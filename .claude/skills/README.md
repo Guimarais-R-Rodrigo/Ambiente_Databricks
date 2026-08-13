@@ -8,7 +8,7 @@ Skills do produto, que vivem em `ambiente_fonte/.assistant/skills/`).
 | `validar-assistant` | Bateria de validação do `ambiente_fonte/` | ✅ ativa |
 | `render-simulado` | Gera `Novo_Ambiente_Simulado/` a partir do fonte | ✅ ativa |
 | `publicar-free` | Publica no Databricks Free via engine do Hub | ⏳ fase 3 |
-| `forward-test-skills` | Roteiro de testes das 12 skills no Genie Code | ⏳ fase 3 |
+| `forward-test-skills` | Roteiro de testes das 12 skills no Genie Code | ✅ ativa |
 | `replicar-trabalho` | Runbook de cópia manual para o workspace do trabalho | ⏳ fase 4 |
 | `revisar-docs-oficiais` | Revisão periódica da documentação oficial (vanguarda) | ⏳ fase 4 |
 

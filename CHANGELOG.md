@@ -28,6 +28,14 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
    `databricks-genie` do Verg_Alchemy_Hub) e 0003 (quarentena do
    `Ambiente_Antigo/`).
 
+### Adicionado (forward tests)
+
+1. (Claude) Skill `.claude/skills/forward-test-skills/` e suíte em
+   `docs/testes/forward/`: roteiro com 36 testes (12 skills × positivo,
+   negativo e `@menção`), template de resultados e índice de rodadas. Casos
+   negativos desenhados sobre as zonas de colisão entre descriptions
+   (drift, WoE/IV, explicar×documentar, materialização, deterioração).
+
 ### Atualizado
 
 1. (Claude) Workspace Databricks Free zerado e republicado como réplica deste
