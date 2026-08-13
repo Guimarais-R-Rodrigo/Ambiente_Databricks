@@ -9,6 +9,29 @@ Registre os resultados em `resultados/<data>_rodada<N>.md` (copie o
 observar a skill carregada, não a qualidade da resposta · tabelas citadas são
 fictícias de propósito (o teste é de roteamento, não de execução).
 
+## Registro rápido (protocolo de 2 mensagens)
+
+O prompt de teste deve ficar **puro** — pedir registro nele contaminaria o
+roteamento (a palavra "skill" atrai `rodrigo-auditoria-skills`; "salvar arquivo"
+atrai `rodrigo-pipeline-builder`). Por isso o registro é uma **segunda mensagem
+no mesmo chat**, enviada depois da resposta, quando a seleção já aconteceu:
+
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/<ID>.md com uma única linha, no formato "<ID>: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+Fluxo por teste: **chat novo → mensagem 1 (prompt do teste) → mensagem 2 (a de
+cima, trocando `<ID>` pelo código do teste: 01P, 01N, 01M, 02P, ...)**. A pasta
+`x_lab/forward_tests/` já existe no workspace; ao final, o Claude coleta os 36
+arquivos via CLI e preenche a tabela de resultados sozinho.
+
+Notas:
+- Se o Genie não conseguir criar o arquivo, ele responde a linha no chat — nesse
+  caso, copie/cole as linhas acumuladas para o Claude de uma vez, ao final.
+- O autorrelato da mensagem 2 pode errar; para qualquer resultado surpreendente,
+  confirme pelo indicador de skill na interface antes de anotar.
+- IDs: número da skill (2 dígitos) + P/N/M (positivo/negativo/menção).
+
 Os casos negativos foram desenhados sobre as **zonas de colisão** entre
 descrições: drift (monitoramento × validação × safra), WoE/IV (features ×
 baseline), explicar × documentar (tutor × comentar), revisar (auditoria × tutor)
