@@ -28,6 +28,18 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
    `databricks-genie` do Verg_Alchemy_Hub) e 0003 (quarentena do
    `Ambiente_Antigo/`).
 
+### Adicionado (testes Spark serverless — gate aprovado)
+
+1. (Claude) `tools/spark_smoke_test.py` (notebook) + suíte `docs/testes/spark/`:
+   71 checks executados em job serverless one-time no Free (Spark 4.1.0) —
+   resultado final **64 PASS / 0 FAIL / 7 opcionais ausentes**.
+2. (Claude) O gate revelou e levou à correção de 3 defeitos reais no
+   `ambiente_fonte/` invisíveis à validação estática: `spark` como global
+   inexistente em 6 módulos; `cache()`/`unpersist()` incompatíveis com
+   serverless em `safe_display`, `quick_profile` e `drift_detector`;
+   f-string com backslash (PEP 701, Python ≥ 3.12) em `kpi_card.py`.
+   Réplica do workspace Free republicada após as correções.
+
 ### Adicionado (forward tests)
 
 1. (Claude) Skill `.claude/skills/forward-test-skills/` e suíte em

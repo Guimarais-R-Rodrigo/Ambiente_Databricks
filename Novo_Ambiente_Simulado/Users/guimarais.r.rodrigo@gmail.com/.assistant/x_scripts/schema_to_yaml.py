@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from typing import Any, Dict
 
-from pyspark.sql import functions as F
+from pyspark.sql import SparkSession, functions as F
 
 
 def schema_to_dict(
@@ -15,6 +15,7 @@ def schema_to_dict(
     include_stats: bool = False,
 ) -> Dict[str, Any]:
     """Return a serializable schema dictionary with optional bounded scan stats."""
+    spark = SparkSession.getActiveSession() or SparkSession.builder.getOrCreate()
     df = spark.table(table_name)
     payload: Dict[str, Any] = {"table": table_name, "columns": []}
 

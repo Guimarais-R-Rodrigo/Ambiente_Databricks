@@ -4,7 +4,22 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
-from pyspark.sql import functions as F
+from pyspark.sql import DataFrame, SparkSession, functions as F
+
+
+def _cache_if_supported(df: DataFrame) -> DataFrame:
+    """cache() é bloqueado em compute serverless; nesse caso, seguir sem cache."""
+    try:
+        return df.cache()
+    except Exception:
+        return df
+
+
+def _unpersist_quietly(df: DataFrame) -> None:
+    try:
+        df.unpersist()
+    except Exception:
+        pass
 
 
 def quick_profile(
@@ -25,6 +40,9 @@ def quick_profile(
     if max_categories <= 0:
         raise ValueError("max_categories must be positive")
 
+    # Resolver a sessão explicitamente: o global de notebook `spark` não existe
+    # quando o módulo é importado (NameError em runtime serverless).
+    spark = SparkSession.getActiveSession() or SparkSession.builder.getOrCreate()
     df = spark.table(table_name)
     dtypes = dict(df.dtypes)
     numeric_cols = [
@@ -55,7 +73,7 @@ def quick_profile(
         reverse=True,
     )
 
-    sample = (df if sample_fraction == 1 else df.sample(False, sample_fraction, seed)).cache()
+    sample = _cache_if_supported(df if sample_fraction == 1 else df.sample(False, sample_fraction, seed))
     sample_rows = sample.count()
     try:
         cardinality = {}
@@ -98,7 +116,7 @@ def quick_profile(
                 for column in selected_dates
             }
     finally:
-        sample.unpersist()
+        _unpersist_quietly(sample)
 
     return {
         "table": table_name,

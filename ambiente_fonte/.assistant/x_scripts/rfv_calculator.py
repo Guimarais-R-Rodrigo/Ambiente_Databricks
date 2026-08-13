@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
-from pyspark.sql import DataFrame, functions as F
+from pyspark.sql import DataFrame, SparkSession, functions as F
 
 
 def rfv_calculator(
@@ -24,6 +24,7 @@ def rfv_calculator(
     if not periods or any(period <= 0 for period in periods):
         raise ValueError("periodos must contain positive integers")
 
+    spark = SparkSession.getActiveSession() or SparkSession.builder.getOrCreate()
     source = spark.table(table_name)
     required = {col_cliente, col_data, col_valor}
     missing = required - set(source.columns)

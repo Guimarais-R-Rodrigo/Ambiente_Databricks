@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Any, Dict, List, Optional
 
-from pyspark.sql import functions as F
+from pyspark.sql import SparkSession, functions as F
 
 
 DEFAULT_THRESHOLDS = {"null_warn": 5.0, "null_fail": 20.0, "freshness_days": 2.0}
@@ -31,6 +31,7 @@ def data_quality_check(
     if limits["freshness_days"] < 0:
         raise ValueError("freshness_days must be non-negative")
 
+    spark = SparkSession.getActiveSession() or SparkSession.builder.getOrCreate()
     df = spark.table(table_name)
     required = set(pk_columns) | ({date_column} if date_column else set())
     missing = required - set(df.columns)

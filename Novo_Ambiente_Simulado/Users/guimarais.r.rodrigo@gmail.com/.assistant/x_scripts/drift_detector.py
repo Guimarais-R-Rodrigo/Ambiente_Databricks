@@ -5,7 +5,22 @@ from __future__ import annotations
 from math import log
 from typing import Any, Dict, Iterable, Optional
 
-from pyspark.sql import Column, DataFrame, functions as F
+from pyspark.sql import Column, DataFrame, SparkSession, functions as F
+
+
+def _cache_if_supported(df: DataFrame) -> DataFrame:
+    """cache() é bloqueado em compute serverless; nesse caso, seguir sem cache."""
+    try:
+        return df.cache()
+    except Exception:
+        return df
+
+
+def _unpersist_quietly(df: DataFrame) -> None:
+    try:
+        df.unpersist()
+    except Exception:
+        pass
 
 
 def _classify_psi(
@@ -78,6 +93,7 @@ def drift_detector(
     if epsilon <= 0:
         raise ValueError("epsilon must be positive")
 
+    spark = SparkSession.getActiveSession() or SparkSession.builder.getOrCreate()
     df = spark.table(table_name)
     missing = {date_col, *(cols or [])} - set(df.columns)
     if missing:
@@ -91,13 +107,13 @@ def drift_detector(
     if not selected_cols:
         raise ValueError("no numeric columns selected")
 
-    ref_df = df.filter(F.col(date_col) == F.lit(date_ref)).cache()
-    comp_df = df.filter(F.col(date_col) == F.lit(date_comp)).cache()
+    ref_df = _cache_if_supported(df.filter(F.col(date_col) == F.lit(date_ref)))
+    comp_df = _cache_if_supported(df.filter(F.col(date_col) == F.lit(date_comp)))
     ref_size = ref_df.count()
     comp_size = comp_df.count()
     if ref_size == 0 or comp_size == 0:
-        ref_df.unpersist()
-        comp_df.unpersist()
+        _unpersist_quietly(ref_df)
+        _unpersist_quietly(comp_df)
         raise ValueError(f"both cohorts must be non-empty (reference={ref_size}, comparison={comp_size})")
 
     probabilities = [index / num_bins for index in range(1, num_bins)]
@@ -138,6 +154,6 @@ def drift_detector(
                 "buckets": details,
             }
     finally:
-        ref_df.unpersist()
-        comp_df.unpersist()
+        _unpersist_quietly(ref_df)
+        _unpersist_quietly(comp_df)
     return results

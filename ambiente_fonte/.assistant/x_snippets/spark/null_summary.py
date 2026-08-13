@@ -23,6 +23,6 @@ def null_summary(df: DataFrame, threshold_warn: float = 5, threshold_fail: float
         else:
             status = "🟢"
         rows.append((col_name, int(count_null), float(pct), status))
-    result = spark.createDataFrame(rows, ["coluna", "count_null", "pct_null", "status"]).orderBy(F.desc("pct_null"))
+    result = df.sparkSession.createDataFrame(rows, ["coluna", "count_null", "pct_null", "status"]).orderBy(F.desc("pct_null"))
     print("Resumo de nulos calculado com sucesso.")
     return result

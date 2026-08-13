@@ -21,5 +21,8 @@ def kpi_card_html(metricas: Dict[str, Any]) -> str:
 
 def kpi_card_markdown(metricas: Dict[str, Any]) -> str:
     """Return KPI line as blockquote markdown."""
-    parts = [f"**{str(value).replace('|', '\\|')}** {str(label).replace('|', '\\|')}" for label, value in metricas.items()]
+    # Backslash fora da expressão da f-string: PEP 701 só vale em Python >= 3.12
+    # e o runtime Databricks pode ser anterior.
+    pipe_escaped = {str(label).replace("|", "\\|"): str(value).replace("|", "\\|") for label, value in metricas.items()}
+    parts = [f"**{value}** {label}" for label, value in pipe_escaped.items()]
     return "> " + " | ".join(parts)
