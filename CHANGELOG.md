@@ -28,6 +28,17 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
    `databricks-genie` do Verg_Alchemy_Hub) e 0003 (quarentena do
    `Ambiente_Antigo/`).
 
+### Atualizado
+
+1. (Claude) Workspace Databricks Free zerado e republicado como réplica deste
+   projeto, a pedido do Rodrigo: backup do conteúdo anterior (camada global
+   `global-*` do Hub + instruções, 10 arquivos) feito antes da remoção;
+   `Novo_Ambiente_Simulado/Users/<username>/` importado via
+   `databricks workspace import-dir`. Verificado: 12 skills `rodrigo-*`,
+   extensões `x_`, instruções e `.py` como `FILE` (não notebook).
+2. (Claude) `.claude/context/ambiente-free.md` atualizado com o novo estado do
+   workspace (camada global do Hub removida; republicável pelo Hub).
+
 ### Notas
 
 - Análise independente confirmou os achados da auditoria do Codex contra o
