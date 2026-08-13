@@ -1,0 +1,20 @@
+# Install only the libraries required by the selected workflow.
+# Pin versions in the consuming project's tested lockfile or bundle.
+catboost
+lifelines
+lightgbm
+matplotlib
+mlflow>=3
+numpy
+optuna
+pandas
+plotly
+pmdarima
+prophet
+pytorch-tabnet
+scikit-learn
+scipy
+shap
+torch
+umap-learn
+xgboost

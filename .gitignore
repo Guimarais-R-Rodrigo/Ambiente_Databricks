@@ -1,0 +1,24 @@
+# --- Quarentena de dados corporativos -----------------------------------
+# Ambiente_Antigo contém identificadores corporativos reais
+# (e-mail/username de rede do banco). Fica APENAS local até decisão
+# registrada em docs/decisions/ADR-0003-quarentena-ambiente-antigo.md.
+Ambiente_Antigo/
+
+# --- Python --------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# --- Ambiente local ------------------------------------------------------
+.claude/settings.local.json
+*.local.json
+.env
+.env.*
+
+# --- Sistema operacional -------------------------------------------------
+Thumbs.db
+Desktop.ini
+.DS_Store

@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Relatório de auditoria e implementação — Databricks Genie Code</title>
+<style>
+:root{--blue:#0b5cab;--ink:#17202a;--muted:#586574;--line:#d9e2ec;--soft:#f5f8fb;--orange:#f7941d}
+*{box-sizing:border-box} body{margin:0;background:#eef3f7;color:var(--ink);font:16px/1.58 "Segoe UI",Arial,sans-serif}
+main{max-width:1120px;margin:32px auto;padding:48px 64px;background:#fff;border-radius:16px;box-shadow:0 10px 35px rgba(20,45,70,.10)}
+h1{color:var(--blue);font-size:2.15rem;border-bottom:4px solid var(--orange);padding-bottom:.35em} h2{color:var(--blue);margin-top:2em;border-bottom:1px solid var(--line);padding-bottom:.25em} h3{color:#174f7f}
+a{color:var(--blue)} blockquote{margin:1.2em 0;padding:.7em 1.1em;border-left:4px solid var(--orange);background:#fff8ee;color:#4a5562}
+table{width:100%;border-collapse:collapse;margin:1.2em 0;font-size:.94rem} th,td{padding:.65em .75em;border:1px solid var(--line);vertical-align:top} th{background:#eaf2f9;color:#174f7f;text-align:left}
+code{background:#f0f4f8;padding:.12em .32em;border-radius:4px} pre{overflow:auto;background:#152536;color:#e9f2f8;padding:1.1em;border-radius:8px} pre code{background:transparent;padding:0}
+li{margin:.3em 0} hr{border:0;border-top:1px solid var(--line)} .meta{color:var(--muted);font-size:.9rem;margin-bottom:2rem}
+@media(max-width:750px){main{margin:0;padding:24px;border-radius:0} table{display:block;overflow:auto}}
+@media print{body{background:#fff} main{box-shadow:none;margin:0;max-width:none;padding:20px} a{color:inherit;text-decoration:none}}
+</style>
+</head>
+<body><main><div class="meta">Entrega técnica · 13/08/2026 · Azure Databricks</div><h1 id="relatorio-de-auditoria-e-implementacao">Relatório de auditoria e implementação</h1>
+<blockquote>
+<p><strong>ENTREGA CUSTOMIZADA (<code>x_delivery</code>) — não auto-descoberta pela Genie Code.</strong>
+Data: 13 de agosto de 2026 · Plataforma-alvo: Azure Databricks Genie Code</p>
+</blockquote>
+<h2 id="resultado">Resultado</h2>
+<p>O ecossistema foi reorganizado, corrigido e documentado. As 12 skills pessoais
+continuam presentes e agora usam a estrutura oficialmente suportada
+<code>.assistant/skills/&lt;skill&gt;/SKILL.md</code>. Estruturas não institucionais receberam o
+prefixo <code>x_</code>, deixando explícito que precisam de <code>@</code>/Add context, import ou execução
+manual.</p>
+<p>Status desta entrega: <strong>aprovada para revisão e testes no workspace de destino</strong>.
+Não declarar implantação produtiva concluída antes dos gates de runtime listados ao
+final.</p>
+<h2 id="escopo-revisado">Escopo revisado</h2>
+<table>
+<thead>
+<tr>
+<th>Componente</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.assistant_instructions.md</code> fornecido</td>
+<td>reescrito e reduzido a 7.371 caracteres</td>
+</tr>
+<tr>
+<td>Agent Skills</td>
+<td>12/12 preservadas e validadas</td>
+</tr>
+<tr>
+<td>Prompts</td>
+<td>16 briefings completos, cobrindo as 12 skills e utilitários</td>
+</tr>
+<tr>
+<td>Contexto de projeto</td>
+<td>migrado para modelo <code>AGENTS.md</code> oficialmente descoberto</td>
+</tr>
+<tr>
+<td>Scripts</td>
+<td>7 utilitários revisados/corrigidos</td>
+</tr>
+<tr>
+<td>Snippets Python</td>
+<td>47 módulos funcionais + pacote/testes revisados</td>
+</tr>
+<tr>
+<td>Documentação</td>
+<td>README raiz, README do ecossistema, manifestos e roadmap sincronizados</td>
+</tr>
+<tr>
+<td>Segurança editorial</td>
+<td>zero paths/e-mails pessoais, PII ou credenciais detectados</td>
+</tr>
+<tr>
+<td>Integridade</td>
+<td>zero links Markdown relativos quebrados; zero mojibake detectado</td>
+</tr>
+</tbody>
+</table>
+<h2 id="arquitetura-implantavel">Arquitetura implantável</h2>
+<pre><code class="language-text">assistant_optimized_2026-08-13/
+├── .assistant_instructions.md           # SUPORTE NATIVO: instruções pessoais
+├── .assistant/
+│   ├── skills/                          # SUPORTE NATIVO: descoberta de skills
+│   │   └── rodrigo-*/SKILL.md           # CONTEÚDO PERSONALIZADO
+│   ├── x_prompts/                       # CUSTOM: Add context/@
+│   ├── x_projects/                      # CUSTOM: modelos; copiar como AGENTS.md
+│   ├── x_scripts/                       # CUSTOM: executar/importar
+│   ├── x_snippets/                      # CUSTOM: importar explicitamente
+│   ├── x_docs/                          # CUSTOM: documentação/histórico
+│   └── x_config/                        # CUSTOM: legado/manual
+├── x_delivery/                          # CUSTOM: relatório e handoff
+├── .gitignore
+└── README.md
+</code></pre>
+<p>O prefixo <code>rodrigo-</code> identifica skills pessoais; ele não significa skill built-in da
+Databricks. O mecanismo de descoberta é nativo, o conteúdo é customizado.</p>
+<h2 id="achados-estruturais-corrigidos">Achados estruturais corrigidos</h2>
+<h3 id="descoberta-e-contexto">Descoberta e contexto</h3>
+<ul>
+<li>Seis skills sem frontmatter passaram a ter <code>name</code> e <code>description</code> válidos.</li>
+<li>Todas as 12 descrições agora explicam função e gatilhos de uso.</li>
+<li>Skills extensas foram reduzidas com progressive disclosure; os <code>SKILL.md</code> ficaram
+  entre 64 e 120 linhas.</li>
+<li>Frontmatter deste pacote usa somente <code>name</code> e <code>description</code> por política
+  conservadora local. O padrão Agent Skills admite campos opcionais suportados.</li>
+<li>Prompts, projetos, scripts e snippets deixaram de parecer interfaces nativas e
+  foram movidos para diretórios <code>x_</code>.</li>
+<li>Memória de projeto foi migrada para <code>AGENTS_TEMPLATE.md</code>, que deve ser copiado como
+  <code>AGENTS.md</code> no diretório ancestral do projeto real.</li>
+<li>Aliases como <code>/eda</code> e <code>/baseline</code> agora são descritos como convenções humanas. A
+  seleção explícita suportada é <code>@nome-da-skill</code>; <code>/findTables</code> permanece identificado
+  como recurso nativo.</li>
+<li>O JSON MCP vazio/legado foi movido para <code>x_config</code> e marcado como inativo. MCP deve
+  ser configurado em <strong>Genie Code → Settings</strong>.</li>
+</ul>
+<h3 id="instrucoes-pessoais">Instruções pessoais</h3>
+<ul>
+<li>O arquivo fornecido foi renomeado para o nome oficial <code>.assistant_instructions.md</code>.</li>
+<li>Contexto muito específico, sprints e memórias históricas foram movidos para
+  <code>x_docs/LEGACY_CONTEXT.md</code>.</li>
+<li>Foram mantidas preferências úteis: PT-BR, PySpark, Spark SQL, Plotly, MLflow,
+  serverless compatível, anti-leakage, qualidade e documentação.</li>
+<li>Foram removidas promessas de hooks, slash commands e memória automática.</li>
+<li>Foram adicionadas fronteiras de escrita, PII, custo, inferência, conformidade,
+  MLflow, Unity Catalog, Lakeflow e Declarative Automation Bundles.</li>
+<li>Foi registrada a exceção oficial: instruções não se aplicam a Quick Fix e
+  Autocomplete.</li>
+</ul>
+<h3 id="prompts">Prompts</h3>
+<p>Os 11 prompts existentes foram ampliados e cinco prompts antes apenas implícitos
+foram adicionados: explicabilidade, monitoramento, pipeline, safras e auditoria.
+Todos os 16 incluem:</p>
+<ul>
+<li>campos <code>{{...}}</code> e explicação do que preencher;</li>
+<li>contexto por <code>@</code>/Add context e skill recomendada;</li>
+<li>briefing, premissas e defaults;</li>
+<li>limites de execução, escrita, custo e PII;</li>
+<li>contrato de saída e validação final;</li>
+<li>exemplo mínimo e follow-ups.</li>
+</ul>
+<h2 id="correcoes-tecnicas-principais">Correções técnicas principais</h2>
+<h3 id="dados-e-spark">Dados e Spark</h3>
+<ul>
+<li><code>drift_detector.py</code>: substituição do falso PSI baseado em média/desvio por PSI de
+  distribuição com bins da referência, bucket de ausentes e thresholds opcionais.</li>
+<li><code>data_quality_check.py</code>: aplicação real de <code>null_warn</code>, <code>null_fail</code> e freshness,
+  alertas estruturados e agregação de nulos em uma varredura.</li>
+<li><code>quick_profile.py</code>: uso real da fração de amostragem; separação explícita entre
+  estatísticas full-table e sample.</li>
+<li><code>rfv_calculator.py</code>: exclusão de eventos posteriores à data de referência, janela
+  inclusiva correta e remoção de default mutável.</li>
+<li><code>schema_to_yaml.py</code>: escaping seguro com PyYAML e fallback JSON válido em YAML 1.2.</li>
+<li><code>naming_checker.py</code>: prefixos passam a ser política configurável, não requisito
+  universal da Databricks.</li>
+<li><code>safe_display.py</code>: limite sempre aplicado e contagem limitada, sem scan completo.</li>
+<li><code>smart_sample.py</code>: amostragem estratificada distribuída, limites e tratamento de
+  excesso de estratos.</li>
+<li><code>date_features.py</code>: separação entre feriados nacionais fixos e calendário de
+  projeto; alias de compatibilidade preservado.</li>
+<li><code>psi_calculator.py</code>: missing explícito, categorias suportadas, sem sentinela <code>-1</code>
+  silenciosa e interpretação dependente de política calibrada.</li>
+<li>Correlação/distribuição: tipos <code>decimal(p,s)</code>, seleção vazia, aliases de API e
+  limites no driver corrigidos.</li>
+</ul>
+<h3 id="ml-estatistica-e-monitoramento">ML, estatística e monitoramento</h3>
+<ul>
+<li>Métricas: validação de shapes/probabilidades/classes, lift para amostra pequena e
+  MAPE indefinido quando todos os valores reais são zero.</li>
+<li>Score bands/scorecard: direção de score e de evento adverso explicitadas; ties,
+  labels e sinal do logit corrigidos.</li>
+<li>LightGBM/XGBoost/CatBoost/Optuna: tasks/classes validadas, multiclass corrigido,
+  early stopping aplicado e MLflow opcional somente quando solicitado.</li>
+<li>Ranking: grupos e labels validados; claim indevido de MAP removido.</li>
+<li>Temporal: splits usam períodos de calendário; lags/rollings podem ser particionados
+  por entidade; walk-forward normaliza períodos e usa o target no contrato.</li>
+<li>Vintage: incidência acumulada calculada no nível contrato×MOB, evitando soma
+  incorreta de taxas.</li>
+<li>Survival/Cox: validações de duração/evento e retorno real do teste de
+  proporcionalidade.</li>
+<li>WOE/IV: target binário, ambas as classes e smoothing consistente.</li>
+<li>SHAP/explicabilidade: AUC não é apresentada como acurácia; importância SHAP não é
+  “percentual do poder preditivo” nem causalidade.</li>
+<li>Monitoramento: melhora de métrica não gera alerta; thresholds/direção são política
+  explícita; o helper nunca autoriza retreino automático e exige investigação,
+  champion-challenger e aprovação.</li>
+<li>Autoencoder/MLP/TabNet: batching, escala de treino, melhor estado restaurado,
+  validações de tarefa/categorias e menor risco de memória.</li>
+<li>Clustering/UMAP: algoritmos e parâmetros validados; crashes de formatação e
+  cenários vazios corrigidos.</li>
+</ul>
+<h3 id="seguranca-e-documentacao">Segurança e documentação</h3>
+<ul>
+<li>Inputs HTML de badges, KPIs e headers são escapados.</li>
+<li>46 ocorrências de caminhos/identificadores pessoais foram parametrizadas.</li>
+<li>Imports <code>snippets.*</code> foram migrados para o pacote válido <code>x_snippets.*</code>.</li>
+<li>APIs documentadas foram sincronizadas (<code>null_summary</code>, aliases de correlação,
+  distribuição e datas).</li>
+<li>Claims regulatórios foram separados de boas práticas e condicionados a fonte
+  oficial e revisão de Compliance/Risco.</li>
+<li>A skill de auditoria preserva dois modos: auditoria da implementação da skill e
+  auditoria do output gerado contra o contrato da skill produtora.</li>
+</ul>
+<h2 id="validacoes-executadas">Validações executadas</h2>
+<table>
+<thead>
+<tr>
+<th>Validação</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>quick_validate.py</code></td>
+<td>12/12 skills aprovadas</td>
+</tr>
+<tr>
+<td>Tamanho dos <code>SKILL.md</code></td>
+<td>64–120 linhas</td>
+</tr>
+<tr>
+<td>Links internos das skills</td>
+<td>56 resolvidos</td>
+</tr>
+<tr>
+<td>Imports <code>x_snippets</code> em recursos das skills</td>
+<td>8 verificados</td>
+</tr>
+<tr>
+<td>Blocos Python em templates das skills</td>
+<td>19 compilados</td>
+</tr>
+<tr>
+<td>Parsing AST do pacote</td>
+<td>61/61 arquivos Python</td>
+</tr>
+<tr>
+<td>Testes driver-side</td>
+<td>13/13 aprovados</td>
+</tr>
+<tr>
+<td>Links Markdown relativos globais</td>
+<td>0 quebrados</td>
+</tr>
+<tr>
+<td>Cercas Markdown</td>
+<td>0 desbalanceadas</td>
+</tr>
+<tr>
+<td>UTF-8/mojibake</td>
+<td>0 falhas detectadas</td>
+</tr>
+<tr>
+<td>PII/paths pessoais</td>
+<td>0 correspondências</td>
+</tr>
+<tr>
+<td>Tamanho das instruções</td>
+<td>7.371/20.000 caracteres</td>
+</tr>
+</tbody>
+</table>
+<p>Os testes driver-side usaram dependências temporárias isoladas em <code>work/test_deps</code>;
+essas dependências não fazem parte do pacote implantável.</p>
+<h2 id="gates-pendentes-antes-de-producao">Gates pendentes antes de produção</h2>
+<ol>
+<li>Executar testes Spark dos helpers em uma sessão Azure Databricks com o runtime
+   alvo.</li>
+<li>Testar workflows opcionais com versões fixadas de LightGBM, XGBoost, CatBoost,
+   SHAP, lifelines, Prophet, PyTorch/TabNet e UMAP.</li>
+<li>Publicar primeiro no diretório/target de desenvolvimento.</li>
+<li>Abrir novo chat e executar, para cada skill, casos positivo, negativo e
+   <code>@menção</code> explícita; hard refresh se o metadata estiver em cache.</li>
+<li>Validar permissões, PII, escrita, custo e paths do workspace real.</li>
+<li>Para pipelines/bundles, executar <code>databricks bundle validate</code>, testes e smoke
+   antes de deploy/run produtivo.</li>
+</ol>
+<h2 id="fontes-oficiais-prioritarias">Fontes oficiais prioritárias</h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills">Agent Skills na Genie Code — Azure Databricks</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/databricks/genie-code/instructions">Instruções customizadas</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/databricks/genie-code/tips">Dicas para Genie Code</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/databricks/genie-code/mcp">MCP na Genie Code</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/databricks/ldp/best-practices">Lakeflow Spark Declarative Pipelines — melhores práticas</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/databricks/dev-tools/bundles/">Declarative Automation Bundles</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/databricks/mlflow/tracking">MLflow Tracking</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/databricks/machine-learning/manage-model-lifecycle/">Models in Unity Catalog</a></li>
+<li><a href="https://agentskills.io/specification">Agent Skills specification</a></li>
+</ul>
+<h2 id="conclusao">Conclusão</h2>
+<p>Não restaram achados P0/P1 na auditoria independente após a última correção de
+painéis vintage incompletos, métricas de monitoramento ausentes/não finitas, anotação
+de lift parametrizada, formatos SHAP multiclass/regressão e multiplicidade em
+comparações Kaplan–Meier.
+O pacote final exclui caches/bytecode e preserva o manifesto da exportação original
+apenas em <code>x_docs</code> para rastreabilidade. Os limites remanescentes são ambientais e
+estão registrados como gates, sem declaração indevida de execução no Databricks.</p></main></body>
+</html>
