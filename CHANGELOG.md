@@ -27,6 +27,12 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
    `import-dir --overwrite` sobrescreve mas nunca apaga. Removido, e a detecção
    de obsoletos incorporada à ferramenta.
 
+2. (Claude) `tools/publicar_free.py` concatenava stdout e stderr antes de fazer
+   parse de JSON. A CLI emite um aviso intermitente em stderr que corrompia a
+   saída e derrubava o `verify` com `JSONDecodeError`. Os fluxos passaram a ser
+   tratados separadamente, com parse tolerante; verificado em execuções
+   repetidas.
+
 ### Observação encaminhável (outro repositório)
 
 - O `_fmt_args` do engine do Hub publica `.py` como notebook; o próprio

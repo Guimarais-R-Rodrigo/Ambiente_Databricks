@@ -28,18 +28,34 @@ EXPECTED_SKILLS = 12
 EXPECTED_X_DIRS = {"x_config", "x_docs", "x_projects", "x_prompts", "x_scripts", "x_snippets"}
 
 
-def databricks(*args: str) -> tuple[int, str]:
+def databricks(*args: str) -> tuple[int, str, str]:
+    """Retorna (returncode, stdout, stderr) separados.
+
+    stdout e stderr nunca são concatenados: a CLI emite avisos em stderr que,
+    misturados à saída, corrompem o parse de JSON.
+    """
     proc = subprocess.run(
         ["databricks", *args], capture_output=True, text=True, encoding="utf-8"
     )
-    return proc.returncode, (proc.stdout or "") + (proc.stderr or "")
+    return proc.returncode, proc.stdout or "", proc.stderr or ""
+
+
+def databricks_json(*args: str) -> object | None:
+    """Executa a CLI e devolve o JSON de stdout, ou None se não houver."""
+    rc, out, _err = databricks(*args)
+    if rc != 0 or not out.strip():
+        return None
+    try:
+        return json.loads(out)
+    except json.JSONDecodeError:
+        return None
 
 
 def resolve_home() -> tuple[str, str]:
-    rc, out = databricks("current-user", "me", "-o", "json")
-    if rc != 0:
-        raise SystemExit(f"FAIL não foi possível resolver o usuário:\n{out}")
-    user = json.loads(out)["userName"]
+    identidade = databricks_json("current-user", "me", "-o", "json")
+    if not isinstance(identidade, dict) or "userName" not in identidade:
+        raise SystemExit("FAIL não foi possível resolver o usuário pela CLI.")
+    user = identidade["userName"]
     if CORPORATE_RE.search(user):
         raise SystemExit(
             "FAIL usuário com aparência corporativa. Esta ferramenta publica no\n"
@@ -66,13 +82,8 @@ def local_tree() -> tuple[Path, list[Path]]:
 
 
 def remote_list(path: str) -> list[dict]:
-    rc, out = databricks("workspace", "list", path, "-o", "json")
-    if rc != 0:
-        return []
-    try:
-        return json.loads(out) or []
-    except json.JSONDecodeError:
-        return []
+    itens = databricks_json("workspace", "list", path, "-o", "json")
+    return itens if isinstance(itens, list) else []
 
 
 def remote_walk(path: str) -> list[dict]:
@@ -104,9 +115,9 @@ def cmd_plan(root: Path, arquivos: list[Path], home: str, executar: bool) -> int
         print("\nDRY-RUN: nada foi publicado. Use --execute para publicar.")
         return 0
 
-    rc, out = databricks("workspace", "import-dir", str(root), home, "--overwrite")
+    rc, out, err = databricks("workspace", "import-dir", str(root), home, "--overwrite")
     if rc != 0:
-        print(f"\nFAIL publicação falhou:\n{out}")
+        print(f"\nFAIL publicação falhou:\n{out}{err}")
         return 1
     print(f"\nPublicado. Confira com: python {Path(__file__).name} --verify")
     return 0
@@ -122,10 +133,11 @@ def cmd_verify(root: Path, arquivos: list[Path], home: str) -> int:
         for item in remote_walk(f"{home}/.assistant")
         if item.get("object_type") != "DIRECTORY"
     }
-    instrucoes = f"{home}/.assistant_instructions.md"
-    rc, out = databricks("workspace", "get-status", instrucoes, "-o", "json")
-    if rc == 0:
-        remotos[".assistant_instructions.md"] = json.loads(out)
+    instrucoes = databricks_json(
+        "workspace", "get-status", f"{home}/.assistant_instructions.md", "-o", "json"
+    )
+    if isinstance(instrucoes, dict):
+        remotos[".assistant_instructions.md"] = instrucoes
 
     ausentes = sorted(esperados - set(remotos))
     for nome in ausentes:
