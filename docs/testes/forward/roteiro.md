@@ -528,10 +528,14 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 ## 7. RODADA 2 — refaça apenas estes 5 testes
 
-> **É só esta seção que você precisa executar agora.** A seção 6 acima já foi
-> concluída (rodada 1: 33 PASS / 2 FAIL / 1 pendente) e fica preservada como
-> histórico. Nenhuma `description` de skill foi alterada — por isso os 31
-> testes aprovados continuam valendo e não precisam ser repetidos.
+> **Status: 4 de 5 concluídos (todos PASS).** Falta apenas o bloco
+> **`11P-r2`** — o arquivo de registro não chegou ao workspace. É o último item
+> para fechar o gate de roteamento; ver
+> [resultados da rodada 2](resultados/2026-08-14_rodada2.md).
+>
+> A seção 6 acima já foi concluída (rodada 1) e fica preservada como histórico.
+> Nenhuma `description` de skill foi alterada — por isso os testes aprovados
+> continuam valendo e não precisam ser repetidos.
 
 Mesmo procedimento de sempre: **chat novo → Mensagem 1 → Mensagem 2**. Os IDs
 aqui terminam em `-r2`, então as evidências da rodada 1 não são sobrescritas.

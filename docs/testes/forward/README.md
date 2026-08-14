@@ -11,7 +11,11 @@ pendente da auditoria do Codex antes da replicação no trabalho.
 | Rodada | Data | PASS | FAIL | Resultado |
 |---|---|---|---|---|
 | 1 | 2026-08-14 | 33 | 2 | [detalhes](resultados/2026-08-14_rodada1.md) — 12/12 negativos corretos; falhas isoladas em `10P`/`11P`; `07M` sem registro |
-| 2 | — | — | — | pendente: seção 7 do roteiro — `07M-r2`, `10P-r2`, `10N-r2`, `11P-r2`, `11N-r2` |
+| 2 | 2026-08-14 | 4 | 0 | [detalhes](resultados/2026-08-14_rodada2.md) — hipótese confirmada: `10P` passou só com o prompt corrigido; falta `11P-r2` (sem registro) |
+
+**Consolidado:** 35/36 aprovados · negativos 12/12 · menções 12/12 · pendente
+apenas `11P-r2` para fechar o gate. Nenhuma `description` foi alterada em
+nenhuma rodada.
 
 ## O que a rodada 1 mostrou
 

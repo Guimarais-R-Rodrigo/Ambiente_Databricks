@@ -14,8 +14,19 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
    **33 PASS, 2 FAIL, 1 pendente** de 36. Coleta automatizada via arquivos de
    evidência em `x_lab/forward_tests/` lidos por CLI.
 
+2. (Claude) `docs/testes/forward/resultados/2026-08-14_rodada2.md`: rodada 2
+   (5 testes com prompts autocontidos, IDs `-r2`) — **4 PASS, 0 FAIL,
+   1 sem registro** (`11P-r2`). Consolidado das duas rodadas: 35/36 aprovados,
+   negativos 12/12, menções 12/12.
+
 ### Notas
 
+- Rodada 2 confirmou a hipótese da rodada 1: `10P` passou com a **mesma**
+  `description` e apenas o artefato embutido no prompt — a falha era do
+  instrumento de teste. Nenhuma `description` foi alterada em nenhuma rodada.
+- Item de vigilância registrado: `comentar-notebook` respondeu ao vocabulário
+  "células %md" mas não a "markdown de documentação" no `11N-r2`; sem ação por
+  ora, pois no uso real o notebook aberto no editor é sinal mais forte.
 - As `description` do pacote auditado pelo Codex se mostraram bem calibradas:
   **12/12 casos negativos corretos**, sem nenhuma das colisões previstas
   (drift, materialização, deterioração, auditoria×execução); em 11 deles o
