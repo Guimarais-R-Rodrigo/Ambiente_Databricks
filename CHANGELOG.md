@@ -7,6 +7,32 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
 ## 2026-08-14
 
+### Adicionado (publicação no Free com verificação)
+
+1. (Claude) `tools/publicar_free.py` e skill `.claude/skills/publicar-free/`:
+   plano em dry-run, publicação com gate `--execute` e `verify` read-only que
+   confere ausentes, obsoletos, `.py` como `FILE`, 12 skills e 6 diretórios de
+   extensão. Ciclo completo executado: 164/164 arquivos, zero pendências.
+2. (Claude) ADR-0005, supersedindo o ADR-0002: o engine do Hub não pode ser
+   consumido nesta camada. Evidência medida no workspace — `.py` publicado por
+   ele vira `NOTEBOOK` (quebraria todos os imports de `x_snippets`), enquanto
+   `--format AUTO` produz `FILE`; e o cabeçalho que ele antepõe invalidaria o
+   frontmatter YAML das skills. O padrão de três fases foi mantido.
+
+### Corrigido (publicação no Free)
+
+1. (Claude) O `verify` detectou, na primeira execução,
+   `.assistant/.mcp_servers.json` remanescente no workspace — arquivo legado
+   inerte que a auditoria do Codex removera do pacote e que sobrevivera porque
+   `import-dir --overwrite` sobrescreve mas nunca apaga. Removido, e a detecção
+   de obsoletos incorporada à ferramenta.
+
+### Observação encaminhável (outro repositório)
+
+- O `_fmt_args` do engine do Hub publica `.py` como notebook; o próprio
+  `write_evidence.py` da camada global está nessa condição. Correção cabe ao
+  dono daquele repositório, com testes próprios.
+
 ### Adicionado (fase 4 — replicação no trabalho)
 
 1. (Claude) `docs/playbooks/replicacao-trabalho.md`: runbook completo para o

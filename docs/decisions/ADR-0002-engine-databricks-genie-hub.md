@@ -1,8 +1,13 @@
 # ADR-0002 — Reutilizar o engine databricks-genie do Verg_Alchemy_Hub
 
 Data: 2026-08-13
-Status: Aceito
+Status: **Supersedido pelo [ADR-0005](ADR-0005-publicacao-propria-no-free.md)** (2026-08-14)
 Autor: Claude (aprovado por Rodrigo)
+
+> A inspeção do engine mostrou dois impedimentos técnicos para consumi-lo nesta
+> camada: `.py` importado como notebook (quebra os imports de `x_snippets`) e
+> cabeçalho anteposto ao conteúdo (invalida o frontmatter das skills). O padrão
+> de três fases foi mantido; o código não é consumido. Ver ADR-0005.
 
 ## Contexto
 

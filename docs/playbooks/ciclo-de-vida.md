@@ -29,16 +29,17 @@ python tools/render_simulado.py --write
 - Entrada no `CHANGELOG.md` (template `.claude/templates/changelog-entry.md`).
 - Decisão estrutural → ADR; sessão interrompida → handoff.
 
-## 5. Publicar no Free (fase 3 — via engine do Hub)
+## 5. Publicar no Free
 
 ```powershell
-# após pip install -e ../../Verg_Projects/Verg_Alchemy_Hub --no-deps
-# manifesto fino deste projeto + wrappers (a criar na fase 3)
-# padrão do engine: render (dry-run) → publish --execute → verify
+python tools/publicar_free.py            # plano (dry-run)
+python tools/publicar_free.py --execute  # publica
+python tools/publicar_free.py --verify   # confere o remoto (read-only)
 ```
 
-Dry-run por padrão; `--execute` é gate consciente. Não sobrescrever a camada
-global `global-*` do Hub.
+Dry-run por padrão; `--execute` é gate consciente. O `verify` é obrigatório: a
+publicação relata o que enviou, ele confere o que existe — inclusive arquivos
+obsoletos, que `import-dir --overwrite` nunca remove (ADR-0005).
 
 ## 6. Testar no Free
 
