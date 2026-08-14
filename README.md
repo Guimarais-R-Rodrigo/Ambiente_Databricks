@@ -58,25 +58,112 @@ prefixo `x_` e precisa de ação manual (`@`/Add context, import ou execução):
 
 > Exceção oficial: instruções não se aplicam a **Quick Fix** e **Autocomplete**.
 
+## Primeira hora no projeto
+
+Quem chega agora não precisa entender o repositório inteiro para ser útil. Este
+percurso leva do zero até uma alteração publicada e conferida.
+
+**1. Entenda a ideia central (5 min).** Existe uma pasta editável — `ambiente_fonte/` —
+e todo o resto é derivado dela por script ou é cópia publicada. Você nunca edita
+o workspace do Databricks diretamente; edita aqui e publica. Isso evita a
+situação clássica de duas versões divergentes sem saber qual vale.
+
+**2. Veja o produto (10 min).** Abra [ambiente_fonte/.assistant/README.md](ambiente_fonte/.assistant/README.md).
+É o guia do ecossistema que vai para o Databricks: 12 skills, instruções pessoais
+e as extensões. Se algum termo travar a leitura, o [glossário](ambiente_fonte/.assistant/x_docs/glossario.md)
+resolve.
+
+**3. Rode a validação (2 min).** Sem alterar nada, execute
+`python tools/validate_assistant.py`. A saída está reproduzida abaixo. Este
+comando é a rede de segurança: ele reprova link quebrado, frontmatter inválido e
+identificador corporativo antes que virem commit.
+
+**4. Faça uma alteração pequena (15 min).** Corrija uma frase em qualquer README
+dentro de `ambiente_fonte/`. Depois rode, em ordem: validar → renderizar →
+publicar → conferir. Os quatro comandos estão logo abaixo com o retorno esperado.
+
+**5. Veja o resultado no Databricks (5 min).** Abra o workspace Free, navegue até
+`/Users/<seu-usuario>/.assistant/` e encontre a frase alterada. Esse é o ciclo
+completo: o que está aqui é o que está lá.
+
+Ao final você sabe editar, validar, publicar e conferir — que é tudo o que a
+operação do dia a dia exige. Replicar no workspace do trabalho é assunto do
+[runbook](docs/playbooks/replicacao-trabalho.md) e só acontece depois dos gates.
+
 ## Ciclo de vida de uma mudança
 
 ```mermaid
 flowchart TD
   E["1. Editar ambiente_fonte/"] --> V["2. Validar\npython tools/validate_assistant.py"]
   V --> R["3. Renderizar\npython tools/render_simulado.py --write"]
-  R --> C["4. Commit + CHANGELOG"]
-  C --> P["5. Publicar no Free\n(engine databricks-genie, gated)"]
-  P --> T["6. Forward tests\ncaso +, caso −, @menção (chat novo)"]
-  T --> W["7. Replicar no trabalho\n(runbook de cópia manual)"]
+  R --> P["4. Publicar no Free\npython tools/publicar_free.py --execute"]
+  P --> C["5. Conferir\npython tools/publicar_free.py --verify"]
+  C --> G["6. Commit + CHANGELOG"]
+  G --> T["7. Forward tests\ncaso +, caso −, @menção (chat novo)"]
+  T --> W["8. Replicar no trabalho\n(runbook de cópia manual)"]
 ```
 
-Comandos locais:
+## Comandos e o que esperar de cada um
+
+As saídas abaixo foram capturadas de execuções reais, não redigidas à mão. Se o
+seu retorno divergir, a diferença é o diagnóstico.
+
+**Validar a fonte** — roda em segundos, não toca em nada:
 
 ```powershell
-python tools/validate_assistant.py            # bateria de validação do ambiente_fonte/
-python tools/render_simulado.py               # dry-run do render
-python tools/render_simulado.py --write       # gera Novo_Ambiente_Simulado/
+python tools/validate_assistant.py
 ```
+
+```text
+raiz analisada     : <repo>\ambiente_fonte
+skills             : 12
+markdown / links   : 102 arquivos / 79 links relativos
+python (AST)       : 61 arquivos
+instrucoes         : 7371/20000 caracteres
+
+APROVADO: 0 falha(s), 0 aviso(s)
+```
+
+Qualquer linha `FAIL` bloqueia o resto do ciclo. `WARN` de tamanho de skill é
+aviso de dívida, não impedimento.
+
+**Renderizar o simulado** — sem `--write` mostra apenas o plano:
+
+```powershell
+python tools/render_simulado.py
+```
+
+```text
+fonte  : <repo>\ambiente_fonte
+destino: <repo>\Novo_Ambiente_Simulado\Users\<seu-usuario>
+  copy file .assistant_instructions.md -> ...\.assistant_instructions.md
+  copy dir  .assistant -> ...\.assistant
+
+DRY-RUN: nada foi escrito. Use --write para executar.
+```
+
+**Publicar e conferir** — a publicação relata o que enviou; a conferência
+verifica o que existe. São coisas diferentes, e por isso a segunda não é opcional:
+
+```powershell
+python tools/publicar_free.py --execute
+python tools/publicar_free.py --verify
+```
+
+```text
+== VERIFY (read-only) ==
+esperados : 165 arquivos
+remotos   : 165 arquivos sob .assistant + instruções
+ausentes  : 0 | obsoletos: 0
+skills    : 12/12
+extensões : 6/6 diretórios x_
+
+APROVADO: 0 problema(s)
+```
+
+A linha `obsoletos` é a que costuma surpreender: a publicação sobrescreve
+arquivos, mas nunca apaga os que saíram da fonte. Um arquivo removido daqui
+continua ativo no workspace até alguém notar — e é essa conferência que nota.
 
 ## Governança multi-IA
 
@@ -109,6 +196,48 @@ Gates herdados da auditoria do Codex, todos verificados no Databricks Free:
 ¹ Fase 3 concluída no essencial. Itens abertos: fixação das dependências
 opcionais por workflow e a troca do `import-dir` manual pelo fluxo governado do
 engine `databricks-genie` do Hub (skill `publicar-free`, ADR-0002).
+
+## Perguntas frequentes
+
+**Preciso saber Databricks para contribuir?**
+Para editar documentação e skills, não — o conteúdo é Markdown e o ciclo são
+quatro comandos. Para mexer na biblioteca Python (`x_snippets`, `x_scripts`) sim,
+porque o código roda em Spark e as armadilhas são de lá.
+
+**Por que existem duas pastas com o mesmo conteúdo?**
+`ambiente_fonte/` é o que você edita; `Novo_Ambiente_Simulado/` é o espelho
+gerado por script, com a árvore exata que o workspace espera. A separação existe
+para que a cópia para o trabalho seja mecânica: você copia a subárvore pronta,
+sem decidir nada na hora. Editar o simulado à mão não adianta — o próximo render
+apaga.
+
+**O que acontece se eu editar direto no workspace do Databricks?**
+A alteração vive até a próxima publicação e depois desaparece, sem aviso. O
+workspace é cópia operacional, nunca a fonte. Se algo precisar mudar, muda aqui.
+
+**Alterei uma skill e o Genie Code continua com o comportamento antigo.**
+Skills não recarregam em chat já aberto. Abra um chat novo; se persistir,
+recarregue a página, porque o metadata fica em cache.
+
+**Como sei qual skill vai ser acionada?**
+O Genie Code escolhe lendo apenas o campo `description` de cada skill. Para forçar
+uma específica, use `@nome-da-skill`. As 36 combinações testadas estão em
+[docs/testes/forward/](docs/testes/forward/README.md).
+
+**Posso usar dados reais do trabalho no ambiente Free?**
+Não, em nenhuma hipótese. O Free é laboratório e recebe apenas dados sintéticos.
+Identificador corporativo também não entra no repositório — há verificação
+automática que reprova, inclusive em nome de pasta.
+
+**O que são as pastas com prefixo `x_`?**
+Extensões criadas aqui, que o Genie Code **não** carrega sozinho. Precisam de
+`@`/Add context, import ou execução explícita. O prefixo existe justamente para
+que ninguém as confunda com estrutura nativa da plataforma.
+
+**Encontrei um erro no código de um helper. Onde corrijo?**
+Em `ambiente_fonte/.assistant/x_snippets/` ou `x_scripts/`, nunca no workspace.
+Depois rode o ciclo e, se o helper tiver lógica de Spark, verifique no runtime —
+o teste em `docs/testes/spark/` mostra como.
 
 ## Fontes oficiais
 

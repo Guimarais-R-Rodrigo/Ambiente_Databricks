@@ -5,6 +5,26 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-14 — documentação, sprint 2 de 6
+
+### Adicionado
+
+1. (Claude) `README.md`: percurso de primeira hora em cinco passos, do zero até
+   uma alteração publicada e conferida no workspace.
+2. (Claude) Seção de comandos com **saída real capturada de execução** — padrão
+   que os sprints seguintes replicam. Retorno redigido à mão foi descartado como
+   prática: envelhece sem avisar.
+3. (Claude) FAQ com oito perguntas, entre elas as três que o diagnóstico
+   apontou como não respondidas em lugar nenhum: por que duas pastas com o mesmo
+   conteúdo, o que acontece ao editar direto no workspace, e por que a skill
+   alterada continua se comportando como antes.
+
+### Corrigido
+
+1. (Claude) O diagrama de ciclo de vida ainda citava publicação pelo engine do
+   Hub, decisão supersedida pelo ADR-0005. Passou a refletir os comandos reais,
+   incluindo a conferência, que antes não aparecia no fluxo.
+
 ## 2026-08-14 — documentação, sprint 1 de 6
 
 ### Adicionado
