@@ -5,6 +5,30 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-14
+
+### Adicionado
+
+1. (Claude) `docs/testes/forward/resultados/2026-08-14_rodada1.md`: resultado da
+   rodada 1 dos forward tests executada pelo Rodrigo no Genie Code do Free —
+   **33 PASS, 2 FAIL, 1 pendente** de 36. Coleta automatizada via arquivos de
+   evidência em `x_lab/forward_tests/` lidos por CLI.
+
+### Notas
+
+- As `description` do pacote auditado pelo Codex se mostraram bem calibradas:
+  **12/12 casos negativos corretos**, sem nenhuma das colisões previstas
+  (drift, materialização, deterioração, auditoria×execução); em 11 deles o
+  Genie ainda escolheu a skill ideal do desvio. Nenhuma description foi
+  alterada.
+- As 2 falhas (`10P`, `11P`, ambas com resultado "nenhuma") concentraram-se nas
+  skills que dependem de artefato no chat: os prompts citavam "este notebook"/
+  "este stack trace" sem que existissem — defeito do instrumento, não do
+  ambiente. Prompts v2 autocontidos aplicados no roteiro para a rodada 2
+  (`07M`, `10P`, `10N`, `11P`, `11N`).
+- Confirmado que skills nativas do Databricks (`data-sampling`) coexistem com as
+  `rodrigo-*` no mesmo chat, sem conflito de seleção.
+
 ## 2026-08-13
 
 ### Adicionado

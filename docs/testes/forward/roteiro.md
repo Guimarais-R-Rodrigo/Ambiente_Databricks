@@ -99,6 +99,12 @@ copie-a para um bloco de notas e, no final, cole todas de uma vez para o Claude.
 
 Nos negativos, indicamos qual skill *idealmente* seria carregada no lugar.
 
+> **Rodada 2 (pendente):** refaça apenas `07M`, `10P`, `10N`, `11P` e `11N`.
+> Os blocos de 10 e 11 foram reescritos como **v2** (artefato embutido no
+> prompt); `07M` apenas não teve o arquivo gravado na rodada 1. Os demais 31
+> testes passaram e continuam válidos — ver
+> [resultados/2026-08-14_rodada1.md](resultados/2026-08-14_rodada1.md).
+
 ### Skill 1 — rodrigo-eda-profissional
 
 #### `01P` — positivo (esperado: carregar `rodrigo-eda-profissional`)
@@ -418,9 +424,18 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 #### `10P` — positivo (esperado: carregar `rodrigo-comentar-notebook`)
 
+> **v2 (rodada 2)** — prompt agora autocontido: na rodada 1 o pedido citava um
+> notebook que não existia no chat e nenhuma skill foi carregada.
+
 Mensagem 1:
 ```text
-Adicione células %md antes e depois de cada bloco deste notebook de EDA, explicando objetivo, entradas, resultado e próximo passo, sem poluir o fluxo.
+Este é um bloco do meu notebook de EDA:
+
+df = spark.table("catalogo.crm.clientes_pf")
+resumo = df.groupBy("uf").agg(F.count("*").alias("qtd"), F.avg("renda").alias("renda_media"))
+display(resumo.orderBy(F.desc("qtd")).limit(20))
+
+Adicione células %md antes e depois desse bloco, explicando objetivo, entradas, resultado e próximo passo, sem poluir o fluxo.
 ```
 Mensagem 2:
 ```text
@@ -429,9 +444,17 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 #### `10N` — negativo, colisão "explicar" (esperado: NÃO carregar; ideal: `rodrigo-tutor-databricks`)
 
+> **v2 (rodada 2)** — prompt autocontido (mesmo motivo do `10P`).
+
 Mensagem 1:
 ```text
-Me explique linha a linha o que este notebook PySpark faz, como se fosse uma aula para quem está aprendendo Spark.
+Estou aprendendo Spark e encontrei este código:
+
+df = spark.table("catalogo.crm.clientes_pf")
+resumo = df.groupBy("uf").agg(F.count("*").alias("qtd"), F.avg("renda").alias("renda_media"))
+display(resumo.orderBy(F.desc("qtd")).limit(20))
+
+Me explique linha a linha o que ele faz, como se fosse uma aula para quem está começando.
 ```
 Mensagem 2:
 ```text
@@ -453,9 +476,17 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 #### `11P` — positivo (esperado: carregar `rodrigo-tutor-databricks`)
 
+> **v2 (rodada 2)** — o stack trace agora vem embutido; na rodada 1 o pedido
+> citava um erro inexistente no chat e nenhuma skill foi carregada.
+
 Mensagem 1:
 ```text
-Me dê uma aula sobre este stack trace do Spark: o que causou o erro, como corrigir e uma analogia para eu nunca mais esquecer.
+Meu job falhou com este erro:
+
+org.apache.spark.SparkException: Job aborted due to stage failure: Task 14 in stage 8.0 failed 4 times, most recent failure: Lost task 14.3 in stage 8.0: ExecutorLostFailure (executor 6 exited caused by one of the running tasks) Reason: Container killed by YARN for exceeding memory limits. 12.4 GB of 12 GB physical memory used.
+Caused by: java.lang.OutOfMemoryError: Java heap space
+
+Me dê uma aula sobre isso: o que causou o erro, como corrigir e uma analogia para eu nunca mais esquecer.
 ```
 Mensagem 2:
 ```text
@@ -464,9 +495,16 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 #### `11N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-comentar-notebook`)
 
+> **v2 (rodada 2)** — prompt autocontido (mesmo motivo do `11P`).
+
 Mensagem 1:
 ```text
-Adicione markdown profissional de documentação neste notebook para o time entender cada etapa.
+Este é o trecho final do meu notebook de scoring:
+
+scores = modelo.transform(features)
+scores.write.mode("overwrite").saveAsTable("catalogo.crm.scores_propensao")
+
+Adicione markdown profissional de documentação em volta dele para o time entender cada etapa.
 ```
 Mensagem 2:
 ```text
