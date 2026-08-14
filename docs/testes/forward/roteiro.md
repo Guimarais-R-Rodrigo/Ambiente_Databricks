@@ -99,11 +99,10 @@ copie-a para um bloco de notas e, no final, cole todas de uma vez para o Claude.
 
 Nos negativos, indicamos qual skill *idealmente* seria carregada no lugar.
 
-> **Rodada 2 (pendente):** refaça apenas `07M`, `10P`, `10N`, `11P` e `11N`.
-> Os blocos de 10 e 11 foram reescritos como **v2** (artefato embutido no
-> prompt); `07M` apenas não teve o arquivo gravado na rodada 1. Os demais 31
-> testes passaram e continuam válidos — ver
-> [resultados/2026-08-14_rodada1.md](resultados/2026-08-14_rodada1.md).
+> **Esta seção já foi executada** (rodada 1, 2026-08-14: 33 PASS / 2 FAIL /
+> 1 pendente — ver [resultados](resultados/2026-08-14_rodada1.md)). Mantida
+> como histórico; **não precisa refazer**. O que falta executar está na
+> **seção 7 (RODADA 2)**, com apenas 5 testes.
 
 ### Skill 1 — rodrigo-eda-profissional
 
@@ -424,18 +423,9 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 #### `10P` — positivo (esperado: carregar `rodrigo-comentar-notebook`)
 
-> **v2 (rodada 2)** — prompt agora autocontido: na rodada 1 o pedido citava um
-> notebook que não existia no chat e nenhuma skill foi carregada.
-
 Mensagem 1:
 ```text
-Este é um bloco do meu notebook de EDA:
-
-df = spark.table("catalogo.crm.clientes_pf")
-resumo = df.groupBy("uf").agg(F.count("*").alias("qtd"), F.avg("renda").alias("renda_media"))
-display(resumo.orderBy(F.desc("qtd")).limit(20))
-
-Adicione células %md antes e depois desse bloco, explicando objetivo, entradas, resultado e próximo passo, sem poluir o fluxo.
+Adicione células %md antes e depois de cada bloco deste notebook de EDA, explicando objetivo, entradas, resultado e próximo passo, sem poluir o fluxo.
 ```
 Mensagem 2:
 ```text
@@ -444,17 +434,9 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 #### `10N` — negativo, colisão "explicar" (esperado: NÃO carregar; ideal: `rodrigo-tutor-databricks`)
 
-> **v2 (rodada 2)** — prompt autocontido (mesmo motivo do `10P`).
-
 Mensagem 1:
 ```text
-Estou aprendendo Spark e encontrei este código:
-
-df = spark.table("catalogo.crm.clientes_pf")
-resumo = df.groupBy("uf").agg(F.count("*").alias("qtd"), F.avg("renda").alias("renda_media"))
-display(resumo.orderBy(F.desc("qtd")).limit(20))
-
-Me explique linha a linha o que ele faz, como se fosse uma aula para quem está começando.
+Me explique linha a linha o que este notebook PySpark faz, como se fosse uma aula para quem está aprendendo Spark.
 ```
 Mensagem 2:
 ```text
@@ -476,17 +458,9 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 #### `11P` — positivo (esperado: carregar `rodrigo-tutor-databricks`)
 
-> **v2 (rodada 2)** — o stack trace agora vem embutido; na rodada 1 o pedido
-> citava um erro inexistente no chat e nenhuma skill foi carregada.
-
 Mensagem 1:
 ```text
-Meu job falhou com este erro:
-
-org.apache.spark.SparkException: Job aborted due to stage failure: Task 14 in stage 8.0 failed 4 times, most recent failure: Lost task 14.3 in stage 8.0: ExecutorLostFailure (executor 6 exited caused by one of the running tasks) Reason: Container killed by YARN for exceeding memory limits. 12.4 GB of 12 GB physical memory used.
-Caused by: java.lang.OutOfMemoryError: Java heap space
-
-Me dê uma aula sobre isso: o que causou o erro, como corrigir e uma analogia para eu nunca mais esquecer.
+Me dê uma aula sobre este stack trace do Spark: o que causou o erro, como corrigir e uma analogia para eu nunca mais esquecer.
 ```
 Mensagem 2:
 ```text
@@ -495,16 +469,9 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 #### `11N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-comentar-notebook`)
 
-> **v2 (rodada 2)** — prompt autocontido (mesmo motivo do `11P`).
-
 Mensagem 1:
 ```text
-Este é o trecho final do meu notebook de scoring:
-
-scores = modelo.transform(features)
-scores.write.mode("overwrite").saveAsTable("catalogo.crm.scores_propensao")
-
-Adicione markdown profissional de documentação em volta dele para o time entender cada etapa.
+Adicione markdown profissional de documentação neste notebook para o time entender cada etapa.
 ```
 Mensagem 2:
 ```text
@@ -559,7 +526,105 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 ---
 
-## 7. Referências
+## 7. RODADA 2 — refaça apenas estes 5 testes
+
+> **É só esta seção que você precisa executar agora.** A seção 6 acima já foi
+> concluída (rodada 1: 33 PASS / 2 FAIL / 1 pendente) e fica preservada como
+> histórico. Nenhuma `description` de skill foi alterada — por isso os 31
+> testes aprovados continuam valendo e não precisam ser repetidos.
+
+Mesmo procedimento de sempre: **chat novo → Mensagem 1 → Mensagem 2**. Os IDs
+aqui terminam em `-r2`, então as evidências da rodada 1 não são sobrescritas.
+
+O que mudou nos testes 10 e 11: na rodada 1 os prompts citavam "este notebook"
+e "este stack trace" sem que existissem no chat, e o Genie não carregou skill
+nenhuma. Agora o artefato vem **embutido no próprio prompt**.
+
+### `07M-r2` — menção a `rodrigo-monitoramento-modelo`
+
+*(na rodada 1 o teste foi feito, mas o arquivo de registro não foi gravado)*
+
+Mensagem 1:
+```text
+@rodrigo-monitoramento-modelo desenhe os thresholds de alerta para o modelo em produção.
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/07M-r2.md com uma única linha, no formato "07M-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+### `10P-r2` — positivo (esperado: carregar `rodrigo-comentar-notebook`)
+
+Mensagem 1:
+```text
+Este é um bloco do meu notebook de EDA:
+
+df = spark.table("catalogo.crm.clientes_pf")
+resumo = df.groupBy("uf").agg(F.count("*").alias("qtd"), F.avg("renda").alias("renda_media"))
+display(resumo.orderBy(F.desc("qtd")).limit(20))
+
+Adicione células %md antes e depois desse bloco, explicando objetivo, entradas, resultado e próximo passo, sem poluir o fluxo.
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/10P-r2.md com uma única linha, no formato "10P-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+### `10N-r2` — negativo, colisão "explicar" (esperado: NÃO carregar; ideal: `rodrigo-tutor-databricks`)
+
+Mensagem 1:
+```text
+Estou aprendendo Spark e encontrei este código:
+
+df = spark.table("catalogo.crm.clientes_pf")
+resumo = df.groupBy("uf").agg(F.count("*").alias("qtd"), F.avg("renda").alias("renda_media"))
+display(resumo.orderBy(F.desc("qtd")).limit(20))
+
+Me explique linha a linha o que ele faz, como se fosse uma aula para quem está começando.
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/10N-r2.md com uma única linha, no formato "10N-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+### `11P-r2` — positivo (esperado: carregar `rodrigo-tutor-databricks`)
+
+Mensagem 1:
+```text
+Meu job falhou com este erro:
+
+org.apache.spark.SparkException: Job aborted due to stage failure: Task 14 in stage 8.0 failed 4 times, most recent failure: Lost task 14.3 in stage 8.0: ExecutorLostFailure (executor 6 exited caused by one of the running tasks) Reason: Container killed by YARN for exceeding memory limits. 12.4 GB of 12 GB physical memory used.
+Caused by: java.lang.OutOfMemoryError: Java heap space
+
+Me dê uma aula sobre isso: o que causou o erro, como corrigir e uma analogia para eu nunca mais esquecer.
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/11P-r2.md com uma única linha, no formato "11P-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+### `11N-r2` — negativo (esperado: NÃO carregar; ideal: `rodrigo-comentar-notebook`)
+
+Mensagem 1:
+```text
+Este é o trecho final do meu notebook de scoring:
+
+scores = modelo.transform(features)
+scores.write.mode("overwrite").saveAsTable("catalogo.crm.scores_propensao")
+
+Adicione markdown profissional de documentação em volta dele para o time entender cada etapa.
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/11N-r2.md com uma única linha, no formato "11N-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+Ao terminar os 5, avise o Claude: ele coleta os arquivos `-r2`, fecha a tabela
+da rodada 2 e conclui o gate de roteamento.
+
+---
+
+## 8. Referências
 
 - Método e critérios de veredito: `.claude/skills/forward-test-skills/SKILL.md`
 - Tabela de resultados (preenchida pelo Claude): `template_resultados.md` →
