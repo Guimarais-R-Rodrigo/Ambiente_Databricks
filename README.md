@@ -90,13 +90,21 @@ python tools/render_simulado.py --write       # gera Novo_Ambiente_Simulado/
 | 0 | Bootstrap: git + canônicos + `.claude/` | ✅ concluída |
 | 1 | `ambiente_fonte/` + bateria de validação local | ✅ concluída |
 | 2 | Render do `Novo_Ambiente_Simulado/` | ✅ concluída |
-| 3 | Publicação no Free (engine do Hub) + gates pendentes do Codex | ⏳ próxima |
+| 3 | Publicação no Free + gates do Codex: Spark serverless (64/64) e forward tests (36/36) | ✅ concluída¹ |
 | 4 | Matriz Free vs. trabalho + runbook de replicação | ⏳ |
 | 5 | Camada squad (`Workspace/.assistant/skills/`) + revisão dos prompts | ⏳ |
 
-Gates herdados da auditoria do Codex (a executar na fase 3): testes Spark no runtime
-real, forward tests das 12 skills (positivo, negativo e `@menção` em chat novo) e
-fixação de dependências opcionais por workflow.
+Gates herdados da auditoria do Codex, todos verificados no Databricks Free:
+
+| Gate | Resultado |
+|---|---|
+| Testes Spark no runtime real | ✅ **64 PASS / 0 FAIL** — [detalhes](docs/testes/spark/README.md) (revelou e corrigiu 3 defeitos de runtime) |
+| Forward tests das 12 skills (positivo, negativo, `@menção`) | ✅ **36/36 PASS** — [detalhes](docs/testes/forward/README.md) (sem alterar nenhuma `description`) |
+| Dependências opcionais fixadas e testadas | ⏳ por projeto consumidor (7 módulos ML) |
+
+¹ Fase 3 concluída no essencial. Itens abertos: fixação das dependências
+opcionais por workflow e a troca do `import-dir` manual pelo fluxo governado do
+engine `databricks-genie` do Hub (skill `publicar-free`, ADR-0002).
 
 ## Fontes oficiais
 

@@ -15,9 +15,9 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
    evidência em `x_lab/forward_tests/` lidos por CLI.
 
 2. (Claude) `docs/testes/forward/resultados/2026-08-14_rodada2.md`: rodada 2
-   (5 testes com prompts autocontidos, IDs `-r2`) — **4 PASS, 0 FAIL,
-   1 sem registro** (`11P-r2`). Consolidado das duas rodadas: 35/36 aprovados,
-   negativos 12/12, menções 12/12.
+   (5 testes com prompts autocontidos, IDs `-r2`) — **5 PASS, 0 FAIL**.
+   **Gate de roteamento FECHADO: 36/36 PASS** (positivos 12/12, negativos
+   12/12, menções 12/12), sem nenhuma alteração de `description`.
 
 ### Notas
 
