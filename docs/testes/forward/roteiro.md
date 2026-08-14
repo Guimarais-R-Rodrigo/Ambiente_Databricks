@@ -23,15 +23,18 @@ sobre as zonas de colisão reais entre as descriptions (drift aparece em 3 skill
 mais ensinam.
 
 Duas coisas que este teste **não** avalia: a qualidade da resposta do Genie
-(irrelevante aqui) e a execução de código (as tabelas citadas nos prompts são
-fictícias de propósito — nada será executado de verdade).
+(irrelevante aqui) e a execução de código. As tabelas citadas nos prompts
+(`catalogo.crm.*`) são **fictícias de propósito**: o roteamento acontece antes
+de qualquer tabela ser tocada, nada é executado, nenhum compute é consumido.
+Se o Genie disser "não encontrei a tabela", tudo bem — anote a skill carregada
+e siga.
 
 ## 2. Quem faz o quê
 
 | Ator | Responsabilidade |
 |---|---|
-| **Você** | abrir um chat novo por teste, colar 2 mensagens prontas (deste roteiro), e nada mais |
-| **Genie Code** | escolher a skill (mensagem 1) e gravar o resultado em um arquivo no workspace (mensagem 2) |
+| **Você** | abrir um chat novo por teste e colar as 2 mensagens prontas do bloco do teste |
+| **Genie Code** | escolher a skill (Mensagem 1) e gravar o resultado em um arquivo no workspace (Mensagem 2) |
 | **Claude** | criou este roteiro; depois coleta os arquivos via CLI, preenche a tabela de resultados, diagnostica as colisões, corrige as descriptions e republica para a rodada 2 |
 
 ## 3. Antes de começar (já está tudo pronto)
@@ -44,9 +47,9 @@ fictícias de propósito — nada será executado de verdade).
 
 ```mermaid
 flowchart LR
-  A["1. Você:\nchat NOVO"] --> B["2. Você:\ncola a MENSAGEM 1\n(prompt do teste)"]
+  A["1. Você:\nchat NOVO"] --> B["2. Você:\ncola a MENSAGEM 1\ndo bloco do teste"]
   B --> C["3. Genie:\ncarrega (ou não)\numa skill e responde"]
-  C --> D["4. Você:\ncola a MENSAGEM 2\n(registro, com o ID)"]
+  C --> D["4. Você:\ncola a MENSAGEM 2\ndo mesmo bloco"]
   D --> E["5. Genie:\ngrava o arquivo\n<ID>.md no workspace"]
   E --> A
 ```
@@ -55,248 +58,470 @@ flowchart LR
 obrigatório a cada teste: skills não recarregam em chat usado, e um chat
 reaproveitado contamina o teste seguinte.
 
-**Passo 2 — mensagem 1.** Copie o prompt do teste (seção 7 abaixo) e envie.
-Nada mais junto: sem anexos, sem `@`, sem comentários seus.
+**Passo 2 — Mensagem 1.** Copie a "Mensagem 1" do bloco do teste (seção 6) e
+envie. Nada mais junto: sem anexos, sem comentários seus.
 
 **Passo 3 — Genie responde.** Você não precisa ler a resposta com atenção. Se
 quiser, observe o indicador de skill na interface (é a verdade definitiva em
 caso de dúvida).
 
-**Passo 4 — mensagem 2.** No **mesmo chat**, copie o texto abaixo, troque
-`<ID>` pelo código do teste (ele está no título de cada bloco, ex.: `01P`) e
-envie:
+**Passo 4 — Mensagem 2.** No **mesmo chat**, copie a "Mensagem 2" do mesmo
+bloco e envie. O ID do teste já está preenchido nela — é só copiar e colar.
 
-```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/<ID>.md com uma única linha, no formato "<ID>: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
-```
-
-Por que em duas mensagens? Porque o roteamento acontece na mensagem 1 — se o
+Por que em duas mensagens? Porque o roteamento acontece na Mensagem 1 — se o
 pedido de registro estivesse nela, as palavras "skill" e "criar arquivo"
 puxariam `rodrigo-auditoria-skills` e `rodrigo-pipeline-builder`, contaminando
-o teste. Na mensagem 2 a escolha já aconteceu; o pedido é inofensivo.
+o teste. Na Mensagem 2 a escolha já aconteceu; o pedido é inofensivo.
 
 **Passo 5 — Genie grava o arquivo.** Pronto, próximo teste. Se o Genie disser
 que não consegue criar arquivos, sem problema: ele responderá a linha no chat —
 copie-a para um bloco de notas e, no final, cole todas de uma vez para o Claude.
 
-> **Dica no 1º teste:** depois da mensagem 2 do teste `01P`, avise o Claude
+> **Dica no 1º teste:** depois da Mensagem 2 do teste `01P`, avise o Claude
 > ("criou?"). Ele confere pela CLI em segundos se o arquivo apareceu — assim
 > você já sabe se o plano A (arquivos) funciona ou se segue no plano B (colar
 > linhas no final).
 
-## 5. Exemplo completo (teste 01P, do início ao fim)
-
-1. Você abre um chat novo.
-2. Você cola e envia:
-   *"Faça uma EDA completa da tabela catalogo.crm.clientes_pf: granularidade, chaves, qualidade de dados, distribuições e um relatório executivo ao final."*
-3. O Genie responde (esperado: carregando `rodrigo-eda-profissional`).
-4. Você cola a mensagem de registro trocando `<ID>` por `01P` e envia.
-5. O Genie cria `/…/x_lab/forward_tests/01P.md` com a linha
-   `01P: rodrigo-eda-profissional`.
-6. Você abre um chat novo e passa ao `01N`.
-
-## 6. Depois dos 36 testes — o que acontece
+## 5. Depois dos 36 testes — o que acontece
 
 1. **Você** avisa o Claude: "terminei" (ou cola as linhas, se foi o plano B).
 2. **Claude** coleta os 36 arquivos via CLI, preenche
    `resultados/<data>_rodada1.md`, e classifica cada teste em PASS/FAIL.
 3. **Claude** ajusta a `description` de cada skill que colidiu (no
    `ambiente_fonte/`), valida, re-renderiza o simulado e republica no workspace.
-4. **Você** repete **apenas os testes que falharam** (chats novos) — rodada 2.
+4. **Você** repete **apenas os testes que falharem** (chats novos) — rodada 2.
 5. Meta: 36/36 PASS → gate fechado → próximo passo é o runbook de replicação
    para o trabalho.
 
 ---
 
-## 7. Os 36 testes
+## 6. Os 36 testes — copie a Mensagem 1, depois a Mensagem 2
 
-Cada bloco tem o ID (para a mensagem 2) e o prompt (mensagem 1) pronto para
-copiar. Nos negativos, indicamos qual skill *idealmente* seria carregada no
-lugar — anote se for outra: essa informação calibra as descriptions.
+Nos negativos, indicamos qual skill *idealmente* seria carregada no lugar.
 
 ### Skill 1 — rodrigo-eda-profissional
 
-**`01P` — positivo (esperado: carregar `rodrigo-eda-profissional`):**
+#### `01P` — positivo (esperado: carregar `rodrigo-eda-profissional`)
+
+Mensagem 1:
 ```text
 Faça uma EDA completa da tabela catalogo.crm.clientes_pf: granularidade, chaves, qualidade de dados, distribuições e um relatório executivo ao final.
 ```
-**`01N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-cross-eda-ml`):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/01P.md com uma única linha, no formato "01P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `01N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-cross-eda-ml`)
+
+Mensagem 1:
 ```text
 Já tenho os EDAs prontos de clientes, transações e produtos. Consolide os três, avalie se os joins são viáveis e diga se estou pronto para modelar.
 ```
-**`01M` — menção (esperado: carregar):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/01N.md com uma única linha, no formato "01N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `01M` — menção (esperado: carregar)
+
+Mensagem 1:
 ```text
 @rodrigo-eda-profissional faça o perfil inicial da tabela catalogo.crm.contas.
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/01M.md com uma única linha, no formato "01M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 2 — rodrigo-cross-eda-ml
 
-**`02P` — positivo (esperado: carregar `rodrigo-cross-eda-ml`):**
+#### `02P` — positivo (esperado: carregar `rodrigo-cross-eda-ml`)
+
+Mensagem 1:
 ```text
 Cruze os resultados dos EDAs das tabelas clientes e cartões, avalie a viabilidade do join por CPF, o alinhamento temporal e a prontidão para ML.
 ```
-**`02N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-eda-profissional`):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/02P.md com uma única linha, no formato "02P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `02N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-eda-profissional`)
+
+Mensagem 1:
 ```text
 Explore a tabela catalogo.crm.cartoes e me diga como está a qualidade e a distribuição das variáveis.
 ```
-**`02M` — menção (esperado: carregar):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/02N.md com uma única linha, no formato "02N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `02M` — menção (esperado: carregar)
+
+Mensagem 1:
 ```text
 @rodrigo-cross-eda-ml avalie a complementaridade de sinal entre as fontes A e B.
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/02M.md com uma única linha, no formato "02M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 3 — rodrigo-feature-engineering
 
-**`03P` — positivo (esperado: carregar `rodrigo-feature-engineering`):**
+#### `03P` — positivo (esperado: carregar `rodrigo-feature-engineering`)
+
+Mensagem 1:
 ```text
 Monte o plano de features para prever churn de previdência, com joins point-in-time, prevenção de leakage e materialização em feature table no Unity Catalog.
 ```
-**`03N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-baseline-ml`):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/03P.md com uma única linha, no formato "03P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `03N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-baseline-ml`)
+
+Mensagem 1:
 ```text
 Treine um primeiro modelo LightGBM para churn com split temporal e registre tudo no MLflow.
 ```
-**`03M` — menção (esperado: carregar):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/03N.md com uma única linha, no formato "03N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `03M` — menção (esperado: carregar)
+
+Mensagem 1:
 ```text
 @rodrigo-feature-engineering especifique features de recência e frequência para o target churn_90d.
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/03M.md com uma única linha, no formato "03M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 4 — rodrigo-validacao-estatistica
 
-**`04P` — positivo (esperado: carregar `rodrigo-validacao-estatistica`):**
+#### `04P` — positivo (esperado: carregar `rodrigo-validacao-estatistica`)
+
+Mensagem 1:
 ```text
 Antes da regressão, verifique normalidade dos resíduos, homocedasticidade e VIF, com amostragem reprodutível e effect size.
 ```
-**`04N` — negativo, colisão "drift" (esperado: NÃO carregar; ideal: `rodrigo-monitoramento-modelo`):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/04P.md com uma única linha, no formato "04P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `04N` — negativo, colisão "drift" (esperado: NÃO carregar; ideal: `rodrigo-monitoramento-modelo`)
+
+Mensagem 1:
 ```text
 O PSI das features do modelo em produção subiu nos últimos dois meses. Configure alertas e me diga se é hora de retreinar.
 ```
-**`04M` — menção (esperado: carregar):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/04N.md com uma única linha, no formato "04N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `04M` — menção (esperado: carregar)
+
+Mensagem 1:
 ```text
 @rodrigo-validacao-estatistica compare as duas amostras e diga se a diferença é significativa.
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/04M.md com uma única linha, no formato "04M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 5 — rodrigo-baseline-ml
 
-**`05P` — positivo (esperado: carregar `rodrigo-baseline-ml`):**
+#### `05P` — positivo (esperado: carregar `rodrigo-baseline-ml`)
+
+Mensagem 1:
 ```text
 Treine baselines de classificação comparando LightGBM e XGBoost com split temporal anti-leakage, MLflow e scorecard final.
 ```
-**`05N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-explainability`):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/05P.md com uma única linha, no formato "05P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `05N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-explainability`)
+
+Mensagem 1:
 ```text
 Quais features mais pesam no score do meu modelo de propensão? Quero a visão global e dois exemplos locais para o comitê.
 ```
-**`05M` — menção (esperado: carregar):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/05N.md com uma única linha, no formato "05N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `05M` — menção (esperado: carregar)
+
+Mensagem 1:
 ```text
 @rodrigo-baseline-ml rode a suite de baseline para o target inadimplencia_90d.
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/05M.md com uma única linha, no formato "05M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 6 — rodrigo-explainability
 
-**`06P` — positivo (esperado: carregar `rodrigo-explainability`):**
+#### `06P` — positivo (esperado: carregar `rodrigo-explainability`)
+
+Mensagem 1:
 ```text
 Gere a análise SHAP global e local do modelo de propensão a consórcio e um model card com limitações para público executivo.
 ```
-**`06N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-monitoramento-modelo`):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/06P.md com uma única linha, no formato "06P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `06N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-monitoramento-modelo`)
+
+Mensagem 1:
 ```text
 Implemente o acompanhamento mensal de performance do modelo com alertas de degradação e painel.
 ```
-**`06M` — menção (esperado: carregar):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/06N.md com uma única linha, no formato "06N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `06M` — menção (esperado: carregar)
+
+Mensagem 1:
 ```text
 @rodrigo-explainability explique os drivers do score do cliente 12345 (dados sintéticos).
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/06M.md com uma única linha, no formato "06M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 7 — rodrigo-monitoramento-modelo
 
-**`07P` — positivo (esperado: carregar `rodrigo-monitoramento-modelo`):**
+#### `07P` — positivo (esperado: carregar `rodrigo-monitoramento-modelo`)
+
+Mensagem 1:
 ```text
 Implemente monitoramento do modelo de churn: qualidade de dados, drift com PSI, performance mensal, calibração e regra de decisão de retreino.
 ```
-**`07N` — negativo, colisão "KS/drift" (esperado: NÃO carregar; ideal: `rodrigo-validacao-estatistica`):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/07P.md com uma única linha, no formato "07P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `07N` — negativo, colisão "KS/drift" (esperado: NÃO carregar; ideal: `rodrigo-validacao-estatistica`)
+
+Mensagem 1:
 ```text
 Num estudo pontual, rode um teste KS para comparar a distribuição de renda entre dois grupos de clientes e me dê intervalo de confiança.
 ```
-**`07M` — menção (esperado: carregar):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/07N.md com uma única linha, no formato "07N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `07M` — menção (esperado: carregar)
+
+Mensagem 1:
 ```text
 @rodrigo-monitoramento-modelo desenhe os thresholds de alerta para o modelo em produção.
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/07M.md com uma única linha, no formato "07M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 8 — rodrigo-pipeline-builder
 
-**`08P` — positivo (esperado: carregar `rodrigo-pipeline-builder`):**
+#### `08P` — positivo (esperado: carregar `rodrigo-pipeline-builder`)
+
+Mensagem 1:
 ```text
 Desenhe um pipeline bronze/silver/gold com Lakeflow Spark Declarative Pipelines, expectations de qualidade e um bundle com targets dev e prod.
 ```
-**`08N` — negativo, colisão "materialização" (esperado: NÃO carregar; ideal: `rodrigo-feature-engineering`):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/08P.md com uma única linha, no formato "08P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `08N` — negativo, colisão "materialização" (esperado: NÃO carregar; ideal: `rodrigo-feature-engineering`)
+
+Mensagem 1:
 ```text
 Materialize as features do modelo de churn numa feature table do Unity Catalog garantindo reuso idêntico entre treino e inferência.
 ```
-**`08M` — menção (esperado: carregar):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/08N.md com uma única linha, no formato "08N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `08M` — menção (esperado: carregar)
+
+Mensagem 1:
 ```text
 @rodrigo-pipeline-builder estruture a orquestração dos notebooks de scoring com Lakeflow Jobs.
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/08M.md com uma única linha, no formato "08M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 9 — rodrigo-analise-safra
 
-**`09P` — positivo (esperado: carregar `rodrigo-analise-safra`):**
+#### `09P` — positivo (esperado: carregar `rodrigo-analise-safra`)
+
+Mensagem 1:
 ```text
 Monte a análise de safras de originação de crédito com MOB, curvas de maturação, triângulo safra-calendário e alertas de deterioração.
 ```
-**`09N` — negativo, colisão "deterioração" (esperado: NÃO carregar; ideal: `rodrigo-monitoramento-modelo`):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/09P.md com uma única linha, no formato "09P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `09N` — negativo, colisão "deterioração" (esperado: NÃO carregar; ideal: `rodrigo-monitoramento-modelo`)
+
+Mensagem 1:
 ```text
 A inadimplência do portfólio subiu neste trimestre. O modelo de crédito degradou? Monte o acompanhamento contínuo com alertas.
 ```
-**`09M` — menção (esperado: carregar):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/09N.md com uma única linha, no formato "09N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `09M` — menção (esperado: carregar)
+
+Mensagem 1:
 ```text
 @rodrigo-analise-safra compare as safras de 2024 e 2025 em MOB equivalente.
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/09M.md com uma única linha, no formato "09M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 10 — rodrigo-comentar-notebook
 
-**`10P` — positivo (esperado: carregar `rodrigo-comentar-notebook`):**
+#### `10P` — positivo (esperado: carregar `rodrigo-comentar-notebook`)
+
+Mensagem 1:
 ```text
 Adicione células %md antes e depois de cada bloco deste notebook de EDA, explicando objetivo, entradas, resultado e próximo passo, sem poluir o fluxo.
 ```
-**`10N` — negativo, colisão "explicar" (esperado: NÃO carregar; ideal: `rodrigo-tutor-databricks`):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/10P.md com uma única linha, no formato "10P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `10N` — negativo, colisão "explicar" (esperado: NÃO carregar; ideal: `rodrigo-tutor-databricks`)
+
+Mensagem 1:
 ```text
 Me explique linha a linha o que este notebook PySpark faz, como se fosse uma aula para quem está aprendendo Spark.
 ```
-**`10M` — menção (esperado: carregar):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/10N.md com uma única linha, no formato "10N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `10M` — menção (esperado: carregar)
+
+Mensagem 1:
 ```text
 @rodrigo-comentar-notebook documente este notebook para revisão do time.
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/10M.md com uma única linha, no formato "10M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 11 — rodrigo-tutor-databricks
 
-**`11P` — positivo (esperado: carregar `rodrigo-tutor-databricks`):**
+#### `11P` — positivo (esperado: carregar `rodrigo-tutor-databricks`)
+
+Mensagem 1:
 ```text
 Me dê uma aula sobre este stack trace do Spark: o que causou o erro, como corrigir e uma analogia para eu nunca mais esquecer.
 ```
-**`11N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-comentar-notebook`):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/11P.md com uma única linha, no formato "11P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `11N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-comentar-notebook`)
+
+Mensagem 1:
 ```text
 Adicione markdown profissional de documentação neste notebook para o time entender cada etapa.
 ```
-**`11M` — menção (esperado: carregar):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/11N.md com uma única linha, no formato "11N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `11M` — menção (esperado: carregar)
+
+Mensagem 1:
 ```text
 @rodrigo-tutor-databricks explique a diferença entre cache() e persist() com exemplos.
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/11M.md com uma única linha, no formato "11M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 12 — rodrigo-auditoria-skills
 
-**`12P` — positivo (esperado: carregar `rodrigo-auditoria-skills`):**
+#### `12P` — positivo (esperado: carregar `rodrigo-auditoria-skills`)
+
+Mensagem 1:
 ```text
 Audite este relatório de EDA contra o contrato da skill rodrigo-eda-profissional: completude, reprodutibilidade e score final com prioridades.
 ```
-**`12N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-eda-profissional`):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/12P.md com uma única linha, no formato "12P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `12N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-eda-profissional`)
+
+Mensagem 1:
 ```text
 Faça a análise exploratória da tabela catalogo.crm.propostas com foco em qualidade.
 ```
-**`12M` — menção (esperado: carregar):**
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/12N.md com uma única linha, no formato "12N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `12M` — menção (esperado: carregar)
+
+Mensagem 1:
 ```text
 @rodrigo-auditoria-skills avalie se a pasta da skill rodrigo-analise-safra segue o padrão Agent Skills.
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/x_lab/forward_tests/12M.md com uma única linha, no formato "12M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ---
 
-## 8. Referências
+## 7. Referências
 
 - Método e critérios de veredito: `.claude/skills/forward-test-skills/SKILL.md`
 - Tabela de resultados (preenchida pelo Claude): `template_resultados.md` →
