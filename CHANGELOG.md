@@ -5,6 +5,32 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-14 — documentação, sprint 5 de 6
+
+### Adicionado
+
+1. (Claude) `ambiente_fonte/README.md`: diagrama do trajeto fonte → simulado →
+   workspaces e a resposta direta a "por que duas pastas com o mesmo conteúdo" —
+   a fonte é neutra, o simulado acrescenta a camada `Users/<username>/` que muda
+   conforme o destino. Inclui o percurso completo de uma alteração.
+2. (Claude) `x_projects/README.md`: diagrama da descoberta hierárquica do
+   `AGENTS.md`, com as três consequências práticas — busca de baixo para cima,
+   diretórios sem o arquivo são apenas atravessados, e os arquivos encontrados
+   somam contexto em vez de se substituírem.
+3. (Claude) `x_scripts/README.md`: saída real de `data_quality_check` executada
+   em serverless sobre tabela sintética. O exemplo escolhido reprova por prazo de
+   atualização com todos os demais checks aprovados, o que evidencia que
+   `status: "fail"` reflete a política de limite configurada, não qualidade do
+   dado.
+4. (Claude) `x_snippets/README.md`: tabela de falhas de import com causa e
+   correção, montada a partir de erros reais do runtime, não de suposição.
+
+### Atualizado
+
+1. (Claude) O catálogo por pacote de `x_snippets` passa a apontar para o
+   catálogo por demanda, encerrando a duplicação que levaria as duas listas a
+   divergir na primeira alteração.
+
 ## 2026-08-14 — documentação, sprint 4 de 6
 
 ### Atualizado

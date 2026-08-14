@@ -21,6 +21,50 @@ from x_scripts.quick_profile import quick_profile
 profile = quick_profile("catalog.schema.table", sample_fraction=0.05, seed=42)
 ```
 
+## O que volta de verdade
+
+Saída real de `data_quality_check` sobre uma tabela sintética de 500 linhas,
+executada em compute serverless. Trecho, com a estrutura preservada:
+
+```json
+{
+  "status": "fail",
+  "score": 75,
+  "thresholds": { "null_warn": 5.0, "null_fail": 20.0, "freshness_days": 2.0 },
+  "checks": {
+    "row_count": 500,
+    "pk_uniqueness": { "columns": ["id_cliente"], "duplicate_rows": 0, "status": "pass" },
+    "nulls": {
+      "renda": { "count": 20, "pct": 4.0, "status": "pass" },
+      "uf":    { "count": 0,  "pct": 0.0, "status": "pass" }
+    },
+    "freshness": {
+      "column": "dt_referencia", "max_value": "2026-07-20",
+      "days_old": 25, "status": "fail"
+    }
+  },
+  "alerts": [
+    { "check": "freshness", "severity": "fail",
+      "message": "Latest dt_referencia is 25 days old; limit is 2.0." }
+  ]
+}
+```
+
+Este retorno ilustra bem o ponto mais importante do helper: **`status: "fail"`
+não significa dado ruim**. Aqui, chave sem duplicata e nulos dentro do limite —
+a reprovação veio do prazo de atualização, comparado contra um limite de dois
+dias que é política padrão do script, não exigência da plataforma. Uma tabela
+mensal reprovaria todo dia sob esse limite. Ajuste `thresholds` ao ritmo real da
+fonte antes de tratar o resultado como alerta.
+
+`quick_profile` devolve um dicionário com as chaves `table`, `total_rows`,
+`total_columns`, `sample_fraction`, `sample_seed`, `sample_rows`, `dtypes`,
+`null_summary_full_table`, `cardinality_sample`, `top_values_sample`,
+`numeric_summary_sample` e `date_range_sample`. Os sufixos importam e são
+deliberados: `_full_table` foi calculado sobre tudo, `_sample` saiu da amostra.
+Relatar uma cardinalidade de amostra como se fosse da tabela inteira é o erro
+que essa nomenclatura existe para evitar.
+
 | Script | Contrato atual |
 |---|---|
 | `quick_profile.py` | nulos/contagem na tabela completa; demais estatísticas em amostra declarada |

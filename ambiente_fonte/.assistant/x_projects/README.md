@@ -25,9 +25,36 @@ Use `x_projects` para guardar modelos. Para o contexto ativo, copie
 └── exemplo_churn_previdencia.md
 ```
 
+## Como a descoberta funciona
+
 Ao abrir um notebook ou arquivo, o Genie Code procura `AGENTS.md` e `CLAUDE.md` no
 diretório atual e sobe pela árvore de diretórios. Por isso, a localização do
 `AGENTS.md` define seu escopo. Não é necessário configurar essa descoberta.
+
+O diagrama mostra o que acontece ao abrir um notebook em `modelos/churn/`:
+
+```mermaid
+flowchart BT
+  N["notebooks/exploracao.py<br/><i>arquivo aberto</i>"]
+  D1["modelos/churn/<br/><b>AGENTS.md</b> ✓ encontrado"]
+  D2["modelos/<br/>sem AGENTS.md"]
+  D3["projeto/<br/><b>AGENTS.md</b> ✓ encontrado"]
+  D4["/Users/&lt;username&gt;/<br/>fim da busca"]
+  N --> D1 --> D2 --> D3 --> D4
+  D1 -.->|"regras específicas de churn"| C["contexto do chat"]
+  D3 -.->|"regras gerais do projeto"| C
+```
+
+Três consequências práticas. A busca é **de baixo para cima**, então o arquivo
+mais próximo do notebook é o mais específico. Diretórios sem `AGENTS.md` são
+apenas atravessados — não interrompem a subida. E como os arquivos encontrados
+somam contexto em vez de se substituírem, vale colocar no nível do projeto o que
+é geral e criar um `AGENTS.md` em subpasta somente quando aquele escopo tiver
+regras realmente diferentes.
+
+Um arquivo que fique apenas aqui em `x_projects/` nunca é descoberto: esta pasta
+guarda modelos. A descoberta só acontece depois que a cópia é renomeada para
+`AGENTS.md` e colocada na árvore do projeto real.
 
 ## Qual arquivo usar
 

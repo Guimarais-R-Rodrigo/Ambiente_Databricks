@@ -33,18 +33,38 @@ Para uma instalação no diretório do usuário, use o caminho parametrizado
 exemplo. Em serverless, confirme as regras atuais para dependências e reinicie o
 Python quando a instalação do notebook exigir.
 
-## Catálogo
+## Onde procurar um módulo
+
+O mapa completo — 54 módulos organizados por demanda, com função pública e
+dependências marcadas — está em
+[x_docs/catalogo_helpers.md](../x_docs/catalogo_helpers.md). É a única lista
+mantida; procure lá em vez de navegar pelas pastas.
+
+A divisão por pacote serve apenas para situar:
 
 | Pacote | Finalidade | Cuidados |
 |---|---|---|
-| `constants` | cores, estilos, emojis e formatação BR | a paleta é institucional/customizada, não Databricks |
-| `visual` | tema Plotly, cabeçalhos, badges, KPIs e índice | HTML gerado escapa texto fornecido pelo usuário |
+| `constants` | cores, estilos, emojis e formatação BR | a paleta é customizada, não Databricks |
+| `visual` | tema Plotly, cabeçalhos, badges, KPIs e índice | o HTML gerado escapa o texto recebido |
 | `spark` | nulos, amostragem, display, datas e PSI | ações Spark têm custo; declare amostra e referência |
-| `display` | correlação, distribuições e tabela estilizada | conversão ao driver sempre é limitada |
-| `ml` | baselines, validação, drift, SHAP, séries, survival e monitoramento | dependências são opcionais; valide versão/runtime |
+| `display` | correlação, distribuições e tabela estilizada | conversão ao driver é sempre limitada |
+| `ml` | baselines, validação, drift, SHAP, séries, survival e monitoramento | dependências opcionais; valide versão e runtime |
 
 Use `requirements-optional.txt` como inventário, não como lockfile universal. Instale
 somente o subconjunto necessário e registre versões no projeto consumidor.
+
+## Quando o import falha
+
+| Mensagem | Causa | Correção |
+|---|---|---|
+| `ModuleNotFoundError: No module named 'x_snippets'` | foi adicionada ao `sys.path` a pasta `x_snippets` | adicione a `.assistant`, que a contém |
+| `ModuleNotFoundError: No module named 'lightgbm'` (ou `xgboost`, `catboost`, `optuna`, `torch`) | dependência opcional exigida já no import | instale com versão fixada, ou use outro módulo do catálogo |
+| Import passa e o erro só aparece ao chamar a função | dependência opcional resolvida na chamada — caso de SHAP, lifelines, Prophet, UMAP, TabNet e ARIMA | mesma correção; o catálogo marca esses casos |
+| `NOT_SUPPORTED_WITH_SERVERLESS: PERSIST TABLE` | código novo chamando `cache()` em compute serverless | remova o cache; os helpers já operam sem ele |
+| `NameError: name 'spark' is not defined` | código novo contando com a variável global de notebook dentro de um módulo | resolva a sessão com `SparkSession.getActiveSession()` |
+
+As três últimas linhas vieram de falhas reais encontradas ao executar a
+biblioteca no runtime, não de suposição.
 
 ## Contrato de segurança
 
