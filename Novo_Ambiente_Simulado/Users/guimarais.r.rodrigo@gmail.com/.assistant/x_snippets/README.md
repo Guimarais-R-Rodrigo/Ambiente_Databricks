@@ -5,6 +5,10 @@
 Esta pasta preserva helpers reutilizáveis de notebook. Ela não é uma Agent Skill e
 nenhum módulo é carregado automaticamente. Importe somente o que o notebook usa.
 
+Para localizar o módulo a partir da demanda ("preciso calcular PSI", "preciso de
+split temporal"), consulte o [catálogo de helpers](../x_docs/catalogo_helpers.md),
+que cobre `x_snippets` e `x_scripts` e marca as dependências opcionais.
+
 ## Uso no Databricks
 
 Se `.assistant` estiver no diretório do projeto/repositório:

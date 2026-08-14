@@ -7,6 +7,19 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
 ## 2026-08-14
 
+### Adicionado (pacote de helpers — sprint 1 de 3)
+
+1. (Claude) ADR-0004: helpers passam a ser declarados explicitamente nas skills,
+   em vez de descobertos em tempo de chat. Levantamento que motivou a decisão:
+   **nenhum dos 12 `SKILL.md` citava um helper** — as 3 referências do pacote
+   estavam em templates auxiliares.
+2. (Claude) `ambiente_fonte/.assistant/x_docs/catalogo_helpers.md`: catálogo
+   demanda → módulo cobrindo os 54 helpers (47 `x_snippets` + 7 `x_scripts`),
+   com API pública, marcação de dependência opcional (exigida no import vs. na
+   chamada) e as restrições de runtime confirmadas no smoke test.
+3. (Claude) Referências cruzadas ao catálogo em `.assistant/README.md`,
+   `x_snippets/README.md` e `x_scripts/README.md`. Réplica do Free republicada.
+
 ### Adicionado
 
 1. (Claude) `docs/testes/forward/resultados/2026-08-14_rodada1.md`: resultado da

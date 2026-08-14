@@ -150,7 +150,12 @@ from x_snippets.constants.format_br import fmt_brl
 from x_scripts.quick_profile import quick_profile
 ```
 
-Consulte [x_snippets/README.md](x_snippets/README.md) e
+Para descobrir qual módulo atende a uma demanda, use o
+[catálogo de helpers](x_docs/catalogo_helpers.md): 54 módulos organizados por
+tarefa, com dependências opcionais e restrições de runtime marcadas. Cada
+`SKILL.md` já declara os helpers do próprio fluxo (ver ADR-0004 no repositório).
+
+Consulte também [x_snippets/README.md](x_snippets/README.md) e
 [x_scripts/README.md](x_scripts/README.md). As dependências em
 `x_snippets/requirements-optional.txt` são um inventário: instale só o subconjunto
 necessário e fixe versões no projeto consumidor.

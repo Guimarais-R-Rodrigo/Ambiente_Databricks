@@ -7,6 +7,9 @@ explícita depois de adicionar `.assistant` ao `sys.path`. Para produção, inco
 código ao projeto versionado, adicione testes e implante com um Declarative
 Automation Bundle.
 
+O mapa demanda → módulo, incluindo `x_snippets`, está no
+[catálogo de helpers](../x_docs/catalogo_helpers.md).
+
 ```python
 from pathlib import Path
 import sys
