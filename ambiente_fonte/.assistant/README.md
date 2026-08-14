@@ -235,9 +235,10 @@ flowchart TD
 
 ## MCP e integrações
 
-`x_config/mcp_servers.legacy.json` é apenas um artefato legado preservado. Ele **não
-configura MCP na Genie Code**. Faça integrações suportadas na página **Settings** da
-Genie Code e aplique o princípio do menor privilégio. Nunca armazene tokens no Git.
+Fora do escopo deste ecossistema: não há conexão MCP no laboratório nem no
+workspace do trabalho. O `x_config/mcp_servers.legacy.json` é resíduo do ambiente
+anterior, contém apenas uma lista vazia e não configura nada — ver
+[x_config/README.md](x_config/README.md). Nunca armazene tokens no Git.
 
 ## Validação antes de publicar
 
@@ -269,7 +270,6 @@ Genie Code e aplique o princípio do menor privilégio. Nunca armazene tokens no
 | `NOT_SUPPORTED_WITH_SERVERLESS` ao usar `cache()` | serverless não persiste; remova o cache ou rode em compute clássico |
 | `.py` abre como notebook e o import quebra | foi importado no formato errado; deve ser arquivo, não notebook |
 | arquivo apagado da fonte continua no workspace | a publicação sobrescreve mas não apaga; remova à mão e confira |
-| MCP não conecta | configure em Genie Code → Settings; o JSON legado em `x_config` não tem efeito |
 
 ## Fontes oficiais
 
