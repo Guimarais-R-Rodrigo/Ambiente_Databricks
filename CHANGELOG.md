@@ -5,6 +5,36 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-14 — documentação, sprint 3 de 6
+
+### Adicionado
+
+1. (Claude) Guia do ecossistema: tabela com o pedido que aciona cada uma das 12
+   skills sem precisar de `@`. As frases não foram inventadas — são as que
+   passaram nos forward tests. Acompanham as duas lições que os testes deram:
+   skill que trabalha sobre artefato não dispara sem o artefato no chat, e
+   vocabulário genérico vai para a skill errada.
+2. (Claude) Verificação de acesso à biblioteca com saída real, já que o import
+   não imprime nada e silêncio pode ser confundido com falha.
+
+### Atualizado
+
+1. (Claude) Tabela de solução de problemas ampliada de 7 para 12 sintomas,
+   incorporando o que apareceu durante os gates: `.py` importado como notebook,
+   `cache()` recusado em serverless, arquivo obsoleto sobrevivendo à publicação,
+   metadata em cache após editar skill, e nenhuma skill carregada por falta do
+   artefato citado.
+
+### Corrigido
+
+1. (Claude) `tools/render_simulado.py` copiava a árvore inteira, inclusive
+   artefatos de execução local. Rodar um helper dentro de `ambiente_fonte/` — o
+   que aconteceu ao capturar as saídas deste sprint — criava `__pycache__`, que
+   era renderizado e **publicado no workspace**. O `verify` não acusava, porque
+   compara fonte com remoto e o lixo estava nos dois. O render passa a ignorar
+   `__pycache__`, `.pyc`, `.pyo` e caches de ferramenta; fonte, simulado e
+   workspace foram limpos.
+
 ## 2026-08-14 — documentação, sprint 2 de 6
 
 ### Adicionado

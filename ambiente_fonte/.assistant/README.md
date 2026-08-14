@@ -106,6 +106,34 @@ A descoberta automática depende do campo `description` de cada `SKILL.md`. Use 
 menção `@` quando quiser seleção determinística. Textos como `/eda` ou `/baseline`
 são convenções pessoais, não comandos slash registrados.
 
+### O que digitar para acionar cada uma
+
+Os pedidos abaixo foram exercitados contra o roteamento real e cada um acionou a
+skill indicada sem precisar de `@`. Servem como referência de vocabulário: repare
+que o que decide a escolha é o termo técnico do domínio, não o nome da skill.
+
+| Skill acionada | Pedido que a aciona sozinha |
+|---|---|
+| eda-profissional | "Faça uma EDA completa da tabela `catalogo.crm.clientes_pf`: granularidade, chaves, qualidade de dados, distribuições e um relatório executivo ao final." |
+| cross-eda-ml | "Cruze os resultados dos EDAs de clientes e cartões, avalie a viabilidade do join por CPF, o alinhamento temporal e a prontidão para ML." |
+| feature-engineering | "Monte o plano de features para prever churn, com joins point-in-time, prevenção de leakage e materialização em feature table." |
+| validacao-estatistica | "Antes da regressão, verifique normalidade dos resíduos, homocedasticidade e VIF, com amostragem reprodutível e effect size." |
+| baseline-ml | "Treine baselines de classificação comparando LightGBM e XGBoost com split temporal anti-leakage, MLflow e scorecard final." |
+| explainability | "Gere a análise SHAP global e local do modelo de propensão e um model card com limitações para público executivo." |
+| monitoramento-modelo | "Implemente monitoramento do modelo: qualidade de dados, drift com PSI, performance mensal, calibração e regra de retreino." |
+| pipeline-builder | "Desenhe um pipeline bronze/silver/gold com Lakeflow, expectations de qualidade e um bundle com targets dev e prod." |
+| analise-safra | "Monte a análise de safras de originação com MOB, curvas de maturação, triângulo safra-calendário e alertas de deterioração." |
+| comentar-notebook | "Adicione células `%md` antes e depois deste bloco, explicando objetivo, entradas, resultado e próximo passo." |
+| tutor-databricks | "Me dê uma aula sobre este stack trace: o que causou o erro, como corrigir e uma analogia para eu não esquecer." |
+| auditoria-skills | "Audite este relatório de EDA contra o contrato da skill produtora: completude, reprodutibilidade e score com prioridades." |
+
+Duas observações que economizam tempo. As skills que trabalham sobre um artefato
+— `comentar-notebook` e `tutor-databricks` — precisam que o artefato esteja no
+chat: pedir para "explicar este notebook" sem o notebook anexado tende a não
+acionar skill nenhuma. E vocabulário genérico costuma ir para o lugar errado:
+"quais variáveis pesam mais no score", dito sem termo técnico, aciona
+monitoramento em vez de explicabilidade; citar SHAP resolve.
+
 ## Prompts que ensinam a pedir
 
 Os 16 arquivos de `x_prompts/` são briefings prontos. Cada um explica o que
@@ -152,6 +180,27 @@ from x_snippets.spark.safe_display import safe_display
 from x_snippets.constants.format_br import fmt_brl
 from x_scripts.quick_profile import quick_profile
 ```
+
+O import em si não imprime nada — silêncio aqui significa sucesso. Para confirmar
+que a biblioteca está mesmo acessível, chame algo sem custo de Spark:
+
+```python
+from x_snippets.constants.format_br import fmt_int, fmt_pct, fmt_brl
+
+print(fmt_int(3375674))
+print(fmt_pct(0.928))
+print(fmt_brl(12345.67))
+```
+
+```text
+3.375.674
+92,8%
+R$ 12.345,67
+```
+
+Se aparecer `ModuleNotFoundError: No module named 'x_snippets'`, o caminho
+adicionado ao `sys.path` foi o da pasta `x_snippets` em vez do da pasta
+`.assistant` que a contém — é o engano mais comum.
 
 Para descobrir qual módulo atende a uma demanda, use o
 [catálogo de helpers](x_docs/catalogo_helpers.md): 54 módulos organizados por
@@ -207,15 +256,20 @@ Genie Code e aplique o princípio do menor privilégio. Nunca armazene tokens no
 
 ## Solução de problemas
 
-| Sintoma | Verificação |
+| Sintoma | Causa provável e o que fazer |
 |---|---|
-| skill não aparece | path exato, frontmatter, novo chat e hard refresh |
-| skill errada é escolhida | melhore `description` ou use `@nome-da-skill` |
-| prompt não influencia a resposta | adicione o arquivo com `@`/Add context; `x_prompts` não é automático |
-| contexto do projeto não entra | renomeie a cópia para `AGENTS.md` e deixe-a no ancestral do arquivo aberto |
-| `x_snippets` não importa | adicione a pasta `.assistant`, não `x_snippets`, ao `sys.path` |
-| pacote falha em serverless | instale dependências no escopo suportado e confirme compatibilidade do runtime |
-| MCP não conecta | configure em Settings; ignore o JSON legado |
+| skill não aparece na lista | path exato, frontmatter válido, chat novo e recarga da página |
+| skill continua com o texto antigo depois de editada | metadata em cache: chat novo e, se persistir, recarregar a página |
+| skill errada é escolhida | vocabulário genérico demais no pedido; use termo técnico do domínio ou `@nome-da-skill` |
+| nenhuma skill é carregada | o pedido cita um artefato ("este notebook") que não está no chat; anexe-o com `@`/Add context |
+| prompt de `x_prompts` não influencia a resposta | não é automático: precisa ser adicionado com `@`/Add context |
+| contexto do projeto não entra | renomeie a cópia para `AGENTS.md` e deixe-a no diretório ancestral do arquivo aberto |
+| `ModuleNotFoundError: x_snippets` | foi adicionada ao `sys.path` a pasta `x_snippets`; o correto é a `.assistant` que a contém |
+| import de módulo de ML falha | dependência opcional ausente; confira a marcação no catálogo de helpers e instale com versão fixada |
+| `NOT_SUPPORTED_WITH_SERVERLESS` ao usar `cache()` | serverless não persiste; remova o cache ou rode em compute clássico |
+| `.py` abre como notebook e o import quebra | foi importado no formato errado; deve ser arquivo, não notebook |
+| arquivo apagado da fonte continua no workspace | a publicação sobrescreve mas não apaga; remova à mão e confira |
+| MCP não conecta | configure em Genie Code → Settings; o JSON legado em `x_config` não tem efeito |
 
 ## Fontes oficiais
 

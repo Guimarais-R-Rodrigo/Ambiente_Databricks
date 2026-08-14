@@ -33,6 +33,13 @@ CORPORATE_RE = re.compile(r"c\d{6}|corp\.|\.gov\.br", re.IGNORECASE)
 SOURCE = Path("ambiente_fonte")
 TARGET_ROOT = Path("Novo_Ambiente_Simulado")
 
+# Artefatos de execução local não são produto: rodar um helper dentro de
+# ambiente_fonte/ cria __pycache__, e sem este filtro o lixo era copiado para o
+# simulado e publicado no workspace.
+IGNORAR = shutil.ignore_patterns(
+    "__pycache__", "*.pyc", "*.pyo", ".pytest_cache", ".ruff_cache", ".DS_Store"
+)
+
 MARKER = (
     "# GERADO POR tools/render_simulado.py — NÃO EDITAR À MÃO\n\n"
     "Este diretório é derivado de `ambiente_fonte/`. Qualquer edição manual\n"
@@ -83,7 +90,7 @@ def main() -> int:
 
     for src, dst in plan:
         if src.is_dir():
-            shutil.copytree(src, dst)
+            shutil.copytree(src, dst, ignore=IGNORAR)
         else:
             shutil.copy2(src, dst)
 
