@@ -14,6 +14,7 @@ notebook [tools/spark_smoke_test.py](../../../tools/spark_smoke_test.py)
 | 3 (…004103) | 56 PASS / 8 FAIL | **3 defeitos reais do ambiente** (abaixo) |
 | 4 (…266634) | 62 PASS / 2 FAIL | restavam `cache()` em `quick_profile` e `drift_detector` |
 | 5 (…159902) | **64 PASS / 0 FAIL / 7 opcionais ausentes** | gate aprovado — [JSON bruto](resultados/2026-08-13_smoke_run5.json) |
+| 6 (…314130) | 64 PASS / 0 FAIL | regressão após parametrizar o caminho — [JSON bruto](resultados/2026-08-14_smoke_run6_parametrizado.json) |
 
 ## Defeitos reais encontrados e corrigidos no `ambiente_fonte/`
 
@@ -39,6 +40,13 @@ local com Python 3.12):
 `x_snippets/ml` só importam com as libs instaladas no ambiente do projeto
 consumidor (`x_snippets/requirements-optional.txt`). Testá-los com versões
 fixadas continua como gate específico por workflow.
+
+## Portabilidade
+
+O notebook resolve o caminho da biblioteca pelo usuário logado e aceita o widget
+`assistant_root` para sobrepor. Com isso roda também no workspace do trabalho,
+onde não há CLI: basta importá-lo e executar pela interface (passo 6.3 do
+[runbook de replicação](../../playbooks/replicacao-trabalho.md)).
 
 ## Reexecutar
 

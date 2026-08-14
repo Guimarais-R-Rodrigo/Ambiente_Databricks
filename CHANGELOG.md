@@ -7,6 +7,32 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
 ## 2026-08-14
 
+### Adicionado (fase 4 — replicação no trabalho)
+
+1. (Claude) `docs/playbooks/replicacao-trabalho.md`: runbook completo para o
+   workspace corporativo sem CLI — backup obrigatório antes de qualquer
+   remoção, três rotas de transporte com o que confirmar em cada uma, limpeza
+   do ambiente antigo, verificação de estrutura, testes de aceitação, rollback
+   e caminho de escala para squad.
+2. (Claude) Skill operacional `.claude/skills/replicar-trabalho/` com os
+   pré-requisitos verificáveis e os guardrails da operação.
+3. (Claude) `.claude/rules/free-vs-trabalho.md`: nova matriz de diferenças de
+   runtime já observadas (cache/persist, config de cluster, bibliotecas ML,
+   variável global `spark`).
+
+### Corrigido (fase 4)
+
+1. (Claude) `tools/spark_smoke_test.py` tinha o caminho da biblioteca fixo no
+   usuário do laboratório, o que o tornava inútil no trabalho. Passa a resolver
+   pelo usuário logado, com widget `assistant_root` para sobrepor. Regressão
+   executada no Free: 64 aprovações, nenhuma falha.
+2. (Claude) Vetor de vazamento fechado: identificador corporativo em **nome de
+   pasta** escapava à validação, que só lia conteúdo. Renderizar o simulado com
+   o username do trabalho criaria `Users/<identificador>/` e um `git add`
+   publicaria o identificador. Agora `tools/render_simulado.py` recusa username
+   com aparência corporativa e `tools/validate_assistant.py` verifica caminhos
+   além do conteúdo.
+
 ### Adicionado (pacote de helpers — sprints 2 e 3 de 3)
 
 1. (Claude) Seção `## Usar helpers da biblioteca` em 11 `SKILL.md`, cada uma com

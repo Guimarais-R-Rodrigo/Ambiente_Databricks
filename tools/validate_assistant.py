@@ -114,6 +114,19 @@ def check_instructions_size(root: Path, problems: list[str]) -> int:
     return size
 
 
+def check_path_hygiene(root: Path, problems: list[str]) -> None:
+    """Identificador corporativo em nome de arquivo/pasta escapa ao check de conteúdo.
+
+    Vetor real: renderizar o simulado com o username do trabalho cria
+    `Users/<identificador>/` e um `git add` publicaria o identificador no nome do
+    diretório, contra o ADR-0003.
+    """
+    for path in sorted(root.rglob("*")):
+        relative = path.relative_to(root)
+        if PERSONAL_RE.search(str(relative)):
+            problems.append(f"{relative}: identificador pessoal/corporativo no caminho")
+
+
 def check_text_hygiene(root: Path, problems: list[str]) -> None:
     for path in iter_files(root, ".md") + iter_files(root, ".py"):
         try:
@@ -146,6 +159,7 @@ def main() -> int:
     n_py = check_python_ast(root, problems)
     n_chars = check_instructions_size(root, problems)
     check_text_hygiene(root, problems)
+    check_path_hygiene(root, problems)
 
     print(f"raiz analisada     : {root}")
     print(f"skills             : {n_skills}")

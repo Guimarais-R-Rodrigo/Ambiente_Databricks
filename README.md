@@ -91,7 +91,7 @@ python tools/render_simulado.py --write       # gera Novo_Ambiente_Simulado/
 | 1 | `ambiente_fonte/` + bateria de validação local | ✅ concluída |
 | 2 | Render do `Novo_Ambiente_Simulado/` | ✅ concluída |
 | 3 | Publicação no Free + gates do Codex: Spark serverless (64/64) e forward tests (36/36) | ✅ concluída¹ |
-| 4 | Matriz Free vs. trabalho + runbook de replicação | ⏳ |
+| 4 | Matriz Free vs. trabalho + [runbook de replicação](docs/playbooks/replicacao-trabalho.md) | ✅ pronta para execução |
 | 5 | Camada squad (`Workspace/.assistant/skills/`) + revisão dos prompts | ⏳ |
 
 Gates herdados da auditoria do Codex, todos verificados no Databricks Free:

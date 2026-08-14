@@ -19,11 +19,17 @@ simulado e o workspace publicado seja vazio.
 from __future__ import annotations
 
 import argparse
+import re
 import shutil
 import sys
 from pathlib import Path
 
 DEFAULT_USERNAME = "guimarais.r.rodrigo@gmail.com"
+
+# O username do trabalho é identificador corporativo e não pode virar nome de
+# diretório versionado (ADR-0003). A replicação no trabalho copia o conteúdo da
+# subárvore renderizada, sem exigir render com o username de lá.
+CORPORATE_RE = re.compile(r"c\d{6}|corp\.|\.gov\.br", re.IGNORECASE)
 SOURCE = Path("ambiente_fonte")
 TARGET_ROOT = Path("Novo_Ambiente_Simulado")
 
@@ -44,6 +50,15 @@ def main() -> int:
     source = SOURCE.resolve()
     if not source.exists():
         print(f"FAIL fonte não encontrada: {source}")
+        return 1
+
+    if CORPORATE_RE.search(args.username):
+        print(
+            "FAIL username com aparência corporativa recusado (ADR-0003).\n"
+            "     Para replicar no trabalho, copie o conteúdo da subárvore já\n"
+            "     renderizada para /Users/<username-trabalho>/ — ver o runbook\n"
+            "     em docs/playbooks/replicacao-trabalho.md."
+        )
         return 1
 
     user_dir = TARGET_ROOT / "Users" / args.username

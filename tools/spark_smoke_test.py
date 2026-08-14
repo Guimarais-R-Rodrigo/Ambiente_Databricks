@@ -16,7 +16,17 @@ import random
 import sys
 import traceback
 
-ASSISTANT_ROOT = "/Workspace/Users/guimarais.r.rodrigo@gmail.com/.assistant"
+# O notebook roda em qualquer workspace: por padrão usa a pasta .assistant do
+# usuário logado. No workspace do trabalho não há CLI — executar pela UI, e
+# ajustar o widget apenas se a biblioteca estiver em outro caminho.
+dbutils.widgets.text("assistant_root", "", "Caminho da pasta .assistant (vazio = usuário logado)")
+
+ASSISTANT_ROOT = dbutils.widgets.get("assistant_root").strip()
+if not ASSISTANT_ROOT:
+    current_user = spark.sql("SELECT current_user()").first()[0]
+    ASSISTANT_ROOT = f"/Workspace/Users/{current_user}/.assistant"
+
+print(f"Biblioteca sob teste: {ASSISTANT_ROOT}")
 sys.path.insert(0, ASSISTANT_ROOT)
 
 # Dependências declaradas como opcionais no ecossistema (requirements-optional).
