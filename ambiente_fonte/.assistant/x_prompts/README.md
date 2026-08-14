@@ -28,6 +28,54 @@ reprodutíveis. Eles complementam, mas não substituem:
 O contexto selecionado persiste no chat. Para um tema diferente, prefira um novo
 chat para evitar que decisões antigas contaminem a resposta.
 
+## Um formulário do início ao fim
+
+O percurso abaixo usa `eda_rapida.md`. Vale para todos: muda o formulário,
+não o método.
+
+**Passo 1 — o modelo, como está no arquivo.** Cada `{{CAMPO}}` é uma decisão que
+você toma, não um enfeite. Trecho do bloco a colar:
+
+```text
+CONTEXTO
+- Tabela/DataFrame: {{TABELA_OU_DF}}
+- Objetivo de negócio: {{OBJETIVO}}
+- Foco: {{FOCO}}
+- Chave esperada: {{PK_OU_NAO_INFORMADO}}
+- Coluna temporal: {{COL_DATA_OU_NAO_INFORMADO}}
+- Limite de execução: {{TEMPO_CUSTO_OU_NAO_INFORMADO}}
+```
+
+**Passo 2 — o mesmo trecho preenchido.** Repare no uso de `NÃO INFORMADO`: ele
+comunica "eu não sei", que é diferente de deixar o campo em branco. Campo em
+branco a Genie Code tende a preencher sozinha, e passa a trabalhar sobre uma
+suposição que você não fez.
+
+```text
+CONTEXTO
+- Tabela/DataFrame: catalogo.crm.clientes_pf
+- Objetivo de negócio: avaliar se a base serve de população para um modelo de propensão a consórcio
+- Foco: completude das variáveis de renda e ocupação, e duplicidade de cliente
+- Chave esperada: id_cliente
+- Coluna temporal: dt_referencia
+- Limite de execução: leitura leve, sem varredura completa da tabela
+```
+
+**Passo 3 — anexe o recurso.** Antes de colar, adicione a tabela ao chat com
+**Add context** ou `@`. O formulário descreve o que fazer; ele não dá acesso ao
+dado. Sem o anexo, a resposta vem genérica.
+
+**Passo 4 — o que esperar de volta.** Pelo contrato declarado no próprio
+formulário, a resposta deve trazer um plano curto antes de qualquer execução, o
+quadro de dimensão/evidência/severidade/ação, e a lista do que ficou pendente.
+Se vier código executado sem plano prévio, o contrato não foi respeitado — vale
+recusar e pedir de novo apontando a etapa pulada.
+
+> **Retorno real ainda não capturado.** Uma execução verdadeira deste formulário
+> no Genie Code, com a resposta colada aqui, fecharia o exemplo. Enquanto não for
+> feita, o passo 4 descreve o contrato esperado em vez de mostrar o resultado —
+> preferimos assumir a lacuna a inventar uma resposta plausível.
+
 ## Catálogo
 
 | Tema | Arquivo | Skill recomendada |

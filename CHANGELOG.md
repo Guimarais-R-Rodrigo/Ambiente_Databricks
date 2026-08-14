@@ -5,6 +5,29 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-14 — documentação, sprint 4 de 6
+
+### Atualizado
+
+1. (Claude) `x_config/README.md`: passa a explicar o que é MCP e por que outras
+   ferramentas usam arquivo JSON, antes de dizer que aqui isso não vale. Um
+   arquivo de configuração que não configura nada, sem mensagem de erro que
+   explique, justifica o aviso. Inclui os passos da configuração real e a
+   proibição de segredos em pasta versionada.
+2. (Claude) `.claude/skills/README.md`: explicita a distinção entre as duas
+   famílias de skill do projeto — as daqui constroem o ecossistema, as
+   `rodrigo-*` são o ecossistema. Acrescenta como uma skill é acionada e como
+   criar outra.
+3. (Claude) `x_prompts/README.md`: percurso completo de um formulário, do modelo
+   ao preenchido, com a explicação de por que `NÃO INFORMADO` difere de campo
+   vazio e de como reconhecer resposta que ignorou o contrato.
+
+### Pendente
+
+- O passo 4 do percurso de `x_prompts` descreve o contrato esperado em vez de
+  mostrar retorno real: falta uma execução no Genie Code. Marcado no próprio
+  arquivo; resposta plausível não foi inventada para preencher a lacuna.
+
 ## 2026-08-14 — documentação, sprint 3 de 6
 
 ### Adicionado
