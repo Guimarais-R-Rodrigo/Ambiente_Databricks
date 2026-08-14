@@ -60,6 +60,18 @@ Revisar dados sensíveis: explicações locais podem revelar atributos. Agregar,
 
 Substituir thresholds fixos dos templates por critérios do modelo, população e política aprovada.
 
+## Usar helpers da biblioteca
+
+Importar de `x_snippets` em vez de reimplementar a lógica. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+
+| Demanda | Módulo |
+|---|---|
+| Cálculo SHAP, importância e plots global/local | `x_snippets.ml.shap_explainer` |
+| Relatório dual-layer (executivo e técnico) | `x_snippets.ml.explainability_report` |
+| Curvas diagnósticas de apoio | `x_snippets.ml.curves_plotly` |
+
+`shap` é dependência opcional resolvida na chamada: o import do módulo passa mesmo sem a biblioteca instalada. Os textos gerados evitam tratar importância SHAP como causalidade ou como percentual de poder preditivo; preservar essa formulação ao adaptar.
+
 ## Entregar
 
 Entregar método, conjunto, classe/escala, gráficos, tabela de drivers, exemplos locais, estabilidade, limitações e próximos testes. Separar claramente explicação do comportamento do modelo de explicação causal do fenômeno.

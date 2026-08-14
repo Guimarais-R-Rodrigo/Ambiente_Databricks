@@ -62,6 +62,20 @@ Persistir métricas em tabela governada com `model_name`, versão/alias, janela,
 
 Tratar valores dos templates como placeholders. Substituir por limites aprovados e direção correta da métrica.
 
+## Usar helpers da biblioteca
+
+Importar de `x_snippets`/`x_scripts` em vez de reimplementar a lógica. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+
+| Demanda | Módulo |
+|---|---|
+| PSI/CSI nativo em escala | `x_snippets.spark.psi_calculator` |
+| PSI, KS, CSI e varredura de features driver-side | `x_snippets.ml.drift_detection` |
+| Comparar duas coortes de uma tabela | `x_scripts.drift_detector` |
+| Acompanhar métricas contra política calibrada | `x_snippets.ml.performance_monitor` |
+| Métricas e curvas de performance | `x_snippets.ml.metrics_report`, `x_snippets.ml.curves_plotly` |
+
+`interpretar_psi` só classifica quando recebe os limites do consumidor — não há faixa universal. `PerformanceMonitor` sinaliza degradação e nunca autoriza retreino: a decisão exige investigação, champion-challenger e aprovação.
+
 ## Entregar
 
 Fornecer arquitetura, tabelas, métricas, baseline, thresholds justificados, queries/jobs, dashboard, alertas, runbook e matriz de decisão. Listar o que é monitorado automaticamente e o que depende de labels ou revisão humana.

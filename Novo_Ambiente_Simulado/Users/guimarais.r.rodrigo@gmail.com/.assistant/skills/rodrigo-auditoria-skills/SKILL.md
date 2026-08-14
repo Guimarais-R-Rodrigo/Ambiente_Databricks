@@ -33,8 +33,9 @@ Não aprovar uma skill apenas por conter palavras-chave. Ler o contrato, testar 
 8. Inspecionar scripts: sintaxe, argumentos, dependências, efeitos colaterais, dados sensíveis e ao menos um teste representativo.
 9. Procurar APIs inexistentes, comandos apresentados como nativos sem serem, paths pessoais, segredos e alegações regulatórias sem fonte.
 10. Comparar skills entre si para detectar sobreposição, contradições, ciclos e contratos de handoff incompatíveis.
-11. Executar o validador disponível e registrar comando, saída e data.
-12. Produzir achados priorizados e uma conclusão independente para cada skill e para o conjunto.
+11. Conferir a seção de helpers da skill contra [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md): módulos citados existem, caminhos de import conferem, dependências opcionais estão sinalizadas e nenhum helper aplicável ao fluxo ficou de fora.
+12. Executar o validador disponível e registrar comando, saída e data.
+13. Produzir achados priorizados e uma conclusão independente para cada skill e para o conjunto.
 
 ## Executar auditoria de output
 
@@ -47,11 +48,16 @@ Não aprovar uma skill apenas por conter palavras-chave. Ler o contrato, testar 
    caminhos, dependências e reprodutibilidade proporcionalmente ao risco.
 5. Avaliar completude, reprodutibilidade, rigor, documentação, rastreabilidade,
    governança, acionabilidade, apresentação, robustez e integração do ecossistema.
-6. Separar defeito do output, limitação da skill produtora e falta de entrada do
+6. Verificar aderência à biblioteca: quando o output reimplementa lógica já disponível
+   em `x_snippets`/`x_scripts` — PSI, split temporal, WOE/IV, métricas, bandas de score,
+   curvas de safra — registrar achado, indicar o módulo do catálogo e avaliar se a
+   versão reescrita diverge da implementação auditada. Reescrita justificada é
+   aceitável; reescrita silenciosa não.
+7. Separar defeito do output, limitação da skill produtora e falta de entrada do
    usuário. Não atribuir um problema à camada errada.
-7. Produzir score/rubrica somente depois dos vetos críticos; média alta não neutraliza
+8. Produzir score/rubrica somente depois dos vetos críticos; média alta não neutraliza
    erro material, leakage, dado corrompido ou claim regulatório indevido.
-8. Entregar correções propostas ou, quando autorizado, corrigir o output e repetir a
+9. Entregar correções propostas ou, quando autorizado, corrigir o output e repetir a
    auditoria. Não modificar a skill produtora sem autorização explícita.
 
 ## Classificar achados
@@ -84,12 +90,15 @@ Pontuar de 0 a 10, sem esconder vetos, nestas dimensões:
 7. integração Databricks;
 8. coerência cruzada;
 9. qualidade dos recursos;
-10. clareza da entrega.
+10. aderência à biblioteca de helpers;
+11. clareza da entrega.
 
 Uma média alta não compensa achado crítico. Separar conformidade verificável de julgamento editorial.
 
 ## Usar recursos
 
+- Usar [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md) como referência de aderência: é a lista dos 54 módulos disponíveis, com API e dependências opcionais.
+- Para auditar a própria documentação e nomenclatura, `x_scripts.doc_coverage` e `x_scripts.naming_checker` estão disponíveis; o segundo aplica política do projeto, não requisito da Databricks.
 - Usar [templates/rubrica_universal.md](templates/rubrica_universal.md) como ponto de partida, ajustando pesos ao risco real.
 - Usar [templates/relatorio_auditoria.md](templates/relatorio_auditoria.md) para a saída.
 - Consultar [templates/checkpoints_por_skill.md](templates/checkpoints_por_skill.md) somente como histórico customizado. Não tratá-lo como documentação oficial nem como lista fixa de aceite; conferir o `SKILL.md` atual de cada skill.

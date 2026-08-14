@@ -74,6 +74,19 @@ Produzir:
 
 Usar [templates/pipeline_spec.md](templates/pipeline_spec.md) como spec editável. Adaptar recursos às capacidades oficiais disponíveis e registrar qualquer componente customizado.
 
+## Usar helpers da biblioteca
+
+Importar de `x_snippets`/`x_scripts` em vez de reimplementar a lógica. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+
+| Demanda | Módulo |
+|---|---|
+| Unicidade de chave, nulos e freshness | `x_scripts.data_quality_check` |
+| Schema documentado como contrato de camada | `x_scripts.schema_to_yaml` |
+| Conferir convenção de nomes do projeto | `x_scripts.naming_checker` |
+| Inspecionar amostra sem varredura completa | `x_snippets.spark.safe_display` |
+
+Esses helpers servem a diagnóstico e prototipação. Em pipeline, a regra de qualidade deve ser declarada como expectation do Lakeflow e monitorada pelo event log, não executada como script avulso. `naming_checker` aplica política do projeto, não requisito da Databricks.
+
 ## Evitar erros comuns
 
 - Não usar `F.col(data).max()`; usar agregação `F.max(F.col(data))` quando necessário.

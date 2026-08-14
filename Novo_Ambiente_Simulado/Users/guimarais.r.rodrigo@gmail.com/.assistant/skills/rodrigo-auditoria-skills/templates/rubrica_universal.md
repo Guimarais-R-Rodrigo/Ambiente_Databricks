@@ -121,16 +121,25 @@
 | 7-8 | Robusto: nulos, volume, edge cases principais tratados |
 | 9-10 | Ultra-robusto: todos edge cases do SKILL.md + validacoes + alertas + fallback |
 
-### D10 — Aderencia ao Ecossistema
+### D10 — Aderencia ao ecossistema e a biblioteca de helpers
+
+Confrontar o output com [../../../x_docs/catalogo_helpers.md](../../../x_docs/catalogo_helpers.md).
+Reimplementar logica ja disponivel e o achado tipico desta dimensao: e como
+surgem PSI por media/desvio, split temporal por fatia de linhas e incidencia de
+safra somada por taxa.
 
 | Nota | Criterio |
 |---|---|
-| 0 | Nenhuma aderencia. Output desconectado do ecossistema .assistant |
-| 1-2 | Usa formatacao propria inconsistente com padrao |
-| 3-4 | Parcialmente aderente (snake_case, PT-BR) mas sem snippets |
-| 5-6 | Segue instrucoes basicas mas nao usa snippets nem templates |
-| 7-8 | Usa snippets + templates + padrao visual consistente |
-| 9-10 | Ecossistema completo: snippets + templates + instrucoes + paleta + hooks |
+| 0 | Output desconectado do ecossistema; reimplementa logica critica da biblioteca de forma incorreta |
+| 1-2 | Reimplementa logica disponivel sem justificativa e com divergencia de comportamento |
+| 3-4 | Formatacao/convencoes parcialmente aderentes; ignora helpers aplicaveis |
+| 5-6 | Segue instrucoes e templates, mas reescreve helper aplicavel sem declarar o motivo |
+| 7-8 | Usa os helpers aplicaveis com import correto; desvios justificados explicitamente |
+| 9-10 | Usa helpers e templates, declara dependencias opcionais e versoes, e preserva as ressalvas do modulo (direcao de score, threshold calibrado, limite de amostra) |
+
+Reescrever um helper e aceitavel quando o caso exige e o motivo esta declarado.
+Reescrita silenciosa, nao. Nao pontuar por recursos inexistentes na plataforma:
+nao ha hooks nem slash commands registrados pelo usuario.
 
 ---
 

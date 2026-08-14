@@ -54,6 +54,20 @@ Para cada achado relevante, informar:
 
 Usar [templates/roteiro_eda.md](templates/roteiro_eda.md) para estruturar o notebook, [templates/matriz_graficos_eda.md](templates/matriz_graficos_eda.md) para selecionar visualizações e [templates/relatorio_executivo_eda.md](templates/relatorio_executivo_eda.md) para o resumo. Consultar [templates/estilo_visual_eda.md](templates/estilo_visual_eda.md) apenas para orientação visual customizada, não como API nativa Databricks.
 
+## Usar helpers da biblioteca
+
+Importar de `x_snippets`/`x_scripts` em vez de reimplementar a lógica. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+
+| Demanda | Módulo |
+|---|---|
+| Perfil de tabela e checagem de qualidade | `x_scripts.quick_profile`, `x_scripts.data_quality_check` |
+| Nulos por coluna com semáforo | `x_snippets.spark.null_summary` |
+| Amostra reprodutível e exibição limitada | `x_snippets.spark.smart_sample`, `x_snippets.spark.safe_display` |
+| Correlação e grid de distribuições | `x_snippets.display.correlation_matrix`, `x_snippets.display.distribution_grid` |
+| Tema, índice e formatação brasileira | `x_snippets.visual.theme_plotly`, `x_snippets.visual.index_generator`, `x_snippets.constants.format_br` |
+
+`quick_profile` distingue o que é calculado na tabela inteira do que vem da amostra; preservar essa distinção ao relatar números.
+
 ## Handoff
 
 Entregar um contrato com:

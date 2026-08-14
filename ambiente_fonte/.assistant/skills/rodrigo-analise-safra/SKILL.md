@@ -59,6 +59,18 @@ Usar [templates/relatorio_safra.md](templates/relatorio_safra.md) como estrutura
 - Acionar `rodrigo-validacao-estatistica` para comparar coortes com inferência e correção de múltiplos testes.
 - Acionar `rodrigo-monitoramento-modelo` quando a safra fizer parte de um sistema de alertas recorrente.
 
+## Usar helpers da biblioteca
+
+Importar de `x_snippets` em vez de reimplementar a lógica. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+
+| Demanda | Módulo |
+|---|---|
+| Tabela de safra, curvas de maturação, heatmap e comparação | `x_snippets.ml.vintage_analysis` |
+| Features de calendário para derivar MOB | `x_snippets.spark.date_features` |
+| Tema visual e formatação brasileira | `x_snippets.visual.theme_plotly`, `x_snippets.constants.format_br` |
+
+`build_vintage_table` calcula incidência acumulada no nível contrato × MOB. Somar taxas por safra produz número diferente e incorreto — erro recorrente em painéis de vintage.
+
 ## Verificar atualidade Databricks
 
 Preferir PySpark/Spark SQL para agregações distribuídas e Plotly apenas sobre resultados agregados. Antes de gerar APIs de plataforma, confirmar a documentação oficial aplicável ao cloud e à versão do runtime; não inventar funções de Databricks.

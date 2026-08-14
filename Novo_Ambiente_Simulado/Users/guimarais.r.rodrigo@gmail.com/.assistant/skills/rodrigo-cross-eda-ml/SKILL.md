@@ -72,6 +72,20 @@ Decidir:
 
 Adaptar thresholds e imports à implementação atual; templates são customizados e não recursos nativos do Genie Code.
 
+## Usar helpers da biblioteca
+
+Importar de `x_snippets`/`x_scripts` em vez de reimplementar a lógica. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+
+| Demanda | Módulo |
+|---|---|
+| Perfil comparável entre fontes | `x_scripts.quick_profile` |
+| Schema documentado para confronto de contratos | `x_scripts.schema_to_yaml` |
+| Nulos e cobertura por coluna | `x_snippets.spark.null_summary` |
+| Amostra reprodutível e exibição limitada | `x_snippets.spark.smart_sample`, `x_snippets.spark.safe_display` |
+| Divergência de distribuição entre fontes ou janelas | `x_snippets.spark.psi_calculator` |
+
+PSI aqui mede comparabilidade entre fontes, não drift de modelo; interpretar apenas com limites calibrados para o caso.
+
 ## Entregar o handoff
 
 Fornecer mapa de fontes, contrato de join point-in-time, matriz de cobertura, riscos, decisão e backlog para `rodrigo-feature-engineering`. Incluir consultas de validação reproduzíveis e data dos snapshots.

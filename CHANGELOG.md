@@ -7,6 +7,31 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
 ## 2026-08-14
 
+### Adicionado (pacote de helpers — sprints 2 e 3 de 3)
+
+1. (Claude) Seção `## Usar helpers da biblioteca` em 11 `SKILL.md`, cada uma com
+   a tabela demanda → módulo do próprio fluxo, link para o catálogo e as
+   ressalvas técnicas do domínio (leakage em splits, incidência acumulada em
+   safra, thresholds calibrados em drift, escape de HTML em documentação).
+2. (Claude) `rodrigo-auditoria-skills` passa a verificar aderência à biblioteca:
+   novo passo na auditoria de implementação (conferir seção de helpers contra o
+   catálogo), novo passo na auditoria de output (reimplementação silenciosa de
+   lógica disponível vira achado) e nova dimensão de avaliação.
+3. (Claude) `templates/rubrica_universal.md`: dimensão D10 reescrita com âncoras
+   objetivas de aderência à biblioteca.
+
+### Corrigido
+
+1. (Claude) A âncora 9-10 da dimensão D10 da rubrica premiava o uso de "hooks",
+   capacidade inexistente na plataforma (`.claude/rules/genie-code-oficial.md`).
+   Removida junto com a reescrita da dimensão.
+
+### Notas (pacote de helpers)
+
+- Nenhuma `description` foi alterada nos três sprints: a seleção automática lê
+  apenas o frontmatter, e as seções entram no corpo. Verificado por diff — a
+  certificação de roteamento 36/36 permanece válida sem reteste.
+
 ### Adicionado (pacote de helpers — sprint 1 de 3)
 
 1. (Claude) ADR-0004: helpers passam a ser declarados explicitamente nas skills,

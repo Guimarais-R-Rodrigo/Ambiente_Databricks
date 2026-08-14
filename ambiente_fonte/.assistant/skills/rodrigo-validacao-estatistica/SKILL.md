@@ -107,6 +107,20 @@ Usar [templates/severity_rubric.md](templates/severity_rubric.md) como linguagem
 
 Usar [templates/notebook_output_stat.md](templates/notebook_output_stat.md) como estrutura editável, mas adaptar imports às funções realmente existentes no pacote de snippets e à pasta customizada instalada. Não assumir que helpers visuais fazem parte do Databricks.
 
+## Usar helpers da biblioteca
+
+Importar de `x_snippets`/`x_scripts` em vez de reimplementar a lógica. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+
+| Demanda | Módulo |
+|---|---|
+| Amostragem controlada e reprodutível | `x_snippets.spark.smart_sample` |
+| KS, PSI e CSI driver-side sobre amostra | `x_snippets.ml.drift_detection` |
+| PSI/CSI nativo em escala | `x_snippets.spark.psi_calculator` |
+| Qualidade prévia (nulos por coluna) | `x_snippets.spark.null_summary` |
+| Formatação numérica da narrativa | `x_snippets.constants.format_br` |
+
+Os helpers entregam a estatística, não a decisão: classificação de severidade exige limite calibrado para a população e o risco em questão.
+
 ## Validar a conclusão
 
 1. Recalcular amostra de resultados por método independente quando material.

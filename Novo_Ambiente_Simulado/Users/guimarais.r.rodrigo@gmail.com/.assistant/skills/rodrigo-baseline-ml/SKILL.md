@@ -114,6 +114,21 @@ Confirmar as assinaturas da API MLflow atual antes de gerar código. Não regist
 
 Tratar thresholds contidos nos templates como placeholders customizados, nunca como regra universal.
 
+## Usar helpers da biblioteca
+
+Importar de `x_snippets` em vez de reimplementar a lógica. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+
+| Demanda | Módulo |
+|---|---|
+| Split temporal e validação walk-forward | `x_snippets.ml.split_temporal`, `x_snippets.ml.walk_forward` |
+| Métricas de classificação e regressão | `x_snippets.ml.metrics_report` |
+| Curvas ROC, PR, lift e KS | `x_snippets.ml.curves_plotly` |
+| Treino com MLflow opcional | `x_snippets.ml.train_lgbm`, `.train_xgboost`, `.train_catboost`, `.optuna_lgbm` |
+| Scorecard e bandas de score | `x_snippets.ml.scorecard_builder`, `x_snippets.ml.score_bands` |
+| Suites não tabulares | `x_snippets.ml.lgbm_ranker`, `.clustering_suite`, `.isolation_forest`, `.survival_cox`, `.prophet_wrapper` |
+
+`temporal_split` e `walk_forward_cv` operam em unidades de calendário; substituí-los por fatia de linhas reintroduz o leakage que eles evitam. Os wrappers de treino dependem de bibliotecas opcionais — confirmar instalação e versão fixada antes de prometer execução.
+
 ## Entregar
 
 Fornecer notebook/código reproduzível, contrato, comparação com trivial, tabela de métricas, diagnóstico de leakage/overfit, registro MLflow, limitações e recomendação. Encaminhar `rodrigo-explainability` após escolher o candidato e `rodrigo-monitoramento-modelo` antes de produção.

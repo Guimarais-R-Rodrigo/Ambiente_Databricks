@@ -76,6 +76,20 @@ Carregar somente os necessários:
 - [templates/checklist_validacao_features.md](templates/checklist_validacao_features.md) para aceite;
 - [templates/mapa_notebooks_alvo.md](templates/mapa_notebooks_alvo.md) e [templates/notebook_output_structure.md](templates/notebook_output_structure.md) para documentar o corpus.
 
+## Usar helpers da biblioteca
+
+Importar de `x_snippets`/`x_scripts` em vez de reimplementar a lógica. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+
+| Demanda | Módulo |
+|---|---|
+| Features de calendário | `x_snippets.spark.date_features` |
+| Lags e janelas móveis por entidade | `x_snippets.ml.lgbm_temporal` (`create_temporal_features`) |
+| WOE e Information Value | `x_snippets.ml.woe_iv_calculator` |
+| Recência, frequência e valor até data de corte | `x_scripts.rfv_calculator` |
+| Split por período de calendário para checar leakage | `x_snippets.ml.split_temporal` |
+
+`rfv_calculator` já exclui eventos posteriores à data de referência — não duplicar nem remover esse filtro. `extrair_features_data` cobre apenas feriados nacionais de data fixa; os demais entram por `holiday_dates`.
+
 ## Entregar
 
 Fornecer specs, DAG lógico, código ou pseudocódigo implementável, plano de materialização, testes, riscos e backlog. Separar feature aprovada, experimental e bloqueada. Indicar como registrar linhagem e como reproduzir a feature no momento da inferência.
