@@ -5,6 +5,20 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-14 — documentação, sprint 1 de 6
+
+### Adicionado
+
+1. (Claude) `x_docs/glossario.md`: 49 verbetes separados por procedência —
+   plataforma Databricks, vocabulário de modelagem e convenção deste projeto —
+   mais uma seção final sobre capacidades que não existem e induzem a erro
+   (slash commands próprios, hooks, memória automática, MCP por arquivo).
+   A separação por origem é o ponto: procurar um termo de convenção na
+   documentação oficial não devolve nada, e isso não era explicado em lugar
+   nenhum.
+2. (Claude) Ponteiro para o glossário no `README.md` da raiz e no guia do
+   ecossistema. Nenhum outro texto foi alterado neste sprint.
+
 ## 2026-08-14
 
 ### Adicionado (publicação no Free com verificação)

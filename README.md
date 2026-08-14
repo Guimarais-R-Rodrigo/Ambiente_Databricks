@@ -3,6 +3,10 @@
 > Laboratório de engenharia do ecossistema `.assistant` (Agent Skills, instruções e
 > extensões) do **Databricks Genie Code**, com governança multi-IA, validação
 > automatizada e trilha de publicação do ambiente pessoal até a squad/missão.
+>
+> Primeira vez aqui? O [glossário](ambiente_fonte/.assistant/x_docs/glossario.md)
+> explica os termos deste README, separando o que é oficial da Databricks, o que
+> é vocabulário de modelagem e o que é convenção criada neste projeto.
 
 ## Por que este projeto existe
 

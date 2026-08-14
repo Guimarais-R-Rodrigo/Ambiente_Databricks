@@ -3,6 +3,9 @@
 > **Este README e todos os diretórios `x_` são documentação/extensões customizadas.**
 > A Genie Code não os lê automaticamente. A estrutura nativa está identificada com
 > `NATIVO` ao longo deste guia.
+>
+> Termo desconhecido? O [glossário](x_docs/glossario.md) separa o que é oficial da
+> Databricks, o que é vocabulário de modelagem e o que é convenção deste projeto.
 
 Um pacote de 12 skills personalizadas, instruções pessoais, prompts guiados, contexto de
 projeto e helpers de notebook para análises em Azure Databricks. A arquitetura foi
