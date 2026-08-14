@@ -41,6 +41,28 @@ local com Python 3.12):
 consumidor (`x_snippets/requirements-optional.txt`). Testá-los com versões
 fixadas continua como gate específico por workflow.
 
+## Como ler uma falha
+
+O relatório classifica cada verificação em três estados, e a diferença entre eles
+decide o que fazer:
+
+| Estado | Significado | Ação |
+|---|---|---|
+| `PASS` | executou como esperado | nenhuma |
+| `OPTIONAL_MISSING` | biblioteca opcional não instalada neste ambiente | nenhuma no laboratório; instalar com versão fixada no projeto que precisar do módulo |
+| `FAIL` | defeito real no código ou incompatibilidade com o runtime | corrigir no `ambiente_fonte/` e reexecutar |
+
+Um `FAIL` costuma cair em um de três padrões, todos vistos na primeira execução
+deste projeto. `NameError` sobre `spark` indica código contando com a variável
+global de notebook dentro de um módulo importado. `NOT_SUPPORTED_WITH_SERVERLESS`
+aponta operação que o compute serverless recusa, tipicamente `cache()`.
+`SyntaxError` significa que o runtime tem uma versão de Python anterior à que a
+sintaxe exige — foi o caso de uma f-string com barra invertida, válida a partir
+do Python 3.12.
+
+Um detalhe que engana: teste que passa na máquina local não prova nada sobre o
+runtime. Os três defeitos acima compilavam sem erro aqui e só apareceram lá.
+
 ## Portabilidade
 
 O notebook resolve o caminho da biblioteca pelo usuário logado e aceita o widget

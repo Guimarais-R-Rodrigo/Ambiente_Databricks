@@ -1,6 +1,22 @@
 # Decisões arquiteturais (ADRs)
 
-Registro imutável de decisões. Template: `.claude/templates/adr.md`.
+Um ADR (*Architecture Decision Record*) registra uma decisão estrutural junto com
+o contexto que a motivou e as alternativas descartadas. A prática existe porque a
+decisão em si é a parte fácil de recuperar depois — o difícil é lembrar **por
+que** ela foi tomada, e sem isso alguém refaz o mesmo debate ou reverte por
+engano algo que resolvia um problema real.
+
+Estes arquivos são **imutáveis depois de aceitos**. Mudar de ideia não apaga o
+ADR antigo: escreve-se um novo que o supersede, e o antigo recebe um aviso
+apontando para o substituto. O ADR-0005 deste projeto é exatamente isso — ele
+reverte a decisão do ADR-0002 depois que uma medição mostrou que a escolha
+original quebraria a biblioteca. Os dois continuam no repositório, e a leitura
+em sequência mostra o raciocínio completo, inclusive o erro.
+
+Escreva um ADR quando a decisão for difícil de reverter, afetar a estrutura do
+projeto, ou quando alguém provavelmente perguntará "por que fizeram assim?".
+Preferência de estilo e ajuste pontual não pedem ADR — pedem entrada no
+changelog. Template em `.claude/templates/adr.md`.
 
 | ADR | Decisão | Status |
 |---|---|---|

@@ -1,7 +1,16 @@
 # Forward tests das Agent Skills
 
-Testes de roteamento das 12 skills no Genie Code do Databricks Free — o gate
-pendente da auditoria do Codex antes da replicação no trabalho.
+Quando você escreve um pedido no Genie Code, ele decide sozinho qual skill
+carregar — lendo apenas o campo `description` de cada uma, nunca o corpo. Esse
+mecanismo é o **roteamento**, e é onde mora a falha mais silenciosa do
+ecossistema: descrições parecidas fazem o assistente carregar a skill errada, e
+a resposta vem plausível o bastante para ninguém desconfiar.
+
+Um forward test mede exatamente isso e nada mais. Não avalia a qualidade da
+resposta nem executa código: verifica se, diante de um pedido típico, a skill
+correta é carregada — e, diante de um pedido parecido de outro domínio, se ela
+fica de fora. É o gate que a auditoria do Codex deixou pendente antes da
+replicação no trabalho.
 
 - Método e vereditos: `.claude/skills/forward-test-skills/SKILL.md`
 - Prompts prontos para colar: [roteiro.md](roteiro.md) (36 testes, 2 mensagens cada)

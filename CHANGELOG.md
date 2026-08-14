@@ -5,6 +5,32 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-14 — documentação, sprint 6 de 6
+
+### Atualizado
+
+1. (Claude) `docs/decisions/README.md`: apresenta o que é um ADR e por que a
+   imutabilidade importa, usando o par 0002/0005 deste próprio projeto como
+   demonstração — a sequência preserva inclusive o erro corrigido.
+2. (Claude) `docs/handoffs/README.md`: exemplo curto de handoff. O formato só
+   fica claro vendo um pronto; a descrição sozinha não ensinava.
+3. (Claude) `docs/auditoria/README.md`: explica por que auditar com mais de um
+   modelo — cada um erra de forma diferente, e a divergência entre eles marca
+   onde o material é ambíguo. Tabela dos quatro níveis com o gatilho de cada um.
+4. (Claude) `docs/testes/forward/README.md`: define roteamento antes de mostrar
+   resultado, para quem cai direto na página.
+5. (Claude) `docs/testes/spark/README.md`: como ler uma falha, com os três
+   padrões observados na prática e a advertência de que passar na máquina local
+   não prova nada sobre o runtime.
+
+### Encerramento do plano de documentação
+
+Seis sprints concluídos. Balanço em relação ao diagnóstico: os 14 READMEs
+receberam tratamento, mais um glossário novo; as três lacunas sistêmicas
+apontadas — ausência de glossário, exemplos sem retorno e falta de percurso
+inicial — foram fechadas. Nenhuma `description` de skill foi tocada em nenhum
+sprint, e a certificação de roteamento 36/36 permanece válida.
+
 ## 2026-08-14 — documentação, sprint 5 de 6
 
 ### Adicionado
