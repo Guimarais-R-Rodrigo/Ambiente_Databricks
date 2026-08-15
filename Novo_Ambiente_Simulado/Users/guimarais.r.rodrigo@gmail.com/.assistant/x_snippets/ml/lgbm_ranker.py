@@ -109,6 +109,10 @@ def evaluate_ranking(
     if not ks or any(k <= 0 for k in ks):
         raise ValueError("ks must contain positive integers")
     scores = model.predict(X)
+    # Fatiar e reordenar por posição: em uma Series do pandas, indexar com um
+    # array de inteiros seria busca por rótulo. O primeiro grupo funcionaria por
+    # coincidência (rótulo igual à posição) e os seguintes falhariam.
+    y = np.asarray(y)
 
     metrics = {}
     offset = 0

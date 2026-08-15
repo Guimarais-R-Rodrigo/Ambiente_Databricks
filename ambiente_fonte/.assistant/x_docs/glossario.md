@@ -51,7 +51,10 @@ procurar por ele na documentação oficial não devolve nada.
 | **Scorecard** | Modelo convertido em pontos legíveis por humanos, tradicional em crédito por ser auditável. | `x_snippets.ml.scorecard_builder` |
 | **Banda de score** | Faixas em que o score é agrupado para decisão. Exige declarar qual extremo representa maior risco. | `x_snippets.ml.score_bands` |
 | **SHAP** | Método que atribui a cada variável sua contribuição para uma previsão. Explica o modelo, não a causa do fenômeno. | Skill de explicabilidade |
-| **Point-in-time** | Junção que usa apenas informação disponível no instante da decisão. É a forma correta de montar histórico sem leakage. | Skill de feature engineering |
+| **Point-in-time** | Junção que usa apenas informação disponível no instante da decisão. É a forma correta de montar histórico sem leakage. | `x_snippets.spark.pit_join` |
+| **As-of join** | Nome técnico da junção point-in-time: para cada linha, traz a última versão do dado válida naquele momento. | `x_snippets.spark.pit_join` |
+| **Atraso de publicação** | Tempo entre o instante a que um dado se refere e o momento em que ele fica disponível. Um score de bureau com referência 10/01 e atraso de 2 dias só pode entrar em decisões a partir de 12/01; ignorá-lo cria vazamento mesmo com data de referência no passado. | `pit_join(atraso_publicacao_dias=...)` |
+| **Fator de expansão** | Quantas vezes um join multiplica as linhas da esquerda. Acima de 1,0 há duplicação, e é como uma base de treino passa a superrepresentar entidades sem ninguém perceber. | `x_snippets.spark.join_diagnostics` |
 
 ## Convenção — criado neste projeto
 

@@ -48,6 +48,7 @@ exercitado no runtime até aqui — essa verificação é gate por workflow.
 | Exportar schema documentado em YAML/JSON | `x_scripts.schema_to_yaml` | `schema_to_dict`, `schema_to_yaml` |
 | Conferir convenção de nomes (política do projeto) | `x_scripts.naming_checker` | `naming_checker` |
 | Medir cobertura de documentação de notebook | `x_scripts.doc_coverage` | `doc_coverage` |
+| **Diagnóstico de join antes de executá-lo** | `x_snippets.spark.join_diagnostics` | `diagnosticar_join` |
 | Amostra reprodutível, com estratificação opcional | `x_snippets.spark.smart_sample` | `smart_sample` |
 | Exibir DataFrame grande sem varredura completa | `x_snippets.spark.safe_display` | `safe_display` |
 | Heatmap de correlação | `x_snippets.display.correlation_matrix` | `plot_correlation` |
@@ -62,6 +63,7 @@ Preserve essa distinção ao reportar resultados.
 
 | Demanda | Módulo | API |
 |---|---|---|
+| **Junção point-in-time (as-of) com atraso de publicação** | `x_snippets.spark.pit_join` | `pit_join` |
 | Features de calendário (com feriados do projeto) | `x_snippets.spark.date_features` | `extrair_features_data` |
 | Lags e janelas móveis por entidade | `x_snippets.ml.lgbm_temporal` | `create_temporal_features` |
 | WOE e Information Value | `x_snippets.ml.woe_iv_calculator` | `calculate_woe_iv`, `classify_iv` |
@@ -175,6 +177,21 @@ Somar taxas por safra produz número diferente e incorreto.
 Formatação brasileira vale para a narrativa; os dados preservam o tipo numérico
 original. Entradas dos helpers de HTML são escapadas — não monte HTML por
 concatenação manual para contornar o escape.
+
+## Testes e fixtures
+
+| Demanda | Módulo | API |
+|---|---|---|
+| Base tabular sintética (chave, categórica, nulos, alvo) | `x_snippets.testing.fixtures` | `base_tabular` |
+| Painel de série temporal por entidade | `x_snippets.testing.fixtures` | `serie_temporal` |
+| Par fatos/features com vazamento marcado | `x_snippets.testing.fixtures` | `fatos_e_features` |
+| Painel contrato × MOB para curvas de safra | `x_snippets.testing.fixtures` | `safras` |
+
+Toda função é determinística: mesma `seed`, mesmo resultado. Nenhuma grava
+tabela — o retorno é DataFrame em memória, e materializar continua sendo decisão
+visível de quem consome. `fatos_e_features` marca com `eh_futura` as linhas
+publicadas depois da decisão, para que um teste de junção temporal possa provar
+que elas foram descartadas.
 
 ## Restrições verificadas no runtime
 

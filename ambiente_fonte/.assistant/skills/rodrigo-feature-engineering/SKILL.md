@@ -82,6 +82,7 @@ Importar de `x_snippets`/`x_scripts` em vez de reimplementar a lógica. Catálog
 
 | Demanda | Módulo |
 |---|---|
+| Junção point-in-time com atraso de publicação | `x_snippets.spark.pit_join` |
 | Features de calendário | `x_snippets.spark.date_features` |
 | Lags e janelas móveis por entidade | `x_snippets.ml.lgbm_temporal` (`create_temporal_features`) |
 | WOE e Information Value | `x_snippets.ml.woe_iv_calculator` |

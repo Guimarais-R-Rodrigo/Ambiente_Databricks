@@ -15,6 +15,26 @@ notebook [tools/spark_smoke_test.py](../../../tools/spark_smoke_test.py)
 | 4 (…266634) | 62 PASS / 2 FAIL | restavam `cache()` em `quick_profile` e `drift_detector` |
 | 5 (…159902) | **64 PASS / 0 FAIL / 7 opcionais ausentes** | gate aprovado — [JSON bruto](resultados/2026-08-13_smoke_run5.json) |
 | 6 (…314130) | 64 PASS / 0 FAIL | regressão após parametrizar o caminho — [JSON bruto](resultados/2026-08-14_smoke_run6_parametrizado.json) |
+| 7 (…965277) | **11 PASS / 0 FAIL** | módulos novos e correção do ranker — [JSON bruto](resultados/2026-08-14_modulos_novos.json) |
+
+## Restrição de ambiente descoberta na rodada 7
+
+Instalar o conjunto de bibliotecas de ML sem fixar versão **derruba o kernel** em
+compute serverless: pip sobe `pandas` de 1.5.3 para 2.3.3 e `numpy` de 1.26.4
+para 2.2.6, e o Databricks recusa a alteração dos pacotes core
+(`ERROR_CORE_PACKAGE_VERSION_CHANGE`).
+
+A instalação funciona com as versões core fixadas junto das bibliotecas:
+
+```text
+numpy==1.26.4  pandas==1.5.3  lightgbm==4.3.0  shap==0.44.1  lifelines==0.27.8
+```
+
+Duas consequências práticas. Em job serverless, dependências vão no bloco
+`environments` da submissão, não em `%pip` — `%pip` antes do primeiro comando
+Spark aborta a execução com `spark should be initialized with the first notebook
+command`. E o `requirements-optional.txt` do pacote, que hoje lista nomes sem
+versão, não é instalável como está neste ambiente.
 
 ## Defeitos reais encontrados e corrigidos no `ambiente_fonte/`
 

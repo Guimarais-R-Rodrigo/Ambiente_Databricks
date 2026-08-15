@@ -5,6 +5,48 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-14 — biblioteca, sprints 0 a 3
+
+### Adicionado
+
+1. (Claude) `x_snippets/spark/pit_join.py`: junção point-in-time com atraso de
+   publicação declarado. Devolve o DataFrame e o diagnóstico do que foi
+   descartado por indisponibilidade temporal. Preenche exigência textual da
+   skill de feature engineering que não tinha implementação.
+2. (Claude) `x_snippets/spark/join_diagnostics.py`: cobertura, não-match,
+   multiplicidade e fator de expansão medidos **antes** do join, com chaves
+   nulas contabilizadas à parte.
+3. (Claude) `x_snippets/testing/fixtures.py`: geradores determinísticos
+   (tabular, série temporal, fatos/features com vazamento marcado, safras).
+
+### Corrigido
+
+1. (Claude) **Defeito real em `x_snippets/ml/lgbm_ranker.py`**, encontrado ao
+   exercitar o módulo pela primeira vez no runtime. Em `evaluate_ranking`, o
+   reordenamento `group_labels[ranked_idx]` faz busca **por rótulo** quando `y`
+   é uma Series do pandas: funcionava no primeiro grupo, onde rótulo coincide
+   com posição, e quebrava do segundo em diante com `KeyError`. Passou a
+   converter para array antes de fatiar.
+2. (Claude) Defeito na fixture `fatos_e_features`, revelado pelo próprio teste
+   anti-vazamento: com clientes repetidos entre decisões, uma feature "futura"
+   para uma decisão era legitimamente passada para outra do mesmo cliente, e a
+   marca `eh_futura` deixava de valer. Cada decisão passou a ter cliente
+   próprio, e o teste ganhou a invariante universal
+   (`feature_ts + atraso <= decisão`), que não depende do rótulo.
+
+### Notas
+
+- Verificação no runtime: **11 aprovações, nenhuma falha**, incluindo o teste
+  que prova que nenhuma feature publicada após a decisão sobrevive ao
+  `pit_join`, e a expansão de join medida contra multiplicidade conhecida
+  (1:1 → 1,0; 1:N controlado → 2,0).
+- Rodada 7 documentou uma restrição de ambiente não conhecida: instalar as
+  bibliotecas de ML sem fixar versão derruba o kernel serverless por alteração
+  de pacotes core (`pandas`, `numpy`). Detalhe em `docs/testes/spark/README.md`.
+- Sprint 0 permanece **aberto**: apenas 3 dos 14 módulos com dependência
+  opcional foram verificados (`train_lgbm`, `survival_cox`, `kaplan_meier`).
+  Os demais exigem novo ambiente com versões compatíveis fixadas.
+
 ## 2026-08-14 — documentação, sprint 6 de 6
 
 ### Atualizado

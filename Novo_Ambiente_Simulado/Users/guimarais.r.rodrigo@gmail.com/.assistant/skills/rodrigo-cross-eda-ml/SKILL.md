@@ -78,6 +78,8 @@ Importar de `x_snippets`/`x_scripts` em vez de reimplementar a lógica. Catálog
 
 | Demanda | Módulo |
 |---|---|
+| Cobertura, multiplicidade e expansão antes do join | `x_snippets.spark.join_diagnostics` |
+| Alinhamento temporal por junção point-in-time | `x_snippets.spark.pit_join` |
 | Perfil comparável entre fontes | `x_scripts.quick_profile` |
 | Schema documentado para confronto de contratos | `x_scripts.schema_to_yaml` |
 | Nulos e cobertura por coluna | `x_snippets.spark.null_summary` |
