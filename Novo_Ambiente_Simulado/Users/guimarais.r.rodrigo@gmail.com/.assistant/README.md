@@ -203,8 +203,8 @@ adicionado ao `sys.path` foi o da pasta `x_snippets` em vez do da pasta
 `.assistant` que a contém — é o engano mais comum.
 
 Para descobrir qual módulo atende a uma demanda, use o
-[catálogo de helpers](x_docs/catalogo_helpers.md): 54 módulos organizados por
-tarefa, com dependências opcionais e restrições de runtime marcadas. Cada
+[catálogo de helpers](x_docs/catalogo_helpers.md), que organiza a biblioteca
+por tarefa e marca dependências opcionais e restrições de runtime. Cada
 `SKILL.md` já declara os helpers do próprio fluxo (ver ADR-0004 no repositório).
 
 Consulte também [x_snippets/README.md](x_snippets/README.md) e

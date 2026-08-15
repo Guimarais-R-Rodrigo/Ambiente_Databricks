@@ -35,8 +35,8 @@ Python quando a instalação do notebook exigir.
 
 ## Onde procurar um módulo
 
-O mapa completo — 54 módulos organizados por demanda, com função pública e
-dependências marcadas — está em
+O mapa completo — organizado por demanda, com função pública e dependências
+marcadas — está em
 [x_docs/catalogo_helpers.md](../x_docs/catalogo_helpers.md). É a única lista
 mantida; procure lá em vez de navegar pelas pastas.
 

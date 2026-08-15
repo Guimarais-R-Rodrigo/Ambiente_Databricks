@@ -5,8 +5,8 @@
 > biblioteca inteira. Cada `SKILL.md` já declara os helpers do seu próprio
 > fluxo; este catálogo é a visão completa e a fonte de manutenção.
 
-A biblioteca reúne 54 módulos curados — 47 em `x_snippets/`, 7 em `x_scripts/` —
-com lógica analítica auditada e verificada no runtime Databricks. A regra que
+A biblioteca reúne módulos curados em `x_snippets/` e `x_scripts/`, com lógica
+analítica auditada e verificada no runtime Databricks. A regra que
 justifica o catálogo é simples: **quando existe helper para a demanda, use o
 helper; não reimplemente a lógica**. Código estatístico reescrito a cada
 conversa é a origem mais comum de erro silencioso — o ambiente anterior a este
@@ -33,10 +33,15 @@ apenas o runtime Python; não injeta o conteúdo do módulo no contexto do chat.
 | **imp** | Dependência opcional exigida **no import**: o módulo nem carrega sem a lib |
 | **exec** | Dependência opcional exigida **na chamada**: o import passa e o erro só aparece no uso |
 
-Dependências opcionais estão inventariadas em `x_snippets/requirements-optional.txt`.
-Instale apenas o subconjunto necessário e **fixe a versão no projeto consumidor**;
-o inventário não é arquivo de instalação. Nenhum dos módulos marcados foi
-exercitado no runtime até aqui — essa verificação é gate por workflow.
+Dependências opcionais estão inventariadas em `x_snippets/requirements-optional.txt`,
+com o conjunto de versões que funcionou em runtime. Instale apenas o subconjunto
+necessário e **fixe a versão**; instalar sem fixar derruba o kernel em serverless,
+por alteração de pacotes core.
+
+Situação de verificação dos módulos com dependência opcional: todos foram
+exercitados no runtime, exceto `prophet_wrapper`, que falha por não inicializar
+o backend do Prophet nesse ambiente. Detalhes em `docs/testes/spark/` no
+repositório.
 
 ## Exploração, qualidade e perfil de dados
 

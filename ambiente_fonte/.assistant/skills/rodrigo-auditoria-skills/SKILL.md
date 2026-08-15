@@ -97,7 +97,7 @@ Uma média alta não compensa achado crítico. Separar conformidade verificável
 
 ## Usar recursos
 
-- Usar [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md) como referência de aderência: é a lista dos 54 módulos disponíveis, com API e dependências opcionais.
+- Usar [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md) como referência de aderência: é a lista dos módulos disponíveis, com API e dependências opcionais.
 - Para auditar a própria documentação e nomenclatura, `x_scripts.doc_coverage` e `x_scripts.naming_checker` estão disponíveis; o segundo aplica política do projeto, não requisito da Databricks.
 - Usar [templates/rubrica_universal.md](templates/rubrica_universal.md) como ponto de partida, ajustando pesos ao risco real.
 - Usar [templates/relatorio_auditoria.md](templates/relatorio_auditoria.md) para a saída.
