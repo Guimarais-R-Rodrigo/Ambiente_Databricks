@@ -5,6 +5,10 @@ para o workspace corporativo (Azure Databricks). Escrito para ser executado em
 outro computador, **sem Databricks CLI**, com acesso apenas pela interface do
 workspace.
 
+> Para acompanhar a execução marcando cada passo, use o
+> [checklist](checklist-replicacao.md) — mesma sequência, formato de
+> conferência.
+
 ## Antes de começar
 
 | Restrição do destino | Consequência no procedimento |
