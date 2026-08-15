@@ -40,7 +40,63 @@ dependências marcadas — está em
 [x_docs/catalogo_helpers.md](../x_docs/catalogo_helpers.md). É a única lista
 mantida; procure lá em vez de navegar pelas pastas.
 
-A divisão por pacote serve apenas para situar:
+### O que cada módulo faz
+
+Visão de inventário — o que existe. Para o caminho inverso ("preciso fazer X,
+qual módulo uso?"), o catálogo é a referência.
+
+| Módulo | Em uma linha |
+|---|---|
+| `spark.pit_join` | junta histórico à decisão usando só o que já estava disponível |
+| `spark.join_diagnostics` | mede cobertura, multiplicidade e expansão antes do join |
+| `spark.psi_calculator` | PSI e CSI comparando formas de distribuição, bins da referência |
+| `spark.null_summary` | nulos por coluna com semáforo |
+| `spark.smart_sample` | amostra reprodutível, estratificada quando pedido |
+| `spark.safe_display` | exibe DataFrame grande sem varredura completa |
+| `spark.date_features` | features de calendário, com feriados do projeto |
+| `ml.split_temporal` | separa treino e teste por período, não por sorteio |
+| `ml.walk_forward` | validação que avança no tempo, retreinando a cada janela |
+| `ml.metrics_report` | métricas de classificação e regressão padronizadas |
+| `ml.curves_plotly` | curvas ROC, PR, lift e KS |
+| `ml.train_lgbm`, `.train_xgboost`, `.train_catboost` | baselines tabulares com MLflow opcional |
+| `ml.optuna_lgbm` | busca de hiperparâmetros |
+| `ml.lgbm_ranker` | ranking com LambdaRank e NDCG |
+| `ml.mlflow_run` | registro que exige dataset, split, assinatura e limitações |
+| `ml.scorecard_builder` | converte modelo logístico em pontos |
+| `ml.score_bands` | bandas de score com direção declarada |
+| `ml.woe_iv_calculator` | WOE e Information Value |
+| `ml.shap_explainer` | SHAP: cálculo, importância e gráficos |
+| `ml.explainability_report` | relatório executivo e técnico de explicabilidade |
+| `ml.drift_detection` | PSI, KS e CSI driver-side, sobre amostra |
+| `ml.performance_monitor` | acompanha métricas contra política calibrada |
+| `ml.vintage_analysis` | safras: tabela, curvas de maturação e heatmap |
+| `ml.survival_cox`, `.kaplan_meier` | sobrevivência e teste log-rank |
+| `ml.prophet_wrapper`, `.arima_wrapper` | séries temporais |
+| `ml.clustering_suite`, `.cluster_profiling` | seleção de k, pipeline e profiling |
+| `ml.isolation_forest`, `.autoencoder_anomaly` | detecção de anomalia |
+| `ml.umap_viz` | projeção 2D para visualizar grupos |
+| `ml.mlp_embeddings`, `.tabnet_wrapper` | redes para dados tabulares |
+| `ml.lgbm_temporal` | lags e janelas móveis por entidade |
+| `display.correlation_matrix`, `.distribution_grid`, `.dataframe_styled` | gráficos e tabelas de exploração |
+| `visual.theme_plotly`, `.kpi_card`, `.badge`, `.section_header`, `.divider`, `.index_generator` | identidade visual do notebook |
+| `constants.format_br`, `.colors`, `.emojis`, `.styles` | formatação brasileira, paleta e estilos |
+| `testing.fixtures` | bases sintéticas determinísticas para teste e exemplo |
+
+### Material didático
+
+Dois notebooks explicam, com execução real sobre fixtures, os conceitos onde o
+erro custa mais caro:
+
+| Notebook | Cobre |
+|---|---|
+| [01_vazamento_temporal](../x_docs/notebooks/01_vazamento_temporal.py) | `pit_join` e `split_temporal`: o que dá errado sem eles |
+| [02_drift_e_estabilidade](../x_docs/notebooks/02_drift_e_estabilidade.py) | `psi_calculator`: o que o PSI mede e o que não mede |
+
+Para explicação linha a linha de qualquer módulo, use
+`@rodrigo-tutor-databricks` com o arquivo anexado — ela lê a versão atual, então
+não fica defasada.
+
+### Agrupamento por pacote
 
 | Pacote | Finalidade | Cuidados |
 |---|---|---|

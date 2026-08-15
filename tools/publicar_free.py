@@ -23,6 +23,22 @@ from pathlib import Path
 SIMULADO = Path("Novo_Ambiente_Simulado")
 CORPORATE_RE = re.compile(r"c\d{6}|corp\.|\.gov\.br", re.IGNORECASE)
 
+# Marcador que o próprio Databricks usa para distinguir notebook de script.
+# `import-dir` não o honra: envia tudo como arquivo. Os módulos da biblioteca
+# precisam mesmo ser arquivo, senão o import quebra — mas o material didático
+# precisa ser notebook, ou não há células para executar nem markdown para ler.
+MARCADOR_NOTEBOOK = "# Databricks notebook source"
+
+
+def eh_notebook(caminho: Path) -> bool:
+    if caminho.suffix != ".py":
+        return False
+    try:
+        with caminho.open(encoding="utf-8") as arquivo:
+            return arquivo.readline().strip() == MARCADOR_NOTEBOOK
+    except OSError:
+        return False
+
 # Estrutura mínima que o Genie Code precisa encontrar para descobrir o ecossistema.
 EXPECTED_SKILLS = 12
 EXPECTED_X_DIRS = {"x_config", "x_docs", "x_projects", "x_prompts", "x_scripts", "x_snippets"}
@@ -119,6 +135,23 @@ def cmd_plan(root: Path, arquivos: list[Path], home: str, executar: bool) -> int
     if rc != 0:
         print(f"\nFAIL publicação falhou:\n{out}{err}")
         return 1
+
+    # Reenviar como notebook o material didático, que o import-dir mandou como
+    # arquivo. Sem isto não há células para executar.
+    cadernos = [a for a in arquivos if eh_notebook(a)]
+    for caderno in cadernos:
+        relativo = str(caderno.relative_to(root)).replace("\\", "/")
+        destino = f"{home}/{relativo[:-3]}"  # o workspace guarda notebook sem .py
+        rc, _out, err = databricks(
+            "workspace", "import", destino, "--file", str(caderno),
+            "--format", "SOURCE", "--language", "PYTHON", "--overwrite",
+        )
+        if rc != 0:
+            print(f"FAIL notebook {relativo}: {err.strip()[:160]}")
+            return 1
+    if cadernos:
+        print(f"  {len(cadernos)} arquivo(s) reenviado(s) como notebook")
+
     print(f"\nPublicado. Confira com: python {Path(__file__).name} --verify")
     return 0
 
@@ -127,7 +160,16 @@ def cmd_verify(root: Path, arquivos: list[Path], home: str) -> int:
     print("== VERIFY (read-only) ==")
     problemas: list[str] = []
 
-    esperados = {str(a.relative_to(root)).replace("\\", "/") for a in arquivos}
+    # O workspace guarda notebook sem a extensão: o nome esperado muda.
+    esperados = set()
+    esperado_notebook = set()
+    for arquivo in arquivos:
+        relativo = str(arquivo.relative_to(root)).replace("\\", "/")
+        if eh_notebook(arquivo):
+            esperados.add(relativo[:-3])
+            esperado_notebook.add(relativo[:-3])
+        else:
+            esperados.add(relativo)
     remotos = {
         item["path"][len(home) + 1 :]: item
         for item in remote_walk(f"{home}/.assistant")
@@ -149,10 +191,14 @@ def cmd_verify(root: Path, arquivos: list[Path], home: str) -> int:
     for nome in obsoletos:
         problemas.append(f"obsoleto no remoto (remover à mão): {nome}")
 
-    # `.py` precisa ser FILE: como NOTEBOOK, `from x_snippets...` deixa de funcionar.
+    # `.py` de biblioteca precisa ser FILE: como NOTEBOOK, o import quebra.
+    # Material didático é o oposto: como FILE, não há células para executar.
     for nome, item in sorted(remotos.items()):
-        if nome.endswith(".py") and item.get("object_type") != "FILE":
-            problemas.append(f"{nome}: importado como {item.get('object_type')}, esperado FILE")
+        tipo = item.get("object_type")
+        if nome.endswith(".py") and tipo != "FILE":
+            problemas.append(f"{nome}: importado como {tipo}, esperado FILE")
+        if nome in esperado_notebook and tipo != "NOTEBOOK":
+            problemas.append(f"{nome}: importado como {tipo}, esperado NOTEBOOK")
 
     skills = [
         item for item in remote_list(f"{home}/.assistant/skills")

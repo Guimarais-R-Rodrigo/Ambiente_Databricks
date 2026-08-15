@@ -5,6 +5,43 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-14 — material didático da biblioteca
+
+### Adicionado
+
+1. (Claude) `x_docs/notebooks/01_vazamento_temporal.py`: mostra o join ingênuo
+   inflando a base e trazendo dado do futuro, e depois `pit_join` e
+   `temporal_split` resolvendo. Executa sobre fixtures sintéticas e imprime a
+   prova — zero linhas com score futuro no resultado.
+2. (Claude) `x_docs/notebooks/02_drift_e_estabilidade.py`: constrói duas
+   populações com **a mesma média** e formas opostas, para mostrar por que
+   comparar média e desvio não é PSI. Reproduz o erro que existia no ambiente
+   anterior e explica por que a interpretação exige limite calibrado.
+3. (Claude) Inventário por módulo no `x_snippets/README.md`: uma linha para cada
+   um dos 47 módulos, como visão do que existe. O catálogo continua sendo a
+   visão por demanda; os dois papéis são distintos e não se repetem.
+
+### Corrigido
+
+1. (Claude) `tools/publicar_free.py` publicava **todo** `.py` como arquivo, o
+   que está certo para a biblioteca e errado para material didático: notebook
+   como arquivo não tem células para executar. A ferramenta passou a detectar o
+   marcador `# Databricks notebook source` e reenviar esses arquivos como
+   notebook; o `verify` confere os dois tipos separadamente.
+
+### Notas
+
+- Ambos os notebooks foram executados no Free antes de serem entregues. As duas
+  falhas encontradas eram erros meus de escrita, não defeitos de módulo: import
+  faltando e um DataFrame Spark passado a `temporal_split`, que opera em pandas.
+- Esse segundo erro virou conteúdo: o notebook agora explica que definir split é
+  decisão sobre metadados, não processamento de volume, e que o erro
+  `Attribute 'copy' is not supported` não diz nada sobre a causa real.
+- Decisão de escopo: notebook apenas onde o erro é caro e a lógica não é óbvia.
+  Explicar `fmt_brl` linha a linha criaria manutenção sem ensinar nada. Para
+  explicação sob demanda de qualquer módulo, a skill do tutor lê a versão atual
+  do arquivo e não fica defasada.
+
 ## 2026-08-14 — biblioteca, fecho do sprint 0
 
 ### Notas
