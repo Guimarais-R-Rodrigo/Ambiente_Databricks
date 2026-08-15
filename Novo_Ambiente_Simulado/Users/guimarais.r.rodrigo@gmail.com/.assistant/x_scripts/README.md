@@ -57,13 +57,37 @@ dias que é política padrão do script, não exigência da plataforma. Uma tabe
 mensal reprovaria todo dia sob esse limite. Ajuste `thresholds` ao ritmo real da
 fonte antes de tratar o resultado como alerta.
 
-`quick_profile` devolve um dicionário com as chaves `table`, `total_rows`,
-`total_columns`, `sample_fraction`, `sample_seed`, `sample_rows`, `dtypes`,
-`null_summary_full_table`, `cardinality_sample`, `top_values_sample`,
-`numeric_summary_sample` e `date_range_sample`. Os sufixos importam e são
-deliberados: `_full_table` foi calculado sobre tudo, `_sample` saiu da amostra.
-Relatar uma cardinalidade de amostra como se fosse da tabela inteira é o erro
-que essa nomenclatura existe para evitar.
+`quick_profile` sobre a mesma tabela, também executado em serverless:
+
+```json
+{
+  "table": "vw_doc_clientes",
+  "total_rows": 500,
+  "total_columns": 5,
+  "sample_fraction": 1.0,
+  "sample_seed": 42,
+  "sample_rows": 500,
+  "null_summary_full_table": [
+    { "column": "renda", "null_count": 20, "null_pct": 4.0 },
+    { "column": "id_cliente", "null_count": 0, "null_pct": 0.0 }
+  ],
+  "cardinality_sample": { "doc": 300, "uf": 4 },
+  "date_range_sample": {
+    "dt_referencia": { "min": "2026-01-01", "max": "2026-07-20" }
+  }
+}
+```
+
+Os sufixos das chaves são deliberados e carregam a informação mais importante do
+retorno: `_full_table` foi calculado sobre a tabela inteira, `_sample` saiu da
+amostra. Neste exemplo `sample_fraction` é 1.0, então os dois coincidem — com
+fração menor, não coincidiriam. Relatar uma cardinalidade de amostra como se
+fosse da tabela inteira é exatamente o erro que essa nomenclatura existe para
+evitar. As demais chaves do dicionário são `dtypes`, `top_values_sample` e
+`numeric_summary_sample`, omitidas aqui por extensão.
+
+> Saídas capturadas em 14 ago 2026, em compute serverless com Spark 4.1, sobre
+> tabela sintética de 500 linhas.
 
 | Script | Contrato atual |
 |---|---|
