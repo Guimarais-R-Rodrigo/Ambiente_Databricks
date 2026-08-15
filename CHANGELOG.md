@@ -5,6 +5,38 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-14 — biblioteca, endurecimento do pit_join
+
+### Corrigido
+
+1. (Claude) **Escolha indeterminada em empate de instante.** Duas versões da
+   feature publicadas no mesmo momento deixavam o desempate a cargo do plano de
+   execução: o mesmo código podia devolver valores diferentes entre execuções, o
+   que quebra reprodutibilidade sem emitir erro. Passou a haver desempate
+   determinístico, e o diagnóstico reporta `linhas_com_empate_de_instante` —
+   empate costuma indicar duplicidade na fonte e não deveria passar silencioso.
+2. (Claude) **Identificador sintético de linha eliminado.**
+   `monotonically_increasing_id` não tem estabilidade garantida entre
+   recomputações, e era usado para particionar a janela. A resolução passou a
+   ser por par (chave, instante de decisão) distinto, com junção de volta. O
+   desenho novo também corrige o caso de duas decisões da mesma entidade no
+   mesmo instante — legítimas, por exemplo para produtos diferentes —, que antes
+   disputavam a mesma partição.
+3. (Claude) `AMBIGUOUS_COLUMN_REFERENCE` introduzido pela correção anterior: a
+   tabela resolvida descende dos fatos, e reaproveitar os nomes das chaves fazia
+   o Spark tratar a junção como auto-join. Colunas de junção renomeadas.
+
+### Notas
+
+- Verificação após as correções: **13 aprovações, nenhuma falha**, incluindo dois
+  testes novos — escolha estável em três execuções consecutivas sob empate, e
+  preservação de decisões duplicadas da mesma entidade.
+- As três primeiras perguntas do contexto de auditoria eram fragilidades reais e
+  foram resolvidas antes da submissão; o registro delas permanece, porque a
+  correção também precisa ser revisada. Cinco perguntas novas ficaram em aberto,
+  entre elas se o desempate deveria falhar em vez de escolher, e se o contrato
+  de atraso constante por fonte é limitação aceitável.
+
 ## 2026-08-14 — biblioteca, sprints 4 a 6
 
 ### Adicionado

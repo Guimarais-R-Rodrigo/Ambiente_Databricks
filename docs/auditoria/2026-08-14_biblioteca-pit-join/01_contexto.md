@@ -54,18 +54,48 @@ falha (`docs/testes/spark/resultados/2026-08-14_modulos_novos.json`):
 A auditoria deve procurar o que o teste **não** cobre, não repetir o que ele já
 provou.
 
-## Perguntas que a auditoria precisa responder
+## Perguntas já tratadas antes da auditoria
 
-1. O `pit_join` trata corretamente empate de `dt_referencia` para a mesma chave?
-   A escolha atual é arbitrária entre versões com o mesmo instante.
-2. `monotonically_increasing_id` é estável o bastante como identificador de
-   linha dentro da mesma ação, ou há cenário de recomputação que o altere?
-3. O `join_diagnostics` conta corretamente quando a chave é composta e uma das
-   colunas é nula apenas em um dos lados?
-4. A recusa do `mlflow_run` a fechar run incompleto é rigor útil ou obstáculo
+Três das cinco perguntas originais eram fragilidades reais e foram corrigidas
+pelo implementador antes de submeter o material. Ficam registradas porque a
+correção também merece revisão.
+
+1. **Empate de instante no `pit_join`** — era mesmo indeterminado: duas versões
+   publicadas no mesmo instante deixavam a escolha a cargo do plano de execução,
+   e o mesmo código podia devolver resultados diferentes entre execuções. Agora
+   há desempate determinístico pelos valores trazidos, e o diagnóstico reporta
+   `linhas_com_empate_de_instante`, já que empate normalmente indica duplicidade
+   na fonte. Verificado com três execuções consecutivas devolvendo o mesmo valor.
+2. **`monotonically_increasing_id`** — a preocupação procedia, e o identificador
+   sintético foi **eliminado**. A resolução passou a ser feita por par
+   (chave, instante de decisão) distinto, com junção de volta aos fatos. O
+   desenho novo também trata corretamente duas decisões da mesma entidade no
+   mesmo instante, que antes disputavam a mesma partição de janela.
+3. **Chave composta com nulo em um só lado no `join_diagnostics`** — conferido:
+   linhas com qualquer componente nulo são excluídas da análise de casamento e
+   contabilizadas à parte, o que corresponde ao comportamento real do join em
+   SQL. Sem alteração.
+
+Na correção da pergunta 2 surgiu um defeito adicional, também já resolvido: a
+junção de volta aos fatos gerava `AMBIGUOUS_COLUMN_REFERENCE`, porque a tabela
+resolvida descende da própria base de fatos. As colunas de junção passaram a ser
+renomeadas antes da volta.
+
+Estado após as correções: **13 verificações, nenhuma falha**.
+
+## Perguntas em aberto para a auditoria
+
+1. A recusa do `mlflow_run` a fechar run incompleto é rigor útil ou obstáculo
    que levará as pessoas a contornar o helper?
-5. Algum dos quatro módulos deveria simplesmente não existir, pelo critério de
-   admissão declarado em `docs/decisions/` e no plano da biblioteca?
+2. Algum dos quatro módulos deveria simplesmente não existir, pelo critério de
+   admissão declarado no plano da biblioteca?
+3. O desempate por ordem crescente dos valores trazidos é a convenção certa, ou
+   seria preferível falhar diante de empate em vez de escolher?
+4. O `pit_join` assume que `ts_feature` é o instante de referência do dado e que
+   o atraso é constante por fonte. Fontes com atraso variável — por evento, por
+   entidade — ficam fora do contrato. Isso é limitação aceitável ou lacuna?
+5. O que os testes atuais **não** cobrem e deveria ser coberto antes de o
+   material ir para o workspace do trabalho?
 
 ## Critério de bloqueio
 
