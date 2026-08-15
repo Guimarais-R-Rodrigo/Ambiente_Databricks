@@ -7,8 +7,14 @@ evitar é o join que duplica linhas em silêncio: a contagem cresce, ninguém
 percebe, e a base de treino passa a superrepresentar as entidades com mais
 correspondências do lado direito.
 
-Chaves nulas são tratadas explicitamente: em SQL elas nunca casam, e contá-las
-como não-match sem separá-las esconde um problema de qualidade.
+Duas escolhas de contagem que mudam a leitura dos números:
+
+- Chave nula é contada **à parte** e sai do denominador de cobertura. Em SQL ela
+  nunca casa, e misturá-la com a chave órfã esconde um problema de qualidade que
+  tem outra causa e outra correção.
+- Multiplicidade e expansão consideram apenas as chaves **presentes à esquerda**.
+  Uma chave que só existe do lado direito não afeta o resultado do join e não
+  deve inflar a estatística.
 """
 
 from __future__ import annotations
@@ -34,11 +40,12 @@ def diagnosticar_join(
         amostra_orfas: quantas chaves sem correspondência devolver como exemplo.
 
     Returns:
-        Dicionário com contagens dos dois lados, cobertura, multiplicidade do
-        lado direito, fator de expansão previsto e chaves nulas por lado.
-        ``expansao_prevista`` é a razão entre as linhas que o join à esquerda
-        produziria e as linhas originais: 1,0 significa que o join preserva a
-        cardinalidade; acima disso, duplica.
+        Dicionário com as contagens dos dois lados e, separadamente:
+        ``expansao_prevista_left`` e ``expansao_prevista_inner`` (razão entre as
+        linhas resultantes e as originais, por tipo de junção),
+        ``cobertura_pct_chaves_validas`` (denominador exclui chave nula) e
+        ``linhas_descartadas_chave_nula``. Expansão ``1,0`` preserva a
+        cardinalidade; acima disso, o join duplica.
 
     Raises:
         ValueError: chave ausente em algum dos lados ou parâmetro inválido.
@@ -54,61 +61,83 @@ def diagnosticar_join(
         if faltando:
             raise ValueError(f"colunas ausentes em {nome}: {sorted(faltando)}")
 
-    nulo_esq = F.lit(False)
-    nulo_dir = F.lit(False)
+    nulo = F.lit(False)
     for k in chaves:
-        nulo_esq = nulo_esq | F.col(k).isNull()
-        nulo_dir = nulo_dir | F.col(k).isNull()
+        nulo = nulo | F.col(k).isNull()
 
-    esq_valida = esquerda.filter(~nulo_esq)
-    dir_valida = direita.filter(~nulo_dir)
-
-    total_esq = esquerda.count()
-    total_dir = direita.count()
-    nulas_esq = total_esq - esq_valida.count()
-    nulas_dir = total_dir - dir_valida.count()
-
-    # Multiplicidade: quantas linhas do lado direito existem por chave.
-    por_chave = dir_valida.groupBy(*chaves).agg(F.count(F.lit(1)).alias("__n"))
-    stats = por_chave.agg(
-        F.count(F.lit(1)).alias("chaves_distintas"),
-        F.max("__n").alias("max"),
-        F.avg("__n").alias("media"),
+    # Uma passada por lado, em vez de uma ação por métrica: com fonte não
+    # determinística (amostra, tabela sob escrita), contagens tiradas de leituras
+    # diferentes podem ficar mutuamente incoerentes.
+    tot_esq = esquerda.agg(
+        F.count(F.lit(1)).alias("total"),
+        F.sum(F.when(nulo, 1).otherwise(0)).alias("nulas"),
     ).first()
-    chaves_dir_distintas = stats["chaves_distintas"] or 0
-    mult_max = int(stats["max"] or 0)
-    mult_media = float(stats["media"] or 0.0)
+    tot_dir = direita.agg(
+        F.count(F.lit(1)).alias("total"),
+        F.sum(F.when(nulo, 1).otherwise(0)).alias("nulas"),
+    ).first()
 
-    # Linhas da esquerda que encontram ao menos uma correspondência.
+    total_esq = int(tot_esq["total"] or 0)
+    nulas_esq = int(tot_esq["nulas"] or 0)
+    total_dir = int(tot_dir["total"] or 0)
+    nulas_dir = int(tot_dir["nulas"] or 0)
+    validas_esq = total_esq - nulas_esq
+
+    esq_valida = esquerda.filter(~nulo)
+    dir_valida = direita.filter(~nulo)
+
+    # Multiplicidade restrita às chaves que existem à esquerda: chave que só
+    # aparece à direita não participa do join e não deve entrar na estatística.
+    chaves_esq = esq_valida.select(*chaves).distinct()
+    por_chave = (
+        dir_valida.join(chaves_esq, chaves, "left_semi")
+        .groupBy(*chaves)
+        .agg(F.count(F.lit(1)).alias("__n"))
+    )
+
     casadas = esq_valida.join(por_chave, chaves, "inner")
-    linhas_casadas = casadas.count()
-    linhas_resultantes = casadas.agg(F.coalesce(F.sum("__n"), F.lit(0))).first()[0]
+    resumo = casadas.agg(
+        F.count(F.lit(1)).alias("linhas"),
+        F.coalesce(F.sum("__n"), F.lit(0)).alias("resultantes"),
+        F.max("__n").alias("mult_max"),
+        F.avg("__n").alias("mult_media"),
+    ).first()
 
-    denominador = total_esq or 1
+    linhas_casadas = int(resumo["linhas"] or 0)
+    resultantes = int(resumo["resultantes"] or 0)
+    mult_max = int(resumo["mult_max"] or 0)
+    mult_media = float(resumo["mult_media"] or 0.0)
+
+    sem_match_validas = validas_esq - linhas_casadas
+    linhas_left = resultantes + sem_match_validas + nulas_esq
+    base = validas_esq or 1
+
     return {
         "linhas_esquerda": total_esq,
         "linhas_direita": total_dir,
         "chaves_nulas_esquerda": nulas_esq,
         "chaves_nulas_direita": nulas_dir,
-        "chaves_distintas_direita": chaves_dir_distintas,
+        "linhas_descartadas_chave_nula": nulas_esq,
         "linhas_com_match": linhas_casadas,
-        "linhas_sem_match": total_esq - linhas_casadas,
-        "cobertura_pct": round(100.0 * linhas_casadas / denominador, 2),
+        "linhas_sem_match_chave_valida": sem_match_validas,
+        "cobertura_pct_chaves_validas": round(100.0 * linhas_casadas / base, 2),
         "multiplicidade_max_direita": mult_max,
         "multiplicidade_media_direita": round(mult_media, 3),
-        "relacao": _classificar(mult_max),
-        "linhas_apos_join_esquerda": int(linhas_resultantes) + (total_esq - linhas_casadas),
-        "expansao_prevista": round(
-            (int(linhas_resultantes) + (total_esq - linhas_casadas)) / denominador, 3
-        ),
+        "relacao": _classificar(resultantes, linhas_casadas),
+        "linhas_apos_join_left": linhas_left,
+        "linhas_apos_join_inner": resultantes,
+        "expansao_prevista_left": round(linhas_left / (total_esq or 1), 3) if total_esq else 1.0,
+        "expansao_prevista_inner": round(resultantes / (total_esq or 1), 3) if total_esq else 1.0,
         "exemplos_sem_match": _orfas(esq_valida, por_chave, chaves, amostra_orfas),
+        "exemplos_chave_nula": _amostra_nulas(esquerda, nulo, chaves, amostra_orfas),
     }
 
 
-def _classificar(multiplicidade_max: int) -> str:
-    if multiplicidade_max == 0:
+def _classificar(resultantes: int, casadas: int) -> str:
+    """Deriva a relação da expansão observada, não da multiplicidade bruta."""
+    if casadas == 0:
         return "sem correspondencia"
-    if multiplicidade_max == 1:
+    if resultantes == casadas:
         return "1:1 ou N:1 — join preserva a cardinalidade"
     return "1:N — join duplica linhas da esquerda"
 
@@ -118,5 +147,16 @@ def _orfas(
 ) -> list:
     if limite == 0:
         return []
-    orfas = esquerda.select(*chaves).distinct().join(por_chave, list(chaves), "left_anti")
+    orfas = (
+        esquerda.select(*chaves).distinct()
+        .join(por_chave, list(chaves), "left_anti")
+        .orderBy(*chaves)  # ordenado para que a mesma execução devolva a mesma amostra
+    )
     return [linha.asDict() for linha in orfas.limit(limite).collect()]
+
+
+def _amostra_nulas(esquerda: DataFrame, nulo, chaves: Sequence[str], limite: int) -> list:
+    if limite == 0:
+        return []
+    linhas = esquerda.filter(nulo).select(*chaves).limit(limite).collect()
+    return [linha.asDict() for linha in linhas]

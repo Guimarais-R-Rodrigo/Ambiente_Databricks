@@ -5,6 +5,65 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-14 — auditoria da biblioteca e 13 correções
+
+### Auditoria
+
+1. (Rodrigo + Claude) Rodada de auditoria com Claude em sessão sem contexto,
+   registrada em `docs/auditoria/2026-08-14_biblioteca-pit-join/`. Registrada
+   como **A1, não A2**: o auditor é do mesmo modelo do implementador, então
+   pontos cegos comuns permanecem. O gate para o trabalho segue exigindo uma
+   segunda origem.
+2. Resultado: 15 achados, **13 procedentes**, todos confirmados por leitura e
+   depois reproduzidos em teste.
+
+### Corrigido em `pit_join`
+
+1. (Claude) `atraso_publicacao_dias` passa a ser **obrigatório**. Com o default
+   zero e comparação inclusiva, um snapshot diário com data de referência igual
+   à data da decisão entrava no resultado — vazamento sem erro, produzido pelo
+   helper cuja razão de existir é evitá-lo.
+2. (Claude) `janela_maxima_dias` comparava a **disponibilidade** em vez da
+   referência, o que tornava a janela efetiva igual a `janela + atraso`. Um
+   valor de 8 dias entrava sob janela de 3.
+3. (Claude) Diagnóstico separava mal as ausências: chave nula, entidade sem
+   histórico e feature indisponível na data caíam num número só, e a leitura
+   natural levava a afrouxar o atraso — o movimento que reintroduz o vazamento.
+4. (Claude) Empate de instante passa a **interromper por padrão**. O desempate
+   anterior era determinístico mas enviesado: escolhia sempre o menor valor, o
+   que em crédito é viés conservador sistemático, não escolha neutra.
+5. (Claude) Encadear duas chamadas quebrava por colisão da coluna interna de
+   disponibilidade, que agora não é devolvida por padrão.
+6. (Claude) Contagem de `ts_feature` nulo, tipo do parâmetro validado, nomes de
+   coluna protegidos por backticks e fuso da sessão reportado no diagnóstico.
+
+### Corrigido em `join_diagnostics`
+
+1. (Claude) Multiplicidade e relação eram medidas sobre o lado direito inteiro:
+   uma chave que só existe à direita inflava a estatística e fazia o helper
+   anunciar "1:N duplica" enquanto a expansão calculada dizia 1,0.
+2. (Claude) Cobertura usava denominador com chave nula, enquanto os exemplos de
+   órfãs as excluíam — a combinação "3 sem match, 0 exemplos" lia como defeito
+   da ferramenta. Agora há cobertura sobre chaves válidas e contagem separada.
+3. (Claude) Expansão passou a distinguir `left` de `inner`; contagens em passada
+   única, para não produzir métricas incoerentes sobre fonte não determinística;
+   amostra de órfãs ordenada; base vazia devolve expansão 1,0.
+
+### Notas
+
+- Os módulos haviam passado em 13 verificações de runtime escritas por quem os
+  implementou, e **nenhuma delas pegou qualquer um dos treze achados**. As
+  categorias que escaparam: ambiguidade semântica de tipo de data, interação
+  entre parâmetros nunca combinados no teste, diagnóstico que agrega causas
+  distintas, comportamento em escala, encadeamento e política de empate.
+- Duas falhas foram introduzidas durante a própria correção e resolvidas:
+  `conf.get(chave, default)` valida o default como configuração no Spark Connect
+  e derruba a execução; e a fixture sorteava datas que podiam coincidir, criando
+  empate acidental — a guarda nova o denunciou.
+- Verificação final: **10 testes, um por achado, nenhuma falha**.
+- Pendente para o ambiente do trabalho: o achado de escala (A5) recomenda hint
+  de range-join, que exige `explain()` sobre volume representativo.
+
 ## 2026-08-14 — reformulação das instruções pessoais
 
 ### Corrigido

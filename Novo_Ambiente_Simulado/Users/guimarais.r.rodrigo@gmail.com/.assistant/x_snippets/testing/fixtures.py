@@ -147,10 +147,13 @@ def fatos_e_features(
         dt_decisao = inicio + datetime.timedelta(days=rng.randint(30, 120))
         fatos.append((cliente, dt_decisao, rng.randint(0, 1)))
 
-        # Duas versões legítimas, para exercitar também a escolha da mais recente.
-        for _ in range(2):
+        # Duas versões legítimas com datas garantidamente distintas, para
+        # exercitar a escolha da mais recente sem produzir empate acidental —
+        # empate é situação própria, e a fixture não deve criá-la por sorteio.
+        defasagem = rng.randint(1, 20)
+        for extra in (0, rng.randint(1, 10)):
             dt_ok = dt_decisao - datetime.timedelta(
-                days=atraso_real_dias + rng.randint(1, 25)
+                days=atraso_real_dias + defasagem + extra
             )
             features.append((cliente, dt_ok, round(rng.uniform(300, 900), 1), False))
 
