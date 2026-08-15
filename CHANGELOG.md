@@ -5,6 +5,32 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-14 — material didático, notebooks 03 e 04
+
+### Adicionado
+
+1. (Claude) `03_qualidade_de_juncao.py`: os quatro desfechos de um join —
+   preserva, infla, encolhe e perde por chave nula — cada um com os números que
+   o denunciam. Explica por que chave nula é contada à parte: em SQL `NULL`
+   nunca casa com `NULL`, e a causa costuma ser outra (erro de extração, campo
+   opcional) com correção também outra.
+2. (Claude) `04_armadilhas_de_credito.py`: demonstra que somar taxas de
+   inadimplência por safra exagera o acumulado, porque conta o mesmo contrato
+   várias vezes — o erro que a auditoria do Codex corrigiu no ambiente anterior.
+   E constrói uma variável deliberadamente vazada para mostrar que IV altíssimo
+   é motivo de desconfiança, não de comemoração.
+3. (Claude) Seção "Como se localizar" no `x_snippets/README.md`, ligando cada
+   tipo de pergunta ao documento que a responde: inventário, catálogo por
+   demanda, notebooks, skill do tutor e glossário.
+
+### Notas
+
+- Os quatro notebooks foram executados no Free antes da entrega; os dois novos
+  passaram na primeira tentativa.
+- O notebook 04 aproveita para reforçar, com exemplo, que faixas de IV e limites
+  de PSI são referências e não normas — apresentá-las como exigência regulatória
+  sem citar fonte é algo que as instruções do ecossistema proíbem.
+
 ## 2026-08-14 — material didático da biblioteca
 
 ### Adicionado

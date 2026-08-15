@@ -84,17 +84,30 @@ qual módulo uso?"), o catálogo é a referência.
 
 ### Material didático
 
-Dois notebooks explicam, com execução real sobre fixtures, os conceitos onde o
-erro custa mais caro:
+Quatro notebooks executáveis explicam, sobre fixtures sintéticas, os conceitos
+onde o erro custa mais caro. Cada um mostra o problema acontecendo antes de
+apresentar a solução:
 
 | Notebook | Cobre |
 |---|---|
-| [01_vazamento_temporal](../x_docs/notebooks/01_vazamento_temporal.py) | `pit_join` e `split_temporal`: o que dá errado sem eles |
-| [02_drift_e_estabilidade](../x_docs/notebooks/02_drift_e_estabilidade.py) | `psi_calculator`: o que o PSI mede e o que não mede |
+| [01 — vazamento temporal](../x_docs/notebooks/01_vazamento_temporal.py) | `pit_join` e `split_temporal`: como dado do futuro entra no treino |
+| [02 — drift e estabilidade](../x_docs/notebooks/02_drift_e_estabilidade.py) | `psi_calculator`: o que o PSI mede, e por que comparar médias não é PSI |
+| [03 — qualidade de junção](../x_docs/notebooks/03_qualidade_de_juncao.py) | `join_diagnostics`: quando o join infla, encolhe ou perde linhas |
+| [04 — armadilhas de crédito](../x_docs/notebooks/04_armadilhas_de_credito.py) | `vintage_analysis` e `woe_iv_calculator`: somar taxas de safra e celebrar IV alto |
 
-Para explicação linha a linha de qualquer módulo, use
+Para explicação linha a linha de qualquer outro módulo, use
 `@rodrigo-tutor-databricks` com o arquivo anexado — ela lê a versão atual, então
 não fica defasada.
+
+### Como se localizar
+
+| Sua pergunta | Onde responder |
+|---|---|
+| "o que existe nesta biblioteca?" | a tabela de módulos acima |
+| "preciso fazer X, qual módulo uso?" | [catálogo de helpers](../x_docs/catalogo_helpers.md) |
+| "por que este helper existe e o que dá errado sem ele?" | os quatro notebooks |
+| "o que esta linha do código faz?" | `@rodrigo-tutor-databricks` com o módulo anexado |
+| "o que significa este termo?" | [glossário](../x_docs/glossario.md) |
 
 ### Agrupamento por pacote
 
