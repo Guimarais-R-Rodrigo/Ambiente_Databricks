@@ -3,6 +3,11 @@
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe todos os EDAs, tabelas e definições
 > via **Add context**/`@`. Skill: `@rodrigo-cross-eda-ml`.
 
+Antes de pedir código, veja os helpers que a skill recomendada declara: boa
+parte do que este formulário pede já tem implementação verificada, e usá-la
+evita que a lógica seja reescrita a cada conversa. Mapa completo em
+[x_docs/catalogo_helpers.md](../x_docs/catalogo_helpers.md).
+
 ## Quando usar
 
 Use depois de EDAs individuais para avaliar compatibilidade, joins, cobertura e

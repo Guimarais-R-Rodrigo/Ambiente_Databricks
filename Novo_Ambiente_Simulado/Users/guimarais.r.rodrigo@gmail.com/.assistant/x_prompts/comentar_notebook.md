@@ -3,6 +3,11 @@
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe o notebook com **Add context** ou
 > `@`. Para uma célula específica, use `@cell`. Skill: `@rodrigo-comentar-notebook`.
 
+Antes de pedir código, veja os helpers que a skill recomendada declara: boa
+parte do que este formulário pede já tem implementação verificada, e usá-la
+evita que a lógica seja reescrita a cada conversa. Mapa completo em
+[x_docs/catalogo_helpers.md](../x_docs/catalogo_helpers.md).
+
 ## Escolha o modo
 
 - `REVISÃO`: diagnostica e propõe alterações, sem editar.

@@ -124,6 +124,7 @@ Importar de `x_snippets` em vez de reimplementar a lógica. Catálogo completo: 
 | Métricas de classificação e regressão | `x_snippets.ml.metrics_report` |
 | Curvas ROC, PR, lift e KS | `x_snippets.ml.curves_plotly` |
 | Treino com MLflow opcional | `x_snippets.ml.train_lgbm`, `.train_xgboost`, `.train_catboost`, `.optuna_lgbm` |
+| Registro com dataset, split, assinatura e limitações | `x_snippets.ml.mlflow_run` (`run_governado`) |
 | Scorecard e bandas de score | `x_snippets.ml.scorecard_builder`, `x_snippets.ml.score_bands` |
 | Suites não tabulares | `x_snippets.ml.lgbm_ranker`, `.clustering_suite`, `.isolation_forest`, `.survival_cox`, `.prophet_wrapper` |
 

@@ -3,6 +3,11 @@
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe dataset, notebook e desenho
 > experimental com **Add context**/`@`. Skill: `@rodrigo-validacao-estatistica`.
 
+Antes de pedir código, veja os helpers que a skill recomendada declara: boa
+parte do que este formulário pede já tem implementação verificada, e usá-la
+evita que a lógica seja reescrita a cada conversa. Mapa completo em
+[x_docs/catalogo_helpers.md](../x_docs/catalogo_helpers.md).
+
 ## Antes de usar
 
 Declare se o objetivo é diagnóstico preditivo, inferência/estimativa ou experimento.

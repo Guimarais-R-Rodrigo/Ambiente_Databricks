@@ -3,6 +3,11 @@
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe modelo, baseline, dados atuais,
 > endpoint/job e métricas com **Add context**/`@`. Skill: `@rodrigo-monitoramento-modelo`.
 
+Antes de pedir código, veja os helpers que a skill recomendada declara: boa
+parte do que este formulário pede já tem implementação verificada, e usá-la
+evita que a lógica seja reescrita a cada conversa. Mapa completo em
+[x_docs/catalogo_helpers.md](../x_docs/catalogo_helpers.md).
+
 ## Antes de usar
 
 Defina evento positivo, direção das métricas, janela de referência e atraso do rótulo.

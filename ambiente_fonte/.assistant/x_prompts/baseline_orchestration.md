@@ -3,6 +3,11 @@
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe dataset/notebook e target com
 > **Add context** ou `@`. Skill: `@rodrigo-baseline-ml`.
 
+Antes de pedir código, veja os helpers que a skill recomendada declara: boa
+parte do que este formulário pede já tem implementação verificada, e usá-la
+evita que a lógica seja reescrita a cada conversa. Mapa completo em
+[x_docs/catalogo_helpers.md](../x_docs/catalogo_helpers.md).
+
 ## Por que este formulário é detalhado
 
 Um baseline útil depende da unidade de análise, disponibilidade temporal, definição

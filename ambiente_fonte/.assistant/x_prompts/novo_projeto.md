@@ -5,6 +5,11 @@
 > hierárquico nativo, use um `AGENTS.md` no diretório real do projeto. Anexe recursos
 > existentes com **Add context** ou `@`.
 
+Antes de pedir código, veja os helpers que a skill recomendada declara: boa
+parte do que este formulário pede já tem implementação verificada, e usá-la
+evita que a lógica seja reescrita a cada conversa. Mapa completo em
+[x_docs/catalogo_helpers.md](../x_docs/catalogo_helpers.md).
+
 ## Prompt pronto para colar
 
 ```text

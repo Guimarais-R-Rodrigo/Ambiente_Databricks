@@ -3,6 +3,11 @@
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe a tabela/pipeline com **Add context**
 > ou `@`. Skill recomendada: `@rodrigo-eda-profissional`.
 
+Antes de pedir código, veja os helpers que a skill recomendada declara: boa
+parte do que este formulário pede já tem implementação verificada, e usá-la
+evita que a lógica seja reescrita a cada conversa. Mapa completo em
+[x_docs/catalogo_helpers.md](../x_docs/catalogo_helpers.md).
+
 ## Campos essenciais
 
 Defina recurso, granularidade, chaves, coluna de atualização, uso downstream e

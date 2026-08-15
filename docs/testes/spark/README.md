@@ -16,6 +16,25 @@ notebook [tools/spark_smoke_test.py](../../../tools/spark_smoke_test.py)
 | 5 (…159902) | **64 PASS / 0 FAIL / 7 opcionais ausentes** | gate aprovado — [JSON bruto](resultados/2026-08-13_smoke_run5.json) |
 | 6 (…314130) | 64 PASS / 0 FAIL | regressão após parametrizar o caminho — [JSON bruto](resultados/2026-08-14_smoke_run6_parametrizado.json) |
 | 7 (…965277) | **11 PASS / 0 FAIL** | módulos novos e correção do ranker — [JSON bruto](resultados/2026-08-14_modulos_novos.json) |
+| 8 (…191413) | 4 PASS / 1 FAIL | xgboost, optuna, umap e shap verificados; catboost falhou por colisão de run |
+| 9 (…632341) | **4 PASS / 0 FAIL** | catboost isolado e `run_governado` — [JSON bruto](resultados/2026-08-14_catboost_mlflow.json) |
+
+## Módulos com dependência opcional — situação após as rodadas 7 a 9
+
+| Situação | Módulos |
+|---|---|
+| **Verificados em runtime** (8) | `train_lgbm`, `train_xgboost`, `train_catboost`, `optuna_lgbm`, `umap_viz`, `shap_explainer`, `survival_cox`, `kaplan_meier` |
+| **Ainda não verificados** (6) | `lgbm_ranker` (corrigido e reconferido com LightGBM, mas sem rodada dedicada de ranking), `autoencoder_anomaly`, `mlp_embeddings`, `tabnet_wrapper`, `prophet_wrapper`, `arima_wrapper` |
+
+Os seis restantes dependem de PyTorch, TabNet, Prophet e pmdarima, cujo conjunto
+de versões compatíveis com `pandas 1.5.3` e `numpy 1.26.4` ainda não foi
+resolvido. Enquanto isso, permanecem marcados como não verificados no catálogo.
+
+Duas observações que valem para todos os wrappers de treino: eles registram no
+run **ativo** do MLflow, então dois deles na mesma sessão colidem na chave
+`algorithm`; e `shap_explainer` exige `output_index` em resultado multi-output —
+recusa correta, não defeito, já que escolher a classe sozinho seria arbitrar
+sobre a classe positiva.
 
 ## Restrição de ambiente descoberta na rodada 7
 

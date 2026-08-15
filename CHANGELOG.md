@@ -5,6 +5,37 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-14 — biblioteca, sprints 4 a 6
+
+### Adicionado
+
+1. (Claude) `x_snippets/ml/mlflow_run.py`: contexto `run_governado`, que recusa
+   abrir sem limitações declaradas e recusa fechar sem parâmetros, métricas e
+   assinatura. As instruções pessoais já exigiam esse conjunto; os wrappers
+   registravam apenas parâmetros e métricas, e o restante dependia de alguém
+   lembrar. As duas recusas foram verificadas em runtime.
+2. (Claude) Ponteiro para o catálogo de helpers nos **16 prompts**. Antes, zero
+   prompts citavam helpers enquanto 11 das 12 skills os declaravam — quem
+   partisse do formulário não recebia a orientação. Optou-se por referência
+   única em vez de replicar as listas, para não recriar a divergência já
+   corrigida nos dois catálogos e nos dois blocos de comandos.
+3. (Claude) `docs/auditoria/2026-08-14_biblioteca-pit-join/01_contexto.md`:
+   contexto da auditoria A2, com papéis (Claude implementa e não se autoavalia),
+   o que já está verificado e cinco perguntas específicas — entre elas o empate
+   de instantes no `pit_join` e a estabilidade de `monotonically_increasing_id`.
+
+### Notas (sprints 4 a 6)
+
+- Sprint 0 avançou de 3 para **8 dos 14** módulos verificados. Restam seis, que
+  dependem de PyTorch, TabNet, Prophet e pmdarima — conjunto de versões
+  compatível com `pandas 1.5.3`/`numpy 1.26.4` ainda não resolvido.
+- Dois comportamentos confirmados em runtime e documentados: os wrappers de
+  treino registram no run ativo do MLflow e colidem quando usados em sequência
+  na mesma sessão; e `shap_explainer` exige `output_index` em resultado
+  multi-output, recusa correta em vez de arbitrar a classe positiva.
+- `train_catboost` foi aprovado quando isolado: a falha da rodada 8 era colisão
+  de run, não defeito do módulo.
+
 ## 2026-08-14 — biblioteca, sprints 0 a 3
 
 ### Adicionado

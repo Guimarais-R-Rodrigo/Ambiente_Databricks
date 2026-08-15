@@ -3,6 +3,11 @@
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Adicione as duas tabelas com **Add context**
 > ou `@`. A skill adequada depende de o foco ser qualidade, EDA ou modelagem.
 
+Antes de pedir código, veja os helpers que a skill recomendada declara: boa
+parte do que este formulário pede já tem implementação verificada, e usá-la
+evita que a lógica seja reescrita a cada conversa. Mapa completo em
+[x_docs/catalogo_helpers.md](../x_docs/catalogo_helpers.md).
+
 ## Antes de usar
 
 Defina se a comparação é de schema, conteúdo, reconciliação, migração, período ou

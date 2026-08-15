@@ -98,10 +98,18 @@ existem para evitar.
 | Baseline CatBoost com MLflow | `x_snippets.ml.train_catboost` | `train_catboost_baseline` | **imp** |
 | Busca de hiperparâmetros | `x_snippets.ml.optuna_lgbm` | `optimize_lgbm` | **imp** |
 | Ranking (LambdaRank, NDCG) | `x_snippets.ml.lgbm_ranker` | `train_lgbm_ranker`, `evaluate_ranking` | **imp** |
+| **Registro MLflow com os campos exigidos pela política** | `x_snippets.ml.mlflow_run` | `run_governado` | **exec** |
 | MLP com embeddings categóricas | `x_snippets.ml.mlp_embeddings` | `train_embedding_mlp` | **imp** |
 | TabNet | `x_snippets.ml.tabnet_wrapper` | `train_tabnet` | **exec** |
 
-O registro em MLflow é opcional e só ocorre quando solicitado explicitamente.
+O registro em MLflow é opcional nos wrappers e só ocorre quando solicitado.
+Atenção verificada em runtime: os wrappers registram no run **ativo**, então
+chamar dois deles na mesma sessão colide na chave `algorithm`, que o MLflow
+trata como imutável. Use `run_governado` para isolar cada execução.
+
+`run_governado` recusa fechar um run sem parâmetros, métricas e assinatura, e
+recusa abrir sem limitações declaradas — a política de registro das instruções
+passa a ser aplicada em vez de lembrada.
 
 ## Scorecard e bandas de score
 

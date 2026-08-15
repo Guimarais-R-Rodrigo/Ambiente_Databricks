@@ -3,6 +3,11 @@
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe notebooks, tabelas e definição do
 > target com **Add context**/`@`. Skill: `@rodrigo-feature-engineering`.
 
+Antes de pedir código, veja os helpers que a skill recomendada declara: boa
+parte do que este formulário pede já tem implementação verificada, e usá-la
+evita que a lógica seja reescrita a cada conversa. Mapa completo em
+[x_docs/catalogo_helpers.md](../x_docs/catalogo_helpers.md).
+
 ## Pré-requisito crítico
 
 Defina o tempo de observação, o instante de predição e o horizonte do evento. Sem
