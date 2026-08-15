@@ -7,25 +7,32 @@
 > Termo desconhecido? O [glossário](x_docs/glossario.md) separa o que é oficial da
 > Databricks, o que é vocabulário de modelagem e o que é convenção deste projeto.
 
-Um pacote de 12 skills personalizadas, instruções pessoais, prompts guiados, contexto de
+Um pacote de skills personalizadas, instruções pessoais, prompts guiados, contexto de
 projeto e helpers de notebook para análises em Azure Databricks. A arquitetura foi
 separada de propósito para que o usuário saiba exatamente o que a Genie Code carrega
 e o que precisa ser adicionado ou executado manualmente.
 
 ## Visão em 30 segundos
 
+Seta cheia é automático: acontece sem você pedir. Seta tracejada exige ação
+sua — anexar, importar ou executar.
+
 ```mermaid
 flowchart LR
-  U["Pedido do usuário"] --> I[".assistant_instructions.md\nNATIVO • maioria das interações"]
-  U --> S[".assistant/skills\nNATIVO • relevância ou @skill"]
-  U --> A["AGENTS.md do projeto\nNATIVO • hierarquia de diretórios"]
-  P["x_prompts / x_projects\nCUSTOM • @ ou Add context"] --> U
-  S --> H["x_snippets / x_scripts\nCUSTOM • import/exec explícito"]
-  I --> R["Resposta/código"]
-  S --> R
-  A --> R
-  H --> R
+  U["Pedido do usuário"] ==> I[".assistant_instructions.md\nNATIVO • maioria das interações"]
+  U ==> S[".assistant/skills\nNATIVO • relevância ou @skill"]
+  U ==> A["AGENTS.md do projeto\nNATIVO • hierarquia de diretórios"]
+  P["x_prompts / x_projects\nCUSTOM"] -.->|"você anexa antes de pedir"| U
+  S -.->|"a skill indica; você importa"| H["x_snippets / x_scripts\nCUSTOM • só no runtime Python"]
+  I ==> R["Resposta/código"]
+  S ==> R
+  A ==> R
 ```
+
+A seta tracejada entre skills e helpers é o ponto que mais gera engano: a skill
+**recomenda** o módulo no texto que ela injeta, e nada mais. Quem importa é você,
+no notebook. Nenhum conteúdo de `x_snippets` entra na conversa por conta da
+skill.
 
 | Item | A Genie Code usa automaticamente? | Como usar |
 |---|---:|---|
@@ -37,7 +44,7 @@ flowchart LR
 | `x_projects/` | Não | copiar `AGENTS_TEMPLATE.md` como `AGENTS.md` no projeto real |
 | `x_snippets/` | Não | importar explicitamente no Python |
 | `x_scripts/` | Não | importar/executar explicitamente |
-| `x_docs/`, `x_config/`, este README | Não | consulta humana/manual |
+| `x_docs/`, `x_config/`, este README | Não | consulta humana; comece por [x_docs/README.md](x_docs/README.md) |
 
 \* Instruções pessoais e de workspace não se aplicam a **Quick Fix** e
 **Autocomplete**, conforme a documentação oficial atual.
@@ -45,18 +52,19 @@ flowchart LR
 ## Estrutura
 
 ```text
-<pacote>/
+/Users/<username>/
 ├── .assistant_instructions.md          # NATIVO: instruções pessoais
-├── README.md                           # entrada do pacote
 └── .assistant/
+    ├── README.md                       # ← você está aqui: guia do ecossistema
     ├── skills/                         # NATIVO: descoberta; rodrigo-* é custom
     │   └── <skill>/SKILL.md
-    ├── x_prompts/                      # CUSTOM: 16 prompts guiados
+    ├── x_prompts/                      # CUSTOM: formulários de pedido
     ├── x_projects/                     # CUSTOM: contexto + AGENTS_TEMPLATE
     ├── x_snippets/                     # CUSTOM: biblioteca Python
-    ├── x_scripts/                      # CUSTOM: utilitários
-    ├── x_docs/                         # CUSTOM: governança/histórico
-    └── x_config/                       # CUSTOM: configuração legada/manual
+    ├── x_scripts/                      # CUSTOM: utilitários de diagnóstico
+    ├── x_docs/                         # CUSTOM: catálogo, glossário, notebooks
+    │   └── notebooks/                  # CUSTOM: material didático executável
+    └── x_config/                       # CUSTOM: resíduo legado, sem efeito
 ```
 
 O prefixo `x_` significa: **extensão do usuário, não interface institucional da
@@ -67,7 +75,7 @@ Genie Code**. Ele também é um identificador Python válido (`x_snippets`).
 ### Opção A — skills pessoais
 
 1. Versione este pacote em Git.
-2. Copie as 12 pastas para o diretório de usuário documentado pela Genie Code:
+2. Copie as pastas de skill para o diretório de usuário documentado pela Genie Code:
    `/Users/<username>/.assistant/skills/`.
 3. Copie `.assistant_instructions.md` para:
    `/Users/<username>/.assistant_instructions.md`.
@@ -85,7 +93,7 @@ Use permissões e revisão por Git. Instruções de workspace ficam em
 > Não publique segredos, tokens, e-mails pessoais ou caminhos de produção dentro de
 > uma skill. Use placeholders e configuração do projeto.
 
-## Como invocar as 12 skills
+## Como invocar as skills
 
 | Skill | Quando usar |
 |---|---|
@@ -212,7 +220,12 @@ Consulte também [x_snippets/README.md](x_snippets/README.md) e
 `x_snippets/requirements-optional.txt` são um inventário: instale só o subconjunto
 necessário e fixe versões no projeto consumidor.
 
-## Fluxo de engenharia recomendado
+## Fluxo de engenharia recomendado para os SEUS pipelines
+
+> **Isto não descreve como este pacote é publicado.** A publicação do
+> ecossistema é uma cópia de arquivos, sem bundle. O diagrama abaixo é a
+> recomendação que as skills aplicam aos pipelines de dados que **você**
+> construir — mantida aqui como referência do padrão que elas seguem.
 
 ```mermaid
 flowchart TD

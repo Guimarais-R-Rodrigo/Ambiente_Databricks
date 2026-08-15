@@ -22,7 +22,7 @@ procurar por ele na documentação oficial não devolve nada.
 | **Auto-descoberta** | Capacidade do Genie Code de encontrar e carregar um arquivo sozinho, sem você pedir. Vale para skills, instruções e `AGENTS.md` — e para mais nada. | Motivo do prefixo `x_` (ver convenção) |
 | **`description`** | Campo do frontmatter que descreve quando a skill deve ser usada. É o **único** texto que o Genie Code lê para decidir qual skill carregar. | Determina o roteamento; alterá-la exige reteste |
 | **`@menção`** | Digitar `@nome-da-skill` no chat força o carregamento daquela skill, sem depender da escolha automática. | Forma determinística de invocar uma skill |
-| **Add context** | Botão do painel que anexa um arquivo, tabela ou notebook ao chat. É como conteúdo não auto-descoberto entra no contexto. | Única forma de usar `x_prompts` e `x_docs` |
+| **Add context** | Botão do painel que anexa um arquivo, tabela ou notebook ao chat. É como conteúdo não auto-descoberto entra no contexto. | Junto com `@`, é o que traz `x_prompts` e `x_docs` — nunca automático |
 | **`/findTables`** | Comando nativo do Genie Code para localizar tabelas cujo nome você não sabe. | Não confundir com `/eda` e similares, que não existem |
 | **Instruções pessoais** | Arquivo `.assistant_instructions.md` na sua pasta de usuário, com preferências aplicadas à maioria das interações. Limite de 20.000 caracteres. | Raiz de `ambiente_fonte/` |
 | **`AGENTS.md`** | Arquivo de contexto de projeto, descoberto automaticamente ao abrir um arquivo e subir a hierarquia de diretórios. `CLAUDE.md` cumpre o mesmo papel. | Modelo em `x_projects/` |
@@ -33,6 +33,10 @@ procurar por ele na documentação oficial não devolve nada.
 | **Declarative Automation Bundles** | Empacotamento versionável de jobs, pipelines e permissões, com ambientes separados. Nome anterior: Databricks Asset Bundles. | Skill de pipeline |
 | **Git folder** | Repositório Git clonado dentro do workspace. Não é onde as skills são descobertas — é só uma cópia do código. | Rota recomendada de replicação |
 | **Quick Fix / Autocomplete** | Sugestões pontuais do editor. Exceção oficial: instruções pessoais **não** se aplicam a elas. | Limite documentado das instruções |
+| **Driver-side** | Calculado na máquina que coordena o job, não distribuído pelo cluster. Rápido em dado pequeno, e a forma clássica de derrubar um notebook quando o dado é grande. Helpers marcados assim esperam amostra, não a tabela inteira. | `x_snippets.ml.drift_detection` |
+| **Bronze / silver / gold** | Convenção de camadas: bronze recebe o dado bruto, silver limpa e padroniza, gold entrega pronto para consumo. É organização, não exigência da plataforma. | Skill de pipeline |
+| **Expectations** | Regras de qualidade declaradas dentro do pipeline Lakeflow, que registram ou barram linhas fora do esperado. Diferente de checagem avulsa em notebook. | Skill de pipeline |
+| **Readiness (para ML)** | Avaliação de se os dados sustentam modelagem: cobertura, alinhamento temporal, sinal e qualidade. Responde "dá para modelar?" antes de tentar. | Skill de cross-EDA |
 
 ## Modelagem — vocabulário de estatística e ML
 
@@ -69,12 +73,14 @@ Nenhum destes termos existe na documentação da Databricks.
 | **Camada canônica / derivada / operacional** | Canônica é o repositório, única fonte editável; derivada é o simulado; operacional são os workspaces, que são cópias e nunca a verdade. | Divisão que sustenta todo o projeto |
 | **Gate** | Verificação que precisa passar antes de avançar de fase. Não é sugestão: enquanto não passa, não se replica. | Testes de runtime e de roteamento |
 | **Forward test** | Teste que mede **qual skill o Genie Code carrega** diante de um pedido. Não avalia a qualidade da resposta, só o roteamento. | 36 testes, `docs/testes/forward/` |
-| **Smoke test** | Execução dos helpers no runtime real para descobrir o que só quebra fora da máquina local. | 71 verificações, `docs/testes/spark/` |
+| **Smoke test** | Execução dos helpers no runtime real para descobrir o que só quebra fora da máquina local. | Resultados em `docs/testes/spark/` |
 | **Caso positivo / negativo** | No forward test, positivo confirma que a skill certa é carregada; negativo confirma que ela **não** é carregada por um pedido parecido de outro domínio. | Método dos forward tests |
 | **ADR** | Registro de decisão arquitetural. Imutável depois de aceito: mudar de ideia gera um novo ADR que supersede o anterior, preservando o histórico do raciocínio. | `docs/decisions/` |
 | **Handoff** | Documento de passagem de contexto entre sessões ou entre IAs diferentes, escrito para quem chega sem saber de nada. | `docs/handoffs/` |
 | **Helper** | Função pronta e auditada da biblioteca (`x_snippets` ou `x_scripts`). Existe para que a lógica não seja reescrita a cada conversa. | Catálogo em [catalogo_helpers.md](catalogo_helpers.md) |
 | **API pública** | As funções que um módulo oferece para uso externo. As internas começam com `_` e podem mudar sem aviso. | Coluna "API" do catálogo |
+| **Runbook** | Procedimento escrito passo a passo, para ser seguido sob pressão sem improviso. Aqui, o da replicação no trabalho. | `docs/playbooks/` |
+| **AST** | Representação estruturada do código que permite conferir sintaxe sem executá-lo. A validação usa para garantir que todo `.py` compila. | Saída do validador |
 
 ## Termos que descrevem o que **não** existe
 

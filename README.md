@@ -11,7 +11,7 @@
 ## Por que este projeto existe
 
 O ambiente de trabalho (Azure Databricks, CRM bancário, missão de modelos de ML) usa
-um ecossistema de 12 Agent Skills pessoais + instruções + biblioteca Python. Este
+um ecossistema de Agent Skills pessoais, instruções e biblioteca Python. Este
 repositório é a **fonte única de verdade** desse ecossistema: aqui ele é editado,
 validado, testado no Databricks Free Edition e só então replicado para o trabalho.
 
@@ -20,9 +20,9 @@ flowchart LR
   subgraph REPO["Este repositório (canônico)"]
     F["ambiente_fonte/\n(editável)"] -->|"tools/render_simulado.py"| S["Novo_Ambiente_Simulado/\n(derivado, nunca editar)"]
   end
-  S -->|"engine databricks-genie\n(publish --execute)"| FREE["Databricks Free\n(testes: Spark + forward tests)"]
+  S -->|"publicar_free.py --execute"| FREE["Databricks Free\n(testes: Spark + forward tests)"]
   S -->|"cópia manual\n(runbook)"| WORK["Workspace do trabalho\n(Azure, sem CLI)"]
-  WORK -->|"fase 2"| SQUAD["Workspace/.assistant/skills/\n(squad → missão)"]
+  WORK -->|"escala: squad"| SQUAD["Workspace/.assistant/skills/\n(squad → missão)"]
 ```
 
 ## Mapa do repositório
@@ -58,6 +58,33 @@ prefixo `x_` e precisa de ação manual (`@`/Add context, import ou execução):
 
 > Exceção oficial: instruções não se aplicam a **Quick Fix** e **Autocomplete**.
 
+## Antes de começar
+
+Os passos 1 a 3 do percurso abaixo funcionam **sem instalar nada além de
+Python** — são leitura e validação local. Os passos 4 e 5 publicam no Databricks
+e exigem preparo:
+
+| Precisa | Para quê | Como confirmar |
+|---|---|---|
+| Python 3.12 ou superior | rodar as ferramentas locais | `python --version` |
+| Repositório clonado | ter os arquivos | `git clone <url do repo>` |
+| Conta no Databricks Free | ter onde publicar | criar em databricks.com/learn/free-edition |
+| CLI do Databricks autenticada | publicar e conferir | `databricks current-user me` deve devolver seu e-mail |
+
+Instalar e autenticar a CLI:
+
+```powershell
+pip install databricks-cli
+databricks auth login --host <url do seu workspace Free>
+```
+
+Se `databricks current-user me` devolver erro, os passos 4 e 5 vão falhar — e a
+mensagem não deixará claro que a causa é autenticação. Confirme antes.
+
+> No workspace do **trabalho** não há CLI, e isso é esperado: lá a instalação é
+> manual, pelo [runbook de replicação](docs/playbooks/replicacao-trabalho.md).
+> O pré-requisito acima vale para o laboratório.
+
 ## Primeira hora no projeto
 
 Quem chega agora não precisa entender o repositório inteiro para ser útil. Este
@@ -69,8 +96,8 @@ o workspace do Databricks diretamente; edita aqui e publica. Isso evita a
 situação clássica de duas versões divergentes sem saber qual vale.
 
 **2. Veja o produto (10 min).** Abra [ambiente_fonte/.assistant/README.md](ambiente_fonte/.assistant/README.md).
-É o guia do ecossistema que vai para o Databricks: 12 skills, instruções pessoais
-e as extensões. Se algum termo travar a leitura, o [glossário](ambiente_fonte/.assistant/x_docs/glossario.md)
+É o guia do ecossistema que vai para o Databricks: as skills, as instruções
+pessoais e as extensões. Se algum termo travar a leitura, o [glossário](ambiente_fonte/.assistant/x_docs/glossario.md)
 resolve.
 
 **3. Rode a validação (2 min).** Sem alterar nada, execute
@@ -105,8 +132,10 @@ flowchart TD
 
 ## Comandos e o que esperar de cada um
 
-As saídas abaixo foram capturadas de execuções reais, não redigidas à mão. Se o
-seu retorno divergir, a diferença é o diagnóstico.
+As saídas abaixo vêm de execução real, com o nome de usuário substituído por
+placeholder. **As linhas de contagem mudam conforme o repositório cresce** — não
+tente casá-las com o seu retorno. O que importa em cada bloco é a última linha,
+`APROVADO` ou `OK`.
 
 **Validar a fonte** — roda em segundos, não toca em nada:
 
@@ -117,9 +146,9 @@ python tools/validate_assistant.py
 ```text
 raiz analisada     : <repo>\ambiente_fonte
 skills             : 12
-markdown / links   : 102 arquivos / 79 links relativos
-python (AST)       : 61 arquivos
-instrucoes         : 7371/20000 caracteres
+markdown / links   : 102 arquivos / 103 links relativos
+python (AST)       : 70 arquivos
+instrucoes         : 7088/20000 caracteres
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
@@ -151,9 +180,11 @@ python tools/publicar_free.py --verify
 ```
 
 ```text
+usuário: <seu-usuario>
+
 == VERIFY (read-only) ==
-esperados : 165 arquivos
-remotos   : 165 arquivos sob .assistant + instruções
+esperados : 174 arquivos
+remotos   : 174 arquivos sob .assistant + instruções
 ausentes  : 0 | obsoletos: 0
 skills    : 12/12
 extensões : 6/6 diretórios x_
@@ -164,38 +195,6 @@ APROVADO: 0 problema(s)
 A linha `obsoletos` é a que costuma surpreender: a publicação sobrescreve
 arquivos, mas nunca apaga os que saíram da fonte. Um arquivo removido daqui
 continua ativo no workspace até alguém notar — e é essa conferência que nota.
-
-## Governança multi-IA
-
-- `CLAUDE.md` é canônico; `AGENTS.md` (Codex) e `GEMINI.md` são adaptadores finos.
-- Toda IA registra o que fez no `CHANGELOG.md` com atribuição (`(Claude)`, `(Codex)`, …).
-- Mudanças estruturais geram handoff em `docs/handoffs/`.
-- Auditorias formais seguem o padrão multi-LLM do Verg_Alchemy_Hub
-  (`docs/playbooks/auditoria-multillm.md` do Hub): níveis `A0`–`A3`, papéis por IA e
-  pasta `docs/auditoria/<data>_<tema>/` com rodadas individuais + consenso.
-
-## Status e roadmap
-
-| Fase | Entrega | Status |
-|---|---|---|
-| 0 | Bootstrap: git + canônicos + `.claude/` | ✅ concluída |
-| 1 | `ambiente_fonte/` + bateria de validação local | ✅ concluída |
-| 2 | Render do `Novo_Ambiente_Simulado/` | ✅ concluída |
-| 3 | Publicação no Free + gates do Codex: Spark serverless (64/64) e forward tests (36/36) | ✅ concluída¹ |
-| 4 | Matriz Free vs. trabalho + [runbook de replicação](docs/playbooks/replicacao-trabalho.md) | ✅ pronta para execução |
-| 5 | Camada squad (`Workspace/.assistant/skills/`) + revisão dos prompts | ⏳ |
-
-Gates herdados da auditoria do Codex, todos verificados no Databricks Free:
-
-| Gate | Resultado |
-|---|---|
-| Testes Spark no runtime real | ✅ **64 PASS / 0 FAIL** — [detalhes](docs/testes/spark/README.md) (revelou e corrigiu 3 defeitos de runtime) |
-| Forward tests das 12 skills (positivo, negativo, `@menção`) | ✅ **36/36 PASS** — [detalhes](docs/testes/forward/README.md) (sem alterar nenhuma `description`) |
-| Dependências opcionais fixadas e testadas | ⏳ por projeto consumidor (7 módulos ML) |
-
-¹ Fase 3 concluída no essencial. Itens abertos: fixação das dependências
-opcionais por workflow e a troca do `import-dir` manual pelo fluxo governado do
-engine `databricks-genie` do Hub (skill `publicar-free`, ADR-0002).
 
 ## Perguntas frequentes
 
@@ -226,8 +225,13 @@ uma específica, use `@nome-da-skill`. As 36 combinações testadas estão em
 
 **Posso usar dados reais do trabalho no ambiente Free?**
 Não, em nenhuma hipótese. O Free é laboratório e recebe apenas dados sintéticos.
-Identificador corporativo também não entra no repositório — há verificação
-automática que reprova, inclusive em nome de pasta.
+
+Identificador corporativo também não entra no repositório, e a validação reprova
+se entrar — o `validate_assistant.py` varre todo o repositório atrás de padrão
+corporativo, em conteúdo **e** em nome de pasta, porque é assim que o vazamento
+aconteceria: renderizando o simulado com o username do trabalho. Note que o
+username pessoal do laboratório aparece no caminho de `Novo_Ambiente_Simulado/`;
+isso é estado aceito, e só o padrão corporativo é bloqueado (ADR-0003).
 
 **O que são as pastas com prefixo `x_`?**
 Extensões criadas aqui, que o Genie Code **não** carrega sozinho. Precisam de
@@ -238,6 +242,41 @@ que ninguém as confunda com estrutura nativa da plataforma.
 Em `ambiente_fonte/.assistant/x_snippets/` ou `x_scripts/`, nunca no workspace.
 Depois rode o ciclo e, se o helper tiver lógica de Spark, verifique no runtime —
 o teste em `docs/testes/spark/` mostra como.
+
+## Governança multi-IA
+
+- `CLAUDE.md` é canônico; `AGENTS.md` (Codex) e `GEMINI.md` são adaptadores finos.
+- Toda IA registra o que fez no `CHANGELOG.md` com atribuição (`(Claude)`, `(Codex)`, …).
+- Mudanças estruturais geram handoff em `docs/handoffs/`.
+- Auditorias formais seguem o padrão multi-LLM do Verg_Alchemy_Hub
+  (`../Verg_Alchemy_Hub/docs/playbooks/auditoria-multillm.md`, em outro
+  repositório): níveis `A0`–`A3`, papéis por IA e pasta
+  `docs/auditoria/<data>_<tema>/` com rodadas individuais e consenso.
+
+## Status e roadmap
+
+| Fase | Entrega | Status |
+|---|---|---|
+| 0 | Bootstrap: git + canônicos + `.claude/` | ✅ concluída |
+| 1 | `ambiente_fonte/` + bateria de validação local | ✅ concluída |
+| 2 | Render do `Novo_Ambiente_Simulado/` | ✅ concluída |
+| 3 | Publicação no Free + gates do Codex: Spark serverless (64/64) e forward tests (36/36) | ✅ concluída¹ |
+| 4 | Matriz Free vs. trabalho + [runbook de replicação](docs/playbooks/replicacao-trabalho.md) | ✅ pronta para execução |
+| 5 | Camada squad (`Workspace/.assistant/skills/`) + revisão dos prompts | ⏳ |
+
+Gates herdados da auditoria do Codex, todos verificados no Databricks Free:
+
+| Gate | Resultado |
+|---|---|
+| Testes Spark no runtime real | ✅ **64 aprovações, 0 falhas** de 71 verificações — as 7 restantes são módulos com dependência opcional ausente, não falhas. [Detalhes](docs/testes/spark/README.md) |
+| Forward tests das 12 skills (positivo, negativo, `@menção`) | ✅ **36/36 PASS** — [detalhes](docs/testes/forward/README.md) (sem alterar nenhuma `description`) |
+| Dependências opcionais fixadas e testadas | ⏳ por projeto consumidor (7 módulos ML) |
+
+¹ Fase 3 concluída no essencial. Item aberto: fixação das dependências opcionais
+por workflow. A publicação usa `tools/publicar_free.py`, decisão registrada no
+[ADR-0005](docs/decisions/ADR-0005-publicacao-propria-no-free.md) — o engine do
+Hub foi descartado porque publica `.py` como notebook, o que quebraria os
+imports da biblioteca.
 
 ## Fontes oficiais
 

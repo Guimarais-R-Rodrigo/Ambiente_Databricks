@@ -5,6 +5,86 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-14 — auditoria da documentação e 22 correções
+
+Rodada independente sobre os oito READMEs e o glossário, com o auditor tendo
+acesso ao sistema de arquivos e à CLI — o que permitiu verificar afirmações
+contra o código e contra o workspace, em vez de apenas contra o próprio texto.
+Registro em `docs/auditoria/2026-08-14_documentacao/`.
+
+### Corrigido — fatos falsos
+
+1. (Claude) Os blocos de saída do `README.md` estavam desatualizados em três dos
+   cinco números, e o texto mandava tratar divergência como diagnóstico. Um
+   leitor novo concluiria que seu ambiente está quebrado com o repositório
+   aprovado — o inverso do propósito da seção. Números regenerados e a promessa
+   trocada: as linhas de contagem são voláteis, o que importa é o `APROVADO`.
+2. (Claude) O bloco do `--verify` mostrava 165 arquivos contra 174 reais, e
+   omitia a primeira linha da saída — ou seja, havia sido editado à mão logo
+   acima da frase que afirmava o contrário. Corrigido e a afirmação ajustada.
+3. (Claude) Glossário dizia que **Add context** é a "única forma" de usar
+   `x_prompts` e `x_docs`, contradizendo o próprio glossário e outros três
+   documentos: `@` também funciona.
+4. (Claude) Contagem do smoke test divergia entre documentos (71 e 64). São
+   coisas diferentes — 71 verificações, 64 aprovações — e agora está explícito.
+5. (Claude) `x_config/README.md` dizia "o único arquivo desta pasta" havendo
+   também o próprio README.
+
+### Corrigido — afirmações sobre o próprio sistema
+
+1. (Claude) O `README.md` garantia verificação automática de identificador
+   corporativo "inclusive em nome de pasta", mas o validador só cobria
+   `ambiente_fonte/` — e o vetor descrito no ADR-0003 se materializa em
+   `Novo_Ambiente_Simulado/`, que é versionado. **A guarda foi estendida**:
+   `check_repo_corporate` varre o repositório inteiro, conteúdo e caminho,
+   buscando apenas padrão corporativo (o username pessoal do laboratório é
+   estado aceito). O texto passou a descrever a cobertura real.
+2. (Claude) Diagrama e nota de rodapé atribuíam a publicação ao engine do Hub,
+   decisão revertida pelo ADR-0005 e contrariada pelo próprio código.
+3. (Claude) A camada squad aparecia como "fase 2" no diagrama e "Fase 5" na
+   tabela — dois sistemas de numeração sem aviso.
+
+### Adicionado
+
+1. (Claude) Seção **"Antes de começar"** no `README.md`: o percurso mandava
+   publicar sem nunca dizer que isso exige CLI instalada e autenticada, e a
+   única menção a CLI no arquivo dizia que o workspace do trabalho não tem —
+   sugerindo o oposto do pré-requisito. Agora há tabela de pré-requisitos,
+   comandos de instalação e como confirmar.
+2. (Claude) `x_docs/README.md`, que era a única extensão sem porta de entrada.
+   Cinco arquivos dela não eram citados em documento nenhum, incluindo o
+   `SKILL_TEMPLATE.md`. Inclui o procedimento de criar uma skill nova, que não
+   estava escrito em lugar algum.
+3. (Claude) Sete verbetes no glossário para termos usados sem definição:
+   driver-side, bronze/silver/gold, expectations, readiness, runbook e AST.
+
+### Atualizado
+
+1. (Claude) FAQ movido para logo após o percurso inicial — respondia as dúvidas
+   do primeiro dia e estava atrás de governança e roadmap.
+2. (Claude) Os links dos notebooks didáticos quebravam no workspace, que é onde
+   o documento é lido: lá os objetos são notebook e não têm extensão.
+3. (Claude) O mermaid do guia sugeria que a skill carrega os helpers sozinha —
+   exatamente o engano que o prefixo `x_` existe para evitar. Ganhou distinção
+   entre automático e manual, com a ressalva explícita.
+4. (Claude) Diagrama do `x_projects` mostrava o arquivo em `notebooks/` enquanto
+   o texto dizia `modelos/churn/`, ensinando errado o único conceito da seção. O
+   nó "fim da busca" afirmava um limite não documentado.
+5. (Claude) `x_snippets/README.md` declarava que o catálogo é "a única lista
+   mantida" e publicava a segunda lista logo abaixo. Agora a precedência está
+   dita.
+6. (Claude) A seção de fluxo de engenharia do guia descrevia pipelines que o
+   leitor constrói, não a publicação deste pacote — que não usa bundle. Ganhou
+   cabeçalho que separa as duas coisas.
+7. (Claude) Contagens fixas restantes removidas da prosa.
+
+### Não corrigido
+
+- Números de teste citados na documentação (36/36, 64/71) não puderam ser
+  reverificados pelo auditor, que não tinha acesso a `docs/testes/` por
+  instrução. Permanecem como estavam, agora com a distinção entre verificações
+  e aprovações explicitada.
+
 ## 2026-08-14 — auditoria da biblioteca e 13 correções
 
 ### Auditoria

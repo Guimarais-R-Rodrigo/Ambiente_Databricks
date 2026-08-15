@@ -8,7 +8,7 @@ Este projeto não usa nem pretende usar conexões MCP — nem no laboratório, n
 workspace do trabalho. Se você procurava configuração de integração externa, não
 há nada aqui para ajustar.
 
-O único arquivo desta pasta, `mcp_servers.legacy.json`, veio do ambiente anterior
+O único arquivo de configuração desta pasta, `mcp_servers.legacy.json`, veio do ambiente anterior
 e **contém apenas uma lista vazia**. Ele não configura coisa alguma: nem porque
 está vazio, nem porque a Genie Code configura integrações pela página de
 Settings, e não por arquivo no workspace. Está preservado somente como rastro da

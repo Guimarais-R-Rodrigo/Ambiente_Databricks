@@ -37,8 +37,11 @@ Python quando a instalação do notebook exigir.
 
 O mapa completo — organizado por demanda, com função pública e dependências
 marcadas — está em
-[x_docs/catalogo_helpers.md](../x_docs/catalogo_helpers.md). É a única lista
-mantida; procure lá em vez de navegar pelas pastas.
+[x_docs/catalogo_helpers.md](../x_docs/catalogo_helpers.md).
+
+O catálogo é a lista mantida para **demanda → módulo**. A tabela de inventário
+logo abaixo responde outra pergunta — "o que existe?" — e pode ficar para trás
+quando a biblioteca mudar. Havendo divergência entre as duas, vale o catálogo.
 
 ### O que cada módulo faz
 
@@ -88,12 +91,16 @@ Quatro notebooks executáveis explicam, sobre fixtures sintéticas, os conceitos
 onde o erro custa mais caro. Cada um mostra o problema acontecendo antes de
 apresentar a solução:
 
+Todos ficam em `x_docs/notebooks/`. **No workspace do Databricks eles aparecem
+como notebook e sem a extensão `.py`** — abra pelo navegador de arquivos, não
+pelo link, se estiver lendo este documento dentro do Databricks.
+
 | Notebook | Cobre |
 |---|---|
-| [01 — vazamento temporal](../x_docs/notebooks/01_vazamento_temporal.py) | `pit_join` e `split_temporal`: como dado do futuro entra no treino |
-| [02 — drift e estabilidade](../x_docs/notebooks/02_drift_e_estabilidade.py) | `psi_calculator`: o que o PSI mede, e por que comparar médias não é PSI |
-| [03 — qualidade de junção](../x_docs/notebooks/03_qualidade_de_juncao.py) | `join_diagnostics`: quando o join infla, encolhe ou perde linhas |
-| [04 — armadilhas de crédito](../x_docs/notebooks/04_armadilhas_de_credito.py) | `vintage_analysis` e `woe_iv_calculator`: somar taxas de safra e celebrar IV alto |
+| `01_vazamento_temporal` | `pit_join` e `split_temporal`: como dado do futuro entra no treino |
+| `02_drift_e_estabilidade` | `psi_calculator`: o que o PSI mede, e por que comparar médias não é PSI |
+| `03_qualidade_de_juncao` | `join_diagnostics`: quando o join infla, encolhe ou perde linhas |
+| `04_armadilhas_de_credito` | `vintage_analysis` e `woe_iv_calculator`: somar taxas de safra e celebrar IV alto |
 
 Para explicação linha a linha de qualquer outro módulo, use
 `@rodrigo-tutor-databricks` com o arquivo anexado — ela lê a versão atual, então

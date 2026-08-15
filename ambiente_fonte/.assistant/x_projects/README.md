@@ -35,11 +35,11 @@ O diagrama mostra o que acontece ao abrir um notebook em `modelos/churn/`:
 
 ```mermaid
 flowchart BT
-  N["notebooks/exploracao.py<br/><i>arquivo aberto</i>"]
+  N["modelos/churn/exploracao.py<br/><i>arquivo aberto</i>"]
   D1["modelos/churn/<br/><b>AGENTS.md</b> ✓ encontrado"]
   D2["modelos/<br/>sem AGENTS.md"]
   D3["projeto/<br/><b>AGENTS.md</b> ✓ encontrado"]
-  D4["/Users/&lt;username&gt;/<br/>fim da busca"]
+  D4["níveis acima<br/><i>a busca continua subindo</i>"]
   N --> D1 --> D2 --> D3 --> D4
   D1 -.->|"regras específicas de churn"| C["contexto do chat"]
   D3 -.->|"regras gerais do projeto"| C
@@ -55,6 +55,14 @@ regras realmente diferentes.
 Um arquivo que fique apenas aqui em `x_projects/` nunca é descoberto: esta pasta
 guarda modelos. A descoberta só acontece depois que a cópia é renomeada para
 `AGENTS.md` e colocada na árvore do projeto real.
+
+> Até onde a busca sobe não está documentado com precisão. Não conte com um
+> limite específico: coloque o `AGENTS.md` onde ele deve valer, em vez de supor
+> que um arquivo muito acima será alcançado.
+
+Sobre o prefixo `/Workspace` que aparece na árvore acima: ele é usado em
+caminhos que o **código** enxerga. O mecanismo de descoberta de `AGENTS.md`
+trabalha com o caminho sem esse prefixo. Os dois se referem ao mesmo lugar.
 
 ## Qual arquivo usar
 

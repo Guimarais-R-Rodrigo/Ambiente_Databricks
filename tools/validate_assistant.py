@@ -114,6 +114,33 @@ def check_instructions_size(root: Path, problems: list[str]) -> int:
     return size
 
 
+def check_repo_corporate(problems: list[str]) -> int:
+    """Varre o repositório inteiro atrás de identificador **corporativo**.
+
+    O check de caminho abaixo cobre apenas a raiz analisada, e o vetor descrito
+    no ADR-0003 se materializa fora dela: em `Novo_Ambiente_Simulado/`, que é
+    versionado e carrega o nome do usuário no caminho. Aqui a busca é só por
+    padrão corporativo — o username pessoal do laboratório é estado aceito.
+    """
+    corporativo = re.compile(r"c\d{6}|corp\.|\.gov\.br", re.IGNORECASE)
+    ignorar = {".git", "Ambiente_Antigo", "Ajustes_Codex", "__pycache__", ".venv"}
+    verificados = 0
+    for caminho in Path(".").rglob("*"):
+        if any(parte in ignorar for parte in caminho.parts):
+            continue
+        if corporativo.search(str(caminho)):
+            problems.append(f"{caminho}: identificador corporativo no caminho")
+        if not caminho.is_file() or caminho.suffix not in {".md", ".py", ".txt", ".json"}:
+            continue
+        verificados += 1
+        try:
+            if corporativo.search(caminho.read_text(encoding="utf-8")):
+                problems.append(f"{caminho}: identificador corporativo no conteúdo")
+        except (UnicodeDecodeError, OSError):
+            continue
+    return verificados
+
+
 def check_path_hygiene(root: Path, problems: list[str]) -> None:
     """Identificador corporativo em nome de arquivo/pasta escapa ao check de conteúdo.
 
@@ -160,12 +187,14 @@ def main() -> int:
     n_chars = check_instructions_size(root, problems)
     check_text_hygiene(root, problems)
     check_path_hygiene(root, problems)
+    n_repo = check_repo_corporate(problems)
 
     print(f"raiz analisada     : {root}")
     print(f"skills             : {n_skills}")
     print(f"markdown / links   : {n_md} arquivos / {n_links} links relativos")
     print(f"python (AST)       : {n_py} arquivos")
     print(f"instrucoes         : {n_chars}/{INSTRUCTION_LIMIT} caracteres")
+    print(f"repo (corporativo) : {n_repo} arquivos varridos, fora da raiz analisada")
     print()
     for warning in warnings:
         print(f"WARN {warning}")
