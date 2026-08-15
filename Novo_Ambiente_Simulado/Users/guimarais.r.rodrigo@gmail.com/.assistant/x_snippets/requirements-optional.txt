@@ -1,20 +1,45 @@
-# Install only the libraries required by the selected workflow.
-# Pin versions in the consuming project's tested lockfile or bundle.
-catboost
-lifelines
-lightgbm
+# Dependencias opcionais dos modulos de x_snippets/ml.
+#
+# Instale apenas o subconjunto que o workflow exigir. Este arquivo e inventario
+# com referencia de versao, nao lockfile: o projeto consumidor deve fixar o
+# conjunto que testou.
+#
+# ATENCAO - restricao verificada em compute serverless (2026-08-14):
+# instalar estes pacotes SEM fixar versao derruba o kernel. O pip resolve para
+# versoes novas que sobem pandas e numpy, e a plataforma recusa a alteracao dos
+# pacotes core (ERROR_CORE_PACKAGE_VERSION_CHANGE). Fixe sempre numpy e pandas
+# junto das bibliotecas escolhidas.
+#
+# Em job serverless, declare as dependencias no bloco `environments` da
+# submissao. `%pip` antes do primeiro comando Spark aborta a execucao.
+
+# --- pacotes core: fixe sempre, junto de qualquer biblioteca abaixo ---------
+numpy==1.26.4
+pandas==1.5.3
+
+# --- conjunto verificado em runtime (Spark 4.1 serverless, 2026-08-14) ------
+# 13 dos 14 modulos com dependencia opcional executaram com estas versoes.
+catboost==1.2.5
+lifelines==0.27.8
+lightgbm==4.3.0
+optuna==3.6.1
+pmdarima==2.0.4
+pytorch-tabnet==4.1.0
+scikit-learn==1.3.2
+shap==0.44.1
+torch==2.3.1
+umap-learn==0.5.5
+xgboost==2.0.3
+
+# --- sem combinacao funcional conhecida -------------------------------------
+# prophet_wrapper falha com "'Prophet' object has no attribute 'stan_backend'"
+# em serverless, mesmo com autologging desligado: o backend de inferencia do
+# Prophet nao inicializa. Nao prometa execucao com este modulo antes de achar
+# uma combinacao que funcione no ambiente alvo.
+# prophet==1.1.5
+
+# --- ja presentes no runtime Databricks; nao reinstale sem necessidade -------
 matplotlib
-mlflow>=3
-numpy
-optuna
-pandas
+mlflow
 plotly
-pmdarima
-prophet
-pytorch-tabnet
-scikit-learn
 scipy
-shap
-torch
-umap-learn
-xgboost

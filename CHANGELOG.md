@@ -5,6 +5,38 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-14 — biblioteca, fecho do sprint 0
+
+### Notas
+
+1. (Claude) **13 dos 14 módulos com dependência opcional verificados em
+   runtime**, contra zero no início do dia. O conjunto de versões que funciona
+   foi apurado e registrado em `x_snippets/requirements-optional.txt`, que antes
+   listava nomes sem versão — e nessa forma não era instalável em serverless.
+2. (Claude) `prophet_wrapper` permanece o único não verificado: falha com
+   `'Prophet' object has no attribute 'stan_backend'` mesmo com autologging
+   desligado e sem registro. O atributo não é usado pelo nosso código; ele deixa
+   de existir quando o backend de inferência do Prophet não inicializa, o que
+   indica incompatibilidade da biblioteca com o ambiente serverless. Fica
+   marcado como não verificado em vez de presumido funcional.
+
+### Corrigido
+
+1. (Claude) `requirements-optional.txt` reescrito: pacotes core fixados no topo
+   com a explicação do porquê, conjunto verificado com versões exatas, e o
+   Prophet comentado com o motivo. Um inventário sem versões, num ambiente onde
+   instalar sem fixar derruba o kernel, era instrução para quebrar o ambiente.
+
+### Aprendizados de ambiente registrados
+
+- O Databricks liga autologging do MLflow por padrão, e ele intercepta o `fit`
+  mesmo quando o wrapper não registra nada — foi o que mascarou a falha do
+  Prophet na primeira tentativa.
+- `mlp_embeddings` espera uma lista de arrays, um por feature categórica, não
+  uma matriz. A mensagem de erro do módulo já dizia isso com clareza.
+- `tabnet_wrapper` e `arima_wrapper` só falhavam por colisão no run ativo do
+  MLflow; isolados, executam normalmente.
+
 ## 2026-08-14 — biblioteca, endurecimento do pit_join
 
 ### Corrigido

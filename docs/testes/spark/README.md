@@ -19,22 +19,36 @@ notebook [tools/spark_smoke_test.py](../../../tools/spark_smoke_test.py)
 | 8 (…191413) | 4 PASS / 1 FAIL | xgboost, optuna, umap e shap verificados; catboost falhou por colisão de run |
 | 9 (…632341) | **4 PASS / 0 FAIL** | catboost isolado e `run_governado` — [JSON bruto](resultados/2026-08-14_catboost_mlflow.json) |
 
-## Módulos com dependência opcional — situação após as rodadas 7 a 9
+## Módulos com dependência opcional — situação final
+
+**13 dos 14 verificados em runtime.** O conjunto de versões que funciona está em
+`x_snippets/requirements-optional.txt`.
 
 | Situação | Módulos |
 |---|---|
-| **Verificados em runtime** (8) | `train_lgbm`, `train_xgboost`, `train_catboost`, `optuna_lgbm`, `umap_viz`, `shap_explainer`, `survival_cox`, `kaplan_meier` |
-| **Ainda não verificados** (6) | `lgbm_ranker` (corrigido e reconferido com LightGBM, mas sem rodada dedicada de ranking), `autoencoder_anomaly`, `mlp_embeddings`, `tabnet_wrapper`, `prophet_wrapper`, `arima_wrapper` |
+| **Verificados** (13) | `train_lgbm`, `train_xgboost`, `train_catboost`, `optuna_lgbm`, `lgbm_ranker`, `umap_viz`, `shap_explainer`, `survival_cox`, `kaplan_meier`, `autoencoder_anomaly`, `mlp_embeddings`, `tabnet_wrapper`, `arima_wrapper` |
+| **Não verificado** (1) | `prophet_wrapper` |
 
-Os seis restantes dependem de PyTorch, TabNet, Prophet e pmdarima, cujo conjunto
-de versões compatíveis com `pandas 1.5.3` e `numpy 1.26.4` ainda não foi
-resolvido. Enquanto isso, permanecem marcados como não verificados no catálogo.
+`prophet_wrapper` falha com `AttributeError: 'Prophet' object has no attribute
+'stan_backend'` — inclusive com autologging desligado e sem registro. O atributo
+não é usado pelo nosso código: ele deixa de ser criado quando o backend de
+inferência do Prophet não inicializa, o que aponta para incompatibilidade entre
+`prophet 1.1.5` e o ambiente serverless, não defeito do módulo. Enquanto não
+houver combinação de versões que funcione, ele permanece marcado como não
+verificado, e prometer execução com ele é afirmar algo sem evidência.
 
-Duas observações que valem para todos os wrappers de treino: eles registram no
-run **ativo** do MLflow, então dois deles na mesma sessão colidem na chave
-`algorithm`; e `shap_explainer` exige `output_index` em resultado multi-output —
-recusa correta, não defeito, já que escolher a classe sozinho seria arbitrar
-sobre a classe positiva.
+Três armadilhas confirmadas, válidas para todos os wrappers de treino:
+
+- registram no run **ativo** do MLflow, então dois deles na mesma sessão colidem
+  na chave `algorithm`, que o MLflow trata como imutável — use `run_governado`
+  ou `log_mlflow=False` para isolar;
+- o Databricks liga **autologging por padrão**, e ele intercepta o `fit` mesmo
+  quando o wrapper não registra nada; desligue com `mlflow.autolog(disable=True)`
+  quando a biblioteca não for compatível;
+- `shap_explainer` exige `output_index` em resultado multi-output — recusa
+  correta, já que escolher a classe sozinho seria arbitrar sobre a classe
+  positiva; e `mlp_embeddings` espera **uma lista de arrays**, um por feature
+  categórica, não uma matriz.
 
 ## Restrição de ambiente descoberta na rodada 7
 
