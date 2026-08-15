@@ -5,6 +5,54 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-14 — reformulação das instruções pessoais
+
+### Corrigido
+
+1. (Claude) **Duas instruções orientavam para comportamento que falha.** O
+   arquivo pedia para preferir compute serverless e, adiante, para usar cache
+   com benefício demonstrável — mas serverless recusa `cache()` e `persist()`,
+   como o teste de runtime provou. E mandava instalar bibliotecas "conforme a
+   documentação aplicável", quando instalar sem fixar versão derruba o kernel
+   por alteração de pacotes core. Ambas substituídas pelo comportamento
+   verificado.
+
+### Adicionado
+
+1. (Claude) Seção **Limites inegociáveis**, promovida ao topo, reunindo os vetos
+   que estavam dispersos entre preferências de formatação: nada de afirmar
+   execução sem evidência, escrita sem declaração prévia, vazamento temporal,
+   PII exposta, heurística apresentada como norma, ou falha silenciada.
+2. (Claude) Seção **Restrições verificadas do runtime**: serverless sem cache,
+   `spark` global inexistente em módulo, autologging do MLflow ligado por
+   padrão, necessidade de fixar versão, Python possivelmente anterior ao 3.12 e
+   colisão dos wrappers no run ativo.
+3. (Claude) Seção **Use a biblioteca antes de escrever**, a lacuna de maior
+   custo: skills só valem quando carregadas, e conversas curtas frequentemente
+   não carregam nenhuma. Nessas, o único guia ativo é este arquivo, que descrevia
+   `x_snippets` como "pacote opcional" sem nunca pedir preferência por ele.
+   Reescrever segue permitido — desde que declarado.
+4. (Claude) Junção point-in-time e atraso de publicação passam a ser citados no
+   anti-leakage, e diagnóstico de junção entra na validação de dados.
+
+### Removido
+
+1. (Claude) Manual dos diretórios `x_` (cerca de 1.400 caracteres): é referência,
+   já está no README com mais detalhe, e custava em toda interação.
+2. (Claude) Parágrafo esclarecendo que `/eda` e afins não são comandos — o hábito
+   acabou junto com o ambiente antigo, apagado nesta mesma série de sessões.
+3. (Claude) A contagem "as 12 skills" e demais números que envelhecem sozinhos.
+4. (Claude) Procedimento que pertence às skills, onde já está melhor explicado.
+
+### Verificação
+
+Os três critérios de aceite declarados na proposta foram conferidos por script:
+nenhuma instrução contradiz fato registrado em `docs/testes/spark/`; nenhuma
+contagem, lista de pastas ou alias remanescente; e presença confirmada dos seis
+temas que faltavam. Resultado: **7.056 caracteres**, contra 7.371 antes — menos
+texto com o conteúdo crítico presente. Instruções não influenciam a seleção de
+skill, então a certificação de roteamento 36/36 permanece válida sem reteste.
+
 ## 2026-08-14 — material didático, notebooks 03 e 04
 
 ### Adicionado
