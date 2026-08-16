@@ -100,7 +100,8 @@ Destino exato, com o username do workspace do trabalho:
 ├── .assistant_instructions.md        ← nativo: instruções pessoais
 └── .assistant/
     ├── skills/rodrigo-*/             ← nativo: descoberta automática
-    └── hub_prompts | x_projects | hub_snippets | hub_scripts | x_docs | x_config
+    ├── GLOSSARIO.md | CATALOGO_HELPERS.md
+    └── hub_padroes | hub_prompts | hub_snippets | hub_scripts
 ```
 
 O nome da pasta de usuário na origem é irrelevante: copia-se o **conteúdo** da
@@ -121,7 +122,7 @@ Pontos de atenção verificados no laboratório:
 | Verificação | Resultado esperado |
 |---|---|
 | `/Users/<username-trabalho>/.assistant/skills/` | 12 pastas `rodrigo-*`, cada uma com `SKILL.md` |
-| Raiz do `.assistant` | 6 diretórios `x_` mais `README.md` |
+| Raiz do `.assistant` | 4 diretórios `hub_` mais `README.md` |
 | `.assistant_instructions.md` | presente na raiz do usuário, com ponto inicial |
 | Um `.py` qualquer de `hub_snippets` | abre como arquivo de código, não como notebook |
 | `CATALOGO_HELPERS.md` | presente (referenciado por todas as skills) |

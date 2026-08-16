@@ -2,7 +2,7 @@
 # MAGIC %md
 # MAGIC # Vazamento temporal: por que `pit_join` e `temporal_split` existem
 # MAGIC
-# MAGIC > **Material didático (`x_docs`) — não é auto-descoberto pela Genie Code.**
+# MAGIC > **Material didático do Hub — não é auto-descoberto pelo Genie Code.**
 # MAGIC > Abra, execute célula a célula e leia os comentários. Nenhum dado real é
 # MAGIC > usado: tudo vem das fixtures sintéticas da própria biblioteca.
 # MAGIC

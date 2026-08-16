@@ -1,9 +1,10 @@
 # Auditoria da documentação — rodada e consenso
 
 > **Nomenclatura da época.** Os nomes `x_*` e `rodrigo-*` neste registro são
-> os que existiam na data. A correspondência com os nomes atuais está no ADR
-> da reestruturação do Hub; este documento não é reescrito porque descreve o
-> que foi observado, não o estado atual.
+> os que existiam na data. A tradução para os nomes atuais está na tabela de
+> correspondência do [ADR-0006](../../decisions/ADR-0006-identidade-hub.md);
+> este documento não é reescrito porque descreve o que foi observado, não o
+> estado atual.
 
 Data: 2026-08-14 · Auditor: Claude em sessão sem contexto, com acesso ao sistema
 de arquivos e à CLI do Databricks · Nível: **A1**

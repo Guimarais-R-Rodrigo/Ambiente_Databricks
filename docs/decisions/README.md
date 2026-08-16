@@ -25,5 +25,6 @@ changelog. Template em `.claude/templates/adr.md`.
 | [ADR-0003](ADR-0003-quarentena-ambiente-antigo.md) | `Ambiente_Antigo/` local-only (fora do git) | Aceito |
 | [ADR-0004](ADR-0004-declaracao-explicita-de-helpers.md) | Helpers declarados nas skills, não descobertos em chat | Aceito |
 | [ADR-0005](ADR-0005-publicacao-propria-no-free.md) | Publicação própria no Free, herdando o padrão do Hub | Aceito |
+| [ADR-0006](ADR-0006-identidade-hub.md) | De ambiente pessoal a Hub de equipe: `x_`→`hub_`, `rodrigo-`→`hub-ml-`, com tabela de correspondência | Aceito |
 
 Ao adicionar um ADR, atualize esta tabela e registre no `CHANGELOG.md`.

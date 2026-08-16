@@ -1,6 +1,6 @@
 # Glossário
 
-> **Documento customizado (`x_docs`), não auto-descoberto pelo Genie Code.**
+> **Documento do Hub, não auto-descoberto pelo Genie Code.**
 > Consulte-o quando um termo aparecer sem explicação em qualquer README deste
 > ecossistema. Para adicioná-lo ao chat, use `@` ou **Add context**.
 
@@ -19,13 +19,13 @@ procurar por ele na documentação oficial não devolve nada.
 | **Agent Skills** | Padrão aberto (agentskills.io) para dar a um assistente instruções especializadas em pastas. A Databricks adotou o padrão. | As 12 pastas `rodrigo-*` em `skills/` |
 | **`SKILL.md`** | Arquivo obrigatório de cada skill. Contém o cabeçalho de identificação e as instruções do fluxo. | Um por pasta de skill |
 | **Frontmatter** | Bloco de metadados no topo do arquivo, delimitado por `---`. Aqui carrega `name` e `description`. Texto antes dele invalida o arquivo. | Primeiras linhas de todo `SKILL.md` |
-| **Auto-descoberta** | Capacidade do Genie Code de encontrar e carregar um arquivo sozinho, sem você pedir. Vale para skills, instruções e `AGENTS.md` — e para mais nada. | Motivo do prefixo `x_` (ver convenção) |
+| **Auto-descoberta** | Capacidade do Genie Code de encontrar e carregar um arquivo sozinho, sem você pedir. Vale para skills, instruções e `AGENTS.md` — e para mais nada. | Motivo do prefixo `hub_` (ver convenção) |
 | **`description`** | Campo do frontmatter que descreve quando a skill deve ser usada. É o **único** texto que o Genie Code lê para decidir qual skill carregar. | Determina o roteamento; alterá-la exige reteste |
 | **`@menção`** | Digitar `@nome-da-skill` no chat força o carregamento daquela skill, sem depender da escolha automática. | Forma determinística de invocar uma skill |
-| **Add context** | Botão do painel que anexa um arquivo, tabela ou notebook ao chat. É como conteúdo não auto-descoberto entra no contexto. | Junto com `@`, é o que traz `hub_prompts` e `x_docs` — nunca automático |
+| **Add context** | Botão do painel que anexa um arquivo, tabela ou notebook ao chat. É como conteúdo não auto-descoberto entra no contexto. | Junto com `@`, é o que traz `hub_prompts` e `hub_padroes` — nunca automático |
 | **`/findTables`** | Comando nativo do Genie Code para localizar tabelas cujo nome você não sabe. | Não confundir com `/eda` e similares, que não existem |
 | **Instruções pessoais** | Arquivo `.assistant_instructions.md` na sua pasta de usuário, com preferências aplicadas à maioria das interações. Limite de 20.000 caracteres. | Raiz de `ambiente_fonte/` |
-| **`AGENTS.md`** | Arquivo de contexto de projeto, descoberto automaticamente ao abrir um arquivo e subir a hierarquia de diretórios. `CLAUDE.md` cumpre o mesmo papel. | Modelo em `x_projects/` |
+| **`AGENTS.md`** | Arquivo de contexto de projeto, descoberto automaticamente ao abrir um arquivo e subir a hierarquia de diretórios. `CLAUDE.md` cumpre o mesmo papel. | Modelo em `docs/historico/`, no repositório |
 | **Serverless** | Compute gerenciado pela Databricks, sem cluster para configurar. É o único disponível na Free Edition e tem restrições — não aceita `cache()`, por exemplo. | Onde os helpers foram testados |
 | **Unity Catalog** | Camada de governança de dados: catálogos, schemas, tabelas, permissões e linhagem. Origem do padrão `catalog.schema.table`. | Exemplos de acesso a dados |
 | **MLflow** | Ferramenta de registro de experimentos: parâmetros, métricas, artefatos e versões de modelo. | Skills de baseline e monitoramento |
@@ -82,7 +82,7 @@ Nenhum destes termos existe na documentação da Databricks.
 | **Caso positivo / negativo** | No forward test, positivo confirma que a skill certa é carregada; negativo confirma que ela **não** é carregada por um pedido parecido de outro domínio. | Método dos forward tests |
 | **ADR** | Registro de decisão arquitetural. Imutável depois de aceito: mudar de ideia gera um novo ADR que supersede o anterior, preservando o histórico do raciocínio. | `docs/decisions/` |
 | **Handoff** | Documento de passagem de contexto entre sessões ou entre IAs diferentes, escrito para quem chega sem saber de nada. | `docs/handoffs/` |
-| **Helper** | Função pronta e auditada da biblioteca (`hub_snippets` ou `hub_scripts`). Existe para que a lógica não seja reescrita a cada conversa. | Catálogo em [catalogo_helpers.md](catalogo_helpers.md) |
+| **Helper** | Função pronta e auditada da biblioteca (`hub_snippets` ou `hub_scripts`). Existe para que a lógica não seja reescrita a cada conversa. | Catálogo em [CATALOGO_HELPERS.md](CATALOGO_HELPERS.md) |
 | **API pública** | As funções que um módulo oferece para uso externo. As internas começam com `_` e podem mudar sem aviso. | Coluna "API" do catálogo |
 | **Runbook** | Procedimento escrito passo a passo, para ser seguido sob pressão sem improviso. Aqui, o da replicação no trabalho. | `docs/playbooks/` |
 | **AST** | Representação estruturada do código que permite conferir sintaxe sem executá-lo. A validação usa para garantir que todo `.py` compila. | Saída do validador |

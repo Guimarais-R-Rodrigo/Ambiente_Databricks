@@ -1,8 +1,8 @@
 # `hub_prompts` — biblioteca personalizada de prompts para Genie Code
 
-> **EXTENSÃO PERSONALIZADA (`x_`) — NÃO AUTO-DESCOBERTA.** Esta pasta não é uma
+> **EXTENSÃO DO HUB (`hub_`) — NÃO AUTO-DESCOBERTA.** Esta pasta não é uma
 > estrutura institucional da Databricks e seu conteúdo não é carregado
-> automaticamente pelo Genie Code. O prefixo `x_` torna essa diferença explícita.
+> automaticamente pelo Genie Code. O prefixo `hub_` torna essa diferença explícita.
 
 ## Para que serve
 

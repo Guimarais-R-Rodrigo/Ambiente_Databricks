@@ -1,6 +1,6 @@
 # Catálogo de helpers — demanda → módulo
 
-> **Documento customizado (`x_docs`), não auto-descoberto pelo Genie Code.**
+> **Documento do Hub, não auto-descoberto pelo Genie Code.**
 > Adicione-o ao chat com `@` ou **Add context** quando quiser explorar a
 > biblioteca inteira. Cada `SKILL.md` já declara os helpers do seu próprio
 > fluxo; este catálogo é a visão completa e a fonte de manutenção.

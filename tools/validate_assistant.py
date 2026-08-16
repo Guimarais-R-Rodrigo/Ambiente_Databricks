@@ -60,6 +60,36 @@ def iter_files(root: Path, suffix: str) -> list[Path]:
     return sorted(p for p in root.rglob(f"*{suffix}") if p.is_file())
 
 
+def alvo_existe(origem: Path, alvo: str) -> bool:
+    """Resolve link relativo **respeitando a caixa** do nome.
+
+    `Path.exists()` no NTFS ignora maiúsculas: um link para `catalogo.md` passa
+    quando o arquivo é `CATALOGO.md`. O workspace Databricks não ignora, e o
+    link morre exatamente no ambiente onde alguém clica nele. Foi assim que um
+    link do glossário para o catálogo passou por três validações e só apareceu
+    quando um auditor consultou o workspace.
+    """
+    if not (origem / alvo).resolve().exists():
+        return False
+    # Desce componente a componente a partir da origem, conferindo cada nome
+    # contra a listagem real. `resolve()` normaliza a caixa para a do disco, e
+    # por isso não serve aqui: é justamente a diferença que se quer detectar.
+    atual = origem
+    for parte in alvo.replace("\\", "/").split("/"):
+        if parte in ("", "."):
+            continue
+        if parte == "..":
+            atual = atual.parent
+            continue
+        try:
+            if parte not in {p.name for p in atual.iterdir()}:
+                return False
+        except OSError:
+            return True  # sem permissão de listar: não invente reprovação
+        atual = atual / parte
+    return True
+
+
 def check_skill_frontmatter(root: Path, problems: list[str]) -> int:
     skills_dir = root / ".assistant" / "skills"
     count = 0
@@ -127,7 +157,7 @@ def check_markdown(root: Path, problems: list[str]) -> tuple[int, int]:
             if target.startswith(("http://", "https://", "mailto:")):
                 continue
             links_checked += 1
-            if not (md.parent / target).resolve().exists():
+            if not alvo_existe(md.parent, target):
                 problems.append(f"{md}: link relativo quebrado -> {target}")
     return len(md_files), links_checked
 
@@ -153,7 +183,7 @@ def check_notebook_links(root: Path, problems: list[str]) -> tuple[int, int]:
                 if target.startswith(("http://", "https://", "mailto:")):
                     continue
                 links_checked += 1
-                if not (nb.parent / target).resolve().exists():
+                if not alvo_existe(nb.parent, target):
                     problems.append(f"{nb}: link relativo quebrado -> {target}")
     return len(notebooks), links_checked
 
@@ -326,7 +356,7 @@ def check_repo_links(root: Path, problems: list[str]) -> int:
             if alvo.startswith(("http://", "https://", "mailto:")):
                 continue
             verificados += 1
-            if not (caminho.parent / alvo).resolve().exists():
+            if not alvo_existe(caminho.parent, alvo):
                 problems.append(f"{relativo}: link relativo quebrado -> {alvo}")
     return verificados
 

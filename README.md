@@ -242,7 +242,7 @@ remotos   : 176 arquivos sob .assistant + instruções
 ausentes  : 0 | obsoletos: 0
 plataforma: 1 arquivo(s) gerenciado(s) — .assistant/.mcp_servers.json
 skills    : 12/12
-extensões : 6/6 diretórios x_
+extensões : 4/4 diretórios hub_
 
 APROVADO: 0 problema(s)
 ```

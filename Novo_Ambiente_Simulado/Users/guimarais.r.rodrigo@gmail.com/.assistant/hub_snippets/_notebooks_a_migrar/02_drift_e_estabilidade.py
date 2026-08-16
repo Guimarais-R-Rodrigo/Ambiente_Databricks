@@ -2,7 +2,7 @@
 # MAGIC %md
 # MAGIC # Drift: o que o PSI mede, e o que ele **não** mede
 # MAGIC
-# MAGIC > **Material didático (`x_docs`) — não é auto-descoberto pela Genie Code.**
+# MAGIC > **Material didático do Hub — não é auto-descoberto pelo Genie Code.**
 # MAGIC > Dados sintéticos apenas.
 # MAGIC
 # MAGIC ## Por que este notebook existe

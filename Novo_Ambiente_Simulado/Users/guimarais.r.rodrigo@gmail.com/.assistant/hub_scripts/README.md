@@ -1,6 +1,6 @@
 # `hub_scripts` — utilitários executados explicitamente
 
-> **EXTENSÃO CUSTOMIZADA (`x_`) — não auto-descoberta nem executada pelo Genie Code.**
+> **EXTENSÃO DO HUB (`hub_`) — não auto-descoberta nem executada pelo Genie Code.**
 
 Os scripts desta pasta são helpers de diagnóstico. Importe-os ou execute-os de forma
 explícita depois de adicionar `.assistant` ao `sys.path`. Para produção, incorpore o

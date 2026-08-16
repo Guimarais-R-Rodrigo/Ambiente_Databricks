@@ -1,6 +1,6 @@
 # `hub_snippets` — biblioteca Python customizada
 
-> **EXTENSÃO CUSTOMIZADA (`x_`) — não auto-descoberta nem instalada pelo Genie Code.**
+> **EXTENSÃO DO HUB (`hub_`) — não auto-descoberta nem instalada pelo Genie Code.**
 
 Esta pasta preserva helpers reutilizáveis de notebook. Ela não é uma Agent Skill e
 nenhum módulo é carregado automaticamente. Importe somente o que o notebook usa.

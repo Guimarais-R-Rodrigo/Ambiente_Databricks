@@ -159,19 +159,23 @@ um recurso nativo documentado. Ele não deve ser confundido com os aliases pesso
 
 ## Contexto automático por projeto
 
-Use o modelo `docs/historico/AGENTS_TEMPLATE.md`, no repositório:
+O Genie Code descobre `AGENTS.md` e `CLAUDE.md` ao abrir um arquivo ou notebook e
+percorrer a hierarquia de diretórios acima dele. É mecanismo **nativo**, e é o
+único jeito de dar contexto de projeto sem anexar nada a cada conversa.
 
-1. Copie-o como `AGENTS.md` para a raiz do projeto real.
-2. Preencha objetivos, fontes, grão, schemas, permissões, ambiente, testes e decisões.
-3. Mantenha o arquivo junto do código no Git.
-4. Crie `AGENTS.md` mais específico em uma subpasta somente quando esse escopo
-   realmente precisar de regras diferentes.
+O que isso implica na prática:
 
-O Genie Code descobre `AGENTS.md`/`CLAUDE.md` ao abrir um arquivo ou notebook e
-percorrer a hierarquia ancestral. O arquivo precisa estar **na árvore do projeto
-real** para valer: guardá-lo no `.assistant` não cria memória automática. Um
-modelo de partida está em `docs/historico/AGENTS_TEMPLATE.md`, no repositório —
-fora do que é publicado aqui.
+1. O arquivo precisa estar **na árvore do projeto real** — guardá-lo aqui no
+   `.assistant` não cria memória automática nenhuma.
+2. A localização define o escopo: `AGENTS.md` na raiz do projeto vale para tudo
+   abaixo; um em subpasta acrescenta regras só naquele escopo.
+3. Crie o mais específico apenas quando aquele escopo tiver regras realmente
+   diferentes — os arquivos encontrados somam contexto, não se substituem.
+
+Conteúdo que vale a pena: objetivo e unidade de análise, recursos autorizados,
+invariantes de negócio, convenções de código do projeto, comandos de validação e
+limites de escrita. Evite backlog, diário de sessão e resultado transitório —
+esses envelhecem e passam a atrapalhar.
 
 ## Helpers opcionais
 
@@ -250,9 +254,20 @@ flowchart TD
 
 ## MCP e integrações
 
-Fora do escopo deste ecossistema: não há conexão MCP no laboratório nem no
-anterior, contém apenas uma lista vazia e não configura nada — ver
-[hub_padroes/README.md](hub_padroes/README.md). Nunca armazene tokens no Git.
+Fora do escopo deste ecossistema: **não há conexão MCP**, nem no laboratório nem
+no workspace do trabalho. Se você procurava configuração de integração externa,
+não há nada aqui para ajustar.
+
+Dois avisos que evitam confusão:
+
+- **MCP configura-se em Genie Code → Settings**, nunca por arquivo no workspace.
+- Abrir aquele painel faz a **plataforma escrever**
+  `/Users/<username>/.assistant/.mcp_servers.json` com a lista de conectores
+  internos. Esse arquivo é saída da configuração, não entrada: criá-lo à mão não
+  configura nada, e **não deve ser apagado** — a conferência do projeto o
+  reconhece e o separa dos arquivos obsoletos.
+
+Nunca armazene tokens no Git.
 
 ## Validação antes de publicar
 

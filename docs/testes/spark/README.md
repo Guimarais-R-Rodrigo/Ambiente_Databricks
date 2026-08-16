@@ -1,14 +1,15 @@
 # Testes Spark serverless dos helpers
 
 > **Nomenclatura da época.** Os nomes `x_*` e `rodrigo-*` neste registro são
-> os que existiam na data. A correspondência com os nomes atuais está no ADR
-> da reestruturação do Hub; este documento não é reescrito porque descreve o
-> que foi observado, não o estado atual.
+> os que existiam na data. A tradução para os nomes atuais está na tabela de
+> correspondência do [ADR-0006](../../decisions/ADR-0006-identidade-hub.md);
+> este documento não é reescrito porque descreve o que foi observado, não o
+> estado atual.
 
 Gate da fase 3 (herdado da auditoria do Codex): executar `x_snippets`/`x_scripts`
 no runtime Databricks real. Executor: job serverless one-time no Free Edition,
 notebook [tools/spark_smoke_test.py](../../../tools/spark_smoke_test.py)
-(importado em `/Users/<username>/x_lab/`), dados 100% sintéticos.
+(importado em `/Users/<username>/hub_lab/`), dados 100% sintéticos.
 
 ## Resultado — 2026-08-13 (Spark 4.1.0 serverless) ✅ APROVADO
 
@@ -142,9 +143,9 @@ onde não há CLI: basta importá-lo e executar pela interface (passo 6.3 do
 ## Reexecutar
 
 ```powershell
-databricks workspace import "/Users/<username>/x_lab/spark_smoke_test" --file tools\spark_smoke_test.py --format SOURCE --language PYTHON --overwrite
+databricks workspace import "/Users/<username>/hub_lab/spark_smoke_test" --file tools\spark_smoke_test.py --format SOURCE --language PYTHON --overwrite
 
-$job = '{"run_name":"smoke","tasks":[{"task_key":"smoke","notebook_task":{"notebook_path":"/Users/<username>/x_lab/spark_smoke_test"}}]}'
+$job = '{"run_name":"smoke","tasks":[{"task_key":"smoke","notebook_task":{"notebook_path":"/Users/<username>/hub_lab/spark_smoke_test"}}]}'
 [System.IO.File]::WriteAllText("$env:TEMP\smoke_job.json", $job)
 databricks jobs submit --json "@$env:TEMP\smoke_job.json"
 ```

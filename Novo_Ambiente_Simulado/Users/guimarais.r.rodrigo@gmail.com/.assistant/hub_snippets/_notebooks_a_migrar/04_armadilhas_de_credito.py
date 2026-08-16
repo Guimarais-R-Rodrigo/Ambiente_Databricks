@@ -2,7 +2,7 @@
 # MAGIC %md
 # MAGIC # Crédito: duas contas que quase todo mundo erra
 # MAGIC
-# MAGIC > **Material didático (`x_docs`) — não é auto-descoberto pela Genie Code.**
+# MAGIC > **Material didático do Hub — não é auto-descoberto pelo Genie Code.**
 # MAGIC > Dados sintéticos apenas. Inventário completo da biblioteca no
 # MAGIC > [catálogo de helpers](../../CATALOGO_HELPERS.md).
 # MAGIC

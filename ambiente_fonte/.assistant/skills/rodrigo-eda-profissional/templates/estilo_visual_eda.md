@@ -280,9 +280,9 @@ PÓS longos:
 
 ## 11. Índice de Seções (obrigatório)
 
-Todo notebook EDA deve começar com um índice visual. O padrão oficial é usar `snippets/visual/index_generator.py`.
+Todo notebook EDA deve começar com um índice visual. O padrão oficial é usar `hub_snippets/visual/index_generator.py`.
 
-* Mapeamento emoji ↔ seção: definido em `snippets/constants/emojis.py`
+* Mapeamento emoji ↔ seção: definido em `hub_snippets/constants/emojis.py`
 * O índice deve listar etapa, título e descrição curta.
 * O índice pode ser renderizado em HTML ou Markdown.
 
@@ -292,7 +292,7 @@ Exemplo de referência:
 
 ## 12. Section Headers (padrão por seção)
 
-Cada seção principal da EDA deve abrir com header visual via `snippets/visual/section_header.py`.
+Cada seção principal da EDA deve abrir com header visual via `hub_snippets/visual/section_header.py`.
 
 Formato esperado:
 

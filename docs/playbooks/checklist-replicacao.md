@@ -83,7 +83,7 @@ subárvore, não a pasta de usuário do laboratório.
 ## Fase 5 — verificar a estrutura
 
 - [ ] `.assistant/skills/` tem 12 pastas `rodrigo-*`, cada uma com `SKILL.md`
-- [ ] `.assistant/` tem os 6 diretórios `x_` mais `README.md`
+- [ ] `.assistant/` tem os 4 diretórios `hub_` mais `README.md`
 - [ ] `.assistant_instructions.md` presente na raiz do usuário
 - [ ] Abrir um `.py` de `hub_snippets`: precisa ser **arquivo**, não notebook
 - [ ] Abrir um notebook de `hub_snippets/_notebooks_a_migrar/`: precisa ser **notebook**

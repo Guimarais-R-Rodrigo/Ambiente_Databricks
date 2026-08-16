@@ -33,7 +33,7 @@ INSTRUÇÕES
 1. Verifique o contexto anexado e liste dúvidas que impedem definição segura.
 2. Proponha uma árvore simples de projeto, separando código, testes, configuração e
    documentação. Não invente nomes de catálogos, credenciais ou owners.
-3. Gere um `AGENTS.md` a partir do template de `x_projects`, com apenas instruções
+3. Gere um `AGENTS.md` do zero, com apenas instruções
    aplicáveis aos arquivos daquele diretório e descendentes.
 4. Para implantação, proponha Declarative Automation Bundles com targets separados
    quando fizer sentido; não faça deploy nem crie recursos sem autorização.
@@ -50,7 +50,7 @@ CONTRATO DE SAÍDA
 
 VALIDAÇÃO FINAL
 - Confirme que `AGENTS.md` será colocado no diretório ancestral correto.
-- Diferencie estrutura oficial Databricks de convenções personalizadas `x_`.
+- Diferencie estrutura oficial Databricks das convenções do Hub (`hub_`/`hub-`).
 - Verifique que nenhum placeholder, segredo ou path pessoal ficou no artefato final.
 ```
 
