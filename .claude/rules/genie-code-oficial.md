@@ -31,7 +31,8 @@ não existe**. Em dúvida, verificar a documentação oficial antes de afirmar.
 
 ## Convenção local
 
-- Conteúdo não auto-descoberto usa prefixo `x_` e READMEs explicam que exige
+- Conteúdo não auto-descoberto usa prefixo `hub_` (pasta) ou `hub-` (skill), e
+  READMEs explicam que exige
   `@`/Add context, import ou execução manual.
 - Após editar skill publicada: chat novo; se metadata cachear, hard refresh.
 

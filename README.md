@@ -4,7 +4,7 @@
 > extensões) do **Databricks Genie Code**, com governança multi-IA, validação
 > automatizada e trilha de publicação do ambiente pessoal até a squad/missão.
 >
-> Primeira vez aqui? O [glossário](ambiente_fonte/.assistant/x_docs/glossario.md)
+> Primeira vez aqui? O [glossário](ambiente_fonte/.assistant/GLOSSARIO.md)
 > explica os termos deste README, separando o que é oficial da Databricks, o que
 > é vocabulário de modelagem e o que é convenção criada neste projeto.
 
@@ -39,14 +39,19 @@ flowchart LR
 | `docs/handoffs/` | Contexto de passagem entre IAs/sessões | append-only |
 | `docs/playbooks/` | Procedimentos repetíveis (ciclo de vida, replicação) | sim |
 | `docs/testes/` | Evidência dos gates: Spark serverless e forward tests | append-only |
+| `docs/historico/` | O que saiu do produto e por quê (roadmap, contexto legado) | sim |
+| `docs/sprints/` | Relatório de cada sprint da reestruturação do Hub | append-only |
 | `Ajustes_Codex/` | Entrega congelada da auditoria do Codex (2026-08-13) | **não** (referência) |
 | `Ambiente_Antigo/` | Export original do trabalho — **local-only, git-ignored** (ADR-0003) | **não** (referência) |
 | `CHANGELOG.md` | Registro de toda mudança relevante, com IA autora | append-only |
 
-## O que o Genie Code lê (nativo) vs. o que é extensão (`x_`)
+## O que o Genie Code lê (nativo) vs. o que é do Hub (`hub_`)
 
-O Genie Code auto-descobre apenas as estruturas nativas. Tudo que não é nativo usa o
-prefixo `x_` e precisa de ação manual (`@`/Add context, import ou execução):
+O Genie Code auto-descobre apenas as estruturas nativas. Tudo que é nosso leva o
+prefixo **`hub_`** e precisa de ação manual (`@`/Add context, import ou execução).
+A regra se decora numa frase: **underscore onde o Python importa, hífen onde a
+plataforma nomeia** — por isso as pastas são `hub_snippets` e as skills
+`hub-ml-<tema>`.
 
 | Item | Auto-descoberto? | Como usar |
 |---|---:|---|
@@ -54,10 +59,10 @@ prefixo `x_` e precisa de ação manual (`@`/Add context, import ou execução):
 | `/Users/<username>/.assistant_instructions.md` | **Sim** | instruções pessoais (≤ 20.000 chars) |
 | `Workspace/.assistant_workspace_instructions.md` | **Sim** | admins; fase squad |
 | `AGENTS.md` / `CLAUDE.md` no workspace | **Sim** | descoberta hierárquica ao abrir arquivo |
-| `x_prompts/`, `x_docs/` | Não | adicionar com `@`/Add context |
-| `x_projects/` | Não | **copiar** `AGENTS_TEMPLATE.md` como `AGENTS.md` na raiz do projeto real — arquivo que fique nesta pasta nunca é descoberto |
-| `x_snippets/`, `x_scripts/` | Não | importar/executar explicitamente |
-| `x_config/` | Não | resíduo legado, não se anexa a nada ([por quê](ambiente_fonte/.assistant/x_config/README.md)) |
+| `hub_prompts/` | Não | adicionar com `@`/Add context |
+| `hub_snippets/`, `hub_scripts/` | Não | importar/executar explicitamente |
+| `hub_padroes/` | Não | consulta humana: os moldes de todo objeto do Hub |
+| `skills/hub-ml-<tema>/` | **Sim** | é a única estrutura nativa com conteúdo nosso |
 
 > Exceção oficial: instruções não se aplicam a **Quick Fix** e **Autocomplete**.
 
@@ -122,7 +127,7 @@ situação clássica de duas versões divergentes sem saber qual vale.
 
 **2. Veja o produto (10 min).** Abra [ambiente_fonte/.assistant/README.md](ambiente_fonte/.assistant/README.md).
 É o guia do ecossistema que vai para o Databricks: as skills, as instruções
-pessoais e as extensões. Se algum termo travar a leitura, o [glossário](ambiente_fonte/.assistant/x_docs/glossario.md)
+pessoais e as extensões. Se algum termo travar a leitura, o [glossário](ambiente_fonte/.assistant/GLOSSARIO.md)
 resolve.
 
 **3. Rode a validação (2 min).** Sem alterar nada, execute
@@ -257,7 +262,7 @@ vez de mandar removê-lo.
 
 **Preciso saber Databricks para contribuir?**
 Para editar documentação e skills, não — o conteúdo é Markdown e o ciclo são
-quatro comandos. Para mexer na biblioteca Python (`x_snippets`, `x_scripts`) sim,
+quatro comandos. Para mexer na biblioteca Python (`hub_snippets`, `hub_scripts`) sim,
 porque o código roda em Spark e as armadilhas são de lá.
 
 **Por que existem duas pastas com o mesmo conteúdo?**
@@ -298,13 +303,14 @@ envelhecer em dois lugares. **Antes de confiar no check em outra organização,
 acrescente ali o formato de matrícula e o domínio de lá.** Padrão que não está
 na constante passa sem alarme.
 
-**O que são as pastas com prefixo `x_`?**
+**O que são as pastas com prefixo `hub_`?**
 Extensões criadas aqui, que o Genie Code **não** carrega sozinho. Precisam de
 `@`/Add context, import ou execução explícita. O prefixo existe justamente para
-que ninguém as confunda com estrutura nativa da plataforma.
+que ninguém as confunda com estrutura nativa da plataforma — e para que isso se
+entenda batendo o olho na árvore de pastas, sem ler legenda.
 
 **Encontrei um erro no código de um helper. Onde corrijo?**
-Em `ambiente_fonte/.assistant/x_snippets/` ou `x_scripts/`, nunca no workspace.
+Em `ambiente_fonte/.assistant/hub_snippets/` ou `hub_scripts/`, nunca no workspace.
 Depois rode o ciclo e, se o helper tiver lógica de Spark, verifique no runtime —
 o teste em `docs/testes/spark/` mostra como.
 
@@ -335,7 +341,7 @@ Gates herdados da auditoria do Codex, todos verificados no Databricks Free:
 |---|---|
 | Testes Spark no runtime real | ✅ **64 aprovações, 0 falhas** de 71 verificações — as 7 restantes são módulos com dependência opcional ausente, não falhas. [Detalhes](docs/testes/spark/README.md) |
 | Forward tests das 12 skills (positivo, negativo, `@menção`) | ✅ **36/36 PASS** — [detalhes](docs/testes/forward/README.md) (sem alterar nenhuma `description`) |
-| Dependências opcionais fixadas e testadas | ✅ **13 de 14 módulos** executados com as versões de [`requirements-optional.txt`](ambiente_fonte/.assistant/x_snippets/requirements-optional.txt); só `prophet_wrapper` segue sem combinação funcional |
+| Dependências opcionais fixadas e testadas | ✅ **13 de 14 módulos** executados com as versões de [`requirements-optional.txt`](ambiente_fonte/.assistant/hub_snippets/requirements-optional.txt); só `prophet_wrapper` segue sem combinação funcional |
 
 Os três gates medem coisas diferentes, e nenhum substitui o outro:
 

@@ -123,7 +123,7 @@
 
 ### D10 — Aderencia ao ecossistema e a biblioteca de helpers
 
-Confrontar o output com [../../../x_docs/catalogo_helpers.md](../../../x_docs/catalogo_helpers.md).
+Confrontar o output com [CATALOGO_HELPERS.md](../../../CATALOGO_HELPERS.md).
 Reimplementar logica ja disponivel e o achado tipico desta dimensao: e como
 surgem PSI por media/desvio, split temporal por fatia de linhas e incidencia de
 safra somada por taxa.

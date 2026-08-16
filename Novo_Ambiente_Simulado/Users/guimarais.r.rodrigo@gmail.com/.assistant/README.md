@@ -1,10 +1,10 @@
 # Ecossistema `.assistant` para Databricks Genie Code
 
-> **Este README e todos os diretórios `x_` são documentação/extensões customizadas.**
+> **Este README e todos os diretórios `hub_` são documentação/extensões do Hub.**
 > O Genie Code não os lê automaticamente. A estrutura nativa está identificada com
 > `NATIVO` ao longo deste guia.
 >
-> Termo desconhecido? O [glossário](x_docs/glossario.md) separa o que é oficial da
+> Termo desconhecido? O [glossário](GLOSSARIO.md) separa o que é oficial da
 > Databricks, o que é vocabulário de modelagem e o que é convenção deste projeto.
 
 Um pacote de skills personalizadas, instruções pessoais, prompts guiados, contexto de
@@ -22,8 +22,8 @@ flowchart LR
   U["Pedido do usuário"] ==> I[".assistant_instructions.md\nNATIVO • maioria das interações"]
   U ==> S[".assistant/skills\nNATIVO • relevância ou @skill"]
   U ==> A["AGENTS.md do projeto\nNATIVO • hierarquia de diretórios"]
-  P["x_prompts / x_projects\nCUSTOM"] -.->|"você anexa antes de pedir"| U
-  S -.->|"a skill indica; você importa"| H["x_snippets / x_scripts\nCUSTOM • só no runtime Python"]
+  P["hub_prompts\nHUB"] -.->|"você anexa antes de pedir"| U
+  S -.->|"a skill indica; você importa"| H["hub_snippets / hub_scripts\nCUSTOM • só no runtime Python"]
   I ==> R["Resposta/código"]
   S ==> R
   A ==> R
@@ -31,7 +31,7 @@ flowchart LR
 
 A seta tracejada entre skills e helpers é o ponto que mais gera engano: a skill
 **recomenda** o módulo no texto que ela injeta, e nada mais. Quem importa é você,
-no notebook. Nenhum conteúdo de `x_snippets` entra na conversa por conta da
+no notebook. Nenhum conteúdo de `hub_snippets` entra na conversa por conta da
 skill.
 
 | Item | O Genie Code usa automaticamente? | Como usar |
@@ -40,11 +40,10 @@ skill.
 | `.assistant_instructions.md` | **Sim*** | colocar em `/Users/<username>/` |
 | `.assistant_workspace_instructions.md` | **Sim** | administradores do workspace; não incluído aqui |
 | `AGENTS.md` / `CLAUDE.md` | **Sim** | colocar no projeto; descoberta no diretório ancestral |
-| `x_prompts/` | Não | adicionar o arquivo com `@` ou **Add context** |
-| `x_projects/` | Não | copiar `AGENTS_TEMPLATE.md` como `AGENTS.md` no projeto real |
-| `x_snippets/` | Não | importar explicitamente no Python |
-| `x_scripts/` | Não | importar/executar explicitamente |
-| `x_docs/`, `x_config/`, este README | Não | consulta humana; comece por [x_docs/README.md](x_docs/README.md) |
+| `hub_prompts/` | Não | adicionar o arquivo com `@` ou **Add context** |
+| `hub_snippets/` | Não | importar explicitamente no Python |
+| `hub_scripts/` | Não | importar/executar explicitamente |
+| `hub_padroes/`, este README | Não | consulta humana; comece por [hub_padroes/README.md](hub_padroes/README.md) |
 
 \* Instruções pessoais e de workspace não se aplicam a **Quick Fix** e
 **Autocomplete**, conforme a documentação oficial atual.
@@ -56,19 +55,20 @@ skill.
 ├── .assistant_instructions.md          # NATIVO: instruções pessoais
 └── .assistant/
     ├── README.md                       # ← você está aqui: guia do ecossistema
-    ├── skills/                         # NATIVO: descoberta; rodrigo-* é custom
+    ├── GLOSSARIO.md                    # HUB: vocabulário, por procedência
+    ├── CATALOGO_HELPERS.md             # HUB: mapa demanda → módulo
+    ├── skills/                         # NATIVO: descoberta; hub-ml-* é do Hub
     │   └── <skill>/SKILL.md
-    ├── x_prompts/                      # CUSTOM: formulários de pedido
-    ├── x_projects/                     # CUSTOM: contexto + AGENTS_TEMPLATE
-    ├── x_snippets/                     # CUSTOM: biblioteca Python
-    ├── x_scripts/                      # CUSTOM: utilitários de diagnóstico
-    ├── x_docs/                         # CUSTOM: catálogo, glossário, notebooks
-    │   └── notebooks/                  # CUSTOM: material didático executável
-    └── x_config/                       # CUSTOM: resíduo legado, sem efeito
+    ├── hub_padroes/                    # HUB: os moldes de todo objeto
+    ├── hub_prompts/                    # HUB: formulários de pedido
+    ├── hub_snippets/                   # HUB: biblioteca Python
+    └── hub_scripts/                    # HUB: utilitários de diagnóstico
 ```
 
-O prefixo `x_` significa: **extensão do usuário, não interface institucional da
-Genie Code**. Ele também é um identificador Python válido (`x_snippets`).
+O prefixo `hub_` significa: **parte do Hub, não interface nativa do Genie Code**.
+Ele também é um identificador Python válido, o que permite importar
+`hub_snippets` diretamente. As skills usam hífen (`hub-ml-<tema>`) porque quem as
+nomeia é a plataforma, não o Python.
 
 ## Instalação recomendada
 
@@ -79,8 +79,8 @@ Genie Code**. Ele também é um identificador Python válido (`x_snippets`).
    `/Users/<username>/.assistant/skills/`.
 3. Copie `.assistant_instructions.md` para:
    `/Users/<username>/.assistant_instructions.md`.
-4. Se quiser os helpers, copie também os diretórios `x_` para a `.assistant` do
-   usuário. Eles continuarão manuais.
+4. Se quiser os helpers, copie também os diretórios `hub_` para a `.assistant`
+   do usuário. Eles continuarão manuais.
 5. Abra **um novo chat** no Genie Code depois da alteração. Se houver cache,
    recarregue a página.
 
@@ -144,11 +144,11 @@ monitoramento em vez de explicabilidade; citar SHAP resolve.
 
 ## Prompts que ensinam a pedir
 
-Os 16 arquivos de `x_prompts/` são briefings prontos. Cada um explica o que
+Os 16 arquivos de `hub_prompts/` são briefings prontos. Cada um explica o que
 substituir, qual contexto adicionar, quais ações estão autorizadas, o contrato da
 saída e como validar.
 
-1. Abra um prompt em `x_prompts/`.
+1. Abra um prompt em `hub_prompts/`.
 2. Substitua os campos `{{...}}`.
 3. Adicione tabelas/notebooks com `@` ou **Add context**.
 4. Cole a seção **Prompt pronto para colar** no chat.
@@ -159,7 +159,7 @@ um recurso nativo documentado. Ele não deve ser confundido com os aliases pesso
 
 ## Contexto automático por projeto
 
-Use [x_projects/AGENTS_TEMPLATE.md](x_projects/AGENTS_TEMPLATE.md):
+Use o modelo `docs/historico/AGENTS_TEMPLATE.md`, no repositório:
 
 1. Copie-o como `AGENTS.md` para a raiz do projeto real.
 2. Preencha objetivos, fontes, grão, schemas, permissões, ambiente, testes e decisões.
@@ -168,8 +168,10 @@ Use [x_projects/AGENTS_TEMPLATE.md](x_projects/AGENTS_TEMPLATE.md):
    realmente precisar de regras diferentes.
 
 O Genie Code descobre `AGENTS.md`/`CLAUDE.md` ao abrir um arquivo ou notebook e
-percorrer a hierarquia ancestral. Um arquivo deixado apenas em `x_projects/` não é
-memória automática.
+percorrer a hierarquia ancestral. O arquivo precisa estar **na árvore do projeto
+real** para valer: guardá-lo no `.assistant` não cria memória automática. Um
+modelo de partida está em `docs/historico/AGENTS_TEMPLATE.md`, no repositório —
+fora do que é publicado aqui.
 
 ## Helpers opcionais
 
@@ -184,16 +186,16 @@ import sys
 assistant_root = Path("/Workspace/Users/<username>/.assistant")
 sys.path.insert(0, str(assistant_root))
 
-from x_snippets.spark.safe_display import safe_display
-from x_snippets.constants.format_br import fmt_brl
-from x_scripts.quick_profile import quick_profile
+from hub_snippets.spark.safe_display import safe_display
+from hub_snippets.constants.format_br import fmt_brl
+from hub_scripts.quick_profile import quick_profile
 ```
 
 O import em si não imprime nada — silêncio aqui significa sucesso. Para confirmar
 que a biblioteca está mesmo acessível, chame algo sem custo de Spark:
 
 ```python
-from x_snippets.constants.format_br import fmt_int, fmt_pct, fmt_brl
+from hub_snippets.constants.format_br import fmt_int, fmt_pct, fmt_brl
 
 print(fmt_int(3375674))
 print(fmt_pct(0.928))
@@ -206,18 +208,18 @@ print(fmt_brl(12345.67))
 R$ 12.345,67
 ```
 
-Se aparecer `ModuleNotFoundError: No module named 'x_snippets'`, o caminho
-adicionado ao `sys.path` foi o da pasta `x_snippets` em vez do da pasta
+Se aparecer `ModuleNotFoundError: No module named 'hub_snippets'`, o caminho
+adicionado ao `sys.path` foi o da pasta `hub_snippets` em vez do da pasta
 `.assistant` que a contém — é o engano mais comum.
 
 Para descobrir qual módulo atende a uma demanda, use o
-[catálogo de helpers](x_docs/catalogo_helpers.md), que organiza a biblioteca
+[catálogo de helpers](CATALOGO_HELPERS.md), que organiza a biblioteca
 por tarefa e marca dependências opcionais e restrições de runtime. Cada
 `SKILL.md` já declara os helpers do próprio fluxo (ver ADR-0004 no repositório).
 
-Consulte também [x_snippets/README.md](x_snippets/README.md) e
-[x_scripts/README.md](x_scripts/README.md). As dependências em
-`x_snippets/requirements-optional.txt` são um inventário: instale só o subconjunto
+Consulte também [hub_snippets/README.md](hub_snippets/README.md) e
+[hub_scripts/README.md](hub_scripts/README.md). As dependências em
+`hub_snippets/requirements-optional.txt` são um inventário: instale só o subconjunto
 necessário e fixe versões no projeto consumidor.
 
 ## Fluxo de engenharia recomendado para os SEUS pipelines
@@ -249,9 +251,8 @@ flowchart TD
 ## MCP e integrações
 
 Fora do escopo deste ecossistema: não há conexão MCP no laboratório nem no
-workspace do trabalho. O `x_config/mcp_servers.legacy.json` é resíduo do ambiente
 anterior, contém apenas uma lista vazia e não configura nada — ver
-[x_config/README.md](x_config/README.md). Nunca armazene tokens no Git.
+[hub_padroes/README.md](hub_padroes/README.md). Nunca armazene tokens no Git.
 
 ## Validação antes de publicar
 
@@ -295,9 +296,9 @@ nada acuse.
 | skill continua com o texto antigo depois de editada | metadata em cache: chat novo e, se persistir, recarregar a página |
 | skill errada é escolhida | vocabulário genérico demais no pedido; use termo técnico do domínio ou `@nome-da-skill` |
 | nenhuma skill é carregada | o pedido cita um artefato ("este notebook") que não está no chat; anexe-o com `@`/Add context |
-| prompt de `x_prompts` não influencia a resposta | não é automático: precisa ser adicionado com `@`/Add context |
+| prompt de `hub_prompts` não influencia a resposta | não é automático: precisa ser adicionado com `@`/Add context |
 | contexto do projeto não entra | renomeie a cópia para `AGENTS.md` e deixe-a no diretório ancestral do arquivo aberto |
-| `ModuleNotFoundError: x_snippets` | foi adicionada ao `sys.path` a pasta `x_snippets`; o correto é a `.assistant` que a contém |
+| `ModuleNotFoundError: hub_snippets` | foi adicionada ao `sys.path` a pasta `hub_snippets`; o correto é a `.assistant` que a contém |
 | import de módulo de ML falha | dependência opcional ausente; confira a marcação no catálogo de helpers e instale com versão fixada |
 | `NOT_SUPPORTED_WITH_SERVERLESS` ao usar `cache()` | serverless não persiste; remova o cache ou rode em compute clássico |
 | `.py` abre como notebook e o import quebra | foi importado no formato errado; deve ser arquivo, não notebook |

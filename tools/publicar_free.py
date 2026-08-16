@@ -8,7 +8,7 @@ Três fases, no padrão do engine `databricks-genie` do Verg_Alchemy_Hub:
 
 O ADR-0005 registra por que a publicação é feita aqui em vez de pelo engine do
 Hub: aquele engine importa `.py` como notebook, o que quebraria os imports de
-`x_snippets`, e injeta cabeçalho, o que invalidaria o frontmatter das skills.
+`hub_snippets`, e injeta cabeçalho, o que invalidaria o frontmatter das skills.
 """
 
 from __future__ import annotations
@@ -33,7 +33,7 @@ CORPORATE_RE = re.compile(r"c\d{6}|corp\.|\.gov\.br", re.IGNORECASE)
 
 # Estrutura mínima que o Genie Code precisa encontrar para descobrir o ecossistema.
 EXPECTED_SKILLS = 12
-EXPECTED_X_DIRS = {"x_config", "x_docs", "x_projects", "x_prompts", "x_scripts", "x_snippets"}
+EXPECTED_HUB_DIRS = {"hub_padroes", "hub_prompts", "hub_scripts", "hub_snippets"}
 
 # Arquivos que a **plataforma** cria dentro de `.assistant/` e que não vêm da
 # fonte. Observado em 2026-08-15: abrir o painel de MCP em Genie Code → Settings
@@ -230,12 +230,12 @@ def cmd_verify(root: Path, arquivos: list[Path], home: str) -> int:
     if len(skills) != EXPECTED_SKILLS:
         problemas.append(f"skills: {len(skills)} pastas, esperado {EXPECTED_SKILLS}")
 
-    x_dirs = {
+    hub_dirs = {
         item["path"].rsplit("/", 1)[-1]
         for item in remote_list(f"{home}/.assistant")
         if item.get("object_type") == "DIRECTORY"
     }
-    for faltante in sorted(EXPECTED_X_DIRS - x_dirs):
+    for faltante in sorted(EXPECTED_HUB_DIRS - hub_dirs):
         problemas.append(f"diretório ausente: {faltante}")
 
     plataforma = sorted(set(remotos) & GERENCIADOS_PELA_PLATAFORMA)
@@ -246,7 +246,7 @@ def cmd_verify(root: Path, arquivos: list[Path], home: str) -> int:
     if plataforma:
         print(f"plataforma: {len(plataforma)} arquivo(s) gerenciado(s) — {', '.join(plataforma)}")
     print(f"skills    : {len(skills)}/{EXPECTED_SKILLS}")
-    print(f"extensões : {len(x_dirs & EXPECTED_X_DIRS)}/{len(EXPECTED_X_DIRS)} diretórios x_")
+    print(f"extensões : {len(hub_dirs & EXPECTED_HUB_DIRS)}/{len(EXPECTED_HUB_DIRS)} diretórios hub_")
     print()
     for problema in problemas:
         print(f"FAIL {problema}")

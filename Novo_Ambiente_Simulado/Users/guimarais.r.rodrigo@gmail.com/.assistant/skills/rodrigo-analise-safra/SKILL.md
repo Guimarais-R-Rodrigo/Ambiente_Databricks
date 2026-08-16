@@ -61,13 +61,13 @@ Usar [templates/relatorio_safra.md](templates/relatorio_safra.md) como estrutura
 
 ## Usar helpers da biblioteca
 
-Importar de `x_snippets` em vez de reimplementar a lógica. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+Importar de `hub_snippets` em vez de reimplementar a lógica. Catálogo completo: [CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md).
 
 | Demanda | Módulo |
 |---|---|
-| Tabela de safra, curvas de maturação, heatmap e comparação | `x_snippets.ml.vintage_analysis` |
-| Features de calendário para derivar MOB | `x_snippets.spark.date_features` |
-| Tema visual e formatação brasileira | `x_snippets.visual.theme_plotly`, `x_snippets.constants.format_br` |
+| Tabela de safra, curvas de maturação, heatmap e comparação | `hub_snippets.ml.vintage_analysis` |
+| Features de calendário para derivar MOB | `hub_snippets.spark.date_features` |
+| Tema visual e formatação brasileira | `hub_snippets.visual.theme_plotly`, `hub_snippets.constants.format_br` |
 
 `build_vintage_table` calcula incidência acumulada no nível contrato × MOB. Somar taxas por safra produz número diferente e incorreto — erro recorrente em painéis de vintage.
 

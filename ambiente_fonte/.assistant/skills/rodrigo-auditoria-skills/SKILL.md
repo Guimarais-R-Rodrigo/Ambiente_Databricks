@@ -33,7 +33,7 @@ Não aprovar uma skill apenas por conter palavras-chave. Ler o contrato, testar 
 8. Inspecionar scripts: sintaxe, argumentos, dependências, efeitos colaterais, dados sensíveis e ao menos um teste representativo.
 9. Procurar APIs inexistentes, comandos apresentados como nativos sem serem, paths pessoais, segredos e alegações regulatórias sem fonte.
 10. Comparar skills entre si para detectar sobreposição, contradições, ciclos e contratos de handoff incompatíveis.
-11. Conferir a seção de helpers da skill contra [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md): módulos citados existem, caminhos de import conferem, dependências opcionais estão sinalizadas e nenhum helper aplicável ao fluxo ficou de fora.
+11. Conferir a seção de helpers da skill contra [CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md): módulos citados existem, caminhos de import conferem, dependências opcionais estão sinalizadas e nenhum helper aplicável ao fluxo ficou de fora.
 12. Executar o validador disponível e registrar comando, saída e data.
 13. Produzir achados priorizados e uma conclusão independente para cada skill e para o conjunto.
 
@@ -49,7 +49,7 @@ Não aprovar uma skill apenas por conter palavras-chave. Ler o contrato, testar 
 5. Avaliar completude, reprodutibilidade, rigor, documentação, rastreabilidade,
    governança, acionabilidade, apresentação, robustez e integração do ecossistema.
 6. Verificar aderência à biblioteca: quando o output reimplementa lógica já disponível
-   em `x_snippets`/`x_scripts` — PSI, split temporal, WOE/IV, métricas, bandas de score,
+   em `hub_snippets`/`hub_scripts` — PSI, split temporal, WOE/IV, métricas, bandas de score,
    curvas de safra — registrar achado, indicar o módulo do catálogo e avaliar se a
    versão reescrita diverge da implementação auditada. Reescrita justificada é
    aceitável; reescrita silenciosa não.
@@ -97,8 +97,8 @@ Uma média alta não compensa achado crítico. Separar conformidade verificável
 
 ## Usar recursos
 
-- Usar [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md) como referência de aderência: é a lista dos módulos disponíveis, com API e dependências opcionais.
-- Para auditar a própria documentação e nomenclatura, `x_scripts.doc_coverage` e `x_scripts.naming_checker` estão disponíveis; o segundo aplica política do projeto, não requisito da Databricks.
+- Usar [CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md) como referência de aderência: é a lista dos módulos disponíveis, com API e dependências opcionais.
+- Para auditar a própria documentação e nomenclatura, `hub_scripts.doc_coverage` e `hub_scripts.naming_checker` estão disponíveis; o segundo aplica política do projeto, não requisito da Databricks.
 - Usar [templates/rubrica_universal.md](templates/rubrica_universal.md) como ponto de partida, ajustando pesos ao risco real.
 - Usar [templates/relatorio_auditoria.md](templates/relatorio_auditoria.md) para a saída.
 - Consultar [templates/checkpoints_por_skill.md](templates/checkpoints_por_skill.md) somente como histórico customizado. Não tratá-lo como documentação oficial nem como lista fixa de aceite; conferir o `SKILL.md` atual de cada skill.

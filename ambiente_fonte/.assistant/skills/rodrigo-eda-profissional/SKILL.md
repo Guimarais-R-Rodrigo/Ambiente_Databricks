@@ -56,15 +56,15 @@ Usar [templates/roteiro_eda.md](templates/roteiro_eda.md) para estruturar o note
 
 ## Usar helpers da biblioteca
 
-Importar de `x_snippets`/`x_scripts` em vez de reimplementar a lógica. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+Importar de `hub_snippets`/`hub_scripts` em vez de reimplementar a lógica. Catálogo completo: [CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md).
 
 | Demanda | Módulo |
 |---|---|
-| Perfil de tabela e checagem de qualidade | `x_scripts.quick_profile`, `x_scripts.data_quality_check` |
-| Nulos por coluna com semáforo | `x_snippets.spark.null_summary` |
-| Amostra reprodutível e exibição limitada | `x_snippets.spark.smart_sample`, `x_snippets.spark.safe_display` |
-| Correlação e grid de distribuições | `x_snippets.display.correlation_matrix`, `x_snippets.display.distribution_grid` |
-| Tema, índice e formatação brasileira | `x_snippets.visual.theme_plotly`, `x_snippets.visual.index_generator`, `x_snippets.constants.format_br` |
+| Perfil de tabela e checagem de qualidade | `hub_scripts.quick_profile`, `hub_scripts.data_quality_check` |
+| Nulos por coluna com semáforo | `hub_snippets.spark.null_summary` |
+| Amostra reprodutível e exibição limitada | `hub_snippets.spark.smart_sample`, `hub_snippets.spark.safe_display` |
+| Correlação e grid de distribuições | `hub_snippets.display.correlation_matrix`, `hub_snippets.display.distribution_grid` |
+| Tema, índice e formatação brasileira | `hub_snippets.visual.theme_plotly`, `hub_snippets.visual.index_generator`, `hub_snippets.constants.format_br` |
 
 `quick_profile` distingue o que é calculado na tabela inteira do que vem da amostra; preservar essa distinção ao relatar números.
 

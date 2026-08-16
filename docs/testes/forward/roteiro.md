@@ -1,5 +1,10 @@
 # Roteiro de forward tests — guia completo passo a passo
 
+> **Nomenclatura da época.** Os nomes `x_*` e `rodrigo-*` neste registro são
+> os que existiam na data. A correspondência com os nomes atuais está no ADR
+> da reestruturação do Hub; este documento não é reescrito porque descreve o
+> que foi observado, não o estado atual.
+
 ## 1. O que é este teste e por que ele existe
 
 As 12 skills `rodrigo-*` já estão publicadas no seu workspace Databricks Free.

@@ -78,16 +78,16 @@ Carregar somente os necessários:
 
 ## Usar helpers da biblioteca
 
-Importar de `x_snippets`/`x_scripts` em vez de reimplementar a lógica. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+Importar de `hub_snippets`/`hub_scripts` em vez de reimplementar a lógica. Catálogo completo: [CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md).
 
 | Demanda | Módulo |
 |---|---|
-| Junção point-in-time com atraso de publicação | `x_snippets.spark.pit_join` |
-| Features de calendário | `x_snippets.spark.date_features` |
-| Lags e janelas móveis por entidade | `x_snippets.ml.lgbm_temporal` (`create_temporal_features`) |
-| WOE e Information Value | `x_snippets.ml.woe_iv_calculator` |
-| Recência, frequência e valor até data de corte | `x_scripts.rfv_calculator` |
-| Split por período de calendário para checar leakage | `x_snippets.ml.split_temporal` |
+| Junção point-in-time com atraso de publicação | `hub_snippets.spark.pit_join` |
+| Features de calendário | `hub_snippets.spark.date_features` |
+| Lags e janelas móveis por entidade | `hub_snippets.ml.lgbm_temporal` (`create_temporal_features`) |
+| WOE e Information Value | `hub_snippets.ml.woe_iv_calculator` |
+| Recência, frequência e valor até data de corte | `hub_scripts.rfv_calculator` |
+| Split por período de calendário para checar leakage | `hub_snippets.ml.split_temporal` |
 
 `rfv_calculator` já exclui eventos posteriores à data de referência — não duplicar nem remover esse filtro. `extrair_features_data` cobre apenas feriados nacionais de data fixa; os demais entram por `holiday_dates`.
 

@@ -1,5 +1,10 @@
 # Testes Spark serverless dos helpers
 
+> **Nomenclatura da época.** Os nomes `x_*` e `rodrigo-*` neste registro são
+> os que existiam na data. A correspondência com os nomes atuais está no ADR
+> da reestruturação do Hub; este documento não é reescrito porque descreve o
+> que foi observado, não o estado atual.
+
 Gate da fase 3 (herdado da auditoria do Codex): executar `x_snippets`/`x_scripts`
 no runtime Databricks real. Executor: job serverless one-time no Free Edition,
 notebook [tools/spark_smoke_test.py](../../../tools/spark_smoke_test.py)

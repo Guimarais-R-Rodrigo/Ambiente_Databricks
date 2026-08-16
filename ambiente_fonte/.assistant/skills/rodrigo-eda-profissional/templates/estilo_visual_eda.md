@@ -314,4 +314,4 @@ A descrição padrão pode ser expandida, mas nunca omitida.
 | `index_generator.py` | Índice do notebook | `gerar_indice_eda()` |
 | `badge.py` | Badges de score/status | `badge_score(84)` |
 
-Nota: `estilo_visual_eda.md` documenta o padrão; a implementação opcional vive na extensão customizada `.assistant/x_snippets/` e exige import explícito.
+Nota: `estilo_visual_eda.md` documenta o padrão; a implementação opcional vive na extensão customizada `.assistant/hub_snippets/` e exige import explícito.

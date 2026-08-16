@@ -74,17 +74,17 @@ Adaptar thresholds e imports à implementação atual; templates são customizad
 
 ## Usar helpers da biblioteca
 
-Importar de `x_snippets`/`x_scripts` em vez de reimplementar a lógica. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+Importar de `hub_snippets`/`hub_scripts` em vez de reimplementar a lógica. Catálogo completo: [CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md).
 
 | Demanda | Módulo |
 |---|---|
-| Cobertura, multiplicidade e expansão antes do join | `x_snippets.spark.join_diagnostics` |
-| Alinhamento temporal por junção point-in-time | `x_snippets.spark.pit_join` |
-| Perfil comparável entre fontes | `x_scripts.quick_profile` |
-| Schema documentado para confronto de contratos | `x_scripts.schema_to_yaml` |
-| Nulos e cobertura por coluna | `x_snippets.spark.null_summary` |
-| Amostra reprodutível e exibição limitada | `x_snippets.spark.smart_sample`, `x_snippets.spark.safe_display` |
-| Divergência de distribuição entre fontes ou janelas | `x_snippets.spark.psi_calculator` |
+| Cobertura, multiplicidade e expansão antes do join | `hub_snippets.spark.join_diagnostics` |
+| Alinhamento temporal por junção point-in-time | `hub_snippets.spark.pit_join` |
+| Perfil comparável entre fontes | `hub_scripts.quick_profile` |
+| Schema documentado para confronto de contratos | `hub_scripts.schema_to_yaml` |
+| Nulos e cobertura por coluna | `hub_snippets.spark.null_summary` |
+| Amostra reprodutível e exibição limitada | `hub_snippets.spark.smart_sample`, `hub_snippets.spark.safe_display` |
+| Divergência de distribuição entre fontes ou janelas | `hub_snippets.spark.psi_calculator` |
 
 PSI aqui mede comparabilidade entre fontes, não drift de modelo; interpretar apenas com limites calibrados para o caso.
 

@@ -1,5 +1,11 @@
 # Checklist de replicação no trabalho
 
+> **Números desatualizados pela reestruturação do Hub (Sprint 2, 16/08/2026).**
+> As contagens de arquivos, diretórios e nomes de skill neste documento
+> referem-se à estrutura anterior. O procedimento continua válido; os
+> números serão refeitos na Sprint 12, após a conversão terminar. Confira o
+> estado real com `python tools/publicar_free.py --verify`.
+
 Documento de acompanhamento, para marcar enquanto executa. O procedimento
 completo, com o porquê de cada passo, está em
 [replicacao-trabalho.md](replicacao-trabalho.md).
@@ -79,11 +85,11 @@ subárvore, não a pasta de usuário do laboratório.
 - [ ] `.assistant/skills/` tem 12 pastas `rodrigo-*`, cada uma com `SKILL.md`
 - [ ] `.assistant/` tem os 6 diretórios `x_` mais `README.md`
 - [ ] `.assistant_instructions.md` presente na raiz do usuário
-- [ ] Abrir um `.py` de `x_snippets`: precisa ser **arquivo**, não notebook
-- [ ] Abrir um notebook de `x_docs/notebooks/`: precisa ser **notebook**
-- [ ] `x_docs/catalogo_helpers.md` e `x_docs/glossario.md` presentes
+- [ ] Abrir um `.py` de `hub_snippets`: precisa ser **arquivo**, não notebook
+- [ ] Abrir um notebook de `hub_snippets/_notebooks_a_migrar/`: precisa ser **notebook**
+- [ ] `CATALOGO_HELPERS.md` e `GLOSSARIO.md` presentes
 
-> `.py` como notebook quebra `from x_snippets...`. Notebook como arquivo não tem
+> `.py` como notebook quebra `from hub_snippets...`. Notebook como arquivo não tem
 > células para executar. Os dois tipos importam.
 
 ## Fase 6 — testes de aceitação

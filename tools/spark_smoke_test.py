@@ -1,6 +1,6 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # Smoke test serverless — helpers `x_snippets`/`x_scripts`
+# MAGIC # Smoke test serverless — helpers `hub_snippets`/`hub_scripts`
 # MAGIC
 # MAGIC Gate da fase 3 (herdado da auditoria do Codex): executar os helpers no
 # MAGIC runtime Databricks real, com **dados sintéticos**. O resultado sai como
@@ -57,8 +57,8 @@ def run_case(name, fn):
 
 # COMMAND ----------
 
-import x_scripts  # noqa: E402
-import x_snippets  # noqa: E402
+import hub_scripts  # noqa: E402
+import hub_snippets  # noqa: E402
 
 # Cópia deliberada da regra de tools/notebook_marker.py. O smoke test roda dentro
 # do workspace, onde `tools/` não existe, então não há como importar a versão
@@ -103,7 +103,7 @@ def modulo_e_notebook(module_finder, nome, ispkg):
 
 
 notebooks_pulados = []
-for pacote in (x_snippets, x_scripts):
+for pacote in (hub_snippets, hub_scripts):
     prefixo = f"{pacote.__name__}."
     for module_info in pkgutil.walk_packages(pacote.__path__, prefix=prefixo):
         if modulo_e_notebook(module_info.module_finder, module_info.name, module_info.ispkg):
@@ -148,30 +148,30 @@ df_nulls.createOrReplaceTempView("vw_smoke_tx")
 print(f"base sintética: {df.count()} linhas")
 
 # COMMAND ----------
-# MAGIC %md ## 3. Testes funcionais — x_snippets.spark
+# MAGIC %md ## 3. Testes funcionais — hub_snippets.spark
 
 # COMMAND ----------
 
 def t_null_summary():
-    from x_snippets.spark.null_summary import null_summary
+    from hub_snippets.spark.null_summary import null_summary
     out = null_summary(df_nulls).collect()
     assert len(out) > 0
 
 
 def t_smart_sample():
-    from x_snippets.spark.smart_sample import smart_sample
+    from hub_snippets.spark.smart_sample import smart_sample
     sampled = smart_sample(df, n=60, stratify_col="categoria")
     assert 0 < sampled.count() <= 60
 
 
 def t_date_features():
-    from x_snippets.spark.date_features import extrair_features_data
+    from hub_snippets.spark.date_features import extrair_features_data
     out = extrair_features_data(df, "data", holiday_dates=["2026-04-21"])
     assert len(out.columns) > len(df.columns)
 
 
 def t_psi():
-    from x_snippets.spark.psi_calculator import calcular_psi, interpretar_psi
+    from hub_snippets.spark.psi_calculator import calcular_psi, interpretar_psi
     df_base = df.filter(F.col("safra") == "2026-S1")
     df_atual = df.filter(F.col("safra") == "2026-S2")
     psi = calcular_psi(df_base, df_atual, "valor")
@@ -181,7 +181,7 @@ def t_psi():
 
 
 def t_safe_display():
-    from x_snippets.spark.safe_display import safe_display
+    from hub_snippets.spark.safe_display import safe_display
     safe_display(df, limit=5, display_fn=lambda d: d.show(3))
 
 
@@ -189,23 +189,23 @@ for case in [t_null_summary, t_smart_sample, t_date_features, t_psi, t_safe_disp
     run_case(f"func:{case.__name__[2:]}", case)
 
 # COMMAND ----------
-# MAGIC %md ## 4. Testes funcionais — x_scripts
+# MAGIC %md ## 4. Testes funcionais — hub_scripts
 
 # COMMAND ----------
 
 def t_quick_profile():
-    from x_scripts.quick_profile import quick_profile
+    from hub_scripts.quick_profile import quick_profile
     out = quick_profile("vw_smoke_tx", sample_fraction=1.0)
     assert out["row_count"] if "row_count" in out else out
 
 
 def t_data_quality_check():
-    from x_scripts.data_quality_check import data_quality_check
+    from hub_scripts.data_quality_check import data_quality_check
     data_quality_check("vw_smoke_tx", ["tx_id"], "data")
 
 
 def t_rfv_calculator():
-    from x_scripts.rfv_calculator import rfv_calculator
+    from hub_scripts.rfv_calculator import rfv_calculator
     out = rfv_calculator(
         "vw_smoke_tx", "cliente_id", "data", "valor", "2026-05-31"
     )
@@ -213,12 +213,12 @@ def t_rfv_calculator():
 
 
 def t_drift_detector():
-    from x_scripts.drift_detector import drift_detector
+    from hub_scripts.drift_detector import drift_detector
     drift_detector("vw_smoke_tx", "safra", "2026-S1", "2026-S2", cols=["valor"])
 
 
 def t_schema_to_yaml():
-    from x_scripts.schema_to_yaml import schema_to_dict, schema_to_yaml
+    from hub_scripts.schema_to_yaml import schema_to_dict, schema_to_yaml
     payload = schema_to_dict("vw_smoke_tx", include_stats=True)
     assert payload["columns"]
     schema_to_yaml("vw_smoke_tx")
@@ -236,14 +236,14 @@ for case in [
 # COMMAND ----------
 
 def t_format_br():
-    from x_snippets.constants.format_br import fmt_brl, fmt_int, fmt_pct
+    from hub_snippets.constants.format_br import fmt_brl, fmt_int, fmt_pct
     assert fmt_int(3375674) == "3.375.674"
     fmt_brl(12345.67)
     fmt_pct(0.928)
 
 
 def t_theme_plotly():
-    importlib.import_module("x_snippets.visual.theme_plotly")
+    importlib.import_module("hub_snippets.visual.theme_plotly")
 
 
 run_case("func:format_br", t_format_br)

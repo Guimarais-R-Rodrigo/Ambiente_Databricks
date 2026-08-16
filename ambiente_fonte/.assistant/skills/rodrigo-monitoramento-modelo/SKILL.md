@@ -64,15 +64,15 @@ Tratar valores dos templates como placeholders. Substituir por limites aprovados
 
 ## Usar helpers da biblioteca
 
-Importar de `x_snippets`/`x_scripts` em vez de reimplementar a lógica. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+Importar de `hub_snippets`/`hub_scripts` em vez de reimplementar a lógica. Catálogo completo: [CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md).
 
 | Demanda | Módulo |
 |---|---|
-| PSI/CSI nativo em escala | `x_snippets.spark.psi_calculator` |
-| PSI, KS, CSI e varredura de features driver-side | `x_snippets.ml.drift_detection` |
-| Comparar duas coortes de uma tabela | `x_scripts.drift_detector` |
-| Acompanhar métricas contra política calibrada | `x_snippets.ml.performance_monitor` |
-| Métricas e curvas de performance | `x_snippets.ml.metrics_report`, `x_snippets.ml.curves_plotly` |
+| PSI/CSI nativo em escala | `hub_snippets.spark.psi_calculator` |
+| PSI, KS, CSI e varredura de features driver-side | `hub_snippets.ml.drift_detection` |
+| Comparar duas coortes de uma tabela | `hub_scripts.drift_detector` |
+| Acompanhar métricas contra política calibrada | `hub_snippets.ml.performance_monitor` |
+| Métricas e curvas de performance | `hub_snippets.ml.metrics_report`, `hub_snippets.ml.curves_plotly` |
 
 `interpretar_psi` só classifica quando recebe os limites do consumidor — não há faixa universal. `PerformanceMonitor` sinaliza degradação e nunca autoriza retreino: a decisão exige investigação, champion-challenger e aprovação.
 

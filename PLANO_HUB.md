@@ -4,7 +4,7 @@ Documento de trabalho, versão 2. Cada sprint é executada isoladamente, auditad
 em sessão sem contexto, revisada por você, e só então a seguinte começa.
 
 - **Status:** v2. Sprints 0 e 0b concluídas. Auditoria começa na Sprint 1
-- **Sprint atual:** 1 concluída, aguardando auditoria; próxima é a 2
+- **Sprint atual:** 2 concluída, aguardando auditoria; próxima é a 4 (portão de formato)
 - **Última atualização:** 2026-08-16
 
 > **Histórico de revisão.** A v1 foi submetida a auditoria em sessão sem
@@ -77,7 +77,7 @@ nomes de constante —, então nenhuma exceção de código é necessária.
 `hub-snippets` com hífen é **impossível**: `from hub-snippets.spark.pit_join
 import pit_join` é erro de sintaxe — verificado.
 
-**Fora do `.assistant`:** a pasta `/Users/<user>/x_lab/`, onde o smoke test é
+**Fora do `.assistant`:** a pasta `/Users/<user>/hub_lab/`, onde o smoke test é
 importado, é o último `x_` visível no workspace. Renomeada para `hub_lab/` na
 Sprint 2, com as 6 referências em `docs/` acompanhando.
 
@@ -172,12 +172,12 @@ independentes.
 
 ### 4.2 O notebook dentro do pacote quebra o smoke test
 
-Hoje os notebooks vivem em `x_docs/notebooks/`, **fora** do pacote. Movê-los para
+Hoje os notebooks vivem em `hub_snippets/_notebooks_a_migrar/`, **fora** do pacote. Movê-los para
 dentro da pasta de cada snippet os torna submódulos importáveis, e
 `tools/spark_smoke_test.py` importa todo submódulo que encontra:
 
 ```python
-for module_info in pkgutil.walk_packages(x_snippets.__path__, prefix="x_snippets."):
+for module_info in pkgutil.walk_packages(hub_snippets.__path__, prefix="hub_snippets."):
     run_case(f"import:{module_info.name}", lambda name=module_info.name: importlib.import_module(name))
 ```
 
@@ -205,9 +205,9 @@ A v1 tratava `catalogo_helpers.md` como uma linha de tabela. A auditoria contou
 
 | Alvo que some | Links | Onde |
 |---|---:|---|
-| `x_docs/catalogo_helpers.md` | 35 | 12 `SKILL.md`, `rubrica_universal.md`, 16 prompts, 3 READMEs |
-| `x_docs/glossario.md` | 4 | `.assistant/README.md`, `x_snippets/README.md`, README da raiz |
-| `x_config/README.md`, `x_docs/README.md`, `x_projects/AGENTS_TEMPLATE.md` | 4 | `.assistant/README.md`, README da raiz |
+| `CATALOGO_HELPERS.md` | 35 | 12 `SKILL.md`, `rubrica_universal.md`, 16 prompts, 3 READMEs |
+| `GLOSSARIO.md` | 4 | `.assistant/README.md`, `hub_snippets/README.md`, README da raiz |
+| `hub_padroes/README.md`, `x_docs/README.md`, `docs/historico/AGENTS_TEMPLATE.md` | 4 | `.assistant/README.md`, README da raiz |
 
 Simulada, a Sprint 2 da v1 terminava em `REPROVADO: 40 falha(s)` — reprovando o
 próprio critério de aceite. E o destino que ela declarava ("READMEs de seção")
@@ -217,14 +217,14 @@ só nasce quatro sprints depois.
 
 | Origem | Conteúdo | Destino, e em que sprint |
 |---|---|---|
-| `x_docs/catalogo_helpers.md` | mapa demanda → módulo | **Sprint 2:** o conteúdo é absorvido por `hub_snippets/README.md`, que já existe (é o `x_snippets/README.md` de hoje). Os 35 links passam a apontar para lá. **Sprints 6–9:** cada seção herda a fatia que lhe cabe, e o README de `hub_snippets` vira índice |
-| `x_docs/glossario.md` | vocabulário | **Sprint 2:** vira `.assistant/GLOSSARIO.md`, publicado, e os 4 links apontam para lá. **Sprint 10:** absorvido como seção do `.assistant/README.md`, com os links reapontados de novo |
-| `x_docs/notebooks/` (4 arquivos) | material didático | **Sprint 2:** movidos para `.assistant/hub_snippets/_notebooks_a_migrar/`, uma pasta de trânsito explícita. **Sprints 6 e 7:** desmembrados (§4.4) e a pasta de trânsito é removida. Sem essa ponte, a Sprint 2 apaga o insumo das Sprints 6 e 7 |
-| `x_docs/SKILL_TEMPLATE.md` | modelo de skill | **Sprint 1:** `hub_padroes/skill/template.md`, publicado |
-| `x_docs/ROADMAP_SKILLS.md`, `LEGACY_CONTEXT.md`, `skills_manifest.md`, manifesto | governança | **Sprint 2:** `docs/historico/` na raiz, com README explicando cada um |
+| `CATALOGO_HELPERS.md` | mapa demanda → módulo | **Sprint 2:** o conteúdo é absorvido por `hub_snippets/README.md`, que já existe (é o `hub_snippets/README.md` de hoje). Os 35 links passam a apontar para lá. **Sprints 6–9:** cada seção herda a fatia que lhe cabe, e o README de `hub_snippets` vira índice |
+| `GLOSSARIO.md` | vocabulário | **Sprint 2:** vira `.assistant/GLOSSARIO.md`, publicado, e os 4 links apontam para lá. **Sprint 10:** absorvido como seção do `.assistant/README.md`, com os links reapontados de novo |
+| `hub_snippets/_notebooks_a_migrar/` (4 arquivos) | material didático | **Sprint 2:** movidos para `.assistant/hub_snippets/_notebooks_a_migrar/`, uma pasta de trânsito explícita. **Sprints 6 e 7:** desmembrados (§4.4) e a pasta de trânsito é removida. Sem essa ponte, a Sprint 2 apaga o insumo das Sprints 6 e 7 |
+| `.assistant/hub_padroes/skill/template.md` | modelo de skill | **Sprint 1:** `hub_padroes/skill/template.md`, publicado |
+| `docs/historico/ROADMAP_SKILLS.md`, `LEGACY_CONTEXT.md`, `skills_manifest.md`, manifesto | governança | **Sprint 2:** `docs/historico/` na raiz, com README explicando cada um |
 | `x_config/mcp_servers.legacy.json` | lista vazia | **removido** |
-| `x_config/README.md` | aviso do `.mcp_servers.json` da plataforma | vira FAQ do `.assistant/README.md` |
-| `x_projects/AGENTS_TEMPLATE.md` | modelo `AGENTS.md` | `docs/historico/`. Não é objeto do Hub |
+| `hub_padroes/README.md` | aviso do `.mcp_servers.json` da plataforma | vira FAQ do `.assistant/README.md` |
+| `docs/historico/AGENTS_TEMPLATE.md` | modelo `AGENTS.md` | `docs/historico/`. Não é objeto do Hub |
 | `x_projects/` restante | ficha, exemplo, README | **removidos** |
 | `.assistant_instructions.md` | arquivo **nativo**, ≤ 20.000 chars | referência a `catalogo_helpers.md` reapontada; identidade "pessoal" → "Hub" |
 
@@ -442,7 +442,7 @@ reutilizável. É atualizado; os resultados das rodadas ficam intactos.
 
 `import-dir --overwrite` sobrescreve e **nunca apaga**. Sem um passo explícito:
 
-- depois da Sprint 2, o workspace teria `x_snippets` **e** `hub_snippets`, mais
+- depois da Sprint 2, o workspace teria `hub_snippets` **e** `hub_snippets`, mais
   as seis pastas antigas intactas — e a verificação humana declarada na v1 ("as
   três pastas ausentes") retornaria o resultado errado;
 - depois da Sprint 3, `.assistant/skills/` teria **24 pastas**: 12 `rodrigo-*`
@@ -526,9 +526,9 @@ executor mapear os seis prefixos e produzir 43 links para `hub_docs/`,
 
 | Prefixo | Ação |
 |---|---|
-| `x_snippets`, `x_scripts`, `x_prompts` | renomeia para `hub_*` |
+| `hub_snippets`, `hub_scripts`, `hub_prompts` | renomeia para `hub_*` |
 | `x_docs`, `x_config`, `x_projects` | **remove**, com reapontamento por destino (§4.3) |
-| `x_lab` (workspace) | renomeia para `hub_lab` |
+| `hub_lab` (workspace) | renomeia para `hub_lab` |
 | prefixo `x_` citado como conceito | reescrito à mão em 6 lugares: 2 regras de `.claude/`, 2 playbooks, 1 skill operacional, README da raiz |
 
 Guardrails: `Ambiente_Antigo/` e `Ajustes_Codex/` **não são tocados**; camadas
@@ -662,8 +662,8 @@ Registrado para não ser desfeito numa próxima revisão:
 |---|---|---|---|---|
 | 0 | ✅ concluída | 2026-08-16 | dispensada | [relatório](docs/sprints/sprint-0-fundacao.md) |
 | 0b | ✅ concluída | 2026-08-16 | dispensada | [relatório](docs/sprints/sprint-0b-fixtures-e-api-publica.md) |
-| 1 | ✅ concluída | 2026-08-16 | **pendente** | [relatório](docs/sprints/sprint-1-padroes.md) |
-| 2 | não iniciada | — | — | — |
+| 1 | ✅ concluída | 2026-08-16 | ✅ 21 achados corrigidos | [relatório](docs/sprints/sprint-1-padroes.md) |
+| 2 | ✅ concluída | 2026-08-16 | **pendente** | [relatório](docs/sprints/sprint-2-renomeacao.md) |
 | 4 | não iniciada | — | — | — |
 | 3 | não iniciada | — | — | — |
 | 5 | não iniciada | — | — | — |

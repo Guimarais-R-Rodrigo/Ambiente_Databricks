@@ -84,14 +84,14 @@ Adaptar; não preencher placeholders com suposições.
 
 ## Usar helpers da biblioteca
 
-Importar de `x_snippets`/`x_scripts` em vez de reimplementar a lógica. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+Importar de `hub_snippets`/`hub_scripts` em vez de reimplementar a lógica. Catálogo completo: [CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md).
 
 | Demanda | Módulo |
 |---|---|
-| Medir cobertura de documentação do notebook | `x_scripts.doc_coverage` |
-| Headers de seção, separadores e índice | `x_snippets.visual.section_header`, `.divider`, `.index_generator` |
-| Badges de status e KPI cards | `x_snippets.visual.badge`, `x_snippets.visual.kpi_card` |
-| Números no padrão brasileiro | `x_snippets.constants.format_br` |
+| Medir cobertura de documentação do notebook | `hub_scripts.doc_coverage` |
+| Headers de seção, separadores e índice | `hub_snippets.visual.section_header`, `.divider`, `.index_generator` |
+| Badges de status e KPI cards | `hub_snippets.visual.badge`, `hub_snippets.visual.kpi_card` |
+| Números no padrão brasileiro | `hub_snippets.constants.format_br` |
 
 Os helpers visuais escapam a entrada antes de renderizar HTML; montar HTML por concatenação manual para contornar o escape reintroduz risco de injeção. Documentação é conteúdo adicionado ao redor do código — nenhuma célula existente deve ser alterada.
 

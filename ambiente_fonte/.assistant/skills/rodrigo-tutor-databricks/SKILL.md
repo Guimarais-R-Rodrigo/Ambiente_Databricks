@@ -56,13 +56,13 @@ Usar analogias de banking/CRM somente depois da explicação técnica e rotulá-
 
 ## Usar helpers da biblioteca
 
-Quando o exemplo didático corresponder a algo que a biblioteca já resolve, mostrar o helper existente e explicar a lógica interna, em vez de escrever uma versão simplificada que diverge do que roda em produção. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+Quando o exemplo didático corresponder a algo que a biblioteca já resolve, mostrar o helper existente e explicar a lógica interna, em vez de escrever uma versão simplificada que diverge do que roda em produção. Catálogo completo: [CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md).
 
 | Tema explicado | Módulo de referência |
 |---|---|
-| Exibir DataFrame grande sem estourar o driver | `x_snippets.spark.safe_display` |
-| Amostragem reprodutível e estratificada | `x_snippets.spark.smart_sample` |
-| Formatação numérica brasileira em relatórios | `x_snippets.constants.format_br` |
+| Exibir DataFrame grande sem estourar o driver | `hub_snippets.spark.safe_display` |
+| Amostragem reprodutível e estratificada | `hub_snippets.spark.smart_sample` |
+| Formatação numérica brasileira em relatórios | `hub_snippets.constants.format_br` |
 
 Vale explicar também por que o helper existe: `safe_display` opera sem `cache()` porque compute serverless não suporta persistência, e os módulos resolvem a sessão por `SparkSession.getActiveSession()` porque a variável global `spark` de notebook não existe dentro de módulo importado.
 

@@ -61,7 +61,7 @@ ambiente_fonte/
 └── .assistant/
     ├── README.md                 # guia completo do ecossistema (instalação, uso, testes)
     ├── skills/                   # NATIVO: 12 Agent Skills rodrigo-*
-    └── x_prompts | x_projects | x_snippets | x_scripts | x_docs | x_config
+    └── hub_prompts | x_projects | hub_snippets | hub_scripts | x_docs | x_config
                                   # CUSTOM: extensões manuais (@/import/execução)
 ```
 
@@ -73,5 +73,5 @@ em [.assistant/README.md](.assistant/README.md).
 1. Valide antes de commitar: `python tools/validate_assistant.py`.
 2. Regenere o simulado após aprovar: `python tools/render_simulado.py --write`.
 3. Nunca insira identificadores corporativos, paths reais ou PII (placeholders).
-4. Skills novas seguem `.assistant/x_docs/SKILL_TEMPLATE.md` e o padrão
+4. Skills novas seguem `.assistant/.assistant/hub_padroes/skill/template.md` e o padrão
    Agent Skills (frontmatter `name` + `description`).

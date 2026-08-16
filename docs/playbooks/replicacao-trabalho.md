@@ -1,5 +1,11 @@
 # Runbook — replicar o ecossistema no workspace do trabalho
 
+> **Números desatualizados pela reestruturação do Hub (Sprint 2, 16/08/2026).**
+> As contagens de arquivos, diretórios e nomes de skill neste documento
+> referem-se à estrutura anterior. O procedimento continua válido; os
+> números serão refeitos na Sprint 12, após a conversão terminar. Confira o
+> estado real com `python tools/publicar_free.py --verify`.
+
 Procedimento para levar o ecossistema `.assistant` certificado no laboratório
 para o workspace corporativo (Azure Databricks). Escrito para ser executado em
 outro computador, **sem Databricks CLI**, com acesso apenas pela interface do
@@ -94,7 +100,7 @@ Destino exato, com o username do workspace do trabalho:
 ├── .assistant_instructions.md        ← nativo: instruções pessoais
 └── .assistant/
     ├── skills/rodrigo-*/             ← nativo: descoberta automática
-    └── x_prompts | x_projects | x_snippets | x_scripts | x_docs | x_config
+    └── hub_prompts | x_projects | hub_snippets | hub_scripts | x_docs | x_config
 ```
 
 O nome da pasta de usuário na origem é irrelevante: copia-se o **conteúdo** da
@@ -106,7 +112,7 @@ Pontos de atenção verificados no laboratório:
 
 - Arquivos `.py` devem ficar como **arquivo**, não como notebook. Importação por
   UI pode converter `.py` em notebook dependendo da opção escolhida; se isso
-  ocorrer, os imports de `x_snippets` falham.
+  ocorrer, os imports de `hub_snippets` falham.
 - O arquivo de instruções precisa do ponto inicial e do nome exato
   `.assistant_instructions.md`, na raiz do diretório do usuário.
 
@@ -117,8 +123,8 @@ Pontos de atenção verificados no laboratório:
 | `/Users/<username-trabalho>/.assistant/skills/` | 12 pastas `rodrigo-*`, cada uma com `SKILL.md` |
 | Raiz do `.assistant` | 6 diretórios `x_` mais `README.md` |
 | `.assistant_instructions.md` | presente na raiz do usuário, com ponto inicial |
-| Um `.py` qualquer de `x_snippets` | abre como arquivo de código, não como notebook |
-| `x_docs/catalogo_helpers.md` | presente (referenciado por todas as skills) |
+| Um `.py` qualquer de `hub_snippets` | abre como arquivo de código, não como notebook |
+| `CATALOGO_HELPERS.md` | presente (referenciado por todas as skills) |
 
 ## 6. Testes de aceitação no workspace do trabalho
 

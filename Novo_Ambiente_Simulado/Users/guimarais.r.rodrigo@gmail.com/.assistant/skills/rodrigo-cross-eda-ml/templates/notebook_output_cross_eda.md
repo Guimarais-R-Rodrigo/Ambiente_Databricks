@@ -25,12 +25,12 @@
 ### Célula 2 — Setup visual [code]
 ```python
 try:
-    from x_snippets.visual.theme_plotly import registrar_template_plotly, aplicar_tema
-    from x_snippets.visual.section_header import section_header_html
-    from x_snippets.constants.colors import PALETA_CATEGORICA
+    from hub_snippets.visual.theme_plotly import registrar_template_plotly, aplicar_tema
+    from hub_snippets.visual.section_header import section_header_html
+    from hub_snippets.constants.colors import PALETA_CATEGORICA
     registrar_template_plotly()
 except ImportError:
-    # Fallback autônomo: x_snippets é uma extensão visual opcional.
+    # Fallback autônomo: hub_snippets é uma extensão visual opcional.
     PALETA_CATEGORICA = ["#005CA9", "#F7941D", "#6CBDE1", "#333333"]
 
     def aplicar_tema(fig, **kwargs):

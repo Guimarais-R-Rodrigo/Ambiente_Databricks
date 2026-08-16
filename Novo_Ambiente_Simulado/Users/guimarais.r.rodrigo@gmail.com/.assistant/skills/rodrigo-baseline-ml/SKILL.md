@@ -116,17 +116,17 @@ Tratar thresholds contidos nos templates como placeholders customizados, nunca c
 
 ## Usar helpers da biblioteca
 
-Importar de `x_snippets` em vez de reimplementar a lógica. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+Importar de `hub_snippets` em vez de reimplementar a lógica. Catálogo completo: [CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md).
 
 | Demanda | Módulo |
 |---|---|
-| Split temporal e validação walk-forward | `x_snippets.ml.split_temporal`, `x_snippets.ml.walk_forward` |
-| Métricas de classificação e regressão | `x_snippets.ml.metrics_report` |
-| Curvas ROC, PR, lift e KS | `x_snippets.ml.curves_plotly` |
-| Treino com MLflow opcional | `x_snippets.ml.train_lgbm`, `.train_xgboost`, `.train_catboost`, `.optuna_lgbm` |
-| Registro com dataset, split, assinatura e limitações | `x_snippets.ml.mlflow_run` (`run_governado`) |
-| Scorecard e bandas de score | `x_snippets.ml.scorecard_builder`, `x_snippets.ml.score_bands` |
-| Suites não tabulares | `x_snippets.ml.lgbm_ranker`, `.clustering_suite`, `.isolation_forest`, `.survival_cox`, `.prophet_wrapper` |
+| Split temporal e validação walk-forward | `hub_snippets.ml.split_temporal`, `hub_snippets.ml.walk_forward` |
+| Métricas de classificação e regressão | `hub_snippets.ml.metrics_report` |
+| Curvas ROC, PR, lift e KS | `hub_snippets.ml.curves_plotly` |
+| Treino com MLflow opcional | `hub_snippets.ml.train_lgbm`, `.train_xgboost`, `.train_catboost`, `.optuna_lgbm` |
+| Registro com dataset, split, assinatura e limitações | `hub_snippets.ml.mlflow_run` (`run_governado`) |
+| Scorecard e bandas de score | `hub_snippets.ml.scorecard_builder`, `hub_snippets.ml.score_bands` |
+| Suites não tabulares | `hub_snippets.ml.lgbm_ranker`, `.clustering_suite`, `.isolation_forest`, `.survival_cox`, `.prophet_wrapper` |
 
 `temporal_split` e `walk_forward_cv` operam em unidades de calendário; substituí-los por fatia de linhas reintroduz o leakage que eles evitam. Os wrappers de treino dependem de bibliotecas opcionais — confirmar instalação e versão fixada antes de prometer execução.
 

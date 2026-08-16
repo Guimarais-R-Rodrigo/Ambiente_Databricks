@@ -1,5 +1,10 @@
 # Rodada 1 — Claude em sessão sem contexto
 
+> **Nomenclatura da época.** Os nomes `x_*` e `rodrigo-*` neste registro são
+> os que existiam na data. A correspondência com os nomes atuais está no ADR
+> da reestruturação do Hub; este documento não é reescrito porque descreve o
+> que foi observado, não o estado atual.
+
 Data: 2026-08-14 · Auditor: Claude, janela nova, sem acesso ao repositório
 Material: `pit_join.py` e `join_diagnostics.py`, colados no chat
 

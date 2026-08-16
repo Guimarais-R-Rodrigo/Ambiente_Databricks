@@ -62,13 +62,13 @@ Substituir thresholds fixos dos templates por critérios do modelo, população 
 
 ## Usar helpers da biblioteca
 
-Importar de `x_snippets` em vez de reimplementar a lógica. Catálogo completo: [x_docs/catalogo_helpers.md](../../x_docs/catalogo_helpers.md).
+Importar de `hub_snippets` em vez de reimplementar a lógica. Catálogo completo: [CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md).
 
 | Demanda | Módulo |
 |---|---|
-| Cálculo SHAP, importância e plots global/local | `x_snippets.ml.shap_explainer` |
-| Relatório dual-layer (executivo e técnico) | `x_snippets.ml.explainability_report` |
-| Curvas diagnósticas de apoio | `x_snippets.ml.curves_plotly` |
+| Cálculo SHAP, importância e plots global/local | `hub_snippets.ml.shap_explainer` |
+| Relatório dual-layer (executivo e técnico) | `hub_snippets.ml.explainability_report` |
+| Curvas diagnósticas de apoio | `hub_snippets.ml.curves_plotly` |
 
 `shap` é dependência opcional resolvida na chamada: o import do módulo passa mesmo sem a biblioteca instalada. Os textos gerados evitam tratar importância SHAP como causalidade ou como percentual de poder preditivo; preservar essa formulação ao adaptar.
 

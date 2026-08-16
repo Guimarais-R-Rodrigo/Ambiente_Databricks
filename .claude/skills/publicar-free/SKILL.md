@@ -27,9 +27,9 @@ que existe. São coisas diferentes.
 |---|---|
 | Arquivos ausentes | envio parcial passa despercebido no log de publicação |
 | **Arquivos obsoletos** | `import-dir --overwrite` sobrescreve mas nunca apaga: arquivo removido da fonte continua ativo no workspace |
-| `.py` como `FILE` | como `NOTEBOOK`, `from x_snippets...` deixa de funcionar |
+| `.py` como `FILE` | como `NOTEBOOK`, `from hub_snippets...` deixa de funcionar |
 | 12 pastas de skill | descoberta incompleta é silenciosa |
-| 6 diretórios `x_` | extensões ausentes só aparecem no uso |
+| 4 diretórios `hub_` | extensões ausentes só aparecem no uso |
 
 ## Interpretar e agir
 

@@ -48,13 +48,13 @@
 
 ```python
 # --- Configuração ---
-# Snippets visuais são opcionais; o notebook permanece executável sem x_snippets.
+# Snippets visuais são opcionais; o notebook permanece executável sem hub_snippets.
 try:
-    from x_snippets.visual.theme_plotly import registrar_template_plotly, aplicar_tema
-    from x_snippets.visual.badge import badge_status
-    from x_snippets.visual.section_header import section_header_html
-    from x_snippets.visual.kpi_card import kpi_card_html
-    from x_snippets.spark.safe_display import safe_display
+    from hub_snippets.visual.theme_plotly import registrar_template_plotly, aplicar_tema
+    from hub_snippets.visual.badge import badge_status
+    from hub_snippets.visual.section_header import section_header_html
+    from hub_snippets.visual.kpi_card import kpi_card_html
+    from hub_snippets.spark.safe_display import safe_display
     registrar_template_plotly()
 except ImportError:
     def aplicar_tema(fig, **kwargs):
@@ -72,7 +72,7 @@ except ImportError:
 
     def safe_display(df, limit=1000, msg=True):
         if msg:
-            print(f"Exibindo no máximo {limit} linhas (fallback sem x_snippets).")
+            print(f"Exibindo no máximo {limit} linhas (fallback sem hub_snippets).")
         display(df.limit(limit))
 
 # Bibliotecas estatísticas
