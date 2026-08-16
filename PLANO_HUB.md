@@ -315,8 +315,26 @@ que são todas do Hub é ruído.
 ### 5.3 Tema do exemplo
 
 **`taxa_resposta_campanha`** — taxa de resposta de campanha de CRM por segmento.
-Do domínio da equipe, trivial no enunciado, e com uma armadilha estatística
-legítima: comparar taxas entre segmentos de tamanhos muito diferentes.
+Do domínio da equipe e trivial no enunciado.
+
+**A armadilha foi medida, não suposta.** A v2 afirmava que o intervalo de
+confiança "desarma" a comparação entre segmentos de tamanhos muito diferentes.
+Rodado sobre a base de exemplo, **não desarma**: o segmento de 28 contatos tem
+IC de Wilson `[26,5% ; 60,9%]`, que não se sobrepõe a nenhum outro. A diferença é
+estatisticamente real.
+
+O que o exemplo ensina, então, é mais fino e mais útil:
+
+| Leitura | Conclusão |
+|---|---|
+| Ingênua | "42,9% contra 3,8%: mande tudo para lá" |
+| Estatística | a diferença é real, mas a **precisão** é péssima — a largura do IC vai de 0,4 pp no maior segmento a 34,4 pp no menor |
+| Operacional | há 28 clientes no segmento. Mesmo a 60% de resposta, são 17 respostas numa campanha de 15.000 contatos |
+
+A lição é que **significância não é relevância**: o efeito existe, é
+mensurável, e é irrelevante para a decisão. Um exemplo que só mostrasse "o IC
+derruba a diferença" ensinaria algo falso — e teria sido publicado se ninguém
+rodasse.
 
 A auditoria mostrou que ele **não exercita quatro situações** que os executores
 vão encontrar. O conjunto de exemplos ganha, por isso, três peças a mais:
