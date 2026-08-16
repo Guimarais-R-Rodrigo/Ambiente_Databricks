@@ -4,7 +4,7 @@ Documento de trabalho, versão 2. Cada sprint é executada isoladamente, auditad
 em sessão sem contexto, revisada por você, e só então a seguinte começa.
 
 - **Status:** v2. Sprints 0 e 0b concluídas. Auditoria começa na Sprint 1
-- **Sprint atual:** 2 concluída, aguardando auditoria; próxima é a 4 (portão de formato)
+- **Sprint atual:** 4 concluída (portão de formato), aguardando auditoria; próxima é a 3
 - **Última atualização:** 2026-08-16
 
 > **Histórico de revisão.** A v1 foi submetida a auditoria em sessão sem
@@ -663,8 +663,8 @@ Registrado para não ser desfeito numa próxima revisão:
 | 0 | ✅ concluída | 2026-08-16 | dispensada | [relatório](docs/sprints/sprint-0-fundacao.md) |
 | 0b | ✅ concluída | 2026-08-16 | dispensada | [relatório](docs/sprints/sprint-0b-fixtures-e-api-publica.md) |
 | 1 | ✅ concluída | 2026-08-16 | ✅ 21 achados corrigidos | [relatório](docs/sprints/sprint-1-padroes.md) |
-| 2 | ✅ concluída | 2026-08-16 | **pendente** | [relatório](docs/sprints/sprint-2-renomeacao.md) |
-| 4 | não iniciada | — | — | — |
+| 2 | ✅ concluída | 2026-08-16 | ✅ 13 quebras corrigidas + ADR-0006 | [relatório](docs/sprints/sprint-2-renomeacao.md) |
+| 4 | ✅ concluída | 2026-08-16 | **pendente** | [relatório](docs/sprints/sprint-4-hub-scripts.md) |
 | 3 | não iniciada | — | — | — |
 | 5 | não iniciada | — | — | — |
 | 6 | não iniciada | — | — | — |

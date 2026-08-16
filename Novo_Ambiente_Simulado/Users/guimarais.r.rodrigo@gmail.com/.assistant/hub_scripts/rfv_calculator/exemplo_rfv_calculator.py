@@ -1,0 +1,144 @@
+# Databricks notebook source
+# MAGIC %md
+# MAGIC # `rfv_calculator` — RFV que não olha para o futuro
+# MAGIC
+# MAGIC **O problema.** Recência, frequência e valor são as features mais comuns de
+# MAGIC CRM, e a forma natural de calculá-las é agregar a base inteira por cliente.
+# MAGIC Quando essas features alimentam um modelo que prevê algo a partir de uma
+# MAGIC data de decisão, a agregação inteira inclui transações **posteriores** a
+# MAGIC essa data. O modelo aprende com informação que não existiria na hora de
+# MAGIC decidir, acerta no teste e fracassa em produção.
+# MAGIC
+# MAGIC **O que este script faz.** Calcula RFV com corte na data de referência,
+# MAGIC inclusive, e não inventa score nenhum a partir disso.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## O que este notebook assume do ambiente
+# MAGIC
+# MAGIC | Item | Exigência |
+# MAGIC |---|---|
+# MAGIC | Compute | serverless ou clássico |
+# MAGIC | Bibliotecas | nenhuma além do runtime |
+# MAGIC | Dados | sintéticos, gerados por `hub_snippets.testing.fixtures` |
+# MAGIC | Escrita | uma view temporária de sessão |
+# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
+
+# COMMAND ----------
+
+import sys
+
+usuario = spark.sql("SELECT current_user()").first()[0]
+sys.path.insert(0, f"/Workspace/Users/{usuario}/.assistant")
+
+from hub_scripts.rfv_calculator import rfv_calculator
+from hub_snippets.testing import fixtures
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## Preparo — um painel de transações por cliente
+
+# COMMAND ----------
+
+from pyspark.sql import functions as F
+
+# O painel da fixture é entidade × mês; aqui ele vira "transações": cada linha é
+# um valor movimentado por um cliente numa data.
+painel = (
+    fixtures.serie_temporal(n_entidades=40, n_periodos=24, seed=42)
+    .withColumnRenamed("id_entidade", "id_cliente")
+    .withColumnRenamed("dt_referencia", "dt_transacao")
+)
+painel.createOrReplaceTempView("vw_exemplo_rfv")
+
+print(f"linhas   : {painel.count()}")
+print(f"clientes : {painel.select('id_cliente').distinct().count()}")
+periodo = painel.agg(F.min("dt_transacao"), F.max("dt_transacao")).first()
+print(f"período  : {periodo[0]} a {periodo[1]}")
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## 1. RFV com corte na data de decisão
+
+# COMMAND ----------
+
+# A data de referência é o instante da decisão: nada posterior a ela pode entrar.
+DATA_DECISAO = "2026-06-01"
+
+rfv = rfv_calculator(
+    "vw_exemplo_rfv",
+    col_cliente="id_cliente",
+    col_data="dt_transacao",
+    col_valor="valor",
+    dt_referencia=DATA_DECISAO,
+)
+display(rfv.orderBy("id_cliente").limit(8))
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## 2. A prova de que o corte funciona
+
+# COMMAND ----------
+
+# Se o corte estiver certo, a frequência calculada tem de bater exatamente com a
+# contagem de transações ATÉ a data de decisão — nem uma a mais.
+esperado = (
+    painel.filter(F.col("dt_transacao") <= F.lit(DATA_DECISAO))
+    .groupBy("id_cliente").agg(F.count("*").alias("freq_esperada"))
+)
+conferencia = rfv.join(esperado, "id_cliente", "inner")
+coluna_freq = [c for c in rfv.columns if "freq" in c.lower()][0]
+
+divergentes = conferencia.filter(F.col(coluna_freq) != F.col("freq_esperada")).count()
+depois_do_corte = painel.filter(F.col("dt_transacao") > F.lit(DATA_DECISAO)).count()
+
+print(f"coluna de frequência          : {coluna_freq}")
+print(f"clientes com divergência      : {divergentes}")
+print(f"transações após a data de corte: {depois_do_corte} (todas descartadas)")
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC **Como ler.** Zero divergências significa que nenhuma das transações
+# MAGIC posteriores entrou no cálculo — e havia muitas, já que o painel vai até
+# MAGIC bem depois de junho.
+# MAGIC
+# MAGIC Esta é a verificação que vale a pena repetir sempre que uma feature
+# MAGIC temporal for construída: comparar o resultado do helper com uma contagem
+# MAGIC filtrada à mão. É barata e pega a classe de erro mais cara da área.
+# MAGIC
+# MAGIC O erro de interpretação mais provável aqui é achar que o corte na data
+# MAGIC basta. **Não basta**: se um dado só ficou disponível dias depois da data a
+# MAGIC que se refere, usá-lo na decisão daquele dia continua sendo vazamento. Esse
+# MAGIC caso é o do atraso de publicação, e quem trata dele é
+# MAGIC `hub_snippets.spark.pit_join`.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## 3. O que ele deliberadamente **não** faz
+
+# COMMAND ----------
+
+print("colunas devolvidas:", rfv.columns)
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC **Como ler.** Não há coluna de "score RFV" nem de "segmento". A convenção
+# MAGIC clássica de somar quintis de R, F e V num número de 3 dígitos é arbitrária:
+# MAGIC ela pressupõe que as três dimensões pesam igual, o que raramente é verdade
+# MAGIC no negócio, e o número resultante não é comparável entre bases.
+# MAGIC
+# MAGIC O script devolve as três medidas cruas e devolve a decisão de combinar a
+# MAGIC quem conhece o negócio.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## Quando **não** usar este script
+# MAGIC
+# MAGIC - **Quando o dado tem atraso de publicação.** Corte por data de referência
+# MAGIC   não é o mesmo que corte por disponibilidade. Use `pit_join`.
+# MAGIC - **Para gerar segmento pronto.** Ele não pontua nem agrupa, de propósito.
+# MAGIC - **Com uma única data de referência para toda a base**, se as decisões
+# MAGIC   aconteceram em momentos diferentes: cada linha precisa do seu próprio
+# MAGIC   instante, ou o corte fica frouxo para uns e apertado para outros.
+# MAGIC - **Sem conferir o grão da tabela de origem.** Se a mesma transação aparece
+# MAGIC   duas vezes, a frequência dobra e nada acusa.
