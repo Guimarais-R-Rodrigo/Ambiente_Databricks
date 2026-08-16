@@ -141,8 +141,8 @@ chegar ao novo lugar como um bloco solto que ninguém entende.
 | `x_docs/` | `ROADMAP_SKILLS.md`, `LEGACY_CONTEXT.md`, `skills_manifest.md`, manifesto de exportação | `docs/historico/` na raiz do repositório, com um README explicando o que cada um registrou e por que não vai para o workspace |
 | `x_config/` | `mcp_servers.legacy.json` | **removido**: contém lista vazia e o projeto não usa MCP |
 | `x_config/` | aviso sobre o `.mcp_servers.json` que a plataforma cria sozinha | vira FAQ do `.assistant/README.md` — é informação que salva alguém de apagar um arquivo da plataforma |
-| `x_projects/` | `AGENTS_TEMPLATE.md` | `padroes/agents/template.md`; segue útil como referência mesmo sem a pasta |
-| `x_projects/` | explicação da descoberta hierárquica de `AGENTS.md` | vira FAQ do `README.md` da raiz: o mecanismo é real e vale saber, mesmo sem a pasta |
+| `x_projects/` | `AGENTS_TEMPLATE.md` | `docs/historico/`. **Não vira template do Hub**: `padroes/` padroniza o que criamos aqui, e um `AGENTS.md` de projeto externo não é objeto do Hub. Fica recuperável, sem ocupar espaço na estrutura |
+| `x_projects/` | explicação da descoberta hierárquica de `AGENTS.md` | vira FAQ do `README.md` da raiz: o mecanismo é nativo e vale saber que existe, mesmo sem a pasta |
 | `x_projects/` | ficha de projeto, exemplo de churn, README | **removidos** |
 
 ### 3.3 Free Edition não é o ambiente de destino
@@ -163,7 +163,7 @@ motivo escrito, nunca com resultado inventado. A matriz de diferenças continua 
 
 ## 4. Os padrões
 
-`padroes/` na raiz do repositório, **uma subpasta por tipo de objeto**. Cada
+`padroes/` na raiz do repositório, **uma subpasta por tipo de objeto** (seis). Cada
 subpasta tem o template, o exemplo preenchido e um README curto dizendo quando
 usar aquele template.
 
@@ -193,14 +193,15 @@ padroes/
 │   ├── template.md
 │   ├── exemplo/
 │   └── README.md
-├── notebook/
-│   ├── template.py              # esqueleto do notebook de exemplo
-│   ├── exemplo.py
-│   └── README.md
-└── agents/
-    ├── template.md
+└── notebook/
+    ├── template.py              # esqueleto do notebook de exemplo
+    ├── exemplo.py
     └── README.md
 ```
+
+São **seis tipos de objeto**, e a lista é fechada: se algo não é README,
+snippet, script, prompt, skill ou notebook, não é objeto do Hub e não ganha
+template aqui.
 
 ### 4.1 Estrutura do template de README
 
@@ -294,7 +295,7 @@ notebook plausível que nunca rodou.
 | # | Sprint | Entrega | Objetos | Depende de |
 |---|---|---|---:|---|
 | 0 | Fundação e verificações | relatório curto, zero mudança estrutural | — | — |
-| 1 | Padrões e exemplo | `padroes/` completa, 7 subpastas | — | 0 |
+| 1 | Padrões e exemplo | `padroes/` completa, 6 subpastas | — | 0 |
 | 2 | Renomeação e limpeza | `hub_*`, 3 pastas removidas, conteúdo realocado | — | 1 |
 | 3 | Skills renomeadas | 12 pastas `hub-ml-*` + README da seção | 12 | 0, 2 |
 | 4 | `hub_scripts` | pastas + notebooks + README | 7 | 1, 2 |
@@ -330,8 +331,8 @@ Nada é renomeado. Responde ao que pode inviabilizar o resto.
 
 ### Sprint 1 — Padrões e exemplo
 
-Cria `padroes/` com as sete subpastas da seção 4, incluindo o exemplo completo e
-executável do `taxa_resposta_campanha` nos cinco formatos. Nenhum arquivo do
+Cria `padroes/` com as seis subpastas da seção 4, incluindo o exemplo completo e
+executável do `taxa_resposta_campanha` em cada formato aplicável. Nenhum arquivo do
 produto é tocado.
 
 **Como você verifica:** lê `padroes/readme/exemplo.md` e roda
