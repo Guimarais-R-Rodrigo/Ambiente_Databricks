@@ -1,5 +1,10 @@
 # Template — pasta de prompt
 
+> Um dos **seis** tipos de objeto do Hub, e a lista é fechada. Prompt é texto
+> para colar num chat; se o que você tem é código a importar, veja
+> [`../snippet/template.md`](../snippet/template.md). O que estiver em
+> `analisar_campanha/` é referência de forma.
+
 Use quando o objeto for um **briefing pronto para colar** num chat do Genie Code.
 Um prompt do Hub não é um atalho para digitar menos: é um formulário que força a
 declarar o que o pedido informal esquece — e é o esquecimento que produz resposta
@@ -75,5 +80,5 @@ roteamento está fazendo o que se espera fora da bateria de forward tests.
 ```
 
 O exemplo preenchido está em
-[`exemplo/analisar_campanha.md`](exemplo/analisar_campanha.md), com a resposta
-real em [`exemplo/exemplo_analisar_campanha.py`](exemplo/exemplo_analisar_campanha.py).
+[`analisar_campanha/analisar_campanha.md`](analisar_campanha/analisar_campanha.md), com a resposta
+real em [`exemplo/exemplo_analisar_campanha.py`](analisar_campanha/exemplo_analisar_campanha.py).

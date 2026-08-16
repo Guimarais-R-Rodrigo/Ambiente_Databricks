@@ -42,22 +42,33 @@ resultado = taxa_resposta_campanha(
 display(resultado.filter("decidivel"))
 ```
 
-Saída real, sobre a base sintética de exemplo:
+Saída, capturada em 16 ago 2026 no Databricks Free, Spark 4.1 serverless, sobre a
+base sintética de exemplo — as seis linhas, sem corte:
 
 ```text
-segmento        contatados  respostas  taxa_pct  ic_inferior_pct  ic_superior_pct  largura_ic_pp  decidivel
-Private                 28         12     42.86            26.51            60.91          34.40      false
-Aposentado            2600        209      8.04             7.06             9.13           2.07       true
-Universitario         4100        307      7.49             6.71             8.34           1.63       true
-Massa                30000       1154      3.85             3.63             4.07           0.44       true
+     segmento  contatados  respostas  taxa_pct  ic_inferior_pct  ic_superior_pct  largura_ic_pp  decidivel
+      Private          28         12     42.86            26.51            60.93          34.42      False
+   Aposentado        2600        209      8.04             7.05             9.15           2.09       True
+Universitario        4100        307      7.49             6.72             8.33           1.61       True
+   Massa alta        8200        431      5.26             4.79             5.76           0.97       True
+   PJ pequeno         940         43      4.57             3.41             6.11           2.69       True
+        Massa       30000       1154      3.85             3.63             4.07           0.44       True
 ```
+
+A largura do intervalo é a coluna que decide: 0,44 ponto percentual no maior
+segmento contra 34,42 no menor. É a diferença entre saber a taxa e achar que se
+sabe.
 
 ## O que existe aqui
 
 | Objeto | Em uma linha | Quando usar |
 |---|---|---|
 | `taxa_resposta_campanha` | taxa por segmento com intervalo de Wilson | comparar segmentos antes de alocar orçamento |
-| `checar_base_campanha` | valida grão, nulos e domínio do target | antes de qualquer medição, sobre base nova |
+| `cobertura_por_safra` | percentual de preenchimento da base por mês | antes de comparar períodos |
+
+O script `checar_base_campanha`, que valida a base antes da medição, **não fica
+aqui**: script mora em `hub_scripts/`. A tabela lista só o que está sob esta
+pasta — é o que o checklist exige.
 
 ## Limites e armadilhas
 
@@ -88,7 +99,8 @@ para ser visível e calibrável. Mude com um motivo escrito.
 
 ## Onde continuar
 
-- O notebook [`exemplo_taxa_resposta_campanha`](../snippet/exemplo/exemplo_taxa_resposta_campanha.py)
+- O notebook [`exemplo_taxa_resposta_campanha`](../snippet/taxa_resposta_campanha/exemplo_taxa_resposta_campanha.py)
   mostra o erro acontecendo antes de mostrar a correção.
 - O vocabulário do projeto está no README do `.assistant`.
-- Para criar um objeto novo nesta seção, use `@hub-ml-criar-objeto`.
+- Para criar um objeto novo nesta seção, copie o template de
+  [`hub_padroes/snippet/`](../snippet/template.md).

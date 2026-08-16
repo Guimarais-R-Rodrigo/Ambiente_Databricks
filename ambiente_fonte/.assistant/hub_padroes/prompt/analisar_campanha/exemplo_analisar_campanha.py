@@ -34,7 +34,7 @@
 # MAGIC ## Parte 1 — preparo
 # MAGIC
 # MAGIC A base é criada pelo notebook do snippet
-# MAGIC `hub_padroes/snippet/exemplo/exemplo_taxa_resposta_campanha`. Rode-o antes,
+# MAGIC `hub_padroes/snippet/taxa_resposta_campanha/exemplo_taxa_resposta_campanha`. Rode-o antes,
 # MAGIC ou execute a célula abaixo para conferir que a tabela existe.
 
 # COMMAND ----------

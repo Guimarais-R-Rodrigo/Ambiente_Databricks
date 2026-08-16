@@ -1,5 +1,8 @@
 # Template — README do Hub
 
+> Um dos **seis** tipos de objeto do Hub, e a lista é fechada. Este template vale
+> para todo README do projeto, do menor ao da raiz.
+
 Todo README do Hub segue este esqueleto. A ordem das seções é fixa: ela responde
 às perguntas do leitor na sequência em que elas surgem, e trocar a ordem obriga
 a ler o documento inteiro para achar o que se procurava.
@@ -11,9 +14,14 @@ nem ao README da raiz do repositório.
 
 | Escala | Quando usar | Seções |
 |---|---|---|
-| **Curta** | pasta com até 5 objetos | 1, 3, 6, 7, 9 |
+| **Curta** | pasta com até 5 **pastas de objeto** | 1, 3, 5, 6, 7, 9 |
 | **Padrão** | pasta de seção (`hub_snippets/spark/`, `hub_scripts/`) | as 9 |
 | **Longa** | raiz do repositório e `.assistant/` | as 9 + extras posicionadas |
+
+**Conte pastas de objeto, não arquivos.** `hub_snippets/display/` tem 3 objetos
+(curta); `hub_snippets/spark/` tem 7 (padrão); `hub_padroes/` tem 7 subpastas
+(padrão). A dúvida é real e produz READMEs de tamanhos diferentes para a mesma
+pasta.
 
 Na escala curta, "visão estrutural" e "o que existe aqui" viram o mesmo conteúdo
 em dois formatos — mantenha só a tabela. E FAQ com menos de três perguntas reais

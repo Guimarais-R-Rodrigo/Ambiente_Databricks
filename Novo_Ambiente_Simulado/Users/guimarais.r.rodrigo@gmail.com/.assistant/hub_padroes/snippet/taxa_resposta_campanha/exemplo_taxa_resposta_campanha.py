@@ -36,7 +36,7 @@ import sys
 usuario = spark.sql("SELECT current_user()").first()[0]
 sys.path.insert(0, f"/Workspace/Users/{usuario}/.assistant")
 
-from hub_padroes.snippet.exemplo import MINIMO_PARA_DECISAO, taxa_resposta_campanha
+from hub_padroes.snippet.taxa_resposta_campanha import MINIMO_PARA_DECISAO, taxa_resposta_campanha
 
 print(f"biblioteca: /Workspace/Users/{usuario}/.assistant")
 print(f"base mínima para decisão (padrão): {MINIMO_PARA_DECISAO}")

@@ -158,6 +158,59 @@ def check_notebook_links(root: Path, problems: list[str]) -> tuple[int, int]:
     return len(notebooks), links_checked
 
 
+def check_pastas_de_objeto(root: Path, problems: list[str]) -> int:
+    """Confere a forma das pastas de objeto: nome, arquivos e `__init__.py`.
+
+    O checklist dos templates manda rodar este validador logo abaixo de "a pasta
+    tem exatamente os três arquivos" e "`__init__.py` saiu da ferramenta". A
+    adjacência sugeria que ele conferia essas coisas. Não conferia — e com 74
+    objetos a converter, era por aqui que a deriva ficaria invisível até a
+    auditoria.
+
+    Uma pasta é de objeto quando contém `<nome_da_pasta>.py` — a forma que a
+    conversão produz. Pasta de seção (`spark/`, `ml/`) não tem `spark.py` dentro,
+    e por isso não é alcançada: enquanto as Sprints 6 a 9 não rodarem, a estrutura
+    antiga convive com a nova sem reprovar.
+    """
+    from api_publica import api_publica, conteudo_init
+
+    verificadas = 0
+    for init in sorted(root.rglob("__init__.py")):
+        pasta = init.parent
+        modulo = pasta / f"{pasta.name}.py"
+        if not modulo.exists():
+            continue  # raiz de pacote, pasta de seção ou estrutura ainda antiga
+        verificadas += 1
+        rel = pasta.relative_to(root)
+
+        if not pasta.name.isidentifier():
+            problems.append(f"{rel}: nome de pasta não é identificador Python válido")
+        extras = [
+            p for p in pasta.glob("*.py")
+            if p.name not in {"__init__.py", modulo.name} and not eh_notebook(p)
+        ]
+        if extras:
+            nomes = ", ".join(p.name for p in extras)
+            problems.append(f"{rel}: módulo extra na pasta do objeto ({nomes})")
+        notebooks = [p for p in pasta.glob("*.py") if eh_notebook(p)]
+        esperado = f"exemplo_{pasta.name}.py"
+        if not any(p.name == esperado for p in notebooks):
+            problems.append(f"{rel}: falta o notebook '{esperado}'")
+        try:
+            # Normaliza fim de linha: redirecionar a saída da ferramenta no
+            # Windows grava CRLF, e a divergência seria só de bytes invisíveis.
+            atual = init.read_text(encoding="utf-8").replace("\r\n", "\n").strip()
+            esperado_init = conteudo_init(modulo.stem, api_publica(modulo)).strip()
+            if atual != esperado_init:
+                problems.append(
+                    f"{rel}/__init__.py: divergiu da API pública do módulo. "
+                    f"Regenere: python tools/api_publica.py {modulo} > {init}"
+                )
+        except (SystemExit, ValueError) as exc:
+            problems.append(f"{rel}: não foi possível derivar a API pública -> {exc}")
+    return verificadas
+
+
 def check_smoke_test_sincronizado(problems: list[str]) -> None:
     """O smoke test roda no workspace, onde `tools/` não existe.
 
@@ -326,6 +379,7 @@ def main() -> int:
     n_chars = check_instructions_size(root, problems)
     check_text_hygiene(root, problems)
     check_path_hygiene(root, problems)
+    n_objetos = check_pastas_de_objeto(root, problems)
     check_smoke_test_sincronizado(problems)
     n_repo = check_repo_corporate(problems)
     n_repo_links = check_repo_links(root, problems)
@@ -334,6 +388,7 @@ def main() -> int:
     print(f"skills             : {n_skills}")
     print(f"markdown / links   : {n_md} arquivos / {n_links} links relativos")
     print(f"notebooks / links  : {n_nb} notebooks / {n_nb_links} links relativos")
+    print(f"pastas de objeto   : {n_objetos} conferidas (nome, arquivos, __init__)")
     print(f"python (AST)       : {n_py} arquivos")
     print(f"instrucoes         : {n_chars}/{INSTRUCTION_LIMIT} caracteres")
     print(f"repo (corporativo) : {n_repo} arquivos varridos no repositório inteiro")

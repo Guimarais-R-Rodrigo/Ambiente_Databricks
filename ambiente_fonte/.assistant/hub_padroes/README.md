@@ -14,23 +14,22 @@ estiver em dúvida sobre a forma de um que já existe.
 
 ## Como usar
 
-Peça à skill, que aplica o template certo e monta a estrutura de pastas:
+Copie o template do tipo de objeto que você vai criar, a partir da tabela
+abaixo, e siga o checklist que fecha cada um.
 
-```text
-@hub-ml-criar-objeto preciso de um snippet novo em hub_snippets/spark que
-calcule a cobertura de uma feature ao longo do tempo
-```
-
-Ou copie o template à mão, a partir da tabela abaixo.
+> **Planejado, ainda não existe:** uma skill `hub-ml-criar-objeto` que aplique o
+> template e monte a estrutura de pastas sozinha. Está prevista para a Sprint 11
+> do plano de reestruturação. Até lá, a cópia manual é o caminho — e é ela que
+> define o que a skill vai automatizar.
 
 ## O que existe aqui
 
 | Tipo | Template | Exemplo preenchido |
 |---|---|---|
 | README | [readme/template.md](readme/template.md) | [readme/exemplo.md](readme/exemplo.md) |
-| Snippet | [snippet/template.md](snippet/template.md) | [snippet/exemplo/](snippet/exemplo/) |
-| Script | [script/template.md](script/template.md) | [script/exemplo/](script/exemplo/) |
-| Prompt | [prompt/template.md](prompt/template.md) | [prompt/exemplo/](prompt/exemplo/) |
+| Snippet | [snippet/template.md](snippet/template.md) | [snippet/taxa_resposta_campanha/](snippet/taxa_resposta_campanha/) |
+| Script | [script/template.md](script/template.md) | [script/checar_base_campanha/](script/checar_base_campanha/) |
+| Prompt | [prompt/template.md](prompt/template.md) | [prompt/analisar_campanha/](prompt/analisar_campanha/) |
 | Skill | [skill/template.md](skill/template.md) | [skill/exemplo/](skill/exemplo/) |
 | Notebook | [notebook/template.py](notebook/template.py) | os notebooks dos exemplos acima |
 | Auditoria de sprint | [auditoria/template.md](auditoria/template.md) | — |
@@ -52,21 +51,27 @@ que é o que os exemplos existem para ensinar.
 
 ## Limites e armadilhas
 
-- **A skill de exemplo não é publicada.** `skill/exemplo/SKILL.md` fica aqui e
-  **não** vai para `.assistant/skills/`. Publicada, entraria no roteamento real e
-  disputaria vocabulário com as skills de verdade.
+- **A skill de exemplo não entra no roteamento.** `skill/exemplo/SKILL.md` é
+  publicado junto com esta pasta, como todo o resto — mas a descoberta do Genie
+  Code é escopada a `.assistant/skills/`, e ele não está lá. Não o copie para
+  lá: com `name` válido e uma `description` desenhada para vencer vocabulário de
+  campanha, ele passaria na validação e disputaria roteamento com as skills
+  reais.
 - **Exemplo não é biblioteca.** `taxa_resposta_campanha` e `checar_base_campanha`
   são material de referência: não os importe em trabalho real. O que serve para
   produção está em `hub_snippets/` e `hub_scripts/`.
 - **Template não substitui revisão.** Ele garante forma, não conteúdo. Um
   notebook no formato certo com explicação errada continua errado.
-- **Não há README em cada subpasta**, de propósito: cada `template.md` já abre
-  dizendo quando se aplica, e um README ao lado repetiria isso — que é
-  exatamente o que a regra de duplicação do template de README proíbe.
+- **Não há README em cada subpasta**, de propósito: seria um sétimo lugar para
+  atualizar a cada mudança de padrão, e cada `template.md` já abre dizendo
+  quando se aplica. Em compensação, quem entra direto numa subpasta perde três
+  coisas que só existem aqui — por isso cada template repete, no topo, a lista
+  fechada de tipos, a distinção snippet × script e o aviso de que `exemplo/` não
+  é biblioteca.
 
 ## Onde continuar
 
-- Para criar um objeto: `@hub-ml-criar-objeto`.
+- Para criar um objeto: copie o template do tipo, na tabela acima.
 - Para entender um termo: o vocabulário está no
   [README do `.assistant`](../README.md).
 - Para auditar o resultado de uma sprint: [auditoria/](auditoria/).

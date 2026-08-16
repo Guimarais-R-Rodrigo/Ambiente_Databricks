@@ -1,5 +1,10 @@
 # Template — pasta de script
 
+> Um dos **seis** tipos de objeto do Hub, e a lista é fechada. Se o seu objeto
+> recebe **DataFrame** e devolve dado para o fluxo seguir, ele é snippet e não
+> script — veja [`../snippet/template.md`](../snippet/template.md). O que estiver
+> em `checar_base_campanha/` é referência de forma, **não biblioteca**.
+
 Use quando o objeto for **diagnóstico**: algo que se aponta a uma tabela do
 workspace e que devolve um veredito legível, tipicamente antes de alguém confiar
 naquele objeto.
@@ -71,4 +76,4 @@ Quatro regras que o contrato carrega:
 ```
 
 O exemplo preenchido está em
-[`exemplo/checar_base_campanha.py`](exemplo/checar_base_campanha.py).
+[`checar_base_campanha/checar_base_campanha.py`](checar_base_campanha/checar_base_campanha.py).

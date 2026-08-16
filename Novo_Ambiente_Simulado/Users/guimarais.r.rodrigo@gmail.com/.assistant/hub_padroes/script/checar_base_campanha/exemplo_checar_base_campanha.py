@@ -32,7 +32,7 @@ import sys
 usuario = spark.sql("SELECT current_user()").first()[0]
 sys.path.insert(0, f"/Workspace/Users/{usuario}/.assistant")
 
-from hub_padroes.script.exemplo import LIMITES_PADRAO, checar_base_campanha
+from hub_padroes.script.checar_base_campanha import LIMITES_PADRAO, checar_base_campanha
 
 print(f"limites padrão: {LIMITES_PADRAO}")
 

@@ -3,7 +3,7 @@
 Por que existe: com uma pasta por snippet, cada pasta precisa de um
 ``__init__.py`` que reexporta o que o módulo oferece. Decidir isso 51 vezes, à
 mão, produz 51 critérios diferentes — e a auditoria do plano mostrou o custo:
-``constants/colors`` tem 22 nomes públicos e três outros módulos importam nomes
+``constants/colors`` tem 22 nomes públicos, e dois outros módulos importam nomes
 específicos dele. Um ``__all__`` curado quebra o import de quem depende, e o
 sintoma aparece sprints depois de a causa ser escrita.
 
@@ -24,9 +24,25 @@ import ast
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from notebook_marker import eh_notebook  # noqa: E402
+
 
 def api_publica(caminho: Path) -> list[str]:
-    """Nomes públicos definidos no topo do módulo, na ordem em que aparecem."""
+    """Nomes públicos definidos no topo do módulo, na ordem em que aparecem.
+
+    Recusa notebook. Numa pasta de objeto convivem o módulo e o notebook de
+    exemplo, e apontar a ferramenta para o segundo produz um ``__init__.py`` que
+    reexporta as variáveis de trabalho do notebook — e que **executa o notebook
+    inteiro no import**. O erro é fácil de cometer e silencioso de diagnosticar.
+    """
+    if eh_notebook(caminho):
+        raise SystemExit(
+            f"FAIL {caminho.name} é um notebook, não um módulo.\n"
+            "     Aponte para o arquivo de implementação da pasta —\n"
+            "     o notebook de exemplo não tem API pública a declarar."
+        )
     arvore = ast.parse(caminho.read_text(encoding="utf-8"), filename=str(caminho))
     nomes: list[str] = []
 
@@ -75,7 +91,10 @@ def main() -> int:
 
     modulos = [
         p for p in sorted(args.caminho.rglob("*.py"))
-        if p.name != "__init__.py" and "__pycache__" not in p.parts and "tests" not in p.parts
+        if p.name != "__init__.py"
+        and "__pycache__" not in p.parts
+        and "tests" not in p.parts
+        and not eh_notebook(p)  # notebook de exemplo não tem API pública
     ]
     total_nomes = 0
     multiplos = 0

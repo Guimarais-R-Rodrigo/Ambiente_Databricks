@@ -1,5 +1,9 @@
 # Template — Agent Skill do Hub
 
+> Um dos **seis** tipos de objeto do Hub, e a lista é fechada. Skill é o único
+> que a plataforma descobre sozinha, e o único com hífen no nome. O exemplo em
+> `exemplo/` **não deve ser copiado para `.assistant/skills/`**.
+
 Use quando for criar uma skill nova em `.assistant/skills/`. Uma skill é uma
 **pasta** cujo nome é idêntico ao campo `name` do frontmatter, contendo um
 `SKILL.md` e, opcionalmente, uma subpasta `templates/`.

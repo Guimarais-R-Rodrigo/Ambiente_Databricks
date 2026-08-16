@@ -4,7 +4,7 @@
 # MAGIC
 # MAGIC Copie este arquivo, troque o conteúdo, mantenha a ordem dos blocos. A
 # MAGIC referência completa e executável é
-# MAGIC `hub_padroes/snippet/exemplo/exemplo_taxa_resposta_campanha.py`.
+# MAGIC `hub_padroes/snippet/taxa_resposta_campanha/exemplo_taxa_resposta_campanha.py`.
 # MAGIC
 # MAGIC ## Formato-fonte — o que quebra se você errar
 # MAGIC
@@ -100,6 +100,27 @@ sys.path.insert(0, f"/Workspace/Users/{usuario}/.assistant")
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## BLOCO CANÔNICO — quando a execução é impossível
+# MAGIC
+# MAGIC ### Quando ele é permitido
+# MAGIC
+# MAGIC Este bloco é a saída mais barata do checklist inteiro, e por isso tem
+# MAGIC porteiro. Ele vale **só quando a impossibilidade é do objeto ou do
+# MAGIC runtime** — nunca da agenda de quem escreve.
+# MAGIC
+# MAGIC | Motivo | Vale? |
+# MAGIC |---|---|
+# MAGIC | a biblioteca não inicializa no runtime alvo | **sim** |
+# MAGIC | a dependência não existe e não há versão compatível conhecida | **sim** |
+# MAGIC | o objeto precisa de dado que não pode existir no laboratório | **sim** |
+# MAGIC | "não tenho acesso ao workspace nesta sessão" | **não** — o objeto fica aberto |
+# MAGIC | "não deu tempo" | **não** |
+# MAGIC | "não consegui montar a fixture" | **não** — é trabalho, não impedimento |
+# MAGIC
+# MAGIC Nos três casos de baixo, o notebook **não é entregue**: o objeto fica
+# MAGIC pendente e a sprint não fecha por ele. Um bloco canônico com motivo fraco é
+# MAGIC pior que um notebook faltando, porque parece pronto.
+# MAGIC
+# MAGIC ### A forma
 # MAGIC
 # MAGIC Notebook que não pode rodar no laboratório **não** sai com célula vazia nem
 # MAGIC com saída inventada. Sai com este bloco, preenchido:
