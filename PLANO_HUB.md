@@ -4,7 +4,7 @@ Documento de trabalho. Cada sprint é executada isoladamente, revisada e só ent
 a seguinte começa. A divisão existe para que nenhuma sprint dependa de decisão
 ainda não tomada, e para que cada uma possa ser delegada como pacote fechado.
 
-- **Status:** plano calibrado, aguardando início da Sprint 0
+- **Status:** plano calibrado e verificado contra o repositório, aguardando início da Sprint 0
 - **Sprint atual:** nenhuma iniciada
 - **Última atualização:** 2026-08-16
 
@@ -39,8 +39,9 @@ exigia uma legenda; o `hub_` carrega o significado no próprio nome.
 |---|---|---|---|
 | Pasta de biblioteca importável | `hub_` | `hub_snippets`, `hub_scripts` | nome de pacote Python não aceita hífen |
 | Pasta irmã não importável | `hub_` | `hub_prompts` | consistência visual com as duas acima |
-| Skill | `hub-ml-` | `hub-ml-eda-profissional` | objeto nomeado pela plataforma; hífen é a convenção do padrão Agent Skills |
-| Pasta de snippet/script/prompt | minúsculas com `_` | `pit_join/`, `taxa_resposta_campanha/` | precisa ser identificador Python válido |
+| Skill | `hub-ml-` | `hub-ml-eda-profissional` | objeto nomeado pela plataforma; hífen já é o que as 12 skills atuais usam e funciona |
+| Pasta de snippet e de script | minúsculas com `_` | `pit_join/`, `quick_profile/` | é pacote Python: precisa ser identificador válido |
+| Pasta de prompt | minúsculas com `_` | `eda_completa/` | não é importada; o `_` é só consistência com as irmãs |
 
 `hub-snippets` com hífen é **impossível**: `from hub-snippets.spark.pit_join
 import pit_join` é erro de sintaxe. A alternativa seria obrigar cada notebook a
@@ -123,8 +124,31 @@ usa; o que ficar de fora é interno e pode mudar sem aviso. Cada pasta de snippe
 passa a declarar isso explicitamente, o que hoje só existe por convenção de
 nomes com `_`.
 
-O notebook de exemplo mora na mesma pasta, nunca é importado, e é publicado como
-notebook e não como arquivo.
+O notebook de exemplo mora na mesma pasta e é publicado como notebook, não como
+arquivo. Isso tem uma consequência que a próxima seção trata.
+
+### 3.1.1 O notebook dentro do pacote quebra o smoke test
+
+Hoje os notebooks didáticos vivem em `x_docs/notebooks/`, **fora** do pacote
+Python. Movê-los para dentro da pasta de cada snippet os transforma em submódulos
+importáveis — e `tools/spark_smoke_test.py` importa todo submódulo que encontra:
+
+```python
+for module_info in pkgutil.walk_packages(x_snippets.__path__, prefix="x_snippets."):
+    run_case(f"import:{module_info.name}", lambda name=module_info.name: importlib.import_module(name))
+```
+
+Sem filtro, o smoke test passaria a **executar cada notebook de exemplo no
+import**, fora de contexto de notebook. Setenta e quatro execuções indevidas, com
+falhas que pareceriam defeito dos módulos.
+
+Não é item de verificação: é alteração obrigatória, e entra na Sprint 0. O
+`walk_packages` passa a pular arquivos cujo primeiro conteúdo seja o marcador
+`# Databricks notebook source` — a mesma detecção que `publicar_free.py` já usa
+para decidir o formato de publicação. A regra vira uma só, em um lugar só.
+
+A lista fixa de `x_scripts` no mesmo arquivo também deixa de existir: com uma
+pasta por script, a descoberta passa a ser automática pelo mesmo caminho.
 
 ### 3.2 Destino do conteúdo que sai
 
@@ -134,9 +158,10 @@ chegar ao novo lugar como um bloco solto que ninguém entende.
 
 | Origem | Conteúdo | Destino e tratamento |
 |---|---|---|
-| `x_docs/` | `glossario.md` | **seção "Vocabulário" do `.assistant/README.md`**, mantendo a divisão por procedência — plataforma, modelagem, convenção do Hub e o que não existe |
+| `x_docs/` | `glossario.md` | **seção "Vocabulário" do `.assistant/README.md`**, mantendo a divisão por procedência — plataforma, modelagem, convenção do Hub e o que não existe. **Absorvido na Sprint 10, não na 2**: o README é reescrito lá, e colar antes produziria trabalho duplo. Entre as duas sprints o arquivo fica em `.assistant/GLOSSARIO.md`, provisório e marcado como tal |
 | `x_docs/` | `catalogo_helpers.md` | **dissolvido** nos READMEs de seção. Com uma pasta por objeto, cada README lista o que há embaixo dele; o mapa demanda → módulo vira a coluna "quando usar" dessas tabelas |
-| `x_docs/` | 4 notebooks didáticos | viram o notebook de exemplo dos snippets que ensinam: `pit_join`, `psi_calculator`, `join_diagnostics`, `vintage_analysis` — o conteúdo é reaproveitado, não recomeçado |
+| `x_docs/` | 4 notebooks didáticos | reaproveitados, **não recomeçados** — mas cobrem 6 módulos, não 4, e um deles cruza duas sprints. Ver o mapeamento na tabela 3.2.1 |
+| `ambiente_fonte/` | `.assistant_instructions.md` | arquivo **nativo**, com limite de 20.000 caracteres. Tem uma única referência afetada, e ela aponta para `x_docs/catalogo_helpers.md`, que deixa de existir: passa a apontar para os READMEs de seção. Revisado também quanto à identidade — "ambiente pessoal" vira "Hub" |
 | `x_docs/` | `SKILL_TEMPLATE.md` | `padroes/skill/template.md`, revisado no formato novo |
 | `x_docs/` | `ROADMAP_SKILLS.md`, `LEGACY_CONTEXT.md`, `skills_manifest.md`, manifesto de exportação | `docs/historico/` na raiz do repositório, com um README explicando o que cada um registrou e por que não vai para o workspace |
 | `x_config/` | `mcp_servers.legacy.json` | **removido**: contém lista vazia e o projeto não usa MCP |
@@ -144,6 +169,22 @@ chegar ao novo lugar como um bloco solto que ninguém entende.
 | `x_projects/` | `AGENTS_TEMPLATE.md` | `docs/historico/`. **Não vira template do Hub**: `padroes/` padroniza o que criamos aqui, e um `AGENTS.md` de projeto externo não é objeto do Hub. Fica recuperável, sem ocupar espaço na estrutura |
 | `x_projects/` | explicação da descoberta hierárquica de `AGENTS.md` | vira FAQ do `README.md` da raiz: o mecanismo é nativo e vale saber que existe, mesmo sem a pasta |
 | `x_projects/` | ficha de projeto, exemplo de churn, README | **removidos** |
+
+#### 3.2.1 Mapeamento dos quatro notebooks didáticos
+
+Os quatro cobrem **seis** módulos, e um deles atravessa duas sprints. Cada
+notebook é desmembrado para que cada snippet fique com o trecho que o ensina:
+
+| Notebook atual | Módulos que ensina | Destino | Sprint |
+|---|---|---|---|
+| `01_vazamento_temporal` | `spark.pit_join` **e** `ml.split_temporal` | **dividido em dois**: a parte do join point-in-time vai para `spark/pit_join/`, a do split temporal para `ml/split_temporal/`. Cada metade ganha contexto próprio para ficar autossuficiente | 6 e 7 |
+| `02_drift_e_estabilidade` | `spark.psi_calculator` | `spark/psi_calculator/` | 6 |
+| `03_qualidade_de_juncao` | `spark.join_diagnostics` | `spark/join_diagnostics/` | 6 |
+| `04_armadilhas_de_credito` | `ml.vintage_analysis` **e** `ml.woe_iv_calculator` | **dividido em dois**, ambos na mesma sprint | 7 |
+
+Dividir custa algo real: o notebook 01 ensina vazamento temporal mostrando join e
+split juntos, que é como o erro acontece na prática. As duas metades precisam
+recuperar esse contexto separadamente, e cada uma remete à outra.
 
 ### 3.3 Free Edition não é o ambiente de destino
 
@@ -255,9 +296,34 @@ comparável à de um de 30.000. O notebook mostra o erro acontecendo antes de
 mostrar o intervalo de confiança que o desarma.
 
 Não é um módulo real da biblioteca e não vai virar um — é material de referência
-dos padrões. O mesmo tema atravessa os cinco tipos de template, para que dê para
-comparar lado a lado o snippet, seu notebook, seu prompt, seu script e o README
-da pasta.
+dos padrões. O mesmo tema atravessa os **seis** tipos de template: o snippet
+`taxa_resposta_campanha`, seu notebook, o script `checar_base_campanha`, o prompt
+`analisar_campanha`, a skill `hub-ml-analise-campanha` e o README da pasta. Dá
+para comparar os seis lado a lado e ver o que muda de forma entre eles.
+
+A skill de exemplo **não é publicada** — vive só em `padroes/skill/exemplo/` e
+não vai para `.assistant/skills/`, senão entraria no roteamento real e disputaria
+vocabulário com as skills de verdade.
+
+### 4.4 O notebook de um prompt não executa — e o que fazer com isso
+
+Um prompt é um briefing para colar num chat do Genie Code. Não há código para
+rodar, e a resposta vem de uma interação que notebook nenhum reproduz. Isso
+colide com o critério de aceite que exige notebook executado.
+
+O notebook de prompt tem, então, um formato próprio e três partes:
+
+1. **Preparo executável** — cria a tabela sintética a que o prompt se refere, de
+   modo que quem lê possa preencher `{{TABELA_OU_DF}}` com algo real e colar o
+   prompt de verdade. Esta parte roda e tem saída.
+2. **O prompt preenchido** — o texto exato a colar, já sem placeholders.
+3. **A resposta real do Genie Code**, colada como markdown, com comentário sobre
+   o que observar nela e onde ela costuma errar.
+
+A parte 3 **exige uma pessoa num chat** e não pode ser produzida por subagente. É
+a única dependência humana do plano inteiro, e são 16 interações na Sprint 5.
+Está registrada aqui para não virar surpresa — o repositório já tem um caso
+pendente exatamente por isso, no passo 4 do walkthrough de `x_prompts`.
 
 ---
 
@@ -281,12 +347,40 @@ O critério de aceite é o mesmo em todas as sprints de conteúdo:
 1. `python tools/validate_assistant.py` aprovado;
 2. render e `--verify` aprovados, sem obsoleto nem ausente;
 3. todo notebook da sprint executado no laboratório, com a saída real colada —
-   ou, quando impossível, com o motivo escrito;
+   ou, quando a execução for impossível, com o motivo escrito. Os notebooks de
+   prompt seguem a regra da seção 4.4;
 4. o README da pasta lista todos os objetos dela, sem sobrar nem faltar;
-5. nenhuma referência órfã ao nome antigo.
+5. nenhuma referência órfã ao nome antigo **nas camadas vivas** — ver a seção
+   5.1, que delimita onde o nome antigo deve permanecer.
 
 O item 3 é o que impede o modo de falha mais provável de uma execução paralela:
 notebook plausível que nunca rodou.
+
+### 5.1 O que **não** é renomeado
+
+Renomear em massa esbarra numa regra do próprio projeto: `CHANGELOG.md` é
+append-only, ADRs são imutáveis depois de aceitos, e registros de auditoria e de
+teste descrevem **o que foi observado na época**, com os nomes que existiam
+então. Trocar `x_snippets` por `hub_snippets` dentro de um relatório de auditoria
+de 14/08 falsifica o registro.
+
+| Camada | Ocorrências `x_` / `rodrigo-` | Renomeia? |
+|---|---:|---|
+| `ambiente_fonte/` — o produto vivo | 397 / 151 | **sim** |
+| `tools/` — ferramentas | 28 / 0 | **sim** |
+| `.claude/` e canônicos da raiz | 15 / 2 | **sim** |
+| `docs/playbooks/` — procedimentos em uso | 14 / 5 | **sim** |
+| `docs/testes/` — evidência de execução | 126 / 101 | **não**, com nota de cabeçalho |
+| `CHANGELOG.md`, `docs/auditoria/`, `docs/handoffs/`, `docs/decisions/` | 61 / 7 | **não**, são append-only |
+
+Nas duas camadas preservadas entra **uma nota no topo do documento**: "os nomes
+`x_*` e `rodrigo-*` neste registro são os que existiam na data; a
+correspondência com os nomes atuais está no ADR da reestruturação". Uma linha,
+uma vez por documento, e o histórico continua legível sem mentir.
+
+Exceção dentro da exceção: `docs/testes/forward/roteiro.md` é as duas coisas —
+registro do que foi executado **e** instrumento reutilizável. Ele é atualizado
+para os nomes novos, e a rodada antiga permanece intacta em `resultados/`.
 
 ---
 
@@ -300,13 +394,17 @@ notebook plausível que nunca rodou.
 | 3 | Skills renomeadas | 12 pastas `hub-ml-*` + README da seção | 12 | 0, 2 |
 | 4 | `hub_scripts` | pastas + notebooks + README | 7 | 1, 2 |
 | 5 | `hub_prompts` | pastas + notebooks + README | 16 | 1, 2 |
-| 6 | `hub_snippets`: spark e testing | pastas + notebooks + README | 8 | 1, 2 |
+| 6 | `hub_snippets`: spark e testing | pastas + notebooks + README | 8 | **4 aprovada** |
 | 7 | `hub_snippets`: ml núcleo | pastas + notebooks | 16 | 6 |
 | 8 | `hub_snippets`: ml com dependência opcional | pastas + notebooks | 14 | 6 |
 | 9 | `hub_snippets`: constants, visual, display | pastas + notebooks + READMEs | 13 | 6 |
 | 10 | READMEs de topo | raiz e `.assistant`, com o vocabulário | 2 | 2–9 |
-| 11 | `hub-ml-criar-objeto` | skill + forward tests | 1 | 1, 10 |
+| 11 | `hub-ml-criar-objeto` | skill + forward tests | 1 | 1, 4–9 |
 | 12 | Auditoria e fechamento | rodada A1 externa, correções, ADR | — | tudo |
+
+A Sprint 6 depende da **aprovação** da 4, não só da existência dela: é na 4 que
+você valida o formato de pasta e de notebook num volume pequeno. Antes desse
+aval, replicar para 51 snippets é multiplicar um formato não aprovado.
 
 **Total de notebooks a escrever: 74** — 51 em snippets, 7 em scripts, 16 em
 prompts. Um por objeto, inclusive nos triviais, como você decidiu: a
@@ -319,12 +417,16 @@ Nada é renomeado. Responde ao que pode inviabilizar o resto.
 
 1. **O `__init__.py` por pasta entrega a ergonomia prometida?** Provar com um
    snippet real, incluindo import a partir de notebook no workspace.
-2. **Notebook dentro da pasta do módulo atrapalha o import?** Confirmar que
-   importar o pacote não executa o notebook vizinho.
-3. **`publicar_free.py` publica estrutura aninhada corretamente?** O `.py` do
-   módulo como arquivo e o notebook como notebook, três níveis abaixo.
-4. **O nome com hífen é aceito na skill?** Baixo risco — hífen é a convenção do
-   padrão —, mas se verifica junto com o resto.
+2. **Adaptar `tools/spark_smoke_test.py`** para pular arquivos com o marcador
+   `# Databricks notebook source` no `walk_packages`, e trocar a lista fixa de
+   scripts por descoberta automática. Sem isso a Sprint 6 quebra — ver seção
+   3.1.1. Único item da Sprint 0 que altera código.
+3. **`publicar_free.py` publica estrutura aninhada corretamente?** Confirmar com
+   um caso real em `.assistant/hub_snippets/spark/pit_join/`: o módulo precisa
+   chegar como `FILE` e o notebook como `NOTEBOOK`, quatro níveis abaixo da pasta
+   do usuário.
+4. **O nome com hífen é aceito na skill?** Risco baixo — as 12 skills atuais já
+   usam hífen —, mas se confirma junto com o resto.
 5. Guarda permanente contra `__pycache__` reaparecer no fonte.
 
 **Como você verifica:** lê o relatório. Sem aprovação, a Sprint 1 não começa.
@@ -342,25 +444,43 @@ que a correção sai mais barata.
 
 ### Sprint 2 — Renomeação e limpeza estrutural
 
-Alto volume e mecânica: 682 referências em 121 arquivos, feitas por script com
-verificação. Inclui `tools/` (lista de diretórios esperados na conferência), as
-regras de `.claude/` e o simulado.
+Mecânica e de alto volume: **601 ocorrências de `x_*` em 97 arquivos**, feitas
+por script com verificação, respeitando as camadas preservadas da seção 5.1.
+
+Três guardrails obrigatórios no script de renomeação:
+
+- **`Ambiente_Antigo/` e `Ajustes_Codex/` não são tocados.** São referências
+  congeladas por regra do projeto, e uma delas é git-ignored por conter
+  identificador corporativo (ADR-0003).
+- **Camadas append-only não são renomeadas**, apenas recebem a nota de cabeçalho.
+- **`Novo_Ambiente_Simulado/` não é editado**: é derivado, e se regenera pelo
+  render depois que a fonte muda.
+
+Em `tools/` mudam três coisas concretas, além dos caminhos: `EXPECTED_X_DIRS` cai
+de seis para três diretórios e passa a se chamar pelo que é; o rótulo
+`extensões : 6/6 diretórios x_` impresso pela conferência acompanha; e
+`EXPECTED_SKILLS` ganha um comentário lembrando que sobe para 13 na Sprint 11.
 
 Saem `x_projects/`, `x_docs/` e `x_config/`, com o conteúdo realocado conforme a
 tabela 3.2 — cada peça acompanhada do texto que a explica no destino novo.
 
 **Como você verifica:** navega no Databricks e vê `hub_snippets`, `hub_scripts` e
 `hub_prompts` no lugar dos `x_`, e as três pastas ausentes. Validação, render e
-conferência aprovados, com zero referência órfã.
+conferência aprovados, com zero referência órfã nas camadas vivas.
 
 ### Sprint 3 — Skills renomeadas
 
-12 pastas para `hub-ml-*`, `name` do frontmatter acompanhando, 254 referências
-atualizadas, e o README da pasta `skills/` no template novo.
+12 pastas para `hub-ml-*`, `name` do frontmatter acompanhando, **262 ocorrências
+de `rodrigo-` em 69 arquivos** atualizadas nas camadas vivas, e o README da pasta
+`skills/` no template novo.
 
 **Ponto de atenção:** renomear não altera nenhuma `description`, então o
 roteamento automático segue certificado. A `@menção` muda — os 12 testes de
 menção precisam ser refeitos; os 24 positivos e negativos, não.
+
+`docs/testes/forward/roteiro.md` é atualizado para os nomes novos porque é
+instrumento reutilizável; os resultados das rodadas 1 e 2 ficam intactos, com a
+nota de cabeçalho da seção 5.1.
 
 **Como você verifica:** abre um chat novo e chama `@hub-ml-eda-profissional`.
 
@@ -369,10 +489,15 @@ menção precisam ser refeitos; os 24 positivos e negativos, não.
 As menores, e por isso primeiras: 7 e 16 objetos. Validam o formato de pasta e de
 notebook num volume revisável antes de aplicá-lo a 51 snippets.
 
+A **Sprint 4 é o portão**: é a que valida o formato inteiro com código que
+executa. A Sprint 5 depende de você para 16 interações no Genie Code (seção 4.4),
+então pode rodar em paralelo com a 6 sem travar a fila — é a única sprint com
+dependência humana, e prendê-la no caminho crítico atrasaria o resto sem ganho.
+
 **Como você verifica:** abre duas ou três pastas no Databricks, roda o notebook e
-diz se a explicação está no nível certo. Aprovado aqui, as sprints 6 a 9
-replicam o formato sem nova discussão — e é este o ponto em que a delegação a
-subagentes passa a ser segura.
+diz se a explicação está no nível certo. Aprovada a 4, as sprints 6 a 9 replicam
+o formato sem nova discussão — e é este o ponto em que a delegação a subagentes
+passa a ser segura.
 
 ### Sprints 6 a 9 — `hub_snippets`
 
@@ -380,7 +505,10 @@ Divididas por natureza do conteúdo, não por volume:
 
 - **6 — `spark` (7) e `testing` (1).** Onde o erro custa mais caro e onde estão
   os módulos mais novos e menos rodados: `pit_join`, `join_diagnostics`. Herdam
-  três dos quatro notebooks didáticos existentes.
+  material de três dos quatro notebooks didáticos, um deles dividido com a Sprint
+  7 (tabela 3.2.1). `tests/test_core.py` **não** ganha pasta nem notebook: é
+  suíte de regressão, não objeto do Hub — é a única exceção à regra de um
+  notebook por objeto, e está registrada aqui para não parecer esquecimento.
 - **7 — `ml` sem dependência opcional (16).** Split temporal, walk-forward,
   métricas, PSI, WOE/IV, scorecard, safra. Executam no Free sem instalar nada.
 - **8 — `ml` com dependência opcional (14).** Exigem versões fixadas na sessão.
@@ -409,6 +537,9 @@ skill diferente.
 Ela lê os templates de `padroes/`, pergunta o que falta, gera a estrutura de
 pastas completa e roda a checagem final. Precisa de forward tests próprios: um
 positivo, um negativo e a menção.
+
+Ao entrar, `EXPECTED_SKILLS` em `tools/publicar_free.py` sobe de 12 para 13, e o
+README da pasta `skills/` ganha a linha correspondente.
 
 ### Sprint 12 — Auditoria e fechamento
 
