@@ -1,7 +1,7 @@
 # Ecossistema `.assistant` para Databricks Genie Code
 
 > **Este README e todos os diretórios `x_` são documentação/extensões customizadas.**
-> A Genie Code não os lê automaticamente. A estrutura nativa está identificada com
+> O Genie Code não os lê automaticamente. A estrutura nativa está identificada com
 > `NATIVO` ao longo deste guia.
 >
 > Termo desconhecido? O [glossário](x_docs/glossario.md) separa o que é oficial da
@@ -9,7 +9,7 @@
 
 Um pacote de skills personalizadas, instruções pessoais, prompts guiados, contexto de
 projeto e helpers de notebook para análises em Azure Databricks. A arquitetura foi
-separada de propósito para que o usuário saiba exatamente o que a Genie Code carrega
+separada de propósito para que o usuário saiba exatamente o que o Genie Code carrega
 e o que precisa ser adicionado ou executado manualmente.
 
 ## Visão em 30 segundos
@@ -34,7 +34,7 @@ A seta tracejada entre skills e helpers é o ponto que mais gera engano: a skill
 no notebook. Nenhum conteúdo de `x_snippets` entra na conversa por conta da
 skill.
 
-| Item | A Genie Code usa automaticamente? | Como usar |
+| Item | O Genie Code usa automaticamente? | Como usar |
 |---|---:|---|
 | `.assistant/skills/<skill>/SKILL.md` | **Sim** | mecanismo nativo; conteúdo `rodrigo-*` é personalizado |
 | `.assistant_instructions.md` | **Sim*** | colocar em `/Users/<username>/` |
@@ -75,13 +75,13 @@ Genie Code**. Ele também é um identificador Python válido (`x_snippets`).
 ### Opção A — skills pessoais
 
 1. Versione este pacote em Git.
-2. Copie as pastas de skill para o diretório de usuário documentado pela Genie Code:
+2. Copie as pastas de skill para o diretório de usuário documentado pelo Genie Code:
    `/Users/<username>/.assistant/skills/`.
 3. Copie `.assistant_instructions.md` para:
    `/Users/<username>/.assistant_instructions.md`.
 4. Se quiser os helpers, copie também os diretórios `x_` para a `.assistant` do
    usuário. Eles continuarão manuais.
-5. Abra **um novo chat** na Genie Code depois da alteração. Se houver cache,
+5. Abra **um novo chat** no Genie Code depois da alteração. Se houver cache,
    recarregue a página.
 
 ### Opção B — skills compartilhadas no workspace
@@ -167,7 +167,7 @@ Use [x_projects/AGENTS_TEMPLATE.md](x_projects/AGENTS_TEMPLATE.md):
 4. Crie `AGENTS.md` mais específico em uma subpasta somente quando esse escopo
    realmente precisar de regras diferentes.
 
-A Genie Code descobre `AGENTS.md`/`CLAUDE.md` ao abrir um arquivo ou notebook e
+O Genie Code descobre `AGENTS.md`/`CLAUDE.md` ao abrir um arquivo ou notebook e
 percorrer a hierarquia ancestral. Um arquivo deixado apenas em `x_projects/` não é
 memória automática.
 
@@ -255,18 +255,37 @@ anterior, contém apenas uma lista vazia e não configura nada — ver
 
 ## Validação antes de publicar
 
+A maior parte desta lista é executada por um comando só. O que sobra é o que
+exige uma pessoa — e é justamente aí que a checagem costuma ser pulada.
+
+**Automático** — `python tools/validate_assistant.py` cobre, e reprova, todos
+estes de uma vez:
+
 ```text
-[ ] 12/12 pastas de skill têm SKILL.md válido
-[ ] frontmatter contém name e description; este pacote omite extras por convenção conservadora
-[ ] cada skill passa o validador local adotado pelo projeto
-[ ] nenhum caminho/e-mail pessoal permanece
-[ ] referências Markdown relativas existem
-[ ] Python compila e testes driver-side passam
-[ ] testes Spark rodam em uma sessão Databricks compatível
-[ ] instruções pessoais têm menos de 20.000 caracteres
-[ ] prompts e projetos x_ continuam marcados como manuais
-[ ] um novo chat confirma seleção automática e @menção de cada skill
+[x] 12/12 pastas de skill têm SKILL.md válido
+[x] frontmatter contém name e description
+[x] name é idêntico ao nome da pasta
+[x] nenhum caminho/e-mail pessoal ou identificador corporativo permanece
+[x] referências Markdown relativas existem
+[x] Python compila (AST)
+[x] instruções pessoais têm menos de 20.000 caracteres
+[x] arquivos decodificam como UTF-8, sem mojibake
 ```
+
+**Manual** — nenhum comando substitui estes três:
+
+```text
+[ ] testes Spark rodam em uma sessão Databricks compatível
+    (tools/spark_smoke_test.py; ver docs/testes/spark/)
+[ ] um novo chat confirma seleção automática e @menção de cada skill
+    (ver docs/testes/forward/)
+[ ] prompts e projetos x_ continuam marcados como manuais na documentação
+```
+
+Sobre o frontmatter: o padrão Agent Skills admite campos além de `name` e
+`description`, e este pacote não os usa. A razão é que só a `description` entra
+no roteamento — campo extra vira texto que ninguém lê e que envelhece sem que
+nada acuse.
 
 ## Solução de problemas
 
@@ -286,10 +305,10 @@ anterior, contém apenas uma lista vazia e não configura nada — ver
 
 ## Fontes oficiais
 
-- [Agent Skills na Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills)
+- [Agent Skills no Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills)
 - [Instruções customizadas](https://learn.microsoft.com/en-us/azure/databricks/genie-code/instructions)
 - [Dicas para Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/tips)
-- [MCP na Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/mcp)
+- [MCP no Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/mcp)
 - [Lakeflow Spark Declarative Pipelines — melhores práticas](https://learn.microsoft.com/en-us/azure/databricks/ldp/best-practices)
 - [Declarative Automation Bundles](https://learn.microsoft.com/en-us/azure/databricks/dev-tools/bundles/)
 - [MLflow Tracking](https://learn.microsoft.com/en-us/azure/databricks/mlflow/tracking)

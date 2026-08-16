@@ -20,6 +20,7 @@ Use `x_projects` para guardar modelos. Para o contexto ativo, copie
 └── tests/
 
 /Users/<usuario>/.assistant/x_projects/
+├── README.md                 ← este arquivo
 ├── AGENTS_TEMPLATE.md        ← modelo personalizado, não automático
 ├── _template_projeto.md      ← ficha detalhada, não automática
 └── exemplo_churn_previdencia.md
@@ -113,11 +114,10 @@ no `AGENTS.md` os detalhes essenciais e anexe os recursos adicionais no chat.
 
 ## Ciclo de vida
 
-```text
-RASCUNHO → ATIVO → ESTÁVEL → ENCERRADO
-    ↑         │        │          │
-    └─ revisar├─ atualizar fatos  └─ preservar histórico fora do AGENTS.md
-              └─ remover contexto obsoleto
+```mermaid
+flowchart LR
+  R["RASCUNHO"] --> A["ATIVO"] --> E["ESTÁVEL"] --> F["ENCERRADO"]
+  A -->|"o escopo mudou"| R
 ```
 
 - **Rascunho:** placeholders preenchidos e revisão de segurança.

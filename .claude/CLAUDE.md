@@ -20,15 +20,18 @@ Leia este arquivo primeiro; depois carregue apenas o que a tarefa pedir.
 ├── CLAUDE.md          # este índice
 ├── rules/             # regras duráveis (5 arquivos, uma responsabilidade cada)
 ├── context/           # fatos permanentes sobre usuário e ambientes
-├── skills/            # playbooks executáveis deste repositório
+├── skills/            # playbooks executáveis deste repositório (5 ativas)
 │   ├── validar-assistant/   # roda tools/validate_assistant.py e interpreta
-│   └── render-simulado/     # roda tools/render_simulado.py
+│   ├── render-simulado/     # roda tools/render_simulado.py
+│   ├── publicar-free/       # roda tools/publicar_free.py (plano/execute/verify)
+│   ├── forward-test-skills/ # roteiro de teste de roteamento das 12 skills
+│   └── replicar-trabalho/   # pré-requisitos e guardrails da cópia manual
 └── templates/         # changelog, ADR, handoff, auditoria
 ```
 
-Skills planejadas para as próximas fases (ver README raiz): `publicar-free`
-(engine do Hub), `forward-test-skills`, `replicar-trabalho`,
-`revisar-docs-oficiais`. Não invente que já existem.
+O inventário com status de cada uma está em `skills/README.md`, que é o dono
+dessa lista. Planejada e **ainda inexistente**: `revisar-docs-oficiais` (revisão
+periódica da documentação oficial). Não invente que ela já existe.
 
 ## Convenções desta pasta
 

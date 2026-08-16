@@ -43,6 +43,12 @@ def eh_notebook(caminho: Path) -> bool:
 EXPECTED_SKILLS = 12
 EXPECTED_X_DIRS = {"x_config", "x_docs", "x_projects", "x_prompts", "x_scripts", "x_snippets"}
 
+# Arquivos que a **plataforma** cria dentro de `.assistant/` e que não vêm da
+# fonte. Observado em 2026-08-15: abrir o painel de MCP em Genie Code → Settings
+# materializa `.assistant/.mcp_servers.json` com os conectores internos. Sem esta
+# lista, a conferência os classificaria como obsoletos e mandaria removê-los.
+GERENCIADOS_PELA_PLATAFORMA = {".assistant/.mcp_servers.json"}
+
 
 def databricks(*args: str) -> tuple[int, str, str]:
     """Retorna (returncode, stdout, stderr) separados.
@@ -156,6 +162,12 @@ def cmd_plan(root: Path, arquivos: list[Path], home: str, executar: bool) -> int
     return 0
 
 
+def _ancestrais(caminho: str) -> set[str]:
+    """Todos os diretórios intermediários de um caminho relativo."""
+    partes = caminho.split("/")
+    return {"/".join(partes[:i]) for i in range(1, len(partes))}
+
+
 def cmd_verify(root: Path, arquivos: list[Path], home: str) -> int:
     print("== VERIFY (read-only) ==")
     problemas: list[str] = []
@@ -170,9 +182,10 @@ def cmd_verify(root: Path, arquivos: list[Path], home: str) -> int:
             esperado_notebook.add(relativo[:-3])
         else:
             esperados.add(relativo)
+    arvore_remota = remote_walk(f"{home}/.assistant")
     remotos = {
         item["path"][len(home) + 1 :]: item
-        for item in remote_walk(f"{home}/.assistant")
+        for item in arvore_remota
         if item.get("object_type") != "DIRECTORY"
     }
     instrucoes = databricks_json(
@@ -187,7 +200,25 @@ def cmd_verify(root: Path, arquivos: list[Path], home: str) -> int:
 
     # `import-dir --overwrite` sobrescreve, mas nunca apaga: arquivo removido da
     # fonte sobrevive no workspace e continua sendo lido pelo Genie Code.
-    obsoletos = sorted(set(remotos) - esperados)
+    obsoletos = sorted(set(remotos) - esperados - GERENCIADOS_PELA_PLATAFORMA)
+
+    # Diretório sofre do mesmo problema e não aparece na conta de arquivos: uma
+    # pasta esvaziada na fonte sobrevive no workspace sem nenhum arquivo dentro,
+    # invisível para a comparação acima.
+    esperado_dirs = {
+        str(Path(nome).parent).replace("\\", "/")
+        for nome in esperados
+        if "/" in nome
+    }
+    esperado_dirs |= {
+        pai for nome in esperado_dirs for pai in _ancestrais(nome)
+    }
+    remoto_dirs = {
+        item["path"][len(home) + 1 :]
+        for item in arvore_remota
+        if item.get("object_type") == "DIRECTORY"
+    }
+    obsoletos += sorted(remoto_dirs - esperado_dirs)
     for nome in obsoletos:
         problemas.append(f"obsoleto no remoto (remover à mão): {nome}")
 
@@ -215,9 +246,13 @@ def cmd_verify(root: Path, arquivos: list[Path], home: str) -> int:
     for faltante in sorted(EXPECTED_X_DIRS - x_dirs):
         problemas.append(f"diretório ausente: {faltante}")
 
+    plataforma = sorted(set(remotos) & GERENCIADOS_PELA_PLATAFORMA)
+
     print(f"esperados : {len(esperados)} arquivos")
     print(f"remotos   : {len(remotos)} arquivos sob .assistant + instruções")
     print(f"ausentes  : {len(ausentes)} | obsoletos: {len(obsoletos)}")
+    if plataforma:
+        print(f"plataforma: {len(plataforma)} arquivo(s) gerenciado(s) — {', '.join(plataforma)}")
     print(f"skills    : {len(skills)}/{EXPECTED_SKILLS}")
     print(f"extensões : {len(x_dirs & EXPECTED_X_DIRS)}/{len(EXPECTED_X_DIRS)} diretórios x_")
     print()

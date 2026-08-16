@@ -19,6 +19,26 @@ from pathlib import Path
 INSTRUCTION_LIMIT = 20_000
 SKILL_LINE_WARN = 500
 
+# Raiz do repositório, derivada do arquivo e não do diretório atual: os checks de
+# repositório inteiro precisam varrer sempre o mesmo lugar, independentemente de
+# onde o comando foi chamado.
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+# Diretórios fora do alcance dos checks de repositório inteiro.
+REPO_IGNORE = {".git", "Ambiente_Antigo", "Ajustes_Codex", "__pycache__", ".venv"}
+
+# Padrões que caracterizam identificador corporativo. Não são exaustivos — são os
+# formatos conhecidos deste contexto. Ao levar o repositório para outra
+# organização, acrescente aqui o formato de matrícula e o domínio de lá antes de
+# confiar no check.
+CORPORATE_RE = re.compile(
+    r"\b[a-z]\d{6,8}\b"                      # matrícula: letra + 6 a 8 dígitos
+    r"|corp(?:orativ)?[.@]"                  # domínio/e-mail corporativo
+    r"|\.gov\.br"
+    r"|@[a-z0-9-]*(?:banco|caixa|bank)[a-z0-9-]*\.",
+    re.IGNORECASE,
+)
+
 # Sequências típicas de mojibake (UTF-8 lido como latin-1/cp1252).
 MOJIBAKE_RE = re.compile(r"Ã[£¡©ªµ§¢³º]|â€[œ\x9d™“”]|Ã‚|Ã©|Ã§Ã")
 
@@ -114,6 +134,15 @@ def check_instructions_size(root: Path, problems: list[str]) -> int:
     return size
 
 
+def iter_repo_files() -> list[Path]:
+    """Arquivos do repositório inteiro, exceto referências congeladas e caches."""
+    return [
+        p
+        for p in REPO_ROOT.rglob("*")
+        if not any(parte in REPO_IGNORE for parte in p.relative_to(REPO_ROOT).parts)
+    ]
+
+
 def check_repo_corporate(problems: list[str]) -> int:
     """Varre o repositório inteiro atrás de identificador **corporativo**.
 
@@ -121,23 +150,56 @@ def check_repo_corporate(problems: list[str]) -> int:
     no ADR-0003 se materializa fora dela: em `Novo_Ambiente_Simulado/`, que é
     versionado e carrega o nome do usuário no caminho. Aqui a busca é só por
     padrão corporativo — o username pessoal do laboratório é estado aceito.
+
+    A varredura parte de `REPO_ROOT`, não do diretório atual: antes disso, rodar
+    o comando de outra pasta reduzia a varredura sem alterar o veredito.
     """
-    corporativo = re.compile(r"c\d{6}|corp\.|\.gov\.br", re.IGNORECASE)
-    ignorar = {".git", "Ambiente_Antigo", "Ajustes_Codex", "__pycache__", ".venv"}
     verificados = 0
-    for caminho in Path(".").rglob("*"):
-        if any(parte in ignorar for parte in caminho.parts):
-            continue
-        if corporativo.search(str(caminho)):
-            problems.append(f"{caminho}: identificador corporativo no caminho")
+    for caminho in iter_repo_files():
+        relativo = caminho.relative_to(REPO_ROOT)
+        if CORPORATE_RE.search(str(relativo)):
+            problems.append(f"{relativo}: identificador corporativo no caminho")
         if not caminho.is_file() or caminho.suffix not in {".md", ".py", ".txt", ".json"}:
             continue
         verificados += 1
         try:
-            if corporativo.search(caminho.read_text(encoding="utf-8")):
-                problems.append(f"{caminho}: identificador corporativo no conteúdo")
+            if CORPORATE_RE.search(caminho.read_text(encoding="utf-8")):
+                problems.append(f"{relativo}: identificador corporativo no conteúdo")
         except (UnicodeDecodeError, OSError):
             continue
+    if verificados == 0:
+        problems.append(
+            "check corporativo não varreu nenhum arquivo — a proteção do ADR-0003 "
+            "não rodou; não trate este resultado como aprovação"
+        )
+    return verificados
+
+
+def check_repo_links(root: Path, problems: list[str]) -> int:
+    """Confere links relativos dos Markdown **fora** da raiz analisada.
+
+    `check_markdown` cobre só `--root`. Sem isto, o README da raiz, `docs/` e
+    `.claude/` — que é onde vive a maior parte da documentação de navegação —
+    ficavam sem verificação de link algum.
+    """
+    verificados = 0
+    for caminho in iter_repo_files():
+        if caminho.suffix != ".md" or not caminho.is_file():
+            continue
+        if root in caminho.parents:
+            continue  # já coberto por check_markdown
+        relativo = caminho.relative_to(REPO_ROOT)
+        try:
+            texto = caminho.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, OSError):
+            continue
+        for match in MD_LINK_RE.finditer(texto):
+            alvo = match.group(1)
+            if alvo.startswith(("http://", "https://", "mailto:")):
+                continue
+            verificados += 1
+            if not (caminho.parent / alvo).resolve().exists():
+                problems.append(f"{relativo}: link relativo quebrado -> {alvo}")
     return verificados
 
 
@@ -188,13 +250,15 @@ def main() -> int:
     check_text_hygiene(root, problems)
     check_path_hygiene(root, problems)
     n_repo = check_repo_corporate(problems)
+    n_repo_links = check_repo_links(root, problems)
 
     print(f"raiz analisada     : {root}")
     print(f"skills             : {n_skills}")
     print(f"markdown / links   : {n_md} arquivos / {n_links} links relativos")
     print(f"python (AST)       : {n_py} arquivos")
     print(f"instrucoes         : {n_chars}/{INSTRUCTION_LIMIT} caracteres")
-    print(f"repo (corporativo) : {n_repo} arquivos varridos, fora da raiz analisada")
+    print(f"repo (corporativo) : {n_repo} arquivos varridos no repositório inteiro")
+    print(f"repo (links)       : {n_repo_links} links fora da raiz analisada")
     print()
     for warning in warnings:
         print(f"WARN {warning}")

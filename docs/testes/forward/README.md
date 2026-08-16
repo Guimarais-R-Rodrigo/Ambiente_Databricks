@@ -23,9 +23,14 @@ replicação no trabalho.
 | 2 | 2026-08-14 | 5 | 0 | [detalhes](resultados/2026-08-14_rodada2.md) — hipótese confirmada: `10P` e `11P` passaram apenas com o prompt corrigido |
 
 **GATE FECHADO ✅ — 36/36 PASS** (positivos 12/12 · negativos 12/12 · menções
-12/12). Nenhuma `description` foi alterada em nenhuma rodada: o pacote auditado
-pelo Codex passou como estava. As falhas da rodada 1 eram do instrumento de
-teste, não do ambiente.
+12/12), **sendo 1 negativo aprovado em sentido fraco**: em `11N-r2` a skill
+errada não carregou — que é o critério do teste —, mas a ideal também não veio.
+Está registrado como item de vigilância no
+[handoff de 2026-08-14](../../handoffs/2026-08-14_calibracao-descriptions.md).
+
+Nenhuma `description` foi alterada em nenhuma rodada: o pacote auditado pelo
+Codex passou como estava. As falhas da rodada 1 eram do instrumento de teste,
+não do ambiente.
 
 ## O que a rodada 1 mostrou
 

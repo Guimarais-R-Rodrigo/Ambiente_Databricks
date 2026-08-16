@@ -5,6 +5,148 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-15 — segunda auditoria da documentação e 25 correções
+
+Rodada independente sobre os **15 READMEs** do repositório, sete deles auditados
+pela primeira vez. Ao contrário da rodada anterior, esta pediu que o auditor
+**executasse** os procedimentos documentados em vez de apenas lê-los, e que
+comparasse cada README com o conteúdo real da pasta que ele descreve. Os dois
+achados mais caros vieram exatamente daí. Registro em
+`docs/auditoria/2026-08-15_documentacao-rodada2/`.
+
+### Corrigido — proteções que não cobriam o que prometiam
+
+1. (Claude) `check_repo_corporate` varria a partir de `Path(".")`, não da raiz do
+   repositório. Rodado de `tools/`, varria 4 arquivos em vez de 409 e devolvia
+   `APROVADO: 0 falha(s), 0 aviso(s)` — a proteção do ADR-0003 desligava em
+   silêncio conforme o diretório de onde o comando fosse chamado. A raiz passou a
+   vir de `Path(__file__).resolve().parents[1]`, e **varredura vazia agora
+   reprova**. O padrão foi ampliado de três alternativas para matrícula genérica
+   (letra + 6 a 8 dígitos), domínio corporativo e domínio bancário, verificado
+   sem falso positivo no repositório atual. O `README.md` deixou de prometer
+   cobertura genérica e passou a apontar `CORPORATE_RE` como dona da lista.
+2. (Claude) A validação só checava links relativos dentro de `--root`
+   (`ambiente_fonte` por padrão), enquanto o `README.md` a apresentava como rede
+   que "reprova link quebrado". `README.md`, `docs/` e `.claude/` — 156 links —
+   nunca foram verificados. Novo `check_repo_links` cobre o repositório fora da
+   raiz analisada; nenhum link quebrado encontrado. O texto passou a dizer que
+   não há hook nem CI: a rede só existe quando alguém a aciona.
+3. (Claude) `publicar_free.py --verify` filtrava `object_type != "DIRECTORY"`, e
+   por isso não enxergava diretório órfão. Havia um caso vivo: `x_projects/archive`,
+   vazio, não versionado e publicado no workspace. A conferência passou a comparar
+   também os diretórios; `archive/` foi removido da fonte e do workspace.
+
+### Corrigido — procedimento documentado que não executa
+
+1. (Claude) O passo 4 da "Primeira hora" mandava rodar quatro comandos "logo
+   abaixo", e o bloco do render aparecia **sem `--write`**. Quem copiasse os
+   blocos na ordem publicaria o espelho anterior e receberia `APROVADO` na
+   conferência, que compara workspace contra espelho e nunca contra a fonte. Os
+   quatro comandos passaram para dentro do passo 4, com `--write` e a explicação
+   do porquê a conferência não acusaria o erro.
+2. (Claude) `README.md` mandava instalar a CLI com `pip install databricks-cli`,
+   que é a CLI legada — parada na 0.18, desaconselhada pela própria Databricks,
+   sem `auth login` nem `current-user`, e capaz de sombrear o binário correto no
+   PATH em Windows. Substituído por `winget` e pelo instalador oficial, com
+   `databricks --version` ≥ 0.200 como pré-requisito conferível.
+3. (Claude) O comando de reexecução do smoke test estava marcado como PowerShell
+   mas passava JSON entre aspas simples: o shell remove as aspas duplas antes de
+   o executável recebê-las. Trocado por here-string.
+
+### Corrigido — código
+
+1. (Claude) `x_scripts/naming_checker.py` referenciava o global de notebook
+   `spark` sem importar `pyspark` — o mesmo `NameError` que `docs/testes/spark/`
+   declarava eliminado em todos os scripts. Ele nunca esteve no smoke test, então
+   nunca foi importado no runtime, e a validação estática não pega porque o
+   arquivo é sintaticamente válido. Corrigido; varredura por AST confirmou que
+   nenhum outro módulo de `x_snippets` ou `x_scripts` usa o global.
+
+### Corrigido — contradições entre documentos
+
+1. (Claude) `CLAUDE.md` listava o ADR-0002 (engine do Hub) como decisão **ativa**,
+   revogada pelo ADR-0005 desde então, e omitia os ADRs 0004 e 0005.
+2. (Claude) `.claude/CLAUDE.md` mandava "não invente que já existem" sobre
+   `publicar-free`, `forward-test-skills` e `replicar-trabalho` — as três no
+   disco, com frontmatter válido e listadas como ativas em `skills/README.md`.
+   Como é o primeiro arquivo que toda IA lê, a instrução fazia uma IA nova
+   recusar-se a usar ferramenta existente ou reconstruí-la.
+3. (Claude) `docs/testes/spark/README.md` afirmava que `requirements-optional.txt`
+   traz o conjunto que funciona e, 45 linhas depois, que ele "lista nomes sem
+   versão" e não é instalável — resíduo de antes de o arquivo ser pinado.
+4. (Claude) `ROADMAP_SKILLS.md` mantinha em aberto dois gates fechados (Spark
+   64/71 e forward tests 36/36), e `x_docs/README.md` mandava o leitor lá
+   justamente para saber "gates pendentes". Marcados, com o status apontando para
+   o README da raiz em vez de duplicá-lo.
+
+### Corrigido — índices que negavam o próprio conteúdo
+
+1. (Claude) `docs/auditoria/README.md` dizia "nenhuma auditoria formal registrada
+   ainda" com duas pastas de auditoria ao lado. Tabela preenchida com as três.
+2. (Claude) `docs/handoffs/README.md` declarava-se vazio enquanto guardava, dentro
+   de um bloco rotulado "exemplo", os dois únicos itens de vigilância abertos do
+   projeto — incluindo um que não existe em nenhum outro lugar do repositório.
+   Promovido a `2026-08-14_calibracao-descriptions.md` e registrado na tabela; o
+   README ficou com esqueleto genérico.
+3. (Claude) O mapa do repositório no `README.md` omitia `docs/testes/`, que guarda
+   a evidência dos dois gates da fase 3.
+
+### Corrigido — fatos e mecanismos
+
+1. (Claude) `README.md` declarava as dependências opcionais pendentes de fixação
+   ("7 módulos ML") quando 13 dos 14 já haviam executado com as versões pinadas;
+   só `prophet_wrapper` segue sem combinação funcional.
+2. (Claude) `README.md` agrupava `x_projects/` sob "adicionar com `@`/Add context",
+   que é falso e é exatamente o engano que `x_projects/README.md` existe para
+   desfazer: arquivo que fique nessa pasta nunca é descoberto — é preciso copiar
+   o template como `AGENTS.md` na raiz do projeto real.
+3. (Claude) `x_scripts/README.md` documentava o contrato anterior à correção
+   ("`spark` deve existir no ambiente"), ensinando a aceitar como normal o defeito
+   que o projeto eliminou.
+4. (Claude) A árvore de `x_projects/README.md` listava 3 das 5 entradas da pasta,
+   e o exemplo de `quick_profile` chamava com `sample_fraction=0.05` sobre uma
+   saída capturada com fração 1.0.
+5. (Claude) O gate do forward test declarava 36/36 sem a ressalva que o próprio
+   resultado registra: `11N-r2` passou em sentido fraco.
+
+### Adicionado
+
+1. (Claude) Bifurcação de leitores no `README.md`: usar, contribuir ou assumir o
+   projeto. O percurso inteiro era escrito para quem contribui, e o analista que
+   só vai usar o ambiente publicado não tinha caminho — o passo 4 o convidava a
+   escrever no workspace na primeira hora.
+2. (Claude) Diagrama dos três gates (validação estática, Spark, forward test) com
+   o que cada um prova e **não** prova, e a fronteira que nenhum deles alcança.
+3. (Claude) Sete verbetes no glossário, todos usados sem definição em documentos
+   que remetem o leitor a ele: *event log*, *target (de bundle)*, *autologging*,
+   *PII*, *LambdaRank/NDCG*, *auditoria do Codex* e `run_governado`. O primeiro
+   aparecia em 3 documentos; o penúltimo, em 7.
+4. (Claude) Separação entre automático e manual no checklist de pré-publicação de
+   `.assistant/README.md`: oito itens viram um comando, e sobram os três que
+   exigem uma pessoa.
+
+### Atualizado
+
+1. (Claude) Ordem de `docs/testes/spark/README.md`: a legenda dos três estados
+   (`PASS`/`OPTIONAL_MISSING`/`FAIL`) subiu para junto da tabela que os usa, 80
+   linhas acima de onde estava.
+2. (Claude) A explicação de por que existem duas pastas deixou de ser duplicada
+   no `README.md`; `ambiente_fonte/README.md` passou a ser a dona.
+3. (Claude) Gênero de "Genie Code" padronizado no masculino em 16 arquivos — a
+   forma feminina aparecia em 6 dos 15 READMEs.
+
+### Descoberto durante a correção
+
+1. (Claude) **A plataforma escreve dentro de `.assistant/`.** Abrir o painel de
+   MCP em Genie Code → Settings materializa
+   `/Users/<username>/.assistant/.mcp_servers.json` com a lista de conectores
+   internos (observado em 2026-08-15). Sem tratamento, o `--verify` recém-corrigido
+   classificaria um arquivo gerenciado pela plataforma como obsoleto e mandaria
+   apagá-lo. Passou a ser reconhecido e reportado à parte. Registrado em
+   `.claude/rules/genie-code-oficial.md` com a inversão que importa: o arquivo é
+   **saída** da configuração, nunca entrada — criá-lo à mão não configura nada, o
+   que preserva a afirmação original da regra.
+
 ## 2026-08-14 — auditoria da documentação e 22 correções
 
 Rodada independente sobre os oito READMEs e o glossário, com o auditor tendo

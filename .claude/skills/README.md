@@ -8,7 +8,7 @@ mal-entendido mais provável de quem chega:
 | | Skills **desta** pasta | Skills `rodrigo-*` |
 |---|---|---|
 | Onde vivem | `.claude/skills/` | `ambiente_fonte/.assistant/skills/` |
-| Quem as executa | o assistente que trabalha **no repositório** | a Genie Code, **dentro do Databricks** |
+| Quem as executa | o assistente que trabalha **no repositório** | o Genie Code, **dentro do Databricks** |
 | Sobre o que agem | os arquivos deste projeto | dados, notebooks e modelos do workspace |
 | Exemplo de uso | "valide e publique o ambiente" | "faça a EDA desta tabela" |
 | Vão para o workspace? | não, ficam só aqui | sim, são o produto |

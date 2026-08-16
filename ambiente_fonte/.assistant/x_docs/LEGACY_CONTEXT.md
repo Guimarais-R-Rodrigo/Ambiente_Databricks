@@ -1,6 +1,6 @@
 # Contexto histórico migrado
 
-> **EXTENSÃO CUSTOMIZADA (`x_`) — não auto-descoberta pela Genie Code.**
+> **EXTENSÃO CUSTOMIZADA (`x_`) — não auto-descoberta pelo Genie Code.**
 
 Este arquivo preserva o significado das seções específicas que foram retiradas de
 `.assistant_instructions.md`. A migração mantém as instruções pessoais abaixo do

@@ -30,10 +30,16 @@ Escala planejada: pessoal → squad → missão.
 ## Decisões ativas
 
 - Arquitetura multi-IA e este layout: `docs/decisions/ADR-0001-arquitetura-multi-ia.md`.
-- Publicação no Free reutiliza o engine `databricks-genie` do Verg_Alchemy_Hub:
-  `docs/decisions/ADR-0002-engine-databricks-genie-hub.md`.
 - `Ambiente_Antigo/` é git-ignored por conter identificadores corporativos:
   `docs/decisions/ADR-0003-quarentena-ambiente-antigo.md`.
+- Helpers declarados explicitamente nas skills, não descobertos em chat:
+  `docs/decisions/ADR-0004-declaracao-explicita-de-helpers.md`.
+- Publicação no Free usa `tools/publicar_free.py`, não o engine do Hub:
+  `docs/decisions/ADR-0005-publicacao-propria-no-free.md`. O ADR-0002, que
+  adotava o engine `databricks-genie`, foi **supersedido** por ele — o engine
+  publica `.py` como notebook e quebraria os imports da biblioteca.
+
+O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 
 ## Regras inegociáveis
 

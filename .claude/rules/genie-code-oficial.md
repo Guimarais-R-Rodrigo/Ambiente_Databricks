@@ -23,6 +23,10 @@ não existe**. Em dúvida, verificar a documentação oficial antes de afirmar.
   `/findTables` é nativo). Seleção explícita suportada: `@nome-da-skill`.
 - Hooks/automação pós-resposta; memória automática além dos mecanismos acima.
 - MCP por arquivo JSON no workspace — MCP configura-se em Genie Code → Settings.
+  Cuidado com a inversão: abrir esse painel **escreve**
+  `/Users/<username>/.assistant/.mcp_servers.json` (verificado em 2026-08-15).
+  O arquivo é saída da configuração, nunca entrada — criá-lo à mão não configura
+  nada, e ele não deve ser versionado nem removido do workspace.
 - Instruções aplicadas a Quick Fix e Autocomplete (exceção oficial).
 
 ## Convenção local

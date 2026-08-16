@@ -6,6 +6,8 @@ import re
 from collections.abc import Sequence
 from typing import Dict, List
 
+from pyspark.sql import SparkSession
+
 
 def naming_checker(
     table_name: str,
@@ -24,6 +26,9 @@ def naming_checker(
     if enforce_prefix and not allowed_table_prefixes:
         raise ValueError("allowed_table_prefixes is required when enforce_prefix=True")
 
+    # Resolver a sessão explicitamente: o global de notebook `spark` não existe
+    # quando o módulo é importado (NameError em runtime serverless).
+    spark = SparkSession.getActiveSession() or SparkSession.builder.getOrCreate()
     df = spark.table(table_name)
     violations: List[Dict[str, str]] = []
     table_short = table_name.split(".")[-1]

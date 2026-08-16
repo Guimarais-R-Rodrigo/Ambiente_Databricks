@@ -1,6 +1,6 @@
 # Manifesto funcional das skills
 
-> **DOCUMENTAÇÃO CUSTOMIZADA (`x_docs`) — não auto-descoberta pela Genie Code.**
+> **DOCUMENTAÇÃO CUSTOMIZADA (`x_docs`) — não auto-descoberta pelo Genie Code.**
 
 Fonte executável: `.assistant/skills/<nome>/SKILL.md`. Este manifesto serve para
 revisão humana; se divergir, corrija ambos e valide o `SKILL.md`.

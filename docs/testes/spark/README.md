@@ -19,6 +19,18 @@ notebook [tools/spark_smoke_test.py](../../../tools/spark_smoke_test.py)
 | 8 (…191413) | 4 PASS / 1 FAIL | xgboost, optuna, umap e shap verificados; catboost falhou por colisão de run |
 | 9 (…632341) | **4 PASS / 0 FAIL** | catboost isolado e `run_governado` — [JSON bruto](resultados/2026-08-14_catboost_mlflow.json) |
 
+Os três estados da tabela não são sinônimos, e a diferença decide o que fazer:
+
+| Estado | Significado | Ação |
+|---|---|---|
+| `PASS` | executou como esperado | nenhuma |
+| `OPTIONAL_MISSING` | biblioteca opcional não instalada neste ambiente | nenhuma no laboratório; instalar com versão fixada no projeto que precisar do módulo |
+| `FAIL` | defeito real no código ou incompatibilidade com o runtime | corrigir no `ambiente_fonte/` e reexecutar |
+
+Por isso a rodada 5 fecha o gate com **64 PASS / 0 FAIL / 7 opcionais ausentes**:
+são 71 verificações, e as 7 restantes não são falhas. Para diagnosticar um `FAIL`
+concreto, veja [Como ler uma falha](#como-ler-uma-falha).
+
 ## Módulos com dependência opcional — situação final
 
 **13 dos 14 verificados em runtime.** O conjunto de versões que funciona está em
@@ -63,22 +75,30 @@ A instalação funciona com as versões core fixadas junto das bibliotecas:
 numpy==1.26.4  pandas==1.5.3  lightgbm==4.3.0  shap==0.44.1  lifelines==0.27.8
 ```
 
-Duas consequências práticas. Em job serverless, dependências vão no bloco
+Consequência prática: em job serverless, dependências vão no bloco
 `environments` da submissão, não em `%pip` — `%pip` antes do primeiro comando
 Spark aborta a execução com `spark should be initialized with the first notebook
-command`. E o `requirements-optional.txt` do pacote, que hoje lista nomes sem
-versão, não é instalável como está neste ambiente.
+command`.
+
+Foi essa rodada que motivou fixar as versões em `requirements-optional.txt`. O
+arquivo hoje traz o conjunto que funcionou; antes dela listava só nomes, e nessa
+forma não era instalável neste ambiente.
 
 ## Defeitos reais encontrados e corrigidos no `ambiente_fonte/`
 
 Nenhum deles era detectável pela validação estática (AST compilava na máquina
 local com Python 3.12):
 
-1. **`spark` como global inexistente** — `null_summary` e os 5 `x_scripts`
+1. **`spark` como global inexistente** — `null_summary` e 5 `x_scripts`
    (`quick_profile`, `data_quality_check`, `rfv_calculator`, `drift_detector`,
    `schema_to_yaml`) referenciavam o global de notebook `spark`, que não existe
    quando o módulo é importado (`NameError`). Correção: `df.sparkSession` no
    snippet e `SparkSession.getActiveSession() or ...getOrCreate()` nos scripts.
+   **`naming_checker` tinha o mesmo defeito e escapou desta rodada**: ele não
+   estava coberto pelo smoke test, então nunca foi importado no runtime.
+   Encontrado e corrigido em 2026-08-15 pela auditoria de documentação, que
+   comparou a lista acima com o código. Hoje nenhum módulo de `x_scripts` ou
+   `x_snippets` usa o global — a varredura por AST está descrita no CHANGELOG.
 2. **`cache()`/`unpersist()` proibidos no serverless** (`NOT_SUPPORTED_WITH_SERVERLESS`)
    — em `safe_display` (removido: o prefixo `limit+1` já limita custo) e em
    `quick_profile`/`drift_detector` (guardas `_cache_if_supported`/`_unpersist_quietly`,
@@ -95,15 +115,6 @@ consumidor (`x_snippets/requirements-optional.txt`). Testá-los com versões
 fixadas continua como gate específico por workflow.
 
 ## Como ler uma falha
-
-O relatório classifica cada verificação em três estados, e a diferença entre eles
-decide o que fazer:
-
-| Estado | Significado | Ação |
-|---|---|---|
-| `PASS` | executou como esperado | nenhuma |
-| `OPTIONAL_MISSING` | biblioteca opcional não instalada neste ambiente | nenhuma no laboratório; instalar com versão fixada no projeto que precisar do módulo |
-| `FAIL` | defeito real no código ou incompatibilidade com o runtime | corrigir no `ambiente_fonte/` e reexecutar |
 
 Um `FAIL` costuma cair em um de três padrões, todos vistos na primeira execução
 deste projeto. `NameError` sobre `spark` indica código contando com a variável
@@ -127,5 +138,13 @@ onde não há CLI: basta importá-lo e executar pela interface (passo 6.3 do
 
 ```powershell
 databricks workspace import "/Users/<username>/x_lab/spark_smoke_test" --file tools\spark_smoke_test.py --format SOURCE --language PYTHON --overwrite
-databricks jobs submit --json '{"run_name":"smoke","tasks":[{"task_key":"smoke","notebook_task":{"notebook_path":"/Users/<username>/x_lab/spark_smoke_test"}}]}'
+
+databricks jobs submit --json @'
+{"run_name":"smoke","tasks":[{"task_key":"smoke","notebook_task":{"notebook_path":"/Users/<username>/x_lab/spark_smoke_test"}}]}
+'@
 ```
+
+> O JSON precisa da here-string (`@'` … `'@`, com o `'@` na coluna 0, sem
+> indentação). Passado entre aspas simples comuns, o PowerShell remove as aspas
+> duplas antes de o executável recebê-las e a CLI recusa o payload. A
+> alternativa é gravar o JSON em arquivo e passar `--json @caminho.json`.

@@ -189,6 +189,6 @@ administradas separadamente e não fazem parte deste runbook.
 
 ## Fontes
 
-- [Agent Skills na Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills)
+- [Agent Skills no Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills)
 - [Instruções customizadas](https://learn.microsoft.com/en-us/azure/databricks/genie-code/instructions)
 - [Git folders no Databricks](https://learn.microsoft.com/en-us/azure/databricks/repos/)

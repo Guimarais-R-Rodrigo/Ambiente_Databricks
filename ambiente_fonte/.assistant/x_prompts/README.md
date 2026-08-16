@@ -48,7 +48,7 @@ CONTEXTO
 
 **Passo 2 — o mesmo trecho preenchido.** Repare no uso de `NÃO INFORMADO`: ele
 comunica "eu não sei", que é diferente de deixar o campo em branco. Campo em
-branco a Genie Code tende a preencher sozinha, e passa a trabalhar sobre uma
+branco o Genie Code tende a preencher sozinha, e passa a trabalhar sobre uma
 suposição que você não fez.
 
 ```text

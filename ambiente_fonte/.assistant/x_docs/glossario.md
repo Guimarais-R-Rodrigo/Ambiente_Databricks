@@ -1,6 +1,6 @@
 # Glossário
 
-> **Documento customizado (`x_docs`), não auto-descoberto pela Genie Code.**
+> **Documento customizado (`x_docs`), não auto-descoberto pelo Genie Code.**
 > Consulte-o quando um termo aparecer sem explicação em qualquer README deste
 > ecossistema. Para adicioná-lo ao chat, use `@` ou **Add context**.
 
@@ -37,6 +37,10 @@ procurar por ele na documentação oficial não devolve nada.
 | **Bronze / silver / gold** | Convenção de camadas: bronze recebe o dado bruto, silver limpa e padroniza, gold entrega pronto para consumo. É organização, não exigência da plataforma. | Skill de pipeline |
 | **Expectations** | Regras de qualidade declaradas dentro do pipeline Lakeflow, que registram ou barram linhas fora do esperado. Diferente de checagem avulsa em notebook. | Skill de pipeline |
 | **Readiness (para ML)** | Avaliação de se os dados sustentam modelagem: cobertura, alinhamento temporal, sinal e qualidade. Responde "dá para modelar?" antes de tentar. | Skill de cross-EDA |
+| **Event log** | Tabela que um pipeline Lakeflow escreve sozinho, com um registro por evento de execução: expectations violadas, linhas processadas, falhas. É onde se investiga o que aconteceu numa rodada, sem instrumentar nada. | Fluxo de engenharia; limites de `x_scripts` |
+| **Target (de bundle)** | Ambiente de destino declarado num Declarative Automation Bundle — tipicamente `dev`, `homologação` e `prod`. Cada um aponta para catálogo, schema e permissões próprios, e é o que impede um deploy de desenvolvimento tocar produção. | Diagrama do fluxo de engenharia |
+| **Autologging** | Registro automático de parâmetros, métricas e modelo pelo MLflow, ligado por padrão no Databricks. Ele intercepta o `fit` mesmo quando o código não pede nada — e é por isso que aparece como causa de falha com bibliotecas incompatíveis. | `docs/testes/spark/` |
+| **PII** | *Personally identifiable information*: dado que identifica uma pessoa (CPF, nome, e-mail, telefone, endereço). Nunca entra neste repositório nem no laboratório Free, em nenhuma hipótese — placeholders sempre. | Regras de edição e checklists |
 
 ## Modelagem — vocabulário de estatística e ML
 
@@ -59,6 +63,7 @@ procurar por ele na documentação oficial não devolve nada.
 | **As-of join** | Nome técnico da junção point-in-time: para cada linha, traz a última versão do dado válida naquele momento. | `x_snippets.spark.pit_join` |
 | **Atraso de publicação** | Tempo entre o instante a que um dado se refere e o momento em que ele fica disponível. Um score de bureau com referência 10/01 e atraso de 2 dias só pode entrar em decisões a partir de 12/01; ignorá-lo cria vazamento mesmo com data de referência no passado. | `pit_join(atraso_publicacao_dias=...)` |
 | **Fator de expansão** | Quantas vezes um join multiplica as linhas da esquerda. Acima de 1,0 há duplicação, e é como uma base de treino passa a superrepresentar entidades sem ninguém perceber. | `x_snippets.spark.join_diagnostics` |
+| **LambdaRank / NDCG** | Ranking, não classificação: o modelo aprende a **ordenar** os itens de um grupo (LambdaRank) e o NDCG mede se os mais relevantes ficaram no topo. Serve para "quem oferecer primeiro", não para "quem vai contratar". | `x_snippets.ml.lgbm_ranker` |
 
 ## Convenção — criado neste projeto
 
@@ -81,6 +86,8 @@ Nenhum destes termos existe na documentação da Databricks.
 | **API pública** | As funções que um módulo oferece para uso externo. As internas começam com `_` e podem mudar sem aviso. | Coluna "API" do catálogo |
 | **Runbook** | Procedimento escrito passo a passo, para ser seguido sob pressão sem improviso. Aqui, o da replicação no trabalho. | `docs/playbooks/` |
 | **AST** | Representação estruturada do código que permite conferir sintaxe sem executá-lo. A validação usa para garantir que todo `.py` compila. | Saída do validador |
+| **Auditoria do Codex** | Revisão independente do ambiente `.assistant` original, feita pelo Codex em 2026-08-13, antes deste repositório existir. Encontrou seis skills sem frontmatter, cálculo de PSI incorreto e identificadores corporativos expostos, e entregou o pacote corrigido que virou o `ambiente_fonte/`. A entrega está congelada em `Ajustes_Codex/`, e os "gates do Codex" são as verificações que ela deixou pendentes. | Origem do produto; `docs/testes/` |
+| **`run_governado`** | Gerenciador de contexto que abre um run isolado do MLflow e **recusa fechá-lo** sem parâmetros, métricas, assinatura e limitações declaradas. Existe porque dois wrappers de treino na mesma sessão colidem na chave `algorithm`, que o MLflow trata como imutável. | `x_snippets.ml.mlflow_run` |
 
 ## Termos que descrevem o que **não** existe
 

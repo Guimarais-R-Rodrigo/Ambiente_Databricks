@@ -12,39 +12,37 @@ levaria mais de alguns minutos. Um arquivo por handoff, nomeado
 
 ## Como um se parece
 
-O formato fica claro vendo um. Versão curta, com as quatro partes que importam:
+O esqueleto tem quatro partes que importam. O molde completo está em
+`.claude/templates/handoff.md`:
 
 ```markdown
-# Handoff — calibração das descriptions
+# Handoff — <tema>
 
-Data: 2026-08-14 · De: sessão Claude · Para: qualquer IA
+Data: YYYY-MM-DD · De: <sessão/IA> · Para: <quem assume>
 
 ## Estado atual
-Roteamento certificado em 36/36 (`docs/testes/forward/`). Nenhuma description
-foi alterada; o pacote do Codex passou como estava.
+<O que está feito e verificado, com caminhos de arquivo.>
 
 ## Em andamento / bloqueado
-Nada bloqueado. Dois itens de vigilância abertos, ambos sem ação decidida:
-pedido de "features que pesam no score" em linguagem executiva vai para
-monitoramento em vez de explicabilidade; `comentar-notebook` responde a
-"células %md" mas não a "markdown de documentação".
+<O que ficou pela metade, e em quem ou em quê está travado.>
 
 ## Próximos passos recomendados
-1. Observar os dois itens no uso real antes de mexer em qualquer description.
-2. Se um deles atrapalhar de fato, ajustar a description e repetir apenas os
-   testes daquela skill.
+1. <passo objetivo e verificável>
 
 ## Armadilhas conhecidas
-Alterar description invalida a certificação: os testes precisam ser refeitos
-para a skill alterada e para as que competem com ela no mesmo vocabulário.
-Editar description "de passagem", junto de outra mudança, é como a certificação
-se perde sem ninguém notar.
+<O que parece óbvio mas quebra. Termine por aqui: é o que economiza
+mais tempo de quem chega.>
 ```
 
-Repare no que o exemplo faz: separa o que está firme do que está aberto, não
-esconde o que ficou sem decisão, e termina pela armadilha — a informação que
-economiza mais tempo de quem chega.
+O que separa um handoff útil de um resumo: ele distingue o que está firme do
+que está aberto, não esconde o que ficou sem decisão, e fecha pela armadilha.
+
+## Handoffs registrados
 
 | Data | Tema | De → Para |
 |---|---|---|
-| — | (nenhum handoff registrado ainda) | — |
+| 2026-08-14 | [Calibração das descriptions](2026-08-14_calibracao-descriptions.md) | sessão Claude → quem alterar uma skill |
+
+Leia o de 2026-08-14 **antes de editar qualquer `description`**: ele registra os
+dois únicos itens de vigilância abertos do projeto e por que nenhuma
+`description` foi alterada apesar deles.

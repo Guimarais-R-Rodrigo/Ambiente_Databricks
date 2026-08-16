@@ -17,10 +17,20 @@
 
 ## Antes da implantação no workspace
 
-- [ ] Executar testes Spark com as versões reais do runtime Databricks.
-- [ ] Validar as 12 skills em chats novos: um caso positivo, um negativo e uma
-  `@menção` explícita por skill.
-- [ ] Fixar dependências opcionais por workflow após teste no runtime alvo.
+> O status destes gates é mantido no README da raiz do repositório
+> (seção **Status e roadmap**) e na evidência em `docs/testes/`. Esta lista
+> aponta para lá; se divergirem, vale o README.
+
+- [x] Executar testes Spark com as versões reais do runtime Databricks —
+  64 PASS / 0 FAIL de 71 verificações (2026-08-13, Spark 4.1 serverless).
+- [x] Validar as 12 skills em chats novos: um caso positivo, um negativo e uma
+  `@menção` explícita por skill — 36/36 PASS (2026-08-14), sem alterar nenhuma
+  `description`.
+- [x] Fixar dependências opcionais e testar no runtime — 13 dos 14 módulos
+  executaram com as versões de `../x_snippets/requirements-optional.txt`; só
+  `prophet_wrapper` segue sem combinação funcional.
+- [ ] Fixar o subconjunto de versões em cada **projeto consumidor** que usar os
+  módulos de ML. O inventário é referência, não lockfile universal.
 - [ ] Implantar primeiro em um usuário/target de desenvolvimento.
 - [ ] Revisar permissões, PII, custos e efeitos de escrita.
 

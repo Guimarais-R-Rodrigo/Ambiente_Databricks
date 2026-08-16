@@ -34,6 +34,16 @@ Gatilhos mínimos de auditoria `A1+` neste projeto (ver `.claude/rules/multi-llm
 - antes de replicar mudança estrutural no workspace do trabalho;
 - quando duas IAs divergirem sobre comportamento da plataforma.
 
+## Auditorias realizadas
+
 | Data | Tema | Nível | Resultado |
 |---|---|---|---|
-| — | (nenhuma auditoria formal registrada ainda) | — | — |
+| 2026-08-14 | [Biblioteca: `pit_join` e `join_diagnostics`](2026-08-14_biblioteca-pit-join/) | `A1` | 15 achados, **13 procedentes** — corrigidos |
+| 2026-08-14 | [Documentação: 8 documentos](2026-08-14_documentacao/) | `A1` | 22 achados, **todos procedentes** — corrigidos |
+| 2026-08-15 | [Documentação: 15 READMEs, segunda rodada](2026-08-15_documentacao-rodada2/) | `A1` | 25 achados, **todos procedentes** — corrigidos |
+
+As três rodadas usaram o mesmo modelo do autor, em sessão sem contexto, com
+acesso ao sistema de arquivos e à CLI. Isso é `A1`, não `A2`: pontos cegos
+compartilhados pelo modelo continuam de pé, e é por isso que a auditoria de
+segunda origem sobre a biblioteca permanece como gate aberto antes de usar
+`pit_join` em decisão que importe no trabalho.

@@ -1,6 +1,6 @@
 # `x_scripts` — utilitários executados explicitamente
 
-> **EXTENSÃO CUSTOMIZADA (`x_`) — não auto-descoberta nem executada pela Genie Code.**
+> **EXTENSÃO CUSTOMIZADA (`x_`) — não auto-descoberta nem executada pelo Genie Code.**
 
 Os scripts desta pasta são helpers de diagnóstico. Importe-os ou execute-os de forma
 explícita depois de adicionar `.assistant` ao `sys.path`. Para produção, incorpore o
@@ -18,7 +18,7 @@ assistant_root = Path("/Workspace/Users/<username>/.assistant")
 sys.path.insert(0, str(assistant_root))
 
 from x_scripts.quick_profile import quick_profile
-profile = quick_profile("catalog.schema.table", sample_fraction=0.05, seed=42)
+profile = quick_profile("catalog.schema.table", sample_fraction=1.0, seed=42)
 ```
 
 ## O que volta de verdade
@@ -130,7 +130,11 @@ drift = drift_detector(
 
 - Esses helpers não substituem Lakeflow expectations, o event log, MLflow, Model
   Serving observability, monitoramento Lakehouse ou políticas do Unity Catalog.
-- `spark` deve existir no ambiente para os scripts que leem tabelas.
+- Os scripts resolvem a sessão Spark sozinhos
+  (`SparkSession.getActiveSession() or ...getOrCreate()`); precisam apenas de uma
+  sessão ativa no runtime. Não conte com o global `spark` de notebook dentro de
+  um módulo importado — ele não existe lá, e foi a causa da primeira leva de
+  falhas no runtime real.
 - Leituras e ações podem ter custo. Revise o plano e as permissões antes de rodar em
   tabelas grandes.
 - `doc_coverage` mede adjacência de Markdown, não a qualidade da explicação.
