@@ -16,6 +16,10 @@ import re
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from notebook_marker import eh_notebook  # noqa: E402
+
 INSTRUCTION_LIMIT = 20_000
 SKILL_LINE_WARN = 500
 
@@ -84,6 +88,23 @@ def check_skill_frontmatter(root: Path, problems: list[str]) -> int:
     return count
 
 
+def check_pycache(root: Path, warnings: list[str]) -> None:
+    """Bytecode no fonte não quebra nada, mas viaja.
+
+    O `.gitignore` impede o commit e o render o filtra na cópia, então ele nunca
+    chega ao workspace pelo caminho normal. O que sobra é sujeira local que
+    aparece em busca e em listagem de pasta — e que já chegou ao workspace uma
+    vez, por publicação feita direto da pasta em vez de pelo simulado. Aviso, não
+    falha: apagar é trivial e não bloqueia ninguém.
+    """
+    caches = [p for p in root.rglob("__pycache__") if p.is_dir()]
+    if caches:
+        warnings.append(
+            f"{len(caches)} pasta(s) __pycache__ em {root.name}/ — "
+            "remova com: find <raiz> -name __pycache__ -type d -exec rm -rf {} +"
+        )
+
+
 def check_skill_sizes(root: Path, warnings: list[str]) -> None:
     for skill_md in sorted((root / ".assistant" / "skills").glob("*/SKILL.md")):
         n_lines = len(skill_md.read_text(encoding="utf-8").splitlines())
@@ -109,6 +130,60 @@ def check_markdown(root: Path, problems: list[str]) -> tuple[int, int]:
             if not (md.parent / target).resolve().exists():
                 problems.append(f"{md}: link relativo quebrado -> {target}")
     return len(md_files), links_checked
+
+
+def check_notebook_links(root: Path, problems: list[str]) -> tuple[int, int]:
+    """Confere links markdown escritos dentro de células `%md` de notebook.
+
+    Notebook é `.py`, e por isso escapava inteiro do check de markdown. Com uma
+    pasta por objeto, cada snippet passa a ter um notebook cheio de links para o
+    catálogo, o glossário e os módulos vizinhos — a classe de arquivo que mais
+    vai crescer é justamente a que ninguém verificava.
+
+    O caminho é resolvido a partir da pasta do notebook, como no Markdown.
+    """
+    notebooks = [p for p in iter_files(root, ".py") if eh_notebook(p)]
+    links_checked = 0
+    for nb in notebooks:
+        for linha in nb.read_text(encoding="utf-8").splitlines():
+            if not linha.lstrip().startswith("#"):
+                continue  # link só conta dentro de comentário/`# MAGIC %md`
+            for match in MD_LINK_RE.finditer(linha):
+                target = match.group(1)
+                if target.startswith(("http://", "https://", "mailto:")):
+                    continue
+                links_checked += 1
+                if not (nb.parent / target).resolve().exists():
+                    problems.append(f"{nb}: link relativo quebrado -> {target}")
+    return len(notebooks), links_checked
+
+
+def check_smoke_test_sincronizado(problems: list[str]) -> None:
+    """O smoke test roda no workspace, onde `tools/` não existe.
+
+    Por isso ele carrega uma cópia da regra de detecção de notebook. Cópia sem
+    guarda diverge: a canônica passa a tolerar um prefixo novo, a do smoke test
+    não, e notebooks voltam a ser importados sem que nada acuse.
+    """
+    smoke = REPO_ROOT / "tools" / "spark_smoke_test.py"
+    canonico = REPO_ROOT / "tools" / "notebook_marker.py"
+    if not smoke.exists() or not canonico.exists():
+        problems.append("tools: smoke test ou notebook_marker ausente")
+        return
+    texto_smoke = smoke.read_text(encoding="utf-8")
+    for constante in ("MARCADOR_NOTEBOOK", "_PREFIXOS_TOLERADOS"):
+        linha_canonica = next(
+            (l for l in canonico.read_text(encoding="utf-8").splitlines()
+             if l.startswith(f"{constante} =")),
+            None,
+        )
+        if linha_canonica is None:
+            problems.append(f"notebook_marker.py: constante {constante} não encontrada")
+        elif linha_canonica not in texto_smoke:
+            problems.append(
+                f"spark_smoke_test.py: {constante} divergiu de notebook_marker.py "
+                f"(esperado: {linha_canonica.strip()})"
+            )
 
 
 def check_python_ast(root: Path, problems: list[str]) -> int:
@@ -244,17 +319,21 @@ def main() -> int:
 
     n_skills = check_skill_frontmatter(root, problems)
     check_skill_sizes(root, warnings)
+    check_pycache(root, warnings)
     n_md, n_links = check_markdown(root, problems)
+    n_nb, n_nb_links = check_notebook_links(root, problems)
     n_py = check_python_ast(root, problems)
     n_chars = check_instructions_size(root, problems)
     check_text_hygiene(root, problems)
     check_path_hygiene(root, problems)
+    check_smoke_test_sincronizado(problems)
     n_repo = check_repo_corporate(problems)
     n_repo_links = check_repo_links(root, problems)
 
     print(f"raiz analisada     : {root}")
     print(f"skills             : {n_skills}")
     print(f"markdown / links   : {n_md} arquivos / {n_links} links relativos")
+    print(f"notebooks / links  : {n_nb} notebooks / {n_nb_links} links relativos")
     print(f"python (AST)       : {n_py} arquivos")
     print(f"instrucoes         : {n_chars}/{INSTRUCTION_LIMIT} caracteres")
     print(f"repo (corporativo) : {n_repo} arquivos varridos no repositório inteiro")

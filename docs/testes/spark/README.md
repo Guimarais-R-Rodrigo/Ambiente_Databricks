@@ -139,12 +139,16 @@ onde não há CLI: basta importá-lo e executar pela interface (passo 6.3 do
 ```powershell
 databricks workspace import "/Users/<username>/x_lab/spark_smoke_test" --file tools\spark_smoke_test.py --format SOURCE --language PYTHON --overwrite
 
-databricks jobs submit --json @'
-{"run_name":"smoke","tasks":[{"task_key":"smoke","notebook_task":{"notebook_path":"/Users/<username>/x_lab/spark_smoke_test"}}]}
-'@
+$job = '{"run_name":"smoke","tasks":[{"task_key":"smoke","notebook_task":{"notebook_path":"/Users/<username>/x_lab/spark_smoke_test"}}]}'
+[System.IO.File]::WriteAllText("$env:TEMP\smoke_job.json", $job)
+databricks jobs submit --json "@$env:TEMP\smoke_job.json"
 ```
 
-> O JSON precisa da here-string (`@'` … `'@`, com o `'@` na coluna 0, sem
-> indentação). Passado entre aspas simples comuns, o PowerShell remove as aspas
-> duplas antes de o executável recebê-las e a CLI recusa o payload. A
-> alternativa é gravar o JSON em arquivo e passar `--json @caminho.json`.
+> **Passe o JSON por arquivo, não inline.** O PowerShell remove as aspas duplas
+> antes de o executável recebê-las, e a CLI recusa o payload com
+> `invalid character 'r'`. A here-string (`@'` … `'@`) **também não resolve** —
+> verificado em 2026-08-16, mesmo erro. O prefixo `@` no valor de `--json` é o
+> que faz a CLI ler de arquivo.
+>
+> Use `[System.IO.File]::WriteAllText` e não `Set-Content`: este último grava em
+> ANSI por padrão neste ambiente.

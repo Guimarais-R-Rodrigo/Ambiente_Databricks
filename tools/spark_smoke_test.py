@@ -57,22 +57,64 @@ def run_case(name, fn):
 
 # COMMAND ----------
 
+import x_scripts  # noqa: E402
 import x_snippets  # noqa: E402
 
-for module_info in pkgutil.walk_packages(x_snippets.__path__, prefix="x_snippets."):
-    run_case(
-        f"import:{module_info.name}",
-        lambda name=module_info.name: importlib.import_module(name),
-    )
+# Cópia deliberada da regra de tools/notebook_marker.py. O smoke test roda dentro
+# do workspace, onde `tools/` não existe, então não há como importar a versão
+# canônica. `validate_assistant.py` confere que as duas não divergiram.
+MARCADOR_NOTEBOOK = "# Databricks notebook source"
+_PREFIXOS_TOLERADOS = ("#!", "# -*-", "# coding", "# vim:")
 
-for script in [
-    "data_quality_check", "doc_coverage", "drift_detector", "naming_checker",
-    "quick_profile", "rfv_calculator", "schema_to_yaml",
-]:
-    run_case(
-        f"import:x_scripts.{script}",
-        lambda name=script: importlib.import_module(f"x_scripts.{name}"),
-    )
+
+def modulo_e_notebook(module_finder, nome, ispkg):
+    """Um notebook de exemplo é submódulo importável — e importá-lo o executa.
+
+    Com uma pasta por objeto, cada snippet tem ao lado um notebook didático que o
+    `walk_packages` enumera. Importá-lo roda o notebook inteiro fora de contexto:
+    `NameError: name 'spark' is not defined`, classificado como FAIL, para cada um
+    deles.
+
+    Pacote nunca é notebook: o arquivo dele é `__init__.py`, sem caminho de
+    módulo resolvível. Na dúvida, importa — pular um pacote silenciaria justamente
+    a API pública que os `__init__.py` passaram a declarar.
+    """
+    if ispkg:
+        return False
+    origem = getattr(module_finder, "path", None)
+    if not origem:
+        return False
+    caminho = f"{origem}/{nome.rsplit('.', 1)[-1]}.py"
+    try:
+        with open(caminho, encoding="utf-8") as arquivo:
+            conteudo = arquivo.read(4096)
+    except OSError:
+        return False
+    for linha in conteudo.lstrip("﻿").splitlines():
+        despida = linha.strip()
+        if not despida:
+            continue
+        if despida == MARCADOR_NOTEBOOK:
+            return True
+        if despida.startswith(_PREFIXOS_TOLERADOS):
+            continue
+        return False
+    return False
+
+
+notebooks_pulados = []
+for pacote in (x_snippets, x_scripts):
+    prefixo = f"{pacote.__name__}."
+    for module_info in pkgutil.walk_packages(pacote.__path__, prefix=prefixo):
+        if modulo_e_notebook(module_info.module_finder, module_info.name, module_info.ispkg):
+            notebooks_pulados.append(module_info.name)
+            continue
+        run_case(
+            f"import:{module_info.name}",
+            lambda name=module_info.name: importlib.import_module(name),
+        )
+
+print(f"notebooks pulados no import: {len(notebooks_pulados)}")
 
 # COMMAND ----------
 # MAGIC %md ## 2. Dados sintéticos

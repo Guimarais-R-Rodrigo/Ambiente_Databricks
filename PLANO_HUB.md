@@ -3,8 +3,8 @@
 Documento de trabalho, versão 2. Cada sprint é executada isoladamente, auditada
 em sessão sem contexto, revisada por você, e só então a seguinte começa.
 
-- **Status:** v2, revisada após auditoria A1 do plano. Aguardando duas decisões (§2)
-- **Sprint atual:** nenhuma iniciada
+- **Status:** v2. Decisões de §2 tomadas. **Sprint 0 executada**, aguardando auditoria
+- **Sprint atual:** 0 concluída ([relatório](docs/sprints/sprint-0-fundacao.md)); próxima é 0b
 - **Última atualização:** 2026-08-16
 
 > **Histórico de revisão.** A v1 foi submetida a auditoria em sessão sem
@@ -36,42 +36,29 @@ entender o que é da plataforma e o que é nosso, sem ler README nenhum.**
 
 ---
 
-## 2. Duas decisões que preciso de você antes da Sprint 0
+## 2. Decisões tomadas
 
-### 2.1 Onde mora `padroes/` — decisão que a auditoria elegeu como a primeira
+### 2.1 `hub_padroes/` é publicado com o produto
 
-Você pediu os templates numa subpasta da raiz do repositório. A auditoria provou
-que ali eles **nunca chegam ao workspace**: `render_simulado.py` copia
-exatamente duas coisas, `.assistant_instructions.md` e `.assistant/`.
+**Decidido em 2026-08-16: `.assistant/hub_padroes/`.**
 
-Isso quebra três coisas de uma vez: a skill `hub-ml-criar-objeto` roda dentro do
-Genie Code e não enxergaria os templates que ela existe para aplicar; o
-`SKILL_TEMPLATE.md`, hoje acessível em `.assistant/x_docs/`, sumiria do workspace;
-e os 43 links órfãos da §4.2 não teriam destino publicado.
+A auditoria provou que uma pasta na raiz do repositório **nunca chega ao
+workspace** — `render_simulado.py` copia exatamente `.assistant_instructions.md`
+e `.assistant/`. Ali os templates ficariam invisíveis para a equipe e para a
+skill `hub-ml-criar-objeto`, que roda dentro do Genie Code e existe para
+aplicá-los. Publicados, entram no `--verify` e servem de destino aos links
+órfãos da §4.3.
 
-| Opção | Onde | Consequência |
-|---|---|---|
-| **A — recomendada** | `.assistant/hub_padroes/` | publicado, entra no `--verify`, visível para a equipe, a skill funciona. Vira a quarta pasta `hub_` |
-| B | `padroes/` na raiz, templates duplicados dentro do `SKILL.md` | a skill funciona, mas template e cópia divergem com o tempo — e divergência de template é o defeito que se multiplica por 74 |
+### 2.2 A paleta permanece como está
 
-**Recomendo A.** Os padrões *são* parte do Hub: quem usa o ambiente no Databricks
-precisa vê-los para seguir. Manter na raiz atende à letra do seu pedido e falha
-no propósito. O resto deste plano assume A; diga se prefere B.
+**Decidido em 2026-08-16: manter `AZUL_CAIXA` e a nomenclatura atual de
+`constants/colors.py`.** O repositório é privado e o material circula apenas
+dentro da instituição.
 
-### 2.2 `AZUL_CAIXA` e "cores institucionais"
-
-`x_snippets/constants/colors.py` define `AZUL_CAIXA = "#005CA9"` e se descreve
-como paleta de "cores institucionais". A constante é pública, usada por três
-módulos, e vai aparecer num notebook didático na Sprint 9 e numa auditoria na
-Sprint 12.
-
-O `CORPORATE_RE` não a pega, e o repositório passa na validação. Mas o projeto
-declarou que nenhum identificador corporativo entra em arquivo versionado, e o
-material vai circular por uma área inteira.
-
-Não é decisão minha. As opções: manter como está; renomear para
-`AZUL_PRIMARIO`/`AZUL_MARCA` mantendo o valor; ou neutralizar valor e nome. Se
-optar por renomear, entra na Sprint 2 junto do resto da mudança de identidade.
+Registrado aqui para que uma auditoria futura não reabra o ponto: a constante é
+identificador institucional, foi avaliada, e a permanência é decisão consciente.
+O `CORPORATE_RE` do validador não a alcança — ele cobre domínios de e-mail, não
+nomes de constante —, então nenhuma exceção de código é necessária.
 
 ---
 
@@ -655,7 +642,7 @@ Registrado para não ser desfeito numa próxima revisão:
 
 | Sprint | Status | Data | Auditoria | Observação |
 |---|---|---|---|---|
-| 0 | não iniciada | — | — | — |
+| 0 | ✅ concluída | 2026-08-16 | pendente | [relatório](docs/sprints/sprint-0-fundacao.md) |
 | 0b | não iniciada | — | — | — |
 | 1 | não iniciada | — | — | — |
 | 2 | não iniciada | — | — | — |

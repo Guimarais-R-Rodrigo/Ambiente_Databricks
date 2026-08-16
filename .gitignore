@@ -22,3 +22,6 @@ venv/
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# Guia temporário de replicação: local-only, apagado após a replicação.
+GUIA_REPLICACAO_TEMPORARIO.md

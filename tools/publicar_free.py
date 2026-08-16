@@ -20,24 +20,16 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+# `import-dir` não honra o marcador de notebook: envia tudo como arquivo. Os
+# módulos da biblioteca precisam mesmo ser arquivo, senão o import quebra — mas o
+# material didático precisa ser notebook, ou não há células para executar.
+# A detecção é canônica em notebook_marker.py; ver o docstring de lá.
+from notebook_marker import eh_notebook  # noqa: E402
+
 SIMULADO = Path("Novo_Ambiente_Simulado")
 CORPORATE_RE = re.compile(r"c\d{6}|corp\.|\.gov\.br", re.IGNORECASE)
-
-# Marcador que o próprio Databricks usa para distinguir notebook de script.
-# `import-dir` não o honra: envia tudo como arquivo. Os módulos da biblioteca
-# precisam mesmo ser arquivo, senão o import quebra — mas o material didático
-# precisa ser notebook, ou não há células para executar nem markdown para ler.
-MARCADOR_NOTEBOOK = "# Databricks notebook source"
-
-
-def eh_notebook(caminho: Path) -> bool:
-    if caminho.suffix != ".py":
-        return False
-    try:
-        with caminho.open(encoding="utf-8") as arquivo:
-            return arquivo.readline().strip() == MARCADOR_NOTEBOOK
-    except OSError:
-        return False
 
 # Estrutura mínima que o Genie Code precisa encontrar para descobrir o ecossistema.
 EXPECTED_SKILLS = 12
@@ -262,14 +254,81 @@ def cmd_verify(root: Path, arquivos: list[Path], home: str) -> int:
     return 0 if not problemas else 1
 
 
+PROFUNDIDADE_RAPIDA = 3  # .assistant → seção → pasta do objeto
+
+
+def remote_dirs(path: str, profundidade: int) -> set[str]:
+    """Lista só diretórios, até `profundidade` níveis. Uma chamada por diretório."""
+    encontrados: set[str] = set()
+    if profundidade <= 0:
+        return encontrados
+    for item in remote_list(path):
+        if item.get("object_type") != "DIRECTORY":
+            continue
+        encontrados.add(item["path"])
+        encontrados |= remote_dirs(item["path"], profundidade - 1)
+    return encontrados
+
+
+def cmd_verify_rapido(root: Path, arquivos: list[Path], home: str) -> int:
+    """Compara a árvore de **diretórios**, não a de arquivos.
+
+    A conferência completa faz um `workspace list` por diretório da árvore
+    inteira. Com uma pasta por objeto isso passa de dezenas para mais de cem
+    chamadas — e gate que demora é gate que se pula durante a execução.
+
+    O que muda numa sprint de reestruturação é a árvore de pastas: pasta de
+    objeto que não foi criada, seção que não subiu, pasta antiga que sobreviveu.
+    Comparar só diretórios até a profundidade do objeto responde a isso com uma
+    fração das chamadas.
+
+    **Não substitui a completa.** Não vê tipo de objeto, arquivo faltando dentro
+    de uma pasta que existe, nem obsoleto abaixo da profundidade varrida.
+    """
+    print(f"== VERIFY RÁPIDO (read-only, árvore de diretórios até {PROFUNDIDADE_RAPIDA} níveis) ==")
+
+    esperados = set()
+    for arquivo in arquivos:
+        partes = arquivo.relative_to(root).parts[:-1]
+        for i in range(1, min(len(partes), PROFUNDIDADE_RAPIDA) + 1):
+            esperados.add("/".join(partes[:i]))
+
+    remotos = {
+        caminho[len(home) + 1:]
+        for caminho in remote_dirs(f"{home}/.assistant", PROFUNDIDADE_RAPIDA - 1)
+    }
+    remotos.add(".assistant")
+
+    ausentes = sorted(esperados - remotos)
+    obsoletos = sorted(remotos - esperados)
+
+    print(f"diretórios: {len(esperados)} esperados | {len(remotos)} remotos")
+    for nome in ausentes:
+        print(f"FAIL ausente no remoto: {nome}/")
+    for nome in obsoletos:
+        print(f"FAIL obsoleto no remoto: {nome}/")
+
+    total = len(ausentes) + len(obsoletos)
+    print(f"\n{'APROVADO' if not total else 'DIVERGENTE'}: {total} diferença(s)")
+    print("Rode --verify (completo) antes de fechar a sprint.")
+    return 0 if not total else 1
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--execute", action="store_true", help="publica de fato")
     parser.add_argument("--verify", action="store_true", help="apenas confere o remoto")
+    parser.add_argument(
+        "--rapido", action="store_true",
+        help="com --verify: só contagens, para uso durante a execução",
+    )
     args = parser.parse_args()
 
     if args.execute and args.verify:
         print("FAIL use --execute ou --verify, não os dois")
+        return 1
+    if args.rapido and not args.verify:
+        print("FAIL --rapido só faz sentido com --verify")
         return 1
 
     root, arquivos = local_tree()
@@ -277,6 +336,8 @@ def main() -> int:
     print(f"usuário: {user}\n")
 
     if args.verify:
+        if args.rapido:
+            return cmd_verify_rapido(root, arquivos, home)
         return cmd_verify(root, arquivos, home)
     return cmd_plan(root, arquivos, home, args.execute)
 
