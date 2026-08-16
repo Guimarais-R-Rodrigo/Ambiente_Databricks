@@ -4,7 +4,7 @@ Documento de trabalho, versão 2. Cada sprint é executada isoladamente, auditad
 em sessão sem contexto, revisada por você, e só então a seguinte começa.
 
 - **Status:** v2. Sprints 0 e 0b concluídas. Auditoria começa na Sprint 1
-- **Sprint atual:** próxima é a 1 (padrões e exemplos)
+- **Sprint atual:** 1 concluída, aguardando auditoria; próxima é a 2
 - **Última atualização:** 2026-08-16
 
 > **Histórico de revisão.** A v1 foi submetida a auditoria em sessão sem
@@ -662,7 +662,7 @@ Registrado para não ser desfeito numa próxima revisão:
 |---|---|---|---|---|
 | 0 | ✅ concluída | 2026-08-16 | dispensada | [relatório](docs/sprints/sprint-0-fundacao.md) |
 | 0b | ✅ concluída | 2026-08-16 | dispensada | [relatório](docs/sprints/sprint-0b-fixtures-e-api-publica.md) |
-| 1 | não iniciada | — | — | — |
+| 1 | ✅ concluída | 2026-08-16 | **pendente** | [relatório](docs/sprints/sprint-1-padroes.md) |
 | 2 | não iniciada | — | — | — |
 | 4 | não iniciada | — | — | — |
 | 3 | não iniciada | — | — | — |
