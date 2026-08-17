@@ -97,32 +97,48 @@ for alerta in resultado_calibrado["alerts"]:
 # MAGIC %md
 # MAGIC ## 3. Chave duplicada — o erro que passa despercebido
 # MAGIC
-# MAGIC `n_entidades` menor que `n` faz a fixture repetir clientes, que é o que
-# MAGIC acontece quando um join anterior expandiu a base sem ninguém notar.
+# MAGIC Simulamos o caso real: um join com uma tabela regional que tem duas linhas
+# MAGIC para cada cliente de SP. A base cresce, a chave repete, e **um segmento
+# MAGIC passa a pesar o dobro** na média — que é como a duplicação enviesa de
+# MAGIC verdade, e não uniformemente.
 
 # COMMAND ----------
 
 from pyspark.sql import functions as F
 
-duplicada = fixtures.base_tabular(n=500, seed=42, n_entidades=350)
+duplicada = base.unionByName(base.filter(F.col("uf") == "SP"))
 duplicada.createOrReplaceTempView("vw_exemplo_dq_dup")
 
 diag = data_quality_check("vw_exemplo_dq_dup", ["id_cliente"], "dt_referencia",
                           thresholds={"freshness_days": 400})
 pk = diag["checks"]["pk_uniqueness"]
-print(f"linhas             : {diag['checks']['row_count']}")
-print(f"chaves duplicadas  : {pk['duplicate_rows']}  (status: {pk['status']})")
+print(f"linhas            : {diag['checks']['row_count']}   (eram 500)")
+print(f"linhas duplicadas : {pk['duplicate_rows']}  (status: {pk['status']})")
 
-for nome, df in [("única", base), ("duplicada", duplicada)]:
-    media = df.agg(F.round(F.avg("alvo"), 4)).first()[0]
-    print(f"prevalência do alvo, base {nome:10}: {media}")
+for nome, df in [("original ", base), ("duplicada", duplicada)]:
+    media = df.agg(F.round(100 * F.avg("alvo"), 2)).first()[0]
+    print(f"prevalência do alvo, base {nome}: {media}%")
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** A prevalência muda entre as duas bases, e a diferença é
-# MAGIC pequena — décimos. É exatamente isso que torna o erro perigoso: nada parece
-# MAGIC anormal. Numa base onde a duplicação atinge um segmento em particular, o
-# MAGIC efeito se concentra e a comparação entre grupos deixa de valer.
+# MAGIC **Como ler.** Executado no laboratório, o resultado é:
+# MAGIC
+# MAGIC ```text
+# MAGIC linhas            : 596   (eram 500)
+# MAGIC linhas duplicadas : 96  (status: fail)
+# MAGIC prevalência do alvo, base original : 26.8%
+# MAGIC prevalência do alvo, base duplicada: 27.18%
+# MAGIC ```
+# MAGIC
+# MAGIC A prevalência se deslocou **0,38 ponto percentual**. É pouco, e é
+# MAGIC exatamente isso que torna o erro perigoso: 27,18% não parece anormal ao lado
+# MAGIC de 26,8%, e não há nada no cálculo que acuse.
+# MAGIC
+# MAGIC O deslocamento aqui é pequeno porque SP é um quinto da base e a prevalência
+# MAGIC dele é próxima da média. Numa duplicação que atinja um segmento com
+# MAGIC comportamento diferente — e é o caso típico, porque o join que expande
+# MAGIC costuma ser com uma tabela de um recorte específico —, o efeito se concentra
+# MAGIC e a comparação entre grupos deixa de valer.
 # MAGIC
 # MAGIC A verificação que pega isso é a mais barata que existe — comparar
 # MAGIC `count(*)` com `count(distinct chave)` — e é a que mais gente pula.

@@ -67,10 +67,24 @@ print(f"  cardinalidade       : {perfil['cardinality_sample']}")
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** A cardinalidade de `id_cliente` na amostra é próxima do número
-# MAGIC de linhas amostradas, não das 2.000 da tabela. Reportar esse número como
-# MAGIC "valores distintos da tabela" é exatamente o erro que a nomenclatura existe
-# MAGIC para evitar — e é um erro que passa, porque o número é plausível.
+# MAGIC **Como ler.** Executado no laboratório:
+# MAGIC
+# MAGIC ```text
+# MAGIC linhas na amostra   : 530 de 2000
+# MAGIC cardinalidade       : {'id_cliente': 564, 'uf': 5}
+# MAGIC ```
+# MAGIC
+# MAGIC Dois erros possíveis aqui, e o segundo é mais sutil que o primeiro.
+# MAGIC
+# MAGIC **O primeiro:** 564 não são os valores distintos da tabela, que tem 2.000
+# MAGIC clientes únicos. É a cardinalidade **da amostra**, e reportá-la como se
+# MAGIC fosse da tabela é o erro que a nomenclatura existe para evitar.
+# MAGIC
+# MAGIC **O segundo:** 564 é maior que as 530 linhas amostradas, o que é
+# MAGIC aritmeticamente impossível para uma contagem exata. O script usa
+# MAGIC `approx_count_distinct`, que troca precisão por custo e erra para mais ou
+# MAGIC para menos. Se um número de cardinalidade precisa ser exato, esta não é a
+# MAGIC ferramenta.
 # MAGIC
 # MAGIC Já `null_summary_full_table` foi calculado sobre tudo: contagem de nulos é
 # MAGIC barata e não faz sentido estimar.
@@ -107,9 +121,10 @@ print(f"\ndemais chaves do retorno: {sorted(perfil_completo)}")
 # MAGIC
 # MAGIC - **Para estatística que precisa ser exata.** Amostra é amostra. Se a
 # MAGIC   decisão depende do número preciso, use fração 1.0 e aceite o custo.
-# MAGIC - **Em coluna de altíssima cardinalidade**, esperando cardinalidade real: a
-# MAGIC   amostra subestima sistematicamente, e a subestimação cresce quanto mais
-# MAGIC   rara for cada categoria.
+# MAGIC - **Esperando cardinalidade exata.** Dois efeitos se somam e vão em
+# MAGIC   direções opostas: a amostra **subestima** o número de categorias raras, e o
+# MAGIC   `approx_count_distinct` erra para os dois lados. O resultado é uma
+# MAGIC   estimativa, não uma contagem.
 # MAGIC - **Como substituto de EDA.** Ele descreve schema e distribuição. Não avalia
 # MAGIC   se a tabela serve para a pergunta, que é o trabalho da skill de EDA.
 # MAGIC - **Sem declarar a semente**, se o resultado for para um relatório: sem

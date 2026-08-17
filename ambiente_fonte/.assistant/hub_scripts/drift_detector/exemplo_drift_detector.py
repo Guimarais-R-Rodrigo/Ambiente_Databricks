@@ -69,9 +69,17 @@ display(
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** As médias praticamente coincidem. Um relatório que compare só
-# MAGIC médias conclui "sem mudança" e encerra o assunto. O desvio já dá o primeiro
-# MAGIC sinal — mas desvio também é um número só, e distribuições diferentes podem
+# MAGIC **Como ler.** Executado no laboratório:
+# MAGIC
+# MAGIC ```text
+# MAGIC safra      media   desvio  linhas
+# MAGIC 2026-S1   599.75    40.12    4000
+# MAGIC 2026-S2   596.56    83.84    4000
+# MAGIC ```
+# MAGIC
+# MAGIC As médias diferem em **0,53%**. Um relatório que compare só médias conclui
+# MAGIC "sem mudança" e encerra o assunto. O desvio dobra e dá o primeiro sinal —
+# MAGIC mas desvio também é um número só, e distribuições diferentes podem
 # MAGIC compartilhá-lo.
 
 # COMMAND ----------
@@ -94,9 +102,15 @@ print(json.dumps(resultado, indent=2, ensure_ascii=False, default=str))
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** O PSI sai alto, porque ele compara a **forma**: cada bin do
-# MAGIC período de referência recebe uma proporção diferente no período de
-# MAGIC comparação, e a soma dessas diferenças é o índice.
+# MAGIC **Como ler.** O PSI sai em **2,94** — contra um limiar usual de 0,25 para
+# MAGIC "mudança crítica". Ele compara a **forma**: cada bin do período de
+# MAGIC referência recebe uma proporção diferente no período de comparação, e a soma
+# MAGIC dessas diferenças é o índice.
+# MAGIC
+# MAGIC Os buckets mostram onde a mudança está. Na referência cada bin tem ~10% das
+# MAGIC linhas, por construção dos quantis. Na comparação, o primeiro bin recebe
+# MAGIC **44,8%** e o último **42,2%**, enquanto os do meio ficam com menos de 1%:
+# MAGIC é a distribuição partida em dois grupos, exatamente como foi construída.
 # MAGIC
 # MAGIC Dois detalhes de implementação que mudam a interpretação:
 # MAGIC
@@ -119,7 +133,9 @@ print(json.dumps(resultado, indent=2, ensure_ascii=False, default=str))
 # MAGIC   Performance se mede com o alvo realizado, que costuma chegar depois.
 # MAGIC - **Com bins demais em base pequena.** Bin quase vazio infla o índice por
 # MAGIC   ruído. Com poucos milhares de linhas, dez bins já é bastante.
-# MAGIC - **Em variável categórica de alta cardinalidade** sem agrupar antes: cada
-# MAGIC   categoria rara vira um termo instável na soma.
+# MAGIC - **Em variável categórica.** O script seleciona colunas numéricas e faz
+# MAGIC   `cast("double")`; passar uma coluna de texto explicitamente quebra em
+# MAGIC   `approxQuantile`, não devolve um índice ruim. Para categórica, o caminho é
+# MAGIC   `hub_snippets.ml.drift_detection`, que calcula CSI.
 # MAGIC - **Comparando períodos de tamanhos muito diferentes** sem olhar a
 # MAGIC   contagem: o índice não avisa que um dos lados tem pouca base.

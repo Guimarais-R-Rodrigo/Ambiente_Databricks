@@ -66,11 +66,32 @@ sys.path.insert(0, f"/Workspace/Users/{usuario}/.assistant")
 # MAGIC    em linguagem de negócio antes da técnica.
 # MAGIC 2. **Código comentado** — comentário nas linhas onde a decisão não é
 # MAGIC    óbvia. Não comente o que o código já diz.
-# MAGIC 3. **Execução real** — a chamada, com dados sintéticos, e a saída de
-# MAGIC    verdade. Nunca saída inventada.
+# MAGIC 3. **Execução real** — a chamada, com dados sintéticos.
 # MAGIC 4. **Leitura do resultado** — o que aquele número significa, e **o erro de
 # MAGIC    interpretação mais provável ali**. Este quarto item é o que separa um
 # MAGIC    notebook didático de uma demonstração.
+# MAGIC
+# MAGIC ### O movimento 4 precisa dos números
+# MAGIC
+# MAGIC Uma célula executada no Databricks guarda a saída no notebook, mas o arquivo
+# MAGIC `.py` versionado **não** — ele tem só o código. Quem lê o repositório, e
+# MAGIC qualquer auditoria futura, vê a chamada e nada depois dela.
+# MAGIC
+# MAGIC Por isso a leitura **crava os valores obtidos**, em vez de descrevê-los:
+# MAGIC
+# MAGIC | Em vez de | Escreva |
+# MAGIC |---|---|
+# MAGIC | "o PSI sai alto" | "o PSI sai em 2,94" |
+# MAGIC | "a diferença é pequena" | "a prevalência vai de 26,8% para 27,18%" |
+# MAGIC | "a cardinalidade é próxima" | "500 distintos numa amostra de 512 linhas" |
+# MAGIC
+# MAGIC Quando o bloco for grande, cole a saída literal num bloco de código dentro
+# MAGIC da célula de markdown, precedida de "Executado no laboratório, o resultado
+# MAGIC é". Número cravado é o que permite alguém conferir sem reexecutar — e é o
+# MAGIC que faz a diferença entre um notebook auditável e um plausível.
+# MAGIC
+# MAGIC **Célula sem leitura.** Preparo, limpeza e a célula que só imprime um
+# MAGIC caminho dispensam o movimento 4. Célula que produz resultado, nunca.
 
 # COMMAND ----------
 

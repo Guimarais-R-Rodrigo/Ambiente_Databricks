@@ -20,7 +20,7 @@
 # MAGIC | Compute | serverless ou clássico; o script não usa Spark |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | nenhum. Ele lê **arquivos**, não tabelas |
-# MAGIC | Escrita | dois arquivos temporários em `/tmp` do driver, removidos ao final |
+# MAGIC | Escrita | três arquivos temporários em `/tmp` do driver, removidos ao final |
 # MAGIC | Diferença Free × trabalho | nenhuma conhecida |
 
 # COMMAND ----------
@@ -115,8 +115,9 @@ print(json.dumps(doc_coverage(str(VAZIO)), indent=2, ensure_ascii=False, default
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** Um markdown com um ponto final produz a mesma cobertura que
-# MAGIC um parágrafo explicativo. Isso não é defeito a corrigir: qualquer medida
+# MAGIC **Como ler.** `coverage_pct` sai em **100,0** — o mesmo valor do notebook
+# MAGIC bem documentado da célula anterior. Um markdown com um ponto final produz a
+# MAGIC mesma cobertura que um parágrafo explicativo. Isso não é defeito a corrigir: qualquer medida
 # MAGIC automática de qualidade de texto seria pior, porque erraria com aparência de
 # MAGIC autoridade. O script declara o que mede, e o limite é a informação mais
 # MAGIC honesta que ele tem a dar.

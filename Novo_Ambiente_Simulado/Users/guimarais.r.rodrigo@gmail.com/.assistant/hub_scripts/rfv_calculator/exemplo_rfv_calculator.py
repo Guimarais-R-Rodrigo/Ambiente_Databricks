@@ -42,12 +42,17 @@ from hub_snippets.testing import fixtures
 
 from pyspark.sql import functions as F
 
-# O painel da fixture é entidade × mês; aqui ele vira "transações": cada linha é
-# um valor movimentado por um cliente numa data.
+# O painel da fixture é entidade × mês, **balanceado**: toda entidade tem uma
+# linha em todo mês. Isso é errado para RFV — com histórico idêntico, recência e
+# frequência saem constantes e o exemplo não exercita nem o R nem o F.
+#
+# A amostragem quebra o balanceamento: cada cliente passa a ter o próprio
+# histórico, que é como transação real se comporta.
 painel = (
     fixtures.serie_temporal(n_entidades=40, n_periodos=24, seed=42)
     .withColumnRenamed("id_entidade", "id_cliente")
     .withColumnRenamed("dt_referencia", "dt_transacao")
+    .sample(withReplacement=False, fraction=0.55, seed=7)
 )
 painel.createOrReplaceTempView("vw_exemplo_rfv")
 
@@ -73,6 +78,28 @@ rfv = rfv_calculator(
     dt_referencia=DATA_DECISAO,
 )
 display(rfv.orderBy("id_cliente").limit(8))
+
+# COMMAND ----------
+
+# A tabela acima só ensina se as três dimensões variarem entre clientes. Este
+# resumo prova que variam — e serviria de alarme se a fixture voltasse a ser
+# balanceada, caso em que R e F sairiam constantes sem nada acusar.
+colunas_rfv = [c for c in rfv.columns if c != "id_cliente"]
+display(
+    rfv.select([F.countDistinct(c).alias(f"valores_distintos_{c}") for c in colunas_rfv])
+)
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC **Como ler.** Executado no laboratório, a recência assume 5 valores
+# MAGIC distintos entre os 40 clientes (de 0 a 151 dias) e a frequência total
+# MAGIC assume 11 (de 6 a 17). Se qualquer uma dessas contagens vier **1**, a base
+# MAGIC de exemplo está balanceada e o notebook deixou de exercitar aquela dimensão
+# MAGIC — que é exatamente o defeito que a amostragem na célula de preparo corrige.
+# MAGIC
+# MAGIC Vale o hábito: sempre que um exemplo de feature devolver uma tabela,
+# MAGIC conferir que as colunas variam. Tabela degenerada tem a mesma aparência de
+# MAGIC tabela correta.
 
 # COMMAND ----------
 # MAGIC %md
@@ -122,10 +149,17 @@ print("colunas devolvidas:", rfv.columns)
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** Não há coluna de "score RFV" nem de "segmento". A convenção
-# MAGIC clássica de somar quintis de R, F e V num número de 3 dígitos é arbitrária:
-# MAGIC ela pressupõe que as três dimensões pesam igual, o que raramente é verdade
-# MAGIC no negócio, e o número resultante não é comparável entre bases.
+# MAGIC **Como ler.** Não há coluna de "score RFV" nem de "segmento". As duas
+# MAGIC convenções clássicas embutem uma escolha de negócio que o helper não tem como
+# MAGIC fazer:
+# MAGIC
+# MAGIC - **Somar os quintis** (um número de 3 a 15) pressupõe que as três dimensões
+# MAGIC   pesam igual — raramente verdade.
+# MAGIC - **Concatenar os quintis** ("545") faz o oposto: impõe prioridade
+# MAGIC   lexicográfica, com R dominando F e V.
+# MAGIC
+# MAGIC Nenhuma das duas é neutra, e o número resultante não é comparável entre
+# MAGIC bases com quintis diferentes.
 # MAGIC
 # MAGIC O script devolve as três medidas cruas e devolve a decisão de combinar a
 # MAGIC quem conhece o negócio.

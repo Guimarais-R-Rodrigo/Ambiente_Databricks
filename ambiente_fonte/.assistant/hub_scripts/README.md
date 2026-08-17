@@ -3,8 +3,9 @@
 > **EXTENSÃO DO HUB (`hub_`) — não auto-descoberta nem executada pelo Genie Code.**
 > Importe explicitamente, depois de acrescentar `.assistant` ao `sys.path`.
 
-Sete utilitários que se apontam a uma tabela do workspace e devolvem um veredito
-legível sobre ela.
+Sete utilitários de diagnóstico. Seis se apontam a uma **tabela** do workspace;
+`doc_coverage` é a exceção e recebe o caminho de um **notebook**, porque o que ele
+avalia é documentação, não dado.
 
 ## Para que serve
 
@@ -66,8 +67,10 @@ mostrar a correção. O mapa por demanda, cobrindo também `hub_snippets`, está
   `SparkSession.getActiveSession() or ...getOrCreate()`. Não conte com o global
   `spark` de notebook dentro de módulo importado — ele não existe lá, e foi a
   causa da primeira leva de falhas no runtime real.
-- **Leituras têm custo.** Cada script diz, na docstring, quantas varreduras faz.
-  Barato em milhões de linhas não é barato em bilhões.
+- **Leituras têm custo.** Cada script faz de uma a três varreduras agregadas,
+  e `quick_profile` faz mais se `include_stats` estiver ligado. Barato em milhões
+  de linhas não é barato em bilhões: confira o plano antes de apontar para tabela
+  grande.
 - **Nada aqui substitui** Lakeflow expectations, o event log, monitoramento
   Lakehouse ou políticas do Unity Catalog. São diagnósticos de quem analisa, não
   controles de pipeline.
