@@ -1,7 +1,7 @@
 # Prompt: EDA completa e reprodutível
 
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Adicione tabelas, notebook e definições
-> com **Add context** ou `@`. Skill recomendada: `@rodrigo-eda-profissional`.
+> com **Add context** ou `@`. Skill recomendada: `@hub-ml-eda-profissional`.
 
 Antes de pedir código, veja os helpers que a skill recomendada declara: boa
 parte do que este formulário pede já tem implementação verificada, e usá-la
@@ -17,7 +17,7 @@ existirem no problema.
 ## Prompt pronto para colar
 
 ```text
-Use @rodrigo-eda-profissional para construir uma EDA completa, auditável e adequada
+Use @hub-ml-eda-profissional para construir uma EDA completa, auditável e adequada
 ao volume, sem alterar os dados de origem.
 
 BRIEFING

@@ -36,7 +36,7 @@ skill.
 
 | Item | O Genie Code usa automaticamente? | Como usar |
 |---|---:|---|
-| `.assistant/skills/<skill>/SKILL.md` | **Sim** | mecanismo nativo; conteúdo `rodrigo-*` é personalizado |
+| `.assistant/skills/<skill>/SKILL.md` | **Sim** | mecanismo nativo; conteúdo `hub-ml-*` é personalizado |
 | `.assistant_instructions.md` | **Sim*** | colocar em `/Users/<username>/` |
 | `.assistant_workspace_instructions.md` | **Sim** | administradores do workspace; não incluído aqui |
 | `AGENTS.md` / `CLAUDE.md` | **Sim** | colocar no projeto; descoberta no diretório ancestral |
@@ -97,18 +97,18 @@ Use permissões e revisão por Git. Instruções de workspace ficam em
 
 | Skill | Quando usar |
 |---|---|
-| `@rodrigo-eda-profissional` | perfil, qualidade, univariada/bivariada e síntese executiva |
-| `@rodrigo-cross-eda-ml` | consolidar múltiplas EDAs e avaliar readiness para ML |
-| `@rodrigo-feature-engineering` | especificar, implementar e validar features sem leakage |
-| `@rodrigo-validacao-estatistica` | pressupostos, testes, efeito, incerteza e diagnóstico pré-ML |
-| `@rodrigo-baseline-ml` | baseline tabular/temporal/ranking/survival com MLflow |
-| `@rodrigo-explainability` | SHAP, explicação global/local e comunicação responsável |
-| `@rodrigo-monitoramento-modelo` | drift, performance, qualidade operacional e decisão de retreino |
-| `@rodrigo-pipeline-builder` | Lakeflow, Jobs, bundles, qualidade e promoção entre ambientes |
-| `@rodrigo-analise-safra` | cohorts/vintage, maturação e comparações em MOB equivalente |
-| `@rodrigo-comentar-notebook` | documentação PRÉ/PÓS e revisão de notebook |
-| `@rodrigo-tutor-databricks` | explicação didática de código, Spark, SQL e plataforma |
-| `@rodrigo-auditoria-skills` | auditar output contra o contrato da skill produtora |
+| `@hub-ml-eda-profissional` | perfil, qualidade, univariada/bivariada e síntese executiva |
+| `@hub-ml-cross-eda-ml` | consolidar múltiplas EDAs e avaliar readiness para ML |
+| `@hub-ml-feature-engineering` | especificar, implementar e validar features sem leakage |
+| `@hub-ml-validacao-estatistica` | pressupostos, testes, efeito, incerteza e diagnóstico pré-ML |
+| `@hub-ml-baseline-ml` | baseline tabular/temporal/ranking/survival com MLflow |
+| `@hub-ml-explainability` | SHAP, explicação global/local e comunicação responsável |
+| `@hub-ml-monitoramento-modelo` | drift, performance, qualidade operacional e decisão de retreino |
+| `@hub-ml-pipeline-builder` | Lakeflow, Jobs, bundles, qualidade e promoção entre ambientes |
+| `@hub-ml-analise-safra` | cohorts/vintage, maturação e comparações em MOB equivalente |
+| `@hub-ml-comentar-notebook` | documentação PRÉ/PÓS e revisão de notebook |
+| `@hub-ml-tutor-databricks` | explicação didática de código, Spark, SQL e plataforma |
+| `@hub-ml-auditoria-skills` | auditar output contra o contrato da skill produtora |
 
 A descoberta automática depende do campo `description` de cada `SKILL.md`. Use a
 menção `@` quando quiser seleção determinística. Textos como `/eda` ou `/baseline`

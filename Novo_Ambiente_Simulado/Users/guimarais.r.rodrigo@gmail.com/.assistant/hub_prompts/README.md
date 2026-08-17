@@ -80,20 +80,20 @@ recusar e pedir de novo apontando a etapa pulada.
 
 | Tema | Arquivo | Skill recomendada |
 |---|---|---|
-| EDA completa | `eda_completa.md` | `@rodrigo-eda-profissional` |
-| Perfil rápido | `eda_rapida.md` | `@rodrigo-eda-profissional` |
-| Qualidade de dados | `data_quality.md` | `@rodrigo-eda-profissional` |
-| Cross-EDA | `cross_eda.md` | `@rodrigo-cross-eda-ml` |
-| Feature engineering | `feature_engineering.md` | `@rodrigo-feature-engineering` |
-| Validação estatística | `stat_check.md` | `@rodrigo-validacao-estatistica` |
-| Baseline de ML | `baseline_orchestration.md` | `@rodrigo-baseline-ml` |
-| Explicabilidade | `explainability.md` | `@rodrigo-explainability` |
-| Monitoramento | `monitoramento_modelo.md` | `@rodrigo-monitoramento-modelo` |
-| Pipeline de dados | `pipeline.md` | `@rodrigo-pipeline-builder` |
-| Safra/vintage | `safra.md` | `@rodrigo-analise-safra` |
-| Auditoria de skills | `auditoria_skills.md` | `@rodrigo-auditoria-skills` |
-| Documentar notebook | `comentar_notebook.md` | `@rodrigo-comentar-notebook` |
-| Explicação/tutoria | `tutor_explicar.md` | `@rodrigo-tutor-databricks` |
+| EDA completa | `eda_completa.md` | `@hub-ml-eda-profissional` |
+| Perfil rápido | `eda_rapida.md` | `@hub-ml-eda-profissional` |
+| Qualidade de dados | `data_quality.md` | `@hub-ml-eda-profissional` |
+| Cross-EDA | `cross_eda.md` | `@hub-ml-cross-eda-ml` |
+| Feature engineering | `feature_engineering.md` | `@hub-ml-feature-engineering` |
+| Validação estatística | `stat_check.md` | `@hub-ml-validacao-estatistica` |
+| Baseline de ML | `baseline_orchestration.md` | `@hub-ml-baseline-ml` |
+| Explicabilidade | `explainability.md` | `@hub-ml-explainability` |
+| Monitoramento | `monitoramento_modelo.md` | `@hub-ml-monitoramento-modelo` |
+| Pipeline de dados | `pipeline.md` | `@hub-ml-pipeline-builder` |
+| Safra/vintage | `safra.md` | `@hub-ml-analise-safra` |
+| Auditoria de skills | `auditoria_skills.md` | `@hub-ml-auditoria-skills` |
+| Documentar notebook | `comentar_notebook.md` | `@hub-ml-comentar-notebook` |
+| Explicação/tutoria | `tutor_explicar.md` | `@hub-ml-tutor-databricks` |
 | Comparar tabelas | `comparar_tabelas.md` | conforme o objetivo |
 | Iniciar projeto | `novo_projeto.md` | conforme o projeto |
 

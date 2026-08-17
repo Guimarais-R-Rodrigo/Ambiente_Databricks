@@ -1,7 +1,7 @@
 # Prompt: auditoria de implementação ou output de skill
 
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe a pasta/arquivos da skill com
-> **Add context**/`@`. Skill: `@rodrigo-auditoria-skills`.
+> **Add context**/`@`. Skill: `@hub-ml-auditoria-skills`.
 
 Antes de pedir código, veja os helpers que a skill recomendada declara: boa
 parte do que este formulário pede já tem implementação verificada, e usá-la
@@ -11,7 +11,7 @@ evita que a lógica seja reescrita a cada conversa. Mapa completo em
 ## Prompt pronto para colar
 
 ```text
-Use @rodrigo-auditoria-skills no modo {{IMPLEMENTACAO_OU_OUTPUT}}. No modo
+Use @hub-ml-auditoria-skills no modo {{IMPLEMENTACAO_OU_OUTPUT}}. No modo
 IMPLEMENTAÇÃO, audite a pasta da skill contra a documentação oficial atual da
 Databricks e o padrão Agent Skills. No modo OUTPUT, audite o artefato anexado contra
 o pedido original e o contrato no SKILL.md da skill produtora. Não edite no modo
@@ -63,7 +63,7 @@ VALIDAÇÃO FINAL
 
 ## Exemplo mínimo
 
-Skill alvo = `@rodrigo-eda-profissional`; modo = AUDITORIA; foco = descoberta,
+Skill alvo = `@hub-ml-eda-profissional`; modo = AUDITORIA; foco = descoberta,
 referências relativas, segurança em alto volume e testes representativos.
 
 ## Follow-ups úteis

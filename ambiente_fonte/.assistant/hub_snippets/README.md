@@ -103,7 +103,7 @@ pelo link, se estiver lendo este documento dentro do Databricks.
 | `04_armadilhas_de_credito` | `vintage_analysis` e `woe_iv_calculator`: somar taxas de safra e celebrar IV alto |
 
 Para explicação linha a linha de qualquer outro módulo, use
-`@rodrigo-tutor-databricks` com o arquivo anexado — ela lê a versão atual, então
+`@hub-ml-tutor-databricks` com o arquivo anexado — ela lê a versão atual, então
 não fica defasada.
 
 ### Como se localizar
@@ -113,7 +113,7 @@ não fica defasada.
 | "o que existe nesta biblioteca?" | a tabela de módulos acima |
 | "preciso fazer X, qual módulo uso?" | [catálogo de helpers](../CATALOGO_HELPERS.md) |
 | "por que este helper existe e o que dá errado sem ele?" | os quatro notebooks |
-| "o que esta linha do código faz?" | `@rodrigo-tutor-databricks` com o módulo anexado |
+| "o que esta linha do código faz?" | `@hub-ml-tutor-databricks` com o módulo anexado |
 | "o que significa este termo?" | [glossário](../GLOSSARIO.md) |
 
 ### Agrupamento por pacote

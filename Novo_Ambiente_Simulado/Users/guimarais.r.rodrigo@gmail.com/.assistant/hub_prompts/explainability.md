@@ -1,7 +1,7 @@
 # Prompt: explicabilidade de modelo
 
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe modelo/run, dataset de avaliação e
-> documentação com **Add context**/`@`. Skill: `@rodrigo-explainability`.
+> documentação com **Add context**/`@`. Skill: `@hub-ml-explainability`.
 
 Antes de pedir código, veja os helpers que a skill recomendada declara: boa
 parte do que este formulário pede já tem implementação verificada, e usá-la
@@ -16,7 +16,7 @@ explicação não puderem ser identificados, peça somente um plano.
 ## Prompt pronto para colar
 
 ```text
-Use @rodrigo-explainability para explicar o modelo anexado com rigor, respeitando o
+Use @hub-ml-explainability para explicar o modelo anexado com rigor, respeitando o
 objetivo, o público e as limitações do método.
 
 CONTEXTO

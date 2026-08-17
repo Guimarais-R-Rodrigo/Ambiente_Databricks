@@ -1,6 +1,6 @@
 # Roteiro de forward tests — guia completo passo a passo
 
-> **Nomenclatura da época.** Os nomes `x_*` e `rodrigo-*` neste registro são
+> **Nomenclatura da época.** Os nomes `x_*` e `hub-ml-*` neste registro são
 > os que existiam na data. A tradução para os nomes atuais está na tabela de
 > correspondência do [ADR-0006](../../decisions/ADR-0006-identidade-hub.md);
 > este documento não é reescrito porque descreve o que foi observado, não o
@@ -8,7 +8,7 @@
 
 ## 1. O que é este teste e por que ele existe
 
-As 12 skills `rodrigo-*` já estão publicadas no seu workspace Databricks Free.
+As 12 skills `hub-ml-*` já estão publicadas no seu workspace Databricks Free.
 Quando você conversa com o Genie Code, ele decide **sozinho** qual skill carregar,
 lendo apenas o campo `description` de cada `SKILL.md`. Se duas descriptions se
 parecem demais, ele carrega a skill errada — e você recebe um relatório de
@@ -76,7 +76,7 @@ bloco e envie. O ID do teste já está preenchido nela — é só copiar e colar
 
 Por que em duas mensagens? Porque o roteamento acontece na Mensagem 1 — se o
 pedido de registro estivesse nela, as palavras "skill" e "criar arquivo"
-puxariam `rodrigo-auditoria-skills` e `rodrigo-pipeline-builder`, contaminando
+puxariam `hub-ml-auditoria-skills` e `hub-ml-pipeline-builder`, contaminando
 o teste. Na Mensagem 2 a escolha já aconteceu; o pedido é inofensivo.
 
 **Passo 5 — Genie grava o arquivo.** Pronto, próximo teste. Se o Genie disser
@@ -110,9 +110,9 @@ Nos negativos, indicamos qual skill *idealmente* seria carregada no lugar.
 > como histórico; **não precisa refazer**. O que falta executar está na
 > **seção 7 (RODADA 2)**, com apenas 5 testes.
 
-### Skill 1 — rodrigo-eda-profissional
+### Skill 1 — hub-ml-eda-profissional
 
-#### `01P` — positivo (esperado: carregar `rodrigo-eda-profissional`)
+#### `01P` — positivo (esperado: carregar `hub-ml-eda-profissional`)
 
 Mensagem 1:
 ```text
@@ -123,7 +123,7 @@ Mensagem 2:
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/01P.md com uma única linha, no formato "01P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-#### `01N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-cross-eda-ml`)
+#### `01N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-cross-eda-ml`)
 
 Mensagem 1:
 ```text
@@ -138,16 +138,16 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 Mensagem 1:
 ```text
-@rodrigo-eda-profissional faça o perfil inicial da tabela catalogo.crm.contas.
+@hub-ml-eda-profissional faça o perfil inicial da tabela catalogo.crm.contas.
 ```
 Mensagem 2:
 ```text
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/01M.md com uma única linha, no formato "01M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-### Skill 2 — rodrigo-cross-eda-ml
+### Skill 2 — hub-ml-cross-eda-ml
 
-#### `02P` — positivo (esperado: carregar `rodrigo-cross-eda-ml`)
+#### `02P` — positivo (esperado: carregar `hub-ml-cross-eda-ml`)
 
 Mensagem 1:
 ```text
@@ -158,7 +158,7 @@ Mensagem 2:
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/02P.md com uma única linha, no formato "02P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-#### `02N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-eda-profissional`)
+#### `02N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-eda-profissional`)
 
 Mensagem 1:
 ```text
@@ -173,16 +173,16 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 Mensagem 1:
 ```text
-@rodrigo-cross-eda-ml avalie a complementaridade de sinal entre as fontes A e B.
+@hub-ml-cross-eda-ml avalie a complementaridade de sinal entre as fontes A e B.
 ```
 Mensagem 2:
 ```text
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/02M.md com uma única linha, no formato "02M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-### Skill 3 — rodrigo-feature-engineering
+### Skill 3 — hub-ml-feature-engineering
 
-#### `03P` — positivo (esperado: carregar `rodrigo-feature-engineering`)
+#### `03P` — positivo (esperado: carregar `hub-ml-feature-engineering`)
 
 Mensagem 1:
 ```text
@@ -193,7 +193,7 @@ Mensagem 2:
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/03P.md com uma única linha, no formato "03P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-#### `03N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-baseline-ml`)
+#### `03N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-baseline-ml`)
 
 Mensagem 1:
 ```text
@@ -208,16 +208,16 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 Mensagem 1:
 ```text
-@rodrigo-feature-engineering especifique features de recência e frequência para o target churn_90d.
+@hub-ml-feature-engineering especifique features de recência e frequência para o target churn_90d.
 ```
 Mensagem 2:
 ```text
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/03M.md com uma única linha, no formato "03M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-### Skill 4 — rodrigo-validacao-estatistica
+### Skill 4 — hub-ml-validacao-estatistica
 
-#### `04P` — positivo (esperado: carregar `rodrigo-validacao-estatistica`)
+#### `04P` — positivo (esperado: carregar `hub-ml-validacao-estatistica`)
 
 Mensagem 1:
 ```text
@@ -228,7 +228,7 @@ Mensagem 2:
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/04P.md com uma única linha, no formato "04P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-#### `04N` — negativo, colisão "drift" (esperado: NÃO carregar; ideal: `rodrigo-monitoramento-modelo`)
+#### `04N` — negativo, colisão "drift" (esperado: NÃO carregar; ideal: `hub-ml-monitoramento-modelo`)
 
 Mensagem 1:
 ```text
@@ -243,16 +243,16 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 Mensagem 1:
 ```text
-@rodrigo-validacao-estatistica compare as duas amostras e diga se a diferença é significativa.
+@hub-ml-validacao-estatistica compare as duas amostras e diga se a diferença é significativa.
 ```
 Mensagem 2:
 ```text
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/04M.md com uma única linha, no formato "04M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-### Skill 5 — rodrigo-baseline-ml
+### Skill 5 — hub-ml-baseline-ml
 
-#### `05P` — positivo (esperado: carregar `rodrigo-baseline-ml`)
+#### `05P` — positivo (esperado: carregar `hub-ml-baseline-ml`)
 
 Mensagem 1:
 ```text
@@ -263,7 +263,7 @@ Mensagem 2:
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/05P.md com uma única linha, no formato "05P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-#### `05N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-explainability`)
+#### `05N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-explainability`)
 
 Mensagem 1:
 ```text
@@ -278,16 +278,16 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 Mensagem 1:
 ```text
-@rodrigo-baseline-ml rode a suite de baseline para o target inadimplencia_90d.
+@hub-ml-baseline-ml rode a suite de baseline para o target inadimplencia_90d.
 ```
 Mensagem 2:
 ```text
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/05M.md com uma única linha, no formato "05M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-### Skill 6 — rodrigo-explainability
+### Skill 6 — hub-ml-explainability
 
-#### `06P` — positivo (esperado: carregar `rodrigo-explainability`)
+#### `06P` — positivo (esperado: carregar `hub-ml-explainability`)
 
 Mensagem 1:
 ```text
@@ -298,7 +298,7 @@ Mensagem 2:
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/06P.md com uma única linha, no formato "06P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-#### `06N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-monitoramento-modelo`)
+#### `06N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-monitoramento-modelo`)
 
 Mensagem 1:
 ```text
@@ -313,16 +313,16 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 Mensagem 1:
 ```text
-@rodrigo-explainability explique os drivers do score do cliente 12345 (dados sintéticos).
+@hub-ml-explainability explique os drivers do score do cliente 12345 (dados sintéticos).
 ```
 Mensagem 2:
 ```text
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/06M.md com uma única linha, no formato "06M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-### Skill 7 — rodrigo-monitoramento-modelo
+### Skill 7 — hub-ml-monitoramento-modelo
 
-#### `07P` — positivo (esperado: carregar `rodrigo-monitoramento-modelo`)
+#### `07P` — positivo (esperado: carregar `hub-ml-monitoramento-modelo`)
 
 Mensagem 1:
 ```text
@@ -333,7 +333,7 @@ Mensagem 2:
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/07P.md com uma única linha, no formato "07P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-#### `07N` — negativo, colisão "KS/drift" (esperado: NÃO carregar; ideal: `rodrigo-validacao-estatistica`)
+#### `07N` — negativo, colisão "KS/drift" (esperado: NÃO carregar; ideal: `hub-ml-validacao-estatistica`)
 
 Mensagem 1:
 ```text
@@ -348,16 +348,16 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 Mensagem 1:
 ```text
-@rodrigo-monitoramento-modelo desenhe os thresholds de alerta para o modelo em produção.
+@hub-ml-monitoramento-modelo desenhe os thresholds de alerta para o modelo em produção.
 ```
 Mensagem 2:
 ```text
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/07M.md com uma única linha, no formato "07M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-### Skill 8 — rodrigo-pipeline-builder
+### Skill 8 — hub-ml-pipeline-builder
 
-#### `08P` — positivo (esperado: carregar `rodrigo-pipeline-builder`)
+#### `08P` — positivo (esperado: carregar `hub-ml-pipeline-builder`)
 
 Mensagem 1:
 ```text
@@ -368,7 +368,7 @@ Mensagem 2:
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/08P.md com uma única linha, no formato "08P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-#### `08N` — negativo, colisão "materialização" (esperado: NÃO carregar; ideal: `rodrigo-feature-engineering`)
+#### `08N` — negativo, colisão "materialização" (esperado: NÃO carregar; ideal: `hub-ml-feature-engineering`)
 
 Mensagem 1:
 ```text
@@ -383,16 +383,16 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 Mensagem 1:
 ```text
-@rodrigo-pipeline-builder estruture a orquestração dos notebooks de scoring com Lakeflow Jobs.
+@hub-ml-pipeline-builder estruture a orquestração dos notebooks de scoring com Lakeflow Jobs.
 ```
 Mensagem 2:
 ```text
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/08M.md com uma única linha, no formato "08M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-### Skill 9 — rodrigo-analise-safra
+### Skill 9 — hub-ml-analise-safra
 
-#### `09P` — positivo (esperado: carregar `rodrigo-analise-safra`)
+#### `09P` — positivo (esperado: carregar `hub-ml-analise-safra`)
 
 Mensagem 1:
 ```text
@@ -403,7 +403,7 @@ Mensagem 2:
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/09P.md com uma única linha, no formato "09P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-#### `09N` — negativo, colisão "deterioração" (esperado: NÃO carregar; ideal: `rodrigo-monitoramento-modelo`)
+#### `09N` — negativo, colisão "deterioração" (esperado: NÃO carregar; ideal: `hub-ml-monitoramento-modelo`)
 
 Mensagem 1:
 ```text
@@ -418,16 +418,16 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 Mensagem 1:
 ```text
-@rodrigo-analise-safra compare as safras de 2024 e 2025 em MOB equivalente.
+@hub-ml-analise-safra compare as safras de 2024 e 2025 em MOB equivalente.
 ```
 Mensagem 2:
 ```text
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/09M.md com uma única linha, no formato "09M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-### Skill 10 — rodrigo-comentar-notebook
+### Skill 10 — hub-ml-comentar-notebook
 
-#### `10P` — positivo (esperado: carregar `rodrigo-comentar-notebook`)
+#### `10P` — positivo (esperado: carregar `hub-ml-comentar-notebook`)
 
 Mensagem 1:
 ```text
@@ -438,7 +438,7 @@ Mensagem 2:
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/10P.md com uma única linha, no formato "10P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-#### `10N` — negativo, colisão "explicar" (esperado: NÃO carregar; ideal: `rodrigo-tutor-databricks`)
+#### `10N` — negativo, colisão "explicar" (esperado: NÃO carregar; ideal: `hub-ml-tutor-databricks`)
 
 Mensagem 1:
 ```text
@@ -453,16 +453,16 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 Mensagem 1:
 ```text
-@rodrigo-comentar-notebook documente este notebook para revisão do time.
+@hub-ml-comentar-notebook documente este notebook para revisão do time.
 ```
 Mensagem 2:
 ```text
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/10M.md com uma única linha, no formato "10M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-### Skill 11 — rodrigo-tutor-databricks
+### Skill 11 — hub-ml-tutor-databricks
 
-#### `11P` — positivo (esperado: carregar `rodrigo-tutor-databricks`)
+#### `11P` — positivo (esperado: carregar `hub-ml-tutor-databricks`)
 
 Mensagem 1:
 ```text
@@ -473,7 +473,7 @@ Mensagem 2:
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/11P.md com uma única linha, no formato "11P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-#### `11N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-comentar-notebook`)
+#### `11N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-comentar-notebook`)
 
 Mensagem 1:
 ```text
@@ -488,27 +488,27 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 Mensagem 1:
 ```text
-@rodrigo-tutor-databricks explique a diferença entre cache() e persist() com exemplos.
+@hub-ml-tutor-databricks explique a diferença entre cache() e persist() com exemplos.
 ```
 Mensagem 2:
 ```text
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/11M.md com uma única linha, no formato "11M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-### Skill 12 — rodrigo-auditoria-skills
+### Skill 12 — hub-ml-auditoria-skills
 
-#### `12P` — positivo (esperado: carregar `rodrigo-auditoria-skills`)
+#### `12P` — positivo (esperado: carregar `hub-ml-auditoria-skills`)
 
 Mensagem 1:
 ```text
-Audite este relatório de EDA contra o contrato da skill rodrigo-eda-profissional: completude, reprodutibilidade e score final com prioridades.
+Audite este relatório de EDA contra o contrato da skill hub-ml-eda-profissional: completude, reprodutibilidade e score final com prioridades.
 ```
 Mensagem 2:
 ```text
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/12P.md com uma única linha, no formato "12P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-#### `12N` — negativo (esperado: NÃO carregar; ideal: `rodrigo-eda-profissional`)
+#### `12N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-eda-profissional`)
 
 Mensagem 1:
 ```text
@@ -523,7 +523,7 @@ Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.
 
 Mensagem 1:
 ```text
-@rodrigo-auditoria-skills avalie se a pasta da skill rodrigo-analise-safra segue o padrão Agent Skills.
+@hub-ml-auditoria-skills avalie se a pasta da skill hub-ml-analise-safra segue o padrão Agent Skills.
 ```
 Mensagem 2:
 ```text
@@ -546,20 +546,20 @@ O que mudou nos testes 10 e 11: na rodada 1 os prompts citavam "este notebook"
 e "este stack trace" sem que existissem no chat, e o Genie não carregou skill
 nenhuma. Agora o artefato vem **embutido no próprio prompt**.
 
-### `07M-r2` — menção a `rodrigo-monitoramento-modelo`
+### `07M-r2` — menção a `hub-ml-monitoramento-modelo`
 
 *(na rodada 1 o teste foi feito, mas o arquivo de registro não foi gravado)*
 
 Mensagem 1:
 ```text
-@rodrigo-monitoramento-modelo desenhe os thresholds de alerta para o modelo em produção.
+@hub-ml-monitoramento-modelo desenhe os thresholds de alerta para o modelo em produção.
 ```
 Mensagem 2:
 ```text
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/07M-r2.md com uma única linha, no formato "07M-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-### `10P-r2` — positivo (esperado: carregar `rodrigo-comentar-notebook`)
+### `10P-r2` — positivo (esperado: carregar `hub-ml-comentar-notebook`)
 
 Mensagem 1:
 ```text
@@ -576,7 +576,7 @@ Mensagem 2:
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/10P-r2.md com uma única linha, no formato "10P-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-### `10N-r2` — negativo, colisão "explicar" (esperado: NÃO carregar; ideal: `rodrigo-tutor-databricks`)
+### `10N-r2` — negativo, colisão "explicar" (esperado: NÃO carregar; ideal: `hub-ml-tutor-databricks`)
 
 Mensagem 1:
 ```text
@@ -593,7 +593,7 @@ Mensagem 2:
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/10N-r2.md com uma única linha, no formato "10N-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-### `11P-r2` — positivo (esperado: carregar `rodrigo-tutor-databricks`)
+### `11P-r2` — positivo (esperado: carregar `hub-ml-tutor-databricks`)
 
 Mensagem 1:
 ```text
@@ -609,7 +609,7 @@ Mensagem 2:
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/11P-r2.md com uma única linha, no formato "11P-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-### `11N-r2` — negativo (esperado: NÃO carregar; ideal: `rodrigo-comentar-notebook`)
+### `11N-r2` — negativo (esperado: NÃO carregar; ideal: `hub-ml-comentar-notebook`)
 
 Mensagem 1:
 ```text

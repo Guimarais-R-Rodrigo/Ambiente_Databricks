@@ -1,7 +1,7 @@
 # Prompt: perfil rápido de dados
 
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Use **Add context**/`@` para anexar a
-> tabela ou o notebook. Skill recomendada: `@rodrigo-eda-profissional`.
+> tabela ou o notebook. Skill recomendada: `@hub-ml-eda-profissional`.
 
 Antes de pedir código, veja os helpers que a skill recomendada declara: boa
 parte do que este formulário pede já tem implementação verificada, e usá-la
@@ -16,7 +16,7 @@ de custo/tempo. Se a tabela não for conhecida, peça primeiro `/findTables`.
 ## Prompt pronto para colar
 
 ```text
-Use @rodrigo-eda-profissional para produzir um perfil rápido, objetivo e
+Use @hub-ml-eda-profissional para produzir um perfil rápido, objetivo e
 reprodutível do recurso anexado.
 
 CONTEXTO

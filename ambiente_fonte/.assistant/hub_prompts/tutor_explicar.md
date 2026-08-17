@@ -1,7 +1,7 @@
 # Prompt: tutor de Databricks
 
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe o notebook, célula, tabela, erro ou
-> pipeline com **Add context**/`@`. Skill: `@rodrigo-tutor-databricks`.
+> pipeline com **Add context**/`@`. Skill: `@hub-ml-tutor-databricks`.
 
 Antes de pedir código, veja os helpers que a skill recomendada declara: boa
 parte do que este formulário pede já tem implementação verificada, e usá-la
@@ -11,7 +11,7 @@ evita que a lógica seja reescrita a cada conversa. Mapa completo em
 ## Prompt pronto para colar
 
 ```text
-Use @rodrigo-tutor-databricks para explicar o objeto anexado de forma progressiva,
+Use @hub-ml-tutor-databricks para explicar o objeto anexado de forma progressiva,
 tecnicamente precisa e conectada ao meu contexto.
 
 CONTEXTO

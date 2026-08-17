@@ -1,7 +1,7 @@
 # Prompt: baseline de machine learning
 
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe dataset/notebook e target com
-> **Add context** ou `@`. Skill: `@rodrigo-baseline-ml`.
+> **Add context** ou `@`. Skill: `@hub-ml-baseline-ml`.
 
 Antes de pedir código, veja os helpers que a skill recomendada declara: boa
 parte do que este formulário pede já tem implementação verificada, e usá-la
@@ -17,7 +17,7 @@ plano — não aceite um treino baseado em suposições ocultas.
 ## Prompt pronto para colar
 
 ```text
-Use @rodrigo-baseline-ml para construir um baseline simples, auditável e apropriado
+Use @hub-ml-baseline-ml para construir um baseline simples, auditável e apropriado
 ao problema. Priorize uma referência honesta antes de otimização complexa.
 
 DEFINIÇÃO

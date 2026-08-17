@@ -82,7 +82,7 @@ subárvore, não a pasta de usuário do laboratório.
 
 ## Fase 5 — verificar a estrutura
 
-- [ ] `.assistant/skills/` tem 12 pastas `rodrigo-*`, cada uma com `SKILL.md`
+- [ ] `.assistant/skills/` tem 12 pastas `hub-ml-*`, cada uma com `SKILL.md`
 - [ ] `.assistant/` tem os 4 diretórios `hub_` mais `README.md`
 - [ ] `.assistant_instructions.md` presente na raiz do usuário
 - [ ] Abrir um `.py` de `hub_snippets`: precisa ser **arquivo**, não notebook
@@ -100,8 +100,8 @@ permissão e integração.
 
 - [ ] **Chat novo**: pedir "Faça uma EDA completa da tabela X: granularidade,
       chaves, qualidade e relatório executivo" → deve carregar
-      `rodrigo-eda-profissional`
-- [ ] **Chat novo**: pedir com `@rodrigo-baseline-ml` → seleção determinística
+      `hub-ml-eda-profissional`
+- [ ] **Chat novo**: pedir com `@hub-ml-baseline-ml` → seleção determinística
 - [ ] Confirmar que as respostas saem em PT-BR e seguem as preferências
 - [ ] Importar `tools/spark_smoke_test.py` como notebook e executar
 - [ ] Registrar o resultado do smoke test: `________ aprovações / ________ falhas`

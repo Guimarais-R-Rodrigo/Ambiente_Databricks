@@ -1,7 +1,7 @@
 # Prompt: pipeline de dados com Lakeflow
 
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe fontes, schema, pipeline e
-> repositório com **Add context**/`@`. Skill: `@rodrigo-pipeline-builder`.
+> repositório com **Add context**/`@`. Skill: `@hub-ml-pipeline-builder`.
 
 Antes de pedir código, veja os helpers que a skill recomendada declara: boa
 parte do que este formulário pede já tem implementação verificada, e usá-la
@@ -11,7 +11,7 @@ evita que a lógica seja reescrita a cada conversa. Mapa completo em
 ## Prompt pronto para colar
 
 ```text
-Use @rodrigo-pipeline-builder para desenhar um pipeline Databricks atual, testável e
+Use @hub-ml-pipeline-builder para desenhar um pipeline Databricks atual, testável e
 operável. Não crie, implante nem execute recursos até eu autorizar explicitamente.
 
 BRIEFING

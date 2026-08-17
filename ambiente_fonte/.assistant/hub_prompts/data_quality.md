@@ -1,7 +1,7 @@
 # Prompt: diagnóstico e contrato de qualidade de dados
 
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe a tabela/pipeline com **Add context**
-> ou `@`. Skill recomendada: `@rodrigo-eda-profissional`.
+> ou `@`. Skill recomendada: `@hub-ml-eda-profissional`.
 
 Antes de pedir código, veja os helpers que a skill recomendada declara: boa
 parte do que este formulário pede já tem implementação verificada, e usá-la
@@ -16,7 +16,7 @@ limites de qualidade. Threshold sem justificativa deve ser tratado como hipótes
 ## Prompt pronto para colar
 
 ```text
-Use @rodrigo-eda-profissional para avaliar a qualidade do recurso anexado e propor
+Use @hub-ml-eda-profissional para avaliar a qualidade do recurso anexado e propor
 um contrato verificável. Não modifique dados nem pipeline nesta etapa.
 
 CONTEXTO

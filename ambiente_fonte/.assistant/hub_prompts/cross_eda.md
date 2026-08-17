@@ -1,7 +1,7 @@
 # Prompt: Cross-EDA para viabilidade de modelagem
 
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe todos os EDAs, tabelas e definições
-> via **Add context**/`@`. Skill: `@rodrigo-cross-eda-ml`.
+> via **Add context**/`@`. Skill: `@hub-ml-cross-eda-ml`.
 
 Antes de pedir código, veja os helpers que a skill recomendada declara: boa
 parte do que este formulário pede já tem implementação verificada, e usá-la
@@ -17,7 +17,7 @@ fonte ainda desconhecida.
 ## Prompt pronto para colar
 
 ```text
-Use @rodrigo-cross-eda-ml para comparar os recursos anexados e avaliar se formam uma
+Use @hub-ml-cross-eda-ml para comparar os recursos anexados e avaliar se formam uma
 base de modelagem coerente, sem executar escrita ou treino.
 
 CONTEXTO
@@ -67,4 +67,4 @@ churn em 90 dias; chaves = `id_cliente + data_snapshot`.
 
 - “Gere somente os testes para validar cardinalidade e cobertura dos joins.”
 - “Transforme os riscos P0 em critérios de bloqueio para feature engineering.”
-- “Prepare um handoff factual para @rodrigo-feature-engineering.”
+- “Prepare um handoff factual para @hub-ml-feature-engineering.”

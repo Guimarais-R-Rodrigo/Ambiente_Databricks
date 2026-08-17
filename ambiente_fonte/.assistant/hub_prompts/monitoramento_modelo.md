@@ -1,7 +1,7 @@
 # Prompt: monitoramento de modelo
 
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe modelo, baseline, dados atuais,
-> endpoint/job e métricas com **Add context**/`@`. Skill: `@rodrigo-monitoramento-modelo`.
+> endpoint/job e métricas com **Add context**/`@`. Skill: `@hub-ml-monitoramento-modelo`.
 
 Antes de pedir código, veja os helpers que a skill recomendada declara: boa
 parte do que este formulário pede já tem implementação verificada, e usá-la
@@ -16,7 +16,7 @@ Thresholds devem ser calibrados ao caso; os exemplos não são normas universais
 ## Prompt pronto para colar
 
 ```text
-Use @rodrigo-monitoramento-modelo para desenhar ou avaliar monitoramento técnico e de
+Use @hub-ml-monitoramento-modelo para desenhar ou avaliar monitoramento técnico e de
 negócio do modelo anexado, sem alterar produção.
 
 CONTEXTO

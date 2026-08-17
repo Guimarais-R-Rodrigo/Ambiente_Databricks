@@ -1,7 +1,7 @@
 # Prompt: documentar e comentar notebook
 
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe o notebook com **Add context** ou
-> `@`. Para uma célula específica, use `@cell`. Skill: `@rodrigo-comentar-notebook`.
+> `@`. Para uma célula específica, use `@cell`. Skill: `@hub-ml-comentar-notebook`.
 
 Antes de pedir código, veja os helpers que a skill recomendada declara: boa
 parte do que este formulário pede já tem implementação verificada, e usá-la
@@ -17,7 +17,7 @@ evita que a lógica seja reescrita a cada conversa. Mapa completo em
 ## Prompt pronto para colar
 
 ```text
-Use @rodrigo-comentar-notebook para documentar o notebook anexado.
+Use @hub-ml-comentar-notebook para documentar o notebook anexado.
 
 BRIEFING
 - Notebook/células: {{NOTEBOOK_OU_CELULAS}}

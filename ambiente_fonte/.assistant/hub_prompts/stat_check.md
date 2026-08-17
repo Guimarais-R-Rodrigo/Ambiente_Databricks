@@ -1,7 +1,7 @@
 # Prompt: validação estatística pré-modelagem
 
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe dataset, notebook e desenho
-> experimental com **Add context**/`@`. Skill: `@rodrigo-validacao-estatistica`.
+> experimental com **Add context**/`@`. Skill: `@hub-ml-validacao-estatistica`.
 
 Antes de pedir código, veja os helpers que a skill recomendada declara: boa
 parte do que este formulário pede já tem implementação verificada, e usá-la
@@ -16,7 +16,7 @@ Esses objetivos exigem pressupostos e interpretações diferentes.
 ## Prompt pronto para colar
 
 ```text
-Use @rodrigo-validacao-estatistica para avaliar se o método pretendido é adequado ao
+Use @hub-ml-validacao-estatistica para avaliar se o método pretendido é adequado ao
 desenho e aos dados anexados. Não transforme automaticamente um teste significativo
 em causalidade ou relevância prática.
 

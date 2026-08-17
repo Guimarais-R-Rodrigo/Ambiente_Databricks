@@ -1,7 +1,7 @@
 # Prompt: feature engineering temporal e governado
 
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe notebooks, tabelas e definição do
-> target com **Add context**/`@`. Skill: `@rodrigo-feature-engineering`.
+> target com **Add context**/`@`. Skill: `@hub-ml-feature-engineering`.
 
 Antes de pedir código, veja os helpers que a skill recomendada declara: boa
 parte do que este formulário pede já tem implementação verificada, e usá-la
@@ -16,7 +16,7 @@ esses três marcos, peça apenas um plano; não gere features finais.
 ## Prompt pronto para colar
 
 ```text
-Use @rodrigo-feature-engineering para desenhar e, se autorizado, implementar features
+Use @hub-ml-feature-engineering para desenhar e, se autorizado, implementar features
 reprodutíveis, sem leakage e compatíveis com o volume.
 
 BRIEFING

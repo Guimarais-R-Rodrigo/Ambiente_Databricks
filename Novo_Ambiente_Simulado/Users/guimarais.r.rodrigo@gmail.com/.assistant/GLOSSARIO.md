@@ -16,7 +16,7 @@ procurar por ele na documentação oficial não devolve nada.
 | Termo | O que é | Onde aparece aqui |
 |---|---|---|
 | **Genie Code** | Assistente de código do Databricks, integrado ao workspace. É ele quem lê as skills e as instruções. | É o destinatário de tudo neste ecossistema |
-| **Agent Skills** | Padrão aberto (agentskills.io) para dar a um assistente instruções especializadas em pastas. A Databricks adotou o padrão. | As 12 pastas `rodrigo-*` em `skills/` |
+| **Agent Skills** | Padrão aberto (agentskills.io) para dar a um assistente instruções especializadas em pastas. A Databricks adotou o padrão. | As 12 pastas `hub-ml-*` em `skills/` |
 | **`SKILL.md`** | Arquivo obrigatório de cada skill. Contém o cabeçalho de identificação e as instruções do fluxo. | Um por pasta de skill |
 | **Frontmatter** | Bloco de metadados no topo do arquivo, delimitado por `---`. Aqui carrega `name` e `description`. Texto antes dele invalida o arquivo. | Primeiras linhas de todo `SKILL.md` |
 | **Auto-descoberta** | Capacidade do Genie Code de encontrar e carregar um arquivo sozinho, sem você pedir. Vale para skills, instruções e `AGENTS.md` — e para mais nada. | Motivo do prefixo `hub_` (ver convenção) |

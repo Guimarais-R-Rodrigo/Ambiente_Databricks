@@ -1,7 +1,7 @@
 # Prompt: análise de safra/vintage
 
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Anexe tabela e dicionário com
-> **Add context**/`@`. Skill: `@rodrigo-analise-safra`.
+> **Add context**/`@`. Skill: `@hub-ml-analise-safra`.
 
 Antes de pedir código, veja os helpers que a skill recomendada declara: boa
 parte do que este formulário pede já tem implementação verificada, e usá-la
@@ -16,7 +16,7 @@ definição analítica como exigência regulatória sem fonte normativa e revis�
 ## Prompt pronto para colar
 
 ```text
-Use @rodrigo-analise-safra para realizar análise de safra reproduzível e comparável,
+Use @hub-ml-analise-safra para realizar análise de safra reproduzível e comparável,
 com denominadores e maturação explícitos.
 
 CONTEXTO

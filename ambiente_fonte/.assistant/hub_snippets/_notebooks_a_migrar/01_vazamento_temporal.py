@@ -243,5 +243,5 @@ for nome, parte in [("treino", treino), ("validação", validacao), ("teste", te
 # MAGIC | Separar treino e teste com tempo envolvido | `temporal_split` | teste otimista, produção decepciona |
 # MAGIC
 # MAGIC Quando precisar de explicação linha a linha do código interno, use a
-# MAGIC skill `@rodrigo-tutor-databricks` com o módulo anexado — ela lê a versão
+# MAGIC skill `@hub-ml-tutor-databricks` com o módulo anexado — ela lê a versão
 # MAGIC atual do arquivo, então a explicação nunca fica desatualizada.

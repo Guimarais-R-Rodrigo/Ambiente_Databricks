@@ -225,5 +225,5 @@ Verificação executada em Spark 4.1 serverless (2026-08-13, 64 checks):
 Alteração na biblioteca exige, na mesma sessão: atualizar este catálogo,
 atualizar a seção de helpers das skills afetadas, rodar
 `tools/validate_assistant.py`, regerar o simulado e registrar no `CHANGELOG.md`
-(ver ADR-0004). A skill `rodrigo-auditoria-skills` verifica aderência de outputs
+(ver ADR-0004). A skill `hub-ml-auditoria-skills` verifica aderência de outputs
 ao que está declarado aqui.

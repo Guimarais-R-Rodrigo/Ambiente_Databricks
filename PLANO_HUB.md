@@ -4,7 +4,7 @@ Documento de trabalho, versão 2. Cada sprint é executada isoladamente, auditad
 em sessão sem contexto, revisada por você, e só então a seguinte começa.
 
 - **Status:** v2. Sprints 0 e 0b concluídas. Auditoria começa na Sprint 1
-- **Sprint atual:** 4 concluída (portão de formato), aguardando auditoria; próxima é a 3
+- **Sprint atual:** 3 concluída; próximas são 5 (prompts) e 6 (snippets spark)
 - **Última atualização:** 2026-08-16
 
 > **Histórico de revisão.** A v1 foi submetida a auditoria em sessão sem
@@ -21,7 +21,7 @@ em sessão sem contexto, revisada por você, e só então a seguinte começa.
 |---|---|---|
 | Marca do que é customizado | prefixo `x_` | prefixo **`hub_`** / **`hub-`** |
 | Identidade do projeto | ambiente pessoal | **Hub de ML** da equipe |
-| Nome das skills | `rodrigo-<tema>` | **`hub-ml-<tema>`** |
+| Nome das skills | `hub-ml-<tema>` | **`hub-ml-<tema>`** |
 | Organização de um snippet | um `.py` solto numa pasta temática | **uma pasta por snippet**: `.py`, `__init__.py` e notebook |
 | Organização de script e prompt | idem | idem |
 | Contexto de projeto | `x_projects/` | **removida** |
@@ -426,7 +426,7 @@ duplicado, link quebrado e import errado: `APROVADO, 0 falhas`.
 `CHANGELOG.md` é append-only, ADRs são imutáveis, e registros de auditoria e de
 teste descrevem o que foi observado na época. Renomear ali falsifica o registro.
 
-| Camada | `x_` / `rodrigo-` | Renomeia? |
+| Camada | `x_` / `hub-ml-` | Renomeia? |
 |---|---:|---|
 | `ambiente_fonte/`, `tools/`, `.claude/`, canônicos, `docs/playbooks/`, `GUIA_REPLICACAO_TEMPORARIO.md` | **471 / 162** | **sim** |
 | `docs/testes/`, `CHANGELOG.md`, `docs/auditoria/`, `docs/handoffs/`, `docs/decisions/` | **187 / 108** | **não**, com nota de cabeçalho |
@@ -445,7 +445,7 @@ reutilizável. É atualizado; os resultados das rodadas ficam intactos.
 - depois da Sprint 2, o workspace teria `hub_snippets` **e** `hub_snippets`, mais
   as seis pastas antigas intactas — e a verificação humana declarada na v1 ("as
   três pastas ausentes") retornaria o resultado errado;
-- depois da Sprint 3, `.assistant/skills/` teria **24 pastas**: 12 `rodrigo-*`
+- depois da Sprint 3, `.assistant/skills/` teria **24 pastas**: 12 `hub-ml-*`
   órfãs e 12 `hub-ml-*`, com `description` idêntica duas a duas. É exatamente a
   colisão de roteamento que os forward tests existem para pegar.
 
@@ -551,7 +551,7 @@ snippets é multiplicar um formato não aprovado.**
 nas camadas vivas, README da pasta, `roteiro.md` atualizado.
 
 Renomear não altera nenhuma `description` — verificado: nenhuma das 12 contém
-`rodrigo-`, e o roteamento automático segue certificado. Os 12 testes de menção
+`hub-ml-`, e o roteamento automático segue certificado. Os 12 testes de menção
 são refeitos; os 24 positivos e negativos, não. Quatro `SKILL.md` citam sete
 outras skills pelo nome no corpo: renome mecânico.
 
@@ -610,7 +610,7 @@ Sprint 2**, não na 12, para não ficar meses inconsistente.
 
 Os três playbooks de replicação (`checklist-replicacao.md`,
 `replicacao-trabalho.md`, `GUIA_REPLICACAO_TEMPORARIO.md`) fixam "174 arquivos",
-"12 skills", "6 diretórios `x_`" e "12 pastas `rodrigo-*`". Nenhum número
+"12 skills", "6 diretórios `x_`" e "12 pastas `hub-ml-*`". Nenhum número
 sobrevive: o total publicado sai de 175 para cerca de 295. Reescritos na Sprint 12.
 
 ---
@@ -664,8 +664,8 @@ Registrado para não ser desfeito numa próxima revisão:
 | 0b | ✅ concluída | 2026-08-16 | dispensada | [relatório](docs/sprints/sprint-0b-fixtures-e-api-publica.md) |
 | 1 | ✅ concluída | 2026-08-16 | ✅ 21 achados corrigidos | [relatório](docs/sprints/sprint-1-padroes.md) |
 | 2 | ✅ concluída | 2026-08-16 | ✅ 13 quebras corrigidas + ADR-0006 | [relatório](docs/sprints/sprint-2-renomeacao.md) |
-| 4 | ✅ concluída | 2026-08-16 | **pendente** | [relatório](docs/sprints/sprint-4-hub-scripts.md) |
-| 3 | não iniciada | — | — | — |
+| 4 | ✅ concluída | 2026-08-16 | ✅ 9 achados corrigidos | [relatório](docs/sprints/sprint-4-hub-scripts.md) |
+| 3 | ✅ concluída | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-3-skills.md) |
 | 5 | não iniciada | — | — | — |
 | 6 | não iniciada | — | — | — |
 | 7 | não iniciada | — | — | — |

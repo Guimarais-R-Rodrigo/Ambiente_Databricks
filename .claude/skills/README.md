@@ -5,7 +5,7 @@
 Este projeto tem skills em dois lugares, com propósitos opostos. Confundi-las é o
 mal-entendido mais provável de quem chega:
 
-| | Skills **desta** pasta | Skills `rodrigo-*` |
+| | Skills **desta** pasta | Skills `hub-ml-*` |
 |---|---|---|
 | Onde vivem | `.claude/skills/` | `ambiente_fonte/.assistant/skills/` |
 | Quem as executa | o assistente que trabalha **no repositório** | o Genie Code, **dentro do Databricks** |
