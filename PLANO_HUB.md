@@ -4,7 +4,7 @@ Documento de trabalho, versão 2. Cada sprint é executada isoladamente, auditad
 em sessão sem contexto, revisada por você, e só então a seguinte começa.
 
 - **Status:** v2. Sprints 0 e 0b concluídas. Auditoria começa na Sprint 1
-- **Sprint atual:** 3 concluída; próximas são 5 (prompts) e 6 (snippets spark)
+- **Sprint atual:** 6 concluída; próximas são 7 (ml núcleo) e 5 (prompts, depende de você)
 - **Última atualização:** 2026-08-16
 
 > **Histórico de revisão.** A v1 foi submetida a auditoria em sessão sem
@@ -665,9 +665,9 @@ Registrado para não ser desfeito numa próxima revisão:
 | 1 | ✅ concluída | 2026-08-16 | ✅ 21 achados corrigidos | [relatório](docs/sprints/sprint-1-padroes.md) |
 | 2 | ✅ concluída | 2026-08-16 | ✅ 13 quebras corrigidas + ADR-0006 | [relatório](docs/sprints/sprint-2-renomeacao.md) |
 | 4 | ✅ concluída | 2026-08-16 | ✅ 9 achados corrigidos | [relatório](docs/sprints/sprint-4-hub-scripts.md) |
-| 3 | ✅ concluída | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-3-skills.md) |
+| 3 | ✅ concluída | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-3-skills.md) · `@hub-ml-*` confirmado no chat |
 | 5 | não iniciada | — | — | — |
-| 6 | não iniciada | — | — | — |
+| 6 | ✅ concluída | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-6-snippets-spark.md) |
 | 7 | não iniciada | — | — | — |
 | 8 | não iniciada | — | — | — |
 | 9 | não iniciada | — | — | — |

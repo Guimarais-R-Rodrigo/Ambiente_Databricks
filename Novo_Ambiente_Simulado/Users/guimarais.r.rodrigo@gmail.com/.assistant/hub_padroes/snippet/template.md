@@ -48,6 +48,41 @@ Com isso o import fica limpo, sem repetir o nome:
 from hub_snippets.spark.pit_join import pit_join
 ```
 
+### O `__init__.py` de **seção** não reexporta nada
+
+`spark/__init__.py`, `ml/__init__.py` e os outros de nível de seção continuam
+com docstring e mais nada. Só a pasta do **objeto** reexporta.
+
+Não é preguiça: é o que mantém a seção importável. Um `__init__.py` de seção que
+reexportasse os objetos importaria todos eles de uma vez — e treze módulos de
+`ml/` dependem de biblioteca que não existe no laboratório. A seção inteira
+deixaria de importar por causa deles.
+
+Verificado com um pacote de teste:
+
+```text
+pkg.ml.train_lgbm              -> OPTIONAL_MISSING  (exc.name = 'lightgbm')
+pkg.ml.train_lgbm.train_lgbm   -> OPTIONAL_MISSING  (exc.name = 'lightgbm')
+pkg.ml                         -> PASS
+```
+
+A última linha só é `PASS` porque a seção não reexporta.
+
+### Objeto que depende de biblioteca ausente: nada muda
+
+As duas primeiras linhas acima respondem à outra dúvida. O `__init__.py` eager
+**preserva o `exc.name`** da dependência que faltou, então o smoke test continua
+classificando como `OPTIONAL_MISSING` e não como `FAIL`.
+
+E não há regressão: `train_lgbm.py` já tem `import lightgbm` no topo, de modo que
+importar o módulo já falhava antes da conversão. A pasta falha do mesmo jeito,
+pelo mesmo motivo, com o mesmo diagnóstico.
+
+**Consequência para quem escreve o notebook:** o objeto não pode ser importado no
+laboratório de forma alguma, nem para alcançar uma constante. É o caso do BLOCO
+CANÔNICO de não executado, e o motivo se enquadra em "a dependência não existe e
+não há versão compatível conhecida".
+
 ## 2. O módulo
 
 Ver [`taxa_resposta_campanha/taxa_resposta_campanha.py`](taxa_resposta_campanha/taxa_resposta_campanha.py)

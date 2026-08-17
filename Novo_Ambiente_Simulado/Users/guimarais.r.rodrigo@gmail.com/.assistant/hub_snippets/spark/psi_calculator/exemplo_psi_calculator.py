@@ -16,6 +16,18 @@
 # MAGIC muda. Só que ele é cego para o tipo de mudança que mais importa.
 
 # COMMAND ----------
+# MAGIC %md
+# MAGIC ## O que este notebook assume do ambiente
+# MAGIC
+# MAGIC | Item | Exigência |
+# MAGIC |---|---|
+# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Bibliotecas | nenhuma além do runtime |
+# MAGIC | Dados | sintéticos, gerados por `hub_snippets.testing.fixtures` |
+# MAGIC | Escrita | nenhuma; tudo em memória |
+# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
+
+# COMMAND ----------
 
 import sys
 
@@ -167,3 +179,17 @@ for coluna, valor in csi.items():
 # MAGIC Para o caso de comparar duas coortes de uma mesma tabela — a rotina mensal
 # MAGIC típica —, o atalho é `hub_scripts.drift_detector`, que aplica esta mesma
 # MAGIC lógica recebendo o nome da tabela e as duas datas.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## Quando **não** usar
+# MAGIC
+# MAGIC - **Como prova de que o modelo piorou.** PSI mede mudança na entrada;
+# MAGIC   performance se mede com o alvo realizado, que costuma chegar depois.
+# MAGIC - **Com bins demais em base pequena.** Bin quase vazio infla o índice por
+# MAGIC   ruído — dez bins já é bastante em poucos milhares de linhas.
+# MAGIC - **Sobre variável categórica.** `calcular_psi` espera numérica; para
+# MAGIC   categórica o caminho é `calcular_csi`, na mesma pasta.
+# MAGIC - **Aceitando os limiares como lei.** 0,1 e 0,25 vêm da tradição de
+# MAGIC   crédito. Num score que muda de escala a cada retreino, disparam sem que
+# MAGIC   nada esteja errado.

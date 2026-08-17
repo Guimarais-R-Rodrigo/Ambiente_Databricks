@@ -4,7 +4,7 @@
 # MAGIC
 # MAGIC > **Material didático do Hub — não é auto-descoberto pelo Genie Code.**
 # MAGIC > Dados sintéticos apenas. Inventário completo da biblioteca no
-# MAGIC > [catálogo de helpers](../../CATALOGO_HELPERS.md).
+# MAGIC > [catálogo de helpers](../../../CATALOGO_HELPERS.md).
 # MAGIC
 # MAGIC ## O problema
 # MAGIC
@@ -15,6 +15,18 @@
 # MAGIC
 # MAGIC Três coisas podem acontecer sem nenhuma mensagem de erro: a base cresce,
 # MAGIC a base encolhe, ou parte dela some por chave nula.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## O que este notebook assume do ambiente
+# MAGIC
+# MAGIC | Item | Exigência |
+# MAGIC |---|---|
+# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Bibliotecas | nenhuma além do runtime |
+# MAGIC | Dados | sintéticos, gerados por `hub_snippets.testing.fixtures` |
+# MAGIC | Escrita | nenhuma; tudo em memória |
+# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
 
 # COMMAND ----------
 
@@ -45,7 +57,7 @@ cadastro = clientes.select("id_cliente").distinct().withColumn("segmento", F.lit
 d = diagnosticar_join(clientes, cadastro, "id_cliente")
 
 for chave in ["linhas_esquerda", "linhas_direita", "linhas_com_match",
-              "multiplicidade_max_direita", "expansao_prevista", "relacao"]:
+              "multiplicidade_max_direita", "expansao_prevista_left", "relacao"]:
     print(f"{chave:>28}: {d[chave]}")
 
 # COMMAND ----------
@@ -72,8 +84,8 @@ contratos = (
 d = diagnosticar_join(clientes, contratos, "id_cliente")
 
 print(f"linhas antes do join   : {d['linhas_esquerda']}")
-print(f"linhas depois do join  : {d['linhas_apos_join_esquerda']}")
-print(f"fator de expansão      : {d['expansao_prevista']}")
+print(f"linhas depois do join  : {d['linhas_apos_join_left']}")
+print(f"fator de expansão      : {d['expansao_prevista_left']}")
 print(f"leitura                : {d['relacao']}")
 
 # COMMAND ----------
@@ -108,8 +120,8 @@ d = diagnosticar_join(clientes, cadastro_parcial, "id_cliente")
 
 print(f"linhas na esquerda   : {d['linhas_esquerda']}")
 print(f"encontraram par      : {d['linhas_com_match']}")
-print(f"ficaram sem par      : {d['linhas_sem_match']}")
-print(f"cobertura            : {d['cobertura_pct']}%")
+print(f"ficaram sem par      : {d['linhas_sem_match_chave_valida']}")
+print(f"cobertura            : {d['cobertura_pct_chaves_validas']}%")
 print()
 print("exemplos de chaves órfãs:", d["exemplos_sem_match"][:3])
 
@@ -149,7 +161,7 @@ d = diagnosticar_join(com_nulos, cadastro, "id_cliente")
 
 print(f"linhas na esquerda      : {d['linhas_esquerda']}")
 print(f"com chave nula          : {d['chaves_nulas_esquerda']}  <- nunca casam")
-print(f"cobertura sobre o total : {d['cobertura_pct']}%")
+print(f"cobertura sobre o total : {d['cobertura_pct_chaves_validas']}%")
 
 # COMMAND ----------
 
@@ -171,3 +183,17 @@ print(f"cobertura sobre o total : {d['cobertura_pct']}%")
 # MAGIC Rodar o diagnóstico leva segundos e responde, com número, uma pergunta que
 # MAGIC normalmente só se responde depois — quando a contagem de linhas não bate e
 # MAGIC ninguém sabe explicar por quê.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## Quando **não** usar
+# MAGIC
+# MAGIC - **Como substituto do join.** Ele mede o que vai acontecer; não junta
+# MAGIC   nada, e a decisão de juntar continua sendo sua.
+# MAGIC - **Em chave composta, passando só uma coluna.** A multiplicidade sai
+# MAGIC   errada — informe a chave inteira.
+# MAGIC - **Sobre tabela muito grande, sem avaliar custo.** São contagens
+# MAGIC   agregadas e um `left_semi`; baratos em milhões, não em bilhões.
+# MAGIC - **Esperando que ele decida o tipo de join.** Inner, left e anti
+# MAGIC   respondem a perguntas diferentes de negócio, e o diagnóstico só informa
+# MAGIC   o custo de cada uma.

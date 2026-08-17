@@ -1,21 +1,28 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # Vazamento temporal: por que `pit_join` e `temporal_split` existem
+# MAGIC # `pit_join` — trazer histórico sem trazer o futuro junto
 # MAGIC
-# MAGIC > **Material didático do Hub — não é auto-descoberto pelo Genie Code.**
-# MAGIC > Abra, execute célula a célula e leia os comentários. Nenhum dado real é
-# MAGIC > usado: tudo vem das fixtures sintéticas da própria biblioteca.
+# MAGIC **O problema.** Para treinar um modelo você precisa saber o que era
+# MAGIC verdade **no instante da decisão**. O join natural — por chave, pegando o
+# MAGIC registro mais recente — traz o valor de hoje para uma decisão de março. O
+# MAGIC modelo aprende com informação que não existia, acerta no teste e fracassa
+# MAGIC em produção.
 # MAGIC
-# MAGIC ## O que você vai entender aqui
+# MAGIC **O que este helper faz.** Junta cada decisão à última versão da feature
+# MAGIC que **já estava disponível** naquele momento — considerando também o atraso
+# MAGIC de publicação, que é a parte que quase todo mundo esquece.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## O que este notebook assume do ambiente
 # MAGIC
-# MAGIC Vazamento (*leakage*) é quando o modelo aprende com informação que **não
-# MAGIC existia** no momento em que a decisão precisava ser tomada. O resultado é
-# MAGIC cruel: o modelo fica excelente no teste e fracassa em produção — e a
-# MAGIC diferença só aparece meses depois, quando o prejuízo já ocorreu.
-# MAGIC
-# MAGIC Este notebook mostra o problema acontecendo, e depois mostra os dois
-# MAGIC helpers que o evitam. Você não precisa entender o código por dentro: o
-# MAGIC objetivo é entender **o que dá errado sem eles**.
+# MAGIC | Item | Exigência |
+# MAGIC |---|---|
+# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Bibliotecas | nenhuma além do runtime |
+# MAGIC | Dados | sintéticos, gerados por `hub_snippets.testing.fixtures` |
+# MAGIC | Escrita | nenhuma; tudo em memória |
+# MAGIC | Diferença Free × trabalho | nenhuma conhecida. O `explain()` de range join só é conclusivo em volume real |
 
 # COMMAND ----------
 
@@ -171,7 +178,7 @@ for atraso in [0, 3, 30, 60]:
         fatos, features, "id_cliente", "dt_decisao", "dt_referencia",
         atraso_publicacao_dias=atraso, colunas_feature=["score_bureau"],
     )
-    print(f"atraso {atraso:>3} dias -> cobertura {diag['cobertura_pct']:>6}%")
+    print(f"atraso {atraso:>3} dias -> cobertura {diag['cobertura_pct_linhas_validas']:>6}%")
 
 # COMMAND ----------
 
@@ -182,66 +189,23 @@ for atraso in [0, 3, 30, 60]:
 # MAGIC quase nunca é verdade.
 
 # COMMAND ----------
-
 # MAGIC %md
-# MAGIC ## 5. A segunda armadilha: separar treino e teste
+# MAGIC ## Quando **não** usar
 # MAGIC
-# MAGIC Resolvido o join, falta decidir o que é treino e o que é teste. Aqui o
-# MAGIC erro clássico é sortear linhas ao acaso.
+# MAGIC - **Sem saber o atraso de publicação da fonte.** O parâmetro é
+# MAGIC   obrigatório de propósito: um palpite errado aqui produz vazamento com
+# MAGIC   aparência de rigor. Se ninguém sabe o atraso, descobrir é o primeiro
+# MAGIC   passo, não usar zero.
+# MAGIC - **Quando a decisão não tem instante próprio.** Se todas as linhas
+# MAGIC   compartilham uma data de corte, `pit_join` funciona mas é exagero: um
+# MAGIC   filtro resolve.
+# MAGIC - **Como garantia contra todo vazamento.** Ele resolve o temporal na
+# MAGIC   junção. Alvo construído com informação futura, feature derivada da
+# MAGIC   população inteira e split aleatório continuam vazando por outros
+# MAGIC   caminhos.
+# MAGIC - **Em volume grande, sem olhar o plano.** A junção é por intervalo, e o
+# MAGIC   custo dela depende de otimização que só se confirma com `explain()` sobre
+# MAGIC   dado representativo.
 # MAGIC
-# MAGIC Sortear funciona quando as linhas são independentes. Quando há tempo
-# MAGIC envolvido, não são: sortear coloca no treino linhas de **depois** das que
-# MAGIC ficaram no teste. O modelo passa a "ver o futuro" de novo, por outro
-# MAGIC caminho.
-# MAGIC
-# MAGIC `temporal_split` separa por **período de calendário**, não por posição de
-# MAGIC linha, e aceita um intervalo de segurança (`gap_periods`) entre treino e
-# MAGIC teste — útil quando o target leva tempo para se materializar.
-
-# COMMAND ----------
-
-from hub_snippets.ml.split_temporal import temporal_split
-
-painel_spark = fixtures.serie_temporal(n_entidades=30, n_periodos=24, seed=5)
-print("PAINEL (uma linha por entidade e mês):")
-painel_spark.show(3, truncate=False)
-
-# ATENÇÃO — diferença que confunde na primeira vez: `temporal_split` trabalha
-# com pandas, não com Spark. Ele roda no driver, sobre dados já reduzidos.
-# Passar um DataFrame Spark aqui produz o erro `Attribute 'copy' is not
-# supported`, que não diz nada sobre a causa real.
-#
-# Isso não é descuido do módulo: definir splits é decisão sobre metadados
-# (quais períodos), não processamento de volume. Reduza antes com agregação ou
-# amostra, e só então chame — nunca converta uma tabela inteira ao driver.
-painel = painel_spark.toPandas()
-print(f"\nconvertido para pandas: {len(painel)} linhas (volume controlado)")
-
-treino, validacao, teste = temporal_split(painel, date_col="dt_referencia")
-
-for nome, parte in [("treino", treino), ("validação", validacao), ("teste", teste)]:
-    if len(parte):
-        print(
-            f"{nome:>10}: {len(parte):>5} linhas  |  "
-            f"{parte['dt_referencia'].min()} a {parte['dt_referencia'].max()}"
-        )
-    else:
-        print(f"{nome:>10}: vazio")
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC Repare que os períodos **não se sobrepõem**: cada faixa de datas pertence
-# MAGIC a uma partição só. É exatamente isso que o sorteio aleatório destrói.
-# MAGIC
-# MAGIC ## Resumo para levar
-# MAGIC
-# MAGIC | Situação | O que usar | O que acontece sem |
-# MAGIC |---|---|---|
-# MAGIC | Trazer atributo histórico para uma decisão | `pit_join` | base incha e entra dado do futuro |
-# MAGIC | Fonte demora a publicar o dado | `atraso_publicacao_dias` | vazamento sutil, difícil de detectar |
-# MAGIC | Separar treino e teste com tempo envolvido | `temporal_split` | teste otimista, produção decepciona |
-# MAGIC
-# MAGIC Quando precisar de explicação linha a linha do código interno, use a
-# MAGIC skill `@hub-ml-tutor-databricks` com o módulo anexado — ela lê a versão
-# MAGIC atual do arquivo, então a explicação nunca fica desatualizada.
+# MAGIC A segunda metade do assunto — separar treino e teste sem vazar — está em
+# MAGIC `hub_snippets/ml/split_temporal/`.
