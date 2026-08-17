@@ -7,6 +7,18 @@
 # MAGIC bom de mau. A leitura natural — "IV alto, variável ótima" — é a que mais
 # MAGIC coloca vazamento dentro de um modelo.
 # MAGIC
+# MAGIC Executado no laboratório, o resultado é:
+# MAGIC
+# MAGIC ```text
+# MAGIC faixa_renda  n_bom  n_mau  n_total     woe   iv_partial
+# MAGIC alta          1016    296     1312  -0.1133      0.00580
+# MAGIC baixa          446     89      535   0.2618      0.01130
+# MAGIC media          919    234     1153   0.0210      0.00017
+# MAGIC
+# MAGIC IV da faixa de renda    :  0.0173   (Inútil (< 0.02))
+# MAGIC IV do status de cobrança: 15.5748   (Elevada — investigar leakage)
+# MAGIC ```
+# MAGIC
 # MAGIC **O que este helper faz.** Calcula WOE por faixa e o IV total, e classifica
 # MAGIC a força — inclusive a faixa que deveria acender alerta em vez de comemoração.
 
@@ -17,7 +29,7 @@
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
 # MAGIC | Compute | serverless ou clássico, indiferente |
-# MAGIC | Bibliotecas | nenhuma além do runtime (Plotly já vem no Databricks) |
+# MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, gerados por `hub_snippets.testing.fixtures` |
 # MAGIC | Escrita | nenhuma; tudo em memória |
 # MAGIC | Diferença Free × trabalho | nenhuma conhecida |
@@ -37,7 +49,7 @@ print("biblioteca acessível")
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## Parte 2 — Information Value
+# MAGIC ## 1. WOE e Information Value
 # MAGIC
 # MAGIC WOE (*weight of evidence*) transforma uma variável em log da razão entre
 # MAGIC bons e maus de cada faixa. IV (*information value*) resume, num número, o
@@ -99,8 +111,9 @@ print("o status de cobrança só existe DEPOIS que o cliente ficou inadimplente.
 # MAGIC %md
 # MAGIC Em produção, no momento de decidir o crédito, `status_cobranca` ainda não
 # MAGIC existe. O modelo treinado com ela terá desempenho excelente no teste e
-# MAGIC não funcionará — é o mesmo vazamento do notebook 01, chegando por outra
-# MAGIC porta.
+# MAGIC não funcionará — é o mesmo vazamento que `hub_snippets.ml.split_temporal`
+# MAGIC trata pelo lado do tempo, chegando aqui por outra porta: não pela ordem
+# MAGIC das linhas, mas pelo conteúdo da coluna.
 # MAGIC
 # MAGIC **A regra prática:** IV muito acima do esperado para o domínio é sinal
 # MAGIC para investigar a origem da variável, não para promovê-la. Pergunte
@@ -110,9 +123,13 @@ print("o status de cobrança só existe DEPOIS que o cliente ficou inadimplente.
 # MAGIC
 # MAGIC | Armadilha | Sintoma | Conta certa |
 # MAGIC |---|---|---|
-# MAGIC | Somar taxas por safra | acumulado exagerado, às vezes acima de 100% | contar contratos distintos afetados |
-# MAGIC | Comparar safras pelo calendário | safra antiga sempre parece pior | comparar em MOB equivalente |
-# MAGIC | Celebrar IV alto | variável "perfeita" | verificar se ela existia na hora da decisão |
+# MAGIC | Celebrar IV alto | variável "perfeita", IV muito acima do domínio | verificar se ela existia na hora da decisão |
+# MAGIC | Ler faixa de IV como norma | "0,3 é forte" repetido sem fonte | tratar como referência, e calibrar no próprio domínio |
+# MAGIC | Aplicar WOE calculado no treino inteiro | otimismo que não reaparece em produção | calcular as faixas só no treino e aplicá-las ao resto |
+# MAGIC
+# MAGIC As armadilhas de **safra** — somar taxas por vintage, comparar safras pelo
+# MAGIC calendário — são de outro helper: `hub_snippets.ml.vintage_analysis`, que
+# MAGIC tem notebook próprio.
 # MAGIC
 # MAGIC As faixas de IV e os limites de PSI têm a mesma natureza: referências
 # MAGIC úteis, não normas. Nenhuma delas vem de regulação — e apresentá-las como

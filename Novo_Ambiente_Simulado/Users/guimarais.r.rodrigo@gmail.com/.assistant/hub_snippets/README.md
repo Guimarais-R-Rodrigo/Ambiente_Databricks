@@ -117,7 +117,7 @@ não fica defasada.
 |---|---|
 | "o que existe nesta biblioteca?" | a tabela de módulos acima |
 | "preciso fazer X, qual módulo uso?" | [catálogo de helpers](../CATALOGO_HELPERS.md) |
-| "por que este helper existe e o que dá errado sem ele?" | os quatro notebooks |
+| "por que este helper existe e o que dá errado sem ele?" | o `exemplo_*` na pasta do próprio helper |
 | "o que esta linha do código faz?" | `@hub-ml-tutor-databricks` com o módulo anexado |
 | "o que significa este termo?" | [glossário](../GLOSSARIO.md) |
 

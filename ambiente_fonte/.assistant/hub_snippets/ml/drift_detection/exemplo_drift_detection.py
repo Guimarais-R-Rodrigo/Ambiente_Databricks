@@ -53,6 +53,15 @@ print(f"KS     {ks_stat:.4f}  (p-valor {ks_p:.2e})")
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC Executado no laboratório, o resultado é:
+# MAGIC
+# MAGIC ```text
+# MAGIC média  ref  599.22 | atual  599.05
+# MAGIC desvio ref   39.99 | atual   83.70
+# MAGIC PSI    3.0710
+# MAGIC KS     0.3385  (p-valor 1.95e-203)
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** As médias praticamente coincidem e o desvio dobra. O PSI sai
 # MAGIC alto porque compara a **forma** bin a bin; o KS mede a maior distância
 # MAGIC entre as acumuladas, e também acusa.
@@ -117,6 +126,60 @@ print(relatorio.to_string(index=False) if hasattr(relatorio, "to_string") else r
 # MAGIC como "as features que quebraram o modelo". Drift de entrada não implica
 # MAGIC queda de performance, e uma feature que o modelo quase não usa pode
 # MAGIC liderar a lista sem consequência alguma.
+# MAGIC
+# MAGIC **E repare na coluna `status`: todas as linhas saem `NOT_CLASSIFIED`,
+# MAGIC inclusive a de PSI mais alto.** Não é defeito nem coluna pela metade — é a
+# MAGIC recusa deliberada do módulo em classificar sem política declarada. Como
+# MAGIC nenhum limiar foi passado, ele calcula os índices e se cala sobre o
+# MAGIC veredito, em vez de aplicar por conta própria o 0,1 / 0,25 que circula
+# MAGIC como se fosse lei. A próxima seção mostra a coluna mudando.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## 4. A mesma varredura, com a política declarada
+
+# COMMAND ----------
+
+com_politica = detect_drift_all_features(
+    base_ref, base_atual,
+    feature_cols=["score", "renda", "uf"],
+    numeric_cols=["score", "renda"],
+    categorical_cols=["uf"],
+    # os dois vêm juntos ou nenhum vem: o módulo recusa política pela metade
+    psi_threshold=0.25,
+    ks_threshold=0.10,
+)
+print(com_politica[["feature", "psi", "status"]].to_string(index=False))
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC Executado no laboratório, o resultado é:
+# MAGIC
+# MAGIC ```text
+# MAGIC feature      psi status
+# MAGIC   score 3.070975  ALERT
+# MAGIC      uf 0.250667  ALERT
+# MAGIC   renda 0.014308     OK
+# MAGIC ```
+# MAGIC
+# MAGIC **Como ler.** A mesma varredura, os mesmos índices, e agora `status`
+# MAGIC responde: `ALERT` para o que passou do limiar, `OK` para o resto. Nada foi
+# MAGIC recalculado — o que mudou foi haver uma régua.
+# MAGIC
+# MAGIC E repare em `uf`: **0,250667** contra um limiar de **0,25**. Ela dispara o
+# MAGIC alarme por seis milésimos. Não é defeito do módulo nem da variável — é o
+# MAGIC que acontece com qualquer corte: sempre existe um caso na fronteira, e ele
+# MAGIC vai cair de um lado por margem irrelevante. Quem opera o monitoramento
+# MAGIC precisa saber disso antes de receber o primeiro alerta assim, ou vai
+# MAGIC tratar um empate técnico como evento.
+# MAGIC
+# MAGIC Os dois limiares vêm em par por decisão do módulo: passar só
+# MAGIC `psi_threshold` levanta `ValueError`. Meia política é pior que nenhuma,
+# MAGIC porque a metade ausente vira um padrão implícito que ninguém escolheu.
+# MAGIC
+# MAGIC E 0,25 aqui é **exemplo, não recomendação**. O valor certo depende de
+# MAGIC quanto custa um alarme falso no seu processo, e sai de olhar a série
+# MAGIC histórica do próprio índice — não de um artigo.
 
 # COMMAND ----------
 # MAGIC %md

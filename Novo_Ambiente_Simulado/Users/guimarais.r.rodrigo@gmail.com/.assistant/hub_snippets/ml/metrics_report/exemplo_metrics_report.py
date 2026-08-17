@@ -49,9 +49,27 @@ for k, v in m.items():
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** A acurácia sai alta e não significa nada: um modelo que
-# MAGIC responda "não" para todo mundo acerta 95% numa base com 5% de eventos.
-# MAGIC Compare o valor de `accuracy` com 0,95 antes de comemorar.
+# MAGIC Executado no laboratório, o resultado é:
+# MAGIC
+# MAGIC ```text
+# MAGIC auc_roc      0.9925     f1           0.2263
+# MAGIC ks          92.1        precision    1.0
+# MAGIC gini         0.985      recall       0.1276
+# MAGIC auc_pr       0.9252     lift_10pct   9.71
+# MAGIC brier_score  0.0269     prevalence   0.0486
+# MAGIC
+# MAGIC limiar 0.10 -> precisão 0.173 | recall 0.996 | f1 0.295
+# MAGIC limiar 0.30 -> precisão 0.910 | recall 0.794 | f1 0.848
+# MAGIC limiar 0.50 -> precisão 1.000 | recall 0.128 | f1 0.226
+# MAGIC limiar 0.70 -> precisão 0.000 | recall 0.000 | f1 0.000
+# MAGIC ```
+# MAGIC
+# MAGIC **Como ler.** Comece por `prevalence`, que sai em **0,0486**: menos de
+# MAGIC cinco eventos em cada cem. Um modelo que responda "não" para todo mundo
+# MAGIC acerta 95,1% dos casos nesta base — e é por isso que **acurácia não está
+# MAGIC entre as dez chaves devolvidas**. A omissão é deliberada: a métrica que
+# MAGIC todo mundo pede primeiro é a que menos informa aqui, e oferecê-la seria
+# MAGIC convidar a comparação errada.
 # MAGIC
 # MAGIC O par que decide é **precisão e recall**, e eles se movem em direções
 # MAGIC opostas conforme o limiar. AUC resume a ordenação — o quanto o score separa

@@ -61,26 +61,86 @@ print(painel.groupby("id")["valor"].mean().round(1).to_string())
 # COMMAND ----------
 
 com_ent = create_temporal_features(
-    painel, target_col="valor", date_col="dt", lags=[1], entity_cols=["id"],
+    painel, target_col="valor", date_col="dt",
+    lags=[1], rolling_windows=[3], entity_cols=["id"],
 )
-col_lag = [c for c in com_ent.columns if "lag" in c.lower()][0]
-
-# A primeira linha de CADA entidade tem lag nulo: não há mês anterior dela.
-nulos_por_entidade = com_ent.groupby("id")[col_lag].apply(lambda s: int(s.isna().sum()))
-print(f"coluna de lag: {col_lag}")
-print(nulos_por_entidade.to_string())
+print(f"linhas restantes: {len(com_ent)}")
+print("linhas por entidade:", com_ent.groupby("id").size().to_dict())
+print("primeira data que sobrou, por entidade:",
+      {k: str(v.date()) for k, v in com_ent.groupby("id")["dt"].min().items()})
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** Cada entidade tem exatamente **um** lag nulo — o primeiro mês
-# MAGIC dela. É essa a assinatura de um lag corretamente particionado.
+# MAGIC **Como ler.** Executado no laboratório, o resultado é:
 # MAGIC
-# MAGIC Se a coluna de entidade fosse esquecida, só a primeira linha do painel
-# MAGIC inteiro teria nulo, e a primeira linha de B receberia o último valor de A —
-# MAGIC 100 onde deveria haver 500. O número sai, o modelo treina, e ninguém vê.
+# MAGIC ```text
+# MAGIC Features temporais: 9 linhas removidas por NaN de lags
+# MAGIC linhas restantes: 27
+# MAGIC linhas por entidade: {'A': 9, 'B': 9, 'C': 9}
+# MAGIC primeira data que sobrou, por entidade: {'A': '2025-04-01', 'B': '2025-04-01', 'C': '2025-04-01'}
+# MAGIC ```
 # MAGIC
-# MAGIC A verificação vale como hábito: **conte os nulos por entidade**. Um nulo por
-# MAGIC entidade por lag é o esperado; nulos de menos significam vazamento lateral.
+# MAGIC Nove linhas removidas, **três por entidade** — cada uma perde os três
+# MAGIC primeiros meses, que é o que a janela móvel de 3 exige para existir. É por
+# MAGIC isso que todas as entidades passam a começar em abril.
+# MAGIC
+# MAGIC Repare no que **não** dá para conferir aqui: a função termina com um
+# MAGIC `dropna()`, de modo que o DataFrame devolvido tem zero nulos por
+# MAGIC construção. Contar nulos na saída não diagnostica nada — o número é sempre
+# MAGIC zero, com ou sem vazamento. O que denuncia é **quantas linhas foram
+# MAGIC removidas**, e a próxima seção mostra por quê.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## 3. Sem a entidade declarada — e o resultado parece melhor
+
+# COMMAND ----------
+
+sem_ent = create_temporal_features(
+    painel, target_col="valor", date_col="dt",
+    lags=[1], rolling_windows=[3],
+)
+print(f"linhas restantes: {len(sem_ent)}")
+print("linhas por entidade:", sem_ent.groupby("id").size().to_dict())
+
+# a linha que denuncia: B vive perto de 500 — de onde veio o lag dela?
+b_com = com_ent[com_ent["id"] == "B"].iloc[0]
+b_sem = sem_ent[sem_ent["id"] == "B"].iloc[0]
+print("")
+print(f"primeira linha de B, com entidade : dt={b_com['dt'].date()}  lag_1={b_com['lag_1']:.1f}")
+print(f"primeira linha de B, sem entidade : dt={b_sem['dt'].date()}  lag_1={b_sem['lag_1']:.1f}")
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC **Como ler.** Executado no laboratório:
+# MAGIC
+# MAGIC ```text
+# MAGIC Features temporais: 3 linhas removidas por NaN de lags
+# MAGIC linhas restantes: 33
+# MAGIC linhas por entidade: {'A': 11, 'B': 11, 'C': 11}
+# MAGIC
+# MAGIC primeira linha de B, com entidade : dt=2025-04-01  lag_1=502.3
+# MAGIC primeira linha de B, sem entidade : dt=2025-02-01  lag_1=898.2
+# MAGIC ```
+# MAGIC
+# MAGIC **Sobraram 33 linhas em vez de 27.** Sem `entity_cols` você perde menos
+# MAGIC dados, começa o painel dois meses antes e o modelo treina com mais
+# MAGIC exemplos. Toda métrica de volume melhora. É por isso que o erro sobrevive:
+# MAGIC ele não parece erro, parece eficiência.
+# MAGIC
+# MAGIC A denúncia está numa linha só. B vive perto de **500**. Com a entidade
+# MAGIC declarada, o lag de B é **502,3** — o próprio mês anterior de B. Sem ela, o
+# MAGIC lag de B é **898,2**, que é o valor de **C** em janeiro: a função ordena
+# MAGIC por data, e a linha anterior à de B em fevereiro é a de C em janeiro.
+# MAGIC
+# MAGIC O modelo aprende que "o mês passado desta entidade valia 898" para uma
+# MAGIC entidade que nunca passou de 510. O treino converge, a métrica sai boa, e o
+# MAGIC erro só aparece em produção — onde as entidades não chegam nessa ordem.
+# MAGIC
+# MAGIC A verificação que funciona: **compare a contagem de linhas removidas**. Com
+# MAGIC `entity_cols`, ela é proporcional ao número de entidades (9 = 3 × 3). Sem,
+# MAGIC ela é a de um painel só (3). Remoção pequena demais é a assinatura do
+# MAGIC vazamento lateral.
 
 # COMMAND ----------
 # MAGIC %md

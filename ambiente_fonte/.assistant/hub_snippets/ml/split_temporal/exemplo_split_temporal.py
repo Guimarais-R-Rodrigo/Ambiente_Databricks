@@ -51,10 +51,10 @@ print("biblioteca acessível")
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## 5. A segunda armadilha: separar treino e teste
+# MAGIC ## 1. O erro: sortear linhas quando há tempo envolvido
 # MAGIC
-# MAGIC Resolvido o join, falta decidir o que é treino e o que é teste. Aqui o
-# MAGIC erro clássico é sortear linhas ao acaso.
+# MAGIC Decidido o que entra na base, falta decidir o que é treino e o que é
+# MAGIC teste. Aqui o erro clássico é sortear linhas ao acaso.
 # MAGIC
 # MAGIC Sortear funciona quando as linhas são independentes. Quando há tempo
 # MAGIC envolvido, não são: sortear coloca no treino linhas de **depois** das que
@@ -98,16 +98,44 @@ for nome, parte in [("treino", treino), ("validação", validacao), ("teste", te
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC Repare que os períodos **não se sobrepõem**: cada faixa de datas pertence
-# MAGIC a uma partição só. É exatamente isso que o sorteio aleatório destrói.
+# MAGIC **Como ler.** Executado no laboratório, o resultado é:
+# MAGIC
+# MAGIC ```text
+# MAGIC convertido para pandas: 720 linhas (volume controlado)
+# MAGIC     treino:   480 linhas  |  2025-01-01 a 2026-04-01
+# MAGIC  validação:    90 linhas  |  2026-06-01 a 2026-08-01
+# MAGIC      teste:    90 linhas  |  2026-10-01 a 2026-12-01
+# MAGIC ```
+# MAGIC
+# MAGIC Os períodos **não se sobrepõem**: cada faixa de datas pertence a uma
+# MAGIC partição só. É exatamente isso que o sorteio aleatório destrói.
+# MAGIC
+# MAGIC Agora some: 480 + 90 + 90 = **660 das 720 linhas**. Sessenta linhas —
+# MAGIC 8,3% da base — não estão em partição nenhuma. Os meses **2026-05** e
+# MAGIC **2026-09** sumiram, e cada mês vale 30 entidades.
+# MAGIC
+# MAGIC Não é defeito: é `gap_periods`, que tem padrão **1** e é a decisão de
+# MAGIC projeto mais consequente do módulo. O intervalo existe porque o target
+# MAGIC leva tempo para se materializar — se você prevê inadimplência em 12
+# MAGIC meses, o último mês do treino ainda não sabe o próprio desfecho quando a
+# MAGIC validação começa. Sem o intervalo, treino e validação compartilham a
+# MAGIC janela em que o target estava se formando, e o teste sai otimista.
+# MAGIC
+# MAGIC O preço é perder um período em cada fronteira. Vale conferir a conta em
+# MAGIC base real: com poucos períodos, `gap_periods=1` pode custar caro, e a
+# MAGIC alternativa é declarar `gap_periods=0` **sabendo** o que se está abrindo
+# MAGIC mão — não por descuido.
 # MAGIC
 # MAGIC ## Resumo para levar
 # MAGIC
 # MAGIC | Situação | O que usar | O que acontece sem |
 # MAGIC |---|---|---|
-# MAGIC | Trazer atributo histórico para uma decisão | `pit_join` | base incha e entra dado do futuro |
-# MAGIC | Fonte demora a publicar o dado | `atraso_publicacao_dias` | vazamento sutil, difícil de detectar |
 # MAGIC | Separar treino e teste com tempo envolvido | `temporal_split` | teste otimista, produção decepciona |
+# MAGIC | Dar tempo ao target para se materializar | `gap_periods` | treino e validação dividem a janela de formação do target |
+# MAGIC | Impedir que a mesma entidade caia nos dois lados | `group_col` | o modelo reconhece a entidade, não o padrão |
+# MAGIC
+# MAGIC Para trazer atributo histórico até a data da decisão — o passo **anterior**
+# MAGIC a este —, o helper é `hub_snippets.spark.pit_join`, com notebook próprio.
 # MAGIC
 # MAGIC Quando precisar de explicação linha a linha do código interno, use a
 # MAGIC skill `@hub-ml-tutor-databricks` com o módulo anexado — ela lê a versão

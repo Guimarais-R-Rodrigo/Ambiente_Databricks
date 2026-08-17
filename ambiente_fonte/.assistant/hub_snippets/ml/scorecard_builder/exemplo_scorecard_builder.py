@@ -66,6 +66,18 @@ print(card.to_string(index=False))
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC Executado no laboratório, o resultado é:
+# MAGIC
+# MAGIC ```text
+# MAGIC        feature  faixa   woe  coef  pontos  event_is_bad
+# MAGIC      renda_woe  baixa  0.72 -0.45   192.0          True
+# MAGIC      renda_woe  media -0.05 -0.45   182.0          True
+# MAGIC      renda_woe   alta -0.81 -0.45   172.0          True
+# MAGIC uso_limite_woe   <30% -0.68  0.62   195.0          True
+# MAGIC uso_limite_woe 30-70%  0.02  0.62   182.0          True
+# MAGIC uso_limite_woe   >70%  0.90  0.62   166.0          True
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** Cada faixa de cada variável recebe pontos, e o score de um
 # MAGIC cliente é a soma das faixas dele — aritmética que qualquer pessoa confere
 # MAGIC à mão. É essa a razão de o scorecard existir num setor regulado.

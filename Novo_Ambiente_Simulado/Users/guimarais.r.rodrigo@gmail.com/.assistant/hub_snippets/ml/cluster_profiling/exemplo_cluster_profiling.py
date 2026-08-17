@@ -55,6 +55,18 @@ print(perfis.to_string(index=False) if hasattr(perfis, "to_string") else perfis)
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC Executado no laboratório, o resultado é:
+# MAGIC
+# MAGIC ```text
+# MAGIC  cluster   n  pct_total  feature  cluster_mean  global_mean  index  z_score
+# MAGIC        0 300       33.3    renda     2979.4605    5040.5970  0.591    -0.72
+# MAGIC        0 300       33.3    idade       30.2131      36.1335  0.836    -0.59
+# MAGIC        1 300       33.3    renda     8989.8733    5040.5970  1.783     1.37
+# MAGIC        1 300       33.3    idade       47.9166      36.1335  1.326     1.18
+# MAGIC        2 300       33.3    renda     3152.4571    5040.5970  0.625    -0.66
+# MAGIC        2 300       33.3    idade       30.2707      36.1335  0.838    -0.59
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** Os clusters 0 e 2 foram construídos **quase idênticos** — de
 # MAGIC propósito. O perfil mostra isso: renda, idade e número de produtos ficam
 # MAGIC próximos entre os dois, e distantes do cluster 1.

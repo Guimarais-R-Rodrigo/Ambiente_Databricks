@@ -97,6 +97,22 @@ print(f"a soma exagera em {soma_das_taxas / incidencia_correta:.1f}x")
 # MAGIC abaixo disso — e frequentemente fica — o número parece razoável e vira
 # MAGIC decisão.
 # MAGIC
+# MAGIC Executado no laboratório, o resultado é:
+# MAGIC
+# MAGIC ```text
+# MAGIC mob  incidencia          mob  incidencia
+# MAGIC   1  0.0100                7  0.2583
+# MAGIC   2  0.0283                8  0.3183
+# MAGIC   3  0.0617                9  0.3683
+# MAGIC   4  0.1017               10  0.4300
+# MAGIC   5  0.1550               11  0.4833
+# MAGIC   6  0.2000               12  0.5417
+# MAGIC
+# MAGIC somando as taxas por MOB  : 295.7%   <- errado
+# MAGIC contratos afetados        :  54.2%   <- correto
+# MAGIC a soma exagera em 5.5x
+# MAGIC ```
+# MAGIC
 # MAGIC **Por que a soma está errada:** um contrato que ficou inadimplente no MOB
 # MAGIC 3 continua inadimplente no 4, no 5, no 6. Somar as taxas conta o mesmo
 # MAGIC contrato várias vezes. A pergunta certa é *"que fração dos contratos foi

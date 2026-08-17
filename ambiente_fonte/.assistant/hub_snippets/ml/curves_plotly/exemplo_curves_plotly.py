@@ -50,6 +50,12 @@ plot_roc_curve(y, p, title="ROC — base com 2% de eventos")
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC Executado no laboratório, o resultado é:
+# MAGIC
+# MAGIC ```text
+# MAGIC linhas: 8000 | eventos: 148 (1.85%)
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** A AUC sai bem acima de 0,5 e a curva parece boa. ROC compara
 # MAGIC taxa de verdadeiros positivos com taxa de falsos positivos, e o
 # MAGIC denominador da segunda são os **não-eventos** — 98% da base aqui. Errar mil
@@ -67,8 +73,11 @@ plot_pr_curve(y, p, title="Precisão × recall — a mesma base")
 # MAGIC da prevalência e cai conforme o recall sobe. É a curva que responde à
 # MAGIC pergunta operacional: **de cada dez que eu abordar, quantos são evento?**
 # MAGIC
-# MAGIC A linha de referência da PR não é 0,5 como na ROC — é a prevalência. Um
-# MAGIC modelo aleatório produz uma reta horizontal em 0,02.
+# MAGIC A linha de referência da PR não é 0,5 como na ROC — é a prevalência.
+# MAGIC Executada no laboratório, esta base sai com **148 eventos em 8.000 linhas,
+# MAGIC 1,85%** (a fixture pede 2%; o sorteio entrega 1,85%). Um modelo aleatório
+# MAGIC produz aqui uma reta horizontal em **0,0185**, não em 0,02 — e a diferença
+# MAGIC importa num notebook cujo assunto é qual número se escolhe contar.
 
 # COMMAND ----------
 

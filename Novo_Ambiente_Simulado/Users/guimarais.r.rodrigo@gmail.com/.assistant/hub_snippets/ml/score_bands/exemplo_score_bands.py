@@ -42,13 +42,43 @@ y = (rng.random(n) < 0.12).astype(int)
 score = np.clip(0.06 + 0.40 * y + rng.normal(0, 0.12, n), 0.001, 0.999)
 
 bandas = generate_score_bands(score, y, n_bands=5, higher_score_is_better=False)
+print(f"bandas pedidas: 5 | bandas devolvidas: {len(bandas)}")
+print(f"fração da base no piso do score (0,001): {100 * (score <= 0.0011).mean():.1f}%")
 print(bandas.to_string(index=False))
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** `higher_score_is_better=False` diz que score alto significa
+# MAGIC **Como ler.** Executado no laboratório, o resultado é:
+# MAGIC
+# MAGIC ```text
+# MAGIC bandas pedidas: 5 | bandas devolvidas: 4
+# MAGIC fração da base no piso do score (0,001): 26.8%
+# MAGIC faixa  score_min  score_max    n  pct_base  n_bom  n_mau  taxa_default
+# MAGIC   B01   0.001000   0.046265 1600      40.0   1600      0         0.000
+# MAGIC   B02   0.046435   0.116641  800      20.0    799      1         0.125
+# MAGIC   B03   0.116694   0.224791  800      20.0    787     13         1.625
+# MAGIC   B04   0.224937   0.756304  800      20.0    323    477        59.625
+# MAGIC ```
+# MAGIC
+# MAGIC **Pedimos cinco bandas e vieram quatro** — e a primeira ficou com 40% da
+# MAGIC base em vez de 20%. Não é defeito: 26,8% dos scores estão empatados
+# MAGIC exatamente no piso de 0,001, porque a fixture faz `clip` ali. Quantis não
+# MAGIC conseguem cortar dentro de um empate, então dois cortes coincidem e as
+# MAGIC duas primeiras bandas colapsam numa só. O módulo avisa disso na docstring
+# MAGIC (*"quantile edges can collapse when scores are tied"*), e aqui a
+# MAGIC advertência deixou de ser teórica.
+# MAGIC
+# MAGIC **A consequência prática:** quem escrever `labels=["A","B","C","D","E"]`
+# MAGIC contando com cinco posições recebe um erro de tamanho, ou pior, um
+# MAGIC alinhamento silencioso errado. Confira `len(bandas)` antes de assumir
+# MAGIC `n_bands`. Score com piso, teto ou muito arredondado — coisa comum em
+# MAGIC modelo já em produção — é onde isso acontece.
+# MAGIC
+# MAGIC Fora isso, `higher_score_is_better=False` diz que score alto significa
 # MAGIC **mais risco** — é a convenção de um modelo de propensão a inadimplir. A
-# MAGIC taxa de evento cresce da primeira banda para a última.
+# MAGIC taxa de evento cresce da primeira banda para a última: 0,000 → 0,125 →
+# MAGIC 1,625 → **59,625**. A concentração na última banda é o que torna o
+# MAGIC scorecard útil.
 # MAGIC
 # MAGIC O parâmetro não tem padrão silencioso de propósito. Um scorecard de crédito
 # MAGIC tradicional usa a convenção oposta: score alto é bom cliente. Trocar as duas

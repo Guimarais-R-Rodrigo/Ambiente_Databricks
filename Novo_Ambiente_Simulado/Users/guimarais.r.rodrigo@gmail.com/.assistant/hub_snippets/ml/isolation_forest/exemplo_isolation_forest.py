@@ -55,6 +55,15 @@ print(f"marcados como anomalia: {detectados}")
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC Executado no laboratório, o resultado é:
+# MAGIC
+# MAGIC ```text
+# MAGIC 3000 linhas | estranhos plantados: 30 (1,0%)
+# MAGIC   contamination=0.01 ->  30 marcados, 30 deles realmente estranhos
+# MAGIC   contamination=0.05 -> 150 marcados, 30 deles realmente estranhos
+# MAGIC   contamination=0.10 -> 300 marcados, 30 deles realmente estranhos
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** O número de marcados corresponde à contaminação declarada,
 # MAGIC porque foi ela que o determinou. Aqui a premissa estava certa — plantamos
 # MAGIC 1% e pedimos 1% —, e por isso o resultado parece impressionante.

@@ -15,8 +15,8 @@
 # MAGIC | Compute | serverless ou clássico, indiferente |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, gerados aqui — o módulo opera **driver-side** |
-# MAGIC | Escrita | nenhuma; tudo em memória |
-# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
+# MAGIC | Escrita | **tentada** — nenhum run chega a abrir neste runtime; ver a seção 3 |
+# MAGIC | Diferença Free × trabalho | **sim** — nenhum run do MLflow abre no serverless do Free; ver a seção 3 |
 
 # COMMAND ----------
 
@@ -74,20 +74,79 @@ except ValueError as erro:
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## 3. Um registro completo
+# MAGIC ## 3. O registro completo — e por que ele não abre aqui
 # MAGIC
+# MAGIC Esta é a seção que importa: o caminho feliz do helper, com parâmetros,
+# MAGIC métricas e assinatura. A célula abaixo tenta executá-lo de verdade.
+
+# COMMAND ----------
+
+from sklearn.linear_model import LogisticRegression
+
+X = rng.normal(0, 1, (600, 3))
+y = (X[:, 0] + rng.normal(0, 0.5, 600) > 0).astype(int)
+modelo = LogisticRegression(max_iter=200).fit(X, y)
+
+try:
+    with run_governado(
+        "baseline_propensao",
+        dataset="sintética, 600 linhas, gerada nesta célula com seed 42",
+        split="sem split — é demonstração de registro, não de avaliação",
+        limitacoes=[
+            "dados sintéticos: não sustenta nenhuma conclusão de negócio",
+            "sem validação temporal: a métrica abaixo é de treino",
+            "três features contínuas; não cobre categórica nem faltante",
+        ],
+    ) as run:
+        run.parametros({"algorithm": "logistic_regression", "max_iter": 200})
+        run.metricas({"acuracia_treino": float(modelo.score(X, y))})
+        run.modelo(modelo, exemplo_entrada=X[:2])
+    print("run completo aceito e fechado")
+except Exception as erro:
+    print("o run não abriu neste runtime:")
+    print(f"  {type(erro).__name__}: {str(erro).splitlines()[0]}")
+
+# COMMAND ----------
+# MAGIC %md
 # MAGIC ```text
-# MAGIC ⚠️ NÃO EXECUTADO
+# MAGIC ⚠️ NÃO EXECUTADO no laboratório
 # MAGIC
-# MAGIC O que rodaria : with run_governado("baseline_churn", dataset=...,
-# MAGIC                 split=..., limitacoes=...) as run: run.log_params(...)
-# MAGIC Por que não   : o registro criaria um experimento permanente no workspace,
-# MAGIC                 e este notebook declara "escrita: nenhuma". Um notebook
-# MAGIC                 didático que suja o MLflow de quem o executa é pior que um
-# MAGIC                 notebook incompleto.
-# MAGIC Onde verificar: docs/testes/spark/ registra a execução real, na rodada 9
-# MAGIC O que falta   : nada — é decisão de escopo, não impedimento técnico
+# MAGIC O que rodaria : run_governado(...) com parametros, metricas e modelo
+# MAGIC Por que não   : AnalysisException: [CONFIG_NOT_AVAILABLE.WITHOUT_SUGGESTION]
+# MAGIC                 Configuration spark.mlflow.modelRegistryUri is not available.
+# MAGIC                 `mlflow.start_run` instancia um MlflowClient, que resolve o
+# MAGIC                 registry URI lendo essa config da sessão Spark. No
+# MAGIC                 serverless, o Spark Connect recusa devolvê-la, e a exceção
+# MAGIC                 acontece na ABERTURA do bloco — nenhum registro chega a ser
+# MAGIC                 tentado.
+# MAGIC Onde verificar: .claude/rules/free-vs-trabalho.md, matriz de runtime
+# MAGIC O que falta   : compute clássico, ou uma versão do MLflow que não leia essa
+# MAGIC                 config. Não é ajustável pelo helper.
 # MAGIC ```
+# MAGIC
+# MAGIC **Como ler.** É impedimento de runtime, não de escopo: a biblioteca não
+# MAGIC inicializa aqui. A célula acima captura a exceção em vez de escondê-la,
+# MAGIC então o notebook continua sendo executável e se auto-verifica — em compute
+# MAGIC clássico, no trabalho, ela imprime `run completo aceito e fechado`.
+# MAGIC
+# MAGIC **E há um detalhe que vale mais que o erro em si.** Este mesmo caminho foi
+# MAGIC testado no laboratório em **14/08/2026** e passou:
+# MAGIC `docs/testes/spark/resultados/` registra `mlflow_run.completo` como
+# MAGIC `"run completo aceito"`. Três dias depois, no mesmo tipo de compute, ele
+# MAGIC não abre. O registro de 14/08 não está errado — descreve o que era verdade
+# MAGIC então. O que mudou foi o runtime do Free, por baixo, sem aviso.
+# MAGIC
+# MAGIC A lição é sobre método: **"foi testado" tem data de validade em ambiente
+# MAGIC gerenciado.** Um teste de três dias atrás não é garantia de hoje, e é por
+# MAGIC isso que a verificação vale mais que o registro dela.
+# MAGIC
+# MAGIC **Uma dependência que não aparece no `import`:** quando o run abre,
+# MAGIC `run.modelo()` chama `mlflow.sklearn.log_model`, e `import mlflow` **não**
+# MAGIC traz o `scikit-learn` junto — o *flavor* é resolvido na hora da chamada.
+# MAGIC Está registrado em `hub_snippets/requirements-optional.txt`.
+# MAGIC
+# MAGIC E o *flavor* é fixo: qualquer modelo vai registrado como sklearn, mesmo um
+# MAGIC Booster do LightGBM. Para esses, registre à mão com o flavor correto.
 
 # COMMAND ----------
 # MAGIC %md

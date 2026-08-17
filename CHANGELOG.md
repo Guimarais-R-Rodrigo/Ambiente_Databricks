@@ -5,6 +5,61 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-17 — auditoria da Sprint 7: 12 achados e duas guardas novas
+
+Rodada em sessão sem contexto, com instrução para executar e com `git show`
+liberado para recuperar a versão anterior de cada módulo. Doze achados, todos
+procedentes. Relatório completo em `docs/sprints/sprint-7-ml-nucleo.md`.
+
+### Adicionado
+
+1. (Claude) `check_contrato_de_entrada` em `tools/validate_assistant.py`: confere
+   por AST o que o notebook **passa** contra a assinatura do módulo — kwarg
+   inexistente, posicional a mais, obrigatório omitido. Era a direção sem portão
+   nenhum, e por onde entraram seis dos dezesseis defeitos da sprint. Provado com
+   os três defeitos reais reinjetados num sandbox; 0 achados no repositório.
+2. (Claude) `check_saida_colada` (**aviso**): cobra do notebook um bloco
+   ```text com a saída real. Só 6 de 24 tinham; hoje são 22 de 34.
+3. (Claude) Seção 4 em `exemplo_drift_detection`, com a política de limiar
+   declarada, e o caso de fronteira registrado — `uf` sai 0,250667 contra um
+   limiar de 0,25 e dispara alarme por seis milésimos.
+
+### Corrigido
+
+1. (Claude) `exemplo_lgbm_temporal` ensinava a contar nulos por entidade como
+   assinatura de lag correto. A função termina com `dropna()` e devolve zero
+   nulos sempre; e a chamada do notebook, com a janela móvel no padrão
+   `[3,6,12]` sobre 12 meses, devolvia **zero linhas**. O job reportava SUCCESS.
+   A demonstração foi refeita sobre contagem de linhas removidas — 9 com
+   `entity_cols`, 3 sem — e mostra o lag de B recebendo 898,2, valor de C.
+2. (Claude) `exemplo_metrics_report` mandava comparar `accuracy`, que
+   `calculate_binary_metrics` não devolve. Leitura reescrita em torno de
+   `prevalence`.
+3. (Claude) `exemplo_mlflow_run` usava o bloco canônico com motivo que o template
+   proíbe ("decisão de escopo, não impedimento técnico"). Ao executar, apareceu
+   impedimento real — ver Notas.
+4. (Claude) `exemplo_split_temporal`: 60 das 720 linhas somiam sem menção;
+   `gap_periods` explicado. `exemplo_score_bands`: pede 5 bandas e recebe 4, por
+   colapso de quantis com 26,8% da base empatada no piso. `exemplo_curves_plotly`:
+   prevalência 0,0185, não 0,02.
+5. (Claude) Título e tabela órfãos em `exemplo_woe_iv_calculator` e
+   `exemplo_split_temporal`, resíduo do desmembramento dos notebooks de trânsito.
+6. (Claude) `scikit-learn` registrado em `requirements-optional.txt`: entra por
+   `mlflow.sklearn`, que `import mlflow` não traz.
+
+### Notas
+
+- **Diferença Free × trabalho nova, e uma lição de método.** Nenhum run do MLflow
+  abre no serverless do Free: `mlflow.start_run` instancia um `MlflowClient` que
+  lê `spark.mlflow.modelRegistryUri`, e o Spark Connect recusa a config. O mesmo
+  caminho foi testado e **passou em 14/08/2026** — `docs/testes/spark/resultados/`
+  registra `mlflow_run.completo` como "run completo aceito". Três dias, mesmo tipo
+  de compute, resultado oposto. O registro de 14/08 não está errado; o runtime
+  mudou. Linha nova na matriz de `.claude/rules/free-vs-trabalho.md`, com a
+  conclusão: **"foi testado" tem data de validade em ambiente gerenciado.**
+- Dívida declarada: 12 notebooks das Sprints 1, 4 e 6 seguem sem saída colada.
+  A guarda os lista a cada execução.
+
 ## 2026-08-17 — reestruturação para Hub: Sprints 0 a 7
 
 Execução do `PLANO_HUB.md`, iniciada em 16/08. Esta entrada cobre as oito sprints

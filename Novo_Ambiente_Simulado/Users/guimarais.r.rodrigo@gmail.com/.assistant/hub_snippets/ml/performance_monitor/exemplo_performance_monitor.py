@@ -52,6 +52,16 @@ monitor = PerformanceMonitor(
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC Executado no laboratório, o resultado é:
+# MAGIC
+# MAGIC ```text
+# MAGIC auc         {'warning': 0.03, 'critical': 0.05, 'direction': 'higher', 'delta': 'absolute'}
+# MAGIC ks          {'warning': 0.03, 'critical': 0.05, 'direction': 'higher', 'delta': 'absolute'}
+# MAGIC gini        {'warning': 0.05, 'critical': 0.08, 'direction': 'higher', 'delta': 'absolute'}
+# MAGIC rmse        {'warning': 0.1,  'critical': 0.2,  'direction': 'lower',  'delta': 'relative'}
+# MAGIC c_index     {'warning': 0.03, 'critical': 0.05, 'direction': 'higher', 'delta': 'absolute'}
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** O nome da constante é o aviso: são limites de **exemplo**. Um
 # MAGIC AUC mínimo de 0,65 pode ser folgado para um modelo de propensão e
 # MAGIC inaceitável para um de fraude.

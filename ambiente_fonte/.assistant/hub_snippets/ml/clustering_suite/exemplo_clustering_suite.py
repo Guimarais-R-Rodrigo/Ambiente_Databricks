@@ -52,6 +52,19 @@ print(resultado_k.to_string(index=False) if hasattr(resultado_k, "to_string") el
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC Executado no laboratório, o resultado é:
+# MAGIC
+# MAGIC ```text
+# MAGIC    k      inertia  silhouette     calinski  davies_bouldin
+# MAGIC    2  7498.797349    0.571473  1222.053818        0.629699
+# MAGIC    3  1811.383498    0.718484  3934.931322        0.394263
+# MAGIC    4  1587.093480    0.583685  3032.883933        0.760532
+# MAGIC    5  1366.298256    0.457860  2675.544355        1.011596
+# MAGIC    6  1157.886020    0.329079  2554.981940        1.161478
+# MAGIC    7  1024.279313    0.335115  2424.018403        1.057406
+# MAGIC best_k: 3
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** A silhueta deve apontar 3, que é o número plantado. Vale
 # MAGIC olhar a **distância** entre o melhor e o segundo colocado: quando os dois
 # MAGIC estão próximos, a escolha é arbitrária e dizer "o dado indicou 3" é falso.

@@ -70,6 +70,20 @@ print(sem_gap.head(6).to_string(index=False) if hasattr(sem_gap, "head") else se
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC Executado no laboratório, o resultado é:
+# MAGIC
+# MAGIC ```text
+# MAGIC brier: 0.2502 ± 0.0004
+# MAGIC n_teste: 200.0000 ± 0.0000
+# MAGIC janelas sem gap: 18
+# MAGIC
+# MAGIC fold  train_end  test_start  n_train  n_test    brier
+# MAGIC    1    2024-06     2024-07     1200     200  0.25051
+# MAGIC    2    2024-07     2024-08     1400     200  0.25061
+# MAGIC    3    2024-08     2024-09     1600     200  0.25008
+# MAGIC    4    2024-09     2024-10     1800     200  0.25005
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** Cada linha é uma janela: treina com os meses anteriores,
 # MAGIC testa no seguinte, avança. O número de janelas sai de `min_train_periods`,
 # MAGIC `test_periods` e `step` — e é ele que diz quanta evidência a validação

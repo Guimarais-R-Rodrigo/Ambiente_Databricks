@@ -118,6 +118,39 @@ def check_skill_frontmatter(root: Path, problems: list[str]) -> int:
     return count
 
 
+def check_saida_colada(root: Path, warnings: list[str]) -> tuple[int, int]:
+    """Cobra do notebook um bloco com a saída real da execução.
+
+    O template pede que a leitura cite o número obtido, não o pretendido — e uma
+    auditoria mostrou que só 6 de 24 notebooks faziam isso. Prosa sem número é
+    prosa que ninguém confere sem reexecutar, e foi sob essa cobertura que
+    sobreviveu um notebook ensinando a contar nulos numa saída que tem zero
+    nulos por construção.
+
+    O sinal exigido é um bloco ```text dentro do markdown. É proxy, não prova:
+    ele não sabe se o conteúdo veio mesmo da execução. Mas o defeito que ele
+    ataca é o silêncio, e para silêncio o proxy basta.
+
+    **Aviso, não falha**, enquanto a dívida da Sprint 6 não fecha. Promover a
+    falha quando `sem_bloco` chegar a zero.
+    """
+    com = sem = 0
+    for nb in sorted(root.rglob("exemplo_*.py")):
+        markdown = "\n".join(
+            linha for linha in nb.read_text(encoding="utf-8").splitlines()
+            if linha.startswith("# MAGIC")
+        )
+        if "```text" in markdown:
+            com += 1
+        else:
+            sem += 1
+            warnings.append(
+                f"{nb.relative_to(root)}: nenhum bloco ```text com saída real; "
+                "a leitura não pode ser conferida sem reexecutar"
+            )
+    return com, sem
+
+
 def check_pycache(root: Path, warnings: list[str]) -> None:
     """Bytecode no fonte não quebra nada, mas viaja.
 
@@ -323,6 +356,112 @@ def check_contrato_de_dados(root: Path, problems: list[str]) -> int:
     return verificadas
 
 
+def _assinaturas_publicas(arvore: ast.Module) -> dict[str, ast.arguments]:
+    """Mapeia nome chamável -> assinatura, para funções e classes de nível superior.
+
+    Classe entra pelo próprio nome, apontando para o `__init__`: no notebook a
+    chamada é `PerformanceMonitor(...)`, não `__init__(...)`.
+    """
+    assinaturas: dict[str, ast.arguments] = {}
+    for no in arvore.body:
+        if isinstance(no, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            if not no.name.startswith("_"):
+                assinaturas[no.name] = no.args
+        elif isinstance(no, ast.ClassDef) and not no.name.startswith("_"):
+            for filho in no.body:
+                if isinstance(filho, ast.FunctionDef) and filho.name == "__init__":
+                    assinaturas[no.name] = filho.args
+    return assinaturas
+
+
+def check_contrato_de_entrada(root: Path, problems: list[str]) -> int:
+    """Confronta o que o notebook **passa** com o que o módulo **aceita**.
+
+    `check_contrato_de_dados` cobre a direção de saída: nome que o notebook
+    consome do retorno. A direção oposta — argumento que o notebook passa — não
+    tinha portão nenhum, e é por onde entraram seis dos dezesseis defeitos da
+    Sprint 7: `n_bandas` em vez de `n_bands`, `thresholds` num construtor que
+    pede `baseline_metrics`, `feature_cols` omitido sendo obrigatório.
+
+    Confere, por AST, toda chamada do notebook a função ou classe pública do
+    módulo irmão:
+
+    - argumento nomeado que a assinatura não tem (e não há `**kwargs`);
+    - posicionais a mais (e não há `*args`);
+    - parâmetro obrigatório sem valor.
+
+    Não pega: chamada por variável (`fn = modulo.f; fn(...)`), desempacotamento
+    (`f(**cfg)`), e incompatibilidade de **tipo** ou de coluna dentro de um
+    DataFrame — que continuam custando execução real para aparecer.
+    """
+    verificadas = 0
+    for init in sorted(root.rglob("__init__.py")):
+        pasta = init.parent
+        modulo = pasta / f"{pasta.name}.py"
+        notebook = pasta / f"exemplo_{pasta.name}.py"
+        if not (modulo.exists() and notebook.exists()):
+            continue
+        try:
+            arv_mod = ast.parse(modulo.read_text(encoding="utf-8"))
+            arv_nb = ast.parse(notebook.read_text(encoding="utf-8"))
+        except SyntaxError:
+            continue  # o check de sintaxe já reprovou este arquivo
+        assinaturas = _assinaturas_publicas(arv_mod)
+        if not assinaturas:
+            continue
+        verificadas += 1
+        rel = pasta.relative_to(root)
+
+        for chamada in ast.walk(arv_nb):
+            if not isinstance(chamada, ast.Call) or not isinstance(chamada.func, ast.Name):
+                continue
+            args = assinaturas.get(chamada.func.id)
+            if args is None:
+                continue
+            alvo = chamada.func.id
+
+            posicionais = [a.arg for a in args.posonlyargs] + [a.arg for a in args.args]
+            if posicionais and posicionais[0] in ("self", "cls"):
+                posicionais = posicionais[1:]
+            somente_nome = [a.arg for a in args.kwonlyargs]
+            aceitos = set(posicionais) | set(somente_nome)
+
+            if any(isinstance(a, ast.Starred) for a in chamada.args):
+                continue  # desempacotamento: a contagem deixa de ser confiável
+            passados_nome = {k.arg for k in chamada.keywords if k.arg}
+            tem_duplo_asterisco = any(k.arg is None for k in chamada.keywords)
+
+            if not args.kwarg:
+                for nome in sorted(passados_nome - aceitos):
+                    problems.append(
+                        f"{rel}/{notebook.name}: {alvo}(...) recebe '{nome}=', "
+                        f"que não existe na assinatura de {modulo.name}"
+                    )
+            if not args.vararg and len(chamada.args) > len(posicionais):
+                problems.append(
+                    f"{rel}/{notebook.name}: {alvo}(...) recebe "
+                    f"{len(chamada.args)} posicionais; a assinatura aceita "
+                    f"{len(posicionais)}"
+                )
+            if not tem_duplo_asterisco:
+                n_com_padrao = len(args.defaults)
+                obrigatorios = posicionais[:len(posicionais) - n_com_padrao]
+                cobertos = set(posicionais[:len(chamada.args)]) | passados_nome
+                for nome in obrigatorios:
+                    if nome not in cobertos:
+                        problems.append(
+                            f"{rel}/{notebook.name}: {alvo}(...) não passa "
+                            f"'{nome}', que é obrigatório"
+                        )
+                for arg, padrao in zip(args.kwonlyargs, args.kw_defaults):
+                    if padrao is None and arg.arg not in passados_nome:
+                        problems.append(
+                            f"{rel}/{notebook.name}: {alvo}(...) não passa "
+                            f"'{arg.arg}', que é obrigatório e só por nome"
+                        )
+    return verificadas
+
+
 def check_smoke_test_sincronizado(problems: list[str]) -> None:
     """O smoke test roda no workspace, onde `tools/` não existe.
 
@@ -493,6 +632,8 @@ def main() -> int:
     check_path_hygiene(root, problems)
     n_objetos = check_pastas_de_objeto(root, problems)
     n_contratos = check_contrato_de_dados(root, problems)
+    n_entradas = check_contrato_de_entrada(root, problems)
+    n_com_saida, n_sem_saida = check_saida_colada(root, warnings)
     check_smoke_test_sincronizado(problems)
     n_repo = check_repo_corporate(problems)
     n_repo_links = check_repo_links(root, problems)
@@ -502,7 +643,9 @@ def main() -> int:
     print(f"markdown / links   : {n_md} arquivos / {n_links} links relativos")
     print(f"notebooks / links  : {n_nb} notebooks / {n_nb_links} links relativos")
     print(f"pastas de objeto   : {n_objetos} conferidas (nome, arquivos, __init__)")
-    print(f"contrato de dados  : {n_contratos} pares módulo/notebook conferidos")
+    print(f"contrato de dados  : {n_contratos} pares (saída: o que o notebook consome)")
+    print(f"contrato de entrada: {n_entradas} pares (entrada: o que o notebook passa)")
+    print(f"saída colada       : {n_com_saida} notebooks com bloco real, {n_sem_saida} sem")
     print(f"python (AST)       : {n_py} arquivos")
     print(f"instrucoes         : {n_chars}/{INSTRUCTION_LIMIT} caracteres")
     print(f"repo (corporativo) : {n_repo} arquivos varridos no repositório inteiro")

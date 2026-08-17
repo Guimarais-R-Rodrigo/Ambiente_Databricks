@@ -172,7 +172,7 @@ independentes.
 
 ### 4.2 O notebook dentro do pacote quebra o smoke test
 
-Hoje os notebooks vivem em `hub_snippets/_notebooks_a_migrar/`, **fora** do pacote. Movê-los para
+Até a Sprint 7 os notebooks viviam em `hub_snippets/_notebooks_a_migrar/`, **fora** do pacote. Movê-los para
 dentro da pasta de cada snippet os torna submódulos importáveis, e
 `tools/spark_smoke_test.py` importa todo submódulo que encontra:
 
@@ -668,7 +668,7 @@ Registrado para não ser desfeito numa próxima revisão:
 | 3 | ✅ concluída | 2026-08-17 | ✅ auditada com a 6 | [relatório](docs/sprints/sprint-3-skills.md) · `@hub-ml-*` confirmado no chat |
 | 5 | não iniciada | — | — | — |
 | 6 | ✅ concluída | 2026-08-17 | ✅ contrato de dados virou guarda | [relatório](docs/sprints/sprint-6-snippets-spark.md) |
-| 7 | ✅ concluída | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-7-ml-nucleo.md) · dependência escondida `tabulate` |
+| 7 | ✅ concluída | 2026-08-17 | ✅ 12 achados corrigidos + guarda de entrada | [relatório](docs/sprints/sprint-7-ml-nucleo.md) |
 | 8 | não iniciada | — | — | — |
 | 9 | não iniciada | — | — | — |
 | 10 | não iniciada | — | — | — |
