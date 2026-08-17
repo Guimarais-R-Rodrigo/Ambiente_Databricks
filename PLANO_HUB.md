@@ -4,7 +4,7 @@ Documento de trabalho, versão 2. Cada sprint é executada isoladamente, auditad
 em sessão sem contexto, revisada por você, e só então a seguinte começa.
 
 - **Status:** v2. Sprints 0 e 0b concluídas. Auditoria começa na Sprint 1
-- **Sprint atual:** 7 concluída; próximas são 8 (ml com dependência opcional) e 5 (prompts, depende de você)
+- **Sprint atual:** 8 concluída — `ml` inteira convertida; próximas são 9 (constants, visual, display) e 5 (prompts, depende de você)
 - **Última atualização:** 2026-08-17
 
 > **Histórico de revisão.** A v1 foi submetida a auditoria em sessão sem
@@ -669,7 +669,7 @@ Registrado para não ser desfeito numa próxima revisão:
 | 5 | não iniciada | — | — | — |
 | 6 | ✅ concluída | 2026-08-17 | ✅ contrato de dados virou guarda | [relatório](docs/sprints/sprint-6-snippets-spark.md) |
 | 7 | ✅ concluída | 2026-08-17 | ✅ 12 achados corrigidos + guarda de entrada | [relatório](docs/sprints/sprint-7-ml-nucleo.md) |
-| 8 | não iniciada | — | — | — |
+| 8 | ✅ concluída | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-8-ml-dependencia-opcional.md) · os 14 executam, via `%pip` |
 | 9 | não iniciada | — | — | — |
 | 10 | não iniciada | — | — | — |
 | 11 | não iniciada | — | — | — |

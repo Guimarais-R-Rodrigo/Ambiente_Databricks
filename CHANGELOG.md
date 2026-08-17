@@ -5,6 +5,44 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-17 — Sprint 8: `ml` inteira convertida, e os 14 demonstram
+
+Os 14 módulos com dependência opcional viraram pasta de objeto, com notebook
+próprio que **instala a biblioteca e executa**. Com isso a seção `ml` fica
+completa: 30 objetos. Relatório em
+`docs/sprints/sprint-8-ml-dependencia-opcional.md`.
+
+### Adicionado
+
+1. (Claude) 14 pastas de objeto em `hub_snippets/ml/`, com `__init__.py` gerado
+   por `tools/api_publica.py` e notebook `exemplo_*` com `%pip install` na
+   primeira célula. Os 14 executaram como job: 14 de 14 SUCCESS.
+
+### Corrigido
+
+1. (Claude) `exemplo_train_catboost` passou a exigir
+   `params_override={"allow_writing_files": False}`. Sem isso o CatBoost cria
+   `catboost_info/` no diretório de trabalho — que no Databricks é a **pasta do
+   notebook** —, e a primeira execução deixou dez arquivos de log publicados
+   dentro de `.assistant`. Quem apanhou foi o `--verify` da publicação.
+
+### Notas
+
+- **O portão novo funcionou, e os erros mudaram de classe.** O
+  `check_contrato_de_entrada`, criado na auditoria da Sprint 7, aprovou os 14, e
+  nenhum dos três erros que apareceram na execução era de assinatura: dois eram
+  de **aridade de retorno** (`prophet_wrapper` e `arima_wrapper` devolvem três
+  elementos, não dois) e um era regra de domínio validada em runtime
+  (`shap_explainer` recusa escolher a classe a explicar). Acerto de primeira
+  execução subiu de 10/16 na Sprint 7 para 11/14 aqui.
+- Três notebooks registram resultado que contraria o esperado, e ficam assim:
+  `autoencoder_anomaly` acerta 19 de 81 marcados e o notebook diz que foi mal;
+  `prophet_wrapper` ajusta com MAPE de 1,02% e devolve um componente `trend`
+  negativo que não descreve a série — registrado como achado, sem explicação
+  inventada; `arima_wrapper` escolhe (0,1,0), que é a resposta honesta.
+- Os 7 `OPTIONAL_MISSING` do smoke test continuam e devem continuar: ele importa
+  sem instalar, que é o comportamento de quem só faz `from hub_snippets.ml...`.
+
 ## 2026-08-17 — as 14 dependências opcionais instalam e rodam no Free
 
 Levantamento feito antes da Sprint 8, para saber quantos dos 14 módulos com
