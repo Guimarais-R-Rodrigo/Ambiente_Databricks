@@ -468,7 +468,7 @@ humano deixa de ser "vejo as pastas certas" e passa a ser `obsoletos: 0`.
 | 5 | `hub_prompts` (17 interações humanas) | 16 | 4 aprovada |
 | 6 | `hub_snippets`: spark e testing | 8 | 4 aprovada |
 | 7 | `hub_snippets`: ml núcleo | 16 | 6 |
-| 8 | `hub_snippets`: ml com dependência opcional | 14 | 6 |
+| 8 | `hub_snippets`: ml com dependência opcional — **os 14 executam**, via `%pip` na sessão | 14 | 6 |
 | 9 | `hub_snippets`: constants, visual, display | 13 | 6 |
 | 10 | READMEs de topo | 2 | 2–9 |
 | 11 | `hub-ml-criar-objeto` | 1 | 1, 4–9 |
@@ -633,7 +633,7 @@ durante a execução; o completo continua obrigatório no fechamento da sprint.
 | Item | Situação |
 |---|---|
 | Auditoria de segunda origem da biblioteca | gate aberto, independe desta reestruturação |
-| `prophet_wrapper` | sem combinação funcional; a Sprint 8 documenta, não resolve |
+| ~~`prophet_wrapper`~~ | **resolvido em 2026-08-17**: `%pip install prophet` instala e ajusta. Sai desta lista |
 | Testes funcionais de `ml` no Free | os 16 da Sprint 7 nunca executaram lá; o risco está registrado, a criação da bateria não está no escopo |
 | Camada squad | fase seguinte |
 

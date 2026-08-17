@@ -4,55 +4,82 @@
 # com referencia de versao, nao lockfile: o projeto consumidor deve fixar o
 # conjunto que testou.
 #
-# ATENCAO - restricao verificada em compute serverless (2026-08-14):
-# instalar estes pacotes SEM fixar versao derruba o kernel. O pip resolve para
-# versoes novas que sobem pandas e numpy, e a plataforma recusa a alteracao dos
-# pacotes core (ERROR_CORE_PACKAGE_VERSION_CHANGE). Fixe sempre numpy e pandas
-# junto das bibliotecas escolhidas.
+# ===========================================================================
+# VERIFICADO EM 2026-08-17 — serverless, Spark 4.1.0, Python 3.11.10
+# ===========================================================================
 #
-# Em job serverless, declare as dependencias no bloco `environments` da
-# submissao. `%pip` antes do primeiro comando Spark aborta a execucao.
+# O runtime traz numpy 1.23.5, pandas, matplotlib 3.7.2, mlflow 2.11.4,
+# plotly 5.9.0 e scikit-learn 1.3.0. Todo o resto e ausente e precisa de
+# instalacao explicita.
+#
+# `%pip install` FUNCIONA em notebook serverless, na primeira celula, seguido
+# de `%restart_python`. As 12 bibliotecas abaixo foram instaladas e exercitadas
+# com chamada real (ajuste de modelo, projecao, previsao) — nao so importadas.
+# Custo tipico: 200 a 280 segundos de job, incluindo start e instalacao.
+#
+# TRES REGRAS QUE CUSTARAM UM AMBIENTE QUEBRADO:
+#
+# 1. Instale por notebook, so o que aquele objeto usa. Instalar pmdarima, shap
+#    e umap-learn na MESMA sessao derruba o `import numpy` do proprio notebook
+#    ("numpy.dtype size changed... Expected 96 from C header, got 88").
+#    Isoladas, as tres funcionam.
+# 2. Tres exigem pin; as outras nove resolvem sozinhas. Sem o pin, `shap` sobe
+#    versao que espera numpy 2.x e quebra no import com
+#    "cannot import name 'ComplexWarning' from 'numpy.core.numeric'".
+# 3. Nao fixe numpy/pandas por precaucao. O aviso anterior deste arquivo mandava
+#    fixar numpy==1.26.4 sempre; o runtime hoje traz 1.23.5, e o pin gera
+#    conflito em vez de evitar. A excecao esta anotada no pmdarima.
+#
+# Registro anterior, de 2026-08-14, dizia que instalar sem fixar versao derrubava
+# o kernel e que `%pip` antes do primeiro comando Spark abortava a execucao.
+# Nenhuma das duas coisas se reproduziu hoje. O registro nao estava errado:
+# descrevia o runtime daquele dia. Reexecute antes de confiar neste arquivo —
+# ver `.claude/rules/free-vs-trabalho.md`.
 
-# --- pacotes core: fixe sempre, junto de qualquer biblioteca abaixo ---------
-numpy==1.26.4
-pandas==1.5.3
+# --- resolvem sozinhas: instale sem pin -------------------------------------
+# versao que o pip escolheu em 2026-08-17, e a prova que rodou
+catboost          # 1.2.10  — ajustou classificador, acuracia 0,885
+lifelines         # 0.30.3  — Kaplan-Meier mediana 19,5; Cox coef 0,0903
+lightgbm          # 4.7.0   — ajustou classificador, acuracia 0,897
+optuna            # 4.9.0   — 8 trials, convergiu para x=2,30
+prophet           # ver nota abaixo — previu 127 pontos, yhat final 88,6
+pytorch-tabnet    # ajustou 2 epocas, acuracia 0,743
+tabulate          # 0.10.0  — DataFrame.to_markdown() funcionando
+torch             # 2.13.0+cu130 — tensor ok; cuda indisponivel (esperado)
+xgboost           # 3.2.0   — ajustou classificador, acuracia 0,887
 
-# --- conjunto verificado em runtime (Spark 4.1 serverless, 2026-08-14) ------
-# 13 dos 14 modulos com dependencia opcional executaram com estas versoes.
-catboost==1.2.5
-lifelines==0.27.8
-lightgbm==4.3.0
-optuna==3.6.1
-pmdarima==2.0.4
-pytorch-tabnet==4.1.0
-scikit-learn==1.3.2
-shap==0.44.1
-torch==2.3.1
-umap-learn==0.5.5
-xgboost==2.0.3
-
-# --- sem combinacao funcional conhecida -------------------------------------
-# prophet_wrapper falha com "'Prophet' object has no attribute 'stan_backend'"
-# em serverless, mesmo com autologging desligado: o backend de inferencia do
-# Prophet nao inicializa. Nao prometa execucao com este modulo antes de achar
-# uma combinacao que funcione no ambiente alvo.
-# prophet==1.1.5
+# --- EXIGEM pin: sem ele, quebram --------------------------------------------
+pmdarima==2.0.4   # exige tambem numpy==1.23.5 na mesma linha de instalacao;
+                  # sem os dois pins, envenena o ambiente. auto_arima devolveu
+                  # ordem (0,1,0)
+shap==0.44.1      # sem o pin, ImportError de ComplexWarning. TreeExplainer
+                  # devolveu shap_values como lista de 2
+umap-learn==0.5.5 # projecao (300, 2) confirmada
 
 # --- dependencia ESCONDIDA: nao aparece como import no topo do modulo --------
 # ml/explainability_report usa DataFrame.to_markdown(), que o pandas delega ao
-# tabulate. Ausente no runtime do Free (verificado em 2026-08-17). A
-# classificacao por import nao encontra este caso.
-tabulate==0.9.0
+# tabulate. A classificacao por import de topo nao encontra este caso.
+# (o tabulate esta na lista acima)
 
 # ml/mlflow_run chama mlflow.sklearn.log_model. `import mlflow` NAO traz o
 # scikit-learn: o flavor e um submodulo resolvido na hora da chamada. Presente no
-# runtime do Free (1.3.0, verificado em 2026-08-17), mas nao garantido em
-# ambiente minimo. Efeito colateral conhecido: o flavor esta fixo em sklearn,
-# entao um Booster LightGBM sai registrado pelo flavor errado.
+# runtime do Free (1.3.0), mas nao garantido em ambiente minimo. Efeito colateral
+# conhecido: o flavor esta fixo em sklearn, entao um Booster LightGBM sai
+# registrado pelo flavor errado.
 scikit-learn>=1.3
 
-# --- ja presentes no runtime Databricks; nao reinstale sem necessidade -------
-matplotlib
-mlflow
-plotly
+# --- ja presentes no runtime; nao reinstale sem necessidade -----------------
+matplotlib        # 3.7.2
+mlflow            # 2.11.4 — mas nenhum run abre no serverless; ver a regra
+plotly            # 5.9.0
 scipy
+
+# ===========================================================================
+# NOTA SOBRE O PROPHET
+# ===========================================================================
+# Ate 2026-08-16 este arquivo classificava prophet como "sem combinacao
+# funcional conhecida", por falhar com
+# "'Prophet' object has no attribute 'stan_backend'" em serverless. Em
+# 2026-08-17, `%pip install prophet` sem pin instalou e ajustou um modelo
+# completo, com previsao de 7 dias a frente. O impedimento nao existe mais no
+# runtime atual do Free.

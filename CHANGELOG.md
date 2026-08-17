@@ -5,6 +5,49 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-17 — as 14 dependências opcionais instalam e rodam no Free
+
+Levantamento feito antes da Sprint 8, para saber quantos dos 14 módulos com
+dependência opcional conseguiriam demonstrar de verdade. A resposta mudou o
+desenho da sprint: **todos**.
+
+### Atualizado
+
+1. (Claude) `hub_snippets/requirements-optional.txt` reescrito com o inventário
+   verificado em 2026-08-17. As 12 bibliotecas foram instaladas por `%pip` e
+   **exercitadas com chamada real** — ajuste de modelo, projeção, previsão —,
+   não apenas importadas. Custo: 200 a 280 segundos de job.
+2. (Claude) `.claude/rules/free-vs-trabalho.md`: a linha "bibliotecas ML
+   opcionais ausentes" passou a "ausentes do runtime, mas instaláveis na sessão",
+   com as três regras que custaram um ambiente quebrado.
+3. (Claude) `PLANO_HUB.md`: a Sprint 8 deixa de produzir 14 notebooks que só
+   documentam.
+
+### Corrigido
+
+1. (Claude) `prophet` estava registrado como **"sem combinação funcional
+   conhecida"** — falhava com `'Prophet' object has no attribute 'stan_backend'`
+   — e o plano o listava como fora de escopo, a documentar sem resolver. Em
+   17/08 instalou sem pin e ajustou um modelo completo, com previsão de 7 dias.
+   O impedimento não existe mais.
+2. (Claude) O arquivo mandava fixar `numpy==1.26.4` sempre, por precaução. O
+   runtime traz **1.23.5**, e o pin gera conflito em vez de evitar. Também não se
+   reproduziu o aviso de que `%pip` antes do primeiro comando Spark abortaria a
+   execução.
+
+### Notas
+
+- **Três bibliotecas exigem pin**: `shap==0.44.1` (sem ele, sobe versão que
+  espera numpy 2.x e quebra no import), `umap-learn==0.5.5` e `pmdarima==2.0.4`
+  (esta com `numpy==1.23.5` na mesma linha). As outras nove resolvem sozinhas.
+- **Instale uma por notebook.** As três acima, juntas na mesma sessão, derrubam o
+  `import numpy` do próprio notebook: `numpy.dtype size changed, Expected 96 from
+  C header, got 88`. Isoladas, funcionam.
+- Segunda vez no mesmo dia em que um registro de teste de 14/08 se mostrou
+  desatualizado — uma vez para pior (MLflow deixou de abrir run), uma para melhor
+  (Prophet passou a funcionar). Reforça a linha da regra: **"foi testado" tem
+  data de validade em ambiente gerenciado.**
+
 ## 2026-08-17 — auditoria da Sprint 7: 12 achados e duas guardas novas
 
 Rodada em sessão sem contexto, com instrução para executar e com `git show`
