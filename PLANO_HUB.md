@@ -4,7 +4,7 @@ Documento de trabalho, versão 2. Cada sprint é executada isoladamente, auditad
 em sessão sem contexto, revisada por você, e só então a seguinte começa.
 
 - **Status:** v2. Sprints 0 e 0b concluídas. Auditoria começa na Sprint 1
-- **Sprint atual:** 8 concluída — `ml` inteira convertida; próximas são 9 (constants, visual, display) e 5 (prompts, depende de você)
+- **Sprint atual:** 9 concluída — **a biblioteca inteira convertida, 60 objetos**; próximas são 10 (READMEs de topo), 11, 12 e a 5 (prompts, depende de você)
 - **Última atualização:** 2026-08-17
 
 > **Histórico de revisão.** A v1 foi submetida a auditoria em sessão sem
@@ -700,7 +700,7 @@ atrás, uma tabela rotulada "saída real" com valores extrapolados.
 | 6 | ✅ concluída | 2026-08-17 | ✅ contrato de dados virou guarda | [relatório](docs/sprints/sprint-6-snippets-spark.md) |
 | 7 | ✅ concluída | 2026-08-17 | ✅ 12 achados corrigidos + guarda de entrada | [relatório](docs/sprints/sprint-7-ml-nucleo.md) |
 | 8 | ✅ concluída | 2026-08-17 | ✅ 13 achados corrigidos | [relatório](docs/sprints/sprint-8-ml-dependencia-opcional.md) · os 14 executam, via `%pip` |
-| 9 | não iniciada | — | — | — |
+| 9 | ✅ concluída | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-9-constants-visual-display.md) · fecha a biblioteca |
 | 10 | não iniciada | — | — | — |
 | 11 | não iniciada | — | — | — |
 | 12 | não iniciada | — | — | — |

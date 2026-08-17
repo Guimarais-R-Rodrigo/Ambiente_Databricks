@@ -25,6 +25,8 @@ Registradas a partir da execução no laboratório (Spark 4.1 serverless, 2026-0
 | Variável global `spark` dentro de módulo importado | inexistente (vale nos dois) | inexistente |
 | Abrir run do MLflow (`start_run`, `set_experiment`) | **bloqueado** desde 2026-08-17: o `MlflowClient` lê `spark.mlflow.modelRegistryUri`, e o Spark Connect recusa a config | disponível em compute clássico |
 | `tabulate` (exigido por `DataFrame.to_markdown()`) | ausente | confirmar |
+| `jinja2` (exigido por `DataFrame.style`) | ausente | confirmar |
+| API clássica de `pyspark.ml` (`VectorAssembler`, `Correlation.corr`) | **bloqueada** — o Spark Connect não expõe essas classes da JVM | disponível em compute clássico |
 
 Os helpers foram ajustados para funcionar nos dois casos: degradam sem cache no
 serverless e mantêm o cache onde ele existe.

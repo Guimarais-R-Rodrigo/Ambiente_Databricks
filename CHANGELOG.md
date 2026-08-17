@@ -5,6 +5,47 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-17 — Sprint 9: a biblioteca inteira convertida
+
+Os 13 objetos de `constants`, `visual` e `display` viraram pasta de objeto, com
+notebook que mostra o valor e o efeito renderizado. Com eles, **os 60 objetos da
+biblioteca estão convertidos**. Relatório em
+`docs/sprints/sprint-9-constants-visual-display.md`.
+
+### Adicionado
+
+1. (Claude) 13 pastas de objeto, com `__init__.py` gerado por
+   `tools/api_publica.py` e notebook `exemplo_*`. Os 13 executaram como job:
+   13 de 13 SUCCESS.
+
+### Corrigido
+
+1. (Claude) `exemplo_dataframe_styled` passou a instalar `jinja2`. **Segundo caso
+   de dependência escondida** da biblioteca: o módulo não a importa, ela entra
+   por `DataFrame.style`, que o pandas delega na hora da chamada. O primeiro foi
+   o `tabulate`, por `to_markdown()`. Dois casos deixam de ser coincidência, e o
+   padrão está registrado em `requirements-optional.txt`.
+2. (Claude) `exemplo_correlation_matrix` foi para o bloco canônico: o módulo usa
+   a API clássica de `pyspark.ml` (`VectorAssembler`, `Correlation.corr`), que o
+   Spark Connect não expõe. Importa normalmente; falha ao instanciar.
+
+### Notas
+
+- **Três definições de "verde de selo" na mesma biblioteca**, expostas pela
+  conversão: `constants.colors` (`VERDE = #8DC63F`), `constants.styles`
+  (`STYLE_BADGE_OK`, hex copiado) e `visual.badge` (`#2E7D32`, cor diferente das
+  outras duas). E `constants.styles` não tem uma linha de `import` — repete
+  `#005CA9` e `#F8F9FA` em vez de puxar de `colors`, de modo que uma mudança de
+  identidade visual não alcançaria os cabeçalhos. `visual.theme_plotly` é o
+  contraexemplo positivo: importa `PALETA_CATEGORICA` de verdade. Cada caso
+  registrado no notebook do objeto; unificar é etapa 2.
+- `constants.format_br`: `fmt_delta` espera **razão**, não pontos percentuais,
+  apesar da unidade "pp". Passar `2.4` pensando em "2,4 pp" devolve `+240,0 pp`.
+  Encontrado ao escrever o próprio exemplo, que na primeira versão passava 2.4.
+- Terceira variação do mesmo tema nesta fase — **importável não é executável** —,
+  agora com três causas distintas: biblioteca ausente (`tabulate`), dependência
+  delegada (`jinja2`) e API da plataforma (`pyspark.ml` no Spark Connect).
+
 ## 2026-08-17 — auditoria da Sprint 8: 13 achados, e uma correção que estava no lugar errado
 
 Rodada em sessão sem contexto. O auditor executou os 14 notebooks em vez dos 5

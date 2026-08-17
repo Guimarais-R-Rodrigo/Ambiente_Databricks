@@ -70,9 +70,15 @@ shap==0.44.1      # sem o pin, arrasta numpy 2.4.6 e quebra as extensoes C do
 umap-learn==0.5.5 # projecao (300, 2) confirmada
 
 # --- dependencia ESCONDIDA: nao aparece como import no topo do modulo --------
-# ml/explainability_report usa DataFrame.to_markdown(), que o pandas delega ao
-# tabulate. A classificacao por import de topo nao encontra este caso.
-# (o tabulate esta na lista acima)
+# SAO DOIS CASOS, e o padrao vale mais que cada um: o pandas tem varias funcoes
+# que delegam a biblioteca opcional NO MOMENTO DA CHAMADA. Nenhuma analise de
+# import de topo encontra isso, e o smoke test importa os dois modulos com PASS.
+#
+#   ml/explainability_report -> DataFrame.to_markdown() exige tabulate
+#   display/dataframe_styled -> DataFrame.style       exige jinja2
+#
+# (o tabulate esta na lista de cima)
+jinja2
 
 # ml/mlflow_run chama mlflow.sklearn.log_model. `import mlflow` NAO traz o
 # scikit-learn: o flavor e um submodulo resolvido na hora da chamada. Presente no
