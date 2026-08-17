@@ -282,11 +282,27 @@ def check_contrato_de_dados(root: Path, problems: list[str]) -> int:
         rel = pasta.relative_to(root)
 
         produzidos = set(literais_modulo.findall(texto_modulo))
-        # o notebook também cria nomes: alias, withColumn, createDataFrame
+        # O notebook também cria e recebe nomes: de `alias`/`withColumn`, do
+        # esquema que ele declara, e de qualquer nome que ele **passe** ao helper
+        # como argumento — `date_col="dt_referencia"` diz que aquela coluna vem
+        # da base, não do retorno. Sem isso a guarda acusa a própria entrada.
         produzidos |= set(literais_modulo.findall(texto_nb.split("# COMMAND", 1)[0]))
         produzidos |= set(re.findall(r"""alias\(\s*["']([^"']+)["']""", texto_nb))
         produzidos |= set(re.findall(r"""withColumn\(\s*["']([^"']+)["']""", texto_nb))
         produzidos |= set(re.findall(r"""f?["'][^"']*\b(\w+) (?:string|int|double|date|boolean)""", texto_nb))
+        produzidos |= set(re.findall(r"""\w+\s*=\s*["']([a-z_]{3,})["']""", texto_nb))
+        # Coluna criada por atribuição no próprio notebook: `df["nova"] = ...`
+        produzidos |= set(re.findall(
+            r"""\w+\[\s*["']([a-z_]{3,})["']\s*\]\s*=[^=]""", texto_nb
+        ))
+        # Colunas das fixtures: são a entrada de quase todo notebook do Hub.
+        fixtures = root / ".assistant" / "hub_snippets" / "testing" / "fixtures"
+        if fixtures.is_dir():
+            for f in fixtures.glob("*.py"):
+                produzidos |= set(re.findall(
+                    r"""\b(\w+) (?:string|int|double|date|boolean)""",
+                    f.read_text(encoding="utf-8"),
+                ))
 
         for linha in texto_nb.splitlines():
             if linha.lstrip().startswith("# MAGIC"):

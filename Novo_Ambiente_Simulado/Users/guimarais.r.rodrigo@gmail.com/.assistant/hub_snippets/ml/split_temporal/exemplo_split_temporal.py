@@ -1,16 +1,32 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # RASCUNHO — material de `split_temporal`, para a Sprint 7
+# MAGIC # `split_temporal` — separar treino e teste sem embaralhar o tempo
 # MAGIC
-# MAGIC **Não é um notebook do Hub.** É a metade que sobrou quando o notebook de
-# MAGIC vazamento temporal foi dividido: a parte de `pit_join` virou
-# MAGIC `spark/pit_join/exemplo_pit_join.py`, e esta aqui espera a conversão de
-# MAGIC `ml/split_temporal`.
+# MAGIC **O problema.** A separação padrão de treino e teste é aleatória, e ela
+# MAGIC pressupõe que as linhas são intercambiáveis. Quando há tempo envolvido, não
+# MAGIC são: sortear embaralha períodos, e o modelo treina com dezembro para prever
+# MAGIC março. Ele aprende o futuro, acerta no teste, e fracassa em produção — sem
+# MAGIC que nenhuma métrica de validação acuse.
 # MAGIC
-# MAGIC Ao converter, esta metade precisa recuperar sozinha o contexto que a outra
-# MAGIC dava: o que é vazamento temporal, e por que separar treino e teste por
-# MAGIC sorteio destrói a ordem do tempo. Hoje o texto começa em "a segunda
-# MAGIC armadilha" e se refere a um join que não está mais no arquivo.
+# MAGIC **O que este helper faz.** Corta por período de calendário, não por sorteio:
+# MAGIC tudo até uma data treina, tudo depois testa.
+# MAGIC
+# MAGIC > Este notebook é a segunda metade do assunto **vazamento temporal**. A
+# MAGIC > primeira — trazer histórico para a decisão sem trazer o futuro junto —
+# MAGIC > está em `hub_snippets.spark.pit_join`. Os dois erros costumam aparecer
+# MAGIC > juntos, e corrigir só um deixa o modelo vazando pelo outro.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## O que este notebook assume do ambiente
+# MAGIC
+# MAGIC | Item | Exigência |
+# MAGIC |---|---|
+# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Bibliotecas | nenhuma além do runtime |
+# MAGIC | Dados | sintéticos; `temporal_split` opera sobre **pandas**, não Spark |
+# MAGIC | Escrita | nenhuma; tudo em memória |
+# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
 
 # COMMAND ----------
 
@@ -96,3 +112,17 @@ for nome, parte in [("treino", treino), ("validação", validacao), ("teste", te
 # MAGIC Quando precisar de explicação linha a linha do código interno, use a
 # MAGIC skill `@hub-ml-tutor-databricks` com o módulo anexado — ela lê a versão
 # MAGIC atual do arquivo, então a explicação nunca fica desatualizada.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## Quando **não** usar
+# MAGIC
+# MAGIC - **Passando um DataFrame do Spark.** `temporal_split` é pandas. Colete a
+# MAGIC   base — com limite verificável — antes de chamar.
+# MAGIC - **Quando não há ordem temporal real.** Se as linhas são de fato
+# MAGIC   intercambiáveis, o corte por data só reduz a base de treino sem ganho.
+# MAGIC - **Como única defesa contra vazamento.** Ele resolve a separação. Feature
+# MAGIC   construída com informação futura continua vazando, e é `pit_join` quem
+# MAGIC   trata disso.
+# MAGIC - **Com um único ponto de corte, em série longa.** Um corte só mede um
+# MAGIC   momento; para saber se o modelo aguenta o tempo, use `walk_forward`.

@@ -86,7 +86,7 @@ subárvore, não a pasta de usuário do laboratório.
 - [ ] `.assistant/` tem os 4 diretórios `hub_` mais `README.md`
 - [ ] `.assistant_instructions.md` presente na raiz do usuário
 - [ ] Abrir um `.py` de `hub_snippets`: precisa ser **arquivo**, não notebook
-- [ ] Abrir um notebook de `hub_snippets/_notebooks_a_migrar/`: precisa ser **notebook**
+- [ ] Abrir `hub_snippets/spark/pit_join/exemplo_pit_join.py`: precisa ser **notebook**
 - [ ] `CATALOGO_HELPERS.md` e `GLOSSARIO.md` presentes
 
 > `.py` como notebook quebra `from hub_snippets...`. Notebook como arquivo não tem

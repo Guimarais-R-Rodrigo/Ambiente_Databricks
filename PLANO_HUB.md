@@ -4,8 +4,8 @@ Documento de trabalho, versão 2. Cada sprint é executada isoladamente, auditad
 em sessão sem contexto, revisada por você, e só então a seguinte começa.
 
 - **Status:** v2. Sprints 0 e 0b concluídas. Auditoria começa na Sprint 1
-- **Sprint atual:** 6 concluída; próximas são 7 (ml núcleo) e 5 (prompts, depende de você)
-- **Última atualização:** 2026-08-16
+- **Sprint atual:** 7 concluída; próximas são 8 (ml com dependência opcional) e 5 (prompts, depende de você)
+- **Última atualização:** 2026-08-17
 
 > **Histórico de revisão.** A v1 foi submetida a auditoria em sessão sem
 > contexto, com instrução para executar o plano sobre um objeto real em vez de
@@ -665,10 +665,10 @@ Registrado para não ser desfeito numa próxima revisão:
 | 1 | ✅ concluída | 2026-08-16 | ✅ 21 achados corrigidos | [relatório](docs/sprints/sprint-1-padroes.md) |
 | 2 | ✅ concluída | 2026-08-16 | ✅ 13 quebras corrigidas + ADR-0006 | [relatório](docs/sprints/sprint-2-renomeacao.md) |
 | 4 | ✅ concluída | 2026-08-16 | ✅ 9 achados corrigidos | [relatório](docs/sprints/sprint-4-hub-scripts.md) |
-| 3 | ✅ concluída | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-3-skills.md) · `@hub-ml-*` confirmado no chat |
+| 3 | ✅ concluída | 2026-08-17 | ✅ auditada com a 6 | [relatório](docs/sprints/sprint-3-skills.md) · `@hub-ml-*` confirmado no chat |
 | 5 | não iniciada | — | — | — |
-| 6 | ✅ concluída | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-6-snippets-spark.md) |
-| 7 | não iniciada | — | — | — |
+| 6 | ✅ concluída | 2026-08-17 | ✅ contrato de dados virou guarda | [relatório](docs/sprints/sprint-6-snippets-spark.md) |
+| 7 | ✅ concluída | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-7-ml-nucleo.md) · dependência escondida `tabulate` |
 | 8 | não iniciada | — | — | — |
 | 9 | não iniciada | — | — | — |
 | 10 | não iniciada | — | — | — |

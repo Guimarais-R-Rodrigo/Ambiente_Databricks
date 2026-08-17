@@ -38,6 +38,12 @@ xgboost==2.0.3
 # uma combinacao que funcione no ambiente alvo.
 # prophet==1.1.5
 
+# --- dependencia ESCONDIDA: nao aparece como import no topo do modulo --------
+# ml/explainability_report usa DataFrame.to_markdown(), que o pandas delega ao
+# tabulate. Ausente no runtime do Free (verificado em 2026-08-17). A
+# classificacao por import nao encontra este caso.
+tabulate==0.9.0
+
 # --- ja presentes no runtime Databricks; nao reinstale sem necessidade -------
 matplotlib
 mlflow

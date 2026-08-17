@@ -87,17 +87,25 @@ qual módulo uso?"), o catálogo é a referência.
 
 ### Material didático
 
-Cada snippet convertido tem, na própria pasta, um notebook `exemplo_*` que
-mostra o erro acontecendo antes de mostrar a correção. Os módulos ainda não
-convertidos guardam material didático em `_notebooks_a_migrar/`, que é pasta de
-trânsito e se esvazia conforme as seções são convertidas.
+Cada snippet convertido tem, na própria pasta, um notebook `exemplo_<nome>.py`
+que mostra o erro acontecendo antes de mostrar a correção. O material didático
+não fica mais em pasta separada: ele mora junto do módulo que ensina, e é assim
+que se sabe se um objeto já foi convertido.
 
-Todos ficam em `hub_snippets/_notebooks_a_migrar/`. **No workspace do Databricks eles aparecem
-como notebook e sem a extensão `.py`** — abra pelo navegador de arquivos, não
-pelo link, se estiver lendo este documento dentro do Databricks.
+```text
+hub_snippets/spark/pit_join/
+├── __init__.py
+├── pit_join.py              # o módulo
+└── exemplo_pit_join.py      # o notebook que o ensina
+```
 
-| Notebook | Cobre |
-|---|---|
+**No workspace do Databricks o `exemplo_*` aparece como notebook e sem a extensão
+`.py`** — abra pelo navegador de arquivos, não pelo link, se estiver lendo este
+documento dentro do Databricks. O módulo ao lado, com a mesma aparência de `.py`,
+é arquivo comum: essa diferença é o que mantém o `import` funcionando.
+
+A pasta de trânsito `_notebooks_a_migrar/`, que existiu entre as Sprints 2 e 7,
+foi removida quando o último dos quatro notebooks originais foi desmembrado.
 
 Para explicação linha a linha de qualquer outro módulo, use
 `@hub-ml-tutor-databricks` com o arquivo anexado — ela lê a versão atual, então

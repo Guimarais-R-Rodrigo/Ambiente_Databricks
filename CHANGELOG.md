@@ -5,6 +5,82 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-17 — reestruturação para Hub: Sprints 0 a 7
+
+Execução do `PLANO_HUB.md`, iniciada em 16/08. Esta entrada cobre as oito sprints
+concluídas até aqui em bloco, e não uma por uma: o registro detalhado de cada uma
+está em `docs/sprints/`, e o estado de cada sprint, com data e auditoria, em
+`PLANO_HUB.md` §12. **Foi um lapso de processo não registrar sprint a sprint** —
+o CHANGELOG ficou dois dias atrás da execução, contrariando a regra do projeto.
+
+### Adicionado
+
+1. (Claude) `.assistant/hub_padroes/` — seis tipos de template (readme, snippet,
+   script, prompt, skill, notebook) com exemplo executável em
+   `taxa_resposta_campanha/`. Sprint 1.
+2. (Claude) `tools/api_publica.py`: extrai a API pública por AST e gera o
+   `__init__.py` da pasta de objeto. A regra é exaustiva, não curada.
+3. (Claude) `tools/notebook_marker.py`: detecção canônica de notebook, tolerando
+   BOM, linha em branco e comentário de encoding, usada pela publicação e pelo
+   smoke test.
+4. (Claude) `check_pastas_de_objeto` e `check_contrato_de_dados` em
+   `tools/validate_assistant.py`. O segundo compara o que o módulo **produz** com
+   o que o notebook **consome**; nasceu de um caso real em que o notebook filtrava
+   `status != 'ok'` sobre uma coluna que devolve emoji.
+5. (Claude) `docs/decisions/ADR-0006-identidade-hub.md`, com a tabela de
+   correspondência `x_*`/`rodrigo-*` → nomes atuais, referenciada pelos dez
+   documentos datados que preservam a nomenclatura da época.
+6. (Claude) 31 notebooks `exemplo_<objeto>.py`, todos executados como job no
+   laboratório: 7 em `hub_scripts` (Sprint 4), 8 em `spark`/`testing` (Sprint 6),
+   16 em `ml` (Sprint 7).
+
+### Atualizado
+
+1. (Claude) Prefixo `x_` → `hub_`, e as 12 skills `rodrigo-<tema>` →
+   `hub-ml-<tema>`. Regra de nomenclatura: underscore onde o Python importa,
+   hífen onde a plataforma nomeia. Sprints 2 e 3.
+2. (Claude) `hub_snippets` e `hub_scripts` passaram de arquivo plano a **pasta por
+   objeto** (`__init__.py` + módulo + notebook). 31 dos 58 objetos convertidos.
+3. (Claude) `tools/publicar_free.py`: detecção de diretório obsoleto,
+   `--verify` rápido, e `.assistant/.mcp_servers.json` tratado como arquivo
+   gerido pela plataforma.
+4. (Claude) `tools/spark_smoke_test.py`: pula notebook no `walk_packages` —
+   objetos NOTEBOOK aparecem como `.py` no mount `/Workspace`, o que foi
+   verificado com job de sonda — e descobre `hub_scripts` automaticamente.
+
+### Corrigido
+
+1. (Claude) Três notebooks didáticos estavam quebrados desde 14/08: a auditoria da
+   biblioteca renomeou chaves de retorno (`cobertura_pct` →
+   `cobertura_pct_linhas_validas`, entre outras) e o material didático não
+   acompanhou. Encontrado ao executar, não ao ler.
+2. (Claude) `hub_scripts/naming_checker` usava `spark` sem importar pyspark — o
+   mesmo `NameError` que a documentação declarava eliminado.
+3. (Claude) 38 links relativos quebrados pela renomeação, por substituição que
+   descartava a profundidade do caminho; refeitos com `os.path.relpath`.
+
+### Removido
+
+1. (Claude) `x_projects/`, `x_docs/` e `x_config/`, com o conteúdo aproveitável
+   realocado. Sprint 2.
+2. (Claude) `hub_snippets/_notebooks_a_migrar/`, pasta de trânsito criada na
+   Sprint 2 para que a renomeação não apagasse o insumo das Sprints 6 e 7. O
+   último dos quatro notebooks originais foi desmembrado nesta sprint.
+
+### Notas
+
+- **Dependência escondida.** `ml/explainability_report` está classificado como
+  núcleo — não tem `import` de biblioteca opcional e o smoke test o importa com
+  `PASS` —, mas não executa no laboratório: usa `DataFrame.to_markdown()`, que o
+  pandas delega ao `tabulate`, ausente no runtime. Registrado em
+  `hub_snippets/requirements-optional.txt`. A divisão 16/14 entre as Sprints 7 e 8
+  é exata sobre importabilidade, não sobre executabilidade.
+- Auditorias em sessão sem contexto ao fim das Sprints 1, 2, 4 e 3+6: 21, 13, 9 e
+  13 achados, todos procedentes e corrigidos. A da Sprint 7 está pendente.
+- `PALETA_CATEGORICA` tem 6 cores em `ml.curves_plotly` e 10 em
+  `constants.colors`; duas das três cópias são idênticas à original, o que esconde
+  a divergente. Registrado no notebook do objeto; unificar é decisão de produto.
+
 ## 2026-08-15 — segunda auditoria da documentação e 25 correções
 
 Rodada independente sobre os **15 READMEs** do repositório, sete deles auditados
