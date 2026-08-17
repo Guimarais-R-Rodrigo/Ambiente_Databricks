@@ -85,17 +85,28 @@ display(null_summary(base, threshold_warn=1.0, threshold_fail=10.0))
 # COMMAND ----------
 
 # Uso típico: rodar antes de qualquer agregação e olhar só o que não está verde.
+# O status é um semáforo em emoji: 🟢 dentro do limiar, 🟡 alerta, 🔴 falha.
+# Filtrar por texto ("ok", "pass") casa todas as linhas em silêncio.
 resumo = null_summary(base, threshold_warn=1.0, threshold_fail=10.0)
-suspeitas = resumo.filter("status != 'ok'")
+suspeitas = resumo.filter("status != '🟢'")
 print(f"colunas fora do limiar: {suspeitas.count()} de {len(base.columns)}")
 display(suspeitas)
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** Uma coluna de cinco. Em base larga — dezenas ou centenas de
-# MAGIC colunas — é este filtro que torna o resumo utilizável: olhar a tabela
-# MAGIC inteira em cada execução não escala, e olhar nenhuma é o que acontece na
-# MAGIC prática.
+# MAGIC **Como ler.** Executado no laboratório: **1 coluna de 5** fora do limiar
+# MAGIC — `renda`, com 13 nulos em 500 linhas (2,6%), contra um limiar de alerta de
+# MAGIC 1,0%.
+# MAGIC
+# MAGIC Em base larga — dezenas ou centenas de colunas — é este filtro que torna o
+# MAGIC resumo utilizável: olhar a tabela inteira em cada execução não escala, e
+# MAGIC olhar nenhuma é o que acontece na prática.
+# MAGIC
+# MAGIC **O filtro merece atenção.** O status é emoji, não texto. Escrever
+# MAGIC `status != 'ok'` parece natural, casa todas as linhas, e o `count` sai 5 de
+# MAGIC 5 sem que nada acuse. Foi exatamente o erro que este notebook teve na
+# MAGIC primeira versão — e a validação do projeto ganhou uma guarda por causa
+# MAGIC dele: hoje ela reprova comparação com literal que o módulo não produz.
 
 # COMMAND ----------
 # MAGIC %md

@@ -87,9 +87,10 @@ qual módulo uso?"), o catálogo é a referência.
 
 ### Material didático
 
-Quatro notebooks executáveis explicam, sobre fixtures sintéticas, os conceitos
-onde o erro custa mais caro. Cada um mostra o problema acontecendo antes de
-apresentar a solução:
+Cada snippet convertido tem, na própria pasta, um notebook `exemplo_*` que
+mostra o erro acontecendo antes de mostrar a correção. Os módulos ainda não
+convertidos guardam material didático em `_notebooks_a_migrar/`, que é pasta de
+trânsito e se esvazia conforme as seções são convertidas.
 
 Todos ficam em `hub_snippets/_notebooks_a_migrar/`. **No workspace do Databricks eles aparecem
 como notebook e sem a extensão `.py`** — abra pelo navegador de arquivos, não
@@ -97,10 +98,6 @@ pelo link, se estiver lendo este documento dentro do Databricks.
 
 | Notebook | Cobre |
 |---|---|
-| `01_vazamento_temporal` | `pit_join` e `split_temporal`: como dado do futuro entra no treino |
-| `02_drift_e_estabilidade` | `psi_calculator`: o que o PSI mede, e por que comparar médias não é PSI |
-| `03_qualidade_de_juncao` | `join_diagnostics`: quando o join infla, encolhe ou perde linhas |
-| `04_armadilhas_de_credito` | `vintage_analysis` e `woe_iv_calculator`: somar taxas de safra e celebrar IV alto |
 
 Para explicação linha a linha de qualquer outro módulo, use
 `@hub-ml-tutor-databricks` com o arquivo anexado — ela lê a versão atual, então

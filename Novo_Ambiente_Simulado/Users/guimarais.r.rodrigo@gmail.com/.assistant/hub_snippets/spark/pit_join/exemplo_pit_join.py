@@ -208,4 +208,4 @@ for atraso in [0, 3, 30, 60]:
 # MAGIC   dado representativo.
 # MAGIC
 # MAGIC A segunda metade do assunto — separar treino e teste sem vazar — está em
-# MAGIC `hub_snippets/ml/split_temporal/`.
+# MAGIC `hub_snippets.ml.split_temporal`.

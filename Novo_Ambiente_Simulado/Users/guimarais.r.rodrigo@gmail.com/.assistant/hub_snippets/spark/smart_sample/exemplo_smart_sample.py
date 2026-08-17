@@ -77,9 +77,11 @@ print(f"outra semente : {c.count()} linhas, difere de a? {c.exceptAll(a).count()
 # MAGIC reproduzir o seu número amanhã. Sem semente declarada, duas execuções dão
 # MAGIC resultados diferentes e ninguém sabe se a diferença é do dado ou do sorteio.
 # MAGIC
-# MAGIC A contagem sai próxima de 500, não exata: amostragem por fração sorteia
-# MAGIC linha a linha. Se o seu caso exige exatamente N linhas, o caminho é ordenar
-# MAGIC por algo declarado e limitar — assumindo o viés que isso introduz.
+# MAGIC A contagem sai **exatamente 500**, e vale entender por quê: o helper
+# MAGIC sorteia com fração `n × 1,2 / total` — sobra proposital de 20% — e depois
+# MAGIC aplica `limit(n)`. A fração sozinha daria um número próximo de 500; é o
+# MAGIC `limit` que o torna exato, e a sobra existe para que ele quase nunca tenha
+# MAGIC menos do que cortar.
 
 # COMMAND ----------
 # MAGIC %md

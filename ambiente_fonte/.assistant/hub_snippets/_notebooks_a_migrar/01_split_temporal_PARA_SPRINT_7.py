@@ -1,21 +1,16 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # Vazamento temporal: por que `pit_join` e `temporal_split` existem
+# MAGIC # RASCUNHO — material de `split_temporal`, para a Sprint 7
 # MAGIC
-# MAGIC > **Material didático do Hub — não é auto-descoberto pelo Genie Code.**
-# MAGIC > Abra, execute célula a célula e leia os comentários. Nenhum dado real é
-# MAGIC > usado: tudo vem das fixtures sintéticas da própria biblioteca.
+# MAGIC **Não é um notebook do Hub.** É a metade que sobrou quando o notebook de
+# MAGIC vazamento temporal foi dividido: a parte de `pit_join` virou
+# MAGIC `spark/pit_join/exemplo_pit_join.py`, e esta aqui espera a conversão de
+# MAGIC `ml/split_temporal`.
 # MAGIC
-# MAGIC ## O que você vai entender aqui
-# MAGIC
-# MAGIC Vazamento (*leakage*) é quando o modelo aprende com informação que **não
-# MAGIC existia** no momento em que a decisão precisava ser tomada. O resultado é
-# MAGIC cruel: o modelo fica excelente no teste e fracassa em produção — e a
-# MAGIC diferença só aparece meses depois, quando o prejuízo já ocorreu.
-# MAGIC
-# MAGIC Este notebook mostra o problema acontecendo, e depois mostra os dois
-# MAGIC helpers que o evitam. Você não precisa entender o código por dentro: o
-# MAGIC objetivo é entender **o que dá errado sem eles**.
+# MAGIC Ao converter, esta metade precisa recuperar sozinha o contexto que a outra
+# MAGIC dava: o que é vazamento temporal, e por que separar treino e teste por
+# MAGIC sorteio destrói a ordem do tempo. Hoje o texto começa em "a segunda
+# MAGIC armadilha" e se refere a um join que não está mais no arquivo.
 
 # COMMAND ----------
 
@@ -36,8 +31,6 @@ from pyspark.sql import functions as F
 from hub_snippets.testing import fixtures
 
 print("biblioteca acessível")
-
-# COMMAND ----------
 
 # COMMAND ----------
 

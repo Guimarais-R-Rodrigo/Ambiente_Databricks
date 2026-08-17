@@ -241,6 +241,72 @@ def check_pastas_de_objeto(root: Path, problems: list[str]) -> int:
     return verificadas
 
 
+def check_contrato_de_dados(root: Path, problems: list[str]) -> int:
+    """Confronta o que o módulo devolve com o que o notebook irmão consome.
+
+    Duas vezes seguidas a mesma classe de defeito atravessou todos os portões:
+    três notebooks publicados pedindo chaves que a biblioteca havia renomeado, e
+    um filtro por `status != 'ok'` num módulo cujo status é emoji. Nenhum dos
+    checks existentes vê isso — eles conferem sintaxe, link e **nome exportado**,
+    nunca **valor devolvido**.
+
+    O que esta guarda extrai do módulo, por AST:
+
+    - chaves de dicionário literais (`{"cobertura_pct": ...}` e `d["x"] = ...`);
+    - nomes criados por `alias("nome")`, que viram coluna de DataFrame;
+    - literais de string atribuídos a variável, que cobrem domínios como o
+      semáforo do `null_summary`.
+
+    O que ela cobra do notebook: todo acesso literal por string — `d["k"]`,
+    `d.get("k")`, `filter("col != 'v'")`, `select("col")` — cujo alvo não esteja
+    no conjunto acima **nem** tenha sido criado pelo próprio notebook.
+
+    Não pega tudo: chave montada por concatenação e acesso por variável passam.
+    Pega a forma que já falhou duas vezes.
+    """
+    literais_modulo = re.compile(r"""["']([a-zA-Z_À-ſ\U0001F300-\U0001FAFF][^"']{0,40})["']""")
+    acesso_indice = re.compile(r"""\w+\[\s*["']([a-z_]{3,})["']\s*\]""")
+    acesso_get = re.compile(r"""\.get\(\s*["']([a-z_]{3,})["']""")
+    comparacao = re.compile(r"""!=\s*'([^']{1,20})'|==\s*'([^']{1,20})'""")
+
+    verificadas = 0
+    for init in sorted(root.rglob("__init__.py")):
+        pasta = init.parent
+        modulo = pasta / f"{pasta.name}.py"
+        notebook = pasta / f"exemplo_{pasta.name}.py"
+        if not (modulo.exists() and notebook.exists()):
+            continue
+        verificadas += 1
+        texto_modulo = modulo.read_text(encoding="utf-8")
+        texto_nb = notebook.read_text(encoding="utf-8")
+        rel = pasta.relative_to(root)
+
+        produzidos = set(literais_modulo.findall(texto_modulo))
+        # o notebook também cria nomes: alias, withColumn, createDataFrame
+        produzidos |= set(literais_modulo.findall(texto_nb.split("# COMMAND", 1)[0]))
+        produzidos |= set(re.findall(r"""alias\(\s*["']([^"']+)["']""", texto_nb))
+        produzidos |= set(re.findall(r"""withColumn\(\s*["']([^"']+)["']""", texto_nb))
+        produzidos |= set(re.findall(r"""f?["'][^"']*\b(\w+) (?:string|int|double|date|boolean)""", texto_nb))
+
+        for linha in texto_nb.splitlines():
+            if linha.lstrip().startswith("# MAGIC"):
+                continue  # markdown: prosa, não contrato
+            for chave in acesso_indice.findall(linha) + acesso_get.findall(linha):
+                if chave not in produzidos:
+                    problems.append(
+                        f"{rel}/{notebook.name}: consome ['{chave}'], que "
+                        f"{modulo.name} não produz"
+                    )
+            for a, b in comparacao.findall(linha):
+                valor = a or b
+                if valor and valor not in produzidos and not valor.isdigit():
+                    problems.append(
+                        f"{rel}/{notebook.name}: compara com '{valor}', que "
+                        f"{modulo.name} não produz"
+                    )
+    return verificadas
+
+
 def check_smoke_test_sincronizado(problems: list[str]) -> None:
     """O smoke test roda no workspace, onde `tools/` não existe.
 
@@ -410,6 +476,7 @@ def main() -> int:
     check_text_hygiene(root, problems)
     check_path_hygiene(root, problems)
     n_objetos = check_pastas_de_objeto(root, problems)
+    n_contratos = check_contrato_de_dados(root, problems)
     check_smoke_test_sincronizado(problems)
     n_repo = check_repo_corporate(problems)
     n_repo_links = check_repo_links(root, problems)
@@ -419,6 +486,7 @@ def main() -> int:
     print(f"markdown / links   : {n_md} arquivos / {n_links} links relativos")
     print(f"notebooks / links  : {n_nb} notebooks / {n_nb_links} links relativos")
     print(f"pastas de objeto   : {n_objetos} conferidas (nome, arquivos, __init__)")
+    print(f"contrato de dados  : {n_contratos} pares módulo/notebook conferidos")
     print(f"python (AST)       : {n_py} arquivos")
     print(f"instrucoes         : {n_chars}/{INSTRUCTION_LIMIT} caracteres")
     print(f"repo (corporativo) : {n_repo} arquivos varridos no repositório inteiro")

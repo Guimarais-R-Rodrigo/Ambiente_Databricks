@@ -185,7 +185,41 @@ def t_safe_display():
     safe_display(df, limit=5, display_fn=lambda d: d.show(3))
 
 
-for case in [t_null_summary, t_smart_sample, t_date_features, t_psi, t_safe_display]:
+
+def t_join_diagnostics():
+    from hub_snippets.spark.join_diagnostics import diagnosticar_join
+    from hub_snippets.testing import fixtures
+    esq = fixtures.base_tabular(n=200, seed=1)
+    dir_ = fixtures.base_tabular(n=200, seed=1, n_entidades=100).select("id_cliente", "uf")
+    d = diagnosticar_join(esq, dir_, "id_cliente")
+    # As chaves são contrato: renomeá-las sem propagar já quebrou notebook antes.
+    for chave in ("linhas_esquerda", "cobertura_pct_chaves_validas",
+                  "expansao_prevista_left", "expansao_prevista_inner",
+                  "multiplicidade_max_direita", "linhas_descartadas_chave_nula"):
+        assert chave in d, f"chave ausente no retorno: {chave}"
+    assert d["linhas_esquerda"] == 200
+
+
+def t_pit_join():
+    from hub_snippets.spark.pit_join import pit_join
+    from hub_snippets.testing import fixtures
+    fatos, feats = fixtures.fatos_e_features(n_decisoes=100, seed=3)
+    resultado, diag = pit_join(
+        fatos, feats, chave="id_cliente",
+        ts_decisao="dt_decisao", ts_feature="dt_referencia",
+        atraso_publicacao_dias=3,
+    )
+    for chave in ("linhas_fato", "cobertura_pct_linhas_validas",
+                  "sem_feature_disponivel_na_data", "atraso_publicacao_dias"):
+        assert chave in diag, f"chave ausente no diagnóstico: {chave}"
+    # Nenhuma feature marcada como futura pode ter atravessado o join.
+    assert resultado.filter("eh_futura = true").count() == 0
+
+
+for case in [
+    t_null_summary, t_smart_sample, t_date_features, t_psi, t_safe_display,
+    t_join_diagnostics, t_pit_join,
+]:
     run_case(f"func:{case.__name__[2:]}", case)
 
 # COMMAND ----------
@@ -196,7 +230,9 @@ for case in [t_null_summary, t_smart_sample, t_date_features, t_psi, t_safe_disp
 def t_quick_profile():
     from hub_scripts.quick_profile import quick_profile
     out = quick_profile("vw_smoke_tx", sample_fraction=1.0)
-    assert out["row_count"] if "row_count" in out else out
+    # Asserção de contrato: o nome da chave importa tanto quanto o valor.
+    assert out["total_rows"] > 0
+    assert out["sample_rows"] <= out["total_rows"]
 
 
 def t_data_quality_check():
@@ -222,6 +258,7 @@ def t_schema_to_yaml():
     payload = schema_to_dict("vw_smoke_tx", include_stats=True)
     assert payload["columns"]
     schema_to_yaml("vw_smoke_tx")
+
 
 
 for case in [

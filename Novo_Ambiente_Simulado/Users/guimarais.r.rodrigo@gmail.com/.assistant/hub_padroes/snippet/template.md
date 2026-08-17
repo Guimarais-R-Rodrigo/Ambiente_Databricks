@@ -54,9 +54,15 @@ from hub_snippets.spark.pit_join import pit_join
 com docstring e mais nada. Só a pasta do **objeto** reexporta.
 
 Não é preguiça: é o que mantém a seção importável. Um `__init__.py` de seção que
-reexportasse os objetos importaria todos eles de uma vez — e treze módulos de
-`ml/` dependem de biblioteca que não existe no laboratório. A seção inteira
-deixaria de importar por causa deles.
+reexportasse os objetos importaria todos eles de uma vez — e **sete** módulos de
+`ml/` importam biblioteca ausente no laboratório já no topo do arquivo. A seção
+inteira deixaria de importar por causa deles, **e os irmãos junto**: um
+`ml/score_bands`, sem dependência nenhuma, falharia com `exc.name='lightgbm'`,
+porque importar qualquer submódulo executa o `__init__` do pacote pai.
+
+(São 14 os módulos com dependência opcional; os outros 7 importam dentro da
+função e por isso importam sem erro. A distinção importa na hora de decidir o
+que testar.)
 
 Verificado com um pacote de teste:
 
@@ -160,7 +166,39 @@ quebrado.
 | Quem importa este módulo | `grep -rn "<secao>.<modulo>" ambiente_fonte tools` |
 | Se o smoke test o cita nominalmente | `tools/spark_smoke_test.py` tem casos funcionais por nome |
 | Se alguma skill o recomenda | as 12 `SKILL.md` declaram helpers por caminho de import |
-| Se ele redeclara constante de outro módulo | `curves_plotly`, `vintage_analysis`, `umap_viz` e `performance_monitor` copiam a paleta em vez de importar; converta o import antes, ou a regra exaustiva publica duas versões da mesma constante |
+| Se ele redeclara constante de outro módulo | ver a regra abaixo — é o único caso em que a conversão **não** é só mover |
+
+### Constante duplicada: a exceção que precisa de decisão
+
+Quatro módulos de `ml/` redeclaram a paleta em vez de importá-la de
+`constants.colors`. E os valores **divergem**:
+
+| Nome | Onde | Valor |
+|---|---|---|
+| `PALETA_CATEGORICA` | `constants.colors` | 10 cores |
+| `PALETA_CATEGORICA` | `ml.curves_plotly` | **6 cores** |
+| `PALETA_CATEGORICA` | `ml.umap_viz`, `ml.vintage_analysis` | 10 cores, idênticas |
+
+Duas das três cópias são iguais à original, o que torna a terceira invisível numa
+inspeção rápida.
+
+A regra exaustiva do `__init__.py` publica cada uma como API pública oficial. Ao
+fim da conversão haverá dois caminhos de import para `PALETA_CATEGORICA` com
+valores diferentes, ambos "corretos" pela regra.
+
+**A conversão não resolve isso, e não deve tentar.** Trocar a redeclaração por
+import muda o comportamento — `curves_plotly` passaria de 6 para 10 cores nos
+gráficos —, e a etapa 1 proíbe mudança de comportamento. A instrução anterior,
+"converta o import antes", pedia exatamente o que a regra veta.
+
+**O que fazer:** converta como está, na etapa 1, e **registre a duplicação no
+notebook do objeto**, na seção "quando não usar" — dizendo qual valor aquele
+módulo usa e que ele difere de `constants.colors`. A unificação é decisão de
+produto, vai para a etapa 2, e precisa de alguém olhando os gráficos para dizer
+se seis ou dez cores é o certo ali.
+
+Duplicação de constante com valor idêntico (`umap_viz`, `vintage_analysis`) é
+dívida menor: registre no notebook e siga.
 
 ## Antes de dar por pronto
 

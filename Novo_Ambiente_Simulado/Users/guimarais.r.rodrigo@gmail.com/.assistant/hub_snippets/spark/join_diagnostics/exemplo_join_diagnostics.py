@@ -174,9 +174,9 @@ print(f"cobertura sobre o total : {d['cobertura_pct_chaves_validas']}%")
 # MAGIC
 # MAGIC | Número | O que ele responde |
 # MAGIC |---|---|
-# MAGIC | `expansao_prevista` | o join vai inflar a base? `1,0` preserva |
+# MAGIC | `expansao_prevista_left` | o join vai inflar a base? `1,0` preserva |
 # MAGIC | `multiplicidade_max_direita` | quantas linhas por chave existem à direita |
-# MAGIC | `cobertura_pct` | quanto da esquerda encontra par |
+# MAGIC | `cobertura_pct_chaves_validas` | quanto da esquerda encontra par |
 # MAGIC | `chaves_nulas_*` | quanto não casa por motivo diferente |
 # MAGIC | `exemplos_sem_match` | amostra para conferir se a chave está certa |
 # MAGIC
