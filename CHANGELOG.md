@@ -5,6 +5,69 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-17 — auditoria da Sprint 8: 13 achados, e uma correção que estava no lugar errado
+
+Rodada em sessão sem contexto. O auditor executou os 14 notebooks em vez dos 5
+pedidos e escreveu sondas próprias para testar as afirmações em vez de aceitá-las.
+Treze achados, todos procedentes. Detalhe em
+`docs/sprints/sprint-8-ml-dependencia-opcional.md`.
+
+### Corrigido
+
+1. (Claude) `ml/train_catboost` passou a definir `allow_writing_files=False` **no
+   módulo**. A correção do efeito colateral estava no notebook, via
+   `params_override` — o notebook parou de escrever, o `--verify` deu limpo, e a
+   biblioteca continuou com a mina armada para qualquer outro chamador. As skills
+   recomendam o módulo por caminho de import.
+2. (Claude) `exemplo_autoencoder_anomaly` mandava o leitor para
+   `isolation_forest`, "que acerta bem mais". Medido sobre a mesma fixture, o
+   Isolation Forest tem **metade** da precisão (11,5% contra 23,5%) e metade da
+   cobertura. A impressão vinha do notebook do outro objeto, cuja fixture é de
+   anomalia grosseira de escala. A comparação foi substituída pelos números
+   medidos, com a explicação de por que os dois cenários não se comparam.
+3. (Claude) `exemplo_shap_explainer` ensinava que `max_samples=800` limitava o
+   custo. O parâmetro só age em `model_type="kernel"`; o notebook chama com
+   `"tree"`, e o TreeSHAP roda sobre a base inteira. O docstring do módulo estava
+   certo — a prosa do notebook é que invertia.
+4. (Claude) `exemplo_lgbm_ranker` lia NDCG@1 como taxa de acerto do topo. É razão
+   de ganho: um ranker que nunca acerta o topo tira 0,4286 nessa escala, e o
+   0,9548 obtido corresponde a ~92% de acerto, não 95%.
+5. (Claude) Quatro notebooks — `kaplan_meier`, `optuna_lgbm`, `shap_explainer` e
+   `umap_viz` — traziam uma seção inteira sobre `log_mlflow=False` e declaravam
+   "Escrita: nenhuma" com base nele. Nenhum dos quatro módulos importa mlflow.
+   Bloco copiado dos dez treinadores para quatro objetos que não treinam.
+6. (Claude) `exemplo_train_lgbm` afirmava que nenhum dos nove parâmetros era o
+   padrão do LightGBM; três são. `exemplo_lgbm_ranker` dizia que os NDCG "sobem
+   de @1 para @10" citando uma série que desce na primeira transição — a
+   não-monotonicidade virou o ponto.
+7. (Claude) `requirements-optional.txt`: o mecanismo do pin do `shap` estava
+   errado e citava a mensagem de erro do outro caso. O real é que ele arrasta
+   numpy 2.4.6 sobre o 1.23.5 do runtime. E o custo de instalação, declarado como
+   "~3 min" nos 14, erra por 4 a 6× em 11 deles — são dois grupos, torch (~5 min)
+   e o resto (~1 min).
+
+### Atualizado
+
+1. (Claude) `check_saida_colada` passou a exigir substância no bloco — dígito ou
+   trinta caracteres. Aceitava bloco vazio. O limite preserva o caso legítimo do
+   `safe_display`, que cola um `RuntimeError` sem um número sequer.
+2. (Claude) A exceção do `AZUL_CAIXA` passou a ser visível onde a regra é
+   enunciada (`CLAUDE.md`) e no código da guarda, apontando para `PLANO_HUB` §2.2.
+   Sem renomeação: é decisão registrada em 16/08.
+3. (Claude) `PLANO_HUB.md` §12.1, nova: a dívida dos 12 notebooks sem saída
+   colada, com caminho e sprint de origem de cada. Vivia só na narrativa, e o
+   comentário no código a atribuía inteira à Sprint 6 — são 1, 4 e 6.
+
+### Notas
+
+- **Seis dos catorze blocos de saída são transcrições editadas**, não literais:
+  omitem linhas, reordenam, renomeiam colunas. Num deles a curadoria removeu
+  justamente as linhas que contradiziam a prosa. Nenhuma guarda estática
+  distingue bloco editado de bloco inventado; o limite está dito no docstring.
+- O auditor confirmou intacto o que mais custaria: converter é mover cumprido nos
+  14, `__init__.py` gerados, pins corretos, limpeza remota, e **os números
+  colados conferindo nos 14** — nenhum inventado.
+
 ## 2026-08-17 — Sprint 8: `ml` inteira convertida, e os 14 demonstram
 
 Os 14 módulos com dependência opcional viraram pasta de objeto, com notebook

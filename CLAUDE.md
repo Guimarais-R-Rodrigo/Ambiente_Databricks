@@ -46,7 +46,10 @@ O índice completo, com o status de cada ADR, está em `docs/decisions/README.md
 - Toda sessão que altera algo termina com entrada no `CHANGELOG.md`
   (template em `.claude/templates/changelog-entry.md`), atribuída à IA autora.
 - Nenhum identificador corporativo, path real do trabalho, PII ou segredo entra
-  em arquivo versionado. Placeholders sempre.
+  em arquivo versionado. Placeholders sempre. **Uma exceção, decidida e
+  registrada:** o nome da instituição na paleta visual (`AZUL_CAIXA` e afins) —
+  ver `PLANO_HUB.md` §2.2. O `CORPORATE_RE` do validador não a alcança e não
+  deve alcançar; qualquer outro identificador continua proibido.
 - Afirmações sobre a plataforma Databricks seguem a nomenclatura oficial vigente
   (`.claude/rules/genie-code-oficial.md`); em dúvida, verificar a documentação
   antes de afirmar.

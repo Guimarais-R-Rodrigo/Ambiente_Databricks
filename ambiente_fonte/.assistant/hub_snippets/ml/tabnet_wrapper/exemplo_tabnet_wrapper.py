@@ -16,7 +16,7 @@
 # MAGIC | Bibliotecas | **instala `pytorch-tabnet` na primeira célula** |
 # MAGIC | Dados | sintéticos, gerados aqui |
 # MAGIC | Escrita | nenhuma; `log_mlflow=False` em todas as chamadas |
-# MAGIC | Diferença Free × trabalho | a instalação leva ~3 min no Free; no trabalho, confirme a política do workspace |
+# MAGIC | Diferença Free × trabalho | a instalação e a execução levam ~5 min no Free (o `torch` é pesado); no trabalho, confirme a política do workspace |
 
 # COMMAND ----------
 # MAGIC %pip install pytorch-tabnet

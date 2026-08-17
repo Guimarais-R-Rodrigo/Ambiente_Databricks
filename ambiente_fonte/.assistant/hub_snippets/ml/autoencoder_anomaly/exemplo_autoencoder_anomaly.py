@@ -16,7 +16,7 @@
 # MAGIC | Bibliotecas | **instala `torch` na primeira célula** |
 # MAGIC | Dados | sintéticos, gerados aqui |
 # MAGIC | Escrita | nenhuma; `log_mlflow=False` em todas as chamadas |
-# MAGIC | Diferença Free × trabalho | a instalação leva ~3 min no Free; no trabalho, confirme a política do workspace |
+# MAGIC | Diferença Free × trabalho | a instalação e a execução levam ~5 min no Free (o `torch` é pesado); no trabalho, confirme a política do workspace |
 
 # COMMAND ----------
 # MAGIC %pip install torch
@@ -134,8 +134,29 @@ print(f"estranhos que passaram: {int(((marcados == 0) & (verdade == 1)).sum())}"
 # MAGIC existe. Aumentar para 99 marcaria menos e acharia menos; o método não sabe
 # MAGIC quantas anomalias há.
 # MAGIC
-# MAGIC Para este tipo de anomalia, `hub_snippets.ml.isolation_forest` no mesmo
-# MAGIC cenário acerta bem mais — e custa uma fração do tempo.
+# MAGIC **E o alternativo óbvio vai pior aqui.** Medido sobre esta mesma fixture:
+# MAGIC
+# MAGIC ```text
+# MAGIC                                    marcados  acertos  precisão  cobertura
+# MAGIC autoencoder (acima)                      81       19     23,5%      38,0%
+# MAGIC IsolationForest contamination=0.05       61        7     11,5%      14,0%
+# MAGIC IsolationForest contamination=0.081      91       10     11,0%      20,0%
+# MAGIC IsolationForest contamination=0.10      109       12     11,0%      24,0%
+# MAGIC
+# MAGIC AUC do escore do IsolationForest (sem limiar): 0.6804
+# MAGIC ```
+# MAGIC
+# MAGIC Em todo ponto de operação comparável o Isolation Forest tem **metade** da
+# MAGIC precisão e metade ou menos da cobertura. Não é surpresa depois de olhar: a
+# MAGIC anomalia aqui é **estrutural** — quebra de correlação, na mesma escala do
+# MAGIC normal —, e árvore de isolamento corta eixo a eixo. O autoencoder aprende
+# MAGIC a correlação e sente a quebra.
+# MAGIC
+# MAGIC Onde o Isolation Forest ganha é no caso oposto, de anomalia grosseira de
+# MAGIC escala, que é o cenário do `exemplo_isolation_forest` — lá ele acerta 30
+# MAGIC de 30. **Os dois notebooks reportam números que não se comparam**, porque
+# MAGIC as bases são diferentes de propósito. Escolher entre os métodos depende do
+# MAGIC tipo de anomalia que você espera, e essa é a decisão de verdade.
 
 # COMMAND ----------
 # MAGIC %md

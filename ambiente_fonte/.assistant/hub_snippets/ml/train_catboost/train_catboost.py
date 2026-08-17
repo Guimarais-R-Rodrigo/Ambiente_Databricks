@@ -65,6 +65,13 @@ def train_catboost_baseline(
         "early_stopping_rounds": 50,
     }
 
+    # Sem isto o CatBoost cria `catboost_info/` no diretorio de trabalho. No
+    # Databricks o diretorio de trabalho e a pasta do NOTEBOOK, dentro de
+    # `.assistant` — e a biblioteca passa a publicar log no proprio workspace.
+    # Aconteceu uma vez, com dez arquivos. O default fica seguro; quem quiser os
+    # logs sobrescreve com params_override.
+    params.setdefault("allow_writing_files", False)
+
     if params_override:
         params.update(params_override)
 

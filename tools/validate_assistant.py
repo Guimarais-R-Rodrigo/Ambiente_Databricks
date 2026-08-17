@@ -31,6 +31,11 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 # Diretórios fora do alcance dos checks de repositório inteiro.
 REPO_IGNORE = {".git", "Ambiente_Antigo", "Ajustes_Codex", "__pycache__", ".venv"}
 
+# NAO cobre o nome da instituicao na paleta visual (AZUL_CAIXA e afins). E
+# decisao registrada em PLANO_HUB.md 2.2, nao lacuna: o repositorio e privado e o
+# material circula so internamente. Uma auditoria ja levantou o ponto; se voce
+# for a proxima, leia la antes de reabrir.
+#
 # Padrões que caracterizam identificador corporativo. Não são exaustivos — são os
 # formatos conhecidos deste contexto. Ao levar o repositório para outra
 # organização, acrescente aqui o formato de matrícula e o domínio de lá antes de
@@ -131,8 +136,19 @@ def check_saida_colada(root: Path, warnings: list[str]) -> tuple[int, int]:
     ele não sabe se o conteúdo veio mesmo da execução. Mas o defeito que ele
     ataca é o silêncio, e para silêncio o proxy basta.
 
-    **Aviso, não falha**, enquanto a dívida da Sprint 6 não fecha. Promover a
-    falha quando `sem_bloco` chegar a zero.
+    O sinal exigido é um bloco ```text **com dígito dentro**. Uma auditoria
+    mostrou que a versão anterior — só a presença da cerca — aceitava bloco
+    vazio e bloco sem número nenhum.
+
+    O que ele **não** cobre, e é bom saber: a guarda é por notebook, não por
+    bloco de leitura. Um notebook com quatro células que imprimem e um único
+    bloco colado passa. E ele não distingue transcrição literal de transcrição
+    curada — uma auditoria encontrou seis blocos editados, um deles omitindo
+    justamente a linha que contradizia a prosa em volta.
+
+    **Aviso, não falha**, enquanto a dívida das Sprints 1, 4 e 6 não fecha —
+    são 12 notebooks, listados em `PLANO_HUB.md` §12.1. Promover a falha quando
+    `sem_bloco` chegar a zero.
     """
     com = sem = 0
     for nb in sorted(root.rglob("exemplo_*.py")):
@@ -140,12 +156,22 @@ def check_saida_colada(root: Path, warnings: list[str]) -> tuple[int, int]:
             linha for linha in nb.read_text(encoding="utf-8").splitlines()
             if linha.startswith("# MAGIC")
         )
-        if "```text" in markdown:
+        # Bloco vazio ou de meia dúzia de palavras é decorativo: não sustenta
+        # leitura nenhuma. Um número resolve, e uma mensagem de erro capturada
+        # também — `safe_display` cola um `RuntimeError` sem um dígito sequer, e
+        # é evidência tão conferível quanto uma tabela.
+        blocos = [
+            re.sub(r"^# MAGIC ?", "", b, flags=re.MULTILINE).strip()
+            for b in re.findall(r"```text(.*?)```", markdown, re.DOTALL)
+        ]
+        if any(re.search(r"\d", b) or len(b) >= 30 for b in blocos):
             com += 1
         else:
             sem += 1
+            motivo = ("bloco ```text sem nenhum número" if blocos
+                      else "nenhum bloco ```text com saída real")
             warnings.append(
-                f"{nb.relative_to(root)}: nenhum bloco ```text com saída real; "
+                f"{nb.relative_to(root)}: {motivo}; "
                 "a leitura não pode ser conferida sem reexecutar"
             )
     return com, sem

@@ -15,8 +15,8 @@
 # MAGIC | Compute | serverless ou clássico, indiferente |
 # MAGIC | Bibliotecas | **instala `catboost` na primeira célula** |
 # MAGIC | Dados | sintéticos, gerados aqui |
-# MAGIC | Escrita | nenhuma — mas exige `allow_writing_files=False`; ver a célula de treino |
-# MAGIC | Diferença Free × trabalho | a instalação leva ~3 min no Free; no trabalho, confirme a política do workspace |
+# MAGIC | Escrita | nenhuma — o módulo desliga a escrita de log do CatBoost |
+# MAGIC | Diferença Free × trabalho | a instalação e a execução levam ~1 min no Free; no trabalho, confirme a política do workspace |
 
 # COMMAND ----------
 # MAGIC %pip install catboost
@@ -88,13 +88,8 @@ print(f"categorias distintas: {len(np.unique(categoria))} | prevalencia {y.mean(
 # COMMAND ----------
 
 # `cat_features` recebe o INDICE da coluna, nao o nome: a entrada e ndarray.
-# `allow_writing_files=False` NAO e detalhe: sem ele o CatBoost cria uma pasta
-# `catboost_info/` no diretorio de trabalho — que no Databricks e a pasta do
-# proprio notebook, dentro de `.assistant`. Foram 10 arquivos publicados por
-# engano no workspace na primeira execucao deste notebook.
 modelo, metricas = train_catboost_baseline(
     X_tr, y_tr, X_va, y_va, task="binary", cat_features=[2], log_mlflow=False,
-    params_override={"allow_writing_files": False},
 )
 for chave, valor in metricas.items():
     print(f"  {chave:24s} {valor}")
@@ -127,11 +122,18 @@ for chave, valor in metricas.items():
 # MAGIC    coluna. A mensagem é longa e não diz "converta para inteiro" — diz que
 # MAGIC    o array é de ponto flutuante, "o que significa nenhuma feature
 # MAGIC    categórica".
-# MAGIC 2. Sem `allow_writing_files=False`, o CatBoost cria `catboost_info/` no
-# MAGIC    diretório de trabalho. No Databricks isso é a **pasta do notebook**, e
-# MAGIC    a primeira execução deixou dez arquivos de log publicados dentro de
+# MAGIC 2. O CatBoost escreve `catboost_info/` no diretório de trabalho por
+# MAGIC    padrão. No Databricks isso é a **pasta do notebook**, e a primeira
+# MAGIC    execução deste exemplo deixou dez arquivos de log publicados dentro de
 # MAGIC    `.assistant/hub_snippets/ml/train_catboost/`. Foi o `--verify` da
-# MAGIC    publicação que apanhou, listando-os como obsoletos no remoto.
+# MAGIC    publicação que apanhou.
+# MAGIC
+# MAGIC    A correção ficou **no módulo**, não aqui: `train_catboost.py` agora
+# MAGIC    define `allow_writing_files=False` por padrão. A primeira versão desta
+# MAGIC    correção estava nesta célula, e isso deixava a mina armada para
+# MAGIC    qualquer outro chamador — inclusive as skills, que recomendam o módulo
+# MAGIC    por caminho de import. Quem quiser os logs sobrescreve com
+# MAGIC    `params_override={"allow_writing_files": True}`.
 
 # COMMAND ----------
 # MAGIC %md

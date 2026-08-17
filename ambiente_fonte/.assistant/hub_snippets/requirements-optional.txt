@@ -15,7 +15,13 @@
 # `%pip install` FUNCIONA em notebook serverless, na primeira celula, seguido
 # de `%restart_python`. As 12 bibliotecas abaixo foram instaladas e exercitadas
 # com chamada real (ajuste de modelo, projecao, previsao) — nao so importadas.
-# Custo tipico: 200 a 280 segundos de job, incluindo start e instalacao.
+#
+# CUSTO MEDIDO nos 14 notebooks, em dois grupos bem distintos:
+#   - torch e derivados (pytorch-tabnet)  : 270 a 310 s por job
+#   - as outras nove bibliotecas          :  33 a  70 s por job
+# Os 14 juntos levam ~25 minutos, nao a hora que uma estimativa unica de "3 min
+# por notebook" sugeria. A diferenca importa: estimativa alta demais faz alguem
+# nao reexecutar antes de replicar no trabalho.
 #
 # TRES REGRAS QUE CUSTARAM UM AMBIENTE QUEBRADO:
 #
@@ -23,9 +29,15 @@
 #    e umap-learn na MESMA sessao derruba o `import numpy` do proprio notebook
 #    ("numpy.dtype size changed... Expected 96 from C header, got 88").
 #    Isoladas, as tres funcionam.
-# 2. Tres exigem pin; as outras nove resolvem sozinhas. Sem o pin, `shap` sobe
-#    versao que espera numpy 2.x e quebra no import com
-#    "cannot import name 'ComplexWarning' from 'numpy.core.numeric'".
+# 2. Tres exigem pin; as outras nove resolvem sozinhas. Sem o pin, `shap` arrasta
+#    numpy 2.4.6 por cima do 1.23.5 do runtime, e o que quebra sao as extensoes C
+#    ja compiladas contra o numpy antigo:
+#      ValueError: numpy.dtype size changed, may indicate binary incompatibility.
+#      Expected 96 from C header, got 88 from PyObject
+#    Verificado em sessao limpa, com `%pip install shap` e mais nada.
+#    As regras 1 e 2 compartilham o SINTOMA; o que as separa e a causa — ali sao
+#    tres pacotes brigando entre si, aqui e um pacote trocando o numpy do
+#    ambiente. O diagnostico pela mensagem sozinha nao distingue os dois.
 # 3. Nao fixe numpy/pandas por precaucao. O aviso anterior deste arquivo mandava
 #    fixar numpy==1.26.4 sempre; o runtime hoje traz 1.23.5, e o pin gera
 #    conflito em vez de evitar. A excecao esta anotada no pmdarima.
@@ -52,8 +64,9 @@ xgboost           # 3.2.0   — ajustou classificador, acuracia 0,887
 pmdarima==2.0.4   # exige tambem numpy==1.23.5 na mesma linha de instalacao;
                   # sem os dois pins, envenena o ambiente. auto_arima devolveu
                   # ordem (0,1,0)
-shap==0.44.1      # sem o pin, ImportError de ComplexWarning. TreeExplainer
-                  # devolveu shap_values como lista de 2
+shap==0.44.1      # sem o pin, arrasta numpy 2.4.6 e quebra as extensoes C do
+                  # runtime; ver a regra 2 no topo. TreeExplainer devolveu
+                  # shap_values como lista de 2
 umap-learn==0.5.5 # projecao (300, 2) confirmada
 
 # --- dependencia ESCONDIDA: nao aparece como import no topo do modulo --------

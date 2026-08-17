@@ -16,7 +16,7 @@
 # MAGIC | Bibliotecas | **instala `prophet` na primeira célula** |
 # MAGIC | Dados | sintéticos, gerados aqui |
 # MAGIC | Escrita | nenhuma; `log_mlflow=False` em todas as chamadas |
-# MAGIC | Diferença Free × trabalho | a instalação leva ~3 min no Free; no trabalho, confirme a política do workspace |
+# MAGIC | Diferença Free × trabalho | a instalação e a execução levam ~1 min no Free; no trabalho, confirme a política do workspace |
 
 # COMMAND ----------
 # MAGIC %pip install prophet
@@ -107,6 +107,12 @@ for chave, valor in metricas.items():
 # MAGIC rmse_insample            15.9480
 # MAGIC mae_insample             13.2339
 # MAGIC ```
+# MAGIC
+# MAGIC > **Ressalva de reprodutibilidade:** `yhat` e `trend` saem idênticos a cada
+# MAGIC > execução, mas `yhat_lower` e `yhat_upper` **variam** — o Prophet estima os
+# MAGIC > intervalos por amostragem (`uncertainty_samples`) e o wrapper não fixa
+# MAGIC > semente para isso. Reexecutar e ver as duas colunas diferentes é o
+# MAGIC > esperado, não uma divergência.
 # MAGIC
 # MAGIC **Como ler.** O ajuste é bom: MAPE de **1,02%** sobre a própria amostra, e a
 # MAGIC previsão continua a subida da série com a ondulação anual no lugar certo.

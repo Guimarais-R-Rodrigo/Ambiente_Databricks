@@ -42,9 +42,8 @@ usa o objeto, não estado da biblioteca.
 
 ## Duas armadilhas que só a execução encontrou
 
-**O CatBoost escreve na pasta do notebook.** Sem
-`params_override={"allow_writing_files": False}`, ele cria `catboost_info/` no
-diretório de trabalho — que no Databricks é a pasta do próprio notebook, dentro
+**O CatBoost escreve na pasta do notebook.** Por padrão ele cria `catboost_info/`
+no diretório de trabalho — que no Databricks é a pasta do próprio notebook, dentro
 de `.assistant`. A primeira execução deixou **dez arquivos de log publicados no
 workspace**, num notebook cuja tabela de ambiente declarava "Escrita: nenhuma".
 
@@ -58,7 +57,8 @@ ponto flutuante, "o que significa nenhuma feature categórica". A coluna precisa
 chegar como inteiro; um array de `dtype=object` preserva os dois tipos.
 
 As duas estão documentadas no notebook de `train_catboost`, que é onde alguém vai
-tropeçar nelas.
+tropeçar nelas. **A correção da primeira ficou inicialmente no lugar errado** —
+ver a seção de auditoria no fim deste relatório.
 
 ## Três notebooks escritos contra API imaginada — e o que o portão novo pegou
 
@@ -88,9 +88,12 @@ Três valem menção porque o resultado real contrariou o esperado:
 **`autoencoder_anomaly` foi mal, e o notebook diz isso.** De 81 marcados, 19 eram
 estranhos de verdade; 31 dos 50 plantados passaram. Precisão de 23%, cobertura de
 38%. Ficou no notebook com a análise do porquê — anomalia de estrutura, não de
-escala, com 25 épocas — e com o ponteiro para `isolation_forest`, que resolve
-melhor o mesmo cenário. Notebook didático que só mostra o método brilhando ensina
+escala, com 25 épocas. Notebook didático que só mostra o método brilhando ensina
 a confiar nele.
+
+A primeira versão desta seção mandava o leitor para `isolation_forest`, "que
+resolve melhor o mesmo cenário". **Estava invertido**, e a auditoria mediu — ver
+a seção no fim deste relatório.
 
 **`prophet_wrapper` ajusta bem e decompõe mal.** MAPE de 1,02% e, na mesma
 previsão, um componente `trend` **negativo** (−861) enquanto o `yhat` é 1.626. A
@@ -117,3 +120,106 @@ removidos explicitamente 14 arquivos planos e a pasta `catboost_info/`, antes do
 | Dívida de saída colada: 12 notebooks das Sprints 1, 4 e 6 | passe próprio; a guarda os lista a cada execução |
 | Bateria funcional de `ml` no smoke test | fora do escopo do plano (§10) |
 | `%pip install` nos notebooks × política do workspace do trabalho | decidido: a linha fica ativa. Se a política de lá exigir outra forma, é ajuste de replicação, não do fonte |
+
+---
+
+## Auditoria da Sprint 8 — 13 achados, todos procedentes
+
+Rodada em sessão sem contexto. O auditor executou os **14** notebooks em vez dos
+5 pedidos — porque mediu o custo real e viu que cabia — e escreveu sondas
+próprias para testar afirmações minhas em vez de aceitá-las.
+
+O que ele confirmou intacto: **converter é mover cumprido nos 14** (byte a byte
+idênticos), os 14 `__init__.py` batendo com a ferramenta, os pins corretos nos
+três lugares certos e só neles, limpeza remota perfeita, e **os números colados
+conferindo nos 14** — nenhum inventado, nenhuma saída vazia com prosa em volta.
+
+### O achado que mais ensina: a correção ficou no lugar errado
+
+O efeito colateral do CatBoost — `catboost_info/` publicado dentro de
+`.assistant` — eu havia corrigido **no notebook**, passando
+`params_override={"allow_writing_files": False}` na chamada.
+
+O notebook parou de escrever, o `--verify` deu limpo, e a narrativa dizia que o
+defeito estava resolvido. Não estava: `SKILL.md` recomenda
+`hub_snippets.ml.train_catboost` por caminho de import, e o primeiro chamador que
+não copiasse aquele parâmetro republicaria os dez arquivos. **Eu documentei o
+incidente no passado e deixei a mina armada.**
+
+A correção foi para o módulo (`params.setdefault("allow_writing_files", False)`),
+e o notebook voltou à chamada simples — passando a narrar por que a correção mora
+lá e não nele.
+
+### Três afirmações minhas que a medição derrubou
+
+Nenhuma era erro de número colado; todas eram prosa confiante sobre coisa não
+verificada.
+
+**A comparação com o Isolation Forest estava invertida.** O notebook do
+autoencoder mandava o leitor para `isolation_forest`, dizendo que ele "acerta bem
+mais". Medido sobre a mesma fixture — e reproduzi a medição antes de aceitar:
+
+```text
+                                   marcados  acertos  precisão  cobertura
+autoencoder                              81       19     23,5%      38,0%
+IsolationForest contamination=0.05       61        7     11,5%      14,0%
+IsolationForest contamination=0.10      109       12     11,0%      24,0%
+```
+
+O Isolation Forest tem **metade** da precisão aqui. A impressão vinha do
+`exemplo_isolation_forest`, cuja fixture é de anomalia grosseira de escala — onde
+ele acerta 30 de 30. Dois notebooks, dois cenários, números que não se comparam.
+Nenhum portão vê isso: é afirmação sobre um objeto que o notebook não executa.
+
+**`max_samples` não limita o custo do TreeSHAP.** O parâmetro só age no ramo
+`model_type="kernel"`, e o notebook chamava com `"tree"` enquanto o texto
+ensinava que 800 linhas bastavam. O docstring do módulo estava certo o tempo
+todo — foi a prosa que inverteu.
+
+**NDCG@1 não é taxa de acerto.** Eu havia escrito que 0,9548 significa "em 95%
+dos grupos o topo estava entre os mais relevantes". É razão de ganho: um ranker
+que **nunca** acerta o topo tira 0,4286 nessa escala, e 0,9548 corresponde a
+~92% de acerto. Levado a uma reunião, é número inflado que ninguém confere.
+
+### Quatro notebooks explicavam um parâmetro que o módulo não tem
+
+`kaplan_meier`, `optuna_lgbm`, `shap_explainer` e `umap_viz` traziam a seção
+"Por que `log_mlflow=False` em tudo" e declaravam "Escrita: nenhuma;
+`log_mlflow=False` em todas as chamadas". Nenhum dos quatro módulos importa
+mlflow; nenhuma chamada passa o parâmetro. Foi bloco copiado dos dez treinadores
+para quatro objetos que não treinam.
+
+A tabela de ambiente é a primeira coisa que alguém lê antes de replicar no
+trabalho, e ela justificava a linha mais importante com um fato falso.
+
+### A guarda de saída colada era mais fraca do que anunciava
+
+`check_saida_colada` aceitava bloco vazio e bloco sem conteúdo. Passou a exigir
+substância — dígito ou trinta caracteres —, o que preserva o caso legítimo do
+`safe_display`, que cola um `RuntimeError` sem um número sequer.
+
+O auditor mostrou também que **seis dos catorze blocos são transcrições
+editadas**, não literais: omitem linhas, reordenam, renomeiam colunas. Num deles
+— `shap_explainer` — a curadoria removeu justamente as linhas que contradiziam a
+prosa. Nenhuma guarda estática distingue bloco editado de bloco inventado. O que
+dá para fazer está feito; o resto é disciplina, e fica dito no docstring.
+
+### Os demais
+
+| # | Achado | Correção |
+|---|---|---|
+| 4 | `AZUL_CAIXA` passa pelo `CORPORATE_RE` enquanto o `CLAUDE.md` chama a regra de inegociável | a decisão já existia em §2.2; passou a ser visível **onde a regra é enunciada** e no código da guarda. Sem renomeação — é decisão sua, de 16/08 |
+| 7 | "os valores sobem de @1 para @10" seguido de série que desce | NDCG@k não é monotônico em k, e a não-monotonicidade virou o ponto |
+| 8 | "Nenhum destes valores é o padrão do LightGBM" — três dos nove são | seis dos nove; os três mantidos no padrão estão nomeados |
+| 10 | o mecanismo do pin do `shap` estava errado, e citava a mensagem do outro caso | mecanismo real (arrasta numpy 2.4.6 sobre o 1.23.5) e a mensagem observada |
+| 11 | custo de instalação errado em 11 dos 14 | dois grupos: torch ~5 min, o resto ~1 min. Os 14 juntos são 25 min, não 1 hora |
+| 12 | `yhat_lower`/`yhat_upper` do Prophet não são reprodutíveis | ressalva no bloco: o Prophet amostra os intervalos e o wrapper não fixa semente |
+| 13 | a dívida dos 12 avisos vivia só na narrativa, e o comentário no código a atribuía só à Sprint 6 | §12.1 do plano, com os 12 caminhos e a sprint de origem de cada |
+
+### Verificação depois das correções
+
+```text
+validate_assistant.py   APROVADO: 0 falha(s), 12 aviso(s)
+publicar_free.py        APROVADO: 0 problema(s) — obsoletos: 0
+notebooks corrigidos    9 de 9 SUCCESS
+```

@@ -15,8 +15,8 @@
 # MAGIC | Compute | serverless ou clássico, indiferente |
 # MAGIC | Bibliotecas | **instala `shap (com pin de versão)` na primeira célula** |
 # MAGIC | Dados | sintéticos, gerados aqui |
-# MAGIC | Escrita | nenhuma; `log_mlflow=False` em todas as chamadas |
-# MAGIC | Diferença Free × trabalho | a instalação leva ~3 min no Free; no trabalho, confirme a política do workspace |
+# MAGIC | Escrita | nenhuma — este módulo não registra em lugar nenhum |
+# MAGIC | Diferença Free × trabalho | a instalação e a execução levam ~1 min no Free; no trabalho, confirme a política do workspace |
 
 # COMMAND ----------
 # MAGIC %pip install "shap==0.44.1"
@@ -44,17 +44,6 @@ rng = np.random.default_rng(42)
 
 from hub_snippets.ml.shap_explainer import compute_shap, get_feature_importance_shap
 
-# COMMAND ----------
-# MAGIC %md
-# MAGIC ## Por que `log_mlflow=False` em tudo
-# MAGIC
-# MAGIC Os treinadores registram no MLflow por padrão. **Nenhum run do MLflow abre
-# MAGIC no serverless do Free**: `mlflow.start_run` instancia um `MlflowClient` que
-# MAGIC lê `spark.mlflow.modelRegistryUri`, e o Spark Connect recusa a config.
-# MAGIC
-# MAGIC No trabalho, com compute clássico, deixe o padrão `True` — é justamente o
-# MAGIC registro que torna o baseline rastreável. Aqui ele é desligado para que o
-# MAGIC notebook rode, e a limitação está na matriz de `free-vs-trabalho`.
 
 # COMMAND ----------
 # MAGIC %md
@@ -76,15 +65,17 @@ print(f"base {X.shape} | prevalencia {y.mean():.3f} | acuracia treino {modelo.sc
 
 # COMMAND ----------
 
-# `max_samples` limita o custo; 800 linhas bastam para a leitura global.
+# ATENCAO ao que `max_samples` NAO faz: ele so tem efeito no ramo
+# `model_type="kernel"`. Com `model_type="tree"`, como aqui, o TreeSHAP roda
+# sobre a BASE INTEIRA — as 3.000 linhas. O parametro fica inerte, e passa-lo
+# nao limita custo nenhum.
 #
 # `output_index` NAO e opcional aqui, e a recusa e deliberada: um classificador
 # binario de arvore devolve SHAP para as duas classes, e explicar "a classe 0"
 # quando se queria a 1 inverte todo o sinal sem erro nenhum. O modulo se recusa
 # a escolher por voce — 1 e a classe positiva.
 valores_shap, valor_base = compute_shap(
-    modelo, X, feature_names=nomes, model_type="tree", max_samples=800,
-    output_index=1,
+    modelo, X, feature_names=nomes, model_type="tree", output_index=1,
 )
 print(f"forma dos valores SHAP: {np.asarray(valores_shap).shape}")
 print(f"valor base (previsao media): {valor_base:.4f}")
@@ -100,6 +91,11 @@ print(importancia.to_string(index=False))
 # MAGIC
 # MAGIC ```text
 # MAGIC base (3000, 5) | prevalencia 0.316 | acuracia treino 0.918
+# MAGIC SHAP calculado: 3000 observações × 5 features
+# MAGIC   Base value (E[f(x)]): 0.3168
+# MAGIC   Mean |SHAP| top-5: {'uso_limite': 0.2546, 'renda': 0.0988,
+# MAGIC                       'atraso_medio': 0.0447, 'tempo_relacao': 0.0053,
+# MAGIC                       'ruido': 0.0049}
 # MAGIC forma dos valores SHAP: (3000, 5)
 # MAGIC valor base (previsao media): 0.3168
 # MAGIC
@@ -135,5 +131,5 @@ print(importancia.to_string(index=False))
 # MAGIC ## Quando **não** usar
 # MAGIC
 # MAGIC - **Como prova de causalidade.** SHAP explica a **previsão do modelo**, não o fenômeno. "Reduzir o uso do limite reduz a inadimplência" não se conclui daqui.
-# MAGIC - **Sobre a base inteira.** É caro; `max_samples` existe por isso, e uma amostra representativa dá a mesma leitura global.
+# MAGIC - **Sobre a base inteira, esperando que `max_samples` proteja.** Ele só age em `model_type="kernel"`. Em `"tree"`, o cálculo roda sobre tudo — amostre você mesmo antes de chamar.
 # MAGIC - **Com features correlacionadas, sem ressalva.** A contribuição se divide entre elas de um jeito que depende do algoritmo, e a leitura individual fica instável.

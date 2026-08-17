@@ -656,6 +656,36 @@ Registrado para não ser desfeito numa próxima revisão:
 
 ---
 
+### 12.1 Dívida nomeada — notebooks sem saída real colada
+
+O critério §7.1 item 4 exige "todo notebook da sprint executado, com saída real
+colada". **Três sprints fecharam sem cumpri-lo**, e a exceção não estava anotada
+em lugar nenhum fora da narrativa. Fica aqui, com nome e origem:
+
+| Notebook | Sprint de origem |
+|---|---|
+| `hub_padroes/script/checar_base_campanha/exemplo_checar_base_campanha.py` | 1 |
+| `hub_scripts/doc_coverage/exemplo_doc_coverage.py` | 4 |
+| `hub_scripts/naming_checker/exemplo_naming_checker.py` | 4 |
+| `hub_scripts/rfv_calculator/exemplo_rfv_calculator.py` | 4 |
+| `hub_scripts/schema_to_yaml/exemplo_schema_to_yaml.py` | 4 |
+| `hub_snippets/spark/date_features/exemplo_date_features.py` | 6 |
+| `hub_snippets/spark/join_diagnostics/exemplo_join_diagnostics.py` | 6 |
+| `hub_snippets/spark/null_summary/exemplo_null_summary.py` | 6 |
+| `hub_snippets/spark/pit_join/exemplo_pit_join.py` | 6 |
+| `hub_snippets/spark/psi_calculator/exemplo_psi_calculator.py` | 6 |
+| `hub_snippets/spark/smart_sample/exemplo_smart_sample.py` | 6 |
+| `hub_snippets/testing/fixtures/exemplo_fixtures.py` | 6 |
+
+São **12**, e nenhum é das Sprints 7 ou 8. `check_saida_colada` os lista como
+aviso a cada execução; quando esta tabela zerar, promova a guarda a falha.
+
+Quem for fechar a dívida: são doze capturas de execução mais doze leituras
+escritas. Não é trabalho de fim de sessão — foi assim que nasceu, duas rodadas
+atrás, uma tabela rotulada "saída real" com valores extrapolados.
+
+---
+
 ## 12. Registro de execução
 
 | Sprint | Status | Data | Auditoria | Observação |
@@ -669,7 +699,7 @@ Registrado para não ser desfeito numa próxima revisão:
 | 5 | não iniciada | — | — | — |
 | 6 | ✅ concluída | 2026-08-17 | ✅ contrato de dados virou guarda | [relatório](docs/sprints/sprint-6-snippets-spark.md) |
 | 7 | ✅ concluída | 2026-08-17 | ✅ 12 achados corrigidos + guarda de entrada | [relatório](docs/sprints/sprint-7-ml-nucleo.md) |
-| 8 | ✅ concluída | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-8-ml-dependencia-opcional.md) · os 14 executam, via `%pip` |
+| 8 | ✅ concluída | 2026-08-17 | ✅ 13 achados corrigidos | [relatório](docs/sprints/sprint-8-ml-dependencia-opcional.md) · os 14 executam, via `%pip` |
 | 9 | não iniciada | — | — | — |
 | 10 | não iniciada | — | — | — |
 | 11 | não iniciada | — | — | — |

@@ -16,7 +16,7 @@
 # MAGIC | Bibliotecas | **instala `lightgbm` na primeira célula** |
 # MAGIC | Dados | sintéticos, gerados aqui |
 # MAGIC | Escrita | nenhuma; `log_mlflow=False` em todas as chamadas |
-# MAGIC | Diferença Free × trabalho | a instalação leva ~3 min no Free; no trabalho, confirme a política do workspace |
+# MAGIC | Diferença Free × trabalho | a instalação e a execução levam ~1 min no Free; no trabalho, confirme a política do workspace |
 
 # COMMAND ----------
 # MAGIC %pip install lightgbm
@@ -128,8 +128,11 @@ for chave, valor in DEFAULT_PARAMS_BINARY.items():
 # MAGIC n_estimators             500
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** Nenhum destes valores é o padrão do LightGBM: são uma escolha
-# MAGIC conservadora, e vale saber qual.
+# MAGIC **Como ler.** **Seis** destes nove valores diferem do padrão do LightGBM;
+# MAGIC `num_leaves` (31), `max_depth` (−1) e `min_child_samples` (20) são o
+# MAGIC padrão da biblioteca, mantidos de propósito. Saber quais são decisão e
+# MAGIC quais são herança é o que torna a revisão possível — debater três números
+# MAGIC que ninguém escolheu consome o tempo que os outros seis mereciam.
 # MAGIC
 # MAGIC `learning_rate` 0,05 em vez de 0,1 troca velocidade por estabilidade —
 # MAGIC combinado com `n_estimators` 500 e early stopping, deixa o modelo parar

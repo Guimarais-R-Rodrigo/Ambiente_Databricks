@@ -15,8 +15,8 @@
 # MAGIC | Compute | serverless ou clássico, indiferente |
 # MAGIC | Bibliotecas | **instala `umap-learn (com pin de versão)` na primeira célula** |
 # MAGIC | Dados | sintéticos, gerados aqui |
-# MAGIC | Escrita | nenhuma; `log_mlflow=False` em todas as chamadas |
-# MAGIC | Diferença Free × trabalho | a instalação leva ~3 min no Free; no trabalho, confirme a política do workspace |
+# MAGIC | Escrita | nenhuma — este módulo não registra em lugar nenhum |
+# MAGIC | Diferença Free × trabalho | a instalação e a execução levam ~1 min no Free; no trabalho, confirme a política do workspace |
 
 # COMMAND ----------
 # MAGIC %pip install "umap-learn==0.5.5"
@@ -44,17 +44,6 @@ rng = np.random.default_rng(42)
 
 from hub_snippets.ml.umap_viz import compute_umap, plot_umap_clusters
 
-# COMMAND ----------
-# MAGIC %md
-# MAGIC ## Por que `log_mlflow=False` em tudo
-# MAGIC
-# MAGIC Os treinadores registram no MLflow por padrão. **Nenhum run do MLflow abre
-# MAGIC no serverless do Free**: `mlflow.start_run` instancia um `MlflowClient` que
-# MAGIC lê `spark.mlflow.modelRegistryUri`, e o Spark Connect recusa a config.
-# MAGIC
-# MAGIC No trabalho, com compute clássico, deixe o padrão `True` — é justamente o
-# MAGIC registro que torna o baseline rastreável. Aqui ele é desligado para que o
-# MAGIC notebook rode, e a limitação está na matriz de `free-vs-trabalho`.
 
 # COMMAND ----------
 # MAGIC %md

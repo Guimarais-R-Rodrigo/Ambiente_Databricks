@@ -16,7 +16,7 @@
 # MAGIC | Bibliotecas | **instala `lightgbm` na primeira célula** |
 # MAGIC | Dados | sintéticos, gerados aqui |
 # MAGIC | Escrita | nenhuma; `log_mlflow=False` em todas as chamadas |
-# MAGIC | Diferença Free × trabalho | a instalação leva ~3 min no Free; no trabalho, confirme a política do workspace |
+# MAGIC | Diferença Free × trabalho | a instalação e a execução levam ~1 min no Free; no trabalho, confirme a política do workspace |
 
 # COMMAND ----------
 # MAGIC %pip install lightgbm
@@ -110,18 +110,30 @@ for chave, valor in avaliacao.items():
 # MAGIC ndcg_at_10               0.9764
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** `ndcg_at_1` de **0,9548** responde à pergunta operacional: em
-# MAGIC 95% dos grupos, o item que o modelo pôs em primeiro estava entre os mais
-# MAGIC relevantes daquele grupo. É a métrica que corresponde à tela em que só cabe
-# MAGIC uma oferta.
+# MAGIC **Como ler — e o erro de leitura mais caro está aqui.** `ndcg_at_1` de
+# MAGIC **0,9548** **não** quer dizer "acertamos a primeira posição em 95% dos
+# MAGIC grupos". NDCG@1 é uma **razão de ganho**:
 # MAGIC
-# MAGIC E repare que os valores **sobem** de @1 para @10: 0,9548 → 0,9543 → 0,9634
-# MAGIC → 0,9764. NDCG@k mais alto para k maior é o normal, e não significa que o
-# MAGIC modelo melhora quando você mostra mais itens — significa que a métrica
-# MAGIC fica mais fácil, porque com 10 posições em grupos de 10 basta ordenar
-# MAGIC aproximadamente certo. **Comparar modelos com k diferentes não diz nada.**
+# MAGIC ```text
+# MAGIC NDCG@1 = (2^relevância_do_topo − 1) / (2^melhor_relevância_do_grupo − 1)
+# MAGIC ```
 # MAGIC
-# MAGIC A pequena queda de @1 para @3 é ruído de amostra e não tem leitura.
+# MAGIC Com a escala de relevância deste notebook (0 a 3), um ranker que **nunca**
+# MAGIC acerta o topo — põe sempre um item de relevância 2 onde havia um de 3 —
+# MAGIC ainda tira **0,4286**. E a taxa de acerto que corresponde a 0,9548 é de
+# MAGIC cerca de **92%**, não 95%.
+# MAGIC
+# MAGIC Levado a uma reunião como "acertamos a oferta em 95% dos casos", é um
+# MAGIC número inflado que ninguém na sala tem como conferir. **Se a pergunta é
+# MAGIC taxa de acerto, meça taxa de acerto** — `hit-rate@1` é uma linha de código
+# MAGIC e não se confunde com nada.
+# MAGIC
+# MAGIC Sobre a série 0,9548 → 0,9543 → 0,9634 → 0,9764: repare que ela **desce**
+# MAGIC de @1 para @3 antes de subir. NDCG@k **não é monotônico em k**, e a
+# MAGIC intuição de que "k maior dá número maior" já falha na primeira transição
+# MAGIC desta tabela. A tendência geral de alta existe — com 10 posições em grupos
+# MAGIC de 10, basta ordenar aproximadamente certo —, mas não é uma regra.
+# MAGIC **Comparar modelos com k diferentes não diz nada.**
 
 # COMMAND ----------
 # MAGIC %md
