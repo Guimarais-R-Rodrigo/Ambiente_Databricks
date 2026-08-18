@@ -49,7 +49,7 @@ e siga.
 - A pasta `/Users/<username>/hub_lab/forward_tests/` é criada na primeira gravação; não é preciso criá-la antes.
 - Deixe este roteiro aberto de um lado e o Databricks do outro.
 
-## 4. O ciclo de um teste (você repete isto 36 vezes)
+## 4. O ciclo de um teste (repita para cada caso pendente)
 
 ```mermaid
 flowchart LR
@@ -88,10 +88,10 @@ copie-a para um bloco de notas e, no final, cole todas de uma vez para o Claude.
 > você já sabe se o plano A (arquivos) funciona ou se segue no plano B (colar
 > linhas no final).
 
-## 5. Depois dos 36 testes — o que acontece
+## 5. Depois dos testes — o que acontece
 
 1. **Você** avisa o Claude: "terminei" (ou cola as linhas, se foi o plano B).
-2. **Claude** coleta os 36 arquivos via CLI, preenche
+2. **Claude** coleta os arquivos via CLI, preenche
    `resultados/<data>_rodada1.md`, e classifica cada teste em PASS/FAIL.
 3. **Claude** ajusta a `description` de cada skill que colidiu (no
    `ambiente_fonte/`), valida, re-renderiza o simulado e republica no workspace.
@@ -101,7 +101,11 @@ copie-a para um bloco de notas e, no final, cole todas de uma vez para o Claude.
 
 ---
 
-## 6. Os 36 testes — copie a Mensagem 1, depois a Mensagem 2
+## 6. Os testes — copie a Mensagem 1, depois a Mensagem 2
+
+> **39 no total**: 36 das doze skills originais, já concluídos com
+> 36/36 PASS, mais os **três da Skill 13**, que são os únicos pendentes.
+> Se você está aqui só para testar a skill nova, vá direto à Skill 13.
 
 Nos negativos, indicamos qual skill *idealmente* seria carregada no lugar.
 
@@ -528,6 +532,46 @@ Mensagem 1:
 Mensagem 2:
 ```text
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/12M.md com uma única linha, no formato "12M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+### Skill 13 — hub-ml-criar-objeto
+
+> **Acrescentada na Sprint 11 (2026-08-17), ainda não testada.** É a única skill
+> cujo vocabulário — criar, adicionar, padronizar — roça o de todas as vizinhas.
+> **O caso `13N` é o mais importante do roteiro inteiro**: se ela roubar a vez de
+> quem faz análise, o pedido de estatística vira conversa sobre formato de pasta.
+
+#### `13P` — positivo (esperado: carregar `hub-ml-criar-objeto`)
+
+Mensagem 1:
+```text
+Quero criar um snippet novo no Hub para calcular taxa de resposta de campanha. Qual é o formato e o que preciso entregar junto?
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/13P.md com uma única linha, no formato "13P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `13N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-validacao-estatistica`)
+
+Mensagem 1:
+```text
+Como calculo o PSI entre a safra de janeiro e a de junho, e a partir de que valor devo me preocupar?
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/13N.md com uma única linha, no formato "13N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+```
+
+#### `13M` — menção (esperado: carregar)
+
+Mensagem 1:
+```text
+@hub-ml-criar-objeto qual template eu uso para um utilitário que recebe o nome de uma tabela e devolve um diagnóstico de qualidade?
+```
+Mensagem 2:
+```text
+Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/13M.md com uma única linha, no formato "13M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ---

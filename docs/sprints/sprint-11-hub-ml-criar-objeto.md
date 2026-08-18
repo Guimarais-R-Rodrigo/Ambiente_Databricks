@@ -103,6 +103,10 @@ Onde dava, troquei o número por uma formulação que não envelhece. Onde o nú
 | Negativo | "como calculo PSI entre duas safras?" → carrega `hub-ml-validacao-estatistica` ou similar, **não** esta |
 | `@menção` | `@hub-ml-criar-objeto` → carrega deterministicamente |
 
+**O roteiro não cobria a skill nova** — os 36 casos eram das doze originais, e
+os três de `13P`/`13N`/`13M` foram acrescentados agora a
+`docs/testes/forward/roteiro.md`. Sem isso não haveria o que executar.
+
 O caso negativo é o que importa mais. Uma skill de "criar objeto" tem vocabulário
 que roça o de todas as outras, e o risco real é ela roubar a vez — o pedido de
 análise virando conversa sobre formato de pasta.
