@@ -1,4 +1,4 @@
-"""Check configurable table and column naming conventions."""
+"""Confere convenções configuráveis de nome de tabela e de coluna."""
 
 from __future__ import annotations
 

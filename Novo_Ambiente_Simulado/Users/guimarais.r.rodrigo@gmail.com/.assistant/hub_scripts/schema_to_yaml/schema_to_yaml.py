@@ -1,4 +1,4 @@
-"""Export a Unity Catalog table schema as safe YAML 1.2."""
+"""Exporta o schema de uma tabela do Unity Catalog como YAML 1.2 seguro."""
 
 from __future__ import annotations
 

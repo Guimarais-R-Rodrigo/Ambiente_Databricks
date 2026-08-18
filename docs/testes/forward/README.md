@@ -13,7 +13,7 @@ fica de fora. É o gate que a auditoria do Codex deixou pendente antes da
 replicação no trabalho.
 
 - Método e vereditos: `.claude/skills/forward-test-skills/SKILL.md`
-- Prompts prontos para colar: [roteiro.md](roteiro.md) (36 testes, 2 mensagens cada)
+- Prompts prontos para colar: [roteiro.md](roteiro.md) (39 testes, 2 mensagens cada — 36 concluídos)
 - Registro de rodadas: copie [template_resultados.md](template_resultados.md)
   para `resultados/<YYYY-MM-DD>_rodada<N>.md`
 
@@ -22,8 +22,9 @@ replicação no trabalho.
 | 1 | 2026-08-14 | 33 | 2 | [detalhes](resultados/2026-08-14_rodada1.md) — 12/12 negativos corretos; falhas isoladas em `10P`/`11P`; `07M` sem registro |
 | 2 | 2026-08-14 | 5 | 0 | [detalhes](resultados/2026-08-14_rodada2.md) — hipótese confirmada: `10P` e `11P` passaram apenas com o prompt corrigido |
 
-**GATE FECHADO ✅ — 36/36 PASS** (positivos 12/12 · negativos 12/12 · menções
-12/12), **sendo 1 negativo aprovado em sentido fraco**: em `11N-r2` a skill
+**GATE DAS 12 SKILLS ORIGINAIS FECHADO ✅ — 36/36 PASS** (positivos 12/12 ·
+negativos 12/12 · menções 12/12). Faltam os **3 casos da `hub-ml-criar-objeto`**,
+criada na Sprint 11 e nunca testada: a meta do gate completo é 39/39, **sendo 1 negativo aprovado em sentido fraco**: em `11N-r2` a skill
 errada não carregou — que é o critério do teste —, mas a ideal também não veio.
 Está registrado como item de vigilância no
 [handoff de 2026-08-14](../../handoffs/2026-08-14_calibracao-descriptions.md).

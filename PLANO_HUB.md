@@ -3,7 +3,6 @@
 Documento de trabalho, versão 2. Cada sprint é executada isoladamente, auditada
 em sessão sem contexto, revisada por você, e só então a seguinte começa.
 
-- **Status:** v2. Sprints 0 e 0b concluídas. Auditoria começa na Sprint 1
 - **Status: as 13 sprints executadas.** A 5 entregou as partes 1 e 2 dos 16 prompts; as partes 3 e os forward tests dependem de interação humana. 13 skills; a biblioteca convertida (**58 objetos**: 51 `hub_snippets` + 7 `hub_scripts`) e os dois READMEs de topo atualizados. O validador conta **60 pastas de objeto**, somando os 2 exemplares de `hub_padroes`, que são template e não biblioteca. Pendem de você: os 3 forward tests da skill nova e as 16 partes 3 dos prompts
 - **Última atualização:** 2026-08-17
 
@@ -21,7 +20,7 @@ em sessão sem contexto, revisada por você, e só então a seguinte começa.
 |---|---|---|
 | Marca do que é customizado | prefixo `x_` | prefixo **`hub_`** / **`hub-`** |
 | Identidade do projeto | ambiente pessoal | **Hub de ML** da equipe |
-| Nome das skills | `hub-ml-<tema>` | **`hub-ml-<tema>`** |
+| Nome das skills | `rodrigo-<tema>` | **`hub-ml-<tema>`** |
 | Organização de um snippet | um `.py` solto numa pasta temática | **uma pasta por snippet**: `.py`, `__init__.py` e notebook |
 | Organização de script e prompt | idem | idem |
 | Contexto de projeto | `x_projects/` | **removida** |
@@ -148,8 +147,8 @@ reestruturação de 51 objetos custa uma linha de documentação.
 módulo — funções, classes e constantes em maiúscula que não começam com `_`.
 Não é curadoria.
 
-Isto não é preferência. Há seis imports cruzados reais entre módulos da
-biblioteca, e `tests/test_core.py` importa nove nomes de oito módulos:
+Isto não é preferência. Há **sete** imports cruzados reais entre módulos da
+biblioteca, e `tests/test_core.py` importa dez nomes de oito módulos:
 
 ```text
 display/correlation_matrix  -> visual.theme_plotly : aplicar_tema
@@ -157,6 +156,7 @@ display/distribution_grid   -> spark.smart_sample  : smart_sample
 display/distribution_grid   -> visual.theme_plotly : aplicar_tema
 visual/index_generator      -> constants.emojis    : SECOES_EDA
 visual/section_header       -> constants.colors    : AZUL_CAIXA, BG_SECTION, TEXTO_SECUNDARIO
+visual/section_header       -> constants.emojis    : SECOES_EDA
 visual/theme_plotly         -> constants.colors    : PALETA_CATEGORICA, TEXTO_SECUNDARIO, AZUL_CAIXA
 ```
 
@@ -166,7 +166,8 @@ auditoria com `ImportError: cannot import name 'BG_SECTION'`. E `smart_sample` �
 escrito na Sprint 6 enquanto `distribution_grid` o consome na Sprint 9: três
 sprints de distância entre a causa e o sintoma.
 
-**37 dos 51 módulos têm mais de um nome público.** Por isso os 51 `__all__` são
+**A maioria dos módulos tem mais de um nome público** — hoje 39 dos 51, e o
+número sai de `python tools/validate_assistant.py`, não daqui. Por isso os 51 `__all__` são
 gerados **mecanicamente por AST na Sprint 0b**, não por 51 julgamentos
 independentes.
 
@@ -341,7 +342,7 @@ vão encontrar. O conjunto de exemplos ganha, por isso, três peças a mais:
 
 | Situação | Exemplo que a demonstra |
 |---|---|
-| `__all__` com mais de um nome (37 dos 51 módulos) | `taxa_resposta_campanha` exporta a função **e** a constante de limite mínimo de base |
+| `__all__` com mais de um nome (a maioria dos módulos) | `taxa_resposta_campanha` exporta a função **e** a constante de limite mínimo de base |
 | Notebook que não pode ser executado | um exemplo curto e explicitamente falso, com o bloco canônico preenchido |
 | Objeto sem dados e sem número | uma constante de exemplo, na variante de §5.1 |
 | Resposta real do Genie Code no notebook de prompt | **exige uma interação humana já na Sprint 1** — ver §5.4 |

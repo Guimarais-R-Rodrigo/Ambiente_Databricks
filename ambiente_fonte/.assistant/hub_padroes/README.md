@@ -1,5 +1,10 @@
 # `hub_padroes` — os moldes do Hub
 
+> **EXTENSÃO DO HUB (`hub_`) — NÃO AUTO-DESCOBERTA.** Os moldes desta pasta são
+> consulta humana: o Genie Code não os lê nem os aplica sozinho. Para que um
+> deles chegue ao chat, anexe o arquivo com `@`/Add context — ou use
+> `@hub-ml-criar-objeto`, a skill que faz cumprir esta forma.
+
 Os templates que todo objeto do Hub segue, com um exemplo preenchido de cada um.
 
 ## Para que serve

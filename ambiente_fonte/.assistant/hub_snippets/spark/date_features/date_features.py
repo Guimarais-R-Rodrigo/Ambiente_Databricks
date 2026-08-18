@@ -1,4 +1,4 @@
-"""Add transparent calendar features to Spark DataFrames."""
+"""Acrescenta features de calendário explícitas a DataFrames Spark."""
 
 from __future__ import annotations
 

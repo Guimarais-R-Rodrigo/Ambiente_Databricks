@@ -1,4 +1,4 @@
-"""Build recency, frequency, and monetary (RFM/RFV) customer features."""
+"""Constrói features de recência, frequência e valor (RFV/RFM) por cliente."""
 
 from __future__ import annotations
 

@@ -213,10 +213,11 @@ forma da pasta     : 58 conferidas (o módulo tem o nome da pasta)
 contrato de dados  : 60 pares (saída: o que o notebook consome)
 contrato de entrada: 57 pares (entrada: o que o notebook passa)
 saída colada       : 66 notebooks com bloco real, 11 sem
+idioma da docstring: 60 módulos, 0 com docstring em inglês
 python (AST)       : 209 arquivos
 instrucoes         : 7085/20000 caracteres
-repo (corporativo) : 714 arquivos varridos no repositório inteiro
-repo (links)       : 247 links fora da raiz analisada
+repo (corporativo) : 717 arquivos varridos no repositório inteiro
+repo (links)       : 265 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 11 aviso(s)
 ```

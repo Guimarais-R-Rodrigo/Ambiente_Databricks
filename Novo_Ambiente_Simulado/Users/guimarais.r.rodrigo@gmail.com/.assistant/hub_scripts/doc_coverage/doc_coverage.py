@@ -1,4 +1,4 @@
-"""Measure documentation adjacency in exported Databricks or Jupyter notebooks."""
+"""Mede a proximidade entre código e documentação em notebooks exportados."""
 
 from __future__ import annotations
 

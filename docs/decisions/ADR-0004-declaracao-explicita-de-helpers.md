@@ -1,7 +1,11 @@
 # ADR-0004 — Declaração explícita de helpers nas skills, em vez de descoberta em tempo de chat
 
 Data: 2026-08-14
-Status: Aceito
+Status: Aceito · **localização e forma supersedidas** pelo
+[ADR-0007](ADR-0007-catalogo-e-pasta-de-objeto.md) (2026-08-17). A decisão de
+fundo — declaração explícita de helpers — continua valendo e é reafirmada lá.
+Os caminhos `x_snippets/`, `x_scripts/` e `x_docs/` descritos abaixo são de
+14/08 e não existem mais.
 Autor: Claude
 
 ## Contexto

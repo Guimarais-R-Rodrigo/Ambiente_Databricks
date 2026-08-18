@@ -1,4 +1,4 @@
-"""Create auditable score bands with an explicit score direction."""
+"""Cria faixas de score auditáveis, com a direção do score declarada."""
 
 from __future__ import annotations
 

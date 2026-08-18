@@ -35,15 +35,16 @@ Escala planejada: pessoal → squad → missão.
 - Helpers declarados explicitamente nas skills, não descobertos em chat:
   `docs/decisions/ADR-0004-declaracao-explicita-de-helpers.md`.
 - Publicação no Free usa `tools/publicar_free.py`, não o engine do Hub:
-  `docs/decisions/ADR-0005-publicacao-propria-no-free.md` — com o **critério de
-  conferência** atualizado pelo `ADR-0008`, que o tirou do texto e o pôs em
-  constante de código.
+  `docs/decisions/ADR-0005-publicacao-propria-no-free.md`, que **supersede o
+  ADR-0002** — o engine publicava `.py` como notebook e quebraria os imports da
+  biblioteca. O **critério de conferência** foi atualizado pelo `ADR-0008`, que o
+  tirou do texto e o pôs em constante de código.
 - O catálogo de helpers e a forma de pasta por objeto: `ADR-0007`, que supersede
   o `ADR-0004` em localização e forma. A declaração explícita de helpers, decidida
   lá, continua valendo.
-- Identidade `hub_`/`hub-ml-`, com tabela de correspondência: `ADR-0006`. O ADR-0002, que
-  adotava o engine `databricks-genie`, foi **supersedido** por ele — o engine
-  publica `.py` como notebook e quebraria os imports da biblioteca.
+- Identidade `hub_`/`hub-ml-`, com a tabela de correspondência `rodrigo-*` →
+  `hub-ml-*`: `ADR-0006`. Ele **não supersede nada** — complementa o ADR-0001 e o
+  ADR-0004.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 

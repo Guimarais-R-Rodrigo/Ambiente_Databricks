@@ -1,4 +1,4 @@
-"""Detect numeric distribution drift with Population Stability Index (PSI)."""
+"""Detecta drift de distribuição numérica pelo Population Stability Index (PSI)."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Track model metrics against an explicit, calibrated monitoring policy."""
+"""Acompanha métricas do modelo contra uma política de monitoramento explícita."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Bound notebook display actions for large Spark DataFrames."""
+"""Limita as ações de display de DataFrames Spark grandes no notebook."""
 
 from __future__ import annotations
 

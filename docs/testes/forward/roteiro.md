@@ -6,6 +6,14 @@
 > este documento não é reescrito porque descreve o que foi observado, não o
 > estado atual.
 
+> **Antes de reusar este roteiro.** Os prompts abaixo trazem o caminho do
+> workspace do laboratório, com o username de quem escreveu o roteiro — são 44
+> ocorrências. Eles ficam literais de propósito, para continuarem coláveis sem
+> edição por quem os escreveu. **Se você não é essa pessoa**, substitua o trecho
+> `/Workspace/Users/<...>/hub_lab/` pelo seu antes de colar: sem isso, os testes
+> tentam escrever na pasta de outra pessoa. É a mesma regra que o produto ensina
+> em `hub_snippets/README.md` — nunca copie um e-mail de um exemplo.
+
 ## 1. O que é este teste e por que ele existe
 
 As 13 skills `hub-ml-*` já estão publicadas no seu workspace Databricks Free.

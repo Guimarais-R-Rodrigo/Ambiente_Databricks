@@ -1,4 +1,4 @@
-"""Run a compact, scan-efficient data-quality assessment on a Unity Catalog table."""
+"""Avalia a qualidade de uma tabela do Unity Catalog com varredura compacta."""
 
 from __future__ import annotations
 

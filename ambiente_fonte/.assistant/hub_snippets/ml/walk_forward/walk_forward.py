@@ -1,4 +1,4 @@
-"""Calendar-aware expanding-window validation for temporal models."""
+"""Validação em janela expansiva por calendário, para modelos temporais."""
 
 from __future__ import annotations
 

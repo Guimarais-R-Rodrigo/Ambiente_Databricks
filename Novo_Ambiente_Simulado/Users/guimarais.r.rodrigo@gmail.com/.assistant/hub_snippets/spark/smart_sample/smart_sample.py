@@ -1,4 +1,4 @@
-"""Create bounded reproducible samples from Spark DataFrames."""
+"""Cria amostras reprodutíveis e limitadas de DataFrames Spark."""
 
 from __future__ import annotations
 

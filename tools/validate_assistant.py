@@ -44,14 +44,26 @@ CORPORATE_RE = re.compile(
     r"\b[a-z]\d{6,8}\b"                      # matrícula: letra + 6 a 8 dígitos
     r"|corp(?:orativ)?[.@]"                  # domínio/e-mail corporativo
     r"|\.gov\.br"
-    r"|@[a-z0-9-]*(?:banco|caixa|bank)[a-z0-9-]*\.",
+    r"|@[a-z0-9-]*(?:banco|caixa|bank)[a-z0-9-]*\."
+    # Siglas de orgao ou norma interna. Nao tem formato reconhecivel: so a lista
+    # pega. Cada uma leva uma letra entre colchetes para que a constante nao case
+    # consigo mesma -- este arquivo tambem e varrido pelo check. Ao levar o Hub
+    # para outra organizacao, acrescente as de la aqui. A fronteira e escrita a
+    # mao, e nao com , porque _ conta como caractere de palavra e o token
+    # aparece colado em nome de arquivo: conformidade_<sigla>.md.
+    r"|(?<![A-Za-z0-9])GE[G]OD(?![A-Za-z0-9])",
     re.IGNORECASE,
 )
 
 # Sequências típicas de mojibake (UTF-8 lido como latin-1/cp1252).
 MOJIBAKE_RE = re.compile(r"Ã[£¡©ªµ§¢³º]|â€[œ\x9d™“”]|Ã‚|Ã©|Ã§Ã")
 
-# Identificadores que jamais podem aparecer em conteúdo versionado.
+# Identificadores proibidos **dentro do produto** (`ambiente_fonte/`). Os dois
+# checks que usam esta constante recebem a raiz analisada, não o repositório
+# inteiro: o username pessoal do laboratório aparece de propósito em
+# `Novo_Ambiente_Simulado/` e em `docs/testes/`, e é estado aceito — ver o
+# docstring de `check_repo_corporate`. Quem estender esta regex supondo alcance
+# global vai errar por 439 caminhos.
 PERSONAL_RE = re.compile(
     r"c\d{6}|corp\.caixa|caixa\.gov\.br|guimarais[._-]?r?[._-]?rodrigo@|"
     r"C:\\Users\\Rodrigo|/Users/rodri\b",
@@ -188,7 +200,7 @@ def check_skill_helpers_resolvem(root: Path, problems: list[str]) -> int:
     percebe, porque o Genie Code não resolve o caminho — quem resolve é a pessoa,
     no notebook, e o erro aparece longe daqui.
 
-    Uma auditoria verificou os 38 caminhos à mão e achou zero quebrados. Esta
+    Uma auditoria verificou à mão os caminhos existentes à época e achou zero quebrados. Esta
     guarda é para que a próxima não precise.
     """
     base = root / ".assistant"
@@ -316,6 +328,7 @@ def check_saida_de_comando_no_readme(problems: list[str]) -> int:
     rotulos = (
         "skills             :", "markdown / links   :", "notebooks / links  :",
         "pastas de objeto   :", "forma da pasta     :", "saída colada       :",
+        "idioma da docstring:",
         "python (AST)       :", "repo (corporativo) :", "repo (links)       :",
         "esperados : ", "remotos   : ", "skills    :",
     )
@@ -337,8 +350,19 @@ def check_saida_de_comando_no_readme(problems: list[str]) -> int:
                 cwd=str(REPO_ROOT), encoding="utf-8", errors="replace",
                 env=ambiente,
             ).stdout
-        except (OSError, subprocess.SubprocessError):
-            return 0  # sem os comandos disponíveis, não invente reprovação
+        except (OSError, subprocess.SubprocessError) as erro:
+            # Antes daqui havia `return 0`: o comando não lançava e a guarda
+            # aprovava em silêncio, com "0 linhas conferidas" no meio de um bloco
+            # de contagens. Uma auditoria mediu o custo numa máquina sem CLI —
+            # três contagens erradas por 685, 684 e 86 passaram em dois segundos.
+            # Timeout entra por aqui também (`--verify` gasta ~100 s de rede).
+            problems.append(
+                f"README: o comando `{Path(cmd[1]).name}` não executou "
+                f"({type(erro).__name__}) — as contagens coladas ficaram sem "
+                "conferência. Não trate este resultado como aprovação: rode de "
+                "novo com a CLI do Databricks autenticada."
+            )
+            return 0
 
     texto_readme = readme.read_text(encoding="utf-8")
     verificados = 0
@@ -499,6 +523,63 @@ def check_pastas_de_objeto(root: Path, problems: list[str]) -> int:
 
 # Seções conhecidas: uma pasta diretamente sob elas é objeto, não sub-seção.
 _SECOES_DE_BIBLIOTECA = {"constants", "display", "ml", "spark", "testing", "visual"}
+
+
+def check_docstring_em_portugues(root: Path, problems: list[str]) -> tuple[int, int]:
+    """Cobra do módulo a norma de idioma que o próprio Hub publica.
+
+    `hub_padroes/snippet/template.md` não descreve: manda. *"Docstring,
+    comentário e notebook são prosa e vão em português"*, e *"não traduza
+    identificador"*. É especificação executável escrita em Markdown — e até esta
+    guarda existir, nada media se o produto a cumpria.
+
+    Uma auditoria mediu: 15 dos 58 módulos (26%) tinham docstring de módulo em
+    inglês, e a divisão era limpa por pasta — **7 de 7** em `hub_scripts/`. A
+    biblioteca ensinava duas convenções ao mesmo tempo, e o molde publicado
+    perdia autoridade sobre a etapa que o criou.
+
+    A detecção não pode ser só "tem acento": cinco docstrings legítimas em
+    português não têm nenhum (*"Wrapper Prophet com MLflow e feriados BR."*).
+    O sinal é a **razão** entre palavras funcionais das duas línguas, que separa
+    as duas populações sem falso positivo — e cai fora quando há acento, porque
+    aí a língua está decidida.
+
+    Escopo: a docstring **de módulo**, que é o que o leitor vê ao abrir o arquivo
+    e o que o Genie Code cita ao explicá-lo. Docstring de função fica de fora por
+    ora — a dívida é maior e vale medir antes de cobrar.
+
+    **Falha, não aviso** — e isso é deliberado. As 15 foram traduzidas na mesma
+    sessão em que a guarda nasceu, então não há dívida a tolerar: a partir daqui,
+    docstring de módulo em inglês reprova a validação. Aviso serve para dívida
+    aberta com prazo; norma cumprida se cobra.
+    """
+    en = re.compile(r"\b(the|of|with|for|and|to|from|based|against|as|on|in|"
+                    r"an|that|when|not|into|by)\b", re.IGNORECASE)
+    pt = re.compile(r"\b(de|com|para|do|da|dos|das|em|no|na|nos|nas|que|ou|"
+                    r"ao|aos|um|uma|sem|por|pelo|pela|como|entre|sobre)\b", re.IGNORECASE)
+    acento = re.compile(r"[áàâãéêíóôõúüçÁÀÂÃÉÊÍÓÔÕÚÜÇ]")
+    conferidos = ingleses = 0
+    for modulo in sorted(root.rglob("*.py")):
+        if modulo.parent.name != modulo.stem or modulo.name.startswith("exemplo_"):
+            continue
+        try:
+            doc = ast.get_docstring(ast.parse(modulo.read_text(encoding="utf-8")))
+        except SyntaxError:
+            continue
+        if not doc:
+            continue
+        conferidos += 1
+        primeira = doc.split("\n")[0]
+        if acento.search(primeira):
+            continue
+        if len(en.findall(primeira)) > len(pt.findall(primeira)):
+            ingleses += 1
+            problems.append(
+                f"{modulo.relative_to(root)}: docstring de módulo em inglês — "
+                f"{primeira[:60]!r}. O molde de `hub_padroes/snippet/` manda "
+                "prosa em português; identificadores ficam como estão."
+            )
+    return conferidos, ingleses
 
 
 def check_pasta_de_objeto_malformada(root: Path, problems: list[str]) -> int:
@@ -930,6 +1011,7 @@ def main() -> int:
     check_smoke_test_sincronizado(problems)
     n_helpers = check_skill_helpers_resolvem(root, problems)
     n_secoes, n_completas = check_skill_secoes(root, warnings)
+    n_doc, n_doc_en = check_docstring_em_portugues(root, problems)
     n_readme = 0
     if args.conferir_readme:
         n_readme = check_saida_de_comando_no_readme(problems)
@@ -948,6 +1030,7 @@ def main() -> int:
     print(f"contrato de dados  : {n_contratos} pares (saída: o que o notebook consome)")
     print(f"contrato de entrada: {n_entradas} pares (entrada: o que o notebook passa)")
     print(f"saída colada       : {n_com_saida} notebooks com bloco real, {n_sem_saida} sem")
+    print(f"idioma da docstring: {n_doc} módulos, {n_doc_en} com docstring em inglês")
     print(f"python (AST)       : {n_py} arquivos")
     print(f"instrucoes         : {n_chars}/{INSTRUCTION_LIMIT} caracteres")
     print(f"repo (corporativo) : {n_repo} arquivos varridos no repositório inteiro")

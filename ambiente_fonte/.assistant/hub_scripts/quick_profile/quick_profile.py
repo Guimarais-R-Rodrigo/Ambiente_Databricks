@@ -1,4 +1,4 @@
-"""Generate a bounded first-pass profile for a Unity Catalog table."""
+"""Gera um perfil inicial e limitado de uma tabela do Unity Catalog."""
 
 from __future__ import annotations
 

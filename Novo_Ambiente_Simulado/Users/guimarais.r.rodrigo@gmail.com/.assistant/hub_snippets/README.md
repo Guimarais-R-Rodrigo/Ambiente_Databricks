@@ -131,6 +131,7 @@ não fica defasada.
 | `display` | correlação, distribuições e tabela estilizada | conversão ao driver é sempre limitada |
 | `ml` | baselines, validação, drift, SHAP, séries, survival e monitoramento | dependências opcionais; valide versão e runtime |
 | `testing` | fixtures sintéticas determinísticas | só para teste e exemplo; nunca imita base real |
+| `tests` | suíte de regressão dos helpers de driver | **não é pacote de objeto**: sem `__init__.py` e sem notebook; roda fora do workspace |
 
 Use `requirements-optional.txt` como inventário, não como lockfile universal. Instale
 somente o subconjunto necessário e registre versões no projeto consumidor.

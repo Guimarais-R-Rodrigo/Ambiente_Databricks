@@ -1,4 +1,4 @@
-"""Leakage-aware temporal split based on calendar periods, not row positions."""
+"""Split temporal por período de calendário, e não por posição de linha, contra vazamento."""
 
 from __future__ import annotations
 

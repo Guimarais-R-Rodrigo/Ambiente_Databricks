@@ -42,9 +42,16 @@ Gatilhos mínimos de auditoria `A1+` neste projeto (ver `.claude/rules/multi-llm
 | 2026-08-14 | [Documentação: 8 documentos](2026-08-14_documentacao/) | `A1` | 22 achados, **todos procedentes** — corrigidos |
 | 2026-08-15 | [Documentação: 15 READMEs, segunda rodada](2026-08-15_documentacao-rodada2/) | `A1` | 25 achados, **todos procedentes** — corrigidos |
 | 2026-08-16 | [Plano de reestruturação do Hub](2026-08-16_plano-hub/) | `A1` | 25 achados, **todos procedentes** — plano reescrito em v2 |
+| 2026-08-18 | [Consistência residual e padrão didático](2026-08-18_consistencia-e-didatica/) | `A1` | 18 achados, **todos procedentes** — corrigidos; classe nova: norma publicada sem instrumento |
 
-As três rodadas usaram o mesmo modelo do autor, em sessão sem contexto, com
-acesso ao sistema de arquivos e à CLI. Isso é `A1`, não `A2`: pontos cegos
+**Esta tabela cobre só as auditorias temáticas.** As auditorias de sprint — uma
+por sprint executada, treze até aqui — vivem junto do relatório que auditaram, em
+`docs/sprints/`, e estão indexadas na coluna *Auditoria* do registro de execução
+em [`PLANO_HUB.md`](../../PLANO_HUB.md). Quem pergunta "o que já foi auditado?"
+precisa dos dois lugares.
+
+As cinco rodadas acima usaram o mesmo modelo do autor, em sessão sem contexto,
+com acesso ao sistema de arquivos e à CLI. Isso é `A1`, não `A2`: pontos cegos
 compartilhados pelo modelo continuam de pé, e é por isso que a auditoria de
 segunda origem sobre a biblioteca permanece como gate aberto antes de usar
 `pit_join` em decisão que importe no trabalho.

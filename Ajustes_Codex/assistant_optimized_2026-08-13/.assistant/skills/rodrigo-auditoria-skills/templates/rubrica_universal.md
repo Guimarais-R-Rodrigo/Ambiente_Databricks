@@ -86,7 +86,7 @@
 | 3-4 | Tabela com nome completo mas sem declarar limitacoes ou premissas |
 | 5-6 | Nome completo + algumas limitacoes, mas naming inconsistente |
 | 7-8 | Naming OK + limitacoes + premissas + periodo declarado |
-| 9-10 | Tudo acima + aderencia GEGOD explicita + PII tratado + lineage documentado |
+| 9-10 | Tudo acima + aderencia a norma interna de governanca de dados explicita + PII tratado + lineage documentado |
 
 ### D7 — Interpretacao e Acionabilidade
 

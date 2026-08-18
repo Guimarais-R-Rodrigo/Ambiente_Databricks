@@ -1,4 +1,4 @@
-"""Driver-side distribution diagnostics with configurable monitoring policies."""
+"""Diagnóstico de distribuição no driver, com políticas de monitoramento configuráveis."""
 
 from __future__ import annotations
 

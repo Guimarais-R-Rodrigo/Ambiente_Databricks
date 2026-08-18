@@ -297,7 +297,8 @@ adicionado ao `sys.path` foi o da pasta `hub_snippets` em vez do da pasta
 Para descobrir qual módulo atende a uma demanda, use o
 [catálogo de helpers](CATALOGO_HELPERS.md), que organiza a biblioteca
 por tarefa e marca dependências opcionais e restrições de runtime. Cada
-`SKILL.md` já declara os helpers do próprio fluxo (ver ADR-0004 no repositório).
+`SKILL.md` já declara os helpers do próprio fluxo (a decisão é o ADR-0007, no
+repositório, que supersede o ADR-0004 em localização e forma).
 
 Consulte também [hub_snippets/README.md](hub_snippets/README.md) e
 [hub_scripts/README.md](hub_scripts/README.md). As dependências em
@@ -400,6 +401,7 @@ nada acuse.
 | `NOT_SUPPORTED_WITH_SERVERLESS` ao usar `cache()` | serverless não persiste; remova o cache ou rode em compute clássico |
 | `.py` abre como notebook e o import quebra | foi importado no formato errado; deve ser arquivo, não notebook |
 | arquivo apagado da fonte continua no workspace | a publicação sobrescreve mas não apaga; remova à mão e confira |
+| editei um arquivo daqui e a mudança sumiu | esperado: **este workspace é cópia operacional, nunca a fonte**. A alteração vive até a próxima publicação e desaparece sem aviso. Peça a mudança a quem mantém o Hub, para que ela entre no repositório |
 
 ## Glossário
 
@@ -409,6 +411,11 @@ Databricks e você encontra na documentação deles. Um termo de **modelagem** �
 vocabulário de estatística e machine learning, independente de ferramenta. Um
 termo de **convenção** foi criado aqui e não existe fora deste repositório —
 procurar por ele na documentação oficial não devolve nada.
+
+> **A coluna "Onde ver" às vezes cita `docs/` e `tools/`.** Essas pastas vivem no
+> repositório do Hub e **não são publicadas** neste workspace — quem mantém o Hub
+> tem acesso a elas. Tudo que este glossário cita sem prefixo de pasta está aqui,
+> em `.assistant/`.
 
 ### Plataforma — vocabulário oficial da Databricks
 
@@ -476,7 +483,7 @@ Nenhum destes termos existe na documentação da Databricks.
 | **Render** | Ato de gerar o simulado a partir do fonte. Cópia fiel, sem transformação de conteúdo. | `tools/render_simulado.py` |
 | **Camada canônica / derivada / operacional** | Canônica é o repositório, única fonte editável; derivada é o simulado; operacional são os workspaces, que são cópias e nunca a verdade. | Divisão que sustenta todo o projeto |
 | **Gate** | Verificação que precisa passar antes de avançar de fase. Não é sugestão: enquanto não passa, não se replica. | Testes de runtime e de roteamento |
-| **Forward test** | Teste que mede **qual skill o Genie Code carrega** diante de um pedido. Não avalia a qualidade da resposta, só o roteamento. | 36 testes, `docs/testes/forward/` |
+| **Forward test** | Teste que mede **qual skill o Genie Code carrega** diante de um pedido. Não avalia a qualidade da resposta, só o roteamento. | 39 testes, dos quais 36 concluídos; `docs/testes/forward/`, no repositório |
 | **Smoke test** | Execução dos helpers no runtime real para descobrir o que só quebra fora da máquina local. | Resultados em `docs/testes/spark/` |
 | **Caso positivo / negativo** | No forward test, positivo confirma que a skill certa é carregada; negativo confirma que ela **não** é carregada por um pedido parecido de outro domínio. | Método dos forward tests |
 | **ADR** | Registro de decisão arquitetural. Imutável depois de aceito: mudar de ideia gera um novo ADR que supersede o anterior, preservando o histórico do raciocínio. | `docs/decisions/` |

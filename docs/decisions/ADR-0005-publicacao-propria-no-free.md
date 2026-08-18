@@ -1,7 +1,9 @@
 # ADR-0005 — Publicação própria no Free, adotando o padrão do engine do Hub sem consumi-lo
 
 Data: 2026-08-14
-Status: Aceito · supersede o ADR-0002
+Status: Aceito · supersede o ADR-0002 · **critério de conferência
+supersedido** pelo [ADR-0008](ADR-0008-criterios-de-conferencia-da-publicacao.md)
+(2026-08-17). As três fases e o gate `--execute` continuam valendo.
 Autor: Claude
 
 ## Contexto

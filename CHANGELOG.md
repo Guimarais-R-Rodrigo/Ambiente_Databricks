@@ -5,6 +5,92 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-18 — Auditoria de consistência e didática: 18 achados, e uma sigla que atravessou a quarentena
+
+Décima quarta rodada, `A1`, sobre o conjunto e com foco no padrão didático da
+documentação. Relatório em
+`docs/auditoria/2026-08-18_consistencia-e-didatica/`.
+
+### Corrigido
+
+1. (Claude) **Um identificador corporativo estava publicado no produto** — a
+   sigla de um órgão de governança interno, numa linha de rubrica dentro de
+   `templates/` de uma skill. Estava no workspace Free e entraria no do trabalho
+   pelo runbook. O `ADR-0003` quarentenou a **pasta** `Ambiente_Antigo/` em
+   15/08; não alcançou o **vocabulário** que já tinha atravessado para
+   `ambiente_fonte/` antes disso. O `CORPORATE_RE` ganhou uma classe de siglas
+   internas — escrita com uma letra entre colchetes, para que a constante não
+   reprove a si mesma, e com fronteira à mão, porque `_` conta como caractere de
+   palavra. Uma varredura cruzando as 198 siglas da pasta em quarentena contra o
+   produto não achou nenhuma outra.
+2. (Claude) **O `CHANGELOG.md` de 17/08 registrava uma correção que nunca foi
+   escrita em disco:** os avisos de superseding nos `ADR-0004` e `ADR-0005`. O
+   script daquela sessão procurava a âncora `- **Status:`, que é o formato dos
+   ADRs novos; os dois antigos usam `Status:` sem marcação, a âncora não casou, e
+   a função **imprimiu sucesso mesmo assim**. Os banners foram escritos agora, e
+   o script desta rodada aborta quando uma âncora não casa.
+3. (Claude) **26% da biblioteca violava o molde que a própria biblioteca
+   publica.** `hub_padroes/snippet/template.md` manda docstring em português; 15
+   dos 58 módulos estavam em inglês, sendo **7 de 7** em `hub_scripts/`. As 15
+   foram traduzidas, identificadores intactos.
+4. (Claude) `--conferir-readme` tinha uma segunda porta de degradação
+   silenciosa: quando o comando **não lançava**, o `except` devolvia zero e a
+   guarda aprovava. Agora reprova, nomeando o comando e a causa provável.
+5. (Claude) `CLAUDE.md` atribuía ao `ADR-0006` uma supersessão que é do
+   `ADR-0005`, com a razão do 0005 colada no bullet do 0006. Separados.
+6. (Claude) `forward/README.md` anunciava **GATE FECHADO 36/36** enquanto o
+   `roteiro.md`, na mesma pasta, fala em 39 testes — a ressalva que a Sprint 12
+   escreveu em três documentos morria a um clique de distância. Corrigido lá e no
+   glossário publicado, que era o quarto documento a citar 36 sem ressalva.
+7. (Claude) `ciclo-de-vida.md` mandava a um runbook "a criar" que existe,
+   ignorava o runbook irmão na mesma pasta, e ordenava o ciclo de forma diferente
+   dos dois documentos que dizem resumi-lo. Reescrito com a ordem única —
+   registrar **depois** de conferir, porque o `--verify` produz o número que a
+   entrada cita — mais diagrama e seção de fontes.
+8. (Claude) `hub_padroes/README.md` era o único README do produto sem o aviso de
+   não-descoberta, e é o que o guia principal indica como porta de entrada dos
+   moldes. Ganhou o banner dos irmãos.
+9. (Claude) O glossário publicado remetia oito verbetes a `docs/`, que não é
+   publicado — beco sem saída para quem só recebeu o `.assistant/`. Ganhou o
+   aviso; e a solução de problemas ganhou a linha que faltava sobre editar
+   direto no workspace, que era o erro de maior custo do analista da squad e só
+   estava avisado no repositório.
+10. (Claude) Números mortos: sete imports cruzados (o inventário dizia seis e
+    omitia `section_header -> constants.emojis`), dez nomes em `test_core.py`,
+    39 de 51 módulos com mais de um nome público. Os deriváveis viraram comando.
+11. (Claude) `PLANO_HUB.md` §1 dizia que o nome das skills era `hub-ml-` **antes**
+    da renomeação — uma busca-e-substituição varreu a coluna histórica junto.
+12. (Claude) O comentário do `PERSONAL_RE` prometia alcance global; os dois
+    checks que o usam recebem `ambiente_fonte/`. Reescrito com o alcance real.
+
+### Adicionado
+
+1. (Claude) `check_docstring_em_portugues` — vigésimo check, e o primeiro a
+   cobrar uma **norma publicada** em vez de um fato estrutural. Nasceu como
+   falha, não como aviso: a dívida fechou na mesma sessão, e aviso sobre norma
+   cumprida é convite à regressão.
+2. (Claude) `tools/README.md` e `docs/testes/README.md`, os dois diretórios sem
+   README que custavam alguma coisa a alguém. O de `tools/` abre declarando que a
+   pasta **não é publicada** — que é a causa de o produto mandar rodar scripts
+   que o leitor não tem.
+
+### Notas
+
+- **A classe nova é sobre método: norma publicada sem instrumento, auditada como
+  prosa e nunca como especificação.** Treze rodadas perguntaram "isto é
+  verdade?"; a décima terceira acrescentou "isto concorda com aquilo?". Nenhuma
+  perguntou "isto é uma norma, e o repositório a cumpre?". O molde de
+  `hub_padroes/` é especificação executável escrita em Markdown, com autoridade
+  declarada e, até aqui, zero cobertura.
+- **Diferença da classe anterior:** contradição entre dois artefatos é simétrica
+  e qualquer lado pode ceder; aqui há hierarquia — o molde está certo por
+  construção, e o que sobra é dívida de conformidade, mensurável e automatizável.
+- Duas recomendações do auditor foram **recusadas com motivo registrado**: o
+  roteiro de forward tests não foi parametrizado (ganhou aviso de substituição, e
+  os prompts continuam coláveis sem edição por quem os usa hoje), e três dos
+  cinco READMEs ausentes não foram escritos, por serem burocracia sobre pastas
+  que o README da raiz já mapeia.
+
 ## 2026-08-17 — Auditoria final do conjunto: 18 achados, e a classe que doze rodadas não viram
 
 Décima terceira rodada, a única que auditou **o conjunto** e não uma sprint.
