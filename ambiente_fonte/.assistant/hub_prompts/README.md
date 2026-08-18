@@ -30,7 +30,7 @@ chat para evitar que decisões antigas contaminem a resposta.
 
 ## Um formulário do início ao fim
 
-O percurso abaixo usa `eda_rapida.md`. Vale para todos: muda o formulário,
+O percurso abaixo usa `eda_rapida/eda_rapida.md`. Vale para todos: muda o formulário,
 não o método.
 
 **Passo 1 — o modelo, como está no arquivo.** Cada `{{CAMPO}}` é uma decisão que
@@ -76,26 +76,51 @@ recusar e pedir de novo apontando a etapa pulada.
 > feita, o passo 4 descreve o contrato esperado em vez de mostrar o resultado —
 > preferimos assumir a lacuna a inventar uma resposta plausível.
 
+## Cada prompt é uma pasta, com o notebook que o demonstra
+
+```text
+hub_prompts/<nome>/
+├── <nome>.md                   # o briefing, com os placeholders
+└── exemplo_<nome>.py           # o notebook de três partes
+```
+
+O notebook **não executa o prompt** — nenhum notebook executa. Ele tem três
+partes, e só as duas primeiras rodam:
+
+| Parte | O que é | Roda? |
+|---|---|---|
+| 1 | preparo: cria a base sintética a que o prompt se refere | **sim** |
+| 2 | o prompt preenchido, pronto para copiar | não; é texto |
+| 3 | a resposta real do Genie Code, colada de um chat | **exige uma pessoa** |
+
+**A parte 3 está em branco nos dezesseis**, com instrução de como preencher. Não
+é esquecimento: prompt produz resposta de assistente, e resposta inventada é pior
+que resposta nenhuma — ela ensina que o assistente faz algo que ele não faz.
+
+Quem for preencher: rode a Parte 1, cole a Parte 2 num **chat novo**, e registre
+a resposta com a data, **qual skill foi carregada** e o que o assistente deixou
+de fora. A segunda metade do comentário é a que ensina.
+
 ## Catálogo
 
-| Tema | Arquivo | Skill recomendada |
+| Tema | Pasta | Skill recomendada |
 |---|---|---|
-| EDA completa | `eda_completa.md` | `@hub-ml-eda-profissional` |
-| Perfil rápido | `eda_rapida.md` | `@hub-ml-eda-profissional` |
-| Qualidade de dados | `data_quality.md` | `@hub-ml-eda-profissional` |
-| Cross-EDA | `cross_eda.md` | `@hub-ml-cross-eda-ml` |
-| Feature engineering | `feature_engineering.md` | `@hub-ml-feature-engineering` |
-| Validação estatística | `stat_check.md` | `@hub-ml-validacao-estatistica` |
-| Baseline de ML | `baseline_orchestration.md` | `@hub-ml-baseline-ml` |
-| Explicabilidade | `explainability.md` | `@hub-ml-explainability` |
-| Monitoramento | `monitoramento_modelo.md` | `@hub-ml-monitoramento-modelo` |
-| Pipeline de dados | `pipeline.md` | `@hub-ml-pipeline-builder` |
-| Safra/vintage | `safra.md` | `@hub-ml-analise-safra` |
-| Auditoria de skills | `auditoria_skills.md` | `@hub-ml-auditoria-skills` |
-| Documentar notebook | `comentar_notebook.md` | `@hub-ml-comentar-notebook` |
-| Explicação/tutoria | `tutor_explicar.md` | `@hub-ml-tutor-databricks` |
-| Comparar tabelas | `comparar_tabelas.md` | conforme o objetivo |
-| Iniciar projeto | `novo_projeto.md` | conforme o projeto |
+| EDA completa | [`eda_completa/`](eda_completa/eda_completa.md) | `@hub-ml-eda-profissional` |
+| Perfil rápido | [`eda_rapida/`](eda_rapida/eda_rapida.md) | `@hub-ml-eda-profissional` |
+| Qualidade de dados | [`data_quality/`](data_quality/data_quality.md) | `@hub-ml-eda-profissional` |
+| Cross-EDA | [`cross_eda/`](cross_eda/cross_eda.md) | `@hub-ml-cross-eda-ml` |
+| Feature engineering | [`feature_engineering/`](feature_engineering/feature_engineering.md) | `@hub-ml-feature-engineering` |
+| Validação estatística | [`stat_check/`](stat_check/stat_check.md) | `@hub-ml-validacao-estatistica` |
+| Baseline de ML | [`baseline_orchestration/`](baseline_orchestration/baseline_orchestration.md) | `@hub-ml-baseline-ml` |
+| Explicabilidade | [`explainability/`](explainability/explainability.md) | `@hub-ml-explainability` |
+| Monitoramento | [`monitoramento_modelo/`](monitoramento_modelo/monitoramento_modelo.md) | `@hub-ml-monitoramento-modelo` |
+| Pipeline de dados | [`pipeline/`](pipeline/pipeline.md) | `@hub-ml-pipeline-builder` |
+| Safra/vintage | [`safra/`](safra/safra.md) | `@hub-ml-analise-safra` |
+| Auditoria de skills | [`auditoria_skills/`](auditoria_skills/auditoria_skills.md) | `@hub-ml-auditoria-skills` |
+| Documentar notebook | [`comentar_notebook/`](comentar_notebook/comentar_notebook.md) | `@hub-ml-comentar-notebook` |
+| Explicação/tutoria | [`tutor_explicar/`](tutor_explicar/tutor_explicar.md) | `@hub-ml-tutor-databricks` |
+| Comparar tabelas | [`comparar_tabelas/`](comparar_tabelas/comparar_tabelas.md) | conforme o objetivo |
+| Iniciar projeto | [`novo_projeto/`](novo_projeto/novo_projeto.md) | conforme o projeto |
 
 ## Sobre os atalhos `/...`
 

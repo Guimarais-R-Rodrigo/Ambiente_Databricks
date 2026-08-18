@@ -5,6 +5,47 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-17 — Sprint 5: os 16 prompts ganham notebook, com a parte 3 declarada em branco
+
+Os 16 prompts viraram pasta de objeto, cada um com o notebook de três partes. As
+duas primeiras estão prontas e executam; a terceira depende de uma pessoa num
+chat. Relatório em `docs/sprints/sprint-5-hub-prompts.md`.
+
+### Adicionado
+
+1. (Claude) 16 pastas em `hub_prompts/`, com o briefing e o
+   `exemplo_<nome>.py`. Os 16 executaram como job: 16 de 16 SUCCESS nas partes
+   1 e 2.
+2. (Claude) A parte 1 de cada um cria a base sintética a que o prompt se refere,
+   **com o defeito certo plantado** — duplicata de chave no `data_quality`,
+   vazamento temporal no `cross_eda` e no `feature_engineering`, safra imatura no
+   `safra`, prevalência e nulo em movimento no `monitoramento_modelo`.
+3. (Claude) A parte 2 traz o prompt preenchido: cerca de **160 placeholders**,
+   todos com valor, para a base da parte 1.
+
+### Notas
+
+- **A parte 3 fica em branco por decisão, não por esquecimento.** O template é
+  explícito: resposta inventada é pior que resposta nenhuma, porque ensina que o
+  assistente faz algo que ele não faz. Cada notebook traz o bloco canônico com o
+  motivo e um roteiro de cinco passos para quem preencher.
+- Onde a resposta honesta era "não sei", o placeholder foi preenchido com **"não
+  informado"** — e o notebook explica que isso é informação, não omissão.
+- `comparar_tabelas` e `novo_projeto` **não declaram skill recomendada**, de
+  propósito. O que o Genie Code escolher neles é evidência de roteamento que
+  nenhum forward test produz.
+
+### Corrigido
+
+1. (Claude) Os 16 briefings desceram um nível e os links para
+   `../CATALOGO_HELPERS.md` quebraram — mesma classe da Sprint 2. Recalculados
+   com `os.path.relpath`, não com substituição cega. A validação pegou os 16 de
+   uma vez; o `--verify` pegou os 16 briefings planos que continuavam no
+   workspace.
+2. (Claude) `agg({"id_contrato": "countDistinct"})` no notebook do `safra` não
+   resolve — o nome não existe como rotina SQL. Trocado por `F.countDistinct`,
+   com o comentário explicando a diferença.
+
 ## 2026-08-17 — auditoria da Sprint 11: 19 achados, e a skill que não cumpria o próprio molde
 
 O auditor **usou a skill** para criar um objeto, do começo ao fim, e relatou onde

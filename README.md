@@ -195,17 +195,17 @@ python tools/validate_assistant.py
 ```text
 raiz analisada     : <repo>\ambiente_fonte
 skills             : 13
-markdown / links   : 105 arquivos / 150 links relativos
-notebooks / links  : 62 notebooks / 1 links relativos
+markdown / links   : 105 arquivos / 166 links relativos
+notebooks / links  : 78 notebooks / 17 links relativos
 pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
 forma da pasta     : 58 conferidas (o módulo tem o nome da pasta)
 contrato de dados  : 60 pares (saída: o que o notebook consome)
 contrato de entrada: 57 pares (entrada: o que o notebook passa)
-saída colada       : 50 notebooks com bloco real, 11 sem
+saída colada       : 66 notebooks com bloco real, 11 sem
 python (AST)       : 193 arquivos
 instrucoes         : 7085/20000 caracteres
-repo (corporativo) : 678 arquivos varridos no repositório inteiro
-repo (links)       : 224 links fora da raiz analisada
+repo (corporativo) : 711 arquivos varridos no repositório inteiro
+repo (links)       : 241 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 11 aviso(s)
 ```
@@ -248,7 +248,7 @@ destino: <repo>\Novo_Ambiente_Simulado\Users\<seu-usuario>
   copy file .assistant_instructions.md -> ...\.assistant_instructions.md
   copy dir  .assistant -> ...\.assistant
 
-OK: 299 arquivos renderizados em Novo_Ambiente_Simulado/
+OK: 315 arquivos renderizados em Novo_Ambiente_Simulado/
 ```
 
 O total inclui o marcador `README_GERADO.md` na raiz do simulado, que não vai
@@ -266,8 +266,8 @@ python tools/publicar_free.py --verify
 usuário: <seu-usuario>
 
 == VERIFY (read-only) ==
-esperados : 298 arquivos
-remotos   : 299 arquivos sob .assistant + instruções
+esperados : 314 arquivos
+remotos   : 315 arquivos sob .assistant + instruções
 ausentes  : 0 | obsoletos: 0
 plataforma: 1 arquivo(s) gerenciado(s) — .assistant/.mcp_servers.json
 skills    : 13/13

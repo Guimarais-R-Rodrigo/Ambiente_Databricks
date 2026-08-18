@@ -4,7 +4,7 @@ Documento de trabalho, versão 2. Cada sprint é executada isoladamente, auditad
 em sessão sem contexto, revisada por você, e só então a seguinte começa.
 
 - **Status:** v2. Sprints 0 e 0b concluídas. Auditoria começa na Sprint 1
-- **Sprint atual:** 11 concluída — 13 skills; a biblioteca convertida (**58 objetos**: 51 `hub_snippets` + 7 `hub_scripts`) e os dois READMEs de topo atualizados. O validador conta **60 pastas de objeto**, somando os 2 exemplares de `hub_padroes`, que são template e não biblioteca. Próximas: 12 (auditoria final) e a 5 (prompts, depende de você). O forward test da skill nova está pendente
+- **Sprint atual:** 11 concluída e 5 parcial (partes 1 e 2 dos 16 prompts) — 13 skills; a biblioteca convertida (**58 objetos**: 51 `hub_snippets` + 7 `hub_scripts`) e os dois READMEs de topo atualizados. O validador conta **60 pastas de objeto**, somando os 2 exemplares de `hub_padroes`, que são template e não biblioteca. Próxima: 12 (auditoria final). Pendem de você: os 3 forward tests da skill nova e as 16 partes 3 dos prompts
 - **Última atualização:** 2026-08-17
 
 > **Histórico de revisão.** A v1 foi submetida a auditoria em sessão sem
@@ -732,7 +732,7 @@ morto. Editar `STYLE_SECTION_HEADER` não muda cabeçalho nenhum — e o noteboo
 | 2 | ✅ concluída | 2026-08-16 | ✅ 13 quebras corrigidas + ADR-0006 | [relatório](docs/sprints/sprint-2-renomeacao.md) |
 | 4 | ✅ concluída | 2026-08-16 | ✅ 9 achados corrigidos | [relatório](docs/sprints/sprint-4-hub-scripts.md) |
 | 3 | ✅ concluída | 2026-08-17 | ✅ auditada com a 6 | [relatório](docs/sprints/sprint-3-skills.md) · `@hub-ml-*` confirmado no chat |
-| 5 | não iniciada | — | — | — |
+| 5 | 🟡 partes 1 e 2 | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-5-hub-prompts.md) · as 16 partes 3 dependem de interação humana |
 | 6 | ✅ concluída | 2026-08-17 | ✅ contrato de dados virou guarda | [relatório](docs/sprints/sprint-6-snippets-spark.md) |
 | 7 | ✅ concluída | 2026-08-17 | ✅ 12 achados corrigidos + guarda de entrada | [relatório](docs/sprints/sprint-7-ml-nucleo.md) |
 | 8 | ✅ concluída | 2026-08-17 | ✅ 13 achados corrigidos | [relatório](docs/sprints/sprint-8-ml-dependencia-opcional.md) · os 14 executam, via `%pip` |
