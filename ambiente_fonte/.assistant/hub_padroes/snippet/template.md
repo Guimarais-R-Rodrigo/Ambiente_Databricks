@@ -165,7 +165,7 @@ quebrado.
 |---|---|
 | Quem importa este módulo | `grep -rn "<secao>.<modulo>" ambiente_fonte tools` |
 | Se o smoke test o cita nominalmente | `tools/spark_smoke_test.py` tem casos funcionais por nome |
-| Se alguma skill o recomenda | as 12 `SKILL.md` declaram helpers por caminho de import |
+| Se alguma skill o recomenda | as `SKILL.md` de `skills/` declaram helpers por caminho de import |
 | Se ele redeclara constante de outro módulo | ver a regra abaixo — é o único caso em que a conversão **não** é só mover |
 
 ### Constante duplicada: a exceção que precisa de decisão

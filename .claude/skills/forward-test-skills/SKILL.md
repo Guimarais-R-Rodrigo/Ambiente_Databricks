@@ -1,7 +1,7 @@
 ---
 name: forward-test-skills
 description: >-
-  Executa e registra os forward tests das 12 Agent Skills no Genie Code do
+  Executa e registra os forward tests das Agent Skills no Genie Code do
   Databricks Free: caso positivo, caso negativo e @menção por skill, sempre em
   chat novo. Use após publicar/alterar skills no workspace e antes de replicar
   no trabalho.

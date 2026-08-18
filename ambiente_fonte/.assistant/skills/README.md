@@ -69,6 +69,7 @@ Para seleção determinística, use a menção:
 | `hub-ml-comentar-notebook` | documentação PRÉ/PÓS e revisão de notebook |
 | `hub-ml-tutor-databricks` | explicação didática de código, Spark, SQL e plataforma |
 | `hub-ml-auditoria-skills` | auditar uma saída contra o contrato da skill que a produziu |
+| `hub-ml-criar-objeto` | criar objeto do Hub aplicando o template de `hub_padroes/` |
 
 Algumas trazem uma subpasta `templates/` com modelos de saída que a skill
 referencia. Esses arquivos não são descobertos sozinhos: a skill os cita, e o

@@ -11,6 +11,6 @@
   pode republicá-la com `databricks-genie publish-global --execute`). Se a
   camada global voltar, coordenar targets para não sobrescrever.
 - Papel: executar os gates pendentes da auditoria do Codex — testes Spark
-  serverless dos helpers, forward tests das 12 skills (caso positivo, negativo,
+  serverless dos helpers, forward tests das skills (caso positivo, negativo,
   `@menção`, sempre em chat novo), calibração das descriptions.
 - Somente dados sintéticos; nada do banco.

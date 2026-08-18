@@ -24,7 +24,7 @@ Leia este arquivo primeiro; depois carregue apenas o que a tarefa pedir.
 │   ├── validar-assistant/   # roda tools/validate_assistant.py e interpreta
 │   ├── render-simulado/     # roda tools/render_simulado.py
 │   ├── publicar-free/       # roda tools/publicar_free.py (plano/execute/verify)
-│   ├── forward-test-skills/ # roteiro de teste de roteamento das 12 skills
+│   ├── forward-test-skills/ # roteiro de teste de roteamento das skills
 │   └── replicar-trabalho/   # pré-requisitos e guardrails da cópia manual
 └── templates/         # changelog, ADR, handoff, auditoria
 ```

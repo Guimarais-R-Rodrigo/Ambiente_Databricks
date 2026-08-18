@@ -129,6 +129,7 @@ Use permissões e revisão por Git. Instruções de workspace ficam em
 | `@hub-ml-comentar-notebook` | documentação PRÉ/PÓS e revisão de notebook |
 | `@hub-ml-tutor-databricks` | explicação didática de código, Spark, SQL e plataforma |
 | `@hub-ml-auditoria-skills` | auditar output contra o contrato da skill produtora |
+| `@hub-ml-criar-objeto` | criar snippet, script, prompt, README, notebook ou skill no padrão do Hub |
 
 A descoberta automática depende do campo `description` de cada `SKILL.md`. Use a
 menção `@` quando quiser seleção determinística. Textos como `/eda` ou `/baseline`
@@ -355,7 +356,7 @@ exige uma pessoa — e é justamente aí que a checagem costuma ser pulada.
 estes de uma vez:
 
 ```text
-[x] 12/12 pastas de skill têm SKILL.md válido
+[x] 13/13 pastas de skill têm SKILL.md válido
 [x] frontmatter contém name e description
 [x] name é idêntico ao nome da pasta
 [x] nenhum caminho/e-mail pessoal ou identificador corporativo permanece
@@ -410,7 +411,7 @@ procurar por ele na documentação oficial não devolve nada.
 | Termo | O que é | Onde aparece aqui |
 |---|---|---|
 | **Genie Code** | Assistente de código do Databricks, integrado ao workspace. É ele quem lê as skills e as instruções. | É o destinatário de tudo neste ecossistema |
-| **Agent Skills** | Padrão aberto (agentskills.io) para dar a um assistente instruções especializadas em pastas. A Databricks adotou o padrão. | As 12 pastas `hub-ml-*` em `skills/` |
+| **Agent Skills** | Padrão aberto (agentskills.io) para dar a um assistente instruções especializadas em pastas. A Databricks adotou o padrão. | As pastas `hub-ml-*` em `skills/` |
 | **`SKILL.md`** | Arquivo obrigatório de cada skill. Contém o cabeçalho de identificação e as instruções do fluxo. | Um por pasta de skill |
 | **Frontmatter** | Bloco de metadados no topo do arquivo, delimitado por `---`. Aqui carrega `name` e `description`. Texto antes dele invalida o arquivo. | Primeiras linhas de todo `SKILL.md` |
 | **Auto-descoberta** | Capacidade do Genie Code de encontrar e carregar um arquivo sozinho, sem você pedir. Vale para skills, instruções e `AGENTS.md` — e para mais nada. | Motivo do prefixo `hub_` (ver convenção) |

@@ -32,7 +32,7 @@ SIMULADO = Path("Novo_Ambiente_Simulado")
 CORPORATE_RE = re.compile(r"c\d{6}|corp\.|\.gov\.br", re.IGNORECASE)
 
 # Estrutura mínima que o Genie Code precisa encontrar para descobrir o ecossistema.
-EXPECTED_SKILLS = 12
+EXPECTED_SKILLS = 13
 EXPECTED_HUB_DIRS = {"hub_padroes", "hub_prompts", "hub_scripts", "hub_snippets"}
 
 # Arquivos que a **plataforma** cria dentro de `.assistant/` e que não vêm da

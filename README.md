@@ -194,8 +194,8 @@ python tools/validate_assistant.py
 
 ```text
 raiz analisada     : <repo>\ambiente_fonte
-skills             : 12
-markdown / links   : 103 arquivos / 143 links relativos
+skills             : 13
+markdown / links   : 105 arquivos / 143 links relativos
 notebooks / links  : 62 notebooks / 1 links relativos
 pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
 contrato de dados  : 60 pares (saída: o que o notebook consome)
@@ -203,8 +203,8 @@ contrato de entrada: 57 pares (entrada: o que o notebook passa)
 saída colada       : 49 notebooks com bloco real, 12 sem
 python (AST)       : 193 arquivos
 instrucoes         : 7085/20000 caracteres
-repo (corporativo) : 673 arquivos varridos no repositório inteiro
-repo (links)       : 216 links fora da raiz analisada
+repo (corporativo) : 678 arquivos varridos no repositório inteiro
+repo (links)       : 217 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 12 aviso(s)
 ```
@@ -246,7 +246,7 @@ destino: <repo>\Novo_Ambiente_Simulado\Users\<seu-usuario>
   copy file .assistant_instructions.md -> ...\.assistant_instructions.md
   copy dir  .assistant -> ...\.assistant
 
-OK: 297 arquivos renderizados em Novo_Ambiente_Simulado/
+OK: 299 arquivos renderizados em Novo_Ambiente_Simulado/
 ```
 
 O total inclui o marcador `README_GERADO.md` na raiz do simulado, que não vai
@@ -264,11 +264,11 @@ python tools/publicar_free.py --verify
 usuário: <seu-usuario>
 
 == VERIFY (read-only) ==
-esperados : 296 arquivos
-remotos   : 297 arquivos sob .assistant + instruções
+esperados : 298 arquivos
+remotos   : 299 arquivos sob .assistant + instruções
 ausentes  : 0 | obsoletos: 0
 plataforma: 1 arquivo(s) gerenciado(s) — .assistant/.mcp_servers.json
-skills    : 12/12
+skills    : 13/13
 extensões : 4/4 diretórios hub_
 
 APROVADO: 0 problema(s)
@@ -367,7 +367,7 @@ Gates herdados da auditoria do Codex, todos verificados no Databricks Free:
 | Gate | Resultado |
 |---|---|
 | Testes Spark no runtime real | ✅ **64 aprovações, 0 falhas** de 71 verificações — as 7 restantes são módulos com dependência opcional ausente, não falhas. [Detalhes](docs/testes/spark/README.md) |
-| Forward tests das 12 skills (positivo, negativo, `@menção`) | ✅ **36/36 PASS** — [detalhes](docs/testes/forward/README.md) (sem alterar nenhuma `description`) |
+| Forward tests das skills (positivo, negativo, `@menção`) | ✅ **36/36 PASS** nas 12 originais — [detalhes](docs/testes/forward/README.md). A décima terceira, `hub-ml-criar-objeto`, é da Sprint 11 e **ainda não foi testada** |
 | Dependências opcionais fixadas e testadas | ✅ **12 bibliotecas** instaladas por `%pip` e exercitadas com chamada real, inclusive o `prophet_wrapper` que antes constava sem combinação funcional — inventário em [`requirements-optional.txt`](ambiente_fonte/.assistant/hub_snippets/requirements-optional.txt) |
 
 Os três gates medem coisas diferentes, e nenhum substitui o outro:

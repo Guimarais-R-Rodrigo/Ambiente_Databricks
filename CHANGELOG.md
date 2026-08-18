@@ -5,6 +5,42 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-17 — Sprint 11: a skill que cria objeto do Hub
+
+`hub-ml-criar-objeto`, a décima terceira skill. Primeira mudança em roteamento
+desde a Sprint 3. Relatório em `docs/sprints/sprint-11-hub-ml-criar-objeto.md`.
+
+### Adicionado
+
+1. (Claude) `.assistant/skills/hub-ml-criar-objeto/`, com `SKILL.md` e
+   `templates/checklist-objeto-novo.md`. Ela conduz a criação de qualquer um dos
+   seis tipos de objeto aplicando o molde de `hub_padroes/` — e existe por causa
+   da decisão §2.1, que pôs os templates dentro de `.assistant/` e portanto no
+   workspace.
+
+### Atualizado
+
+1. (Claude) `EXPECTED_SKILLS` de 12 para 13 em `tools/publicar_free.py`.
+2. (Claude) Onze arquivos afirmavam "12 skills". Onde dava, o número foi trocado
+   por formulação que não envelhece; onde ele é o ponto — `EXPECTED_SKILLS`, a
+   saída de exemplo do README —, foi atualizado. O próprio template de README
+   avisava contra isso: *"as 12 skills vira mentira na décima terceira"*.
+3. (Claude) O quadro de status do README da raiz passou a declarar 36/36 nas
+   **doze originais**, com a décima terceira explicitamente não testada.
+
+### Notas
+
+- **A skill não gera arquivo pronto: ela conduz.** Manda confirmar o tipo antes
+  de escrever, exige que o template seja anexado (`hub_padroes/` não é
+  auto-descoberto), e carrega as armadilhas que custaram caro nesta fase — cada
+  regra do corpo tem um custo real citado ao lado.
+- **A `description` é a hipótese não testada.** Ela fecha com o que a skill não
+  cobre, para não roubar a vez de quem faz análise: sem esse período, "criar um
+  snippet que calcula PSI" carregaria formato em vez de estatística. Medir isso
+  exige forward test, que depende de interação humana.
+- Pendente: os três casos de forward test da skill nova. O **negativo** é o que
+  importa — vocabulário de "criar objeto" roça o de todas as vizinhas.
+
 ## 2026-08-17 — auditoria da Sprint 10: 12 achados, e o defeito que se repetiu
 
 O auditor seguiu o README ao pé da letra — publicou um notebook no Free com os
