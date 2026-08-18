@@ -5,6 +5,15 @@ description: Explica modelos no Databricks para públicos técnico e executivo c
 
 # Explicar modelos com rigor
 
+## Quando esta skill se aplica
+
+- Pedem **interpretabilidade, SHAP, feature importance, motivos de score,
+  drivers, model card** ou investigação de leakage/viés.
+- Existe um **modelo treinado** a explicar — global, local ou por cohort.
+
+**Não cobre:** treinar ou comparar modelos (`hub-ml-baseline-ml`) nem detectar
+drift em produção (`hub-ml-monitoramento-modelo`).
+
 ## Definir o objeto
 
 Confirmar modelo/versão, target, unidade, população, período, conjunto avaliado, preprocessing, classe explicada e escala do output (margem, log-odds, probabilidade ou valor previsto).
@@ -52,6 +61,17 @@ Não dizer que AUC de 0,82 significa “82% dos casos corretos”. Não chamar a
 No MLflow, registrar gráficos, ranking tabular, configuração do explicador, amostra/background e versão do pacote. Conectar ao modelo correto em Unity Catalog sem promover ou alterar alias sem autorização.
 
 Revisar dados sensíveis: explicações locais podem revelar atributos. Agregar, mascarar e controlar acesso.
+
+## O que nunca fazer
+
+- **Ler importância como causalidade.** SHAP explica o modelo, não o mundo.
+- **Explicar modelo que não foi validado.** Explicabilidade sobre modelo com
+  leakage produz uma narrativa convincente e errada.
+- **Publicar importância global sem a distribuição.** A média esconde o cohort em
+  que o modelo se comporta de outro jeito.
+- **Omitir a limitação do método.** PDP assume independência entre features;
+  quando elas são correlacionadas, a curva descreve um ponto que não existe.
+- **Instalar `shap` sem fixar versão** — o inventário exige `shap==0.44.1`.
 
 ## Usar recursos
 

@@ -5,6 +5,16 @@ description: Desenha e implementa monitoramento de modelos no Databricks para qu
 
 # Monitorar modelos em produção
 
+## Quando esta skill se aplica
+
+- Pedem **monitoramento, PSI/CSI/KS, drift, degradação, alerta, dashboard,
+  inference table, retreino ou champion/challenger**.
+- O modelo **já está em produção** — ou está prestes a entrar, e a pergunta é o
+  que observar.
+
+**Não cobre:** comparar coortes de originação (`hub-ml-analise-safra`) nem
+explicar por que o modelo decide o que decide (`hub-ml-explainability`).
+
 ## Definir o contrato operacional
 
 Registrar modelo/alias, versão, endpoint ou job, população, frequência, SLA, target disponível/atraso, baseline de referência, owners, canal de alerta e runbook. Não criar trigger de retreino sem owner e validação.
@@ -54,6 +64,18 @@ Exigir validação out-of-time e gates de governança antes de promover um novo 
 ## Registrar e alertar
 
 Persistir métricas em tabela governada com `model_name`, versão/alias, janela, referência, segmento, métrica, valor, limite, status e timestamp. Registrar artefatos/links no MLflow sem PII. Configurar alertas com deduplicação, cooldown e runbook.
+
+## O que nunca fazer
+
+- **Fixar limiar universal.** PSI > 0,2 não é regra da natureza: o limite vem do
+  histórico da feature, do apetite de risco e da política aprovada.
+- **Alertar sobre drift sem olhar volume.** Uma fatia pequena move o índice sem
+  significar nada.
+- **Confundir drift de entrada com queda de performance.** Os dois existem
+  separados, e a resposta a cada um é diferente.
+- **Decidir retreino por um único ponto no tempo.**
+- **Prometer Lakehouse Monitoring ou inference table sem confirmar** que estão
+  habilitados no workspace: no Free, não estão.
 
 ## Usar recursos
 

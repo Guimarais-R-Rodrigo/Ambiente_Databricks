@@ -5,6 +5,15 @@ description: Produz EDA profissional e escalável no Databricks com PySpark/Spar
 
 # Produzir EDA profissional
 
+## Quando esta skill se aplica
+
+- Pedem **exploração, perfil, diagnóstico ou qualidade inicial** de uma fonte de
+  dados, ou um notebook de EDA.
+- A pergunta é sobre **uma** tabela ou uma base já consolidada.
+
+**Não cobre:** cruzar múltiplas fontes (`hub-ml-cross-eda-ml`) nem executar
+testes de hipótese com p-valor e effect size (`hub-ml-validacao-estatistica`).
+
 ## Definir escopo
 
 Confirmar a pergunta, unidade de análise, data de corte, tabela, filtros, chave candidata e target. Se algo crítico estiver ausente, continuar com hipóteses explícitas e listar o que precisa ser confirmado.
@@ -67,6 +76,17 @@ Importar de `hub_snippets`/`hub_scripts` em vez de reimplementar a lógica. Cat�
 | Tema, índice e formatação brasileira | `hub_snippets.visual.theme_plotly`, `hub_snippets.visual.index_generator`, `hub_snippets.constants.format_br` |
 
 `quick_profile` distingue o que é calculado na tabela inteira do que vem da amostra; preservar essa distinção ao relatar números.
+
+## O que nunca fazer
+
+- **Trazer a tabela inteira para o driver.** `toPandas()` sem limite verificável
+  derruba o notebook em base real; passe por amostra declarada.
+- **Usar `cache()` sem proteção** — é bloqueado em compute serverless.
+- **Afirmar distribuição a partir da média.** Duas bases com a mesma média e
+  desvios diferentes contam histórias opostas.
+- **Chamar de qualidade o que é só contagem de nulo.** Nulo tem significado, e
+  tratá-lo como zero enviesa sem deixar rastro.
+- **Fechar a EDA sem dizer o que ela não olhou.**
 
 ## Handoff
 

@@ -5,6 +5,16 @@ description: Explica código, notebooks, erros e conceitos do Databricks de form
 
 # Ensinar Databricks com contexto
 
+## Quando esta skill se aplica
+
+- Pedem **aula, explicação linha a linha, analogia, interpretação de stack trace,
+  comparação de abordagens** ou orientação para aprender Databricks.
+- A pessoa quer **entender**, não receber um artefato pronto.
+
+**Não cobre:** escrever as células `%md` dentro do notebook
+(`hub-ml-comentar-notebook`). A fronteira é o destino do texto: aqui ele fica no
+chat; lá, entra no arquivo.
+
 ## Calibrar a resposta
 
 Inferir o nível técnico pela pergunta e declarar a profundidade adotada. Começar pela finalidade e pelo fluxo; aprofundar em APIs e internals apenas quando útil. Não esconder incerteza sobre versão, cloud ou recurso disponível.
@@ -48,6 +58,23 @@ Não inferir que uma célula funcionou apenas porque existe. Separar “intenç�
 ## Usar analogias com responsabilidade
 
 Usar analogias de banking/CRM somente depois da explicação técnica e rotulá-las como analogias. Consultar [templates/analogias_banking_crm.md](templates/analogias_banking_crm.md) quando ajudar. Não apresentar equivalência aproximada como comportamento literal.
+
+## O que nunca fazer
+
+- **Responder com o artefato pronto** quando pediram para entender. A entrega
+  aqui é a compreensão.
+- **Usar analogia que precisa de ressalva maior que ela.** Se a metáfora exige
+  três correções, explique direto.
+- **Afirmar capacidade da plataforma sem verificar.** Slash command registrado
+  pelo usuário, hook e memória automática **não existem** no Genie Code.
+- **Ensinar o nome antigo.** Delta Live Tables virou Lakeflow Spark Declarative
+  Pipelines; Asset Bundles virou Declarative Automation Bundles.
+
+## Formato de saída
+
+Resposta no chat, em camadas: primeiro a ideia em uma frase, depois o passo a
+passo, depois a armadilha. Código só quando ele **é** a explicação — e sempre com
+o motivo ao lado, nunca solto.
 
 ## Usar recursos
 

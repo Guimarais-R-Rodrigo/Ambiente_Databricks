@@ -5,6 +5,17 @@ description: Desenha e implementa pipelines de dados e ML no Databricks com arqu
 
 # Construir pipelines Databricks
 
+## Quando esta skill se aplica
+
+- Pedem **pipeline, ingestão incremental, medallion, expectations, orquestração,
+  job, bundle, CI/CD ou deploy** dev/staging/prod.
+- O produto é **infraestrutura que roda sozinha**, não uma análise que alguém lê.
+
+**Não cobre:** construir as features que o pipeline materializa
+(`hub-ml-feature-engineering`) nem decidir o que monitorar depois que ele está de
+pé (`hub-ml-monitoramento-modelo`).
+
+
 ## Escolher a arquitetura
 
 Confirmar cloud, região, workspace, Unity Catalog, origem, SLA, volume, latência, frequência, política de reprocessamento e ambientes. Usar medallion apenas quando suas fronteiras melhorarem qualidade, reuso ou governança; não criar camadas vazias.

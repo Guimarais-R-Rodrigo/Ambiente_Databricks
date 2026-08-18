@@ -5,6 +5,15 @@ description: Documenta notebooks Databricks com células `%md` antes e depois do
 
 # Comentar notebooks Databricks
 
+## Quando esta skill se aplica
+
+- Pedem **comentar, documentar, tornar didático** ou revisar a narrativa de um
+  notebook que já existe.
+- O notebook está no chat: anexado com `@`/Add context, ou colado.
+
+**Não cobre:** ensinar o conceito por trás do código (`hub-ml-tutor-databricks`).
+A fronteira é o produto: aqui sai **um notebook comentado**; lá, uma explicação.
+
 ## Preservar o comportamento
 
 Não alterar código, ordem de execução, parâmetros, resultados nem linguagem da célula sem pedido explícito. Inserir documentação somente onde ela reduz ambiguidade ou melhora a rastreabilidade.
@@ -102,3 +111,22 @@ Os helpers visuais escapam a entrada antes de renderizar HTML; montar HTML por c
 - Verificar que métricas e nomes batem com os outputs.
 - Confirmar que links, âncoras e caracteres UTF-8 renderizam.
 - Entregar o notebook comentado e um resumo separado das inconsistências técnicas encontradas.
+## O que nunca fazer
+
+- **Alterar uma linha de código.** A skill documenta; qualquer mudança de
+  comportamento é outro pedido.
+- **Descrever o que o código faz** quando isso já está legível. O valor está no
+  **porquê**, na armadilha e no próximo passo.
+- **Escrever número que você não viu executar.** Se a leitura cita um valor, ele
+  vem da saída real — foi assim que uma tabela rotulada "saída real" nasceu com
+  valores extrapolados.
+- **Encher o notebook.** Markdown demais afoga o fluxo tanto quanto Markdown de
+  menos.
+
+## Formato de saída
+
+O mesmo notebook, com células `%md` acrescentadas — nunca um documento à parte.
+Cabeçalho no topo, célula pré antes do bloco que exige contexto, célula pós
+depois do bloco cujo resultado precisa de leitura. O código volta byte a byte
+como entrou.
+

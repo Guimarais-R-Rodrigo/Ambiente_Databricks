@@ -5,6 +5,16 @@ description: Audita implementações de skills do Databricks Genie Code e també
 
 # Auditar skills e seus outputs
 
+## Quando esta skill se aplica
+
+- Pedem **revisão, auditoria, QA, score ou validação** de uma pasta em
+  `.assistant/skills`, ou de um artefato produzido por outra skill.
+- Há um contrato escrito (`SKILL.md`) e um resultado a conferir contra ele.
+
+**Não cobre:** criar objeto novo (`hub-ml-criar-objeto`), nem auditar a
+**qualidade estatística** de um resultado (`hub-ml-validacao-estatistica`). Aqui
+se audita a **aderência ao contrato**, não a correção do conteúdo.
+
 ## Basear a auditoria em evidências
 
 Tratar como requisito nativo somente o que estiver sustentado pela documentação oficial atual do Databricks Genie Code ou pela especificação Agent Skills adotada. Identificar políticas internas, preferências e heurísticas com o rótulo **customizado**.
@@ -94,6 +104,17 @@ Pontuar de 0 a 10, sem esconder vetos, nestas dimensões:
 11. clareza da entrega.
 
 Uma média alta não compensa achado crítico. Separar conformidade verificável de julgamento editorial.
+
+## O que nunca fazer
+
+- **Aprovar por leitura.** Achado sem evidência reproduzível não é achado: cite
+  arquivo, linha e o comando que prova.
+- **Confundir aderência ao contrato com qualidade do conteúdo.** Uma skill pode
+  cumprir o `SKILL.md` inteiro e ainda estar errada no mérito.
+- **Contar `description` como se fosse corpo.** O roteamento lê só a
+  `description`; auditar o corpo não diz nada sobre qual skill será carregada.
+- **Dar nota sem dizer o que muda a nota.** Score sem critério é opinião com
+  número.
 
 ## Usar recursos
 

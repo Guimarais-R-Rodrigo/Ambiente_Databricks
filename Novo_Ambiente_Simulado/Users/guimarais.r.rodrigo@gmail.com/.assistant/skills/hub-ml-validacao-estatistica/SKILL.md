@@ -5,6 +5,16 @@ description: Planeja e executa validação estatística no Databricks para quali
 
 # Validar estatisticamente
 
+## Quando esta skill se aplica
+
+- Pedem **teste estatístico, hipótese, p-valor, normalidade, homocedasticidade,
+  VIF, ADF/KPSS, power, comparação de grupos** ou pressupostos de modelo.
+- A pergunta exige **decisão com incerteza declarada**, não descrição.
+
+**Não cobre:** descrever a base (`hub-ml-eda-profissional`) nem calcular PSI para
+acompanhar modelo em produção (`hub-ml-monitoramento-modelo`), onde o limiar vem
+de política e não de teste.
+
 ## Definir a decisão antes do teste
 
 Registrar:
@@ -128,3 +138,20 @@ Os helpers entregam a estatística, não a decisão: classificação de severida
 3. Confirmar que a conclusão segue o estimando e não somente o p-valor.
 4. Separar evidência estatística, julgamento de negócio e exigência regulatória.
 5. Entregar plano, código reproduzível, resultados, limitações e próximas ações.
+## O que nunca fazer
+
+- **Escolher o teste depois de ver o resultado.** A decisão vem antes do dado.
+- **Reportar p-valor sem effect size.** Com amostra grande, tudo é significante e
+  quase nada é relevante.
+- **Testar pressuposto e seguir mesmo assim** sem dizer o que muda na conclusão.
+- **Ignorar múltiplas comparações.** Vinte testes a 5% produzem um "achado" por
+  acaso.
+- **Usar a API clássica de `pyspark.ml`** — `VectorAssembler` e `Correlation.corr`
+  estão bloqueados sob Spark Connect no Free.
+
+## Formato de saída
+
+Um card por teste: pergunta, teste escolhido e por quê, pressupostos conferidos,
+estatística, p-valor, effect size com intervalo, e a **prescrição** — o que fazer
+com o resultado. Sem prescrição, o card não está pronto.
+

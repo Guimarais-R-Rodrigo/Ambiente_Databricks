@@ -204,7 +204,7 @@ python tools/validate_assistant.py
 
 ```text
 raiz analisada     : <repo>\ambiente_fonte
-skills             : 13 · 2/13 com as 5 seções do template
+skills             : 13 · 13/13 com as 5 seções do template
 helpers citados    : 72 caminhos verificados
 markdown / links   : 105 arquivos / 167 links relativos
 notebooks / links  : 78 notebooks / 17 links relativos

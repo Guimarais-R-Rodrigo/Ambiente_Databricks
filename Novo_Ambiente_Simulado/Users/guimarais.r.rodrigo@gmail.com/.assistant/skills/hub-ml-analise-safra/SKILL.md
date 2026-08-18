@@ -5,6 +5,19 @@ description: Analisa coortes e safras (vintages) de crédito, clientes, contrato
 
 # Analisar safras
 
+## Quando esta skill se aplica
+
+- O pedido cita **safra, vintage, coorte, MOB, maturação** ou inadimplência por
+  originação — inclusive quando vem disfarçado de "comparar os clientes que
+  entraram em janeiro com os de junho".
+- Há **grupos de entrada** a comparar ao longo do tempo, e a data de originação
+  importa tanto quanto a data do evento.
+
+**Não cobre:** monitoramento de modelo em produção (`hub-ml-monitoramento-modelo`),
+nem teste estatístico de diferença entre grupos (`hub-ml-validacao-estatistica`).
+A fronteira é o objeto: aqui a coorte é definida pela **entrada**; lá, pela janela
+de observação.
+
 ## Definir o contrato antes de calcular
 
 1. Confirmar a unidade de análise: contrato, cliente, conta ou evento.

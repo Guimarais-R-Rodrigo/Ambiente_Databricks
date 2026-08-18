@@ -5,6 +5,16 @@ description: Projeta, implementa e valida features no Databricks com foco em joi
 
 # Projetar features no Databricks
 
+## Quando esta skill se aplica
+
+- Pedem **feature engineering, backlog de features, transformação de variáveis,
+  feature table, encoding, WoE/IV, seleção, linhagem** ou materialização.
+- Há risco de **leakage** ou de training-serving skew a prevenir, e o join
+  point-in-time é parte do problema.
+
+**Não cobre:** decidir se as fontes se cruzam (`hub-ml-cross-eda-ml`) nem treinar
+o modelo que consome as features (`hub-ml-baseline-ml`).
+
 ## Definir o contexto de modelagem
 
 Registrar antes de propor features:
@@ -64,6 +74,19 @@ Executar testes de:
 - distribuição por split/período;
 - custo e volume;
 - valor incremental out-of-time quando houver target.
+
+## O que nunca fazer
+
+- **Agregar sem recorte temporal.** Média histórica calculada sobre a base
+  inteira inclui o período depois da decisão — é o leakage mais comum e o mais
+  difícil de ver depois.
+- **Reaproveitar código de treino na inferência sem conferir a janela.** É assim
+  que nasce training-serving skew.
+- **Renomear coluna devolvida** de uma feature já consumida: quebra sem erro de
+  import, e o sintoma aparece longe da causa.
+- **Encodar categoria com estatística do alvo** sem separar as dobras.
+- **Materializar antes de fixar o contrato** — chave, granularidade, instante de
+  validade e dono.
 
 ## Usar recursos
 

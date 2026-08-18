@@ -5,6 +5,18 @@ description: Treina e compara baselines reproduzíveis de machine learning no Da
 
 # Construir baseline de ML
 
+## Quando esta skill se aplica
+
+- Pedem **baseline, primeiro modelo, benchmark ou comparação de modelos** — em
+  classificação, regressão, série temporal, ranking, survival, clustering ou
+  detecção de anomalia.
+- Existe alvo definido e base pronta o bastante para treinar algo que sirva de
+  régua.
+
+**Não cobre:** construir as features (`hub-ml-feature-engineering`), explicar o
+modelo depois de treinado (`hub-ml-explainability`), nem acompanhá-lo em produção
+(`hub-ml-monitoramento-modelo`).
+
 ## Firmar o contrato
 
 Antes do treino, registrar:
@@ -133,3 +145,17 @@ Importar de `hub_snippets` em vez de reimplementar a lógica. Catálogo completo
 ## Entregar
 
 Fornecer notebook/código reproduzível, contrato, comparação com trivial, tabela de métricas, diagnóstico de leakage/overfit, registro MLflow, limitações e recomendação. Encaminhar `hub-ml-explainability` após escolher o candidato e `hub-ml-monitoramento-modelo` antes de produção.
+## O que nunca fazer
+
+- **Dividir por posição de linha** quando o dado é temporal. Split aleatório em
+  série temporal vaza o futuro e produz métrica que não se repete em produção.
+- **Comparar modelos com métricas diferentes**, ou com a mesma métrica sobre
+  amostras diferentes.
+- **Tratar o baseline como entrega final.** Ele é régua: existe para dizer se o
+  modelo seguinte vale o custo.
+- **Instalar biblioteca opcional sem fixar versão** onde o inventário manda fixar
+  — `shap`, `umap-learn` e `pmdarima` exigem pin, e as três juntas quebram o
+  `import numpy`.
+- **Abrir run de MLflow no serverless** sem checar: está bloqueado no Free desde
+  17/08/2026.
+

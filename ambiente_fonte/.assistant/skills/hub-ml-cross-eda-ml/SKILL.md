@@ -5,6 +5,17 @@ description: Consolida múltiplos EDAs e fontes para avaliar viabilidade de join
 
 # Avaliar múltiplas fontes para ML
 
+## Quando esta skill se aplica
+
+- Há **mais de uma fonte** e a pergunta é se elas se cruzam: viabilidade de join,
+  resolução de entidade, alinhamento temporal, cobertura, sinal complementar.
+- Pedem readiness para modelagem, definição de âncora, ou riscos **antes** de
+  começar feature engineering.
+
+**Não cobre:** a exploração de **uma** fonte (`hub-ml-eda-profissional`) nem a
+construção das features depois de decidido o cruzamento
+(`hub-ml-feature-engineering`).
+
 ## Receber o contexto
 
 Exigir ou inferir explicitamente:
@@ -60,6 +71,17 @@ Decidir:
 - **GO:** contrato completo e riscos controlados;
 - **CONDICIONAL:** lacunas mitigáveis com owners e critérios;
 - **NO-GO:** ausência de chave/tempo, leakage material ou cobertura incompatível.
+
+## O que nunca fazer
+
+- **Cruzar sem checar cardinalidade.** Um join 1:N silencioso multiplica linhas e
+  todas as métricas derivadas junto.
+- **Ignorar o instante da informação.** Se a feature foi publicada depois da data
+  da decisão, o cruzamento vaza — é o que o join point-in-time existe para evitar.
+- **Concluir complementaridade a partir de correlação alta** entre fontes: isso é
+  redundância, não sinal novo.
+- **Declarar readiness sem cobertura medida.** "As bases se cruzam" precisa de um
+  percentual e de um exemplo de chave órfã.
 
 ## Usar recursos
 

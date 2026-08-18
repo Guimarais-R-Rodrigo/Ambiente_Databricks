@@ -5,6 +5,54 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-18 — A norma vira instrumento, e as 13 skills ficam completas
+
+Segunda parte do dia. A classe nomeada pela auditoria — *norma publicada sem
+instrumento* — deixou de ser diagnóstico e virou fila de trabalho executada.
+
+### Adicionado
+
+1. (Claude) `check_normas_do_molde` — o **vigésimo primeiro** check, e o primeiro
+   a instrumentar `hub_padroes/snippet/template.md` em bloco. Quatro ordens do
+   molde que são mecanicamente decidíveis, cada uma citando a linha que a impõe:
+   `cache()`/`persist()` fora de `try`; `toPandas()` sem limite verificável; o
+   global `spark` dentro de módulo importado; e `__init__.py` de seção que
+   reexporta. **Nasceu como falha**, porque as quatro já estavam em zero. As
+   quatro foram provadas construindo uma violação de cada.
+2. (Claude) **A seção "Quando esta skill se aplica" nas 12 skills que não a
+   tinham**, derivada da própria `description` — que é o contrato de roteamento —
+   mais a fronteira explícita com a skill vizinha. Adição pura: nenhuma linha
+   existente foi alterada, e o roteamento não muda, porque quem roteia é a
+   `description`.
+3. (Claude) **A seção "O que nunca fazer" nas 10 skills que não a tinham.** Cada
+   proibição sai de armadilha já documentada aqui — `cache()` em serverless, PSI
+   com limiar universal, `shap` sem pin, API clássica de `pyspark.ml` sob Spark
+   Connect, nome antigo de produto Databricks. Nenhuma foi inventada.
+
+### Corrigido
+
+1. (Claude) **Dois erros de medição na própria `check_skill_secoes`**, achados ao
+   instrumentá-la — a mesma classe que ela existe para pegar:
+   - **falso positivo:** a chave `"aplica"` contava a seção "Aplicar qualidade" de
+     `hub-ml-pipeline-builder` como se fosse a de escopo, e a skill aparecia
+     completa sem ter a seção. Virou `"se aplica"`.
+   - **falso negativo:** sete skills listam proibições sob o título `Guardrails`,
+     e três descrevem o fluxo como sequência de seções no infinitivo. A primeira
+     virou palavra-chave; a segunda virou **detecção estrutural**, porque
+     renomear seções boas para agradar a guarda é ajustar o mundo ao instrumento.
+2. (Claude) `check_skill_secoes` **promovida de aviso a falha**. Contagem:
+   **13/13 com as cinco seções**, contra 2/13 na véspera.
+
+### Notas
+
+- **O validador tem 22 checks e roda em 0 falhas e 0 avisos.** Três guardas foram
+  promovidas de aviso a falha no mesmo dia — saída colada, idioma da docstring e
+  seções de skill —, todas pelo mesmo critério: aviso é para dívida aberta com
+  prazo; norma cumprida se cobra.
+- A dívida de §12.1 e §12.2 e a das seções eram as três **nomeadas** que restavam
+  no `PLANO_HUB.md`. As três estão fechadas; o que sobra depende do chat do Genie
+  Code, bloqueado até 1º/set.
+
 ## 2026-08-18 — As duas dívidas nomeadas fecham, e o validador zera
 
 `PLANO_HUB.md` §12.1 e a higiene do §12.2 foram fechadas no mesmo dia. O

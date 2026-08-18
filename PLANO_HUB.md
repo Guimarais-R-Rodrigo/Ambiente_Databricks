@@ -3,7 +3,7 @@
 Documento de trabalho, versão 2. Cada sprint é executada isoladamente, auditada
 em sessão sem contexto, revisada por você, e só então a seguinte começa.
 
-- **Status: as 13 sprints executadas.** A 5 entregou as partes 1 e 2 dos 16 prompts; as partes 3 e os forward tests dependem de interação humana. 13 skills; a biblioteca convertida (**58 objetos**: 51 `hub_snippets` + 7 `hub_scripts`) e os dois READMEs de topo atualizados. O validador conta **60 pastas de objeto**, somando os 2 exemplares de `hub_padroes`, que são template e não biblioteca. Pendem de você: os 3 forward tests da skill nova e as 16 partes 3 dos prompts
+- **Status: as 13 sprints executadas.** A 5 entregou as partes 1 e 2 dos 16 prompts; as partes 3 e os forward tests dependem de interação humana. 13 skills; a biblioteca convertida (**58 objetos**: 51 `hub_snippets` + 7 `hub_scripts`) e os dois READMEs de topo atualizados. O validador conta **60 pastas de objeto**, somando os 2 exemplares de `hub_padroes`, que são template e não biblioteca. Pendem de você: os 3 forward tests da skill nova e as 16 partes 3 dos prompts **Em 18/08 as três dívidas nomeadas fecharam** — saída colada, cor redeclarada e seções de skill —, e o validador passou a 0 falhas e 0 avisos, com 22 checks. Pendem de você: os 3 forward tests e as 16 partes 3, ambos bloqueados até 1º/set pelo orçamento do assistente no Free
 - **Última atualização:** 2026-08-17
 
 > **Histórico de revisão.** A v1 foi submetida a auditoria em sessão sem

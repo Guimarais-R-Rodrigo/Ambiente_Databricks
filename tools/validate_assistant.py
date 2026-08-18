@@ -259,30 +259,45 @@ _CHAVES_DE_HELPER = ("helper", "recurso")
 # contagem informativa, porque as 12 skills originais são anteriores ao template
 # e reescrevê-las é decisão de produto, não conserto.
 _SECOES_DE_SKILL = {
-    "quando esta skill se aplica": ("aplica",),
+    # "se aplica", e nao "aplica": `hub-ml-pipeline-builder` tem uma seção
+    # chamada "Aplicar qualidade", e a chave curta a contava como se fosse a
+    # seção de escopo. Falso positivo da guarda, achado ao instrumentá-la.
+    "quando esta skill se aplica": ("se aplica", "quando usar"),
     "fluxo": ("fluxo", "executar", "selecionar", "basear", "escolher"),
     "helpers": _CHAVES_DE_HELPER,
-    "o que nunca fazer": ("nunca fazer", "não fazer", "evitar"),
+    # `guardrail` entra porque é a **mesma seção com outro nome**: sete skills
+    # anteriores ao template listam proibições sob esse título, com o mesmo
+    # formato de lista imperativa. Cobrar o título em vez do conteúdo era falso
+    # negativo da própria guarda -- exatamente a classe que ela existe para pegar.
+    "o que nunca fazer": ("nunca fazer", "não fazer", "evitar", "guardrail", "cuidado"),
     "formato de saída": ("formato de saída", "verificar o resultado", "entregar"),
 }
 
 
-def check_skill_secoes(root: Path, warnings: list[str]) -> tuple[int, int]:
+def check_skill_secoes(root: Path, problems: list[str]) -> tuple[int, int]:
     """Confere o corpo da skill contra as seções que o template exige.
 
     Uma auditoria encontrou a skill mais nova sem três das cinco — inclusive a de
     helpers, que o template chama de "não opcional e não decorativa". Os dois
     portões aprovaram: eles conferem frontmatter e tamanho, não conteúdo.
 
-    **Só a seção de helpers vira aviso.** As outras quatro entram na contagem
-    informativa e não geram ruído, por dois motivos: as 12 skills originais são
-    anteriores ao template, e o casamento aqui é por palavra-chave no título —
-    um título legítimo pode não conter nenhuma delas. Reprovar produziria treze
-    avisos por execução, afogando os que importam.
+    **A seção de helpers reprova**, e desde 18/08/2026 as treze a têm. A
+    consequência dela é concreta: o Genie Code não descobre `hub_snippets`
+    sozinho, e uma skill que não a declara transfere para a pessoa a tarefa de
+    adivinhar que o helper existe.
 
-    A seção de helpers é a exceção porque a consequência dela é concreta: o Genie
-    Code não descobre `hub_snippets` sozinho, e uma skill que não a declara
-    transfere para a pessoa a tarefa de adivinhar que o helper existe.
+    As outras quatro entram na contagem informativa — hoje **13/13** —, e não
+    reprovam por um motivo de método: o casamento é por título, e título é
+    vocabulário. Instrumentar esta guarda expôs os dois erros que o casamento
+    lexical produz, e os dois viraram correção:
+
+    - **falso positivo:** a chave `"aplica"` contava a seção "Aplicar qualidade"
+      de `hub-ml-pipeline-builder` como se fosse a de escopo. Virou `"se aplica"`.
+    - **falso negativo:** sete skills listam proibições sob o título `Guardrails`,
+      e três descrevem o fluxo como uma sequência de seções no infinitivo. A
+      primeira virou palavra-chave; a segunda virou detecção **estrutural**,
+      porque renomear seções boas para agradar a guarda é ajustar o mundo ao
+      instrumento.
     """
     verificados = completas = 0
     for skill_md in sorted((root / ".assistant" / "skills").glob("*/SKILL.md")):
@@ -296,10 +311,19 @@ def check_skill_secoes(root: Path, warnings: list[str]) -> tuple[int, int]:
             nome for nome, chaves in _SECOES_DE_SKILL.items()
             if not any(c in t for t in titulos for c in chaves)
         ]
+        # "Fluxo" pode não se chamar fluxo. Três skills o escrevem como uma
+        # sequência de seções no infinitivo -- "definir o contexto",
+        # "inventariar e especificar", "prevenir leakage" --, que é a mesma coisa
+        # com nomes melhores. Cobrar a palavra seria fazer a guarda medir
+        # vocabulário em vez de estrutura, e renomear seções boas para agradar a
+        # guarda é ajustar o mundo ao instrumento.
+        passos = sum(1 for t in titulos if t.split(" ")[0].endswith(("ar", "er", "ir")))
+        if "fluxo" in faltando and passos >= 3:
+            faltando.remove("fluxo")
         if not faltando:
             completas += 1
         if not any(c in t for t in titulos for c in _CHAVES_DE_HELPER):
-            warnings.append(
+            problems.append(
                 f"{skill_md.relative_to(root)}: sem seção de helpers — o Genie "
                 "Code não descobre `hub_snippets` sozinho (ADR-0004/0007)"
             )
@@ -582,6 +606,119 @@ def check_docstring_em_portugues(root: Path, problems: list[str]) -> tuple[int, 
                 "prosa em português; identificadores ficam como estão."
             )
     return conferidos, ingleses
+
+
+def check_normas_do_molde(root: Path, problems: list[str]) -> tuple[int, int]:
+    """Cobra do módulo as normas que `hub_padroes/snippet/template.md` **manda**.
+
+    A auditoria de 18/08/2026 nomeou a classe: *norma publicada sem instrumento*.
+    O molde não descreve, ele ordena — e viaja com o produto, com autoridade
+    declarada. Até `check_docstring_em_portugues` existir, nenhuma das ordens dele
+    era medida, e uma delas estava violada em 26% da biblioteca.
+
+    Esta guarda instrumenta as quatro ordens que são **mecanicamente decidíveis**.
+    O resto do molde continua sendo julgamento humano, e isso está certo: *"docstring
+    do módulo diz por que existe, não o que faz"* não é verificável por AST.
+
+    | Norma, como o molde a escreve | Como é medida |
+    |---|---|
+    | *"`cache()` ou `persist()`: bloqueados em serverless"* | chamada fora de `try` |
+    | *"`toPandas()` sem limite verificável"* | sem `limit`/`sample`/`head`/`take` nas 5 linhas anteriores |
+    | *"O global `spark` **não existe** dentro de módulo importado"* | nome `spark` lido sem ligação local |
+    | *"O `__init__.py` de **seção** não reexporta nada"* | `from .` num `__init__` que não é de objeto |
+
+    **Falha, não aviso**, e as quatro nasceram assim porque as quatro já estavam
+    em zero quando a guarda foi escrita. Duas delas exigiram calibragem, e as duas
+    calibragens são a parte que interessa:
+
+    - `cache()` **dentro de `try`** é o padrão sancionado, não a violação:
+      `drift_detector` e `quick_profile` têm um `_cache_if_supported` que degrada
+      no serverless e mantém o cache onde ele existe. A regra é a chamada
+      **desprotegida**.
+    - `toPandas()` depois de `smart_sample(...)` tem limite verificável, mesmo sem
+      a palavra `limit`. Daí a lista de limitadores em vez de um só nome.
+
+    Sem essas duas, a guarda nasceria com três falsos positivos — e guarda que
+    acusa código correto é desativada na segunda semana.
+    """
+    LIMITADORES = ("limit", "sample", "head", "take", "first")
+    modulos = [
+        p for p in sorted(root.rglob("*.py"))
+        if p.parent.name == p.stem and not p.name.startswith("exemplo_")
+    ]
+    violacoes = 0
+
+    def dentro_de_try(arvore: ast.AST, alvo: ast.AST) -> bool:
+        for no in ast.walk(arvore):
+            if isinstance(no, ast.Try) and any(sub is alvo for sub in ast.walk(no)):
+                return True
+        return False
+
+    for modulo in modulos:
+        texto = modulo.read_text(encoding="utf-8")
+        try:
+            arvore = ast.parse(texto)
+        except SyntaxError:
+            continue
+        linhas = texto.splitlines()
+        rel = modulo.relative_to(root)
+
+        for no in ast.walk(arvore):
+            if not (isinstance(no, ast.Call) and isinstance(no.func, ast.Attribute)):
+                continue
+            if no.func.attr in ("cache", "persist") and not dentro_de_try(arvore, no):
+                violacoes += 1
+                problems.append(
+                    f"{rel}:{no.lineno}: `{no.func.attr}()` fora de `try` — o molde "
+                    "de `hub_padroes/snippet/` diz que são bloqueados em serverless. "
+                    "O padrão da casa é degradar, como em `_cache_if_supported`"
+                )
+            if no.func.attr == "toPandas":
+                contexto = "\n".join(linhas[max(0, no.lineno - 6):no.lineno]).lower()
+                if not any(t in contexto for t in LIMITADORES):
+                    violacoes += 1
+                    problems.append(
+                        f"{rel}:{no.lineno}: `toPandas()` sem limite verificável — o "
+                        "molde proíbe. Passe por `smart_sample`, `limit` ou equivalente"
+                    )
+
+        ligados = {
+            alvo.id for no in ast.walk(arvore) if isinstance(no, ast.Assign)
+            for alvo in no.targets if isinstance(alvo, ast.Name)
+        }
+        ligados |= {
+            arg.arg for no in ast.walk(arvore)
+            if isinstance(no, (ast.FunctionDef, ast.AsyncFunctionDef)) for arg in no.args.args
+        }
+        for no in ast.walk(arvore):
+            if isinstance(no, (ast.Import, ast.ImportFrom)):
+                for apelido in no.names:
+                    ligados.add(apelido.asname or apelido.name.split(".")[0])
+        if "spark" not in ligados:
+            for no in ast.walk(arvore):
+                if isinstance(no, ast.Name) and no.id == "spark" and isinstance(no.ctx, ast.Load):
+                    violacoes += 1
+                    problems.append(
+                        f"{rel}:{no.lineno}: usa o global `spark`, que **não existe** "
+                        "dentro de módulo importado. Use "
+                        "`SparkSession.getActiveSession() or SparkSession.builder.getOrCreate()`"
+                    )
+
+    secoes = 0
+    for init in sorted(root.rglob("__init__.py")):
+        if (init.parent / f"{init.parent.name}.py").exists():
+            continue                      # pasta de objeto: reexportar é a regra
+        secoes += 1
+        for numero, linha in enumerate(init.read_text(encoding="utf-8").splitlines(), 1):
+            if linha.strip().startswith("from ."):
+                violacoes += 1
+                problems.append(
+                    f"{init.relative_to(root)}:{numero}: `__init__.py` de seção "
+                    "reexporta — o molde proíbe. Uma seção que reexporta importa "
+                    "todos os objetos de uma vez, e os sete de `ml/` com dependência "
+                    "opcional derrubariam os irmãos junto"
+                )
+    return len(modulos) + secoes, violacoes
 
 
 def check_pasta_de_objeto_malformada(root: Path, problems: list[str]) -> int:
@@ -1012,8 +1149,9 @@ def main() -> int:
     n_com_saida, n_sem_saida = check_saida_colada(root, problems)
     check_smoke_test_sincronizado(problems)
     n_helpers = check_skill_helpers_resolvem(root, problems)
-    n_secoes, n_completas = check_skill_secoes(root, warnings)
+    n_secoes, n_completas = check_skill_secoes(root, problems)
     n_doc, n_doc_en = check_docstring_em_portugues(root, problems)
+    n_norma, n_norma_ruim = check_normas_do_molde(root, problems)
     n_readme = 0
     if args.conferir_readme:
         n_readme = check_saida_de_comando_no_readme(problems)
@@ -1033,6 +1171,7 @@ def main() -> int:
     print(f"contrato de entrada: {n_entradas} pares (entrada: o que o notebook passa)")
     print(f"saída colada       : {n_com_saida} notebooks com bloco real, {n_sem_saida} sem")
     print(f"idioma da docstring: {n_doc} módulos, {n_doc_en} com docstring em inglês")
+    print(f"normas do molde    : {n_norma} arquivos, {n_norma_ruim} violação(ões)")
     print(f"python (AST)       : {n_py} arquivos")
     print(f"instrucoes         : {n_chars}/{INSTRUCTION_LIMIT} caracteres")
     print(f"repo (corporativo) : {n_repo} arquivos varridos no repositório inteiro")
