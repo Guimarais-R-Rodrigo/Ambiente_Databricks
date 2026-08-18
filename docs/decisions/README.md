@@ -23,8 +23,10 @@ changelog. Template em `.claude/templates/adr.md`.
 | [ADR-0001](ADR-0001-arquitetura-multi-ia.md) | Arquitetura multi-IA: repo canônico + camadas derivadas | Aceito |
 | [ADR-0002](ADR-0002-engine-databricks-genie-hub.md) | Reutilizar engine `databricks-genie` do Hub | ~~Aceito~~ supersedido por ADR-0005 |
 | [ADR-0003](ADR-0003-quarentena-ambiente-antigo.md) | `Ambiente_Antigo/` local-only (fora do git) | Aceito |
-| [ADR-0004](ADR-0004-declaracao-explicita-de-helpers.md) | Helpers declarados nas skills, não descobertos em chat | Aceito |
-| [ADR-0005](ADR-0005-publicacao-propria-no-free.md) | Publicação própria no Free, herdando o padrão do Hub | Aceito |
+| [ADR-0004](ADR-0004-declaracao-explicita-de-helpers.md) | Helpers declarados nas skills, não descobertos em chat | Aceito; localização e forma supersedidas por ADR-0007 |
+| [ADR-0005](ADR-0005-publicacao-propria-no-free.md) | Publicação própria no Free, herdando o padrão do Hub | Aceito; critério de conferência supersedido por ADR-0008 |
 | [ADR-0006](ADR-0006-identidade-hub.md) | De ambiente pessoal a Hub de equipe: `x_`→`hub_`, `rodrigo-`→`hub-ml-`, com tabela de correspondência | Aceito |
+| [ADR-0007](ADR-0007-catalogo-e-pasta-de-objeto.md) | O catálogo depois da pasta de objeto: onde vive, o que cobre, e a coluna `exec` | Aceito |
+| [ADR-0008](ADR-0008-criterios-de-conferencia-da-publicacao.md) | O critério de conferência sai do ADR e vai para constante de código | Aceito |
 
 Ao adicionar um ADR, atualize esta tabela e registre no `CHANGELOG.md`.

@@ -1,17 +1,28 @@
 # Checklist de replicação no trabalho
 
-> **Números desatualizados pela reestruturação do Hub (Sprint 2, 16/08/2026).**
-> As contagens de arquivos, diretórios e nomes de skill neste documento
-> referem-se à estrutura anterior. O procedimento continua válido; os
-> números serão refeitos na Sprint 12, após a conversão terminar. Confira o
-> estado real com `python tools/publicar_free.py --verify`.
+> **Os números deste documento saem de comando, não de memória.** Onde antes
+> havia uma contagem fixa, hoje há a linha que a produz — porque toda contagem
+> escrita à mão neste projeto envelheceu, sem exceção. Rode antes de replicar:
+>
+> ```powershell
+> python tools/validate_assistant.py     # skills, objetos, contratos
+> python tools/publicar_free.py --verify # arquivos, skills, extensões, obsoletos
+> ```
 
 Documento de acompanhamento, para marcar enquanto executa. O procedimento
 completo, com o porquê de cada passo, está em
 [replicacao-trabalho.md](replicacao-trabalho.md).
 
-**Versão a replicar:** commit `ac9a782` · 174 arquivos · 12 skills
-de extensão · 4 notebooks didáticos.
+**Versão a replicar:** o commit que passou nos dois comandos do aviso acima.
+Anote aqui o hash e a saída de `--verify`, para que quem conferir depois saiba
+exatamente o que foi copiado:
+
+```text
+commit    : ________________
+arquivos  : ________ (linha `remotos` do --verify)
+skills    : ________ (linha `skills`)
+extensões : ________ (linha `extensões`)
+```
 
 Preencha ao final: data \_\_\_\_\_\_\_\_ · executado por \_\_\_\_\_\_\_\_
 
@@ -82,7 +93,8 @@ subárvore, não a pasta de usuário do laboratório.
 
 ## Fase 5 — verificar a estrutura
 
-- [ ] `.assistant/skills/` tem 12 pastas `hub-ml-*`, cada uma com `SKILL.md`
+- [ ] `.assistant/skills/` tem o número de pastas `hub-ml-*` que o `--verify`
+      reportou, cada uma com `SKILL.md`
 - [ ] `.assistant/` tem os 4 diretórios `hub_` mais `README.md`
 - [ ] `.assistant_instructions.md` presente na raiz do usuário
 - [ ] Abrir um `.py` de `hub_snippets`: precisa ser **arquivo**, não notebook

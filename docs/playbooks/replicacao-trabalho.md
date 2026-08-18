@@ -1,10 +1,13 @@
 # Runbook — replicar o ecossistema no workspace do trabalho
 
-> **Números desatualizados pela reestruturação do Hub (Sprint 2, 16/08/2026).**
-> As contagens de arquivos, diretórios e nomes de skill neste documento
-> referem-se à estrutura anterior. O procedimento continua válido; os
-> números serão refeitos na Sprint 12, após a conversão terminar. Confira o
-> estado real com `python tools/publicar_free.py --verify`.
+> **Os números deste documento saem de comando, não de memória.** Onde antes
+> havia uma contagem fixa, hoje há a linha que a produz — porque toda contagem
+> escrita à mão neste projeto envelheceu, sem exceção. Rode antes de replicar:
+>
+> ```powershell
+> python tools/validate_assistant.py     # skills, objetos, contratos
+> python tools/publicar_free.py --verify # arquivos, skills, extensões, obsoletos
+> ```
 
 Procedimento para levar o ecossistema `.assistant` certificado no laboratório
 para o workspace corporativo (Azure Databricks). Escrito para ser executado em
@@ -121,7 +124,7 @@ Pontos de atenção verificados no laboratório:
 
 | Verificação | Resultado esperado |
 |---|---|
-| `/Users/<username-trabalho>/.assistant/skills/` | 12 pastas `hub-ml-*`, cada uma com `SKILL.md` |
+| `/Users/<username-trabalho>/.assistant/skills/` | uma pasta `hub-ml-*` por skill, cada uma com `SKILL.md` — o número vem do `--verify` |
 | Raiz do `.assistant` | 4 diretórios `hub_` mais `README.md` |
 | `.assistant_instructions.md` | presente na raiz do usuário, com ponto inicial |
 | Um `.py` qualquer de `hub_snippets` | abre como arquivo de código, não como notebook |

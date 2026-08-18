@@ -4,7 +4,7 @@ Documento de trabalho, versão 2. Cada sprint é executada isoladamente, auditad
 em sessão sem contexto, revisada por você, e só então a seguinte começa.
 
 - **Status:** v2. Sprints 0 e 0b concluídas. Auditoria começa na Sprint 1
-- **Sprint atual:** 11 concluída e 5 parcial (partes 1 e 2 dos 16 prompts) — 13 skills; a biblioteca convertida (**58 objetos**: 51 `hub_snippets` + 7 `hub_scripts`) e os dois READMEs de topo atualizados. O validador conta **60 pastas de objeto**, somando os 2 exemplares de `hub_padroes`, que são template e não biblioteca. Próxima: 12 (auditoria final). Pendem de você: os 3 forward tests da skill nova e as 16 partes 3 dos prompts
+- **Status: as 13 sprints executadas.** A 5 entregou as partes 1 e 2 dos 16 prompts; as partes 3 e os forward tests dependem de interação humana. 13 skills; a biblioteca convertida (**58 objetos**: 51 `hub_snippets` + 7 `hub_scripts`) e os dois READMEs de topo atualizados. O validador conta **60 pastas de objeto**, somando os 2 exemplares de `hub_padroes`, que são template e não biblioteca. Pendem de você: os 3 forward tests da skill nova e as 16 partes 3 dos prompts
 - **Última atualização:** 2026-08-17
 
 > **Histórico de revisão.** A v1 foi submetida a auditoria em sessão sem
@@ -739,4 +739,4 @@ morto. Editar `STYLE_SECTION_HEADER` não muda cabeçalho nenhum — e o noteboo
 | 9 | ✅ concluída | 2026-08-17 | ✅ 13 achados corrigidos | [relatório](docs/sprints/sprint-9-constants-visual-display.md) · fecha a biblioteca |
 | 10 | ✅ concluída | 2026-08-17 | ✅ 12 achados corrigidos | [relatório](docs/sprints/sprint-10-readmes-de-topo.md) · glossário absorvido |
 | 11 | ✅ concluída | 2026-08-17 | ✅ 19 achados corrigidos | [relatório](docs/sprints/sprint-11-hub-ml-criar-objeto.md) · forward test pendente |
-| 12 | não iniciada | — | — | — |
+| 12 | ✅ concluída | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-12-fechamento.md) · ADR-0007 e 0008, playbooks, 3 guardas |

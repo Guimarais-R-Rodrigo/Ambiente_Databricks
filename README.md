@@ -185,6 +185,16 @@ tente casá-las com o seu retorno. O que importa em cada bloco é a última linh
 > do commit, nunca antes. Uma auditoria pegou os três blocos errados por
 > exatamente 1 em quatro contagens, porque foram colados antes de o commit apagar
 > um arquivo. A ordem é: editar → rodar → colar → commitar.
+>
+> E não confie na disciplina: rode
+>
+> ```powershell
+> python tools/validate_assistant.py --conferir-readme
+> ```
+>
+> Ele reexecuta os comandos e **reprova** se algum número colado divergir. Fica
+> fora do caminho padrão porque chama os próprios scripts — use antes de commitar
+> mudança que altere contagem.
 
 **Validar a fonte** — roda em segundos, não toca em nada:
 
@@ -194,7 +204,8 @@ python tools/validate_assistant.py
 
 ```text
 raiz analisada     : <repo>\ambiente_fonte
-skills             : 13
+skills             : 13 · 2/13 com as 5 seções do template
+helpers citados    : 72 caminhos, todos resolvem
 markdown / links   : 105 arquivos / 166 links relativos
 notebooks / links  : 78 notebooks / 17 links relativos
 pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
@@ -202,10 +213,10 @@ forma da pasta     : 58 conferidas (o módulo tem o nome da pasta)
 contrato de dados  : 60 pares (saída: o que o notebook consome)
 contrato de entrada: 57 pares (entrada: o que o notebook passa)
 saída colada       : 66 notebooks com bloco real, 11 sem
-python (AST)       : 193 arquivos
+python (AST)       : 209 arquivos
 instrucoes         : 7085/20000 caracteres
-repo (corporativo) : 711 arquivos varridos no repositório inteiro
-repo (links)       : 241 links fora da raiz analisada
+repo (corporativo) : 714 arquivos varridos no repositório inteiro
+repo (links)       : 244 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 11 aviso(s)
 ```
@@ -226,6 +237,7 @@ saber o que cada uma cobre:
 |---|---|---|
 | `pastas de objeto` | nome da pasta, os três arquivos, e se o `__init__.py` bate com a API do módulo | conversão para pasta por objeto |
 | `forma da pasta` | o módulo tem o nome da pasta — sem isso o import documentado não existe | pasta que o outro check pulava em silêncio |
+| `helpers citados` | todo `hub_snippets.x.y` citado numa skill existe de fato | renomear módulo quebraria 13 skills em silêncio |
 | `contrato de dados` | o notebook consome chave que o módulo **devolve** | três notebooks pedindo chave renomeada |
 | `contrato de entrada` | o notebook passa argumento que a assinatura **aceita** | seis dos dezesseis defeitos da Sprint 7 entraram por aí |
 | `saída colada` | o notebook tem bloco com saída real, não só prosa | notebook que ensinava a contar nulos numa saída sem nulos |

@@ -5,6 +5,50 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-17 — Sprint 12: fechamento, com dois ADRs e três guardas
+
+Última sprint de execução do `PLANO_HUB.md`. Relatório em
+`docs/sprints/sprint-12-fechamento.md`.
+
+### Adicionado
+
+1. (Claude) `ADR-0007` — o catálogo depois da pasta de objeto. Supersede o
+   ADR-0004 nos pontos de localização e forma; a decisão de fundo (declaração
+   explícita de helpers) é reafirmada. Formaliza a coluna de dependência com o
+   estado `exec`, que nomeia a classe descoberta nas Sprints 7 e 9.
+2. (Claude) `ADR-0008` — o critério de conferência sai do ADR e vai para
+   constante de código. Supersede o ADR-0005 nesse ponto. A decisão não é
+   corrigir "12 skills, 6 diretórios" para 13 e 4: é **tirar o número do texto**,
+   porque contagem em ADR envelhece sem que nada acuse.
+3. (Claude) Três guardas em `tools/validate_assistant.py`, cada uma contra um
+   defeito que aconteceu:
+   - `check_saida_de_comando_no_readme` (flag `--conferir-readme`) reexecuta os
+     comandos e reprova se algum número colado divergir. Provada com o defeito
+     exato da Sprint 10, e **pegou quatro divergências reais** na primeira
+     execução, criadas pelas edições desta própria sprint.
+   - `check_skill_helpers_resolvem`: os 72 caminhos `hub_snippets.x.y` citados
+     nas 13 skills resolvem. Renomear um objeto os quebraria em silêncio.
+   - `check_skill_secoes`: cobra a seção de helpers e reporta **2 de 13** com as
+     cinco seções do template, como contagem informativa.
+
+### Atualizado
+
+1. (Claude) Os três playbooks de replicação trocaram número morto por **comando
+   que devolve o número**. O checklist ganhou quadro em branco para quem replicar
+   preencher com a saída do `--verify` — o registro passa a ser do que foi de
+   fato copiado.
+
+### Notas
+
+- **A guarda de seções exigiu calibragem.** A primeira versão acusava treze
+  skills por execução: as 12 originais são anteriores ao template, e o casamento
+  por palavra-chave produz falso positivo sobre título legítimo. A versão final
+  cobra só a seção de helpers, que é a que tem consequência concreta.
+- Fica declarado o que este projeto aprendeu em doze auditorias e ~150 achados:
+  prosa confiante sobre coisa não verificada é a classe mais frequente; "foi
+  testado" tem data de validade em ambiente gerenciado; e cada portão pega uma
+  classe, nenhum pega a do vizinho.
+
 ## 2026-08-17 — Sprint 5: os 16 prompts ganham notebook, com a parte 3 declarada em branco
 
 Os 16 prompts viraram pasta de objeto, cada um com o notebook de três partes. As

@@ -175,6 +175,166 @@ def check_saida_colada(root: Path, warnings: list[str]) -> tuple[int, int]:
     return com, sem
 
 
+
+def check_skill_helpers_resolvem(root: Path, problems: list[str]) -> int:
+    """Todo helper citado numa skill precisa existir.
+
+    As skills recomendam helper por caminho de import pontilhado —
+    `hub_snippets.spark.pit_join` — porque essa forma é imune à conversão para
+    pasta de objeto. Ela sobreviveu a cinco sprints de conversão sem uma edição.
+
+    O que ela **não** sobrevive é a um objeto renomeado ou removido: o caminho
+    continua escrito, e a skill passa a recomendar algo que não existe. Ninguém
+    percebe, porque o Genie Code não resolve o caminho — quem resolve é a pessoa,
+    no notebook, e o erro aparece longe daqui.
+
+    Uma auditoria verificou os 38 caminhos à mão e achou zero quebrados. Esta
+    guarda é para que a próxima não precise.
+    """
+    base = root / ".assistant"
+    verificados = 0
+    for skill_md in sorted((base / "skills").glob("*/SKILL.md")):
+        texto = skill_md.read_text(encoding="utf-8")
+        rel = skill_md.relative_to(root)
+        for pacote, caminho in re.findall(
+            r"\b(hub_snippets|hub_scripts)((?:\.[a-z_][a-z0-9_]*)+)", texto
+        ):
+            partes = [p for p in caminho.split(".") if p]
+            # A última parte pode ser a função, não o módulo: aceita as duas.
+            destino_modulo = base / pacote / Path(*partes)
+            destino_pai = base / pacote / Path(*partes[:-1]) if len(partes) > 1 else None
+            verificados += 1
+            if destino_modulo.is_dir() or (destino_pai and destino_pai.is_dir()):
+                continue
+            problems.append(
+                f"{rel}: recomenda `{pacote}{caminho}`, que não existe na "
+                "biblioteca — a skill aponta para um objeto renomeado ou removido"
+            )
+    return verificados
+
+
+# A seção que o template chama de "não opcional e não decorativa" (ADR-0004).
+_CHAVES_DE_HELPER = ("helper", "recurso")
+
+# As cinco que o template lista. Só a de helpers é cobrada; as outras entram na
+# contagem informativa, porque as 12 skills originais são anteriores ao template
+# e reescrevê-las é decisão de produto, não conserto.
+_SECOES_DE_SKILL = {
+    "quando esta skill se aplica": ("aplica",),
+    "fluxo": ("fluxo", "executar", "selecionar", "basear", "escolher"),
+    "helpers": _CHAVES_DE_HELPER,
+    "o que nunca fazer": ("nunca fazer", "não fazer", "evitar"),
+    "formato de saída": ("formato de saída", "verificar o resultado", "entregar"),
+}
+
+
+def check_skill_secoes(root: Path, warnings: list[str]) -> tuple[int, int]:
+    """Confere o corpo da skill contra as seções que o template exige.
+
+    Uma auditoria encontrou a skill mais nova sem três das cinco — inclusive a de
+    helpers, que o template chama de "não opcional e não decorativa". Os dois
+    portões aprovaram: eles conferem frontmatter e tamanho, não conteúdo.
+
+    **Só a seção de helpers vira aviso.** As outras quatro entram na contagem
+    informativa e não geram ruído, por dois motivos: as 12 skills originais são
+    anteriores ao template, e o casamento aqui é por palavra-chave no título —
+    um título legítimo pode não conter nenhuma delas. Reprovar produziria treze
+    avisos por execução, afogando os que importam.
+
+    A seção de helpers é a exceção porque a consequência dela é concreta: o Genie
+    Code não descobre `hub_snippets` sozinho, e uma skill que não a declara
+    transfere para a pessoa a tarefa de adivinhar que o helper existe.
+    """
+    verificados = completas = 0
+    for skill_md in sorted((root / ".assistant" / "skills").glob("*/SKILL.md")):
+        verificados += 1
+        titulos = [
+            l[3:].strip().lower()
+            for l in skill_md.read_text(encoding="utf-8").splitlines()
+            if l.startswith("## ")
+        ]
+        faltando = [
+            nome for nome, chaves in _SECOES_DE_SKILL.items()
+            if not any(c in t for t in titulos for c in chaves)
+        ]
+        if not faltando:
+            completas += 1
+        if not any(c in t for t in titulos for c in _CHAVES_DE_HELPER):
+            warnings.append(
+                f"{skill_md.relative_to(root)}: sem seção de helpers — o Genie "
+                "Code não descobre `hub_snippets` sozinho (ADR-0004/0007)"
+            )
+    return verificados, completas
+
+
+def check_saida_de_comando_no_readme(problems: list[str]) -> int:
+    """Reexecuta os comandos que o README documenta e compara com o colado.
+
+    O `README.md` da raiz ensina o ciclo colando a saída real de cada comando.
+    É a escolha certa e a que envelhece sozinha: uma auditoria encontrou os três
+    blocos errados por exatamente 1 em quatro contagens, porque foram capturados
+    **antes** de o commit apagar um arquivo.
+
+    A ironia registrada: o validador imprimia a resposta certa na tela enquanto o
+    README exibia a errada. Esta guarda fecha esse caso.
+
+    Compara só as linhas de contagem — as que começam com um rótulo conhecido.
+    Não tenta casar o bloco inteiro, porque caminho e usuário aparecem com
+    placeholder de propósito.
+    """
+    import subprocess
+
+    readme = REPO_ROOT / "README.md"
+    if not readme.exists():
+        return 0
+
+    rotulos = (
+        "skills             :", "markdown / links   :", "notebooks / links  :",
+        "pastas de objeto   :", "forma da pasta     :", "saída colada       :",
+        "python (AST)       :", "repo (corporativo) :", "repo (links)       :",
+        "esperados : ", "remotos   : ", "skills    :",
+    )
+    comandos = [
+        [sys.executable, str(REPO_ROOT / "tools" / "validate_assistant.py")],
+        [sys.executable, str(REPO_ROOT / "tools" / "publicar_free.py"), "--verify"],
+    ]
+    # O filho herda a codificação do console, que no Windows é cp1252 e devolve
+    # caractere de substituição em acento — e aí a comparação falha por
+    # codificação, não por divergência real. PYTHONIOENCODING resolve na origem.
+    import os
+
+    ambiente = dict(os.environ, PYTHONIOENCODING="utf-8")
+    real = ""
+    for cmd in comandos:
+        try:
+            real += subprocess.run(
+                cmd, capture_output=True, text=True, timeout=300,
+                cwd=str(REPO_ROOT), encoding="utf-8", errors="replace",
+                env=ambiente,
+            ).stdout
+        except (OSError, subprocess.SubprocessError):
+            return 0  # sem os comandos disponíveis, não invente reprovação
+
+    texto_readme = readme.read_text(encoding="utf-8")
+    verificados = 0
+    for rotulo in rotulos:
+        linha_real = next(
+            (l.strip() for l in real.splitlines() if l.strip().startswith(rotulo.strip())), None)
+        linha_readme = next(
+            (l.strip() for l in texto_readme.splitlines() if l.strip().startswith(rotulo.strip())), None)
+        if linha_real is None or linha_readme is None:
+            continue
+        verificados += 1
+        norm = lambda s: re.sub(r"\s+", " ", s)
+        if norm(linha_real) != norm(linha_readme):
+            problems.append(
+                f"README.md: a saída colada diverge da execução\n"
+                f"    colado : {linha_readme}\n"
+                f"    real   : {linha_real}"
+            )
+    return verificados
+
+
 def check_pycache(root: Path, warnings: list[str]) -> None:
     """Bytecode no fonte não quebra nada, mas viaja.
 
@@ -697,6 +857,17 @@ def check_text_hygiene(root: Path, problems: list[str]) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--conferir-readme",
+        action="store_true",
+        dest="conferir_readme",
+        help=(
+            "reexecuta os comandos que o README.md documenta e compara com a "
+            "saída colada. Fica fora do caminho padrão porque chama os próprios "
+            "scripts, e recursão em validação é armadilha; use antes de commitar "
+            "mudança que altere contagem."
+        ),
+    )
     parser.add_argument("--root", default="ambiente_fonte", type=Path)
     args = parser.parse_args()
 
@@ -723,11 +894,19 @@ def main() -> int:
     n_entradas = check_contrato_de_entrada(root, problems)
     n_com_saida, n_sem_saida = check_saida_colada(root, warnings)
     check_smoke_test_sincronizado(problems)
+    n_helpers = check_skill_helpers_resolvem(root, problems)
+    n_secoes, n_completas = check_skill_secoes(root, warnings)
+    n_readme = 0
+    if args.conferir_readme:
+        n_readme = check_saida_de_comando_no_readme(problems)
     n_repo = check_repo_corporate(problems)
     n_repo_links = check_repo_links(root, problems)
 
     print(f"raiz analisada     : {root}")
-    print(f"skills             : {n_skills}")
+    print(f"skills             : {n_skills} · {n_completas}/{n_secoes} com as 5 seções do template")
+    print(f"helpers citados    : {n_helpers} caminhos, todos resolvem")
+    if args.conferir_readme:
+        print(f"saída no README    : {n_readme} linhas conferidas contra execução real")
     print(f"markdown / links   : {n_md} arquivos / {n_links} links relativos")
     print(f"notebooks / links  : {n_nb} notebooks / {n_nb_links} links relativos")
     print(f"pastas de objeto   : {n_objetos} conferidas (nome, arquivos, __init__)")
