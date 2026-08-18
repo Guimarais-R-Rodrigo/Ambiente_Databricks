@@ -43,6 +43,7 @@ flowchart LR
 | `docs/sprints/` | Relatório de cada sprint da reestruturação do Hub | append-only |
 | `Ajustes_Codex/` | Entrega congelada da auditoria do Codex (2026-08-13) | **não** (referência) |
 | `Ambiente_Antigo/` | Export original do trabalho — **local-only, git-ignored** (ADR-0003) | **não** (referência) |
+| `PLANO_HUB.md` | Plano da reestruturação em 12 sprints, com o registro de execução e a dívida declarada | sim |
 | `CHANGELOG.md` | Registro de toda mudança relevante, com IA autora | append-only |
 
 ## O que o Genie Code lê (nativo) vs. o que é do Hub (`hub_`)
@@ -180,6 +181,11 @@ placeholder. **As linhas de contagem mudam conforme o repositório cresce** — 
 tente casá-las com o seu retorno. O que importa em cada bloco é a última linha,
 `APROVADO` ou `OK`.
 
+> **Para quem edita este README:** capture as saídas **depois** da última edição
+> do commit, nunca antes. Uma auditoria pegou os três blocos errados por
+> exatamente 1 em quatro contagens, porque foram colados antes de o commit apagar
+> um arquivo. A ordem é: editar → rodar → colar → commitar.
+
 **Validar a fonte** — roda em segundos, não toca em nada:
 
 ```powershell
@@ -189,7 +195,7 @@ python tools/validate_assistant.py
 ```text
 raiz analisada     : <repo>\ambiente_fonte
 skills             : 12
-markdown / links   : 104 arquivos / 143 links relativos
+markdown / links   : 103 arquivos / 143 links relativos
 notebooks / links  : 62 notebooks / 1 links relativos
 pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
 contrato de dados  : 60 pares (saída: o que o notebook consome)
@@ -197,11 +203,16 @@ contrato de entrada: 57 pares (entrada: o que o notebook passa)
 saída colada       : 49 notebooks com bloco real, 12 sem
 python (AST)       : 193 arquivos
 instrucoes         : 7085/20000 caracteres
-repo (corporativo) : 674 arquivos varridos no repositório inteiro
-repo (links)       : 214 links fora da raiz analisada
+repo (corporativo) : 673 arquivos varridos no repositório inteiro
+repo (links)       : 216 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 12 aviso(s)
 ```
+
+**Sobre `pastas de objeto: 60`:** a biblioteca são **58** — 51 em `hub_snippets`
+e 7 em `hub_scripts`. Os outros dois são os exemplares de `hub_padroes/`, que são
+molde e não biblioteca. O validador conta pastas de objeto, e eles têm a forma de
+um; o `.assistant/README.md` conta biblioteca, e eles não são.
 
 Qualquer linha `FAIL` bloqueia o resto do ciclo. Os **12 avisos** são dívida
 nomeada, não impedimento: são notebooks de sprints antigas sem saída real colada,
@@ -214,8 +225,8 @@ saber o que cada uma cobre:
 |---|---|---|
 | `pastas de objeto` | nome da pasta, os três arquivos, e se o `__init__.py` bate com a API do módulo | conversão para pasta por objeto |
 | `contrato de dados` | o notebook consome chave que o módulo **devolve** | três notebooks pedindo chave renomeada |
-| `contrato de entrada` | o notebook passa argumento que a assinatura **aceita** | seis notebooks escritos contra API imaginada |
-| `saída colada` | o notebook tem bloco com saída real, não só prosa | notebook que ensinava a ler uma saída vazia |
+| `contrato de entrada` | o notebook passa argumento que a assinatura **aceita** | seis dos dezesseis defeitos da Sprint 7 entraram por aí |
+| `saída colada` | o notebook tem bloco com saída real, não só prosa | notebook que ensinava a contar nulos numa saída sem nulos |
 
 As duas últimas linhas são as únicas que valem conferir de olho: elas contam o
 que os checks de repositório inteiro alcançaram. Se qualquer uma vier **zero**,
@@ -235,7 +246,7 @@ destino: <repo>\Novo_Ambiente_Simulado\Users\<seu-usuario>
   copy file .assistant_instructions.md -> ...\.assistant_instructions.md
   copy dir  .assistant -> ...\.assistant
 
-OK: 298 arquivos renderizados em Novo_Ambiente_Simulado/
+OK: 297 arquivos renderizados em Novo_Ambiente_Simulado/
 ```
 
 O total inclui o marcador `README_GERADO.md` na raiz do simulado, que não vai
@@ -253,8 +264,8 @@ python tools/publicar_free.py --verify
 usuário: <seu-usuario>
 
 == VERIFY (read-only) ==
-esperados : 297 arquivos
-remotos   : 298 arquivos sob .assistant + instruções
+esperados : 296 arquivos
+remotos   : 297 arquivos sob .assistant + instruções
 ausentes  : 0 | obsoletos: 0
 plataforma: 1 arquivo(s) gerenciado(s) — .assistant/.mcp_servers.json
 skills    : 12/12

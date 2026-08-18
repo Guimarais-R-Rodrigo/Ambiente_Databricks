@@ -10,7 +10,7 @@ Documento de acompanhamento, para marcar enquanto executa. O procedimento
 completo, com o porquê de cada passo, está em
 [replicacao-trabalho.md](replicacao-trabalho.md).
 
-**Versão a replicar:** commit `ac9a782` · 174 arquivos · 12 skills · 6 diretórios
+**Versão a replicar:** commit `ac9a782` · 174 arquivos · 12 skills
 de extensão · 4 notebooks didáticos.
 
 Preencha ao final: data \_\_\_\_\_\_\_\_ · executado por \_\_\_\_\_\_\_\_

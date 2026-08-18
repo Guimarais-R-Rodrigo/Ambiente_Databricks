@@ -6,7 +6,7 @@
 > este documento não é reescrito porque descreve o que foi observado, não o
 > estado atual.
 
-Gate da fase 3 (herdado da auditoria do Codex): executar `x_snippets`/`x_scripts`
+Gate da fase 3 (herdado da auditoria do Codex): executar `hub_snippets`/`hub_scripts`
 no runtime Databricks real. Executor: job serverless one-time no Free Edition,
 notebook [tools/spark_smoke_test.py](../../../tools/spark_smoke_test.py)
 (importado em `/Users/<username>/hub_lab/`), dados 100% sintéticos.
@@ -39,21 +39,30 @@ concreto, veja [Como ler uma falha](#como-ler-uma-falha).
 
 ## Módulos com dependência opcional — situação final
 
-**13 dos 14 verificados em runtime.** O conjunto de versões que funciona está em
-`x_snippets/requirements-optional.txt`.
+> **Atualizado em 2026-08-17.** O bloco abaixo foi reescrito: a situação de
+> 14/08 registrava 13 de 14 e classificava `prophet_wrapper` como sem combinação
+> funcional conhecida. Isso deixou de ser verdade. A tabela de rodadas acima é
+> evidência datada e permanece como está.
 
-| Situação | Módulos |
-|---|---|
-| **Verificados** (13) | `train_lgbm`, `train_xgboost`, `train_catboost`, `optuna_lgbm`, `lgbm_ranker`, `umap_viz`, `shap_explainer`, `survival_cox`, `kaplan_meier`, `autoencoder_anomaly`, `mlp_embeddings`, `tabnet_wrapper`, `arima_wrapper` |
-| **Não verificado** (1) | `prophet_wrapper` |
+**14 dos 14 verificados em runtime**, cada um com chamada real — ajuste de
+modelo, projeção ou previsão, não apenas import. O inventário com a prova de
+execução de cada biblioteca está em
+`ambiente_fonte/.assistant/hub_snippets/requirements-optional.txt`.
 
-`prophet_wrapper` falha com `AttributeError: 'Prophet' object has no attribute
-'stan_backend'` — inclusive com autologging desligado e sem registro. O atributo
-não é usado pelo nosso código: ele deixa de ser criado quando o backend de
-inferência do Prophet não inicializa, o que aponta para incompatibilidade entre
-`prophet 1.1.5` e o ambiente serverless, não defeito do módulo. Enquanto não
-houver combinação de versões que funcione, ele permanece marcado como não
-verificado, e prometer execução com ele é afirmar algo sem evidência.
+`prophet_wrapper` era o único pendente. Em **14/08** falhava com
+`AttributeError: 'Prophet' object has no attribute 'stan_backend'` — o backend de
+inferência não inicializava, e o registro concluiu, corretamente para a época,
+que prometer execução com ele seria afirmar algo sem evidência.
+
+Em **17/08**, `%pip install prophet` sem pin instalou e ajustou um modelo
+completo, com previsão de 7 dias à frente. O impedimento não existe mais no
+runtime atual do Free.
+
+**A lição é de método, e vale mais que o caso:** em ambiente gerenciado, "foi
+testado" tem data de validade — nos dois sentidos. No mesmo dia em que o Prophet
+passou a funcionar, o `mlflow_run`, registrado aqui como aprovado em 14/08,
+deixou de abrir run. Reexecute antes de replicar; ver
+`.claude/rules/free-vs-trabalho.md`.
 
 Três armadilhas confirmadas, válidas para todos os wrappers de treino:
 
@@ -95,7 +104,7 @@ forma não era instalável neste ambiente.
 Nenhum deles era detectável pela validação estática (AST compilava na máquina
 local com Python 3.12):
 
-1. **`spark` como global inexistente** — `null_summary` e 5 `x_scripts`
+1. **`spark` como global inexistente** — `null_summary` e 5 `hub_scripts`
    (`quick_profile`, `data_quality_check`, `rfv_calculator`, `drift_detector`,
    `schema_to_yaml`) referenciavam o global de notebook `spark`, que não existe
    quando o módulo é importado (`NameError`). Correção: `df.sparkSession` no
@@ -103,8 +112,8 @@ local com Python 3.12):
    **`naming_checker` tinha o mesmo defeito e escapou desta rodada**: ele não
    estava coberto pelo smoke test, então nunca foi importado no runtime.
    Encontrado e corrigido em 2026-08-15 pela auditoria de documentação, que
-   comparou a lista acima com o código. Hoje nenhum módulo de `x_scripts` ou
-   `x_snippets` usa o global — a varredura por AST está descrita no CHANGELOG.
+   comparou a lista acima com o código. Hoje nenhum módulo de `hub_scripts` ou
+   `hub_snippets` usa o global — a varredura por AST está descrita no CHANGELOG.
 2. **`cache()`/`unpersist()` proibidos no serverless** (`NOT_SUPPORTED_WITH_SERVERLESS`)
    — em `safe_display` (removido: o prefixo `limit+1` já limita custo) e em
    `quick_profile`/`drift_detector` (guardas `_cache_if_supported`/`_unpersist_quietly`,
@@ -116,8 +125,8 @@ local com Python 3.12):
 ## Dependências opcionais ausentes no Free (esperado)
 
 `lightgbm`, `xgboost`, `catboost`, `optuna`, `torch` (×2 módulos) — 7 módulos de
-`x_snippets/ml` só importam com as libs instaladas no ambiente do projeto
-consumidor (`x_snippets/requirements-optional.txt`). Testá-los com versões
+`hub_snippets/ml` só importam com as libs instaladas no ambiente do projeto
+consumidor (`hub_snippets/requirements-optional.txt`). Testá-los com versões
 fixadas continua como gate específico por workflow.
 
 ## Como ler uma falha

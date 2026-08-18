@@ -736,6 +736,6 @@ morto. Editar `STYLE_SECTION_HEADER` não muda cabeçalho nenhum — e o noteboo
 | 7 | ✅ concluída | 2026-08-17 | ✅ 12 achados corrigidos + guarda de entrada | [relatório](docs/sprints/sprint-7-ml-nucleo.md) |
 | 8 | ✅ concluída | 2026-08-17 | ✅ 13 achados corrigidos | [relatório](docs/sprints/sprint-8-ml-dependencia-opcional.md) · os 14 executam, via `%pip` |
 | 9 | ✅ concluída | 2026-08-17 | ✅ 13 achados corrigidos | [relatório](docs/sprints/sprint-9-constants-visual-display.md) · fecha a biblioteca |
-| 10 | ✅ concluída | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-10-readmes-de-topo.md) · glossário absorvido |
+| 10 | ✅ concluída | 2026-08-17 | ✅ 12 achados corrigidos | [relatório](docs/sprints/sprint-10-readmes-de-topo.md) · glossário absorvido |
 | 11 | não iniciada | — | — | — |
 | 12 | não iniciada | — | — | — |

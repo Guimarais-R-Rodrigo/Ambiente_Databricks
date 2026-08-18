@@ -184,6 +184,9 @@ Somar taxas por safra produz número diferente e incorreto.
 | Badges de status e score | `hub_snippets.visual.badge` | `badge_status`, `badge_score`, `badge_inline` |
 | Headers de seção | `hub_snippets.visual.section_header` | `section_header_html` |
 | Separadores | `hub_snippets.visual.divider` | `divider_light`, `divider_medium`, `divider_heavy`, `divider_section` |
+| Paleta, cores semânticas e institucionais | `hub_snippets.constants.colors` | 22 constantes: `PALETA_CATEGORICA`, `COR_POSITIVO`, `AZUL_CAIXA`… |
+| CSS compartilhado para `displayHTML` | `hub_snippets.constants.styles` | `STYLE_SECTION_HEADER`, `STYLE_KPI_CARD`, `STYLE_BADGE_OK`… |
+| Emojis das etapas da EDA e vocabulário semântico | `hub_snippets.constants.emojis` | `SECOES_EDA`, `SEMANTICA` |
 | Índice de notebook de EDA | `hub_snippets.visual.index_generator` | `gerar_indice_eda` |
 | Paletas, emojis e estilos CSS | `hub_snippets.constants.colors`, `.emojis`, `.styles` | constantes |
 

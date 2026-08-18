@@ -5,6 +5,61 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-17 — auditoria da Sprint 10: 12 achados, e o defeito que se repetiu
+
+O auditor seguiu o README ao pé da letra — publicou um notebook no Free com os
+trechos copiados literalmente e rodou como job. Doze achados, todos procedentes.
+Detalhe em `docs/sprints/sprint-10-readmes-de-topo.md`.
+
+### Corrigido
+
+1. (Claude) **As três saídas de comando coladas estavam erradas — pelo arquivo que
+   a própria sprint apagou.** Capturei os números e só depois removi o
+   `GLOSSARIO.md`; quatro contagens caíram em 1 e uma subiu em 2. Esta sprint
+   existia para corrigir saídas desatualizadas e reproduziu o defeito um commit
+   adiante. Recapturadas, e a ordem **editar → rodar → colar → commitar** ficou
+   escrita no próprio README.
+2. (Claude) A seção nova prometia saída real colada em todo notebook, com
+   "sempre". Falta em **11 dos 58** — e o exemplo que eu escolhi para ilustrar,
+   com "abra este primeiro", era `pit_join`, um dos onze. Trocado por
+   `safe_display`, e os onze declarados com ponteiro para §12.1.
+3. (Claude) Os "três casos conhecidos" de bloco não-executado erravam nos três:
+   `pyspark.ml` não é bloco de não-executado (o notebook executa e cola o
+   `Py4JError` real), sobrou uma dependência de pandas e não duas, e havia um
+   quarto bloco no template ensinando uma limitação do Prophet que deixou de
+   existir.
+4. (Claude) `docs/testes/spark/README.md` ainda declarava `prophet_wrapper` não
+   verificado — contra o `requirements-optional.txt`, a regra
+   `free-vs-trabalho.md` e o próprio README da raiz — e usava caminhos
+   `x_snippets/` de antes da Sprint 2.
+5. (Claude) "Quatorze objetos de `ml/` instalam sozinhos": são **quinze**, com
+   `display/dataframe_styled` estruturalmente idêntico.
+6. (Claude) O "Mapa do repositório" omitia o `PLANO_HUB.md`; o
+   `CATALOGO_HELPERS.md` não tinha `constants.emojis` nem `constants.styles`; e
+   `checklist-replicacao.md` dizia 6 diretórios numa linha e 4 em outra.
+
+### Atualizado
+
+1. (Claude) `check_repo_links` ganhou a guarda de varredura vazia que só
+   `check_repo_corporate` tinha. O README prometia que **ambas** reprovassem com
+   zero; metade da rede não existia. Preferi consertar o código a enfraquecer a
+   frase — provado com sonda que troca `REPO_ROOT` por diretório vazio.
+
+### Notas
+
+- **O que a auditoria confirmou é o que mais importava:** seguir o README
+  funciona. Os caminhos existem na caixa exata, os três imports rodam no
+  workspace, as saídas de confirmação batem caractere por caractere, e o "engano
+  mais comum" documentado reproduz a mensagem prometida.
+- O glossário migrou limpo: 65 termos antes, 65 depois, hierarquia correta, onze
+  âncoras resolvendo — inclusive as acentuadas.
+- **Nenhum portão veria nenhum dos doze.** Eles conferem estrutura, sintaxe, link
+  e tipo de objeto; nenhum lê uma frase e pergunta se é verdade. A ironia do
+  achado 1 é que o validador imprimia a resposta certa na tela enquanto o README
+  exibia a errada. A guarda que fecharia o caso — extrair os blocos de saída,
+  reexecutar e falhar na divergência — fica registrada como candidata da
+  Sprint 12.
+
 ## 2026-08-17 — Sprint 10: os dois READMEs de topo, e o glossário absorvido
 
 `README.md` da raiz e `.assistant/README.md` atualizados na variante longa.

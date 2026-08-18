@@ -603,6 +603,14 @@ def check_repo_links(root: Path, problems: list[str]) -> int:
             verificados += 1
             if not alvo_existe(caminho.parent, alvo):
                 problems.append(f"{relativo}: link relativo quebrado -> {alvo}")
+    # Mesma guarda do check corporativo, e pelo mesmo motivo: varredura vazia é
+    # indistinguível de varredura limpa na saída, e o README prometia que ambas
+    # reprovassem. Só uma reprovava — uma auditoria mostrou.
+    if verificados == 0:
+        problems.append(
+            "check de links do repositório não conferiu nenhum link — a rede "
+            "não rodou; não trate este resultado como aprovação"
+        )
     return verificados
 
 

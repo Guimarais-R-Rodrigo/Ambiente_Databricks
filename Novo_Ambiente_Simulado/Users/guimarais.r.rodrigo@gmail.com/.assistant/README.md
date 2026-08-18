@@ -203,10 +203,10 @@ Esta é a parte do Hub que mais economiza tempo, e a menos óbvia: **os 58 objet
 da biblioteca têm, cada um, um notebook próprio na mesma pasta.**
 
 ```text
-hub_snippets/spark/pit_join/
-├── __init__.py              # a API pública
-├── pit_join.py              # a implementação
-└── exemplo_pit_join.py      # ← abra este primeiro
+hub_snippets/spark/safe_display/
+├── __init__.py                 # a API pública
+├── safe_display.py             # a implementação
+└── exemplo_safe_display.py     # ← abra este primeiro
 ```
 
 No workspace, o `exemplo_*` aparece **como notebook**, sem a extensão `.py`. O
@@ -214,7 +214,7 @@ módulo ao lado, com a mesma aparência, é arquivo comum — essa diferença é
 mantém o `import` funcionando, e é por isso que a publicação confere o tipo de
 cada um.
 
-**O que você encontra dentro**, sempre na mesma ordem:
+**O que você encontra dentro**, na mesma ordem:
 
 | Parte | O que responde |
 |---|---|
@@ -225,19 +225,34 @@ cada um.
 | "Quando **não** usar" | os casos em que o helper é a escolha errada |
 
 A última seção costuma ser a mais útil. Um helper que só documenta quando usar
-transfere para você a decisão mais difícil.
+transfere para você a decisão mais difícil — e ela existe nos **58**, sem
+exceção.
 
-**Os que precisam de biblioteca opcional instalam sozinhos.** Quatorze objetos de
-`ml/` abrem com `%pip install` na primeira célula, seguido de `%restart_python` —
-rodam de ponta a ponta sem preparação. O custo é de cerca de um minuto, ou cinco
+**A seção de Leitura ainda falta em onze.** São notebooks escritos antes de a
+regra existir, e o validador os lista como aviso a cada execução; a lista está em
+`PLANO_HUB.md` §12.1. Nesses onze o notebook roda e ensina, mas você precisa
+executar para ver o número — a prosa não o traz.
+
+**Os que precisam de biblioteca opcional instalam sozinhos.** Quinze objetos —
+quatorze de `ml/` e o `display/dataframe_styled` — abrem com `%pip install` na
+primeira célula, seguido de `%restart_python`, e rodam de ponta a ponta sem
+preparação. O custo é de cerca de um minuto, ou cinco
 nos três que dependem de `torch`.
 
-**Alguns notebooks trazem um bloco de "não executado".** É deliberado e vale
+**Dois notebooks trazem um bloco de "não executado".** É deliberado e vale
 confiar nele: significa que aquele trecho não roda no ambiente onde foi escrito,
-com o motivo verificado e o erro real citado. Três casos conhecidos hoje —
-nenhum run do MLflow abre no serverless, a API clássica de `pyspark.ml` não é
-exposta pelo Spark Connect, e duas funções do pandas exigem biblioteca que o
-runtime não traz. Todos estão na matriz de diferenças entre Free e trabalho.
+com o motivo verificado e o erro real citado.
+
+| Notebook | Por que não roda no Free |
+|---|---|
+| `ml/mlflow_run` | nenhum run do MLflow abre no serverless — o `MlflowClient` lê uma config que o Spark Connect recusa |
+| `ml/explainability_report` | `DataFrame.to_markdown()` exige `tabulate`, que o runtime não traz |
+
+**Um terceiro caso existe e é tratado de outra forma**, que vale conhecer:
+`display/correlation_matrix` **executa** e captura o erro real num `try/except`,
+colando o `Py4JError` como saída. A API clássica de `pyspark.ml` não é exposta
+pelo Spark Connect, e mostrar o erro acontecendo é evidência mais forte que
+descrevê-lo. Os três estão na matriz de diferenças entre Free e trabalho.
 
 ## Helpers opcionais
 
@@ -382,6 +397,7 @@ nada acuse.
 | arquivo apagado da fonte continua no workspace | a publicação sobrescreve mas não apaga; remova à mão e confira |
 
 ## Glossário
+
 Os termos deste projeto vêm de três procedências diferentes, e confundi-las é a
 principal fonte de mal-entendido. Um termo de **plataforma** é oficial da
 Databricks e você encontra na documentação deles. Um termo de **modelagem** é
