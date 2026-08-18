@@ -70,6 +70,14 @@ roteamento está fazendo o que se espera fora da bateria de forward tests.
 
 ## Antes de dar por pronto
 
+O checklist é **um só para os seis tipos**, e mora em
+[`skills/hub-ml-criar-objeto/templates/checklist-objeto-novo.md`](../../skills/hub-ml-criar-objeto/templates/checklist-objeto-novo.md).
+Ele separa o que um terceiro consegue conferir do que é juízo de quem escreveu, e
+tem um bloco específico para prompt.
+
+A lista abaixo era a antiga, preservada porque um item dela não estava no
+canônico — os demais foram absorvidos:
+
 ```text
 [ ] o cabeçalho declara a skill recomendada
 [ ] todo placeholder tem uma frase dizendo por que importa

@@ -202,17 +202,14 @@ dívida menor: registre no notebook e siga.
 
 ## Antes de dar por pronto
 
-```text
-[ ] a pasta tem exatamente os três arquivos, com os nomes do padrão
-[ ] o módulo se chama como a pasta (o validador confere)
-[ ] __init__.py saiu da ferramenta, sem edição manual (o validador confere)
-[ ] se é conversão: assinatura, colunas e casos de borda inalterados
-[ ] o notebook executou no laboratório, com a saída real colada
-[ ] quem importava o módulo continua importando (grep antes e depois)
-[ ] o README da seção lista este snippet
-[ ] python tools/validate_assistant.py aprovado
-[ ] o smoke test continua verde
-```
+O checklist é **um só para os seis tipos**, e mora em
+[`skills/hub-ml-criar-objeto/templates/checklist-objeto-novo.md`](../../skills/hub-ml-criar-objeto/templates/checklist-objeto-novo.md).
+Ele separa o que um terceiro consegue conferir do que é juízo de quem escreveu, e
+tem um bloco específico para snippet.
+
+Três listas divergentes conviveram neste projeto até uma auditoria apontar: uma
+pedia smoke test e não pedia catálogo, outra o inverso. Uma lista só, com um
+dono, é o conserto.
 
 Os dois primeiros itens de verificação automática estão marcados: o validador
 confere nome de pasta, presença dos três arquivos e se o `__init__.py` bate com a

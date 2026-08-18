@@ -145,7 +145,7 @@ def check_saida_colada(root: Path, warnings: list[str]) -> tuple[int, int]:
     justamente a linha que contradizia a prosa em volta.
 
     **Aviso, não falha**, enquanto a dívida das Sprints 1, 4 e 6 não fecha —
-    são 12 notebooks, listados em `PLANO_HUB.md` §12.1. Promover a falha quando
+    são 11 notebooks, listados em `PLANO_HUB.md` §12.1. Promover a falha quando
     `sem_bloco` chegar a zero.
     """
     com = sem = 0
@@ -256,8 +256,13 @@ def check_pastas_de_objeto(root: Path, problems: list[str]) -> int:
 
     Uma pasta é de objeto quando contém `<nome_da_pasta>.py` — a forma que a
     conversão produz. Pasta de seção (`spark/`, `ml/`) não tem `spark.py` dentro,
-    e por isso não é alcançada: enquanto as Sprints 6 a 9 não rodarem, a estrutura
-    antiga convive com a nova sem reprovar.
+    e por isso não entra na contagem.
+
+    **Mas "não entra na contagem" não pode significar "passa".** Uma auditoria
+    mostrou que uma pasta com `__init__.py` e um módulo de nome divergente —
+    `taxa_nulos/calcula.py` — era simplesmente pulada: o validador aprovava um
+    objeto que nunca seria importável pelo caminho que a documentação promete.
+    `check_pasta_de_objeto_malformada` fecha isso.
     """
     from api_publica import api_publica, conteudo_init
 
@@ -266,7 +271,7 @@ def check_pastas_de_objeto(root: Path, problems: list[str]) -> int:
         pasta = init.parent
         modulo = pasta / f"{pasta.name}.py"
         if not modulo.exists():
-            continue  # raiz de pacote, pasta de seção ou estrutura ainda antiga
+            continue  # raiz de pacote ou pasta de seção
         verificadas += 1
         rel = pasta.relative_to(root)
 
@@ -295,6 +300,56 @@ def check_pastas_de_objeto(root: Path, problems: list[str]) -> int:
                 )
         except (SystemExit, ValueError) as exc:
             problems.append(f"{rel}: não foi possível derivar a API pública -> {exc}")
+    return verificadas
+
+
+# Seções conhecidas: uma pasta diretamente sob elas é objeto, não sub-seção.
+_SECOES_DE_BIBLIOTECA = {"constants", "display", "ml", "spark", "testing", "visual"}
+
+
+def check_pasta_de_objeto_malformada(root: Path, problems: list[str]) -> int:
+    """Pega a pasta de objeto que `check_pastas_de_objeto` não alcança.
+
+    Aquela função só enxerga a pasta quando o módulo se chama como ela. O caso
+    em que o nome **diverge** — que é justamente o erro — passava despercebido,
+    e o validador devolvia APROVADO sobre um objeto que nunca seria importável
+    pelo caminho documentado.
+
+    Aqui a regra é invertida: toda pasta dentro de `hub_snippets/<secao>/` ou de
+    `hub_scripts/` que tenha `__init__.py` **precisa** ter `<nome>.py`. Se tiver
+    outro módulo no lugar, é defeito, não estrutura desconhecida.
+    """
+    verificadas = 0
+    raizes = [
+        (root / ".assistant" / "hub_scripts", None),
+        (root / ".assistant" / "hub_snippets", _SECOES_DE_BIBLIOTECA),
+    ]
+    for raiz, secoes in raizes:
+        if not raiz.is_dir():
+            continue
+        candidatas = []
+        if secoes is None:
+            candidatas = [d for d in raiz.iterdir() if d.is_dir()]
+        else:
+            for secao in sorted(secoes):
+                if (raiz / secao).is_dir():
+                    candidatas += [d for d in (raiz / secao).iterdir() if d.is_dir()]
+        for pasta in candidatas:
+            if not (pasta / "__init__.py").exists():
+                continue
+            verificadas += 1
+            if (pasta / f"{pasta.name}.py").exists():
+                continue  # forma correta; o outro check cuida do resto
+            outros = [
+                p.name for p in pasta.glob("*.py")
+                if p.name != "__init__.py" and not eh_notebook(p)
+            ]
+            rel = pasta.relative_to(root)
+            achado = f" (encontrei {', '.join(sorted(outros))})" if outros else ""
+            problems.append(
+                f"{rel}: pasta de objeto sem '{pasta.name}.py'{achado} — o módulo "
+                "precisa ter o nome da pasta, ou o import documentado não existe"
+            )
     return verificadas
 
 
@@ -663,6 +718,7 @@ def main() -> int:
     check_text_hygiene(root, problems)
     check_path_hygiene(root, problems)
     n_objetos = check_pastas_de_objeto(root, problems)
+    n_malformadas = check_pasta_de_objeto_malformada(root, problems)
     n_contratos = check_contrato_de_dados(root, problems)
     n_entradas = check_contrato_de_entrada(root, problems)
     n_com_saida, n_sem_saida = check_saida_colada(root, warnings)
@@ -675,6 +731,7 @@ def main() -> int:
     print(f"markdown / links   : {n_md} arquivos / {n_links} links relativos")
     print(f"notebooks / links  : {n_nb} notebooks / {n_nb_links} links relativos")
     print(f"pastas de objeto   : {n_objetos} conferidas (nome, arquivos, __init__)")
+    print(f"forma da pasta     : {n_malformadas} conferidas (o módulo tem o nome da pasta)")
     print(f"contrato de dados  : {n_contratos} pares (saída: o que o notebook consome)")
     print(f"contrato de entrada: {n_entradas} pares (entrada: o que o notebook passa)")
     print(f"saída colada       : {n_com_saida} notebooks com bloco real, {n_sem_saida} sem")

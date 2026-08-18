@@ -9,7 +9,25 @@ Esta skill aplica os moldes de `.assistant/hub_padroes/`. Ela **não** inventa
 formato: se o template divergir do que está escrito aqui, o template vence, e a
 divergência é defeito a corrigir.
 
-## Escolher o tipo antes de escrever qualquer linha
+## Quando esta skill se aplica
+
+**Caso típico:** alguém tem uma lógica que já escreveu duas vezes em notebooks
+diferentes e quer transformá-la em objeto do Hub, para que a terceira vez seja um
+`import`.
+
+Dois contra-exemplos, para não roubar a vez de quem faz o trabalho de verdade:
+
+- **"Como calculo PSI entre duas safras?"** — é pergunta de estatística, não de
+  formato. Vai para `hub-ml-validacao-estatistica` ou
+  `hub-ml-monitoramento-modelo`. Esta skill só entra se a pessoa disser que quer
+  **guardar** esse cálculo como objeto.
+- **"Melhore o `pit_join` para aceitar múltiplas chaves."** — é alteração de
+  objeto existente, não criação. Só entra aqui se o pedido for **converter ao
+  padrão**; mudar comportamento é trabalho de quem conhece o domínio.
+
+## Fluxo
+
+### 1. Escolher o tipo, antes de escrever qualquer linha
 
 A lista é **fechada**: seis tipos, e nada fora dela. Escolher errado custa a
 reescrita inteira, porque a forma muda.
@@ -17,48 +35,69 @@ reescrita inteira, porque a forma muda.
 | O objeto… | é | template |
 |---|---|---|
 | recebe DataFrame ou valores e devolve resultado | **snippet** | `hub_padroes/snippet/template.md` |
-| recebe **nome de tabela** e devolve um veredito | **script** | `hub_padroes/script/template.md` |
+| recebe o **endereço do que vai diagnosticar** e devolve um veredito | **script** | `hub_padroes/script/template.md` |
 | é texto que a pessoa preenche e cola no chat | **prompt** | `hub_padroes/prompt/template.md` |
 | explica uma pasta para quem chega | **README** | `hub_padroes/readme/template.md` |
 | ensina a usar um objeto, executando | **notebook** | `hub_padroes/notebook/template.py` |
 | é instrução que o Genie Code carrega sozinho | **skill** | `hub_padroes/skill/template.md` |
 
 A distinção entre snippet e script é a que mais erra, e ela muda a assinatura:
-snippet recebe **dado**, script recebe **nome de tabela**. Na dúvida, pergunte
-quem chama a função — se for um notebook passando um DataFrame já carregado, é
-snippet.
+snippet recebe **dado já carregado**; script recebe o **endereço** — nome de
+tabela, tipicamente, ou caminho de arquivo, como faz `hub_scripts.doc_coverage`.
+Na dúvida, pergunte quem chama: se for um notebook passando um DataFrame que ele
+já tem, é snippet.
+
+`hub_padroes/` tem uma sétima pasta, `auditoria/`. Ela é molde de **processo**,
+não tipo de objeto, e não conta entre os seis.
 
 Confirme o tipo com quem pediu antes de seguir. Se o pedido não couber em nenhum
 dos seis, **diga isso** em vez de forçar o mais próximo.
 
-## Ler o template inteiro, sempre
+### 2. Ler o template inteiro
 
 Anexe o template do tipo escolhido com **Add context** ou `@`. Eles não são
 auto-descobertos: sem anexar, você está trabalhando de memória, e o formato muda
 entre versões.
 
-Leia também o exemplo preenchido que acompanha o template, em
-`hub_padroes/<tipo>/<exemplo>/`. Ele mostra a forma completa sobre um caso de CRM
-real, e é mais rápido de ler do que a especificação.
+Leia também o exemplo preenchido, quando houver — `hub_padroes/README.md` tem a
+tabela que diz qual acompanha cada template. Snippet, script, prompt e skill têm
+exemplar em pasta própria; README tem um arquivo `exemplo.md`; notebook não tem
+exemplar separado, porque os exemplares dos outros tipos já trazem o seu.
 
-## Nomear
+Os exemplares usam um caso de CRM **sintético**, do domínio da equipe. São
+referência de forma — não os importe em trabalho real, e não copie os dados.
+
+### 3. Nomear
 
 | Tipo | Convenção | Motivo |
 |---|---|---|
 | snippet, script, prompt | `snake_case` | é identificador Python; a pasta vira caminho de import |
 | skill | `hub-ml-<tema>`, com hífen | é a plataforma que nomeia, não o Python |
 
-O nome da pasta e o do módulo são **iguais**: `pit_join/pit_join.py`. O validador
-reprova qualquer outra combinação.
+O nome da pasta e o do módulo são **iguais**: `pit_join/pit_join.py`. Não é
+convenção estética — é o que faz o import documentado existir. Um
+`taxa_nulos/calcula.py` produz uma pasta que ninguém consegue importar pelo
+caminho que o catálogo promete.
 
-Verifique antes se o nome já existe. Dois objetos com nomes próximos —
-`drift_detection` e `drift_detector` — já convivem na biblioteca, um em
-`hub_snippets/ml` e outro em `hub_scripts`, e a distinção entre eles não é óbvia
-pelo nome. Não crie um terceiro.
+Antes de escolher, procure o que já existe:
 
-## Montar a pasta
+```bash
+grep -ri "<demanda>" .assistant/CATALOGO_HELPERS.md
+```
 
-Para snippet e script, três arquivos e nada mais:
+Se a demanda já estiver coberta, **não crie um objeto novo em silêncio**. Traga a
+decisão para quem pediu: estender o existente, criar um recorte declarado, ou
+recusar. `hub_snippets.spark.null_summary` e um "taxa de nulos por coluna" são o
+mesmo objeto com nomes diferentes.
+
+E confira nomes próximos: `drift_detection` (em `hub_snippets/ml`) e
+`drift_detector` (em `hub_scripts`) já convivem, e a distinção entre eles não é
+óbvia pelo nome. Não crie um terceiro.
+
+### 4. Montar a pasta
+
+Snippet, dentro de uma das seis seções existentes — `constants`, `display`, `ml`,
+`spark`, `testing`, `visual`:
 
 ```text
 hub_snippets/<secao>/<nome>/
@@ -67,7 +106,21 @@ hub_snippets/<secao>/<nome>/
 └── exemplo_<nome>.py           # o notebook que ensina
 ```
 
-O `__init__.py` sai da ferramenta, no repositório:
+Script, que **não tem nível de seção**:
+
+```text
+hub_scripts/<nome>/
+├── __init__.py
+├── <nome>.py
+└── exemplo_<nome>.py
+```
+
+**Não crie seção nova sem decidir com quem pediu.** O `__init__.py` de seção não
+reexporta nada — e isso é deliberado: se reexportasse, um módulo com dependência
+ausente derrubaria a seção inteira e os irmãos junto. Gerar o `__init__.py` de
+uma seção com a ferramenta quebraria essa propriedade.
+
+O `__init__.py` do **objeto** sai da ferramenta, no repositório:
 
 ```bash
 python tools/api_publica.py <caminho>/<nome>.py > <caminho>/__init__.py
@@ -76,16 +129,14 @@ python tools/api_publica.py <caminho>/<nome>.py > <caminho>/__init__.py
 Ela lê o módulo por AST e reexporta **todos** os nomes públicos de nível
 superior. A regra é exaustiva, não curada — e isso não é preferência: uma
 curadoria plausível de `constants/colors`, que tem 22 nomes, exportaria cinco e
-quebraria o import de quem depende, com o sintoma aparecendo sprints depois da
-causa.
+quebraria o import de `visual/section_header` e `visual/theme_plotly`, com o
+sintoma aparecendo sprints depois da causa.
 
 Sem acesso ao repositório, escreva o `__init__.py` listando **todos** os nomes
 sem underscore inicial, e avise que ele precisa ser regenerado pela ferramenta
 antes do commit.
 
-## Escrever o módulo
-
-O que o template exige, e que a revisão vai cobrar:
+### 5. Escrever o módulo
 
 | Elemento | Regra |
 |---|---|
@@ -107,13 +158,24 @@ O que nunca fazer:
 - Importar biblioteca opcional no topo quando ela puder ser adiada — isso decide
   se o objeto importa ou não no laboratório.
 
-## Escrever o notebook, que não é opcional
+### 6. Escrever o notebook, que não é opcional
 
 **Todo snippet e todo script têm o seu**, inclusive os triviais. Um leitor que
 encontra notebook em doze pastas e não na décima terceira desconfia da décima
 terceira.
 
-O formato está em `hub_padroes/notebook/template.py`. A ordem importa:
+**A primeira linha do arquivo tem de ser exatamente:**
+
+```python
+# Databricks notebook source
+```
+
+Sem ela o arquivo não é notebook — nem para o Databricks, nem para o validador,
+que vai acusar dois erros contraditórios sobre o mesmo arquivo ("módulo extra" e
+"falta o notebook"). E a publicação envia o arquivo no formato errado, o que
+quebra o import no workspace. É a exigência mais fácil de esquecer e a mais cara.
+
+O resto do formato está em `hub_padroes/notebook/template.py`. A ordem importa:
 
 1. cabeçalho com o **problema real**, não com a descrição da função;
 2. tabela "o que este notebook assume do ambiente" — compute, bibliotecas, dados,
@@ -127,6 +189,12 @@ pretendido.** "O PSI sai alto" não se confere; "o PSI sai em 2,94" se confere. 
 cole a saída **literal**, inclusive feia — se precisar cortar, diga que cortou,
 nunca complete.
 
+**O notebook e o módulo têm um contrato que a validação confere.** Ela compara o
+que o notebook consome (`resultado["chave"]`) com o que o módulo devolve, e o que
+o notebook passa (`fn(arg=...)`) com a assinatura. Um `resultado["taxa"]` para um
+módulo que devolve `taxa_nulos_pct` reprova — então escreva o notebook lendo a
+assinatura real, não a que você imagina.
+
 Se o objeto depende de biblioteca ausente no ambiente, abra o notebook com
 `%pip install <lib>` seguido de `%restart_python`. Consulte
 `hub_snippets/requirements-optional.txt` antes: três bibliotecas exigem pin, e
@@ -137,7 +205,7 @@ do template, com o motivo verificado e o erro real citado. Motivo válido é
 impedimento do objeto ou do runtime — nunca "não deu tempo" nem "é decisão de
 escopo".
 
-## Converter objeto que já existe
+### 7. Converter objeto que já existe
 
 Converter é **mover**. A conversão não muda comportamento: se o módulo antigo
 devolve 0% em base vazia, o convertido devolve 0% em base vazia, mesmo que o
@@ -157,26 +225,78 @@ como estão; docstring, comentário e notebook vão em português. Um módulo co
 `threshold_warn` e docstring em português é inconsistente e correto; um com
 `limite_alerta` é consistente e quebrado.
 
+## Usar helpers da biblioteca
+
+O Genie Code **não** descobre `hub_snippets` sozinho: a skill recomenda por
+caminho de import, e quem importa é a pessoa, no notebook (ADR-0004). Catálogo
+completo em [CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md).
+
+| Demanda ao escrever o objeto | Módulo |
+|---|---|
+| Base sintética determinística para o notebook | `hub_snippets.testing.fixtures` |
+| Números do notebook no padrão brasileiro | `hub_snippets.constants.format_br` |
+| Tema visual e rodapé com a contagem de pontos | `hub_snippets.visual.theme_plotly` |
+| Paleta e cores semânticas | `hub_snippets.constants.colors` |
+| Exibir DataFrame grande sem varredura completa | `hub_snippets.spark.safe_display` |
+
+Duas ferramentas do repositório, que não são helpers de notebook e sim de quem
+edita: `tools/api_publica.py` gera o `__init__.py`, e
+`tools/validate_assistant.py` confere a forma.
+
+## O que nunca fazer
+
+- **Criar objeto para demanda já coberta**, sem trazer a decisão para quem pediu.
+- **Inventar sétimo tipo.** Se não couber nos seis, diga que não couber.
+- **Escrever o notebook a partir da docstring**, sem ler a assinatura. Foi assim
+  que nove notebooks desta biblioteca nasceram quebrados.
+- **Colar saída editada** como se fosse literal. Um bloco curado é
+  indistinguível de um inventado para quem lê depois.
+- **Criar seção nova** em `hub_snippets/` por conta própria.
+- **Prometer que o validador confere** o que ele não confere — ver a seção
+  seguinte.
+
+## Formato de saída
+
+Entregue, nesta ordem:
+
+1. **O tipo escolhido e por quê**, em uma frase — para quem pediu confirmar.
+2. **Os três arquivos**, completos, com o caminho de cada um.
+3. **O comando** que gera o `__init__.py`, para quem tem o repositório rodar.
+4. **A lista do que ficou por fazer** — o notebook precisa ser executado, o
+   catálogo precisa da linha, o CHANGELOG precisa da entrada.
+
+Não entregue "um esboço para você completar". Objeto pela metade entra na
+biblioteca e fica.
+
 ## Verificar antes de dar por pronto
 
-```text
-[ ] o tipo foi confirmado com quem pediu, e é um dos seis
-[ ] a pasta tem exatamente os arquivos do padrão, com os nomes certos
-[ ] o módulo se chama como a pasta
-[ ] o __init__.py saiu da ferramenta, sem edição manual
-[ ] se é conversão: assinatura, colunas e casos de borda inalterados
-[ ] o notebook executou, e a saída colada é literal
-[ ] a seção "quando não usar" existe e é específica
-[ ] o README da seção lista o objeto novo
-[ ] o catálogo de helpers ganhou a linha correspondente
-```
+O checklist completo, com um bloco por tipo de objeto, está em
+[`templates/checklist-objeto-novo.md`](templates/checklist-objeto-novo.md). Cole
+numa PR ou num chamado.
 
-Os quatro primeiros o validador confere sozinho, no repositório:
-`python tools/validate_assistant.py`. Os demais são humanos — e o do catálogo é o
-mais esquecido: dois objetos ficaram fora dele por uma sprint inteira, e ficaram
-indescobríveis pela rota que o README recomenda.
+**Sobre o que a ferramenta confere, e o que ela não confere** — importa saber a
+diferença antes de confiar:
+
+| Verificação | Quem faz |
+|---|---|
+| a pasta tem os três arquivos, com os nomes do padrão | `validate_assistant.py` |
+| o módulo tem o nome da pasta | `validate_assistant.py` |
+| o `__init__.py` bate com a API pública do módulo | `validate_assistant.py` |
+| o notebook consome chave que o módulo devolve | `validate_assistant.py` |
+| o notebook passa argumento que a assinatura aceita | `validate_assistant.py` |
+| o notebook tem bloco de saída real | `validate_assistant.py`, como **aviso** |
+| **o tipo foi confirmado com quem pediu** | **você** |
+| **a saída colada é literal, e não editada** | **você** |
+| **a demanda já não estava coberta** | **você** |
+| **o notebook executou de verdade** | **você** |
+| **o catálogo ganhou a linha** | **você** |
+
+As cinco de baixo são as que mais custam quando falham, e nenhuma tem portão.
+A do catálogo é a mais esquecida: dois objetos ficaram fora dele por uma sprint
+inteira, indescobríveis pela rota que o próprio README recomenda.
 
 ## Usar recursos
 
-- `templates/checklist-objeto-novo.md` — a lista acima em formato para colar numa
-  PR ou num chamado, com as verificações de conversão separadas.
+- [`templates/checklist-objeto-novo.md`](templates/checklist-objeto-novo.md) — o
+  checklist canônico, com bloco por tipo e a separação entre o que um terceiro
+  verifica e o que é juízo de quem escreveu.

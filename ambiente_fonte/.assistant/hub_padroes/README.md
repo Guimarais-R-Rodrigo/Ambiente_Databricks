@@ -17,10 +17,10 @@ estiver em dúvida sobre a forma de um que já existe.
 Copie o template do tipo de objeto que você vai criar, a partir da tabela
 abaixo, e siga o checklist que fecha cada um.
 
-> **Planejado, ainda não existe:** uma skill `hub-ml-criar-objeto` que aplique o
-> template e monte a estrutura de pastas sozinha. Está prevista para a Sprint 11
-> do plano de reestruturação. Até lá, a cópia manual é o caminho — e é ela que
-> define o que a skill vai automatizar.
+> **Para aplicar estes moldes, use `@hub-ml-criar-objeto`.** Ela conduz a
+> escolha do tipo, aponta o template certo e cobra o que a validação não
+> confere. A cópia manual continua funcionando e é o caminho de quem não está no
+> Genie Code.
 
 ## O que existe aqui
 

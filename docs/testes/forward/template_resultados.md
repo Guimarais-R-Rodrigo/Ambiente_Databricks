@@ -42,11 +42,14 @@ Veredito: PASS/FAIL conforme `.claude/skills/forward-test-skills/SKILL.md`.
 | 11 | hub-ml-tutor-databricks | @ | carrega | | | |
 | 12 | hub-ml-auditoria-skills | P | carrega | | | |
 | 12 | hub-ml-auditoria-skills | N | NÃO carrega (ideal: eda-profissional) | | | |
-| 12 | hub-ml-auditoria-skills | @ | carrega | | | |
+| 12 | hub-ml-auditoria-skills | @ | carrega |
+| 13 | hub-ml-criar-objeto | positivo | carrega |
+| 13 | hub-ml-criar-objeto | negativo | NÃO carrega |
+| 13 | hub-ml-criar-objeto | @ | carrega | | | |
 
 ## Síntese da rodada
 
-- PASS: __/36 · FAIL: __/36
+- PASS: __/39 · FAIL: __/39
 - Colisões observadas (skill errada carregada em caso negativo): <listar>
 - Descriptions a ajustar: <listar skills>
 - Observações livres: <UI, cache, comportamento inesperado>

@@ -664,7 +664,6 @@ em lugar nenhum fora da narrativa. Fica aqui, com nome e origem:
 
 | Notebook | Sprint de origem |
 |---|---|
-| `hub_padroes/script/checar_base_campanha/exemplo_checar_base_campanha.py` | 1 |
 | `hub_scripts/doc_coverage/exemplo_doc_coverage.py` | 4 |
 | `hub_scripts/naming_checker/exemplo_naming_checker.py` | 4 |
 | `hub_scripts/rfv_calculator/exemplo_rfv_calculator.py` | 4 |
@@ -677,7 +676,9 @@ em lugar nenhum fora da narrativa. Fica aqui, com nome e origem:
 | `hub_snippets/spark/smart_sample/exemplo_smart_sample.py` | 6 |
 | `hub_snippets/testing/fixtures/exemplo_fixtures.py` | 6 |
 
-São **12**, e nenhum é das Sprints 7 ou 8. `check_saida_colada` os lista como
+São **11**, e nenhum é das Sprints 7 a 11. O exemplar de `hub_padroes/`, que
+era o décimo segundo, foi fechado na auditoria da Sprint 11 — ele é o molde que a
+skill manda ler, e não podia ser o primeiro a violar a regra que ela ensina. `check_saida_colada` os lista como
 aviso a cada execução; quando esta tabela zerar, promova a guarda a falha.
 
 Quem for fechar a dívida: são doze capturas de execução mais doze leituras
@@ -737,5 +738,5 @@ morto. Editar `STYLE_SECTION_HEADER` não muda cabeçalho nenhum — e o noteboo
 | 8 | ✅ concluída | 2026-08-17 | ✅ 13 achados corrigidos | [relatório](docs/sprints/sprint-8-ml-dependencia-opcional.md) · os 14 executam, via `%pip` |
 | 9 | ✅ concluída | 2026-08-17 | ✅ 13 achados corrigidos | [relatório](docs/sprints/sprint-9-constants-visual-display.md) · fecha a biblioteca |
 | 10 | ✅ concluída | 2026-08-17 | ✅ 12 achados corrigidos | [relatório](docs/sprints/sprint-10-readmes-de-topo.md) · glossário absorvido |
-| 11 | ✅ concluída | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-11-hub-ml-criar-objeto.md) · forward test pendente |
+| 11 | ✅ concluída | 2026-08-17 | ✅ 19 achados corrigidos | [relatório](docs/sprints/sprint-11-hub-ml-criar-objeto.md) · forward test pendente |
 | 12 | não iniciada | — | — | — |

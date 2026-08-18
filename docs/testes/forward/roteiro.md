@@ -8,7 +8,7 @@
 
 ## 1. O que é este teste e por que ele existe
 
-As 12 skills `hub-ml-*` já estão publicadas no seu workspace Databricks Free.
+As 13 skills `hub-ml-*` já estão publicadas no seu workspace Databricks Free.
 Quando você conversa com o Genie Code, ele decide **sozinho** qual skill carregar,
 lendo apenas o campo `description` de cada `SKILL.md`. Se duas descriptions se
 parecem demais, ele carrega a skill errada — e você recebe um relatório de
@@ -23,7 +23,7 @@ Este teste verifica exatamente isso: **o roteamento**. Para cada skill fazemos
 | **N** (negativo) | um pedido *parecido, mas de outra skill* NÃO a aciona? | a skill alvo **não** é carregada |
 | **M** (menção) | `@nome-da-skill` força a seleção? | a skill alvo é carregada |
 
-São 12 skills × 3 casos = **36 testes**. Os casos negativos foram desenhados
+São 13 skills × 3 casos = **39 testes**, dos quais 36 já estão concluídos. Os casos negativos foram desenhados
 sobre as zonas de colisão reais entre as descriptions (drift aparece em 3 skills,
 "explicar notebook" em 2, "materializar features" em 2...) — são os testes que
 mais ensinam.
@@ -96,7 +96,8 @@ copie-a para um bloco de notas e, no final, cole todas de uma vez para o Claude.
 3. **Claude** ajusta a `description` de cada skill que colidiu (no
    `ambiente_fonte/`), valida, re-renderiza o simulado e republica no workspace.
 4. **Você** repete **apenas os testes que falharem** (chats novos) — rodada 2.
-5. Meta: 36/36 PASS → gate fechado → próximo passo é o runbook de replicação
+5. Meta: **39/39** PASS → gate fechado → próximo passo é o runbook de replicação.
+   Os 36 primeiros já fecharam em 14/08; faltam os três da Skill 13.
    para o trabalho.
 
 ---
@@ -552,7 +553,16 @@ Mensagem 2:
 Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/13P.md com uma única linha, no formato "13P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
-#### `13N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-validacao-estatistica`)
+#### `13N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-monitoramento-modelo`)
+
+> O ideal aqui foi corrigido depois de uma auditoria. A `description` de
+> `hub-ml-monitoramento-modelo` contém **PSI** e **alerta** literalmente, e o
+> caso `04N` deste mesmo roteiro, com enunciado quase idêntico, já declara esse
+> ideal. `hub-ml-analise-safra` é resultado **aceitável** — ela dispara em
+> "mencionar safra", que é o único gatilho incondicional das treze.
+>
+> **A colisão real a observar é `monitoramento-modelo` × `analise-safra`**, e ela
+> é anterior a esta sprint: o `13N` a expõe, não a cria.
 
 Mensagem 1:
 ```text

@@ -123,3 +123,159 @@ roteamento das vizinhas que competem no mesmo vocabulário. O roteiro está em
 | Dívida de saída colada: 12 notebooks | §12.1 do plano |
 | Duplicação de cor em 12 módulos | §12.2 do plano |
 | Guarda que confere saída colada no README contra execução | proposta pela auditoria da Sprint 10; é desenho, entra na 12 |
+
+---
+
+## Auditoria da Sprint 11 — 19 achados, e uma previsão registrada
+
+O auditor fez o que nenhum anterior tinha feito: **usou a skill** para criar um
+objeto, do começo ao fim, e relatou onde travou. Foi de lá que saiu o achado
+bloqueante.
+
+### A previsão de roteamento, registrada antes do teste
+
+Pedi que ele previsse o resultado dos três forward tests lendo apenas as treze
+`description`, antes de abrir o corpo da skill. Fica aqui para ser confrontada
+com o teste real:
+
+| Caso | Previsão | Confiança |
+|---|---|---|
+| `13P` | `hub-ml-criar-objeto` | alta — quatro tokens que só existem nessa description |
+| `13N` | `hub-ml-monitoramento-modelo`, **não** a skill nova | média-alta |
+| `13M` | `hub-ml-criar-objeto` | determinístico, a menção força |
+
+**Ele concorda que o `13N` não colide com a skill nova**, e a razão é forte: zero
+sobreposição léxica — a description dela não contém PSI, drift, safra nem
+qualquer verbo do pedido.
+
+**Mas discordou do ideal declarado**, e tinha razão. Eu havia escrito
+`hub-ml-validacao-estatistica`; a description dela não contém "PSI" nem "safra",
+enquanto `hub-ml-monitoramento-modelo` contém **PSI/CSI/KS** e **alerta**
+literalmente, e o caso `04N` do mesmo roteiro, com enunciado quase idêntico, já
+declara esse ideal.
+
+E ele apontou a colisão real, que é entre duas outras skills:
+`monitoramento-modelo` × `analise-safra`. Esta última dispara em "mencionar
+safra" — **o único gatilho incondicional das treze** — e a palavra está no
+pedido. Essa colisão é anterior a esta sprint; o `13N` a expõe, não a cria.
+
+### O achado bloqueante: a skill nunca menciona o marcador
+
+O auditor seguiu o `SKILL.md` ao pé da letra para criar um snippet. As cinco
+etapas do notebook, escritas exatamente como descritas, produziram duas falhas
+que se contradizem sobre o mesmo arquivo — "módulo extra na pasta do objeto" e
+"falta o notebook" —, por uma causa que a skill **nunca citava**: a primeira
+linha precisa ser o marcador `# Databricks notebook source`.
+
+Ele só saiu lendo `tools/notebook_marker.py` — e a skill contempla
+explicitamente quem **não** tem o repositório.
+
+É a exigência mais fácil de esquecer e a mais cara: sem ela a publicação envia o
+arquivo no formato errado e quebra o import no workspace.
+
+### O erro que a skill chamava de fatal era o que passava
+
+A skill afirmava: *"O nome da pasta e o do módulo são iguais. O validador reprova
+qualquer outra combinação."*
+
+Ele não reprovava. `check_pastas_de_objeto` só enxerga a pasta **quando o módulo
+tem o nome dela** — `if not modulo.exists(): continue`. Uma pasta
+`taxa_nulos/calcula.py` com `__init__.py` era simplesmente pulada, e não entrava
+nem na contagem.
+
+Nova guarda `check_pasta_de_objeto_malformada`, com a regra invertida: toda pasta
+sob `hub_snippets/<secao>/` ou `hub_scripts/` que tenha `__init__.py`
+**precisa** ter `<nome>.py`. Provada com o caso que o auditor construiu — a pasta
+`taxa_nulos` com `calcula.py` dentro passou a reprovar, com a mensagem dizendo o
+que encontrou e por que importa.
+
+E a skill passou a ter uma tabela dizendo, linha a linha, **o que a ferramenta
+confere e o que é você** — porque ela também afirmava que "os quatro primeiros o
+validador confere", quando o primeiro é "o tipo foi confirmado com quem pediu",
+que nenhuma ferramenta verifica.
+
+### A skill criada para fazer cumprir os moldes era a que menos cumpria
+
+Faltavam **três das cinco seções** que `hub_padroes/skill/template.md` declara
+obrigatórias: "quando esta skill se aplica", "usar helpers da biblioteca" e
+"formato de saída". As doze anteriores têm todas.
+
+A de helpers é a que o template chama de "não opcional e não decorativa",
+ancorada no ADR-0004 — o Genie Code não descobre `hub_snippets` sozinho.
+
+E ela fazia o inverso do que o template prevê: **duplicava o checklist**, inline
+no corpo e expandido em `templates/`. As duas listas já discordavam no mesmo
+commit.
+
+### Três checklists, três conteúdos
+
+O auditor encontrou três listas convivendo — em `snippet/template.md`, no corpo
+da skill e em `templates/` — divergindo nos dois sentidos: uma pedia smoke test e
+não pedia catálogo, outra o inverso, e nenhuma das duas novas cobria script ou
+skill, apesar de o checklist se intitular "objeto novo do Hub".
+
+O `checklist-objeto-novo.md` virou o **canônico**, com bloco por tipo, e os
+quatro templates passaram a apontar para ele.
+
+E ele testou a promessa de que "cada linha é verificável": cerca de oito de trinta
+não eram — "docstring diz por que existe", "decisão não óbvia", "problema real".
+A lista foi dividida em **verificável por terceiro** e **juízo de quem escreveu**,
+porque um checklist que promete verificação e entrega opinião ensina a marcar
+tudo.
+
+### Os demais
+
+| # | Achado | Correção |
+|---|---|---|
+| 4 | a árvore de pastas mostrava `hub_snippets/<secao>/` rotulada "para snippet e script"; script não tem seção | duas árvores |
+| 5 | `skills/README.md` dizia "Doze skills" acima de uma tabela com treze — publicado no Free | sem número |
+| 6 | `hub_padroes/README.md` anunciava a skill como "planejado, ainda não existe" | aponta para a skill |
+| 8 | o formulário de resultados dos forward tests não tinha a Skill 13 | três linhas e a síntese em 39 |
+| 9 | o roteiro dizia 36 e 39 no mesmo arquivo, e a **meta do gate** estava em 36/36 | 39 testes, meta 39/39, com o bloco histórico intacto |
+| 13 | "o exemplo em `hub_padroes/<tipo>/<exemplo>/`" não existe para README nem notebook | remete à tabela do README de `hub_padroes` |
+| 14 | "um caso de CRM real" contra a regra de fixture sintética | "sintético, do domínio da equipe" |
+| 15 | "script recebe nome de tabela" não classifica `doc_coverage`, que recebe caminho | "o endereço do que vai diagnosticar" |
+| 16 | o exemplar que a skill manda ler violava a regra da saída colada | as duas saídas coladas, `warn` e `fail`. **A dívida de §12.1 caiu de 12 para 11** |
+| 17 | "o README da seção" não existe — não há `spark/README.md` | "a tabela de módulos em `hub_snippets/README.md`" |
+| 18 | `ambiente_fonte/README.md` ainda dizia "12 Agent Skills" | sem número |
+| 19 | `hub_padroes/` tem sete pastas; a skill fala em seis "fechados" | uma linha explicando que `auditoria/` é molde de processo |
+
+### O que a auditoria confirmou
+
+Todas as demais afirmações do corpo conferem, e ele mediu cada uma: os 22 nomes
+de `constants/colors`, a coexistência de `drift_detection` e `drift_detector`, o
+comando de `api_publica.py` produzindo diff vazio contra o `__init__.py`
+commitado, os três pins, e — com um script sobre os 64 commits — que "dois
+objetos ficaram fora do catálogo por uma sprint inteira" é **verdadeiro e
+preciso**: `constants/emojis` e `constants/styles`, ausentes em três commits,
+corrigidos no quarto.
+
+Nenhum registro datado foi promovido a 13. Os 38 caminhos de helper citados nas
+treze skills resolvem, zero quebrados.
+
+### O que nenhum portão vê, numa skill
+
+O auditor nomeou cinco classes, e a que ele priorizaria é a que produziu o achado
+das seções faltantes: **conformidade do corpo ao `skill/template.md`**. Doze de
+treze têm a seção de helpers; a décima terceira não tinha, e os dois portões
+aprovaram.
+
+Fica registrada como candidata da Sprint 12, junto com a que a auditoria anterior
+propôs. As duas são baratas e pegam defeitos que já aconteceram.
+
+### Onde ele travou ao usar a skill
+
+Cinco pontos, um bloqueante (o marcador). Os outros quatro viraram correção:
+
+- **em qual seção o objeto entra** — a skill não dizia que existem seis, nem que
+  criar seção nova exige decisão; agora diz, e avisa que o `__init__.py` de seção
+  não reexporta;
+- **a demanda já estava coberta** — ele descobriu `spark/null_summary` seguindo a
+  instrução, e a skill não tinha procedimento para isso; agora tem, com a busca
+  no catálogo e a decisão trazida para quem pediu;
+- **os dois contratos que a validação cruza** não eram citados; agora são;
+- **o fechamento ambíguo**, resolvido pelo checklist canônico.
+
+O que funcionou sem atrito, no relato dele: a escolha do tipo, a nomenclatura, a
+geração do `__init__.py` e **a ordem das cinco etapas do notebook** — que
+"produziu um notebook melhor do que eu escreveria sem ela".

@@ -70,6 +70,14 @@ e quem importa é a pessoa, no notebook (ADR-0004).
 
 ## Antes de dar por pronto
 
+O checklist é **um só para os seis tipos**, e mora em
+[`skills/hub-ml-criar-objeto/templates/checklist-objeto-novo.md`](../../skills/hub-ml-criar-objeto/templates/checklist-objeto-novo.md).
+Ele separa o que um terceiro consegue conferir do que é juízo de quem escreveu, e
+tem um bloco específico para skill.
+
+A lista abaixo era a antiga, preservada porque um item dela não estava no
+canônico — os demais foram absorvidos:
+
 ```text
 [ ] o nome da pasta é idêntico ao campo name
 [ ] a description diz quando usar e o que não cobre

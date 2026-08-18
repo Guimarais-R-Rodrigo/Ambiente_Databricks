@@ -195,18 +195,19 @@ python tools/validate_assistant.py
 ```text
 raiz analisada     : <repo>\ambiente_fonte
 skills             : 13
-markdown / links   : 105 arquivos / 143 links relativos
+markdown / links   : 105 arquivos / 150 links relativos
 notebooks / links  : 62 notebooks / 1 links relativos
 pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
+forma da pasta     : 58 conferidas (o módulo tem o nome da pasta)
 contrato de dados  : 60 pares (saída: o que o notebook consome)
 contrato de entrada: 57 pares (entrada: o que o notebook passa)
-saída colada       : 49 notebooks com bloco real, 12 sem
+saída colada       : 50 notebooks com bloco real, 11 sem
 python (AST)       : 193 arquivos
 instrucoes         : 7085/20000 caracteres
 repo (corporativo) : 678 arquivos varridos no repositório inteiro
-repo (links)       : 217 links fora da raiz analisada
+repo (links)       : 224 links fora da raiz analisada
 
-APROVADO: 0 falha(s), 12 aviso(s)
+APROVADO: 0 falha(s), 11 aviso(s)
 ```
 
 **Sobre `pastas de objeto: 60`:** a biblioteca são **58** — 51 em `hub_snippets`
@@ -214,7 +215,7 @@ e 7 em `hub_scripts`. Os outros dois são os exemplares de `hub_padroes/`, que s
 molde e não biblioteca. O validador conta pastas de objeto, e eles têm a forma de
 um; o `.assistant/README.md` conta biblioteca, e eles não são.
 
-Qualquer linha `FAIL` bloqueia o resto do ciclo. Os **12 avisos** são dívida
+Qualquer linha `FAIL` bloqueia o resto do ciclo. Os **11 avisos** são dívida
 nomeada, não impedimento: são notebooks de sprints antigas sem saída real colada,
 listados um a um em [`PLANO_HUB.md` §12.1](PLANO_HUB.md).
 
@@ -224,6 +225,7 @@ saber o que cada uma cobre:
 | Linha | O que confere | Nasceu de |
 |---|---|---|
 | `pastas de objeto` | nome da pasta, os três arquivos, e se o `__init__.py` bate com a API do módulo | conversão para pasta por objeto |
+| `forma da pasta` | o módulo tem o nome da pasta — sem isso o import documentado não existe | pasta que o outro check pulava em silêncio |
 | `contrato de dados` | o notebook consome chave que o módulo **devolve** | três notebooks pedindo chave renomeada |
 | `contrato de entrada` | o notebook passa argumento que a assinatura **aceita** | seis dos dezesseis defeitos da Sprint 7 entraram por aí |
 | `saída colada` | o notebook tem bloco com saída real, não só prosa | notebook que ensinava a contar nulos numa saída sem nulos |

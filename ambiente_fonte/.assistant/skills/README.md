@@ -4,7 +4,7 @@
 > sozinho e carrega o que está aqui sem ninguém pedir. Tudo o mais no Hub exige
 > `@`, Add context, import ou execução — só isto acontece automaticamente.
 
-Doze skills que injetam contexto especializado na conversa quando o assunto
+As skills de `skills/` injetam contexto especializado na conversa quando o assunto
 bate com o que cada uma cobre.
 
 ## Para que serve

@@ -66,6 +66,14 @@ Quatro regras que o contrato carrega:
 
 ## Antes de dar por pronto
 
+O checklist é **um só para os seis tipos**, e mora em
+[`skills/hub-ml-criar-objeto/templates/checklist-objeto-novo.md`](../../skills/hub-ml-criar-objeto/templates/checklist-objeto-novo.md).
+Ele separa o que um terceiro consegue conferir do que é juízo de quem escreveu, e
+tem um bloco específico para script.
+
+A lista abaixo era a antiga, preservada porque um item dela não estava no
+canônico — os demais foram absorvidos:
+
 ```text
 [ ] a função recebe nome de tabela, não DataFrame
 [ ] não escreve nada, e a docstring diz isso

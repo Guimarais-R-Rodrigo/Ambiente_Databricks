@@ -5,6 +5,71 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-17 — auditoria da Sprint 11: 19 achados, e a skill que não cumpria o próprio molde
+
+O auditor **usou a skill** para criar um objeto, do começo ao fim, e relatou onde
+travou — foi de lá que saiu o achado bloqueante. Detalhe em
+`docs/sprints/sprint-11-hub-ml-criar-objeto.md`.
+
+### Corrigido
+
+1. (Claude) **O `SKILL.md` nunca mencionava `# Databricks notebook source`.** Ele
+   descrevia as cinco etapas do notebook em detalhe e omitia a única exigência que
+   o portão de fato impõe. Seguir a skill ao pé da letra produzia REPROVADO com
+   duas mensagens que se contradizem sobre o mesmo arquivo.
+2. (Claude) A skill afirmava que "o validador reprova" nome de módulo divergente
+   do nome da pasta. Ele **pulava** o caso — `if not modulo.exists(): continue` —
+   e nem contava a pasta. Ver Adicionado.
+3. (Claude) "Os quatro primeiros o validador confere sozinho": o primeiro é "o
+   tipo foi confirmado com quem pediu", que nenhuma ferramenta verifica. A skill
+   ganhou tabela dizendo linha a linha o que é ferramenta e o que é pessoa.
+4. (Claude) Faltavam **três das cinco seções** que `hub_padroes/skill/template.md`
+   declara obrigatórias — inclusive a de helpers, que o template chama de "não
+   opcional e não decorativa". As doze anteriores têm todas; a criada para fazer
+   cumprir os moldes era a que menos cumpria.
+5. (Claude) A árvore de pastas mostrava `hub_snippets/<secao>/` rotulada "para
+   snippet e script"; script não tem nível de seção. E "script recebe nome de
+   tabela" não classifica `doc_coverage`, que recebe caminho de arquivo.
+6. (Claude) `skills/README.md` dizia "Doze skills" acima de uma tabela com treze,
+   e `ambiente_fonte/README.md` ainda dizia "12 Agent Skills" — os dois
+   publicados no Free. `hub_padroes/README.md` anunciava a skill como "planejado,
+   ainda não existe".
+7. (Claude) O roteiro de forward test dizia 36 e 39 no mesmo arquivo, com a
+   **meta do gate** parada em 36/36; o formulário de resultados não tinha a
+   Skill 13; e o ideal declarado do `13N` estava errado — a `description` de
+   `hub-ml-validacao-estatistica` não contém "PSI" nem "safra", e o caso `04N`,
+   quase idêntico, já declarava `hub-ml-monitoramento-modelo`.
+8. (Claude) O exemplar de script de `hub_padroes/`, que a skill manda ler como
+   referência, **não tinha saída colada** — violava a regra que a skill ensina.
+   As duas saídas foram executadas e coladas. **A dívida de §12.1 caiu de 12
+   para 11.**
+
+### Adicionado
+
+1. (Claude) `check_pasta_de_objeto_malformada` em `tools/validate_assistant.py`,
+   com a regra invertida: toda pasta sob `hub_snippets/<secao>/` ou
+   `hub_scripts/` que tenha `__init__.py` **precisa** ter `<nome>.py`. Provada
+   com o caso que o auditor construiu.
+2. (Claude) `checklist-objeto-novo.md` virou o **canônico**, com bloco por tipo,
+   e os quatro templates de `hub_padroes/` passaram a apontar para ele. Três
+   listas divergentes conviviam; nenhuma das duas novas cobria script ou skill.
+   A lista foi dividida em **verificável por terceiro** e **juízo de quem
+   escreveu** — cerca de oito de trinta itens não eram verificáveis.
+
+### Notas
+
+- **Previsão registrada antes do teste.** Pedi ao auditor que previsse o
+  roteamento dos três forward tests lendo apenas as treze `description`. Ele
+  prevê `hub-ml-criar-objeto` no `13P` e `13M`, e **não** a skill nova no `13N` —
+  com a colisão real sendo `monitoramento-modelo` × `analise-safra`, anterior a
+  esta sprint. O teste humano vai confirmar ou derrubar.
+- **O que nenhum portão vê numa skill:** conformidade do corpo ao template.
+  Doze de treze têm a seção de helpers, a décima terceira não tinha, e os dois
+  portões aprovaram. Candidata de guarda para a Sprint 12.
+- O auditor confirmou todas as demais afirmações do corpo, medindo cada uma —
+  inclusive, com um script sobre os 64 commits, que "dois objetos ficaram fora do
+  catálogo por uma sprint inteira" é verdadeiro e preciso.
+
 ## 2026-08-17 — Sprint 11: a skill que cria objeto do Hub
 
 `hub-ml-criar-objeto`, a décima terceira skill. Primeira mudança em roteamento
