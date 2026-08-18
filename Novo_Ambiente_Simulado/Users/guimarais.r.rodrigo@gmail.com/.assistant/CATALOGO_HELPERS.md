@@ -33,15 +33,21 @@ apenas o runtime Python; não injeta o conteúdo do módulo no contexto do chat.
 | **imp** | Dependência opcional exigida **no import**: o módulo nem carrega sem a lib |
 | **exec** | Dependência opcional exigida **na chamada**: o import passa e o erro só aparece no uso |
 
-Dependências opcionais estão inventariadas em `hub_snippets/requirements-optional.txt`,
-com o conjunto de versões que funcionou em runtime. Instale apenas o subconjunto
-necessário e **fixe a versão**; instalar sem fixar derruba o kernel em serverless,
-por alteração de pacotes core.
+Dependências opcionais estão inventariadas em
+[`hub_snippets/requirements-optional.txt`](hub_snippets/requirements-optional.txt),
+com a prova de execução de cada uma. **Consulte-o antes de instalar**, e não este
+parágrafo: só três exigem pin, e fixar as demais por precaução gera o conflito
+que se queria evitar.
 
-Situação de verificação dos módulos com dependência opcional: todos foram
-exercitados no runtime, exceto `prophet_wrapper`, que falha por não inicializar
-o backend do Prophet nesse ambiente. Detalhes em `docs/testes/spark/` no
-repositório.
+**As doze bibliotecas foram instaladas e exercitadas com chamada real** — ajuste
+de modelo, projeção, previsão —, `prophet` inclusive. Uma versão anterior deste
+catálogo dizia que o `prophet_wrapper` falhava por não inicializar o backend, e
+que instalar sem fixar versão derrubava o kernel. As duas coisas eram verdade em
+14/08/2026 e deixaram de ser em 17/08, quando foram reexecutadas.
+
+O caso é a razão de este parágrafo remeter ao inventário em vez de repetir o
+conteúdo dele: **"foi testado" tem data de validade em ambiente gerenciado**.
+Reexecute antes de confiar em qualquer um dos dois documentos.
 
 ## Exploração, qualidade e perfil de dados
 

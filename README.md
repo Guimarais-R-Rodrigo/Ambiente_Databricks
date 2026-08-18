@@ -205,8 +205,8 @@ python tools/validate_assistant.py
 ```text
 raiz analisada     : <repo>\ambiente_fonte
 skills             : 13 · 2/13 com as 5 seções do template
-helpers citados    : 72 caminhos, todos resolvem
-markdown / links   : 105 arquivos / 166 links relativos
+helpers citados    : 72 caminhos verificados
+markdown / links   : 105 arquivos / 167 links relativos
 notebooks / links  : 78 notebooks / 17 links relativos
 pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
 forma da pasta     : 58 conferidas (o módulo tem o nome da pasta)
@@ -216,7 +216,7 @@ saída colada       : 66 notebooks com bloco real, 11 sem
 python (AST)       : 209 arquivos
 instrucoes         : 7085/20000 caracteres
 repo (corporativo) : 714 arquivos varridos no repositório inteiro
-repo (links)       : 244 links fora da raiz analisada
+repo (links)       : 247 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 11 aviso(s)
 ```
@@ -230,7 +230,7 @@ Qualquer linha `FAIL` bloqueia o resto do ciclo. Os **11 avisos** são dívida
 nomeada, não impedimento: são notebooks de sprints antigas sem saída real colada,
 listados um a um em [`PLANO_HUB.md` §12.1](PLANO_HUB.md).
 
-**As quatro linhas do meio são as guardas que mais pegaram defeito**, e vale
+**As seis linhas do meio são as guardas que mais pegaram defeito**, e vale
 saber o que cada uma cobre:
 
 | Linha | O que confere | Nasceu de |
@@ -242,7 +242,8 @@ saber o que cada uma cobre:
 | `contrato de entrada` | o notebook passa argumento que a assinatura **aceita** | seis dos dezesseis defeitos da Sprint 7 entraram por aí |
 | `saída colada` | o notebook tem bloco com saída real, não só prosa | notebook que ensinava a contar nulos numa saída sem nulos |
 
-As duas últimas linhas são as únicas que valem conferir de olho: elas contam o
+As duas últimas linhas **do bloco de saída acima** — `repo (corporativo)` e
+`repo (links)` — são as que valem conferir de olho: elas contam o
 que os checks de repositório inteiro alcançaram. Se qualquer uma vier **zero**,
 a proteção correspondente não rodou — e desde a correção de 15/08/2026 isso
 reprova a execução em vez de passar em silêncio.

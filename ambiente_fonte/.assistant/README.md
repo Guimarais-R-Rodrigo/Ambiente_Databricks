@@ -349,6 +349,10 @@ Nunca armazene tokens no Git.
 
 ## Validação antes de publicar
 
+> **Os comandos desta seção rodam no repositório, não aqui.** `tools/` e `docs/`
+> não são publicados com o `.assistant/` — se você está no workspace, o que se
+> pode conferir daqui é a estrutura; a validação é de quem tem o repositório.
+
 A maior parte desta lista é executada por um comando só. O que sobra é o que
 exige uma pessoa — e é justamente aí que a checagem costuma ser pulada.
 
@@ -373,7 +377,7 @@ estes de uma vez:
     (tools/spark_smoke_test.py; ver docs/testes/spark/)
 [ ] um novo chat confirma seleção automática e @menção de cada skill
     (ver docs/testes/forward/)
-[ ] prompts e projetos x_ continuam marcados como manuais na documentação
+[ ] prompts e padrões `hub_` continuam marcados como manuais na documentação
 ```
 
 Sobre o frontmatter: o padrão Agent Skills admite campos além de `name` e

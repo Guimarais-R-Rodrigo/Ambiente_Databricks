@@ -74,7 +74,7 @@ O objeto a transportar é a subárvore renderizada
 |---|---|---|
 | **A — Git folder** (recomendada) | Política corporativa permite conectar o workspace ao GitHub | Acesso ao github.com pelo workspace e credencial/PAT autorizada |
 | **B — Download e importação pela UI** | Git bloqueado, mas upload permitido | Se a UI do workspace importa diretório/arquivo compactado nessa versão |
-| **C — Criação manual pasta a pasta** | Demais rotas bloqueadas | Nenhuma; é sempre possível, porém trabalhoso (165 arquivos) |
+| **C — Criação manual pasta a pasta** | Demais rotas bloqueadas | Nenhuma; é sempre possível, porém trabalhoso (o número que a linha `esperados` do `--verify` reportar) |
 
 A rota A é a única que torna atualizações futuras triviais (`pull` na Git
 folder) e mantém rastreabilidade de versão. As rotas B e C exigem repetir o
@@ -132,8 +132,7 @@ Pontos de atenção verificados no laboratório:
 
 ## 6. Testes de aceitação no workspace do trabalho
 
-O roteamento das skills já foi certificado no laboratório (36/36) e depende
-apenas das `description`, que são idênticas. O que **só o trabalho valida** é
+O roteamento foi certificado no laboratório em **36/36** — mas nas **12 skills originais**. A `hub-ml-criar-objeto`, da Sprint 11, **ainda não foi testada**, e é a de `description` mais ampla do conjunto: inclua-a nos testes de aceitação. O que **só o trabalho valida** é
 runtime real, permissões e integração — e é isso que estes testes cobrem.
 
 ### 6.1 Descoberta

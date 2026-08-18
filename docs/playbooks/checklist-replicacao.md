@@ -95,7 +95,7 @@ subárvore, não a pasta de usuário do laboratório.
 
 - [ ] `.assistant/skills/` tem o número de pastas `hub-ml-*` que o `--verify`
       reportou, cada uma com `SKILL.md`
-- [ ] `.assistant/` tem os 4 diretórios `hub_` mais `README.md`
+- [ ] `.assistant/` tem os diretórios `hub_` que a linha `extensões` do `--verify` reportou mais `README.md`
 - [ ] `.assistant_instructions.md` presente na raiz do usuário
 - [ ] Abrir um `.py` de `hub_snippets`: precisa ser **arquivo**, não notebook
 - [ ] Abrir `hub_snippets/spark/pit_join/exemplo_pit_join.py`: precisa ser **notebook**
@@ -106,7 +106,9 @@ subárvore, não a pasta de usuário do laboratório.
 
 ## Fase 6 — testes de aceitação
 
-O roteamento já foi certificado no laboratório (36/36) e depende só das
+O roteamento foi certificado em **36/36 nas 12 skills originais**; a
+`hub-ml-criar-objeto`, da Sprint 11, **ainda não foi testada** — inclua-a nos
+testes desta fase. O resultado depende só das
 descriptions, que são as mesmas. O que **só o trabalho valida** é runtime,
 permissão e integração.
 

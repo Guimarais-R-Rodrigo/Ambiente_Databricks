@@ -200,12 +200,37 @@ def check_skill_helpers_resolvem(root: Path, problems: list[str]) -> int:
             r"\b(hub_snippets|hub_scripts)((?:\.[a-z_][a-z0-9_]*)+)", texto
         ):
             partes = [p for p in caminho.split(".") if p]
-            # A última parte pode ser a função, não o módulo: aceita as duas.
-            destino_modulo = base / pacote / Path(*partes)
-            destino_pai = base / pacote / Path(*partes[:-1]) if len(partes) > 1 else None
             verificados += 1
-            if destino_modulo.is_dir() or (destino_pai and destino_pai.is_dir()):
+            destino = base / pacote / Path(*partes)
+
+            # Pasta de objeto é a que tem `__init__.py`. Exigir isso, e não só
+            # `is_dir()`, é o que separa esta guarda de uma que não serve: uma
+            # auditoria mostrou que aceitar "o pai existe" deixava 59 dos 72
+            # caminhos desprotegidos, porque o pai de <secao>/<objeto> é a
+            # seção, e seção sempre existe.
+            if (destino / "__init__.py").exists():
                 continue
+
+            # O caminho pode terminar na função em vez do módulo. Aí o pai
+            # precisa ser pasta de objeto **e** o último componente precisa ser
+            # um nome que o `__init__.py` de lá realmente exporta.
+            if len(partes) > 1:
+                pai = base / pacote / Path(*partes[:-1])
+                init = pai / "__init__.py"
+                if init.exists():
+                    exportados = set(re.findall(
+                        r'^\s*"([A-Za-z_][A-Za-z0-9_]*)",\s*$',
+                        init.read_text(encoding="utf-8"), re.MULTILINE,
+                    ))
+                    if partes[-1] in exportados or partes[-1] == partes[-2]:
+                        continue
+                    problems.append(
+                        f"{rel}: recomenda `{pacote}{caminho}`, mas "
+                        f"`{partes[-1]}` não está na API pública de "
+                        f"`{'.'.join(partes[:-1])}`"
+                    )
+                    continue
+
             problems.append(
                 f"{rel}: recomenda `{pacote}{caminho}`, que não existe na "
                 "biblioteca — a skill aponta para um objeto renomeado ou removido"
@@ -322,7 +347,16 @@ def check_saida_de_comando_no_readme(problems: list[str]) -> int:
             (l.strip() for l in real.splitlines() if l.strip().startswith(rotulo.strip())), None)
         linha_readme = next(
             (l.strip() for l in texto_readme.splitlines() if l.strip().startswith(rotulo.strip())), None)
-        if linha_real is None or linha_readme is None:
+        if linha_readme is None:
+            continue  # o README não documenta esta linha; nada a conferir
+        if linha_real is None:
+            # Degradação silenciosa é o modo de falha que este repositório já
+            # corrigiu duas vezes em outros checks: varredura vazia que passa.
+            problems.append(
+                f"README.md: documenta a linha `{rotulo.strip()}` mas o comando "
+                "não a produziu — ou o rótulo mudou, ou o comando não rodou "
+                "(CLI do Databricks autenticada?)"
+            )
             continue
         verificados += 1
         norm = lambda s: re.sub(r"\s+", " ", s)
@@ -904,7 +938,7 @@ def main() -> int:
 
     print(f"raiz analisada     : {root}")
     print(f"skills             : {n_skills} · {n_completas}/{n_secoes} com as 5 seções do template")
-    print(f"helpers citados    : {n_helpers} caminhos, todos resolvem")
+    print(f"helpers citados    : {n_helpers} caminhos verificados")
     if args.conferir_readme:
         print(f"saída no README    : {n_readme} linhas conferidas contra execução real")
     print(f"markdown / links   : {n_md} arquivos / {n_links} links relativos")

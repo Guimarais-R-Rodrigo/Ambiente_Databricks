@@ -88,3 +88,24 @@ qual módulo uso?" — não está no código, está na cabeça de quem escreveu.
 - ADR-0006, que renomeou `x_*` para `hub_*`
 - `PLANO_HUB.md` §12.1 e §12.2, dívidas declaradas
 - `.assistant/skills/hub-ml-criar-objeto/`, que faz cumprir esta forma
+
+---
+
+## Errata — 2026-08-17
+
+Registrada pela auditoria final, no mesmo dia. O texto da decisão fica como está
+(ADR aceito é imutável); as correções de **fato** vão aqui, que é append-only.
+
+| Onde | Diz | É |
+|---|---|---|
+| Decisão 2, tabela | marcador `opt` para dependência exigida no import | o catálogo usa **`imp`** |
+| Decisão 2, prosa | "a biblioteca tem dois casos" de `exec` | são **dez**: `dataframe_styled`, `mlflow_run`, `tabnet_wrapper`, `shap_explainer`, `explainability_report`, `kaplan_meier`, `survival_cox`, `prophet_wrapper`, `arima_wrapper`, `umap_viz` |
+| Contexto | "as 13 skills atravessaram cinco sprints de conversão sem uma edição" | o **segmento pontilhado** dos 65 caminhos das 12 skills originais atravessou sem alteração; o corpo das 12 mudou, o prefixo mudou (ADR-0006), e a 13ª nasceu na Sprint 11 |
+
+A terceira é a que mais incomoda, porque a afirmação **substantiva** está certa e
+foi verificada — o que estava errado era o "sem uma edição", que exagerava o
+alcance. A auditoria mediu: caminhos idênticos nas 12, corpo alterado em todas.
+
+O ADR pratica, para o total de helpers, a regra que falhou em aplicar aqui:
+*"Este ADR evita citar o total no corpo das decisões justamente por isso."* A
+contagem de `exec` deveria ter recebido o mesmo tratamento.

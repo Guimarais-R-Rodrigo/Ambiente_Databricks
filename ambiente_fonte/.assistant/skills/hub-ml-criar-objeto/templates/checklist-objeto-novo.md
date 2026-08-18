@@ -13,6 +13,12 @@ em vez de repetir a lista.
 
 ---
 
+> **Sobre os comandos deste checklist.** `tools/validate_assistant.py`,
+> `tools/api_publica.py` e `tools/spark_smoke_test.py` vivem **no repositório**,
+> não no workspace — eles não são publicados com o `.assistant/`. Quem estiver só
+> no Genie Code marca os itens que dependem deles como "a conferir no
+> repositório" e avisa quem for commitar.
+
 ## Parte 1 — verificável por terceiro
 
 ### Comum a todos os tipos

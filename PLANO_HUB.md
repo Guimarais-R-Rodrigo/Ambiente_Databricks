@@ -656,6 +656,27 @@ Registrado para não ser desfeito numa próxima revisão:
 
 ---
 
+## 12. Registro de execução
+
+| Sprint | Status | Data | Auditoria | Observação |
+|---|---|---|---|---|
+| 0 | ✅ concluída | 2026-08-16 | dispensada | [relatório](docs/sprints/sprint-0-fundacao.md) |
+| 0b | ✅ concluída | 2026-08-16 | dispensada | [relatório](docs/sprints/sprint-0b-fixtures-e-api-publica.md) |
+| 1 | ✅ concluída | 2026-08-16 | ✅ 21 achados corrigidos | [relatório](docs/sprints/sprint-1-padroes.md) |
+| 2 | ✅ concluída | 2026-08-16 | ✅ 13 quebras corrigidas + ADR-0006 | [relatório](docs/sprints/sprint-2-renomeacao.md) |
+| 4 | ✅ concluída | 2026-08-16 | ✅ 9 achados corrigidos | [relatório](docs/sprints/sprint-4-hub-scripts.md) |
+| 3 | ✅ concluída | 2026-08-17 | ✅ auditada com a 6 | [relatório](docs/sprints/sprint-3-skills.md) · `@hub-ml-*` confirmado no chat |
+| 5 | 🟡 partes 1 e 2 | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-5-hub-prompts.md) · as 16 partes 3 dependem de interação humana |
+| 6 | ✅ concluída | 2026-08-17 | ✅ contrato de dados virou guarda | [relatório](docs/sprints/sprint-6-snippets-spark.md) |
+| 7 | ✅ concluída | 2026-08-17 | ✅ 12 achados corrigidos + guarda de entrada | [relatório](docs/sprints/sprint-7-ml-nucleo.md) |
+| 8 | ✅ concluída | 2026-08-17 | ✅ 13 achados corrigidos | [relatório](docs/sprints/sprint-8-ml-dependencia-opcional.md) · os 14 executam, via `%pip` |
+| 9 | ✅ concluída | 2026-08-17 | ✅ 13 achados corrigidos | [relatório](docs/sprints/sprint-9-constants-visual-display.md) · fecha a biblioteca |
+| 10 | ✅ concluída | 2026-08-17 | ✅ 12 achados corrigidos | [relatório](docs/sprints/sprint-10-readmes-de-topo.md) · glossário absorvido |
+| 11 | ✅ concluída | 2026-08-17 | ✅ 19 achados corrigidos | [relatório](docs/sprints/sprint-11-hub-ml-criar-objeto.md) · forward test pendente |
+| 12 | ✅ concluída | 2026-08-17 | ✅ 18 achados corrigidos | [relatório](docs/sprints/sprint-12-fechamento.md) · auditoria final do conjunto |
+
+---
+
 ### 12.1 Dívida nomeada — notebooks sem saída real colada
 
 O critério §7.1 item 4 exige "todo notebook da sprint executado, com saída real
@@ -681,7 +702,7 @@ era o décimo segundo, foi fechado na auditoria da Sprint 11 — ele é o molde 
 skill manda ler, e não podia ser o primeiro a violar a regra que ela ensina. `check_saida_colada` os lista como
 aviso a cada execução; quando esta tabela zerar, promova a guarda a falha.
 
-Quem for fechar a dívida: são doze capturas de execução mais doze leituras
+Quem for fechar a dívida: são onze capturas de execução mais onze leituras
 escritas. Não é trabalho de fim de sessão — foi assim que nasceu, duas rodadas
 atrás, uma tabela rotulada "saída real" com valores extrapolados.
 
@@ -721,22 +742,3 @@ morto. Editar `STYLE_SECTION_HEADER` não muda cabeçalho nenhum — e o noteboo
 `section_header` chegou a afirmar o contrário.
 
 ---
-
-## 12. Registro de execução
-
-| Sprint | Status | Data | Auditoria | Observação |
-|---|---|---|---|---|
-| 0 | ✅ concluída | 2026-08-16 | dispensada | [relatório](docs/sprints/sprint-0-fundacao.md) |
-| 0b | ✅ concluída | 2026-08-16 | dispensada | [relatório](docs/sprints/sprint-0b-fixtures-e-api-publica.md) |
-| 1 | ✅ concluída | 2026-08-16 | ✅ 21 achados corrigidos | [relatório](docs/sprints/sprint-1-padroes.md) |
-| 2 | ✅ concluída | 2026-08-16 | ✅ 13 quebras corrigidas + ADR-0006 | [relatório](docs/sprints/sprint-2-renomeacao.md) |
-| 4 | ✅ concluída | 2026-08-16 | ✅ 9 achados corrigidos | [relatório](docs/sprints/sprint-4-hub-scripts.md) |
-| 3 | ✅ concluída | 2026-08-17 | ✅ auditada com a 6 | [relatório](docs/sprints/sprint-3-skills.md) · `@hub-ml-*` confirmado no chat |
-| 5 | 🟡 partes 1 e 2 | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-5-hub-prompts.md) · as 16 partes 3 dependem de interação humana |
-| 6 | ✅ concluída | 2026-08-17 | ✅ contrato de dados virou guarda | [relatório](docs/sprints/sprint-6-snippets-spark.md) |
-| 7 | ✅ concluída | 2026-08-17 | ✅ 12 achados corrigidos + guarda de entrada | [relatório](docs/sprints/sprint-7-ml-nucleo.md) |
-| 8 | ✅ concluída | 2026-08-17 | ✅ 13 achados corrigidos | [relatório](docs/sprints/sprint-8-ml-dependencia-opcional.md) · os 14 executam, via `%pip` |
-| 9 | ✅ concluída | 2026-08-17 | ✅ 13 achados corrigidos | [relatório](docs/sprints/sprint-9-constants-visual-display.md) · fecha a biblioteca |
-| 10 | ✅ concluída | 2026-08-17 | ✅ 12 achados corrigidos | [relatório](docs/sprints/sprint-10-readmes-de-topo.md) · glossário absorvido |
-| 11 | ✅ concluída | 2026-08-17 | ✅ 19 achados corrigidos | [relatório](docs/sprints/sprint-11-hub-ml-criar-objeto.md) · forward test pendente |
-| 12 | ✅ concluída | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-12-fechamento.md) · ADR-0007 e 0008, playbooks, 3 guardas |

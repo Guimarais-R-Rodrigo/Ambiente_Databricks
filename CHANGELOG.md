@@ -5,6 +5,75 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-17 — Auditoria final do conjunto: 18 achados, e a classe que doze rodadas não viram
+
+Décima terceira rodada, a única que auditou **o conjunto** e não uma sprint.
+Dezoito achados, todos procedentes. Resposta completa no fim de
+`docs/sprints/sprint-12-fechamento.md`.
+
+### Corrigido
+
+1. (Claude) **`check_skill_helpers_resolvem` não pegava o defeito que a
+   originou.** Aceitava o caminho quando a pasta-pai existia — e para
+   `hub_snippets.<secao>.<objeto>` a pasta-pai é a seção, que sempre existe.
+   Medição do auditor: **59 dos 72 caminhos (82%) desprotegidos**. Reescrita: o
+   destino precisa ser pasta de objeto (com `__init__.py`), e quando o caminho
+   termina na função, o último componente precisa estar na API pública que o
+   `__init__.py` de lá exporta. Provada contra os quatro casos construídos pelo
+   auditor mais o caso legítimo `hub_snippets.spark.pit_join.pit_join`.
+2. (Claude) **Duas frases retratadas continuavam publicadas no
+   `CATALOGO_HELPERS.md`** — que `prophet_wrapper` falha por não inicializar o
+   backend, e que instalar sem fixar versão derruba o kernel. A execução de 17/08
+   desmentiu as duas, e a retratação já estava em três outros documentos. O
+   parágrafo passou a **remeter ao inventário em vez de repetir o conteúdo
+   dele**, com a razão declarada: "foi testado" tem data de validade.
+3. (Claude) **`GUIA_REPLICACAO_TEMPORARIO.md` descrevia o repositório de 35
+   commits atrás**, com `x_config/`, `x_docs/` e `x_projects/` — pastas que a
+   Sprint 2 apagou. Aposentado, com aviso no lugar do conteúdo. A causa é
+   estrutural: o arquivo é git-ignored, e nenhum portão varre o que não está
+   versionado.
+4. (Claude) **`--conferir-readme` degradava em silêncio**: rótulo ausente na
+   saída real fazia o laço seguir. Numa máquina sem CLI autenticada, três
+   contagens erradas por 685, 684 e 86 passavam em dois segundos. Agora reprova,
+   nomeando o rótulo e a causa provável.
+5. (Claude) `ADR-0004` e `ADR-0005` ganharam aviso de superseding no topo, e as
+   "Decisões ativas" do `CLAUDE.md` canônico — que roteava só para eles —
+   passaram a citar `ADR-0006`, `ADR-0007` e `ADR-0008`.
+6. (Claude) Errata append-only no `ADR-0007` (marcador `imp`, não `opt`; dez
+   casos de `exec`, não dois; o alcance do "sem uma edição") e no `ADR-0008`
+   (a data do ADR-0005 é 14/08).
+7. (Claude) Números mortos restantes trocados por comando: a estimativa de
+   esforço da rota C e os "4 diretórios `hub_`" do checklist. O `36/36` de
+   roteamento ganhou, nos três documentos que o citam, a ressalva de que a 13ª
+   skill **nunca foi testada** — e a instrução de incluí-la nos testes.
+8. (Claude) O produto publicado mandava rodar `tools/`, que não é publicado:
+   ressalva no checklist e no `README.md` do `.assistant/`, onde também caiu o
+   único `x_` residual de todo o produto.
+
+### Notas
+
+- **A classe nova é sobre método, não sobre defeito: contradição entre dois
+  artefatos publicados, quando cada um passa sozinho.** As doze rodadas
+  anteriores compararam sempre *um documento contra a realidade*; nenhuma leu
+  *dois documentos publicados um contra o outro*. Seis dos dezoito achados só
+  aparecem por leitura pareada, e **nenhum portão pode pegá-los por construção**
+  — o validador confere links, forma e contagens contra o disco, nunca duas
+  afirmações entre si.
+- **A variante sutil: a referência de volta.** Doze auditorias verificaram que os
+  links resolvem; ninguém verificou se o destino **sabe que foi apontado**. Foi
+  assim que os ADRs supersedidos ficaram sem aviso enquanto a entrada canônica
+  continuava roteando para eles — com os quatro links resolvendo perfeitamente.
+- **Veredito de prontidão**, contra o perfil de um analista de CRM sem CLI e sem
+  acesso ao repositório: pronto para uso, com o `.assistant/README.md` recebendo
+  a melhor avaliação das treze rodadas. As duas condições que o auditor pôs para
+  distribuir — corrigir o catálogo e não usar o guia temporário — foram atendidas
+  nesta rodada.
+- Candidato de melhoria **não** aplicado: `--conferir-readme` reexecuta o
+  `validate_assistant.py` como subprocesso para reler a própria saída como texto,
+  quando os números já estão em variáveis no `main()`. Metade do custo de 1m41s é
+  duplicação. Mudar o desenho de uma guarda no mesmo dia em que ela foi escrita e
+  corrigida duas vezes é como se introduz o terceiro defeito.
+
 ## 2026-08-17 — Sprint 12: fechamento, com dois ADRs e três guardas
 
 Última sprint de execução do `PLANO_HUB.md`. Relatório em

@@ -85,3 +85,17 @@ em código.
 - ADR-0005, superseded no critério de conferência
 - Ferramenta: `tools/publicar_free.py`; skill: `.claude/skills/publicar-free/`
 - `PLANO_HUB.md` §7.3, limpeza remota obrigatória
+
+---
+
+## Errata — 2026-08-17
+
+Registrada pela auditoria final, no mesmo dia. Append-only, como o ADR-0007.
+
+| Onde | Diz | É |
+|---|---|---|
+| Contexto | "O ADR-0005 decidiu, em 2026-08-15" e "descreve corretamente o repositório de 15/08" | o ADR-0005 é datado de **2026-08-14**, e o ADR-0002 concorda com essa data |
+
+Baixo impacto isolado, e alto no argumento: a data é o que sustenta a defesa da
+imutabilidade — *"o ADR descrevia corretamente o repositório daquele dia"*. Errar
+a data enfraquece exatamente a linha de raciocínio que o ADR usa.
