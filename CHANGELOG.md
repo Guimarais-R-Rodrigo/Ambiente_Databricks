@@ -43,6 +43,14 @@ instrumento* — deixou de ser diagnóstico e virou fila de trabalho executada.
 2. (Claude) `check_skill_secoes` **promovida de aviso a falha**. Contagem:
    **13/13 com as cinco seções**, contra 2/13 na véspera.
 
+### Atualizado
+
+1. (Claude) `.claude/rules/free-vs-trabalho.md` ganhou a linha e a seção sobre o
+   **orçamento próprio do assistente**: ele esgota sozinho, trava até a virada do
+   mês, e **não afeta compute nem workspace**. Medido, não suposto — job entra em
+   `RUNNING`, `mkdirs`/`delete`/`export` respondem `exit=0`. A regra passa a
+   mandar medir o alcance de um bloqueio em vez de presumi-lo.
+
 ### Notas
 
 - **O validador tem 22 checks e roda em 0 falhas e 0 avisos.** Três guardas foram

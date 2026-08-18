@@ -27,6 +27,7 @@ Registradas a partir da execução no laboratório (Spark 4.1 serverless, 2026-0
 | `tabulate` (exigido por `DataFrame.to_markdown()`) | ausente | confirmar |
 | `jinja2` (exigido por `DataFrame.style`) | ausente | confirmar |
 | API clássica de `pyspark.ml` (`VectorAssembler`, `Correlation.corr`) | **bloqueada** — o Spark Connect não expõe essas classes da JVM | disponível em compute clássico |
+| Chat do Genie Code | tem **orçamento próprio**, que esgota sozinho e trava até a virada do mês — sem afetar compute nem workspace | limite é política corporativa, não cota mensal pessoal |
 
 Os helpers foram ajustados para funcionar nos dois casos: degradam sem cache no
 serverless e mantêm o cache onde ele existe.
@@ -41,6 +42,29 @@ pin, juntas na mesma sessão, derrubam o `import numpy`.
 
 O inventário completo, com a prova de execução de cada uma, está em
 `ambiente_fonte/.assistant/hub_snippets/requirements-optional.txt`.
+
+### O orçamento do assistente esgota separado do resto
+
+Observado em **18/08/2026**: `Budget reached. Contact your admin to resume.
+Resets Sep 1.` — no chat do Genie Code, com **quatorze dias** de bloqueio.
+
+O que caiu e o que não caiu, medido e não suposto:
+
+| Capacidade | Estado | Como foi medido |
+|---|---|---|
+| Chat do Genie Code | ❌ bloqueado | a própria mensagem |
+| Compute (job, notebook, smoke test) | ✅ funciona | job submetido entra em `RUNNING` e termina `SUCCESS` |
+| Workspace (ler, escrever, publicar, conferir) | ✅ funciona | `mkdirs` + `delete` + `export` com `exit=0` |
+
+Consequência de planejamento: o corte é limpo e cai numa fronteira útil. **Tudo
+que passa por conversa com o assistente para; tudo que passa por arquivo ou por
+compute segue.** Forward tests e qualquer tarefa que dependa de resposta do Genie
+ficam bloqueados; o ciclo editar → validar → renderizar → publicar → conferir
+continua inteiro, e job de execução também.
+
+Antes de planejar sprint que dependa do assistente, confira o orçamento. E não
+suponha o alcance de um bloqueio: meça, porque as três capacidades acima têm
+cotas diferentes.
 
 ### O runtime do Free muda sem aviso
 
