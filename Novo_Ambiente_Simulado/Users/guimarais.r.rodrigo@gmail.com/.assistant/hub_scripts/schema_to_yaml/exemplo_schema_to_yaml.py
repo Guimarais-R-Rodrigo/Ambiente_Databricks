@@ -48,6 +48,34 @@ print(json.dumps(payload, indent=2, ensure_ascii=False, default=str))
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC {
+# MAGIC   "table": "vw_exemplo_schema",
+# MAGIC   "columns": [
+# MAGIC     {
+# MAGIC       "name": "id_cliente",
+# MAGIC       "type": "string",
+# MAGIC       "nullable": true
+# MAGIC     },
+# MAGIC     {
+# MAGIC       "name": "uf",
+# MAGIC       "type": "string",
+# MAGIC       "nullable": true
+# MAGIC     },
+# MAGIC     {
+# MAGIC       "name": "renda",
+# MAGIC       "type": "double",
+# MAGIC       "nullable": true
+# MAGIC     },
+# MAGIC     {
+# MAGIC       "name": "dt_referencia",
+# MAGIC       "type": "date",
+# MAGIC       "nullable": true
+# MAGIC     },
+# MAGIC     {
+# MAGIC ...
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** O retorno é dicionário Python, serializável, e não texto — o
 # MAGIC que permite compará-lo entre execuções, versioná-lo ou alimentar outra
 # MAGIC ferramenta. A conversão para texto é a segunda função, e é opcional.
@@ -66,6 +94,26 @@ print("…" if len(texto) > 600 else "")
 # MAGIC %md
 # MAGIC ## 3. Por que o fallback para JSON não é um defeito
 
+# MAGIC ```text
+# MAGIC table: vw_exemplo_schema
+# MAGIC columns:
+# MAGIC - name: id_cliente
+# MAGIC   type: string
+# MAGIC   nullable: true
+# MAGIC - name: uf
+# MAGIC   type: string
+# MAGIC   nullable: true
+# MAGIC - name: renda
+# MAGIC   type: double
+# MAGIC   nullable: true
+# MAGIC - name: dt_referencia
+# MAGIC   type: date
+# MAGIC   nullable: true
+# MAGIC - name: alvo
+# MAGIC   type: int
+# MAGIC   nullable: true
+# MAGIC ```
+# MAGIC
 # COMMAND ----------
 
 try:
@@ -83,6 +131,14 @@ print("degradado: nenhum consumidor quebra pela ausência da biblioteca.")
 # MAGIC %md
 # MAGIC ## 4. Estatísticas são opcionais porque custam varredura
 
+# MAGIC ```text
+# MAGIC PyYAML presente: a saída acima é YAML propriamente dito.
+# MAGIC
+# MAGIC JSON é YAML 1.2 válido, então quem consome não precisa saber qual dos
+# MAGIC dois veio. É essa propriedade que torna o fallback seguro em vez de
+# MAGIC degradado: nenhum consumidor quebra pela ausência da biblioteca.
+# MAGIC ```
+# MAGIC
 # COMMAND ----------
 
 com_stats = schema_to_dict("vw_exemplo_schema", include_stats=True)
@@ -92,6 +148,20 @@ print(json.dumps(primeira, indent=2, ensure_ascii=False, default=str))
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC primeira coluna, com estatísticas:
+# MAGIC {
+# MAGIC   "name": "id_cliente",
+# MAGIC   "type": "string",
+# MAGIC   "nullable": true,
+# MAGIC   "stats": {
+# MAGIC     "approx_distinct": 311,
+# MAGIC     "null_count": 0,
+# MAGIC     "null_pct": 0.0
+# MAGIC   }
+# MAGIC }
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** Sem `include_stats`, o script lê apenas metadados — é
 # MAGIC instantâneo e não toca nos dados. Com ele, cada coluna exige agregação.
 # MAGIC

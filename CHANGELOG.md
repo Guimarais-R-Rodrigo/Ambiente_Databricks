@@ -5,6 +5,60 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-18 — As duas dívidas nomeadas fecham, e o validador zera
+
+`PLANO_HUB.md` §12.1 e a higiene do §12.2 foram fechadas no mesmo dia. O
+validador passou a **0 falhas e 0 avisos** pela primeira vez desde que existe.
+
+Contexto operacional: o orçamento do assistente do Databricks Free esgotou até
+1º/set, o que bloqueia o chat do Genie Code — e portanto os forward tests e as
+partes 3 dos prompts. Compute, jobs e workspace continuam funcionando, o que
+liberou justamente estas duas dívidas.
+
+### Corrigido
+
+1. (Claude) **§12.1 — os 11 notebooks sem saída real colada.** Executados **como
+   um job só** no Free, com um driver que roda cada notebook célula a célula e
+   captura o que cada uma imprime. **Cinquenta blocos** de saída real entraram
+   nos onze arquivos, cada um na célula de markdown que lê o resultado — colar no
+   fim fecharia a guarda sem fechar a dívida. Contador: `66 com bloco, 11 sem` →
+   **`77 com bloco, 0 sem`**.
+2. (Claude) `check_saida_colada` **promovida de aviso a falha**, que era a escada
+   escrita no docstring dela desde a Sprint 6: *"promover quando `sem_bloco`
+   chegar a zero"*. Provada removendo o bloco de um notebook: reprova.
+3. (Claude) **§12.2 — a cor redeclarada.** Os onze sítios de cópia idêntica
+   passaram a derivar de `constants.colors`; **trinta hexadecimais saíram do
+   código**. Sobraram os seis da única linha divergente, agora marcada
+   `PENDENTE/DECISAO` no próprio arquivo.
+4. (Claude) `constants/styles` — o espelho morto — passou a **dizer no docstring**
+   que nenhum módulo o importa, e suas cores institucionais agora derivam de
+   `colors`. O CSS continua duplicado por decisão registrada: unificá-lo mexeria
+   na saída de cinco módulos.
+
+### Notas
+
+- **Três provas sustentam o §12.2, e nenhuma é opinião.** O script aborta se o
+  literal não bater byte a byte com o nome oficial (14 nomes e 2 paletas
+  conferidos); a saída de `visual/` foi capturada antes e depois com **zero
+  divergências**; e `api_publica.py` regerado nos 51 módulos deu **zero
+  `__init__.py` divergentes**. Fechando, o smoke test no runtime real: **129
+  verificações, 122 pass, 0 fail**, os 7 restantes sendo dependência opcional
+  ausente.
+- **A armadilha que a terceira prova pegou.** A forma óbvia — trocar
+  `AZUL_CAIXA = "#005CA9"` por `from ... import AZUL_CAIXA` — quebraria a API
+  pública de quatro módulos, porque `api_publica.py` exclui do `__all__` o que foi
+  apenas importado. A forma correta é atribuição derivada.
+- **A ordem também importa.** Em `ml/kaplan_meier` a lista de oito cores não é
+  `PALETA_CATEGORICA[:8]`: `CINZA_ESCURO` vem por último ali. Fatiar a paleta
+  teria trocado a cor de quatro curvas em silêncio.
+- Três armadilhas da captura ficaram registradas no §12.1, porque a próxima vai
+  encontrá-las: `display()` não escreve em stdout e **`_jdf` não existe no Spark
+  Connect**; split de notebook com `\s*$` come a linha em branco seguinte; e o
+  notebook do `doc_coverage` **cita** os marcadores de célula, o que quebra
+  qualquer split por literal.
+- Compute e workspace do Free foram medidos, não supostos: `mkdirs`/`delete`
+  respondem, job entra em `RUNNING`. O bloqueio é só do assistente.
+
 ## 2026-08-18 — Auditoria de consistência e didática: 18 achados, e uma sigla que atravessou a quarentena
 
 Décima quarta rodada, `A1`, sobre o conjunto e com foco no padrão didático da

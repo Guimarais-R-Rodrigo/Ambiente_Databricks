@@ -700,12 +700,29 @@ em lugar nenhum fora da narrativa. Fica aqui, com nome e origem:
 
 São **11**, e nenhum é das Sprints 7 a 11. O exemplar de `hub_padroes/`, que
 era o décimo segundo, foi fechado na auditoria da Sprint 11 — ele é o molde que a
-skill manda ler, e não podia ser o primeiro a violar a regra que ela ensina. `check_saida_colada` os lista como
-aviso a cada execução; quando esta tabela zerar, promova a guarda a falha.
+skill manda ler, e não podia ser o primeiro a violar a regra que ela ensina.
 
-Quem for fechar a dívida: são onze capturas de execução mais onze leituras
-escritas. Não é trabalho de fim de sessão — foi assim que nasceu, duas rodadas
-atrás, uma tabela rotulada "saída real" com valores extrapolados.
+#### ✅ Fechada em 2026-08-18
+
+Os onze foram executados **como um job só** no Free, com um driver que roda cada
+notebook célula a célula e captura o que cada uma imprime. Cinquenta blocos de
+saída real entraram nos onze arquivos, cada um **na célula de markdown que lê o
+resultado** — colar no fim do arquivo fecharia a guarda sem fechar a dívida.
+
+O contador foi de `66 com bloco, 11 sem` para `77 com bloco, 0 sem`, e
+`check_saida_colada` **foi promovida de aviso a falha**, que era a escada escrita
+no docstring dela desde a Sprint 6.
+
+Três armadilhas do caminho, registradas porque a próxima captura vai encontrá-las:
+
+| Armadilha | Sintoma | Correção |
+|---|---|---|
+| `display()` não escreve em stdout | as tabelas saíam como `DataFrame[coluna: string, ...]` | *shim* que chama `show()`; e o teste é por `hasattr(obj, "show")`, porque **`_jdf` não existe no Spark Connect** |
+| split do notebook por regex com `\s*$` | comia a linha em branco depois de cada marcador, alterando 11 arquivos num detalhe que ninguém pediu | `[ 	]*$`, com round-trip provado byte a byte nos 77 notebooks |
+| o notebook do `doc_coverage` **cita** os marcadores de célula | split por literal partia o arquivo no meio do código | regex ancorada em início de linha |
+
+A captura também trazia o caminho do workspace com o username; virou
+`<username>` antes de entrar em arquivo versionado.
 
 ### 12.2 Dívida nomeada — cor redeclarada fora de `constants.colors`
 
@@ -741,5 +758,39 @@ inline em `visual/badge`, `visual/divider`, `visual/kpi_card`,
 `visual/section_header` e `visual/index_generator`. O módulo inteiro é um espelho
 morto. Editar `STYLE_SECTION_HEADER` não muda cabeçalho nenhum — e o notebook de
 `section_header` chegou a afirmar o contrário.
+
+#### ✅ Higiene fechada em 2026-08-18 · 1 decisão em aberto
+
+Os onze sítios de cópia idêntica passaram a derivar de `constants.colors`.
+**Trinta hexadecimais saíram do código**; sobraram os seis da linha divergente,
+agora marcada `PENDENTE/DECISAO` no próprio arquivo.
+
+A unificação foi feita sob três provas, e nenhuma delas é opinião:
+
+| Prova | Como |
+|---|---|
+| valor idêntico | o script aborta se o literal não bater byte a byte com o nome oficial — 14 nomes e 2 paletas conferidos antes da primeira substituição |
+| saída idêntica | os oito grupos de função de `visual/` capturados antes e depois: **zero divergências** |
+| API pública idêntica | `api_publica.py` regerado nos 51 módulos: **zero `__init__.py` divergentes** |
+
+**A armadilha que a terceira prova pegou.** A forma óbvia — trocar
+`AZUL_CAIXA = "#005CA9"` por `from ... import AZUL_CAIXA` — **quebraria a API
+pública** de quatro módulos, porque `api_publica.py` exclui do `__all__` o que foi
+apenas importado, e esses nomes são reexportados pelos `__init__.py` desde a
+Sprint 7. A forma correta é atribuição derivada, `AZUL_CAIXA = colors.AZUL_CAIXA`:
+unifica o valor e preserva o contrato.
+
+**A ordem também importa.** Em `ml/kaplan_meier` a lista de oito cores **não** é
+`PALETA_CATEGORICA[:8]` — `CINZA_ESCURO` vem por último ali. Fatiar a paleta teria
+trocado a cor de quatro curvas em silêncio; nomear preserva a atribuição.
+
+**A decisão que resta é sua:** a `PALETA_CATEGORICA` de `ml/curves_plotly` tem
+seis cores. Adotar a oficial não muda gráfico nenhum de até seis séries, e muda
+todos os que passam disso — hoje a sétima série recomeça no azul, e passaria a
+ser roxo.
+
+`constants/styles` continua sendo espelho morto quanto ao CSS, e agora **diz isso
+no próprio docstring**. Suas cores institucionais já derivam de `colors`; unificar
+o CSS mexeria na saída de cinco módulos e é decisão de produto, não higiene.
 
 ---

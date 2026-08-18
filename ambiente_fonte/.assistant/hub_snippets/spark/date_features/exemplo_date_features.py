@@ -46,6 +46,11 @@ print(FIXED_NATIONAL_HOLIDAYS_BR)
 # MAGIC %md
 # MAGIC ## 1. As features de calendário
 
+# MAGIC ```text
+# MAGIC feriados nacionais de data fixa: 9
+# MAGIC {'10-12', '05-01', '11-20', '09-07', '01-01', '11-02', '04-21', '12-25', '11-15'}
+# MAGIC ```
+# MAGIC
 # COMMAND ----------
 
 base = fixtures.base_tabular(n=500, seed=42)
@@ -57,6 +62,22 @@ display(com_datas.select("dt_referencia", *novas).limit(8))
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC colunas acrescentadas (9): ['dia_semana_iso', 'is_fim_semana', 'dia_mes', 'semana_ano', 'mes', 'trimestre', 'ano', 'is_feriado_nacional_fixo', 'is_feriado_calendario']
+# MAGIC +-------------+--------------+-------------+-------+----------+---+---------+----+------------------------+---------------------+
+# MAGIC |dt_referencia|dia_semana_iso|is_fim_semana|dia_mes|semana_ano|mes|trimestre|ano |is_feriado_nacional_fixo|is_feriado_calendario|
+# MAGIC +-------------+--------------+-------------+-------+----------+---+---------+----+------------------------+---------------------+
+# MAGIC |2026-03-04   |3             |false        |4      |10        |3  |1        |2026|false                   |false                |
+# MAGIC |2026-01-23   |5             |false        |23     |4         |1  |1        |2026|false                   |false                |
+# MAGIC |2026-02-25   |3             |false        |25     |9         |2  |1        |2026|false                   |false                |
+# MAGIC |2026-04-18   |6             |true         |18     |16        |4  |2        |2026|false                   |false                |
+# MAGIC |2026-02-10   |2             |false        |10     |7         |2  |1        |2026|false                   |false                |
+# MAGIC |2026-01-27   |2             |false        |27     |5         |1  |1        |2026|false                   |false                |
+# MAGIC |2026-03-09   |1             |false        |9      |11        |3  |1        |2026|false                   |false                |
+# MAGIC |2026-01-21   |3             |false        |21     |4         |1  |1        |2026|false                   |false                |
+# MAGIC +-------------+--------------+-------------+-------+----------+---+---------+----+------------------------+---------------------+
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** Os nomes são o produto principal aqui. Um modelo treinado com
 # MAGIC `mes` e servido com `month` quebra em produção, e o erro aparece longe da
 # MAGIC causa. Padronizar o nome é o que o helper resolve, e é mais valioso do que
@@ -86,6 +107,16 @@ display(
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC coluna de feriado: is_feriado_nacional_fixo
+# MAGIC +------------------------+-----+
+# MAGIC |is_feriado_nacional_fixo|count|
+# MAGIC +------------------------+-----+
+# MAGIC |false                   |493  |
+# MAGIC |true                    |7    |
+# MAGIC +------------------------+-----+
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** A lista embutida tem apenas os feriados **nacionais de data
 # MAGIC fixa**. Carnaval, Páscoa e Corpus Christi mudam de data todo ano e não
 # MAGIC estão lá; feriado estadual e municipal também não.
@@ -113,6 +144,12 @@ for linha in amostra:
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC {'dt_referencia': datetime.date(2026, 3, 4), 'dia_semana_iso': 3, 'is_fim_semana': False, 'dia_mes': 4, 'semana_ano': 10, 'mes': 3, 'trimestre': 1, 'ano': 2026, 'is_feriado_nacional_fixo': False, 'is_feriado_calendario': False}
+# MAGIC {'dt_referencia': datetime.date(2026, 1, 23), 'dia_semana_iso': 5, 'is_fim_semana': False, 'dia_mes': 23, 'semana_ano': 4, 'mes': 1, 'trimestre': 1, 'ano': 2026, 'is_feriado_nacional_fixo': False, 'is_feriado_calendario': False}
+# MAGIC {'dt_referencia': datetime.date(2026, 2, 25), 'dia_semana_iso': 3, 'is_fim_semana': False, 'dia_mes': 25, 'semana_ano': 9, 'mes': 2, 'trimestre': 1, 'ano': 2026, 'is_feriado_nacional_fixo': False, 'is_feriado_calendario': False}
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** Cada valor sai da própria `dt_referencia` da linha. Não há
 # MAGIC agregação, não há join, não há nada que possa trazer informação do futuro.
 # MAGIC

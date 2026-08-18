@@ -43,6 +43,19 @@ display(null_summary(base))
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC Resumo de nulos calculado com sucesso.
+# MAGIC +-------------+----------+--------+------+
+# MAGIC |coluna       |count_null|pct_null|status|
+# MAGIC +-------------+----------+--------+------+
+# MAGIC |renda        |13        |2.6     |🟢    |
+# MAGIC |id_cliente   |0         |0.0     |🟢    |
+# MAGIC |uf           |0         |0.0     |🟢    |
+# MAGIC |dt_referencia|0         |0.0     |🟢    |
+# MAGIC |alvo         |0         |0.0     |🟢    |
+# MAGIC +-------------+----------+--------+------+
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** Executado no laboratório, `renda` aparece com **13 nulos**
 # MAGIC (2,6%) e status verde; as demais colunas com zero.
 # MAGIC
@@ -66,6 +79,19 @@ display(null_summary(base, threshold_warn=1.0, threshold_fail=10.0))
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC Resumo de nulos calculado com sucesso.
+# MAGIC +-------------+----------+--------+------+
+# MAGIC |coluna       |count_null|pct_null|status|
+# MAGIC +-------------+----------+--------+------+
+# MAGIC |renda        |13        |2.6     |🟡    |
+# MAGIC |id_cliente   |0         |0.0     |🟢    |
+# MAGIC |uf           |0         |0.0     |🟢    |
+# MAGIC |dt_referencia|0         |0.0     |🟢    |
+# MAGIC |alvo         |0         |0.0     |🟢    |
+# MAGIC +-------------+----------+--------+------+
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** Nada mudou nos dados — `renda` continua com 13 nulos em 500.
 # MAGIC O que mudou foi o limiar, e com ele o status.
 # MAGIC
@@ -94,6 +120,16 @@ display(suspeitas)
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC Resumo de nulos calculado com sucesso.
+# MAGIC colunas fora do limiar: 1 de 5
+# MAGIC +------+----------+--------+------+
+# MAGIC |coluna|count_null|pct_null|status|
+# MAGIC +------+----------+--------+------+
+# MAGIC |renda |13        |2.6     |🟡    |
+# MAGIC +------+----------+--------+------+
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** Executado no laboratório: **1 coluna de 5** fora do limiar
 # MAGIC — `renda`, com 13 nulos em 500 linhas (2,6%), contra um limiar de alerta de
 # MAGIC 1,0%.

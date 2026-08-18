@@ -212,14 +212,14 @@ pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
 forma da pasta     : 58 conferidas (o módulo tem o nome da pasta)
 contrato de dados  : 60 pares (saída: o que o notebook consome)
 contrato de entrada: 57 pares (entrada: o que o notebook passa)
-saída colada       : 66 notebooks com bloco real, 11 sem
+saída colada       : 77 notebooks com bloco real, 0 sem
 idioma da docstring: 60 módulos, 0 com docstring em inglês
 python (AST)       : 209 arquivos
 instrucoes         : 7085/20000 caracteres
 repo (corporativo) : 717 arquivos varridos no repositório inteiro
-repo (links)       : 265 links fora da raiz analisada
+repo (links)       : 264 links fora da raiz analisada
 
-APROVADO: 0 falha(s), 11 aviso(s)
+APROVADO: 0 falha(s), 0 aviso(s)
 ```
 
 **Sobre `pastas de objeto: 60`:** a biblioteca são **58** — 51 em `hub_snippets`
@@ -227,9 +227,10 @@ e 7 em `hub_scripts`. Os outros dois são os exemplares de `hub_padroes/`, que s
 molde e não biblioteca. O validador conta pastas de objeto, e eles têm a forma de
 um; o `.assistant/README.md` conta biblioteca, e eles não são.
 
-Qualquer linha `FAIL` bloqueia o resto do ciclo. Os **11 avisos** são dívida
-nomeada, não impedimento: são notebooks de sprints antigas sem saída real colada,
-listados um a um em [`PLANO_HUB.md` §12.1](PLANO_HUB.md).
+Qualquer linha `FAIL` bloqueia o resto do ciclo. **Desde 18/08/2026 não há
+avisos**: a última dívida em aberto — onze notebooks sem saída real colada — foi
+fechada, e a guarda que os listava passou de aviso a falha. Um aviso que
+reaparecer aqui é dívida nova, não herança.
 
 **As seis linhas do meio são as guardas que mais pegaram defeito**, e vale
 saber o que cada uma cobre:

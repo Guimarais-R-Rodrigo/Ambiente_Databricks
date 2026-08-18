@@ -65,6 +65,12 @@ print(f"período  : {periodo[0]} a {periodo[1]}")
 # MAGIC %md
 # MAGIC ## 1. RFV com corte na data de decisão
 
+# MAGIC ```text
+# MAGIC linhas   : 568
+# MAGIC clientes : 40
+# MAGIC período  : 2025-01-01 a 2026-12-01
+# MAGIC ```
+# MAGIC
 # COMMAND ----------
 
 # A data de referência é o instante da decisão: nada posterior a ela pode entrar.
@@ -80,6 +86,24 @@ rfv = rfv_calculator(
 display(rfv.orderBy("id_cliente").limit(8))
 
 # COMMAND ----------
+# MAGIC %md
+# MAGIC ```text
+# MAGIC +----------+-----------+------------------+----------------+--------+--------------+---------+--------------+------------------+--------------+------------------+
+# MAGIC |id_cliente|ultima_data|valor_total       |frequencia_total|recencia|frequencia_30d|valor_30d|frequencia_60d|valor_60d         |frequencia_90d|valor_90d         |
+# MAGIC +----------+-----------+------------------+----------------+--------+--------------+---------+--------------+------------------+--------------+------------------+
+# MAGIC |ent000    |2026-03-01 |1069.24           |9               |92      |0             |0.0      |0             |0.0               |0             |0.0               |
+# MAGIC |ent001    |2026-06-01 |972.72            |11              |0       |1             |96.25    |2             |188.48000000000002|3             |278.17            |
+# MAGIC |ent002    |2026-06-01 |906.5500000000001 |10              |0       |1             |96.39    |1             |96.39             |2             |187.35            |
+# MAGIC |ent003    |2026-06-01 |1033.08           |11              |0       |1             |93.01    |2             |191.94            |3             |293.47            |
+# MAGIC |ent004    |2026-06-01 |603.0799999999999 |11              |0       |1             |54.4     |1             |54.4              |2             |109.99000000000001|
+# MAGIC |ent005    |2026-04-01 |969.58            |11              |61      |0             |0.0      |0             |0.0               |1             |90.89             |
+# MAGIC |ent006    |2026-05-01 |1995.9299999999998|13              |31      |0             |0.0      |1             |155.82            |2             |314.41999999999996|
+# MAGIC |ent007    |2026-05-01 |741.8             |10              |31      |0             |0.0      |1             |77.05             |2             |155.5             |
+# MAGIC +----------+-----------+------------------+----------------+--------+--------------+---------+--------------+------------------+--------------+------------------+
+# MAGIC ```
+# MAGIC
+
+# COMMAND ----------
 
 # A tabela acima só ensina se as três dimensões variarem entre clientes. Este
 # resumo prova que variam — e serviria de alarme se a fixture voltasse a ser
@@ -91,6 +115,14 @@ display(
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC +-----------------------------+-----------------------------+----------------------------------+--------------------------+--------------------------------+---------------------------+--------------------------------+---------------------------+--------------------------------+---------------------------+
+# MAGIC |valores_distintos_ultima_data|valores_distintos_valor_total|valores_distintos_frequencia_total|valores_distintos_recencia|valores_distintos_frequencia_30d|valores_distintos_valor_30d|valores_distintos_frequencia_60d|valores_distintos_valor_60d|valores_distintos_frequencia_90d|valores_distintos_valor_90d|
+# MAGIC +-----------------------------+-----------------------------+----------------------------------+--------------------------+--------------------------------+---------------------------+--------------------------------+---------------------------+--------------------------------+---------------------------+
+# MAGIC |5                            |40                           |9                                 |5                         |2                               |22                         |3                               |33                         |4                               |38                         |
+# MAGIC +-----------------------------+-----------------------------+----------------------------------+--------------------------+--------------------------------+---------------------------+--------------------------------+---------------------------+--------------------------------+---------------------------+
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** Executado no laboratório, a recência assume 5 valores
 # MAGIC distintos entre os 40 clientes (de 0 a 151 dias) e a frequência total
 # MAGIC assume 11 (de 6 a 17). Se qualquer uma dessas contagens vier **1**, a base
@@ -125,6 +157,12 @@ print(f"transações após a data de corte: {depois_do_corte} (todas descartadas
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC coluna de frequência          : frequencia_total
+# MAGIC clientes com divergência      : 0
+# MAGIC transações após a data de corte: 145 (todas descartadas)
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** Zero divergências significa que nenhuma das transações
 # MAGIC posteriores entrou no cálculo — e havia muitas, já que o painel vai até
 # MAGIC bem depois de junho.
@@ -149,6 +187,10 @@ print("colunas devolvidas:", rfv.columns)
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC colunas devolvidas: ['id_cliente', 'ultima_data', 'valor_total', 'frequencia_total', 'recencia', 'frequencia_30d', 'valor_30d', 'frequencia_60d', 'valor_60d', 'frequencia_90d', 'valor_90d']
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** Não há coluna de "score RFV" nem de "segmento". As duas
 # MAGIC convenções clássicas embutem uma escolha de negócio que o helper não tem como
 # MAGIC fazer:

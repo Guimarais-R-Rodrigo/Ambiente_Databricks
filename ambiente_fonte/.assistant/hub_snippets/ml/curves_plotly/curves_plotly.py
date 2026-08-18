@@ -15,15 +15,22 @@ from sklearn.metrics import roc_curve, precision_recall_curve, roc_auc_score
 from typing import Optional
 
 # Paleta institucional Caixa
+# PENDENTE/DECISAO -- a unica linha do 12.2 que nao e higiene.
+# Esta paleta tem **seis** cores; a oficial em `constants.colors` tem dez, e as
+# seis primeiras sao identicas. Trocar por `colors.PALETA_CATEGORICA` nao mudaria
+# nenhum grafico com ate seis series, e mudaria todos os que passam disso: hoje
+# a setima serie recomeca no azul, e passaria a ser roxo. E decisao de produto.
 PALETA_CATEGORICA = ["#005CA9", "#F7941D", "#6CBDE1", "#333333", "#8DC63F", "#C4262E"]
-AZUL_CAIXA = "#005CA9"
-LARANJA = "#F7941D"
-CINZA_ESCURO = "#333333"
+from hub_snippets.constants import colors
+
+AZUL_CAIXA = colors.AZUL_CAIXA
+LARANJA = colors.LARANJA
+CINZA_ESCURO = colors.CINZA_ESCURO
 
 # Tema padrão
 TEMA_BASE = dict(
     template="plotly_white",
-    font=dict(family="Segoe UI, Roboto, sans-serif", size=12, color="#333333"),
+    font=dict(family="Segoe UI, Roboto, sans-serif", size=12, color=CINZA_ESCURO),
     title=dict(font=dict(size=16, color=AZUL_CAIXA), x=0.01, xanchor="left"),
     colorway=PALETA_CATEGORICA,
     height=450,
@@ -45,7 +52,7 @@ def _aplicar_tema(fig: go.Figure, subtitulo: Optional[str] = None, n: Optional[i
         fig.add_annotation(
             text=" | ".join(footer), xref="paper", yref="paper",
             x=0, y=-0.18, showarrow=False,
-            font=dict(size=10, color="#6C757D"), xanchor="left",
+            font=dict(size=10, color=colors.TEXTO_SECUNDARIO), xanchor="left",
         )
     return fig
 

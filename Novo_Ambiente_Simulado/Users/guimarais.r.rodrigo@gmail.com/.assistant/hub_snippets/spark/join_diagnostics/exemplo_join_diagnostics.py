@@ -46,6 +46,10 @@ print("biblioteca acessível")
 # MAGIC %md
 # MAGIC ## 1. O caso que preserva a base
 # MAGIC
+# MAGIC ```text
+# MAGIC biblioteca acessível
+# MAGIC ```
+# MAGIC
 # MAGIC Cada cliente aparece uma única vez do lado direito. É o caso confortável,
 # MAGIC e é bom saber reconhecê-lo pelos números.
 
@@ -63,6 +67,15 @@ for chave in ["linhas_esquerda", "linhas_direita", "linhas_com_match",
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC ```text
+# MAGIC              linhas_esquerda: 500
+# MAGIC               linhas_direita: 500
+# MAGIC             linhas_com_match: 500
+# MAGIC   multiplicidade_max_direita: 1
+# MAGIC       expansao_prevista_left: 1.0
+# MAGIC                      relacao: 1:1 ou N:1 — join preserva a cardinalidade
+# MAGIC ```
+# MAGIC
 # MAGIC `expansao_prevista = 1.0` é a leitura que importa: o join devolve tantas
 # MAGIC linhas quantas entraram. `multiplicidade_max_direita = 1` explica por quê
 # MAGIC — nenhuma chave se repete do lado direito.
@@ -91,6 +104,13 @@ print(f"leitura                : {d['relacao']}")
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC ```text
+# MAGIC linhas antes do join   : 500
+# MAGIC linhas depois do join  : 1000
+# MAGIC fator de expansão      : 2.0
+# MAGIC leitura                : 1:N — join duplica linhas da esquerda
+# MAGIC ```
+# MAGIC
 # MAGIC A base dobrou. Se isso for uma tabela de treino, cada cliente passa a
 # MAGIC valer o dobro no aprendizado do modelo, sem que ninguém tenha decidido
 # MAGIC dar esse peso.
@@ -128,6 +148,15 @@ print("exemplos de chaves órfãs:", d["exemplos_sem_match"][:3])
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC ```text
+# MAGIC linhas na esquerda   : 500
+# MAGIC encontraram par      : 250
+# MAGIC ficaram sem par      : 250
+# MAGIC cobertura            : 50.0%
+# MAGIC
+# MAGIC exemplos de chaves órfãs: [{'id_cliente': 'cli00250'}, {'id_cliente': 'cli00251'}, {'id_cliente': 'cli00252'}]
+# MAGIC ```
+# MAGIC
 # MAGIC Com `left join`, essas linhas permanecem e as colunas do lado direito vêm
 # MAGIC nulas — o que costuma ser o comportamento desejado. Com `inner join`,
 # MAGIC elas somem, e a base encolhe pela metade sem aviso.
@@ -166,6 +195,12 @@ print(f"cobertura sobre o total : {d['cobertura_pct_chaves_validas']}%")
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC ```text
+# MAGIC linhas na esquerda      : 500
+# MAGIC com chave nula          : 48  <- nunca casam
+# MAGIC cobertura sobre o total : 100.0%
+# MAGIC ```
+# MAGIC
 # MAGIC Chave nula costuma ter causa distinta da chave órfã: erro de extração,
 # MAGIC campo opcional na origem, cliente sem documento. A correção também é
 # MAGIC outra — não adianta procurar a chave faltante no cadastro.

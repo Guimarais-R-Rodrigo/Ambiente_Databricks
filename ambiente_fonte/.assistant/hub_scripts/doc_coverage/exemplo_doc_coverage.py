@@ -38,6 +38,10 @@ print(f"marcadores de célula reconhecidos: {SOURCE_MARKERS}")
 # MAGIC %md
 # MAGIC ## Preparo — dois notebooks sintéticos, um documentado e outro não
 
+# MAGIC ```text
+# MAGIC marcadores de célula reconhecidos: {'.py': ('# COMMAND ----------', ('# MAGIC %md', '# MAGIC %md-sandbox')), '.sql': ('-- COMMAND ----------', ('-- MAGIC %md', '-- MAGIC %md-sandbox')), '.scala': ('// COMMAND ----------', ('// MAGIC %md', '// MAGIC %md-sandbox')), '.r': ('# COMMAND ----------', ('# MAGIC %md', '# MAGIC %md-sandbox'))}
+# MAGIC ```
+# MAGIC
 # COMMAND ----------
 
 import json
@@ -76,6 +80,11 @@ print(f"documentado: {BEM}\nseco       : {MAL}")
 # MAGIC %md
 # MAGIC ## 1. A medida nos dois casos
 
+# MAGIC ```text
+# MAGIC documentado: /tmp/hub_exemplo_documentado.py
+# MAGIC seco       : /tmp/hub_exemplo_seco.py
+# MAGIC ```
+# MAGIC
 # COMMAND ----------
 
 for rotulo, caminho in [("documentado", BEM), ("seco", MAL)]:
@@ -85,6 +94,33 @@ for rotulo, caminho in [("documentado", BEM), ("seco", MAL)]:
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC --- documentado ---
+# MAGIC {
+# MAGIC   "path": "/tmp/hub_exemplo_documentado.py",
+# MAGIC   "format": ".py",
+# MAGIC   "total_code_cells": 2,
+# MAGIC   "total_markdown_cells": 2,
+# MAGIC   "coverage_pct": 100.0,
+# MAGIC   "uncovered_cell_indexes": [],
+# MAGIC   "metric_note": "Adjacency heuristic; review explanatory quality separately."
+# MAGIC }
+# MAGIC --- seco ---
+# MAGIC {
+# MAGIC   "path": "/tmp/hub_exemplo_seco.py",
+# MAGIC   "format": ".py",
+# MAGIC   "total_code_cells": 3,
+# MAGIC   "total_markdown_cells": 0,
+# MAGIC   "coverage_pct": 0.0,
+# MAGIC   "uncovered_cell_indexes": [
+# MAGIC     0,
+# MAGIC     1,
+# MAGIC     2
+# MAGIC   ],
+# MAGIC   "metric_note": "Adjacency heuristic; review explanatory quality separately."
+# MAGIC }
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** A diferença entre os dois é exatamente o que o script se
 # MAGIC propõe a medir: presença de markdown ao lado do código. Nada além disso.
 # MAGIC
@@ -115,6 +151,18 @@ print(json.dumps(doc_coverage(str(VAZIO)), indent=2, ensure_ascii=False, default
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC {
+# MAGIC   "path": "/tmp/hub_exemplo_vazio.py",
+# MAGIC   "format": ".py",
+# MAGIC   "total_code_cells": 1,
+# MAGIC   "total_markdown_cells": 1,
+# MAGIC   "coverage_pct": 100.0,
+# MAGIC   "uncovered_cell_indexes": [],
+# MAGIC   "metric_note": "Adjacency heuristic; review explanatory quality separately."
+# MAGIC }
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** `coverage_pct` sai em **100,0** — o mesmo valor do notebook
 # MAGIC bem documentado da célula anterior. Um markdown com um ponto final produz a
 # MAGIC mesma cobertura que um parágrafo explicativo. Isso não é defeito a corrigir: qualquer medida
@@ -131,6 +179,10 @@ print("arquivos temporários removidos")
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## Quando **não** usar este script
+# MAGIC
+# MAGIC ```text
+# MAGIC arquivos temporários removidos
+# MAGIC ```
 # MAGIC
 # MAGIC - **Como métrica de qualidade.** Ele mede adjacência de markdown. Texto
 # MAGIC   vazio pontua igual a explicação boa.

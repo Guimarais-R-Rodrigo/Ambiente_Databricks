@@ -5,13 +5,15 @@ from __future__ import annotations
 
 from html import escape
 
+from hub_snippets.constants.colors import AZUL_CAIXA, BG_HEADER
+
 
 def badge_status(texto: str, tipo: str = "ok") -> str:
     styles = {
         "ok": "background:#EAF7EC; color:#2E7D32;",
         "warn": "background:#FFF8E1; color:#B26A00;",
         "fail": "background:#FDECEC; color:#B71C1C;",
-        "info": "background:#E8F4FD; color:#005CA9;",
+        "info": f"background:{BG_HEADER}; color:{AZUL_CAIXA};",
     }
     style = styles.get(tipo, styles["info"])
     safe_text = escape(str(texto), quote=True)

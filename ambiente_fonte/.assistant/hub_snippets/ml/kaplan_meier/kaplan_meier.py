@@ -12,6 +12,17 @@ Versão: 1.0
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
+
+from hub_snippets.constants.colors import (
+    AZUL_CAIXA,
+    AZUL_CLARO,
+    CINZA_ESCURO,
+    LARANJA,
+    ROXO,
+    TEAL,
+    VERDE,
+    VERMELHO,
+)
 from typing import Any, Optional, List, Dict
 
 
@@ -46,7 +57,10 @@ def plot_kaplan_meier(
     else:
         groups = {name: group for name, group in df.groupby(group_col)}
 
-    colors = ["#005CA9", "#F7941D", "#6CBDE1", "#8DC63F", "#C4262E", "#7B2D8B", "#00A79D", "#333333"]
+    # Ordem propria, e nao `PALETA_CATEGORICA[:8]`: aqui CINZA_ESCURO vem por
+    # ultimo. Nomear preserva a atribuicao de cor por curva; fatiar a paleta
+    # mudaria quatro delas.
+    colors = [AZUL_CAIXA, LARANJA, AZUL_CLARO, VERDE, VERMELHO, ROXO, TEAL, CINZA_ESCURO]
 
     for i, (name, group_df) in enumerate(groups.items()):
         kmf.fit(group_df[duration_col], event_observed=group_df[event_col], label=str(name))
@@ -75,8 +89,8 @@ def plot_kaplan_meier(
 
     fig.update_layout(
         template="plotly_white",
-        font=dict(family="Segoe UI, Roboto, sans-serif", size=12, color="#333333"),
-        title=dict(text=title, font=dict(size=16, color="#005CA9"), x=0.01, xanchor="left"),
+        font=dict(family="Segoe UI, Roboto, sans-serif", size=12, color=CINZA_ESCURO),
+        title=dict(text=title, font=dict(size=16, color=AZUL_CAIXA), x=0.01, xanchor="left"),
         xaxis_title="Tempo",
         yaxis_title="S(t) — Probabilidade de sobrevivência",
         width=900, height=550,

@@ -13,13 +13,14 @@ import numpy as np
 from typing import Any, Dict, List, Optional, Tuple
 
 # Paleta institucional Caixa
-PALETA_CATEGORICA = ["#005CA9", "#F7941D", "#6CBDE1", "#333333", "#8DC63F", "#C4262E",
-                     "#7B2D8B", "#00A79D", "#F15A29", "#A7A9AC"]
-AZUL_CAIXA = "#005CA9"
-PALETA_SEQUENCIAL = ["#E6F0FA", "#99C2E8", "#4D94D6", "#005CA9", "#003D73"]
+from hub_snippets.constants import colors
+
+PALETA_CATEGORICA = colors.PALETA_CATEGORICA
+AZUL_CAIXA = colors.AZUL_CAIXA
+PALETA_SEQUENCIAL = colors.PALETA_SEQUENCIAL
 TEMA_BASE = dict(
     template="plotly_white",
-    font=dict(family="Segoe UI, Roboto, sans-serif", size=12, color="#333333"),
+    font=dict(family="Segoe UI, Roboto, sans-serif", size=12, color=colors.CINZA_ESCURO),
     title=dict(font=dict(size=16, color=AZUL_CAIXA), x=0.01, xanchor="left"),
     height=600, width=1000,
     margin=dict(l=60, r=30, t=70, b=60),
@@ -207,7 +208,7 @@ def plot_vintage_heatmap(
         z=pivot.values * 100,
         x=[f"MOB {c}" for c in pivot.columns],
         y=pivot.index,
-        colorscale=[[0, "#E6F0FA"], [0.25, "#99C2E8"], [0.5, "#4D94D6"], [0.75, "#005CA9"], [1, "#003D73"]],
+        colorscale=[[p, cor] for p, cor in zip((0, 0.25, 0.5, 0.75, 1), PALETA_SEQUENCIAL)],
         text=np.round(pivot.values * 100, 1),
         texttemplate="%{text:.1f}%",
         textfont={"size": 9},

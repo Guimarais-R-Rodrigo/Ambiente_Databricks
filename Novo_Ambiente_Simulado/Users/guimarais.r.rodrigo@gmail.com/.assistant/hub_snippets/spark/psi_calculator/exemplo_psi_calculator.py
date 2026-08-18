@@ -44,6 +44,10 @@ print("biblioteca acessível")
 # MAGIC %md
 # MAGIC ## 1. O que o PSI realmente faz
 # MAGIC
+# MAGIC ```text
+# MAGIC biblioteca acessível
+# MAGIC ```
+# MAGIC
 # MAGIC PSI (*Population Stability Index*) compara **a forma de duas
 # MAGIC distribuições**, não seus resumos. O procedimento é:
 # MAGIC
@@ -90,6 +94,13 @@ print("Se você comparasse apenas a média, concluiria que nada mudou.")
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC ```text
+# MAGIC referência: média   9990.77   desvio   791.92
+# MAGIC atual     : média   9854.58   desvio  6030.92
+# MAGIC
+# MAGIC Se você comparasse apenas a média, concluiria que nada mudou.
+# MAGIC ```
+# MAGIC
 # MAGIC A média praticamente não se moveu. Mas a população se partiu ao meio:
 # MAGIC ninguém mais ganha o valor médio. Para um modelo de crédito, isso é uma
 # MAGIC mudança enorme — e o comparador de média não vê.
@@ -109,6 +120,11 @@ print(interpretar_psi(psi))
 
 # MAGIC %md
 # MAGIC ## 3. Por que a interpretação não vem pronta
+# MAGIC
+# MAGIC ```text
+# MAGIC PSI = 10.3398
+# MAGIC PSI=10.3398 — compare com a política calibrada desta feature/modelo
+# MAGIC ```
 # MAGIC
 # MAGIC Repare que `interpretar_psi` devolveu o valor e mandou compará-lo com a
 # MAGIC política calibrada — não disse "crítico" nem "aceitável".
@@ -133,6 +149,14 @@ print("  ", interpretar_psi(psi, warning_threshold=0.10, critical_threshold=0.25
 
 # MAGIC %md
 # MAGIC ## 4. Drift de dados não é queda de performance
+# MAGIC
+# MAGIC ```text
+# MAGIC Sem política definida:
+# MAGIC    PSI=10.3398 — compare com a política calibrada desta feature/modelo
+# MAGIC
+# MAGIC Com limites calibrados para esta feature:
+# MAGIC    🔴 PSI=10.3398 — acima do crítico configurado; investigar
+# MAGIC ```
 # MAGIC
 # MAGIC Esta é a confusão mais cara da área, e vale fixar:
 # MAGIC
@@ -166,6 +190,10 @@ for coluna, valor in csi.items():
 
 # MAGIC %md
 # MAGIC ## Resumo para levar
+# MAGIC
+# MAGIC ```text
+# MAGIC      renda: 10.3398
+# MAGIC ```
 # MAGIC
 # MAGIC - PSI compara **formas de distribuição**, não médias. Comparar média e
 # MAGIC   desvio não é PSI, ainda que produza um número plausível.

@@ -135,7 +135,7 @@ def check_skill_frontmatter(root: Path, problems: list[str]) -> int:
     return count
 
 
-def check_saida_colada(root: Path, warnings: list[str]) -> tuple[int, int]:
+def check_saida_colada(root: Path, problems: list[str]) -> tuple[int, int]:
     """Cobra do notebook um bloco com a saída real da execução.
 
     O template pede que a leitura cite o número obtido, não o pretendido — e uma
@@ -156,9 +156,11 @@ def check_saida_colada(root: Path, warnings: list[str]) -> tuple[int, int]:
     curada — uma auditoria encontrou seis blocos editados, um deles omitindo
     justamente a linha que contradizia a prosa em volta.
 
-    **Aviso, não falha**, enquanto a dívida das Sprints 1, 4 e 6 não fecha —
-    são 11 notebooks, listados em `PLANO_HUB.md` §12.1. Promover a falha quando
-    `sem_bloco` chegar a zero.
+    **Falha, não aviso**, desde 2026-08-18. A dívida das Sprints 1, 4 e 6 — os
+    11 notebooks listados em `PLANO_HUB.md` §12.1 — foi fechada executando os
+    onze como job no Free e colando a transcrição na célula que lê o resultado.
+    A escada estava escrita aqui desde o começo: *promover a falha quando
+    `sem_bloco` chegar a zero*. Chegou.
     """
     com = sem = 0
     for nb in sorted(root.rglob("exemplo_*.py")):
@@ -180,7 +182,7 @@ def check_saida_colada(root: Path, warnings: list[str]) -> tuple[int, int]:
             sem += 1
             motivo = ("bloco ```text sem nenhum número" if blocos
                       else "nenhum bloco ```text com saída real")
-            warnings.append(
+            problems.append(
                 f"{nb.relative_to(root)}: {motivo}; "
                 "a leitura não pode ser conferida sem reexecutar"
             )
@@ -1007,7 +1009,7 @@ def main() -> int:
     n_malformadas = check_pasta_de_objeto_malformada(root, problems)
     n_contratos = check_contrato_de_dados(root, problems)
     n_entradas = check_contrato_de_entrada(root, problems)
-    n_com_saida, n_sem_saida = check_saida_colada(root, warnings)
+    n_com_saida, n_sem_saida = check_saida_colada(root, problems)
     check_smoke_test_sincronizado(problems)
     n_helpers = check_skill_helpers_resolvem(root, problems)
     n_secoes, n_completas = check_skill_secoes(root, warnings)

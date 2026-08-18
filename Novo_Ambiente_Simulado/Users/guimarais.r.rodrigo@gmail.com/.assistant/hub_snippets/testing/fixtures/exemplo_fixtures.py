@@ -40,6 +40,11 @@ print(f"geradores disponíveis: {', '.join(fixtures.__all__)}")
 # MAGIC %md
 # MAGIC ## 1. `base_tabular` — o caso geral
 # MAGIC
+# MAGIC ```text
+# MAGIC biblioteca: /Workspace/Users/<username>/.assistant
+# MAGIC geradores disponíveis: base_tabular, serie_temporal, fatos_e_features, safras
+# MAGIC ```
+# MAGIC
 # MAGIC **Para que serve.** É a base de partida de qualquer exemplo que precise de
 # MAGIC uma tabela de clientes: uma chave, uma categórica, uma numérica com
 # MAGIC ausentes e um alvo binário. Os ausentes existem de propósito — helper que
@@ -52,6 +57,21 @@ print(f"geradores disponíveis: {', '.join(fixtures.__all__)}")
 clientes = fixtures.base_tabular(n=500, seed=42, pct_nulos_renda=0.04, prevalencia_alvo=0.25)
 
 display(clientes.limit(5))
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ```text
+# MAGIC +----------+---+--------+-------------+----+
+# MAGIC |id_cliente|uf |renda   |dt_referencia|alvo|
+# MAGIC +----------+---+--------+-------------+----+
+# MAGIC |cli00000  |MG |1962.7  |2026-03-04   |1   |
+# MAGIC |cli00001  |RS |14018.94|2026-01-23   |0   |
+# MAGIC |cli00002  |SP |NULL    |2026-02-25   |1   |
+# MAGIC |cli00003  |RS |11883.03|2026-04-18   |1   |
+# MAGIC |cli00004  |SP |16474.46|2026-02-10   |0   |
+# MAGIC +----------+---+--------+-------------+----+
+# MAGIC ```
+# MAGIC
 
 # COMMAND ----------
 
@@ -71,6 +91,13 @@ print(f"prevalência alvo  : {resumo['prevalencia_alvo']}")
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC linhas            : 500
+# MAGIC clientes distintos: 500
+# MAGIC renda nula        : 13
+# MAGIC prevalência alvo  : 0.268
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** `clientes distintos` igual a `linhas` significa **chave
 # MAGIC única** — é o padrão. Para exercitar diagnóstico de join, passe
 # MAGIC `n_entidades` menor que `n` e a chave passa a ter duplicidade proposital.
@@ -103,6 +130,12 @@ print(f"  das quais publicadas DEPOIS da decisão: {futuras}")
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC decisões        : 300
+# MAGIC linhas de feature: 656
+# MAGIC   das quais publicadas DEPOIS da decisão: 56
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** A coluna `eh_futura` não existe em dado real: é gabarito.
 # MAGIC Ela existe para que o teste possa afirmar "nenhuma dessas linhas
 # MAGIC atravessou o join", que é uma verificação bem mais forte do que conferir a
@@ -138,6 +171,27 @@ display(
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC série temporal: 480 linhas (20 entidades × 24 períodos)
+# MAGIC safras        : 4800 linhas (400 contratos × 12 MOB)
+# MAGIC +---+----------+
+# MAGIC |mob|incidencia|
+# MAGIC +---+----------+
+# MAGIC |1  |0.005     |
+# MAGIC |2  |0.0225    |
+# MAGIC |3  |0.065     |
+# MAGIC |4  |0.0925    |
+# MAGIC |5  |0.1375    |
+# MAGIC |6  |0.185     |
+# MAGIC |7  |0.24      |
+# MAGIC |8  |0.31      |
+# MAGIC |9  |0.37      |
+# MAGIC |10 |0.4275    |
+# MAGIC |11 |0.475     |
+# MAGIC |12 |0.5475    |
+# MAGIC +---+----------+
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** A incidência sobe monotonicamente com o MOB porque contrato
 # MAGIC que entrou em inadimplência não volta — é acumulado, não taxa do mês.
 # MAGIC Comparar duas safras em MOBs diferentes por causa disso é a armadilha
@@ -160,6 +214,11 @@ print(f"seed 7 == seed 8 : {a == c}")
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## Quando **não** usar
+# MAGIC
+# MAGIC ```text
+# MAGIC seed 7 == seed 7 : True
+# MAGIC seed 7 == seed 8 : False
+# MAGIC ```
 # MAGIC
 # MAGIC - **Para estimar desempenho ou custo.** São centenas de linhas em memória;
 # MAGIC   nada aqui diz como o helper se comporta com milhões.

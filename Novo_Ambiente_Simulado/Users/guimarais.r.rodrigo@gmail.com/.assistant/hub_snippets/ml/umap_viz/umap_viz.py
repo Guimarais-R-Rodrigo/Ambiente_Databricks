@@ -18,13 +18,14 @@ from typing import Optional, List
 SEED = 42
 
 # Paleta institucional Caixa
-PALETA_CATEGORICA = ["#005CA9", "#F7941D", "#6CBDE1", "#333333", "#8DC63F", "#C4262E",
-                     "#7B2D8B", "#00A79D", "#F15A29", "#A7A9AC"]
-AZUL_CAIXA = "#005CA9"
+from hub_snippets.constants import colors
+
+PALETA_CATEGORICA = colors.PALETA_CATEGORICA
+AZUL_CAIXA = colors.AZUL_CAIXA
 
 TEMA_BASE = dict(
     template="plotly_white",
-    font=dict(family="Segoe UI, Roboto, sans-serif", size=12, color="#333333"),
+    font=dict(family="Segoe UI, Roboto, sans-serif", size=12, color=colors.CINZA_ESCURO),
     title=dict(font=dict(size=16, color=AZUL_CAIXA), x=0.01, xanchor="left"),
     colorway=PALETA_CATEGORICA,
     height=600,
@@ -116,7 +117,7 @@ def plot_umap_clusters(
     fig.add_annotation(
         text=footer, xref="paper", yref="paper",
         x=0, y=-0.15, showarrow=False,
-        font=dict(size=10, color="#6C757D"), xanchor="left",
+        font=dict(size=10, color=colors.TEXTO_SECUNDARIO), xanchor="left",
     )
 
     return fig

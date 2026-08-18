@@ -49,6 +49,10 @@ print("biblioteca acessível")
 # MAGIC %md
 # MAGIC ## 1. O cenário
 # MAGIC
+# MAGIC ```text
+# MAGIC biblioteca acessível
+# MAGIC ```
+# MAGIC
 # MAGIC Imagine que você decide conceder crédito a um cliente **hoje**. Para
 # MAGIC decidir, usa o score de bureau daquele cliente. A pergunta que define
 # MAGIC tudo é: **qual versão do score você tinha em mãos naquele momento?**
@@ -71,6 +75,30 @@ features.orderBy("id_cliente", "dt_referencia").show(6, truncate=False)
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC ```text
+# MAGIC DECISÕES (uma linha por decisão de crédito):
+# MAGIC +----------+----------+----+
+# MAGIC |id_cliente|dt_decisao|alvo|
+# MAGIC +----------+----------+----+
+# MAGIC |cli00000  |2026-05-27|1   |
+# MAGIC |cli00001  |2026-05-30|0   |
+# MAGIC |cli00002  |2026-06-27|0   |
+# MAGIC +----------+----------+----+
+# MAGIC only showing top 3 rows
+# MAGIC HISTÓRICO DE SCORE (várias versões por cliente):
+# MAGIC +----------+-------------+------------+---------+
+# MAGIC |id_cliente|dt_referencia|score_bureau|eh_futura|
+# MAGIC +----------+-------------+------------+---------+
+# MAGIC |cli00000  |2026-04-30   |413.9       |false    |
+# MAGIC |cli00000  |2026-05-09   |813.0       |false    |
+# MAGIC |cli00001  |2026-05-15   |354.4       |false    |
+# MAGIC |cli00001  |2026-05-23   |482.0       |false    |
+# MAGIC |cli00002  |2026-05-28   |692.4       |false    |
+# MAGIC |cli00002  |2026-06-04   |878.9       |false    |
+# MAGIC +----------+-------------+------------+---------+
+# MAGIC only showing top 6 rows
+# MAGIC ```
+# MAGIC
 # MAGIC Repare na terceira coluna do histórico: para o mesmo cliente existem
 # MAGIC várias versões do score, cada uma com sua data de referência. E algumas
 # MAGIC têm `eh_futura = true`.
@@ -95,6 +123,12 @@ print(f"linhas com score futuro : {linhas_vazadas}")
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC ```text
+# MAGIC decisões originais      : 200
+# MAGIC linhas após o join      : 433
+# MAGIC linhas com score futuro : 33
+# MAGIC ```
+# MAGIC
 # MAGIC Dois estragos aconteceram de uma vez, e nenhum deles emitiu erro:
 # MAGIC
 # MAGIC **A base inchou.** Cada decisão virou várias linhas, uma por versão do
@@ -146,6 +180,22 @@ for chave, valor in diagnostico.items():
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC ```text
+# MAGIC DIAGNÓSTICO:
+# MAGIC   linhas_fato: 200
+# MAGIC   com_feature: 200
+# MAGIC   sem_chave_ou_data: 0
+# MAGIC   entidade_sem_historico: 0
+# MAGIC   sem_feature_disponivel_na_data: 0
+# MAGIC   cobertura_pct_linhas_validas: 100.0
+# MAGIC   linhas_feature_com_ts_nulo: 0
+# MAGIC   linhas_com_empate_de_instante: 0
+# MAGIC   atraso_publicacao_dias: 3
+# MAGIC   janela_maxima_dias: None
+# MAGIC   fuso_da_sessao: Etc/UTC
+# MAGIC   colunas_trazidas: ['score_bureau', 'eh_futura']
+# MAGIC ```
+# MAGIC
 # MAGIC Compare com o join ingênuo: o número de linhas continua igual ao número
 # MAGIC de decisões, e a cobertura diz quantas decisões conseguiram um score
 # MAGIC elegível.
@@ -167,6 +217,22 @@ resultado.show(5, truncate=False)
 # MAGIC %md
 # MAGIC ## 4. O atraso de publicação, na prática
 # MAGIC
+# MAGIC ```text
+# MAGIC linhas no resultado         : 200
+# MAGIC decisões originais          : 200
+# MAGIC scores do futuro que entraram: 0   <- tem de ser zero
+# MAGIC +----------+----------+----+------------+---------+
+# MAGIC |id_cliente|dt_decisao|alvo|score_bureau|eh_futura|
+# MAGIC +----------+----------+----+------------+---------+
+# MAGIC |cli00000  |2026-05-27|1   |813.0       |false    |
+# MAGIC |cli00001  |2026-05-30|0   |482.0       |false    |
+# MAGIC |cli00002  |2026-06-27|0   |878.9       |false    |
+# MAGIC |cli00003  |2026-04-20|0   |335.7       |false    |
+# MAGIC |cli00004  |2026-04-03|1   |654.6       |false    |
+# MAGIC +----------+----------+----+------------+---------+
+# MAGIC only showing top 5 rows
+# MAGIC ```
+# MAGIC
 # MAGIC Para ver que o parâmetro faz diferença real, rode o mesmo join com
 # MAGIC atrasos diferentes. Quanto maior o atraso declarado, menos scores são
 # MAGIC elegíveis — porque menos deles já estavam publicados na data da decisão.
@@ -183,6 +249,13 @@ for atraso in [0, 3, 30, 60]:
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC ```text
+# MAGIC atraso   0 dias -> cobertura  100.0%
+# MAGIC atraso   3 dias -> cobertura  100.0%
+# MAGIC atraso  30 dias -> cobertura    5.0%
+# MAGIC atraso  60 dias -> cobertura    0.0%
+# MAGIC ```
+# MAGIC
 # MAGIC **A lição:** o atraso não é um detalhe de configuração, é uma
 # MAGIC característica da fonte de dados. Descubra o valor real com quem opera a
 # MAGIC fonte. Declarar zero por omissão é assumir publicação instantânea, o que

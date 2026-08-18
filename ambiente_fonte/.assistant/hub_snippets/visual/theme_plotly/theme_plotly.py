@@ -15,14 +15,19 @@ from typing import Any, Dict, Optional
 import plotly.io as pio
 import plotly.graph_objects as go
 
-from hub_snippets.constants.colors import PALETA_CATEGORICA, TEXTO_SECUNDARIO, AZUL_CAIXA
+from hub_snippets.constants.colors import (
+    AZUL_CAIXA,
+    CINZA_ESCURO,
+    PALETA_CATEGORICA,
+    TEXTO_SECUNDARIO,
+)
 
 
 def get_tema_eda() -> Dict[str, Any]:
     """Return the default Plotly theme configuration for the ecosystem."""
     return {
         "template": "plotly_white",
-        "font": {"family": "Segoe UI, Roboto, sans-serif", "size": 12, "color": "#333333"},
+        "font": {"family": "Segoe UI, Roboto, sans-serif", "size": 12, "color": CINZA_ESCURO},
         "title": {"font": {"size": 16, "color": AZUL_CAIXA}, "x": 0.01, "xanchor": "left"},
         "colorway": PALETA_CATEGORICA,
         "height": 450,

@@ -51,6 +51,10 @@ print("colunas:", spark.table("vw_exemplo_naming").columns)
 # MAGIC %md
 # MAGIC ## 1. Só a convenção do projeto, sem prefixo exigido
 
+# MAGIC ```text
+# MAGIC colunas: ['id_cliente', 'ValorTotal', 'dataDeReferencia', 'coluna_com_nome_absurdamente_longo_que_ninguem_vai_digitar_duas_vezes']
+# MAGIC ```
+# MAGIC
 # COMMAND ----------
 
 violacoes = naming_checker("vw_exemplo_naming", max_col_length=40)
@@ -60,6 +64,17 @@ for v in violacoes:
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC [databricks-recommended-context  ] vw_exemplo_naming
+# MAGIC     Prefer a fully qualified Unity Catalog name: catalog.schema.table.
+# MAGIC [project-custom                  ] ValorTotal
+# MAGIC     Column is outside the configured lowercase snake_case convention.
+# MAGIC [project-custom                  ] dataDeReferencia
+# MAGIC     Column is outside the configured lowercase snake_case convention.
+# MAGIC [project-custom                  ] coluna_com_nome_absurdamente_longo_que_ninguem_vai_digitar_duas_vezes
+# MAGIC     Column exceeds the configured limit of 40 characters.
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** A coluna `policy` é o que importa mais que a mensagem:
 # MAGIC
 # MAGIC | Valor | Significa |
@@ -89,6 +104,11 @@ except ValueError as erro:
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC recusou, como deveria:
+# MAGIC   allowed_table_prefixes is required when enforce_prefix=True
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** Pedir para exigir prefixo sem dizer **quais** prefixos é
 # MAGIC ambíguo, e o script poderia ter escolhido uma lista padrão — `dim_`,
 # MAGIC `fato_`, `stg_` — que é o que a maioria das ferramentas faz.
@@ -118,6 +138,10 @@ print("violações por origem da regra:", por_politica)
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC violações por origem da regra: {'databricks-recommended-context': 1, 'project-custom': 3}
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** `vw_exemplo_naming` começa com `vw_`, que está na lista, então
 # MAGIC não há violação de prefixo. As demais permanecem, e continuam separadas por
 # MAGIC origem — que é o que permite alguém decidir "a convenção do projeto eu sigo,

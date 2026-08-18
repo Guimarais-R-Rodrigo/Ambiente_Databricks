@@ -54,6 +54,19 @@ display(
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC +---+-----+
+# MAGIC |uf |count|
+# MAGIC +---+-----+
+# MAGIC |XX |20   |
+# MAGIC |MG |970  |
+# MAGIC |SP |981  |
+# MAGIC |RJ |993  |
+# MAGIC |RS |1008 |
+# MAGIC |BA |1048 |
+# MAGIC +---+-----+
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** `XX` tem 20 linhas em 5.020 — 0,4% da base. É o tipo de
 # MAGIC categoria que existe em toda base real e some em toda amostra descuidada.
 
@@ -73,6 +86,11 @@ print(f"outra semente : {c.count()} linhas, difere de a? {c.exceptAll(a).count()
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC mesma semente : 500 e 500 linhas, conjuntos iguais? True
+# MAGIC outra semente : 500 linhas, difere de a? True
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** Mesma semente, mesma amostra — é o que permite alguém
 # MAGIC reproduzir o seu número amanhã. Sem semente declarada, duas execuções dão
 # MAGIC resultados diferentes e ninguém sabe se a diferença é do dado ou do sorteio.
@@ -98,6 +116,11 @@ for rotulo, df in [("simples", simples), ("estratificada", estratificada)]:
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC ```text
+# MAGIC simples         200 linhas | categoria rara XX: 0
+# MAGIC estratificada   200 linhas | categoria rara XX: 1
+# MAGIC ```
+# MAGIC
 # MAGIC **Como ler.** Numa amostra de 200 sobre uma categoria que é 0,4% da base, o
 # MAGIC esperado é **menos de uma linha** de `XX`. A amostra simples costuma sair
 # MAGIC com zero — e uma análise por UF feita sobre ela conclui que `XX` não existe.

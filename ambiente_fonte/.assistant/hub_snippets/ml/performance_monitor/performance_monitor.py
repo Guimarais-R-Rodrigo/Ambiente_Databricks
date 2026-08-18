@@ -7,9 +7,14 @@ import math
 from typing import Any, Dict, List, Optional
 
 
-AZUL_CAIXA = "#005CA9"
-LARANJA = "#F7941D"
-VERMELHO = "#C4262E"
+from hub_snippets.constants import colors
+
+# Derivado, nao redeclarado: o valor tem uma fonte so. A forma e atribuicao
+# porque `api_publica.py` nao reexporta nome importado, e estes tres fazem
+# parte da API publica deste modulo desde a Sprint 7.
+AZUL_CAIXA = colors.AZUL_CAIXA
+LARANJA = colors.LARANJA
+VERMELHO = colors.VERMELHO
 
 # Example policy for backward compatibility. It is not a Databricks default and
 # must be reviewed for the model, metric scale, sample size, and business risk.

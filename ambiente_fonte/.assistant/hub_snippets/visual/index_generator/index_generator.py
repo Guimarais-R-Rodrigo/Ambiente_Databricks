@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Iterable, Optional
 
 from hub_snippets.constants.emojis import SECOES_EDA
+from hub_snippets.constants.colors import AZUL_CAIXA, BG_SECTION, TEXTO_SECUNDARIO
 
 
 def gerar_indice_eda(etapas_ativas: Optional[Iterable[int]] = None, markdown: bool = False) -> str:
@@ -31,9 +32,11 @@ def gerar_indice_eda(etapas_ativas: Optional[Iterable[int]] = None, markdown: bo
     for etapa in etapas:
         sec = SECOES_EDA[etapa]
         items.append(
-            f'<div style="margin:6px 0; padding:6px 10px; background:#F8F9FA; border-radius:6px;">'
+            f'<div style="margin:6px 0; padding:6px 10px; background:{BG_SECTION}; border-radius:6px;">'
             f'<strong>{sec["emoji"]} Etapa {etapa}</strong> — {sec["titulo"]}<br/>'
-            f'<span style="color:#6C757D; font-size:12px;">{sec["descricao"]}</span>'
+            f'<span style="color:{TEXTO_SECUNDARIO}; font-size:12px;">{sec["descricao"]}</span>'
             f'</div>'
         )
-    return '<div style="font-family:Segoe UI, Roboto, sans-serif;"><h3 style="color:#005CA9; margin-bottom:10px;">📋 Índice da EDA</h3>' + ''.join(items) + '</div>'
+    return (f'<div style="font-family:Segoe UI, Roboto, sans-serif;">'
+            f'<h3 style="color:{AZUL_CAIXA}; margin-bottom:10px;">📋 Índice da EDA</h3>'
+            + ''.join(items) + '</div>')
