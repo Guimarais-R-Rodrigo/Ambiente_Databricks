@@ -88,4 +88,4 @@ except Exception as erro:
 # MAGIC - **Para concluir causalidade.** Correlação alta entre renda e limite não diz qual determina qual — neste caso, sabemos, porque plantamos.
 # MAGIC - **Com variável categórica codificada como número.** A correlação de Pearson sobre código de agência mede a ordem do código, que não significa nada.
 # MAGIC - **Como único critério de seleção de feature.** Correlação com o alvo ignora interação; variável fraca sozinha pode ser forte em par.
-# MAGIC - **Sobre a base inteira sem amostrar.** É `toPandas()` por baixo; o limite é o driver.
+# MAGIC - **Amostrando por medo do driver.** Não precisa: o cálculo é distribuído (`Correlation.corr` do MLlib) e o que volta é a matriz k×k, não as linhas. Amostrar aqui perde precisão de graça. O custo cresce com o número de **colunas**, não de linhas — e acima de umas trinta o mapa deixa de ser legível antes de o cálculo pesar.

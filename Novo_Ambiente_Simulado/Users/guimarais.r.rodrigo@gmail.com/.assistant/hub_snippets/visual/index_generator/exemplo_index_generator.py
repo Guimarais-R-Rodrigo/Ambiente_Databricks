@@ -53,7 +53,7 @@ print(gerar_indice_eda(etapas_ativas=[1, 3, 4, 8], markdown=True))
 # MAGIC * ✅ Etapa 3 — Qualidade de Dados
 # MAGIC   Diagnostica nulos, duplicatas, outliers e inconsistências.
 # MAGIC * 📊 Etapa 4 — Análise Univariada
-# MAGIC   Distribuição individual de cada variável.
+# MAGIC   Distribuição individual de cada variável numérica, categórica e temporal.
 # MAGIC * 📈 Etapa 8 — Relatório Executivo
 # MAGIC   Síntese final com achados, impactos e próximos passos.
 # MAGIC ```

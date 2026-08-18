@@ -79,8 +79,14 @@ print(section_header_html(etapa=3)[:180], "...")
 # MAGIC `descricao` à mão. Forçar um número que não corresponde é pior que não
 # MAGIC numerar: quem lê procura a etapa 3 no índice e encontra outra coisa.
 # MAGIC
-# MAGIC A saída é HTML puro, e o estilo vem de `constants.styles`. Trocar a
-# MAGIC aparência de todos os cabeçalhos do ecossistema é uma edição num arquivo.
+# MAGIC A saída é HTML puro — e aqui uma correção importante, porque é
+# MAGIC contraintuitivo: **o CSS está inline neste módulo**, montado a partir das
+# MAGIC cores importadas. `constants.styles.STYLE_SECTION_HEADER` existe, é
+# MAGIC idêntico a este CSS, e **não é usado por ninguém**.
+# MAGIC
+# MAGIC Ou seja: editar `STYLE_SECTION_HEADER` não muda cabeçalho nenhum. A
+# MAGIC dívida está registrada no notebook de `constants.styles` e no inventário
+# MAGIC de duplicação em `PLANO_HUB.md` §12.2.
 
 # COMMAND ----------
 # MAGIC %md

@@ -58,10 +58,10 @@ for nome, fn in [("divider_light", divider_light), ("divider_medium", divider_me
 # MAGIC Executado no laboratório, o resultado é:
 # MAGIC
 # MAGIC ```text
-# MAGIC divider_light      <hr style="border:none; border-top:1px   solid #D9DEE3; margin:10px 0;"/>
-# MAGIC divider_medium     <hr style="border:none; border-top:1.5px solid #BFC7D1; margin:14px 0;"/>
-# MAGIC divider_heavy      <hr style="border:none; border-top:2px   solid #005CA9; margin:18px 0;"/>
-# MAGIC divider_section    <div style="margin:20px 0;"> dois traços: 2px azul + 1px cinza </div>
+# MAGIC   divider_light      <hr style="border:none; border-top:1px solid #D9DEE3; margin:10px 0;"/>
+# MAGIC   divider_medium     <hr style="border:none; border-top:1.5px solid #BFC7D1; margin:14px 0;"/>
+# MAGIC   divider_heavy      <hr style="border:none; border-top:2px solid #005CA9; margin:18px 0;"/>
+# MAGIC   divider_section    <div style="margin:20px 0;"><hr style="border:none; border-top:2px solid #005CA9; margin:0;"/><hr style="border:none; border-top:1px solid #D9DEE3; margin:4px 0 0 0;"/></div>
 # MAGIC ```
 # MAGIC
 # MAGIC **Como ler.** A hierarquia está em **três dimensões ao mesmo tempo**, e é isso

@@ -45,20 +45,20 @@ repositório.
 
 ## Exploração, qualidade e perfil de dados
 
-| Demanda | Módulo | API |
-|---|---|---|
-| Resumo de nulos por coluna com semáforo | `hub_snippets.spark.null_summary` | `null_summary` |
-| Perfil de tabela com amostragem declarada | `hub_scripts.quick_profile` | `quick_profile` |
-| Unicidade de chave, nulos e freshness | `hub_scripts.data_quality_check` | `data_quality_check` |
-| Exportar schema documentado em YAML/JSON | `hub_scripts.schema_to_yaml` | `schema_to_dict`, `schema_to_yaml` |
-| Conferir convenção de nomes (política do projeto) | `hub_scripts.naming_checker` | `naming_checker` |
-| Medir cobertura de documentação de notebook | `hub_scripts.doc_coverage` | `doc_coverage` |
-| **Diagnóstico de join antes de executá-lo** | `hub_snippets.spark.join_diagnostics` | `diagnosticar_join` |
-| Amostra reprodutível, com estratificação opcional | `hub_snippets.spark.smart_sample` | `smart_sample` |
-| Exibir DataFrame grande sem varredura completa | `hub_snippets.spark.safe_display` | `safe_display` |
-| Heatmap de correlação | `hub_snippets.display.correlation_matrix` | `plot_correlation` |
-| Grid de distribuições numéricas | `hub_snippets.display.distribution_grid` | `plot_distributions` |
-| Tabela pandas estilizada em HTML | `hub_snippets.display.dataframe_styled` | `display_styled` |
+| Demanda | Módulo | API | Dep. |
+|---|---|---|---|
+| Resumo de nulos por coluna com semáforo | `hub_snippets.spark.null_summary` | `null_summary` | — |
+| Perfil de tabela com amostragem declarada | `hub_scripts.quick_profile` | `quick_profile` | — |
+| Unicidade de chave, nulos e freshness | `hub_scripts.data_quality_check` | `data_quality_check` | — |
+| Exportar schema documentado em YAML/JSON | `hub_scripts.schema_to_yaml` | `schema_to_dict`, `schema_to_yaml` | — |
+| Conferir convenção de nomes (política do projeto) | `hub_scripts.naming_checker` | `naming_checker` | — |
+| Medir cobertura de documentação de notebook | `hub_scripts.doc_coverage` | `doc_coverage` | — |
+| **Diagnóstico de join antes de executá-lo** | `hub_snippets.spark.join_diagnostics` | `diagnosticar_join` | — |
+| Amostra reprodutível, com estratificação opcional | `hub_snippets.spark.smart_sample` | `smart_sample` | — |
+| Exibir DataFrame grande sem varredura completa | `hub_snippets.spark.safe_display` | `safe_display` | — |
+| Heatmap de correlação | `hub_snippets.display.correlation_matrix` | `plot_correlation` | — |
+| Grid de distribuições numéricas | `hub_snippets.display.distribution_grid` | `plot_distributions` | — |
+| Tabela pandas estilizada em HTML | `hub_snippets.display.dataframe_styled` | `display_styled` | **exec** |
 
 `quick_profile` separa explicitamente o que é calculado na tabela inteira
 (contagem, nulos) do que vem da amostra (cardinalidade, top valores, faixas).
@@ -131,7 +131,7 @@ representa maior risco é decisão de negócio, não default do helper.
 | Demanda | Módulo | API | Dep. |
 |---|---|---|---|
 | Cálculo SHAP e plots global/local | `hub_snippets.ml.shap_explainer` | `compute_shap`, `get_feature_importance_shap`, `plot_shap_global`, `plot_shap_local` | **exec** |
-| Relatório dual-layer (executivo + técnico) | `hub_snippets.ml.explainability_report` | `generate_executive_report`, `generate_technical_summary` | — |
+| Relatório dual-layer (executivo + técnico) | `hub_snippets.ml.explainability_report` | `generate_executive_report`, `generate_technical_summary` | **exec** |
 
 Importância SHAP não é causalidade nem percentual de poder preditivo; os módulos
 formulam os textos de acordo e essa formulação deve ser preservada.

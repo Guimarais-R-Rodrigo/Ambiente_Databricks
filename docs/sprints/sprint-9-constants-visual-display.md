@@ -107,3 +107,108 @@ com 0 obsoletos.
 | `constants.styles` sem importar `colors` | idem |
 | Limiares de `badge_score` sem constante nomeada | são política, e política merece nome — etapa 2 |
 | Dívida de saída colada: 12 notebooks | §12.1 do plano |
+
+---
+
+## Auditoria da Sprint 9 — 13 achados, todos procedentes
+
+Rodada em sessão sem contexto. O auditor executou os 13, recuperou a saída
+célula a célula via `jobs export-run`, e — o que fez a diferença — **imprimiu e
+leu o HTML que as funções devolvem** em vez de aceitar a prosa. Foi de onde
+saíram os quatro achados mais graves.
+
+Ele também declarou o ponto cego com precisão: 14 saídas do tipo `mimeBundle`
+(HTML renderizado e figuras Plotly) não são recuperáveis por job. **Os três
+defeitos mais graves passaram por `validate_assistant` APROVADO e por
+`publicar_free --verify` APROVADO** — porque nenhum portão olha para dentro do
+HTML devolvido.
+
+### Quatro afirmações minhas que o HTML desmentiu
+
+**`display_styled` não faz o que o notebook dizia.** Eu havia escrito que ele
+"destaca as duas colunas pedidas" e que "o gradiente faz o resto". O HTML
+devolvido tinha **zero células destacadas e nenhum gradiente**: a regra do módulo
+é realçar valor **negativo** dentro das colunas declaradas, e a fixture não tinha
+nenhum negativo. Três afirmações erradas numa leitura só, e a quarta de brinde —
+o `format_dict` com `"{:,.0f}"` produzia `3,375,674`, separador americano, dentro
+da sprint que entrega `constants.format_br` para evitar exatamente isso.
+
+Corrigido com uma coluna de negativos na fixture, `fmt_int` no lugar do
+`format_dict`, e a prosa descrevendo o que a função faz.
+
+**`section_header` dizia que o estilo vem de `constants.styles`.** Não vem: o CSS
+está inline no módulo, e `STYLE_SECTION_HEADER` **não é usado por ninguém**. Quem
+fosse trocar a identidade visual editaria aquele arquivo e não veria mudança em
+cabeçalho nenhum.
+
+**`badge_score(68)` sai amarelo, não verde.** Os cortes reais são 80 e 50; minha
+prosa usava o par 62/68 para explicar a política e errava em 12 pontos — no
+parágrafo que existe justamente porque o limiar não está em constante nomeada.
+
+**O bloco do `theme_plotly` mostrava dez cores; a execução imprime oito.** O
+`print` corta em 88 caracteres e a lista tem 110. Eu completei a saída para caber
+na afirmação "são as dez cores" — que é verdadeira, mas a evidência ao lado dela
+foi fabricada. Corrigido com uma célula que imprime `len(colorway)` e a lista
+inteira, e o bloco de volta ao literal truncado.
+
+### O inventário de duplicação estava incompleto e invertido
+
+Eu havia registrado **2 de 12** módulos que redeclaram cor de `constants.colors`,
+e chamado `visual.theme_plotly` de "contraexemplo positivo" — ele importa a
+paleta, e três linhas acima redeclara `#333333`, que é o `CINZA_ESCURO` do mesmo
+módulo.
+
+Pior: eu dizia "três definições de verde de selo", sugerindo três valores. São
+**três sítios e dois valores** — `constants.styles` e `visual.badge` são cópia
+byte a byte um do outro. Isso muda o custo da decisão: juntar os dois é edição
+sem efeito visual; alinhá-los ao `VERDE` oficial troca a cor de todos os selos.
+
+E a dívida maior de `constants.styles` não era o hexadecimal copiado: **o módulo
+inteiro é um espelho morto**. As oito constantes replicam CSS que vive inline em
+cinco outros módulos, e ninguém o importa.
+
+O inventário único, com os doze módulos e a distinção entre cópia idêntica
+(onze, higiene) e valor divergente (um, decisão de produto), está em
+`PLANO_HUB.md` §12.2.
+
+### Os demais
+
+| # | Achado | Correção |
+|---|---|---|
+| 5 | a docstring de `format_br` errava `fmt_delta(..., "bps")` por 10× — dentro do módulo cujo notebook auditava essa armadilha | docstring corrigida e `bps` exercitado numa célula |
+| 7 | `correlation_matrix` dizia "é `toPandas()` por baixo"; o módulo não chama `toPandas()` | o cálculo é distribuído e o custo cresce com **colunas**, não linhas — amostrar ali perde precisão de graça |
+| 8 | o `CATALOGO_HELPERS.md` não marcava nenhuma das duas dependências escondidas, e a tabela de exploração nem tinha a coluna | coluna `Dep.` acrescentada; `dataframe_styled` e `explainability_report` marcados `exec` |
+| 9 | seis dos treze blocos eram transcrição editada, não literal | refeitos; onde a saída é longa, o corte está declarado |
+| 10 | a docstring do `check_saida_colada` prometia mais rigor do que o código tem | passou a declarar as duas portas, inclusive a de 30 caracteres, por onde passa prosa inventada |
+| 11 | "60 objetos" incluía os 2 exemplares de `hub_padroes` | **58 na biblioteca** (51 + 7); 60 é a contagem do validador |
+| 12 | dois dos quatro chips semânticos reprovam contraste AA com texto branco, e o notebook não falava de contraste | contraste medido na célula, texto adaptado, e a regra registrada: `COR_ALERTA` e `COR_POSITIVO` são preenchimento, nunca fundo para branco |
+| 13 | `display_styled` usa `Styler.applymap`, removido no pandas 3.0 | `getattr(styled, "map", ...)` com fallback; sem mudança de comportamento no 1.5.3 do Free |
+
+### O que a auditoria confirmou intacto
+
+Converter é mover cumprido nos 13, byte a byte — nenhum hexadecimal mudou, que
+era a quebra mais silenciosa possível nesta sprint. Os 13 `__init__.py` batem com
+a ferramenta, incluindo os 22 nomes de `constants/colors`. Os três valores de
+escala do `format_br` conferem, e a varredura AST do ecossistema não achou
+ninguém que tenha caído na armadilha. As afirmações visuais **aferíveis no
+valor** se sustentam: a hierarquia do `divider` é real nas três dimensões, e a
+luminância das paletas sequencial e divergente confirma o que a prosa diz.
+
+### O ponto cego, declarado
+
+Nada do que é pixel foi verificado — nem por mim, nem pelo auditor. O candidato
+mais provável a defeito escondido é a **colisão entre o rodapé e a legenda do
+`theme_plotly`**: a anotação fica em `y=-0.18` e a legenda em `y=-0.25`, com
+`margin.b=60`. A afirmação central daquele notebook ("a diferença que importa é o
+rodapé") depende de o rodapé estar legível.
+
+São trinta segundos de trabalho humano com o notebook aberto, e nenhum job
+substitui.
+
+### Verificação depois das correções
+
+```text
+validate_assistant.py   APROVADO: 0 falha(s), 12 aviso(s)
+publicar_free.py        APROVADO: 0 problema(s) — obsoletos: 0
+notebooks               13 de 13 SUCCESS
+```

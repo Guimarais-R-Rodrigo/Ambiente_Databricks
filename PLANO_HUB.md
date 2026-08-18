@@ -4,7 +4,7 @@ Documento de trabalho, versão 2. Cada sprint é executada isoladamente, auditad
 em sessão sem contexto, revisada por você, e só então a seguinte começa.
 
 - **Status:** v2. Sprints 0 e 0b concluídas. Auditoria começa na Sprint 1
-- **Sprint atual:** 9 concluída — **a biblioteca inteira convertida, 60 objetos**; próximas são 10 (READMEs de topo), 11, 12 e a 5 (prompts, depende de você)
+- **Sprint atual:** 9 concluída — **a biblioteca inteira convertida: 58 objetos** (51 `hub_snippets` + 7 `hub_scripts`). O validador conta **60 pastas de objeto**, somando os 2 exemplares de `hub_padroes`, que são template e não biblioteca. Próximas: 10 (READMEs de topo), 11, 12 e a 5 (prompts, depende de você)
 - **Última atualização:** 2026-08-17
 
 > **Histórico de revisão.** A v1 foi submetida a auditoria em sessão sem
@@ -684,6 +684,41 @@ Quem for fechar a dívida: são doze capturas de execução mais doze leituras
 escritas. Não é trabalho de fim de sessão — foi assim que nasceu, duas rodadas
 atrás, uma tabela rotulada "saída real" com valores extrapolados.
 
+### 12.2 Dívida nomeada — cor redeclarada fora de `constants.colors`
+
+Levantada pela auditoria da Sprint 9, que mostrou que o registro espalhado pelos
+notebooks cobria **2 de 12** sítios e chamava de exemplar um módulo que também
+copia. Esta tabela é o inventário; as menções nos notebooks apontam para cá.
+
+| Módulo | Importa `colors`? | Hexadecimais que repetem valor oficial | Tipo |
+|---|---|---|---|
+| `constants/styles` | não | `AZUL_CAIXA`, `TEXTO_PRINCIPAL`, `BG_HEADER`, `BG_SECTION` | cópia idêntica |
+| `visual/badge` | não | `AZUL_CAIXA`, `BG_HEADER` | cópia idêntica |
+| `visual/divider` | não | `AZUL_CAIXA` | cópia idêntica |
+| `visual/index_generator` | não | `AZUL_CAIXA`, `COR_NEUTRO`, `BG_SECTION` | cópia idêntica |
+| `visual/kpi_card` | não | `TEXTO_PRINCIPAL`, `BG_HEADER` | cópia idêntica |
+| `visual/theme_plotly` | **sim** | `CINZA_ESCURO` | cópia idêntica |
+| `display/dataframe_styled` | não | `AZUL_CAIXA`, `VERMELHO` | cópia idêntica |
+| `ml/curves_plotly` | não | 7 cores da paleta | **valor divergente** — 6 cores contra 10 |
+| `ml/kaplan_meier` | não | 8 cores da paleta | cópia idêntica |
+| `ml/performance_monitor` | não | `AZUL_CAIXA`, `VERMELHO`, `LARANJA` | cópia idêntica |
+| `ml/umap_viz` | não | 11 cores da paleta | cópia idêntica |
+| `ml/vintage_analysis` | não | 10 cores da paleta + a sequencial | cópia idêntica |
+
+**A distinção que decide o custo da etapa 2** está na última coluna. Onze dos
+doze são **cópia idêntica**: unificar é substituir literal por import, sem
+nenhum efeito visual. Só `ml/curves_plotly` tem **valor divergente** — sua
+`PALETA_CATEGORICA` tem seis cores contra as dez da original —, e unificar ali
+muda a aparência de todo gráfico que ele produz. É a única linha que precisa de
+decisão de produto; as outras onze são higiene.
+
+**E há um caso à parte:** `constants/styles` não é importado por **nenhum**
+módulo, e suas oito constantes de estilo são cópia byte a byte de CSS que vive
+inline em `visual/badge`, `visual/divider`, `visual/kpi_card`,
+`visual/section_header` e `visual/index_generator`. O módulo inteiro é um espelho
+morto. Editar `STYLE_SECTION_HEADER` não muda cabeçalho nenhum — e o notebook de
+`section_header` chegou a afirmar o contrário.
+
 ---
 
 ## 12. Registro de execução
@@ -700,7 +735,7 @@ atrás, uma tabela rotulada "saída real" com valores extrapolados.
 | 6 | ✅ concluída | 2026-08-17 | ✅ contrato de dados virou guarda | [relatório](docs/sprints/sprint-6-snippets-spark.md) |
 | 7 | ✅ concluída | 2026-08-17 | ✅ 12 achados corrigidos + guarda de entrada | [relatório](docs/sprints/sprint-7-ml-nucleo.md) |
 | 8 | ✅ concluída | 2026-08-17 | ✅ 13 achados corrigidos | [relatório](docs/sprints/sprint-8-ml-dependencia-opcional.md) · os 14 executam, via `%pip` |
-| 9 | ✅ concluída | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-9-constants-visual-display.md) · fecha a biblioteca |
+| 9 | ✅ concluída | 2026-08-17 | ✅ 13 achados corrigidos | [relatório](docs/sprints/sprint-9-constants-visual-display.md) · fecha a biblioteca |
 | 10 | não iniciada | — | — | — |
 | 11 | não iniciada | — | — | — |
 | 12 | não iniciada | — | — | — |

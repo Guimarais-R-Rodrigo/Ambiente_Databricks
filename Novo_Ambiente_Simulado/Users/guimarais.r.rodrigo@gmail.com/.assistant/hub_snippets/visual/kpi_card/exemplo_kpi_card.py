@@ -51,8 +51,7 @@ print(kpi_card_markdown(metricas))
 # MAGIC Executado no laboratório, o resultado é:
 # MAGIC
 # MAGIC ```text
-# MAGIC > **3.375.674** Linhas | **92,8%** Cobertura | **2025-01 a 2026-08** Período |
-# MAGIC > **2 colunas com nulo acima de 30%** Alerta
+# MAGIC > **3.375.674** Linhas | **92,8%** Cobertura | **2025-01 a 2026-08** Período | **2 colunas com nulo acima de 30%** Alerta
 # MAGIC ```
 # MAGIC
 # MAGIC **Como ler.** A versão Markdown é a que sobrevive fora do Databricks — colada

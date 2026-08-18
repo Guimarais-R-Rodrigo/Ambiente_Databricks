@@ -81,9 +81,17 @@ print(" ", STYLE_SECTION_HEADER)
 # MAGIC enquanto os gráficos mudariam de cor, e o sintoma apareceria como
 # MAGIC "inconsistência do relatório", longe da causa.
 # MAGIC
-# MAGIC É o mesmo padrão de `PALETA_CATEGORICA` redeclarada em `ml.curves_plotly`,
-# MAGIC registrado no notebook daquele objeto. Unificar muda o comportamento de
-# MAGIC quem já usa, e por isso é decisão de produto — etapa 2, não conversão.
+# MAGIC **E a dívida maior é outra, que só apareceu quando alguém foi conferir:
+# MAGIC este módulo não é importado por ninguém.** As oito constantes de estilo
+# MAGIC são cópia byte a byte de CSS que vive inline em `visual/badge`,
+# MAGIC `visual/divider`, `visual/kpi_card`, `visual/section_header` e
+# MAGIC `visual/index_generator`. O arquivo é um espelho morto: editar
+# MAGIC `STYLE_SECTION_HEADER` não muda cabeçalho nenhum.
+# MAGIC
+# MAGIC São **doze** os módulos da biblioteca que repetem cor de
+# MAGIC `constants.colors`, e onze deles são cópia idêntica — unificar é higiene,
+# MAGIC sem efeito visual. O inventário completo, com a distinção entre cópia e
+# MAGIC divergência, está em `PLANO_HUB.md` §12.2.
 
 # COMMAND ----------
 # MAGIC %md

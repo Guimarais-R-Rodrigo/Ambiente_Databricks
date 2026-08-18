@@ -45,7 +45,7 @@ for numero, dados in SECOES_EDA.items():
 # MAGIC   1  📐  Inventário Inicial         Reconhece estrutura, volume, tipos e perfil geral dos dados.
 # MAGIC   2  🔑  Granularidade e Chaves     Identifica o que representa uma linha e valida unicidade.
 # MAGIC   3  ✅  Qualidade de Dados         Diagnostica nulos, duplicatas, outliers e inconsistências.
-# MAGIC   4  📊  Análise Univariada         Distribuição individual de cada variável.
+# MAGIC   4  📊  Análise Univariada         Distribuição individual de cada variável numérica, categórica e temporal.
 # MAGIC   5  🔗  Análise Bivariada          Correlações, relações entre variáveis e com o target.
 # MAGIC   6  🎨  Visualizações              Gráficos interativos do relatório final com Plotly.
 # MAGIC   7  🛠️  Recomendações Técnicas     Tratamentos, features candidatas e riscos para modelagem.
@@ -80,12 +80,17 @@ for chave, emoji in SEMANTICA.items():
 # MAGIC Executado no laboratório, o resultado é:
 # MAGIC
 # MAGIC ```text
-# MAGIC 📊  resultado        ✅  ok
-# MAGIC 🔍  interpretacao    ❌  falha
-# MAGIC 💼  negocio          ⚠️  atencao
-# MAGIC ➡️  proximo_passo    🟢  status_positivo
-# MAGIC 📌  insight          🟡  status_medio
-# MAGIC                      🔴  status_critico
+# MAGIC   📊  resultado
+# MAGIC   🔍  interpretacao
+# MAGIC   💼  negocio
+# MAGIC   ➡️  proximo_passo
+# MAGIC   📌  insight
+# MAGIC   ✅  ok
+# MAGIC   ❌  falha
+# MAGIC   ⚠️  atencao
+# MAGIC   🟢  status_positivo
+# MAGIC   🟡  status_medio
+# MAGIC   🔴  status_critico
 # MAGIC ```
 # MAGIC
 # MAGIC **Como ler.** Onze símbolos, e a lista é fechada de propósito. O ganho de um

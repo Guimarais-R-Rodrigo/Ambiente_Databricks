@@ -81,6 +81,10 @@ print("")
 print("fmt_delta tem a MESMA pegadinha, e a unidade 'pp' engana:")
 print("  fmt_delta(0.032) ->", fmt_delta(0.032), " (razão, como o fmt_pct espera)")
 print("  fmt_delta(2.4)   ->", fmt_delta(2.4), " (alguém pensando em '2,4 pp')")
+print("")
+print("e a unidade 'bps' multiplica por 10.000, nao por 100:")
+print("  fmt_delta(0.0005, 'bps') ->", fmt_delta(0.0005, "bps"))
+print("  fmt_delta(0.005,  'bps') ->", fmt_delta(0.005, "bps"))
 
 # COMMAND ----------
 # MAGIC %md
@@ -94,8 +98,13 @@ print("  fmt_delta(2.4)   ->", fmt_delta(2.4), " (alguém pensando em '2,4 pp')"
 # MAGIC   fmt_pct(92.8)                         -> 9280,0%
 # MAGIC   fmt_pct(0.928, input_scale='percent') -> 0,9%
 # MAGIC
-# MAGIC fmt_delta(0.032) -> +3,2 pp      (espera RAZÃO, como o fmt_pct)
-# MAGIC fmt_delta(2.4)   -> +240,0 pp
+# MAGIC fmt_delta tem a MESMA pegadinha, e a unidade 'pp' engana:
+# MAGIC   fmt_delta(0.032) -> +3,2 pp  (razão, como o fmt_pct espera)
+# MAGIC   fmt_delta(2.4)   -> +240,0 pp  (alguém pensando em '2,4 pp')
+# MAGIC
+# MAGIC e a unidade 'bps' multiplica por 10.000, nao por 100:
+# MAGIC   fmt_delta(0.0005, 'bps') -> +5 bps
+# MAGIC   fmt_delta(0.005,  'bps') -> +50 bps
 # MAGIC ```
 # MAGIC
 # MAGIC **Como ler.** As duas primeiras linhas produzem o mesmo texto a partir de
@@ -112,6 +121,12 @@ print("  fmt_delta(2.4)   ->", fmt_delta(2.4), " (alguém pensando em '2,4 pp')"
 # MAGIC unidade "pp" sugere que se passe pontos percentuais. Não: ele espera
 # MAGIC **razão**, igual ao `fmt_pct`. Passar 2,4 pensando em "2,4 pp" devolve
 # MAGIC **+240,0 pp**. A docstring diz (`-0.032 para -3.2pp`); a assinatura, não.
+# MAGIC
+# MAGIC **E `bps` multiplica por 10.000, não por 100** — o que é correto (um ponto
+# MAGIC base é um centésimo de ponto percentual) e é mais uma escala para errar. A
+# MAGIC docstring do módulo chegou a documentar esse caso com um exemplo errado por
+# MAGIC um fator de dez; foi corrigida, e a célula acima existe para que a próxima
+# MAGIC divergência apareça na execução em vez de ficar no comentário.
 # MAGIC
 # MAGIC A defesa que funciona não é lembrar: é **nunca deixar a escala implícita no
 # MAGIC nome da variável**. `taxa_resposta_ratio` e `delta_pp_ratio` são feios e

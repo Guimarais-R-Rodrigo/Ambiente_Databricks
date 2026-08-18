@@ -5,6 +5,69 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-17 — auditoria da Sprint 9: 13 achados, e o HTML que ninguém lia
+
+Rodada em sessão sem contexto. O auditor **imprimiu e leu o HTML que as funções
+devolvem** em vez de aceitar a prosa — foi de onde saíram os quatro achados mais
+graves, todos aprovados pelos dois portões. Detalhe em
+`docs/sprints/sprint-9-constants-visual-display.md`.
+
+### Corrigido
+
+1. (Claude) `exemplo_dataframe_styled` fazia **três** afirmações erradas sobre a
+   função: que ela destaca as colunas pedidas, que há gradiente, e que o realce é
+   por coluna. O HTML devolvido tinha zero células destacadas — a regra é realçar
+   valor **negativo** dentro das colunas declaradas, e a fixture não tinha
+   negativo. Corrigido com coluna de negativos, e o `format_dict` com `"{:,.0f}"`
+   (separador americano) trocado por `fmt_int`.
+2. (Claude) `exemplo_section_header` dizia que o estilo vem de
+   `constants.styles`. O CSS está inline no módulo, e `STYLE_SECTION_HEADER` não
+   é usado por ninguém — editá-lo não muda cabeçalho nenhum.
+3. (Claude) `exemplo_badge` usava o par 62/68 para explicar a política de corte.
+   Os cortes reais são 80 e 50; `badge_score(68)` sai amarelo.
+4. (Claude) O bloco de saída do `theme_plotly` mostrava dez cores; a execução
+   imprime oito, porque o `print` corta em 88 caracteres. A afirmação era
+   verdadeira e a evidência ao lado dela, fabricada. Célula nova imprime
+   `len(colorway)` e a lista inteira.
+5. (Claude) A docstring de `format_br` errava `fmt_delta(..., "bps")` por um
+   fator de dez — dentro do módulo cujo notebook auditava essa exata armadilha.
+6. (Claude) `exemplo_correlation_matrix` dizia "é `toPandas()` por baixo"; o
+   módulo não chama `toPandas()`. O cálculo é distribuído e o custo cresce com
+   colunas, não com linhas — amostrar ali perde precisão de graça.
+7. (Claude) `display_styled` usava `Styler.applymap`, removido no pandas 3.0.
+   Passou a `getattr(styled, "map", ...)` com fallback, sem mudar comportamento
+   no 1.5.3 do Free.
+8. (Claude) Seis dos treze blocos de saída eram transcrição editada. Refeitos
+   literais; onde a saída é longa, o corte está declarado.
+
+### Adicionado
+
+1. (Claude) `PLANO_HUB.md` §12.2: inventário único da cor redeclarada fora de
+   `constants.colors`. Eu havia registrado **2 de 12** módulos e chamado de
+   contraexemplo positivo um que também copia. A tabela separa **cópia idêntica**
+   (onze — unificar é higiene, sem efeito visual) de **valor divergente** (um,
+   `ml/curves_plotly`, que é a única decisão de produto).
+2. (Claude) Coluna `Dep.` na tabela de exploração do `CATALOGO_HELPERS.md`, com
+   `dataframe_styled` e `explainability_report` marcados `exec`. O catálogo é o
+   índice que as skills mandam consultar, e não marcava nenhuma das duas
+   dependências escondidas.
+3. (Claude) Contraste medido em `exemplo_colors`: **duas das quatro cores
+   semânticas reprovam o mínimo AA com texto branco** — `COR_ALERTA` em 1,73:1 e
+   `COR_POSITIVO` em 2,04:1. A regra ficou registrada: as duas são cor de
+   preenchimento, nunca fundo para texto branco.
+
+### Notas
+
+- **A biblioteca tem 58 objetos** (51 `hub_snippets` + 7 `hub_scripts`). O "60"
+  do validador soma os 2 exemplares de `hub_padroes`, que são template.
+- `constants/styles` **não é importado por ninguém**, e suas oito constantes são
+  cópia byte a byte de CSS que vive inline em cinco outros módulos. O arquivo
+  inteiro é um espelho morto.
+- **Ponto cego declarado:** nada do que é pixel foi verificado. O candidato mais
+  provável a defeito escondido é a colisão entre o rodapé e a legenda do
+  `theme_plotly` — anotação em `y=-0.18`, legenda em `y=-0.25`. Precisa de olho
+  humano no notebook aberto.
+
 ## 2026-08-17 — Sprint 9: a biblioteca inteira convertida
 
 Os 13 objetos de `constants`, `visual` e `display` viraram pasta de objeto, com

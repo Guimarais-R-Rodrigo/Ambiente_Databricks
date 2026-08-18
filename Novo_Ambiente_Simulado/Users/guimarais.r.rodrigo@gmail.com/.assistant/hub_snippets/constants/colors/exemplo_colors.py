@@ -95,22 +95,44 @@ for nome, valor in [("COR_POSITIVO", COR_POSITIVO), ("COR_NEGATIVO", COR_NEGATIV
                     ("COR_NEUTRO", COR_NEUTRO), ("COR_ALERTA", COR_ALERTA)]:
     print(f"  {nome:16s} {valor}")
 
+# O texto NAO e branco em todos: dois destes fundos reprovam contraste com
+# branco. A celula seguinte mede.
+def contraste_ok(hexa):
+    r, g, b = (int(hexa[i:i + 2], 16) / 255 for i in (1, 3, 5))
+    canal = [(c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4) for c in (r, g, b)]
+    lum = 0.2126 * canal[0] + 0.7152 * canal[1] + 0.0722 * canal[2]
+    return (1.05 / (lum + 0.05)) >= 4.5  # branco sobre a cor, mínimo AA
+
 displayHTML("".join(
-    f'<span style="background:{v};color:#fff;padding:6px 14px;margin-right:8px;'
-    f'border-radius:4px;font-family:Segoe UI">{n}</span>'
+    f'<span style="background:{v};color:{"#fff" if contraste_ok(v) else "#1A1A1A"};'
+    f'padding:6px 14px;margin-right:8px;border-radius:4px;font-family:Segoe UI">{n}</span>'
     for n, v in [("POSITIVO", COR_POSITIVO), ("NEGATIVO", COR_NEGATIVO),
                  ("NEUTRO", COR_NEUTRO), ("ALERTA", COR_ALERTA)]
 ))
+
+print("contraste do branco sobre cada fundo (mínimo AA = 4,5:1):")
+for n, v in [("COR_POSITIVO", COR_POSITIVO), ("COR_NEGATIVO", COR_NEGATIVO),
+             ("COR_NEUTRO", COR_NEUTRO), ("COR_ALERTA", COR_ALERTA)]:
+    r, g, b = (int(v[i:i + 2], 16) / 255 for i in (1, 3, 5))
+    canal = [(c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4) for c in (r, g, b)]
+    lum = 0.2126 * canal[0] + 0.7152 * canal[1] + 0.0722 * canal[2]
+    razao = 1.05 / (lum + 0.05)
+    print(f"  {n:14s} {v}  {razao:5.2f}:1  {'ok' if razao >= 4.5 else 'REPROVA'}")
 
 # COMMAND ----------
 # MAGIC %md
 # MAGIC Executado no laboratório, o resultado é:
 # MAGIC
 # MAGIC ```text
-# MAGIC COR_POSITIVO     #8DC63F
-# MAGIC COR_NEGATIVO     #C4262E
-# MAGIC COR_NEUTRO       #6C757D
-# MAGIC COR_ALERTA       #FFB800
+# MAGIC   COR_POSITIVO     #8DC63F
+# MAGIC   COR_NEGATIVO     #C4262E
+# MAGIC   COR_NEUTRO       #6C757D
+# MAGIC   COR_ALERTA       #FFB800
+# MAGIC contraste do branco sobre cada fundo (mínimo AA = 4,5:1):
+# MAGIC   COR_POSITIVO   #8DC63F   2.04:1  REPROVA
+# MAGIC   COR_NEGATIVO   #C4262E   5.73:1  ok
+# MAGIC   COR_NEUTRO     #6C757D   4.69:1  ok
+# MAGIC   COR_ALERTA     #FFB800   1.73:1  REPROVA
 # MAGIC ```
 # MAGIC
 # MAGIC **Como ler.** Estas quatro existem para que "verde" signifique a mesma coisa em
@@ -118,7 +140,20 @@ displayHTML("".join(
 # MAGIC relatório em que vermelho às vezes é alerta e às vezes é só a sexta série
 # MAGIC da paleta categórica ensina o leitor a ignorar a cor.
 # MAGIC
-# MAGIC Repare que `COR_POSITIVO` **é** o `VERDE` da paleta categórica, e
+# MAGIC **E há uma decisão de design que faltava neste notebook: contraste.**
+# MAGIC Duas das quatro cores **reprovam** o mínimo AA (4,5:1) com texto branco —
+# MAGIC `COR_ALERTA` em 1,73:1 e `COR_POSITIVO` em 2,04:1. São amarelo e verde
+# MAGIC claros; branco em cima deles é praticamente ilegível.
+# MAGIC
+# MAGIC A regra que decorre disso: **`COR_ALERTA` e `COR_POSITIVO` são cores de
+# MAGIC preenchimento — barra, ponto, borda —, nunca fundo para texto branco.**
+# MAGIC Para selo ou chip com essas duas, o texto vai em `TEXTO_PRINCIPAL`. A
+# MAGIC célula acima faz essa escolha sozinha, medindo antes de pintar.
+# MAGIC
+# MAGIC Isso é diferente de daltonismo, que o "quando não usar" menciona: contraste
+# MAGIC é aferível no valor, e portanto não tem desculpa para ficar sem verificação.
+# MAGIC
+# MAGIC Repare, por fim, que `COR_POSITIVO` **é** o `VERDE` da paleta categórica, e
 # MAGIC `COR_NEGATIVO` **é** o `VERMELHO`. Ou seja, um gráfico categórico com seis
 # MAGIC ou mais séries vai usar as duas cores semânticas como cor qualquer. Não há
 # MAGIC como o módulo evitar isso — mas vale saber, porque é onde o contrato se

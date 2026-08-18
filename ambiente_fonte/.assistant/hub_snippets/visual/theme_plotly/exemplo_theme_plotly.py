@@ -79,6 +79,13 @@ for chave, valor in tema.items():
     texto = str(valor)
     print(f"  {chave:20s} {texto[:88]}{'...' if len(texto) > 88 else ''}")
 
+# O print acima corta em 88 caracteres, e o colorway tem 110 — a lista sai
+# truncada. Como a afirmacao da leitura e sobre o NUMERO de cores, ele precisa
+# ser impresso inteiro.
+print("")
+print(f"cores no colorway: {len(tema['colorway'])}")
+print(f"colorway completo: {tema['colorway']}")
+
 # COMMAND ----------
 # MAGIC %md
 # MAGIC Executado no laboratório, o resultado é:
@@ -87,18 +94,30 @@ for chave, valor in tema.items():
 # MAGIC template     plotly_white
 # MAGIC font         {'family': 'Segoe UI, Roboto, sans-serif', 'size': 12, 'color': '#333333'}
 # MAGIC title        {'font': {'size': 16, 'color': '#005CA9'}, 'x': 0.01, 'xanchor': 'left'}
-# MAGIC colorway     ['#005CA9', '#F7941D', '#6CBDE1', '#333333', '#8DC63F', '#C4262E',
-# MAGIC               '#7B2D8B', '#00A79D', '#F15A29', '#A7A9AC']
+# MAGIC colorway             ['#005CA9', '#F7941D', '#6CBDE1', '#333333', '#8DC63F', '#C4262E', '#7B2D8B', '#00A79D',...
 # MAGIC height       450
 # MAGIC width        900
 # MAGIC margin       {'l': 60, 'r': 30, 't': 70, 'b': 60}
-# MAGIC legend       {'orientation': 'h', 'yanchor': 'bottom', 'y': -0.25, ...}
+# MAGIC legend               {'orientation': 'h', 'yanchor': 'bottom', 'y': -0.25, 'xanchor': 'center', 'x': 0.5}
+# MAGIC
+# MAGIC cores no colorway: 10
+# MAGIC colorway completo: ['#005CA9', '#F7941D', '#6CBDE1', '#333333', '#8DC63F', '#C4262E', '#7B2D8B', '#00A79D', '#F15A29', '#A7A9AC']
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** O `colorway` são as **dez cores** de `PALETA_CATEGORICA`, e este
-# MAGIC módulo as importa de `constants.colors` de verdade — não as redeclara. É o
-# MAGIC contraexemplo positivo dos casos registrados em `constants.styles` e
-# MAGIC `visual.badge`, onde a cópia foi feita.
+# MAGIC **Como ler.** Repare que o `colorway` sai **truncado** no bloco acima: o
+# MAGIC `print` corta em 88 caracteres e a lista tem 110. A segunda célula existe
+# MAGIC por isso — a afirmação é sobre o número de cores, e ela precisa ser
+# MAGIC conferível. São **dez**, e são as de `PALETA_CATEGORICA`.
+# MAGIC
+# MAGIC Este módulo **importa** a paleta de `constants.colors` em vez de copiá-la,
+# MAGIC o que é o comportamento certo. Mas não é o exemplo limpo que uma versão
+# MAGIC anterior deste texto afirmava: três linhas acima do colorway importado, a
+# MAGIC cor da fonte está fixa em `#333333` — que é o `CINZA_ESCURO` do mesmo
+# MAGIC módulo de constantes, redeclarado à mão.
+# MAGIC
+# MAGIC **Doze dos módulos da biblioteca repetem hexadecimal que existe em
+# MAGIC `constants.colors`**, e este é um deles. O inventário completo está em
+# MAGIC `PLANO_HUB.md` §12.2.
 # MAGIC
 # MAGIC Duas escolhas de layout merecem nota. O **título alinhado à esquerda**
 # MAGIC (`x: 0.01`) segue a leitura da página em vez de centralizar; e a

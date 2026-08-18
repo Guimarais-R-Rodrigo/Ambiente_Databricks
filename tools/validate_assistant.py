@@ -132,13 +132,11 @@ def check_saida_colada(root: Path, warnings: list[str]) -> tuple[int, int]:
     sobreviveu um notebook ensinando a contar nulos numa saída que tem zero
     nulos por construção.
 
-    O sinal exigido é um bloco ```text dentro do markdown. É proxy, não prova:
-    ele não sabe se o conteúdo veio mesmo da execução. Mas o defeito que ele
-    ataca é o silêncio, e para silêncio o proxy basta.
-
-    O sinal exigido é um bloco ```text **com dígito dentro**. Uma auditoria
-    mostrou que a versão anterior — só a presença da cerca — aceitava bloco
-    vazio e bloco sem número nenhum.
+    O sinal exigido é um bloco ```text com dígito dentro **ou** com pelo menos
+    trinta caracteres. A segunda porta existe para saída que é mensagem de erro
+    — `safe_display` cola um `RuntimeError` sem um dígito sequer —, e é por ela
+    que passa prosa inventada de trinta caracteres. É o preço de não ter falso
+    positivo; saiba que ela está aberta.
 
     O que ele **não** cobre, e é bom saber: a guarda é por notebook, não por
     bloco de leitura. Um notebook com quatro células que imprimem e um único

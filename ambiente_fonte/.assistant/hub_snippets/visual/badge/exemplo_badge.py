@@ -82,31 +82,39 @@ for v in valores:
 # MAGIC Executado no laboratório, o resultado é:
 # MAGIC
 # MAGIC ```text
-# MAGIC badge_score( 95) -> verde   (#EAF7EC / #2E7D32)
-# MAGIC badge_score( 80) -> verde
-# MAGIC badge_score( 62) -> amarelo (#FFF8E1 / #B26A00)
-# MAGIC badge_score( 45) -> vermelho(#FDECEC / #B71C1C)
-# MAGIC badge_score( 10) -> vermelho
+# MAGIC   badge_score( 95) -> <span style="...background:#EAF7EC; color:#2E7D32;...">Score: 95/100</span>
+# MAGIC   badge_score( 80) -> <span style="...background:#EAF7EC; color:#2E7D32;...">Score: 80/100</span>
+# MAGIC   badge_score( 62) -> <span style="...background:#FFF8E1; color:#B26A00;...">Score: 62/100</span>
+# MAGIC   badge_score( 45) -> <span style="...background:#FDECEC; color:#B71C1C;...">Score: 45/100</span>
+# MAGIC   badge_score( 10) -> <span style="...background:#FDECEC; color:#B71C1C;...">Score: 10/100</span>
+# MAGIC
+# MAGIC (o `style` completo foi encurtado com reticências; o resto é literal)
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** Os cortes ficam entre 80 e 62, e entre 62 e 45 — **e não estão
-# MAGIC declarados em constante nomeada**. Quem quiser saber onde muda a cor lê o
-# MAGIC corpo da função.
+# MAGIC **Como ler.** Os cortes são `valor/max >= 0.8` para verde e `>= 0.5` para
+# MAGIC amarelo — com o `max=100` do padrão, **80 e 50**. Um score 79 sai amarelo;
+# MAGIC 80 sai verde.
 # MAGIC
-# MAGIC Isso importa porque um selo de score é um **veredito**: 62 saindo amarelo
-# MAGIC e 68 saindo verde é uma decisão de política, do mesmo tipo que o
-# MAGIC `psi_threshold` do monitoramento — e lá o módulo se recusa a escolher
-# MAGIC sozinho. Aqui ele escolhe, em silêncio.
+# MAGIC **E eles não estão declarados em constante nomeada**: quem quiser saber
+# MAGIC onde a cor muda lê o corpo da função. Isso importa porque um selo de score
+# MAGIC é um **veredito**, do mesmo tipo que o `psi_threshold` do monitoramento —
+# MAGIC e lá o módulo se recusa a decidir sozinho, exigindo a política declarada.
+# MAGIC Aqui ele decide, em silêncio, e a decisão fica a duas casas decimais de
+# MAGIC distância de quem lê o selo.
 # MAGIC
 # MAGIC ## Dívida registrada: as cores não vêm de `constants`
 # MAGIC
-# MAGIC O verde daqui é `#2E7D32`; o `VERDE` de `constants.colors` é `#8DC63F`. São
-# MAGIC cores diferentes, e existe ainda um terceiro conjunto em
-# MAGIC `constants.styles` (`STYLE_BADGE_OK`), que este módulo também não usa.
+# MAGIC O verde daqui é `#2E7D32`; o `VERDE` de `constants.colors` é `#8DC63F`.
+# MAGIC São **três sítios de declaração e dois valores**: `constants.styles`
+# MAGIC (`STYLE_BADGE_OK`) tem exatamente o mesmo CSS deste módulo, byte a byte, e
+# MAGIC nenhum dos dois usa o `VERDE` oficial.
 # MAGIC
-# MAGIC **Três definições de "verde de selo" convivendo na mesma biblioteca.** Como
-# MAGIC em `styles`, unificar muda o que já está publicado, e fica para a etapa 2 —
-# MAGIC mas quem for escolher precisa saber que são três, não duas.
+# MAGIC A distinção importa para quem for unificar: juntar `styles` e `badge` é
+# MAGIC edição sem efeito visual nenhum; alinhar os dois ao `VERDE` de `colors`
+# MAGIC **troca a cor de todos os selos**. Só a segunda é decisão de produto.
+# MAGIC
+# MAGIC O inventário dos doze módulos com cor redeclarada está em
+# MAGIC `PLANO_HUB.md` §12.2.
 
 # COMMAND ----------
 # MAGIC %md

@@ -10,7 +10,7 @@ Uso:
     fmt_brl(12345.67)      # "R$ 12.345,67"
     fmt_dec(0.8234, 4)     # "0,8234"
     fmt_delta(-0.032)      # "-3,2 pp"
-    fmt_delta(0.005, "bps") # "+5 bps"
+    fmt_delta(0.0005, "bps") # "+5 bps"  (razao, como o fmt_pct)
 
 Autor: Rodrigo via assistente
 Versão: 1.0

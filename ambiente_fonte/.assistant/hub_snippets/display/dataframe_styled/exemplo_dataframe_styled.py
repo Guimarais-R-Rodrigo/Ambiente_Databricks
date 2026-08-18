@@ -41,21 +41,31 @@ from hub_snippets.display.dataframe_styled import display_styled
 
 import pandas as pd
 
+# `variacao_pp` tem negativos DE PROPOSITO: o realce do helper e por valor
+# negativo, nao por limiar. Sem um negativo na base, nada e destacado.
 tabela = pd.DataFrame({
     "coluna": ["id_cliente", "renda", "uf", "dt_referencia", "score"],
     "nulos_pct": [0.0, 12.4, 0.3, 0.0, 31.7],
     "distintos": [3375674, 48213, 27, 24, 99812],
     "psi": [0.001, 0.084, 0.012, 0.000, 0.312],
+    "variacao_pp": [0.0, -3.2, 0.1, 0.0, -11.5],
 })
 print(tabela.to_string(index=False))
 
 # COMMAND ----------
 
 # `display_styled` devolve HTML — quem renderiza e o notebook.
+# ATENCAO ao format_dict: "{:,.0f}" produz separador AMERICANO (3,375,674),
+# que e exatamente o que `constants.format_br` existe para evitar. Formate
+# antes, com fmt_int, e passe a coluna ja como texto.
+from hub_snippets.constants.format_br import fmt_int
+
+tabela["distintos"] = tabela["distintos"].map(fmt_int)
+
 html = display_styled(
     tabela,
-    highlight_cols=["nulos_pct", "psi"],
-    format_dict={"nulos_pct": "{:.1f}%", "psi": "{:.3f}", "distintos": "{:,.0f}"},
+    highlight_cols=["variacao_pp"],
+    format_dict={"nulos_pct": "{:.1f}%", "psi": "{:.3f}", "variacao_pp": "{:+.1f}"},
 )
 displayHTML(html)
 
@@ -64,28 +74,36 @@ displayHTML(html)
 # MAGIC Executado no laboratório, o resultado é:
 # MAGIC
 # MAGIC ```text
-# MAGIC        coluna  nulos_pct  distintos   psi
-# MAGIC    id_cliente        0.0    3375674 0.001
-# MAGIC         renda       12.4      48213 0.084
-# MAGIC            uf        0.3         27 0.012
-# MAGIC dt_referencia        0.0         24 0.000
-# MAGIC         score       31.7      99812 0.312
+# MAGIC        coluna  nulos_pct  distintos   psi  variacao_pp
+# MAGIC    id_cliente        0.0    3375674 0.001          0.0
+# MAGIC         renda       12.4      48213 0.084         -3.2
+# MAGIC            uf        0.3         27 0.012          0.1
+# MAGIC dt_referencia        0.0         24 0.000          0.0
+# MAGIC         score       31.7      99812 0.312        -11.5
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** A tabela crua acima tem vinte números, e dois decidem: `score`
-# MAGIC com **31,7%** de nulos e **PSI 0,312**. A versão estilizada destaca as duas
-# MAGIC colunas pedidas e formata cada uma na sua escala — percentual com uma casa,
-# MAGIC PSI com três, contagem com separador de milhar.
+# MAGIC **Como ler — e o que a função realmente faz, que não é o óbvio.**
 # MAGIC
-# MAGIC Repare que o destaque é **por coluna**, não por valor. A função não sabe
-# MAGIC quais valores são ruins; ela realça a coluna que você declarou que importa,
-# MAGIC e o gradiente faz o resto. Isso é uma limitação honesta: um limiar de
-# MAGIC negócio ("PSI acima de 0,25 é alerta") continua sendo decisão sua, e o
-# MAGIC lugar dele é uma constante nomeada no seu notebook.
+# MAGIC O realce **é por valor, restrito às colunas declaradas**: dentro de
+# MAGIC `highlight_cols`, ele pinta de vermelho e negrito o que for **negativo**.
+# MAGIC Não é gradiente, não é "destaque a coluna inteira", e não conhece limiar
+# MAGIC de negócio nenhum.
 # MAGIC
-# MAGIC E é o formato que expõe a diferença de escala. `distintos` com 3.375.674 ao
-# MAGIC lado de `psi` com 0,001 na mesma tabela sem formatação é ilegível; com
-# MAGIC `format_dict`, as duas colunas passam a ser comparáveis com a vizinha.
+# MAGIC É por isso que esta demonstração precisou de uma coluna com negativos.
+# MAGIC Uma versão anterior deste notebook passava `highlight_cols=["nulos_pct",
+# MAGIC "psi"]` — colunas sem nenhum valor negativo — e afirmava que as duas
+# MAGIC ficavam destacadas. **Zero células eram pintadas**, e o HTML devolvido não
+# MAGIC continha uma única ocorrência da cor de destaque.
+# MAGIC
+# MAGIC A consequência prática: para "PSI acima de 0,25 é alerta" este helper não
+# MAGIC serve como está. Ou você calcula uma coluna de desvio (negativa quando
+# MAGIC ruim), ou o limiar vira uma constante e o realce, código seu.
+# MAGIC
+# MAGIC **E repare no `format_dict`.** `"{:,.0f}"` produz `3,375,674` — separador
+# MAGIC americano, dentro de uma biblioteca que tem `constants.format_br`
+# MAGIC justamente para evitar isso. A saída de `Styler.format` não passa pelo
+# MAGIC nosso formatador; a defesa é formatar antes e entregar a coluna como
+# MAGIC texto, que é o que a célula acima faz.
 
 # COMMAND ----------
 # MAGIC %md
