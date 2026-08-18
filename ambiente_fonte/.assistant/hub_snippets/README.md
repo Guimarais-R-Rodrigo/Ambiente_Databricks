@@ -119,7 +119,7 @@ não fica defasada.
 | "preciso fazer X, qual módulo uso?" | [catálogo de helpers](../CATALOGO_HELPERS.md) |
 | "por que este helper existe e o que dá errado sem ele?" | o `exemplo_*` na pasta do próprio helper |
 | "o que esta linha do código faz?" | `@hub-ml-tutor-databricks` com o módulo anexado |
-| "o que significa este termo?" | [glossário](../GLOSSARIO.md) |
+| "o que significa este termo?" | [glossário](../README.md#glossário) |
 
 ### Agrupamento por pacote
 

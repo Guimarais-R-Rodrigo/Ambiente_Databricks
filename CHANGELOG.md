@@ -5,6 +5,45 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-17 — Sprint 10: os dois READMEs de topo, e o glossário absorvido
+
+`README.md` da raiz e `.assistant/README.md` atualizados na variante longa.
+Relatório em `docs/sprints/sprint-10-readmes-de-topo.md`.
+
+### Atualizado
+
+1. (Claude) As três saídas de comando coladas no README da raiz estavam da
+   Sprint 2 e erravam por larga margem — 70 arquivos Python contra 193, 176
+   arquivos renderizados contra 298, 409 varridos contra 674. Recolhidas de
+   execução real, e o bloco do validador passou a mostrar as **quatro guardas
+   criadas depois**, com o defeito real de que cada uma nasceu.
+2. (Claude) `.assistant/README.md` ganhou tabela de navegação no topo — dez
+   perguntas, dez âncoras — e seção nova sobre o notebook por objeto.
+
+### Corrigido
+
+1. (Claude) O quadro de status do README da raiz afirmava que `prophet_wrapper`
+   "segue sem combinação funcional". A Sprint 8 mostrou que instala e ajusta um
+   modelo completo.
+
+### Removido
+
+1. (Claude) `.assistant/GLOSSARIO.md`, absorvido como seção do
+   `.assistant/README.md` conforme §5 do plano. Os cinco links foram reapontados
+   para a âncora, e a validação pegou os que eu havia reapontado errado. O
+   `--verify` da publicação pegou o que faltava: o arquivo continuava no
+   workspace depois de removido da fonte.
+
+### Notas
+
+- **A seção nova sobre os notebooks era o buraco maior.** Nenhum dos dois READMEs
+  mencionava que os 58 objetos têm, cada um, um `exemplo_*` na própria pasta —
+  que é o que esta fase inteira produziu, e o que um recém-chegado precisa saber
+  antes de qualquer outra coisa.
+- Contrapartida registrada: o `.assistant/README.md` foi a 494 linhas. Glossário
+  é documento de consulta por termo e README é leitura linear; a mesa de
+  navegação no topo é o que evita que a fusão piore os dois.
+
 ## 2026-08-17 — auditoria da Sprint 9: 13 achados, e o HTML que ninguém lia
 
 Rodada em sessão sem contexto. O auditor **imprimiu e leu o HTML que as funções

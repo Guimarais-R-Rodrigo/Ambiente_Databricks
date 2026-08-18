@@ -4,7 +4,7 @@ Documento de trabalho, versão 2. Cada sprint é executada isoladamente, auditad
 em sessão sem contexto, revisada por você, e só então a seguinte começa.
 
 - **Status:** v2. Sprints 0 e 0b concluídas. Auditoria começa na Sprint 1
-- **Sprint atual:** 9 concluída — **a biblioteca inteira convertida: 58 objetos** (51 `hub_snippets` + 7 `hub_scripts`). O validador conta **60 pastas de objeto**, somando os 2 exemplares de `hub_padroes`, que são template e não biblioteca. Próximas: 10 (READMEs de topo), 11, 12 e a 5 (prompts, depende de você)
+- **Sprint atual:** 10 concluída — a biblioteca convertida (**58 objetos**: 51 `hub_snippets` + 7 `hub_scripts`) e os dois READMEs de topo atualizados. O validador conta **60 pastas de objeto**, somando os 2 exemplares de `hub_padroes`, que são template e não biblioteca. Próximas: 11 (`hub-ml-criar-objeto`), 12 (auditoria final) e a 5 (prompts, depende de você)
 - **Última atualização:** 2026-08-17
 
 > **Histórico de revisão.** A v1 foi submetida a auditoria em sessão sem
@@ -736,6 +736,6 @@ morto. Editar `STYLE_SECTION_HEADER` não muda cabeçalho nenhum — e o noteboo
 | 7 | ✅ concluída | 2026-08-17 | ✅ 12 achados corrigidos + guarda de entrada | [relatório](docs/sprints/sprint-7-ml-nucleo.md) |
 | 8 | ✅ concluída | 2026-08-17 | ✅ 13 achados corrigidos | [relatório](docs/sprints/sprint-8-ml-dependencia-opcional.md) · os 14 executam, via `%pip` |
 | 9 | ✅ concluída | 2026-08-17 | ✅ 13 achados corrigidos | [relatório](docs/sprints/sprint-9-constants-visual-display.md) · fecha a biblioteca |
-| 10 | não iniciada | — | — | — |
+| 10 | ✅ concluída | 2026-08-17 | **pendente** | [relatório](docs/sprints/sprint-10-readmes-de-topo.md) · glossário absorvido |
 | 11 | não iniciada | — | — | — |
 | 12 | não iniciada | — | — | — |

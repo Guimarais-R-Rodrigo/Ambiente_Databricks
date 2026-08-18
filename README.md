@@ -4,7 +4,7 @@
 > extensões) do **Databricks Genie Code**, com governança multi-IA, validação
 > automatizada e trilha de publicação do ambiente pessoal até a squad/missão.
 >
-> Primeira vez aqui? O [glossário](ambiente_fonte/.assistant/GLOSSARIO.md)
+> Primeira vez aqui? O [glossário](ambiente_fonte/.assistant/README.md#glossário)
 > explica os termos deste README, separando o que é oficial da Databricks, o que
 > é vocabulário de modelagem e o que é convenção criada neste projeto.
 
@@ -127,7 +127,7 @@ situação clássica de duas versões divergentes sem saber qual vale.
 
 **2. Veja o produto (10 min).** Abra [ambiente_fonte/.assistant/README.md](ambiente_fonte/.assistant/README.md).
 É o guia do ecossistema que vai para o Databricks: as skills, as instruções
-pessoais e as extensões. Se algum termo travar a leitura, o [glossário](ambiente_fonte/.assistant/GLOSSARIO.md)
+pessoais e as extensões. Se algum termo travar a leitura, o [glossário](ambiente_fonte/.assistant/README.md#glossário)
 resolve.
 
 **3. Rode a validação (2 min).** Sem alterar nada, execute
@@ -189,17 +189,33 @@ python tools/validate_assistant.py
 ```text
 raiz analisada     : <repo>\ambiente_fonte
 skills             : 12
-markdown / links   : 103 arquivos / 109 links relativos
-python (AST)       : 70 arquivos
-instrucoes         : 7088/20000 caracteres
-repo (corporativo) : 409 arquivos varridos no repositório inteiro
-repo (links)       : 156 links fora da raiz analisada
+markdown / links   : 104 arquivos / 143 links relativos
+notebooks / links  : 62 notebooks / 1 links relativos
+pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
+contrato de dados  : 60 pares (saída: o que o notebook consome)
+contrato de entrada: 57 pares (entrada: o que o notebook passa)
+saída colada       : 49 notebooks com bloco real, 12 sem
+python (AST)       : 193 arquivos
+instrucoes         : 7085/20000 caracteres
+repo (corporativo) : 674 arquivos varridos no repositório inteiro
+repo (links)       : 214 links fora da raiz analisada
 
-APROVADO: 0 falha(s), 0 aviso(s)
+APROVADO: 0 falha(s), 12 aviso(s)
 ```
 
-Qualquer linha `FAIL` bloqueia o resto do ciclo. `WARN` de tamanho de skill é
-aviso de dívida, não impedimento.
+Qualquer linha `FAIL` bloqueia o resto do ciclo. Os **12 avisos** são dívida
+nomeada, não impedimento: são notebooks de sprints antigas sem saída real colada,
+listados um a um em [`PLANO_HUB.md` §12.1](PLANO_HUB.md).
+
+**As quatro linhas do meio são as guardas que mais pegaram defeito**, e vale
+saber o que cada uma cobre:
+
+| Linha | O que confere | Nasceu de |
+|---|---|---|
+| `pastas de objeto` | nome da pasta, os três arquivos, e se o `__init__.py` bate com a API do módulo | conversão para pasta por objeto |
+| `contrato de dados` | o notebook consome chave que o módulo **devolve** | três notebooks pedindo chave renomeada |
+| `contrato de entrada` | o notebook passa argumento que a assinatura **aceita** | seis notebooks escritos contra API imaginada |
+| `saída colada` | o notebook tem bloco com saída real, não só prosa | notebook que ensinava a ler uma saída vazia |
 
 As duas últimas linhas são as únicas que valem conferir de olho: elas contam o
 que os checks de repositório inteiro alcançaram. Se qualquer uma vier **zero**,
@@ -219,7 +235,7 @@ destino: <repo>\Novo_Ambiente_Simulado\Users\<seu-usuario>
   copy file .assistant_instructions.md -> ...\.assistant_instructions.md
   copy dir  .assistant -> ...\.assistant
 
-OK: 176 arquivos renderizados em Novo_Ambiente_Simulado/
+OK: 298 arquivos renderizados em Novo_Ambiente_Simulado/
 ```
 
 O total inclui o marcador `README_GERADO.md` na raiz do simulado, que não vai
@@ -237,8 +253,8 @@ python tools/publicar_free.py --verify
 usuário: <seu-usuario>
 
 == VERIFY (read-only) ==
-esperados : 175 arquivos
-remotos   : 176 arquivos sob .assistant + instruções
+esperados : 297 arquivos
+remotos   : 298 arquivos sob .assistant + instruções
 ausentes  : 0 | obsoletos: 0
 plataforma: 1 arquivo(s) gerenciado(s) — .assistant/.mcp_servers.json
 skills    : 12/12
@@ -341,7 +357,7 @@ Gates herdados da auditoria do Codex, todos verificados no Databricks Free:
 |---|---|
 | Testes Spark no runtime real | ✅ **64 aprovações, 0 falhas** de 71 verificações — as 7 restantes são módulos com dependência opcional ausente, não falhas. [Detalhes](docs/testes/spark/README.md) |
 | Forward tests das 12 skills (positivo, negativo, `@menção`) | ✅ **36/36 PASS** — [detalhes](docs/testes/forward/README.md) (sem alterar nenhuma `description`) |
-| Dependências opcionais fixadas e testadas | ✅ **13 de 14 módulos** executados com as versões de [`requirements-optional.txt`](ambiente_fonte/.assistant/hub_snippets/requirements-optional.txt); só `prophet_wrapper` segue sem combinação funcional |
+| Dependências opcionais fixadas e testadas | ✅ **12 bibliotecas** instaladas por `%pip` e exercitadas com chamada real, inclusive o `prophet_wrapper` que antes constava sem combinação funcional — inventário em [`requirements-optional.txt`](ambiente_fonte/.assistant/hub_snippets/requirements-optional.txt) |
 
 Os três gates medem coisas diferentes, e nenhum substitui o outro:
 

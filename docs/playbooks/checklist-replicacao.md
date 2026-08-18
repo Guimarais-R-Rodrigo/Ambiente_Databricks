@@ -87,7 +87,7 @@ subárvore, não a pasta de usuário do laboratório.
 - [ ] `.assistant_instructions.md` presente na raiz do usuário
 - [ ] Abrir um `.py` de `hub_snippets`: precisa ser **arquivo**, não notebook
 - [ ] Abrir `hub_snippets/spark/pit_join/exemplo_pit_join.py`: precisa ser **notebook**
-- [ ] `CATALOGO_HELPERS.md` e `GLOSSARIO.md` presentes
+- [ ] `CATALOGO_HELPERS.md` presente (o glossário é seção do `README.md`)
 
 > `.py` como notebook quebra `from hub_snippets...`. Notebook como arquivo não tem
 > células para executar. Os dois tipos importam.

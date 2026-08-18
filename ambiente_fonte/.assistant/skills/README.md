@@ -106,5 +106,5 @@ método da casa.
 ## Onde continuar
 
 - Para criar uma skill: [`hub_padroes/skill/template.md`](../hub_padroes/skill/template.md).
-- Para o vocabulário: [glossário](../GLOSSARIO.md).
+- Para o vocabulário: [glossário](../README.md#glossário).
 - Para o mapa demanda → helper: [catálogo](../CATALOGO_HELPERS.md).

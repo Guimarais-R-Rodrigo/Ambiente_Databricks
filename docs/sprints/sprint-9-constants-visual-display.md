@@ -205,6 +205,15 @@ rodapé") depende de o rodapé estar legível.
 São trinta segundos de trabalho humano com o notebook aberto, e nenhum job
 substitui.
 
+**Verificado por inspeção humana em 2026-08-17: está legível.** O rodapé aparece,
+não colide com a legenda nem com o eixo, e não é cortado. Os quatro chips
+semânticos estão legíveis com a escolha de texto por contraste, a hierarquia dos
+quatro separadores se lê sem legenda, e a grade de distribuições mostra os dois
+picos da bimodal com os títulos cabendo.
+
+O ponto cego continua existindo como classe — nenhum portão vê pixel —, mas esta
+sprint não tem defeito visual conhecido.
+
 ### Verificação depois das correções
 
 ```text

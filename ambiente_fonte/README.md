@@ -61,7 +61,7 @@ ambiente_fonte/
 └── .assistant/
     ├── README.md                 # guia completo do ecossistema (instalação, uso, testes)
     ├── skills/                   # NATIVO: 12 Agent Skills hub-ml-*
-    ├── GLOSSARIO.md | CATALOGO_HELPERS.md
+    ├── CATALOGO_HELPERS.md            # o glossário mora no README
     └── hub_padroes | hub_prompts | hub_snippets | hub_scripts
                                   # CUSTOM: extensões manuais (@/import/execução)
 ```

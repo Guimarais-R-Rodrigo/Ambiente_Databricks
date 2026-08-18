@@ -94,5 +94,5 @@ pode estar duplicada.
 
 - Para criar um script novo: o molde está em
   [`hub_padroes/script/template.md`](../hub_padroes/script/template.md).
-- Para o vocabulário do projeto: [glossário](../GLOSSARIO.md).
+- Para o vocabulário do projeto: [glossário](../README.md#glossário).
 - Para a biblioteca de cálculo: [`hub_snippets`](../hub_snippets/README.md).
