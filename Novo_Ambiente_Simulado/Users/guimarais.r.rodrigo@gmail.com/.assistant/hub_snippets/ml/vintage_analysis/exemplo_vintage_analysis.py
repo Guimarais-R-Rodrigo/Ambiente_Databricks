@@ -142,10 +142,108 @@ print(f"convertido: {len(painel_pd)} linhas (volume controlado)")
 # MAGIC - **Sem conferir o tamanho de cada safra.** Uma safra pequena produz curva
 # MAGIC   errática que parece tendência.
 # MAGIC
-# MAGIC ### Nota de duplicação
+# MAGIC ### Nota de cor — resolvida em 18/08/2026
 # MAGIC
-# MAGIC Este módulo **redeclara** `PALETA_CATEGORICA`, `AZUL_CAIXA`,
-# MAGIC `PALETA_SEQUENCIAL` e `TEMA_BASE` em vez de importar de
-# MAGIC `hub_snippets.constants.colors`. Os valores aqui são **idênticos** aos de
-# MAGIC lá, mas são cópias: mudar a paleta exige editar os dois. A unificação é
-# MAGIC mudança de comportamento e está registrada como trabalho futuro.
+# MAGIC Este módulo **redeclarava** `PALETA_CATEGORICA`, `AZUL_CAIXA` e
+# MAGIC `PALETA_SEQUENCIAL` com literais idênticos aos de
+# MAGIC `hub_snippets.constants.colors`. Hoje ele os **deriva** de lá, e a paleta
+# MAGIC tem uma fonte só. Os nomes continuam na API pública do módulo, então nada
+# MAGIC que importava daqui quebrou.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## 4. A tabela de safras, que é o que o módulo entrega
+# MAGIC
+# MAGIC Até aqui o notebook mostrou **por que** a análise de safra existe. Esta
+# MAGIC seção usa o módulo.
+# MAGIC
+# MAGIC Duas colunas de data precisam existir, e a fixture não as traz de graça:
+# MAGIC `dt_originacao` é a safra virada em data, e `dt_referencia` é a foto. O
+# MAGIC parâmetro `mob_col` diz que o MOB já está calculado — mas **não dispensa**
+# MAGIC `dt_referencia`, que continua obrigatório.
+
+# COMMAND ----------
+
+import pandas as pd
+
+from hub_snippets.ml.vintage_analysis import (
+    build_vintage_table,
+    compare_safras,
+    plot_vintage_curves,
+    plot_vintage_heatmap,
+)
+
+painel_pd["dt_orig"] = pd.to_datetime(painel_pd["safra"], format="%Y%m")
+painel_pd["dt_ref"] = painel_pd["dt_orig"] + pd.to_timedelta(painel_pd["mob"] * 30, unit="D")
+
+tabela = build_vintage_table(
+    painel_pd,
+    contract_id="id_contrato",
+    dt_originacao="dt_orig",
+    dt_referencia="dt_ref",
+    target="inadimplente",
+    mob_col="mob",
+)
+print(f"linhas na tabela de safras: {len(tabela)}")
+print(tabela.head(8).to_string(index=False))
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ```text
+# MAGIC Vintage table: 3 safras, MOB range [0-12]
+# MAGIC linhas na tabela de safras: 39
+# MAGIC   safra  mob  n_contratos_observados  n_eventos_acumulados  n_contratos_safra  taxa_acumulada  cobertura_observada  taxa
+# MAGIC 2025-01    0                     200                   0.0                200            0.00                  1.0  0.00
+# MAGIC 2025-01    1                     200                   4.0                200            0.02                  1.0  0.02
+# MAGIC 2025-01    2                     200                   6.0                200            0.03                  1.0  0.03
+# MAGIC 2025-01    3                     200                  14.0                200            0.07                  1.0  0.07
+# MAGIC 2025-01    4                     200                  22.0                200            0.11                  1.0  0.11
+# MAGIC 2025-01    5                     200                  32.0                200            0.16                  1.0  0.16
+# MAGIC 2025-01    6                     200                  46.0                200            0.23                  1.0  0.23
+# MAGIC 2025-01    7                     200                  58.0                200            0.29                  1.0  0.29
+# MAGIC ```
+# MAGIC
+# MAGIC **Como ler.** Uma linha por safra × MOB. A taxa acumulada é a fração de
+# MAGIC contratos daquela safra que já tinham entrado em inadimplência **até**
+# MAGIC aquele MOB — e é por isso que ela nunca cai: uma vez inadimplente, o
+# MAGIC contrato não sai da conta.
+# MAGIC
+# MAGIC A comparação entre safras só é honesta no mesmo MOB. É a armadilha que a
+# MAGIC seção anterior demonstrou com números.
+
+# COMMAND ----------
+
+comparacao = compare_safras(tabela)
+print(comparacao.to_string(index=False))
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ```text
+# MAGIC   safra  n_contratos  taxa_mob_3  taxa_mob_6  taxa_mob_12 taxa_mob_24  vs_media_mob_3  vs_media_mob_6  vs_media_mob_12 vs_media_mob_24
+# MAGIC 2025-01          200       0.070       0.230        0.555        None        0.008333           0.030         0.013333             NaN
+# MAGIC 2025-02          200       0.050       0.145        0.530        None       -0.011667          -0.055        -0.011667             NaN
+# MAGIC 2025-03          200       0.065       0.225        0.540        None        0.003333           0.025        -0.001667             NaN
+# MAGIC ```
+# MAGIC
+# MAGIC **Como ler.** Cada linha é uma safra, cada coluna um checkpoint de MOB.
+# MAGIC Célula vazia não é zero: é safra que ainda não chegou àquele MOB, e essa é
+# MAGIC exatamente a diagonal incompleta que não se preenche com zero.
+
+# COMMAND ----------
+
+fig_curvas = plot_vintage_curves(tabela)
+fig_heatmap = plot_vintage_heatmap(tabela)
+print(f"curvas  : {type(fig_curvas).__name__} com {len(fig_curvas.data)} série(s)")
+print(f"heatmap : {type(fig_heatmap).__name__} com {len(fig_heatmap.data)} camada(s)")
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ```text
+# MAGIC curvas  : Figure com 3 série(s)
+# MAGIC heatmap : Figure com 1 camada(s)
+# MAGIC ```
+# MAGIC
+# MAGIC **Como ler.** As duas funções devolvem figuras Plotly e **não desenham
+# MAGIC nada sozinhas** — quem renderiza é o notebook, com `fig.show()`. É a mesma
+# MAGIC separação de `theme_plotly` e `badge`: o helper devolve o objeto, a
+# MAGIC exibição é decisão de quem chama.

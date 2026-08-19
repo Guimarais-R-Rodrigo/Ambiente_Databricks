@@ -32,7 +32,12 @@ sys.path.insert(0, ASSISTANT_ROOT)
 # Dependências declaradas como opcionais no ecossistema (requirements-optional).
 OPTIONAL_PKGS = {
     "lightgbm", "xgboost", "catboost", "optuna", "shap", "umap", "prophet",
-    "lifelines", "torch", "pytorch_tabnet", "statsmodels",
+    "lifelines", "torch", "pytorch_tabnet", "statsmodels", "pmdarima",
+    # Dependencias **escondidas**: nenhum modulo as importa no topo, e por isso
+    # nenhuma analise de import as encontra. Quem as exige e a biblioteca de
+    # terceiro, na chamada -- `DataFrame.to_markdown()` pede tabulate,
+    # `DataFrame.style` pede jinja2. E a classe `exec` do catalogo de helpers.
+    "tabulate", "jinja2",
 }
 
 results = {}
@@ -45,12 +50,47 @@ def run_case(name, fn):
     except ModuleNotFoundError as exc:
         status = "OPTIONAL_MISSING" if exc.name in OPTIONAL_PKGS else "FAIL"
         results[name] = {"status": status, "error": f"{type(exc).__name__}: {exc}"}
+    except ImportError as exc:
+        # `ImportError` sem `name` e o que o pandas levanta na dependencia
+        # escondida: "Missing optional dependency 'tabulate'". Classificar como
+        # FAIL diria que a biblioteca esta quebrada quando ela so precisa de
+        # `%pip install`. O nome vem do texto porque nao vem do atributo.
+        texto = str(exc).lower()
+        achou = next((p for p in OPTIONAL_PKGS if p in texto), None)
+        results[name] = {
+            "status": "OPTIONAL_MISSING" if achou else "FAIL",
+            "error": f"{type(exc).__name__}: {exc}",
+        }
     except Exception as exc:
         results[name] = {
             "status": "FAIL",
             "error": f"{type(exc).__name__}: {exc}",
             "trace": traceback.format_exc(limit=2),
         }
+
+def run_case_bloqueado(name, fn, motivo):
+    """Caso que **precisa** falhar, porque a plataforma o bloqueia.
+
+    Existe por causa da regra que este projeto aprendeu na pele: *"foi testado"
+    tem data de validade em ambiente gerenciado*. Um bloqueio documentado que
+    deixa de existir é notícia tão relevante quanto um que aparece — e sem esta
+    guarda a notícia chegaria como um `PASS` silencioso, ou nunca chegaria.
+
+    Passa quando levanta. **Reprova quando funciona**, pedindo revisão da regra.
+    """
+    try:
+        fn()
+    except Exception as exc:  # noqa: BLE001
+        results[name] = {"status": "BLOQUEADO_ESPERADO",
+                         "motivo": motivo,
+                         "error": f"{type(exc).__name__}: {str(exc)[:200]}"}
+        return
+    results[name] = {
+        "status": "FAIL",
+        "error": f"executou, e deveria estar bloqueado ({motivo}). "
+                 "O runtime mudou: revise `.claude/rules/free-vs-trabalho.md`",
+    }
+
 
 # COMMAND ----------
 # MAGIC %md ## 1. Import de todos os módulos
@@ -286,8 +326,260 @@ def t_theme_plotly():
 run_case("func:format_br", t_format_br)
 run_case("func:theme_plotly", t_theme_plotly)
 
+
 # COMMAND ----------
-# MAGIC %md ## 6. Sumário
+# MAGIC %md ## 6. Testes funcionais — os 16 módulos de núcleo de `ml`
+# MAGIC
+# MAGIC Os notebooks destes dezesseis executaram uma vez, em 17/08/2026. Isto aqui
+# MAGIC é outra coisa: a bateria **repetível**, que roda de novo antes de cada
+# MAGIC replicação. A execução de uma vez prova que funcionou naquele dia; só a
+# MAGIC bateria prova que continua funcionando.
+# MAGIC
+# MAGIC As chamadas saem dos notebooks que executaram com `SUCCESS` — invocação
+# MAGIC provada vale mais que invocação deduzida da docstring, e foi lendo
+# MAGIC docstring em vez de assinatura que nove notebooks desta biblioteca
+# MAGIC nasceram quebrados.
+
+# COMMAND ----------
+
+import numpy as np  # noqa: E402
+from hub_snippets.testing import fixtures  # noqa: E402
+
+
+def _amostra_binaria(n=400, seed=7):
+    """Rótulo e probabilidade correlacionados, para métrica não degenerar."""
+    rng = np.random.default_rng(seed)
+    y = rng.binomial(1, 0.2, n)
+    p = np.clip(rng.normal(0.5, 0.2, n) + y * 0.3, 0.001, 0.999)
+    return y, p
+
+
+def t_split_temporal():
+    from hub_snippets.ml.split_temporal import temporal_split
+    # Trabalha em **pandas**, não em Spark: o módulo chama `df.copy()`, que o
+    # Spark Connect não expõe. O notebook do objeto avisa disso em caixa alta, e
+    # a primeira versão deste teste ignorou o aviso e passou um DataFrame Spark.
+    painel = fixtures.serie_temporal(n_entidades=10, n_periodos=24, seed=1).toPandas()
+    tr, va, te = temporal_split(painel, date_col="dt_referencia")
+    assert len(tr) + len(va) + len(te) <= len(painel)
+    assert len(tr) > 0 and len(te) > 0
+
+
+def t_walk_forward():
+    from hub_snippets.ml.walk_forward import walk_forward_cv
+    painel = fixtures.serie_temporal(n_entidades=5, n_periodos=24, seed=2).toPandas()
+    painel = painel.rename(columns={"dt_referencia": "dt", "valor": "y"})
+
+    def modelo(treino, teste):
+        return {"mae": float(abs(teste["y"].mean() - treino["y"].mean()))}
+
+    dobras = walk_forward_cv(painel, date_col="dt", target_col="y",
+                             model_fn=modelo, min_train_periods=6,
+                             test_periods=1, step=1, gap=0)
+    assert len(dobras) > 0
+
+
+def t_woe_iv_calculator():
+    from hub_snippets.ml.woe_iv_calculator import calculate_woe_iv, classify_iv
+    base = fixtures.base_tabular(n=600, seed=3)
+    tabela, iv = calculate_woe_iv(base, feature_col="uf", target_col="alvo")
+    assert iv >= 0
+    assert isinstance(classify_iv(iv), str)
+
+
+def t_drift_detection():
+    from hub_snippets.ml.drift_detection import (
+        calculate_csi, calculate_ks, calculate_psi, detect_drift_all_features,
+    )
+    rng = np.random.default_rng(11)
+    ref, atual = rng.normal(0, 1, 500), rng.normal(0.4, 1, 500)
+    assert calculate_psi(ref, atual) > 0
+    ks = calculate_ks(ref, atual)
+    # Contrato registrado na auditoria da Sprint 7: devolve tupla, não número.
+    assert isinstance(ks, tuple)
+    import pandas as pd
+    cat_ref = pd.Series(["a"] * 60 + ["b"] * 40)
+    cat_atual = pd.Series(["a"] * 40 + ["b"] * 60)
+    assert calculate_csi(cat_ref, cat_atual) > 0
+    base_ref = fixtures.base_tabular(n=400, seed=4).toPandas()
+    base_at = fixtures.base_tabular(n=400, seed=5).toPandas()
+    out = detect_drift_all_features(
+        base_ref, base_at, feature_cols=["renda", "uf"],
+        numeric_cols=["renda"], categorical_cols=["uf"],
+    )
+    assert len(out) > 0
+
+
+def t_metrics_report():
+    from hub_snippets.ml.metrics_report import (
+        calculate_binary_metrics, calculate_regression_metrics,
+    )
+    y, p = _amostra_binaria()
+    m = calculate_binary_metrics(y, p)
+    # O nome da chave é contrato: quem consome quebra sem erro de import.
+    for chave in ("auc_roc", "ks", "gini", "lift_10pct", "prevalence"):
+        assert chave in m, f"chave ausente: {chave}"
+    calculate_regression_metrics(np.arange(50.0), np.arange(50.0) + 0.5)
+
+
+def t_curves_plotly():
+    from hub_snippets.ml.curves_plotly import (
+        plot_ks_curve, plot_lift_curve, plot_pr_curve, plot_roc_curve,
+    )
+    y, p = _amostra_binaria()
+    for f in (plot_roc_curve, plot_pr_curve, plot_lift_curve, plot_ks_curve):
+        assert f(y, p) is not None
+
+
+def t_score_bands():
+    from hub_snippets.ml.score_bands import generate_score_bands
+    y, p = _amostra_binaria()
+    faixas = generate_score_bands(p * 1000, y, n_bands=5, higher_score_is_better=True)
+    assert len(faixas) > 0
+
+
+def t_scorecard_builder():
+    from hub_snippets.ml.scorecard_builder import build_scorecard
+    from hub_snippets.ml.woe_iv_calculator import calculate_woe_iv
+    base = fixtures.base_tabular(n=600, seed=6)
+    tabela, _ = calculate_woe_iv(base, feature_col="uf", target_col="alvo")
+    # **A costura entre os dois módulos, e ela não é automática.**
+    # `calculate_woe_iv` devolve um DataFrame **Spark** cuja coluna de faixa se
+    # chama como a feature; `build_scorecard` quer **pandas** com as colunas
+    # `faixa` e `woe`. Os dois passam sozinhos, e o notebook do scorecard monta a
+    # tabela à mão -- então a junção nunca tinha sido exercitada por ninguém.
+    # Estas duas linhas são a ponte, e existem aqui para que ela não quebre em
+    # silêncio.
+    ponte = tabela.toPandas().rename(columns={"uf": "faixa"})[["faixa", "woe"]]
+    # `coefs` é **array na ordem de `feature_names`**, não dicionário. A auditoria
+    # da Sprint 7 registrou exatamente esta confusão num notebook; a primeira
+    # versão deste teste a repetiu.
+    out = build_scorecard(
+        coefs=np.array([-0.45]), intercept=-2.1, feature_names=["uf"],
+        woe_tables={"uf": ponte}, pdo=20, base_score=600, base_odds=50,
+    )
+    assert len(out) > 0
+
+
+def t_clustering_suite():
+    from hub_snippets.ml.clustering_suite import run_clustering_pipeline, select_k
+    rng = np.random.default_rng(8)
+    pontos = np.vstack([rng.normal(m, 0.5, (80, 2)) for m in (0, 5, 10)])
+    assert select_k(pontos, k_range=range(2, 6), method="silhouette") is not None
+    base = fixtures.base_tabular(n=300, seed=9).toPandas()
+    base = base.dropna(subset=["renda"])
+    base["f2"] = base["renda"] * 0.5
+    assert run_clustering_pipeline(base, feature_cols=["renda", "f2"], k=3,
+                                   scaler="standard", log_mlflow=False) is not None
+
+
+def t_isolation_forest():
+    from hub_snippets.ml.isolation_forest import profile_anomalies, train_isolation_forest
+    base = fixtures.base_tabular(n=300, seed=10).toPandas().dropna(subset=["renda"])
+    base["b"] = base["renda"] * 0.3
+    base["c"] = base["renda"] * -0.2
+    saida = train_isolation_forest(base, feature_cols=["renda", "b", "c"],
+                                   contamination=0.02, log_mlflow=False)
+    assert saida is not None
+
+
+def t_cluster_profiling():
+    from hub_snippets.ml.cluster_profiling import profile_clusters, top_differentiators
+    base = fixtures.base_tabular(n=300, seed=12).toPandas().dropna(subset=["renda"])
+    base["idade"] = (base["renda"] / 1000).astype(int)
+    base["cluster"] = base.index % 3
+    perfis = profile_clusters(base, feature_cols=["renda", "idade"], cluster_col="cluster")
+    assert len(perfis) > 0
+    assert top_differentiators(perfis, cluster_id=0, top_n=2) is not None
+
+
+def t_lgbm_temporal():
+    from hub_snippets.ml.lgbm_temporal import create_temporal_features
+    painel = fixtures.serie_temporal(n_entidades=5, n_periodos=24, seed=13).toPandas()
+    painel = painel.rename(columns={"dt_referencia": "dt", "id_entidade": "id"})
+    com_id = create_temporal_features(painel, target_col="valor", date_col="dt",
+                                      lags=[1], rolling_windows=[3], entity_cols=["id"])
+    sem_id = create_temporal_features(painel, target_col="valor", date_col="dt",
+                                      lags=[1], rolling_windows=[3])
+    # O contrato que a auditoria da Sprint 7 fixou: o módulo termina em dropna(),
+    # e ignorar a entidade descarta MENOS linhas porque mistura as séries.
+    assert len(com_id) < len(sem_id)
+
+
+def t_performance_monitor():
+    from hub_snippets.ml.performance_monitor import EXAMPLE_THRESHOLDS, PerformanceMonitor
+    mon = PerformanceMonitor(baseline_metrics={"auc": 0.78},
+                             model_name="smoke", policy=EXAMPLE_THRESHOLDS)
+    mon.add_period("2026-01", {"auc": 0.77}, n_predictions=1000)
+    mon.add_period("2026-02", {"auc": 0.60}, n_predictions=1000)
+    assert mon.get_current_status() is not None
+    assert mon.should_retrain() is not None
+    mon.generate_report()
+
+
+def t_vintage_analysis():
+    from hub_snippets.ml.vintage_analysis import (
+        build_vintage_table, compare_safras, plot_vintage_curves, plot_vintage_heatmap,
+    )
+    import pandas as pd
+    painel = fixtures.safras(n_contratos=200, seed=14).toPandas()
+    # A fixture entrega safra como `AAAAMM` e o MOB como inteiro; o módulo quer
+    # duas colunas de data. `dt_referencia` é obrigatório mesmo com `mob_col`.
+    painel["dt_orig"] = pd.to_datetime(painel["safra"], format="%Y%m")
+    painel["dt_ref"] = painel["dt_orig"] + pd.to_timedelta(painel["mob"] * 30, unit="D")
+    tabela = build_vintage_table(
+        painel, contract_id="id_contrato", dt_originacao="dt_orig",
+        dt_referencia="dt_ref", target="inadimplente", mob_col="mob",
+    )
+    assert len(tabela) > 0
+    assert plot_vintage_curves(tabela) is not None
+    assert plot_vintage_heatmap(tabela) is not None
+    assert compare_safras(tabela) is not None
+
+
+def t_explainability_report():
+    import pandas as pd
+    from hub_snippets.ml.explainability_report import (
+        generate_executive_report, generate_technical_summary,
+    )
+    imp = pd.DataFrame({"feature": ["renda", "idade"],
+                        "importance": [0.6, 0.4],
+                        "pct_importance": [60.0, 40.0]})
+    texto = generate_executive_report(
+        imp, feature_business_names={"renda": "Renda", "idade": "Idade"},
+        target_description="probabilidade de inadimplência",
+        model_metric=0.78, metric_name="AUC",
+    )
+    assert isinstance(texto, str) and len(texto) > 0
+    # A segunda chama `to_markdown()`, que exige `tabulate` — dependência
+    # escondida, ausente no Free. `run_case` a classifica como opcional.
+    generate_technical_summary(imp)
+
+
+for case in [
+    t_split_temporal, t_walk_forward, t_woe_iv_calculator, t_drift_detection,
+    t_metrics_report, t_curves_plotly, t_score_bands, t_scorecard_builder,
+    t_clustering_suite, t_isolation_forest, t_cluster_profiling, t_lgbm_temporal,
+    t_performance_monitor, t_vintage_analysis, t_explainability_report,
+]:
+    run_case(f"ml:{case.__name__[2:]}", case)
+
+
+def t_mlflow_run():
+    from hub_snippets.ml.mlflow_run import run_governado
+    with run_governado("smoke_test", dataset="sintética, gerada no smoke test",
+                       split="sem split", limitacoes="execução de bateria"):
+        pass
+
+
+# O décimo sexto. Abrir run está bloqueado no serverless desde 17/08/2026: o
+# MlflowClient lê `spark.mlflow.modelRegistryUri` e o Spark Connect recusa a
+# config. Se um dia passar, a regra é que está velha — e a bateria avisa.
+run_case_bloqueado("ml:mlflow_run", t_mlflow_run,
+                   "MLflow start_run bloqueado no serverless (Spark Connect)")
+
+# COMMAND ----------
+# MAGIC %md ## 7. Sumário
 
 # COMMAND ----------
 
@@ -297,6 +589,9 @@ summary = {
     "fail": sum(1 for r in results.values() if r["status"] == "FAIL"),
     "optional_missing": sum(
         1 for r in results.values() if r["status"] == "OPTIONAL_MISSING"
+    ),
+    "bloqueado_esperado": sum(
+        1 for r in results.values() if r["status"] == "BLOQUEADO_ESPERADO"
     ),
     "runtime": f"serverless (spark {spark.version})",
     "results": results,

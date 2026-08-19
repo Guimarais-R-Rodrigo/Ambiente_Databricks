@@ -635,7 +635,7 @@ durante a execução; o completo continua obrigatório no fechamento da sprint.
 |---|---|
 | Auditoria de segunda origem da biblioteca | gate aberto, independe desta reestruturação |
 | ~~`prophet_wrapper`~~ | **resolvido em 2026-08-17**: `%pip install prophet` instala e ajusta. Sai desta lista |
-| Testes funcionais de `ml` no Free | os 16 da Sprint 7 nunca executaram lá; o risco está registrado, a criação da bateria não está no escopo |
+| ~~Testes funcionais de `ml` no Free~~ | **resolvido em 2026-08-19**. A linha anterior dizia que *"os 16 da Sprint 7 nunca executaram lá"* — e estava errada desde 17/08: o relatório da Sprint 7 traz os 16 como job, todos `SUCCESS`. O que faltava era outra coisa, e é o que foi feito: os 16 entraram na **bateria repetível** do `spark_smoke_test.py`. Execução de uma vez prova o dia; só a bateria prova que continua |
 | Camada squad | fase seguinte |
 
 ---

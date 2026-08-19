@@ -72,6 +72,11 @@ def calculate_woe_iv(
     # IV total
     iv_total = woe_df.agg(F.sum("iv_partial").alias("iv")).collect()[0]["iv"]
 
+    # A coluna de faixa **se chama como a feature**, não `faixa`, e o retorno é
+    # Spark. Para alimentar `scorecard_builder.build_scorecard` são necessárias
+    # duas conversões -- `toPandas()` e o rename --, e elas não são automáticas.
+    # Ver o docstring de `build_scorecard` e o caso `ml:scorecard_builder` do
+    # smoke test, que fixa a ponte.
     return woe_df, iv_total
 
 

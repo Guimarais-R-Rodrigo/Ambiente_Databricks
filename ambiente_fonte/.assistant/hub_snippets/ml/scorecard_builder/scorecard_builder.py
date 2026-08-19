@@ -30,7 +30,16 @@ def build_scorecard(
         coefs: Coeficientes do modelo (array).
         intercept: Intercepto do modelo.
         feature_names: Nomes das features (ordem dos coefs).
-        woe_tables: Dict feature_name → DataFrame com colunas [faixa, woe].
+        woe_tables: Dict feature_name → DataFrame **pandas** com colunas
+            [faixa, woe]. **A saída de `woe_iv_calculator.calculate_woe_iv` não
+            serve direto**: ela é Spark, e a coluna de faixa se chama como a
+            feature. A ponte é de duas linhas e está no smoke test::
+
+                ponte = (tabela.toPandas()
+                         .rename(columns={feature: "faixa"})[["faixa", "woe"]])
+
+            Os dois módulos passavam sozinhos e a junção nunca tinha sido
+            exercitada; quem a descobriu foi a bateria funcional de 19/08/2026.
         pdo: Points to Double Odds.
         base_score: Score base (no ponto de base_odds).
         base_odds: Odds de referência (bom:mau) no base_score.

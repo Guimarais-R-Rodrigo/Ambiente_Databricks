@@ -5,6 +5,60 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-19 — Bateria funcional de `ml`, e a costura que ninguém tinha exercitado
+
+Os 16 módulos de núcleo de `ml` entraram na bateria repetível do
+`spark_smoke_test.py`. Resultado da execução real no Free: **145 verificações,
+136 PASS, 0 FAIL**, registro em
+`docs/testes/spark/resultados/2026-08-19_bateria_ml.json`.
+
+### Corrigido
+
+1. (Claude) **`PLANO_HUB.md` §10 dizia que "os 16 da Sprint 7 nunca executaram"
+   no Free — e estava errado desde 17/08.** O relatório da Sprint 7 traz os 16
+   como job, todos `SUCCESS`. O que faltava era outra coisa: eles não estavam na
+   bateria **repetível**. Execução de uma vez prova o dia; só a bateria prova que
+   continua.
+2. (Claude) **`calculate_woe_iv` e `build_scorecard` não se encaixam.** O
+   primeiro devolve **Spark**, com a coluna de faixa nomeada como a feature; o
+   segundo quer **pandas** com as colunas `faixa` e `woe`. Os dois passam
+   sozinhos, e o notebook do scorecard monta a tabela à mão — então a junção
+   nunca tinha sido exercitada por ninguém. A ponte de duas linhas está fixada no
+   caso `ml:scorecard_builder` e documentada nos dois módulos e no catálogo.
+3. (Claude) **`exemplo_vintage_analysis.py` importava `build_vintage_table` e
+   nunca o chamava.** As quatro funções públicas do módulo não eram exercitadas
+   por ninguém, e o notebook rodava com `SUCCESS` porque não havia o que quebrar.
+   Ganhou as células que usam o módulo, com saída real colada.
+4. (Claude) A "Nota de duplicação" do mesmo notebook ainda dizia que o módulo
+   redeclara as cores — deixou de ser verdade em 18/08, quando passaram a derivar
+   de `constants.colors`.
+
+### Adicionado
+
+1. (Claude) `check_notebook_exercita_o_objeto` — **23º check**. O notebook do
+   objeto precisa **chamar** pelo menos uma função pública dele. Medição na
+   origem: **1 de 60**. Por isso nasceu como falha.
+2. (Claude) `run_case_bloqueado` no smoke test: caso que **precisa** falhar
+   porque a plataforma o bloqueia, e que **reprova se passar**. `mlflow_run` é o
+   primeiro. Um bloqueio documentado que deixa de existir é notícia tão relevante
+   quanto um que aparece — e sem essa inversão chegaria como `PASS` silencioso.
+3. (Claude) `run_case` passou a classificar `ImportError` sem `name`, que é o que
+   o pandas levanta na dependência escondida (*"Missing optional dependency
+   'tabulate'"*). Antes isso viraria `FAIL` e diria que a biblioteca está
+   quebrada quando ela só precisa de `%pip`.
+
+### Notas
+
+- **Quatro das cinco falhas da primeira execução eram dos testes, não da
+  biblioteca** — e o repositório documentava cada contrato que eu quebrei:
+  `split_temporal` trabalha em pandas (o notebook avisa em caixa alta),
+  `calculate_csi` quer `Series`, a chave é `auc_roc`, e `coefs` é array na ordem
+  de `feature_names` — exatamente a confusão que a auditoria da Sprint 7
+  registrou num notebook, e que a primeira versão do teste repetiu.
+- **A quinta era real**, e é a costura WOE → scorecard. Nenhum portão a pegaria:
+  a validação olha o disco, o `--verify` olha o workspace, e ambos os módulos
+  passam sozinhos. Só a execução da junção a expõe.
+
 ## 2026-08-19 — Auditoria de segunda origem: a regra de idioma contra a biblioteca
 
 Primeira rodada com modelo de outra família, e a primeira **sem execução**: o

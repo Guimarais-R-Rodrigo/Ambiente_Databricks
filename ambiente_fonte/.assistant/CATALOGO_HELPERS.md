@@ -127,6 +127,13 @@ passa a ser aplicada em vez de lembrada.
 | Demanda | Módulo | API |
 |---|---|---|
 | Converter modelo logístico em pontos | `hub_snippets.ml.scorecard_builder` | `build_scorecard` |
+
+> **A costura WOE → scorecard não é automática.** `calculate_woe_iv` devolve
+> **Spark**, com a coluna de faixa nomeada como a própria feature;
+> `build_scorecard` quer **pandas** com as colunas `faixa` e `woe`. A ponte é
+> `tabela.toPandas().rename(columns={feature: "faixa"})[["faixa", "woe"]]`.
+> Os dois módulos passam sozinhos, e foi a bateria funcional de 19/08/2026 que
+> exercitou a junção pela primeira vez.
 | Bandas de score auditáveis | `hub_snippets.ml.score_bands` | `generate_score_bands` |
 
 `generate_score_bands` exige direção do score declarada. Definir qual extremo

@@ -354,7 +354,7 @@ def check_saida_de_comando_no_readme(problems: list[str]) -> int:
     rotulos = (
         "skills             :", "markdown / links   :", "notebooks / links  :",
         "pastas de objeto   :", "forma da pasta     :", "saída colada       :",
-        "idioma da docstring:",
+        "idioma da docstring:", "notebook exercita  :",
         "python (AST)       :", "repo (corporativo) :", "repo (links)       :",
         "esperados : ", "remotos   : ", "skills    :",
     )
@@ -719,6 +719,69 @@ def check_normas_do_molde(root: Path, problems: list[str]) -> tuple[int, int]:
                     "opcional derrubariam os irmãos junto"
                 )
     return len(modulos) + secoes, violacoes
+
+
+def check_notebook_exercita_o_objeto(root: Path, problems: list[str]) -> tuple[int, int]:
+    """O notebook do objeto precisa **chamar** pelo menos uma função pública dele.
+
+    O molde diz que o notebook "ensina" o objeto. Um notebook que importa o módulo
+    e nunca o executa não ensina nada — e passa em tudo: importa, valida, e roda
+    como job com `SUCCESS`, porque não há o que quebrar.
+
+    Foi assim que `exemplo_vintage_analysis.py` viveu duas sprints. Ele importava
+    `build_vintage_table` na última célula, convertia a base para pandas, e
+    terminava. As quatro funções públicas do módulo nunca foram chamadas por
+    ninguém, e o relatório da Sprint 7 registrou o notebook como `SUCCESS` — o que
+    era verdade e não significava nada.
+
+    A guarda nasceu de uma medição: **1 de 60**. Por isso já nasce como falha; se
+    fossem trinta, seria aviso com prazo.
+
+    O que ela **não** cobre: chamar não é exercitar bem. Um notebook que chama a
+    função uma vez e ignora o resultado passa aqui. A leitura do resultado é
+    cobrada por `check_saida_colada`, que é outra guarda e outro defeito.
+    """
+    conferidos = mudos = 0
+    for modulo in sorted(root.rglob("*.py")):
+        if modulo.parent.name != modulo.stem or modulo.name.startswith("exemplo_"):
+            continue
+        notebook = modulo.parent / f"exemplo_{modulo.stem}.py"
+        if not notebook.exists():
+            continue
+        try:
+            arvore_modulo = ast.parse(modulo.read_text(encoding="utf-8"))
+        except SyntaxError:
+            continue
+        publicas = {
+            no.name for no in arvore_modulo.body
+            if isinstance(no, (ast.FunctionDef, ast.ClassDef)) and not no.name.startswith("_")
+        }
+        if not publicas:
+            continue
+        conferidos += 1
+        codigo = "\n".join(
+            linha for linha in notebook.read_text(encoding="utf-8").splitlines()
+            if not linha.startswith("# MAGIC")
+        )
+        try:
+            arvore_nb = ast.parse(codigo)
+        except SyntaxError:
+            continue
+        chamadas = set()
+        for no in ast.walk(arvore_nb):
+            if isinstance(no, ast.Call):
+                if isinstance(no.func, ast.Name):
+                    chamadas.add(no.func.id)
+                elif isinstance(no.func, ast.Attribute):
+                    chamadas.add(no.func.attr)
+        if not (chamadas & publicas):
+            mudos += 1
+            problems.append(
+                f"{notebook.relative_to(root)}: não chama nenhuma função pública de "
+                f"`{modulo.stem}` ({', '.join(sorted(publicas))}). O notebook existe "
+                "para ensinar o objeto, e importar não é executar"
+            )
+    return conferidos, mudos
 
 
 def check_pasta_de_objeto_malformada(root: Path, problems: list[str]) -> int:
@@ -1152,6 +1215,7 @@ def main() -> int:
     n_secoes, n_completas = check_skill_secoes(root, problems)
     n_doc, n_doc_en = check_docstring_em_portugues(root, problems)
     n_norma, n_norma_ruim = check_normas_do_molde(root, problems)
+    n_nb_obj, n_nb_mudos = check_notebook_exercita_o_objeto(root, problems)
     n_readme = 0
     if args.conferir_readme:
         n_readme = check_saida_de_comando_no_readme(problems)
@@ -1172,6 +1236,7 @@ def main() -> int:
     print(f"saída colada       : {n_com_saida} notebooks com bloco real, {n_sem_saida} sem")
     print(f"idioma da docstring: {n_doc} módulos, {n_doc_en} com docstring em inglês")
     print(f"normas do molde    : {n_norma} arquivos, {n_norma_ruim} violação(ões)")
+    print(f"notebook exercita  : {n_nb_obj} objetos, {n_nb_mudos} notebook(s) que só importam")
     print(f"python (AST)       : {n_py} arquivos")
     print(f"instrucoes         : {n_chars}/{INSTRUCTION_LIMIT} caracteres")
     print(f"repo (corporativo) : {n_repo} arquivos varridos no repositório inteiro")

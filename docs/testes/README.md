@@ -59,8 +59,25 @@ e menção (`@nome-da-skill` força o carregamento).
 
 | Gate | Estado | Falta |
 |---|---|---|
-| Runtime Spark/ML | os 58 helpers exercitados no Free | reexecução antes de replicar |
+| Import no runtime | os 58 helpers, mais os pacotes | — |
+| **Execução funcional** | **145 verificações, 136 PASS, 0 FAIL** (19/08/2026) | as 8 opcionais exigem `%pip` |
 | Roteamento | **36/39** — as 12 skills originais fecharam | os 3 casos da `hub-ml-criar-objeto` |
+
+A bateria funcional cobre os **16 módulos de núcleo de `ml`** desde 19/08/2026.
+Antes disso o smoke test só os **importava**, e importar não é executar — a
+distinção custou três descobertas a este projeto. O registro da execução está em
+[`resultados/2026-08-19_bateria_ml.json`](spark/resultados/2026-08-19_bateria_ml.json).
+
+Dois vereditos da bateria não são `PASS` e também não são falha:
+
+| Veredito | Quando | Exemplo |
+|---|---|---|
+| `OPTIONAL_MISSING` | a biblioteca exigida não está no runtime | `explainability_report`, que chama `to_markdown()` e precisa de `tabulate` |
+| `BLOQUEADO_ESPERADO` | a plataforma bloqueia, e está documentado | `mlflow_run`, que não abre run no serverless |
+
+O segundo é o mais interessante: ele **reprova se o caso passar**. Um bloqueio
+documentado que deixa de existir é notícia tão relevante quanto um que aparece, e
+sem essa inversão a notícia chegaria como um `PASS` silencioso — ou nunca.
 
 A décima terceira skill nasceu na Sprint 11 e nunca foi testada. Ela tem a
 `description` mais ampla do conjunto, que é exatamente o perfil que rouba
