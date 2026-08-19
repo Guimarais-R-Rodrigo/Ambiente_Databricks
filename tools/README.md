@@ -1,6 +1,6 @@
 # `tools/` — as ferramentas que sustentam os portões
 
-Seis scripts Python, sem dependência externa além do que a máquina já tem. Eles
+Sete scripts Python, sem dependência externa além do que a máquina já tem. Eles
 são o que transforma as regras deste repositório em algo que **reprova**, em vez
 de algo que se pede que alguém lembre.
 
@@ -19,6 +19,7 @@ de algo que se pede que alguém lembre.
 | `spark_smoke_test.py` | 305 | executa os helpers no runtime real como job | ao mexer em helper que toca Spark ou ML |
 | `api_publica.py` | 117 | extrai por AST a API pública de um módulo e gera o `__init__.py` | ao criar ou renomear objeto |
 | `notebook_marker.py` | 57 | decide se um `.py` é módulo ou notebook Databricks | importado pelos outros, não chamado à mão |
+| `bundle_para_auditoria.py` | 74 | empacota o repositório num arquivo único, para auditoria por leitura | antes de uma rodada de contexto longo |
 
 Os dois últimos são **bibliotecas**, não comandos: existem para que os quatro
 primeiros concordem sobre o que é API pública e sobre o que é notebook. Duas
@@ -39,6 +40,17 @@ E os dois que custam mais, usados de propósito e não por hábito:
 python tools/publicar_free.py --execute              # gate consciente: escreve no workspace
 python tools/validate_assistant.py --conferir-readme # ~1m40s: reexecuta os comandos do README
 ```
+
+E o que prepara auditoria externa, quando a rodada é de **leitura** e não de
+execução:
+
+```powershell
+python tools/bundle_para_auditoria.py   # ~480 mil tokens num arquivo só
+```
+
+Ele exclui `Novo_Ambiente_Simulado/`, que é cópia byte a byte do fonte, e
+`Ajustes_Codex/`, que é referência congelada — juntas elas dobrariam o tamanho
+sem acrescentar informação.
 
 Saída real de uma execução limpa, com o caminho substituído por placeholder:
 

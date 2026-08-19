@@ -5,6 +5,26 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-19 — Empacotador para auditoria de contexto longo
+
+### Adicionado
+
+1. (Claude) `tools/bundle_para_auditoria.py` — empacota o repositório versionado
+   num arquivo único, com delimitador por arquivo. **402 arquivos, ~478 mil
+   tokens**, o que cabe numa janela de 1M.
+
+### Notas
+
+- Existe para uma rodada de auditoria de **leitura**, não de execução: a classe
+  de defeito que nenhum portão daqui pega por construção é a contradição entre
+  dois documentos publicados, e ela só aparece com o corpus inteiro numa janela
+  só. É o complemento natural das 14 rodadas anteriores, todas com acesso a
+  execução e nenhuma com o corpus completo em contexto.
+- Exclui por padrão `Novo_Ambiente_Simulado/`, que é cópia byte a byte do fonte,
+  e `Ajustes_Codex/`, congelada: juntas dobrariam o tamanho sem acrescentar
+  informação. `--incluir-espelho` traz as duas de volta.
+- O arquivo gerado é git-ignored.
+
 ## 2026-08-18 — A norma vira instrumento, e as 13 skills ficam completas
 
 Segunda parte do dia. A classe nomeada pela auditoria — *norma publicada sem

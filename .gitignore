@@ -25,3 +25,6 @@ Desktop.ini
 
 # Guia temporário de replicação: local-only, apagado após a replicação.
 GUIA_REPLICACAO_TEMPORARIO.md
+
+# Bundle para auditoria de contexto longo (gerado, nunca versionado)
+bundle_auditoria*.txt
