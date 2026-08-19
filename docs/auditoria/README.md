@@ -43,6 +43,7 @@ Gatilhos mínimos de auditoria `A1+` neste projeto (ver `.claude/rules/multi-llm
 | 2026-08-15 | [Documentação: 15 READMEs, segunda rodada](2026-08-15_documentacao-rodada2/) | `A1` | 25 achados, **todos procedentes** — corrigidos |
 | 2026-08-16 | [Plano de reestruturação do Hub](2026-08-16_plano-hub/) | `A1` | 25 achados, **todos procedentes** — plano reescrito em v2 |
 | 2026-08-18 | [Consistência residual e padrão didático](2026-08-18_consistencia-e-didatica/) | `A1` | 18 achados, **todos procedentes** — corrigidos; classe nova: norma publicada sem instrumento |
+| 2026-08-19 | [Leitura em contexto longo](2026-08-19_leitura-contexto-longo/) | `A1` **segunda origem** | 3 achados (1 procedente, 1 parcial, 1 improcedente) — e 1 achado forte fora da lista: a regra de idioma contra a biblioteca |
 
 **Esta tabela cobre só as auditorias temáticas.** As auditorias de sprint — uma
 por sprint executada, treze até aqui — vivem junto do relatório que auditaram, em
@@ -50,8 +51,10 @@ por sprint executada, treze até aqui — vivem junto do relatório que auditara
 em [`PLANO_HUB.md`](../../PLANO_HUB.md). Quem pergunta "o que já foi auditado?"
 precisa dos dois lugares.
 
-As cinco rodadas acima usaram o mesmo modelo do autor, em sessão sem contexto,
-com acesso ao sistema de arquivos e à CLI. Isso é `A1`, não `A2`: pontos cegos
+As **cinco primeiras** rodadas acima usaram o mesmo modelo do autor, em sessão
+sem contexto, com acesso ao sistema de arquivos e à CLI. A de 19/08 é a primeira
+de **segunda origem**, e a primeira sem execução: outro modelo, lendo o corpus
+inteiro numa janela só. O gate do `PLANO_HUB.md` §10 abriu com ela. Isso é `A1`, não `A2`: pontos cegos
 compartilhados pelo modelo continuam de pé, e é por isso que a auditoria de
 segunda origem sobre a biblioteca permanece como gate aberto antes de usar
 `pit_join` em decisão que importe no trabalho.

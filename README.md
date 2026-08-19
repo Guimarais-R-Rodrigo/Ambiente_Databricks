@@ -216,8 +216,8 @@ saída colada       : 77 notebooks com bloco real, 0 sem
 idioma da docstring: 60 módulos, 0 com docstring em inglês
 python (AST)       : 209 arquivos
 instrucoes         : 7085/20000 caracteres
-repo (corporativo) : 717 arquivos varridos no repositório inteiro
-repo (links)       : 264 links fora da raiz analisada
+repo (corporativo) : 719 arquivos varridos no repositório inteiro
+repo (links)       : 265 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```

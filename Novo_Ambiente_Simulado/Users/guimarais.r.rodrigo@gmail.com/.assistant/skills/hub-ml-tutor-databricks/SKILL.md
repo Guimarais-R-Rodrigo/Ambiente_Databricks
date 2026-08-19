@@ -68,7 +68,7 @@ Usar analogias de banking/CRM somente depois da explicação técnica e rotulá-
 - **Afirmar capacidade da plataforma sem verificar.** Slash command registrado
   pelo usuário, hook e memória automática **não existem** no Genie Code.
 - **Ensinar o nome antigo.** Delta Live Tables virou Lakeflow Spark Declarative
-  Pipelines; Asset Bundles virou Declarative Automation Bundles.
+  Pipelines; Databricks Asset Bundles virou Declarative Automation Bundles.
 
 ## Formato de saída
 

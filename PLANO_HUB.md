@@ -739,7 +739,7 @@ copia. Esta tabela é o inventário; as menções nos notebooks apontam para cá
 | `visual/kpi_card` | não | `TEXTO_PRINCIPAL`, `BG_HEADER` | cópia idêntica |
 | `visual/theme_plotly` | **sim** | `CINZA_ESCURO` | cópia idêntica |
 | `display/dataframe_styled` | não | `AZUL_CAIXA`, `VERMELHO` | cópia idêntica |
-| `ml/curves_plotly` | não | 7 cores da paleta | **valor divergente** — 6 cores contra 10 |
+| `ml/curves_plotly` | não | 7 hexadecimais, **6 deles** da paleta | **valor divergente** — a paleta local tem 6 cores contra as 10 da oficial |
 | `ml/kaplan_meier` | não | 8 cores da paleta | cópia idêntica |
 | `ml/performance_monitor` | não | `AZUL_CAIXA`, `VERMELHO`, `LARANJA` | cópia idêntica |
 | `ml/umap_viz` | não | 11 cores da paleta | cópia idêntica |
@@ -794,3 +794,45 @@ no próprio docstring**. Suas cores institucionais já derivam de `colors`; unif
 o CSS mexeria na saída de cinco módulos e é decisão de produto, não higiene.
 
 ---
+
+---
+
+### 12.3 Dívida nomeada — cinco funções públicas em português
+
+Levantada pela auditoria de leitura de 19/08/2026, que leu a regra de idioma
+contra a biblioteca inteira em vez de contra um arquivo por vez.
+
+Três documentos vivos mandavam *"inglês em identificadores"*, e a biblioteca
+media outra coisa:
+
+| Categoria | Inglês | Português |
+|---|---|---|
+| Funções e classes públicas | **85** | **5** |
+| Constantes públicas | 35 | 37 |
+
+A regra foi **corrigida**, não a biblioteca: constante de domínio em português é
+decisão certa — `AZUL_CAIXA` nomeia a paleta institucional, `SECOES_EDA` nomeia as
+seções desta EDA, e traduzir apaga o referente. As 37 saem da dívida.
+
+Ficam as **cinco funções**, que são deriva de verdade contra uma convenção que 85
+irmãs cumprem:
+
+| Função | Onde | Observação |
+|---|---|---|
+| `aplicar_tema` | `visual/theme_plotly` | consumida por `display/correlation_matrix` e `display/distribution_grid` |
+| `gerar_indice_eda` | `visual/index_generator` | — |
+| `get_tema_eda` | `visual/theme_plotly` | mistura inglês e português no mesmo nome |
+| `calcular_psi` | `spark/psi_calculator` | o módulo é inglês, a função é português |
+| `calcular_csi` | `spark/psi_calculator` | idem |
+
+**Não foram renomeadas, e a razão é a mesma de sempre:** renomear função pública
+quebra quem chama, em silêncio. É mudança de contrato, não higiene — precisa de
+decisão, de varredura dos consumidores e de uma sprint que possa testar. Fica
+declarada aqui, com nome, lugar e custo.
+
+**Não foi instrumentada, e isso é deliberado.** Um check que adivinhe "nome em
+português" por heurística acusaria `psi_calculator` e `smart_sample` tanto quanto
+`calcular_psi`, e as cinco existentes precisariam de exceção — uma guarda que
+nasce com cinco exceções e falso positivo provável é desativada na segunda semana.
+A lição de 18/08 vale aqui: guarda que acusa código correto é pior que guarda
+nenhuma.

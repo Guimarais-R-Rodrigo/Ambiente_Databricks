@@ -59,7 +59,8 @@ nosso, e nos dois READMEs de topo.
 | Nenhum número em prosa que envelheça sozinho | "as 12 skills" vira mentira na décima terceira; prefira "as skills de `skills/`" |
 | Exemplo sempre copiável e testado | exemplo que não roda custa mais do que exemplo nenhum |
 | Diagrama que ensina errado é pior que diagrama nenhum | confira o mermaid contra o código antes de publicar |
-| PT-BR na prosa, inglês em código e identificador | consistência com o resto do projeto |
+| PT-BR na prosa, inglês em função e parâmetro | consistência com o resto do projeto |
+| Constante de domínio pode ser português | `AZUL_CAIXA` nomeia a paleta institucional; traduzir apaga o referente |
 
 ## Antes de dar por pronto
 

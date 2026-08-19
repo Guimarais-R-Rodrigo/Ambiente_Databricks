@@ -61,7 +61,9 @@ entre versões.
 
 Leia também o exemplo preenchido, quando houver — `hub_padroes/README.md` tem a
 tabela que diz qual acompanha cada template. Snippet, script, prompt e skill têm
-exemplar em pasta própria; README tem um arquivo `exemplo.md`; notebook não tem
+exemplar em pasta própria — que se **lê, e não se copia**: qualquer pasta dentro
+de `.assistant/skills/` é auto-descoberta, e uma cópia do exemplar viraria skill
+fantasma no chat. README tem um arquivo `exemplo.md`; notebook não tem
 exemplar separado, porque os exemplares dos outros tipos já trazem o seu.
 
 Os exemplares usam um caso de CRM **sintético**, do domínio da equipe. São

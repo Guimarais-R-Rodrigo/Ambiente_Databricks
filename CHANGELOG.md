@@ -5,6 +5,64 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-19 — Auditoria de segunda origem: a regra de idioma contra a biblioteca
+
+Primeira rodada com modelo de outra família, e a primeira **sem execução**: o
+corpus versionado inteiro numa janela só, 402 arquivos. Abre o gate de segunda
+origem declarado no `PLANO_HUB.md` §10. Relatório em
+`docs/auditoria/2026-08-19_leitura-contexto-longo/`.
+
+Três achados reportados — 1 procedente, 1 parcial, 1 improcedente — e **um achado
+forte fora da lista**, na única análise que nenhuma rodada anterior tinha pedido.
+
+### Corrigido
+
+1. (Claude) **Três documentos vivos mandavam "inglês em identificadores", e a
+   biblioteca praticava outra coisa:** 85 funções públicas em inglês contra 5 em
+   português, e **37 constantes em português**. O que torna o caso grave é onde a
+   regra vivia — o `.assistant_instructions.md` é publicado e injetado em **toda**
+   conversa do Genie Code, então o assistente era instruído a usar inglês e, na
+   mesma sessão, mandado importar `AZUL_CAIXA` e `SECOES_EDA`.
+   **A correção foi na regra, não na biblioteca:** constante de domínio em
+   português nomeia coisa que só existe aqui, e traduzir apaga o referente. A
+   regra passou a dizer o que o projeto pratica.
+2. (Claude) `PLANO_HUB.md` §12.2 dizia "7 cores da paleta" para `curves_plotly`.
+   O módulo tinha **7 hexadecimais oficiais** — 6 da paleta mais o
+   `TEXTO_SECUNDARIO`. O número estava certo e a palavra errada; a correção
+   proposta pelo auditor (trocar 7 por 6) teria **introduzido** um erro.
+3. (Claude) A skill do tutor escrevia "Asset Bundles"; o nome legado oficial é
+   **"Databricks Asset Bundles"**.
+4. (Claude) `hub-ml-criar-objeto` passou a dizer que o exemplar de skill se **lê e
+   não se copia** — qualquer pasta em `.assistant/skills/` é auto-descoberta, e
+   uma cópia viraria skill fantasma no chat.
+
+### Adicionado
+
+1. (Claude) `PLANO_HUB.md` §12.3 — **cinco funções públicas em português**
+   (`aplicar_tema`, `gerar_indice_eda`, `get_tema_eda`, `calcular_psi`,
+   `calcular_csi`), deriva contra uma convenção que 85 irmãs cumprem. Não
+   renomeadas: renomear função pública quebra quem chama, em silêncio. **Não
+   instrumentada, com razão registrada** — uma heurística de "nome em português"
+   acusaria `psi_calculator` tanto quanto `calcular_psi`, e nasceria com cinco
+   exceções.
+
+### Notas
+
+- **Segunda origem funciona mesmo com desempenho menor.** O achado de idioma
+  estava disponível para as 14 rodadas anteriores e nenhuma o viu, porque nenhuma
+  leu uma regra de estilo contra a biblioteca inteira. Um achado que só a troca de
+  origem produz paga a rodada.
+- **A análise que rendeu foi a inédita.** Das oito pedidas, a única que nenhuma
+  rodada anterior tinha feito — ler as 13 skills e as instruções pessoais como um
+  corpo único de instruções — foi a que achou. As sete que repetiam ângulos já
+  auditados devolveram matrizes corretas e vazias.
+- **Auditor sem execução precisa de âncora mais rígida.** Três problemas do
+  relatório têm a mesma raiz: sem poder rodar nada, preenche-se a lacuna com
+  plausibilidade. Foram uma afirmação falsa sobre o validador, um achado já
+  corrigido no dia anterior, e **três enunciados de forward test inventados**
+  quando o prompt indicava o arquivo com os literais. O próximo prompt de leitura
+  vai exigir transcrever antes de julgar, e não só citar ao julgar.
+
 ## 2026-08-19 — Empacotador para auditoria de contexto longo
 
 ### Adicionado
