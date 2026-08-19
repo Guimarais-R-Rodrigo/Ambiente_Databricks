@@ -14,7 +14,9 @@
 ## Por que esta rodada existiu, e por que o método foi outro
 
 O `PLANO_HUB.md` §10 declara desde o início um gate aberto: auditoria de segunda
-origem. As catorze rodadas anteriores tiveram acesso a shell, CLI e execução, e
+origem **da biblioteca**. Esta rodada **não o fecha** — ela é de segunda origem,
+mas de leitura: auditou consistência documental sem executar uma linha de código.
+O gate continua aberto e exige execução. As catorze rodadas anteriores tiveram acesso a shell, CLI e execução, e
 usaram bem — mas nenhuma teve o corpus completo em contexto, e todas
 compartilhavam os pontos cegos de um mesmo modelo.
 

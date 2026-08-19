@@ -8,9 +8,15 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 ## 2026-08-19 — Auditoria de segunda origem: a regra de idioma contra a biblioteca
 
 Primeira rodada com modelo de outra família, e a primeira **sem execução**: o
-corpus versionado inteiro numa janela só, 402 arquivos. Abre o gate de segunda
-origem declarado no `PLANO_HUB.md` §10. Relatório em
+corpus versionado inteiro numa janela só, 402 arquivos. Relatório em
 `docs/auditoria/2026-08-19_leitura-contexto-longo/`.
+
+> **Correção da primeira versão desta entrada**, escrita horas antes: ela dizia
+> que a rodada *"abre o gate de segunda origem do `PLANO_HUB.md` §10"*. **Não
+> abre.** O gate do §10 é *"auditoria de segunda origem **da biblioteca**"*, e
+> esta rodada foi de leitura, sem executar uma linha — auditou consistência
+> documental, não corretude de código. O gate continua aberto. A frase é a classe
+> de defeito que este projeto mais corrige, escrita por quem a nomeou.
 
 Três achados reportados — 1 procedente, 1 parcial, 1 improcedente — e **um achado
 forte fora da lista**, na única análise que nenhuma rodada anterior tinha pedido.
