@@ -5,6 +5,38 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-29 — Correções após auditoria externa dos READMEs
+
+### Adicionado
+
+1. (Codex) Registrados o parecer independente do Grok 4.6, o contraditório do
+   Codex e a evidência datada da etapa 6 em `docs/auditoria/` e `docs/testes/`.
+
+### Corrigido
+
+1. (Codex) Unificado o estado vigente de publicação Free e separado esse estado
+   da evidência histórica das etapas 1 a 5.
+2. (Codex) Reordenado o ciclo canônico para validar, renderizar, publicar e
+   verificar antes dos testes condicionais, do registro e da replicação; a
+   matriz de impacto agora explicita quando cada gate é obrigatório.
+3. (Codex) Corrigidas as referências ao glossário nos playbooks de replicação e
+   distinguido `constants.styles` como espelho legado, sem efeito automático
+   sobre módulos visuais.
+4. (Codex) O catálogo de helpers passou a destacar o smoke vigente no Spark
+   4.2.0 e a preservar os números de rodadas anteriores apenas como histórico;
+   títulos ambíguos do histórico Spark receberam data explícita.
+5. (Codex) O índice de skills operacionais passou a separar rotas ativas de uma
+   rota apenas planejada. A documentação de instruções agora explicita as
+   superfícies suportadas e a precedência geral das instruções de workspace.
+
+### Validação
+
+1. (Codex) Validação local aprovada com 737 arquivos inspecionados e 347 links
+   externos à raiz do produto; o simulado foi regenerado com 317 arquivos.
+2. (Codex) Publicação e verify no Databricks Free aprovados: 316 arquivos
+   esperados, 317 remotos (um gerenciado pela plataforma), 0 ausentes, 0
+   obsoletos, 13/13 skills e 4/4 diretórios `hub_`.
+
 ## 2026-08-29 — Redesenho editorial da etapa 6
 
 ### Adicionado

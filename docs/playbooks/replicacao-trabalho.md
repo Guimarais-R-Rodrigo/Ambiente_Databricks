@@ -119,7 +119,8 @@ Destino exato, com o username do workspace do trabalho:
 ├── .assistant_instructions.md        ← nativo: instruções pessoais
 └── .assistant/
     ├── skills/hub-ml-*/             ← nativo: descoberta automática
-    ├── CATALOGO_HELPERS.md            # o glossário mora no README
+    ├── CATALOGO_HELPERS.md
+    ├── GLOSSARIO.md                   # vocabulário oficial, técnico e local
     └── hub_padroes | hub_prompts | hub_snippets | hub_scripts
 ```
 

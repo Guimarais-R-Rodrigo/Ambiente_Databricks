@@ -198,14 +198,17 @@ Somar taxas por safra produz número diferente e incorreto.
 | Headers de seção | `hub_snippets.visual.section_header` | `section_header_html` |
 | Separadores | `hub_snippets.visual.divider` | `divider_light`, `divider_medium`, `divider_heavy`, `divider_section` |
 | Paleta, cores semânticas e institucionais | `hub_snippets.constants.colors` | 22 constantes: `PALETA_CATEGORICA`, `COR_POSITIVO`, `AZUL_CAIXA`… |
-| CSS compartilhado para `displayHTML` | `hub_snippets.constants.styles` | `STYLE_SECTION_HEADER`, `STYLE_KPI_CARD`, `STYLE_BADGE_OK`… |
+| CSS legado de referência — espelho, não fonte efetiva | `hub_snippets.constants.styles` | `STYLE_SECTION_HEADER`, `STYLE_KPI_CARD`, `STYLE_BADGE_OK`… |
 | Emojis das etapas da EDA e vocabulário semântico | `hub_snippets.constants.emojis` | `SECOES_EDA`, `SEMANTICA` |
 | Índice de notebook de EDA | `hub_snippets.visual.index_generator` | `gerar_indice_eda` |
-| Paletas, emojis e estilos CSS | `hub_snippets.constants.colors`, `.emojis`, `.styles` | constantes |
 
 Formatação brasileira vale para a narrativa; os dados preservam o tipo numérico
 original. Entradas dos helpers de HTML são escapadas — não monte HTML por
 concatenação manual para contornar o escape.
+
+`constants.styles` preserva um espelho do CSS legado para consulta e
+compatibilidade. O CSS efetivo continua inline nos módulos `visual`: editar
+`STYLE_SECTION_HEADER`, por exemplo, **não** altera `section_header_html`.
 
 ## Testes e fixtures
 
@@ -224,7 +227,15 @@ que elas foram descartadas.
 
 ## Restrições verificadas no runtime
 
-Verificação executada em Spark 4.1 serverless (2026-08-13, 64 checks):
+Estado vigente do gate: Spark 4.2.0 serverless em 2026-08-29, com 145
+verificações — 136 `PASS`, 0 `FAIL`, 8 `OPTIONAL_MISSING` e 1
+`BLOQUEADO_ESPERADO`. A evidência bruta fica no repositório canônico em
+`docs/testes/spark/resultados/2026-08-29_smoke_a2.json`.
+
+As restrições abaixo foram descobertas na rodada de Spark 4.1 serverless de
+2026-08-13 (64 checks). O smoke de 29/08 passou com as mitigações já incorporadas
+ao código; isso não transforma observação de serverless em regra universal de
+todo compute Databricks:
 
 - `cache()` e `persist()` **não são suportados** em compute serverless.
   `safe_display` opera sem cache; `quick_profile` e `drift_detector` degradam

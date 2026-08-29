@@ -51,6 +51,11 @@ flowchart LR
 \* As instruções não se aplicam a Quick Fix e Autocomplete, conforme a
 documentação oficial atual.
 
+Nas demais superfícies suportadas, elas alcançam chat, sugestões inline e
+Suggest Fix. Salvo instrução em contrário, o Genie Code geralmente prioriza
+instruções de workspace sobre as pessoais; por isso a promoção para uso
+compartilhado exige revisão de conflito, não apenas cópia.
+
 O prefixo `hub_`/`hub-` indica autoria local, não menor qualidade. Ele existe
 para que ninguém confunda uma convenção deste pacote com uma interface
 institucional da Databricks.
@@ -91,7 +96,8 @@ Workspace/.assistant_workspace_instructions.md
 
 Use permissões, revisão por Git e teste representativo antes de promover uma
 skill pessoal. Não copie automaticamente bibliotecas ou preferências pessoais
-para toda a equipe.
+para toda a equipe. Compare primeiro as instruções pessoais com as de workspace,
+porque as de workspace geralmente têm precedência quando houver sobreposição.
 
 ## Fluxo diário
 

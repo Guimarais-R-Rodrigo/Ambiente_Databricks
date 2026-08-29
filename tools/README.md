@@ -79,6 +79,11 @@ Nenhum gate substitui o outro:
 padrão, ambos recusam worktree sujo para não atribuir conteúdo novo ao commit
 anterior.
 
+`.artifacts/` é saída local e não fonte de verdade. Um ZIP citado em relatório
+datado representa aquele commit; não existe alias “latest”. Para implantar,
+gere o bundle novamente em HEAD limpo e confira `source_commit` e os hashes do
+`MANIFEST.json`.
+
 ## Acrescentar uma verificação
 
 1. Registre no docstring qual defeito real a guarda previne.

@@ -26,7 +26,7 @@ flowchart LR
 | Gate | Resultado | Falta |
 |---|---|---|
 | validação local | aprovado | — |
-| publicação/verify Free | aprovado antes do redesenho documental | republicar a documentação atual |
+| publicação/verify Free | **316 esperados, 317 remotos, 0 ausentes/obsoletos** | [redesenho publicado e conferido](2026-08-29_etapa-6-redesenho-documental.md) |
 | execução funcional | **145 verificações: 136 PASS, 0 FAIL** | 8 opcionais requerem bibliotecas; 1 bloqueio MLflow é esperado |
 | roteamento das 12 skills originais | **36/36 PASS** | — |
 | `hub-ml-criar-objeto` | 0/3 | positivo, negativo e `@menção` |

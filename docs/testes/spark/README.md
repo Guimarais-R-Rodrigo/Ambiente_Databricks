@@ -62,7 +62,7 @@ Por isso a rodada 5 fecha o gate com **64 PASS / 0 FAIL / 7 opcionais ausentes**
 são 71 verificações, e as 7 restantes não são falhas. Para diagnosticar um `FAIL`
 concreto, veja [Como ler uma falha](#como-ler-uma-falha).
 
-## Módulos com dependência opcional — situação final
+### Módulos com dependência opcional — situação em 2026-08-17
 
 > **Atualizado em 2026-08-17.** O bloco abaixo foi reescrito: a situação de
 > 14/08 registrava 13 de 14 e classificava `prophet_wrapper` como sem combinação
@@ -102,7 +102,7 @@ Três armadilhas confirmadas, válidas para todos os wrappers de treino:
   positiva; e `mlp_embeddings` espera **uma lista de arrays**, um por feature
   categórica, não uma matriz.
 
-## Restrição de ambiente descoberta na rodada 7
+### Restrição de ambiente descoberta na rodada 7
 
 Instalar o conjunto de bibliotecas de ML sem fixar versão **derruba o kernel** em
 compute serverless: pip sobe `pandas` de 1.5.3 para 2.3.3 e `numpy` de 1.26.4
@@ -124,7 +124,7 @@ Foi essa rodada que motivou fixar as versões em `requirements-optional.txt`. O
 arquivo hoje traz o conjunto que funcionou; antes dela listava só nomes, e nessa
 forma não era instalável neste ambiente.
 
-## Defeitos reais encontrados e corrigidos no `ambiente_fonte/`
+### Defeitos reais encontrados e corrigidos no `ambiente_fonte/`
 
 Nenhum deles era detectável pela validação estática (AST compilava na máquina
 local com Python 3.12):
@@ -147,7 +147,7 @@ local com Python 3.12):
    Python ≥ 3.12; o runtime usa versão anterior. Escapes movidos para fora da
    f-string.
 
-## Dependências opcionais ausentes no Free (esperado)
+### Dependências opcionais ausentes na rodada 5 — 2026-08-13
 
 `lightgbm`, `xgboost`, `catboost`, `optuna`, `torch` (×2 módulos) — 7 módulos de
 `hub_snippets/ml` só importam com as libs instaladas no ambiente do projeto

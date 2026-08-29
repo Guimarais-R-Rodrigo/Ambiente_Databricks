@@ -15,16 +15,18 @@
 
 ## Rotas disponíveis
 
-| Intenção | Skill operacional | Saída esperada |
-|---|---|---|
-| validar o produto | `validar-assistant` | gate local com falhas acionáveis |
-| gerar o espelho | `render-simulado` | `Novo_Ambiente_Simulado/` regenerado |
-| publicar no laboratório | `publicar-free` | execute + verify com host/perfil explícitos |
-| testar roteamento | `forward-test-skills` | registro positivo, negativo e `@menção` |
-| copiar para o trabalho | `replicar-trabalho` | pré-condições, cópia e verificação no destino |
+| Intenção | Skill operacional | Status | Saída esperada |
+|---|---|---|---|
+| validar o produto | `validar-assistant` | ativa | gate local com falhas acionáveis |
+| gerar o espelho | `render-simulado` | ativa | `Novo_Ambiente_Simulado/` regenerado |
+| publicar no laboratório | `publicar-free` | ativa | execute + verify com host/perfil explícitos |
+| testar roteamento | `forward-test-skills` | ativa | registro positivo, negativo e `@menção` |
+| copiar para o trabalho | `replicar-trabalho` | ativa | pré-condições, cópia e verificação no destino |
+| revisar documentação oficial | `revisar-docs-oficiais` | **planejada; pasta inexistente** | relatório de mudança de nomenclatura/capacidade |
 
-O pedido em linguagem natural aciona a rota pertinente. O `SKILL.md` explica
-pré-condições, comandos, critério de sucesso e quando parar.
+O pedido em linguagem natural aciona uma rota ativa pertinente. O `SKILL.md`
+explica pré-condições, comandos, critério de sucesso e quando parar. Item
+planejado não é invocável até a pasta e o `SKILL.md` existirem.
 
 ## Criar ou alterar uma skill operacional
 

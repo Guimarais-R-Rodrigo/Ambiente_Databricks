@@ -20,10 +20,11 @@ Databricks; um termo de **modelagem** independe de ferramenta; uma
 | **Skill de usuário** | Skill em `/Users/<username>/.assistant/skills/`, disponível apenas para a pessoa. |
 | **Skill de workspace** | Skill em `Workspace/.assistant/skills/`, compartilhada conforme permissões administradas. |
 | **Instruções pessoais** | `.assistant_instructions.md` no diretório do usuário; preferências persistentes aplicadas às interações suportadas. |
-| **Instruções de workspace** | `Workspace/.assistant_workspace_instructions.md`, administrado para orientar o workspace. |
+| **Instruções de workspace** | `Workspace/.assistant_workspace_instructions.md`, administrado para orientar o workspace e geralmente priorizado sobre instruções pessoais quando houver sobreposição. |
 | **`AGENTS.md` / `CLAUDE.md`** | Contexto de projeto descoberto na árvore do arquivo aberto. A localização define o escopo. |
 | **`@menção`** | Referência explícita no prompt a skill, arquivo, tabela ou outro recurso oferecido pela interface. |
 | **Quick Fix / Autocomplete** | Superfícies às quais as instruções pessoais e de workspace não se aplicam, segundo a documentação oficial atual. |
+| **Inline suggestions / Suggest Fix** | Superfícies às quais as instruções se aplicam, além do chat. Não confundir Suggest Fix com Quick Fix. |
 | **Agent mode** | Modo em que o Genie Code conduz tarefas em múltiplas etapas e pode usar ferramentas ou executar código, sujeito a permissões e configuração de aprovação. |
 | **Unity Catalog** | Camada de governança de catálogos, schemas, tabelas, permissões e linhagem. Origina o nome de três níveis `catalog.schema.table`. |
 | **Serverless** | Compute gerenciado. Suporte de API e bibliotecas depende do runtime e deve ser verificado no destino. |

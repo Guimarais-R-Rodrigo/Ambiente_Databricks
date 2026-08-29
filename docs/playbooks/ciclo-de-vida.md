@@ -8,8 +8,10 @@ mesma ordem, e divergir de qualquer um deles é defeito nos três.
 ```mermaid
 flowchart LR
   E["1. Editar"] --> V["2. Validar"] --> R["3. Renderizar"]
-  R --> P["4. Publicar<br/>--execute + --verify"] --> G["5. Registrar<br/>CHANGELOG + commit"]
-  G --> T["6. Testar<br/>forward tests"] --> W["7. Replicar<br/>runbook manual"]
+  R --> P["4. Publicar<br/>--execute + --verify"]
+  P --> T["5. Testar conforme impacto<br/>smoke · forward · prompts"]
+  T --> G["6. Registrar<br/>CHANGELOG + commit"]
+  G --> W["7. Replicar<br/>runbook manual"]
 ```
 
 ## 1. Editar
@@ -45,24 +47,30 @@ Dry-run por padrão; `--execute` é gate consciente. O `verify` é obrigatório:
 publicação relata o que enviou, ele confere o que existe — inclusive arquivos
 obsoletos, que `import-dir --overwrite` nunca remove (ADR-0005).
 
-## 5. Registrar
+## 5. Testar conforme o impacto
+
+Nem toda mudança exige todos os testes. A classe alterada decide o gate:
+
+| Mudança | Gate antes do commit |
+|---|---|
+| helper, Python, Spark ou ML | smoke no runtime Databricks |
+| `name`, `description` ou fronteira de skill | forward tests positivo, negativo e `@menção` |
+| contrato ou comportamento de prompt | resposta real no Genie Code e registro no notebook de exemplo |
+| somente governança fora do produto | validação local; nenhum runtime por reflexo |
+
+Execute em chat novo quando o gate for conversacional. Falha não vira ajuste de
+`description` ou relaxamento do teste sem antes isolar se o defeito está no
+produto, no instrumento ou na cota.
+
+## 6. Registrar
 
 - Entrada no `CHANGELOG.md` (template `.claude/templates/changelog-entry.md`).
 - Decisão estrutural → ADR; sessão interrompida → handoff.
 
-**Depois de publicar, não antes.** A entrada cita contagens, e quem as produz é a
-linha `remotos` do `--verify`. Registrar primeiro é escrever de memória o número
-que o comando ia dar — a classe de defeito que este repositório mais corrigiu.
-
-## 6. Testar no Free
-
-Para cada skill alterada, em **chat novo** do Genie Code:
-
-1. caso positivo (pedido que deveria acionar a skill por relevância);
-2. caso negativo (pedido parecido que NÃO deveria acionar);
-3. `@menção` explícita.
-
-Falha de auto-seleção → melhorar `description` e repetir. Registrar resultados.
+O changelog pode ser rascunhado durante o trabalho, mas só é fechado **depois**
+do `--verify` e dos testes pertinentes. A entrada cita contagens e evidência
+real; registrar antes é escrever de memória o número que o comando ainda não
+produziu.
 
 ## 7. Replicar no trabalho (fase 4 — runbook)
 
@@ -75,7 +83,7 @@ pré-requisitos e guardrails estão em `.claude/skills/replicar-trabalho/`.
 ## Fontes
 
 - Diagrama equivalente: [`README.md`](../../README.md) da raiz, seção "Ciclo de
-  vida de uma mudança"
+  contribuição"
 - Comandos na forma copiável: [`ambiente_fonte/README.md`](../../ambiente_fonte/README.md)
 - Camadas e o que é editável: `.claude/rules/fonte-de-verdade.md`
 - Por que a conferência é obrigatória: [ADR-0005](../decisions/ADR-0005-publicacao-propria-no-free.md)

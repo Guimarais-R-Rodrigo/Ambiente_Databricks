@@ -75,7 +75,7 @@ continuam exigindo import explícito.
 |---|---|---|
 | validação local | ✅ aprovado | fonte, links, contratos, Python e higiene |
 | render | ✅ aprovado | espelho regenerado a partir da fonte |
-| publicação Free | ✅ aprovado após este redesenho | 316 esperados, 0 ausentes e 0 obsoletos |
+| publicação Free | ✅ aprovado após este redesenho | [316 esperados, 0 ausentes e 0 obsoletos](docs/testes/2026-08-29_etapa-6-redesenho-documental.md) |
 | smoke Spark 4.2.0 | ✅ 145 verificações: 136 PASS, 0 FAIL, 8 opcionais ausentes e 1 bloqueio esperado | [JSON](docs/testes/spark/resultados/2026-08-29_smoke_a2.json) |
 | roteamento das 12 skills originais | ✅ 36/36 | [forward tests](docs/testes/forward/README.md) |
 | `hub-ml-criar-objeto` | ⏳ 0/3 | cota do Genie Code impediu a rodada |
@@ -84,6 +84,8 @@ continuam exigindo import explícito.
 
 A síntese das etapas 1 a 5, incluindo run e task do smoke, está em
 [`2026-08-29_execucao-etapas-1-a-5.md`](docs/testes/2026-08-29_execucao-etapas-1-a-5.md).
+A publicação do redesenho e o pacote de 316 arquivos estão na
+[evidência da etapa 6](docs/testes/2026-08-29_etapa-6-redesenho-documental.md).
 
 `OPTIONAL_MISSING` não é falha do helper: indica biblioteca opcional ausente.
 `BLOQUEADO_ESPERADO` é um limite de plataforma previamente documentado e
@@ -235,8 +237,8 @@ normas do molde    : 70 arquivos, 0 violação(ões)
 notebook exercita  : 57 objetos, 0 notebook(s) que só importam
 python (AST)       : 209 arquivos
 instrucoes         : 8116/20000 caracteres
-repo (identidade)  : 735 arquivos varridos no repositório editável/derivado
-repo (links)       : 341 links fora da raiz analisada
+repo (identidade)  : 737 arquivos varridos no repositório editável/derivado
+repo (links)       : 347 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```

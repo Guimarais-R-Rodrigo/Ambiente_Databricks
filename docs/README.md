@@ -46,7 +46,10 @@ resumo vigente em [testes](testes/README.md) e abra o JSON ou a rodada citada.
 
 Em 29/08/2026, validação local, publicação no Free e smoke no Spark 4.2.0 estavam
 aprovados. Os testes conversacionais do Genie Code continuavam parcialmente
-pendentes por cota. A síntese e os identificadores das execuções estão em
-[execução das etapas 1 a 5](testes/2026-08-29_execucao-etapas-1-a-5.md).
+pendentes por cota. Consulte a
+[execução das etapas 1 a 5](testes/2026-08-29_execucao-etapas-1-a-5.md) para o
+checkpoint técnico e a
+[etapa 6](testes/2026-08-29_etapa-6-redesenho-documental.md) para o redesenho
+publicado depois dele.
 
 Volte ao [README raiz](../README.md) para o ciclo de contribuição.
