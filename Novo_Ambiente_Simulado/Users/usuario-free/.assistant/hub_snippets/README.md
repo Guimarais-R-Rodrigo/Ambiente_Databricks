@@ -1,173 +1,129 @@
-# `hub_snippets` — biblioteca Python customizada
+# `hub_snippets/` — biblioteca Python reutilizável
 
-> **EXTENSÃO DO HUB (`hub_`) — não auto-descoberta nem instalada pelo Genie Code.**
+> **HUB · IMPORT MANUAL.** Esta pasta não é uma Agent Skill, não é instalada
+> pelo Genie Code e nenhum módulo entra automaticamente no chat ou no runtime.
 
-Esta pasta preserva helpers reutilizáveis de notebook. Ela não é uma Agent Skill e
-nenhum módulo é carregado automaticamente. Importe somente o que o notebook usa.
+Use um snippet quando precisar de uma função para compor seu notebook, teste ou
+pipeline. Para diagnóstico que recebe nome de tabela/notebook e devolve um
+veredito, veja [`hub_scripts`](../hub_scripts/README.md).
 
-Para localizar o módulo a partir da demanda ("preciso calcular PSI", "preciso de
-split temporal"), consulte o [catálogo de helpers](../CATALOGO_HELPERS.md),
-que cobre `hub_snippets` e `hub_scripts` e marca as dependências opcionais.
+## Encontre antes de importar
 
-## Uso no Databricks
+O [catálogo de helpers](../CATALOGO_HELPERS.md) é o documento dono do mapa:
 
-Se `.assistant` estiver no diretório do projeto/repositório:
+```text
+demanda → módulo → API pública → dependência → restrição de runtime
+```
+
+Não mantenha uma segunda lista completa aqui. Este README explica a forma e o
+uso; o catálogo responde “qual helper resolve meu problema?”.
+
+| Pacote | Finalidade | Cuidado principal |
+|---|---|---|
+| `constants` | formato brasileiro, cores e estilos | convenções locais, não identidade oficial Databricks |
+| `visual` | tema Plotly, seções, badges e KPIs | escape de texto e compatibilidade de render |
+| `spark` | joins temporais, qualidade, amostra e display | ações distribuídas, custo e Spark Connect |
+| `display` | gráficos e tabelas de exploração | coleta no driver sempre limitada |
+| `ml` | validação, modelos, explicabilidade e monitoramento | dependências opcionais e leakage |
+| `testing` | dados sintéticos determinísticos | apenas teste/exemplo |
+| `tests` | regressão local de helpers driver-side | não é pasta de objeto nem produto importável |
+
+## Primeiro uso
+
+Adicione a pasta `.assistant` ao path:
 
 ```python
 from pathlib import Path
 import sys
 
-project_root = Path.cwd()  # ajuste se o notebook estiver em uma subpasta
-assistant_root = project_root / ".assistant"
+assistant_root = Path("/Workspace/Users/<username>/.assistant")
 if not assistant_root.is_dir():
-    raise FileNotFoundError("Defina assistant_root para a pasta .assistant deste projeto")
+    raise FileNotFoundError(f"Defina o caminho correto: {assistant_root}")
+
 sys.path.insert(0, str(assistant_root))
 
-from hub_snippets.visual.theme_plotly import aplicar_tema
 from hub_snippets.spark.null_summary import null_summary
-from hub_snippets.spark.safe_display import safe_display
+from hub_snippets.visual.theme_plotly import aplicar_tema
 ```
 
-Para uma instalação no diretório do usuário, use o caminho parametrizado
-`/Workspace/Users/<username>/.assistant`; nunca copie um e-mail pessoal de um
-exemplo. Em serverless, confirme as regras atuais para dependências e reinicie o
-Python quando a instalação do notebook exigir.
+Se o pacote estiver dentro do projeto, derive o caminho a partir da raiz do
+projeto em vez de fixar um usuário.
 
-## Onde procurar um módulo
-
-O mapa completo — organizado por demanda, com função pública e dependências
-marcadas — está em
-[CATALOGO_HELPERS.md](../CATALOGO_HELPERS.md).
-
-O catálogo é a lista mantida para **demanda → módulo**. A tabela de inventário
-logo abaixo responde outra pergunta — "o que existe?" — e pode ficar para trás
-quando a biblioteca mudar. Havendo divergência entre as duas, vale o catálogo.
-
-### O que cada módulo faz
-
-Visão de inventário — o que existe. Para o caminho inverso ("preciso fazer X,
-qual módulo uso?"), o catálogo é a referência.
-
-| Módulo | Em uma linha |
-|---|---|
-| `spark.pit_join` | junta histórico à decisão usando só o que já estava disponível |
-| `spark.join_diagnostics` | mede cobertura, multiplicidade e expansão antes do join |
-| `spark.psi_calculator` | PSI e CSI comparando formas de distribuição, bins da referência |
-| `spark.null_summary` | nulos por coluna com semáforo |
-| `spark.smart_sample` | amostra reprodutível, estratificada quando pedido |
-| `spark.safe_display` | exibe DataFrame grande sem varredura completa |
-| `spark.date_features` | features de calendário, com feriados do projeto |
-| `ml.split_temporal` | separa treino e teste por período, não por sorteio |
-| `ml.walk_forward` | validação que avança no tempo, retreinando a cada janela |
-| `ml.metrics_report` | métricas de classificação e regressão padronizadas |
-| `ml.curves_plotly` | curvas ROC, PR, lift e KS |
-| `ml.train_lgbm`, `.train_xgboost`, `.train_catboost` | baselines tabulares com MLflow opcional |
-| `ml.optuna_lgbm` | busca de hiperparâmetros |
-| `ml.lgbm_ranker` | ranking com LambdaRank e NDCG |
-| `ml.mlflow_run` | registro que exige dataset, split, assinatura e limitações |
-| `ml.scorecard_builder` | converte modelo logístico em pontos |
-| `ml.score_bands` | bandas de score com direção declarada |
-| `ml.woe_iv_calculator` | WOE e Information Value |
-| `ml.shap_explainer` | SHAP: cálculo, importância e gráficos |
-| `ml.explainability_report` | relatório executivo e técnico de explicabilidade |
-| `ml.drift_detection` | PSI, KS e CSI driver-side, sobre amostra |
-| `ml.performance_monitor` | acompanha métricas contra política calibrada |
-| `ml.vintage_analysis` | safras: tabela, curvas de maturação e heatmap |
-| `ml.survival_cox`, `.kaplan_meier` | sobrevivência e teste log-rank |
-| `ml.prophet_wrapper`, `.arima_wrapper` | séries temporais |
-| `ml.clustering_suite`, `.cluster_profiling` | seleção de k, pipeline e profiling |
-| `ml.isolation_forest`, `.autoencoder_anomaly` | detecção de anomalia |
-| `ml.umap_viz` | projeção 2D para visualizar grupos |
-| `ml.mlp_embeddings`, `.tabnet_wrapper` | redes para dados tabulares |
-| `ml.lgbm_temporal` | lags e janelas móveis por entidade |
-| `display.correlation_matrix`, `.distribution_grid`, `.dataframe_styled` | gráficos e tabelas de exploração |
-| `visual.theme_plotly`, `.kpi_card`, `.badge`, `.section_header`, `.divider`, `.index_generator` | identidade visual do notebook |
-| `constants.format_br`, `.colors`, `.emojis`, `.styles` | formatação brasileira, paleta e estilos |
-| `testing.fixtures` | bases sintéticas determinísticas para teste e exemplo |
-
-### Material didático
-
-Cada snippet convertido tem, na própria pasta, um notebook `exemplo_<nome>.py`
-que mostra o erro acontecendo antes de mostrar a correção. O material didático
-não fica mais em pasta separada: ele mora junto do módulo que ensina, e é assim
-que se sabe se um objeto já foi convertido.
-
-```text
-hub_snippets/spark/pit_join/
-├── __init__.py
-├── pit_join.py              # o módulo
-└── exemplo_pit_join.py      # o notebook que o ensina
-```
-
-**No workspace do Databricks o `exemplo_*` aparece como notebook e sem a extensão
-`.py`** — abra pelo navegador de arquivos, não pelo link, se estiver lendo este
-documento dentro do Databricks. O módulo ao lado, com a mesma aparência de `.py`,
-é arquivo comum: essa diferença é o que mantém o `import` funcionando.
-
-A pasta de trânsito `_notebooks_a_migrar/`, que existiu entre as Sprints 2 e 7,
-foi removida quando o último dos quatro notebooks originais foi desmembrado.
-
-Para explicação linha a linha de qualquer outro módulo, use
-`@hub-ml-tutor-databricks` com o arquivo anexado — ela lê a versão atual, então
-não fica defasada.
-
-### Como se localizar
-
-| Sua pergunta | Onde responder |
-|---|---|
-| "o que existe nesta biblioteca?" | a tabela de módulos acima |
-| "preciso fazer X, qual módulo uso?" | [catálogo de helpers](../CATALOGO_HELPERS.md) |
-| "por que este helper existe e o que dá errado sem ele?" | o `exemplo_*` na pasta do próprio helper |
-| "o que esta linha do código faz?" | `@hub-ml-tutor-databricks` com o módulo anexado |
-| "o que significa este termo?" | [glossário](../README.md#glossário) |
-
-### Agrupamento por pacote
-
-| Pacote | Finalidade | Cuidados |
-|---|---|---|
-| `constants` | cores, estilos, emojis e formatação BR | a paleta é customizada, não Databricks |
-| `visual` | tema Plotly, cabeçalhos, badges, KPIs e índice | o HTML gerado escapa o texto recebido |
-| `spark` | nulos, amostragem, display, datas e PSI | ações Spark têm custo; declare amostra e referência |
-| `display` | correlação, distribuições e tabela estilizada | conversão ao driver é sempre limitada |
-| `ml` | baselines, validação, drift, SHAP, séries, survival e monitoramento | dependências opcionais; valide versão e runtime |
-| `testing` | fixtures sintéticas determinísticas | só para teste e exemplo; nunca imita base real |
-| `tests` | suíte de regressão dos helpers de driver | **não é pacote de objeto**: sem `__init__.py` e sem notebook; roda fora do workspace |
-
-Use `requirements-optional.txt` como inventário, não como lockfile universal. Instale
-somente o subconjunto necessário e registre versões no projeto consumidor.
-
-## Quando o import falha
-
-| Mensagem | Causa | Correção |
-|---|---|---|
-| `ModuleNotFoundError: No module named 'hub_snippets'` | foi adicionada ao `sys.path` a pasta `hub_snippets` | adicione a `.assistant`, que a contém |
-| `ModuleNotFoundError: No module named 'lightgbm'` (ou `xgboost`, `catboost`, `optuna`, `torch`) | dependência opcional exigida já no import | instale com versão fixada, ou use outro módulo do catálogo |
-| Import passa e o erro só aparece ao chamar a função | dependência opcional resolvida na chamada — caso de SHAP, lifelines, Prophet, UMAP, TabNet e ARIMA | mesma correção; o catálogo marca esses casos |
-| `NOT_SUPPORTED_WITH_SERVERLESS: PERSIST TABLE` | código novo chamando `cache()` em compute serverless | remova o cache; os helpers já operam sem ele |
-| `NameError: name 'spark' is not defined` | código novo contando com a variável global de notebook dentro de um módulo | resolva a sessão com `SparkSession.getActiveSession()` |
-
-As três últimas linhas vieram de falhas reais encontradas ao executar a
-biblioteca no runtime, não de suposição.
-
-## Contrato de segurança
-
-- Não use `toPandas()` sem limite verificável.
-- Em dados temporais, ajuste preprocessamento apenas no treino e respeite o instante
-  de decisão.
-- Em dados por entidade, informe a chave para lags/janelas.
-- Defina explicitamente classe positiva e direção do score.
-- PSI e thresholds de alerta são heurísticas calibráveis.
-- Não silencie exceções com sentinelas como `-1`; retorne diagnóstico ou falhe.
-
-## Verificação rápida
+Teste barato, sem ação Spark:
 
 ```python
 from hub_snippets.constants.format_br import fmt_brl, fmt_pct
 
 assert fmt_brl(1.999) == "R$ 2,00"
-assert fmt_pct(1.0) == "100,0%"              # escala ratio
-assert fmt_pct(1.0, input_scale="percent") == "1,0%"
+assert fmt_pct(0.928) == "92,8%"
 ```
 
-Após alterar os módulos, execute os testes locais e a compilação sintática. O fato de
-um arquivo importar não comprova compatibilidade com o runtime Spark do workspace.
+Silêncio no import significa apenas que o módulo foi localizado. Não prova que a
+função executará no runtime nem que a lógica está correta para seus dados.
+
+## Forma de cada objeto
+
+```text
+hub_snippets/<pacote>/<objeto>/
+├── __init__.py              # API pública
+├── <objeto>.py              # implementação importável
+└── exemplo_<objeto>.py      # notebook didático
+```
+
+Abra `exemplo_<objeto>` antes de usar a função. Ele apresenta:
+
+1. problema e erro típico;
+2. ambiente e dependências;
+3. exemplo executável com dado sintético;
+4. saída real e interpretação;
+5. situações em que o helper é a escolha errada.
+
+No workspace, `exemplo_*` aparece como notebook sem a extensão `.py`. A
+implementação ao lado precisa permanecer arquivo Python comum para que o import
+funcione.
+
+## Dependências opcionais
+
+O arquivo [`requirements-optional.txt`](requirements-optional.txt) é inventário,
+não lockfile universal.
+
+1. Escolha o helper no catálogo.
+2. Instale apenas a dependência marcada para ele.
+3. Fixe a versão no projeto consumidor.
+4. Reinicie o Python quando o notebook exigir.
+5. Reexecute no runtime de destino.
+
+Ambiente gerenciado muda. Uma biblioteca que funcionou numa data pode deixar de
+funcionar — ou o inverso — após atualização do runtime.
+
+## Diagnóstico de import e execução
+
+| Sintoma | Causa provável | Ação |
+|---|---|---|
+| `No module named 'hub_snippets'` | path aponta para `hub_snippets`, não para o pai | adicione `.assistant` |
+| dependência como `lightgbm` ausente | opcional exigida no import | instale versão fixada ou escolha outro helper |
+| import passa, chamada falha | dependência é carregada tardiamente | confira catálogo e notebook de exemplo |
+| `NOT_SUPPORTED_WITH_SERVERLESS` | API não aceita nesse compute/runtime | use alternativa documentada e teste no destino |
+| `NameError: spark` dentro do módulo | código contou com global de notebook | resolva `SparkSession` explicitamente |
+| `Py4JError` em API de ML | superfície clássica não exposta por Spark Connect | use API compatível ou compute apropriado |
+
+Esses padrões são diagnósticos, não garantias universais. Preserve a mensagem
+completa, runtime e data ao registrar uma falha nova.
+
+## Contrato de segurança
+
+- Não use `toPandas()` ou coleta no driver sem limite verificável.
+- Declare grão, chave, tempo e classe positiva quando aplicável.
+- Ajuste preprocessamento somente no treino.
+- Respeite disponibilidade point-in-time e atraso de publicação.
+- Trate PSI e thresholds como heurísticas calibráveis.
+- Não esconda falha com sentinela arbitrária; retorne diagnóstico ou lance erro.
+- Helper não substitui expectativa de pipeline, monitoramento de produção ou
+  política do Unity Catalog.
+
+## Onde continuar
+
+- [Catálogo demanda → helper](../CATALOGO_HELPERS.md)
+- [Diagnósticos em `hub_scripts`](../hub_scripts/README.md)
+- [Template para novo snippet](../hub_padroes/snippet/template.md)
+- [Guia do ecossistema](../README.md)

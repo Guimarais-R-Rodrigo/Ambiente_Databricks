@@ -1,57 +1,74 @@
-# `hub_prompts` — biblioteca personalizada de prompts para Genie Code
+# `hub_prompts/` — briefings guiados para Genie Code
 
-> **EXTENSÃO DO HUB (`hub_`) — NÃO AUTO-DESCOBERTA.** Esta pasta não é uma
-> estrutura institucional da Databricks e seu conteúdo não é carregado
-> automaticamente pelo Genie Code. O prefixo `hub_` torna essa diferença explícita.
+> **HUB · USO MANUAL.** Esta coleção não é uma estrutura institucional da
+> Databricks e não é auto-descoberta. Escolha um arquivo, preencha os campos e
+> anexe-o ou copie o bloco final para o chat.
 
-## Para que serve
+Os prompts transformam um pedido vago em um contrato reproduzível: contexto,
+objetivo, dados, modo de trabalho, limites, saída e QA.
 
-Estes arquivos são formulários reutilizáveis para preparar pedidos claros e
-reprodutíveis. Eles complementam, mas não substituem:
+## Comece em três passos
 
-- `.assistant_instructions.md`, usado para preferências globais do usuário;
-- `AGENTS.md`, descoberto automaticamente no diretório do projeto e em seus
-  diretórios ancestrais;
-- `.assistant/skills/<nome>/SKILL.md`, carregado quando relevante ou quando a skill
-  é mencionada com `@`.
+1. Escolha a família na [tabela abaixo](#catálogo).
+2. Substitua todo `{{CAMPO}}` seguindo o guia do próprio arquivo.
+3. Anexe os recursos com `@` e cole **Prompt pronto para colar**.
 
-## Uso recomendado
+```text
+@hub-ml-eda-profissional
 
-1. Abra o prompt adequado e substitua cada `{{CAMPO}}`. Use `NÃO INFORMADO` quando
-   algo for desconhecido; não deixe placeholders sem intenção.
-2. No painel do Genie Code, clique em **Add context** para anexar notebooks, queries,
-   pipelines, tabelas ou arquivos. Alternativamente, digite `@<recurso>`.
-3. Para uma skill específica, digite `@` e selecione a skill indicada no prompt.
-4. Cole apenas o bloco **Prompt pronto para colar** no chat.
-5. Revise o plano, os pressupostos e o impacto antes de autorizar execução ou escrita.
+Use o briefing anexado e @catalogo.schema.tabela.
+Primeiro apresente o plano. Não execute nem escreva até minha aprovação.
+```
 
-### Como preencher sem adivinhar
+Usar `@skill` é recomendado quando você precisa de rota determinística. Sem a
+menção, o Genie Code ainda pode escolher uma skill relevante.
 
-Cada prompt traz uma tabela `campo → como preencher → por que importa → exemplo`.
-Use estes critérios em conjunto:
+## O que existe dentro de cada prompt
 
-| Tipo de campo | Regra de preenchimento | Erro que evita |
+| Bloco | Pergunta que resolve |
+|---|---|
+| Quando usar / não usar | este formulário é o correto? |
+| Antes de preencher | que contexto e autorização preciso obter? |
+| Guia de campos | o que escrever, por que importa e um exemplo |
+| Prompt pronto para colar | qual texto vai ao chat? |
+| Contrato de saída | como reconheço uma resposta completa? |
+| QA | o que conferir antes de aceitar? |
+| Limites | o que o Genie Code não deve inferir ou executar? |
+
+Cada pasta também tem `exemplo_<nome>.py`. O notebook:
+
+1. prepara dado sintético ou localiza o recurso;
+2. mostra o prompt preenchido;
+3. reserva um bloco para colar a resposta **real** do Genie Code.
+
+O notebook não “executa o prompt”. A terceira parte exige uma pessoa no chat e
+deve registrar data, skill carregada e lacunas observadas.
+
+## Como preencher sem inventar
+
+| Campo | Preenchimento útil | Evita |
 |---|---|---|
-| Recurso | use `@recurso` ou nome `catalog.schema.table`; confirme que foi anexado | analisar outro objeto ou inventar schema |
-| Grão, chave e tempo | descreva uma linha, a chave e o instante de observação | duplicidade, leakage e comparação incoerente |
-| Target/métrica | defina evento positivo, unidade, direção e horizonte | otimizar a medida errada |
-| Restrições | declare PII, permissões, custo, prazo e o que não pode mudar | escrita ou coleta indevida |
-| Modo | escolha plano, código, execução ou deploy; execução/escrita exige autorização separada | confundir proposta com ação realizada |
+| recurso | `@recurso` ou `catalog.schema.table` confirmado | analisar objeto errado |
+| grão | o que uma linha representa | contagem ou join incoerente |
+| chave | coluna ou conjunto que identifica o grão | duplicidade silenciosa |
+| tempo | instante de decisão e disponibilidade do dado | leakage |
+| target/métrica | evento, classe positiva, unidade, direção e horizonte | otimizar medida errada |
+| restrições | PII, custo, prazo, ACL e o que não pode mudar | ação indevida |
+| modo | explicar, planejar, gerar código, executar ou publicar | confundir proposta com ação |
+| saída | artefatos, ordem, evidência e critério de aceitação | resposta plausível mas incompleta |
 
-`NÃO INFORMADO` torna uma lacuna visível; não autoriza o assistente a inventar.
-`NÃO APLICÁVEL` afirma que o campo foi avaliado e não pertence ao caso. Use-os
-deliberadamente.
+Use:
 
-O contexto selecionado persiste no chat. Para um tema diferente, prefira um novo
-chat para evitar que decisões antigas contaminem a resposta.
+- `NÃO INFORMADO` quando a informação está ausente e precisa virar pendência;
+- `NÃO APLICÁVEL` quando o campo foi avaliado e não pertence ao caso;
+- um valor concreto quando existe evidência.
 
-## Um formulário do início ao fim
+Não deixe placeholder por descuido. Uma lacuna não marcada pode levar o
+assistente a inferir uma premissa que o usuário nunca aprovou.
 
-O percurso abaixo usa `eda_rapida/eda_rapida.md`. Vale para todos: muda o formulário,
-não o método.
+## Exemplo do início ao fim
 
-**Passo 1 — o modelo, como está no arquivo.** Cada `{{CAMPO}}` é uma decisão que
-você toma, não um enfeite. Trecho do bloco a colar:
+Trecho original de `eda_rapida/eda_rapida.md`:
 
 ```text
 CONTEXTO
@@ -63,108 +80,73 @@ CONTEXTO
 - Limite de execução: {{TEMPO_CUSTO_OU_NAO_INFORMADO}}
 ```
 
-**Passo 2 — o mesmo trecho preenchido.** Repare no uso de `NÃO INFORMADO`: ele
-comunica "eu não sei", que é diferente de deixar o campo em branco. Campo em
-branco o Genie Code tende a preencher sozinha, e passa a trabalhar sobre uma
-suposição que você não fez.
+O mesmo trecho preenchido:
 
 ```text
 CONTEXTO
-- Tabela/DataFrame: catalogo.crm.clientes_pf
-- Objetivo de negócio: avaliar se a base serve de população para um modelo de propensão a consórcio
-- Foco: completude das variáveis de renda e ocupação, e duplicidade de cliente
+- Tabela/DataFrame: @catalogo.crm.clientes_pf
+- Objetivo de negócio: avaliar prontidão para um modelo de propensão
+- Foco: renda, ocupação e duplicidade por cliente
 - Chave esperada: id_cliente
 - Coluna temporal: dt_referencia
-- Limite de execução: leitura leve, sem varredura completa da tabela
+- Limite de execução: leitura leve; sem varredura completa
+
+MODO
+- Primeiro produza plano e pressupostos.
+- Não execute nem escreva até aprovação explícita.
+
+SAÍDA
+- dimensão, evidência, severidade e ação;
+- pendências e limites da conclusão.
 ```
 
-**Passo 3 — anexe o recurso.** Antes de colar, adicione a tabela ao chat com
-**Add context** ou `@`. O formulário descreve o que fazer; ele não dá acesso ao
-dado. Sem o anexo, a resposta vem genérica.
-
-**Passo 4 — o que esperar de volta.** Pelo contrato declarado no próprio
-formulário, a resposta deve trazer um plano curto antes de qualquer execução, o
-quadro de dimensão/evidência/severidade/ação, e a lista do que ficou pendente.
-Se vier código executado sem plano prévio, o contrato não foi respeitado — vale
-recusar e pedir de novo apontando a etapa pulada.
-
-> **Retorno real ainda não capturado.** Uma execução verdadeira deste formulário
-> no Genie Code, com a resposta colada aqui, fecharia o exemplo. Enquanto não for
-> feita, o passo 4 descreve o contrato esperado em vez de mostrar o resultado —
-> preferimos assumir a lacuna a inventar uma resposta plausível.
-
-## Cada prompt é uma pasta, com o notebook que o demonstra
-
-```text
-hub_prompts/<nome>/
-├── <nome>.md                   # o briefing, com os placeholders
-└── exemplo_<nome>.py           # o notebook de três partes
-```
-
-O notebook **não executa o prompt** — nenhum notebook executa. Ele tem três
-partes, e só as duas primeiras rodam:
-
-| Parte | O que é | Roda? |
-|---|---|---|
-| 1 | preparo: cria a base sintética ou localiza o recurso a que o prompt se refere | **sim** |
-| 2 | o prompt preenchido, pronto para copiar | não; é texto |
-| 3 | a resposta real do Genie Code, colada de um chat | **exige uma pessoa** |
-
-**A parte 3 está em branco nos dezesseis**, com instrução de como preencher. Não
-é esquecimento: prompt produz resposta de assistente, e resposta inventada é pior
-que resposta nenhuma — ela ensina que o assistente faz algo que ele não faz.
-
-Quem for preencher: rode a Parte 1, cole a Parte 2 num **chat novo**, e registre
-a resposta com a data, **qual skill foi carregada** e o que o assistente deixou
-de fora. A segunda metade do comentário é a que ensina.
+Depois de anexar a tabela, a resposta deve ser avaliada contra o contrato do
+formulário. Se o plano, as premissas ou os limites estiverem ausentes, peça a
+correção citando a seção faltante; não aceite apenas porque o texto parece
+convincente.
 
 ## Catálogo
 
-| Tema | Pasta | Skill recomendada |
+| Objetivo | Prompt | Skill sugerida |
 |---|---|---|
-| EDA completa | [`eda_completa/`](eda_completa/eda_completa.md) | `@hub-ml-eda-profissional` |
-| Perfil rápido | [`eda_rapida/`](eda_rapida/eda_rapida.md) | `@hub-ml-eda-profissional` |
-| Qualidade de dados | [`data_quality/`](data_quality/data_quality.md) | `@hub-ml-eda-profissional` |
-| Cross-EDA | [`cross_eda/`](cross_eda/cross_eda.md) | `@hub-ml-cross-eda-ml` |
-| Feature engineering | [`feature_engineering/`](feature_engineering/feature_engineering.md) | `@hub-ml-feature-engineering` |
-| Validação estatística | [`stat_check/`](stat_check/stat_check.md) | `@hub-ml-validacao-estatistica` |
-| Baseline de ML | [`baseline_orchestration/`](baseline_orchestration/baseline_orchestration.md) | `@hub-ml-baseline-ml` |
-| Explicabilidade | [`explainability/`](explainability/explainability.md) | `@hub-ml-explainability` |
-| Monitoramento | [`monitoramento_modelo/`](monitoramento_modelo/monitoramento_modelo.md) | `@hub-ml-monitoramento-modelo` |
-| Pipeline de dados | [`pipeline/`](pipeline/pipeline.md) | `@hub-ml-pipeline-builder` |
-| Safra/vintage | [`safra/`](safra/safra.md) | `@hub-ml-analise-safra` |
-| Auditoria de skills | [`auditoria_skills/`](auditoria_skills/auditoria_skills.md) | `@hub-ml-auditoria-skills` |
-| Documentar notebook | [`comentar_notebook/`](comentar_notebook/comentar_notebook.md) | `@hub-ml-comentar-notebook` |
-| Explicação/tutoria | [`tutor_explicar/`](tutor_explicar/tutor_explicar.md) | `@hub-ml-tutor-databricks` |
-| Comparar tabelas | [`comparar_tabelas/`](comparar_tabelas/comparar_tabelas.md) | conforme o objetivo |
-| Iniciar projeto | [`novo_projeto/`](novo_projeto/novo_projeto.md) | conforme o projeto |
+| EDA completa | [`eda_completa`](eda_completa/eda_completa.md) | `@hub-ml-eda-profissional` |
+| perfil rápido | [`eda_rapida`](eda_rapida/eda_rapida.md) | `@hub-ml-eda-profissional` |
+| qualidade de dados | [`data_quality`](data_quality/data_quality.md) | `@hub-ml-eda-profissional` |
+| consolidar EDAs | [`cross_eda`](cross_eda/cross_eda.md) | `@hub-ml-cross-eda-ml` |
+| engenharia de features | [`feature_engineering`](feature_engineering/feature_engineering.md) | `@hub-ml-feature-engineering` |
+| validação estatística | [`stat_check`](stat_check/stat_check.md) | `@hub-ml-validacao-estatistica` |
+| baseline de ML | [`baseline_orchestration`](baseline_orchestration/baseline_orchestration.md) | `@hub-ml-baseline-ml` |
+| explicabilidade | [`explainability`](explainability/explainability.md) | `@hub-ml-explainability` |
+| monitoramento | [`monitoramento_modelo`](monitoramento_modelo/monitoramento_modelo.md) | `@hub-ml-monitoramento-modelo` |
+| pipeline | [`pipeline`](pipeline/pipeline.md) | `@hub-ml-pipeline-builder` |
+| safra/vintage | [`safra`](safra/safra.md) | `@hub-ml-analise-safra` |
+| auditar saída de skill | [`auditoria_skills`](auditoria_skills/auditoria_skills.md) | `@hub-ml-auditoria-skills` |
+| documentar notebook | [`comentar_notebook`](comentar_notebook/comentar_notebook.md) | `@hub-ml-comentar-notebook` |
+| explicação/tutoria | [`tutor_explicar`](tutor_explicar/tutor_explicar.md) | `@hub-ml-tutor-databricks` |
+| comparar tabelas | [`comparar_tabelas`](comparar_tabelas/comparar_tabelas.md) | depende do objetivo |
+| iniciar projeto | [`novo_projeto`](novo_projeto/novo_projeto.md) | depende do projeto |
 
-## Sobre os atalhos `/...`
+## Estado de validação
 
-Expressões como `/eda`, `/baseline` e `/stat-check` são **convenções pessoais de
-texto** mantidas por compatibilidade. Não são comandos registrados do Genie Code.
-O comando `/findTables` é uma funcionalidade documentada pela Databricks; os
-demais atalhos deste catálogo dependem da interpretação do texto e não devem ser
-usados como único mecanismo de roteamento. Para execução determinística, mencione
-a skill com `@` e forneça o contexto explicitamente.
+- A estrutura e o contrato humano das 16 famílias são validados
+  automaticamente no repositório canônico.
+- Campos sem guia, motivo ou exemplo reprovam o gate local.
+- Resposta real continua sendo teste conversacional: precisa ser capturada no
+  Genie Code e não deve ser simulada na documentação.
 
-## Princípios incorporados
+## Limites e segurança
 
-- pedido específico, guia de preenchimento, nível de detalhe e formato de saída explícitos;
-- recursos adicionados com **Add context** ou `@`;
-- nomes de tabelas em três níveis (`catalog.schema.table`) quando conhecidos;
-- pressupostos e campos ausentes sinalizados, nunca inventados;
-- separação entre análise, geração de código, execução e mutação;
-- amostragem/limites em exploração e processamento distribuído para volume alto;
-- proteção de dados sensíveis e nenhuma exposição de valores identificáveis;
-- validação técnica antes de recomendar produção.
+- Um prompt não concede acesso: o recurso precisa estar anexado e autorizado.
+- “Gerar código” não significa “executar”; “executar” não significa “publicar”.
+- Nunca cole PII, token ou segredo no briefing.
+- Para dado temporal, declare instante de decisão e atraso de disponibilidade.
+- Para volume alto, imponha amostra, limite de linhas ou orçamento de execução.
+- Use chat novo quando o tema mudar materialmente, para reduzir interferência de
+  decisões anteriores.
 
-## Fontes oficiais
+## Onde continuar
 
-- [Tips to improve Genie Code responses](https://learn.microsoft.com/en-us/azure/databricks/genie-code/tips)
-- [Extend Genie Code with agent skills](https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills)
-- [Customize Genie Code with custom instructions](https://learn.microsoft.com/en-us/azure/databricks/genie-code/instructions)
-
----
-
-Última revisão: 2026-08-13.
+- [Guia do ecossistema](../README.md)
+- [Agent Skills do Hub](../skills/README.md)
+- [Template para novo prompt](../hub_padroes/prompt/template.md)
+- [Dicas oficiais de prompting](https://learn.microsoft.com/en-us/azure/databricks/genie-code/tips)

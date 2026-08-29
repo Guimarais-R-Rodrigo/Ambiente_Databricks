@@ -17,10 +17,11 @@
 ## 1. O que é este teste e por que ele existe
 
 As 13 skills `hub-ml-*` já estão publicadas no seu workspace Databricks Free.
-Quando você conversa com o Genie Code, ele decide **sozinho** qual skill carregar,
-lendo apenas o campo `description` de cada `SKILL.md`. Se duas descriptions se
-parecem demais, ele carrega a skill errada — e você recebe um relatório de
-monitoramento quando pediu um teste estatístico, por exemplo.
+Quando você conversa com o Genie Code, ele compara o pedido com a `description`
+das skills para carregar contexto relevante; `@menção` permite seleção
+explícita. Se duas descriptions se parecem demais, a rota pode colidir — e você
+recebe um relatório de monitoramento quando pediu um teste estatístico, por
+exemplo.
 
 Este teste verifica exatamente isso: **o roteamento**. Para cada skill fazemos
 3 perguntas:

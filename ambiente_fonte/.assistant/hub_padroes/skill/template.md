@@ -6,12 +6,15 @@
 
 Use quando for criar uma skill nova em `.assistant/skills/`. Uma skill é uma
 **pasta** cujo nome é idêntico ao campo `name` do frontmatter, contendo um
-`SKILL.md` e, opcionalmente, uma subpasta `templates/`.
+`SKILL.md` e, opcionalmente, recursos relativos como templates, referências e
+scripts.
 
 ```text
 .assistant/skills/hub-ml-<tema>/
 ├── SKILL.md
-└── templates/          # opcional: saídas modelo que a skill referencia
+├── templates/          # opcional: saídas modelo
+├── references/         # opcional: documentação consultada sob demanda
+└── scripts/            # opcional: automação executável da própria skill
 ```
 
 Nome com **hífen**, sempre: `hub-ml-analise-campanha`. É o único objeto do Hub
@@ -26,14 +29,16 @@ description: <quando usar, não o que faz>
 ---
 ```
 
-Só dois campos. O padrão Agent Skills admite outros, e este pacote não os usa: só
-a `description` entra no roteamento, então campo extra vira texto que ninguém lê
-e que envelhece sem que nada acuse.
+Este pacote padroniza somente os dois campos obrigatórios. A superfície mínima
+reduz metadado sem gate e mantém compatibilidade com a estrutura documentada pela
+Databricks; recursos adicionais pertencem ao corpo e aos caminhos relativos da
+skill.
 
-## A `description` é a skill inteira, do ponto de vista do roteamento
+## A `description` participa do roteamento
 
-O Genie Code decide qual skill carregar lendo **apenas** a `description`. Nunca o
-corpo. Isso tem três consequências práticas:
+O Genie Code avalia o pedido contra a `description` para carregar skills
+relevantes. O corpo e os recursos orientam a tarefa depois do carregamento.
+Isso tem três consequências práticas:
 
 | Consequência | O que fazer |
 |---|---|

@@ -5,6 +5,45 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-29 — Redesenho editorial da etapa 6
+
+### Adicionado
+
+1. (Codex) Criados `docs/README.md`, `docs/playbooks/README.md` e
+   `docs/sprints/README.md` para oferecer uma entrada única à governança,
+   procedimentos e histórico de execução.
+2. (Codex) Criado `ambiente_fonte/.assistant/GLOSSARIO.md`, separando vocabulário
+   oficial da Databricks, conceitos de modelagem e convenções locais sem
+   sobrecarregar o guia de uso.
+
+### Atualizado
+
+1. (Codex) Redesenhados os 20 READMEs ativos como um sistema de quatro níveis:
+   repositório, governança, produto publicado e coleção. A regra
+   `.claude/rules/docs-e-readmes.md` agora define propriedade do assunto,
+   próxima ação, limites e prevenção de duplicação.
+2. (Codex) O README raiz passou de manual linear para painel de manutenção; o
+   README publicado do `.assistant` passou a conduzir instalação e uso por
+   intenção; catálogos locais deixaram de repetir inventários mantidos em outro
+   documento.
+3. (Codex) Claims de Agent Skills foram reconciliados com a documentação oficial
+   atual: `description` participa do carregamento relevante; o corpo e os
+   recursos orientam a tarefa depois de carregados; skills podem referenciar
+   documentação, templates e scripts. Os helpers externos do Hub continuam com
+   import explícito.
+4. (Codex) `Novo_Ambiente_Simulado/` foi regenerado exclusivamente por
+   `tools/render_simulado.py` e o pacote documental foi republicado no Free.
+   Verify aprovado com 316 arquivos esperados, 317 remotos (um gerenciado pela
+   plataforma), 0 ausentes e 0 obsoletos.
+
+### Validação
+
+1. (Codex) `python tools/validate_assistant.py --conferir-readme` aprovado:
+   22 linhas do README conferidas contra execução real, 107 Markdown ativos na
+   fonte, 341 links externos à raiz analisada, 0 falhas e 0 avisos.
+2. (Codex) A etapa 5 permanece pendente: 16 famílias de prompts e 3 casos de
+   `hub-ml-criar-objeto` dependem da renovação da cota do Genie Code.
+
 ## 2026-08-29 — Checkpoint, publicação e smoke pós-auditoria
 
 ### Adicionado

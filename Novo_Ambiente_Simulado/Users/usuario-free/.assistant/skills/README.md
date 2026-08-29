@@ -1,113 +1,100 @@
-# `skills` — conteúdo do Hub na estrutura nativa de Agent Skills
+# `skills/` — Agent Skills do Hub
 
-> **ATENÇÃO: esta pasta usa uma estrutura nativa da plataforma.** O Genie Code
-> descobre as skills e carrega a relevante pelo pedido ou por `@`. Não é o único
-> contexto automático: `.assistant_instructions.md` e `AGENTS.md`/`CLAUDE.md`
-> também são descobertos quando aplicáveis. Já `hub_prompts`, `hub_snippets`,
-> `hub_scripts` e `hub_padroes` exigem Add context/`@`, import ou execução.
+> **MECANISMO NATIVO · CONTEÚDO CUSTOMIZADO.** O Genie Code reconhece
+> `.assistant/skills/<nome>/SKILL.md`. Os nomes e métodos `hub-ml-*` foram
+> criados neste projeto.
 
-As skills de `skills/` injetam contexto especializado na conversa quando o assunto
-bate com o que cada uma cobre.
+Use esta pasta quando quiser acrescentar ao Genie Code um método especializado,
+com instruções, exemplos, recursos e limites próprios.
 
-## Para que serve
-
-Uma skill não executa nada. Ela **injeta texto** na conversa — o fluxo do
-trabalho, as armadilhas do domínio e os helpers a usar — de modo que o
-assistente responda como alguém que já fez aquilo antes.
-
-Use quando quiser que o Genie Code trate um pedido com o método da casa em vez
-do método genérico. Se o que você quer é código pronto para importar, o lugar é
-[`hub_snippets`](../hub_snippets/README.md); se é um formulário para colar, é
-[`hub_prompts`](../hub_prompts/README.md).
-
-## Como a escolha acontece
+## Como a skill entra numa tarefa
 
 ```mermaid
 flowchart LR
-  P["seu pedido"] --> D{"o Genie Code lê<br/><b>só a description</b><br/>de cada skill"}
-  D -->|"vocabulário bate"| C["carrega a skill"]
-  D -->|"não bate"| N["responde sem ela"]
-  P -.->|"@nome-da-skill"| C
-  C --> R["resposta com o método da casa"]
+  P["pedido + contexto"] --> R{"relevância<br/>inclui description"}
+  R -->|"relevante"| L["carrega SKILL.md<br/>e recursos necessários"]
+  R -->|"não relevante"| G["responde sem a skill"]
+  P -.->|"@nome"| L
+  L --> A["Genie Code planeja/age<br/>conforme permissões"]
 ```
 
-Duas coisas seguem daí, e as duas surpreendem:
+A `description` precisa dizer **o que a skill faz e quando usar**. O corpo do
+`SKILL.md` define o método depois que a skill é carregada. Recursos relativos,
+como templates, documentação e scripts, podem complementar a skill.
 
-- **O corpo do `SKILL.md` não influencia a escolha.** Só a `description` é lida
-  no roteamento. Um fluxo excelente numa skill mal descrita nunca é usado.
-- **Alterar uma `description` invalida a certificação de roteamento.** Os testes
-  precisam ser refeitos para a skill alterada e para as que competem com ela no
-  mesmo vocabulário.
+Neste pacote, a biblioteca `hub_snippets`/`hub_scripts` não fica dentro das
+skills. Uma skill pode indicar qual helper usar, mas o código ainda precisa
+importá-lo explicitamente no runtime.
 
-## Como usar
+## Escolha por intenção
 
-Descreva a intenção com o **termo técnico do domínio** — é o que decide a
-escolha, não o nome da skill:
-
-```text
-Faça uma EDA completa da tabela catalogo.crm.clientes_pf: granularidade,
-chaves, qualidade de dados, distribuições e um relatório executivo ao final.
-```
-
-Para seleção determinística, use a menção:
-
-```text
-@hub-ml-baseline-ml treine um baseline de classificação com split temporal
-```
-
-## O que existe aqui
-
-| Skill | Quando ela se aplica |
+| Intenção principal | Skill |
 |---|---|
-| `hub-ml-eda-profissional` | perfil, qualidade, univariada/bivariada e síntese executiva |
-| `hub-ml-cross-eda-ml` | consolidar múltiplas EDAs e avaliar prontidão para ML |
-| `hub-ml-feature-engineering` | especificar e validar features sem vazamento temporal |
-| `hub-ml-validacao-estatistica` | pressupostos, testes, efeito e incerteza antes de modelar |
-| `hub-ml-baseline-ml` | baseline tabular, temporal, ranking ou survival com MLflow |
-| `hub-ml-explainability` | SHAP, explicação global e local, comunicação responsável |
-| `hub-ml-monitoramento-modelo` | drift, performance, calibração e decisão de retreino |
-| `hub-ml-pipeline-builder` | Lakeflow, Jobs, bundles e promoção entre ambientes |
-| `hub-ml-analise-safra` | safras, maturação e comparação em MOB equivalente |
-| `hub-ml-comentar-notebook` | documentação PRÉ/PÓS e revisão de notebook |
-| `hub-ml-tutor-databricks` | explicação didática de código, Spark, SQL e plataforma |
-| `hub-ml-auditoria-skills` | auditar uma saída contra o contrato da skill que a produziu |
-| `hub-ml-criar-objeto` | criar objeto do Hub aplicando o template de `hub_padroes/` |
+| EDA com qualidade, distribuição e síntese | `hub-ml-eda-profissional` |
+| consolidar EDAs e avaliar prontidão para ML | `hub-ml-cross-eda-ml` |
+| features e joins point-in-time | `hub-ml-feature-engineering` |
+| testes, efeito e incerteza | `hub-ml-validacao-estatistica` |
+| baseline, validação e tracking | `hub-ml-baseline-ml` |
+| SHAP e comunicação de explicabilidade | `hub-ml-explainability` |
+| drift, performance e decisão de retreino | `hub-ml-monitoramento-modelo` |
+| Lakeflow, Jobs e bundles | `hub-ml-pipeline-builder` |
+| safras e maturação por MOB | `hub-ml-analise-safra` |
+| documentação PRÉ/PÓS de notebook | `hub-ml-comentar-notebook` |
+| explicação didática de código e plataforma | `hub-ml-tutor-databricks` |
+| auditoria de uma saída produzida por skill | `hub-ml-auditoria-skills` |
+| criação de objeto no padrão do Hub | `hub-ml-criar-objeto` |
 
-Algumas trazem uma subpasta `templates/` com modelos de saída que a skill
-referencia. Esses arquivos não são descobertos sozinhos: a skill os cita, e o
-assistente os usa como formato.
+Exemplo explícito:
 
-## Limites e armadilhas
+```text
+@hub-ml-feature-engineering
 
-- **Skill não recarrega em chat aberto.** Depois de editar, abra um chat novo;
-  se persistir, recarregue a página, porque o metadata fica em cache.
-- **A skill recomenda helper, não o importa.** Ela cita
-  `hub_snippets.spark.pit_join` no texto que injeta; quem executa o import é
-  você, no notebook. Nenhum código entra na conversa por conta da skill.
-- **Existem skills nativas da Databricks** que convivem com estas e às vezes
-  são escolhidas no lugar — observado com `data-sampling` num pedido de análise
-  direta. Não é falha: é o roteamento avaliando qual cobre melhor o pedido. Para
-  garantir a sua, use `@`.
-- **Descrição vaga produz skill que nunca é escolhida**, ou que rouba a vez de
-  outra. É o defeito mais silencioso desta pasta.
+Desenhe as features para prever churn em 30 dias usando @catalogo.schema.base.
+Declare grão, instante de decisão, disponibilidade de cada fonte e testes
+anti-leakage. Primeiro entregue o plano; não execute nem escreva.
+```
 
-## Perguntas frequentes
+## Contrato de uma skill desta biblioteca
 
-**Por que o nome usa hífen se as pastas do Hub usam underscore?**
-Porque quem nomeia a skill é a plataforma, não o Python. A regra do projeto é
-"underscore onde o Python importa, hífen onde a plataforma nomeia" — e o nome da
-pasta precisa ser idêntico ao campo `name` do frontmatter.
+Cada `SKILL.md` precisa ter:
 
-**Posso ter skills compartilhadas com o time?**
-Sim, em `Workspace/.assistant/skills/`, administradas por quem tem permissão de
-workspace. É a fase seguinte do Hub; hoje estas são pessoais.
+1. frontmatter YAML com `name` igual ao nome da pasta e `description` específica;
+2. seções de objetivo, quando usar, fluxo, guardrails e saída;
+3. caminhos relativos válidos para todo recurso citado;
+4. separação explícita entre planejar, gerar código, executar e mutar;
+5. exemplos representativos e fronteiras contra skills vizinhas.
 
-**Como sei qual skill foi carregada?**
-A interface do chat mostra. Vale conferir quando a resposta não tiver a cara do
-método da casa.
+Crie pelo [template de skill](../hub_padroes/skill/template.md) ou invoque
+`@hub-ml-criar-objeto`.
+
+## Testar uma alteração
+
+Mudanças no corpo exigem revisão do contrato e dos recursos. Mudanças em `name`,
+`description` ou fronteira temática exigem também forward tests:
+
+| Caso | Deve acontecer |
+|---|---|
+| positivo | a skill alvo é carregada para uma demanda típica |
+| negativo | a skill alvo não rouba uma demanda vizinha |
+| `@menção` | a seleção explícita carrega a skill |
+
+Execute em chat novo e registre o que foi observado. Forward test mede
+roteamento; não prova qualidade da resposta nem execução do código.
+
+## Limites
+
+- Skill não concede permissão de dados nem substitui Unity Catalog.
+- Skill pode orientar execução, mas autorização de escrita/deploy continua
+  separada e deve estar explícita no pedido.
+- Texto genérico em `description` pode fazer a skill competir com muitas outras.
+- Um artefato citado como “este notebook” precisa estar anexado ao chat.
+- Skills nativas da Databricks coexistem com as skills do Hub; use `@` quando a
+  seleção precisar ser determinística.
 
 ## Onde continuar
 
-- Para criar uma skill: [`hub_padroes/skill/template.md`](../hub_padroes/skill/template.md).
-- Para o vocabulário: [glossário](../README.md#glossário).
-- Para o mapa demanda → helper: [catálogo](../CATALOGO_HELPERS.md).
+- [Guia completo do ecossistema](../README.md)
+- [Prompts guiados](../hub_prompts/README.md)
+- [Catálogo de helpers](../CATALOGO_HELPERS.md)
+- [Glossário](../GLOSSARIO.md)
+- [Documentação oficial de Agent Skills](https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills)

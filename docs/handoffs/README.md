@@ -1,48 +1,47 @@
-# Handoffs
+# Handoffs — continuidade entre sessões
 
-Um handoff é a passagem de contexto para quem assume o trabalho depois — outra
-sessão, outra IA, ou você mesmo daqui a três semanas. Ele responde o que o
-histórico de commits não responde: o que estava pela metade, o que parecia óbvio
-e não era, e o que já foi tentado sem sucesso.
+Handoff registra o estado que um commit não explica: o que está firme, o que
+ficou bloqueado, o que já falhou e qual é a próxima ação verificável.
 
-Escreva um quando uma tarefa estrutural ficar inacabada, quando uma decisão
-depender de outra pessoa, ou quando reconstruir o estado a partir do changelog
-levaria mais de alguns minutos. Um arquivo por handoff, nomeado
-`YYYY-MM-DD_<tema>.md`, seguindo `.claude/templates/handoff.md`.
+## Quando criar
 
-## Como um se parece
+- tarefa estrutural termina incompleta;
+- decisão depende de pessoa, cota ou ambiente externo;
+- outra sessão/agente assumirá o trabalho;
+- reconstruir o estado pelo Git levaria mais de alguns minutos.
 
-O esqueleto tem quatro partes que importam. O molde completo está em
-`.claude/templates/handoff.md`:
+Não use handoff como diário. Trabalho concluído vai para `CHANGELOG.md` e
+evidência datada.
+
+## Estrutura mínima
 
 ```markdown
 # Handoff — <tema>
 
-Data: YYYY-MM-DD · De: <sessão/IA> · Para: <quem assume>
+Data: YYYY-MM-DD · De: <origem> · Para: <destino>
 
 ## Estado atual
-<O que está feito e verificado, com caminhos de arquivo.>
+<feito e verificado, com caminhos/evidência>
 
 ## Em andamento / bloqueado
-<O que ficou pela metade, e em quem ou em quê está travado.>
+<o que falta e qual condição destrava>
 
 ## Próximos passos recomendados
-1. <passo objetivo e verificável>
+1. <ação objetiva e critério de sucesso>
 
 ## Armadilhas conhecidas
-<O que parece óbvio mas quebra. Termine por aqui: é o que economiza
-mais tempo de quem chega.>
+<o que já foi tentado ou parece seguro, mas não é>
 ```
 
-O que separa um handoff útil de um resumo: ele distingue o que está firme do
-que está aberto, não esconde o que ficou sem decisão, e fecha pela armadilha.
+O template completo está em `.claude/templates/handoff.md`.
 
-## Handoffs registrados
+## Registros
 
-| Data | Tema | De → Para |
+| Data | Tema | Relevância atual |
 |---|---|---|
-| 2026-08-14 | [Calibração das descriptions](2026-08-14_calibracao-descriptions.md) | sessão Claude → quem alterar uma skill |
+| 2026-08-14 | [calibração das descriptions](2026-08-14_calibracao-descriptions.md) | ler antes de alterar `description` de skill |
 
-Leia o de 2026-08-14 **antes de editar qualquer `description`**: ele registra os
-dois únicos itens de vigilância abertos do projeto e por que nenhuma
-`description` foi alterada apesar deles.
+Esse handoff preserva os pontos de vigilância dos testes de roteamento e explica
+por que as falhas do instrumento não levaram a alterações indevidas nas skills.
+
+[Voltar ao índice de documentação](../README.md)

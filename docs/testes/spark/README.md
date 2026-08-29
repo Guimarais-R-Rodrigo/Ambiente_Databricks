@@ -1,4 +1,4 @@
-# Testes Spark serverless dos helpers
+# Testes Spark serverless — evidência por runtime
 
 > **Nomenclatura da época.** Os nomes `x_*` e `rodrigo-*` neste registro são
 > os que existiam na data. A tradução para os nomes atuais está na tabela de
@@ -6,12 +6,37 @@
 > este documento não é reescrito porque descreve o que foi observado, não o
 > estado atual.
 
-Gate da fase 3 (herdado da auditoria do Codex): executar `hub_snippets`/`hub_scripts`
-no runtime Databricks real. Executor: job serverless one-time no Free Edition,
-notebook [tools/spark_smoke_test.py](../../../tools/spark_smoke_test.py)
-(importado em `/Users/<username>/hub_lab/`), dados 100% sintéticos.
+Este documento preserva as descobertas por rodada. Para decidir sobre o estado
+atual, leia primeiro o resumo abaixo; as seções seguintes são histórico técnico
+e não são reescritas para parecerem atuais.
 
-## Resultado — 2026-08-13 (Spark 4.1.0 serverless) ✅ APROVADO
+Executor: job serverless one-time no Free Edition, notebook
+[`tools/spark_smoke_test.py`](../../../tools/spark_smoke_test.py), dados 100%
+sintéticos.
+
+## Resultado vigente — 2026-08-29 (Spark 4.2.0 serverless)
+
+| Verificação | Resultado |
+|---|---:|
+| total | 145 |
+| `PASS` | **136** |
+| `FAIL` | **0** |
+| `OPTIONAL_MISSING` | 8 |
+| `BLOQUEADO_ESPERADO` | 1 |
+
+Execução: run `996607251657906`, task `657506000110053`. Resultado bruto:
+[`2026-08-29_smoke_a2.json`](resultados/2026-08-29_smoke_a2.json).
+
+As oito ausências são dependências opcionais não instaladas nessa rodada. O
+bloqueio esperado é a abertura de run MLflow no serverless observado; o caso
+reprova se o comportamento mudar sem revisão.
+
+> Este resultado prova execução no runtime e na data declarados. Não prova
+> permissões, bibliotecas, Spark Connect ou política do workspace do trabalho.
+
+## Histórico inicial — 2026-08-13 (Spark 4.1.0 serverless)
+
+### Gate aprovado após cinco rodadas
 
 | Rodada (run_id) | Resultado | O que revelou |
 |---|---|---|
