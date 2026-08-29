@@ -5,6 +5,29 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-29 — Checkpoint, publicação e smoke pós-auditoria
+
+### Adicionado
+
+1. (Codex) Criada a branch `codex/auditoria-a2-correcoes` e o checkpoint
+   `02a5ad3`; gerado pacote limpo de 315 arquivos com manifesto SHA-256.
+2. (Codex) Registrados o smoke integral em
+   `docs/testes/spark/resultados/2026-08-29_smoke_a2.json` e a síntese das etapas
+   em `docs/testes/2026-08-29_execucao-etapas-1-a-5.md`.
+
+### Atualizado
+
+1. (Codex) Publicação Free e verificação remota aprovadas: 315 arquivos
+   esperados, 0 ausentes/obsoletos, 13/13 skills e 4/4 diretórios `hub_`.
+2. (Codex) Smoke pós-correção aprovado no Spark 4.2.0: 145 verificações,
+   136 PASS, 0 FAIL, 8 opcionais ausentes e 1 bloqueio MLflow esperado.
+
+### Notas
+
+- Os testes conversacionais não foram classificados: o Genie Code exibiu cota
+  esgotada e envio desabilitado, com renovação em 01/09. Permanecem pendentes as
+  16 famílias de prompts e os 3 casos de `hub-ml-criar-objeto`.
+
 ## 2026-08-20 — Auditoria de segunda origem com execução
 
 ### Adicionado

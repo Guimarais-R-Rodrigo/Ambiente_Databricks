@@ -223,8 +223,8 @@ normas do molde    : 70 arquivos, 0 violação(ões)
 notebook exercita  : 57 objetos, 0 notebook(s) que só importam
 python (AST)       : 209 arquivos
 instrucoes         : 8116/20000 caracteres
-repo (identidade)  : 728 arquivos varridos no repositório editável/derivado
-repo (links)       : 271 links fora da raiz analisada
+repo (identidade)  : 730 arquivos varridos no repositório editável/derivado
+repo (links)       : 276 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
@@ -284,9 +284,9 @@ python tools/publicar_free.py --execute --profile <free> --expected-host <url-fr
 python tools/publicar_free.py --verify --profile <free> --expected-host <url-free>
 ```
 
-> **PENDENTE nesta revisão:** o bloco abaixo é o contrato esperado para os 315
-> arquivos do pacote atual. Ele só vira evidência de execução depois de uma
-> publicação autorizada e de `--verify` aprovado; não representa o remoto atual.
+> **Executado em 29/08/2026:** o commit `02a5ad3` foi publicado no laboratório
+> Free e o `--verify` abaixo foi aprovado. Usuário, perfil e host permanecem
+> parametrizados no documento para não persistir identidade pessoal.
 
 ```text
 usuário: <seu-usuario>

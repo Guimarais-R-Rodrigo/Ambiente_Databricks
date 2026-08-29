@@ -14,4 +14,7 @@
 - Papel: executar os gates pendentes da auditoria do Codex — testes Spark
   serverless dos helpers, forward tests das skills (caso positivo, negativo,
   `@menção`, sempre em chat novo), calibração das descriptions.
+- Estado em 2026-08-29: commit `02a5ad3` publicado e conferido (315 arquivos,
+  0 ausente/obsoleto); smoke pós-correção aprovado no Spark 4.2.0. O chat segue
+  bloqueado por cota até 01/09, impedindo prompts e os 3 forward tests pendentes.
 - Somente dados sintéticos; nada do banco.

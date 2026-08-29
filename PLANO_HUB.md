@@ -8,9 +8,9 @@ em sessão sem contexto, revisada por você, e só então a seguinte começa.
   2 exemplares de `hub_padroes`, totalizando 60 pastas de objeto. Os 16 prompts
   têm formulário e notebook, mas as partes 3 continuam dependendo de interação
   humana; também restam os 3 forward tests de `hub-ml-criar-objeto`. A auditoria
-  de 20/08 corrigiu o runbook, os gates e a biblioteca; reexecução Spark no
-  runtime real continua obrigatória antes da replicação.
-- **Última atualização:** 2026-08-20
+  de 20/08 corrigiu o runbook, os gates e a biblioteca; a reexecução no Spark
+  4.2.0 passou em 29/08. Os testes conversacionais aguardam a renovação da cota.
+- **Última atualização:** 2026-08-29
 
 > **Histórico de revisão.** A v1 foi submetida a auditoria em sessão sem
 > contexto, com instrução para executar o plano sobre um objeto real em vez de
@@ -640,7 +640,7 @@ durante a execução; o completo continua obrigatório no fechamento da sprint.
 
 | Item | Situação |
 |---|---|
-| Auditoria de segunda origem da biblioteca | executada em 20/08; correções locais validadas, reexecução Spark pós-correção ainda necessária |
+| Auditoria de segunda origem da biblioteca | executada em 20/08; correções locais validadas e smoke pós-correção aprovado em 29/08; faltam os gates conversacionais |
 | ~~`prophet_wrapper`~~ | **resolvido em 2026-08-17**: `%pip install prophet` instala e ajusta. Sai desta lista |
 | ~~Testes funcionais de `ml` no Free~~ | **resolvido em 2026-08-19**. A linha anterior dizia que *"os 16 da Sprint 7 nunca executaram lá"* — e estava errada desde 17/08: o relatório da Sprint 7 traz os 16 como job, todos `SUCCESS`. O que faltava era outra coisa, e é o que foi feito: os 16 entraram na **bateria repetível** do `spark_smoke_test.py`. Execução de uma vez prova o dia; só a bateria prova que continua |
 | Camada squad | fase seguinte |

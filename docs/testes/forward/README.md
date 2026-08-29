@@ -21,6 +21,7 @@ replicação no trabalho.
 |---|---|---|---|---|
 | 1 | 2026-08-14 | 33 | 2 | [detalhes](resultados/2026-08-14_rodada1.md) — 12/12 negativos corretos; falhas isoladas em `10P`/`11P`; `07M` sem registro |
 | 2 | 2026-08-14 | 5 | 0 | [detalhes](resultados/2026-08-14_rodada2.md) — hipótese confirmada: `10P` e `11P` passaram apenas com o prompt corrigido |
+| tentativa | 2026-08-29 | — | — | [bloqueada pela cota do Genie Code](../2026-08-29_execucao-etapas-1-a-5.md); nenhum caso enviado |
 
 **GATE DAS 12 SKILLS ORIGINAIS FECHADO ✅ — 36/36 PASS** (positivos 12/12 ·
 negativos 12/12 · menções 12/12). Faltam os **3 casos da `hub-ml-criar-objeto`**,

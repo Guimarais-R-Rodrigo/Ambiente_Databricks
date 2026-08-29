@@ -1,4 +1,4 @@
-# `docs/testes/` — as duas coisas que só o ambiente real responde
+# `docs/testes/` — o que só o ambiente real responde
 
 Duas famílias de teste, com naturezas diferentes. Confundi-las é a causa do erro
 mais caro deste projeto: tratar "passou aqui" como "vai passar lá".
@@ -60,18 +60,20 @@ e menção (`@nome-da-skill` força o carregamento).
 | Gate | Estado | Falta |
 |---|---|---|
 | Import no runtime | os 58 helpers, mais os pacotes | — |
-| **Execução funcional** | **145 verificações, 136 PASS, 0 FAIL** (19/08/2026) | as 8 opcionais exigem `%pip` |
-| Roteamento | **36/39** — as 12 skills originais fecharam | os 3 casos da `hub-ml-criar-objeto` |
+| **Execução funcional** | **145 verificações, 136 PASS, 0 FAIL** (29/08/2026) | as 8 opcionais exigem `%pip` |
+| Roteamento | **36/39** — as 12 skills originais fecharam | os 3 casos da `hub-ml-criar-objeto`; cota bloqueou a tentativa de 29/08 |
+| Respostas dos prompts | contrato estático **16/16** | execução conversacional bloqueada pela cota até 01/09 |
 
 A bateria funcional cobre os **16 módulos de núcleo de `ml`** desde 19/08/2026.
 Antes disso o smoke test só os **importava**, e importar não é executar — a
 distinção custou três descobertas a este projeto. O registro da execução está em
 [`resultados/2026-08-19_bateria_ml.json`](spark/resultados/2026-08-19_bateria_ml.json).
 
-> **Validade do resultado:** em 20/08 o smoke test foi alterado para exigir
-> classe e assinatura da mensagem no bloqueio MLflow e ganhou novos invariantes
-> de Spark. A tabela acima continua sendo evidência histórica de 19/08, **não**
-> aprovação do código pós-correção. Reexecute a bateria antes da replicação.
+> **Reexecução pós-correção concluída:** em 29/08, o smoke endurecido passou no
+> Spark 4.2.0 serverless. Resultado integral em
+> [`2026-08-29_smoke_a2.json`](spark/resultados/2026-08-29_smoke_a2.json) e síntese
+> das cinco etapas em
+> [`2026-08-29_execucao-etapas-1-a-5.md`](2026-08-29_execucao-etapas-1-a-5.md).
 
 Dois vereditos da bateria não são `PASS` e também não são falha:
 
