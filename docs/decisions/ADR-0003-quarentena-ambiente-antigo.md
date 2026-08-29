@@ -34,3 +34,10 @@ corrige o original e foi verificado como livre de identificadores).
   exigem esta máquina (ou a criação futura da cópia sanitizada).
 - Checks de identificadores pessoais em `tools/validate_assistant.py` cobrem o
   restante do repositório para impedir reintrodução.
+
+## Ratificação de 2026-08-20
+
+Rodrigo confirmou que o projeto será compartilhado com outras pessoas. O
+ADR-0009 complementa esta decisão: identidades reais também saem do conteúdo
+ativo e derivado, e o transporte padrão passa a ser um pacote mínimo sanitizado.
+A quarentena de `Ambiente_Antigo/` permanece inalterada.

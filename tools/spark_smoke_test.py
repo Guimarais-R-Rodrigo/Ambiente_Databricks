@@ -20,8 +20,14 @@ import traceback
 # usuário logado. No workspace do trabalho não há CLI — executar pela UI, e
 # ajustar o widget apenas se a biblioteca estiver em outro caminho.
 dbutils.widgets.text("assistant_root", "", "Caminho da pasta .assistant (vazio = usuário logado)")
+dbutils.widgets.dropdown("target_environment", "free", ["free", "work"], "Ambiente alvo")
+dbutils.widgets.text("mlflow_experiment_path", "", "Experimento temporário (obrigatório no trabalho)")
 
 ASSISTANT_ROOT = dbutils.widgets.get("assistant_root").strip()
+TARGET_ENVIRONMENT = dbutils.widgets.get("target_environment").strip().lower()
+MLFLOW_EXPERIMENT_PATH = dbutils.widgets.get("mlflow_experiment_path").strip()
+if TARGET_ENVIRONMENT not in {"free", "work"}:
+    raise ValueError("target_environment deve ser 'free' ou 'work'")
 if not ASSISTANT_ROOT:
     current_user = spark.sql("SELECT current_user()").first()[0]
     ASSISTANT_ROOT = f"/Workspace/Users/{current_user}/.assistant"
@@ -68,7 +74,7 @@ def run_case(name, fn):
             "trace": traceback.format_exc(limit=2),
         }
 
-def run_case_bloqueado(name, fn, motivo):
+def run_case_bloqueado(name, fn, motivo, expected_exceptions, message_fragments):
     """Caso que **precisa** falhar, porque a plataforma o bloqueia.
 
     Existe por causa da regra que este projeto aprendeu na pele: *"foi testado"
@@ -76,11 +82,23 @@ def run_case_bloqueado(name, fn, motivo):
     deixa de existir é notícia tão relevante quanto um que aparece — e sem esta
     guarda a notícia chegaria como um `PASS` silencioso, ou nunca chegaria.
 
-    Passa quando levanta. **Reprova quando funciona**, pedindo revisão da regra.
+    Só passa quando classe **e** assinatura da mensagem correspondem ao bloqueio
+    conhecido. Outra exceção é falha do teste ou do helper, não evidência de que a
+    plataforma continua bloqueando.
     """
     try:
         fn()
     except Exception as exc:  # noqa: BLE001
+        class_ok = type(exc).__name__ in set(expected_exceptions)
+        message_ok = any(fragment.lower() in str(exc).lower() for fragment in message_fragments)
+        if not (class_ok and message_ok):
+            results[name] = {
+                "status": "FAIL",
+                "error": f"bloqueio inesperado: {type(exc).__name__}: {str(exc)[:300]}",
+                "expected_exceptions": list(expected_exceptions),
+                "expected_message_fragments": list(message_fragments),
+            }
+            return
         results[name] = {"status": "BLOQUEADO_ESPERADO",
                          "motivo": motivo,
                          "error": f"{type(exc).__name__}: {str(exc)[:200]}"}
@@ -201,7 +219,13 @@ def t_null_summary():
 def t_smart_sample():
     from hub_snippets.spark.smart_sample import smart_sample
     sampled = smart_sample(df, n=60, stratify_col="categoria")
-    assert 0 < sampled.count() <= 60
+    assert sampled.count() == 60
+    rare = spark.range(101).withColumn(
+        "stratum", F.when(F.col("id") == 0, F.lit("rare")).otherwise(F.lit("common"))
+    )
+    rare_sample = smart_sample(rare, n=10, stratify_col="stratum")
+    assert rare_sample.count() == 10
+    assert rare_sample.filter(F.col("stratum") == "rare").count() == 1
 
 
 def t_date_features():
@@ -252,6 +276,13 @@ def t_pit_join():
     for chave in ("linhas_fato", "cobertura_pct_linhas_validas",
                   "sem_feature_disponivel_na_data", "atraso_publicacao_dias"):
         assert chave in diag, f"chave ausente no diagnóstico: {chave}"
+    assert (
+        diag["com_feature"]
+        + diag["sem_chave_ou_data"]
+        + diag["entidade_sem_historico"]
+        + diag["sem_feature_disponivel_na_data"]
+        == diag["linhas_fato"]
+    )
     # Nenhuma feature marcada como futura pode ter atravessado o join.
     assert resultado.filter("eh_futura = true").count() == 0
 
@@ -278,6 +309,13 @@ def t_quick_profile():
 def t_data_quality_check():
     from hub_scripts.data_quality_check import data_quality_check
     data_quality_check("vw_smoke_tx", ["tx_id"], "data")
+    with_null_pk = df.limit(4).unionByName(
+        df.limit(1).withColumn("tx_id", F.lit(None).cast("long"))
+    )
+    with_null_pk.createOrReplaceTempView("vw_smoke_null_pk")
+    out = data_quality_check("vw_smoke_null_pk", ["tx_id"])
+    assert out["status"] == "fail"
+    assert out["checks"]["pk_uniqueness"]["null_key_rows"] == 1
 
 
 def t_rfv_calculator():
@@ -291,6 +329,12 @@ def t_rfv_calculator():
 def t_drift_detector():
     from hub_scripts.drift_detector import drift_detector
     drift_detector("vw_smoke_tx", "safra", "2026-S1", "2026-S2", cols=["valor"])
+    numeric_cohort = spark.range(20).withColumn(
+        "period", F.when(F.col("id") < 10, F.lit(1)).otherwise(F.lit(2))
+    ).withColumn("value", F.col("id").cast("double"))
+    numeric_cohort.createOrReplaceTempView("vw_smoke_numeric_cohort")
+    detected = drift_detector("vw_smoke_numeric_cohort", "period", "1", "2")
+    assert "period" not in detected
 
 
 def t_schema_to_yaml():
@@ -417,7 +461,7 @@ def t_metrics_report():
     y, p = _amostra_binaria()
     m = calculate_binary_metrics(y, p)
     # O nome da chave é contrato: quem consome quebra sem erro de import.
-    for chave in ("auc_roc", "ks", "gini", "lift_10pct", "prevalence"):
+    for chave in ("auc_roc", "ks_pct", "gini", "lift_10pct", "prevalence"):
         assert chave in m, f"chave ausente: {chave}"
     calculate_regression_metrics(np.arange(50.0), np.arange(50.0) + 0.5)
 
@@ -429,6 +473,11 @@ def t_curves_plotly():
     y, p = _amostra_binaria()
     for f in (plot_roc_curve, plot_pr_curve, plot_lift_curve, plot_ks_curve):
         assert f(y, p) is not None
+    try:
+        plot_lift_curve(np.zeros(10), np.linspace(0.1, 0.9, 10))
+        raise AssertionError("lift deveria rejeitar target de classe única")
+    except ValueError as exc:
+        assert "both classes" in str(exc)
 
 
 def t_score_bands():
@@ -436,6 +485,11 @@ def t_score_bands():
     y, p = _amostra_binaria()
     faixas = generate_score_bands(p * 1000, y, n_bands=5, higher_score_is_better=True)
     assert len(faixas) > 0
+    try:
+        generate_score_bands(np.ones(4), np.array([0, 1, 0, 1]))
+        raise AssertionError("bandas deveriam rejeitar score constante")
+    except ValueError as exc:
+        assert "must vary" in str(exc)
 
 
 def t_scorecard_builder():
@@ -459,6 +513,14 @@ def t_scorecard_builder():
         woe_tables={"uf": ponte}, pdo=20, base_score=600, base_odds=50,
     )
     assert len(out) > 0
+    try:
+        build_scorecard(
+            coefs=np.array([np.inf]), intercept=-2.1, feature_names=["uf"],
+            woe_tables={"uf": ponte},
+        )
+        raise AssertionError("scorecard deveria rejeitar coeficiente infinito")
+    except ValueError as exc:
+        assert "finite" in str(exc)
 
 
 def t_clustering_suite():
@@ -504,6 +566,21 @@ def t_lgbm_temporal():
     # O contrato que a auditoria da Sprint 7 fixou: o módulo termina em dropna(),
     # e ignorar a entidade descarta MENOS linhas porque mistura as séries.
     assert len(com_id) < len(sem_id)
+    painel["aux_missing"] = 1.0
+    painel.loc[painel.index[-1], "aux_missing"] = np.nan
+    preservado = create_temporal_features(
+        painel, target_col="valor", date_col="dt", lags=[1],
+        rolling_windows=[], calendar_features=False, entity_cols=["id"],
+    )
+    assert preservado["aux_missing"].isna().sum() == 1
+    try:
+        create_temporal_features(
+            painel, target_col="valor", date_col="dt", lags=[],
+            rolling_windows=[1], calendar_features=False, entity_cols=["id"],
+        )
+        raise AssertionError("rolling window 1 deveria ser rejeitada")
+    except ValueError as exc:
+        assert ">= 2" in str(exc)
 
 
 def t_performance_monitor():
@@ -535,6 +612,19 @@ def t_vintage_analysis():
     assert plot_vintage_curves(tabela) is not None
     assert plot_vintage_heatmap(tabela) is not None
     assert compare_safras(tabela) is not None
+    gap = pd.DataFrame([
+        {"c": "a", "o": "2024-01-01", "r": "2024-01-01", "y": 1, "mob": 0},
+        {"c": "a", "o": "2024-01-01", "r": "2024-03-01", "y": 1, "mob": 2},
+        {"c": "b", "o": "2024-01-01", "r": "2024-01-01", "y": 0, "mob": 0},
+        {"c": "b", "o": "2024-01-01", "r": "2024-02-01", "y": 0, "mob": 1},
+        {"c": "b", "o": "2024-01-01", "r": "2024-03-01", "y": 0, "mob": 2},
+    ])
+    gap_table = build_vintage_table(
+        gap, "c", "o", "r", "y", mob_col="mob", target_is_cumulative=True,
+    )
+    middle = gap_table.loc[gap_table["mob"] == 1].iloc[0]
+    assert pd.isna(middle["taxa_acumulada"])
+    assert middle["cobertura_observada"] == 0.5
 
 
 def t_explainability_report():
@@ -565,18 +655,65 @@ for case in [
     run_case(f"ml:{case.__name__[2:]}", case)
 
 
-def t_mlflow_run():
+def t_mlflow_start_free():
+    """Prova somente a fronteira bloqueada e limpa qualquer run se ela mudar."""
+    import mlflow
+
+    run_id = None
+    try:
+        run = mlflow.start_run(run_name="hub-smoke-free-delete-me")
+        run_id = run.info.run_id
+    finally:
+        if mlflow.active_run() is not None:
+            mlflow.end_run(status="KILLED")
+        if run_id is not None:
+            mlflow.tracking.MlflowClient().delete_run(run_id)
+
+
+def t_mlflow_run_work():
+    """Executa o contrato completo e remove o run temporário ao terminar."""
+    if not MLFLOW_EXPERIMENT_PATH:
+        raise ValueError("mlflow_experiment_path é obrigatório no ambiente work")
+
+    import mlflow
+    import pandas as pd
+    from sklearn.dummy import DummyClassifier
     from hub_snippets.ml.mlflow_run import run_governado
-    with run_governado("smoke_test", dataset="sintética, gerada no smoke test",
-                       split="sem split", limitacoes="execução de bateria"):
-        pass
+
+    x = pd.DataFrame({"x": [0.0, 1.0, 2.0, 3.0]})
+    y = np.array([0, 0, 1, 1])
+    model = DummyClassifier(strategy="prior").fit(x, y)
+    run_id = None
+    try:
+        with run_governado(
+            "hub-smoke-work-delete-me",
+            dataset="synthetic:tools/spark_smoke_test.py",
+            split="synthetic holdout not applicable",
+            limitacoes=["teste temporário de integração; não é modelo de decisão"],
+            experimento=MLFLOW_EXPERIMENT_PATH,
+        ) as governed:
+            active = mlflow.active_run()
+            run_id = active.info.run_id if active is not None else None
+            governed.parametros({"strategy": "prior"})
+            governed.metricas({"accuracy_smoke": float(model.score(x, y))})
+            governed.modelo(model, exemplo_entrada=x.head(2), nome="smoke_model")
+    finally:
+        if mlflow.active_run() is not None:
+            mlflow.end_run(status="KILLED")
+        if run_id is not None:
+            mlflow.tracking.MlflowClient().delete_run(run_id)
 
 
-# O décimo sexto. Abrir run está bloqueado no serverless desde 17/08/2026: o
-# MlflowClient lê `spark.mlflow.modelRegistryUri` e o Spark Connect recusa a
-# config. Se um dia passar, a regra é que está velha — e a bateria avisa.
-run_case_bloqueado("ml:mlflow_run", t_mlflow_run,
-                   "MLflow start_run bloqueado no serverless (Spark Connect)")
+if TARGET_ENVIRONMENT == "free":
+    run_case_bloqueado(
+        "ml:mlflow_start_free",
+        t_mlflow_start_free,
+        "MLflow start_run bloqueado no serverless (Spark Connect)",
+        expected_exceptions=("AnalysisException",),
+        message_fragments=("spark.mlflow.modelRegistryUri", "CONFIG_NOT_AVAILABLE"),
+    )
+else:
+    run_case("ml:mlflow_run_work", t_mlflow_run_work)
 
 # COMMAND ----------
 # MAGIC %md ## 7. Sumário
@@ -593,6 +730,7 @@ summary = {
     "bloqueado_esperado": sum(
         1 for r in results.values() if r["status"] == "BLOQUEADO_ESPERADO"
     ),
+    "target_environment": TARGET_ENVIRONMENT,
     "runtime": f"serverless (spark {spark.version})",
     "results": results,
 }

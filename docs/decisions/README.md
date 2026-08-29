@@ -28,5 +28,6 @@ changelog. Template em `.claude/templates/adr.md`.
 | [ADR-0006](ADR-0006-identidade-hub.md) | De ambiente pessoal a Hub de equipe: `x_`→`hub_`, `rodrigo-`→`hub-ml-`, com tabela de correspondência | Aceito |
 | [ADR-0007](ADR-0007-catalogo-e-pasta-de-objeto.md) | O catálogo depois da pasta de objeto: onde vive, o que cobre, e a coluna `exec` | Aceito |
 | [ADR-0008](ADR-0008-criterios-de-conferencia-da-publicacao.md) | O critério de conferência sai do ADR e vai para constante de código | Aceito |
+| [ADR-0009](ADR-0009-identidade-e-pacote-de-implantacao.md) | Identidade neutra no conteúdo ativo e ZIP mínimo de implantação | Aceito |
 
 Ao adicionar um ADR, atualize esta tabela e registre no `CHANGELOG.md`.

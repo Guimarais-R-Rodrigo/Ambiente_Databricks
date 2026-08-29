@@ -37,8 +37,8 @@ python tools/render_simulado.py --write
 
 ```powershell
 python tools/publicar_free.py            # plano (dry-run)
-python tools/publicar_free.py --execute  # publica
-python tools/publicar_free.py --verify   # confere o remoto (read-only)
+python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>
+python tools/publicar_free.py --verify --profile <free> --expected-host <url-free>
 ```
 
 Dry-run por padrão; `--execute` é gate consciente. O `verify` é obrigatório: a
@@ -66,8 +66,8 @@ Falha de auto-seleção → melhorar `description` e repetir. Registrar resultad
 
 ## 7. Replicar no trabalho (fase 4 — runbook)
 
-Cópia manual da subárvore `Novo_Ambiente_Simulado/Users/<username>/` para o
-workspace do trabalho, com mapeamento de username. Procedimento completo no
+Geração do ZIP mínimo por `tools/bundle_implantacao.py` e cópia manual para o
+workspace do trabalho, com mapeamento do placeholder para o destino. Procedimento completo no
 [runbook de replicação](replicacao-trabalho.md), com o
 [checklist](checklist-replicacao.md) para marcar durante a execução. Os
 pré-requisitos e guardrails estão em `.claude/skills/replicar-trabalho/`.

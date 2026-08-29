@@ -18,7 +18,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from notebook_marker import eh_notebook  # noqa: E402
+from notebook_marker import eh_notebook, texto_e_notebook  # noqa: E402
+from project_policy import CORPORATE_RE, EXPECTED_SKILL_NAMES, PERSONAL_RE  # noqa: E402
 
 INSTRUCTION_LIMIT = 20_000
 SKILL_LINE_WARN = 500
@@ -29,46 +30,22 @@ SKILL_LINE_WARN = 500
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 # Diretórios fora do alcance dos checks de repositório inteiro.
-REPO_IGNORE = {".git", "Ambiente_Antigo", "Ajustes_Codex", "__pycache__", ".venv"}
+REPO_IGNORE = {
+    ".git",
+    ".artifacts",
+    "Ambiente_Antigo",
+    "Ajustes_Codex",
+    "__pycache__",
+    ".venv",
+}
 
-# NAO cobre o nome da instituicao na paleta visual (AZUL_CAIXA e afins). E
-# decisao registrada em PLANO_HUB.md 2.2, nao lacuna: o repositorio e privado e o
-# material circula so internamente. Uma auditoria ja levantou o ponto; se voce
-# for a proxima, leia la antes de reabrir.
+# Não cobre o nome da instituição usado como constante de domínio na paleta
+# visual (`AZUL_CAIXA` e afins), exceção registrada no PLANO_HUB.md §2.2. O
+# ADR-0009, por outro lado, exige identidade pessoal neutra no conteúdo ativo e
+# derivado; e-mail/username real não é mais exceção implícita.
 #
-# Padrões que caracterizam identificador corporativo. Não são exaustivos — são os
-# formatos conhecidos deste contexto. Ao levar o repositório para outra
-# organização, acrescente aqui o formato de matrícula e o domínio de lá antes de
-# confiar no check.
-CORPORATE_RE = re.compile(
-    r"\b[a-z]\d{6,8}\b"                      # matrícula: letra + 6 a 8 dígitos
-    r"|corp(?:orativ)?[.@]"                  # domínio/e-mail corporativo
-    r"|\.gov\.br"
-    r"|@[a-z0-9-]*(?:banco|caixa|bank)[a-z0-9-]*\."
-    # Siglas de orgao ou norma interna. Nao tem formato reconhecivel: so a lista
-    # pega. Cada uma leva uma letra entre colchetes para que a constante nao case
-    # consigo mesma -- este arquivo tambem e varrido pelo check. Ao levar o Hub
-    # para outra organizacao, acrescente as de la aqui. A fronteira e escrita a
-    # mao, e nao com , porque _ conta como caractere de palavra e o token
-    # aparece colado em nome de arquivo: conformidade_<sigla>.md.
-    r"|(?<![A-Za-z0-9])GE[G]OD(?![A-Za-z0-9])",
-    re.IGNORECASE,
-)
-
 # Sequências típicas de mojibake (UTF-8 lido como latin-1/cp1252).
 MOJIBAKE_RE = re.compile(r"Ã[£¡©ªµ§¢³º]|â€[œ\x9d™“”]|Ã‚|Ã©|Ã§Ã")
-
-# Identificadores proibidos **dentro do produto** (`ambiente_fonte/`). Os dois
-# checks que usam esta constante recebem a raiz analisada, não o repositório
-# inteiro: o username pessoal do laboratório aparece de propósito em
-# `Novo_Ambiente_Simulado/` e em `docs/testes/`, e é estado aceito — ver o
-# docstring de `check_repo_corporate`. Quem estender esta regex supondo alcance
-# global vai errar por 439 caminhos.
-PERSONAL_RE = re.compile(
-    r"c\d{6}|corp\.caixa|caixa\.gov\.br|guimarais[._-]?r?[._-]?rodrigo@|"
-    r"C:\\Users\\Rodrigo|/Users/rodri\b",
-    re.IGNORECASE,
-)
 
 MD_LINK_RE = re.compile(r"\[[^\]]*\]\(([^)#?\s]+)(?:[#?][^)]*)?\)")
 
@@ -107,32 +84,76 @@ def alvo_existe(origem: Path, alvo: str) -> bool:
     return True
 
 
+def _parse_frontmatter_subset(text: str, skill_md: Path) -> tuple[dict[str, str], str | None]:
+    """Parseia o subconjunto conservador adotado pelo pacote: escalares simples.
+
+    O projeto usa somente ``name`` e ``description``. Rejeitar sintaxe fora desse
+    subconjunto é deliberado e evita que regex aceite YAML inválido ou valor vazio.
+    """
+    match = re.match(r"\A---\r?\n(.*?)\r?\n---(?:\r?\n|\Z)", text, re.DOTALL)
+    if not match:
+        return {}, "frontmatter ausente ou sem delimitador final"
+    values: dict[str, str] = {}
+    for number, raw in enumerate(match.group(1).splitlines(), 2):
+        if not raw.strip() or raw.lstrip().startswith("#"):
+            continue
+        if raw != raw.lstrip() or ":" not in raw:
+            return {}, f"YAML fora do subconjunto escalar na linha {number}"
+        key, scalar = raw.split(":", 1)
+        key, scalar = key.strip(), scalar.strip()
+        if key in values:
+            return {}, f"chave YAML duplicada: {key}"
+        if key not in {"name", "description"}:
+            return {}, f"campo {key!r} fora da política conservadora deste pacote"
+        if not scalar:
+            return {}, f"campo {key!r} vazio"
+        if scalar[0] in "[{&*!|>":
+            return {}, f"campo {key!r} usa sintaxe YAML fora do subconjunto escalar"
+        if scalar[0] in {'"', "'"}:
+            try:
+                parsed = ast.literal_eval(scalar)
+            except (SyntaxError, ValueError):
+                return {}, f"string YAML inválida no campo {key!r}"
+            if not isinstance(parsed, str):
+                return {}, f"campo {key!r} precisa ser string"
+            scalar = parsed.strip()
+        if not scalar:
+            return {}, f"campo {key!r} vazio"
+        values[key] = scalar
+    return values, None
+
+
 def check_skill_frontmatter(root: Path, problems: list[str]) -> int:
     skills_dir = root / ".assistant" / "skills"
-    count = 0
-    for skill_md in sorted(skills_dir.glob("*/SKILL.md")):
-        count += 1
-        folder = skill_md.parent.name
+    folders = {path.name: path for path in skills_dir.iterdir() if path.is_dir()}
+    for name in sorted(EXPECTED_SKILL_NAMES - set(folders)):
+        problems.append(f"{skills_dir}: skill esperada ausente: {name}")
+    for name in sorted(set(folders) - EXPECTED_SKILL_NAMES):
+        problems.append(f"{skills_dir}: pasta inesperada em skills: {name}")
+
+    for folder, directory in sorted(folders.items()):
+        skill_md = directory / "SKILL.md"
+        if not skill_md.is_file():
+            problems.append(f"{directory}: pasta de skill sem SKILL.md")
+            continue
         text = skill_md.read_text(encoding="utf-8")
-        if not text.startswith("---"):
-            problems.append(f"{skill_md}: sem frontmatter YAML")
+        frontmatter, error = _parse_frontmatter_subset(text, skill_md)
+        if error:
+            problems.append(f"{skill_md}: {error}")
             continue
-        try:
-            frontmatter = text.split("---", 2)[1]
-        except IndexError:
-            problems.append(f"{skill_md}: frontmatter malformado")
-            continue
-        name_match = re.search(r"^name:\s*(\S+)", frontmatter, re.MULTILINE)
-        has_description = re.search(r"^description:", frontmatter, re.MULTILINE)
-        if not name_match:
+        name = frontmatter.get("name")
+        description = frontmatter.get("description")
+        if not name:
             problems.append(f"{skill_md}: frontmatter sem 'name'")
-        elif name_match.group(1) != folder:
+        elif name != folder:
             problems.append(
-                f"{skill_md}: name '{name_match.group(1)}' != pasta '{folder}'"
+                f"{skill_md}: name '{name}' != pasta '{folder}'"
             )
-        if not has_description:
-            problems.append(f"{skill_md}: frontmatter sem 'description'")
-    return count
+        elif not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", name) or len(name) > 64:
+            problems.append(f"{skill_md}: name fora do formato Agent Skills")
+        if not description:
+            problems.append(f"{skill_md}: frontmatter sem 'description' não vazia")
+    return len(folders)
 
 
 def check_saida_colada(root: Path, problems: list[str]) -> tuple[int, int]:
@@ -352,11 +373,13 @@ def check_saida_de_comando_no_readme(problems: list[str]) -> int:
         return 0
 
     rotulos = (
-        "skills             :", "markdown / links   :", "notebooks / links  :",
-        "pastas de objeto   :", "forma da pasta     :", "saída colada       :",
-        "idioma da docstring:", "notebook exercita  :",
-        "python (AST)       :", "repo (corporativo) :", "repo (links)       :",
-        "esperados : ", "remotos   : ", "skills    :",
+        "skills             :", "prompts            :", "helpers citados    :", "markdown / links   :",
+        "notebooks / links  :", "pastas de objeto   :", "forma da pasta     :",
+        "contrato de dados  :", "contrato de entrada:", "saída colada       :",
+        "idioma da docstring:", "normas do molde    :", "notebook exercita  :",
+        "python (AST)       :", "instrucoes         :", "repo (identidade)  :",
+        "repo (links)       :", "esperados : ", "remotos   : ", "ausentes  : ",
+        "skills    :", "extensões :",
     )
     comandos = [
         [sys.executable, str(REPO_ROOT / "tools" / "validate_assistant.py")],
@@ -371,11 +394,17 @@ def check_saida_de_comando_no_readme(problems: list[str]) -> int:
     real = ""
     for cmd in comandos:
         try:
-            real += subprocess.run(
+            process = subprocess.run(
                 cmd, capture_output=True, text=True, timeout=300,
                 cwd=str(REPO_ROOT), encoding="utf-8", errors="replace",
                 env=ambiente,
-            ).stdout
+            )
+            real += process.stdout
+            if process.returncode != 0:
+                problems.append(
+                    f"README: `{Path(cmd[1]).name}` retornou {process.returncode}; "
+                    "não há saída aprovada para certificar"
+                )
         except (OSError, subprocess.SubprocessError) as erro:
             # Antes daqui havia `return 0`: o comando não lançava e a guarda
             # aprovava em silêncio, com "0 linhas conferidas" no meio de um bloco
@@ -397,8 +426,12 @@ def check_saida_de_comando_no_readme(problems: list[str]) -> int:
             (l.strip() for l in real.splitlines() if l.strip().startswith(rotulo.strip())), None)
         linha_readme = next(
             (l.strip() for l in texto_readme.splitlines() if l.strip().startswith(rotulo.strip())), None)
-        if linha_readme is None:
-            continue  # o README não documenta esta linha; nada a conferir
+        if linha_readme is None and linha_real is not None:
+            problems.append(
+                f"README.md: bloco de saída não documenta `{rotulo.strip()}`; "
+                "toda contagem do gate precisa ter um único dono conferível"
+            )
+            continue
         if linha_real is None:
             # Degradação silenciosa é o modo de falha que este repositório já
             # corrigiu duas vezes em outros checks: varredura vazia que passa.
@@ -444,6 +477,63 @@ def check_skill_sizes(root: Path, warnings: list[str]) -> None:
                 f"{skill_md}: {n_lines} linhas (> {SKILL_LINE_WARN}; "
                 "considere progressive disclosure)"
             )
+
+
+def check_prompt_contract(root: Path, problems: list[str]) -> tuple[int, int]:
+    """Confere se cada prompt ensina a pessoa, além de instruir o modelo.
+
+    A guarda nasceu quando 161 placeholders tinham rótulos, mas não explicavam
+    preenchimento, impacto ou exemplo, e as seções humanas de QA/limites haviam
+    sido substituídas por follow-ups. Repetir o placeholder em prosa não basta:
+    cada campo precisa da linha de quatro colunas antes do bloco colável.
+    """
+    prompts_root = root / ".assistant" / "hub_prompts"
+    files = sorted(
+        path for path in prompts_root.glob("*/*.md")
+        if path.name == f"{path.parent.name}.md"
+    )
+    placeholders_total = 0
+    required = (
+        "## Como preencher cada campo",
+        "## Prompt pronto para colar",
+        "## O que conferir na resposta",
+        "## Limites",
+    )
+    for path in files:
+        text = path.read_text(encoding="utf-8")
+        rel = path.relative_to(root)
+        for heading in required:
+            if heading not in text:
+                problems.append(f"{rel}: seção obrigatória ausente: {heading}")
+        before_prompt, marker, _prompt = text.partition("## Prompt pronto para colar")
+        if not marker:
+            continue
+        placeholders = set(re.findall(r"\{\{[A-Z0-9_]+\}\}", text))
+        documented = set(re.findall(r"\{\{[A-Z0-9_]+\}\}", before_prompt))
+        placeholders_total += len(placeholders)
+        for field in sorted(placeholders - documented):
+            problems.append(f"{rel}: {field} não tem guia antes do bloco colável")
+        for field in sorted(placeholders):
+            row = next(
+                (
+                    line for line in before_prompt.splitlines()
+                    if field in line and line.startswith("|")
+                ),
+                "",
+            )
+            if not row.startswith("|") or row.count("|") < 5:
+                problems.append(
+                    f"{rel}: {field} não tem linha campo/como/por quê/exemplo"
+                )
+        notebook = path.with_name(f"exemplo_{path.parent.name}.py")
+        if notebook.exists() and re.search(
+            r"\| Escrita \| \*\*sim\*\*.*`nenhuma",
+            notebook.read_text(encoding="utf-8"),
+        ):
+            problems.append(
+                f"{notebook.relative_to(root)}: declara escrita em tabela inexistente"
+            )
+    return len(files), placeholders_total
 
 
 def check_markdown(root: Path, problems: list[str]) -> tuple[int, int]:
@@ -648,11 +738,83 @@ def check_normas_do_molde(root: Path, problems: list[str]) -> tuple[int, int]:
     ]
     violacoes = 0
 
-    def dentro_de_try(arvore: ast.AST, alvo: ast.AST) -> bool:
+    def dentro_do_corpo_de_try(arvore: ast.AST, alvo: ast.AST) -> bool:
         for no in ast.walk(arvore):
-            if isinstance(no, ast.Try) and any(sub is alvo for sub in ast.walk(no)):
+            if isinstance(no, ast.Try) and any(
+                sub is alvo for statement in no.body for sub in ast.walk(statement)
+            ):
                 return True
         return False
+
+    def receiver_name(node: ast.AST) -> str | None:
+        while isinstance(node, ast.Attribute):
+            node = node.value
+        return node.id if isinstance(node, ast.Name) else None
+
+    def dataframe_receiver(node: ast.AST, tree: ast.AST) -> bool:
+        name = receiver_name(node)
+        if not name:
+            return False
+        lowered = name.lower()
+        if lowered in {"df", "dataframe", "frame"} or lowered.startswith("df_") or lowered.endswith("_df"):
+            return True
+        for function in (item for item in ast.walk(tree) if isinstance(item, ast.FunctionDef)):
+            for argument in [*function.args.posonlyargs, *function.args.args, *function.args.kwonlyargs]:
+                if argument.arg != name or argument.annotation is None:
+                    continue
+                try:
+                    if "DataFrame" in ast.unparse(argument.annotation):
+                        return True
+                except Exception:
+                    pass
+        return False
+
+    def expression_has_limiter(node: ast.AST) -> bool:
+        for child in ast.walk(node):
+            if isinstance(child, ast.Call):
+                if isinstance(child.func, ast.Attribute) and child.func.attr in LIMITADORES:
+                    return True
+                if isinstance(child.func, ast.Name) and child.func.id in {"smart_sample", *LIMITADORES}:
+                    return True
+        return False
+
+    def assigned_from_limiter(tree: ast.AST, name: str, before_line: int) -> bool:
+        for child in ast.walk(tree):
+            if not isinstance(child, (ast.Assign, ast.AnnAssign)) or child.lineno >= before_line:
+                continue
+            targets = child.targets if isinstance(child, ast.Assign) else [child.target]
+            if any(isinstance(target, ast.Name) and target.id == name for target in targets):
+                value = child.value
+                if value is not None and expression_has_limiter(value):
+                    return True
+        return False
+
+    def direct_nodes(scope: ast.AST):
+        stack = list(getattr(scope, "body", []))
+        while stack:
+            node = stack.pop()
+            yield node
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.Lambda)):
+                continue
+            stack.extend(ast.iter_child_nodes(node))
+
+    def scope_bindings(scope: ast.AST) -> set[str]:
+        bound: set[str] = set()
+        if isinstance(scope, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            bound |= {
+                argument.arg
+                for argument in [
+                    *scope.args.posonlyargs, *scope.args.args,
+                    *scope.args.kwonlyargs,
+                ]
+            }
+        for node in direct_nodes(scope):
+            if isinstance(node, (ast.Assign, ast.AnnAssign)):
+                targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+                bound |= {target.id for target in targets if isinstance(target, ast.Name)}
+            elif isinstance(node, (ast.Import, ast.ImportFrom)):
+                bound |= {alias.asname or alias.name.split(".")[0] for alias in node.names}
+        return bound
 
     for modulo in modulos:
         texto = modulo.read_text(encoding="utf-8")
@@ -666,7 +828,11 @@ def check_normas_do_molde(root: Path, problems: list[str]) -> tuple[int, int]:
         for no in ast.walk(arvore):
             if not (isinstance(no, ast.Call) and isinstance(no.func, ast.Attribute)):
                 continue
-            if no.func.attr in ("cache", "persist") and not dentro_de_try(arvore, no):
+            if (
+                no.func.attr in ("cache", "persist")
+                and dataframe_receiver(no.func.value, arvore)
+                and not dentro_do_corpo_de_try(arvore, no)
+            ):
                 violacoes += 1
                 problems.append(
                     f"{rel}:{no.lineno}: `{no.func.attr}()` fora de `try` — o molde "
@@ -674,28 +840,27 @@ def check_normas_do_molde(root: Path, problems: list[str]) -> tuple[int, int]:
                     "O padrão da casa é degradar, como em `_cache_if_supported`"
                 )
             if no.func.attr == "toPandas":
-                contexto = "\n".join(linhas[max(0, no.lineno - 6):no.lineno]).lower()
-                if not any(t in contexto for t in LIMITADORES):
+                name = receiver_name(no.func.value)
+                limited = expression_has_limiter(no.func.value) or (
+                    bool(name) and assigned_from_limiter(arvore, name, no.lineno)
+                )
+                if not limited:
                     violacoes += 1
                     problems.append(
                         f"{rel}:{no.lineno}: `toPandas()` sem limite verificável — o "
                         "molde proíbe. Passe por `smart_sample`, `limit` ou equivalente"
                     )
 
-        ligados = {
-            alvo.id for no in ast.walk(arvore) if isinstance(no, ast.Assign)
-            for alvo in no.targets if isinstance(alvo, ast.Name)
-        }
-        ligados |= {
-            arg.arg for no in ast.walk(arvore)
-            if isinstance(no, (ast.FunctionDef, ast.AsyncFunctionDef)) for arg in no.args.args
-        }
-        for no in ast.walk(arvore):
-            if isinstance(no, (ast.Import, ast.ImportFrom)):
-                for apelido in no.names:
-                    ligados.add(apelido.asname or apelido.name.split(".")[0])
-        if "spark" not in ligados:
-            for no in ast.walk(arvore):
+        scopes: list[ast.AST] = [arvore]
+        scopes.extend(
+            node for node in ast.walk(arvore)
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+        )
+        for scope in scopes:
+            bindings = scope_bindings(scope)
+            if "spark" in bindings:
+                continue
+            for no in direct_nodes(scope):
                 if isinstance(no, ast.Name) and no.id == "spark" and isinstance(no.ctx, ast.Load):
                     violacoes += 1
                     problems.append(
@@ -703,6 +868,7 @@ def check_normas_do_molde(root: Path, problems: list[str]) -> tuple[int, int]:
                         "dentro de módulo importado. Use "
                         "`SparkSession.getActiveSession() or SparkSession.builder.getOrCreate()`"
                     )
+                    break
 
     secoes = 0
     for init in sorted(root.rglob("__init__.py")):
@@ -853,10 +1019,77 @@ def check_contrato_de_dados(root: Path, problems: list[str]) -> int:
     Não pega tudo: chave montada por concatenação e acesso por variável passam.
     Pega a forma que já falhou duas vezes.
     """
-    literais_modulo = re.compile(r"""["']([a-zA-Z_À-ſ\U0001F300-\U0001FAFF][^"']{0,40})["']""")
-    acesso_indice = re.compile(r"""\w+\[\s*["']([a-z_]{3,})["']\s*\]""")
-    acesso_get = re.compile(r"""\.get\(\s*["']([a-z_]{3,})["']""")
-    comparacao = re.compile(r"""!=\s*'([^']{1,20})'|==\s*'([^']{1,20})'""")
+    def literal_string(node: ast.AST | None) -> str | None:
+        return node.value if isinstance(node, ast.Constant) and isinstance(node.value, str) else None
+
+    def produced_names(tree: ast.AST, *, include_return_literals: bool = True) -> set[str]:
+        produced: set[str] = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Dict):
+                produced |= {value for key in node.keys if (value := literal_string(key))}
+                if include_return_literals:
+                    produced |= {value for item in node.values if (value := literal_string(item))}
+            elif isinstance(node, ast.Subscript) and isinstance(node.ctx, ast.Store):
+                value = literal_string(node.slice)
+                if value:
+                    produced.add(value)
+            elif isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+                if node.func.attr in {"alias", "withColumn", "withColumnRenamed"} and node.args:
+                    value = literal_string(node.args[-1] if node.func.attr == "withColumnRenamed" else node.args[0])
+                    if value:
+                        produced.add(value)
+                if not include_return_literals and node.func.attr == "count":
+                    produced.add("count")
+                if not include_return_literals and node.func.attr == "lit" and node.args:
+                    value = literal_string(node.args[0])
+                    if value:
+                        produced.add(value)
+            elif not include_return_literals and isinstance(node, (ast.List, ast.Tuple, ast.Set)):
+                produced |= {value for item in node.elts if (value := literal_string(item))}
+            elif not include_return_literals and isinstance(node, ast.Compare):
+                if any(
+                    isinstance(child, ast.Call)
+                    and isinstance(child.func, ast.Attribute)
+                    and child.func.attr == "col"
+                    for child in ast.walk(node)
+                ):
+                    produced |= {
+                        child.value for child in ast.walk(node)
+                        if isinstance(child, ast.Constant) and isinstance(child.value, str)
+                    }
+            elif include_return_literals and isinstance(node, (ast.Assign, ast.AnnAssign)):
+                value = literal_string(node.value)
+                if value:
+                    produced.add(value)
+            elif include_return_literals and isinstance(node, ast.Return):
+                produced |= {
+                    child.value for child in ast.walk(node)
+                    if isinstance(child, ast.Constant) and isinstance(child.value, str)
+                }
+        return produced
+
+    def consumed_names(tree: ast.AST) -> set[str]:
+        consumed: set[str] = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Subscript) and isinstance(node.ctx, ast.Load):
+                value = literal_string(node.slice)
+                if value:
+                    consumed.add(value)
+            elif isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+                if node.func.attr == "get" and node.args:
+                    value = literal_string(node.args[0])
+                    if value:
+                        consumed.add(value)
+                if node.func.attr in {"select", "drop", "groupBy", "orderBy"}:
+                    consumed |= {value for arg in node.args if (value := literal_string(arg))}
+            elif isinstance(node, ast.Compare) and any(
+                isinstance(operator, (ast.Eq, ast.NotEq)) for operator in node.ops
+            ):
+                consumed |= {
+                    child.value for child in ast.walk(node)
+                    if isinstance(child, ast.Constant) and isinstance(child.value, str)
+                }
+        return consumed
 
     verificadas = 0
     for init in sorted(root.rglob("__init__.py")):
@@ -869,13 +1102,27 @@ def check_contrato_de_dados(root: Path, problems: list[str]) -> int:
         texto_modulo = modulo.read_text(encoding="utf-8")
         texto_nb = notebook.read_text(encoding="utf-8")
         rel = pasta.relative_to(root)
+        try:
+            tree_module = ast.parse(texto_modulo)
+            tree_notebook = ast.parse(texto_nb)
+        except SyntaxError:
+            continue
 
-        produzidos = set(literais_modulo.findall(texto_modulo))
+        produzidos = produced_names(tree_module)
+        dynamic_prefixes = {
+            "".join(
+                part.value for part in node.values
+                if isinstance(part, ast.Constant) and isinstance(part.value, str)
+            )
+            for node in ast.walk(tree_module)
+            if isinstance(node, ast.JoinedStr)
+        }
+        dynamic_prefixes.discard("")
         # O notebook também cria e recebe nomes: de `alias`/`withColumn`, do
         # esquema que ele declara, e de qualquer nome que ele **passe** ao helper
         # como argumento — `date_col="dt_referencia"` diz que aquela coluna vem
         # da base, não do retorno. Sem isso a guarda acusa a própria entrada.
-        produzidos |= set(literais_modulo.findall(texto_nb.split("# COMMAND", 1)[0]))
+        produzidos |= produced_names(tree_notebook, include_return_literals=False)
         produzidos |= set(re.findall(r"""alias\(\s*["']([^"']+)["']""", texto_nb))
         produzidos |= set(re.findall(r"""withColumn\(\s*["']([^"']+)["']""", texto_nb))
         produzidos |= set(re.findall(r"""f?["'][^"']*\b(\w+) (?:string|int|double|date|boolean)""", texto_nb))
@@ -893,22 +1140,23 @@ def check_contrato_de_dados(root: Path, problems: list[str]) -> int:
                     f.read_text(encoding="utf-8"),
                 ))
 
-        for linha in texto_nb.splitlines():
-            if linha.lstrip().startswith("# MAGIC"):
-                continue  # markdown: prosa, não contrato
-            for chave in acesso_indice.findall(linha) + acesso_get.findall(linha):
-                if chave not in produzidos:
-                    problems.append(
-                        f"{rel}/{notebook.name}: consome ['{chave}'], que "
-                        f"{modulo.name} não produz"
-                    )
-            for a, b in comparacao.findall(linha):
-                valor = a or b
-                if valor and valor not in produzidos and not valor.isdigit():
-                    problems.append(
-                        f"{rel}/{notebook.name}: compara com '{valor}', que "
-                        f"{modulo.name} não produz"
-                    )
+        # Valores de argumentos nomeados são contrato de entrada e não precisam
+        # ser produzidos pelo módulo irmão.
+        for call in (node for node in ast.walk(tree_notebook) if isinstance(node, ast.Call)):
+            for keyword in call.keywords:
+                value = literal_string(keyword.value)
+                if value:
+                    produzidos.add(value)
+
+        for chave in sorted(consumed_names(tree_notebook) - produzidos):
+            if chave.isdigit():
+                continue
+            if any(chave.startswith(prefix) for prefix in dynamic_prefixes):
+                continue
+            problems.append(
+                f"{rel}/{notebook.name}: consome '{chave}', que não é entrada "
+                f"declarada nem saída efetiva de {modulo.name}"
+            )
     return verificadas
 
 
@@ -968,13 +1216,37 @@ def check_contrato_de_entrada(root: Path, problems: list[str]) -> int:
         verificadas += 1
         rel = pasta.relative_to(root)
 
+        direct_aliases: dict[str, str] = {}
+        module_aliases: set[str] = set()
+        for node in ast.walk(arv_nb):
+            if isinstance(node, ast.ImportFrom):
+                for alias in node.names:
+                    local = alias.asname or alias.name
+                    if alias.name in assinaturas:
+                        direct_aliases[local] = alias.name
+                    else:
+                        module_aliases.add(local)
+            elif isinstance(node, ast.Import):
+                for alias in node.names:
+                    module_aliases.add(alias.asname or alias.name.split(".")[0])
+
         for chamada in ast.walk(arv_nb):
-            if not isinstance(chamada, ast.Call) or not isinstance(chamada.func, ast.Name):
+            if not isinstance(chamada, ast.Call):
                 continue
-            args = assinaturas.get(chamada.func.id)
+            alvo: str | None = None
+            if isinstance(chamada.func, ast.Name):
+                alvo = direct_aliases.get(chamada.func.id, chamada.func.id)
+            elif (
+                isinstance(chamada.func, ast.Attribute)
+                and isinstance(chamada.func.value, ast.Name)
+                and chamada.func.value.id in module_aliases
+            ):
+                alvo = chamada.func.attr
+            if alvo is None:
+                continue
+            args = assinaturas.get(alvo)
             if args is None:
                 continue
-            alvo = chamada.func.id
 
             posicionais = [a.arg for a in args.posonlyargs] + [a.arg for a in args.args]
             if posicionais and posicionais[0] in ("self", "cls"):
@@ -1030,20 +1302,51 @@ def check_smoke_test_sincronizado(problems: list[str]) -> None:
     if not smoke.exists() or not canonico.exists():
         problems.append("tools: smoke test ou notebook_marker ausente")
         return
-    texto_smoke = smoke.read_text(encoding="utf-8")
-    for constante in ("MARCADOR_NOTEBOOK", "_PREFIXOS_TOLERADOS"):
-        linha_canonica = next(
-            (l for l in canonico.read_text(encoding="utf-8").splitlines()
-             if l.startswith(f"{constante} =")),
-            None,
-        )
-        if linha_canonica is None:
-            problems.append(f"notebook_marker.py: constante {constante} não encontrada")
-        elif linha_canonica not in texto_smoke:
-            problems.append(
-                f"spark_smoke_test.py: {constante} divergiu de notebook_marker.py "
-                f"(esperado: {linha_canonica.strip()})"
-            )
+    import tempfile
+    from types import SimpleNamespace
+
+    try:
+        tree = ast.parse(smoke.read_text(encoding="utf-8"))
+    except SyntaxError:
+        return
+    selected: list[ast.stmt] = []
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and any(
+            isinstance(target, ast.Name)
+            and target.id in {"MARCADOR_NOTEBOOK", "_PREFIXOS_TOLERADOS"}
+            for target in node.targets
+        ):
+            selected.append(node)
+        if isinstance(node, ast.FunctionDef) and node.name == "modulo_e_notebook":
+            selected.append(node)
+    namespace: dict[str, object] = {}
+    try:
+        exec(compile(ast.Module(body=selected, type_ignores=[]), str(smoke), "exec"), namespace)
+        detector = namespace["modulo_e_notebook"]
+    except Exception as exc:
+        problems.append(f"spark_smoke_test.py: detector não pôde ser carregado ({exc})")
+        return
+
+    cases = {
+        "marker": "# Databricks notebook source\nprint('ok')\n",
+        "bom_blank": "\ufeff\n# Databricks notebook source\n",
+        "encoding": "# -*- coding: utf-8 -*-\n# Databricks notebook source\n",
+        "code_before": "x = 1\n# Databricks notebook source\n",
+        "empty": "",
+    }
+    with tempfile.TemporaryDirectory(prefix="hub-notebook-marker-") as directory:
+        finder = SimpleNamespace(path=directory)
+        for name, content in cases.items():
+            Path(directory, f"{name}.py").write_text(content, encoding="utf-8")
+            expected = texto_e_notebook(content)
+            actual = bool(detector(finder, name, False))
+            if actual != expected:
+                problems.append(
+                    f"spark_smoke_test.py: detector diverge no caso {name!r} "
+                    f"(canônico={expected}, smoke={actual})"
+                )
+        if detector(finder, "marker", True):
+            problems.append("spark_smoke_test.py: pacote foi classificado como notebook")
 
 
 def check_python_ast(root: Path, problems: list[str]) -> int:
@@ -1079,12 +1382,13 @@ def iter_repo_files() -> list[Path]:
 
 
 def check_repo_corporate(problems: list[str]) -> int:
-    """Varre o repositório inteiro atrás de identificador **corporativo**.
+    """Varre o repositório editável/derivado atrás de identidade pessoal/corporativa.
 
     O check de caminho abaixo cobre apenas a raiz analisada, e o vetor descrito
-    no ADR-0003 se materializa fora dela: em `Novo_Ambiente_Simulado/`, que é
-    versionado e carrega o nome do usuário no caminho. Aqui a busca é só por
-    padrão corporativo — o username pessoal do laboratório é estado aceito.
+    nos ADRs 0003/0009 se materializa também fora dela: no simulado versionado e
+    nos documentos ativos. A busca cobre padrões corporativos e pessoais.
+    Referências congeladas continuam fora desta guarda e entram somente no modo
+    ``security`` do bundle de auditoria.
 
     A varredura parte de `REPO_ROOT`, não do diretório atual: antes disso, rodar
     o comando de outra pasta reduzia a varredura sem alterar o veredito.
@@ -1092,14 +1396,15 @@ def check_repo_corporate(problems: list[str]) -> int:
     verificados = 0
     for caminho in iter_repo_files():
         relativo = caminho.relative_to(REPO_ROOT)
-        if CORPORATE_RE.search(str(relativo)):
-            problems.append(f"{relativo}: identificador corporativo no caminho")
+        if CORPORATE_RE.search(str(relativo)) or PERSONAL_RE.search(str(relativo)):
+            problems.append(f"{relativo}: identificador pessoal/corporativo no caminho")
         if not caminho.is_file() or caminho.suffix not in {".md", ".py", ".txt", ".json"}:
             continue
         verificados += 1
         try:
-            if CORPORATE_RE.search(caminho.read_text(encoding="utf-8")):
-                problems.append(f"{relativo}: identificador corporativo no conteúdo")
+            content = caminho.read_text(encoding="utf-8")
+            if CORPORATE_RE.search(content) or PERSONAL_RE.search(content):
+                problems.append(f"{relativo}: identificador pessoal/corporativo no conteúdo")
         except (UnicodeDecodeError, OSError):
             continue
     if verificados == 0:
@@ -1197,6 +1502,7 @@ def main() -> int:
     warnings: list[str] = []
 
     n_skills = check_skill_frontmatter(root, problems)
+    n_prompts, n_prompt_fields = check_prompt_contract(root, problems)
     check_skill_sizes(root, warnings)
     check_pycache(root, warnings)
     n_md, n_links = check_markdown(root, problems)
@@ -1223,7 +1529,8 @@ def main() -> int:
     n_repo_links = check_repo_links(root, problems)
 
     print(f"raiz analisada     : {root}")
-    print(f"skills             : {n_skills} · {n_completas}/{n_secoes} com as 5 seções do template")
+    print(f"skills             : {n_skills} · {n_completas}/{n_secoes} com as 5 seções estruturais")
+    print(f"prompts            : {n_prompts} · {n_prompt_fields} campos com guia e contrato humano")
     print(f"helpers citados    : {n_helpers} caminhos verificados")
     if args.conferir_readme:
         print(f"saída no README    : {n_readme} linhas conferidas contra execução real")
@@ -1239,7 +1546,7 @@ def main() -> int:
     print(f"notebook exercita  : {n_nb_obj} objetos, {n_nb_mudos} notebook(s) que só importam")
     print(f"python (AST)       : {n_py} arquivos")
     print(f"instrucoes         : {n_chars}/{INSTRUCTION_LIMIT} caracteres")
-    print(f"repo (corporativo) : {n_repo} arquivos varridos no repositório inteiro")
+    print(f"repo (identidade)  : {n_repo} arquivos varridos no repositório editável/derivado")
     print(f"repo (links)       : {n_repo_links} links fora da raiz analisada")
     print()
     for warning in warnings:

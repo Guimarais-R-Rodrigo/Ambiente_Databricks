@@ -63,7 +63,7 @@ plataforma nomeia** — por isso as pastas são `hub_snippets` e as skills
 | `hub_prompts/` | Não | adicionar com `@`/Add context |
 | `hub_snippets/`, `hub_scripts/` | Não | importar/executar explicitamente |
 | `hub_padroes/` | Não | consulta humana: os moldes de todo objeto do Hub |
-| `skills/hub-ml-<tema>/` | **Sim** | é a única estrutura nativa com conteúdo nosso |
+| `skills/hub-ml-<tema>/` | **Sim** | skills customizadas usando o mecanismo nativo |
 
 > Exceção oficial: instruções não se aplicam a **Quick Fix** e **Autocomplete**.
 
@@ -91,7 +91,7 @@ e exigem preparo:
 | Python 3.12 ou superior | rodar as ferramentas locais | `python --version` |
 | Repositório clonado | ter os arquivos | `git clone <url do repo>` |
 | Conta no Databricks Free | ter onde publicar | criar em databricks.com/learn/free-edition |
-| CLI do Databricks **v0.200+** | publicar e conferir | `databricks --version` |
+| CLI nova do Databricks **v0.205+**; prefira **1.0+ GA** | publicar e conferir | `databricks --version` |
 | CLI autenticada | publicar e conferir | `databricks current-user me` deve devolver seu e-mail |
 
 Instalar e autenticar a CLI:
@@ -107,14 +107,17 @@ databricks auth login --host <url do seu workspace Free>
 > que pode sombrear o binário correto. Em Linux/macOS, use o instalador oficial:
 > `curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh`.
 
-Confirme os dois na ordem: `databricks --version` deve mostrar `v0.200` ou
-superior, e só então `databricks current-user me` deve devolver seu e-mail. Se o
+Confirme os dois na ordem: `databricks --version` deve mostrar no mínimo
+`v0.205` — prefira uma versão `1.0+`, já GA — e só então
+`databricks current-user me` deve devolver seu e-mail. Se o
 primeiro falhar, a CLI está errada; se só o segundo falhar, é autenticação. Sem
 isso, os passos 4 e 5 falham com mensagem que não aponta a causa.
 
 > No workspace do **trabalho** não há CLI, e isso é esperado: lá a instalação é
 > manual, pelo [runbook de replicação](docs/playbooks/replicacao-trabalho.md).
 > O pré-requisito acima vale para o laboratório.
+
+Referência: [instalação e status da Databricks CLI](https://learn.microsoft.com/en-us/azure/databricks/dev-tools/cli/).
 
 ## Primeira hora no projeto
 
@@ -144,8 +147,8 @@ dentro de `ambiente_fonte/`. Depois rode, em ordem, os quatro comandos abaixo:
 ```powershell
 python tools/validate_assistant.py
 python tools/render_simulado.py --write
-python tools/publicar_free.py --execute
-python tools/publicar_free.py --verify
+python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>
+python tools/publicar_free.py --verify --profile <free> --expected-host <url-free>
 ```
 
 O `--write` do segundo comando não é opcional aqui. Sem ele o render apenas
@@ -167,8 +170,8 @@ operação do dia a dia exige. Replicar no workspace do trabalho é assunto do
 flowchart TD
   E["1. Editar ambiente_fonte/"] --> V["2. Validar\npython tools/validate_assistant.py"]
   V --> R["3. Renderizar\npython tools/render_simulado.py --write"]
-  R --> P["4. Publicar no Free\npython tools/publicar_free.py --execute"]
-  P --> C["5. Conferir\npython tools/publicar_free.py --verify"]
+  R --> P["4. Publicar no Free\n--execute + profile + host"]
+  P --> C["5. Conferir\n--verify + profile + host"]
   C --> G["6. Commit + CHANGELOG"]
   G --> T["7. Forward tests\ncaso +, caso −, @menção (chat novo)"]
   T --> W["8. Replicar no trabalho\n(runbook de cópia manual)"]
@@ -176,10 +179,11 @@ flowchart TD
 
 ## Comandos e o que esperar de cada um
 
-As saídas abaixo vêm de execução real, com o nome de usuário substituído por
-placeholder. **As linhas de contagem mudam conforme o repositório cresce** — não
-tente casá-las com o seu retorno. O que importa em cada bloco é a última linha,
-`APROVADO` ou `OK`.
+As saídas locais abaixo vêm de execução real, com o caminho substituído por
+placeholder. O bloco remoto é explicitamente marcado como contrato esperado
+quando ainda não houve publicação desta versão. **As linhas de contagem mudam
+conforme o repositório cresce**; o gate confere todas as linhas rotuladas e o
+veredito final.
 
 > **Para quem edita este README:** capture as saídas **depois** da última edição
 > do commit, nunca antes. Uma auditoria pegou os três blocos errados por
@@ -204,21 +208,23 @@ python tools/validate_assistant.py
 
 ```text
 raiz analisada     : <repo>\ambiente_fonte
-skills             : 13 · 13/13 com as 5 seções do template
-helpers citados    : 72 caminhos verificados
-markdown / links   : 105 arquivos / 167 links relativos
+skills             : 13 · 13/13 com as 5 seções estruturais
+prompts            : 16 · 161 campos com guia e contrato humano
+helpers citados    : 81 caminhos verificados
+markdown / links   : 106 arquivos / 169 links relativos
 notebooks / links  : 78 notebooks / 17 links relativos
 pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
 forma da pasta     : 58 conferidas (o módulo tem o nome da pasta)
 contrato de dados  : 60 pares (saída: o que o notebook consome)
 contrato de entrada: 57 pares (entrada: o que o notebook passa)
 saída colada       : 77 notebooks com bloco real, 0 sem
-notebook exercita  : 57 objetos, 0 notebook(s) que só importam
 idioma da docstring: 60 módulos, 0 com docstring em inglês
+normas do molde    : 70 arquivos, 0 violação(ões)
+notebook exercita  : 57 objetos, 0 notebook(s) que só importam
 python (AST)       : 209 arquivos
-instrucoes         : 7085/20000 caracteres
-repo (corporativo) : 720 arquivos varridos no repositório inteiro
-repo (links)       : 266 links fora da raiz analisada
+instrucoes         : 8116/20000 caracteres
+repo (identidade)  : 728 arquivos varridos no repositório editável/derivado
+repo (links)       : 271 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
@@ -238,14 +244,14 @@ saber o que cada uma cobre:
 
 | Linha | O que confere | Nasceu de |
 |---|---|---|
-| `pastas de objeto` | nome da pasta, os três arquivos, e se o `__init__.py` bate com a API do módulo | conversão para pasta por objeto |
+| `pastas de objeto` | nome da pasta, artefatos exigidos pelo tipo e, quando houver, `__init__.py` idêntico à API | conversão para pasta por objeto |
 | `forma da pasta` | o módulo tem o nome da pasta — sem isso o import documentado não existe | pasta que o outro check pulava em silêncio |
 | `helpers citados` | todo `hub_snippets.x.y` citado numa skill existe de fato | renomear módulo quebraria 13 skills em silêncio |
 | `contrato de dados` | o notebook consome chave que o módulo **devolve** | três notebooks pedindo chave renomeada |
 | `contrato de entrada` | o notebook passa argumento que a assinatura **aceita** | seis dos dezesseis defeitos da Sprint 7 entraram por aí |
 | `saída colada` | o notebook tem bloco com saída real, não só prosa | notebook que ensinava a contar nulos numa saída sem nulos |
 
-As duas últimas linhas **do bloco de saída acima** — `repo (corporativo)` e
+As duas últimas linhas **do bloco de saída acima** — `repo (identidade)` e
 `repo (links)` — são as que valem conferir de olho: elas contam o
 que os checks de repositório inteiro alcançaram. Se qualquer uma vier **zero**,
 a proteção correspondente não rodou — e desde a correção de 15/08/2026 isso
@@ -260,11 +266,11 @@ python tools/render_simulado.py --write
 
 ```text
 fonte  : <repo>\ambiente_fonte
-destino: <repo>\Novo_Ambiente_Simulado\Users\<seu-usuario>
+destino: <repo>\Novo_Ambiente_Simulado\Users\usuario-free
   copy file .assistant_instructions.md -> ...\.assistant_instructions.md
   copy dir  .assistant -> ...\.assistant
 
-OK: 315 arquivos renderizados em Novo_Ambiente_Simulado/
+OK: 316 arquivos renderizados em Novo_Ambiente_Simulado/
 ```
 
 O total inclui o marcador `README_GERADO.md` na raiz do simulado, que não vai
@@ -274,16 +280,22 @@ para o workspace — por isso a conferência adiante espera um arquivo a menos.
 verifica o que existe. São coisas diferentes, e por isso a segunda não é opcional:
 
 ```powershell
-python tools/publicar_free.py --execute
-python tools/publicar_free.py --verify
+python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>
+python tools/publicar_free.py --verify --profile <free> --expected-host <url-free>
 ```
+
+> **PENDENTE nesta revisão:** o bloco abaixo é o contrato esperado para os 315
+> arquivos do pacote atual. Ele só vira evidência de execução depois de uma
+> publicação autorizada e de `--verify` aprovado; não representa o remoto atual.
 
 ```text
 usuário: <seu-usuario>
+profile: <profile-free>
+host   : https://<workspace-free>
 
 == VERIFY (read-only) ==
-esperados : 314 arquivos
-remotos   : 315 arquivos sob .assistant + instruções
+esperados : 315 arquivos
+remotos   : 316 arquivos sob .assistant + instruções
 ausentes  : 0 | obsoletos: 0
 plataforma: 1 arquivo(s) gerenciado(s) — .assistant/.mcp_servers.json
 skills    : 13/13
@@ -332,21 +344,23 @@ uma específica, use `@nome-da-skill`. As 36 combinações testadas estão em
 **Posso usar dados reais do trabalho no ambiente Free?**
 Não, em nenhuma hipótese. O Free é laboratório e recebe apenas dados sintéticos.
 
-Identificador corporativo também não entra no repositório, e a validação reprova
-se entrar — o `validate_assistant.py` varre todo o repositório em conteúdo **e**
-em nome de pasta, porque é assim que o vazamento aconteceria: renderizando o
-simulado com o username do trabalho. Note que o username pessoal do laboratório
-aparece no caminho de `Novo_Ambiente_Simulado/`; isso é estado aceito, e só o
-padrão corporativo é bloqueado (ADR-0003).
+Identificador pessoal ou corporativo também não entra no conteúdo ativo nem no
+simulado. O `validate_assistant.py` varre conteúdo **e** nome de pasta; o render
+usa sempre `Users/usuario-free/`, e o workspace real só é informado ao publicar.
+Essa decisão está no ADR-0009; `Ambiente_Antigo/` continua em quarentena pelo
+ADR-0003.
+
+O ZIP mínimo não leva a história Git. Commits anteriores ainda contêm o antigo
+path pessoal do simulado, portanto clone completo para ambiente corporativo fica
+bloqueado até reescrita coordenada do histórico; veja o runbook.
 
 O que exatamente é bloqueado importa, porque a lista não é genérica: hoje ela
 cobre matrícula no formato letra seguida de seis a oito dígitos, domínios e
-e-mails corporativos conhecidos e o domínio governamental brasileiro. A lista
-literal vive na constante `CORPORATE_RE` de
-[tools/validate_assistant.py](tools/validate_assistant.py) — e só lá, para não
-envelhecer em dois lugares. **Antes de confiar no check em outra organização,
-acrescente ali o formato de matrícula e o domínio de lá.** Padrão que não está
-na constante passa sem alarme.
+e-mails corporativos conhecidos e o domínio governamental brasileiro. A política
+compartilhada vive em [project_policy.py](tools/project_policy.py), consumida por
+validador, render e publicador para não envelhecer em três lugares. **Antes de
+confiar no check em outra organização, acrescente ali o formato de matrícula e o
+domínio de lá.** Padrão que não está na constante passa sem alarme.
 
 **O que são as pastas com prefixo `hub_`?**
 Extensões criadas aqui, que o Genie Code **não** carrega sozinho. Precisam de

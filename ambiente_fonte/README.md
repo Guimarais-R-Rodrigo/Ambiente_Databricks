@@ -14,7 +14,7 @@ papéis opostos:
 ```mermaid
 flowchart LR
   F["<b>ambiente_fonte/</b><br/>você edita aqui<br/><i>sem username</i>"]
-  S["<b>Novo_Ambiente_Simulado/</b><br/>gerado por script<br/><i>Users/&lt;username&gt;/…</i>"]
+  S["<b>Novo_Ambiente_Simulado/</b><br/>gerado por script<br/><i>Users/usuario-free/…</i>"]
   W1["Workspace Free<br/><i>laboratório</i>"]
   W2["Workspace do trabalho<br/><i>sem CLI</i>"]
   F -->|"render_simulado.py"| S
@@ -22,12 +22,10 @@ flowchart LR
   S -->|"cópia manual (runbook)"| W2
 ```
 
-A pasta que você edita é **neutra**: não contém username nenhum. O simulado
-acrescenta a camada `Users/<username>/`, que é o formato que o workspace espera —
-e essa camada muda conforme o destino. Manter as duas separadas é o que permite
-que a cópia para o trabalho seja mecânica: você copia uma subárvore pronta, sem
-decidir nada no meio do caminho, em um computador que não tem as ferramentas
-deste repositório.
+A pasta que você edita é **neutra**: não contém username nenhum. O simulado usa
+sempre `Users/usuario-free/`; o destino real entra apenas no publicador ou no
+runbook. Manter as duas camadas separadas permite gerar o pacote mínimo e mapear
+o destino sem versionar a identidade de quem opera.
 
 Editar o simulado à mão não funciona: o próximo render apaga a pasta inteira e a
 recria a partir daqui.
@@ -43,8 +41,8 @@ python tools/validate_assistant.py
 python tools/render_simulado.py --write
 
 # 4. publique no laboratório e confira o que ficou lá
-python tools/publicar_free.py --execute
-python tools/publicar_free.py --verify
+python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>
+python tools/publicar_free.py --verify --profile <free> --expected-host <url-free>
 
 # 5. registre no CHANGELOG.md e faça o commit
 ```

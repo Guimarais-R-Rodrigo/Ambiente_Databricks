@@ -3,7 +3,7 @@
 Três fases, no padrão do engine `databricks-genie` do Verg_Alchemy_Hub:
 
     python tools/publicar_free.py             # plano (dry-run), nada é escrito
-    python tools/publicar_free.py --execute   # publica
+    python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>
     python tools/publicar_free.py --verify    # confere o remoto (read-only)
 
 O ADR-0005 registra por que a publicação é feita aqui em vez de pelo engine do
@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -27,13 +27,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 # material didático precisa ser notebook, ou não há células para executar.
 # A detecção é canônica em notebook_marker.py; ver o docstring de lá.
 from notebook_marker import eh_notebook  # noqa: E402
+from project_policy import (  # noqa: E402
+    CORPORATE_RE,
+    EXPECTED_HUB_DIRS,
+    EXPECTED_SKILL_NAMES,
+    normalize_host,
+)
 
 SIMULADO = Path("Novo_Ambiente_Simulado")
-CORPORATE_RE = re.compile(r"c\d{6}|corp\.|\.gov\.br", re.IGNORECASE)
-
-# Estrutura mínima que o Genie Code precisa encontrar para descobrir o ecossistema.
-EXPECTED_SKILLS = 13
-EXPECTED_HUB_DIRS = {"hub_padroes", "hub_prompts", "hub_scripts", "hub_snippets"}
+CLI_PROFILE: str | None = None
 
 # Arquivos que a **plataforma** cria dentro de `.assistant/` e que não vêm da
 # fonte. Observado em 2026-08-15: abrir o painel de MCP em Genie Code → Settings
@@ -48,8 +50,12 @@ def databricks(*args: str) -> tuple[int, str, str]:
     stdout e stderr nunca são concatenados: a CLI emite avisos em stderr que,
     misturados à saída, corrompem o parse de JSON.
     """
+    profile_args = ["--profile", CLI_PROFILE] if CLI_PROFILE else []
     proc = subprocess.run(
-        ["databricks", *args], capture_output=True, text=True, encoding="utf-8"
+        ["databricks", *profile_args, *args],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
     )
     return proc.returncode, proc.stdout or "", proc.stderr or ""
 
@@ -65,18 +71,54 @@ def databricks_json(*args: str) -> object | None:
         return None
 
 
-def resolve_home() -> tuple[str, str]:
+def _configuration_value(payload: object, key: str) -> str | None:
+    if not isinstance(payload, dict):
+        return None
+    details = payload.get("details")
+    configuration = details.get("configuration") if isinstance(details, dict) else None
+    item = configuration.get(key) if isinstance(configuration, dict) else None
+    value = item.get("value") if isinstance(item, dict) else None
+    return str(value) if value is not None else None
+
+
+def resolve_home(
+    *, expected_host: str | None = None, require_explicit_target: bool = False
+) -> tuple[str, str, str, str]:
+    """Resolve usuário, host e perfil e aplica o guardrail de destino de escrita."""
     identidade = databricks_json("current-user", "me", "-o", "json")
     if not isinstance(identidade, dict) or "userName" not in identidade:
         raise SystemExit("FAIL não foi possível resolver o usuário pela CLI.")
-    user = identidade["userName"]
+    user = str(identidade["userName"])
     if CORPORATE_RE.search(user):
         raise SystemExit(
             "FAIL usuário com aparência corporativa. Esta ferramenta publica no\n"
             "     laboratório Free; o workspace do trabalho usa o runbook manual\n"
             "     (docs/playbooks/replicacao-trabalho.md)."
         )
-    return f"/Users/{user}", user
+    auth = databricks_json("auth", "describe", "-o", "json")
+    actual_host = _configuration_value(auth, "host")
+    actual_profile = _configuration_value(auth, "profile") or CLI_PROFILE
+    if not actual_host or not actual_profile:
+        raise SystemExit("FAIL a CLI não informou host e profile ativos em `auth describe`.")
+    try:
+        actual_host = normalize_host(actual_host)
+        normalized_expected = normalize_host(expected_host) if expected_host else None
+    except ValueError as exc:
+        raise SystemExit(f"FAIL host inválido: {exc}") from exc
+
+    if require_explicit_target and (not CLI_PROFILE or not normalized_expected):
+        raise SystemExit(
+            "FAIL --execute exige --profile e --expected-host (ou as variáveis\n"
+            "     DATABRICKS_FREE_PROFILE e DATABRICKS_FREE_HOST). O gate impede\n"
+            "     escrita quando o destino não foi declarado explicitamente."
+        )
+    if normalized_expected and actual_host != normalized_expected:
+        raise SystemExit(
+            "FAIL host ativo diverge do laboratório Free declarado:\n"
+            f"     ativo   : {actual_host}\n"
+            f"     esperado: {normalized_expected}"
+        )
+    return f"/Users/{user}", user, actual_host, actual_profile
 
 
 def local_tree() -> tuple[Path, list[Path]]:
@@ -223,12 +265,15 @@ def cmd_verify(root: Path, arquivos: list[Path], home: str) -> int:
         if nome in esperado_notebook and tipo != "NOTEBOOK":
             problemas.append(f"{nome}: importado como {tipo}, esperado NOTEBOOK")
 
-    skills = [
-        item for item in remote_list(f"{home}/.assistant/skills")
-        if item.get("object_type") == "DIRECTORY"
-    ]
-    if len(skills) != EXPECTED_SKILLS:
-        problemas.append(f"skills: {len(skills)} pastas, esperado {EXPECTED_SKILLS}")
+    skills = {
+        str(item["path"]).rsplit("/", 1)[-1]
+        for item in remote_list(f"{home}/.assistant/skills")
+        if item.get("object_type") == "DIRECTORY" and item.get("path")
+    }
+    for nome in sorted(EXPECTED_SKILL_NAMES - skills):
+        problemas.append(f"skill ausente: {nome}")
+    for nome in sorted(skills - EXPECTED_SKILL_NAMES):
+        problemas.append(f"skill inesperada: {nome}")
 
     hub_dirs = {
         item["path"].rsplit("/", 1)[-1]
@@ -245,7 +290,7 @@ def cmd_verify(root: Path, arquivos: list[Path], home: str) -> int:
     print(f"ausentes  : {len(ausentes)} | obsoletos: {len(obsoletos)}")
     if plataforma:
         print(f"plataforma: {len(plataforma)} arquivo(s) gerenciado(s) — {', '.join(plataforma)}")
-    print(f"skills    : {len(skills)}/{EXPECTED_SKILLS}")
+    print(f"skills    : {len(skills)}/{len(EXPECTED_SKILL_NAMES)}")
     print(f"extensões : {len(hub_dirs & EXPECTED_HUB_DIRS)}/{len(EXPECTED_HUB_DIRS)} diretórios hub_")
     print()
     for problema in problemas:
@@ -315,6 +360,7 @@ def cmd_verify_rapido(root: Path, arquivos: list[Path], home: str) -> int:
 
 
 def main() -> int:
+    global CLI_PROFILE
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--execute", action="store_true", help="publica de fato")
     parser.add_argument("--verify", action="store_true", help="apenas confere o remoto")
@@ -322,7 +368,18 @@ def main() -> int:
         "--rapido", action="store_true",
         help="com --verify: só contagens, para uso durante a execução",
     )
+    parser.add_argument(
+        "--profile",
+        default=os.getenv("DATABRICKS_FREE_PROFILE"),
+        help="profile explícito da CLI do laboratório Free",
+    )
+    parser.add_argument(
+        "--expected-host",
+        default=os.getenv("DATABRICKS_FREE_HOST"),
+        help="origem HTTPS exata do laboratório Free; obrigatória com --execute",
+    )
     args = parser.parse_args()
+    CLI_PROFILE = args.profile
 
     if args.execute and args.verify:
         print("FAIL use --execute ou --verify, não os dois")
@@ -332,8 +389,13 @@ def main() -> int:
         return 1
 
     root, arquivos = local_tree()
-    home, user = resolve_home()
-    print(f"usuário: {user}\n")
+    home, user, host, profile = resolve_home(
+        expected_host=args.expected_host,
+        require_explicit_target=args.execute,
+    )
+    print(f"usuário: {user}")
+    print(f"profile: {profile}")
+    print(f"host   : {host}\n")
 
     if args.verify:
         if args.rapido:

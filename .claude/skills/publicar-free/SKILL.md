@@ -14,8 +14,8 @@ description: >-
 python tools/validate_assistant.py       # 1. fonte válida
 python tools/render_simulado.py --write  # 2. simulado atualizado
 python tools/publicar_free.py            # 3. plano (dry-run)
-python tools/publicar_free.py --execute  # 4. publicação
-python tools/publicar_free.py --verify   # 5. conferência independente
+python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>
+python tools/publicar_free.py --verify --profile <free> --expected-host <url-free>
 ```
 
 Nunca pular o passo 5: a publicação relata o que enviou, o `verify` confere o
@@ -42,8 +42,8 @@ que existe. São coisas diferentes.
 
 ## Guardrails
 
-- A ferramenta recusa usuário com aparência corporativa: ela publica no
-  laboratório. O workspace do trabalho usa o runbook manual
+- A escrita exige profile e host Free explícitos, compara-os com a CLI ativa e
+  recusa usuário com aparência corporativa. O workspace do trabalho usa o runbook manual
   ([replicacao-trabalho.md](../../../docs/playbooks/replicacao-trabalho.md)).
 - Somente dados sintéticos no Free; nenhum identificador do trabalho.
 - Após publicar skills alteradas, abrir **chat novo** no Genie Code; havendo

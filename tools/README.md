@@ -1,8 +1,9 @@
 # `tools/` — as ferramentas que sustentam os portões
 
-Sete scripts Python, sem dependência externa além do que a máquina já tem. Eles
-são o que transforma as regras deste repositório em algo que **reprova**, em vez
-de algo que se pede que alguém lembre.
+Nove arquivos Python, sem dependência externa além do que a máquina já tem:
+sete comandos e duas bibliotecas compartilhadas. Eles transformam as regras
+deste repositório em algo que **reprova**, em vez de algo que se pede que alguém
+lembre.
 
 > **Esta pasta não é publicada.** Nada aqui vai para o workspace do Databricks —
 > nem no Free, nem no trabalho. Quem recebe o `.assistant/` copiado **não tem**
@@ -13,18 +14,20 @@ de algo que se pede que alguém lembre.
 
 | Script | Linhas | Papel | Roda quando |
 |---|---|---|---|
-| `validate_assistant.py` | 1048 | 20 checks estruturais sobre `ambiente_fonte/` | **sempre**, antes de qualquer commit |
-| `render_simulado.py` | 105 | regenera `Novo_Ambiente_Simulado/` a partir da fonte | depois de editar a fonte |
-| `publicar_free.py` | 346 | publica no Databricks Free e confere o remoto | ao levar mudança para o laboratório |
-| `spark_smoke_test.py` | 305 | executa os helpers no runtime real como job | ao mexer em helper que toca Spark ou ML |
+| `validate_assistant.py` | 1.562 | 24 checks estruturais/semânticos sobre `ambiente_fonte/` | **sempre**, antes de qualquer commit |
+| `render_simulado.py` | 111 | regenera `Novo_Ambiente_Simulado/` a partir da fonte | depois de editar a fonte |
+| `publicar_free.py` | 408 | publica no Databricks Free com host/perfil explícitos e confere o remoto | ao levar mudança para o laboratório |
+| `spark_smoke_test.py` | 738 | executa os helpers no runtime real como job | ao mexer em helper que toca Spark ou ML |
 | `api_publica.py` | 117 | extrai por AST a API pública de um módulo e gera o `__init__.py` | ao criar ou renomear objeto |
 | `notebook_marker.py` | 57 | decide se um `.py` é módulo ou notebook Databricks | importado pelos outros, não chamado à mão |
-| `bundle_para_auditoria.py` | 74 | empacota o repositório num arquivo único, para auditoria por leitura | antes de uma rodada de contexto longo |
+| `project_policy.py` | 101 | centraliza identidade, nomes de skills e diretórios gerenciados | importado pelos outros, não chamado à mão |
+| `bundle_para_auditoria.py` | 140 | empacota evidência em modo `canonical`, `security` ou `full` | antes de auditoria por leitura/forense |
+| `bundle_implantacao.py` | 103 | gera ZIP mínimo sanitizado com manifesto e hashes | antes de levar o produto a outro ambiente |
 
-Os dois últimos são **bibliotecas**, não comandos: existem para que os quatro
-primeiros concordem sobre o que é API pública e sobre o que é notebook. Duas
-respostas diferentes para essas perguntas quebrariam o import no workspace sem
-erro visível.
+`notebook_marker.py` e `project_policy.py` são **bibliotecas**, não comandos:
+existem para que publicação, render, validação e smoke test compartilhem a mesma
+definição de notebook, identidade e conjunto gerenciado. O teste de mutação exige
+equivalência de comportamento, não apenas constantes com o mesmo nome.
 
 ## Os três comandos do dia a dia
 
@@ -37,7 +40,7 @@ python tools/publicar_free.py --verify      # ~1m40s · read-only, exige CLI aut
 E os dois que custam mais, usados de propósito e não por hábito:
 
 ```powershell
-python tools/publicar_free.py --execute              # gate consciente: escreve no workspace
+python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>
 python tools/validate_assistant.py --conferir-readme # ~1m40s: reexecuta os comandos do README
 ```
 
@@ -45,23 +48,31 @@ E o que prepara auditoria externa, quando a rodada é de **leitura** e não de
 execução:
 
 ```powershell
-python tools/bundle_para_auditoria.py   # ~480 mil tokens num arquivo só
+python tools/bundle_para_auditoria.py --mode canonical
+python tools/bundle_para_auditoria.py --mode security
+python tools/bundle_implantacao.py
 ```
 
-Ele exclui `Novo_Ambiente_Simulado/`, que é cópia byte a byte do fonte, e
-`Ajustes_Codex/`, que é referência congelada — juntas elas dobrariam o tamanho
-sem acrescentar informação.
+O modo `canonical` exclui derivado e material congelado para revisar a lógica. O
+modo `security` acrescenta manifesto de **todo** caminho versionado, sem fingir
+que conteúdo omitido não existe; `full` inclui tudo. Já o bundle de implantação
+leva apenas o produto sanitizado sob `Users/usuario-free/`, mais manifesto de
+hashes — não leva o repositório, auditorias ou referências congeladas.
+Por padrão, ambos recusam worktree sujo para não atribuir conteúdo novo ao commit
+anterior. `--allow-dirty` existe só para pacote de revisão e registra o estado no
+manifesto/cabeçalho.
 
 Saída real de uma execução limpa, com o caminho substituído por placeholder:
 
 ```text
 raiz analisada     : <repo>/ambiente_fonte
-skills             : 13 · 2/13 com as 5 seções do template
-helpers citados    : 72 caminhos verificados
+skills             : 13 · 13/13 com as 5 seções estruturais
+prompts            : 16 · 161 campos com guia e contrato humano
+helpers citados    : 81 caminhos verificados
 idioma da docstring: 60 módulos, 0 com docstring em inglês
 pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
 
-APROVADO: 0 falha(s), 11 aviso(s)
+APROVADO: 0 falha(s), 0 aviso(s)
 ```
 
 **As contagens mudam conforme o repositório cresce.** Não as decore: o número

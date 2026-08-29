@@ -28,3 +28,6 @@ GUIA_REPLICACAO_TEMPORARIO.md
 
 # Bundle para auditoria de contexto longo (gerado, nunca versionado)
 bundle_auditoria*.txt
+
+# Pacotes mínimos de implantação (gerados, nunca versionados)
+.artifacts/

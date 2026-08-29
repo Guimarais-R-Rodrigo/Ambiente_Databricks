@@ -29,7 +29,7 @@ defeito.
 ## Guardrails
 
 - O username do trabalho nunca entra em arquivo versionado nem em nome de pasta
-  renderizada; `tools/render_simulado.py` recusa esse parâmetro (ADR-0003).
+  renderizada; `tools/render_simulado.py` recusa esse parâmetro (ADR-0009).
 - Backup do ambiente atual do trabalho antes de remover qualquer coisa: sem CLI,
   é o único rollback disponível.
 - Skills antigas de mesmo nome são removidas, não sobrepostas.

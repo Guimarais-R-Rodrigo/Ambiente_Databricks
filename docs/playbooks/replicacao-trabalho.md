@@ -66,33 +66,49 @@ sem CLI.
 
 ## 2. Transportar os arquivos
 
-O objeto a transportar é a subárvore renderizada
-`Novo_Ambiente_Simulado/Users/<username>/`, com dois itens na raiz:
-`.assistant_instructions.md` e `.assistant/`.
+O objeto a transportar é o ZIP mínimo e sanitizado, não o repositório inteiro.
+Gere-o na máquina do laboratório:
+
+```powershell
+python tools/render_simulado.py --write
+python tools/bundle_implantacao.py
+```
+
+O ZIP contém somente `.assistant_instructions.md`, `.assistant/` e
+`MANIFEST.json`; não leva Git, documentos internos, referências congeladas ou
+paths da máquina do autor.
 
 | Rota | Quando usar | Confirmar antes |
 |---|---|---|
-| **A — Git folder** (recomendada) | Política corporativa permite conectar o workspace ao GitHub | Acesso ao github.com pelo workspace e credencial/PAT autorizada |
-| **B — Download e importação pela UI** | Git bloqueado, mas upload permitido | Se a UI do workspace importa diretório/arquivo compactado nessa versão |
-| **C — Criação manual pasta a pasta** | Demais rotas bloqueadas | Nenhuma; é sempre possível, porém trabalhoso (o número que a linha `esperados` do `--verify` reportar) |
+| **A — ZIP mínimo** (recomendada) | Upload de arquivo é permitido | Hash/commit no `MANIFEST.json` e suporte da UI ao formato |
+| **B — Git folder** | Somente após política permitir GitHub **e** a história Git ser sanitizada/auditada | Aprovação formal e scan do histórico; ainda copiar somente os paths do manifesto |
+| **C — Criação manual pasta a pasta** | Demais rotas bloqueadas | Reproduzir somente os paths do `MANIFEST.json` |
 
-A rota A é a única que torna atualizações futuras triviais (`pull` na Git
-folder) e mantém rastreabilidade de versão. As rotas B e C exigem repetir o
-procedimento inteiro a cada atualização.
+> **Bloqueio atual da rota B:** commits anteriores contêm o antigo path pessoal
+> do simulado. A árvore atual e o ZIP estão neutros, mas clonar transporta a
+> história. Não use Git no ambiente corporativo até uma reescrita coordenada do
+> histórico ou aprovação explícita para esse conteúdo.
 
-Na rota A, a Git folder é o repositório clonado — **não** é o local de execução
-das skills: o Genie Code descobre skills em `/Users/<username>/.assistant/skills/`.
-Copiar dali para o caminho de descoberta continua sendo necessário.
+Git folder é conveniência de transporte, **não** local de execução das skills.
+O caminho de descoberta continua sendo `/Users/<username>/.assistant/skills/`.
 
 ## 3. Limpar o ambiente antigo
 
 Skills antigas com o mesmo nome convivem com as novas e produzem seleção
 ambígua. Após o backup do passo 1:
 
-1. Remover `/Users/<username-trabalho>/.assistant/skills/` inteira.
-2. Remover `.mcp_servers.json`, se existir — arquivo inerte, não configura MCP.
-3. Remover `assistant_instructions.md` (sem ponto), que nunca foi lido.
-4. Manter fora do caminho qualquer pasta de trabalho pessoal não relacionada.
+1. Inventariar as pastas atuais de `.assistant/skills/` e comparar com a lista
+   `EXPECTED_SKILL_NAMES`/`LEGACY_MANAGED_SKILL_NAMES` em
+   `tools/project_policy.py`.
+2. Remover **somente** skills pertencentes ao Hub que serão substituídas. Nunca
+   remover `skills/` inteira: skills pessoais ou organizacionais alheias coexistem.
+3. Preservar `.assistant/.mcp_servers.json`. Ele é estado criado pelo painel de
+   MCP do Genie Code; não é entrada do pacote e não deve ser apagado.
+4. Remover `assistant_instructions.md` (sem ponto), depois de preservá-lo no
+   backup, porque esse nome legado não é descoberto.
+5. Para atualização, remover e substituir somente os quatro diretórios
+   Hub-owned (`hub_padroes`, `hub_prompts`, `hub_scripts`, `hub_snippets`). Isso
+   elimina helpers obsoletos sem tocar em conteúdo alheio.
 
 ## 4. Instalar no caminho do usuário
 
@@ -149,13 +165,19 @@ exceção oficial: instruções **não** se aplicam a Quick Fix e Autocomplete.
 
 ### 6.3 Runtime da biblioteca
 
-Executar `tools/spark_smoke_test.py` como notebook no workspace do trabalho. O
-notebook resolve sozinho o caminho pelo usuário logado e aceita o widget
-`assistant_root` para outro caminho; não depende de CLI.
+Executar `tools/spark_smoke_test.py` como notebook no workspace do trabalho com:
 
-Resultado de referência do laboratório: 64 aprovações, nenhuma falha, sete
-módulos de ML sem dependência opcional instalada. Diferenças esperadas no
-trabalho:
+- `target_environment=work`;
+- `mlflow_experiment_path` apontando para um experimento temporário autorizado;
+- `assistant_root` vazio, salvo instalação em outro caminho.
+
+O caso do trabalho registra parâmetros, métrica, modelo e assinatura e tenta
+excluir o run temporário no `finally`. O caso do Free é outro: valida por classe
+e assinatura o bloqueio conhecido de `start_run`. Não execute o oráculo de
+“bloqueio esperado” no trabalho.
+
+Use como referência a saída corrente registrada em `docs/testes/spark/README.md`,
+sem copiar contagens para este runbook. Diferenças esperadas no trabalho:
 
 | Diferença possível | Interpretação |
 |---|---|
@@ -178,15 +200,17 @@ ambiente identificado apenas como "workspace do trabalho".
 
 ## Rollback
 
-Restaurar o backup do passo 1 no mesmo caminho e abrir um chat novo. Como o
-ecossistema é conteúdo estático — sem jobs, sem serving, sem escrita em dados —
-o rollback não deixa efeito residual. Registrar o motivo antes de nova tentativa.
+Restaurar o backup do passo 1 no mesmo caminho e abrir um chat novo. Conferir no
+experimento temporário que o run do smoke foi excluído; falha de limpeza é efeito
+residual e precisa ser tratada antes de encerrar. Registrar o motivo antes de
+nova tentativa.
 
 ## Atualizações posteriores
 
-Na rota A, atualizar a Git folder e recopiar os arquivos alterados para o
-caminho de descoberta. Nas rotas B e C, repetir os passos 2 a 6. Em qualquer
-caso, **abrir chat novo** após alterar skills publicadas.
+Gerar novo ZIP/manifesto e repetir os passos 2 a 6. Remover e substituir somente
+os quatro diretórios Hub-owned e as skills geridas pelo manifesto; sobrescrever
+arquivos isolados não remove obsoletos. Em qualquer caso, **abrir chat novo**
+após alterar skills publicadas.
 
 ## Escala para squad e missão
 

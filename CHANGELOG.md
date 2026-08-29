@@ -5,6 +5,58 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-20 — Auditoria de segunda origem com execução
+
+### Adicionado
+
+1. (Codex) `docs/auditoria/2026-08-20_segunda-origem-codex/01_rodada.md` —
+   auditoria diagnóstica do baseline `9c17008`, executada em cinco frentes:
+   biblioteca, ferramentas, produto/UX, documentação/decisões e
+   segurança/replicação.
+
+### Notas
+
+- Os quatro gates foram reproduzidos antes dos probes: validação local e
+  conferência do README aprovadas; verify remoto com zero problemas; smoke real
+  com 145 verificações, 136 PASS, 0 FAIL, 8 dependências opcionais ausentes e um
+  bloqueio esperado inspecionado.
+- A rodada foi somente diagnóstica. Nenhum achado foi corrigido no produto,
+  runbooks ou ADRs. A recomendação do relatório é não replicar no trabalho antes
+  de conter os riscos externos e corrigir as três costuras analíticas prioritárias.
+
+### Contraditório e correções pós-auditoria
+
+1. (Codex) Adicionado
+   `docs/auditoria/2026-08-20_segunda-origem-codex/02_treplica-e-execucao.md`:
+   incorpora o contraditório independente do Claude, revisa severidades para
+   2 críticas/16 relevantes/6 melhorias e registra a execução por F01–F24.
+2. (Codex) Publicação/render/empacotamento endurecidos: perfil e host Free
+   explícitos para escrita, inventário exato de skills, identidade neutra,
+   proteção de path, falha em Git vazio, modos de auditoria e ZIP mínimo com
+   manifesto SHA-256. ADR-0009 registra a decisão; a história Git anterior ainda
+   exige reescrita coordenada antes de clone corporativo.
+3. (Codex) Runbook e checklist deixaram de apagar `.mcp_servers.json` ou a pasta
+   inteira de skills; substituem somente conteúdo Hub-owned e exigem pacote
+   sanitizado/manifesto, smoke específico por ambiente e limpeza do run MLflow.
+4. (Codex) Gates passaram a validar YAML real, nomes exatos, chamadas
+   qualificadas, contratos de colunas, escopo Spark, coleta no driver,
+   comportamento do detector e o contrato humano dos 16 prompts. Adicionados
+   14 testes de mutação; 14/14 aprovados.
+5. (Codex) Corrigidas as costuras analíticas de KS em pontos percentuais,
+   vintage ragged, features temporais, `pit_join`, scorecard/bandas/lift,
+   amostragem estratificada, PK nula e drift da coluna temporal. Os 21
+   known-answer tests locais passaram; integração Spark pós-correção permanece
+   pendente e não foi declarada aprovada.
+6. (Codex) Os 161 campos dos 16 prompts ganharam instrução, motivo e exemplo;
+   todos ganharam QA e limites. Corrigidos boilerplate sem rota, contratos de
+   escrita falsos e a matriz de artefatos da skill de criação.
+7. (Codex) Documentação viva conciliada com ADRs e documentação oficial:
+   auto-descoberta de instruções/skills/AGENTS, publicador vigente, CLI nova
+   0.205+ (preferência 1.0+ GA), 78 notebooks e contagens atuais do validador.
+8. (Codex) Render regenerado em `Users/usuario-free/` com 316 arquivos; removidos
+   89 diretórios `__pycache__` ignorados. Gerados artefatos de revisão marcados
+   como worktree sujo, sem apresentá-los como pacote de commit limpo.
+
 ## 2026-08-19 — Bateria funcional de `ml`, e a costura que ninguém tinha exercitado
 
 Os 16 módulos de núcleo de `ml` entraram na bateria repetível do

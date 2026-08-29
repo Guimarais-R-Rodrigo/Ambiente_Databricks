@@ -68,6 +68,11 @@ Antes disso o smoke test só os **importava**, e importar não é executar — a
 distinção custou três descobertas a este projeto. O registro da execução está em
 [`resultados/2026-08-19_bateria_ml.json`](spark/resultados/2026-08-19_bateria_ml.json).
 
+> **Validade do resultado:** em 20/08 o smoke test foi alterado para exigir
+> classe e assinatura da mensagem no bloqueio MLflow e ganhou novos invariantes
+> de Spark. A tabela acima continua sendo evidência histórica de 19/08, **não**
+> aprovação do código pós-correção. Reexecute a bateria antes da replicação.
+
 Dois vereditos da bateria não são `PASS` e também não são falha:
 
 | Veredito | Quando | Exemplo |

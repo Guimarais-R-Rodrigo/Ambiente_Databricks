@@ -19,17 +19,16 @@ simulado e o workspace publicado seja vazio.
 from __future__ import annotations
 
 import argparse
-import re
 import shutil
 import sys
 from pathlib import Path
 
-DEFAULT_USERNAME = "guimarais.r.rodrigo@gmail.com"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-# O username do trabalho é identificador corporativo e não pode virar nome de
-# diretório versionado (ADR-0003). A replicação no trabalho copia o conteúdo da
-# subárvore renderizada, sem exigir render com o username de lá.
-CORPORATE_RE = re.compile(r"c\d{6}|corp\.|\.gov\.br", re.IGNORECASE)
+from project_policy import SAFE_SIMULATED_USERNAME, validate_username_component  # noqa: E402
+
+DEFAULT_USERNAME = SAFE_SIMULATED_USERNAME
+
 SOURCE = Path("ambiente_fonte")
 TARGET_ROOT = Path("Novo_Ambiente_Simulado")
 
@@ -54,21 +53,28 @@ def main() -> int:
     parser.add_argument("--username", default=DEFAULT_USERNAME)
     args = parser.parse_args()
 
-    source = SOURCE.resolve()
+    repo_root = Path(__file__).resolve().parents[1]
+    source = (repo_root / SOURCE).resolve()
     if not source.exists():
         print(f"FAIL fonte não encontrada: {source}")
         return 1
 
-    if CORPORATE_RE.search(args.username):
-        print(
-            "FAIL username com aparência corporativa recusado (ADR-0003).\n"
-            "     Para replicar no trabalho, copie o conteúdo da subárvore já\n"
-            "     renderizada para /Users/<username-trabalho>/ — ver o runbook\n"
-            "     em docs/playbooks/replicacao-trabalho.md."
-        )
+    try:
+        username = validate_username_component(args.username)
+    except ValueError as exc:
+        print(f"FAIL {exc}")
         return 1
 
-    user_dir = TARGET_ROOT / "Users" / args.username
+    target_root = (repo_root / TARGET_ROOT).resolve()
+    expected_target = (repo_root / "Novo_Ambiente_Simulado").resolve()
+    if target_root != expected_target or target_root.parent != repo_root:
+        print("FAIL raiz derivada não é o diretório fixo do workspace")
+        return 1
+    users_root = (target_root / "Users").resolve()
+    user_dir = (users_root / username).resolve()
+    if not user_dir.is_relative_to(users_root):
+        print("FAIL destino do username escaparia de Novo_Ambiente_Simulado/Users")
+        return 1
     plan = [
         (source / ".assistant_instructions.md", user_dir / ".assistant_instructions.md"),
         (source / ".assistant", user_dir / ".assistant"),
@@ -84,8 +90,8 @@ def main() -> int:
         print("\nDRY-RUN: nada foi escrito. Use --write para executar.")
         return 0
 
-    if TARGET_ROOT.exists():
-        shutil.rmtree(TARGET_ROOT)
+    if target_root.exists():
+        shutil.rmtree(target_root)
     user_dir.mkdir(parents=True)
 
     for src, dst in plan:
@@ -94,9 +100,9 @@ def main() -> int:
         else:
             shutil.copy2(src, dst)
 
-    (TARGET_ROOT / "README_GERADO.md").write_text(MARKER, encoding="utf-8")
+    (target_root / "README_GERADO.md").write_text(MARKER, encoding="utf-8")
 
-    n_files = sum(1 for p in TARGET_ROOT.rglob("*") if p.is_file())
+    n_files = sum(1 for p in target_root.rglob("*") if p.is_file())
     print(f"\nOK: {n_files} arquivos renderizados em {TARGET_ROOT}/")
     return 0
 

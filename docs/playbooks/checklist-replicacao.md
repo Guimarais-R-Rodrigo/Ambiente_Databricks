@@ -34,8 +34,9 @@ Preencha ao final: data \_\_\_\_\_\_\_\_ · executado por \_\_\_\_\_\_\_\_
 - [ ] `python tools/validate_assistant.py` aprovado
 - [ ] `python tools/publicar_free.py --verify` aprovado
 - [ ] Anotar o commit que está sendo replicado: `________`
-- [ ] Confirmar que o repositório está acessível pelo GitHub a partir do outro
-      computador (login e permissão)
+- [ ] `python tools/render_simulado.py --write`
+- [ ] `python tools/bundle_implantacao.py`
+- [ ] Guardar o ZIP mínimo e anotar o commit do `MANIFEST.json`
 
 ## Fase 1 — backup, antes de tocar em qualquer coisa
 
@@ -55,17 +56,17 @@ Sem CLI no trabalho, este é o único caminho de volta.
 
 Escolha a rota que a política permitir. Descubra isso **antes** da fase 3.
 
-### Rota A — Git folder (preferível)
+### Rota A — ZIP mínimo (preferível)
 
-- [ ] Workspace → Repos/Git folders → Add → URL do repositório
-- [ ] Autenticar (token pessoal do GitHub, se exigido)
-- [ ] Confirmar que o clone trouxe `Novo_Ambiente_Simulado/`
+- [ ] Levar somente `.artifacts/ambiente-databricks-<commit>.zip`
+- [ ] Conferir commit e paths no `MANIFEST.json`
 
-### Rota B — download e importação manual
+### Rota B — Git folder, se aprovada
 
-- [ ] Baixar o ZIP do repositório no computador do trabalho
-- [ ] Extrair e localizar `Novo_Ambiente_Simulado/Users/<qualquer>/`
-- [ ] Importar pela UI do workspace
+- [ ] Confirmar autorização para transportar o repositório completo
+- [ ] Confirmar que a história Git foi sanitizada/auditada; **a rota está
+      bloqueada enquanto commits antigos contiverem o path pessoal do simulado**
+- [ ] Copiar para o destino somente os paths listados no manifesto
 
 ### Rota C — criação manual
 
@@ -77,8 +78,11 @@ Rota usada: `________`
 
 Só depois do backup confirmado.
 
-- [ ] Remover `/Users/<username-trabalho>/.assistant/skills/` inteira
-- [ ] Remover `.mcp_servers.json`, se existir
+- [ ] Inventariar skills atuais e preservar todas as que não pertencem ao Hub
+- [ ] Remover somente skills Hub atuais/legadas listadas em `tools/project_policy.py`
+- [ ] Preservar `.assistant/.mcp_servers.json`
+- [ ] Remover/substituir somente `hub_padroes`, `hub_prompts`, `hub_scripts` e
+      `hub_snippets`, para que helpers obsoletos não sobrevivam
 - [ ] Remover `assistant_instructions.md` (sem ponto), que nunca foi lido
 - [ ] Conferir que nenhuma pasta pessoal não relacionada foi afetada
 
@@ -117,12 +121,14 @@ permissão e integração.
       `hub-ml-eda-profissional`
 - [ ] **Chat novo**: pedir com `@hub-ml-baseline-ml` → seleção determinística
 - [ ] Confirmar que as respostas saem em PT-BR e seguem as preferências
-- [ ] Importar `tools/spark_smoke_test.py` como notebook e executar
+- [ ] Importar `tools/spark_smoke_test.py` como notebook
+- [ ] Definir `target_environment=work` e um `mlflow_experiment_path` temporário
+- [ ] Executar e confirmar que o run temporário foi excluído
 - [ ] Registrar o resultado do smoke test: `________ aprovações / ________ falhas`
 
-Resultado de referência no laboratório: 64 aprovações, nenhuma falha. Diferenças
-esperadas no trabalho: módulos de ML podem parar de acusar dependência ausente,
-e falhas ligadas a `cache()` desaparecem em compute clássico.
+Consultar a referência corrente em `docs/testes/spark/README.md`. Módulos de ML
+podem parar de acusar dependência ausente, e limitações de `cache()` podem mudar
+em compute clássico.
 
 ## Fase 7 — registrar
 
@@ -135,9 +141,9 @@ e falhas ligadas a `cache()` desaparecem em compute clássico.
 
 ## Se algo der errado
 
-Restaurar o backup da fase 1 no mesmo caminho e abrir um chat novo. Como o
-ecossistema é conteúdo estático — sem job, sem serving, sem escrita em dados —
-o rollback não deixa efeito residual.
+Restaurar o backup da fase 1 no mesmo caminho e abrir um chat novo. Conferir
+também se o run temporário do smoke foi excluído; se não, removê-lo antes de
+encerrar o rollback.
 
 ## Ressalva sobre os módulos novos
 

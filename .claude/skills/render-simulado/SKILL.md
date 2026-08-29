@@ -15,15 +15,15 @@ python tools/render_simulado.py            # dry-run: mostra o plano
 python tools/render_simulado.py --write    # apaga e regenera o simulado
 ```
 
-Username padrão do render: o do Free Edition (definido no script; sobreponha com
-`--username`). Para o trabalho, o runbook de replicação faz o mapeamento — não
-renderize com o username corporativo (regra `free-vs-trabalho.md`).
+Username padrão do render: o placeholder neutro `usuario-free`. Não persista
+username real no simulado; o publicador e o runbook mapeiam o pacote para o
+destino escolhido no momento da implantação (ADR-0009).
 
 ## O que o render produz
 
 ```text
 Novo_Ambiente_Simulado/
-└── Users/<username>/
+└── Users/usuario-free/
     ├── .assistant_instructions.md
     └── .assistant/
         ├── skills/hub-ml-*/...
