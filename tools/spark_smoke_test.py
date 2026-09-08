@@ -286,10 +286,91 @@ def t_pit_join():
     # Nenhuma feature marcada como futura pode ter atravessado o join.
     assert resultado.filter("eh_futura = true").count() == 0
 
+def t_pit_join_preservacao():
+    """Prove preservação de linha, multiplicidade e escolha correta da feature.
+
+    A invariante que já existia soma as quatro categorias e compara com
+    ``linhas_fato`` — mas ``linhas_fato`` é derivado das próprias categorias.
+    Isso prova completude de rótulo, não preservação: uma linha perdida e outra
+    duplicada passariam. Aqui a comparação é contra ``fatos.count()``, e cada
+    linha tem valor esperado declarado.
+    """
+    from hub_snippets.spark.pit_join import pit_join
+
+    # Fixture pequena e inteiramente conhecida. Cada linha existe para exercitar
+    # uma categoria; nenhuma é ruído.
+    fatos_pit = spark.createDataFrame(
+        [
+            ("C1", "2026-03-10"),   # feature disponível, com 3 versões no histórico
+            ("C1", "2026-03-10"),   # linha de fato DUPLICADA: multiplicidade
+            ("C2", "2026-03-10"),   # histórico existe, mas só com referência futura
+            ("C3", "2026-03-10"),   # entidade sem nenhum histórico
+            (None, "2026-03-10"),   # chave nula
+            ("C4", None),           # data de decisão nula
+        ],
+        "id_cliente string, dt_decisao_txt string",
+    ).withColumn("dt_decisao", F.to_date("dt_decisao_txt")).drop("dt_decisao_txt")
+
+    features_pit = spark.createDataFrame(
+        [
+            ("C1", "2026-01-31", 10),   # elegível, mas não é a mais recente
+            ("C1", "2026-02-28", 20),   # disponível em 03-03 → é a escolhida
+            ("C1", "2026-03-09", 99),   # disponível em 03-12 → futura, proibida
+            ("C2", "2026-03-09", 77),   # única versão de C2, também futura
+        ],
+        "id_cliente string, dt_referencia_txt string, valor int",
+    ).withColumn("dt_referencia", F.to_date("dt_referencia_txt")).drop("dt_referencia_txt")
+
+    resultado, diag = pit_join(
+        fatos_pit, features_pit, chave="id_cliente",
+        ts_decisao="dt_decisao", ts_feature="dt_referencia",
+        atraso_publicacao_dias=3,
+    )
+
+    n_entrada = fatos_pit.count()
+    n_saida = resultado.count()
+    assert n_saida == n_entrada, f"linhas perdidas ou criadas: entrada={n_entrada}, saída={n_saida}"
+    assert diag["linhas_fato"] == n_entrada, (
+        f"diagnóstico não reflete a entrada: linhas_fato={diag['linhas_fato']}, "
+        f"fatos.count()={n_entrada}"
+    )
+
+    esperado = {
+        "com_feature": 2,
+        "sem_chave_ou_data": 2,
+        "entidade_sem_historico": 1,
+        "sem_feature_disponivel_na_data": 1,
+    }
+    for categoria, quantidade in esperado.items():
+        assert diag[categoria] == quantidade, (
+            f"{categoria}: esperado {quantidade}, obtido {diag[categoria]}"
+        )
+
+    # Contagem igual não basta: uma linha perdida e outra duplicada mantêm o
+    # total. Multiplicidade e valor escolhido precisam bater linha a linha.
+    linhas = [
+        (r["id_cliente"], r["dt_decisao"], r["valor"])
+        for r in resultado.collect()
+    ]
+    c1 = [valor for chave, _, valor in linhas if chave == "C1"]
+    assert len(c1) == 2, f"C1 deveria manter as 2 linhas de fato duplicadas, obtido {len(c1)}"
+    assert set(c1) == {20}, f"C1 deveria receber a versão de 2026-02-28 (20), obtido {set(c1)}"
+
+    for chave in ("C2", "C3", "C4", None):
+        valores = [valor for k, _, valor in linhas if k == chave]
+        assert all(valor is None for valor in valores), (
+            f"{chave} não deveria receber feature, obtido {valores}"
+        )
+
+    trazidos = {valor for _, _, valor in linhas if valor is not None}
+    assert 99 not in trazidos, "feature com referência futura atravessou o join"
+    assert 77 not in trazidos, "feature indisponível na data atravessou o join"
+    assert 10 not in trazidos, "versão antiga escolhida no lugar da mais recente elegível"
+
 
 for case in [
     t_null_summary, t_smart_sample, t_date_features, t_psi, t_safe_display,
-    t_join_diagnostics, t_pit_join,
+    t_join_diagnostics, t_pit_join, t_pit_join_preservacao,
 ]:
     run_case(f"func:{case.__name__[2:]}", case)
 
