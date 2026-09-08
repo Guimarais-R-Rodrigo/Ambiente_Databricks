@@ -17,10 +17,11 @@
 ## 1. O que é este teste e por que ele existe
 
 As 13 skills `hub-ml-*` já estão publicadas no seu workspace Databricks Free.
-Quando você conversa com o Genie Code, ele decide **sozinho** qual skill carregar,
-lendo apenas o campo `description` de cada `SKILL.md`. Se duas descriptions se
-parecem demais, ele carrega a skill errada — e você recebe um relatório de
-monitoramento quando pediu um teste estatístico, por exemplo.
+Quando você conversa com o Genie Code, ele compara o pedido com a `description`
+das skills para carregar contexto relevante; `@menção` permite seleção
+explícita. Se duas descriptions se parecem demais, a rota pode colidir — e você
+recebe um relatório de monitoramento quando pediu um teste estatístico, por
+exemplo.
 
 Este teste verifica exatamente isso: **o roteamento**. Para cada skill fazemos
 3 perguntas:
@@ -133,7 +134,7 @@ Faça uma EDA completa da tabela catalogo.crm.clientes_pf: granularidade, chaves
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/01P.md com uma única linha, no formato "01P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/01P.md com uma única linha, no formato "01P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `01N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-cross-eda-ml`)
@@ -144,7 +145,7 @@ Já tenho os EDAs prontos de clientes, transações e produtos. Consolide os tr�
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/01N.md com uma única linha, no formato "01N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/01N.md com uma única linha, no formato "01N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `01M` — menção (esperado: carregar)
@@ -155,7 +156,7 @@ Mensagem 1:
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/01M.md com uma única linha, no formato "01M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/01M.md com uma única linha, no formato "01M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 2 — hub-ml-cross-eda-ml
@@ -168,7 +169,7 @@ Cruze os resultados dos EDAs das tabelas clientes e cartões, avalie a viabilida
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/02P.md com uma única linha, no formato "02P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/02P.md com uma única linha, no formato "02P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `02N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-eda-profissional`)
@@ -179,7 +180,7 @@ Explore a tabela catalogo.crm.cartoes e me diga como está a qualidade e a distr
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/02N.md com uma única linha, no formato "02N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/02N.md com uma única linha, no formato "02N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `02M` — menção (esperado: carregar)
@@ -190,7 +191,7 @@ Mensagem 1:
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/02M.md com uma única linha, no formato "02M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/02M.md com uma única linha, no formato "02M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 3 — hub-ml-feature-engineering
@@ -203,7 +204,7 @@ Monte o plano de features para prever churn de previdência, com joins point-in-
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/03P.md com uma única linha, no formato "03P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/03P.md com uma única linha, no formato "03P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `03N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-baseline-ml`)
@@ -214,7 +215,7 @@ Treine um primeiro modelo LightGBM para churn com split temporal e registre tudo
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/03N.md com uma única linha, no formato "03N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/03N.md com uma única linha, no formato "03N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `03M` — menção (esperado: carregar)
@@ -225,7 +226,7 @@ Mensagem 1:
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/03M.md com uma única linha, no formato "03M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/03M.md com uma única linha, no formato "03M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 4 — hub-ml-validacao-estatistica
@@ -238,7 +239,7 @@ Antes da regressão, verifique normalidade dos resíduos, homocedasticidade e VI
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/04P.md com uma única linha, no formato "04P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/04P.md com uma única linha, no formato "04P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `04N` — negativo, colisão "drift" (esperado: NÃO carregar; ideal: `hub-ml-monitoramento-modelo`)
@@ -249,7 +250,7 @@ O PSI das features do modelo em produção subiu nos últimos dois meses. Config
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/04N.md com uma única linha, no formato "04N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/04N.md com uma única linha, no formato "04N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `04M` — menção (esperado: carregar)
@@ -260,7 +261,7 @@ Mensagem 1:
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/04M.md com uma única linha, no formato "04M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/04M.md com uma única linha, no formato "04M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 5 — hub-ml-baseline-ml
@@ -273,7 +274,7 @@ Treine baselines de classificação comparando LightGBM e XGBoost com split temp
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/05P.md com uma única linha, no formato "05P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/05P.md com uma única linha, no formato "05P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `05N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-explainability`)
@@ -284,7 +285,7 @@ Quais features mais pesam no score do meu modelo de propensão? Quero a visão g
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/05N.md com uma única linha, no formato "05N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/05N.md com uma única linha, no formato "05N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `05M` — menção (esperado: carregar)
@@ -295,7 +296,7 @@ Mensagem 1:
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/05M.md com uma única linha, no formato "05M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/05M.md com uma única linha, no formato "05M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 6 — hub-ml-explainability
@@ -308,7 +309,7 @@ Gere a análise SHAP global e local do modelo de propensão a consórcio e um mo
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/06P.md com uma única linha, no formato "06P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/06P.md com uma única linha, no formato "06P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `06N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-monitoramento-modelo`)
@@ -319,7 +320,7 @@ Implemente o acompanhamento mensal de performance do modelo com alertas de degra
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/06N.md com uma única linha, no formato "06N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/06N.md com uma única linha, no formato "06N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `06M` — menção (esperado: carregar)
@@ -330,7 +331,7 @@ Mensagem 1:
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/06M.md com uma única linha, no formato "06M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/06M.md com uma única linha, no formato "06M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 7 — hub-ml-monitoramento-modelo
@@ -343,7 +344,7 @@ Implemente monitoramento do modelo de churn: qualidade de dados, drift com PSI, 
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/07P.md com uma única linha, no formato "07P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/07P.md com uma única linha, no formato "07P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `07N` — negativo, colisão "KS/drift" (esperado: NÃO carregar; ideal: `hub-ml-validacao-estatistica`)
@@ -354,7 +355,7 @@ Num estudo pontual, rode um teste KS para comparar a distribuição de renda ent
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/07N.md com uma única linha, no formato "07N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/07N.md com uma única linha, no formato "07N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `07M` — menção (esperado: carregar)
@@ -365,7 +366,7 @@ Mensagem 1:
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/07M.md com uma única linha, no formato "07M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/07M.md com uma única linha, no formato "07M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 8 — hub-ml-pipeline-builder
@@ -378,7 +379,7 @@ Desenhe um pipeline bronze/silver/gold com Lakeflow Spark Declarative Pipelines,
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/08P.md com uma única linha, no formato "08P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/08P.md com uma única linha, no formato "08P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `08N` — negativo, colisão "materialização" (esperado: NÃO carregar; ideal: `hub-ml-feature-engineering`)
@@ -389,7 +390,7 @@ Materialize as features do modelo de churn numa feature table do Unity Catalog g
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/08N.md com uma única linha, no formato "08N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/08N.md com uma única linha, no formato "08N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `08M` — menção (esperado: carregar)
@@ -400,7 +401,7 @@ Mensagem 1:
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/08M.md com uma única linha, no formato "08M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/08M.md com uma única linha, no formato "08M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 9 — hub-ml-analise-safra
@@ -413,7 +414,7 @@ Monte a análise de safras de originação de crédito com MOB, curvas de matura
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/09P.md com uma única linha, no formato "09P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/09P.md com uma única linha, no formato "09P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `09N` — negativo, colisão "deterioração" (esperado: NÃO carregar; ideal: `hub-ml-monitoramento-modelo`)
@@ -424,7 +425,7 @@ A inadimplência do portfólio subiu neste trimestre. O modelo de crédito degra
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/09N.md com uma única linha, no formato "09N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/09N.md com uma única linha, no formato "09N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `09M` — menção (esperado: carregar)
@@ -435,7 +436,7 @@ Mensagem 1:
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/09M.md com uma única linha, no formato "09M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/09M.md com uma única linha, no formato "09M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 10 — hub-ml-comentar-notebook
@@ -448,7 +449,7 @@ Adicione células %md antes e depois de cada bloco deste notebook de EDA, explic
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/10P.md com uma única linha, no formato "10P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/10P.md com uma única linha, no formato "10P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `10N` — negativo, colisão "explicar" (esperado: NÃO carregar; ideal: `hub-ml-tutor-databricks`)
@@ -459,7 +460,7 @@ Me explique linha a linha o que este notebook PySpark faz, como se fosse uma aul
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/10N.md com uma única linha, no formato "10N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/10N.md com uma única linha, no formato "10N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `10M` — menção (esperado: carregar)
@@ -470,7 +471,7 @@ Mensagem 1:
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/10M.md com uma única linha, no formato "10M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/10M.md com uma única linha, no formato "10M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 11 — hub-ml-tutor-databricks
@@ -483,7 +484,7 @@ Me dê uma aula sobre este stack trace do Spark: o que causou o erro, como corri
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/11P.md com uma única linha, no formato "11P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/11P.md com uma única linha, no formato "11P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `11N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-comentar-notebook`)
@@ -494,7 +495,7 @@ Adicione markdown profissional de documentação neste notebook para o time ente
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/11N.md com uma única linha, no formato "11N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/11N.md com uma única linha, no formato "11N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `11M` — menção (esperado: carregar)
@@ -505,7 +506,7 @@ Mensagem 1:
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/11M.md com uma única linha, no formato "11M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/11M.md com uma única linha, no formato "11M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 12 — hub-ml-auditoria-skills
@@ -518,7 +519,7 @@ Audite este relatório de EDA contra o contrato da skill hub-ml-eda-profissional
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/12P.md com uma única linha, no formato "12P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/12P.md com uma única linha, no formato "12P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `12N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-eda-profissional`)
@@ -529,7 +530,7 @@ Faça a análise exploratória da tabela catalogo.crm.propostas com foco em qual
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/12N.md com uma única linha, no formato "12N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/12N.md com uma única linha, no formato "12N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `12M` — menção (esperado: carregar)
@@ -540,7 +541,7 @@ Mensagem 1:
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/12M.md com uma única linha, no formato "12M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/12M.md com uma única linha, no formato "12M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### Skill 13 — hub-ml-criar-objeto
@@ -558,7 +559,7 @@ Quero criar um snippet novo no Hub para calcular taxa de resposta de campanha. Q
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/13P.md com uma única linha, no formato "13P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/13P.md com uma única linha, no formato "13P: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `13N` — negativo (esperado: NÃO carregar; ideal: `hub-ml-monitoramento-modelo`)
@@ -578,7 +579,7 @@ Como calculo o PSI entre a safra de janeiro e a de junho, e a partir de que valo
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/13N.md com uma única linha, no formato "13N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/13N.md com uma única linha, no formato "13N: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 #### `13M` — menção (esperado: carregar)
@@ -589,7 +590,7 @@ Mensagem 1:
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/13M.md com uma única linha, no formato "13M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/13M.md com uma única linha, no formato "13M: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ---
@@ -618,7 +619,7 @@ Mensagem 1:
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/07M-r2.md com uma única linha, no formato "07M-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/07M-r2.md com uma única linha, no formato "07M-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### `10P-r2` — positivo (esperado: carregar `hub-ml-comentar-notebook`)
@@ -635,7 +636,7 @@ Adicione células %md antes e depois desse bloco, explicando objetivo, entradas,
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/10P-r2.md com uma única linha, no formato "10P-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/10P-r2.md com uma única linha, no formato "10P-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### `10N-r2` — negativo, colisão "explicar" (esperado: NÃO carregar; ideal: `hub-ml-tutor-databricks`)
@@ -652,7 +653,7 @@ Me explique linha a linha o que ele faz, como se fosse uma aula para quem está 
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/10N-r2.md com uma única linha, no formato "10N-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/10N-r2.md com uma única linha, no formato "10N-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### `11P-r2` — positivo (esperado: carregar `hub-ml-tutor-databricks`)
@@ -668,7 +669,7 @@ Me dê uma aula sobre isso: o que causou o erro, como corrigir e uma analogia pa
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/11P-r2.md com uma única linha, no formato "11P-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/11P-r2.md com uma única linha, no formato "11P-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 ### `11N-r2` — negativo (esperado: NÃO carregar; ideal: `hub-ml-comentar-notebook`)
@@ -684,7 +685,7 @@ Adicione markdown profissional de documentação em volta dele para o time enten
 ```
 Mensagem 2:
 ```text
-Registre o resultado: crie o arquivo /Workspace/Users/guimarais.r.rodrigo@gmail.com/hub_lab/forward_tests/11N-r2.md com uma única linha, no formato "11N-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
+Registre o resultado: crie o arquivo /Workspace/Users/<username-free>/hub_lab/forward_tests/11N-r2.md com uma única linha, no formato "11N-r2: <nome-da-skill-que-voce-carregou-nesta-conversa, ou 'nenhuma'>". Se não conseguir criar arquivos, apenas responda essa única linha no chat.
 ```
 
 Ao terminar os 5, avise o Claude: ele coleta os arquivos `-r2`, fecha a tabela

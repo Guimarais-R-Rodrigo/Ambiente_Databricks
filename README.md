@@ -1,289 +1,256 @@
-# Ambiente_Databricks
+# Ambiente Databricks — engenharia do ecossistema Genie Code
 
-> Laboratório de engenharia do ecossistema `.assistant` (Agent Skills, instruções e
-> extensões) do **Databricks Genie Code**, com governança multi-IA, validação
-> automatizada e trilha de publicação do ambiente pessoal até a squad/missão.
+Fonte versionada de um ambiente `.assistant` para Databricks Genie Code:
+instruções, Agent Skills, prompts guiados, helpers Python, validação, publicação
+e evidência de runtime.
+
+> **Para usar o ambiente no Databricks:** vá ao
+> [guia do produto](ambiente_fonte/.assistant/README.md).
 >
-> Primeira vez aqui? O [glossário](ambiente_fonte/.assistant/README.md#glossário)
-> explica os termos deste README, separando o que é oficial da Databricks, o que
-> é vocabulário de modelagem e o que é convenção criada neste projeto.
+> **Para manter, auditar ou replicar:** continue neste README.
 
-## Por que este projeto existe
+## Escolha sua rota
 
-O ambiente de trabalho (Azure Databricks, CRM bancário, missão de modelos de ML) usa
-um ecossistema de Agent Skills pessoais, instruções e biblioteca Python. Este
-repositório é a **fonte única de verdade** desse ecossistema: aqui ele é editado,
-validado, testado no Databricks Free Edition e só então replicado para o trabalho.
+| Quero… | Comece por |
+|---|---|
+| usar uma skill, prompt ou helper | [Guia do `.assistant`](ambiente_fonte/.assistant/README.md) |
+| alterar o produto | [Ciclo de contribuição](#ciclo-de-contribuição) |
+| entender uma decisão ou evidência | [Índice de documentação](docs/README.md) |
+| publicar no Free | [Playbook de ciclo de vida](docs/playbooks/ciclo-de-vida.md) |
+| replicar para o trabalho | [Runbook de replicação](docs/playbooks/replicacao-trabalho.md) |
+| revisar o estado dos gates | [Estado comprovado](#estado-comprovado) |
+
+## Arquitetura em um minuto
 
 ```mermaid
 flowchart LR
-  subgraph REPO["Este repositório (canônico)"]
-    F["ambiente_fonte/\n(editável)"] -->|"tools/render_simulado.py"| S["Novo_Ambiente_Simulado/\n(derivado, nunca editar)"]
+  subgraph GIT["Git · fonte de verdade"]
+    F["ambiente_fonte/<br/><b>produto editável</b>"]
+    D["docs/ + tools/<br/><b>governança e gates</b>"]
   end
-  S -->|"publicar_free.py --execute"| FREE["Databricks Free\n(testes: Spark + forward tests)"]
-  S -->|"cópia manual\n(runbook)"| WORK["Workspace do trabalho\n(Azure, sem CLI)"]
-  WORK -->|"escala: squad"| SQUAD["Workspace/.assistant/skills/\n(squad → missão)"]
+  F -->|"render_simulado.py"| S["Novo_Ambiente_Simulado/<br/><b>derivado</b>"]
+  S -->|"publicar + verificar"| FREE["Databricks Free<br/><b>laboratório</b>"]
+  S -->|"runbook manual"| WORK["Workspace do trabalho<br/><b>destino governado</b>"]
+  D --> F
+  FREE -->|"evidência Spark + chat"| D
 ```
 
-## Mapa do repositório
+| Camada | Regra |
+|---|---|
+| `ambiente_fonte/` | única cópia editável do produto |
+| `Novo_Ambiente_Simulado/` | derivado; nunca editar à mão |
+| Free | laboratório com dados sintéticos; não é fonte |
+| trabalho | recebe somente pacote aprovado; precisa de novos checks locais |
+| `docs/` | decisões, testes e histórico; não é publicado |
+| `tools/` | automação do repositório; não é publicada |
 
-| Pasta | Papel | Editável? |
+Essa separação impede duas fontes concorrentes e mantém usuário, host, dado real
+e identidade corporativa fora do conteúdo ativo.
+
+## Nativo da Databricks × customizado pelo Hub
+
+O prefixo `hub_`/`hub-` sinaliza autoria local. Ele não significa que tudo seja
+manual: as skills `hub-ml-*` usam a estrutura nativa de Agent Skills.
+
+| Componente | Mecanismo | Uso |
 |---|---|---|
-| `CLAUDE.md` · `AGENTS.md` · `GEMINI.md` | Entrada canônica + adaptadores multi-IA | sim |
-| `.claude/` | Centro de IA: regras, contexto, skills operacionais, templates | sim |
-| `ambiente_fonte/` | **O produto**: `.assistant_instructions.md` + `.assistant/` implantável | sim |
-| `Novo_Ambiente_Simulado/` | Espelho da árvore do workspace, gerado por script | **não** (derivado) |
-| `tools/` | Validação e render (chamados pelas skills da `.claude/`) | sim |
-| `docs/decisions/` | ADRs — decisões arquiteturais numeradas | append-only |
-| `docs/auditoria/` | Auditorias multi-LLM (`<data>_<tema>/`) | append-only |
-| `docs/handoffs/` | Contexto de passagem entre IAs/sessões | append-only |
-| `docs/playbooks/` | Procedimentos repetíveis (ciclo de vida, replicação) | sim |
-| `docs/testes/` | Evidência dos gates: Spark serverless e forward tests | append-only |
-| `docs/historico/` | O que saiu do produto e por quê (roadmap, contexto legado) | sim |
-| `docs/sprints/` | Relatório de cada sprint da reestruturação do Hub | append-only |
-| `Ajustes_Codex/` | Entrega congelada da auditoria do Codex (2026-08-13) | **não** (referência) |
-| `Ambiente_Antigo/` | Export original do trabalho — **local-only, git-ignored** (ADR-0003) | **não** (referência) |
-| `PLANO_HUB.md` | Plano da reestruturação em 12 sprints, com o registro de execução e a dívida declarada | sim |
-| `CHANGELOG.md` | Registro de toda mudança relevante, com IA autora | append-only |
+| `.assistant_instructions.md` | nativo | instruções pessoais |
+| `Workspace/.assistant_workspace_instructions.md` | nativo | instruções do workspace |
+| `AGENTS.md` / `CLAUDE.md` | nativo | contexto hierárquico do projeto |
+| `.assistant/skills/<nome>/SKILL.md` | nativo | relevância pelo pedido/`description` ou `@nome` |
+| conteúdo `hub-ml-*` | customizado | métodos de dados e ML dentro de Agent Skills |
+| `hub_prompts/` | customizado e manual | anexar ou copiar briefing |
+| `hub_snippets/` / `hub_scripts/` | customizado e manual | importar/executar Python |
+| `hub_padroes/` | customizado e manual | templates e exemplos |
 
-## O que o Genie Code lê (nativo) vs. o que é do Hub (`hub_`)
+As instruções não se aplicam a Quick Fix e Autocomplete. Skills podem conter ou
+referenciar recursos e scripts; neste pacote, os helpers Python externos à skill
+continuam exigindo import explícito.
 
-O Genie Code auto-descobre apenas as estruturas nativas. Tudo que é nosso leva o
-prefixo **`hub_`** e precisa de ação manual (`@`/Add context, import ou execução).
-A regra se decora numa frase: **underscore onde o Python importa, hífen onde a
-plataforma nomeia** — por isso as pastas são `hub_snippets` e as skills
-`hub-ml-<tema>`.
+## Estado comprovado
 
-| Item | Auto-descoberto? | Como usar |
-|---|---:|---|
-| `.assistant/skills/<skill>/SKILL.md` | **Sim** | relevância automática ou `@nome-da-skill` |
-| `/Users/<username>/.assistant_instructions.md` | **Sim** | instruções pessoais (≤ 20.000 chars) |
-| `Workspace/.assistant_workspace_instructions.md` | **Sim** | admins; fase squad |
-| `AGENTS.md` / `CLAUDE.md` no workspace | **Sim** | descoberta hierárquica ao abrir arquivo |
-| `hub_prompts/` | Não | adicionar com `@`/Add context |
-| `hub_snippets/`, `hub_scripts/` | Não | importar/executar explicitamente |
-| `hub_padroes/` | Não | consulta humana: os moldes de todo objeto do Hub |
-| `skills/hub-ml-<tema>/` | **Sim** | é a única estrutura nativa com conteúdo nosso |
+Última consolidação operacional: **29/08/2026**.
 
-> Exceção oficial: instruções não se aplicam a **Quick Fix** e **Autocomplete**.
-
-## Por onde começar, conforme o que você veio fazer
-
-Nem todo mundo que abre este repositório precisa dele. Escolha a linha que
-descreve você:
-
-| Você quer | Comece por | Precisa instalar algo? |
+| Gate | Estado | Evidência |
 |---|---|---|
-| **Usar** o ambiente para analisar dados no Databricks | [Como invocar as skills](ambiente_fonte/.assistant/README.md#como-invocar-as-skills) — as skills já estão publicadas no workspace | não |
-| **Contribuir**: alterar uma skill, um helper ou a documentação | as duas seções abaixo | sim, Python e a CLI |
-| **Assumir** o projeto ou entender por que ele é assim | [ADRs](docs/decisions/README.md) e [evidência dos gates](docs/testes/) | não |
+| validação local | ✅ aprovado | fonte, links, contratos, Python e higiene |
+| render | ✅ aprovado | espelho regenerado a partir da fonte |
+| publicação Free | ✅ aprovado após este redesenho | [316 esperados, 0 ausentes e 0 obsoletos](docs/testes/2026-08-29_etapa-6-redesenho-documental.md) |
+| smoke Spark 4.2.0 | ✅ 145 verificações: 136 PASS, 0 FAIL, 8 opcionais ausentes e 1 bloqueio esperado | [JSON](docs/testes/spark/resultados/2026-08-29_smoke_a2.json) |
+| roteamento das 12 skills originais | ✅ 36/36 | [forward tests](docs/testes/forward/README.md) |
+| `hub-ml-criar-objeto` | ⏳ 0/3 | cota do Genie Code impediu a rodada |
+| respostas das 16 famílias de prompts | ⏳ pendente | contrato estático aprovado; teste conversacional bloqueado por cota |
+| replicação no trabalho | ⛔ não executada | depende dos gates conversacionais e do runbook no destino |
 
-O restante desta página é escrito para quem contribui.
+A síntese das etapas 1 a 5, incluindo run e task do smoke, está em
+[`2026-08-29_execucao-etapas-1-a-5.md`](docs/testes/2026-08-29_execucao-etapas-1-a-5.md).
+A publicação do redesenho e o pacote de 316 arquivos estão na
+[evidência da etapa 6](docs/testes/2026-08-29_etapa-6-redesenho-documental.md).
 
-## Antes de começar
+`OPTIONAL_MISSING` não é falha do helper: indica biblioteca opcional ausente.
+`BLOQUEADO_ESPERADO` é um limite de plataforma previamente documentado e
+reprova se mudar silenciosamente.
 
-Os passos 1 a 3 do percurso abaixo funcionam **sem instalar nada além de
-Python** — são leitura e validação local. Os passos 4 e 5 publicam no Databricks
-e exigem preparo:
+## Ciclo de contribuição
 
-| Precisa | Para quê | Como confirmar |
-|---|---|---|
-| Python 3.12 ou superior | rodar as ferramentas locais | `python --version` |
-| Repositório clonado | ter os arquivos | `git clone <url do repo>` |
-| Conta no Databricks Free | ter onde publicar | criar em databricks.com/learn/free-edition |
-| CLI do Databricks **v0.200+** | publicar e conferir | `databricks --version` |
-| CLI autenticada | publicar e conferir | `databricks current-user me` deve devolver seu e-mail |
+### Pré-requisitos
 
-Instalar e autenticar a CLI:
+- Python 3.12+ para as ferramentas locais;
+- Databricks CLI 0.205+ instalada por canal oficial;
+- perfil autenticado para o workspace Free;
+- dados exclusivamente sintéticos no laboratório.
+
+No Windows:
 
 ```powershell
 winget install Databricks.DatabricksCLI
-databricks auth login --host <url do seu workspace Free>
+databricks --version
+databricks auth login --host <url-do-workspace-free>
+databricks current-user me
 ```
 
-> **Não instale pelo `pip`.** O pacote `databricks-cli` do PyPI é a CLI legada,
-> parada na 0.18, e a própria Databricks recomenda não usá-la. Ela não tem
-> `auth login` nem `current-user`, e em Windows deixa um `databricks.exe` no PATH
-> que pode sombrear o binário correto. Em Linux/macOS, use o instalador oficial:
-> `curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh`.
+Não instale o pacote legado `databricks-cli` do PyPI.
 
-Confirme os dois na ordem: `databricks --version` deve mostrar `v0.200` ou
-superior, e só então `databricks current-user me` deve devolver seu e-mail. Se o
-primeiro falhar, a CLI está errada; se só o segundo falhar, é autenticação. Sem
-isso, os passos 4 e 5 falham com mensagem que não aponta a causa.
+### Uma mudança, do começo ao fim
 
-> No workspace do **trabalho** não há CLI, e isso é esperado: lá a instalação é
-> manual, pelo [runbook de replicação](docs/playbooks/replicacao-trabalho.md).
-> O pré-requisito acima vale para o laboratório.
+```mermaid
+flowchart TD
+  E["1 · editar ambiente_fonte/"] --> V["2 · validar local"]
+  V --> R["3 · renderizar derivado"]
+  R --> P["4 · publicar no Free"]
+  P --> C["5 · verificar remoto"]
+  C --> T{"mudou runtime<br/>ou roteamento?"}
+  T -->|"Python/Spark/ML"| S["6a · smoke"]
+  T -->|"skill"| F["6b · forward tests"]
+  T -->|"não"| L["7 · changelog + commit"]
+  S --> L
+  F --> L
+```
 
-## Primeira hora no projeto
-
-Quem chega agora não precisa entender o repositório inteiro para ser útil. Este
-percurso leva do zero até uma alteração publicada e conferida.
-
-**1. Entenda a ideia central (5 min).** Existe uma pasta editável — `ambiente_fonte/` —
-e todo o resto é derivado dela por script ou é cópia publicada. Você nunca edita
-o workspace do Databricks diretamente; edita aqui e publica. Isso evita a
-situação clássica de duas versões divergentes sem saber qual vale.
-
-**2. Veja o produto (10 min).** Abra [ambiente_fonte/.assistant/README.md](ambiente_fonte/.assistant/README.md).
-É o guia do ecossistema que vai para o Databricks: as skills, as instruções
-pessoais e as extensões. Se algum termo travar a leitura, o [glossário](ambiente_fonte/.assistant/README.md#glossário)
-resolve.
-
-**3. Rode a validação (2 min).** Sem alterar nada, execute
-`python tools/validate_assistant.py`. A saída está reproduzida abaixo. Este
-comando é a rede de segurança: reprova link relativo quebrado, frontmatter
-inválido e identificador corporativo. Rode-o **antes de cada commit** — não há
-hook de git nem CI neste repositório, então a rede só existe quando alguém a
-aciona.
-
-**4. Faça uma alteração pequena (15 min).** Corrija uma frase em qualquer README
-dentro de `ambiente_fonte/`. Depois rode, em ordem, os quatro comandos abaixo:
+Comandos essenciais:
 
 ```powershell
 python tools/validate_assistant.py
 python tools/render_simulado.py --write
-python tools/publicar_free.py --execute
-python tools/publicar_free.py --verify
+python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>
+python tools/publicar_free.py --verify  --profile <free> --expected-host <url-free>
 ```
 
-O `--write` do segundo comando não é opcional aqui. Sem ele o render apenas
-mostra o plano, a publicação envia o espelho antigo, e a conferência devolve
-`APROVADO` — porque ela compara o workspace com o espelho, não com a sua
-alteração. A seção seguinte mostra o retorno esperado de cada um.
+O `--write` é obrigatório para atualizar o derivado. O `--verify` é obrigatório
+porque a publicação sobrescreve, mas não remove arquivo obsoleto.
 
-**5. Veja o resultado no Databricks (5 min).** Abra o workspace Free, navegue até
-`/Users/<seu-usuario>/.assistant/` e encontre a frase alterada. Esse é o ciclo
-completo: o que está aqui é o que está lá.
-
-Ao final você sabe editar, validar, publicar e conferir — que é tudo o que a
-operação do dia a dia exige. Replicar no workspace do trabalho é assunto do
-[runbook](docs/playbooks/replicacao-trabalho.md) e só acontece depois dos gates.
-
-## Ciclo de vida de uma mudança
-
-```mermaid
-flowchart TD
-  E["1. Editar ambiente_fonte/"] --> V["2. Validar\npython tools/validate_assistant.py"]
-  V --> R["3. Renderizar\npython tools/render_simulado.py --write"]
-  R --> P["4. Publicar no Free\npython tools/publicar_free.py --execute"]
-  P --> C["5. Conferir\npython tools/publicar_free.py --verify"]
-  C --> G["6. Commit + CHANGELOG"]
-  G --> T["7. Forward tests\ncaso +, caso −, @menção (chat novo)"]
-  T --> W["8. Replicar no trabalho\n(runbook de cópia manual)"]
-```
-
-## Comandos e o que esperar de cada um
-
-As saídas abaixo vêm de execução real, com o nome de usuário substituído por
-placeholder. **As linhas de contagem mudam conforme o repositório cresce** — não
-tente casá-las com o seu retorno. O que importa em cada bloco é a última linha,
-`APROVADO` ou `OK`.
-
-> **Para quem edita este README:** capture as saídas **depois** da última edição
-> do commit, nunca antes. Uma auditoria pegou os três blocos errados por
-> exatamente 1 em quatro contagens, porque foram colados antes de o commit apagar
-> um arquivo. A ordem é: editar → rodar → colar → commitar.
->
-> E não confie na disciplina: rode
->
-> ```powershell
-> python tools/validate_assistant.py --conferir-readme
-> ```
->
-> Ele reexecuta os comandos e **reprova** se algum número colado divergir. Fica
-> fora do caminho padrão porque chama os próprios scripts — use antes de commitar
-> mudança que altere contagem.
-
-**Validar a fonte** — roda em segundos, não toca em nada:
+Antes de commitar uma mudança que altere contagens ou o README raiz:
 
 ```powershell
-python tools/validate_assistant.py
+python tools/validate_assistant.py --conferir-readme
 ```
+
+Esse modo reexecuta a validação e a conferência remota e compara as linhas
+rotuladas com a saída de referência ao final deste documento.
+
+## Mapa do repositório
+
+| Entrada | Papel | Política |
+|---|---|---|
+| [`CLAUDE.md`](CLAUDE.md) | instrução canônica para agentes | editável |
+| `AGENTS.md` / `GEMINI.md` | adaptadores para outros agentes | manter finos |
+| [`ambiente_fonte/`](ambiente_fonte/README.md) | produto implantável | editável |
+| `Novo_Ambiente_Simulado/` | espelho gerado | não editar |
+| [`tools/`](tools/README.md) | gates e automação | editável |
+| [`docs/`](docs/README.md) | governança e evidência | respeitar natureza de cada coleção |
+| [`.claude/`](.claude/CLAUDE.md) | regras, skills operacionais e templates | editável |
+| `Ajustes_Codex/` | entrega congelada de referência | não editar |
+| `Ambiente_Antigo/` | quarentena local e ignorada | não versionar/expor |
+| [`PLANO_HUB.md`](PLANO_HUB.md) | plano e registro das sprints | histórico de execução |
+| [`CHANGELOG.md`](CHANGELOG.md) | mudanças relevantes e autoria | append-only por data |
+
+## O que cada gate prova
+
+```mermaid
+flowchart LR
+  V["validação local"] -.-> VF["forma, links,<br/>contratos, identidade"]
+  R["verify remoto"] -.-> RF["inventário e<br/>tipos publicados"]
+  S["smoke"] -.-> SF["execução no<br/>runtime observado"]
+  F["forward test"] -.-> FF["seleção da<br/>skill no chat"]
+```
+
+| Gate | Fronteira |
+|---|---|
+| validação local | não prova execução Spark |
+| verify remoto | não prova correção funcional |
+| smoke no Free | não prova runtime, ACLs ou políticas do trabalho |
+| forward test | não prova qualidade da resposta |
+| auditoria por leitura | não substitui execução |
+
+Por isso “passou aqui” sempre precisa declarar **onde**, **quando** e **qual
+propriedade** foi medida.
+
+## Segurança e replicação
+
+- Nunca use dado real do trabalho no Free.
+- Nunca versione token, e-mail, host, matrícula ou caminho corporativo.
+- Use o ZIP sanitizado de implantação; o histórico Git anterior contém caminhos
+  antigos e não deve ser clonado para o ambiente corporativo sem reescrita
+  coordenada.
+- Preserve arquivos gerenciados pela plataforma, como o
+  `.assistant/.mcp_servers.json` observado no workspace.
+- Na replicação, substitua apenas o conteúdo pertencente ao Hub; não apague a
+  pasta de skills inteira.
+- Refaça smoke e checks de permissão no destino.
+
+Detalhes: [runbook](docs/playbooks/replicacao-trabalho.md) e
+[ADR-0009](docs/decisions/ADR-0009-identidade-e-pacote-de-implantacao.md).
+
+## Governança multi-IA
+
+- `CLAUDE.md` é canônico; adaptadores apenas traduzem a entrada.
+- Preserve mudanças de outras pessoas/agentes; conflito exige reconciliação.
+- Toda alteração relevante entra no `CHANGELOG.md` com autoria.
+- Decisão estrutural pede ADR; evidência nova pede nova rodada datada.
+- Auditoria multi-LLM usa rodadas independentes e contraditório; maioria não
+  supera documentação oficial da plataforma.
+
+Veja [auditorias](docs/auditoria/README.md),
+[ADRs](docs/decisions/README.md) e [handoffs](docs/handoffs/README.md).
+
+## Saídas de referência conferíveis
+
+Estas linhas têm um único objetivo: permitir que
+`validate_assistant.py --conferir-readme` detecte documentação envelhecida.
+Os valores abaixo foram recapturados após o render e a republicação deste
+redesenho.
 
 ```text
 raiz analisada     : <repo>\ambiente_fonte
-skills             : 13 · 13/13 com as 5 seções do template
-helpers citados    : 72 caminhos verificados
-markdown / links   : 105 arquivos / 167 links relativos
+skills             : 13 · 13/13 com as 5 seções estruturais
+prompts            : 16 · 161 campos com guia e contrato humano
+helpers citados    : 81 caminhos verificados
+markdown / links   : 107 arquivos / 190 links relativos
 notebooks / links  : 78 notebooks / 17 links relativos
 pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
 forma da pasta     : 58 conferidas (o módulo tem o nome da pasta)
 contrato de dados  : 60 pares (saída: o que o notebook consome)
 contrato de entrada: 57 pares (entrada: o que o notebook passa)
 saída colada       : 77 notebooks com bloco real, 0 sem
-notebook exercita  : 57 objetos, 0 notebook(s) que só importam
 idioma da docstring: 60 módulos, 0 com docstring em inglês
+normas do molde    : 70 arquivos, 0 violação(ões)
+notebook exercita  : 57 objetos, 0 notebook(s) que só importam
 python (AST)       : 209 arquivos
-instrucoes         : 7085/20000 caracteres
-repo (corporativo) : 720 arquivos varridos no repositório inteiro
-repo (links)       : 266 links fora da raiz analisada
+instrucoes         : 8116/20000 caracteres
+repo (identidade)  : 737 arquivos varridos no repositório editável/derivado
+repo (links)       : 347 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
 
-**Sobre `pastas de objeto: 60`:** a biblioteca são **58** — 51 em `hub_snippets`
-e 7 em `hub_scripts`. Os outros dois são os exemplares de `hub_padroes/`, que são
-molde e não biblioteca. O validador conta pastas de objeto, e eles têm a forma de
-um; o `.assistant/README.md` conta biblioteca, e eles não são.
-
-Qualquer linha `FAIL` bloqueia o resto do ciclo. **Desde 18/08/2026 não há
-avisos**: a última dívida em aberto — onze notebooks sem saída real colada — foi
-fechada, e a guarda que os listava passou de aviso a falha. Um aviso que
-reaparecer aqui é dívida nova, não herança.
-
-**As seis linhas do meio são as guardas que mais pegaram defeito**, e vale
-saber o que cada uma cobre:
-
-| Linha | O que confere | Nasceu de |
-|---|---|---|
-| `pastas de objeto` | nome da pasta, os três arquivos, e se o `__init__.py` bate com a API do módulo | conversão para pasta por objeto |
-| `forma da pasta` | o módulo tem o nome da pasta — sem isso o import documentado não existe | pasta que o outro check pulava em silêncio |
-| `helpers citados` | todo `hub_snippets.x.y` citado numa skill existe de fato | renomear módulo quebraria 13 skills em silêncio |
-| `contrato de dados` | o notebook consome chave que o módulo **devolve** | três notebooks pedindo chave renomeada |
-| `contrato de entrada` | o notebook passa argumento que a assinatura **aceita** | seis dos dezesseis defeitos da Sprint 7 entraram por aí |
-| `saída colada` | o notebook tem bloco com saída real, não só prosa | notebook que ensinava a contar nulos numa saída sem nulos |
-
-As duas últimas linhas **do bloco de saída acima** — `repo (corporativo)` e
-`repo (links)` — são as que valem conferir de olho: elas contam o
-que os checks de repositório inteiro alcançaram. Se qualquer uma vier **zero**,
-a proteção correspondente não rodou — e desde a correção de 15/08/2026 isso
-reprova a execução em vez de passar em silêncio.
-
-**Renderizar o simulado** — `--write` é o que efetivamente escreve; sem ele o
-comando só imprime o plano:
-
-```powershell
-python tools/render_simulado.py --write
-```
-
-```text
-fonte  : <repo>\ambiente_fonte
-destino: <repo>\Novo_Ambiente_Simulado\Users\<seu-usuario>
-  copy file .assistant_instructions.md -> ...\.assistant_instructions.md
-  copy dir  .assistant -> ...\.assistant
-
-OK: 315 arquivos renderizados em Novo_Ambiente_Simulado/
-```
-
-O total inclui o marcador `README_GERADO.md` na raiz do simulado, que não vai
-para o workspace — por isso a conferência adiante espera um arquivo a menos.
-
-**Publicar e conferir** — a publicação relata o que enviou; a conferência
-verifica o que existe. São coisas diferentes, e por isso a segunda não é opcional:
-
-```powershell
-python tools/publicar_free.py --execute
-python tools/publicar_free.py --verify
-```
-
 ```text
 usuário: <seu-usuario>
+profile: <profile-free>
+host   : https://<workspace-free>
 
 == VERIFY (read-only) ==
-esperados : 314 arquivos
-remotos   : 315 arquivos sob .assistant + instruções
+esperados : 316 arquivos
+remotos   : 317 arquivos sob .assistant + instruções
 ausentes  : 0 | obsoletos: 0
 plataforma: 1 arquivo(s) gerenciado(s) — .assistant/.mcp_servers.json
 skills    : 13/13
@@ -292,134 +259,17 @@ extensões : 4/4 diretórios hub_
 APROVADO: 0 problema(s)
 ```
 
-A linha `obsoletos` é a que costuma surpreender: a publicação sobrescreve
-arquivos e diretórios, mas nunca apaga os que saíram da fonte. Um arquivo
-removido daqui continua ativo no workspace até alguém notar — e é essa
-conferência que nota.
-
-A linha `plataforma` existe porque o Databricks também escreve dentro de
-`.assistant/`: abrir o painel de MCP em **Genie Code → Settings** cria
-`.assistant/.mcp_servers.json` com os conectores internos. Esse arquivo não vem
-da fonte e **não deve ser apagado** — a conferência o separa dos obsoletos em
-vez de mandar removê-lo.
-
-## Perguntas frequentes
-
-**Preciso saber Databricks para contribuir?**
-Para editar documentação e skills, não — o conteúdo é Markdown e o ciclo são
-quatro comandos. Para mexer na biblioteca Python (`hub_snippets`, `hub_scripts`) sim,
-porque o código roda em Spark e as armadilhas são de lá.
-
-**Por que existem duas pastas com o mesmo conteúdo?**
-`ambiente_fonte/` é o que você edita; `Novo_Ambiente_Simulado/` é o espelho
-gerado por script, com a árvore exata que o workspace espera. A explicação
-completa, com diagrama, está em [ambiente_fonte/README.md](ambiente_fonte/README.md),
-que é o dono desse assunto.
-
-**O que acontece se eu editar direto no workspace do Databricks?**
-A alteração vive até a próxima publicação e depois desaparece, sem aviso. O
-workspace é cópia operacional, nunca a fonte. Se algo precisar mudar, muda aqui.
-
-**Alterei uma skill e o Genie Code continua com o comportamento antigo.**
-Skills não recarregam em chat já aberto. Abra um chat novo; se persistir,
-recarregue a página, porque o metadata fica em cache.
-
-**Como sei qual skill vai ser acionada?**
-O Genie Code escolhe lendo apenas o campo `description` de cada skill. Para forçar
-uma específica, use `@nome-da-skill`. As 36 combinações testadas estão em
-[docs/testes/forward/](docs/testes/forward/README.md).
-
-**Posso usar dados reais do trabalho no ambiente Free?**
-Não, em nenhuma hipótese. O Free é laboratório e recebe apenas dados sintéticos.
-
-Identificador corporativo também não entra no repositório, e a validação reprova
-se entrar — o `validate_assistant.py` varre todo o repositório em conteúdo **e**
-em nome de pasta, porque é assim que o vazamento aconteceria: renderizando o
-simulado com o username do trabalho. Note que o username pessoal do laboratório
-aparece no caminho de `Novo_Ambiente_Simulado/`; isso é estado aceito, e só o
-padrão corporativo é bloqueado (ADR-0003).
-
-O que exatamente é bloqueado importa, porque a lista não é genérica: hoje ela
-cobre matrícula no formato letra seguida de seis a oito dígitos, domínios e
-e-mails corporativos conhecidos e o domínio governamental brasileiro. A lista
-literal vive na constante `CORPORATE_RE` de
-[tools/validate_assistant.py](tools/validate_assistant.py) — e só lá, para não
-envelhecer em dois lugares. **Antes de confiar no check em outra organização,
-acrescente ali o formato de matrícula e o domínio de lá.** Padrão que não está
-na constante passa sem alarme.
-
-**O que são as pastas com prefixo `hub_`?**
-Extensões criadas aqui, que o Genie Code **não** carrega sozinho. Precisam de
-`@`/Add context, import ou execução explícita. O prefixo existe justamente para
-que ninguém as confunda com estrutura nativa da plataforma — e para que isso se
-entenda batendo o olho na árvore de pastas, sem ler legenda.
-
-**Encontrei um erro no código de um helper. Onde corrijo?**
-Em `ambiente_fonte/.assistant/hub_snippets/` ou `hub_scripts/`, nunca no workspace.
-Depois rode o ciclo e, se o helper tiver lógica de Spark, verifique no runtime —
-o teste em `docs/testes/spark/` mostra como.
-
-## Governança multi-IA
-
-- `CLAUDE.md` é canônico; `AGENTS.md` (Codex) e `GEMINI.md` são adaptadores finos.
-- Toda IA registra o que fez no `CHANGELOG.md` com atribuição (`(Claude)`, `(Codex)`, …).
-- Mudanças estruturais geram handoff em `docs/handoffs/`.
-- Auditorias formais seguem o padrão multi-LLM do Verg_Alchemy_Hub
-  (`../Verg_Alchemy_Hub/docs/playbooks/auditoria-multillm.md`, em outro
-  repositório): níveis `A0`–`A3`, papéis por IA e pasta
-  `docs/auditoria/<data>_<tema>/` com rodadas individuais e consenso.
-
-## Status e roadmap
-
-| Fase | Entrega | Status |
-|---|---|---|
-| 0 | Bootstrap: git + canônicos + `.claude/` | ✅ concluída |
-| 1 | `ambiente_fonte/` + bateria de validação local | ✅ concluída |
-| 2 | Render do `Novo_Ambiente_Simulado/` | ✅ concluída |
-| 3 | Publicação no Free + gates do Codex: Spark serverless e forward tests | ✅ concluída¹ |
-| 4 | Matriz Free vs. trabalho + [runbook de replicação](docs/playbooks/replicacao-trabalho.md) | ✅ pronta para execução |
-| 5 | Camada squad (`Workspace/.assistant/skills/`) + revisão dos prompts | ⏳ |
-
-Gates herdados da auditoria do Codex, todos verificados no Databricks Free:
-
-| Gate | Resultado |
-|---|---|
-| Testes Spark no runtime real | ✅ **64 aprovações, 0 falhas** de 71 verificações — as 7 restantes são módulos com dependência opcional ausente, não falhas. [Detalhes](docs/testes/spark/README.md) |
-| Forward tests das skills (positivo, negativo, `@menção`) | ✅ **36/36 PASS** nas 12 originais — [detalhes](docs/testes/forward/README.md). A décima terceira, `hub-ml-criar-objeto`, é da Sprint 11 e **ainda não foi testada** |
-| Dependências opcionais fixadas e testadas | ✅ **12 bibliotecas** instaladas por `%pip` e exercitadas com chamada real, inclusive o `prophet_wrapper` que antes constava sem combinação funcional — inventário em [`requirements-optional.txt`](ambiente_fonte/.assistant/hub_snippets/requirements-optional.txt) |
-
-Os três gates medem coisas diferentes, e nenhum substitui o outro:
-
-```mermaid
-flowchart LR
-  V["Validação estática\nvalidate_assistant.py"] --> S["Testes Spark\nruntime serverless"]
-  S --> F["Forward tests\nchat novo no Genie Code"]
-  V -.->|"prova"| VP["frontmatter, links,\nsintaxe, higiene"]
-  S -.->|"prova"| SP["o código roda\nno runtime real"]
-  F -.->|"prova"| FP["a skill certa\né carregada"]
-  V -.->|"não prova"| VN["que o código roda"]
-  S -.->|"não prova"| SN["permissões, Unity Catalog,\npolíticas do trabalho"]
-  F -.->|"não prova"| FN["a qualidade\nda resposta"]
-```
-
-O que nenhum dos três alcança é o ambiente do trabalho: compute conforme
-política, dados reais e ACLs. Essa fronteira está na matriz de
-[`.claude/rules/free-vs-trabalho.md`](.claude/rules/free-vs-trabalho.md) e é o
-que o [runbook de replicação](docs/playbooks/replicacao-trabalho.md) cobre.
-
-¹ Fase 3 concluída. A publicação usa `tools/publicar_free.py`, decisão registrada
-no [ADR-0005](docs/decisions/ADR-0005-publicacao-propria-no-free.md) — o engine
-do Hub foi descartado porque publica `.py` como notebook, o que quebraria os
-imports da biblioteca.
-
 ## Fontes oficiais
 
-- [Agent Skills no Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills)
+- [Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/)
+- [Agent Skills](https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills)
 - [Instruções customizadas](https://learn.microsoft.com/en-us/azure/databricks/genie-code/instructions)
-- [Dicas para Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/tips)
-- [MCP no Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/mcp)
+- [Dicas de contexto e prompting](https://learn.microsoft.com/en-us/azure/databricks/genie-code/tips)
+- [Uso e modo agente](https://learn.microsoft.com/en-us/azure/databricks/genie-code/use-genie-code)
+- [Databricks CLI](https://learn.microsoft.com/en-us/azure/databricks/dev-tools/cli/install)
 - [Declarative Automation Bundles](https://learn.microsoft.com/en-us/azure/databricks/dev-tools/bundles/)
-- [Agent Skills specification](https://agentskills.io/specification)
+- [Especificação Agent Skills](https://agentskills.io/specification)
 
-Nomes e limites da plataforma evoluem; a regra `.claude/rules/genie-code-oficial.md`
-define como manter este repositório na vanguarda sem afirmar recurso inexistente.
+Nomes, limites e superfícies do Genie Code evoluem. Claims de plataforma devem
+ser revistos contra documentação oficial antes de mudança estrutural ou
+replicação.

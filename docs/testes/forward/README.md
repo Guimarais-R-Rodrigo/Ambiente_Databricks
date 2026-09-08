@@ -1,45 +1,69 @@
 # Forward tests das Agent Skills
 
-Quando você escreve um pedido no Genie Code, ele decide sozinho qual skill
-carregar — lendo apenas o campo `description` de cada uma, nunca o corpo. Esse
-mecanismo é o **roteamento**, e é onde mora a falha mais silenciosa do
-ecossistema: descrições parecidas fazem o assistente carregar a skill errada, e
-a resposta vem plausível o bastante para ninguém desconfiar.
+Forward test mede **roteamento**: diante de um pedido, qual skill o Genie Code
+carrega? A relevância considera o pedido e a `description` da skill; `@menção`
+permite seleção explícita.
 
-Um forward test mede exatamente isso e nada mais. Não avalia a qualidade da
-resposta nem executa código: verifica se, diante de um pedido típico, a skill
-correta é carregada — e, diante de um pedido parecido de outro domínio, se ela
-fica de fora. É o gate que a auditoria do Codex deixou pendente antes da
-replicação no trabalho.
+Ele não mede qualidade da resposta nem execução de código.
 
-- Método e vereditos: `.claude/skills/forward-test-skills/SKILL.md`
-- Prompts prontos para colar: [roteiro.md](roteiro.md) (39 testes, 2 mensagens cada — 36 concluídos)
-- Registro de rodadas: copie [template_resultados.md](template_resultados.md)
-  para `resultados/<YYYY-MM-DD>_rodada<N>.md`
+## Matriz por skill
 
-| Rodada | Data | PASS | FAIL | Resultado |
-|---|---|---|---|---|
-| 1 | 2026-08-14 | 33 | 2 | [detalhes](resultados/2026-08-14_rodada1.md) — 12/12 negativos corretos; falhas isoladas em `10P`/`11P`; `07M` sem registro |
-| 2 | 2026-08-14 | 5 | 0 | [detalhes](resultados/2026-08-14_rodada2.md) — hipótese confirmada: `10P` e `11P` passaram apenas com o prompt corrigido |
+| Caso | Pergunta | PASS |
+|---|---|---|
+| positivo (`P`) | demanda típica carrega a skill alvo? | alvo carregada |
+| negativo (`N`) | demanda vizinha deixa a skill alvo de fora? | alvo não carregada |
+| menção (`M`) | `@nome-da-skill` seleciona explicitamente? | alvo carregada |
 
-**GATE DAS 12 SKILLS ORIGINAIS FECHADO ✅ — 36/36 PASS** (positivos 12/12 ·
-negativos 12/12 · menções 12/12). Faltam os **3 casos da `hub-ml-criar-objeto`**,
-criada na Sprint 11 e nunca testada: a meta do gate completo é 39/39, **sendo 1 negativo aprovado em sentido fraco**: em `11N-r2` a skill
-errada não carregou — que é o critério do teste —, mas a ideal também não veio.
-Está registrado como item de vigilância no
-[handoff de 2026-08-14](../../handoffs/2026-08-14_calibracao-descriptions.md).
+São 13 skills × 3 casos = 39. Os negativos cobrem colisões de vocabulário como
+drift, materialização, explicação de notebook e auditoria.
 
-Nenhuma `description` foi alterada em nenhuma rodada: o pacote auditado pelo
-Codex passou como estava. As falhas da rodada 1 eram do instrumento de teste,
-não do ambiente.
+## Estado vigente
 
-## O que a rodada 1 mostrou
+| Escopo | Resultado | Situação |
+|---|---:|---|
+| 12 skills originais | **36/36 PASS** | fechado |
+| `hub-ml-criar-objeto` | **0/3** | pendente |
+| total | **36/39** | cota impediu a tentativa de 29/08 |
 
-As descriptions do pacote auditado pelo Codex estão **bem calibradas**: nenhuma
-das colisões previstas (drift, materialização, deterioração, auditoria×execução)
-se materializou, e em 11 dos 12 negativos o Genie ainda escolheu a skill *ideal*
-do desvio. As duas falhas se concentraram nas skills que dependem de um artefato
-no chat (`comentar-notebook`, `tutor-databricks`): os prompts citavam "este
-notebook"/"este stack trace" sem que existissem — defeito do instrumento de
-teste, corrigido com prompts v2 autocontidos. **Nenhuma `description` foi
-alterada até aqui.**
+O caso `11N-r2` foi aprovado no critério do teste — a skill alvo ficou de fora
+—, embora a skill ideal também não tenha sido carregada. É item de vigilância,
+não motivo para reclassificar o resultado.
+
+## Executar uma rodada
+
+1. Abra [`roteiro.md`](roteiro.md).
+2. Use um chat novo para cada caso.
+3. Anexe qualquer artefato exigido pelo prompt.
+4. Envie as duas mensagens do caso sem alterar o vocabulário.
+5. Registre skill carregada, ausência e observação.
+6. Copie [`template_resultados.md`](template_resultados.md) para
+   `resultados/<YYYY-MM-DD>_rodada<N>.md`.
+
+Se o Genie Code não permitir envio, registre a tentativa como bloqueada e não
+invente veredito.
+
+## Rodadas
+
+| Data | Rodada | Resultado | Leitura |
+|---|---|---:|---|
+| 2026-08-14 | [1](resultados/2026-08-14_rodada1.md) | 33 PASS, 2 FAIL, 1 sem registro | falhas concentradas em prompts sem artefato anexado |
+| 2026-08-14 | [2](resultados/2026-08-14_rodada2.md) | 5 PASS | prompts autocontidos confirmaram defeito do instrumento |
+| 2026-08-29 | tentativa | sem casos enviados | [cota bloqueada](../2026-08-29_execucao-etapas-1-a-5.md) |
+
+Nenhuma `description` foi alterada por causa da rodada 1: a rodada 2 isolou que
+o problema estava no instrumento. Antes de editar uma `description`, leia o
+[handoff de calibração](../../handoffs/2026-08-14_calibracao-descriptions.md).
+
+## Critério de reabertura
+
+Repita pelo menos os casos da skill e das vizinhas quando mudar:
+
+- `name` ou `description`;
+- fronteira temática;
+- exemplo que altera o vocabulário esperado;
+- estrutura/path de descoberta.
+
+Mudança apenas editorial no corpo, sem alterar escopo, ainda exige revisão, mas
+não invalida automaticamente todos os 39 casos.
+
+[Voltar ao índice de testes](../README.md)

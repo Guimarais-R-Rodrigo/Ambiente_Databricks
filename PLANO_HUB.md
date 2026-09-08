@@ -3,8 +3,14 @@
 Documento de trabalho, versão 2. Cada sprint é executada isoladamente, auditada
 em sessão sem contexto, revisada por você, e só então a seguinte começa.
 
-- **Status: as 13 sprints executadas.** A 5 entregou as partes 1 e 2 dos 16 prompts; as partes 3 e os forward tests dependem de interação humana. 13 skills; a biblioteca convertida (**58 objetos**: 51 `hub_snippets` + 7 `hub_scripts`) e os dois READMEs de topo atualizados. O validador conta **60 pastas de objeto**, somando os 2 exemplares de `hub_padroes`, que são template e não biblioteca. Pendem de você: os 3 forward tests da skill nova e as 16 partes 3 dos prompts **Em 18/08 as três dívidas nomeadas fecharam** — saída colada, cor redeclarada e seções de skill —, e o validador passou a 0 falhas e 0 avisos, com 22 checks. Pendem de você: os 3 forward tests e as 16 partes 3, ambos bloqueados até 1º/set pelo orçamento do assistente no Free
-- **Última atualização:** 2026-08-17
+- **Status:** as 13 sprints foram executadas. Há 13 skills e **58 objetos** de
+  biblioteca (51 `hub_snippets` + 7 `hub_scripts`); o validador soma também os
+  2 exemplares de `hub_padroes`, totalizando 60 pastas de objeto. Os 16 prompts
+  têm formulário e notebook, mas as partes 3 continuam dependendo de interação
+  humana; também restam os 3 forward tests de `hub-ml-criar-objeto`. A auditoria
+  de 20/08 corrigiu o runbook, os gates e a biblioteca; a reexecução no Spark
+  4.2.0 passou em 29/08. Os testes conversacionais aguardam a renovação da cota.
+- **Última atualização:** 2026-08-29
 
 > **Histórico de revisão.** A v1 foi submetida a auditoria em sessão sem
 > contexto, com instrução para executar o plano sobre um objeto real em vez de
@@ -481,7 +487,8 @@ portão de formato aconteça o mais cedo possível e a renomeação de skills �
 única que mexe em roteamento certificado — fique isolada depois dele; e **5 sai
 do caminho crítico**, por ter dependência humana.
 
-Total de notebooks: **74** — 51 snippets, 7 scripts, 16 prompts.
+Total detectado de notebooks: **78** — 51 snippets, 7 scripts, 16 prompts e 4
+exemplos/templates em `hub_padroes`.
 
 ### Sprint 0 — Fundação: ferramentas
 
@@ -633,7 +640,7 @@ durante a execução; o completo continua obrigatório no fechamento da sprint.
 
 | Item | Situação |
 |---|---|
-| Auditoria de segunda origem da biblioteca | gate aberto, independe desta reestruturação |
+| Auditoria de segunda origem da biblioteca | executada em 20/08; correções locais validadas e smoke pós-correção aprovado em 29/08; faltam os gates conversacionais |
 | ~~`prophet_wrapper`~~ | **resolvido em 2026-08-17**: `%pip install prophet` instala e ajusta. Sai desta lista |
 | ~~Testes funcionais de `ml` no Free~~ | **resolvido em 2026-08-19**. A linha anterior dizia que *"os 16 da Sprint 7 nunca executaram lá"* — e estava errada desde 17/08: o relatório da Sprint 7 traz os 16 como job, todos `SUCCESS`. O que faltava era outra coisa, e é o que foi feito: os 16 entraram na **bateria repetível** do `spark_smoke_test.py`. Execução de uma vez prova o dia; só a bateria prova que continua |
 | Camada squad | fase seguinte |

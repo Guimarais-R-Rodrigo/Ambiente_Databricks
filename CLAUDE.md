@@ -45,6 +45,8 @@ Escala planejada: pessoal → squad → missão.
 - Identidade `hub_`/`hub-ml-`, com a tabela de correspondência `rodrigo-*` →
   `hub-ml-*`: `ADR-0006`. Ele **não supersede nada** — complementa o ADR-0001 e o
   ADR-0004.
+- Identidade neutra no conteúdo ativo e pacote mínimo de implantação com
+  manifesto: `ADR-0009`.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 

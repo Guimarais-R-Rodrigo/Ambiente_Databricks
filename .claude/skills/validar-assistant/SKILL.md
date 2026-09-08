@@ -21,7 +21,8 @@ Exit code 0 = aprovado; 1 = há falha bloqueante.
 
 | Check | Bloqueante? | Critério |
 |---|---|---|
-| Frontmatter das skills | sim | `name` + `description` presentes; `name` == nome da pasta |
+| Inventário/frontmatter das skills | sim | conjunto exato das 13 pastas; YAML escalar válido; `name` + `description`; `name` == pasta |
+| Contrato dos prompts | sim | 16 prompts; cada um dos 161 campos tem como preencher, motivo e exemplo; QA e limites presentes |
 | Tamanho de SKILL.md | não (warn) | alerta acima de 500 linhas (progressive disclosure) |
 | Links Markdown relativos | sim | resolve para arquivo existente, **com a caixa exata** — NTFS ignora maiúsculas, o workspace Databricks não |
 | Links dentro de notebook | sim | idem, para links escritos em célula `%md` de arquivo `.py` |
@@ -29,11 +30,13 @@ Exit code 0 = aprovado; 1 = há falha bloqueante.
 | Cercas de código | sim | blocos ``` balanceados em todos os .md |
 | AST Python | sim | todos os .py compilam |
 | Pastas de objeto | sim | nome identificador, módulo com o nome da pasta, notebook `exemplo_*`, e `__init__.py` idêntico à API pública derivada por AST |
-| Sincronia do smoke test | sim | a cópia da regra de detecção de notebook em `spark_smoke_test.py` não divergiu de `notebook_marker.py` |
+| Contratos de entrada e saída | sim | argumentos aceitos e colunas produzidas/consumidas conferidos por AST |
+| Normas do molde | sim | limites de coleta, cache serverless e sessão Spark conferidos por AST/escopo |
+| Sincronia do smoke test | sim | a regra copiada tem o mesmo comportamento de `notebook_marker.py`, não apenas constantes iguais |
 | Tamanho das instruções | sim | `.assistant_instructions.md` ≤ 20.000 caracteres |
 | Mojibake/UTF-8 | sim | sem sequências `Ã©`-like ou erro de decodificação |
 | Identificadores pessoais | sim | zero paths corporativos, e-mails ou usernames reais na raiz analisada |
-| Identificador corporativo no repositório | sim | varredura do repositório inteiro; **varredura vazia reprova** |
+| Identidade no repositório | sim | conteúdo ativo/derivado sem e-mail, username ou path real; **varredura vazia reprova** |
 | `__pycache__` no fonte | não (warn) | bytecode local; não quebra, mas viaja se alguém publicar fora do pipeline |
 
 A saída **não** imprime `PASS` por check: imprime os contadores de cada um e,

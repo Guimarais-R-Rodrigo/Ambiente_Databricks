@@ -1,4 +1,4 @@
-# Testes Spark serverless dos helpers
+# Testes Spark serverless — evidência por runtime
 
 > **Nomenclatura da época.** Os nomes `x_*` e `rodrigo-*` neste registro são
 > os que existiam na data. A tradução para os nomes atuais está na tabela de
@@ -6,12 +6,37 @@
 > este documento não é reescrito porque descreve o que foi observado, não o
 > estado atual.
 
-Gate da fase 3 (herdado da auditoria do Codex): executar `hub_snippets`/`hub_scripts`
-no runtime Databricks real. Executor: job serverless one-time no Free Edition,
-notebook [tools/spark_smoke_test.py](../../../tools/spark_smoke_test.py)
-(importado em `/Users/<username>/hub_lab/`), dados 100% sintéticos.
+Este documento preserva as descobertas por rodada. Para decidir sobre o estado
+atual, leia primeiro o resumo abaixo; as seções seguintes são histórico técnico
+e não são reescritas para parecerem atuais.
 
-## Resultado — 2026-08-13 (Spark 4.1.0 serverless) ✅ APROVADO
+Executor: job serverless one-time no Free Edition, notebook
+[`tools/spark_smoke_test.py`](../../../tools/spark_smoke_test.py), dados 100%
+sintéticos.
+
+## Resultado vigente — 2026-08-29 (Spark 4.2.0 serverless)
+
+| Verificação | Resultado |
+|---|---:|
+| total | 145 |
+| `PASS` | **136** |
+| `FAIL` | **0** |
+| `OPTIONAL_MISSING` | 8 |
+| `BLOQUEADO_ESPERADO` | 1 |
+
+Execução: run `996607251657906`, task `657506000110053`. Resultado bruto:
+[`2026-08-29_smoke_a2.json`](resultados/2026-08-29_smoke_a2.json).
+
+As oito ausências são dependências opcionais não instaladas nessa rodada. O
+bloqueio esperado é a abertura de run MLflow no serverless observado; o caso
+reprova se o comportamento mudar sem revisão.
+
+> Este resultado prova execução no runtime e na data declarados. Não prova
+> permissões, bibliotecas, Spark Connect ou política do workspace do trabalho.
+
+## Histórico inicial — 2026-08-13 (Spark 4.1.0 serverless)
+
+### Gate aprovado após cinco rodadas
 
 | Rodada (run_id) | Resultado | O que revelou |
 |---|---|---|
@@ -37,7 +62,7 @@ Por isso a rodada 5 fecha o gate com **64 PASS / 0 FAIL / 7 opcionais ausentes**
 são 71 verificações, e as 7 restantes não são falhas. Para diagnosticar um `FAIL`
 concreto, veja [Como ler uma falha](#como-ler-uma-falha).
 
-## Módulos com dependência opcional — situação final
+### Módulos com dependência opcional — situação em 2026-08-17
 
 > **Atualizado em 2026-08-17.** O bloco abaixo foi reescrito: a situação de
 > 14/08 registrava 13 de 14 e classificava `prophet_wrapper` como sem combinação
@@ -77,7 +102,7 @@ Três armadilhas confirmadas, válidas para todos os wrappers de treino:
   positiva; e `mlp_embeddings` espera **uma lista de arrays**, um por feature
   categórica, não uma matriz.
 
-## Restrição de ambiente descoberta na rodada 7
+### Restrição de ambiente descoberta na rodada 7
 
 Instalar o conjunto de bibliotecas de ML sem fixar versão **derruba o kernel** em
 compute serverless: pip sobe `pandas` de 1.5.3 para 2.3.3 e `numpy` de 1.26.4
@@ -99,7 +124,7 @@ Foi essa rodada que motivou fixar as versões em `requirements-optional.txt`. O
 arquivo hoje traz o conjunto que funcionou; antes dela listava só nomes, e nessa
 forma não era instalável neste ambiente.
 
-## Defeitos reais encontrados e corrigidos no `ambiente_fonte/`
+### Defeitos reais encontrados e corrigidos no `ambiente_fonte/`
 
 Nenhum deles era detectável pela validação estática (AST compilava na máquina
 local com Python 3.12):
@@ -122,7 +147,7 @@ local com Python 3.12):
    Python ≥ 3.12; o runtime usa versão anterior. Escapes movidos para fora da
    f-string.
 
-## Dependências opcionais ausentes no Free (esperado)
+### Dependências opcionais ausentes na rodada 5 — 2026-08-13
 
 `lightgbm`, `xgboost`, `catboost`, `optuna`, `torch` (×2 módulos) — 7 módulos de
 `hub_snippets/ml` só importam com as libs instaladas no ambiente do projeto

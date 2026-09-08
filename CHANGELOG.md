@@ -5,6 +5,152 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-08-29 — Correções após auditoria externa dos READMEs
+
+### Adicionado
+
+1. (Codex) Registrados o parecer independente do Grok 4.6, o contraditório do
+   Codex e a evidência datada da etapa 6 em `docs/auditoria/` e `docs/testes/`.
+
+### Corrigido
+
+1. (Codex) Unificado o estado vigente de publicação Free e separado esse estado
+   da evidência histórica das etapas 1 a 5.
+2. (Codex) Reordenado o ciclo canônico para validar, renderizar, publicar e
+   verificar antes dos testes condicionais, do registro e da replicação; a
+   matriz de impacto agora explicita quando cada gate é obrigatório.
+3. (Codex) Corrigidas as referências ao glossário nos playbooks de replicação e
+   distinguido `constants.styles` como espelho legado, sem efeito automático
+   sobre módulos visuais.
+4. (Codex) O catálogo de helpers passou a destacar o smoke vigente no Spark
+   4.2.0 e a preservar os números de rodadas anteriores apenas como histórico;
+   títulos ambíguos do histórico Spark receberam data explícita.
+5. (Codex) O índice de skills operacionais passou a separar rotas ativas de uma
+   rota apenas planejada. A documentação de instruções agora explicita as
+   superfícies suportadas e a precedência geral das instruções de workspace.
+
+### Validação
+
+1. (Codex) Validação local aprovada com 737 arquivos inspecionados e 347 links
+   externos à raiz do produto; o simulado foi regenerado com 317 arquivos.
+2. (Codex) Publicação e verify no Databricks Free aprovados: 316 arquivos
+   esperados, 317 remotos (um gerenciado pela plataforma), 0 ausentes, 0
+   obsoletos, 13/13 skills e 4/4 diretórios `hub_`.
+
+## 2026-08-29 — Redesenho editorial da etapa 6
+
+### Adicionado
+
+1. (Codex) Criados `docs/README.md`, `docs/playbooks/README.md` e
+   `docs/sprints/README.md` para oferecer uma entrada única à governança,
+   procedimentos e histórico de execução.
+2. (Codex) Criado `ambiente_fonte/.assistant/GLOSSARIO.md`, separando vocabulário
+   oficial da Databricks, conceitos de modelagem e convenções locais sem
+   sobrecarregar o guia de uso.
+
+### Atualizado
+
+1. (Codex) Redesenhados os 20 READMEs ativos como um sistema de quatro níveis:
+   repositório, governança, produto publicado e coleção. A regra
+   `.claude/rules/docs-e-readmes.md` agora define propriedade do assunto,
+   próxima ação, limites e prevenção de duplicação.
+2. (Codex) O README raiz passou de manual linear para painel de manutenção; o
+   README publicado do `.assistant` passou a conduzir instalação e uso por
+   intenção; catálogos locais deixaram de repetir inventários mantidos em outro
+   documento.
+3. (Codex) Claims de Agent Skills foram reconciliados com a documentação oficial
+   atual: `description` participa do carregamento relevante; o corpo e os
+   recursos orientam a tarefa depois de carregados; skills podem referenciar
+   documentação, templates e scripts. Os helpers externos do Hub continuam com
+   import explícito.
+4. (Codex) `Novo_Ambiente_Simulado/` foi regenerado exclusivamente por
+   `tools/render_simulado.py` e o pacote documental foi republicado no Free.
+   Verify aprovado com 316 arquivos esperados, 317 remotos (um gerenciado pela
+   plataforma), 0 ausentes e 0 obsoletos.
+
+### Validação
+
+1. (Codex) `python tools/validate_assistant.py --conferir-readme` aprovado:
+   22 linhas do README conferidas contra execução real, 107 Markdown ativos na
+   fonte, 341 links externos à raiz analisada, 0 falhas e 0 avisos.
+2. (Codex) A etapa 5 permanece pendente: 16 famílias de prompts e 3 casos de
+   `hub-ml-criar-objeto` dependem da renovação da cota do Genie Code.
+
+## 2026-08-29 — Checkpoint, publicação e smoke pós-auditoria
+
+### Adicionado
+
+1. (Codex) Criada a branch `codex/auditoria-a2-correcoes` e o checkpoint
+   `02a5ad3`; gerado pacote limpo de 315 arquivos com manifesto SHA-256.
+2. (Codex) Registrados o smoke integral em
+   `docs/testes/spark/resultados/2026-08-29_smoke_a2.json` e a síntese das etapas
+   em `docs/testes/2026-08-29_execucao-etapas-1-a-5.md`.
+
+### Atualizado
+
+1. (Codex) Publicação Free e verificação remota aprovadas: 315 arquivos
+   esperados, 0 ausentes/obsoletos, 13/13 skills e 4/4 diretórios `hub_`.
+2. (Codex) Smoke pós-correção aprovado no Spark 4.2.0: 145 verificações,
+   136 PASS, 0 FAIL, 8 opcionais ausentes e 1 bloqueio MLflow esperado.
+
+### Notas
+
+- Os testes conversacionais não foram classificados: o Genie Code exibiu cota
+  esgotada e envio desabilitado, com renovação em 01/09. Permanecem pendentes as
+  16 famílias de prompts e os 3 casos de `hub-ml-criar-objeto`.
+
+## 2026-08-20 — Auditoria de segunda origem com execução
+
+### Adicionado
+
+1. (Codex) `docs/auditoria/2026-08-20_segunda-origem-codex/01_rodada.md` —
+   auditoria diagnóstica do baseline `9c17008`, executada em cinco frentes:
+   biblioteca, ferramentas, produto/UX, documentação/decisões e
+   segurança/replicação.
+
+### Notas
+
+- Os quatro gates foram reproduzidos antes dos probes: validação local e
+  conferência do README aprovadas; verify remoto com zero problemas; smoke real
+  com 145 verificações, 136 PASS, 0 FAIL, 8 dependências opcionais ausentes e um
+  bloqueio esperado inspecionado.
+- A rodada foi somente diagnóstica. Nenhum achado foi corrigido no produto,
+  runbooks ou ADRs. A recomendação do relatório é não replicar no trabalho antes
+  de conter os riscos externos e corrigir as três costuras analíticas prioritárias.
+
+### Contraditório e correções pós-auditoria
+
+1. (Codex) Adicionado
+   `docs/auditoria/2026-08-20_segunda-origem-codex/02_treplica-e-execucao.md`:
+   incorpora o contraditório independente do Claude, revisa severidades para
+   2 críticas/16 relevantes/6 melhorias e registra a execução por F01–F24.
+2. (Codex) Publicação/render/empacotamento endurecidos: perfil e host Free
+   explícitos para escrita, inventário exato de skills, identidade neutra,
+   proteção de path, falha em Git vazio, modos de auditoria e ZIP mínimo com
+   manifesto SHA-256. ADR-0009 registra a decisão; a história Git anterior ainda
+   exige reescrita coordenada antes de clone corporativo.
+3. (Codex) Runbook e checklist deixaram de apagar `.mcp_servers.json` ou a pasta
+   inteira de skills; substituem somente conteúdo Hub-owned e exigem pacote
+   sanitizado/manifesto, smoke específico por ambiente e limpeza do run MLflow.
+4. (Codex) Gates passaram a validar YAML real, nomes exatos, chamadas
+   qualificadas, contratos de colunas, escopo Spark, coleta no driver,
+   comportamento do detector e o contrato humano dos 16 prompts. Adicionados
+   14 testes de mutação; 14/14 aprovados.
+5. (Codex) Corrigidas as costuras analíticas de KS em pontos percentuais,
+   vintage ragged, features temporais, `pit_join`, scorecard/bandas/lift,
+   amostragem estratificada, PK nula e drift da coluna temporal. Os 21
+   known-answer tests locais passaram; integração Spark pós-correção permanece
+   pendente e não foi declarada aprovada.
+6. (Codex) Os 161 campos dos 16 prompts ganharam instrução, motivo e exemplo;
+   todos ganharam QA e limites. Corrigidos boilerplate sem rota, contratos de
+   escrita falsos e a matriz de artefatos da skill de criação.
+7. (Codex) Documentação viva conciliada com ADRs e documentação oficial:
+   auto-descoberta de instruções/skills/AGENTS, publicador vigente, CLI nova
+   0.205+ (preferência 1.0+ GA), 78 notebooks e contagens atuais do validador.
+8. (Codex) Render regenerado em `Users/usuario-free/` com 316 arquivos; removidos
+   89 diretórios `__pycache__` ignorados. Gerados artefatos de revisão marcados
+   como worktree sujo, sem apresentá-los como pacote de commit limpo.
+
 ## 2026-08-19 — Bateria funcional de `ml`, e a costura que ninguém tinha exercitado
 
 Os 16 módulos de núcleo de `ml` entraram na bateria repetível do

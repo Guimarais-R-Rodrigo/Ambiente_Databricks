@@ -1,47 +1,41 @@
-# Skills operacionais deste repositório
+# Skills operacionais do repositório
 
-## Duas famílias de skill, e por que não se confundem
+> **CONTEXTO DE MANUTENÇÃO · NÃO PUBLICADO.** Estas skills orientam o agente que
+> trabalha no Git. As skills `hub-ml-*` em `ambiente_fonte/` são o produto usado
+> pelo Genie Code no Databricks.
 
-Este projeto tem skills em dois lugares, com propósitos opostos. Confundi-las é o
-mal-entendido mais provável de quem chega:
+## Não confunda as duas famílias
 
-| | Skills **desta** pasta | Skills `hub-ml-*` |
+| | `.claude/skills/` | `ambiente_fonte/.assistant/skills/` |
 |---|---|---|
-| Onde vivem | `.claude/skills/` | `ambiente_fonte/.assistant/skills/` |
-| Quem as executa | o assistente que trabalha **no repositório** | o Genie Code, **dentro do Databricks** |
-| Sobre o que agem | os arquivos deste projeto | dados, notebooks e modelos do workspace |
-| Exemplo de uso | "valide e publique o ambiente" | "faça a EDA desta tabela" |
-| Vão para o workspace? | não, ficam só aqui | sim, são o produto |
+| usuário | agente que mantém este repositório | usuário do Genie Code |
+| atua sobre | fonte, render, publicação e gates | dados, notebooks, modelos e pipelines |
+| vai ao workspace | não | sim |
+| exemplo | “publique e confira o Free” | “faça uma EDA desta tabela” |
 
-Em resumo: as daqui **constroem** o ecossistema; as de lá **são** o ecossistema.
-Uma skill que ensina a rodar `validate_assistant.py` não tem utilidade dentro do
-Databricks, e uma skill de análise de safra não tem o que fazer no repositório.
+## Rotas disponíveis
 
-## O que existe hoje
+| Intenção | Skill operacional | Status | Saída esperada |
+|---|---|---|---|
+| validar o produto | `validar-assistant` | ativa | gate local com falhas acionáveis |
+| gerar o espelho | `render-simulado` | ativa | `Novo_Ambiente_Simulado/` regenerado |
+| publicar no laboratório | `publicar-free` | ativa | execute + verify com host/perfil explícitos |
+| testar roteamento | `forward-test-skills` | ativa | registro positivo, negativo e `@menção` |
+| copiar para o trabalho | `replicar-trabalho` | ativa | pré-condições, cópia e verificação no destino |
+| revisar documentação oficial | `revisar-docs-oficiais` | **planejada; pasta inexistente** | relatório de mudança de nomenclatura/capacidade |
 
-| Skill | Faz o quê | Status |
-|---|---|---|
-| `validar-assistant` | Bateria de validação do `ambiente_fonte/` | ✅ ativa |
-| `render-simulado` | Gera `Novo_Ambiente_Simulado/` a partir do fonte | ✅ ativa |
-| `publicar-free` | Publica no Free: plano, gate `--execute` e verify | ✅ ativa |
-| `forward-test-skills` | Roteiro de testes de roteamento das skills no Genie Code | ✅ ativa |
-| `replicar-trabalho` | Pré-requisitos e guardrails da cópia para o trabalho | ✅ ativa |
-| `revisar-docs-oficiais` | Revisão periódica da documentação oficial (vanguarda) | ⏳ planejada |
+O pedido em linguagem natural aciona uma rota ativa pertinente. O `SKILL.md`
+explica pré-condições, comandos, critério de sucesso e quando parar. Item
+planejado não é invocável até a pasta e o `SKILL.md` existirem.
 
-## Como uma skill daqui é acionada
+## Criar ou alterar uma skill operacional
 
-Pelo pedido em linguagem natural: descrever a intenção ("preciso publicar o
-ambiente no Free") faz o assistente carregar a skill correspondente e seguir o
-procedimento dela. O efeito prático é que o procedimento não precisa ser
-lembrado — nem por você, nem por outra IA que assuma o trabalho depois.
+1. Crie `.claude/skills/<nome>/SKILL.md`.
+2. Use `name` igual ao nome da pasta e `description` com gatilho claro.
+3. Mantenha automação executável em `tools/`; a skill deve orquestrá-la, não
+   duplicá-la.
+4. Teste sucesso e falha representativa.
+5. Atualize esta tabela e o `CHANGELOG.md`.
 
-## Criar uma nova
-
-Uma pasta com `SKILL.md` dentro, contendo frontmatter com `name` idêntico ao
-nome da pasta e uma `description` que diga **quando** usar, não apenas o que faz.
-Descrição vaga produz skill que nunca é escolhida.
-
-O script executável, se houver, mora em `tools/` na raiz do repositório, e a
-skill o referencia por caminho relativo. Separar as duas coisas mantém o script
-testável fora do contexto de conversa. Registre a nova skill na tabela acima e
-no `CHANGELOG.md`.
+Volte ao [README raiz](../../README.md) ou às
+[ferramentas executáveis](../../tools/README.md).

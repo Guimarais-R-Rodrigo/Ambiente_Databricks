@@ -8,7 +8,7 @@ para o trabalho" sem conferir esta matriz.
 | Acesso | CLI configurada nesta máquina | **sem CLI**; outro computador; cópia manual |
 | Compute | somente serverless, Python/SQL | conforme políticas do workspace |
 | Dados | **somente sintéticos** — nunca dados reais do banco | dados reais, governados |
-| Publicação | engine `databricks-genie` do Hub (gated `--execute`) | runbook de cópia manual |
+| Publicação | `tools/publicar_free.py` (ADR-0005; conferência no ADR-0008) | runbook de cópia manual |
 | Valida | estrutura das skills, descoberta/`@menção`, código Spark serverless, forward tests | runtime real, permissões, Unity Catalog, dados reais |
 | Não valida | jobs permanentes, serving, políticas corporativas, ACLs | — |
 

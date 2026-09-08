@@ -6,7 +6,7 @@
 - Objetivo do projeto: ecossistema `.assistant` do Genie Code profissional e
   escalável — primeiro pessoal, depois squad, depois missão inteira.
 - Trabalha com múltiplas IAs (Claude, Codex, Gemini) no padrão do ecossistema
-  Verg (`C:\Users\Rodrigo\Projetos_IA\Verg_Projects`).
+  Verg (`%USERPROFILE%\Projetos_IA\Verg_Projects`).
 - Exige documentação rica (exemplos, diagramas, tabelas) — padrão mínimo é o
   README raiz deste repositório.
 - Preferências técnicas (já refletidas em `ambiente_fonte/.assistant_instructions.md`):
