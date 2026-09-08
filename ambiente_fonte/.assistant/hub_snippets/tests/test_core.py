@@ -160,6 +160,125 @@ class TemporalTests(unittest.TestCase):
             )
 
 
+    def test_textual_dates_are_ordered_chronologically_not_lexicographically(self) -> None:
+        # '2026-1-10' precede '2026-1-2' na ordem lexicografica: sem normalizar a
+        # data antes de ordenar, o lag do dia 2 recebia o valor do dia 10.
+        frame = pd.DataFrame({"date": ["2026-1-1", "2026-1-2", "2026-1-10"], "target": [1, 2, 10]})
+        result = create_temporal_features(
+            frame, "target", "date", lags=[1], rolling_windows=[], calendar_features=False
+        )
+        lags = dict(zip(result["date"], result["lag_1"]))
+        self.assertEqual(lags["2026-1-2"], 1)
+        self.assertEqual(lags["2026-1-10"], 2)
+
+    def test_typed_and_textual_dates_produce_the_same_sequence(self) -> None:
+        valores = [1, 2, 10]
+        textual = pd.DataFrame({"date": ["2026-1-1", "2026-1-2", "2026-1-10"], "target": valores})
+        tipado = pd.DataFrame(
+            {"date": pd.to_datetime(["2026-01-01", "2026-01-02", "2026-01-10"]), "target": valores}
+        )
+        kwargs = dict(lags=[1], rolling_windows=[], calendar_features=False)
+        esperado = create_temporal_features(tipado, "target", "date", **kwargs)["lag_1"].tolist()
+        obtido = create_temporal_features(textual, "target", "date", **kwargs)["lag_1"].tolist()
+        self.assertEqual(obtido, esperado)
+
+    def test_explicit_day_first_format_crosses_months_correctly(self) -> None:
+        # dd/mm/aaaa ordenado como texto agrupa pelo dia: 01/02 viria antes de
+        # 02/01. O erro nao produz valor futuro, produz o passado errado.
+        frame = pd.DataFrame(
+            {"date": ["02/01/2026", "01/02/2026", "03/02/2026"], "target": [2, 100, 300]}
+        )
+        result = create_temporal_features(
+            frame,
+            "target",
+            "date",
+            lags=[1],
+            rolling_windows=[],
+            calendar_features=False,
+            date_format="%d/%m/%Y",
+        )
+        lags = dict(zip(result["date"], result["lag_1"]))
+        self.assertEqual(lags["01/02/2026"], 2)
+        self.assertEqual(lags["03/02/2026"], 100)
+
+    def test_shuffled_input_yields_the_same_features(self) -> None:
+        frame = pd.DataFrame({"date": ["2026-1-1", "2026-1-2", "2026-1-10"], "target": [1, 2, 10]})
+        kwargs = dict(lags=[1], rolling_windows=[], calendar_features=False)
+        ordenado = create_temporal_features(frame, "target", "date", **kwargs)
+        embaralhado = create_temporal_features(
+            frame.iloc[[2, 0, 1]].reset_index(drop=True), "target", "date", **kwargs
+        )
+        pd.testing.assert_frame_equal(ordenado, embaralhado)
+
+    def test_calendar_features_use_the_normalized_date(self) -> None:
+        frame = pd.DataFrame({"date": ["2026-1-1", "2026-1-2", "2026-1-10"], "target": [1, 2, 10]})
+        result = create_temporal_features(
+            frame, "target", "date", lags=[1], rolling_windows=[], calendar_features=True
+        )
+        dia = dict(zip(result["date"], result["day_of_year"]))
+        self.assertEqual(dia["2026-1-10"], 10)
+
+    def test_ambiguous_textual_format_requires_explicit_date_format(self) -> None:
+        frame = pd.DataFrame({"date": ["02/01/2026", "01/02/2026"], "target": [1, 2]})
+        with self.assertRaisesRegex(ValueError, "date_format"):
+            create_temporal_features(
+                frame, "target", "date", lags=[1], rolling_windows=[], calendar_features=False
+            )
+
+    def test_date_format_that_does_not_match_is_rejected(self) -> None:
+        frame = pd.DataFrame({"date": ["02/01/2026", "01/02/2026"], "target": [1, 2]})
+        with self.assertRaisesRegex(ValueError, "nao casa|não casa"):
+            create_temporal_features(
+                frame,
+                "target",
+                "date",
+                lags=[1],
+                rolling_windows=[],
+                calendar_features=False,
+                date_format="%Y-%m-%d",
+            )
+
+    def test_null_and_invalid_dates_are_rejected(self) -> None:
+        nulo = pd.DataFrame({"date": ["2026-01-01", None], "target": [1, 2]})
+        with self.assertRaisesRegex(ValueError, "nulo"):
+            create_temporal_features(
+                nulo, "target", "date", lags=[1], rolling_windows=[], calendar_features=False
+            )
+        invalido = pd.DataFrame({"date": ["2026-02-30", "2026-03-01"], "target": [1, 2]})
+        with self.assertRaisesRegex(ValueError, "calend"):
+            create_temporal_features(
+                invalido, "target", "date", lags=[1], rolling_windows=[], calendar_features=False
+            )
+
+    def test_numeric_date_column_is_rejected(self) -> None:
+        frame = pd.DataFrame({"date": [20260101, 20260102], "target": [1, 2]})
+        with self.assertRaisesRegex(ValueError, "date_format"):
+            create_temporal_features(
+                frame, "target", "date", lags=[1], rolling_windows=[], calendar_features=False
+            )
+
+    def test_duplicate_grain_is_rejected_unless_opted_in(self) -> None:
+        frame = pd.DataFrame(
+            {"date": ["2026-01-01", "2026-01-01", "2026-01-02"], "target": [1, 2, 3]}
+        )
+        with self.assertRaisesRegex(ValueError, "grão|grao"):
+            create_temporal_features(
+                frame, "target", "date", lags=[1], rolling_windows=[], calendar_features=False
+            )
+        aceito = create_temporal_features(
+            frame,
+            "target",
+            "date",
+            lags=[1],
+            rolling_windows=[],
+            calendar_features=False,
+            on_duplicate_dates="keep",
+        )
+        # Ordenacao estavel: entre as duas linhas de 2026-01-01 a ordem de
+        # entrada e preservada, logo o lag do dia 2 e o segundo empate.
+        self.assertEqual(aceito.iloc[-1]["lag_1"], 2)
+
+
 class VintageTests(unittest.TestCase):
     def test_cumulative_incidence_is_not_sum_of_rates(self) -> None:
         rows = []
