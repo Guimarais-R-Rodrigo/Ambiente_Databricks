@@ -228,5 +228,119 @@ class StructuralGuardTests(unittest.TestCase):
             self.assertTrue(any("campo/como" in p for p in problems), problems)
 
 
+
+class PublishContentGuardTests(unittest.TestCase):
+    """T5 — o verify precisa provar conteúdo, não só nome e tipo."""
+
+    def setUp(self) -> None:
+        self.temp = tempfile.TemporaryDirectory()
+        base = Path(self.temp.name)
+        self.fonte = base / "ambiente_fonte"
+        self.espelho = base / "espelho"
+        for raiz in (self.fonte, self.espelho):
+            (raiz / ".assistant" / "hub_snippets").mkdir(parents=True)
+            (raiz / ".assistant_instructions.md").write_text("instrucoes\n", encoding="utf-8")
+            (raiz / ".assistant" / "hub_snippets" / "modulo.py").write_text(
+                "def f():\n    return 1\n", encoding="utf-8"
+            )
+            (raiz / ".assistant" / "hub_snippets" / "exemplo_modulo.py").write_text(
+                "# Databricks notebook source\nprint(1)\n", encoding="utf-8"
+            )
+        self.arquivos = sorted(p for p in self.espelho.rglob("*") if p.is_file())
+
+    def tearDown(self) -> None:
+        self.temp.cleanup()
+
+    def test_mirror_in_sync_reports_no_problem(self) -> None:
+        with mock.patch.object(publisher, "FONTE", self.fonte):
+            self.assertEqual(publisher.conferir_fonte_espelho(self.espelho), [])
+
+    def test_stale_mirror_is_rejected_before_writing(self) -> None:
+        (self.espelho / ".assistant" / "hub_snippets" / "modulo.py").write_text(
+            "def f():\n    return 2\n", encoding="utf-8"
+        )
+        with mock.patch.object(publisher, "FONTE", self.fonte):
+            problemas = publisher.conferir_fonte_espelho(self.espelho)
+        self.assertTrue(any("conteúdo difere" in p for p in problemas), problemas)
+
+    def test_file_only_in_source_or_only_in_mirror_is_rejected(self) -> None:
+        (self.fonte / ".assistant" / "novo.md").write_text("x\n", encoding="utf-8")
+        (self.espelho / ".assistant" / "sobra.md").write_text("y\n", encoding="utf-8")
+        with mock.patch.object(publisher, "FONTE", self.fonte):
+            problemas = publisher.conferir_fonte_espelho(self.espelho)
+        self.assertTrue(any("ausente no espelho" in p for p in problemas), problemas)
+        self.assertTrue(any("não existe na fonte" in p for p in problemas), problemas)
+
+    def test_pycache_in_source_does_not_count_as_divergence(self) -> None:
+        lixo = self.fonte / ".assistant" / "hub_snippets" / "__pycache__"
+        lixo.mkdir()
+        (lixo / "modulo.cpython-312.pyc").write_bytes(b"\x00binario")
+        with mock.patch.object(publisher, "FONTE", self.fonte):
+            self.assertEqual(publisher.conferir_fonte_espelho(self.espelho), [])
+
+    def test_remote_content_change_with_correct_name_and_type_fails(self) -> None:
+        def exportar(caminho: str, notebook: bool):
+            if caminho.endswith("modulo"):  # notebook, sem .py
+                return b"# Databricks notebook source\nprint(1)\n", ""
+            if caminho.endswith("modulo.py"):
+                return b"def f():\n    return 999\n", ""   # mesmo nome, mesmo tipo
+            return b"instrucoes\n", ""
+
+        with mock.patch.object(publisher, "_exportar_remoto", side_effect=exportar):
+            problemas, conferidos = publisher.comparar_conteudo(
+                self.espelho, self.arquivos, "/Users/x"
+            )
+        self.assertEqual(conferidos, len(self.arquivos))
+        self.assertTrue(any("conteúdo divergente" in p for p in problemas), problemas)
+
+    def test_incomplete_remote_read_is_not_treated_as_valid(self) -> None:
+        with mock.patch.object(
+            publisher, "_exportar_remoto", return_value=(None, "RESOURCE_DOES_NOT_EXIST")
+        ):
+            problemas, conferidos = publisher.comparar_conteudo(
+                self.espelho, self.arquivos, "/Users/x"
+            )
+        self.assertEqual(conferidos, 0)
+        self.assertEqual(len(problemas), len(self.arquivos))
+        self.assertTrue(all("leitura remota incompleta" in p for p in problemas))
+
+    def test_documented_equivalent_representations_pass(self) -> None:
+        """CRLF e quebra final de notebook são transformação da plataforma."""
+
+        def exportar(caminho: str, notebook: bool):
+            local = next(
+                a for a in self.arquivos
+                if caminho.endswith(a.name) or caminho.endswith(a.name[:-3])
+            )
+            dados = local.read_bytes().replace(b"\n", b"\r\n")
+            if notebook:
+                dados += b"\r\n\r\n"
+            return dados, ""
+
+        with mock.patch.object(publisher, "_exportar_remoto", side_effect=exportar):
+            problemas, conferidos = publisher.comparar_conteudo(
+                self.espelho, self.arquivos, "/Users/x"
+            )
+        self.assertEqual(problemas, [])
+        self.assertEqual(conferidos, len(self.arquivos))
+
+    def test_trailing_newline_moves_raw_hash_but_not_normalized_hash(self) -> None:
+        bruto1, norm1 = publisher._hashes_do_pacote(self.espelho, self.arquivos)
+        caderno = self.espelho / ".assistant" / "hub_snippets" / "exemplo_modulo.py"
+        caderno.write_bytes(caderno.read_bytes() + b"\n\n")
+        bruto2, norm2 = publisher._hashes_do_pacote(self.espelho, self.arquivos)
+        self.assertNotEqual(bruto1, bruto2, "hash bruto deveria acompanhar os bytes")
+        self.assertEqual(norm1, norm2, "hash normalizado não deveria mudar")
+
+    def test_normalization_does_not_erase_blank_lines_or_comments(self) -> None:
+        """Normalizar demais mascararia diferença real de conteúdo."""
+        com_comentario = b"a = 1\n# nota\n\nb = 2\n"
+        sem_comentario = b"a = 1\nb = 2\n"
+        self.assertNotEqual(
+            publisher._normalizar_para_comparacao(com_comentario, notebook=False),
+            publisher._normalizar_para_comparacao(sem_comentario, notebook=False),
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

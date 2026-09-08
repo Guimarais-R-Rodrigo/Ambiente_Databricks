@@ -14,7 +14,8 @@ podem reprovar uma mudança.
 | conferir saídas coladas no README | `python tools/validate_assistant.py --conferir-readme` |
 | regenerar o derivado | `python tools/render_simulado.py --write` |
 | publicar no Free | `python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>` |
-| conferir o remoto | `python tools/publicar_free.py --verify --profile <free> --expected-host <url-free>` |
+| conferir o remoto (inventário e tipos) | `python tools/publicar_free.py --verify --profile <free> --expected-host <url-free>` |
+| conferir o remoto **por conteúdo** | `python tools/publicar_free.py --verify --conteudo --profile <free> --expected-host <url-free>` |
 | executar smoke no Databricks | importar/submeter `tools/spark_smoke_test.py` |
 | criar pacote de auditoria | `python tools/bundle_para_auditoria.py --mode canonical` |
 | criar ZIP de implantação | `python tools/bundle_implantacao.py` |
@@ -28,8 +29,19 @@ python tools/publicar_free.py --execute --profile <free> --expected-host <url-fr
 python tools/publicar_free.py --verify  --profile <free> --expected-host <url-free>
 ```
 
-`--execute` altera o workspace. `--verify` é leitura e compara fonte, tipos e
-inventário remoto. Publicar sem verificar não fecha o gate.
+`--execute` altera o workspace e recusa espelho desatualizado antes de escrever.
+`--verify` é leitura. Sem `--conteudo` ele compara inventário e tipos: um módulo
+com o mesmo nome e o mesmo tipo, porém conteúdo diferente, passaria. Com
+`--conteudo` cada objeto é exportado e comparado byte a byte na representação
+canônica — só então é possível afirmar equivalência entre local e remoto. A
+saída declara o alcance da comparação em toda rodada. Publicar sem verificar não
+fecha o gate.
+
+A normalização da comparação é mínima e declarada: fim de linha, e fim de arquivo
+apenas em notebook. Comentário, espaço e linha em branco **não** são removidos —
+fazê-lo mascararia diferença real. Por isso a saída registra dois hashes: o bruto,
+que identifica os bytes do pacote, e o normalizado, que é o único comparável com
+o remoto.
 
 ## Inventário
 
