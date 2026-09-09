@@ -69,23 +69,20 @@ continuam exigindo import explícito.
 
 ## Estado comprovado
 
-Última consolidação operacional: **29/08/2026**.
+Última consolidação operacional: **09/09/2026**.
 
 | Gate | Estado | Evidência |
 |---|---|---|
 | validação local | ✅ aprovado | fonte, links, contratos, Python e higiene |
 | render | ✅ aprovado | espelho regenerado a partir da fonte |
-| publicação Free | ✅ aprovado após este redesenho | [316 esperados, 0 ausentes e 0 obsoletos](docs/testes/2026-08-29_etapa-6-redesenho-documental.md) |
-| smoke Spark 4.2.0 | ✅ 145 verificações: 136 PASS, 0 FAIL, 8 opcionais ausentes e 1 bloqueio esperado | [JSON](docs/testes/spark/resultados/2026-08-29_smoke_a2.json) |
-| roteamento das 12 skills originais | ✅ 36/36 | [forward tests](docs/testes/forward/README.md) |
-| `hub-ml-criar-objeto` | ⏳ 0/3 | cota do Genie Code impediu a rodada |
-| respostas das 16 famílias de prompts | ⏳ pendente | contrato estático aprovado; teste conversacional bloqueado por cota |
+| publicação Free | ✅ 316/316 conteúdos iguais; 0 ausentes/obsoletos | [fechamento de 09/09](docs/testes/2026-09-09_fechamento-codex.md) |
+| smoke Spark 4.2.0 | ✅ 146 verificações: 137 PASS, 0 FAIL, 8 opcionais ausentes e 1 bloqueio esperado | [JSON](docs/testes/spark/resultados/2026-09-09_smoke_codex_final.json) |
+| roteamento das 13 skills | ✅ 39/39 | [forward tests](docs/testes/forward/README.md) |
+| respostas das 16 famílias de prompts | ⏳ pendente | contrato estático 16/16; falta fixture e rubrica conversacional por família |
 | replicação no trabalho | ⛔ não executada | depende dos gates conversacionais e do runbook no destino |
 
-A síntese das etapas 1 a 5, incluindo run e task do smoke, está em
-[`2026-08-29_execucao-etapas-1-a-5.md`](docs/testes/2026-08-29_execucao-etapas-1-a-5.md).
-A publicação do redesenho e o pacote de 316 arquivos estão na
-[evidência da etapa 6](docs/testes/2026-08-29_etapa-6-redesenho-documental.md).
+A publicação final, o pacote de 316 arquivos, o smoke e o roteamento estão na
+[evidência de fechamento](docs/testes/2026-09-09_fechamento-codex.md).
 
 `OPTIONAL_MISSING` não é falha do helper: indica biblioteca opcional ausente.
 `BLOQUEADO_ESPERADO` é um limite de plataforma previamente documentado e
@@ -245,8 +242,8 @@ normas do molde    : 70 arquivos, 0 violação(ões)
 notebook exercita  : 57 objetos, 0 notebook(s) que só importam
 python (AST)       : 209 arquivos
 instrucoes         : 8116/20000 caracteres
-repo (identidade)  : 746 arquivos varridos no repositório editável/derivado
-repo (links)       : 360 links fora da raiz analisada
+repo (identidade)  : 749 arquivos varridos no repositório editável/derivado
+repo (links)       : 363 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```

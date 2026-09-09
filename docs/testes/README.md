@@ -21,21 +21,20 @@ flowchart LR
   P --> W
 ```
 
-## Estado vigente — 29/08/2026
+## Estado vigente — 09/09/2026
 
 | Gate | Resultado | Falta |
 |---|---|---|
 | validação local | aprovado | — |
-| publicação/verify Free | **316 esperados, 317 remotos, 0 ausentes/obsoletos** | [redesenho publicado e conferido](2026-08-29_etapa-6-redesenho-documental.md) |
-| execução funcional | **145 verificações: 136 PASS, 0 FAIL** | 8 opcionais requerem bibliotecas; 1 bloqueio MLflow é esperado |
-| roteamento das 12 skills originais | **36/36 PASS** | — |
-| `hub-ml-criar-objeto` | 0/3 | positivo, negativo e `@menção` |
-| 16 famílias de prompts | contrato estático 16/16 | respostas reais; cota bloqueou até 01/09 |
+| publicação/verify Free | **316 esperados, 317 remotos, 0 ausentes/obsoletos; 316/316 conteúdos iguais** | [fechamento Codex](2026-09-09_fechamento-codex.md) |
+| execução funcional | **146 verificações: 137 PASS, 0 FAIL** | 8 opcionais requerem bibliotecas; 1 bloqueio MLflow é esperado |
+| roteamento das 13 skills | **39/39 PASS** | — |
+| 16 famílias de prompts | contrato estático 16/16 | falta rodada conversacional com fixtures e rubrica por família |
 
 Síntese operacional:
 [`2026-08-29_execucao-etapas-1-a-5.md`](2026-08-29_execucao-etapas-1-a-5.md).
-Smoke integral:
-[`2026-08-29_smoke_a2.json`](spark/resultados/2026-08-29_smoke_a2.json).
+Smoke vigente:
+[`2026-09-09_smoke_codex_final.json`](spark/resultados/2026-09-09_smoke_codex_final.json).
 
 ## Como ler os vereditos
 

@@ -28,6 +28,11 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 - (Codex) O segundo smoke revelou um cenário legado que ignorava entidade com
   datas duplicadas sem optar por `on_duplicate_dates="keep"`; o teste passou a
   declarar essa escolha, preservando a proteção padrão do helper.
+- (Codex) Publicado o produto `8187fac` no Free e conferidos 316/316 conteúdos,
+  13/13 skills e 4/4 extensões, sem ausência ou obsoleto.
+- (Codex) Smoke final `186787319038743` aprovado no Spark 4.2.0 com 146 casos,
+  137 PASS, 0 FAIL, 8 opcionais e 1 bloqueio esperado; a skill 13 passou nos
+  três forward tests e fechou o inventário em 39/39.
 
 ## 2026-09-09 — Correções da revisão e retomada no PC (Codex)
 

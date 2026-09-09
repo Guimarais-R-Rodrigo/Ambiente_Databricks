@@ -105,3 +105,13 @@ Esse comando não substitui `--verify --conteudo`.
 - Higiene não autoriza publicar extras. Re-renderize se o espelho tiver caches.
 - Testes com CLI simulada não provam o protocolo real da versão instalada.
 - Abrir sessão adequada após publicação evita usar módulos antigos em memória.
+
+## Fechamento posterior — Codex, 09/09/2026
+
+O estado pendente acima foi superado no Free. O produto do commit `8187fac` foi
+publicado e conferido em conteúdo (316/316); o smoke final no Spark 4.2.0 fechou
+com 137 PASS e 0 FAIL; e os três casos da skill 13 fecharam o roteamento em
+39/39. A evidência canônica é
+[`docs/testes/2026-09-09_fechamento-codex.md`](../testes/2026-09-09_fechamento-codex.md).
+Continuam fora do aceite: as respostas conversacionais das 16 famílias de
+prompts e a replicação no workspace de trabalho.

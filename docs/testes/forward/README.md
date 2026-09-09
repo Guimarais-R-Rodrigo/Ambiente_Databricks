@@ -22,8 +22,8 @@ drift, materialização, explicação de notebook e auditoria.
 | Escopo | Resultado | Situação |
 |---|---:|---|
 | 12 skills originais | **36/36 PASS** | fechado |
-| `hub-ml-criar-objeto` | **0/3** | pendente |
-| total | **36/39** | cota impediu a tentativa de 29/08 |
+| `hub-ml-criar-objeto` | **3/3 PASS** | fechado em 09/09 |
+| total | **39/39 PASS** | fechado |
 
 O caso `11N-r2` foi aprovado no critério do teste — a skill alvo ficou de fora
 —, embora a skill ideal também não tenha sido carregada. É item de vigilância,
@@ -49,6 +49,7 @@ invente veredito.
 | 2026-08-14 | [1](resultados/2026-08-14_rodada1.md) | 33 PASS, 2 FAIL, 1 sem registro | falhas concentradas em prompts sem artefato anexado |
 | 2026-08-14 | [2](resultados/2026-08-14_rodada2.md) | 5 PASS | prompts autocontidos confirmaram defeito do instrumento |
 | 2026-08-29 | tentativa | sem casos enviados | [cota bloqueada](../2026-08-29_execucao-etapas-1-a-5.md) |
+| 2026-09-09 | [3](resultados/2026-09-09_rodada3.md) | 3/3 PASS | skill 13 fechada; total 39/39 |
 
 Nenhuma `description` foi alterada por causa da rodada 1: a rodada 2 isolou que
 o problema estava no instrumento. Antes de editar uma `description`, leia o
