@@ -108,3 +108,8 @@ print(f"decisão de retreino: {monitor.should_retrain()}")
 # MAGIC - **Comparando mês contra mês.** A referência é o limite, não o mês anterior.
 # MAGIC - **Com alvo ainda não realizado.** Métrica de performance exige rótulo; em produto de crédito ele chega meses depois.
 # MAGIC - **Como gatilho automático de retreino.** O monitor informa; retreinar é decisão com custo e risco próprios.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ### Contrato atualizado em 09/09/2026
+# MAGIC Seleção de métricas: valores inválidos selecionados pela política agora geram erro. Use metricas_obrigatorias para exigir auc e ks_pct; para excluir uma métrica deliberadamente, forneça uma política sem essa chave. KS antigo em 0–100 mantém o valor ao migrar para ks_pct.

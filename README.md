@@ -216,7 +216,12 @@ Veja [auditorias](docs/auditoria/README.md),
 ## Saídas de referência conferíveis
 
 Estas linhas têm um único objetivo: permitir que
-`validate_assistant.py --conferir-readme` detecte documentação envelhecida.
+`validate_assistant.py --conferir-readme` detecte documentação local envelhecida.
+
+As contagens de repositório usam o inventário Git, com higiene de extras locais
+separada. Para conferir o bloco remoto abaixo, use
+`--conferir-readme-remoto` com acesso autenticado ao Free. Esse bloco preserva
+a referência remota anterior até uma nova execução; não é certificação do novo código.
 Os valores abaixo foram recapturados após o render e a republicação deste
 redesenho.
 
@@ -237,8 +242,8 @@ normas do molde    : 70 arquivos, 0 violação(ões)
 notebook exercita  : 57 objetos, 0 notebook(s) que só importam
 python (AST)       : 209 arquivos
 instrucoes         : 8116/20000 caracteres
-repo (identidade)  : 737 arquivos varridos no repositório editável/derivado
-repo (links)       : 347 links fora da raiz analisada
+repo (identidade)  : 746 arquivos varridos no repositório editável/derivado
+repo (links)       : 360 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
@@ -253,7 +258,7 @@ esperados : 316 arquivos
 remotos   : 317 arquivos sob .assistant + instruções
 ausentes  : 0 | obsoletos: 0
 plataforma: 1 arquivo(s) gerenciado(s) — .assistant/.mcp_servers.json
-skills    : 13/13
+skills             : 13 · 13/13 com as 5 seções estruturais
 extensões : 4/4 diretórios hub_
 
 APROVADO: 0 problema(s)

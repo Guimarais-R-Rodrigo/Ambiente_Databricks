@@ -17,6 +17,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from project_policy import SAFE_SIMULATED_USERNAME
+from publicar_free import conferir_fonte_espelho
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -35,6 +36,12 @@ def main() -> int:
 
     if not SOURCE.is_dir():
         print("FAIL simulado sanitizado ausente; rode tools/render_simulado.py --write")
+        return 1
+    divergencias = conferir_fonte_espelho(SOURCE)
+    if divergencias:
+        print("FAIL pacote recusado: fonte/espelho ou inventário inválido")
+        for erro in divergencias:
+            print(f"  {erro}")
         return 1
     files = sorted(path for path in SOURCE.rglob("*") if path.is_file())
     if not files:

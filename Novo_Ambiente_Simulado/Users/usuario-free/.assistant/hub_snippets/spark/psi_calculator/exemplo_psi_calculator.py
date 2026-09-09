@@ -221,3 +221,8 @@ for coluna, valor in csi.items():
 # MAGIC - **Aceitando os limiares como lei.** 0,1 e 0,25 vêm da tradição de
 # MAGIC   crédito. Num score que muda de escala a cada retreino, disparam sem que
 # MAGIC   nada esteja errado.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ### Contrato atualizado em 09/09/2026
+# MAGIC max_categorias deve ser inteiro positivo: bool, NaN e infinito são recusados antes de ações Spark. O limite vale por população e controla quantidade de categorias, não bytes totais ou custo do shuffle.

@@ -424,9 +424,40 @@ class ReferenceChainTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "nenhuma métrica"):
             selecionar_metricas_do_relatorio({"metrica_inventada": 1.0})
 
-    def test_non_finite_metric_is_dropped_not_forwarded(self) -> None:
-        selecionadas = selecionar_metricas_do_relatorio({"auc_roc": float("nan"), "ks_pct": 40.0})
-        self.assertEqual(selecionadas, {"ks_pct": 40.0})
+    def test_invalid_selected_metrics_fail_loudly(self) -> None:
+        for value in (float("nan"), float("inf"), True, "0.8"):
+            with self.subTest(value=value), self.assertRaisesRegex(ValueError, "inválida"):
+                selecionar_metricas_do_relatorio({"auc_roc": value, "ks_pct": 40.0})
+
+    def test_required_metrics_and_alias_conflicts(self) -> None:
+        with self.assertRaisesRegex(ValueError, "obrigatórias ausentes"):
+            selecionar_metricas_do_relatorio({"ks_pct": 40.0}, metricas_obrigatorias=["auc"])
+        with self.assertRaisesRegex(ValueError, "conflitantes"):
+            selecionar_metricas_do_relatorio({"auc": .5, "auc_roc": .8})
+        result = selecionar_metricas_do_relatorio({"auc": .8, "auc_roc": .8})
+        self.assertEqual(result, {"auc": .8})
+
+    def test_explicit_metric_exclusion_is_allowed(self) -> None:
+        policy = {"ks_pct": EXAMPLE_THRESHOLDS["ks_pct"]}
+        result = selecionar_metricas_do_relatorio({"auc_roc": float("nan"), "ks_pct": 40.0}, policy)
+        self.assertEqual(result, {"ks_pct": 40.0})
+
+    def test_temporal_internal_names_preserve_user_columns_and_grain(self) -> None:
+        frame = pd.DataFrame({
+            "date": ["2026-1-10", "2026-1-1", "2026-1-2"] * 2,
+            "target": [10, 1, 2, 100, 10, 20],
+            "__hub_data": ["a"] * 3 + ["b"] * 3,
+            "__hub_ordem": list("abcdef"),
+            "__hub_ordem_": list(range(6)),
+        })
+        original = frame.copy(deep=True)
+        result = create_temporal_features(frame, "target", "date", lags=[1],
+            rolling_windows=[], calendar_features=False, entity_cols=["__hub_data"])
+        self.assertEqual(result["lag_1"].tolist(), [1, 2, 10, 20])
+        self.assertEqual(result["__hub_ordem"].tolist(), ["c", "a", "f", "d"])
+        self.assertEqual(result["__hub_ordem_"].tolist(), [2, 0, 5, 3])
+        pd.testing.assert_frame_equal(frame, original)
+
 
 
 if __name__ == "__main__":

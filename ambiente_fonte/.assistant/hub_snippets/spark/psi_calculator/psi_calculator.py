@@ -7,6 +7,7 @@ Databricks nem gatilhos universais de retreino. Calibre-os ao volume e ao risco.
 from __future__ import annotations
 
 import math
+from numbers import Integral
 from typing import Dict, List, Optional
 
 from pyspark.sql import Column, DataFrame, functions as F
@@ -86,6 +87,7 @@ def _calcular_csi_categorico(
     precisa ser derivada da **referência** e aplicada aos dois períodos; agrupar
     cada período por conta própria compara faixas diferentes e inventa deriva.
     """
+    _validar_max_categorias(max_categorias)
     category = F.coalesce(F.col(col).cast("string"), F.lit("__MISSING__"))
     base_agrupado = df_base.select(category.alias("category")).groupBy("category").count()
     atual_agrupado = df_atual.select(category.alias("category")).groupBy("category").count()
@@ -104,6 +106,12 @@ def _calcular_csi_categorico(
     return round(_stability_index(base, current, sum(base.values()), sum(current.values())), 6)
 
 
+def _validar_max_categorias(valor: int) -> None:
+    """Recusa limites inválidos antes de qualquer ação Spark."""
+    if isinstance(valor, bool) or not isinstance(valor, Integral) or valor <= 0:
+        raise ValueError("max_categorias deve ser inteiro positivo e finito")
+
+
 def calcular_csi(
     df_base: DataFrame,
     df_atual: DataFrame,
@@ -114,9 +122,10 @@ def calcular_csi(
     """Calcule estabilidade por feature; numéricas usam PSI, demais usam categorias.
 
     ``max_categorias`` protege o driver nas colunas categóricas. O PSI numérico
-    não recebe a mesma guarda porque ele coleta no máximo ``n_bins`` linhas,
+    não recebe a mesma guarda porque ele coleta uma quantidade limitada de bins,
     independentemente do volume da tabela.
     """
+    _validar_max_categorias(max_categorias)
     if not feature_cols:
         raise ValueError("feature_cols não pode ser vazio")
     missing = set(feature_cols) - set(df_base.columns) | (set(feature_cols) - set(df_atual.columns))

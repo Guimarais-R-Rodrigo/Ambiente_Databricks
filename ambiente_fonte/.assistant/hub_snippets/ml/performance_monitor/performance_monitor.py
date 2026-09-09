@@ -1,10 +1,9 @@
 """Acompanha métricas do modelo contra uma política de monitoramento explícita.
 
-Migração de chave. Até a unificação de escala, ``metrics_report`` devolvia ``ks``
-em fração e a política falava em ``ks``. Hoje o relatório devolve ``ks_pct`` em
-pontos percentuais e a política usa a mesma chave e a mesma escala. Quem ainda lê
-``ks`` precisa passar a ler ``ks_pct``: não é renomeação cosmética, a escala mudou
-junto, e comparar 0,40 com um limiar de 3,0 pontos não acusa deriva nenhuma.
+Migração de chave: o relatório antigo já devolvia ``ks`` em pontos percentuais
+(0–100). A migração preservou esses valores, renomeou a chave para ``ks_pct``
+e corrigiu os limiares do monitor para pontos percentuais. Não multiplique nem
+divida o KS antigo por 100: um KS de 40 continua sendo 40.
 
 Os dois vocabulários ainda não coincidem em tudo: o relatório devolve ``auc_roc``
 e a política de exemplo fala em ``auc``. Passar o dicionário inteiro do relatório
@@ -60,6 +59,8 @@ CHAVES_DO_RELATORIO = {
 def selecionar_metricas_do_relatorio(
     relatorio: Dict[str, Any],
     politica: Optional[Dict[str, Any]] = None,
+    *,
+    metricas_obrigatorias: Optional[List[str]] = None,
 ) -> Dict[str, float]:
     """Traduza a saída de ``metrics_report`` para o vocabulário da política.
 
@@ -67,6 +68,9 @@ def selecionar_metricas_do_relatorio(
         relatorio: dicionário devolvido por ``calculate_binary_metrics`` ou
             ``calculate_regression_metrics``.
         politica: política de limiares; ``EXAMPLE_THRESHOLDS`` por padrão.
+        metricas_obrigatorias: nomes da política exigidos pela tarefa, por
+            exemplo ['auc', 'ks_pct']; não exige todas as métricas da política
+            genérica. Para excluir uma métrica, retire-a explicitamente da política.
 
     Returns:
         Somente as métricas presentes na política, já com a chave dela e com
@@ -74,7 +78,8 @@ def selecionar_metricas_do_relatorio(
         limiar ausente não é limiar zero.
 
     Raises:
-        ValueError: nenhuma métrica do relatório pertence à política. Devolver
+        ValueError: métrica selecionada inválida, alias conflitante, obrigação
+            ausente ou nenhuma métrica do relatório pertencente à política. Devolver
             um dicionário vazio faria o monitor aceitar um período sem medir
             nada, que é pior do que falhar.
     """
@@ -84,11 +89,16 @@ def selecionar_metricas_do_relatorio(
         chave_politica = CHAVES_DO_RELATORIO.get(chave_relatorio, chave_relatorio)
         if chave_politica not in alvo:
             continue
-        if isinstance(valor, bool) or not isinstance(valor, (int, float)):
-            continue
-        if not math.isfinite(float(valor)):
-            continue
+        if isinstance(valor, bool) or not isinstance(valor, (int, float)) or not math.isfinite(float(valor)):
+            raise ValueError(f"métrica selecionada inválida: {chave_relatorio}")
+        if chave_politica in selecionadas and selecionadas[chave_politica] != float(valor):
+            raise ValueError(f"aliases conflitantes para a métrica {chave_politica}")
         selecionadas[chave_politica] = float(valor)
+    obrigatorias = set(metricas_obrigatorias or [])
+    if obrigatorias - set(alvo):
+        raise ValueError(f"métricas obrigatórias sem política: {sorted(obrigatorias - set(alvo))}")
+    if obrigatorias - set(selecionadas):
+        raise ValueError(f"métricas obrigatórias ausentes: {sorted(obrigatorias - set(selecionadas))}")
     if not selecionadas:
         raise ValueError(
             "nenhuma métrica do relatório pertence à política: "

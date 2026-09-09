@@ -36,8 +36,9 @@ from project_policy import (  # noqa: E402
     normalize_host,
 )
 
-SIMULADO = Path("Novo_Ambiente_Simulado")
-FONTE = Path("ambiente_fonte")
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SIMULADO = REPO_ROOT / "Novo_Ambiente_Simulado"
+FONTE = REPO_ROOT / "ambiente_fonte"
 CLI_PROFILE: str | None = None
 
 # O render copia exatamente estes dois itens da fonte. Mantê-los aqui permite
@@ -246,16 +247,17 @@ def _sha(dados: bytes) -> str:
 
 
 def _commit_atual() -> str:
-    proc = subprocess.run(
-        ["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True
-    )
-    if proc.returncode != 0:
-        return "desconhecido"
-    commit = (proc.stdout or "").strip()
-    sujo = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
-    if (sujo.stdout or "").strip():
-        return f"{commit}-dirty"
-    return commit
+    """Identifica a origem sem confundir falha do Git com árvore limpa."""
+    try:
+        proc = subprocess.run(["git", "rev-parse", "HEAD"], cwd=REPO_ROOT,
+                              capture_output=True, text=True)
+        status = subprocess.run(["git", "status", "--porcelain"], cwd=REPO_ROOT,
+                                capture_output=True, text=True)
+    except OSError as exc:
+        raise ValueError("Git indisponível para certificar origem") from exc
+    if proc.returncode or status.returncode or not proc.stdout.strip():
+        raise ValueError("Git falhou ao certificar commit/estado da árvore")
+    return proc.stdout.strip() + ("-dirty" if status.stdout.strip() else "")
 
 
 def conferir_fonte_espelho(root: Path) -> list[str]:
@@ -280,6 +282,14 @@ def conferir_fonte_espelho(root: Path) -> list[str]:
         else:
             problemas.append(f"fonte ausente: {origem}")
 
+    # Ignorar cache na fonte não autoriza enviar cache presente no espelho.
+    # import-dir recebe o diretório inteiro: qualquer extra ignorado deve barrar
+    # a escrita, mesmo que não participe da comparação de conteúdo.
+    for extra in root.rglob("*"):
+        if extra.is_file() and _e_ignorado(extra):
+            problemas.append(f"arquivo não publicável no espelho: {extra.relative_to(root)}")
+        if extra.is_symlink():
+            problemas.append(f"link simbólico não publicável: {extra.relative_to(root)}")
     no_espelho = {
         p.relative_to(root) for p in root.rglob("*") if p.is_file() and not _e_ignorado(p)
     }
@@ -363,7 +373,7 @@ def _ancestrais(caminho: str) -> set[str]:
     return {"/".join(partes[:i]) for i in range(1, len(partes))}
 
 
-def cmd_verify(root: Path, arquivos: list[Path], home: str, conteudo: bool = False) -> int:
+def cmd_verify(root: Path, arquivos: list[Path], home: str, conteudo: bool = False, relatorio: Path | None = None) -> int:
     print("== VERIFY (read-only) ==")
     problemas: list[str] = []
 
@@ -457,7 +467,13 @@ def cmd_verify(root: Path, arquivos: list[Path], home: str, conteudo: bool = Fal
 
     bruto, normalizado = _hashes_do_pacote(root, arquivos)
 
-    print(f"commit    : {_commit_atual()}")
+    try:
+        commit = _commit_atual()
+    except ValueError as exc:
+        commit = "não certificado"
+        if conteudo:
+            problemas.append(str(exc))
+    print(f"commit    : {commit}")
     print(f"esperados : {len(esperados)} arquivos")
     print(f"remotos   : {len(remotos)} arquivos sob .assistant + instruções")
     print(f"ausentes  : {len(ausentes)} | obsoletos: {len(obsoletos)}")
@@ -465,7 +481,7 @@ def cmd_verify(root: Path, arquivos: list[Path], home: str, conteudo: bool = Fal
         print(f"plataforma: {len(plataforma)} arquivo(s) gerenciado(s) — {', '.join(plataforma)}")
     print(f"skills    : {len(skills)}/{len(EXPECTED_SKILL_NAMES)}")
     print(f"extensões : {len(hub_dirs & EXPECTED_HUB_DIRS)}/{len(EXPECTED_HUB_DIRS)} diretórios hub_")
-    print(f"hash bruto: {bruto[:16]} | hash normalizado: {normalizado[:16]}")
+    print(f"hash bruto: {bruto} | hash normalizado: {normalizado}")
     if conteudo:
         print(f"conteúdo  : {conferidos}/{len(arquivos)} arquivo(s) exportado(s) e comparado(s)")
         print("alcance   : inventário, tipos E conteúdo")
@@ -476,6 +492,27 @@ def cmd_verify(root: Path, arquivos: list[Path], home: str, conteudo: bool = Fal
     for problema in problemas:
         print(f"FAIL {problema}")
     print(f"\n{'APROVADO' if not problemas else 'REPROVADO'}: {len(problemas)} problema(s)")
+    if relatorio is not None:
+        from datetime import datetime, timezone
+        evidencia = {
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "source_commit": commit,
+            "scope": "inventory-types-content" if conteudo else "inventory-types",
+            "status": "PASS" if not problemas else "FAIL",
+            "files_compared": conferidos,
+            "package_raw_sha256": bruto,
+            "package_normalized_sha256": normalizado,
+            "normalization": "CRLF/CR to LF; notebook terminal LF only",
+            "errors": problemas,
+            "files": [{
+                "path": a.relative_to(root).as_posix(),
+                "raw_sha256": _sha(a.read_bytes()),
+                "normalized_sha256": _sha(_normalizar_para_comparacao(a.read_bytes(), notebook=eh_notebook(a))),
+                "type": "NOTEBOOK" if eh_notebook(a) else "FILE",
+            } for a in arquivos],
+        }
+        relatorio.parent.mkdir(parents=True, exist_ok=True)
+        relatorio.write_text(json.dumps(evidencia, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return 0 if not problemas else 1
 
 
@@ -563,9 +600,16 @@ def main() -> int:
         default=os.getenv("DATABRICKS_FREE_HOST"),
         help="origem HTTPS exata do laboratório Free; obrigatória com --execute",
     )
+    parser.add_argument("--relatorio", type=Path, help="com --verify: salva evidência JSON local")
     args = parser.parse_args()
     CLI_PROFILE = args.profile
 
+    if args.relatorio and not args.verify:
+        print("FAIL --relatorio exige --verify")
+        return 1
+    if args.relatorio and args.rapido:
+        print("FAIL --relatorio não aceita --rapido")
+        return 1
     if args.execute and args.verify:
         print("FAIL use --execute ou --verify, não os dois")
         return 1
@@ -591,7 +635,7 @@ def main() -> int:
     if args.verify:
         if args.rapido:
             return cmd_verify_rapido(root, arquivos, home)
-        return cmd_verify(root, arquivos, home, conteudo=args.conteudo)
+        return cmd_verify(root, arquivos, home, conteudo=args.conteudo, relatorio=args.relatorio)
     return cmd_plan(root, arquivos, home, args.execute)
 
 

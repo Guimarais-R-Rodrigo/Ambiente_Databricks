@@ -5,6 +5,17 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-09 — Correções da revisão e retomada no PC (Codex)
+
+- (Codex) Implementados R01–R06 da revisão: métricas inválidas, colisões de nomes,
+  inventário publicável, multiconjunto PIT, limite CSI e migração KS.
+- (Codex) Separados inventário versionado/higiene local e conferência local/remota
+  do README. Acrescentada evidência JSON opcional à verificação de conteúdo.
+- (Codex) Atualizados exemplos e regenerado o espelho pelo renderer. Validação:
+  40 testes da biblioteca e 32 de ferramentas aprovados; execução remota pendente.
+- (Codex) Registrados plano de retomada e comandos em
+  `docs/handoffs/2026-09-09_correcoes-codex.md` e fechamento local da auditoria.
+
 ## 2026-09-09 — Revisão da implantação do plano (Codex)
 
 - (Codex) Registrados contexto, auditoria independente e plano corretivo em `docs/auditoria/2026-09-09_implantacao-plano/`.

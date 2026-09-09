@@ -109,3 +109,9 @@ Bloqueado por acesso, não por código:
 ## Revisão de segunda origem — 09/09/2026 (Codex)
 
 O estado acima é preservado como relato da implementação. A [rodada Codex](../auditoria/2026-09-09_implantacao-plano/02_codex.md) revisa o commit `9e9fa78`, confirma os gates locais e registra achados residuais e plano de correção. Consultá-la antes de encerrar T1, T2, T5 ou T6 e antes de retomar publicação. O escopo do validador, os testes conversacionais e o aceite no destino continuam pendentes. Não há consenso formal registrado nesta adição.
+
+## Implementação posterior — Codex, 09/09/2026
+
+As correções da revisão e a separação de escopos T3 foram implementadas.
+O [novo handoff](2026-09-09_correcoes-codex.md) é a entrada para retomar a execução;
+o texto acima preserva o estado anterior. Gates remotos continuam pendentes.

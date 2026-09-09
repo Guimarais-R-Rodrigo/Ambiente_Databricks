@@ -11,7 +11,7 @@ podem reprovar uma mudança.
 | Objetivo | Comando |
 |---|---|
 | validar fonte e repositório | `python tools/validate_assistant.py` |
-| conferir saídas coladas no README | `python tools/validate_assistant.py --conferir-readme` |
+| conferir somente saídas locais do README | `python tools/validate_assistant.py --conferir-readme` |
 | regenerar o derivado | `python tools/render_simulado.py --write` |
 | publicar no Free | `python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>` |
 | conferir o remoto (inventário e tipos) | `python tools/publicar_free.py --verify --profile <free> --expected-host <url-free>` |
@@ -113,3 +113,18 @@ assinatura esperada do erro.
 - [Testes e evidências](../docs/testes/README.md)
 - [Decisões arquiteturais](../docs/decisions/README.md)
 - [Skills operacionais](../.claude/skills/README.md)
+
+## Escopos e evidência após a revisão
+
+`repo_inventory.py` usa caminhos do índice Git para contagens reproduzíveis e
+examina extras separadamente. Sem Git, a certificação reprova; um ZIP exportado
+não deve ser apresentado como checkout validado. O validador lê o conteúdo atual
+na worktree, portanto não certifica sozinho que ela está limpa.
+
+`--conferir-readme` é local. `--conferir-readme-remoto` é opt-in, exige acesso ao
+Databricks e confere somente o bloco remoto. Nenhum substitui o verify por conteúdo.
+
+`publicar_free.py --verify --conteudo --relatorio .artifacts/verify.json` grava
+origem, hashes completos por arquivo e resultado da comparação. O bundle e o
+publicador recusam espelho antigo e extras/caches no pacote. Os hashes agregados
+da comparação não são hashes do ZIP. A integração real ainda exige teste Free.

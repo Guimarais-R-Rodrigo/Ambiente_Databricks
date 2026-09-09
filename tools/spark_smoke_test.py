@@ -286,6 +286,22 @@ def t_pit_join():
     # Nenhuma feature marcada como futura pode ter atravessado o join.
     assert resultado.filter("eh_futura = true").count() == 0
 
+def _conferir_linhas_pit(linhas):
+    """Compara o multiconjunto completo, incluindo datas e duplicatas."""
+    from collections import Counter
+    from datetime import date
+
+    esperado = [
+        ("C1", date(2026, 3, 10), 20),
+        ("C1", date(2026, 3, 10), 20),
+        ("C2", date(2026, 3, 10), None),
+        ("C3", date(2026, 3, 10), None),
+        (None, date(2026, 3, 10), None),
+        ("C4", None, None),
+    ]
+    assert Counter(linhas) == Counter(esperado), "multiconjunto PIT difere da entrada/feature esperada"
+
+
 def t_pit_join_preservacao():
     """Prove preservação de linha, multiplicidade e escolha correta da feature.
 
@@ -352,6 +368,7 @@ def t_pit_join_preservacao():
         (r["id_cliente"], r["dt_decisao"], r["valor"])
         for r in resultado.collect()
     ]
+    _conferir_linhas_pit(linhas)
     c1 = [valor for chave, _, valor in linhas if chave == "C1"]
     assert len(c1) == 2, f"C1 deveria manter as 2 linhas de fato duplicadas, obtido {len(c1)}"
     assert set(c1) == {20}, f"C1 deveria receber a versão de 2026-02-28 (20), obtido {set(c1)}"

@@ -155,7 +155,10 @@ def create_temporal_features(
 
     grao = [*(entity_cols or [])]
     chaves = df[grao].copy() if grao else pd.DataFrame(index=df.index)
-    chaves["__hub_data"] = ordem
+    nome_data = "__hub_data"
+    while nome_data in chaves.columns:
+        nome_data += "_"
+    chaves[nome_data] = ordem
     empates = chaves.duplicated(keep=False)
     if empates.any() and on_duplicate_dates == "raise":
         exemplo = chaves[empates].iloc[0].to_dict()
@@ -166,13 +169,16 @@ def create_temporal_features(
             f"on_duplicate_dates='keep' para aceitar empates. Exemplo: {exemplo}"
         )
 
-    df["__hub_ordem"] = ordem
-    sort_cols = [*grao, "__hub_ordem"]
+    nome_ordem = "__hub_ordem"
+    while nome_ordem in df.columns:
+        nome_ordem += "_"
+    df[nome_ordem] = ordem
+    sort_cols = [*grao, nome_ordem]
     # mergesort é estável: com on_duplicate_dates='keep', empates preservam a
     # ordem original de entrada em vez de embaralhar em silêncio.
     df = df.sort_values(sort_cols, kind="mergesort")
-    ordem_ordenada = df["__hub_ordem"]
-    df = df.drop(columns="__hub_ordem")
+    ordem_ordenada = df[nome_ordem]
+    df = df.drop(columns=nome_ordem)
 
     if lags is None:
         lags = [1, 2, 3, 6, 12]

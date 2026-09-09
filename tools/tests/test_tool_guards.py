@@ -362,5 +362,145 @@ class PublishContentGuardTests(unittest.TestCase):
         )
 
 
+class ReviewRegressionTests(unittest.TestCase):
+    def test_ignored_mirror_extra_blocks_upload_before_any_call(self):
+        with tempfile.TemporaryDirectory() as td:
+            source, mirror = Path(td) / "source", Path(td) / "mirror"
+            for root in (source, mirror):
+                (root / ".assistant").mkdir(parents=True)
+                (root / ".assistant_instructions.md").write_bytes(b"instructions")
+            (mirror / ".assistant" / "__pycache__").mkdir()
+            extra = mirror / ".assistant" / "__pycache__" / "extra.pyc"
+            extra.write_bytes(b"not-product")
+            files = [p for p in mirror.rglob("*") if p.is_file()]
+            with mock.patch.object(publisher, "FONTE", source), mock.patch.object(publisher, "databricks") as cli:
+                with redirect_stdout(StringIO()):
+                    code = publisher.cmd_plan(mirror, files, "/Users/test", True)
+                self.assertEqual(code, 1)
+                cli.assert_not_called()
+
+    def test_export_protocol_errors_and_empty_file(self):
+        import json
+        cases = [(1, "", "denied"), (0, "not-json", ""),
+                 (0, "{}", ""), (0, json.dumps({"content": "%%%"}), "")]
+        for result in cases:
+            with self.subTest(result=result), mock.patch.object(publisher, "databricks", return_value=result):
+                data, error = publisher._exportar_remoto("/Users/test/a", False)
+                self.assertIsNone(data)
+                self.assertTrue(error)
+        with mock.patch.object(publisher, "databricks", return_value=(0, '{"content":""}', "")):
+            self.assertEqual(publisher._exportar_remoto("/Users/test/a", False), (b"", ""))
+
+    def test_git_status_failure_is_not_clean_provenance(self):
+        ok = mock.Mock(returncode=0, stdout="a" * 40 + "\n")
+        fail = mock.Mock(returncode=128, stdout="")
+        with mock.patch.object(publisher.subprocess, "run", side_effect=[ok, fail]):
+            with self.assertRaisesRegex(ValueError, "Git falhou"):
+                publisher._commit_atual()
+
+    def test_verify_persists_full_hashes_and_scope(self):
+        import json
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td) / "mirror"
+            f = root / ".assistant" / "a.py"
+            f.parent.mkdir(parents=True)
+            f.write_bytes(b"x=1\n")
+            target = Path(td) / "evidence.json"
+            home = "/Users/test"
+            def list_remote(path):
+                names = EXPECTED_SKILL_NAMES if path.endswith("/skills") else publisher.EXPECTED_HUB_DIRS
+                return [{"path": path + "/" + n, "object_type": "DIRECTORY"} for n in names]
+            with mock.patch.object(publisher, "remote_walk", return_value=[{"path": home + "/.assistant/a.py", "object_type": "FILE"}]), mock.patch.object(publisher, "remote_list", side_effect=list_remote), mock.patch.object(publisher, "databricks_json", return_value=None), mock.patch.object(publisher, "conferir_fonte_espelho", return_value=[]), mock.patch.object(publisher, "_exportar_remoto", return_value=(f.read_bytes(), "")), mock.patch.object(publisher, "_commit_atual", return_value="a" * 40):
+                with redirect_stdout(StringIO()):
+                    code = publisher.cmd_verify(root, [f], home, conteudo=True, relatorio=target)
+            self.assertEqual(code, 0)
+            evidence = json.loads(target.read_text(encoding="utf-8"))
+            self.assertEqual(evidence["status"], "PASS")
+            self.assertEqual(evidence["source_commit"], "a" * 40)
+            self.assertEqual(len(evidence["package_raw_sha256"]), 64)
+            self.assertEqual(evidence["files_compared"], 1)
+            self.assertEqual(evidence["files"][0]["path"], ".assistant/a.py")
+
+    def _load_function(self, path, name, namespace=None):
+        import ast
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        function = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == name)
+        ns = namespace or {}
+        exec(compile(ast.Module(body=[function], type_ignores=[]), str(path), "exec"), ns)
+        return ns[name]
+
+    def test_pit_multiset_rejects_loss_outside_c1_and_date_change(self):
+        from datetime import date
+        check = self._load_function(TOOLS / "spark_smoke_test.py", "_conferir_linhas_pit")
+        d = date(2026, 3, 10)
+        rows = [("C1", d, 20), ("C1", d, 20), ("C2", d, None),
+                ("C3", d, None), (None, d, None), ("C4", None, None)]
+        check(list(reversed(rows)))
+        for i in range(len(rows)):
+            mutant = rows.copy()
+            mutant[i] = ("wrong", d, None)
+            with self.subTest(i=i), self.assertRaises(AssertionError):
+                check(mutant)
+        mutant = rows.copy()
+        mutant[2] = rows[3]
+        with self.assertRaises(AssertionError):
+            check(mutant)
+        mutant = rows.copy()
+        mutant[2] = ("C2", date(2026, 3, 11), None)
+        with self.assertRaises(AssertionError):
+            check(mutant)
+
+    def test_csi_invalid_limit_fails_before_spark_access(self):
+        from numbers import Integral
+        from typing import Dict, List
+        path = TOOLS.parent / "ambiente_fonte/.assistant/hub_snippets/spark/psi_calculator/psi_calculator.py"
+        ns = {"Integral": Integral, "DataFrame": object, "List": List, "Dict": Dict,
+              "LIMITE_CATEGORIAS_CSI": 1000}
+        check = self._load_function(path, "_validar_max_categorias", ns)
+        public = self._load_function(path, "calcular_csi", ns)
+        for value in (float("nan"), float("inf"), True, 0, -1, 1.5, "100"):
+            with self.subTest(value=value), self.assertRaisesRegex(ValueError, "inteiro positivo"):
+                public(None, None, ["x"], max_categorias=value)
+        check(1)
+        check(1000)
+
+
+class RepoInventoryTests(unittest.TestCase):
+    def test_ignored_guide_does_not_change_versioned_count_but_is_checked(self):
+        import subprocess
+        import repo_inventory
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            subprocess.run(["git", "init", "-q", td], check=True)
+            (root / ".gitignore").write_text("guide.md\n", encoding="utf-8")
+            (root / "README.md").write_text("hello", encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            before = repo_inventory.git_paths(root)
+            (root / "guide.md").write_text("[bad](missing.md)", encoding="utf-8")
+            self.assertEqual(before, repo_inventory.git_paths(root))
+            with mock.patch.object(validator, "REPO_ROOT", root):
+                problems = []
+                self.assertEqual(validator.check_worktree_hygiene(problems), 1)
+                self.assertTrue(any("link quebrado" in p for p in problems))
+
+    def test_git_failure_and_empty_output_are_not_certified(self):
+        import repo_inventory
+        for rc, output in ((128, b""), (0, b"")):
+            with mock.patch.object(repo_inventory.subprocess, "run", return_value=mock.Mock(returncode=rc, stdout=output)):
+                with self.assertRaises(ValueError):
+                    repo_inventory.git_paths(Path.cwd())
+
+    def test_readme_local_check_never_invokes_remote_cli(self):
+        import subprocess
+        calls = []
+        def run(cmd, **kwargs):
+            calls.append(cmd)
+            return mock.Mock(returncode=0, stdout="")
+        with mock.patch.object(subprocess, "run", side_effect=run):
+            validator.check_saida_de_comando_no_readme([])
+        self.assertEqual(len(calls), 1)
+        self.assertIn("validate_assistant.py", calls[0][1])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -150,3 +150,8 @@ print(f"primeira linha de B, sem entidade : dt={b_sem['dt'].date()}  lag_1={b_se
 # MAGIC - **Com o painel desordenado.** Lag pressupõe ordem; ordene por entidade e data antes.
 # MAGIC - **Em série com buracos.** Lag de 1 é a linha anterior, não o mês anterior — se faltam meses, os dois deixam de coincidir.
 # MAGIC - **Sobre DataFrame do Spark.** É pandas: colete antes, com limite.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ### Contrato atualizado em 09/09/2026
+# MAGIC O helper normaliza datas antes de ordenar e preserva colunas do chamador, inclusive nomes internos __hub_ordem e __hub_data. Datas ambíguas exigem date_format; lag_n significa observações anteriores, não períodos de calendário.

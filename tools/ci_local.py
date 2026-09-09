@@ -46,7 +46,7 @@ ETAPAS = [
     (
         "validacao",
         "validação local do ambiente_fonte",
-        [sys.executable, "tools/validate_assistant.py"],
+        [sys.executable, "tools/validate_assistant.py", "--conferir-readme"],
     ),
     (
         "biblioteca",
@@ -91,7 +91,7 @@ def rodar(comando: list[str], mostrar_saida: bool) -> tuple[int, str, float]:
     # As três etapas são Python: pedir UTF-8 ao filho resolve a origem do
     # problema. A decodificação tolerante acima é a rede de segurança para
     # qualquer saída que ainda escape disso.
-    ambiente = dict(os.environ, PYTHONIOENCODING="utf-8", PYTHONUTF8="1")
+    ambiente = dict(os.environ, PYTHONIOENCODING="utf-8", PYTHONUTF8="1", PYTHONDONTWRITEBYTECODE="1")
     inicio = time.monotonic()
     proc = subprocess.run(comando, cwd=RAIZ, capture_output=True, env=ambiente)
     duracao = time.monotonic() - inicio
