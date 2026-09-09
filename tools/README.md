@@ -11,10 +11,11 @@ podem reprovar uma mudança.
 | Objetivo | Comando |
 |---|---|
 | validar fonte e repositório | `python tools/validate_assistant.py` |
-| conferir saídas coladas no README | `python tools/validate_assistant.py --conferir-readme` |
+| conferir somente saídas locais do README | `python tools/validate_assistant.py --conferir-readme` |
 | regenerar o derivado | `python tools/render_simulado.py --write` |
 | publicar no Free | `python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>` |
-| conferir o remoto | `python tools/publicar_free.py --verify --profile <free> --expected-host <url-free>` |
+| conferir o remoto (inventário e tipos) | `python tools/publicar_free.py --verify --profile <free> --expected-host <url-free>` |
+| conferir o remoto **por conteúdo** | `python tools/publicar_free.py --verify --conteudo --profile <free> --expected-host <url-free>` |
 | executar smoke no Databricks | importar/submeter `tools/spark_smoke_test.py` |
 | criar pacote de auditoria | `python tools/bundle_para_auditoria.py --mode canonical` |
 | criar ZIP de implantação | `python tools/bundle_implantacao.py` |
@@ -28,8 +29,19 @@ python tools/publicar_free.py --execute --profile <free> --expected-host <url-fr
 python tools/publicar_free.py --verify  --profile <free> --expected-host <url-free>
 ```
 
-`--execute` altera o workspace. `--verify` é leitura e compara fonte, tipos e
-inventário remoto. Publicar sem verificar não fecha o gate.
+`--execute` altera o workspace e recusa espelho desatualizado antes de escrever.
+`--verify` é leitura. Sem `--conteudo` ele compara inventário e tipos: um módulo
+com o mesmo nome e o mesmo tipo, porém conteúdo diferente, passaria. Com
+`--conteudo` cada objeto é exportado e comparado byte a byte na representação
+canônica — só então é possível afirmar equivalência entre local e remoto. A
+saída declara o alcance da comparação em toda rodada. Publicar sem verificar não
+fecha o gate.
+
+A normalização da comparação é mínima e declarada: fim de linha, e fim de arquivo
+apenas em notebook. Comentário, espaço e linha em branco **não** são removidos —
+fazê-lo mascararia diferença real. Por isso a saída registra dois hashes: o bruto,
+que identifica os bytes do pacote, e o normalizado, que é o único comparável com
+o remoto.
 
 ## Inventário
 
@@ -101,3 +113,18 @@ assinatura esperada do erro.
 - [Testes e evidências](../docs/testes/README.md)
 - [Decisões arquiteturais](../docs/decisions/README.md)
 - [Skills operacionais](../.claude/skills/README.md)
+
+## Escopos e evidência após a revisão
+
+`repo_inventory.py` usa caminhos do índice Git para contagens reproduzíveis e
+examina extras separadamente. Sem Git, a certificação reprova; um ZIP exportado
+não deve ser apresentado como checkout validado. O validador lê o conteúdo atual
+na worktree, portanto não certifica sozinho que ela está limpa.
+
+`--conferir-readme` é local. `--conferir-readme-remoto` é opt-in, exige acesso ao
+Databricks e confere somente o bloco remoto. Nenhum substitui o verify por conteúdo.
+
+`publicar_free.py --verify --conteudo --relatorio .artifacts/verify.json` grava
+origem, hashes completos por arquivo e resultado da comparação. O bundle e o
+publicador recusam espelho antigo e extras/caches no pacote. Os hashes agregados
+da comparação não são hashes do ZIP. A integração real ainda exige teste Free.

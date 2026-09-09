@@ -1,0 +1,24 @@
+{
+  "total": 146,
+  "pass": 137,
+  "fail": 0,
+  "optional_missing": 8,
+  "bloqueado_esperado": 1,
+  "target_environment": "free",
+  "runtime": "serverless (spark 4.2.0)",
+  "run_id": 186787319038743,
+  "task_run_id": 791248932732477,
+  "source_commit": "133ac87",
+  "published_product_commit": "8187fac",
+  "new_regressions": {
+    "func:psi": "PASS — missing separado da categoria textual __MISSING__; limite de cardinalidade exercitado",
+    "ml:lgbm_temporal": "PASS — data compatível com pandas do runtime; chave nula e colisão recusadas",
+    "ml:performance_monitor": "PASS — booleanos recusados como métricas e contagens",
+    "func:pit_join_preservacao": "PASS"
+  },
+  "notes": [
+    "As oito ausências são dependências opcionais não instaladas.",
+    "O bloqueio esperado é a abertura de run MLflow no serverless observado.",
+    "O job terminou com SUCCESS e o resultado interno foi aceito somente após fail=0."
+  ]
+}

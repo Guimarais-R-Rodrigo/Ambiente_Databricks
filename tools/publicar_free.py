@@ -14,6 +14,8 @@ Hub: aquele engine importa `.py` como notebook, o que quebraria os imports de
 from __future__ import annotations
 
 import argparse
+import base64
+import hashlib
 import json
 import os
 import subprocess
@@ -34,8 +36,16 @@ from project_policy import (  # noqa: E402
     normalize_host,
 )
 
-SIMULADO = Path("Novo_Ambiente_Simulado")
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SIMULADO = REPO_ROOT / "Novo_Ambiente_Simulado"
+FONTE = REPO_ROOT / "ambiente_fonte"
 CLI_PROFILE: str | None = None
+
+# O render copia exatamente estes dois itens da fonte. Mantê-los aqui permite
+# conferir espelho contra fonte sem reimplementar a lógica do renderer.
+ITENS_PUBLICAVEIS = (".assistant_instructions.md", ".assistant")
+PADROES_IGNORADOS = ("__pycache__", ".pytest_cache", ".ruff_cache", ".DS_Store")
+SUFIXOS_IGNORADOS = (".pyc", ".pyo")
 
 # Arquivos que a **plataforma** cria dentro de `.assistant/` e que não vêm da
 # fonte. Observado em 2026-08-15: abrir o painel de MCP em Genie Code → Settings
@@ -167,6 +177,17 @@ def cmd_plan(root: Path, arquivos: list[Path], home: str, executar: bool) -> int
     for area, total in sorted(por_area.items()):
         print(f"  {area:24} {total:4d}")
 
+    divergencias = conferir_fonte_espelho(root)
+    if divergencias:
+        print(f"\n== ESPELHO x FONTE ==\n{len(divergencias)} divergência(s):")
+        for problema in divergencias[:20]:
+            print(f"  FAIL {problema}")
+        if len(divergencias) > 20:
+            print(f"  ... e mais {len(divergencias) - 20}")
+        print("\nRode: python tools/render_simulado.py --write")
+        return 1
+    print("espelho: em dia com a fonte")
+
     if not executar:
         print("\nDRY-RUN: nada foi publicado. Use --execute para publicar.")
         return 0
@@ -196,13 +217,176 @@ def cmd_plan(root: Path, arquivos: list[Path], home: str, executar: bool) -> int
     return 0
 
 
+def _e_ignorado(caminho: Path) -> bool:
+    """Artefato de execução local, que o render não copia e o remoto não tem."""
+    if caminho.suffix in SUFIXOS_IGNORADOS:
+        return True
+    return any(parte in PADROES_IGNORADOS for parte in caminho.parts)
+
+
+def _normalizar_para_comparacao(dados: bytes, *, notebook: bool) -> bytes:
+    """Representação canônica mínima para comparar local com remoto.
+
+    A normalização é deliberadamente pequena. Remover comentário, espaço ou
+    linha em branco mascararia diferença real de conteúdo — que é justamente o
+    que esta comparação existe para encontrar. Só duas transformações:
+
+    1. fim de linha: o workspace devolve LF; a origem pode estar em CRLF
+       conforme a máquina e o `.gitattributes`;
+    2. fim de arquivo, apenas em notebook: a plataforma normaliza a quebra final
+       ao materializar as células.
+    """
+    texto = dados.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    if notebook:
+        texto = texto.rstrip(b"\n") + b"\n"
+    return texto
+
+
+def _sha(dados: bytes) -> str:
+    return hashlib.sha256(dados).hexdigest()
+
+
+def _commit_atual() -> str:
+    """Identifica a origem do pacote, sem sujeira alheia ao escopo publicado.
+
+    Evidência de publicação descreve o produto e seu espelho. Alteração em docs,
+    artefato ignorado ou metadado de fim de linha fora desses caminhos não torna
+    o pacote ``dirty``; alteração na fonte ou no espelho, sim.
+    """
+    try:
+        proc = subprocess.run(["git", "rev-parse", "HEAD"], cwd=REPO_ROOT,
+                              capture_output=True, text=True)
+        status = subprocess.run(
+            [
+                "git", "status", "--porcelain", "--",
+                str(FONTE.relative_to(REPO_ROOT)),
+                str(SIMULADO.relative_to(REPO_ROOT) / "Users" / "usuario-free"),
+            ],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            text=True,
+        )
+    except OSError as exc:
+        raise ValueError("Git indisponível para certificar origem") from exc
+    if proc.returncode or status.returncode or not proc.stdout.strip():
+        raise ValueError("Git falhou ao certificar commit/estado da árvore")
+    return proc.stdout.strip() + ("-dirty" if status.stdout.strip() else "")
+
+
+def conferir_fonte_espelho(root: Path) -> list[str]:
+    """Recusa espelho desatualizado ANTES de qualquer escrita no workspace.
+
+    Publicar de um espelho velho grava conteúdo que não corresponde a nenhum
+    commit, e o `--verify` seguinte aprova, porque ele compara o remoto com o
+    mesmo espelho velho.
+    """
+    problemas: list[str] = []
+    esperados: set[Path] = set()
+    for item in ITENS_PUBLICAVEIS:
+        origem = FONTE / item
+        if origem.is_file():
+            esperados.add(Path(item))
+        elif origem.is_dir():
+            esperados.update(
+                p.relative_to(FONTE)
+                for p in origem.rglob("*")
+                if p.is_file() and not _e_ignorado(p)
+            )
+        else:
+            problemas.append(f"fonte ausente: {origem}")
+
+    # Ignorar cache na fonte não autoriza enviar cache presente no espelho.
+    # import-dir recebe o diretório inteiro: qualquer extra ignorado deve barrar
+    # a escrita, mesmo que não participe da comparação de conteúdo.
+    for extra in root.rglob("*"):
+        if extra.is_file() and _e_ignorado(extra):
+            problemas.append(f"arquivo não publicável no espelho: {extra.relative_to(root)}")
+        if extra.is_symlink():
+            problemas.append(f"link simbólico não publicável: {extra.relative_to(root)}")
+    no_espelho = {
+        p.relative_to(root) for p in root.rglob("*") if p.is_file() and not _e_ignorado(p)
+    }
+    for faltando in sorted(esperados - no_espelho):
+        problemas.append(f"espelho desatualizado — ausente no espelho: {faltando}")
+    for sobrando in sorted(no_espelho - esperados):
+        problemas.append(f"espelho desatualizado — não existe na fonte: {sobrando}")
+    for comum in sorted(esperados & no_espelho):
+        local = _normalizar_para_comparacao((FONTE / comum).read_bytes(), notebook=False)
+        espelho = _normalizar_para_comparacao((root / comum).read_bytes(), notebook=False)
+        if local != espelho:
+            problemas.append(f"espelho desatualizado — conteúdo difere: {comum}")
+    return problemas
+
+
+def _exportar_remoto(caminho_remoto: str, notebook: bool) -> tuple[bytes | None, str]:
+    """Exporta um objeto do workspace. Erro nunca vira conteúdo válido."""
+    formato = "SOURCE" if notebook else "AUTO"
+    rc, out, err = databricks(
+        "workspace", "export", caminho_remoto, "--format", formato, "-o", "json"
+    )
+    if rc != 0:
+        return None, (err.strip() or out.strip() or "erro sem mensagem")[:160]
+    try:
+        payload = json.loads(out)
+    except json.JSONDecodeError:
+        return None, "resposta não-JSON da CLI"
+    conteudo = payload.get("content") if isinstance(payload, dict) else None
+    if not isinstance(conteudo, str):
+        return None, "resposta sem campo 'content'"
+    try:
+        return base64.b64decode(conteudo, validate=True), ""
+    except Exception:
+        return None, "campo 'content' não é base64 válido"
+
+
+def comparar_conteudo(root: Path, arquivos: list[Path], home: str) -> tuple[list[str], int]:
+    """Compara byte a byte, na representação canônica, o local com o remoto."""
+    problemas: list[str] = []
+    conferidos = 0
+    for arquivo in arquivos:
+        relativo = str(arquivo.relative_to(root)).replace("\\", "/")
+        notebook = eh_notebook(arquivo)
+        remoto_path = f"{home}/{relativo[:-3]}" if notebook else f"{home}/{relativo}"
+        dados, erro = _exportar_remoto(remoto_path, notebook)
+        if dados is None:
+            problemas.append(f"leitura remota incompleta: {relativo} — {erro}")
+            continue
+        local = _normalizar_para_comparacao(arquivo.read_bytes(), notebook=notebook)
+        remoto = _normalizar_para_comparacao(dados, notebook=notebook)
+        conferidos += 1
+        if _sha(local) != _sha(remoto):
+            problemas.append(
+                f"conteúdo divergente: {relativo} "
+                f"(local {_sha(local)[:12]} != remoto {_sha(remoto)[:12]})"
+            )
+    return problemas, conferidos
+
+
+def _hashes_do_pacote(root: Path, arquivos: list[Path]) -> tuple[str, str]:
+    """Hash bruto e hash da representação normalizada, registrados separados.
+
+    O bruto identifica os bytes que saem daqui. O normalizado é o único que pode
+    ser comparado com o remoto, porque a plataforma transforma o fim de arquivo
+    do notebook. Confundir os dois faz um pacote correto parecer divergente.
+    """
+    bruto = hashlib.sha256()
+    normalizado = hashlib.sha256()
+    for arquivo in sorted(arquivos):
+        relativo = str(arquivo.relative_to(root)).replace("\\", "/").encode("utf-8")
+        dados = arquivo.read_bytes()
+        bruto.update(relativo + b"\0" + _sha(dados).encode("ascii") + b"\n")
+        canonico = _normalizar_para_comparacao(dados, notebook=eh_notebook(arquivo))
+        normalizado.update(relativo + b"\0" + _sha(canonico).encode("ascii") + b"\n")
+    return bruto.hexdigest(), normalizado.hexdigest()
+
+
 def _ancestrais(caminho: str) -> set[str]:
     """Todos os diretórios intermediários de um caminho relativo."""
     partes = caminho.split("/")
     return {"/".join(partes[:i]) for i in range(1, len(partes))}
 
 
-def cmd_verify(root: Path, arquivos: list[Path], home: str) -> int:
+def cmd_verify(root: Path, arquivos: list[Path], home: str, conteudo: bool = False, relatorio: Path | None = None) -> int:
     print("== VERIFY (read-only) ==")
     problemas: list[str] = []
 
@@ -285,6 +469,24 @@ def cmd_verify(root: Path, arquivos: list[Path], home: str) -> int:
 
     plataforma = sorted(set(remotos) & GERENCIADOS_PELA_PLATAFORMA)
 
+    conferidos = 0
+    if conteudo:
+        # Espelho velho invalida a comparação: o remoto seria conferido contra a
+        # mesma referência errada que o gerou.
+        for divergencia in conferir_fonte_espelho(root):
+            problemas.append(divergencia)
+        problemas_conteudo, conferidos = comparar_conteudo(root, arquivos, home)
+        problemas.extend(problemas_conteudo)
+
+    bruto, normalizado = _hashes_do_pacote(root, arquivos)
+
+    try:
+        commit = _commit_atual()
+    except ValueError as exc:
+        commit = "não certificado"
+        if conteudo:
+            problemas.append(str(exc))
+    print(f"commit    : {commit}")
     print(f"esperados : {len(esperados)} arquivos")
     print(f"remotos   : {len(remotos)} arquivos sob .assistant + instruções")
     print(f"ausentes  : {len(ausentes)} | obsoletos: {len(obsoletos)}")
@@ -292,10 +494,38 @@ def cmd_verify(root: Path, arquivos: list[Path], home: str) -> int:
         print(f"plataforma: {len(plataforma)} arquivo(s) gerenciado(s) — {', '.join(plataforma)}")
     print(f"skills    : {len(skills)}/{len(EXPECTED_SKILL_NAMES)}")
     print(f"extensões : {len(hub_dirs & EXPECTED_HUB_DIRS)}/{len(EXPECTED_HUB_DIRS)} diretórios hub_")
+    print(f"hash bruto: {bruto} | hash normalizado: {normalizado}")
+    if conteudo:
+        print(f"conteúdo  : {conferidos}/{len(arquivos)} arquivo(s) exportado(s) e comparado(s)")
+        print("alcance   : inventário, tipos E conteúdo")
+    else:
+        print("alcance   : inventário e tipos — NÃO prova igualdade de conteúdo; "
+              "use --verify --conteudo")
     print()
     for problema in problemas:
         print(f"FAIL {problema}")
     print(f"\n{'APROVADO' if not problemas else 'REPROVADO'}: {len(problemas)} problema(s)")
+    if relatorio is not None:
+        from datetime import datetime, timezone
+        evidencia = {
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "source_commit": commit,
+            "scope": "inventory-types-content" if conteudo else "inventory-types",
+            "status": "PASS" if not problemas else "FAIL",
+            "files_compared": conferidos,
+            "package_raw_sha256": bruto,
+            "package_normalized_sha256": normalizado,
+            "normalization": "CRLF/CR to LF; notebook terminal LF only",
+            "errors": problemas,
+            "files": [{
+                "path": a.relative_to(root).as_posix(),
+                "raw_sha256": _sha(a.read_bytes()),
+                "normalized_sha256": _sha(_normalizar_para_comparacao(a.read_bytes(), notebook=eh_notebook(a))),
+                "type": "NOTEBOOK" if eh_notebook(a) else "FILE",
+            } for a in arquivos],
+        }
+        relatorio.parent.mkdir(parents=True, exist_ok=True)
+        relatorio.write_text(json.dumps(evidencia, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return 0 if not problemas else 1
 
 
@@ -365,6 +595,11 @@ def main() -> int:
     parser.add_argument("--execute", action="store_true", help="publica de fato")
     parser.add_argument("--verify", action="store_true", help="apenas confere o remoto")
     parser.add_argument(
+        "--conteudo",
+        action="store_true",
+        help="no --verify, exporta cada objeto remoto e compara o conteúdo com a fonte",
+    )
+    parser.add_argument(
         "--rapido", action="store_true",
         help="com --verify: só contagens, para uso durante a execução",
     )
@@ -378,14 +613,27 @@ def main() -> int:
         default=os.getenv("DATABRICKS_FREE_HOST"),
         help="origem HTTPS exata do laboratório Free; obrigatória com --execute",
     )
+    parser.add_argument("--relatorio", type=Path, help="com --verify: salva evidência JSON local")
     args = parser.parse_args()
     CLI_PROFILE = args.profile
 
+    if args.relatorio and not args.verify:
+        print("FAIL --relatorio exige --verify")
+        return 1
+    if args.relatorio and args.rapido:
+        print("FAIL --relatorio não aceita --rapido")
+        return 1
     if args.execute and args.verify:
         print("FAIL use --execute ou --verify, não os dois")
         return 1
     if args.rapido and not args.verify:
         print("FAIL --rapido só faz sentido com --verify")
+        return 1
+    if args.conteudo and not args.verify:
+        print("FAIL --conteudo só faz sentido com --verify")
+        return 1
+    if args.conteudo and args.rapido:
+        print("FAIL --conteudo e --rapido se excluem: um confere bytes, o outro pula")
         return 1
 
     root, arquivos = local_tree()
@@ -400,7 +648,7 @@ def main() -> int:
     if args.verify:
         if args.rapido:
             return cmd_verify_rapido(root, arquivos, home)
-        return cmd_verify(root, arquivos, home)
+        return cmd_verify(root, arquivos, home, conteudo=args.conteudo, relatorio=args.relatorio)
     return cmd_plan(root, arquivos, home, args.execute)
 
 

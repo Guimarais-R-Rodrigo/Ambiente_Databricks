@@ -14,18 +14,18 @@ Executor: job serverless one-time no Free Edition, notebook
 [`tools/spark_smoke_test.py`](../../../tools/spark_smoke_test.py), dados 100%
 sintéticos.
 
-## Resultado vigente — 2026-08-29 (Spark 4.2.0 serverless)
+## Resultado vigente — 2026-09-09 (Spark 4.2.0 serverless)
 
 | Verificação | Resultado |
 |---|---:|
-| total | 145 |
-| `PASS` | **136** |
+| total | 146 |
+| `PASS` | **137** |
 | `FAIL` | **0** |
 | `OPTIONAL_MISSING` | 8 |
 | `BLOQUEADO_ESPERADO` | 1 |
 
-Execução: run `996607251657906`, task `657506000110053`. Resultado bruto:
-[`2026-08-29_smoke_a2.json`](resultados/2026-08-29_smoke_a2.json).
+Execução: run `186787319038743`, task `791248932732477`. Resultado estruturado:
+[`2026-09-09_smoke_codex_final.json`](resultados/2026-09-09_smoke_codex_final.json).
 
 As oito ausências são dependências opcionais não instaladas nessa rodada. O
 bloqueio esperado é a abertura de run MLflow no serverless observado; o caso

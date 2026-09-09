@@ -14,7 +14,11 @@
 - Papel: executar os gates pendentes da auditoria do Codex — testes Spark
   serverless dos helpers, forward tests das skills (caso positivo, negativo,
   `@menção`, sempre em chat novo), calibração das descriptions.
-- Estado em 2026-08-29: commit `02a5ad3` publicado e conferido (315 arquivos,
-  0 ausente/obsoleto); smoke pós-correção aprovado no Spark 4.2.0. O chat segue
-  bloqueado por cota até 01/09, impedindo prompts e os 3 forward tests pendentes.
+- Observado em 2026-08-29 (fato datado, não estado atual): commit `02a5ad3`
+  publicado e conferido (315 arquivos, 0 ausente/obsoleto); smoke pós-correção
+  aprovado no Spark 4.2.0; chat bloqueado por cota **até 01/09**.
+- Estado da cota: **pendente de revalidação**. A janela declarada em agosto já
+  passou. Não presuma que o bloqueio continua nem que acabou — abra um chat novo
+  e registre o que aconteceu. Testar a disponibilidade custa menos que inferir,
+  e "bloqueado" nunca vira "aprovado" por decurso de prazo.
 - Somente dados sintéticos; nada do banco.

@@ -3,7 +3,7 @@
 Política: estar na vanguarda do que a Databricks lança **sem afirmar recurso que
 não existe**. Em dúvida, verificar a documentação oficial antes de afirmar.
 
-## Nomenclatura vigente (verificada em 2026-08-13)
+## Nomenclatura vigente (verificada em 2026-09-09)
 
 - **Genie Code** — assistente de código do Databricks (Azure: docs em
   `learn.microsoft.com/en-us/azure/databricks/genie-code/`).
@@ -16,6 +16,14 @@ não existe**. Em dúvida, verificar a documentação oficial antes de afirmar.
 - `AGENTS.md`/`CLAUDE.md`: descoberta hierárquica automática ao abrir arquivo.
 - **Lakeflow Spark Declarative Pipelines**, **Lakeflow Jobs**,
   **Declarative Automation Bundles** (nome anterior: Databricks Asset Bundles).
+- O prompt pode receber contexto explícito por `@` e imagens. Imagem ajuda a
+  comunicar estado visual, mas não substitui nomes, grão, restrições e critério
+  de aceite em texto.
+- Ações do modo agente respeitam permissões e a política de aprovação configurada;
+  um prompt não amplia ACL nem substitui autorização de negócio.
+- MCP no Genie Code inclui servidores gerenciados, externos e customizados. A
+  interface também pode oferecer conectores nativos em Beta; disponibilidade e
+  suporte precisam ser conferidos no workspace e não são promessa do Hub.
 
 ## Capacidades que NÃO existem (não prometa)
 
@@ -27,6 +35,8 @@ não existe**. Em dúvida, verificar a documentação oficial antes de afirmar.
   `/Users/<username>/.assistant/.mcp_servers.json` (verificado em 2026-08-15).
   O arquivo é saída da configuração, nunca entrada — criá-lo à mão não configura
   nada, e ele não deve ser versionado nem removido do workspace.
+- Segredos de MCP, conector ou API em instruções, prompt, skill ou Git. Use o
+  mecanismo de credenciais autorizado pelo workspace.
 - Instruções aplicadas a Quick Fix e Autocomplete (exceção oficial).
 
 ## Convenção local

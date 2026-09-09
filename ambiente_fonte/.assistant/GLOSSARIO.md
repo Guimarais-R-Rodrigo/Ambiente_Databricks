@@ -33,7 +33,8 @@ Databricks; um termo de **modelagem** independe de ferramenta; uma
 | **Lakeflow Spark Declarative Pipelines** | Framework declarativo para pipelines, qualidade e observabilidade. Nome anterior: Delta Live Tables. |
 | **Declarative Automation Bundles** | Definição versionável de recursos e destinos de implantação. Nome anterior: Databricks Asset Bundles. |
 | **Git folder** | Repositório Git no workspace; é controle de versão, não diretório nativo de descoberta de skills. |
-| **MCP** | Protocolo para conectar ferramentas e fontes externas. No Genie Code, a configuração é feita em Settings; nunca versione tokens. |
+| **MCP** | Protocolo para conectar ferramentas e fontes externas. No Genie Code, servidores gerenciados, externos ou customizados são configurados em Settings; nunca versione tokens. |
+| **Conector nativo (Beta)** | Integração oferecida pela interface para uma fonte externa. Disponibilidade e suporte variam por workspace; não é pasta nem convenção deste Hub. |
 
 ## Estatística e machine learning
 

@@ -18,6 +18,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from repo_inventory import git_paths
 from notebook_marker import eh_notebook, texto_e_notebook  # noqa: E402
 from project_policy import CORPORATE_RE, EXPECTED_SKILL_NAMES, PERSONAL_RE  # noqa: E402
 
@@ -351,7 +352,7 @@ def check_skill_secoes(root: Path, problems: list[str]) -> tuple[int, int]:
     return verificados, completas
 
 
-def check_saida_de_comando_no_readme(problems: list[str]) -> int:
+def check_saida_de_comando_no_readme(problems: list[str], *, remoto: bool = False) -> int:
     """Reexecuta os comandos que o README documenta e compara com o colado.
 
     O `README.md` da raiz ensina o ciclo colando a saída real de cada comando.
@@ -378,13 +379,17 @@ def check_saida_de_comando_no_readme(problems: list[str]) -> int:
         "contrato de dados  :", "contrato de entrada:", "saída colada       :",
         "idioma da docstring:", "normas do molde    :", "notebook exercita  :",
         "python (AST)       :", "instrucoes         :", "repo (identidade)  :",
-        "repo (links)       :", "esperados : ", "remotos   : ", "ausentes  : ",
-        "skills    :", "extensões :",
+        "repo (links)       :", "APROVADO: 0 falha(s)",
     )
     comandos = [
         [sys.executable, str(REPO_ROOT / "tools" / "validate_assistant.py")],
-        [sys.executable, str(REPO_ROOT / "tools" / "publicar_free.py"), "--verify"],
     ]
+    if remoto:
+        rotulos = (
+            "esperados : ", "remotos   : ", "ausentes  : ", "skills    :",
+            "extensões :", "APROVADO: 0 problema(s)",
+        )
+        comandos = [[sys.executable, str(REPO_ROOT / "tools" / "publicar_free.py"), "--verify"]]
     # O filho herda a codificação do console, que no Windows é cp1252 e devolve
     # caractere de substituição em acento — e aí a comparação falha por
     # codificação, não por divergência real. PYTHONIOENCODING resolve na origem.
@@ -1373,12 +1378,37 @@ def check_instructions_size(root: Path, problems: list[str]) -> int:
 
 
 def iter_repo_files() -> list[Path]:
-    """Arquivos do repositório inteiro, exceto referências congeladas e caches."""
-    return [
-        p
-        for p in REPO_ROOT.rglob("*")
-        if not any(parte in REPO_IGNORE for parte in p.relative_to(REPO_ROOT).parts)
-    ]
+    """Inventário versionado, independente de arquivos locais ignorados."""
+    return [p for p in git_paths(REPO_ROOT)
+            if not any(parte in REPO_IGNORE for parte in p.relative_to(REPO_ROOT).parts)]
+
+
+def check_worktree_hygiene(problems: list[str]) -> int:
+    """Extras são examinados sem alterar a contagem certificada do versionado."""
+    paths = [p for p in git_paths(REPO_ROOT, untracked=True)
+             if not any(part in REPO_IGNORE or part in {".pytest_cache", ".ruff_cache"}
+                        for part in p.relative_to(REPO_ROOT).parts)]
+    count = 0
+    for p in paths:
+        rel = p.relative_to(REPO_ROOT)
+        if CORPORATE_RE.search(str(rel)) or PERSONAL_RE.search(str(rel)):
+            problems.append(f"worktree: identidade no caminho {rel}")
+        if not p.is_file() or p.suffix not in {".md", ".py", ".json", ".txt"}:
+            continue
+        count += 1
+        try:
+            content = p.read_text(encoding="utf-8")
+        except (OSError, UnicodeError):
+            problems.append(f"worktree: arquivo ilegível/UTF-8 inválido: {rel}")
+            continue
+        if CORPORATE_RE.search(content) or PERSONAL_RE.search(content) or MOJIBAKE_RE.search(content):
+            problems.append(f"worktree: higiene de conteúdo inválida: {rel}")
+        if p.suffix == ".md":
+            for match in MD_LINK_RE.finditer(content):
+                target = match.group(1)
+                if not target.startswith(("http://", "https://", "mailto:")) and not alvo_existe(p.parent, target):
+                    problems.append(f"worktree: link quebrado em {rel}: {target}")
+    return count
 
 
 def check_repo_corporate(problems: list[str]) -> int:
@@ -1398,6 +1428,9 @@ def check_repo_corporate(problems: list[str]) -> int:
         relativo = caminho.relative_to(REPO_ROOT)
         if CORPORATE_RE.search(str(relativo)) or PERSONAL_RE.search(str(relativo)):
             problems.append(f"{relativo}: identificador pessoal/corporativo no caminho")
+        if not caminho.exists():
+            problems.append(f"arquivo versionado ausente na worktree: {relativo}")
+            continue
         if not caminho.is_file() or caminho.suffix not in {".md", ".py", ".txt", ".json"}:
             continue
         verificados += 1
@@ -1483,17 +1516,15 @@ def main() -> int:
         "--conferir-readme",
         action="store_true",
         dest="conferir_readme",
-        help=(
-            "reexecuta os comandos que o README.md documenta e compara com a "
-            "saída colada. Fica fora do caminho padrão porque chama os próprios "
-            "scripts, e recursão em validação é armadilha; use antes de commitar "
-            "mudança que altere contagem."
-        ),
+        help="confere apenas contagens locais do README; não chama Databricks",
+
     )
+    parser.add_argument("--conferir-readme-remoto", action="store_true",
+                        help="confere somente o bloco remoto; exige CLI/autenticação Databricks")
     parser.add_argument("--root", default="ambiente_fonte", type=Path)
     args = parser.parse_args()
 
-    root = args.root.resolve()
+    root = (REPO_ROOT / args.root).resolve()
     if not root.exists():
         print(f"FAIL raiz não encontrada: {root}")
         return 1
@@ -1525,8 +1556,15 @@ def main() -> int:
     n_readme = 0
     if args.conferir_readme:
         n_readme = check_saida_de_comando_no_readme(problems)
-    n_repo = check_repo_corporate(problems)
-    n_repo_links = check_repo_links(root, problems)
+    if args.conferir_readme_remoto:
+        n_readme += check_saida_de_comando_no_readme(problems, remoto=True)
+    n_repo = n_repo_links = n_extras = 0
+    try:
+        n_repo = check_repo_corporate(problems)
+        n_repo_links = check_repo_links(root, problems)
+        n_extras = check_worktree_hygiene(problems)
+    except (ValueError, UnicodeError) as exc:
+        problems.append(f"inventário não certificado: {exc}")
 
     print(f"raiz analisada     : {root}")
     print(f"skills             : {n_skills} · {n_completas}/{n_secoes} com as 5 seções estruturais")
@@ -1548,6 +1586,7 @@ def main() -> int:
     print(f"instrucoes         : {n_chars}/{INSTRUCTION_LIMIT} caracteres")
     print(f"repo (identidade)  : {n_repo} arquivos varridos no repositório editável/derivado")
     print(f"repo (links)       : {n_repo_links} links fora da raiz analisada")
+    print(f"worktree (extras)  : {n_extras} arquivos locais examinados, fora da contagem versionada")
     print()
     for warning in warnings:
         print(f"WARN {warning}")

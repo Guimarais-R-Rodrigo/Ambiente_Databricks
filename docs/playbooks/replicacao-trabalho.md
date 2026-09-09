@@ -131,9 +131,18 @@ script recusa esse parâmetro por decisão registrada em ADR-0003.
 
 Pontos de atenção verificados no laboratório:
 
-- Arquivos `.py` devem ficar como **arquivo**, não como notebook. Importação por
-  UI pode converter `.py` em notebook dependendo da opção escolhida; se isso
-  ocorrer, os imports de `hub_snippets` falham.
+- Nem todo `.py` vai como arquivo. O tipo depende do papel, e os dois erros
+  quebram coisas diferentes:
+
+  | Arquivo | Tipo no workspace | O que quebra se errar |
+  |---|---|---|
+  | módulo da biblioteca (`psi_calculator.py`, `pit_join.py`, …) | **arquivo** | como notebook, `from hub_snippets...` falha |
+  | material didático (`exemplo_<nome>.py`) | **notebook** | como arquivo, não há células para executar |
+
+  A distinção é a mesma que `tools/publicar_free.py` aplica no Free e que o
+  checklist confere item a item. Importação por UI pode converter `.py` em
+  notebook conforme a opção escolhida: confira o tipo dos dois casos depois de
+  subir, não só de um.
 - O arquivo de instruções precisa do ponto inicial e do nome exato
   `.assistant_instructions.md`, na raiz do diretório do usuário.
 

@@ -69,23 +69,20 @@ continuam exigindo import explícito.
 
 ## Estado comprovado
 
-Última consolidação operacional: **29/08/2026**.
+Última consolidação operacional: **09/09/2026**.
 
 | Gate | Estado | Evidência |
 |---|---|---|
 | validação local | ✅ aprovado | fonte, links, contratos, Python e higiene |
 | render | ✅ aprovado | espelho regenerado a partir da fonte |
-| publicação Free | ✅ aprovado após este redesenho | [316 esperados, 0 ausentes e 0 obsoletos](docs/testes/2026-08-29_etapa-6-redesenho-documental.md) |
-| smoke Spark 4.2.0 | ✅ 145 verificações: 136 PASS, 0 FAIL, 8 opcionais ausentes e 1 bloqueio esperado | [JSON](docs/testes/spark/resultados/2026-08-29_smoke_a2.json) |
-| roteamento das 12 skills originais | ✅ 36/36 | [forward tests](docs/testes/forward/README.md) |
-| `hub-ml-criar-objeto` | ⏳ 0/3 | cota do Genie Code impediu a rodada |
-| respostas das 16 famílias de prompts | ⏳ pendente | contrato estático aprovado; teste conversacional bloqueado por cota |
+| publicação Free | ✅ 316/316 conteúdos iguais; 0 ausentes/obsoletos | [fechamento de 09/09](docs/testes/2026-09-09_fechamento-codex.md) |
+| smoke Spark 4.2.0 | ✅ 146 verificações: 137 PASS, 0 FAIL, 8 opcionais ausentes e 1 bloqueio esperado | [JSON](docs/testes/spark/resultados/2026-09-09_smoke_codex_final.json) |
+| roteamento das 13 skills | ✅ 39/39 | [forward tests](docs/testes/forward/README.md) |
+| respostas das 16 famílias de prompts | ⏳ pendente | contrato estático 16/16; falta fixture e rubrica conversacional por família |
 | replicação no trabalho | ⛔ não executada | depende dos gates conversacionais e do runbook no destino |
 
-A síntese das etapas 1 a 5, incluindo run e task do smoke, está em
-[`2026-08-29_execucao-etapas-1-a-5.md`](docs/testes/2026-08-29_execucao-etapas-1-a-5.md).
-A publicação do redesenho e o pacote de 316 arquivos estão na
-[evidência da etapa 6](docs/testes/2026-08-29_etapa-6-redesenho-documental.md).
+A publicação final, o pacote de 316 arquivos, o smoke e o roteamento estão na
+[evidência de fechamento](docs/testes/2026-09-09_fechamento-codex.md).
 
 `OPTIONAL_MISSING` não é falha do helper: indica biblioteca opcional ausente.
 `BLOQUEADO_ESPERADO` é um limite de plataforma previamente documentado e
@@ -216,13 +213,21 @@ Veja [auditorias](docs/auditoria/README.md),
 ## Saídas de referência conferíveis
 
 Estas linhas têm um único objetivo: permitir que
-`validate_assistant.py --conferir-readme` detecte documentação envelhecida.
+`validate_assistant.py --conferir-readme` detecte documentação local envelhecida.
+
+As contagens de repositório usam o inventário Git, com higiene de extras locais
+separada. A linha volátil `worktree (extras)` não é congelada neste README: ela
+descreve arquivos locais e ignorados desta máquina, não o produto versionado.
+Qualquer problema nesses extras continua reprovando; a contagem aparece na saída
+ao vivo do validador. Para conferir o bloco remoto abaixo, use
+`--conferir-readme-remoto` com acesso autenticado ao Free. Esse bloco preserva
+a referência remota anterior até uma nova execução; não é certificação do novo código.
 Os valores abaixo foram recapturados após o render e a republicação deste
 redesenho.
 
 ```text
 raiz analisada     : <repo>\ambiente_fonte
-skills             : 13 · 13/13 com as 5 seções estruturais
+skills    : 13/13
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 81 caminhos verificados
 markdown / links   : 107 arquivos / 190 links relativos
@@ -237,8 +242,8 @@ normas do molde    : 70 arquivos, 0 violação(ões)
 notebook exercita  : 57 objetos, 0 notebook(s) que só importam
 python (AST)       : 209 arquivos
 instrucoes         : 8116/20000 caracteres
-repo (identidade)  : 737 arquivos varridos no repositório editável/derivado
-repo (links)       : 347 links fora da raiz analisada
+repo (identidade)  : 749 arquivos varridos no repositório editável/derivado
+repo (links)       : 363 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
@@ -253,7 +258,7 @@ esperados : 316 arquivos
 remotos   : 317 arquivos sob .assistant + instruções
 ausentes  : 0 | obsoletos: 0
 plataforma: 1 arquivo(s) gerenciado(s) — .assistant/.mcp_servers.json
-skills    : 13/13
+skills             : 13 · 13/13 com as 5 seções estruturais
 extensões : 4/4 diretórios hub_
 
 APROVADO: 0 problema(s)
