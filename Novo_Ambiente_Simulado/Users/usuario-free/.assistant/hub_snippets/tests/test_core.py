@@ -16,7 +16,11 @@ sys.path.insert(0, str(ASSISTANT_ROOT))
 from hub_snippets.constants.format_br import fmt_brl, fmt_pct
 from hub_snippets.ml.lgbm_temporal import create_temporal_features
 from hub_snippets.ml.metrics_report import calculate_binary_metrics, calculate_regression_metrics
-from hub_snippets.ml.performance_monitor import EXAMPLE_THRESHOLDS, PerformanceMonitor
+from hub_snippets.ml.performance_monitor import (
+    EXAMPLE_THRESHOLDS,
+    PerformanceMonitor,
+    selecionar_metricas_do_relatorio,
+)
 from hub_snippets.ml.curves_plotly import plot_lift_curve
 from hub_snippets.ml.score_bands import generate_score_bands
 from hub_snippets.ml.scorecard_builder import build_scorecard
@@ -352,6 +356,77 @@ class CurveTests(unittest.TestCase):
     def test_lift_requires_both_classes(self) -> None:
         with self.assertRaisesRegex(ValueError, "both classes"):
             plot_lift_curve(np.zeros(10), np.linspace(0.1, 0.9, 10))
+
+
+class ReferenceChainTests(unittest.TestCase):
+    """Cadeia sintética de referência: split -> features -> métricas -> monitor.
+
+    Cada helper tem teste próprio. O que nenhum deles cobre é a costura: as
+    unidades e os nomes que atravessam a fronteira entre um e o outro. Foi ali
+    que o KS em escala errada passou despercebido.
+    """
+
+    def _painel(self) -> pd.DataFrame:
+        datas = pd.date_range("2024-01-01", periods=24, freq="MS")
+        linhas = []
+        for entidade in ("a", "b"):
+            for indice, data in enumerate(datas):
+                linhas.append({"entity": entidade, "date": data, "value": float(indice)})
+        return pd.DataFrame(linhas)
+
+    def _relatorio(self) -> dict:
+        rng = np.random.default_rng(42)
+        y_true = np.repeat([0, 1], 200)
+        y_prob = np.clip(
+            np.where(y_true == 1, rng.normal(0.70, 0.12, 400), rng.normal(0.30, 0.12, 400)),
+            0.001,
+            0.999,
+        )
+        return calculate_binary_metrics(y_true, y_prob)
+
+    def test_chain_runs_end_to_end_with_declared_units(self) -> None:
+        painel = self._painel()
+        treino, validacao, teste = temporal_split(painel, "date", gap_periods=1, period_unit="M")
+        self.assertTrue(len(treino) and len(validacao) and len(teste))
+
+        features = create_temporal_features(
+            treino, "value", "date", lags=[1], rolling_windows=[], entity_cols=["entity"]
+        )
+        self.assertIn("lag_1", features.columns)
+
+        selecionadas = selecionar_metricas_do_relatorio(self._relatorio())
+        monitor = PerformanceMonitor(
+            selecionadas, policy={chave: EXAMPLE_THRESHOLDS[chave] for chave in selecionadas}
+        )
+        monitor.add_period("p1", {**selecionadas, "auc": selecionadas["auc"] - 0.08})
+        self.assertEqual(monitor.history[0]["auc_status"], "🔴")
+
+    def test_raw_report_is_rejected_loudly_by_the_monitor(self) -> None:
+        with self.assertRaisesRegex(ValueError, "policy is missing monitored metrics"):
+            PerformanceMonitor(self._relatorio())
+
+    def test_naive_name_matching_loses_auc_but_selection_keeps_it(self) -> None:
+        relatorio = self._relatorio()
+        ingenua = {c: v for c, v in relatorio.items() if c in EXAMPLE_THRESHOLDS}
+        self.assertNotIn("auc", ingenua, "o relatório chama a métrica de auc_roc")
+
+        selecionadas = selecionar_metricas_do_relatorio(relatorio)
+        self.assertIn("auc", selecionadas)
+        self.assertAlmostEqual(selecionadas["auc"], relatorio["auc_roc"])
+
+    def test_ks_keeps_percent_points_across_the_boundary(self) -> None:
+        relatorio = self._relatorio()
+        selecionadas = selecionar_metricas_do_relatorio(relatorio)
+        self.assertAlmostEqual(selecionadas["ks_pct"], relatorio["ks_pct"])
+        self.assertGreater(selecionadas["ks_pct"], 1.0, "KS em pontos percentuais, não fração")
+
+    def test_selection_without_any_policy_match_fails_instead_of_returning_empty(self) -> None:
+        with self.assertRaisesRegex(ValueError, "nenhuma métrica"):
+            selecionar_metricas_do_relatorio({"metrica_inventada": 1.0})
+
+    def test_non_finite_metric_is_dropped_not_forwarded(self) -> None:
+        selecionadas = selecionar_metricas_do_relatorio({"auc_roc": float("nan"), "ks_pct": 40.0})
+        self.assertEqual(selecionadas, {"ks_pct": 40.0})
 
 
 if __name__ == "__main__":

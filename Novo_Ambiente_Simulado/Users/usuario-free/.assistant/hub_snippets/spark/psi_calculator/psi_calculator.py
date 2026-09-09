@@ -12,6 +12,13 @@ from typing import Dict, List, Optional
 from pyspark.sql import Column, DataFrame, functions as F
 
 
+# Limite padrão de categorias distintas coletadas no CSI categórico. Não é um
+# número universal: depende do volume, do tamanho dos valores e do recurso do
+# cluster. Existe para que estourar o driver seja uma decisão explícita, e não um
+# OOM no meio de uma execução longa.
+LIMITE_CATEGORIAS_CSI = 1000
+
+
 def _validate(df_base: DataFrame, df_atual: DataFrame, col: str, n_bins: int) -> None:
     if not 2 <= n_bins <= 100:
         raise ValueError("n_bins deve estar entre 2 e 100")
@@ -64,17 +71,52 @@ def calcular_psi(df_base: DataFrame, df_atual: DataFrame, col: str, n_bins: int 
     return round(_stability_index(base, current, n_base, n_current), 6)
 
 
-def _calcular_csi_categorico(df_base: DataFrame, df_atual: DataFrame, col: str) -> float:
+def _calcular_csi_categorico(
+    df_base: DataFrame, df_atual: DataFrame, col: str, max_categorias: int
+) -> float:
+    """Calcule CSI categórico protegendo o driver contra alta cardinalidade.
+
+    A distribuição completa vai para o driver. Numa coluna de baixa cardinalidade
+    — UF, produto, canal — isso é barato. Numa coluna de identificador, documento
+    mascarado ou hash, o mesmo código traz milhões de linhas e derruba o driver.
+    A contagem de categorias distintas custa um shuffle e acontece **antes** da
+    coleta, para que o limite chegue a tempo de evitar o estouro.
+
+    Categorias raras não são agrupadas. Se um dia forem, a regra de agrupamento
+    precisa ser derivada da **referência** e aplicada aos dois períodos; agrupar
+    cada período por conta própria compara faixas diferentes e inventa deriva.
+    """
     category = F.coalesce(F.col(col).cast("string"), F.lit("__MISSING__"))
-    base_rows = df_base.select(category.alias("category")).groupBy("category").count().collect()
-    current_rows = df_atual.select(category.alias("category")).groupBy("category").count().collect()
-    base = {row["category"]: int(row["count"]) for row in base_rows}
-    current = {row["category"]: int(row["count"]) for row in current_rows}
+    base_agrupado = df_base.select(category.alias("category")).groupBy("category").count()
+    atual_agrupado = df_atual.select(category.alias("category")).groupBy("category").count()
+    n_base = base_agrupado.count()
+    n_atual = atual_agrupado.count()
+    if max(n_base, n_atual) > max_categorias:
+        raise ValueError(
+            f"coluna {col!r} tem {max(n_base, n_atual)} categorias distintas, acima do "
+            f"limite de {max_categorias}. Coletar essa distribuição no driver é o "
+            "caminho para estourar memória. Agregue a coluna antes, escolha outra "
+            "granularidade, ou eleve max_categorias conscientemente — o limite certo "
+            "depende do volume, do tamanho dos valores e do recurso do cluster."
+        )
+    base = {row["category"]: int(row["count"]) for row in base_agrupado.collect()}
+    current = {row["category"]: int(row["count"]) for row in atual_agrupado.collect()}
     return round(_stability_index(base, current, sum(base.values()), sum(current.values())), 6)
 
 
-def calcular_csi(df_base: DataFrame, df_atual: DataFrame, feature_cols: List[str], n_bins: int = 20) -> Dict[str, float]:
-    """Calcule estabilidade por feature; numéricas usam PSI, demais usam categorias."""
+def calcular_csi(
+    df_base: DataFrame,
+    df_atual: DataFrame,
+    feature_cols: List[str],
+    n_bins: int = 20,
+    max_categorias: int = LIMITE_CATEGORIAS_CSI,
+) -> Dict[str, float]:
+    """Calcule estabilidade por feature; numéricas usam PSI, demais usam categorias.
+
+    ``max_categorias`` protege o driver nas colunas categóricas. O PSI numérico
+    não recebe a mesma guarda porque ele coleta no máximo ``n_bins`` linhas,
+    independentemente do volume da tabela.
+    """
     if not feature_cols:
         raise ValueError("feature_cols não pode ser vazio")
     missing = set(feature_cols) - set(df_base.columns) | (set(feature_cols) - set(df_atual.columns))
@@ -87,7 +129,7 @@ def calcular_csi(df_base: DataFrame, df_atual: DataFrame, feature_cols: List[str
         if any(token in base_types[col] for token in numeric_tokens):
             results[col] = calcular_psi(df_base, df_atual, col, n_bins)
         else:
-            results[col] = _calcular_csi_categorico(df_base, df_atual, col)
+            results[col] = _calcular_csi_categorico(df_base, df_atual, col, max_categorias)
     return dict(sorted(results.items(), key=lambda item: item[1], reverse=True))
 
 

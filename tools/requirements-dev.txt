@@ -1,0 +1,21 @@
+# Dependências para rodar o gate local (tools/ci_local.py) num checkout limpo.
+#
+# Este arquivo é de MANUTENÇÃO e não é publicado no workspace. As dependências
+# do produto ficam em ambiente_fonte/.assistant/hub_snippets/requirements-optional.txt,
+# que registra runtime e combinações medidas — outro arquivo, outro propósito.
+#
+# Versões com piso e sem teto: o gate local precisa rodar em máquina nova sem
+# ficar preso a uma combinação de agosto. Se uma delas quebrar o gate, o lugar de
+# fixar é aqui, com a data e o motivo.
+
+numpy>=1.26
+pandas>=2.0
+scikit-learn>=1.4
+plotly>=5.20
+
+# NÃO entram aqui de propósito:
+# - pyspark: os casos que precisam de Spark rodam no Databricks, não no gate
+#   local. Instalar pyspark aqui daria a impressão de que o gate cobre o runtime,
+#   e ele não cobre.
+# - databricks-cli: o gate local roda sem credencial. Publicação e verify remoto
+#   são etapa separada, por decisão do plano consolidado.

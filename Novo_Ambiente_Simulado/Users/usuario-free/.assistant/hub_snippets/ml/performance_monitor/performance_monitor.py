@@ -1,4 +1,20 @@
-"""Acompanha métricas do modelo contra uma política de monitoramento explícita."""
+"""Acompanha métricas do modelo contra uma política de monitoramento explícita.
+
+Migração de chave. Até a unificação de escala, ``metrics_report`` devolvia ``ks``
+em fração e a política falava em ``ks``. Hoje o relatório devolve ``ks_pct`` em
+pontos percentuais e a política usa a mesma chave e a mesma escala. Quem ainda lê
+``ks`` precisa passar a ler ``ks_pct``: não é renomeação cosmética, a escala mudou
+junto, e comparar 0,40 com um limiar de 3,0 pontos não acusa deriva nenhuma.
+
+Os dois vocabulários ainda não coincidem em tudo: o relatório devolve ``auc_roc``
+e a política de exemplo fala em ``auc``. Passar o dicionário inteiro do relatório
+ao monitor **falha alto**, com ``policy is missing monitored metrics`` — o
+relatório traz accuracy, precision, recall e outras que não têm limiar. O risco
+silencioso está no contorno óbvio: selecionar à mão só as chaves cujo nome já
+coincide com a política deixa a AUC de fora, porque ela se chama ``auc_roc``, e o
+monitoramento passa a rodar sem a métrica principal sem nunca reclamar.
+``selecionar_metricas_do_relatorio`` faz a seleção e a tradução no mesmo passo.
+"""
 
 from __future__ import annotations
 
@@ -27,6 +43,58 @@ EXAMPLE_THRESHOLDS = {
     "ndcg_at_10": {"warning": 0.05, "critical": 0.10, "direction": "higher", "delta": "absolute"},
     "c_index": {"warning": 0.03, "critical": 0.05, "direction": "higher", "delta": "absolute"},
 }
+
+
+# Vocabulário do relatório -> vocabulário da política. Explícito de propósito:
+# uma conversão por heurística de nome erraria em silêncio, que é exatamente o
+# defeito que este mapa existe para impedir.
+CHAVES_DO_RELATORIO = {
+    "auc_roc": "auc",
+    "ks_pct": "ks_pct",
+    "gini": "gini",
+    "rmse": "rmse",
+    "mape": "mape",
+}
+
+
+def selecionar_metricas_do_relatorio(
+    relatorio: Dict[str, Any],
+    politica: Optional[Dict[str, Any]] = None,
+) -> Dict[str, float]:
+    """Traduza a saída de ``metrics_report`` para o vocabulário da política.
+
+    Args:
+        relatorio: dicionário devolvido por ``calculate_binary_metrics`` ou
+            ``calculate_regression_metrics``.
+        politica: política de limiares; ``EXAMPLE_THRESHOLDS`` por padrão.
+
+    Returns:
+        Somente as métricas presentes na política, já com a chave dela e com
+        valor numérico finito. Métrica sem política é descartada de propósito:
+        limiar ausente não é limiar zero.
+
+    Raises:
+        ValueError: nenhuma métrica do relatório pertence à política. Devolver
+            um dicionário vazio faria o monitor aceitar um período sem medir
+            nada, que é pior do que falhar.
+    """
+    alvo = EXAMPLE_THRESHOLDS if politica is None else politica
+    selecionadas: Dict[str, float] = {}
+    for chave_relatorio, valor in relatorio.items():
+        chave_politica = CHAVES_DO_RELATORIO.get(chave_relatorio, chave_relatorio)
+        if chave_politica not in alvo:
+            continue
+        if isinstance(valor, bool) or not isinstance(valor, (int, float)):
+            continue
+        if not math.isfinite(float(valor)):
+            continue
+        selecionadas[chave_politica] = float(valor)
+    if not selecionadas:
+        raise ValueError(
+            "nenhuma métrica do relatório pertence à política: "
+            f"relatório={sorted(relatorio)}, política={sorted(alvo)}"
+        )
+    return selecionadas
 
 
 class PerformanceMonitor:

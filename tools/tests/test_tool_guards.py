@@ -237,16 +237,34 @@ class PublishContentGuardTests(unittest.TestCase):
         base = Path(self.temp.name)
         self.fonte = base / "ambiente_fonte"
         self.espelho = base / "espelho"
+        # write_bytes, e não write_text: no Windows o modo texto traduz \\n para
+        # \\r\\n, e o teste passaria a medir a tradução do sistema operacional em
+        # vez do contrato da comparação.
         for raiz in (self.fonte, self.espelho):
             (raiz / ".assistant" / "hub_snippets").mkdir(parents=True)
-            (raiz / ".assistant_instructions.md").write_text("instrucoes\n", encoding="utf-8")
-            (raiz / ".assistant" / "hub_snippets" / "modulo.py").write_text(
-                "def f():\n    return 1\n", encoding="utf-8"
+            (raiz / ".assistant_instructions.md").write_bytes(b"instrucoes\n")
+            (raiz / ".assistant" / "hub_snippets" / "modulo.py").write_bytes(
+                b"def f():\n    return 1\n"
             )
-            (raiz / ".assistant" / "hub_snippets" / "exemplo_modulo.py").write_text(
-                "# Databricks notebook source\nprint(1)\n", encoding="utf-8"
+            (raiz / ".assistant" / "hub_snippets" / "exemplo_modulo.py").write_bytes(
+                b"# Databricks notebook source\nprint(1)\n"
             )
         self.arquivos = sorted(p for p in self.espelho.rglob("*") if p.is_file())
+
+    def _mapa_remoto(self, home: str = "/Users/x") -> dict:
+        """Caminho remoto -> arquivo local, montado como o publicador monta.
+
+        Casar por ``endswith`` dependia da ordem de iteração e do separador de
+        path do sistema: '.../exemplo_modulo' termina em 'modulo'.
+        """
+        mapa = {}
+        for arquivo in self.arquivos:
+            relativo = str(arquivo.relative_to(self.espelho)).replace("\\", "/")
+            if publisher.eh_notebook(arquivo):
+                mapa[f"{home}/{relativo[:-3]}"] = arquivo
+            else:
+                mapa[f"{home}/{relativo}"] = arquivo
+        return mapa
 
     def tearDown(self) -> None:
         self.temp.cleanup()
@@ -307,12 +325,14 @@ class PublishContentGuardTests(unittest.TestCase):
     def test_documented_equivalent_representations_pass(self) -> None:
         """CRLF e quebra final de notebook são transformação da plataforma."""
 
+        mapa = self._mapa_remoto()
+
         def exportar(caminho: str, notebook: bool):
-            local = next(
-                a for a in self.arquivos
-                if caminho.endswith(a.name) or caminho.endswith(a.name[:-3])
-            )
-            dados = local.read_bytes().replace(b"\n", b"\r\n")
+            local = mapa[caminho]
+            # Normaliza para LF antes de simular o CRLF do remoto: sem isso, um
+            # arquivo já em CRLF no disco viraria \\r\\r\\n e o teste mediria o
+            # próprio defeito em vez do contrato.
+            dados = local.read_bytes().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
             if notebook:
                 dados += b"\r\n\r\n"
             return dados, ""
