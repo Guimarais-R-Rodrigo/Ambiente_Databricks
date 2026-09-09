@@ -675,8 +675,12 @@ def t_lgbm_temporal():
     painel = painel.rename(columns={"dt_referencia": "dt", "id_entidade": "id"})
     com_id = create_temporal_features(painel, target_col="valor", date_col="dt",
                                       lags=[1], rolling_windows=[3], entity_cols=["id"])
+    # Ignorar a entidade cria datas repetidas. Este cenário é deliberadamente
+    # comparativo, portanto opta pela ordem estável; pipelines reais devem
+    # declarar a entidade ou agregar o grão antes.
     sem_id = create_temporal_features(painel, target_col="valor", date_col="dt",
-                                      lags=[1], rolling_windows=[3])
+                                      lags=[1], rolling_windows=[3],
+                                      on_duplicate_dates="keep")
     # O contrato que a auditoria da Sprint 7 fixou: o módulo termina em dropna(),
     # e ignorar a entidade descarta MENOS linhas porque mistura as séries.
     assert len(com_id) < len(sem_id)

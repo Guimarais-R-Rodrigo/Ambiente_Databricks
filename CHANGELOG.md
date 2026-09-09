@@ -25,6 +25,9 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 - (Codex) O primeiro smoke de fechamento revelou incompatibilidade do sentinela
   `format="ISO8601"` com o pandas do runtime Databricks e inferência impossível
   numa fixture Spark totalmente nula; ambos foram corrigidos antes da nova rodada.
+- (Codex) O segundo smoke revelou um cenário legado que ignorava entidade com
+  datas duplicadas sem optar por `on_duplicate_dates="keep"`; o teste passou a
+  declarar essa escolha, preservando a proteção padrão do helper.
 
 ## 2026-09-09 — Correções da revisão e retomada no PC (Codex)
 
