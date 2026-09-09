@@ -5,6 +5,18 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-09 — Reformulação didática e promoção dos READMEs do ecossistema (Gemini)
+
+- (Gemini) Reformulados os 5 READMEs principais do projeto com foco didático, humano e sem dicotomia de ambientes (Free x trabalho):
+  - `README.md` (raiz do repositório) e `ambiente_fonte/.assistant/README.md` (guia do ecossistema): introdução didática, componentes modulares, arquitetura completa em Mermaid, fluxo de contexto para o Genie Code e FAQ abrangente.
+  - `ambiente_fonte/.assistant/hub_snippets/README.md`: catálogo detalhado por categorias funcionais (`ml`, `spark`, `display`, `visual`, `constants`, `testing`), padrão Pasta de Objeto (ADR-0007), passo a passo operacional e FAQ.
+  - `ambiente_fonte/.assistant/hub_scripts/README.md`: catálogo de diagnósticos de integridade e qualidade de dados (`data_quality_check`, `quick_profile`, `rfv_calculator`, `drift_detector`, `schema_to_yaml`, `naming_checker`, `doc_coverage`), fluxo sequencial e FAQ.
+  - `ambiente_fonte/.assistant/skills/README.md`: guia metodológico aprofundado das Agent Skills, roteamento do Genie Code via `@`, sinergia com helpers, templates e catálogo funcional.
+  - `ambiente_fonte/.assistant/hub_prompts/README.md`: especificação técnica de briefings estruturados para Genie Code, disciplina de metadados (`NÃO INFORMADO` / `NÃO APLICÁVEL`), catálogo por famílias e checklist de QA.
+- (Gemini) Revisão editorial sistemática em todos os documentos promovidos: suavização de tom, eliminação de afirmações absolutas ("garante", "100%", "blindagem estrita") e remoção de contadores fixos de componentes.
+- (Gemini) Espelho derivado `Novo_Ambiente_Simulado/` atualizado via `tools/render_simulado.py --write`.
+- (Gemini) Validação local aprovada integralmente com `tools/validate_assistant.py` (0 falhas, 0 avisos).
+
 ## 2026-09-09 — Fechamento das inconsistências residuais (Codex)
 
 - (Codex) `lgbm_temporal` agora recusa chaves de entidade nulas, parâmetros

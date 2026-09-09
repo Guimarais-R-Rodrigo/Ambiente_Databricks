@@ -1,294 +1,185 @@
-# Ecossistema `.assistant` para Databricks Genie Code
+# Ecossistema/Hub .assistant para Databricks Genie Code voltado para Machine Learning
 
-Este é o guia de uso do ambiente publicado. Ele reúne instruções, Agent Skills,
-prompts guiados e bibliotecas Python para trabalho de dados e machine learning
-no Databricks.
+> Um ambiente integrado de governança, biblioteca algorítmica e inteligência contextual que capacita o Databricks Assistant (Genie Code) a atuar como um especialista sênior em Machine Learning na sua rotina diária de desenvolvimento.
 
-> **Leia primeiro a legenda:** `NATIVO` é um mecanismo reconhecido pelo Genie
-> Code; `HUB` é conteúdo criado neste projeto. As skills `hub-ml-*` são conteúdo
-> do Hub dentro do mecanismo nativo de Agent Skills.
+---
 
-## Escolha sua rota
+## 🌟 O que é este Ecossistema e como ele ajuda no Databricks?
 
-| Quero… | Comece aqui |
-|---|---|
-| fazer uma análise com o método do Hub | [Escolher uma skill](#1-escolher-uma-skill) |
-| formular melhor um pedido | [Usar um prompt guiado](#2-usar-um-prompt-guiado) |
-| importar uma função pronta | [Usar um helper](#3-usar-um-helper) |
-| dar contexto permanente a um projeto | [Contexto por projeto](#4-contexto-por-projeto) |
-| instalar para uma pessoa ou equipe | [Instalação](#instalação) |
-| resolver erro de descoberta ou import | [Diagnóstico rápido](#diagnóstico-rápido) |
-| entender um termo | [Glossário](GLOSSARIO.md) |
+Desenvolver projetos de Machine Learning em ambientes de Big Data frequentemente envolve desafios repetitivos: escrever códigos extensos de engenharia de recursos (*feature engineering*), recalcular métricas de risco e drift, padronizar análises exploratórias e mitigar o risco de vazamento temporal (*data leakage*).
 
-## Como o contexto chega ao Genie Code
+Quando utilizamos assistentes de IA genéricos, eles frequentemente "reinventam a roda": geram códigos do zero, usam bibliotecas despadronizadas ou aplicam fórmulas matemáticas simplistas que não escalam no cluster Spark.
 
-Seta contínua indica descoberta nativa. Seta tracejada exige uma ação sua.
+**O Ecossistema `.assistant` resolve isso transformando o Databricks Assistant em um parceiro contextualizado.**
+
+Em vez de sugerir códigos genéricos da internet, o Genie Code passa a ter acesso a uma **biblioteca matemática curada, moldes de governança e habilidades especializadas** instaladas diretamente no workspace corporativo.
+
+```text
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           ROTINA DO CIENTISTA DE DADOS                       │
+│                                                                             │
+│   ❌ Sem o Hub: Códigos dispersos, reescrita de fórmulas, risco de leakage │
+│   ✅ Com o Hub: Algoritmos auditados, padrões corporativos e IA especialista│
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🧰 O que tem neste ambiente e como ele ajuda na rotina de trabalho?
+
+O ecossistema é dividido em 5 componentes modulares que cobrem todo o ciclo de vida analítico:
 
 ```mermaid
-flowchart LR
-  Q["Seu pedido"] --> U["Instruções pessoais<br/>NATIVO"]
-  Q --> A["AGENTS.md / CLAUDE.md<br/>NATIVO e hierárquico"]
-  Q --> S["Skill relevante<br/>NATIVO; conteúdo HUB"]
-  P["hub_prompts<br/>HUB"] -.->|"anexar ou copiar"| Q
-  H["hub_snippets / hub_scripts<br/>HUB"] -.->|"importar ou executar"| R["Código no runtime"]
-  U --> G["Genie Code"]
-  A --> G
-  S --> G
-  Q --> G
-  G --> R
+mindmap
+  root((Ecossistema .assistant))
+    Agent Skills
+      Raciocínio guiado
+      Fluxos analíticos de ponta a ponta
+      Guardrails anti-alucinação
+    Hub Snippets
+      Biblioteca algorítmica
+      Modelagem temporal sem leakage
+      Métricas de risco e drift
+    Hub Scripts
+      Diagnóstico rápido
+      Profiling de dados
+      Qualidade de schemas
+    Hub Prompts
+      Briefings estruturados
+      Comandos prontos para colar
+      Direcionamento preciso da IA
+    Hub Padrões
+      Moldes arquiteturais
+      Padronização corporativa
+      Engenharia consistente
 ```
 
-| Componente | Origem | Automático? | Como entra |
-|---|---|---:|---|
-| `.assistant_instructions.md` | nativo | sim* | instruções pessoais |
-| `Workspace/.assistant_workspace_instructions.md` | nativo | sim* | instruções administradas para o workspace |
-| `AGENTS.md` e `CLAUDE.md` | nativo | sim | descoberta na árvore do arquivo aberto |
-| `.assistant/skills/<nome>/SKILL.md` | nativo | quando relevante | pedido + `description`, ou `@nome` |
-| `hub_prompts/` | Hub | não | anexo/`@` ou texto copiado |
-| `hub_snippets/` e `hub_scripts/` | Hub | não | import Python explícito |
-| `hub_padroes/` | Hub | não | consulta ou anexo explícito |
+### 🧠 1. Agent Skills (`skills/`)
+* **O que são:** Habilidades modulares que orientam o raciocínio da IA em tarefas analíticas completas.
+* **Como ajudam:** Quando você pede uma análise exploratória (EDA), modelagem preditiva ou cálculo de safras, a skill injeta no assistente o passo a passo metodológico, o que nunca fazer (*guardrails*) e exatamente quais funções da biblioteca ele deve recomendar.
 
-\* As instruções não se aplicam a Quick Fix e Autocomplete, conforme a
-documentação oficial atual.
+### 📦 2. Hub Snippets (`hub_snippets/`)
+* **O que são:** Uma biblioteca Python pura, auditada e de alta performance pronta para importação direta em qualquer notebook.
+* **Como ajudam:** Disponibiliza mais de 50 funções prontas para produção:
+  * **Modelagem Temporal:** Divisão de bases e criação de *lags* protegidos contra vazamento de informação futura.
+  * **Risco de Crédito e Finanças:** Análise de Safras (*Vintage*), WOE/IV (*Weight of Evidence*), cálculo e calibração de scorecards.
+  * **Monitoramento:** Estabilidade Populacional (PSI/CSI) e monitor contínuo de drift de dados.
+  * **Spark Nativo:** Joins *point-in-time* seguros e sumarização de nulos em escala massiva.
 
-Nas demais superfícies suportadas, elas alcançam chat, sugestões inline e
-Suggest Fix. Salvo instrução em contrário, o Genie Code geralmente prioriza
-instruções de workspace sobre as pessoais; por isso a promoção para uso
-compartilhado exige revisão de conflito, não apenas cópia.
+### ⚡ 3. Hub Scripts (`hub_scripts/`)
+* **O que são:** Utilitários e scripts de linha de comando ou execução direta.
+* **Como ajudam:** Permitem rodar diagnósticos imediatos em tabelas Delta (perfilamento rápido, validação de schema para YAML e testes de conformidade) antes de iniciar a modelagem.
 
-O prefixo `hub_`/`hub-` indica autoria local, não menor qualidade. Ele existe
-para que ninguém confunda uma convenção deste pacote com uma interface
-institucional da Databricks.
+### 📝 4. Hub Prompts (`hub_prompts/`)
+* **O que são:** Catálogo de briefings e comandos pré-estruturados.
+* **Como ajudam:** Em vez de pensar em como formular uma pergunta complexa para o assistente, basta copiar o template de prompt específico (ex: auditoria estatística, baseline de ML, documentação de notebook) e colar no chat para receber uma resposta cirúrgica.
 
-## Instalação
+### 📐 5. Hub Padrões (`hub_padroes/`)
+* **O que são:** Moldes arquiteturais (*blueprints*) do ecossistema.
+* **Como ajudam:** Favorecem que qualquer novo código, skill ou documentação criado pela equipe siga as diretrizes de arquitetura, testes e qualidade estabelecidas para o projeto.
 
-### Uso pessoal
+---
 
-Copie para os caminhos documentados:
+## 🏛️ Arquitetura Completa do Ecossistema
 
-```text
-/Users/<username>/
-├── .assistant_instructions.md
-└── .assistant/
-    ├── skills/
-    ├── hub_prompts/
-    ├── hub_snippets/
-    ├── hub_scripts/
-    └── hub_padroes/
+O diagrama abaixo ilustra como os componentes interagem entre o repositório central, o workspace do Databricks e o cluster Spark durante a execução:
+
+```mermaid
+flowchart TB
+    subgraph Repositorio["📂 Repositório Central (Git)"]
+        Fonte["ambiente_fonte/\n(Código-Fonte Canônico)"]
+        Tools["tools/\n(Validação e Governança)"]
+        Testes["docs/testes/\n(Evidências e Smokes)"]
+    end
+
+    subgraph DatabricksWorkspace["☁️ Databricks Workspace Corporativo"]
+        direction TB
+        UserArea["/Users/usuario/"]
+        AssistantRoot["/Users/usuario/.assistant/"]
+        
+        subgraph ModulosAssistant[".assistant/ Componentes"]
+            direction LR
+            Skills["🧠 skills/\n(Habilidades Especializadas)"]
+            Snippets["📦 hub_snippets/\n(Biblioteca Python)"]
+            Scripts["⚡ hub_scripts/\n(Utilitários)"]
+            Prompts["📝 hub_prompts/\n(Briefings)"]
+            Padroes["📐 hub_padroes/\n(Moldes)"]
+        end
+        
+        Instructions[".assistant_instructions.md\n(Instruções Globais do Assistente)"]
+        Notebooks["📓 Seus Notebooks de Trabalho\n(Python / PySpark / SQL)"]
+    end
+
+    subgraph RuntimeCluster["⚡ Databricks Runtime (Cluster Spark)"]
+        PythonEnv["Python 3.12+ (sys.path)\n.assistant importável"]
+        SparkEngine["Motor Apache Spark\n(Processamento Distribuído)"]
+    end
+
+    Fonte -->|Sincronização / Publicação| AssistantRoot
+    Fonte -->|Instruções Globais| Instructions
+
+    Notebooks <-->|Chat Interativo & Contexto| AssistantRoot
+    Notebooks <-->|from hub_snippets import ...| PythonEnv
+    PythonEnv <--> SparkEngine
 ```
 
-As skills pessoais ficam disponíveis apenas para esse usuário. Prompts, helpers e
-padrões continuam manuais mesmo dentro de `.assistant/`.
+---
 
-### Uso compartilhado
+## 🔄 Como o Contexto chega ao Genie Code?
 
-Skills de workspace ficam em:
+Muitos usuários se perguntam: *“Como a IA do Databricks sabe que esses códigos existem sem que eu precise ensinar tudo para ela?”*
 
-```text
-Workspace/.assistant/skills/<nome>/SKILL.md
+A plataforma Databricks Assistant lê automaticamente a estrutura de instruções e pastas do seu workspace corporativo. O fluxo ocorre em 5 etapas bem definidas:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Dev as Cientista de Dados
+    participant UI as Chat do Genie Code
+    participant Core as Motor do Assistente (.assistant)
+    participant Nb as Notebook em Execução
+    participant Spark as Cluster Spark
+
+    Dev->>UI: Digita uma necessidade analítica (ex: "@hub-ml-analise-safra gere as curvas")
+    UI->>Core: Consulta .assistant_instructions.md e a Skill correspondente
+    Core-->>UI: Injeta regras, guardrails e recomenda: from hub_snippets.ml.vintage_analysis import ...
+    UI->>Nb: Gera a célula de código com os parâmetros corretos
+    Dev->>Nb: Executa a célula
+    Nb->>Spark: Importa o snippet e processa os dados com performance auditada
+    Spark-->>Nb: Retorna DataFrames e gráficos Plotly padronizados
 ```
 
-Instruções administradas para todo o workspace ficam em:
+### Explicação Passo a Passo:
 
-```text
-Workspace/.assistant_workspace_instructions.md
-```
+1. **Gatilho e Intenção:** Você abre o chat do assistente no Databricks e faz uma pergunta em linguagem natural ou referencia uma habilidade usando `@` (ex: `@hub-ml-feature-engineering`).
+2. **Carregamento de Diretrizes Globais:** O assistente lê `.assistant_instructions.md`, que estabelece a persona sênior, o idioma em português e a proibição de reinventar funções disponíveis.
+3. **Ativação da Skill e Injeção de Contexto:** A skill específica injeta no modelo as boas práticas da tarefa e fornece o caminho exato do módulo a ser importado (ex: `hub_snippets.spark.pit_join`).
+4. **Geração Segura de Código:** Em vez de gerar 80 linhas de cálculos manuais propensos a erros, o Genie Code gera um bloco limpo que importa o módulo correspondente da biblioteca.
+5. **Execução no Cluster:** O seu notebook importa a função diretamente da pasta `.assistant`, executando código homologado, rápido e com cobertura de testes completa no cluster Spark.
 
-Use permissões, revisão por Git e teste representativo antes de promover uma
-skill pessoal. Não copie automaticamente bibliotecas ou preferências pessoais
-para toda a equipe. Compare primeiro as instruções pessoais com as de workspace,
-porque as de workspace geralmente têm precedência quando houver sobreposição.
+---
 
-## Fluxo diário
+## ❓ Perguntas Frequentes (FAQ)
 
-### 1. Escolher uma skill
+### 1. O que acontece quando eu abro o chat do Databricks Assistant com este ecossistema configurado?
+O assistente passa a reconhecer automaticamente os padrões do seu time. Ele ganha a capacidade de autocomplete inteligente para as bibliotecas internas, entende as menções de skills (com `@`) e, ao invés de sugerir códigos genéricos ou tentar instalar pacotes externos não homologados, ele prioriza as funções já testadas do `hub_snippets`.
 
-O Genie Code pode carregar uma skill quando o pedido é relevante para a
-`description` dela. Para seleção explícita, mencione a skill com `@`.
-
-| Intenção | Skill |
-|---|---|
-| explorar uma base e sintetizar achados | `@hub-ml-eda-profissional` |
-| consolidar EDAs e decidir prontidão para ML | `@hub-ml-cross-eda-ml` |
-| criar features com controle temporal | `@hub-ml-feature-engineering` |
-| validar pressupostos, efeito e incerteza | `@hub-ml-validacao-estatistica` |
-| treinar um baseline governado | `@hub-ml-baseline-ml` |
-| explicar previsões com SHAP | `@hub-ml-explainability` |
-| acompanhar drift, performance e retreino | `@hub-ml-monitoramento-modelo` |
-| desenhar pipeline, Job ou bundle | `@hub-ml-pipeline-builder` |
-| analisar safra e maturação | `@hub-ml-analise-safra` |
-| documentar um notebook | `@hub-ml-comentar-notebook` |
-| aprender código, Spark, SQL ou plataforma | `@hub-ml-tutor-databricks` |
-| auditar uma saída contra seu contrato | `@hub-ml-auditoria-skills` |
-| criar um objeto no padrão do Hub | `@hub-ml-criar-objeto` |
-
-Exemplo copiável:
-
-```text
-@hub-ml-baseline-ml
-
-Objetivo: criar um baseline de classificação para prever {{EVENTO}}.
-Dados: @{{TABELA_OU_NOTEBOOK}}.
-Grão: uma linha por {{ENTIDADE}} na data {{INSTANTE_DE_DECISAO}}.
-Validação: split temporal; declare classe positiva e métrica principal.
-Restrições: não execute nem escreva até eu aprovar o plano.
-Saída: plano, pressupostos, código proposto, checks e limitações.
-```
-
-Uma Agent Skill pode referenciar documentação, exemplos e scripts executáveis
-relativos à própria pasta. Neste pacote, porém, `hub_snippets` e `hub_scripts`
-ficam fora das skills: a skill pode recomendar o helper, mas o helper só entra
-no runtime quando o código o importa explicitamente.
-
-Depois de alterar uma skill, use chat novo para evitar contexto antigo. Mudança
-em `name`, `description` ou fronteira de escopo exige repetir os testes de
-roteamento com casos positivo, negativo e `@menção`.
-
-### 2. Usar um prompt guiado
-
-Os prompts são formulários customizados, não comandos do Genie Code. Eles deixam
-explícitos contexto, autorização, formato da saída e validação.
-
-1. Abra o [catálogo de prompts](hub_prompts/README.md).
-2. Escolha a família e substitua cada `{{CAMPO}}`.
-3. Use `NÃO INFORMADO` para uma lacuna real e `NÃO APLICÁVEL` quando o campo foi
-   avaliado e não pertence ao caso.
-4. Anexe tabela, notebook, query ou pipeline com `@`.
-5. Cole apenas o bloco “Prompt pronto para colar”.
-6. Revise o plano antes de autorizar execução, escrita ou deploy.
-
-Quando o problema for visual, anexe também uma imagem da interface ou do gráfico
-e descreva em texto o que deve ser observado. A imagem é contexto complementar:
-nomes de recursos, grão, restrições e critério de aceite continuam explícitos.
-
-Exemplo mínimo:
-
-```text
-CONTEXTO
-- Recurso: @catalogo.schema.tabela
-- Objetivo: medir {{DECISAO_DE_NEGOCIO}}
-- Grão/chave/tempo: {{GRAO}} / {{CHAVE}} / {{COLUNA_TEMPORAL}}
-
-MODO
-- Primeiro produza um plano.
-- Não execute nem escreva até aprovação explícita.
-
-SAÍDA
-- evidência, interpretação, limitações e próximo passo;
-- liste campos não informados sem inventar valores.
-```
-
-Atalhos como `/eda` e `/baseline` são convenções de texto deste pacote, não
-comandos registrados. Prefira `@nome-da-skill` e contexto explícito.
-
-### 3. Usar um helper
-
-Use o [catálogo demanda → helper](CATALOGO_HELPERS.md) para escolher o módulo.
-Adicione a pasta `.assistant` — não `hub_snippets` — ao `sys.path`:
-
+### 2. Preciso instalar alguma biblioteca via `pip` ou reiniciar meu cluster para usar os snippets?
+**Não.** O ecossistema foi projetado para ter zero atrito. Como os módulos residem dentro da sua pasta `.assistant` no workspace, eles ficam automaticamente visíveis para o interpretador Python (`sys.path`). Previne falhas de execução decorrentes de bibliotecas externas não gerenciadas. Basta abrir qualquer notebook e rodar:
 ```python
-from pathlib import Path
-import sys
-
-assistant_root = Path("/Workspace/Users/<username>/.assistant")
-if not assistant_root.is_dir():
-    raise FileNotFoundError(f"Pasta não encontrada: {assistant_root}")
-
-sys.path.insert(0, str(assistant_root))
-
-from hub_snippets.spark.safe_display import safe_display
-from hub_scripts.data_quality_check import data_quality_check
+from hub_snippets.ml.split_temporal import temporal_split
 ```
+A biblioteca funciona nativamente tanto em computação Serverless quanto em clusters clássicos.
 
-Cada objeto tem um `exemplo_<nome>` ao lado da implementação. No workspace, esse
-arquivo aparece como notebook e demonstra entradas, saída real, erro típico e
-quando não usar. Comece por ele antes de copiar um import.
+### 3. Qual é a diferença prática entre usar uma Skill, um Prompt ou importar um Snippet diretamente?
+* **Snippet:** É o **código puro** (uma função Python/Spark). Use quando você mesmo estiver escrevendo seu notebook e só precisa da função matemática pronta.
+* **Skill:** É o **cérebro metodológico da IA**. Use quando quiser que a IA estruture uma análise inteira para você no chat (ela usará os snippets por trás dos panos).
+* **Prompt:** É o **briefing pronto**. Use quando você não quiser pensar em como redigir a instrução: basta copiar o texto do prompt e colar no assistente.
 
-| Preciso de… | Coleção |
-|---|---|
-| função para compor um notebook ou pipeline | [`hub_snippets`](hub_snippets/README.md) |
-| diagnóstico sobre tabela ou notebook publicado | [`hub_scripts`](hub_scripts/README.md) |
-| dependência opcional de ML | [inventário de dependências](hub_snippets/requirements-optional.txt) |
+### 4. Como o ecossistema contribui para mitigar vazamento temporal (*data leakage*) e erros analíticos?
+Os algoritmos de Machine Learning do Hub passam por etapas de validação e testes antes de serem disponibilizados:
+* Módulos temporais convertem e validam tipagens de data antes de qualquer ordenação, mitigando o risco de vazamento de informação do futuro.
+* Funções estatísticas como PSI, WOE/IV e Safras são testadas contra cenários desafiadores (valores nulos, categorias raras, ausência de variância) e possuem invariantes matemáticas validadas.
 
-Instale somente a dependência necessária e fixe a versão no projeto consumidor.
-Teste no runtime de destino: import local não prova compatibilidade com Spark
-Connect, serverless ou políticas do workspace.
-
-### 4. Contexto por projeto
-
-Ao abrir um arquivo, o Genie Code procura `AGENTS.md` e `CLAUDE.md` no diretório
-e em seus ancestrais. Use esse mecanismo para fatos estáveis do projeto:
-
-- objetivo e unidade de análise;
-- tabelas autorizadas e significado do grão;
-- invariantes de negócio;
-- convenções de código e comandos de validação;
-- limites de escrita, custo e dados sensíveis.
-
-Não use instruções como backlog, diário de sessão ou depósito de resultados.
-Conteúdo transitório envelhece e passa a competir com o pedido atual.
-
-## Execução, escrita e aprovação
-
-O Genie Code opera em modo agente e pode propor ou realizar tarefas em várias
-etapas conforme permissões e configuração de aprovação. Por isso, declare o modo
-no pedido:
-
-| Modo | Formulação recomendada |
-|---|---|
-| explicação | “Explique; não execute nem altere arquivos.” |
-| plano | “Produza o plano e aguarde aprovação.” |
-| código | “Gere o código, mas não execute.” |
-| execução | “Execute somente a leitura descrita e mostre o resultado.” |
-| mutação/deploy | “Mostre impacto e plano de reversão; aguarde aprovação.” |
-
-Permissão do Unity Catalog continua limitando o que o Genie Code pode acessar.
-Mesmo assim, um prompt deve declarar PII, custo, escopo e ações proibidas; acesso
-técnico não equivale a autorização de negócio.
-
-Conexões MCP são configuradas em **Genie Code → Settings**, não pela criação
-manual de `.assistant/.mcp_servers.json`. O Genie Code pode oferecer servidores
-MCP gerenciados, externos ou customizados e conectores nativos em Beta, conforme
-o workspace. Trate disponibilidade como capacidade do ambiente, preserve o
-arquivo gerenciado pela plataforma e nunca coloque token em prompt, skill,
-instrução ou Git.
-
-## Diagnóstico rápido
-
-| Sintoma | Verifique |
-|---|---|
-| skill não aparece | path exato, `SKILL.md`, frontmatter e novo chat |
-| skill inadequada foi carregada | intenção específica ou `@nome-da-skill` |
-| “este notebook” não foi entendido | anexe o artefato com `@` |
-| prompt do Hub não influenciou | ele não é automático; anexe ou copie o bloco final |
-| contexto de projeto não entrou | `AGENTS.md`/`CLAUDE.md` precisa estar na árvore do arquivo aberto |
-| `ModuleNotFoundError: hub_snippets` | adicione a pasta `.assistant` ao `sys.path` |
-| dependência de ML ausente | consulte `requirements-optional.txt` e fixe versão |
-| `NOT_SUPPORTED_WITH_SERVERLESS` | confira a evidência do exemplo e use alternativa compatível |
-| `.py` publicado como notebook | o módulo deve ser arquivo; apenas `exemplo_*` é notebook |
-| conteúdo antigo permanece no chat | abra chat novo e recarregue a interface se necessário |
-
-## Mapa desta pasta
-
-| Entrada | Papel |
-|---|---|
-| [`skills/`](skills/README.md) | catálogo e contrato das Agent Skills |
-| [`hub_prompts/`](hub_prompts/README.md) | formulários reprodutíveis de pedido |
-| [`hub_snippets/`](hub_snippets/README.md) | helpers Python por pacote |
-| [`hub_scripts/`](hub_scripts/README.md) | diagnósticos orientados a tabela/notebook |
-| [`hub_padroes/`](hub_padroes/README.md) | templates para novos objetos |
-| [`CATALOGO_HELPERS.md`](CATALOGO_HELPERS.md) | demanda, API, dependência e runtime |
-| [`GLOSSARIO.md`](GLOSSARIO.md) | vocabulário separado por procedência |
-
-## Fontes oficiais
-
-- [Agent Skills no Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills)
-- [Instruções customizadas](https://learn.microsoft.com/en-us/azure/databricks/genie-code/instructions)
-- [Dicas para respostas melhores](https://learn.microsoft.com/en-us/azure/databricks/genie-code/tips)
-- [Uso e modo agente](https://learn.microsoft.com/en-us/azure/databricks/genie-code/use-genie-code)
-- [MCP no Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/mcp)
-- [Especificação aberta de Agent Skills](https://agentskills.io/specification)
-
-Documentação de plataforma muda. Quando um comportamento deste guia divergir da
-interface ou da fonte oficial, trate a fonte oficial como autoridade e registre
-a revisão no repositório canônico.
+### 5. A equipe pode criar novos snippets, prompts ou skills? Como funciona a evolução do ecossistema?
+**Sim, o ambiente é extensível por design.** Para manter a consistência, novas adições utilizam a pasta `hub_padroes/` e a skill `hub-ml-criar-objeto`. Todo novo helper segue a regra de "pasta de objeto" (contendo o código, a exportação no `__init__.py` e um notebook com exemplos didáticos e dados sintéticos), propiciando que novas adições sejam facilmente compreendidas e adotadas tanto pela equipe quanto pela IA.
