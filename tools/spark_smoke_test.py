@@ -245,8 +245,10 @@ def t_psi():
 
     # Ausência e a categoria textual "__MISSING__" são estados distintos. Com
     # sentinela textual, as duas distribuições abaixo colapsavam e o CSI dava 0.
-    categorica_base = spark.createDataFrame([("__MISSING__",), (None,)], ["categoria"])
-    categorica_atual = spark.createDataFrame([(None,), (None,)], ["categoria"])
+    categorica_base = spark.createDataFrame(
+        [("__MISSING__",), (None,)], "categoria string"
+    )
+    categorica_atual = spark.createDataFrame([(None,), (None,)], "categoria string")
     csi = calcular_csi(categorica_base, categorica_atual, ["categoria"])["categoria"]
     assert csi > 0, "categoria real e missing foram colapsados"
 

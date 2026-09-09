@@ -22,6 +22,9 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
   oficial do Genie Code para imagens, aprovações, MCP e conectores nativos Beta.
 - (Codex) Espelho regenerado exclusivamente por `tools/render_simulado.py` e 13
   caches Python locais removidos do produto.
+- (Codex) O primeiro smoke de fechamento revelou incompatibilidade do sentinela
+  `format="ISO8601"` com o pandas do runtime Databricks e inferência impossível
+  numa fixture Spark totalmente nula; ambos foram corrigidos antes da nova rodada.
 
 ## 2026-09-09 — Correções da revisão e retomada no PC (Codex)
 

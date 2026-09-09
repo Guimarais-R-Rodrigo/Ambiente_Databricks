@@ -81,7 +81,10 @@ def _normalizar_datas(valores: pd.Series, date_format: Optional[str]) -> pd.Seri
                 "por exemplo date_format='%d/%m/%Y'. Primeiro valor fora do "
                 f"padrão: {fora_do_padrao.iloc[0]!r}"
             )
-        convertida = pd.to_datetime(texto, format="ISO8601", errors="coerce")
+        # O regex acima já eliminou formatos ambíguos. Não use
+        # ``format='ISO8601'`` aqui: runtimes Databricks com pandas anterior a
+        # 2.0 não reconhecem esse sentinela e transformam datas válidas em NaT.
+        convertida = pd.to_datetime(texto, errors="coerce")
         if convertida.isna().any():
             exemplo = texto[convertida.isna()].iloc[0]
             raise ValueError(f"date_col tem data inválida no calendário: {exemplo!r}")
