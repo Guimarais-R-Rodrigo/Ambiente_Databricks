@@ -235,13 +235,27 @@ def t_date_features():
 
 
 def t_psi():
-    from hub_snippets.spark.psi_calculator import calcular_psi, interpretar_psi
+    from hub_snippets.spark.psi_calculator import calcular_csi, calcular_psi, interpretar_psi
     df_base = df.filter(F.col("safra") == "2026-S1")
     df_atual = df.filter(F.col("safra") == "2026-S2")
     psi = calcular_psi(df_base, df_atual, "valor")
     assert psi >= 0
     interpretar_psi(psi)
     interpretar_psi(psi, warning_threshold=0.1, critical_threshold=0.25)
+
+    # Ausência e a categoria textual "__MISSING__" são estados distintos. Com
+    # sentinela textual, as duas distribuições abaixo colapsavam e o CSI dava 0.
+    categorica_base = spark.createDataFrame([("__MISSING__",), (None,)], ["categoria"])
+    categorica_atual = spark.createDataFrame([(None,), (None,)], ["categoria"])
+    csi = calcular_csi(categorica_base, categorica_atual, ["categoria"])["categoria"]
+    assert csi > 0, "categoria real e missing foram colapsados"
+
+    cardinalidade = spark.createDataFrame([("a",), ("b",)], ["categoria"])
+    try:
+        calcular_csi(cardinalidade, cardinalidade, ["categoria"], max_categorias=1)
+        raise AssertionError("cardinalidade acima do limite deveria ser rejeitada")
+    except ValueError as exc:
+        assert "acima do limite" in str(exc)
 
 
 def t_safe_display():
@@ -679,6 +693,26 @@ def t_lgbm_temporal():
         raise AssertionError("rolling window 1 deveria ser rejeitada")
     except ValueError as exc:
         assert ">= 2" in str(exc)
+    painel_nulo = painel.copy()
+    painel_nulo.loc[painel_nulo.index[0], "id"] = None
+    try:
+        create_temporal_features(
+            painel_nulo, target_col="valor", date_col="dt", lags=[1],
+            rolling_windows=[], calendar_features=False, entity_cols=["id"],
+        )
+        raise AssertionError("chave de entidade nula deveria ser rejeitada")
+    except ValueError as exc:
+        assert "entity_cols contain null" in str(exc)
+    painel_colisao = painel.copy()
+    painel_colisao["lag_1"] = 999
+    try:
+        create_temporal_features(
+            painel_colisao, target_col="valor", date_col="dt", lags=[1],
+            rolling_windows=[], calendar_features=False, entity_cols=["id"],
+        )
+        raise AssertionError("feature existente deveria ser preservada por erro explícito")
+    except ValueError as exc:
+        assert "already exist" in str(exc)
 
 
 def t_performance_monitor():
@@ -690,6 +724,22 @@ def t_performance_monitor():
     assert mon.get_current_status() is not None
     assert mon.should_retrain() is not None
     mon.generate_report()
+    for construtor in (
+        lambda: PerformanceMonitor({"auc": True}, policy=EXAMPLE_THRESHOLDS),
+        lambda: PerformanceMonitor(
+            {"auc": 0.78}, policy=EXAMPLE_THRESHOLDS, consecutive_alert_periods=True
+        ),
+    ):
+        try:
+            construtor()
+            raise AssertionError("booleano numérico deveria ser rejeitado")
+        except ValueError:
+            pass
+    try:
+        mon.add_period("2026-03", {"auc": False}, n_predictions=True)
+        raise AssertionError("métrica/n_predictions booleanos deveriam ser rejeitados")
+    except ValueError:
+        pass
 
 
 def t_vintage_analysis():

@@ -1,0 +1,27 @@
+name: CI local reproduzível
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+      - name: Instalar dependências de teste
+        run: python -m pip install -r tools/requirements-dev.txt
+      - name: Executar o gate sem credenciais
+        run: python tools/ci_local.py

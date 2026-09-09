@@ -88,9 +88,20 @@ def _calcular_csi_categorico(
     cada período por conta própria compara faixas diferentes e inventa deriva.
     """
     _validar_max_categorias(max_categorias)
-    category = F.coalesce(F.col(col).cast("string"), F.lit("__MISSING__"))
-    base_agrupado = df_base.select(category.alias("category")).groupBy("category").count()
-    atual_agrupado = df_atual.select(category.alias("category")).groupBy("category").count()
+    # A ausência é parte separada da chave. Um sentinela textual como
+    # ``__MISSING__`` colide com uma categoria real de mesmo valor e mascara
+    # deriva justamente quando essa categoria existe nos dados.
+    category = F.col(col).cast("string")
+    base_agrupado = (
+        df_base.select(F.col(col).isNull().alias("is_missing"), category.alias("category"))
+        .groupBy("is_missing", "category")
+        .count()
+    )
+    atual_agrupado = (
+        df_atual.select(F.col(col).isNull().alias("is_missing"), category.alias("category"))
+        .groupBy("is_missing", "category")
+        .count()
+    )
     n_base = base_agrupado.count()
     n_atual = atual_agrupado.count()
     if max(n_base, n_atual) > max_categorias:
@@ -101,8 +112,14 @@ def _calcular_csi_categorico(
             "granularidade, ou eleve max_categorias conscientemente — o limite certo "
             "depende do volume, do tamanho dos valores e do recurso do cluster."
         )
-    base = {row["category"]: int(row["count"]) for row in base_agrupado.collect()}
-    current = {row["category"]: int(row["count"]) for row in atual_agrupado.collect()}
+    base = {
+        (bool(row["is_missing"]), row["category"]): int(row["count"])
+        for row in base_agrupado.collect()
+    }
+    current = {
+        (bool(row["is_missing"]), row["category"]): int(row["count"])
+        for row in atual_agrupado.collect()
+    }
     return round(_stability_index(base, current, sum(base.values()), sum(current.values())), 6)
 
 

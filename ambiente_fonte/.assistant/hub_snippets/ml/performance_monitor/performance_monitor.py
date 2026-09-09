@@ -56,6 +56,11 @@ CHAVES_DO_RELATORIO = {
 }
 
 
+def _is_finite_number(value: object) -> bool:
+    """Aceite números reais finitos, mas nunca booleanos disfarçados de 0/1."""
+    return not isinstance(value, bool) and isinstance(value, (int, float)) and math.isfinite(float(value))
+
+
 def selecionar_metricas_do_relatorio(
     relatorio: Dict[str, Any],
     politica: Optional[Dict[str, Any]] = None,
@@ -128,9 +133,15 @@ class PerformanceMonitor:
     ) -> None:
         if not baseline_metrics:
             raise ValueError("baseline_metrics cannot be empty")
-        if consecutive_alert_periods <= 0:
+        if (
+            isinstance(consecutive_alert_periods, bool)
+            or not isinstance(consecutive_alert_periods, int)
+            or consecutive_alert_periods <= 0
+        ):
             raise ValueError("consecutive_alert_periods must be positive")
-        if any(not isinstance(value, (int, float)) or not math.isfinite(float(value)) for value in baseline_metrics.values()):
+        if not isinstance(require_complete_metrics, bool):
+            raise ValueError("require_complete_metrics must be boolean")
+        if any(not _is_finite_number(value) for value in baseline_metrics.values()):
             raise ValueError("baseline metrics must be finite numeric values")
         self.baseline = {metric: float(value) for metric, value in baseline_metrics.items()}
         self.model_name = model_name
@@ -149,10 +160,10 @@ class PerformanceMonitor:
             required = {"warning", "critical", "direction", "delta"}
             if not required <= set(rule):
                 raise ValueError(f"policy for {metric} must contain {sorted(required)}")
+            if not _is_finite_number(rule["warning"]) or not _is_finite_number(rule["critical"]):
+                raise ValueError(f"thresholds must be finite numeric values for {metric}")
             if not 0 <= rule["warning"] < rule["critical"]:
                 raise ValueError(f"invalid warning/critical thresholds for {metric}")
-            if not math.isfinite(float(rule["warning"])) or not math.isfinite(float(rule["critical"])):
-                raise ValueError(f"thresholds must be finite for {metric}")
             if rule["direction"] not in {"higher", "lower"} or rule["delta"] not in {"absolute", "relative"}:
                 raise ValueError(f"invalid direction/delta for {metric}")
             if rule["delta"] == "relative" and self.baseline.get(metric) == 0:
@@ -166,8 +177,8 @@ class PerformanceMonitor:
 
     def add_period(self, period: str, metrics: Dict[str, float], n_predictions: int = 0) -> None:
         """Add one monitoring period and calculate one-sided deterioration."""
-        if n_predictions < 0:
-            raise ValueError("n_predictions cannot be negative")
+        if isinstance(n_predictions, bool) or not isinstance(n_predictions, int) or n_predictions < 0:
+            raise ValueError("n_predictions must be a non-negative integer")
         unknown = set(metrics) - set(self.baseline)
         if unknown:
             raise ValueError(f"metrics missing from the baseline/policy: {sorted(unknown)}")
@@ -176,7 +187,7 @@ class PerformanceMonitor:
             raise ValueError(f"period is missing monitored metrics: {sorted(missing)}")
         if not metrics:
             raise ValueError("metrics cannot be empty")
-        if any(not isinstance(value, (int, float)) or not math.isfinite(float(value)) for value in metrics.values()):
+        if any(not _is_finite_number(value) for value in metrics.values()):
             raise ValueError("period metrics must be finite numeric values")
         entry: Dict[str, Any] = {"period": period, "n_predictions": n_predictions, **metrics}
         entry["missing_metrics"] = sorted(missing)

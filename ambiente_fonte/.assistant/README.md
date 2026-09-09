@@ -157,6 +157,10 @@ explícitos contexto, autorização, formato da saída e validação.
 5. Cole apenas o bloco “Prompt pronto para colar”.
 6. Revise o plano antes de autorizar execução, escrita ou deploy.
 
+Quando o problema for visual, anexe também uma imagem da interface ou do gráfico
+e descreva em texto o que deve ser observado. A imagem é contexto complementar:
+nomes de recursos, grão, restrições e critério de aceite continuam explícitos.
+
 Exemplo mínimo:
 
 ```text
@@ -241,6 +245,13 @@ no pedido:
 Permissão do Unity Catalog continua limitando o que o Genie Code pode acessar.
 Mesmo assim, um prompt deve declarar PII, custo, escopo e ações proibidas; acesso
 técnico não equivale a autorização de negócio.
+
+Conexões MCP são configuradas em **Genie Code → Settings**, não pela criação
+manual de `.assistant/.mcp_servers.json`. O Genie Code pode oferecer servidores
+MCP gerenciados, externos ou customizados e conectores nativos em Beta, conforme
+o workspace. Trate disponibilidade como capacidade do ambiente, preserve o
+arquivo gerenciado pela plataforma e nunca coloque token em prompt, skill,
+instrução ou Git.
 
 ## Diagnóstico rápido
 

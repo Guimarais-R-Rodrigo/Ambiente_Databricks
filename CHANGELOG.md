@@ -5,6 +5,24 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-09 — Fechamento das inconsistências residuais (Codex)
+
+- (Codex) `lgbm_temporal` agora recusa chaves de entidade nulas, parâmetros
+  booleanos/duplicados e colisões com todas as features geradas, evitando perda
+  de entidade e sobrescrita silenciosa.
+- (Codex) `PerformanceMonitor` passou a rejeitar booleanos em métricas, limiares,
+  contagens e períodos consecutivos; o CSI categórico separa ausência de uma
+  categoria textual de mesmo nome.
+- (Codex) Ampliados testes locais e smoke Spark para os casos acima; o gate local
+  passou com 45 regressões da biblioteca e 33 guardas de ferramentas.
+- (Codex) A proveniência de publicação passou a considerar apenas fonte e
+  espelho publicáveis; a conferência do README inclui o status final e distingue
+  a contagem volátil de extras locais.
+- (Codex) Adicionado workflow de CI sem credenciais e atualizada a referência
+  oficial do Genie Code para imagens, aprovações, MCP e conectores nativos Beta.
+- (Codex) Espelho regenerado exclusivamente por `tools/render_simulado.py` e 13
+  caches Python locais removidos do produto.
+
 ## 2026-09-09 — Correções da revisão e retomada no PC (Codex)
 
 - (Codex) Implementados R01–R06 da revisão: métricas inválidas, colisões de nomes,

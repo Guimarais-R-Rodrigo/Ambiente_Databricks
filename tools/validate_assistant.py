@@ -379,13 +379,16 @@ def check_saida_de_comando_no_readme(problems: list[str], *, remoto: bool = Fals
         "contrato de dados  :", "contrato de entrada:", "saída colada       :",
         "idioma da docstring:", "normas do molde    :", "notebook exercita  :",
         "python (AST)       :", "instrucoes         :", "repo (identidade)  :",
-        "repo (links)       :",
+        "repo (links)       :", "APROVADO: 0 falha(s)",
     )
     comandos = [
         [sys.executable, str(REPO_ROOT / "tools" / "validate_assistant.py")],
     ]
     if remoto:
-        rotulos = ("esperados : ", "remotos   : ", "ausentes  : ", "skills    :", "extensões :")
+        rotulos = (
+            "esperados : ", "remotos   : ", "ausentes  : ", "skills    :",
+            "extensões :", "APROVADO: 0 problema(s)",
+        )
         comandos = [[sys.executable, str(REPO_ROOT / "tools" / "publicar_free.py"), "--verify"]]
     # O filho herda a codificação do console, que no Windows é cp1252 e devolve
     # caractere de substituição em acento — e aí a comparação falha por

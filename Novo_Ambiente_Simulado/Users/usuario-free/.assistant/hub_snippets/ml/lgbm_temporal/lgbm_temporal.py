@@ -11,7 +11,7 @@ vinha antes de '2026-1-2'. O lag resultante trazia informação futura sem nenhu
 sinal de erro.
 
 Autor: Rodrigo via assistente
-Versão: 1.1
+Versão: 1.2
 """
 
 import re
@@ -135,17 +135,66 @@ def create_temporal_features(
         preserva o tipo e os valores originais.
 
     Raises:
-        ValueError: Coluna ausente, data nula/ambígua/inválida, lag não positivo,
-            janela menor que 2, empate de data sob a política ``'raise'``, ou
+        ValueError: Coluna ausente, chave de entidade nula, data
+            nula/ambígua/inválida, lag não positivo, janela menor que 2, nome de
+            feature já existente, empate de data sob a política ``'raise'``, ou
             ``on_duplicate_dates`` desconhecido.
     """
     if on_duplicate_dates not in {"raise", "keep"}:
         raise ValueError("on_duplicate_dates must be 'raise' or 'keep'")
 
-    required = {target_col, date_col, *(entity_cols or [])}
+    if entity_cols is None:
+        grao: list[str] = []
+    elif isinstance(entity_cols, (str, bytes)):
+        raise ValueError("entity_cols must be a sequence of column names, not a string")
+    else:
+        grao = list(entity_cols)
+    if not all(isinstance(column, str) and column for column in grao):
+        raise ValueError("entity_cols must contain non-empty column names")
+    if len(grao) != len(set(grao)):
+        raise ValueError("entity_cols must not contain duplicate columns")
+
+    if lags is None:
+        lags = [1, 2, 3, 6, 12]
+    if rolling_windows is None:
+        rolling_windows = [3, 6, 12]
+    if any(isinstance(lag, bool) or not isinstance(lag, int) or lag <= 0 for lag in lags):
+        raise ValueError("lags must contain positive integers")
+    if len(lags) != len(set(lags)):
+        raise ValueError("lags must not contain duplicate values")
+    if any(isinstance(w, bool) or not isinstance(w, int) or w < 2 for w in rolling_windows):
+        raise ValueError("rolling_windows must contain integers >= 2 for sample std")
+    if len(rolling_windows) != len(set(rolling_windows)):
+        raise ValueError("rolling_windows must not contain duplicate values")
+
+    generated_names = [f"lag_{lag}" for lag in lags]
+    generated_names.extend(
+        f"rolling_{stat}_{window}"
+        for window in rolling_windows
+        for stat in ("mean", "std", "min", "max")
+    )
+    if calendar_features:
+        generated_names.extend(
+            ("month", "quarter", "day_of_week", "day_of_year", "is_month_start", "is_month_end")
+        )
+    generated_names.append("trend")
+    collisions = sorted(set(generated_names) & set(df.columns))
+    if collisions:
+        raise ValueError(
+            "generated feature columns already exist; rename or remove them before calling: "
+            f"{collisions}"
+        )
+
+    required = {target_col, date_col, *grao}
     missing = required - set(df.columns)
     if missing:
         raise ValueError(f"columns not found: {sorted(missing)}")
+    if grao and df[grao].isna().any(axis=None):
+        null_counts = {column: int(df[column].isna().sum()) for column in grao if df[column].isna().any()}
+        raise ValueError(
+            "entity_cols contain null values; impute or remove them explicitly before feature "
+            f"generation to avoid silently dropping entities: {null_counts}"
+        )
 
     df = df.copy()
 
@@ -153,7 +202,6 @@ def create_temporal_features(
     # depende do texto original para juntar com outra fonte continua podendo.
     ordem = _normalizar_datas(df[date_col], date_format)
 
-    grao = [*(entity_cols or [])]
     chaves = df[grao].copy() if grao else pd.DataFrame(index=df.index)
     nome_data = "__hub_data"
     while nome_data in chaves.columns:
@@ -180,26 +228,17 @@ def create_temporal_features(
     ordem_ordenada = df[nome_ordem]
     df = df.drop(columns=nome_ordem)
 
-    if lags is None:
-        lags = [1, 2, 3, 6, 12]
-    if rolling_windows is None:
-        rolling_windows = [3, 6, 12]
-
-    groups = df.groupby(list(entity_cols), sort=False)[target_col] if entity_cols else None
+    groups = df.groupby(grao, sort=False)[target_col] if grao else None
     generated_required: list[str] = []
 
     # Lag features, always isolated by entity when entity columns are provided.
     for lag in lags:
-        if lag <= 0:
-            raise ValueError("lags must contain positive integers")
         name = f"lag_{lag}"
         df[name] = groups.shift(lag) if groups is not None else df[target_col].shift(lag)
         generated_required.append(name)
 
     # Rolling features
     for w in rolling_windows:
-        if isinstance(w, bool) or not isinstance(w, int) or w < 2:
-            raise ValueError("rolling_windows must contain integers >= 2 for sample std")
         names = [f"rolling_{stat}_{w}" for stat in ("mean", "std", "min", "max")]
         generated_required.extend(names)
         if groups is None:
@@ -210,7 +249,7 @@ def create_temporal_features(
             df[f"rolling_max_{w}"] = shifted.rolling(w).max()
         else:
             shifted = groups.shift(1)
-            regrouped = shifted.groupby([df[column] for column in entity_cols], sort=False)
+            regrouped = shifted.groupby([df[column] for column in grao], sort=False)
             df[f"rolling_mean_{w}"] = regrouped.transform(lambda series: series.rolling(w).mean())
             df[f"rolling_std_{w}"] = regrouped.transform(lambda series: series.rolling(w).std())
             df[f"rolling_min_{w}"] = regrouped.transform(lambda series: series.rolling(w).min())
@@ -227,7 +266,7 @@ def create_temporal_features(
         df["is_month_end"] = dt.is_month_end.astype(int)
 
     # Trend
-    df["trend"] = df.groupby(list(entity_cols), sort=False).cumcount() if entity_cols else range(len(df))
+    df["trend"] = df.groupby(grao, sort=False).cumcount() if grao else range(len(df))
 
     # Remova somente warm-up criado por este helper. Missing preexistente em
     # coluna alheia pertence à política de imputação do pipeline consumidor.

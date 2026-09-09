@@ -398,6 +398,26 @@ class ReviewRegressionTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "Git falhou"):
                 publisher._commit_atual()
 
+    def test_git_provenance_is_scoped_to_the_published_product(self):
+        head = mock.Mock(returncode=0, stdout="a" * 40 + "\n")
+        clean = mock.Mock(returncode=0, stdout="")
+        with mock.patch.object(publisher.subprocess, "run", side_effect=[head, clean]) as run:
+            self.assertEqual(publisher._commit_atual(), "a" * 40)
+        status_command = run.call_args_list[1].args[0]
+        separator = status_command.index("--")
+        scopes = set(status_command[separator + 1 :])
+        self.assertEqual(
+            scopes,
+            {
+                str(publisher.FONTE.relative_to(publisher.REPO_ROOT)),
+                str(
+                    publisher.SIMULADO.relative_to(publisher.REPO_ROOT)
+                    / "Users"
+                    / "usuario-free"
+                ),
+            },
+        )
+
     def test_verify_persists_full_hashes_and_scope(self):
         import json
         with tempfile.TemporaryDirectory() as td:

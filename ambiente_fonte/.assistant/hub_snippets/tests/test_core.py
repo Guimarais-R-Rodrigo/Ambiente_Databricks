@@ -65,6 +65,28 @@ class MonitoringTests(unittest.TestCase):
         monitor.add_period("p2", {"ks_pct": baseline["ks_pct"] - 6.0})
         self.assertEqual(monitor.get_current_status(), "🔴 Crítico")
 
+    def test_booleans_are_not_accepted_as_numeric_monitoring_values(self) -> None:
+        with self.assertRaisesRegex(ValueError, "finite numeric"):
+            PerformanceMonitor({"auc": True})
+        with self.assertRaisesRegex(ValueError, "positive"):
+            PerformanceMonitor({"auc": 0.7}, consecutive_alert_periods=True)
+        with self.assertRaisesRegex(ValueError, "boolean"):
+            PerformanceMonitor({"auc": 0.7}, require_complete_metrics=1)
+
+        monitor = PerformanceMonitor({"auc": 0.7})
+        with self.assertRaisesRegex(ValueError, "finite numeric"):
+            monitor.add_period("p1", {"auc": False})
+        with self.assertRaisesRegex(ValueError, "non-negative integer"):
+            monitor.add_period("p1", {"auc": 0.7}, n_predictions=True)
+
+    def test_policy_thresholds_reject_booleans_and_non_finite_values(self) -> None:
+        base_rule = {"warning": 0.03, "critical": 0.05, "direction": "higher", "delta": "absolute"}
+        for key, value in (("warning", True), ("critical", float("inf"))):
+            rule = dict(base_rule)
+            rule[key] = value
+            with self.subTest(key=key, value=value), self.assertRaisesRegex(ValueError, "finite numeric"):
+                PerformanceMonitor({"auc": 0.7}, policy={"auc": rule})
+
 
 class ScoreBandTests(unittest.TestCase):
     def test_best_scores_appear_first(self) -> None:
@@ -162,6 +184,46 @@ class TemporalTests(unittest.TestCase):
             create_temporal_features(
                 frame, "target", "date", lags=[], rolling_windows=[1], calendar_features=False
             )
+
+    def test_null_entity_keys_are_rejected_instead_of_silently_dropped(self) -> None:
+        frame = pd.DataFrame(
+            {
+                "entity": ["a", "a", None, None],
+                "date": pd.to_datetime(["2026-01-01", "2026-01-02"] * 2),
+                "target": [1.0, 2.0, 10.0, 20.0],
+            }
+        )
+        with self.assertRaisesRegex(ValueError, "entity_cols contain null"):
+            create_temporal_features(
+                frame, "target", "date", lags=[1], rolling_windows=[],
+                calendar_features=False, entity_cols=["entity"],
+            )
+
+    def test_generated_feature_name_collisions_are_rejected(self) -> None:
+        base = {"date": pd.date_range("2026-01-01", periods=4), "target": range(4)}
+        for existing in ("lag_1", "rolling_mean_2", "month", "trend"):
+            frame = pd.DataFrame({**base, existing: 999})
+            with self.subTest(existing=existing), self.assertRaisesRegex(ValueError, "already exist"):
+                create_temporal_features(
+                    frame, "target", "date", lags=[1], rolling_windows=[2],
+                    calendar_features=True,
+                )
+
+    def test_temporal_parameters_reject_boolean_duplicate_and_string_sequences(self) -> None:
+        frame = pd.DataFrame(
+            {"entity": ["a"] * 4, "date": pd.date_range("2026-01-01", periods=4), "target": range(4)}
+        )
+        invalid = (
+            ({"lags": [True], "rolling_windows": []}, "positive integers"),
+            ({"lags": [1, 1], "rolling_windows": []}, "duplicate"),
+            ({"lags": [], "rolling_windows": [2, 2]}, "duplicate"),
+            ({"lags": [], "rolling_windows": [], "entity_cols": "entity"}, "not a string"),
+        )
+        for kwargs, message in invalid:
+            with self.subTest(kwargs=kwargs), self.assertRaisesRegex(ValueError, message):
+                create_temporal_features(
+                    frame, "target", "date", calendar_features=False, **kwargs
+                )
 
 
     def test_textual_dates_are_ordered_chronologically_not_lexicographically(self) -> None:

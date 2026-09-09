@@ -219,7 +219,10 @@ Estas linhas têm um único objetivo: permitir que
 `validate_assistant.py --conferir-readme` detecte documentação local envelhecida.
 
 As contagens de repositório usam o inventário Git, com higiene de extras locais
-separada. Para conferir o bloco remoto abaixo, use
+separada. A linha volátil `worktree (extras)` não é congelada neste README: ela
+descreve arquivos locais e ignorados desta máquina, não o produto versionado.
+Qualquer problema nesses extras continua reprovando; a contagem aparece na saída
+ao vivo do validador. Para conferir o bloco remoto abaixo, use
 `--conferir-readme-remoto` com acesso autenticado ao Free. Esse bloco preserva
 a referência remota anterior até uma nova execução; não é certificação do novo código.
 Os valores abaixo foram recapturados após o render e a republicação deste
@@ -227,7 +230,7 @@ redesenho.
 
 ```text
 raiz analisada     : <repo>\ambiente_fonte
-skills             : 13 · 13/13 com as 5 seções estruturais
+skills    : 13/13
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 81 caminhos verificados
 markdown / links   : 107 arquivos / 190 links relativos

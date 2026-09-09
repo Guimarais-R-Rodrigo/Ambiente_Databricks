@@ -247,12 +247,25 @@ def _sha(dados: bytes) -> str:
 
 
 def _commit_atual() -> str:
-    """Identifica a origem sem confundir falha do Git com árvore limpa."""
+    """Identifica a origem do pacote, sem sujeira alheia ao escopo publicado.
+
+    Evidência de publicação descreve o produto e seu espelho. Alteração em docs,
+    artefato ignorado ou metadado de fim de linha fora desses caminhos não torna
+    o pacote ``dirty``; alteração na fonte ou no espelho, sim.
+    """
     try:
         proc = subprocess.run(["git", "rev-parse", "HEAD"], cwd=REPO_ROOT,
                               capture_output=True, text=True)
-        status = subprocess.run(["git", "status", "--porcelain"], cwd=REPO_ROOT,
-                                capture_output=True, text=True)
+        status = subprocess.run(
+            [
+                "git", "status", "--porcelain", "--",
+                str(FONTE.relative_to(REPO_ROOT)),
+                str(SIMULADO.relative_to(REPO_ROOT) / "Users" / "usuario-free"),
+            ],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            text=True,
+        )
     except OSError as exc:
         raise ValueError("Git indisponível para certificar origem") from exc
     if proc.returncode or status.returncode or not proc.stdout.strip():
