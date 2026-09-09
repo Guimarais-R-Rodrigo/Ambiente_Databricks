@@ -5,6 +5,19 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-09 — Handoff da rodada registrado
+
+### Adicionado
+
+1. (Claude) `docs/handoffs/2026-09-09_plano-consolidado.md`: estado dos pacotes T0 a
+   T6, o que continua bloqueado por acesso e as armadilhas de plataforma encontradas
+   ao executá-los.
+
+### Atualizado
+
+1. (Claude) `docs/handoffs/README.md`: novo registro no índice, e o parágrafo de
+   leitura passa a distinguir os dois handoffs em vez de falar de um só.
+
 ## 2026-09-08 — Plano consolidado, após contraditório de três LLMs
 
 Rodada dos pacotes T0, T1, T2 e T5 do plano consolidado, mais o T6 e a parte
