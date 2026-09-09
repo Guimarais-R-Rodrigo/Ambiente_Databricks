@@ -105,3 +105,7 @@ Bloqueado por acesso, não por código:
 - **A invariante que soma categorias e compara com o total** prova completude de rótulo,
   não preservação de linha: perder uma linha e duplicar outra mantém a soma. Compare
   sempre contra a contagem da entrada.
+
+## Revisão de segunda origem — 09/09/2026 (Codex)
+
+O estado acima é preservado como relato da implementação. A [rodada Codex](../auditoria/2026-09-09_implantacao-plano/02_codex.md) revisa o commit `9e9fa78`, confirma os gates locais e registra achados residuais e plano de correção. Consultá-la antes de encerrar T1, T2, T5 ou T6 e antes de retomar publicação. O escopo do validador, os testes conversacionais e o aceite no destino continuam pendentes. Não há consenso formal registrado nesta adição.

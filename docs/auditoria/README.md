@@ -56,6 +56,7 @@ equivalente.
 | 2026-08-19 | [leitura em contexto longo](2026-08-19_leitura-contexto-longo/) | A1, segunda origem | 1 procedente, 1 parcial, 1 improcedente + achado de idioma |
 | 2026-08-20 | [execução e contraditório](2026-08-20_segunda-origem-codex/) | A2 | 24 achados; correções com probes e mutantes |
 | 2026-08-29 | [READMEs após o redesenho](2026-08-29_readmes-grok/) | A1, Grok 4.6 + contraditório | 2 P1, 3 P2 e melhorias P3 aceitas; sem P0 |
+| 2026-09-09 | [implantação do plano consolidado](2026-09-09_implantacao-plano/02_codex.md) | segunda origem, rodada Codex | gates locais aprovados; achados residuais e plano corretivo; contraditório pendente |
 
 As auditorias das sprints ficam junto dos respectivos relatórios e estão
 indexadas em [`PLANO_HUB.md`](../../PLANO_HUB.md). Esta tabela cobre apenas

@@ -5,6 +5,12 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-09 — Revisão da implantação do plano (Codex)
+
+- (Codex) Registrados contexto, auditoria independente e plano corretivo em `docs/auditoria/2026-09-09_implantacao-plano/`.
+- (Codex) Reexecutado o gate local sobre `9e9fa78`: 37 testes da biblioteca, 23 guardas e validação estrutural aprovados. Reproduzidos descarte de métrica inválida, colisão de coluna temporal e divergência entre filtro e operação de publicação simulada.
+- (Codex) Acrescentada referência de continuidade ao handoff; nenhuma alteração funcional nem publicação Databricks nesta rodada.
+
 ## 2026-09-09 — Handoff da rodada registrado
 
 ### Adicionado
