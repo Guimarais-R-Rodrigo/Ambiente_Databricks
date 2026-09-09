@@ -5,6 +5,86 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-08 — Plano consolidado, após contraditório de três LLMs
+
+Rodada dos pacotes T0, T1, T2 e T5 do plano consolidado, mais o T6 e a parte
+documental do T3. T4 (testes conversacionais) e T7 (replicação) seguem abertos.
+
+### Adicionado
+
+1. (Claude) `.gitattributes` com `* text=auto eol=lf` e exceção `-text` para
+   `Ajustes_Codex/`, que é material congelado e fica preservado byte a byte.
+2. (Claude) `tools/ci_local.py` e `tools/requirements-dev.txt`: gate local que
+   roda validador, testes da biblioteca e guardas das ferramentas sem credencial
+   do Databricks, e recusa rodar com dependência de teste ausente.
+3. (Claude) `t_pit_join_preservacao` em `tools/spark_smoke_test.py`: fixture de
+   seis linhas com contagem esperada por categoria, comparada contra
+   `fatos.count()` e não contra o total derivado da própria saída.
+4. (Claude) `conferir_fonte_espelho`, `comparar_conteudo` e a flag
+   `--verify --conteudo` em `tools/publicar_free.py`, com hash bruto e hash
+   normalizado registrados separadamente.
+5. (Claude) `selecionar_metricas_do_relatorio` e `CHAVES_DO_RELATORIO` em
+   `hub_snippets/ml/performance_monitor`: tradução explícita de `auc_roc` para
+   `auc`, sem heurística de nome.
+6. (Claude) `LIMITE_CATEGORIAS_CSI` e o parâmetro `max_categorias` em
+   `hub_snippets/spark/psi_calculator`, com a contagem de categorias distintas
+   feita antes da coleta no driver.
+7. (Claude) Evidências datadas em `docs/testes/2026-09-08_diagnostico-eol.md` e
+   `docs/testes/2026-09-08_pit-join-preservacao.md`.
+
+### Atualizado
+
+1. (Claude) `docs/playbooks/checklist-replicacao.md`: a ressalva de "auditoria de
+   uma rodada" sobre `pit_join` e vizinhos deu lugar ao estado real — segunda
+   origem em 20/08, smoke em 29/08, teste de preservação em 08/09. O risco que
+   permanece é o ambiente corporativo, não a rodada única.
+2. (Claude) `docs/playbooks/replicacao-trabalho.md`: passa a distinguir módulo da
+   biblioteca (**arquivo**) de material didático `exemplo_*` (**notebook**), em
+   vez de generalizar todos os `.py` como arquivo.
+3. (Claude) `.claude/context/ambiente-free.md`: a cota de 01/09 vira fato datado e
+   o estado passa a "pendente de revalidação".
+4. (Claude) `tools/README.md`: declara o alcance de cada modo de verify e por que
+   a normalização da comparação é deliberadamente mínima.
+5. (Claude) `.gitignore`: `Claude outputs/`, pasta gerada pela ponte de arquivos
+   que estava entrando na varredura de identidade do validador.
+
+### Corrigido
+
+1. (Claude) `hub_snippets/ml/lgbm_temporal`: a coluna de data era ordenada como
+   veio. Em texto, a ordem era lexicográfica — `2026-1-10` antes de `2026-1-2` —
+   e o lag trazia informação futura sem nenhum sinal de erro. A conversão passou
+   a ocorrer antes de `sort_values` e independe de `calendar_features`.
+2. (Claude) Contrato de data declarado no mesmo módulo: ano-mês-dia é aceito
+   automaticamente por não ser ambíguo; qualquer outro formato exige
+   `date_format`. Data nula, data inválida no calendário, coluna numérica e
+   empate no grão entidade+data passaram a levantar `ValueError`.
+3. (Claude) Árvore de trabalho normalizada de CRLF para LF em 648 arquivos, sem
+   nenhuma diferença de conteúdo, em commit isolado das mudanças funcionais.
+4. (Claude) `hub_snippets/ml/performance_monitor/__init__.py` regenerado por
+   `tools/api_publica.py` em 09/09, depois que o validador acusou divergência da
+   API pública: a ordem é a de definição no módulo, não alfabética.
+5. (Claude) `tools/ci_local.py` lia a saída dos subprocessos como UTF-8 estrito.
+   No Windows o filho escreve no code page do console, e o `UnicodeDecodeError`
+   morria dentro da thread leitora: a etapa reprovava sem mostrar a causa. Agora
+   o filho recebe `PYTHONUTF8` e a decodificação tem fallback de locale.
+6. (Claude) `tools/tests/test_tool_guards.py`: o teste de representações
+   equivalentes gravava a fixture em modo texto e casava o objeto remoto por
+   `endswith`. No Windows a fixture saía em CRLF, o mock a convertia outra vez e
+   produzia `CR CR LF`, reprovando os três arquivos. Passa a gravar bytes e a
+   casar por mapa explícito de caminho remoto, e foi conferido nos dois cenários
+   de fim de linha.
+
+### Notas
+
+- Validação local aprovada e espelho regenerado a cada pacote funcional.
+- Testes: 37 em `hub_snippets/tests/test_core.py` (eram 21) e 23 em
+  `tools/tests/test_tool_guards.py` (eram 14).
+- `t_pit_join_preservacao` foi exercitado em PySpark 3.5.3 local, com quatro
+  mutantes reprovando — inclusive o que preserva o total de linhas. Isso **não**
+  substitui o smoke no Free em Spark 4.2.0, que precisa ser refeito.
+- Continua aberto: escopo do `validate_assistant.py` por `git ls-files` (T3),
+  recaptura do bloco de saídas de referência do `README.md`, T4 e T7.
+
 ## 2026-08-29 — Correções após auditoria externa dos READMEs
 
 ### Adicionado

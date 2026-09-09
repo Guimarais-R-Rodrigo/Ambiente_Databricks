@@ -147,8 +147,21 @@ encerrar o rollback.
 
 ## Ressalva sobre os módulos novos
 
-`pit_join`, `join_diagnostics`, `fixtures` e `mlflow_run` têm auditoria de uma
-rodada apenas, com o mesmo modelo que os implementou. Essa rodada encontrou treze
-defeitos, o que sugere que uma segunda origem encontraria mais. Eles são opt-in:
-ninguém os usa sem importar. **Evite `pit_join` em decisão que importe até a
-segunda auditoria.**
+A ressalva original dizia que `pit_join`, `join_diagnostics`, `fixtures` e
+`mlflow_run` tinham auditoria de **uma** rodada, feita pelo mesmo modelo que os
+implementou, e mandava evitar `pit_join` em decisão que importasse. Essa condição
+não vale mais, e mantê-la escrita passou a induzir a decisão errada.
+
+O que mudou, com evidência datada:
+
+| Data | Fato |
+|---|---|
+| 20/08/2026 | auditoria de **segunda origem** (Codex), independente de quem implementou |
+| 29/08/2026 | smoke pós-correção no Spark 4.2.0, com `func:pit_join` = PASS |
+| 08/09/2026 | teste de **preservação de linha** do `pit_join`, com mutantes |
+
+O risco que **permanece** não é mais o de rodada única, e sim o de ambiente: nada
+disso foi medido no workspace corporativo. Antes de usar qualquer um dos quatro
+em decisão que importe no trabalho, refaça o smoke no runtime de destino e
+confira permissões, Unity Catalog e bibliotecas. Um PASS no Free é evidência
+sobre o Free.

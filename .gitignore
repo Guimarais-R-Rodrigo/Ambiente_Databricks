@@ -31,3 +31,8 @@ bundle_auditoria*.txt
 
 # Pacotes mínimos de implantação (gerados, nunca versionados)
 .artifacts/
+
+# Saídas da ponte de arquivos do Cowork. São geradas na raiz do repositório e
+# estavam entrando na varredura de identidade do validador, que percorre o
+# filesystem e não o conjunto versionado.
+Claude outputs/
