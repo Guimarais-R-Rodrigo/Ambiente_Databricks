@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111F"/>
+      <stop offset="0.56" stop-color="#0B1728"/>
+      <stop offset="1" stop-color="#101B30"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.82" cy="0.08" r="0.85">
+      <stop offset="0" stop-color="#FF4F87" stop-opacity="0.18"/>
+      <stop offset="0.52" stop-color="#5DD6FF" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#07111F" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#2C4059" stroke-width="1" opacity="0.16"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000814" flood-opacity="0.42"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7890AA"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#glow)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <rect x="68" y="50" width="188" height="34" rx="17" fill="#FF4F87" opacity="0.16"/>
+  <text x="162" y="74" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#FF4F87" opacity="1"><tspan x="162" dy="0">GUIA VISUAL</tspan></text>
+  <text x="68" y="122" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="750" fill="#F7FAFC" opacity="1"><tspan x="68" dy="0">Do exemplo ao resultado confiável</tspan></text>
+  <text x="68" y="158" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="68" dy="0">O snippet acelera o trabalho; a validação continua humana</tspan></text>
+  <line x1="68" y1="186" x2="1532" y2="186" stroke="#2C4059" stroke-width="1"/>
+  <path d="M390,415 C422.5,415 422.5,415 455,415" fill="none" stroke="#7890AA" stroke-width="3"  marker-end="url(#arrow)"/>
+  <path d="M765,415 C797.5,415 797.5,415 830,415" fill="none" stroke="#7890AA" stroke-width="3"  marker-end="url(#arrow)"/>
+  <path d="M1140,415 C1172.5,415 1172.5,415 1205,415" fill="none" stroke="#7890AA" stroke-width="3"  marker-end="url(#arrow)"/>
+  <g opacity="1" filter="url(#shadow)">
+    <rect x="80" y="300" width="310" height="230" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="80" y="300" width="6" height="230" rx="3" fill="#A992FF"/>
+    <circle cx="356" cy="334" r="20" fill="#A992FF" opacity="0.18"/>
+       <text x="356" y="341" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="750" fill="#A992FF" opacity="1"><tspan x="356" dy="0">1</tspan></text>
+    <text x="108" y="350" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="108" dy="0">Consultar</tspan></text>
+    <text x="108" y="392" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="108" dy="0">Abra exemplo_*.py</tspan><tspan x="108" dy="25">Entenda entradas e saída</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="455" y="300" width="310" height="230" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="455" y="300" width="6" height="230" rx="3" fill="#FFC966"/>
+    <circle cx="731" cy="334" r="20" fill="#FFC966" opacity="0.18"/>
+       <text x="731" y="341" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="750" fill="#FFC966" opacity="1"><tspan x="731" dy="0">2</tspan></text>
+    <text x="483" y="350" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="483" dy="0">Configurar</tspan></text>
+    <text x="483" y="392" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="483" dy="0">Torne a raiz visível</tspan><tspan x="483" dy="25">Confirme dependências</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="830" y="300" width="310" height="230" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="830" y="300" width="6" height="230" rx="3" fill="#FF4F87"/>
+    <circle cx="1106" cy="334" r="20" fill="#FF4F87" opacity="0.18"/>
+       <text x="1106" y="341" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="750" fill="#FF4F87" opacity="1"><tspan x="1106" dy="0">3</tspan></text>
+    <text x="858" y="350" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="858" dy="0">Importar</tspan></text>
+    <text x="858" y="392" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="858" dy="0">Use a API pública</tspan><tspan x="858" dy="25">Passe parâmetros reais</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="1205" y="300" width="310" height="230" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="1205" y="300" width="6" height="230" rx="3" fill="#66E3C4"/>
+    <circle cx="1481" cy="334" r="20" fill="#66E3C4" opacity="0.18"/>
+       <text x="1481" y="341" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="750" fill="#66E3C4" opacity="1"><tspan x="1481" dy="0">4</tspan></text>
+    <text x="1233" y="350" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="1233" dy="0">Validar</tspan></text>
+    <text x="1233" y="392" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="1233" dy="0">Interprete retorno</tspan><tspan x="1233" dy="25">Confira limites e custo</tspan></text>
+  </g><g><circle cx="80" cy="785" r="6" fill="#A992FF"/><text x="96" y="791" font-family="Segoe UI, Arial" font-size="15" font-weight="600" fill="#AFC0D4">Preparação</text></g><g><circle cx="222" cy="785" r="6" fill="#FF4F87"/><text x="238" y="791" font-family="Segoe UI, Arial" font-size="15" font-weight="600" fill="#AFC0D4">Execução explícita</text></g><g><circle cx="436" cy="785" r="6" fill="#66E3C4"/><text x="452" y="791" font-family="Segoe UI, Arial" font-size="15" font-weight="600" fill="#AFC0D4">Validação</text></g>
+  <line x1="68" y1="838" x2="1532" y2="838" stroke="#2C4059" stroke-width="1"/>
+  <circle cx="80" cy="865" r="5" fill="#FF4F87"/>
+  <text x="96" y="871" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#AFC0D4" opacity="1"><tspan x="96" dy="0">HUB .ASSISTANT</tspan></text>
+  <text x="1532" y="871" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="500" fill="#AFC0D4" opacity="1"><tspan x="1532" dy="0">Leitura técnica + impacto visual</tspan></text>
+</svg>

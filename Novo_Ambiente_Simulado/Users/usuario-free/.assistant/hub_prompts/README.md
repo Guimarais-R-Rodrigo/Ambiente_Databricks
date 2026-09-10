@@ -1,120 +1,179 @@
 # Hub Prompts — Briefings Técnicos Estruturados para Genie Code
 
-O **Hub Prompts** é a camada de **interface e especificação técnica** do nosso ecossistema de dados. Ele reúne um conjunto de formulários e briefings padronizados projetados para orientar a interação humana com o **Databricks Genie Code**, orientando para que as demandas analíticas sejam traduzidas em instruções bem delimitadas, rastreáveis e reproduzíveis.
+O **Hub Prompts** é a camada de interface e especificação técnica do ecossistema. Ele reúne formulários e briefings padronizados para orientar a interação humana com a **Databricks Genie Code**, ajudando a traduzir demandas analíticas em instruções delimitadas, rastreáveis e reproduzíveis.
 
-Em vez de depender de comandos improvisados em linguagem natural, o Hub Prompts estabelece um contrato claro entre quem precisa da análise e o assistente de IA.
+> **CONTEÚDO CUSTOMIZADO PELO HUB · USO MANUAL.** `hub_prompts` não é uma pasta nativa descoberta ou executada automaticamente pela Genie Code. Você escolhe o template, preenche os campos e fornece o conteúdo no chat junto aos recursos necessários.
+
+Em vez de depender apenas de comandos improvisados, o Hub Prompts estabelece um contrato claro entre quem solicita a análise e o assistente de IA.
 
 ---
+
+## 🧭 Neste Guia
+
+| Para entender... | Vá para... |
+|---|---|
+| por que usar um briefing estruturado | [O que é um Prompt Estruturado](#-o-que-é-um-prompt-estruturado) |
+| como um objeto de prompt é organizado | [Anatomia da Pasta](#️-a-anatomia-de-uma-pasta-de-prompt) |
+| como preencher sem inventar informações | [Disciplina dos Parâmetros](#-a-disciplina-dos-parâmetros-evitando-alucinações) |
+| qual prompt escolher | [Catálogo Detalhado](#-catálogo-detalhado-de-prompts) |
+| como conduzir a interação | [Passo a Passo Operacional](#️-passo-a-passo-operacional-do-briefing-ao-resultado) |
+| dúvidas e limites | [Perguntas Frequentes](#-perguntas-frequentes-faq) |
+
+---
+
+<a id="-o-que-é-um-prompt-estruturado"></a>
 
 ## 🎯 O que é um Prompt Estruturado?
 
-No ecossistema corporativo, um prompt estruturado funciona como uma **Ordem de Serviço (OS) ou Especificação Técnica de Requisitos (Spec de Engenharia)**.
+No ecossistema, um prompt estruturado funciona como uma **Ordem de Serviço (OS) ou Especificação Técnica de Requisitos**.
 
-Imagine solicitar a construção de um pipeline para a equipe de engenharia de dados:
-* Se você disser apenas *"faça um pipeline com os dados de vendas"*, o engenheiro não saberá a frequência, o grão das tabelas, as regras de particionamento, o volume esperado nem os critérios de aceite.
-* Se você entregar uma **especificação técnica** detalhando a chave primária, a janela temporal de corte, os filtros de exclusão e o SLA exigido, a comunicação se torna muito mais precisa, diminuindo sensivelmente desvios de interpretação e retrabalho.
+Imagine solicitar a construção de um pipeline para uma equipe de engenharia de dados:
 
-O **Hub Prompts** aplica exatamente essa mesma disciplina ao desenvolvimento assistido por IA:
+- Se você disser apenas *“faça um pipeline com os dados de vendas”*, ficarão abertos frequência, grão, chaves, volume, destino e critérios de aceite.
+- Se você entregar uma **especificação técnica** com fontes, janela temporal, filtros, restrições, entregáveis e validações, a comunicação fica mais precisa e o resultado mais fácil de revisar.
 
-| Característica | Chat Informal / Ad-hoc | Briefing Estruturado (Hub Prompts) |
+O Hub Prompts aplica essa disciplina ao desenvolvimento assistido por IA:
+
+| Característica | Chat Informal / Ad hoc | Briefing Estruturado (Hub Prompts) |
 | :--- | :--- | :--- |
-| **Entrada** | Pergunta solta (*"analisa essa tabela de churn"*). | Contexto delimitado com grão, chaves, período e filtros. |
-| **Premissas da IA** | A IA adivinha colunas, regras e relações. | A IA é orientada a perguntar ou inspecionar o schema real. |
-| **Controle de Custo** | Risco de varreduras completas e `toPandas()` no driver. | Teto de execução explícito e leitura agregada em PySpark. |
-| **Segurança & Dados** | Pode expor PII ou tentar mutações sem autorização. | Guardrails declarados (somente leitura, agregação, mascaramento). |
-| **Entregável** | Resposta textual variável e código desestruturado. | Contrato de saída padronizado (tabelas de achados + código limpo). |
+| **Entrada** | Pedido amplo: “analise esta tabela”. | Objetivo, dados, grão, chaves, período e filtros. |
+| **Premissas da IA** | Muitas lacunas precisam ser resolvidas durante a conversa. | Desconhecidos e hipóteses são declarados para inspeção ou aprovação. |
+| **Controle de Custo** | Escopo de leitura e execução pode ficar implícito. | Limites e modo de trabalho podem ser definidos antes da execução. |
+| **Segurança & Dados** | Operações permitidas podem não estar claras. | Guardrails, aprovações e tratamento de dados são explicitados. |
+| **Entregável** | Formato varia conforme a interpretação. | Contrato de saída e critérios de aceite ficam no próprio briefing. |
 
-> [!NOTE]
-> **Uso Assistido:** Os prompts não são executados de forma silenciosa ou automática por jobs. Eles são ferramentas de trabalho colaborativo: você preenche os parâmetros de negócio, anexa os recursos no Databricks Genie Code e valida criticamente a resposta entregue.
+> **Uso assistido:** o briefing melhora a especificação, mas não garante que a resposta ou o código estejam corretos. Você continua responsável por revisar plano, dados utilizados, código, resultados e operações propostas.
 
 ---
 
+<a id="️-a-anatomia-de-uma-pasta-de-prompt"></a>
+
 ## 🏗️ A Anatomia de uma Pasta de Prompt
 
-Seguindo o padrão de **Pasta de Objeto (ADR-0007)** do repositório, cada demanda do Hub Prompts é organizada em uma pasta autossuficiente contendo dois arquivos essenciais:
+Seguindo o padrão de organização **Pasta de Objeto**, cada demanda do Hub Prompts possui uma pasta autossuficiente com dois arquivos centrais:
 
 ```text
 hub_prompts/
 └── eda_rapida/
-    ├── eda_rapida.md             <- O Briefing Técnico (formulário com parâmetros)
-    └── exemplo_eda_rapida.py     <- Notebook de demonstração e homologação
+    ├── eda_rapida.md             <- briefing técnico preenchível
+    └── exemplo_eda_rapida.py     <- notebook didático de acompanhamento
 ```
 
+![Anatomia de um briefing técnico forte](../hub_readmes_visual_assets/readmes/prompts/png/03_anatomia_do_briefing.png)
+
+*Leitura da figura: objetivo e contexto delimitam o problema; restrições controlam a operação; entrega e aceite definem quando o trabalho está pronto.*
+
+A figura funciona como um mapa de preenchimento. O template continua sendo o contrato copiável e deve carregar os detalhes concretos que não cabem no resumo visual.
+
 ### 1. O Arquivo Markdown (`<nome>.md`)
-É o template mestre do briefing. Ele é estruturado em seções fundamentais:
-* **Quando usar e quando não usar:** Delimita o propósito da análise.
-* **Guia de preenchimento:** Explica o significado de cada parâmetro e por que ele é crucial para o assistente.
-* **Prompt pronto para colar:** O bloco de texto contendo os placeholders (ex: `{{TABELA_OU_DF}}`, `{{CHAVE_PRIMARIA}}`), as instruções de modo de trabalho e o contrato de saída.
-* **O que conferir na resposta (Critérios de QA):** Checklist prático para você validar se a IA cumpriu todos os requisitos antes de aceitar o código.
+
+É a fonte do briefing. Em geral, contém:
+
+- **Quando usar e quando não usar:** delimita o propósito e as fronteiras.
+- **Guia de preenchimento:** explica o significado, o motivo e um exemplo de cada campo.
+- **Prompt pronto para preencher:** reúne contexto, modo de trabalho e contrato de saída.
+- **O que conferir na resposta:** checklist para revisar se a entrega cumpriu o pedido.
 
 ### 2. O Notebook de Acompanhamento (`exemplo_<nome>.py`)
-O notebook documenta o ciclo de vida real do briefing dentro do Databricks e é dividido em três partes bem demarcadas:
 
-1. **Parte 1 — Preparo do Ambiente:** Cria bases de dados sintéticas controladas (ou ancora tabelas de teste) para viabilizar a análise.
-2. **Parte 2 — O Prompt Preenchido:** Apresenta o briefing com exemplos reais de preenchimento, demonstrando como os parâmetros devem ser articulados na prática.
-3. **Parte 3 — Registro da Resposta Real (Homologação):** Espaço reservado para documentar a resposta que o Genie Code gerou no chat, qual skill foi acionada e quais pontos positivos ou lacunas foram observados pela equipe.
+O notebook documenta o ciclo de uso do briefing em três partes:
+
+1. **Parte 1 — Preparo do Ambiente:** cria dados sintéticos controlados ou aponta recursos de teste.
+2. **Parte 2 — Prompt Preenchido:** mostra uma instância completa do briefing, sem placeholders pendentes.
+3. **Parte 3 — Registro da Resposta Real:** espaço para registrar a resposta obtida, a skill utilizada, evidências, pontos fortes e lacunas.
+
+> **Atenção:** o notebook é uma demonstração e um recipiente de evidência. Enquanto a Parte 3 não contiver uma resposta realmente produzida e revisada, ele não comprova homologação conversacional do prompt.
+
+### 3. Exemplo de briefing completamente preenchido
+
+```text
+Quero realizar uma EDA rápida da tabela anexada `catalogo.analytics.customer_events`.
+
+Objetivo:
+- decidir se a base está apta para uma análise mensal de retenção;
+- identificar bloqueios de qualidade antes de desenhar as métricas.
+
+Contexto dos dados:
+- grão esperado: um evento de cliente por linha;
+- chave candidata: event_id;
+- entidade: customer_id;
+- coluna temporal: event_timestamp;
+- período: 2026-01-01 a 2026-06-30;
+- filtro: event_status = 'valid';
+- regras adicionais: NÃO INFORMADO — pergunte antes de assumir.
+
+Modo de trabalho:
+- trabalhe somente em leitura;
+- apresente primeiro o plano e as consultas pretendidas;
+- não colete a tabela inteira no driver;
+- limite amostras e explicite o motivo;
+- peça aprovação antes de qualquer operação persistente ou de leitura ampla.
+
+Entregue:
+1. schema, volume e intervalo temporal observado;
+2. avaliação da unicidade da chave e completude das colunas;
+3. distribuição das variáveis relevantes;
+4. anomalias e limitações, separando fatos de hipóteses;
+5. código PySpark reproduzível e próximos passos priorizados.
+
+Critérios de aceite:
+- todos os números devem ter origem identificável;
+- nenhuma regra de negócio pode ser inventada;
+- divergências entre o grão esperado e o observado devem ser destacadas.
+```
+
+Esse exemplo é intencionalmente detalhado: ele mostra ao usuário **o que substituir, por que a informação importa e como conferir a resposta**.
 
 ---
 
+<a id="-a-disciplina-dos-parâmetros-evitando-alucinações"></a>
+
 ## 🧩 A Disciplina dos Parâmetros: Evitando Alucinações
 
-Um dos maiores riscos no uso de IA generativa em dados é a inferência indevida: quando um campo é omitido, o modelo tende a inventar uma chave primária, supor uma regra contábil ou assumir uma granularidade inexistente.
+Um risco recorrente no uso de IA generativa em dados é preencher lacunas com hipóteses não confirmadas: assumir uma chave, inferir uma regra contábil ou escolher granularidade sem validação.
 
-Para evitar esse problema, os templates utilizam convenções estritas de preenchimento:
+Os templates usam três convenções de preenchimento:
 
-* **Valor Concreto:** Quando você conhece o dado com certeza (ex: `id_cliente`, `dt_referencia`).
-* **`NÃO INFORMADO`:** Quando a informação é desconhecida pela equipe no momento. **Isso é uma instrução ativa para a IA**: ao ver `NÃO INFORMADO`, o Genie Code é proibido de inventar o campo e passa a ter a obrigação de inspecionar o schema ou propor uma hipótese prévia para aprovação humana.
-* **`NÃO APLICÁVEL`:** Quando o parâmetro foi avaliado tecnicamente e não se aplica ao caso (por exemplo, uma tabela de cadastro estático que não possui coluna temporal).
+- **Valor concreto:** informação conhecida e confirmada, como `id_cliente` ou `dt_referencia`.
+- **`NÃO INFORMADO`:** a informação é desconhecida neste momento. O prompt deve instruir a Genie Code a inspecionar o schema, fazer perguntas ou propor uma hipótese para aprovação antes de usá-la.
+- **`NÃO APLICÁVEL`:** o campo foi avaliado e não se aplica ao caso, como uma tabela estática sem eixo temporal.
 
-> [!IMPORTANT]
-> **Nunca deixe um placeholder vazio (`{{...}}`):** Um campo não preenchido gera ambiguidade no modelo. Declare o valor ou explicite `NÃO INFORMADO`.
+> **Não envie placeholders vazios (`{{...}}`).** Preencha o valor, use `NÃO INFORMADO` ou declare `NÃO APLICÁVEL`. Essas expressões são convenções do briefing, não travas técnicas da plataforma; a instrução e a revisão humana é que controlam o comportamento esperado.
+
+### O contexto mínimo que evita retrabalho
+
+| Informação | Pergunta respondida |
+|---|---|
+| **Objetivo** | Qual decisão ou resultado o trabalho deve apoiar? |
+| **Recursos** | Quais tabelas, notebooks, células, arquivos ou modelos podem ser usados? |
+| **Grão e chaves** | O que representa uma linha e como identificar registros? |
+| **Tempo** | Qual período, coluna de data e instante de decisão valem? |
+| **Regras e filtros** | O que incluir, excluir ou tratar de modo especial? |
+| **Restrições** | Há limite de custo, tempo, memória, coleta ou mutação? |
+| **Entrega** | Quais códigos, tabelas, gráficos e explicações são esperados? |
+| **Aceite** | O que precisa ser verdadeiro para a resposta ser aprovada? |
 
 ---
 
 ## 🔄 A Sinergia Triangular: Prompts, Skills e Helpers
 
-O Hub Prompts não opera de forma isolada. Ele é a ponta de entrada que ativa todo o ecossistema de inteligência e reutilização de código do Databricks:
+O Hub Prompts não opera isoladamente. Ele fornece o contexto do problema; uma skill pode fornecer a metodologia; snippets e scripts podem fornecer implementações reutilizáveis.
 
-```mermaid
-flowchart TD
-    subgraph Entrada["1. Entrada do Usuário"]
-        Prompt["📄 Hub Prompt<br><i>Briefing com Contexto, Grão e Metas</i>"]
-    end
+![Sinergia entre briefing, Agent Skill, Genie Code e helpers](../hub_readmes_visual_assets/readmes/prompts/png/01_sinergia_contexto.png)
 
-    subgraph Roteamento["2. Roteamento & Inteligência"]
-        Genie["💬 Databricks Genie Code<br><i>Assistente Conversacional</i>"]
-        Skill["🧠 Agent Skill (@skill)<br><i>Metodologia e Guardrails</i>"]
-    end
+*Leitura da figura: o briefing define o problema, a skill organiza o método, a plataforma propõe e os helpers apoiam a implementação explícita.*
 
-    subgraph Execucao["3. Aceleração & Código Canônico"]
-        Snippets["⚡ Hub Snippets<br><i>Funções Modulares Testadas</i>"]
-        Scripts["🛠️ Hub Scripts<br><i>Automações Diagnósticas</i>"]
-    end
-
-    subgraph Saida["4. Entregável"]
-        Notebook["📓 Notebook de Produção<br><i>Código Limpo, Documentado e Seguro</i>"]
-    end
-
-    Prompt -->|Colado no chat com @recurso e @skill| Genie
-    Genie -->|Carrega metodologia da| Skill
-    Skill -->|Instrui assistente a importar| Snippets
-    Skill -->|Instrui assistente a reutilizar| Scripts
-    Snippets --> Notebook
-    Scripts --> Notebook
-    Genie --> Notebook
-```
-
-* **O Briefing (Prompt):** Fornece o escopo, o contexto do negócio e os parâmetros da tabela.
-* **O Maestro (Skill):** Carrega a metodologia correta de trabalho (ex: impedir vazamento temporal em safras, exigir análise univariada antes de modelar).
-* **Os Instrumentos (Snippets & Scripts):** Fornecem blocos de código prontos e testados (ex: join de ponto no tempo, cálculo de KS/PSI, matrizes de correlação), evitando que a IA reescreva lógica do zero a cada interação.
+- **O Briefing (Prompt):** fornece objetivo, contexto de negócio, recursos e parâmetros.
+- **O Maestro (Skill):** orienta o fluxo metodológico e os guardrails, quando carregada por relevância ou selecionada por `@`.
+- **Os Instrumentos (Snippets & Scripts):** oferecem código reutilizável; não são importados nem executados automaticamente pela skill.
 
 ---
 
 ## 📂 Famílias Funcionais de Prompts
 
-Os briefings estão agrupados em quatro grandes áreas do ciclo de vida de dados:
+Os briefings podem ser entendidos em quatro famílias do ciclo de dados:
 
-```
+```text
 hub_prompts/
 ├── 🔍 Exploração & Perfilamento
 ├── 📈 Modelagem, Safras & Estatística
@@ -122,208 +181,282 @@ hub_prompts/
 └── 📚 Documentação, Tutoria & Onboarding
 ```
 
+> **Nota de leitura:** essa árvore é uma organização **conceitual deste README**. Fisicamente, os 16 objetos ficam diretamente em `hub_prompts/<nome>/`.
+
+### Matriz rápida de seleção
+
+| Se a sua pergunta começa com... | Comece por... | Família |
+|---|---|---|
+| “O que existe e posso confiar nesta base?” | `eda_rapida`, `eda_completa` ou `data_quality` | exploração e qualidade |
+| “Como estas tabelas se relacionam?” | `cross_eda` ou `comparar_tabelas` | cruzamento e reconciliação |
+| “Como medir no tempo sem leakage?” | `safra` ou `feature_engineering` | temporalidade e risco |
+| “Como modelar, explicar ou acompanhar?” | `baseline_orchestration`, `explainability` ou `monitoramento_modelo` | ciclo de ML |
+| “Como transformar em processo?” | `pipeline` ou `novo_projeto` | implementação e onboarding |
+| “Como revisar, ensinar ou documentar?” | `auditoria_skills`, `tutor_explicar` ou `comentar_notebook` | governança e comunicação |
+| “A evidência sustenta a hipótese?” | `stat_check` | validação estatística |
+
+### Legenda dos campos de cada briefing
+
+| Campo | Função na conversa |
+|---|---|
+| **O que faz** | delimita o problema que o template organiza |
+| **Skill recomendada** | sugere método; não significa ativação automática |
+| **O usuário precisa informar** | explicita dados que não devem ser inventados |
+| **Cenário de uso** | mostra quando o briefing costuma ser útil |
+| **Arquivos** | indica os caminhos do template e do exemplo no pacote |
+
 ### 1. Exploração & Perfilamento
-Focados em diagnosticar bases de dados desconhecidas, entender volume, integridade, distribuições e viabilidade analítica preliminar antes de qualquer esforço de desenvolvimento.
+
+Diagnostica bases desconhecidas, volume, integridade, distribuições e viabilidade preliminar antes de esforços de desenvolvimento mais caros.
 
 ### 2. Modelagem, Safras & Estatística
-Orientados a guiar o ciclo analítico de ponta a ponta: estruturação de safras históricas (vintages), validação estatística de hipóteses, engenharia de atributos, baseline de machine learning, explicabilidade de modelos e monitoramento de drift em produção.
+
+Orienta coortes históricas, validação de hipóteses, engenharia de atributos, modelos baseline, explicabilidade e acompanhamento de drift.
 
 ### 3. Qualidade, Reconciliação & Auditoria
-Dedicados à confiabilidade dos dados e do próprio código: varreduras de anomalias, reconciliação precisa entre bases distintas e auditoria de segurança/qualidade sobre códigos gerados por inteligência artificial.
+
+Trata confiabilidade de dados e código: anomalias, reconciliação entre bases e revisão crítica de entregas assistidas por IA.
 
 ### 4. Documentação, Tutoria & Onboarding
-Projetados para transformar códigos brutos em ativos institucionais elegantes, capacitar engenheiros e cientistas nas melhores práticas de Databricks e estruturar o pontapé inicial de novos projetos.
+
+Transforma código em material compreensível, explica conceitos e estrutura o início de novos projetos.
 
 ---
 
+<a id="-catálogo-detalhado-de-prompts"></a>
+
 ## 📖 Catálogo Detalhado de Prompts
 
-Abaixo está o catálogo completo dos briefings disponíveis no Hub, organizados por suas respectivas famílias:
+O catálogo abaixo preserva as famílias e acrescenta links diretos para o briefing e para o notebook didático.
 
 ---
 
 ### 🔍 Exploração & Perfilamento
 
 #### `eda_rapida` — Perfil Preliminar de Dados
-* **O que faz:** Realiza um diagnóstico expresso e de baixo custo computacional sobre uma tabela ou DataFrame recém-descoberto, levantando grão, volume, completude e integridade básica.
-* **Skill Recomendada:** `@hub-ml-eda-profissional`
-* **Parâmetros Principais:** `{{TABELA_OU_DF}}`, `{{OBJETIVO}}`, `{{FOCO}}`, `{{PK_OU_NAO_INFORMADO}}`, `{{COL_DATA_OU_NAO_INFORMADO}}`, `{{TEMPO_CUSTO_OU_NAO_INFORMADO}}`.
-* **Cenário de Uso:**
-  > *"Acabei de receber acesso a uma tabela nova do CRM. Antes de propor qualquer análise, preciso de um raio-X rápido para saber se ela possui dados consistentes ou se está repleta de nulos e duplicações."*
+
+- **O que faz:** organiza um diagnóstico inicial de grão, volume, completude e integridade básica.
+- **Skill recomendada:** `@hub-ml-eda-profissional`.
+- **O usuário precisa informar:** recurso, objetivo, foco, chave candidata, coluna temporal, filtros e limite de custo/tempo.
+- **Cenário de Uso:**
+  > *“Recebi acesso a uma tabela nova. Antes de propor uma análise, preciso entender estrutura, qualidade e bloqueios.”*
+- **Arquivos:** `hub_prompts/eda_rapida/eda_rapida.md` · `hub_prompts/eda_rapida/exemplo_eda_rapida.py`
 
 #### `eda_completa` — Análise Exploratória Profunda
-* **O que faz:** Estrutura uma exploração aprofundada univariada e bivariada, investigando distribuições, cardinalidade, dispersão, assimetria, correlações e correlação direta com uma variável alvo.
-* **Skill Recomendada:** `@hub-ml-eda-profissional`
-* **Parâmetros Principais:** `{{TABELA_OU_DF}}`, `{{VARIAVEL_ALVO}}`, `{{SEGMENTOS_CHAVE}}`, `{{JANELA_TEMPORAL}}`, `{{REGRAS_NEGOCIO}}`.
-* **Cenário de Uso:**
-  > *"A equipe definiu que vamos criar um modelo de propensão à contratação de crédito. Preciso de uma análise minuciosa de todas as features candidatas em relação ao target antes de começar o pré-processamento."*
+
+- **O que faz:** estrutura exploração univariada e bivariada, distribuições, cardinalidade, dispersão e relações com o target quando houver.
+- **Skill recomendada:** `@hub-ml-eda-profissional`.
+- **O usuário precisa informar:** recurso, target, segmentos, janela, regras e restrições.
+- **Cenário de Uso:**
+  > *“Vamos construir um modelo de propensão e preciso avaliar as features candidatas antes do pré-processamento.”*
+- **Arquivos:** `hub_prompts/eda_completa/eda_completa.md` · `hub_prompts/eda_completa/exemplo_eda_completa.py`
 
 #### `cross_eda` — Exploração Cruzada Multi-Tabelas
-* **O que faz:** Analisa a viabilidade de relacionamentos, chaves e integridade referencial entre duas ou mais tabelas antes da construção de joins complexos.
-* **Skill Recomendada:** `@hub-ml-cross-eda-ml`
-* **Parâmetros Principais:** `{{TABELAS_ENVOLVIDAS}}`, `{{CHAVES_LIGACAO}}`, `{{PERIODO_ANALISE}}`, `{{GRAO_ESPERADO}}`.
-* **Cenário de Uso:**
-  > *"Preciso consolidar a tabela de cadastros com a tabela transacional de cartões. Quero mapear perda de registros no join, taxa de correspondência e integridade das chaves antes de gerar a tabela final."*
+
+- **O que faz:** analisa chaves, cardinalidade, integridade referencial, disponibilidade temporal e risco do join.
+- **Skill recomendada:** `@hub-ml-cross-eda-ml`.
+- **O usuário precisa informar:** tabelas, chaves, período, grão e resultado esperado do relacionamento.
+- **Cenário de Uso:**
+  > *“Quero cruzar cadastro e transações e medir correspondência, perda e multiplicação antes da tabela final.”*
+- **Arquivos:** `hub_prompts/cross_eda/cross_eda.md` · `hub_prompts/cross_eda/exemplo_cross_eda.py`
 
 ---
 
 ### 📈 Modelagem, Safras & Estatística
 
 #### `safra` — Análise de Coortes e Maturação Temporal
-* **O que faz:** Estrutura curvas de acompanhamento histórico (vintages/safras) ao longo de janelas de maturação (ex: MOB — *Month on Book*), estruturado para mitigar o risco de vazamento temporal (*data leakage*).
-* **Skill Recomendada:** `@hub-ml-analise-safra`
-* **Parâmetros Principais:** `{{TABELA}}`, `{{COLUNA_SAFRA}}`, `{{COLUNA_EVENTO}}`, `{{JANELA_MATURACAO}}`, `{{CRITERIO_PERFORMANCE}}`.
-* **Cenário de Uso:**
-  > *"Preciso avaliar a qualidade do crédito concedido nos últimos 24 meses, acompanhando a evolução da inadimplência a cada 30 dias após a contratação."*
+
+- **O que faz:** estrutura coortes, MOB, denominadores, eventos, censura e janelas comparáveis.
+- **Skill recomendada:** `@hub-ml-analise-safra`.
+- **Cenário de Uso:**
+  > *“Quero comparar a inadimplência de contratos originados em meses diferentes após maturidade equivalente.”*
+- **Arquivos:** `hub_prompts/safra/safra.md` · `hub_prompts/safra/exemplo_safra.py`
 
 #### `stat_check` — Validação Estatística de Hipóteses
-* **O que faz:** Executa checagens formais de premissas estatísticas: testes de normalidade, homocedasticidade, significância estatística de diferenças entre grupos e correlações lineares e não-lineares.
-* **Skill Recomendada:** `@hub-ml-validacao-estatistica`
-* **Parâmetros Principais:** `{{TABELA}}`, `{{VARIAVEIS_TESTE}}`, `{{VARIAVEL_AGRUPAMENTO}}`, `{{NIVEL_SIGNIFICANCIA}}`.
-* **Cenário de Uso:**
-  > *"Realizamos um teste A/B em uma campanha de marketing. Preciso comprovar formalmente se a diferença de conversão entre o grupo de controle e o grupo de tratamento é estatisticamente significativa."*
+
+- **O que faz:** orienta escolha de teste, pressupostos, tamanho de efeito, incerteza e interpretação.
+- **Skill recomendada:** `@hub-ml-validacao-estatistica`.
+- **Cenário de Uso:**
+  > *“Quero avaliar se a diferença observada em um teste A/B é estatisticamente e materialmente relevante.”*
+- **Arquivos:** `hub_prompts/stat_check/stat_check.md` · `hub_prompts/stat_check/exemplo_stat_check.py`
 
 #### `feature_engineering` — Engenharia de Atributos Temporais
-* **O que faz:** Orienta a criação de variáveis derivadas com visão temporal pontual (*Point-in-Time*), janelas deslizantes (`rolling windows`), agregações comportamentais e tratamento robusto de nulos.
-* **Skill Recomendada:** `@hub-ml-feature-engineering`
-* **Parâmetros Principais:** `{{TABELA_ORIGEM}}`, `{{DATA_CORTE_AS_OF}}`, `{{JANELAS_TEMPORAIS}}`, `{{ENTIDADES}}`.
-* **Cenário de Uso:**
-  > *"Quero construir features de comportamento financeiro (soma de gastos nos últimos 30, 60 e 90 dias) de modo que nenhuma transação posterior à data de referência seja considerada no cálculo."*
+
+- **O que faz:** especifica features, entidades, datas de corte, janelas, fontes e prevenção de leakage.
+- **Skill recomendada:** `@hub-ml-feature-engineering`.
+- **Cenário de Uso:**
+  > *“Quero calcular comportamento em 30, 60 e 90 dias usando apenas dados disponíveis até a decisão.”*
+- **Arquivos:** `hub_prompts/feature_engineering/feature_engineering.md` · `hub_prompts/feature_engineering/exemplo_feature_engineering.py`
 
 #### `baseline_orchestration` — Modelo Baseline Ponta a Ponta
-* **O que faz:** Constrói um modelo de referência simples, rápido e transparente (ex: regressão logística ou árvore rasa) para servir de benchmark mínimo contra soluções mais complexas.
-* **Skill Recomendada:** `@hub-ml-baseline-ml`
-* **Parâmetros Principais:** `{{TABELA_TREINO}}`, `{{TARGET}}`, `{{METRICA_PRIMARIA}}`, `{{ESTRATEGIA_SPLIT}}`.
-* **Cenário de Uso:**
-  > *"Antes de treinar um modelo complexo de Gradient Boosting, precisamos de um baseline estruturado para validar a esteira de treino, medir as métricas mínimas e ter uma linha de base comparável."*
+
+- **O que faz:** define problema, população, split, métricas, baseline e tracking antes de comparar soluções mais complexas.
+- **Skill recomendada:** `@hub-ml-baseline-ml`.
+- **Cenário de Uso:**
+  > *“Preciso validar a esteira e estabelecer uma linha de base reproduzível antes de otimizar modelos.”*
+- **Arquivos:** `hub_prompts/baseline_orchestration/baseline_orchestration.md` · `hub_prompts/baseline_orchestration/exemplo_baseline_orchestration.py`
 
 #### `pipeline` — Construção de Pipelines Modulares
-* **O que faz:** Estrutura o encadeamento de transformações de dados em funções puras, modulares e preparadas para execução distribuída em PySpark.
-* **Skill Recomendada:** `@hub-ml-pipeline-builder`
-* **Parâmetros Principais:** `{{ETAPAS_TRANSFORMACAO}}`, `{{TABELAS_ENTRADA}}`, `{{TABELA_DESTINO}}`, `{{MODO_GRAVACAO}}`.
-* **Cenário de Uso:**
-  > *"Preciso organizar um notebook monolítico de 1.000 linhas em um pipeline modular com etapas claras de ingestão, limpeza, enriquecimento e carga na camada Gold."*
+
+- **O que faz:** especifica fontes, contratos, etapas, incrementalidade, qualidade, observabilidade e destino.
+- **Skill recomendada:** `@hub-ml-pipeline-builder`.
+- **Cenário de Uso:**
+  > *“Quero decompor um notebook monolítico em etapas testáveis e preparar sua automação.”*
+- **Arquivos:** `hub_prompts/pipeline/pipeline.md` · `hub_prompts/pipeline/exemplo_pipeline.py`
 
 #### `explainability` — Explicabilidade de Modelos de ML
-* **O que faz:** Extrai insights transparentes de modelos já treinados utilizando técnicas de interpretabilidade global e local (como valores de SHAP e importâncias relativas).
-* **Skill Recomendada:** `@hub-ml-explainability`
-* **Parâmetros Principais:** `{{MODELO_OBJETO}}`, `{{BASE_TESTE}}`, `{{METODO_EXPLICACAO}}`, `{{TOP_N_FEATURES}}`.
-* **Cenário de Uso:**
-  > *"O modelo de detecção de fraudes foi aprovado tecnicamente, mas a área de Compliance exige entender exatamente quais variáveis pesaram na recusa de uma transação específica."*
+
+- **O que faz:** define modelo, população, método, público e limites de uma explicação global ou local.
+- **Skill recomendada:** `@hub-ml-explainability`.
+- **Cenário de Uso:**
+  > *“Preciso entender quais variáveis influenciaram o comportamento do modelo e comunicar as limitações da análise.”*
+- **Arquivos:** `hub_prompts/explainability/explainability.md` · `hub_prompts/explainability/exemplo_explainability.py`
 
 #### `monitoramento_modelo` — Acompanhamento de Performance e Drift
-* **O que faz:** Calcula índices de estabilidade populacional (PSI), testes de aderência (KS) e verifica a degradação de performance das previsões ao longo do tempo.
-* **Skill Recomendada:** `@hub-ml-monitoramento-modelo`
-* **Parâmetros Principais:** `{{BASE_BASELINE}}`, `{{BASE_PRODUCAO}}`, `{{SCORE_COLUNA}}`, `{{TARGET_REAL}}`.
-* **Cenário de Uso:**
-  > *"Nosso modelo de propensão está em produção há 6 meses. Preciso monitorar se a distribuição das variáveis preditoras mudou em relação à base de desenvolvimento."*
+
+- **O que faz:** delimita referência, período atual, métricas, drift, thresholds e processo decisório.
+- **Skill recomendada:** `@hub-ml-monitoramento-modelo`.
+- **Cenário de Uso:**
+  > *“Quero investigar se a população ou a performance mudou e produzir evidência para decidir o próximo passo.”*
+- **Arquivos:** `hub_prompts/monitoramento_modelo/monitoramento_modelo.md` · `hub_prompts/monitoramento_modelo/exemplo_monitoramento_modelo.py`
 
 ---
 
 ### 🛡️ Qualidade, Reconciliação & Auditoria
 
 #### `data_quality` — Varredura e Regras de Integridade
-* **O que faz:** Diagnostica violações de integridade, anomalias de schema, desvios de formato e padrões de nulidade, gerando um relatório acionável de sanidade dos dados.
-* **Skill Recomendada:** `@hub-ml-eda-profissional`
-* **Parâmetros Principais:** `{{TABELA}}`, `{{REGRAS_ESPECIFICAS}}`, `{{COLUNAS_CRITICAS}}`, `{{TOLERANCIA_FALHAS}}`.
-* **Cenário de Uso:**
-  > *"Antes de disponibilizar a tabela analítica para a diretoria, quero rodar um check abrangente para verificar se há valores negativos em colunas monetárias ou registros órfãos."*
+
+- **O que faz:** estrutura verificações de schema, nulidade, unicidade, formato e regras específicas.
+- **Skill recomendada:** `@hub-ml-eda-profissional`.
+- **Cenário de Uso:**
+  > *“Antes de disponibilizar uma tabela, quero verificar chaves, nulos, intervalos e regras de domínio.”*
+- **Arquivos:** `hub_prompts/data_quality/data_quality.md` · `hub_prompts/data_quality/exemplo_data_quality.py`
 
 #### `comparar_tabelas` — Reconciliação entre Bases de Dados
-* **O que faz:** Realiza a comparação exata entre duas tabelas ou versões de um mesmo dataset, mapeando discrepâncias de contagem de linhas, schemas, divergência de valores e chaves ausentes.
-* **Skill Recomendada:** Direto com Genie Code ou via `@hub-ml-eda-profissional`
-* **Parâmetros Principais:** `{{TABELA_A}}`, `{{TABELA_B}}`, `{{CHAVE_CONCILIACAO}}`, `{{COLUNAS_COMPARACAO}}`.
-* **Cenário de Uso:**
-  > *"Estamos migrando um pipeline legado para Delta Lake. Preciso reconciliar a saída da tabela antiga com a nova para verificar o grau de aderência e identificar eventuais divergências nos dados."*
+
+- **O que faz:** compara schema, contagens, chaves e valores entre duas versões ou implementações.
+- **Skill recomendada:** Genie Code ou `@hub-ml-cross-eda-ml`, conforme o foco.
+- **Cenário de Uso:**
+  > *“Quero reconciliar uma saída legada com a nova implementação e localizar divergências.”*
+- **Arquivos:** `hub_prompts/comparar_tabelas/comparar_tabelas.md` · `hub_prompts/comparar_tabelas/exemplo_comparar_tabelas.py`
 
 #### `auditoria_skills` — Auditoria de Código Gerado por IA
-* **O que faz:** Inspeciona criticamente um notebook ou script gerado por IA para identificar potenciais más práticas: vazamento de dados temporais, chamadas ineficientes de `toPandas()`, falta de tratamento de exceções e não reutilização de helpers corporativos.
-* **Skill Recomendada:** `@hub-ml-auditoria-skills`
-* **Parâmetros Principais:** `{{NOTEBOOK_ALVO}}`, `{{CONTEXTO_DESENVOLVIMENTO}}`, `{{PONTOS_ATENCAO}}`.
-* **Cenário de Uso:**
-  > *"A IA gerou um notebook de modelagem para o time. Antes de colocá-lo na esteira de produção, quero que este briefing revise o código linha a linha em busca de brechas de engenharia e governança."*
+
+- **O que faz:** confronta pedido, skill, código, execução, evidências, helpers e guardrails.
+- **Skill recomendada:** `@hub-ml-auditoria-skills`.
+- **Cenário de Uso:**
+  > *“Antes de aceitar um notebook gerado com IA, quero revisar segurança, temporalidade, custo e aderência ao contrato.”*
+- **Arquivos:** `hub_prompts/auditoria_skills/auditoria_skills.md` · `hub_prompts/auditoria_skills/exemplo_auditoria_skills.py`
 
 ---
 
 ### 📚 Documentação, Tutoria & Onboarding
 
 #### `comentar_notebook` — Refatoração e Documentação Didática
-* **O que faz:** Analisa o código de um notebook existente e insere documentação técnica de alta clareza: docstrings em funções, tipagem estática (type hints), cabeçalhos em Markdown e resumos conceituais de cada célula.
-* **Skill Recomendada:** `@hub-ml-comentar-notebook`
-* **Parâmetros Principais:** `{{NOTEBOOK_OU_CODIGO}}`, `{{NIVEL_DETALHE}}`, `{{PUBLICO_ALVO}}`.
-* **Cenário de Uso:**
-  > *"Desenvolvi um algoritmo complexo de otimização de rotas e agora preciso transferi-lo para a equipe de sustentação. Quero que o notebook seja comentado didaticamente para facilitar o entendimento de qualquer colega."*
+
+- **O que faz:** orienta cabeçalhos, contexto antes do código, comentários e interpretação depois da execução.
+- **Skill recomendada:** `@hub-ml-comentar-notebook`.
+- **Cenário de Uso:**
+  > *“Quero tornar um notebook denso compreensível para a equipe sem alterar silenciosamente sua lógica.”*
+- **Arquivos:** `hub_prompts/comentar_notebook/comentar_notebook.md` · `hub_prompts/comentar_notebook/exemplo_comentar_notebook.py`
 
 #### `tutor_explicar` — Mentoria Técnica e Explicabilidade de Código
-* **O que faz:** Atua como um mentor técnico, explicando de forma didática e profunda como um trecho complexo de código PySpark/SQL funciona por trás dos panos no Databricks.
-* **Skill Recomendada:** `@hub-ml-tutor-databricks`
-* **Parâmetros Principais:** `{{TRECHO_CODIGO}}`, `{{DUVIDA_ESPECIFICA}}`, `{{NIVEL_EXPERIENCIA}}`.
-* **Cenário de Uso:**
-  > *"Um analista júnior da equipe está com dificuldades para entender como o Catalyst Optimizer gerencia o plano de execução e o particionamento em um join específico."*
+
+- **O que faz:** estrutura uma explicação adequada ao nível do leitor, com conceito, leitura do código, riscos e exercício.
+- **Skill recomendada:** `@hub-ml-tutor-databricks`.
+- **Cenário de Uso:**
+  > *“Quero entender como o plano Spark, o particionamento e o join se relacionam com a lentidão observada.”*
+- **Arquivos:** `hub_prompts/tutor_explicar/tutor_explicar.md` · `hub_prompts/tutor_explicar/exemplo_tutor_explicar.py`
 
 #### `novo_projeto` — Kick-off Estruturado de Projetos de Dados
-* **O que faz:** Estrutura o planejamento inicial de um novo projeto, levantando perguntas-chave de negócio, desenhando o escopo da solução, definindo arquitetura de dados e gerando o scaffolding de pastas.
-* **Skill Recomendada:** Direto com Genie Code
-* **Parâmetros Principais:** `{{PROBLEMA_NEGOCIO}}`, `{{FONTES_DADOS}}`, `{{USUARIOS_FINAIS}}`, `{{RESTRICOES_ARQUITETURA}}`.
-* **Cenário de Uso:**
-  > *"Vamos iniciar um projeto de precificação dinâmica. Quero um briefing para alinhar com a IA o desenho do projeto, os entregáveis de cada sprint e os requisitos arquiteturais."*
+
+- **O que faz:** conduz descoberta de negócio, fontes, restrições, arquitetura, riscos, entregáveis e critérios de aceite.
+- **Skill recomendada:** Genie Code; selecione uma skill especializada depois que a natureza da entrega estiver clara.
+- **Cenário de Uso:**
+  > *“Vamos iniciar um projeto de precificação e quero organizar perguntas, escopo, dependências e plano antes de criar artefatos.”*
+- **Arquivos:** `hub_prompts/novo_projeto/novo_projeto.md` · `hub_prompts/novo_projeto/exemplo_novo_projeto.py`
 
 ---
+
+<a id="️-passo-a-passo-operacional-do-briefing-ao-resultado"></a>
 
 ## 🛠️ Passo a Passo Operacional: Do Briefing ao Resultado
 
-Seguir o fluxo correto propicia respostas mais consistentes, código auditável e menor retrabalho:
+Seguir o fluxo abaixo favorece respostas mais consistentes, código auditável e menor retrabalho:
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Dev as Desenvolvedor (Você)
-    participant Hub as Hub Prompts (.md)
-    participant Chat as Genie Code (Chat)
-    participant Workspace as Databricks Workspace
+![Fluxo operacional do briefing à entrega](../hub_readmes_visual_assets/readmes/prompts/png/02_fluxo_operacional.png)
 
-    Dev->>Hub: 1. Seleciona e copia o template correto
-    Dev->>Dev: 2. Preenche os {{CAMPOS}} com dados reais ou NÃO INFORMADO
-    Dev->>Chat: 3. Abre CHAT NOVO, anexa @tabela e cola o briefing
-    Chat->>Workspace: 4. Inspeciona schema e executa plano sob aprovação
-    Chat-->>Dev: 5. Entrega resumo de achados e código auditável
-    Dev->>Dev: 6. Valida entrega contra os Critérios de QA do template
-```
+*Leitura da figura: seleção, preenchimento, contexto, revisão, execução e validação são etapas distintas.*
 
 ### 1. Selecione o Briefing Adequado
-Identifique na tabela do catálogo qual prompt atende à sua necessidade imediata (ex: se o objetivo for uma primeira checagem, use `eda_rapida`; se for modelagem temporal, use `safra`).
+
+Escolha o prompt pelo resultado principal. Se a demanda mistura EDA, features e baseline, trate cada fase com seu próprio contrato e só transporte premissas já validadas.
 
 ### 2. Preencha os Metadados com Rigor
-Abra o arquivo `.md` correspondente e substitua os placeholders. Seja transparente: se não souber a coluna de data, escreva explicitamente `NÃO INFORMADO`.
 
-### 3. Abra um Chat Novo e Anexe os Recursos
-No Databricks Genie Code:
-* Prefira sempre abrir uma **conversa limpa** para evitar que o contexto de discussões anteriores polua a análise atual.
-* Anexe o catálogo/tabela usando `@catalogo.schema.tabela`.
-* Adicione a skill correspondente (ex: `@hub-ml-eda-profissional`) para forçar o carregamento imediato da metodologia oficial.
-* Cole o texto completo do briefing preenchido.
+Substitua todos os placeholders. Use identificadores precisos, declare desconhecidos e não envie segredos, tokens, credenciais ou dados desnecessários.
 
-### 4. Valide a Entrega contra o Contrato de Saída
-Assim que o assistente responder, não copie o código cegamente:
-* Verifique se ele apresentou o plano de execução antes de gerar código.
-* Confirme se a tabela e os filtros utilizados correspondem ao que você especificou.
-* Certifique-se de que não foram realizadas operações pesadas de coleta no driver (`.toPandas()` em bases inteiras) nem mutações na base de dados original.
+### 3. Anexe os Recursos e Defina o Modo de Trabalho
+
+Na Genie Code:
+
+- use `@` ou **Add Context** para fornecer tabelas, notebooks, arquivos e outros recursos oferecidos pela interface;
+- use o identificador completo `catalog.schema.table` quando trabalhar com Unity Catalog;
+- quando aplicável, utilize contexto de célula, como `@cell`;
+- `/findTables` pode ajudar a localizar tabelas; aliases como `/eda` não são comandos registrados pelo Hub;
+- diga se deseja explicação, plano, geração de código ou execução;
+- selecione uma skill com `@` quando quiser explicitar a metodologia.
+
+Uma conversa nova é útil quando objetivo, conjunto de dados ou fase mudam materialmente. Para refinamentos do mesmo problema, o histórico validado pode ajudar.
+
+### 4. Revise o Plano antes de Executar
+
+Confirme recursos, filtros, período, operações, coleta no driver, custo e ações persistentes. Um prompt não amplia permissões e não substitui a política de aprovação configurada.
+
+### 5. Valide a Entrega contra o Contrato de Saída
+
+- diferencie código sugerido, código executado e resultado validado;
+- confira se fatos e hipóteses estão separados;
+- confirme a origem dos números e as limitações;
+- revise qualquer `CREATE`, `ALTER`, `DROP`, `DELETE`, `MERGE`, instalação ou mudança de configuração;
+- registre a resposta real no notebook de exemplo apenas quando ela tiver sido obtida e revisada.
 
 ---
 
+<a id="-perguntas-frequentes-faq"></a>
+
 ## ❓ Perguntas Frequentes (FAQ)
 
-### 1. Por que devo preencher um briefing estruturado em vez de apenas fazer uma pergunta livre no chat?
-**Para propiciar maior reprodutibilidade, segurança e controle computacional.** Quando você faz uma pergunta aberta (ex: *"analise os dados"*), o assistente precisa deduzir o grão da tabela, pode realizar varreduras completas desnecessárias no cluster e supor regras de negócio. O briefing amarra as variáveis fundamentais (chaves, janelas temporais, limites de custo), maximizando as chances de obter uma resposta aderente logo nas primeiras iterações.
+### 1. Por que preencher um briefing estruturado em vez de apenas fazer uma pergunta livre?
 
-### 2. O que devo preencher quando eu não souber a chave primária ou a granularidade dos dados?
-**Escreva explicitamente `NÃO INFORMADO`.** Jamais deixe o campo vazio ou invente um nome. Ao ler `NÃO INFORMADO`, o assistente é formalmente instruído pelo contrato do briefing a não assumir nenhuma chave e a dedicar as primeiras etapas da análise para investigar a unicidade das colunas e sugerir uma candidata para sua validação.
+Porque o briefing torna objetivo, dados, temporalidade, limites e entrega explícitos. Isso reduz ambiguidades e facilita a revisão, mas não impede sozinho erros do modelo ou do usuário.
 
-### 3. Por que o notebook de exemplo (`exemplo_*.py`) não executa o prompt automaticamente via código Python?
-**Porque prompts são interfaces conversacionais humanas.** Um prompt gera uma interação deliberativa e adaptativa com o assistente dentro do chat do Databricks Genie Code, exigindo julgamento crítico e aprovação humana. O notebook existe para preparar o ambiente (dados sintéticos), documentar o briefing preenchido e arquivar a resposta real obtida para fins de histórico e governança da equipe.
+### 2. O que preencher quando eu não souber a chave primária ou a granularidade?
 
-### 4. Quando devo abrir uma conversa nova no Genie Code em vez de continuar na mesma thread?
-**Sempre que o foco ou a fase do trabalho mudar materialmente.** Se você acabou de concluir uma `eda_rapida` e agora vai iniciar um `baseline_orchestration`, abra um chat novo. Conversas longas acumulam histórico e schemas anteriores que podem confundir o assistente, induzindo-o a referenciar colunas ou suposições de etapas que já foram superadas.
+Use `NÃO INFORMADO` e instrua o assistente a inspecionar ou perguntar antes de assumir. Não invente um nome e não deixe o placeholder vazio.
 
-### 5. Minha equipe pode criar novos modelos de briefing para demandas internas específicas?
-**Sim, e incentivamos isso.** Para criar um novo prompt padronizado (por exemplo, um briefing para cálculo de LTV ou análise de churn específico do seu negócio), basta criar uma nova pasta seguindo o padrão de objeto (`<nome>/<nome>.md` e `<nome>/exemplo_<nome>.py`) e registrar os placeholders e o contrato de saída. Você também pode utilizar a skill `@hub-ml-criar-objeto` para gerar essa estrutura automaticamente!
+### 3. Por que o notebook `exemplo_*.py` não executa o prompt automaticamente?
+
+Porque o prompt é uma interface conversacional. O notebook prepara dados, demonstra o preenchimento e registra a resposta real; não existe, neste Hub, uma automação silenciosa que envie o texto ao chat.
+
+### 4. Quando abrir uma conversa nova?
+
+Quando mudar materialmente o objetivo, os dados, a fase ou a skill recém-editada. Para aprofundar a mesma tarefa com premissas já verificadas, continuar a conversa pode preservar contexto útil.
+
+### 5. Minha equipe pode criar novos modelos de briefing?
+
+Sim. Use o padrão `<nome>/<nome>.md` e `<nome>/exemplo_<nome>.py`, explique cada campo e inclua limites, saída e checklist. A skill `@hub-ml-criar-objeto` pode orientar a estrutura, mas criar arquivos continua sendo uma ação explícita.
+
+### 6. O prompt carrega a skill e os helpers automaticamente?
+
+Não. A skill pode ser selecionada por relevância ou `@`. Snippets e scripts precisam ser importados pelo notebook. O prompt apenas fornece contexto e instruções.
+
+---
+
+## 🔗 Continue Explorando
+
+- [Agent Skills](../skills/README.md)
+- [Hub Snippets](../hub_snippets/README.md)
+- [Hub Scripts](../hub_scripts/README.md)
+- [Boas práticas de prompting na Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/tips)
+- [Funcionalidades da Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/features-capabilities)

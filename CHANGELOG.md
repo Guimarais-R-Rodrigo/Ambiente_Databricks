@@ -12,6 +12,14 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 - (Codex) Versionados em `READMEs_refeitos/` os rascunhos documentais
   conservadores e, na subpasta `readmes_viasual_melhorado/`, suas variantes para
   avaliação visual isolada no Databricks, sem substituir os READMEs ativos.
+- (Codex) Criada a extensão editorial `hub_readmes_visual_assets/`, nomeada para
+  deixar explícito que reúne apenas recursos visuais dos READMEs; ela contém 22
+  fontes SVG editáveis, 22 PNGs publicados, manifesto com hashes e guia visual.
+- (Codex) Adicionado `tools/render_readme_visuals.mjs` para reproduzir todo o
+  conjunto em `1600 × 900` a partir de uma única definição versionada.
+- (Codex) Registrado em `docs/sprints/2026-09-10-readmes-visuais.md` o plano das
+  cinco sprints, incluindo o requisito de conciliar densidade informativa com
+  acabamento bonito e estiloso para leitura e apresentação.
 
 ### Atualizado
 
@@ -21,6 +29,21 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 - (Codex) Referências externas à cópia isolada passaram a ser exibidas como
   caminhos, preservando apenas links que podem ser navegados dentro do conjunto
   publicado para revisão.
+- (Codex) Acrescentado o ensaio isolado
+  `readmes_viasual_melhorado/readmes_visual_testes/` com três representações do
+  README de snippets: Markdown com PNGs, notebook com Mermaid bruto e notebook
+  com PNGs; fontes `.mmd`, texto equivalente e roteiro de comparação foram
+  mantidos junto aos artefatos.
+- (Codex) Promovidos os cinco READMEs principais — com os dois documentos de
+  topo tratados como uma sprint editorial — e substituídos os blocos Mermaid
+  por PNGs compatíveis com o workspace; cada figura recebeu texto alternativo,
+  legenda interpretativa e equivalente semântico no corpo do documento.
+- (Codex) Corrigidos os links que nos rascunhos apontavam para nomes isolados e
+  recalculados os caminhos relativos para os destinos definitivos no Git e em
+  `.assistant/`.
+- (Codex) O inventário esperado de extensões `hub_` passou a incluir
+  `hub_readmes_visual_assets`, permitindo que publicação e verificação remota
+  tratem a nova pasta como parte explícita do pacote.
 
 ## 2026-09-09 — Reformulação didática e promoção dos READMEs do ecossistema (Gemini)
 

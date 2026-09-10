@@ -1,0 +1,96 @@
+version: 1
+generated_by: tools/render_readme_visuals.mjs
+format:
+  source: svg
+  published: png
+  width: 1600
+  height: 900
+assets:
+  - id: snippets.01_anatomia_pasta
+    source: readmes/snippets/sources/01_anatomia_pasta.svg
+    published: readmes/snippets/png/01_anatomia_pasta.png
+    sha256: df1035d05b556084c7f8c63f174e5140ab2e127619c6a4004f07c6cb97465d89
+  - id: snippets.02_mapa_categorias
+    source: readmes/snippets/sources/02_mapa_categorias.svg
+    published: readmes/snippets/png/02_mapa_categorias.png
+    sha256: 097b4e5a750b28a29663d0ac840e8ebdb0b6881169d64201a9acdd6b4713b09d
+  - id: snippets.03_fluxo_operacional
+    source: readmes/snippets/sources/03_fluxo_operacional.svg
+    published: readmes/snippets/png/03_fluxo_operacional.png
+    sha256: 22202b0ee453c6ad64f851245151c475ddb4a40fdf370d05428e2268bb053784
+  - id: snippets.04_contrato_de_reuso
+    source: readmes/snippets/sources/04_contrato_de_reuso.svg
+    published: readmes/snippets/png/04_contrato_de_reuso.png
+    sha256: 34c222afb010cb0e2235ad0f4ec0109e915f4f7dd8c8faecc1c498dc1d5d5023
+  - id: scripts.01_anatomia_pasta
+    source: readmes/scripts/sources/01_anatomia_pasta.svg
+    published: readmes/scripts/png/01_anatomia_pasta.png
+    sha256: 7da267eba7122a82462cd123a81c4d807485b57dbf5ba94e2fb10e2d7a62e8f5
+  - id: scripts.02_catalogo_diagnosticos
+    source: readmes/scripts/sources/02_catalogo_diagnosticos.svg
+    published: readmes/scripts/png/02_catalogo_diagnosticos.png
+    sha256: 92fdc481fccf150d9baafca618abf1d5733f789bc0ad1eaa844aed21251fc4dc
+  - id: scripts.03_fluxo_execucao
+    source: readmes/scripts/sources/03_fluxo_execucao.svg
+    published: readmes/scripts/png/03_fluxo_execucao.png
+    sha256: 53aebf716ff0be189cf048d0b3dea4089b901378eb19e81a1266c3a0374a5c8f
+  - id: scripts.04_diagnostico_vs_enforcement
+    source: readmes/scripts/sources/04_diagnostico_vs_enforcement.svg
+    published: readmes/scripts/png/04_diagnostico_vs_enforcement.png
+    sha256: 270d60f37b7f0d8bcdb18395da12b26ff710644d407b1a7916d298c804c35127
+  - id: scripts.05_leitura_do_veredito
+    source: readmes/scripts/sources/05_leitura_do_veredito.svg
+    published: readmes/scripts/png/05_leitura_do_veredito.png
+    sha256: 0d5a38e1bd01a563cb07f918fc0b0ccb0b9efa9da13cef765ab6db4b31610d7f
+  - id: skills.01_descoberta_e_selecao
+    source: readmes/skills/sources/01_descoberta_e_selecao.svg
+    published: readmes/skills/png/01_descoberta_e_selecao.png
+    sha256: 9fc31fe6c97b6f88089db5406f69512b78fac693e6917a7227ba2dfed12110fa
+  - id: skills.02_skill_helpers_runtime
+    source: readmes/skills/sources/02_skill_helpers_runtime.svg
+    published: readmes/skills/png/02_skill_helpers_runtime.png
+    sha256: c8ed3b6666c0cc14a5ef489e803b7dbda88cdb8fcbd152021953821ed6e7c111
+  - id: skills.03_camadas_de_uma_skill
+    source: readmes/skills/sources/03_camadas_de_uma_skill.svg
+    published: readmes/skills/png/03_camadas_de_uma_skill.png
+    sha256: 21d0ecff1dd1ab007b2695426bfdddad9e782860adbe94b82904fcd853d4e5bc
+  - id: prompts.01_sinergia_contexto
+    source: readmes/prompts/sources/01_sinergia_contexto.svg
+    published: readmes/prompts/png/01_sinergia_contexto.png
+    sha256: 68c2cd157ca12c90bc196ea0ed58771f7fb0c9efe073c6b016ddcba8a6ba1e2f
+  - id: prompts.02_fluxo_operacional
+    source: readmes/prompts/sources/02_fluxo_operacional.svg
+    published: readmes/prompts/png/02_fluxo_operacional.png
+    sha256: 3f4ae8e516cfb8c6c3d6301e0fde41dbef0819fd81da90c30079b76c0ced601a
+  - id: prompts.03_anatomia_do_briefing
+    source: readmes/prompts/sources/03_anatomia_do_briefing.svg
+    published: readmes/prompts/png/03_anatomia_do_briefing.png
+    sha256: b342a7545b56fac1189d6d0a5c391bbeea339b0676834d02c0dd218380b9e2c1
+  - id: raiz.01_mapa_ecossistema
+    source: readmes/raiz/sources/01_mapa_ecossistema.svg
+    published: readmes/raiz/png/01_mapa_ecossistema.png
+    sha256: 2d1ba81f3e2a765ad3b808b5b013d20adb3709feb4e56c7944348844480ac810
+  - id: raiz.02_arquitetura_ecossistema
+    source: readmes/raiz/sources/02_arquitetura_ecossistema.svg
+    published: readmes/raiz/png/02_arquitetura_ecossistema.png
+    sha256: 92ce4bde21c270a1e1b64fbafd204414fb969f83be8ca2ff03ece9933d3aad9c
+  - id: raiz.03_ciclo_de_vida
+    source: readmes/raiz/sources/03_ciclo_de_vida.svg
+    published: readmes/raiz/png/03_ciclo_de_vida.png
+    sha256: 18c81a849ab3fdaf66d8b2a577350eece950ef407e403c83b4bcc26ccb904797
+  - id: raiz.04_fluxo_de_contexto
+    source: readmes/raiz/sources/04_fluxo_de_contexto.svg
+    published: readmes/raiz/png/04_fluxo_de_contexto.png
+    sha256: b993ecea98fbe017fbd6a1079b5357e0807d29a76530cd6a5d42da121ce44530
+  - id: assistant.02_arquitetura_de_uso
+    source: readmes/assistant/sources/02_arquitetura_de_uso.svg
+    published: readmes/assistant/png/02_arquitetura_de_uso.png
+    sha256: c6404c7f2d6f48bd0303e54238ef65c681d902a9bda57b28828c0e3b53b74fbf
+  - id: assistant.03_contexto_e_execucao
+    source: readmes/assistant/sources/03_contexto_e_execucao.svg
+    published: readmes/assistant/png/03_contexto_e_execucao.png
+    sha256: cccf4d1545f69930528417cd39acfc7237b560c7f0c523312a4ed7146f88c73f
+  - id: assistant.01_escolha_ponto_de_partida
+    source: readmes/assistant/sources/01_escolha_ponto_de_partida.svg
+    published: readmes/assistant/png/01_escolha_ponto_de_partida.png
+    sha256: ff8e7dc50bb0b4ee7c56b58267a9efd4ccb7609a3b63efc137c7a19ce1b4ae44

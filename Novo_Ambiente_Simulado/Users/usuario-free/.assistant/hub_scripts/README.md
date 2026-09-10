@@ -1,29 +1,48 @@
 # Hub Scripts
 
-> Utilitários e diagnósticos de integridade para auditar tabelas Delta, schemas e notebooks antes de confiar na modelagem preditiva ou publicar artefatos no Databricks.
+> Utilitários e diagnósticos de integridade para inspecionar tabelas, schemas e notebooks antes de confiar na modelagem preditiva ou promover artefatos no Databricks.
+
+> **CONTEÚDO CUSTOMIZADO PELO HUB.** `hub_scripts` não é executado automaticamente pela Genie Code. Cada diagnóstico precisa ser importado e chamado por um notebook, tarefa ou pessoa, que também decide como tratar o resultado.
 
 ---
 
+## 🧭 Neste Guia
+
+| Para entender... | Vá para... |
+|---|---|
+| o papel de um Hub Script | [O que é um Script](#-o-que-é-um-script-neste-ecossistema) |
+| os sete diagnósticos disponíveis | [Catálogo Detalhado](#-catálogo-detalhado) |
+| como executar uma checagem | [Passo a Passo Operacional](#️-passo-a-passo-operacional-como-usar-um-script) |
+| custo e efeitos de cada utilitário | [O que Acontece Durante a Execução](#️-o-que-acontece-durante-a-execução) |
+| a diferença entre diagnóstico e regra operacional | [Diagnóstico não é Enforcement](#-diagnóstico-não-é-enforcement) |
+| dúvidas e limitações | [Perguntas Frequentes](#-perguntas-frequentes-faq) |
+
+---
+
+<a id="-o-que-é-um-script-neste-ecossistema"></a>
+
 ## 🔍 O que é um Script neste Ecossistema?
 
-Em pipelines de dados modernos, o maior risco para um modelo de Machine Learning raramente é o algoritmo em si, mas sim a **qualidade e a confiabilidade do dado bruto que o alimenta**. 
+Em pipelines de dados modernos, o maior risco para um modelo de Machine Learning muitas vezes não é o algoritmo em si, mas a **qualidade e a confiabilidade do dado que o alimenta**.
 
-Treinar um modelo sobre uma tabela com chaves duplicadas, variáveis defasadas ou distribuições corrompidas gera modelos falhos e desperdício de processamento no cluster.
+Treinar um modelo sobre uma tabela com chaves duplicadas, variáveis defasadas ou distribuições corrompidas pode produzir conclusões frágeis e desperdício de processamento no cluster.
 
-**No ecossistema `.assistant`, um Hub Script atua como um Pórtico de Controle de Qualidade e Inspeção Sanitária de Dados.**
+**No ecossistema `.assistant`, um Hub Script atua como um pórtico de controle de qualidade e inspeção técnica.**
 
-Pense em um gateway de qualidade na ingestão analítica:
-* Antes de carregar uma base de dados para treinar um modelo preditivo de crédito, churn ou séries temporais, você submete a tabela a um **laudo técnico automatizado**.
-* O script realiza uma checagem direcionada: audita a unicidade das chaves primárias, verifica a completude das colunas essenciais, checa a recência temporal dos dados e avalia a conformidade dos schemas com as diretrizes do time.
+Pense em um gateway antes de uma etapa analítica importante:
+
+- Antes de usar uma base para treinar um modelo de crédito, churn ou séries temporais, você executa um diagnóstico compatível com o risco.
+- O script responde a uma pergunta delimitada: unicidade da chave candidata, completude, atualidade, estabilidade, nomenclatura ou cobertura documental.
+- O resultado é evidência para uma decisão; não é uma homologação automática da tabela ou do notebook.
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                            O PAPEL DE UM SCRIPT                             │
 │                                                                             │
-│   🛑 Diagnóstico Autocontido: Responde "Posso confiar neste dado/código?"  │
-│   📋 Veredito Explícito: Retorna status (pass/fail) com alertas acionáveis │
-│   🛡️ Zero Intervenção Destrutiva: Nunca altera ou deleta seus dados brutos │
-│   ⚡ Validação Prévia: Alerta sobre inconsistências antes de treinar modelos│
+│   🛑 Diagnóstico Delimitado: responde uma pergunta técnica configurada      │
+│   📋 Saída Estruturada: retorna métricas, status ou violações conferíveis   │
+│   🛡️ Leitura por Padrão: não persiste alterações nos ativos inspecionados   │
+│   ⚡ Validação Prévia: revela riscos antes de etapas de maior impacto        │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -31,158 +50,251 @@ Pense em um gateway de qualidade na ingestão analítica:
 
 ## 🏛️ Arquitetura e o Padrão "Pasta de Objeto"
 
-Os scripts seguem o padrão arquitetural de **Pasta de Objeto (ADR-0007)**. Cada diagnóstico mora em sua própria pasta isolada:
+Os scripts seguem o padrão de organização **Pasta de Objeto**. Cada diagnóstico mora em sua própria pasta:
 
-```mermaid
-graph TD
-    subgraph PastaDeObjeto["📂 Pasta de Objeto: hub_scripts/nome_do_script/"]
-        Init["📄 __init__.py\n(Exportação Limpa da Função de Diagnóstico)"]
-        ScriptPy["⚙️ nome_do_script.py\n(Motor de Inspeção e Lógica de Veredito)"]
-        Exemplo["📓 exemplo_nome_do_script.py\n(Notebook com Falhas Simuladas e Casos Reais)"]
-    end
+![Anatomia da pasta de um Hub Script](../hub_readmes_visual_assets/readmes/scripts/png/01_anatomia_pasta.png)
 
-    Init -->|Disponibiliza| ScriptPy
-    Exemplo -->|Demonstra alertas e uso| ScriptPy
-```
+*Leitura da figura: interface, motor de inspeção e demonstração ficam separados.*
 
-O notebook `exemplo_<nome>.py` é essencial: ele simula **cenários reais de inconformidade** (tabelas com chaves duplicadas, nomes fora de convenção ou defasagem temporal) para você ver exatamente como o script reage e emite alertas antes de você aplicá-lo em suas tabelas de produção.
+O notebook `exemplo_<nome>.py` mostra uma chamada com dados controlados e a saída observada. Alguns exemplos simulam falhas; outros demonstram apenas o caminho principal. Por isso, o exemplo ensina o contrato exercitado, mas não substitui testes de volume, permissões ou runtime.
 
 ---
 
+<a id="-catálogo-detalhado"></a>
+
 ## 📚 Catálogo Detalhado
 
-Os utilitários do Hub são organizados em três dimensões de qualidade essenciais para o ciclo analítico:
+Os utilitários do Hub são organizados em três dimensões de qualidade do ciclo analítico:
 
-```mermaid
-mindmap
-  root((Hub Scripts))
-    Qualidade de Dados
-      data_quality_check
-      quick_profile
-      rfv_calculator
-    Estabilidade de Distribuição
-      drift_detector
-    Governança e Contratos de Código
-      schema_to_yaml
-      naming_checker
-      doc_coverage
-```
+![Catálogo dos Hub Scripts por pergunta de diagnóstico](../hub_readmes_visual_assets/readmes/scripts/png/02_catalogo_diagnosticos.png)
+
+*Leitura da figura: saúde dos dados, estabilidade e governança técnica respondem a riscos distintos.*
 
 ---
 
 ### 🩺 1. Qualidade e Perfilamento de Dados (Data Health)
 
 #### `data_quality_check` — Inspeção Sanitária Pré-Modelagem
-* **O que faz:** Realiza um checkup em tabelas Delta: avalia a unicidade da chave primária, verifica a proporção de nulos em colunas críticas e confere se a base de dados está atualizada no tempo (*recency check*).
-* **O que retorna:** Dicionário estruturado com `status: "pass"` ou `"fail"`, métricas detalhadas e uma lista de alertas textuais explicando eventuais inconsistências encontradas.
-* **Quando usar:** Sempre que for consumir uma tabela nova pela primeira vez ou como portão de entrada antes do pipeline oficial de treino.
 
-#### `quick_profile` — Raio-X Rápido de Esquema e Distribuição
-* **O que faz:** Gera um perfilamento estatístico sumarizado da tabela sem custo de computação desnecessário. Mapeia tipos de dados, valores distintos, cardinalidade e cardinalidade relativa de cada coluna.
-* **O que retorna:** Resumo tabular com a volumetria e origem de cada métrica calculada.
-* **Quando usar:** Na primeira etapa de exploração de um dataset, antes de abrir notebooks pesados de visualização gráfica.
+- **O que faz:** avalia uma tabela por nome, calcula nulos em todas as colunas, verifica nulidade e unicidade das `pk_columns` e, quando `date_column` é informada, avalia atualidade.
+- **O que retorna:** dicionário com `status: "pass"`, `"warn"` ou `"fail"`, métricas e uma lista de alertas estruturados como dicionários.
+- **Quando usar:** ao receber uma tabela nova ou como diagnóstico anterior a uma etapa de treino. Os thresholds são política fornecida à chamada, não defaults oficiais da Databricks.
 
-#### `rfv_calculator` — Diagnóstico de Recência, Frequência e Valor
-* **O que faz:** Calcula e valida os componentes clássicos de RFV (*Recency, Frequency, Monetary Value*) para cada entidade/cliente referenciados a uma data de corte exata.
-* **O que retorna:** Métricas de RFV calculadas com precisão temporal e sem distorções de linhas históricas futuras.
-* **Quando usar:** Antes de construir segmentações de clientes ou features comportamentais para modelos de churn, ativação ou risco.
+#### `quick_profile` — Raio-X de Schema e Distribuição
+
+- **O que faz:** lê a tabela, calcula volume e nulos no conjunto completo e usa uma amostra configurada para cardinalidade e resumos adicionais.
+- **O que retorna:** dicionário com metadados, métricas e informações de perfilamento.
+- **Quando usar:** na primeira etapa de exploração, entendendo que contagem e nulos ainda podem exigir leitura completa da tabela.
+
+#### `rfv_calculator` — Recência, Frequência e Valor
+
+- **O que faz:** calcula atributos brutos de recência, frequência e valor por entidade e por períodos anteriores a uma data de corte.
+- **O que retorna:** DataFrame Spark com as colunas RFV produzidas.
+- **Quando usar:** antes de segmentações ou features comportamentais. O script não cria automaticamente quintis, personas nem política de negócio.
 
 ---
 
 ### 📉 2. Estabilidade e Monitoramento de Distribuição
 
 #### `drift_detector` — Detecção de Desvios de Distribuição
-* **O que faz:** Compara diretamente duas populações (ex: base histórica de treino versus base recente de produção) e calcula desvios estatísticos de média, variância e distribuição para cada coluna.
-* **O que retorna:** Relatório de estabilidade indicando quais variáveis sofreram deslocamento significativo de distribuição (*drift*).
-* **Quando usar:** Antes de assumir que uma tabela de produção continua estável ou para auditar bases de escoragem mensal antes da inferência.
+
+- **O que faz:** recebe uma tabela, uma coluna de coorte, valores de referência e comparação e colunas numéricas; calcula PSI por variável com bins derivados da referência.
+- **O que retorna:** dicionário com o PSI e a classificação configurada para cada variável.
+- **Quando usar:** ao comparar duas coortes dentro da mesma tabela. PSI indica mudança de distribuição; não demonstra sozinho perda de performance ou causalidade.
 
 ---
 
 ### 📐 3. Governança, Contratos e Boas Práticas de Código
 
-#### `schema_to_yaml` — Contratos de Dados Vivos em YAML
-* **O que faz:** Inspeciona uma tabela Spark/Delta e serializa sua estrutura (nomes de colunas, tipos de dados e nulabilidade) em um arquivo de texto limpo em formato YAML.
-* **O que retorna:** O schema exportado e pronto para versionamento em repositórios Git.
-* **Quando usar:** Para documentar o contrato de dados de uma tabela analítica (*ABT*) ou registrar a versão do schema em auditorias técnicas.
+#### `schema_to_yaml` — Contratos de Dados em YAML
 
-#### `naming_checker` — Guardião de Nomenclatura Corporativa
-* **O que faz:** Analisa tabelas ou listas de variáveis e identifica violações em relação às convenções de nomenclatura corporativas (ex: uso de *snake_case*, prefixos padronizados como `dt_`, `vl_`, `cd_`, ausência de acentos e caracteres especiais).
-* **O que retorna:** Lista dos campos em desacordo com as regras de padronização da equipe.
-* **Quando usar:** Antes de promover uma tabela de desenvolvimento para os ambientes compartilhados da área de dados.
+- **O que faz:** inspeciona uma tabela Spark e serializa nomes, tipos e nulabilidade. Estatísticas podem ser incluídas quando solicitadas.
+- **O que retorna:** string YAML; na ausência de PyYAML, o fallback é JSON, que também é válido em YAML 1.2. O script não grava arquivo automaticamente.
+- **Quando usar:** para preparar uma representação revisável do schema antes de versioná-la pelo mecanismo escolhido.
 
-#### `doc_coverage` — Auditoria de Documentação de Notebooks
-* **O que faz:** Varre as células de um notebook Databricks e mede a proporção de código coberta por explicações didáticas em Markdown ou docstrings.
-* **O que retorna:** Percentual de cobertura de documentação e lista das células que realizam transformações complexas sem nenhuma explicação textual.
-* **Quando usar:** Em revisões de código (*Code Review*), antes de transferir um notebook analítico para a esteira de produção.
+#### `naming_checker` — Guardião de Nomenclatura
+
+- **O que faz:** recebe o nome de uma tabela, lê suas colunas e compara os nomes com a política configurada, incluindo regras como `snake_case` e prefixos.
+- **O que retorna:** lista de violações encontradas.
+- **Quando usar:** antes de promover ou compartilhar uma tabela. As convenções são regras do Hub ou da equipe, não exigências universais do Unity Catalog.
+
+#### `doc_coverage` — Auditoria Estrutural de Documentação
+
+- **O que faz:** lê um notebook Jupyter ou uma fonte Databricks exportada como arquivo e mede a proximidade entre blocos Markdown e código.
+- **O que retorna:** dicionário heurístico com cobertura e blocos sem documentação adjacente.
+- **Quando usar:** em revisão de código. O script não abre um notebook diretamente por URL do workspace, não mede docstrings e não avalia a qualidade semântica do texto.
 
 ---
+
+<a id="️-passo-a-passo-operacional-como-usar-um-script"></a>
 
 ## 🛠️ Passo a Passo Operacional: Como Usar um Script
 
-Integrar um diagnóstico de dados na sua rotina do Databricks segue um fluxo intuitivo em 3 passos:
+Integrar um diagnóstico à rotina do Databricks segue um fluxo simples, mas deliberado:
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Dev as Cientista de Dados
-    participant Nb as Notebook de Trabalho
-    participant Script as Hub Script
-    participant Delta as Tabela Delta / Unity Catalog
+![Fluxo de execução e resultados de um Hub Script](../hub_readmes_visual_assets/readmes/scripts/png/03_fluxo_execucao.png)
 
-    Dev->>Nb: Importa o diagnóstico (from hub_scripts...)
-    Nb->>Script: data_quality_check("catalogo.schema.tabela", chaves=["id"])
-    Script->>Delta: Lê metadados e estatísticas distribuídas
-    Delta-->>Script: Retorna volumetria e validações
-    Script-->>Nb: Retorna veredito { status: "pass" | "fail", alerts: [...] }
-    
-    alt status == "pass"
-        Nb->>Dev: Prossegue para a modelagem com segurança ✅
-    else status == "fail"
-        Nb->>Dev: Alerta emitido! Trata a base antes de gastar computação ⚠️
-    end
-```
+*Leitura da figura: o diagnóstico retorna evidência; a política consumidora define a reação.*
 
-### Exemplo Prático de Código:
+### Exemplo Prático de Código
+
+Se a raiz `.assistant` ainda não estiver no caminho do Python, configure-a antes do import:
 
 ```python
-# 1. Importação direta do diagnóstico
+from pathlib import Path
+import sys
+
+assistant_root = Path("/Workspace/Users/<username>/.assistant")
+if str(assistant_root) not in sys.path:
+    sys.path.insert(0, str(assistant_root))
+```
+
+Em seguida, execute a checagem com a assinatura real:
+
+```python
+# 1. Importação explícita do diagnóstico
 from hub_scripts.data_quality_check import data_quality_check
 
-# 2. Execução da checagem apontando para sua tabela
+# 2. Execução apontando para uma tabela governada
 resultado = data_quality_check(
     table_name="catalogo.credito.clientes_abril",
-    primary_keys=["id_cliente"],
+    pk_columns=["id_cliente"],
     date_column="dt_referencia",
-    critical_columns=["renda_estimada", "score_inicial"]
+    thresholds={
+        "null_warn": 5.0,
+        "null_fail": 20.0,
+        "freshness_days": 2.0,
+    },
 )
 
-# 3. Tratamento didático do veredito
-print(f"Status do Diagnóstico: {resultado['status'].upper()}")
+# 3. Tratamento do veredito pelo notebook consumidor
+print(f"Status do diagnóstico: {resultado['status'].upper()}")
+
+for alerta in resultado["alerts"]:
+    print(
+        f"{alerta['severity'].upper()} · "
+        f"{alerta['check']} · {alerta['message']}"
+    )
 
 if resultado["status"] == "fail":
-    print("\n⚠️ ALERTAS IDENTIFICADOS:")
-    for alerta in resultado["alerts"]:
-        print(f"  • {alerta}")
-    raise ValueError("A tabela não passou nos critérios mínimos de qualidade.")
+    raise ValueError("A tabela violou as regras configuradas de qualidade.")
+elif resultado["status"] == "warn":
+    print("Há alertas que exigem análise antes de prosseguir.")
 else:
-    print("✅ Tabela homologada com sucesso! Pronto para modelagem.")
+    print("Nenhuma violação foi encontrada pelas regras executadas.")
+```
+
+O helper usa `pk_columns`; não existem os parâmetros `primary_keys` ou `critical_columns`. Um status `pass` significa apenas que as verificações configuradas não encontraram violações — não que a tabela inteira esteja homologada para qualquer finalidade.
+
+### Como interpretar o retorno
+
+| Estado | Significado | Decisão típica do consumidor |
+|---|---|---|
+| `pass` | nenhuma regra configurada encontrou violação | prosseguir para o próximo gate |
+| `warn` | existe condição que requer atenção | revisar alertas e decidir conscientemente |
+| `fail` | ao menos uma regra de falha foi violada | interromper somente se essa política estiver codificada |
+
+Os estados nunca substituem o contexto de negócio. A severidade informa a
+classificação do diagnóstico; o notebook, job ou pipeline implementa a ação.
+
+Exemplo abreviado da estrutura retornada:
+
+```python
+{
+    "status": "warn",
+    "metrics": {
+        "row_count": 125000,
+        "duplicate_pk_count": 0,
+    },
+    "alerts": [
+        {
+            "severity": "warn",
+            "check": "freshness",
+            "message": "A atualização excedeu o limite configurado.",
+        }
+    ],
+}
 ```
 
 ---
+
+<a id="️-o-que-acontece-durante-a-execução"></a>
+
+### Leitura visual do veredito
+
+![Comparação entre os estados PASS, WARN e FAIL](../hub_readmes_visual_assets/readmes/scripts/png/05_leitura_do_veredito.png)
+
+*Leitura da figura: cada estado orienta uma investigação, mas só a política codificada decide se o fluxo deve prosseguir ou parar.*
+
+## ⚙️ O que Acontece Durante a Execução?
+
+| Script | Operação principal | Cuidado de custo ou efeito |
+|---|---|---|
+| `data_quality_check` | agregado completo + distinct da chave | scan e possível shuffle |
+| `quick_profile` | volume/nulos completos + ações sobre amostra | tabela larga aumenta o custo |
+| `drift_detector` | filtros, quantis, bins e agregações por coluna | custo cresce com variáveis e bins |
+| `rfv_calculator` | filtros temporais, agregações e joins | custo cresce com períodos e entidades |
+| `schema_to_yaml` | schema; agregados se houver estatísticas | persistência do texto é externa |
+| `naming_checker` | leitura de schema | não inspeciona conteúdo das linhas |
+| `doc_coverage` | leitura e parse de arquivo | não executa Spark |
+
+Os scripts priorizam processamento distribuído quando trabalham com Spark, mas isso não significa custo desprezível. Contagens, distinct, quantis e `groupBy` podem exigir leitura ampla e shuffle.
+
+---
+
+<a id="-diagnóstico-não-é-enforcement"></a>
+
+## 🧭 Diagnóstico não é Enforcement
+
+Um Hub Script descreve o que observou; a camada operacional decide o que fazer.
+
+![Separação entre diagnóstico, política e enforcement](../hub_readmes_visual_assets/readmes/scripts/png/04_diagnostico_vs_enforcement.png)
+
+*Leitura da figura: Hub Script, regra consumidora e serviços de orquestração são camadas diferentes.*
+
+- Para regras executadas dentro de um pipeline declarativo, avalie **Lakeflow expectations**.
+- Para histórico operacional, use o **event log** do pipeline.
+- Para falhas de tarefa e notificações, configure **Lakeflow Jobs**.
+- O script não envia alerta nem interrompe outro processo sozinho; o código consumidor precisa implementar essa decisão.
+
+---
+
+<a id="-perguntas-frequentes-faq"></a>
 
 ## ❓ Perguntas Frequentes (FAQ)
 
 ### 1. Se o script retornar `status="fail"`, meus dados serão apagados ou modificados?
-**Nunca.** Os Hub Scripts operam exclusivamente em modo de leitura (*read-only*). Eles não alteram, deletam nem filtram dados. Um status de falha (`fail`) significa apenas que o laudo técnico detectou anomalias (como chaves duplicadas ou nulos excessivos) e cabe a você decidir como tratar os dados antes de prosseguir.
+
+**Não pelo script.** Os diagnósticos leem dados e retornam resultados; não executam `DELETE`, `DROP` ou sobrescrita. O notebook consumidor pode optar por falhar uma tarefa, mas isso é uma ação separada e explícita.
 
 ### 2. Os scripts funcionam com tabelas do Unity Catalog?
-**Sim.** Todos os scripts aceitam tanto o formato de 3 níveis do Unity Catalog (`catalogo.schema.tabela`) quanto o formato clássico de 2 níveis (`schema.tabela`). Eles utilizam a sessão ativa do Spark no Databricks.
 
-### 3. Preciso rodar esses scripts pelo terminal ou dentro de um Notebook?
-Embora possam ser chamados por ferramentas externas, eles foram projetados especificamente para serem importados e executados **diretamente dentro dos seus notebooks Python no Databricks**, como uma célula preliminar de validação.
+Os scripts que recebem tabelas usam a sessão Spark ativa. Prefira o formato de três níveis (`catalog.schema.table`) para eliminar ambiguidade. Formatos mais curtos dependem do catálogo e do schema ativos, e nenhum script contorna permissões.
 
-### 4. Os scripts causam lentidão em tabelas muito volumosas?
-**Não.** Os scripts utilizam os metadados de estatísticas do Delta Lake e operações agregadas otimizadas pelo Spark SQL. Eles priorizam operações agregadas e evitam coletas pesadas para o driver, favorecendo avaliações ágeis mesmo em bases volumosas.
+### 3. Preciso rodar esses scripts pelo terminal ou dentro de um notebook?
 
-### 5. Posso usar os scripts em pipelines automatizados (Jobs / Workflows)?
-**Sim, essa é uma das melhores formas de uso.** Você pode colocar uma etapa com `data_quality_check` logo após a ingestão de dados em um Databricks Workflow. Se o status for `"fail"`, a tarefa pode enviar um alerta para o time e interromper a esteira antes de disparar o treino dispendioso de um modelo.
+Eles foram estruturados como módulos Python importáveis. Podem ser chamados em notebooks ou tarefas compatíveis, desde que o pacote esteja no `sys.path`, as dependências existam e uma `SparkSession` esteja disponível quando exigida.
+
+### 4. Os scripts causam lentidão em tabelas volumosas?
+
+**Podem causar.** Ações agregadas continuam lendo dados e operações como distinct, quantis, joins e `groupBy` podem gerar shuffle. Avalie plano, colunas, filtros, partições e frequência antes de automatizar.
+
+### 5. Posso usar os scripts em pipelines automatizados?
+
+**Sim, desde que a política seja explícita.** Uma tarefa pode chamar `data_quality_check` e decidir falhar em `fail`, revisar `warn` ou persistir métricas. O alerta, a interrupção e a recorrência devem ser configurados em Lakeflow Jobs ou no mecanismo de orquestração adotado.
+
+### 6. A Genie Code executa estes scripts automaticamente?
+
+**Não.** Skills podem sugerir um caminho de helper, mas importar e executar o módulo é uma ação explícita. `hub_scripts` é uma extensão do projeto, não uma capacidade nativa de descoberta da Genie Code.
+
+---
+
+## 🔗 Continue Explorando
+
+- [Hub Snippets](../hub_snippets/README.md)
+- [Agent Skills](../skills/README.md)
+- [Hub Prompts](../hub_prompts/README.md)
+- Catálogo de Helpers: `.assistant/CATALOGO_HELPERS.md`
+- [Lakeflow expectations](https://learn.microsoft.com/en-us/azure/databricks/ldp/expectations)
+- [Event log de pipelines](https://learn.microsoft.com/en-us/azure/databricks/ldp/monitor-event-logs)
+- [Notificações de Lakeflow Jobs](https://learn.microsoft.com/en-us/azure/databricks/jobs/notifications)

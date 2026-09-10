@@ -50,7 +50,13 @@ LEGACY_MANAGED_SKILL_NAMES = frozenset(
 )
 
 EXPECTED_HUB_DIRS = frozenset(
-    {"hub_padroes", "hub_prompts", "hub_scripts", "hub_snippets"}
+    {
+        "hub_padroes",
+        "hub_prompts",
+        "hub_readmes_visual_assets",
+        "hub_scripts",
+        "hub_snippets",
+    }
 )
 
 CORPORATE_RE = re.compile(

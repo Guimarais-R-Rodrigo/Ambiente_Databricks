@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111F"/>
+      <stop offset="0.56" stop-color="#0B1728"/>
+      <stop offset="1" stop-color="#101B30"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.82" cy="0.08" r="0.85">
+      <stop offset="0" stop-color="#FF4F87" stop-opacity="0.18"/>
+      <stop offset="0.52" stop-color="#5DD6FF" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#07111F" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#2C4059" stroke-width="1" opacity="0.16"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000814" flood-opacity="0.42"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7890AA"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#glow)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <rect x="68" y="50" width="188" height="34" rx="17" fill="#FF4F87" opacity="0.16"/>
+  <text x="162" y="74" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#FF4F87" opacity="1"><tspan x="162" dy="0">GUIA VISUAL</tspan></text>
+  <text x="68" y="122" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="750" fill="#F7FAFC" opacity="1"><tspan x="68" dy="0">O ecossistema em uma visão</tspan></text>
+  <text x="68" y="158" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="68" dy="0">Cinco componentes complementares, uma experiência coerente</tspan></text>
+  <line x1="68" y1="186" x2="1532" y2="186" stroke="#2C4059" stroke-width="1"/>
+  <path d="M800,442.5 L242.5,285" stroke="#5DD6FF" stroke-width="3" opacity="0.58" fill="none"/>
+      <circle cx="521.25" cy="363.75" r="4" fill="#5DD6FF"/><path d="M800,442.5 L242.5,605" stroke="#FF4F87" stroke-width="3" opacity="0.58" fill="none"/>
+      <circle cx="521.25" cy="523.75" r="4" fill="#FF4F87"/><path d="M800,442.5 L1357.5,260" stroke="#FF4F87" stroke-width="3" opacity="0.58" fill="none"/>
+      <circle cx="1078.75" cy="351.25" r="4" fill="#FF4F87"/><path d="M800,442.5 L1357.5,460" stroke="#FF4F87" stroke-width="3" opacity="0.58" fill="none"/>
+      <circle cx="1078.75" cy="451.25" r="4" fill="#FF4F87"/><path d="M800,442.5 L1357.5,660" stroke="#FF4F87" stroke-width="3" opacity="0.58" fill="none"/>
+      <circle cx="1078.75" cy="551.25" r="4" fill="#FF4F87"/><g opacity="1" filter="url(#shadow)">
+    <rect x="70" y="205" width="345" height="160" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="70" y="205" width="6" height="160" rx="3" fill="#5DD6FF"/>
+    <rect x="94" y="225" width="136" height="28" rx="14" fill="#5DD6FF" opacity="0.14"/>
+       <text x="108" y="245" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="750" fill="#5DD6FF" opacity="1"><tspan x="108" dy="0">NATIVO + HUB</tspan></text>
+    <text x="98" y="289" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="98" dy="0">Agent Skills</tspan></text>
+    <text x="98" y="331" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="98" dy="0">metodologia · guardrails</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="70" y="525" width="345" height="160" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="70" y="525" width="6" height="160" rx="3" fill="#FF4F87"/>
+    <rect x="94" y="545" width="127" height="28" rx="14" fill="#FF4F87" opacity="0.14"/>
+       <text x="108" y="565" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="750" fill="#FF4F87" opacity="1"><tspan x="108" dy="0">CUSTOMIZADO</tspan></text>
+    <text x="98" y="609" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="98" dy="0">Hub Prompts</tspan></text>
+    <text x="98" y="651" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="98" dy="0">briefing · critérios de aceite</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="1185" y="180" width="345" height="160" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="1185" y="180" width="6" height="160" rx="3" fill="#FF4F87"/>
+    <rect x="1209" y="200" width="127" height="28" rx="14" fill="#FF4F87" opacity="0.14"/>
+       <text x="1223" y="220" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="750" fill="#FF4F87" opacity="1"><tspan x="1223" dy="0">CUSTOMIZADO</tspan></text>
+    <text x="1213" y="264" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="1213" dy="0">Hub Snippets</tspan></text>
+    <text x="1213" y="306" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="1213" dy="0">funções importáveis</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="1185" y="380" width="345" height="160" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="1185" y="380" width="6" height="160" rx="3" fill="#FF4F87"/>
+    <rect x="1209" y="400" width="127" height="28" rx="14" fill="#FF4F87" opacity="0.14"/>
+       <text x="1223" y="420" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="750" fill="#FF4F87" opacity="1"><tspan x="1223" dy="0">CUSTOMIZADO</tspan></text>
+    <text x="1213" y="464" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="1213" dy="0">Hub Scripts</tspan></text>
+    <text x="1213" y="506" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="1213" dy="0">diagnósticos explícitos</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="1185" y="580" width="345" height="160" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="1185" y="580" width="6" height="160" rx="3" fill="#FF4F87"/>
+    <rect x="1209" y="600" width="127" height="28" rx="14" fill="#FF4F87" opacity="0.14"/>
+       <text x="1223" y="620" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="750" fill="#FF4F87" opacity="1"><tspan x="1223" dy="0">CUSTOMIZADO</tspan></text>
+    <text x="1213" y="664" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="1213" dy="0">Hub Padrões</tspan></text>
+    <text x="1213" y="706" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="1213" dy="0">moldes e consistência</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="585" y="350" width="430" height="185" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="585" y="350" width="6" height="185" rx="3" fill="#FF4F87"/>
+    <rect x="609" y="370" width="181" height="28" rx="14" fill="#FF4F87" opacity="0.14"/>
+       <text x="623" y="390" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="750" fill="#FF4F87" opacity="1"><tspan x="623" dy="0">CONTEXTO AMPLIADO</tspan></text>
+    <text x="800" y="434" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="800" dy="0">Ecossistema .assistant</tspan></text>
+    <text x="800" y="476" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="800" dy="0">Método + briefing</tspan><tspan x="800" dy="25">código + padrões</tspan></text>
+  </g><g><circle cx="80" cy="785" r="6" fill="#5DD6FF"/><text x="96" y="791" font-family="Segoe UI, Arial" font-size="15" font-weight="600" fill="#AFC0D4">Nativo da plataforma</text></g><g><circle cx="312" cy="785" r="6" fill="#FF4F87"/><text x="328" y="791" font-family="Segoe UI, Arial" font-size="15" font-weight="600" fill="#AFC0D4">Extensão customizada</text></g>
+  <line x1="68" y1="838" x2="1532" y2="838" stroke="#2C4059" stroke-width="1"/>
+  <circle cx="80" cy="865" r="5" fill="#FF4F87"/>
+  <text x="96" y="871" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#AFC0D4" opacity="1"><tspan x="96" dy="0">HUB .ASSISTANT</tspan></text>
+  <text x="1532" y="871" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="500" fill="#AFC0D4" opacity="1"><tspan x="1532" dy="0">Leitura técnica + impacto visual</tspan></text>
+</svg>

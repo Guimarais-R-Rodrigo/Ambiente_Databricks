@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111F"/>
+      <stop offset="0.56" stop-color="#0B1728"/>
+      <stop offset="1" stop-color="#101B30"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.82" cy="0.08" r="0.85">
+      <stop offset="0" stop-color="#FF4F87" stop-opacity="0.18"/>
+      <stop offset="0.52" stop-color="#5DD6FF" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#07111F" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#2C4059" stroke-width="1" opacity="0.16"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000814" flood-opacity="0.42"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7890AA"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#glow)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <rect x="68" y="50" width="188" height="34" rx="17" fill="#FF4F87" opacity="0.16"/>
+  <text x="162" y="74" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#FF4F87" opacity="1"><tspan x="162" dy="0">GUIA VISUAL</tspan></text>
+  <text x="68" y="122" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="750" fill="#F7FAFC" opacity="1"><tspan x="68" dy="0">Diagnóstico não é enforcement</tspan></text>
+  <text x="68" y="158" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="68" dy="0">Medição, política e orquestração são camadas diferentes</tspan></text>
+  <line x1="68" y1="186" x2="1532" y2="186" stroke="#2C4059" stroke-width="1"/>
+  <path d="M490,430 C552.5,430 552.5,430 615,430" fill="none" stroke="#7890AA" stroke-width="3"  marker-end="url(#arrow)"/>
+  <rect x="470.9" y="401" width="163.2" height="28" rx="14" fill="#07111F" stroke="#2C4059"/><text x="552.5" y="421" text-anchor="middle" font-family="Segoe UI, Arial" font-size="13" font-weight="650" fill="#AFC0D4">entrega evidência</text><path d="M985,430 C1047.5,430 1047.5,330 1110,330" fill="none" stroke="#7890AA" stroke-width="3"  marker-end="url(#arrow)"/>
+  <rect x="995.5" y="351" width="104" height="28" rx="14" fill="#07111F" stroke="#2C4059"/><text x="1047.5" y="371" text-anchor="middle" font-family="Segoe UI, Arial" font-size="13" font-weight="650" fill="#AFC0D4">aciona</text><path d="M985,430 C1047.5,430 1047.5,610 1110,610" fill="none" stroke="#7890AA" stroke-width="3"  marker-end="url(#arrow)"/>
+  <rect x="995.5" y="491" width="104" height="28" rx="14" fill="#07111F" stroke="#2C4059"/><text x="1047.5" y="511" text-anchor="middle" font-family="Segoe UI, Arial" font-size="13" font-weight="650" fill="#AFC0D4">aciona</text><g opacity="1" filter="url(#shadow)">
+    <rect x="120" y="300" width="370" height="260" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="120" y="300" width="6" height="260" rx="3" fill="#FF4F87"/>
+    <rect x="144" y="320" width="92" height="28" rx="14" fill="#FF4F87" opacity="0.14"/>
+       <text x="158" y="340" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="750" fill="#FF4F87" opacity="1"><tspan x="158" dy="0">MEDE</tspan></text>
+    <text x="148" y="384" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="148" dy="0">Hub Script</tspan></text>
+    <text x="148" y="426" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="148" dy="0">Retorna métricas</tspan><tspan x="148" dy="25">Sinaliza alertas</tspan><tspan x="148" dy="25">Não agenda nem bloqueia</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="615" y="300" width="370" height="260" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="615" y="300" width="6" height="260" rx="3" fill="#FFC966"/>
+    <rect x="639" y="320" width="92" height="28" rx="14" fill="#FFC966" opacity="0.14"/>
+       <text x="653" y="340" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="750" fill="#FFC966" opacity="1"><tspan x="653" dy="0">DECIDE</tspan></text>
+    <text x="643" y="384" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="643" dy="0">Política consumidora</tspan></text>
+    <text x="643" y="426" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="643" dy="0">Prosseguir</tspan><tspan x="643" dy="25">Alertar</tspan><tspan x="643" dy="25">Falhar</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="1110" y="220" width="370" height="220" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="1110" y="220" width="6" height="220" rx="3" fill="#5DD6FF"/>
+    <rect x="1134" y="240" width="109" height="28" rx="14" fill="#5DD6FF" opacity="0.14"/>
+       <text x="1148" y="260" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="750" fill="#5DD6FF" opacity="1"><tspan x="1148" dy="0">ORQUESTRA</tspan></text>
+    <text x="1138" y="304" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="1138" dy="0">Lakeflow Jobs</tspan></text>
+    <text x="1138" y="346" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="1138" dy="0">Execução</tspan><tspan x="1138" dy="25">notificações</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="1110" y="500" width="370" height="220" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="1110" y="500" width="6" height="220" rx="3" fill="#5DD6FF"/>
+    <rect x="1134" y="520" width="92" height="28" rx="14" fill="#5DD6FF" opacity="0.14"/>
+       <text x="1148" y="540" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="750" fill="#5DD6FF" opacity="1"><tspan x="1148" dy="0">APLICA</tspan></text>
+    <text x="1138" y="584" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="1138" dy="0">Pipelines</tspan></text>
+    <text x="1138" y="626" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="1138" dy="0">Expectations</tspan><tspan x="1138" dy="25">event log</tspan></text>
+  </g><g><circle cx="80" cy="785" r="6" fill="#FF4F87"/><text x="96" y="791" font-family="Segoe UI, Arial" font-size="15" font-weight="600" fill="#AFC0D4">Extensão do Hub</text></g><g><circle cx="267" cy="785" r="6" fill="#FFC966"/><text x="283" y="791" font-family="Segoe UI, Arial" font-size="15" font-weight="600" fill="#AFC0D4">Política da equipe</text></g><g><circle cx="481" cy="785" r="6" fill="#5DD6FF"/><text x="497" y="791" font-family="Segoe UI, Arial" font-size="15" font-weight="600" fill="#AFC0D4">Serviço Databricks</text></g>
+  <line x1="68" y1="838" x2="1532" y2="838" stroke="#2C4059" stroke-width="1"/>
+  <circle cx="80" cy="865" r="5" fill="#FF4F87"/>
+  <text x="96" y="871" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#AFC0D4" opacity="1"><tspan x="96" dy="0">HUB .ASSISTANT</tspan></text>
+  <text x="1532" y="871" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="500" fill="#AFC0D4" opacity="1"><tspan x="1532" dy="0">Leitura técnica + impacto visual</tspan></text>
+</svg>

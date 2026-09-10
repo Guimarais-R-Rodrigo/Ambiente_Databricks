@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111F"/>
+      <stop offset="0.56" stop-color="#0B1728"/>
+      <stop offset="1" stop-color="#101B30"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.82" cy="0.08" r="0.85">
+      <stop offset="0" stop-color="#FF4F87" stop-opacity="0.18"/>
+      <stop offset="0.52" stop-color="#5DD6FF" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#07111F" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#2C4059" stroke-width="1" opacity="0.16"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000814" flood-opacity="0.42"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7890AA"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#glow)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <rect x="68" y="50" width="188" height="34" rx="17" fill="#FF4F87" opacity="0.16"/>
+  <text x="162" y="74" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#FF4F87" opacity="1"><tspan x="162" dy="0">GUIA VISUAL</tspan></text>
+  <text x="68" y="122" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="750" fill="#F7FAFC" opacity="1"><tspan x="68" dy="0">Anatomia de um briefing forte</tspan></text>
+  <text x="68" y="158" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="68" dy="0">O contexto útil conecta intenção, execução e critério de conclusão</tspan></text>
+  <line x1="68" y1="186" x2="1532" y2="186" stroke="#2C4059" stroke-width="1"/>
+  <path d="M520,450 C555,450 555,450 590,450" fill="none" stroke="#7890AA" stroke-width="3"  marker-end="url(#arrow)"/>
+  <rect x="503" y="421" width="104" height="28" rx="14" fill="#07111F" stroke="#2C4059"/><text x="555" y="441" text-anchor="middle" font-family="Segoe UI, Arial" font-size="13" font-weight="650" fill="#AFC0D4">delimita</text><path d="M1010,450 C1045,450 1045,450 1080,450" fill="none" stroke="#7890AA" stroke-width="3"  marker-end="url(#arrow)"/>
+  <rect x="993" y="421" width="104" height="28" rx="14" fill="#07111F" stroke="#2C4059"/><text x="1045" y="441" text-anchor="middle" font-family="Segoe UI, Arial" font-size="13" font-weight="650" fill="#AFC0D4">produz</text><g opacity="1" filter="url(#shadow)">
+    <rect x="100" y="245" width="420" height="410" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="100" y="245" width="6" height="410" rx="3" fill="#A992FF"/>
+    <rect x="124" y="265" width="92" height="28" rx="14" fill="#A992FF" opacity="0.14"/>
+       <text x="138" y="285" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="750" fill="#A992FF" opacity="1"><tspan x="138" dy="0">POR QUÊ</tspan></text>
+    <text x="128" y="329" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="128" dy="0">Objetivo e contexto</tspan></text>
+    <text x="128" y="371" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="128" dy="0">Problema de negócio</tspan><tspan x="128" dy="25">grão e população</tspan><tspan x="128" dy="25">fontes anexadas</tspan><tspan x="128" dy="25">o que já é conhecido</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="590" y="245" width="420" height="410" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="590" y="245" width="6" height="410" rx="3" fill="#FF4F87"/>
+    <rect x="614" y="265" width="92" height="28" rx="14" fill="#FF4F87" opacity="0.14"/>
+       <text x="628" y="285" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="750" fill="#FF4F87" opacity="1"><tspan x="628" dy="0">COMO</tspan></text>
+    <text x="618" y="329" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="618" dy="0">Restrições e operação</tspan></text>
+    <text x="618" y="371" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="618" dy="0">colunas e chaves</tspan><tspan x="618" dy="25">período e filtros</tspan><tspan x="618" dy="25">custo e permissões</tspan><tspan x="618" dy="25">ações proibidas</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="1080" y="245" width="420" height="410" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="1080" y="245" width="6" height="410" rx="3" fill="#66E3C4"/>
+    <rect x="1104" y="265" width="145" height="28" rx="14" fill="#66E3C4" opacity="0.14"/>
+       <text x="1118" y="285" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="750" fill="#66E3C4" opacity="1"><tspan x="1118" dy="0">PRONTO QUANDO</tspan></text>
+    <text x="1108" y="329" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="1108" dy="0">Entrega e aceite</tspan></text>
+    <text x="1108" y="371" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="1108" dy="0">artefatos esperados</tspan><tspan x="1108" dy="25">evidências mínimas</tspan><tspan x="1108" dy="25">limitações declaradas</tspan><tspan x="1108" dy="25">critérios verificáveis</tspan></text>
+  </g><g><circle cx="80" cy="785" r="6" fill="#A992FF"/><text x="96" y="791" font-family="Segoe UI, Arial" font-size="15" font-weight="600" fill="#AFC0D4">Intenção</text></g><g><circle cx="204" cy="785" r="6" fill="#FF4F87"/><text x="220" y="791" font-family="Segoe UI, Arial" font-size="15" font-weight="600" fill="#AFC0D4">Controle</text></g><g><circle cx="328" cy="785" r="6" fill="#66E3C4"/><text x="344" y="791" font-family="Segoe UI, Arial" font-size="15" font-weight="600" fill="#AFC0D4">Critério de aceite</text></g>
+  <line x1="68" y1="838" x2="1532" y2="838" stroke="#2C4059" stroke-width="1"/>
+  <circle cx="80" cy="865" r="5" fill="#FF4F87"/>
+  <text x="96" y="871" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#AFC0D4" opacity="1"><tspan x="96" dy="0">HUB .ASSISTANT</tspan></text>
+  <text x="1532" y="871" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="500" fill="#AFC0D4" opacity="1"><tspan x="1532" dy="0">Leitura técnica + impacto visual</tspan></text>
+</svg>

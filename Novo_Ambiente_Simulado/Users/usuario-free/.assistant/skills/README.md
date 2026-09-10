@@ -1,301 +1,425 @@
 # Agent Skills
 
-> O cérebro metodológico do Databricks Genie Code: diretrizes de engenharia, guardrails anti-alucinação e fluxos analíticos passo a passo para transformar a IA em um especialista sênior em Machine Learning.
+> O cérebro metodológico do ecossistema no Databricks Genie Code: diretrizes de engenharia, guardrails e fluxos analíticos passo a passo para orientar trabalhos de Machine Learning.
+
+> **MECANISMO NATIVO, CONTEÚDO CUSTOMIZADO.** Agent Skills são um recurso oficial da Genie Code e seguem o padrão aberto Agent Skills. Os nomes `hub-ml-*`, as metodologias, os templates e os helpers descritos aqui foram criados neste projeto.
 
 ---
+
+## 🧭 Neste Guia
+
+| Para entender... | Vá para... |
+|---|---|
+| o que uma Agent Skill faz | [O que são Agent Skills](#-o-que-são-agent-skills) |
+| como ocorre a seleção por relevância ou `@` | [Como as Skills são utilizadas](#-como-o-genie-code-e-o-usuário-utilizam-as-skills) |
+| a relação entre metodologia e código | [Skills, Snippets e Scripts](#-relação-entre-skills-hub-snippets-e-hub-scripts) |
+| as skills disponíveis | [Catálogo](#️-catálogo-de-agent-skills) |
+| o propósito de cada skill | [Detalhamento](#-detalhamento-das-skills) |
+| permissões e aprovação | [Aprovações e Revisão](#-aprovações-permissões-e-revisão) |
+
+---
+
+<a id="-o-que-são-agent-skills"></a>
 
 ## 🧠 O que são Agent Skills?
 
 Para entender o que é uma **Agent Skill**, imagine a seguinte situação:
 
-> Você contrata um cientista de dados recém-formado brilhante. Ele conhece toda a teoria matemática e leu todos os manuais técnicos do mundo, mas **não conhece as regras de negócio da sua empresa, não sabe quais bibliotecas internas já existem e tende a reinventar a roda** ou cometer erros comuns de engenharia (como vazar dados do futuro em modelos preditivos).
-> 
-> Para que ele trabalhe com excelência, você entrega a ele um **Procedimento Operacional Padrão (POP) detalhado**, escrito pelo Engenheiro de Machine Learning mais sênior da equipe, dizendo: *"Aqui nós analisamos dados seguindo este método, com estes guardrails, e usamos estas funções homologadas da nossa biblioteca interna."*
+> Você recebe um cientista de dados tecnicamente preparado. Ele conhece teoria e ferramentas, mas ainda não conhece as regras da sua equipe, as bibliotecas internas disponíveis nem as armadilhas recorrentes do seu domínio.
+>
+> Para orientar o trabalho, você entrega um **Procedimento Operacional Padrão (POP)**: “nesta tarefa, comece por estas perguntas, siga estas etapas, observe estes riscos, utilize estes recursos e entregue o resultado neste formato”.
 
-**Uma Agent Skill é exatamente esse POP estruturado para o Databricks Assistant (Genie Code).**
+**Uma Agent Skill funciona como esse POP estruturado para a Genie Code.**
 
-Uma skill **não é código Python para você importar**. Ela é um arquivo de instrução contextual (`SKILL.md`) que ensina a IA a:
-1. **Pensar antes de agir:** Estruturar o problema em etapas lógicas antes de escrever código.
-2. **Respeitar Guardrails Rigorosos:** Proibições explícitas do que *nunca* fazer (ex: nunca rodar `collect()` em tabelas gigantes, nunca ordenar datas como texto, nunca calcular métricas sem intervalo de confiança).
-3. **Recomendar a Biblioteca do Hub:** Apontar diretamente para os algoritmos homologados de `hub_snippets` e `hub_scripts`, impedindo que o assistente tente programar fórmulas complexas do zero de forma ingênua.
+Uma skill **não é código Python para importar**. Ela é um pacote de instruções cujo arquivo principal, `SKILL.md`, ensina o assistente a:
+
+1. **Pensar antes de agir:** decompor o problema e declarar premissas antes de escrever ou executar código.
+2. **Respeitar guardrails:** evitar práticas como vazamento temporal, coleta indiscriminada no driver ou conclusão estatística sem contexto.
+3. **Recomendar a biblioteca do Hub:** apontar helpers existentes de `hub_snippets` e `hub_scripts` quando eles forem adequados, sem presumir que foram importados.
+4. **Entregar de forma consistente:** usar checklists e templates para tornar código, evidências e limitações mais fáceis de revisar.
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                           ANATOMIA DE UMA AGENT SKILL                       │
 │                                                                             │
-│   🎯 Objetivo & Escopo: Quando esta habilidade deve ou não ser acionada     │
-│   🗺️ Metodologia: O passo a passo analítico de ponta a ponta               │
-│   🚫 Guardrails Anti-Erro: Proibições expressas contra armadilhas comuns    │
-│   📦 Catálogo de Helpers: As funções prontas que o modelo deve sugerir      │
-│   📋 Templates de Saída: O formato exato de entrega de gráficos e tabelas   │
+│   🎯 Objetivo & Escopo: quando a habilidade se aplica e onde termina        │
+│   🗺️ Metodologia: etapas, decisões e perguntas que orientam o trabalho      │
+│   🚫 Guardrails: riscos que precisam ser prevenidos ou aprovados            │
+│   📦 Catálogo de Helpers: caminhos reutilizáveis recomendados               │
+│   📋 Templates de Saída: estruturas de entrega e critérios de revisão       │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
+Guardrails textuais reduzem risco, mas não são barreiras técnicas absolutas. Permissões, política de aprovação, revisão humana e testes continuam valendo.
+
 ---
+
+<a id="-como-o-genie-code-e-o-usuário-utilizam-as-skills"></a>
 
 ## 🤖 Como o Genie Code e o Usuário utilizam as Skills
 
-O ciclo de vida de uma skill estabelece uma interação colaborativa e estruturada entre o usuário e o motor do assistente no Databricks:
+O ciclo de vida de uma skill estabelece uma interação colaborativa entre o usuário, o assistente e os recursos do Databricks:
 
-```mermaid
-flowchart TD
-    User["👤 Usuário"] -->|Opção 1: Digita necessidade em linguagem natural| Router{"🤖 Roteador do Genie Code"}
-    User -->|Opção 2: Invoca explicitamente com @hub-ml-...| Direct["🎯 Ativação Direta"]
+![Fluxo de descoberta e seleção de uma Agent Skill](../hub_readmes_visual_assets/readmes/skills/png/01_descoberta_e_selecao.png)
 
-    Router -->|Compara com description do YAML| Match{"Encontrou Skill Relevante?"}
-    Match -->|Sim| Direct
-    Match -->|Não| Generic["Responde com IA genérica (sem padrões do Hub)"]
+*Leitura da figura: a Genie Code pode selecionar por relevância ou a pessoa pode escolher explicitamente com @.*
 
-    Direct --> Load["📥 Carrega SKILL.md + Templates"]
-    Load --> Plan["📝 IA gera Plano de Ação Metodológico"]
-    Plan --> Code["💻 IA gera código importando hub_snippets"]
-    Code --> Exec["⚡ Execução Segura no Cluster Spark"]
-```
+### 1. Pelo lado do Genie Code (Seleção por Relevância)
 
-### 1. Pelo lado do Genie Code (Descoberta Automática)
-Cada skill possui no seu cabeçalho um bloco YAML (*frontmatter*) com dois atributos essenciais: `name` e `description`.
-* O Genie Code lê constantemente essas descrições no workspace.
-* Quando o usuário faz uma pergunta em linguagem natural (ex: *"Quero analisar o comportamento das safras de contratos por mês de concessão"*), o roteador semântico da IA compara o pedido com as descrições e decide autonomamente: *"Esta tarefa requer a skill de análise de safras"*.
-* Ao carregar a skill, o assistente adota imediatamente a persona, as restrições e a metodologia descritas naquele documento.
+Cada skill possui no cabeçalho de `SKILL.md` um frontmatter YAML com `name` e `description`:
+
+- A Genie Code usa a descrição para decidir se a skill é relevante à solicitação.
+- Quando o pedido corresponde ao escopo, o assistente pode carregar a skill e seguir suas instruções.
+- Recursos adicionais da pasta são utilizados conforme forem referenciados e necessários; não presuma que toda a subpasta `templates/` é carregada integralmente em toda conversa.
+- A seleção por relevância depende da qualidade da descrição e do pedido. Ela deve ser testada, não tratada como certeza universal.
 
 ### 2. Pelo lado do Usuário (Ativação Explícita com `@`)
-Embora o assistente consiga deduzir a skill pelo contexto, **a melhor prática em ambientes corporativos é a menção direta via arroba (`@`)**:
-* Ao digitar `@hub-ml-feature-engineering` no chat, você força o assistente a carregar aquela rota específica de forma determinística, sem qualquer margem para ambiguidade.
-* **Exemplo de comando ideal no chat:**
-  ```text
-  @hub-ml-feature-engineering
-  
-  Desenhe as features para prever o cancelamento de clientes nos próximos 30 dias 
-  utilizando a tabela @catalogo_crm.vendas.historico.
-  - Data de referência: dt_venda
-  - Entidade: id_cliente
-  - Apresente primeiro o plano metodológico antes de gerar o código final.
-  ```
+
+Quando você quer indicar uma metodologia específica, mencione a skill com `@`:
+
+```text
+@hub-ml-feature-engineering
+
+Desenhe as features para prever o cancelamento de clientes nos próximos 30 dias
+utilizando a tabela anexada `catalogo_crm.vendas.historico`.
+
+- Data de referência: dt_venda
+- Entidade: id_cliente
+- Disponibilidade das fontes: NÃO INFORMADO — pergunte antes de assumir
+- Apresente primeiro o plano metodológico e os riscos de leakage.
+- Não execute nem persista alterações antes da minha aprovação.
+```
+
+A `@menção` é a forma explícita suportada de selecionar uma skill. Ela reduz ambiguidade, mas não transforma o resultado em determinístico nem substitui a revisão do que foi carregado e produzido.
+
+> **Dica:** depois de editar uma skill publicada, teste-a em um chat novo. Se a versão anterior ainda aparecer, faça uma atualização completa da página antes de concluir que a mudança não foi reconhecida.
 
 ---
 
+<a id="-relação-entre-skills-hub-snippets-e-hub-scripts"></a>
+
 ## 🔗 Relação entre Skills, Hub Snippets e Hub Scripts
 
-Para que o ecossistema funcione com máxima eficiência, existe uma divisão de papéis clara e sem sobreposição:
+Para que o ecossistema funcione de forma coerente, existe uma divisão de papéis:
 
-> **A Skill é o Maestro (o cérebro metodológico).**
-> **Os Snippets e Scripts são os Músicos e Instrumentos (as ferramentas de execução).**
+> **A Skill é o Maestro: organiza a metodologia.**
+> **Os Snippets e Scripts são os Instrumentos: fornecem implementações e diagnósticos reutilizáveis.**
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Dev as Cientista de Dados
-    participant Genie as Databricks Genie Code
-    participant Skill as 🧠 Agent Skill (hub-ml-*)
-    participant Hub as 📦 hub_snippets / hub_scripts
-    participant Cluster as ⚡ Cluster Spark
+![Relação entre Agent Skill, helpers e runtime](../hub_readmes_visual_assets/readmes/skills/png/02_skill_helpers_runtime.png)
 
-    Dev->>Genie: "Preciso calcular o drift das features entre treino e produção"
-    Genie->>Skill: Carrega metodologia de hub-ml-monitoramento-modelo
-    Skill-->>Genie: Injeta: "Não reinvente teste de KS/PSI manual. Recomende hub_snippets.ml.drift_detection"
-    Genie->>Dev: Apresenta a estratégia e entrega o bloco de código homologado
-    Dev->>Cluster: Roda: from hub_snippets.ml.drift_detection import ...
-    Cluster-->>Dev: Retorna métricas calculadas em segundos sem erro
-```
+*Leitura da figura: a skill fornece método e recomenda recursos; o notebook importa e executa helpers explicitamente.*
 
-### Caso de Uso Genérico:
-1. **O que acontece sem o ecossistema:** O usuário pede à IA para calcular estabilidade populacional. A IA tenta gerar um algoritmo do zero de 60 linhas de Python puro, usando laços `for` lentos, calculando decis com aproximações incorretas e coletando bilhões de linhas para a memória do driver, derrubando o cluster.
-2. **O que acontece com a Skill do ecossistema:** A skill intercepta a intenção e instrui o assistente: *"Não gere cálculos manuais. Indique a importação de `hub_snippets.spark.psi_calculator`. Use os limiares 0.1 e 0.25."* O resultado é um código de 3 linhas, homologado, ultra veloz e distribuído em Spark.
+### Caso de Uso Genérico
+
+1. **Sem uma metodologia específica:** ao pedir apenas “calcule estabilidade”, o assistente precisa inferir população de referência, período atual, variáveis, bins, escala e critérios de interpretação.
+2. **Com a skill do ecossistema:** a skill orienta essas decisões e recomenda, quando adequado, `hub_snippets.spark.psi_calculator` ou `hub_scripts.drift_detector`.
+3. **No runtime:** o notebook ainda precisa tornar `.assistant` visível ao Python, importar o helper e satisfazer suas dependências. A skill não instala, importa ou executa a biblioteca sozinha.
+
+O objetivo é reduzir reinvenção e tornar a solução conferível — não prometer código infalível, execução instantânea ou um threshold universal de PSI.
 
 ---
 
 ## 📋 O que são os Templates das Skills?
 
-Dentro das pastas de algumas skills existe uma subpasta chamada **`templates/`**. 
+Dentro das pastas de algumas skills existe uma subpasta chamada **`templates/`**.
 
-**Templates são gabaritos de formatação, estilo e entrega que propiciam que a saída gerada pela IA mantenha um padrão uniforme e profissional.**
+**Templates são gabaritos de especificação, análise e entrega que ajudam a manter uma saída uniforme e revisável.**
 
-Pense nos templates como folhas timbradas ou formulários de apresentação corporativa:
-* **Gabaritos de Estilo Visual (ex: `estilo_visual_eda.md`):** Ensina à IA exatamente como formatar gráficos do Plotly (quais cores hexadecimais usar, como formatar tooltips e eixos).
-* **Checklists de Validação (ex: `checklist-objeto-novo.md`):** Checklists estruturados que a IA preenche para provar que uma entrega técnica cumpre todos os requisitos antes de ser considerada concluída.
-* **Formatos de Laudos Técnicos (ex: `notebook_output_stat.md`):** Estrutura padronizada de como relatar p-valores, tamanhos de efeito e intervalos de confiança para áreas de negócio.
+Pense neles como formulários técnicos especializados:
+
+- **Gabaritos de Estilo Visual**, como `estilo_visual_eda.md`: orientam paleta, hierarquia e leitura de gráficos.
+- **Checklists de Validação**, como `checklist-objeto-novo.md`: organizam requisitos que devem ser conferidos antes de concluir uma entrega.
+- **Formatos de Laudo**, como `notebook_output_stat.md`: estruturam hipótese, teste, efeito, incerteza, limitações e decisão.
+
+Um template não é executável e não é um helper. Ele só influencia a resposta quando a skill o referencia e o assistente o utiliza como contexto.
 
 ---
 
 ## 🏛️ Arquitetura de Skills no Hub
 
-Cada skill habita em seu próprio diretório em `.assistant/skills/<nome-da-skill>/` e é composta por um arquivo canônico **`SKILL.md`**, estruturado rigidamente em seções auditadas por ferramentas automatizadas:
+Cada skill habita em seu próprio diretório em `.assistant/skills/<nome-da-skill>/` e possui um arquivo canônico `SKILL.md`:
 
 ```text
 .assistant/skills/hub-ml-feature-engineering/
-├── SKILL.md                  # O cérebro metodológico da skill
-└── templates/                # Gabaritos de saída e formatação (opcional)
-    └── contrato_features.md
+├── SKILL.md                  # metodologia e roteamento da skill
+└── templates/                # recursos de apoio, quando necessários
+    ├── feature_spec_core.md
+    └── checklist_validacao_features.md
 ```
 
-### As Seções Estruturais Obrigatórias de um `SKILL.md`:
-1. **Frontmatter YAML:** Metadados de identificação (`name` e `description` rica em palavras-chave).
-2. **Quando esta skill se aplica:** Critérios claros de inclusão e exclusão (fronteiras com outras skills).
-3. **Fluxo de Execução:** O passo a passo sequencial que a IA deve guiar (do entendimento do problema à entrega).
-4. **Helpers Obrigatórios:** Lista explícita de funções de `hub_snippets` e `hub_scripts` que devem ser recomendadas para a tarefa.
-5. **O que NUNCA fazer (Guardrails):** Proibições severas contra más práticas de modelagem e riscos de engenharia.
-6. **Formato de Saída:** Critérios de aceite de como o código e o relatório devem ser entregues no notebook.
+![Três camadas de uma Agent Skill](../hub_readmes_visual_assets/readmes/skills/png/03_camadas_de_uma_skill.png)
+
+*Leitura da figura: frontmatter sustenta a descoberta, SKILL.md contém o método e recursos aprofundam apenas o necessário.*
+
+A separação em camadas evita transformar o arquivo principal em um depósito de referências. Metadados ajudam o roteamento; instruções organizam o trabalho; recursos são carregados quando a tarefa realmente os exige.
+
+### Requisitos oficiais e seções estruturais do Hub
+
+No padrão oficial, `SKILL.md` precisa ter frontmatter válido com `name` e `description`. Neste projeto, o contrato editorial acrescenta seções auditadas:
+
+1. **Frontmatter YAML:** identificação e descrição usada no roteamento.
+2. **Quando esta skill se aplica:** inclusão, exclusão e fronteiras com outras skills.
+3. **Fluxo de execução:** sequência de entendimento, planejamento, código e entrega.
+4. **Helpers da biblioteca:** caminhos de `hub_snippets` e `hub_scripts` recomendados, quando existirem.
+5. **O que NUNCA fazer (Guardrails):** riscos e operações que exigem prevenção ou aprovação.
+6. **Formato de saída:** artefatos e critérios de revisão.
+
+Os itens 2 a 6 são uma convenção de qualidade do Hub, não campos obrigatórios da especificação oficial de Agent Skills.
+
+### Onde as skills podem ficar
+
+- **Skill de usuário:** `/Users/<username>/.assistant/skills/`
+- **Skill de workspace:** `Workspace/.assistant/skills/`
+
+O local define o escopo e as permissões. A disponibilidade de uma skill compartilhada depende de como o workspace foi administrado.
 
 ---
+
+<a id="️-catálogo-de-agent-skills"></a>
 
 ## 🗺️ Catálogo de Agent Skills
 
-As skills cobrem as diversas etapas de um ciclo analítico profissional:
+As skills cobrem etapas complementares de um ciclo analítico. O catálogo foi
+dividido por etapa para permanecer legível em painéis estreitos do workspace.
 
-| Ciclo Analítico | Skill | Objetivo Principal |
-| :--- | :--- | :--- |
-| **Exploração & Diagnóstico** | `hub-ml-eda-profissional` | Análise exploratória univariada e bivariada com qualidade e síntese executiva. |
-| | `hub-ml-cross-eda-ml` | Cruzamento entre múltiplas bases e avaliação de prontidão para modelagem (*ML readiness*). |
-| | `hub-ml-validacao-estatistica` | Testes de hipóteses rigorosos, tamanho de efeito e inferência sob incerteza. |
-| **Engenharia de Dados & Risco** | `hub-ml-feature-engineering` | Criação de features e joins temporais (*point-in-time*) protegidos contra vazamento. |
-| | `hub-ml-analise-safra` | Curvas de safra e evolução de maturação por MOB (*Months on Book*) em crédito. |
-| **Modelagem & Explicabilidade** | `hub-ml-baseline-ml` | Criação de modelos benchmark, validação temporal robusta e tracking no MLflow. |
-| | `hub-ml-explainability` | Interpretação de caixas-pretas com SHAP e geração de relatórios de explicabilidade. |
-| **MLOps & Produção** | `hub-ml-monitoramento-modelo` | Acompanhamento contínuo de performance e drift com tomada de decisão de retreino. |
-| | `hub-ml-pipeline-builder` | Empacotamento de esteiras em Databricks Workflows, Jobs e Lakeflow. |
-| **Governança & Engenharia** | `hub-ml-comentar-notebook` | Documentação técnica e executiva de notebooks (contexto PRÉ e interpretação PÓS). |
-| | `hub-ml-tutor-databricks` | Explicação didática de arquitetura Spark, Catalyst Optimizer e conceitos de ML. |
-| | `hub-ml-auditoria-skills` | Auditoria de códigos gerados por IA para apoiar a conformidade técnica. |
-| | `hub-ml-criar-objeto` | Automação da criação de novos snippets, scripts e skills no padrão do Hub. |
+### 🔍 Exploração & Diagnóstico
+
+| Skill | Objetivo principal |
+|---|---|
+| `hub-ml-eda-profissional` | EDA univariada e bivariada com qualidade e síntese executiva. |
+| `hub-ml-cross-eda-ml` | Cruzamento de fontes e avaliação de prontidão para modelagem. |
+| `hub-ml-validacao-estatistica` | Hipóteses, pressupostos, efeito e inferência sob incerteza. |
+
+### 🧱 Engenharia de Dados & Risco
+
+| Skill | Objetivo principal |
+|---|---|
+| `hub-ml-feature-engineering` | Features e joins temporais com instante de decisão explícito. |
+| `hub-ml-analise-safra` | Curvas de safra, denominadores e maturação comparável. |
+
+### 📈 Modelagem & Explicabilidade
+
+| Skill | Objetivo principal |
+|---|---|
+| `hub-ml-baseline-ml` | Baselines por tipo de problema, validação e tracking. |
+| `hub-ml-explainability` | Interpretação global/local e comunicação de limitações. |
+
+### ⚙️ MLOps & Produção
+
+| Skill | Objetivo principal |
+|---|---|
+| `hub-ml-monitoramento-modelo` | Performance, drift, fairness, custo e decisão de retreino. |
+| `hub-ml-pipeline-builder` | Pipelines modulares, qualidade, observabilidade e automação. |
+
+### 🛡️ Governança & Engenharia
+
+| Skill | Objetivo principal |
+|---|---|
+| `hub-ml-comentar-notebook` | Documentação técnica e executiva de notebooks. |
+| `hub-ml-tutor-databricks` | Explicação didática de código, Spark, Databricks e ML. |
+| `hub-ml-auditoria-skills` | Auditoria da implementação de skills e das entregas produzidas. |
+| `hub-ml-criar-objeto` | Criação orientada de objetos no padrão do Hub. |
+
+> **Como ler o catálogo:** a etapa organiza o ponto de entrada, mas não limita a
+> composição. Uma análise pode combinar skills desde que objetivo, ordem e
+> responsabilidades permaneçam explícitos.
 
 ---
 
+<a id="-detalhamento-das-skills"></a>
+
 ## 📖 Detalhamento das Skills
 
-Abaixo você encontra a análise aprofundada de cada skill: seu propósito, o que faz, quando usar, quais helpers ela aciona e quais templates a acompanham.
+Abaixo você encontra o propósito, o momento de uso, os principais recursos e um exemplo de demanda para cada skill.
 
 ---
 
 ### `hub-ml-eda-profissional` — Exploração Completa e Visual
-* **O que faz:** Estrutura uma Análise Exploratória de Dados (EDA) rigorosa. Avalia volumetria, completude de dados, cardinalidade, distribuições univariadas, relações bivariadas com o alvo e geração de insights de negócio.
-* **Templates:** `templates/estilo_visual_eda.md` (orienta para que os gráficos usem paletas profissionais limpas e padronizadas).
-* **Helpers Acionados:** `hub_snippets.visual.theme_plotly`, `hub_snippets.display.dataframe_styled`, `hub_snippets.display.distribution_grid`, `hub_scripts.quick_profile`.
-* **Caso de Uso Real:**
-  > *"Acabei de receber uma tabela nova de sinistros de seguros com 120 colunas. Preciso de uma análise exploratória completa para entender quais variáveis mais impactam o valor pago e identificar anomalias nas colunas numéricas."*
+
+- **O que faz:** estrutura EDA com volumetria, qualidade, cardinalidade, distribuições, relações e síntese executiva.
+- **Templates:** `roteiro_eda.md`, `matriz_graficos_eda.md`, `relatorio_executivo_eda.md` e `estilo_visual_eda.md`.
+- **Helpers recomendados:** `hub_scripts.quick_profile`, `hub_scripts.data_quality_check`, `hub_snippets.spark.null_summary`, `hub_snippets.spark.smart_sample`, `hub_snippets.spark.safe_display`, `hub_snippets.display.correlation_matrix`, `hub_snippets.display.distribution_grid`, `hub_snippets.visual.theme_plotly`, `hub_snippets.visual.index_generator` e `hub_snippets.constants.format_br`.
+- **Caso de Uso Real:**
+  > *“Recebi uma tabela de sinistros com muitas colunas. Preciso entender grão, qualidade, distribuições e relações com o valor pago antes de formular hipóteses.”*
 
 ---
 
 ### `hub-ml-cross-eda-ml` — Cruzamento de Bases e Prontidão para ML
-* **O que faz:** Focada no estágio em que os dados já foram explorados isoladamente e precisam ser consolidados. Avalia compatibilidade de chaves entre tabelas, perda de linhas em cruzamentos e julga formalmente a **prontidão da base para Machine Learning** (*ML Readiness*).
-* **Templates:** `templates/tabela_cruzamento.md`, `templates/checklist_prontidao.md`.
-* **Helpers Acionados:** `hub_scripts.join_diagnostics`, `hub_scripts.data_quality_check`.
-* **Caso de Uso Real:**
-  > *"Tenho uma tabela de transações bancárias e outra de dados cadastrais. Quero cruzar as duas e saber se há perda de clientes no relacionamento ou desbalanceamento severo antes de começar a modelagem preditiva."*
+
+- **O que faz:** inventaria fontes, avalia cobertura de chaves, cardinalidade, viabilidade temporal do join e prontidão para modelagem.
+- **Templates:** `inventario_edas.md`, `coverage_matrix.md`, `join_feasibility.md`, `readiness_scorecard.md`, `notebook_output_cross_eda.md` e `relatorio_executivo_cross_eda.md`.
+- **Helpers recomendados:** `hub_snippets.spark.join_diagnostics`, `hub_snippets.spark.pit_join`, `hub_snippets.spark.null_summary`, `hub_snippets.spark.smart_sample`, `hub_snippets.spark.safe_display`, `hub_snippets.spark.psi_calculator`, `hub_scripts.quick_profile` e `hub_scripts.schema_to_yaml`.
+- **Caso de Uso Real:**
+  > *“Tenho tabelas transacional e cadastral. Quero medir correspondência, multiplicação de linhas, perda de entidades e disponibilidade temporal antes de construir a ABT.”*
+
+> **Nota técnica:** `join_diagnostics` pertence a `hub_snippets.spark`, não a `hub_scripts`.
 
 ---
 
 ### `hub-ml-validacao-estatistica` — Rigor Matemático e Testes de Hipóteses
-* **O que faz:** Impede que o cientista de dados tire conclusões precipitadas baseadas em médias simples. Aplica testes de normalidade (Shapiro-Wilk), testes paramétricos/não-paramétricos (T-Student, Mann-Whitney, ANOVA, Kruskal-Wallis), mede o tamanho do efeito (Cohen's d) e estima intervalos de confiança por Bootstrap.
-* **Templates:** `templates/notebook_output_stat.md` (formato padronizado de laudo de testes estatísticos).
-* **Helpers Acionados:** Funções de inferência estatística de `hub_snippets.ml`.
-* **Caso de Uso Real:**
-  > *"Realizamos um teste A/B em uma campanha de marketing. A taxa de conversão do grupo B foi 2% maior que a do grupo A. Quero validar com 95% de confiança estatística se essa diferença é real ou mero ruído amostral."*
+
+- **O que faz:** parte da decisão e do desenho do dado para escolher testes, conferir pressupostos, estimar efeito e comunicar incerteza.
+- **Templates:** `test_plan.md`, `decisao_pressupostos.md`, `test_result_card.md`, `notebook_output_stat.md`, `relatorio_diagnostico.md` e `severity_rubric.md`.
+- **Helpers recomendados:** `hub_snippets.spark.smart_sample`, `hub_snippets.spark.null_summary`, `hub_snippets.spark.psi_calculator`, `hub_snippets.ml.drift_detection` e `hub_snippets.constants.format_br`.
+- **Caso de Uso Real:**
+  > *“A taxa de conversão do grupo B foi maior. Quero decidir se a diferença é material, com teste adequado, tamanho de efeito, incerteza e limitações do desenho.”*
 
 ---
 
 ### `hub-ml-feature-engineering` — Engenharia de Atributos sem Leakage
-* **O que faz:** Desenha e codifica variáveis preditivas para problemas temporais e tabulares. É estruturada para que as agregações históricas respeitem o instante da decisão (tempo zero), mitigando o risco de vazamento temporal.
-* **Templates:** `templates/contrato_features.md`.
-* **Helpers Acionados:** `hub_snippets.spark.pit_join`, `hub_snippets.ml.lgbm_temporal`, `hub_snippets.spark.date_features`.
-* **Caso de Uso Real:**
-  > *"Preciso criar variáveis agregadas de consumo dos últimos 30, 60 e 90 dias para cada cliente, de modo que o cálculo de cada dia utilize apenas as transações registradas até a meia-noite anterior."*
+
+- **O que faz:** desenha features com entidade, instante de decisão, disponibilidade das fontes, janelas e validações consistentes entre treino e inferência.
+- **Templates:** `feature_spec_core.md`, `feature_spec_risco_validacao.md`, `feature_backlog_tiers.md`, `feature_taxonomy_cross_source.md`, `checklist_validacao_features.md`, `mapa_notebooks_alvo.md` e `notebook_output_structure.md`.
+- **Helpers recomendados:** `hub_snippets.spark.pit_join`, `hub_snippets.spark.date_features`, `hub_snippets.ml.lgbm_temporal`, `hub_snippets.ml.split_temporal`, `hub_snippets.ml.woe_iv_calculator` e `hub_scripts.rfv_calculator`.
+- **Caso de Uso Real:**
+  > *“Preciso criar atributos de consumo em 30, 60 e 90 dias usando apenas informações disponíveis antes da data de decisão de cada cliente.”*
 
 ---
 
 ### `hub-ml-analise-safra` — Maturação e Curvas de Crédito (Vintage)
-* **O que faz:** Constrói análises de safras (*Vintage Analysis*). Estrutura matrizes de evolução temporal por mês de concessão/originação ao longo dos meses de vida do contrato (*Months on Book - MOB*), calculando taxas acumuladas de evento (inadimplência, churn ou sinistralidade).
-* **Templates:** `templates/estilo_safra.md`.
-* **Helpers Acionados:** `hub_snippets.ml.vintage_analysis`, `hub_snippets.constants.format_br`.
-* **Caso de Uso Real:**
-  > *"A diretoria de crédito precisa saber se os contratos originados no último trimestre estão performando pior ou melhor do que as safras do ano passado após 6 meses de carteira."*
+
+- **O que faz:** define evento, denominador, coorte, MOB, janela comparável e censura antes de construir curvas de safra.
+- **Templates:** `relatorio_safra.md`.
+- **Helpers recomendados:** `hub_snippets.ml.vintage_analysis`, `hub_snippets.spark.date_features`, `hub_snippets.constants.format_br` e `hub_snippets.visual.theme_plotly`.
+- **Caso de Uso Real:**
+  > *“Quero comparar contratos originados em diferentes trimestres após a mesma maturidade, distinguindo safras ainda incompletas.”*
 
 ---
 
 ### `hub-ml-baseline-ml` — Benchmark Inicial e Rastreabilidade
-* **O que faz:** Cria o primeiro modelo preditivo estruturado (benchmark). Define uma estratégia de divisão temporal rígida, treina modelos simples e interpretáveis, registra métricas completas no MLflow e estabelece o patamar mínimo de acurácia que modelos futuros mais complexos deverão superar.
-* **Templates:** `templates/resumo_baseline.md`.
-* **Helpers Acionados:** `hub_snippets.ml.split_temporal`, `hub_snippets.ml.mlflow_run`, `hub_snippets.ml.metrics_report`.
-* **Caso de Uso Real:**
-  > *"Preciso de um modelo baseline rápido para previsão de propensão de contratação de seguro para servir de balizador antes de iniciarmos experimentos complexos com redes neurais."*
+
+- **O que faz:** seleciona uma suíte compatível com classificação, regressão, séries, ranking, survival, clustering ou anomalias; define split, métricas, tracking e critério de comparação.
+- **Templates:** incluem `suite_selection_guide.md`, `split_strategy.md`, famílias de métricas, `mlflow_checklist.md`, `notebook_output_baseline.md` e `relatorio_executivo_baseline.md`.
+- **Helpers recomendados:** `hub_snippets.ml.split_temporal`, `hub_snippets.ml.walk_forward`, `hub_snippets.ml.metrics_report`, `hub_snippets.ml.curves_plotly`, `hub_snippets.ml.mlflow_run` e treinadores adequados ao tipo de problema.
+- **Caso de Uso Real:**
+  > *“Preciso de um baseline reproduzível para comparar abordagens mais complexas, mantendo população, split, métrica e custo sob o mesmo contrato.”*
 
 ---
 
 ### `hub-ml-explainability` — Explicabilidade de Modelos e SHAP
-* **O que faz:** Abre caixas-pretas de Machine Learning. Calcula e visualiza valores SHAP (*SHapley Additive exPlanations*), dependência parcial e importância de variáveis, traduzindo o raciocínio matemático do modelo em explicações intuitivas para áreas de negócio e auditoria.
-* **Templates:** `templates/laudo_explicabilidade.md`.
-* **Helpers Acionados:** `hub_snippets.ml.explainability_report`, `hub_snippets.ml.curves_plotly`.
-* **Caso de Uso Real:**
-  > *"O modelo de crédito negou o limite de um cliente e a área de conformidade regulatória exige uma explicação transparente de quais variáveis individuais mais contribuíram para essa decisão negativa."*
+
+- **O que faz:** escolhe abordagem de explicação conforme modelo, público e decisão, separando leitura técnica e comunicação executiva.
+- **Templates:** `shap_analysis_technical.md` e `relatorio_executivo_explainability.md`.
+- **Helpers recomendados:** `hub_snippets.ml.explainability_report`, `hub_snippets.ml.shap_explainer` e `hub_snippets.ml.curves_plotly`.
+- **Caso de Uso Real:**
+  > *“Preciso explicar globalmente o comportamento do modelo e revisar uma previsão individual, deixando claro que contribuição não significa causalidade.”*
 
 ---
 
 ### `hub-ml-monitoramento-modelo` — MLOps e Detecção de Degradação
-* **O que faz:** Audita modelos em produção. Compara bases de escoragem mensal contra a base de desenvolvimento, calculando PSI (*Population Stability Index*), CSI por variável, decaimento de KS/AUC e alertando sobre a necessidade ou não de retreinamento.
-* **Templates:** `templates/alerta_monitoramento.md`.
-* **Helpers Acionados:** `hub_snippets.ml.performance_monitor`, `hub_snippets.spark.psi_calculator`, `hub_scripts.drift_detector`.
-* **Caso de Uso Real:**
-  > *"Nosso modelo de propensão está rodando há 6 meses em produção. Quero rodar uma rotina mensal que aponte se o perfil da população mudou significativamente e se a curva ROC ainda se sustenta nos níveis originais."*
+
+- **O que faz:** organiza performance, calibração, drift, fairness, latência, custo e critérios de decisão de retreino.
+- **Templates:** `drift_report.md` e `retreino_decision.md`.
+- **Helpers recomendados:** `hub_snippets.ml.performance_monitor`, `hub_snippets.ml.drift_detection`, `hub_snippets.spark.psi_calculator`, `hub_snippets.ml.metrics_report`, `hub_snippets.ml.curves_plotly` e `hub_scripts.drift_detector`.
+- **Caso de Uso Real:**
+  > *“Quero comparar população e performance ao longo do tempo e produzir evidências para uma decisão humana de manter, investigar ou retreinar.”*
+
+A skill não agenda o monitoramento, não envia notificações e não retreina automaticamente.
 
 ---
 
-### `hub-ml-pipeline-builder` — Industrialização e Databricks Workflows
-* **O que faz:** Pega o código experimental validado no notebook e o transforma em uma esteira de produção industrial: estrutura pipelines modulares, parametriza tarefas para o Databricks Jobs/Workflows, define tratamento de erros e prepara bundles de implantação.
-* **Templates:** `templates/workflow_spec.md`.
-* **Helpers Acionados:** `hub_scripts.data_quality_check`, `hub_snippets.ml.mlflow_run`.
-* **Caso de Uso Real:**
-  > *"Terminei meu modelo no notebook interativo. Agora preciso criar uma esteira automatizada no Databricks Jobs que rode todo dia primeiro do mês, ingira os dados, escore a base e salve o resultado no Unity Catalog."*
+### `hub-ml-pipeline-builder` — Industrialização e Lakeflow
+
+- **O que faz:** transforma lógica experimental em contratos por camada, processamento incremental, qualidade, observabilidade e automação.
+- **Templates:** `pipeline_spec.md`.
+- **Helpers recomendados:** `hub_scripts.data_quality_check`, `hub_scripts.naming_checker`, `hub_scripts.schema_to_yaml` e `hub_snippets.spark.safe_display`.
+- **Caso de Uso Real:**
+  > *“Quero decompor um notebook em pipeline incremental, definir expectativas, observabilidade e tarefas de Lakeflow Jobs antes de implantar.”*
+
+Use a nomenclatura vigente: **Lakeflow Spark Declarative Pipelines**, **Lakeflow Jobs** e **Declarative Automation Bundles**.
 
 ---
 
 ### `hub-ml-comentar-notebook` — Documentação Executiva e Técnica
-* **O que faz:** Analisa notebooks existentes e os transforma em relatórios legíveis para humanos. Insere células de Markdown explicativo **antes** dos códigos (explicando o racional técnico) e blocos de síntese executiva **depois** das saídas (traduzindo números brutos em interpretações claras de negócio).
-* **Templates:** `templates/padrao_comentario_notebook.md`.
-* **Helpers Acionados:** `hub_snippets.visual.section_header`.
-* **Caso de Uso Real:**
-  > *"Construí um notebook técnico denso com mais de 40 células. Preciso apresentá-lo para a gerência amanhã e quero documentá-lo para que qualquer pessoa entenda a narrativa de negócio sem precisar ler código."*
+
+- **O que faz:** cria narrativa antes do código e interpretação depois da execução, sem alterar silenciosamente o comportamento do notebook.
+- **Templates:** `cabecalho_notebook.md`, blocos pré e pós-código nas versões completa e compacta.
+- **Helpers recomendados:** `hub_scripts.doc_coverage`, componentes de `hub_snippets.visual` e `hub_snippets.constants.format_br`.
+- **Caso de Uso Real:**
+  > *“Tenho um notebook técnico extenso. Quero documentar objetivo, lógica e resultados para públicos técnico e executivo, preservando o código.”*
 
 ---
 
 ### `hub-ml-tutor-databricks` — Mentoria Técnica e Didática
-* **O que faz:** Atua como um professor particular de Databricks e PySpark. Explica como funcionam planos de execução do Catalyst Optimizer, gerenciamento de partições, shuffle, otimização de joins e conceitos teóricos de algoritmos estatísticos.
-* **Templates:** `templates/explicacao_didatica.md`.
-* **Helpers Acionados:** Não aciona helpers de execução (sua função é conceitual e pedagógica).
-* **Caso de Uso Real:**
-  > *"Minha consulta Spark com join está demorando 40 minutos para executar. Quero que a IA analise o plano de execução e me explique didaticamente o que é Broadcast Join e como resolver o problema de skew nos dados."*
+
+- **O que faz:** explica código, notebooks, erros, Spark, Databricks e conceitos de ML no nível adequado ao leitor.
+- **Templates:** `explicacao_bloco_codigo.md`, `explicacao_notebook.md` e `analogias_banking_crm.md`.
+- **Helpers recomendados:** `hub_snippets.spark.safe_display`, `hub_snippets.spark.smart_sample` e `hub_snippets.constants.format_br`, apenas quando a demonstração prática exigir.
+- **Caso de Uso Real:**
+  > *“Minha consulta com join está lenta. Quero entender o plano, broadcast, shuffle e skew antes de escolher uma alteração.”*
+
+Analogias facilitam a compreensão, mas não substituem o comportamento técnico real.
 
 ---
 
 ### `hub-ml-auditoria-skills` — Guardiã da Qualidade das Entregas
-* **O que faz:** Revisa criticamente a resposta ou código que foi gerado por outra skill. Confere se a IA não tentou reimplementar funções existentes do Hub, se tratou nulos adequadamente, se não criou bugs temporais e se seguiu os guardrails institucionais.
-* **Templates:** `templates/relatorio_auditoria.md`.
-* **Helpers Acionados:** Varre `CATALOGO_HELPERS.md`.
-* **Caso de Uso Real:**
-  > *"A IA gerou um notebook de modelagem para mim. Antes de rodar em produção, quero que a skill de auditoria avalie se o código respeitou todas as regras contra vazamento de dados e boas práticas do ecossistema."*
+
+- **O que faz:** opera em dois modos: audita a implementação de uma skill ou audita o output que ela produziu.
+- **Templates:** `rubrica_universal.md`, `checkpoints_por_skill.md` e `relatorio_auditoria.md`.
+- **Helpers recomendados:** `hub_scripts.doc_coverage` e `hub_scripts.naming_checker`; `CATALOGO_HELPERS.md` é referência documental, não helper executável.
+- **Caso de Uso Real:**
+  > *“A Genie Code gerou um notebook. Quero confrontar pedido, metodologia, código, resultados e limitações antes de aceitar a entrega.”*
 
 ---
 
 ### `hub-ml-criar-objeto` — Fábrica de Expansão do Hub
-* **O que faz:** Automatiza a expansão do próprio ecossistema. Quando a equipe precisa criar um novo snippet, script ou skill, este assistente gera a estrutura completa da **Pasta de Objeto (ADR-0007)**: cria o código-fonte, o contrato público no `__init__.py` e o notebook didático de exemplo com dados sintéticos.
-* **Templates:** `templates/checklist-objeto-novo.md`.
-* **Helpers Acionados:** Aciona os templates de `hub_padroes/`.
-* **Caso de Uso Real:**
-  > *"Desenvolvi uma função inovadora de cálculo de LTV (Lifetime Value) que será útil para todo o time. Quero empacotá-la como um novo snippet oficial do Hub seguindo as boas práticas e padrões de qualidade do ecossistema."*
+
+- **O que faz:** orienta a criação ou alteração de snippet, script, prompt, README, notebook ou skill usando os padrões do Hub.
+- **Templates:** `checklist-objeto-novo.md` e os moldes em `hub_padroes/`.
+- **Helpers recomendados:** variam conforme o tipo criado; a própria skill lista recursos de estrutura, teste, visual e documentação.
+- **Caso de Uso Real:**
+  > *“Desenvolvi uma função de LTV útil para a equipe. Quero estruturá-la com API pública, exemplo sintético, testes, documentação e revisão.”*
+
+Gerar ou editar arquivos é uma ação explícita e sujeita à aprovação; a skill não cria artefatos silenciosamente.
 
 ---
 
 ## ❓ Perguntas Frequentes (FAQ)
 
-### 1. Como a skill sabe quais colunas da minha tabela utilizar (chave primária, target, data de referência)?
-**Elas foram desenhadas para trabalhar em colaboração com você.** Ao acionar a skill no chat, você pode declarar explicitamente os campos principais (ex: `@catalogo.schema.tabela com chave id_cliente e target churn`). Caso você não declare, a metodologia da skill instrui o assistente a inspecionar o schema da tabela ou fazer perguntas objetivas de alinhamento antes de começar a escrever o código, buscando alinhar o grão e as variáveis com você antes da escrita do código.
+### 1. Como a skill sabe quais colunas utilizar?
 
-### 2. O que acontece se eu não colocar o `@` antes do nome da skill?
-O Databricks Genie Code tentará deduzir a skill comparando a sua pergunta com o texto de descrição de cada uma. Se a sua pergunta for clara, ele acertará. No entanto, usar o `@` (ex: `@hub-ml-analise-safra`) direciona deterministicamente a IA para carregar a metodologia recomendada.
+As skills trabalham em colaboração com você. Declare tabela, grão, chave, target, instante de decisão, período e filtros. Quando um dado estiver ausente, a metodologia pode orientar a inspeção do schema ou perguntas objetivas; isso não autoriza inventar regra de negócio.
+
+### 2. O que acontece se eu não colocar `@` antes do nome da skill?
+
+A Genie Code pode selecionar uma skill pela relevância entre o pedido e sua `description`. Se você quer uma metodologia específica, use `@nome-da-skill`. A `@menção` explicita a escolha, mas a entrega continua sujeita a revisão.
 
 ### 3. Posso combinar duas ou mais skills na mesma conversa?
-**Sim, mas em etapas sequenciais.** Uma boa prática é avançar passo a passo: primeiro use `@hub-ml-eda-profissional` para entender os dados; em seguida, no mesmo chat ou notebook, invoque `@hub-ml-feature-engineering` para desenhar os atributos com base nas descobertas da exploração.
 
-### 4. O que fazer se a saída gerada pela skill precisar de adaptações ou regras específicas do meu projeto?
-**Você mantém controle total sobre o código.** As skills fornecem a melhor prática metodológica e os blocos canônicos, mas o código gerado no notebook é Python/PySpark aberto e totalmente editável. Além disso, no próprio chat você pode solicitar refinamentos (ex: *"altere a janela móvel para 15 dias em vez de 30"* ou *"adicione um filtro para excluir contratos cancelados"*), e o assistente adaptará a solução preservando todos os guardrails da skill.
+Sim, preferencialmente em etapas: EDA, feature engineering, baseline, explicabilidade ou monitoramento. Reutilize apenas premissas já validadas e abra um chat novo quando objetivo, dados ou fase mudarem materialmente.
+
+### 4. O que fazer se a saída precisar de adaptações do meu projeto?
+
+Declare as regras e peça a alteração. Depois confira se o refinamento preservou grão, temporalidade, segurança e critérios de aceite. Guardrails não tornam toda adaptação automaticamente correta.
 
 ### 5. A equipe pode editar as instruções de uma skill existente?
-**Sim.** Se a sua área técnica decidir que um novo guardrail corporativo deve ser adotado por todos (por exemplo: *"sempre excluir a coluna X em modelos de crédito por conformidade regulatória"*), basta atualizar o arquivo `SKILL.md` correspondente. A partir desse momento, todas as respostas futuras da IA seguirão a nova diretriz.
+
+Sim. Atualize `SKILL.md` e os recursos relacionados, valide o frontmatter e execute testes de roteamento positivo, negativo e por `@menção`. Mudanças recém-publicadas devem ser verificadas em uma conversa nova.
+
+### 6. A skill executa os helpers citados automaticamente?
+
+Não. Ela orienta a Genie Code e pode recomendar caminhos. O notebook precisa configurar `sys.path`, importar o módulo e executar a chamada, respeitando dependências, permissões e aprovações.
+
+---
+
+<a id="-aprovações-permissões-e-revisão"></a>
+
+## 🔐 Aprovações, Permissões e Revisão
+
+- Uma skill não amplia permissões no workspace ou no Unity Catalog.
+- Planejar, gerar código, editar notebook, executar e persistir são ações diferentes.
+- A política de aprovação configurada continua valendo para as ferramentas disponíveis.
+- Autoaprovação reduz confirmações; não é uma fronteira de segurança.
+- Revise qualquer `CREATE`, `ALTER`, `DROP`, `DELETE`, `MERGE`, instalação, execução ampla ou mudança de configuração.
+- Não inclua tokens, senhas, chaves ou dados sensíveis em skills, templates ou prompts.
+
+---
+
+## 🔗 Continue Explorando
+
+- [Documentação oficial de Agent Skills](https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills)
+- [Instruções customizadas na Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/instructions)
+- [Hub Prompts](../hub_prompts/README.md)
+- [Hub Snippets](../hub_snippets/README.md)
+- [Hub Scripts](../hub_scripts/README.md)
+- Catálogo de Helpers: `.assistant/CATALOGO_HELPERS.md`

@@ -1,0 +1,9 @@
+graph TD
+    subgraph PastaDeObjeto["📂 Pasta de Objeto: hub_snippets/categoria/nome_do_snippet/"]
+        Init["📄 __init__.py<br/>(Contrato Público / Exportação)"]
+        Modulo["⚙️ nome_do_snippet.py<br/>(Implementação)"]
+        Exemplo["📓 exemplo_nome_do_snippet.py<br/>(Notebook Didático)"]
+    end
+
+    Init -->|Reexporta a API pública| Modulo
+    Exemplo -->|Demonstra uma chamada real| Init

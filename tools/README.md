@@ -13,6 +13,7 @@ podem reprovar uma mudança.
 | validar fonte e repositório | `python tools/validate_assistant.py` |
 | conferir somente saídas locais do README | `python tools/validate_assistant.py --conferir-readme` |
 | regenerar o derivado | `python tools/render_simulado.py --write` |
+| regenerar SVGs e PNGs dos READMEs | `node tools/render_readme_visuals.mjs` |
 | publicar no Free | `python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>` |
 | conferir o remoto (inventário e tipos) | `python tools/publicar_free.py --verify --profile <free> --expected-host <url-free>` |
 | conferir o remoto **por conteúdo** | `python tools/publicar_free.py --verify --conteudo --profile <free> --expected-host <url-free>` |
@@ -49,6 +50,7 @@ o remoto.
 |---|---|
 | `validate_assistant.py` | estrutura, YAML, links, Python, contratos, identidade e consistência |
 | `render_simulado.py` | recriar o espelho de workspace a partir da fonte |
+| `render_readme_visuals.mjs` | gerar fontes SVG e PNGs editoriais dos READMEs |
 | `publicar_free.py` | plano, publicação protegida e conferência remota |
 | `spark_smoke_test.py` | chamadas funcionais no runtime Databricks |
 | `api_publica.py` | extrair API pública por AST e gerar `__init__.py` |

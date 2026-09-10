@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111F"/>
+      <stop offset="0.56" stop-color="#0B1728"/>
+      <stop offset="1" stop-color="#101B30"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.82" cy="0.08" r="0.85">
+      <stop offset="0" stop-color="#FF4F87" stop-opacity="0.18"/>
+      <stop offset="0.52" stop-color="#5DD6FF" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#07111F" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#2C4059" stroke-width="1" opacity="0.16"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000814" flood-opacity="0.42"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7890AA"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#glow)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <rect x="68" y="50" width="188" height="34" rx="17" fill="#FF4F87" opacity="0.16"/>
+  <text x="162" y="74" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#FF4F87" opacity="1"><tspan x="162" dy="0">GUIA VISUAL</tspan></text>
+  <text x="68" y="122" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="40" font-weight="750" fill="#F7FAFC" opacity="1"><tspan x="68" dy="0">Ciclo de vida do projeto</tspan></text>
+  <text x="68" y="158" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="68" dy="0">Cada mudança percorre os mesmos gates antes de chegar à equipe</tspan></text>
+  <line x1="68" y1="186" x2="1532" y2="186" stroke="#2C4059" stroke-width="1"/>
+  <path d="M295,417.5 C307.5,417.5 307.5,417.5 320,417.5" fill="none" stroke="#7890AA" stroke-width="3"  marker-end="url(#arrow)"/>
+  <path d="M550,417.5 C562.5,417.5 562.5,417.5 575,417.5" fill="none" stroke="#7890AA" stroke-width="3"  marker-end="url(#arrow)"/>
+  <path d="M805,417.5 C817.5,417.5 817.5,417.5 830,417.5" fill="none" stroke="#7890AA" stroke-width="3"  marker-end="url(#arrow)"/>
+  <path d="M1060,417.5 C1072.5,417.5 1072.5,417.5 1085,417.5" fill="none" stroke="#7890AA" stroke-width="3"  marker-end="url(#arrow)"/>
+  <path d="M1315,417.5 C1327.5,417.5 1327.5,417.5 1340,417.5" fill="none" stroke="#7890AA" stroke-width="3"  marker-end="url(#arrow)"/>
+  <g opacity="1" filter="url(#shadow)">
+    <rect x="65" y="300" width="230" height="235" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="65" y="300" width="6" height="235" rx="3" fill="#A992FF"/>
+    <circle cx="261" cy="334" r="20" fill="#A992FF" opacity="0.18"/>
+       <text x="261" y="341" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="750" fill="#A992FF" opacity="1"><tspan x="261" dy="0">1</tspan></text>
+    <text x="93" y="350" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="93" dy="0">Editar</tspan></text>
+    <text x="93" y="392" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="93" dy="0">fonte canônica</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="320" y="300" width="230" height="235" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="320" y="300" width="6" height="235" rx="3" fill="#66E3C4"/>
+    <circle cx="516" cy="334" r="20" fill="#66E3C4" opacity="0.18"/>
+       <text x="516" y="341" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="750" fill="#66E3C4" opacity="1"><tspan x="516" dy="0">2</tspan></text>
+    <text x="348" y="350" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="348" dy="0">Validar</tspan></text>
+    <text x="348" y="392" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="348" dy="0">contratos e links</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="575" y="300" width="230" height="235" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="575" y="300" width="6" height="235" rx="3" fill="#FF4F87"/>
+    <circle cx="771" cy="334" r="20" fill="#FF4F87" opacity="0.18"/>
+       <text x="771" y="341" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="750" fill="#FF4F87" opacity="1"><tspan x="771" dy="0">3</tspan></text>
+    <text x="603" y="350" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="603" dy="0">Renderizar</tspan></text>
+    <text x="603" y="392" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="603" dy="0">espelho derivado</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="830" y="300" width="230" height="235" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="830" y="300" width="6" height="235" rx="3" fill="#5DD6FF"/>
+    <circle cx="1026" cy="334" r="20" fill="#5DD6FF" opacity="0.18"/>
+       <text x="1026" y="341" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="750" fill="#5DD6FF" opacity="1"><tspan x="1026" dy="0">4</tspan></text>
+    <text x="858" y="350" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="858" dy="0">Publicar</tspan></text>
+    <text x="858" y="392" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="858" dy="0">manifesto e hashes</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="1085" y="300" width="230" height="235" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="1085" y="300" width="6" height="235" rx="3" fill="#FFC966"/>
+    <circle cx="1281" cy="334" r="20" fill="#FFC966" opacity="0.18"/>
+       <text x="1281" y="341" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="750" fill="#FFC966" opacity="1"><tspan x="1281" dy="0">5</tspan></text>
+    <text x="1113" y="350" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="1113" dy="0">Verificar</tspan></text>
+    <text x="1113" y="392" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="1113" dy="0">conteúdo no destino</tspan></text>
+  </g><g opacity="1" filter="url(#shadow)">
+    <rect x="1340" y="300" width="230" height="235" rx="24" fill="#101D2F" stroke="#2C4059" stroke-width="1.5"/>
+    <rect x="1340" y="300" width="6" height="235" rx="3" fill="#66E3C4"/>
+    <circle cx="1536" cy="334" r="20" fill="#66E3C4" opacity="0.18"/>
+       <text x="1536" y="341" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="750" fill="#66E3C4" opacity="1"><tspan x="1536" dy="0">6</tspan></text>
+    <text x="1368" y="350" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#F7FAFC" opacity="1"><tspan x="1368" dy="0">Testar</tspan></text>
+    <text x="1368" y="392" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="450" fill="#AFC0D4" opacity="1"><tspan x="1368" dy="0">runtime e Genie Code</tspan></text>
+  </g><g><circle cx="80" cy="785" r="6" fill="#5DD6FF"/><text x="96" y="791" font-family="Segoe UI, Arial" font-size="15" font-weight="600" fill="#AFC0D4">Mecanismo nativo</text></g><g><circle cx="276" cy="785" r="6" fill="#FF4F87"/><text x="292" y="791" font-family="Segoe UI, Arial" font-size="15" font-weight="600" fill="#AFC0D4">Conteúdo do Hub</text></g><g><circle cx="463" cy="785" r="6" fill="#FFC966"/><text x="479" y="791" font-family="Segoe UI, Arial" font-size="15" font-weight="600" fill="#AFC0D4">Decisão humana</text></g>
+  <line x1="68" y1="838" x2="1532" y2="838" stroke="#2C4059" stroke-width="1"/>
+  <circle cx="80" cy="865" r="5" fill="#FF4F87"/>
+  <text x="96" y="871" text-anchor="start" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#AFC0D4" opacity="1"><tspan x="96" dy="0">HUB .ASSISTANT</tspan></text>
+  <text x="1532" y="871" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="500" fill="#AFC0D4" opacity="1"><tspan x="1532" dy="0">Leitura técnica + impacto visual</tspan></text>
+</svg>
