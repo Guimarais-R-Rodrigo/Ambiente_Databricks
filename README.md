@@ -162,6 +162,34 @@ A resposta depende da camada. **Não existe uma única leitura automática de to
 
 O gate local verifica estrutura e contratos; a comparação de conteúdo verifica equivalência; o smoke verifica execução; os forward tests verificam roteamento de skills. Nenhum deles substitui os demais.
 
+### Estado verificável do gate local
+
+O bloco abaixo é a saída do validador no estado versionado. Ele não é uma
+declaração decorativa: `python tools/validate_assistant.py --conferir-readme`
+reexecuta o gate e reprova se qualquer contagem ficar desatualizada.
+
+```text
+skills             : 13 · 13/13 com as 5 seções estruturais
+prompts            : 16 · 161 campos com guia e contrato humano
+helpers citados    : 81 caminhos verificados
+markdown / links   : 110 arquivos / 172 links relativos
+notebooks / links  : 78 notebooks / 17 links relativos
+pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
+forma da pasta     : 58 conferidas (o módulo tem o nome da pasta)
+contrato de dados  : 60 pares (saída: o que o notebook consome)
+contrato de entrada: 57 pares (entrada: o que o notebook passa)
+saída colada       : 77 notebooks com bloco real, 0 sem
+idioma da docstring: 60 módulos, 0 com docstring em inglês
+normas do molde    : 70 arquivos, 0 violação(ões)
+notebook exercita  : 57 objetos, 0 notebook(s) que só importam
+python (AST)       : 209 arquivos
+instrucoes         : 8116/20000 caracteres
+repo (identidade)  : 774 arquivos varridos no repositório editável/derivado
+repo (links)       : 454 links fora da raiz analisada
+
+APROVADO: 0 falha(s), 0 aviso(s)
+```
+
 ---
 
 ## ❓ Perguntas Frequentes (FAQ)

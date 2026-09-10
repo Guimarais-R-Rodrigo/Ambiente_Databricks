@@ -44,6 +44,9 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 - (Codex) O inventário esperado de extensões `hub_` passou a incluir
   `hub_readmes_visual_assets`, permitindo que publicação e verificação remota
   tratem a nova pasta como parte explícita do pacote.
+- (Codex) Restaurado no README raiz o bloco de estado verificável do gate local,
+  preservando a conferência automática das contagens após a reformulação
+  editorial.
 
 ## 2026-09-09 — Reformulação didática e promoção dos READMEs do ecossistema (Gemini)
 
