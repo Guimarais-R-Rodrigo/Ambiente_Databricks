@@ -5,6 +5,23 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-10 — Variantes visuais dos READMEs para avaliação (Codex)
+
+### Adicionado
+
+- (Codex) Versionados em `READMEs_refeitos/` os rascunhos documentais
+  conservadores e, na subpasta `readmes_viasual_melhorado/`, suas variantes para
+  avaliação visual isolada no Databricks, sem substituir os READMEs ativos.
+
+### Atualizado
+
+- (Codex) As variantes visuais ganharam mapas de leitura, âncoras explícitas,
+  tabelas mais estreitas, diagramas simplificados, inventário integral de
+  snippets, matriz de seleção de prompts e legenda operacional de scripts.
+- (Codex) Referências externas à cópia isolada passaram a ser exibidas como
+  caminhos, preservando apenas links que podem ser navegados dentro do conjunto
+  publicado para revisão.
+
 ## 2026-09-09 — Reformulação didática e promoção dos READMEs do ecossistema (Gemini)
 
 - (Gemini) Reformulados os 5 READMEs principais do projeto com foco didático, humano e sem dicotomia de ambientes (Free x trabalho):
