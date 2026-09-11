@@ -86,10 +86,6 @@ Escolha o utilitário pela pergunta e pelo retorno. Perfilamento descreve; quali
 
 A figura agrupa as perguntas, não promete uma ordem obrigatória de execução. Para a campanha, primeiro conhecemos o schema; depois conferimos a chave. Calcular RFV é uma etapa diferente, que exige definir entidade, valor e corte temporal.
 
-![Tipos de retorno dos scripts](../../../ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/scripts/png/03_panorama_retornos.png)
-
-O panorama distingue dicionário, DataFrame e texto. `checks` pertence ao dicionário de qualidade; não procure esse campo na string produzida por `schema_to_yaml` ou no DataFrame de RFV.
-
 <a id="preparação-comum-a-campanha-sintética"></a>
 
 ### Preparação comum: a campanha sintética
@@ -380,6 +376,12 @@ A primeira célula de código é vizinha de Markdown; a segunda não. Por isso `
 <a id="passo-a-passo-operacional-como-usar-um-script"></a>
 
 ## 🛠️ Passo a Passo Operacional: Como Usar um Script
+
+Antes de executar, identifique o tipo de retorno que o código consumidor precisará interpretar.
+
+![Tipos de retorno dos scripts](../../../ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/scripts/png/03_panorama_retornos.png)
+
+O panorama distingue dicionário, DataFrame Spark, texto e lista. `checks` pertence ao dicionário de qualidade; não procure esse campo na string produzida por `schema_to_yaml` ou no DataFrame de RFV.
 
 <a id="exemplo-prático-de-código"></a>
 

@@ -22,7 +22,7 @@ import subprocess
 from pathlib import Path, PurePosixPath
 from urllib.parse import unquote, urlsplit
 
-from markdown_contract import anchors, markdown_links, python_blocks
+from markdown_contract import anchors, markdown_links, mask_code, python_blocks
 
 ROOT = Path(__file__).resolve().parents[1]
 STAGING = Path('Template_READMEs/sprints_preenchidos')
@@ -110,6 +110,46 @@ def check_links(text: str, source: Path, root: Path, virtual: dict[Path, str]) -
     return errors, count, images
 
 
+def image_layout(text: str, source: Path) -> list[tuple[Path | str, str]]:
+    """Localiza cada imagem real e seu título imediatamente anterior.
+
+    Exclui exemplos de código e comentários HTML. Caminhos absolutos resolvidos
+    permitem comparar o staging com o README de referência, sem comparar os
+    diferentes prefixos relativos. A sequência também faz parte do contrato.
+    """
+    visible = mask_code(text)
+    headings = list(re.finditer(r'^#{1,6}\s+(.+?)\s*$', visible, re.M))
+    result = []
+    for match in markdown_links(text):
+        if not match[0].startswith('!'):
+            continue
+        url = urlsplit(match[1])
+        if url.scheme or url.netloc:
+            asset = match[1]
+        else:
+            asset = (source.parent / unquote(url.path)).resolve()
+        preceding = [h for h in headings if h.start() < match.start()]
+        heading = preceding[-1][1] if preceding else 'TOPO'
+        result.append((asset, heading))
+    return result
+
+
+def check_image_layout(text: str, source: Path, reference_text: str,
+                       reference: Path) -> list[str]:
+    """Cobra as mesmas imagens, ordem e seções dos READMEs atuais do projeto."""
+    actual = image_layout(text, source)
+    expected = image_layout(reference_text, reference)
+    if actual == expected:
+        return []
+    missing = [str(asset) + ' em ' + heading
+               for asset, heading in expected if (asset, heading) not in actual]
+    extra = [str(asset) + ' em ' + heading
+             for asset, heading in actual if (asset, heading) not in expected]
+    return [f'{source}: disposição de imagens diverge do README de referência; '
+            f'ausentes/fora da seção: {missing}; extras/fora da seção: {extra}; '
+            'a ordem e a multiplicidade também devem ser preservadas']
+
+
 def png_contract(path: Path) -> tuple[int, int, str]:
     data = path.read_bytes()
     if data[:8] != b'\x89PNG\r\n\x1a\n' or len(data) < 24 or data[12:16] != b'IHDR':
@@ -194,6 +234,9 @@ def audit(root: Path = ROOT) -> dict:
     images = set()
     for d in docs:
         original = (root / d['draft']).read_text(encoding='utf-8')
+        errors.extend(check_image_layout(original, root / d['draft'],
+                                         (root / d['target']).read_text(encoding='utf-8'),
+                                         root / d['target']))
         for source, text, overlay in [(root / d['draft'], original, {}), (root / d['target'], virtual[(root / d['target']).resolve()], virtual)]:
             e, n, pngs = check_links(text, source, root, overlay)
             errors.extend(e); references += n; images.update(pngs)

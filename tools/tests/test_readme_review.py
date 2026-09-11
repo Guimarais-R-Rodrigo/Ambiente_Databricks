@@ -48,6 +48,24 @@ class ReviewTests(unittest.TestCase):
         self.assertEqual(result['errors'],[])
         self.assertEqual(result['documents'],10)
         self.assertEqual(result['unique_images'],23)
+    def test_layout_rejects_missing_image(self):
+        r=Path('/repo')
+        errors=review.check_image_layout('## Contexto\n',r/'draft/README.md',
+            '## Contexto\n![Fluxo](assets/flow.png)\n',r/'README.md')
+        self.assertTrue(errors)
+    def test_layout_rejects_wrong_section(self):
+        r=Path('/repo')
+        errors=review.check_image_layout('## Catalogo\n![Fluxo](../assets/flow.png)\n',
+            r/'draft/README.md','## Operacao\n![Fluxo](assets/flow.png)\n',r/'README.md')
+        self.assertTrue(errors)
+    def test_layout_accepts_rebased_path_and_ignores_code(self):
+        r=Path('/repo')
+        text='## Contexto\n![Fluxo](../assets/flow.png)\n```markdown\n![Exemplo](fake.png)\n```\n'
+        self.assertEqual(review.check_image_layout(text,r/'draft/README.md',
+            '## Contexto\n![Fluxo](assets/flow.png)\n',r/'README.md'),[])
+    def test_layout_rejects_wrong_order(self):
+        r=Path('/repo');a='## Uso\n![A](a.png)\n![B](b.png)\n';b='## Uso\n![B](b.png)\n![A](a.png)\n'
+        self.assertTrue(review.check_image_layout(a,r/'README.md',b,r/'README.md'))
     def test_mapping_targets_unique(self):
         docs=review.load_mapping();self.assertEqual(len({d['target'] for d in docs}),10)
     def test_rebase_keeps_fenced_examples(self):

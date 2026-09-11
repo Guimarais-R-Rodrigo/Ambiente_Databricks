@@ -52,6 +52,10 @@ O [mapping de destinos](mapping.json) permite converter os caminhos sem
 adivinhar quantos níveis subir. Links escritos em exemplos de código continuam
 representando o local explicitamente descrito no exemplo.
 
+O [índice de revisão](README.md) abre os dez candidatos e indica a seção de
+cada imagem. O gate também compara presença, ordem e posição com os READMEs
+atuais, além de conferir caminhos e integridade dos PNGs.
+
 ## Como conferir antes de promover
 
 Na raiz do repositório, execute:

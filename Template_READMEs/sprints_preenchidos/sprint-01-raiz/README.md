@@ -201,6 +201,10 @@ Uma correção em `ambiente_fonte/.assistant/README.md` exige validação de lin
 
 **Contexto** é a informação disponível para a tarefa. Não existe leitura automática de toda a pasta `.assistant`.
 
+![Fontes de contexto aplicáveis à tarefa na Genie Code](../../../ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/assistant/png/03_contexto_e_execucao.png)
+
+*Leitura da figura: código e histórico, metadados permitidos, instruções aplicáveis e skills fornecem contexto à tarefa. Relevância e seleção explícita são formas distintas de fornecer esse contexto; a pasta existir não carrega todo o seu conteúdo.*
+
 **Sem contexto:** “a campanha está boa?” — faltam tabela, chave e período; a resposta correta deve pedir esses dados, não inventá-los.
 
 **Com contexto:** tabela anexada, `event_id`, `dt_evento` de janeiro a junho, somente leitura. As ambiguidades de recurso e tempo diminuem; as de negócio (o que é “boa”) continuam suas.
@@ -344,8 +348,8 @@ normas do molde    : 70 arquivos, 0 violação(ões)
 notebook exercita  : 57 objetos, 0 notebook(s) que só importam
 python (AST)       : 209 arquivos
 instrucoes         : 8116/20000 caracteres
-repo (identidade)  : 888 arquivos varridos no repositório editável/derivado
-repo (links)       : 789 links fora da raiz analisada
+repo (identidade)  : 889 arquivos varridos no repositório editável/derivado
+repo (links)       : 804 links fora da raiz analisada
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
 <!-- REVIEW_GATE_END -->

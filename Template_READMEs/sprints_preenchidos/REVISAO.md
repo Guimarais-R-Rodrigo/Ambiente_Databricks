@@ -32,6 +32,27 @@ Na raiz, somente as linhas numéricas do gate são atualizadas mecanicamente.
 | Notas ao autor e 18 px | metatexto removido; 18 px exatos a 720 px | copy.json/manifest e cálculo |
 | Links históricos fora dos rascunhos | protótipos locais identificados como não versionados | sem arquivos fictícios ou supressão global do gate |
 
+## Errata de entrega e disposição das imagens
+
+Na primeira entrega, as correções estavam apenas na branch de revisão; os
+rascunhos da `main` ainda usavam caminhos relativos aos futuros destinos e,
+por isso, não exibiam as imagens. Esta entrega atualiza os próprios rascunhos,
+sem promover o conteúdo para os READMEs oficiais.
+
+A comparação seção a seção também encontrou duas diferenças que a checagem
+anterior de existência/hash não detectava: o guia da raiz não mostrava o
+fluxo de contexto na seção correspondente, e o panorama de retornos dos scripts
+estava no catálogo, em vez do passo a passo operacional. Ambos foram corrigidos.
+
+O gate agora compara as imagens, sua ordem e a seção imediatamente anterior
+com o README atual de referência. Quatro testes adicionais cobrem ausência,
+seção incorreta, ordem incorreta e caminhos relativos com exemplos em código.
+O índice [README desta pasta](README.md) oferece acesso direto aos dez candidatos.
+São 31 inserções reais, provenientes dos mesmos 23 PNGs aprovados; nenhum PNG
+foi alterado. O preview offline desta correção carregou as 31 inserções nos
+dez guias; a resolução dos caminhos foi conferida separadamente pelo gate.
+A promoção oficial e a publicação no workspace continuam pendentes.
+
 ## Imagens e apresentação
 
 As imagens são os PNGs aprovados já existentes. Foram inspecionados os 21 diagramas
@@ -39,8 +60,9 @@ por família e os dois cabeçalhos em largura reduzida de 720 px. As referência
 foram inseridas nas seções conceituais correspondentes, com texto antes/depois,
 alt e âncoras explícitas. Os hashes/dimensões são confrontados com os manifestos
 existentes; nenhum hash foi relaxado e nenhuma nova arte foi gerada.
-O snapshot também foi renderizado em HTML local: 30 ocorrências de imagem
-carregaram a partir dos 23 PNGs. O preview usa os bytes incorporados em memória;
+Na primeira revisão, o snapshot foi renderizado em HTML local: 30 ocorrências
+de imagem carregaram a partir dos 23 PNGs. Esse teste não detectava omissão
+em relação ao README de referência; a errata acima corrige essa lacuna. O preview usa os bytes incorporados em memória;
 a navegação de URLs do navegador local é bloqueada. A resolução física e virtual
 dos caminhos é verificada separadamente pelo gate. Isto não é preview Databricks.
 
@@ -60,7 +82,7 @@ python tools/tests/test_readme_examples.py
 
 O teste de exemplos lê os blocos Python dos próprios READMEs. A suíte básica
 executa 24 casos portáveis e informa 14 casos Spark ignorados, sem considerar
-skip como execução bem-sucedida. Os guardas de revisão possuem 20 testes.
+skip como execução bem-sucedida. Os guardas de revisão possuem 24 testes, incluindo os quatro de disposição de imagens.
 
 O workflow `readme-examples.yml` instala PySpark 4.0.1 somente no runner Linux,
 com Python 3.11/Java 17, e executa `test_readme_examples.py --spark`. O resultado

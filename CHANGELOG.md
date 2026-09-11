@@ -5,6 +5,29 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-11 — Imagens nos rascunhos originais e paridade de disposição (Codex)
+
+### Corrigido
+
+- (Codex) A primeira entrega ficou apenas na branch de revisão, deixando os
+  rascunhos da `main` com caminhos quebrados. As versões corrigidas passam a
+  ocupar os próprios arquivos em `Template_READMEs/sprints_preenchidos/`.
+- (Codex) Diagrama de contexto reinserido na seção correspondente do candidato
+  da raiz; panorama de retornos dos scripts movido do catálogo para o passo
+  a passo operacional, como nos READMEs atuais. PNGs aprovados preservados.
+
+### Adicionado
+
+- (Codex) Índice renderizado da pasta de candidatos e guarda que compara
+  presença, sequência e seção das imagens com os READMEs de referência;
+  quatro regressões para impedir novo falso positivo de validação visual.
+
+### Limites
+
+- (Codex) Sem promoção da redação candidata, edição de algoritmos, render do
+  simulado ou publicação no Databricks. O README oficial da raiz recebe
+  somente sincronização mecânica das contagens do gate.
+
 ## 2026-09-11 — Correção dos READMEs candidatos após auditoria (ChatGPT)
 
 ### Corrigido
