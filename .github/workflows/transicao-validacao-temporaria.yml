@@ -1,26 +1,99 @@
-name: Snapshot isolado para transicao
+name: Validacao isolada do kit de transicao
 on:
   push:
     branches: ['chatgpt/transicao-trabalho-2026-09-11']
     paths: ['.github/workflows/transicao-validacao-temporaria.yml']
 permissions:
-  contents: read
+  contents: write
 jobs:
-  snapshot:
+  validar:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      SPARK_LOCAL_IP: '127.0.0.1'
     steps:
       - uses: actions/checkout@v4
         with:
           ref: 704b3bb801834aa4c0ca2c3a107022b061d62032
           persist-credentials: false
-      - run: |
-          git archive --format=zip --output="$RUNNER_TEMP/repository.zip" HEAD
-          git rev-parse HEAD HEAD^{tree} > "$RUNNER_TEMP/identity.txt"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/setup-python@v5
         with:
-          name: transicao-source
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Reconstruir apenas a arvore conferida
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import base64, bz2, hashlib, json, os, pathlib, subprocess, urllib.request
+          repository='Guimarais-R-Rodrigo/Ambiente_Databricks'
+          assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip() == '704b3bb801834aa4c0ca2c3a107022b061d62032'
+          def get(sha):
+              req=urllib.request.Request(f'https://api.github.com/repos/{repository}/git/blobs/{sha}',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
+              with urllib.request.urlopen(req,timeout=60) as response: obj=json.load(response)
+              data=base64.b64decode(obj['content'])
+              assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest() == sha
+              return data
+          first=get('f0dd18320cdb3ab60f2b85fb413a19238b60621e')
+          # Duas correcoes de transcricao do transporte, com hash esperado por bloco.
+          second_text=base64.b64encode(get('aa22bd683d1ee9cc3af179b6c7d81ef4c441b3f1')).decode()
+          assert second_text.count('beovqq9') == 1
+          second=base64.b64decode(second_text.replace('beovqq9','beovq9')+'8',validate=True)
+          assert hashlib.sha1(b'blob '+str(len(second)).encode()+b'\0'+second).hexdigest() == 'b375595862b8d857ce0910ddefeff32888ae0840'
+          third_text=base64.b64encode(get('749f809f22e341ddc83706a704356419fa896877')).decode()
+          assert third_text.count('FqYGkU59') == 1
+          third=base64.b64decode(third_text.replace('FqYGkU59','FqYGk59')+'B',validate=True)
+          assert hashlib.sha1(b'blob '+str(len(third)).encode()+b'\0'+third).hexdigest() == '438cbf96e5b32179be61b430aa52cb82087023d1'
+          patch=bz2.decompress(first+second+third)
+          assert hashlib.sha256(patch).hexdigest() == 'b08f69bb7dfc5042225370e4dd87a8236bb650b652f3843899e4b6c9e487169f'
+          path=pathlib.Path(os.environ['RUNNER_TEMP'])/'transicao.patch';path.write_bytes(patch)
+          allowed={'.claude/skills/replicar-trabalho/SKILL.md','.github/workflows/kit-transicao-trabalho.yml','CHANGELOG.md','README.md','docs/playbooks/README.md','docs/playbooks/checklist-replicacao.md','docs/playbooks/replicacao-trabalho.md','docs/playbooks/testes-genie-trabalho.md','docs/testes/README.md','tools/aceite_trabalho.py','tools/bundle_implantacao.py','tools/ci_local.py','tools/kit_transicao_trabalho.py','tools/tests/test_transicao_trabalho.py'}
+          stats=subprocess.check_output(['git','apply','--numstat',str(path)],text=True)
+          assert {line.split('\t',2)[2] for line in stats.splitlines()} == allowed
+          subprocess.run(['git','apply','--check','--index','--unidiff-zero',str(path)],check=True)
+          subprocess.run(['git','apply','--index','--unidiff-zero',str(path)],check=True)
+          assert subprocess.check_output(['git','write-tree'],text=True).strip() == '1d39c7e4e91d38f7c36364a27939a1fb8b43ed00'
+          print('Escopo e arvore exata conferidos; produto preservado.')
+          PY
+      - name: Dependencias somente do runner
+        run: python -m pip install -r tools/requirements-dev.txt 'pyspark==4.0.1'
+      - name: Gate local e casos Spark sinteticos
+        shell: bash
+        run: |
+          set -o pipefail
+          python tools/ci_local.py --verbose 2>&1 | tee "$RUNNER_TEMP/transicao-gate.log"
+          python tools/tests/test_transicao_trabalho.py --spark -v 2>&1 | tee "$RUNNER_TEMP/transicao-spark.log"
+          git diff --cached --check
+      - name: Preparar blobs validados sem criar commit nem mover branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import base64, hashlib, json, os, pathlib, subprocess, urllib.request
+          entries=[]
+          for name in subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines():
+              data=subprocess.check_output(['git','show',':'+name])
+              expected=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+              req=urllib.request.Request('https://api.github.com/repos/Guimarais-R-Rodrigo/Ambiente_Databricks/git/blobs',data=json.dumps({'content':base64.b64encode(data).decode(),'encoding':'base64'}).encode(),method='POST',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'})
+              with urllib.request.urlopen(req,timeout=60) as response: obj=json.load(response)
+              assert obj['sha'] == expected
+              entries.append({'path':name,'mode':'100644','type':'blob','sha':expected})
+          result={'tree':subprocess.check_output(['git','write-tree'],text=True).strip(),'base':'704b3bb801834aa4c0ca2c3a107022b061d62032','files':entries,'gate':'passed','spark_tests':'passed','run_id':os.environ['GITHUB_RUN_ID']}
+          pathlib.Path(os.environ['RUNNER_TEMP'],'transicao-blobs.json').write_text(json.dumps(result,indent=2))
+          print(json.dumps(result,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: transicao-validation
           path: |
-            ${{ runner.temp }}/repository.zip
-            ${{ runner.temp }}/identity.txt
-          retention-days: 1
+            ${{ runner.temp }}/transicao-gate.log
+            ${{ runner.temp }}/transicao-spark.log
+            ${{ runner.temp }}/transicao-blobs.json
+          retention-days: 7
