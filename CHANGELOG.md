@@ -5,6 +5,22 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-11 — Limpeza de pastas acessórias; simulado eleito (OpenCode)
+
+### Removido
+
+- (OpenCode) `Template_READMEs/`, `READMEs_refeitos/`, `Ajustes_Codex/`,
+  `GUIA_PENDENCIAS_E_CONFERENCIAS.md` e
+  `PLANO_TRANSFERENCIA_E_TESTES_DATABRICKS_TRABALHO.md`.
+- (OpenCode) Ferramentas e workflow que só existiam para revisar os rascunhos
+  (`review_readmes.py`, testes e `.github/workflows/readme-examples.yml`).
+
+### Atualizado
+
+- (OpenCode) `CLAUDE.md`, `fonte-de-verdade.md` e `.gitattributes` deixam de
+  tratar `Ajustes_Codex/` como camada viva. O estado escolhido permanece o
+  `Novo_Ambiente_Simulado/` vigente (espelho de `ambiente_fonte/`).
+
 ## 2026-09-11 — Imagens nos rascunhos originais e paridade de disposição (Codex)
 
 ### Corrigido

@@ -7,11 +7,7 @@ esconde os outros e obriga a rodar de novo para cada um:
 
 1. `validate_assistant.py`  — forma, links, contratos, identidade e higiene;
 2. `hub_snippets/tests/test_core.py`   — regressões da biblioteca;
-3. `tools/tests/test_tool_guards.py`   — guardas das próprias ferramentas;
-4. revisão dos READMEs, guardas de revisão e exemplos portáveis.
-
-Casos Spark são explicitamente ignorados no gate básico e executados apenas
-no workflow separado de Spark local ou via --spark em ambiente apropriado.
+3. `tools/tests/test_tool_guards.py`   — guardas das próprias ferramentas.
 
 O que este gate **não** faz, por decisão do plano consolidado: nada que precise
 de credencial, rede ou runtime Databricks. Publicação, verify remoto, smoke em
@@ -63,9 +59,6 @@ ETAPAS = [
         "guardas de tools/",
         [sys.executable, "tools/tests/test_tool_guards.py"],
     ),
-    ("readmes", "links, destinos, imagens e contratos dos rascunhos", [sys.executable, "tools/review_readmes.py"]),
-    ("guardas_readmes", "regressoes dos mecanismos de revisao", [sys.executable, "tools/tests/test_readme_review.py"]),
-    ("exemplos_readmes", "exemplos portaveis efetivamente escritos no Markdown", [sys.executable, "tools/tests/test_readme_examples.py"]),
 ]
 
 

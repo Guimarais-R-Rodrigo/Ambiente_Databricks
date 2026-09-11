@@ -11,10 +11,6 @@
 
 * text=auto eol=lf
 
-# Material congelado (política de referência read-only, ver .claude/rules/fonte-de-verdade.md):
-# nunca transformar. O conteúdo versionado permanece exatamente como foi entregue.
-Ajustes_Codex/** -text
-
 # Binários: nunca tratar como texto, mesmo que a heurística erre.
 *.zip   binary
 *.gz    binary

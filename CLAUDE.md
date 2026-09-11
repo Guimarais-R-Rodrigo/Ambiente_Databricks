@@ -25,7 +25,7 @@ Escala planejada: pessoal → squad → missão.
 | Produto | `ambiente_fonte/` | ecossistema `.assistant` que será implantado |
 | Derivada | `Novo_Ambiente_Simulado/` | espelho renderizado; **nunca editar à mão** |
 | Operacional | workspaces Databricks (Free e trabalho) | cópias publicadas; nunca canônicas |
-| Congeladas | `Ambiente_Antigo/` (local-only), `Ajustes_Codex/` | referência histórica read-only |
+| Congeladas | `Ambiente_Antigo/` (local-only) | referência histórica read-only |
 
 ## Decisões ativas
 
