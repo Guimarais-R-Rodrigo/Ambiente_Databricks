@@ -17,7 +17,11 @@ sys.path.insert(0, str(TOOLS))
 import validate_assistant as validator  # noqa: E402
 import bundle_para_auditoria as audit_bundle  # noqa: E402
 import publicar_free as publisher  # noqa: E402
-from project_policy import EXPECTED_SKILL_NAMES, validate_username_component  # noqa: E402
+from project_policy import (  # noqa: E402
+    EXPECTED_SKILL_NAMES,
+    PERSONAL_RE,
+    validate_username_component,
+)
 
 
 class TemporaryObject(unittest.TestCase):
@@ -92,6 +96,42 @@ class NormGuardTests(TemporaryObject):
 
 
 class StructuralGuardTests(unittest.TestCase):
+    def test_personal_identifier_token_has_alphanumeric_boundaries(self) -> None:
+        token = "c" + "123456"
+        positives = (
+            token,
+            f"{token}@example.com",
+            f"usuario+{token}@example.com",
+            f"/Users/{token}/projeto",
+            f"C:\\prefixo\\{token}\\projeto",
+            f"prefixo:{token}",
+        )
+        for text in positives:
+            with self.subTest(text=text):
+                self.assertIsNotNone(PERSONAL_RE.search(text))
+
+        hashes_or_larger_tokens = (
+            "a" * 20 + token + "b" * 37,
+            token + "a" * 57,
+            "a" * 57 + token,
+            "x" + token,
+            token + "7",
+        )
+        for text in hashes_or_larger_tokens:
+            with self.subTest(text=text):
+                self.assertIsNone(PERSONAL_RE.search(text))
+
+        legacy_patterns = (
+            "corp" + ".caixa",
+            "caixa" + ".gov" + ".br",
+            "guimarais" + ".r.rodrigo@",
+            "C:\\Users\\" + "Rodrigo",
+            "/Users/" + "rodri",
+        )
+        for text in legacy_patterns:
+            with self.subTest(text=text):
+                self.assertIsNotNone(PERSONAL_RE.search(text))
+
     def test_renderer_rejects_path_traversal(self) -> None:
         for value in ("..", "..\\..\\escape", "a/b", "pessoa@example.com"):
             with self.subTest(value=value), self.assertRaises(ValueError):
@@ -486,6 +526,40 @@ class ReviewRegressionTests(unittest.TestCase):
 
 
 class RepoInventoryTests(unittest.TestCase):
+    def test_node_modules_is_ignored_only_when_it_is_an_extra(self):
+        import subprocess
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            subprocess.run(["git", "init", "-q", td], check=True)
+            (root / ".gitignore").write_text("node_modules/\n", encoding="utf-8")
+
+            tracked = root / "vendor" / "node_modules" / "tracked.md"
+            tracked.parent.mkdir(parents=True)
+            tracked.write_text("identificador " + "c" + "123456", encoding="utf-8")
+            subprocess.run(["git", "add", ".gitignore"], cwd=root, check=True)
+            subprocess.run(
+                ["git", "add", "-f", tracked.relative_to(root).as_posix()],
+                cwd=root,
+                check=True,
+            )
+
+            ignored = root / "node_modules" / "ignored.md"
+            ignored.parent.mkdir()
+            ignored.write_text("[bad](missing.md)", encoding="utf-8")
+            (root / "guide.md").write_text("ok", encoding="utf-8")
+
+            with mock.patch.object(validator, "REPO_ROOT", root):
+                extra_problems: list[str] = []
+                self.assertEqual(validator.check_worktree_hygiene(extra_problems), 1)
+                self.assertEqual(extra_problems, [])
+
+                tracked_problems: list[str] = []
+                self.assertGreater(validator.check_repo_corporate(tracked_problems), 0)
+                self.assertTrue(
+                    any("tracked.md" in problem for problem in tracked_problems),
+                    tracked_problems,
+                )
+
     def test_ignored_guide_does_not_change_versioned_count_but_is_checked(self):
         import subprocess
         import repo_inventory

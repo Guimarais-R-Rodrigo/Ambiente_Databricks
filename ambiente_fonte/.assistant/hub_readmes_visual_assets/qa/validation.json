@@ -1,0 +1,117 @@
+{
+  "status": "passed",
+  "scope": "all",
+  "checks": 8154,
+  "failures": [],
+  "measurements": [
+    {
+      "id": "raiz.01_mapa_ecossistema",
+      "min_effective_px": 14.4,
+      "min_contrast": 4.863721947388273
+    },
+    {
+      "id": "raiz.02_arquitetura_ecossistema",
+      "min_effective_px": 14.4,
+      "min_contrast": 4.863721947388273
+    },
+    {
+      "id": "raiz.03_ciclo_de_vida",
+      "min_effective_px": 14.4,
+      "min_contrast": 7.9735783719832565
+    },
+    {
+      "id": "assistant.01_escolha_ponto_de_partida",
+      "min_effective_px": 14.4,
+      "min_contrast": 4.863721947388273
+    },
+    {
+      "id": "assistant.02_arquitetura_de_uso",
+      "min_effective_px": 14.4,
+      "min_contrast": 7.9735783719832565
+    },
+    {
+      "id": "assistant.03_contexto_e_execucao",
+      "min_effective_px": 14.4,
+      "min_contrast": 4.863721947388273
+    },
+    {
+      "id": "snippets.01_anatomia_pasta",
+      "min_effective_px": 14.4,
+      "min_contrast": 4.863721947388273
+    },
+    {
+      "id": "snippets.02_mapa_categorias",
+      "min_effective_px": 14.4,
+      "min_contrast": 7.9735783719832565
+    },
+    {
+      "id": "snippets.03_fluxo_operacional",
+      "min_effective_px": 14.4,
+      "min_contrast": 7.9735783719832565
+    },
+    {
+      "id": "snippets.04_contrato_de_reuso",
+      "min_effective_px": 14.4,
+      "min_contrast": 7.9735783719832565
+    },
+    {
+      "id": "scripts.01_anatomia_pasta",
+      "min_effective_px": 14.4,
+      "min_contrast": 7.9735783719832565
+    },
+    {
+      "id": "scripts.02_catalogo_diagnosticos",
+      "min_effective_px": 14.4,
+      "min_contrast": 7.9735783719832565
+    },
+    {
+      "id": "scripts.03_panorama_retornos",
+      "min_effective_px": 14.4,
+      "min_contrast": 5.2980288317296464
+    },
+    {
+      "id": "scripts.04_diagnostico_vs_enforcement",
+      "min_effective_px": 14.4,
+      "min_contrast": 4.863721947388273
+    },
+    {
+      "id": "scripts.05_veredito_data_quality",
+      "min_effective_px": 14.4,
+      "min_contrast": 5.345776394262448
+    },
+    {
+      "id": "skills.01_descoberta_e_selecao",
+      "min_effective_px": 14.4,
+      "min_contrast": 7.9735783719832565
+    },
+    {
+      "id": "skills.02_skill_helpers_runtime",
+      "min_effective_px": 14.4,
+      "min_contrast": 7.9735783719832565
+    },
+    {
+      "id": "skills.03_anatomia_skill",
+      "min_effective_px": 14.4,
+      "min_contrast": 7.9735783719832565
+    },
+    {
+      "id": "prompts.01_mapa_familias",
+      "min_effective_px": 14.4,
+      "min_contrast": 5.2980288317296464
+    },
+    {
+      "id": "prompts.02_fluxo_operacional",
+      "min_effective_px": 14.4,
+      "min_contrast": 4.863721947388273
+    },
+    {
+      "id": "prompts.03_anatomia_briefing",
+      "min_effective_px": 14.4,
+      "min_contrast": 4.863721947388273
+    }
+  ],
+  "limits": [
+    "A geometria automatizada não cobre todas as curvas e silhuetas; revisão visual independente complementa os checks.",
+    "Não é homologação de runtime nem teste conversacional da Genie Code."
+  ]
+}

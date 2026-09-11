@@ -1,3 +1,5 @@
+![CRM — Missão Modelos Analíticos CRM](ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/png/cabecalho_crm.png)
+
 # Ecossistema/Hub `.assistant` para Databricks Genie Code voltado para Machine Learning
 
 > Um ambiente integrado de governança, biblioteca algorítmica e inteligência contextual que ajuda a Genie Code e a equipe a trabalhar com métodos, componentes e critérios de revisão consistentes.
@@ -46,14 +48,15 @@ O Hub não substitui julgamento técnico, permissões ou testes. Ele organiza o 
 ---
 
 <a id="-o-que-tem-neste-ambiente-e-como-ele-ajuda-na-rotina-de-trabalho"></a>
+<a id="o-que-tem-neste-ambiente-e-como-ele-ajuda-na-rotina-de-trabalho"></a>
 
 ## 🧰 O que tem neste ambiente e como ele ajuda na rotina de trabalho?
 
 O ecossistema é dividido em cinco componentes modulares que cobrem diferentes responsabilidades do ciclo analítico:
 
-![Mapa visual dos cinco componentes do ecossistema .assistant](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/01_mapa_ecossistema.png)
+![Mapa do ecossistema .assistant separado entre contexto e método, código e diagnóstico, com cinco componentes e suas formas de uso.](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/01_mapa_ecossistema.png)
 
-*Leitura da figura: as Agent Skills usam um mecanismo reconhecido pela plataforma; prompts, snippets, scripts e padrões são extensões customizadas do Hub.*
+*Leitura da figura: as ligações pontilhadas mostram organização, não execução. Agent Skills usam um mecanismo nativo com conteúdo do Hub; cada componente tem sua própria forma de uso.*
 
 ### 🧠 1. Agent Skills (`skills/`)
 
@@ -69,9 +72,9 @@ O ecossistema é dividido em cinco componentes modulares que cobrem diferentes r
 
 ### ⚡ 3. Hub Scripts (`hub_scripts/`)
 
-- **O que são:** utilitários de diagnóstico importáveis.
+- **O que são:** utilitários importáveis de inspeção, transformação analítica e governança técnica.
 - **Como ajudam:** respondem a perguntas operacionais sobre qualidade, perfil, drift, RFV, schema, nomenclatura e documentação.
-- **Como usar:** configurar o caminho Python, importar a função e executar explicitamente. O script retorna evidência; o notebook ou a tarefa decide alertar, interromper ou prosseguir.
+- **Como usar:** configurar o caminho Python, importar a função e executar explicitamente. Cada utilitário tem seu contrato de retorno: diagnóstico, DataFrame, texto ou lista de violações. Quando houver uma decisão operacional, o notebook ou a tarefa define se deve alertar, interromper ou prosseguir.
 
 ### 📝 4. Hub Prompts (`hub_prompts/`)
 
@@ -86,21 +89,28 @@ O ecossistema é dividido em cinco componentes modulares que cobrem diferentes r
 - **Como usar:** consultar manualmente ou fornecer como contexto ao criar conteúdo. A skill `@hub-ml-criar-objeto` pode orientar a aplicação desses moldes.
 
 > **INFRAESTRUTURA EDITORIAL DO HUB.** A pasta
-> `hub_readmes_visual_assets/` mantém as fontes SVG e os PNGs destes guias. Ela
+> `hub_readmes_visual_assets/` mantém os diagramas e os cabeçalhos compartilhados
+> de CRM e Squad, com fontes de composição e PNGs. Ela
 > não é um sexto componente funcional, não é nativa da Databricks e não fornece
 > contexto automaticamente à Genie Code.
+
+Os diagramas ficam em `readmes/<familia>/`; os cabeçalhos, em `headers/`.
+O PNG de CRM serve aos READMEs e aos notebooks gerais; o da Squad identifica
+notebooks específicos, sem empilhar os dois banners. A origem raster, a camada
+tipográfica e os caminhos de uso estão no [guia de assets](ambiente_fonte/.assistant/hub_readmes_visual_assets/README.md).
 
 ---
 
 <a id="️-arquitetura-completa-do-ecossistema"></a>
+<a id="arquitetura-completa-do-ecossistema"></a>
 
 ## 🏛️ Arquitetura Completa do Ecossistema
 
 O diagrama abaixo mostra como o repositório, o workspace e o runtime se relacionam sem confundir contexto da IA com importação de código:
 
-![Arquitetura do repositório ao runtime Databricks](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/02_arquitetura_ecossistema.png)
+![Corte arquitetural entre fonte versionada, workspace, contexto da Genie Code, notebook e runtime.](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/02_arquitetura_ecossistema.png)
 
-*Leitura da figura: a fonte versionada é publicada no workspace, contextualiza a Genie Code e chega ao runtime somente por código revisado.*
+*Leitura da figura: a publicação torna os arquivos disponíveis no workspace. O plano de contexto e o plano de execução são distintos: helpers podem ser usados diretamente pelo notebook, sem passar pela conversa.*
 
 > **Leitura do fluxo:** o repositório controla a origem; o workspace disponibiliza
 > o conteúdo; a Genie Code usa apenas as camadas de contexto aplicáveis; o
@@ -113,17 +123,24 @@ O diagrama abaixo mostra como o repositório, o workspace e o runtime se relacio
 - `hub_snippets` e `hub_scripts` pertencem ao runtime Python; estar dentro de `.assistant` não os coloca automaticamente no `sys.path`.
 - Evidência local, conteúdo promovido e execução no runtime são gates diferentes.
 
+<a id="ciclo-de-vida-do-projeto"></a>
+
 ### Ciclo de vida do projeto
 
-![Ciclo de vida de uma mudança no ecossistema](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/03_ciclo_de_vida.png)
+![Pista de promoção com sete gates e retornos de correção para a etapa de edição.](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/03_ciclo_de_vida.png)
 
-*Leitura da figura: editar, validar, renderizar, publicar, verificar e testar são gates complementares.*
+*Leitura da figura: editar, validar, renderizar, publicar e verificar, testar, registrar e promover são sete gates. Publicação e conferência pertencem ao mesmo gate; qualquer falha exige correção na fonte antes de prosseguir.*
+
+O registro associa a mudança às evidências e à versão correspondente. A promoção
+ao destino autorizado é uma ação controlada, não uma continuação automática de
+uma execução que terminou sem erro.
 
 `ambiente_fonte/` é a fonte editável. `Novo_Ambiente_Simulado/` é derivado por ferramenta e não deve ser alterado manualmente. Auditorias, testes e orientações operacionais ficam na documentação interna do projeto.
 
 ---
 
 <a id="-como-o-contexto-chega-ao-genie-code"></a>
+<a id="como-o-contexto-chega-ao-genie-code"></a>
 
 ## 🔄 Como o Contexto chega ao Genie Code?
 
@@ -131,9 +148,9 @@ Uma pergunta importante é: *“Como a Genie Code sabe que essas orientações e
 
 A resposta depende da camada. **Não existe uma única leitura automática de toda a pasta `.assistant`.**
 
-![Fluxo de contexto entre a pessoa, a Genie Code e o runtime](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/04_fluxo_de_contexto.png)
+![Confluência de fontes de contexto suportadas para a Genie Code e suas saídas possíveis.](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/assistant/png/03_contexto_e_execucao.png)
 
-*Leitura da figura: a plataforma organiza a proposta; revisão, aprovação e aceitação do resultado permanecem humanas.*
+*Leitura da figura: código e histórico, metadados permitidos, instruções aplicáveis e recursos fornecidos à tarefa convergem para a Genie Code. As ações respeitam o escopo e a política de aprovação configurada; aceitar o resultado continua exigindo revisão técnica.*
 
 ### Explicação Passo a Passo
 
@@ -143,6 +160,11 @@ A resposta depende da camada. **Não existe uma única leitura automática de to
 4. **Plano e geração:** a skill orienta método, riscos, recursos e formato. Ela pode recomendar um helper, mas não o importa automaticamente.
 5. **Execução no runtime:** o notebook configura o caminho que contém os pacotes, importa a função e executa conforme dependências e permissões.
 6. **Revisão:** a pessoa verifica código, dados, custo, resultado e qualquer ação persistente antes de aceitar a entrega.
+
+Esses itens explicam responsabilidades, não uma ordem rígida de carregamento.
+Para uma resposta sem execução, declare isso no pedido. A aprovação de ferramentas
+pode ser individual ou previamente configurada; ela não substitui controles de
+acesso nem comprova a correção analítica. Veja a [documentação do modo agente](https://docs.databricks.com/aws/en/genie-code/agent-mode).
 
 > **Dica:** após editar uma skill, teste em uma nova conversa. Se a versão anterior continuar aparecendo, faça uma atualização completa da página.
 
@@ -172,7 +194,7 @@ reexecuta o gate e reprova se qualquer contagem ficar desatualizada.
 skills             : 13 · 13/13 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 81 caminhos verificados
-markdown / links   : 110 arquivos / 172 links relativos
+markdown / links   : 113 arquivos / 212 links relativos
 notebooks / links  : 78 notebooks / 17 links relativos
 pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
 forma da pasta     : 58 conferidas (o módulo tem o nome da pasta)
@@ -185,7 +207,7 @@ notebook exercita  : 57 objetos, 0 notebook(s) que só importam
 python (AST)       : 209 arquivos
 instrucoes         : 8116/20000 caracteres
 repo (identidade)  : 774 arquivos varridos no repositório editável/derivado
-repo (links)       : 454 links fora da raiz analisada
+repo (links)       : 469 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
@@ -220,7 +242,7 @@ Alguns helpers possuem dependências opcionais. Em compute serverless, elas pode
 - **Skill:** metodologia usada pela Genie Code; mecanismo nativo com conteúdo `hub-ml-*` do projeto.
 - **Prompt:** briefing que você preenche e fornece manualmente.
 - **Snippet:** função ou classe importável para compor seu código.
-- **Script:** diagnóstico autocontido chamado explicitamente.
+- **Script:** utilitário autocontido chamado explicitamente, com contrato próprio de saída.
 
 ### 4. Como o ecossistema ajuda a mitigar leakage e erros analíticos?
 

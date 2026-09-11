@@ -25,12 +25,18 @@ Rótulos e legendas acompanham as cores; cor isolada nunca define significado.
 - Cartões usam frases curtas, não parágrafos reduzidos.
 - Setas representam dependência ou sequência real.
 - O corpo do README contém o equivalente textual da informação essencial.
-- PNG é a saída publicada; SVG é a fonte editável.
+- PNG é a saída publicada; SVG é gerado pelo código de composição, com Inter em paths.
+- Arquétipos variam conforme a pergunta: atlas, corte, pista, dossiê, jornada,
+  ponte, bancada ou storyboard. Não repetir caixas e setas como solução universal.
+- Cabeçalhos usam arte raster decorativa e texto exato; não herdam a legenda
+  operacional dos diagramas. O brilho fica longe da região de leitura.
 
 ## Regeneração
 
 Execute com o Node.js que tenha o pacote `sharp` disponível:
 
 ```powershell
-node tools/render_readme_visuals.mjs
+node tools/readme_visuals/headers.mjs
+node tools/readme_visuals/production.mjs --family all
+node tools/readme_visuals/validate_production.mjs
 ```

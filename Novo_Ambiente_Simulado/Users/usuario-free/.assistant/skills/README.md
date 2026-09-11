@@ -1,3 +1,5 @@
+![CRM — Missão Modelos Analíticos CRM](../hub_readmes_visual_assets/headers/png/cabecalho_crm.png)
+
 # Agent Skills
 
 > O cérebro metodológico do ecossistema no Databricks Genie Code: diretrizes de engenharia, guardrails e fluxos analíticos passo a passo para orientar trabalhos de Machine Learning.
@@ -55,14 +57,17 @@ Guardrails textuais reduzem risco, mas não são barreiras técnicas absolutas. 
 ---
 
 <a id="-como-o-genie-code-e-o-usuário-utilizam-as-skills"></a>
+<a id="como-o-genie-code-e-o-usuario-utilizam-as-skills"></a>
 
 ## 🤖 Como o Genie Code e o Usuário utilizam as Skills
 
 O ciclo de vida de uma skill estabelece uma interação colaborativa entre o usuário, o assistente e os recursos do Databricks:
 
-![Fluxo de descoberta e seleção de uma Agent Skill](../hub_readmes_visual_assets/readmes/skills/png/01_descoberta_e_selecao.png)
+![Duas rotas independentes, relevância e menção com @, convergindo no carregamento de uma Agent Skill.](../hub_readmes_visual_assets/readmes/skills/png/01_descoberta_e_selecao.png)
 
-*Leitura da figura: a Genie Code pode selecionar por relevância ou a pessoa pode escolher explicitamente com @.*
+*Leitura da figura: a `description` ajuda o roteamento; a menção com `@` torna a escolha explícita.*
+
+**Equivalente textual:** na rota por relevância, a Genie Code compara o pedido com a `description` da skill. Na rota explícita, a pessoa seleciona a skill com `@nome-da-skill`. As duas rotas convergem no carregamento do mesmo pacote de instruções, sem eliminar a necessidade de revisar a entrega.
 
 ### 1. Pelo lado do Genie Code (Seleção por Relevância)
 
@@ -97,6 +102,7 @@ A `@menção` é a forma explícita suportada de selecionar uma skill. Ela reduz
 ---
 
 <a id="-relação-entre-skills-hub-snippets-e-hub-scripts"></a>
+<a id="relacao-entre-skills-hub-snippets-e-hub-scripts"></a>
 
 ## 🔗 Relação entre Skills, Hub Snippets e Hub Scripts
 
@@ -105,9 +111,11 @@ Para que o ecossistema funcione de forma coerente, existe uma divisão de papéi
 > **A Skill é o Maestro: organiza a metodologia.**
 > **Os Snippets e Scripts são os Instrumentos: fornecem implementações e diagnósticos reutilizáveis.**
 
-![Relação entre Agent Skill, helpers e runtime](../hub_readmes_visual_assets/readmes/skills/png/02_skill_helpers_runtime.png)
+![Dois planos separando método da Agent Skill e execução explícita de helpers no notebook.](../hub_readmes_visual_assets/readmes/skills/png/02_skill_helpers_runtime.png)
 
-*Leitura da figura: a skill fornece método e recomenda recursos; o notebook importa e executa helpers explicitamente.*
+*Leitura da figura: orientação metodológica e código executável são responsabilidades diferentes.*
+
+**Equivalente textual:** no plano de contexto, a skill orienta metodologia e guardrails e pode recomendar um helper quando adequado. No plano de runtime, o notebook precisa importar e chamar esse helper explicitamente; a recomendação não instala, importa nem executa código.
 
 ### Caso de Uso Genérico
 
@@ -135,6 +143,8 @@ Um template não é executável e não é um helper. Ele só influencia a respos
 
 ---
 
+<a id="estrutura-de-uma-skill-profissional"></a>
+
 ## 🏛️ Arquitetura de Skills no Hub
 
 Cada skill habita em seu próprio diretório em `.assistant/skills/<nome-da-skill>/` e possui um arquivo canônico `SKILL.md`:
@@ -147,9 +157,9 @@ Cada skill habita em seu próprio diretório em `.assistant/skills/<nome-da-skil
     └── checklist_validacao_features.md
 ```
 
-![Três camadas de uma Agent Skill](../hub_readmes_visual_assets/readmes/skills/png/03_camadas_de_uma_skill.png)
+![Dossiê de uma Agent Skill mostrando frontmatter e instruções dentro de SKILL.md e recursos opcionais ao lado.](../hub_readmes_visual_assets/readmes/skills/png/03_anatomia_skill.png)
 
-*Leitura da figura: frontmatter sustenta a descoberta, SKILL.md contém o método e recursos aprofundam apenas o necessário.*
+*Leitura da figura: o mecanismo Agent Skills reconhece o pacote; o conteúdo metodológico e seus recursos são mantidos pelo Hub.*
 
 A separação em camadas evita transformar o arquivo principal em um depósito de referências. Metadados ajudam o roteamento; instruções organizam o trabalho; recursos são carregados quando a tarefa realmente os exige.
 

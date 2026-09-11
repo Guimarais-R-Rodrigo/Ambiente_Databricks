@@ -1,0 +1,62 @@
+version: 1
+status: approved_active_v2
+
+principle: >-
+  Procedência, função, interação, responsabilidade e estado usam canais visuais
+  diferentes. Cor isolada nunca comunica o contrato.
+
+provenance:
+  databricks_native:
+    badge: NATIVO DATABRICKS
+    outline: databricks_native
+    frame: continuous
+  hub_custom:
+    badge: HUB CUSTOMIZADO
+    outline: hub_custom
+    frame: notched
+  project_policy:
+    badge: POLÍTICA DO PROJETO
+    outline: human_decision
+    frame: angular
+
+artifact_shapes:
+  document: sheet
+  package: stacked_modules
+  notebook: tabbed_canvas
+  runtime: compute_plane
+  evidence: output_panel
+  person_or_review: diamond_checkpoint
+
+relationships:
+  contextual_reference:
+    line: dotted
+    arrow: none
+  explicit_action_or_data:
+    line: solid
+    arrow: forward
+  optional_or_on_demand:
+    line: dashed
+    arrow: forward
+    label_required: true
+  feedback_or_rework:
+    line: curved
+    arrow: backward
+    label_required: true
+
+states:
+  pass:
+    color: result_evidence
+    icon: circle-check
+    label: PASS
+  warn:
+    color: human_decision
+    icon: triangle-alert
+    label: WARN
+  fail:
+    color: danger
+    icon: diamond-x
+    label: FAIL
+
+legend:
+  mode: generated_from_used_encodings
+  never_use_default_legend: true

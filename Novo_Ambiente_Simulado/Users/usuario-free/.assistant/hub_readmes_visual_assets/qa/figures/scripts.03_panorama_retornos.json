@@ -1,0 +1,359 @@
+{
+  "id": "scripts.03_panorama_retornos",
+  "archetype": "return_panorama",
+  "source": "readmes/scripts/sources/03_panorama_retornos.svg",
+  "published": "readmes/scripts/png/03_panorama_retornos.png",
+  "sha256": "e64d2176875d7cfa5144bfa538dd9caab72de76221fdcb1939d8ed307fbe5534",
+  "svg_sha256": "a00f8e078cc8c10f354c8905f64140723ce0e7c5e8c26a6b354bf3347fc3a2ca",
+  "width": 1600,
+  "height": 760,
+  "chrome": "compact",
+  "minimum_display_width": 720,
+  "question": "Quais contratos de retorno existem nos Hub Scripts?",
+  "alt": "Panorama de entradas e dos diferentes tipos de retorno produzidos pelos sete Hub Scripts.",
+  "caption": "O consumidor interpreta o contrato específico do script e codifica separadamente qualquer reação operacional.",
+  "owner_readme": "ambiente_fonte/.assistant/hub_scripts/README.md",
+  "anchor": "passo-a-passo-operacional-como-usar-um-script",
+  "approved_signature": false,
+  "texts": [
+    {
+      "text": "PANORAMA · CONTRATOS DE RETORNO",
+      "x": 56,
+      "y": 25,
+      "width": 476.2734375,
+      "height": 30,
+      "size": 24,
+      "essential": false,
+      "color": "#FF6598"
+    },
+    {
+      "text": "Sete ferramentas, quatro formas de saída",
+      "x": 56,
+      "y": 59,
+      "width": 858.4775390625,
+      "height": 52.5,
+      "size": 42,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "Quais contratos de retorno existem nos Hub Scripts?",
+      "x": 56,
+      "y": 112,
+      "width": 796.59375,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "ENTRADA",
+      "x": 156,
+      "y": 226,
+      "width": 157.78125,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "tabela / arquivo",
+      "x": 156,
+      "y": 268,
+      "width": 234.390625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "+ parâmetros",
+      "x": 156,
+      "y": 310,
+      "width": 202.8125,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "Hub Script escolhido",
+      "x": 660,
+      "y": 232,
+      "width": 349.728515625,
+      "height": 42.5,
+      "size": 34,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "execução sob demanda",
+      "x": 660,
+      "y": 280,
+      "width": 360.6875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "Cada função define",
+      "x": 1200,
+      "y": 232,
+      "width": 303.234375,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "o contrato de saída.",
+      "x": 1200,
+      "y": 273,
+      "width": 305.6875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "DICT · CONTRATOS PRÓPRIOS",
+      "x": 148,
+      "y": 409,
+      "width": 477.90625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#66E3C4"
+    },
+    {
+      "text": "data_quality_check",
+      "x": 78,
+      "y": 481,
+      "width": 295.1875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "qualidade",
+      "x": 486.203125,
+      "y": 481,
+      "width": 147.796875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "quick_profile",
+      "x": 78,
+      "y": 532,
+      "width": 200.640625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "perfil",
+      "x": 555.859375,
+      "y": 532,
+      "width": 78.140625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "drift_detector",
+      "x": 78,
+      "y": 583,
+      "width": 209.40625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "PSI + classe*",
+      "x": 432.796875,
+      "y": 583,
+      "width": 201.203125,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "doc_coverage",
+      "x": 78,
+      "y": 634,
+      "width": 217.46875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "cobertura",
+      "x": 486.328125,
+      "y": 634,
+      "width": 147.671875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "* classificação exige limiares",
+      "x": 78,
+      "y": 682,
+      "width": 438.21875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "SPARK",
+      "x": 760,
+      "y": 408,
+      "width": 108.640625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#66E3C4"
+    },
+    {
+      "text": "DATAFRAME",
+      "x": 701.4765625,
+      "y": 459,
+      "width": 201.046875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#66E3C4"
+    },
+    {
+      "text": "rfv_calculator",
+      "x": 694.6328125,
+      "y": 542,
+      "width": 214.734375,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "features RFV",
+      "x": 704.5703125,
+      "y": 598,
+      "width": 194.859375,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "por entidade",
+      "x": 706.2890625,
+      "y": 640,
+      "width": 191.421875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "TEXTO",
+      "x": 1036,
+      "y": 408,
+      "width": 109.609375,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#A992FF"
+    },
+    {
+      "text": "schema_to_yaml",
+      "x": 964.0546875,
+      "y": 542,
+      "width": 257.890625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "YAML ou JSON",
+      "x": 977.0390625,
+      "y": 598,
+      "width": 231.921875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "sem persistir",
+      "x": 995.6640625,
+      "y": 640,
+      "width": 194.671875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "LISTA",
+      "x": 1342,
+      "y": 408,
+      "width": 91.46875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#FFC966"
+    },
+    {
+      "text": "naming_checker",
+      "x": 1269.8359375,
+      "y": 542,
+      "width": 258.328125,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "violações",
+      "x": 1327.171875,
+      "y": 598,
+      "width": 143.65625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "de nomenclatura",
+      "x": 1271.828125,
+      "y": 640,
+      "width": 254.34375,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    }
+  ],
+  "icons": [
+    "database",
+    "split",
+    "waypoints",
+    "braces",
+    "table-2",
+    "file-json-2",
+    "list-checks"
+  ]
+}

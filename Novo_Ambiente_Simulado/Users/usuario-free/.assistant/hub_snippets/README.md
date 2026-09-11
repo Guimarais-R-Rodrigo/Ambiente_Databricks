@@ -1,3 +1,5 @@
+![CRM — Missão Modelos Analíticos CRM](../hub_readmes_visual_assets/headers/png/cabecalho_crm.png)
+
 # Hub Snippets
 
 > A biblioteca matemática e algorítmica central do ecossistema `.assistant`: funções e classes reutilizáveis, revisadas e testadas para fluxos de Machine Learning e Big Data no Databricks.
@@ -11,9 +13,9 @@
 | Para entender... | Vá para... |
 |---|---|
 | o conceito e a estrutura de um snippet | [O que é um Snippet](#-o-que-é-um-snippet-neste-ecossistema) |
-| as categorias da biblioteca | [Mapa de Categorias](#-mapa-de-categorias-do-hub-snippets) |
+| as categorias da biblioteca | [Mapa de Categorias](#mapa-de-categorias-do-hub-snippets) |
 | quais objetos estão disponíveis | [Catálogo Detalhado](#-catálogo-detalhado-por-categoria) |
-| como importar e executar | [Passo a Passo Operacional](#️-passo-a-passo-operacional-como-usar-um-snippet) |
+| como importar e executar | [Passo a Passo Operacional](#passo-a-passo-operacional-como-usar-um-snippet) |
 | runtime, dependências e custo | [Onde o Código Executa](#️-onde-o-código-executa-e-quanto-pode-custar) |
 | dúvidas e limitações | [Perguntas Frequentes](#-perguntas-frequentes-faq) |
 
@@ -48,17 +50,21 @@ Cada snippet resolve uma **dor analítica específica**, expondo uma API públic
 
 ---
 
+<a id="arquitetura-e-o-padrao-pasta-de-objeto"></a>
+
 ## 🏛️ Arquitetura e o Padrão "Pasta de Objeto"
 
 Para favorecer que o código seja limpo, fácil de encontrar e intuitivo tanto para pessoas quanto para a IA, os snippets seguem o padrão de organização chamado **Pasta de Objeto**.
 
 Na estrutura vigente, cada snippet fica em um diretório autossuficiente com três componentes centrais:
 
-![Anatomia da pasta de um snippet](../hub_readmes_visual_assets/readmes/snippets/png/01_anatomia_pasta.png)
+![Vista explodida de uma pasta de snippet com fachada, implementação e notebook didático.](../hub_readmes_visual_assets/readmes/snippets/png/01_anatomia_pasta.png)
 
-*Leitura da figura: a API pública, a implementação e o notebook didático possuem responsabilidades separadas.*
+*Leitura da figura: o notebook consome a API pública; a implementação permanece atrás da fachada.*
 
 ### O que cada arquivo faz
+
+**Equivalente textual da figura:** a pasta contém uma fachada pública em `__init__.py`, um módulo com a implementação e um notebook modelo que exercita o contrato com dados sintéticos.
 
 1. **`__init__.py` (A Fachada):** reexporta as funções e classes públicas. É ele que permite imports curtos sem expor a organização interna do módulo.
 2. **`nome_do_snippet.py` (O Motor):** contém implementação, validações, tipagem e docstring. O código é a fonte técnica para a assinatura real.
@@ -70,13 +76,24 @@ O Catálogo de Helpers (`.assistant/CATALOGO_HELPERS.md`) relaciona demanda, cam
 
 <a id="-mapa-de-categorias-do-hub-snippets"></a>
 
+<a id="mapa-de-categorias-do-hub-snippets"></a>
+
 ## 🗺️ Mapa de Categorias do Hub Snippets
 
-A biblioteca é dividida em seis categorias funcionais que acompanham as principais etapas de um fluxo analítico:
+A biblioteca é dividida em seis categorias funcionais, agrupadas pela natureza do problema que cada helper resolve:
 
-![Mapa das categorias funcionais do Hub Snippets](../hub_readmes_visual_assets/readmes/snippets/png/02_mapa_categorias.png)
+![Paisagem funcional com as seis categorias do Hub Snippets em áreas distintas.](../hub_readmes_visual_assets/readmes/snippets/png/02_mapa_categorias.png)
 
-*Leitura da figura: as categorias agrupam helpers pelo tipo de problema analítico que resolvem.*
+*Leitura da figura: as categorias agrupam helpers por natureza de problema e não constituem uma sequência obrigatória.*
+
+| Categoria | Natureza do problema |
+|---|---|
+| `ml` | Machine Learning e estatística aplicada |
+| `spark` | operações distribuídas em escala |
+| `display` | exibição e tabelas formatadas |
+| `visual` | identidade visual e design em Plotly |
+| `constants` | padrões brasileiros, cores e estilos compartilhados |
+| `testing` | dados sintéticos e fixtures |
 
 ---
 
@@ -255,21 +272,33 @@ hub_snippets/
 
 <a id="️-passo-a-passo-operacional-como-usar-um-snippet"></a>
 
+<a id="o-contrato-de-reuso"></a>
+
 ## 🔐 O Contrato de Reuso
 
 Um snippet economiza implementação sem eliminar responsabilidade técnica. A interface documentada prepara o reuso; a execução explícita aplica o caso concreto; e a evidência validada sustenta a confiança no resultado.
 
-![Contrato de reuso dos snippets](../hub_readmes_visual_assets/readmes/snippets/png/04_contrato_de_reuso.png)
+![Ponte de reuso apoiada por interface previsível, execução consciente e evidência reproduzível.](../hub_readmes_visual_assets/readmes/snippets/png/04_contrato_de_reuso.png)
 
-*Leitura da figura: interface previsível, execução consciente e evidência conferida são partes inseparáveis do reuso.*
+*Leitura da figura: dependências, efeitos, parâmetros, limites e resultados precisam permanecer observáveis.*
+
+| Momento | Apoio do contrato | O que precisa permanecer observável |
+|---|---|---|
+| antes da chamada | interface previsível | API pública, parâmetros, retorno e erros documentados |
+| durante a chamada | execução consciente | dependências, efeitos ou mutações, custo e compute |
+| depois da chamada | evidência reproduzível | resultado interpretado, limites declarados e teste reproduzível |
+
+<a id="passo-a-passo-operacional-como-usar-um-snippet"></a>
 
 ## 🛠️ Passo a Passo Operacional: Como Usar um Snippet
 
-Usar um snippet envolve quatro decisões: localizar o exemplo, tornar o pacote importável, chamar a API real e validar o resultado.
+Usar um snippet envolve quatro decisões: consultar o exemplo, configurar o ambiente, importar e executar a API real e interpretar o resultado.
 
-![Fluxo operacional para usar um snippet](../hub_readmes_visual_assets/readmes/snippets/png/03_fluxo_operacional.png)
+![Jornada em notebook desde a consulta ao exemplo até a interpretação do resultado.](../hub_readmes_visual_assets/readmes/snippets/png/03_fluxo_operacional.png)
 
-*Leitura da figura: consultar, configurar, importar e validar formam uma sequência única.*
+*Leitura da figura: o snippet acelera a implementação, mas o notebook ainda configura dependências, executa a API e valida o retorno.*
+
+**Equivalente textual da figura:** (1) abra `exemplo_<snippet>.py`; (2) torne `hub_snippets/` importável e confirme dependências; (3) importe e execute a API com parâmetros reais; (4) confira tipo, unidade, schema, limites e população antes de encadear a saída.
 
 ### Passo 1: Inspecione o notebook modelo
 

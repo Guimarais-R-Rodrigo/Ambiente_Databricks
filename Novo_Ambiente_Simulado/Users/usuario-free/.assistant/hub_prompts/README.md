@@ -1,3 +1,5 @@
+![CRM — Missão Modelos Analíticos CRM](../hub_readmes_visual_assets/headers/png/cabecalho_crm.png)
+
 # Hub Prompts — Briefings Técnicos Estruturados para Genie Code
 
 O **Hub Prompts** é a camada de interface e especificação técnica do ecossistema. Ele reúne formulários e briefings padronizados para orientar a interação humana com a **Databricks Genie Code**, ajudando a traduzir demandas analíticas em instruções delimitadas, rastreáveis e reproduzíveis.
@@ -47,6 +49,7 @@ O Hub Prompts aplica essa disciplina ao desenvolvimento assistido por IA:
 ---
 
 <a id="️-a-anatomia-de-uma-pasta-de-prompt"></a>
+<a id="estrutura-do-hub-prompts"></a>
 
 ## 🏗️ A Anatomia de uma Pasta de Prompt
 
@@ -59,9 +62,9 @@ hub_prompts/
     └── exemplo_eda_rapida.py     <- notebook didático de acompanhamento
 ```
 
-![Anatomia de um briefing técnico forte](../hub_readmes_visual_assets/readmes/prompts/png/03_anatomia_do_briefing.png)
+![Blueprint de um briefing com objetivo e contexto, recursos, restrições, modo de trabalho, contrato de saída e validação final.](../hub_readmes_visual_assets/readmes/prompts/png/03_anatomia_briefing.png)
 
-*Leitura da figura: objetivo e contexto delimitam o problema; restrições controlam a operação; entrega e aceite definem quando o trabalho está pronto.*
+*Leitura da figura: o template permanece o contrato copiável; a figura mostra como seus blocos reduzem ambiguidade e tornam o aceite verificável.*
 
 A figura funciona como um mapa de preenchimento. O template continua sendo o contrato copiável e deve carregar os detalhes concretos que não cabem no resumo visual.
 
@@ -159,15 +162,13 @@ Os templates usam três convenções de preenchimento:
 
 O Hub Prompts não opera isoladamente. Ele fornece o contexto do problema; uma skill pode fornecer a metodologia; snippets e scripts podem fornecer implementações reutilizáveis.
 
-![Sinergia entre briefing, Agent Skill, Genie Code e helpers](../hub_readmes_visual_assets/readmes/prompts/png/01_sinergia_contexto.png)
-
-*Leitura da figura: o briefing define o problema, a skill organiza o método, a plataforma propõe e os helpers apoiam a implementação explícita.*
-
 - **O Briefing (Prompt):** fornece objetivo, contexto de negócio, recursos e parâmetros.
 - **O Maestro (Skill):** orienta o fluxo metodológico e os guardrails, quando carregada por relevância ou selecionada por `@`.
 - **Os Instrumentos (Snippets & Scripts):** oferecem código reutilizável; não são importados nem executados automaticamente pela skill.
 
 ---
+
+<a id="familias-do-ciclo-de-dados"></a>
 
 ## 📂 Famílias Funcionais de Prompts
 
@@ -182,6 +183,12 @@ hub_prompts/
 ```
 
 > **Nota de leitura:** essa árvore é uma organização **conceitual deste README**. Fisicamente, os 16 objetos ficam diretamente em `hub_prompts/<nome>/`.
+
+![Roteador editorial que relaciona quatro tipos de resultado às famílias de briefing adequadas.](../hub_readmes_visual_assets/readmes/prompts/png/01_mapa_familias.png)
+
+*Leitura da figura: o catálogo textual continua canônico; a figura ensina como escolher a família.*
+
+**Equivalente textual:** comece pelo resultado esperado: entender e perfilar uma base; modelar, medir ou acompanhar; conferir dados, código ou bases; ou explicar, documentar e iniciar um trabalho. Essa primeira decisão leva a uma das quatro famílias abaixo; a matriz e o catálogo refinam a escolha até o briefing específico.
 
 ### Matriz rápida de seleção
 
@@ -379,14 +386,17 @@ O catálogo abaixo preserva as famílias e acrescenta links diretos para o brief
 ---
 
 <a id="️-passo-a-passo-operacional-do-briefing-ao-resultado"></a>
+<a id="passo-a-passo-operacional-do-briefing-ao-resultado"></a>
 
 ## 🛠️ Passo a Passo Operacional: Do Briefing ao Resultado
 
 Seguir o fluxo abaixo favorece respostas mais consistentes, código auditável e menor retrabalho:
 
-![Fluxo operacional do briefing à entrega](../hub_readmes_visual_assets/readmes/prompts/png/02_fluxo_operacional.png)
+![Storyboard em cinco estágios desde a escolha do briefing até a validação da entrega.](../hub_readmes_visual_assets/readmes/prompts/png/02_fluxo_operacional.png)
 
-*Leitura da figura: seleção, preenchimento, contexto, revisão, execução e validação são etapas distintas.*
+*Leitura da figura: a execução ocorre dentro do escopo e da política definidos no estágio de revisão.*
+
+**Equivalente textual:** os cinco macroestágios são selecionar o briefing, preencher os metadados, anexar recursos e definir o modo de trabalho, revisar o plano antes de executar e validar a entrega contra o contrato de saída. A execução pertence ao quarto estágio; não constitui um sexto macroestágio.
 
 ### 1. Selecione o Briefing Adequado
 

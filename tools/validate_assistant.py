@@ -1386,7 +1386,12 @@ def iter_repo_files() -> list[Path]:
 def check_worktree_hygiene(problems: list[str]) -> int:
     """Extras são examinados sem alterar a contagem certificada do versionado."""
     paths = [p for p in git_paths(REPO_ROOT, untracked=True)
-             if not any(part in REPO_IGNORE or part in {".pytest_cache", ".ruff_cache"}
+             # Dependências instaladas são ruído apenas neste inventário de
+             # extras. Se forem rastreadas, iter_repo_files() continua a
+             # submetê-las às guardas do repositório.
+             if not any(part in REPO_IGNORE or part in {
+                            ".pytest_cache", ".ruff_cache", "node_modules"
+                        }
                         for part in p.relative_to(REPO_ROOT).parts)]
     count = 0
     for p in paths:

@@ -36,3 +36,5 @@ bundle_auditoria*.txt
 # estavam entrando na varredura de identidade do validador, que percorre o
 # filesystem e não o conjunto versionado.
 Claude outputs/
+# Dependências locais do renderer de recursos visuais
+tools/readme_visuals/node_modules/

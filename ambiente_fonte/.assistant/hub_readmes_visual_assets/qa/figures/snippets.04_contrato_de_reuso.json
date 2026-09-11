@@ -1,0 +1,245 @@
+{
+  "id": "snippets.04_contrato_de_reuso",
+  "archetype": "trust_bridge",
+  "source": "readmes/snippets/sources/04_contrato_de_reuso.svg",
+  "published": "readmes/snippets/png/04_contrato_de_reuso.png",
+  "sha256": "2fce8543a1201bf03b51ac46c265e55ba750c62107bf7e01a3762a9157f20c40",
+  "svg_sha256": "54844f3aaa170ec0826726616bc2595f52e4da03de49b50603a9183fd5c0a616",
+  "width": 1600,
+  "height": 760,
+  "chrome": "compact",
+  "minimum_display_width": 720,
+  "question": "O que sustenta um reuso confiável?",
+  "alt": "Ponte de reuso apoiada por interface previsível, execução consciente e evidência reproduzível.",
+  "caption": "Dependências, efeitos, parâmetros, limites e resultados precisam permanecer observáveis.",
+  "owner_readme": "ambiente_fonte/.assistant/hub_snippets/README.md",
+  "anchor": "o-contrato-de-reuso",
+  "approved_signature": false,
+  "texts": [
+    {
+      "text": "HUB SNIPPETS · CONTRATO DE REUSO",
+      "x": 68,
+      "y": 31,
+      "width": 455.71875,
+      "height": 30,
+      "size": 24,
+      "essential": false,
+      "color": "#FF6598"
+    },
+    {
+      "text": "Três apoios sustentam um reuso confiável",
+      "x": 54,
+      "y": 66,
+      "width": 824.2578125,
+      "height": 50,
+      "size": 40,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "Dependências, efeitos, parâmetros, limites e resultados permanecem observáveis.",
+      "x": 54,
+      "y": 118,
+      "width": 1247.96875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "REUSO CONFIÁVEL",
+      "x": 630.16015625,
+      "y": 353,
+      "width": 339.6796875,
+      "height": 45,
+      "size": 36,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "ANTES DA CHAMADA",
+      "x": 208,
+      "y": 439,
+      "width": 234.8994140625,
+      "height": 27.5,
+      "size": 22,
+      "essential": false,
+      "color": "#5DD6FF"
+    },
+    {
+      "text": "Interface",
+      "x": 140,
+      "y": 482,
+      "width": 144.234375,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "previsível",
+      "x": 140,
+      "y": 524,
+      "width": 155.203125,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "API pública",
+      "x": 140,
+      "y": 568,
+      "width": 170.28125,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "parâmetros explícitos",
+      "x": 140,
+      "y": 610,
+      "width": 324.40625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "retorno e erros",
+      "x": 140,
+      "y": 652,
+      "width": 225.609375,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "DURANTE A CHAMADA",
+      "x": 703,
+      "y": 439,
+      "width": 251.96875,
+      "height": 27.5,
+      "size": 22,
+      "essential": false,
+      "color": "#FFC966"
+    },
+    {
+      "text": "Execução",
+      "x": 635,
+      "y": 482,
+      "width": 154.515625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "consciente",
+      "x": 635,
+      "y": 524,
+      "width": 176.3125,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "dependências",
+      "x": 635,
+      "y": 568,
+      "width": 213.453125,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "efeitos e mutações",
+      "x": 635,
+      "y": 610,
+      "width": 287.421875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "custo e compute",
+      "x": 635,
+      "y": 652,
+      "width": 252.921875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "DEPOIS DA CHAMADA",
+      "x": 1198,
+      "y": 439,
+      "width": 240.2919921875,
+      "height": 27.5,
+      "size": 22,
+      "essential": false,
+      "color": "#66E3C4"
+    },
+    {
+      "text": "Evidência",
+      "x": 1130,
+      "y": 482,
+      "width": 155.15625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "reproduzível",
+      "x": 1130,
+      "y": 524,
+      "width": 200.34375,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "resultado interpretado",
+      "x": 1130,
+      "y": 568,
+      "width": 335.734375,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "limites declarados",
+      "x": 1130,
+      "y": 610,
+      "width": 273.921875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "teste reproduzível",
+      "x": 1130,
+      "y": 652,
+      "width": 271.6875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    }
+  ],
+  "icons": [
+    "scan-face",
+    "cpu",
+    "file-check-2"
+  ]
+}

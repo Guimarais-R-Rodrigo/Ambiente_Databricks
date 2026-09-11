@@ -1,3 +1,5 @@
+![CRM — Missão Modelos Analíticos CRM](hub_readmes_visual_assets/headers/png/cabecalho_crm.png)
+
 # Ecossistema/Hub `.assistant` para Databricks Genie Code voltado para Machine Learning
 
 > Um ambiente integrado de instruções, habilidades, bibliotecas e briefings que ajuda a transformar a Genie Code em uma parceira contextualizada para a rotina analítica.
@@ -57,7 +59,7 @@ O Hub reduz improvisação e retrabalho, mas não torna a IA infalível. Permiss
 
 O ecossistema é dividido em cinco componentes, cada um com uma responsabilidade e uma forma de uso:
 
-![Mapa visual dos cinco componentes do ecossistema .assistant](hub_readmes_visual_assets/readmes/raiz/png/01_mapa_ecossistema.png)
+![Mapa do ecossistema .assistant separado entre contexto e método, código e diagnóstico, com cinco componentes e suas formas de uso.](hub_readmes_visual_assets/readmes/raiz/png/01_mapa_ecossistema.png)
 
 *Leitura da figura: cada componente possui uma responsabilidade e uma forma própria de ativação.*
 
@@ -105,8 +107,8 @@ A pasta `.assistant` não entra automaticamente no `sys.path` apenas por existir
 
 ### ⚡ 3. Hub Scripts (`hub_scripts/`)
 
-- **O que são:** diagnósticos importáveis que respondem a uma pergunta operacional delimitada.
-- **Como ajudam:** avaliam qualidade, perfil, drift, RFV, schema, nomenclatura ou cobertura documental.
+- **O que são:** utilitários importáveis de inspeção, transformação analítica e governança técnica, cada um com responsabilidade delimitada.
+- **Como ajudam:** inspecionam qualidade, perfil e drift; calculam features RFV; serializam schemas; conferem nomenclatura e cobertura documental. O retorno depende da ferramenta escolhida.
 - **Como são ativados:** importação e chamada explícitas; alertas e interrupção do fluxo são decisões do código consumidor.
 
 ```python
@@ -147,25 +149,35 @@ Quando uma informação for desconhecida, use `NÃO INFORMADO` e peça inspeçã
 Consulte o Hub Padrões em `.assistant/hub_padroes/README.md`.
 
 > **INFRAESTRUTURA EDITORIAL DO HUB.** A pasta
-> `hub_readmes_visual_assets/` mantém as fontes SVG e os PNGs destes guias. Ela
+> `hub_readmes_visual_assets/` mantém os diagramas e os cabeçalhos compartilhados
+> de CRM e Squad, com fontes de composição e PNGs. Ela
 > não é um sexto componente funcional, não é nativa da Databricks e não fornece
 > contexto automaticamente à Genie Code.
+
+Na arquitetura editorial, `readmes/<familia>/` organiza os diagramas, enquanto
+`headers/` reúne os cabeçalhos reutilizáveis. O arquivo CRM atende README e
+notebook geral; o arquivo Squad atende notebooks específicos. Consulte o
+[guia de recursos visuais](hub_readmes_visual_assets/README.md) e o
+[guia de cabeçalhos](hub_readmes_visual_assets/headers/README.md) para usá-los
+sem duplicar imagens ou depender de pastas temporárias de revisão.
 
 ---
 
 <a id="️-arquitetura-completa-do-ecossistema"></a>
+<a id="arquitetura-completa-do-ecossistema"></a>
 
 ## 🏛️ Arquitetura Completa do Ecossistema
 
 O diagrama mostra as duas rotas complementares do ecossistema: **contexto para a Genie Code** e **execução no runtime Python/Spark**.
 
-![Arquitetura de uso do ecossistema no workspace](hub_readmes_visual_assets/readmes/assistant/png/02_arquitetura_de_uso.png)
+![Duas rotas paralelas, uma de contexto para a Genie Code e outra de execução no notebook, conectadas por um checkpoint conforme a política configurada.](hub_readmes_visual_assets/readmes/assistant/png/02_arquitetura_de_uso.png)
 
 *Leitura da figura: contexto orienta a conversa; snippets e scripts entram por importação explícita no notebook.*
 
 > **Duas rotas, uma entrega:** instruções, skills e briefing orientam a conversa;
-> snippets e scripts entram somente na execução do notebook. A revisão humana
-> conecta as duas rotas.
+> snippets e scripts entram por importação e chamada no notebook. A revisão de
+> proposta e escopo conecta as rotas conforme a política configurada. Helpers
+> também podem ser usados diretamente, sem uma conversa com a Genie Code.
 
 ### O que acontece automaticamente e o que depende de você
 
@@ -184,6 +196,7 @@ Instruções pessoais e de workspace não devem ser tratadas como aplicáveis a 
 ---
 
 <a id="-como-o-contexto-chega-ao-genie-code"></a>
+<a id="como-o-contexto-chega-ao-genie-code"></a>
 
 ## 🔄 Como o Contexto chega ao Genie Code?
 
@@ -191,9 +204,9 @@ Muitos usuários se perguntam: *“Como a IA sabe quais regras e componentes uti
 
 O fluxo combina contexto automático suportado e contexto explícito fornecido pelo usuário:
 
-![Fluxo do contexto à execução revisada](hub_readmes_visual_assets/readmes/assistant/png/03_contexto_e_execucao.png)
+![Confluência de fontes de contexto suportadas para a Genie Code e suas saídas possíveis.](hub_readmes_visual_assets/readmes/assistant/png/03_contexto_e_execucao.png)
 
-*Leitura da figura: a proposta passa por revisão antes de qualquer execução e termina em evidências conferidas.*
+*Leitura da figura: código e histórico, metadados permitidos, instruções aplicáveis e recursos relevantes ou explícitos compõem o contexto da tarefa. A figura não é um pipeline de execução e não promete leitura de toda a pasta `.assistant`.*
 
 ### Explicação Passo a Passo
 
@@ -205,17 +218,29 @@ O fluxo combina contexto automático suportado e contexto explícito fornecido p
 6. **Execução:** permissões e política de aprovação continuam valendo. Um prompt não amplia ACLs nem autorização de negócio.
 7. **Validação:** diferencie código sugerido, código executado e resultado validado.
 
+O pedido delimita o modo de trabalho. Diga explicitamente quando quiser apenas
+explicação ou plano, sem execução. O modo agente admite diferentes políticas de
+aprovação; uma nova confirmação manual não é obrigatória para toda chamada.
+Mesmo com aprovações previamente configuradas, permissões e revisão técnica
+continuam necessárias. Veja a [documentação oficial do modo agente](https://docs.databricks.com/aws/en/genie-code/agent-mode).
+
 Uma conversa nova é útil quando objetivo, dados ou fase mudarem materialmente. Para refinar a mesma tarefa, o histórico validado pode ajudar. Skills recém-editadas devem ser testadas em uma nova conversa; se necessário, atualize a página.
 
 ---
 
 <a id="-como-escolher-o-ponto-de-partida"></a>
+<a id="como-escolher-o-ponto-de-partida"></a>
 
 ## 🧭 Como Escolher o Ponto de Partida
 
-![Árvore de escolha do componente mais adequado](hub_readmes_visual_assets/readmes/assistant/png/01_escolha_ponto_de_partida.png)
+![Bússola de decisão que conduz de cinco necessidades explícitas ao componente mais adequado.](hub_readmes_visual_assets/readmes/assistant/png/01_escolha_ponto_de_partida.png)
 
 *Leitura da figura: o objetivo do momento indica se o melhor ponto de partida é uma skill, prompt, snippet, script ou padrão.*
+
+Método aponta para **skill**; estruturar o pedido, para **prompt**; reutilizar
+código, para **snippet**; obter um diagnóstico, para **script**; criar um novo
+componente, para **padrão**. As escolhas não são exclusivas: um briefing pode
+selecionar uma skill e orientar um notebook que reutiliza helpers.
 
 ### Exemplo: conhecer uma tabela nova
 
@@ -279,7 +304,7 @@ Depende do módulo e do ambiente. Primeiro torne a raiz que contém `hub_snippet
 - **Skill:** metodologia contextual para a Genie Code.
 - **Prompt:** briefing preenchível fornecido manualmente.
 - **Snippet:** código Python importável no notebook.
-- **Script:** diagnóstico explícito com saída estruturada.
+- **Script:** utilitário explícito com contrato próprio de saída, não apenas diagnóstico.
 
 ### 4. Como o ecossistema contribui para mitigar leakage e erros analíticos?
 
@@ -287,7 +312,7 @@ Ele explicita entidade, tempo, disponibilidade, validações e helpers conhecido
 
 ### 5. A equipe pode criar novos snippets, prompts ou skills?
 
-Sim. Use `hub_padroes/` e `@hub-ml-criar-objeto`, mantendo código, exportação pública, notebook didático, documentação e testes coerentes. A criação de arquivos exige ação e revisão humanas.
+Sim. Use `hub_padroes/` e `@hub-ml-criar-objeto`, mantendo código, exportação pública, notebook didático, documentação e testes coerentes. A criação de arquivos precisa estar autorizada no escopo e sujeita à revisão; a Genie Code pode executar ações conforme a política configurada.
 
 ### 6. O que fazer quando a skill ou o helper não funciona como esperado?
 

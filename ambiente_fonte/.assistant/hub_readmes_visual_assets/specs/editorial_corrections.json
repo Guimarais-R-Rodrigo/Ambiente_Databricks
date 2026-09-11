@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "baseline": "f5461d8",
+  "corrections": [
+    {
+      "file": "ambiente_fonte/.assistant/hub_scripts/README.md",
+      "old_sha256": "ce24b567a73cc478d224b93e498587f132dfd73421dc664c841dc2e4f7025f5a",
+      "new_sha256": "48f0ef15c40bae94ccf6b99658e3f8832e9df9f8d47f11e5f26ba4c669d0a941",
+      "reason": "Corrige o exemplo abreviado de retorno: a API produz score, thresholds e checks, não metrics; mantém o contrato real do helper.",
+      "source": "ambiente_fonte/.assistant/hub_scripts/data_quality_check/data_quality_check.py",
+      "source_sha256": "8cb820c26f9380627bfcad5491b192a4510aa65ab46622382c699d453bb904eb"
+    }
+  ]
+}

@@ -1,22 +1,65 @@
-version: 1
-canvas:
-  width: 1600
-  height: 900
+version: 2
+status: approved_active_v2
+
+presets:
+  readme_wide:
+    width: 1600
+    height: 760
+    chrome: compact
+    minimum_display_width: 720
+  readme_standard:
+    width: 1400
+    height: 900
+    chrome: compact
+    minimum_display_width: 720
+  presentation_hero:
+    width: 1600
+    height: 900
+    chrome: complete
+    minimum_display_width: 1280
+
 colors:
-  background: "#07111F"
-  panel: "#101D2F"
+  background: "#06101D"
+  background_elevated: "#0B182A"
+  panel: "#102238"
+  panel_high: "#16304A"
+  line: "#34516D"
   text: "#F7FAFC"
-  muted: "#AFC0D4"
-  hub_custom: "#FF4F87"
+  muted: "#B8C9DA"
+  quiet: "#8196AA"
+  hub_custom: "#FF6598"
+  gradient_end: "#102139"
+  atlas_core: "#0D2034"
+  dossier_back: "#0B1B2D"
+  dossier_middle: "#112740"
+  dossier_fold: "#1B3751"
   databricks_native: "#5DD6FF"
   human_decision: "#FFC966"
   result_evidence: "#66E3C4"
   supporting_method: "#A992FF"
+  danger: "#FF7A7A"
+
 typography:
-  family: "Segoe UI, Arial, sans-serif"
-  title_px: 40
-  card_title_px: 24
-  body_px: 17
+  family: "Inter, Segoe UI, Arial, sans-serif"
+  source: "@fontsource/inter"
+  presentation_title_px: 52
+  readme_heading_px: 34
+  module_title_px: 30
+  body_px: 32
+  small_px: 24
+  minimum_effective_body_px: 14
+
+geometry:
+  corner_radius: 22
+  connector_width: 5
+  border_width: 3
+  safe_margin: 56
+  glow_opacity: 0.16
+
 accessibility:
   essential_information_requires_text_equivalent: true
   meaning_must_not_depend_only_on_color: true
+  status_requires_word_and_icon: true
+  connectors_require_labels_when_ambiguous: true
+  contrast_normal_text: 4.5
+  contrast_large_text: 3.0

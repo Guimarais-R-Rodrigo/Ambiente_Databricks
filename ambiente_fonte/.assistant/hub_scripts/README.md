@@ -1,8 +1,10 @@
+![CRM — Missão Modelos Analíticos CRM](../hub_readmes_visual_assets/headers/png/cabecalho_crm.png)
+
 # Hub Scripts
 
-> Utilitários e diagnósticos de integridade para inspecionar tabelas, schemas e notebooks antes de confiar na modelagem preditiva ou promover artefatos no Databricks.
+> Utilitários de inspeção, transformação analítica e governança técnica para trabalhar com tabelas, schemas e notebooks de forma explícita no Databricks.
 
-> **CONTEÚDO CUSTOMIZADO PELO HUB.** `hub_scripts` não é executado automaticamente pela Genie Code. Cada diagnóstico precisa ser importado e chamado por um notebook, tarefa ou pessoa, que também decide como tratar o resultado.
+> **CONTEÚDO CUSTOMIZADO PELO HUB.** `hub_scripts` não é executado automaticamente pela Genie Code. Cada utilitário precisa ser importado e chamado por um notebook, tarefa ou pessoa. O código consumidor também interpreta o contrato específico da saída e codifica qualquer reação operacional.
 
 ---
 
@@ -10,69 +12,79 @@
 
 | Para entender... | Vá para... |
 |---|---|
-| o papel de um Hub Script | [O que é um Script](#-o-que-é-um-script-neste-ecossistema) |
-| os sete diagnósticos disponíveis | [Catálogo Detalhado](#-catálogo-detalhado) |
-| como executar uma checagem | [Passo a Passo Operacional](#️-passo-a-passo-operacional-como-usar-um-script) |
-| custo e efeitos de cada utilitário | [O que Acontece Durante a Execução](#️-o-que-acontece-durante-a-execução) |
-| a diferença entre diagnóstico e regra operacional | [Diagnóstico não é Enforcement](#-diagnóstico-não-é-enforcement) |
-| dúvidas e limitações | [Perguntas Frequentes](#-perguntas-frequentes-faq) |
+| o papel de um Hub Script | [O que é um Script](#o-que-e-um-script-neste-ecossistema) |
+| os sete utilitários disponíveis | [Catálogo Detalhado](#catalogo-detalhado) |
+| como escolher, executar e interpretar um utilitário | [Passo a Passo Operacional](#passo-a-passo-operacional-como-usar-um-script) |
+| custo e efeitos de cada utilitário | [O que Acontece Durante a Execução](#o-que-acontece-durante-a-execucao) |
+| a diferença entre diagnóstico e regra operacional | [Diagnóstico não é Enforcement](#diagnostico-nao-e-enforcement) |
+| dúvidas e limitações | [Perguntas Frequentes](#perguntas-frequentes-faq) |
 
 ---
 
 <a id="-o-que-é-um-script-neste-ecossistema"></a>
+<a id="o-que-e-um-script-neste-ecossistema"></a>
 
 ## 🔍 O que é um Script neste Ecossistema?
 
-Em pipelines de dados modernos, o maior risco para um modelo de Machine Learning muitas vezes não é o algoritmo em si, mas a **qualidade e a confiabilidade do dado que o alimenta**.
+Em pipelines de dados modernos, uma análise confiável depende tanto da qualidade dos dados quanto da clareza dos contratos, das transformações e da documentação que sustentam o trabalho.
 
-Treinar um modelo sobre uma tabela com chaves duplicadas, variáveis defasadas ou distribuições corrompidas pode produzir conclusões frágeis e desperdício de processamento no cluster.
+Uma tabela com chaves duplicadas, variáveis defasadas ou distribuições alteradas pode fragilizar um modelo. Da mesma forma, features sem corte temporal explícito, schemas pouco revisáveis e notebooks sem documentação próxima tornam a solução difícil de conferir e manter.
 
-**No ecossistema `.assistant`, um Hub Script atua como um pórtico de controle de qualidade e inspeção técnica.**
+**No ecossistema `.assistant`, um Hub Script executa uma responsabilidade técnica delimitada.** Ele pode inspecionar uma base, comparar distribuições, construir features RFV, serializar um schema ou conferir nomenclatura e cobertura documental.
 
-Pense em um gateway antes de uma etapa analítica importante:
+Pense em uma bancada de ferramentas: você escolhe o instrumento pela pergunta que precisa responder e lê a saída conforme o contrato daquela ferramenta.
 
-- Antes de usar uma base para treinar um modelo de crédito, churn ou séries temporais, você executa um diagnóstico compatível com o risco.
-- O script responde a uma pergunta delimitada: unicidade da chave candidata, completude, atualidade, estabilidade, nomenclatura ou cobertura documental.
-- O resultado é evidência para uma decisão; não é uma homologação automática da tabela ou do notebook.
+- Antes de usar uma base para treinar um modelo de crédito, churn ou séries temporais, você pode executar um diagnóstico compatível com o risco.
+- Para preparar features ou contratos técnicos, você pode usar uma transformação ou serialização com retorno próprio.
+- O script não agenda a si mesmo nem torna sua saída automaticamente normativa; o notebook, job, pipeline ou pessoa consumidora decide como usá-la.
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                            O PAPEL DE UM SCRIPT                             │
 │                                                                             │
-│   🛑 Diagnóstico Delimitado: responde uma pergunta técnica configurada      │
-│   📋 Saída Estruturada: retorna métricas, status ou violações conferíveis   │
-│   🛡️ Leitura por Padrão: não persiste alterações nos ativos inspecionados   │
-│   ⚡ Validação Prévia: revela riscos antes de etapas de maior impacto        │
+│   🎯 Responsabilidade Delimitada: cada utilitário resolve uma tarefa clara  │
+│   📦 Contrato Específico: retorna DataFrame, texto, lista ou dicionário      │
+│   🛡️ Ação Explícita: importar e chamar não acontece automaticamente         │
+│   🔎 Resultado Conferível: o consumidor interpreta limites e evidências     │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
+<a id="arquitetura-e-o-padrao-pasta-de-objeto"></a>
+
 ## 🏛️ Arquitetura e o Padrão "Pasta de Objeto"
 
-Os scripts seguem o padrão de organização **Pasta de Objeto**. Cada diagnóstico mora em sua própria pasta:
+Os scripts seguem o padrão de organização **Pasta de Objeto**. Cada utilitário mora em sua própria pasta:
 
-![Anatomia da pasta de um Hub Script](../hub_readmes_visual_assets/readmes/scripts/png/01_anatomia_pasta.png)
+![Vista explodida de uma pasta de Hub Script com interface, implementação e notebook de exemplo.](../hub_readmes_visual_assets/readmes/scripts/png/01_anatomia_pasta.png)
 
-*Leitura da figura: interface, motor de inspeção e demonstração ficam separados.*
+*Leitura da figura: interface, implementação e demonstração permanecem separadas; a implementação define o contrato específico da ferramenta.*
+
+**Equivalente textual da figura:** a pasta contém `__init__.py`, que expõe a interface pública; `<nome>.py`, que contém a implementação; e `exemplo_<nome>.py`, que demonstra a chamada em formato de notebook. A saída não é universal: conforme o utilitário, pode ser dicionário, DataFrame Spark, texto YAML/JSON ou lista de violações.
 
 O notebook `exemplo_<nome>.py` mostra uma chamada com dados controlados e a saída observada. Alguns exemplos simulam falhas; outros demonstram apenas o caminho principal. Por isso, o exemplo ensina o contrato exercitado, mas não substitui testes de volume, permissões ou runtime.
 
 ---
 
 <a id="-catálogo-detalhado"></a>
+<a id="catalogo-detalhado"></a>
 
 ## 📚 Catálogo Detalhado
 
-Os utilitários do Hub são organizados em três dimensões de qualidade do ciclo analítico:
+Os sete utilitários se distribuem por quatro frentes funcionais: qualidade e perfil, estabilidade, transformação analítica e governança técnica. Todos são executados sob demanda e cada um preserva seu próprio contrato de retorno.
 
-![Catálogo dos Hub Scripts por pergunta de diagnóstico](../hub_readmes_visual_assets/readmes/scripts/png/02_catalogo_diagnosticos.png)
+![Bancada dos Hub Scripts com sete ferramentas executadas sob demanda, agrupadas em qualidade, estabilidade, transformação analítica e governança técnica.](../hub_readmes_visual_assets/readmes/scripts/png/02_catalogo_diagnosticos.png)
 
-*Leitura da figura: saúde dos dados, estabilidade e governança técnica respondem a riscos distintos.*
+*Leitura da figura: qualidade e perfil, estabilidade, transformação analítica e governança técnica respondem a necessidades diferentes.*
+
+**Equivalente textual da figura:** `data_quality_check` e `quick_profile` inspecionam qualidade e perfil; `drift_detector` compara distribuições; `rfv_calculator` constrói features RFV; `schema_to_yaml`, `naming_checker` e `doc_coverage` apoiam governança técnica. Os tipos de retorno estão explícitos no catálogo abaixo.
 
 ---
 
 ### 🩺 1. Qualidade e Perfilamento de Dados (Data Health)
+
+Este grupo reúne a inspeção inicial e seu preparo analítico próximo. Há uma distinção importante: `data_quality_check` e `quick_profile` inspecionam a base; `rfv_calculator` constrói features e não emite um diagnóstico de aprovação.
 
 #### `data_quality_check` — Inspeção Sanitária Pré-Modelagem
 
@@ -99,7 +111,7 @@ Os utilitários do Hub são organizados em três dimensões de qualidade do cicl
 #### `drift_detector` — Detecção de Desvios de Distribuição
 
 - **O que faz:** recebe uma tabela, uma coluna de coorte, valores de referência e comparação e colunas numéricas; calcula PSI por variável com bins derivados da referência.
-- **O que retorna:** dicionário com o PSI e a classificação configurada para cada variável.
+- **O que retorna:** dicionário com o PSI e os detalhes por variável. Sem os dois limiares opcionais, a classificação é `not_classified`; com `warning_threshold` e `critical_threshold` válidos, ela pode ser `stable`, `attention` ou `critical`.
 - **Quando usar:** ao comparar duas coortes dentro da mesma tabela. PSI indica mudança de distribuição; não demonstra sozinho perda de performance ou causalidade.
 
 ---
@@ -127,16 +139,21 @@ Os utilitários do Hub são organizados em três dimensões de qualidade do cicl
 ---
 
 <a id="️-passo-a-passo-operacional-como-usar-um-script"></a>
+<a id="passo-a-passo-operacional-como-usar-um-script"></a>
 
 ## 🛠️ Passo a Passo Operacional: Como Usar um Script
 
-Integrar um diagnóstico à rotina do Databricks segue um fluxo simples, mas deliberado:
+Integrar um Hub Script à rotina do Databricks segue um fluxo simples, mas deliberado: escolha a ferramenta, forneça o recurso e os parâmetros exigidos, leia o contrato específico da saída e só então codifique a reação necessária.
 
-![Fluxo de execução e resultados de um Hub Script](../hub_readmes_visual_assets/readmes/scripts/png/03_fluxo_execucao.png)
+![Panorama de entradas e dos diferentes tipos de retorno produzidos pelos sete Hub Scripts.](../hub_readmes_visual_assets/readmes/scripts/png/03_panorama_retornos.png)
 
-*Leitura da figura: o diagnóstico retorna evidência; a política consumidora define a reação.*
+*Leitura da figura: a ferramenta escolhida define o retorno; não existe um dicionário de status compartilhado por todos os Hub Scripts.*
+
+**Equivalente textual da figura:** `rfv_calculator` devolve DataFrame Spark; `schema_to_yaml`, texto YAML ou JSON; `naming_checker`, lista de violações; e os demais, dicionários com estruturas próprias. Entre esses dicionários, `data_quality_check` expõe `status`, `score`, `thresholds`, `checks` e `alerts`; `quick_profile` devolve o perfil; `drift_detector`, PSI e classificação condicional; e `doc_coverage`, métricas heurísticas de cobertura.
 
 ### Exemplo Prático de Código
+
+O exemplo abaixo usa especificamente `data_quality_check`. Os campos e o tratamento mostrados aqui não devem ser copiados como se fossem o contrato universal dos outros seis utilitários.
 
 Se a raiz `.assistant` ainda não estiver no caminho do Python, configure-a antes do import:
 
@@ -190,7 +207,7 @@ O helper usa `pk_columns`; não existem os parâmetros `primary_keys` ou `critic
 
 | Estado | Significado | Decisão típica do consumidor |
 |---|---|---|
-| `pass` | nenhuma regra configurada encontrou violação | prosseguir para o próximo gate |
+| `pass` | nenhuma regra configurada encontrou violação | avaliar os demais gates e prosseguir somente se a política permitir |
 | `warn` | existe condição que requer atenção | revisar alertas e decidir conscientemente |
 | `fail` | ao menos uma regra de falha foi violada | interromper somente se essa política estiver codificada |
 
@@ -202,15 +219,27 @@ Exemplo abreviado da estrutura retornada:
 ```python
 {
     "status": "warn",
-    "metrics": {
+    "score": 95,
+    "thresholds": {
+        "null_warn": 5.0,
+        "null_fail": 20.0,
+        "freshness_days": 2.0,
+    },
+    "checks": {
         "row_count": 125000,
-        "duplicate_pk_count": 0,
+        "pk_uniqueness": {
+            "duplicate_rows": 0,
+            "null_key_rows": 0,
+            "status": "pass",
+        },
+        "nulls": {"coluna_exemplo": {"count": 6250, "pct": 5.0, "status": "warn"}},
     },
     "alerts": [
         {
+            "check": "null_rate",
+            "column": "coluna_exemplo",
             "severity": "warn",
-            "check": "freshness",
-            "message": "A atualização excedeu o limite configurado.",
+            "message": "Null rate 5.00% (6250/125000).",
         }
     ],
 }
@@ -219,12 +248,17 @@ Exemplo abreviado da estrutura retornada:
 ---
 
 <a id="️-o-que-acontece-durante-a-execução"></a>
+<a id="leitura-visual-do-veredito"></a>
 
 ### Leitura visual do veredito
 
-![Comparação entre os estados PASS, WARN e FAIL](../hub_readmes_visual_assets/readmes/scripts/png/05_leitura_do_veredito.png)
+![Três estados do data_quality_check seguidos de um gate separado de política consumidora.](../hub_readmes_visual_assets/readmes/scripts/png/05_veredito_data_quality.png)
 
-*Leitura da figura: cada estado orienta uma investigação, mas só a política codificada decide se o fluxo deve prosseguir ou parar.*
+*Leitura da figura: PASS, WARN e FAIL são estados irmãos exclusivos de `data_quality_check`; nenhum deles executa uma reação por conta própria.*
+
+**Equivalente textual da figura:** `pass` indica ausência de violações nas verificações configuradas, não homologação; `warn` indica uma condição que exige atenção; e `fail` indica que uma regra de falha foi violada. Depois do diagnóstico, uma política externa e codificada decide se o consumidor prossegue, registra e revisa alertas ou falha a tarefa.
+
+<a id="o-que-acontece-durante-a-execucao"></a>
 
 ## ⚙️ O que Acontece Durante a Execução?
 
@@ -243,14 +277,17 @@ Os scripts priorizam processamento distribuído quando trabalham com Spark, mas 
 ---
 
 <a id="-diagnóstico-não-é-enforcement"></a>
+<a id="diagnostico-nao-e-enforcement"></a>
 
 ## 🧭 Diagnóstico não é Enforcement
 
-Um Hub Script descreve o que observou; a camada operacional decide o que fazer.
+Quando um Hub Script é usado como diagnóstico, ele descreve o que observou; a camada operacional decide o que fazer.
 
-![Separação entre diagnóstico, política e enforcement](../hub_readmes_visual_assets/readmes/scripts/png/04_diagnostico_vs_enforcement.png)
+![Três zonas separando diagnóstico, política consumidora e orquestração Databricks.](../hub_readmes_visual_assets/readmes/scripts/png/04_diagnostico_vs_enforcement.png)
 
 *Leitura da figura: Hub Script, regra consumidora e serviços de orquestração são camadas diferentes.*
+
+**Equivalente textual da figura:** na camada de medição, o script de diagnóstico lê e calcula, devolvendo evidência; na camada de política, o código consumidor interpreta essa saída; e, somente quando configurados e disponíveis no workspace, serviços operacionais aplicam regras, histórico, tarefas ou notificações. O Hub Script não agenda, notifica nem interrompe outro processo sozinho.
 
 - Para regras executadas dentro de um pipeline declarativo, avalie **Lakeflow expectations**.
 - Para histórico operacional, use o **event log** do pipeline.
@@ -260,12 +297,13 @@ Um Hub Script descreve o que observou; a camada operacional decide o que fazer.
 ---
 
 <a id="-perguntas-frequentes-faq"></a>
+<a id="perguntas-frequentes-faq"></a>
 
 ## ❓ Perguntas Frequentes (FAQ)
 
 ### 1. Se o script retornar `status="fail"`, meus dados serão apagados ou modificados?
 
-**Não pelo script.** Os diagnósticos leem dados e retornam resultados; não executam `DELETE`, `DROP` ou sobrescrita. O notebook consumidor pode optar por falhar uma tarefa, mas isso é uma ação separada e explícita.
+**Não pelo script.** Esses utilitários não executam `DELETE`, `DROP` ou sobrescrita. Alguns apenas leem e descrevem; `rfv_calculator` constrói um novo DataFrame; `schema_to_yaml` serializa texto em memória. Persistência ou falha de tarefa é uma ação separada e explícita do consumidor.
 
 ### 2. Os scripts funcionam com tabelas do Unity Catalog?
 

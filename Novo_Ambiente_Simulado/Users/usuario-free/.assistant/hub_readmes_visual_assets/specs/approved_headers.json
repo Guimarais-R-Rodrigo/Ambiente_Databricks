@@ -1,0 +1,7 @@
+{
+  "approved_by": "user",
+  "headers": [
+    {"id": "cabecalho_crm", "sha256": "705a2c35c5182401edc6874fae6de56ed1f5d48891cb2e6dd995682b415ffca2"},
+    {"id": "cabecalho_squad", "sha256": "bc7d804c3127924ad7838dcc8fe1bc0a573daafb7c4512d335210540f3ef7a05"}
+  ]
+}

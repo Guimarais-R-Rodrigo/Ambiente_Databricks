@@ -1,0 +1,26 @@
+{
+  "name": "ambiente-databricks-readme-visuals",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "render": "node production.mjs --family all",
+    "render:headers": "node headers.mjs",
+    "validate": "node validate_production.mjs",
+    "render:sprint0": "node render.mjs",
+    "validate:sprint0": "node validate.mjs",
+    "contact-sheet:sprint0": "node contact_sheet.mjs"
+  },
+  "dependencies": {
+    "@fontsource/inter": "5.3.0",
+    "@svgdotjs/svg.js": "3.2.8",
+    "fontkit": "2.0.4",
+    "lucide-static": "1.44.0",
+    "sharp": "0.35.4",
+    "svgdom": "0.1.29",
+    "yaml": "2.9.0"
+  }
+}

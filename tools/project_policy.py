@@ -71,7 +71,8 @@ CORPORATE_RE = re.compile(
 # Padrões pessoais legados que não podem reaparecer em conteúdo ativo. As partes
 # são concatenadas para o próprio arquivo de política não casar consigo mesmo.
 PERSONAL_RE = re.compile(
-    r"c\d{6}|corp\.caixa|caixa\.gov\.br|guimarais[._-]?r?[._-]?"
+    r"(?<![A-Za-z0-9])c\d{6}(?![A-Za-z0-9])"
+    r"|corp\.caixa|caixa\.gov\.br|guimarais[._-]?r?[._-]?"
     + r"rodrigo@|C:\\Users\\"
     + r"Rodrigo"
     + r"|/Users/"

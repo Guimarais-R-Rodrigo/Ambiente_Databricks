@@ -1,0 +1,1381 @@
+{
+  "schema_version": 1,
+  "approved_by": "user",
+  "purpose": "Canonical frozen inputs for five approved signatures; production has no dependency on prototype folders.",
+  "assets": [
+    {
+      "id": "raiz.01_mapa_ecossistema",
+      "variants": [
+        {
+          "mode": "readme",
+          "width": 1600,
+          "height": 760,
+          "minimum_display_width": 720,
+          "svg": "readmes/raiz/sources/01_mapa_ecossistema.svg",
+          "png": "readmes/raiz/png/01_mapa_ecossistema.png",
+          "svg_sha256": "dafab3d97b08af3b68ff24a2e8a881e225559bf5c9638466d95159b8a382d143",
+          "png_sha256": "476743d24837ac6392ff32d8cb73a86ab2811baf38a56e20a2b47c4ea34cc45a",
+          "texts": [
+            {
+              "text": "CONTEXTO E MÉTODO",
+              "x": 58,
+              "y": 24,
+              "width": 357.484375,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "CÓDIGO E UTILITÁRIOS",
+              "x": 970,
+              "y": 24,
+              "width": 362.546875,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "Ecossistema",
+              "x": 694.50537109375,
+              "y": 312,
+              "width": 210.9892578125,
+              "height": 42.5,
+              "size": 34,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": ".assistant",
+              "x": 706.21533203125,
+              "y": 353,
+              "width": 187.5693359375,
+              "height": 47.5,
+              "size": 38,
+              "essential": true,
+              "color": "#FF6598"
+            },
+            {
+              "text": "ORGANIZAÇÃO",
+              "x": 721.33203125,
+              "y": 418,
+              "width": 157.3359375,
+              "height": 26.25,
+              "size": 21,
+              "essential": false,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "Agent Skills",
+              "x": 166,
+              "y": 124,
+              "width": 202.46337890625,
+              "height": 43.75,
+              "size": 35,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "método + guardrails",
+              "x": 166,
+              "y": 180,
+              "width": 304.015625,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "relevância ou @",
+              "x": 166,
+              "y": 225,
+              "width": 241.671875,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#5DD6FF"
+            },
+            {
+              "text": "mecanismo suportado • conteúdo Hub",
+              "x": 166,
+              "y": 275,
+              "width": 440.7890625,
+              "height": 30,
+              "size": 24,
+              "essential": false,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "Hub Prompts",
+              "x": 166,
+              "y": 387,
+              "width": 221.9970703125,
+              "height": 43.75,
+              "size": 35,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "briefing + critérios de aceite",
+              "x": 166,
+              "y": 443,
+              "width": 426.765625,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "contexto explícito",
+              "x": 166,
+              "y": 488,
+              "width": 266.78125,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#FF6598"
+            },
+            {
+              "text": "CONTEÚDO HUB",
+              "x": 166,
+              "y": 538,
+              "width": 195.5625,
+              "height": 30,
+              "size": 24,
+              "essential": false,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "Hub Snippets",
+              "x": 1118,
+              "y": 124,
+              "width": 229.619140625,
+              "height": 43.75,
+              "size": 35,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "funções + classes",
+              "x": 1118,
+              "y": 180,
+              "width": 275.1875,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "importação explícita",
+              "x": 1118,
+              "y": 225,
+              "width": 305.578125,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#FF6598"
+            },
+            {
+              "text": "CONTEÚDO HUB",
+              "x": 1118,
+              "y": 275,
+              "width": 195.5625,
+              "height": 30,
+              "size": 24,
+              "essential": false,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "Hub Scripts",
+              "x": 1118,
+              "y": 387,
+              "width": 199.9169921875,
+              "height": 43.75,
+              "size": 35,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "utilitários + diagnósticos",
+              "x": 1118,
+              "y": 443,
+              "width": 369.09375,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "execução sob demanda",
+              "x": 1118,
+              "y": 488,
+              "width": 360.6875,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#FF6598"
+            },
+            {
+              "text": "CONTEÚDO HUB",
+              "x": 1118,
+              "y": 538,
+              "width": 195.5625,
+              "height": 30,
+              "size": 24,
+              "essential": false,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "Hub Padrões",
+              "x": 580,
+              "y": 586,
+              "width": 205.75048828125,
+              "height": 41.25,
+              "size": 33,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "consulta ou contexto explícito",
+              "x": 580,
+              "y": 633,
+              "width": 451.890625,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "As ligações mostram organização; cada componente tem sua própria forma de uso.",
+              "x": 246.083984375,
+              "y": 706,
+              "width": 1107.83203125,
+              "height": 35,
+              "size": 28,
+              "essential": false,
+              "color": "#B8C9DA"
+            }
+          ],
+          "icons": [
+            "network",
+            "route",
+            "notebook-pen",
+            "package-open",
+            "scan-search",
+            "blocks"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "assistant.02_arquitetura_de_uso",
+      "variants": [
+        {
+          "mode": "readme",
+          "width": 1600,
+          "height": 760,
+          "minimum_display_width": 720,
+          "svg": "readmes/assistant/sources/02_arquitetura_de_uso.svg",
+          "png": "readmes/assistant/png/02_arquitetura_de_uso.png",
+          "svg_sha256": "d87b7fe83debc547e3ebc368e339f3720371ebe45d71e7f30972e37154695715",
+          "png_sha256": "7658823d3d1f5e8a75813861e9e61acebe4aca1185d60ccf8f43d31565c311a7",
+          "texts": [
+            {
+              "text": "CONTEXTO",
+              "x": 68,
+              "y": 31,
+              "width": 135.65625,
+              "height": 30,
+              "size": 24,
+              "essential": false,
+              "color": "#5DD6FF"
+            },
+            {
+              "text": "EXECUÇÃO",
+              "x": 68,
+              "y": 452,
+              "width": 134.6953125,
+              "height": 30,
+              "size": 24,
+              "essential": false,
+              "color": "#FF6598"
+            },
+            {
+              "text": "Objetivo e recursos",
+              "x": 73.5166015625,
+              "y": 210,
+              "width": 322.966796875,
+              "height": 42.5,
+              "size": 34,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "pedido, @ e Add Context",
+              "x": 45.7265625,
+              "y": 258,
+              "width": 378.546875,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "Contexto aplicável",
+              "x": 595.7880859375,
+              "y": 210,
+              "width": 308.423828125,
+              "height": 42.5,
+              "size": 34,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "instruções, skill e briefing",
+              "x": 556.46875,
+              "y": 258,
+              "width": 387.0625,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "Genie Code",
+              "x": 1168.9267578125,
+              "y": 210,
+              "width": 192.146484375,
+              "height": 42.5,
+              "size": 34,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "plano, código ou ações",
+              "x": 1088.828125,
+              "y": 258,
+              "width": 352.34375,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "Revisão de proposta e escopo",
+              "x": 360,
+              "y": 333,
+              "width": 463.84375,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#FFC966"
+            },
+            {
+              "text": "conforme política configurada",
+              "x": 360,
+              "y": 375,
+              "width": 454.859375,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "Helpers Hub",
+              "x": 65.27490234375,
+              "y": 603,
+              "width": 199.4501953125,
+              "height": 41.25,
+              "size": 33,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "snippets + scripts",
+              "x": 30.234375,
+              "y": 648,
+              "width": 269.53125,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "Notebook",
+              "x": 591.38330078125,
+              "y": 603,
+              "width": 157.2333984375,
+              "height": 41.25,
+              "size": 33,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "importa e chama",
+              "x": 543.234375,
+              "y": 648,
+              "width": 253.53125,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "Runtime",
+              "x": 1048.218505859375,
+              "y": 603,
+              "width": 133.56298828125,
+              "height": 41.25,
+              "size": 33,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "Python / Spark / SQL",
+              "x": 956.4765625,
+              "y": 648,
+              "width": 317.046875,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "Evidência",
+              "x": 1371.35107421875,
+              "y": 603,
+              "width": 157.2978515625,
+              "height": 41.25,
+              "size": 33,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "resultado",
+              "x": 1379.2109375,
+              "y": 644,
+              "width": 141.578125,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "+ limites",
+              "x": 1386.421875,
+              "y": 684,
+              "width": 127.15625,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "ação explícita",
+              "x": 323.5634765625,
+              "y": 496,
+              "width": 168.873046875,
+              "height": 32.5,
+              "size": 26,
+              "essential": false,
+              "color": "#FF6598"
+            },
+            {
+              "text": "Rota independente da conversa: o código consumidor importa e chama os helpers.",
+              "x": 56,
+              "y": 709,
+              "width": 1059.328125,
+              "height": 33.75,
+              "size": 27,
+              "essential": false,
+              "color": "#B8C9DA"
+            }
+          ],
+          "icons": [
+            "scan-search",
+            "layers-3",
+            "sparkles",
+            "user-round-check",
+            "package-open",
+            "notebook-tabs",
+            "cpu",
+            "badge-check"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scripts.02_catalogo_diagnosticos",
+      "variants": [
+        {
+          "mode": "readme",
+          "width": 1600,
+          "height": 760,
+          "minimum_display_width": 720,
+          "svg": "readmes/scripts/sources/02_catalogo_diagnosticos.svg",
+          "png": "readmes/scripts/png/02_catalogo_diagnosticos.png",
+          "svg_sha256": "b50bfe5f2bbda9761314dca4c6cc7fa7b2c41dd739fc36a63c8a572534cc136f",
+          "png_sha256": "4cb42c2bea4af614dcd8de4b9fa676a92f64a784a57da2f71d4c0964c74a3444",
+          "texts": [
+            {
+              "text": "EXECUÇÃO SOB DEMANDA",
+              "x": 68,
+              "y": 29,
+              "width": 320.87109375,
+              "height": 30,
+              "size": 24,
+              "essential": false,
+              "color": "#FF6598"
+            },
+            {
+              "text": "UTILITÁRIOS + DIAGNÓSTICOS",
+              "x": 1135.8095703125,
+              "y": 28,
+              "width": 408.1904296875,
+              "height": 33.75,
+              "size": 27,
+              "essential": false,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "Qualidade e perfil",
+              "x": 148,
+              "y": 131,
+              "width": 293.3994140625,
+              "height": 42.5,
+              "size": 34,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "data_quality_check",
+              "x": 84,
+              "y": 209,
+              "width": 295.1875,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "dict · status e alertas",
+              "x": 437.859375,
+              "y": 209,
+              "width": 314.140625,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "quick_profile",
+              "x": 84,
+              "y": 256,
+              "width": 200.640625,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "dict · perfil",
+              "x": 590.546875,
+              "y": 256,
+              "width": 161.453125,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "INSPECIONAR A BASE",
+              "x": 84,
+              "y": 314,
+              "width": 237.2734375,
+              "height": 27.5,
+              "size": 22,
+              "essential": false,
+              "color": "#8196AA"
+            },
+            {
+              "text": "Estabilidade",
+              "x": 914,
+              "y": 131,
+              "width": 203.9833984375,
+              "height": 42.5,
+              "size": 34,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "drift_detector",
+              "x": 850,
+              "y": 209,
+              "width": 209.40625,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "dict · classificações",
+              "x": 1219.984375,
+              "y": 209,
+              "width": 298.015625,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "classifica somente com limiares definidos",
+              "x": 850,
+              "y": 278,
+              "width": 630.15625,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "COMPARAR DISTRIBUIÇÕES",
+              "x": 850,
+              "y": 314,
+              "width": 302.5537109375,
+              "height": 27.5,
+              "size": 22,
+              "essential": false,
+              "color": "#8196AA"
+            },
+            {
+              "text": "Transformação analítica",
+              "x": 148,
+              "y": 418,
+              "width": 402.4052734375,
+              "height": 42.5,
+              "size": 34,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "rfv_calculator",
+              "x": 84,
+              "y": 496,
+              "width": 210.84375,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "Spark DataFrame",
+              "x": 490.171875,
+              "y": 496,
+              "width": 261.828125,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "recência, frequência e valor por entidade",
+              "x": 84,
+              "y": 565,
+              "width": 622.1875,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "CONSTRUIR FEATURES",
+              "x": 84,
+              "y": 629,
+              "width": 249.0576171875,
+              "height": 27.5,
+              "size": 22,
+              "essential": false,
+              "color": "#8196AA"
+            },
+            {
+              "text": "Governança técnica",
+              "x": 914,
+              "y": 418,
+              "width": 332.9111328125,
+              "height": 42.5,
+              "size": 34,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "schema_to_yaml",
+              "x": 850,
+              "y": 496,
+              "width": 254.015625,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "texto YAML ou JSON",
+              "x": 1201.546875,
+              "y": 496,
+              "width": 316.453125,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "naming_checker",
+              "x": 850,
+              "y": 543,
+              "width": 254.671875,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "lista de violações",
+              "x": 1257.109375,
+              "y": 543,
+              "width": 260.890625,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "doc_coverage",
+              "x": 850,
+              "y": 590,
+              "width": 217.46875,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "dict · métricas",
+              "x": 1303.96875,
+              "y": 590,
+              "width": 214.03125,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "DESCREVER E CONFERIR",
+              "x": 850,
+              "y": 629,
+              "width": 267.1044921875,
+              "height": 27.5,
+              "size": 22,
+              "essential": false,
+              "color": "#8196AA"
+            },
+            {
+              "text": "Cada ferramenta tem seu contrato. O consumidor decide como usar a saída.",
+              "x": 104,
+              "y": 702,
+              "width": 1154.625,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#B8C9DA"
+            }
+          ],
+          "icons": [
+            "scan-search",
+            "activity",
+            "users-round",
+            "files",
+            "sliders-horizontal"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "skills.03_anatomia_skill",
+      "variants": [
+        {
+          "mode": "readme",
+          "width": 1400,
+          "height": 900,
+          "minimum_display_width": 720,
+          "svg": "readmes/skills/sources/03_anatomia_skill.svg",
+          "png": "readmes/skills/png/03_anatomia_skill.png",
+          "svg_sha256": "f194a10380639c90a33964003593de188a4288cfe77ea799c3b59736110da14a",
+          "png_sha256": "0edd08059de6dea5f21a8b6cb9f83bc835cf9e89ca42257d418c76bb6af5c390",
+          "texts": [
+            {
+              "text": "MECANISMO SUPORTADO · CONTEÚDO HUB",
+              "x": 68,
+              "y": 31,
+              "width": 524.91796875,
+              "height": 30,
+              "size": 24,
+              "essential": false,
+              "color": "#5DD6FF"
+            },
+            {
+              "text": "SKILL.md",
+              "x": 230,
+              "y": 153,
+              "width": 227.15625,
+              "height": 60,
+              "size": 48,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "Frontmatter YAML",
+              "x": 181,
+              "y": 256,
+              "width": 293.47119140625,
+              "height": 41.25,
+              "size": 33,
+              "essential": true,
+              "color": "#5DD6FF"
+            },
+            {
+              "text": "name: nome da skill",
+              "x": 181,
+              "y": 307,
+              "width": 267.873046875,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "description: o que faz",
+              "x": 181,
+              "y": 346,
+              "width": 293.822265625,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "e quando usar",
+              "x": 181,
+              "y": 385,
+              "width": 192.732421875,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "Instruções em Markdown",
+              "x": 153,
+              "y": 459,
+              "width": 421.3974609375,
+              "height": 42.5,
+              "size": 34,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "sequência de trabalho",
+              "x": 181,
+              "y": 519,
+              "width": 304.5849609375,
+              "height": 36.25,
+              "size": 29,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "exemplos e guardrails",
+              "x": 181,
+              "y": 565,
+              "width": 300.40771484375,
+              "height": 36.25,
+              "size": 29,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "critérios de saída",
+              "x": 181,
+              "y": 611,
+              "width": 235.455078125,
+              "height": 36.25,
+              "size": 29,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "referências aos recursos",
+              "x": 181,
+              "y": 657,
+              "width": 339.06494140625,
+              "height": 36.25,
+              "size": 29,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "CABEÇALHO + CORPO NO MESMO ARQUIVO",
+              "x": 155,
+              "y": 699,
+              "width": 458.15478515625,
+              "height": 26.25,
+              "size": 21,
+              "essential": false,
+              "color": "#8196AA"
+            },
+            {
+              "text": "Recursos opcionais",
+              "x": 866,
+              "y": 173,
+              "width": 325.689453125,
+              "height": 42.5,
+              "size": 34,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "capacidades do mecanismo",
+              "x": 866,
+              "y": 224,
+              "width": 370.97265625,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "uso conforme necessidade",
+              "x": 866,
+              "y": 263,
+              "width": 359.228515625,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "templates",
+              "x": 979,
+              "y": 355,
+              "width": 155.484375,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "presentes no Hub",
+              "x": 979,
+              "y": 399,
+              "width": 234.7734375,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "referências",
+              "x": 979,
+              "y": 494,
+              "width": 177.65625,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "quando fornecidas",
+              "x": 979,
+              "y": 538,
+              "width": 248.376953125,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "scripts",
+              "x": 979,
+              "y": 633,
+              "width": 108.171875,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "quando fornecidos",
+              "x": 979,
+              "y": 677,
+              "width": 249.443359375,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "Metadados ajudam a selecionar. Instruções orientam. Recursos aprofundam.",
+              "x": 192.8486328125,
+              "y": 824,
+              "width": 1014.302734375,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            }
+          ],
+          "icons": [
+            "file-code-2",
+            "file-stack",
+            "library-big",
+            "terminal-square"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prompts.03_anatomia_briefing",
+      "variants": [
+        {
+          "mode": "readme",
+          "width": 1400,
+          "height": 900,
+          "minimum_display_width": 720,
+          "svg": "readmes/prompts/sources/03_anatomia_briefing.svg",
+          "png": "readmes/prompts/png/03_anatomia_briefing.png",
+          "svg_sha256": "f237a8a719a2adcc59e83b59640f5d04b0a9ca78541a2427d97555618c3fb1ff",
+          "png_sha256": "5b974251dc505780429f66024c78de68259b9e5f6c50e95a4595e0bc972ebaa8",
+          "texts": [
+            {
+              "text": "BRIEFING TÉCNICO",
+              "x": 68,
+              "y": 31,
+              "width": 225.3984375,
+              "height": 30,
+              "size": 24,
+              "essential": false,
+              "color": "#FF6598"
+            },
+            {
+              "text": "PREENCHER · CONTEXTUALIZAR · CONFERIR",
+              "x": 840.1123046875,
+              "y": 32,
+              "width": 505.8876953125,
+              "height": 28.75,
+              "size": 23,
+              "essential": false,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "01",
+              "x": 118,
+              "y": 168,
+              "width": 36.265625,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#FF6598"
+            },
+            {
+              "text": "Objetivo e contexto",
+              "x": 118,
+              "y": 216,
+              "width": 294.1669921875,
+              "height": 38.75,
+              "size": 31,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "problema, decisão e contexto",
+              "x": 118,
+              "y": 263,
+              "width": 391.48046875,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "campos variam por briefing",
+              "x": 118,
+              "y": 301,
+              "width": 364.423828125,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "02",
+              "x": 715,
+              "y": 168,
+              "width": 42.546875,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#FF6598"
+            },
+            {
+              "text": "Recursos",
+              "x": 715,
+              "y": 216,
+              "width": 142.345703125,
+              "height": 38.75,
+              "size": 31,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "tabela, notebook ou arquivo",
+              "x": 715,
+              "y": 263,
+              "width": 368.921875,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "@ / Add Context",
+              "x": 715,
+              "y": 301,
+              "width": 217.724609375,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "03",
+              "x": 118,
+              "y": 349,
+              "width": 43.15625,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#FF6598"
+            },
+            {
+              "text": "Restrições",
+              "x": 118,
+              "y": 397,
+              "width": 161.40283203125,
+              "height": 38.75,
+              "size": 31,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "custo, tempo e permissões",
+              "x": 118,
+              "y": 444,
+              "width": 357.90234375,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "ações proibidas",
+              "x": 118,
+              "y": 482,
+              "width": 209.849609375,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "04",
+              "x": 715,
+              "y": 349,
+              "width": 44.171875,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#FF6598"
+            },
+            {
+              "text": "Modo de trabalho",
+              "x": 715,
+              "y": 397,
+              "width": 265.24072265625,
+              "height": 38.75,
+              "size": 31,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "explicar ou gerar código",
+              "x": 715,
+              "y": 444,
+              "width": 322.1640625,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "execução quando autorizada",
+              "x": 715,
+              "y": 482,
+              "width": 383.263671875,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "05",
+              "x": 118,
+              "y": 532,
+              "width": 42.421875,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#FF6598"
+            },
+            {
+              "text": "Contrato de saída",
+              "x": 118,
+              "y": 580,
+              "width": 266.84521484375,
+              "height": 38.75,
+              "size": 31,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "artefatos e evidências",
+              "x": 118,
+              "y": 627,
+              "width": 291.67578125,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "limitações declaradas",
+              "x": 118,
+              "y": 665,
+              "width": 287.533203125,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "06",
+              "x": 715,
+              "y": 532,
+              "width": 43.3125,
+              "height": 40,
+              "size": 32,
+              "essential": true,
+              "color": "#FF6598"
+            },
+            {
+              "text": "Validação final",
+              "x": 715,
+              "y": 580,
+              "width": 223.236328125,
+              "height": 38.75,
+              "size": 31,
+              "essential": true,
+              "color": "#F7FAFC"
+            },
+            {
+              "text": "critérios de aceite",
+              "x": 715,
+              "y": 627,
+              "width": 237.220703125,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "fatos versus hipóteses",
+              "x": 715,
+              "y": 665,
+              "width": 298.388671875,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "NÃO INFORMADO",
+              "x": 117,
+              "y": 776,
+              "width": 243.66015625,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#FFC966"
+            },
+            {
+              "text": "ainda desconhecido",
+              "x": 407,
+              "y": 778,
+              "width": 266.95703125,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "NÃO APLICÁVEL",
+              "x": 753,
+              "y": 776,
+              "width": 224.396484375,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#A992FF"
+            },
+            {
+              "text": "avaliado: não se aplica",
+              "x": 1030,
+              "y": 778,
+              "width": 300.125,
+              "height": 35,
+              "size": 28,
+              "essential": true,
+              "color": "#B8C9DA"
+            },
+            {
+              "text": "O formulário organiza a conversa; o template em Markdown é a versão copiável.",
+              "x": 187.6064453125,
+              "y": 840,
+              "width": 1024.787109375,
+              "height": 33.75,
+              "size": 27,
+              "essential": false,
+              "color": "#B8C9DA"
+            }
+          ],
+          "icons": [
+            "target",
+            "paperclip",
+            "shield-alert",
+            "list-checks",
+            "package-check",
+            "badge-check"
+          ]
+        }
+      ]
+    }
+  ]
+}

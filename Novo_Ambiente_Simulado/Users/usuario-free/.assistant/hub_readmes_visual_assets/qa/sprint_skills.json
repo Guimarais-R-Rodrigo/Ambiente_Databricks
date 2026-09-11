@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "scope": "skills",
+  "checks": 770,
+  "failures": [],
+  "measurements": [
+    {
+      "id": "skills.01_descoberta_e_selecao",
+      "min_effective_px": 14.4,
+      "min_contrast": 7.9735783719832565
+    },
+    {
+      "id": "skills.02_skill_helpers_runtime",
+      "min_effective_px": 14.4,
+      "min_contrast": 7.9735783719832565
+    },
+    {
+      "id": "skills.03_anatomia_skill",
+      "min_effective_px": 14.4,
+      "min_contrast": 7.9735783719832565
+    }
+  ],
+  "limits": [
+    "A geometria automatizada não cobre todas as curvas e silhuetas; revisão visual independente complementa os checks.",
+    "Não é homologação de runtime nem teste conversacional da Genie Code."
+  ]
+}
