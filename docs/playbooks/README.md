@@ -10,6 +10,7 @@ resultado de teste, ele pode e deve ser atualizado quando a operação muda.
 | Alterar, validar, renderizar e publicar | [Ciclo de vida](ciclo-de-vida.md) |
 | Levar o pacote aprovado ao workspace do trabalho | [Replicação no trabalho](replicacao-trabalho.md) |
 | Conferir cada pré-condição da replicação | [Checklist de replicação](checklist-replicacao.md) |
+| Conferir Genie, instruções e imagens no trabalho | [Aceite humano](testes-genie-trabalho.md) |
 
 ## Ordem segura
 

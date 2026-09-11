@@ -1,167 +1,58 @@
-# Checklist de replicação no trabalho
+# Checklist — transição pessoal para o Databricks do trabalho
 
-> **Os números deste documento saem de comando, não de memória.** Onde antes
-> havia uma contagem fixa, hoje há a linha que a produz — porque toda contagem
-> escrita à mão neste projeto envelheceu, sem exceção. Rode antes de replicar:
->
-> ```powershell
-> python tools/validate_assistant.py     # skills, objetos, contratos
-> python tools/publicar_free.py --verify # arquivos, skills, extensões, obsoletos
-> ```
+Procedimento dono: [guia de transição](replicacao-trabalho.md). Versão 11/09/2026. Não preencher identificadores corporativos nesta cópia versionada; anotações reais ficam no ambiente autorizado.
 
-Documento de acompanhamento, para marcar enquanto executa. O procedimento
-completo, com o porquê de cada passo, está em
-[replicacao-trabalho.md](replicacao-trabalho.md).
+## Origem e pacote
 
-**Versão a replicar:** o commit que passou nos dois comandos do aviso acima.
-Anote aqui o hash e a saída de `--verify`, para que quem conferir depois saiba
-exatamente o que foi copiado:
+- [ ] Confirmar o commit escolhido e checkout limpo; manter README/widgets, Manual e instruções aprovados.
+- [ ] Executar renderer, gate local e testes do kit. Não interpretar teste local como teste do trabalho.
+- [ ] Gerar `tools/kit_transicao_trabalho.py --output .artifacts/kit-trabalho` em diretório novo ou baixar o artefato do workflow.
+- [ ] Levar ZIP 01, ZIP 02, guias e SHA256SUMS pelo canal corporativo permitido; não levar Git/histórico/segredos.
+- [ ] Conferir hashes e commit. Não misturar releases; não importar o ZIP externo de download.
 
-```text
-commit    : ________________
-arquivos  : ________ (linha `remotos` do --verify)
-skills    : ________ (linha `skills`)
-extensões : ________ (linha `extensões`)
-```
+## Destino, backup e staging
 
-Preencha ao final: data \_\_\_\_\_\_\_\_ · executado por \_\_\_\_\_\_\_\_
+- [ ] Confirmar autorização de upload, Workspace Files, compute e Genie. Não presumir autorização para produção.
+- [ ] Copiar o caminho do usuário pela UI e preencher somente no notebook do trabalho.
+- [ ] Backup de `.assistant` em **Zip - Source (notebook + files only)**; instruções exportadas separadamente.
+- [ ] Abrir o backup, conferir módulos/Markdown/imagens/notebooks e recuperação em local isolado. DBC sozinho não serve.
+- [ ] Guardar backup/configurações dentro do ambiente corporativo; separar Hub de skills/arquivos de terceiros.
+- [ ] Criar `hub_staging_<commit>` e importar ZIP 01 dentro dela, conferindo a camada de diretório.
+- [ ] Importar ZIP 02 na raiz do usuário; abrir `aceite_hub_<commit>/01_ACEITE_TECNICO`.
 
----
+## Notebook técnico em staging
 
-## Fase 0 — antes de sair desta máquina
+- [ ] Sessão Python nova; preencher USER_HOME/KIT_DIR; `PHASE="staging"`; opções extras desligadas.
+- [ ] Manifesto PASS e todos os FILEs SHA256 PASS. Não editar o manifesto para contornar erro.
+- [ ] Conferir tipos de arquivos/notebooks pela UI; metadata via API é opcional e não atesta células.
+- [ ] Conferir dependências necessárias e compute autorizado. Nenhuma instalação indiscriminada.
+- [ ] Habilitar Spark sintético; recomeçar em sessão nova; imports e Python PASS.
+- [ ] Spark mínimo, DQ aviso, DQ duplicidade, RFV, PIT, PSI e objeto Plotly PASS.
+- [ ] Veredito `STAGING_TECNICO_APROVADO_NAO_ATIVADO`. Nenhuma alegação de Genie ativa nesta fase.
 
-- [ ] `git status` limpo e sincronizado com o remoto
-- [ ] `python tools/validate_assistant.py` aprovado
-- [ ] `python tools/publicar_free.py --verify` aprovado
-- [ ] Anotar o commit que está sendo replicado: `________`
-- [ ] `python tools/render_simulado.py --write`
-- [ ] `python tools/bundle_implantacao.py`
-- [ ] Guardar o ZIP mínimo e anotar o commit do `MANIFEST.json`
+## Promoção seletiva
 
-## Fase 1 — backup, antes de tocar em qualquer coisa
+- [ ] Reservar janela sem alteração simultânea; preparar rollback fora da descoberta de skills.
+- [ ] Substituir cinco pastas Hub: padrões, prompts, recursos visuais, scripts e snippets.
+- [ ] Substituir apenas skills declaradas do Hub, sem apagar `skills/` inteira; reconciliar legado identificado.
+- [ ] Preservar `.mcp_servers.json`, skills alheias, segredos, permissões e instruções administrativas.
+- [ ] Atualizar README e Manual; retirar catálogo/glossário independentes somente se forem Hub-owned.
+- [ ] Atualizar `.assistant_instructions.md` na raiz do usuário por último e confirmar pelo Settings da Genie.
 
-Sem CLI no trabalho, este é o único caminho de volta.
+## Aceite final e piloto
 
-- [ ] Abrir `/Users/<username-trabalho>/` no workspace
-- [ ] Exportar a pasta `.assistant` inteira (menu de contexto → Export)
-- [ ] Exportar o arquivo de instruções existente — no ambiente anterior ele
-      costuma estar como `assistant_instructions.md`, **sem o ponto inicial**
-- [ ] Guardar os dois fora do Databricks, em local que sobreviva à sessão
-- [ ] Anotar data e conteúdo do backup: `________`
+- [ ] Reiniciar Python; `PHASE="final"`; conferir FILEs e testes novamente após a movimentação.
+- [ ] Abrir READMEs renderizados, imagens, links e os exemplos FILE/NOTEBOOK indicados.
+- [ ] Rodar roteiro humano: instruções, EDA sem @, baseline com @, criar objeto com @, contexto proporcional e proveniência.
+- [ ] Declarar confirmações humanas somente com observação. PENDENTE não é PASS.
+- [ ] MLflow opcional: experimento pessoal existente autorizado; round-trip e limpeza do run próprio confirmados.
+- [ ] Leitura UC opcional: consulta limitada à tabela autorizada; não confundir com permissão de escrita.
+- [ ] Registrar JSON final sanitizado dentro do ambiente autorizado; revisar antes de compartilhar.
+- [ ] `PRONTO_PARA_PILOTO_BASICO` somente no escopo testado. Modelos/serving/produção continuam em gates próprios.
 
-> Se o menu não oferecer exportação de pasta, exporte subpasta por subpasta.
-> Não avance sem backup completo.
+## Se houver falha
 
-## Fase 2 — levar os arquivos
-
-Escolha a rota que a política permitir. Descubra isso **antes** da fase 3.
-
-### Rota A — ZIP mínimo (preferível)
-
-- [ ] Levar somente `.artifacts/ambiente-databricks-<commit>.zip`
-- [ ] Conferir commit e paths no `MANIFEST.json`
-
-### Rota B — Git folder, se aprovada
-
-- [ ] Confirmar autorização para transportar o repositório completo
-- [ ] Confirmar que a história Git foi sanitizada/auditada; **a rota está
-      bloqueada enquanto commits antigos contiverem o path pessoal do simulado**
-- [ ] Copiar para o destino somente os paths listados no manifesto
-
-### Rota C — criação manual
-
-- [ ] Recriar a estrutura de pastas e subir arquivo a arquivo
-
-Rota usada: `________`
-
-## Fase 3 — limpar o ambiente antigo
-
-Só depois do backup confirmado.
-
-- [ ] Inventariar skills atuais e preservar todas as que não pertencem ao Hub
-- [ ] Remover somente skills Hub atuais/legadas listadas em `tools/project_policy.py`
-- [ ] Preservar `.assistant/.mcp_servers.json`
-- [ ] Remover/substituir somente `hub_padroes`, `hub_prompts`, `hub_scripts` e
-      `hub_snippets`, para que helpers obsoletos não sobrevivam
-- [ ] Remover `assistant_instructions.md` (sem ponto), que nunca foi lido
-- [ ] Conferir que nenhuma pasta pessoal não relacionada foi afetada
-
-## Fase 4 — instalar
-
-O destino é a pasta do **seu usuário do trabalho**. Copie o **conteúdo** da
-subárvore, não a pasta de usuário do laboratório.
-
-- [ ] `.assistant_instructions.md` na raiz de `/Users/<username-trabalho>/`
-- [ ] `.assistant/` completa no mesmo nível
-- [ ] Conferir que o arquivo de instruções tem o **ponto inicial** e o nome exato
-
-## Fase 5 — verificar a estrutura
-
-- [ ] `.assistant/skills/` tem o número de pastas `hub-ml-*` que o `--verify`
-      reportou, cada uma com `SKILL.md`
-- [ ] `.assistant/` tem os diretórios `hub_` que a linha `extensões` do `--verify` reportou mais `README.md`
-- [ ] `.assistant_instructions.md` presente na raiz do usuário
-- [ ] Abrir um `.py` de `hub_snippets`: precisa ser **arquivo**, não notebook
-- [ ] Abrir `hub_snippets/spark/pit_join/exemplo_pit_join.py`: precisa ser **notebook**
-- [ ] `MANUAL_TECNICO.md` presente
-
-> `.py` como notebook quebra `from hub_snippets...`. Notebook como arquivo não tem
-> células para executar. Os dois tipos importam.
-
-## Fase 6 — testes de aceitação
-
-O roteamento foi certificado em **36/36 nas 12 skills originais**; a
-`hub-ml-criar-objeto`, da Sprint 11, **ainda não foi testada** — inclua-a nos
-testes desta fase. O resultado depende só das
-descriptions, que são as mesmas. O que **só o trabalho valida** é runtime,
-permissão e integração.
-
-- [ ] **Chat novo**: pedir "Faça uma EDA completa da tabela X: granularidade,
-      chaves, qualidade e relatório executivo" → deve carregar
-      `hub-ml-eda-profissional`
-- [ ] **Chat novo**: pedir com `@hub-ml-baseline-ml` → seleção determinística
-- [ ] Confirmar que as respostas saem em PT-BR e seguem as preferências
-- [ ] Importar `tools/spark_smoke_test.py` como notebook
-- [ ] Definir `target_environment=work` e um `mlflow_experiment_path` temporário
-- [ ] Executar e confirmar que o run temporário foi excluído
-- [ ] Registrar o resultado do smoke test: `________ aprovações / ________ falhas`
-
-Consultar a referência corrente em `docs/testes/spark/README.md`. Módulos de ML
-podem parar de acusar dependência ausente, e limitações de `cache()` podem mudar
-em compute clássico.
-
-## Fase 7 — registrar
-
-- [ ] Entrada no `CHANGELOG.md` com o commit replicado e o resultado dos testes,
-      **sem identificadores corporativos**
-- [ ] Divergência entre laboratório e trabalho anotada na matriz de
-      `.claude/rules/free-vs-trabalho.md`
-- [ ] Qualquer correção necessária feita no `ambiente_fonte/`, nunca só no
-      workspace
-
-## Se algo der errado
-
-Restaurar o backup da fase 1 no mesmo caminho e abrir um chat novo. Conferir
-também se o run temporário do smoke foi excluído; se não, removê-lo antes de
-encerrar o rollback.
-
-## Ressalva sobre os módulos novos
-
-A ressalva original dizia que `pit_join`, `join_diagnostics`, `fixtures` e
-`mlflow_run` tinham auditoria de **uma** rodada, feita pelo mesmo modelo que os
-implementou, e mandava evitar `pit_join` em decisão que importasse. Essa condição
-não vale mais, e mantê-la escrita passou a induzir a decisão errada.
-
-O que mudou, com evidência datada:
-
-| Data | Fato |
-|---|---|
-| 20/08/2026 | auditoria de **segunda origem** (Codex), independente de quem implementou |
-| 29/08/2026 | smoke pós-correção no Spark 4.2.0, com `func:pit_join` = PASS |
-| 08/09/2026 | teste de **preservação de linha** do `pit_join`, com mutantes |
-
-O risco que **permanece** não é mais o de rodada única, e sim o de ambiente: nada
-disso foi medido no workspace corporativo. Antes de usar qualquer um dos quatro
-em decisão que importe no trabalho, refaça o smoke no runtime de destino e
-confira permissões, Unity Catalog e bibliotecas. Um PASS no Free é evidência
-sobre o Free.
+- [ ] Interromper promoção ou uso do componente afetado; localizar ID do teste, causa e correção no guia.
+- [ ] Conferir se MLflow deixou run próprio pendente de limpeza.
+- [ ] Restaurar só o escopo substituído pelo backup, sem sobrescrever mudanças alheias posteriores.
+- [ ] Reiniciar Python/chat; registrar motivo e retestar. Levar correções à fonte sem identificadores do trabalho.

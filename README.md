@@ -209,8 +209,8 @@ normas do molde    : 70 arquivos, 0 violação(ões)
 notebook exercita  : 57 objetos, 0 notebook(s) que só importam
 python (AST)       : 209 arquivos
 instrucoes         : 8367/20000 caracteres
-repo (identidade)  : 842 arquivos varridos no repositório editável/derivado
-repo (links)       : 382 links fora da raiz analisada
+repo (identidade)  : 846 arquivos varridos no repositório editável/derivado
+repo (links)       : 387 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
@@ -270,3 +270,5 @@ Não é recomendado. Confira recursos, filtros, plano, coletas, dependências, p
 - [Hub Prompts](ambiente_fonte/.assistant/hub_prompts/README.md)
 - [Recursos da Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/features-capabilities)
 - [Agent Skills](https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills)
+
+Para a instalação pessoal no trabalho, siga o [guia de transição com kit e notebook de aceite](docs/playbooks/replicacao-trabalho.md).

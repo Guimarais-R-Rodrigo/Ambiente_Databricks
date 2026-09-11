@@ -21,7 +21,11 @@ flowchart LR
   P --> W
 ```
 
-## Estado vigente — 09/09/2026
+## Transição ao trabalho — preparação em 11/09/2026
+
+O [guia vigente](../playbooks/replicacao-trabalho.md) separa integridade, runtime sintético e aceite humano. O kit gera um notebook próprio; ele não considera testes pulados como aprovação e não presume que a rodada de 09/09 homologue as novas instruções de 11/09 ou o workspace corporativo. A execução no trabalho permanece pendente.
+
+## Estado registrado — 09/09/2026
 
 | Gate | Resultado | Falta |
 |---|---|---|

@@ -5,6 +5,27 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-11 — Kit de transição e aceite gradual no trabalho (Codex)
+
+### Adicionado
+
+- (Codex) Kit offline de dois ZIPs, manifesto v2 com tipos de objeto e notebook
+  IPYNB de aceite gerado a partir de núcleo testável, sem publicação remota.
+- (Codex) Roteiro de 16 casos humanos para Genie e apresentação; testes de
+  integridade, escopo, estado, notebook e contratos Spark sintéticos opcionais.
+
+### Atualizado
+
+- (Codex) Runbook/checklist e skill de replicação: backup Zip - Source, staging,
+  promoção seletiva das cinco pastas Hub, instruções por último e reteste final.
+- (Codex) MLflow e consultas corporativas desativados por padrão. Pulado não
+  equivale a aprovado; arquivos, notebooks, runtime e experiência têm gates próprios.
+
+### Notas
+
+- (Codex) Instruções, Manual, READMEs do produto, imagens, helpers e simulado
+  preservados. Nenhuma conexão, publicação ou teste no workspace corporativo.
+
 ## 2026-09-11 — Assistant Instructions integradas ao Hub (Codex)
 
 ### Atualizado

@@ -8,6 +8,7 @@ esconde os outros e obriga a rodar de novo para cada um:
 1. `validate_assistant.py`  — forma, links, contratos, identidade e higiene;
 2. `hub_snippets/tests/test_core.py`   — regressões da biblioteca;
 3. `tools/tests/test_tool_guards.py`   — guardas das próprias ferramentas.
+4. `tools/tests/test_transicao_trabalho.py` — kit, notebook e guardas de aceite.
 
 O que este gate **não** faz, por decisão do plano consolidado: nada que precise
 de credencial, rede ou runtime Databricks. Publicação, verify remoto, smoke em
@@ -58,6 +59,11 @@ ETAPAS = [
         "ferramentas",
         "guardas de tools/",
         [sys.executable, "tools/tests/test_tool_guards.py"],
+    ),
+    (
+        "transicao",
+        "guardas do kit e notebook de aceite (Spark opcional separado)",
+        [sys.executable, "tools/tests/test_transicao_trabalho.py"],
     ),
 ]
 

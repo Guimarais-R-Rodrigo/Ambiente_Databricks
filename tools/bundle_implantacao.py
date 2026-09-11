@@ -16,7 +16,8 @@ import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-from project_policy import SAFE_SIMULATED_USERNAME
+from project_policy import SAFE_SIMULATED_USERNAME, EXPECTED_HUB_DIRS, EXPECTED_SKILL_NAMES, LEGACY_MANAGED_SKILL_NAMES
+from notebook_marker import eh_notebook
 from publicar_free import conferir_fonte_espelho
 
 
@@ -78,23 +79,38 @@ def main() -> int:
     output = output.resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
 
+    if output.is_relative_to(SOURCE.resolve()) or output.is_relative_to((REPO_ROOT / "ambiente_fonte").resolve()):
+        print("FAIL saída do pacote não pode ficar dentro do produto")
+        return 1
+    if output.exists():
+        print("FAIL saída já existe; use outro nome para preservar o pacote anterior")
+        return 1
+
     entries = []
     for path in files:
+        if path.is_symlink():
+            print("FAIL symlink recusado no pacote")
+            return 1
         relative = path.relative_to(SOURCE).as_posix()
         entries.append(
             {
                 "path": relative,
                 "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
                 "bytes": path.stat().st_size,
+                "object_type": "NOTEBOOK" if path.suffix == ".ipynb" or (path.suffix == ".py" and eh_notebook(path)) else "FILE",
             }
         )
     manifest = {
-        "schema_version": 1,
+        "schema_version": 2,
         "source_commit": commit,
         "worktree_dirty": dirty,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "target": "/Users/<username-trabalho>/",
         "files": entries,
+        "managed_hub_directories": sorted(EXPECTED_HUB_DIRS),
+        "managed_skill_names": sorted(EXPECTED_SKILL_NAMES),
+        "legacy_skill_names_for_review": sorted(LEGACY_MANAGED_SKILL_NAMES),
+        "preserve": [".assistant/.mcp_servers.json", "skills e arquivos alheios ao Hub", "ACL e configuracoes administrativas"],
     }
 
     with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
