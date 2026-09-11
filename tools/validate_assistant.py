@@ -19,6 +19,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from repo_inventory import git_paths
+from markdown_contract import mask_code
 from notebook_marker import eh_notebook, texto_e_notebook  # noqa: E402
 from project_policy import CORPORATE_RE, EXPECTED_SKILL_NAMES, PERSONAL_RE  # noqa: E402
 
@@ -548,7 +549,7 @@ def check_markdown(root: Path, problems: list[str]) -> tuple[int, int]:
         text = md.read_text(encoding="utf-8")
         if text.count("```") % 2 != 0:
             problems.append(f"{md}: cercas ``` desbalanceadas")
-        for match in MD_LINK_RE.finditer(text):
+        for match in MD_LINK_RE.finditer(mask_code(text)):
             target = match.group(1)
             if target.startswith(("http://", "https://", "mailto:")):
                 continue
@@ -1409,7 +1410,7 @@ def check_worktree_hygiene(problems: list[str]) -> int:
         if CORPORATE_RE.search(content) or PERSONAL_RE.search(content) or MOJIBAKE_RE.search(content):
             problems.append(f"worktree: higiene de conteúdo inválida: {rel}")
         if p.suffix == ".md":
-            for match in MD_LINK_RE.finditer(content):
+            for match in MD_LINK_RE.finditer(mask_code(content)):
                 target = match.group(1)
                 if not target.startswith(("http://", "https://", "mailto:")) and not alvo_existe(p.parent, target):
                     problems.append(f"worktree: link quebrado em {rel}: {target}")
@@ -1471,7 +1472,7 @@ def check_repo_links(root: Path, problems: list[str]) -> int:
             texto = caminho.read_text(encoding="utf-8")
         except (UnicodeDecodeError, OSError):
             continue
-        for match in MD_LINK_RE.finditer(texto):
+        for match in MD_LINK_RE.finditer(mask_code(texto)):
             alvo = match.group(1)
             if alvo.startswith(("http://", "https://", "mailto:")):
                 continue

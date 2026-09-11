@@ -80,7 +80,7 @@ os comandos da seção anterior.
 - Conteúdo e papéis: `ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/` e `visual_system/`.
 - Layout: `lib.mjs` e `archetypes/signatures.mjs`.
 - Saída isolada: `READMEs_refeitos/readmes_viasual_melhorado/sprint_0/`.
-- Guia completo: [sistema visual](../../READMEs_refeitos/readmes_viasual_melhorado/sprint_0/SISTEMA_VISUAL.md).
+- Guia histórico local: `READMEs_refeitos/readmes_viasual_melhorado/sprint_0/SISTEMA_VISUAL.md` (não versionado neste checkout). Para o pacote vigente, consulte [contratos e transcrição](../../ambiente_fonte/.assistant/hub_readmes_visual_assets/CONTEUDO_FIGURAS.md).
 
 O diretório de saída é fixo e o baseline vem de um commit explícito. O renderer recusa um baseline local adulterado. Os READMEs ativos não são escritos por estas ferramentas.
 

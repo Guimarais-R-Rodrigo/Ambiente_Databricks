@@ -5,6 +5,33 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-11 — Correção dos READMEs candidatos após auditoria (ChatGPT)
+
+### Corrigido
+
+- (ChatGPT) Dez rascunhos em `Template_READMEs/sprints_preenchidos/`, sem promoção
+  da redação oficial: contratos DQ e taxa de resposta, freshness separado,
+  schema sintético consistente, execução do agente, dependências e procedência.
+- (ChatGPT) Fichas dos 51 snippets, sete scripts, treze skills e dezesseis prompts,
+  com interfaces conferidas, preparação, exemplos, limites e referências específicas.
+- (ChatGPT) Links de staging e destinos virtuais, âncoras explícitas e inserção
+  dos 21 diagramas e dois banners existentes, sem alterar os PNGs aprovados.
+- (ChatGPT) Validação ignora exemplos Markdown dentro de código, mas continua
+  reprovando links reais quebrados. Quatro referências históricas locais foram
+  identificadas como não versionadas, sem fabricar arquivos de Sprint 0.
+- (ChatGPT) Somente os contadores de evidência do README raiz são atualizados;
+  a redação candidata não foi promovida e o produto/simulado não foram alterados.
+
+### Adicionado
+
+- (ChatGPT) Mapping, exportação isolada de revisão, validação de PNG/hash,
+  links/âncoras e chamadas por AST; testes de regressão e exemplos documentados.
+- (ChatGPT) Workflow separado de PySpark local para dados sintéticos. Sem deploy,
+  credenciais Databricks, alteração de ACL ou homologação conversacional presumida.
+- (ChatGPT) Registro de escopo e evidências em
+  `Template_READMEs/sprints_preenchidos/REVISAO.md`. Treinadores opcionais não
+  são instalados nem homologados pelo gate básico.
+
 ## 2026-09-11 — Rascunhos dos READMEs a partir dos templates (OpenCode)
 
 ### Adicionado

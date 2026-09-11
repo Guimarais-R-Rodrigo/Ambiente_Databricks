@@ -2,13 +2,17 @@
 
 Data: 2026-09-10 · De: Codex · Para: próxima sessão de revisão visual
 
-## Estado atual
+> Nota de manutenção de 11/09/2026: este handoff preserva o registro histórico.
+> Para o conjunto vigente, consulte o [guia das ferramentas visuais](../../tools/readme_visuals/README.md).
+> Referências a protótipos locais não são links para arquivos disponíveis no Git.
+
+## Estado registrado em 10/09/2026
 
 Implementada a fundação para revisar a direção gráfica antes das cinco sprints
-documentais. A [galeria isolada](../../READMEs_refeitos/readmes_viasual_melhorado/sprint_0/README_SPRINT_0.md)
+documentais. A galeria isolada (`../../READMEs_refeitos/readmes_viasual_melhorado/sprint_0/README_SPRINT_0.md`; artefato local não versionado neste checkout)
 contém cinco assinaturas em variantes README/apresentação, comparações, contratos
 de 21 figuras futuras, licenças, manifesto e QA. O
-[estado da sprint](../../READMEs_refeitos/readmes_viasual_melhorado/sprint_0/ESTADO_SPRINT_0.md)
+estado da sprint (`../../READMEs_refeitos/readmes_viasual_melhorado/sprint_0/ESTADO_SPRINT_0.md`; artefato local não versionado neste checkout)
 é a referência para a publicação e os limites dos testes.
 
 Os seis READMEs físicos ativos e os 22 ativos anteriores permanecem preservados.
@@ -18,7 +22,7 @@ Os seis READMEs físicos ativos e os 22 ativos anteriores permanecem preservados
 
 As cinco assinaturas foram aprovadas pelo usuário em 2026-09-10. Depois da
 aprovação, ele solicitou dois cabeçalhos adicionais, com CRM e Squad, e pediu
-novo OK antes da continuidade. As [propostas locais de cabeçalho](../../READMEs_refeitos/readmes_viasual_melhorado/sprint_0/cabecalhos/README_CABECALHOS.md)
+novo OK antes da continuidade. As propostas locais de cabeçalho (`../../READMEs_refeitos/readmes_viasual_melhorado/sprint_0/cabecalhos/README_CABECALHOS.md`; artefato local não versionado neste checkout)
 usam uma arte-base raster com tipografia determinística; não foram publicadas.
 Não produzir os outros dezesseis ativos nem substituir imagens dos READMEs ativos
 antes da nova confirmação solicitada.

@@ -27,32 +27,62 @@ pré-requisito necessário, sem obrigação de ler os outros.
 
 | Sprint | README destino | Template | Pergunta que o guia responde | Arquivo desta pasta |
 |---|---|---|---|---|
-| 1 | `README.md` (raiz do repositório) | `README_raiz.md` | Quais peças existem e onde manter o produto? | `sprint-01-raiz/README.md` |
-| 2 | `ambiente_fonte/.assistant/README.md` | `README_assistant.md` | Como faço a primeira tarefa no workspace? | `sprint-02-assistant/README.md` |
-| 3 | `hub_snippets/README.md` | `README_snippets.md` | Como reutilizo uma implementação com contrato? | `sprint-03-snippets/README.md` |
-| 4 | `hub_scripts/README.md` | `README_scripts.md` | Como diagnostico um recurso e leio o veredito? | `sprint-04-scripts/README.md` |
-| 5 | `skills/README.md` | `README_skills.md` | Como aplico um método com a Genie Code? | `sprint-05-skills/README.md` |
-| 6 | `hub_prompts/README.md` | `README_prompts.md` | Como formulo a demanda sem inventar dados? | `sprint-06-prompts/README.md` |
-| 7 | `ambiente_fonte/README.md` | `README_ambiente_fonte.md` | Onde edito e como levo uma correção até o derivado? | `sprint-07-ambiente-fonte/README.md` |
-| 8 | `hub_padroes/README.md` | `README_padroes.md` | Como crio um objeto novo sem inventar formato? | `sprint-08-padroes/README.md` |
-| 9 | `hub_readmes_visual_assets/README.md` | `README_visual_assets.md` | Como uso ou mantenho uma figura sem cópia divergente? | `sprint-09-visual-assets/README.md` |
-| 10 | `headers/README.md` | `README_cabecalhos.md` | Qual banner usar e como inseri-lo? | `sprint-10-cabecalhos/README.md` |
+| 1 | `README.md` (raiz do repositório) | `README_raiz.md` | Quais peças existem e onde manter o produto? | [Abrir rascunho](sprint-01-raiz/README.md) |
+| 2 | `ambiente_fonte/.assistant/README.md` | `README_assistant.md` | Como faço a primeira tarefa no workspace? | [Abrir rascunho](sprint-02-assistant/README.md) |
+| 3 | `hub_snippets/README.md` | `README_snippets.md` | Como reutilizo uma implementação com contrato? | [Abrir rascunho](sprint-03-snippets/README.md) |
+| 4 | `hub_scripts/README.md` | `README_scripts.md` | Como diagnostico um recurso e leio o veredito? | [Abrir rascunho](sprint-04-scripts/README.md) |
+| 5 | `skills/README.md` | `README_skills.md` | Como aplico um método com a Genie Code? | [Abrir rascunho](sprint-05-skills/README.md) |
+| 6 | `hub_prompts/README.md` | `README_prompts.md` | Como formulo a demanda sem inventar dados? | [Abrir rascunho](sprint-06-prompts/README.md) |
+| 7 | `ambiente_fonte/README.md` | `README_ambiente_fonte.md` | Onde edito e como levo uma correção até o derivado? | [Abrir rascunho](sprint-07-ambiente-fonte/README.md) |
+| 8 | `hub_padroes/README.md` | `README_padroes.md` | Como crio um objeto novo sem inventar formato? | [Abrir rascunho](sprint-08-padroes/README.md) |
+| 9 | `hub_readmes_visual_assets/README.md` | `README_visual_assets.md` | Como uso ou mantenho uma figura sem cópia divergente? | [Abrir rascunho](sprint-09-visual-assets/README.md) |
+| 10 | `headers/README.md` | `README_cabecalhos.md` | Qual banner usar e como inseri-lo? | [Abrir rascunho](sprint-10-cabecalhos/README.md) |
 
-## Regras desta rodada
+## Estado desta revisão
 
-- Títulos e subtítulos da origem foram preservados, salvo correção pontual
-  justificada no próprio arquivo (ex.: “Em 30 segundos” → título descritivo).
-- Caminhos de imagem estão no formato do **destino final**, não desta pasta.
-- Placeholders `{{...}}` e notas ao autor foram removidos.
-- Nenhuma publicação, render de simulado, commit ou alteração dos READMEs
-  canônicos foi feita nesta etapa.
+Os dez rascunhos foram corrigidos para revisão humana. Os READMEs de uso em
+`ambiente_fonte/`, a lógica dos helpers e o simulado não foram substituídos.
+No README da raiz, somente as linhas numéricas da evidência do gate local
+são atualizadas mecanicamente quando o inventário muda; isso não promove a redação candidata.
 
-## Como promover depois da aprovação
+Links e imagens dos rascunhos agora resolvem **na pasta em que você os está
+lendo no GitHub**. Não é necessário copiar imagens: todos apontam para os PNGs
+canônicos em `ambiente_fonte/.assistant/hub_readmes_visual_assets/`.
+O [mapping de destinos](mapping.json) permite converter os caminhos sem
+adivinhar quantos níveis subir. Links escritos em exemplos de código continuam
+representando o local explicitamente descrito no exemplo.
 
-1. Revisar o rascunho da sprint.
-2. Copiar para o caminho de origem correspondente.
-3. Validar (`python tools/validate_assistant.py`).
-4. Regenerar o simulado.
-5. Só então publicar, se autorizado.
+## Como conferir antes de promover
 
-Não use `git add .`. Não apague `READMEs_refeitos/` neste passo.
+Na raiz do repositório, execute:
+
+```powershell
+python tools/review_readmes.py
+python tools/tests/test_readme_review.py
+python tools/tests/test_readme_examples.py
+python tools/ci_local.py
+```
+
+O primeiro comando verifica rascunhos e destinos virtuais, links, âncoras,
+assinaturas diretas e imagens. O segundo testa os guardas. O terceiro executa
+os exemplos portáveis e identifica os casos Spark não executados. O gate
+integra os testes locais; nenhum deles instala bibliotecas ou publica no workspace.
+
+O workflow específico de exemplos usa PySpark **local no GitHub Actions**, com
+dependência explícita e dados sintéticos. Isso não homologa Databricks,
+Spark Connect, ACL, conversas da Genie ou os treinadores opcionais.
+
+## Exportação para revisão, sem promoção
+
+```powershell
+python tools/review_readmes.py --export .artifacts/readme-review/candidato
+```
+
+Use diretório novo. A ferramenta cria um snapshot isolado com caminhos finais;
+não escreve nos READMEs oficiais, no simulado nem no workspace. Ela remove
+somente o aviso de rascunho da cópia exportada. O staging preserva esse aviso.
+
+Após aprovação humana, uma mudança separada pode copiar os dez READMEs do
+snapshot para seus destinos do mapping, validar, regenerar e encaminhar
+publicação autorizada. Não copie os rascunhos literalmente para a fonte sem
+converter os links. Não use `git add .` e não promova o snapshot inteiro.

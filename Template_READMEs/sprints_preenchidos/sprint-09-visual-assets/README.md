@@ -1,3 +1,5 @@
+<a id="hub-readme-visual-assets"></a>
+
 # Hub README Visual Assets
 
 > **CONTEÚDO CUSTOMIZADO PELO HUB** — esta pasta não é uma estrutura nativa da
@@ -12,6 +14,8 @@ referenciá-la no Markdown. **Alterar** a composição é trabalho de autoria no
 repositório, com compositor e aprovação — não é editar o PNG no workspace.
 
 ---
+
+<a id="organização"></a>
 
 ## Organização
 
@@ -39,12 +43,14 @@ tipográficos são só uma camada.
 
 ---
 
+<a id="cabeçalhos-reutilizáveis"></a>
+
 ## Cabeçalhos reutilizáveis
 
 | Uso | Arquivo canônico |
 |---|---|
-| README ou notebook geral | [CRM](headers/png/cabecalho_crm.png) |
-| Notebook da Squad | [Squad](headers/png/cabecalho_squad.png) |
+| README ou notebook geral | [CRM](../../../ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/png/cabecalho_crm.png) |
+| Notebook da Squad | [Squad](../../../ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/png/cabecalho_squad.png) |
 
 Um cabeçalho por documento. Não copie o PNG para cada notebook: aponte para
 cá. Caminho relativo depende da pasta do consumidor.
@@ -52,11 +58,15 @@ cá. Caminho relativo depende da pasta do consumidor.
 - Deste README: `headers/png/cabecalho_crm.png`
 - De `hub_snippets/README.md`: `../hub_readmes_visual_assets/headers/png/cabecalho_crm.png`
 
-Guia completo: [headers/README.md](headers/README.md).
+Guia completo: [headers/README.md](../sprint-10-cabecalhos/README.md).
 
 ---
 
+<a id="como-manter"></a>
+
 ## Como manter
+
+<a id="quero-apenas-usar-uma-imagem"></a>
 
 ### Quero apenas usar uma imagem
 
@@ -64,6 +74,8 @@ Guia completo: [headers/README.md](headers/README.md).
 2. Confira o caminho relativo.
 3. No preview, a figura deve carregar. Se quebrar, o arquivo não foi publicado
    junto ou o caminho está errado — não regenere arte por isso.
+
+<a id="quero-alterar-uma-figura"></a>
 
 ### Quero alterar uma figura
 
@@ -85,11 +97,15 @@ python tools/render_simulado.py --write
 Essas ferramentas **não** estão no compute do leitor no workspace. Não rode
 `tools/render_readme_visuals.mjs` (pacote v1) sobre o v2.
 
+<a id="como-conferir-um-link-quebrado"></a>
+
 ### Como conferir um link quebrado
 
 O validador de Markdown resolve o caminho com caixa exata. No Databricks o
 sistema de arquivos distingue maiúsculas. Ajuste o `![alt](caminho)` no README
 consumidor; não duplique o PNG.
+
+<a id="como-evitar-versões-concorrentes"></a>
 
 ### Como evitar versões concorrentes
 
@@ -103,6 +119,8 @@ O manifesto lista o conjunto **vigente**. Histórico antigo fica no Git, não
 neste pacote ativo.
 
 ---
+
+<a id="qualidade-editorial"></a>
 
 ## Qualidade editorial
 
@@ -121,9 +139,19 @@ reprovando hash de assinatura: a figura aprovada foi alterada sem revisão.
 
 ---
 
+<a id="qualidade-critérios-observáveis"></a>
+
 ## Qualidade — critérios observáveis
 
 - Uma pergunta por figura.
 - Legenda e equivalente textual no README.
 - Cor nunca é o único sinal (rótulo + traço).
 - Tipografia legível na largura do README.
+
+<a id="exemplo-acompanhado-localizar-a-autoria-sem-alterar-a-figura"></a>
+
+### Exemplo acompanhado: localizar a autoria sem alterar a figura
+
+Partindo do README raiz, a referência da figura `01_mapa_ecossistema.png` chega a `ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/`. A coleção correspondente é `readmes/raiz`, mas o compositor está em `tools/readme_visuals/` na raiz do repositório. Consulte `manifest.yaml`, procure a entrada `raiz` e confira a transcrição em [CONTEUDO_FIGURAS.md](../../../ambiente_fonte/.assistant/hub_readmes_visual_assets/CONTEUDO_FIGURAS.md).
+
+Para mudar um rótulo, registre primeiro o texto atual e o proposto, a fonte autoral indicada no manifesto e os READMEs consumidores. Depois da aprovação, regenere apenas pelo compositor apropriado, confira a transcrição e abra o PNG na largura de leitura. Uma alteração de hash prova que bytes mudaram; não prova que a nova redação é correta. Nesta revisão editorial os assets existentes foram reutilizados, sem recriar ilustrações ou inserir uma segunda cópia.

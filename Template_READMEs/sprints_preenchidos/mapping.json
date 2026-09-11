@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "status": "pending-human-approval",
+  "documents": [
+    {
+      "draft": "Template_READMEs/sprints_preenchidos/sprint-01-raiz/README.md",
+      "target": "README.md"
+    },
+    {
+      "draft": "Template_READMEs/sprints_preenchidos/sprint-02-assistant/README.md",
+      "target": "ambiente_fonte/.assistant/README.md"
+    },
+    {
+      "draft": "Template_READMEs/sprints_preenchidos/sprint-03-snippets/README.md",
+      "target": "ambiente_fonte/.assistant/hub_snippets/README.md"
+    },
+    {
+      "draft": "Template_READMEs/sprints_preenchidos/sprint-04-scripts/README.md",
+      "target": "ambiente_fonte/.assistant/hub_scripts/README.md"
+    },
+    {
+      "draft": "Template_READMEs/sprints_preenchidos/sprint-05-skills/README.md",
+      "target": "ambiente_fonte/.assistant/skills/README.md"
+    },
+    {
+      "draft": "Template_READMEs/sprints_preenchidos/sprint-06-prompts/README.md",
+      "target": "ambiente_fonte/.assistant/hub_prompts/README.md"
+    },
+    {
+      "draft": "Template_READMEs/sprints_preenchidos/sprint-07-ambiente-fonte/README.md",
+      "target": "ambiente_fonte/README.md"
+    },
+    {
+      "draft": "Template_READMEs/sprints_preenchidos/sprint-08-padroes/README.md",
+      "target": "ambiente_fonte/.assistant/hub_padroes/README.md"
+    },
+    {
+      "draft": "Template_READMEs/sprints_preenchidos/sprint-09-visual-assets/README.md",
+      "target": "ambiente_fonte/.assistant/hub_readmes_visual_assets/README.md"
+    },
+    {
+      "draft": "Template_READMEs/sprints_preenchidos/sprint-10-cabecalhos/README.md",
+      "target": "ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/README.md"
+    }
+  ],
+  "link_policy": "draft-relative; export converts each real Markdown link to its mapped destination; code examples are not rewritten"
+}
