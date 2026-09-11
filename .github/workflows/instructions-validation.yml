@@ -1,0 +1,180 @@
+name: Validacao isolada das Assistant Instructions
+on:
+  push:
+    branches: ['chatgpt/validacao-instructions-2026-09-11']
+    paths: ['.github/workflows/instructions-validation.yml']
+permissions:
+  contents: write
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ceb315e92515771e1ab3725ea7a559590c4a1659
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+      - name: Aplicar conteudo exato e regenerar somente o espelho
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import base64, hashlib, json, os, pathlib, re, subprocess, sys, urllib.request
+          base='ceb315e92515771e1ab3725ea7a559590c4a1659'
+          assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip() == base
+          repo='Guimarais-R-Rodrigo/Ambiente_Databricks'
+          def get_blob(sha):
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/git/blobs/{sha}',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
+              with urllib.request.urlopen(req,timeout=60) as response: obj=json.load(response)
+              assert obj['encoding']=='base64'
+              data=base64.b64decode(obj['content'])
+              assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()==sha
+              return data
+          source=pathlib.Path('ambiente_fonte/.assistant_instructions.md')
+          before=source.read_text()
+          assert len(before)==8131
+          files={
+              str(source):'f614790e8414109cd17d8e129c23563b2cca773c',
+              'docs/handoffs/2026-09-11-assistant-instructions-otimizadas.md':'2d5b8b5f2f3cf4d95d66336e0be55e103cb5c8ed',
+          }
+          for name,sha in files.items():
+              p=pathlib.Path(name);p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(get_blob(sha))
+          assert len(source.read_text())==8367
+          entry='''## 2026-09-11 — Assistant Instructions integradas ao Hub (Codex)
+
+          ### Atualizado
+
+          - (Codex) Instrucoes pessoais passam a fornecer mapa operacional, treze
+            rotas de skills e treze modulos frequentes, com consulta seletiva,
+            verificacao de contratos e separacao entre contexto e execucao.
+          - (Codex) Corrigida generalizacao de autologging; restricoes serverless,
+            instalacao e efeitos de tracking passam a depender do ambiente/tarefa.
+          - (Codex) Mantidos limites de autorizacao, privacidade e proveniencia;
+            sem leitura integral obrigatoria do manual e sem perguntas redundantes.
+          - (Codex) Espelho regenerado pelo renderer e contagens do README
+            sincronizadas com a execucao do validador.
+
+          ### Adicionado
+
+          - (Codex) Nota tecnica em `docs/handoffs/2026-09-11-assistant-instructions-otimizadas.md`,
+            com fontes oficiais, tradeoffs, limites e dezesseis casos de aceite.
+
+          ### Limites
+
+          - (Codex) Sem publicacao Databricks, alteracao de skills/helpers/imagens,
+            teste conversacional ou medicao de custo/latencia/tokens da Genie.
+
+          '''
+          entry='\n'.join(line[10:] if line.startswith('          ') else line for line in entry.split('\n'))
+          changelog=pathlib.Path('CHANGELOG.md');text=changelog.read_text();pos=text.index('\n## ')
+          changelog.write_text(text[:pos+1]+entry+text[pos+1:])
+          subprocess.run(['git','add',*files.keys(),'CHANGELOG.md'],check=True)
+          subprocess.run([sys.executable,'tools/render_simulado.py','--write'],check=True)
+          sys.path.insert(0,'tools')
+          from project_policy import SAFE_SIMULATED_USERNAME
+          mirror=f'Novo_Ambiente_Simulado/Users/{SAFE_SIMULATED_USERNAME}/.assistant_instructions.md'
+          assert pathlib.Path(mirror).read_bytes()==source.read_bytes()
+          subprocess.run(['git','add',mirror],check=True)
+          proc=subprocess.run([sys.executable,'tools/validate_assistant.py'],text=True,capture_output=True)
+          print(proc.stdout);print(proc.stderr)
+          if proc.returncode: raise SystemExit(proc.returncode)
+          readme=pathlib.Path('README.md');text=readme.read_text()
+          for label in ['instrucoes','repo (identidade)','repo (links)']:
+              pattern=r'^'+re.escape(label)+r'\s*:[^\n]*$'
+              found=re.findall(pattern,proc.stdout,flags=re.M)
+              assert len(found)==1,(label,found)
+              text,n=re.subn(pattern,lambda m:found[0],text,flags=re.M)
+              assert n==1,(label,n)
+          readme.write_text(text)
+          subprocess.run(['git','add','README.md'],check=True)
+          expected=set(files)|{'CHANGELOG.md','README.md',mirror}
+          changed=set(subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines())
+          assert changed==expected,(changed,expected)
+          assert not subprocess.check_output(['git','diff','--name-only'],text=True).strip(), 'Mudanca fora do escopo staged'
+          subprocess.run(['git','diff','--cached','--check'],check=True)
+          pathlib.Path(os.environ['RUNNER_TEMP'],'instructions-scope.json').write_text(json.dumps({'base':base,'files':sorted(expected),'before_chars':len(before),'after_chars':8367},indent=2))
+          PY
+      - name: Conferir mapa e contratos contra o produto atual
+        run: |
+          python - <<'PY'
+          import ast, pathlib, re, sys
+          sys.path.insert(0,'tools')
+          from project_policy import EXPECTED_SKILL_NAMES, SAFE_SIMULATED_USERNAME
+          root=pathlib.Path('ambiente_fonte/.assistant')
+          text=pathlib.Path('ambiente_fonte/.assistant_instructions.md').read_text()
+          names=re.findall(r'`(hub-ml-[a-z-]+)`',text)
+          assert len(names)==13 and set(names)==EXPECTED_SKILL_NAMES
+          for name in names:
+              skill=root/'skills'/name/'SKILL.md'
+              assert skill.is_file(),skill
+              assert f'name: {name}' in skill.read_text(),name
+          modules=re.findall(r'`(hub_(?:snippets|scripts)(?:\.[a-z_]+)+)`',text)
+          assert len(modules)==13 and len(set(modules))==13
+          for module in modules:
+              folder=root/pathlib.Path(*module.split('.'))
+              assert (folder/'__init__.py').is_file(),module
+              assert (folder/(folder.name+'.py')).is_file(),module
+              ast.parse((folder/'__init__.py').read_text())
+          for name in ['MANUAL_TECNICO.md','hub_padroes/output/proveniencia.md','hub_snippets/requirements-optional.txt']:
+              assert (root/name).is_file(),name
+          assert '<a id="catalogo-helpers"></a>' in (root/'MANUAL_TECNICO.md').read_text()
+          dq=ast.parse((root/'hub_scripts/data_quality_check/data_quality_check.py').read_text())
+          returns=[n for n in ast.walk(dq) if isinstance(n,ast.Return) and isinstance(n.value,ast.Dict)]
+          keys=[{k.value for k in n.value.keys if isinstance(k,ast.Constant)} for n in returns]
+          assert {'status','score','thresholds','checks','alerts'} in keys,keys
+          assert len(text)==8367 and len(text)<20000
+          assert 'CATALOGO_HELPERS.md' not in text and 'GLOSSARIO.md' not in text
+          assert pathlib.Path(f'Novo_Ambiente_Simulado/Users/{SAFE_SIMULATED_USERNAME}/.assistant_instructions.md').read_text()==text
+          print('APROVADO: 13 skills, 13 modulos, caminhos, contrato DQ por AST, 8367/20000 caracteres e espelho identico.')
+          print('Alcance: verificacao estatica; sem execucao Genie ou Databricks.')
+          PY
+      - name: Dependencias somente do runner
+        run: python -m pip install -r tools/requirements-dev.txt
+      - name: Gate completo sem credencial Databricks
+        shell: bash
+        run: |
+          set -o pipefail
+          python tools/ci_local.py --verbose 2>&1 | tee "$RUNNER_TEMP/instructions-gate.log"
+      - name: Preparar objetos Git sem criar commit ou mover branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import base64, hashlib, json, os, pathlib, subprocess, urllib.request
+          repo='Guimarais-R-Rodrigo/Ambiente_Databricks'
+          scope=json.loads(pathlib.Path(os.environ['RUNNER_TEMP'],'instructions-scope.json').read_text())
+          assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()==scope['base']
+          subprocess.run(['git','diff','--cached','--check'],check=True)
+          def api(route,payload):
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/git/{route}',data=json.dumps(payload).encode(),method='POST',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'})
+              with urllib.request.urlopen(req,timeout=60) as response:return json.load(response)
+          entries=[]
+          for name in scope['files']:
+              data=subprocess.check_output(['git','show',':'+name])
+              sha=api('blobs',{'content':base64.b64encode(data).decode(),'encoding':'base64'})['sha']
+              assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()==sha
+              entries.append({'path':name,'mode':'100644','type':'blob','sha':sha})
+          tree=api('trees',{'base_tree':subprocess.check_output(['git','rev-parse','HEAD^{tree}'],text=True).strip(),'tree':entries})['sha']
+          assert tree==subprocess.check_output(['git','write-tree'],text=True).strip()
+          result=dict(scope,tree=tree,entries=entries,gate='passed',static_instructions='passed',workflow_run=os.environ['GITHUB_RUN_ID'])
+          pathlib.Path(os.environ['RUNNER_TEMP'],'instructions-result.json').write_text(json.dumps(result,indent=2))
+          print(json.dumps(result,indent=2))
+          print('Nenhum commit criado, nenhuma branch movida e nenhum workspace publicado pelo runner.')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: instructions-validation
+          path: |
+            ${{ runner.temp }}/instructions-gate.log
+            ${{ runner.temp }}/instructions-result.json
+            ${{ runner.temp }}/instructions-scope.json
+          retention-days: 7
