@@ -36,6 +36,21 @@ jobs:
           branch = subprocess.check_output(['git','branch','--show-current'], text=True).strip()
           if branch != 'chatgpt/revisao-readmes-2026-09-11':
               raise SystemExit('Branch fora do escopo autorizado')
+          def get_blob(sha):
+              request = urllib.request.Request(
+                  f'https://api.github.com/repos/{repository}/git/blobs/{sha}',
+                  headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],
+                           'Accept':'application/vnd.github+json',
+                           'X-GitHub-Api-Version':'2022-11-28'})
+              with urllib.request.urlopen(request, timeout=60) as response:
+                  obj = json.load(response)
+              if obj.get('encoding') != 'base64':
+                  raise SystemExit('Encoding de blob inesperado')
+              data = base64.b64decode(obj['content'])
+              actual = hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+              if actual != sha:
+                  raise SystemExit('Integridade de blob reprovada')
+              return data
           shas = [
               'd0fb650d26e3c4f52d221102d5ad1f94d20eff82',
               'ba7f483b97a6b19f27925212b155d8658969a488',
@@ -50,23 +65,7 @@ jobs:
               'b6e96215c1142376989ea6ba84664a463313aeb2',
               '35752ef5dc6e34a3437277ec9d911dd7f002df2e',
           ]
-          chunks = []
-          for sha in shas:
-              request = urllib.request.Request(
-                  f'https://api.github.com/repos/{repository}/git/blobs/{sha}',
-                  headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],
-                           'Accept':'application/vnd.github+json',
-                           'X-GitHub-Api-Version':'2022-11-28'})
-              with urllib.request.urlopen(request, timeout=60) as response:
-                  obj = json.load(response)
-              if obj.get('encoding') != 'base64':
-                  raise SystemExit('Encoding de blob inesperado')
-              data = base64.b64decode(obj['content'])
-              actual = hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
-              if actual != sha:
-                  raise SystemExit('Integridade de blob reprovada')
-              chunks.append(data)
-          patch = bz2.decompress(b''.join(chunks))
+          patch = bz2.decompress(b''.join(get_blob(sha) for sha in shas))
           digest = hashlib.sha256(patch).hexdigest()
           if digest != '5b2422617266d5dbffe3adb0db87c22ca060cd6913bda554dd1fd0e902b41d2a':
               raise SystemExit('SHA256 do patch divergiu; nenhum arquivo alterado')
@@ -96,7 +95,18 @@ jobs:
           workflow.write_text(workflow.read_text().replace('          cache: pip\n', '          cache: pip\n          cache-dependency-path: tools/requirements-dev.txt\n'))
           subprocess.run(['git','add',str(workflow)],check=True)
           subprocess.run(['git','rm','.github/workflows/readme-review-snapshot.yml'],check=True)
-          expected_tree = '42367d8fd444950e965bf017fa1d91c6d7c9f8ce'
+          correction = bz2.decompress(get_blob('07412e45450ec3944e8dd04895c103d1034e5f43'))
+          if hashlib.sha256(correction).hexdigest() != 'c6f05d55d5fc334200a9069e5c3fa0f43a3a7ea31a7bfcfc0f6540f7302cf85f':
+              raise SystemExit('Suplemento PIT divergiu')
+          correction_path = pathlib.Path(os.environ['RUNNER_TEMP'])/'pit-correction.patch'
+          correction_path.write_bytes(correction)
+          correction_stats = subprocess.check_output(['git','apply','--numstat',str(correction_path)],text=True)
+          correction_paths = {line.split('\t',2)[2] for line in correction_stats.splitlines()}
+          if correction_paths != {'Template_READMEs/sprints_preenchidos/sprint-03-snippets/README.md'}:
+              raise SystemExit('Suplemento fora do escopo')
+          subprocess.run(['git','apply','--check','--index','--unidiff-zero',str(correction_path)],check=True)
+          subprocess.run(['git','apply','--index','--unidiff-zero',str(correction_path)],check=True)
+          expected_tree = '74173c36e6231f700acc559c20797fb3e2bc15d7'
           if subprocess.check_output(['git','write-tree'],text=True).strip() != expected_tree:
               raise SystemExit('Arvore final divergiu da copia validada localmente')
           print(f'Patch integro: {digest}; {len(changed)} arquivos; sem promocao oficial.')
