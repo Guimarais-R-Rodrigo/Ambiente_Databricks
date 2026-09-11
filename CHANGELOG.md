@@ -5,6 +5,30 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-11 — Assistant Instructions integradas ao Hub (Codex)
+
+### Atualizado
+
+- (Codex) Instrucoes pessoais passam a fornecer mapa operacional, treze
+  rotas de skills e treze modulos frequentes, com consulta seletiva,
+  verificacao de contratos e separacao entre contexto e execucao.
+- (Codex) Corrigida generalizacao de autologging; restricoes serverless,
+  instalacao e efeitos de tracking passam a depender do ambiente/tarefa.
+- (Codex) Mantidos limites de autorizacao, privacidade e proveniencia;
+  sem leitura integral obrigatoria do manual e sem perguntas redundantes.
+- (Codex) Espelho regenerado pelo renderer e contagens do README
+  sincronizadas com a execucao do validador.
+
+### Adicionado
+
+- (Codex) Nota tecnica em `docs/handoffs/2026-09-11-assistant-instructions-otimizadas.md`,
+  com fontes oficiais, tradeoffs, limites e dezesseis casos de aceite.
+
+### Limites
+
+- (Codex) Sem publicacao Databricks, alteracao de skills/helpers/imagens,
+  teste conversacional ou medicao de custo/latencia/tokens da Genie.
+
 ## 2026-09-11 — Manual Técnico unificado; apresentação vigente preservada (Codex)
 
 ### Adicionado
