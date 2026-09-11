@@ -1,0 +1,31 @@
+name: Snapshot temporario para conferir imagens dos rascunhos
+on:
+  push:
+    branches: ['chatgpt/revisao-readmes-2026-09-11']
+    paths: ['.github/workflows/readme-image-snapshot.yml']
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: e90af520fdb5c8db1d8bc22cebb3d426ea7568f5
+          persist-credentials: false
+      - name: Exportar somente arquivos versionados do candidato
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = e90af520fdb5c8db1d8bc22cebb3d426ea7568f5
+          git archive --format=zip --output="$RUNNER_TEMP/candidato.zip" HEAD
+          git ls-files -s -z > "$RUNNER_TEMP/indice-git.bin"
+          git rev-parse HEAD HEAD^{tree} > "$RUNNER_TEMP/identidade.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: readme-image-snapshot
+          path: |
+            ${{ runner.temp }}/candidato.zip
+            ${{ runner.temp }}/indice-git.bin
+            ${{ runner.temp }}/identidade.txt
+          retention-days: 1
