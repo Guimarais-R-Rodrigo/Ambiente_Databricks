@@ -1,21 +1,128 @@
-name: Snapshot para revisao de READMEs
+name: Aplicacao verificada da revisao de READMEs
 on:
   push:
     branches: ["chatgpt/revisao-readmes-2026-09-11"]
     paths: [".github/workflows/readme-review-snapshot.yml"]
 permissions:
-  contents: read
+  contents: write
+concurrency:
+  group: aplicacao-readmes-revisao
+  cancel-in-progress: false
 jobs:
-  snapshot:
+  validar-e-commitar:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      SPARK_LOCAL_IP: '127.0.0.1'
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
-      - name: Arquivar exatamente os arquivos versionados
-        run: git archive --format=zip --output="$RUNNER_TEMP/repository.zip" HEAD
-      - uses: actions/upload-artifact@v4
+          ref: chatgpt/revisao-readmes-2026-09-11
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
         with:
-          name: readme-review-source
-          path: ${{ runner.temp }}/repository.zip
-          retention-days: 1
+          python-version: '3.11'
+          cache: pip
+      - name: Recuperar patch e conferir integridade e escopo antes de escrever
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import base64, bz2, hashlib, json, os, pathlib, subprocess, urllib.request
+          repository = 'Guimarais-R-Rodrigo/Ambiente_Databricks'
+          branch = subprocess.check_output(['git','branch','--show-current'], text=True).strip()
+          if branch != 'chatgpt/revisao-readmes-2026-09-11':
+              raise SystemExit('Branch fora do escopo autorizado')
+          shas = [
+              'd0fb650d26e3c4f52d221102d5ad1f94d20eff82',
+              'ba7f483b97a6b19f27925212b155d8658969a488',
+              'bf2b65baf0eecc13de89a0624053323794b1b692',
+              '799e4cd23c403c8288c29e1223135a7a02b6ea44',
+              '24e212e42c037eadc282cf153e42983a65361250',
+              'd7d6519d84b38ccf8dc346eaca8d0623e21f1e6e',
+              'b172f2158ba376c6afde499b658c1159bd245aba',
+              '1763ee2556289d8fe4f6d552806512e36ed95026',
+              '324ee4fa38362759d936b07df0299c4dadedc71b',
+              '30d75a9f0005b53053ae401d8d6963611377a87d',
+              'b6e96215c1142376989ea6ba84664a463313aeb2',
+              '35752ef5dc6e34a3437277ec9d911dd7f002df2e',
+          ]
+          chunks = []
+          for sha in shas:
+              request = urllib.request.Request(
+                  f'https://api.github.com/repos/{repository}/git/blobs/{sha}',
+                  headers={'Authorization': 'Bearer '+os.environ['GH_TOKEN'],
+                           'Accept':'application/vnd.github+json',
+                           'X-GitHub-Api-Version':'2022-11-28'})
+              with urllib.request.urlopen(request, timeout=60) as response:
+                  obj = json.load(response)
+              if obj.get('encoding') != 'base64':
+                  raise SystemExit('Encoding de blob inesperado')
+              data = base64.b64decode(obj['content'])
+              actual = hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+              if actual != sha:
+                  raise SystemExit('Integridade de blob reprovada')
+              chunks.append(data)
+          patch = bz2.decompress(b''.join(chunks))
+          digest = hashlib.sha256(patch).hexdigest()
+          if digest != '5b2422617266d5dbffe3adb0db87c22ca060cd6913bda554dd1fd0e902b41d2a':
+              raise SystemExit('SHA256 do patch divergiu; nenhum arquivo alterado')
+          path = pathlib.Path(os.environ['RUNNER_TEMP'])/'readmes.patch'
+          path.write_bytes(patch)
+          allowed = {
+              '.github/workflows/readme-examples.yml', 'CHANGELOG.md', 'README.md',
+              'Template_READMEs/sprints_preenchidos/PLANO.md',
+              'Template_READMEs/sprints_preenchidos/REVISAO.md',
+              'Template_READMEs/sprints_preenchidos/mapping.json',
+              'docs/handoffs/2026-09-10_sprint-0-evolucao-visual.md',
+              'tools/ci_local.py','tools/markdown_contract.py',
+              'tools/readme_visuals/README.md','tools/requirements-dev.txt',
+              'tools/review_readmes.py','tools/tests/test_readme_examples.py',
+              'tools/tests/test_readme_review.py','tools/validate_assistant.py',
+          }
+          sprints = ['01-raiz','02-assistant','03-snippets','04-scripts','05-skills',
+                     '06-prompts','07-ambiente-fonte','08-padroes','09-visual-assets','10-cabecalhos']
+          allowed.update(f'Template_READMEs/sprints_preenchidos/sprint-{s}/README.md' for s in sprints)
+          stats = subprocess.check_output(['git','apply','--numstat',str(path)], text=True)
+          changed = {line.split('\t',2)[2] for line in stats.splitlines()}
+          if changed != allowed:
+              raise SystemExit('Conjunto de arquivos divergiu do escopo aprovado')
+          subprocess.run(['git','apply','--check','--index','--unidiff-zero',str(path)],check=True)
+          subprocess.run(['git','apply','--index','--unidiff-zero',str(path)],check=True)
+          subprocess.run(['git','rm','.github/workflows/readme-review-snapshot.yml'],check=True)
+          print(f'Patch integro: {digest}; {len(changed)} arquivos; sem promocao oficial.')
+          PY
+      - name: Dependencias do gate portavel
+        run: python -m pip install -r tools/requirements-dev.txt
+      - name: Gate completo do repositorio
+        run: |
+          set -o pipefail
+          python tools/ci_local.py --verbose 2>&1 | tee "$RUNNER_TEMP/readme-ci-local.log"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Spark somente no runner de teste
+        run: python -m pip install 'pyspark==4.0.1'
+      - name: Executar exemplos Spark extraidos dos READMEs
+        run: |
+          set -o pipefail
+          python tools/tests/test_readme_examples.py --spark 2>&1 | tee "$RUNNER_TEMP/readme-spark.log"
+      - name: Commit somente apos todos os testes e push sem force
+        run: |
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'docs: corrige dez READMEs candidatos, imagens e contratos verificaveis' -m 'Mantem o produto oficial e o workspace intactos. Inclui exemplos extraidos do Markdown, validacao staging/destino e regressao Spark local. Remove o workflow temporario de transporte.'
+          git push origin HEAD:chatgpt/revisao-readmes-2026-09-11
+          git rev-parse HEAD
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: readme-review-validation
+          path: |
+            ${{ runner.temp }}/readme-ci-local.log
+            ${{ runner.temp }}/readme-spark.log
+          if-no-files-found: ignore
+          retention-days: 7
