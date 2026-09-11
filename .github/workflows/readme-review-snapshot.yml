@@ -9,7 +9,7 @@ concurrency:
   group: aplicacao-readmes-revisao
   cancel-in-progress: false
 jobs:
-  validar-e-commitar:
+  validar-e-preparar:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -20,10 +20,12 @@ jobs:
         with:
           ref: chatgpt/revisao-readmes-2026-09-11
           fetch-depth: 2
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
       - name: Recuperar patch e conferir integridade e escopo antes de escrever
         env:
           GH_TOKEN: ${{ github.token }}
@@ -52,7 +54,7 @@ jobs:
           for sha in shas:
               request = urllib.request.Request(
                   f'https://api.github.com/repos/{repository}/git/blobs/{sha}',
-                  headers={'Authorization': 'Bearer '+os.environ['GH_TOKEN'],
+                  headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],
                            'Accept':'application/vnd.github+json',
                            'X-GitHub-Api-Version':'2022-11-28'})
               with urllib.request.urlopen(request, timeout=60) as response:
@@ -71,7 +73,7 @@ jobs:
           path = pathlib.Path(os.environ['RUNNER_TEMP'])/'readmes.patch'
           path.write_bytes(patch)
           allowed = {
-              '.github/workflows/readme-examples.yml', 'CHANGELOG.md', 'README.md',
+              '.github/workflows/readme-examples.yml','CHANGELOG.md','README.md',
               'Template_READMEs/sprints_preenchidos/PLANO.md',
               'Template_READMEs/sprints_preenchidos/REVISAO.md',
               'Template_READMEs/sprints_preenchidos/mapping.json',
@@ -90,7 +92,13 @@ jobs:
               raise SystemExit('Conjunto de arquivos divergiu do escopo aprovado')
           subprocess.run(['git','apply','--check','--index','--unidiff-zero',str(path)],check=True)
           subprocess.run(['git','apply','--index','--unidiff-zero',str(path)],check=True)
+          workflow = pathlib.Path('.github/workflows/readme-examples.yml')
+          workflow.write_text(workflow.read_text().replace('          cache: pip\n', '          cache: pip\n          cache-dependency-path: tools/requirements-dev.txt\n'))
+          subprocess.run(['git','add',str(workflow)],check=True)
           subprocess.run(['git','rm','.github/workflows/readme-review-snapshot.yml'],check=True)
+          expected_tree = '42367d8fd444950e965bf017fa1d91c6d7c9f8ce'
+          if subprocess.check_output(['git','write-tree'],text=True).strip() != expected_tree:
+              raise SystemExit('Arvore final divergiu da copia validada localmente')
           print(f'Patch integro: {digest}; {len(changed)} arquivos; sem promocao oficial.')
           PY
       - name: Dependencias do gate portavel
@@ -109,14 +117,43 @@ jobs:
         run: |
           set -o pipefail
           python tools/tests/test_readme_examples.py --spark 2>&1 | tee "$RUNNER_TEMP/readme-spark.log"
-      - name: Commit somente apos todos os testes e push sem force
+      - name: Preparar objetos Git validados sem mover qualquer branch
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git diff --cached --check
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'docs: corrige dez READMEs candidatos, imagens e contratos verificaveis' -m 'Mantem o produto oficial e o workspace intactos. Inclui exemplos extraidos do Markdown, validacao staging/destino e regressao Spark local. Remove o workflow temporario de transporte.'
-          git push origin HEAD:chatgpt/revisao-readmes-2026-09-11
-          git rev-parse HEAD
+          python - <<'PY'
+          import base64, hashlib, json, os, pathlib, subprocess, urllib.request
+          repository = 'Guimarais-R-Rodrigo/Ambiente_Databricks'
+          def api(route, payload):
+              req=urllib.request.Request(f'https://api.github.com/repos/{repository}/git/{route}',
+                  data=json.dumps(payload).encode(),method='POST',headers={
+                  'Authorization':'Bearer '+os.environ['GH_TOKEN'],
+                  'Accept':'application/vnd.github+json','Content-Type':'application/json',
+                  'X-GitHub-Api-Version':'2022-11-28'})
+              with urllib.request.urlopen(req,timeout=60) as response:return json.load(response)
+          subprocess.run(['git','diff','--cached','--check'],check=True)
+          paths=subprocess.check_output(['git','diff','--cached','--name-only','-z']).decode().split('\0')
+          entries=[]
+          for name in filter(None,paths):
+              p=pathlib.Path(name)
+              if p.exists():
+                  data=subprocess.check_output(['git','show',':'+name])
+                  sha=api('blobs',{'content':base64.b64encode(data).decode(),'encoding':'base64'})['sha']
+                  expected=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+                  if sha != expected:raise SystemExit('Blob publicado divergiu')
+              else:sha=None
+              entries.append({'path':name,'mode':'100644','type':'blob','sha':sha})
+          parent=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+          base=subprocess.check_output(['git','rev-parse','HEAD^{tree}'],text=True).strip()
+          tree=api('trees',{'base_tree':base,'tree':entries})['sha']
+          local=subprocess.check_output(['git','write-tree'],text=True).strip()
+          if tree != local:raise SystemExit('Arvore publicada divergiu')
+          result={'parent':parent,'tree':tree,'files':entries,'ci_local':'passed','spark_examples':'passed','workflow_run':os.environ['GITHUB_RUN_ID']}
+          pathlib.Path(os.environ['RUNNER_TEMP'],'readme-validated-tree.json').write_text(json.dumps(result,indent=2))
+          print('VALIDATED_TREE='+tree)
+          print('PARENT='+parent)
+          print('Nenhuma branch movida; commit sera feito pela conexao autorizada.')
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -124,5 +161,6 @@ jobs:
           path: |
             ${{ runner.temp }}/readme-ci-local.log
             ${{ runner.temp }}/readme-spark.log
+            ${{ runner.temp }}/readme-validated-tree.json
           if-no-files-found: ignore
           retention-days: 7
