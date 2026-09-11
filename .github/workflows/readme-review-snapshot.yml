@@ -1,0 +1,21 @@
+name: Snapshot para revisao de READMEs
+on:
+  push:
+    branches: ["chatgpt/revisao-readmes-2026-09-11"]
+    paths: [".github/workflows/readme-review-snapshot.yml"]
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Arquivar exatamente os arquivos versionados
+        run: git archive --format=zip --output="$RUNNER_TEMP/repository.zip" HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: readme-review-source
+          path: ${{ runner.temp }}/repository.zip
+          retention-days: 1
