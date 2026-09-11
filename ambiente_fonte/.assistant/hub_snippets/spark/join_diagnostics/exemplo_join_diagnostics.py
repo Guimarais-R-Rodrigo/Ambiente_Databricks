@@ -4,7 +4,7 @@
 # MAGIC
 # MAGIC > **Material didático do Hub — não é auto-descoberto pelo Genie Code.**
 # MAGIC > Dados sintéticos apenas. Inventário completo da biblioteca no
-# MAGIC > [catálogo de helpers](../../../CATALOGO_HELPERS.md).
+# MAGIC > [catálogo de helpers](../../../MANUAL_TECNICO.md#catalogo-helpers).
 # MAGIC
 # MAGIC ## O problema
 # MAGIC

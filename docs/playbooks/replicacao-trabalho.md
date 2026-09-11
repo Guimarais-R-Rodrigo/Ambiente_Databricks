@@ -119,8 +119,7 @@ Destino exato, com o username do workspace do trabalho:
 ├── .assistant_instructions.md        ← nativo: instruções pessoais
 └── .assistant/
     ├── skills/hub-ml-*/             ← nativo: descoberta automática
-    ├── CATALOGO_HELPERS.md
-    ├── GLOSSARIO.md                   # vocabulário oficial, técnico e local
+    ├── MANUAL_TECNICO.md
     └── hub_padroes | hub_prompts | hub_snippets | hub_scripts
 ```
 
@@ -154,7 +153,7 @@ Pontos de atenção verificados no laboratório:
 | Raiz do `.assistant` | 4 diretórios `hub_` mais `README.md` |
 | `.assistant_instructions.md` | presente na raiz do usuário, com ponto inicial |
 | Um `.py` qualquer de `hub_snippets` | abre como arquivo de código, não como notebook |
-| `CATALOGO_HELPERS.md` | presente (referenciado por todas as skills) |
+| `MANUAL_TECNICO.md` | presente (referenciado por todas as skills) |
 
 ## 6. Testes de aceitação no workspace do trabalho
 

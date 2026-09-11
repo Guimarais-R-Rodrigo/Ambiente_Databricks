@@ -5,6 +5,35 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-11 — Manual Técnico unificado; apresentação vigente preservada (Codex)
+
+### Adicionado
+
+- (Codex) Manual Técnico didático: APIs locais/Spark/REST, Python e imports,
+  sys.path, contratos, dados, skills, modelos, métricas, segurança e publicação.
+  Inclui inventário dos 58 helpers, métodos/briefings e índice de termos, com
+  referências ao código examinado e à documentação oficial.
+- (Codex) Uma redação de autoria no Hub e cópia de leitura idêntica na raiz Git;
+  ADR-0010 e testes documentais de sincronização, inventário e exemplos locais.
+
+### Atualizado
+
+- (Codex) Referências ativas dos READMEs, skills, prompts e playbooks passam
+  ao Manual Técnico. Layout, imagens, widgets e lógica analítica preservados.
+- (Codex) Simulado regenerado exclusivamente por `tools/render_simulado.py`.
+  Contagens do README raiz sincronizadas com a validação real.
+
+### Removido
+
+- (Codex) Catálogo de helpers e glossário independentes da raiz do Hub, na
+  fonte e no derivado. Conteúdo útil consolidado e contratos reconferidos.
+
+### Limites
+
+- (Codex) Sem publicação Databricks, retirada remota de arquivos, alterações
+  de ACL ou homologação conversacional. Os rascunhos descartados não retornam.
+
+
 ## 2026-09-11 — Limpeza de pastas acessórias; simulado eleito (OpenCode)
 
 ### Removido

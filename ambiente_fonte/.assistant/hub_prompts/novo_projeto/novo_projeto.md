@@ -8,7 +8,7 @@
 Não há uma skill analítica única nesta etapa. O objetivo é criar o charter e o
 `AGENTS.md`; depois, mencione com `@` a skill que corresponde ao trabalho
 definido. O mapa de capacidades e helpers está em
-[CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md).
+[MANUAL_TECNICO.md#catalogo-helpers](../../MANUAL_TECNICO.md#catalogo-helpers).
 
 ## Como preencher cada campo
 

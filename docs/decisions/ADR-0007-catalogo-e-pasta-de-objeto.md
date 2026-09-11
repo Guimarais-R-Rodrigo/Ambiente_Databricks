@@ -109,3 +109,11 @@ alcance. A auditoria mediu: caminhos idênticos nas 12, corpo alterado em todas.
 O ADR pratica, para o total de helpers, a regra que falhou em aplicar aqui:
 *"Este ADR evita citar o total no corpo das decisões justamente por isso."* A
 contagem de `exec` deveria ter recebido o mesmo tratamento.
+
+
+## Atualização de status — 2026-09-11
+
+O [ADR-0010](ADR-0010-manual-tecnico-unificado.md) substitui somente o arquivo e
+a forma do catálogo central pelo inventário integrado ao Manual Técnico.
+Declaração explícita de helpers e organização por pasta permanecem. O corpo
+histórico acima é preservado.

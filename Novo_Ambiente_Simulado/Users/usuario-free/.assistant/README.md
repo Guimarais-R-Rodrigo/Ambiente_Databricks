@@ -331,8 +331,7 @@ Sim. Use `hub_padroes/` e `@hub-ml-criar-objeto`, mantendo código, exportação
 - [Hub Prompts](hub_prompts/README.md)
 - [Hub Snippets](hub_snippets/README.md)
 - [Hub Scripts](hub_scripts/README.md)
-- Glossário: `.assistant/GLOSSARIO.md`
-- Catálogo de Helpers: `.assistant/CATALOGO_HELPERS.md`
+- [Manual Técnico](MANUAL_TECNICO.md): fundamentos, [inventário de helpers](MANUAL_TECNICO.md#catalogo-helpers) e [índice de termos](MANUAL_TECNICO.md#indice-termos).
 - [Funcionalidades da Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/features-capabilities)
 - [Agent Skills](https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills)
 - [Instruções customizadas](https://learn.microsoft.com/en-us/azure/databricks/genie-code/instructions)

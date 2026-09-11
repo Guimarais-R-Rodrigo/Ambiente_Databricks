@@ -70,7 +70,7 @@ Na estrutura vigente, cada snippet fica em um diretório autossuficiente com tr�
 2. **`nome_do_snippet.py` (O Motor):** contém implementação, validações, tipagem e docstring. O código é a fonte técnica para a assinatura real.
 3. **`exemplo_nome_do_snippet.py` (O Guia Didático):** demonstra o uso com dados sintéticos e registra uma saída observada. Ele ensina o contrato exercitado; não promete compatibilidade com qualquer runtime ou volume.
 
-O Catálogo de Helpers (`.assistant/CATALOGO_HELPERS.md`) relaciona demanda, caminho público e dependências. Ele é o índice canônico; este README preserva uma leitura narrativa por categoria.
+O Catálogo de Helpers (`.assistant/MANUAL_TECNICO.md#catalogo-helpers`) relaciona demanda, caminho público e dependências. Ele é o índice canônico; este README preserva uma leitura narrativa por categoria.
 
 ---
 
@@ -266,7 +266,7 @@ hub_snippets/
     ├── section_header     └── theme_plotly
 ```
 
-> **Como usar este inventário:** escolha o objeto pelo problema, abra seu `exemplo_<nome>.py` e confirme API, dependências e tipo de retorno no Catálogo de Helpers (`.assistant/CATALOGO_HELPERS.md`).
+> **Como usar este inventário:** escolha o objeto pelo problema, abra seu `exemplo_<nome>.py` e confirme API, dependências e tipo de retorno no Catálogo de Helpers (`.assistant/MANUAL_TECNICO.md#catalogo-helpers`).
 
 ---
 
@@ -406,7 +406,7 @@ Eles priorizam operações distribuídas, mas algumas rotinas executam ações e
 
 ## 🔗 Continue Explorando
 
-- Catálogo completo de helpers: `.assistant/CATALOGO_HELPERS.md`
+- Catálogo completo de helpers: `.assistant/MANUAL_TECNICO.md#catalogo-helpers`
 - [Hub Scripts](../hub_scripts/README.md)
 - [Agent Skills](../skills/README.md)
 - [Hub Prompts](../hub_prompts/README.md)

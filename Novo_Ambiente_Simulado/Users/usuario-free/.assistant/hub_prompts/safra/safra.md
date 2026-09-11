@@ -6,7 +6,7 @@
 Antes de pedir código, veja os helpers que a skill recomendada declara: boa
 parte do que este formulário pede já tem implementação verificada, e usá-la
 evita que a lógica seja reescrita a cada conversa. Mapa completo em
-[CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md).
+[MANUAL_TECNICO.md#catalogo-helpers](../../MANUAL_TECNICO.md#catalogo-helpers).
 
 ## Pré-requisito crítico
 

@@ -38,8 +38,7 @@ ambiente_fonte/
 ├── .assistant_instructions.md    # NATIVO: instruções pessoais
 └── .assistant/
     ├── README.md                 # guia de uso no Databricks
-    ├── GLOSSARIO.md              # vocabulário oficial, técnico e local
-    ├── CATALOGO_HELPERS.md       # demanda → helper
+    ├── MANUAL_TECNICO.md  # fundamentos, inventário de helpers e índice de termos
     ├── skills/                   # NATIVO: mecanismo de Agent Skills
     ├── hub_prompts/              # HUB: formulários de pedido, uso manual
     ├── hub_snippets/             # HUB: biblioteca Python, import manual
@@ -93,7 +92,7 @@ O procedimento completo e os critérios de parada estão no
 | Objetivo | Próximo documento |
 |---|---|
 | usar skills, prompts e helpers | [Guia do ecossistema](.assistant/README.md) |
-| encontrar um helper | [Catálogo](.assistant/CATALOGO_HELPERS.md) |
+| encontrar um helper | [Manual Técnico — helpers](.assistant/MANUAL_TECNICO.md#catalogo-helpers) |
 | criar um objeto do Hub | [Padrões](.assistant/hub_padroes/README.md) |
 | publicar ou replicar | [Playbooks](../docs/playbooks/README.md) |
 | entender uma decisão | [ADRs](../docs/decisions/README.md) |

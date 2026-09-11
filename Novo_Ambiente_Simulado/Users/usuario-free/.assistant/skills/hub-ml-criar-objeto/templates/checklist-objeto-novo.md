@@ -25,9 +25,9 @@ em vez de repetir a lista.
 
 - [ ] O tipo é um dos seis: snippet, script, prompt, README, notebook, skill
       (`auditoria/` é molde de processo, não conta)
-- [ ] Nenhum objeto do `CATALOGO_HELPERS.md` atende à mesma demanda
+- [ ] Nenhum objeto do `MANUAL_TECNICO.md#catalogo-helpers` atende à mesma demanda
 - [ ] `python tools/validate_assistant.py` aprovado
-- [ ] `CATALOGO_HELPERS.md` ganhou a linha, com a coluna de dependência
+- [ ] O inventário de `MANUAL_TECNICO.md` ganhou a ficha, com API e dependências conferidas
 - [ ] Entrada no `CHANGELOG.md`
 
 ### Se é snippet ou script

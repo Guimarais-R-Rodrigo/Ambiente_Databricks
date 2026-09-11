@@ -48,6 +48,9 @@ Escala planejada: pessoal → squad → missão.
 - Identidade neutra no conteúdo ativo e pacote mínimo de implantação com
   manifesto: `ADR-0009`.
 
+- Manual Técnico unifica o catálogo e o glossário: `ADR-0010`. Autoria em
+  `ambiente_fonte/.assistant/MANUAL_TECNICO.md`; cópia de leitura idêntica na raiz.
+
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 
 ## Regras inegociáveis

@@ -366,7 +366,7 @@ Analogias facilitam a compreensão, mas não substituem o comportamento técnico
 
 - **O que faz:** opera em dois modos: audita a implementação de uma skill ou audita o output que ela produziu.
 - **Templates:** `rubrica_universal.md`, `checkpoints_por_skill.md` e `relatorio_auditoria.md`.
-- **Helpers recomendados:** `hub_scripts.doc_coverage` e `hub_scripts.naming_checker`; `CATALOGO_HELPERS.md` é referência documental, não helper executável.
+- **Helpers recomendados:** `hub_scripts.doc_coverage` e `hub_scripts.naming_checker`; `MANUAL_TECNICO.md#catalogo-helpers` é referência documental, não helper executável.
 - **Caso de Uso Real:**
   > *“A Genie Code gerou um notebook. Quero confrontar pedido, metodologia, código, resultados e limitações antes de aceitar a entrega.”*
 
@@ -432,4 +432,4 @@ Não. Ela orienta a Genie Code e pode recomendar caminhos. O notebook precisa co
 - [Hub Prompts](../hub_prompts/README.md)
 - [Hub Snippets](../hub_snippets/README.md)
 - [Hub Scripts](../hub_scripts/README.md)
-- Catálogo de Helpers: `.assistant/CATALOGO_HELPERS.md`
+- Catálogo de Helpers: `.assistant/MANUAL_TECNICO.md#catalogo-helpers`

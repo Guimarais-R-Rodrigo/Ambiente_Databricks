@@ -82,5 +82,5 @@ Todo objeto precisa deixar explícitos:
 ## Onde continuar
 
 - [Guia do ecossistema](../README.md)
-- [Glossário](../GLOSSARIO.md)
-- [Catálogo de helpers](../CATALOGO_HELPERS.md)
+- [Manual Técnico — índice de termos](../MANUAL_TECNICO.md#indice-termos)
+- [Manual Técnico — inventário de helpers](../MANUAL_TECNICO.md#catalogo-helpers)

@@ -87,7 +87,7 @@ Usar [templates/pipeline_spec.md](templates/pipeline_spec.md) como spec editáve
 
 ## Usar helpers da biblioteca
 
-Importar de `hub_snippets`/`hub_scripts` em vez de reimplementar a lógica. Catálogo completo: [CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md).
+Importar de `hub_snippets`/`hub_scripts` em vez de reimplementar a lógica. Catálogo completo: [MANUAL_TECNICO.md#catalogo-helpers](../../MANUAL_TECNICO.md#catalogo-helpers).
 
 | Demanda | Módulo |
 |---|---|

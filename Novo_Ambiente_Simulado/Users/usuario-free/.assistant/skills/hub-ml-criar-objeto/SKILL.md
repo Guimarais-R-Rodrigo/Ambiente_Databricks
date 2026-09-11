@@ -84,7 +84,7 @@ caminho que o catálogo promete.
 Antes de escolher, procure o que já existe:
 
 ```bash
-grep -ri "<demanda>" .assistant/CATALOGO_HELPERS.md
+grep -ri "<demanda>" .assistant/MANUAL_TECNICO.md#catalogo-helpers
 ```
 
 Se a demanda já estiver coberta, **não crie um objeto novo em silêncio**. Traga a
@@ -231,7 +231,7 @@ como estão; docstring, comentário e notebook vão em português. Um módulo co
 
 O Genie Code **não** descobre `hub_snippets` sozinho: a skill recomenda por
 caminho de import, e quem importa é a pessoa, no notebook (ADR-0004). Catálogo
-completo em [CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md).
+completo em [MANUAL_TECNICO.md#catalogo-helpers](../../MANUAL_TECNICO.md#catalogo-helpers).
 
 | Demanda ao escrever o objeto | Módulo |
 |---|---|

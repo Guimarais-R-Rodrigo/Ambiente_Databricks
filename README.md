@@ -6,6 +6,9 @@
 
 > **LEGENDA DE PROCEDÊNCIA.** Agent Skills e instruções são mecanismos reconhecidos pela Genie Code. Pastas com prefixo `hub_` e skills com prefixo `hub-` contêm implementações e convenções deste projeto; não são produtos institucionais da Databricks.
 
+
+**Manual Técnico:** [entenda APIs, Python, Spark, helpers e o funcionamento do Hub](MANUAL_TECNICO.md).
+
 ---
 
 ## 🧭 Mapa de Leitura
@@ -194,7 +197,7 @@ reexecuta o gate e reprova se qualquer contagem ficar desatualizada.
 skills             : 13 · 13/13 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 81 caminhos verificados
-markdown / links   : 113 arquivos / 210 links relativos
+markdown / links   : 112 arquivos / 211 links relativos
 notebooks / links  : 78 notebooks / 17 links relativos
 pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
 forma da pasta     : 58 conferidas (o módulo tem o nome da pasta)
@@ -205,9 +208,9 @@ idioma da docstring: 60 módulos, 0 com docstring em inglês
 normas do molde    : 70 arquivos, 0 violação(ões)
 notebook exercita  : 57 objetos, 0 notebook(s) que só importam
 python (AST)       : 209 arquivos
-instrucoes         : 8116/20000 caracteres
-repo (identidade)  : 889 arquivos varridos no repositório editável/derivado
-repo (links)       : 804 links fora da raiz analisada
+instrucoes         : 8131/20000 caracteres
+repo (identidade)  : 841 arquivos varridos no repositório editável/derivado
+repo (links)       : 382 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```

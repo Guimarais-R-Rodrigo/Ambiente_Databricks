@@ -332,7 +332,7 @@ Eles foram estruturados como módulos Python importáveis. Podem ser chamados em
 - [Hub Snippets](../hub_snippets/README.md)
 - [Agent Skills](../skills/README.md)
 - [Hub Prompts](../hub_prompts/README.md)
-- Catálogo de Helpers: `.assistant/CATALOGO_HELPERS.md`
+- Catálogo de Helpers: `.assistant/MANUAL_TECNICO.md#catalogo-helpers`
 - [Lakeflow expectations](https://learn.microsoft.com/en-us/azure/databricks/ldp/expectations)
 - [Event log de pipelines](https://learn.microsoft.com/en-us/azure/databricks/ldp/monitor-event-logs)
 - [Notificações de Lakeflow Jobs](https://learn.microsoft.com/en-us/azure/databricks/jobs/notifications)

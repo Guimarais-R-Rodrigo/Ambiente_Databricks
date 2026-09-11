@@ -83,7 +83,7 @@ o motivo ao lado, nunca solto.
 
 ## Usar helpers da biblioteca
 
-Quando o exemplo didático corresponder a algo que a biblioteca já resolve, mostrar o helper existente e explicar a lógica interna, em vez de escrever uma versão simplificada que diverge do que roda em produção. Catálogo completo: [CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md).
+Quando o exemplo didático corresponder a algo que a biblioteca já resolve, mostrar o helper existente e explicar a lógica interna, em vez de escrever uma versão simplificada que diverge do que roda em produção. Catálogo completo: [MANUAL_TECNICO.md#catalogo-helpers](../../MANUAL_TECNICO.md#catalogo-helpers).
 
 | Tema explicado | Módulo de referência |
 |---|---|

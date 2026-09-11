@@ -7,7 +7,7 @@ Não há uma skill única: use `@hub-ml-eda-profissional` para perfil/qualidade,
 `@hub-ml-cross-eda-ml` para viabilidade de joins ou
 `@hub-ml-monitoramento-modelo` para drift. Depois de escolher o objetivo, veja
 os helpers declarados por essa skill em
-[CATALOGO_HELPERS.md](../../CATALOGO_HELPERS.md).
+[MANUAL_TECNICO.md#catalogo-helpers](../../MANUAL_TECNICO.md#catalogo-helpers).
 
 ## Antes de usar
 

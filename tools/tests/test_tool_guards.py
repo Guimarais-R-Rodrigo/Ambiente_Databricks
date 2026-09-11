@@ -596,5 +596,56 @@ class RepoInventoryTests(unittest.TestCase):
         self.assertIn("validate_assistant.py", calls[0][1])
 
 
+class ManualTecnicoTests(unittest.TestCase):
+    """Guarda a redação unificada sem alterar regras analíticas do produto."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.repo = TOOLS.parent
+        cls.source = cls.repo / "ambiente_fonte/.assistant/MANUAL_TECNICO.md"
+        cls.text = cls.source.read_text(encoding="utf-8")
+
+    def test_manual_copies_are_identical(self):
+        from project_policy import SAFE_SIMULATED_USERNAME
+        derived = self.repo / "Novo_Ambiente_Simulado/Users" / SAFE_SIMULATED_USERNAME / ".assistant/MANUAL_TECNICO.md"
+        self.assertEqual(self.source.read_bytes(), (self.repo / "MANUAL_TECNICO.md").read_bytes())
+        self.assertEqual(self.source.read_bytes(), derived.read_bytes())
+        for root in (self.source.parent, derived.parent):
+            self.assertFalse((root / "CATALOGO_HELPERS.md").exists())
+            self.assertFalse((root / "GLOSSARIO.md").exists())
+
+    def test_manual_inventory_covers_current_objects(self):
+        base = self.source.parent
+        for collection in ("hub_snippets", "hub_scripts"):
+            for module in (base / collection).rglob("*.py"):
+                if module.stem != module.parent.name:
+                    continue
+                dotted = ".".join(module.parent.relative_to(base).parts)
+                self.assertIn(f"#### `{dotted}`", self.text, dotted)
+
+    def test_manual_python_blocks_and_internal_links(self):
+        import ast
+        import re
+        anchors = set(re.findall(r'<a id="([^"]+)"', self.text))
+        self.assertGreaterEqual(len(anchors), 31)
+        for target in re.findall(r'\]\(#([^\s)]+)\)', self.text):
+            self.assertIn(target, anchors)
+        for number, code in enumerate(re.findall(r'```python\n(.*?)```', self.text, re.S), 1):
+            ast.parse(code, filename=f"MANUAL_TECNICO.md:bloco-{number}")
+
+    def test_manual_portable_examples_as_written(self):
+        import re
+        labels = {"funcao_didatica", "introspeccao", "split_temporal", "metricas_binarias"}
+        found = set()
+        blocks = re.findall(r'```python\n(.*?)```', self.text, re.S)
+        with mock.patch.object(sys, "path", [str(self.source.parent)] + sys.path):
+            for code in blocks:
+                tag = re.search(r"^# EXEMPLO: (\w+)$", code, re.M)
+                if tag and tag[1] in labels:
+                    with self.subTest(example=tag[1]), redirect_stdout(StringIO()):
+                        exec(compile(code, f"MANUAL_TECNICO.md:{tag[1]}", "exec"), {})
+                    found.add(tag[1])
+        self.assertEqual(found, labels)
+
 if __name__ == "__main__":
     unittest.main()

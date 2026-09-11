@@ -58,3 +58,12 @@ entrada, no sumário e na navegação, sem reescrever evidência antiga.
 - O corpo decisório de um ADR aceito é imutável. Erratas factuais, ratificações e
   mudanças de status podem ser anexadas, com data e sem apagar o texto original.
   Uma mudança de decisão exige novo ADR que superseda o anterior.
+
+
+## Manual Técnico
+
+O Manual Técnico é a explicação aprofundada para leitores não técnicos e o dono
+do inventário integrado de helpers e termos (ADR-0010). Edite em
+`ambiente_fonte/.assistant/MANUAL_TECNICO.md`; sincronize a cópia de leitura
+`MANUAL_TECNICO.md` da raiz e gere o simulado pelo renderer. As três cópias devem
+conservar o mesmo conteúdo. Não reintroduza catálogo ou glossário independentes.
