@@ -1,214 +1,159 @@
-![CRM — Missão Modelos Analíticos CRM](ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/png/cabecalho_crm.png)
+![CRM — Missão Modelos Analíticos CRM](../../../ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/png/cabecalho_crm.png)
 
 # Ecossistema/Hub `.assistant` para Databricks Genie Code voltado para Machine Learning
 
-> Um ambiente integrado de governança, biblioteca algorítmica e inteligência contextual que ajuda a Genie Code e a equipe a trabalhar com métodos, componentes e critérios de revisão consistentes.
+Uma demanda como “verifique se podemos usar os eventos da campanha para modelagem” combina contexto de negócio, qualidade dos dados, método analítico e execução de código. Este Hub organiza essas responsabilidades para que a equipe consiga escolher uma ferramenta, compreender suas entradas e revisar o resultado.
 
-> **LEGENDA DE PROCEDÊNCIA.** Agent Skills e instruções são mecanismos reconhecidos pela Genie Code. Pastas com prefixo `hub_` e skills com prefixo `hub-` contêm implementações e convenções deste projeto; não são produtos institucionais da Databricks.
+> **Versão candidata para revisão.** Ainda não substitui o README oficial. Os links desta versão funcionam na pasta de revisão; a preparação para publicação deve recalculá-los para o destino. Não publicar esta pasta no Databricks.
 
-> **Rascunho de sprint 1 — não publicado.** Destino previsto: `README.md` na raiz do repositório.
+> **Procedência.** Instruções e Agent Skills utilizam mecanismos documentados da Genie Code. Os conteúdos `hub-ml-*` e as coleções com prefixo `hub_` são implementações deste projeto. Eles não são produtos institucionais da Databricks. Configuração de contexto, execução de código e aprovação de resultados são etapas distintas.
 
 ---
 
+<a id="mapa-de-leitura"></a>
 ## 🧭 Mapa de Leitura
 
-Este documento apresenta o Hub: o que ele é, quais peças o formam, como o código chega ao workspace e como o projeto é mantido. Ele **não** ensina a importar um helper nem a preencher um briefing — isso fica nos guias de uso.
+Este guia apresenta a finalidade, os componentes, a arquitetura e a manutenção do repositório. Você aprenderá a reconhecer qual peça atende sua necessidade e onde uma correção deve nascer. Para executar a primeira tarefa, abra o [guia candidato do `.assistant`](../sprint-02-assistant/README.md).
 
-**O que você conseguirá fazer com este guia.** Ao terminar, você explica a função de cada componente, escolhe o guia certo para a próxima ação e sabe que a cópia editável não é a pasta do workspace.
+A primeira leitura pode seguir visão geral, componentes, arquitetura e manutenção. Para consulta, escolha pela pergunta:
 
-Há duas rotas. A **primeira leitura** segue as seções na ordem: visão geral → componentes → arquitetura → contexto → manutenção. A **consulta** usa a tabela abaixo e salta para a âncora.
-
-| Se você quer entender... | Continue em... |
+| Sua pergunta | Próxima seção |
 |---|---|
-| por que o ecossistema existe | [Visão Geral](#-o-que-é-este-ecossistema-e-como-ele-ajuda-no-databricks) |
-| quais componentes ele reúne | [Componentes](#-o-que-tem-neste-ambiente-e-como-ele-ajuda-na-rotina-de-trabalho) |
-| como repositório, workspace e runtime se relacionam | [Arquitetura](#️-arquitetura-completa-do-ecossistema) |
-| como a Genie Code recebe contexto | [Fluxo de Contexto](#-como-o-contexto-chega-ao-genie-code) |
-| onde editar e o que não editar | [Manutenção](#-como-o-projeto-é-mantido-sem-criar-duas-verdades) |
-
-Se você já está no Databricks e quer executar a primeira tarefa, abra o [guia do `.assistant`](ambiente_fonte/.assistant/README.md). Este README da raiz é o mapa; aquele é o tutorial de uso.
+| Que problema o Hub resolve? | [Visão geral](#visao-geral) |
+| Preciso de método, briefing, código ou molde? | [Componentes](#componentes) |
+| Onde o arquivo é mantido e onde executa? | [Arquitetura](#arquitetura) |
+| O que a Genie Code recebe como contexto? | [Contexto](#contexto) |
+| Como encaminhar uma correção? | [Manutenção](#manutencao) |
 
 ---
 
+<a id="visao-geral"></a>
 ## 🌟 O que é este Ecossistema e como ele ajuda no Databricks?
 
-Uma demanda analítica típica mistura várias coisas ao mesmo tempo: “olhe essa base da campanha e me diga se dá para modelar retenção”. Sem estrutura, o pedido deixa em aberto o grão da linha, a chave, o período, o que pode ser lido e o que não pode ser gravado. A Genie Code preenche lacunas; a equipe depois não consegue revisar o que foi assumido.
+O ecossistema reúne instruções, métodos, briefings, módulos Python e padrões de autoria. Ele reduz a necessidade de reconstruir o contexto e reimplementar rotinas em cada conversa. Não substitui permissões, testes, desenho estatístico nem decisão de negócio.
 
-**Ecossistema**, neste projeto, é o conjunto organizado de instruções, métodos, briefings e código Python que acompanha esse trabalho no Databricks Genie Code. Ele não substitui permissão, teste nem decisão de negócio.
+Considere uma campanha fictícia. Cada linha é um evento; `event_id` é a chave candidata, `id_cliente` identifica a entidade, `dt_evento` é a data, `respondeu` é um indicador 0/1 e `valor_gasto` é um valor associado ao evento. Esses nomes são didáticos, não identificadores de uma tabela corporativa. Uma checagem posterior também usa `canal`, com um nulo introduzido de propósito.
 
-Três momentos da mesma campanha fictícia:
-
-1. **Pedido incompleto:** “analise a campanha”. Faltam tabela, chave, período e modo de trabalho.
-2. **Contexto estruturado:** briefing com recurso, `event_id`, `dt_evento` e leitura apenas.
-3. **Resultado revisável:** plano, código e números com origem; a pessoa aceita ou recusa.
-
-O Hub reduz improvisação. Ele não torna a IA infalível.
-
-```text
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           ROTINA DO TRABALHO ANALÍTICO                      │
-│                                                                             │
-│   Você descreve objetivo, dados, restrições e entrega                       │
-│   A skill organiza método, perguntas e guardrails                           │
-│   O notebook importa helpers quando eles forem adequados                    │
-│   Você revisa código, execução, resultados e limitações                     │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+A passagem de pedido vago para trabalho revisável tem três momentos. Primeiro, “analise a campanha” deixa dados, grão e restrições indefinidos. Depois, um briefing declara a fonte, o período e a permissão de somente planejar. Finalmente, código autorizado produz números cuja origem e interpretação podem ser verificadas. Um evento de resposta, por si só, não define retenção: a definição dessa variável de negócio ainda precisa ser fornecida.
 
 ---
 
+<a id="componentes"></a>
 ## 🧰 O que tem neste ambiente e como ele ajuda na rotina de trabalho?
 
-O ecossistema tem cinco componentes de produto. Não são cinco nomes para a mesma coisa: mudam a entrada, a ação humana e o que acontece no runtime.
+A figura separa componentes que orientam a conversa daqueles que oferecem código ou moldes. Observe a forma de uso indicada em cada componente, não apenas sua posição no desenho.
 
-![Mapa visual dos cinco componentes do ecossistema .assistant](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/01_mapa_ecossistema.png)
+![Cinco componentes do Hub: skills, prompts, snippets, scripts e padrões, separados por responsabilidade.](../../../ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/01_mapa_ecossistema.png)
 
-*Leitura da figura: as Agent Skills usam um mecanismo reconhecido pela plataforma; prompts, snippets, scripts e padrões são extensões customizadas do Hub. A via contínua é descoberta nativa; a via tracejada exige ação sua.*
-
-A mesma demanda de campanha atravessa os cinco, com papéis distintos.
+As ligações representam organização. Não são gatilhos que executam todo o conjunto. Na campanha, um briefing pode acompanhar uma skill de exploração; um helper só será executado quando houver uma chamada de código no ambiente que o disponibiliza.
 
 ### 🧠 1. Agent Skills (`skills/`)
 
-**Necessidade.** Você quer um método (EDA, features, baseline), não só um parágrafo genérico.
+Você escolhe uma skill quando precisa de um método: por onde começar uma EDA, como investigar um cruzamento ou como estruturar um baseline. Cada pacote contém `SKILL.md`, com descrição de uso, instruções e referências. A plataforma pode carregá-lo por relevância; a seleção com `@` explicita a intenção.
 
-**Conceito.** Agent Skill é um pacote de instruções com `SKILL.md`. A Genie Code pode carregá-lo por relevância da `description` ou você seleciona com `@nome-da-skill`.
-
-**O que você faz.** Anexa a tabela da campanha e escreve, por exemplo, `@hub-ml-eda-profissional` pedindo plano somente leitura.
-
-**Saída.** Metodologia, perguntas e, se autorizado, código proposto. A skill **não** importa `hub_snippets` sozinha.
-
-**Diferença.** Perto do prompt: a skill é método carregável; o prompt é o briefing que *você* preenche e cola.
+Na campanha, você pode selecionar `@hub-ml-eda-profissional`, fornecer as células com a fixture e pedir apenas o plano. A entrega esperada nessa fase é uma proposta de inspeção, não métricas inventadas. A skill orienta a atuação do agente; não é um módulo Python. Veja os [pedidos e critérios de revisão por skill](../sprint-05-skills/README.md).
 
 ### 📦 2. Hub Snippets (`hub_snippets/`)
 
-**Necessidade.** Você não quer reescrever split temporal, PSI ou formatação brasileira.
+Você utiliza um snippet para reaproveitar uma implementação: divisão temporal, cálculo de PSI ou formatação de números. Neste projeto, o objeto tem API pública, implementação e notebook de exemplo. A forma de entrada depende da função; não é correto presumir que todo snippet receba um DataFrame.
 
-**Conceito.** Snippet é módulo Python importável, com pasta de objeto (`__init__.py`, implementação, notebook de exemplo).
-
-**O que você faz.** Coloca a raiz `.assistant` no `sys.path`, importa a função e chama com o DataFrame da campanha.
-
-**Saída.** Objeto Python (DataFrame, número, figura), conforme o contrato.
-
-**Diferença.** Perto do script: o snippet recebe dado já carregado; o script recebe o **endereço** do recurso a inspecionar.
+O código consumidor localiza o pacote, importa a função e chama a API. Para a campanha, `temporal_split` pode organizar períodos de avaliação depois que o problema temporal estiver definido. O retorno precisa ser interpretado conforme seu contrato, e não como uma aprovação automática da análise. O [guia de snippets](../sprint-03-snippets/README.md) explica essa reutilização.
 
 ### ⚡ 3. Hub Scripts (`hub_scripts/`)
 
-**Necessidade.** Antes de modelar, você quer um diagnóstico: chave única? nulos? atualidade?
+Os scripts são utilitários com uma tarefa delimitada, frequentemente sobre um recurso identificado por nome ou caminho. Nem todos são diagnósticos: há perfilamento, qualidade, transformação RFV, serialização de schema e inspeção de documentação.
 
-**Conceito.** Script do Hub é utilitário de inspeção. Lê e devolve evidência; não apaga tabela.
-
-**O que você faz.** Importa `data_quality_check` e aponta para o nome da tabela. O notebook decide o que fazer com `pass` / `warn` / `fail`.
-
-**Saída.** Dicionário com status, métricas e alertas.
-
-**Diferença.** Perto do snippet: pergunta sobre um recurso identificado por nome, não transformação de um DataFrame que você já tem na memória.
+`data_quality_check`, por exemplo, recebe o nome de uma tabela ou view acessível na sessão Spark e devolve `status`, `score`, `thresholds`, `checks` e `alerts`. Ele não interrompe outra tarefa por retornar `fail`. A política consumidora decide o que fazer. `rfv_calculator`, por sua vez, devolve um DataFrame, não um veredito. Compare os [contratos dos sete utilitários](../sprint-04-scripts/README.md).
 
 ### 📝 4. Hub Prompts (`hub_prompts/`)
 
-**Necessidade.** O pedido vago gera hipóteses inventadas.
+Um prompt do Hub é um briefing que você preenche para formular a demanda. Ele explicita objetivo, recursos, granularidade, período, restrições, entrega e critérios de aceite. A pasta não registra novos comandos na interface.
 
-**Conceito.** Prompt do Hub é briefing preenchível. Não é slash command nem pasta descoberta pela plataforma.
-
-**O que você faz.** Abre `eda_rapida.md`, substitui campos (ou `NÃO INFORMADO`) e cola no chat.
-
-**Saída.** O texto do pedido, não um resultado de Spark.
-
-**Diferença.** Perto da skill: o prompt é a ordem de serviço; a skill é o POP que a Genie pode carregar.
+Na campanha, o briefing informa `event_id` como chave candidata e pede que a unicidade seja verificada. Quando um dado é desconhecido, declara `NÃO INFORMADO`, em vez de inventá-lo. O prompt define o trabalho; a skill pode orientar como realizá-lo. O [guia de prompts](../sprint-06-prompts/README.md) mostra exemplos preenchidos.
 
 ### 📐 5. Hub Padrões (`hub_padroes/`)
 
-**Necessidade.** Um objeto novo não deve inventar formato.
+Um padrão ajuda quem vai criar um objeto novo a manter estrutura, contrato, exemplo e revisão consistentes. Escolha o tipo antes de copiar um molde: README, snippet, script, prompt, skill ou notebook.
 
-**Conceito.** Padrão é molde (template + exemplo). Consulta manual ou skill `@hub-ml-criar-objeto`.
+O resultado é uma proposta de objeto com responsabilidades explícitas, não uma certificação de sua fórmula. O [guia de padrões](../sprint-08-padroes/README.md) acompanha o exemplar real de taxa de resposta por segmento, sem substituir sua API por uma assinatura imaginada.
 
-**O que você faz.** Escolhe o tipo, lê o template, preenche contrato e exemplo.
-
-**Saída.** Estrutura; a correção do conteúdo continua humana.
-
-**Diferença.** Não é biblioteca nem skill de análise: é fábrica de forma.
-
-> **INFRAESTRUTURA EDITORIAL DO HUB.** A pasta `hub_readmes_visual_assets/` mantém SVG, PNG e cabeçalhos destes guias. Não é um sexto componente analítico, não é nativa da Databricks e não entra sozinha no contexto da Genie Code.
+A pasta `hub_readmes_visual_assets/` é infraestrutura editorial compartilhada. Não é um sexto componente analítico e não alimenta a conversa apenas por existir. Os diagramas continuam acompanhados de explicação textual.
 
 ### A mesma demanda vista por cinco componentes
 
-| Componente | Papel na campanha fictícia |
+| Componente | Papel no exemplo |
 |---|---|
-| Prompt `eda_rapida` | declara tabela, chave e modo leitura |
-| Skill `@hub-ml-eda-profissional` | organiza o método da exploração |
-| Script `data_quality_check` | mede nulos e unicidade quando você executa |
-| Snippet `split_temporal` | parte períodos de calendário se houver modelagem |
-| Padrão | só entra se a equipe for **criar** um objeto novo |
+| Prompt de EDA | Delimitar dados, pergunta e ações permitidas |
+| Skill de EDA | Organizar o método e as perguntas faltantes |
+| Script de qualidade | Medir regras configuradas quando chamado |
+| Snippet temporal | Preparar avaliação temporal, quando aplicável |
+| Padrão | Orientar criação de novo objeto, somente se necessário |
 
 ---
 
+<a id="arquitetura"></a>
 ## 🏛️ Arquitetura Completa do Ecossistema
 
-A fonte versionada, o workspace e o runtime não são a mesma cópia.
+O percurso de um arquivo explica por que ler, publicar e executar são ações diferentes.
 
-![Arquitetura do repositório ao runtime Databricks](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/02_arquitetura_ecossistema.png)
+![Fonte versionada, workspace, contexto aplicável e rota de execução no runtime.](../../../ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/02_arquitetura_ecossistema.png)
 
-*Leitura da figura: o repositório controla a origem; o workspace disponibiliza o conteúdo; a Genie Code usa as camadas de contexto aplicáveis; o notebook importa e executa no runtime. Revisão humana liga as rotas.*
-
-**Arquitetura**, aqui, é o percurso de um arquivo — não a lista de pastas da seção anterior.
+A fonte mantém o conteúdo editável; a publicação disponibiliza uma cópia; o runtime executa o código consumidor. A rota em notebook ilustrada é a adotada pelos tutoriais, não um limite de capacidade da Genie Code. O agente também pode executar código por ferramentas autorizadas. Em ambos os casos, o ambiente de execução precisa ter acesso ao pacote e às suas dependências.
 
 ### O que este diagrama deixa explícito
 
-Skills e instruções usam mecanismos de contexto da Genie Code. Prompts e padrões são fornecidos manualmente. Snippets e scripts só entram no Python quando o notebook importa. Estar dentro de `.assistant` **não** coloca o pacote no `sys.path`.
+Contexto de conversa não é importação. Selecionar o arquivo de um helper permite que o modelo consulte seu conteúdo; não coloca automaticamente a biblioteca no `sys.path` de todo processo Python. Da mesma forma, importar uma função no notebook não injeta sua implementação no contexto do chat.
 
-**Aplicação.** Se alguém “corrigir” um helper só no workspace, a próxima publicação da fonte apaga essa correção.
-
-**Consequência.** Edite em `ambiente_fonte/`. O guia de uso no workspace é o README do `.assistant`.
+Para corrigir um helper publicado, altere a implementação correspondente em `ambiente_fonte/`, seu exemplo e os testes pertinentes. Uma edição feita somente na cópia operacional pode ser perdida quando o mesmo arquivo for sobrescrito na publicação seguinte.
 
 ### Ciclo de vida do projeto
 
-![Ciclo de vida de uma mudança no ecossistema](ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/03_ciclo_de_vida.png)
+A próxima figura mostra verificações complementares, não uma aprovação única.
 
-*Leitura da figura: editar, validar, renderizar, publicar, verificar e testar são gates complementares — um não substitui o outro.*
+![Etapas de edição, validação, geração do espelho, publicação e conferência, testes, registro e promoção.](../../../ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/03_ciclo_de_vida.png)
 
-Uma correção na frase de um README exige validação de links. Uma mudança em `temporal_split` exige, além disso, testes e, se tocar runtime, smoke. Detalhes de comando estão em `ambiente_fonte/README.md` e no playbook de ciclo de vida.
+Uma mudança de explicação exige revisão de conteúdo e links. Uma mudança de algoritmo exige também regressões. Compatibilidade com Spark, permissões e comportamento conversacional precisam de evidência própria no ambiente correspondente. Aprovar uma etapa não permite atribuir sucesso às demais.
 
 ---
 
+<a id="contexto"></a>
 ## 🔄 Como o Contexto chega ao Genie Code?
 
-**Contexto** é a informação disponível para a tarefa. Não existe leitura automática de toda a pasta `.assistant`.
-
-**Sem contexto:** “a campanha está boa?” — a Genie precisa inventar tabela, chave e período.
-
-**Com contexto:** tabela anexada, `event_id`, `dt_evento` de janeiro a junho, somente leitura. As ambiguidades de recurso e tempo diminuem; as de negócio (o que é “boa”) continuam suas.
+Contexto é a informação disponível para a tarefa: pedido, histórico, código, recursos selecionados, instruções aplicáveis e skills carregadas. Não existe uma regra geral de leitura integral de qualquer pasta denominada `.assistant`.
 
 ### Explicação Passo a Passo
 
-1. **Gatilho.** No chat da Genie Code, descreva a demanda e o modo (explicar, planejar, gerar, executar).
-2. **Diretrizes.** Instruções pessoais ou de workspace, quando existirem, valem nas superfícies suportadas — não em Quick Fix nem Autocomplete.
-3. **Skill.** A plataforma pode carregar por relevância; `@hub-ml-*` explicita a escolha.
-4. **Plano.** Confira dados, grão, custo e persistência **antes** de autorizar execução.
-5. **Runtime.** O notebook configura o caminho, importa o helper e executa. A skill não faz isso sozinha.
-6. **Validação.** Separe código sugerido, código executado e resultado aceito.
+1. No chat, declare a pergunta e o modo pretendido. Para a primeira revisão: “Explique o plano; não execute código nem altere arquivos”.
+2. Selecione os recursos reais pelo mecanismo de contexto oferecido na interface. Em uma fixture com view temporária, forneça a célula de criação e o resultado de schema; não presuma que a view seja uma tabela persistente do Unity Catalog.
+3. Selecione a skill quando desejar um método específico. Instruções pessoais, de workspace e de arquivos hierárquicos seguem os mecanismos suportados pela plataforma.
+4. Revise fontes, grão, filtros, custo, coletas e possíveis efeitos antes de autorizar ferramentas. O modo de aprovação configurado pode permitir ações sem uma nova confirmação a cada chamada.
+5. Confira a saída efetiva: tipo, unidade, população e limitações. Código proposto, código executado e resultado aceito são estados distintos.
 
-**Erro comum.** Anexar o arquivo `.py` do helper e achar que ele já está importado. Anexo é contexto de leitura; import é ação no interpretador.
+A documentação oficial confirma a descoberta de `AGENTS.md` e `CLAUDE.md` na hierarquia do arquivo aberto e as exceções de Quick Fix e Autocomplete para instruções. Essas capacidades são da plataforma; os métodos e restrições particulares do Hub são conteúdo local. Consulte as referências de plataforma ao final.
 
 ---
 
+<a id="manutencao"></a>
 ## 🧭 Como o Projeto é Mantido sem Criar Duas Verdades
 
-**Fonte canônica** é a cópia que se edita e se versiona: `ambiente_fonte/`. **Derivado** é o espelho gerado (`Novo_Ambiente_Simulado/`). **Cópia operacional** é o workspace.
-
-Se duas pessoas “corrigirem” o mesmo texto, uma no Git e outra só no Databricks, a próxima publicação faz o workspace perder a correção local. Por isso a regra: edite na fonte; gere o derivado; publique; confira.
+`ambiente_fonte/` contém a fonte editável do produto. `Novo_Ambiente_Simulado/` é gerado. O workspace é uma cópia operacional. `tools/` contém automação de manutenção e `docs/` registra evidências e decisões operacionais.
 
 ### Encontrei um problema: como encaminhar uma correção
 
-| Tipo de problema | Onde alterar | O que conferir |
+| Problema | Onde corrigir | Evidência necessária |
 |---|---|---|
-| Frase ou link de README | arquivo em `ambiente_fonte/` | validador de links |
-| Comportamento de helper | módulo + exemplo + teste | suíte local; smoke se tocar Spark/ML |
-| Roteamento de skill | `SKILL.md` (`name`/`description`) | forward tests |
+| Explicação ou link do produto | README correspondente em `ambiente_fonte/` | Revisão humana e validação de referências |
+| Resultado de helper | Implementação, exemplo e regressão | Teste com entrada e saída conhecidas |
+| Seleção inadequada de skill | `SKILL.md` e casos de fronteira | Testes positivos, negativos e seleção explícita |
+| Arquivo não aparece no workspace | Inventário e publicação autorizada | Conferência remota de existência, tipo e conteúdo |
 
-Não edite o simulado à mão. Não grave host, e-mail ou token em arquivo versionado.
+Não edite o espelho à mão. O [guia de manutenção](../sprint-07-ambiente-fonte/README.md) distingue os dois itens publicados — `.assistant_instructions.md` e `.assistant/` — dos documentos que permanecem apenas no repositório.
 
 ### Estado verificável do gate local
 
-O bloco de saídas no final deste README existe para o comando `python tools/validate_assistant.py --conferir-readme` detectar documentação envelhecida. Os números são da última consolidação colada; se divergirem da execução, atualize o bloco com a saída real — não o contrário.
+O estado de um gate deve ser consultado na execução correspondente ao commit, com saída, ambiente e alcance identificados. Este candidato não declara que executou testes no Databricks nem replica uma aprovação histórica como se fosse atual.
+
+As [evidências de testes do projeto](../../../docs/testes/README.md) e o resultado do CI são as rotas de conferência. Na futura promoção deste README, o mecanismo de validação das contagens deve receber a saída real da árvore promovida. Uma contagem antiga não deve ser ajustada para aparentar aprovação, e uma execução que falhou deve permanecer identificada como falha.
 
 ---
 
@@ -216,57 +161,46 @@ O bloco de saídas no final deste README existe para o comando `python tools/val
 
 ### 1. O que acontece quando eu abro o chat da Genie Code com este ecossistema configurado?
 
-As instruções aplicáveis podem orientar a conversa, e uma skill pode ser carregada por relevância ou por `@`. Extensões `hub_` não entram automaticamente só por existirem na pasta. **Sinal:** a skill aparece como carregada, ou o assistente segue o método sem tê-la selecionado. **Próximo passo:** se quiser um método específico, use `@`.
+As instruções aplicáveis podem orientar a resposta e uma skill pode ser carregada por relevância ou seleção explícita. As pastas customizadas não são executadas por sua mera presença. Observe a indicação de recursos ou ações oferecida pela interface; uma resposta que parece seguir o método não comprova, sozinha, que determinado `SKILL.md` foi carregado.
 
 ### 2. Preciso instalar alguma biblioteca ou configurar o Python para usar os snippets?
 
-Depende do snippet. Módulos Python puros tendem a funcionar quando o `sys.path` aponta para a raiz que contém `hub_snippets/`. LightGBM, SHAP, Plotly, MLflow e o próprio Spark precisam existir no compute. Um `ImportError` nomeia o pacote que falta; não instale “tudo” por reflexo. Detalhes: [guia do `.assistant`](ambiente_fonte/.assistant/README.md) e [Hub Snippets](ambiente_fonte/.assistant/hub_snippets/README.md).
+O processo que executa a chamada precisa localizar o pacote e ter as dependências da função. Configurar `sys.path` não instala bibliotecas. Algumas dependências são exigidas ao importar; outras, apenas na chamada. O [tutorial de snippets](../sprint-03-snippets/README.md) separa essas falhas e aponta o inventário de dependências.
 
 ### 3. Qual é a diferença prática entre Skill, Prompt, Snippet e Script?
 
-Skill = método para a Genie. Prompt = briefing que você preenche. Snippet = função importável sobre dado já carregado. Script = diagnóstico sobre um recurso endereçado. Na campanha: você preenche `eda_rapida`, menciona `@hub-ml-eda-profissional`, e só executa `data_quality_check` se autorizar código no notebook.
+Skill orienta o método do agente; prompt delimita o pedido; snippet oferece uma API reutilizável; script resolve uma tarefa delimitada com contrato próprio. Na campanha, você pode formular o briefing, selecionar a skill e autorizar uma chamada de qualidade. Não precisa usar todas as peças em toda tarefa.
 
 ### 4. Como o ecossistema ajuda a mitigar leakage e erros analíticos?
 
-Ele **orienta**: skills e prompts pedem instante de decisão, `pit_join` e `temporal_split` existem para recortes temporais explícitos. Isso não impede leakage se o pedido omitir a data de corte ou se o código for executado sem revisão. Guardrail textual não é barreira de plataforma.
+Ele torna instante de decisão, disponibilidade dos atributos, períodos e critérios de avaliação explícitos. Não garante ausência de vazamento. Um corte por índices cronologicamente ordenados pode ser válido; o risco está em misturar futuro, entidades ou informações ainda indisponíveis. O helper de períodos é uma implementação reutilizável dessa disciplina, não prova automática de validade de todo o desenho.
 
 ### 5. A equipe pode criar novos snippets, prompts ou skills?
 
-Sim. Use [`hub_padroes/`](ambiente_fonte/.assistant/hub_padroes/README.md) e, se quiser, `@hub-ml-criar-objeto`. Criar arquivo é ação explícita, sujeita a revisão. Objeto novo de skill precisa de testes de roteamento.
+Sim, mediante definição de contrato, exemplo e revisão. O molde orienta a estrutura e a skill de criação pode auxiliar. Uma nova skill precisa também de teste de seleção e de fronteira com as existentes. Comece pelo [guia de padrões](../sprint-08-padroes/README.md).
 
 ### 6. Se o código foi gerado pela Genie Code, posso executá-lo sem revisão?
 
-Não. Planejar, gerar, executar e persistir são ações diferentes. Revise `CREATE`/`DELETE`/`MERGE`, coleta no driver e qualquer escrita. Autoaprovação reduz cliques; não é fronteira de segurança.
+Não tome a geração como aprovação. Confira recursos, filtros, escrita, instalação de pacotes, coletas e permissões. A Genie Code pode executar ferramentas conforme as aprovações configuradas; autoaprovação é uma conveniência, não uma barreira de segurança. Em recursos sensíveis, adote os controles de acesso e revisão apropriados.
 
 ### Por onde começo se só quero usar?
 
-[Guia do `.assistant`](ambiente_fonte/.assistant/README.md), seção de ponto de partida.
+No [guia do `.assistant`](../sprint-02-assistant/README.md), que prepara uma fixture, formula o pedido, chama um helper e interpreta o resultado. O exemplo não depende de uma tabela corporativa supostamente existente.
 
 ### Preciso dominar todas as coleções?
 
-Não. Escolha o componente da demanda. Os outros guias existem para quando a pergunta mudar.
+Não. Identifique primeiro o resultado desejado. Use a comparação de componentes para escolher o ponto de entrada e aprofunde o contrato apenas dos objetos necessários à tarefa.
 
 ### Quem mantém o código?
 
-Quem edita `ambiente_fonte/`, valida, gera o derivado e publica. O workspace não é fonte.
+Os mantenedores alteram a fonte versionada, revisam os contratos e executam os testes pertinentes. Quem usa a cópia operacional informa o defeito com entrada, erro, versão e ambiente, sem transformar uma correção isolada no workspace em nova fonte de verdade.
 
 ---
 
 ## 🔗 Próximos Passos
 
-| Se você... | Abra | O que encontrará |
-|---|---|---|
-| vai usar o Hub no Databricks | [`.assistant/README.md`](ambiente_fonte/.assistant/README.md) | escolha de componente, contexto, import e revisão |
-| vai alterar o pacote | [`ambiente_fonte/README.md`](ambiente_fonte/README.md) | fonte, derivado e comandos de validação |
-| precisa de um helper | [Catálogo](ambiente_fonte/.assistant/CATALOGO_HELPERS.md) | demanda → caminho de import |
-| precisa de vocabulário | [Glossário](ambiente_fonte/.assistant/GLOSSARIO.md) | termos oficiais e locais |
+Para usar, siga o [tutorial de primeira tarefa](../sprint-02-assistant/README.md). Para manter o pacote, consulte o [fluxo de alteração](../sprint-07-ambiente-fonte/README.md). Para localizar APIs, abra o [Catálogo de Helpers](../../../ambiente_fonte/.assistant/CATALOGO_HELPERS.md); para termos, o [Glossário](../../../ambiente_fonte/.assistant/GLOSSARIO.md).
 
----
+### Referências de plataforma
 
-## Saídas de referência conferíveis
-
-Estas linhas permitem que `validate_assistant.py --conferir-readme` detecte documentação envelhecida. Recoloque a saída real ao consolidar a release; não invente o número.
-
-```text
-(use a saída atual de python tools/validate_assistant.py)
-```
+Conferidas em 11/09/2026. São fontes das capacidades da plataforma, não certificação da instalação do Hub: [Agent Skills](https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills), [instruções](https://learn.microsoft.com/en-us/azure/databricks/genie-code/instructions), [modo agente e aprovações](https://learn.microsoft.com/en-us/azure/databricks/genie-code/agent-mode) e [imagens em notebooks](https://docs.databricks.com/aws/en/notebooks/notebook-media).
