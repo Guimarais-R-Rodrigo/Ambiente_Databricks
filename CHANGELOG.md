@@ -5,6 +5,171 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-11 — Rascunhos dos READMEs a partir dos templates (OpenCode)
+
+### Adicionado
+
+- (OpenCode) `Template_READMEs/sprints_preenchidos/`: plano em dez sprints
+  (um README cada) e rascunhos sem placeholders, com fio de campanha sintética.
+  Destino canônico intocado; sem publicação Databricks.
+
+## 2026-09-11 — Templates editoriais para aprofundar os READMEs (Codex)
+
+### Adicionado
+
+- (Codex) `Template_READMEs/`: guia comum de tom/didática e dez templates
+  específicos, cobrindo os seis READMEs das cinco frentes e quatro guias
+  auxiliares do produto, com títulos/subtítulos de referência preservados.
+- (Codex) Orientações por seção, propostas aditivas de subdivisão, fichas de
+  catálogo, exemplos acompanhados, interpretação de resultados e critérios
+  editoriais; sem reescrever os READMEs atuais ou gerar novas figuras.
+
+### Notas
+
+- (Codex) Somente orientação local: sem publicação, criação de notebooks,
+  alteração do produto, commit ou push. Mudanças anteriores preservadas.
+- (Codex) Conferidos os hashes dos dez READMEs de origem, sem alterações;
+  todos os títulos/subtítulos de referência preservados nos templates.
+  Validador estrutural aprovado com zero falhas e zero avisos.
+
+## 2026-09-11 — Conferência remota da camada visual e do produto (OpenCode)
+
+### Atualizado
+
+- (OpenCode) Recolhida a saída real do validador: `repo (links)` no README raiz
+  passou de 456 para 469, alinhado à inclusão documental desta worktree.
+
+### Validação
+
+- (OpenCode) Publicação visual: `--verify` com 103/103 RAW e `status: verified`.
+- (OpenCode) Produto Free: `--verify --conteudo` com 414/414, 0 ausentes/obsoletos,
+  13/13 skills, 5/5 `hub_`.
+- (OpenCode) QA visual local 8154/0; 29 testes do publicador visual; biblioteca e
+  guardas do `ci_local` ok. Aceite de tela, commit e trabalho continuam humanos.
+
+## 2026-09-11 — Guias de retomada, transferência e homologação (Codex)
+
+### Adicionado
+
+- (Codex) `GUIA_PENDENCIAS_E_CONFERENCIAS.md` na raiz: estado observado,
+  retomada da publicação, conferências, versionamento e backlog documental.
+- (Codex) `PLANO_TRANSFERENCIA_E_TESTES_DATABRICKS_TRABALHO.md` na raiz:
+  transporte autorizado por e-mail/ZIP e UI, staging, backup, rollback e
+  sprints para 12 notebooks principais e 14 opcionais, ainda não criados.
+- (Codex) Plano de cobertura de scripts/snippets/moldes, 39 casos de roteamento
+  e 48 casos conversacionais de prompts, com fixtures, oráculos, estados,
+  evidências e gates de escrita; fundamentação em documentação oficial.
+
+### Notas
+
+- (Codex) Por mudança de escopo solicitada pelo usuário, a publicação em curso
+  foi interrompida após log de 103/103 envios e conferências RAW individuais,
+  durante a conferência final. O recibo permaneceu `started`; outra execução
+  de verificação deve certificar o estado remoto, inclusive assets legados.
+- (Codex) Nesta entrega, nenhuma criação de notebook, envio de e-mail, nova
+  publicação, commit ou push. READMEs e código do produto preservados.
+- (Codex) Validador estrutural aprovado, sem falhas/avisos. A atualização da
+  contagem de links no bloco de saída do README raiz ficou como pendência
+  editorial para `--conferir-readme`, pois foram acrescentados documentos.
+
+## 2026-09-11 — Integração da evolução visual v2 (Codex)
+
+### Adicionado
+
+- (Codex) Cabeçalhos CRM/Squad incorporados à arquitetura canônica em
+  `hub_readmes_visual_assets/headers/`, com original, texto editável, PNGs,
+  proveniência, licenças e guia de uso compartilhado por README e notebook.
+- (Codex) Compositor de produção para 21 diagramas, manifesto completo,
+  transcrição das figuras, contratos semânticos e QA de imagens e consumidores.
+- (Codex) Publicador visual de escopo fechado, com backup, detecção de conflito,
+  comparação de bytes brutos, aposentadoria individual protegida e testes locais.
+
+### Atualizado
+
+- (Codex) Cinco sprints documentais integradas em seis READMEs físicos,
+  preservando títulos, subtítulos, catálogos e exemplos de uso. Diagramas
+  compartilhados têm 23 ocorrências; o único cabeçalho CRM atende os seis documentos.
+- (Codex) Fontes e módulos de autoria organizados no pacote definitivo, sem
+  dependência das pastas temporárias de avaliação para regeneração normal.
+
+### Corrigido
+
+- (Codex) Distinção entre contexto e runtime, procedência nativa e conteúdo Hub,
+  política e diagnóstico, contratos heterogêneos dos scripts e seleção explícita.
+- (Codex) Exemplo abreviado de retorno de `data_quality_check` alinhado ao código:
+  `checks`, `score` e `thresholds` substituem o campo incorreto `metrics`.
+  A exceção editorial é rastreada por hashes, sem alterar a implementação.
+- (Codex) Rótulos cortados, setas invertidas/ocultas, margens, contraste, texto
+  equivalente, alts canônicos e âncoras de integração, após revisão cruzada.
+
+### Removido
+
+- (Codex) Do pacote ativo, 12 arquivos SVG/PNG substituídos e sem referências.
+  Permanecem recuperáveis no Git e no baseline congelado da Sprint 0.
+
+### Notas
+
+- (Codex) QA visual global: 8.154 verificações, zero falhas; dois renders
+  independentes preservaram os 44 SVG/PNG ativos byte a byte. Os cinco PNGs
+  assinatura e os dois cabeçalhos aprovados mantêm os hashes originais.
+- (Codex) Biblioteca: 45 testes aprovados; ferramentas existentes: 35 testes
+  aprovados. Dependências de desenvolvimento isoladas em `.venv/`, sem mudar runtime.
+- (Codex) Publicação e conferência remota serão registradas após sua execução.
+
+## 2026-09-10 — Propostas de cabeçalhos CRM e Squad (Codex)
+
+### Adicionado
+
+- (Codex) Dois PNGs de cabeçalho, CRM e Squad Modelos Analíticos e Preditivos,
+  em `sprint_0/cabecalhos/`, compartilhando uma arte-base tecnológica. O mesmo
+  PNG de CRM serve a README e notebook, sem duplicação de versões por destino.
+- (Codex) Compositor isolado `tools/readme_visuals/headers.mjs`, texto exato
+  declarativo, original raster preservado, origem da geração, manifesto,
+  camadas tipográficas SVG e verificações de legibilidade em tamanho reduzido.
+
+### Atualizado
+
+- (Codex) Registrada a aprovação do usuário para as cinco assinaturas da Sprint 0.
+  Os cabeçalhos são propostas adicionais locais, aguardando novo OK; nenhum
+  README ativo, diagrama aprovado ou notebook existente foi substituído.
+
+### Notas
+
+- (Codex) Sem publicação no Databricks, commit ou push nesta rodada. A arte-base
+  foi gerada pela ferramenta nativa de imagem; o texto é aplicado pelo compositor
+  determinístico. As sprints seguintes continuam aguardando aprovação.
+- (Codex) Validação dos cabeçalhos com 22 verificações, inspeção independente
+  sem ajustes requeridos e duas exportações com hashes idênticos. O validador
+  canônico do projeto passou sem falhas nem avisos.
+
+## 2026-09-10 — Sprint 0 da evolução visual (Codex)
+
+### Adicionado
+
+1. (Codex) Contratos semânticos de 21 figuras, microcopy declarativa e sistema
+   visual candidato v2 em `hub_readmes_visual_assets/`; cinco protótipos assinatura
+   em SVG/PNG, com versões de leitura e apresentação, na galeria isolada `sprint_0/`.
+2. (Codex) Renderer determinístico em `tools/readme_visuals/`, com fonte e ícones
+   licenciados, dependências fixadas, baseline dos 22 ativos anteriores, comparação,
+   transcrição acessível, QA geométrico e publicação/verificação isolada por CLI.
+
+### Corrigido
+
+1. (Codex) Falsos positivos de higiene em hashes SHA-256 e dependências locais:
+   delimitado o token de identificação e excluído `node_modules` apenas da
+   varredura de extras, mantendo inspeção de arquivos rastreados e testes de regressão.
+
+### Notas
+
+- (Codex) Preservados os seis READMEs físicos e os 22 ativos anteriores. As
+  próximas sprints documentais dependem da avaliação visual do usuário. Tokens v2
+  e protótipos são candidatos, não promoção automática do conjunto ativo.
+- (Codex) O espelho `Novo_Ambiente_Simulado/` foi gerado pela ferramenta canônica;
+  nenhum arquivo derivado foi editado manualmente.
+- (Codex) Galeria enviada e conferida por CLI em pasta isolada; PNGs inspecionados
+  no Databricks em leitura normal, com painel lateral e em split view. Corrigidos
+  os links relativos do notebook visualizador, preservando os Markdown locais.
+
 ## 2026-09-10 — Variantes visuais dos READMEs para avaliação (Codex)
 
 ### Adicionado
