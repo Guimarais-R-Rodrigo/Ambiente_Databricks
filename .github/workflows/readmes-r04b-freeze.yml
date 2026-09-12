@@ -1,0 +1,291 @@
+name: Freeze R04-B scripts
+on:
+  push:
+    branches: [codex/readmes-r04b]
+    paths: [.github/workflows/readmes-r04b-freeze.yml]
+permissions:
+  contents: read
+jobs:
+  freeze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      SPARK_LOCAL_IP: '127.0.0.1'
+      BASE_COMMIT: a8f314a31106aceb52db2661544146cc2bddcc99
+      BASE_TREE: 7e3fbff1b73af5b47abe0627a7ede52444287f0b
+      EXPECTED_PARENT: 326cf0b4b871c1f2bb990efdc739be0024bb6e33
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Integrar documentação canônica e remover infraestrutura temporária
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$EXPECTED_PARENT"
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+
+          objs=['data_quality_check','doc_coverage','drift_detector','naming_checker','rfv_calculator','schema_to_yaml']
+          root=Path('.')
+
+          # Notebooks: apenas Markdown na primeira célula; nenhum novo COMMAND.
+          for obj in objs:
+              p=root/f'ambiente_fonte/.assistant/hub_scripts/{obj}/exemplo_{obj}.py'
+              s=p.read_text(encoding='utf-8')
+              marker='\n# COMMAND ----------'
+              assert marker in s and 'Guia local completo:' not in s, obj
+              intro='\n# MAGIC\n# MAGIC **Guia local completo:** [README deste script](README.md).'
+              s=s.replace(marker,intro+marker,1)
+              p.write_text(s,encoding='utf-8')
+
+          # Correção editorial: output histórico diz 9, não 11.
+          p=root/'ambiente_fonte/.assistant/hub_scripts/rfv_calculator/exemplo_rfv_calculator.py'
+          s=p.read_text(encoding='utf-8')
+          old='# MAGIC distintos entre os 40 clientes (de 0 a 151 dias) e a frequência total\n# MAGIC assume 11 (de 6 a 17).'
+          new='# MAGIC distintos entre os 40 clientes (de 0 a 151 dias) e o output acima registra\n# MAGIC 9 valores distintos para a frequência total. Leia a tabela como evidência desta execução.'
+          assert old in s
+          p.write_text(s.replace(old,new),encoding='utf-8')
+
+          # Catálogo: backlink junto a cada entrada, sem reescrever o contrato existente.
+          p=root/'ambiente_fonte/.assistant/hub_scripts/README.md'; s=p.read_text(encoding='utf-8')
+          for obj in objs:
+              pattern=rf'(?m)^(#### `{re.escape(obj)}`[^\n]*)$'
+              m=re.search(pattern,s); assert m and f'[{obj}: guia local]' not in s, obj
+              replacement=m.group(1)+f'\n\n- **Guia local:** [{obj}: guia local]({obj}/README.md)'
+              s=s[:m.start()]+replacement+s[m.end():]
+          p.write_text(s,encoding='utf-8')
+
+          # Manual: bloco operacional simples antes das fontes.
+          p=root/'ambiente_fonte/.assistant/MANUAL_TECNICO.md'; s=p.read_text(encoding='utf-8')
+          section='''\n### Guias locais R04-B — scripts operacionais\n\nSe a dúvida estiver em um dos seis scripts abaixo, abra primeiro o README da própria pasta. Ele explica o conceito, efeitos, custo e interpretação antes do notebook:\n\n- `hub_scripts/data_quality_check/README.md` — chave, nulos, atualidade e score heurístico;\n- `hub_scripts/doc_coverage/README.md` — adjacência Markdown-código, não qualidade textual;\n- `hub_scripts/drift_detector/README.md` — PSI numérico entre coortes, sem confundir drift e performance;\n- `hub_scripts/naming_checker/README.md` — convenções com origem explícita da política;\n- `hub_scripts/rfv_calculator/README.md` — RFV bruto com corte temporal global;\n- `hub_scripts/schema_to_yaml/README.md` — snapshot de schema, YAML/JSON e estatísticas opcionais.\n\nOs scripts continuam sendo executados explicitamente. O README não torna o helper um gate automático e não substitui a implementação.\n\n'''
+          assert '### Guias locais R04-B — scripts operacionais' not in s
+          m=re.search(r'(?m)^## 30\.',s)
+          if not m: m=re.search(r'(?m)^<a id="fontes"',s)
+          assert m, 'ancora de fontes do Manual não encontrada'
+          p.write_text(s[:m.start()]+section+s[m.start():],encoding='utf-8')
+          (root/'MANUAL_TECNICO.md').write_bytes(p.read_bytes())
+
+          # Controle de migração: exatamente seis dispensas retiradas.
+          p=root/'docs/sprints/readmes_objetos/CONTROLE_MIGRACAO.json'; data=json.loads(p.read_text(encoding='utf-8'))
+          removed={f'hub_scripts/{x}' for x in objs}
+          assert removed <= set(data['pending'])
+          for key in sorted(removed): data['pending'].pop(key)
+          assert len(data['pending'])==43
+          p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          # Índice da iniciativa.
+          p=root/'docs/sprints/readmes_objetos/README.md'; s=p.read_text(encoding='utf-8')
+          old='''O contrato vigente é **1.0.0**. Durante esta sprint, a V02 do sistema de temas foi\naceita e integrada à `main` no commit `6085eab`, adicionando o objeto documentado\n`visual/tema`. A R04-A documenta seis snippets Spark: `date_features`,\n`join_diagnostics`, `null_summary`, `psi_calculator`, `safe_display` e\n`smart_sample`. A cobertura estrutural da composição final é **26/75 operacionais\ne 3/3 exemplares, com 49 pendências**. Isso descreve a candidata Git; não significa\npublicação no workspace nem aceite antecipado dos seis textos.\n\nConsulte o [relatório R04-A](RELATORIO_R04A.md), a\n[matriz nominal](MATRIZ_ALTERACOES_R04A.md) e os [achados](ACHADOS_R04A.md).\nA próxima parada é a revisão desta leva antes da R04-B, que contém os seis scripts\nprevistos no plano.'''
+          new='''O contrato vigente é **1.0.0**. A R04-A foi aceita e integrada pelo PR nº 17 no\ncommit `a8f314a`, já com a V02 preservada e pós-merge verde. A R04-B documenta os\nseis scripts `data_quality_check`, `doc_coverage`, `drift_detector`,\n`naming_checker`, `rfv_calculator` e `schema_to_yaml`, sem alterar suas\nimplementações. A cobertura estrutural esperada desta candidata é **32/75\noperacionais e 3/3 exemplares, com 43 pendências**; a saída do validador da árvore\nfechada é a fonte de verdade. Isso não significa publicação no workspace nem\naceite antecipado dos seis textos.\n\nConsulte o [relatório R04-B](RELATORIO_R04B.md), a\n[matriz nominal](MATRIZ_ALTERACOES_R04B.md) e os [achados](ACHADOS_R04B.md).\nA próxima parada é a revisão desta leva antes da R05.'''
+          assert old in s
+          s=s.replace(old,new)
+          s=s.replace('[Matriz R04-A](MATRIZ_ALTERACOES_R04A.md)','[Matriz R04-B](MATRIZ_ALTERACOES_R04B.md)')
+          s=s.replace('[Achados R04-A](ACHADOS_R04A.md)','[Achados R04-B](ACHADOS_R04B.md)')
+          s=s.replace('[Relatório R04-A](RELATORIO_R04A.md)','[Relatório R04-B](RELATORIO_R04B.md)')
+          p.write_text(s,encoding='utf-8')
+
+          # Checkpoints globais: entradas aditivas, sem apagar histórico.
+          additions={
+            'CLAUDE.md':'\n### Estado da migração de READMEs — R04-B\nA R04-A foi integrada na `main` em `a8f314a`. A R04-B documenta os seis `hub_scripts` previstos no controle de migração; use `docs/sprints/readmes_objetos/RELATORIO_R04B.md` para escopo, testes e limites. Não trate cobertura estrutural como aceite editorial.\n',
+            'PLANO_HUB.md':'\n### Checkpoint R04-B — READMEs de scripts\nSeis Hub Scripts recebem README local no contrato 1.0.0. Implementações permanecem preservadas; o lote pausa antes da R05 para revisão. Fonte: `docs/sprints/readmes_objetos/RELATORIO_R04B.md`.\n',
+            'docs/sprints/README.md':'\n### READMEs de objeto — R04-B\nA R04-A está integrada em `a8f314a`. A R04-B cobre seis Hub Scripts e pausa para revisão antes da R05. Consulte `readmes_objetos/RELATORIO_R04B.md` e `readmes_objetos/MATRIZ_ALTERACOES_R04B.md`.\n',
+          }
+          for name,block in additions.items():
+              p=root/name; s=p.read_text(encoding='utf-8'); heading=block.splitlines()[1]
+              assert heading not in s,name
+              p.write_text(s.rstrip()+"\n"+block,encoding='utf-8')
+
+          # README raiz: continuidade editorial; contagens serão substituídas pelo validador abaixo.
+          p=root/'README.md'; s=p.read_text(encoding='utf-8')
+          block='''\n### Continuidade R04-B\n\nApós o aceite e merge da R04-A pelo PR nº 17 (`a8f314a`), a R04-B documenta os seis Hub Scripts previstos no controle de migração. A candidata não altera as implementações e deve chegar a **32/75 READMEs operacionais**, com 43 pendências, sujeito à conferência do validador. A leva pausa antes da R05 para revisão dos novos textos.\n'''
+          assert '### Continuidade R04-B' not in s
+          p.write_text(s.rstrip()+"\n"+block,encoding='utf-8')
+
+          # Changelog aditivo antes do histórico anterior.
+          p=root/'CHANGELOG.md'; s=p.read_text(encoding='utf-8')
+          entry='''## 2026-09-12 — R04-B: READMEs dos seis Hub Scripts (ChatGPT)\n\n- Documenta `data_quality_check`, `doc_coverage`, `drift_detector`, `naming_checker`, `rfv_calculator` e `schema_to_yaml` no contrato 1.0.0.\n- Atualiza somente prosa/backlinks dos seis exemplos; implementações e fachadas permanecem protegidas.\n- Retira exatamente seis dispensas do controle de migração; a cobertura final é calculada pelo validador.\n- Registra relatório, matriz, achados, rubrica e testes específicos, incluindo Spark real.\n- Sem publicação Databricks, auditoria independente ou início da R05.\n\n'''
+          assert '## 2026-09-12 — R04-B: READMEs dos seis Hub Scripts' not in s
+          pos=s.index('## 2026-')
+          p.write_text(s[:pos]+entry+s[pos:],encoding='utf-8')
+
+          # Relatório identifica este run antes dos testes; só será materializado se o workflow terminar verde.
+          p=root/'docs/sprints/readmes_objetos/RELATORIO_R04B.md'; s=p.read_text(encoding='utf-8')
+          old='**PENDENTE até a execução da árvore completa.** O workflow de fechamento deve substituir esta linha por evidência concreta ou falhar sem materializar a candidata.'
+          new=f'Workflow de fechamento: **run {__import__("os").environ["GITHUB_RUN_ID"]}**. A árvore só é materializada se gate, V00/V01/V02, preservação e a suíte R04-B com Spark real concluírem com sucesso; o bloco final é atualizado depois dessas verificações.'
+          assert old in s
+          p.write_text(s.replace(old,new),encoding='utf-8')
+          PY
+
+          cp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
+          python tools/render_simulado.py --write
+          git rm .github/workflows/readmes-r04b-freeze.yml
+          git add -A
+
+          # Contagens reais do validador substituem as linhas correspondentes no README raiz.
+          python tools/validate_assistant.py > "$RUNNER_TEMP/validator-pre.txt"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          out=Path(os.environ['RUNNER_TEMP'],'validator-pre.txt').read_text()
+          keys=['skills','prompts','helpers citados','markdown / links','notebooks / links','readmes de objeto','pastas de objeto','forma da pasta','contrato de dados','contrato de entrada','saída colada','idioma da docstring','normas do molde','notebook exercita','python (AST)','instrucoes','repo (identidade)','repo (links)']
+          actual={}
+          for line in out.splitlines():
+              for key in keys:
+                  if line.startswith(key): actual[key]=line
+          assert set(actual)==set(keys),set(keys)-set(actual)
+          assert '32/75 operacionais' in actual['readmes de objeto'] and '43 pendentes' in actual['readmes de objeto'],actual['readmes de objeto']
+          p=Path('README.md'); lines=p.read_text(encoding='utf-8').splitlines(); found=set()
+          for i,line in enumerate(lines):
+              for key,value in actual.items():
+                  if line.startswith(key): lines[i]=value; found.add(key); break
+          assert found==set(keys),set(keys)-found
+          p.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+          git add -A
+          git diff --cached --check "$BASE_COMMIT"
+          git write-tree | tee "$RUNNER_TEMP/tree-pre.txt"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: |
+            tools/requirements-dev.txt
+            tools/requirements-temas-dev.txt
+
+      - name: Gate permanente e regressões V00 V01 V02
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt >/dev/null
+          python tools/ci_local.py --verbose 2>&1 | tee "$RUNNER_TEMP/gate.txt"
+          for suite in test_inventario_visual test_visual_legado_v00 test_baseline_visual_runner; do python "tools/tests/$suite.py" 2>&1 | tee "$RUNNER_TEMP/$suite.txt"; done
+          for suite in test_temas_v01 test_temas_v01_integracao; do python "tools/tests/$suite.py" 2>&1 | tee "$RUNNER_TEMP/$suite.txt"; done
+          python tools/tests/test_temas_v02.py 2>&1 | tee "$RUNNER_TEMP/test_temas_v02.txt"
+          test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/tree-pre.txt")"
+          git diff --exit-code
+
+      - name: Preservação contra main pós-R04-A
+        shell: bash
+        run: |
+          set -euo pipefail
+          python docs/sprints/readmes_objetos/evidencias_r04b/verificar_preservacao.py 2>&1 | tee "$RUNNER_TEMP/preservacao.txt"
+          test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/tree-pre.txt")"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Executar suíte R04-B com Spark real
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv "$RUNNER_TEMP/r04b-env"
+          "$RUNNER_TEMP/r04b-env/bin/python" -m pip install pyspark==4.0.1 PyYAML==6.0.2 >/dev/null
+          "$RUNNER_TEMP/r04b-env/bin/python" -m pip freeze > "$RUNNER_TEMP/r04b-pacotes.txt"
+          mkdir -p "$RUNNER_TEMP/spark"
+          (cd "$RUNNER_TEMP/spark" && "$RUNNER_TEMP/r04b-env/bin/python" "$GITHUB_WORKSPACE/docs/sprints/readmes_objetos/evidencias_r04b/verificar_r04b.py" --require-spark) 2>&1 | tee "$RUNNER_TEMP/r04b.txt"
+          python - <<'PY'
+          import os,re
+          from pathlib import Path
+          text=Path(os.environ['RUNNER_TEMP'],'r04b.txt').read_text()
+          m=re.search(r'Ran (\d+) tests',text); assert m and int(m.group(1))==14,text[-1000:]
+          assert 'FAILED' not in text and 'skipped=' not in text.lower(),text[-1000:]
+          PY
+          test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/tree-pre.txt")"
+
+      - name: Fechar relatório e rubrica e reconferir árvore final
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os,re
+          from pathlib import Path
+          report=Path('docs/sprints/readmes_objetos/RELATORIO_R04B.md')
+          s=report.read_text(encoding='utf-8')
+          marker='Workflow de fechamento: **run '+os.environ['GITHUB_RUN_ID']+'**. A árvore só é materializada se gate, V00/V01/V02, preservação e a suíte R04-B com Spark real concluírem com sucesso; o bloco final é atualizado depois dessas verificações.'
+          final=f'''Workflow de fechamento: **run {os.environ['GITHUB_RUN_ID']} — success até esta etapa**. Na árvore final: gate permanente de 9 etapas aprovado; validador com 0 falhas/0 avisos; V00 48/48; V01 138/138; V02 105/105; preservação PASS; suíte R04-B **14/14 aprovada sem skips** com Java 17, PySpark 4.0.1 e PyYAML 6.0.2. A cobertura validada é **32/75 operacionais, 3/3 exemplares e 43 pendências**. A materialização ocorre somente após a reconferência abaixo.'''
+          assert marker in s
+          report.write_text(s.replace(marker,final),encoding='utf-8')
+          rubric=Path('docs/sprints/readmes_objetos/RUBRICA_R04B.json')
+          data=json.loads(rubric.read_text(encoding='utf-8'))
+          for key in ['implementation_unchanged','notebook_executable_content_unchanged','spark_runtime','repository_gate']:
+              data['criteria'][key]='passed_self_review'
+          data['remote_run_id']=int(os.environ['GITHUB_RUN_ID'])
+          data['validated_coverage']='32/75 operacionais; 3/3 exemplares; 43 pendentes'
+          rubric.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          git add -A
+          git diff --cached --check "$BASE_COMMIT"
+          python tools/ci_local.py --verbose > "$RUNNER_TEMP/gate-final.txt" 2>&1
+          python docs/sprints/readmes_objetos/evidencias_r04b/verificar_preservacao.py > "$RUNNER_TEMP/preservacao-final.txt"
+          python tools/validate_assistant.py > "$RUNNER_TEMP/validator-final.txt"
+          grep -q 'APROVADO: 0 falha(s), 0 aviso(s)' "$RUNNER_TEMP/validator-final.txt"
+          grep -q '32/75 operacionais' "$RUNNER_TEMP/validator-final.txt"
+          git diff --exit-code
+          git write-tree | tee "$RUNNER_TEMP/final-tree.txt"
+
+      - name: Materializar exatamente a árvore final testada
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os,subprocess,urllib.request
+          from pathlib import Path
+          def git(*a): return subprocess.check_output(['git',*a])
+          final=Path(os.environ['RUNNER_TEMP'],'final-tree.txt').read_text().strip()
+          assert git('write-tree').decode().strip()==final
+          raw=git('diff','--cached','--no-renames','--name-status','-z',os.environ['BASE_COMMIT']).decode().split('\0')
+          entries=[]; i=0
+          while i<len(raw) and raw[i]:
+              st,p=raw[i:i+2]; i+=2
+              assert st in ('A','M'),(st,p)
+              mode=git('ls-files','--stage','--',p).decode().split()[0]
+              entries.append({'path':p,'mode':mode,'type':'blob','content':Path(p).read_text(encoding='utf-8')})
+          req=urllib.request.Request(
+              os.environ['GITHUB_API_URL']+'/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/trees',
+              data=json.dumps({'base_tree':os.environ['BASE_TREE'],'tree':entries}).encode(),method='POST',
+              headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'})
+          with urllib.request.urlopen(req,timeout=90) as response: tree=json.load(response)['sha']
+          assert tree==final,(tree,final)
+          result={'tree':tree,'base':os.environ['BASE_COMMIT'],'paths_vs_main':len(entries),'gate':'9_PASS','v00':'48_PASS','v01':'138_PASS','v02':'105_PASS','r04b':'14_PASS','preservacao':'PASS','coverage':'32/75','pending':43,'run_id':os.environ['GITHUB_RUN_ID'],'workflow_in_final_tree':False,'main_alterada':False,'databricks_publicado':False}
+          Path(os.environ['RUNNER_TEMP'],'R04B-FINAL.json').write_text(json.dumps(result,indent=2)+'\n')
+          print(json.dumps(result))
+          PY
+
+      - name: Guardar evidências mesmo em falha
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r04b-freeze-evidencias
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/validator-pre.txt
+            ${{ runner.temp }}/validator-final.txt
+            ${{ runner.temp }}/gate.txt
+            ${{ runner.temp }}/gate-final.txt
+            ${{ runner.temp }}/test_inventario_visual.txt
+            ${{ runner.temp }}/test_visual_legado_v00.txt
+            ${{ runner.temp }}/test_baseline_visual_runner.txt
+            ${{ runner.temp }}/test_temas_v01.txt
+            ${{ runner.temp }}/test_temas_v01_integracao.txt
+            ${{ runner.temp }}/test_temas_v02.txt
+            ${{ runner.temp }}/preservacao.txt
+            ${{ runner.temp }}/preservacao-final.txt
+            ${{ runner.temp }}/r04b.txt
+            ${{ runner.temp }}/r04b-pacotes.txt
+            ${{ runner.temp }}/final-tree.txt
+            ${{ runner.temp }}/R04B-FINAL.json
