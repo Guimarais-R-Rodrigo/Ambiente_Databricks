@@ -15,13 +15,13 @@
   },
   "base_commit": "8744157fe9c3e0603f689fb2bcad52445e96cb41",
   "base_tree": "0062a9e82690b96a1cf0a650d4a3f362b78f6b38",
-  "candidata_commit_testado": "7d3c683cfaa5b534421a82149ff959f6c405f3e1",
-  "candidata_tree_testada": "3954fc73ba47a50c227354da360e65bbfc544316",
+  "candidata_commit_testado": "ad9542fe13755fa390e4db79f4ef59d80290098c",
+  "candidata_tree_testada": "78fac959dd2d227933080ddfdd6c7fa0cedc0485",
   "capturas_legadas_identicas": true,
   "diferencas_protegidas": [],
   "estado_sprint": "CANDIDATA_PENDENTE_DE_AUDITORIA_E_ACEITE",
   "falhas_visuais_preexistentes": [
-    "Execução não produziu relatório de QA novo verificável."
+    "ENOENT: arquivo esperado pelo validador global ausente: ambiente_fonte/.assistant/CATALOGO_HELPERS.md"
   ],
   "gate_tecnico": "FAIL_OU_BLOQUEADO",
   "inventario": {
@@ -58,13 +58,13 @@
   "qa_visual": {
     "base": {
       "failures": [
-        "Execução não produziu relatório de QA novo verificável."
+        "ENOENT: arquivo esperado pelo validador global ausente: ambiente_fonte/.assistant/CATALOGO_HELPERS.md"
       ],
       "status": "nao_confirmado"
     },
     "candidata": {
       "failures": [
-        "Execução não produziu relatório de QA novo verificável."
+        "ENOENT: arquivo esperado pelo validador global ausente: ambiente_fonte/.assistant/CATALOGO_HELPERS.md"
       ],
       "status": "nao_confirmado"
     }
@@ -78,12 +78,12 @@
         "tools/ci_local.py",
         "--verbose"
       ],
-      "duracao_s": 9.493,
+      "duracao_s": 10.793,
       "estado": "PASS",
       "log": "ci_base.log",
-      "log_sha256": "5a497f7e9a7704d40d337be91e06abe547692d3bb9330d937b8937b4a123fea9",
+      "log_sha256": "053c85d73ab338833d10b28d6f901ae54d5b45fd162b7a16af9441e524fc0750",
       "nome": "ci_base",
-      "skips_reportados": 14,
+      "skips_reportados": 7,
       "testes_unittest_reportados": 153
     },
     {
@@ -100,10 +100,10 @@
         "test_*.py",
         "-v"
       ],
-      "duracao_s": 0.285,
+      "duracao_s": 0.351,
       "estado": "PASS",
       "log": "publicador_visual_base.log",
-      "log_sha256": "349d6a2c90ef0de902014832d674dc804595bbe294f27071ab15ac6606caf6f9",
+      "log_sha256": "521e12c7add912e15ffed8d8c92f66e5b8b11e115c964fdaa0c4289c9f7a0280",
       "nome": "publicador_visual_base",
       "skips_reportados": 0,
       "testes_unittest_reportados": 29
@@ -117,10 +117,10 @@
         "--root",
         "<BASE>"
       ],
-      "duracao_s": 0.456,
+      "duracao_s": 0.526,
       "estado": "PASS",
       "log": "legado_base.log",
-      "log_sha256": "9edc25309658a148d7855afdba33c0bb452ef8344bdf8e0fcf40c971d8bcb3ed",
+      "log_sha256": "132987eb8740dbde0700cb12aa43152cf49101ef2e3fbad76582ceab0a33f1aa",
       "nome": "legado_base",
       "skips_reportados": 0,
       "testes_unittest_reportados": 12
@@ -135,7 +135,7 @@
         "<BASE>",
         "--capturar"
       ],
-      "duracao_s": 0.263,
+      "duracao_s": 0.322,
       "estado": "PASS",
       "log": "captura_base.log",
       "log_sha256": "01786c4e713e517b6a60e48e07b739399ccc40474908be33bdb23fd063b733cd",
@@ -152,28 +152,113 @@
         "node",
         "tools/readme_visuals/validate_production.mjs"
       ],
-      "duracao_s": 0.854,
+      "duracao_s": 0.458,
       "estado": "FAIL",
       "log": "assets_v2_base.log",
-      "log_sha256": "2fd77470767387d263b4806c82d3cb0907310b6d3b2c64bbe307e386e86a9efc",
+      "log_sha256": "32740e34dffd76de834cd9c1c4d97b7944442f1dd0fa013a5c48e690d1febcf0",
       "nome": "assets_v2_base",
       "skips_reportados": 0,
       "testes_unittest_reportados": 0
     },
     {
-      "codigo": 1,
+      "codigo": 0,
+      "comando": [
+        "node",
+        "tools/readme_visuals/validate_production.mjs",
+        "--family",
+        "top"
+      ],
+      "duracao_s": 0.355,
+      "estado": "PASS",
+      "log": "figuras_base_top.log",
+      "log_sha256": "1c60f3cf6f4fcae0910d00fb293bbaabdfd812c44393151592b78b87a153b0bb",
+      "nome": "figuras_base_top",
+      "skips_reportados": 0,
+      "testes_unittest_reportados": 0,
+      "verificacoes_visuais": 1624
+    },
+    {
+      "codigo": 0,
+      "comando": [
+        "node",
+        "tools/readme_visuals/validate_production.mjs",
+        "--family",
+        "snippets"
+      ],
+      "duracao_s": 0.314,
+      "estado": "PASS",
+      "log": "figuras_base_snippets.log",
+      "log_sha256": "a38fc90bc4bc552058911a9cd1316f7187295fdc44599366ab99bcd643ef3517",
+      "nome": "figuras_base_snippets",
+      "skips_reportados": 0,
+      "testes_unittest_reportados": 0,
+      "verificacoes_visuais": 1137
+    },
+    {
+      "codigo": 0,
+      "comando": [
+        "node",
+        "tools/readme_visuals/validate_production.mjs",
+        "--family",
+        "scripts"
+      ],
+      "duracao_s": 0.325,
+      "estado": "PASS",
+      "log": "figuras_base_scripts.log",
+      "log_sha256": "24e65bbd153ca1a6d673298399f30c910c5de13b61e0a85a05f8da78c3b800d1",
+      "nome": "figuras_base_scripts",
+      "skips_reportados": 0,
+      "testes_unittest_reportados": 0,
+      "verificacoes_visuais": 2198
+    },
+    {
+      "codigo": 0,
+      "comando": [
+        "node",
+        "tools/readme_visuals/validate_production.mjs",
+        "--family",
+        "skills"
+      ],
+      "duracao_s": 0.313,
+      "estado": "PASS",
+      "log": "figuras_base_skills.log",
+      "log_sha256": "4e9b3854a4e39c02557789adc1d2d01c16b005f7e77b2c791d6520c01da8ceb8",
+      "nome": "figuras_base_skills",
+      "skips_reportados": 0,
+      "testes_unittest_reportados": 0,
+      "verificacoes_visuais": 771
+    },
+    {
+      "codigo": 0,
+      "comando": [
+        "node",
+        "tools/readme_visuals/validate_production.mjs",
+        "--family",
+        "prompts"
+      ],
+      "duracao_s": 0.309,
+      "estado": "PASS",
+      "log": "figuras_base_prompts.log",
+      "log_sha256": "faa560d225ee2b3d36cba6393c61cb9b8a7f9776ef67ef447c7965c73bb36a16",
+      "nome": "figuras_base_prompts",
+      "skips_reportados": 0,
+      "testes_unittest_reportados": 0,
+      "verificacoes_visuais": 1609
+    },
+    {
+      "codigo": 0,
       "comando": [
         "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
         "-B",
         "tools/ci_local.py",
         "--verbose"
       ],
-      "duracao_s": 11.858,
-      "estado": "FAIL",
+      "duracao_s": 14.697,
+      "estado": "PASS",
       "log": "ci_candidata.log",
-      "log_sha256": "01729cb685c6bfa77c6ce0da39786b527a91fc9e045d2ac88f64e5cf2c01a82b",
+      "log_sha256": "9026d08278ded4edb7fb8e171d973f64735ad796f3c79f5fb949ed135f6f9e6d",
       "nome": "ci_candidata",
-      "skips_reportados": 14,
+      "skips_reportados": 7,
       "testes_unittest_reportados": 153
     },
     {
@@ -190,10 +275,10 @@
         "test_*.py",
         "-v"
       ],
-      "duracao_s": 0.293,
+      "duracao_s": 0.348,
       "estado": "PASS",
       "log": "publicador_visual_candidata.log",
-      "log_sha256": "349d6a2c90ef0de902014832d674dc804595bbe294f27071ab15ac6606caf6f9",
+      "log_sha256": "b7c60deb6e49e6eb3067e3592d946f3c8a10f8c582c4bbf9793653167d970a76",
       "nome": "publicador_visual_candidata",
       "skips_reportados": 0,
       "testes_unittest_reportados": 29
@@ -207,10 +292,10 @@
         "--root",
         "<CANDIDATA>"
       ],
-      "duracao_s": 0.459,
+      "duracao_s": 0.52,
       "estado": "PASS",
       "log": "legado_candidata.log",
-      "log_sha256": "aa31190b311721d44f6544a83d5df92c08be2bc453b54aff265c1ff91a1e42ee",
+      "log_sha256": "8d1d090ac0e66bb7c6e88121fad8a4ffeb71fb1cf9a0f6a13325e92c0d3f02b5",
       "nome": "legado_candidata",
       "skips_reportados": 0,
       "testes_unittest_reportados": 12
@@ -225,7 +310,7 @@
         "<CANDIDATA>",
         "--capturar"
       ],
-      "duracao_s": 0.265,
+      "duracao_s": 0.287,
       "estado": "PASS",
       "log": "captura_candidata.log",
       "log_sha256": "01786c4e713e517b6a60e48e07b739399ccc40474908be33bdb23fd063b733cd",
@@ -242,13 +327,98 @@
         "node",
         "tools/readme_visuals/validate_production.mjs"
       ],
-      "duracao_s": 0.39,
+      "duracao_s": 0.45,
       "estado": "FAIL",
       "log": "assets_v2_candidata.log",
-      "log_sha256": "414c3bdcdc6c72841efe616a350c2b5c3327aed0efcfbc6a0379e99d072883f7",
+      "log_sha256": "6e70176c751491026fc244bd6ee6cb126ebb0c4abf7af95c66f43900efbde182",
       "nome": "assets_v2_candidata",
       "skips_reportados": 0,
       "testes_unittest_reportados": 0
+    },
+    {
+      "codigo": 0,
+      "comando": [
+        "node",
+        "tools/readme_visuals/validate_production.mjs",
+        "--family",
+        "top"
+      ],
+      "duracao_s": 0.312,
+      "estado": "PASS",
+      "log": "figuras_candidata_top.log",
+      "log_sha256": "1c60f3cf6f4fcae0910d00fb293bbaabdfd812c44393151592b78b87a153b0bb",
+      "nome": "figuras_candidata_top",
+      "skips_reportados": 0,
+      "testes_unittest_reportados": 0,
+      "verificacoes_visuais": 1624
+    },
+    {
+      "codigo": 0,
+      "comando": [
+        "node",
+        "tools/readme_visuals/validate_production.mjs",
+        "--family",
+        "snippets"
+      ],
+      "duracao_s": 0.313,
+      "estado": "PASS",
+      "log": "figuras_candidata_snippets.log",
+      "log_sha256": "a38fc90bc4bc552058911a9cd1316f7187295fdc44599366ab99bcd643ef3517",
+      "nome": "figuras_candidata_snippets",
+      "skips_reportados": 0,
+      "testes_unittest_reportados": 0,
+      "verificacoes_visuais": 1137
+    },
+    {
+      "codigo": 0,
+      "comando": [
+        "node",
+        "tools/readme_visuals/validate_production.mjs",
+        "--family",
+        "scripts"
+      ],
+      "duracao_s": 0.315,
+      "estado": "PASS",
+      "log": "figuras_candidata_scripts.log",
+      "log_sha256": "24e65bbd153ca1a6d673298399f30c910c5de13b61e0a85a05f8da78c3b800d1",
+      "nome": "figuras_candidata_scripts",
+      "skips_reportados": 0,
+      "testes_unittest_reportados": 0,
+      "verificacoes_visuais": 2198
+    },
+    {
+      "codigo": 0,
+      "comando": [
+        "node",
+        "tools/readme_visuals/validate_production.mjs",
+        "--family",
+        "skills"
+      ],
+      "duracao_s": 0.302,
+      "estado": "PASS",
+      "log": "figuras_candidata_skills.log",
+      "log_sha256": "4e9b3854a4e39c02557789adc1d2d01c16b005f7e77b2c791d6520c01da8ceb8",
+      "nome": "figuras_candidata_skills",
+      "skips_reportados": 0,
+      "testes_unittest_reportados": 0,
+      "verificacoes_visuais": 771
+    },
+    {
+      "codigo": 0,
+      "comando": [
+        "node",
+        "tools/readme_visuals/validate_production.mjs",
+        "--family",
+        "prompts"
+      ],
+      "duracao_s": 0.311,
+      "estado": "PASS",
+      "log": "figuras_candidata_prompts.log",
+      "log_sha256": "faa560d225ee2b3d36cba6393c61cb9b8a7f9776ef67ef447c7965c73bb36a16",
+      "nome": "figuras_candidata_prompts",
+      "skips_reportados": 0,
+      "testes_unittest_reportados": 0,
+      "verificacoes_visuais": 1609
     },
     {
       "codigo": 0,
@@ -257,16 +427,31 @@
         "-B",
         "<CANDIDATA>/tools/tests/test_inventario_visual.py"
       ],
-      "duracao_s": 0.659,
+      "duracao_s": 0.823,
       "estado": "PASS",
       "log": "guardas_inventario.log",
-      "log_sha256": "8e7445230b0a0234392db4d30537ab8610bfa0878a32b4500b7e9f218260e2a8",
+      "log_sha256": "ccddfec54d7f567ffc3fe413559478ca6b9a47abdf1f3f8b372138b6b0becc80",
       "nome": "guardas_inventario",
       "skips_reportados": 0,
       "testes_unittest_reportados": 25
+    },
+    {
+      "codigo": 0,
+      "comando": [
+        "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
+        "-B",
+        "<CANDIDATA>/tools/tests/test_baseline_visual_runner.py"
+      ],
+      "duracao_s": 0.311,
+      "estado": "PASS",
+      "log": "guardas_runner.log",
+      "log_sha256": "f0e5f1a8bf921e9975a5930ec0e6465cfbbff0205c6b5c6d6539848a4fa29d18",
+      "nome": "guardas_runner",
+      "skips_reportados": 0,
+      "testes_unittest_reportados": 139
     }
   ],
-  "run_id": "34703259496",
+  "run_id": "34703617487",
   "sprint": "V00",
-  "utc": "2026-09-12T15:48:31.553643+00:00"
+  "utc": "2026-09-12T15:55:47.971965+00:00"
 }

@@ -2,23 +2,34 @@
 
 Estado da sprint: **CANDIDATA_PENDENTE_DE_AUDITORIA_E_ACEITE**.
 
-Baseline: `8744157fe9c3e0603f689fb2bcad52445e96cb41`. Candidata executada: `7d3c683cfaa5b534421a82149ff959f6c405f3e1`.
+Baseline: `8744157fe9c3e0603f689fb2bcad52445e96cb41`. Candidata executada: `ad9542fe13755fa390e4db79f4ef59d80290098c`.
 
 Gate técnico: **FAIL_OU_BLOQUEADO**. Não é aceite humano, auditoria independente ou publicação.
 
 | Execução | Estado | Casos unittest reportados | Skips reportados |
 |---|---|---:|---:|
-| ci_base | PASS | 153 | 14 |
+| ci_base | PASS | 153 | 7 |
 | publicador_visual_base | PASS | 29 | 0 |
 | legado_base | PASS | 12 | 0 |
 | captura_base | PASS | 0 | 0 |
 | assets_v2_base | FAIL | 0 | 0 |
-| ci_candidata | FAIL | 153 | 14 |
+| figuras_base_top | PASS | 0 | 0 |
+| figuras_base_snippets | PASS | 0 | 0 |
+| figuras_base_scripts | PASS | 0 | 0 |
+| figuras_base_skills | PASS | 0 | 0 |
+| figuras_base_prompts | PASS | 0 | 0 |
+| ci_candidata | PASS | 153 | 7 |
 | publicador_visual_candidata | PASS | 29 | 0 |
 | legado_candidata | PASS | 12 | 0 |
 | captura_candidata | PASS | 0 | 0 |
 | assets_v2_candidata | FAIL | 0 | 0 |
+| figuras_candidata_top | PASS | 0 | 0 |
+| figuras_candidata_snippets | PASS | 0 | 0 |
+| figuras_candidata_scripts | PASS | 0 | 0 |
+| figuras_candidata_skills | PASS | 0 | 0 |
+| figuras_candidata_prompts | PASS | 0 | 0 |
 | guardas_inventario | PASS | 25 | 0 |
+| guardas_runner | PASS | 139 | 0 |
 
 Contagens não incluem verificações sem unittest; não somar base e candidata como testes distintos.
 
