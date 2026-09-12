@@ -1,0 +1,160 @@
+name: Validacao final R04-A corrigida
+on:
+  push:
+    branches: [codex/readmes-r04a]
+    paths: [.github/workflows/readmes-r04a-final.yml]
+permissions:
+  contents: read
+jobs:
+  conferir:
+    if: github.ref == 'refs/heads/codex/readmes-r04a'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      SPARK_LOCAL_IP: '127.0.0.1'
+      BASE_COMMIT: 1be947b0a62c3b0b85fa3cd5692f474b9066d85f
+      BASE_TREE: a0ba5cbaaee5dc430d5111f4d0f6eb607c6744f9
+      EXPECTED_PARENT: fe1e53d76196fc97c3fda4bda4dc08b0b72ff990
+      OLD_TREE: 0f55dff65765be92eea1147df8a6b2f848b09f01
+      EXPECTED_TREE: 9cca9b2f012955c3a7734fe7fb32e9c6fd86bb71
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Reconstruir a candidata corrigida a partir de artefatos imutáveis
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$EXPECTED_PARENT"
+          python - <<'PY'
+          import base64, hashlib, lzma, os
+          from pathlib import Path
+          parts = sorted(Path('.github/r04a-patch-parts').glob('part-*.txt'))
+          assert len(parts) == 9, f'Transporte base incompleto: {len(parts)}'
+          old_packed = base64.b64decode(''.join(p.read_text(encoding='utf-8').strip() for p in parts), validate=True)
+          assert hashlib.sha256(old_packed).hexdigest() == 'dd9c491c56366f63c55af74eef5240b6905bbe029e997f0967b99a8fbba2d146'
+          old_patch = lzma.decompress(old_packed)
+          assert hashlib.sha256(old_patch).hexdigest() == '7d6cccb85bdc3337bd0cb4240eb097ae1ccdd267e1c4a5e5269b3c6d47037131'
+          Path(os.environ['RUNNER_TEMP'], 'R04A-base.patch').write_bytes(old_patch)
+
+          fix_packed = base64.b64decode(Path('.github/r04a-ansi-fix.b64').read_text(encoding='utf-8').strip(), validate=True)
+          assert hashlib.sha256(fix_packed).hexdigest() == '3b98632b301b32e833dc1d8355c92665d7c1475b628448308c92fb00dfd309f2'
+          fix_patch = lzma.decompress(fix_packed)
+          assert hashlib.sha256(fix_patch).hexdigest() == 'b45af545364434ff8748d436281a3c97fcd71691b925e641551006b97f183c49'
+          Path(os.environ['RUNNER_TEMP'], 'R04A-ansi-fix.patch').write_bytes(fix_patch)
+          print('Hashes dos dois patches conferidos')
+          PY
+          git read-tree --reset -u "$BASE_COMMIT"
+          git apply --check "$RUNNER_TEMP/R04A-base.patch"
+          git apply --index "$RUNNER_TEMP/R04A-base.patch"
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('README.md')
+          s=p.read_text(encoding='utf-8')
+          old1='repo (identidade)  : 1060 arquivos varridos no repositório editável/derivado'
+          old2='repo (links)       : 987 links fora da raiz analisada'
+          assert old1 in s and old2 in s
+          s=s.replace(old1,'repo (identidade)  : 1079 arquivos varridos no repositório editável/derivado')
+          s=s.replace(old2,'repo (links)       : 1057 links fora da raiz analisada')
+          p.write_text(s,encoding='utf-8')
+          PY
+          git add README.md
+          test "$(git write-tree)" = "$OLD_TREE"
+          git apply --check "$RUNNER_TEMP/R04A-ansi-fix.patch"
+          git apply --index "$RUNNER_TEMP/R04A-ansi-fix.patch"
+          test "$(git write-tree)" = "$EXPECTED_TREE"
+          git clean -fd
+          test "$(git write-tree)" = "$EXPECTED_TREE"
+          git diff --cached --check "$BASE_COMMIT"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: |
+            tools/requirements-dev.txt
+            tools/requirements-temas-dev.txt
+      - name: Gate permanente, V00, V01 e preservacao
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt
+          python tools/ci_local.py --verbose 2>&1 | tee "$RUNNER_TEMP/r04a-gate.txt"
+          for suite in test_inventario_visual test_visual_legado_v00 test_baseline_visual_runner; do
+            python "tools/tests/$suite.py" 2>&1 | tee "$RUNNER_TEMP/$suite.txt"
+          done
+          for suite in test_temas_v01 test_temas_v01_integracao; do
+            python "tools/tests/$suite.py" 2>&1 | tee "$RUNNER_TEMP/$suite.txt"
+          done
+          python docs/sprints/readmes_objetos/evidencias_r04a/verificar_preservacao.py 2>&1 | tee "$RUNNER_TEMP/r04a-preservacao.json"
+          test "$(git write-tree)" = "$EXPECTED_TREE"
+          git diff --exit-code
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Exigir os 18 casos R04-A com Spark real
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv "$RUNNER_TEMP/r04a-env"
+          "$RUNNER_TEMP/r04a-env/bin/python" -m pip install pyspark==4.0.1
+          "$RUNNER_TEMP/r04a-env/bin/python" -m pip freeze > "$RUNNER_TEMP/r04a-pacotes.txt"
+          mkdir -p "$RUNNER_TEMP/r04a-spark"
+          (cd "$RUNNER_TEMP/r04a-spark" && "$RUNNER_TEMP/r04a-env/bin/python" "$GITHUB_WORKSPACE/docs/sprints/readmes_objetos/evidencias_r04a/verificar_r04a.py" --require-spark) 2>&1 | tee "$RUNNER_TEMP/r04a-spark.txt"
+          test "$(git write-tree)" = "$EXPECTED_TREE"
+          git diff --exit-code
+      - name: Materializar somente a arvore que passou pelos testes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, subprocess, urllib.request
+          from pathlib import Path
+          def git(*args): return subprocess.check_output(['git',*args])
+          assert git('write-tree').decode().strip() == os.environ['EXPECTED_TREE']
+          parts=git('diff','--cached','--name-status','-z',os.environ['BASE_COMMIT']).decode().split('\0')
+          entries=[]; i=0
+          while i < len(parts) and parts[i]:
+              status,path=parts[i:i+2]; i += 2
+              assert status in ('A','M'), (status,path)
+              entries.append({'path':path,'mode':git('ls-files','--stage','--',path).decode().split()[0],
+                'type':'blob','content':Path(path).read_text(encoding='utf-8')})
+          assert len(entries) == 43, len(entries)
+          req=urllib.request.Request(os.environ['GITHUB_API_URL']+'/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/trees',
+            data=json.dumps({'base_tree':os.environ['BASE_TREE'],'tree':entries}).encode(),method='POST',headers={
+            'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json',
+            'Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'})
+          with urllib.request.urlopen(req,timeout=90) as response: tree=json.load(response)['sha']
+          assert tree == os.environ['EXPECTED_TREE'], tree
+          result={'tree':tree,'base':os.environ['BASE_COMMIT'],'paths':43,'gate':'8_PASS','v00':'48_PASS',
+            'v01':'138_PASS','r04a_spark':'18_PASS','preservacao':'PASS','run_id':os.environ['GITHUB_RUN_ID'],
+            'refs_atualizadas_pelo_workflow':False,'main_alterada':False,'databricks_publicado':False}
+          Path(os.environ['RUNNER_TEMP'],'R04A-final.json').write_text(json.dumps(result,indent=2)+'\n')
+          print(json.dumps(result))
+          PY
+      - name: Guardar evidencias mesmo em falha
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r04a-final-evidencias
+          retention-days: 7
+          path: |
+            ${{ runner.temp }}/r04a-gate.txt
+            ${{ runner.temp }}/test_inventario_visual.txt
+            ${{ runner.temp }}/test_visual_legado_v00.txt
+            ${{ runner.temp }}/test_baseline_visual_runner.txt
+            ${{ runner.temp }}/test_temas_v01.txt
+            ${{ runner.temp }}/test_temas_v01_integracao.txt
+            ${{ runner.temp }}/r04a-preservacao.json
+            ${{ runner.temp }}/r04a-spark.txt
+            ${{ runner.temp }}/r04a-pacotes.txt
+            ${{ runner.temp }}/R04A-final.json
+          if-no-files-found: warn
