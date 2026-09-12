@@ -1,8 +1,8 @@
 """Verificação LOCAL do contrato candidato V01, sem resolver ou aplicar temas.
 
-Não carrega bibliotecas do produto, não consulta serviços e não concede papéis.
+Reutiliza o núcleo V02 do produto para validar; não consulta serviços nem concede papéis.
 Os modelos de workflow são oráculos sintéticos da especificação, não controles
-operacionais de autenticação. O núcleo de runtime pertence à V02.
+operacionais de autenticação. Relatos V01 permanecem históricos; o schema ativo foi promovido na V02.
 
 Uso: python -B tools/temas_v01_contract.py
      python -B tools/temas_v01_contract.py --print-dictionary
@@ -14,6 +14,7 @@ import hashlib
 import json
 import math
 import re
+import sys
 from pathlib import Path, PurePosixPath
 from typing import Any
 from urllib.parse import unquote, urlsplit
@@ -29,144 +30,17 @@ except ImportError as exc:
 
 ROOT = Path(__file__).resolve().parent.parent
 PACKAGE = ROOT / 'docs/sprints/sistema_temas/V01'
-MAX_BYTES = 131072
-MAX_DEPTH = 12
-CANDIDATE_ENGINE = (1, 0, 0)  # protocolo alvo do contrato, NÃO mecanismo instalado
 
 
-class ContractError(ValueError):
-    """Erro determinístico, sem repetir conteúdo potencialmente sensível."""
-    def __init__(self, code: str, message: str):
-        self.code = code
-        super().__init__(f'{code}: {message}')
-
-
-def _fail(code: str, message: str) -> None:
-    raise ContractError(code, message)
-
-
-def strict_json(raw: bytes) -> Any:
-    """Parser de manutenção: limita bytes/profundidade e rejeita ambiguidades."""
-    if not isinstance(raw, bytes):
-        _fail('JSON_INPUT_TYPE', 'Forneça bytes UTF-8.')
-    if len(raw) > MAX_BYTES:
-        _fail('JSON_SIZE', f'O limite por configuração é {MAX_BYTES} bytes.')
-    try:
-        text = raw.decode('utf-8')
-    except UnicodeDecodeError:
-        _fail('JSON_ENCODING', 'Use UTF-8 sem BOM.')
-    if text.startswith('\ufeff'):
-        _fail('JSON_ENCODING', 'Use UTF-8 sem BOM.')
-    # Pré-varredura linear antes de json.loads, respeitando strings escapadas.
-    depth = 0
-    quoted = escaped = False
-    for ch in text:
-        if quoted:
-            if escaped:
-                escaped = False
-            elif ch == '\\':
-                escaped = True
-            elif ch == '"':
-                quoted = False
-        elif ch == '"':
-            quoted = True
-        elif ch in '[{':
-            depth += 1
-            if depth > MAX_DEPTH:
-                _fail('JSON_DEPTH', f'O limite é {MAX_DEPTH} níveis de objetos/listas.')
-        elif ch in ']}':
-            depth -= 1
-    def pairs(items):
-        result = {}
-        for key, value in items:
-            if key in result:
-                _fail('JSON_DUPLICATE', 'Uma propriedade foi declarada mais de uma vez.')
-            result[key] = value
-        return result
-    def constant(_):
-        _fail('JSON_NONFINITE', 'NaN e infinito não são números admitidos.')
-    try:
-        value = json.loads(text, object_pairs_hook=pairs, parse_constant=constant)
-    except (json.JSONDecodeError, RecursionError, ValueError) as exc:
-        if isinstance(exc, ContractError):
-            raise
-        _fail('JSON_SYNTAX', 'JSON inválido; revise pontuação, aspas e tamanho dos números.')
-    def finite(item):
-        if isinstance(item, float) and not math.isfinite(item):
-            _fail('JSON_NONFINITE', 'O número excede a representação finita.')
-        if isinstance(item, str) and any(0xD800 <= ord(ch) <= 0xDFFF for ch in item):
-            _fail('JSON_UNICODE', 'Sequência Unicode isolada não é válida.')
-        if isinstance(item, dict):
-            for key, sub in item.items():
-                finite(key)
-                finite(sub)
-        elif isinstance(item, list):
-            for sub in item: finite(sub)
-    finite(value)
-    return value
-
-
-def read_json(path: Path) -> Any:
-    """Lê no máximo o limite + 1; não segue arquivo simbólico."""
-    if path.is_symlink() or any(parent.is_symlink() for parent in path.parents):
-        _fail('PATH_SYMLINK', 'Arquivo ou pasta simbólica não é aceito como contrato.')
-    with path.open('rb') as stream:
-        return strict_json(stream.read(MAX_BYTES + 1))
-
-
-def schema_validator(schema: dict[str, Any]) -> Draft202012Validator:
-    """Aceita somente referências internas; nenhuma consulta de schema na rede."""
-    if schema.get('$schema') != 'https://json-schema.org/draft/2020-12/schema':
-        _fail('SCHEMA_DIALECT', 'O contrato exige o dialeto 2020-12 declarado.')
-    def inspect(item):
-        if isinstance(item, dict):
-            if '$ref' in item and (not isinstance(item['$ref'], str) or not item['$ref'].startswith('#/')):
-                _fail('SCHEMA_REMOTE_REF', 'Referências de schema devem ser internas.')
-            if '$dynamicRef' in item:
-                _fail('SCHEMA_DYNAMIC_REF', 'Referências dinâmicas não fazem parte deste contrato.')
-            for sub in item.values(): inspect(sub)
-        elif isinstance(item, list):
-            for sub in item: inspect(sub)
-    inspect(schema)
-    try:
-        Draft202012Validator.check_schema(schema)
-    except SchemaError:
-        _fail('SCHEMA_INVALID', 'O próprio schema não atende ao meta-schema.')
-    return Draft202012Validator(schema, registry=Registry())
-
-
-def validate_theme(theme: Any, schema: dict[str, Any]) -> None:
-    """Valida a fixture, sem completar defaults, herdar perfis ou aplicar estilos."""
-    validator = schema_validator(schema)
-    error = next(validator.iter_errors(theme), None)
-    if error:
-        # Caminho de schema, e não valores/nomes fornecidos pela proposta.
-        place = '/'.join(str(x) for x in error.schema_path)
-        _fail('SCHEMA_' + str(error.validator).upper(), f'Contrato não atendido em {place}. Consulte CONTRATO_TEMAS.md.')
-    compat = theme['engine_compatibility']
-    minimum = tuple(int(v) for v in compat['minimum_version'].split('.'))
-    if minimum > CANDIDATE_ENGINE or minimum[0] != compat['api_major']:
-        _fail('ENGINE_VERSION', 'Exigência incompatível com o protocolo candidato 1.0.0; não force fallback.')
-    if theme['context'] == 'notebook' and len(theme['tokens']['palette.diverging']) % 2 == 0:
-        _fail('PALETTE_CENTER', 'A paleta divergente precisa de quantidade ímpar de cores.')
-
-
-def safe_file(root: Path, relative: str) -> Path:
-    """Confere uma referência versionada; a proposta não fornece esse caminho."""
-    p = PurePosixPath(relative)
-    if not relative or p.is_absolute() or any(x in ('..', '.') for x in relative.split('/')) or '\\' in relative or ':' in relative:
-        _fail('PATH_SCOPE', 'Referência fora do escopo relativo do repositório.')
-    root = root.absolute()
-    current = root
-    if root.is_symlink() or any(parent.is_symlink() for parent in root.parents):
-        _fail('PATH_SYMLINK', 'Raiz simbólica não é permitida.')
-    for part in p.parts:
-        current /= part
-        if current.is_symlink():
-            _fail('PATH_SYMLINK', 'Referência simbólica não é permitida.')
-    if not current.is_file():
-        _fail('PATH_MISSING', 'Referência declarada não encontrada no checkout.')
-    return current
+# API de manutenção preservada, com implementação única no núcleo V02.
+sys.path.insert(0, str(ROOT / 'ambiente_fonte/.assistant'))
+from hub_snippets.visual.tema.tema import (
+    ThemeError as ContractError, _fail, _strict_json as strict_json,
+    _MAX_BYTES as MAX_BYTES, _MAX_DEPTH as MAX_DEPTH, _ENGINE as CANDIDATE_ENGINE,
+    _read_json as read_json, _schema_validator as schema_validator,
+    _validate_theme as validate_theme, _safe_file as safe_file,
+)
+SCHEMA_PATH = ROOT / 'ambiente_fonte/.assistant/hub_padroes/identidade_visual/theme.schema.json'
 
 
 def check_assets(theme: dict, registry: dict, root: Path = ROOT) -> int:
@@ -343,7 +217,7 @@ def check_links(package: Path = PACKAGE, root: Path = ROOT) -> int:
 
 
 def check_package(package: Path = PACKAGE, root: Path = ROOT) -> dict:
-    schema = read_json(package/'theme.schema.json')
+    schema = read_json(root/'ambiente_fonte/.assistant/hub_padroes/identidade_visual/theme.schema.json')
     schema_validator(schema)
     policy=read_json(package/'politica_workflow.json');validate_policy(policy)
     registry=read_json(package/'referencias_assets.json')
@@ -378,7 +252,7 @@ def main() -> int:
     args=parser.parse_args()
     try:
         if args.print_dictionary:
-            print(dictionary(read_json(PACKAGE/'theme.schema.json')),end='')
+            print(dictionary(read_json(SCHEMA_PATH)),end='')
         else:
             print(json.dumps(check_package(),ensure_ascii=False,indent=2))
         return 0

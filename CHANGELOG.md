@@ -5,6 +5,66 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — V02: alinhamento documental da candidata remota (Codex)
+
+### Corrigido
+
+- (Codex) Índices e checkpoint passaram a apresentar a V02 como etapa corrente no
+  PR #14, preservando o guia de primeiro uso da V01 como referência histórica e
+  mantendo separadas validação funcional, aceite, integração e publicação.
+- (Codex) Saída reproduzível do README raiz sincronizada após os novos links
+  documentais; o validador continua fail-closed e nenhuma guarda foi relaxada.
+
+### Notas
+
+- (Codex) Correção exclusivamente documental sobre o núcleo funcional já testado;
+  sem mudança em API, schema, fixtures, assets, aparência ou consumidores legados.
+- (Codex) Sem merge da V02, publicação Databricks, homologação de Spark/widgets/
+  Apps/AI-BI ou início da V03. Auditoria independente e teste com iniciante seguem
+  pendentes.
+
+## 2026-09-12 — V02: conciliação com R03-A/R03-B integrada (Codex)
+
+### Atualizado
+
+- (Codex) Candidata V02 reconciliada com main `1be947b`, preservando os READMEs
+  R03-A/R03-B e o contrato editorial 1.0.0. O novo objeto usa a versão vigente.
+- (Codex) Conflitos do CHANGELOG e do README raiz resolvidos de forma aditiva;
+  contagens recalculadas por execução. Manual raiz sincronizado e espelho gerado.
+
+### Notas
+
+- (Codex) Testes anteriores continuam vinculados à base `836f236`; a composição
+  tem repetição própria de V01/V02, V00, publicador, nove gates e suplementos R03.
+- (Codex) Candidata local em bundle/patch. A branch remota da preparação contém
+  somente baseline; não confundir execução dos testes locais com push integral.
+- (Codex) Sem merge, publicação Databricks, mudança funcional legada ou V03.
+
+## 2026-09-12 — V02: núcleo de temas e contrato promovido (Codex)
+
+### Adicionado
+
+- (Codex) Objeto `visual.tema`: resolução explícita, cópias imutáveis, integridade,
+  leitura local limitada, exportação em memória e erros seguros; nenhuma aplicação visual.
+- (Codex) README de quinze seções, exemplo sintético, guia de primeiro uso/erros,
+  registro do núcleo no Manual, testes positivos/adversariais e gate V02.
+
+### Atualizado
+
+- (Codex) Schema V01 movido sem alterar bytes para o padrão de identidade visual;
+  verificador V01 reutiliza as funções do núcleo. Referências geradas e fixtures
+  derivadas têm guardas contra divergência; políticas e relatos históricos preservados.
+- (Codex) Entradas de navegação, dependências explícitas de validação e Manual raiz;
+  espelho gerado pelo renderer, sem edição manual ou migração dos gráficos legados.
+
+### Notas
+
+- (Codex) Implementação candidata em branch; resultados pertencem ao commit/run
+  identificado na PR e no pacote, não a rodadas antigas. Sem merge ou publicação.
+- (Codex) Sem dados corporativos, alteração de modelos, permissões de escrita de
+  workflows, painel, V03 ou homologação operacional presumida. Auditoria independente
+  e teste com iniciante permanecem pendentes.
+
 ## 2026-09-12 — R03-I: reconciliação READMEs com V01 integrada (ChatGPT)
 
 ### Atualizado

@@ -19,7 +19,7 @@ import temas_v01_contract as c
 class ContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.schema=c.read_json(c.PACKAGE/'theme.schema.json')
+        cls.schema=c.read_json(c.SCHEMA_PATH)
         cls.valid=c.read_json(c.PACKAGE/'fixtures/legado_notebook.json')
         cls.policy=c.read_json(c.PACKAGE/'politica_workflow.json')
         cls.assets=c.read_json(c.PACKAGE/'referencias_assets.json')

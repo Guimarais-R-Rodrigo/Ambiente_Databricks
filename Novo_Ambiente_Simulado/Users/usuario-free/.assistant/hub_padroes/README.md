@@ -21,6 +21,12 @@ conteúdo.
 Esses são os seis tipos de objeto do Hub. `auditoria/` e `output/` são padrões
 transversais de processo, não novos tipos.
 
+## Sistema de Temas
+
+O [padrão de identidade visual](identidade_visual/README.md) define configurações
+completas e sua validação. É transversal, não um sétimo tipo de objeto. A V02
+não instala painel nem altera automaticamente as cores dos consumidores.
+
 ## Fluxo recomendado
 
 ```mermaid

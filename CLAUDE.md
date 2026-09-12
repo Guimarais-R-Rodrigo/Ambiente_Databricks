@@ -66,6 +66,10 @@ Escala planejada: pessoal → squad → missão.
   Homologação operacional permanece pendente. Estado, limites e retomada:
   `docs/sprints/sistema_temas/V01/CHECKPOINT_V01.md`.
 
+A V02 está em execução em branch: `docs/sprints/sistema_temas/V02/CHECKPOINT_V02.md`.
+O contrato ativo foi promovido para `ambiente_fonte/.assistant/hub_padroes/identidade_visual/`;
+a candidata não autoriza publicar temas nem migra consumidores legados.
+
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 
 ## Regras inegociáveis

@@ -155,7 +155,7 @@ e registre quem fez a revisão. Código que executa não é sinônimo de anális
 
 ## Composição READMEs + Concierge — R02-I
 
-`python tools/ci_local.py` executa oito etapas: `validacao`, `biblioteca`,
+A composição R02-I estabeleceu oito etapas, preservadas na V02: `validacao`, `biblioteca`,
 `ferramentas`, `transicao`, `readmes`, `concierge-pacote`,
 `concierge-regressoes` e `concierge-integracao`. `--etapa` continua aceitando
 um nome para diagnóstico isolado; isso não equivale à aprovação do conjunto.
@@ -169,7 +169,7 @@ ficam em [INTEGRACAO_R02.md](../docs/sprints/readmes_objetos/INTEGRACAO_R02.md).
 
 `inventario_visual.py` e `executar_baseline_visual.py` produzem evidência somente em `.artifacts/`. Consulte o [guia da V00](../docs/sprints/sistema_temas/V00.md) antes de executar. Não publicam nem alteram o produto.
 
-## Contrato candidato V01 — somente manutenção
+## Contrato V01 aceito — verificador de manutenção
 
 A [V01 do Sistema de Temas](../docs/sprints/sistema_temas/V01/README.md) especifica
 aparência, não instala temas. `temas_v01_contract.py` verifica schema, exemplos,
@@ -187,5 +187,19 @@ python -B -m unittest discover -s tools/tests -p "test_temas_v01*.py" -v
 Os procedimentos completos, inclusive diagnóstico e retorno, estão no
 [guia do mantenedor](../docs/sprints/sistema_temas/V01/GUIA_MANTENEDOR.md).
 `.github/workflows/temas-v01-ci.yml` executa essas verificações com leitura apenas.
-Não substitui nem reduz as oito etapas de `ci_local.py` ou o CI permanente V00.
+Não substitui nem reduz o gate `ci_local.py` ou o CI permanente V00.
+A composição vigente com V02 tem nove etapas, descritas abaixo.
 As verificações editoriais Node e a homologação Databricks continuam separadas.
+
+
+## Núcleo V02 e promoção do schema
+
+`python -B tools/temas_v02_check.py` confere fonte única, cópias derivadas,
+fachada, catálogo e descoberta não vazia. `python -B tools/tests/test_temas_v02.py`
+exercita entradas hostis, resolução e isolamento. O gate `ci_local.py` conserva
+as oito etapas anteriores e acrescenta `temas`, que executa os testes V01/V02.
+As dependências de validação estão em `requirements-temas-dev.txt`.
+
+O verificador V01 passa a consumir o schema do padrão do produto e as funções
+do núcleo. Os relatos anteriores não são reclassificados como execução de V02.
+Estado e procedimentos: [V02](../docs/sprints/sistema_temas/V02/README.md).

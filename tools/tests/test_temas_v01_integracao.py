@@ -134,7 +134,7 @@ class V01IntegrationTests(unittest.TestCase):
             self.reject('DOC_ANCHOR', contract.check_links, package, root)
 
     def test_dictionary_displays_each_effect(self):
-        schema = contract.read_json(contract.PACKAGE/'theme.schema.json')
+        schema = contract.read_json(contract.SCHEMA_PATH)
         text = contract.dictionary(schema)
         for group in ('notebookTokens', 'editorialTokens'):
             for spec in schema['$defs'][group]['properties'].values():

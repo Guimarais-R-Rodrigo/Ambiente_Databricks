@@ -60,5 +60,9 @@ A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das spr
 históricas e dos READMEs. V00 e [V01](sistema_temas/V01/README.md) estão aceitas
 e integradas no Git. A V01 entrega o contrato e a experiência especificada;
 não instala o seletor de temas, não altera a aparência e não publica no Databricks.
-A homologação operacional, a auditoria independente e a avaliação com usuário
-iniciante permanecem pendentes. A V02 ainda não foi iniciada.
+
+A [V02](sistema_temas/V02/README.md) é a etapa corrente: o núcleo funcional já foi
+validado remotamente e está no PR #14, aguardando aceite explícito antes de qualquer
+integração. Ela ainda não aplica tema a Plotly/HTML e não publica no Databricks. A
+homologação operacional, a auditoria independente e a avaliação com usuário iniciante
+permanecem pendentes; a V03 não foi iniciada.

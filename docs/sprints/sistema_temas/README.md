@@ -1,17 +1,22 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Etapa atual — V01 com aceite e integração pelo PR #10
+## Etapa atual — V02 validada remotamente e aguardando aceite
 
-A instrumentação V00 foi integrada pelo PR #8 na main `b88a9cc`. A etapa seguinte
-é a [V01 — contrato e experiência documentada](V01/README.md), preparada a partir
-dessa main com READMEs e Concierge preservados. O seletor de temas ainda não existe.
-Rodrigo concedeu o aceite para testar e integrar a V01; confira o estado vigente
-no [checkpoint V01](V01/CHECKPOINT_V01.md). O merge é registrado no PR #10.
+A instrumentação V00 foi integrada pelo PR #8 e a [V01 — contrato e experiência
+documentada](V01/README.md) foi aceita e integrada pelo PR #10. A etapa corrente é
+a [V02 — núcleo de temas, validação e resolução](V02/README.md), aberta no PR #14.
+O núcleo funcional foi validado remotamente antes desta correção documental; qualquer
+novo head da PR precisa repetir os mesmos gates antes de ser apresentado para aceite.
+A V03 não foi iniciada.
 
-Para quem nunca entrou no Hub, comece pelo [guia de primeiro uso proposto](V01/GUIA_PRIMEIRO_USO.md).
-O [checkpoint V01](V01/CHECKPOINT_V01.md) distingue implementação, testes, aceite e
-publicação. As seções abaixo preservam o histórico V00; não são o estado atual V01.
-
+Para quem nunca entrou no Hub: **nada muda na aparência ou na rotina atual nesta
+etapa**. A V02 valida uma configuração completa de tema, mas ainda não aplica o tema
+a gráficos ou HTML, não cria seletor e não publica nada no Databricks. Comece pelo
+[README da V02](V02/README.md), depois leia o [checkpoint](V02/CHECKPOINT_V02.md) e o
+[guia operacional](../../../ambiente_fonte/.assistant/hub_padroes/identidade_visual/GUIA_OPERACIONAL.md).
+O [guia de primeiro uso da V01](V01/GUIA_PRIMEIRO_USO.md) permanece acessível como
+referência do contrato e da experiência documentada já aceitos; ele não transforma
+V01 novamente na etapa corrente.
 
 ## Aceite de integração Git — 12/09/2026
 
@@ -93,3 +98,10 @@ do gate existente, a comparação visual global ou a auditoria independente.
 A automação temporária utilizada para preparar e registrar as evidências foi
 removida da árvore final. Não há workflow de escrita recorrente, credencial
 Databricks ou publicação automática nesta entrega.
+
+## Continuidade — V02
+
+A [candidata V02](V02/README.md) implementa o núcleo sem aplicar aparência. Está
+em revisão no PR #14 e depende de aceite explícito antes de qualquer integração.
+A V01 continua aceita/integrada; seus relatos permanecem históricos. V03 não foi
+iniciada e não há publicação Databricks nesta etapa.
