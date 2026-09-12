@@ -344,3 +344,7 @@ limites antes do exemplo. A migração dos legados é gradual. O
 [contrato editorial](../hub_padroes/readme/template_objeto.md) padroniza essa
 leitura; o Manual continua sendo o catálogo integrado. Leia o aviso de efeitos
 do exemplo: ele pode escrever mesmo quando o helper apenas lê.
+
+No piloto R02, o [guia de quick_profile](quick_profile/README.md) explica
+o que vem da tabela inteira e o que vem da amostra, além dos limites de
+cardinalidade e da possível exposição de categorias sensíveis.

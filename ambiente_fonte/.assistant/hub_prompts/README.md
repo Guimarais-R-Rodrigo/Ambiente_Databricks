@@ -478,3 +478,7 @@ limites antes do exemplo. A migração dos legados é gradual. O
 [contrato editorial](../hub_padroes/readme/template_objeto.md) padroniza essa
 leitura; o Manual continua sendo o catálogo integrado. Leia o aviso de efeitos
 do exemplo: ele pode escrever mesmo quando o helper apenas lê.
+
+No piloto R02, o [guia de eda_rapida](eda_rapida/README.md) explica quando
+usar o briefing e como avaliar sua resposta. Leia também o aviso de overwrite
+do notebook: o preparo escreve uma tabela, separadamente do pedido de leitura.

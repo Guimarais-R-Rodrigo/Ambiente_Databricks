@@ -422,3 +422,9 @@ limites antes do exemplo. A migração dos legados é gradual. O
 [contrato editorial](../hub_padroes/readme/template_objeto.md) padroniza essa
 leitura; o Manual continua sendo o catálogo integrado. Leia o aviso de efeitos
 do exemplo: ele pode escrever mesmo quando o helper apenas lê.
+
+O piloto R02 oferece guias de [XGBoost](ml/train_xgboost/README.md),
+[Isolation Forest](ml/isolation_forest/README.md),
+[junção point-in-time](spark/pit_join/README.md) e
+[formatação brasileira](constants/format_br/README.md). São entradas conceituais
+para os mesmos objetos, não novos helpers ou homologações de runtime.
