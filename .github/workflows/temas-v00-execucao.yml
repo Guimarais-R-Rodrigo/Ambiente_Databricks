@@ -4,7 +4,7 @@ on:
     branches: [codex/temas-v00]
     paths:
       - .github/workflows/temas-v00-execucao.yml
-      - .github/v00_patch_r2.py
+      - .github/v00_patch_r3.py
 permissions:
   contents: write
 concurrency:
@@ -37,20 +37,20 @@ jobs:
         run: |
           python -m pip install -r tools/requirements-dev.txt
           pnpm --dir tools/readme_visuals install --frozen-lockfile
-      - name: Corrigir instrumentação e reconciliar contagens observadas
+      - name: Corrigir falso negativo e precisão das contagens
         run: |
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           git config user.name 'Codex'
           git config user.email 'codex@example.invalid'
-          python -B .github/v00_patch_r2.py
-          git add README.md CHANGELOG.md tools/executar_baseline_visual.py tools/tests/test_baseline_visual_runner.py docs/sprints/sistema_temas
-          git commit -m 'fix: contagens verificadas e diagnóstico V00 mais preciso (Codex)'
+          python -B .github/v00_patch_r3.py
+          git add README.md CHANGELOG.md tools/inventario_visual.py tools/executar_baseline_visual.py tools/tests/test_inventario_visual.py tools/tests/test_baseline_visual_runner.py docs/sprints/sistema_temas/ACHADOS_V00.md
+          git commit -m 'fix: descobre gráficos sem literal de cor e não conta exemplos como testes (Codex)'
           git worktree add --detach "$RUNNER_TEMP/baseline-temas-v00" 8744157fe9c3e0603f689fb2bcad52445e96cb41
-      - name: Executar base e candidata com famílias visuais separadas
+      - name: Reexecutar integralmente o diagnóstico
         id: diagnostico
         continue-on-error: true
         run: python -B tools/executar_baseline_visual.py --base-root "$RUNNER_TEMP/baseline-temas-v00" --output .artifacts/temas-v00
-      - name: Registrar somente resultados produzidos e conferir README local
+      - name: Registrar resultados da terceira rodada
         if: always()
         run: |
           python - <<'PY'
@@ -61,7 +61,7 @@ jobs:
               p=src/name
               if p.exists(): shutil.copyfile(p,dst/name)
           if not (src/'RESUMO.json').exists():
-              (dst/'RELATORIO_TECNICO.md').write_text('# Resultado técnico V00\n\nBLOQUEADO: segunda rodada sem resumo final. Os resultados anteriores não são uma aprovação desta revisão. Conferir workflow.\n',encoding='utf-8')
+              (dst/'RELATORIO_TECNICO.md').write_text('# Resultado técnico V00\n\nBLOQUEADO: terceira rodada sem resumo final. Resultados anteriores não aprovam esta revisão.\n',encoding='utf-8')
           subprocess.run(['git','add','docs/testes/sistema_temas/V00'],check=True)
           proc=subprocess.run([sys.executable,'-B','tools/validate_assistant.py'],capture_output=True,text=True,check=True)
           p=Path('README.md');s=p.read_text(encoding='utf-8')
@@ -73,7 +73,7 @@ jobs:
           p.write_text(s,encoding='utf-8')
           PY
           git add README.md docs/testes/sistema_temas/V00
-          if ! git diff --cached --quiet; then git commit -m 'test: segunda rodada V00 com evidências e falha histórica separada (Codex)'; fi
+          if ! git diff --cached --quiet; then git commit -m 'test: evidências V00 regeneradas após revisão dos instrumentos (Codex)'; fi
       - name: Gate atual na candidata registrada
         id: final_gate
         continue-on-error: true
