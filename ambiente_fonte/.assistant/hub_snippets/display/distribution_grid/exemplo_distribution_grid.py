@@ -6,14 +6,17 @@
 # MAGIC
 # MAGIC **O que este objeto oferece.** Desenha a distribuição de várias colunas numa grade única, com amostragem controlada.
 
+# MAGIC
+# MAGIC **Antes de executar:** consulte o [README deste objeto](README.md) para entender o conceito, os requisitos e os efeitos do exemplo.
+
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
-# MAGIC | Bibliotecas | `plotly`, já presente no runtime |
+# MAGIC | Compute | confira as dependências e a compatibilidade descritas no README; não há equivalência universal entre runtimes |
+# MAGIC | Bibliotecas | Plotly disponível; NumPy para gerar os dados sintéticos desta demonstração |
 # MAGIC | Dados | sintéticos, com três formas diferentes de propósito |
 # MAGIC | Escrita | nenhuma; tudo em memória |
 # MAGIC | Diferença Free × trabalho | nenhuma conhecida |
@@ -75,22 +78,26 @@ plot_distributions(base, ncols=3, sample_n=5000)
 # MAGIC
 # MAGIC | Variável | Média | O que a forma mostra |
 # MAGIC |---|---:|---|
-# MAGIC | `simetrica` | 49,8 | a média é o valor típico; metade acima, metade abaixo |
+# MAGIC | `simetrica` | 49,8 | distribuição aproximadamente simétrica; não há garantia de metade exata da amostra de cada lado da média |
 # MAGIC | `assimetrica` | 1.984,9 | cauda longa à direita — **a maioria está bem abaixo da média** |
 # MAGIC | `bimodal` | 45,5 | dois picos, em ~20 e ~70. **Quase ninguém vale 45** |
 # MAGIC
 # MAGIC O caso bimodal é o que justifica a grade. A média de 45,5 cai exatamente no
 # MAGIC vale entre os dois grupos: é um valor que quase nenhum cliente tem, e que
 # MAGIC descreve uma população que não existe. Uma segmentação construída sobre
-# MAGIC essa média divide os dois grupos reais pelo meio.
+# MAGIC essa média pode separar os dois grupos, mas resumir ambos pelo mesmo
+# MAGIC valor esconde sua heterogeneidade. Aqui os grupos são sintéticos.
 # MAGIC
-# MAGIC Nenhuma estatística resumo teria contado isso. O histograma conta em um
-# MAGIC segundo, e é o argumento inteiro para olhar a forma antes do número.
+# MAGIC Uma média isolada não mostra os dois picos. O histograma complementa
+# MAGIC resumos e quantis; sua leitura depende dos intervalos escolhidos e dos
+# MAGIC dados amostrados. O helper usa intervalos automáticos do Plotly, traz os
+# MAGIC valores selecionados ao driver e os incorpora na figura. O N do rodapé
+# MAGIC é a quantidade de linhas coletadas, não a contagem válida de cada coluna.
 
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
-# MAGIC - **Com muitas colunas.** Acima de nove ou doze, a grade fica pequena demais para mostrar forma.
+# MAGIC - **Com grade extensa sem ajuste.** O tema fixa altura em 450; confira legibilidade e ajuste a figura após a função, sem tratar um número de colunas como limite universal.
 # MAGIC - **Sem olhar o `sample_n`.** A grade desenha a amostra; a cauda rara pode não estar nela, e é justamente a cauda que interessa.
-# MAGIC - **Sobre categórica.** Histograma de código não é distribuição de nada — para categórica, contagem ordenada.
+# MAGIC - **Sobre códigos de categorias.** Os intervalos numéricos podem impor uma distância sem significado; prefira contagens por categoria.

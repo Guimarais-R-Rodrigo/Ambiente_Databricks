@@ -4,7 +4,10 @@
 # MAGIC
 # MAGIC **O problema.** Uma matriz de correlação com 15 variáveis tem 105 pares. Impressa como tabela, ninguém encontra o par que importa — e o par que importa costuma ser o que denuncia redundância ou vazamento.
 # MAGIC
-# MAGIC **O que este objeto oferece.** Desenha a matriz como mapa de calor, destacando o que passa de um limiar declarado.
+# MAGIC **O que este objeto oferece.** Desenha a matriz como mapa de calor e retorna, separadamente, a lista de pares que atingem um limiar declarado. O limiar não acrescenta realce às células.
+
+# MAGIC
+# MAGIC **Antes de executar:** consulte o [README deste objeto](README.md) para entender o conceito, os requisitos e os efeitos do exemplo.
 
 # COMMAND ----------
 # MAGIC %md
@@ -12,11 +15,11 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
-# MAGIC | Bibliotecas | `plotly`, já presente no runtime |
+# MAGIC | Compute | confira as dependências e a compatibilidade descritas no README; não há equivalência universal entre runtimes |
+# MAGIC | Bibliotecas | Plotly disponível; NumPy para gerar os dados sintéticos desta demonstração |
 # MAGIC | Dados | sintéticos, com correlação plantada |
 # MAGIC | Escrita | nenhuma; tudo em memória |
-# MAGIC | Diferença Free × trabalho | **sim** — `pyspark.ml` clássico não roda no serverless; ver a seção 2 |
+# MAGIC | Diferença Free × trabalho | a falha histórica abaixo exige conferir suporte a `VectorAssembler` e `Correlation.corr` no compute escolhido |
 
 # COMMAND ----------
 
@@ -72,9 +75,11 @@ except Exception as erro:
 # MAGIC ```
 # MAGIC
 # MAGIC **Como ler.** A base foi construída com `limite_credito` valendo três vezes a
-# MAGIC `renda` mais um ruído pequeno — correlação de cerca de 0,97 por construção.
-# MAGIC Em compute clássico o mapa mostraria esse par destacado, e as outras duas
-# MAGIC colunas próximas de zero.
+# MAGIC `renda` mais um ruído pequeno. O comentário numérico na célula de geração
+# MAGIC foi preservado como histórico, mas o coeficiente deve ser calculado, não
+# MAGIC inferido daquela anotação. Em um ambiente compatível, esse par deve mostrar
+# MAGIC associação positiva forte; a lista de pares e o mapa são saídas distintas.
+# MAGIC A transcrição acima registra uma execução antiga, não o teste da R03-B.
 # MAGIC
 # MAGIC O par redundante é o achado que este helper existe para produzir: duas
 # MAGIC variáveis quase idênticas num modelo dividem a importância entre si, e cada
@@ -88,4 +93,5 @@ except Exception as erro:
 # MAGIC - **Para concluir causalidade.** Correlação alta entre renda e limite não diz qual determina qual — neste caso, sabemos, porque plantamos.
 # MAGIC - **Com variável categórica codificada como número.** A correlação de Pearson sobre código de agência mede a ordem do código, que não significa nada.
 # MAGIC - **Como único critério de seleção de feature.** Correlação com o alvo ignora interação; variável fraca sozinha pode ser forte em par.
-# MAGIC - **Amostrando por medo do driver.** Não precisa: o cálculo é distribuído (`Correlation.corr` do MLlib) e o que volta é a matriz k×k, não as linhas. Amostrar aqui perde precisão de graça. O custo cresce com o número de **colunas**, não de linhas — e acima de umas trinta o mapa deixa de ser legível antes de o cálculo pesar.
+# MAGIC - **Sem avaliar volume e população.** O cálculo distribuído depende de linhas e colunas; Spearman também ordena valores. O driver recebe a matriz k×k, mas isso não elimina custo ou risco de memória. Amostrar pode ser uma decisão justificada, desde que seu efeito na representatividade seja avaliado.
+# MAGIC - **Sem conferir nulos e escala.** As linhas incompletas são removidas conjuntamente. A escala sequencial `Blues` deixa correlações negativas fortes claras; leia sinal e módulo, não apenas intensidade da cor.

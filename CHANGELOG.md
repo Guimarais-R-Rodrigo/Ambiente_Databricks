@@ -5,6 +5,36 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — R03-B: seis guias de display e navegação (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) READMEs de correlation_matrix, dataframe_styled, distribution_grid,
+  index_generator, section_header e theme_plotly; relatório, matriz, achados,
+  rubrica e testes suplementares em `docs/sprints/readmes_objetos/`.
+
+### Atualizado
+
+- (ChatGPT) Seis notebooks receberam backlinks e correções de prosa, sem mudar
+  código executável ou saídas históricas. Coleção, Manual e índices oferecem rotas.
+- (ChatGPT) Controle de migração remove exatamente seis dispensas: 19/74
+  operacionais, três exemplares e 55 pendências; cobertura não é aceite editorial.
+- (ChatGPT) Manual sincronizado, simulado pelo renderer e contagens da raiz
+  reconciliadas com a execução. Contrato 1.0.0 e textos anteriores preservados.
+
+### Corrigido
+
+- (ChatGPT) Explicações sobre limiar/escala de correlação, custo e descarte de
+  nulos, amostragem, índice declarado, CSS local e precedência do tema.
+  Limites funcionais são documentados, não alterados silenciosamente.
+
+### Notas
+
+- (ChatGPT) Autorrevisão A0_light; evidências locais e remotas identificadas
+  separadamente no relatório e no PR. Sem auditor independente ou homologação.
+- (ChatGPT) Execução autorizada por “Siga”; branch R03-B depende da R03-A ainda
+  em revisão. Nenhum merge, publicação Databricks ou avanço à R04-A.
+
 ## 2026-09-12 — R03-A: preservação da V00 integrada em paralelo (ChatGPT)
 
 ### Atualizado

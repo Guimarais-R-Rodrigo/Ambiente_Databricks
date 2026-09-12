@@ -1296,7 +1296,9 @@ Constantes exportadas: `FONT_FAMILY`, `STYLE_SECTION_HEADER`, `STYLE_KPI_CARD`, 
 
 #### `hub_snippets.display.correlation_matrix`
 
-Recebe um DataFrame Spark e colunas numéricas. Calcula correlações e devolve a figura Plotly e os pares fortes, não apenas uma figura isolada. Depende de APIs de `pyspark.ml`; confira suporte no compute e tratamento de nulos. Correlação não é causalidade.
+**Guia local do objeto (R03-B):** na pasta `hub_snippets/display/correlation_matrix/`, abra `README.md` antes de `exemplo_correlation_matrix.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+
+Recebe um DataFrame Spark e colunas numéricas. Calcula correlações e devolve a figura Plotly e os pares fortes, não apenas uma figura isolada. Depende de APIs de `pyspark.ml`; confira suporte no compute e tratamento de nulos. Correlação não é causalidade. O corte seleciona a lista de pares, não destaca células; o descarte de nulos é conjunto nas colunas selecionadas.
 
 <details>
 <summary>Consultar a API deste objeto: nomes e assinaturas</summary>
@@ -1311,7 +1313,9 @@ plot_correlation(df: DataFrame, cols: Optional[Iterable[str]]=None, method: str=
 
 #### `hub_snippets.display.dataframe_styled`
 
-Recebe uma tabela pandas e devolve HTML estilizado. O consumidor escolhe onde mostrar esse texto. A operação de estilo delegada ao pandas pode exigir Jinja2 na chamada; o módulo carregar não prova essa dependência.
+**Guia local do objeto (R03-B):** na pasta `hub_snippets/display/dataframe_styled/`, abra `README.md` antes de `exemplo_dataframe_styled.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+
+Recebe uma tabela pandas e devolve HTML estilizado. O consumidor escolhe onde mostrar esse texto. A operação de estilo delegada ao pandas pode exigir Jinja2 na chamada; o módulo carregar não prova essa dependência. O helper não ativa escape HTML; use conteúdo controlado.
 
 <details>
 <summary>Consultar a API deste objeto: nomes e assinaturas</summary>
@@ -1326,7 +1330,9 @@ display_styled(df_pandas, highlight_cols: Optional[Iterable[str]]=None, format_d
 
 #### `hub_snippets.display.distribution_grid`
 
-Recebe DataFrame Spark, seleciona/amostra dados numéricos e devolve uma figura Plotly com distribuições. Confirme tamanho da amostra e leitura das escalas; os histogramas não representam uma contagem integral se vieram de amostra.
+**Guia local do objeto (R03-B):** na pasta `hub_snippets/display/distribution_grid/`, abra `README.md` antes de `exemplo_distribution_grid.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+
+Recebe DataFrame Spark, seleciona/amostra dados numéricos e devolve uma figura Plotly com distribuições. Confirme tamanho da amostra e leitura das escalas; os histogramas não representam uma contagem integral se vieram de amostra. Valores selecionados são coletados em pandas e incorporados à figura; N conta linhas coletadas, não valores válidos por coluna.
 
 <details>
 <summary>Consultar a API deste objeto: nomes e assinaturas</summary>
@@ -2006,7 +2012,9 @@ divider_section() -> str
 
 #### `hub_snippets.visual.index_generator`
 
-Devolve um índice de etapas de EDA em HTML ou Markdown. O parâmetro `markdown` define o formato. Um link de etapa só será útil se a âncora correspondente existir no documento final.
+**Guia local do objeto (R03-B):** na pasta `hub_snippets/visual/index_generator/`, abra `README.md` antes de `exemplo_index_generator.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+
+Devolve um índice de etapas de EDA em HTML ou Markdown. O parâmetro `markdown` define o formato. A implementação produz lista declarada, sem links ou inspeção das células; o índice não comprova execução das etapas.
 
 <details>
 <summary>Consultar a API deste objeto: nomes e assinaturas</summary>
@@ -2039,6 +2047,8 @@ kpi_card_markdown(metricas: Dict[str, Any]) -> str
 
 #### `hub_snippets.visual.section_header`
 
+**Guia local do objeto (R03-B):** na pasta `hub_snippets/visual/section_header/`, abra `README.md` antes de `exemplo_section_header.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+
 Devolve HTML de cabeçalho para uma seção, com opções preenchidas por etapa ou fornecidas diretamente. Não é o PNG do cabeçalho institucional e não registra um widget nativo.
 
 <details>
@@ -2054,7 +2064,9 @@ section_header_html(etapa: Optional[int]=None, emoji: Optional[str]=None, titulo
 
 #### `hub_snippets.visual.theme_plotly`
 
-Obtém configuração, aplica tema a uma figura ou registra um template na sessão. `registrar_template_plotly` tem efeito no estado de apresentação da sessão. A figura formatada continua exigindo exibição; tema não altera a lógica estatística dos dados plotados.
+**Guia local do objeto (R03-B):** na pasta `hub_snippets/visual/theme_plotly/`, abra `README.md` antes de `exemplo_theme_plotly.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+
+Obtém configuração, aplica tema a uma figura ou registra um template na sessão. `registrar_template_plotly` tem efeito no estado de apresentação da sessão. A figura formatada continua exigindo exibição; tema não altera a lógica estatística dos dados plotados. A aplicação modifica a própria figura; anotações podem se acumular em chamadas repetidas, e customizações de layout devem vir depois do tema.
 
 <details>
 <summary>Consultar a API deste objeto: nomes e assinaturas</summary>

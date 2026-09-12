@@ -56,7 +56,7 @@ Escala planejada: pessoal → squad → missão.
   Publicação e homologação conversacional são gates separados da integração Git.
 
 - README didático por pasta de objeto: `ADR-0012`, ratificado em 2026-09-12;
-  contrato 1.0.0 estabilizado após aceite do piloto. R03-A é o lote atual.
+  contrato 1.0.0 estabilizado após aceite do piloto. R03-B é o lote atual em branch de revisão, dependente da R03-A.
   Estado e retomada: `docs/sprints/readmes_objetos/README.md`.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.

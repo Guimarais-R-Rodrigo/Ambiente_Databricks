@@ -10,11 +10,17 @@ Rodrigo aprovou o padrão e a integração em 2026-09-12. O PR nº 7 foi integra
 na main pelo commit `5493f7d`; o [registro de aceite](ACEITE_V1.md) distingue
 esse ato da revisão independente ou homologação Databricks.
 
-O contrato vigente é **1.0.0**. A R03-A acrescenta sete guias aos seis pilotos,
-sem modificar os algoritmos. Consulte [relatório e checkpoint](RELATORIO_R03A.md),
-[matriz de alterações](MATRIZ_ALTERACOES_R03A.md) e [achados](ACHADOS_R03A.md).
-Os sete textos novos aguardam seu próprio aceite; a execução autorizada não
-significa aprovação antecipada. A próxima leva é R03-B, ainda não iniciada.
+O contrato vigente é **1.0.0**, preservado nesta rodada. A R03-A está no PR nº 9,
+sem merge; sua base revisada `c60f1e5` sustenta a R03-B em branch separada.
+O pedido “Siga” autorizou executar a próxima leva, não aprovação editorial
+antecipada nem integração automática das duas branches.
+
+A R03-B entrega seis guias de apresentação e navegação. Consulte o
+[relatório e checkpoint](RELATORIO_R03B.md), a
+[matriz nominal](MATRIZ_ALTERACOES_R03B.md) e os [achados](ACHADOS_R03B.md).
+A cobertura estrutural da candidata é 19/74 operacionais e 3/3 exemplares,
+com 55 pendências. Não representa 19 objetos já publicados ou aceitos pelo usuário.
+A próxima parada é a revisão desta leva, antes da R04-A.
 
 Os relatórios R01/R02/R02-I preservam os estados de proposta e de conflito que
 examinaram. A [composição R02-I](INTEGRACAO_R02.md) foi integrada pelo PR nº 7;
@@ -27,9 +33,9 @@ A cobertura atual é calculada pelo validador e pelo controle de migração abai
 |---|---|
 | Examinar o formato e a linguagem | [Template de objeto](../../../ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md) |
 | Julgar a qualidade, além da estrutura | [Checklist editorial](../../../ambiente_fonte/.assistant/hub_padroes/readme/checklist_objeto.md) |
-| Ver o que mudou além dos READMEs | [Matriz R02](MATRIZ_ALTERACOES_R02.md) · [Matriz R01](MATRIZ_ALTERACOES_R01.md) |
-| Conhecer inconsistências observadas | [Achados R02](ACHADOS_R02.md) · [Achados R01](ACHADOS_R01.md) |
-| Ver o resultado da execução | [Relatório R02](RELATORIO_R02.md) · [Relatório R01](RELATORIO_R01.md) |
+| Ver o que mudou além dos READMEs | [Matriz R03-B](MATRIZ_ALTERACOES_R03B.md) · [Matriz R03-A](MATRIZ_ALTERACOES_R03A.md) |
+| Conhecer inconsistências observadas | [Achados R03-B](ACHADOS_R03B.md) · [Achados R03-A](ACHADOS_R03A.md) |
+| Ver o resultado da execução | [Relatório R03-B](RELATORIO_R03B.md) · [Relatório R03-A](RELATORIO_R03A.md) |
 | Saber quais legados faltam | [Controle de migração](CONTROLE_MIGRACAO.json) |
 
 ## Como evitar deriva na continuação

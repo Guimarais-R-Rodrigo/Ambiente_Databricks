@@ -42,3 +42,10 @@ Integração R02-I aprovada por Rodrigo e realizada pelo PR nº 7 (`5493f7d`).
 Contrato 1.0.0 estabilizado; sete novos guias da R03-A são entregues em branch
 separada para revisão. Registro, matriz, testes e próxima parada no
 [fechamento da R03-A](readmes_objetos/RELATORIO_R03A.md). R03-B não iniciada; sem publicação Databricks.
+
+## Continuidade READMEs — 2026-09-12, R03-B
+
+Seis guias de display/visual, preservando o contrato 1.0.0 e as APIs.
+Branch separada baseada na R03-A `c60f1e5`; PR nº 9 ainda não integrado.
+[Relatório, verificações e ponto de parada](readmes_objetos/RELATORIO_R03B.md).
+Sem aceite antecipado, merge automático, publicação ou início da R04-A.

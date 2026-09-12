@@ -6,16 +6,19 @@
 # MAGIC
 # MAGIC **O que este objeto oferece.** Formata um DataFrame pandas com destaque por coluna e formatação declarada, devolvendo HTML.
 
+# MAGIC
+# MAGIC **Antes de executar:** consulte o [README deste objeto](README.md) para entender o conceito, os requisitos e os efeitos do exemplo.
+
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Compute | confira as dependências e a compatibilidade descritas no README; não há equivalência universal entre runtimes |
 # MAGIC | Bibliotecas | **instala `jinja2` na primeira célula** — ver a seção 2 |
 # MAGIC | Dados | sintéticos, gerados aqui |
-# MAGIC | Escrita | nenhuma; tudo em memória |
+# MAGIC | Efeitos | instala biblioteca e reinicia Python; o helper gera HTML, sem gravar tabela |
 # MAGIC | Diferença Free × trabalho | nenhuma conhecida |
 
 # COMMAND ----------
@@ -82,7 +85,7 @@ displayHTML(html)
 # MAGIC         score       31.7      99812 0.312        -11.5
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler — e o que a função realmente faz, que não é o óbvio.**
+# MAGIC **Como ler — e qual regra de destaque está implementada.**
 # MAGIC
 # MAGIC O realce **é por valor, restrito às colunas declaradas**: dentro de
 # MAGIC `highlight_cols`, ele pinta de vermelho e negrito o que for **negativo**.
@@ -109,6 +112,8 @@ displayHTML(html)
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
-# MAGIC - **Sobre DataFrame do Spark.** É pandas; colete antes, com limite.
+# MAGIC - **Sobre DataFrame do Spark.** É pandas; agregue e limite antes de qualquer coleta, conferindo memória e sensibilidade dos campos.
 # MAGIC - **Com centenas de linhas.** O destaque perde função quando tudo está na tela; agregue antes.
 # MAGIC - **Como saída de dado.** É apresentação. O que alimenta processo seguinte sai em Parquet, não em HTML.
+
+# MAGIC - **Com HTML não confiável nas células.** O helper não ativa escape. Use dados controlados; o destaque visual não é uma política de sanitização.

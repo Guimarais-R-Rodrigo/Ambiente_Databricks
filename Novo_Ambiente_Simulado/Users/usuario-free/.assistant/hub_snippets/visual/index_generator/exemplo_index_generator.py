@@ -6,13 +6,16 @@
 # MAGIC
 # MAGIC **O que este objeto oferece.** Gera o índice das etapas da EDA a partir de `constants.emojis`, em HTML ou Markdown, com filtro das etapas ativas.
 
+# MAGIC
+# MAGIC **Antes de executar:** consulte o [README deste objeto](README.md) para entender o conceito, os requisitos e os efeitos do exemplo.
+
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Compute | confira as dependências e a compatibilidade descritas no README; não há equivalência universal entre runtimes |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | nenhum — este objeto não recebe dados |
 # MAGIC | Escrita | nenhuma; tudo em memória |
@@ -63,17 +66,15 @@ print(gerar_indice_eda(etapas_ativas=[1, 3, 4, 8], markdown=True))
 # MAGIC
 # MAGIC É a decisão de projeto que faz o objeto valer a pena. Renumerar
 # MAGIC sequencialmente daria um índice mais bonito e destruiria a informação:
-# MAGIC quem conhece o roteiro vê de imediato que a granularidade (2) não foi
-# MAGIC analisada, que a bivariada (5) não foi feita e que não há visualizações
-# MAGIC (6). **O que falta é tão informativo quanto o que está lá**, e só um
-# MAGIC índice que respeita a numeração canônica consegue dizer isso.
-# MAGIC
-# MAGIC Um índice de 1 a 4 pareceria completo.
+# MAGIC quem conhece o roteiro identifica quais etapas foram **declaradas**.
+# MAGIC A omissão de uma etapa não prova que ela deixou de ser executada: a função
+# MAGIC não lê células, não audita a análise e não detecta se o índice desatualizou.
+# MAGIC Mantenha a lista coerente com o conteúdo real do notebook.
 
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
 # MAGIC - **Sem filtrar as etapas ativas.** Índice com nove itens num notebook que tem quatro promete o que não entrega.
-# MAGIC - **Como âncora clicável.** O que ele gera é lista, não link — o Databricks não expõe âncora estável por célula.
+# MAGIC - **Como navegação clicável automática.** Este helper gera uma lista, não links. Isso não nega o sumário nativo do notebook, baseado em títulos e Markdown; consulte a referência no README.
 # MAGIC - **Em notebook que não segue o roteiro.** O índice reflete o mapa das nove etapas; outro roteiro pede outro índice.

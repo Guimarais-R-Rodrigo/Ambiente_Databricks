@@ -88,18 +88,6 @@
       "sprint": "R04",
       "lote": "B"
     },
-    "hub_snippets/display/correlation_matrix": {
-      "sprint": "R03",
-      "lote": "B"
-    },
-    "hub_snippets/display/dataframe_styled": {
-      "sprint": "R03",
-      "lote": "B"
-    },
-    "hub_snippets/display/distribution_grid": {
-      "sprint": "R03",
-      "lote": "B"
-    },
     "hub_snippets/ml/arima_wrapper": {
       "sprint": "R06",
       "lote": "A"
@@ -235,18 +223,6 @@
     "hub_snippets/spark/smart_sample": {
       "sprint": "R04",
       "lote": "A"
-    },
-    "hub_snippets/visual/index_generator": {
-      "sprint": "R03",
-      "lote": "B"
-    },
-    "hub_snippets/visual/section_header": {
-      "sprint": "R03",
-      "lote": "B"
-    },
-    "hub_snippets/visual/theme_plotly": {
-      "sprint": "R03",
-      "lote": "B"
     }
   }
 }
