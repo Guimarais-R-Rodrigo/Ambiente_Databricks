@@ -21,6 +21,8 @@ Leia a [implementação](pit_join.py), a [fachada](__init__.py) ou o [notebook](
 
 Ao juntar uma tabela de decisões a um histórico, não basta identificar a mesma entidade. É preciso saber qual versão estava disponível no momento relevante. *Point-in-time* significa reconstruir essa visão do passado. Usar informação que só surgiu depois é um tipo de vazamento temporal e pode distorcer uma avaliação preditiva.
 
+Aqui, **fato** é cada linha que representa uma decisão; **feature** é uma característica que será associada a ela. Um *timestamp* registra data e horário. PySpark é a interface Python do Spark, usada para trabalhar com essas tabelas e operações. Assim, os nomes `fatos`, `features` e `ts_decisao` identificam papéis diferentes, não apenas três tabelas quaisquer.
+
 Este é um helper customizado, não uma chamada ao serviço de Feature Store. A [documentação Databricks sobre junções point-in-time](https://docs.databricks.com/aws/en/machine-learning/feature-store/time-series) explica o conceito em seu próprio serviço; o contrato desta pasta é definido por `pit_join.py` e inclui uma convenção específica de atraso fixo.
 
 ## 2. Que problema este recurso resolve?
@@ -98,7 +100,7 @@ O exemplo não escreve tabela persistente. Testes locais de um helper Spark e os
 
 A regra depende de a história ser verdadeira e de o atraso representar disponibilidade real. Correções feitas hoje em um registro antigo podem exigir modelar também o momento da revisão; o helper não reconstrói esse histórico automaticamente. Não há calendário de dias úteis nem atraso individual por registro no argumento de dias.
 
-Além disso, a cobertura diagnóstica não avalia utilidade preditiva, causalidade ou qualidade dos valores trazidos. Uma transformação ajustada com dados futuros, um alvo construído incorretamente ou uma separação inadequada de treino e teste podem introduzir outros vazamentos. Use os nomes internos do helper com cuidado em schemas não usuais; a ausência de uma validação explícita não prova que não há colisão.
+Além disso, a cobertura diagnóstica não avalia utilidade preditiva, causalidade ou qualidade dos valores trazidos. Uma transformação ajustada conjuntamente no treino e no teste, uma característica calculada com o desfecho posterior à decisão ou uma separação inadequada entre conjuntos podem introduzir outros vazamentos. Já observar uma resposta futura para construir o alvo é esperado em previsão: o problema é deixar essa informação entrar nas características ou violar a disponibilidade e o desenho da avaliação. Use os nomes internos do helper com cuidado em schemas não usuais; a ausência de uma validação explícita não prova que não há colisão.
 
 ## 12. Quais são as alternativas?
 
@@ -120,4 +122,4 @@ A [implementação](pit_join.py) é dona das condições e do diagnóstico; a [f
 
 Contrato conferido na base R01 `af1efd14f2a688d3d3cc816ef85f5f1755e8afec`. A [documentação de point-in-time joins](https://docs.databricks.com/aws/en/machine-learning/feature-store/time-series), consultada em 12/09/2026, sustenta o conceito, não a equivalência deste helper ao serviço. A [referência de limitações serverless](https://docs.databricks.com/aws/en/compute/serverless/limitations), na mesma data, delimita o ambiente; não é uma homologação do código.
 
-Revisão R02 técnica e didática pelo próprio autor. O ambiente local da redação não possui PySpark. Qualquer smoke executado em runner com Spark local será registrado separadamente; não equivale a execução do notebook no Databricks, teste de escala, Spark Connect ou auditoria independente.
+A redação inicial e a revisão de fechamento R02 são técnicas e didáticas pelo próprio autor. A [execução suplementar da R02 em 12/09/2026](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/actions/runs/34696720982) exercitou este helper com PySpark 4.0.1 real, incluindo elegibilidade temporal, empate, janela e preservação de fatos repetidos. O ambiente local do fechamento não possui PySpark; essa evidência anterior não foi apresentada como reexecução local. Ela não equivale a execução do notebook no Databricks, teste de escala, Spark Connect ou auditoria independente.

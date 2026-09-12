@@ -276,8 +276,10 @@ for atraso in [0, 3, 30, 60]:
 # MAGIC   é necessário selecionar a última versão elegível por chave; só filtrar
 # MAGIC   a data não resolve múltiplas versões nem empates.
 # MAGIC - **Como garantia contra todo vazamento.** Ele resolve o temporal na
-# MAGIC   junção. Alvo construído com informação futura, feature derivada da
-# MAGIC   população inteira podem vazar por outros caminhos. Um split aleatório
+# MAGIC   junção. Uma feature que usa o desfecho posterior à decisão, ou uma
+# MAGIC   transformação ajustada conjuntamente no treino e no teste, pode vazar.
+# MAGIC   Observar uma resposta futura para construir o alvo é esperado em previsão;
+# MAGIC   isso não autoriza usá-la como característica. Um split aleatório
 # MAGIC   também pode ser inadequado em problemas temporais; avalie o desenho.
 # MAGIC - **Em volume grande, sem olhar o plano.** A junção é por intervalo, e o
 # MAGIC   custo dela depende de otimização que só se confirma com `explain()` sobre

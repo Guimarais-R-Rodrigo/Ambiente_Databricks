@@ -7,7 +7,10 @@ A produção operacional começa somente depois do aceite do contrato e do pilot
 ## Estado e próxima ação
 
 R02 entrega os seis READMEs do piloto sobre a fundação candidata da R01.
-O próximo marco é avaliar o piloto antes de congelar o contrato e autorizar R03.
+A [revisão de fechamento](REVISAO_FECHAMENTO_R02.md) ajustou os seis textos e
+registrou a [integração pendente](DIAGNOSTICO_INTEGRACAO_R02.md) com a main atual.
+O próximo marco é o aceite editorial e a decisão de integração, antes de congelar
+o contrato e autorizar R03. Nenhum desses aceites foi presumido.
 O [checkpoint atual](CHECKPOINT_R02.md) registra execução e limitações;
 o [checkpoint R01](CHECKPOINT_R01.md) preserva o estado daquela entrega. O
 [plano R00](PLANO_R00.md) é histórico: suas afirmações de “não executado” descrevem

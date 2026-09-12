@@ -14,11 +14,11 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Compute | o helper usa Python padrão; o preparo deste notebook exige sessão Spark disponível |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | valores escalares sintéticos; não lê uma tabela externa |
 # MAGIC | Escrita | nenhuma; tudo em memória |
-# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
+# MAGIC | Diferença Free × trabalho | compatibilidade no destino não homologada por testes Python locais |
 
 # COMMAND ----------
 

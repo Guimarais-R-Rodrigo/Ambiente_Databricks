@@ -45,7 +45,7 @@ Outro contraexemplo é consultar uma tabela com nomes ou identificadores pessoai
 
 Primeiro, a função confere a fração solicitada, acessa a tabela e identifica seus tipos. Uma agregação calcula a quantidade total de linhas e os nulos de todas as colunas. Depois, produz uma amostra aleatória sem reposição, ou usa todas as linhas quando a fração é 1.
 
-Essa segunda base alimenta cardinalidade aproximada, categorias frequentes, mínimos, máximos e médias selecionados. O código tenta armazená-la em cache para reutilização e depois liberar esse cache. Por fim, reúne resultados e metadados em um dicionário.
+Essa segunda base alimenta cardinalidade aproximada, categorias frequentes, mínimos, máximos e médias selecionados. O código tenta mantê-la em cache, uma forma de reutilizar dados entre operações em vez de recalculá-los, e depois liberar esse armazenamento. Por fim, reúne resultados e metadados em um dicionário.
 
 A seleção aleatória não garante exatamente a fração solicitada; a [documentação de `DataFrame.sample`](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.sample.html) faz essa distinção. Confira `sample_rows`, não apenas o parâmetro solicitado.
 
@@ -57,7 +57,7 @@ O perfil pode mostrar que renda tem muitos nulos na tabela inteira e que a amost
 
 ## 7. O que você precisa antes de usar?
 
-`table_name` é uma string resolvida por `spark.table`: normalmente um nome qualificado de tabela, ou uma view que exista na sessão. `sample_fraction` deve estar no intervalo maior que zero e até 1; `max_categories` precisa ser positivo. `seed`, informado somente por nome, controla a semente da amostragem.
+`table_name` é uma string resolvida por `spark.table`: normalmente um nome qualificado de tabela, ou uma view que exista na sessão. Uma view é um resultado de consulta acessível por um nome; quando temporária, seu uso depende da sessão que a contém. `sample_fraction` deve estar no intervalo maior que zero e até 1; `max_categories` precisa ser positivo. `seed`, informado somente por nome, controla a semente da amostragem.
 
 A função exige PySpark e uma sessão capaz de ler o recurso. Ela procura a sessão ativa e, na ausência, tenta obter ou criar outra. A permissão de leitura e a disponibilidade do objeto não são concedidas pelo script.
 
@@ -85,7 +85,7 @@ Abra o [exemplo executável](exemplo_quick_profile.py) para acompanhar a compara
 
 A API pública é `quick_profile`, importada de `hub_scripts.quick_profile` depois de tornar a raiz `.assistant` disponível ao Python. Confira essa preparação no exemplo, usando o caminho real de sua instalação. Para uso próprio, revise o recurso, seus tipos, os dados sensíveis e o custo antes da chamada.
 
-O retorno não é automaticamente mascarado. Se houver categorias identificáveis, não imprima nem copie esses campos. As evidências desta sprint distinguem revisão estática, testes locais disponíveis e execução Spark não realizada; não considere o notebook homologado em qualquer workspace.
+O retorno não é automaticamente mascarado. Se houver categorias identificáveis, não imprima nem copie esses campos. A execução suplementar da R02 verificou o helper com Spark real em uma view temporária sintética; a seção 15 identifica a evidência. Isso não é uma execução recente do notebook no Databricks nem homologa o recurso em qualquer workspace.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -128,3 +128,5 @@ Depois do perfil, escolha um check concreto para cada achado relevante. Não há
 A implementação e o notebook vinculados acima sustentam o contrato específico, revisado na base R01 `af1efd14f2a688d3d3cc816ef85f5f1755e8afec`, em 12/09/2026. As evidências de revisão e execução ficam no relatório R02; nenhum resultado de um workspace foi recertificado por esta redação.
 
 A documentação Apache Spark de [amostragem](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.sample.html) sustenta a distinção entre fração pedida e amostra obtida. A de [contagem aproximada distinta](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.approx_count_distinct.html) sustenta o caráter estimado da cardinalidade. Fontes consultadas em 12/09/2026; os limites de dez ou cinco colunas vêm do código do Hub, não dessas APIs.
+
+Na [execução suplementar da R02 em 12/09/2026](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/actions/runs/34696720982), testes com PySpark 4.0.1 real conferiram campos de retorno, contagens, nulos e recusas sobre uma view temporária sintética. O ambiente local da revisão de fechamento não possui PySpark; a evidência anterior permanece identificada, sem alegação de reexecução local. Revisão do texto pelo próprio autor não é auditoria independente nem aceite humano.

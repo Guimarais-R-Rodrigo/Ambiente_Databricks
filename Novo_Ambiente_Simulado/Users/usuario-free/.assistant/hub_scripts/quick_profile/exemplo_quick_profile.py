@@ -99,7 +99,7 @@ print(f"  cardinalidade       : {perfil['cardinality_sample']}")
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## 3. Com fração 1.0 os dois coincidem — e é aí que se engana
+# MAGIC ## 3. Com fração 1.0 a base é completa, mas a cardinalidade segue aproximada
 
 # COMMAND ----------
 

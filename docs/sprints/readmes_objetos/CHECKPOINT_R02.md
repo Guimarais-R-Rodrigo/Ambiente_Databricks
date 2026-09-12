@@ -4,6 +4,18 @@ Data: 12/09/2026. Autor: ChatGPT. Estado: entrega candidata para revisão.
 Autorização recebida: seguir para o piloto proposto após a entrega R01.
 Isso autoriza produzir e verificar a R02, não presume aceite editorial final.
 
+## Atualização — revisão de fechamento em 12/09/2026
+
+Os seis textos foram revistos e ajustados sem alterar o contrato candidato.
+Consulte [revisão e alterações](REVISAO_FECHAMENTO_R02.md),
+[rubrica por objeto](RUBRICA_FECHAMENTO_R02.json) e
+[diagnóstico de integração](DIAGNOSTICO_INTEGRACAO_R02.md).
+A main recebeu o Concierge em `8744157`; há quatro conflitos textuais com a
+R01 e uma colisão de número ADR. Nenhuma integração foi executada. O ADR dos
+READMEs citado abaixo é `ADR-0011-readmes-de-objeto.md`, distinto do Concierge.
+O aceite humano, a revisão independente e o congelamento 1.0 permanecem pendentes.
+As seções seguintes preservam a base e o escopo da entrega original da R02.
+
 ## Base e isolamento
 
 Base de conteúdo: `af1efd14f2a688d3d3cc816ef85f5f1755e8afec`, R01.

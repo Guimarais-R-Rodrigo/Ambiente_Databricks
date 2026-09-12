@@ -2,7 +2,7 @@
 
 <!-- readme-objeto: 0.1.0-candidata -->
 
-Isolation Forest ajuda a ordenar observações pelo quanto são fáceis de separar das demais. No Hub, esse ranking vira scores, uma marca de anomalia e um perfil descritivo para apoiar investigação, sem transformar “incomum” em “fraude”.
+Isolation Forest ajuda a ordenar observações pelo quanto são fáceis de separar das demais. No Hub, cada observação recebe uma pontuação (score), que permite ordená-las (ranking); um corte gera a marca de anomalia. Um perfil descritivo complementa essa informação para apoiar investigação, sem transformar “incomum” em “fraude”.
 
 ## Visão rápida
 
@@ -23,7 +23,7 @@ Uma observação atípica é diferente das demais segundo as características e 
 
 Isolation Forest constrói árvores com divisões aleatórias. Observações isoladas em poucos passos recebem maior indicação de anomalia; a comparação entre várias árvores reduz a dependência de um único caminho aleatório. O [guia de detecção de outliers](https://scikit-learn.org/stable/modules/outlier_detection.html) apresenta esse mecanismo. “Não supervisionado” significa que o ajuste não precisa de uma coluna dizendo quais casos são fraudes ou erros.
 
-Este wrapper oferece `train_isolation_forest` e `profile_anomalies`. A primeira ajusta e pontua a própria base recebida; a segunda descreve casos já marcados. Ela não é uma rotina pronta de monitoramento contínuo.
+As funções auxiliares do Hub são `train_isolation_forest` e `profile_anomalies`. A primeira ajusta e pontua a própria base recebida; a segunda descreve casos já marcados. Ela não é uma rotina pronta de monitoramento contínuo.
 
 ## 2. Que problema este recurso resolve?
 
@@ -75,7 +75,7 @@ Neste wrapper, use `contamination` numérico no intervalo `(0, 0.5]`, compatíve
 
 `pct_anomalies` está na escala 0–100; `contamination` usa fração. `stats["score_threshold"]` é um percentil calculado sobre `scores`, não o limiar operacional oficial de `predict`, que usa zero na função de decisão. Não construa uma nova regra presumindo equivalência exata entre os dois.
 
-`profile_anomalies` devolve até `top_n` linhas com `index`, `anomaly_score`, `most_anomalous_feature` e `max_z_score`. O último descreve o maior desvio absoluto padronizado em relação à base, não uma explicação causal nem uma atribuição do modelo. Sem casos marcados, a implementação pode retornar um DataFrame vazio sem essas colunas.
+`profile_anomalies` devolve até `top_n` linhas com `index`, `anomaly_score`, `most_anomalous_feature` e `max_z_score`. O último descreve o maior desvio absoluto padronizado: a distância de uma característica à média da base, medida em desvios-padrão. Um valor 3 indica uma distância de três desvios-padrão na característica selecionada; não significa probabilidade de fraude nem explica qual divisão da árvore isolou o caso. É uma comparação descritiva, não uma explicação causal ou atribuição do modelo. Sem casos marcados, a implementação pode retornar um DataFrame vazio sem essas colunas.
 
 ## 9. Como usar este recurso no Hub?
 
@@ -97,7 +97,7 @@ No perfil, `top_n=50` limita os casos retornados. As mesmas linhas, na mesma ord
 
 Uma anomalia pode ser erro, mudança legítima ou caso raro relevante. O algoritmo não distingue essas causas. Scores não são probabilidades e a quantidade marcada não estima automaticamente prevalência real. Rótulos derivados do método também não se tornam verdade de referência por serem usados em outro treinamento.
 
-O perfil usa médias e desvios globais da própria base, que podem ser influenciados pelos extremos. Sua “característica mais anômala” não identifica necessariamente o motivo de o estimador ter isolado a linha. O wrapper não mede precisão, recall, estabilidade temporal ou valor econômico da investigação.
+O perfil usa médias e desvios globais da própria base, que podem ser influenciados pelos extremos. Sua “característica mais anômala” não identifica necessariamente o motivo de o estimador ter isolado a linha. O wrapper não mede a proporção de alertas confirmados (precisão), a proporção dos eventos reais encontrados (recall), estabilidade temporal ou valor econômico da investigação.
 
 A matriz e suas transformações precisam caber na memória local. Valores constantes, populações heterogêneas e mudança de distribuição exigem checagens específicas. Um teste sintético com casos muito separados é uma demonstração, não estimativa da eficácia em dados reais.
 
@@ -115,10 +115,10 @@ Varie o corte de maneira declarada e observe quem entra na fila. Se quase todos 
 
 ## 14. Arquivos relacionados e próximos passos
 
-A [implementação](isolation_forest.py) contém treino, scoring e perfil; a [fachada](__init__.py) lista os exports; o [notebook](exemplo_isolation_forest.py) explora o corte. O [guia da coleção](../../README.md) explica importação e categorias; o [Manual](../../../MANUAL_TECNICO.md#catalogo-helpers) mantém o catálogo integrado. Antes de usar, defina o que será investigado e como os casos serão confirmados.
+A [implementação](isolation_forest.py) contém treino, cálculo das pontuações e perfil; a [fachada](__init__.py) lista as funções e constantes públicas; o [notebook](exemplo_isolation_forest.py) explora o corte. O [guia da coleção](../../README.md) explica importação e categorias; o [Manual](../../../MANUAL_TECNICO.md#catalogo-helpers) mantém o catálogo integrado. Antes de usar, defina o que será investigado e como os casos serão confirmados.
 
 ## 15. Referências
 
 Comportamento conferido na implementação da base R01 `af1efd14f2a688d3d3cc816ef85f5f1755e8afec`. Para conceito e score, foram consultados em 12/09/2026 o [guia de outliers](https://scikit-learn.org/stable/modules/outlier_detection.html) e a [API IsolationForest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html); para efeitos da sessão, a [documentação de autologging](https://docs.databricks.com/aws/en/mlflow/databricks-autologging).
 
-Revisão R02 pelo próprio autor, sem auditor independente. O ambiente local da redação não possui MLflow; importar este wrapper ali ficou bloqueado, em vez de ser simulado com um módulo falso. Eventuais testes em runner com dependências reais têm evidência própria no relatório R02 e não equivalem a teste Databricks. Saídas históricas do notebook não são novas execuções desta documentação.
+A redação inicial e a revisão de fechamento R02 são autorrevisões, não auditorias independentes. Em 12/09/2026, a [execução suplementar da R02](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/actions/runs/34696720982) aprovou testes de treino, perfil e empates com scikit-learn e MLflow reais, sem habilitar o logging do helper. Esse resultado é evidência histórica identificada: o ambiente local do fechamento continua sem MLflow e não repete esses testes usando um módulo falso. Não houve teste de tracking remoto ou homologação Databricks. Saídas históricas do notebook não são novas execuções desta documentação.

@@ -33,7 +33,7 @@ O briefing torna essas escolhas visíveis. A decisão apoiada é quais verifica�
 
 Use ao receber uma fonte nova, iniciar uma análise ou verificar se uma mudança tornou inadequadas premissas anteriores. Uma tabela conhecida também pode merecer novo perfil quando sua população, estrutura ou período mudar.
 
-O recurso é especialmente útil quando você conhece a necessidade de negócio, mas ainda não sabe quais colunas podem ser problemáticas. Declare um objetivo concreto e poucas prioridades, como completude, duplicidade e recência. Isso permite uma análise inicial focada, em vez de um inventário extenso sem relação com a decisão.
+O recurso é especialmente útil quando você conhece a necessidade de negócio, mas ainda não sabe quais colunas podem ser problemáticas. Declare um objetivo concreto e poucas prioridades, como **completude** (quanto dos campos esperados está preenchido), **duplicidade** (repetição segundo a chave e a unidade definidas) e **recência** (quão atuais são os registros para o uso pretendido). Isso permite uma análise inicial focada, em vez de um inventário extenso sem relação com a decisão.
 
 ## 4. Quando não usar?
 
@@ -53,7 +53,7 @@ O arquivo Markdown, sozinho, não executa nada. A interação com o assistente p
 
 Imagine uma base fictícia de clientes que uma equipe pretende usar em uma campanha. Você conhece o objetivo, mas não confirmou se existe uma linha por cliente, qual é a data de referência ou como tratar renda ausente.
 
-Ao preencher o formulário, declare essas dúvidas, indique completude e unicidade como foco e restrinja a análise ao período relevante. Uma resposta útil apontará o que foi realmente verificado e o que depende de decisão de negócio. O resultado esperado é um diagnóstico inicial orientado a próximos passos, não uma nota de aprovação nem números que ainda não foram medidos.
+Ao preencher o formulário, declare essas dúvidas, indique completude e unicidade — verificar se a chave identifica uma única linha no recorte — como foco e restrinja a análise ao período relevante. Uma resposta útil apontará o que foi realmente verificado e o que depende de decisão de negócio. O resultado esperado é um diagnóstico inicial orientado a próximos passos, não uma nota de aprovação nem números que ainda não foram medidos.
 
 ## 7. O que você precisa antes de usar?
 

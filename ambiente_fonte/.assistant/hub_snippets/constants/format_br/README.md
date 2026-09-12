@@ -37,7 +37,7 @@ Para tabelas pandas já pequenas, a formatação pode ser aplicada à exibição
 
 Não substitua uma coluna numérica por strings antes de ordenar, somar ou treinar um modelo. Ordenação textual e numérica são operações diferentes. Um contraexemplo é salvar `"R$ 9,00"` e `"R$ 100,00"` como se fossem valores prontos para comparação de magnitude.
 
-Também não use `fmt_int` ou `fmt_n` para identificadores ou contagens de precisão arbitrária. `fmt_n` converte a entrada para `float`; `fmt_int` usa apresentação `.0f`, que também envolve ponto flutuante. Ambos podem perder dígitos de inteiros muito grandes. E ela não lê textos como `"1.234,56"` para recuperar um número; conversão de entrada é outro problema.
+Também não use `fmt_int` ou `fmt_n` para identificadores ou contagens de precisão arbitrária. `fmt_n` converte a entrada para `float`; `fmt_int` usa apresentação `.0f`, que também envolve ponto flutuante. Ambos podem perder dígitos de inteiros muito grandes. Essas funções não são interpretadores de números escritos no padrão brasileiro, como `"1.234,56"`; tratar essa entrada e recuperar um número é outro problema.
 
 ## 5. Como funciona, intuitivamente?
 
@@ -47,7 +47,7 @@ Cada função escolhe uma representação. `fmt_int` primeiro aplica `int`, trun
 
 ## 6. Exemplo de situação
 
-Uma campanha fictícia passa de 10% para 12% de resposta. A diferença em frações é `0.12 - 0.10 = 0.02`. Sua apresentação por `fmt_delta` é `+2,0 pp`. Já o crescimento relativo seria 20%, obtido por outro cálculo. A função formata a grandeza recebida; não decide qual comparação você pretendia fazer.
+Uma campanha fictícia passa de 10% para 12% de resposta. A diferença em frações é `0.12 - 0.10 = 0.02`. Sua apresentação por `fmt_delta` é `+2,0 pp`: dois **pontos percentuais**, a diferença direta entre as duas taxas percentuais. Já o crescimento relativo seria 20%, obtido por outro cálculo. A função formata a grandeza recebida; não decide qual comparação você pretendia fazer.
 
 No mesmo relatório, `fmt_pct(0.12)` exibe `12,0%`. Se a origem já traz 12, use `input_scale="percent"`. Passar 12 no padrão de fração produziria `1200,0%`, sem erro de execução.
 

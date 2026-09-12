@@ -49,13 +49,15 @@ A *parada antecipada* acompanha uma métrica de validação e interrompe o cresc
 
 Imagine uma campanha fictícia já encerrada. Cada linha representa um contato, com atributos disponíveis antes do envio e uma resposta 0/1 observada após um horizonte definido. Uma primeira parte histórica serve para aprender e outra para escolher configurações; um período posterior fica reservado para teste final.
 
-O helper poderia treinar a classificação binária e devolver AUC e Gini de validação. A interpretação seria “quanto o modelo ordena respondedores acima de não respondedores nessa população”, não “quanto a campanha aumentará vendas”. Este cenário não é uma execução nem uma promessa de métrica. Havendo contatos repetidos por cliente, reveja também a dependência entre linhas e a estratégia de separação.
+O helper poderia treinar a classificação binária e devolver AUC, a área sob a curva ROC, e o Gini de validação. A ROC relaciona a proporção de positivos identificados e a de negativos incorretamente marcados ao variar o corte. A AUC resume a capacidade de ordenar as duas classes; o Gini deste helper é outra escala dessa mesma medida. A interpretação seria “quanto o modelo ordena respondedores acima de não respondedores nessa população”, não “quanto a campanha aumentará vendas”. Este cenário não é uma execução nem uma promessa de métrica. Havendo contatos repetidos por cliente, reveja também a dependência entre linhas e a estratégia de separação.
 
 ## 7. O que você precisa antes de usar?
 
 `X_train` e `X_val` são matrizes de características, com mesmas colunas, ordem e significado. `y_train` e `y_val` contêm as respostas na mesma ordem das respectivas linhas. A assinatura usa arrays NumPy; categorias e outros formatos aceitos pela biblioteca dependem de preparação e versão. O wrapper não cria um pipeline de transformação nem garante suporte a qualquer DataFrame recebido.
 
-Para classificação binária, use a convenção 0/1 e confirme a classe positiva. O helper exige duas classes em treino e validação. No modo multiclasse, exige ao menos duas classes no treino e não aceita classes de validação ausentes no treino; a codificação ainda precisa satisfazer o estimador subjacente. Conjuntos vazios são recusados.
+Para classificação binária, forneça exatamente os rótulos 0 e 1, com 1 representando a classe positiva. **A checagem inicial do helper só recusa conjuntos com menos de duas classes; ela não garante que existam exatamente duas nem valida toda a codificação.** Três classes podem ultrapassar essa checagem e falhar depois, na avaliação. Conferir o domínio da resposta antes de treinar continua sendo responsabilidade de quem chama a função.
+
+No modo multiclasse, o helper exige ao menos duas classes no treino e recusa classes de validação ausentes no treino. O `XGBClassifier` 3.1.3 usado nos testes exige rótulos inteiros consecutivos a partir de zero: para três classes, `0, 1, 2`, não `1, 2, 3`. Guarde o significado desse mapeamento e aplique-o igualmente à validação. Conjuntos de respostas vazios são recusados.
 
 São necessários NumPy, scikit-learn e XGBoost. MLflow pode faltar somente quando `log_mlflow=False`: com logging habilitado, a checagem de sua ausência ocorre **depois do treinamento**. Confirme isso antes de gastar compute. Ajuste transformações apenas no treino e aplique a mesma preparação nos demais conjuntos; a [documentação de prevenção de vazamento](https://scikit-learn.org/stable/common_pitfalls.html) detalha esse cuidado.
 
@@ -65,9 +67,11 @@ O retorno é a tupla `(model, metrics)`, não um relatório nem um pipeline impl
 
 | Tarefa | Chaves em `metrics` | Leitura |
 |---|---|---|
-| `binary` | `auc_val`, `gini_val` | Ordenação na validação; Gini calculado como `2 × AUC − 1`. |
-| `multiclass` | `log_loss_val`, `accuracy_val` | Perda das probabilidades e proporção de classes acertadas. |
-| `regression` | `rmse_val` | Raiz do erro quadrático médio, na unidade da resposta. |
+| `binary` | `auc_val`, `gini_val` | Ordenação na validação; valores maiores indicam melhor discriminação nessa base. Gini é `2 × AUC − 1`. |
+| `multiclass` | `log_loss_val`, `accuracy_val` | Log loss penaliza probabilidades atribuídas à classe errada: menor é melhor. Accuracy é a proporção de classes acertadas: maior é melhor. |
+| `regression` | `rmse_val` | Raiz do erro quadrático médio, na unidade da resposta; dá mais peso a erros grandes e menor é melhor. |
+
+A [referência de AUC](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html) e a de [log loss](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.log_loss.html) detalham esses cálculos. Compare métricas sob a mesma população e estratégia de avaliação: uma melhora em outra base não isola o efeito de trocar o algoritmo. AUC não é percentual de acertos; RMSE não é uma porcentagem quando a resposta é monetária.
 
 As métricas saem numéricas, sem formatação percentual. O código binário usa `predict_proba(X_val)[:, 1]`; não confunda esse score com probabilidade calibrada por um procedimento adicional. A função não calcula incerteza das métricas, importância de variáveis, ganho financeiro ou métricas de teste independente. Consulte a [implementação](train_xgboost.py) para o cálculo exato de cada retorno.
 
@@ -115,4 +119,4 @@ A [implementação](train_xgboost.py) contém o treino e as métricas; a [fachad
 
 Contrato conferido na implementação, fachada e notebook da base R01 `af1efd14f2a688d3d3cc816ef85f5f1755e8afec`. Fontes primárias externas, consultadas em 12/09/2026: [árvores impulsionadas](https://xgboost.readthedocs.io/en/stable/tutorials/model.html), [interface de estimadores](https://xgboost.readthedocs.io/en/stable/python/sklearn_estimator.html), [previsão e parada](https://xgboost.readthedocs.io/en/stable/prediction.html), [vazamento de dados](https://scikit-learn.org/stable/common_pitfalls.html) e [autologging Databricks](https://docs.databricks.com/aws/en/mlflow/databricks-autologging). Cada uma sustenta o assunto ao qual foi associada no texto; não certifica este wrapper inteiro.
 
-Revisão R02: leitura técnica e didática pelo próprio autor. Os testes locais sintéticos da sprint usam XGBoost 3.1.3 e logging desligado; não são as saídas históricas do notebook. Teste no Databricks, teste de tracking remoto e auditoria independente não fazem parte dessa evidência. Aceite humano do piloto permanece separado.
+Revisão R02: leitura técnica e didática pelo próprio autor. Os testes locais sintéticos da sprint usam XGBoost 3.1.3 e logging desligado; não são as saídas históricas do notebook. Teste no Databricks, teste de tracking remoto e auditoria independente não fazem parte dessa evidência. Aceite humano do piloto permanece separado. Na revisão de fechamento de 12/09/2026, os três modos foram novamente exercitados localmente. Foram também reproduzidas a passagem de três classes pela checagem inicial de `binary` e a recusa de classes `1, 2, 3` pelo estimador multiclasse, com XGBoost 3.1.3 real e logging desligado. Essas verificações caracterizam o contrato e suas lacunas, não homologam produção.
