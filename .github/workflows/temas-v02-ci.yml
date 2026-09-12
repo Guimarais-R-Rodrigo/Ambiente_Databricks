@@ -11,7 +11,7 @@ jobs:
     env:
       EXPECTED_BASE: 1be947b0a62c3b0b85fa3cd5692f474b9066d85f
       EXPECTED_COMMIT: 921f898cbae859b8f6a91862a7b65291c9806906
-      EXPECTED_TREE: 984c8c8942fe03f64a3b750576a7a412260a7f80
+      EXPECTED_TREE: 984c8c89c98034585e6cbf2528370eb4c4cb9f06
       EXPECTED_BUNDLE_SHA256: baf4cf410f34c8fb0cf0f8ec9a24fbb28704d2465bb51417737bf503339d18b6
       REVIEW_BRANCH: codex/temas-v02-review-20260912
     steps:
@@ -53,6 +53,7 @@ jobs:
           printf '%s\n' "$EXPECTED_TREE" > /tmp/v02-transport/tree.txt
           printf '%s\n' "$EXPECTED_BUNDLE_SHA256" > /tmp/v02-transport/bundle_sha256_esperado.txt
           git show -s --format=fuller "$EXPECTED_COMMIT" > /tmp/v02-transport/commit_metadata.txt
+          printf '%s\n' 'Tentativas anteriores 34716136002 e 34716253226 permaneceram reprovadas; nenhuma criou a branch de revisão.' > /tmp/v02-transport/historico_tentativas.txt
       - name: Publicar somente a branch limpa de revisão
         shell: bash
         run: |
