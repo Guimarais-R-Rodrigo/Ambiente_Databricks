@@ -1,0 +1,29 @@
+name: Snapshot temporario R01
+
+on:
+  push:
+    branches: [codex/readmes-r01]
+    paths: [.github/workflows/readmes-r01-snapshot.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Exportar somente arquivos versionados da base autorizada
+        run: |
+          git archive --format=tar HEAD > "${RUNNER_TEMP}/readmes-r01-source.tar"
+          git rev-parse HEAD > "${RUNNER_TEMP}/readmes-r01-head.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: readmes-r01-source
+          path: |
+            ${{ runner.temp }}/readmes-r01-source.tar
+            ${{ runner.temp }}/readmes-r01-head.txt
+          retention-days: 1
