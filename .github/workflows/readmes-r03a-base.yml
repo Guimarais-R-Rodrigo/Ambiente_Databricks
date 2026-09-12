@@ -1,0 +1,30 @@
+name: Base conferida R03-A
+on:
+  push:
+    branches: [codex/readmes-r03a]
+    paths: [.github/workflows/readmes-r03a-base.yml]
+permissions:
+  contents: read
+jobs:
+  base:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Exportar base e referências necessárias sem credenciais
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = 5493f7db68f397ad7040485cb09bad53eb79be74
+          git branch r03a-base 5493f7db68f397ad7040485cb09bad53eb79be74
+          git branch r03a-referencia-r02 5996574a337e7c878e19db9d8312c871cb4cd98f
+          git bundle create "$RUNNER_TEMP/r03a-base.bundle" r03a-base r03a-referencia-r02
+          git bundle verify "$RUNNER_TEMP/r03a-base.bundle"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r03a-base-historico
+          path: ${{ runner.temp }}/r03a-base.bundle
+          retention-days: 1
