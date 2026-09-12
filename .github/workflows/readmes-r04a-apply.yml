@@ -19,7 +19,7 @@ jobs:
       SPARK_LOCAL_IP: '127.0.0.1'
       BASE_COMMIT: 1be947b0a62c3b0b85fa3cd5692f474b9066d85f
       BASE_TREE: a0ba5cbaaee5dc430d5111f4d0f6eb607c6744f9
-      EXPECTED_PARENT: 90f4945952760f0aec5d83440e3782758bc36f97
+      EXPECTED_PARENT: 88a839d978d9b05c2d8e9a1836eba565a119a1ae
       EXPECTED_TREE: 0f55dff65765be92eea1147df8a6b2f848b09f01
     steps:
       - uses: actions/checkout@v4
@@ -67,12 +67,14 @@ jobs:
         with:
           python-version: '3.12'
           cache: pip
-          cache-dependency-path: tools/requirements-dev.txt
+          cache-dependency-path: |
+            tools/requirements-dev.txt
+            tools/requirements-temas-dev.txt
       - name: Gate permanente, V00, V01 e preservacao
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip install -r tools/requirements-dev.txt
+          python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt
           python tools/ci_local.py --verbose 2>&1 | tee "$RUNNER_TEMP/r04a-gate.txt"
           for suite in test_inventario_visual test_visual_legado_v00 test_baseline_visual_runner; do
             python "tools/tests/$suite.py" 2>&1 | tee "$RUNNER_TEMP/$suite.txt"
