@@ -82,14 +82,14 @@ jobs:
           git diff --cached --exit-code
           test -z "$(git status --porcelain)"
           test "$(git rev-parse HEAD^{tree})" = "$EXPECTED_TREE"
-      - name: Gravar objetos Git sem atualizar qualquer branch
+      - name: Gravar apenas objetos de codigo e documentacao sem atualizar branches
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json, os, pathlib, subprocess, urllib.request
+          import json, os, pathlib, subprocess, urllib.request, urllib.error
           root = pathlib.Path.cwd()
           def git(*args):
               return subprocess.check_output(['git',*args],text=True).strip()
@@ -98,20 +98,25 @@ jobs:
           changed = git('diff','--name-only',os.environ['BASE'],'HEAD').splitlines()
           entries = []
           for name in changed:
+              if name == '.github/workflows/temas-v01-ci.yml':
+                  continue
+              assert not name.startswith('.github/'), name
               path = root/name
               assert path.is_file() and not path.is_symlink(), name
               entries.append({'path':name,'mode':'100644','type':'blob','content':path.read_bytes().decode('utf-8')})
-          def post(endpoint,data):
-              url = 'https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/'+endpoint
-              request = urllib.request.Request(url,data=json.dumps(data).encode(),headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'},method='POST')
+          url = 'https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/trees'
+          payload = {'base_tree':git('rev-parse',os.environ['BASE']+'^{tree}'),'tree':entries}
+          request = urllib.request.Request(url,data=json.dumps(payload).encode(),headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'},method='POST')
+          try:
               with urllib.request.urlopen(request,timeout=60) as response:
-                  return json.load(response)
-          tree = post('trees',{'base_tree':git('rev-parse',os.environ['BASE']+'^{tree}'),'tree':entries})
-          assert tree['sha'] == os.environ['EXPECTED_TREE'],tree['sha']
-          commit = post('commits',{'message':'feat(temas): V01 reconciliada com main, contrato e guias testados (Codex)\n\n138 testes V01, oito etapas do CI e regressoes V00/publicador aprovados no run '+os.environ['GITHUB_RUN_ID']+'. Mesma arvore validada localmente. ADR proposto, sem merge ou publicacao Databricks. Instrumentos temporarios removidos.','tree':tree['sha'],'parents':[os.environ['GITHUB_SHA']]})
-          record = {'candidate_commit':commit['sha'],'tree':tree['sha'],'parent':os.environ['GITHUB_SHA'],'base':os.environ['BASE'],'run_id':os.environ['GITHUB_RUN_ID'],'changed_files':len(entries),'branch_updated':False,'databricks_published':False}
+                  tree = json.load(response)
+          except urllib.error.HTTPError as exc:
+              print('GitHub recusou objetos:',exc.code,exc.read().decode('utf-8')[:2000])
+              raise
+          assert tree['sha'] == 'e0d6bb726b6613ecec8c3a4ead178a76ea00c133',tree['sha']
+          record = {'content_tree':tree['sha'],'tested_full_tree':os.environ['EXPECTED_TREE'],'parent':os.environ['GITHUB_SHA'],'base':os.environ['BASE'],'run_id':os.environ['GITHUB_RUN_ID'],'changed_files':len(entries),'workflow_omitted':'.github/workflows/temas-v01-ci.yml','branch_updated':False,'databricks_published':False}
           out = pathlib.Path(os.environ['RUNNER_TEMP'])/'v01-evidencias'
-          (out/'REMOTE_CANDIDATE.json').write_text(json.dumps(record,indent=2),encoding='utf-8')
+          (out/'REMOTE_CONTENT_TREE.json').write_text(json.dumps(record,indent=2),encoding='utf-8')
           print(json.dumps(record,indent=2))
           PY
       - uses: actions/upload-artifact@v4
