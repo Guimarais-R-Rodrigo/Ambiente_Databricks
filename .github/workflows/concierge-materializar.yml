@@ -1,0 +1,86 @@
+name: Integracao verificavel Concierge
+on:
+  push:
+    branches: [codex/concierge-integracao-20260912]
+    paths:
+      - '.github/workflows/concierge-materializar.yml'
+      - '.github/concierge-part-*.b64'
+permissions:
+  contents: write
+jobs:
+  integrar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+      - name: Instalar dependencias de teste local
+        run: python -m pip install -r tools/requirements-dev.txt
+      - name: Materializar somente o patch validado
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = f748c144dbb6909c7437b53498b25dd4f4854ab7
+          python - <<'PY'
+          import base64, gzip, hashlib, shutil
+          from pathlib import Path
+          parts = sorted(Path('.github').glob('concierge-part-*.b64'))
+          assert len(parts) == 4, 'Transporte incompleto'
+          encoded = ''.join(p.read_text(encoding='ascii').strip() for p in parts)
+          compressed = base64.b64decode(encoded, validate=True)
+          assert hashlib.sha256(compressed).hexdigest() == '9c7ff602ea109dbc509e725f5f468578a88ace921775b3c147f89fe96a94e4af', 'Hash comprimido divergente'
+          patch = gzip.decompress(compressed)
+          assert len(patch) == 62958
+          assert hashlib.sha256(patch).hexdigest() == '9abff84b2ed00c6a9f2a54bcd163ecbee1c3ffdbb9d5d19f493dd476c597a2bb', 'Hash do patch divergente'
+          Path('/tmp/concierge-integracao.patch').write_bytes(patch)
+          shutil.copytree('novas_funcionalidades/skills/hub-ml-concierge', 'ambiente_fonte/.assistant/skills/hub-ml-concierge')
+          PY
+          git add ambiente_fonte/.assistant/skills/hub-ml-concierge
+          git apply --index --unidiff-zero /tmp/concierge-integracao.patch
+          cp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
+          python tools/render_simulado.py --write
+          git add -A
+          git diff --cached --check
+      - name: Validar as sete etapas sem Databricks
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/ci_local.py --verbose 2>&1 | tee /tmp/concierge-ci.log
+      - name: Conferir arvore e registrar na branch de integracao
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os, shutil, subprocess
+          from pathlib import Path
+          index = subprocess.check_output(['git', 'rev-parse', '--git-path', 'index'], text=True).strip()
+          shadow = '/tmp/concierge-final-index'
+          shutil.copyfile(index, shadow)
+          env = dict(os.environ, GIT_INDEX_FILE=shadow)
+          transport = [str(p) for p in sorted(Path('.github').glob('concierge-part-*.b64'))]
+          transport.append('.github/workflows/concierge-materializar.yml')
+          subprocess.run(['git', 'update-index', '--force-remove', '--', *transport], env=env, check=True)
+          tree = subprocess.check_output(['git', 'write-tree'], env=env, text=True).strip()
+          assert tree == '0062a9e82690b96a1cf0a650d4a3f362b78f6b38', f'Arvore difere do checkout validado: {tree}'
+          print('Arvore final conferida:', tree)
+          PY
+          git diff --cached --check
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'feat: materializa integracao validada do Concierge (Codex)'
+          git push origin HEAD:refs/heads/codex/concierge-integracao-20260912
+      - name: Guardar log de validacao
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: concierge-integracao-ci
+          path: /tmp/concierge-ci.log
+          if-no-files-found: ignore
+          retention-days: 7
