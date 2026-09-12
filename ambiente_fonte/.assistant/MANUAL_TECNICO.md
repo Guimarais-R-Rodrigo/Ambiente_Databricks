@@ -2067,8 +2067,9 @@ section_header_html(etapa: Optional[int]=None, emoji: Optional[str]=None, titulo
 Valida uma configuração visual completa e devolve um retrato isolado dos tokens,
 isto é, escolhas de aparência com nome e valor. Este núcleo não aplica cores,
 não registra templates, não consulta dados e não publica. `ResolvedTheme.to_dict()` fornece
-uma cópia editável, sem contaminar a configuração original. A V02 é candidata;
-integração Git, execução local e homologação no workspace são estados diferentes.
+uma cópia editável, sem contaminar a configuração original. A V02 foi aceita e
+integrada no Git pelo PR #14; execução local, publicação e homologação no workspace
+continuam sendo estados diferentes.
 
 **Schema** é o documento central dos campos e limites, em
 `hub_padroes/identidade_visual/theme.schema.json`. **Serialização canônica** é a
