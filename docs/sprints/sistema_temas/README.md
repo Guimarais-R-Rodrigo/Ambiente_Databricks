@@ -39,3 +39,5 @@ publicação, troca de paleta ou alteração de arquivos congelados.
 
 O plano aprovado na conversa distingue V00–V14. Esta entrega cobre apenas V00;
 não substitui aquele plano por uma promessa de todas as sprints concluídas.
+
+Consulte também a [rastreabilidade ao plano](RASTREABILIDADE_V00.md).

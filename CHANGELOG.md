@@ -7,6 +7,11 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
 ## 2026-09-12 — V00 candidata do Sistema de Temas (Codex)
 
+### Corrigido nesta candidata
+
+- (Codex) Agregação dos skips, testada contra resumo duplicado; contagens locais do README reconciliadas com execução.
+- (Codex) Falha global editorial anterior registrada com causa concreta; famílias validadas com alcance separado.
+
 ### Adicionado
 
 - (Codex) Inventário visual somente leitura, runner comparativo e testes adversariais e de contratos legados.

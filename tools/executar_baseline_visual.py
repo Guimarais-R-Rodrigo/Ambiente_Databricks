@@ -37,7 +37,8 @@ def executar(cmd, cwd, out, nome, root, base):
     text = text.replace(str(root), '<CANDIDATA>').replace(str(base), '<BASE>')
     (out / (nome + '.log')).write_text(text, encoding='utf-8')
     counts = [int(x) for x in re.findall(r'Ran (\d+) tests?\b', text)]
-    skips = [int(x) for x in re.findall(r'skipped=(\d+)', text)]
+    # O gate imprime novamente o resumo; contar somente a linha unittest original.
+    skips = [int(x) for x in re.findall(r'^OK \(skipped=(\d+)\)\s*$', text, re.MULTILINE)]
     result = {'nome': nome, 'codigo': code, 'estado': 'PASS' if code == 0 else ('BLOQUEADO' if code in (124,127) else 'FAIL'),
               'duracao_s': round(time.monotonic() - inicio, 3), 'testes_unittest_reportados': sum(counts),
               'skips_reportados': sum(skips), 'log': nome + '.log',
@@ -85,7 +86,7 @@ def main():
                 modules = root / 'tools/readme_visuals/node_modules'
                 if modules.is_dir():
                     (sandbox / 'tools/readme_visuals/node_modules').symlink_to(modules, target_is_directory=True)
-                result, _ = executar(['node', 'tools/readme_visuals/validate_production.mjs'], sandbox, out, 'assets_v2_' + label, root, base)
+                result, visual_text = executar(['node', 'tools/readme_visuals/validate_production.mjs'], sandbox, out, 'assets_v2_' + label, root, base)
                 resultados.append(result)
                 report = sandbox / 'ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/validation.json'
                 # Usar apenas relatório emitido agora; o arquivo já versionado não
@@ -97,11 +98,29 @@ def main():
                 elif report.is_file() and 'qa/validation.json' in diff:
                     qa[label] = json.loads(report.read_text(encoding='utf-8'))
                 else:
-                    qa[label] = {'status': 'nao_confirmado', 'failures': ['Execução não produziu relatório de QA novo verificável.']}
+                    missing = re.search(r"Error: (ENOENT)[^\n]*open '([^']+)'", visual_text)
+                    reason = 'Execução não produziu relatório de QA novo verificável.'
+                    if missing:
+                        path = missing.group(2)
+                        path = 'ambiente_fonte/' + path.split('/ambiente_fonte/', 1)[1] if '/ambiente_fonte/' in path else Path(path).name
+                        reason = missing.group(1) + ': arquivo esperado pelo validador global ausente: ' + path
+                    qa[label] = {'status': 'nao_confirmado', 'failures': [reason]}
                 (out / ('qa_visual_' + label + '.json')).write_text(json.dumps(qa[label], ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+                # Validar as famílias não contorna nem aprova o gate global falho.
+                # Cada resultado é guardado com alcance próprio, sem renderização.
+                for family in ('top', 'snippets', 'scripts', 'skills', 'prompts'):
+                    family_result, _ = executar(['node', 'tools/readme_visuals/validate_production.mjs', '--family', family], sandbox, out, 'figuras_' + label + '_' + family, root, base)
+                    resultados.append(family_result)
+                    family_path = sandbox / ('ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/sprint_' + family + '.json')
+                    if family_result['codigo'] == 0 and family_path.is_file():
+                        family_report = json.loads(family_path.read_text(encoding='utf-8'))
+                        family_result['verificacoes_visuais'] = family_report.get('checks')
+                        (out / ('qa_' + label + '_' + family + '.json')).write_text(json.dumps(family_report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
             finally:
                 subprocess.run(['git', 'worktree', 'remove', '--force', str(sandbox)], cwd=root, check=True, capture_output=True)
     result, _ = executar([sys.executable, '-B', str(root / 'tools/tests/test_inventario_visual.py')], root, out, 'guardas_inventario', root, base)
+    resultados.append(result)
+    result, _ = executar([sys.executable, '-B', str(root / 'tools/tests/test_baseline_visual_runner.py')], root, out, 'guardas_runner', root, base)
     resultados.append(result)
     after_base = inventariar(base)
     after_candidate = inventariar(root)

@@ -49,3 +49,26 @@ Imports dinâmicos e relativos exigem completar o grafo. Nenhuma afirmação de
 Testes executados em runner GitHub não são testes no Free ou no trabalho. Não há
 capturas reais de navegador Databricks nesta execução. A revisão do próprio autor
 não será denominada auditoria independente. Ambos são pendências de saída.
+
+## A08 — Falha global observada e anterior à V00
+
+Na rodada 34703259496, o validador global falhou tanto na base quanto na candidata
+com ENOENT ao tentar ler `ambiente_fonte/.assistant/CATALOGO_HELPERS.md`, arquivo
+retirado pela consolidação do Manual. O QA versionado anterior não é resultado
+desta execução. V00 não recria um catálogo concorrente nem altera o validador
+histórico para esconder essa falha. A segunda rodada executa também cada família,
+com alcance explícito; PASS de famílias não equivale a aprovação global.
+
+## A09 — Contagens locais do README afetadas pela nova documentação
+
+O gate da base passou. Na primeira candidata, a inclusão dos instrumentos e
+documentos aumentou as contagens locais de arquivos e links. A correção limita-se
+às duas linhas da saída local do README raiz, obtidas de nova execução real.
+Não altera bloco remoto, resultado analítico, instrução de produto ou gate.
+
+## A10 — Contagem de skips na primeira instrumentação
+
+A primeira versão do agregador contou duas vezes sete skips, porque o gate imprime
+novamente o resumo unittest. A rodada inicial registrou 14; o número real era 7.
+A correção usa somente a linha original de unittest e acrescenta teste para a
+repetição. Evidência inicial é histórica, não uma segunda execução dos skips.
