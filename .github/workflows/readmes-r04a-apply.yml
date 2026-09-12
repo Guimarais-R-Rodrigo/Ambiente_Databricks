@@ -19,7 +19,7 @@ jobs:
       SPARK_LOCAL_IP: '127.0.0.1'
       BASE_COMMIT: 1be947b0a62c3b0b85fa3cd5692f474b9066d85f
       BASE_TREE: a0ba5cbaaee5dc430d5111f4d0f6eb607c6744f9
-      EXPECTED_PARENT: 6c8cdc03ce78b37f5f94e519f94a9bc90b4521ef
+      EXPECTED_PARENT: 5f8ed28d04a11a76cb186bc169925702adec26ce
       EXPECTED_TREE: 224b9e9578d8583a0fd1df8f06e40aa232375f60
     steps:
       - uses: actions/checkout@v4
@@ -47,6 +47,8 @@ jobs:
           git read-tree --reset -u "$BASE_COMMIT"
           git apply --check "$RUNNER_TEMP/R04A.patch"
           git apply --index "$RUNNER_TEMP/R04A.patch"
+          test "$(git write-tree)" = "$EXPECTED_TREE"
+          git clean -fd
           test "$(git write-tree)" = "$EXPECTED_TREE"
           git diff --cached --check "$BASE_COMMIT"
       - uses: actions/setup-python@v5
