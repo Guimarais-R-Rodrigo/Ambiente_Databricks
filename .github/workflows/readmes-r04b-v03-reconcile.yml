@@ -1,0 +1,227 @@
+name: Reconciliacao R04-B com V03
+on:
+  push:
+    branches: [codex/readmes-r04b-v03-reconcile]
+    paths: [.github/workflows/readmes-r04b-v03-reconcile.yml]
+permissions:
+  contents: read
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      SPARK_LOCAL_IP: '127.0.0.1'
+      OLD_BASE: a8f314a31106aceb52db2661544146cc2bddcc99
+      MAIN_COMMIT: b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2
+      R04B_COMMIT: a0373e23794a67fdbff97e31711d75a83326184f
+      MAIN_TREE: 0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Compor R04-B sobre a main V03 sem carregar o workflow temporario
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$MAIN_COMMIT"
+          MAIN_TREE=$(git show -s --format=%T "$MAIN_COMMIT")
+          echo "MAIN_TREE=$MAIN_TREE" >> "$GITHUB_ENV"
+          git read-tree --reset -u "$MAIN_COMMIT"
+          python - <<'PY'
+          import json, os, re, subprocess
+          from pathlib import Path
+          OLD=os.environ['OLD_BASE']; MAIN=os.environ['MAIN_COMMIT']; R04B=os.environ['R04B_COMMIT']
+          root=Path('.')
+          def git_text(ref,path):
+              return subprocess.check_output(['git','show',f'{ref}:{path}']).decode('utf-8')
+          def changed(a,b):
+              return subprocess.check_output(['git','diff','--name-only','--no-renames',a,b],text=True).splitlines()
+          rpaths=changed(OLD,R04B); vpaths=set(changed(OLD,MAIN))
+          assert len(rpaths)==42, len(rpaths)
+          shared=set(rpaths)&vpaths
+          expected_shared={'CHANGELOG.md','CLAUDE.md','MANUAL_TECNICO.md','README.md','ambiente_fonte/.assistant/MANUAL_TECNICO.md','docs/sprints/README.md','Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md'}
+          assert shared==expected_shared,(shared,expected_shared)
+          skip_prefix='Novo_Ambiente_Simulado/'
+          skip={'MANUAL_TECNICO.md','CHANGELOG.md','CLAUDE.md','README.md','ambiente_fonte/.assistant/MANUAL_TECNICO.md','docs/sprints/README.md'}
+          for p in rpaths:
+              if p.startswith(skip_prefix) or p in skip: continue
+              subprocess.run(['git','checkout',R04B,'--',p],check=True)
+          # CHANGELOG: entrada R04-B sobre o histórico V03, sem apagar nenhuma entrada.
+          cur=git_text(MAIN,'CHANGELOG.md'); old=git_text(R04B,'CHANGELOG.md')
+          m=re.search(r'(?ms)^## 2026-09-12 — R04-B:.*?(?=^## 2026-)',old); assert m
+          entry=m.group(0)
+          assert '## 2026-09-12 — R04-B: READMEs dos seis Hub Scripts' not in cur
+          pos=cur.index('## 2026-')
+          (root/'CHANGELOG.md').write_text(cur[:pos]+entry+cur[pos:],encoding='utf-8')
+          # CLAUDE e índice de sprints: blocos aditivos da R04-B sobre a redação V03.
+          for path,heading in [('CLAUDE.md','### Estado da migração de READMEs — R04-B'),('docs/sprints/README.md','### READMEs de objeto — R04-B')]:
+              cur=git_text(MAIN,path); old=git_text(R04B,path); assert heading not in cur and heading in old
+              block=old[old.index(heading):].strip()
+              (root/path).write_text(cur.rstrip()+'\n\n'+block+'\n',encoding='utf-8')
+          # Manual: preservar integralmente V03 e inserir somente a seção R04-B.
+          path='ambiente_fonte/.assistant/MANUAL_TECNICO.md'
+          cur=git_text(MAIN,path); old=git_text(R04B,path)
+          m=re.search(r'(?ms)^### Guias locais R04-B — scripts operacionais\n.*?(?=^## 30\.)',old); assert m
+          block=m.group(0); assert '### Guias locais R04-B — scripts operacionais' not in cur
+          anchor=re.search(r'(?m)^## 30\.',cur); assert anchor
+          merged=cur[:anchor.start()]+block+cur[anchor.start():]
+          (root/path).write_text(merged,encoding='utf-8')
+          # README raiz: preservar V03, acrescentar continuidade R04-B; contagens virão do validador.
+          cur=git_text(MAIN,'README.md'); old=git_text(R04B,'README.md')
+          heading='### Continuidade R04-B'; assert heading not in cur and heading in old
+          block=old[old.index(heading):].strip()
+          (root/'README.md').write_text(cur.rstrip()+'\n\n'+block+'\n',encoding='utf-8')
+          # Registrar a conciliação sem reescrever o relatório histórico do freeze original.
+          recon=f'''# Conciliação R04-B × V03\n\n**Data:** 2026-09-12  \n**Base comum:** `{OLD}`  \n**Main V03:** `{MAIN}`  \n**R04-B validada:** `{R04B}`  \n**Workflow desta conferência:** `{os.environ['GITHUB_RUN_ID']}`\n\nA V03 avançou em paralelo depois do freeze da R04-B. A composição preserva os arquivos exclusivos de cada frente byte a byte; os documentos compartilhados são reconciliados semanticamente e o simulado é regenerado pelo renderer. Nenhuma implementação dos seis Hub Scripts é alterada. A árvore só será materializada se o gate vigente, V00/V01/V02/V03, a guarda de preservação e os 14 casos R04-B com Spark real passarem.\n\n## Documentos compartilhados reconciliados\n\n- `CHANGELOG.md`: mantém o histórico V03 e acrescenta a entrada R04-B.\n- `CLAUDE.md` e `docs/sprints/README.md`: preservam V03 e acrescentam o checkpoint R04-B.\n- `README.md`: preserva a continuidade V03, acrescenta R04-B e recebe contagens do validador da composição.\n- `ambiente_fonte/.assistant/MANUAL_TECNICO.md`: preserva o conteúdo V03 e insere a seção operacional R04-B; raiz e simulado são derivados.\n\nNão há aceite automático da R05, publicação Databricks ou auditoria independente nesta conciliação.\n'''
+          (root/'docs/sprints/readmes_objetos/CONCILIACAO_R04B_V03.md').write_text(recon,encoding='utf-8')
+          p=root/'docs/sprints/readmes_objetos/README.md'; s=p.read_text(encoding='utf-8')
+          note='\n### Conciliação R04-B × V03\n\nAntes da integração, a R04-B foi recomposta sobre a V03 já presente na `main`. O registro datado está em [CONCILIACAO_R04B_V03.md](CONCILIACAO_R04B_V03.md). A cobertura permanece 32/75 e a próxima parada continua sendo o aceite/merge da R04-B antes da R05.\n'
+          assert '### Conciliação R04-B × V03' not in s
+          p.write_text(s.rstrip()+'\n'+note,encoding='utf-8')
+          p=root/'docs/sprints/readmes_objetos/RELATORIO_R04B.md'; s=p.read_text(encoding='utf-8')
+          add=f'''\n## Addendum de integração com V03\n\nApós o freeze original, a `main` avançou para `{MAIN}` com a V03. O run `{os.environ['GITHUB_RUN_ID']}` recompõe esta entrega sobre essa base e materializa apenas se todas as guardas passarem. O registro detalhado está em `CONCILIACAO_R04B_V03.md`.\n'''
+          assert '## Addendum de integração com V03' not in s
+          p.write_text(s.rstrip()+'\n'+add,encoding='utf-8')
+          PY
+          cp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
+          python tools/render_simulado.py --write
+          git add -A
+          python tools/validate_assistant.py > "$RUNNER_TEMP/validator-pre.txt"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          out=Path(os.environ['RUNNER_TEMP'],'validator-pre.txt').read_text()
+          keys=['skills','prompts','helpers citados','markdown / links','notebooks / links','readmes de objeto','pastas de objeto','forma da pasta','contrato de dados','contrato de entrada','saída colada','idioma da docstring','normas do molde','notebook exercita','python (AST)','instrucoes','repo (identidade)','repo (links)']
+          actual={}
+          for line in out.splitlines():
+              for k in keys:
+                  if line.startswith(k): actual[k]=line
+          assert set(actual)==set(keys),set(keys)-set(actual)
+          assert '32/75 operacionais' in actual['readmes de objeto'] and '43 pendentes' in actual['readmes de objeto']
+          p=Path('README.md'); lines=p.read_text(encoding='utf-8').splitlines(); found=set()
+          for i,line in enumerate(lines):
+              for k,v in actual.items():
+                  if line.startswith(k): lines[i]=v; found.add(k); break
+          assert found==set(keys),set(keys)-found
+          p.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+          git add -A
+          git diff --cached --check "$MAIN_COMMIT"
+          git write-tree | tee "$RUNNER_TEMP/candidate-tree.txt"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: |
+            tools/requirements-dev.txt
+            tools/requirements-temas-dev.txt
+      - name: Gate vigente e regressões V00 V01 V02 V03
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt >/dev/null
+          python tools/ci_local.py --verbose 2>&1 | tee "$RUNNER_TEMP/gate.txt"
+          for suite in test_inventario_visual test_visual_legado_v00 test_baseline_visual_runner; do python "tools/tests/$suite.py"; done
+          for suite in test_temas_v01 test_temas_v01_integracao; do python "tools/tests/$suite.py"; done
+          python tools/tests/test_temas_v02.py
+          python tools/tests/test_temas_v03.py
+          test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/candidate-tree.txt")"
+          git diff --exit-code
+      - name: Preservação cruzada R04-B e V03
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, subprocess
+          from pathlib import Path
+          OLD=os.environ['OLD_BASE']; MAIN=os.environ['MAIN_COMMIT']; R04B=os.environ['R04B_COMMIT']; root=Path('.')
+          def out(*a): return subprocess.check_output(['git',*a])
+          def text(ref,p): return out('show',f'{ref}:{p}')
+          def changed(a,b): return out('diff','--name-only','--no-renames',a,b).decode().splitlines()
+          rp=set(changed(OLD,R04B)); vp=set(changed(OLD,MAIN))
+          shared=rp&vp
+          deliberate=shared|{'docs/sprints/readmes_objetos/README.md','docs/sprints/readmes_objetos/RELATORIO_R04B.md'}
+          for p in sorted(rp-shared):
+              if p.startswith('Novo_Ambiente_Simulado/') or p=='MANUAL_TECNICO.md' or p in deliberate: continue
+              assert (root/p).read_bytes()==text(R04B,p),('R04B exclusivo',p)
+          for p in sorted(vp-shared):
+              if p.startswith('Novo_Ambiente_Simulado/') or p=='MANUAL_TECNICO.md': continue
+              assert (root/p).read_bytes()==text(MAIN,p),('V03 exclusivo',p)
+          objs=['data_quality_check','doc_coverage','drift_detector','naming_checker','rfv_calculator','schema_to_yaml']
+          for obj in objs:
+              base=f'ambiente_fonte/.assistant/hub_scripts/{obj}'
+              for name in [f'{obj}.py','__init__.py']:
+                  assert (root/base/name).read_bytes()==text(MAIN,f'{base}/{name}')
+              assert (root/base/'README.md').read_bytes()==text(R04B,f'{base}/README.md')
+          ctrl=json.loads((root/'docs/sprints/readmes_objetos/CONTROLE_MIGRACAO.json').read_text())
+          assert len(ctrl['pending'])==43
+          source=root/'ambiente_fonte'; target=root/'Novo_Ambiente_Simulado/Users/usuario-free'; mirrored=[]
+          for p in source.rglob('*'):
+              if not p.is_file() or '__pycache__' in p.parts or p==source/'README.md': continue
+              dest=target/p.relative_to(source); assert dest.is_file() and dest.read_bytes()==p.read_bytes(),str(p); mirrored.append(str(p.relative_to(source)))
+          derived=[str(p.relative_to(target)) for p in target.rglob('*') if p.is_file()]
+          assert set(derived)==set(mirrored)
+          assert (root/'MANUAL_TECNICO.md').read_bytes()==(source/'.assistant/MANUAL_TECNICO.md').read_bytes()
+          print(json.dumps({'status':'PASS','r04b_exclusive':len(rp-shared),'v03_exclusive':len(vp-shared),'shared':sorted(shared),'pending':43,'mirrored':len(mirrored)},ensure_ascii=False))
+          PY
+          test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/candidate-tree.txt")"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Suite R04-B com Spark real
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv "$RUNNER_TEMP/r04b-env"
+          "$RUNNER_TEMP/r04b-env/bin/python" -m pip install pyspark==4.0.1 PyYAML==6.0.2 >/dev/null
+          mkdir -p "$RUNNER_TEMP/spark"
+          (cd "$RUNNER_TEMP/spark" && "$RUNNER_TEMP/r04b-env/bin/python" "$GITHUB_WORKSPACE/docs/sprints/readmes_objetos/evidencias_r04b/verificar_r04b.py" --require-spark) 2>&1 | tee "$RUNNER_TEMP/r04b.txt"
+          grep -q 'Ran 14 tests' "$RUNNER_TEMP/r04b.txt"
+          ! grep -qi 'FAILED' "$RUNNER_TEMP/r04b.txt"
+          ! grep -qi 'skipped=' "$RUNNER_TEMP/r04b.txt"
+          test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/candidate-tree.txt")"
+      - name: Materializar a árvore exata conferida sem atualizar refs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os,subprocess,urllib.request
+          from pathlib import Path
+          def git(*a): return subprocess.check_output(['git',*a])
+          final=Path(os.environ['RUNNER_TEMP'],'candidate-tree.txt').read_text().strip()
+          assert git('write-tree').decode().strip()==final
+          raw=git('diff','--cached','--no-renames','--name-status','-z',os.environ['MAIN_COMMIT']).decode().split('\0')
+          entries=[]; i=0
+          while i<len(raw) and raw[i]:
+              st,p=raw[i:i+2]; i+=2; assert st in ('A','M'),(st,p)
+              mode=git('ls-files','--stage','--',p).decode().split()[0]
+              entries.append({'path':p,'mode':mode,'type':'blob','content':Path(p).read_text(encoding='utf-8')})
+          req=urllib.request.Request(os.environ['GITHUB_API_URL']+'/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/trees',data=json.dumps({'base_tree':os.environ['MAIN_TREE'],'tree':entries}).encode(),method='POST',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'})
+          with urllib.request.urlopen(req,timeout=90) as response: tree=json.load(response)['sha']
+          assert tree==final,(tree,final)
+          result={'tree':tree,'base':os.environ['MAIN_COMMIT'],'r04b':os.environ['R04B_COMMIT'],'paths_vs_main':len(entries),'gate':'PASS','v00':'PASS','v01':'PASS','v02':'PASS','v03':'PASS','r04b_suite':'14_PASS','preservacao':'PASS','coverage':'32/75','pending':43,'run_id':os.environ['GITHUB_RUN_ID'],'refs_updated':False,'main_changed':False}
+          Path(os.environ['RUNNER_TEMP'],'R04B-V03-FINAL.json').write_text(json.dumps(result,indent=2)+'\n')
+          print(json.dumps(result))
+          PY
+      - name: Guardar evidências
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r04b-v03-reconcile-evidencias
+          retention-days: 7
+          path: |
+            ${{ runner.temp }}/validator-pre.txt
+            ${{ runner.temp }}/gate.txt
+            ${{ runner.temp }}/r04b.txt
+            ${{ runner.temp }}/candidate-tree.txt
+            ${{ runner.temp }}/R04B-V03-FINAL.json
+          if-no-files-found: warn
