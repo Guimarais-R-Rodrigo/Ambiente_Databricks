@@ -1,5 +1,16 @@
 # Sistema de Temas do Hub — execução por sprints
 
+## Etapa atual — candidata V01
+
+A instrumentação V00 foi integrada pelo PR #8 na main `b88a9cc`. A etapa seguinte
+é a [V01 — contrato e experiência documentada](V01/README.md), preparada a partir
+dessa main com READMEs e Concierge preservados. O seletor de temas ainda não existe.
+
+Para quem nunca entrou no Hub, comece pelo [guia de primeiro uso proposto](V01/GUIA_PRIMEIRO_USO.md).
+O [checkpoint V01](V01/CHECKPOINT_V01.md) distingue implementação, testes, aceite e
+publicação. As seções abaixo preservam o histórico V00; não são o estado atual V01.
+
+
 ## Aceite de integração Git — 12/09/2026
 
 Rodrigo autorizou explicitamente: “Pode aprovar e integrar”. A autorização cobre

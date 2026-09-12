@@ -5,6 +5,24 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — V01: contrato e experiência sobre a V00 integrada (Codex)
+
+### Adicionado
+
+- (Codex) ADR-0013 proposto e contrato candidato em `docs/sprints/sistema_temas/V01/`, com schema, fixtures, política, guia de primeiro uso e manutenção, rastreabilidade e checkpoint.
+- (Codex) Verificador `tools/temas_v01_contract.py`, regressões V01 e workflow separado com leitura apenas, sem modificar as oito etapas do CI ou o workflow V00.
+- (Codex) Conferência de âncoras pelo parser Markdown existente, vínculo do registro de assets aos manifestos oficiais e evidências próprias da composição.
+
+### Atualizado
+
+- (Codex) Candidata local anterior reconciliada com `b88a9cc`, sem transportar a V00 alternativa. Índices e ferramentas apontam a rota única vigente; referência de tokens gerada pelo schema.
+- (Codex) Contagens locais do README recalculadas pelo validador. Produto, espelho, Manual, decisões anteriores e históricos V00 preservados.
+
+### Notas
+
+- (Codex) A primeira cópia rasa foi recusada pelo gate de READMEs; recuperação refeita com histórico completo sem relaxar guardas. Preparação/transporte transitórios não compõem a árvore final.
+- (Codex) Implementação candidata, não aceite do ADR nem homologação. Sem merge automático, publicação Databricks, mudança visual ou V02. Auditoria independente e leitura por iniciante continuam pendentes.
+
 ## 2026-09-12 — V00: reconciliação e aceite de integração Git (Codex)
 
 ### Atualizado

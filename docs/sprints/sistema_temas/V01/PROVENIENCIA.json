@@ -1,0 +1,114 @@
+{
+  "base_commit": "b88a9ccdde6e61892bc25eb7cf4f4b2577badb23",
+  "base_tree": "e339983237bd21b2127248f38705c685b03da0f0",
+  "previous_candidate_commit": "aa70abcf5cc471c0f9cfb5b85dcbb2e902812e7e",
+  "previous_candidate_zip_sha256": "6f97c574fbe5f61b99f7d036d0728ab93fbca16179a4e511a6087b317dd6c9e4",
+  "note": "Fontes reaproveitadas e depois reconciliadas; hashes source não são hashes finais nem prova de testes.",
+  "reused_sources": [
+    {
+      "source": "docs/sprints/temas/v01/GUIA_MANTENEDOR.md",
+      "source_sha256": "89b5ddbbdf075a1c72ceb72e7f25db2ea22871901aa06dd38ab3da304d616728",
+      "destination": "docs/sprints/sistema_temas/V01/GUIA_MANTENEDOR.md"
+    },
+    {
+      "source": "docs/sprints/temas/v01/politica_workflow.json",
+      "source_sha256": "8b649b9fcd46d138200de95fce95029c1a10168354b5451464170ecd0c095aeb",
+      "destination": "docs/sprints/sistema_temas/V01/politica_workflow.json"
+    },
+    {
+      "source": "docs/sprints/temas/v01/TOKENS.md",
+      "source_sha256": "1d8daf724c3b205d021c52badd1796cace3b4cfc215f7e2e73777c3f1945a6dd",
+      "destination": "docs/sprints/sistema_temas/V01/TOKENS.md"
+    },
+    {
+      "source": "docs/sprints/temas/v01/LEITURAS_E_DEPENDENCIAS.md",
+      "source_sha256": "d64e3a33ac80acb2e559249abce667b320f3364edb2a2ea5b06f13452c4935f4",
+      "destination": "docs/sprints/sistema_temas/V01/LEITURAS_E_DEPENDENCIAS.md"
+    },
+    {
+      "source": "docs/sprints/temas/v01/referencias_assets.json",
+      "source_sha256": "2b775763fa080bb4f719eeab65a22c999b86b4a17d78345b3787463758d037c2",
+      "destination": "docs/sprints/sistema_temas/V01/referencias_assets.json"
+    },
+    {
+      "source": "docs/sprints/temas/v01/CONTRATO_TEMAS.md",
+      "source_sha256": "74cb1d83614e6c46a9b1ceb7ea796efe6eaf1b2b4e34be39f108a5415b1ce314",
+      "destination": "docs/sprints/sistema_temas/V01/CONTRATO_TEMAS.md"
+    },
+    {
+      "source": "docs/sprints/temas/v01/TESTES_E_ACEITE.md",
+      "source_sha256": "d732c0d08e4be9ead57f7510cfb7f094a12e559e7bb7d4461c4b9287d0190ed3",
+      "destination": "docs/sprints/sistema_temas/V01/TESTES_E_ACEITE.md"
+    },
+    {
+      "source": "docs/sprints/temas/v01/EXPERIENCIA_LABORATORIO.md",
+      "source_sha256": "ec36f066d8fc25d20cfdd112a9e72c2ed6685fe204685f11ce5e6bcc68e7bcf7",
+      "destination": "docs/sprints/sistema_temas/V01/EXPERIENCIA_LABORATORIO.md"
+    },
+    {
+      "source": "docs/sprints/temas/v01/theme.schema.json",
+      "source_sha256": "4fa814190590f28e88ec03ad1459b96aa2eb01be0762773a1b27e329ae8fc81e",
+      "destination": "docs/sprints/sistema_temas/V01/theme.schema.json"
+    },
+    {
+      "source": "docs/sprints/temas/v01/README.md",
+      "source_sha256": "e516afaa3a060ac40b87f52f28aa5ca39eac6529d36a2b7f9a785c32199d45da",
+      "destination": "docs/sprints/sistema_temas/V01/README.md"
+    },
+    {
+      "source": "docs/sprints/temas/v01/PLANO_DOCUMENTACAO.md",
+      "source_sha256": "3d240ad80208de2e03acfb4d1ee300ed1f1626432de529a3d0cadc98fcf80f00",
+      "destination": "docs/sprints/sistema_temas/V01/PLANO_DOCUMENTACAO.md"
+    },
+    {
+      "source": "docs/sprints/temas/v01/matriz_testes.json",
+      "source_sha256": "7fb6541a2b9513e5ea2c4df69f90558e538ecc76204efb62315f7cd6cbea8caf",
+      "destination": "docs/sprints/sistema_temas/V01/matriz_testes.json"
+    },
+    {
+      "source": "docs/sprints/temas/v01/GUIA_PRIMEIRO_USO.md",
+      "source_sha256": "4263e51c383f201f975240a4e115fda56826cf2f4b15985f0d5e2cd07a56b2ed",
+      "destination": "docs/sprints/sistema_temas/V01/GUIA_PRIMEIRO_USO.md"
+    },
+    {
+      "source": "docs/sprints/temas/v01/GOVERNANCA.md",
+      "source_sha256": "2cf02776e3cf2b4308a540c3bf253aa3f815865f8cd2794dece171c7a8344c56",
+      "destination": "docs/sprints/sistema_temas/V01/GOVERNANCA.md"
+    },
+    {
+      "source": "docs/sprints/temas/v01/fixtures/executivo_claro_exemplo.json",
+      "source_sha256": "53429a210fd024c35e6b99c3917b04ec437787379ea50227a7fa37cdb5dc5438",
+      "destination": "docs/sprints/sistema_temas/V01/fixtures/executivo_claro_exemplo.json"
+    },
+    {
+      "source": "docs/sprints/temas/v01/fixtures/legado_notebook.json",
+      "source_sha256": "c820c56416af38cbf1faf29d924ae199dc2ece8570026394325c93567d4bc207",
+      "destination": "docs/sprints/sistema_temas/V01/fixtures/legado_notebook.json"
+    },
+    {
+      "source": "docs/sprints/temas/v01/fixtures/legado_editorial.json",
+      "source_sha256": "0ac57489a92a1e8006a09797e326890e44f3f24de81df0ae0afe6df0e7f371df",
+      "destination": "docs/sprints/sistema_temas/V01/fixtures/legado_editorial.json"
+    },
+    {
+      "source": "docs/sprints/temas/v01/fixtures/apresentacao_exemplo.json",
+      "source_sha256": "e2724bcc31f7b4f5398c51db1f671aec1f2ba022bb1ae006c8b56fdceaed79d0",
+      "destination": "docs/sprints/sistema_temas/V01/fixtures/apresentacao_exemplo.json"
+    },
+    {
+      "source": "tools/temas_v01_contract.py",
+      "source_sha256": "326829dee5967ed0f9e8950e4349d36854d34eac78502b1df5470ac1d8e490db",
+      "destination": "tools/temas_v01_contract.py"
+    },
+    {
+      "source": "tools/tests/test_temas_v01.py",
+      "source_sha256": "94b992bce40801f3652fdaa3678ee9559349255b3b1bb30ee6670f24891ac11f",
+      "destination": "tools/tests/test_temas_v01.py"
+    },
+    {
+      "source": "docs/decisions/ADR-0013-sistema-de-temas.md",
+      "source_sha256": "b116c6a5b4811c2b06cdfcac10cc304aa3b5e312147dcdd9a7d3d2e21b8d9864",
+      "destination": "docs/decisions/ADR-0013-sistema-de-temas.md"
+    }
+  ]
+}
