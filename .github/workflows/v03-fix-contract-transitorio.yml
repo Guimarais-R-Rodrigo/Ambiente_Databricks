@@ -1,0 +1,116 @@
+name: Corrigir contrato V03
+on:
+  push:
+    branches:
+      - codex/temas-v03-review-20260912
+permissions:
+  contents: write
+jobs:
+  corrigir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Gerar fachada oficial e alinhar notebook irmão
+        shell: bash
+        run: |
+          set -euo pipefail
+          MOD='ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/theme_plotly.py'
+          INIT='ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/__init__.py'
+          python -B tools/api_publica.py "$MOD" > /tmp/theme_plotly_init.py
+          mv /tmp/theme_plotly_init.py "$INIT"
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/exemplo_theme_plotly.py')
+          t = p.read_text(encoding='utf-8')
+          needle = '# COMMAND ----------\n# MAGIC %md\n# MAGIC ## 3. V03'
+          if needle not in t:
+              raise SystemExit('seção V03 do notebook não encontrada')
+          prefix = t.split(needle, 1)[0]
+          section = '''# COMMAND ----------
+# MAGIC %md
+# MAGIC ## 3. V03 — referência resolvida, aplicação explícita
+# MAGIC
+# MAGIC Esta seção usa a referência notebook empacotada para provar a nova rota sem
+# MAGIC editar a configuração dentro do notebook irmão. A referência é uma fixture
+# MAGIC de teste, não um tema operacional aprovado.
+
+# COMMAND ----------
+
+import plotly.io as pio
+from hub_snippets.visual.tema import load_reference_theme
+from hub_snippets.visual.theme_plotly import aplicar_tema_resolvido, get_tema_plotly
+
+referencia = load_reference_theme("notebook")
+default_antes = pio.templates.default
+
+figura3 = go.Figure(go.Bar(x=["A", "B", "C"], y=[10, 12, 9]))
+figura3.update_layout(title="Referência V03 — exemplo sintético")
+aplicar_tema_resolvido(figura3, referencia, fonte="dados sintéticos", n=3)
+
+config_referencia = get_tema_plotly(referencia)
+config_legado = get_tema_eda()
+assert config_referencia == config_legado
+assert pio.templates.default == default_antes
+figura3.show()
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC **Como ler.** A igualdade entre as duas configurações prova que a referência
+# MAGIC `legado_notebook` preserva o layout atual pela nova rota. A aplicação afeta
+# MAGIC somente `figura3` e não muda `pio.templates.default`. Para aprender a criar
+# MAGIC uma proposta com tokens diferentes, use o exemplo comentado no README do
+# MAGIC objeto; o notebook executável mantém um contrato local simples e auditável.
+# MAGIC `dark` e `high_contrast` continuam fora do adaptador Plotly desta sprint.
+'''
+          p.write_text(prefix + section, encoding='utf-8')
+          PY
+      - name: Sincronizar métricas e derivados
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('README.md')
+          t = p.read_text(encoding='utf-8')
+          import re
+          t, n1 = re.subn(r'repo \(identidade\)  : \d+ arquivos varridos no repositório editável/derivado',
+                           'repo (identidade)  : 1100 arquivos varridos no repositório editável/derivado', t)
+          t, n2 = re.subn(r'repo \(links\)       : \d+ links fora da raiz analisada',
+                           'repo (links)       : 1032 links fora da raiz analisada', t)
+          if n1 != 1 or n2 != 1:
+              raise SystemExit(f'métricas raiz inesperadas: identidade={n1}, links={n2}')
+          p.write_text(t, encoding='utf-8')
+          PY
+          python -B tools/render_simulado.py --write
+          cmp ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/__init__.py Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_plotly/__init__.py
+          cmp ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/exemplo_theme_plotly.py Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_plotly/exemplo_theme_plotly.py
+      - name: Exigir validadores verdes antes de gravar
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B tools/validate_assistant.py --conferir-readme
+          python -B tools/tests/test_temas_v03.py
+          python -B tools/tests/test_visual_legado_v00.py
+      - name: Commitar apenas correções permanentes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Codex"
+          git config user.email "codex@users.noreply.github.com"
+          git add README.md ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_plotly
+          if git diff --cached --quiet; then
+            echo 'Sem correções adicionais.'
+            exit 0
+          fi
+          git commit -m "fix(temas): alinhar fachada e exemplo V03 aos contratos do Hub"
+          git push origin HEAD:codex/temas-v03-review-20260912
