@@ -47,7 +47,7 @@ assert proc.returncode == 0 or conflicts, 'merge falhou sem conflito reconhecido
 for path in sorted(conflicts):
     if path == 'README.md':
         delta = git('diff', common, old, '--', path)
-        changed = [s for s in delta.splitlines() if s[:1] in '+-' and not s.startswith(('+++', '---'))]
+        changed = [s for s in delta.splitlines() if s and s[0] in '+-' and not s.startswith(('+++', '---'))]
         assert changed and all('repo (identidade)' in s or 'repo (links)' in s for s in changed), 'README contém mudança não numérica'
         write(path, text(main, path))
     elif path == 'CHANGELOG.md':
@@ -85,7 +85,7 @@ entry = '''## 2026-09-12 — V00: reconciliação e aceite de integração Git (
 ### Notas
 
 - (Codex) Evidências anteriores permanecem vinculadas aos commits executados. A nova rodada identifica sua própria base e comandos. Sem publicação Databricks, alteração visual, force-push ou desativação de gates.
-- (Codex) A primeira tentativa de automação transitória foi rejeitada por sintaxe YAML antes de executar comandos; a correção separa o script da configuração. O run reprovado permanece no histórico.
+- (Codex) Preparação transitória corrigida após bloqueios por sintaxe YAML e localização incorreta da suíte visual; usa o comando já declarado no executor V00. Os runs reprovados permanecem no histórico, sem aprovação retroativa.
 
 '''
 changelog = Path('CHANGELOG.md').read_text(encoding='utf-8')
@@ -180,12 +180,8 @@ commands = [
     ['python', '-B', 'tools/tests/test_inventario_visual.py'],
     ['python', '-B', 'tools/tests/test_visual_legado_v00.py'],
     ['python', '-B', 'tools/tests/test_baseline_visual_runner.py'],
-    ['python', '-B', 'tools/tests/test_publicar_readmes_visuais.py'],
+    ['python', '-B', '-m', 'unittest', 'discover', '-s', 'tools/readme_visuals/tests', '-p', 'test_*.py', '-v'],
 ]
-if not Path(commands[-1][-1]).is_file():
-    matches = list(Path('tools/tests').glob('*publicar*visual*.py'))
-    assert len(matches) == 1, f'teste do publicador visual ambíguo: {matches}'
-    commands[-1][-1] = str(matches[0])
 results = []
 for i, cmd in enumerate(commands):
     p = subprocess.run(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -204,11 +200,12 @@ for r in results:
         report += '  - ' + line + '\n'
 report += '''
 Após registrar os resultados, o mesmo conjunto é reexecutado sobre o commit
-de documentação final antes do push. O resultado dessa verificação está no run
-identificado acima. SKIPs não significam homologação Spark. Revisão própria não
-é auditoria independente. O workflow temporário com permissão de escrita e seu
-script foram removidos antes do commit; permanece apenas o CI V00 com permissão
-de leitura.
+de documentação final antes do push. A comparação do inventário e das capturas
+sintéticas com a main também é refeita, com JSONs próprios no artefato desta
+rodada. O resultado dessas verificações está no run identificado acima. SKIPs
+não significam homologação Spark. Revisão própria não é auditoria independente.
+O workflow temporário com permissão de escrita e seu script foram removidos
+antes do commit; permanece apenas o CI V00 com permissão de leitura.
 '''
 write(report_path, report)
 git('add', report_path)
@@ -225,11 +222,34 @@ for i, cmd in enumerate(commands):
 assert not git('status', '--porcelain')
 assert not git('diff', '--name-only', main, 'HEAD', '--', *protected)
 assert all(not Path(p).exists() for p in transport)
-(logs / 'resultado.json').write_text(json.dumps({
+from inventario_visual import inventariar, comparar_protegidos
+base_path = Path(os.environ['RUNNER_TEMP']) / 'v00-main-comparacao'
+git('worktree', 'add', '--detach', str(base_path), main)
+try:
+    baseline = inventariar(base_path)
+    candidate = inventariar(root)
+    differences = comparar_protegidos(baseline, candidate)
+    assert not differences, differences
+    captures = []
+    for label, checkout in [('main', base_path), ('candidata', root)]:
+        p = subprocess.run(['python', '-B', str(root / 'tools/tests/test_visual_legado_v00.py'), '--root', str(checkout), '--capturar'], text=True, capture_output=True, check=True)
+        captures.append(json.loads(p.stdout))
+        (logs / ('captura_' + label + '.json')).write_text(p.stdout, encoding='utf-8')
+    assert captures[0] == captures[1], 'capturas sintéticas divergentes'
+    for label, inventory in [('main', baseline), ('candidata', candidate)]:
+        (logs / ('inventario_' + label + '.json')).write_text(json.dumps(inventory, ensure_ascii=False, indent=2), encoding='utf-8')
+finally:
+    git('worktree', 'remove', str(base_path))
+assert not git('status', '--porcelain')
+result = {
     'main': main, 'origem': source, 'commit_executado': tested, 'commit_final': final,
     'comandos': results, 'reexecucao_final': 'PASS',
-    'produto_espelho_manual_gate': 'PRESERVADOS',
+    'produto_espelho_manual_gate': 'PRESERVADOS', 'diferencas_protegidas': differences,
+    'capturas_sinteticas_identicas': True, 'inventario_main': baseline['resumo'],
+    'inventario_candidata': candidate['resumo'],
     'node_global': 'NAO_REEXECUTADO_FALHA_PREEXISTENTE', 'merge_main': 'NAO_REALIZADO'
-}, ensure_ascii=False, indent=2), encoding='utf-8')
+}
+(logs / 'resultado.json').write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')
+print('RESULTADO_INTEGRACAO=' + json.dumps(result, ensure_ascii=False), flush=True)
 with open(os.environ['GITHUB_ENV'], 'a') as f:
     f.write('INTEGRACAO_PRONTA=1\n')
