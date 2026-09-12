@@ -20,14 +20,21 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Aplicar patch documental assertivo
-        run: python -B tools/_v03_finalize_docs.py
+      - name: Aplicar patch documental assertivo uma única vez
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -Fq '## 2026-09-12 — V03: adaptador Plotly opt-in (Codex)' CHANGELOG.md; then
+            echo 'Documentação V03 já aplicada; não repetir substituições.'
+          else
+            python -B tools/_v03_finalize_docs.py
+          fi
       - name: Sincronizar Manual raiz e gerar espelho
         shell: bash
         run: |
           set -euo pipefail
           cp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
-          python -B tools/render_simulado.py
+          python -B tools/render_simulado.py --write
           cmp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
           cmp ambiente_fonte/.assistant/MANUAL_TECNICO.md Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md
       - name: Commitar resultado documental e derivado
@@ -37,6 +44,9 @@ jobs:
           git config user.name "Codex"
           git config user.email "codex@users.noreply.github.com"
           git add CHANGELOG.md CLAUDE.md MANUAL_TECNICO.md ambiente_fonte Novo_Ambiente_Simulado docs/sprints tools/ci_local.py
-          git diff --cached --quiet && exit 0
+          if git diff --cached --quiet; then
+            echo 'Sem alterações documentais adicionais.'
+            exit 0
+          fi
           git commit -m "docs(temas): completar documentação operacional V03 (Codex)"
           git push origin HEAD:codex/temas-v03
