@@ -9,6 +9,9 @@ jobs:
   preparar:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      ENTRY_B64: IyMgMjAyNi0wOS0xMiDigJQgVjAyOiBhbGluaGFtZW50byBkb2N1bWVudGFsIGRhIGNhbmRpZGF0YSByZW1vdGEgKENvZGV4KQoKIyMjIENvcnJpZ2lkbwoKLSAoQ29kZXgpIMONbmRpY2VzIGUgY2hlY2twb2ludCBwYXNzYXJhbSBhIGFwcmVzZW50YXIgYSBWMDIgY29tbyBldGFwYSBjb3JyZW50ZSBubwogIFBSICMxNCwgcHJlc2VydmFuZG8gbyBndWlhIGRlIHByaW1laXJvIHVzbyBkYSBWMDEgY29tbyByZWZlcsOqbmNpYSBoaXN0w7NyaWNhIGUKICBtYW50ZW5kbyBzZXBhcmFkYXMgdmFsaWRhw6fDo28gZnVuY2lvbmFsLCBhY2VpdGUsIGludGVncmHDp8OjbyBlIHB1YmxpY2HDp8Ojby4KLSAoQ29kZXgpIFNhw61kYSByZXByb2R1esOtdmVsIGRvIFJFQURNRSByYWl6IHNpbmNyb25pemFkYSBhcMOzcyBvcyBub3ZvcyBsaW5rcwogIGRvY3VtZW50YWlzOyBvIHZhbGlkYWRvciBjb250aW51YSBmYWlsLWNsb3NlZCBlIG5lbmh1bWEgZ3VhcmRhIGZvaSByZWxheGFkYS4KCiMjIyBOb3RhcwoKLSAoQ29kZXgpIENvcnJlw6fDo28gZXhjbHVzaXZhbWVudGUgZG9jdW1lbnRhbCBzb2JyZSBvIG7DumNsZW8gZnVuY2lvbmFsIGrDoSB0ZXN0YWRvOwogIHNlbSBtdWRhbsOnYSBlbSBBUEksIHNjaGVtYSwgZml4dHVyZXMsIGFzc2V0cywgYXBhcsOqbmNpYSBvdSBjb25zdW1pZG9yZXMgbGVnYWRvcy4KLSAoQ29kZXgpIFNlbSBtZXJnZSBkYSBWMDIsIHB1YmxpY2HDp8OjbyBEYXRhYnJpY2tzLCBob21vbG9nYcOnw6NvIGRlIFNwYXJrL3dpZGdldHMvCiAgQXBwcy9BSS1CSSBvdSBpbsOtY2lvIGRhIFYwMy4gQXVkaXRvcmlhIGluZGVwZW5kZW50ZSBlIHRlc3RlIGNvbSBpbmljaWFudGUgc2VndWVtCiAgcGVuZGVudGVzLgoK
+      ANCHOR: '## 2026-09-12 — V02: conciliação com R03-A/R03-B integrada (Codex)'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -18,37 +21,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path('CHANGELOG.md')
-          text = path.read_text(encoding='utf-8')
-          marker = '## 2026-09-12 — V02: alinhamento documental da candidata remota (Codex)'
-          if marker not in text:
-              anchor = '## 2026-09-12 — V02: conciliação com R03-A/R03-B integrada (Codex)'
-              if anchor not in text:
-                  raise SystemExit('âncora V02 não encontrada')
-              entry = '''## 2026-09-12 — V02: alinhamento documental da candidata remota (Codex)
-
-### Corrigido
-
-- (Codex) Índices e checkpoint passaram a apresentar a V02 como etapa corrente no
-  PR #14, preservando o guia de primeiro uso da V01 como referência histórica e
-  mantendo separadas validação funcional, aceite, integração e publicação.
-- (Codex) Saída reproduzível do README raiz sincronizada após os novos links
-  documentais; o validador continua fail-closed e nenhuma guarda foi relaxada.
-
-### Notas
-
-- (Codex) Correção exclusivamente documental sobre o núcleo funcional já testado;
-  sem mudança em API, schema, fixtures, assets, aparência ou consumidores legados.
-- (Codex) Sem merge da V02, publicação Databricks, homologação de Spark/widgets/
-  Apps/AI-BI ou início da V03. Auditoria independente e teste com iniciante seguem
-  pendentes.
-
-'''
-              path.write_text(text.replace(anchor, entry + anchor, 1), encoding='utf-8')
-          PY
+          python -c "import base64,os; from pathlib import Path; p=Path('CHANGELOG.md'); t=p.read_text(encoding='utf-8'); m='## 2026-09-12 — V02: alinhamento documental da candidata remota (Codex)'; e=base64.b64decode(os.environ['ENTRY_B64']).decode('utf-8'); a=os.environ['ANCHOR']; (_ for _ in ()).throw(SystemExit('âncora V02 não encontrada')) if (m not in t and a not in t) else None; p.write_text(t if m in t else t.replace(a,e+a,1),encoding='utf-8')"
       - name: Commitar somente o changelog
         shell: bash
         run: |
