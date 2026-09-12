@@ -14,6 +14,9 @@ etapa**. A V02 valida uma configuração completa de tema, mas ainda não aplica
 a gráficos ou HTML, não cria seletor e não publica nada no Databricks. Comece pelo
 [README da V02](V02/README.md), depois leia o [checkpoint](V02/CHECKPOINT_V02.md) e o
 [guia operacional](../../../ambiente_fonte/.assistant/hub_padroes/identidade_visual/GUIA_OPERACIONAL.md).
+O [guia de primeiro uso da V01](V01/GUIA_PRIMEIRO_USO.md) permanece acessível como
+referência do contrato e da experiência documentada já aceitos; ele não transforma
+V01 novamente na etapa corrente.
 
 ## Aceite de integração Git — 12/09/2026
 
