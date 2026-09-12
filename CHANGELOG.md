@@ -5,6 +5,36 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — V03: adaptador Plotly opt-in (Codex)
+
+### Aceite e integração
+
+- (Codex) Rodrigo concedeu aceite explícito à V03 com a instrução "pode integrar a V03". A integração Git pelo PR #16 fica autorizada após revalidação da árvore exata; o aceite não autoriza publicação Databricks, homologação operacional, migração automática de outros consumidores nem início da V04.
+
+### Adicionado
+
+- (Codex) `get_tema_plotly`, `aplicar_tema_resolvido` e `registrar_template_plotly_resolvido` sobre a API pública V02, sem alterar as três assinaturas legadas.
+- (Codex) Suíte V03, workflow somente leitura e documentação de sprint para equivalência legada, mapeamento de tokens, integridade, efeitos de sessão e falhas adversariais.
+
+### Atualizado
+
+- (Codex) README/notebook de `theme_plotly`, Manual e índices passam a documentar a rota configurada como opt-in; consumidores atuais continuam no caminho legado.
+- (Codex) Gate `temas` já descobre a suíte V03 pelo padrão `test_temas*.py`; descrição atualizada sem criar etapa paralela.
+
+### Corrigido
+
+- (Codex) Code review P2: o adaptador Plotly passa a consumir layout e rodapé somente dos tokens extraídos do JSON canônico revalidado; adulterar apenas `_values` de um `ResolvedTheme` não contamina a figura.
+- (Codex) Bloco copiável V03 no README importa `plotly.graph_objects as go` localmente, sem depender da execução de células anteriores.
+- (Codex) Code review P2 documental: README, notebook e Manual explicitam que a rota V03 revalida o tema e requer `jsonschema`/`referencing` conforme `hub_snippets/requirements-temas.txt`, sem instalação automática.
+- (Codex) README do núcleo V02 deixa de afirmar que Plotly ainda não está integrado e passa a registrar a integração opt-in V03 sem sugerir migração automática ou aprovação.
+- (Codex) Code review P2 final: `registrar_template_plotly_resolvido` recusa substituir um template que já participa do default ativo quando `ativar=False`, inclusive em defaults compostos; regressões cobrem recusa e ativação explícita.
+
+### Notas
+
+- (Codex) Primeiro run remoto V03 `34721929275`: 22 V03 + 12 V00 + 105 V02 + 138 V01 aprovados. Não somar reexecuções como novos casos.
+- (Codex) `mode=dark` e `high_contrast` permanecem válidos no contrato, mas o adaptador Plotly V03 os recusa até existirem tokens de superfície suficientes.
+- (Codex) Sem aceite/merge V03, publicação Databricks, migração de consumidores, V04/V05 ou homologação operacional.
+
 ## 2026-09-12 — R04-A: seis guias de operações Spark (ChatGPT)
 
 ### Adicionado

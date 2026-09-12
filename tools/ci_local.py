@@ -5,8 +5,7 @@
 Executa, em ordem, e sempre até o fim — um gate que para no primeiro erro
 esconde os outros e obriga a rodar de novo para cada um:
 
-1. Temas — núcleo V02 e contrato V01 compartilhado, com regressões adversariais;
-1. Temas — núcleo V02 e contrato V01 compartilhado, com regressões adversariais;
+1. Temas — adaptador Plotly V03, núcleo V02 e contrato V01, com regressões adversariais;
 2. `validate_assistant.py`  — forma, links, contratos, identidade e higiene;
 3. `hub_snippets/tests/test_core.py`   — regressões da biblioteca;
 4. `tools/tests/test_tool_guards.py`   — guardas das próprias ferramentas.
@@ -56,7 +55,7 @@ DEPENDENCIAS = [
 ETAPAS = [
     (
         "temas",
-        "núcleo V02 e contrato V01 compartilhado (sem publicação)",
+        "adaptador Plotly V03 + núcleo V02 + contrato V01 (sem publicação)",
         [sys.executable, "-B", "-m", "unittest", "discover", "-s", "tools/tests", "-p", "test_temas*.py", "-v"],
     ),
     (

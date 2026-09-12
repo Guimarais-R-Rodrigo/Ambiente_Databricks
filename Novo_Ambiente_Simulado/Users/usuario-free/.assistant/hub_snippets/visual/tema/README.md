@@ -1,7 +1,7 @@
 # `visual.tema` — conferir uma configuração antes de mudar a aparência
 
-> **CUSTOMIZADO PELO HUB · V02 CANDIDATA · NÃO APLICA CORES.** O núcleo valida
-> uma proposta; não instala painel, não aprova a identidade e não publica arquivos.
+> **CUSTOMIZADO PELO HUB · V02 INTEGRADA · O NÚCLEO NÃO APLICA CORES SOZINHO.** O núcleo valida
+> uma proposta; a V03 permite consumo Plotly por opt-in, sem instalar painel, aprovar identidade ou publicar arquivos.
 
 <!-- readme-objeto: 1.0.0 -->
 
@@ -35,18 +35,20 @@ qual conteúdo foi conferido. Um erro não aciona outro tema silenciosamente.
 
 ## 3. Quando faz sentido usar?
 
-Na preparação de uma proposta e nos futuros adaptadores de gráficos, cabeçalhos
-e materiais editoriais. Também permite testar uma configuração em Python sem
-compute Spark ou acesso a dados de clientes. Os consumidores antigos continuam
-usando suas rotas atuais até a migração específica de cada um.
+Na preparação de uma proposta e nos adaptadores de gráficos, cabeçalhos
+e materiais editoriais. A V03 já conecta explicitamente este núcleo ao `theme_plotly`
+por uma rota opt-in; outros consumidores continuam em suas rotas atuais até a sprint
+específica de cada um. Também permite testar uma configuração em Python sem
+compute Spark ou acesso a dados de clientes.
 
 ## 4. Quando não usar?
 
 Não use para publicar uma identidade, conceder acesso ou modificar um dashboard.
 Um tema válido pode não ser legível ou adequado à marca. Por exemplo, chamar
 uma configuração de “alto contraste” não certifica que ela seja acessível.
-Para aplicar o tema Plotly legado, a alternativa existente é
-[`theme_plotly`](../theme_plotly/); ele não está integrado a este núcleo ainda.
+Para Plotly, a V03 mantém a rota legada e acrescenta uma integração opt-in com
+[`theme_plotly`](../theme_plotly/): somente um `ResolvedTheme` explícito é consumido
+pela API nova. Isso não migra gráficos existentes nem transforma a validação em aprovação.
 
 ## 5. Como funciona, intuitivamente?
 

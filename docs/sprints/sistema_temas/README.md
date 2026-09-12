@@ -1,17 +1,18 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Etapa atual — V02 aceita e integrada pelo PR #14
+## Etapa atual — V03 aceita; integração Git autorizada pelo PR #16
 
 A instrumentação V00 foi integrada pelo PR #8, a [V01 — contrato e experiência
 documentada](V01/README.md) foi aceita e integrada pelo PR #10 e a
 [V02 — núcleo de temas, validação e resolução](V02/README.md) foi aceita por Rodrigo
 e integrada pelo PR #14 no commit `d4cabdca4ac68c0a2edbd7f9f621f68962c8f6b8`.
-Os quatro checks pós-merge na `main` passaram. A V03 ainda não foi iniciada.
+Os quatro checks pós-merge da V02 na `main` passaram. A V03 foi iniciada a partir dessa base verde, acrescenta somente uma rota Plotly opt-in e recebeu aceite explícito de Rodrigo em 12/09/2026. A integração Git foi autorizada pelo PR #16; o estado efetivo do merge deve ser verificado na própria PR. Não houve publicação Databricks.
 
-Para quem nunca entrou no Hub: **nada muda na aparência ou na rotina atual por causa
-da V02**. Ela valida uma configuração completa de tema, mas ainda não aplica o tema
-a gráficos ou HTML, não cria seletor e não publica nada no Databricks. Comece pelo
-[README da V02](V02/README.md), depois leia o [checkpoint](V02/CHECKPOINT_V02.md) e o
+Para quem nunca entrou no Hub: **nada muda automaticamente na aparência ou na rotina atual por causa
+da V03**. Quem já usa `aplicar_tema` continua no mesmo caminho legado. A V03 só acrescenta
+uma rota Plotly opt-in para um `ResolvedTheme` de notebook; não cria seletor e não publica
+nada no Databricks. Comece pelo [README da V03](V03/README.md), depois leia o
+[checkpoint](V03/CHECKPOINT_V03.md) e o
 [guia operacional](../../../ambiente_fonte/.assistant/hub_padroes/identidade_visual/GUIA_OPERACIONAL.md).
 O [guia de primeiro uso da V01](V01/GUIA_PRIMEIRO_USO.md) permanece acessível como
 referência do contrato e da experiência documentada já aceitos; ele não transforma
@@ -98,8 +99,9 @@ A automação temporária utilizada para preparar e registrar as evidências foi
 removida da árvore final. Não há workflow de escrita recorrente, credencial
 Databricks ou publicação automática nesta entrega.
 
-## Continuidade — após V02
+## Continuidade — V03
 
-A V02 está aceita e integrada no Git. A próxima sprint planejada é V03, que fará a
-integração explícita do núcleo com Plotly preservando o comportamento legado por
-padrão. A V03 ainda não foi iniciada e não há publicação Databricks nesta etapa.
+A V02 está aceita e integrada no Git. A [V03](V03/README.md) recebeu aceite explícito
+de Rodrigo e teve sua integração Git autorizada pelo PR #16: integra explicitamente o
+núcleo com Plotly preservando o comportamento legado por padrão. O estado efetivo do
+merge fica registrado na PR; não há publicação Databricks e V04/V05 não foram iniciadas.

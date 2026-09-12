@@ -16,7 +16,7 @@
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
 # MAGIC | Compute | confira as dependências e a compatibilidade descritas no README; não há equivalência universal entre runtimes |
-# MAGIC | Bibliotecas | Plotly disponível; NumPy para gerar os dados sintéticos desta demonstração |
+# MAGIC | Bibliotecas | Plotly e NumPy disponíveis; para a seção V03, `jsonschema` e `referencing` preparados conforme `hub_snippets/requirements-temas.txt`; o notebook não instala pacotes |
 # MAGIC | Dados | sintéticos, gerados aqui |
 # MAGIC | Escrita | nenhuma; tudo em memória |
 # MAGIC | Diferença Free × trabalho | nenhuma conhecida |
@@ -132,3 +132,40 @@ print(f"colorway completo: {tema['colorway']}")
 # MAGIC - **Com N sem significado.** Declare qual contagem é pertinente ao gráfico e seu recorte; nem todo gráfico exige N. A função aceita o rótulo, mas não o verifica.
 # MAGIC - **Depois de ajustes que precisa preservar.** A aplicação redefine chaves de layout. Aplique o tema primeiro e faça as customizações específicas depois; reaplicar pode desfazê-las e duplicar o rodapé.
 # MAGIC - **Sem conferir o destino.** A função pode ser usada fora do Databricks, mas fontes, dimensões e renderização precisam ser avaliadas no ambiente final.
+
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## 3. V03 — referência resolvida, aplicação explícita
+# MAGIC
+# MAGIC Esta seção usa a referência notebook empacotada para provar a nova rota sem
+# MAGIC editar a configuração dentro do notebook irmão. A referência é uma fixture
+# MAGIC de teste, não um tema operacional aprovado.
+
+# COMMAND ----------
+
+import plotly.io as pio
+from hub_snippets.visual.tema import load_reference_theme
+from hub_snippets.visual.theme_plotly import aplicar_tema_resolvido, get_tema_plotly
+
+referencia = load_reference_theme("notebook")
+default_antes = pio.templates.default
+
+figura3 = go.Figure(go.Bar(x=["A", "B", "C"], y=[10, 12, 9]))
+figura3.update_layout(title="Referência V03 — exemplo sintético")
+aplicar_tema_resolvido(figura3, referencia, fonte="dados sintéticos", n=3)
+
+config_referencia = get_tema_plotly(referencia)
+config_legado = get_tema_eda()
+assert config_referencia == config_legado
+assert pio.templates.default == default_antes
+figura3.show()
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC **Como ler.** A igualdade entre as duas configurações prova que a referência
+# MAGIC `legado_notebook` preserva o layout atual pela nova rota. A aplicação afeta
+# MAGIC somente `figura3` e não muda `pio.templates.default`. Para aprender a criar
+# MAGIC uma proposta com tokens diferentes, use o exemplo comentado no README do
+# MAGIC objeto; o notebook executável mantém um contrato local simples e auditável.
+# MAGIC `dark` e `high_contrast` continuam fora do adaptador Plotly desta sprint.

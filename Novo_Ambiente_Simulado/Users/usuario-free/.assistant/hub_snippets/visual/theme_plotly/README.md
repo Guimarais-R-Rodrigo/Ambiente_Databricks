@@ -8,7 +8,7 @@
 
 | Pergunta | Resposta |
 |---|---|
-| O que é? | Conjunto de funções de tema para Plotly. |
+| O que é? | Funções legadas de tema Plotly mais um adaptador V03 opt-in para `ResolvedTheme`. |
 | Para que serve? | Uniformizar aparência e acrescentar contexto declarado. |
 | Use quando... | O gráfico já está correto e precisa de apresentação consistente. |
 | Evite quando... | Você espera corrigir cálculo, inferir origem ou reestilizar todo o Hub. |
@@ -21,7 +21,7 @@
 
 Um tema reúne convenções de apresentação: fontes, cores, dimensões, margens e posição da legenda. Plotly é a biblioteca que constrói as figuras; o tema do Hub é uma escolha local aplicada sobre ela.
 
-Este objeto oferece três operações: `get_tema_eda` consulta a configuração, `aplicar_tema` modifica uma figura e `registrar_template_plotly` registra um padrão para novas figuras na sessão. Essas operações não são equivalentes e não centralizam o estilo de todo componente HTML do projeto.
+As três operações legadas continuam iguais: `get_tema_eda` consulta a configuração histórica, `aplicar_tema` modifica uma figura e `registrar_template_plotly` registra o padrão `caixa` na sessão. A V03 acrescenta, sem substituir essas chamadas, `get_tema_plotly`, `aplicar_tema_resolvido` e `registrar_template_plotly_resolvido` para consumir explicitamente um `ResolvedTheme` validado pela V02. Plotly continua sendo apenas um consumidor; HTML e outros componentes têm sprints próprias.
 
 ## 2. Que problema este recurso resolve?
 
@@ -47,7 +47,9 @@ Evite aplicar o tema depois de dimensões customizadas quando precisa preservá-
 
 `aplicar_tema` chama `fig.update_layout` e, quando há informações, adiciona uma anotação de rodapé. **Modifica a figura recebida e devolve o mesmo objeto.**
 
-`registrar_template_plotly` insere a configuração no registro `plotly.io.templates` com o nome `caixa` e altera `pio.templates.default`. Esse efeito vale para o processo Python atual. Importar o módulo, por si só, não chama essa função.
+`registrar_template_plotly` insere a configuração legada no registro `plotly.io.templates` com o nome `caixa` e altera `pio.templates.default`. Esse efeito vale para o processo Python atual. Importar o módulo, por si só, não chama essa função.
+
+Na rota V03, `get_tema_plotly(theme)` traduz somente os tokens notebook atribuídos ao Plotly e não altera a sessão. `aplicar_tema_resolvido` aplica essa tradução explicitamente a uma figura. `registrar_template_plotly_resolvido` usa um nome `hub-*`, não ativa o template por padrão e só muda `pio.templates.default` com `ativar=True`. A configuração é revalidada pelo núcleo antes de ser consumida.
 
 ## 6. Exemplo de situação
 
@@ -57,7 +59,7 @@ Aplique o tema com `n=3`, escreva “pontos mensais” no subtítulo e declare a
 
 ## 7. O que você precisa antes de usar?
 
-Tenha Plotly instalado e o caminho de importação preparado. `aplicar_tema` recebe uma `go.Figure`, não uma tabela de dados. Fonte e subtítulo devem ser textos controlados e apropriados ao compartilhamento.
+Tenha Plotly instalado e o caminho de importação preparado. `aplicar_tema` recebe uma `go.Figure`, não uma tabela de dados. Para a rota V03, tenha também um `ResolvedTheme` produzido pelo núcleo V02 para o contexto `notebook`; não passe dicionário cru ao adaptador. Como a V03 revalida esse resultado antes de consumi-lo, `jsonschema` e `referencing` também precisam estar disponíveis conforme `hub_snippets/requirements-temas.txt`. O helper não instala dependências automaticamente. Fonte e subtítulo devem ser textos controlados e apropriados ao compartilhamento.
 
 Defina previamente o significado de N: linhas, entidades, observações válidas ou pontos agregados. Use um inteiro não negativo para uma contagem; a implementação formata o valor, mas não valida essa interpretação.
 
@@ -65,7 +67,7 @@ O notebook de demonstração usa NumPy para gerar a série e Spark para localiza
 
 ## 8. O que este recurso entrega?
 
-`get_tema_eda()` retorna um dicionário. `aplicar_tema(...)` retorna a própria figura modificada, preservando os dados dos traces. `registrar_template_plotly()` retorna `None` e deixa um efeito na sessão.
+`get_tema_eda()` retorna o dicionário legado. `aplicar_tema(...)` retorna a própria figura modificada, preservando os dados dos traces. `registrar_template_plotly()` retorna `None` e deixa o template legado ativo na sessão. Na rota V03, `get_tema_plotly(theme)` retorna um novo dicionário de layout derivado do `ResolvedTheme`; `aplicar_tema_resolvido(...)` retorna a mesma figura modificada sem trocar o template default; e `registrar_template_plotly_resolvido(...)` retorna `None`, registra um nome `hub-*` e só altera o default quando `ativar=True`.
 
 O rodapé é uma anotação textual com as partes fornecidas, não metadado verificado. Chamadas repetidas com rodapé adicionam novas anotações, em vez de substituir automaticamente a anterior. Sem argumentos de rodapé, a função não acrescenta uma anotação nova.
 
@@ -86,11 +88,35 @@ fig.update_layout(width=720)  # ajuste específico depois do tema
 assert fig.layout.width == 720
 ```
 
+### V03: aplicar uma proposta resolvida sem mudar o legado
+
+A referência empacotada abaixo é **fixture de teste**, não tema operacional aprovado. Ela serve para demonstrar o fluxo; uma proposta real deve seguir o processo de governança do Sistema de Temas.
+
+```python
+import plotly.graph_objects as go
+from hub_snippets.visual.tema import load_reference_theme, resolve_theme
+from hub_snippets.visual.theme_plotly import aplicar_tema_resolvido
+
+base = load_reference_theme("notebook")
+proposta = base.to_dict()
+proposta["theme_id"] = "hub-exemplo-proposta"
+proposta["display_name"] = "Exemplo de proposta"
+proposta["description"] = "Exemplo sintético para demonstrar a aplicação Plotly opt-in."
+proposta["tokens"]["brand.primary"] = "#112233"
+
+tema_resolvido = resolve_theme(proposta, expected_context="notebook")
+fig = go.Figure(go.Bar(x=["A", "B"], y=[10, 12]))
+aplicar_tema_resolvido(fig, tema_resolvido, fonte="dados sintéticos", n=2)
+fig.show()
+```
+
+O fluxo não grava o tema, não o aprova e não altera outros gráficos da sessão. A fixture `legado_notebook` produz exatamente o mesmo layout de `get_tema_eda()`, o que é testado como regressão da migração.
+
 Use `fig.show()` no notebook para visualizar. O [exemplo completo](exemplo_theme_plotly.py) gera uma série local e mostra figuras; não grava tabelas. Seu rótulo de fonte menciona fixtures, mas os dados daquela célula são gerados por NumPy: trate o rótulo como ilustração, não como procedência comprovada. O exemplo importa a função de registro, mas não a chama.
 
 ## 10. Decisões e configurações que mais importam
 
-Escolha conscientemente entre aplicação explícita e registro global. Para recuperar o padrão da sessão depois de uma experiência de registro, guarde o valor anterior de `pio.templates.default` e restaure-o; não suponha que uma nova célula comece uma sessão vazia.
+Escolha conscientemente entre aplicação explícita e registro global. Para propostas V03, prefira `aplicar_tema_resolvido`; `registrar_template_plotly_resolvido` exige namespace `hub-*`, recusa colisão por padrão e só ativa o template com `ativar=True`. `substituir=True` permite trocar um nome já registrado, mas não permite substituir silenciosamente um nome que já participa do default da sessão: nesse caso, a chamada falha e exige também `ativar=True`, pois trocar o objeto ativo já seria uma mudança global. Para recuperar o padrão da sessão depois de uma experiência de registro, guarde o valor anterior de `pio.templates.default` e restaure-o; não suponha que uma nova célula comece uma sessão vazia.
 
 Aplique mudanças de largura, altura, margem ou fonte específicas **depois** de `aplicar_tema`. Uma nova aplicação do tema redefine essas opções. `n` é formatado sem casas decimais, com separador brasileiro de milhares, mas o helper não exige inteiro. `subtitulo` fica no rodapé, não imediatamente abaixo do título.
 
@@ -98,7 +124,7 @@ Aplique mudanças de largura, altura, margem ou fonte específicas **depois** de
 
 Reaplicar o rodapé pode duplicar informações e causar sobreposição com a legenda. A largura e a altura fixas podem comprimir grades extensas e telas pequenas. Uma figura construída sem erro ainda requer inspeção visual.
 
-A paleta categórica não substitui escalas explicitamente definidas em heatmaps nem cores já fixadas nos traces. O registro global afeta outras figuras que usem o padrão da mesma sessão, e não outras sessões independentes.
+A paleta categórica não substitui escalas explicitamente definidas em heatmaps nem cores já fixadas nos traces. O registro global afeta outras figuras que usem o padrão da mesma sessão, e não outras sessões independentes. Um default Plotly pode ser composto, por exemplo `plotly+hub-alguma-coisa`; a V03 considera cada nome desse composto como ativo e recusa sua substituição com `ativar=False`. A V03 aplica somente `mode=light`: `dark` e `high_contrast` são válidos no contrato, mas falham fechados no adaptador Plotly até existirem tokens de superfície suficientes para não inventar backgrounds implícitos.
 
 O dicionário de configuração contém uma referência à lista `PALETA_CATEGORICA`; não altere essa lista por meio do retorno como se fosse uma cópia isolada. Textos de fonte/subtítulo também não passam por uma política geral de escape. Use conteúdo controlado e não exponha caminhos internos ou dados sensíveis no rodapé.
 
@@ -116,10 +142,12 @@ Execute a aplicação uma vez e observe a quantidade de anotações; antes de re
 
 ## 14. Arquivos relacionados e próximos passos
 
-A [implementação](theme_plotly.py) define as três operações; a [fachada](__init__.py) exporta seus nomes. O [notebook](exemplo_theme_plotly.py) demonstra a aplicação explícita. [Correlation matrix](../../display/correlation_matrix/README.md) e [distribution grid](../../display/distribution_grid/README.md) são consumidores reais do tema.
+A [implementação](theme_plotly.py) mantém as três operações legadas e acrescenta as três operações V03; a [fachada](__init__.py) exporta os seis nomes. O [notebook](exemplo_theme_plotly.py) demonstra o legado e a rota opt-in usando uma referência resolvida sem customização inline. [Correlation matrix](../../display/correlation_matrix/README.md) e [distribution grid](../../display/distribution_grid/README.md) continuam consumidores do caminho legado nesta sprint: não foram migrados implicitamente. O estado da V03 está em `docs/sprints/sistema_temas/V03/`.
 
 ## 15. Referências
 
-O guia oficial [Theming and templates](https://plotly.com/python/templates/) descreve o registro e o alcance por sessão, assim como a distinção entre template e propriedades da figura. Consulta em 2026-09-12. As decisões particulares do Hub são verificáveis em [theme_plotly.py](theme_plotly.py), base `c60f1e5`.
+O guia oficial [Theming and templates](https://plotly.com/python/templates/) descreve o registro e o alcance por sessão, assim como a distinção entre template e propriedades da figura. Consulta em 2026-09-12. As decisões particulares vigentes do Hub são verificáveis em [theme_plotly.py](theme_plotly.py). O estado desta sprint está em `docs/sprints/sistema_temas/V03/CHECKPOINT_V03.md`; a base `c60f1e5` permanece apenas como referência histórica da R03-B.
 
 Os testes R03-B conferem identidade do objeto, dados preservados, precedência, anotações e registro com restauração do estado. Não homologam o aspecto no Databricks nem verificam a origem declarada pelo usuário. Revisão própria de ChatGPT; auditoria independente não realizada.
+
+A V03 acrescenta testes de equivalência do layout legado, tradução de tokens, integridade do `ResolvedTheme`, ausência de efeitos globais na aplicação por figura, namespace/colisão de templates e falha fechada de contextos/modos ainda não suportados. Esses testes também não substituem inspeção visual no Databricks.

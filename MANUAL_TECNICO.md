@@ -2106,7 +2106,7 @@ Não há configuração implícita, cache global ou fallback diante de erro.
 
 **Guia local do objeto (R03-B):** na pasta `hub_snippets/visual/theme_plotly/`, abra `README.md` antes de `exemplo_theme_plotly.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
 
-Obtém configuração, aplica tema a uma figura ou registra um template na sessão. `registrar_template_plotly` tem efeito no estado de apresentação da sessão. A figura formatada continua exigindo exibição; tema não altera a lógica estatística dos dados plotados. A aplicação modifica a própria figura; anotações podem se acumular em chamadas repetidas, e customizações de layout devem vir depois do tema.
+Mantém a rota legada de configuração/aplicação/registro e acrescenta, na V03, uma rota opt-in que consome `ResolvedTheme` de contexto notebook. `aplicar_tema_resolvido` afeta somente a figura passada; `registrar_template_plotly_resolvido` usa namespace `hub-*` e não muda o default da sessão sem `ativar=True`. Se o nome a substituir já estiver ativo, sozinho ou dentro de um default composto, `substituir=True` sem `ativar=True` é recusado para impedir mudança global implícita. Como a rota V03 revalida o tema antes do consumo, ela requer também as dependências declaradas em `hub_snippets/requirements-temas.txt` (`jsonschema` e `referencing`); nenhuma função instala pacotes. A figura formatada continua exigindo exibição; tema não altera a lógica estatística dos dados plotados. Dados, eixos e cores explícitas de traces permanecem fora da responsabilidade do adaptador.
 
 <details>
 <summary>Consultar a API deste objeto: nomes e assinaturas</summary>
@@ -2115,9 +2115,14 @@ Obtém configuração, aplica tema a uma figura ou registra um template na sess�
 get_tema_eda() -> Dict[str, Any]
 aplicar_tema(fig: go.Figure, subtitulo: Optional[str]=None, fonte: Optional[str]=None, n: Optional[int]=None) -> go.Figure
 registrar_template_plotly() -> None
+get_tema_plotly(theme: ResolvedTheme) -> Dict[str, Any]
+aplicar_tema_resolvido(fig: go.Figure, theme: ResolvedTheme, subtitulo: Optional[str]=None, fonte: Optional[str]=None, n: Optional[int]=None) -> go.Figure
+registrar_template_plotly_resolvido(theme: ResolvedTheme, *, nome: str, ativar: bool=False, substituir: bool=False) -> None
 ```
 
 </details>
+
+Para usuários novos, mantenha `aplicar_tema` se o objetivo é preservar o hábito atual. Use `aplicar_tema_resolvido` somente quando houver uma configuração notebook explicitamente resolvida pelo núcleo V02. A V03 suporta `mode=light`; `dark`/`high_contrast` falham fechados até uma sprint futura definir superfícies Plotly sem defaults ocultos. Fixtures empacotadas servem a testes/demonstrações e não são temas operacionais aprovados.
 
 [Implementação](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/theme_plotly.py) · [API exportada](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/__init__.py) · [Notebook de exemplo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/exemplo_theme_plotly.py)
 
