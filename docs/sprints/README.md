@@ -31,3 +31,6 @@ correspondência com a identidade `hub_`/`hub-` está no
 A [migração R00–R13](readmes_objetos/README.md) usa numeração própria. Os
 relatórios históricos acima permanecem intactos; não são substituídos pelos
 checkpoints desta iniciativa.
+
+O [piloto R02](readmes_objetos/CHECKPOINT_R02.md) é o checkpoint atual desta
+iniciativa; os relatos R00 e R01 permanecem históricos.

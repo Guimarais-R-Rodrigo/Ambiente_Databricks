@@ -2,21 +2,23 @@
 # MAGIC %md
 # MAGIC # `train_xgboost` — o segundo baseline, para conferir o primeiro
 # MAGIC
-# MAGIC **O problema.** Um baseline só não diz se o resultado é do dado ou da biblioteca. Duas implementações diferentes chegando ao mesmo número é evidência; uma só é anedota.
+# MAGIC **O problema.** Comparar modelos sob o mesmo desenho ajuda a investigar sensibilidade à escolha do estimador. Resultados próximos, porém, não provam ausência de viés ou vazamento: os dois podem compartilhar o mesmo erro de preparação.
 # MAGIC
 # MAGIC **O que este helper faz.** Treina XGBoost com a mesma interface e as mesmas métricas do baseline LightGBM, para comparação direta.
 
+# MAGIC **Antes de usar:** veja o [README do objeto](README.md) para conceito, requisitos, efeitos e interpretação. As saídas históricas abaixo foram preservadas; a revisão R02 não as transforma em execução recente.
+# MAGIC
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Compute | requer ambiente Python e pacotes compatíveis; confirmar o compute da execução |
 # MAGIC | Bibliotecas | **instala `xgboost` na primeira célula** |
 # MAGIC | Dados | sintéticos, gerados aqui |
-# MAGIC | Escrita | nenhuma; `log_mlflow=False` em todas as chamadas |
-# MAGIC | Diferença Free × trabalho | a instalação e a execução levam ~1 min no Free; no trabalho, confirme a política do workspace |
+# MAGIC | Escrita | sem escrita explícita de tabela; logging do helper desligado, mas verificar autologging da sessão |
+# MAGIC | Diferença Free × trabalho | confirmar dependências, tracking e política de instalação; não há prazo universal de execução |
 
 # COMMAND ----------
 # MAGIC %pip install xgboost
@@ -48,13 +50,14 @@ from hub_snippets.ml.train_xgboost import DEFAULT_PARAMS, train_xgboost_baseline
 # MAGIC %md
 # MAGIC ## Por que `log_mlflow=False` em tudo
 # MAGIC
-# MAGIC Os treinadores registram no MLflow por padrão. **Nenhum run do MLflow abre
-# MAGIC no serverless do Free**: `mlflow.start_run` instancia um `MlflowClient` que
-# MAGIC lê `spark.mlflow.modelRegistryUri`, e o Spark Connect recusa a config.
+# MAGIC Os treinadores registram no MLflow por padrão. Este exemplo desliga somente
+# MAGIC o logging explícito do helper. Uma falha histórica de configuração de
+# MAGIC tracking não comprova que MLflow seja indisponível em todo serverless Free.
 # MAGIC
-# MAGIC No trabalho, com compute clássico, deixe o padrão `True` — é justamente o
-# MAGIC registro que torna o baseline rastreável. Aqui ele é desligado para que o
-# MAGIC notebook rode, e a limitação está na matriz de `free-vs-trabalho`.
+# MAGIC Confirme experimento, permissões, dependências e autologging da sessão antes
+# MAGIC de ligar o registro. `log_mlflow=False` não desativa autologging previamente
+# MAGIC configurado. Consulte o [README](README.md#11-limitações-riscos-e-armadilhas)
+# MAGIC para o alcance do wrapper e as referências oficiais de tracking.
 
 # COMMAND ----------
 # MAGIC %md
@@ -91,15 +94,14 @@ for chave, valor in metricas.items():
 # MAGIC deu `auc_val` **0,9268**. O XGBoost dá **0,9302**. A diferença é de
 # MAGIC **0,0034** — três milésimos e meio.
 # MAGIC
-# MAGIC É esse o resultado que interessa, e ele não é sobre qual biblioteca ganhou.
-# MAGIC Duas implementações independentes, com hiperparâmetros diferentes,
-# MAGIC chegando ao mesmo lugar dizem que **o número veio do dado**, não de uma
-# MAGIC particularidade do algoritmo. Se elas divergissem muito, a suspeita
-# MAGIC recairia sobre a configuração, não sobre o problema.
+# MAGIC Essa diferença descreve a execução histórica acima. Para escolher uma
+# MAGIC biblioteca, avalie estabilidade, custo e relevância da diferença sob um
+# MAGIC desenho apropriado. Uma partição não demonstra superioridade universal.
 # MAGIC
-# MAGIC Escolher o XGBoost por esses três milésimos seria ruído travestido de
-# MAGIC decisão. Uma feature nova mexe na segunda casa; a troca de biblioteca, na
-# MAGIC terceira.
+# MAGIC Métricas próximas não excluem vazamento compartilhado; métricas diferentes
+# MAGIC podem refletir configuração, implementação ou características do problema.
+# MAGIC Não há regra geral de que uma feature nova sempre mude mais a métrica que
+# MAGIC a troca de estimador. As saídas antigas foram preservadas, não recertificadas.
 
 
 # COMMAND ----------
@@ -110,16 +112,16 @@ for chave, valor in DEFAULT_PARAMS.items():
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** `max_depth` 6 é a diferença conceitual: o XGBoost cresce por
-# MAGIC nível e limita profundidade, enquanto o LightGBM cresce por folha e limita
-# MAGIC `num_leaves` (31), deixando `max_depth` em −1. São duas estratégias
-# MAGIC diferentes de controlar a mesma coisa, e é por isso que copiar
-# MAGIC hiperparâmetro de um para o outro não faz sentido.
+# MAGIC **Como ler.** `max_depth=6` limita a profundidade nesta configuração. Os
+# MAGIC parâmetros de capacidade e crescimento das duas bibliotecas não têm uma
+# MAGIC correspondência automática. Leia os defaults reais de cada helper e a
+# MAGIC configuração usada; uma escolha do exemplo não define todos os modos
+# MAGIC possíveis de crescimento de uma biblioteca.
 
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
-# MAGIC - **Para decidir "qual biblioteca é melhor".** A diferença entre elas quase sempre é menor que a de uma feature nova.
-# MAGIC - **Com categórica de alta cardinalidade sem tratamento.** Aí o CatBoost costuma levar vantagem real.
-# MAGIC - **Sem fixar a semente.** Comparar duas bibliotecas com sementes diferentes compara ruído.
+# MAGIC - **Para declarar um vencedor universal a partir desta partição.** Avalie estabilidade e adequação operacional.
+# MAGIC - **Com categorias sem preparação compatível.** Confira as opções realmente suportadas pelo wrapper e compare alternativas sob o mesmo desenho.
+# MAGIC - **Sem registrar fontes, partição e configuração.** A semente ajuda a repetir um experimento, mas não torna diferentes bibliotecas idênticas nem substitui validação.

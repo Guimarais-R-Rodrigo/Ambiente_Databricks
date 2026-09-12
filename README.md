@@ -197,9 +197,9 @@ reexecuta o gate e reprova se qualquer contagem ficar desatualizada.
 skills             : 13 · 13/13 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 81 caminhos verificados
-markdown / links   : 117 arquivos / 278 links relativos
-notebooks / links  : 78 notebooks / 21 links relativos
-readmes de objeto  : 0/74 operacionais; 3/3 exemplares; 74 pendentes (estrutura, não aceite editorial)
+markdown / links   : 123 arquivos / 355 links relativos
+notebooks / links  : 78 notebooks / 28 links relativos
+readmes de objeto  : 6/74 operacionais; 3/3 exemplares; 68 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
 forma da pasta     : 58 conferidas (o módulo tem o nome da pasta)
 contrato de dados  : 60 pares (saída: o que o notebook consome)
@@ -210,8 +210,8 @@ normas do molde    : 70 arquivos, 0 violação(ões)
 notebook exercita  : 57 objetos, 0 notebook(s) que só importam
 python (AST)       : 209 arquivos
 instrucoes         : 8575/20000 caracteres
-repo (identidade)  : 889 arquivos varridos no repositório editável/derivado
-repo (links)       : 511 links fora da raiz analisada
+repo (identidade)  : 912 arquivos varridos no repositório editável/derivado
+repo (links)       : 602 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```

@@ -849,3 +849,7 @@ nenhuma.
 A migração R00–R13 complementa a documentação sem alterar helpers. Consulte
 [estado, plano e checkpoint](docs/sprints/readmes_objetos/README.md). As sprints
 históricas deste arquivo preservam a evidência de sua época.
+
+Continuidade desta iniciativa: [checkpoint R02](docs/sprints/readmes_objetos/CHECKPOINT_R02.md),
+com seis pilotos em revisão; não antecipar os lotes seguintes nem interpretar
+aceite de execução como congelamento editorial ou autorização de publicação.

@@ -32,10 +32,6 @@
       "sprint": "R10",
       "lote": "A"
     },
-    "hub_prompts/eda_rapida": {
-      "sprint": "R02",
-      "lote": "A"
-    },
     "hub_prompts/explainability": {
       "sprint": "R11",
       "lote": "A"
@@ -84,10 +80,6 @@
       "sprint": "R04",
       "lote": "B"
     },
-    "hub_scripts/quick_profile": {
-      "sprint": "R02",
-      "lote": "A"
-    },
     "hub_scripts/rfv_calculator": {
       "sprint": "R04",
       "lote": "B"
@@ -102,10 +94,6 @@
     },
     "hub_snippets/constants/emojis": {
       "sprint": "R03",
-      "lote": "A"
-    },
-    "hub_snippets/constants/format_br": {
-      "sprint": "R02",
       "lote": "A"
     },
     "hub_snippets/constants/styles": {
@@ -150,10 +138,6 @@
     },
     "hub_snippets/ml/explainability_report": {
       "sprint": "R08",
-      "lote": "A"
-    },
-    "hub_snippets/ml/isolation_forest": {
-      "sprint": "R02",
       "lote": "A"
     },
     "hub_snippets/ml/kaplan_meier": {
@@ -224,10 +208,6 @@
       "sprint": "R05",
       "lote": "A"
     },
-    "hub_snippets/ml/train_xgboost": {
-      "sprint": "R02",
-      "lote": "A"
-    },
     "hub_snippets/ml/umap_viz": {
       "sprint": "R08",
       "lote": "A"
@@ -254,10 +234,6 @@
     },
     "hub_snippets/spark/null_summary": {
       "sprint": "R04",
-      "lote": "A"
-    },
-    "hub_snippets/spark/pit_join": {
-      "sprint": "R02",
       "lote": "A"
     },
     "hub_snippets/spark/psi_calculator": {

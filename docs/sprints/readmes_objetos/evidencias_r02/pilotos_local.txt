@@ -1,0 +1,22 @@
+AMBIENTE {"python": "3.13.5", "pacotes": {"numpy": "2.3.5", "pandas": "2.2.3", "sklearn": "1.8.0", "xgboost": "3.1.3", "mlflow": null, "pyspark": null}}
+test_bloco_readme_real (__main__.Formato.test_bloco_readme_real) ... ok
+test_escalas_e_bordas (__main__.Formato.test_escalas_e_bordas) ... ok
+test_limite_inteiro_grande (__main__.Formato.test_limite_inteiro_grande)
+Caracteriza limitação conhecida; não aprova o comportamento como ideal. ... ok
+test_auto_nao_suportado (__main__.Isolamento.test_auto_nao_suportado) ... skipped 'MLflow real ou dependências Isolation Forest ausentes; nenhum mock'
+test_contrato_e_perfil (__main__.Isolamento.test_contrato_e_perfil) ... skipped 'MLflow real ou dependências Isolation Forest ausentes; nenhum mock'
+test_empates_nao_garantem_fracao (__main__.Isolamento.test_empates_nao_garantem_fracao) ... skipped 'MLflow real ou dependências Isolation Forest ausentes; nenhum mock'
+test_pit_cobertura_e_duplicata (__main__.SparkSintetico.test_pit_cobertura_e_duplicata) ... skipped 'PySpark ausente; sem teste de sessão local'
+test_pit_empate_e_janela (__main__.SparkSintetico.test_pit_empate_e_janela) ... skipped 'PySpark ausente; sem teste de sessão local'
+test_quick_profile_contrato_e_vazio (__main__.SparkSintetico.test_quick_profile_contrato_e_vazio) ... skipped 'PySpark ausente; sem teste de sessão local'
+test_binary (__main__.XGBoost.test_binary) ... ok
+test_multiclass (__main__.XGBoost.test_multiclass) ... ok
+test_recusas (__main__.XGBoost.test_recusas) ... ok
+test_regression (__main__.XGBoost.test_regression) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.033s
+
+OK (skipped=6)
+LIMITE: 9007199254740993 perde uma unidade em fmt_int e fmt_n.
+RESUMO_R02 {"casos": 13, "falhas": 0, "erros": 0, "pulados": 6, "sucesso": true}

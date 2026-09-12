@@ -2,27 +2,29 @@
 # MAGIC %md
 # MAGIC # `pit_join` — trazer histórico sem trazer o futuro junto
 # MAGIC
-# MAGIC **O problema.** Para treinar um modelo você precisa saber o que era
-# MAGIC verdade **no instante da decisão**. O join natural — por chave, pegando o
-# MAGIC registro mais recente — traz o valor de hoje para uma decisão de março. O
-# MAGIC modelo aprende com informação que não existia, acerta no teste e fracassa
-# MAGIC em produção.
+# MAGIC **O problema.** Para treinar um modelo, precisamos reconstruir a informação
+# MAGIC disponível no instante de cada decisão. Trazer a versão mais recente sem
+# MAGIC considerar esse instante pode introduzir informação futura e tornar a
+# MAGIC avaliação incompatível com o uso real. Isso não determina automaticamente
+# MAGIC qual será a métrica; compromete o desenho da análise.
 # MAGIC
 # MAGIC **O que este helper faz.** Junta cada decisão à última versão da feature
 # MAGIC que **já estava disponível** naquele momento — considerando também o atraso
 # MAGIC de publicação, que é a parte que quase todo mundo esquece.
 
+# MAGIC **Antes de usar:** veja o [README do objeto](README.md) para conceito, requisitos, efeitos e interpretação. As saídas históricas abaixo foram preservadas; a revisão R02 não as transforma em execução recente.
+# MAGIC
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Compute | requer PySpark e sessão compatível; conferir plano e comportamento no ambiente alvo |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, gerados por `hub_snippets.testing.fixtures` |
 # MAGIC | Escrita | nenhuma; tudo em memória |
-# MAGIC | Diferença Free × trabalho | nenhuma conhecida. O `explain()` de range join só é conclusivo em volume real |
+# MAGIC | Diferença Free × trabalho | este exemplo não homologa todos os runtimes; custo exige plano e medidas sobre dados representativos |
 
 # COMMAND ----------
 
@@ -136,9 +138,9 @@ print(f"linhas com score futuro : {linhas_vazadas}")
 # MAGIC mais no modelo — sem que ninguém tenha decidido isso.
 # MAGIC
 # MAGIC **Entrou informação do futuro.** As linhas com `eh_futura = true` são
-# MAGIC scores que só existiram depois da decisão. O modelo vai aprender com
-# MAGIC elas, ficar ótimo no teste, e não ter esse dado disponível quando for
-# MAGIC usado de verdade.
+# MAGIC scores posteriores à decisão. Usá-los como características nesse instante
+# MAGIC pode produzir uma avaliação otimista, pois eles não estariam disponíveis
+# MAGIC na mesma situação de uso real.
 # MAGIC
 # MAGIC É por isso que a skill de feature engineering exige, textualmente,
 # MAGIC *"feature_timestamp ≤ prediction_timestamp respeitando atraso de
@@ -152,9 +154,9 @@ print(f"linhas com score futuro : {linhas_vazadas}")
 # MAGIC *Point-in-time* (ou *as-of*) significa: para cada decisão, traga **a
 # MAGIC última versão do score que já estava disponível naquele instante**.
 # MAGIC
-# MAGIC O parâmetro `atraso_publicacao_dias` merece atenção. Um score com data de
-# MAGIC referência 10/01 raramente está disponível no dia 10 — o bureau leva
-# MAGIC alguns dias para publicar. Se o atraso real é de 3 dias, esse score só
+# MAGIC O parâmetro `atraso_publicacao_dias` merece atenção. Data de referência e
+# MAGIC disponibilidade são conceitos distintos; o atraso depende da fonte. No
+# MAGIC cenário sintético, o atraso é de 3 dias, então um score de 10/01 só
 # MAGIC pode entrar em decisões a partir de 13/01. **Ignorar o atraso cria
 # MAGIC vazamento mesmo usando data de referência no passado** — é o erro mais
 # MAGIC sutil dos três.
@@ -200,7 +202,8 @@ for chave, valor in diagnostico.items():
 # MAGIC de decisões, e a cobertura diz quantas decisões conseguiram um score
 # MAGIC elegível.
 # MAGIC
-# MAGIC A prova de que o vazamento foi eliminado:
+# MAGIC Uma checagem da fixture para a presença dos registros marcados como futuros;
+# MAGIC não é prova de ausência de todas as formas de vazamento:
 
 # COMMAND ----------
 
@@ -258,8 +261,8 @@ for atraso in [0, 3, 30, 60]:
 # MAGIC
 # MAGIC **A lição:** o atraso não é um detalhe de configuração, é uma
 # MAGIC característica da fonte de dados. Descubra o valor real com quem opera a
-# MAGIC fonte. Declarar zero por omissão é assumir publicação instantânea, o que
-# MAGIC quase nunca é verdade.
+# MAGIC fonte. Declarar zero é assumir disponibilidade no instante de referência;
+# MAGIC isso pode ser correto em algumas fontes, mas precisa ser confirmado.
 
 # COMMAND ----------
 # MAGIC %md
@@ -269,13 +272,13 @@ for atraso in [0, 3, 30, 60]:
 # MAGIC   obrigatório de propósito: um palpite errado aqui produz vazamento com
 # MAGIC   aparência de rigor. Se ninguém sabe o atraso, descobrir é o primeiro
 # MAGIC   passo, não usar zero.
-# MAGIC - **Quando a decisão não tem instante próprio.** Se todas as linhas
-# MAGIC   compartilham uma data de corte, `pit_join` funciona mas é exagero: um
-# MAGIC   filtro resolve.
+# MAGIC - **Quando uma única data de corte permite solução mais simples.** Ainda
+# MAGIC   é necessário selecionar a última versão elegível por chave; só filtrar
+# MAGIC   a data não resolve múltiplas versões nem empates.
 # MAGIC - **Como garantia contra todo vazamento.** Ele resolve o temporal na
 # MAGIC   junção. Alvo construído com informação futura, feature derivada da
-# MAGIC   população inteira e split aleatório continuam vazando por outros
-# MAGIC   caminhos.
+# MAGIC   população inteira podem vazar por outros caminhos. Um split aleatório
+# MAGIC   também pode ser inadequado em problemas temporais; avalie o desenho.
 # MAGIC - **Em volume grande, sem olhar o plano.** A junção é por intervalo, e o
 # MAGIC   custo dela depende de otimização que só se confirma com `explain()` sobre
 # MAGIC   dado representativo.

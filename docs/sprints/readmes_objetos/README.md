@@ -6,9 +6,10 @@ A produção operacional começa somente depois do aceite do contrato e do pilot
 
 ## Estado e próxima ação
 
-R01 entrega uma **fundação candidata**, com três exemplares e controles locais.
-O próximo marco é o aceite humano deste lote; R02 ainda não começou. O
-[checkpoint](CHECKPOINT_R01.md) registra execução e limitações. O
+R02 entrega os seis READMEs do piloto sobre a fundação candidata da R01.
+O próximo marco é avaliar o piloto antes de congelar o contrato e autorizar R03.
+O [checkpoint atual](CHECKPOINT_R02.md) registra execução e limitações;
+o [checkpoint R01](CHECKPOINT_R01.md) preserva o estado daquela entrega. O
 [plano R00](PLANO_R00.md) é histórico: suas afirmações de “não executado” descrevem
 aquela entrega, não o estado posterior.
 
@@ -18,9 +19,9 @@ aquela entrega, não o estado posterior.
 |---|---|
 | Examinar o formato e a linguagem | [Template de objeto](../../../ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md) |
 | Julgar a qualidade, além da estrutura | [Checklist editorial](../../../ambiente_fonte/.assistant/hub_padroes/readme/checklist_objeto.md) |
-| Ver o que mudou além dos READMEs | [Matriz efetiva de alterações](MATRIZ_ALTERACOES_R01.md) |
-| Conhecer inconsistências observadas | [Achados R01](ACHADOS_R01.md) |
-| Ver o resultado da execução | [Relatório R01](RELATORIO_R01.md) |
+| Ver o que mudou além dos READMEs | [Matriz R02](MATRIZ_ALTERACOES_R02.md) · [Matriz R01](MATRIZ_ALTERACOES_R01.md) |
+| Conhecer inconsistências observadas | [Achados R02](ACHADOS_R02.md) · [Achados R01](ACHADOS_R01.md) |
+| Ver o resultado da execução | [Relatório R02](RELATORIO_R02.md) · [Relatório R01](RELATORIO_R01.md) |
 | Saber quais legados faltam | [Controle de migração](CONTROLE_MIGRACAO.json) |
 
 ## Como evitar deriva na continuação
