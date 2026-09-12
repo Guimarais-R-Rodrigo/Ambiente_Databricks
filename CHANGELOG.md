@@ -5,6 +5,24 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — V02: alinhamento documental da candidata remota (Codex)
+
+### Corrigido
+
+- (Codex) Índices e checkpoint passaram a apresentar a V02 como etapa corrente no
+  PR #14, preservando o guia de primeiro uso da V01 como referência histórica e
+  mantendo separadas validação funcional, aceite, integração e publicação.
+- (Codex) Saída reproduzível do README raiz sincronizada após os novos links
+  documentais; o validador continua fail-closed e nenhuma guarda foi relaxada.
+
+### Notas
+
+- (Codex) Correção exclusivamente documental sobre o núcleo funcional já testado;
+  sem mudança em API, schema, fixtures, assets, aparência ou consumidores legados.
+- (Codex) Sem merge da V02, publicação Databricks, homologação de Spark/widgets/
+  Apps/AI-BI ou início da V03. Auditoria independente e teste com iniciante seguem
+  pendentes.
+
 ## 2026-09-12 — V02: conciliação com R03-A/R03-B integrada (Codex)
 
 ### Atualizado
