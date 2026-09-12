@@ -1,6 +1,9 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # `safe_display` — exibir sem trazer a tabela para o driver
+# MAGIC # `safe_display` — limitar a prévia antes de chamar o renderer
+# MAGIC
+# MAGIC > **Comece pelo conceito:** [README.md](README.md) explica quando usar, quando evitar,
+# MAGIC > entradas, saídas e limitações antes da execução deste exemplo.
 # MAGIC
 # MAGIC **O problema.** `display(df)` numa tabela grande parece inofensivo porque a
 # MAGIC interface mostra só as primeiras linhas. Dependendo do que veio antes na
@@ -104,8 +107,9 @@ base.limit(10).explain(mode="simple")
 # MAGIC decide se o Spark processa dez linhas ou a base inteira para depois jogar
 # MAGIC fora.
 # MAGIC
-# MAGIC O helper não faz mágica: ele só garante que o limite entre no plano em vez
-# MAGIC de depender de a interface truncar o resultado depois de pronto.
+# MAGIC O helper não faz mágica: ele insere o limite no DataFrame entregue ao
+# MAGIC renderer e evita uma contagem integral **apenas para descobrir o truncamento**.
+# MAGIC Transformações anteriores que exigem processamento amplo continuam custando.
 
 # COMMAND ----------
 # MAGIC %md

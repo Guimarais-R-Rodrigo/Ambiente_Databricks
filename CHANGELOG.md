@@ -35,6 +35,37 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 - (Codex) `mode=dark` e `high_contrast` permanecem válidos no contrato, mas o adaptador Plotly V03 os recusa até existirem tokens de superfície suficientes.
 - (Codex) Sem aceite/merge V03, publicação Databricks, migração de consumidores, V04/V05 ou homologação operacional.
 
+## 2026-09-12 — R04-A: seis guias de operações Spark (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) READMEs de `date_features`, `join_diagnostics`, `null_summary`,
+  `psi_calculator`, `safe_display` e `smart_sample`, com relatório, achados,
+  rubrica, matriz e testes suplementares da R04-A.
+
+### Atualizado
+
+- (ChatGPT) Seis notebooks recebem backlinks e correções exclusivamente de
+  prosa; implementações, fachadas, magics e saídas históricas são preservadas.
+- (ChatGPT) Coleção, Manual e índices passam a oferecer rotas para os seis guias;
+  controle de migração retira somente as seis dispensas correspondentes.
+- (ChatGPT) Cobertura estrutural candidata passa a 26/75 operacionais, três
+  exemplares e 49 pendências; isso não representa publicação ou aceite editorial.
+
+### Corrigido
+
+- (ChatGPT) Explicações sobre feriados fixos, cobertura de join, limiares de
+  nulos, PSI/CSI, renderer de display e garantia de tamanho da amostra são
+  alinhadas ao comportamento observado, sem mudança funcional silenciosa.
+
+### Notas
+
+- (ChatGPT) A R04-A foi produzida e validada inicialmente sobre `1be947b`; antes do PR final,
+  foi reconciliada com a main `6085eab`, que já contém a V02 aceita. A composição final
+  preserva a V02 e repete os gates; auditoria independente e homologação Databricks permanecem separadas.
+- (ChatGPT) Pausa obrigatória antes da R04-B; nenhuma publicação ou merge é
+  presumido por esta entrada.
+
 ## 2026-09-12 — V02: aceite e integração Git concluídos (Codex)
 
 ### Atualizado
