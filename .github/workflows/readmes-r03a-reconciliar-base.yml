@@ -1,0 +1,30 @@
+name: Bases da conciliacao R03-A e V00
+on:
+  push:
+    branches: [codex/readmes-r03a]
+    paths: [.github/workflows/readmes-r03a-reconciliar-base.yml]
+permissions:
+  contents: read
+jobs:
+  base:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Exportar somente historico, sem alterar branches
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = 7bb2db65718d6350e4ad753c1744fa48a7fb55ea
+          git branch r03a-revisada 7bb2db65718d6350e4ad753c1744fa48a7fb55ea
+          git branch main-v00-base b88a9ccdde6e61892bc25eb7cf4f4b2577badb23
+          git bundle create "$RUNNER_TEMP/r03a-v00-bases.bundle" r03a-revisada main-v00-base
+          git bundle verify "$RUNNER_TEMP/r03a-v00-bases.bundle"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r03a-v00-bases
+          path: ${{ runner.temp }}/r03a-v00-bases.bundle
+          retention-days: 1
