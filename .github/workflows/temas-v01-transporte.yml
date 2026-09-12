@@ -1,30 +1,122 @@
-name: V01 conferencia temporaria de transporte
+name: V01 validacao e transporte temporarios
 on:
   push:
     branches: [codex/temas-v01]
-    paths: [.github/workflows/temas-v01-transporte.yml, .github/temas-v01-payload/**]
+    paths: [.github/workflows/temas-v01-transporte.yml]
 permissions:
   contents: read
 jobs:
-  conferir:
+  validar:
+    if: github.ref == 'refs/heads/codex/temas-v01'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      BASE: b88a9ccdde6e61892bc25eb7cf4f4b2577badb23
+      EXPECTED_TREE: fd0aa6a505dda994b63f36d2bd9c1439c974c111
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Registrar bytes recebidos sem executar o conteudo
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reconstruir exatamente a candidata local antes de executar codigo
         shell: bash
         run: |
           set -euo pipefail
-          test "$GITHUB_REF" = refs/heads/codex/temas-v01
-          mkdir -p "$RUNNER_TEMP/v01-transporte"
-          cp .github/temas-v01-payload/parte*.b64 "$RUNNER_TEMP/v01-transporte/"
-          git rev-parse HEAD > "$RUNNER_TEMP/v01-transporte/commit.txt"
-          sha256sum .github/temas-v01-payload/parte*.b64 > "$RUNNER_TEMP/v01-transporte/sha256.txt"
+          mkdir -p "$RUNNER_TEMP/v01-evidencias"
+          python - <<'PY'
+          import base64, bz2, hashlib, os, pathlib, subprocess
+          received = ['519dd1ac8199ddc8fd276fc52b40a8261bee52ad','5200dc90ab45d7345be159465ddaab80c6410402','daf1fbc24c84ce8c177bbf6a58b5215222376521','609fea2f9822cfd46f53116ae42d96f6541956ae','caed52252c433a3180eeb4014c29f987bc5e371f']
+          expected = ['afcbdd7c378354ace8f176aac0311af483f86dc9','3efe5727aa0e4e9b2dde7e34d8b69858f70c73f3',*received[2:]]
+          edits = [[(13402,13404)],[(440,442),(445,447)],[],[],[]]
+          parts = []
+          for i in range(5):
+              data = pathlib.Path(f'.github/temas-v01-payload/parte{i+1:02d}.b64').read_bytes()
+              def blob_sha(b):
+                  return hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+              assert blob_sha(data) == received[i], f'bytes recebidos inesperados: {i+1}'
+              for start,end in reversed(edits[i]):
+                  data = data[:start] + data[end:]
+              assert blob_sha(data) == expected[i], f'correcao nao reproduz original: {i+1}'
+              parts.append(data)
+          encoded = b''.join(parts)
+          assert len(encoded) == 68908
+          patch = bz2.decompress(base64.b64decode(encoded,validate=True))
+          assert len(patch) == 319047
+          assert hashlib.sha256(patch).hexdigest() == 'fb491ad684ece5aab3d274c17a027f82203f54332cc44a4234da0fe524e6f6c6'
+          target = pathlib.Path(os.environ['RUNNER_TEMP'])/'v01.patch'
+          target.write_bytes(patch)
+          subprocess.run(['git','rm','-r','--','.github/temas-v01-payload','.github/workflows/temas-v01-preparacao.yml','.github/workflows/temas-v01-transporte.yml'],check=True)
+          subprocess.run(['git','apply','--check',str(target)],check=True)
+          subprocess.run(['git','apply','--index',str(target)],check=True)
+          tree = subprocess.check_output(['git','write-tree'],text=True).strip()
+          assert tree == os.environ['EXPECTED_TREE'], tree
+          print('PASS_TRANSPORTE_EXATO',tree)
+          PY
+          git diff --cached --exit-code "$BASE" -- ambiente_fonte Novo_Ambiente_Simulado MANUAL_TECNICO.md tools/ci_local.py .github/workflows/ci.yml .github/workflows/temas-v00-ci.yml .github/workflows/kit-transicao-trabalho.yml
+          git -c user.name=Codex -c user.email=noreply@openai.com commit -m 'feat(temas): candidata V01 reconciliada e transportada para validacao (Codex)'
+          test -z "$(git status --porcelain)"
+      - name: Instalar dependencias de manutencao
+        run: python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt
+      - name: Validar contrato, regressao e oito etapas do CI
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/v01-evidencias"
+          python -m pip freeze > "$OUT/dependencias.txt"
+          python --version > "$OUT/python.txt"
+          python -B tools/temas_v01_contract.py 2>&1 | tee "$OUT/contrato.log"
+          python -B -m unittest discover -s tools/tests -p 'test_temas_v01*.py' -v 2>&1 | tee "$OUT/testes-v01.log"
+          python -B tools/tests/test_inventario_visual.py 2>&1 | tee "$OUT/inventario-v00.log"
+          python -B tools/tests/test_visual_legado_v00.py 2>&1 | tee "$OUT/legado-v00.log"
+          python -B tools/tests/test_baseline_visual_runner.py 2>&1 | tee "$OUT/relatorios-v00.log"
+          python -B -m unittest discover -s tools/readme_visuals/tests -p test_publish_production.py -v 2>&1 | tee "$OUT/publicador-visual.log"
+          python -B tools/ci_local.py --verbose 2>&1 | tee "$OUT/ci.log"
+          git diff --exit-code
+          git diff --cached --exit-code
+          test -z "$(git status --porcelain)"
+          test "$(git rev-parse HEAD^{tree})" = "$EXPECTED_TREE"
+      - name: Gravar objetos Git sem atualizar qualquer branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, pathlib, subprocess, urllib.request
+          root = pathlib.Path.cwd()
+          def git(*args):
+              return subprocess.check_output(['git',*args],text=True).strip()
+          assert os.environ['GITHUB_REF'] == 'refs/heads/codex/temas-v01'
+          assert git('rev-parse','HEAD^{tree}') == os.environ['EXPECTED_TREE']
+          changed = git('diff','--name-only',os.environ['BASE'],'HEAD').splitlines()
+          entries = []
+          for name in changed:
+              path = root/name
+              assert path.is_file() and not path.is_symlink(), name
+              entries.append({'path':name,'mode':'100644','type':'blob','content':path.read_bytes().decode('utf-8')})
+          def post(endpoint,data):
+              url = 'https://api.github.com/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/'+endpoint
+              request = urllib.request.Request(url,data=json.dumps(data).encode(),headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'},method='POST')
+              with urllib.request.urlopen(request,timeout=60) as response:
+                  return json.load(response)
+          tree = post('trees',{'base_tree':git('rev-parse',os.environ['BASE']+'^{tree}'),'tree':entries})
+          assert tree['sha'] == os.environ['EXPECTED_TREE'],tree['sha']
+          commit = post('commits',{'message':'feat(temas): V01 reconciliada com main, contrato e guias testados (Codex)\n\n138 testes V01, oito etapas do CI e regressoes V00/publicador aprovados no run '+os.environ['GITHUB_RUN_ID']+'. Mesma arvore validada localmente. ADR proposto, sem merge ou publicacao Databricks. Instrumentos temporarios removidos.','tree':tree['sha'],'parents':[os.environ['GITHUB_SHA']]})
+          record = {'candidate_commit':commit['sha'],'tree':tree['sha'],'parent':os.environ['GITHUB_SHA'],'base':os.environ['BASE'],'run_id':os.environ['GITHUB_RUN_ID'],'changed_files':len(entries),'branch_updated':False,'databricks_published':False}
+          out = pathlib.Path(os.environ['RUNNER_TEMP'])/'v01-evidencias'
+          (out/'REMOTE_CANDIDATE.json').write_text(json.dumps(record,indent=2),encoding='utf-8')
+          print(json.dumps(record,indent=2))
+          PY
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: v01-transporte-${{ github.run_id }}
-          path: ${{ runner.temp }}/v01-transporte/
-          retention-days: 7
+          name: v01-validacao-${{ github.run_id }}
+          path: ${{ runner.temp }}/v01-evidencias/
+          retention-days: 30
