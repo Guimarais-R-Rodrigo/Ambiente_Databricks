@@ -9,8 +9,11 @@ esconde os outros e obriga a rodar de novo para cada um:
 2. `hub_snippets/tests/test_core.py`   — regressões da biblioteca;
 3. `tools/tests/test_tool_guards.py`   — guardas das próprias ferramentas.
 4. `tools/tests/test_transicao_trabalho.py` — kit, notebook e guardas de aceite.
-5. Concierge — estrutura do pacote, regressões do verificador e integração.
-   Não avalia roteamento conversacional; esse gate continua no Genie Code.
+5. READMEs — contrato, migração e regressões de convivência com o Concierge;
+6. Concierge — estrutura do pacote;
+7. Concierge — regressões do verificador;
+8. Concierge — integração canônica e espelho.
+   Essas etapas não avaliam roteamento conversacional; esse gate continua no Genie Code.
 
 O que este gate **não** faz, por decisão do plano consolidado: nada que precise
 de credencial, rede ou runtime Databricks. Publicação, verify remoto, smoke em
@@ -66,6 +69,11 @@ ETAPAS = [
         "transicao",
         "guardas do kit e notebook de aceite (Spark opcional separado)",
         [sys.executable, "tools/tests/test_transicao_trabalho.py"],
+    ),
+    (
+        "readmes",
+        "contrato dos READMEs, dispensas monotônicas e integração com Concierge",
+        [sys.executable, "-B", "-m", "unittest", "discover", "-s", "tools/tests", "-p", "test_readme*.py", "-v"],
     ),
     (
         "concierge-pacote",

@@ -12,6 +12,7 @@ plausível e errada.
 
 ```text
 hub_prompts/<nome_do_prompt>/
+├── README.md                       # conceito, contexto e limites de uso
 ├── <nome_do_prompt>.md             # o briefing
 └── exemplo_<nome_do_prompt>.py     # notebook de três partes
 ```
@@ -93,3 +94,10 @@ canônico — os demais foram absorvidos:
 O exemplo preenchido está em
 [`analisar_campanha/analisar_campanha.md`](analisar_campanha/analisar_campanha.md), com a resposta
 real em [`exemplo/exemplo_analisar_campanha.py`](analisar_campanha/exemplo_analisar_campanha.py).
+
+## README do objeto
+
+Aplique o [molde de objeto](../readme/template_objeto.md); veja o
+[exemplar](analisar_campanha/README.md). O README explica quando e por que usar
+o briefing. Mantenha instruções de preenchimento, QA, limites e bloco colável
+no prompt original. A navegação para o README fica fora desse bloco.

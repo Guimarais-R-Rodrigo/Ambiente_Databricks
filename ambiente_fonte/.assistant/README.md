@@ -14,7 +14,7 @@
 
 | Se você quer... | Continue em... |
 |---|---|
-| não saber qual recurso utilizar | [Concierge Hub](skills/hub-ml-concierge/README.md) |
+| descobrir qual recurso utilizar | [Concierge Hub](skills/hub-ml-concierge/README.md) |
 | conhecer o propósito do Hub | [Visão Geral](#-o-que-é-este-ecossistema-e-como-ele-ajuda-no-databricks) |
 | escolher entre skill, prompt, snippet e script | [Componentes](#-o-que-tem-neste-ambiente-e-como-ele-ajuda-na-rotina-de-trabalho) |
 | entender o que é automático ou manual | [Arquitetura](#️-arquitetura-completa-do-ecossistema) |
@@ -341,3 +341,10 @@ Sim. Use `hub_padroes/` e `@hub-ml-criar-objeto`, mantendo código, exportação
 - [Agent Skills](https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills)
 - [Instruções customizadas](https://learn.microsoft.com/en-us/azure/databricks/genie-code/instructions)
 - [Dependências em serverless](https://learn.microsoft.com/en-us/azure/databricks/compute/serverless/dependencies)
+
+## Entender um objeto antes de executar
+
+Nos objetos já documentados, comece pelo `README.md` da própria pasta. Ele
+explica conceito, escolha e limites, e aponta para o notebook. A migração é
+gradual; o [Manual](MANUAL_TECNICO.md#readmes-objeto) mantém a visão integrada.
+A inclusão do guia não instala dependências nem executa código.

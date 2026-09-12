@@ -2,20 +2,22 @@
 # MAGIC %md
 # MAGIC # `isolation_forest` — contaminação é premissa, não descoberta
 # MAGIC
-# MAGIC **O problema.** Detecção de anomalia parece objetiva — o algoritmo acha o que é estranho. Só que o parâmetro `contamination` **diz ao algoritmo quantas anomalias encontrar**. Ele sempre encontra essa fração, tenha ela sentido ou não, e o resultado tem a mesma aparência nos dois casos.
+# MAGIC **O problema.** O modelo ordena observações pelos padrões aprendidos nos dados. `contamination` numérico calibra o corte usado para rotulá-las; não descobre sozinho a prevalência real de anomalias. Empates e discretização podem impedir que a fração marcada seja exatamente a informada.
 # MAGIC
-# MAGIC **O que este helper faz.** Treina o isolation forest com contaminação declarada e perfila as anomalias encontradas.
+# MAGIC **O que este helper faz.** Treina Isolation Forest e oferece uma função separada de perfil. Este notebook exercita o treinamento e a mudança do corte, mas não chama `profile_anomalies`.
 
+# MAGIC **Antes de usar:** veja o [README do objeto](README.md) para conceito, requisitos, efeitos e interpretação. As saídas históricas abaixo foram preservadas; a revisão R02 não as transforma em execução recente.
+# MAGIC
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
-# MAGIC | Bibliotecas | nenhuma além do runtime |
+# MAGIC | Compute | execução local em pandas/scikit-learn; conferir pacotes e memória do ambiente |
+# MAGIC | Bibliotecas | NumPy, pandas, scikit-learn e MLflow; o import de MLflow é obrigatório mesmo com `log_mlflow=False` |
 # MAGIC | Dados | sintéticos, gerados aqui — o módulo opera **driver-side** |
-# MAGIC | Escrita | nenhuma; tudo em memória |
+# MAGIC | Escrita | sem tabela persistente; chamadas desabilitam logging explícito do helper; conferir autologging externo |
 # MAGIC | Diferença Free × trabalho | nenhuma conhecida |
 
 # COMMAND ----------
@@ -64,9 +66,10 @@ print(f"marcados como anomalia: {detectados}")
 # MAGIC   contamination=0.10 -> 300 marcados, 30 deles realmente estranhos
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** O número de marcados corresponde à contaminação declarada,
-# MAGIC porque foi ela que o determinou. Aqui a premissa estava certa — plantamos
-# MAGIC 1% e pedimos 1% —, e por isso o resultado parece impressionante.
+# MAGIC **Como ler.** Nesta execução histórica, o número marcado acompanhou a fração
+# MAGIC informada. A fixture contém grupos artificialmente bem separados; acertar
+# MAGIC esse cenário não demonstra desempenho em uma população real. A seleção e
+# MAGIC a ordenação dos pontos dependem dos dados, além da escolha do corte.
 
 # COMMAND ----------
 # MAGIC %md
@@ -85,20 +88,21 @@ for c in (0.01, 0.05, 0.10):
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** O total de marcados acompanha a contaminação, não o dado. Com
-# MAGIC 10% o modelo marca dez vezes mais pontos, e a maioria dos novos é normal —
-# MAGIC mas o relatório de saída tem exatamente a mesma cara.
+# MAGIC **Como ler.** Com a fração de 10%, a saída histórica marca mais observações
+# MAGIC normais da fixture. Isso ensina a separar a ordenação estatística da regra
+# MAGIC que transforma scores em rótulos.
 # MAGIC
-# MAGIC O erro de interpretação mais provável: tratar a lista de anomalias como
-# MAGIC descoberta. Ela é a resposta a uma pergunta que **você** fez, com a fração
-# MAGIC que **você** informou. Sem uma estimativa externa de quantas anomalias
-# MAGIC existem, o parâmetro é chute — e vale dizer isso no relatório.
+# MAGIC Justifique o corte por evidência ou por um objetivo operacional declarado,
+# MAGIC como capacidade de investigação; não apresente uma política operacional
+# MAGIC como estimativa da prevalência verdadeira. Examine sensibilidade e falsos
+# MAGIC positivos com evidência adicional. As saídas antigas não foram reexecutadas
+# MAGIC para preencher esta revisão documental.
 
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
-# MAGIC - **Sem justificar a contaminação.** É o parâmetro que determina o resultado, e ele não vem do dado.
-# MAGIC - **Como detector de fraude pronto.** Anomalia estatística e fraude são conjuntos diferentes que se cruzam pouco.
-# MAGIC - **Sobre features em escalas muito diferentes** sem padronizar.
-# MAGIC - **Como rótulo para treinar supervisionado.** Você estaria ensinando o modelo a reproduzir a sua premissa.
+# MAGIC - **Sem justificar a regra de corte.** Ela não é uma descoberta automática da frequência real de anomalias.
+# MAGIC - **Como detector de fraude homologado.** Anomalia estatística não comprova fraude; a relação exige investigação.
+# MAGIC - **Pressupondo que padronização seja exigência universal de árvores de isolamento.** Este wrapper a oferece; não confunda default com pressuposto do método.
+# MAGIC - **Como verdade de referência sem validação.** Pseudorrótulos reproduzem escolhas do detector e não equivalem a rótulos observados independentemente.

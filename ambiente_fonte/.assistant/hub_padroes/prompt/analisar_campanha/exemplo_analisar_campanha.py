@@ -1,5 +1,7 @@
 # Databricks notebook source
 # MAGIC %md
+# MAGIC [Conceito, requisitos e limites deste exemplar](README.md).
+# MAGIC
 # MAGIC # `analisar_campanha` — o prompt sendo usado de verdade
 # MAGIC
 # MAGIC **Por que este notebook é diferente dos outros.** Um prompt não executa:

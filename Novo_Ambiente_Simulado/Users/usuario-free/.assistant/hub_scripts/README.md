@@ -336,3 +336,15 @@ Eles foram estruturados como módulos Python importáveis. Podem ser chamados em
 - [Lakeflow expectations](https://learn.microsoft.com/en-us/azure/databricks/ldp/expectations)
 - [Event log de pipelines](https://learn.microsoft.com/en-us/azure/databricks/ldp/monitor-event-logs)
 - [Notificações de Lakeflow Jobs](https://learn.microsoft.com/en-us/azure/databricks/jobs/notifications)
+
+## Guias locais por objeto
+
+Cada objeto novo inclui um `README.md` para explicar conceito, contexto e
+limites antes do exemplo. A migração dos legados é gradual. O
+[contrato editorial](../hub_padroes/readme/template_objeto.md) padroniza essa
+leitura; o Manual continua sendo o catálogo integrado. Leia o aviso de efeitos
+do exemplo: ele pode escrever mesmo quando o helper apenas lê.
+
+No piloto R02, o [guia de quick_profile](quick_profile/README.md) explica
+o que vem da tabela inteira e o que vem da amostra, além dos limites de
+cardinalidade e da possível exposição de categorias sensíveis.

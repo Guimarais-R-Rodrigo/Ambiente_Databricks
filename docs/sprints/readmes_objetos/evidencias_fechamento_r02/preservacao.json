@@ -1,0 +1,11 @@
+{
+  "base": "0c76bce9f3fa0f52b4312b60c3059e0fd27a2733",
+  "modulos_e_testes_de_helpers_intactos": 124,
+  "notebooks_piloto_ast_magics_outputs_iguais": 6,
+  "blocos_colaveis_iguais": 17,
+  "arquivos_em_prefixos_protegidos_iguais": 266,
+  "controle_migracao_igual": true,
+  "manual_tres_copias_identicas_e_intactas": true,
+  "contrato_e_exemplares_intactos": true,
+  "sucesso": true
+}

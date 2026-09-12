@@ -6,11 +6,12 @@
 > assinatura da função. O que estiver em `taxa_resposta_campanha/` é referência
 > de forma, **não biblioteca**: não o importe em trabalho real.
 
-Um snippet do Hub é uma **pasta**, não um arquivo. Três arquivos, sempre os
-mesmos, sempre com estes nomes:
+Um snippet do Hub é uma **pasta**, não um arquivo. O objeto completo reúne
+README humano, fachada, implementação e notebook, com estes nomes:
 
 ```text
 hub_snippets/<secao>/<nome_do_snippet>/
+├── README.md                       # conceito, escolha e uso seguro
 ├── __init__.py                     # declara a API pública
 ├── <nome_do_snippet>.py            # a implementação
 └── exemplo_<nome_do_snippet>.py    # notebook que demonstra e ensina
@@ -212,6 +213,15 @@ pedia smoke test e não pedia catálogo, outra o inverso. Uma lista só, com um
 dono, é o conserto.
 
 Os dois primeiros itens de verificação automática estão marcados: o validador
-confere nome de pasta, presença dos três arquivos e se o `__init__.py` bate com a
-API pública do módulo. Os demais são manuais — e o item do smoke test só é
+confere nome de pasta, os artefatos executáveis e se o `__init__.py` bate com a
+API pública do módulo. A guarda de README confere a quarta peça segundo o
+contrato de objeto e as dispensas transitórias de legados. Os demais são manuais — e o item do smoke test só é
 alcançável depois que a seção inteira estiver convertida.
+
+## README do objeto
+
+Escreva o [README de objeto](../readme/template_objeto.md) e confira o
+[exemplar preenchido](taxa_resposta_campanha/README.md). Ele explica o conceito
+e a escolha; o notebook continua demonstrando a execução. Novos objetos exigem
+o README. A dispensa de legados é transitória e controlada no repositório;
+converter a documentação não autoriza alterar a implementação.

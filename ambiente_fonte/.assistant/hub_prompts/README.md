@@ -470,3 +470,15 @@ Não. A skill pode ser selecionada por relevância ou `@`. Snippets e scripts pr
 - [Hub Scripts](../hub_scripts/README.md)
 - [Boas práticas de prompting na Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/tips)
 - [Funcionalidades da Genie Code](https://learn.microsoft.com/en-us/azure/databricks/genie-code/features-capabilities)
+
+## Guias locais por objeto
+
+Cada objeto novo inclui um `README.md` para explicar conceito, contexto e
+limites antes do exemplo. A migração dos legados é gradual. O
+[contrato editorial](../hub_padroes/readme/template_objeto.md) padroniza essa
+leitura; o Manual continua sendo o catálogo integrado. Leia o aviso de efeitos
+do exemplo: ele pode escrever mesmo quando o helper apenas lê.
+
+No piloto R02, o [guia de eda_rapida](eda_rapida/README.md) explica quando
+usar o briefing e como avaliar sua resposta. Leia também o aviso de overwrite
+do notebook: o preparo escreve uma tabela, separadamente do pedido de leitura.
