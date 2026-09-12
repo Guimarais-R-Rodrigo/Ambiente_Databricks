@@ -1,0 +1,113 @@
+name: V00 — diagnóstico temporário sem Databricks
+on:
+  push:
+    branches: [codex/temas-v00]
+    paths:
+      - .github/workflows/temas-v00-execucao.yml
+      - tools/inventario_visual.py
+      - tools/executar_baseline_visual.py
+      - tools/tests/test_inventario_visual.py
+      - tools/tests/test_visual_legado_v00.py
+permissions:
+  contents: write
+concurrency:
+  group: temas-v00-diagnostico
+  cancel-in-progress: false
+jobs:
+  diagnosticar:
+    if: github.ref == 'refs/heads/codex/temas-v00'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: codex/temas-v00
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: tools/readme_visuals/.node-version
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10'
+      - name: Dependências locais de testes
+        run: |
+          python -m pip install -r tools/requirements-dev.txt
+          pnpm --dir tools/readme_visuals install --frozen-lockfile
+      - name: Registrar autoria e navegação sem tocar produto
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git config user.name 'Codex'
+          git config user.email 'codex@example.invalid'
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('CHANGELOG.md')
+          s=p.read_text(encoding='utf-8')
+          title='## 2026-09-12 — V00 candidata do Sistema de Temas (Codex)'
+          if title not in s:
+              entry=title+'\n\n### Adicionado\n\n- (Codex) Inventário visual somente leitura, runner comparativo e testes adversariais e de contratos legados.\n- (Codex) Guia de V00 para leitores não técnicos, achados, matriz de ambientes e checkpoint.\n\n### Limites\n\n- (Codex) Resultados em `docs/testes/sistema_temas/V00/`; execução e aceite são distintos.\n- (Codex) Produto, Manual e espelho preservados; sem render, publicação ou teste Databricks.\n- (Codex) Revisão semântica independente, teste de leitura e aceite antes de V01 permanecem pendentes.\n\n'
+              pos=s.index('\n## ')+1
+              p.write_text(s[:pos]+entry+s[pos:],encoding='utf-8')
+          for file,append in {
+              'docs/README.md':'\n## Sistema de Temas — execução candidata\n\n[Diagnóstico V00 e próximos critérios de aceite](sprints/sistema_temas/README.md). Sem mudança no visual do produto.\n',
+              'tools/README.md':'\n## Diagnóstico visual V00\n\n`inventario_visual.py` e `executar_baseline_visual.py` produzem evidência somente em `.artifacts/`. Consulte o [guia da V00](../docs/sprints/sistema_temas/V00.md) antes de executar. Não publicam nem alteram o produto.\n'
+          }.items():
+              p=Path(file); s=p.read_text(encoding='utf-8')
+              if append.strip() not in s: p.write_text(s+append,encoding='utf-8')
+          PY
+          git add CHANGELOG.md docs/README.md tools/README.md
+          if ! git diff --cached --quiet; then git commit -m 'docs: autoria e navegação V00 (Codex)'; fi
+          git worktree add --detach "$RUNNER_TEMP/baseline-temas-v00" 8744157fe9c3e0603f689fb2bcad52445e96cb41
+      - name: Executar comparação e todos os diagnósticos
+        id: diagnostico
+        continue-on-error: true
+        run: python -B tools/executar_baseline_visual.py --base-root "$RUNNER_TEMP/baseline-temas-v00" --output .artifacts/temas-v00
+      - name: Registrar somente evidência efetivamente produzida
+        if: always()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import shutil,json
+          src=Path('.artifacts/temas-v00'); dst=Path('docs/testes/sistema_temas/V00')
+          dst.mkdir(parents=True,exist_ok=True)
+          for name in ['RESUMO.json','RELATORIO_TECNICO.md','MATRIZ_AUTOMATICA.md','manifesto_protecao.json']:
+              p=src/name
+              if p.exists(): shutil.copyfile(p,dst/name)
+          if not (src/'RESUMO.json').exists():
+              (dst/'RELATORIO_TECNICO.md').write_text('# Resultado técnico V00\n\nBLOQUEADO: a execução não chegou a produzir o resumo final. Consultar os logs do workflow; nenhum resultado aprovado é inferido.\n',encoding='utf-8')
+          PY
+          git add docs/testes/sistema_temas/V00
+          if ! git diff --cached --quiet; then git commit -m 'test: evidências observadas da V00 (Codex)'; fi
+      - name: Gate atual após registro das evidências
+        id: final_gate
+        continue-on-error: true
+        run: |
+          mkdir -p .artifacts/temas-v00
+          set -o pipefail
+          python -B tools/ci_local.py --verbose 2>&1 | tee .artifacts/temas-v00/ci_final.log
+      - name: Avançar somente a branch de trabalho sem force
+        if: always()
+        run: |
+          test "$(git ls-remote origin refs/heads/codex/temas-v00 | cut -f1)" = "$GITHUB_SHA"
+          git push origin HEAD:refs/heads/codex/temas-v00
+      - name: Guardar logs e inventários sem fontes gráficas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: temas-v00-${{ github.run_id }}
+          path: .artifacts/temas-v00/
+          include-hidden-files: true
+          retention-days: 14
+      - name: Não transformar falha em aprovação
+        if: always()
+        env:
+          DIAGNOSTICO: ${{ steps.diagnostico.outcome }}
+          FINAL_GATE: ${{ steps.final_gate.outcome }}
+        run: test "$DIAGNOSTICO" = success && test "$FINAL_GATE" = success
