@@ -6,17 +6,20 @@
 # MAGIC
 # MAGIC **O que este objeto oferece.** Três selos em HTML — status com semáforo, score com faixa e destaque em linha — para responder essa pergunta antes que ela seja feita.
 
+# MAGIC
+# MAGIC Antes de executar, consulte o [guia do objeto](README.md): conceito, requisitos, efeitos e limites.
+
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
-# MAGIC | Bibliotecas | nenhuma além do runtime |
-# MAGIC | Dados | nenhum — este objeto não recebe dados |
+# MAGIC | Compute | exemplo usa sessão Spark para localizar usuário; renderização conforme notebook |
+# MAGIC | Bibliotecas | biblioteca padrão Python e módulos locais do Hub; confira a preparação da sessão |
+# MAGIC | Dados | textos e valores definidos nas células; nenhuma tabela externa |
 # MAGIC | Escrita | nenhuma; tudo em memória |
-# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
+# MAGIC | Diferença Free × trabalho | compatibilidade do destino não revalidada nesta rodada |
 
 # COMMAND ----------
 
@@ -102,16 +105,23 @@ for v in valores:
 # MAGIC Aqui ele decide, em silêncio, e a decisão fica a duas casas decimais de
 # MAGIC distância de quem lê o selo.
 # MAGIC
+# MAGIC O texto é arredondado, mas o corte usa o valor original: `79.6` pode
+# MAGIC aparecer como “80/100” ainda no estilo de atenção. Verifique o número
+# MAGIC sem arredondamento antes de interpretar uma faixa. O helper também não
+# MAGIC recusa máximo zero ou valores fora do intervalo; o chamador deve validar.
+# MAGIC O contraste do estilo de atenção é uma limitação documentada no README,
+# MAGIC não corrigida por esta sprint documental.
+# MAGIC
 # MAGIC ## Dívida registrada: as cores não vêm de `constants`
 # MAGIC
 # MAGIC O verde daqui é `#2E7D32`; o `VERDE` de `constants.colors` é `#8DC63F`.
 # MAGIC São **três sítios de declaração e dois valores**: `constants.styles`
-# MAGIC (`STYLE_BADGE_OK`) tem exatamente o mesmo CSS deste módulo, byte a byte, e
+# MAGIC (`STYLE_BADGE_OK`) tem estilos de mesma finalidade, escritos separadamente, e
 # MAGIC nenhum dos dois usa o `VERDE` oficial.
 # MAGIC
-# MAGIC A distinção importa para quem for unificar: juntar `styles` e `badge` é
-# MAGIC edição sem efeito visual nenhum; alinhar os dois ao `VERDE` de `colors`
-# MAGIC **troca a cor de todos os selos**. Só a segunda é decisão de produto.
+# MAGIC A distinção importa para quem for unificar: uma unificação de `styles` e `badge` precisa
+# MAGIC conferir contratos e apresentação; alinhar os dois ao `VERDE` de `colors`
+# MAGIC **troca as cores dos estados alinhados**. Ambas exigem revisão de produto.
 # MAGIC
 # MAGIC O inventário dos doze módulos com cor redeclarada está em
 # MAGIC `PLANO_HUB.md` §12.2.

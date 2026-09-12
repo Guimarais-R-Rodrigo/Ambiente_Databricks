@@ -6,17 +6,20 @@
 # MAGIC
 # MAGIC **O que este objeto oferece.** Vinte e duas constantes: cores institucionais, paletas prontas e cores com significado declarado.
 
+# MAGIC
+# MAGIC Antes de executar, consulte o [guia do objeto](README.md): conceito, requisitos, efeitos e limites.
+
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
-# MAGIC | Bibliotecas | nenhuma além do runtime |
+# MAGIC | Compute | exemplo usa sessão Spark para localizar usuário; renderização conforme notebook |
+# MAGIC | Bibliotecas | biblioteca padrão Python e módulos locais do Hub; confira a preparação da sessão |
 # MAGIC | Dados | nenhum — este objeto não recebe dados |
 # MAGIC | Escrita | nenhuma; tudo em memória |
-# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
+# MAGIC | Diferença Free × trabalho | compatibilidade do destino não revalidada nesta rodada |
 
 # COMMAND ----------
 
@@ -76,13 +79,13 @@ displayHTML(
 # MAGIC | **Sequencial** (5) | intensidade que só cresce — volume, contagem | "isto é mais que aquilo" |
 # MAGIC | **Divergente** (5) | desvio em torno de um centro — variação, resíduo | "isto está acima e aquilo abaixo" |
 # MAGIC
-# MAGIC O erro que mais aparece é usar sequencial para variação percentual: −20% e
-# MAGIC +20% recebem tons de azul de intensidade parecida, e o gráfico esconde
-# MAGIC justamente a mudança de sinal, que era o assunto.
+# MAGIC Para desvios em torno de zero, uma escala divergente pode comunicar os
+# MAGIC lados do centro melhor que uma sequência de intensidade. O código que
+# MAGIC monta o gráfico precisa definir domínio e centro: a lista não faz isso.
 # MAGIC
-# MAGIC **A categórica acaba em dez** — e isso é limite, não coincidência. Um
-# MAGIC gráfico com quinze séries reaproveita cor a partir da décima primeira, e
-# MAGIC duas categorias diferentes passam a ter a mesma. Se são quinze, agrupe.
+# MAGIC A categórica oferece dez cores. Com quinze categorias, o consumidor precisa
+# MAGIC decidir a estratégia: agrupar, dividir o gráfico ou acrescentar codificação
+# MAGIC textual. O módulo não repete cores nem agrupa automaticamente.
 
 
 # COMMAND ----------
@@ -163,6 +166,6 @@ for n, v in [("COR_POSITIVO", COR_POSITIVO), ("COR_NEGATIVO", COR_NEGATIVO),
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
-# MAGIC - **Com mais de dez categorias.** A paleta categórica acaba em dez; a partir da décima primeira, cor deixa de distinguir. Agrupe em "outros" antes.
-# MAGIC - **Para escala contínua com zero significativo.** Use a divergente, não a sequencial — a sequencial esconde o sinal da diferença.
+# MAGIC - **Como distinção exclusivamente cromática de muitas categorias.** A lista tem dez cores; avalie agrupamento ou outra codificação antes de atribuí-las.
+# MAGIC - **Para destacar desvios positivos e negativos sem centro definido.** Avalie a divergente e configure o centro no gráfico; nenhum desses passos é automático.
 # MAGIC - **Como sistema de acessibilidade.** Nenhuma destas paletas foi verificada para daltonismo. Cor sozinha nunca deve carregar a informação.

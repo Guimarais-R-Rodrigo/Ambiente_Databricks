@@ -1,0 +1,173 @@
+{
+  "data": "2026-09-12",
+  "objetos": [
+    {
+      "objeto": "hub_snippets/constants/colors",
+      "contrato": "1.0.0",
+      "autor": "ChatGPT",
+      "revisor": "ChatGPT",
+      "nivel": "A0_light",
+      "fontes_sha256": {
+        "ambiente_fonte/.assistant/hub_snippets/constants/colors/colors.py": "f9a6605aa1ef5a92863d728570013a91d4475952381e699e2d0b3daa29f2e8ca",
+        "ambiente_fonte/.assistant/hub_snippets/constants/colors/__init__.py": "3ddf21642eb05aec62841e75ae581f02120555e1e4caf6917d0b12aee6f804ac",
+        "ambiente_fonte/.assistant/hub_snippets/constants/colors/exemplo_colors.py": "378eaabe8b879d4117cc60c317104ed07e0f173fc9b4b32cd9ed342d93217c95"
+      },
+      "dimensoes": {
+        "conceito": "satisfatoria_na_autorrevisao",
+        "escolha": "satisfatoria_na_autorrevisao",
+        "fidelidade": "satisfatoria_na_autorrevisao",
+        "interpretacao": "satisfatoria_na_autorrevisao",
+        "uso_seguro": "satisfatoria_na_autorrevisao",
+        "validacao": "satisfatoria_na_autorrevisao",
+        "procedencia": "satisfatoria_na_autorrevisao",
+        "clareza": "satisfatoria_na_autorrevisao"
+      },
+      "aceite_humano_do_texto": "pendente",
+      "observacao": "Limitações delimitadas no README e em ACHADOS_R03A.md; testes não equivalem a homologação Databricks."
+    },
+    {
+      "objeto": "hub_snippets/constants/emojis",
+      "contrato": "1.0.0",
+      "autor": "ChatGPT",
+      "revisor": "ChatGPT",
+      "nivel": "A0_light",
+      "fontes_sha256": {
+        "ambiente_fonte/.assistant/hub_snippets/constants/emojis/emojis.py": "ca2ede85dfac855684709e9721053ee5706dfd9f946957180fa0625eb4612f65",
+        "ambiente_fonte/.assistant/hub_snippets/constants/emojis/__init__.py": "a41c9a67aa6ac7a57c00c4359cba12794624e355d8d085220bbad5e316b2b62d",
+        "ambiente_fonte/.assistant/hub_snippets/constants/emojis/exemplo_emojis.py": "68024766b0b7801925937be878264bf04d9ddd4a2aeedfc3971e7bc7925314ad"
+      },
+      "dimensoes": {
+        "conceito": "satisfatoria_na_autorrevisao",
+        "escolha": "satisfatoria_na_autorrevisao",
+        "fidelidade": "satisfatoria_na_autorrevisao",
+        "interpretacao": "satisfatoria_na_autorrevisao",
+        "uso_seguro": "satisfatoria_na_autorrevisao",
+        "validacao": "satisfatoria_na_autorrevisao",
+        "procedencia": "satisfatoria_na_autorrevisao",
+        "clareza": "satisfatoria_na_autorrevisao"
+      },
+      "aceite_humano_do_texto": "pendente",
+      "observacao": "Limitações delimitadas no README e em ACHADOS_R03A.md; testes não equivalem a homologação Databricks."
+    },
+    {
+      "objeto": "hub_snippets/constants/styles",
+      "contrato": "1.0.0",
+      "autor": "ChatGPT",
+      "revisor": "ChatGPT",
+      "nivel": "A0_light",
+      "fontes_sha256": {
+        "ambiente_fonte/.assistant/hub_snippets/constants/styles/styles.py": "abf2dd706aa11baf07fbe49bd1905be6cf7bbd104642b4f48ce4f3cbc5e8f437",
+        "ambiente_fonte/.assistant/hub_snippets/constants/styles/__init__.py": "2c64cc5216c3d12444f47d3e97c4255ad5e52f1d91c64f5912a61d8930552045",
+        "ambiente_fonte/.assistant/hub_snippets/constants/styles/exemplo_styles.py": "995025212a61bd04b1880358e3dd15b84642bc8da55591ae2439fd7ffccbd907"
+      },
+      "dimensoes": {
+        "conceito": "satisfatoria_na_autorrevisao",
+        "escolha": "satisfatoria_na_autorrevisao",
+        "fidelidade": "satisfatoria_na_autorrevisao",
+        "interpretacao": "satisfatoria_na_autorrevisao",
+        "uso_seguro": "satisfatoria_na_autorrevisao",
+        "validacao": "satisfatoria_na_autorrevisao",
+        "procedencia": "satisfatoria_na_autorrevisao",
+        "clareza": "satisfatoria_na_autorrevisao"
+      },
+      "aceite_humano_do_texto": "pendente",
+      "observacao": "Limitações delimitadas no README e em ACHADOS_R03A.md; testes não equivalem a homologação Databricks."
+    },
+    {
+      "objeto": "hub_snippets/testing/fixtures",
+      "contrato": "1.0.0",
+      "autor": "ChatGPT",
+      "revisor": "ChatGPT",
+      "nivel": "A0_light",
+      "fontes_sha256": {
+        "ambiente_fonte/.assistant/hub_snippets/testing/fixtures/fixtures.py": "e9685f1e86821555a675e37e585dbbf9a89edaaf3a6d89f3677ae83c7f03b3be",
+        "ambiente_fonte/.assistant/hub_snippets/testing/fixtures/__init__.py": "f292accdcc3c008bf96dbccf619afc65e8e69f443e1604e368798cabdbd2fc98",
+        "ambiente_fonte/.assistant/hub_snippets/testing/fixtures/exemplo_fixtures.py": "6ed3b77fa5387f30d6f51eb63609fea1776f72baf29532534dc094f951499171"
+      },
+      "dimensoes": {
+        "conceito": "satisfatoria_na_autorrevisao",
+        "escolha": "satisfatoria_na_autorrevisao",
+        "fidelidade": "satisfatoria_na_autorrevisao",
+        "interpretacao": "satisfatoria_na_autorrevisao",
+        "uso_seguro": "satisfatoria_na_autorrevisao",
+        "validacao": "satisfatoria_na_autorrevisao",
+        "procedencia": "satisfatoria_na_autorrevisao",
+        "clareza": "satisfatoria_na_autorrevisao"
+      },
+      "aceite_humano_do_texto": "pendente",
+      "observacao": "Limitações delimitadas no README e em ACHADOS_R03A.md; testes não equivalem a homologação Databricks."
+    },
+    {
+      "objeto": "hub_snippets/visual/badge",
+      "contrato": "1.0.0",
+      "autor": "ChatGPT",
+      "revisor": "ChatGPT",
+      "nivel": "A0_light",
+      "fontes_sha256": {
+        "ambiente_fonte/.assistant/hub_snippets/visual/badge/badge.py": "c4ca8f9e7896309a6a56ca4ffa417bbac315bf23a3fed81f3bbe1e160a1cb90d",
+        "ambiente_fonte/.assistant/hub_snippets/visual/badge/__init__.py": "adfe13ce79dd8717282f2e973874ee301e2fe0edeaac363292f651692dbac4c3",
+        "ambiente_fonte/.assistant/hub_snippets/visual/badge/exemplo_badge.py": "d6644a1c555776d2b20887c7a5a4e8c1a19c2902fc549dc053b5fe3f40eced3f"
+      },
+      "dimensoes": {
+        "conceito": "satisfatoria_na_autorrevisao",
+        "escolha": "satisfatoria_na_autorrevisao",
+        "fidelidade": "satisfatoria_na_autorrevisao",
+        "interpretacao": "satisfatoria_na_autorrevisao",
+        "uso_seguro": "satisfatoria_na_autorrevisao",
+        "validacao": "satisfatoria_na_autorrevisao",
+        "procedencia": "satisfatoria_na_autorrevisao",
+        "clareza": "satisfatoria_na_autorrevisao"
+      },
+      "aceite_humano_do_texto": "pendente",
+      "observacao": "Limitações delimitadas no README e em ACHADOS_R03A.md; testes não equivalem a homologação Databricks."
+    },
+    {
+      "objeto": "hub_snippets/visual/divider",
+      "contrato": "1.0.0",
+      "autor": "ChatGPT",
+      "revisor": "ChatGPT",
+      "nivel": "A0_light",
+      "fontes_sha256": {
+        "ambiente_fonte/.assistant/hub_snippets/visual/divider/divider.py": "92b2cca90ace4a2ca1690afc67a86fecc2d69128a66983afcff882687e6ae2ba",
+        "ambiente_fonte/.assistant/hub_snippets/visual/divider/__init__.py": "e73eb02bdc4ea2fcda8d110e195cf381ce8356a80abf6fd3212d9d7b54f8a654",
+        "ambiente_fonte/.assistant/hub_snippets/visual/divider/exemplo_divider.py": "4a6117ec252e32567ee6b5c639dab487d69f375c655b0c701a78e5ac4766e403"
+      },
+      "dimensoes": {
+        "conceito": "satisfatoria_na_autorrevisao",
+        "escolha": "satisfatoria_na_autorrevisao",
+        "fidelidade": "satisfatoria_na_autorrevisao",
+        "interpretacao": "satisfatoria_na_autorrevisao",
+        "uso_seguro": "satisfatoria_na_autorrevisao",
+        "validacao": "satisfatoria_na_autorrevisao",
+        "procedencia": "satisfatoria_na_autorrevisao",
+        "clareza": "satisfatoria_na_autorrevisao"
+      },
+      "aceite_humano_do_texto": "pendente",
+      "observacao": "Limitações delimitadas no README e em ACHADOS_R03A.md; testes não equivalem a homologação Databricks."
+    },
+    {
+      "objeto": "hub_snippets/visual/kpi_card",
+      "contrato": "1.0.0",
+      "autor": "ChatGPT",
+      "revisor": "ChatGPT",
+      "nivel": "A0_light",
+      "fontes_sha256": {
+        "ambiente_fonte/.assistant/hub_snippets/visual/kpi_card/kpi_card.py": "b1f7b3654c825478ec7c133042fc3df8f525145dac87716963cf80aadbeb64ec",
+        "ambiente_fonte/.assistant/hub_snippets/visual/kpi_card/__init__.py": "112cc0f9454e22407273b5b6d4c5e62d5ce46b5a4cbe09a39ae755337dcd0dc5",
+        "ambiente_fonte/.assistant/hub_snippets/visual/kpi_card/exemplo_kpi_card.py": "7b1c48858808cec8c687d678d616412422deb6d846a11da36aef2a089636d0f5"
+      },
+      "dimensoes": {
+        "conceito": "satisfatoria_na_autorrevisao",
+        "escolha": "satisfatoria_na_autorrevisao",
+        "fidelidade": "satisfatoria_na_autorrevisao",
+        "interpretacao": "satisfatoria_na_autorrevisao",
+        "uso_seguro": "satisfatoria_na_autorrevisao",
+        "validacao": "satisfatoria_na_autorrevisao",
+        "procedencia": "satisfatoria_na_autorrevisao",
+        "clareza": "satisfatoria_na_autorrevisao"
+      },
+      "aceite_humano_do_texto": "pendente",
+      "observacao": "Limitações delimitadas no README e em ACHADOS_R03A.md; testes não equivalem a homologação Databricks."
+    }
+  ]
+}

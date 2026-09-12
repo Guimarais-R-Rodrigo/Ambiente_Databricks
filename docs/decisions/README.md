@@ -33,7 +33,7 @@ escolha for difícil de reverter ou afetar mais de um componente.
 | [0010](ADR-0010-manual-tecnico-unificado.md) | Manual Técnico unifica catálogo e glossário | aceito |
 
 | [0011](ADR-0011-concierge-hub.md) | Concierge opcional para descoberta e composição | aceito para integração; homologação no destino pendente |
-| [0012](ADR-0012-readmes-de-objeto.md) | README didático por objeto; transição controlada | proposto; candidata R01 |
+| [0012](ADR-0012-readmes-de-objeto.md) | README didático por objeto; transição controlada | aceito em 2026-09-12; ratificação anexada |
 
 | [0013](ADR-0013-sistema-de-temas.md) | contrato central de temas e aplicação explícita por contexto | aceito para V01; integração Git condicionada aos checks; sem homologação de runtime |
 

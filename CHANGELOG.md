@@ -5,6 +5,85 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — R03-I: reconciliação READMEs com V01 integrada (ChatGPT)
+
+### Atualizado
+
+- (ChatGPT) R03-A/R03-B reconciliadas com a `main` que já contém V01 e seu alinhamento documental; três conflitos textuais resolvidos sem descartar qualquer iniciativa.
+- (ChatGPT) Estado agregado do README raiz recalculado pela execução real; índice de sprints registra simultaneamente a continuidade dos READMEs e o estado aceito/integrado de V00/V01.
+
+### Notas
+
+- (ChatGPT) Integração autorizada explicitamente por Rodrigo; árvore combinada revalidada antes do merge. Evidências anteriores permanecem vinculadas às árvores em que foram produzidas.
+- (ChatGPT) Sem publicação Databricks, mudança funcional, V02 ou R04-A nesta reconciliação. Auditoria independente e homologações operacionais permanecem separadas.
+
+## 2026-09-12 — R03-B: seis guias de display e navegação (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) READMEs de correlation_matrix, dataframe_styled, distribution_grid,
+  index_generator, section_header e theme_plotly; relatório, matriz, achados,
+  rubrica e testes suplementares em `docs/sprints/readmes_objetos/`.
+
+### Atualizado
+
+- (ChatGPT) Seis notebooks receberam backlinks e correções de prosa, sem mudar
+  código executável ou saídas históricas. Coleção, Manual e índices oferecem rotas.
+- (ChatGPT) Controle de migração remove exatamente seis dispensas: 19/74
+  operacionais, três exemplares e 55 pendências; cobertura não é aceite editorial.
+- (ChatGPT) Manual sincronizado, simulado pelo renderer e contagens da raiz
+  reconciliadas com a execução. Contrato 1.0.0 e textos anteriores preservados.
+
+### Corrigido
+
+- (ChatGPT) Explicações sobre limiar/escala de correlação, custo e descarte de
+  nulos, amostragem, índice declarado, CSS local e precedência do tema.
+  Limites funcionais são documentados, não alterados silenciosamente.
+
+### Notas
+
+- (ChatGPT) Autorrevisão A0_light; evidências locais e remotas identificadas
+  separadamente no relatório e no PR. Sem auditor independente ou homologação.
+- (ChatGPT) Execução autorizada por “Siga”; branch R03-B depende da R03-A ainda
+  em revisão. Nenhum merge, publicação Databricks ou avanço à R04-A.
+
+## 2026-09-12 — R03-A: preservação da V00 integrada em paralelo (ChatGPT)
+
+### Atualizado
+
+- (ChatGPT) Reconciliação da branch R03-A com main `b88a9cc`, que integrou a instrumentação V00 durante a elaboração dos READMEs. Preservadas as entradas das duas iniciativas, o conteúdo da V00 e seus workflows; contagens recalculadas por execução.
+- (ChatGPT) Registro complementar, matriz e verificador datado de preservação identificam a segunda base. Os sete textos, o contrato estável e o código dos oito gates não foram modificados nesta reconciliação.
+- (ChatGPT) Aprovação do PR nº 7 não foi usada para integrar o novo PR nº 9. Sem mudança na main, publicação ou início da R03-B.
+
+## 2026-09-12 — Aceite, versão 1.0.0 e lote R03-A (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) Sete READMEs: colors, emojis, styles, fixtures, badge, divider e
+  kpi_card; relatório, matriz, achados, rubrica e testes suplementares da R03-A.
+- (ChatGPT) Registro do aceite de Rodrigo e merge autorizado do PR nº 7
+  (`5493f7d`); ratificação datada do ADR-0012, sem apagar o relato original.
+
+### Atualizado
+
+- (ChatGPT) Contrato 1.0.0 estabilizado sem mudar as quinze seções; nove READMEs
+  anteriores mudam somente marcador de versão; checklist e regra editorial coerentes.
+- (ChatGPT) Sete notebooks: backlinks e prosa corrigida, preservando execução e
+  transcrições históricas. Coleção, Manual e índices oferecem rotas para os guias.
+- (ChatGPT) Controle remove somente sete dispensas; cobertura estrutural 13/74,
+  três exemplares e 61 pendências; os novos textos ainda aguardam aceite próprio.
+- (ChatGPT) Cópia do Manual sincronizada, simulado pelo renderer e contagens da
+  raiz reconciliadas com execução; nenhuma recertificação de publicação antiga.
+
+### Notas
+
+- (ChatGPT) Helpers, cores/CSS, APIs, blocos coláveis, Concierge e gates existentes
+  preservados. Limitações funcionais/visuais caracterizadas, não corrigidas por efeito colateral.
+- (ChatGPT) Autorrevisão A0_light; execução portátil e execução Spark registradas
+  separadamente, sem presumir auditoria independente ou homologação Databricks.
+- (ChatGPT) Branch R03-A separada da main aprovada. Parada antes da R03-B;
+  nenhum novo merge automático ou publicação no workspace.
+
 ## 2026-09-12 — V01: alinhamento das entradas após integração (Codex)
 
 ### Corrigido

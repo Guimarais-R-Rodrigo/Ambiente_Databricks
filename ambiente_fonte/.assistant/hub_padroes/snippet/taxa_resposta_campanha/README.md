@@ -1,6 +1,6 @@
 # `taxa_resposta_campanha` — uma taxa acompanhada de sua incerteza
 
-<!-- readme-objeto: 0.1.0-candidata -->
+<!-- readme-objeto: 1.0.0 -->
 
 Este exemplar mostra como apresentar a proporção de respostas de uma campanha
 junto da precisão da estimativa, em vez de decidir olhando apenas a maior taxa.

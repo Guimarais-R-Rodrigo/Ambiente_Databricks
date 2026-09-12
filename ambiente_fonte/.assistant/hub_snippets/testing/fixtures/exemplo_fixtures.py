@@ -9,7 +9,12 @@
 # MAGIC reproduzir o problema que ele existe para mostrar.
 # MAGIC
 # MAGIC Este módulo é a fonte única desses dados. Quatro geradores, todos
-# MAGIC determinísticos: mesma `seed`, mesma base, sempre.
+# MAGIC determinísticos para os mesmos parâmetros e ambiente compatível: registre
+# MAGIC `seed`, versões e ordenação de comparação. Trocar somente a seed não é
+# MAGIC a única maneira de alterar a base.
+
+# MAGIC
+# MAGIC Antes de executar, consulte o [guia do objeto](README.md): conceito, requisitos, efeitos e limites.
 
 # COMMAND ----------
 # MAGIC %md
@@ -17,10 +22,10 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
-# MAGIC | Bibliotecas | nenhuma além do runtime — **não instale nada** |
+# MAGIC | Compute | sessão Spark compatível; conferir runtime e API no destino |
+# MAGIC | Bibliotecas | PySpark e módulos locais; confirme o ambiente gerenciado antes de instalar |
 # MAGIC | Dados | 100% sintéticos, gerados aqui; nenhuma tabela é lida ou escrita |
-# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
+# MAGIC | Diferença Free × trabalho | execução deste notebook no destino não revalidada na R03-A |
 
 # COMMAND ----------
 
@@ -52,8 +57,8 @@ print(f"geradores disponíveis: {', '.join(fixtures.__all__)}")
 
 # COMMAND ----------
 
-# `pct_nulos_renda` e `prevalencia_alvo` são declarados, não sorteados: quem lê o
-# exemplo precisa saber que 4% de nulos é escolha, não acaso do gerador.
+# Os parâmetros fixam probabilidades, não quotas: a proporção observada de
+# nulos/alvo deve ser medida na base gerada, mesmo com seed declarada.
 clientes = fixtures.base_tabular(n=500, seed=42, pct_nulos_renda=0.04, prevalencia_alvo=0.25)
 
 display(clientes.limit(5))
@@ -114,8 +119,8 @@ print(f"prevalência alvo  : {resumo['prevalencia_alvo']}")
 # MAGIC %md
 # MAGIC ## 2. `fatos_e_features` — a fixture que torna vazamento **detectável**
 # MAGIC
-# MAGIC **Para que serve.** É a única das quatro desenhada para provar que um
-# MAGIC helper está certo, e não só para alimentá-lo. Parte das linhas de feature
+# MAGIC **Para que serve.** Fornece versões conhecidas para testar um contrato
+# MAGIC temporal, sem provar correção universal do helper. Parte das linhas de feature
 # MAGIC tem data posterior à decisão: um join point-in-time correto **precisa**
 # MAGIC descartá-las. Se sobrarem no resultado, houve vazamento — e o teste vê.
 
@@ -136,8 +141,9 @@ print(f"  das quais publicadas DEPOIS da decisão: {futuras}")
 # MAGIC   das quais publicadas DEPOIS da decisão: 56
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** A coluna `eh_futura` não existe em dado real: é gabarito.
-# MAGIC Ela existe para que o teste possa afirmar "nenhuma dessas linhas
+# MAGIC **Como ler.** A coluna `eh_futura` é gabarito sintético deste cenário;
+# MAGIC não se deve presumir que uma fonte real forneça esse indicador.
+# MAGIC Ela permite que o teste confira "nenhuma dessas linhas
 # MAGIC atravessou o join", que é uma verificação bem mais forte do que conferir a
 # MAGIC contagem final.
 # MAGIC

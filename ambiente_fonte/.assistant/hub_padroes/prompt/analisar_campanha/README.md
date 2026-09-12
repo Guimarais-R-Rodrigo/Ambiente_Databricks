@@ -1,6 +1,6 @@
 # `analisar_campanha` — formular a pergunta antes de pedir uma análise
 
-<!-- readme-objeto: 0.1.0-candidata -->
+<!-- readme-objeto: 1.0.0 -->
 
 Este exemplar ajuda a transformar “mostre a taxa por segmento” em um pedido
 com dados, período e uma decisão explícita. É **material dos padrões do Hub**;

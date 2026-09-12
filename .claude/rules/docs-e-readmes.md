@@ -72,13 +72,13 @@ conservar o mesmo conteúdo. Não reintroduza catálogo ou glossário independen
 ## README de objeto — R01
 
 A escala Objeto segue `ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md`
-e seu checklist editorial. É complemento do ADR-0007/0010, conforme proposta
-ADR-0012. Novos snippets, scripts e prompts incluem README; legados têm dispensa
+e seu checklist editorial. É complemento do ADR-0007/0010, conforme ADR-0012 ratificado em 2026-09-12. Novos snippets, scripts e prompts incluem README; legados têm dispensa
 transitória rastreada, que só diminui. O gate mede estrutura, não qualidade da
 explicação nem execução.
 
-Pausar ao fim da sprint com checkpoint e diff. Template candidato em R01; piloto
-e aceite antes de congelar 1.0. Documento pequeno não precisa de texto de
+Pausar ao fim da sprint com checkpoint e diff. O contrato 1.0.0 foi estabilizado
+após piloto R02 e aceite humano em 2026-09-12. Cada lote novo exige revisão
+própria; aceite do padrão não equivale a homologação de runtime. Documento pequeno não precisa de texto de
 enchimento. Relatórios discriminam READMEs, outras documentações, ferramentas
 e derivados. Preservar imagens e corpos históricos. Não carregar READMEs em
 massa nas instruções nem criar outro catálogo ou glossário.

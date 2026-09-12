@@ -185,6 +185,14 @@ Abaixo você encontra o papel de cada objeto e o momento em que ele pode ser út
 
 *Focada na apresentação didática de dados tabulares dentro dos notebooks.*
 
+**Guias do objeto:** [correlação](display/correlation_matrix/README.md),
+[tabela pandas](display/dataframe_styled/README.md) e
+[grade de distribuições](display/distribution_grid/README.md) explicam o conceito,
+as coletas e a interpretação antes da execução.
+
+- **`correlation_matrix`**: devolve mapa de correlação e lista de pares por corte.
+  - *Quando usar:* para investigar associação entre medidas comparáveis; não decide causalidade nem seleção de variáveis.
+
 - **`dataframe_styled`**: aplica formatação e recursos visuais a DataFrames pandas.
   - *Quando usar:* em relatórios e inspeções com volume compatível com o driver.
 - **`distribution_grid`**: organiza múltiplas distribuições em uma grade compacta.
@@ -196,9 +204,14 @@ Abaixo você encontra o papel de cada objeto e o momento em que ele pode ser út
 
 *Favorece consistência estética nos gráficos e capítulos de notebook.*
 
+**Guias do objeto:** [índice declarado](visual/index_generator/README.md),
+[cabeçalho de seção](visual/section_header/README.md) e
+[tema Plotly](visual/theme_plotly/README.md). O índice não inspeciona células;
+o tema tem efeitos diferentes quando aplicado à figura ou registrado na sessão.
+
 - **`theme_plotly`**: aplica o tema visual do Hub a figuras ou à sessão, conforme a função chamada.
   - *Quando usar:* quando o notebook deve adotar a identidade visual do projeto. Alterações de template global são efeitos de sessão, não funções puras.
-- **`section_header`**: renderiza cabeçalhos, subtítulos e badges em HTML.
+- **`section_header`**: renderiza cabeçalhos e descrições em HTML; badges são outro objeto.
   - *Quando usar:* para dividir notebooks longos em capítulos claros; confirme onde HTML é aceito.
 
 ---
@@ -428,3 +441,13 @@ O piloto R02 oferece guias de [XGBoost](ml/train_xgboost/README.md),
 [junção point-in-time](spark/pit_join/README.md) e
 [formatação brasileira](constants/format_br/README.md). São entradas conceituais
 para os mesmos objetos, não novos helpers ou homologações de runtime.
+
+A R03-A acrescenta guias de [cores](constants/colors/README.md),
+[emojis e roteiro de EDA](constants/emojis/README.md),
+[estilos CSS](constants/styles/README.md),
+[dados sintéticos](testing/fixtures/README.md),
+[badges de status](visual/badge/README.md),
+[divisórias](visual/divider/README.md) e
+[cartões de indicadores](visual/kpi_card/README.md). Os guias distinguem
+formatação e comunicação de cálculo ou decisão de negócio. Não implicam
+unificação automática de estilos nem homologação visual no destino.

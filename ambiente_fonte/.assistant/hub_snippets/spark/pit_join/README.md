@@ -1,6 +1,6 @@
 # `pit_join` — reconstruir a informação disponível no momento da decisão
 
-<!-- readme-objeto: 0.1.0-candidata -->
+<!-- readme-objeto: 1.0.0 -->
 
 Uma junção point-in-time procura, para cada decisão, a versão mais recente de uma informação que já podia ser conhecida naquele instante. Este helper do Hub faz essa seleção em PySpark e explica por que algumas decisões ficam sem informação elegível.
 

@@ -1,6 +1,6 @@
 # `checar_base_campanha` — verificar a base antes de medir a campanha
 
-<!-- readme-objeto: 0.1.0-candidata -->
+<!-- readme-objeto: 1.0.0 -->
 
 Este exemplar mostra como transformar problemas de uma tabela em um diagnóstico
 legível, sem tentar corrigir os dados automaticamente. É **referência dos

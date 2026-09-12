@@ -42,3 +42,9 @@ forma coerente no contrato, controles e exemplares. A R03-A continua aguardando
 nova autorização. Auditoria independente e testes no ambiente destino permanecem
 pendentes. Não confundir aprovação técnica desta composição com homologação de
 roteamento Genie Code, Spark Connect, permissões, custos ou produção.
+
+## Continuidade confirmada em 2026-09-12
+
+A aprovação humana ocorreu nesta conversa; PR nº 7 integrado em `5493f7d`.
+A condição “sem merge/aceite pendente” acima descreve a entrega R02-I anterior.
+Veja [aceite e estabilização](ACEITE_V1.md) e [lote R03-A](RELATORIO_R03A.md).

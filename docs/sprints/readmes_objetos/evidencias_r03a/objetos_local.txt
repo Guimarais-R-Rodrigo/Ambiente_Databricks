@@ -1,0 +1,38 @@
+test_badge_boundaries (__main__.Portable.test_badge_boundaries) ... ok
+test_badge_escape (__main__.Portable.test_badge_escape) ... ok
+test_badge_fallback_and_inline (__main__.Portable.test_badge_fallback_and_inline) ... ok
+test_badge_rounding_is_not_threshold (__main__.Portable.test_badge_rounding_is_not_threshold) ... ok
+test_badge_unvalidated_zero_and_range (__main__.Portable.test_badge_unvalidated_zero_and_range) ... ok
+test_dividers_and_no_parameters (__main__.Portable.test_dividers_and_no_parameters) ... ok
+test_emojis_keys_and_absent_key (__main__.Portable.test_emojis_keys_and_absent_key) ... ok
+test_emojis_nested_copy (__main__.Portable.test_emojis_nested_copy) ... ok
+test_kpi_html_escape_order_and_no_mutation (__main__.Portable.test_kpi_html_escape_order_and_no_mutation) ... ok
+test_kpi_key_collision_characterization (__main__.Portable.test_kpi_key_collision_characterization) ... ok
+test_kpi_markdown_only_pipe_escaped (__main__.Portable.test_kpi_markdown_only_pipe_escaped) ... ok
+test_no_styles_import_in_three_components (__main__.Portable.test_no_styles_import_in_three_components) ... ok
+test_palette_copy_preserves_original (__main__.Portable.test_palette_copy_preserves_original) ... ok
+test_palettes_and_aliases (__main__.Portable.test_palettes_and_aliases) ... ok
+test_six_portable_readme_blocks (__main__.Portable.test_six_portable_readme_blocks) ... ok
+test_styles_real_values (__main__.Portable.test_styles_real_values) ... ok
+test_warning_contrast_characterization (__main__.Portable.test_warning_contrast_characterization) ... ok
+test_fixture_readme_block (__main__.SparkFixtures.test_fixture_readme_block) ... skipped 'PySpark ausente neste ambiente; não usar simulação como execução real'
+test_invalid_parameters (__main__.SparkFixtures.test_invalid_parameters) ... skipped 'PySpark ausente neste ambiente; não usar simulação como execução real'
+test_repeatable_sorted_and_isolated_random (__main__.SparkFixtures.test_repeatable_sorted_and_isolated_random) ... skipped 'PySpark ausente neste ambiente; não usar simulação como execução real'
+test_safra_accumulates_and_does_not_validate_dates (__main__.SparkFixtures.test_safra_accumulates_and_does_not_validate_dates) ... skipped 'PySpark ausente neste ambiente; não usar simulação como execução real'
+test_tabular_count_keys_schema (__main__.SparkFixtures.test_tabular_count_keys_schema) ... skipped 'PySpark ausente neste ambiente; não usar simulação como execução real'
+test_tabular_zero_entities_falls_back (__main__.SparkFixtures.test_tabular_zero_entities_falls_back) ... skipped 'PySpark ausente neste ambiente; não usar simulação como execução real'
+test_temporal_panel (__main__.SparkFixtures.test_temporal_panel) ... skipped 'PySpark ausente neste ambiente; não usar simulação como execução real'
+test_temporal_versions_and_probability_denominator (__main__.SparkFixtures.test_temporal_versions_and_probability_denominator) ... skipped 'PySpark ausente neste ambiente; não usar simulação como execução real'
+test_zero_decisions_returns_empty_typed_frames (__main__.SparkFixtures.test_zero_decisions_returns_empty_typed_frames) ... skipped 'PySpark ausente neste ambiente; não usar simulação como execução real'
+
+----------------------------------------------------------------------
+Ran 26 tests in 0.002s
+
+OK (skipped=9)
+README_PORTATIL constants/colors "#005CA9 10"
+README_PORTATIL constants/emojis "Qualidade de Dados\n⚠️ Revisar a chave antes do cruzamento."
+README_PORTATIL constants/styles "True"
+README_PORTATIL visual/badge "True"
+README_PORTATIL visual/divider "1 2"
+README_PORTATIL visual/kpi_card "> **1.000** Linhas | **92,8%** Cobertura"
+R03A_RESULT {"python": "3.13.5", "tests": 26, "failures": 0, "errors": 0, "skips": 9, "require_spark": false, "passed": 17}

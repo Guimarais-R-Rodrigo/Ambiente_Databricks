@@ -1242,6 +1242,8 @@ documental e tem evidência delimitada; não representa publicação no workspac
 
 #### `hub_snippets.constants.colors`
 
+**Guia local do objeto (R03-A):** na pasta `hub_snippets/constants/colors/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_colors.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
+
 Reúne cores e paletas usadas na apresentação. São valores de configuração visual, não variáveis aprendidas pelo modelo nem regras de aprovação. Consumir uma constante não desenha uma figura sozinho.
 
 Constantes exportadas: `AZUL_CAIXA`, `LARANJA`, `AZUL_CLARO`, `CINZA_ESCURO`, `VERDE`, `VERMELHO`, `ROXO`, `TEAL`, `LARANJA_ESCURO`, `CINZA_MEDIO`, `PALETA_CATEGORICA`, `PALETA_SEQUENCIAL`, `PALETA_DIVERGENTE`, `COR_POSITIVO`, `COR_NEGATIVO`, `COR_NEUTRO`, `COR_ALERTA`, `BG_SECTION`, `BG_HEADER`, `TEXTO_PRINCIPAL`, `TEXTO_SECUNDARIO`, `BORDA_CAIXA`.
@@ -1249,6 +1251,8 @@ Constantes exportadas: `AZUL_CAIXA`, `LARANJA`, `AZUL_CLARO`, `CINZA_ESCURO`, `V
 [Implementação](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/constants/colors/colors.py) · [API exportada](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/constants/colors/__init__.py) · [Notebook de exemplo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/constants/colors/exemplo_colors.py)
 
 #### `hub_snippets.constants.emojis`
+
+**Guia local do objeto (R03-A):** na pasta `hub_snippets/constants/emojis/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_emojis.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
 
 Relaciona símbolos e seções da apresentação. Um emoji de alerta é um recurso de comunicação; não executa um teste e não comprova gravidade estatística.
 
@@ -1280,6 +1284,8 @@ fmt_n(n: Number, sufixo: bool=True) -> str
 
 #### `hub_snippets.constants.styles`
 
+**Guia local do objeto (R03-A):** na pasta `hub_snippets/constants/styles/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_styles.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
+
 Reúne estilos visuais reutilizáveis e depende das constantes de cores do Hub. CSS controla aparência; não calcula indicadores nem altera permissões do notebook.
 
 Constantes exportadas: `FONT_FAMILY`, `STYLE_SECTION_HEADER`, `STYLE_KPI_CARD`, `STYLE_DIVIDER_LIGHT`, `STYLE_DIVIDER_HEAVY`, `STYLE_BADGE_OK`, `STYLE_BADGE_WARN`, `STYLE_BADGE_FAIL`, `STYLE_INDEX_ITEM`.
@@ -1290,7 +1296,9 @@ Constantes exportadas: `FONT_FAMILY`, `STYLE_SECTION_HEADER`, `STYLE_KPI_CARD`, 
 
 #### `hub_snippets.display.correlation_matrix`
 
-Recebe um DataFrame Spark e colunas numéricas. Calcula correlações e devolve a figura Plotly e os pares fortes, não apenas uma figura isolada. Depende de APIs de `pyspark.ml`; confira suporte no compute e tratamento de nulos. Correlação não é causalidade.
+**Guia local do objeto (R03-B):** na pasta `hub_snippets/display/correlation_matrix/`, abra `README.md` antes de `exemplo_correlation_matrix.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+
+Recebe um DataFrame Spark e colunas numéricas. Calcula correlações e devolve a figura Plotly e os pares fortes, não apenas uma figura isolada. Depende de APIs de `pyspark.ml`; confira suporte no compute e tratamento de nulos. Correlação não é causalidade. O corte seleciona a lista de pares, não destaca células; o descarte de nulos é conjunto nas colunas selecionadas.
 
 <details>
 <summary>Consultar a API deste objeto: nomes e assinaturas</summary>
@@ -1305,7 +1313,9 @@ plot_correlation(df: DataFrame, cols: Optional[Iterable[str]]=None, method: str=
 
 #### `hub_snippets.display.dataframe_styled`
 
-Recebe uma tabela pandas e devolve HTML estilizado. O consumidor escolhe onde mostrar esse texto. A operação de estilo delegada ao pandas pode exigir Jinja2 na chamada; o módulo carregar não prova essa dependência.
+**Guia local do objeto (R03-B):** na pasta `hub_snippets/display/dataframe_styled/`, abra `README.md` antes de `exemplo_dataframe_styled.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+
+Recebe uma tabela pandas e devolve HTML estilizado. O consumidor escolhe onde mostrar esse texto. A operação de estilo delegada ao pandas pode exigir Jinja2 na chamada; o módulo carregar não prova essa dependência. O helper não ativa escape HTML; use conteúdo controlado.
 
 <details>
 <summary>Consultar a API deste objeto: nomes e assinaturas</summary>
@@ -1320,7 +1330,9 @@ display_styled(df_pandas, highlight_cols: Optional[Iterable[str]]=None, format_d
 
 #### `hub_snippets.display.distribution_grid`
 
-Recebe DataFrame Spark, seleciona/amostra dados numéricos e devolve uma figura Plotly com distribuições. Confirme tamanho da amostra e leitura das escalas; os histogramas não representam uma contagem integral se vieram de amostra.
+**Guia local do objeto (R03-B):** na pasta `hub_snippets/display/distribution_grid/`, abra `README.md` antes de `exemplo_distribution_grid.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+
+Recebe DataFrame Spark, seleciona/amostra dados numéricos e devolve uma figura Plotly com distribuições. Confirme tamanho da amostra e leitura das escalas; os histogramas não representam uma contagem integral se vieram de amostra. Valores selecionados são coletados em pandas e incorporados à figura; N conta linhas coletadas, não valores válidos por coluna.
 
 <details>
 <summary>Consultar a API deste objeto: nomes e assinaturas</summary>
@@ -1939,6 +1951,8 @@ classify_iv(iv: float) -> str
 
 #### `hub_snippets.testing.fixtures`
 
+**Guia local do objeto (R03-A):** na pasta `hub_snippets/testing/fixtures/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_fixtures.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
+
 Cria Spark DataFrames sintéticos para exercícios tabulares, séries, fatos/features e safras. Alguns testes exigem uma sessão Spark ativa. As características são controladas pelo gerador; não representam estatísticas observadas de clientes reais.
 
 <details>
@@ -1959,6 +1973,8 @@ safras(n_contratos: int=400, *, seed: int=42, safras_yyyymm: Sequence[str]=('202
 
 #### `hub_snippets.visual.badge`
 
+**Guia local do objeto (R03-A):** na pasta `hub_snippets/visual/badge/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_badge.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
+
 Devolve pequenas marcações HTML de status, score ou texto. Cor e rótulo precisam ser alimentados por uma interpretação justificada; a função visual não certifica o dado.
 
 <details>
@@ -1975,6 +1991,8 @@ badge_inline(texto: str) -> str
 [Implementação](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/badge/badge.py) · [API exportada](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/badge/__init__.py) · [Notebook de exemplo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/badge/exemplo_badge.py)
 
 #### `hub_snippets.visual.divider`
+
+**Guia local do objeto (R03-A):** na pasta `hub_snippets/visual/divider/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_divider.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
 
 Devolve separadores HTML. Controla apresentação, sem cálculo ou escrita de dados. O consumidor precisa renderizar a string na superfície adequada.
 
@@ -1994,7 +2012,9 @@ divider_section() -> str
 
 #### `hub_snippets.visual.index_generator`
 
-Devolve um índice de etapas de EDA em HTML ou Markdown. O parâmetro `markdown` define o formato. Um link de etapa só será útil se a âncora correspondente existir no documento final.
+**Guia local do objeto (R03-B):** na pasta `hub_snippets/visual/index_generator/`, abra `README.md` antes de `exemplo_index_generator.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+
+Devolve um índice de etapas de EDA em HTML ou Markdown. O parâmetro `markdown` define o formato. A implementação produz lista declarada, sem links ou inspeção das células; o índice não comprova execução das etapas.
 
 <details>
 <summary>Consultar a API deste objeto: nomes e assinaturas</summary>
@@ -2008,6 +2028,8 @@ gerar_indice_eda(etapas_ativas: Optional[Iterable[int]]=None, markdown: bool=Fal
 [Implementação](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/index_generator/index_generator.py) · [API exportada](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/index_generator/__init__.py) · [Notebook de exemplo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/index_generator/exemplo_index_generator.py)
 
 #### `hub_snippets.visual.kpi_card`
+
+**Guia local do objeto (R03-A):** na pasta `hub_snippets/visual/kpi_card/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_kpi_card.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
 
 Devolve cards HTML ou texto Markdown de indicadores. Recebe valores já apurados; não consulta tabela nem calcula KPI de negócio. Um card com número correto e denominador omitido ainda pode induzir erro.
 
@@ -2025,6 +2047,8 @@ kpi_card_markdown(metricas: Dict[str, Any]) -> str
 
 #### `hub_snippets.visual.section_header`
 
+**Guia local do objeto (R03-B):** na pasta `hub_snippets/visual/section_header/`, abra `README.md` antes de `exemplo_section_header.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+
 Devolve HTML de cabeçalho para uma seção, com opções preenchidas por etapa ou fornecidas diretamente. Não é o PNG do cabeçalho institucional e não registra um widget nativo.
 
 <details>
@@ -2040,7 +2064,9 @@ section_header_html(etapa: Optional[int]=None, emoji: Optional[str]=None, titulo
 
 #### `hub_snippets.visual.theme_plotly`
 
-Obtém configuração, aplica tema a uma figura ou registra um template na sessão. `registrar_template_plotly` tem efeito no estado de apresentação da sessão. A figura formatada continua exigindo exibição; tema não altera a lógica estatística dos dados plotados.
+**Guia local do objeto (R03-B):** na pasta `hub_snippets/visual/theme_plotly/`, abra `README.md` antes de `exemplo_theme_plotly.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
+
+Obtém configuração, aplica tema a uma figura ou registra um template na sessão. `registrar_template_plotly` tem efeito no estado de apresentação da sessão. A figura formatada continua exigindo exibição; tema não altera a lógica estatística dos dados plotados. A aplicação modifica a própria figura; anotações podem se acumular em chamadas repetidas, e customizações de layout devem vir depois do tema.
 
 <details>
 <summary>Consultar a API deste objeto: nomes e assinaturas</summary>
