@@ -197,8 +197,9 @@ reexecuta o gate e reprova se qualquer contagem ficar desatualizada.
 skills             : 13 · 13/13 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 81 caminhos verificados
-markdown / links   : 112 arquivos / 211 links relativos
-notebooks / links  : 78 notebooks / 17 links relativos
+markdown / links   : 117 arquivos / 278 links relativos
+notebooks / links  : 78 notebooks / 21 links relativos
+readmes de objeto  : 0/74 operacionais; 3/3 exemplares; 74 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
 forma da pasta     : 58 conferidas (o módulo tem o nome da pasta)
 contrato de dados  : 60 pares (saída: o que o notebook consome)
@@ -208,9 +209,9 @@ idioma da docstring: 60 módulos, 0 com docstring em inglês
 normas do molde    : 70 arquivos, 0 violação(ões)
 notebook exercita  : 57 objetos, 0 notebook(s) que só importam
 python (AST)       : 209 arquivos
-instrucoes         : 8367/20000 caracteres
-repo (identidade)  : 846 arquivos varridos no repositório editável/derivado
-repo (links)       : 387 links fora da raiz analisada
+instrucoes         : 8575/20000 caracteres
+repo (identidade)  : 889 arquivos varridos no repositório editável/derivado
+repo (links)       : 511 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
@@ -272,3 +273,10 @@ Não é recomendado. Confira recursos, filtros, plano, coletas, dependências, p
 - [Agent Skills](https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills)
 
 Para a instalação pessoal no trabalho, siga o [guia de transição com kit e notebook de aceite](docs/playbooks/replicacao-trabalho.md).
+
+## Migração documental por objeto
+
+A [iniciativa R00–R13](docs/sprints/readmes_objetos/README.md) acrescenta guias
+de conceito, adequação e uso seguro. Consulte o checkpoint antes de iniciar um
+lote. R01 é fundação editorial, não geração dos READMEs operacionais nem
+publicação no Databricks.

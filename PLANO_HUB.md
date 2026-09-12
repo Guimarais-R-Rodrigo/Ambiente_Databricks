@@ -843,3 +843,9 @@ português" por heurística acusaria `psi_calculator` e `smart_sample` tanto qua
 nasce com cinco exceções e falso positivo provável é desativada na segunda semana.
 A lição de 18/08 vale aqui: guarda que acusa código correto é pior que guarda
 nenhuma.
+
+## Iniciativa posterior — READMEs didáticos por objeto
+
+A migração R00–R13 complementa a documentação sem alterar helpers. Consulte
+[estado, plano e checkpoint](docs/sprints/readmes_objetos/README.md). As sprints
+históricas deste arquivo preservam a evidência de sua época.

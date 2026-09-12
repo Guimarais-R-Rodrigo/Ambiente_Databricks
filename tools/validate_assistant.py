@@ -18,6 +18,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from readme_objeto_contract import check_readme_objects
 from repo_inventory import git_paths
 from markdown_contract import mask_code
 from notebook_marker import eh_notebook, texto_e_notebook  # noqa: E402
@@ -376,7 +377,7 @@ def check_saida_de_comando_no_readme(problems: list[str], *, remoto: bool = Fals
 
     rotulos = (
         "skills             :", "prompts            :", "helpers citados    :", "markdown / links   :",
-        "notebooks / links  :", "pastas de objeto   :", "forma da pasta     :",
+        "notebooks / links  :", "readmes de objeto  :", "pastas de objeto   :", "forma da pasta     :",
         "contrato de dados  :", "contrato de entrada:", "saída colada       :",
         "idioma da docstring:", "normas do molde    :", "notebook exercita  :",
         "python (AST)       :", "instrucoes         :", "repo (identidade)  :",
@@ -1538,6 +1539,7 @@ def main() -> int:
     problems: list[str] = []
     warnings: list[str] = []
 
+    readme_counts = check_readme_objects(root, problems)
     n_skills = check_skill_frontmatter(root, problems)
     n_prompts, n_prompt_fields = check_prompt_contract(root, problems)
     check_skill_sizes(root, warnings)
@@ -1580,6 +1582,9 @@ def main() -> int:
         print(f"saída no README    : {n_readme} linhas conferidas contra execução real")
     print(f"markdown / links   : {n_md} arquivos / {n_links} links relativos")
     print(f"notebooks / links  : {n_nb} notebooks / {n_nb_links} links relativos")
+    print(f"readmes de objeto  : {readme_counts['present']}/{readme_counts['operational']} operacionais; "
+          f"{readme_counts['exemplar_present']}/{readme_counts['exemplar']} exemplares; "
+          f"{readme_counts['pending']} pendentes (estrutura, não aceite editorial)")
     print(f"pastas de objeto   : {n_objetos} conferidas (nome, arquivos, __init__)")
     print(f"forma da pasta     : {n_malformadas} conferidas (o módulo tem o nome da pasta)")
     print(f"contrato de dados  : {n_contratos} pares (saída: o que o notebook consome)")

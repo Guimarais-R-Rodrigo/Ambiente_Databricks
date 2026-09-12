@@ -65,3 +65,10 @@ competente. Ver o registro em
 Ele descreve o que aconteceu; não isola o efeito da oferta, do canal ou do
 momento. Para atribuir causa, o desenho precisa ser experimental, e nenhum
 formulário conserta uma campanha que já rodou sem grupo de controle.
+
+## Guia do exemplar
+
+Para entender o contexto de aplicação, os requisitos e os limites antes de
+preencher, consulte o [README deste objeto](README.md). O formulário e o bloco
+colável acima foram preservados. Seu preenchimento não autoriza escrita ou
+execução adicional por si só.

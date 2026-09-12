@@ -15,6 +15,7 @@ quem mantém ou aprova mudanças começa aqui.
 | “O que foi realmente testado?” | [Testes](testes/README.md) |
 | “Como publico ou replico?” | [Playbooks](playbooks/README.md) |
 | “O que cada sprint entregou?” | [Sprints](sprints/README.md) |
+| “Como está a migração dos READMEs de objeto?” | [Iniciativa R00–R13](sprints/readmes_objetos/README.md) |
 | “O que ficou pendente entre sessões?” | [Handoffs](handoffs/README.md) |
 | “Por que este arquivo saiu do produto?” | [Histórico](historico/README.md) |
 

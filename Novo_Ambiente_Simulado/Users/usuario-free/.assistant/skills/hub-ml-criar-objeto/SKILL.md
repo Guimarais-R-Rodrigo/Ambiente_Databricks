@@ -1,6 +1,6 @@
 ---
 name: hub-ml-criar-objeto
-description: Cria objeto novo do Hub — snippet, script, prompt, README, notebook de exemplo ou skill — aplicando o template correspondente de `.assistant/hub_padroes/`, com a pasta, o `__init__.py`, o módulo e o notebook que o ensina. Use quando pedirem para criar, adicionar, padronizar ou converter um helper, utilitário, prompt, documento ou skill do ecossistema `.assistant`, ou quando perguntarem qual é o formato de um objeto do Hub. Não cobre escrever a lógica de análise em si, nem alterar objeto já existente sem que a conversão para o padrão seja o pedido.
+description: Cria objeto novo do Hub — snippet, script, prompt, README, notebook de exemplo ou skill — aplicando o template correspondente de `.assistant/hub_padroes/`, com a pasta, o README humano, o `__init__.py` aplicável, o módulo e o notebook que o ensina. Use quando pedirem para criar, adicionar, padronizar ou converter um helper, utilitário, prompt, documento ou skill do ecossistema `.assistant`, ou quando perguntarem qual é o formato de um objeto do Hub. Não cobre escrever a lógica de análise em si, nem alterar objeto já existente sem que a conversão para o padrão seja o pedido.
 ---
 
 # Criar objeto do Hub
@@ -37,7 +37,7 @@ reescrita inteira, porque a forma muda.
 | recebe DataFrame ou valores e devolve resultado | **snippet** | `hub_padroes/snippet/template.md` |
 | recebe o **endereço do que vai diagnosticar** e devolve um veredito | **script** | `hub_padroes/script/template.md` |
 | é texto que a pessoa preenche e cola no chat | **prompt** | `hub_padroes/prompt/template.md` |
-| explica uma pasta para quem chega | **README** | `hub_padroes/readme/template.md` |
+| explica uma pasta para quem chega | **README** | `hub_padroes/readme/template.md`; escala Objeto: `template_objeto.md` na mesma pasta |
 | ensina a usar um objeto, executando | **notebook** | `hub_padroes/notebook/template.py` |
 | é instrução que o Genie Code carrega sozinho | **skill** | `hub_padroes/skill/template.md` |
 
@@ -103,6 +103,7 @@ Snippet, dentro de uma das seis seções existentes — `constants`, `display`, 
 
 ```text
 hub_snippets/<secao>/<nome>/
+├── README.md                   # conceito, escolha e uso seguro
 ├── __init__.py                 # NÃO escreva à mão
 ├── <nome>.py                   # a implementação
 └── exemplo_<nome>.py           # o notebook que ensina
@@ -112,6 +113,7 @@ Script, que **não tem nível de seção**:
 
 ```text
 hub_scripts/<nome>/
+├── README.md
 ├── __init__.py
 ├── <nome>.py
 └── exemplo_<nome>.py
@@ -227,6 +229,18 @@ como estão; docstring, comentário e notebook vão em português. Um módulo co
 `threshold_warn` e docstring em português é inconsistente e correto; um com
 `limite_alerta` é consistente e quebrado.
 
+### README humano da pasta
+
+Todo snippet, script e prompt novo inclui `README.md` segundo
+[`template_objeto.md`](../../hub_padroes/readme/template_objeto.md). O
+[checklist editorial](../../hub_padroes/readme/checklist_objeto.md) é o dono da
+rubrica didática. Não copie seu conteúdo para esta skill. Leia README e exemplo
+seletivamente; nunca carregue todos os documentos como preâmbulo.
+
+Prompts mantêm briefing e exemplo; o README é o terceiro arquivo e não substitui
+os guias de preenchimento. Em legados, a transição é controlada no repositório.
+A migração documental não altera APIs, regras de negócio ou código executável.
+
 ## Usar helpers da biblioteca
 
 O Genie Code **não** descobre `hub_snippets` sozinho: a skill recomenda por
@@ -263,7 +277,7 @@ Entregue, nesta ordem:
 
 1. **O tipo escolhido e por quê**, em uma frase — para quem pediu confirmar.
 2. **Os artefatos exigidos pelo molde do tipo**, completos, com o caminho de
-   cada um. Snippet e script têm três arquivos; prompt tem dois; README e
+   cada um. Snippet e script incluem quatro arquivos; prompt inclui três; README e
    notebook têm um; skill tem `SKILL.md` e apenas os recursos necessários.
 3. **O comando** que gera o `__init__.py`, para quem tem o repositório rodar.
 4. **A lista do que ficou por fazer** — o notebook precisa ser executado, o
@@ -288,7 +302,8 @@ diferença antes de confiar:
 | o `__init__.py` bate com a API pública do módulo | `validate_assistant.py` |
 | o notebook consome chave que o módulo devolve | `validate_assistant.py` |
 | o notebook passa argumento que a assinatura aceita | `validate_assistant.py` |
-| o notebook tem bloco de saída real | `validate_assistant.py`, como **aviso** |
+| o notebook tem um bloco de saída (não comprova autenticidade) | `validate_assistant.py`, como **falha** quando ausente |
+| README tem versão, seções e links locais e respeita a migração | `readme_objeto_contract.py`, integrado ao validador |
 | **o tipo foi confirmado com quem pediu** | **você** |
 | **a saída colada é literal, e não editada** | **você** |
 | **a demanda já não estava coberta** | **você** |

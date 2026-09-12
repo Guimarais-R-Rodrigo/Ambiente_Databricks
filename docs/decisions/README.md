@@ -31,6 +31,7 @@ escolha for difícil de reverter ou afetar mais de um componente.
 | [0008](ADR-0008-criterios-de-conferencia-da-publicacao.md) | critérios de verify em código | aceito |
 | [0009](ADR-0009-identidade-e-pacote-de-implantacao.md) | identidade neutra e ZIP sanitizado | aceito |
 | [0010](ADR-0010-manual-tecnico-unificado.md) | Manual Técnico unifica catálogo e glossário | aceito |
+| [0011](ADR-0011-readmes-de-objeto.md) | README didático por objeto; transição controlada | proposto; candidata R01 |
 
 Ao adicionar um ADR, atualize esta tabela e o `CHANGELOG.md`.
 

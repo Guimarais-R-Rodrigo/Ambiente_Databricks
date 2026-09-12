@@ -19,6 +19,7 @@ Na primeira leitura, acompanhe os capítulos 1 a 8. Eles constroem o vocabulári
 
 | Sua dúvida | Onde procurar |
 |---|---|
+| O que muda com um README em cada objeto? | [README local](#readmes-objeto) |
 | O que é este ambiente e onde cada coisa fica? | [1. Visão geral](#visao-geral) e [2. Pastas e caminhos](#pastas) |
 | O que significa API? O Databricks busca uma API do projeto? | [3. Quatro sentidos de API](#apis) |
 | O que são função, argumento, retorno e contrato? | [4. Como ler código](#codigo) e [5. Contratos](#contratos) |
@@ -38,6 +39,29 @@ Na primeira leitura, acompanhe os capítulos 1 a 8. Eles constroem o vocabulári
 | Qual helper, skill ou prompt atende à minha demanda? | [27. Inventário de helpers](#catalogo-helpers) e [28. Métodos e briefings](#metodos) |
 | Não lembro o significado de um termo | [29. Índice de termos](#indice-termos) |
 | De onde veio a informação? | [30. Fontes e alcance](#fontes) |
+
+<a id="readmes-objeto"></a>
+## README local: entender antes de executar
+
+O README de uma pasta de objeto explica o conceito, quando escolher o recurso,
+quando evitá-lo, entradas, saídas e como interpretar o resultado. O notebook de
+exemplo continua sendo a demonstração, e a implementação continua definindo o
+comportamento real. A síntese local não substitui este Manual: o
+[inventário integrado](#catalogo-helpers) e o [índice de termos](#indice-termos)
+permanecem aqui.
+
+Na migração em andamento, pastas ainda não convertidas podem não ter README.
+Nesse caso, consulte o inventário e o exemplo existente; ausência do guia não
+é evidência de teste nem de defeito. Novos objetos devem incluir o guia. O molde
+está no caminho lógico `hub_padroes/readme/template_objeto.md`, relativo à raiz
+`.assistant/`. Esta referência lógica permanece válida nas três cópias deste
+Manual, sem pressupor acesso ao GitHub no workspace.
+
+Antes de executar o exemplo, confira os efeitos dele separadamente dos efeitos
+do helper. O helper pode apenas ler, enquanto o notebook cria, sobrescreve ou
+remove tabelas sintéticas. Uma execução antiga documentada não equivale a teste
+na sua sessão. Consulte só os READMEs pertinentes; não é necessário carregar
+toda a coleção para responder uma dúvida.
 
 <a id="visao-geral"></a>
 ## 1. O projeto visto como uma oficina de trabalho

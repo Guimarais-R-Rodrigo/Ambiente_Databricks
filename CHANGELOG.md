@@ -5,6 +5,40 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — R01: READMEs de objeto, fundação candidata (Codex)
+
+### Adicionado
+
+- (Codex) Template e checklist de README de objeto em
+  `ambiente_fonte/.assistant/hub_padroes/readme/`; três READMEs de exemplares.
+- (Codex) `docs/decisions/ADR-0011-readmes-de-objeto.md` proposto e registros em
+  `docs/sprints/readmes_objetos/`, com controle explícito de legados pendentes.
+- (Codex) `tools/readme_objeto_contract.py` e regressões adversariais: estrutura,
+  navegação, versão, histórico e proibição de aumentar/reintroduzir dispensas.
+
+### Atualizado
+
+- (Codex) Templates de snippet/script/prompt/notebook, skill de criação e seu
+  checklist, regras editoriais, instruções, Manual e entradas de navegação.
+- (Codex) `tools/validate_assistant.py`, `tools/ci_local.py`, `tools/README.md` e
+  checkouts de CI: nova guarda e histórico completo para conferir a migração.
+- (Codex) Manual da raiz sincronizado e simulado regenerado a partir da fonte.
+  Relação nominal, inclusive documentos não README, na matriz da R01.
+
+### Corrigido
+
+- (Codex) Contagens locais do README raiz reconciliadas com execução; baseline
+  tinha duas divergências anteriores à R01. O bloco remoto não foi recertificado.
+- (Codex) Notas de escopo nos exemplares: `decidivel`, parâmetro não usado,
+  limites da evidência antiga e escrita de tabelas persistentes de demonstração.
+
+### Notas
+
+- (Codex) Nenhum helper analítico, API, imagem ou bloco colável foi modificado.
+  R02 não iniciada; template candidato e ADR aguardam aceite humano.
+- (Codex) Testes e revisão própria delimitados no relatório R01; sem agentes
+  independentes, execução/publicação Databricks ou homologação de produção.
+
 ## 2026-09-11 — Kit de transição e aceite gradual no trabalho (Codex)
 
 ### Adicionado
