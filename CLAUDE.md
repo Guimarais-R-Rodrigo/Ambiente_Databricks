@@ -58,6 +58,13 @@ Escala planejada: pessoal → squad → missão.
 - README didático por pasta de objeto: proposta `ADR-0012`; contrato candidato e piloto R02 em revisão.
   Estado e retomada: `docs/sprints/readmes_objetos/README.md`.
 
+- Sistema de Temas: contrato central e configuração completa por contexto
+  aceitos no `docs/decisions/ADR-0013-sistema-de-temas.md`. A V01 está aceita
+  e integrada no Git; fixtures são entradas de teste, não temas operacionais
+  aprovados. Sem seletor instalado, mudança visual ou publicação no Databricks.
+  Homologação operacional permanece pendente. Estado, limites e retomada:
+  `docs/sprints/sistema_temas/V01/CHECKPOINT_V01.md`.
+
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 
 ## Regras inegociáveis

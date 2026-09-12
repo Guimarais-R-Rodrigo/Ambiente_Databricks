@@ -39,5 +39,8 @@ e os relatos R00/R01 permanecem históricos; não houve início da R03.
 ## Sistema de Temas do Hub
 
 A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints
-históricas e dos READMEs. V00 foi integrada no Git; a [candidata V01](sistema_temas/V01/README.md)
-propõe contrato e experiência, sem alterar a aparência ou publicar no Databricks.
+históricas e dos READMEs. V00 e [V01](sistema_temas/V01/README.md) estão aceitas
+e integradas no Git. A V01 entrega o contrato e a experiência especificada;
+não instala o seletor de temas, não altera a aparência e não publica no Databricks.
+A homologação operacional, a auditoria independente e a avaliação com usuário
+iniciante permanecem pendentes. A V02 ainda não foi iniciada.
