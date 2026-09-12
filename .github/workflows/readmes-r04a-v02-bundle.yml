@@ -1,0 +1,30 @@
+name: Base V02 para reconciliacao R04-A
+on:
+  push:
+    branches: [codex/readmes-r04a-v02-base]
+    paths: [.github/workflows/readmes-r04a-v02-bundle.yml]
+permissions:
+  contents: read
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Exportar main V02 e ancestral R04 sem credenciais
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = 6085eabd4ca715ea2566336aaeb91e2778d76c77
+          git branch r04a-main-v02 6085eabd4ca715ea2566336aaeb91e2778d76c77
+          git branch r04a-base-antiga 1be947b0a62c3b0b85fa3cd5692f474b9066d85f
+          git bundle create "$RUNNER_TEMP/r04a-v02-base.bundle" r04a-main-v02 r04a-base-antiga
+          git bundle verify "$RUNNER_TEMP/r04a-v02-base.bundle"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r04a-v02-base
+          path: ${{ runner.temp }}/r04a-v02-base.bundle
+          retention-days: 1
