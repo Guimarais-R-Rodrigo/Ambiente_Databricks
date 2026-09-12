@@ -205,9 +205,9 @@ reexecuta o gate e reprova se qualquer contagem ficar desatualizada.
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 88 caminhos verificados
-markdown / links   : 160 arquivos / 682 links relativos
-notebooks / links  : 79 notebooks / 49 links relativos
-readmes de objeto  : 26/75 operacionais; 3/3 exemplares; 49 pendentes (estrutura, não aceite editorial)
+markdown / links   : 166 arquivos / 753 links relativos
+notebooks / links  : 79 notebooks / 55 links relativos
+readmes de objeto  : 32/75 operacionais; 3/3 exemplares; 43 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 61 conferidas (nome, arquivos, __init__)
 forma da pasta     : 59 conferidas (o módulo tem o nome da pasta)
 contrato de dados  : 61 pares (saída: o que o notebook consome)
@@ -218,8 +218,8 @@ normas do molde    : 71 arquivos, 0 violação(ões)
 notebook exercita  : 58 objetos, 0 notebook(s) que só importam
 python (AST)       : 214 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1119 arquivos varridos no repositório editável/derivado
-repo (links)       : 1107 links fora da raiz analisada
+repo (identidade)  : 1138 arquivos varridos no repositório editável/derivado
+repo (links)       : 1181 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
@@ -307,3 +307,7 @@ Spark — calendário, diagnóstico de join, nulos, PSI/CSI, prévia segura e am
 sem alterar os helpers. Com a V02 já integrada, a candidata combinada chega a
 **26/75 READMEs operacionais**, com 49 pendências, e pausa antes da R04-B para
 revisão dos novos textos.
+
+### Continuidade R04-B
+
+Após o aceite e merge da R04-A pelo PR nº 17 (`a8f314a`), a R04-B documenta os seis Hub Scripts previstos no controle de migração. A candidata não altera as implementações e deve chegar a **32/75 READMEs operacionais**, com 43 pendências, sujeito à conferência do validador. A leva pausa antes da R05 para revisão dos novos textos.

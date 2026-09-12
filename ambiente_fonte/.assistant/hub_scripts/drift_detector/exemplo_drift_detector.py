@@ -11,6 +11,8 @@
 # MAGIC **O que este script faz.** Calcula o PSI entre dois recortes da mesma
 # MAGIC tabela, com bins derivados do período de referência.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste script](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente

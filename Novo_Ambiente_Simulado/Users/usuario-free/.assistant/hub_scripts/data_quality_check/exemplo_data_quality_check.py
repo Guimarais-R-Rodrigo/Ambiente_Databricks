@@ -11,6 +11,8 @@
 # MAGIC **O que este script faz.** Roda antes da análise e devolve um veredito
 # MAGIC legível sobre unicidade da chave, taxa de nulos e atualidade.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste script](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente

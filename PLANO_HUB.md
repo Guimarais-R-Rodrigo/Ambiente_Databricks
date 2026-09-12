@@ -875,3 +875,6 @@ A R04-A parte dessa base e documenta `date_features`, `join_diagnostics`,
 `null_summary`, `psi_calculator`, `safe_display` e `smart_sample`, sem alterar
 seus algoritmos. Relatório: `docs/sprints/readmes_objetos/RELATORIO_R04A.md`.
 Parada antes da R04-B; sem publicação Databricks ou aceite antecipado dos novos guias.
+
+### Checkpoint R04-B — READMEs de scripts
+Seis Hub Scripts recebem README local no contrato 1.0.0. Implementações permanecem preservadas; o lote pausa antes da R05 para revisão. Fonte: `docs/sprints/readmes_objetos/RELATORIO_R04B.md`.

@@ -12,6 +12,8 @@
 # MAGIC **O que este script faz.** Calcula RFV com corte na data de referência,
 # MAGIC inclusive, e não inventa score nenhum a partir disso.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste script](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -124,8 +126,8 @@ display(
 # MAGIC ```
 # MAGIC
 # MAGIC **Como ler.** Executado no laboratório, a recência assume 5 valores
-# MAGIC distintos entre os 40 clientes (de 0 a 151 dias) e a frequência total
-# MAGIC assume 11 (de 6 a 17). Se qualquer uma dessas contagens vier **1**, a base
+# MAGIC distintos entre os 40 clientes (de 0 a 151 dias) e o output acima registra
+# MAGIC 9 valores distintos para a frequência total. Leia a tabela como evidência desta execução. Se qualquer uma dessas contagens vier **1**, a base
 # MAGIC de exemplo está balanceada e o notebook deixou de exercitar aquela dimensão
 # MAGIC — que é exatamente o defeito que a amostragem na célula de preparo corrige.
 # MAGIC

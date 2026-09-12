@@ -64,30 +64,6 @@
       "sprint": "R11",
       "lote": "B"
     },
-    "hub_scripts/data_quality_check": {
-      "sprint": "R04",
-      "lote": "B"
-    },
-    "hub_scripts/doc_coverage": {
-      "sprint": "R04",
-      "lote": "B"
-    },
-    "hub_scripts/drift_detector": {
-      "sprint": "R04",
-      "lote": "B"
-    },
-    "hub_scripts/naming_checker": {
-      "sprint": "R04",
-      "lote": "B"
-    },
-    "hub_scripts/rfv_calculator": {
-      "sprint": "R04",
-      "lote": "B"
-    },
-    "hub_scripts/schema_to_yaml": {
-      "sprint": "R04",
-      "lote": "B"
-    },
     "hub_snippets/ml/arima_wrapper": {
       "sprint": "R06",
       "lote": "A"
