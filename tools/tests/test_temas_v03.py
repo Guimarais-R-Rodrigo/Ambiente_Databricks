@@ -236,6 +236,73 @@ class TemasV03Tests(unittest.TestCase):
             if existed:
                 pio.templates[name] = old
 
+    def test_substituicao_template_ativo_simples_exige_ativacao(self):
+        name = "hub-v03-ativo-simples"
+        before_default = pio.templates.default
+        existed = name in pio.templates
+        old = pio.templates[name] if existed else None
+        try:
+            pio.templates[name] = go.layout.Template(layout={"width": 321})
+            pio.templates.default = name
+            with self.assertRaises(ThemeError) as ctx:
+                registrar_template_plotly_resolvido(
+                    proposta(**{"chart.width_px": 1111}), nome=name, substituir=True
+                )
+            self.assertEqual(ctx.exception.code, "PLOTLY_TEMPLATE_ACTIVE")
+            self.assertEqual(pio.templates[name].layout.width, 321)
+            self.assertEqual(pio.templates.default, name)
+        finally:
+            pio.templates.default = before_default
+            if name in pio.templates:
+                del pio.templates[name]
+            if existed:
+                pio.templates[name] = old
+
+    def test_substituicao_template_ativo_composto_exige_ativacao(self):
+        name = "hub-v03-ativo-composto"
+        before_default = pio.templates.default
+        existed = name in pio.templates
+        old = pio.templates[name] if existed else None
+        try:
+            pio.templates[name] = go.layout.Template(layout={"width": 321})
+            pio.templates.default = f"plotly+{name}"
+            with self.assertRaises(ThemeError) as ctx:
+                registrar_template_plotly_resolvido(
+                    proposta(**{"chart.width_px": 1111}), nome=name, substituir=True
+                )
+            self.assertEqual(ctx.exception.code, "PLOTLY_TEMPLATE_ACTIVE")
+            self.assertEqual(pio.templates[name].layout.width, 321)
+            self.assertIn(name, pio.templates.default.split("+"))
+        finally:
+            pio.templates.default = before_default
+            if name in pio.templates:
+                del pio.templates[name]
+            if existed:
+                pio.templates[name] = old
+
+    def test_substituicao_template_ativo_com_ativacao_explicita(self):
+        name = "hub-v03-ativo-explicito"
+        before_default = pio.templates.default
+        existed = name in pio.templates
+        old = pio.templates[name] if existed else None
+        try:
+            pio.templates[name] = go.layout.Template(layout={"width": 321})
+            pio.templates.default = name
+            registrar_template_plotly_resolvido(
+                proposta(**{"chart.width_px": 1111}),
+                nome=name,
+                substituir=True,
+                ativar=True,
+            )
+            self.assertEqual(pio.templates[name].layout.width, 1111)
+            self.assertEqual(pio.templates.default, name)
+        finally:
+            pio.templates.default = before_default
+            if name in pio.templates:
+                del pio.templates[name]
+            if existed:
+                pio.templates[name] = old
+
     def test_opcoes_precisam_booleanas(self):
         with self.assertRaises(ThemeError) as ctx:
             registrar_template_plotly_resolvido(

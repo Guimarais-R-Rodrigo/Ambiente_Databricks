@@ -116,7 +116,7 @@ Use `fig.show()` no notebook para visualizar. O [exemplo completo](exemplo_theme
 
 ## 10. Decisões e configurações que mais importam
 
-Escolha conscientemente entre aplicação explícita e registro global. Para propostas V03, prefira `aplicar_tema_resolvido`; `registrar_template_plotly_resolvido` exige namespace `hub-*`, recusa colisão por padrão e só ativa o template com `ativar=True`. Para recuperar o padrão da sessão depois de uma experiência de registro, guarde o valor anterior de `pio.templates.default` e restaure-o; não suponha que uma nova célula comece uma sessão vazia.
+Escolha conscientemente entre aplicação explícita e registro global. Para propostas V03, prefira `aplicar_tema_resolvido`; `registrar_template_plotly_resolvido` exige namespace `hub-*`, recusa colisão por padrão e só ativa o template com `ativar=True`. `substituir=True` permite trocar um nome já registrado, mas não permite substituir silenciosamente um nome que já participa do default da sessão: nesse caso, a chamada falha e exige também `ativar=True`, pois trocar o objeto ativo já seria uma mudança global. Para recuperar o padrão da sessão depois de uma experiência de registro, guarde o valor anterior de `pio.templates.default` e restaure-o; não suponha que uma nova célula comece uma sessão vazia.
 
 Aplique mudanças de largura, altura, margem ou fonte específicas **depois** de `aplicar_tema`. Uma nova aplicação do tema redefine essas opções. `n` é formatado sem casas decimais, com separador brasileiro de milhares, mas o helper não exige inteiro. `subtitulo` fica no rodapé, não imediatamente abaixo do título.
 
@@ -124,7 +124,7 @@ Aplique mudanças de largura, altura, margem ou fonte específicas **depois** de
 
 Reaplicar o rodapé pode duplicar informações e causar sobreposição com a legenda. A largura e a altura fixas podem comprimir grades extensas e telas pequenas. Uma figura construída sem erro ainda requer inspeção visual.
 
-A paleta categórica não substitui escalas explicitamente definidas em heatmaps nem cores já fixadas nos traces. O registro global afeta outras figuras que usem o padrão da mesma sessão, e não outras sessões independentes. A V03 aplica somente `mode=light`: `dark` e `high_contrast` são válidos no contrato, mas falham fechados no adaptador Plotly até existirem tokens de superfície suficientes para não inventar backgrounds implícitos.
+A paleta categórica não substitui escalas explicitamente definidas em heatmaps nem cores já fixadas nos traces. O registro global afeta outras figuras que usem o padrão da mesma sessão, e não outras sessões independentes. Um default Plotly pode ser composto, por exemplo `plotly+hub-alguma-coisa`; a V03 considera cada nome desse composto como ativo e recusa sua substituição com `ativar=False`. A V03 aplica somente `mode=light`: `dark` e `high_contrast` são válidos no contrato, mas falham fechados no adaptador Plotly até existirem tokens de superfície suficientes para não inventar backgrounds implícitos.
 
 O dicionário de configuração contém uma referência à lista `PALETA_CATEGORICA`; não altere essa lista por meio do retorno como se fosse uma cópia isolada. Textos de fonte/subtítulo também não passam por uma política geral de escape. Use conteúdo controlado e não exponha caminhos internos ou dados sensíveis no rodapé.
 

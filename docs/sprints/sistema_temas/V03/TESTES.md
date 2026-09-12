@@ -4,7 +4,7 @@
 
 `python -B tools/tests/test_temas_v03.py`
 
-A suíte cobre compatibilidade das três APIs legadas, equivalência da fixture legada, mapeamento dos tokens configuráveis, preservação de dados/eixos/cores explícitas, rodapé configurado, ausência de efeito global na aplicação por figura, contexto incorreto, modos ainda não suportados, tipo incorreto, fingerprint adulterado, namespace de template, colisão, substituição e ativação explícitas.
+A suíte cobre compatibilidade das três APIs legadas, equivalência da fixture legada, mapeamento dos tokens configuráveis, preservação de dados/eixos/cores explícitas, rodapé configurado, ausência de efeito global na aplicação por figura, contexto incorreto, modos ainda não suportados, tipo incorreto, fingerprint adulterado, namespace de template, colisão, substituição e ativação explícitas. Inclui regressões para impedir substituição silenciosa de template já ativo tanto em default simples quanto composto, e confirma que a substituição permanece permitida quando `ativar=True` é solicitado conscientemente.
 
 ## Regressões obrigatórias
 
@@ -18,7 +18,7 @@ SKIP nunca é convertido em PASS. Testes locais/CI não homologam Databricks, Sp
 
 ## Testes adversariais
 
-A guarda precisa rejeitar: dicionário cru em vez de `ResolvedTheme`; contexto `readme`; modo `dark`/`high_contrast` antes da implementação de superfícies; fingerprint inconsistente; nome fora de `hub-*`; colisão sem `substituir=True`; opções não booleanas.
+A guarda precisa rejeitar: dicionário cru em vez de `ResolvedTheme`; contexto `readme`; modo `dark`/`high_contrast` antes da implementação de superfícies; fingerprint inconsistente; nome fora de `hub-*`; colisão sem `substituir=True`; substituição de nome que participa do default ativo sem `ativar=True`; opções não booleanas.
 
 ## Evidência de não regressão
 

@@ -195,7 +195,9 @@ def registrar_template_plotly_resolvido(
 
     ``nome`` deve usar o namespace ``hub-*``. O nome legado ``caixa`` e templates
     nativos ficam fora desta API. Registrar não ativa por padrão; ``ativar=True``
-    é a ação explícita que muda ``pio.templates.default``.
+    é a ação explícita que muda ``pio.templates.default``. Substituir um nome que
+    já participa do default ativo também exige ``ativar=True`` para não produzir
+    mudança global implícita pela troca do objeto registrado.
     """
     config = get_tema_plotly(theme)
     if type(nome) is not str or len(nome) > 64 or _TEMPLATE_NAME_RE.fullmatch(nome) is None:
@@ -211,12 +213,25 @@ def registrar_template_plotly_resolvido(
             "As opções ativar e substituir precisam ser booleanas.",
             field="$.template_options",
         )
+    default_atual = pio.templates.default
+    templates_ativos = (
+        {parte.strip() for parte in default_atual.split("+") if parte.strip()}
+        if isinstance(default_atual, str)
+        else set()
+    )
     if nome in pio.templates and not substituir:
         raise ThemeError(
             "PLOTLY_TEMPLATE_EXISTS",
             "Já existe um template com esse nome na sessão.",
             field="$.template_name",
             action="Escolha outro nome ou use substituir=True conscientemente.",
+        )
+    if nome in pio.templates and substituir and not ativar and nome in templates_ativos:
+        raise ThemeError(
+            "PLOTLY_TEMPLATE_ACTIVE",
+            "O template solicitado já participa do padrão ativo da sessão.",
+            field="$.template_name",
+            action="Para substituí-lo, use ativar=True explicitamente ou escolha outro nome.",
         )
     pio.templates[nome] = go.layout.Template(layout=config)
     if ativar:

@@ -23,6 +23,7 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 - (Codex) Bloco copiável V03 no README importa `plotly.graph_objects as go` localmente, sem depender da execução de células anteriores.
 - (Codex) Code review P2 documental: README, notebook e Manual explicitam que a rota V03 revalida o tema e requer `jsonschema`/`referencing` conforme `hub_snippets/requirements-temas.txt`, sem instalação automática.
 - (Codex) README do núcleo V02 deixa de afirmar que Plotly ainda não está integrado e passa a registrar a integração opt-in V03 sem sugerir migração automática ou aprovação.
+- (Codex) Code review P2 final: `registrar_template_plotly_resolvido` recusa substituir um template que já participa do default ativo quando `ativar=False`, inclusive em defaults compostos; regressões cobrem recusa e ativação explícita.
 
 ### Notas
 

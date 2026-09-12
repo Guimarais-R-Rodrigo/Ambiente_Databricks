@@ -18,7 +18,7 @@ As APIs legadas `get_tema_eda()`, `aplicar_tema(fig, subtitulo, fonte, n)` e `re
 
 - `get_tema_plotly(theme)` — produz configuração Plotly sem alterar sessão;
 - `aplicar_tema_resolvido(fig, theme, ...)` — aplica explicitamente à figura e devolve o mesmo objeto;
-- `registrar_template_plotly_resolvido(theme, *, nome, ativar=False, substituir=False)` — registra no namespace `hub-*`; só muda o default da sessão com `ativar=True`.
+- `registrar_template_plotly_resolvido(theme, *, nome, ativar=False, substituir=False)` — registra no namespace `hub-*`; só muda o default da sessão com `ativar=True` e recusa substituir um nome já ativo quando a ativação não é explícita.
 
 ## Fail-closed
 
