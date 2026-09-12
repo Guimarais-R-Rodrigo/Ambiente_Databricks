@@ -136,42 +136,36 @@ print(f"colorway completo: {tema['colorway']}")
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## 3. V03 — proposta resolvida, aplicação explícita
+# MAGIC ## 3. V03 — referência resolvida, aplicação explícita
 # MAGIC
-# MAGIC Esta seção usa uma **fixture sintética** como ponto de partida. Ela não é um
-# MAGIC tema operacional aprovado. A proposta existe só em memória e afeta somente a
-# MAGIC figura passada à função nova.
+# MAGIC Esta seção usa a referência notebook empacotada para provar a nova rota sem
+# MAGIC editar a configuração dentro do notebook irmão. A referência é uma fixture
+# MAGIC de teste, não um tema operacional aprovado.
 
 # COMMAND ----------
 
 import plotly.io as pio
-from hub_snippets.visual.tema import load_reference_theme, resolve_theme
+from hub_snippets.visual.tema import load_reference_theme
 from hub_snippets.visual.theme_plotly import aplicar_tema_resolvido, get_tema_plotly
 
 referencia = load_reference_theme("notebook")
-proposta = referencia.to_dict()
-proposta["theme_id"] = "hub-v03-exemplo"
-proposta["display_name"] = "V03 exemplo sintético"
-proposta["description"] = "Proposta sintética usada somente para demonstrar o adaptador Plotly V03."
-proposta["tokens"]["brand.primary"] = "#112233"
-proposta["tokens"]["palette.categorical"] = ["#112233", "#445566", "#778899"]
-
-tema_resolvido = resolve_theme(proposta, expected_context="notebook")
 default_antes = pio.templates.default
 
 figura3 = go.Figure(go.Bar(x=["A", "B", "C"], y=[10, 12, 9]))
-figura3.update_layout(title="Proposta V03 — exemplo sintético")
-aplicar_tema_resolvido(figura3, tema_resolvido, fonte="dados sintéticos", n=3)
+figura3.update_layout(title="Referência V03 — exemplo sintético")
+aplicar_tema_resolvido(figura3, referencia, fonte="dados sintéticos", n=3)
 
+config_referencia = get_tema_plotly(referencia)
+config_legado = get_tema_eda()
+assert config_referencia == config_legado
 assert pio.templates.default == default_antes
-assert figura3.layout.title.font.color == "#112233"
-assert list(get_tema_plotly(referencia)["colorway"]) == list(get_tema_eda()["colorway"])
 figura3.show()
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** A cor alterada prova somente que o adaptador consumiu a proposta
-# MAGIC validada. `pio.templates.default` permanece igual porque aplicação por figura
-# MAGIC não é registro global. O teste de equivalência da referência legada evita que
-# MAGIC a V03 mude silenciosamente o visual atual. `dark` e `high_contrast` continuam
-# MAGIC fora do adaptador Plotly desta sprint; usar esses modos gera erro explícito.
+# MAGIC **Como ler.** A igualdade entre as duas configurações prova que a referência
+# MAGIC `legado_notebook` preserva o layout atual pela nova rota. A aplicação afeta
+# MAGIC somente `figura3` e não muda `pio.templates.default`. Para aprender a criar
+# MAGIC uma proposta com tokens diferentes, use o exemplo comentado no README do
+# MAGIC objeto; o notebook executável mantém um contrato local simples e auditável.
+# MAGIC `dark` e `high_contrast` continuam fora do adaptador Plotly desta sprint.
