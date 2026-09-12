@@ -1,0 +1,61 @@
+name: V00 - baseline isolada
+
+on:
+  push:
+    branches: [codex/temas-v00-baseline-20260912]
+    paths: [.github/workflows/temas-v00-baseline.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+      - name: Ler exclusivamente a base autorizada
+        uses: actions/checkout@v4
+        with:
+          ref: 8744157fe9c3e0603f689fb2bcad52445e96cb41
+          persist-credentials: false
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Registrar fonte e identidade Git sem configuracao ou credenciais
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/v00"
+          git rev-parse HEAD > "$RUNNER_TEMP/v00/base.commit"
+          git rev-parse HEAD^{tree} > "$RUNNER_TEMP/v00/base.tree"
+          git status --porcelain > "$RUNNER_TEMP/v00/status-inicial.txt"
+          git rev-list --objects HEAD | git pack-objects --stdout > "$RUNNER_TEMP/v00/base.pack"
+          git ls-tree -r -z HEAD > "$RUNNER_TEMP/v00/tree.z"
+          python --version > "$RUNNER_TEMP/v00/python.txt"
+          uname -a > "$RUNNER_TEMP/v00/sistema.txt"
+      - name: Instalar apenas as dependencias de teste existentes
+        run: python -m pip install -r tools/requirements-dev.txt
+      - name: Executar as sete etapas existentes sem Databricks
+        shell: bash
+        run: |
+          set -o pipefail
+          python tools/ci_local.py --verbose 2>&1 | tee "$RUNNER_TEMP/v00/ci-baseline.log"
+      - name: Guardar evidencias sem dados de trabalho nem configuracao Git
+        if: always()
+        shell: bash
+        run: |
+          python -m pip freeze > "$RUNNER_TEMP/v00/dependencias.txt"
+          git status --porcelain > "$RUNNER_TEMP/v00/status-final.txt"
+          cd "$RUNNER_TEMP/v00"
+          sha256sum base.pack > base.pack.sha256
+      - name: Disponibilizar fonte exata e evidencias da baseline
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: temas-v00-baseline
+          path: ${{ runner.temp }}/v00/
+          retention-days: 14
+          if-no-files-found: error
