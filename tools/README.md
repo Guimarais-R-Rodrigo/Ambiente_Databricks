@@ -165,3 +165,6 @@ números ADR e inconsistência das rotas/documentos ao combinar as iniciativas.
 Inclui testes negativos; não executa helpers ou conversas. Os testes originais
 da R01 e do Concierge foram preservados. As evidências datadas da composição
 ficam em [INTEGRACAO_R02.md](../docs/sprints/readmes_objetos/INTEGRACAO_R02.md).
+## Diagnóstico visual V00
+
+`inventario_visual.py` e `executar_baseline_visual.py` produzem evidência somente em `.artifacts/`. Consulte o [guia da V00](../docs/sprints/sistema_temas/V00.md) antes de executar. Não publicam nem alteram o produto.

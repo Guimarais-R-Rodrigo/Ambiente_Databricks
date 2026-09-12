@@ -54,3 +54,7 @@ checkpoint técnico e a
 publicado depois dele.
 
 Volte ao [README raiz](../README.md) para o ciclo de contribuição.
+
+## Sistema de Temas — execução candidata
+
+[Diagnóstico V00 e próximos critérios de aceite](sprints/sistema_temas/README.md). Sem mudança no visual do produto.

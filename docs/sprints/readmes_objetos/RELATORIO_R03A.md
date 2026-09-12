@@ -105,3 +105,7 @@ main/CI antes de uma integração autorizada. A próxima leva **R03-B** contém
 correlation_matrix, dataframe_styled, distribution_grid, index_generator,
 section_header e theme_plotly e **não foi iniciada**. Nenhum deles ganhou README
 nesta rodada. [Controle de migração](CONTROLE_MIGRACAO.json).
+
+## 8. Atualização paralela da main — registro posterior
+
+Após o lote inicial, a main recebeu a V00. A [conciliação](CONCILIACAO_V00_R03A.md) preserva a instrumentação e resolve somente conflitos de changelog e contagens. A matriz final usa essa nova base; os logs locais iniciais mantêm sua procedência. Resultados posteriores são registrados separadamente, sem reescrever o teste inicial como aprovação da composição.

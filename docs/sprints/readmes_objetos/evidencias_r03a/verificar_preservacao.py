@@ -5,6 +5,7 @@ from pathlib import Path
 import ast,json,re,subprocess,sys
 ROOT=Path(__file__).resolve().parents[4]
 BASE='5493f7db68f397ad7040485cb09bad53eb79be74'
+PARALLEL_BASE='b88a9ccdde6e61892bc25eb7cf4f4b2577badb23'
 PREFIX='ambiente_fonte/.assistant/'
 OBJECTS=['constants/colors','constants/emojis','constants/styles','testing/fixtures','visual/badge','visual/divider','visual/kpi_card']
 
@@ -52,7 +53,17 @@ for p in paths:
 assert len(accepted)==9,accepted
 checks['previous_readmes_only_version_changed']=len(accepted)
 protected=[p for p in paths if p.startswith((PREFIX+'skills/',PREFIX+'hub_readmes_visual_assets/','novas_funcionalidades/','tools/','.github/workflows/'))]
-for p in protected:same(p)
+for p in protected:
+ if p=='tools/README.md':
+  assert (ROOT/p).read_bytes()==subprocess.check_output(['git','show',PARALLEL_BASE+':'+p],cwd=ROOT),p
+ else:same(p)
+# Every V00 addition/change other than the two shared conflict resolutions stays byte-identical.
+parallel_paths=subprocess.check_output(['git','diff','--name-only',BASE,PARALLEL_BASE],cwd=ROOT,text=True).splitlines()
+parallel_paths=[p for p in parallel_paths if p not in ('CHANGELOG.md','README.md')]
+for p in parallel_paths:
+ assert (ROOT/p).read_bytes()==subprocess.check_output(['git','show',PARALLEL_BASE+':'+p],cwd=ROOT),p
+checks['v00_files_preserved']=len(parallel_paths)
+checks['v00_base']=PARALLEL_BASE
 checks['protected_skills_assets_tools_workflows_experiments']=len(protected)
 forms=[p for p in paths if p.startswith(PREFIX+'hub_prompts/') and p.endswith('.md') and not p.endswith('/README.md')]
 for p in forms:same(p)

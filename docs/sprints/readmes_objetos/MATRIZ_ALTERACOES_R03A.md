@@ -1,9 +1,6 @@
 # Matriz nominal — aceite, versão 1.0.0 e R03-A
 
-Base Git: `5493f7db68f397ad7040485cb09bad53eb79be74`. O diff contém **77 caminhos**, incluindo cópias
-geradas e evidências, não 77 novos READMEs. São sete guias novos e nove
-READMEs anteriores com mudança restrita ao marcador. Os estados A/M abaixo
-são diferenças no Git, não avaliações de qualidade.
+Base inicial: `5493f7db68f397ad7040485cb09bad53eb79be74`. Após a atualização paralela, esta matriz final compara com main V00 `b88a9ccdde6e61892bc25eb7cf4f4b2577badb23`. O diff contém **78 caminhos**, incluindo cópias e evidências, não novos textos. Os instrumentos/workflows V00 herdados não são alterações deste lote. São sete READMEs novos, nove marcadores anteriores e sete notebooks documentais; o restante é navegação, ratificação e evidência.
 
 | Situação | Caminho | Categoria | Alteração e motivo |
 |---|---|---|---|
@@ -73,6 +70,7 @@ são diferenças no Git, não avaliações de qualidade.
 | A | `docs/sprints/readmes_objetos/ACEITE_V1.md` | Aceite | Registra aprovação real de Rodrigo, merge efetuado e limites da continuidade. |
 | A | `docs/sprints/readmes_objetos/ACHADOS_R03A.md` | Achados | Separa correções de prosa de limitações funcionais/visuais não corrigidas. |
 | M | `docs/sprints/readmes_objetos/CHECKPOINT_INTEGRACAO_R02.md` | Governança/navegação | Estado estável, ratificação e rota para o lote; preservar conteúdo complementar do Concierge. |
+| A | `docs/sprints/readmes_objetos/CONCILIACAO_V00_R03A.md` | Registro complementar | Conciliação da atualização paralela V00; preservar as duas bases. |
 | M | `docs/sprints/readmes_objetos/CONTROLE_MIGRACAO.json` | Controle | Versão 1.0.0 e retirada de exatamente sete dispensas; baseline histórico mantido. |
 | A | `docs/sprints/readmes_objetos/MATRIZ_ALTERACOES_R03A.md` | Fechamento | Escopo nominal, testes, limites e checkpoint; parada antes da R03-B. |
 | M | `docs/sprints/readmes_objetos/README.md` | Governança/navegação | Estado estável, ratificação e rota para o lote; preservar conteúdo complementar do Concierge. |
@@ -82,33 +80,7 @@ são diferenças no Git, não avaliações de qualidade.
 | A | `docs/sprints/readmes_objetos/evidencias_r03a/gate_final_local.txt` | Evidência local | Verificação datada de contratos/preservação; não altera oito etapas ou dependências do gate. |
 | A | `docs/sprints/readmes_objetos/evidencias_r03a/objetos_local.txt` | Evidência local | Verificação datada de contratos/preservação; não altera oito etapas ou dependências do gate. |
 | A | `docs/sprints/readmes_objetos/evidencias_r03a/preservacao_local.json` | Evidência local | Verificação datada de contratos/preservação; não altera oito etapas ou dependências do gate. |
-| A | `docs/sprints/readmes_objetos/evidencias_r03a/verificar_preservacao.py` | Teste suplementar | Verificação datada de contratos/preservação; não altera oito etapas ou dependências do gate. |
+| A | `docs/sprints/readmes_objetos/evidencias_r03a/verificar_preservacao.py` | Teste suplementar | Verificação datada de contratos/preservação; não altera oito etapas ou dependências do gate. Documento compartilhado e novos arquivos da V00 conferidos também contra b88a9cc. |
 | A | `docs/sprints/readmes_objetos/evidencias_r03a/verificar_r03a.py` | Teste suplementar | Verificação datada de contratos/preservação; não altera oito etapas ou dependências do gate. |
 
-## Resumo por categoria
-
-- Aceite: 1 caminho(s).
-- Achados: 1 caminho(s).
-- Controle: 1 caminho(s).
-- Cópia do Manual: 1 caminho(s).
-- Decisão: 1 caminho(s).
-- Derivado: 27 caminho(s).
-- Entrada do repositório: 1 caminho(s).
-- Evidência local: 4 caminho(s).
-- Fechamento: 2 caminho(s).
-- Governança/navegação: 7 caminho(s).
-- Histórico: 1 caminho(s).
-- Manual canônico: 1 caminho(s).
-- Navegação: 1 caminho(s).
-- Notebook — prosa: 7 caminho(s).
-- Padrão editorial: 2 caminho(s).
-- README anterior: 9 caminho(s).
-- README novo: 7 caminho(s).
-- Revisão: 1 caminho(s).
-- Teste suplementar: 2 caminho(s).
-
-Módulos, fachadas, estilos, cores, instruções operacionais de skills, formulários,
-workflows permanentes e gates foram inspecionados e preservados. Testes novos
-ficam nas evidências da sprint; não são automaticamente parte da CI permanente.
-O workflow transitório de transporte deve ser retirado da árvore final e não
-entra nesta matriz. O PR nº 7 já integrado não é contado como alteração nova.
+Os arquivos transitórios de recuperação/transporte não compõem a árvore final; seus commits ficam no histórico. Logs da primeira base e da conciliação permanecem distintos. Nenhum novo aceite humano dos sete textos é presumido.

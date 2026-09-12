@@ -52,3 +52,7 @@ Os notebooks podem escrever tabelas sintéticas: os READMEs alertam antes de
 encaminhar à execução. R01 não os executa no Databricks e não modifica suas
 instruções executáveis. O [ADR-0012](../../decisions/ADR-0012-readmes-de-objeto.md)
 foi ratificado pelo usuário em 2026-09-12, com nota anexada sem apagar o relato inicial.
+
+### Conciliação durante a R03-A
+
+A main recebeu a instrumentação V00 em paralelo; o novo PR nº 9 precisa preservar essa entrega. [Registro de conciliação](CONCILIACAO_V00_R03A.md). A matriz final distingue a base integrada original da main V00 e não contabiliza os instrumentos herdados como novos READMEs.
