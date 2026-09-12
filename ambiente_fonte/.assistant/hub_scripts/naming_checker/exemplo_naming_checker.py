@@ -11,6 +11,8 @@
 # MAGIC **O que este script faz.** Aponta violações **rotulando a origem de cada
 # MAGIC regra**, e exige que os prefixos sejam declarados por quem os adota.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste script](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente

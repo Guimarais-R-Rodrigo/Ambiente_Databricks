@@ -89,3 +89,6 @@ O índice completo, com o status de cada ADR, está em `docs/decisions/README.md
   (`.claude/rules/genie-code-oficial.md`); em dúvida, verificar a documentação
   antes de afirmar.
 - Não duplique regra longa entre arquivos: mova para `.claude/` e referencie.
+
+### Estado da migração de READMEs — R04-B
+A R04-A foi integrada na `main` em `a8f314a`. A R04-B documenta os seis `hub_scripts` previstos no controle de migração; use `docs/sprints/readmes_objetos/RELATORIO_R04B.md` para escopo, testes e limites. Não trate cobertura estrutural como aceite editorial.

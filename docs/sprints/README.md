@@ -72,3 +72,6 @@ aplica tema a Plotly/HTML, não cria seletor e não publica no Databricks.
 
 A homologação operacional, a auditoria independente e a avaliação com usuário
 iniciante permanecem pendentes. A V03 ainda não foi iniciada.
+
+### READMEs de objeto — R04-B
+A R04-A está integrada em `a8f314a`. A R04-B cobre seis Hub Scripts e pausa para revisão antes da R05. Consulte `readmes_objetos/RELATORIO_R04B.md` e `readmes_objetos/MATRIZ_ALTERACOES_R04B.md`.

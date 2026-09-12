@@ -11,6 +11,8 @@
 # MAGIC **O que este script faz.** Conta quantas células de código têm markdown
 # MAGIC adjacente. **Só isso.** Ele não lê a explicação e não sabe se ela presta.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste script](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
