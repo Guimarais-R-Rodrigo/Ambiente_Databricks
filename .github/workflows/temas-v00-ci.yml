@@ -1,0 +1,29 @@
+name: Regressões da instrumentação V00
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  testar-v00:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+      - name: Instalar dependências declaradas
+        run: python -m pip install -r tools/requirements-dev.txt
+      - name: Guardas do inventário
+        run: python -B tools/tests/test_inventario_visual.py
+      - name: Contratos legados sintéticos
+        run: python -B tools/tests/test_visual_legado_v00.py
+      - name: Confiabilidade do relatório
+        run: python -B tools/tests/test_baseline_visual_runner.py
