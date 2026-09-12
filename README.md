@@ -218,8 +218,8 @@ normas do molde    : 70 arquivos, 0 violação(ões)
 notebook exercita  : 57 objetos, 0 notebook(s) que só importam
 python (AST)       : 211 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 986 arquivos varridos no repositório editável/derivado
-repo (links)       : 698 links fora da raiz analisada
+repo (identidade)  : 1014 arquivos varridos no repositório editável/derivado
+repo (links)       : 768 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```

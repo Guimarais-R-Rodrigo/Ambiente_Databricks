@@ -35,3 +35,9 @@ checkpoints desta iniciativa.
 O [checkpoint R02-I](readmes_objetos/CHECKPOINT_INTEGRACAO_R02.md) registra a
 composição candidata com o Concierge. O [piloto R02](readmes_objetos/CHECKPOINT_R02.md)
 e os relatos R00/R01 permanecem históricos; não houve início da R03.
+
+## Sistema de Temas do Hub
+
+A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints
+históricas e dos READMEs. V00 foi integrada no Git; a [candidata V01](sistema_temas/V01/README.md)
+propõe contrato e experiência, sem alterar a aparência ou publicar no Databricks.

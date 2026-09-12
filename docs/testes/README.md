@@ -89,3 +89,10 @@ Antes de replicar no trabalho:
 - [Método e rodadas de roteamento](forward/README.md)
 - [Runbook de replicação](../playbooks/replicacao-trabalho.md)
 - [Índice de documentação](../README.md)
+
+## Sistema de Temas — V01
+
+O [relatório da composição V01](sistema_temas/V01/RELATORIO_EXECUCAO.md) registra
+testes locais, CI adicional e limites. Não substitui a homologação no Databricks.
+A [especificação e o checkpoint](../sprints/sistema_temas/V01/README.md) explicam
+como revisar a proposta sem operar o produto.

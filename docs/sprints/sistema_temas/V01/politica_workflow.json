@@ -1,0 +1,203 @@
+{
+  "version": "0.1.0",
+  "status": "ESPECIFICACAO_NAO_AUTORIZA_ACOES",
+  "roles": [
+    "leitor",
+    "proponente",
+    "aprovador",
+    "publicador",
+    "mantenedor"
+  ],
+  "states": [
+    "rascunho",
+    "em_revisao",
+    "aprovado",
+    "rejeitado",
+    "publicado",
+    "revogado",
+    "arquivado"
+  ],
+  "default": "deny",
+  "permissions_source": "identidade_e_permissoes_validadas_no_processo_ou_servidor_nunca_no_json",
+  "scopes": [
+    "pessoal",
+    "projeto",
+    "compartilhado"
+  ],
+  "transitions": [
+    {
+      "action": "editar",
+      "from": "rascunho",
+      "to": "rascunho",
+      "roles": [
+        "proponente",
+        "mantenedor"
+      ],
+      "scopes": [
+        "pessoal"
+      ],
+      "guards": [
+        "owner",
+        "schema_valid"
+      ]
+    },
+    {
+      "action": "submeter",
+      "from": "rascunho",
+      "to": "em_revisao",
+      "roles": [
+        "proponente",
+        "mantenedor"
+      ],
+      "scopes": [
+        "projeto",
+        "compartilhado"
+      ],
+      "guards": [
+        "owner",
+        "schema_valid",
+        "revision_frozen"
+      ]
+    },
+    {
+      "action": "aprovar",
+      "from": "em_revisao",
+      "to": "aprovado",
+      "roles": [
+        "aprovador"
+      ],
+      "scopes": [
+        "projeto",
+        "compartilhado"
+      ],
+      "guards": [
+        "trusted_identity",
+        "not_author",
+        "revision_match",
+        "assets_verified",
+        "accessibility_review",
+        "independent_review",
+        "target_defined"
+      ]
+    },
+    {
+      "action": "rejeitar",
+      "from": "em_revisao",
+      "to": "rejeitado",
+      "roles": [
+        "aprovador"
+      ],
+      "scopes": [
+        "projeto",
+        "compartilhado"
+      ],
+      "guards": [
+        "trusted_identity",
+        "revision_match",
+        "reason"
+      ]
+    },
+    {
+      "action": "publicar",
+      "from": "aprovado",
+      "to": "publicado",
+      "roles": [
+        "publicador"
+      ],
+      "scopes": [
+        "projeto",
+        "compartilhado"
+      ],
+      "guards": [
+        "trusted_identity",
+        "revision_match",
+        "approval_valid",
+        "target_permission",
+        "backup_verified",
+        "expected_previous_revision",
+        "dependency_manifest_match"
+      ]
+    },
+    {
+      "action": "revogar",
+      "from": "publicado",
+      "to": "revogado",
+      "roles": [
+        "aprovador"
+      ],
+      "scopes": [
+        "projeto",
+        "compartilhado"
+      ],
+      "guards": [
+        "trusted_identity",
+        "reason",
+        "target_defined"
+      ]
+    },
+    {
+      "action": "arquivar",
+      "from": "rascunho",
+      "to": "arquivado",
+      "roles": [
+        "proponente",
+        "mantenedor"
+      ],
+      "scopes": [
+        "pessoal"
+      ],
+      "guards": [
+        "owner"
+      ]
+    }
+  ],
+  "read_actions": [
+    {
+      "action": "ver_temas_aprovados",
+      "roles": [
+        "leitor",
+        "proponente",
+        "aprovador",
+        "publicador",
+        "mantenedor"
+      ],
+      "effect": "Somente leitura de temas aos quais a identidade tem acesso."
+    },
+    {
+      "action": "experimentar",
+      "roles": [
+        "leitor",
+        "proponente",
+        "aprovador",
+        "publicador",
+        "mantenedor"
+      ],
+      "effect": "Prévia da própria sessão com dados sintéticos; sem persistência compartilhada."
+    },
+    {
+      "action": "exportar_proposta",
+      "roles": [
+        "proponente",
+        "mantenedor"
+      ],
+      "effect": "Arquivo local de proposta; não é submissão, aprovação ou publicação."
+    }
+  ],
+  "new_revision_required_for": [
+    "editar_em_revisao",
+    "editar_aprovado",
+    "editar_publicado",
+    "editar_rejeitado",
+    "editar_revogado"
+  ],
+  "rollback": "Novo evento de publicacao de revisao anterior ainda aprovada, com mesmas guardas; nunca apagar historico.",
+  "trusted_revision_components": [
+    "theme_raw_sha256",
+    "schema_sha256",
+    "asset_manifest_sha256",
+    "renderer_version",
+    "requested_scope",
+    "target_id",
+    "expected_previous_revision"
+  ]
+}

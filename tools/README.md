@@ -168,3 +168,24 @@ ficam em [INTEGRACAO_R02.md](../docs/sprints/readmes_objetos/INTEGRACAO_R02.md).
 ## Diagnóstico visual V00
 
 `inventario_visual.py` e `executar_baseline_visual.py` produzem evidência somente em `.artifacts/`. Consulte o [guia da V00](../docs/sprints/sistema_temas/V00.md) antes de executar. Não publicam nem alteram o produto.
+
+## Contrato candidato V01 — somente manutenção
+
+A [V01 do Sistema de Temas](../docs/sprints/sistema_temas/V01/README.md) especifica
+aparência, não instala temas. `temas_v01_contract.py` verifica schema, exemplos,
+metadados, links e integridade; não consulta dados, resolve tema em runtime ou
+concede papéis. A referência dos tokens é gerada pelo próprio verificador.
+
+No ambiente de manutenção autorizado, instale **ambos** os arquivos de dependências:
+
+```powershell
+python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt
+python -B tools/temas_v01_contract.py
+python -B -m unittest discover -s tools/tests -p "test_temas_v01*.py" -v
+```
+
+Os procedimentos completos, inclusive diagnóstico e retorno, estão no
+[guia do mantenedor](../docs/sprints/sistema_temas/V01/GUIA_MANTENEDOR.md).
+`.github/workflows/temas-v01-ci.yml` executa essas verificações com leitura apenas.
+Não substitui nem reduz as oito etapas de `ci_local.py` ou o CI permanente V00.
+As verificações editoriais Node e a homologação Databricks continuam separadas.
