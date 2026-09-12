@@ -1,0 +1,259 @@
+name: Reconciliacao autorizada V00 (temporario)
+on:
+  push:
+    branches: [codex/temas-v00]
+    paths: [.github/workflows/temas-v00-integrar-temporario.yml]
+permissions:
+  contents: write
+concurrency:
+  group: temas-v00-reconciliacao
+  cancel-in-progress: false
+jobs:
+  reconciliar:
+    if: github.ref == 'refs/heads/codex/temas-v00'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      BASE_MAIN: 5493f7db68f397ad7040485cb09bad53eb79be74
+      BASE_V00: 3f65e9414bc1e7bd52493b267ae4fe1cbd0f783d
+      BASE_COMUM: 8744157fe9c3e0603f689fb2bcad52445e96cb41
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Dependencias declaradas
+        run: python -m pip install -r tools/requirements-dev.txt
+      - name: Reconciliar, documentar e validar antes de qualquer push
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os, re, subprocess, sys, tempfile
+          from pathlib import Path
+
+          root = Path.cwd()
+          logs = Path(os.environ['RUNNER_TEMP']) / 'v00-integracao'
+          logs.mkdir(exist_ok=False)
+          def git(*args, check=True):
+              p = subprocess.run(['git', *args], text=True, capture_output=True)
+              if check and p.returncode:
+                  raise RuntimeError(p.stderr + p.stdout)
+              return p.stdout
+          def text(ref, path):
+              return git('show', f'{ref}:{path}')
+          def write(path, content):
+              p = Path(path); p.parent.mkdir(parents=True, exist_ok=True)
+              p.write_text(content, encoding='utf-8')
+
+          main, old, common = (os.environ[k] for k in ('BASE_MAIN','BASE_V00','BASE_COMUM'))
+          source = git('rev-parse', 'HEAD').strip()
+          assert git('rev-parse', 'origin/main').strip() == main, 'main mudou; reconciliacao exige nova revisao'
+          assert git('merge-base', main, old).strip() == common
+          assert git('rev-parse', 'HEAD^').strip() == old, 'branch alterada desde a autorizacao'
+          assert not git('status', '--porcelain')
+          git('config', 'user.name', 'Codex')
+          git('config', 'user.email', 'codex@users.noreply.github.com')
+          proc = subprocess.run(['git','merge','--no-commit','--no-ff',main], text=True, capture_output=True)
+          (logs/'merge.log').write_text(proc.stdout + proc.stderr, encoding='utf-8')
+          conflicts = set(git('diff','--name-only','--diff-filter=U').splitlines())
+          allowed = {'CHANGELOG.md','README.md','docs/README.md','tools/README.md'}
+          assert conflicts <= allowed, f'conflito fora do escopo: {conflicts - allowed}'
+          assert proc.returncode == 0 or conflicts, 'merge falhou sem conflito reconhecido'
+          for path in sorted(conflicts):
+              if path == 'README.md':
+                  # V00 alterou apenas contadores; a narrativa da main prevalece.
+                  delta = git('diff', common, old, '--', path)
+                  changed = [s for s in delta.splitlines() if s[:1] in '+-' and not s.startswith(('+++','---'))]
+                  assert changed and all('repo (identidade)' in s or 'repo (links)' in s for s in changed), 'README contem mudanca nao numerica'
+                  write(path, text(main,path))
+              elif path == 'CHANGELOG.md':
+                  original = text(common,path)
+                  header, tail = original.split('\n## ',1)
+                  tails = []
+                  for ref in (main,old):
+                      h,t = text(ref,path).split('\n## ',1)
+                      assert h == header and t.endswith(tail), 'changelog nao e apenas acrescimo; revisar manualmente'
+                      tails.append(t[:-len(tail)])
+                  write(path, header+'\n## '+''.join(tails)+tail)
+              else:
+                  # Uniao apenas de insercoes; nunca selecionar um lado por inteiro.
+                  for ref in (main,old):
+                      stats = git('diff','--numstat',common,ref,'--',path).strip().split('\t')
+                      assert not stats[0] or stats[1] == '0', f'{path}: houve remocao; revisar manualmente'
+                  with tempfile.TemporaryDirectory() as d:
+                      names=[]
+                      for i,ref in enumerate((main,common,old)):
+                          p=Path(d)/str(i); p.write_text(text(ref,path),encoding='utf-8'); names.append(str(p))
+                      merged=subprocess.run(['git','merge-file','-p','--union',*names],text=True,capture_output=True,check=True)
+                      write(path,merged.stdout)
+          assert '<<<<<<<' not in '\n'.join(Path(p).read_text(encoding='utf-8') for p in allowed)
+          # O transporte com escrita se remove da arvore a integrar.
+          Path('.github/workflows/temas-v00-integrar-temporario.yml').unlink()
+          entry = '''## 2026-09-12 — V00: reconciliacao e aceite de integracao Git (Codex)
+
+### Atualizado
+
+- (Codex) Reconciliacao da candidata V00 com a main que incorpora READMEs e Concierge, preservando historico, produto, espelho, Manual e as oito etapas do gate.
+- (Codex) Autorizacao explicita de Rodrigo para aprovar e integrar registrada em `docs/sprints/sistema_temas/INTEGRACAO_V00.md`; limites e pendencias nao convertidos em homologacao.
+- (Codex) Contagens locais do README recalculadas pelo validador existente. Automacao transitoria de conciliacao removida da arvore final, sem mudanca das permissoes do workflow permanente.
+
+### Notas
+
+- (Codex) Evidencias anteriores permanecem vinculadas aos commits executados. A nova rodada identifica sua propria base e comandos. Sem publicacao Databricks, alteracao visual, force-push ou desativacao de gates.
+
+'''
+          changelog=Path('CHANGELOG.md').read_text(encoding='utf-8')
+          pos=changelog.index('## ')
+          write('CHANGELOG.md',changelog[:pos]+entry+changelog[pos:])
+          notice='''## Aceite de integracao Git — 12/09/2026
+
+Rodrigo autorizou explicitamente: “Pode aprovar e integrar”. A autorizacao cobre
+integrar a instrumentacao V00 no Git; nao equivale a publicacao no Databricks,
+auditoria independente ou homologacao dos ambientes. A reconciliacao e os testes
+novos estao em [Integracao V00](INTEGRACAO_V00.md). O estado efetivo do merge e
+registrado no PR #8; nao se presume merge pela existencia deste documento.
+
+As notas anteriores abaixo sao historicas. Classificacao semantica completa,
+leitura por usuario iniciante, auditoria independente, capturas Databricks e
+correcao do validador editorial global continuam pendentes. A V01 pode seguir
+como desenho e contrato conforme a orientacao anterior de Rodrigo; nao ha
+homologacao integral nem entrega de funcionalidades visuais nesta integracao.
+
+'''
+          for name in ('README.md','CHECKPOINT_V00.md'):
+              path='docs/sprints/sistema_temas/'+name
+              original=Path(path).read_text(encoding='utf-8')
+              heading,body=original.split('\n',1)
+              write(path,heading+'\n\n'+notice+'## Registro anterior (historico)\n'+body)
+          report='''# Integracao Git da V00
+
+## Para quem nunca entrou no Hub
+
+Esta entrega acrescenta ferramentas de diagnostico e protecao, testes e
+documentacao. Nao muda cores nem exige executar celulas no Databricks. O uso
+atual do Hub permanece igual. O seletor de temas ainda nao foi implementado.
+
+Rodrigo autorizou aprovar e integrar esta candidata. Integracao Git significa
+incorporar os arquivos na branch principal; nao significa publicar no ambiente
+do trabalho ou certificar a experiencia de usuarios iniciantes.
+
+## Referencias da rodada
+
+'''+f'- Main preservada: `{main}`.\n- Candidata anterior: `{old}`.\n- Ancestral comum: `{common}`.\n- GitHub Actions run: `{os.environ["GITHUB_RUN_ID"]}`.\n'+'''
+## Escopo e limites
+
+Os oito gates existentes permanecem inalterados. Produto, espelho e Manual sao
+comparados byte a byte com a main. As evidencias historicas nao sao reescritas.
+A falha editorial global anteriormente reproduzida por referencia ao catalogo
+removido permanece registrada; nao foi reclassificada como PASS nem corrigida
+nesta integracao. Os testes Node globais nao sao reexecutados por este workflow.
+Spark, Databricks, Apps, AI/BI, leitura por iniciante e auditoria independente
+continuam pendentes. A autorizacao de integracao nao substitui essas evidencias.
+
+## Recuperacao
+
+Nao publicar ou sobrescrever workspaces a partir deste registro. Em caso de
+regressao atribuida a esta integracao, o mantenedor deve criar um PR de reversao
+do merge #8, preservar alteracoes posteriores e repetir os gates. Nao usar reset
+ou force-push da main. O historico do PR preserva base, candidata e commit final.
+
+## Execucao
+
+O relatorio de comandos abaixo e preenchido somente apos execucao. Os logs
+completos ficam no artefato deste run, separado dos resultados historicos.
+'''
+          report_path='docs/sprints/sistema_temas/INTEGRACAO_V00.md'
+          write(report_path,report)
+          git('add','-A')
+          sys.path.insert(0,str(root/'tools'))
+          import validate_assistant as va
+          def counts():
+              problems=[]
+              actual={'repo (identidade)':va.check_repo_corporate(problems),
+                      'repo (links)':va.check_repo_links(root/'ambiente_fonte',problems)}
+              assert not problems, '\n'.join(problems)
+              data=Path('README.md').read_text(encoding='utf-8')
+              for key,value in actual.items():
+                  data,n=re.subn(r'('+re.escape(key)+r'\s*:\s*)[\d.]+',lambda m:m[1]+str(value),data)
+                  assert n==1,(key,n)
+              write('README.md',data)
+              git('add','README.md')
+          counts()
+          git('commit','-m','merge(temas): reconciliar V00 com READMEs e Concierge sem alterar produto (Codex)')
+          tested=git('rev-parse','HEAD').strip()
+          protected=['ambiente_fonte','Novo_Ambiente_Simulado','MANUAL_TECNICO.md','tools/ci_local.py']
+          assert not git('diff','--name-only',main,'HEAD','--',*protected), 'conteudo protegido alterado'
+          commands=[
+              ['python','-B','tools/ci_local.py','--verbose'],
+              ['python','-B','tools/tests/test_inventario_visual.py'],
+              ['python','-B','tools/tests/test_visual_legado_v00.py'],
+              ['python','-B','tools/tests/test_baseline_visual_runner.py'],
+              ['python','-B','tools/tests/test_publicar_readmes_visuais.py'],
+          ]
+          # Confere o nome real do teste existente antes de executar.
+          if not Path(commands[-1][-1]).is_file():
+              matches=list(Path('tools/tests').glob('*publicar*visual*.py'))
+              assert len(matches)==1, f'teste do publicador visual ambiguo: {matches}'
+              commands[-1][-1]=str(matches[0])
+          results=[]
+          for i,cmd in enumerate(commands):
+              p=subprocess.run(cmd,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+              (logs/f'teste-{i}.log').write_text(p.stdout,encoding='utf-8')
+              summaries=[s for s in p.stdout.splitlines() if re.match(r'^(Ran \d+ tests?|OK\b|APROVADO:|alcance\s*:)',s)]
+              results.append({'comando':' '.join(cmd),'codigo':p.returncode,'resumos':summaries})
+              print(' '.join(cmd),p.returncode,'\n'.join(summaries),flush=True)
+              if p.returncode:
+                  print(p.stdout[-20000:],flush=True)
+                  raise SystemExit(p.returncode)
+          assert not git('status','--porcelain'), 'teste alterou a arvore'
+          report+='\n### Primeira rodada da composicao\n\nCommit executado: `'+tested+'`.\n\n'
+          for r in results:
+              report+='- `'+r['comando']+'`: PASS (codigo 0).\n'
+              for line in r['resumos']:
+                  report+='  - '+line+'\n'
+          report+='\nApos registrar os resultados, o mesmo conjunto e reexecutado sobre o commit\nde documentacao final antes do push. O resultado dessa verificacao esta no run\nidentificado acima. SKIPs nao significam homologacao Spark. Revisao propria nao\ne auditoria independente. O arquivo temporario com permissao de escrita foi\nremovido antes do commit; permanece apenas o CI V00 com permissao de leitura.\n'
+          write(report_path,report)
+          git('add',report_path); counts()
+          git('commit','-m','docs(temas): registrar evidencias da reconciliacao autorizada V00 (Codex)')
+          final=git('rev-parse','HEAD').strip()
+          for i,cmd in enumerate(commands):
+              p=subprocess.run(cmd,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+              (logs/f'final-{i}.log').write_text(p.stdout,encoding='utf-8')
+              print('FINAL', ' '.join(cmd),p.returncode,flush=True)
+              if p.returncode:
+                  print(p.stdout[-20000:],flush=True); raise SystemExit(p.returncode)
+          assert not git('status','--porcelain')
+          assert not git('diff','--name-only',main,'HEAD','--',*protected)
+          assert not Path('.github/workflows/temas-v00-integrar-temporario.yml').exists()
+          (logs/'resultado.json').write_text(json.dumps({'main':main,'origem':source,'commit_executado':tested,'commit_final':final,'comandos':results,'reexecucao_final':'PASS','produto_espelho_manual_gate':'PRESERVADOS','node_global':'NAO_REEXECUTADO_FALHA_PREEXISTENTE','merge_main':'NAO_REALIZADO'},ensure_ascii=False,indent=2),encoding='utf-8')
+          with open(os.environ['GITHUB_ENV'],'a') as f:
+              f.write('INTEGRACAO_PRONTA=1\n')
+          PY
+      - name: Preservar logs inclusive em falha
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integracao-v00-${{ github.run_id }}
+          path: ${{ runner.temp }}/v00-integracao/
+          if-no-files-found: error
+      - name: Atualizar somente a branch candidata por fast-forward
+        if: success() && env.INTEGRACAO_PRONTA == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          export GIT_CONFIG_COUNT=1
+          export GIT_CONFIG_KEY_0=http.https://github.com/.extraheader
+          export GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          actual_main=$(git ls-remote origin refs/heads/main | cut -f1)
+          actual_head=$(git ls-remote origin refs/heads/codex/temas-v00 | cut -f1)
+          test "$actual_main" = "$BASE_MAIN"
+          test "$actual_head" = "$GITHUB_SHA"
+          git push origin HEAD:refs/heads/codex/temas-v00
