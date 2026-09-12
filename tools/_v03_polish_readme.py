@@ -18,7 +18,7 @@ replacements = [
     ),
     (
         'As decisões particulares do Hub são verificáveis em [theme_plotly.py](theme_plotly.py), base `c60f1e5`.\n',
-        'As decisões particulares vigentes do Hub são verificáveis em [theme_plotly.py](theme_plotly.py) e no [checkpoint V03](../../../../../docs/sprints/sistema_temas/V03/CHECKPOINT_V03.md); a base `c60f1e5` permanece apenas como referência histórica da R03-B.\n',
+        'As decisões particulares vigentes do Hub são verificáveis em [theme_plotly.py](theme_plotly.py). O estado desta sprint está em `docs/sprints/sistema_temas/V03/CHECKPOINT_V03.md`; a base `c60f1e5` permanece apenas como referência histórica da R03-B.\n',
     ),
 ]
 
