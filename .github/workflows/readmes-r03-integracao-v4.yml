@@ -19,7 +19,7 @@ jobs:
       SPARK_LOCAL_IP: '127.0.0.1'
       R03B: d61fedbf111075aa3f238b46d2d64834b185bc10
       MAIN: 836f23684cf76ee1f3d7898d44acb70d32a7ff59
-      EXPECTED_PARENT: a426f83c33652fbbb59b4fd7780bfaff5c83478b
+      EXPECTED_PARENT: 797ba5ac3cec6378e2bf8a172455d20e169f15f2
     steps:
       - uses: actions/checkout@v4
         with:
@@ -92,7 +92,7 @@ jobs:
           Path('README.md').write_text(text[:start]+'```text\n'+'\n'.join(lines)+'\n\n'+status.group(0)+'\n```'+text[end+3:],encoding='utf-8')
           PY
           git add README.md CHANGELOG.md docs/sprints/README.md docs/sprints/readmes_objetos/INTEGRACAO_R03_V01.md
-          git diff --cached --check
+          git diff --check "$MAIN" -- CHANGELOG.md README.md docs/sprints/README.md docs/sprints/readmes_objetos/INTEGRACAO_R03_V01.md
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
