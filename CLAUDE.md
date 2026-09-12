@@ -66,9 +66,12 @@ Escala planejada: pessoal → squad → missão.
   Homologação operacional permanece pendente. Estado, limites e retomada:
   `docs/sprints/sistema_temas/V01/CHECKPOINT_V01.md`.
 
-A V02 está em execução em branch: `docs/sprints/sistema_temas/V02/CHECKPOINT_V02.md`.
-O contrato ativo foi promovido para `ambiente_fonte/.assistant/hub_padroes/identidade_visual/`;
-a candidata não autoriza publicar temas nem migra consumidores legados.
+A V02 foi aceita por Rodrigo e integrada pelo PR #14 no commit
+`d4cabdca4ac68c0a2edbd7f9f621f68962c8f6b8`. O contrato ativo foi promovido para
+`ambiente_fonte/.assistant/hub_padroes/identidade_visual/` e o núcleo de
+carga/validação/resolução está versionado, mas ainda não aplica aparência nem publica
+temas. Estado e limites: `docs/sprints/sistema_temas/V02/CHECKPOINT_V02.md`.
+A V03 ainda não foi iniciada.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 
