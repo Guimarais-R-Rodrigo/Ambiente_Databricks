@@ -1,0 +1,29 @@
+name: Base integrada R04-A
+on:
+  push:
+    branches: [codex/readmes-r04a]
+    paths: [.github/workflows/readmes-r04a-base.yml]
+permissions:
+  contents: read
+jobs:
+  base:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Criar bundle da base sem credenciais
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = 1be947b0a62c3b0b85fa3cd5692f474b9066d85f
+          git branch r04a-base 1be947b0a62c3b0b85fa3cd5692f474b9066d85f
+          git bundle create "$RUNNER_TEMP/r04a-base.bundle" r04a-base
+          git bundle verify "$RUNNER_TEMP/r04a-base.bundle"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r04a-base
+          path: ${{ runner.temp }}/r04a-base.bundle
+          retention-days: 1
