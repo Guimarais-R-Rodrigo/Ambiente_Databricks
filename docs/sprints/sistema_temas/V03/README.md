@@ -1,12 +1,14 @@
 # V03 — integração explícita do núcleo com Plotly
 
-> **EM DESENVOLVIMENTO · NÃO INTEGRADA · 12/09/2026.** A V02 está aceita e integrada. Esta sprint acrescenta uma rota opt-in para Plotly; não muda gráficos existentes automaticamente.
+> **ACEITA POR RODRIGO · INTEGRAÇÃO GIT AUTORIZADA · 12/09/2026.** A V02 está aceita e integrada. A V03 acrescenta uma rota opt-in para Plotly e preserva os gráficos existentes por padrão. O PR #16 registra a efetivação do merge; este texto, isoladamente, não prova integração nem publicação.
 
 ## Para quem nunca entrou no Hub
 
 Se você já usa `aplicar_tema(fig, ...)`, continue usando exatamente como hoje. A V03 não exige trocar código antigo nem escolher um novo tema. A nova rota existe para quando você quiser testar conscientemente uma configuração completa validada pelo núcleo V02.
 
 A ordem segura é: obter/resolver uma configuração de notebook → aplicar à figura com a nova função → conferir visualmente → fazer ajustes específicos depois. Não registre template global para experimentar uma única figura.
+
+O aceite desta sprint não publica nada no Databricks. Se a rota V03 vier a ser usada em um ambiente publicado no futuro, Plotly e as dependências de validação declaradas em `hub_snippets/requirements-temas.txt` precisam estar disponíveis; nenhuma função instala pacotes automaticamente.
 
 ## Escopo
 
@@ -24,16 +26,20 @@ As APIs legadas `get_tema_eda()`, `aplicar_tema(fig, subtitulo, fonte, n)` e `re
 
 A V03 aceita somente um `ResolvedTheme` íntegro do contexto `notebook`. Dicionário cru, resultado adulterado, contexto editorial/apresentação e modos `dark`/`high_contrast` são recusados nesta sprint. Os dois últimos continuam válidos no contrato, mas ainda faltam tokens de superfície do gráfico para uma aplicação Plotly completa sem inventar defaults implícitos.
 
+Se um template `hub-*` já participa do default ativo, sozinho ou dentro de uma composição como `plotly+hub-*`, `substituir=True` com `ativar=False` é recusado antes da troca do objeto. Substituir esse nome exige assumir explicitamente o efeito global com `ativar=True`.
+
 ## O que não muda
 
 Dados dos traces, títulos/ranges dos eixos e cores explicitamente definidas nos traces não são reescritos pelo adaptador. O simples import não altera `pio.templates.default`. A V03 não migra `correlation_matrix`, `distribution_grid`, curvas de ML ou qualquer consumidor existente; essas migrações precisam de decisão e testes próprios.
 
-## Critérios de aceite técnico
+## Aceite técnico
 
-A candidata só pode ser apresentada para aceite se: testes V03 e regressões V00/V01/V02 estiverem verdes; a fixture `legado_notebook` produzir exatamente o layout legado; chamadas antigas preservarem assinatura; a nova aplicação não alterar dados/eixos/cores explícitas; efeitos de sessão forem opt-in; documentação e espelho estiverem sincronizados; CI transversal passar sem relaxar guardas.
+Os critérios técnicos da candidata foram satisfeitos antes do aceite de Rodrigo: testes V03 e regressões V00/V01/V02 verdes; fixture `legado_notebook` equivalente ao layout legado; assinaturas antigas preservadas; aplicação nova sem alteração de dados/eixos/cores explícitas; efeitos de sessão opt-in; documentação/espelho sincronizados; CI transversal verde; code review final sem novo achado.
+
+A ratificação do aceite é revalidada novamente antes do merge. O estado efetivo de integração e os SHAs finais pertencem ao PR #16 e à `main`, não a uma afirmação antecipada deste README.
 
 ## Limites
 
-Sem publicação Databricks, sem alteração visual automática, sem homologação de Spark/widgets/Apps/AI-BI, sem V04/V05 e sem aprovação de qualquer fixture como tema operacional.
+Sem publicação Databricks, sem alteração visual automática, sem homologação de Spark/widgets/Apps/AI-BI, sem V04/V05 e sem aprovação de qualquer fixture como tema operacional. Auditoria independente e avaliação com usuário iniciante continuam gates separados.
 
 [Checkpoint](CHECKPOINT_V03.md) · [Testes](TESTES.md) · [V02](../V02/README.md)

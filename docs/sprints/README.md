@@ -59,7 +59,6 @@ Rodrigo autorizou a reconciliação e integração das R03-A/R03-B com a `main` 
 A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints
 históricas e dos READMEs. V00, [V01](sistema_temas/V01/README.md) e
 [V02](sistema_temas/V02/README.md) estão aceitas e integradas no Git. A V02 entrega
-o núcleo de carga, validação e resolução de configurações completas, mas ainda não
-aplica tema a Plotly/HTML, não cria seletor e não publica no Databricks.
+o núcleo de carga, validação e resolução de configurações completas.
 
-A [V03](sistema_temas/V03/README.md) está em desenvolvimento em branch separada e acrescenta apenas um adaptador Plotly opt-in; não migra consumidores existentes. A homologação operacional, a auditoria independente e a avaliação com usuário iniciante permanecem pendentes.
+A [V03](sistema_temas/V03/README.md) recebeu aceite explícito de Rodrigo e teve sua integração Git autorizada pelo PR #16. Ela acrescenta apenas um adaptador Plotly opt-in, preserva o caminho legado por padrão e não migra consumidores existentes. O estado efetivo do merge é registrado na PR. Não houve publicação Databricks; homologação operacional, auditoria independente e avaliação com usuário iniciante permanecem pendentes.

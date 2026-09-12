@@ -7,6 +7,10 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
 ## 2026-09-12 — V03: adaptador Plotly opt-in (Codex)
 
+### Aceite e integração
+
+- (Codex) Rodrigo concedeu aceite explícito à V03 com a instrução "pode integrar a V03". A integração Git pelo PR #16 fica autorizada após revalidação da árvore exata; o aceite não autoriza publicação Databricks, homologação operacional, migração automática de outros consumidores nem início da V04.
+
 ### Adicionado
 
 - (Codex) `get_tema_plotly`, `aplicar_tema_resolvido` e `registrar_template_plotly_resolvido` sobre a API pública V02, sem alterar as três assinaturas legadas.
