@@ -19,7 +19,7 @@ jobs:
       SPARK_LOCAL_IP: '127.0.0.1'
       R03B: d61fedbf111075aa3f238b46d2d64834b185bc10
       MAIN: 836f23684cf76ee1f3d7898d44acb70d32a7ff59
-      EXPECTED_PARENT: ddf77ecf419e300bcb8edde320bb3c05373a3e35
+      EXPECTED_PARENT: 07fc62cbadc9427a33a21693fa29d3c914dbd3b2
     steps:
       - uses: actions/checkout@v4
         with:
@@ -59,7 +59,6 @@ jobs:
           R03=os.environ['R03B']; MAIN=os.environ['MAIN']
           def show(ref,path):
               return subprocess.check_output(['git','show',f'{ref}:{path}'],text=True)
-          # CHANGELOG: preserva literalmente as entradas exclusivas das duas frentes e o histórico comum.
           r03=show(R03,'CHANGELOG.md'); main=show(MAIN,'CHANGELOG.md')
           intro='# Changelog\n\nToda mudança relevante deste projeto é registrada aqui, em entradas curtas, sem\nexpor identificadores corporativos, PII ou segredos. Formato: seções por data,\nsubseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora\nentre parênteses. Template: `.claude/templates/changelog-entry.md`.\n\n'
           marker='## 2026-09-12 — V00: reconciliação e aceite de integração Git (Codex)'
@@ -70,9 +69,7 @@ jobs:
           common=main[main.index(marker):]
           integration='''## 2026-09-12 — R03-I: reconciliação READMEs com V01 integrada (ChatGPT)\n\n### Atualizado\n\n- (ChatGPT) R03-A/R03-B reconciliadas com a `main` que já contém V01 e seu alinhamento documental; três conflitos textuais resolvidos sem descartar qualquer iniciativa.\n- (ChatGPT) Estado agregado do README raiz recalculado pela execução real; índice de sprints passa a registrar simultaneamente a continuidade dos READMEs e o estado aceito/integrado de V00/V01.\n\n### Notas\n\n- (ChatGPT) Integração autorizada explicitamente por Rodrigo; árvore combinada exige revalidação própria antes do merge. Evidências anteriores continuam vinculadas às árvores em que foram produzidas.\n- (ChatGPT) Sem publicação Databricks, mudança funcional, V02 ou R04-A nesta reconciliação. Auditoria independente e homologações operacionais continuam separadas.\n\n'''
           Path('CHANGELOG.md').write_text(intro+integration+r03_unique+main_unique+common,encoding='utf-8')
-          # README raiz: V01 só alterou contadores; usa a narrativa R03-B e recalcula o bloco depois.
           Path('README.md').write_text(show(R03,'README.md'),encoding='utf-8')
-          # Índice de sprints: preserva as duas continuidades R03 e substitui a seção de temas pelo estado vigente da main.
           s_r03=show(R03,'docs/sprints/README.md'); s_main=show(MAIN,'docs/sprints/README.md')
           theme='## Sistema de Temas do Hub'
           if theme not in s_main:
@@ -83,8 +80,26 @@ jobs:
           Path('docs/sprints/README.md').write_text(s_r03.rstrip()+"\n\n"+integration_section+theme_main,encoding='utf-8')
           Path('docs/sprints/readmes_objetos/INTEGRACAO_R03_V01.md').write_text('''# Integração R03-A/R03-B com a main V01\n\n## Estado\n\nReconciliação autorizada por Rodrigo em 12/09/2026. Este registro descreve a candidata combinada; o aceite da integração só deve ser associado ao commit/PR que passar a bateria desta composição.\n\n## Bases\n\n- R03-B acumulada: `d61fedbf111075aa3f238b46d2d64834b185bc10`.\n- main com V01 aceita/integrada e alinhamento documental: `836f23684cf76ee1f3d7898d44acb70d32a7ff59`.\n- R03-B já contém a R03-A e o contrato de README 1.0.0.\n\n## Conflitos reproduzidos\n\nA simulação `git merge-tree --write-tree --name-only` encontrou somente três conflitos textuais: `CHANGELOG.md`, `README.md` e `docs/sprints/README.md`. `CLAUDE.md`, o índice de ADRs e os arquivos V01 combinaram sem conflito textual.\n\n## Política de resolução\n\n1. `CHANGELOG.md`: preservar as entradas exclusivas R03 e V01 e manter uma única cópia do histórico comum.\n2. `README.md`: preservar a narrativa R03-B e recalcular o bloco de contagens com o validador sobre a árvore já combinada.\n3. `docs/sprints/README.md`: preservar R03-A/R03-B e o estado vigente de V00/V01, acrescentando esta reconciliação sem reescrever relatos históricos.\n\n## Preservação exigida\n\n- ADR-0013, contrato, fixtures, verificadores, testes e workflow V01 devem permanecer byte a byte iguais à main, exceto documentos agregadores explicitamente reconciliados.\n- Os 19 READMEs operacionais, três exemplares, contrato 1.0.0, notebooks/documentação da R03 e controle de migração devem permanecer iguais à R03-B, exceto agregadores explicitamente reconciliados.\n- Nenhum helper, API, paleta/CSS, formulário, skill ou objeto analítico é alterado por esta integração.\n\n## Limites\n\nEsta reconciliação não publica no Databricks, não inicia V02 ou R04-A, não converte os sete SKIPs opcionais de Spark em PASS e não substitui auditoria independente ou homologação operacional.\n''',encoding='utf-8')
           PY
+          # O merge textual pode normalizar bytes em arquivos sem conflito. Repor explicitamente
+          # os canônicos de cada frente evita drift invisível (como a linha em branco no ADR-0013).
+          git checkout "$MAIN" -- \
+            .github/workflows/temas-v01-ci.yml \
+            docs/decisions/ADR-0013-sistema-de-temas.md \
+            docs/sprints/sistema_temas/V01 \
+            docs/testes/sistema_temas/V01 \
+            tools/requirements-temas-dev.txt \
+            tools/temas_v01_contract.py \
+            tools/tests/test_temas_v01.py \
+            tools/tests/test_temas_v01_integracao.py
+          git checkout "$R03B" -- \
+            ambiente_fonte/.assistant \
+            Novo_Ambiente_Simulado \
+            MANUAL_TECNICO.md \
+            tools/readme_objeto_contract.py \
+            tools/tests/test_readme_objeto.py \
+            tools/tests/test_readme_integracao.py \
+            docs/sprints/readmes_objetos/CONTROLE_MIGRACAO.json
           git add -A
-          # Calcula as contagens reais da árvore combinada antes de exigir que o README as reproduza.
           python tools/validate_assistant.py 2>&1 | tee "$RUNNER_TEMP/r03i-contagens.txt"
           python - <<'PY'
           import os,re
@@ -129,7 +144,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # V01: áreas não agregadoras devem ser idênticas à main.
           git diff --exit-code "$MAIN" -- \
             .github/workflows/temas-v01-ci.yml \
             docs/decisions/ADR-0013-sistema-de-temas.md \
@@ -139,7 +153,6 @@ jobs:
             tools/temas_v01_contract.py \
             tools/tests/test_temas_v01.py \
             tools/tests/test_temas_v01_integracao.py
-          # READMEs: produto e guias acumulados não mudam na reconciliação.
           git diff --exit-code "$R03B" -- \
             ambiente_fonte/.assistant \
             Novo_Ambiente_Simulado \
@@ -149,7 +162,7 @@ jobs:
             tools/tests/test_readme_integracao.py \
             docs/sprints/readmes_objetos/CONTROLE_MIGRACAO.json
           python - <<'PY'
-          import json,subprocess
+          import json
           from pathlib import Path
           result={'v01_preservada':True,'readmes_produto_preservado':True,
                   'conflitos_resolvidos':['CHANGELOG.md','README.md','docs/sprints/README.md'],
@@ -179,8 +192,6 @@ jobs:
         run: |
           set -euo pipefail
           git add -A
-          tree="$(git write-tree)"
-          head="$(git rev-parse HEAD)"
           python - <<'PY'
           import json,os,subprocess,urllib.request
           from pathlib import Path
