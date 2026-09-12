@@ -53,6 +53,13 @@ Escala planejada: pessoal → squad → missão.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 
+## Propostas em revisão
+
+- README didático por pasta de objeto: `docs/decisions/ADR-0011-readmes-de-objeto.md`.
+  Contrato candidato da R01-A; não representa cobertura migrada, novo gate
+  implementado nem autorização de publicação. Continuidade e pendências em
+  `docs/handoffs/2026-09-12-r01a-contrato-readmes.md`.
+
 ## Regras inegociáveis
 
 - Toda sessão que altera algo termina com entrada no `CHANGELOG.md`
