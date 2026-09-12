@@ -49,3 +49,16 @@ Seis guias de display/visual, preservando o contrato 1.0.0 e as APIs.
 Branch separada baseada na R03-A `c60f1e5`; PR nº 9 ainda não integrado.
 [Relatório, verificações e ponto de parada](readmes_objetos/RELATORIO_R03B.md).
 Sem aceite antecipado, merge automático, publicação ou início da R04-A.
+
+## Integração READMEs com a main V01 — 2026-09-12
+
+Rodrigo autorizou a reconciliação e integração das R03-A/R03-B com a `main` que já contém V01. A candidata preserva os 19 READMEs operacionais, o contrato 1.0.0 e a documentação/guardas do sistema de temas. Registro em [`INTEGRACAO_R03_V01.md`](readmes_objetos/INTEGRACAO_R03_V01.md).
+
+## Sistema de Temas do Hub
+
+A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints
+históricas e dos READMEs. V00 e [V01](sistema_temas/V01/README.md) estão aceitas
+e integradas no Git. A V01 entrega o contrato e a experiência especificada;
+não instala o seletor de temas, não altera a aparência e não publica no Databricks.
+A homologação operacional, a auditoria independente e a avaliação com usuário
+iniciante permanecem pendentes. A V02 ainda não foi iniciada.
