@@ -5,6 +5,19 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — V00 candidata do Sistema de Temas (Codex)
+
+### Adicionado
+
+- (Codex) Inventário visual somente leitura, runner comparativo e testes adversariais e de contratos legados.
+- (Codex) Guia de V00 para leitores não técnicos, achados, matriz de ambientes e checkpoint.
+
+### Limites
+
+- (Codex) Resultados em `docs/testes/sistema_temas/V00/`; execução e aceite são distintos.
+- (Codex) Produto, Manual e espelho preservados; sem render, publicação ou teste Databricks.
+- (Codex) Revisão semântica independente, teste de leitura e aceite antes de V01 permanecem pendentes.
+
 ## 2026-09-12 — Concierge integrado ao produto (Codex)
 
 ### Adicionado

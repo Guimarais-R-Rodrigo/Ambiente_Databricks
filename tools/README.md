@@ -131,3 +131,7 @@ Databricks e confere somente o bloco remoto. Nenhum substitui o verify por conte
 origem, hashes completos por arquivo e resultado da comparação. O bundle e o
 publicador recusam espelho antigo e extras/caches no pacote. Os hashes agregados
 da comparação não são hashes do ZIP. A integração real ainda exige teste Free.
+
+## Diagnóstico visual V00
+
+`inventario_visual.py` e `executar_baseline_visual.py` produzem evidência somente em `.artifacts/`. Consulte o [guia da V00](../docs/sprints/sistema_temas/V00.md) antes de executar. Não publicam nem alteram o produto.
