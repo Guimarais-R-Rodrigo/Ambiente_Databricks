@@ -1,0 +1,54 @@
+name: Diagnostico integracao R03 com main
+on:
+  push:
+    branches: [codex/readmes-r03-integracao]
+    paths: [.github/workflows/readmes-r03-integracao-diagnostico.yml]
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Simular merge sem alterar refs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = d61fedbf111075aa3f238b46d2d64834b185bc10
+          git fetch --no-tags https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks.git 836f23684cf76ee1f3d7898d44acb70d32a7ff59
+          git cat-file -e 836f23684cf76ee1f3d7898d44acb70d32a7ff59^{commit}
+          set +e
+          git -c merge.conflictStyle=diff3 merge-tree --write-tree --name-only \
+            d61fedbf111075aa3f238b46d2d64834b185bc10 \
+            836f23684cf76ee1f3d7898d44acb70d32a7ff59 \
+            > "$RUNNER_TEMP/merge-tree.txt" 2> "$RUNNER_TEMP/merge-tree.err"
+          rc=$?
+          set -e
+          echo "MERGE_TREE_RC=$rc"
+          cat "$RUNNER_TEMP/merge-tree.txt"
+          cat "$RUNNER_TEMP/merge-tree.err"
+          if [ "$rc" -ne 0 ] && [ "$rc" -ne 1 ]; then exit "$rc"; fi
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          out=Path(os.environ['RUNNER_TEMP'],'merge-tree.txt').read_text()
+          err=Path(os.environ['RUNNER_TEMP'],'merge-tree.err').read_text()
+          lines=out.splitlines()
+          result={'r03b':'d61fedbf111075aa3f238b46d2d64834b185bc10','main':'836f23684cf76ee1f3d7898d44acb70d32a7ff59',
+                  'return_code':int(os.environ.get('RC_OVERRIDE','0')) if False else None,
+                  'stdout_lines':lines,'stderr':err}
+          Path(os.environ['RUNNER_TEMP'],'diagnostico-r03i.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: diagnostico-r03-integracao
+          path: |
+            ${{ runner.temp }}/merge-tree.txt
+            ${{ runner.temp }}/merge-tree.err
+            ${{ runner.temp }}/diagnostico-r03i.json
+          retention-days: 2
