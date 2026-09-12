@@ -5,6 +5,24 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — V01: alinhamento das entradas após integração (Codex)
+
+### Corrigido
+
+- (Codex) `docs/sprints/README.md`: V01 identificada como aceita e integrada no Git,
+  sem instalação do seletor ou homologação operacional presumida.
+- (Codex) `CLAUDE.md`: síntese do ADR-0013 aceito em Decisões ativas, com rota
+  para o checkpoint vigente e distinção entre fixtures e temas operacionais.
+
+### Notas
+
+- (Codex) Correção dos dois apontamentos documentais da revisão do PR #10,
+  autorizada por Rodrigo; corpo decisório e relatos históricos preservados.
+- (Codex) Escopo restrito a estas duas entradas e ao changelog. Evidências e
+  resultados pertencem à rodada e à PR corretiva, não a execuções antigas.
+- (Codex) Sem mudança de produto, espelho, Manual, código, testes ou workflows
+  permanentes; sem publicação Databricks e sem início da V02.
+
 ## 2026-09-12 — V01: aceite explícito e revalidação para integração (Codex)
 
 ### Atualizado
