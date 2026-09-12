@@ -41,3 +41,26 @@ O plano aprovado na conversa distingue V00–V14. Esta entrega cobre apenas V00;
 não substitui aquele plano por uma promessa de todas as sprints concluídas.
 
 Consulte também a [rastreabilidade ao plano](RASTREABILIDADE_V00.md).
+
+## Testes permanentes da instrumentação
+
+Depois de preparar as dependências conforme o guia V00, as três suítes podem ser
+executadas separadamente na raiz do checkout:
+
+```powershell
+python -B tools/tests/test_inventario_visual.py
+python -B tools/tests/test_visual_legado_v00.py
+python -B tools/tests/test_baseline_visual_runner.py
+```
+
+A primeira verifica o inventário e seus casos de recusa; a segunda exercita os
+contratos antigos de Plotly e HTML; a terceira verifica contagens, logs, falhas e
+timeouts do relatório. O runner comparativo executa as três automaticamente.
+
+`.github/workflows/temas-v00-ci.yml` mantém essas regressões em pull requests e
+pushes na main, com permissão somente de leitura. Não substitui as sete etapas
+do gate existente, a comparação visual global ou a auditoria independente.
+
+A automação temporária utilizada para preparar e registrar as evidências foi
+removida da árvore final. Não há workflow de escrita recorrente, credencial
+Databricks ou publicação automática nesta entrega.
