@@ -1,16 +1,15 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Etapa atual — V02 validada remotamente e aguardando aceite
+## Etapa atual — V02 aceita e integrada pelo PR #14
 
-A instrumentação V00 foi integrada pelo PR #8 e a [V01 — contrato e experiência
-documentada](V01/README.md) foi aceita e integrada pelo PR #10. A etapa corrente é
-a [V02 — núcleo de temas, validação e resolução](V02/README.md), aberta no PR #14.
-O núcleo funcional foi validado remotamente antes desta correção documental; qualquer
-novo head da PR precisa repetir os mesmos gates antes de ser apresentado para aceite.
-A V03 não foi iniciada.
+A instrumentação V00 foi integrada pelo PR #8, a [V01 — contrato e experiência
+documentada](V01/README.md) foi aceita e integrada pelo PR #10 e a
+[V02 — núcleo de temas, validação e resolução](V02/README.md) foi aceita por Rodrigo
+e integrada pelo PR #14 no commit `d4cabdca4ac68c0a2edbd7f9f621f68962c8f6b8`.
+Os quatro checks pós-merge na `main` passaram. A V03 ainda não foi iniciada.
 
-Para quem nunca entrou no Hub: **nada muda na aparência ou na rotina atual nesta
-etapa**. A V02 valida uma configuração completa de tema, mas ainda não aplica o tema
+Para quem nunca entrou no Hub: **nada muda na aparência ou na rotina atual por causa
+da V02**. Ela valida uma configuração completa de tema, mas ainda não aplica o tema
 a gráficos ou HTML, não cria seletor e não publica nada no Databricks. Comece pelo
 [README da V02](V02/README.md), depois leia o [checkpoint](V02/CHECKPOINT_V02.md) e o
 [guia operacional](../../../ambiente_fonte/.assistant/hub_padroes/identidade_visual/GUIA_OPERACIONAL.md).
@@ -99,9 +98,8 @@ A automação temporária utilizada para preparar e registrar as evidências foi
 removida da árvore final. Não há workflow de escrita recorrente, credencial
 Databricks ou publicação automática nesta entrega.
 
-## Continuidade — V02
+## Continuidade — após V02
 
-A [candidata V02](V02/README.md) implementa o núcleo sem aplicar aparência. Está
-em revisão no PR #14 e depende de aceite explícito antes de qualquer integração.
-A V01 continua aceita/integrada; seus relatos permanecem históricos. V03 não foi
-iniciada e não há publicação Databricks nesta etapa.
+A V02 está aceita e integrada no Git. A próxima sprint planejada é V03, que fará a
+integração explícita do núcleo com Plotly preservando o comportamento legado por
+padrão. A V03 ainda não foi iniciada e não há publicação Databricks nesta etapa.

@@ -5,6 +5,18 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — V02: aceite e integração Git concluídos (Codex)
+
+### Atualizado
+
+- (Codex) Aceite explícito de Rodrigo registrado e PR #14 integrado na main no commit d4cabdca4ac68c0a2edbd7f9f621f68962c8f6b8; checkpoint, índices, contexto canônico e Manual passam a refletir o estado efetivo.
+- (Codex) Manual fonte atualizado e cópias derivadas regeneradas pelo renderer, sem edição manual do espelho.
+
+### Notas
+
+- (Codex) A árvore do merge é idêntica à candidata final validada; CI geral, V00, V01 e V02 passaram novamente após o merge na main.
+- (Codex) Sem publicação Databricks, mudança visual, homologação de Spark/widgets/Apps/AI-BI ou início da V03. Auditoria independente e teste com iniciante permanecem pendentes.
+
 ## 2026-09-12 — V02: alinhamento documental da candidata remota (Codex)
 
 ### Corrigido
