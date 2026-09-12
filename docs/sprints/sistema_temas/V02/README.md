@@ -1,7 +1,9 @@
 # V02 — núcleo de temas, validação e resolução
 
-> **CANDIDATA GIT PARA REVISÃO · AUTORIA CODEX · 12/09/2026.** A V01 está aceita e
-> integrada; este registro não concede aceite nem publicação à V02.
+> **CANDIDATA REMOTA EM REVISÃO · PR #14 · 12/09/2026.** A V01 está aceita e
+> integrada. O núcleo funcional da V02 já passou pelos gates remotos no commit
+> `921f898cbae859b8f6a91862a7b65291c9806906`; alterações documentais posteriores
+devem repetir os checks antes do aceite. Este registro não concede merge nem publicação.
 
 Para quem nunca entrou no Hub: o visual e sua rotina continuam iguais. A nova
 capacidade confere dados de uma proposta sem desenhar gráficos. Comece pelo
@@ -40,10 +42,15 @@ publicadas e o manifesto relativo têm equivalência conferida por testes.
 reexecuções como novos casos. O CI e a inspeção pelo mesmo agente não substituem
 auditoria independente, teste com iniciante ou homologação no Databricks.
 
-O snapshot inicial do runner identifica commit e árvore, sem credenciais. A branch
-de implementação é `codex/temas-v02-implementacao`; o recibo informa o commit
-e a modalidade de entrega. A branch remota de baseline é distinta. Só uma
-integração confirmada altera a main; um bundle ou registro de transporte não
-comprova aplicação do conteúdo à branch remota.
+A candidata remota vigente está na branch `codex/temas-v02-review-20260912`, ligada
+ao PR #14. O commit funcional `921f898c…` foi transportado por bundle verificado e
+teve CI geral, regressões V00, contrato V01 e núcleo V02 aprovados remotamente. O
+transporte auxiliar não integra a PR. A branch `codex/temas-v02-implementacao` e os
+baselines anteriores permanecem como rastreabilidade histórica, não como ponto de
+operação para quem revisa a entrega atual.
+
+Só um merge explicitamente autorizado altera a `main`. Mesmo depois de integrar no
+Git, publicação e homologação no Databricks continuam sendo gates separados. A V03
+não foi iniciada.
 
 [Voltar à iniciativa](../README.md)
