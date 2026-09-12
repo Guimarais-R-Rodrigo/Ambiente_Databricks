@@ -2,9 +2,9 @@
 # MAGIC %md
 # MAGIC # `constants.styles` — CSS compartilhado para `displayHTML`
 # MAGIC
-# MAGIC **O problema.** Cada bloco de HTML num notebook carrega seu próprio `style="..."` inline, e a primeira mudança de identidade visual exige editar dezenas de notebooks. Pior: as versões divergem, e o relatório fica com três tons de cinza que deveriam ser um.
+# MAGIC **O problema.** Cada bloco de HTML num notebook pode carregar seu próprio `style="..."` inline, e uma mudança de identidade visual passa a exigir edição dispersa. A V04 mantém as constantes legadas e acrescenta uma materialização opt-in a partir do Sistema de Temas.
 # MAGIC
-# MAGIC **O que este objeto oferece.** Nove constantes de CSS, prontas para interpolar em `displayHTML`.
+# MAGIC **O que este objeto oferece.** Constantes de CSS para compatibilidade e `get_styles_resolvidos(theme)` para produzir os estilos HTML a partir de um `ResolvedTheme` notebook já validado.
 
 # MAGIC
 # MAGIC Antes de executar, consulte o [guia do objeto](README.md): conceito, requisitos, efeitos e limites.
@@ -28,11 +28,12 @@ import sys
 usuario = spark.sql("SELECT current_user()").first()[0]
 sys.path.insert(0, f"/Workspace/Users/{usuario}/.assistant")
 
-from hub_snippets.constants.styles import FONT_FAMILY, STYLE_BADGE_FAIL, STYLE_BADGE_OK, STYLE_BADGE_WARN, STYLE_DIVIDER_HEAVY, STYLE_DIVIDER_LIGHT, STYLE_KPI_CARD, STYLE_SECTION_HEADER
+from hub_snippets.constants.styles import FONT_FAMILY, STYLE_BADGE_FAIL, STYLE_BADGE_OK, STYLE_BADGE_WARN, STYLE_DIVIDER_HEAVY, STYLE_DIVIDER_LIGHT, STYLE_KPI_CARD, STYLE_SECTION_HEADER, get_styles_resolvidos
+from hub_snippets.visual.tema import load_reference_theme
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## 1. O efeito de cada estilo, renderizado
+# MAGIC ## 1. O efeito dos estilos legados, renderizado
 
 # COMMAND ----------
 
@@ -58,7 +59,7 @@ print(" ", STYLE_SECTION_HEADER)
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC Executado no laboratório, o resultado é:
+# MAGIC Executado no laboratório, o resultado legado é:
 # MAGIC
 # MAGIC ```text
 # MAGIC FONT_FAMILY: Segoe UI, Roboto, sans-serif
@@ -68,34 +69,44 @@ print(" ", STYLE_SECTION_HEADER)
 # MAGIC   margin:8px 0 12px 0; border-radius:4px; font-family:Segoe UI, Roboto, sans-serif;
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** São strings de CSS, prontas para interpolar dentro de um
-# MAGIC `style="..."`. A escolha de entregar string em vez de função é deliberada:
-# MAGIC assim elas compõem com qualquer HTML, e nada no módulo precisa saber o que
-# MAGIC está sendo estilizado.
+# MAGIC **Como ler.** As constantes continuam strings de CSS e preservam o caminho existente. A V04 não as transforma em estado global nem reestiliza HTML já exibido.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## 2. Caminho V04 — tema explícito, sem estado global
+
+# COMMAND ----------
+
+tema = load_reference_theme("notebook")
+styles_resolvidos = get_styles_resolvidos(tema)
+
+assert styles_resolvidos["card.kpi"] == STYLE_KPI_CARD
+assert styles_resolvidos["section.container"] == STYLE_SECTION_HEADER
+
+displayHTML(f"""
+<div style="{styles_resolvidos['section.container']}">
+  <h3 style="{styles_resolvidos['section.title']}">Tema notebook resolvido</h3>
+  <p style="{styles_resolvidos['section.description']}">A referência legada reproduz o visual existente; outra configuração validada pode mudar apenas a apresentação.</p>
+</div>
+""")
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## O que está centralizado e o que continua separado
 # MAGIC
-# MAGIC ## O que está centralizado e o que ainda está separado
+# MAGIC `get_styles_resolvidos` revalida um `ResolvedTheme` e materializa um dicionário de CSS para cabeçalho de seção, KPI card, divisores, badges, índice e cabeçalho/destaque de tabela. Não existe campo de CSS livre no tema.
 # MAGIC
-# MAGIC A implementação atual importa `constants.colors` e usa suas constantes
-# MAGIC em parte do CSS. Essas strings são montadas ao importar o módulo: não
-# MAGIC constituem uma ligação dinâmica que refaz todos os estilos da sessão.
+# MAGIC Na V04, `visual/badge`, `visual/divider`, `visual/kpi_card`, `visual/section_header`, `visual/index_generator` e `display/dataframe_styled` passam a consumir essa materialização **somente nas novas funções `_resolvido`**. As funções antigas continuam usando as constantes legadas e não mudam de aparência por efeito implícito.
 # MAGIC
-# MAGIC Os componentes `visual/badge`, `visual/divider` e `visual/kpi_card`
-# MAGIC mantêm CSS próprio e não consomem `constants.styles` nesta base.
-# MAGIC Alterar `STYLE_KPI_CARD` não altera automaticamente esses componentes.
-# MAGIC O uso mostrado aqui é a composição explícita da constante pelo notebook.
+# MAGIC A configuração de referência reproduz os estilos legados dos componentes HTML. `dark` e `high_contrast` podem ser materializados quando a configuração completa é válida, mas isso não constitui certificação de acessibilidade ou homologação visual no Databricks.
 # MAGIC
-# MAGIC As cores de estado e alguns cinzas continuam declarados localmente.
-# MAGIC Não presumir igualdade byte a byte entre strings de CSS: espaços e ordem
-# MAGIC de propriedades também fazem parte do retorno. Esta sprint não unifica
-# MAGIC CSS nem altera a identidade visual; o README descreve o alcance real.
-# MAGIC
-# MAGIC O contraste de `STYLE_BADGE_WARN` precisa de revisão antes de uso como
-# MAGIC texto pequeno: confira a medição e a referência no [README](README.md).
+# MAGIC O contraste do badge de atenção da referência histórica continua uma limitação conhecida; confira a medição e a referência no [README](README.md).
 
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
 # MAGIC - **Sem conferir o destino.** A exibição no notebook não comprova suporte de outro renderizador; teste o documento final antes de distribuí-lo.
-# MAGIC - **Como folha de estilo de aplicação.** São strings para interpolar em HTML de notebook, não um sistema de design.
+# MAGIC - **Como folha de estilo global.** A função devolve um dicionário para uso explícito; não injeta CSS na sessão.
+# MAGIC - **Passando dicionário cru.** Os componentes V04 aceitam somente `ResolvedTheme` íntegro produzido pelo núcleo V02.
 # MAGIC - **Editando a string na chamada.** Para experimento isolado, use uma cópia local identificada. Mudança compartilhada exige revisão própria, não edição silenciosa do padrão.
