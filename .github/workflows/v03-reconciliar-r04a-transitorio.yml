@@ -1,0 +1,100 @@
+name: Reconciliar V03 com R04-A
+on:
+  push:
+    branches:
+      - codex/temas-v03-review-20260912
+permissions:
+  contents: write
+jobs:
+  reconciliar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      MAIN_ESPERADA: a8f314a31106aceb52db2661544146cc2bddcc99
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Dependências declaradas e Spark de caracterização
+        run: |
+          python -m pip install -r tools/requirements-dev.txt
+          python -m pip install 'pyspark==4.0.1'
+      - name: Reconciliar a nova main sem perder nenhuma iniciativa
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp CHANGELOG.md /tmp/v03_CHANGELOG.md
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$MAIN_ESPERADA"
+          set +e
+          git merge --no-commit --no-ff origin/main
+          merge_status=$?
+          set -e
+          if [ "$merge_status" -ne 0 ]; then
+            echo "Merge reportou conflitos; o resolver aceitará apenas a lista fechada documentada."
+          fi
+          python -B tools/_v03_reconciliar_r04a.py
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          path = Path('README.md')
+          text = path.read_text(encoding='utf-8')
+          text, a = re.subn(r'^repo \(identidade\)  : \d+ arquivos varridos no repositório editável/derivado$',
+                            'repo (identidade)  : 1119 arquivos varridos no repositório editável/derivado', text,
+                            count=1, flags=re.MULTILINE)
+          text, b = re.subn(r'^repo \(links\)       : \d+ links fora da raiz analisada$',
+                            'repo (links)       : 1107 links fora da raiz analisada', text,
+                            count=1, flags=re.MULTILINE)
+          if (a, b) != (1, 1):
+              raise SystemExit(f'Não foi possível normalizar métricas do README: identidade={a}, links={b}')
+          path.write_text(text, encoding='utf-8')
+          PY
+          git add README.md
+          cp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
+          python -B tools/render_simulado.py --write
+          git add MANUAL_TECNICO.md Novo_Ambiente_Simulado
+          python -B tools/_v03_reconciliar_r04a.py
+          git rm .github/workflows/v03-reconciliar-r04a-transitorio.yml tools/_v03_reconciliar_r04a.py
+          test -z "$(git diff --name-only --diff-filter=U)"
+          cmp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
+          cmp ambiente_fonte/.assistant/MANUAL_TECNICO.md Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md
+      - name: Validar V03 e todo o legado de temas
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B tools/validate_assistant.py --conferir-readme
+          python -B tools/tests/test_temas_v03.py
+          python -B tools/tests/test_visual_legado_v00.py
+          python -B tools/tests/test_temas_v02.py
+          python -B -m unittest discover -s tools/tests -p 'test_temas_v01*.py' -v
+          python -B tools/ci_local.py --verbose
+      - name: Revalidar a R04-A com Spark real
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B docs/sprints/readmes_objetos/evidencias_r04a/verificar_r04a.py --require-spark
+      - name: Congelar composição e enviar somente se a main não mudou
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$MAIN_ESPERADA"
+          test ! -e .github/workflows/v03-reconciliar-r04a-transitorio.yml
+          test ! -e tools/_v03_reconciliar_r04a.py
+          test -z "$(git diff --name-only --diff-filter=U)"
+          git status --short
+          git config user.name "Codex"
+          git config user.email "codex@users.noreply.github.com"
+          git add -A
+          git commit -m "merge: reconciliar V03 aceita com R04-A integrada"
+          git push origin HEAD:codex/temas-v03-review-20260912
