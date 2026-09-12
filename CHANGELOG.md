@@ -5,6 +5,19 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — V00: reconciliação e aceite de integração Git (Codex)
+
+### Atualizado
+
+- (Codex) Reconciliação da candidata V00 com a main que incorpora READMEs e Concierge, preservando histórico, produto, espelho, Manual e as oito etapas do gate.
+- (Codex) Autorização explícita de Rodrigo para aprovar e integrar registrada em `docs/sprints/sistema_temas/INTEGRACAO_V00.md`; limites e pendências não convertidos em homologação.
+- (Codex) Contagens locais do README recalculadas pelo validador existente. Automação transitória de conciliação removida da árvore final, sem mudança das permissões do workflow permanente.
+
+### Notas
+
+- (Codex) Evidências anteriores permanecem vinculadas aos commits executados. A nova rodada identifica sua própria base e comandos. Sem publicação Databricks, alteração visual, force-push ou desativação de gates.
+- (Codex) Preparação transitória corrigida após bloqueios por sintaxe YAML e localização incorreta da suíte visual; usa o comando já declarado no executor V00. Os runs reprovados permanecem no histórico, sem aprovação retroativa.
+
 ## 2026-09-12 — R02-I: composição candidata READMEs + Concierge (ChatGPT)
 
 ### Adicionado
@@ -138,6 +151,25 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
   R02 não iniciada; template candidato e ADR aguardam aceite humano.
 - (Codex) Testes e revisão própria delimitados no relatório R01; sem agentes
   independentes, execução/publicação Databricks ou homologação de produção.
+
+## 2026-09-12 — V00 candidata do Sistema de Temas (Codex)
+
+### Corrigido nesta candidata
+
+- (Codex) Descoberta de consumidores sem cor literal e agregação que distingue casos executados de texto citado, com testes adversariais.
+- (Codex) Agregação dos skips, testada contra resumo duplicado; contagens locais do README reconciliadas com execução.
+- (Codex) Falha global editorial anterior registrada com causa concreta; famílias validadas com alcance separado.
+
+### Adicionado
+
+- (Codex) Inventário visual somente leitura, runner comparativo e testes adversariais e de contratos legados.
+- (Codex) Guia de V00 para leitores não técnicos, achados, matriz de ambientes e checkpoint.
+
+### Limites
+
+- (Codex) Resultados em `docs/testes/sistema_temas/V00/`; execução e aceite são distintos.
+- (Codex) Produto, Manual e espelho preservados; sem render, publicação ou teste Databricks.
+- (Codex) Revisão semântica independente, teste de leitura e aceite antes de V01 permanecem pendentes.
 
 ## 2026-09-12 — Concierge integrado ao produto (Codex)
 
