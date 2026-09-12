@@ -51,6 +51,9 @@ Escala planejada: pessoal → squad → missão.
 - Manual Técnico unifica o catálogo e o glossário: `ADR-0010`. Autoria em
   `ambiente_fonte/.assistant/MANUAL_TECNICO.md`; cópia de leitura idêntica na raiz.
 
+- README didático por pasta de objeto: proposta `ADR-0011`, candidata R01.
+  Estado e retomada: `docs/sprints/readmes_objetos/README.md`.
+
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 
 ## Regras inegociáveis

@@ -12,6 +12,7 @@ documento que é dono de cada afirmação sem atravessar duplicações.
 | Governança | `docs/README.md` | rota para decisões, auditorias, testes, playbooks e histórico |
 | Produto publicado | `ambiente_fonte/.assistant/README.md` | instalação e uso do ecossistema no Databricks |
 | Coleção | `README.md` dentro da coleção | catálogo local, contrato, exemplo mínimo e limites |
+| Objeto | `README.md` na pasta do recurso | conceito aplicado, adequação, requisitos, interpretação e rota para exemplo |
 
 Um nível aponta para o seguinte; não copia a explicação longa dele. Quando dois
 documentos precisarem do mesmo fato mutável, um é declarado dono e o outro usa
@@ -19,7 +20,7 @@ link e síntese curta.
 
 ## Contrato de um README
 
-Todo README ativo deve responder, nesta ordem sempre que aplicável:
+As entradas agregadoras devem responder, nesta ordem sempre que aplicável:
 
 1. **o que é e para quem é**;
 2. **qual é a próxima ação**, por objetivo do leitor;
@@ -34,9 +35,9 @@ entrada, no sumário e na navegação, sem reescrever evidência antiga.
 
 ## Linguagem e precisão
 
-- PT-BR na prosa; inglês em função, classe, parâmetro e coluna devolvida.
-  Constante de domínio pode permanecer em português quando traduzir apagar o
-  referente.
+- PT-BR na prosa; preserve nomes existentes de função, classe, parâmetro e
+  coluna, inclusive quando forem portugueses. Não traduza APIs para uniformizar
+  a documentação.
 - Distinga visualmente interfaces **nativas da Databricks** de conteúdo
   **customizado pelo Hub**. O prefixo `hub_`/`hub-` marca autoria local, mas uma
   skill `hub-ml-*` usa o mecanismo nativo de Agent Skills.
@@ -67,3 +68,17 @@ do inventário integrado de helpers e termos (ADR-0010). Edite em
 `ambiente_fonte/.assistant/MANUAL_TECNICO.md`; sincronize a cópia de leitura
 `MANUAL_TECNICO.md` da raiz e gere o simulado pelo renderer. As três cópias devem
 conservar o mesmo conteúdo. Não reintroduza catálogo ou glossário independentes.
+
+## README de objeto — R01
+
+A escala Objeto segue `ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md`
+e seu checklist editorial. É complemento do ADR-0007/0010, conforme proposta
+ADR-0011. Novos snippets, scripts e prompts incluem README; legados têm dispensa
+transitória rastreada, que só diminui. O gate mede estrutura, não qualidade da
+explicação nem execução.
+
+Pausar ao fim da sprint com checkpoint e diff. Template candidato em R01; piloto
+e aceite antes de congelar 1.0. Documento pequeno não precisa de texto de
+enchimento. Relatórios discriminam READMEs, outras documentações, ferramentas
+e derivados. Preservar imagens e corpos históricos. Não carregar READMEs em
+massa nas instruções nem criar outro catálogo ou glossário.

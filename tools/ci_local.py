@@ -9,6 +9,7 @@ esconde os outros e obriga a rodar de novo para cada um:
 2. `hub_snippets/tests/test_core.py`   — regressões da biblioteca;
 3. `tools/tests/test_tool_guards.py`   — guardas das próprias ferramentas.
 4. `tools/tests/test_transicao_trabalho.py` — kit, notebook e guardas de aceite.
+5. `tools/tests/test_readme_objeto_contract.py` — contrato e migração dos READMEs.
 
 O que este gate **não** faz, por decisão do plano consolidado: nada que precise
 de credencial, rede ou runtime Databricks. Publicação, verify remoto, smoke em
@@ -64,6 +65,11 @@ ETAPAS = [
         "transicao",
         "guardas do kit e notebook de aceite (Spark opcional separado)",
         [sys.executable, "tools/tests/test_transicao_trabalho.py"],
+    ),
+    (
+        "readmes",
+        "contrato dos READMEs e dispensas monotônicas",
+        [sys.executable, "tools/tests/test_readme_objeto_contract.py"],
     ),
 ]
 

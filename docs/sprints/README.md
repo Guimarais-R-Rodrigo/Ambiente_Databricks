@@ -25,3 +25,9 @@ reescritos para acompanhar o produto.
 Nomenclatura antiga dentro dos relatórios permanece como evidência da época. A
 correspondência com a identidade `hub_`/`hub-` está no
 [ADR-0006](../decisions/ADR-0006-identidade-hub.md).
+
+## Iniciativa de READMEs por objeto
+
+A [migração R00–R13](readmes_objetos/README.md) usa numeração própria. Os
+relatórios históricos acima permanecem intactos; não são substituídos pelos
+checkpoints desta iniciativa.

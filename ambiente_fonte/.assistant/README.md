@@ -336,3 +336,10 @@ Sim. Use `hub_padroes/` e `@hub-ml-criar-objeto`, mantendo código, exportação
 - [Agent Skills](https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills)
 - [Instruções customizadas](https://learn.microsoft.com/en-us/azure/databricks/genie-code/instructions)
 - [Dependências em serverless](https://learn.microsoft.com/en-us/azure/databricks/compute/serverless/dependencies)
+
+## Entender um objeto antes de executar
+
+Nos objetos já documentados, comece pelo `README.md` da própria pasta. Ele
+explica conceito, escolha e limites, e aponta para o notebook. A migração é
+gradual; o [Manual](MANUAL_TECNICO.md#readmes-objeto) mantém a visão integrada.
+A inclusão do guia não instala dependências nem executa código.

@@ -25,10 +25,11 @@ publicado. Snippet recebe DataFrame porque entra no meio de uma transformação.
 
 ## Estrutura da pasta
 
-Idêntica à de snippet — mesmos três arquivos, mesmos nomes:
+Idêntica à de snippet — README, fachada, implementação e notebook:
 
 ```text
 hub_scripts/<nome_do_script>/
+├── README.md                       # conceito, escolha e uso seguro
 ├── __init__.py                     # gerado por tools/api_publica.py
 ├── <nome_do_script>.py
 └── exemplo_<nome_do_script>.py
@@ -85,3 +86,10 @@ canônico — os demais foram absorvidos:
 
 O exemplo preenchido está em
 [`checar_base_campanha/checar_base_campanha.py`](checar_base_campanha/checar_base_campanha.py).
+
+## README do objeto
+
+Aplique o [molde de objeto](../readme/template_objeto.md); veja o
+[exemplar](checar_base_campanha/README.md). Diferencie efeitos do script e do
+notebook demonstrativo. Explique o retorno real de cada script: não imponha
+as chaves deste exemplar a todos os utilitários preexistentes.

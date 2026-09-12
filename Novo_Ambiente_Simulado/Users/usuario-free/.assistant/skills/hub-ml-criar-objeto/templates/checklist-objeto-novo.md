@@ -30,6 +30,13 @@ em vez de repetir a lista.
 - [ ] O inventário de `MANUAL_TECNICO.md` ganhou a ficha, com API e dependências conferidas
 - [ ] Entrada no `CHANGELOG.md`
 
+### Se é snippet, script ou prompt
+
+- [ ] Existe `README.md` com o [contrato de objeto](../../../hub_padroes/readme/template_objeto.md)
+- [ ] O [checklist editorial](../../../hub_padroes/readme/checklist_objeto.md) foi aplicado e tem evidência
+- [ ] README e notebook têm links recíprocos; efeitos do exemplo estão explícitos
+- [ ] Em migração, a dispensa temporária foi removida; nenhuma implementação mudou
+
 ### Se é snippet ou script
 
 - [ ] Nome em `snake_case`, identificador Python válido

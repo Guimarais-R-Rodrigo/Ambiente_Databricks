@@ -48,6 +48,7 @@ o remoto.
 
 | Arquivo | Responsabilidade |
 |---|---|
+| `readme_objeto_contract.py` | estrutura, links e dispensa monotônica dos READMEs de objeto |
 | `validate_assistant.py` | estrutura, YAML, links, Python, contratos, identidade e consistência |
 | `render_simulado.py` | recriar o espelho de workspace a partir da fonte |
 | `render_readme_visuals.mjs` | gerar fontes SVG e PNGs editoriais dos READMEs |
@@ -130,3 +131,22 @@ Databricks e confere somente o bloco remoto. Nenhum substitui o verify por conte
 origem, hashes completos por arquivo e resultado da comparação. O bundle e o
 publicador recusam espelho antigo e extras/caches no pacote. Os hashes agregados
 da comparação não são hashes do ZIP. A integração real ainda exige teste Free.
+
+## READMEs de objeto — R01
+
+`python tools/ci_local.py --etapa readmes` executa regressões próprias da nova
+guarda. O gate completo inclui essa etapa explicitamente, além das quatro
+anteriores. O contrato vem do template do produto; não há lista concorrente de
+títulos dentro da ferramenta.
+
+[CONTROLE_MIGRACAO.json](../docs/sprints/readmes_objetos/CONTROLE_MIGRACAO.json)
+identifica legados pendentes. Um README entregue precisa sair da dispensa no
+mesmo commit. Novos objetos sem README reprovam. A versão anterior diferente do
+controle, na história first-parent, delimita o conjunto máximo de dispensas;
+na introdução inicial, só objetos existentes na base anterior são elegíveis.
+Histórico raso reprova com orientação para usar `fetch-depth: 0`.
+
+Essas verificações não importam helpers nem executam código Markdown. Não provam
+clareza, estatística, veracidade de links externos ou compatibilidade de runtime.
+Use o [checklist editorial](../ambiente_fonte/.assistant/hub_padroes/readme/checklist_objeto.md)
+e registre quem fez a revisão. Código que executa não é sinônimo de análise correta.
