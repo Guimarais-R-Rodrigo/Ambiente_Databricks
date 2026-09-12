@@ -59,7 +59,7 @@ Aplique o tema com `n=3`, escreva “pontos mensais” no subtítulo e declare a
 
 ## 7. O que você precisa antes de usar?
 
-Tenha Plotly instalado e o caminho de importação preparado. `aplicar_tema` recebe uma `go.Figure`, não uma tabela de dados. Para a rota V03, tenha também um `ResolvedTheme` produzido pelo núcleo V02 para o contexto `notebook`; não passe dicionário cru ao adaptador. Fonte e subtítulo devem ser textos controlados e apropriados ao compartilhamento.
+Tenha Plotly instalado e o caminho de importação preparado. `aplicar_tema` recebe uma `go.Figure`, não uma tabela de dados. Para a rota V03, tenha também um `ResolvedTheme` produzido pelo núcleo V02 para o contexto `notebook`; não passe dicionário cru ao adaptador. Como a V03 revalida esse resultado antes de consumi-lo, `jsonschema` e `referencing` também precisam estar disponíveis conforme `hub_snippets/requirements-temas.txt`. O helper não instala dependências automaticamente. Fonte e subtítulo devem ser textos controlados e apropriados ao compartilhamento.
 
 Defina previamente o significado de N: linhas, entidades, observações válidas ou pontos agregados. Use um inteiro não negativo para uma contagem; a implementação formata o valor, mas não valida essa interpretação.
 
