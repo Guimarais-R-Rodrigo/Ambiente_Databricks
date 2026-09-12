@@ -3,6 +3,9 @@
 > **PERSONALIZADO — NÃO AUTO-DESCOBERTO.** Use **Add context**/`@` para anexar a
 > tabela ou o notebook. Skill recomendada: `@hub-ml-eda-profissional`.
 
+Para entender o conceito, as situações adequadas e os riscos do exemplo, consulte o
+[README do objeto](README.md). O guia e o bloco colável continuam neste arquivo.
+
 Antes de pedir código, veja os helpers que a skill recomendada declara: boa
 parte do que este formulário pede já tem implementação verificada, e usá-la
 evita que a lógica seja reescrita a cada conversa. Mapa completo em

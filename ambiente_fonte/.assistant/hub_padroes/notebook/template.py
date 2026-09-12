@@ -6,6 +6,11 @@
 # MAGIC referência completa e executável é
 # MAGIC `hub_padroes/snippet/taxa_resposta_campanha/exemplo_taxa_resposta_campanha.py`.
 # MAGIC
+# MAGIC Antes do primeiro código do exemplar preenchido, ofereça um link relativo
+# MAGIC para seu `README.md`: ele ensina conceito e escolha. Preserve os avisos de
+# MAGIC escrita do notebook, mesmo quando o helper não escreve. O contrato humano
+# MAGIC está em [README de objeto](../readme/template_objeto.md).
+# MAGIC
 # MAGIC ## Formato-fonte — o que quebra se você errar
 # MAGIC
 # MAGIC | Elemento | Forma correta |

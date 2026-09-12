@@ -48,6 +48,7 @@ o remoto.
 
 | Arquivo | Responsabilidade |
 |---|---|
+| `readme_objeto_contract.py` | estrutura, links e dispensa monotônica dos READMEs de objeto |
 | `validate_assistant.py` | estrutura, YAML, links, Python, contratos, identidade e consistência |
 | `render_simulado.py` | recriar o espelho de workspace a partir da fonte |
 | `render_readme_visuals.mjs` | gerar fontes SVG e PNGs editoriais dos READMEs |
@@ -132,6 +133,38 @@ origem, hashes completos por arquivo e resultado da comparação. O bundle e o
 publicador recusam espelho antigo e extras/caches no pacote. Os hashes agregados
 da comparação não são hashes do ZIP. A integração real ainda exige teste Free.
 
+## READMEs de objeto — R01
+
+`python tools/ci_local.py --etapa readmes` executa regressões próprias da nova
+guarda e as regressões de convivência com o Concierge. A etapa descobre os
+arquivos `tests/test_readme*.py`; o gate completo preserva as quatro etapas
+comuns e as três do Concierge, além desta etapa de READMEs. O contrato vem do template do produto; não há lista concorrente de
+títulos dentro da ferramenta.
+
+[CONTROLE_MIGRACAO.json](../docs/sprints/readmes_objetos/CONTROLE_MIGRACAO.json)
+identifica legados pendentes. Um README entregue precisa sair da dispensa no
+mesmo commit. Novos objetos sem README reprovam. A versão anterior diferente do
+controle, na história first-parent, delimita o conjunto máximo de dispensas;
+na introdução inicial, só objetos existentes na base anterior são elegíveis.
+Histórico raso reprova com orientação para usar `fetch-depth: 0`.
+
+Essas verificações não importam helpers nem executam código Markdown. Não provam
+clareza, estatística, veracidade de links externos ou compatibilidade de runtime.
+Use o [checklist editorial](../ambiente_fonte/.assistant/hub_padroes/readme/checklist_objeto.md)
+e registre quem fez a revisão. Código que executa não é sinônimo de análise correta.
+
+## Composição READMEs + Concierge — R02-I
+
+`python tools/ci_local.py` executa oito etapas: `validacao`, `biblioteca`,
+`ferramentas`, `transicao`, `readmes`, `concierge-pacote`,
+`concierge-regressoes` e `concierge-integracao`. `--etapa` continua aceitando
+um nome para diagnóstico isolado; isso não equivale à aprovação do conjunto.
+
+`tests/test_readme_integracao.py` protege contra perda das etapas, colisão de
+números ADR e inconsistência das rotas/documentos ao combinar as iniciativas.
+Inclui testes negativos; não executa helpers ou conversas. Os testes originais
+da R01 e do Concierge foram preservados. As evidências datadas da composição
+ficam em [INTEGRACAO_R02.md](../docs/sprints/readmes_objetos/INTEGRACAO_R02.md).
 ## Diagnóstico visual V00
 
 `inventario_visual.py` e `executar_baseline_visual.py` produzem evidência somente em `.artifacts/`. Consulte o [guia da V00](../docs/sprints/sistema_temas/V00.md) antes de executar. Não publicam nem alteram o produto.

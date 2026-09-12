@@ -2,21 +2,23 @@
 # MAGIC %md
 # MAGIC # `constants.format_br` — número no padrão brasileiro, sem `locale`
 # MAGIC
-# MAGIC **O problema.** `locale.setlocale(LC_ALL, 'pt_BR')` falha em cluster sem o locale instalado, e falha de um jeito que só aparece em produção. E `f"{x:,.1f}"` produz `1,234.5`, que num relatório em português é um número diferente do pretendido.
+# MAGIC **O problema.** Formatar com locale depende da configuração do ambiente. Já `f"{x:,.1f}"` produz `1,234.5`: o número não mudou, mas seus separadores podem ser interpretados incorretamente em um relatório em português.
 # MAGIC
 # MAGIC **O que este objeto oferece.** Seis funções de formatação que produzem `3.375.674` e `92,8%` sem depender de configuração do sistema.
 
+# MAGIC **Antes de usar:** veja o [README do objeto](README.md) para conceito, requisitos, efeitos e interpretação. As saídas históricas abaixo foram preservadas; a revisão R02 não as transforma em execução recente.
+# MAGIC
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Compute | o helper usa Python padrão; o preparo deste notebook exige sessão Spark disponível |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
-# MAGIC | Dados | nenhum — este objeto não recebe dados |
+# MAGIC | Dados | valores escalares sintéticos; não lê uma tabela externa |
 # MAGIC | Escrita | nenhuma; tudo em memória |
-# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
+# MAGIC | Diferença Free × trabalho | compatibilidade no destino não homologada por testes Python locais |
 
 # COMMAND ----------
 
@@ -60,7 +62,8 @@ print("fmt_n     ", fmt_n(3375674), "|", fmt_n(3375674, sufixo=False))
 # MAGIC `fmt_n` é o único com duas personalidades: com `sufixo=True` ele abrevia
 # MAGIC para **3,4M**, e com `False` escreve **3.375.674**. A abreviação serve para
 # MAGIC cartão de KPI, onde o espaço é curto e a ordem de grandeza basta. Para
-# MAGIC qualquer coisa que alguém vá conferir, use o número inteiro.
+# MAGIC conferências exatas, preserve o valor original. `fmt_n` e a apresentação
+# MAGIC `.0f` usada por `fmt_int` podem perder precisão em inteiros muito grandes.
 
 
 # COMMAND ----------
@@ -108,7 +111,7 @@ print("  fmt_delta(0.005,  'bps') ->", fmt_delta(0.005, "bps"))
 # MAGIC ```
 # MAGIC
 # MAGIC **Como ler.** As duas primeiras linhas produzem o mesmo texto a partir de
-# MAGIC entradas dez vezes diferentes. A função não tem como adivinhar qual escala
+# MAGIC entradas cem vezes diferentes. A função não tem como adivinhar qual escala
 # MAGIC chegou — e é por isso que `input_scale` existe e não tem padrão silencioso
 # MAGIC de detecção.
 # MAGIC
@@ -137,5 +140,5 @@ print("  fmt_delta(0.005,  'bps') ->", fmt_delta(0.005, "bps"))
 # MAGIC ## Quando **não** usar
 # MAGIC
 # MAGIC - **Sobre coluna de DataFrame, linha a linha.** São funções de driver, para texto de relatório. Formatação em massa vai no Spark ou no `style.format` do pandas.
-# MAGIC - **Antes de calcular.** Formatar devolve **string**; somar depois disso não dá erro de sintaxe, dá concatenação.
-# MAGIC - **Para exportar dado.** CSV e Parquet levam número, não texto formatado. Isto é para o que a pessoa lê.
+# MAGIC - **Antes de calcular.** Formatar devolve **string**; somar strings concatena texto, e misturar texto com números pode levantar erro.
+# MAGIC - **Para substituir valores numéricos em dados de intercâmbio.** Preserve números para cálculo; texto formatado serve à apresentação ou a um contrato de exportação que o exija explicitamente.

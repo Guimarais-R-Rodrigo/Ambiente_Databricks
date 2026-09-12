@@ -7,20 +7,23 @@
 # MAGIC contagem de nulos, que veio da tabela toda, e a cardinalidade, que veio de
 # MAGIC 5% dela. Alguém lê "300 valores distintos" e planeja como se fossem 300.
 # MAGIC
-# MAGIC **O que este script faz.** Devolve cada estatística com o sufixo que diz de
-# MAGIC onde ela veio: `_full_table` ou `_sample`.
+# MAGIC **O que este script faz.** Devolve grupos de resumos com sufixos de alcance:
+# MAGIC `_full_table` e `_sample`. Os metadados, como total de linhas e schema,
+# MAGIC não seguem esse sufixo e também precisam ser interpretados.
 
+# MAGIC **Antes de usar:** veja o [README do objeto](README.md) para conceito, requisitos, efeitos e interpretação. As saídas históricas abaixo foram preservadas; a revisão R02 não as transforma em execução recente.
+# MAGIC
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico. Em compute clássico o script usa cache; em serverless ele degrada sem cache, e o resultado é o mesmo |
+# MAGIC | Compute | sessão Spark compatível; tenta usar cache e continua sem ele quando a chamada falha |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, gerados por `hub_snippets.testing.fixtures` |
 # MAGIC | Escrita | uma view temporária de sessão |
-# MAGIC | Diferença Free × trabalho | `cache()` é bloqueado em serverless; o script tem guarda e não falha |
+# MAGIC | Diferença Free × trabalho | a guarda trata a tentativa de cache, não garante sucesso de todas as operações ou compatibilidade universal |
 
 # COMMAND ----------
 
@@ -43,8 +46,8 @@ import json
 fixtures.base_tabular(n=2000, seed=42).createOrReplaceTempView("vw_exemplo_perfil")
 
 # `sample_fraction` e `seed` são declarados, não sorteados: quem lê o relatório
-# precisa saber que 25% foi escolha, e que outra execução com a mesma semente
-# devolve exatamente a mesma amostra.
+# precisa saber que 25% foi escolha. Repetibilidade também depende da fonte
+# e das condições de leitura; a semente não substitui essas informações.
 perfil = quick_profile("vw_exemplo_perfil", sample_fraction=0.25, seed=42)
 print(json.dumps(
     {k: v for k, v in perfil.items() if not isinstance(v, (dict, list))},
@@ -86,8 +89,9 @@ print(f"  cardinalidade       : {perfil['cardinality_sample']}")
 # MAGIC para menos. Se um número de cardinalidade precisa ser exato, esta não é a
 # MAGIC ferramenta.
 # MAGIC
-# MAGIC Já `null_summary_full_table` foi calculado sobre tudo: contagem de nulos é
-# MAGIC barata e não faz sentido estimar.
+# MAGIC Já `null_summary_full_table` foi calculado sobre tudo. Isso preserva o
+# MAGIC alcance global da contagem, mas pode exigir leitura ampla; a amostragem
+# MAGIC usada nos outros resumos não limita essa etapa.
 # MAGIC
 # MAGIC O erro de interpretação mais provável aqui não é confundir os dois sufixos —
 # MAGIC é **não reparar que existem**. Ao copiar um número deste dicionário para um
@@ -95,7 +99,7 @@ print(f"  cardinalidade       : {perfil['cardinality_sample']}")
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## 3. Com fração 1.0 os dois coincidem — e é aí que se engana
+# MAGIC ## 3. Com fração 1.0 a base é completa, mas a cardinalidade segue aproximada
 
 # COMMAND ----------
 
@@ -107,10 +111,10 @@ print(f"\ndemais chaves do retorno: {sorted(perfil_completo)}")
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** Com fração 1.0 os sufixos deixam de distinguir coisa alguma, e
-# MAGIC o relatório fica indistinguível de um perfil completo. Quem se acostuma a
-# MAGIC rodar assim em tabela pequena e depois aplica em tabela grande com fração
-# MAGIC menor carrega a leitura antiga junto.
+# MAGIC **Como ler.** Com fração 1.0, a base dos resumos passa a incluir todas as
+# MAGIC linhas, mas a cardinalidade permanece aproximada e os limites de colunas
+# MAGIC continuam ativos. Isso ainda não é um perfil completo e exato de tudo.
+# MAGIC Ao reduzir a fração, muda também a população observada nesses resumos.
 # MAGIC
 # MAGIC Por isso a fração aparece na saída: ela é a primeira coisa a conferir num
 # MAGIC relatório que alguém te mandou.
@@ -119,14 +123,14 @@ print(f"\ndemais chaves do retorno: {sorted(perfil_completo)}")
 # MAGIC %md
 # MAGIC ## Quando **não** usar este script
 # MAGIC
-# MAGIC - **Para estatística que precisa ser exata.** Amostra é amostra. Se a
-# MAGIC   decisão depende do número preciso, use fração 1.0 e aceite o custo.
-# MAGIC - **Esperando cardinalidade exata.** Dois efeitos se somam e vão em
-# MAGIC   direções opostas: a amostra **subestima** o número de categorias raras, e o
-# MAGIC   `approx_count_distinct` erra para os dois lados. O resultado é uma
-# MAGIC   estimativa, não uma contagem.
+# MAGIC - **Para certificar todas as estatísticas exatas.** Fração 1.0 remove
+# MAGIC   amostragem, mas não remove o estimador de cardinalidade aproximada.
+# MAGIC   Use um cálculo específico quando a decisão exigir contagem exata.
+# MAGIC - **Esperando observar todas as categorias raras na amostra.** Ela pode
+# MAGIC   omiti-las; o estimador também apresenta erro para mais ou para menos.
+# MAGIC   Esses efeitos não necessariamente se compensam.
 # MAGIC - **Como substituto de EDA.** Ele descreve schema e distribuição. Não avalia
 # MAGIC   se a tabela serve para a pergunta, que é o trabalho da skill de EDA.
-# MAGIC - **Sem declarar a semente**, se o resultado for para um relatório: sem
-# MAGIC   `seed`, duas execuções dão números diferentes e ninguém sabe se a
-# MAGIC   diferença é do dado ou do sorteio.
+# MAGIC - **Sem registrar a configuração e a fonte** em um relatório. Há default
+# MAGIC   `seed=42`; omitir o argumento não o torna aleatório a cada chamada.
+# MAGIC   Registre também versão da tabela, filtros e tamanho efetivo da amostra.

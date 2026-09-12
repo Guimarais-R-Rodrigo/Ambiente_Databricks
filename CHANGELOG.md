@@ -5,6 +5,153 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — V00: reconciliação e aceite de integração Git (Codex)
+
+### Atualizado
+
+- (Codex) Reconciliação da candidata V00 com a main que incorpora READMEs e Concierge, preservando histórico, produto, espelho, Manual e as oito etapas do gate.
+- (Codex) Autorização explícita de Rodrigo para aprovar e integrar registrada em `docs/sprints/sistema_temas/INTEGRACAO_V00.md`; limites e pendências não convertidos em homologação.
+- (Codex) Contagens locais do README recalculadas pelo validador existente. Automação transitória de conciliação removida da árvore final, sem mudança das permissões do workflow permanente.
+
+### Notas
+
+- (Codex) Evidências anteriores permanecem vinculadas aos commits executados. A nova rodada identifica sua própria base e comandos. Sem publicação Databricks, alteração visual, force-push ou desativação de gates.
+- (Codex) Preparação transitória corrigida após bloqueios por sintaxe YAML e localização incorreta da suíte visual; usa o comando já declarado no executor V00. Os runs reprovados permanecem no histórico, sem aprovação retroativa.
+
+## 2026-09-12 — R02-I: composição candidata READMEs + Concierge (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) Candidata isolada, registro, checkpoint e matriz nominal em
+  `docs/sprints/readmes_objetos/`, sem merge, R03 ou aceite editorial presumido.
+- (ChatGPT) `tools/tests/test_readme_integracao.py`: regressões positivas e
+  negativas para perda de etapas, colisão de ADR e navegação complementar.
+
+### Atualizado
+
+- (ChatGPT) `tools/ci_local.py` compõe as oito etapas; documentação de ferramentas,
+  índices e instruções/Manual combinados preservam as duas iniciativas.
+- (ChatGPT) Proposta dos READMEs renumerada de ADR-0011 para ADR-0012 com nota
+  administrativa; ADR-0011 do Concierge e registros históricos preservados.
+- (ChatGPT) Manual da raiz sincronizado e simulado pelo renderer; contagens
+  do README raiz conferidas por execução da candidata, sem verify remoto.
+
+### Corrigido
+
+- (ChatGPT) Quatro conflitos da composição (CHANGELOG, CLAUDE, README raiz e
+  gate) resolvidos sem descartar o Concierge nem a guarda dos READMEs.
+
+### Notas
+
+- (ChatGPT) A candidata parte de main `8744157` e incorpora o conteúdo R01/R02
+  de `5996574`, com bases e hashes no registro. PRs originais não reescritos.
+- (ChatGPT) Contrato `0.1.0-candidata`, seis pilotos, três exemplares e 68
+  pendências mantidos. CI não substitui revisão independente ou aceite humano.
+- (ChatGPT) Sem publicação Databricks, execução de dados ou novos testes
+  conversacionais. Eventual transporte transitório não compõe a árvore final.
+
+## 2026-09-12 — R02: fechamento editorial e diagnóstico de integração (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) Revisão, rubrica nominal, diagnóstico de integração e evidências em
+  `docs/sprints/readmes_objetos/`; caracteriza a guarda binária e classes XGBoost.
+
+### Atualizado
+
+- (ChatGPT) Seis READMEs do piloto: termos, interpretação e procedência dos testes;
+  checkpoint e índice da iniciativa; matriz nominal no relatório de fechamento.
+- (ChatGPT) Markdown dos exemplos `pit_join`, `quick_profile` e `format_br`, sem
+  alterar código, magics executáveis ou saídas; simulado pelo renderer.
+- (ChatGPT) Contagens do README raiz reconciliadas após execução, sem recertificar
+  o bloco histórico de publicação remota ou alterar os gates.
+
+### Corrigido
+
+- (ChatGPT) Descrição da checagem binária do XGBoost: exige ao menos duas classes,
+  não garante exatamente 0/1. Restrição e falha posterior documentadas, sem mudar API.
+- (ChatGPT) Distinção entre alvo futuro legítimo e atributo que vaza o desfecho;
+  título sobre cardinalidade; promessa de compatibilidade irrestrita do exemplo.
+- (ChatGPT) Textos que ainda apresentavam testes Spark/MLflow anteriores como
+  futuros: evidência identificada e separada da reexecução local desta rodada.
+
+### Notas
+
+- (ChatGPT) Quatro conflitos textuais com a main e numeração ADR-0011 duplicada
+  diagnosticados, não resolvidos por merge. Não substituir os gates do Concierge.
+- (ChatGPT) Contrato `0.1.0-candidata`, cobertura 6/74 e 68 pendências preservados;
+  revisão própria, sem aceite humano presumido, auditoria independente ou R03.
+- (ChatGPT) Workflow transitório de recuperação de bases removido da árvore final;
+  credenciais de checkout não persistidas, sem publicação Databricks.
+
+## 2026-09-12 — R02: seis READMEs piloto e revisão documental (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) READMEs de `train_xgboost`, `isolation_forest`, `pit_join`,
+  `format_br`, `quick_profile` e `eda_rapida`, seguindo `0.1.0-candidata`.
+- (ChatGPT) Relatório, matriz nominal, achados, checkpoint e checks sintéticos
+  em `docs/sprints/readmes_objetos/`, com evidências de alcance delimitado.
+
+### Atualizado
+
+- (ChatGPT) Navegação das três coleções, fichas do Manual e cópia da raiz,
+  índices operacionais e de sprints; somente seis dispensas removidas do controle.
+- (ChatGPT) Prosa e links dos seis notebooks, sem alterar código, magics
+  executáveis ou blocos históricos; backlink no prompt fora do bloco colável.
+- (ChatGPT) Simulado regenerado pelo renderer; contagens do README raiz
+  reconciliadas com execução real. Relação de caminhos na matriz R02.
+
+### Corrigido
+
+- (ChatGPT) Afirmações documentais excessivas sobre equivalência entre modelos,
+  contaminação exata, MLflow em serverless, cardinalidade e custo de amostragem.
+- (ChatGPT) Explicação do fator cem entre escalas percentuais e alerta de perda
+  de precisão de inteiros grandes em `fmt_int`/`fmt_n`; nenhum algoritmo alterado.
+- (ChatGPT) Distinção entre leitura pedida pelo prompt e overwrite persistente
+  de seu notebook; limite de evidência antiga sobre execução de Genie Code.
+
+### Notas
+
+- (ChatGPT) Revisão própria; nenhuma auditoria independente presumida. Template
+  segue candidato até aceite do piloto. R03, merge e publicação não executados.
+- (ChatGPT) Branch R02 depende da R01 ainda em revisão. Workflows transitórios
+  de recuperação/integração têm escopo restrito e não compõem a árvore final.
+
+## 2026-09-12 — R01: READMEs de objeto, fundação candidata (Codex)
+
+### Adicionado
+
+- (Codex) Template e checklist de README de objeto em
+  `ambiente_fonte/.assistant/hub_padroes/readme/`; três READMEs de exemplares.
+- (Codex) `docs/decisions/ADR-0011-readmes-de-objeto.md` proposto e registros em
+  `docs/sprints/readmes_objetos/`, com controle explícito de legados pendentes.
+- (Codex) `tools/readme_objeto_contract.py` e regressões adversariais: estrutura,
+  navegação, versão, histórico e proibição de aumentar/reintroduzir dispensas.
+
+### Atualizado
+
+- (Codex) Templates de snippet/script/prompt/notebook, skill de criação e seu
+  checklist, regras editoriais, instruções, Manual e entradas de navegação.
+- (Codex) `tools/validate_assistant.py`, `tools/ci_local.py`, `tools/README.md` e
+  checkouts de CI: nova guarda e histórico completo para conferir a migração.
+- (Codex) Manual da raiz sincronizado e simulado regenerado a partir da fonte.
+  Relação nominal, inclusive documentos não README, na matriz da R01.
+
+### Corrigido
+
+- (Codex) Contagens locais do README raiz reconciliadas com execução; baseline
+  tinha duas divergências anteriores à R01. O bloco remoto não foi recertificado.
+- (Codex) Notas de escopo nos exemplares: `decidivel`, parâmetro não usado,
+  limites da evidência antiga e escrita de tabelas persistentes de demonstração.
+
+### Notas
+
+- (Codex) Nenhum helper analítico, API, imagem ou bloco colável foi modificado.
+  R02 não iniciada; template candidato e ADR aguardam aceite humano.
+- (Codex) Testes e revisão própria delimitados no relatório R01; sem agentes
+  independentes, execução/publicação Databricks ou homologação de produção.
+
 ## 2026-09-12 — V00 candidata do Sistema de Temas (Codex)
 
 ### Corrigido nesta candidata

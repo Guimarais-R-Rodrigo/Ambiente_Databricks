@@ -1,5 +1,21 @@
 # Sistema de Temas do Hub — execução por sprints
 
+## Aceite de integração Git — 12/09/2026
+
+Rodrigo autorizou explicitamente: “Pode aprovar e integrar”. A autorização cobre
+integrar a instrumentação V00 no Git; não equivale a publicação no Databricks,
+auditoria independente ou homologação dos ambientes. A reconciliação e os testes
+novos estão em [Integração V00](INTEGRACAO_V00.md). O estado efetivo do merge é
+registrado no PR #8; não se presume merge pela existência deste documento.
+
+As notas anteriores abaixo são históricas. Classificação semântica completa,
+leitura por usuário iniciante, auditoria independente, capturas Databricks e
+correção do validador editorial global continuam pendentes. A V01 pode seguir
+como desenho e contrato conforme a orientação anterior de Rodrigo; não há
+homologação integral nem entrega de funcionalidades visuais nesta integração.
+
+## Registro anterior (histórico)
+
 Esta pasta registra a evolução da identidade visual. É documentação de manutenção;
 não é um novo catálogo de helpers nem uma interface já instalada no Databricks.
 

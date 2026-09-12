@@ -56,7 +56,9 @@ Cada snippet resolve uma **dor analítica específica**, expondo uma API públic
 
 Para favorecer que o código seja limpo, fácil de encontrar e intuitivo tanto para pessoas quanto para a IA, os snippets seguem o padrão de organização chamado **Pasta de Objeto**.
 
-Na estrutura vigente, cada snippet fica em um diretório autossuficiente com três componentes centrais:
+Cada snippet mantém o núcleo executável de três componentes abaixo. O objeto
+novo inclui também `README.md`, a camada humana de conceito e escolha; a
+migração das pastas legadas é gradual:
 
 ![Vista explodida de uma pasta de snippet com fachada, implementação e notebook didático.](../hub_readmes_visual_assets/readmes/snippets/png/01_anatomia_pasta.png)
 
@@ -412,3 +414,17 @@ Eles priorizam operações distribuídas, mas algumas rotinas executam ações e
 - [Hub Prompts](../hub_prompts/README.md)
 - [Dependências em compute serverless](https://learn.microsoft.com/en-us/azure/databricks/compute/serverless/dependencies)
 - [Arquivos no workspace](https://learn.microsoft.com/en-us/azure/databricks/files/workspace)
+
+## Guias locais por objeto
+
+Cada objeto novo inclui um `README.md` para explicar conceito, contexto e
+limites antes do exemplo. A migração dos legados é gradual. O
+[contrato editorial](../hub_padroes/readme/template_objeto.md) padroniza essa
+leitura; o Manual continua sendo o catálogo integrado. Leia o aviso de efeitos
+do exemplo: ele pode escrever mesmo quando o helper apenas lê.
+
+O piloto R02 oferece guias de [XGBoost](ml/train_xgboost/README.md),
+[Isolation Forest](ml/isolation_forest/README.md),
+[junção point-in-time](spark/pit_join/README.md) e
+[formatação brasileira](constants/format_br/README.md). São entradas conceituais
+para os mesmos objetos, não novos helpers ou homologações de runtime.

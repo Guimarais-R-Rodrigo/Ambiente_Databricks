@@ -8,7 +8,7 @@ Leia este arquivo primeiro; depois carregue apenas o que a tarefa pedir.
 |---|---|
 | Editar skills/instruções do produto | `rules/fonte-de-verdade.md`, `rules/genie-code-oficial.md`, depois `ambiente_fonte/` |
 | Validar/publicar/replicar | `skills/validar-assistant/`, `skills/render-simulado/`, `rules/free-vs-trabalho.md` |
-| Documentar (READMEs, relatórios) | `rules/docs-e-readmes.md` |
+| Documentar (READMEs, relatórios) | `rules/docs-e-readmes.md`; para objetos: `ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md` e checkpoint atual em `docs/sprints/readmes_objetos/README.md` |
 | Coordenar com outra IA / fechar sessão | `rules/multi-llm.md`, `templates/changelog-entry.md`, `templates/handoff.md` |
 | Decisão arquitetural | `docs/decisions/` (ADRs) + `templates/adr.md` |
 | Entender o usuário e os ambientes | `context/perfil-usuario.md`, `context/ambiente-trabalho.md`, `context/ambiente-free.md` |

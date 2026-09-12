@@ -96,3 +96,9 @@ O procedimento completo e os critérios de parada estão no
 | criar um objeto do Hub | [Padrões](.assistant/hub_padroes/README.md) |
 | publicar ou replicar | [Playbooks](../docs/playbooks/README.md) |
 | entender uma decisão | [ADRs](../docs/decisions/README.md) |
+
+## Documentação por objeto
+
+O produto inclui [um molde de README local](.assistant/hub_padroes/readme/template_objeto.md)
+para snippets, scripts e prompts. Ele complementa os exemplos e o Manual;
+esta mudança é documental e não publica automaticamente o workspace.

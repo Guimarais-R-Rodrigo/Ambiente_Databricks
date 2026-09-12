@@ -33,7 +33,13 @@ escolha for difícil de reverter ou afetar mais de um componente.
 | [0010](ADR-0010-manual-tecnico-unificado.md) | Manual Técnico unifica catálogo e glossário | aceito |
 
 | [0011](ADR-0011-concierge-hub.md) | Concierge opcional para descoberta e composição | aceito para integração; homologação no destino pendente |
+| [0012](ADR-0012-readmes-de-objeto.md) | README didático por objeto; transição controlada | proposto; candidata R01 |
 
 Ao adicionar um ADR, atualize esta tabela e o `CHANGELOG.md`.
 
 [Voltar ao índice de documentação](../README.md)
+
+A proposta dos READMEs foi renumerada administrativamente para ADR-0012 na
+composição R02-I. A referência histórica ADR-0011 nas sprints R01/R02 refere-se
+a essa proposta, não à decisão do Concierge. O conteúdo e o status das duas
+decisões não foram equiparados.

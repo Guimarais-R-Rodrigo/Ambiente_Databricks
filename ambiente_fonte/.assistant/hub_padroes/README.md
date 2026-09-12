@@ -84,3 +84,11 @@ Todo objeto precisa deixar explícitos:
 - [Guia do ecossistema](../README.md)
 - [Manual Técnico — índice de termos](../MANUAL_TECNICO.md#indice-termos)
 - [Manual Técnico — inventário de helpers](../MANUAL_TECNICO.md#catalogo-helpers)
+
+## README de objeto — contrato candidato
+
+Use o [molde local](readme/template_objeto.md) e o
+[checklist editorial](readme/checklist_objeto.md) para novos snippets, scripts
+e prompts. Os exemplares de snippet, script e prompt têm guias preenchidos.
+O piloto R02 precede o congelamento do contrato em 1.0; não crie outro tipo de
+objeto nem replique o catálogo do Manual.
