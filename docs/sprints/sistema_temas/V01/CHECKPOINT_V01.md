@@ -1,4 +1,45 @@
-# Checkpoint V01 — candidata de revisão
+# Checkpoint V01 — aceite e integração Git
+
+## Estado vigente — 12/09/2026
+
+Rodrigo deu aceite explícito à V01 e solicitou testar e aplicar. O aceite
+cobre o contrato, a arquitetura e a experiência especificada nesta sprint,
+bem como sua integração pelo PR #10 após aprovação dos checks. A ratificação
+do ADR-0013 não muda seu corpo decisório nem implementa o núcleo V02.
+
+Para quem nunca entrou no Hub: não há nada para instalar, executar ou
+reconfigurar no Databricks nesta etapa. Continue usando o Hub como antes.
+O seletor de temas ainda não existe; gráficos, imagens, widgets, imports,
+cálculos e Manual Técnico permanecem preservados. Os exemplos de tema
+continuam sendo entradas de teste, não configurações publicadas.
+
+Integração Git: AUTORIZADA, condicionada à validação da árvore exata. O PR #10
+é o registro da efetivação, dos checks e do SHA de merge; a existência deste
+documento em uma branch não prova integração. A rodada de aceite identifica
+base, candidata, árvore, versões, logs e commit documental em seu artefato.
+Nenhum relatório antigo é reaproveitado como aprovação da rodada nova.
+
+Aceite do usuário: CONCEDIDO. Auditoria independente: PENDENTE. Avaliação
+com usuário iniciante: PENDENTE. Databricks, Spark, widgets, Apps e AI/BI:
+NÃO HOMOLOGADOS. Os casos não executados por ausência de Spark não são PASS.
+A dívida editorial Node e os achados V00 não são encerrados por este aceite.
+Os testes desta rodada e a conferência pelo mesmo agente não substituem
+uma revisão independente. Não houve publicação nem acesso a dados reais.
+
+Após a integração, a próxima sprint é V02; ela não está implementada por
+este aceite. Sua execução deve partir da main efetiva, com fonte canônica
+única, documentação operacional, regressões e checkpoint próprios.
+
+Para desfazer uma integração, o mantenedor deve identificar o merge do
+PR #10 e preparar uma reversão em branch própria, preservando alterações
+posteriores e repetindo os gates antes de novo PR. Não resetar main,
+fazer force-push ou publicar pacote antigo no Databricks para desfazer
+uma mudança exclusivamente de contrato e documentação.
+
+## Registro anterior da candidata — histórico, não estado vigente
+
+O texto abaixo preserva o checkpoint anterior ao aceite. Referências a
+aceite pendente ou candidata descrevem aquela rodada, não a decisão acima.
 
 ## Estado para quem nunca entrou no Hub
 

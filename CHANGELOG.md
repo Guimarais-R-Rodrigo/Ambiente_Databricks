@@ -5,6 +5,20 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — V01: aceite explícito e revalidação para integração (Codex)
+
+### Atualizado
+
+- (Codex) Aceite explícito de Rodrigo registrado no checkpoint V01, nas entradas da iniciativa e na ratificação do ADR-0013, preservando corpo decisório e relatórios históricos.
+- (Codex) Integração Git pelo PR #10 condicionada aos checks da árvore exata; não altera produto, espelho, Manual, schema, fixtures, testes ou workflows permanentes.
+
+### Notas
+
+- (Codex) A rodada 34708693721 passou V01/V00/publicador, mas o CI reprovou a contagem de links do README raiz (765 documentados, 768 medidos). Contador reconciliado com a saída real e bateria repetida; o run anterior permanece reprovado, sem relaxar a guarda.
+- (Codex) Revalidação identificada por base, candidata, árvore e run próprio. O artefato e o PR registram resultados reais; SKIPs não são PASS e rodadas anteriores não são reclassificadas.
+- (Codex) Sem publicação Databricks, mudança visual, V02, force-push ou alteração de proteções. Auditoria independente, avaliação com iniciante e homologações operacionais permanecem pendentes.
+- (Codex) Preparação transitória isolada em branch auxiliar, ausente da árvore candidata; só os documentos de aceite entram no commit submetido aos workflows permanentes.
+
 ## 2026-09-12 — V01: contrato e experiência sobre a V00 integrada (Codex)
 
 ### Adicionado

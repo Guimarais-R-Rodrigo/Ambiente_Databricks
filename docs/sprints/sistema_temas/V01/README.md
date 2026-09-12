@@ -1,6 +1,6 @@
 # Sistema de Temas — V01: contrato e experiência proposta
 
-> **CANDIDATA DE REVISÃO · CONTRATO 0.1.0 · AUTORIA CODEX · 12/09/2026.**
+> **V01 COM ACEITE DE RODRIGO · CONTRATO 0.1.0 · AUTORIA CODEX · 12/09/2026.**
 > O seletor de temas **não está instalado**. Esta sprint entrega decisões,
 > especificações, exemplos de configuração e verificações de manutenção.
 > Não é um pacote de implantação Databricks nem um novo manual do Hub.
@@ -52,8 +52,9 @@ Os documentos explicam esses arquivos sem autorizar ações operacionais.
 
 Auditoria independente: **PENDENTE**. Revisão com usuário iniciante: **PENDENTE**.
 Homologação Databricks: **NÃO EXECUTADA**. Composição com a base `b88a9cc`: ver [checkpoint](CHECKPOINT_V01.md).
-O pedido de Rodrigo para seguir à próxima etapa autoriza preparar esta candidata
-na branch `codex/temas-v01`; merge, aceite do ADR e publicação são ações separadas.
+Rodrigo concedeu o aceite da V01 e solicitou testar e aplicar. O PR #10 registra
+a integração Git após os checks; o [checkpoint vigente](CHECKPOINT_V01.md) explica
+o alcance da autorização. Aceite e integração não equivalem a publicação.
 
 A V00 histórica permanece em [seu registro de integração](../INTEGRACAO_V00.md). Os resultados
 novos não reescrevem suas evidências. A V02 não faz parte desta entrega.

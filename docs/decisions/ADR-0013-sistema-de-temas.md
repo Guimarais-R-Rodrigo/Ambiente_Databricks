@@ -1,7 +1,7 @@
 # ADR-0013 — Contrato central de temas com aplicação explícita por contexto
 
 Data: 2026-09-12
-Status: Proposto — candidata V01; não autoriza publicação
+Status: Aceito por Rodrigo em 2026-09-12 para V01; não autoriza publicação
 Autor: Codex
 
 ## Contexto
@@ -79,3 +79,19 @@ independente e integração com main permanecem pendentes.
 - [Fontes e dependências](../sprints/sistema_temas/V01/LEITURAS_E_DEPENDENCIAS.md).
 - [ADR-0010 — Manual Técnico](ADR-0010-manual-tecnico-unificado.md).
 - [ADR-0009 — identidade e pacote](ADR-0009-identidade-e-pacote-de-implantacao.md).
+
+## Ratificação de status — 12/09/2026
+
+Rodrigo declarou: “Em relação a V01, eu dou o aceite” e solicitou testar
+e aplicar. Ficam aceitos o contrato central, a configuração completa por
+contexto, os limites e a experiência especificada da V01. A integração
+pelo PR #10 permanece condicionada aos checks da árvore exata.
+
+O corpo decisório acima foi preservado. Menções anteriores a proposta,
+candidata e aceite pendente retratam a redação anterior à ratificação;
+esta seção e o status do cabeçalho registram a decisão vigente. O aceite
+não aprova fixtures como temas operacionais nem libera publicação.
+Auditoria independente, avaliação com iniciante e homologações de runtime
+continuam pendentes. Não altera ADRs anteriores nem implementa V02.
+O registro operacional é o [checkpoint V01](../sprints/sistema_temas/V01/CHECKPOINT_V01.md).
+
