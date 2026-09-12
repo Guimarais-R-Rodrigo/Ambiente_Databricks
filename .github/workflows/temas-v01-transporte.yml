@@ -1,0 +1,30 @@
+name: V01 conferencia temporaria de transporte
+on:
+  push:
+    branches: [codex/temas-v01]
+    paths: [.github/workflows/temas-v01-transporte.yml, .github/temas-v01-payload/**]
+permissions:
+  contents: read
+jobs:
+  conferir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Registrar bytes recebidos sem executar o conteudo
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/codex/temas-v01
+          mkdir -p "$RUNNER_TEMP/v01-transporte"
+          cp .github/temas-v01-payload/parte*.b64 "$RUNNER_TEMP/v01-transporte/"
+          git rev-parse HEAD > "$RUNNER_TEMP/v01-transporte/commit.txt"
+          sha256sum .github/temas-v01-payload/parte*.b64 > "$RUNNER_TEMP/v01-transporte/sha256.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v01-transporte-${{ github.run_id }}
+          path: ${{ runner.temp }}/v01-transporte/
+          retention-days: 7
