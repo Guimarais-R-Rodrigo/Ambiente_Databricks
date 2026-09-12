@@ -10,18 +10,18 @@ Rodrigo aprovou o padrão e autorizou a integração das R03-A/R03-B com a V01 e
 2026-09-12. O PR nº 13 foi integrado na `main` pelo commit `1be947b`; o
 [registro da composição](INTEGRACAO_R03_V01.md) preserva os gates e a V01.
 
-O contrato vigente é **1.0.0**. Durante esta sprint, a V02 do sistema de temas foi
-aceita e integrada à `main` no commit `6085eab`, adicionando o objeto documentado
-`visual/tema`. A R04-A documenta seis snippets Spark: `date_features`,
-`join_diagnostics`, `null_summary`, `psi_calculator`, `safe_display` e
-`smart_sample`. A cobertura estrutural da composição final é **26/75 operacionais
-e 3/3 exemplares, com 49 pendências**. Isso descreve a candidata Git; não significa
-publicação no workspace nem aceite antecipado dos seis textos.
+O contrato vigente é **1.0.0**. A R04-A foi aceita e integrada pelo PR nº 17 no
+commit `a8f314a`, já com a V02 preservada e pós-merge verde. A R04-B documenta os
+seis scripts `data_quality_check`, `doc_coverage`, `drift_detector`,
+`naming_checker`, `rfv_calculator` e `schema_to_yaml`, sem alterar suas
+implementações. A cobertura estrutural esperada desta candidata é **32/75
+operacionais e 3/3 exemplares, com 43 pendências**; a saída do validador da árvore
+fechada é a fonte de verdade. Isso não significa publicação no workspace nem
+aceite antecipado dos seis textos.
 
-Consulte o [relatório R04-A](RELATORIO_R04A.md), a
-[matriz nominal](MATRIZ_ALTERACOES_R04A.md) e os [achados](ACHADOS_R04A.md).
-A próxima parada é a revisão desta leva antes da R04-B, que contém os seis scripts
-previstos no plano.
+Consulte o [relatório R04-B](RELATORIO_R04B.md), a
+[matriz nominal](MATRIZ_ALTERACOES_R04B.md) e os [achados](ACHADOS_R04B.md).
+A próxima parada é a revisão desta leva antes da R05.
 
 Os relatórios anteriores preservam o estado observado em cada data. PRs #9/#11
 foram supersedidos pela composição integrada do PR #13 e não devem ser tratados
@@ -33,9 +33,9 @@ como entregas independentes a mesclar novamente.
 |---|---|
 | Examinar o formato e a linguagem | [Template de objeto](../../../ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md) |
 | Julgar a qualidade, além da estrutura | [Checklist editorial](../../../ambiente_fonte/.assistant/hub_padroes/readme/checklist_objeto.md) |
-| Ver o que mudou além dos READMEs | [Matriz R04-A](MATRIZ_ALTERACOES_R04A.md) |
-| Conhecer inconsistências observadas | [Achados R04-A](ACHADOS_R04A.md) |
-| Ver o resultado da execução | [Relatório R04-A](RELATORIO_R04A.md) |
+| Ver o que mudou além dos READMEs | [Matriz R04-B](MATRIZ_ALTERACOES_R04B.md) |
+| Conhecer inconsistências observadas | [Achados R04-B](ACHADOS_R04B.md) |
+| Ver o resultado da execução | [Relatório R04-B](RELATORIO_R04B.md) |
 | Saber quais legados faltam | [Controle de migração](CONTROLE_MIGRACAO.json) |
 
 ## Como evitar deriva na continuação
@@ -62,3 +62,7 @@ foi ratificado pelo usuário em 2026-09-12, com nota anexada sem apagar o relato
 ### Conciliação durante a R03-A
 
 A main recebeu a instrumentação V00 em paralelo; o novo PR nº 9 precisa preservar essa entrega. [Registro de conciliação](CONCILIACAO_V00_R03A.md). A matriz final distingue a base integrada original da main V00 e não contabiliza os instrumentos herdados como novos READMEs.
+
+### Conciliação R04-B × V03
+
+A R04-B foi recomposta sobre a V03 já presente na `main`. Consulte [CONCILIACAO_R04B_V03.md](CONCILIACAO_R04B_V03.md). A cobertura permanece 32/75; a próxima parada continua sendo o merge da R04-B antes da R05.

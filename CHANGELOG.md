@@ -5,6 +5,14 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — R04-B: READMEs dos seis Hub Scripts (ChatGPT)
+
+- Documenta `data_quality_check`, `doc_coverage`, `drift_detector`, `naming_checker`, `rfv_calculator` e `schema_to_yaml` no contrato 1.0.0.
+- Atualiza somente prosa/backlinks dos seis exemplos; implementações e fachadas permanecem protegidas.
+- Retira exatamente seis dispensas do controle de migração; a cobertura final é calculada pelo validador.
+- Registra relatório, matriz, achados, rubrica e testes específicos, incluindo Spark real.
+- Sem publicação Databricks, auditoria independente ou início da R05.
+
 ## 2026-09-12 — V03: adaptador Plotly opt-in (Codex)
 
 ### Aceite e integração
