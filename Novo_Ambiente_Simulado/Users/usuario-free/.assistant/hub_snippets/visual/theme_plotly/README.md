@@ -59,7 +59,7 @@ Aplique o tema com `n=3`, escreva “pontos mensais” no subtítulo e declare a
 
 ## 7. O que você precisa antes de usar?
 
-Tenha Plotly instalado e o caminho de importação preparado. `aplicar_tema` recebe uma `go.Figure`, não uma tabela de dados. Fonte e subtítulo devem ser textos controlados e apropriados ao compartilhamento.
+Tenha Plotly instalado e o caminho de importação preparado. `aplicar_tema` recebe uma `go.Figure`, não uma tabela de dados. Para a rota V03, tenha também um `ResolvedTheme` produzido pelo núcleo V02 para o contexto `notebook`; não passe dicionário cru ao adaptador. Fonte e subtítulo devem ser textos controlados e apropriados ao compartilhamento.
 
 Defina previamente o significado de N: linhas, entidades, observações válidas ou pontos agregados. Use um inteiro não negativo para uma contagem; a implementação formata o valor, mas não valida essa interpretação.
 
@@ -67,7 +67,7 @@ O notebook de demonstração usa NumPy para gerar a série e Spark para localiza
 
 ## 8. O que este recurso entrega?
 
-`get_tema_eda()` retorna um dicionário. `aplicar_tema(...)` retorna a própria figura modificada, preservando os dados dos traces. `registrar_template_plotly()` retorna `None` e deixa um efeito na sessão.
+`get_tema_eda()` retorna o dicionário legado. `aplicar_tema(...)` retorna a própria figura modificada, preservando os dados dos traces. `registrar_template_plotly()` retorna `None` e deixa o template legado ativo na sessão. Na rota V03, `get_tema_plotly(theme)` retorna um novo dicionário de layout derivado do `ResolvedTheme`; `aplicar_tema_resolvido(...)` retorna a mesma figura modificada sem trocar o template default; e `registrar_template_plotly_resolvido(...)` retorna `None`, registra um nome `hub-*` e só altera o default quando `ativar=True`.
 
 O rodapé é uma anotação textual com as partes fornecidas, não metadado verificado. Chamadas repetidas com rodapé adicionam novas anotações, em vez de substituir automaticamente a anterior. Sem argumentos de rodapé, a função não acrescenta uma anotação nova.
 
@@ -141,11 +141,11 @@ Execute a aplicação uma vez e observe a quantidade de anotações; antes de re
 
 ## 14. Arquivos relacionados e próximos passos
 
-A [implementação](theme_plotly.py) mantém as três operações legadas e acrescenta as três operações V03; a [fachada](__init__.py) exporta os seis nomes. O [notebook](exemplo_theme_plotly.py) demonstra legado e opt-in configurado. [Correlation matrix](../../display/correlation_matrix/README.md) e [distribution grid](../../display/distribution_grid/README.md) continuam consumidores do caminho legado nesta sprint: não foram migrados implicitamente. O estado da V03 está em `docs/sprints/sistema_temas/V03/`.
+A [implementação](theme_plotly.py) mantém as três operações legadas e acrescenta as três operações V03; a [fachada](__init__.py) exporta os seis nomes. O [notebook](exemplo_theme_plotly.py) demonstra o legado e a rota opt-in usando uma referência resolvida sem customização inline. [Correlation matrix](../../display/correlation_matrix/README.md) e [distribution grid](../../display/distribution_grid/README.md) continuam consumidores do caminho legado nesta sprint: não foram migrados implicitamente. O estado da V03 está em `docs/sprints/sistema_temas/V03/`.
 
 ## 15. Referências
 
-O guia oficial [Theming and templates](https://plotly.com/python/templates/) descreve o registro e o alcance por sessão, assim como a distinção entre template e propriedades da figura. Consulta em 2026-09-12. As decisões particulares do Hub são verificáveis em [theme_plotly.py](theme_plotly.py), base `c60f1e5`.
+O guia oficial [Theming and templates](https://plotly.com/python/templates/) descreve o registro e o alcance por sessão, assim como a distinção entre template e propriedades da figura. Consulta em 2026-09-12. As decisões particulares vigentes do Hub são verificáveis em [theme_plotly.py](theme_plotly.py). O estado desta sprint está em `docs/sprints/sistema_temas/V03/CHECKPOINT_V03.md`; a base `c60f1e5` permanece apenas como referência histórica da R03-B.
 
 Os testes R03-B conferem identidade do objeto, dados preservados, precedência, anotações e registro com restauração do estado. Não homologam o aspecto no Databricks nem verificam a origem declarada pelo usuário. Revisão própria de ChatGPT; auditoria independente não realizada.
 
