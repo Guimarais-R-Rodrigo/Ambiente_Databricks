@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "base_commit": "f748c144dbb6909c7437b53498b25dd4f4854ab7",
-  "template_version": "0.1.0-candidata",
+  "template_version": "1.0.0",
   "phase": "migration",
   "pending": {
     "hub_prompts/auditoria_skills": {
@@ -87,18 +87,6 @@
     "hub_scripts/schema_to_yaml": {
       "sprint": "R04",
       "lote": "B"
-    },
-    "hub_snippets/constants/colors": {
-      "sprint": "R03",
-      "lote": "A"
-    },
-    "hub_snippets/constants/emojis": {
-      "sprint": "R03",
-      "lote": "A"
-    },
-    "hub_snippets/constants/styles": {
-      "sprint": "R03",
-      "lote": "A"
     },
     "hub_snippets/display/correlation_matrix": {
       "sprint": "R03",
@@ -248,25 +236,9 @@
       "sprint": "R04",
       "lote": "A"
     },
-    "hub_snippets/testing/fixtures": {
-      "sprint": "R03",
-      "lote": "A"
-    },
-    "hub_snippets/visual/badge": {
-      "sprint": "R03",
-      "lote": "A"
-    },
-    "hub_snippets/visual/divider": {
-      "sprint": "R03",
-      "lote": "A"
-    },
     "hub_snippets/visual/index_generator": {
       "sprint": "R03",
       "lote": "B"
-    },
-    "hub_snippets/visual/kpi_card": {
-      "sprint": "R03",
-      "lote": "A"
     },
     "hub_snippets/visual/section_header": {
       "sprint": "R03",

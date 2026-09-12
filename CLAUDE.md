@@ -55,7 +55,8 @@ Escala planejada: pessoal → squad → missão.
 - Concierge integrado como entrada opcional de descoberta/composição: `ADR-0011`.
   Publicação e homologação conversacional são gates separados da integração Git.
 
-- README didático por pasta de objeto: proposta `ADR-0012`; contrato candidato e piloto R02 em revisão.
+- README didático por pasta de objeto: `ADR-0012`, ratificado em 2026-09-12;
+  contrato 1.0.0 estabilizado após aceite do piloto. R03-A é o lote atual.
   Estado e retomada: `docs/sprints/readmes_objetos/README.md`.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.

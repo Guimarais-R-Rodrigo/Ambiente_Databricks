@@ -5,6 +5,35 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — Aceite, versão 1.0.0 e lote R03-A (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) Sete READMEs: colors, emojis, styles, fixtures, badge, divider e
+  kpi_card; relatório, matriz, achados, rubrica e testes suplementares da R03-A.
+- (ChatGPT) Registro do aceite de Rodrigo e merge autorizado do PR nº 7
+  (`5493f7d`); ratificação datada do ADR-0012, sem apagar o relato original.
+
+### Atualizado
+
+- (ChatGPT) Contrato 1.0.0 estabilizado sem mudar as quinze seções; nove READMEs
+  anteriores mudam somente marcador de versão; checklist e regra editorial coerentes.
+- (ChatGPT) Sete notebooks: backlinks e prosa corrigida, preservando execução e
+  transcrições históricas. Coleção, Manual e índices oferecem rotas para os guias.
+- (ChatGPT) Controle remove somente sete dispensas; cobertura estrutural 13/74,
+  três exemplares e 61 pendências; os novos textos ainda aguardam aceite próprio.
+- (ChatGPT) Cópia do Manual sincronizada, simulado pelo renderer e contagens da
+  raiz reconciliadas com execução; nenhuma recertificação de publicação antiga.
+
+### Notas
+
+- (ChatGPT) Helpers, cores/CSS, APIs, blocos coláveis, Concierge e gates existentes
+  preservados. Limitações funcionais/visuais caracterizadas, não corrigidas por efeito colateral.
+- (ChatGPT) Autorrevisão A0_light; execução portátil e execução Spark registradas
+  separadamente, sem presumir auditoria independente ou homologação Databricks.
+- (ChatGPT) Branch R03-A separada da main aprovada. Parada antes da R03-B;
+  nenhum novo merge automático ou publicação no workspace.
+
 ## 2026-09-12 — R02-I: composição candidata READMEs + Concierge (ChatGPT)
 
 ### Adicionado

@@ -853,3 +853,10 @@ históricas deste arquivo preservam a evidência de sua época.
 Continuidade desta iniciativa: [checkpoint R02-I](docs/sprints/readmes_objetos/CHECKPOINT_INTEGRACAO_R02.md),
 composição candidata dos seis pilotos e do Concierge. O aceite editorial continua
 separado da CI; não antecipar R03, congelamento 1.0, merge ou publicação.
+
+## Continuidade READMEs — 2026-09-12, R03-A
+
+Integração R02-I aprovada por Rodrigo e realizada pelo PR nº 7 (`5493f7d`).
+Contrato 1.0.0 estabilizado; sete novos guias da R03-A são entregues em branch
+separada para revisão. Registro, matriz, testes e próxima parada no
+[fechamento da R03-A](docs/sprints/readmes_objetos/RELATORIO_R03A.md). R03-B não iniciada; sem publicação Databricks.

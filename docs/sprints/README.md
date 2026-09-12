@@ -35,3 +35,10 @@ checkpoints desta iniciativa.
 O [checkpoint R02-I](readmes_objetos/CHECKPOINT_INTEGRACAO_R02.md) registra a
 composição candidata com o Concierge. O [piloto R02](readmes_objetos/CHECKPOINT_R02.md)
 e os relatos R00/R01 permanecem históricos; não houve início da R03.
+
+## Continuidade READMEs — 2026-09-12, R03-A
+
+Integração R02-I aprovada por Rodrigo e realizada pelo PR nº 7 (`5493f7d`).
+Contrato 1.0.0 estabilizado; sete novos guias da R03-A são entregues em branch
+separada para revisão. Registro, matriz, testes e próxima parada no
+[fechamento da R03-A](readmes_objetos/RELATORIO_R03A.md). R03-B não iniciada; sem publicação Databricks.

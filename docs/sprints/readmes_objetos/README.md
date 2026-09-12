@@ -6,18 +6,20 @@ A produção operacional começa somente depois do aceite do contrato e do pilot
 
 ## Estado e próxima ação
 
-R02 entregou seis pilotos e sua revisão editorial. A composição candidata
-**R02-I** reúne esse conteúdo e o Concierge da main em branch separada, sem
-merge nos PRs originais ou na main. Veja o [registro de integração](INTEGRACAO_R02.md),
-a [matriz de alterações](MATRIZ_INTEGRACAO_R02.md) e o
-[checkpoint da composição](CHECKPOINT_INTEGRACAO_R02.md).
+Rodrigo aprovou o padrão e a integração em 2026-09-12. O PR nº 7 foi integrado
+na main pelo commit `5493f7d`; o [registro de aceite](ACEITE_V1.md) distingue
+esse ato da revisão independente ou homologação Databricks.
 
-O contrato permanece `0.1.0-candidata`; aceite editorial, auditoria independente,
-congelamento 1.0 e publicação não foram presumidos. R03 não iniciada.
-O [checkpoint R02](CHECKPOINT_R02.md), a [revisão](REVISAO_FECHAMENTO_R02.md)
-e o [diagnóstico anterior](DIAGNOSTICO_INTEGRACAO_R02.md) preservam o estado
-histórico das bases que examinaram. Os conflitos lá descritos foram tratados
-somente na candidata R02-I; os PRs nº 5 e nº 6 não foram reescritos.
+O contrato vigente é **1.0.0**. A R03-A acrescenta sete guias aos seis pilotos,
+sem modificar os algoritmos. Consulte [relatório e checkpoint](RELATORIO_R03A.md),
+[matriz de alterações](MATRIZ_ALTERACOES_R03A.md) e [achados](ACHADOS_R03A.md).
+Os sete textos novos aguardam seu próprio aceite; a execução autorizada não
+significa aprovação antecipada. A próxima leva é R03-B, ainda não iniciada.
+
+Os relatórios R01/R02/R02-I preservam os estados de proposta e de conflito que
+examinaram. A [composição R02-I](INTEGRACAO_R02.md) foi integrada pelo PR nº 7;
+os PRs nº 5 e nº 6 não devem ser integrados novamente como trabalhos distintos.
+A cobertura atual é calculada pelo validador e pelo controle de migração abaixo.
 
 ## Rotas por objetivo
 
@@ -49,4 +51,4 @@ Os exemplares ensinam os padrões e não contam como helpers operacionais.
 Os notebooks podem escrever tabelas sintéticas: os READMEs alertam antes de
 encaminhar à execução. R01 não os executa no Databricks e não modifica suas
 instruções executáveis. O [ADR-0012](../../decisions/ADR-0012-readmes-de-objeto.md)
-continua proposto até decisão humana, sem reescrever ADRs já aceitos.
+foi ratificado pelo usuário em 2026-09-12, com nota anexada sem apagar o relato inicial.

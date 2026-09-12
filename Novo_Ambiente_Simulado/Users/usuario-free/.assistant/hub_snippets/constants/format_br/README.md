@@ -1,6 +1,6 @@
 # `format_br` — apresentar números sem mudar o que eles significam
 
-<!-- readme-objeto: 0.1.0-candidata -->
+<!-- readme-objeto: 1.0.0 -->
 
 Este módulo transforma números em textos no padrão brasileiro. Ele ajuda a apresentar valores, taxas e diferenças com a unidade correta, sem alterar a configuração regional do sistema.
 

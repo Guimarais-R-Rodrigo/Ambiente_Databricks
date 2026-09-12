@@ -1,6 +1,6 @@
 # `isolation_forest` — encontrar observações incomuns para investigar
 
-<!-- readme-objeto: 0.1.0-candidata -->
+<!-- readme-objeto: 1.0.0 -->
 
 Isolation Forest ajuda a ordenar observações pelo quanto são fáceis de separar das demais. No Hub, cada observação recebe uma pontuação (score), que permite ordená-las (ranking); um corte gera a marca de anomalia. Um perfil descritivo complementa essa informação para apoiar investigação, sem transformar “incomum” em “fraude”.
 

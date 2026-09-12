@@ -6,17 +6,20 @@
 # MAGIC
 # MAGIC **O que este objeto oferece.** Nove constantes de CSS, prontas para interpolar em `displayHTML`.
 
+# MAGIC
+# MAGIC Antes de executar, consulte o [guia do objeto](README.md): conceito, requisitos, efeitos e limites.
+
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
-# MAGIC | Bibliotecas | nenhuma além do runtime |
+# MAGIC | Compute | exemplo usa sessão Spark para localizar usuário; renderização conforme notebook |
+# MAGIC | Bibliotecas | biblioteca padrão Python e módulos locais do Hub; confira a preparação da sessão |
 # MAGIC | Dados | nenhum — este objeto não recebe dados |
 # MAGIC | Escrita | nenhuma; tudo em memória |
-# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
+# MAGIC | Diferença Free × trabalho | compatibilidade do destino não revalidada nesta rodada |
 
 # COMMAND ----------
 
@@ -70,33 +73,29 @@ print(" ", STYLE_SECTION_HEADER)
 # MAGIC assim elas compõem com qualquer HTML, e nada no módulo precisa saber o que
 # MAGIC está sendo estilizado.
 # MAGIC
-# MAGIC ## Dívida registrada: os hexadecimais estão copiados
+# MAGIC ## O que está centralizado e o que ainda está separado
 # MAGIC
-# MAGIC Repare no `#005CA9` da borda esquerda e no `#F8F9FA` do fundo. Os dois
-# MAGIC existem em `constants.colors` como `AZUL_CAIXA` e `BG_SECTION` — e este
-# MAGIC módulo **não importa nenhum dos dois**. Ele não tem uma linha de `import`.
+# MAGIC A implementação atual importa `constants.colors` e usa suas constantes
+# MAGIC em parte do CSS. Essas strings são montadas ao importar o módulo: não
+# MAGIC constituem uma ligação dinâmica que refaz todos os estilos da sessão.
 # MAGIC
-# MAGIC Consequência prática: uma mudança de identidade visual feita em
-# MAGIC `colors.py` não alcança os estilos. Os cabeçalhos continuariam azuis
-# MAGIC enquanto os gráficos mudariam de cor, e o sintoma apareceria como
-# MAGIC "inconsistência do relatório", longe da causa.
+# MAGIC Os componentes `visual/badge`, `visual/divider` e `visual/kpi_card`
+# MAGIC mantêm CSS próprio e não consomem `constants.styles` nesta base.
+# MAGIC Alterar `STYLE_KPI_CARD` não altera automaticamente esses componentes.
+# MAGIC O uso mostrado aqui é a composição explícita da constante pelo notebook.
 # MAGIC
-# MAGIC **E a dívida maior é outra, que só apareceu quando alguém foi conferir:
-# MAGIC este módulo não é importado por ninguém.** As oito constantes de estilo
-# MAGIC são cópia byte a byte de CSS que vive inline em `visual/badge`,
-# MAGIC `visual/divider`, `visual/kpi_card`, `visual/section_header` e
-# MAGIC `visual/index_generator`. O arquivo é um espelho morto: editar
-# MAGIC `STYLE_SECTION_HEADER` não muda cabeçalho nenhum.
+# MAGIC As cores de estado e alguns cinzas continuam declarados localmente.
+# MAGIC Não presumir igualdade byte a byte entre strings de CSS: espaços e ordem
+# MAGIC de propriedades também fazem parte do retorno. Esta sprint não unifica
+# MAGIC CSS nem altera a identidade visual; o README descreve o alcance real.
 # MAGIC
-# MAGIC São **doze** os módulos da biblioteca que repetem cor de
-# MAGIC `constants.colors`, e onze deles são cópia idêntica — unificar é higiene,
-# MAGIC sem efeito visual. O inventário completo, com a distinção entre cópia e
-# MAGIC divergência, está em `PLANO_HUB.md` §12.2.
+# MAGIC O contraste de `STYLE_BADGE_WARN` precisa de revisão antes de uso como
+# MAGIC texto pequeno: confira a medição e a referência no [README](README.md).
 
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
-# MAGIC - **Em e-mail.** Cliente de e-mail ignora boa parte de CSS moderno; o que renderiza aqui não renderiza lá.
+# MAGIC - **Sem conferir o destino.** A exibição no notebook não comprova suporte de outro renderizador; teste o documento final antes de distribuí-lo.
 # MAGIC - **Como folha de estilo de aplicação.** São strings para interpolar em HTML de notebook, não um sistema de design.
-# MAGIC - **Editando a string na chamada.** Se precisa de variação, acrescente uma constante ao módulo — a próxima pessoa vai procurar lá.
+# MAGIC - **Editando a string na chamada.** Para experimento isolado, use uma cópia local identificada. Mudança compartilhada exige revisão própria, não edição silenciosa do padrão.

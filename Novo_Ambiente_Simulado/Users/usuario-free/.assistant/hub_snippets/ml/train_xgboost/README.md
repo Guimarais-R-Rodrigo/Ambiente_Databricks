@@ -1,6 +1,6 @@
 # `train_xgboost` — aprender a prever com árvores, sem confundir treino com validação
 
-<!-- readme-objeto: 0.1.0-candidata -->
+<!-- readme-objeto: 1.0.0 -->
 
 XGBoost combina árvores de decisão para aprender relações entre características e uma resposta conhecida. Este recurso do Hub organiza um primeiro treinamento, sua avaliação em validação e, quando solicitado, o registro de parâmetros e métricas no MLflow, sistema de acompanhamento de experimentos.
 

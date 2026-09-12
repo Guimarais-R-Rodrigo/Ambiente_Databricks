@@ -1,6 +1,6 @@
 # `quick_profile` — conhecer uma tabela sem confundir amostra com população
 
-<!-- readme-objeto: 0.1.0-candidata -->
+<!-- readme-objeto: 1.0.0 -->
 
 Um perfil de dados é um primeiro retrato de uma tabela: suas colunas, quantidade de linhas, ausências e alguns valores característicos. Este script ajuda a começar essa investigação. Parte do retrato usa a tabela inteira; outra parte usa uma amostra. Saber qual parte você está lendo é tão importante quanto obter o resultado.
 

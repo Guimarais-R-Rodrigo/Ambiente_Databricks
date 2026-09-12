@@ -1242,6 +1242,8 @@ documental e tem evidência delimitada; não representa publicação no workspac
 
 #### `hub_snippets.constants.colors`
 
+**Guia local do objeto (R03-A):** na pasta `hub_snippets/constants/colors/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_colors.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
+
 Reúne cores e paletas usadas na apresentação. São valores de configuração visual, não variáveis aprendidas pelo modelo nem regras de aprovação. Consumir uma constante não desenha uma figura sozinho.
 
 Constantes exportadas: `AZUL_CAIXA`, `LARANJA`, `AZUL_CLARO`, `CINZA_ESCURO`, `VERDE`, `VERMELHO`, `ROXO`, `TEAL`, `LARANJA_ESCURO`, `CINZA_MEDIO`, `PALETA_CATEGORICA`, `PALETA_SEQUENCIAL`, `PALETA_DIVERGENTE`, `COR_POSITIVO`, `COR_NEGATIVO`, `COR_NEUTRO`, `COR_ALERTA`, `BG_SECTION`, `BG_HEADER`, `TEXTO_PRINCIPAL`, `TEXTO_SECUNDARIO`, `BORDA_CAIXA`.
@@ -1249,6 +1251,8 @@ Constantes exportadas: `AZUL_CAIXA`, `LARANJA`, `AZUL_CLARO`, `CINZA_ESCURO`, `V
 [Implementação](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/constants/colors/colors.py) · [API exportada](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/constants/colors/__init__.py) · [Notebook de exemplo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/constants/colors/exemplo_colors.py)
 
 #### `hub_snippets.constants.emojis`
+
+**Guia local do objeto (R03-A):** na pasta `hub_snippets/constants/emojis/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_emojis.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
 
 Relaciona símbolos e seções da apresentação. Um emoji de alerta é um recurso de comunicação; não executa um teste e não comprova gravidade estatística.
 
@@ -1279,6 +1283,8 @@ fmt_n(n: Number, sufixo: bool=True) -> str
 [Implementação](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/constants/format_br/format_br.py) · [API exportada](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/constants/format_br/__init__.py) · [Notebook de exemplo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/constants/format_br/exemplo_format_br.py)
 
 #### `hub_snippets.constants.styles`
+
+**Guia local do objeto (R03-A):** na pasta `hub_snippets/constants/styles/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_styles.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
 
 Reúne estilos visuais reutilizáveis e depende das constantes de cores do Hub. CSS controla aparência; não calcula indicadores nem altera permissões do notebook.
 
@@ -1939,6 +1945,8 @@ classify_iv(iv: float) -> str
 
 #### `hub_snippets.testing.fixtures`
 
+**Guia local do objeto (R03-A):** na pasta `hub_snippets/testing/fixtures/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_fixtures.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
+
 Cria Spark DataFrames sintéticos para exercícios tabulares, séries, fatos/features e safras. Alguns testes exigem uma sessão Spark ativa. As características são controladas pelo gerador; não representam estatísticas observadas de clientes reais.
 
 <details>
@@ -1959,6 +1967,8 @@ safras(n_contratos: int=400, *, seed: int=42, safras_yyyymm: Sequence[str]=('202
 
 #### `hub_snippets.visual.badge`
 
+**Guia local do objeto (R03-A):** na pasta `hub_snippets/visual/badge/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_badge.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
+
 Devolve pequenas marcações HTML de status, score ou texto. Cor e rótulo precisam ser alimentados por uma interpretação justificada; a função visual não certifica o dado.
 
 <details>
@@ -1975,6 +1985,8 @@ badge_inline(texto: str) -> str
 [Implementação](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/badge/badge.py) · [API exportada](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/badge/__init__.py) · [Notebook de exemplo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/badge/exemplo_badge.py)
 
 #### `hub_snippets.visual.divider`
+
+**Guia local do objeto (R03-A):** na pasta `hub_snippets/visual/divider/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_divider.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
 
 Devolve separadores HTML. Controla apresentação, sem cálculo ou escrita de dados. O consumidor precisa renderizar a string na superfície adequada.
 
@@ -2008,6 +2020,8 @@ gerar_indice_eda(etapas_ativas: Optional[Iterable[int]]=None, markdown: bool=Fal
 [Implementação](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/index_generator/index_generator.py) · [API exportada](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/index_generator/__init__.py) · [Notebook de exemplo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/index_generator/exemplo_index_generator.py)
 
 #### `hub_snippets.visual.kpi_card`
+
+**Guia local do objeto (R03-A):** na pasta `hub_snippets/visual/kpi_card/`, abra `README.md` para entender conceito, escolhas, entradas e limites antes de `exemplo_kpi_card.py`. O guia é parte do produto; as referências históricas de implementação abaixo permanecem datadas.
 
 Devolve cards HTML ou texto Markdown de indicadores. Recebe valores já apurados; não consulta tabela nem calcula KPI de negócio. Um card com número correto e denominador omitido ainda pode induzir erro.
 

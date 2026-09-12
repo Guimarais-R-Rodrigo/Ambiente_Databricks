@@ -428,3 +428,13 @@ O piloto R02 oferece guias de [XGBoost](ml/train_xgboost/README.md),
 [junção point-in-time](spark/pit_join/README.md) e
 [formatação brasileira](constants/format_br/README.md). São entradas conceituais
 para os mesmos objetos, não novos helpers ou homologações de runtime.
+
+A R03-A acrescenta guias de [cores](constants/colors/README.md),
+[emojis e roteiro de EDA](constants/emojis/README.md),
+[estilos CSS](constants/styles/README.md),
+[dados sintéticos](testing/fixtures/README.md),
+[badges de status](visual/badge/README.md),
+[divisórias](visual/divider/README.md) e
+[cartões de indicadores](visual/kpi_card/README.md). Os guias distinguem
+formatação e comunicação de cálculo ou decisão de negócio. Não implicam
+unificação automática de estilos nem homologação visual no destino.

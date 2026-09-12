@@ -1,9 +1,11 @@
 # Template — README de objeto
 
-<!-- readme-objeto: 0.1.0-candidata -->
+<!-- readme-objeto: 1.0.0 -->
 
-Versão candidata da R01. O piloto R02 e o aceite humano precedem o congelamento
-em 1.0. Este arquivo é o dono das seções: regras, skill e validador o referenciam,
+Versão **1.0.0**, estabilizada em 2026-09-12 após o piloto R02 e o aceite
+editorial de Rodrigo. O PR nº 7 foi integrado antes da R03-A. O aceite do
+padrão não aprova antecipadamente novos textos nem homologa runtimes.
+Este arquivo é o dono das seções: regras, skill e validador o referenciam,
 sem manter outro esqueleto concorrente. É a escala **Objeto** do
 [template geral](template.md), não um sétimo tipo do Hub.
 
