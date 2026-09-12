@@ -36,7 +36,7 @@ def executar(cmd, cwd, out, nome, root, base):
         code, text = 127, 'BLOQUEADO: comando indisponível: ' + type(exc).__name__
     text = text.replace(str(root), '<CANDIDATA>').replace(str(base), '<BASE>')
     (out / (nome + '.log')).write_text(text, encoding='utf-8')
-    counts = [int(x) for x in re.findall(r'Ran (\d+) tests?\b', text)]
+    counts = [int(x) for x in re.findall(r'^Ran (\d+) tests?\b', text, re.MULTILINE)]
     # O gate imprime novamente o resumo; contar somente a linha unittest original.
     skips = [int(x) for x in re.findall(r'^OK \(skipped=(\d+)\)\s*$', text, re.MULTILINE)]
     result = {'nome': nome, 'codigo': code, 'estado': 'PASS' if code == 0 else ('BLOQUEADO' if code in (124,127) else 'FAIL'),

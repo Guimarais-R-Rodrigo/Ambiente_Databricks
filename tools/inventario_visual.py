@@ -26,6 +26,8 @@ TEXTOS = {'.py', '.md', '.css', '.html', '.js', '.mjs', '.json', '.yaml', '.yml'
           '.toml', '.ipynb', '.txt', '.sql', '.svg'}
 IMAGENS = {'.png', '.svg', '.jpg', '.jpeg', '.webp', '.gif'}
 PADROES = {
+    'biblioteca_visual': re.compile(r'\b(?:plotly|matplotlib|seaborn|altair|bokeh|ipywidgets|streamlit)\b', re.I),
+    'helper_visual': re.compile(r'\b(?:aplicar_tema|registrar_template_plotly|theme_plotly|section_header_html|kpi_card_html)\b'),
     'cor_hex': re.compile(r'#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{1}|[0-9a-fA-F]{3}|[0-9a-fA-F]{5})?\b'),
     'cor_funcional': re.compile(r'\b(?:rgba?|hsla?)\([^\n)]{1,120}\)', re.I),
     'aparencia': re.compile(r'\b(?:font(?:[-_]\w+)?|color(?:way|scale)?|colour|palette|paleta|colorscale|background|padding|margin|border(?:[-_]\w+)?|height|width|template|theme|tema|displayHTML|set_table_styles|style\.use|rcParams)\b', re.I),

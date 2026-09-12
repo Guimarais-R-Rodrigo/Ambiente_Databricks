@@ -72,3 +72,15 @@ A primeira versão do agregador contou duas vezes sete skips, porque o gate impr
 novamente o resumo unittest. A rodada inicial registrou 14; o número real era 7.
 A correção usa somente a linha original de unittest e acrescenta teste para a
 repetição. Evidência inicial é histórica, não uma segunda execução dos skips.
+
+## A11 — Consumidor sem cor literal não pode sumir da matriz
+
+A revisão própria encontrou `display/distribution_grid` nos imports/AST, mas sem
+ocorrência na primeira matriz de padrões: `aplicar_tema` contém underscore e não
+casa com a palavra isolada `tema`. Foram adicionados padrões de bibliotecas e
+helpers, com dois mutantes que criam figuras sem cor literal. A matriz foi
+regenerada; revisão semântica independente continua necessária.
+
+A agregação de casos também passou a aceitar somente linhas unittest `Ran ...`
+no início da linha. Uma mensagem JSON que cita exemplo de execução não deve
+inflar o total observado; há teste específico para esse cenário.

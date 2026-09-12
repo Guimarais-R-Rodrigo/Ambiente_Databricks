@@ -190,5 +190,20 @@ class InventarioVisualTests(unittest.TestCase):
             v.gravar(self.root, self.root / '.artifacts/v00.json', {})
 
 
+    def test_consumidor_sem_literal_de_cor_e_inventariado(self):
+        self.module.write_text('import plotly.graph_objects as go\ndef desenhar():\n    return go.Histogram(x=[1, 2])\n', encoding='utf-8')
+        self.commit()
+        doc=v.inventariar(self.root)
+        self.assertTrue(any(o['tipo']=='biblioteca_visual' for o in doc['ocorrencias']))
+        row=next(r for r in doc['arquivos'] if r['path']==self.module.relative_to(self.root).as_posix())
+        self.assertGreater(row['ocorrencias'],0)
+
+    def test_helper_com_underscore_nao_some_da_matriz(self):
+        self.module.write_text('from hub_snippets.visual.theme_plotly import aplicar_tema\ndef desenhar(fig):\n    return aplicar_tema(fig)\n', encoding='utf-8')
+        self.commit()
+        doc=v.inventariar(self.root)
+        self.assertTrue(any(o['tipo']=='helper_visual' for o in doc['ocorrencias']))
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

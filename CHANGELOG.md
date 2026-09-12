@@ -9,6 +9,7 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
 ### Corrigido nesta candidata
 
+- (Codex) Descoberta de consumidores sem cor literal e agregação que distingue casos executados de texto citado, com testes adversariais.
 - (Codex) Agregação dos skips, testada contra resumo duplicado; contagens locais do README reconciliadas com execução.
 - (Codex) Falha global editorial anterior registrada com causa concreta; famílias validadas com alcance separado.
 

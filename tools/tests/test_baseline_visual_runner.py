@@ -48,5 +48,9 @@ class RunnerTests(unittest.TestCase):
         self.assertNotIn(str(self.root),text)
         self.assertIn('<CANDIDATA>',text)
 
+    def test_texto_citado_nao_vira_suite_executada(self):
+        d,_=self.run_text('{"exemplo": "Ran 99 tests"}\nRan 2 tests in 0.1s\nOK')
+        self.assertEqual(d['testes_unittest_reportados'],2)
+
 if __name__=='__main__':
     unittest.main(verbosity=2)
