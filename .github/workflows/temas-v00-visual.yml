@@ -1,0 +1,47 @@
+name: V00 - medicao visual da base
+on:
+  push:
+    branches: [codex/temas-v00-baseline-20260912]
+    paths: [.github/workflows/temas-v00-visual.yml]
+permissions:
+  contents: read
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 8744157fe9c3e0603f689fb2bcad52445e96cb41
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+      - name: Instalar gerenciador e dependencias fixadas do compositor
+        run: |
+          npm install --global pnpm@10.15.1
+          pnpm --dir tools/readme_visuals install --frozen-lockfile
+      - name: Medir o validador atual sem regenerar imagens
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/visual-v00"
+          git rev-parse HEAD > "$RUNNER_TEMP/visual-v00/base.commit"
+          git status --porcelain > "$RUNNER_TEMP/visual-v00/status-inicial.txt"
+          node --version > "$RUNNER_TEMP/visual-v00/node.txt"
+          pnpm --version > "$RUNNER_TEMP/visual-v00/pnpm.txt"
+          set +e
+          node tools/readme_visuals/validate_production.mjs > "$RUNNER_TEMP/visual-v00/visual.log" 2>&1
+          rc=$?
+          printf '%s\n' "$rc" > "$RUNNER_TEMP/visual-v00/exit-code.txt"
+          git diff --stat > "$RUNNER_TEMP/visual-v00/efeitos-do-validador.txt"
+          cp ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/validation.json "$RUNNER_TEMP/visual-v00/validation.json"
+          exit "$rc"
+      - name: Guardar evidencias mesmo quando a baseline reprovar
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: temas-v00-visual-baseline
+          path: ${{ runner.temp }}/visual-v00/
+          if-no-files-found: error
+          retention-days: 14
