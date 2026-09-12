@@ -1,0 +1,39 @@
+name: Diagnostico conciliacao R04-A v2
+on:
+  push:
+    branches: [codex/readmes-r04a-reconcile]
+    paths: [.github/workflows/readmes-r04a-reconcile-scan2.yml]
+permissions:
+  contents: read
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Reproduzir merge-tree sem alterar refs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = 91aefac16b3b764c24a832df4fb42c8a23436307
+          git cat-file -e 5f61bd72d08e6d043584e9eb0521adb3a74101bb^{commit}
+          set +e
+          git -c merge.conflictStyle=diff3 merge-tree --write-tree --name-only \
+            6085eabd4ca715ea2566336aaeb91e2778d76c77 \
+            5f61bd72d08e6d043584e9eb0521adb3a74101bb \
+            > "$RUNNER_TEMP/merge-tree.txt" 2>&1
+          code=$?
+          set -e
+          echo "returncode=$code" | tee "$RUNNER_TEMP/resumo.txt"
+          cat "$RUNNER_TEMP/merge-tree.txt" | tee -a "$RUNNER_TEMP/resumo.txt"
+          if [ "$code" -ne 0 ] && [ "$code" -ne 1 ]; then exit "$code"; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r04a-reconcile-diagnostico-v2
+          path: ${{ runner.temp }}/resumo.txt
+          if-no-files-found: warn
+          retention-days: 1
