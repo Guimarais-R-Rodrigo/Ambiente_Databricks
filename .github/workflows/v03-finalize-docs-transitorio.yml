@@ -1,0 +1,42 @@
+name: Preparar documentação V03
+on:
+  push:
+    branches:
+      - codex/temas-v03
+permissions:
+  contents: write
+jobs:
+  preparar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Aplicar patch documental assertivo
+        run: python -B tools/_v03_finalize_docs.py
+      - name: Sincronizar Manual raiz e gerar espelho
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
+          python -B tools/render_simulado.py
+          cmp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
+          cmp ambiente_fonte/.assistant/MANUAL_TECNICO.md Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md
+      - name: Commitar resultado documental e derivado
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Codex"
+          git config user.email "codex@users.noreply.github.com"
+          git add CHANGELOG.md CLAUDE.md MANUAL_TECNICO.md ambiente_fonte Novo_Ambiente_Simulado docs/sprints tools/ci_local.py
+          git diff --cached --quiet && exit 0
+          git commit -m "docs(temas): completar documentação operacional V03 (Codex)"
+          git push origin HEAD:codex/temas-v03
