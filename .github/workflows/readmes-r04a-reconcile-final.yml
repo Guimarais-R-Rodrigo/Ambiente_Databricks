@@ -1,0 +1,289 @@
+name: Conciliacao final R04-A com V02
+on:
+  push:
+    branches: [codex/readmes-r04a-reconcile]
+    paths: [.github/workflows/readmes-r04a-reconcile-final.yml]
+permissions:
+  contents: read
+jobs:
+  conferir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      SPARK_LOCAL_IP: '127.0.0.1'
+      ANCESTOR: 1be947b0a62c3b0b85fa3cd5692f474b9066d85f
+      MAIN_COMMIT: 6085eabd4ca715ea2566336aaeb91e2778d76c77
+      MAIN_TREE: b60d28d93a6095a4e37553f6011f3d2eb92a2d70
+      R04A_COMMIT: 5f61bd72d08e6d043584e9eb0521adb3a74101bb
+      EXPECTED_PARENT: 1e30351cb0d06c8eefde192be74f966913b264b3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Compor as duas linhas e resolver somente os agregadores conflitantes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$EXPECTED_PARENT"
+          for sha in "$ANCESTOR" "$MAIN_COMMIT" "$R04A_COMMIT"; do git cat-file -e "$sha^{commit}"; done
+          set +e
+          git -c merge.conflictStyle=merge merge-tree --write-tree --name-only "$MAIN_COMMIT" "$R04A_COMMIT" > "$RUNNER_TEMP/merge-tree.txt" 2>&1
+          code=$?
+          set -e
+          test "$code" = 1
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          lines=Path(os.environ['RUNNER_TEMP'],'merge-tree.txt').read_text().splitlines()
+          first=[]
+          for line in lines:
+              if not line.strip(): break
+              first.append(line)
+          assert len(first)==3, first
+          assert set(first[1:])=={'CHANGELOG.md','README.md'}, first
+          Path(os.environ['RUNNER_TEMP'],'merge-tree-sha.txt').write_text(first[0]+'\n')
+          print('Conflitos previstos:', first[1:])
+          print('Arvore automatica:', first[0])
+          PY
+          MERGE_TREE="$(cat "$RUNNER_TEMP/merge-tree-sha.txt")"
+          git read-tree --reset -u "$MERGE_TREE"
+
+          python - <<'PY'
+          import os, subprocess
+          from pathlib import Path
+          def show(ref,path):
+              return subprocess.check_output(['git','show',f'{ref}:{path}']).decode('utf-8')
+          anc=os.environ['ANCESTOR']; main=os.environ['MAIN_COMMIT']; r04=os.environ['R04A_COMMIT']
+          # CHANGELOG: preserva literalmente os blocos aditivos das duas linhas sobre a historia comum.
+          base=show(anc,'CHANGELOG.md')
+          header,history=base.split('## ',1); history='## '+history
+          m=show(main,'CHANGELOG.md'); r=show(r04,'CHANGELOG.md')
+          assert m.startswith(header) and m.endswith(history)
+          assert r.startswith(header) and r.endswith(history)
+          madd=m[len(header):-len(history)]
+          radd=r[len(header):-len(history)]
+          final=header+radd+madd+history
+          old='- (ChatGPT) R04-A parte da main `1be947b`, já conciliada com V01. Autorrevisão\n  A0_light; auditoria independente e homologação Databricks permanecem separadas.'
+          new='- (ChatGPT) A R04-A foi produzida e validada inicialmente sobre `1be947b`; antes do PR final,\n  foi reconciliada com a main `6085eab`, que já contém a V02 aceita. A composição final\n  preserva a V02 e repete os gates; auditoria independente e homologação Databricks permanecem separadas.'
+          assert old in final
+          final=final.replace(old,new)
+          Path('CHANGELOG.md').write_text(final,encoding='utf-8')
+
+          # README: o único conflito é o bloco de contagens; usa a versão main como base e recalcula adiante.
+          text=Path('README.md').read_text(encoding='utf-8')
+          assert text.count('<<<<<<<')==1 and text.count('=======')==1 and text.count('>>>>>>>')==1
+          pre,rest=text.split('<<<<<<<',1)
+          ours,rest=rest.split('=======',1)
+          theirs,post=rest.split('>>>>>>>',1)
+          # descarta a linha de metadado apos os marcadores e conserva o lado da main temporariamente.
+          ours='\n'.join(ours.splitlines()[1:])
+          post='\n'.join(post.splitlines()[1:])
+          assert 'readmes de objeto' in ours and 'readmes de objeto' in theirs
+          assert '## ' not in ours and '### ' not in ours and '## ' not in theirs and '### ' not in theirs
+          Path('README.md').write_text(pre+ours+'\n'+post,encoding='utf-8')
+
+          # Estado da iniciativa: reconhece a V02 integrada e a nova contagem de objetos.
+          p=Path('docs/sprints/readmes_objetos/README.md')
+          s=p.read_text(encoding='utf-8')
+          old='O contrato vigente é **1.0.0**. A R04-A é a leva atual e documenta seis snippets\nSpark: `date_features`, `join_diagnostics`, `null_summary`, `psi_calculator`,\n`safe_display` e `smart_sample`. A cobertura estrutural desta candidata é\n**25/74 operacionais e 3/3 exemplares, com 49 pendências**. Isso descreve a branch\nde revisão; não significa publicação no workspace nem aceite antecipado dos seis textos.'
+          new='O contrato vigente é **1.0.0**. Durante esta sprint, a V02 do sistema de temas foi\naceita e integrada à `main` no commit `6085eab`, adicionando o objeto documentado\n`visual/tema`. A R04-A documenta seis snippets Spark: `date_features`,\n`join_diagnostics`, `null_summary`, `psi_calculator`, `safe_display` e\n`smart_sample`. A cobertura estrutural da composição final é **26/75 operacionais\ne 3/3 exemplares, com 49 pendências**. Isso descreve a candidata Git; não significa\npublicação no workspace nem aceite antecipado dos seis textos.'
+          assert old in s
+          p.write_text(s.replace(old,new),encoding='utf-8')
+
+          p=Path('docs/sprints/readmes_objetos/RELATORIO_R04A.md')
+          s=p.read_text(encoding='utf-8')
+          if '## Conciliação final com a V02' not in s:
+              s += '''\n\n## Conciliação final com a V02\n\nA autoria e a primeira validação completa da R04-A partiram da `main`\n`1be947b`. Antes da abertura do PR final, a `main` avançou para `6085eab` com a\nV02 do sistema de temas aceita e integrada. A composição final preserva as duas\nlinhas de trabalho; o `merge-tree` apontou conflito textual apenas em\n`CHANGELOG.md` e no bloco de contagens do `README.md`.\n\nOs resultados da validação remota da árvore conciliada são registrados no PR\nfinal e nos artefatos do workflow correspondente. Essa reconciliação não amplia\no alcance da sprint: não publica no Databricks, não muda APIs dos seis helpers e\nnão equivale a auditoria independente.\n'''
+              p.write_text(s,encoding='utf-8')
+          PY
+
+          # Regera espelhos/copia de leitura a partir da fonte combinada.
+          cp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
+          python tools/render_simulado.py --write
+          git add -A
+
+          # Obtém contagens reais sem exigir ainda que o bloco do README esteja sincronizado.
+          python tools/validate_assistant.py > "$RUNNER_TEMP/validator-plain.txt"
+          cat "$RUNNER_TEMP/validator-plain.txt"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          output=Path(os.environ['RUNNER_TEMP'],'validator-plain.txt').read_text(encoding='utf-8')
+          keys=['skills','prompts','helpers citados','markdown / links','notebooks / links','readmes de objeto',
+                'pastas de objeto','forma da pasta','contrato de dados','contrato de entrada','saída colada',
+                'idioma da docstring','normas do molde','notebook exercita','python (AST)','instrucoes',
+                'repo (identidade)','repo (links)']
+          actual={}
+          for line in output.splitlines():
+              for key in keys:
+                  if line.startswith(key): actual[key]=line
+          assert set(actual)==set(keys),(set(keys)-set(actual),set(actual)-set(keys))
+          p=Path('README.md'); lines=p.read_text(encoding='utf-8').splitlines()
+          found=set()
+          for i,line in enumerate(lines):
+              for key,value in actual.items():
+                  if line.startswith(key): lines[i]=value; found.add(key); break
+          assert found==set(keys),(set(keys)-found)
+          p.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+          git add README.md docs/sprints/readmes_objetos/README.md docs/sprints/readmes_objetos/RELATORIO_R04A.md CHANGELOG.md MANUAL_TECNICO.md Novo_Ambiente_Simulado
+          git diff --cached --check "$MAIN_COMMIT"
+          git write-tree | tee "$RUNNER_TEMP/final-tree.txt"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: |
+            tools/requirements-dev.txt
+            tools/requirements-temas-dev.txt
+
+      - name: Gate geral e regressões V00 V01 V02
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt
+          python tools/ci_local.py --verbose 2>&1 | tee "$RUNNER_TEMP/final-gate.txt"
+          for suite in test_inventario_visual test_visual_legado_v00 test_baseline_visual_runner; do
+            python "tools/tests/$suite.py" 2>&1 | tee "$RUNNER_TEMP/$suite.txt"
+          done
+          for suite in test_temas_v01 test_temas_v01_integracao; do
+            python "tools/tests/$suite.py" 2>&1 | tee "$RUNNER_TEMP/$suite.txt"
+          done
+          python tools/tests/test_temas_v02.py 2>&1 | tee "$RUNNER_TEMP/test_temas_v02.txt"
+          test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/final-tree.txt")"
+          git diff --exit-code
+
+      - name: Preservação cruzada V02 e R04-A
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY' | tee "$RUNNER_TEMP/preservacao-final.json"
+          import ast, json, os, re, subprocess
+          from pathlib import Path
+          root=Path.cwd(); anc=os.environ['ANCESTOR']; main=os.environ['MAIN_COMMIT']; r04=os.environ['R04A_COMMIT']
+          def git(*a): return subprocess.check_output(['git',*a],cwd=root)
+          def show(ref,path): return git('show',f'{ref}:{path}')
+          def names(a,b): return set(git('diff','--name-only',a,b).decode().splitlines())
+          main_changes=names(anc,main); r04_changes=names(anc,r04); overlap=main_changes & r04_changes
+          expected_overlap={'CHANGELOG.md','CLAUDE.md','MANUAL_TECNICO.md','README.md',
+            'ambiente_fonte/.assistant/MANUAL_TECNICO.md','ambiente_fonte/.assistant/hub_snippets/README.md',
+            'Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md',
+            'Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/README.md','docs/sprints/README.md'}
+          assert overlap==expected_overlap,(overlap,expected_overlap)
+          # Tudo exclusivo da V02 deve permanecer byte a byte igual à main atual.
+          for p in sorted(main_changes-overlap):
+              assert (root/p).read_bytes()==show(main,p),p
+          # Tudo exclusivo da R04-A deve permanecer igual à candidata testada, salvo derivados do simulado regenerados.
+          for p in sorted(r04_changes-overlap):
+              if p.startswith('Novo_Ambiente_Simulado/'): continue
+              assert (root/p).read_bytes()==show(r04,p),p
+          # Seis READMEs e implementações: implementação segue main; README segue R04-A.
+          objs=['date_features','join_diagnostics','null_summary','psi_calculator','safe_display','smart_sample']
+          for obj in objs:
+              read=f'ambiente_fonte/.assistant/hub_snippets/spark/{obj}/README.md'
+              mod=f'ambiente_fonte/.assistant/hub_snippets/spark/{obj}/{obj}.py'
+              assert (root/read).read_bytes()==show(r04,read),read
+              assert (root/mod).read_bytes()==show(main,mod),mod
+          # Controle: exatamente seis pendências removidas da main V02.
+          ctrl='docs/sprints/readmes_objetos/CONTROLE_MIGRACAO.json'
+          a=json.loads(show(main,ctrl)); b=json.loads((root/ctrl).read_text())
+          removed={f'hub_snippets/spark/{x}' for x in objs}
+          assert set(a['pending'])-set(b['pending'])==removed
+          assert not set(b['pending'])-set(a['pending'])
+          assert len(b['pending'])==49
+          assert {k:v for k,v in a.items() if k!='pending'}=={k:v for k,v in b.items() if k!='pending'}
+          # Espelhos e Manual sincronizados.
+          source=root/'ambiente_fonte'; target=root/'Novo_Ambiente_Simulado/Users/usuario-free'; mirrored=[]
+          for p in source.rglob('*'):
+              if not p.is_file() or '__pycache__' in p.parts or p==source/'README.md': continue
+              dest=target/p.relative_to(source); assert dest.is_file() and dest.read_bytes()==p.read_bytes(),str(p); mirrored.append(str(p.relative_to(source)))
+          derived=[str(p.relative_to(target)) for p in target.rglob('*') if p.is_file()]
+          assert set(derived)==set(mirrored)
+          assert (root/'MANUAL_TECNICO.md').read_bytes()==(source/'.assistant/MANUAL_TECNICO.md').read_bytes()
+          print(json.dumps({'status':'PASS','main_exclusive_preserved':len(main_changes-overlap),
+            'r04a_exclusive_preserved':len(r04_changes-overlap),'overlap_resolved':sorted(overlap),
+            'migration_removed':sorted(removed),'pending':len(b['pending']),'mirrored':len(mirrored)},ensure_ascii=False,indent=2))
+          PY
+          test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/final-tree.txt")"
+          git diff --exit-code
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Reexecutar os 18 casos R04-A com Spark real
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv "$RUNNER_TEMP/r04a-env"
+          "$RUNNER_TEMP/r04a-env/bin/python" -m pip install pyspark==4.0.1
+          "$RUNNER_TEMP/r04a-env/bin/python" -m pip freeze > "$RUNNER_TEMP/r04a-pacotes.txt"
+          mkdir -p "$RUNNER_TEMP/r04a-spark"
+          (cd "$RUNNER_TEMP/r04a-spark" && "$RUNNER_TEMP/r04a-env/bin/python" "$GITHUB_WORKSPACE/docs/sprints/readmes_objetos/evidencias_r04a/verificar_r04a.py" --require-spark) 2>&1 | tee "$RUNNER_TEMP/r04a-spark.txt"
+          test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/final-tree.txt")"
+          git diff --exit-code
+
+      - name: Materializar exatamente a árvore conciliada testada
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, subprocess, urllib.request
+          from pathlib import Path
+          def git(*a): return subprocess.check_output(['git',*a])
+          final=Path(os.environ['RUNNER_TEMP'],'final-tree.txt').read_text().strip()
+          assert git('write-tree').decode().strip()==final
+          parts=git('diff','--cached','--name-status','-z',os.environ['MAIN_COMMIT']).decode().split('\0')
+          entries=[]; i=0
+          while i<len(parts) and parts[i]:
+              status,path=parts[i:i+2]; i+=2
+              assert status in ('A','M'),(status,path)
+              entries.append({'path':path,'mode':git('ls-files','--stage','--',path).decode().split()[0],
+                'type':'blob','content':Path(path).read_text(encoding='utf-8')})
+          req=urllib.request.Request(os.environ['GITHUB_API_URL']+'/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/trees',
+            data=json.dumps({'base_tree':os.environ['MAIN_TREE'],'tree':entries}).encode(),method='POST',headers={
+            'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json',
+            'Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'})
+          with urllib.request.urlopen(req,timeout=90) as response: remote=json.load(response)['sha']
+          assert remote==final,(remote,final)
+          result={'tree':final,'main_base':os.environ['MAIN_COMMIT'],'r04a_source':os.environ['R04A_COMMIT'],
+            'paths_vs_main':len(entries),'gate':'PASS','v00':'PASS','v01':'PASS','v02':'PASS',
+            'r04a_spark':'18_PASS','preservacao':'PASS','run_id':os.environ['GITHUB_RUN_ID'],
+            'refs_atualizadas_pelo_workflow':False,'main_alterada':False,'databricks_publicado':False}
+          Path(os.environ['RUNNER_TEMP'],'R04A-CONCILIADA.json').write_text(json.dumps(result,indent=2)+'\n')
+          print(json.dumps(result))
+          PY
+
+      - name: Guardar evidências mesmo em falha
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r04a-conciliada-evidencias
+          retention-days: 7
+          path: |
+            ${{ runner.temp }}/merge-tree.txt
+            ${{ runner.temp }}/validator-plain.txt
+            ${{ runner.temp }}/final-tree.txt
+            ${{ runner.temp }}/final-gate.txt
+            ${{ runner.temp }}/test_inventario_visual.txt
+            ${{ runner.temp }}/test_visual_legado_v00.txt
+            ${{ runner.temp }}/test_baseline_visual_runner.txt
+            ${{ runner.temp }}/test_temas_v01.txt
+            ${{ runner.temp }}/test_temas_v01_integracao.txt
+            ${{ runner.temp }}/test_temas_v02.txt
+            ${{ runner.temp }}/preservacao-final.json
+            ${{ runner.temp }}/r04a-spark.txt
+            ${{ runner.temp }}/r04a-pacotes.txt
+            ${{ runner.temp }}/R04A-CONCILIADA.json
+          if-no-files-found: warn
