@@ -1,0 +1,29 @@
+name: Base verificavel R02
+on:
+  push:
+    branches: [codex/readmes-r02]
+    paths: [.github/workflows/readmes-r02-base.yml]
+permissions:
+  contents: read
+jobs:
+  base:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Exportar base e historico sem credenciais
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = af1efd14f2a688d3d3cc816ef85f5f1755e8afec
+          git branch r02-baseline af1efd14f2a688d3d3cc816ef85f5f1755e8afec
+          git bundle create "$RUNNER_TEMP/r02-base.bundle" r02-baseline
+          git bundle verify "$RUNNER_TEMP/r02-base.bundle"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r02-base-historico
+          path: ${{ runner.temp }}/r02-base.bundle
+          retention-days: 1
