@@ -21,6 +21,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Instalar dependências já declaradas do gate
+        run: python -m pip install -r tools/requirements-dev.txt
       - name: Gerar fachada oficial e alinhar notebook irmão
         shell: bash
         run: |
@@ -34,7 +36,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -c "from pathlib import Path; p=Path('README.md'); t=p.read_text(encoding='utf-8'); old1='repo (identidade)  : 1096 arquivos varridos no repositório editável/derivado'; old2='repo (links)       : 1027 links fora da raiz analisada'; assert t.count(old1)==1 and t.count(old2)==1; p.write_text(t.replace(old1,'repo (identidade)  : 1100 arquivos varridos no repositório editável/derivado').replace(old2,'repo (links)       : 1032 links fora da raiz analisada'),encoding='utf-8')"
+          python -c "from pathlib import Path; p=Path('README.md'); t=p.read_text(encoding='utf-8'); old1='repo (identidade)  : 1096 arquivos varridos no repositório editável/derivado'; old2='repo (links)       : 1027 links fora da raiz analisada'; new1='repo (identidade)  : 1100 arquivos varridos no repositório editável/derivado'; new2='repo (links)       : 1032 links fora da raiz analisada'; assert (old1 in t) or (new1 in t); assert (old2 in t) or (new2 in t); p.write_text(t.replace(old1,new1).replace(old2,new2),encoding='utf-8')"
           python -B tools/render_simulado.py --write
           cmp ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/__init__.py Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_plotly/__init__.py
           cmp ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/exemplo_theme_plotly.py Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_plotly/exemplo_theme_plotly.py
