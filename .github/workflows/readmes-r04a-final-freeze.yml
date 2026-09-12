@@ -1,0 +1,219 @@
+name: Freeze final R04-A conciliada
+on:
+  push:
+    branches: [codex/readmes-r04a-reconcile]
+    paths: [.github/workflows/readmes-r04a-final-freeze.yml]
+permissions:
+  contents: read
+jobs:
+  freeze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions:
+      contents: write
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      SPARK_LOCAL_IP: '127.0.0.1'
+      ANCESTOR: 1be947b0a62c3b0b85fa3cd5692f474b9066d85f
+      MAIN_COMMIT: 6085eabd4ca715ea2566336aaeb91e2778d76c77
+      MAIN_TREE: b60d28d93a6095a4e37553f6011f3d2eb92a2d70
+      R04A_COMMIT: 5f61bd72d08e6d043584e9eb0521adb3a74101bb
+      EXPECTED_PARENT: 16f3c15b65d2d44c3cf0fec2e4791d7fa09c6d19
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Montar e congelar a composição final
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$EXPECTED_PARENT"
+          set +e
+          git -c merge.conflictStyle=merge merge-tree --write-tree --name-only "$MAIN_COMMIT" "$R04A_COMMIT" > "$RUNNER_TEMP/merge-tree.txt" 2>&1
+          code=$?
+          set -e
+          test "$code" = 1
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          lines=Path(os.environ['RUNNER_TEMP'],'merge-tree.txt').read_text().splitlines(); first=[]
+          for line in lines:
+              if not line.strip(): break
+              first.append(line)
+          assert len(first)==3 and set(first[1:])=={'CHANGELOG.md','README.md'}, first
+          Path(os.environ['RUNNER_TEMP'],'merge-tree-sha.txt').write_text(first[0]+'\n')
+          PY
+          git read-tree --reset -u "$(cat "$RUNNER_TEMP/merge-tree-sha.txt")"
+          python - <<'PY'
+          import os,subprocess
+          from pathlib import Path
+          def show(ref,path): return subprocess.check_output(['git','show',f'{ref}:{path}']).decode('utf-8')
+          anc=os.environ['ANCESTOR']; main=os.environ['MAIN_COMMIT']; r04=os.environ['R04A_COMMIT']
+          base=show(anc,'CHANGELOG.md'); header,history=base.split('## ',1); history='## '+history
+          m=show(main,'CHANGELOG.md'); r=show(r04,'CHANGELOG.md')
+          assert m.startswith(header) and m.endswith(history) and r.startswith(header) and r.endswith(history)
+          final=header+r[len(header):-len(history)]+m[len(header):-len(history)]+history
+          old='- (ChatGPT) R04-A parte da main `1be947b`, já conciliada com V01. Autorrevisão\n  A0_light; auditoria independente e homologação Databricks permanecem separadas.'
+          new='- (ChatGPT) A R04-A foi produzida e validada inicialmente sobre `1be947b`; antes do PR final,\n  foi reconciliada com a main `6085eab`, que já contém a V02 aceita. A composição final\n  preserva a V02 e repete os gates; auditoria independente e homologação Databricks permanecem separadas.'
+          assert old in final
+          final=final.replace(old,new).replace('Cobertura estrutural candidata passa a 25/74 operacionais','Cobertura estrutural candidata passa a 26/75 operacionais')
+          Path('CHANGELOG.md').write_text(final,encoding='utf-8')
+          s=show(main,'README.md')
+          old_block='''A [R02-I](docs/sprints/readmes_objetos/INTEGRACAO_R02.md) foi integrada pelo\nPR nº 7 após aprovação de Rodrigo em 2026-09-12 (`5493f7d`). As oito etapas\npreservam as verificações das duas frentes. O [aceite e versão estável](docs/sprints/readmes_objetos/ACEITE_V1.md)\nregistra o contrato 1.0.0; o [lote R03-A](docs/sprints/readmes_objetos/RELATORIO_R03A.md)\nacrescenta sete guias em branch própria para revisão. A integração Git não\npublica o Hub no Databricks nem substitui homologação no workspace.\n\n### Continuidade R03-B\n\nO [lote R03-B](docs/sprints/readmes_objetos/RELATORIO_R03B.md) documenta seis\nobjetos de apresentação e navegação, em branch dependente da R03-A ainda em\nrevisão. O contrato permanece 1.0.0; não há alteração visual, novo merge ou\npublicação. A matriz da sprint identifica também as demais documentações atualizadas.'''
+          new_block='''A [R02-I](docs/sprints/readmes_objetos/INTEGRACAO_R02.md) foi integrada pelo\nPR nº 7 após aprovação de Rodrigo em 2026-09-12 (`5493f7d`). As oito etapas\npreservam as verificações das duas frentes. O [aceite e versão estável](docs/sprints/readmes_objetos/ACEITE_V1.md)\nregistra o contrato 1.0.0. Os lotes [R03-A](docs/sprints/readmes_objetos/RELATORIO_R03A.md)\ne [R03-B](docs/sprints/readmes_objetos/RELATORIO_R03B.md) foram reconciliados com\na V01 e integrados pelo PR nº 13 (`1be947b`). Essa integração preserva os 19\nREADMEs operacionais, o Concierge e os controles visuais, mas não publica o Hub\nno Databricks nem substitui homologação no workspace.\n\n### Continuidade R04-A\n\nA [R04-A](docs/sprints/readmes_objetos/RELATORIO_R04A.md) acrescenta seis guias\nSpark — calendário, diagnóstico de join, nulos, PSI/CSI, prévia segura e amostragem —\nsem alterar os helpers. Com a V02 já integrada, a candidata combinada chega a\n**26/75 READMEs operacionais**, com 49 pendências, e pausa antes da R04-B para\nrevisão dos novos textos.'''
+          assert old_block in s
+          Path('README.md').write_text(s.replace(old_block,new_block),encoding='utf-8')
+          p=Path('docs/sprints/readmes_objetos/README.md'); s=p.read_text(encoding='utf-8')
+          oldtxt='O contrato vigente é **1.0.0**. A R04-A é a leva atual e documenta seis snippets\nSpark: `date_features`, `join_diagnostics`, `null_summary`, `psi_calculator`,\n`safe_display` e `smart_sample`. A cobertura estrutural desta candidata é\n**25/74 operacionais e 3/3 exemplares, com 49 pendências**. Isso descreve a branch\nde revisão; não significa publicação no workspace nem aceite antecipado dos seis textos.'
+          newtxt='O contrato vigente é **1.0.0**. Durante esta sprint, a V02 do sistema de temas foi\naceita e integrada à `main` no commit `6085eab`, adicionando o objeto documentado\n`visual/tema`. A R04-A documenta seis snippets Spark: `date_features`,\n`join_diagnostics`, `null_summary`, `psi_calculator`, `safe_display` e\n`smart_sample`. A cobertura estrutural da composição final é **26/75 operacionais\ne 3/3 exemplares, com 49 pendências**. Isso descreve a candidata Git; não significa\npublicação no workspace nem aceite antecipado dos seis textos.'
+          assert oldtxt in s
+          p.write_text(s.replace(oldtxt,newtxt),encoding='utf-8')
+          p=Path('docs/sprints/readmes_objetos/RELATORIO_R04A.md'); s=p.read_text(encoding='utf-8')
+          if '## Conciliação final com a V02' not in s:
+              s += '''\n\n## Conciliação final com a V02\n\nA autoria e a primeira validação completa da R04-A partiram da `main` `1be947b`. Antes da abertura do PR final, a `main` avançou para `6085eab` com a V02 do sistema de temas aceita e integrada. A composição final preserva as duas linhas de trabalho; o `merge-tree` apontou conflito textual apenas em `CHANGELOG.md` e no `README.md` da raiz.\n\nOs resultados da validação remota da árvore conciliada são registrados no PR final e nos artefatos do workflow correspondente. Essa reconciliação não amplia o alcance da sprint: não publica no Databricks, não muda APIs dos seis helpers e não equivale a auditoria independente.\n'''
+              p.write_text(s,encoding='utf-8')
+          PY
+          cp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
+          python tools/render_simulado.py --write >/dev/null
+          git add -A
+          python tools/validate_assistant.py > "$RUNNER_TEMP/validator.txt"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          out=Path(os.environ['RUNNER_TEMP'],'validator.txt').read_text(); keys=['skills','prompts','helpers citados','markdown / links','notebooks / links','readmes de objeto','pastas de objeto','forma da pasta','contrato de dados','contrato de entrada','saída colada','idioma da docstring','normas do molde','notebook exercita','python (AST)','instrucoes','repo (identidade)','repo (links)']; actual={}
+          for line in out.splitlines():
+              for k in keys:
+                  if line.startswith(k): actual[k]=line
+          assert set(actual)==set(keys) and '26/75 operacionais' in actual['readmes de objeto'] and '49 pendentes' in actual['readmes de objeto']
+          p=Path('README.md'); lines=p.read_text().splitlines(); found=set()
+          for i,line in enumerate(lines):
+              for k,v in actual.items():
+                  if line.startswith(k): lines[i]=v; found.add(k); break
+          assert found==set(keys); p.write_text('\n'.join(lines)+'\n')
+          PY
+          git add -A
+          git diff --cached --check "$MAIN_COMMIT"
+          git write-tree | tee "$RUNNER_TEMP/frozen-tree.txt"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: |
+            tools/requirements-dev.txt
+            tools/requirements-temas-dev.txt
+      - name: Gate 9 etapas e V00 V01 V02 na árvore congelada
+        shell: bash
+        run: |
+          set -euo pipefail
+          FROZEN="$(cat "$RUNNER_TEMP/frozen-tree.txt")"
+          python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt >/dev/null
+          python tools/ci_local.py --verbose 2>&1 | tee "$RUNNER_TEMP/final-gate.txt"
+          for suite in test_inventario_visual test_visual_legado_v00 test_baseline_visual_runner; do python "tools/tests/$suite.py" 2>&1 | tee "$RUNNER_TEMP/$suite.txt"; done
+          for suite in test_temas_v01 test_temas_v01_integracao; do python "tools/tests/$suite.py" 2>&1 | tee "$RUNNER_TEMP/$suite.txt"; done
+          python tools/tests/test_temas_v02.py 2>&1 | tee "$RUNNER_TEMP/test_temas_v02.txt"
+          test "$(git write-tree)" = "$FROZEN"
+          git diff --exit-code
+
+      - name: Preservação cruzada com renames tratados como add/delete
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY' | tee "$RUNNER_TEMP/preservacao-final.json"
+          import json,os,subprocess
+          from pathlib import Path
+          root=Path.cwd(); anc=os.environ['ANCESTOR']; main=os.environ['MAIN_COMMIT']; r04=os.environ['R04A_COMMIT']
+          def git(*a): return subprocess.check_output(['git',*a],cwd=root)
+          def show(ref,path): return git('show',f'{ref}:{path}')
+          def statuses(a,b):
+              raw=git('diff','--no-renames','--name-status','-z',a,b).decode().split('\0'); out={}; i=0
+              while i<len(raw) and raw[i]: st,p=raw[i:i+2]; i+=2; out[p]=st
+              return out
+          ms=statuses(anc,main); rs=statuses(anc,r04); overlap=set(ms)&set(rs)
+          allowed={'CHANGELOG.md','CLAUDE.md','MANUAL_TECNICO.md','README.md','ambiente_fonte/.assistant/MANUAL_TECNICO.md','ambiente_fonte/.assistant/hub_snippets/README.md','Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md','Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/README.md','docs/sprints/README.md'}
+          assert overlap<=allowed,overlap-allowed
+          intentional=allowed|{'docs/sprints/readmes_objetos/README.md','docs/sprints/readmes_objetos/RELATORIO_R04A.md'}
+          for p,st in ms.items():
+              if p in intentional: continue
+              if st=='D': assert not (root/p).exists(),p
+              else: assert (root/p).read_bytes()==show(main,p),p
+          for p,st in rs.items():
+              if p in intentional or p.startswith('Novo_Ambiente_Simulado/'): continue
+              if st=='D': assert not (root/p).exists(),p
+              else: assert (root/p).read_bytes()==show(r04,p),p
+          objs=['date_features','join_diagnostics','null_summary','psi_calculator','safe_display','smart_sample']
+          for obj in objs:
+              rd=f'ambiente_fonte/.assistant/hub_snippets/spark/{obj}/README.md'; mod=f'ambiente_fonte/.assistant/hub_snippets/spark/{obj}/{obj}.py'
+              assert (root/rd).read_bytes()==show(r04,rd),rd; assert (root/mod).read_bytes()==show(main,mod),mod
+          ctrl='docs/sprints/readmes_objetos/CONTROLE_MIGRACAO.json'; a=json.loads(show(main,ctrl)); b=json.loads((root/ctrl).read_text()); removed={f'hub_snippets/spark/{x}' for x in objs}
+          assert set(a['pending'])-set(b['pending'])==removed and not set(b['pending'])-set(a['pending']) and len(b['pending'])==49
+          source=root/'ambiente_fonte'; target=root/'Novo_Ambiente_Simulado/Users/usuario-free'; mirrored=[]
+          for p in source.rglob('*'):
+              if not p.is_file() or '__pycache__' in p.parts or p==source/'README.md': continue
+              d=target/p.relative_to(source); assert d.is_file() and d.read_bytes()==p.read_bytes(),str(p); mirrored.append(str(p.relative_to(source)))
+          assert set(str(p.relative_to(target)) for p in target.rglob('*') if p.is_file())==set(mirrored)
+          assert (root/'MANUAL_TECNICO.md').read_bytes()==(source/'.assistant/MANUAL_TECNICO.md').read_bytes()
+          print(json.dumps({'status':'PASS','actual_overlap':sorted(overlap),'main_changed':len(ms),'r04a_changed':len(rs),'pending':49,'mirrored':len(mirrored)},ensure_ascii=False,indent=2))
+          PY
+          test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/frozen-tree.txt")"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Exigir 18 de 18 casos R04-A com Spark real
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv "$RUNNER_TEMP/r04a-env"
+          "$RUNNER_TEMP/r04a-env/bin/python" -m pip install pyspark==4.0.1 >/dev/null
+          "$RUNNER_TEMP/r04a-env/bin/python" -m pip freeze > "$RUNNER_TEMP/r04a-pacotes.txt"
+          mkdir -p "$RUNNER_TEMP/spark"
+          (cd "$RUNNER_TEMP/spark" && "$RUNNER_TEMP/r04a-env/bin/python" "$GITHUB_WORKSPACE/docs/sprints/readmes_objetos/evidencias_r04a/verificar_r04a.py" --require-spark) 2>&1 | tee "$RUNNER_TEMP/r04a-spark.txt"
+          test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/frozen-tree.txt")"
+
+      - name: Materializar exatamente a árvore congelada e aprovada
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os,subprocess,urllib.request
+          from pathlib import Path
+          def git(*a): return subprocess.check_output(['git',*a])
+          frozen=Path(os.environ['RUNNER_TEMP'],'frozen-tree.txt').read_text().strip(); assert git('write-tree').decode().strip()==frozen
+          raw=git('diff','--cached','--no-renames','--name-status','-z',os.environ['MAIN_COMMIT']).decode().split('\0'); entries=[]; i=0
+          while i<len(raw) and raw[i]:
+              st,p=raw[i:i+2]; i+=2
+              if st=='D': entries.append({'path':p,'mode':'100644','type':'blob','sha':None}); continue
+              assert st in ('A','M'),(st,p); entries.append({'path':p,'mode':git('ls-files','--stage','--',p).decode().split()[0],'type':'blob','content':Path(p).read_text(encoding='utf-8')})
+          req=urllib.request.Request(os.environ['GITHUB_API_URL']+'/repos/'+os.environ['GITHUB_REPOSITORY']+'/git/trees',data=json.dumps({'base_tree':os.environ['MAIN_TREE'],'tree':entries}).encode(),method='POST',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'})
+          with urllib.request.urlopen(req,timeout=90) as response: tree=json.load(response)['sha']
+          assert tree==frozen,(tree,frozen)
+          result={'tree':tree,'main_base':os.environ['MAIN_COMMIT'],'r04a_source':os.environ['R04A_COMMIT'],'paths_vs_main':len(entries),'gate':'9_PASS','v00':'48_PASS','v01':'138_PASS','v02':'105_PASS','r04a_spark':'18_PASS','preservacao':'PASS','run_id':os.environ['GITHUB_RUN_ID'],'refs_atualizadas_pelo_workflow':False,'main_alterada':False,'databricks_publicado':False}
+          Path(os.environ['RUNNER_TEMP'],'R04A-FINAL.json').write_text(json.dumps(result,indent=2)+'\n'); print(json.dumps(result))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r04a-freeze-final-evidencias
+          retention-days: 7
+          path: |
+            ${{ runner.temp }}/frozen-tree.txt
+            ${{ runner.temp }}/validator.txt
+            ${{ runner.temp }}/final-gate.txt
+            ${{ runner.temp }}/test_inventario_visual.txt
+            ${{ runner.temp }}/test_visual_legado_v00.txt
+            ${{ runner.temp }}/test_baseline_visual_runner.txt
+            ${{ runner.temp }}/test_temas_v01.txt
+            ${{ runner.temp }}/test_temas_v01_integracao.txt
+            ${{ runner.temp }}/test_temas_v02.txt
+            ${{ runner.temp }}/preservacao-final.json
+            ${{ runner.temp }}/r04a-spark.txt
+            ${{ runner.temp }}/r04a-pacotes.txt
+            ${{ runner.temp }}/R04A-FINAL.json
+          if-no-files-found: warn
