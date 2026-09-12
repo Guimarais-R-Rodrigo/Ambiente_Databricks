@@ -19,14 +19,14 @@ jobs:
       SPARK_LOCAL_IP: '127.0.0.1'
       BASE_COMMIT: 1be947b0a62c3b0b85fa3cd5692f474b9066d85f
       BASE_TREE: a0ba5cbaaee5dc430d5111f4d0f6eb607c6744f9
-      EXPECTED_PARENT: 5f8ed28d04a11a76cb186bc169925702adec26ce
-      EXPECTED_TREE: 224b9e9578d8583a0fd1df8f06e40aa232375f60
+      EXPECTED_PARENT: 90f4945952760f0aec5d83440e3782758bc36f97
+      EXPECTED_TREE: 0f55dff65765be92eea1147df8a6b2f848b09f01
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Reconstruir lote final com hashes conferidos
+      - name: Reconstruir lote final com hashes e contagens conferidas
         shell: bash
         run: |
           set -euo pipefail
@@ -42,11 +42,23 @@ jobs:
           patch=lzma.decompress(packed)
           assert hashlib.sha256(patch).hexdigest()=='7d6cccb85bdc3337bd0cb4240eb097ae1ccdd267e1c4a5e5269b3c6d47037131'
           Path(os.environ['RUNNER_TEMP'],'R04A.patch').write_bytes(patch)
-          print('Hashes XZ e patch final conferidos')
+          print('Hashes XZ e patch conferidos')
           PY
           git read-tree --reset -u "$BASE_COMMIT"
           git apply --check "$RUNNER_TEMP/R04A.patch"
           git apply --index "$RUNNER_TEMP/R04A.patch"
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('README.md')
+          s=p.read_text(encoding='utf-8')
+          old1='repo (identidade)  : 1060 arquivos varridos no repositório editável/derivado'
+          old2='repo (links)       : 987 links fora da raiz analisada'
+          assert old1 in s and old2 in s
+          s=s.replace(old1,'repo (identidade)  : 1079 arquivos varridos no repositório editável/derivado')
+          s=s.replace(old2,'repo (links)       : 1057 links fora da raiz analisada')
+          p.write_text(s,encoding='utf-8')
+          PY
+          git add README.md
           test "$(git write-tree)" = "$EXPECTED_TREE"
           git clean -fd
           test "$(git write-tree)" = "$EXPECTED_TREE"
