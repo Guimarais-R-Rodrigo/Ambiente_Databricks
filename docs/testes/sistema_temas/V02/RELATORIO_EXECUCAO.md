@@ -34,7 +34,7 @@ O ambiente local é Linux, Python 3.13.5. Foram observados: 105 testes V02,
 incluem V01 e V02, portanto não somar esses dois conjuntos novamente. Os sete
 SKIPs de testes que exigem Spark permanecem explicitamente não executados.
 O pacote externo registra a repetição final depois da documentação e a
-reimportação independente do bundle em outra pasta pelo mesmo autor.
+reimportação do bundle em outra pasta isolada pelo mesmo autor.
 
 Execuções remotas da candidata, se realizadas, devem aparecer com seu próprio
 commit materializado, árvore e logs; o sucesso de um baseline não é transferido
