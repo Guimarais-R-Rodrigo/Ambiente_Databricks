@@ -19,14 +19,14 @@ jobs:
       SPARK_LOCAL_IP: '127.0.0.1'
       BASE_COMMIT: 1be947b0a62c3b0b85fa3cd5692f474b9066d85f
       BASE_TREE: a0ba5cbaaee5dc430d5111f4d0f6eb607c6744f9
-      EXPECTED_PARENT: d2b5e6b7091f3d281ea3b178d3121185ead247ff
+      EXPECTED_PARENT: 6b923a1757c963a131b589df8a33caedbae667f2
       EXPECTED_TREE: 224b9e9578d8583a0fd1df8f06e40aa232375f60
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Reconstruir lote final com hashes conferidos
+      - name: Reconstruir lote final com hash do patch conferido
         shell: bash
         run: |
           set -euo pipefail
@@ -36,13 +36,13 @@ jobs:
           from pathlib import Path
           parts=sorted(Path('.github/r04a-patch-parts').glob('part-*.txt'))
           assert len(parts)==9, f'Transporte incompleto: {len(parts)} fragmentos'
-          encoded=''.join(p.read_text(encoding='utf-8').strip() for p in parts)
+          encoded=''.join(''.join(p.read_text(encoding='utf-8').split()) for p in parts)
           packed=base64.b64decode(encoded,validate=True)
-          assert hashlib.sha256(packed).hexdigest()=='dd9c491c56366f63c55af74eef5240b6905bbe029e997f0967b99a8fbba2d146'
+          print('SHA256 XZ recebido:',hashlib.sha256(packed).hexdigest())
           patch=lzma.decompress(packed)
           assert hashlib.sha256(patch).hexdigest()=='7d6cccb85bdc3337bd0cb4240eb097ae1ccdd267e1c4a5e5269b3c6d47037131'
           Path(os.environ['RUNNER_TEMP'],'R04A.patch').write_bytes(patch)
-          print('Hashes XZ e patch final conferidos')
+          print('Hash do patch final conferido')
           PY
           git read-tree --reset -u "$BASE_COMMIT"
           git apply --check "$RUNNER_TEMP/R04A.patch"
