@@ -4,7 +4,7 @@
       "bytes": 227946,
       "camada": "governanca",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 7,
+      "ocorrencias": 27,
       "path": "MANUAL_TECNICO.md",
       "sha256": "57461431b75187a484c789b1689a3c364b3ba32c8d1da6cb921b99f13c0b5395"
     },
@@ -20,7 +20,7 @@
       "bytes": 227946,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 7,
+      "ocorrencias": 27,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md",
       "sha256": "57461431b75187a484c789b1689a3c364b3ba32c8d1da6cb921b99f13c0b5395"
     },
@@ -28,7 +28,7 @@
       "bytes": 19394,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 5,
+      "ocorrencias": 6,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/README.md",
       "sha256": "4924dec322da04cf61b1d7fe4d85166dd45dfc971abe995166333ac4c3ca3180"
     },
@@ -204,7 +204,7 @@
       "bytes": 10296,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 7,
+      "ocorrencias": 8,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/snippet/template.md",
       "sha256": "6bdacc5f66456ec0929eb940079c062fda552c3b2df4448542e7b4c38d3da0ee"
     },
@@ -316,7 +316,7 @@
       "bytes": 6157,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 0,
+      "ocorrencias": 1,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/eda_completa/eda_completa.md",
       "sha256": "38ac6515a8501a43404f0e21579bdab506c0da68f9f98884d1fc160b671a7500"
     },
@@ -324,7 +324,7 @@
       "bytes": 7792,
       "camada": "derivado",
       "classe_inicial": "exemplo_ou_teste",
-      "ocorrencias": 0,
+      "ocorrencias": 1,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_prompts/eda_completa/exemplo_eda_completa.py",
       "sha256": "f95de895b9dcfece7f3777bfff307bcd976ab028e1bf5c4dd077ec0784153774"
     },
@@ -476,7 +476,7 @@
       "bytes": 19232,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 23,
+      "ocorrencias": 24,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/CONTEUDO_FIGURAS.md",
       "sha256": "915d6b414bd3c0a7a3f040ec614d5e5f7c1bc612b1971fae7a9daa51e541c569"
     },
@@ -793,7 +793,7 @@
       "bytes": 5190,
       "camada": "derivado",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 88,
+      "ocorrencias": 89,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/qa/figures/snippets.02_mapa_categorias.json",
       "sha256": "811c3c0bca1f9dbed41c7cad4c6dc706282f6648f7b8501aed4e24ae55b26f02"
     },
@@ -1240,7 +1240,7 @@
       "bytes": 184326,
       "camada": "derivado",
       "classe_inicial": "ativo_a_conferir_no_registro",
-      "ocorrencias": 450,
+      "ocorrencias": 452,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_readmes_visual_assets/readmes/snippets/sources/02_mapa_categorias.svg",
       "sha256": "e08088e7de20bfd6f106bb7b1d794e5f7c80f412c1525247d104acf3b9775021"
     },
@@ -1520,7 +1520,7 @@
       "bytes": 23689,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 8,
+      "ocorrencias": 14,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/README.md",
       "sha256": "285eef95ca50dcf2072f3a5471ec7c76fa5a1e258dd1717db6c4f57751214bbb"
     },
@@ -1576,7 +1576,7 @@
       "bytes": 1609,
       "camada": "derivado",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 0,
+      "ocorrencias": 1,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/emojis/emojis.py",
       "sha256": "ca2ede85dfac855684709e9721053ee5706dfd9f946957180fa0625eb4612f65"
     },
@@ -1584,7 +1584,7 @@
       "bytes": 4988,
       "camada": "derivado",
       "classe_inicial": "exemplo_ou_teste",
-      "ocorrencias": 0,
+      "ocorrencias": 1,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/constants/emojis/exemplo_emojis.py",
       "sha256": "6248fe6cd00a927e0045d67a590c8f2ee11efaaeacc9fc7231e2dc6b72d546eb"
     },
@@ -1656,7 +1656,7 @@
       "bytes": 1967,
       "camada": "derivado",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 1,
+      "ocorrencias": 7,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/correlation_matrix/correlation_matrix.py",
       "sha256": "5c41db399d5007f36d422f6511b52687ff2c3d43a5b8c6fc5b9ef221584f0159"
     },
@@ -1664,7 +1664,7 @@
       "bytes": 3889,
       "camada": "derivado",
       "classe_inicial": "exemplo_ou_teste",
-      "ocorrencias": 0,
+      "ocorrencias": 1,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/correlation_matrix/exemplo_correlation_matrix.py",
       "sha256": "febd717f2edfb22f9a9c31564a96af18de5f510dc8daf1de7dd2ed1eb2e658d8"
     },
@@ -1704,7 +1704,7 @@
       "bytes": 1739,
       "camada": "derivado",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 0,
+      "ocorrencias": 7,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/distribution_grid/distribution_grid.py",
       "sha256": "f11b9cd57264a9adb88ffc072e60f8b6036b1dbd72198b851065c74cfd935a7b"
     },
@@ -1712,7 +1712,7 @@
       "bytes": 3873,
       "camada": "derivado",
       "classe_inicial": "exemplo_ou_teste",
-      "ocorrencias": 0,
+      "ocorrencias": 1,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/distribution_grid/exemplo_distribution_grid.py",
       "sha256": "ce9c2a6bcd2a36a00787381bd0ff4671b88295a5f37600ea0fb8c3e2fa83a134"
     },
@@ -1832,7 +1832,7 @@
       "bytes": 9507,
       "camada": "derivado",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 45,
+      "ocorrencias": 52,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/curves_plotly/curves_plotly.py",
       "sha256": "2bd55c20ddf38ead53b47087b21602671b3ac45a7c09bbd4dd35216c5740ab4d"
     },
@@ -1936,7 +1936,7 @@
       "bytes": 5842,
       "camada": "derivado",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 19,
+      "ocorrencias": 23,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/kaplan_meier/kaplan_meier.py",
       "sha256": "e89b63f89b17cf09d9eb3b58c56168a6196ed09c6a7d5e281a26ab64f01f9c3d"
     },
@@ -2104,7 +2104,7 @@
       "bytes": 14394,
       "camada": "derivado",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 2,
+      "ocorrencias": 4,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/performance_monitor/performance_monitor.py",
       "sha256": "ec19b293cd4ca60b9b5d3d83d65258c006ea992a7034b7e79c51c68fcc22989a"
     },
@@ -2200,7 +2200,7 @@
       "bytes": 9177,
       "camada": "derivado",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 2,
+      "ocorrencias": 4,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/shap_explainer/shap_explainer.py",
       "sha256": "f81ec9326a5fb3f8b2723c0658d29dd668c3fa7df39db6f001bc44ceb7be6d96"
     },
@@ -2368,7 +2368,7 @@
       "bytes": 3399,
       "camada": "derivado",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 16,
+      "ocorrencias": 19,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/umap_viz/umap_viz.py",
       "sha256": "7ff45383e84af585499ef3455f5b322350f9333acd3ecc37ab48ab7bcbae3f1d"
     },
@@ -2384,7 +2384,7 @@
       "bytes": 10593,
       "camada": "derivado",
       "classe_inicial": "exemplo_ou_teste",
-      "ocorrencias": 1,
+      "ocorrencias": 4,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/vintage_analysis/exemplo_vintage_analysis.py",
       "sha256": "edcbfa41ef57569b0586d97edb272cd69611a7cc0c750934315550801bbc00f6"
     },
@@ -2392,7 +2392,7 @@
       "bytes": 9287,
       "camada": "derivado",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 13,
+      "ocorrencias": 17,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/vintage_analysis/vintage_analysis.py",
       "sha256": "91f937bf1d65b831eed31654d2f554e816116ad6ccc793708b1723311b23861c"
     },
@@ -2448,7 +2448,7 @@
       "bytes": 5736,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 0,
+      "ocorrencias": 4,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/requirements-optional.txt",
       "sha256": "c6d6cadbfeab5b1edb3bb96bc53366a962ee75b1ef7446e8c93371763681ee4b"
     },
@@ -2752,7 +2752,7 @@
       "bytes": 117,
       "camada": "derivado",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 0,
+      "ocorrencias": 2,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/kpi_card/__init__.py",
       "sha256": "112cc0f9454e22407273b5b6d4c5e62d5ce46b5a4cbe09a39ae755337dcd0dc5"
     },
@@ -2760,7 +2760,7 @@
       "bytes": 3005,
       "camada": "derivado",
       "classe_inicial": "exemplo_ou_teste",
-      "ocorrencias": 1,
+      "ocorrencias": 3,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/kpi_card/exemplo_kpi_card.py",
       "sha256": "53634cab5e83bfadd200b7d01b8bcc1b7b6cdc0e6a91913d7336aadd527de8a5"
     },
@@ -2768,7 +2768,7 @@
       "bytes": 1258,
       "camada": "derivado",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 7,
+      "ocorrencias": 8,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/kpi_card/kpi_card.py",
       "sha256": "b1f7b3654c825478ec7c133042fc3df8f525145dac87716963cf80aadbeb64ec"
     },
@@ -2776,7 +2776,7 @@
       "bytes": 91,
       "camada": "derivado",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 0,
+      "ocorrencias": 2,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/section_header/__init__.py",
       "sha256": "36daebf022ddf91d48e3c30ceb7efacfb7bfcb8c256d00cceb02821ea7209988"
     },
@@ -2784,7 +2784,7 @@
       "bytes": 3950,
       "camada": "derivado",
       "classe_inicial": "exemplo_ou_teste",
-      "ocorrencias": 10,
+      "ocorrencias": 15,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/section_header/exemplo_section_header.py",
       "sha256": "55d827f66dc4feb95f0110f66cd4ebd3092b6104ac6333d2719905dafab43e9b"
     },
@@ -2792,7 +2792,7 @@
       "bytes": 1734,
       "camada": "derivado",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 13,
+      "ocorrencias": 14,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/section_header/section_header.py",
       "sha256": "64ed5c19cfb5620e41e887a9e5d61b75833a9fee4b9b49ede2b0498664ece72b"
     },
@@ -2800,7 +2800,7 @@
       "bytes": 169,
       "camada": "derivado",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 0,
+      "ocorrencias": 5,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_plotly/__init__.py",
       "sha256": "3ff4642e753aa0ed5000d9736160d2f8a0fd5a304f4f1b16e371956565c18c00"
     },
@@ -2808,7 +2808,7 @@
       "bytes": 5709,
       "camada": "derivado",
       "classe_inicial": "exemplo_ou_teste",
-      "ocorrencias": 52,
+      "ocorrencias": 61,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_plotly/exemplo_theme_plotly.py",
       "sha256": "a575a52ddc05b67a824de8aa79741afd38886f703375ab11dc859c31c68d1fe0"
     },
@@ -2816,7 +2816,7 @@
       "bytes": 2484,
       "camada": "derivado",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 16,
+      "ocorrencias": 27,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/visual/theme_plotly/theme_plotly.py",
       "sha256": "cb60c3518b1108fa5cffc99791394b175a1d70e9b3f23478944b6f5b7475f221"
     },
@@ -2824,7 +2824,7 @@
       "bytes": 27254,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 6,
+      "ocorrencias": 8,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/README.md",
       "sha256": "0fbe4addda86c25ceabddd3ae8b1866914532f5d59555e8edd3ad1eb98f8cfbf"
     },
@@ -2832,7 +2832,7 @@
       "bytes": 5385,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 1,
+      "ocorrencias": 3,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-analise-safra/SKILL.md",
       "sha256": "d681b7bfe5e227e6cd536c9f153076c61427d425c95e2d667a4e83de9b0e322a"
     },
@@ -2864,7 +2864,7 @@
       "bytes": 3417,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 3,
+      "ocorrencias": 4,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-auditoria-skills/templates/relatorio_auditoria.md",
       "sha256": "fa745ae33a8cd5f39b0db5adad26ffe6ec044c8fa38fe7c4af3a0efc3f998d17"
     },
@@ -2872,7 +2872,7 @@
       "bytes": 7092,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 3,
+      "ocorrencias": 6,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-auditoria-skills/templates/rubrica_universal.md",
       "sha256": "6600b2043e5ad54f280182e9b3b8897d0efaf5c3500e476fc463ddf1e88b043f"
     },
@@ -3200,7 +3200,7 @@
       "bytes": 14932,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 19,
+      "ocorrencias": 21,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-criar-objeto/SKILL.md",
       "sha256": "320260bb7ef8485a1e643521831a89611126f5a020ac0f376af3a3fd740dbcec"
     },
@@ -3248,7 +3248,7 @@
       "bytes": 6102,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 10,
+      "ocorrencias": 21,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/templates/notebook_output_cross_eda.md",
       "sha256": "8fb0a22026599de6510cab7d5debd045bca6d585d470cac891456c4f62e0a8ee"
     },
@@ -3272,7 +3272,7 @@
       "bytes": 5643,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 1,
+      "ocorrencias": 3,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/SKILL.md",
       "sha256": "03964b63161710d7f70504e9d9aeff6887a4df63b64fad12ba591d93b802f072"
     },
@@ -3280,7 +3280,7 @@
       "bytes": 11018,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 65,
+      "ocorrencias": 81,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/templates/estilo_visual_eda.md",
       "sha256": "79af86545647b7e4f0a58b3238e4a989709d424add05284dfc8e6b8feae6583d"
     },
@@ -3288,7 +3288,7 @@
       "bytes": 5444,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 2,
+      "ocorrencias": 34,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/templates/matriz_graficos_eda.md",
       "sha256": "31513fdc2d8433b4c525849c86a201c0bde209dbd89cb020fd958b569ca7da08"
     },
@@ -3304,7 +3304,7 @@
       "bytes": 4115,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 1,
+      "ocorrencias": 3,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/templates/roteiro_eda.md",
       "sha256": "7fedf37cdd4866d387d79fce158afa8401ec98516544bf68708f0c19eca2cffc"
     },
@@ -3488,7 +3488,7 @@
       "bytes": 6139,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 7,
+      "ocorrencias": 17,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-validacao-estatistica/templates/notebook_output_stat.md",
       "sha256": "abf209020241a86881535e3dc3688c0d605a5b3bdf6c1ec11096bd4f14b0a0a4"
     },
@@ -3528,7 +3528,7 @@
       "bytes": 9081,
       "camada": "derivado",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 1,
+      "ocorrencias": 3,
       "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant_instructions.md",
       "sha256": "ab6aa85eb53dbdb78d3d022592c01a6e20852a9156c2f47c270439d0f656cd65"
     },
@@ -3536,7 +3536,7 @@
       "bytes": 227946,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 7,
+      "ocorrencias": 27,
       "path": "ambiente_fonte/.assistant/MANUAL_TECNICO.md",
       "sha256": "57461431b75187a484c789b1689a3c364b3ba32c8d1da6cb921b99f13c0b5395"
     },
@@ -3544,7 +3544,7 @@
       "bytes": 19394,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 5,
+      "ocorrencias": 6,
       "path": "ambiente_fonte/.assistant/README.md",
       "sha256": "4924dec322da04cf61b1d7fe4d85166dd45dfc971abe995166333ac4c3ca3180"
     },
@@ -3720,7 +3720,7 @@
       "bytes": 10296,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 7,
+      "ocorrencias": 8,
       "path": "ambiente_fonte/.assistant/hub_padroes/snippet/template.md",
       "sha256": "6bdacc5f66456ec0929eb940079c062fda552c3b2df4448542e7b4c38d3da0ee"
     },
@@ -3832,7 +3832,7 @@
       "bytes": 6157,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 0,
+      "ocorrencias": 1,
       "path": "ambiente_fonte/.assistant/hub_prompts/eda_completa/eda_completa.md",
       "sha256": "38ac6515a8501a43404f0e21579bdab506c0da68f9f98884d1fc160b671a7500"
     },
@@ -3840,7 +3840,7 @@
       "bytes": 7792,
       "camada": "produto",
       "classe_inicial": "exemplo_ou_teste",
-      "ocorrencias": 0,
+      "ocorrencias": 1,
       "path": "ambiente_fonte/.assistant/hub_prompts/eda_completa/exemplo_eda_completa.py",
       "sha256": "f95de895b9dcfece7f3777bfff307bcd976ab028e1bf5c4dd077ec0784153774"
     },
@@ -3992,7 +3992,7 @@
       "bytes": 19232,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 23,
+      "ocorrencias": 24,
       "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/CONTEUDO_FIGURAS.md",
       "sha256": "915d6b414bd3c0a7a3f040ec614d5e5f7c1bc612b1971fae7a9daa51e541c569"
     },
@@ -4309,7 +4309,7 @@
       "bytes": 5190,
       "camada": "produto",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 88,
+      "ocorrencias": 89,
       "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/qa/figures/snippets.02_mapa_categorias.json",
       "sha256": "811c3c0bca1f9dbed41c7cad4c6dc706282f6648f7b8501aed4e24ae55b26f02"
     },
@@ -4756,7 +4756,7 @@
       "bytes": 184326,
       "camada": "produto",
       "classe_inicial": "ativo_a_conferir_no_registro",
-      "ocorrencias": 450,
+      "ocorrencias": 452,
       "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/snippets/sources/02_mapa_categorias.svg",
       "sha256": "e08088e7de20bfd6f106bb7b1d794e5f7c80f412c1525247d104acf3b9775021"
     },
@@ -5036,7 +5036,7 @@
       "bytes": 23689,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 8,
+      "ocorrencias": 14,
       "path": "ambiente_fonte/.assistant/hub_snippets/README.md",
       "sha256": "285eef95ca50dcf2072f3a5471ec7c76fa5a1e258dd1717db6c4f57751214bbb"
     },
@@ -5092,7 +5092,7 @@
       "bytes": 1609,
       "camada": "produto",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 0,
+      "ocorrencias": 1,
       "path": "ambiente_fonte/.assistant/hub_snippets/constants/emojis/emojis.py",
       "sha256": "ca2ede85dfac855684709e9721053ee5706dfd9f946957180fa0625eb4612f65"
     },
@@ -5100,7 +5100,7 @@
       "bytes": 4988,
       "camada": "produto",
       "classe_inicial": "exemplo_ou_teste",
-      "ocorrencias": 0,
+      "ocorrencias": 1,
       "path": "ambiente_fonte/.assistant/hub_snippets/constants/emojis/exemplo_emojis.py",
       "sha256": "6248fe6cd00a927e0045d67a590c8f2ee11efaaeacc9fc7231e2dc6b72d546eb"
     },
@@ -5172,7 +5172,7 @@
       "bytes": 1967,
       "camada": "produto",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 1,
+      "ocorrencias": 7,
       "path": "ambiente_fonte/.assistant/hub_snippets/display/correlation_matrix/correlation_matrix.py",
       "sha256": "5c41db399d5007f36d422f6511b52687ff2c3d43a5b8c6fc5b9ef221584f0159"
     },
@@ -5180,7 +5180,7 @@
       "bytes": 3889,
       "camada": "produto",
       "classe_inicial": "exemplo_ou_teste",
-      "ocorrencias": 0,
+      "ocorrencias": 1,
       "path": "ambiente_fonte/.assistant/hub_snippets/display/correlation_matrix/exemplo_correlation_matrix.py",
       "sha256": "febd717f2edfb22f9a9c31564a96af18de5f510dc8daf1de7dd2ed1eb2e658d8"
     },
@@ -5220,7 +5220,7 @@
       "bytes": 1739,
       "camada": "produto",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 0,
+      "ocorrencias": 7,
       "path": "ambiente_fonte/.assistant/hub_snippets/display/distribution_grid/distribution_grid.py",
       "sha256": "f11b9cd57264a9adb88ffc072e60f8b6036b1dbd72198b851065c74cfd935a7b"
     },
@@ -5228,7 +5228,7 @@
       "bytes": 3873,
       "camada": "produto",
       "classe_inicial": "exemplo_ou_teste",
-      "ocorrencias": 0,
+      "ocorrencias": 1,
       "path": "ambiente_fonte/.assistant/hub_snippets/display/distribution_grid/exemplo_distribution_grid.py",
       "sha256": "ce9c2a6bcd2a36a00787381bd0ff4671b88295a5f37600ea0fb8c3e2fa83a134"
     },
@@ -5348,7 +5348,7 @@
       "bytes": 9507,
       "camada": "produto",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 45,
+      "ocorrencias": 52,
       "path": "ambiente_fonte/.assistant/hub_snippets/ml/curves_plotly/curves_plotly.py",
       "sha256": "2bd55c20ddf38ead53b47087b21602671b3ac45a7c09bbd4dd35216c5740ab4d"
     },
@@ -5452,7 +5452,7 @@
       "bytes": 5842,
       "camada": "produto",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 19,
+      "ocorrencias": 23,
       "path": "ambiente_fonte/.assistant/hub_snippets/ml/kaplan_meier/kaplan_meier.py",
       "sha256": "e89b63f89b17cf09d9eb3b58c56168a6196ed09c6a7d5e281a26ab64f01f9c3d"
     },
@@ -5620,7 +5620,7 @@
       "bytes": 14394,
       "camada": "produto",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 2,
+      "ocorrencias": 4,
       "path": "ambiente_fonte/.assistant/hub_snippets/ml/performance_monitor/performance_monitor.py",
       "sha256": "ec19b293cd4ca60b9b5d3d83d65258c006ea992a7034b7e79c51c68fcc22989a"
     },
@@ -5716,7 +5716,7 @@
       "bytes": 9177,
       "camada": "produto",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 2,
+      "ocorrencias": 4,
       "path": "ambiente_fonte/.assistant/hub_snippets/ml/shap_explainer/shap_explainer.py",
       "sha256": "f81ec9326a5fb3f8b2723c0658d29dd668c3fa7df39db6f001bc44ceb7be6d96"
     },
@@ -5884,7 +5884,7 @@
       "bytes": 3399,
       "camada": "produto",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 16,
+      "ocorrencias": 19,
       "path": "ambiente_fonte/.assistant/hub_snippets/ml/umap_viz/umap_viz.py",
       "sha256": "7ff45383e84af585499ef3455f5b322350f9333acd3ecc37ab48ab7bcbae3f1d"
     },
@@ -5900,7 +5900,7 @@
       "bytes": 10593,
       "camada": "produto",
       "classe_inicial": "exemplo_ou_teste",
-      "ocorrencias": 1,
+      "ocorrencias": 4,
       "path": "ambiente_fonte/.assistant/hub_snippets/ml/vintage_analysis/exemplo_vintage_analysis.py",
       "sha256": "edcbfa41ef57569b0586d97edb272cd69611a7cc0c750934315550801bbc00f6"
     },
@@ -5908,7 +5908,7 @@
       "bytes": 9287,
       "camada": "produto",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 13,
+      "ocorrencias": 17,
       "path": "ambiente_fonte/.assistant/hub_snippets/ml/vintage_analysis/vintage_analysis.py",
       "sha256": "91f937bf1d65b831eed31654d2f554e816116ad6ccc793708b1723311b23861c"
     },
@@ -5964,7 +5964,7 @@
       "bytes": 5736,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 0,
+      "ocorrencias": 4,
       "path": "ambiente_fonte/.assistant/hub_snippets/requirements-optional.txt",
       "sha256": "c6d6cadbfeab5b1edb3bb96bc53366a962ee75b1ef7446e8c93371763681ee4b"
     },
@@ -6268,7 +6268,7 @@
       "bytes": 117,
       "camada": "produto",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 0,
+      "ocorrencias": 2,
       "path": "ambiente_fonte/.assistant/hub_snippets/visual/kpi_card/__init__.py",
       "sha256": "112cc0f9454e22407273b5b6d4c5e62d5ce46b5a4cbe09a39ae755337dcd0dc5"
     },
@@ -6276,7 +6276,7 @@
       "bytes": 3005,
       "camada": "produto",
       "classe_inicial": "exemplo_ou_teste",
-      "ocorrencias": 1,
+      "ocorrencias": 3,
       "path": "ambiente_fonte/.assistant/hub_snippets/visual/kpi_card/exemplo_kpi_card.py",
       "sha256": "53634cab5e83bfadd200b7d01b8bcc1b7b6cdc0e6a91913d7336aadd527de8a5"
     },
@@ -6284,7 +6284,7 @@
       "bytes": 1258,
       "camada": "produto",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 7,
+      "ocorrencias": 8,
       "path": "ambiente_fonte/.assistant/hub_snippets/visual/kpi_card/kpi_card.py",
       "sha256": "b1f7b3654c825478ec7c133042fc3df8f525145dac87716963cf80aadbeb64ec"
     },
@@ -6292,7 +6292,7 @@
       "bytes": 91,
       "camada": "produto",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 0,
+      "ocorrencias": 2,
       "path": "ambiente_fonte/.assistant/hub_snippets/visual/section_header/__init__.py",
       "sha256": "36daebf022ddf91d48e3c30ceb7efacfb7bfcb8c256d00cceb02821ea7209988"
     },
@@ -6300,7 +6300,7 @@
       "bytes": 3950,
       "camada": "produto",
       "classe_inicial": "exemplo_ou_teste",
-      "ocorrencias": 10,
+      "ocorrencias": 15,
       "path": "ambiente_fonte/.assistant/hub_snippets/visual/section_header/exemplo_section_header.py",
       "sha256": "55d827f66dc4feb95f0110f66cd4ebd3092b6104ac6333d2719905dafab43e9b"
     },
@@ -6308,7 +6308,7 @@
       "bytes": 1734,
       "camada": "produto",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 13,
+      "ocorrencias": 14,
       "path": "ambiente_fonte/.assistant/hub_snippets/visual/section_header/section_header.py",
       "sha256": "64ed5c19cfb5620e41e887a9e5d61b75833a9fee4b9b49ede2b0498664ece72b"
     },
@@ -6316,7 +6316,7 @@
       "bytes": 169,
       "camada": "produto",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 0,
+      "ocorrencias": 5,
       "path": "ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/__init__.py",
       "sha256": "3ff4642e753aa0ed5000d9736160d2f8a0fd5a304f4f1b16e371956565c18c00"
     },
@@ -6324,7 +6324,7 @@
       "bytes": 5709,
       "camada": "produto",
       "classe_inicial": "exemplo_ou_teste",
-      "ocorrencias": 52,
+      "ocorrencias": 61,
       "path": "ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/exemplo_theme_plotly.py",
       "sha256": "a575a52ddc05b67a824de8aa79741afd38886f703375ab11dc859c31c68d1fe0"
     },
@@ -6332,7 +6332,7 @@
       "bytes": 2484,
       "camada": "produto",
       "classe_inicial": "literal_ou_consumidor_candidato",
-      "ocorrencias": 16,
+      "ocorrencias": 27,
       "path": "ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/theme_plotly.py",
       "sha256": "cb60c3518b1108fa5cffc99791394b175a1d70e9b3f23478944b6f5b7475f221"
     },
@@ -6340,7 +6340,7 @@
       "bytes": 27254,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 6,
+      "ocorrencias": 8,
       "path": "ambiente_fonte/.assistant/skills/README.md",
       "sha256": "0fbe4addda86c25ceabddd3ae8b1866914532f5d59555e8edd3ad1eb98f8cfbf"
     },
@@ -6348,7 +6348,7 @@
       "bytes": 5385,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 1,
+      "ocorrencias": 3,
       "path": "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/SKILL.md",
       "sha256": "d681b7bfe5e227e6cd536c9f153076c61427d425c95e2d667a4e83de9b0e322a"
     },
@@ -6380,7 +6380,7 @@
       "bytes": 3417,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 3,
+      "ocorrencias": 4,
       "path": "ambiente_fonte/.assistant/skills/hub-ml-auditoria-skills/templates/relatorio_auditoria.md",
       "sha256": "fa745ae33a8cd5f39b0db5adad26ffe6ec044c8fa38fe7c4af3a0efc3f998d17"
     },
@@ -6388,7 +6388,7 @@
       "bytes": 7092,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 3,
+      "ocorrencias": 6,
       "path": "ambiente_fonte/.assistant/skills/hub-ml-auditoria-skills/templates/rubrica_universal.md",
       "sha256": "6600b2043e5ad54f280182e9b3b8897d0efaf5c3500e476fc463ddf1e88b043f"
     },
@@ -6716,7 +6716,7 @@
       "bytes": 14932,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 19,
+      "ocorrencias": 21,
       "path": "ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/SKILL.md",
       "sha256": "320260bb7ef8485a1e643521831a89611126f5a020ac0f376af3a3fd740dbcec"
     },
@@ -6764,7 +6764,7 @@
       "bytes": 6102,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 10,
+      "ocorrencias": 21,
       "path": "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/templates/notebook_output_cross_eda.md",
       "sha256": "8fb0a22026599de6510cab7d5debd045bca6d585d470cac891456c4f62e0a8ee"
     },
@@ -6788,7 +6788,7 @@
       "bytes": 5643,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 1,
+      "ocorrencias": 3,
       "path": "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/SKILL.md",
       "sha256": "03964b63161710d7f70504e9d9aeff6887a4df63b64fad12ba591d93b802f072"
     },
@@ -6796,7 +6796,7 @@
       "bytes": 11018,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 65,
+      "ocorrencias": 81,
       "path": "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/templates/estilo_visual_eda.md",
       "sha256": "79af86545647b7e4f0a58b3238e4a989709d424add05284dfc8e6b8feae6583d"
     },
@@ -6804,7 +6804,7 @@
       "bytes": 5444,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 2,
+      "ocorrencias": 34,
       "path": "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/templates/matriz_graficos_eda.md",
       "sha256": "31513fdc2d8433b4c525849c86a201c0bde209dbd89cb020fd958b569ca7da08"
     },
@@ -6820,7 +6820,7 @@
       "bytes": 4115,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 1,
+      "ocorrencias": 3,
       "path": "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/templates/roteiro_eda.md",
       "sha256": "7fedf37cdd4866d387d79fce158afa8401ec98516544bf68708f0c19eca2cffc"
     },
@@ -7004,7 +7004,7 @@
       "bytes": 6139,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 7,
+      "ocorrencias": 17,
       "path": "ambiente_fonte/.assistant/skills/hub-ml-validacao-estatistica/templates/notebook_output_stat.md",
       "sha256": "abf209020241a86881535e3dc3688c0d605a5b3bdf6c1ec11096bd4f14b0a0a4"
     },
@@ -7044,7 +7044,7 @@
       "bytes": 9081,
       "camada": "produto",
       "classe_inicial": "orientacao_documental",
-      "ocorrencias": 1,
+      "ocorrencias": 3,
       "path": "ambiente_fonte/.assistant_instructions.md",
       "sha256": "ab6aa85eb53dbdb78d3d022592c01a6e20852a9156c2f47c270439d0f656cd65"
     },

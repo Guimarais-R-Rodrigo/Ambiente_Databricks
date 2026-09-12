@@ -2,7 +2,7 @@
 
 Estado da sprint: **CANDIDATA_PENDENTE_DE_AUDITORIA_E_ACEITE**.
 
-Baseline: `8744157fe9c3e0603f689fb2bcad52445e96cb41`. Candidata executada: `ad9542fe13755fa390e4db79f4ef59d80290098c`.
+Baseline: `8744157fe9c3e0603f689fb2bcad52445e96cb41`. Candidata executada: `8f0c732c37d29242ba74430e08d7fb268c632718`.
 
 Gate técnico: **FAIL_OU_BLOQUEADO**. Não é aceite humano, auditoria independente ou publicação.
 
@@ -28,8 +28,8 @@ Gate técnico: **FAIL_OU_BLOQUEADO**. Não é aceite humano, auditoria independe
 | figuras_candidata_scripts | PASS | 0 | 0 |
 | figuras_candidata_skills | PASS | 0 | 0 |
 | figuras_candidata_prompts | PASS | 0 | 0 |
-| guardas_inventario | PASS | 25 | 0 |
-| guardas_runner | PASS | 139 | 0 |
+| guardas_inventario | PASS | 27 | 0 |
+| guardas_runner | PASS | 9 | 0 |
 
 Contagens não incluem verificações sem unittest; não somar base e candidata como testes distintos.
 
@@ -48,9 +48,9 @@ Capturas sintéticas iguais: True. Checkouts preservados durante os testes: True
     "experimental": 19,
     "ferramenta": 42
   },
-  "ocorrencias": 30866,
+  "ocorrencias": 31340,
   "modulos_python": 444,
-  "arquivos_com_ocorrencias": 457,
+  "arquivos_com_ocorrencias": 488,
   "imagens": 102,
   "readmes_com_imagens": 15
 }
