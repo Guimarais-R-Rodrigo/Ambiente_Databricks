@@ -6,7 +6,7 @@ Complemento do [guia de transição](replicacao-trabalho.md). Execute **depois**
 
 Para cada caso, registre localmente pedido, resposta, evidência de seleção/carregamento exposta pela interface, recursos fornecidos, conclusão e limitações. O agente escrever “usei a skill” não basta. Quando a UI não permitir confirmar um mecanismo, registre PENDENTE; é possível avaliar a qualidade da resposta sem certificar carregamento. Mensagem em PT-BR isolada também não prova leitura das instruções.
 
-A confirmação humana do notebook usa `CONFIRMADO`, `PENDENTE` ou `REPROVADO`. O recibo não converte essa declaração em teste automatizado. Os casos 1–7 e 10 alimentam os campos obrigatórios; os demais ampliam o aceite conforme a necessidade e devem permanecer registrados fora do chat. Não afirmar aprovação das treze skills com três conversas.
+A confirmação humana do notebook usa `CONFIRMADO`, `PENDENTE` ou `REPROVADO`. O recibo não converte essa declaração em teste automatizado. Os casos 1–7 e 10 alimentam os campos obrigatórios; os demais ampliam o aceite conforme a necessidade e devem permanecer registrados fora do chat. Não afirmar aprovação de todas as skills com três conversas.
 
 ## Casos prioritários
 
@@ -110,9 +110,17 @@ Esperado: identifica erro/ambiente/dependência exatos, sem instalação indiscr
 
 No mesmo chat, forneça um briefing sintético curto com objetivo, grão, chave e período e depois peça ajuste pontual. Esperado: não repete perguntas respondidas nem reabre o catálogo inteiro sem necessidade. Isso testa economia operacional observável, não cache interno ou preço por token.
 
+### 17. Concierge: descoberta opcional e referências
+
+Selecione `hub-ml-concierge` em um chat novo. Pedido: **“Não conheço as ferramentas do Hub. Quais recursos existentes ajudam a verificar nulos e duplicidades? Recomende o menor conjunto suficiente, cite os contratos lidos e não execute nem consulte dados.”**
+
+Esperado: distinguir checagem de EDA; citar arquivos existentes e adequação de entradas; registrar acesso bloqueado quando necessário, sem inventar pesquisa. Depois, em outro chat, peça somente uma explicação simples de Python: Concierge não deve assumir o pedido. Registre carregamento e qualidade separadamente.
+
+Esse caso é adicional e não altera os campos obrigatórios do notebook de aceite já existente. Para compartilhar a nova skill, registre sua avaliação e as regressões de vizinhas além dos gates anteriores; presença no inventário não é homologação.
+
 ## Inventário das skills desta geração
 
-Confira disponibilidade das treze entradas abaixo pela UI, sem inferir qualidade apenas pela presença:
+Confira disponibilidade das entradas abaixo pela UI, sem inferir qualidade apenas pela presença:
 
 ```text
 hub-ml-eda-profissional
@@ -128,6 +136,7 @@ hub-ml-comentar-notebook
 hub-ml-tutor-databricks
 hub-ml-auditoria-skills
 hub-ml-criar-objeto
+hub-ml-concierge
 ```
 
 Para legado, confira o inventário do ambiente anterior e a lista `legacy_skill_names_for_review` no `MANIFEST.json` do próprio kit. Não remova pasta alheia só por ter nome parecido; nomes antigos são indicação para revisão, não autorização genérica de exclusão.

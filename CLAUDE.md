@@ -32,8 +32,9 @@ Escala planejada: pessoal → squad → missão.
 - Arquitetura multi-IA e este layout: `docs/decisions/ADR-0001-arquitetura-multi-ia.md`.
 - `Ambiente_Antigo/` é git-ignored por conter identificadores corporativos:
   `docs/decisions/ADR-0003-quarentena-ambiente-antigo.md`.
-- Helpers declarados explicitamente nas skills, não descobertos em chat:
-  `docs/decisions/ADR-0004-declaracao-explicita-de-helpers.md`.
+- Helpers declarados explicitamente nas skills:
+  `docs/decisions/ADR-0004-declaracao-explicita-de-helpers.md`. O ADR-0011 acrescenta
+  descoberta solicitada e progressiva pelo Concierge, sem remover essas declarações.
 - Publicação no Free usa `tools/publicar_free.py`, não o engine do Hub:
   `docs/decisions/ADR-0005-publicacao-propria-no-free.md`, que **supersede o
   ADR-0002** — o engine publicava `.py` como notebook e quebraria os imports da
@@ -50,6 +51,9 @@ Escala planejada: pessoal → squad → missão.
 
 - Manual Técnico unifica o catálogo e o glossário: `ADR-0010`. Autoria em
   `ambiente_fonte/.assistant/MANUAL_TECNICO.md`; cópia de leitura idêntica na raiz.
+
+- Concierge integrado como entrada opcional de descoberta/composição: `ADR-0011`.
+  Publicação e homologação conversacional são gates separados da integração Git.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 

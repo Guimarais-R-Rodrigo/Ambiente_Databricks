@@ -192,6 +192,15 @@ O local define o escopo e as permissões. A disponibilidade de uma skill compart
 As skills cobrem etapas complementares de um ciclo analítico. O catálogo foi
 dividido por etapa para permanecer legível em painéis estreitos do workspace.
 
+### 🧭 Descoberta e composição
+
+| Skill | Objetivo principal |
+|---|---|
+| [hub-ml-concierge](hub-ml-concierge/README.md) | Localizar e combinar recursos existentes sem exigir que o usuário conheça o catálogo. |
+
+Integrada ao produto; publicação e testes conversacionais no destino pendentes.
+É uma entrada opcional, não substitui o especialista explicitamente selecionado.
+
 ### 🔍 Exploração & Diagnóstico
 
 | Skill | Objetivo principal |
@@ -241,6 +250,17 @@ dividido por etapa para permanecer legível em painéis estreitos do workspace.
 ## 📖 Detalhamento das Skills
 
 Abaixo você encontra o propósito, o momento de uso, os principais recursos e um exemplo de demanda para cada skill.
+
+### `hub-ml-concierge` — Orientação de uso do Hub
+
+Use ao perguntar o que já existe, por onde começar ou quais peças combinar.
+Consulta o inventário do Manual e verifica contratos dos candidatos antes de
+recomendar método, briefing, API pública ou composição. A resposta informa
+cobertura, evidências, lacunas e próxima ação; não importa helpers nem executa análises.
+
+Exemplo: “O que o Hub tem para conferir nulos e duplicidades antes de modelar?”
+Templates de recomendação, handoff e registro de busca ficam no
+[pacote da skill](hub-ml-concierge/README.md).
 
 ---
 

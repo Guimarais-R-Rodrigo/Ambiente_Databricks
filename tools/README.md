@@ -56,6 +56,7 @@ o remoto.
 | `api_publica.py` | extrair API pública por AST e gerar `__init__.py` |
 | `notebook_marker.py` | distinguir módulo Python de notebook Databricks |
 | `project_policy.py` | centralizar identidade neutra, skills e diretórios gerenciados |
+| `tests/test_concierge_integracao.py` | conferir integração do Concierge, referências e igualdade fonte/espelho |
 | `bundle_para_auditoria.py` | pacote canônico, de segurança ou completo para revisão |
 | `bundle_implantacao.py` | ZIP mínimo sanitizado com manifesto SHA-256 |
 

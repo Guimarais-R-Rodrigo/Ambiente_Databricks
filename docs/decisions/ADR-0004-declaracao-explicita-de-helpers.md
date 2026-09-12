@@ -65,3 +65,7 @@ registrada no repositório, e revisada por auditoria.
 - Catálogo: `ambiente_fonte/.assistant/x_docs/catalogo_helpers.md`
 - Verificação de runtime dos helpers: `docs/testes/spark/README.md`
 - Certificação de roteamento: `docs/testes/forward/README.md`
+
+## Atualização de status — 2026-09-12
+
+O [ADR-0011](ADR-0011-concierge-hub.md) aceita descoberta solicitada, limitada e progressiva pelo Concierge, sem substituir declarações de helpers nas skills. A alternativa de varredura universal indiscriminada continua rejeitada. O corpo histórico acima permanece inalterado.

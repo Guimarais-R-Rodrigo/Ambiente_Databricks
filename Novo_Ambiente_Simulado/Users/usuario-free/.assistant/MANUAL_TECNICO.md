@@ -2142,12 +2142,13 @@ Quando surgir um novo objeto, atualize esta seção a partir do código e confir
 <a id="metodos"></a>
 ## 28. Skills, prompts e padrões: como escolher sem decorar o repositório
 
-### 28.1. As treze skills: o método não é o dado
+### 28.1. Skills do Hub: o método não é o dado
 
 Cada linha abaixo descreve o escopo do método, não uma promessa de execução automática. Na pasta `skills/<nome>/`, `SKILL.md` define o contrato e `templates/` reúne entregáveis de apoio quando presentes. A interface deve receber contexto suficiente para a tarefa; uma menção explícita não supre dados ausentes.
 
 | Skill | Pergunta atendida e contexto necessário | O que revisar na entrega |
 |---|---|---|
+| `hub-ml-concierge` | O que o Hub já oferece e como combinar seus recursos? Descreva objetivo, entrada conhecida e restrições. | Evidências de existência/adequação, cobertura, versão, pré-condições e repasse sem execução. |
 | `hub-ml-eda-profissional` | Como é uma fonte ou base consolidada? Forneça recurso, grão, chaves candidatas e período. | Perfil, qualidade, distribuições, origem integral/amostral dos números e limites. |
 | `hub-ml-cross-eda-ml` | É viável combinar várias fontes? Forneça os EDAs, chaves, tempos e cobertura. | Relações, expansão dos joins, disponibilidade temporal e lacunas antes de modelar. |
 | `hub-ml-feature-engineering` | Como construir atributos disponíveis no momento correto? Defina decisão, target, fontes e horizontes. | Contratos, point-in-time, preparação, testes e coerência treino/inferência. |
@@ -2226,6 +2227,38 @@ Uma boa revisão perguntará se a resposta respeitou o modo, utilizou nomes exis
 Um padrão não é uma função especial do Databricks. É uma convenção de organização. A pasta de objeto aproxima implementação, API pública e notebook de exemplo. O checklist acrescenta verificações sobre contrato, documentação, testes e integração com quem já usa o objeto.
 
 **Docstring** é documentação dentro do código; **README**, a entrada da coleção; **template**, um molde; **notebook de exemplo**, uma demonstração; **teste**, uma comparação automatizada com critérios. Nenhum substitui todos os outros. Uma docstring que promete uma chave inexistente deve ser corrigida; não se deve preservar o erro apenas porque está no próprio código.
+
+### 28.5. Concierge: começar pela necessidade, não pelo nome da ferramenta
+
+O `hub-ml-concierge` é a entrada opcional para quem não sabe qual componente usar.
+Ele consulta os índices deste Manual, verifica os candidatos e recomenda a menor
+composição suficiente. Não substitui as declarações de helpers dos especialistas
+nem faz uma leitura integral do Hub a cada pergunta. O corpo do procedimento e os
+modelos de entrega estão em `skills/hub-ml-concierge/README.md`, relativo à raiz
+do Hub. Essa referência é textual para preservar a mesma redação na cópia Git
+da raiz e na instalação do workspace.
+
+```text
+@hub-ml-concierge
+Quero descobrir quais recursos do Hub ajudam a verificar nulos e duplicidades
+antes de modelar. Tenho uma tabela nomeada; ainda preciso confirmar o grão e a
+chave. Recomende uma rota e cite os contratos consultados. Não execute consultas.
+```
+
+O resultado pode indicar uma skill, um briefing, uma função pública ou várias
+peças complementares. Uma função dentro de um módulo pode bastar; recortar código
+privado exige adaptação explícita. Uma composição conceitual não equivale a um
+pipeline testado: as entradas, saídas e dependências precisam ser compatíveis.
+
+Falta de acesso produz uma limitação de pesquisa, não prova de inexistência.
+Recursos presentes no Git podem ainda não estar publicados no workspace. Uma
+menção na resposta não executa outra skill. Sem ferramentas para ler os arquivos,
+o assistente deve solicitar o contexto mínimo ou registrar acesso bloqueado.
+
+**Estado da integração em 12/09/2026:** componente incorporado à fonte do produto,
+com publicação e testes conversacionais pendentes. A origem histórica do código
+examinado neste Manual permanece a indicada na abertura; esta seção registra a
+adição posterior e não atribui o Concierge ao snapshot antigo dos helpers.
 
 <a id="indice-termos"></a>
 ## 29. Índice de termos técnicos e de nomes parecidos

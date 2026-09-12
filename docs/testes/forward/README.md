@@ -14,20 +14,31 @@ Ele não mede qualidade da resposta nem execução de código.
 | negativo (`N`) | demanda vizinha deixa a skill alvo de fora? | alvo não carregada |
 | menção (`M`) | `@nome-da-skill` seleciona explicitamente? | alvo carregada |
 
-São 13 skills × 3 casos = 39. Os negativos cobrem colisões de vocabulário como
-drift, materialização, explicação de notebook e auditoria.
+A matriz básica agora prevê 14 skills × 3 casos = 42. Os casos 14P/14N/14M
+foram acrescentados para o Concierge, mas ainda não foram executados. Os negativos
+cobrem colisões como drift, materialização, explicação de notebook e auditoria.
+A matriz detalhada do Concierge, em seu pacote canônico, acrescenta casos de qualidade
+e segurança; ela não equivale a 26 forward tests aprovados.
 
-## Estado vigente
+## Evidência histórica preservada — conjunto anterior
 
 | Escopo | Resultado | Situação |
 |---|---:|---|
 | 12 skills originais | **36/36 PASS** | fechado |
 | `hub-ml-criar-objeto` | **3/3 PASS** | fechado em 09/09 |
-| total | **39/39 PASS** | fechado |
+| conjunto anterior | **39/39 PASS** | histórico; não homologa o conjunto ampliado |
 
 O caso `11N-r2` foi aprovado no critério do teste — a skill alvo ficou de fora
 —, embora a skill ideal também não tenha sido carregada. É item de vigilância,
 não motivo para reclassificar o resultado.
+
+## Estado da integração — 12/09/2026
+
+Concierge integrado ao Git; seus casos básicos e a matriz detalhada permanecem
+PENDENTES no Genie Code. Reexecute também as vizinhas e os casos afetados pelo
+mapa de instruções atualizado. Sem nova evidência, não declare 42/42 nem
+homologação de todo o catálogo. A matriz detalhada vive no
+[pacote canônico](../../../ambiente_fonte/.assistant/skills/hub-ml-concierge/tests/README.md).
 
 ## Executar uma rodada
 

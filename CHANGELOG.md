@@ -5,6 +5,40 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — Concierge integrado ao produto (Codex)
+
+### Adicionado
+
+- (Codex) `hub-ml-concierge` na fonte canônica, com templates de recomendação,
+  handoff e registro de busca, referências, documentação e testes locais.
+- (Codex) ADR-0011: descoberta solicitada e progressiva, sem substituir helpers
+  declarados nas skills especializadas nem criar outro agente ou catálogo.
+- (Codex) Testes de integração em `tools/tests/test_concierge_integracao.py` e
+  estágios Concierge incorporados ao gate `tools/ci_local.py`.
+
+### Atualizado
+
+- (Codex) Política de skills, mapa opcional nas instruções, READMEs e Manual;
+  cópia do Manual sincronizada e simulado regenerado pelo renderer.
+- (Codex) Roteiro/template de forward tests recebe 14P/14N/14M. O 39/39 anterior
+  permanece evidência histórica, não homologação da skill nova.
+- (Codex) Protótipo experimental preservado como histórico, com ponte para a
+  versão mantida em `ambiente_fonte/`.
+
+### Corrigido
+
+- (Codex) Contagens do README reconferidas por execução: duas já estavam
+  divergentes na base após a criação do pacote experimental.
+- (Codex) Verificador do Concierge recusa raiz simbólica antes de resolver path
+  e exige coerência entre categoria e ativação esperada na matriz de aceite.
+
+### Notas
+
+- (Codex) Resultados e limites em `docs/testes/2026-09-12_concierge-integracao.md`.
+  Sem publicação no Free/trabalho, consulta de dados ou execução no Genie Code.
+- (Codex) Aceite conversacional e revisão independente antes de compartilhamento
+  permanecem pendentes. Skips de Spark local não são aprovação no Databricks.
+
 ## 2026-09-11 — Kit de transição e aceite gradual no trabalho (Codex)
 
 ### Adicionado

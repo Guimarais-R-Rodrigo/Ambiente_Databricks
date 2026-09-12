@@ -25,6 +25,12 @@ flowchart LR
 
 O [guia vigente](../playbooks/replicacao-trabalho.md) separa integridade, runtime sintético e aceite humano. O kit gera um notebook próprio; ele não considera testes pulados como aprovação e não presume que a rodada de 09/09 homologue as novas instruções de 11/09 ou o workspace corporativo. A execução no trabalho permanece pendente.
 
+## Concierge integrado — 12/09/2026
+
+A [integração Git](2026-09-12_concierge-integracao.md) acrescenta uma skill, sem alterar os resultados históricos abaixo.
+Os casos do Concierge e as regressões de roteamento das vizinhas no Genie Code
+ainda precisam ser executados; consulte [Forward](forward/README.md).
+
 ## Estado registrado — 09/09/2026
 
 | Gate | Resultado | Falta |
