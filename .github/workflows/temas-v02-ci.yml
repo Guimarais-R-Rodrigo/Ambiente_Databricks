@@ -1,0 +1,58 @@
+name: Núcleo de temas V02
+on:
+  push:
+    branches: [codex/temas-v02]
+  pull_request:
+    paths:
+      - 'ambiente_fonte/**'
+      - 'tools/**'
+      - 'docs/sprints/sistema_temas/**'
+      - '.github/workflows/temas-v02-ci.yml'
+permissions:
+  contents: read
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Dependências de teste existentes
+        run: python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt
+      - name: Baseline anterior ao núcleo V02
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/v02-evidencias
+          git rev-parse HEAD > /tmp/v02-evidencias/commit.txt
+          git rev-parse HEAD^{tree} > /tmp/v02-evidencias/tree.txt
+          python -B tools/ci_local.py --verbose 2>&1 | tee /tmp/v02-evidencias/ci.log
+          python -B -m unittest discover -s tools/tests -p 'test_temas_v01*.py' -v 2>&1 | tee /tmp/v02-evidencias/v01.log
+          python -B tools/tests/test_inventario_visual.py 2>&1 | tee /tmp/v02-evidencias/v00-inventario.log
+          python -B tools/tests/test_visual_legado_v00.py 2>&1 | tee /tmp/v02-evidencias/v00-legado.log
+          python -B tools/tests/test_baseline_visual_runner.py 2>&1 | tee /tmp/v02-evidencias/v00-relatorios.log
+          python -B -m unittest discover -s tools/readme_visuals/tests -p 'test_*.py' -v 2>&1 | tee /tmp/v02-evidencias/publicador.log
+      - name: Snapshot versionado para reprodução e inspeção
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/v02-evidencias
+          git archive --format=tar HEAD -- . ':!Ambiente_Antigo' > /tmp/v02-evidencias/fonte.tar
+          git ls-tree -r HEAD > /tmp/v02-evidencias/arvore.txt
+          python -m pip freeze > /tmp/v02-evidencias/dependencias.txt
+          echo 'Baseline preparatório; ainda não implementa nem homologa V02.' > /tmp/v02-evidencias/ESCOPO.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v02-evidencias-${{ github.run_id }}
+          path: /tmp/v02-evidencias
+          retention-days: 7
