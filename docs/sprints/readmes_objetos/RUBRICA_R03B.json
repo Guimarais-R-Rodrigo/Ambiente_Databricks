@@ -1,0 +1,131 @@
+{
+  "sprint": "R03-B",
+  "date": "2026-09-12",
+  "base": "c60f1e54743dc23ed60b32ad2260b9aa6a77af0a",
+  "contract": "1.0.0",
+  "author": "ChatGPT",
+  "review": "A0_light: autorrevisao; nenhum agente independente",
+  "user_acceptance": "PENDENTE para novos textos; Siga autoriza execucao",
+  "objects": [
+    {
+      "path": "ambiente_fonte/.assistant/hub_snippets/display/correlation_matrix/README.md",
+      "state": "ESCRITO_E_AUTORREVISADO",
+      "dimensions": {
+        "conceito": "Definicao antes da sintaxe e delimitacao ao helper real",
+        "adequacao": "Contextos positivos, contraexemplo e motivos",
+        "contrato": "Entradas, retornos, defaults e validacoes ausentes confrontados com o codigo",
+        "seguranca": "Efeitos do helper e notebook separados; dados sinteticos",
+        "didatica": "Quinze secoes, sem quota de palavras ou alternativas inventadas",
+        "procedencia": "Codigo/base e fontes primarias, historico nao recertificado",
+        "navegacao": "Links main/exemplo/fachada/colecao e rotas no Manual",
+        "verificacao": "Bloco copiavel no suplemento; alcance local e Spark separados no relatorio"
+      },
+      "findings": [
+        "B01",
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "independent_review": "NAO_REALIZADA",
+      "workspace_homologation": "NAO_REALIZADA"
+    },
+    {
+      "path": "ambiente_fonte/.assistant/hub_snippets/display/dataframe_styled/README.md",
+      "state": "ESCRITO_E_AUTORREVISADO",
+      "dimensions": {
+        "conceito": "Definicao antes da sintaxe e delimitacao ao helper real",
+        "adequacao": "Contextos positivos, contraexemplo e motivos",
+        "contrato": "Entradas, retornos, defaults e validacoes ausentes confrontados com o codigo",
+        "seguranca": "Efeitos do helper e notebook separados; dados sinteticos",
+        "didatica": "Quinze secoes, sem quota de palavras ou alternativas inventadas",
+        "procedencia": "Codigo/base e fontes primarias, historico nao recertificado",
+        "navegacao": "Links main/exemplo/fachada/colecao e rotas no Manual",
+        "verificacao": "Bloco copiavel no suplemento; alcance local e Spark separados no relatorio"
+      },
+      "findings": [
+        "B05",
+        "B06"
+      ],
+      "independent_review": "NAO_REALIZADA",
+      "workspace_homologation": "NAO_REALIZADA"
+    },
+    {
+      "path": "ambiente_fonte/.assistant/hub_snippets/display/distribution_grid/README.md",
+      "state": "ESCRITO_E_AUTORREVISADO",
+      "dimensions": {
+        "conceito": "Definicao antes da sintaxe e delimitacao ao helper real",
+        "adequacao": "Contextos positivos, contraexemplo e motivos",
+        "contrato": "Entradas, retornos, defaults e validacoes ausentes confrontados com o codigo",
+        "seguranca": "Efeitos do helper e notebook separados; dados sinteticos",
+        "didatica": "Quinze secoes, sem quota de palavras ou alternativas inventadas",
+        "procedencia": "Codigo/base e fontes primarias, historico nao recertificado",
+        "navegacao": "Links main/exemplo/fachada/colecao e rotas no Manual",
+        "verificacao": "Bloco copiavel no suplemento; alcance local e Spark separados no relatorio"
+      },
+      "findings": [
+        "B07",
+        "B08"
+      ],
+      "independent_review": "NAO_REALIZADA",
+      "workspace_homologation": "NAO_REALIZADA"
+    },
+    {
+      "path": "ambiente_fonte/.assistant/hub_snippets/visual/index_generator/README.md",
+      "state": "ESCRITO_E_AUTORREVISADO",
+      "dimensions": {
+        "conceito": "Definicao antes da sintaxe e delimitacao ao helper real",
+        "adequacao": "Contextos positivos, contraexemplo e motivos",
+        "contrato": "Entradas, retornos, defaults e validacoes ausentes confrontados com o codigo",
+        "seguranca": "Efeitos do helper e notebook separados; dados sinteticos",
+        "didatica": "Quinze secoes, sem quota de palavras ou alternativas inventadas",
+        "procedencia": "Codigo/base e fontes primarias, historico nao recertificado",
+        "navegacao": "Links main/exemplo/fachada/colecao e rotas no Manual",
+        "verificacao": "Bloco copiavel no suplemento; alcance local e Spark separados no relatorio"
+      },
+      "findings": [
+        "B09"
+      ],
+      "independent_review": "NAO_REALIZADA",
+      "workspace_homologation": "NAO_REALIZADA"
+    },
+    {
+      "path": "ambiente_fonte/.assistant/hub_snippets/visual/section_header/README.md",
+      "state": "ESCRITO_E_AUTORREVISADO",
+      "dimensions": {
+        "conceito": "Definicao antes da sintaxe e delimitacao ao helper real",
+        "adequacao": "Contextos positivos, contraexemplo e motivos",
+        "contrato": "Entradas, retornos, defaults e validacoes ausentes confrontados com o codigo",
+        "seguranca": "Efeitos do helper e notebook separados; dados sinteticos",
+        "didatica": "Quinze secoes, sem quota de palavras ou alternativas inventadas",
+        "procedencia": "Codigo/base e fontes primarias, historico nao recertificado",
+        "navegacao": "Links main/exemplo/fachada/colecao e rotas no Manual",
+        "verificacao": "Bloco copiavel no suplemento; alcance local e Spark separados no relatorio"
+      },
+      "findings": [
+        "B10"
+      ],
+      "independent_review": "NAO_REALIZADA",
+      "workspace_homologation": "NAO_REALIZADA"
+    },
+    {
+      "path": "ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/README.md",
+      "state": "ESCRITO_E_AUTORREVISADO",
+      "dimensions": {
+        "conceito": "Definicao antes da sintaxe e delimitacao ao helper real",
+        "adequacao": "Contextos positivos, contraexemplo e motivos",
+        "contrato": "Entradas, retornos, defaults e validacoes ausentes confrontados com o codigo",
+        "seguranca": "Efeitos do helper e notebook separados; dados sinteticos",
+        "didatica": "Quinze secoes, sem quota de palavras ou alternativas inventadas",
+        "procedencia": "Codigo/base e fontes primarias, historico nao recertificado",
+        "navegacao": "Links main/exemplo/fachada/colecao e rotas no Manual",
+        "verificacao": "Bloco copiavel no suplemento; alcance local e Spark separados no relatorio"
+      },
+      "findings": [
+        "B11",
+        "B12"
+      ],
+      "independent_review": "NAO_REALIZADA",
+      "workspace_homologation": "NAO_REALIZADA"
+    }
+  ]
+}

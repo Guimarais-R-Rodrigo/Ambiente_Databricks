@@ -205,9 +205,9 @@ reexecuta o gate e reprova se qualquer contagem ficar desatualizada.
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 88 caminhos verificados
-markdown / links   : 141 arquivos / 414 links relativos
-notebooks / links  : 79 notebooks / 29 links relativos
-readmes de objeto  : 7/75 operacionais; 3/3 exemplares; 68 pendentes (estrutura, não aceite editorial)
+markdown / links   : 154 arquivos / 609 links relativos
+notebooks / links  : 79 notebooks / 43 links relativos
+readmes de objeto  : 20/75 operacionais; 3/3 exemplares; 55 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 61 conferidas (nome, arquivos, __init__)
 forma da pasta     : 59 conferidas (o módulo tem o nome da pasta)
 contrato de dados  : 61 pares (saída: o que o notebook consome)
@@ -218,8 +218,8 @@ normas do molde    : 71 arquivos, 0 violação(ões)
 notebook exercita  : 58 objetos, 0 notebook(s) que só importam
 python (AST)       : 214 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1050 arquivos varridos no repositório editável/derivado
-repo (links)       : 812 links fora da raiz analisada
+repo (identidade)  : 1096 arquivos varridos no repositório editável/derivado
+repo (links)       : 1026 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
@@ -289,10 +289,18 @@ de conceito, adequação e uso seguro. Consulte o checkpoint antes de iniciar um
 lote. R01 é fundação editorial, não geração dos READMEs operacionais nem
 publicação no Databricks.
 
-### Composição candidata READMEs + Concierge
+### Integração READMEs + Concierge e continuidade
 
-A [R02-I](docs/sprints/readmes_objetos/INTEGRACAO_R02.md) reúne as duas frentes
-sem alterar helpers. Para manutenção, `python tools/ci_local.py` executa as
-etapas listadas em [tools/README.md](tools/README.md).
-O [checkpoint](docs/sprints/readmes_objetos/CHECKPOINT_INTEGRACAO_R02.md) distingue
-candidata, aceite editorial e publicação. Esta preparação não altera o workspace.
+A [R02-I](docs/sprints/readmes_objetos/INTEGRACAO_R02.md) foi integrada pelo
+PR nº 7 após aprovação de Rodrigo em 2026-09-12 (`5493f7d`). As oito etapas
+preservam as verificações das duas frentes. O [aceite e versão estável](docs/sprints/readmes_objetos/ACEITE_V1.md)
+registra o contrato 1.0.0; o [lote R03-A](docs/sprints/readmes_objetos/RELATORIO_R03A.md)
+acrescenta sete guias em branch própria para revisão. A integração Git não
+publica o Hub no Databricks nem substitui homologação no workspace.
+
+### Continuidade R03-B
+
+O [lote R03-B](docs/sprints/readmes_objetos/RELATORIO_R03B.md) documenta seis
+objetos de apresentação e navegação, em branch dependente da R03-A ainda em
+revisão. O contrato permanece 1.0.0; não há alteração visual, novo merge ou
+publicação. A matriz da sprint identifica também as demais documentações atualizadas.

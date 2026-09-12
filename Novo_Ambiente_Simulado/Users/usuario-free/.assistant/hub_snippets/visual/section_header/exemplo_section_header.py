@@ -6,13 +6,16 @@
 # MAGIC
 # MAGIC **O que este objeto oferece.** Um cabeçalho em HTML que puxa emoji, título e descrição do mapa de `constants.emojis` a partir do número da etapa.
 
+# MAGIC
+# MAGIC **Antes de executar:** consulte o [README deste objeto](README.md) para entender o conceito, os requisitos e os efeitos do exemplo.
+
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Compute | confira as dependências e a compatibilidade descritas no README; não há equivalência universal entre runtimes |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | nenhum — este objeto não recebe dados |
 # MAGIC | Escrita | nenhuma; tudo em memória |
@@ -40,15 +43,16 @@ displayHTML(
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** Passar `etapa=3` bastou: emoji, título e descrição vieram do mapa
+# MAGIC **Como ler.** Com `etapa=3`, emoji, título e descrição vieram do mapa
 # MAGIC de `constants.emojis`, e não foram digitados aqui. É a diferença entre
 # MAGIC cabeçalho e cabeçalho **consistente** — dois notebooks que declaram a etapa
 # MAGIC 3 exibem exatamente o mesmo texto, sem que ninguém precise combinar.
 # MAGIC
 # MAGIC O acoplamento é intencional e vale registrar: este módulo **importa** de
-# MAGIC `constants.emojis` e de `constants.colors`. Se `SECOES_EDA` mudar, os
-# MAGIC cabeçalhos mudam junto — que é exatamente o que `constants.styles` **não**
-# MAGIC faz com as cores, conforme registrado no notebook daquele objeto.
+# MAGIC `constants.emojis` e de `constants.colors`. Novas chamadas usam o mapa
+# MAGIC disponível no processo. Uma string já produzida ou saída já exibida não
+# MAGIC se atualiza sozinha; reinicie/recarregue e execute conscientemente após
+# MAGIC mudanças de biblioteca. Valores explícitos podem sobrescrever o mapa.
 
 
 # COMMAND ----------
@@ -81,10 +85,11 @@ print(section_header_html(etapa=3)[:180], "...")
 # MAGIC
 # MAGIC A saída é HTML puro — e aqui uma correção importante, porque é
 # MAGIC contraintuitivo: **o CSS está inline neste módulo**, montado a partir das
-# MAGIC cores importadas. `constants.styles.STYLE_SECTION_HEADER` existe, é
-# MAGIC idêntico a este CSS, e **não é usado por ninguém**.
+# MAGIC cores importadas. `constants.styles.STYLE_SECTION_HEADER` existe, mas
+# MAGIC não é consumido por esta função. Essa constatação local não afirma
+# MAGIC identidade integral de CSS nem ausência de uso em todo outro código.
 # MAGIC
-# MAGIC Ou seja: editar `STYLE_SECTION_HEADER` não muda cabeçalho nenhum. A
+# MAGIC Ou seja: editar `STYLE_SECTION_HEADER` não muda a saída desta função. A
 # MAGIC dívida está registrada no notebook de `constants.styles` e no inventário
 # MAGIC de duplicação em `PLANO_HUB.md` §12.2.
 

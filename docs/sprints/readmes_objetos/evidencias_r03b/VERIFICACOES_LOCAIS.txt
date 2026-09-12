@@ -1,0 +1,598 @@
+===== baseline_gate.txt =====
+== GATE LOCAL ==
+raiz    : /mnt/data/r03b_work/repo
+python  : 3.13.5
+
+-- validacao: validação local do ambiente_fonte
+raiz analisada     : /mnt/data/r03b_work/repo/ambiente_fonte
+skills             : 14 · 14/14 com as 5 seções estruturais
+prompts            : 16 · 161 campos com guia e contrato humano
+helpers citados    : 88 caminhos verificados
+saída no README    : 19 linhas conferidas contra execução real
+markdown / links   : 143 arquivos / 493 links relativos
+notebooks / links  : 78 notebooks / 36 links relativos
+readmes de objeto  : 13/74 operacionais; 3/3 exemplares; 61 pendentes (estrutura, não aceite editorial)
+pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
+forma da pasta     : 58 conferidas (o módulo tem o nome da pasta)
+contrato de dados  : 60 pares (saída: o que o notebook consome)
+contrato de entrada: 57 pares (entrada: o que o notebook passa)
+saída colada       : 77 notebooks com bloco real, 0 sem
+idioma da docstring: 60 módulos, 0 com docstring em inglês
+normas do molde    : 70 arquivos, 0 violação(ões)
+notebook exercita  : 57 objetos, 0 notebook(s) que só importam
+python (AST)       : 211 arquivos
+instrucoes         : 9043/20000 caracteres
+repo (identidade)  : 1012 arquivos varridos no repositório editável/derivado
+repo (links)       : 819 links fora da raiz analisada
+worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
+
+
+APROVADO: 0 falha(s), 0 aviso(s)
+   OK   (5.6s) APROVADO: 0 falha(s), 0 aviso(s)
+
+-- biblioteca: regressões de hub_snippets
+Features temporais: 2 linhas removidas por warm-up das features geradas
+Features temporais: 2 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 2 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Vintage table: 1 safras, MOB range [0-2]
+Vintage table: 1 safras, MOB range [0-2]
+Vintage table: 1 safras, MOB range [0-2]
+Vintage table: 1 safras, MOB range [1-1]
+................................/mnt/data/r03b_work/repo/ambiente_fonte/.assistant/hub_snippets/ml/lgbm_temporal/lgbm_temporal.py:87: UserWarning: Could not infer format, so each element will be parsed individually, falling back to `dateutil`. To ensure parsing is consistent and as-expected, please specify a format.
+  convertida = pd.to_datetime(texto, errors="coerce")
+.............
+----------------------------------------------------------------------
+Ran 45 tests in 0.144s
+
+OK
+   OK   (1.7s) OK
+
+-- ferramentas: guardas de tools/
+.......................................
+----------------------------------------------------------------------
+Ran 39 tests in 0.817s
+
+OK
+   OK   (1.6s) OK
+
+-- transicao: guardas do kit e notebook de aceite (Spark opcional separado)
+x → PENDENTE — Resolva primeiro: arquivos
+x → BLOQUEADO — Resolva primeiro: arquivos
+error → FAIL — Consulte a causa nesta sessão; não exporte o erro bruto.
+..........................sssssss..........
+----------------------------------------------------------------------
+Ran 43 tests in 0.020s
+
+OK (skipped=7)
+   OK   (0.7s) OK (skipped=7)
+
+-- readmes: contrato dos READMEs, dispensas monotônicas e integração com Concierge
+test_actual_adr_numbers_are_unique (test_readme_integracao.ReadmeConciergeIntegrationTests.test_actual_adr_numbers_are_unique) ... ok
+test_actual_stage_union_is_valid (test_readme_integracao.ReadmeConciergeIntegrationTests.test_actual_stage_union_is_valid) ... ok
+test_discovery_cannot_omit_original_readme_tests (test_readme_integracao.ReadmeConciergeIntegrationTests.test_discovery_cannot_omit_original_readme_tests) ... ok
+test_duplicate_adr_number_is_rejected (test_readme_integracao.ReadmeConciergeIntegrationTests.test_duplicate_adr_number_is_rejected) ... ok
+test_duplicate_stage_is_rejected (test_readme_integracao.ReadmeConciergeIntegrationTests.test_duplicate_stage_is_rejected) ... ok
+test_each_missing_stage_is_rejected (test_readme_integracao.ReadmeConciergeIntegrationTests.test_each_missing_stage_is_rejected) ... ok
+test_instructions_preserve_both_optional_discovery_and_readme_contract (test_readme_integracao.ReadmeConciergeIntegrationTests.test_instructions_preserve_both_optional_discovery_and_readme_contract) ... ok
+test_manual_and_instructions_mirrors_match (test_readme_integracao.ReadmeConciergeIntegrationTests.test_manual_and_instructions_mirrors_match) ... ok
+test_proposal_and_concierge_have_distinct_routes (test_readme_integracao.ReadmeConciergeIntegrationTests.test_proposal_and_concierge_have_distinct_routes) ... ok
+test_weakened_readme_validation_is_rejected (test_readme_integracao.ReadmeConciergeIntegrationTests.test_weakened_readme_validation_is_rejected) ... ok
+test_broken_anchor (test_readme_objeto_contract.ReadmeContractTests.test_broken_anchor) ... ok
+test_broken_link (test_readme_objeto_contract.ReadmeContractTests.test_broken_link) ... ok
+test_code_only_section (test_readme_objeto_contract.ReadmeContractTests.test_code_only_section) ... ok
+test_comment_headings_do_not_count (test_readme_objeto_contract.ReadmeContractTests.test_comment_headings_do_not_count) ... ok
+test_committed_bootstrap (test_readme_objeto_contract.ReadmeContractTests.test_committed_bootstrap) ... ok
+test_complete_with_pending_rejected (test_readme_objeto_contract.ReadmeContractTests.test_complete_with_pending_rejected) ... ok
+test_control_path_traversal_rejected (test_readme_objeto_contract.ReadmeContractTests.test_control_path_traversal_rejected) ... ok
+test_delivered_must_retire_waiver (test_readme_objeto_contract.ReadmeContractTests.test_delivered_must_retire_waiver) ... ok
+test_duplicate_heading (test_readme_objeto_contract.ReadmeContractTests.test_duplicate_heading) ... ok
+test_duplicate_json_rejected (test_readme_objeto_contract.ReadmeContractTests.test_duplicate_json_rejected) ... ok
+test_editor_placeholder_rejected (test_readme_objeto_contract.ReadmeContractTests.test_editor_placeholder_rejected) ... ok
+test_empty_section (test_readme_objeto_contract.ReadmeContractTests.test_empty_section) ... ok
+test_escape_product_tree (test_readme_objeto_contract.ReadmeContractTests.test_escape_product_tree) ... ok
+test_existing_anchor (test_readme_objeto_contract.ReadmeContractTests.test_existing_anchor) ... ok
+test_fenced_headings_do_not_count (test_readme_objeto_contract.ReadmeContractTests.test_fenced_headings_do_not_count) ... ok
+test_ghost_waiver_rejected (test_readme_objeto_contract.ReadmeContractTests.test_ghost_waiver_rejected) ... ok
+test_git_bootstrap_only_preexisting (test_readme_objeto_contract.ReadmeContractTests.test_git_bootstrap_only_preexisting) ... ok
+test_git_reintroduced_waiver_in_commit (test_readme_objeto_contract.ReadmeContractTests.test_git_reintroduced_waiver_in_commit) ... ok
+test_git_reintroduced_waiver_in_worktree (test_readme_objeto_contract.ReadmeContractTests.test_git_reintroduced_waiver_in_worktree) ... ok
+test_history_unavailable_fails_closed (test_readme_objeto_contract.ReadmeContractTests.test_history_unavailable_fails_closed) ... ok
+test_legitimate_pending_legacy (test_readme_objeto_contract.ReadmeContractTests.test_legitimate_pending_legacy) ... ok
+test_link_inside_code_not_real_link (test_readme_objeto_contract.ReadmeContractTests.test_link_inside_code_not_real_link) ... ok
+test_missing_api_link (test_readme_objeto_contract.ReadmeContractTests.test_missing_api_link) ... ok
+test_missing_quick_view (test_readme_objeto_contract.ReadmeContractTests.test_missing_quick_view) ... ok
+test_missing_readme (test_readme_objeto_contract.ReadmeContractTests.test_missing_readme) ... ok
+test_missing_section (test_readme_objeto_contract.ReadmeContractTests.test_missing_section) ... ok
+test_missing_version (test_readme_objeto_contract.ReadmeContractTests.test_missing_version) ... ok
+test_new_object_without_readme (test_readme_objeto_contract.ReadmeContractTests.test_new_object_without_readme) ... ok
+test_new_waiver_rejected (test_readme_objeto_contract.ReadmeContractTests.test_new_waiver_rejected) ... ok
+test_prompt_placeholder_is_legitimate (test_readme_objeto_contract.ReadmeContractTests.test_prompt_placeholder_is_legitimate) ... ok
+test_script_and_exemplar (test_readme_objeto_contract.ReadmeContractTests.test_script_and_exemplar) ... ok
+test_shallow_history_fails_closed (test_readme_objeto_contract.ReadmeContractTests.test_shallow_history_fails_closed) ... ok
+test_short_document_has_no_word_quota (test_readme_objeto_contract.ReadmeContractTests.test_short_document_has_no_word_quota) ... ok
+test_symlink_readme_rejected (test_readme_objeto_contract.ReadmeContractTests.test_symlink_readme_rejected) ... ok
+test_template_order_is_validated (test_readme_objeto_contract.ReadmeContractTests.test_template_order_is_validated) ... ok
+test_unknown_category_is_not_silently_ignored (test_readme_objeto_contract.ReadmeContractTests.test_unknown_category_is_not_silently_ignored) ... ok
+test_waived_symlink_is_not_silently_accepted (test_readme_objeto_contract.ReadmeContractTests.test_waived_symlink_is_not_silently_accepted) ... ok
+test_wrong_order (test_readme_objeto_contract.ReadmeContractTests.test_wrong_order) ... ok
+test_wrong_version (test_readme_objeto_contract.ReadmeContractTests.test_wrong_version) ... ok
+
+----------------------------------------------------------------------
+Ran 49 tests in 0.199s
+
+OK
+   OK   (0.9s) OK
+
+-- concierge-pacote: estrutura do pacote Concierge
+PASS: estrutura, frontmatter, links locais, sintaxe e matriz de aceite.
+NAO VALIDADO: roteamento, recomendacoes reais, Databricks e permissoes.
+   OK   (0.7s) NAO VALIDADO: roteamento, recomendacoes reais, Databricks e permissoes.
+
+-- concierge-regressoes: regressões do verificador Concierge
+test_broken_link (test_validador.ValidatorTests.test_broken_link) ... ok
+test_claimed_human_pass (test_validador.ValidatorTests.test_claimed_human_pass) ... ok
+test_duplicate_case (test_validador.ValidatorTests.test_duplicate_case) ... ok
+test_duplicate_frontmatter (test_validador.ValidatorTests.test_duplicate_frontmatter) ... ok
+test_extra_frontmatter_field (test_validador.ValidatorTests.test_extra_frontmatter_field) ... ok
+test_invalid_route (test_validador.ValidatorTests.test_invalid_route) ... ok
+test_link_outside_package (test_validador.ValidatorTests.test_link_outside_package) ... ok
+test_missing_template (test_validador.ValidatorTests.test_missing_template) ... ok
+test_negative_cannot_take_over (test_validador.ValidatorTests.test_negative_cannot_take_over) ... ok
+test_positive_activation_must_select (test_validador.ValidatorTests.test_positive_activation_must_select) ... ok
+test_python_syntax_error (test_validador.ValidatorTests.test_python_syntax_error) ... ok
+test_root_symlink_rejected (test_validador.ValidatorTests.test_root_symlink_rejected) ... ok
+test_symlink_rejected (test_validador.ValidatorTests.test_symlink_rejected) ... ok
+test_valid_package (test_validador.ValidatorTests.test_valid_package) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.079s
+
+OK
+   OK   (0.8s) OK
+
+-- concierge-integracao: integração canônica, contratos declarados e espelho
+test_ci_includes_all_local_concierge_stages (__main__.ConciergeIntegrationTests.test_ci_includes_all_local_concierge_stages) ... ok
+test_declared_helper_paths_exist_without_importing (__main__.ConciergeIntegrationTests.test_declared_helper_paths_exist_without_importing) ... ok
+test_description_only_selects_discovery_contract (__main__.ConciergeIntegrationTests.test_description_only_selects_discovery_contract) ... ok
+test_example_public_symbols_are_exported (__main__.ConciergeIntegrationTests.test_example_public_symbols_are_exported) ... ok
+test_fixtures_never_claim_conversational_pass (__main__.ConciergeIntegrationTests.test_fixtures_never_claim_conversational_pass) ... ok
+test_forward_cases_and_pending_state_are_documented (__main__.ConciergeIntegrationTests.test_forward_cases_and_pending_state_are_documented) ... ok
+test_manual_inventory_and_reading_copy (__main__.ConciergeIntegrationTests.test_manual_inventory_and_reading_copy) ... ok
+test_package_links_and_matrix_are_valid (__main__.ConciergeIntegrationTests.test_package_links_and_matrix_are_valid) ... ok
+test_personal_instructions_have_optional_route (__main__.ConciergeIntegrationTests.test_personal_instructions_have_optional_route) ... ok
+test_policy_and_discovery_folders_agree (__main__.ConciergeIntegrationTests.test_policy_and_discovery_folders_agree) ... ok
+test_publisher_knows_skill_without_remote_calls (__main__.ConciergeIntegrationTests.test_publisher_knows_skill_without_remote_calls) ... ok
+test_rendered_skill_matches_source_bytes (__main__.ConciergeIntegrationTests.test_rendered_skill_matches_source_bytes) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.078s
+
+OK
+   OK   (0.8s) OK
+
+== RESUMO ==
+  OK   validacao       5.6s
+  OK   biblioteca      1.7s
+  OK   ferramentas     1.6s
+  OK   transicao       0.7s
+  OK   readmes         0.9s
+  OK   concierge-pacote    0.7s
+  OK   concierge-regressoes    0.8s
+  OK   concierge-integracao    0.8s
+
+alcance : gate local — não cobre Databricks, Spark nem Genie Code
+APROVADO: 8 etapa(s)
+
+===== supplement_first.txt =====
+test_header_empty_cannot_remove_defaults (__main__.Portable.test_header_empty_cannot_remove_defaults) ... ok
+test_header_escapes_controlled_markup (__main__.Portable.test_header_escapes_controlled_markup) ... ok
+test_header_override (__main__.Portable.test_header_override) ... ok
+test_header_stage_defaults (__main__.Portable.test_header_stage_defaults) ... ok
+test_header_unknown_falls_back (__main__.Portable.test_header_unknown_falls_back) ... ok
+test_html_not_escaped_by_default (__main__.Portable.test_html_not_escaped_by_default) ... ok
+test_index_default_nine_no_links (__main__.Portable.test_index_default_nine_no_links) ... ok
+test_index_empty_distinct_from_none (__main__.Portable.test_index_empty_distinct_from_none) ... ok
+test_index_generator_iterable (__main__.Portable.test_index_generator_iterable) ... ok
+test_index_invalid_rejected (__main__.Portable.test_index_invalid_rejected) ... ok
+test_index_preserves_order_duplicates (__main__.Portable.test_index_preserves_order_duplicates) ... ok
+test_negative_only_in_selected_column (__main__.Portable.test_negative_only_in_selected_column) ... FAIL
+test_numeric_string_is_not_highlighted (__main__.Portable.test_numeric_string_is_not_highlighted) ... ok
+test_percentage_units_differ (__main__.Portable.test_percentage_units_differ) ... ok
+test_readme_dataframe (__main__.Portable.test_readme_dataframe) ... ok
+test_readme_index (__main__.Portable.test_readme_index) ... ok
+test_readme_section (__main__.Portable.test_readme_section) ... ok
+test_readme_theme (__main__.Portable.test_readme_theme) ... ok
+test_table_does_not_mutate_input (__main__.Portable.test_table_does_not_mutate_input) ... ok
+test_theme_explicit_trace_color_preserved (__main__.Portable.test_theme_explicit_trace_color_preserved) ... ok
+test_theme_footer_declared_without_counting_data (__main__.Portable.test_theme_footer_declared_without_counting_data) ... ok
+test_theme_mutates_same_figure_preserves_data (__main__.Portable.test_theme_mutates_same_figure_preserves_data) ... ok
+test_theme_overrides_dimensions_later_customization_wins (__main__.Portable.test_theme_overrides_dimensions_later_customization_wins) ... ok
+test_theme_palette_reference_and_imported_font (__main__.Portable.test_theme_palette_reference_and_imported_font) ... ok
+test_theme_registration_restores_state (__main__.Portable.test_theme_registration_restores_state) ... ok
+test_theme_repeat_appends_footer (__main__.Portable.test_theme_repeat_appends_footer) ... ok
+test_unknown_highlight_column_is_ignored (__main__.Portable.test_unknown_highlight_column_is_ignored) ... ok
+test_aliases (__main__.SparkCases.test_aliases) ... skipped 'PySpark ausente: teste não executado'
+test_correlation_bad_method (__main__.SparkCases.test_correlation_bad_method) ... skipped 'PySpark ausente: teste não executado'
+test_correlation_constant_nan (__main__.SparkCases.test_correlation_constant_nan) ... skipped 'PySpark ausente: teste não executado'
+test_correlation_features_collision (__main__.SparkCases.test_correlation_features_collision) ... skipped 'PySpark ausente: teste não executado'
+test_correlation_linear_signs_symmetry (__main__.SparkCases.test_correlation_linear_signs_symmetry) ... skipped 'PySpark ausente: teste não executado'
+test_correlation_listwise_deletion (__main__.SparkCases.test_correlation_listwise_deletion) ... skipped 'PySpark ausente: teste não executado'
+test_correlation_missing_column (__main__.SparkCases.test_correlation_missing_column) ... skipped 'PySpark ausente: teste não executado'
+test_correlation_single_column (__main__.SparkCases.test_correlation_single_column) ... skipped 'PySpark ausente: teste não executado'
+test_distribution_invalid_limits (__main__.SparkCases.test_distribution_invalid_limits) ... skipped 'PySpark ausente: teste não executado'
+test_distribution_missing_column (__main__.SparkCases.test_distribution_missing_column) ... skipped 'PySpark ausente: teste não executado'
+test_distribution_no_numeric_column (__main__.SparkCases.test_distribution_no_numeric_column) ... skipped 'PySpark ausente: teste não executado'
+test_distribution_null_count_not_valid_count (__main__.SparkCases.test_distribution_null_count_not_valid_count) ... skipped 'PySpark ausente: teste não executado'
+test_distribution_raw_values_and_footer (__main__.SparkCases.test_distribution_raw_values_and_footer) ... skipped 'PySpark ausente: teste não executado'
+test_distribution_sample_cap_not_quota (__main__.SparkCases.test_distribution_sample_cap_not_quota) ... skipped 'PySpark ausente: teste não executado'
+test_readme_correlation (__main__.SparkCases.test_readme_correlation) ... skipped 'PySpark ausente: teste não executado'
+test_readme_distribution (__main__.SparkCases.test_readme_distribution) ... skipped 'PySpark ausente: teste não executado'
+test_spearman_monotonic (__main__.SparkCases.test_spearman_monotonic) ... skipped 'PySpark ausente: teste não executado'
+test_threshold_only_changes_pairs (__main__.SparkCases.test_threshold_only_changes_pairs) ... skipped 'PySpark ausente: teste não executado'
+
+======================================================================
+FAIL: test_negative_only_in_selected_column (__main__.Portable.test_negative_only_in_selected_column)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/mnt/data/r03b_work/repo/docs/sprints/readmes_objetos/evidencias_r03b/verificar_r03b.py", line 67, in test_negative_only_in_selected_column
+    self.assertIsNotNone(rule)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^
+AssertionError: unexpectedly None
+
+----------------------------------------------------------------------
+Ran 45 tests in 1.984s
+
+FAILED (failures=1, skipped=18)
+R03B_RESULT tests=45 failures=1 errors=0 skipped=18
+
+===== supplement_local.txt =====
+test_header_empty_cannot_remove_defaults (__main__.Portable.test_header_empty_cannot_remove_defaults) ... ok
+test_header_escapes_controlled_markup (__main__.Portable.test_header_escapes_controlled_markup) ... ok
+test_header_override (__main__.Portable.test_header_override) ... ok
+test_header_stage_defaults (__main__.Portable.test_header_stage_defaults) ... ok
+test_header_unknown_falls_back (__main__.Portable.test_header_unknown_falls_back) ... ok
+test_html_not_escaped_by_default (__main__.Portable.test_html_not_escaped_by_default) ... ok
+test_index_default_nine_no_links (__main__.Portable.test_index_default_nine_no_links) ... ok
+test_index_empty_distinct_from_none (__main__.Portable.test_index_empty_distinct_from_none) ... ok
+test_index_generator_iterable (__main__.Portable.test_index_generator_iterable) ... ok
+test_index_invalid_rejected (__main__.Portable.test_index_invalid_rejected) ... ok
+test_index_preserves_order_duplicates (__main__.Portable.test_index_preserves_order_duplicates) ... ok
+test_negative_only_in_selected_column (__main__.Portable.test_negative_only_in_selected_column) ... ok
+test_numeric_string_is_not_highlighted (__main__.Portable.test_numeric_string_is_not_highlighted) ... ok
+test_percentage_units_differ (__main__.Portable.test_percentage_units_differ) ... ok
+test_readme_dataframe (__main__.Portable.test_readme_dataframe) ... ok
+test_readme_index (__main__.Portable.test_readme_index) ... ok
+test_readme_section (__main__.Portable.test_readme_section) ... ok
+test_readme_theme (__main__.Portable.test_readme_theme) ... ok
+test_table_does_not_mutate_input (__main__.Portable.test_table_does_not_mutate_input) ... ok
+test_theme_explicit_trace_color_preserved (__main__.Portable.test_theme_explicit_trace_color_preserved) ... ok
+test_theme_footer_declared_without_counting_data (__main__.Portable.test_theme_footer_declared_without_counting_data) ... ok
+test_theme_mutates_same_figure_preserves_data (__main__.Portable.test_theme_mutates_same_figure_preserves_data) ... ok
+test_theme_overrides_dimensions_later_customization_wins (__main__.Portable.test_theme_overrides_dimensions_later_customization_wins) ... ok
+test_theme_palette_reference_and_imported_font (__main__.Portable.test_theme_palette_reference_and_imported_font) ... ok
+test_theme_registration_restores_state (__main__.Portable.test_theme_registration_restores_state) ... ok
+test_theme_repeat_appends_footer (__main__.Portable.test_theme_repeat_appends_footer) ... ok
+test_unknown_highlight_column_is_ignored (__main__.Portable.test_unknown_highlight_column_is_ignored) ... ok
+test_aliases (__main__.SparkCases.test_aliases) ... skipped 'PySpark ausente: teste não executado'
+test_correlation_bad_method (__main__.SparkCases.test_correlation_bad_method) ... skipped 'PySpark ausente: teste não executado'
+test_correlation_constant_nan (__main__.SparkCases.test_correlation_constant_nan) ... skipped 'PySpark ausente: teste não executado'
+test_correlation_features_collision (__main__.SparkCases.test_correlation_features_collision) ... skipped 'PySpark ausente: teste não executado'
+test_correlation_linear_signs_symmetry (__main__.SparkCases.test_correlation_linear_signs_symmetry) ... skipped 'PySpark ausente: teste não executado'
+test_correlation_listwise_deletion (__main__.SparkCases.test_correlation_listwise_deletion) ... skipped 'PySpark ausente: teste não executado'
+test_correlation_missing_column (__main__.SparkCases.test_correlation_missing_column) ... skipped 'PySpark ausente: teste não executado'
+test_correlation_single_column (__main__.SparkCases.test_correlation_single_column) ... skipped 'PySpark ausente: teste não executado'
+test_distribution_invalid_limits (__main__.SparkCases.test_distribution_invalid_limits) ... skipped 'PySpark ausente: teste não executado'
+test_distribution_missing_column (__main__.SparkCases.test_distribution_missing_column) ... skipped 'PySpark ausente: teste não executado'
+test_distribution_no_numeric_column (__main__.SparkCases.test_distribution_no_numeric_column) ... skipped 'PySpark ausente: teste não executado'
+test_distribution_null_count_not_valid_count (__main__.SparkCases.test_distribution_null_count_not_valid_count) ... skipped 'PySpark ausente: teste não executado'
+test_distribution_raw_values_and_footer (__main__.SparkCases.test_distribution_raw_values_and_footer) ... skipped 'PySpark ausente: teste não executado'
+test_distribution_sample_cap_not_quota (__main__.SparkCases.test_distribution_sample_cap_not_quota) ... skipped 'PySpark ausente: teste não executado'
+test_readme_correlation (__main__.SparkCases.test_readme_correlation) ... skipped 'PySpark ausente: teste não executado'
+test_readme_distribution (__main__.SparkCases.test_readme_distribution) ... skipped 'PySpark ausente: teste não executado'
+test_spearman_monotonic (__main__.SparkCases.test_spearman_monotonic) ... skipped 'PySpark ausente: teste não executado'
+test_threshold_only_changes_pairs (__main__.SparkCases.test_threshold_only_changes_pairs) ... skipped 'PySpark ausente: teste não executado'
+
+----------------------------------------------------------------------
+Ran 45 tests in 0.470s
+
+OK (skipped=18)
+R03B_RESULT tests=45 failures=0 errors=0 skipped=18
+
+===== test_inventario_visual.txt =====
+test_arquivo_extra_nao_ignorado_recusado (__main__.InventarioVisualTests.test_arquivo_extra_nao_ignorado_recusado) ... ok
+test_artefato_ignorado_nao_e_lido (__main__.InventarioVisualTests.test_artefato_ignorado_nao_e_lido) ... ok
+test_artefatos_symlink_recusado (__main__.InventarioVisualTests.test_artefatos_symlink_recusado) ... ok
+test_ast_invalida_nao_vira_inventario_parcial_aprovado (__main__.InventarioVisualTests.test_ast_invalida_nao_vira_inventario_parcial_aprovado) ... ok
+test_camadas_separadas (__main__.InventarioVisualTests.test_camadas_separadas) ... ok
+test_conjunto_protegido_vazio_reprova (__main__.InventarioVisualTests.test_conjunto_protegido_vazio_reprova) ... ok
+test_consumidor_sem_literal_de_cor_e_inventariado (__main__.InventarioVisualTests.test_consumidor_sem_literal_de_cor_e_inventariado) ... ok
+test_determinismo (__main__.InventarioVisualTests.test_determinismo) ... ok
+test_helper_com_underscore_nao_some_da_matriz (__main__.InventarioVisualTests.test_helper_com_underscore_nao_some_da_matriz) ... ok
+test_html_img_e_capturado (__main__.InventarioVisualTests.test_html_img_e_capturado) ... ok
+test_imports_e_chamadas_estaticos (__main__.InventarioVisualTests.test_imports_e_chamadas_estaticos) ... ok
+test_inventario_valido_tem_volume_e_api (__main__.InventarioVisualTests.test_inventario_valido_tem_volume_e_api) ... ok
+test_lista_vazia_nao_aprova (__main__.InventarioVisualTests.test_lista_vazia_nao_aprova) ... ok
+test_modificacao_nao_commitada_recusada_e_preservada (__main__.InventarioVisualTests.test_modificacao_nao_commitada_recusada_e_preservada) ... ok
+test_notebook_sem_api_de_modulo (__main__.InventarioVisualTests.test_notebook_sem_api_de_modulo) ... ok
+test_ordem_e_secao_das_imagens (__main__.InventarioVisualTests.test_ordem_e_secao_das_imagens) ... ok
+test_produto_sem_ocorrencias_nao_aprova (__main__.InventarioVisualTests.test_produto_sem_ocorrencias_nao_aprova) ... ok
+test_protecao_detecta_alteracao_adicao_remocao (__main__.InventarioVisualTests.test_protecao_detecta_alteracao_adicao_remocao) ... ok
+test_protecao_igual (__main__.InventarioVisualTests.test_protecao_igual) ... ok
+test_quarentena_versionada_recusada (__main__.InventarioVisualTests.test_quarentena_versionada_recusada) ... ok
+test_reutiliza_guarda_git_falho (__main__.InventarioVisualTests.test_reutiliza_guarda_git_falho) ... ok
+test_saida_no_produto_recusada (__main__.InventarioVisualTests.test_saida_no_produto_recusada) ... ok
+test_saida_valida_e_sem_sobrescrita (__main__.InventarioVisualTests.test_saida_valida_e_sem_sobrescrita) ... ok
+test_scanner_nao_importa_codigo (__main__.InventarioVisualTests.test_scanner_nao_importa_codigo) ... ok
+test_semantica_nao_e_aprovada_automaticamente (__main__.InventarioVisualTests.test_semantica_nao_e_aprovada_automaticamente) ... ok
+test_symlink_interno_recusado (__main__.InventarioVisualTests.test_symlink_interno_recusado) ... ok
+test_utf8_invalido_recusado (__main__.InventarioVisualTests.test_utf8_invalido_recusado) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 0.491s
+
+OK
+
+===== test_visual_legado_v00.txt =====
+test_assinatura_publica (__main__.ContratosLegadosTests.test_assinatura_publica) ... ok
+test_captura_deterministica (__main__.ContratosLegadosTests.test_captura_deterministica) ... ok
+test_configuracao_default_legada (__main__.ContratosLegadosTests.test_configuracao_default_legada) ... ok
+test_cor_explicita_preservada (__main__.ContratosLegadosTests.test_cor_explicita_preservada) ... ok
+test_dados_nao_mudam (__main__.ContratosLegadosTests.test_dados_nao_mudam) ... ok
+test_eixos_unidades_e_limites_nao_mudam (__main__.ContratosLegadosTests.test_eixos_unidades_e_limites_nao_mudam) ... ok
+test_escape_html (__main__.ContratosLegadosTests.test_escape_html) ... ok
+test_header_deterministico (__main__.ContratosLegadosTests.test_header_deterministico) ... ok
+test_mesmo_objeto_retornado (__main__.ContratosLegadosTests.test_mesmo_objeto_retornado) ... ok
+test_reaplicacao_preserva_comportamento_de_adicionar_rodape (__main__.ContratosLegadosTests.test_reaplicacao_preserva_comportamento_de_adicionar_rodape) ... ok
+test_registro_global_e_restauracao (__main__.ContratosLegadosTests.test_registro_global_e_restauracao) ... ok
+test_rodape_formato_brasileiro (__main__.ContratosLegadosTests.test_rodape_formato_brasileiro) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.306s
+
+OK
+
+===== test_baseline_visual_runner.txt =====
+test_caminhos_reais_sanitizados_no_log (__main__.RunnerTests.test_caminhos_reais_sanitizados_no_log) ... {"nome": "teste", "codigo": 0, "estado": "PASS", "duracao_s": 0.596, "testes_unittest_reportados": 0, "skips_reportados": 0, "log": "teste.log", "comando": ["/opt/pyvenv/bin/python", "-c", "print('<CANDIDATA>')"], "log_sha256": "d460028e65921223f2ab684712d747c9709c71eabf89e0078f1dfae5365ec639"}
+ok
+test_comando_ausente_bloqueia (__main__.RunnerTests.test_comando_ausente_bloqueia) ... {"nome": "ausente", "codigo": 127, "estado": "BLOQUEADO", "duracao_s": 0.001, "testes_unittest_reportados": 0, "skips_reportados": 0, "log": "ausente.log", "comando": ["<CANDIDATA>/nao_existe"], "log_sha256": "1884e72a864634af6cc8fdae37d3c7ba394d4cecc64282e138de0671a3a0a00c"}
+ok
+test_comando_valido_estado_e_hash (__main__.RunnerTests.test_comando_valido_estado_e_hash) ... {"nome": "teste", "codigo": 0, "estado": "PASS", "duracao_s": 0.632, "testes_unittest_reportados": 0, "skips_reportados": 0, "log": "teste.log", "comando": ["/opt/pyvenv/bin/python", "-c", "print('fixture')"], "log_sha256": "e80b71cd14d3cbd65f4173abcbfcf01a545dbca32a72d575108b553a648cc96f"}
+ok
+test_falha_de_processo_nao_vira_pass (__main__.RunnerTests.test_falha_de_processo_nao_vira_pass) ... {"nome": "falha", "codigo": 3, "estado": "FAIL", "duracao_s": 0.591, "testes_unittest_reportados": 0, "skips_reportados": 0, "log": "falha.log", "comando": ["/opt/pyvenv/bin/python", "-c", "raise SystemExit(3)"], "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+ok
+test_saida_sem_unittest_nao_inventa_casos (__main__.RunnerTests.test_saida_sem_unittest_nao_inventa_casos) ... {"nome": "teste", "codigo": 0, "estado": "PASS", "duracao_s": 0.597, "testes_unittest_reportados": 0, "skips_reportados": 0, "log": "teste.log", "comando": ["/opt/pyvenv/bin/python", "-c", "print('Verificação estrutural executada')"], "log_sha256": "b6c5ef7c02b2f2b4c13e192db50e1de7c68761b60349d76f7e926cdddf4b8af8"}
+ok
+test_skip_nao_conta_resumo_repetido (__main__.RunnerTests.test_skip_nao_conta_resumo_repetido) ... {"nome": "teste", "codigo": 0, "estado": "PASS", "duracao_s": 0.608, "testes_unittest_reportados": 43, "skips_reportados": 7, "log": "teste.log", "comando": ["/opt/pyvenv/bin/python", "-c", "print('Ran 43 tests in 0.1s\\nOK (skipped=7)\\n   OK (0.1s) OK (skipped=7)')"], "log_sha256": "67e7acf7e5b06bd55c94a9dc749e877b9fe329d95ba7d682cea949c47d86847c"}
+ok
+test_texto_citado_nao_vira_suite_executada (__main__.RunnerTests.test_texto_citado_nao_vira_suite_executada) ... {"nome": "teste", "codigo": 0, "estado": "PASS", "duracao_s": 0.64, "testes_unittest_reportados": 2, "skips_reportados": 0, "log": "teste.log", "comando": ["/opt/pyvenv/bin/python", "-c", "print('{\"exemplo\": \"Ran 99 tests\"}\\nRan 2 tests in 0.1s\\nOK')"], "log_sha256": "5c52a9289d58dd086d12e466c9b78f91f4ce2de1756fedee47ad7bf871891317"}
+ok
+test_timeout_bloqueia (__main__.RunnerTests.test_timeout_bloqueia) ... {"nome": "timeout", "codigo": 124, "estado": "BLOQUEADO", "duracao_s": 0.0, "testes_unittest_reportados": 0, "skips_reportados": 0, "log": "timeout.log", "comando": ["fixture"], "log_sha256": "d26183fa74d52564e03d3f0c28075ff341d4eb959d8be2bfcae11c439ff17dd3"}
+ok
+test_total_casos_varias_suites (__main__.RunnerTests.test_total_casos_varias_suites) ... {"nome": "teste", "codigo": 0, "estado": "PASS", "duracao_s": 0.69, "testes_unittest_reportados": 88, "skips_reportados": 7, "log": "teste.log", "comando": ["/opt/pyvenv/bin/python", "-c", "print('Ran 45 tests in 0.1s\\nOK\\nRan 43 tests in 0.1s\\nOK (skipped=7)')"], "log_sha256": "76a0873d17f2a93b7dc79e270d7bbf13d8d6174973ec662be656f3a994be5545"}
+ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 4.358s
+
+OK
+
+===== preservation.txt =====
+{
+  "base": "c60f1e54743dc23ed60b32ad2260b9aa6a77af0a",
+  "status": "PASS",
+  "checks": {
+    "product_python_unchanged": 205,
+    "six_notebooks_AST_magics_outputs_preserved": 6,
+    "previous_object_readmes_unchanged": 16,
+    "protected_patterns_skills_assets_tools_ADRs_V00": 305,
+    "prompt_forms_unchanged": 16,
+    "migration_exemptions_removed": 6,
+    "pending": 55,
+    "source_files_mirrored": 453,
+    "manual_three_copies_equal": true,
+    "changelog_prior_entries_preserved": true
+  }
+}
+
+===== final_gate.txt =====
+== GATE LOCAL ==
+raiz    : /mnt/data/r03b_work/repo
+python  : 3.13.5
+
+-- validacao: validação local do ambiente_fonte
+raiz analisada     : /mnt/data/r03b_work/repo/ambiente_fonte
+skills             : 14 · 14/14 com as 5 seções estruturais
+prompts            : 16 · 161 campos com guia e contrato humano
+helpers citados    : 88 caminhos verificados
+saída no README    : 19 linhas conferidas contra execução real
+markdown / links   : 149 arquivos / 579 links relativos
+notebooks / links  : 78 notebooks / 42 links relativos
+readmes de objeto  : 19/74 operacionais; 3/3 exemplares; 55 pendentes (estrutura, não aceite editorial)
+pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
+forma da pasta     : 58 conferidas (o módulo tem o nome da pasta)
+contrato de dados  : 60 pares (saída: o que o notebook consome)
+contrato de entrada: 57 pares (entrada: o que o notebook passa)
+saída colada       : 77 notebooks com bloco real, 0 sem
+idioma da docstring: 60 módulos, 0 com docstring em inglês
+normas do molde    : 70 arquivos, 0 violação(ões)
+notebook exercita  : 57 objetos, 0 notebook(s) que só importam
+python (AST)       : 211 arquivos
+instrucoes         : 9043/20000 caracteres
+repo (identidade)  : 1031 arquivos varridos no repositório editável/derivado
+repo (links)       : 911 links fora da raiz analisada
+worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
+
+
+APROVADO: 0 falha(s), 0 aviso(s)
+   OK   (5.5s) APROVADO: 0 falha(s), 0 aviso(s)
+
+-- biblioteca: regressões de hub_snippets
+Features temporais: 2 linhas removidas por warm-up das features geradas
+Features temporais: 2 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 2 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Features temporais: 1 linhas removidas por warm-up das features geradas
+Vintage table: 1 safras, MOB range [0-2]
+Vintage table: 1 safras, MOB range [0-2]
+Vintage table: 1 safras, MOB range [0-2]
+Vintage table: 1 safras, MOB range [1-1]
+................................/mnt/data/r03b_work/repo/ambiente_fonte/.assistant/hub_snippets/ml/lgbm_temporal/lgbm_temporal.py:87: UserWarning: Could not infer format, so each element will be parsed individually, falling back to `dateutil`. To ensure parsing is consistent and as-expected, please specify a format.
+  convertida = pd.to_datetime(texto, errors="coerce")
+.............
+----------------------------------------------------------------------
+Ran 45 tests in 0.154s
+
+OK
+   OK   (1.6s) OK
+
+-- ferramentas: guardas de tools/
+.......................................
+----------------------------------------------------------------------
+Ran 39 tests in 0.661s
+
+OK
+   OK   (1.4s) OK
+
+-- transicao: guardas do kit e notebook de aceite (Spark opcional separado)
+x → PENDENTE — Resolva primeiro: arquivos
+x → BLOQUEADO — Resolva primeiro: arquivos
+error → FAIL — Consulte a causa nesta sessão; não exporte o erro bruto.
+..........................sssssss..........
+----------------------------------------------------------------------
+Ran 43 tests in 0.018s
+
+OK (skipped=7)
+   OK   (0.6s) OK (skipped=7)
+
+-- readmes: contrato dos READMEs, dispensas monotônicas e integração com Concierge
+test_actual_adr_numbers_are_unique (test_readme_integracao.ReadmeConciergeIntegrationTests.test_actual_adr_numbers_are_unique) ... ok
+test_actual_stage_union_is_valid (test_readme_integracao.ReadmeConciergeIntegrationTests.test_actual_stage_union_is_valid) ... ok
+test_discovery_cannot_omit_original_readme_tests (test_readme_integracao.ReadmeConciergeIntegrationTests.test_discovery_cannot_omit_original_readme_tests) ... ok
+test_duplicate_adr_number_is_rejected (test_readme_integracao.ReadmeConciergeIntegrationTests.test_duplicate_adr_number_is_rejected) ... ok
+test_duplicate_stage_is_rejected (test_readme_integracao.ReadmeConciergeIntegrationTests.test_duplicate_stage_is_rejected) ... ok
+test_each_missing_stage_is_rejected (test_readme_integracao.ReadmeConciergeIntegrationTests.test_each_missing_stage_is_rejected) ... ok
+test_instructions_preserve_both_optional_discovery_and_readme_contract (test_readme_integracao.ReadmeConciergeIntegrationTests.test_instructions_preserve_both_optional_discovery_and_readme_contract) ... ok
+test_manual_and_instructions_mirrors_match (test_readme_integracao.ReadmeConciergeIntegrationTests.test_manual_and_instructions_mirrors_match) ... ok
+test_proposal_and_concierge_have_distinct_routes (test_readme_integracao.ReadmeConciergeIntegrationTests.test_proposal_and_concierge_have_distinct_routes) ... ok
+test_weakened_readme_validation_is_rejected (test_readme_integracao.ReadmeConciergeIntegrationTests.test_weakened_readme_validation_is_rejected) ... ok
+test_broken_anchor (test_readme_objeto_contract.ReadmeContractTests.test_broken_anchor) ... ok
+test_broken_link (test_readme_objeto_contract.ReadmeContractTests.test_broken_link) ... ok
+test_code_only_section (test_readme_objeto_contract.ReadmeContractTests.test_code_only_section) ... ok
+test_comment_headings_do_not_count (test_readme_objeto_contract.ReadmeContractTests.test_comment_headings_do_not_count) ... ok
+test_committed_bootstrap (test_readme_objeto_contract.ReadmeContractTests.test_committed_bootstrap) ... ok
+test_complete_with_pending_rejected (test_readme_objeto_contract.ReadmeContractTests.test_complete_with_pending_rejected) ... ok
+test_control_path_traversal_rejected (test_readme_objeto_contract.ReadmeContractTests.test_control_path_traversal_rejected) ... ok
+test_delivered_must_retire_waiver (test_readme_objeto_contract.ReadmeContractTests.test_delivered_must_retire_waiver) ... ok
+test_duplicate_heading (test_readme_objeto_contract.ReadmeContractTests.test_duplicate_heading) ... ok
+test_duplicate_json_rejected (test_readme_objeto_contract.ReadmeContractTests.test_duplicate_json_rejected) ... ok
+test_editor_placeholder_rejected (test_readme_objeto_contract.ReadmeContractTests.test_editor_placeholder_rejected) ... ok
+test_empty_section (test_readme_objeto_contract.ReadmeContractTests.test_empty_section) ... ok
+test_escape_product_tree (test_readme_objeto_contract.ReadmeContractTests.test_escape_product_tree) ... ok
+test_existing_anchor (test_readme_objeto_contract.ReadmeContractTests.test_existing_anchor) ... ok
+test_fenced_headings_do_not_count (test_readme_objeto_contract.ReadmeContractTests.test_fenced_headings_do_not_count) ... ok
+test_ghost_waiver_rejected (test_readme_objeto_contract.ReadmeContractTests.test_ghost_waiver_rejected) ... ok
+test_git_bootstrap_only_preexisting (test_readme_objeto_contract.ReadmeContractTests.test_git_bootstrap_only_preexisting) ... ok
+test_git_reintroduced_waiver_in_commit (test_readme_objeto_contract.ReadmeContractTests.test_git_reintroduced_waiver_in_commit) ... ok
+test_git_reintroduced_waiver_in_worktree (test_readme_objeto_contract.ReadmeContractTests.test_git_reintroduced_waiver_in_worktree) ... ok
+test_history_unavailable_fails_closed (test_readme_objeto_contract.ReadmeContractTests.test_history_unavailable_fails_closed) ... ok
+test_legitimate_pending_legacy (test_readme_objeto_contract.ReadmeContractTests.test_legitimate_pending_legacy) ... ok
+test_link_inside_code_not_real_link (test_readme_objeto_contract.ReadmeContractTests.test_link_inside_code_not_real_link) ... ok
+test_missing_api_link (test_readme_objeto_contract.ReadmeContractTests.test_missing_api_link) ... ok
+test_missing_quick_view (test_readme_objeto_contract.ReadmeContractTests.test_missing_quick_view) ... ok
+test_missing_readme (test_readme_objeto_contract.ReadmeContractTests.test_missing_readme) ... ok
+test_missing_section (test_readme_objeto_contract.ReadmeContractTests.test_missing_section) ... ok
+test_missing_version (test_readme_objeto_contract.ReadmeContractTests.test_missing_version) ... ok
+test_new_object_without_readme (test_readme_objeto_contract.ReadmeContractTests.test_new_object_without_readme) ... ok
+test_new_waiver_rejected (test_readme_objeto_contract.ReadmeContractTests.test_new_waiver_rejected) ... ok
+test_prompt_placeholder_is_legitimate (test_readme_objeto_contract.ReadmeContractTests.test_prompt_placeholder_is_legitimate) ... ok
+test_script_and_exemplar (test_readme_objeto_contract.ReadmeContractTests.test_script_and_exemplar) ... ok
+test_shallow_history_fails_closed (test_readme_objeto_contract.ReadmeContractTests.test_shallow_history_fails_closed) ... ok
+test_short_document_has_no_word_quota (test_readme_objeto_contract.ReadmeContractTests.test_short_document_has_no_word_quota) ... ok
+test_symlink_readme_rejected (test_readme_objeto_contract.ReadmeContractTests.test_symlink_readme_rejected) ... ok
+test_template_order_is_validated (test_readme_objeto_contract.ReadmeContractTests.test_template_order_is_validated) ... ok
+test_unknown_category_is_not_silently_ignored (test_readme_objeto_contract.ReadmeContractTests.test_unknown_category_is_not_silently_ignored) ... ok
+test_waived_symlink_is_not_silently_accepted (test_readme_objeto_contract.ReadmeContractTests.test_waived_symlink_is_not_silently_accepted) ... ok
+test_wrong_order (test_readme_objeto_contract.ReadmeContractTests.test_wrong_order) ... ok
+test_wrong_version (test_readme_objeto_contract.ReadmeContractTests.test_wrong_version) ... ok
+
+----------------------------------------------------------------------
+Ran 49 tests in 0.165s
+
+OK
+   OK   (0.8s) OK
+
+-- concierge-pacote: estrutura do pacote Concierge
+PASS: estrutura, frontmatter, links locais, sintaxe e matriz de aceite.
+NAO VALIDADO: roteamento, recomendacoes reais, Databricks e permissoes.
+   OK   (0.6s) NAO VALIDADO: roteamento, recomendacoes reais, Databricks e permissoes.
+
+-- concierge-regressoes: regressões do verificador Concierge
+test_broken_link (test_validador.ValidatorTests.test_broken_link) ... ok
+test_claimed_human_pass (test_validador.ValidatorTests.test_claimed_human_pass) ... ok
+test_duplicate_case (test_validador.ValidatorTests.test_duplicate_case) ... ok
+test_duplicate_frontmatter (test_validador.ValidatorTests.test_duplicate_frontmatter) ... ok
+test_extra_frontmatter_field (test_validador.ValidatorTests.test_extra_frontmatter_field) ... ok
+test_invalid_route (test_validador.ValidatorTests.test_invalid_route) ... ok
+test_link_outside_package (test_validador.ValidatorTests.test_link_outside_package) ... ok
+test_missing_template (test_validador.ValidatorTests.test_missing_template) ... ok
+test_negative_cannot_take_over (test_validador.ValidatorTests.test_negative_cannot_take_over) ... ok
+test_positive_activation_must_select (test_validador.ValidatorTests.test_positive_activation_must_select) ... ok
+test_python_syntax_error (test_validador.ValidatorTests.test_python_syntax_error) ... ok
+test_root_symlink_rejected (test_validador.ValidatorTests.test_root_symlink_rejected) ... ok
+test_symlink_rejected (test_validador.ValidatorTests.test_symlink_rejected) ... ok
+test_valid_package (test_validador.ValidatorTests.test_valid_package) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.074s
+
+OK
+   OK   (0.7s) OK
+
+-- concierge-integracao: integração canônica, contratos declarados e espelho
+test_ci_includes_all_local_concierge_stages (__main__.ConciergeIntegrationTests.test_ci_includes_all_local_concierge_stages) ... ok
+test_declared_helper_paths_exist_without_importing (__main__.ConciergeIntegrationTests.test_declared_helper_paths_exist_without_importing) ... ok
+test_description_only_selects_discovery_contract (__main__.ConciergeIntegrationTests.test_description_only_selects_discovery_contract) ... ok
+test_example_public_symbols_are_exported (__main__.ConciergeIntegrationTests.test_example_public_symbols_are_exported) ... ok
+test_fixtures_never_claim_conversational_pass (__main__.ConciergeIntegrationTests.test_fixtures_never_claim_conversational_pass) ... ok
+test_forward_cases_and_pending_state_are_documented (__main__.ConciergeIntegrationTests.test_forward_cases_and_pending_state_are_documented) ... ok
+test_manual_inventory_and_reading_copy (__main__.ConciergeIntegrationTests.test_manual_inventory_and_reading_copy) ... ok
+test_package_links_and_matrix_are_valid (__main__.ConciergeIntegrationTests.test_package_links_and_matrix_are_valid) ... ok
+test_personal_instructions_have_optional_route (__main__.ConciergeIntegrationTests.test_personal_instructions_have_optional_route) ... ok
+test_policy_and_discovery_folders_agree (__main__.ConciergeIntegrationTests.test_policy_and_discovery_folders_agree) ... ok
+test_publisher_knows_skill_without_remote_calls (__main__.ConciergeIntegrationTests.test_publisher_knows_skill_without_remote_calls) ... ok
+test_rendered_skill_matches_source_bytes (__main__.ConciergeIntegrationTests.test_rendered_skill_matches_source_bytes) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.074s
+
+OK
+   OK   (0.7s) OK
+
+== RESUMO ==
+  OK   validacao       5.5s
+  OK   biblioteca      1.6s
+  OK   ferramentas     1.4s
+  OK   transicao       0.6s
+  OK   readmes         0.8s
+  OK   concierge-pacote    0.6s
+  OK   concierge-regressoes    0.7s
+  OK   concierge-integracao    0.7s
+
+alcance : gate local — não cobre Databricks, Spark nem Genie Code
+APROVADO: 8 etapa(s)

@@ -6,14 +6,17 @@
 # MAGIC
 # MAGIC **O que este objeto oferece.** Aplica o tema institucional a uma figura Plotly, com subtítulo, fonte e a contagem de pontos declarada no rodapé.
 
+# MAGIC
+# MAGIC **Antes de executar:** consulte o [README deste objeto](README.md) para entender o conceito, os requisitos e os efeitos do exemplo.
+
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
-# MAGIC | Bibliotecas | `plotly`, já presente no runtime |
+# MAGIC | Compute | confira as dependências e a compatibilidade descritas no README; não há equivalência universal entre runtimes |
+# MAGIC | Bibliotecas | Plotly disponível; NumPy para gerar os dados sintéticos desta demonstração |
 # MAGIC | Dados | sintéticos, gerados aqui |
 # MAGIC | Escrita | nenhuma; tudo em memória |
 # MAGIC | Diferença Free × trabalho | nenhuma conhecida |
@@ -60,12 +63,13 @@ figura2.show()
 # MAGIC %md
 # MAGIC **Como ler.** As duas figuras mostram os mesmos dados. A diferença que importa
 # MAGIC não é a cor — é o **rodapé**: a versão com tema declara a fonte dos dados e
-# MAGIC quantos pontos foram plotados.
+# MAGIC quantos pontos foram declarados. Nesta célula, o rótulo de fonte menciona
+# MAGIC fixtures, mas a série foi gerada por NumPy acima. A chamada original foi
+# MAGIC preservada; não use esse rótulo ilustrativo como procedência comprovada.
 # MAGIC
-# MAGIC Parece detalhe e não é. Um gráfico de amostra e um gráfico da base inteira
-# MAGIC são visualmente idênticos, e a diferença entre eles decide se a cauda que
-# MAGIC não aparece é ausência de dado ou ausência de amostra. Sem o `n` no
-# MAGIC rodapé, ninguém tem como saber — inclusive quem fez, três semanas depois.
+# MAGIC Um gráfico não informa, por sua aparência, se representa uma amostra
+# MAGIC ou toda a base. Declare esse contexto e a unidade de N quando pertinente.
+# MAGIC O helper não infere população, contagem ou origem a partir dos traces.
 
 
 # COMMAND ----------
@@ -110,14 +114,10 @@ print(f"colorway completo: {tema['colorway']}")
 # MAGIC conferível. São **dez**, e são as de `PALETA_CATEGORICA`.
 # MAGIC
 # MAGIC Este módulo **importa** a paleta de `constants.colors` em vez de copiá-la,
-# MAGIC o que é o comportamento certo. Mas não é o exemplo limpo que uma versão
-# MAGIC anterior deste texto afirmava: três linhas acima do colorway importado, a
-# MAGIC cor da fonte está fixa em `#333333` — que é o `CINZA_ESCURO` do mesmo
-# MAGIC módulo de constantes, redeclarado à mão.
-# MAGIC
-# MAGIC **Doze dos módulos da biblioteca repetem hexadecimal que existe em
-# MAGIC `constants.colors`**, e este é um deles. O inventário completo está em
-# MAGIC `PLANO_HUB.md` §12.2.
+# MAGIC e também importa `CINZA_ESCURO` para a fonte. O hexadecimal exibido na
+# MAGIC saída é o valor resolvido dessa constante, não prova de duplicação no
+# MAGIC código atual. O inventário histórico de estilos não substitui essa leitura
+# MAGIC da implementação. O tema também não substitui cores explícitas de traces.
 # MAGIC
 # MAGIC Duas escolhas de layout merecem nota. O **título alinhado à esquerda**
 # MAGIC (`x: 0.01`) segue a leitura da página em vez de centralizar; e a
@@ -129,6 +129,6 @@ print(f"colorway completo: {tema['colorway']}")
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
-# MAGIC - **Sem declarar `n`.** O rodapé com a contagem é a parte que impede alguém de ler um gráfico de amostra como se fosse a base inteira.
-# MAGIC - **Depois de `update_layout` com as mesmas chaves.** A ordem importa: aplique o tema por último, ou a customização volta ao padrão.
-# MAGIC - **Em gráfico que vai para fora do Databricks.** A fonte `Segoe UI` pode não existir no destino, e o layout desloca.
+# MAGIC - **Com N sem significado.** Declare qual contagem é pertinente ao gráfico e seu recorte; nem todo gráfico exige N. A função aceita o rótulo, mas não o verifica.
+# MAGIC - **Depois de ajustes que precisa preservar.** A aplicação redefine chaves de layout. Aplique o tema primeiro e faça as customizações específicas depois; reaplicar pode desfazê-las e duplicar o rodapé.
+# MAGIC - **Sem conferir o destino.** A função pode ser usada fora do Databricks, mas fontes, dimensões e renderização precisam ser avaliadas no ambiente final.

@@ -67,3 +67,20 @@ o contrato continua candidato. Históricos, matrizes e logs de R01/R02 podem
 citar o identificador antigo conforme as bases datadas que examinaram. Consulte
 [registro de integração](../sprints/readmes_objetos/INTEGRACAO_R02.md) para as
 bases, referências atualizadas e limites. O ADR-0011 do Concierge não mudou.
+
+## Ratificação de 2026-09-12 — estado vigente: aceito
+
+Rodrigo respondeu **“Aprovo, pode seguir”** à entrega R02-I que submetia a
+candidata acumulada, o padrão e os seis pilotos ao aceite. O PR nº 7 foi
+conferido e integrado com head `494ab7c` e commit de merge
+`5493f7db68f397ad7040485cb09bad53eb79be74`. A CI permanente
+`34702547585` estava aprovada. Esta ratificação torna vigente a decisão sem
+apagar seu estado inicial de proposta ou a nota de renumeração.
+
+O contrato é estabilizado como **1.0.0**, mantendo as quinze seções e atualizando
+os marcadores dos três exemplares e seis pilotos. Não há mudança de API ou
+aceite antecipado dos novos READMEs R03-A. A aprovação humana não substitui
+auditoria independente, teste com usuários, homologação Databricks ou autorização
+de publicação. A R03-A encerra antes da R03-B.
+
+Procedência e alterações desta ratificação: [aceite e versão estável](../sprints/readmes_objetos/ACEITE_V1.md).

@@ -6,17 +6,20 @@
 # MAGIC
 # MAGIC **O que este objeto oferece.** Dois mapas: as nove etapas canônicas de uma EDA, com emoji e descrição, e um vocabulário semântico fechado.
 
+# MAGIC
+# MAGIC Antes de executar, consulte o [guia do objeto](README.md): conceito, requisitos, efeitos e limites.
+
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
-# MAGIC | Bibliotecas | nenhuma além do runtime |
+# MAGIC | Compute | exemplo usa sessão Spark para localizar usuário; renderização conforme notebook |
+# MAGIC | Bibliotecas | biblioteca padrão Python e módulos locais do Hub; confira a preparação da sessão |
 # MAGIC | Dados | nenhum — este objeto não recebe dados |
 # MAGIC | Escrita | nenhuma; tudo em memória |
-# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
+# MAGIC | Diferença Free × trabalho | compatibilidade do destino não revalidada nesta rodada |
 
 # COMMAND ----------
 
@@ -63,7 +66,8 @@ for numero, dados in SECOES_EDA.items():
 # MAGIC pode estar sendo produzido por dois outliers.
 # MAGIC
 # MAGIC As nove são roteiro, não formulário — a etapa que não se aplica se pula.
-# MAGIC O que o mapa impede é a **ordem** errada, que é o erro caro.
+# MAGIC O mapa documenta a **ordem recomendada**, mas não a impõe: é um dicionário,
+# MAGIC não um executor nem um validador da análise.
 
 
 # COMMAND ----------
@@ -99,7 +103,7 @@ for chave, emoji in SEMANTICA.items():
 # MAGIC e passa a navegar pelo símbolo.
 # MAGIC
 # MAGIC Repare na separação entre `ok`/`falha`/`atencao` e o trio de status
-# MAGIC colorido. Os primeiros são **verdito binário sobre uma checagem**; os
+# MAGIC colorido. Os primeiros distinguem **aprovação, falha e atenção** numa checagem; os
 # MAGIC segundos são **grau numa escala**. Misturá-los — usar ✅ para "está bom" e
 # MAGIC 🟢 para "passou" no mesmo documento — desfaz a distinção.
 
@@ -107,6 +111,6 @@ for chave, emoji in SEMANTICA.items():
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
-# MAGIC - **Como obrigação.** As nove etapas são um roteiro, não um formulário. Análise que não precisa de sobrevivência não abre a seção.
+# MAGIC - **Como obrigação.** As nove etapas são um roteiro, não um formulário. Uma dúvida pontual não precisa virar uma EDA inteira.
 # MAGIC - **Inventando símbolo fora do mapa.** O valor do vocabulário é ser fechado; um emoji novo por notebook desfaz o ganho.
-# MAGIC - **Em documento que será impresso ou exportado para PDF.** Emoji renderiza de forma inconsistente fora do navegador.
+# MAGIC - **Como único portador do significado.** Mantenha texto junto do símbolo e confira a renderização no destino, inclusive na impressão ou exportação.

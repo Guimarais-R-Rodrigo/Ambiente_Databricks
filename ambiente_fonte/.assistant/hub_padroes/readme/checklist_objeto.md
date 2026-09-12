@@ -67,6 +67,8 @@ alteradas, com seção e motivo; ferramentas/testes; cópias geradas; arquivos
 apenas inspecionados. Extraia a relação do diff real. Registre baseline,
 regressões, testes pulados e ambiente. Salve o checkpoint antes de pausar.
 
-O padrão é parar no fim da sprint autorizada. R01 define o contrato candidato;
-R02 testa o piloto. Uma alteração no contrato depois do piloto exige revisão
-de impacto sobre documentos já entregues, não aplicação silenciosa em um lote.
+O padrão é parar no fim da sprint autorizada. Após o piloto R02 e o aceite
+editorial de 2026-09-12, o contrato vigente é **1.0.0**. Os textos de cada novo
+lote continuam sujeitos a revisão e aceite próprios. Uma alteração posterior
+no contrato exige revisão de impacto sobre documentos já entregues, não
+aplicação silenciosa em um lote. R03-A termina antes da R03-B.

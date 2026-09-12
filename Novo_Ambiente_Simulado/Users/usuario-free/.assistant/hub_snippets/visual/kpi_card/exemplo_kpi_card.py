@@ -6,17 +6,20 @@
 # MAGIC
 # MAGIC **O que este objeto oferece.** Um bloco de cartões com as métricas que importam — em HTML para o notebook, ou em Markdown para colar em outro lugar.
 
+# MAGIC
+# MAGIC Antes de executar, consulte o [guia do objeto](README.md): conceito, requisitos, efeitos e limites.
+
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
-# MAGIC | Bibliotecas | nenhuma além do runtime |
-# MAGIC | Dados | nenhum — este objeto não recebe dados |
+# MAGIC | Compute | exemplo usa sessão Spark para localizar usuário; renderização conforme notebook |
+# MAGIC | Bibliotecas | biblioteca padrão Python e módulos locais do Hub; confira a preparação da sessão |
+# MAGIC | Dados | textos e valores definidos nas células; nenhuma tabela externa |
 # MAGIC | Escrita | nenhuma; tudo em memória |
-# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
+# MAGIC | Diferença Free × trabalho | compatibilidade do destino não revalidada nesta rodada |
 
 # COMMAND ----------
 
@@ -54,9 +57,10 @@ print(kpi_card_markdown(metricas))
 # MAGIC > **3.375.674** Linhas | **92,8%** Cobertura | **2025-01 a 2026-08** Período | **2 colunas com nulo acima de 30%** Alerta
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** A versão Markdown é a que sobrevive fora do Databricks — colada
-# MAGIC num chamado, num e-mail ou numa página de documentação, ela continua
-# MAGIC legível. A versão HTML é mais bonita e só existe dentro do notebook.
+# MAGIC **Como ler.** Há duas representações textuais para destinos distintos.
+# MAGIC Markdown precisa de um renderizador compatível para ganhar sua formatação;
+# MAGIC HTML também pode ser consumido fora do notebook, conforme o destino.
+# MAGIC Copiar para um e-mail não garante nenhuma das duas apresentações.
 # MAGIC
 # MAGIC Repare que a função **não formata número**: quem passou "3.375.674" e
 # MAGIC "92,8%" já formatou, com `constants.format_br`. A separação é deliberada —
@@ -71,6 +75,6 @@ print(kpi_card_markdown(metricas))
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
-# MAGIC - **Com mais de seis métricas.** Cartão demais volta a ser tabela, e tabela ninguém lê em cinco minutos.
+# MAGIC - **Com muitos indicadores sem prioridade.** A função não limita a quantidade; selecione os principais e compare uma tabela quando ela organizar melhor os detalhes.
 # MAGIC - **Com número sem contexto.** "AUC 0,78" não decide nada; "AUC 0,78, era 0,81 no trimestre" decide.
-# MAGIC - **No fim do notebook.** O lugar do cartão é o topo. Se está no fim, é conclusão — e conclusão é texto.
+# MAGIC - **Como substituto da explicação.** Use-o próximo à decisão apoiada e mantenha texto sobre período, população e limitações.

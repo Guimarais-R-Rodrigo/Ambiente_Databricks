@@ -3,7 +3,7 @@
 > **CUSTOMIZADO PELO HUB · V02 CANDIDATA · NÃO APLICA CORES.** O núcleo valida
 > uma proposta; não instala painel, não aprova a identidade e não publica arquivos.
 
-<!-- readme-objeto: 0.1.0-candidata -->
+<!-- readme-objeto: 1.0.0 -->
 
 ## Visão rápida
 

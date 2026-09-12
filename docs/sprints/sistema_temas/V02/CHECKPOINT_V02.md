@@ -10,7 +10,19 @@ O pedido de Rodrigo autorizou executar a V02; não é aceite da candidata nova.
 A V01 e sua correção documental continuam preservadas. A V03 não foi iniciada.
 Nenhum notebook legado precisa mudar por causa desta entrega.
 
-## Fonte e promoção
+## Conciliação vigente — 12/09/2026
+
+Base atual da candidata: `1be947b0a62c3b0b85fa3cd5692f474b9066d85f`, após
+integração R03-A/R03-B. O README novo usa o contrato editorial 1.0.0 e conserva
+as quinze seções. Dois conflitos de texto foram resolvidos preservando ambas
+as iniciativas; as contagens são calculadas novamente. O baseline remoto
+`34713522461` testa a main R03, não a implementação V02.
+
+A repetição final e o recibo distinguem a base inicial da composição atual.
+O pacote completo continua candidato local; a preparação remota não comprova
+que seus arquivos foram gravados nos caminhos finais do GitHub.
+
+## Fonte e promoção — rodada inicial
 
 Base main: `836f23684cf76ee1f3d7898d44acb70d32a7ff59`. O baseline preparatório
 `34711683992` roda somente as verificações anteriores e não comprova o núcleo V02.

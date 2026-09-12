@@ -1,6 +1,6 @@
 # `eda_rapida` — pedir um primeiro diagnóstico de dados com contexto e evidência
 
-<!-- readme-objeto: 0.1.0-candidata -->
+<!-- readme-objeto: 1.0.0 -->
 
 Este recurso é um briefing: um formulário de texto que ajuda você a explicar a uma IA qual fonte quer examinar, para qual decisão e com quais limites. Ele organiza o primeiro olhar sobre os dados sem pressupor que você já saiba todas as respostas. Não é um programa de perfil de dados nem uma resposta pronta.
 

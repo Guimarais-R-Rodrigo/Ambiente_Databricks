@@ -4,7 +4,10 @@
 # MAGIC
 # MAGIC **O problema.** `<hr>` puro tem um peso só, então uma página com três níveis de assunto fica com três traços iguais — e a estrutura que existe na cabeça de quem escreveu não chega a quem lê.
 # MAGIC
-# MAGIC **O que este objeto oferece.** Quatro separadores de peso crescente, para que a hierarquia seja visível sem depender de título.
+# MAGIC **O que este objeto oferece.** Quatro separadores para reforçar visualmente a hierarquia. Eles complementam títulos, mas não explicam o assunto por si.
+
+# MAGIC
+# MAGIC Antes de executar, consulte o [guia do objeto](README.md): conceito, requisitos, efeitos e limites.
 
 # COMMAND ----------
 # MAGIC %md
@@ -12,11 +15,11 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
-# MAGIC | Bibliotecas | nenhuma além do runtime |
+# MAGIC | Compute | exemplo usa sessão Spark para localizar usuário; renderização conforme notebook |
+# MAGIC | Bibliotecas | biblioteca padrão Python e módulos locais do Hub; confira a preparação da sessão |
 # MAGIC | Dados | nenhum — este objeto não recebe dados |
 # MAGIC | Escrita | nenhuma; tudo em memória |
-# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
+# MAGIC | Diferença Free × trabalho | compatibilidade do destino não revalidada nesta rodada |
 
 # COMMAND ----------
 
@@ -65,17 +68,17 @@ for nome, fn in [("divider_light", divider_light), ("divider_medium", divider_me
 # MAGIC ```
 # MAGIC
 # MAGIC **Como ler.** A hierarquia está em **três dimensões ao mesmo tempo**, e é isso
-# MAGIC que a faz funcionar sem legenda: a espessura cresce (1 → 1,5 → 2px), o tom
+# MAGIC que oferece pistas visuais complementares: a espessura cresce (1 → 1,5 → 2px), o tom
 # MAGIC escurece (cinza claro → cinza médio → azul institucional) e o espaço em
 # MAGIC volta aumenta (10 → 14 → 18px).
 # MAGIC
-# MAGIC Se só a espessura mudasse, a diferença entre 1px e 1,5px passaria
-# MAGIC despercebida na tela. O espaçamento é o que o olho realmente lê como
-# MAGIC "fronteira maior".
+# MAGIC A legibilidade depende da tela, do zoom e do contexto. Esta demonstração
+# MAGIC permite comparar os estilos, mas não é um teste de percepção com usuários.
+# MAGIC Mantenha títulos que expliquem cada fronteira.
 # MAGIC
 # MAGIC `divider_section` quebra o padrão de propósito: são **dois** traços
 # MAGIC empilhados, o que produz um sinal que nenhum dos outros três produz. É o
-# MAGIC único que abre assunto novo, e por isso precisa ser inconfundível.
+# MAGIC estilo sugerido para seção nova; o nome da função não impõe essa escolha.
 
 # COMMAND ----------
 # MAGIC %md

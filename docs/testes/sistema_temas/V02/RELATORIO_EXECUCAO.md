@@ -1,5 +1,17 @@
 # V02 — relatório da implementação candidata
 
+## Rodada atual: composição com a main R03
+
+A candidata foi conciliada com `1be947b0a62c3b0b85fa3cd5692f474b9066d85f`,
+que integrou R03-A/R03-B durante a execução. Seu novo README passou a seguir
+o contrato 1.0.0; os READMEs anteriores, suas dispensas e relatos são preservados.
+O baseline remoto `34713522461` confere essa main em separado. A rodada local
+posterior repete o CI de nove etapas e as regressões na composição, com logs
+próprios entregues no pacote. Não extrapolar as contagens da rodada inicial.
+A branch remota contém somente preparação; o produto V02 está no bundle candidato.
+
+## Rodada inicial — histórico preservado
+
 Data: 12/09/2026. Autor: Codex. Base do produto:
 `836f23684cf76ee1f3d7898d44acb70d32a7ff59` (V01 e correção documental integradas).
 O manifesto externo da entrega informa o commit e a árvore finais, evitando
