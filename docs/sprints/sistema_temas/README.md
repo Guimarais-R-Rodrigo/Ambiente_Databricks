@@ -1,12 +1,12 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Etapa atual — V02 aceita e integrada pelo PR #14
+## Etapa atual — V03 em desenvolvimento na branch `codex/temas-v03`
 
 A instrumentação V00 foi integrada pelo PR #8, a [V01 — contrato e experiência
 documentada](V01/README.md) foi aceita e integrada pelo PR #10 e a
 [V02 — núcleo de temas, validação e resolução](V02/README.md) foi aceita por Rodrigo
 e integrada pelo PR #14 no commit `d4cabdca4ac68c0a2edbd7f9f621f68962c8f6b8`.
-Os quatro checks pós-merge na `main` passaram. A V03 ainda não foi iniciada.
+Os quatro checks pós-merge da V02 na `main` passaram. A V03 foi iniciada a partir dessa base verde e acrescenta somente uma rota Plotly opt-in; ainda não foi aceita nem integrada.
 
 Para quem nunca entrou no Hub: **nada muda na aparência ou na rotina atual por causa
 da V02**. Ela valida uma configuração completa de tema, mas ainda não aplica o tema
@@ -98,8 +98,9 @@ A automação temporária utilizada para preparar e registrar as evidências foi
 removida da árvore final. Não há workflow de escrita recorrente, credencial
 Databricks ou publicação automática nesta entrega.
 
-## Continuidade — após V02
+## Continuidade — V03
 
-A V02 está aceita e integrada no Git. A próxima sprint planejada é V03, que fará a
-integração explícita do núcleo com Plotly preservando o comportamento legado por
-padrão. A V03 ainda não foi iniciada e não há publicação Databricks nesta etapa.
+A V02 está aceita e integrada no Git. A [V03](V03/README.md) está em desenvolvimento
+na branch `codex/temas-v03`: integra explicitamente o núcleo com Plotly preservando
+o comportamento legado por padrão. Ainda não há aceite, merge ou publicação
+Databricks; V04 e V05 não foram iniciadas.

@@ -62,5 +62,4 @@ históricas e dos READMEs. V00, [V01](sistema_temas/V01/README.md) e
 o núcleo de carga, validação e resolução de configurações completas, mas ainda não
 aplica tema a Plotly/HTML, não cria seletor e não publica no Databricks.
 
-A homologação operacional, a auditoria independente e a avaliação com usuário
-iniciante permanecem pendentes. A V03 ainda não foi iniciada.
+A [V03](sistema_temas/V03/README.md) está em desenvolvimento em branch separada e acrescenta apenas um adaptador Plotly opt-in; não migra consumidores existentes. A homologação operacional, a auditoria independente e a avaliação com usuário iniciante permanecem pendentes.

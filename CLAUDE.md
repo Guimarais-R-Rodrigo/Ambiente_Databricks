@@ -71,7 +71,7 @@ A V02 foi aceita por Rodrigo e integrada pelo PR #14 no commit
 `ambiente_fonte/.assistant/hub_padroes/identidade_visual/` e o núcleo de
 carga/validação/resolução está versionado, mas ainda não aplica aparência nem publica
 temas. Estado e limites: `docs/sprints/sistema_temas/V02/CHECKPOINT_V02.md`.
-A V03 ainda não foi iniciada.
+A V03 está em desenvolvimento na branch `codex/temas-v03`, com adaptador Plotly opt-in; ainda não há aceite, merge ou migração de consumidores legados. Estado: `docs/sprints/sistema_temas/V03/CHECKPOINT_V03.md`.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 

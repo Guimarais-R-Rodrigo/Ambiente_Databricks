@@ -132,3 +132,46 @@ print(f"colorway completo: {tema['colorway']}")
 # MAGIC - **Com N sem significado.** Declare qual contagem é pertinente ao gráfico e seu recorte; nem todo gráfico exige N. A função aceita o rótulo, mas não o verifica.
 # MAGIC - **Depois de ajustes que precisa preservar.** A aplicação redefine chaves de layout. Aplique o tema primeiro e faça as customizações específicas depois; reaplicar pode desfazê-las e duplicar o rodapé.
 # MAGIC - **Sem conferir o destino.** A função pode ser usada fora do Databricks, mas fontes, dimensões e renderização precisam ser avaliadas no ambiente final.
+
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## 3. V03 — proposta resolvida, aplicação explícita
+# MAGIC
+# MAGIC Esta seção usa uma **fixture sintética** como ponto de partida. Ela não é um
+# MAGIC tema operacional aprovado. A proposta existe só em memória e afeta somente a
+# MAGIC figura passada à função nova.
+
+# COMMAND ----------
+
+import plotly.io as pio
+from hub_snippets.visual.tema import load_reference_theme, resolve_theme
+from hub_snippets.visual.theme_plotly import aplicar_tema_resolvido, get_tema_plotly
+
+referencia = load_reference_theme("notebook")
+proposta = referencia.to_dict()
+proposta["theme_id"] = "hub-v03-exemplo"
+proposta["display_name"] = "V03 exemplo sintético"
+proposta["description"] = "Proposta sintética usada somente para demonstrar o adaptador Plotly V03."
+proposta["tokens"]["brand.primary"] = "#112233"
+proposta["tokens"]["palette.categorical"] = ["#112233", "#445566", "#778899"]
+
+tema_resolvido = resolve_theme(proposta, expected_context="notebook")
+default_antes = pio.templates.default
+
+figura3 = go.Figure(go.Bar(x=["A", "B", "C"], y=[10, 12, 9]))
+figura3.update_layout(title="Proposta V03 — exemplo sintético")
+aplicar_tema_resolvido(figura3, tema_resolvido, fonte="dados sintéticos", n=3)
+
+assert pio.templates.default == default_antes
+assert figura3.layout.title.font.color == "#112233"
+assert list(get_tema_plotly(referencia)["colorway"]) == list(get_tema_eda()["colorway"])
+figura3.show()
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC **Como ler.** A cor alterada prova somente que o adaptador consumiu a proposta
+# MAGIC validada. `pio.templates.default` permanece igual porque aplicação por figura
+# MAGIC não é registro global. O teste de equivalência da referência legada evita que
+# MAGIC a V03 mude silenciosamente o visual atual. `dark` e `high_contrast` continuam
+# MAGIC fora do adaptador Plotly desta sprint; usar esses modos gera erro explícito.

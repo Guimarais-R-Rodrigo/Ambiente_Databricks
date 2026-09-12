@@ -5,6 +5,24 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — V03: adaptador Plotly opt-in (Codex)
+
+### Adicionado
+
+- (Codex) `get_tema_plotly`, `aplicar_tema_resolvido` e `registrar_template_plotly_resolvido` sobre a API pública V02, sem alterar as três assinaturas legadas.
+- (Codex) Suíte V03, workflow somente leitura e documentação de sprint para equivalência legada, mapeamento de tokens, integridade, efeitos de sessão e falhas adversariais.
+
+### Atualizado
+
+- (Codex) README/notebook de `theme_plotly`, Manual e índices passam a documentar a rota configurada como opt-in; consumidores atuais continuam no caminho legado.
+- (Codex) Gate `temas` já descobre a suíte V03 pelo padrão `test_temas*.py`; descrição atualizada sem criar etapa paralela.
+
+### Notas
+
+- (Codex) Primeiro run remoto V03 `34721929275`: 22 V03 + 12 V00 + 105 V02 + 138 V01 aprovados. Não somar reexecuções como novos casos.
+- (Codex) `mode=dark` e `high_contrast` permanecem válidos no contrato, mas o adaptador Plotly V03 os recusa até existirem tokens de superfície suficientes.
+- (Codex) Sem aceite/merge V03, publicação Databricks, migração de consumidores, V04/V05 ou homologação operacional.
+
 ## 2026-09-12 — V02: aceite e integração Git concluídos (Codex)
 
 ### Atualizado
