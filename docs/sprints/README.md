@@ -57,12 +57,10 @@ Rodrigo autorizou a reconciliação e integração das R03-A/R03-B com a `main` 
 ## Sistema de Temas do Hub
 
 A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints
-históricas e dos READMEs. V00 e [V01](sistema_temas/V01/README.md) estão aceitas
-e integradas no Git. A V01 entrega o contrato e a experiência especificada;
-não instala o seletor de temas, não altera a aparência e não publica no Databricks.
+históricas e dos READMEs. V00, [V01](sistema_temas/V01/README.md) e
+[V02](sistema_temas/V02/README.md) estão aceitas e integradas no Git. A V02 entrega
+o núcleo de carga, validação e resolução de configurações completas, mas ainda não
+aplica tema a Plotly/HTML, não cria seletor e não publica no Databricks.
 
-A [V02](sistema_temas/V02/README.md) é a etapa corrente: o núcleo funcional já foi
-validado remotamente e está no PR #14, aguardando aceite explícito antes de qualquer
-integração. Ela ainda não aplica tema a Plotly/HTML e não publica no Databricks. A
-homologação operacional, a auditoria independente e a avaliação com usuário iniciante
-permanecem pendentes; a V03 não foi iniciada.
+A homologação operacional, a auditoria independente e a avaliação com usuário
+iniciante permanecem pendentes. A V03 ainda não foi iniciada.
