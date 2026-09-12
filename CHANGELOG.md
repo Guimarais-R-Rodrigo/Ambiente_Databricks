@@ -5,6 +5,36 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — R04-A: seis guias de operações Spark (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) READMEs de `date_features`, `join_diagnostics`, `null_summary`,
+  `psi_calculator`, `safe_display` e `smart_sample`, com relatório, achados,
+  rubrica, matriz e testes suplementares da R04-A.
+
+### Atualizado
+
+- (ChatGPT) Seis notebooks recebem backlinks e correções exclusivamente de
+  prosa; implementações, fachadas, magics e saídas históricas são preservadas.
+- (ChatGPT) Coleção, Manual e índices passam a oferecer rotas para os seis guias;
+  controle de migração retira somente as seis dispensas correspondentes.
+- (ChatGPT) Cobertura estrutural candidata passa a 25/74 operacionais, três
+  exemplares e 49 pendências; isso não representa publicação ou aceite editorial.
+
+### Corrigido
+
+- (ChatGPT) Explicações sobre feriados fixos, cobertura de join, limiares de
+  nulos, PSI/CSI, renderer de display e garantia de tamanho da amostra são
+  alinhadas ao comportamento observado, sem mudança funcional silenciosa.
+
+### Notas
+
+- (ChatGPT) R04-A parte da main `1be947b`, já conciliada com V01. Autorrevisão
+  A0_light; auditoria independente e homologação Databricks permanecem separadas.
+- (ChatGPT) Pausa obrigatória antes da R04-B; nenhuma publicação ou merge é
+  presumido por esta entrada.
+
 ## 2026-09-12 — R03-I: reconciliação READMEs com V01 integrada (ChatGPT)
 
 ### Atualizado

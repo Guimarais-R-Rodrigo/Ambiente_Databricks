@@ -2,6 +2,9 @@
 # MAGIC %md
 # MAGIC # `smart_sample` — amostra que se reproduz e que preserva o raro
 # MAGIC
+# MAGIC > **Comece pelo conceito:** [README.md](README.md) explica quando usar, quando evitar,
+# MAGIC > entradas, saídas e limitações antes da execução deste exemplo.
+# MAGIC
 # MAGIC **O problema.** Amostrar parece trivial: `df.limit(1000)` resolve. Só que
 # MAGIC `limit` não amostra — devolve as primeiras linhas que o Spark encontrar, e
 # MAGIC a ordem depende da partição. Se os dados chegaram ordenados por data ou por
@@ -91,15 +94,15 @@ print(f"outra semente : {c.count()} linhas, difere de a? {c.exceptAll(a).count()
 # MAGIC outra semente : 500 linhas, difere de a? True
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** Mesma semente, mesma amostra — é o que permite alguém
-# MAGIC reproduzir o seu número amanhã. Sem semente declarada, duas execuções dão
-# MAGIC resultados diferentes e ninguém sabe se a diferença é do dado ou do sorteio.
+# MAGIC **Como ler.** Nesta execução, a mesma seed sobre a mesma entrada/plano
+# MAGIC produziu o mesmo conjunto e outra seed produziu conjunto diferente. A seed
+# MAGIC ajuda a reprodução, mas mudanças de dados, partições, versão ou plano podem
+# MAGIC alterar o sorteio.
 # MAGIC
-# MAGIC A contagem sai **exatamente 500**, e vale entender por quê: o helper
-# MAGIC sorteia com fração `n × 1,2 / total` — sobra proposital de 20% — e depois
-# MAGIC aplica `limit(n)`. A fração sozinha daria um número próximo de 500; é o
-# MAGIC `limit` que o torna exato, e a sobra existe para que ele quase nunca tenha
-# MAGIC menos do que cortar.
+# MAGIC Aqui saíram **exatamente 500**, mas isso é resultado observado, não garantia
+# MAGIC do modo simples. O helper usa a fração `n × 1,2 / total` e depois `limit(n)`:
+# MAGIC a sobra de 20% aumenta a chance de haver linhas suficientes para cortar, mas
+# MAGIC uma amostra aleatória ainda pode produzir menos que `n`. O `limit` é teto.
 
 # COMMAND ----------
 # MAGIC %md

@@ -867,3 +867,11 @@ Seis guias de display/visual, preservando o contrato 1.0.0 e as APIs.
 Branch separada baseada na R03-A `c60f1e5`; PR nº 9 ainda não integrado.
 [Relatório, verificações e ponto de parada](docs/sprints/readmes_objetos/RELATORIO_R03B.md).
 Sem aceite antecipado, merge automático, publicação ou início da R04-A.
+
+## Continuidade READMEs — 2026-09-12, integração R03 e R04-A
+
+R03-A/R03-B foram reconciliadas com V01 e integradas pelo PR nº 13 (`1be947b`).
+A R04-A parte dessa base e documenta `date_features`, `join_diagnostics`,
+`null_summary`, `psi_calculator`, `safe_display` e `smart_sample`, sem alterar
+seus algoritmos. Relatório: `docs/sprints/readmes_objetos/RELATORIO_R04A.md`.
+Parada antes da R04-B; sem publicação Databricks ou aceite antecipado dos novos guias.

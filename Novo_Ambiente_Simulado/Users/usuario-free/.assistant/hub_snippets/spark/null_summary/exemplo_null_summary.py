@@ -2,6 +2,9 @@
 # MAGIC %md
 # MAGIC # `null_summary` — nulo por coluna, com semáforo
 # MAGIC
+# MAGIC > **Comece pelo conceito:** [README.md](README.md) explica quando usar, quando evitar,
+# MAGIC > entradas, saídas e limitações antes da execução deste exemplo.
+# MAGIC
 # MAGIC **O problema.** Contar nulos é trivial e por isso costuma ser feito de
 # MAGIC improviso, coluna a coluna, numa célula que ninguém revisa. O resultado é
 # MAGIC uma lista de números sem referência: 4% de nulos é muito ou pouco? Depende
@@ -63,6 +66,10 @@ display(null_summary(base))
 # MAGIC com `pct_nulos_renda=0.04`, e saíram 2,6%. Não é erro — o gerador sorteia
 # MAGIC linha a linha, então a fração é uma probabilidade, não uma cota. Base real
 # MAGIC também não tem percentual redondo.
+# MAGIC
+# MAGIC A implementação atual também não valida se `threshold_warn <= threshold_fail`
+# MAGIC nem se os dois valores estão entre 0 e 100. Declare e valide a política antes
+# MAGIC de automatizar a leitura do semáforo.
 # MAGIC
 # MAGIC O erro de interpretação mais provável aqui é ler o status como veredito
 # MAGIC sobre a qualidade da coluna. Ele é a comparação contra um limiar que **você**

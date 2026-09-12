@@ -2,6 +2,9 @@
 # MAGIC %md
 # MAGIC # Junção: medir antes de juntar
 # MAGIC
+# MAGIC > **Comece pelo conceito:** [README.md](README.md) explica quando usar, quando evitar,
+# MAGIC > entradas, saídas e limitações antes da execução deste exemplo.
+# MAGIC
 # MAGIC > **Material didático do Hub — não é auto-descoberto pelo Genie Code.**
 # MAGIC > Dados sintéticos apenas. Inventário completo da biblioteca no
 # MAGIC > [catálogo de helpers](../../../MANUAL_TECNICO.md#catalogo-helpers).
@@ -201,6 +204,10 @@ print(f"cobertura sobre o total : {d['cobertura_pct_chaves_validas']}%")
 # MAGIC cobertura sobre o total : 100.0%
 # MAGIC ```
 # MAGIC
+# MAGIC O rótulo impresso “sobre o total” é histórico e impreciso: o campo
+# MAGIC `cobertura_pct_chaves_validas` **exclui** as 48 linhas de chave nula do
+# MAGIC denominador. Por isso pode mostrar 100% mesmo quando a esquerda contém nulos.
+# MAGIC
 # MAGIC Chave nula costuma ter causa distinta da chave órfã: erro de extração,
 # MAGIC campo opcional na origem, cliente sem documento. A correção também é
 # MAGIC outra — não adianta procurar a chave faltante no cadastro.
@@ -215,9 +222,9 @@ print(f"cobertura sobre o total : {d['cobertura_pct_chaves_validas']}%")
 # MAGIC | `chaves_nulas_*` | quanto não casa por motivo diferente |
 # MAGIC | `exemplos_sem_match` | amostra para conferir se a chave está certa |
 # MAGIC
-# MAGIC Rodar o diagnóstico leva segundos e responde, com número, uma pergunta que
-# MAGIC normalmente só se responde depois — quando a contagem de linhas não bate e
-# MAGIC ninguém sabe explicar por quê.
+# MAGIC O diagnóstico antecipa uma pergunta que frequentemente aparece só depois do
+# MAGIC join. O custo, porém, depende de volume, distribuição das chaves e plano: há
+# MAGIC agregações e joins Spark, portanto não existe promessa de tempo fixo.
 
 # COMMAND ----------
 # MAGIC %md
@@ -227,8 +234,9 @@ print(f"cobertura sobre o total : {d['cobertura_pct_chaves_validas']}%")
 # MAGIC   nada, e a decisão de juntar continua sendo sua.
 # MAGIC - **Em chave composta, passando só uma coluna.** A multiplicidade sai
 # MAGIC   errada — informe a chave inteira.
-# MAGIC - **Sobre tabela muito grande, sem avaliar custo.** São contagens
-# MAGIC   agregadas e um `left_semi`; baratos em milhões, não em bilhões.
+# MAGIC - **Sobre tabela grande, sem avaliar custo.** Há contagens, agregações,
+# MAGIC   `left_semi`, `inner` e `left_anti`; o custo depende do volume, das partições
+# MAGIC   e da distribuição das chaves.
 # MAGIC - **Esperando que ele decida o tipo de join.** Inner, left e anti
 # MAGIC   respondem a perguntas diferentes de negócio, e o diagnóstico só informa
 # MAGIC   o custo de cada uma.

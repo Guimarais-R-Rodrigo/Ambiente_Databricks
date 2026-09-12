@@ -164,6 +164,13 @@ Abaixo você encontra o papel de cada objeto e o momento em que ele pode ser út
 
 *Voltada a operações sobre DataFrames PySpark, mantendo o processamento principal no cluster e declarando as coletas necessárias.*
 
+**Guias do objeto:** [features de data](spark/date_features/README.md),
+[diagnóstico de join](spark/join_diagnostics/README.md),
+[nulos](spark/null_summary/README.md), [PSI/CSI](spark/psi_calculator/README.md),
+[prévia segura](spark/safe_display/README.md), [amostragem](spark/smart_sample/README.md) e
+[junção point-in-time](spark/pit_join/README.md) explicam grão, custo, coletas e
+interpretação antes da execução.
+
 - **`pit_join` (Point-in-Time Join)**: relaciona eventos a registros históricos disponíveis até o instante de decisão.
   - *Quando usar:* na construção de bases analíticas em que cada entidade possui uma data de referência. Chaves, duplicidades e atraso de publicação precisam ser definidos.
 - **`psi_calculator`**: calcula PSI numérico e CSI categórico com agregações Spark.

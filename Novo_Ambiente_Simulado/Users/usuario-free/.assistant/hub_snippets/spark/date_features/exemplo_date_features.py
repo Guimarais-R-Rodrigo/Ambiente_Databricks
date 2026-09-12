@@ -2,6 +2,9 @@
 # MAGIC %md
 # MAGIC # `date_features` — calendário como feature, sem inventar feriado
 # MAGIC
+# MAGIC > **Comece pelo conceito:** [README.md](README.md) explica quando usar, quando evitar,
+# MAGIC > entradas, saídas e limitações antes da execução deste exemplo.
+# MAGIC
 # MAGIC **O problema.** Extrair ano, mês e dia da semana de uma data é trivial, e
 # MAGIC por isso cada notebook faz do seu jeito, com nomes diferentes. Quando essas
 # MAGIC colunas viram feature de modelo, a divergência de nome vira retrabalho — e
@@ -9,8 +12,8 @@
 # MAGIC cada segmento têm o seu calendário, e nenhum deles é dedutível da data.
 # MAGIC
 # MAGIC **O que este helper faz.** Deriva as features de calendário com nomes
-# MAGIC padronizados e aceita a lista de feriados **do seu projeto** — sem embutir
-# MAGIC uma.
+# MAGIC padronizados, traz uma lista **restrita** de nove feriados nacionais de data
+# MAGIC fixa e aceita, separadamente, as datas do calendário **do seu projeto**.
 
 # COMMAND ----------
 # MAGIC %md
@@ -117,14 +120,16 @@ display(
 # MAGIC +------------------------+-----+
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** A lista embutida tem apenas os feriados **nacionais de data
+# MAGIC **Como ler.** A célula acima agregou a **primeira** coluna cujo nome contém
+# MAGIC `feriad`, que neste schema é `is_feriado_nacional_fixo`; ela não mostra o
+# MAGIC indicador separado `is_feriado_calendario`. A lista embutida tem apenas os feriados **nacionais de data
 # MAGIC fixa**. Carnaval, Páscoa e Corpus Christi mudam de data todo ano e não
 # MAGIC estão lá; feriado estadual e municipal também não.
 # MAGIC
-# MAGIC Isso é escolha de projeto, não limitação. Um helper que embutisse "os
-# MAGIC feriados do Brasil" estaria errado para metade dos casos — a agência de
-# MAGIC Salvador não opera nos mesmos dias que a de Curitiba —, e o erro seria
-# MAGIC invisível: as colunas sairiam preenchidas, só que com o calendário errado.
+# MAGIC A separação é deliberada: `is_feriado_nacional_fixo` usa a lista restrita
+# MAGIC embutida e `is_feriado_calendario` usa somente as datas completas informadas
+# MAGIC por quem chama. Tratar a primeira como “todos os feriados do Brasil” estaria
+# MAGIC errado para calendários móveis, locais ou bancários.
 # MAGIC
 # MAGIC O erro de interpretação mais provável é supor que a lista está completa.
 # MAGIC Ela está **declarada**, que é diferente: você vê o que entrou.
@@ -150,8 +155,11 @@ for linha in amostra:
 # MAGIC {'dt_referencia': datetime.date(2026, 2, 25), 'dia_semana_iso': 3, 'is_fim_semana': False, 'dia_mes': 25, 'semana_ano': 9, 'mes': 2, 'trimestre': 1, 'ano': 2026, 'is_feriado_nacional_fixo': False, 'is_feriado_calendario': False}
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** Cada valor sai da própria `dt_referencia` da linha. Não há
-# MAGIC agregação, não há join, não há nada que possa trazer informação do futuro.
+# MAGIC **Como ler.** Cada atributo básico sai da própria `dt_referencia` da linha;
+# MAGIC o helper não consulta outra tabela para derivá-lo. Isso reduz uma fonte de
+# MAGIC vazamento, mas não torna qualquer uso automaticamente seguro: a data precisa
+# MAGIC representar o instante correto e o calendário informado precisa ser aquele
+# MAGIC que estaria disponível para o processo analisado.
 # MAGIC
 # MAGIC A ressalva fica no **feriado**: se a lista que você passar for construída
 # MAGIC depois do período analisado — por exemplo, um calendário publicado no fim do
