@@ -19,7 +19,7 @@ jobs:
       SPARK_LOCAL_IP: '127.0.0.1'
       BASE_COMMIT: 1be947b0a62c3b0b85fa3cd5692f474b9066d85f
       BASE_TREE: a0ba5cbaaee5dc430d5111f4d0f6eb607c6744f9
-      EXPECTED_PARENT: fe1e53d76196fc97c3fda4bda4dc08b0b72ff990
+      EXPECTED_PARENT: b58e9f3e8a9986a563a5910e9ef186cc6017cc86
       OLD_TREE: 0f55dff65765be92eea1147df8a6b2f848b09f01
       EXPECTED_TREE: 9cca9b2f012955c3a7734fe7fb32e9c6fd86bb71
     steps:
@@ -43,7 +43,9 @@ jobs:
           assert hashlib.sha256(old_patch).hexdigest() == '7d6cccb85bdc3337bd0cb4240eb097ae1ccdd267e1c4a5e5269b3c6d47037131'
           Path(os.environ['RUNNER_TEMP'], 'R04A-base.patch').write_bytes(old_patch)
 
-          fix_packed = base64.b64decode(Path('.github/r04a-ansi-fix.b64').read_text(encoding='utf-8').strip(), validate=True)
+          fix_parts = sorted(Path('.github/r04a-ansi-fix').glob('part-*.txt'))
+          assert len(fix_parts) == 4, f'Delta ANSI incompleto: {len(fix_parts)}'
+          fix_packed = base64.b64decode(''.join(p.read_text(encoding='utf-8').strip() for p in fix_parts), validate=True)
           assert hashlib.sha256(fix_packed).hexdigest() == '3b98632b301b32e833dc1d8355c92665d7c1475b628448308c92fb00dfd309f2'
           fix_patch = lzma.decompress(fix_packed)
           assert hashlib.sha256(fix_patch).hexdigest() == 'b45af545364434ff8748d436281a3c97fcd71691b925e641551006b97f183c49'
