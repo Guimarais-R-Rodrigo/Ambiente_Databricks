@@ -10,6 +10,7 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: write
+      actions: read
     env:
       PYTHONDONTWRITEBYTECODE: '1'
       PYTHONUTF8: '1'
@@ -28,145 +29,54 @@ jobs:
           cache-dependency-path: |
             tools/requirements-dev.txt
             tools/requirements-temas-dev.txt
-      - name: Preparar somente ratificacao documental
+      - uses: actions/download-artifact@v4
+        with:
+          name: v01-aceite-34708693721
+          run-id: 34708693721
+          github-token: ${{ github.token }}
+          path: /tmp/aceite-origem
+      - name: Reconstituir documentacao por hash e corrigir contador medido
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p /tmp/v01-aceite/documentos
           python - <<'PY'
-          import json, os, subprocess
+          import hashlib, json, os, subprocess
           from pathlib import Path
-          def git(*args):
-              return subprocess.check_output(['git', *args], text=True).strip()
-          assert git('rev-parse', 'HEAD') == os.environ['V01_HEAD']
+          def git(*args): return subprocess.check_output(['git', *args], text=True).strip()
+          head = os.environ['V01_HEAD']
+          assert git('rev-parse', 'HEAD') == head
           assert git('rev-parse', 'HEAD^{tree}') == 'fd0aa6a505dda994b63f36d2bd9c1439c974c111'
           assert not git('status', '--porcelain')
-          checkpoint = Path('docs/sprints/sistema_temas/V01/CHECKPOINT_V01.md')
-          old = checkpoint.read_text(encoding='utf-8')
-          assert old.startswith('# Checkpoint V01 — candidata de revisão\n')
-          current = '''# Checkpoint V01 — aceite e integração Git
-
-          ## Estado vigente — 12/09/2026
-
-          Rodrigo deu aceite explícito à V01 e solicitou testar e aplicar. O aceite
-          cobre o contrato, a arquitetura e a experiência especificada nesta sprint,
-          bem como sua integração pelo PR #10 após aprovação dos checks. A ratificação
-          do ADR-0013 não muda seu corpo decisório nem implementa o núcleo V02.
-
-          Para quem nunca entrou no Hub: não há nada para instalar, executar ou
-          reconfigurar no Databricks nesta etapa. Continue usando o Hub como antes.
-          O seletor de temas ainda não existe; gráficos, imagens, widgets, imports,
-          cálculos e Manual Técnico permanecem preservados. Os exemplos de tema
-          continuam sendo entradas de teste, não configurações publicadas.
-
-          Integração Git: AUTORIZADA, condicionada à validação da árvore exata. O PR #10
-          é o registro da efetivação, dos checks e do SHA de merge; a existência deste
-          documento em uma branch não prova integração. A rodada de aceite identifica
-          base, candidata, árvore, versões, logs e commit documental em seu artefato.
-          Nenhum relatório antigo é reaproveitado como aprovação da rodada nova.
-
-          Aceite do usuário: CONCEDIDO. Auditoria independente: PENDENTE. Avaliação
-          com usuário iniciante: PENDENTE. Databricks, Spark, widgets, Apps e AI/BI:
-          NÃO HOMOLOGADOS. Os casos não executados por ausência de Spark não são PASS.
-          A dívida editorial Node e os achados V00 não são encerrados por este aceite.
-          Os testes desta rodada e a conferência pelo mesmo agente não substituem
-          uma revisão independente. Não houve publicação nem acesso a dados reais.
-
-          Após a integração, a próxima sprint é V02; ela não está implementada por
-          este aceite. Sua execução deve partir da main efetiva, com fonte canônica
-          única, documentação operacional, regressões e checkpoint próprios.
-
-          Para desfazer uma integração, o mantenedor deve identificar o merge do
-          PR #10 e preparar uma reversão em branch própria, preservando alterações
-          posteriores e repetindo os gates antes de novo PR. Não resetar main,
-          fazer force-push ou publicar pacote antigo no Databricks para desfazer
-          uma mudança exclusivamente de contrato e documentação.
-
-          ## Registro anterior da candidata — histórico, não estado vigente
-
-          O texto abaixo preserva o checkpoint anterior ao aceite. Referências a
-          aceite pendente ou candidata descrevem aquela rodada, não a decisão acima.
-
-          '''
-          import textwrap
-          checkpoint.write_text(textwrap.dedent(current) + old.split('\n', 1)[1].lstrip(), encoding='utf-8')
-          adr = Path('docs/decisions/ADR-0013-sistema-de-temas.md')
-          old = adr.read_text(encoding='utf-8')
-          needle = 'Status: Proposto — candidata V01; não autoriza publicação'
-          assert old.count(needle) == 1
-          old = old.replace(needle, 'Status: Aceito por Rodrigo em 2026-09-12 para V01; não autoriza publicação')
-          note = '''
-
-          ## Ratificação de status — 12/09/2026
-
-          Rodrigo declarou: “Em relação a V01, eu dou o aceite” e solicitou testar
-          e aplicar. Ficam aceitos o contrato central, a configuração completa por
-          contexto, os limites e a experiência especificada da V01. A integração
-          pelo PR #10 permanece condicionada aos checks da árvore exata.
-
-          O corpo decisório acima foi preservado. Menções anteriores a proposta,
-          candidata e aceite pendente retratam a redação anterior à ratificação;
-          esta seção e o status do cabeçalho registram a decisão vigente. O aceite
-          não aprova fixtures como temas operacionais nem libera publicação.
-          Auditoria independente, avaliação com iniciante e homologações de runtime
-          continuam pendentes. Não altera ADRs anteriores nem implementa V02.
-          O registro operacional é o [checkpoint V01](../sprints/sistema_temas/V01/CHECKPOINT_V01.md).
-          '''
-          adr.write_text(old.rstrip() + textwrap.dedent(note) + '\n', encoding='utf-8')
-          idx = Path('docs/decisions/README.md')
-          old = idx.read_text(encoding='utf-8')
-          needle = '| [0013](ADR-0013-sistema-de-temas.md) | contrato central de temas e aplicação explícita por contexto | proposto; candidata V01 |'
-          assert old.count(needle) == 1
-          idx.write_text(old.replace(needle, '| [0013](ADR-0013-sistema-de-temas.md) | contrato central de temas e aplicação explícita por contexto | aceito para V01; integração Git condicionada aos checks; sem homologação de runtime |'), encoding='utf-8')
-          readme = Path('docs/sprints/sistema_temas/V01/README.md')
+          patch = Path('/tmp/aceite-origem/ratificacao.patch')
+          assert hashlib.sha256(patch.read_bytes()).hexdigest() == 'c064999ee130f91d666fd8fe1e27c6c57b78d5147351b96141b4af382bd8efe9'
+          subprocess.run(['git', 'apply', '--index', str(patch)], check=True)
+          assert git('write-tree') == '25aba30b801a43ef94d892fab5fb7f276917e8d1'
+          readme = Path('README.md')
           old = readme.read_text(encoding='utf-8')
-          needle = '> **CANDIDATA DE REVISÃO · CONTRATO 0.1.0 · AUTORIA CODEX · 12/09/2026.**'
-          assert old.count(needle) == 1
-          old = old.replace(needle, '> **V01 COM ACEITE DE RODRIGO · CONTRATO 0.1.0 · AUTORIA CODEX · 12/09/2026.**')
-          needle = 'O pedido de Rodrigo para seguir à próxima etapa autoriza preparar esta candidata\nna branch `codex/temas-v01`; merge, aceite do ADR e publicação são ações separadas.'
-          assert old.count(needle) == 1
-          old = old.replace(needle, 'Rodrigo concedeu o aceite da V01 e solicitou testar e aplicar. O PR #10 registra\na integração Git após os checks; o [checkpoint vigente](CHECKPOINT_V01.md) explica\no alcance da autorização. Aceite e integração não equivalem a publicação.')
-          readme.write_text(old, encoding='utf-8')
-          entry = Path('docs/sprints/sistema_temas/README.md')
-          old = entry.read_text(encoding='utf-8')
-          assert old.count('## Etapa atual — candidata V01') == 1
-          old = old.replace('## Etapa atual — candidata V01', '## Etapa atual — V01 com aceite e integração pelo PR #10')
-          marker = 'O seletor de temas ainda não existe.'
-          assert old.count(marker) == 1
-          old = old.replace(marker, marker + '\nRodrigo concedeu o aceite para testar e integrar a V01; confira o estado vigente\nno [checkpoint V01](V01/CHECKPOINT_V01.md). O merge é registrado no PR #10.')
-          entry.write_text(old, encoding='utf-8')
+          before = 'repo (links)       : 765 links fora da raiz analisada'
+          after = 'repo (links)       : 768 links fora da raiz analisada'
+          assert old.count(before) == 1
+          readme.write_text(old.replace(before, after), encoding='utf-8')
           changelog = Path('CHANGELOG.md')
           old = changelog.read_text(encoding='utf-8')
-          marker = '## 2026-09-12 — V01: contrato e experiência sobre a V00 integrada (Codex)'
-          assert old.count(marker) == 1
-          note = '''## 2026-09-12 — V01: aceite explícito e revalidação para integração (Codex)
-
-          ### Atualizado
-
-          - (Codex) Aceite explícito de Rodrigo registrado no checkpoint V01, nas entradas da iniciativa e na ratificação do ADR-0013, preservando corpo decisório e relatórios históricos.
-          - (Codex) Integração Git pelo PR #10 condicionada aos checks da árvore exata; não altera produto, espelho, Manual, schema, fixtures, testes ou workflows permanentes.
-
-          ### Notas
-
-          - (Codex) Revalidação identificada por base, candidata, árvore e run próprio. O artefato e o PR registram resultados reais; SKIPs não são PASS e rodadas anteriores não são reclassificadas.
-          - (Codex) Sem publicação Databricks, mudança visual, V02, force-push ou alteração de proteções. Auditoria independente, avaliação com iniciante e homologações operacionais permanecem pendentes.
-          - (Codex) Preparação transitória isolada em branch auxiliar, ausente da árvore candidata; só os documentos de aceite entram no commit submetido aos workflows permanentes.
-
-          '''
-          changelog.write_text(old.replace(marker, textwrap.dedent(note) + marker), encoding='utf-8')
-          paths = sorted(str(p) for p in [checkpoint, adr, idx, readme, entry, changelog])
-          changed = sorted(git('diff', '--name-only').splitlines())
-          assert changed == paths, changed
-          out = Path('/tmp/v01-aceite')
-          (out/'documentos_alterados.json').write_text(json.dumps(paths, indent=2)+'\n')
+          anchor = '- (Codex) Revalidação identificada por base, candidata, árvore e run próprio.'
+          assert old.count(anchor) == 1
+          note = '- (Codex) A rodada 34708693721 passou V01/V00/publicador, mas o CI reprovou a contagem de links do README raiz (765 documentados, 768 medidos). Contador reconciliado com a saída real e bateria repetida; o run anterior permanece reprovado, sem relaxar a guarda.\n'
+          changelog.write_text(old.replace(anchor, note + anchor), encoding='utf-8')
+          paths = ['CHANGELOG.md', 'README.md', 'docs/decisions/ADR-0013-sistema-de-temas.md', 'docs/decisions/README.md', 'docs/sprints/sistema_temas/README.md', 'docs/sprints/sistema_temas/V01/CHECKPOINT_V01.md', 'docs/sprints/sistema_temas/V01/README.md']
+          paths.sort()
+          subprocess.run(['git','add','--',*paths],check=True)
+          assert sorted(git('diff','--cached','--name-only').splitlines()) == paths
+          out=Path('/tmp/v01-aceite')
+          (out/'documentos_alterados.json').write_text(json.dumps(paths,indent=2)+'\n')
+          (out/'ratificacao.patch').write_text(git('diff','--cached')+'\n')
           for name in paths:
-              dest = out/'documentos'/name
-              dest.parent.mkdir(parents=True, exist_ok=True)
+              dest=out/'documentos'/name
+              dest.parent.mkdir(parents=True,exist_ok=True)
               dest.write_bytes(Path(name).read_bytes())
-          (out/'ratificacao.patch').write_text(git('diff')+'\n')
-          subprocess.run(['git', 'add', '--', *paths], check=True)
-          subprocess.run(['git', '-c', 'user.name=Codex', '-c', 'user.email=codex@users.noreply.github.com', 'commit', '-m', 'docs(temas): ratificar aceite V01 de Rodrigo; validar antes da integracao'], check=True)
-          (out/'candidata_local.json').write_text(json.dumps({'base':os.environ['V01_BASE'], 'parent':os.environ['V01_HEAD'], 'local_commit':git('rev-parse','HEAD'), 'tree':git('rev-parse','HEAD^{tree}'), 'run_id':os.environ['GITHUB_RUN_ID']},indent=2)+'\n')
+          subprocess.run(['git','-c','user.name=Codex','-c','user.email=codex@users.noreply.github.com','commit','-m','docs(temas): ratificar aceite V01 e reconciliar contador medido'],check=True)
+          (out/'candidata_local.json').write_text(json.dumps({'base':os.environ['V01_BASE'],'parent':head,'local_commit':git('rev-parse','HEAD'),'tree':git('rev-parse','HEAD^{tree}'),'run_id':os.environ['GITHUB_RUN_ID'],'previous_failed_run':'34708693721'},indent=2)+'\n')
           PY
       - name: Instalar dependencias declaradas e registrar versoes
         shell: bash
@@ -198,31 +108,31 @@ jobs:
           from pathlib import Path
           def git(*args): return subprocess.check_output(['git',*args],text=True).strip()
           assert not git('status','--porcelain')
-          base, head = os.environ['V01_BASE'], os.environ['V01_HEAD']
-          scopes = ['ambiente_fonte','Novo_Ambiente_Simulado','MANUAL_TECNICO.md','tools/ci_local.py','.github/workflows']
-          subprocess.run(['git','diff','--exit-code',base,'HEAD','--',*scopes[:-1]],check=True)
+          base,head=os.environ['V01_BASE'],os.environ['V01_HEAD']
+          scopes=['ambiente_fonte','Novo_Ambiente_Simulado','MANUAL_TECNICO.md','tools/ci_local.py']
+          subprocess.run(['git','diff','--exit-code',base,'HEAD','--',*scopes],check=True)
           subprocess.run(['git','diff','--exit-code',head,'HEAD','--','.github/workflows','tools'],check=True)
-          protected = git('ls-tree','-r',base,'--',*scopes[:-1]).splitlines()
-          assert protected == git('ls-tree','-r','HEAD','--',*scopes[:-1]).splitlines()
-          out = Path('/tmp/v01-aceite')
-          paths = json.loads((out/'documentos_alterados.json').read_text())
-          assert sorted(git('diff','--name-only',head,'HEAD').splitlines()) == paths
-          repo = os.environ['GITHUB_REPOSITORY']
+          protected=git('ls-tree','-r',base,'--',*scopes).splitlines()
+          assert protected==git('ls-tree','-r','HEAD','--',*scopes).splitlines()
+          out=Path('/tmp/v01-aceite')
+          paths=json.loads((out/'documentos_alterados.json').read_text())
+          assert sorted(git('diff','--name-only',head,'HEAD').splitlines())==paths
+          repo=os.environ['GITHUB_REPOSITORY']
           def api(method,path,data=None):
-              request=urllib.request.Request('https://api.github.com/repos/'+repo+path, data=None if data is None else json.dumps(data).encode(),method=method,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'})
+              request=urllib.request.Request('https://api.github.com/repos/'+repo+path,data=None if data is None else json.dumps(data).encode(),method=method,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'})
               with urllib.request.urlopen(request,timeout=60) as response: return json.load(response)
-          assert api('GET','/branches/main')['commit']['sha'] == base
-          assert api('GET','/pulls/10')['head']['sha'] == head
+          assert api('GET','/branches/main')['commit']['sha']==base
+          assert api('GET','/git/ref/heads/codex/temas-v01')['object']['sha']==head
           entries=[]
           for name in paths:
               blob=api('POST','/git/blobs',{'content':Path(name).read_text(encoding='utf-8'),'encoding':'utf-8'})
-              assert blob['sha'] == git('hash-object',name)
+              assert blob['sha']==git('hash-object',name)
               entries.append({'path':name,'mode':'100644','type':'blob','sha':blob['sha']})
           tree=api('POST','/git/trees',{'base_tree':git('rev-parse',head+'^{tree}'),'tree':entries})
-          assert tree['sha'] == git('rev-parse','HEAD^{tree}')
-          message='docs(temas): ratificar aceite V01 de Rodrigo e registrar revalidacao\n\nAceite explicito na conversa de 12/09/2026; integracao condicionada aos checks do PR #10.\nRun de revalidacao: '+os.environ['GITHUB_RUN_ID']+'.\nSem alteracao de produto, espelho, Manual, codigo ou workflows permanentes; sem publicacao Databricks. Auditoria independente e homologacoes pendentes preservadas.'
+          assert tree['sha']==git('rev-parse','HEAD^{tree}')
+          message='docs(temas): ratificar aceite V01 e revalidar integracao (Codex)\n\nAceite explicito de Rodrigo em 12/09/2026; integracao pelo PR #10 condicionada aos checks.\nRun de revalidacao: '+os.environ['GITHUB_RUN_ID']+'.\nContador documental reconciliado apos falha 34708693721, sem relaxar guardas.\nProduto, espelho, Manual, codigo, schema, fixtures e workflows permanentes preservados.\nSem publicacao Databricks; auditoria independente e homologacoes pendentes.'
           commit=api('POST','/git/commits',{'message':message,'tree':tree['sha'],'parents':[head]})
-          receipt={'base':base,'parent':head,'tree':tree['sha'],'commit':commit['sha'],'run_id':os.environ['GITHUB_RUN_ID'],'protected_files_including_ci':len(protected),'changed_documents':paths,'branches_updated':False,'databricks_published':False,'independent_audit':False}
+          receipt={'base':base,'parent':head,'tree':tree['sha'],'commit':commit['sha'],'run_id':os.environ['GITHUB_RUN_ID'],'previous_failed_run':'34708693721','protected_files_including_ci':len(protected),'changed_documents':paths,'branches_updated':False,'databricks_published':False,'independent_audit':False}
           (out/'CANDIDATA_ACEITE.json').write_text(json.dumps(receipt,indent=2)+'\n')
           print(json.dumps(receipt,indent=2))
           PY
