@@ -5,14 +5,16 @@
 Executa, em ordem, e sempre até o fim — um gate que para no primeiro erro
 esconde os outros e obriga a rodar de novo para cada um:
 
-1. `validate_assistant.py`  — forma, links, contratos, identidade e higiene;
-2. `hub_snippets/tests/test_core.py`   — regressões da biblioteca;
-3. `tools/tests/test_tool_guards.py`   — guardas das próprias ferramentas.
-4. `tools/tests/test_transicao_trabalho.py` — kit, notebook e guardas de aceite.
-5. READMEs — contrato, migração e regressões de convivência com o Concierge;
-6. Concierge — estrutura do pacote;
-7. Concierge — regressões do verificador;
-8. Concierge — integração canônica e espelho.
+1. Temas — núcleo V02 e contrato V01 compartilhado, com regressões adversariais;
+1. Temas — núcleo V02 e contrato V01 compartilhado, com regressões adversariais;
+2. `validate_assistant.py`  — forma, links, contratos, identidade e higiene;
+3. `hub_snippets/tests/test_core.py`   — regressões da biblioteca;
+4. `tools/tests/test_tool_guards.py`   — guardas das próprias ferramentas.
+5. `tools/tests/test_transicao_trabalho.py` — kit, notebook e guardas de aceite.
+6. READMEs — contrato, migração e regressões de convivência com o Concierge;
+7. Concierge — estrutura do pacote;
+8. Concierge — regressões do verificador;
+9. Concierge — integração canônica e espelho.
    Essas etapas não avaliam roteamento conversacional; esse gate continua no Genie Code.
 
 O que este gate **não** faz, por decisão do plano consolidado: nada que precise
@@ -42,6 +44,8 @@ RAIZ = Path(__file__).resolve().parent.parent
 # sempre é o nome do pacote — checar o import evita um "instalado" que não
 # importa.
 DEPENDENCIAS = [
+    ("jsonschema", "jsonschema"),
+    ("referencing", "referencing"),
     ("numpy", "numpy"),
     ("pandas", "pandas"),
     ("sklearn", "scikit-learn"),
@@ -50,6 +54,11 @@ DEPENDENCIAS = [
 ]
 
 ETAPAS = [
+    (
+        "temas",
+        "núcleo V02 e contrato V01 compartilhado (sem publicação)",
+        [sys.executable, "-B", "-m", "unittest", "discover", "-s", "tools/tests", "-p", "test_temas*.py", "-v"],
+    ),
     (
         "validacao",
         "validação local do ambiente_fonte",

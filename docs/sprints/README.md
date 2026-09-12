@@ -43,4 +43,4 @@ históricas e dos READMEs. V00 e [V01](sistema_temas/V01/README.md) estão aceit
 e integradas no Git. A V01 entrega o contrato e a experiência especificada;
 não instala o seletor de temas, não altera a aparência e não publica no Databricks.
 A homologação operacional, a auditoria independente e a avaliação com usuário
-iniciante permanecem pendentes. A V02 ainda não foi iniciada.
+iniciante permanecem pendentes. A [V02](sistema_temas/V02/README.md) está em execução como candidata, sem publicação.

@@ -85,7 +85,7 @@ Inclua um caso válido e um mutante que falhe pelo motivo correto. Para gerar a
 referência em UTF-8 sem depender da codificação de redirecionamento do PowerShell:
 
 ```powershell
-python -B -c "import sys; from pathlib import Path; sys.path.insert(0, 'tools'); import temas_v01_contract as c; Path('TOKENS.v01.tmp.md').write_text(c.dictionary(c.read_json(c.PACKAGE / 'theme.schema.json')), encoding='utf-8')"
+python -B -c "import sys; from pathlib import Path; sys.path.insert(0, 'tools'); import temas_v01_contract as c; Path('TOKENS.v01.tmp.md').write_text(c.dictionary(c.read_json(c.SCHEMA_PATH)), encoding='utf-8')"
 ```
 
 Compare `TOKENS.v01.tmp.md` com `docs/sprints/sistema_temas/V01/TOKENS.md`.

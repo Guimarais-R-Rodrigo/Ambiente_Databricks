@@ -205,21 +205,21 @@ reexecuta o gate e reprova se qualquer contagem ficar desatualizada.
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 88 caminhos verificados
-markdown / links   : 136 arquivos / 384 links relativos
-notebooks / links  : 78 notebooks / 28 links relativos
-readmes de objeto  : 6/74 operacionais; 3/3 exemplares; 68 pendentes (estrutura, não aceite editorial)
-pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
-forma da pasta     : 58 conferidas (o módulo tem o nome da pasta)
-contrato de dados  : 60 pares (saída: o que o notebook consome)
-contrato de entrada: 57 pares (entrada: o que o notebook passa)
-saída colada       : 77 notebooks com bloco real, 0 sem
-idioma da docstring: 60 módulos, 0 com docstring em inglês
-normas do molde    : 70 arquivos, 0 violação(ões)
-notebook exercita  : 57 objetos, 0 notebook(s) que só importam
-python (AST)       : 211 arquivos
+markdown / links   : 141 arquivos / 414 links relativos
+notebooks / links  : 79 notebooks / 29 links relativos
+readmes de objeto  : 7/75 operacionais; 3/3 exemplares; 68 pendentes (estrutura, não aceite editorial)
+pastas de objeto   : 61 conferidas (nome, arquivos, __init__)
+forma da pasta     : 59 conferidas (o módulo tem o nome da pasta)
+contrato de dados  : 61 pares (saída: o que o notebook consome)
+contrato de entrada: 58 pares (entrada: o que o notebook passa)
+saída colada       : 78 notebooks com bloco real, 0 sem
+idioma da docstring: 61 módulos, 0 com docstring em inglês
+normas do molde    : 71 arquivos, 0 violação(ões)
+notebook exercita  : 58 objetos, 0 notebook(s) que só importam
+python (AST)       : 214 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1014 arquivos varridos no repositório editável/derivado
-repo (links)       : 768 links fora da raiz analisada
+repo (identidade)  : 1050 arquivos varridos no repositório editável/derivado
+repo (links)       : 812 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```

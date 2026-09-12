@@ -107,6 +107,9 @@ Abaixo você encontra o papel de cada objeto e o momento em que ele pode ser út
 
 ---
 
+**Novo núcleo candidato:** [`visual.tema`](visual/tema/README.md) confere configurações
+completas e isoladas, sem aplicar cores ou alterar consumidores legados.
+
 ### 1. Categoria: `ml` (Machine Learning e Estatística Aplicada)
 
 *É o coração algorítmico do Hub, voltado a modelagem preditiva, risco de crédito, séries temporais e governança de modelos.*

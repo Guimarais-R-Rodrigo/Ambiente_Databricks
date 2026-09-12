@@ -93,3 +93,8 @@ do gate existente, a comparação visual global ou a auditoria independente.
 A automação temporária utilizada para preparar e registrar as evidências foi
 removida da árvore final. Não há workflow de escrita recorrente, credencial
 Databricks ou publicação automática nesta entrega.
+
+## Etapa em execução — V02
+
+A [candidata V02](V02/README.md) implementa o núcleo sem aplicar aparência.
+A V01 continua aceita/integrada; os seus relatos permanecem históricos.

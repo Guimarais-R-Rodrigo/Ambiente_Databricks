@@ -2038,6 +2038,33 @@ section_header_html(etapa: Optional[int]=None, emoji: Optional[str]=None, titulo
 
 [Implementação](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/section_header/section_header.py) · [API exportada](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/section_header/__init__.py) · [Notebook de exemplo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/visual/section_header/exemplo_section_header.py)
 
+#### `hub_snippets.visual.tema`
+
+Valida uma configuração visual completa e devolve um retrato isolado dos tokens,
+isto é, escolhas de aparência com nome e valor. Este núcleo não aplica cores,
+não registra templates, não consulta dados e não publica. `ResolvedTheme.to_dict()` fornece
+uma cópia editável, sem contaminar a configuração original. A V02 é candidata;
+integração Git, execução local e homologação no workspace são estados diferentes.
+
+**Schema** é o documento central dos campos e limites, em
+`hub_padroes/identidade_visual/theme.schema.json`. **Serialização canônica** é a
+forma determinística `hub-json-v1` usada para exportar os dados. **Fingerprint**
+identifica conteúdo e dependências; não autentica autor ou concede aprovação.
+Esses conceitos complementam este Manual, sem criar outro glossário.
+
+A API pública contém `ThemeError`, `ResolvedTheme`, `normalize_color`,
+`resolve_theme`, `load_theme`, `load_reference_theme` e `export_theme`.
+As assinaturas detalhadas e exemplos ficam no README do objeto. Na pasta publicada
+`.assistant`, abra `hub_snippets/visual/tema/README.md`; no Git, o caminho é
+`ambiente_fonte/.assistant/hub_snippets/visual/tema/README.md`. O exemplo só usa
+referências sintéticas e memória; `export_theme` não salva um arquivo.
+
+O import requer somente a biblioteca padrão; validar requer as bibliotecas
+registradas em `hub_snippets/requirements-temas.txt`, sem instalação automática.
+As referências legadas empacotadas não são temas operacionais aprovados. A cópia
+completa é obrigatória; levar apenas `tema.py` perde o schema e o manifesto.
+Não há configuração implícita, cache global ou fallback diante de erro.
+
 #### `hub_snippets.visual.theme_plotly`
 
 Obtém configuração, aplica tema a uma figura ou registra um template na sessão. `registrar_template_plotly` tem efeito no estado de apresentação da sessão. A figura formatada continua exigindo exibição; tema não altera a lógica estatística dos dados plotados.

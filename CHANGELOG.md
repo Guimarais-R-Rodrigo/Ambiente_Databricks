@@ -5,6 +5,31 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — V02: núcleo de temas e contrato promovido (Codex)
+
+### Adicionado
+
+- (Codex) Objeto `visual.tema`: resolução explícita, cópias imutáveis, integridade,
+  leitura local limitada, exportação em memória e erros seguros; nenhuma aplicação visual.
+- (Codex) README de quinze seções, exemplo sintético, guia de primeiro uso/erros,
+  registro do núcleo no Manual, testes positivos/adversariais e gate V02.
+
+### Atualizado
+
+- (Codex) Schema V01 movido sem alterar bytes para o padrão de identidade visual;
+  verificador V01 reutiliza as funções do núcleo. Referências geradas e fixtures
+  derivadas têm guardas contra divergência; políticas e relatos históricos preservados.
+- (Codex) Entradas de navegação, dependências explícitas de validação e Manual raiz;
+  espelho gerado pelo renderer, sem edição manual ou migração dos gráficos legados.
+
+### Notas
+
+- (Codex) Implementação candidata em branch; resultados pertencem ao commit/run
+  identificado na PR e no pacote, não a rodadas antigas. Sem merge ou publicação.
+- (Codex) Sem dados corporativos, alteração de modelos, permissões de escrita de
+  workflows, painel, V03 ou homologação operacional presumida. Auditoria independente
+  e teste com iniciante permanecem pendentes.
+
 ## 2026-09-12 — V01: alinhamento das entradas após integração (Codex)
 
 ### Corrigido
