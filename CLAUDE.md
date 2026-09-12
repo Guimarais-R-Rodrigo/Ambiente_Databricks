@@ -56,8 +56,9 @@ Escala planejada: pessoal → squad → missão.
   Publicação e homologação conversacional são gates separados da integração Git.
 
 - README didático por pasta de objeto: `ADR-0012`, ratificado em 2026-09-12;
-  contrato 1.0.0 estabilizado após aceite do piloto. R03-B é o lote atual em branch de revisão, dependente da R03-A.
-  Estado e retomada: `docs/sprints/readmes_objetos/README.md`.
+  contrato 1.0.0 estabilizado após aceite do piloto. R03-A/R03-B foram integradas
+  à main com V01 pelo PR nº 13; R04-A é a leva atual de seis snippets Spark em
+  branch de revisão. Estado e retomada: `docs/sprints/readmes_objetos/README.md`.
 
 - Sistema de Temas: contrato central e configuração completa por contexto
   aceitos no `docs/decisions/ADR-0013-sistema-de-temas.md`. A V01 está aceita

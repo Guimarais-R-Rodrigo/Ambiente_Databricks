@@ -199,30 +199,6 @@
     "hub_snippets/ml/woe_iv_calculator": {
       "sprint": "R07",
       "lote": "A"
-    },
-    "hub_snippets/spark/date_features": {
-      "sprint": "R04",
-      "lote": "A"
-    },
-    "hub_snippets/spark/join_diagnostics": {
-      "sprint": "R04",
-      "lote": "A"
-    },
-    "hub_snippets/spark/null_summary": {
-      "sprint": "R04",
-      "lote": "A"
-    },
-    "hub_snippets/spark/psi_calculator": {
-      "sprint": "R04",
-      "lote": "A"
-    },
-    "hub_snippets/spark/safe_display": {
-      "sprint": "R04",
-      "lote": "A"
-    },
-    "hub_snippets/spark/smart_sample": {
-      "sprint": "R04",
-      "lote": "A"
     }
   }
 }

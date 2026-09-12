@@ -205,9 +205,9 @@ reexecuta o gate e reprova se qualquer contagem ficar desatualizada.
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 88 caminhos verificados
-markdown / links   : 154 arquivos / 609 links relativos
-notebooks / links  : 79 notebooks / 43 links relativos
-readmes de objeto  : 20/75 operacionais; 3/3 exemplares; 55 pendentes (estrutura, não aceite editorial)
+markdown / links   : 160 arquivos / 682 links relativos
+notebooks / links  : 79 notebooks / 49 links relativos
+readmes de objeto  : 26/75 operacionais; 3/3 exemplares; 49 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 61 conferidas (nome, arquivos, __init__)
 forma da pasta     : 59 conferidas (o módulo tem o nome da pasta)
 contrato de dados  : 61 pares (saída: o que o notebook consome)
@@ -218,8 +218,8 @@ normas do molde    : 71 arquivos, 0 violação(ões)
 notebook exercita  : 58 objetos, 0 notebook(s) que só importam
 python (AST)       : 214 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1096 arquivos varridos no repositório editável/derivado
-repo (links)       : 1027 links fora da raiz analisada
+repo (identidade)  : 1115 arquivos varridos no repositório editável/derivado
+repo (links)       : 1102 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
@@ -294,13 +294,16 @@ publicação no Databricks.
 A [R02-I](docs/sprints/readmes_objetos/INTEGRACAO_R02.md) foi integrada pelo
 PR nº 7 após aprovação de Rodrigo em 2026-09-12 (`5493f7d`). As oito etapas
 preservam as verificações das duas frentes. O [aceite e versão estável](docs/sprints/readmes_objetos/ACEITE_V1.md)
-registra o contrato 1.0.0; o [lote R03-A](docs/sprints/readmes_objetos/RELATORIO_R03A.md)
-acrescenta sete guias em branch própria para revisão. A integração Git não
-publica o Hub no Databricks nem substitui homologação no workspace.
+registra o contrato 1.0.0. Os lotes [R03-A](docs/sprints/readmes_objetos/RELATORIO_R03A.md)
+e [R03-B](docs/sprints/readmes_objetos/RELATORIO_R03B.md) foram reconciliados com
+a V01 e integrados pelo PR nº 13 (`1be947b`). Essa integração preserva os 19
+READMEs operacionais, o Concierge e os controles visuais, mas não publica o Hub
+no Databricks nem substitui homologação no workspace.
 
-### Continuidade R03-B
+### Continuidade R04-A
 
-O [lote R03-B](docs/sprints/readmes_objetos/RELATORIO_R03B.md) documenta seis
-objetos de apresentação e navegação, em branch dependente da R03-A ainda em
-revisão. O contrato permanece 1.0.0; não há alteração visual, novo merge ou
-publicação. A matriz da sprint identifica também as demais documentações atualizadas.
+A [R04-A](docs/sprints/readmes_objetos/RELATORIO_R04A.md) acrescenta seis guias
+Spark — calendário, diagnóstico de join, nulos, PSI/CSI, prévia segura e amostragem —
+sem alterar os helpers. Com a V02 já integrada, a candidata combinada chega a
+**26/75 READMEs operacionais**, com 49 pendências, e pausa antes da R04-B para
+revisão dos novos textos.

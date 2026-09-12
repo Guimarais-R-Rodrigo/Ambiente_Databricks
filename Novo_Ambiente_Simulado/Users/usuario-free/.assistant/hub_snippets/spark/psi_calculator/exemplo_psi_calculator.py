@@ -2,6 +2,9 @@
 # MAGIC %md
 # MAGIC # Drift: o que o PSI mede, e o que ele **não** mede
 # MAGIC
+# MAGIC > **Comece pelo conceito:** [README.md](README.md) explica quando usar, quando evitar,
+# MAGIC > entradas, saídas e limitações antes da execução deste exemplo.
+# MAGIC
 # MAGIC > **Material didático do Hub — não é auto-descoberto pelo Genie Code.**
 # MAGIC > Dados sintéticos apenas.
 # MAGIC
@@ -204,9 +207,11 @@ for coluna, valor in csi.items():
 # MAGIC - Drift responde "a população mudou?". Performance responde "o modelo
 # MAGIC   piorou?". São perguntas diferentes e exigem dados diferentes.
 # MAGIC
-# MAGIC Para o caso de comparar duas coortes de uma mesma tabela — a rotina mensal
-# MAGIC típica —, o atalho é `hub_scripts.drift_detector`, que aplica esta mesma
-# MAGIC lógica recebendo o nome da tabela e as duas datas.
+# MAGIC Para comparar duas coortes de uma mesma tabela existe também
+# MAGIC `hub_scripts.drift_detector`. Ele recebe o nome da tabela e as duas datas,
+# MAGIC mas tem contrato próprio: trabalha com colunas numéricas, expõe limites e
+# MAGIC contribuições por bucket e usa parâmetros de quantil/suavização diferentes.
+# MAGIC Não presuma equivalência de resultados apenas porque ambos calculam PSI.
 
 # COMMAND ----------
 # MAGIC %md
