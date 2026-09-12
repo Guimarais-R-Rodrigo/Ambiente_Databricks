@@ -54,6 +54,14 @@ Sem aceite antecipado, merge automático, publicação ou início da R04-A.
 
 Rodrigo autorizou a reconciliação e integração das R03-A/R03-B com a `main` que já contém V01. A candidata preserva os 19 READMEs operacionais, o contrato 1.0.0 e a documentação/guardas do sistema de temas. Registro em [`INTEGRACAO_R03_V01.md`](readmes_objetos/INTEGRACAO_R03_V01.md).
 
+## Continuidade READMEs — 2026-09-12, R04-A
+
+A `main` integrada `1be947b` é a base da nova leva. Seis snippets Spark recebem
+README didático no contrato 1.0.0, com documentação de grão, ações/coletas,
+custos e interpretação. Estado, matriz e testes em
+[`RELATORIO_R04A.md`](readmes_objetos/RELATORIO_R04A.md). Cobertura candidata
+25/74; sem publicação, aceite antecipado ou início da R04-B.
+
 ## Sistema de Temas do Hub
 
 A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints

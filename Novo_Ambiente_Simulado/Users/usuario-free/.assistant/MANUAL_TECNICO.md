@@ -1349,7 +1349,9 @@ plot_distributions(df: DataFrame, cols: Optional[Iterable[str]]=None, ncols: int
 
 #### `hub_snippets.spark.date_features`
 
-Recebe Spark DataFrame e coluna de data; devolve atributos de calendário. Feriados nacionais fixos não abrangem automaticamente o calendário bancário, feriados móveis ou locais. Forneça `holiday_dates` quando houver um calendário de projeto autorizado.
+**Guia local do objeto (R04-A):** `hub_snippets/spark/date_features/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
+
+Recebe Spark DataFrame e coluna de data; devolve atributos de calendário. A implementação embute nove feriados nacionais de data fixa em indicador próprio; isso não é calendário completo. Feriados móveis, locais, bancários ou regras do projeto entram separadamente em `holiday_dates`.
 
 <details>
 <summary>Consultar a API deste objeto: nomes e assinaturas</summary>
@@ -1363,6 +1365,8 @@ extrair_features_data(df: DataFrame, col_data: str, prefixo: Optional[str]=None,
 [Implementação](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/spark/date_features/date_features.py) · [API exportada](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/spark/date_features/__init__.py) · [Notebook de exemplo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/spark/date_features/exemplo_date_features.py)
 
 #### `hub_snippets.spark.join_diagnostics`
+
+**Guia local do objeto (R04-A):** `hub_snippets/spark/join_diagnostics/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
 
 Recebe dois Spark DataFrames e uma chave, possivelmente composta; devolve dicionário de cardinalidade, correspondência e estimativa de expansão. Não materializa o join completo, mas executa agregações de diagnóstico. Conferir um relacionamento não cria correspondências ausentes.
 
@@ -1379,7 +1383,9 @@ diagnosticar_join(esquerda: DataFrame, direita: DataFrame, chave: str | Sequence
 
 #### `hub_snippets.spark.null_summary`
 
-Recebe Spark DataFrame e devolve uma tabela por coluna com contagens, percentuais e status de nulos. As expressões de nulidade não substituem regras de domínio para strings vazias, sentinelas ou NaN. O semáforo comunica os limiares implementados, não uma lei da plataforma.
+**Guia local do objeto (R04-A):** `hub_snippets/spark/null_summary/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
+
+Recebe Spark DataFrame e devolve uma tabela por coluna com contagens, percentuais e status de `NULL`. As expressões não substituem regras de domínio para strings vazias, sentinelas ou NaN. Os limiares são política do consumidor e a implementação atual não valida sua ordem/faixa.
 
 <details>
 <summary>Consultar a API deste objeto: nomes e assinaturas</summary>
@@ -1411,6 +1417,8 @@ pit_join(fatos: DataFrame, features: DataFrame, chave: str | Sequence[str], ts_d
 
 #### `hub_snippets.spark.psi_calculator`
 
+**Guia local do objeto (R04-A):** `hub_snippets/spark/psi_calculator/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
+
 Recebe Spark DataFrames e calcula PSI/CSI. `calcular_psi` devolve um float; `calcular_csi`, um dicionário por coluna; `interpretar_psi`, texto segundo limiares do consumidor. A guarda de cardinalidade categórica protege coleta no driver, mas não elimina todo custo distribuído.
 
 <details>
@@ -1428,6 +1436,8 @@ interpretar_psi(psi_value: float, *, warning_threshold: Optional[float]=None, cr
 
 #### `hub_snippets.spark.safe_display`
 
+**Guia local do objeto (R04-A):** `hub_snippets/spark/safe_display/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
+
 Mostra uma quantidade limitada de linhas sem solicitar contagem integral apenas para exibir. Retorna `None`; não é uma função de amostragem que devolve dados para treino. Passe `display_fn=display` quando o renderer estiver disponível no notebook: o módulo não herda suas variáveis globais. Em execução local simples, forneça um renderer compatível ou espere a exceção documentada.
 
 <details>
@@ -1443,7 +1453,9 @@ safe_display(df: DataFrame, limit: int=1000, msg: bool=True, *, display_fn: Opti
 
 #### `hub_snippets.spark.smart_sample`
 
-Recebe Spark DataFrame e devolve amostra limitada por `n`, com opção estratificada. No modo estratificado, representar todos os estratos exige capacidade suficiente; mais estratos que linhas permitidas gera erro. Uma amostra para exibição não é automaticamente apropriada para estimação.
+**Guia local do objeto (R04-A):** `hub_snippets/spark/smart_sample/README.md` explica conceito, decisão de uso, custo e limites antes do notebook.
+
+Recebe Spark DataFrame e devolve amostra limitada por `n`, com opção estratificada. O modo simples usa `sample` e `limit`: `n` é teto e a saída pode ter menos linhas. No estratificado elegível, a alocação busca exatamente `n` e preserva cada estrato; uma amostra de inspeção não é automaticamente apropriada para estimação.
 
 <details>
 <summary>Consultar a API deste objeto: nomes e assinaturas</summary>

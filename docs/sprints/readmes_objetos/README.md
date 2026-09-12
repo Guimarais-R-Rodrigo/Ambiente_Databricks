@@ -6,26 +6,26 @@ A produção operacional começa somente depois do aceite do contrato e do pilot
 
 ## Estado e próxima ação
 
-Rodrigo aprovou o padrão e a integração em 2026-09-12. O PR nº 7 foi integrado
-na main pelo commit `5493f7d`; o [registro de aceite](ACEITE_V1.md) distingue
-esse ato da revisão independente ou homologação Databricks.
+Rodrigo aprovou o padrão e autorizou a integração das R03-A/R03-B com a V01 em
+2026-09-12. O PR nº 13 foi integrado na `main` pelo commit `1be947b`; o
+[registro da composição](INTEGRACAO_R03_V01.md) preserva os gates e a V01.
 
-O contrato vigente é **1.0.0**, preservado nesta rodada. A R03-A está no PR nº 9,
-sem merge; sua base revisada `c60f1e5` sustenta a R03-B em branch separada.
-O pedido “Siga” autorizou executar a próxima leva, não aprovação editorial
-antecipada nem integração automática das duas branches.
+O contrato vigente é **1.0.0**. Durante esta sprint, a V02 do sistema de temas foi
+aceita e integrada à `main` no commit `6085eab`, adicionando o objeto documentado
+`visual/tema`. A R04-A documenta seis snippets Spark: `date_features`,
+`join_diagnostics`, `null_summary`, `psi_calculator`, `safe_display` e
+`smart_sample`. A cobertura estrutural da composição final é **26/75 operacionais
+e 3/3 exemplares, com 49 pendências**. Isso descreve a candidata Git; não significa
+publicação no workspace nem aceite antecipado dos seis textos.
 
-A R03-B entrega seis guias de apresentação e navegação. Consulte o
-[relatório e checkpoint](RELATORIO_R03B.md), a
-[matriz nominal](MATRIZ_ALTERACOES_R03B.md) e os [achados](ACHADOS_R03B.md).
-A cobertura estrutural da candidata é 19/74 operacionais e 3/3 exemplares,
-com 55 pendências. Não representa 19 objetos já publicados ou aceitos pelo usuário.
-A próxima parada é a revisão desta leva, antes da R04-A.
+Consulte o [relatório R04-A](RELATORIO_R04A.md), a
+[matriz nominal](MATRIZ_ALTERACOES_R04A.md) e os [achados](ACHADOS_R04A.md).
+A próxima parada é a revisão desta leva antes da R04-B, que contém os seis scripts
+previstos no plano.
 
-Os relatórios R01/R02/R02-I preservam os estados de proposta e de conflito que
-examinaram. A [composição R02-I](INTEGRACAO_R02.md) foi integrada pelo PR nº 7;
-os PRs nº 5 e nº 6 não devem ser integrados novamente como trabalhos distintos.
-A cobertura atual é calculada pelo validador e pelo controle de migração abaixo.
+Os relatórios anteriores preservam o estado observado em cada data. PRs #9/#11
+foram supersedidos pela composição integrada do PR #13 e não devem ser tratados
+como entregas independentes a mesclar novamente.
 
 ## Rotas por objetivo
 
@@ -33,9 +33,9 @@ A cobertura atual é calculada pelo validador e pelo controle de migração abai
 |---|---|
 | Examinar o formato e a linguagem | [Template de objeto](../../../ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md) |
 | Julgar a qualidade, além da estrutura | [Checklist editorial](../../../ambiente_fonte/.assistant/hub_padroes/readme/checklist_objeto.md) |
-| Ver o que mudou além dos READMEs | [Matriz R03-B](MATRIZ_ALTERACOES_R03B.md) · [Matriz R03-A](MATRIZ_ALTERACOES_R03A.md) |
-| Conhecer inconsistências observadas | [Achados R03-B](ACHADOS_R03B.md) · [Achados R03-A](ACHADOS_R03A.md) |
-| Ver o resultado da execução | [Relatório R03-B](RELATORIO_R03B.md) · [Relatório R03-A](RELATORIO_R03A.md) |
+| Ver o que mudou além dos READMEs | [Matriz R04-A](MATRIZ_ALTERACOES_R04A.md) |
+| Conhecer inconsistências observadas | [Achados R04-A](ACHADOS_R04A.md) |
+| Ver o resultado da execução | [Relatório R04-A](RELATORIO_R04A.md) |
 | Saber quais legados faltam | [Controle de migração](CONTROLE_MIGRACAO.json) |
 
 ## Como evitar deriva na continuação
