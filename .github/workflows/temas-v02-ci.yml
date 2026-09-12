@@ -1,13 +1,7 @@
-name: Núcleo de temas V02
+name: Baseline preparatório V02
 on:
   push:
     branches: [codex/temas-v02]
-  pull_request:
-    paths:
-      - 'ambiente_fonte/**'
-      - 'tools/**'
-      - 'docs/sprints/sistema_temas/**'
-      - '.github/workflows/temas-v02-ci.yml'
 permissions:
   contents: read
 jobs:
@@ -20,6 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: 1be947b0a62c3b0b85fa3cd5692f474b9066d85f
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-python@v5
@@ -27,7 +22,7 @@ jobs:
           python-version: '3.12'
       - name: Dependências de teste existentes
         run: python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt
-      - name: Baseline anterior ao núcleo V02
+      - name: Baseline da main R03 anterior à composição V02
         shell: bash
         run: |
           set -euo pipefail
@@ -40,20 +35,19 @@ jobs:
           python -B tools/tests/test_visual_legado_v00.py 2>&1 | tee /tmp/v02-evidencias/v00-legado.log
           python -B tools/tests/test_baseline_visual_runner.py 2>&1 | tee /tmp/v02-evidencias/v00-relatorios.log
           python -B -m unittest discover -s tools/readme_visuals/tests -p 'test_*.py' -v 2>&1 | tee /tmp/v02-evidencias/publicador.log
-      - name: Snapshot e histórico Git para reprodução privada
+      - name: Histórico Git privado para reprodução e conciliação
         if: always()
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p /tmp/v02-evidencias
-          git archive --format=tar HEAD -- . ':!Ambiente_Antigo' > /tmp/v02-evidencias/fonte.tar
           git bundle create /tmp/v02-evidencias/baseline.git.bundle HEAD
           git ls-tree -r HEAD > /tmp/v02-evidencias/arvore.txt
           python -m pip freeze > /tmp/v02-evidencias/dependencias.txt
-          echo 'Baseline preparatório privado; não implementa nem homologa V02. Bundle de entrada para testes com histórico completo, não pacote de distribuição.' > /tmp/v02-evidencias/ESCOPO.txt
+          echo 'Baseline main 1be947b; não executa nem homologa a composição V02. Não é pacote de distribuição.' > /tmp/v02-evidencias/ESCOPO.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v02-evidencias-${{ github.run_id }}
+          name: v02-reconciliacao-${{ github.run_id }}
           path: /tmp/v02-evidencias
           retention-days: 7
