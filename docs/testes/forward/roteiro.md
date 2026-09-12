@@ -1,5 +1,10 @@
 # Roteiro de forward tests — guia completo passo a passo
 
+> **Estado atual — 12/09/2026.** O corpo anterior é histórico. O Concierge está
+> integrado ao Git, mas não foi publicado nem testado no Genie Code. Para a
+> nova rodada, use a seção 9 e o [estado vigente](README.md); não interprete
+> as afirmações antigas de publicação/conclusão como situação da versão nova.
+
 > **Nomenclatura da época.** Os nomes `x_*` e `hub-ml-*` neste registro são
 > os que existiam na data. A tradução para os nomes atuais está na tabela de
 > correspondência do [ADR-0006](../../decisions/ADR-0006-identidade-hub.md);
@@ -700,3 +705,58 @@ da rodada 2 e conclui o gate de roteamento.
   `resultados/<data>_rodada<N>.md`
 - Se uma skill parecer "defasada" (descrição antiga), faça hard refresh no
   navegador — o metadata das skills fica em cache.
+
+
+## 9. Concierge — casos novos, ainda não executados (12/09/2026)
+
+Use chat novo por caso. Disponibilize a instalação de teste e registre a versão
+consultada. Não anexe o corpo de SKILL.md nos positivos/negativos: isso burlaria o
+que se pretende medir. O operador registra o carregamento pela interface e a
+resposta separadamente; autorrelato não basta. Falta de acesso afeta qualidade,
+não deve ser mascarada como sucesso de descoberta.
+
+### 14P — positivo (esperado: carregar Concierge)
+
+Mensagem 1:
+```text
+Não sei qual recurso do Hub usar. O que já existe para verificar nulos e
+chaves repetidas de uma tabela? Recomende componentes e cite o que consultou.
+Não execute código nem consulte tabelas.
+```
+Mensagem 2:
+```text
+Resuma no chat a rota sugerida, as fontes realmente lidas e as limitações de
+acesso. Não crie arquivos. O operador registrará separadamente a skill carregada.
+```
+
+### 14N — negativo (esperado: NÃO carregar Concierge; ideal: tutor)
+
+Mensagem 1:
+```text
+Explique linha a linha: valores = [1, 2, 3]; total = sum(valores).
+Quero aprender Python, não procurar recursos do Hub. Não execute o código.
+```
+Mensagem 2:
+```text
+Explique a diferença entre guardar os valores e calcular sua soma.
+Não mude o assunto para navegação ou descoberta do catálogo.
+```
+
+### 14M — menção (esperado: carregar Concierge)
+
+Mensagem 1:
+```text
+@hub-ml-concierge
+Quais peças existentes do Hub ajudam a apresentar moeda brasileira?
+Indique somente a função pública necessária, com fonte verificável.
+Não execute nem modifique arquivos.
+```
+Mensagem 2:
+```text
+Diferencie o que foi verificado no código do que ainda depende de execução.
+Não afirme que uma menção a outra skill a executou.
+```
+
+A matriz de qualidade e segurança completa está em
+`ambiente_fonte/.assistant/skills/hub-ml-concierge/tests/casos_aceite.json`.
+Resultados devem ser registrados separadamente das expectativas.

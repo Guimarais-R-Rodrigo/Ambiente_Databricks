@@ -18,6 +18,7 @@ EXPECTED_SKILL_NAMES = frozenset(
         "hub-ml-auditoria-skills",
         "hub-ml-baseline-ml",
         "hub-ml-comentar-notebook",
+        "hub-ml-concierge",
         "hub-ml-criar-objeto",
         "hub-ml-cross-eda-ml",
         "hub-ml-eda-profissional",

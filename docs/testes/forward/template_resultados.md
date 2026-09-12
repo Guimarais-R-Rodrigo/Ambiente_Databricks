@@ -42,14 +42,20 @@ Veredito: PASS/FAIL conforme `.claude/skills/forward-test-skills/SKILL.md`.
 | 11 | hub-ml-tutor-databricks | @ | carrega | | | |
 | 12 | hub-ml-auditoria-skills | P | carrega | | | |
 | 12 | hub-ml-auditoria-skills | N | NÃO carrega (ideal: eda-profissional) | | | |
-| 12 | hub-ml-auditoria-skills | @ | carrega |
-| 13 | hub-ml-criar-objeto | positivo | carrega |
-| 13 | hub-ml-criar-objeto | negativo | NÃO carrega |
+| 12 | hub-ml-auditoria-skills | @ | carrega | | | |
+| 13 | hub-ml-criar-objeto | P | carrega | | | |
+| 13 | hub-ml-criar-objeto | N | NÃO carrega | | | |
 | 13 | hub-ml-criar-objeto | @ | carrega | | | |
+
+| 14 | hub-ml-concierge | P | carrega | | | |
+| 14 | hub-ml-concierge | N | NÃO carrega (ideal: tutor) | | | |
+| 14 | hub-ml-concierge | @ | carrega | | | |
 
 ## Síntese da rodada
 
-- PASS: __/39 · FAIL: __/39
+- Casos executados: __/42 · PASS: __ · FAIL: __ · BLOQUEADO: __ · NÃO VERIFICADO: __
+- Registro de carregamento na interface: <evidência; autorrelato não basta>
+- Não copiar PASS de uma rodada anterior como resultado desta rodada.
 - Colisões observadas (skill errada carregada em caso negativo): <listar>
 - Descriptions a ajustar: <listar skills>
 - Observações livres: <UI, cache, comportamento inesperado>

@@ -187,6 +187,14 @@ acesso nem comprova a correção analítica. Veja a [documentação do modo agen
 
 O gate local verifica estrutura e contratos; a comparação de conteúdo verifica equivalência; o smoke verifica execução; os forward tests verificam roteamento de skills. Nenhum deles substitui os demais.
 
+### Concierge integrado, publicação pendente
+
+O [Concierge Hub](ambiente_fonte/.assistant/skills/hub-ml-concierge/README.md)
+ajuda a descobrir e combinar recursos existentes sem substituir especialistas.
+A integração inclui templates e testes locais; o aceite conversacional e a
+publicação no Databricks permanecem separados. Consulte os
+[forward tests](docs/testes/forward/README.md) antes de compartilhar a instalação.
+
 ### Estado verificável do gate local
 
 O bloco abaixo é a saída do validador no estado versionado. Ele não é uma
@@ -194,10 +202,10 @@ declaração decorativa: `python tools/validate_assistant.py --conferir-readme`
 reexecuta o gate e reprova se qualquer contagem ficar desatualizada.
 
 ```text
-skills             : 13 · 13/13 com as 5 seções estruturais
+skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
-helpers citados    : 81 caminhos verificados
-markdown / links   : 112 arquivos / 211 links relativos
+helpers citados    : 88 caminhos verificados
+markdown / links   : 125 arquivos / 240 links relativos
 notebooks / links  : 78 notebooks / 17 links relativos
 pastas de objeto   : 60 conferidas (nome, arquivos, __init__)
 forma da pasta     : 58 conferidas (o módulo tem o nome da pasta)
@@ -207,10 +215,10 @@ saída colada       : 77 notebooks com bloco real, 0 sem
 idioma da docstring: 60 módulos, 0 com docstring em inglês
 normas do molde    : 70 arquivos, 0 violação(ões)
 notebook exercita  : 57 objetos, 0 notebook(s) que só importam
-python (AST)       : 209 arquivos
-instrucoes         : 8367/20000 caracteres
-repo (identidade)  : 846 arquivos varridos no repositório editável/derivado
-repo (links)       : 387 links fora da raiz analisada
+python (AST)       : 211 arquivos
+instrucoes         : 8835/20000 caracteres
+repo (identidade)  : 900 arquivos varridos no repositório editável/derivado
+repo (links)       : 460 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```

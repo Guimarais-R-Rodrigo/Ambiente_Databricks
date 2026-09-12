@@ -14,6 +14,7 @@
 
 | Se você quer... | Continue em... |
 |---|---|
+| não saber qual recurso utilizar | [Concierge Hub](skills/hub-ml-concierge/README.md) |
 | conhecer o propósito do Hub | [Visão Geral](#-o-que-é-este-ecossistema-e-como-ele-ajuda-no-databricks) |
 | escolher entre skill, prompt, snippet e script | [Componentes](#-o-que-tem-neste-ambiente-e-como-ele-ajuda-na-rotina-de-trabalho) |
 | entender o que é automático ou manual | [Arquitetura](#️-arquitetura-completa-do-ecossistema) |
@@ -79,7 +80,11 @@ Antes de gerar código, confirme evento, denominador, coluna de originação,
 data de observação, MOB máximo comparável e tratamento das safras incompletas.
 ```
 
-[Conheça as 13 Agent Skills e seus templates](skills/README.md).
+[Conheça o catálogo de Agent Skills e seus templates](skills/README.md).
+
+Não sabe qual escolher? O [Concierge Hub](skills/hub-ml-concierge/README.md) ajuda
+a localizar e combinar recursos existentes. Ele não é uma etapa obrigatória e
+não executa análises durante a descoberta. Sua homologação conversacional permanece pendente.
 
 ### 📦 2. Hub Snippets (`hub_snippets/`)
 

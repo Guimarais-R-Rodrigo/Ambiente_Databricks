@@ -11,3 +11,7 @@
 **Base examinada:** commit `9fa737104110354c0ec0ca5c4b6d3e5a0574c629` do repositório. Datas dos testes e limitações constam em [RESULTADOS](skills/hub-ml-concierge/tests/RESULTADOS.md). O número de versão é do protótipo, não do Hub.
 
 **Não realizado:** instalação no Databricks, forward tests no Genie Code, validação de permissões corporativas, promoção canônica e homologação de produção.
+
+## 2026-09-12 — Integração autorizada (Codex)
+
+A skill passa a ser mantida em `ambiente_fonte/.assistant/skills/hub-ml-concierge/`. O pacote 0.1.0 desta área permanece como histórico, sem reescrita de resultados. Consulte o changelog canônico para integração e validação. Nenhuma instalação Databricks foi realizada.
