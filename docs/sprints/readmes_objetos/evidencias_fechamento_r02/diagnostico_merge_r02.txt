@@ -1,0 +1,23 @@
+f23ac5e50b6e055f6a1e53d2b76c2a9721d1ce6d
+CHANGELOG.md
+CLAUDE.md
+README.md
+tools/ci_local.py
+
+Auto-merging CHANGELOG.md
+CONFLICT (content): Merge conflict in CHANGELOG.md
+Auto-merging CLAUDE.md
+CONFLICT (content): Merge conflict in CLAUDE.md
+Auto-merging MANUAL_TECNICO.md
+Auto-merging Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md
+Auto-merging Novo_Ambiente_Simulado/Users/usuario-free/.assistant/README.md
+Auto-merging Novo_Ambiente_Simulado/Users/usuario-free/.assistant_instructions.md
+Auto-merging README.md
+CONFLICT (content): Merge conflict in README.md
+Auto-merging ambiente_fonte/.assistant/MANUAL_TECNICO.md
+Auto-merging ambiente_fonte/.assistant/README.md
+Auto-merging ambiente_fonte/.assistant_instructions.md
+Auto-merging docs/decisions/README.md
+Auto-merging tools/README.md
+Auto-merging tools/ci_local.py
+CONFLICT (content): Merge conflict in tools/ci_local.py

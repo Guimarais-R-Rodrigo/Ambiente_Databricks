@@ -1,0 +1,6 @@
+fonte  : /mnt/data/integracao_repo/ambiente_fonte
+destino: /mnt/data/integracao_repo/Novo_Ambiente_Simulado/Users/usuario-free
+  copy file .assistant_instructions.md -> /mnt/data/integracao_repo/Novo_Ambiente_Simulado/Users/usuario-free/.assistant_instructions.md
+  copy dir  .assistant -> /mnt/data/integracao_repo/Novo_Ambiente_Simulado/Users/usuario-free/.assistant
+
+OK: 441 arquivos renderizados em Novo_Ambiente_Simulado/

@@ -1,5 +1,7 @@
 # Databricks notebook source
 # MAGIC %md
+# MAGIC [Conceito, requisitos e limites deste exemplar](README.md).
+# MAGIC
 # MAGIC # `taxa_resposta_campanha` — taxa de resposta com a precisão junto
 # MAGIC
 # MAGIC **O problema.** Uma campanha terminou e alguém precisa decidir para onde
@@ -231,3 +233,13 @@ except ValueError as erro:
 # MAGIC   assistentes de código.
 # MAGIC - **Como substituto de teste A/B.** Isto descreve o que aconteceu; não
 # MAGIC   isola o efeito da oferta, do canal ou do momento.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## Nota de revisão documental R01
+# MAGIC
+# MAGIC O limite superior do intervalo estima a taxa; não é teto absoluto de
+# MAGIC respostas. `decidivel` verifica apenas o tamanho do grupo contra o
+# MAGIC mínimo configurado. Não equivale a teste de hipótese, alocação ótima ou
+# MAGIC autorização de uso. A interpretação histórica acima não foi usada
+# MAGIC como evidência de execução nova nesta rodada; veja o README.

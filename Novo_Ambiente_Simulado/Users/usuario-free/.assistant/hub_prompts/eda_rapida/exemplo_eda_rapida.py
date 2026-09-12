@@ -2,9 +2,10 @@
 # MAGIC %md
 # MAGIC # `eda_rapida` — perfil rápido de uma tabela desconhecida
 # MAGIC
-# MAGIC **Prompt não executa.** Ele é um briefing para colar num chat, e a
-# MAGIC resposta vem de uma interação que notebook nenhum reproduz. Este notebook
-# MAGIC tem três partes, e só as duas primeiras rodam:
+# MAGIC **O arquivo do prompt não executa por si só.** Ele orienta uma interação
+# MAGIC que pode executar ferramentas conforme autorização e configuração. Neste
+# MAGIC notebook, só o preparo executa código; o pedido é texto e a resposta real
+# MAGIC continua pendente de captura. Isso não é uma limitação universal da plataforma.
 # MAGIC
 # MAGIC | Parte | O que é | Roda? |
 # MAGIC |---|---|---|
@@ -12,17 +13,19 @@
 # MAGIC | 2 | o prompt preenchido, pronto para copiar | não; é texto |
 # MAGIC | 3 | a resposta real do Genie Code, colada de um chat | **exige uma pessoa** |
 
+# MAGIC **Antes de usar:** veja o [README do objeto](README.md) para conceito, requisitos, efeitos e interpretação. As saídas históricas abaixo foram preservadas; a revisão R02 não as transforma em execução recente.
+# MAGIC
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Compute | sessão Spark e permissões compatíveis com a criação da tabela de exemplo |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, de `hub_snippets.testing.fixtures` |
-# MAGIC | Escrita | **sim** — cria a tabela `workspace.default.hub_exemplo_clientes` para o chat poder consultá-la |
-# MAGIC | Diferença Free × trabalho | no trabalho, aponte o prompt para uma tabela real governada em vez da sintética |
+# MAGIC | Escrita | **sim, com overwrite** — pode substituir `workspace.default.hub_exemplo_clientes`; exige destino seguro e autorização |
+# MAGIC | Diferença Free × trabalho | não execute o preparo sobre recurso compartilhado; usar fonte real exige autorização e revisão de dados sensíveis |
 
 # COMMAND ----------
 # MAGIC %md
@@ -47,7 +50,7 @@ base.show(5, truncate=False)
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** Cinco colunas, 4.000 linhas, `renda` com cerca de 6% de nulos e `alvo` em torno de 18%. Os nulos e o desbalanceamento são deliberados: um prompt que produz resposta boa numa base perfeita não diz nada sobre a base que você tem.
+# MAGIC **Como ler.** Confira o schema efetivamente impresso. A fixture gera `id_cliente`, `uf`, `renda`, `dt_referencia` e `alvo`: cinco colunas. A base tem 4.000 linhas, com nulos e prevalência solicitados na configuração; o resultado exato depende da geração. Um cenário sintético não homologa sua fonte real.
 
 # COMMAND ----------
 # MAGIC %md
@@ -117,14 +120,19 @@ base.show(5, truncate=False)
 # MAGIC Quem preenche : quem tiver acesso ao Genie Code do workspace.
 # MAGIC ```
 # MAGIC
+# MAGIC **Nota R02 sobre o registro acima:** a falta de execução é deste exemplo.
+# MAGIC A frase histórica sobre nenhum job reproduzir a interação não descreve
+# MAGIC todas as capacidades atuais: existe [tarefa Genie Code para jobs](https://docs.databricks.com/aws/en/jobs/tasks/genie-code), em Beta.
+# MAGIC Esta sprint não configura nem executa essa tarefa; preserva o bloco como registro histórico.
+# MAGIC
 # MAGIC **Como preencher**, quando for a hora:
 # MAGIC
-# MAGIC 1. Rode a Parte 1 deste notebook — ela cria `workspace.default.hub_exemplo_clientes`.
+# MAGIC 1. Antes de executar o preparo, confirme destino e autorização: a Parte 1 sobrescreve `workspace.default.hub_exemplo_clientes`.
 # MAGIC 2. Abra um **chat novo** no Genie Code e cole o bloco da Parte 2.
 # MAGIC 3. Cole a resposta aqui, em markdown, com a data da captura.
-# MAGIC 4. Registre **qual skill foi carregada** — é a única forma de saber se o
-# MAGIC    roteamento está fazendo o que se espera fora da bateria de forward
-# MAGIC    tests. Se não souber, pergunte no mesmo chat.
+# MAGIC 4. Registre o contexto e a skill efetivamente selecionados, com evidência
+# MAGIC    da interface quando disponível. Uma afirmação do assistente não prova
+# MAGIC    sozinha que um arquivo ou uma skill tenha sido carregado.
 # MAGIC 5. Comente: o que o assistente fez bem, e **o que ele deixou de fora**.
 # MAGIC    A segunda metade é a que ensina.
 # MAGIC
@@ -134,6 +142,6 @@ base.show(5, truncate=False)
 # MAGIC %md
 # MAGIC ## Quando **não** usar este prompt
 # MAGIC
-# MAGIC - **Quando a tabela é conhecida.** Se você já sabe granularidade, chave e qualidade, este prompt gasta tempo confirmando o que você sabe.
-# MAGIC - **Como substituto de EDA completa.** Ele é o primeiro olhar; `eda_completa` é o que sustenta decisão de modelagem.
-# MAGIC - **Em tabela que você não pode ler.** Antes de qualquer prompt, confirme que tem permissão — a resposta que vem sem acesso é plausível e inventada.
+# MAGIC - **Quando uma checagem específica já resolve a pergunta.** Conhecimento anterior não dispensa nova avaliação após mudanças relevantes na fonte.
+# MAGIC - **Como aprovação de modelagem.** É um primeiro olhar; uma investigação ampliada também precisa de validação proporcional à decisão.
+# MAGIC - **Sem acesso autorizado à fonte.** O assistente deve declarar a limitação; não aceite achados sem evidência como se a leitura tivesse ocorrido.

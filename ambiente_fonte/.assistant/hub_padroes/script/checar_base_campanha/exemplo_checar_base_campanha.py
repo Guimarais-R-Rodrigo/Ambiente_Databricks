@@ -1,5 +1,7 @@
 # Databricks notebook source
 # MAGIC %md
+# MAGIC [Conceito, requisitos e limites deste exemplar](README.md).
+# MAGIC
 # MAGIC # `checar_base_campanha` — o que conferir antes de confiar num número
 # MAGIC
 # MAGIC **O problema.** Alguém aponta uma tabela nova e pede a taxa de resposta.
@@ -160,3 +162,15 @@ print("tabela de demonstração removida")
 # MAGIC   agregadas; barato em milhões de linhas, não em bilhões.
 # MAGIC - **Como bloqueio automático.** `fail` é sinal para uma pessoa decidir,
 # MAGIC   não para um job abortar. A decisão sobre nulo ambíguo é de negócio.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## Nota de revisão documental R01
+# MAGIC
+# MAGIC O helper é de leitura, mas o exemplo usa `saveAsTable` com overwrite e
+# MAGIC depois `DROP TABLE`: a tabela de demonstração é persistente, não uma
+# MAGIC view temporária. Não execute esses trechos sem conferir autorização e
+# MAGIC destino. A quantidade/custo de leituras depende do plano de execução;
+# MAGIC a docstring não é evidência de três varreduras físicas medidas.
+# MAGIC Os blocos históricos têm contagens diferentes e transcrição parcial;
+# MAGIC não foram reexecutados nesta R01. Limites adicionais estão no README.
