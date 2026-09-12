@@ -7,6 +7,7 @@ on:
       - .github/temas_v00_integrar.py
 permissions:
   contents: write
+  pull-requests: write
 concurrency:
   group: temas-v00-reconciliacao
   cancel-in-progress: false
@@ -33,13 +34,18 @@ jobs:
       - name: Dependencias declaradas
         run: python -m pip install -r tools/requirements-dev.txt
       - name: Reconciliar, documentar e validar antes de qualquer push
-        run: python -B .github/temas_v00_integrar.py
+        shell: bash
+        run: |
+          set -o pipefail
+          python -B .github/temas_v00_integrar.py 2>&1 | tee "$RUNNER_TEMP/v00-console.log"
       - name: Preservar logs inclusive em falha
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: integracao-v00-${{ github.run_id }}
-          path: ${{ runner.temp }}/v00-integracao/
+          path: |
+            ${{ runner.temp }}/v00-integracao/
+            ${{ runner.temp }}/v00-console.log
           if-no-files-found: error
       - name: Atualizar somente a branch candidata por fast-forward
         if: success() && env.INTEGRACAO_PRONTA == '1'
@@ -56,3 +62,21 @@ jobs:
           test "$actual_main" = "$BASE_MAIN"
           test "$actual_head" = "$GITHUB_SHA"
           git push origin HEAD:refs/heads/codex/temas-v00
+      - name: Registrar diagnostico da rodada no PR
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JOB_STATUS: ${{ job.status }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request
+          from pathlib import Path
+          p = Path(os.environ['RUNNER_TEMP']) / 'v00-console.log'
+          log = p.read_text(encoding='utf-8')[-16000:] if p.exists() else 'Executor nao iniciou; consultar etapas do run.'
+          body = '### Reconciliacao V00 — run ' + os.environ['GITHUB_RUN_ID'] + '\n\nEstado do job: **' + os.environ['JOB_STATUS'] + '**. Este registro automatico nao e uma aprovacao independente nem merge da main.\n\n```text\n' + log.replace('```', "'''") + '\n```'
+          req = urllib.request.Request('https://api.github.com/repos/' + os.environ['GITHUB_REPOSITORY'] + '/issues/8/comments', data=json.dumps({'body': body}).encode(), headers={'Authorization': 'Bearer ' + os.environ['GH_TOKEN'], 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'}, method='POST')
+          with urllib.request.urlopen(req, timeout=30) as response:
+              result = json.load(response)
+              print('Diagnostico registrado no comentario', result['id'])
+          PY
