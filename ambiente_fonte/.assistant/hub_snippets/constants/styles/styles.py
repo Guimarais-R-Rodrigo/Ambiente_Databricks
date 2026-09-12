@@ -45,7 +45,7 @@ STYLE_INDEX_ITEM = f"margin:6px 0; padding:6px 10px; background:{colors.BG_SECTI
 STYLE_INDEX_DESCRIPTION = f"color:{colors.TEXTO_SECUNDARIO}; font-size:12px;"
 
 TABLE_HEADER_BACKGROUND = colors.AZUL_CAIXA
-TABLE_HEADER_TEXT = "#FFFFFF"
+TABLE_HEADER_TEXT = "white"
 TABLE_FONT_FAMILY = "Segoe UI"
 TABLE_NEGATIVE = colors.VERMELHO
 
