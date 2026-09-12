@@ -58,3 +58,10 @@ Leia o [guia operacional](GUIA_OPERACIONAL.md) antes de executar o exemplo.
 A [coleção de padrões](../README.md) e o [Manual Técnico](../../MANUAL_TECNICO.md#catalogo-helpers)
 continuam sendo as entradas gerais. A publicação e sua homologação são gates
 separados; esta sprint não oferece comando para publicar um tema.
+
+## Versões que não devem ser confundidas
+
+O contrato visual JSON está em **0.1.0**; ele define campos e limites. O contrato
+editorial dos READMEs está em **1.0.0**; ele organiza como explicar cada objeto.
+A compatibilidade da API do resolvedor usa **1.0.0**. São identificadores de
+contratos distintos, não indicação de que a instalação foi aprovada ou publicada.
