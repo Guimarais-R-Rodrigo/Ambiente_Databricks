@@ -7,6 +7,7 @@ legada durante o simples import.
 
 from __future__ import annotations
 
+import json
 import re
 from typing import Any, Dict, Optional
 
@@ -83,8 +84,9 @@ def _dados_tema_plotly(theme: ResolvedTheme) -> tuple[dict[str, Any], Any]:
             action="Use resolve_theme ou load_theme; não passe dicionário diretamente ao adaptador Plotly.",
         )
     # export_theme revalida schema, recursos e fingerprint; não grava arquivo.
-    export_theme(theme)
-    data = theme.to_dict()
+    # A representação devolvida é a única fonte confiável para o adaptador:
+    # não lemos _values/tokens diretamente de um dataclass potencialmente substituído.
+    data = json.loads(export_theme(theme))
     if data["context"] != "notebook":
         raise ThemeError(
             "CONTEXT_MISMATCH",
@@ -99,7 +101,7 @@ def _dados_tema_plotly(theme: ResolvedTheme) -> tuple[dict[str, Any], Any]:
             field="$.mode",
             action="Mantenha o modo light nesta etapa; dark/high_contrast exigem tokens de superfície próprios antes de uso.",
         )
-    return data, theme.tokens
+    return data, data["tokens"]
 
 
 def get_tema_plotly(theme: ResolvedTheme) -> Dict[str, Any]:
@@ -155,6 +157,7 @@ def aplicar_tema_resolvido(
     ``pio.templates.default`` e não modifica dados, eixos ou cores já definidas
     nos traces; propriedades específicas podem ser ajustadas depois da chamada.
     """
+    _data, tokens = _dados_tema_plotly(theme)
     config = get_tema_plotly(theme)
     fig.update_layout(**config)
     footer_parts = []
@@ -173,8 +176,8 @@ def aplicar_tema_resolvido(
             y=-0.18,
             showarrow=False,
             font={
-                "size": theme.tokens["chart.footer_px"],
-                "color": theme.tokens["text.secondary"],
+                "size": tokens["chart.footer_px"],
+                "color": tokens["text.secondary"],
             },
             xanchor="left",
         )

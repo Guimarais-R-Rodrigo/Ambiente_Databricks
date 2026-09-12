@@ -93,6 +93,7 @@ assert fig.layout.width == 720
 A referência empacotada abaixo é **fixture de teste**, não tema operacional aprovado. Ela serve para demonstrar o fluxo; uma proposta real deve seguir o processo de governança do Sistema de Temas.
 
 ```python
+import plotly.graph_objects as go
 from hub_snippets.visual.tema import load_reference_theme, resolve_theme
 from hub_snippets.visual.theme_plotly import aplicar_tema_resolvido
 

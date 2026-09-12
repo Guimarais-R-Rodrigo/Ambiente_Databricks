@@ -142,6 +142,23 @@ class TemasV03Tests(unittest.TestCase):
             get_tema_plotly(adulterado)
         self.assertEqual(ctx.exception.code, "RESULT_INTEGRITY")
 
+    def test_values_adulterados_nao_contaminam_layout_ou_rodape(self):
+        theme = load_reference_theme("notebook")
+        values = theme.to_dict()
+        values["tokens"]["chart.width_px"] = 1
+        values["tokens"]["chart.footer_px"] = 99
+        values["tokens"]["text.secondary"] = "#FFFFFF"
+        adulterado = replace(theme, _values=values)
+
+        config = get_tema_plotly(adulterado)
+        self.assertEqual(config, get_tema_eda())
+
+        fig = go.Figure()
+        aplicar_tema_resolvido(fig, adulterado, fonte="fixture_local", n=1)
+        ann = fig.layout.annotations[-1]
+        self.assertEqual(ann.font.size, theme.tokens["chart.footer_px"])
+        self.assertEqual(ann.font.color, theme.tokens["text.secondary"])
+
     def test_registro_configurado_nao_ativa_por_padrao(self):
         name = "hub-v03-teste-nao-ativa"
         before_default = pio.templates.default

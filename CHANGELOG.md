@@ -17,6 +17,11 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 - (Codex) README/notebook de `theme_plotly`, Manual e índices passam a documentar a rota configurada como opt-in; consumidores atuais continuam no caminho legado.
 - (Codex) Gate `temas` já descobre a suíte V03 pelo padrão `test_temas*.py`; descrição atualizada sem criar etapa paralela.
 
+### Corrigido
+
+- (Codex) Code review P2: o adaptador Plotly passa a consumir layout e rodapé somente dos tokens extraídos do JSON canônico revalidado; adulterar apenas `_values` de um `ResolvedTheme` não contamina a figura.
+- (Codex) Bloco copiável V03 no README importa `plotly.graph_objects as go` localmente, sem depender da execução de células anteriores.
+
 ### Notas
 
 - (Codex) Primeiro run remoto V03 `34721929275`: 22 V03 + 12 V00 + 105 V02 + 138 V01 aprovados. Não somar reexecuções como novos casos.
