@@ -14,6 +14,8 @@ jobs:
       PYTHONUTF8: '1'
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -45,5 +47,5 @@ jobs:
         run: python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
       - name: Regressão visual V00
         run: python -B tools/tests/test_visual_legado_v00.py
-      - name: AST do produto
+      - name: Validação do produto
         run: python -B tools/validate_assistant.py
