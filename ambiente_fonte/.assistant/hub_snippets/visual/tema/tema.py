@@ -112,7 +112,13 @@ def carregar_tema(
     _validar_schema(documento, schema, schema, path="$", max_depth=max_depth)
     _validar_compatibilidade(documento)
     _validar_regras_dominio(documento)
-    semantico = json.dumps(documento, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
+    semantico = json.dumps(
+        documento,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    )
     return TemaResolvido(
         _json_semantico=semantico,
         _bytes_originais=raw,
@@ -130,8 +136,6 @@ def schema_padrao_path() -> Path:
 @lru_cache(maxsize=4)
 def _carregar_schema_cached(path_text: str) -> dict[str, Any]:
     path = Path(path_text)
-    if path.is_symlink():
-        raise ErroTema("PATH_SYMLINK", "Use um schema regular instalado com o Hub.")
     if not path.exists():
         raise ErroTema("PATH_MISSING", "O schema do Sistema de Temas não foi encontrado.")
     if not path.is_file():
@@ -141,7 +145,10 @@ def _carregar_schema_cached(path_text: str) -> dict[str, Any]:
         text = raw.decode("utf-8")
         parsed = json.loads(text, parse_constant=lambda _x: (_raise_json_constant()))
     except (UnicodeDecodeError, json.JSONDecodeError, ErroTema) as exc:
-        raise ErroTema("SCHEMA_INVALID", "O schema instalado está corrompido; não prossiga com o tema.") from exc
+        raise ErroTema(
+            "SCHEMA_INVALID",
+            "O schema instalado está corrompido; não prossiga com o tema.",
+        ) from exc
     if not isinstance(parsed, dict):
         raise ErroTema("SCHEMA_INVALID", "O schema instalado não possui objeto raiz válido.")
     return parsed
@@ -149,10 +156,16 @@ def _carregar_schema_cached(path_text: str) -> dict[str, Any]:
 
 def _carregar_schema(schema_path: Optional[Union[str, Path]]) -> dict[str, Any]:
     path = Path(schema_path) if schema_path is not None else schema_padrao_path()
+    if path.is_symlink():
+        raise ErroTema("PATH_SYMLINK", "Use um schema regular instalado com o Hub.")
     return deepcopy(_carregar_schema_cached(str(path.resolve(strict=False))))
 
 
-def _ler_origem(origem: Union[str, Path, bytes, bytearray], *, max_bytes: int) -> tuple[bytes, str]:
+def _ler_origem(
+    origem: Union[str, Path, bytes, bytearray],
+    *,
+    max_bytes: int,
+) -> tuple[bytes, str]:
     if isinstance(origem, (bytes, bytearray)):
         raw = bytes(origem)
         rotulo = "<bytes>"
@@ -188,28 +201,45 @@ def _parse_json_estrito(raw: bytes, *, max_depth: int) -> dict[str, Any]:
     try:
         text = raw.decode("utf-8", errors="strict")
     except UnicodeDecodeError as exc:
-        raise ErroTema("JSON_UTF8", "Salve o tema em UTF-8 válido, sem substituir bytes inválidos.") from exc
+        raise ErroTema(
+            "JSON_UTF8",
+            "Salve o tema em UTF-8 válido, sem substituir bytes inválidos.",
+        ) from exc
 
     def pares_sem_duplicata(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
         out: dict[str, Any] = {}
         for key, value in pairs:
             if key in out:
-                raise ErroTema("JSON_DUPLICATE_KEY", "Remova a chave JSON duplicada.", campo=key)
+                raise ErroTema(
+                    "JSON_DUPLICATE_KEY",
+                    "Remova a chave JSON duplicada.",
+                    campo=key,
+                )
             out[key] = value
         return out
 
     try:
-        data = json.loads(text, object_pairs_hook=pares_sem_duplicata, parse_constant=lambda _x: (_raise_json_constant()))
+        data = json.loads(
+            text,
+            object_pairs_hook=pares_sem_duplicata,
+            parse_constant=lambda _x: (_raise_json_constant()),
+        )
     except ErroTema:
         raise
     except json.JSONDecodeError as exc:
-        raise ErroTema("JSON_SYNTAX", "Corrija a sintaxe do JSON antes de tentar novamente.") from exc
+        raise ErroTema(
+            "JSON_SYNTAX",
+            "Corrija a sintaxe do JSON antes de tentar novamente.",
+        ) from exc
     if not isinstance(data, dict):
         raise ErroTema("SCHEMA_ROOT", "O tema precisa ter um objeto JSON na raiz.")
     _validar_unicode(data)
     profundidade = _profundidade(data)
     if profundidade > max_depth:
-        raise ErroTema("JSON_DEPTH", f"O tema excede a profundidade máxima de {max_depth} níveis.")
+        raise ErroTema(
+            "JSON_DEPTH",
+            f"O tema excede a profundidade máxima de {max_depth} níveis.",
+        )
     return data
 
 
@@ -220,7 +250,11 @@ def _raise_json_constant() -> None:
 def _validar_unicode(value: Any, path: str = "$") -> None:
     if isinstance(value, str):
         if any(0xD800 <= ord(ch) <= 0xDFFF for ch in value):
-            raise ErroTema("JSON_SURROGATE", "Use texto Unicode válido, sem surrogate isolado.", campo=path)
+            raise ErroTema(
+                "JSON_SURROGATE",
+                "Use texto Unicode válido, sem surrogate isolado.",
+                campo=path,
+            )
     elif isinstance(value, dict):
         for key, item in value.items():
             _validar_unicode(key, f"{path}.<chave>")
@@ -238,7 +272,14 @@ def _profundidade(value: Any) -> int:
     return 0
 
 
-def _validar_schema(value: Any, rule: Mapping[str, Any], root: Mapping[str, Any], *, path: str, max_depth: int) -> None:
+def _validar_schema(
+    value: Any,
+    rule: Mapping[str, Any],
+    root: Mapping[str, Any],
+    *,
+    path: str,
+    max_depth: int,
+) -> None:
     if "$ref" in rule:
         target = _resolver_ref(rule["$ref"], root)
         _validar_schema(value, target, root, path=path, max_depth=max_depth)
@@ -253,16 +294,30 @@ def _validar_schema(value: Any, rule: Mapping[str, Any], root: Mapping[str, Any]
         required = rule.get("required", [])
         for key in required:
             if key not in value:
-                raise ErroTema("SCHEMA_REQUIRED", "Inclua todos os campos obrigatórios do contrato.", campo=f"{path}.{key}")
+                raise ErroTema(
+                    "SCHEMA_REQUIRED",
+                    "Inclua todos os campos obrigatórios do contrato.",
+                    campo=f"{path}.{key}",
+                )
         props = rule.get("properties", {})
         if rule.get("additionalProperties") is False:
             unknown = [key for key in value if key not in props]
             if unknown:
-                raise ErroTema("SCHEMA_UNKNOWN_FIELD", "Remova campos não previstos pelo contrato.", campo=f"{path}.{unknown[0]}")
+                raise ErroTema(
+                    "SCHEMA_UNKNOWN_FIELD",
+                    "Remova campos não previstos pelo contrato.",
+                    campo=f"{path}.{unknown[0]}",
+                )
         for key, child in value.items():
             child_rule = props.get(key)
             if child_rule is not None:
-                _validar_schema(child, child_rule, root, path=f"{path}.{key}", max_depth=max_depth)
+                _validar_schema(
+                    child,
+                    child_rule,
+                    root,
+                    path=f"{path}.{key}",
+                    max_depth=max_depth,
+                )
     if isinstance(value, list):
         if "minItems" in rule and len(value) < rule["minItems"]:
             _schema_error(path)
@@ -271,10 +326,20 @@ def _validar_schema(value: Any, rule: Mapping[str, Any], root: Mapping[str, Any]
         if rule.get("uniqueItems"):
             for i, item in enumerate(value):
                 if any(item == previous for previous in value[:i]):
-                    raise ErroTema("SCHEMA_UNIQUE", "A lista não pode repetir valores.", campo=path)
+                    raise ErroTema(
+                        "SCHEMA_UNIQUE",
+                        "A lista não pode repetir valores.",
+                        campo=path,
+                    )
         if "items" in rule:
             for i, item in enumerate(value):
-                _validar_schema(item, rule["items"], root, path=f"{path}[{i}]", max_depth=max_depth)
+                _validar_schema(
+                    item,
+                    rule["items"],
+                    root,
+                    path=f"{path}[{i}]",
+                    max_depth=max_depth,
+                )
     if isinstance(value, str):
         if "minLength" in rule and len(value) < rule["minLength"]:
             _schema_error(path)
@@ -291,12 +356,22 @@ def _validar_schema(value: Any, rule: Mapping[str, Any], root: Mapping[str, Any]
     for branch in rule.get("allOf", []):
         _validar_schema(value, branch, root, path=path, max_depth=max_depth)
     if "if" in rule:
-        chosen = rule.get("then") if _matches_schema(value, rule["if"], root, path, max_depth) else rule.get("else")
+        chosen = (
+            rule.get("then")
+            if _matches_schema(value, rule["if"], root, path, max_depth)
+            else rule.get("else")
+        )
         if chosen is not None:
             _validar_schema(value, chosen, root, path=path, max_depth=max_depth)
 
 
-def _matches_schema(value: Any, rule: Mapping[str, Any], root: Mapping[str, Any], path: str, max_depth: int) -> bool:
+def _matches_schema(
+    value: Any,
+    rule: Mapping[str, Any],
+    root: Mapping[str, Any],
+    path: str,
+    max_depth: int,
+) -> bool:
     try:
         _validar_schema(value, rule, root, path=path, max_depth=max_depth)
         return True
@@ -306,16 +381,25 @@ def _matches_schema(value: Any, rule: Mapping[str, Any], root: Mapping[str, Any]
 
 def _resolver_ref(ref: str, root: Mapping[str, Any]) -> Mapping[str, Any]:
     if not isinstance(ref, str) or not ref.startswith("#/"):
-        raise ErroTema("SCHEMA_INVALID", "O schema instalado contém referência não local.")
+        raise ErroTema(
+            "SCHEMA_INVALID",
+            "O schema instalado contém referência não local.",
+        )
     current: Any = root
     try:
         for part in ref[2:].split("/"):
             part = part.replace("~1", "/").replace("~0", "~")
             current = current[part]
     except (KeyError, TypeError) as exc:
-        raise ErroTema("SCHEMA_INVALID", "O schema instalado contém referência inexistente.") from exc
+        raise ErroTema(
+            "SCHEMA_INVALID",
+            "O schema instalado contém referência inexistente.",
+        ) from exc
     if not isinstance(current, dict):
-        raise ErroTema("SCHEMA_INVALID", "O schema instalado aponta para definição inválida.")
+        raise ErroTema(
+            "SCHEMA_INVALID",
+            "O schema instalado aponta para definição inválida.",
+        )
     return current
 
 
@@ -336,40 +420,80 @@ def _validar_tipo(value: Any, expected: Any, path: str) -> None:
             return
         if typ == "null" and value is None:
             return
-    raise ErroTema("SCHEMA_TYPE", "Use o tipo de valor definido pelo contrato.", campo=path)
+    raise ErroTema(
+        "SCHEMA_TYPE",
+        "Use o tipo de valor definido pelo contrato.",
+        campo=path,
+    )
 
 
 def _is_number(value: Any) -> bool:
-    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and math.isfinite(value)
+    )
 
 
 def _schema_error(path: str) -> None:
-    raise ErroTema("SCHEMA_VALUE", "Use um valor permitido pelo contrato do tema.", campo=path)
+    raise ErroTema(
+        "SCHEMA_VALUE",
+        "Use um valor permitido pelo contrato do tema.",
+        campo=path,
+    )
 
 
 def _validar_compatibilidade(documento: Mapping[str, Any]) -> None:
     compat = documento["engine_compatibility"]
     current = _parse_semver(ENGINE_VERSION)
     minimum = _parse_semver(compat["minimum_version"])
-    if compat["api_major"] != current[0] or current < minimum or current[0] >= compat["maximum_major_exclusive"]:
-        raise ErroTema("ENGINE_VERSION", "Este tema exige uma versão de engine diferente da instalada.")
+    if (
+        compat["api_major"] != current[0]
+        or current < minimum
+        or current[0] >= compat["maximum_major_exclusive"]
+    ):
+        raise ErroTema(
+            "ENGINE_VERSION",
+            "Este tema exige uma versão de engine diferente da instalada.",
+        )
 
 
 def _parse_semver(value: str) -> tuple[int, int, int]:
-    match = re.fullmatch(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)", value)
+    match = re.fullmatch(
+        r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)",
+        value,
+    )
     if not match:
-        raise ErroTema("ENGINE_VERSION", "A versão de compatibilidade não segue major.minor.patch.")
+        raise ErroTema(
+            "ENGINE_VERSION",
+            "A versão de compatibilidade não segue major.minor.patch.",
+        )
     return tuple(int(part) for part in match.groups())  # type: ignore[return-value]
 
 
 def _validar_regras_dominio(documento: Mapping[str, Any]) -> None:
     diverging = documento.get("tokens", {}).get("palette.diverging")
     if isinstance(diverging, list) and len(diverging) % 2 == 0:
-        raise ErroTema("PALETTE_CENTER", "A paleta divergente precisa ter quantidade ímpar de cores para representar um centro.", campo="$.tokens.palette.diverging")
+        raise ErroTema(
+            "PALETTE_CENTER",
+            "A paleta divergente precisa ter quantidade ímpar de cores para representar um centro.",
+            campo="$.tokens.palette.diverging",
+        )
 
 
 def _positive_int(value: Any, fallback: int) -> int:
-    return value if isinstance(value, int) and not isinstance(value, bool) and value > 0 else fallback
+    return (
+        value
+        if isinstance(value, int) and not isinstance(value, bool) and value > 0
+        else fallback
+    )
 
 
-__all__ = ["ENGINE_VERSION", "ErroTema", "TemaResolvido", "carregar_tema", "resolver_tema", "schema_padrao_path"]
+__all__ = [
+    "ENGINE_VERSION",
+    "ErroTema",
+    "TemaResolvido",
+    "carregar_tema",
+    "resolver_tema",
+    "schema_padrao_path",
+]
