@@ -31,6 +31,7 @@ STYLE_KPI_CARD = (
 STYLE_DIVIDER_LIGHT = "border:none; border-top:1px solid #D9DEE3; margin:10px 0;"
 STYLE_DIVIDER_MEDIUM = "border:none; border-top:1.5px solid #BFC7D1; margin:14px 0;"
 STYLE_DIVIDER_HEAVY = f"border:none; border-top:2px solid {colors.AZUL_CAIXA}; margin:18px 0;"
+STYLE_DIVIDER_SECTION_PRIMARY = f"border:none; border-top:2px solid {colors.AZUL_CAIXA}; margin:0;"
 STYLE_DIVIDER_SECTION_SECONDARY = "border:none; border-top:1px solid #D9DEE3; margin:4px 0 0 0;"
 
 STYLE_BADGE_OK = "display:inline-block; background:#EAF7EC; color:#2E7D32; padding:2px 8px; border-radius:10px; font-size:11px;"
@@ -102,6 +103,7 @@ def get_styles_resolvidos(theme: ResolvedTheme) -> Dict[str, str]:
         "divider.light": f"border:none; border-top:1px solid {tokens['divider.light']}; margin:10px 0;",
         "divider.medium": f"border:none; border-top:1.5px solid {tokens['divider.medium']}; margin:14px 0;",
         "divider.heavy": f"border:none; border-top:2px solid {tokens['brand.primary']}; margin:18px 0;",
+        "divider.section_primary": f"border:none; border-top:2px solid {tokens['brand.primary']}; margin:0;",
         "divider.section_secondary": f"border:none; border-top:1px solid {tokens['divider.light']}; margin:4px 0 0 0;",
         "badge.ok": (
             f"display:inline-block; background:{tokens['status.ok_bg']}; color:{tokens['status.ok_text']}; "
