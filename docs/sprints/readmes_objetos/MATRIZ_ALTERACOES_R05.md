@@ -1,7 +1,7 @@
 # Matriz nominal de alterações — R05
 
-**Base fixa:** `d9da056c95bf5c4209b2f208de1c9a987580efe7`  
-**Escopo funcional:** seis objetos `hub_snippets/ml` previstos no controle de migração.  
+**Base fixa:** `d9da056c95bf5c4209b2f208de1c9a987580efe7`
+**Escopo funcional:** seis objetos `hub_snippets/ml` previstos no controle de migração.
 **Regra:** implementação e fachada permanecem byte a byte iguais; notebooks podem receber apenas Markdown/backlinks/correções editoriais, preservando AST, magics executáveis e outputs históricos.
 
 ## Novos READMEs canônicos
