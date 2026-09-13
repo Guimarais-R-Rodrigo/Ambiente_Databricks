@@ -2,9 +2,11 @@
 # MAGIC %md
 # MAGIC # `curves_plotly` — as quatro curvas, e o que cada uma esconde
 # MAGIC
-# MAGIC **O problema.** ROC é a curva que todo mundo mostra e a que menos informa em base desbalanceada: com 2% de eventos, uma AUC alta convive com precisão baixíssima. Cada curva responde a uma pergunta diferente, e mostrar só uma é escolher qual verdade contar.
+# MAGIC **Guia local completo:** [README.md](README.md)
 # MAGIC
-# MAGIC **O que este helper faz.** Gera ROC, precisão-recall, lift e KS com o mesmo tema, sobre amostra limitada.
+# MAGIC **O problema.** ROC é uma curva comum de discriminação, mas em base muito desbalanceada ela não deve ser lida sozinha. Cada curva responde a uma pergunta diferente; PR e lift ajudam a enxergar seleção de eventos, enquanto ROC e KS resumem separação sob outras escalas.
+# MAGIC
+# MAGIC **O que este helper faz.** Gera ROC, precisão-recall, lift cumulativo e KS com o mesmo tema. Ele recebe vetores já no driver; o parâmetro `n` só altera o N mostrado no rodapé e **não subamostra** os dados.
 
 # COMMAND ----------
 # MAGIC %md
@@ -12,11 +14,11 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
-# MAGIC | Bibliotecas | nenhuma além do runtime |
+# MAGIC | Compute | serverless ou clássico, indiferente para o cálculo local |
+# MAGIC | Bibliotecas | NumPy, scikit-learn e Plotly disponíveis no runtime |
 # MAGIC | Dados | sintéticos, gerados aqui — o módulo opera **driver-side** |
 # MAGIC | Escrita | nenhuma; tudo em memória |
-# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
+# MAGIC | Diferença Free × trabalho | revalide versões do runtime; não há escrita no workspace |
 
 # COMMAND ----------
 
@@ -50,18 +52,13 @@ plot_roc_curve(y, p, title="ROC — base com 2% de eventos")
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC Executado no laboratório, o resultado é:
+# MAGIC Executado no laboratório, o resultado histórico é:
 # MAGIC
 # MAGIC ```text
 # MAGIC linhas: 8000 | eventos: 148 (1.85%)
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** A AUC sai bem acima de 0,5 e a curva parece boa. ROC compara
-# MAGIC taxa de verdadeiros positivos com taxa de falsos positivos, e o
-# MAGIC denominador da segunda são os **não-eventos** — 98% da base aqui. Errar mil
-# MAGIC negativos mal move a curva.
-# MAGIC
-# MAGIC É por isso que ROC quase nunca fica feia em base desbalanceada.
+# MAGIC **Como ler.** ROC compara TPR e FPR ao variar o threshold. Em prevalência baixa, examine também PR, lift e capacidade operacional; AUC alta não informa sozinha quantos casos selecionados serão eventos.
 
 # COMMAND ----------
 
@@ -69,15 +66,7 @@ plot_pr_curve(y, p, title="Precisão × recall — a mesma base")
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** Aqui o desbalanceamento fica visível. A precisão parte perto
-# MAGIC da prevalência e cai conforme o recall sobe. É a curva que responde à
-# MAGIC pergunta operacional: **de cada dez que eu abordar, quantos são evento?**
-# MAGIC
-# MAGIC A linha de referência da PR não é 0,5 como na ROC — é a prevalência.
-# MAGIC Executada no laboratório, esta base sai com **148 eventos em 8.000 linhas,
-# MAGIC 1,85%** (a fixture pede 2%; o sorteio entrega 1,85%). Um modelo aleatório
-# MAGIC produz aqui uma reta horizontal em **0,0185**, não em 0,02 — e a diferença
-# MAGIC importa num notebook cujo assunto é qual número se escolhe contar.
+# MAGIC **Como ler.** A referência horizontal da PR é a prevalência observada. Nesta fixture histórica foram 148 eventos em 8.000 linhas, 1,85%. Average Precision resume a ordenação sob essa curva, mas não escolhe threshold de negócio.
 
 # COMMAND ----------
 
@@ -89,44 +78,17 @@ plot_ks_curve(y, p, title="KS")
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** Lift responde "quantas vezes melhor que sortear", e é a
-# MAGIC curva que conversa com quem decide orçamento. KS resume a maior distância
-# MAGIC entre as duas distribuições acumuladas, e é o número que a tradição de
-# MAGIC crédito reporta.
-# MAGIC
-# MAGIC As quatro descrevem o mesmo modelo. Mostrar só a ROC não é erro de
-# MAGIC cálculo — é escolha de enquadramento, e vale saber que se está fazendo.
+# MAGIC **Como ler.** O lift implementado é cumulativo: em cada fração da base ordenada por score, compara eventos capturados com o esperado sob a prevalência. KS usa `TPR - FPR` e destaca a maior separação. Nenhum dos dois prova causalidade ou calibração.
 
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
-# MAGIC - **Mostrando só a ROC em base desbalanceada.** É a mais bonita e a menos informativa ali.
-# MAGIC - **Comparando KS entre populações diferentes.** O índice depende da distribuição, não só da separação.
-# MAGIC - **Sobre a base inteira.** As funções aceitam `n` porque plotar milhões de pontos no driver não termina.
-# MAGIC - **Como prova de calibração.** Nenhuma das quatro diz se a probabilidade prevista corresponde à frequência observada.
+# MAGIC - **Como única evidência em base desbalanceada.** Combine métricas e curvas conforme a decisão.
+# MAGIC - **Como prova de calibração.** Nenhuma das quatro verifica frequência observada contra probabilidade prevista.
+# MAGIC - **Passando milhões de linhas esperando que `n` limite o custo.** `n` é só metadado visual; amostre antes.
+# MAGIC - **Comparando populações incompatíveis.** Mudança de população altera as métricas e precisa ser contextualizada.
 # MAGIC
 # MAGIC ## Dívida registrada: a paleta daqui tem seis cores
 # MAGIC
-# MAGIC Este módulo **redeclara** `PALETA_CATEGORICA` em vez de importá-la de
-# MAGIC `hub_snippets.constants.colors`, e o valor **diverge**:
-# MAGIC
-# MAGIC | Onde | Cores |
-# MAGIC |---|---:|
-# MAGIC | `constants.colors` | 10 |
-# MAGIC | `ml.curves_plotly` (aqui) | **6** |
-# MAGIC | `ml.umap_viz`, `ml.vintage_analysis` | 10, idênticas à original |
-# MAGIC
-# MAGIC Duas das três cópias são iguais à original, o que torna esta terceira
-# MAGIC invisível numa inspeção rápida. Como o `__init__.py` reexporta tudo, há
-# MAGIC hoje dois caminhos de import para o mesmo nome com valores diferentes.
-# MAGIC
-# MAGIC **Na prática:** um gráfico com mais de seis séries feito por este módulo
-# MAGIC repete cor a partir da sétima; o mesmo gráfico feito com a paleta de
-# MAGIC `constants` não repete. Se você precisa das dez, importe explicitamente
-# MAGIC de `constants.colors` e passe em `colorway`.
-# MAGIC
-# MAGIC A unificação não foi feita aqui de propósito: trocar a redeclaração por
-# MAGIC import mudaria a aparência de todos os gráficos existentes, e a conversão
-# MAGIC não muda comportamento. É decisão de produto, e precisa de alguém olhando
-# MAGIC os gráficos para dizer se seis ou dez é o certo.
+# MAGIC Este módulo mantém uma `PALETA_CATEGORICA` local de seis cores. A paleta compartilhada em `constants.colors` possui dez. Alterar isso mudaria aparência de gráficos com mais de seis séries e continua sendo decisão visual de produto, fora desta sprint documental.
