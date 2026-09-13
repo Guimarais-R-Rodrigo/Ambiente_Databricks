@@ -4,7 +4,9 @@
 # MAGIC
 # MAGIC **O problema.** ROC é a curva que todo mundo mostra e a que menos informa em base desbalanceada: com 2% de eventos, uma AUC alta convive com precisão baixíssima. Cada curva responde a uma pergunta diferente, e mostrar só uma é escolher qual verdade contar.
 # MAGIC
-# MAGIC **O que este helper faz.** Gera ROC, precisão-recall, lift e KS com o mesmo tema, sobre amostra limitada.
+# MAGIC **O que este helper faz.** Gera ROC, precisão-recall, lift e KS com o mesmo tema sobre vetores já disponíveis no driver. O parâmetro `n` só altera o N exibido no rodapé; **não subamostra** os dados.
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 
 # COMMAND ----------
 # MAGIC %md
@@ -61,7 +63,7 @@ plot_roc_curve(y, p, title="ROC — base com 2% de eventos")
 # MAGIC denominador da segunda são os **não-eventos** — 98% da base aqui. Errar mil
 # MAGIC negativos mal move a curva.
 # MAGIC
-# MAGIC É por isso que ROC quase nunca fica feia em base desbalanceada.
+# MAGIC Por isso, em base desbalanceada, leia ROC junto com PR, lift, prevalência e capacidade operacional; uma AUC alta não garante precisão adequada no recorte acionável.
 
 # COMMAND ----------
 
@@ -103,7 +105,7 @@ plot_ks_curve(y, p, title="KS")
 # MAGIC
 # MAGIC - **Mostrando só a ROC em base desbalanceada.** É a mais bonita e a menos informativa ali.
 # MAGIC - **Comparando KS entre populações diferentes.** O índice depende da distribuição, não só da separação.
-# MAGIC - **Sobre a base inteira.** As funções aceitam `n` porque plotar milhões de pontos no driver não termina.
+# MAGIC - **Sobre milhões de linhas esperando que `n` limite o custo.** `n` é somente metadado visual; amostre ou agregue antes de trazer vetores grandes ao driver.
 # MAGIC - **Como prova de calibração.** Nenhuma das quatro diz se a probabilidade prevista corresponde à frequência observada.
 # MAGIC
 # MAGIC ## Dívida registrada: a paleta daqui tem seis cores
