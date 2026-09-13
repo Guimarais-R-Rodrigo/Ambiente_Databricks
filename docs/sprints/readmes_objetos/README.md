@@ -12,7 +12,7 @@ Rodrigo aprovou o padrão e autorizou a integração das R03-A/R03-B com a V01 e
 
 O contrato vigente é **1.0.0**. A R08 foi aceita e integrada pelo PR nº 27 no commit `d5945e0`. A R09 documenta `curves_plotly`, `drift_detection`, `metrics_report`, `mlflow_run` e `performance_monitor`, preservando implementações/fachadas. A cobertura candidata é **60/75 operacionais e 3/3 exemplares, com 15 pendências**; o validador da árvore fechada é fonte de verdade.
 
-Consulte o [relatório R09](RELATORIO_R09.md), a [matriz nominal](MATRIZ_ALTERACOES_R09.md), os [achados](ACHADOS_R09.md) e o [registro de recuperação](RECUPERACAO_R09.md). A próxima parada é revisão desta leva antes da R10.
+Consulte o [relatório R09](RELATORIO_R09.md), a [matriz nominal](MATRIZ_ALTERACOES_R09.md), os [achados](ACHADOS_R09.md) e o [registro de recuperação](RECUPERACAO_R09.md). A próxima parada é freeze técnico e revisão antes da R10.
 
 Os relatórios anteriores preservam o estado observado em cada data. PRs #9/#11
 foram supersedidos pela composição integrada do PR #13 e não devem ser tratados
@@ -24,10 +24,9 @@ como entregas independentes a mesclar novamente.
 |---|---|
 | Examinar o formato e a linguagem | [Template de objeto](../../../ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md) |
 | Julgar a qualidade, além da estrutura | [Checklist editorial](../../../ambiente_fonte/.assistant/hub_padroes/readme/checklist_objeto.md) |
-| Ver o que mudou além dos READMEs | [Matriz R09](MATRIZ_ALTERACOES_R09.md) |
-| Conhecer inconsistências observadas | [Achados R09](ACHADOS_R09.md) |
-| Ver o resultado da execução | [Relatório R09](RELATORIO_R09.md) |
-| Entender a correção de preservação desta leva | [Recuperação R09](RECUPERACAO_R09.md) |
+| Ver o que mudou além dos READMEs | [Matriz R08](MATRIZ_ALTERACOES_R08.md) |
+| Conhecer inconsistências observadas | [Achados R08](ACHADOS_R08.md) |
+| Ver o resultado da execução | [Relatório R08](RELATORIO_R08.md) |
 | Saber quais legados faltam | [Controle de migração](CONTROLE_MIGRACAO.json) |
 
 ## Como evitar deriva na continuação
@@ -47,10 +46,9 @@ não se torna independente por fazer uma segunda leitura do próprio texto.
 
 Os exemplares ensinam os padrões e não contam como helpers operacionais.
 Os notebooks podem escrever tabelas sintéticas: os READMEs alertam antes de
-encaminhar à execução. O [ADR-0012](../../decisions/ADR-0012-readmes-de-objeto.md)
+encaminhar à execução. R01 não os executa no Databricks e não modifica suas
+instruções executáveis. O [ADR-0012](../../decisions/ADR-0012-readmes-de-objeto.md)
 foi ratificado pelo usuário em 2026-09-12, com nota anexada sem apagar o relato inicial.
-
-Na R09, os cinco notebooks preservam código, magics executáveis e saídas históricas; somente backlinks/erratas declaradas foram autorizados. O runtime MLflow validado usa SQLite local e não equivale a homologação no Databricks.
 
 ### Conciliação durante a R03-A
 
@@ -58,4 +56,4 @@ A main recebeu a instrumentação V00 em paralelo; o novo PR nº 9 precisa prese
 
 ### Conciliação R04-B × V03
 
-A R04-B foi recomposta sobre a V03 já presente na `main`. Consulte [CONCILIACAO_R04B_V03.md](CONCILIACAO_R04B_V03.md). A cobertura permanece 32/75 naquele registro histórico.
+A R04-B foi recomposta sobre a V03 já presente na `main`. Consulte [CONCILIACAO_R04B_V03.md](CONCILIACAO_R04B_V03.md). A cobertura permanece 32/75; a próxima parada continua sendo o merge da R04-B antes da R05.

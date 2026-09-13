@@ -2,41 +2,38 @@
 
 ## Escopo
 
-Documentar cinco objetos R09/A: `curves_plotly`, `drift_detection`, `metrics_report`, `mlflow_run` e `performance_monitor`, preservando implementação/fachada e limitando mudanças nos notebooks a backlinks/erratas Markdown explicitamente autorizadas.
+Documentar cinco objetos R09/A: `curves_plotly`, `drift_detection`, `metrics_report`, `mlflow_run` e `performance_monitor`, preservando implementação/fachada e corrigindo somente documentação quando necessário.
 
-## Cobertura candidata
+## Meta de cobertura
 
-Base integrada R08: 55/75 objetos operacionais e 20 pendências. A candidata R09 alcança **60/75 operacionais, 3/3 exemplares e 15 pendências**. O validador é a fonte de verdade estrutural; a cobertura não significa aceite editorial nem publicação no workspace.
+Base integrada: 55/75 objetos operacionais, 20 pendências. Meta candidata: **60/75 operacionais, 3/3 exemplares e 15 pendências**, com o validador como fonte de verdade.
 
-## Alterações além dos cinco READMEs
+## Alterações além dos READMEs
 
-A entrega inclui: cinco notebooks com substituições editoriais reversíveis; `README.md` raiz com checkpoint e snapshot verificável; `ambiente_fonte/.assistant/hub_snippets/README.md` com um bloco de navegação R09 e sua cópia derivada; `docs/sprints/readmes_objetos/README.md` com navegação/checkpoint; `CONTROLE_MIGRACAO.json` com retirada de exatamente cinco pendências; o registro de recuperação já presente no `CHANGELOG.md`; achados, matriz, relatório, rubrica, registro de recuperação e verificadores; e dez cópias derivadas dos cinco READMEs/notebooks no `Novo_Ambiente_Simulado`, usando o mesmo conteúdo canônico.
+A candidata mínima inclui: backlinks/erratas Markdown nos cinco notebooks; bloco R09 no catálogo de Hub Snippets; checkpoint e snapshot verificável no README raiz; índices de sprints/iniciativa; controle de migração; registro de recuperação no CHANGELOG; achados, matriz, rubrica, recuperação e verificadores; além das cópias correspondentes do simulado produzidas pelo renderer.
 
-`MANUAL_TECNICO.md`, `CLAUDE.md`, `PLANO_HUB.md` e `docs/sprints/README.md` permanecem iguais à base integrada. Esses documentos não precisam de checkpoint redundante nesta leva.
+Após a recuperação de preservação, **Manual Técnico, `CLAUDE.md` e `PLANO_HUB.md` foram retirados do escopo final da R09**. O Manual já cobre métricas, MLflow e monitoramento; repetir um checkpoint não é necessário para operar os cinco objetos e ampliaria a superfície de mudança.
 
-## Preservação
+## Limites
 
-As cinco implementações e cinco fachadas permanecem byte a byte iguais à base `d5945e04328609878f63857cc15cf5e5039b3e75`. A guarda dos notebooks reverte somente as substituições declaradas em `evidencias_r09/aplicar_r09.py` e exige que cada arquivo volte byte a byte à base; portanto código Python, magics executáveis, comentários executáveis e saídas históricas fora dessas substituições não podem derivar silenciosamente.
+Nenhuma implementação ou fachada dos cinco objetos pode mudar. Nos notebooks, somente as substituições declaradas no aplicador são autorizadas; a guarda as reverte e exige que o arquivo volte a ser byte a byte igual à base, preservando código, magics, comentários executáveis e saídas históricas.
 
-## Validação técnica
+Observações de runtime são evidência datada. Nenhum resultado desta sprint equivale a publicação/homologação Databricks, autorização de retreino ou auditoria independente.
 
-O preflight final **`34772841948`** passou integralmente:
+## Validação
 
-- contrato README 1.0.0 e cobertura 60/75 + 3/3, 15 pendências;
-- gate permanente, incluindo sistema de temas V00–V04, biblioteca, ferramentas, transição, READMEs e Concierge;
-- preservação estrita: 10 implementação/fachada, 5 notebooks reversíveis, 47 READMEs anteriores e espelho publicado;
+- contrato README 1.0.0 e cobertura 60/75;
+- gate permanente, incluindo temas V00–V04 e Concierge;
+- preservação byte a byte das dez peças executáveis de produto e equivalência reversível dos cinco notebooks;
 - runtime core para curvas, métricas, drift e monitor;
-- runtime MLflow em backend SQLite local, sem depender do workspace Databricks;
-- reconferência da `main` na mesma base.
-
-Ambiente core observado: NumPy 2.4.6, pandas 3.0.5, scikit-learn 1.9.1, SciPy 1.17.1 e Plotly 7.0.0. Ambiente MLflow: MLflow 3.16.0, NumPy 2.4.6, pandas 3.0.5, scikit-learn 1.9.1 e SQLite local. O uso de SQLite caracteriza o wrapper; **não homologa MLflow no Databricks**.
-
-## Recuperação de preservação
-
-Uma construção anterior desta mesma sprint reescreveu documentação em excesso e chegou a modificar literais executáveis no exemplo MLflow. O run `34764123678` restaurou catálogo, índice e cinco notebooks a partir da base integrada antes da reaplicação pontual. Consulte o [registro de recuperação](RECUPERACAO_R09.md). Esse incidente faz parte da evidência da R09 e não deve ser apagado do histórico.
+- runtime MLflow isolado em SQLite local, sem depender do workspace Databricks;
+- renderer com espelho da fonte publicada;
+- CIs permanentes do PR ainda serão exigidas sobre o commit final.
 
 ## Estado
 
-**TECNICAMENTE APROVADA PRÉ-PR.** O preflight `34772841948` e seu artefato `10322173358` sustentam os runtimes e a preservação. A árvore final ainda precisa passar pelas CIs permanentes do PR e pelo aceite editorial do usuário antes de qualquer merge.
+Preflight técnico **`34772019675`** aprovado integralmente: validador em 60/75 + 3/3 e 15 pendências, gate completo, preservação estrita, runtime core e runtime MLflow local com MLflow 3.16.0/SQLite. A candidata final ainda requer materialização limpa, CIs do PR e aceite editorial humano.
 
-Não houve publicação/homologação Databricks, auditoria independente, aprovação de modelo ou início da R10.
+## Recuperação de preservação — 2026-09-13
+
+A construção anterior foi interrompida por reescritas excessivas de catálogo/índice e notebooks. Os sete arquivos foram restaurados integralmente da base integrada; os cinco READMEs permaneceram. Consulte [RECUPERACAO_R09.md](RECUPERACAO_R09.md). A recuperação não é apresentada como auditoria independente nem como teste no Databricks.

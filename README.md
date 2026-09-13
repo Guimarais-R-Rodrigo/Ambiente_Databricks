@@ -6,6 +6,7 @@
 
 > **LEGENDA DE PROCEDÊNCIA.** Agent Skills e instruções são mecanismos reconhecidos pela Genie Code. Pastas com prefixo `hub_` e skills com prefixo `hub-` contêm implementações e convenções deste projeto; não são produtos institucionais da Databricks.
 
+
 **Manual Técnico:** [entenda APIs, Python, Spark, helpers e o funcionamento do Hub](MANUAL_TECNICO.md).
 
 ---
@@ -201,6 +202,7 @@ declaração decorativa: `python tools/validate_assistant.py --conferir-readme`
 reexecuta o gate e reprova se qualquer contagem ficar desatualizada.
 
 ```text
+raiz analisada     : /home/runner/work/Ambiente_Databricks/Ambiente_Databricks/ambiente_fonte
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 88 caminhos verificados
@@ -217,9 +219,10 @@ normas do molde    : 71 arquivos, 0 violação(ões)
 notebook exercita  : 59 objetos, 0 notebook(s) que só importam
 python (AST)       : 214 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1237 arquivos varridos no repositório editável/derivado
-repo (links)       : 1486 links fora da raiz analisada
-worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
+repo (identidade)  : 1230 arquivos varridos no repositório editável/derivado
+repo (links)       : 1444 links fora da raiz analisada
+worktree (extras)  : 5 arquivos locais examinados, fora da contagem versionada
+
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```

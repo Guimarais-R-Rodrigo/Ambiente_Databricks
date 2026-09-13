@@ -11,29 +11,22 @@
 ## Documentação não-README da candidata final
 
 - cinco notebooks `exemplo_<objeto>.py`: somente backlinks/erratas Markdown declaradas em `evidencias_r09/aplicar_r09.py`; a guarda reverte essas substituições e exige equivalência byte a byte com a base;
-- `README.md` raiz: checkpoint R09 e snapshot verificável das contagens finais;
-- `docs/sprints/readmes_objetos/README.md`: estado, navegação e cobertura da iniciativa;
+- `ambiente_fonte/.assistant/hub_snippets/README.md`: bloco R09 inserido sem substituir o catálogo histórico;
+- `README.md`: checkpoint R09 e snapshot de contagens gerado a partir do validador;
+- `docs/sprints/README.md` e `docs/sprints/readmes_objetos/README.md`: navegação/checkpoint da iniciativa;
 - `docs/sprints/readmes_objetos/CONTROLE_MIGRACAO.json`: retirada de exatamente cinco pendências R09/A;
-- `CHANGELOG.md`: mantém o registro de recuperação/preservação desta sprint, incluindo que os cinco novos READMEs foram preservados;
+- `CHANGELOG.md`: o registro de recuperação da própria R09 permanece como entrada histórica da leva;
 - `ACHADOS_R09.md`, `MATRIZ_ALTERACOES_R09.md`, `RELATORIO_R09.md`, `RUBRICA_R09.json`, `RECUPERACAO_R09.md` e `evidencias_r09/*`: evidência auditável;
-- `Novo_Ambiente_Simulado/**`: dez cópias derivadas correspondentes aos cinco READMEs e cinco notebooks, byte a byte iguais à fonte.
+- `Novo_Ambiente_Simulado/**`: apenas as cópias derivadas dos arquivos-fonte efetivamente alterados, geradas pelo renderer.
 
-## Documentos deliberadamente não alterados
+## Documentos deliberadamente não alterados após a recuperação
 
-`MANUAL_TECNICO.md`, `CLAUDE.md`, `PLANO_HUB.md`, `docs/sprints/README.md` e `ambiente_fonte/.assistant/hub_snippets/README.md` permanecem iguais à base integrada. O catálogo geral já lista os cinco objetos; a navegação específica para a leva fica no índice da iniciativa e nos próprios READMEs.
-
-## Executáveis preservados
-
-As cinco implementações e cinco fachadas públicas permanecem byte a byte iguais à base `d5945e04328609878f63857cc15cf5e5039b3e75`. Nos notebooks, apenas as substituições editoriais registradas são permitidas; código, magics/comentários executáveis e saídas históricas fora delas permanecem preservados.
-
-## Evidências
-
-- recuperação de preservação: run `34764123678`;
-- preflight final verde: run `34772841948`;
-- artefato do preflight: `10322173358`, digest `sha256:720bc038f4b23a38f15afe8bb12e8cacc7cd1e72175c002c88995e80bf96d40f`;
-- cobertura observada no preflight: 60/75 operacionais, 3/3 exemplares e 15 pendências;
-- runtime core e MLflow/SQLite local aprovados; sem homologação Databricks.
+`MANUAL_TECNICO.md`, `CLAUDE.md` e `PLANO_HUB.md` permanecem iguais à base integrada. O Manual já contém capítulos de métricas, MLflow e monitoramento; adicionar checkpoint redundante nesta leva aumentaria superfície de mudança sem ampliar o contrato operacional dos cinco objetos.
 
 ## Fora de escopo
 
-Não há publicação no Databricks, alteração de política de modelo, retreino automático, mudança funcional nos helpers, auditoria independente ou início da R10.
+As cinco implementações e cinco fachadas públicas permanecem byte a byte iguais à base integrada. Não há publicação/homologação Databricks, alteração de política de modelo, retreino automático ou mudança funcional nesta sprint documental.
+
+## Recuperação de preservação — 2026-09-13
+
+A construção anterior foi interrompida por reescritas excessivas de catálogo/índice e notebooks. Os sete arquivos foram restaurados integralmente da base integrada antes desta integração mínima. Consulte [RECUPERACAO_R09.md](RECUPERACAO_R09.md). A recuperação e o freeze técnico são evidências distintas.
