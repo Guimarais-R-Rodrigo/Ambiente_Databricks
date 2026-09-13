@@ -1,0 +1,45 @@
+{
+  "sprint": "R07",
+  "date": "2026-09-12",
+  "base_commit": "289731c79e8ed43d82b39d61cdc41ba2e69ea717",
+  "review_level": "A0_light",
+  "author": "ChatGPT",
+  "independent_reviewer": false,
+  "human_editorial_acceptance": false,
+  "objects": [
+    "hub_snippets/ml/kaplan_meier",
+    "hub_snippets/ml/score_bands",
+    "hub_snippets/ml/scorecard_builder",
+    "hub_snippets/ml/survival_cox",
+    "hub_snippets/ml/vintage_analysis",
+    "hub_snippets/ml/woe_iv_calculator"
+  ],
+  "criteria": {
+    "contract_1_0_0": "pending_freeze",
+    "concept_before_code": "passed_self_review",
+    "real_api_documented": "passed_self_review",
+    "limitations_explicit": "passed_self_review",
+    "notebook_prose_only": "pending_freeze",
+    "implementation_unchanged": "pending_freeze",
+    "facade_unchanged": "pending_freeze",
+    "previous_readmes_preserved": "pending_freeze",
+    "migration_exactly_six_removed": "pending_freeze",
+    "repository_gate": "pending_freeze",
+    "v00": "pending_freeze",
+    "v01": "pending_freeze",
+    "v02": "pending_freeze",
+    "v03": "pending_freeze",
+    "runtime_r07": "pending_freeze",
+    "manual_mirrors": "pending_freeze",
+    "databricks_publication": "not_performed",
+    "model_or_policy_homologation": "not_performed",
+    "independent_audit": "not_performed"
+  },
+  "expected_coverage": "49/75 operacionais; 3/3 exemplares; 26 pendentes",
+  "remote_run_id": null,
+  "notes": [
+    "Characterization tests document existing behavior; they do not approve limitations as desirable design.",
+    "Human editorial acceptance is a separate gate after final technical closure.",
+    "No R08 start or merge is authorized by this rubric."
+  ]
+}
