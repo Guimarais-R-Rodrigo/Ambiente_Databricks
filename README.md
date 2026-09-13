@@ -206,7 +206,7 @@ raiz analisada     : /home/runner/work/Ambiente_Databricks/Ambiente_Databricks/a
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 88 caminhos verificados
-markdown / links   : 209 arquivos / 1225 links relativos
+markdown / links   : 215 arquivos / 1359 links relativos
 notebooks / links  : 79 notebooks / 98 links relativos
 readmes de objeto  : 75/75 operacionais; 3/3 exemplares; 0 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 61 conferidas (nome, arquivos, __init__)
@@ -219,8 +219,8 @@ normas do molde    : 71 arquivos, 0 violação(ões)
 notebook exercita  : 59 objetos, 0 notebook(s) que só importam
 python (AST)       : 214 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1281 arquivos varridos no repositório editável/derivado
-repo (links)       : 1660 links fora da raiz analisada
+repo (identidade)  : 1302 arquivos varridos no repositório editável/derivado
+repo (links)       : 1794 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 
@@ -333,4 +333,6 @@ A candidata R08 acrescenta guias locais para autoencoder de anomalias, profiling
 >
 > **READMEs R10 — integrada:** seis guias de Hub Prompts foram aceitos e integrados pelo PR #30 (`7ba5d386`).
 >
-> **READMEs R11 — candidata:** nove guias finais de Hub Prompts; cobertura alvo 75/75 e zero pendências estruturais, sujeita ao freeze e aceite editorial.
+> **READMEs R11 — integrada:** nove guias finais de Hub Prompts foram aceitos e integrados pelo PR #31 (`d51ca5dd`), fechando 75/75 e zero pendências estruturais.
+>
+> **READMEs R12 — candidata:** seis índices de categoria de `hub_snippets` e reconciliação de navegação com as entradas gerais e o Manual Técnico.

@@ -108,3 +108,6 @@ Após a integração da R09 pelo PR #29 (`d412acb`), a R10 cobre seis Hub Prompt
 
 ### READMEs R11
 A R10 foi integrada pelo PR #30 (`7ba5d386`). A R11 cobre os nove Hub Prompts restantes e busca fechar a migração estrutural em 75/75, sem antecipar homologação ou etapas posteriores.
+
+### READMEs R12 — integração de navegação
+Após a R11 fechar 75/75 objetos, a R12 cria os seis índices de categoria de `hub_snippets` e reconcilia a navegação com o catálogo, a entrada `.assistant` e o Manual Técnico. Não altera implementação nem reabre a migração de objetos.

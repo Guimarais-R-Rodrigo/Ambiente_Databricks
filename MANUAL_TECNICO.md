@@ -50,12 +50,13 @@ comportamento real. A síntese local não substitui este Manual: o
 [inventário integrado](#catalogo-helpers) e o [índice de termos](#indice-termos)
 permanecem aqui.
 
-Na migração em andamento, pastas ainda não convertidas podem não ter README.
-Nesse caso, consulte o inventário e o exemplo existente; ausência do guia não
-é evidência de teste nem de defeito. Novos objetos devem incluir o guia. O molde
-está no caminho lógico `hub_padroes/readme/template_objeto.md`, relativo à raiz
-`.assistant/`. Esta referência lógica permanece válida nas três cópias deste
-Manual, sem pressupor acesso ao GitHub no workspace.
+A migração estrutural dos READMEs de objeto foi concluída na R11: os 75 objetos
+operacionais possuem guia local, e os três exemplares permanecem contabilizados
+separadamente. Para `hub_snippets`, seis índices de categoria — `constants`,
+`display`, `ml`, `spark`, `testing` e `visual` — oferecem uma rota intermediária
+entre este Manual, o catálogo geral e cada objeto. Novos objetos continuam
+devendo incluir o guia. O molde está no caminho lógico
+`hub_padroes/readme/template_objeto.md`, relativo à raiz `.assistant/`.
 
 Antes de executar o exemplo, confira os efeitos dele separadamente dos efeitos
 do helper. O helper pode apenas ler, enquanto o notebook cria, sobrescreve ou
@@ -1228,6 +1229,8 @@ Para uma falha de visualização, não publique novamente todos os helpers. Para
 Este inventário cobre as 51 pastas de snippets e os sete scripts do snapshot examinado. A unidade contada é a pasta de objeto, não o número de funções: um objeto pode exportar várias funções, classes ou constantes. Os dois exemplares de padrões são apresentados separadamente. Nomes e assinaturas abaixo foram extraídos das definições Python, sem executar treinadores nem importar dependências opcionais.
 
 **Como usar:** procure a finalidade, leia o tipo de entrada e de retorno, abra o exemplo específico e só então adapte a chamada. A assinatura é uma referência de consulta; os capítulos 4 a 7 explicam sua notação. Ela não substitui a docstring, os testes ou a revisão de efeitos. As dependências citadas nas fichas destacam pontos de atenção, não constituem um lockfile completo. Nenhuma ficha significa “homologado hoje no seu workspace”.
+
+Para navegar pelos snippets antes de chegar à ficha técnica, use os seis índices de categoria pelos caminhos lógicos `hub_snippets/constants/README.md` · `hub_snippets/display/README.md` · `hub_snippets/ml/README.md` · `hub_snippets/spark/README.md` · `hub_snippets/testing/README.md` · `hub_snippets/visual/README.md`. Eles agrupam os mesmos objetos por natureza do problema e não substituem este inventário. Os caminhos são mostrados como texto porque este Manual tem cópias idênticas em diretórios diferentes; os links clicáveis ficam na entrada `.assistant/README.md` e no catálogo `hub_snippets/README.md`.
 
 As referências de código são permalinks do snapshot, iguais nas cópias Git e workspace deste manual. Abrir esses links depende de acesso ao repositório privado. Dentro do workspace, o caminho local equivalente começa em `.assistant/` e conserva a subpasta exibida na ficha.
 

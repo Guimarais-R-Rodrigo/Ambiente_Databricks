@@ -110,6 +110,8 @@ A pasta `.assistant` não entra automaticamente no `sys.path` apenas por existir
 
 [Explore o catálogo narrativo de snippets](hub_snippets/README.md).
 
+Entre diretamente pela natureza do problema: [constants](hub_snippets/constants/README.md) · [display](hub_snippets/display/README.md) · [ml](hub_snippets/ml/README.md) · [spark](hub_snippets/spark/README.md) · [testing](hub_snippets/testing/README.md) · [visual](hub_snippets/visual/README.md).
+
 ### ⚡ 3. Hub Scripts (`hub_scripts/`)
 
 - **O que são:** utilitários importáveis de inspeção, transformação analítica e governança técnica, cada um com responsabilidade delimitada.

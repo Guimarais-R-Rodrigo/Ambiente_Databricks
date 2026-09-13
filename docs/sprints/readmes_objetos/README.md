@@ -10,9 +10,9 @@ Rodrigo aprovou o padrão e autorizou a integração das R03-A/R03-B com a V01 e
 2026-09-12. O PR nº 13 foi integrado na `main` pelo commit `1be947b`; o
 [registro da composição](INTEGRACAO_R03_V01.md) preserva os gates e a V01.
 
-O contrato vigente é **1.0.0**. A R10 foi aceita e integrada pelo PR nº 30 no commit `7ba5d386`. A R11 documenta os nove Hub Prompts restantes em lotes A/B. A candidata busca fechar a migração estrutural em **75/75 operacionais e 3/3 exemplares, com 0 pendências**, sujeita ao validador real.
+O contrato vigente é **1.0.0**. A R11 foi aceita e integrada pelo PR nº 31 no commit `d51ca5dd`, encerrando a migração estrutural em **75/75 operacionais e 3/3 exemplares, com 0 pendências**. A R12 integra a navegação por categoria dos snippets e reconcilia essas rotas com o Manual e as entradas gerais.
 
-Consulte o [relatório R11](RELATORIO_R11.md), a [matriz nominal](MATRIZ_ALTERACOES_R11.md) e os [achados](ACHADOS_R11.md). Fechar `pending` encerra a migração estrutural de READMEs, não homologação Databricks nem etapas posteriores da iniciativa.
+Consulte o [relatório R12](RELATORIO_R12.md), a [matriz nominal](MATRIZ_ALTERACOES_R12.md) e os [achados](ACHADOS_R12.md). A R12 é integração documental de navegação; não é homologação Databricks nem publicação no workspace.
 
 Os relatórios anteriores preservam o estado observado em cada data. PRs #9/#11
 foram supersedidos pela composição integrada do PR #13 e não devem ser tratados
