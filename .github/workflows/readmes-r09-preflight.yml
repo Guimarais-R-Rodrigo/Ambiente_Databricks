@@ -14,7 +14,7 @@ jobs:
     timeout-minutes: 30
     env:
       BASE: d5945e04328609878f63857cc15cf5e5039b3e75
-      BEFORE_WORKFLOW: 63ed085c8bd2cf527b753073d9c25c447afd90fd
+      BEFORE_WORKFLOW: 9fdd898a091c701a051f7147215b579030433b05
       PYTHONDONTWRITEBYTECODE: '1'
       PYTHONUTF8: '1'
     steps:
@@ -89,7 +89,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: r09-preflight-v2
+          name: r09-preflight-v3
           retention-days: 7
           path: ${{ runner.temp }}/r09-preflight/
           if-no-files-found: warn
