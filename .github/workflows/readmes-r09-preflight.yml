@@ -14,14 +14,14 @@ jobs:
     timeout-minutes: 30
     env:
       BASE: d5945e04328609878f63857cc15cf5e5039b3e75
-      BEFORE_WORKFLOW: 6ee5d09f3f344abe0d6a70a243293379160a9dac
+      BEFORE_WORKFLOW: 6da376ec8b11919aa838d01aab4804523cd2789a
       PYTHONDONTWRITEBYTECODE: '1'
       PYTHONUTF8: '1'
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: true
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -77,7 +77,7 @@ jobs:
           "$RUNNER_TEMP/venv-mlflow/bin/python" -m pip install -q 'mlflow>=2,<4' scikit-learn numpy pandas
           "$RUNNER_TEMP/venv-mlflow/bin/python" docs/sprints/readmes_objetos/evidencias_r09/verificar_r09.py --group mlflow |& tee "$RUNNER_TEMP/r09-preflight/runtime-mlflow.txt"
           "$RUNNER_TEMP/venv-mlflow/bin/python" -m pip freeze > "$RUNNER_TEMP/r09-preflight/mlflow-pacotes.txt"
-      - name: Reconferir base
+      - name: Reconferir base e exportar arquivos transformados
         shell: bash
         run: |
           set -euo pipefail
@@ -85,11 +85,13 @@ jobs:
           test "$(git rev-parse origin/main)" = "$BASE"
           echo "$GITHUB_SHA" > "$RUNNER_TEMP/r09-preflight/workflow-head.txt"
           git write-tree > "$RUNNER_TEMP/r09-preflight/candidate-tree.txt"
+          { git diff --name-only "$BASE"; git ls-files --others --exclude-standard; } | sort -u > "$RUNNER_TEMP/r09-preflight/arquivos-exportados.txt"
+          tar -czf "$RUNNER_TEMP/r09-preflight/arquivos-transformados.tar.gz" -T "$RUNNER_TEMP/r09-preflight/arquivos-exportados.txt"
       - name: Evidencias
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: r09-preflight-v4
+          name: r09-preflight-v5
           retention-days: 7
           path: ${{ runner.temp }}/r09-preflight/
           if-no-files-found: warn
