@@ -10,9 +10,9 @@ Base integrada R08: 55/75 objetos operacionais e 20 pendências. A candidata R09
 
 ## Alterações além dos cinco READMEs
 
-A entrega inclui: cinco notebooks com substituições editoriais reversíveis; `README.md` raiz com checkpoint e snapshot verificável; `docs/sprints/readmes_objetos/README.md` com navegação/checkpoint; `CONTROLE_MIGRACAO.json` com retirada de exatamente cinco pendências; o registro de recuperação já presente no `CHANGELOG.md`; achados, matriz, relatório, rubrica, registro de recuperação e verificadores; e dez cópias derivadas dos cinco READMEs/notebooks no `Novo_Ambiente_Simulado`, usando o mesmo conteúdo canônico.
+A entrega inclui: cinco notebooks com substituições editoriais reversíveis; `README.md` raiz com checkpoint e snapshot verificável; `ambiente_fonte/.assistant/hub_snippets/README.md` com um bloco de navegação R09 e sua cópia derivada; `docs/sprints/readmes_objetos/README.md` com navegação/checkpoint; `CONTROLE_MIGRACAO.json` com retirada de exatamente cinco pendências; o registro de recuperação já presente no `CHANGELOG.md`; achados, matriz, relatório, rubrica, registro de recuperação e verificadores; e dez cópias derivadas dos cinco READMEs/notebooks no `Novo_Ambiente_Simulado`, usando o mesmo conteúdo canônico.
 
-`MANUAL_TECNICO.md`, `CLAUDE.md`, `PLANO_HUB.md`, `docs/sprints/README.md` e o catálogo geral `hub_snippets/README.md` permanecem iguais à base integrada. Esses documentos já descrevem os objetos/categorias e não precisam de checkpoint redundante nesta leva.
+`MANUAL_TECNICO.md`, `CLAUDE.md`, `PLANO_HUB.md` e `docs/sprints/README.md` permanecem iguais à base integrada. Esses documentos não precisam de checkpoint redundante nesta leva.
 
 ## Preservação
 
@@ -33,7 +33,7 @@ Ambiente core observado: NumPy 2.4.6, pandas 3.0.5, scikit-learn 1.9.1, SciPy 1.
 
 ## Recuperação de preservação
 
-Uma construção anterior desta mesma sprint reescreveu documentação em excesso e chegou a modificar literais executáveis no exemplo MLflow. O run `34764123678` restaurou catálogo, índice e cinco notebooks a partir da base integrada antes da reaplicação pontual. Consulte `RECUPERACAO_R09.md`. Esse incidente faz parte da evidência da R09 e não deve ser apagado do histórico.
+Uma construção anterior desta mesma sprint reescreveu documentação em excesso e chegou a modificar literais executáveis no exemplo MLflow. O run `34764123678` restaurou catálogo, índice e cinco notebooks a partir da base integrada antes da reaplicação pontual. Consulte o [registro de recuperação](RECUPERACAO_R09.md). Esse incidente faz parte da evidência da R09 e não deve ser apagado do histórico.
 
 ## Estado
 
