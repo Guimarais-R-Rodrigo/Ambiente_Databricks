@@ -41,3 +41,33 @@ Enquanto esta branch não for integrada, nenhuma reversão de main ou publicaç�
 mudanças da frente R07. Preservar execuções reprovadas como evidência.
 
 [Escopo V05](README.md)
+
+## Diagnóstico de acesso e retomada — 13/09/2026
+
+Rodrigo solicitou pesquisar o bloqueio de ferramentas e aplicar uma solução.
+A inspeção da configuração do aplicativo GitHub encontrou permissão específica
+Allow all actions. Ela já estava configurada; não foi ampliada nesta rodada.
+Essa configuração não elimina as proteções de segurança da plataforma.
+
+As tentativas anteriores de transportar um script de preparação foram recusadas.
+A causa específica não foi informada. Não atribuir o bloqueio a falta de aceite,
+expiração de token, tamanho de arquivo ou erro do GitHub sem evidência própria.
+A manutenção documental deve preferir edição direta de texto, com leitura prévia
+do arquivo inteiro e conferência do SHA, sem scripts transitórios de escrita.
+Não sobrescrever um documento completo usando apenas um trecho retornado pela leitura.
+
+Na consulta desta rodada, a main já estava em
+`d5945e04328609878f63857cc15cf5e5039b3e75`. A PR #26 ainda continha a candidata
+`5f2dc583a04f66f1851836424d4ed2489188cb78` e indicava conflito de integração.
+Portanto, a composição R07 anterior não é mais suficiente para o fechamento:
+preservar o avanço da main, reconciliar a candidata e repetir a validação.
+
+O teste de acesso pelo cliente Git do ambiente de edição não conseguiu resolver
+o host github.com. Isso é uma limitação de conectividade desse ambiente, não
+prova de falha de credenciais nem explicação do bloqueio do aplicativo.
+Nenhum segredo foi solicitado ou transferido e nenhuma proteção foi alterada.
+
+Esta nota documenta o diagnóstico, não a conclusão da V05. Manual, CHANGELOG,
+índices, geração dos derivados e testes finais continuam exigindo comprovação
+de aplicação. Presets, vínculo automático com a base e reabertura autônoma
+continuam pendências de escopo; não são encerradas por uma correção de acesso.
