@@ -73,7 +73,15 @@ A V02 foi aceita por Rodrigo e integrada pelo PR #14 no commit
 `ambiente_fonte/.assistant/hub_padroes/identidade_visual/` e o núcleo de
 carga/validação/resolução está versionado, mas ainda não aplica aparência nem publica
 temas. Estado e limites: `docs/sprints/sistema_temas/V02/CHECKPOINT_V02.md`.
-A V03 foi aceita e integrada pelo PR #16 no commit `b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`. A `main` avançou depois com a R04-B pelo PR #18 (`d9da056c95bf5c4209b2f208de1c9a987580efe7`). A V04 é a candidata atual e foi reconciliada com essa base: componentes HTML, estilos compartilhados e tabela pandas recebem rotas opt-in `_resolvido`, preservando as APIs legadas. Sem publicação Databricks ou início da V05. Estado: `docs/sprints/sistema_temas/V04/CHECKPOINT_V04.md`.
+
+A V03 foi aceita e integrada pelo PR #16 no commit
+`b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`. A V04 também foi aceita por Rodrigo
+e integrada pelo PR #21 no commit `5a7b33d7137f88c1ec80315de1b422293b3ba206`:
+componentes HTML, estilos compartilhados e tabela pandas recebem rotas opt-in
+`_resolvido`, preservando as APIs legadas. A árvore do merge coincide com a
+candidata validada e os seis workflows permanentes pós-merge concluíram com
+`success`. Sem publicação Databricks, homologação operacional ou início da V05.
+Estado: `docs/sprints/sistema_temas/V04/CHECKPOINT_V04.md`.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 
