@@ -46,8 +46,6 @@ jobs:
                   raise SystemExit(f'{path}: marcador de preparação não é único: {old!r}')
               p.write_text(text.replace(old,new,1),encoding='utf-8')
 
-          # O finalizador nasceu antes da reconciliação; normalize somente os
-          # marcadores que mudaram de estado, para ele continuar fail-closed.
           one('docs/sprints/sistema_temas/V04/CHECKPOINT_V04.md',
               '| Implementação funcional | EM VALIDAÇÃO FINAL |\n| Regressões automatizadas | EM VALIDAÇÃO FINAL |\n| Documentação operacional | EM FINALIZAÇÃO |',
               '| Implementação funcional | EM VALIDAÇÃO |\n| Regressões automatizadas | EM VALIDAÇÃO |\n| Documentação operacional | EM CONSTRUÇÃO |')
@@ -55,8 +53,8 @@ jobs:
               '1. Temas — adaptador Plotly V03, núcleo V02 e contrato V01, com regressões adversariais;',
               '1. Temas — adaptador Plotly V03 + núcleo V02 + contrato V01 (todas as `test_temas*.py`)')
           one('tools/ci_local.py',
-              '"adaptador Plotly V03 + núcleo V02 + contrato V01 (sem publicação)",',
-              '"Contrato/implementação do sistema de temas V03 + V02 + V01",')
+              '        "temas",\n        "adaptador Plotly V03 + núcleo V02 + contrato V01 (sem publicação)",',
+              '        "temas", "Contrato/implementação do sistema de temas V03 + V02 + V01",')
           PY
       - name: Aplicar reconciliação documental V04
         run: python -B tools/_v04_finalizar.py
@@ -70,7 +68,7 @@ jobs:
           def one(path, old, new):
               p=Path(path); text=p.read_text(encoding='utf-8')
               if text.count(old)!=1:
-                  raise SystemExit(f'{path}: estado agregado inesperado: {old[:90]!r}')
+                  raise SystemExit(f'{path}: estado agregado inesperado: {old[:100]!r}')
               p.write_text(text.replace(old,new,1),encoding='utf-8')
 
           one('CLAUDE.md',
@@ -81,9 +79,12 @@ jobs:
               'A V03 foi aceita e integrada pelo PR #16 no commit `b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`. A `main` avançou depois com a R04-B pelo PR #18 (`d9da056c95bf5c4209b2f208de1c9a987580efe7`). A V04 é a candidata atual e foi reconciliada com essa base: componentes HTML, estilos compartilhados e tabela pandas recebem rotas opt-in `_resolvido`, preservando as APIs legadas. Sem publicação Databricks ou início da V05. Estado: `docs/sprints/sistema_temas/V04/CHECKPOINT_V04.md`.')
 
           p=Path('docs/sprints/sistema_temas/README.md'); text=p.read_text(encoding='utf-8')
-          text=text.replace('## Etapa atual — V04 candidata sobre V03 + R04-A integradas',
-                            '## Etapa atual — V04 candidata sobre V03 + R04-A + R04-B integradas',1)
-          text=text.replace('V00–V03 estão integradas no Git. A V03 foi mesclada pelo PR #16 no commit\n`b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`, depois de reconciliar a R04-A já\nintegrada pelo PR #17. Os cinco checks permanentes da V03 passaram novamente na\n`main` após o merge.',
+          one_header='## Etapa atual — V04 candidata sobre V03 + R04-A integradas'
+          if text.count(one_header)!=1: raise SystemExit('índice de temas: cabeçalho V04 inesperado')
+          text=text.replace(one_header,'## Etapa atual — V04 candidata sobre V03 + R04-A + R04-B integradas',1)
+          old='V00–V03 estão integradas no Git. A V03 foi mesclada pelo PR #16 no commit\n`b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`, depois de reconciliar a R04-A já\nintegrada pelo PR #17. Os cinco checks permanentes da V03 passaram novamente na\n`main` após o merge.'
+          if text.count(old)!=1: raise SystemExit('índice de temas: resumo base inesperado')
+          text=text.replace(old,
                             'V00–V03 estão integradas no Git. A V03 foi mesclada pelo PR #16 no commit\n`b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`; depois, R04-A e R04-B foram\nintegradas pelos PRs #17 e #18. A V04 foi reconciliada com a `main`\n`d9da056c95bf5c4209b2f208de1c9a987580efe7` antes da candidata final.',1)
           p.write_text(text,encoding='utf-8')
 
@@ -91,10 +92,24 @@ jobs:
               '### READMEs de objeto — R04-B\nA R04-A está integrada em `a8f314a`. A R04-B cobre seis Hub Scripts e pausa para revisão antes da R05. Consulte `readmes_objetos/RELATORIO_R04B.md` e `readmes_objetos/MATRIZ_ALTERACOES_R04B.md`.',
               '### READMEs de objeto — R04-B\nA R04-A foi integrada pelo PR #17 e a R04-B pelo PR #18 (`d9da056c`). A cobertura estrutural da R04-B é 32/75 operacionais, 3/3 exemplares e 43 pendências; isso não equivale a aceite editorial dos demais objetos. Consulte `readmes_objetos/RELATORIO_R04B.md` e `readmes_objetos/MATRIZ_ALTERACOES_R04B.md`.')
 
-          # Acrescente à nota do changelog a reconciliação efetivamente executada.
           one('CHANGELOG.md',
               '- (Codex) Code-check corrigido `34726621227`: 29 V04, 298 temas V01–V04, 12 V00 e `validate_assistant` aprovados.\n- (Codex) V04 é candidata: sem aceite, merge, publicação Databricks, homologação visual/acessibilidade ou início da V05.',
-              '- (Codex) Code-check corrigido `34726621227`: 29 V04, 298 temas V01–V04, 12 V00 e `validate_assistant` aprovados.\n- (Codex) Reconciliação `34726990399` permanece FAILURE por fachadas V04 ainda não materializadas; nenhum commit combinado foi enviado.\n- (Codex) Reconciliação corrigida `34727070003`: preservação V04/R04-B, regressões e 14/14 casos R04-B com Spark real aprovados; commit `c2b91c5e`.\n- (Codex) V04 é candidata: sem aceite, merge, publicação Databricks, homologação visual/acessibilidade ou início da V05.')
+              '- (Codex) Code-check corrigido `34726621227`: 29 V04, 298 temas V01–V04, 12 V00 e `validate_assistant` aprovados.\n- (Codex) Reconciliação `34726990399` permanece FAILURE por fachadas V04 ainda não materializadas; nenhum commit combinado foi enviado.\n- (Codex) Reconciliação corrigida `34727070003`: preservação V04/R04-B, regressões e 14/14 casos R04-B com Spark real aprovados; commit `c2b91c5e`.\n- (Codex) Finalização `34727324137` permanece FAILURE por marcador textual impossível do `ci_local.py`; nenhum derivado/candidato final foi gravado.\n- (Codex) V04 é candidata: sem aceite, merge, publicação Databricks, homologação visual/acessibilidade ou início da V05.')
+
+          one('docs/sprints/sistema_temas/V04/README.md',
+              '**CANDIDATA EM IMPLEMENTAÇÃO E VALIDAÇÃO.** A V04 foi iniciada na `main`',
+              '**CANDIDATA TÉCNICA EM REVISÃO; ACEITE PENDENTE.** A V04 foi iniciada na `main`')
+
+          p=Path('docs/sprints/sistema_temas/V04/TESTES.md'); text=p.read_text(encoding='utf-8')
+          old='## Gates ainda exigidos antes do PR final\n\nAs rodadas acima foram intermediárias. A candidata final ainda precisa rodar,\nna árvore que contém documentação, fachadas versionadas e espelho renderizado:'
+          new='## Gates da validação final\n\nO run final registrado abaixo só será versionado se executar, na mesma árvore,\na documentação, as fachadas versionadas e o espelho renderizado com todos os gates:'
+          if text.count(old)!=1: raise SystemExit('TESTES.md: seção de gates inesperada')
+          text=text.replace(old,new,1)
+          marker='## O que os 29 testes V04 medem\n'
+          failure='''## Finalização documental — tentativa 1 `34727324137`\n\n**Resultado: FAILURE.** O finalizador parou antes de gerar derivados ou medir a\ncandidata porque procurava a tupla `temas` do `ci_local.py` em uma única linha,\nenquanto o arquivo real a organiza em duas. A base já havia sido reconfirmada,\nmas nenhum commit final foi criado. O marcador foi corrigido sem relaxar gates.\n\n'''
+          if text.count(marker)!=1: raise SystemExit('TESTES.md: marcador dos 29 testes inesperado')
+          text=text.replace(marker,failure+marker,1)
+          p.write_text(text,encoding='utf-8')
           PY
       - name: Regenerar fachadas, Manual e espelho somente pela fonte
         shell: bash
@@ -139,7 +154,7 @@ jobs:
           p=Path('docs/sprints/sistema_temas/V04/CHECKPOINT_V04.md'); text=p.read_text(encoding='utf-8')
           old='| Regressões automatizadas | CANDIDATA — exige run final verde |'
           if text.count(old)!=1: raise SystemExit('CHECKPOINT: estado de regressões inesperado')
-          text=text.replace(old,f'| Regressões automatizadas | CANDIDATA — run final `{run}` em validação |',1)
+          text=text.replace(old,f'| Regressões automatizadas | CANDIDATA VALIDADA — evidência final run `{run}` |',1)
           p.write_text(text,encoding='utf-8')
           PY
       - name: Retirar toda preparação transitória antes da medição
@@ -173,7 +188,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # Exclua somente agregadores deliberadamente atualizados pela V04.
           git diff --name-only b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2 origin/main > /tmp/r04b_effective
           while IFS= read -r p; do
             [ -z "$p" ] && continue
