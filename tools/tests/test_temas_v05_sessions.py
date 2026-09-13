@@ -15,7 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "ambiente_fonte/.assistant"))
 
-from hub_snippets.visual.tema import load_reference_theme
+from hub_snippets.visual.tema import ThemeError, load_reference_theme
 from hub_snippets.visual.theme_lab import (
     ThemeLabError,
     build_theme_lab_launcher,
@@ -59,9 +59,9 @@ class PresetTests(unittest.TestCase):
         with self.assertRaises(ThemeLabError) as cm:
             prepare_theme_lab_presets({"../ruim": load_reference_theme("notebook")})
         self.assertEqual(cm.exception.code, "LAB_PRESET_KEY")
-        with self.assertRaises((ThemeLabError, Exception)) as cm2:
+        with self.assertRaises(ThemeError) as cm2:
             prepare_theme_lab_presets({"editorial": load_reference_theme("readme")})
-        self.assertIn("notebook", str(cm2.exception).lower())
+        self.assertEqual(cm2.exception.code, "CONTEXT_MISMATCH")
 
     def test_unknown_preset_does_not_fallback(self):
         presets = get_demo_presets()
@@ -170,7 +170,7 @@ class LauncherTests(unittest.TestCase):
         self.assertTrue(all("demonstração" in label for label in labels))
         _button(ui.root, "Abrir ponto de partida").click()
         self.assertTrue(ui.workspace.children)
-        self.assertIn("Nada será publicado", ui.root.children[0].value)
+        self.assertIn("não submete, aprova ou publica", ui.root.children[0].value)
 
     def test_launcher_saves_and_reopens_session_without_user_code(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -182,6 +182,7 @@ class LauncherTests(unittest.TestCase):
             _button(ui.root, "Salvar sessão rastreável").click()
             self.assertTrue((Path(tmp) / "sessao-ui" / "session.json").is_file(), ui.status.value)
             self.assertTrue(ui.session_control.options)
+            ui.session_control.value = "sessao-ui"
             _button(ui.root, "Reabrir sessão").click()
             self.assertIn("Sessão reaberta", ui.status.value)
 
