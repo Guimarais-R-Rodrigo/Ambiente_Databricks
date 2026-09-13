@@ -5,10 +5,14 @@ on:
     paths: [.github/workflows/readmes-r08-freeze-v2.yml]
 permissions:
   contents: write
+concurrency:
+  group: readmes-r08-freeze
+  cancel-in-progress: false
 jobs:
   freeze:
+    if: github.ref == 'refs/heads/codex/readmes-r08-build'
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
     env:
       BASE: b73bbb91961f9ba5f9031d648c42ec0891b63347
       PYTHONDONTWRITEBYTECODE: '1'
@@ -27,8 +31,7 @@ jobs:
           cache-dependency-path: |
             tools/requirements-dev.txt
             tools/requirements-temas-dev.txt
-
-      - name: Preparar árvore R08
+      - name: Preparar arvore R08
         shell: bash
         run: |
           set -euo pipefail
@@ -42,7 +45,7 @@ jobs:
           git mv docs/sprints/readmes_objetos/evidencias_r08/verificar_r08_v2.py docs/sprints/readmes_objetos/evidencias_r08/verificar_r08.py
           git rm docs/sprints/readmes_objetos/evidencias_r08/verificar_preservacao.py docs/sprints/readmes_objetos/evidencias_r08/verificar_preservacao_v2.py
           git mv docs/sprints/readmes_objetos/evidencias_r08/verificar_preservacao_v3.py docs/sprints/readmes_objetos/evidencias_r08/verificar_preservacao.py
-          printf '\n- `docs/sprints/readmes_objetos/evidencias_r08/aplicar_r08_v2.py` — entrada compatível com o schema `pending` vigente.\n' >> docs/sprints/readmes_objetos/MATRIZ_ALTERACOES_R08.md
+          printf '\n- `docs/sprints/readmes_objetos/evidencias_r08/aplicar_r08_v2.py` — entrada compativel com o schema `pending` vigente.\n' >> docs/sprints/readmes_objetos/MATRIZ_ALTERACOES_R08.md
           sed -i 's/[[:space:]]\+$//' docs/sprints/readmes_objetos/MATRIZ_ALTERACOES_R08.md docs/sprints/readmes_objetos/evidencias_r08/aplicar_r08.py
           git add -A
           git diff --cached --check "$BASE"
@@ -51,7 +54,8 @@ jobs:
           import os
           from pathlib import Path
           out=Path(os.environ['RUNNER_TEMP'],'derived.txt').read_text()
-          keys=['skills','prompts','helpers citados','markdown / links','notebooks / links','readmes de objeto','pastas de objeto','forma da pasta','contrato de dados','contrato de entrada','saída colada','idioma da docstring','normas do molde','notebook exercita','python (AST)','instrucoes','repo (identidade)','repo (links)']
+          keys=['skills','prompts','helpers citados','markdown / links','notebooks / links','readmes de objeto','pastas de objeto','forma da pasta','contrato de dados','contrato de entrada','saida colada','idioma da docstring','normas do molde','notebook exercita','python (AST)','instrucoes','repo (identidade)','repo (links)']
+          keys[keys.index('saida colada')]='saída colada'
           actual={}
           for line in out.splitlines():
               for key in keys:
@@ -66,92 +70,124 @@ jobs:
           p.write_text('\n'.join(lines)+'\n',encoding='utf-8')
           PY
           git add README.md
-          python tools/validate_assistant.py --conferir-readme | tee "$RUNNER_TEMP/validator-pre.txt"
+          python tools/validate_assistant.py --conferir-readme 2>&1 | tee "$RUNNER_TEMP/validator-pre.txt"
           grep -q 'APROVADO: 0 falha(s), 0 aviso(s)' "$RUNNER_TEMP/validator-pre.txt"
           git write-tree > "$RUNNER_TEMP/tree-pre.txt"
-
       - name: Gate estrutural e temas V00-V04
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt >/dev/null
-          python docs/sprints/readmes_objetos/evidencias_r08/verificar_r08.py --group static | tee "$RUNNER_TEMP/static.txt"
-          python tools/ci_local.py --verbose | tee "$RUNNER_TEMP/gate.txt"
-          for s in test_inventario_visual test_visual_legado_v00 test_baseline_visual_runner test_temas_v01 test_temas_v01_integracao test_temas_v02 test_temas_v03 test_temas_v04; do python "tools/tests/$s.py"; done
-          python docs/sprints/readmes_objetos/evidencias_r08/verificar_preservacao.py --base "$BASE" | tee "$RUNNER_TEMP/preservacao.txt"
+          python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt
+          python docs/sprints/readmes_objetos/evidencias_r08/verificar_r08.py --group static 2>&1 | tee "$RUNNER_TEMP/static.txt"
+          python tools/ci_local.py --verbose 2>&1 | tee "$RUNNER_TEMP/gate.txt"
+          for s in test_inventario_visual test_visual_legado_v00 test_baseline_visual_runner test_temas_v01 test_temas_v01_integracao test_temas_v02 test_temas_v03 test_temas_v04; do
+            python "tools/tests/$s.py" 2>&1 | tee "$RUNNER_TEMP/$s.txt"
+          done
+          python docs/sprints/readmes_objetos/evidencias_r08/verificar_preservacao.py --base "$BASE" 2>&1 | tee "$RUNNER_TEMP/preservacao.txt"
           test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/tree-pre.txt")"
-
+          git diff --exit-code
       - name: Runtime core
         shell: bash
         run: |
           set -euo pipefail
           python -m venv "$RUNNER_TEMP/core"; P="$RUNNER_TEMP/core/bin/python"
-          "$P" -m pip install --upgrade pip >/dev/null
-          "$P" -m pip install 'numpy<2' pandas scikit-learn mlflow tabulate scipy >/dev/null
+          "$P" -m pip install 'numpy<2' pandas scikit-learn mlflow tabulate scipy
+          "$P" -m pip check
           "$P" -m pip freeze > "$RUNNER_TEMP/core-pacotes.txt"
-          "$P" docs/sprints/readmes_objetos/evidencias_r08/verificar_r08.py --group core | tee "$RUNNER_TEMP/core.txt"
-
+          "$P" docs/sprints/readmes_objetos/evidencias_r08/verificar_r08.py --group core 2>&1 | tee "$RUNNER_TEMP/core.txt"
       - name: Runtime PyTorch
         shell: bash
         run: |
           set -euo pipefail
           python -m venv "$RUNNER_TEMP/torch"; P="$RUNNER_TEMP/torch/bin/python"
-          "$P" -m pip install --upgrade pip >/dev/null
-          "$P" -m pip install 'numpy<2' >/dev/null
-          "$P" -m pip install torch --index-url https://download.pytorch.org/whl/cpu >/dev/null
+          "$P" -m pip install 'numpy<2'
+          "$P" -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+          "$P" -m pip check
           "$P" -m pip freeze > "$RUNNER_TEMP/torch-pacotes.txt"
-          "$P" docs/sprints/readmes_objetos/evidencias_r08/verificar_r08.py --group torch | tee "$RUNNER_TEMP/torch.txt"
-
+          "$P" docs/sprints/readmes_objetos/evidencias_r08/verificar_r08.py --group torch 2>&1 | tee "$RUNNER_TEMP/torch.txt"
       - name: Runtime SHAP
         shell: bash
         run: |
           set -euo pipefail
           python -m venv "$RUNNER_TEMP/shap"; P="$RUNNER_TEMP/shap/bin/python"
-          "$P" -m pip install --upgrade pip >/dev/null
-          "$P" -m pip install 'numpy==1.26.4' 'scikit-learn==1.4.2' 'shap==0.44.1' pandas matplotlib >/dev/null
+          "$P" -m pip install 'numpy==1.26.4' 'scikit-learn==1.4.2' 'shap==0.44.1' pandas matplotlib
+          "$P" -m pip check
           "$P" -m pip freeze > "$RUNNER_TEMP/shap-pacotes.txt"
-          "$P" docs/sprints/readmes_objetos/evidencias_r08/verificar_r08.py --group shap | tee "$RUNNER_TEMP/shap.txt"
-
+          "$P" docs/sprints/readmes_objetos/evidencias_r08/verificar_r08.py --group shap 2>&1 | tee "$RUNNER_TEMP/shap.txt"
       - name: Runtime UMAP
         shell: bash
         run: |
           set -euo pipefail
           python -m venv "$RUNNER_TEMP/umap"; P="$RUNNER_TEMP/umap/bin/python"
-          "$P" -m pip install --upgrade pip >/dev/null
-          "$P" -m pip install 'numpy==1.26.4' 'umap-learn==0.5.5' pandas plotly >/dev/null
+          "$P" -m pip install 'numpy==1.26.4' 'umap-learn==0.5.5' 'scikit-learn==1.4.2' pandas plotly
+          "$P" -m pip check
           "$P" -m pip freeze > "$RUNNER_TEMP/umap-pacotes.txt"
-          "$P" docs/sprints/readmes_objetos/evidencias_r08/verificar_r08.py --group umap | tee "$RUNNER_TEMP/umap.txt"
-
+          "$P" -c 'import inspect, sklearn, umap; from sklearn.utils import check_array; assert sklearn.__version__ == "1.4.2"; assert umap.__version__ == "0.5.5"; assert "force_all_finite" in inspect.signature(check_array).parameters'
+          "$P" docs/sprints/readmes_objetos/evidencias_r08/verificar_r08.py --group umap 2>&1 | tee "$RUNNER_TEMP/umap.txt"
       - name: Fechar e materializar candidata
         shell: bash
         run: |
           set -euo pipefail
+          test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/tree-pre.txt")"
+          git diff --exit-code
           python - <<'PY'
-          import json, os, re
+          import json, os, re, subprocess
           from pathlib import Path
-          names=['static.txt','core.txt','torch.txt','shap.txt','umap.txt']; counts={}
-          for name in names:
-              text=Path(os.environ['RUNNER_TEMP'],name).read_text(); m=re.search(r'Ran (\d+) tests',text); assert m,name; counts[name]=int(m.group(1)); assert 'FAILED' not in text
-          total=sum(counts.values())
-          p=Path('docs/sprints/readmes_objetos/RELATORIO_R08.md'); s=p.read_text(encoding='utf-8'); s=s.replace('STATUS_R08: CANDIDATA — aguarda fechamento automatizado e revisão/aceite humano antes de qualquer merge.', f'STATUS_R08: PASS técnico — {total}/{total} casos aprovados no run {os.environ["GITHUB_RUN_ID"]}; aguarda aceite editorial humano.'); p.write_text(s,encoding='utf-8')
-          r=Path('docs/sprints/readmes_objetos/RUBRICA_R08.json'); d=json.loads(r.read_text(encoding='utf-8')); d['run_id']=int(os.environ['GITHUB_RUN_ID']); d['runtime_case_counts']=counts; d['runtime_total_cases']=total
-          for k in d['criteria']: d['criteria'][k]='passed_self_review'
+          expected={'static.txt':4,'core.txt':3,'torch.txt':1,'shap.txt':1,'umap.txt':1}
+          counts={}
+          for name,n in expected.items():
+              text=Path(os.environ['RUNNER_TEMP'],name).read_text()
+              matches=re.findall(r'^Ran (\d+) tests? in ',text,re.M)
+              assert len(matches)==1 and int(matches[0])==n,(name,matches)
+              assert re.search(r'^OK\s*$',text,re.M),name
+              assert not re.search(r'FAILED|skipped=|expected failures=|unexpected successes=',text),name
+              counts[name]=n
+          total=sum(counts.values()); runtime=total-counts['static.txt']
+          p=Path('docs/sprints/readmes_objetos/RELATORIO_R08.md'); s=p.read_text(encoding='utf-8')
+          marker='STATUS_R08: CANDIDATA — aguarda fechamento automatizado e revisão/aceite humano antes de qualquer merge.'
+          assert s.count(marker)==1
+          s=s.replace(marker,f'STATUS_R08: PASS técnico — {total}/{total} casos do suplemento aprovados ({counts["static.txt"]} estruturais e {runtime} de runtime), sem skips, no run {os.environ["GITHUB_RUN_ID"]}; aguarda aceite editorial humano.')
+          s+='\n## 8. Fechamento de compatibilidade e evidencias — 2026-09-13\n\nO run anterior 34753403221 passou em core, PyTorch e SHAP, mas falhou no UMAP: a versao 0.5.5 chamou `check_array(force_all_finite=...)` contra scikit-learn sem esse parametro. Este freeze fixa somente no ambiente isolado UMAP `numpy==1.26.4`, `umap-learn==0.5.5` e `scikit-learn==1.4.2`, verifica a assinatura e executa `pip check`. As versoes completas estao nos quatro arquivos `*-pacotes.txt` do artefato do run. Essa combinacao nao e uma homologacao do Databricks nem recomendacao universal de versao.\n\nA coleta agora inclui stdout e stderr e reconhece os resumos singulares e plurais do unittest. A identidade do commit automatizado e explicita. O gate e a preservacao sao repetidos depois de registrar os resultados. As alteracoes desta retomada ficam no workflow temporario, neste relatorio, na rubrica, no changelog e na matriz; implementacoes e dependencias permanentes nao mudam.\n\nReferencia de compatibilidade: https://scikit-learn.org/1.4/modules/generated/sklearn.utils.check_array.html\n'
+          p.write_text(s,encoding='utf-8')
+          r=Path('docs/sprints/readmes_objetos/RUBRICA_R08.json'); d=json.loads(r.read_text(encoding='utf-8'))
+          d['run_id']=int(os.environ['GITHUB_RUN_ID']); d['case_counts']=counts
+          d['total_cases']=total; d['runtime_total_cases']=runtime; d['static_total_cases']=counts['static.txt']
+          d['human_editorial_acceptance']='pending'; d['independent_audit']=False
+          d['umap_test_environment']={'numpy':'1.26.4','umap-learn':'0.5.5','scikit-learn':'1.4.2'}
+          for k in d['criteria']: d['criteria'][k]='passed_automated_check'
           r.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          c=Path('CHANGELOG.md'); text=c.read_text(encoding='utf-8'); anchor='## 2026-09-12 — V04:'
+          assert text.count(anchor)==1
+          entry='## 2026-09-13 — R08: fechamento de compatibilidade (ChatGPT)\n\n### Corrigido\n\n- (ChatGPT) Fixado scikit-learn 1.4.2 junto a UMAP 0.5.5 e NumPy 1.26.4 exclusivamente no runtime isolado de verificacao; helper e dependencias permanentes preservados.\n- (ChatGPT) Coleta conjunta de stdout/stderr, contagem singular/plural e identidade Git automatizada explicita no workflow temporario. Nenhum teste removido, erro ignorado ou skip convertido em sucesso.\n\n### Atualizado\n\n- (ChatGPT) Relatorio, rubrica e matriz R08 registram o run e a compatibilidade; aceite editorial continua pendente. Sem merge, publicacao Databricks ou inicio da R09.\n\n'
+          c.write_text(text.replace(anchor,entry+anchor,1),encoding='utf-8')
+          subprocess.run(['git','add','-A'],check=True)
+          paths=subprocess.check_output(['git','diff','--cached','--name-only',os.environ['BASE']],text=True).splitlines()
+          assert len(paths)==44,(len(paths),paths)
+          assert not any(p.startswith('.github/') for p in paths),paths
+          matrix=Path('docs/sprints/readmes_objetos/MATRIZ_ALTERACOES_R08.md')
+          derived=[p for p in paths if p.startswith('Novo_Ambiente_Simulado/')]
+          with matrix.open('a',encoding='utf-8') as f:
+              f.write(f'\n## Inventario nominal final\n\n{len(paths)} caminhos contra a base; {len(derived)} derivados gerados pelo renderer. Workflow temporario ausente da arvore final.\n\n')
+              for path in paths: f.write(f'- `{path}`\n')
           PY
           git add -A
           git diff --cached --check "$BASE"
-          python tools/ci_local.py --verbose > "$RUNNER_TEMP/gate-final.txt"
-          python tools/validate_assistant.py --conferir-readme > "$RUNNER_TEMP/validator-final.txt"
+          TREE=$(git write-tree)
+          python tools/ci_local.py --verbose 2>&1 | tee "$RUNNER_TEMP/gate-final.txt"
+          python tools/validate_assistant.py --conferir-readme 2>&1 | tee "$RUNNER_TEMP/validator-final.txt"
           grep -q 'APROVADO: 0 falha(s), 0 aviso(s)' "$RUNNER_TEMP/validator-final.txt"
-          python docs/sprints/readmes_objetos/evidencias_r08/verificar_preservacao.py --base "$BASE" > "$RUNNER_TEMP/preservacao-final.txt"
+          python docs/sprints/readmes_objetos/evidencias_r08/verificar_preservacao.py --base "$BASE" 2>&1 | tee "$RUNNER_TEMP/preservacao-final.txt"
+          test "$(git write-tree)" = "$TREE"
+          git diff --exit-code
           git fetch origin main
           test "$(git rev-parse FETCH_HEAD)" = "$BASE"
-          TREE=$(git write-tree)
-          COMMIT=$(printf '%s\n' 'R08 — READMEs de clusters, anomalias e explicabilidade validados (ChatGPT)' | git commit-tree "$TREE" -p "$BASE")
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          COMMIT=$(printf '%s\n' 'docs(r08): seis READMEs validados com runtimes isolados (ChatGPT)' | git commit-tree "$TREE" -p "$BASE")
+          git diff --name-status "$BASE" "$COMMIT" > "$RUNNER_TEMP/arquivos-finais.txt"
           git push origin "$COMMIT:refs/heads/codex/readmes-r08-final"
-          printf '{"base":"%s","tree":"%s","commit":"%s","coverage":"55/75","pending":20,"run_id":%s}\n' "$BASE" "$TREE" "$COMMIT" "$GITHUB_RUN_ID" > "$RUNNER_TEMP/R08-FINAL.json"
-
-      - name: Evidências
+          printf '{"base":"%s","tree":"%s","commit":"%s","coverage":"55/75","pending":20,"run_id":%s,"supplement_cases":10,"static_cases":4,"runtime_cases":6,"main_changed":false,"human_acceptance":"pending"}\n' "$BASE" "$TREE" "$COMMIT" "$GITHUB_RUN_ID" > "$RUNNER_TEMP/R08-FINAL.json"
+      - name: Evidencias
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -169,6 +205,8 @@ jobs:
             ${{ runner.temp }}/torch.txt
             ${{ runner.temp }}/shap.txt
             ${{ runner.temp }}/umap.txt
+            ${{ runner.temp }}/test_*.txt
             ${{ runner.temp }}/*-pacotes.txt
+            ${{ runner.temp }}/arquivos-finais.txt
             ${{ runner.temp }}/R08-FINAL.json
           if-no-files-found: warn
