@@ -1,9 +1,9 @@
 # Relatório R07 — READMEs de score, vintage e sobrevivência
 
-**Data:** 2026-09-12  
-**Base de partida:** `289731c79e8ed43d82b39d61cdc41ba2e69ea717`  
-**Branch de autoria:** `codex/readmes-r07`  
-**Contrato:** README de objeto `1.0.0`  
+**Data:** 2026-09-12
+**Base de partida:** `289731c79e8ed43d82b39d61cdc41ba2e69ea717`
+**Branch de autoria:** `codex/readmes-r07`
+**Contrato:** README de objeto `1.0.0`
 **Autoria/revisão:** ChatGPT, autorrevisão A0_light; sem auditor independente.
 
 ## 1. Objetivo
