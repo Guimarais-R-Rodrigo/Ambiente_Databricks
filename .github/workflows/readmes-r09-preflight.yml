@@ -14,7 +14,7 @@ jobs:
     timeout-minutes: 30
     env:
       BASE: d5945e04328609878f63857cc15cf5e5039b3e75
-      BEFORE_WORKFLOW: 9cf9780423de9a76d6e9d58f4d600eeacd41f165
+      BEFORE_WORKFLOW: 63ed085c8bd2cf527b753073d9c25c447afd90fd
       PYTHONDONTWRITEBYTECODE: '1'
       PYTHONUTF8: '1'
     steps:
@@ -32,10 +32,12 @@ jobs:
           test "$(git rev-parse HEAD^)" = "$BEFORE_WORKFLOW"
           test "$(git rev-parse origin/main)" = "$BASE"
           python docs/sprints/readmes_objetos/evidencias_r09/aplicar_r09.py
+          python docs/sprints/readmes_objetos/evidencias_r09/corrigir_readmes_r09.py
           python docs/sprints/readmes_objetos/evidencias_r09/integrar_agregadores_r09.py
-          python tools/render_simulado.py
-          rm .github/workflows/readmes-r09-preflight.yml
+          python tools/render_simulado.py --write
+          git rm -f .github/workflows/readmes-r09-preflight.yml
           git diff --check
+          git diff --cached --check
           mkdir -p "$RUNNER_TEMP/r09-preflight"
           git diff --name-only "$BASE" > "$RUNNER_TEMP/r09-preflight/caminhos.txt"
           git diff --binary "$BASE" > "$RUNNER_TEMP/r09-preflight/arvore.diff"
@@ -82,12 +84,12 @@ jobs:
           git fetch origin main
           test "$(git rev-parse origin/main)" = "$BASE"
           echo "$GITHUB_SHA" > "$RUNNER_TEMP/r09-preflight/workflow-head.txt"
-          git rev-parse HEAD^{tree} > "$RUNNER_TEMP/r09-preflight/checkout-tree.txt"
+          git write-tree > "$RUNNER_TEMP/r09-preflight/candidate-tree.txt"
       - name: Evidencias
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: r09-preflight
+          name: r09-preflight-v2
           retention-days: 7
           path: ${{ runner.temp }}/r09-preflight/
           if-no-files-found: warn
