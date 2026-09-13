@@ -1,64 +1,78 @@
-name: Preflight READMEs R09
+name: Freeze tecnico READMEs R09
 on:
   push:
     branches: [codex/readmes-r09]
     paths: [.github/workflows/readmes-r09-preflight.yml]
 permissions:
-  contents: read
+  contents: write
 concurrency:
-  group: readmes-r09-preflight
+  group: readmes-r09-freeze
   cancel-in-progress: false
 jobs:
-  preflight:
+  freeze:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     env:
       BASE: d5945e04328609878f63857cc15cf5e5039b3e75
-      BEFORE_WORKFLOW: abb020b07c49456568db48f6687d09dd04760c73
       PYTHONDONTWRITEBYTECODE: '1'
       PYTHONUTF8: '1'
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: false
+          persist-credentials: true
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Preparar arvore R09 em memoria
+      - name: Confirmar base e materializar candidata
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^)" = "$BEFORE_WORKFLOW"
+          git fetch origin main
           test "$(git rev-parse origin/main)" = "$BASE"
           python docs/sprints/readmes_objetos/evidencias_r09/aplicar_r09.py
           python docs/sprints/readmes_objetos/evidencias_r09/corrigir_readmes_r09.py
           python docs/sprints/readmes_objetos/evidencias_r09/integrar_agregadores_r09.py
           python tools/render_simulado.py --write
           git rm -f .github/workflows/readmes-r09-preflight.yml
+          git rm -f docs/sprints/readmes_objetos/evidencias_r09/corrigir_readmes_r09.py
+          git rm -f docs/sprints/readmes_objetos/evidencias_r09/integrar_agregadores_r09.py
           git diff --check
-          git diff --cached --check
-          mkdir -p "$RUNNER_TEMP/r09-preflight"
-          git diff --name-only "$BASE" > "$RUNNER_TEMP/r09-preflight/caminhos.txt"
-          git diff --binary "$BASE" > "$RUNNER_TEMP/r09-preflight/arvore.diff"
       - name: Dependencias do gate
         run: python -m pip install -r tools/requirements-dev.txt
-      - name: Validador sem snapshot e R09 estatica
+      - name: Capturar validador real e atualizar snapshot
         shell: bash
         run: |
           set -euo pipefail
-          python tools/validate_assistant.py | tee "$RUNNER_TEMP/r09-preflight/validator.txt"
-          python docs/sprints/readmes_objetos/evidencias_r09/verificar_r09.py --group static |& tee "$RUNNER_TEMP/r09-preflight/r09-static.txt"
-      - name: Gate permanente sem etapa de snapshot
+          mkdir -p "$RUNNER_TEMP/r09-freeze"
+          python tools/validate_assistant.py | tee "$RUNNER_TEMP/r09-freeze/validator.txt"
+          python - <<'PY'
+          from pathlib import Path
+          import os
+          root=Path('README.md')
+          text=root.read_text(encoding='utf-8')
+          marker='### Estado verificável do gate local'
+          pos=text.index(marker)
+          start=text.index('```text\n',pos)+len('```text\n')
+          end=text.index('\n```',start)
+          val=(Path(os.environ['RUNNER_TEMP'])/'r09-freeze'/'validator.txt').read_text(encoding='utf-8').strip()
+          root.write_text(text[:start]+val+text[end:],encoding='utf-8')
+          PY
+          python tools/validate_assistant.py --conferir-readme | tee "$RUNNER_TEMP/r09-freeze/validator-conferir-readme.txt"
+      - name: Suite estatica e gate permanente
         shell: bash
         run: |
           set -euo pipefail
+          python docs/sprints/readmes_objetos/evidencias_r09/verificar_r09.py --group static |& tee "$RUNNER_TEMP/r09-freeze/r09-static.txt"
           for etapa in temas biblioteca ferramentas transicao readmes concierge-pacote concierge-regressoes concierge-integracao; do
             python tools/ci_local.py --etapa "$etapa"
           done
           python tools/tests/test_visual_legado_v00.py
-      - name: Preservacao R09
-        run: python docs/sprints/readmes_objetos/evidencias_r09/verificar_preservacao.py --base "$BASE" | tee "$RUNNER_TEMP/r09-preflight/preservacao.txt"
+      - name: Preservacao estrita
+        shell: bash
+        run: |
+          set -euo pipefail
+          python docs/sprints/readmes_objetos/evidencias_r09/verificar_preservacao.py --base "$BASE" | tee "$RUNNER_TEMP/r09-freeze/preservacao.txt"
       - name: Runtime core isolado
         shell: bash
         run: |
@@ -66,8 +80,8 @@ jobs:
           python -m venv "$RUNNER_TEMP/venv-core"
           "$RUNNER_TEMP/venv-core/bin/python" -m pip install -q --upgrade pip
           "$RUNNER_TEMP/venv-core/bin/python" -m pip install -q numpy pandas scipy scikit-learn plotly
-          "$RUNNER_TEMP/venv-core/bin/python" docs/sprints/readmes_objetos/evidencias_r09/verificar_r09.py --group core |& tee "$RUNNER_TEMP/r09-preflight/runtime-core.txt"
-          "$RUNNER_TEMP/venv-core/bin/python" -m pip freeze > "$RUNNER_TEMP/r09-preflight/core-pacotes.txt"
+          "$RUNNER_TEMP/venv-core/bin/python" docs/sprints/readmes_objetos/evidencias_r09/verificar_r09.py --group core |& tee "$RUNNER_TEMP/r09-freeze/runtime-core.txt"
+          "$RUNNER_TEMP/venv-core/bin/python" -m pip freeze > "$RUNNER_TEMP/r09-freeze/core-pacotes.txt"
       - name: Runtime MLflow isolado
         shell: bash
         run: |
@@ -75,24 +89,48 @@ jobs:
           python -m venv "$RUNNER_TEMP/venv-mlflow"
           "$RUNNER_TEMP/venv-mlflow/bin/python" -m pip install -q --upgrade pip
           "$RUNNER_TEMP/venv-mlflow/bin/python" -m pip install -q 'mlflow>=2,<4' scikit-learn numpy pandas
-          "$RUNNER_TEMP/venv-mlflow/bin/python" docs/sprints/readmes_objetos/evidencias_r09/verificar_r09.py --group mlflow |& tee "$RUNNER_TEMP/r09-preflight/runtime-mlflow.txt"
-          "$RUNNER_TEMP/venv-mlflow/bin/python" -m pip freeze > "$RUNNER_TEMP/r09-preflight/mlflow-pacotes.txt"
+          "$RUNNER_TEMP/venv-mlflow/bin/python" docs/sprints/readmes_objetos/evidencias_r09/verificar_r09.py --group mlflow |& tee "$RUNNER_TEMP/r09-freeze/runtime-mlflow.txt"
+          "$RUNNER_TEMP/venv-mlflow/bin/python" -m pip freeze > "$RUNNER_TEMP/r09-freeze/mlflow-pacotes.txt"
           rm -rf mlruns
-      - name: Reconferir base e exportar arquivos transformados
+      - name: Evidencia final e commit do freeze
         shell: bash
         run: |
           set -euo pipefail
+          git fetch origin main
           test "$(git rev-parse origin/main)" = "$BASE"
           test ! -e mlruns
-          echo "$GITHUB_SHA" > "$RUNNER_TEMP/r09-preflight/workflow-head.txt"
-          { git diff --name-only "$BASE"; git ls-files --others --exclude-standard; } | sort -u > "$RUNNER_TEMP/r09-preflight/arquivos-exportados.txt"
-          ! grep -E '^mlruns/' "$RUNNER_TEMP/r09-preflight/arquivos-exportados.txt"
-          tar -czf "$RUNNER_TEMP/r09-preflight/arquivos-transformados.tar.gz" -T "$RUNNER_TEMP/r09-preflight/arquivos-exportados.txt"
-      - name: Evidencias
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: r09-preflight-v7-minimal
-          retention-days: 7
-          path: ${{ runner.temp }}/r09-preflight/
-          if-no-files-found: warn
+          git diff --check
+          {
+            echo 'R09 FREEZE TECNICO FINAL'
+            echo "base=$BASE"
+            echo "workflow_source_head=$GITHUB_SHA"
+            echo "python=$(python --version 2>&1)"
+            echo
+            echo '[validator]'
+            cat "$RUNNER_TEMP/r09-freeze/validator.txt"
+            echo
+            echo '[preservacao]'
+            cat "$RUNNER_TEMP/r09-freeze/preservacao.txt"
+            echo
+            echo '[runtime_core]'
+            cat "$RUNNER_TEMP/r09-freeze/runtime-core.txt"
+            echo
+            echo '[runtime_mlflow]'
+            cat "$RUNNER_TEMP/r09-freeze/runtime-mlflow.txt"
+            echo
+            echo '[pacotes_core]'
+            cat "$RUNNER_TEMP/r09-freeze/core-pacotes.txt"
+            echo
+            echo '[pacotes_mlflow]'
+            cat "$RUNNER_TEMP/r09-freeze/mlflow-pacotes.txt"
+            echo
+            echo '[arquivos_vs_base]'
+            git diff --name-status "$BASE"
+          } > docs/sprints/readmes_objetos/evidencias_r09/FREEZE_R09.txt
+          git add -A
+          git diff --cached --check
+          git status --short
+          git config user.name 'Rodrigo'
+          git config user.email 'guimarais.r.rodrigo@gmail.com'
+          git commit -m 'docs(r09): freeze técnico final da leva (ChatGPT)'
+          git push origin HEAD:codex/readmes-r09
