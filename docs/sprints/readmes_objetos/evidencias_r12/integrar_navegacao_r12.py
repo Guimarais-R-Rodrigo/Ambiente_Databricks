@@ -79,9 +79,8 @@ def update_manual() -> None:
         text = text.replace(old, new, 1)
 
     anchor = "**Como usar:** procure a finalidade, leia o tipo de entrada e de retorno, abra o exemplo específico e só então adapte a chamada. A assinatura é uma referência de consulta; os capítulos 4 a 7 explicam sua notação. Ela não substitui a docstring, os testes ou a revisão de efeitos. As dependências citadas nas fichas destacam pontos de atenção, não constituem um lockfile completo. Nenhuma ficha significa “homologado hoje no seu workspace”."
-    addition = anchor + "\n\nPara navegar pelos snippets antes de chegar à ficha técnica, use os índices locais: " + " · ".join(
-        f"[`{c}`](hub_snippets/{c}/README.md)" for c in CATEGORIES
-    ) + ". Eles agrupam os mesmos objetos por natureza do problema e não substituem este inventário."
+    logical = " · ".join(f"`hub_snippets/{c}/README.md`" for c in CATEGORIES)
+    addition = anchor + "\n\nPara navegar pelos snippets antes de chegar à ficha técnica, use os seis índices de categoria pelos caminhos lógicos " + logical + ". Eles agrupam os mesmos objetos por natureza do problema e não substituem este inventário. Os caminhos são mostrados como texto porque este Manual tem cópias idênticas em diretórios diferentes; os links clicáveis ficam na entrada `.assistant/README.md` e no catálogo `hub_snippets/README.md`."
     if "Para navegar pelos snippets antes de chegar à ficha técnica" not in text:
         if anchor not in text:
             raise RuntimeError("ancora do inventario do Manual nao encontrada")
