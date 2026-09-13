@@ -69,7 +69,7 @@ class MlflowCases(unittest.TestCase):
         import numpy as np
         from hub_snippets.ml.mlflow_run import run_governado
         with tempfile.TemporaryDirectory() as td:
-            mlflow.set_tracking_uri(f"file://{td}")
+            mlflow.set_tracking_uri(f"sqlite:///{Path(td) / 'mlflow.db'}")
             X=np.array([[0.],[1.],[2.],[3.]]); y=np.array([0,0,1,1]); model=LogisticRegression().fit(X,y)
             with run_governado("r09",dataset="fixture",split="fixture",limitacoes=["fixture"]) as run:
                 run.parametros({"c":1}); run.metricas({"auc":.9}); run.modelo(model,exemplo_entrada=X[:1])
