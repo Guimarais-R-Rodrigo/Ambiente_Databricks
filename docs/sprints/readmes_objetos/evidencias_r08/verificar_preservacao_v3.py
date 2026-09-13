@@ -1,4 +1,4 @@
-"""Preservação R08 alinhada à política de tools/render_simulado.py."""
+"""Preservação R08 alinhada ao escopo publicado por tools/render_simulado.py."""
 from __future__ import annotations
 
 import argparse
@@ -30,6 +30,11 @@ def ignored(rel: Path) -> bool:
     if any(part in IGNORED_DIRS for part in rel.parts):
         return True
     return any(fnmatch.fnmatch(rel.name, pat) for pat in IGNORED_FILES)
+
+
+def renderer_scope(rel: Path) -> bool:
+    """Espelha o contrato atual do renderer: instruções + árvore .assistant/."""
+    return rel == Path(".assistant_instructions.md") or (rel.parts and rel.parts[0] == ".assistant")
 
 
 def main() -> None:
@@ -71,11 +76,16 @@ def main() -> None:
     source = ROOT / "ambiente_fonte"
     target = ROOT / "Novo_Ambiente_Simulado/Users/usuario-free"
     source_all = sorted(p.relative_to(source) for p in source.rglob("*") if p.is_file())
-    excluded = [rel for rel in source_all if ignored(rel)]
-    source_files = [rel for rel in source_all if not ignored(rel)]
+    outside_scope = [rel for rel in source_all if not renderer_scope(rel)]
+    assert set(outside_scope) == {Path("README.md")}, outside_scope
+
+    scoped = [rel for rel in source_all if renderer_scope(rel)]
+    excluded = [rel for rel in scoped if ignored(rel)]
+    source_files = [rel for rel in scoped if not ignored(rel)]
     target_files = sorted(p.relative_to(target) for p in target.rglob("*") if p.is_file())
     missing = sorted(set(source_files) - set(target_files))
     extra = sorted(set(target_files) - set(source_files))
+    print("FORA_DO_ESCOPO_RENDERER:", [str(x) for x in outside_scope])
     print("IGNORADOS_PELO_RENDERER:", [str(x) for x in excluded])
     print("AUSENTES_NO_SIMULADO:", [str(x) for x in missing])
     print("EXTRAS_NO_SIMULADO:", [str(x) for x in extra])
@@ -94,7 +104,8 @@ def main() -> None:
     print(
         f"PASS: 12 implementação/fachada preservadas; 6 notebooks executáveis preservados; "
         f"{len(prior_readmes)} READMEs anteriores intactos; 6 pendências removidas; "
-        f"{len(source_files)} arquivos publicáveis espelhados; {len(excluded)} artefato(s) local(is) ignorado(s)."
+        f"{len(source_files)} arquivos publicáveis espelhados; {len(excluded)} artefato(s) local(is) ignorado(s); "
+        f"{len(outside_scope)} arquivo(s) de fonte fora do escopo do renderer."
     )
 
 
