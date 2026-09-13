@@ -159,7 +159,7 @@ A resposta depende da camada. **Não existe uma única leitura automática de to
 
 1. **Gatilho e intenção:** você descreve uma demanda em linguagem natural, anexa tabelas, notebooks ou células e pode selecionar uma skill com `@`.
 2. **Diretrizes aplicáveis:** instruções pessoais, instruções de workspace quando configuradas e arquivos hierárquicos de projeto orientam as superfícies suportadas.
-3. **Ativação da skill:** a Genie Code pode carregar uma Agent Skill por relevância da `description`, ou você pode selecioná-la explicitamente.
+3. **Ativação da skill:** a Genie Code pode carregar uma skill por relevância da descrição, ou você pode selecioná-la explicitamente.
 4. **Plano e geração:** a skill orienta método, riscos, recursos e formato. Ela pode recomendar um helper, mas não o importa automaticamente.
 5. **Execução no runtime:** o notebook configura o caminho que contém os pacotes, importa a função e executa conforme dependências e permissões.
 6. **Revisão:** a pessoa verifica código, dados, custo, resultado e qualquer ação persistente antes de aceitar a entrega.
@@ -167,9 +167,7 @@ A resposta depende da camada. **Não existe uma única leitura automática de to
 Esses itens explicam responsabilidades, não uma ordem rígida de carregamento.
 Para uma resposta sem execução, declare isso no pedido. A aprovação de ferramentas
 pode ser individual ou previamente configurada; ela não substitui controles de
-acesso nem comprova a correção analítica. Veja a [documentação do modo agente](https://docs.databricks.com/aws/en/genie-code/agent-mode).
-
-> **Dica:** após editar uma skill, teste em uma nova conversa. Se a versão anterior continuar aparecendo, faça uma atualização completa da página.
+acesso nem comprova a correção analítica. Veja a documentação do modo agente.
 
 ---
 
@@ -205,7 +203,7 @@ reexecuta o gate e reprova se qualquer contagem ficar desatualizada.
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 88 caminhos verificados
-markdown / links   : 191 arquivos / 1023 links relativos
+markdown / links   : 191 arquivos / 1025 links relativos
 notebooks / links  : 80 notebooks / 81 links relativos
 readmes de objeto  : 56/76 operacionais; 3/3 exemplares; 20 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 62 conferidas (nome, arquivos, __init__)
@@ -218,12 +216,12 @@ normas do molde    : 72 arquivos, 0 violação(ões)
 notebook exercita  : 60 objetos, 0 notebook(s) que só importam
 python (AST)       : 217 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1232 arquivos varridos no repositório editável/derivado
-repo (links)       : 1462 links fora da raiz analisada
+repo (identidade)  : 1233 arquivos varridos no repositório editável/derivado
+repo (links)       : 1469 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
-repo (identidade)  : 1232 arquivos varridos no repositório editável/derivado
-repo (links)       : 1462 links fora da raiz analisada
+repo (identidade)  : 1233 arquivos varridos no repositório editável/derivado
+repo (links)       : 1469 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
@@ -326,7 +324,7 @@ Após o aceite e merge da R05 pelo PR nº 19 (`cae94988`), a R06 documenta cinco
 
 ### Continuidade R07
 
-Após o aceite e merge da R06 pelo PR nº 20 (`289731c`), a R07 documenta seis objetos de score, vintage e sobrevivência. A candidata não altera implementações/fachadas e deve chegar a **49/75 READMEs operacionais**, com 26 pendências, sujeito ao validador. A leva pausa antes da R08 para revisão editorial.
+Após o aceite e merge da R06 pelo PR nº 20 (`289731c`), a R07 documenta seis objetos de score, vintage e sobrevivência. A candidata não altera suas implementações/fachadas e deve chegar a **49/75 READMEs operacionais**, com 26 pendências, sujeito ao validador. A leva pausa antes da R08 para revisão editorial.
 
 ### Migração de READMEs — R08
-A candidata R08 acrescenta guias locais para autoencoder de anomalias, profiling/suite de clustering, relatório/SHAP e UMAP. O validador confere a cobertura estrutural; aceite editorial, runtime Databricks e homologação permanecem gates separados.
+A R08 acrescentou guias locais para autoencoder de anomalias, profiling/suite de clustering, relatório/SHAP e UMAP. O validador confere a cobertura estrutural; aceite editorial, runtime Databricks e homologação permanecem gates separados.
