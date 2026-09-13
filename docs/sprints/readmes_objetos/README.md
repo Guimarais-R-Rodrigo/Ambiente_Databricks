@@ -10,9 +10,9 @@ Rodrigo aprovou o padrão e autorizou a integração das R03-A/R03-B com a V01 e
 2026-09-12. O PR nº 13 foi integrado na `main` pelo commit `1be947b`; o
 [registro da composição](INTEGRACAO_R03_V01.md) preserva os gates e a V01.
 
-O contrato vigente é **1.0.0**. A R04-B foi aceita e integrada pelo PR nº 18 no commit `d9da056`, já reconciliada com a V03 e com cinco CIs pós-merge verdes. A R05 documenta `lgbm_ranker`, `mlp_embeddings`, `optuna_lgbm`, `tabnet_wrapper`, `train_catboost` e `train_lgbm` sem alterar suas implementações/fachadas. A cobertura esperada é **38/75 operacionais e 3/3 exemplares, com 37 pendências**; a saída do validador da árvore fechada é a fonte de verdade. Isso não significa publicação no workspace nem aceite antecipado dos seis textos.
+O contrato vigente é **1.0.0**. A R05 foi aceita e integrada pelo PR nº 19 no commit `cae94988`, com CI geral e V00/V01/V02/V03 pós-merge verdes. A R06 documenta `arima_wrapper`, `lgbm_temporal`, `prophet_wrapper`, `split_temporal` e `walk_forward` sem alterar suas implementações/fachadas. A cobertura esperada é **43/75 operacionais e 3/3 exemplares, com 32 pendências**; somente a saída do validador da árvore fechada é fonte de verdade. Isso não significa publicação no workspace nem aceite antecipado dos cinco textos.
 
-Consulte o [relatório R05](RELATORIO_R05.md), a [matriz nominal](MATRIZ_ALTERACOES_R05.md) e os [achados](ACHADOS_R05.md). A próxima parada é a revisão desta leva antes da R06.
+Consulte o [relatório R06](RELATORIO_R06.md), a [matriz nominal](MATRIZ_ALTERACOES_R06.md) e os [achados](ACHADOS_R06.md). A próxima parada é a revisão desta leva antes da R07.
 
 Os relatórios anteriores preservam o estado observado em cada data. PRs #9/#11
 foram supersedidos pela composição integrada do PR #13 e não devem ser tratados
@@ -24,9 +24,9 @@ como entregas independentes a mesclar novamente.
 |---|---|
 | Examinar o formato e a linguagem | [Template de objeto](../../../ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md) |
 | Julgar a qualidade, além da estrutura | [Checklist editorial](../../../ambiente_fonte/.assistant/hub_padroes/readme/checklist_objeto.md) |
-| Ver o que mudou além dos READMEs | [Matriz R05](MATRIZ_ALTERACOES_R05.md) |
-| Conhecer inconsistências observadas | [Achados R05](ACHADOS_R05.md) |
-| Ver o resultado da execução | [Relatório R05](RELATORIO_R05.md) |
+| Ver o que mudou além dos READMEs | [Matriz R06](MATRIZ_ALTERACOES_R06.md) |
+| Conhecer inconsistências observadas | [Achados R06](ACHADOS_R06.md) |
+| Ver o resultado da execução | [Relatório R06](RELATORIO_R06.md) |
 | Saber quais legados faltam | [Controle de migração](CONTROLE_MIGRACAO.json) |
 
 ## Como evitar deriva na continuação

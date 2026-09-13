@@ -205,9 +205,9 @@ reexecuta o gate e reprova se qualquer contagem ficar desatualizada.
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 88 caminhos verificados
-markdown / links   : 172 arquivos / 828 links relativos
-notebooks / links  : 79 notebooks / 61 links relativos
-readmes de objeto  : 38/75 operacionais; 3/3 exemplares; 37 pendentes (estrutura, não aceite editorial)
+markdown / links   : 177 arquivos / 890 links relativos
+notebooks / links  : 79 notebooks / 66 links relativos
+readmes de objeto  : 43/75 operacionais; 3/3 exemplares; 32 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 61 conferidas (nome, arquivos, __init__)
 forma da pasta     : 59 conferidas (o módulo tem o nome da pasta)
 contrato de dados  : 61 pares (saída: o que o notebook consome)
@@ -218,8 +218,8 @@ normas do molde    : 71 arquivos, 0 violação(ões)
 notebook exercita  : 58 objetos, 0 notebook(s) que só importam
 python (AST)       : 214 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1156 arquivos varridos no repositório editável/derivado
-repo (links)       : 1256 links fora da raiz analisada
+repo (identidade)  : 1173 arquivos varridos no repositório editável/derivado
+repo (links)       : 1318 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
@@ -315,3 +315,7 @@ Após o aceite e merge da R04-A pelo PR nº 17 (`a8f314a`), a R04-B documenta os
 ### Continuidade R05
 
 Após o aceite e merge da R04-B (`d9da056`), a R05 documenta seis modelos tabulares. A candidata não altera suas implementações/fachadas e deve chegar a **38/75 READMEs operacionais**, com 37 pendências, sujeito ao validador. A leva pausa antes da R06 para revisão editorial.
+
+### Continuidade R06
+
+Após o aceite e merge da R05 pelo PR nº 19 (`cae94988`), a R06 documenta cinco objetos de séries e validação temporal. A candidata não altera implementações/fachadas e deve chegar a **43/75 READMEs operacionais**, com 32 pendências, sujeito ao validador. A leva pausa antes da R07 para revisão editorial.

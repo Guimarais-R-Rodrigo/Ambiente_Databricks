@@ -4,8 +4,10 @@
 # MAGIC
 # MAGIC **O problema.** Criar lag e média móvel é trivial num painel de uma série. Num painel de muitas entidades — clientes, contratos, agências — a mesma operação sem particionar por entidade puxa o valor do **cliente anterior** para dentro da feature. O resultado é plausível, e o modelo aprende ruído.
 # MAGIC
-# MAGIC **O que este helper faz.** Cria features temporais exigindo a coluna de entidade, e derruba a ambiguidade em vez de assumir uma.
+# MAGIC **O que este helper faz.** Cria lags, rollings, calendário e tendência em pandas. `entity_cols` é opcional para série única; em painel, declará-la isola o histórico por entidade. O objeto não treina LightGBM apesar do nome legado.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -92,7 +94,14 @@ print("primeira data que sobrou, por entidade:",
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## 3. Sem a entidade declarada — e o resultado parece melhor
+# MAGIC ## 3. Sem a entidade declarada — bloco histórico e política atual
+# MAGIC
+# MAGIC O código abaixo foi escrito antes da política atual de duplicatas. Hoje, com várias
+# MAGIC entidades na mesma data e `on_duplicate_dates='raise'` (default), a chamada sem
+# MAGIC `entity_cols` é recusada antes de produzir o resultado histórico. Para estudar
+# MAGIC conscientemente a sequência única com empates, seria necessário optar por
+# MAGIC `on_duplicate_dates='keep'`; o código executável e o output antigo são preservados
+# MAGIC aqui como evidência, não como receita vigente.
 
 # COMMAND ----------
 
@@ -147,7 +156,7 @@ print(f"primeira linha de B, sem entidade : dt={b_sem['dt'].date()}  lag_1={b_se
 # MAGIC ## Quando **não** usar
 # MAGIC
 # MAGIC - **Sem `entity_cols`, em painel de várias entidades.** É o erro que este notebook existe para mostrar.
-# MAGIC - **Com o painel desordenado.** Lag pressupõe ordem; ordene por entidade e data antes.
+# MAGIC - **Com data que não possa ser normalizada ou grão temporal mal definido.** A implementação atual ordena internamente; o risco é fornecer data/grão sem semântica adequada, não deixar de pré-ordenar.
 # MAGIC - **Em série com buracos.** Lag de 1 é a linha anterior, não o mês anterior — se faltam meses, os dois deixam de coincidir.
 # MAGIC - **Sobre DataFrame do Spark.** É pandas: colete antes, com limite.
 

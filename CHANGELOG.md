@@ -5,6 +5,14 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — R06: READMEs de séries e validação temporal (ChatGPT)
+
+- Documenta `arima_wrapper`, `lgbm_temporal`, `prophet_wrapper`, `split_temporal` e `walk_forward` no contrato 1.0.0.
+- Corrige somente prosa/backlinks dos cinco notebooks; código, magics executáveis e outputs históricos permanecem protegidos.
+- Corrige no catálogo o papel de `lgbm_temporal`: geração de features pandas, sem treino LightGBM.
+- Retira exatamente cinco dispensas R06 do controle de migração e registra achados, matriz, rubrica e testes.
+- Sem alteração de implementação/fachada, dependência permanente, publicação Databricks, auditoria independente ou início da R07.
+
 ## 2026-09-12 — R05: READMEs de modelos tabulares (ChatGPT)
 
 - Documenta `lgbm_ranker`, `mlp_embeddings`, `optuna_lgbm`, `tabnet_wrapper`, `train_catboost` e `train_lgbm` no contrato 1.0.0.
