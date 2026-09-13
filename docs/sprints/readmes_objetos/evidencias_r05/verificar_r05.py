@@ -265,12 +265,12 @@ class RuntimeCases(unittest.TestCase):
 
     def test_tabnet_binary_metrics_and_importance(self):
         rng = np.random.default_rng(8)
-        X = rng.normal(size=(180, 4)).astype("float32")
-        y = (1.2 * X[:, 0] - 0.5 * X[:, 1] + rng.normal(scale=0.8, size=180) > 0).astype(int)
+        X = rng.normal(size=(600, 4)).astype("float32")
+        y = (1.2 * X[:, 0] - 0.5 * X[:, 1] + rng.normal(scale=0.8, size=600) > 0).astype(int)
         model, metrics, importance = train_tabnet(
-            X[:130], y[:130], X[130:], y[130:],
+            X[:480], y[:480], X[480:], y[480:],
             task="binary", n_d=4, n_a=4, n_steps=2,
-            max_epochs=2, patience=2, batch_size=32, log_mlflow=False,
+            max_epochs=2, patience=2, batch_size=256, log_mlflow=False,
         )
         self.assertEqual(set(metrics), {"auc_val", "gini_val"})
         self.assertEqual(len(importance), X.shape[1])
@@ -279,12 +279,12 @@ class RuntimeCases(unittest.TestCase):
 
     def test_tabnet_regression_metrics(self):
         rng = np.random.default_rng(9)
-        X = rng.normal(size=(160, 3)).astype("float32")
-        y = (2 * X[:, 0] - X[:, 1] + rng.normal(scale=0.3, size=160)).astype("float32")
+        X = rng.normal(size=(560, 3)).astype("float32")
+        y = (2 * X[:, 0] - X[:, 1] + rng.normal(scale=0.3, size=560)).astype("float32")
         _, metrics, importance = train_tabnet(
-            X[:115], y[:115], X[115:], y[115:],
+            X[:448], y[:448], X[448:], y[448:],
             task="regression", n_d=4, n_a=4, n_steps=2,
-            max_epochs=2, patience=2, batch_size=32, log_mlflow=False,
+            max_epochs=2, patience=2, batch_size=256, log_mlflow=False,
         )
         self.assertEqual(set(metrics), {"rmse_val"})
         self.assertGreaterEqual(metrics["rmse_val"], 0)

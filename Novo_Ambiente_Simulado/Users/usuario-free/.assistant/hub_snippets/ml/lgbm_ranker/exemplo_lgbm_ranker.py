@@ -4,8 +4,10 @@
 # MAGIC
 # MAGIC **O problema.** Recomendar produto para cliente não é decidir se cada par é bom — é ordenar as opções **daquele cliente**. Um classificador otimiza o acerto médio global e pode acertar muito sem nunca pôr a melhor opção em primeiro.
 # MAGIC
-# MAGIC **O que este helper faz.** Treina LambdaRank com grupos declarados e avalia com NDCG e MAP, que medem posição e não acerto.
+# MAGIC **O que este helper faz.** Treina LambdaRank com grupos declarados e avalia com NDCG. Nesta versão, MAP não é calculado pelo helper.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste modelo](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente

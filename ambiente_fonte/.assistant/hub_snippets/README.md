@@ -114,6 +114,19 @@ completas e isoladas, sem aplicar cores ou alterar consumidores legados.
 
 *É o coração algorítmico do Hub, voltado a modelagem preditiva, risco de crédito, séries temporais e governança de modelos.*
 
+#### 📘 Guias locais R05 — modelos tabulares
+
+Antes de treinar ou ajustar estes modelos, use os guias locais para distinguir objetivo, métrica, dependência e limite de cada API:
+
+- [LightGBM baseline](ml/train_lgbm/README.md) — classificação/regressão, early stopping e defaults;
+- [CatBoost baseline](ml/train_catboost/README.md) — categóricas e efeitos de configuração;
+- [LambdaRank](ml/lgbm_ranker/README.md) — grupos e NDCG;
+- [Optuna + LightGBM](ml/optuna_lgbm/README.md) — busca, função objetivo e reconstrução do candidato;
+- [MLP com embeddings](ml/mlp_embeddings/README.md) — categóricas indexadas e treinador binário;
+- [TabNet](ml/tabnet_wrapper/README.md) — rede tabular e importância global.
+
+Os seis recursos são customizados pelo Hub e executados explicitamente; nenhum README aprova um modelo para produção.
+
 #### 🕒 Engenharia Temporal e Séries Temporais
 
 - **`lgbm_temporal`**: prepara atributos temporais e treina LightGBM com parâmetros declarados.

@@ -2,10 +2,12 @@
 # MAGIC %md
 # MAGIC # `mlp_embeddings` — embedding para categórica que árvore não resolve bem
 # MAGIC
-# MAGIC **O problema.** Categórica com milhares de níveis — CEP, agência, produto — vira one-hot gigante ou codificação que perde a relação entre níveis. Árvore lida, mas não aprende que duas agências vizinhas se parecem.
+# MAGIC **O problema.** Categóricas com muitos níveis podem tornar one-hot muito largo. Uma embedding oferece outra hipótese: aprender vetores densos por nível e ajustar essa representação junto com a tarefa.
 # MAGIC
 # MAGIC **O que este helper faz.** Treina uma MLP com camada de *embedding* por categórica, que aprende a representação junto com a tarefa.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste modelo](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -108,25 +110,15 @@ for chave, valor in metricas.items():
 # MAGIC **Como ler.** AUC de **0,8413** com 19 épocas — o early stopping parou antes
 # MAGIC das 20 pedidas, o que indica que a validação já não melhorava.
 # MAGIC
-# MAGIC O ponto do notebook não é o placar: é que o sinal estava em
-# MAGIC `agencia % 5` e `produto % 4`, um agrupamento **latente** que o código
-# MAGIC numérico não revela. Agências 3, 8 e 13 se comportam igual, e nada na
-# MAGIC ordem delas diz isso. One-hot criaria 150 colunas independentes e teria de
-# MAGIC descobrir o padrão trinta vezes; o embedding aprende um vetor por nível e
-# MAGIC pode colocar as três no mesmo lugar do espaço.
+# MAGIC O ponto do notebook não é o placar: o sinal foi construído em grupos latentes de agência e produto. A embedding oferece uma representação densa em que níveis podem aprender vetores semelhantes. Isso é uma capacidade de representação, não prova de que one-hot ou árvores seriam incapazes de modelar a relação; a comparação precisa ser feita no mesmo protocolo.
 # MAGIC
-# MAGIC **Antes de adotar isso, a comparação honesta:** rode
-# MAGIC `hub_snippets.ml.train_lgbm` na mesma base. Em problema tabular do banco,
-# MAGIC a árvore empata ou ganha na maior parte das vezes, treina em segundos e
-# MAGIC não exige tratar nível novo na inferência. O embedding se justifica quando
-# MAGIC a cardinalidade é alta **e** há estrutura entre os níveis **e** há volume
-# MAGIC para aprendê-la — as três coisas juntas.
+# MAGIC **Antes de adotar isso, faça a comparação honesta:** rode um baseline tabular na mesma base, com a mesma partição e métrica. Embeddings se justificam quando a representação aprendida acrescenta valor suficiente para compensar preparo de índices, categorias novas, custo e manutenção.
 
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
-# MAGIC - **Antes de tentar árvore.** Na maioria dos problemas tabulares do banco, LightGBM empata ou ganha, e treina em minutos.
-# MAGIC - **Com categórica de baixa cardinalidade.** Abaixo de ~20 níveis, one-hot resolve e é auditável.
-# MAGIC - **Sem base grande.** Embedding precisa de exemplos por nível; com poucos, cada vetor é ruído aprendido.
+# MAGIC - **Sem baseline comparável.** Primeiro estabeleça uma referência mais simples sob os mesmos dados; só então meça se a embedding acrescenta valor.
+# MAGIC - **Quando uma representação simples já é suficiente.** Baixa cardinalidade pode favorecer one-hot ou tratamento nativo, mas não existe um corte universal de níveis.
+# MAGIC - **Com poucos exemplos por nível.** Embeddings pouco observadas podem ficar instáveis; avalie cobertura por categoria e desempenho fora da amostra.
 # MAGIC - **Sem tratar nível novo.** Categoria que não existia no treino não tem vetor, e a inferência quebra ou inventa.

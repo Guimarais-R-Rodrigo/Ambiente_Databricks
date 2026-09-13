@@ -1,11 +1,13 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # `train_lgbm` — o baseline que quase sempre ganha
+# MAGIC # `train_lgbm` — um baseline de árvore para comparação tabular
 # MAGIC
-# MAGIC **O problema.** Começar um problema tabular por rede neural custa semanas e costuma perder para uma árvore ajustada em minutos. Sem baseline, não há como saber se o modelo complexo valeu.
+# MAGIC **O problema.** Sem uma referência tabular consistente, não há como saber se a complexidade de outro modelo acrescentou valor. Um baseline ajuda a comparar qualidade, custo e estabilidade sob o mesmo protocolo.
 # MAGIC
 # MAGIC **O que este helper faz.** Treina LightGBM com parâmetros conservadores por tarefa, early stopping e métricas padronizadas.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste modelo](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -90,14 +92,11 @@ for chave, valor in metricas.items():
 # MAGIC overfit_gap              0.0460
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** Comece pelo `overfit_gap`, que é a diferença entre treino e
-# MAGIC validação: **0,0460**. É pequeno, e pequeno é o que se quer. Um baseline com
-# MAGIC AUC de treino 0,99 e validação 0,85 decorou, e o número que ele reporta não
-# MAGIC vai se repetir em produção.
+# MAGIC **Como ler.** `overfit_gap` é a diferença de AUC entre treino e validação: aqui foi **0,0460**. O helper não define limiar que transforme esse valor em “pequeno” ou “grande”. Interprete-o junto da partição, variabilidade e custo da decisão; gap baixo também pode coexistir com leakage compartilhado entre treino e validação.
 # MAGIC
 # MAGIC O `early stopping` parou na iteração **57**, de 500 disponíveis. Isso
-# MAGIC também é informação: o problema é fácil o bastante para não precisar do
-# MAGIC orçamento inteiro. Se ele fosse até o limite, valeria aumentar.
+# MAGIC também é informação: nesta execução a validação deixou de melhorar antes do
+# MAGIC orçamento inteiro. Se o treino alcançar o limite, investigue curva, custo e validação antes de decidir se aumentar `n_estimators` faz sentido.
 # MAGIC
 # MAGIC O `gini_val` de 0,8536 é só o AUC reescalado (`2 × AUC − 1`) — aparece
 # MAGIC porque a tradição de crédito reporta assim, não porque acrescente algo.
@@ -128,18 +127,9 @@ for chave, valor in DEFAULT_PARAMS_BINARY.items():
 # MAGIC n_estimators             500
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** **Seis** destes nove valores diferem do padrão do LightGBM;
-# MAGIC `num_leaves` (31), `max_depth` (−1) e `min_child_samples` (20) são o
-# MAGIC padrão da biblioteca, mantidos de propósito. Saber quais são decisão e
-# MAGIC quais são herança é o que torna a revisão possível — debater três números
-# MAGIC que ninguém escolheu consome o tempo que os outros seis mereciam.
+# MAGIC **Como ler.** O bloco histórico acima é um extrato: a constante atual também contém `objective`, `metric`, `random_state` e `verbose`, que a célula Python imprime. Use `DEFAULT_PARAMS_BINARY` e `model.get_params()` como inventário técnico; não conte o bloco colado como lista completa. Alguns valores coincidem com defaults da biblioteca e outros são escolhas locais.
 # MAGIC
-# MAGIC `learning_rate` 0,05 em vez de 0,1 troca velocidade por estabilidade —
-# MAGIC combinado com `n_estimators` 500 e early stopping, deixa o modelo parar
-# MAGIC sozinho no ponto certo. `subsample` e `colsample_bytree` em 0,8 introduzem
-# MAGIC aleatoriedade que reduz variância. `reg_alpha` e `reg_lambda` mantêm
-# MAGIC regularização mínima ligada por padrão, o que é decisão de gosto defensável
-# MAGIC — muita gente prefere começar em zero.
+# MAGIC `learning_rate` 0,05, `n_estimators` 500, regularização e `colsample_bytree=0,8` são escolhas locais a revisar. Um detalhe importante: `subsample=0,8` **não habilita sozinho bagging de linhas** porque o wrapper não define `subsample_freq` e o default LightGBM é 0 (desabilitado). A amostragem de colunas em 0,8, por outro lado, está ativa.
 # MAGIC
 # MAGIC O ponto de expor a constante é que **ela seja discutível**. Parâmetro
 # MAGIC escondido dentro da função é parâmetro que ninguém revisa.
@@ -149,6 +139,6 @@ for chave, valor in DEFAULT_PARAMS_BINARY.items():
 # MAGIC ## Quando **não** usar
 # MAGIC
 # MAGIC - **Como modelo final, sem ajuste.** É baseline: serve de piso, não de entrega.
-# MAGIC - **Em base pequena.** Com poucos milhares de linhas, regressão logística regularizada costuma empatar e é explicável.
+# MAGIC - **Sem comparar com referência simples.** Em problemas menores ou mais lineares, regressão regularizada pode ser competitiva e mais simples; meça em vez de presumir.
 # MAGIC - **Sem separar validação no tempo.** O early stopping usa a validação; se ela vier de sorteio, o corte é otimista.
-# MAGIC - **Com `log_mlflow=False` em produção.** Aqui é contorno de laboratório; lá, o registro é o que torna o resultado auditável.
+# MAGIC - **Quando sua governança exige rastreabilidade e o logging foi desligado.** O laboratório usa `False`; em produção, siga a política de experimentos do ambiente em vez de assumir um padrão universal.

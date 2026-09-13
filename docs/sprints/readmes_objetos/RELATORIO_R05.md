@@ -83,7 +83,7 @@ A suíte R05 deve diferenciar caracterização de garantia: provar que um compor
 
 ## 7. Estado dos testes
 
-**PENDENTE.** Esta seção será substituída pelo workflow de fechamento somente depois de todos os gates, preservação e testes específicos concluírem. A árvore não deve ser materializada como candidata final em caso de falha.
+Workflow de fechamento: **run 34728209632 — success até esta etapa**. Na árvore final: gate vigente aprovado; validador 0 falhas/0 avisos; V00/V01/V02/V03 aprovadas; preservação PASS; suíte R05 **17/17 aprovada sem skips** com versões registradas em `r05-pacotes.txt`. Cobertura validada: **38/75 operacionais, 3/3 exemplares e 37 pendências**. A materialização ocorre somente após a reconferência abaixo.
 
 ## 8. Critérios de aceite técnico
 
