@@ -1,9 +1,9 @@
 # Relatório R05 — READMEs de modelos tabulares
 
-**Data:** 2026-09-12  
-**Base de partida:** `d9da056c95bf5c4209b2f208de1c9a987580efe7`  
-**Branch de autoria:** `codex/readmes-r05`  
-**Contrato:** README de objeto `1.0.0`  
+**Data:** 2026-09-12
+**Base de partida:** `d9da056c95bf5c4209b2f208de1c9a987580efe7`
+**Branch de autoria:** `codex/readmes-r05`
+**Contrato:** README de objeto `1.0.0`
 **Autoria/revisão:** ChatGPT, autorrevisão A0_light; sem auditor independente.
 
 ## 1. Objetivo
