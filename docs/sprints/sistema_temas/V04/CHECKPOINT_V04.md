@@ -17,7 +17,7 @@ na própria `main` concluíram com `success`.
 |---|---|
 | Implementação funcional | ACEITA E INTEGRADA |
 | Regressões automatizadas | PASS na candidata (`34731698772`) e 6/6 checks pós-merge `success` |
-| Documentação operacional | INTEGRADA; estado reconciliado neste fechamento |
+| Documentação operacional | PARCIALMENTE RECONCILIADA — documentos de estado atualizados; rótulo do Manual e nota pré-merge do CHANGELOG ainda exigem sincronização integral segura |
 | Reconciliação R04-B | PASS no run `34727070003` |
 | Reconciliação R05/R06 | PASS no run `34731698772` |
 | Auditoria independente | PENDENTE |
@@ -30,6 +30,20 @@ na própria `main` concluíram com `success`.
 O aceite explícito autorizou a integração Git da V04. Ele não autoriza publicação
 Databricks, homologação visual/runtime, auditoria independente nem reclassifica
 SKIP, PENDENTE, BLOQUEADO ou NÃO TESTADO como PASS.
+
+### Pendência documental mecânica
+
+O estado corrente da V04 é definido por este checkpoint, pelo README V04, pelos
+índices da iniciativa e pelo `CLAUDE.md`. O Manual Técnico integrado ainda contém
+o rótulo textual histórico `V04 (candidata)` na seção acrescentada pela sprint, e
+o `CHANGELOG.md` mantém a nota pré-merge de que a V04 era candidata. O conteúdo
+funcional desses registros não muda o código integrado, mas os rótulos precisam
+ser sincronizados em uma operação que preserve integralmente os arquivos grandes.
+
+A conexão GitHub desta sessão oferece substituição integral, não patch parcial,
+para esses arquivos. Não se reescreveu nem truncou o Manual/CHANGELOG apenas para
+alterar uma linha. Até essa sincronização, não trate os rótulos antigos como estado
+vigente nem declare a documentação integralmente reconciliada.
 
 ## O que muda para quem usa o Hub hoje
 
@@ -93,6 +107,7 @@ force-push nem publicar um pacote antigo para reverter uma mudança Git.
 A V04 está formalmente aceita, integrada e revalidada no Git. O próximo
 desenvolvimento planejado da iniciativa é a V05. Este fechamento documental não
 inicia a V05, não publica no Databricks e não encerra os gates humanos/operacionais
-pendentes acima.
+pendentes acima. A sincronização segura do Manual/CHANGELOG permanece uma pendência
+de documentação, não uma pendência funcional da integração V04.
 
 [Voltar à V04](README.md)
