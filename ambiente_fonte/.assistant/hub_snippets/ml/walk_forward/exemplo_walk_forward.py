@@ -4,8 +4,10 @@
 # MAGIC
 # MAGIC **O problema.** Uma validação com um corte só responde se o modelo funcionou naquele mês. A pergunta real é se ele funciona mês após mês, retreinado, como vai acontecer em produção. E há uma armadilha a mais: quando o alvo demora a se realizar, treinar até ontem e testar hoje usa rótulo que ainda não existiria.
 # MAGIC
-# MAGIC **O que este helper faz.** Roda validação que avança no tempo, retreinando a cada janela, com `gap` entre treino e teste.
+# MAGIC **O que este helper faz.** Cria janelas expansivas e chama `model_fn(train, test)` em cada uma, com `gap` opcional. O callback é quem precisa treinar/preprocessar somente no treino e devolver métricas.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -107,15 +109,13 @@ print(f"janelas com gap : {len(com_gap)}   (gap = 3 meses)")
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** O `gap` descarta os períodos entre treino e teste, e existe
-# MAGIC para um caso concreto: **quando o alvo demora a se realizar**. Se a
-# MAGIC inadimplência só é conhecida três meses depois da originação, treinar com
-# MAGIC dados até maio para prever junho usa rótulos que, em junho, ainda não
-# MAGIC existiriam.
-# MAGIC
-# MAGIC Sem `gap` a validação fica otimista e nada acusa: o número sai bom porque
-# MAGIC a informação vazou pela janela, não pela feature. É a forma de vazamento
-# MAGIC que sobrevive tanto ao `pit_join` quanto ao `split_temporal`.
+# MAGIC **Como ler.** O `gap` pula posições entre treino e teste e pode representar
+# MAGIC **maturação do alvo** quando configurado de acordo com a latência real. Aqui ele
+# MAGIC conta períodos observados; uma base com meses ausentes não transforma `gap=3`
+# MAGIC automaticamente em três meses corridos. Sem gap, a validação **pode** ficar
+# MAGIC otimista quando rótulos recentes ainda não estariam disponíveis no instante
+# MAGIC simulado. `pit_join` e `split_temporal` resolvem outros eixos e não escolhem
+# MAGIC essa latência por você.
 
 # COMMAND ----------
 # MAGIC %md

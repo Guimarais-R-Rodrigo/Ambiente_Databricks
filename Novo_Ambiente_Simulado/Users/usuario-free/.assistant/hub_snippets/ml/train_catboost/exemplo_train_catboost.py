@@ -6,6 +6,8 @@
 # MAGIC
 # MAGIC **O que este helper faz.** Treina CatBoost, que trata categórica nativamente com codificação ordenada — construída para não vazar.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste modelo](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -108,12 +110,7 @@ for chave, valor in metricas.items():
 # MAGIC anteriores: a base é outra, com o sinal escondido num agrupamento latente
 # MAGIC (`categoria % 7`) que nenhuma ordem numérica revela.
 # MAGIC
-# MAGIC O que importa é que ele **encontrou** esse sinal, com uma coluna de 200
-# MAGIC níveis, sem one-hot e sem codificação manual. O CatBoost usa codificação
-# MAGIC ordenada: para cada linha, a estatística da categoria é calculada só com
-# MAGIC as linhas **anteriores** dela. É a mesma ideia do ponto no tempo que o
-# MAGIC `pit_join` aplica ao dado, aqui aplicada à codificação — e é o que impede
-# MAGIC o *target encoding* de vazar o alvo.
+# MAGIC O que importa é que ele **encontrou** esse sinal com uma coluna de 200 níveis, sem one-hot manual. O CatBoost usa mecanismos de estatísticas categóricas ordenadas/permutadas para reduzir o viés e o vazamento do target durante o treino. Essa “ordem” é parte do algoritmo e **não equivale ao tempo real de disponibilidade do dado**: point-in-time continua sendo responsabilidade da construção da base.
 # MAGIC
 # MAGIC **Duas armadilhas que este notebook mostra na prática**, ambas
 # MAGIC encontradas ao executar e não ao ler:
@@ -139,6 +136,6 @@ for chave, valor in metricas.items():
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
-# MAGIC - **Sem declarar `cat_features`.** Sem isso ele trata a categórica como número, e a ordem inventada vira sinal falso.
-# MAGIC - **Quando não há categórica.** O ganho dele está exatamente aí; sem categórica, é mais lento sem contrapartida.
-# MAGIC - **Em busca de hiperparâmetro larga.** É o mais lento dos três; use LightGBM para explorar e CatBoost para confirmar.
+# MAGIC - **Sem declarar corretamente as categóricas.** Em ndarray numérico, um código nominal pode ser tratado como número; em outros tipos, a biblioteca pode falhar. Confira `cat_features` e os tipos.
+# MAGIC - **Quando não há razão específica para CatBoost.** Sem categóricas relevantes, compare custo e qualidade com outros baselines em vez de presumir vantagem ou desvantagem.
+# MAGIC - **Em tuning caro sem orçamento definido.** O custo relativo depende de dados, hardware e parâmetros; escolha a estratégia de busca por evidência do seu ambiente.

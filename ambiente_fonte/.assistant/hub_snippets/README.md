@@ -114,10 +114,35 @@ completas e isoladas, sem aplicar cores ou alterar consumidores legados.
 
 *É o coração algorítmico do Hub, voltado a modelagem preditiva, risco de crédito, séries temporais e governança de modelos.*
 
+#### 📘 Guias locais R05 — modelos tabulares
+
+Antes de treinar ou ajustar estes modelos, use os guias locais para distinguir objetivo, métrica, dependência e limite de cada API:
+
+- [LightGBM baseline](ml/train_lgbm/README.md) — classificação/regressão, early stopping e defaults;
+- [CatBoost baseline](ml/train_catboost/README.md) — categóricas e efeitos de configuração;
+- [LambdaRank](ml/lgbm_ranker/README.md) — grupos e NDCG;
+- [Optuna + LightGBM](ml/optuna_lgbm/README.md) — busca, função objetivo e reconstrução do candidato;
+- [MLP com embeddings](ml/mlp_embeddings/README.md) — categóricas indexadas e treinador binário;
+- [TabNet](ml/tabnet_wrapper/README.md) — rede tabular e importância global.
+
+Os seis recursos são customizados pelo Hub e executados explicitamente; nenhum README aprova um modelo para produção.
+
+#### 📘 Guias locais R06 — séries e validação temporal
+
+Antes de modelar uma série, separe as camadas: features, partição/backtest e modelo. Os guias locais R06 documentam os contratos atuais:
+
+- [ARIMA](ml/arima_wrapper/README.md) — candidato auto-ARIMA e métricas in-sample;
+- [Features temporais](ml/lgbm_temporal/README.md) — lags/rollings pandas; **não treina LightGBM**;
+- [Prophet](ml/prophet_wrapper/README.md) — tendência, sazonalidade, feriados e forecast;
+- [Split temporal](ml/split_temporal/README.md) — treino/validação/teste por períodos observados;
+- [Walk-forward](ml/walk_forward/README.md) — múltiplos folds expansivos por callback.
+
+Os cinco recursos são customizados pelo Hub, driver-side e executados explicitamente. Nenhum guia transforma métrica in-sample em validação futura nem aprova modelo para produção.
+
 #### 🕒 Engenharia Temporal e Séries Temporais
 
-- **`lgbm_temporal`**: prepara atributos temporais e treina LightGBM com parâmetros declarados.
-  - *Quando usar:* em problemas temporais nos quais a disponibilidade histórica de cada atributo foi validada. LightGBM é dependência opcional; ausência do pacote impede esse fluxo.
+- **`lgbm_temporal`**: cria em pandas lags, estatísticas móveis, calendário e tendência; apesar do nome legado, a implementação atual não treina LightGBM.
+  - *Quando usar:* depois de definir grão, entidade e semântica temporal; `lag_n` conta observações anteriores e o processamento ocorre no driver.
 - **`split_temporal`**: divide um `pandas.DataFrame` em treino, validação e teste por períodos completos de calendário, com gaps opcionais.
   - *Quando usar:* quando a avaliação precisa preservar ordem temporal. O helper não recebe datas finais fixas; recebe proporções, unidade de período e quantidade de gaps.
 - **`walk_forward`**: produz janelas sucessivas de validação temporal.

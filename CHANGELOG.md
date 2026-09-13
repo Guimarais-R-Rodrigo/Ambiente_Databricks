@@ -29,6 +29,22 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 - (Codex) Finalização `34727521220` permanece FAILURE porque a regressão V01 exigiu preservar `V01/README.md` e `V01/GUIA_PRIMEIRO_USO.md` no índice agregado; nenhum commit final foi criado.
 - (Codex) V04 é candidata: sem aceite, merge, publicação Databricks, homologação visual/acessibilidade ou início da V05.
 
+## 2026-09-12 — R06: READMEs de séries e validação temporal (ChatGPT)
+
+- Documenta `arima_wrapper`, `lgbm_temporal`, `prophet_wrapper`, `split_temporal` e `walk_forward` no contrato 1.0.0.
+- Corrige somente prosa/backlinks dos cinco notebooks; código, magics executáveis e outputs históricos permanecem protegidos.
+- Corrige no catálogo o papel de `lgbm_temporal`: geração de features pandas, sem treino LightGBM.
+- Retira exatamente cinco dispensas R06 do controle de migração e registra achados, matriz, rubrica e testes.
+- Sem alteração de implementação/fachada, dependência permanente, publicação Databricks, auditoria independente ou início da R07.
+
+## 2026-09-12 — R05: READMEs de modelos tabulares (ChatGPT)
+
+- Documenta `lgbm_ranker`, `mlp_embeddings`, `optuna_lgbm`, `tabnet_wrapper`, `train_catboost` e `train_lgbm` no contrato 1.0.0.
+- Corrige somente prosa/backlinks dos seis notebooks; código, magics executáveis e outputs históricos permanecem protegidos.
+- Retira exatamente seis dispensas R05 do controle de migração.
+- Registra limitações de API encontradas, relatório, matriz, rubrica e testes de runtime isolados.
+- Sem alteração de implementação, dependência permanente, publicação Databricks, auditoria independente ou início da R06.
+
 ## 2026-09-12 — R04-B: READMEs dos seis Hub Scripts (ChatGPT)
 
 - Documenta `data_quality_check`, `doc_coverage`, `drift_detector`, `naming_checker`, `rfv_calculator` e `schema_to_yaml` no contrato 1.0.0.

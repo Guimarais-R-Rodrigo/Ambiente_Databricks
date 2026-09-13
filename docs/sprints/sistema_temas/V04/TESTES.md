@@ -157,6 +157,21 @@ terminarem com sucesso. A rodada mede a árvore já documentada, com fachadas e
 espelho materializados, workflow/script transitórios removidos e README raiz
 reconciliado contra a execução real.
 
+## Reconciliação final com R05/R06 — run `34731698772`
+
+A `main` avançou depois da validação `34727630459`. O diagnóstico `34731492694`
+falhou antes do merge porque o checkout removeu as credenciais necessárias ao
+`fetch` privado; o diagnóstico corrigido `34731516515` identificou somente três
+conflitos documentais (`CHANGELOG.md`, `README.md` e `docs/sprints/README.md`).
+A primeira composição `34731585141` permaneceu FAILURE porque a guarda de
+preservação tratou `CHECKPOINT_V04.md`, deliberadamente atualizado para registrar
+a nova base, como se devesse permanecer byte a byte idêntico à candidata anterior.
+Os gates finais não foram executados e nenhum commit combinado foi enviado.
+A rodada `34731698772` corrige somente essa classificação da guarda, compõe os três
+conflitos, preserva os demais caminhos R05/R06 da `main`, remove os workflows
+transitórios e repete os gates na árvore final. Este bloco só será versionado se
+a rodada terminar com sucesso.
+
 ## Não medido por estes runs
 
 - renderização real no Databricks;

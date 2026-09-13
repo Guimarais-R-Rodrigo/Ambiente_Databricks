@@ -4,8 +4,10 @@
 # MAGIC
 # MAGIC **O problema.** Prever série com tendência, sazonalidade anual e feriado móvel à mão dá muito trabalho e erra no Carnaval. E validar previsão com sorteio aleatório de linhas mede a capacidade de interpolar, não de prever.
 # MAGIC
-# MAGIC **O que este helper faz.** Ajusta Prophet com sazonalidade declarada e feriados do país, devolvendo previsão e componentes separados.
+# MAGIC **O que este helper faz.** Ajusta Prophet com sazonalidade declarada e calendário do país, devolvendo previsão, componentes e métricas in-sample. Em dados mensais, um feriado só entra pelo calendário nativo quando sua data coincide com a data representativa observada; não presuma efeito mensal automático.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -114,8 +116,9 @@ for chave, valor in metricas.items():
 # MAGIC > semente para isso. Reexecutar e ver as duas colunas diferentes é o
 # MAGIC > esperado, não uma divergência.
 # MAGIC
-# MAGIC **Como ler.** O ajuste é bom: MAPE de **1,02%** sobre a própria amostra, e a
-# MAGIC previsão continua a subida da série com a ondulação anual no lugar certo.
+# MAGIC **Como ler.** O MAPE de **1,02%** descreve o ajuste **sobre a própria amostra**.
+# MAGIC Ele não estima o erro futuro. O `yhat` prolonga tendência/ciclo neste exemplo, mas
+# MAGIC a qualidade de forecast precisa ser medida em períodos que não participaram do fit.
 # MAGIC
 # MAGIC **Agora olhe a coluna `trend`: ela sai negativa — −861 — enquanto o `yhat`
 # MAGIC do mesmo mês é 1.626.** Os componentes somam ao valor previsto, então o
@@ -138,6 +141,6 @@ for chave, valor in metricas.items():
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
-# MAGIC - **Em série curta.** Sem dois ciclos completos, a sazonalidade anual é chute com intervalo de confiança.
-# MAGIC - **Como caixa-preta de negócio.** O valor dele está nos componentes separados — tendência, sazonalidade, feriado. Olhar só o `yhat` desperdiça o método.
+# MAGIC - **Quando o histórico é curto para a sazonalidade proposta.** Poucos ciclos tornam a decomposição pouco sustentada; valide estabilidade em vez de usar dois ciclos como corte universal.
+# MAGIC - **Como narrativa causal de negócio.** Componentes ajudam a inspecionar o ajuste, mas não provam causas. Use `yhat` e componentes conforme a decisão, sempre com validação futura.
 # MAGIC - **Para série com quebra estrutural conhecida.** Mudança de política ou de produto pede `changepoints` declarados, não descobertos.

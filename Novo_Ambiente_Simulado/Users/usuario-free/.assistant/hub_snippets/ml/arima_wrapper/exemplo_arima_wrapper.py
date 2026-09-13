@@ -2,10 +2,12 @@
 # MAGIC %md
 # MAGIC # `arima_wrapper` — ARIMA com a ordem escolhida por busca, não por chute
 # MAGIC
-# MAGIC **O problema.** Escolher (p, d, q) no olho leva a modelo que passa no teste e falha fora dele. E ARIMA aplicado a série não estacionária produz previsão que diverge com confiança.
+# MAGIC **O problema.** Escolher (p, d, q) sem protocolo explícito torna a comparação difícil. Não estacionariedade e diferenciação também precisam ser tratadas de acordo com a série e verificadas fora da amostra.
 # MAGIC
-# MAGIC **O que este helper faz.** Roda `auto_arima`, que busca a ordem por critério de informação e já resolve a diferenciação necessária.
+# MAGIC **O que este helper faz.** Roda `auto_arima`, que pesquisa uma especificação segundo o procedimento/configuração da biblioteca e pode selecionar diferenciação. A ordem escolhida continua sendo um candidato a validar fora da amostra.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -112,15 +114,12 @@ for chave, valor in metricas.items():
 # MAGIC mape_insample            1.8345
 # MAGIC ```
 # MAGIC
-# MAGIC **Como ler.** A ordem escolhida é **(0, 1, 0)** — zero termos autorregressivos,
-# MAGIC **uma** diferenciação, zero médias móveis. Traduzindo: a busca concluiu que
-# MAGIC a melhor descrição desta série é "passeio aleatório com deriva", e que
-# MAGIC **não há estrutura a modelar** além da tendência.
-# MAGIC
-# MAGIC Está certo — foi assim que a série foi gerada. E é o resultado mais útil
-# MAGIC que o `auto_arima` pode dar, porque é o que ninguém escolheria à mão. Quem
-# MAGIC ajusta ordem no olho tende a pôr termos AR e MA "para melhorar", e cada um
-# MAGIC deles ajusta ruído.
+# MAGIC **Como ler.** Nesta execução a busca selecionou **(0, 1, 0)**: zero termos
+# MAGIC autorregressivos, uma diferenciação e zero médias móveis. Isso é a especificação
+# MAGIC escolhida pelo procedimento para esta amostra e este espaço de busca; não prova
+# MAGIC que o processo gerador real foi identificado nem que termos adicionais seriam
+# MAGIC necessariamente ruído. A coincidência com a forma usada para gerar este exemplo
+# MAGIC sintético é uma checagem didática, não uma garantia geral do método.
 # MAGIC
 # MAGIC Repare na previsão: **145,9 → 147,7**, uma reta. Passeio aleatório com
 # MAGIC deriva prevê exatamente isso — o último valor mais a deriva acumulada. Se
@@ -133,4 +132,4 @@ for chave, valor in metricas.items():
 # MAGIC
 # MAGIC - **Sem olhar os resíduos.** ARIMA que passou no AIC e deixou autocorrelação nos resíduos ainda tem sinal na mesa.
 # MAGIC - **Com sazonalidade forte e `seasonal=False`.** A busca vai compensar com ordem alta e ajustar ruído.
-# MAGIC - **Para horizonte longo.** O intervalo de confiança abre rápido; a partir de certo ponto ele cobre qualquer coisa e deixa de informar.
+# MAGIC - **Quando o horizonte excede a evidência disponível.** Incerteza tende a crescer com o horizonte; meça cobertura e erro por horizonte em backtest em vez de assumir um ponto universal de inutilidade.

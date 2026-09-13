@@ -4,15 +4,14 @@
 
 V04 em branch `codex/temas-v04-html-20260912`. Foi iniciada sobre a `main`
 `b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2` e reconciliada com a `main`
-`d9da056c95bf5c4209b2f208de1c9a987580efe7`, que acrescentou a R04-B.
-A reconciliação verde está no commit
-`c2b91c5e3a3d80f754045dfc4fae8eb335e31bef`; a candidata final ainda precisa
-incorporar documentação/derivados e repetir os gates.
+`d9da056c95bf5c4209b2f208de1c9a987580efe7`, que acrescentou a R04-B, e depois
+com `289731c79e8ed43d82b39d61cdc41ba2e69ea717`, que integra R05/R06. A
+reconciliação final é validada no run `34731698772`; a V04 continua sem aceite ou merge.
 
 | Gate | Estado |
 |---|---|
 | Implementação funcional | CANDIDATA |
-| Regressões automatizadas | CANDIDATA VALIDADA — evidência final run `34727630459` |
+| Regressões automatizadas | CANDIDATA VALIDADA sobre R06 — run `34731698772` |
 | Documentação operacional | CANDIDATA |
 | Reconciliação R04-B | PASS no run `34727070003` |
 | Auditoria independente | PENDENTE |

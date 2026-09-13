@@ -8,14 +8,17 @@
 # MAGIC março. Ele aprende o futuro, acerta no teste, e fracassa em produção — sem
 # MAGIC que nenhuma métrica de validação acuse.
 # MAGIC
-# MAGIC **O que este helper faz.** Corta por período de calendário, não por sorteio:
-# MAGIC tudo até uma data treina, tudo depois testa.
+# MAGIC **O que este helper faz.** Divide períodos observados em treino, validação e teste,
+# MAGIC com gaps opcionais. As proporções são sobre períodos únicos presentes na base, não
+# MAGIC sobre linhas nem sobre uma grade de calendário preenchida automaticamente.
 # MAGIC
 # MAGIC > Este notebook é a segunda metade do assunto **vazamento temporal**. A
 # MAGIC > primeira — trazer histórico para a decisão sem trazer o futuro junto —
 # MAGIC > está em `hub_snippets.spark.pit_join`. Os dois erros costumam aparecer
 # MAGIC > juntos, e corrigir só um deixa o modelo vazando pelo outro.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -61,9 +64,11 @@ print("biblioteca acessível")
 # MAGIC ficaram no teste. O modelo passa a "ver o futuro" de novo, por outro
 # MAGIC caminho.
 # MAGIC
-# MAGIC `temporal_split` separa por **período de calendário**, não por posição de
-# MAGIC linha, e aceita um intervalo de segurança (`gap_periods`) entre treino e
-# MAGIC teste — útil quando o target leva tempo para se materializar.
+# MAGIC `temporal_split` separa por **períodos observados**, não por posição de linha,
+# MAGIC e aceita `gap_periods` entre as partições. Esse gap pode representar maturação do
+# MAGIC target quando a quantidade configurada corresponde à latência real; buracos na
+# MAGIC série significam que um período observado não equivale necessariamente a uma
+# MAGIC unidade contínua de calendário.
 
 # COMMAND ----------
 
@@ -132,7 +137,7 @@ for nome, parte in [("treino", treino), ("validação", validacao), ("teste", te
 # MAGIC |---|---|---|
 # MAGIC | Separar treino e teste com tempo envolvido | `temporal_split` | teste otimista, produção decepciona |
 # MAGIC | Dar tempo ao target para se materializar | `gap_periods` | treino e validação dividem a janela de formação do target |
-# MAGIC | Impedir que a mesma entidade caia nos dois lados | `group_col` | o modelo reconhece a entidade, não o padrão |
+# MAGIC | Avaliar apenas entidades novas entre partições | `group_col` | entidades vistas antes são removidas; em painel recorrente isso pode ser inadequado |
 # MAGIC
 # MAGIC Para trazer atributo histórico até a data da decisão — o passo **anterior**
 # MAGIC a este —, o helper é `hub_snippets.spark.pit_join`, com notebook próprio.

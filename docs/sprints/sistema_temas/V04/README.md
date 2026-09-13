@@ -4,10 +4,11 @@
 
 **CANDIDATA TÉCNICA EM REVISÃO; ACEITE PENDENTE.** A V04 foi iniciada na `main`
 `b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`, que já continha V03 e R04-A. Durante
-a implementação, a `main` avançou para `d9da056c95bf5c4209b2f208de1c9a987580efe7`
-com a R04-B; a branch V04 foi reconciliada explicitamente com essa revisão no run
-`34727070003`, preservando os dois lados e reexecutando os gates. A base efetiva
-da candidata, portanto, contém V03 + R04-A + R04-B.
+a implementação, a `main` avançou primeiro para `d9da056c95bf5c4209b2f208de1c9a987580efe7`
+com a R04-B e depois para `289731c79e8ed43d82b39d61cdc41ba2e69ea717`
+com R05/R06. A branch V04 foi reconciliada explicitamente com essas revisões; a
+reconciliação final usa o run `34731698772`. A base efetiva da candidata contém
+V03 + R04-A + R04-B + R05 + R06.
 
 Esta sprint não está aceita nem integrada enquanto seu PR não passar pelos gates
 finais e receber decisão explícita do mantenedor. Não há publicação no Databricks

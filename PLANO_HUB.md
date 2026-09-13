@@ -878,3 +878,9 @@ Parada antes da R04-B; sem publicação Databricks ou aceite antecipado dos novo
 
 ### Checkpoint R04-B — READMEs de scripts
 Seis Hub Scripts recebem README local no contrato 1.0.0. Implementações permanecem preservadas; o lote pausa antes da R05 para revisão. Fonte: `docs/sprints/readmes_objetos/RELATORIO_R04B.md`.
+
+### Checkpoint R05 — modelos tabulares
+Seis objetos `hub_snippets/ml` recebem README local no contrato 1.0.0. A leva preserva implementações e pausa antes da R06 para revisão. Fonte: `docs/sprints/readmes_objetos/RELATORIO_R05.md`.
+
+### Checkpoint R06 — séries e validação temporal
+Cinco objetos `hub_snippets/ml` recebem README local no contrato 1.0.0: ARIMA, features temporais, Prophet, split e walk-forward. A leva preserva implementações e pausa antes da R07 para revisão. Fonte: `docs/sprints/readmes_objetos/RELATORIO_R06.md`.

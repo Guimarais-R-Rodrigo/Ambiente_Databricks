@@ -64,10 +64,6 @@
       "sprint": "R11",
       "lote": "B"
     },
-    "hub_snippets/ml/arima_wrapper": {
-      "sprint": "R06",
-      "lote": "A"
-    },
     "hub_snippets/ml/autoencoder_anomaly": {
       "sprint": "R08",
       "lote": "A"
@@ -96,14 +92,6 @@
       "sprint": "R07",
       "lote": "A"
     },
-    "hub_snippets/ml/lgbm_ranker": {
-      "sprint": "R05",
-      "lote": "A"
-    },
-    "hub_snippets/ml/lgbm_temporal": {
-      "sprint": "R06",
-      "lote": "A"
-    },
     "hub_snippets/ml/metrics_report": {
       "sprint": "R09",
       "lote": "A"
@@ -112,20 +100,8 @@
       "sprint": "R09",
       "lote": "A"
     },
-    "hub_snippets/ml/mlp_embeddings": {
-      "sprint": "R05",
-      "lote": "A"
-    },
-    "hub_snippets/ml/optuna_lgbm": {
-      "sprint": "R05",
-      "lote": "A"
-    },
     "hub_snippets/ml/performance_monitor": {
       "sprint": "R09",
-      "lote": "A"
-    },
-    "hub_snippets/ml/prophet_wrapper": {
-      "sprint": "R06",
       "lote": "A"
     },
     "hub_snippets/ml/score_bands": {
@@ -140,24 +116,8 @@
       "sprint": "R08",
       "lote": "A"
     },
-    "hub_snippets/ml/split_temporal": {
-      "sprint": "R06",
-      "lote": "A"
-    },
     "hub_snippets/ml/survival_cox": {
       "sprint": "R07",
-      "lote": "A"
-    },
-    "hub_snippets/ml/tabnet_wrapper": {
-      "sprint": "R05",
-      "lote": "A"
-    },
-    "hub_snippets/ml/train_catboost": {
-      "sprint": "R05",
-      "lote": "A"
-    },
-    "hub_snippets/ml/train_lgbm": {
-      "sprint": "R05",
       "lote": "A"
     },
     "hub_snippets/ml/umap_viz": {
@@ -166,10 +126,6 @@
     },
     "hub_snippets/ml/vintage_analysis": {
       "sprint": "R07",
-      "lote": "A"
-    },
-    "hub_snippets/ml/walk_forward": {
-      "sprint": "R06",
       "lote": "A"
     },
     "hub_snippets/ml/woe_iv_calculator": {

@@ -1470,6 +1470,18 @@ smart_sample(df: DataFrame, n: int=10000, stratify_col: Optional[str]=None, seed
 
 ### 27.4. Modelagem, tempo, métricas e monitoramento
 
+#### Guias locais R06 — como montar uma avaliação temporal sem misturar as camadas
+
+Para um usuário começando no Hub, a ordem conceitual recomendada é: **(1) construir features sem futuro → (2) definir partições/gaps → (3) avaliar em um ou vários cortes → (4) ajustar e comparar candidatos**. Os objetos R06 não formam um pipeline automático; cada um cobre uma parte:
+
+- `hub_snippets/ml/lgbm_temporal/README.md` — lags/rollings/calendário em pandas; não treina LightGBM;
+- `hub_snippets/ml/split_temporal/README.md` — um split treino/validação/teste por períodos observados;
+- `hub_snippets/ml/walk_forward/README.md` — vários folds expansivos; o callback faz o treino;
+- `hub_snippets/ml/arima_wrapper/README.md` — candidato auto-ARIMA; métricas retornadas são in-sample;
+- `hub_snippets/ml/prophet_wrapper/README.md` — candidato Prophet; atenção a feriados e grão agregado.
+
+`gap` e `gap_periods` não descobrem a maturação do target. Eles contam períodos observados da base e precisam ser configurados de acordo com o processo real. Métrica in-sample, validação temporal e teste final são evidências diferentes. Todos esses helpers operam no driver.
+
 #### `hub_snippets.ml.arima_wrapper`
 
 Recebe série NumPy ordenada, ajusta auto-ARIMA e devolve modelo, previsões e métricas. Requer frequência e período sazonal coerentes; lacunas temporais não são inferidas pela posição do array. Pmdarima é exigido na chamada e MLflow é importado no módulo.
@@ -2469,6 +2481,19 @@ Se a dúvida estiver em um dos seis scripts abaixo, abra primeiro o README da pr
 - `hub_scripts/schema_to_yaml/README.md` — snapshot de schema, YAML/JSON e estatísticas opcionais.
 
 Os scripts continuam sendo executados explicitamente. O README não torna o helper um gate automático e não substitui a implementação.
+
+### Guias locais R05 — modelos tabulares
+
+Para escolher entre os seis modelos/tabulares desta leva, abra primeiro o README da pasta. A rota recomendada é: baseline simples → baseline de árvore → somente depois tuning ou arquitetura neural, sempre sob a mesma validação.
+
+- `hub_snippets/ml/train_lgbm/README.md` — LightGBM e métricas por tarefa;
+- `hub_snippets/ml/train_catboost/README.md` — CatBoost e categóricas;
+- `hub_snippets/ml/lgbm_ranker/README.md` — ranking por grupos e NDCG;
+- `hub_snippets/ml/optuna_lgbm/README.md` — TPE e limites da busca;
+- `hub_snippets/ml/mlp_embeddings/README.md` — embeddings e contrato binário do treinador;
+- `hub_snippets/ml/tabnet_wrapper/README.md` — TabNet e importância global.
+
+Os notebooks instalam dependências de laboratório e reiniciam o Python. Leia esses efeitos antes de executar. Métrica de validação, importância ou tuning não equivalem a homologação do modelo.
 
 ## 30. Fontes, manutenção e alcance das afirmações
 
