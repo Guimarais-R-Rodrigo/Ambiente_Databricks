@@ -1497,6 +1497,19 @@ train_arima(series: np.ndarray, m: int=12, forecast_periods: int=6, seasonal: bo
 
 [Implementação](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/arima_wrapper/arima_wrapper.py) · [API exportada](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/arima_wrapper/__init__.py) · [Notebook de exemplo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/arima_wrapper/exemplo_arima_wrapper.py)
 
+#### Guias locais R08 — clusterização, anomalias e explicabilidade
+
+Para um usuário novo, escolha primeiro a **pergunta**:
+
+- `hub_snippets/ml/clustering_suite/README.md` — criar/comparar agrupamentos numéricos; `best_k` é heurística;
+- `hub_snippets/ml/cluster_profiling/README.md` — descrever grupos já rotulados; `z_score` local não é teste estatístico;
+- `hub_snippets/ml/umap_viz/README.md` — visualizar vizinhanças em 2D; a geometria não é medida fiel do espaço original;
+- `hub_snippets/ml/autoencoder_anomaly/README.md` — priorizar anomalias por erro de reconstrução; percentil não é probabilidade;
+- `hub_snippets/ml/shap_explainer/README.md` — calcular atribuições do output do modelo;
+- `hub_snippets/ml/explainability_report/README.md` — transformar importâncias já calculadas em Markdown.
+
+Use as rotas em conjunto somente quando os contratos realmente se encaixarem. A R08 documenta o estado existente; não migra `umap_viz` para a rota V04 de temas e não altera implementações.
+
 #### `hub_snippets.ml.autoencoder_anomaly`
 
 Recebe arrays de treino apresentados como normais e dados a avaliar. Devolve rede treinada, limiar e erros de reconstrução. PyTorch é exigido ao importar. O limiar não é uma probabilidade de fraude; o treino pode ser custoso e depende da preparação dos atributos.

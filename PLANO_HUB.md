@@ -887,3 +887,6 @@ Cinco objetos `hub_snippets/ml` recebem README local no contrato 1.0.0: ARIMA, f
 
 ### Checkpoint R07 — score, vintage e sobrevivência
 Seis objetos `hub_snippets/ml` recebem README local no contrato 1.0.0: Kaplan–Meier, bandas de score, scorecard, Cox PH, vintage e WOE/IV. A leva preserva implementações e pausa antes da R08 para revisão. Fonte: `docs/sprints/readmes_objetos/RELATORIO_R07.md`.
+
+### Checkpoint R08 — clusters, anomalias e explicabilidade
+Seis objetos `hub_snippets/ml` recebem README local 1.0.0, com correções exclusivamente didáticas nos notebooks e preservação das APIs. A leva deve fechar em 55/75 operacionais e pausar antes da R09 para revisão. Fonte: `docs/sprints/readmes_objetos/RELATORIO_R08.md`.

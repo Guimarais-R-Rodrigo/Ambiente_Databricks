@@ -5,6 +5,25 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — R08: READMEs de clusters, anomalias e explicabilidade (ChatGPT)
+
+- Documenta seis objetos no contrato 1.0.0: `autoencoder_anomaly`, `cluster_profiling`, `clustering_suite`, `explainability_report`, `shap_explainer` e `umap_viz`.
+- Corrige somente prosa/backlinks dos notebooks: outputs históricos e código executável permanecem preservados.
+- Registra limites de percentil de anomalia, métricas internas de clustering, ranking/SHAP, dependências ocultas e geometria UMAP.
+- Retira exatamente seis dispensas R08 do controle de migração.
+- Sem alteração de implementação/fachada, publicação Databricks, homologação de modelo/segmentação/explicabilidade, auditoria independente ou início da R09.
+
+## 2026-09-13 — R08: fechamento de compatibilidade (ChatGPT)
+
+### Corrigido
+
+- (ChatGPT) Fixado scikit-learn 1.4.2 junto a UMAP 0.5.5 e NumPy 1.26.4 exclusivamente no runtime isolado de verificacao; helper e dependencias permanentes preservados.
+- (ChatGPT) Coleta conjunta de stdout/stderr, contagem singular/plural e identidade Git automatizada explicita no workflow temporario. Nenhum teste removido, erro ignorado ou skip convertido em sucesso.
+
+### Atualizado
+
+- (ChatGPT) Relatorio, rubrica e matriz R08 registram o run e a compatibilidade; aceite editorial continua pendente. Sem merge, publicacao Databricks ou inicio da R09.
+
 ## 2026-09-12 — V04: componentes HTML e tabelas opt-in (Codex)
 
 ### Adicionado

@@ -110,3 +110,6 @@ A R05 foi aceita e integrada na `main` em `cae94988`. A R06 documenta cinco obje
 
 ### Estado da migração de READMEs — R07
 A R06 foi aceita e integrada na `main` em `289731c`. A R07 documenta seis objetos de score, vintage e sobrevivência sem alterar implementações/fachadas; consulte `docs/sprints/readmes_objetos/RELATORIO_R07.md`. Cobertura estrutural não é aceite editorial, política de crédito nem homologação.
+
+### Estado da migração de READMEs — R08
+A R07 foi aceita e integrada na `main` pelo PR #25 no commit `b73bbb9`. A R08 documenta seis objetos de clusterização, anomalias e explicabilidade sem alterar implementações/fachadas: `autoencoder_anomaly`, `cluster_profiling`, `clustering_suite`, `explainability_report`, `shap_explainer` e `umap_viz`. Estado: `docs/sprints/readmes_objetos/RELATORIO_R08.md`. Cobertura estrutural não é aceite editorial, homologação de modelo nem publicação Databricks.
