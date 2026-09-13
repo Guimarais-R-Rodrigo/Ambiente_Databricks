@@ -37,11 +37,11 @@ jobs:
           python docs/sprints/readmes_objetos/evidencias_r08/aplicar_r08_v2.py
           cp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
           python tools/render_simulado.py --write
-          git rm .github/workflows/readmes-r08-freeze.yml .github/workflows/readmes-r08-freeze-v2.yml
+          git rm .github/workflows/readmes-r08-freeze.yml .github/workflows/readmes-r08-freeze-v2.yml .github/workflows/readmes-r08-freeze-v3.yml .github/workflows/readmes-r08-freeze-v4.yml
           git rm docs/sprints/readmes_objetos/evidencias_r08/verificar_r08.py
           git mv docs/sprints/readmes_objetos/evidencias_r08/verificar_r08_v2.py docs/sprints/readmes_objetos/evidencias_r08/verificar_r08.py
-          git rm docs/sprints/readmes_objetos/evidencias_r08/verificar_preservacao.py
-          git mv docs/sprints/readmes_objetos/evidencias_r08/verificar_preservacao_v2.py docs/sprints/readmes_objetos/evidencias_r08/verificar_preservacao.py
+          git rm docs/sprints/readmes_objetos/evidencias_r08/verificar_preservacao.py docs/sprints/readmes_objetos/evidencias_r08/verificar_preservacao_v2.py
+          git mv docs/sprints/readmes_objetos/evidencias_r08/verificar_preservacao_v3.py docs/sprints/readmes_objetos/evidencias_r08/verificar_preservacao.py
           printf '\n- `docs/sprints/readmes_objetos/evidencias_r08/aplicar_r08_v2.py` — entrada compatível com o schema `pending` vigente.\n' >> docs/sprints/readmes_objetos/MATRIZ_ALTERACOES_R08.md
           sed -i 's/[[:space:]]\+$//' docs/sprints/readmes_objetos/MATRIZ_ALTERACOES_R08.md docs/sprints/readmes_objetos/evidencias_r08/aplicar_r08.py
           git add -A
