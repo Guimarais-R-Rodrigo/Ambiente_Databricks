@@ -2,6 +2,8 @@
 # MAGIC %md
 # MAGIC # `monitoramento_modelo` — monitorar sem transformar ruído em alarme
 # MAGIC
+# MAGIC 📘 Guia local: [`README.md`](./README.md)
+# MAGIC
 # MAGIC **Prompt não executa.** Ele é um briefing para colar num chat, e a
 # MAGIC resposta vem de uma interação que notebook nenhum reproduz. Este notebook
 # MAGIC tem três partes, e só as duas primeiras rodam:
@@ -21,7 +23,7 @@
 # MAGIC | Compute | serverless ou clássico, indiferente |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, de `hub_snippets.testing.fixtures` |
-# MAGIC | Escrita | **sim** — cria a tabela `workspace.default.hub_exemplo_clientes` para o chat poder consultá-la |
+# MAGIC | Escrita | **sim** — cria/sobrescreve `workspace.default.hub_exemplo_monitor_ref` e `workspace.default.hub_exemplo_monitor_atual` para o chat consultá-las |
 # MAGIC | Diferença Free × trabalho | no trabalho, aponte o prompt para uma tabela real governada em vez da sintética |
 
 # COMMAND ----------
@@ -127,7 +129,7 @@ for nome, df in (("referência", base_ref), ("atual", base_atual)):
 # MAGIC
 # MAGIC **Como preencher**, quando for a hora:
 # MAGIC
-# MAGIC 1. Rode a Parte 1 deste notebook — ela cria `workspace.default.hub_exemplo_clientes`.
+# MAGIC 1. Rode a Parte 1 deste notebook — ela cria/sobrescreve `workspace.default.hub_exemplo_monitor_ref` e `workspace.default.hub_exemplo_monitor_atual`.
 # MAGIC 2. Abra um **chat novo** no Genie Code e cole o bloco da Parte 2.
 # MAGIC 3. Cole a resposta aqui, em markdown, com a data da captura.
 # MAGIC 4. Registre **qual skill foi carregada** — é a única forma de saber se o

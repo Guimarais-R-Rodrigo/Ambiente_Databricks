@@ -2,6 +2,8 @@
 # MAGIC %md
 # MAGIC # `auditoria_skills` — auditar uma skill contra o próprio contrato
 # MAGIC
+# MAGIC 📘 Guia local: [`README.md`](./README.md)
+# MAGIC
 # MAGIC **Prompt não executa.** Ele é um briefing para colar num chat, e a
 # MAGIC resposta vem de uma interação que notebook nenhum reproduz. Este notebook
 # MAGIC tem três partes, e só as duas primeiras rodam:
@@ -49,7 +51,7 @@ print(frontmatter.strip()[:400])
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** A skill escolhida é a mais nova, e é a que menos histórico tem. É de propósito: auditar a skill que já passou por revisão humana mede pouco. E há um detalhe honesto — ela é a única cuja `description` ainda não passou por forward test.
+# MAGIC **Como ler.** O alvo é uma skill real publicada. Audite o estado atual do arquivo e dos testes, sem assumir que histórico de revisão ou palavras-chave substituem evidência de roteamento.
 
 # COMMAND ----------
 # MAGIC %md
@@ -132,7 +134,7 @@ print(frontmatter.strip()[:400])
 # MAGIC
 # MAGIC **Como preencher**, quando for a hora:
 # MAGIC
-# MAGIC 1. Rode a Parte 1 deste notebook — ela cria `nenhuma — o insumo é uma pasta de skill`.
+# MAGIC 1. Rode a Parte 1 deste notebook — ela não cria tabela; apenas lê o `SKILL.md` selecionado.
 # MAGIC 2. Abra um **chat novo** no Genie Code e cole o bloco da Parte 2.
 # MAGIC 3. Cole a resposta aqui, em markdown, com a data da captura.
 # MAGIC 4. Registre **qual skill foi carregada** — é a única forma de saber se o

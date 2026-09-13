@@ -206,9 +206,9 @@ raiz analisada     : /home/runner/work/Ambiente_Databricks/Ambiente_Databricks/a
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 88 caminhos verificados
-markdown / links   : 200 arquivos / 1135 links relativos
-notebooks / links  : 79 notebooks / 89 links relativos
-readmes de objeto  : 66/75 operacionais; 3/3 exemplares; 9 pendentes (estrutura, não aceite editorial)
+markdown / links   : 209 arquivos / 1225 links relativos
+notebooks / links  : 79 notebooks / 98 links relativos
+readmes de objeto  : 75/75 operacionais; 3/3 exemplares; 0 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 61 conferidas (nome, arquivos, __init__)
 forma da pasta     : 59 conferidas (o módulo tem o nome da pasta)
 contrato de dados  : 61 pares (saída: o que o notebook consome)
@@ -219,8 +219,8 @@ normas do molde    : 71 arquivos, 0 violação(ões)
 notebook exercita  : 59 objetos, 0 notebook(s) que só importam
 python (AST)       : 214 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1254 arquivos varridos no repositório editável/derivado
-repo (links)       : 1570 links fora da raiz analisada
+repo (identidade)  : 1281 arquivos varridos no repositório editável/derivado
+repo (links)       : 1660 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 
@@ -331,4 +331,6 @@ Após o aceite e merge da R06 pelo PR nº 20 (`289731c`), a R07 documenta seis o
 A candidata R08 acrescenta guias locais para autoencoder de anomalias, profiling/suite de clustering, relatório/SHAP e UMAP. O validador confere a cobertura estrutural; aceite editorial, runtime Databricks e homologação permanecem gates separados.
 > **READMEs R09 — integrada:** cinco guias de avaliação, drift e MLOps foram aceitos e integrados pelo PR #29 (`d412acb`).
 >
-> **READMEs R10 — candidata:** seis guias de Hub Prompts; cobertura alvo 66/75, sujeita ao freeze e aceite editorial.
+> **READMEs R10 — integrada:** seis guias de Hub Prompts foram aceitos e integrados pelo PR #30 (`7ba5d386`).
+>
+> **READMEs R11 — candidata:** nove guias finais de Hub Prompts; cobertura alvo 75/75 e zero pendências estruturais, sujeita ao freeze e aceite editorial.
