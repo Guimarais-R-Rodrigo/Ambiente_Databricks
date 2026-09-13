@@ -1,6 +1,23 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Etapa concluída — V04 aceita e integrada no Git
+## Etapa atual — V05 candidata em fechamento
+
+V00–V04 estão aceitas e integradas no Git. A [V05 — Visual Lab](V05/README.md)
+está em desenvolvimento/revisão na PR #26, atualmente reconciliada com a main
+que já contém a R08. Não há aceite V05, merge, publicação Databricks ou início
+da V06.
+
+O [checkpoint vigente](V05/CHECKPOINT_V05.md) é a fonte do estado técnico da
+candidata. O [guia de primeiro uso](../../../ambiente_fonte/.assistant/hub_snippets/visual/theme_lab/GUIA_PRIMEIRO_USO.md)
+explica a operação da prévia pessoal quando o mantenedor preparou pacote, caminho
+e dependências. A interface candidata ainda não conclui escolha visual de presets,
+linhagem automática até a base original nem reabertura autônoma pelo operador.
+
+Os testes Python e de CI permanecem separados da homologação no Databricks,
+da acessibilidade, do teste com pessoa iniciante e da publicação. Um JSON salvo
+é rascunho: não equivale a submissão, aprovação ou padrão de equipe.
+
+## Etapa concluída anterior — V04 aceita e integrada no Git
 
 V00–V04 estão integradas no Git. A V03 foi mesclada pelo PR #16 no commit
 `b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`; depois, R04-A, R04-B, R05 e R06
@@ -14,18 +31,21 @@ Rodrigo em 12/09/2026 e integrada pelo PR #21 no commit
 além da materialização central de CSS em `constants.styles`. As APIs legadas
 permanecem o default.
 
-Para quem nunca entrou no Hub: não há nada para ativar no Databricks. A V04 não
-instala seletor, não cria CSS global e não migra notebooks automaticamente. Leia o
-[README V04](V04/README.md), o [checkpoint](V04/CHECKPOINT_V04.md) e o
+Para quem nunca entrou no Hub: não há nada para ativar no Databricks por causa
+da V04. Ela não instala seletor, não cria CSS global e não migra notebooks
+automaticamente. Leia o [README V04](V04/README.md), o
+[checkpoint](V04/CHECKPOINT_V04.md) e o
 [guia operacional](../../../ambiente_fonte/.assistant/hub_padroes/identidade_visual/GUIA_OPERACIONAL.md).
 
 ### Entradas históricas preservadas
 
-A evolução continua navegável pela [V01 — contrato e experiência](V01/README.md) e pelo [guia de primeiro uso da V01](V01/GUIA_PRIMEIRO_USO.md). Esses arquivos são referência histórica/contratual e não substituem o estado corrente V04.
+A evolução continua navegável pela [V01 — contrato e experiência](V01/README.md)
+e pelo [guia de primeiro uso da V01](V01/GUIA_PRIMEIRO_USO.md). Esses arquivos
+são referência histórica/contratual; não substituem o estado corrente da V05.
 
-Não houve publicação Databricks, auditoria independente ou homologação visual.
-O aceite e a integração Git da V04 estão concluídos; esses gates operacionais
-permanecem separados. A V05 ainda não foi iniciada por este fechamento.
+Não houve publicação Databricks, auditoria independente ou homologação visual
+pelo aceite Git da V04. A frase histórica de que V05 ainda não havia sido
+iniciada descreve o fechamento daquela sprint, não o estado corrente.
 
 ## Aceite de integração Git — 12/09/2026
 
@@ -72,16 +92,16 @@ a publicar no workspace.
 O Manual Técnico existente permanece dono da orientação operacional do produto:
 [Manual Técnico](../../../MANUAL_TECNICO.md). V00 não o altera porque não entrega
 uma nova operação ao usuário do Hub. As instruções de primeiro uso do laboratório
-serão incorporadas quando a respectiva interface for implementada.
+são parte da V05 e permanecem candidatas enquanto a PR #26 não for aceita.
 
 ## Estado e limites
 
 A V00 é uma candidata de diagnóstico. A extração automatizada precisa de revisão
-semântica independente e aceite antes da V01. Nada nesta pasta autoriza merge,
+semântica independente e aceite antes da V01. Nada nesta seção histórica autoriza
 publicação, troca de paleta ou alteração de arquivos congelados.
 
-O plano aprovado na conversa distingue V00–V14. Esta entrega cobre apenas V00;
-não substitui aquele plano por uma promessa de todas as sprints concluídas.
+O plano aprovado na conversa distingue V00–V14. Esta documentação histórica não
+substitui aquele plano por uma promessa de todas as sprints concluídas.
 
 Consulte também a [rastreabilidade ao plano](RASTREABILIDADE_V00.md).
 
@@ -113,5 +133,5 @@ Databricks ou publicação automática nesta entrega.
 A V03 foi aceita e integrada pelo PR #16; seu adaptador Plotly continua opt-in. A
 [V04](V04/README.md) estende a mesma arquitetura aos componentes HTML e à tabela
 pandas e foi aceita/integrada pelo PR #21 no commit
-`5a7b33d7137f88c1ec80315de1b422293b3ba206`. Sem publicação Databricks; V05 ainda
-não foi iniciada por este fechamento.
+`5a7b33d7137f88c1ec80315de1b422293b3ba206`. Sem publicação Databricks; a V05
+passou a ser desenvolvida posteriormente na PR #26.

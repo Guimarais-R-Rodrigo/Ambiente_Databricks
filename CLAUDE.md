@@ -64,24 +64,37 @@ Escala planejada: pessoal → squad → missão.
 - Sistema de Temas: contrato central e configuração completa por contexto
   aceitos no `docs/decisions/ADR-0013-sistema-de-temas.md`. A V01 está aceita
   e integrada no Git; fixtures são entradas de teste, não temas operacionais
-  aprovados. Sem seletor instalado, mudança visual ou publicação no Databricks.
-  Homologação operacional permanece pendente. Estado, limites e retomada:
-  `docs/sprints/sistema_temas/V01/CHECKPOINT_V01.md`.
+  aprovados. Sem publicação automática no Databricks. Estado e retomada:
+  `docs/sprints/sistema_temas/README.md`.
 
 A V02 foi aceita por Rodrigo e integrada pelo PR #14 no commit
 `d4cabdca4ac68c0a2edbd7f9f621f68962c8f6b8`. O contrato ativo foi promovido para
 `ambiente_fonte/.assistant/hub_padroes/identidade_visual/` e o núcleo de
-carga/validação/resolução está versionado, mas ainda não aplica aparência nem publica
-temas. Estado e limites: `docs/sprints/sistema_temas/V02/CHECKPOINT_V02.md`.
+carga/validação/resolução está versionado. Estado e limites:
+`docs/sprints/sistema_temas/V02/CHECKPOINT_V02.md`.
 
 A V03 foi aceita e integrada pelo PR #16 no commit
-`b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`. A V04 também foi aceita por Rodrigo
+`b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`. A V04 foi aceita por Rodrigo
 e integrada pelo PR #21 no commit `5a7b33d7137f88c1ec80315de1b422293b3ba206`:
 componentes HTML, estilos compartilhados e tabela pandas recebem rotas opt-in
-`_resolvido`, preservando as APIs legadas. A árvore do merge coincide com a
+`_resolvido`, preservando as APIs legadas. A árvore do merge coincidiu com a
 candidata validada e os seis workflows permanentes pós-merge concluíram com
-`success`. Sem publicação Databricks, homologação operacional ou início da V05.
-Estado: `docs/sprints/sistema_temas/V04/CHECKPOINT_V04.md`.
+`success`.
+
+### Estado corrente do Sistema de Temas — V05 candidata
+
+A V05 está em desenvolvimento/revisão no PR #26 e foi reconciliada com a main
+R08 `d5945e04328609878f63857cc15cf5e5039b3e75`. Leia
+`docs/sprints/sistema_temas/V05/CHECKPOINT_V05.md` antes de retomar. O objeto
+`hub_snippets.visual.theme_lab` implementa rascunho e prévia pessoal com dados
+sintéticos, mas a sprint ainda não tem aceite ou merge.
+
+A operação não técnica está em
+`ambiente_fonte/.assistant/hub_snippets/visual/theme_lab/GUIA_PRIMEIRO_USO.md`.
+Continuam pendentes a seleção visual de presets, o vínculo automático da proposta
+com o hash da base original e a reabertura autônoma pelo operador. CI Python não
+homologa navegador/Databricks, acessibilidade, p95, permissões ou UAT. Sem
+publicação Databricks ou início da V06.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 
@@ -112,4 +125,9 @@ A R05 foi aceita e integrada na `main` em `cae94988`. A R06 documenta cinco obje
 A R06 foi aceita e integrada na `main` em `289731c`. A R07 documenta seis objetos de score, vintage e sobrevivência sem alterar implementações/fachadas; consulte `docs/sprints/readmes_objetos/RELATORIO_R07.md`. Cobertura estrutural não é aceite editorial, política de crédito nem homologação.
 
 ### Estado da migração de READMEs — R08
-A R07 foi aceita e integrada na `main` pelo PR #25 no commit `b73bbb9`. A R08 documenta seis objetos de clusterização, anomalias e explicabilidade sem alterar implementações/fachadas: `autoencoder_anomaly`, `cluster_profiling`, `clustering_suite`, `explainability_report`, `shap_explainer` e `umap_viz`. Estado: `docs/sprints/readmes_objetos/RELATORIO_R08.md`. Cobertura estrutural não é aceite editorial, homologação de modelo nem publicação Databricks.
+A R07 foi aceita e integrada na `main` pelo PR #25 no commit `b73bbb9`. A R08 foi
+aceita e integrada pelo PR #27 no commit `d5945e0`, documentando seis objetos de
+clusterização, anomalias e explicabilidade sem alterar implementações/fachadas:
+`autoencoder_anomaly`, `cluster_profiling`, `clustering_suite`,
+`explainability_report`, `shap_explainer` e `umap_viz`. Cobertura estrutural não
+é homologação de modelo nem publicação Databricks.
