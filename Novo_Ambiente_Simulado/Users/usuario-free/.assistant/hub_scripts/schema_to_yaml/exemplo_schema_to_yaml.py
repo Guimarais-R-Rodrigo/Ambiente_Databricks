@@ -11,6 +11,8 @@
 # MAGIC **O que este script faz.** Devolve o schema como dicionário serializável e
 # MAGIC como YAML escapado, com estatísticas opcionais e limitadas.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste script](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente

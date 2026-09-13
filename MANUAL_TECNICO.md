@@ -2457,6 +2457,19 @@ Este índice integra o antigo papel do glossário. As explicações desenvolvida
 | ADR / handoff / runbook | Decisão arquitetural / passagem de estado / procedimento operacional | [30](#fontes) |
 
 <a id="fontes"></a>
+### Guias locais R04-B — scripts operacionais
+
+Se a dúvida estiver em um dos seis scripts abaixo, abra primeiro o README da própria pasta. Ele explica o conceito, efeitos, custo e interpretação antes do notebook:
+
+- `hub_scripts/data_quality_check/README.md` — chave, nulos, atualidade e score heurístico;
+- `hub_scripts/doc_coverage/README.md` — adjacência Markdown-código, não qualidade textual;
+- `hub_scripts/drift_detector/README.md` — PSI numérico entre coortes, sem confundir drift e performance;
+- `hub_scripts/naming_checker/README.md` — convenções com origem explícita da política;
+- `hub_scripts/rfv_calculator/README.md` — RFV bruto com corte temporal global;
+- `hub_scripts/schema_to_yaml/README.md` — snapshot de schema, YAML/JSON e estatísticas opcionais.
+
+Os scripts continuam sendo executados explicitamente. O README não torna o helper um gate automático e não substitui a implementação.
+
 ## 30. Fontes, manutenção e alcance das afirmações
 
 ### 30.1. Como conferir a procedência

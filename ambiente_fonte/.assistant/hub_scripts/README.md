@@ -88,6 +88,8 @@ Este grupo reúne a inspeção inicial e seu preparo analítico próximo. Há um
 
 #### `data_quality_check` — Inspeção Sanitária Pré-Modelagem
 
+- **Guia local:** [data_quality_check: guia local](data_quality_check/README.md)
+
 - **O que faz:** avalia uma tabela por nome, calcula nulos em todas as colunas, verifica nulidade e unicidade das `pk_columns` e, quando `date_column` é informada, avalia atualidade.
 - **O que retorna:** dicionário com `status: "pass"`, `"warn"` ou `"fail"`, métricas e uma lista de alertas estruturados como dicionários.
 - **Quando usar:** ao receber uma tabela nova ou como diagnóstico anterior a uma etapa de treino. Os thresholds são política fornecida à chamada, não defaults oficiais da Databricks.
@@ -100,6 +102,8 @@ Este grupo reúne a inspeção inicial e seu preparo analítico próximo. Há um
 
 #### `rfv_calculator` — Recência, Frequência e Valor
 
+- **Guia local:** [rfv_calculator: guia local](rfv_calculator/README.md)
+
 - **O que faz:** calcula atributos brutos de recência, frequência e valor por entidade e por períodos anteriores a uma data de corte.
 - **O que retorna:** DataFrame Spark com as colunas RFV produzidas.
 - **Quando usar:** antes de segmentações ou features comportamentais. O script não cria automaticamente quintis, personas nem política de negócio.
@@ -109,6 +113,8 @@ Este grupo reúne a inspeção inicial e seu preparo analítico próximo. Há um
 ### 📉 2. Estabilidade e Monitoramento de Distribuição
 
 #### `drift_detector` — Detecção de Desvios de Distribuição
+
+- **Guia local:** [drift_detector: guia local](drift_detector/README.md)
 
 - **O que faz:** recebe uma tabela, uma coluna de coorte, valores de referência e comparação e colunas numéricas; calcula PSI por variável com bins derivados da referência.
 - **O que retorna:** dicionário com o PSI e os detalhes por variável. Sem os dois limiares opcionais, a classificação é `not_classified`; com `warning_threshold` e `critical_threshold` válidos, ela pode ser `stable`, `attention` ou `critical`.
@@ -120,17 +126,23 @@ Este grupo reúne a inspeção inicial e seu preparo analítico próximo. Há um
 
 #### `schema_to_yaml` — Contratos de Dados em YAML
 
+- **Guia local:** [schema_to_yaml: guia local](schema_to_yaml/README.md)
+
 - **O que faz:** inspeciona uma tabela Spark e serializa nomes, tipos e nulabilidade. Estatísticas podem ser incluídas quando solicitadas.
 - **O que retorna:** string YAML; na ausência de PyYAML, o fallback é JSON, que também é válido em YAML 1.2. O script não grava arquivo automaticamente.
 - **Quando usar:** para preparar uma representação revisável do schema antes de versioná-la pelo mecanismo escolhido.
 
 #### `naming_checker` — Guardião de Nomenclatura
 
+- **Guia local:** [naming_checker: guia local](naming_checker/README.md)
+
 - **O que faz:** recebe o nome de uma tabela, lê suas colunas e compara os nomes com a política configurada, incluindo regras como `snake_case` e prefixos.
 - **O que retorna:** lista de violações encontradas.
 - **Quando usar:** antes de promover ou compartilhar uma tabela. As convenções são regras do Hub ou da equipe, não exigências universais do Unity Catalog.
 
 #### `doc_coverage` — Auditoria Estrutural de Documentação
+
+- **Guia local:** [doc_coverage: guia local](doc_coverage/README.md)
 
 - **O que faz:** lê um notebook Jupyter ou uma fonte Databricks exportada como arquivo e mede a proximidade entre blocos Markdown e código.
 - **O que retorna:** dicionário heurístico com cobertura e blocos sem documentação adjacente.
