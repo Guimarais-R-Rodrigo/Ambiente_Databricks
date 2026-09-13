@@ -163,6 +163,19 @@ Estes seis guias cobrem três perguntas diferentes: **como o score organiza risc
 
 Os guias não definem política de crédito, causalidade, regulação ou cutoff. Cada contrato precisa ser validado no problema real antes de virar decisão.
 
+#### 📘 Guias locais R08 — clusters, anomalias e explicabilidade
+
+A R08 separa quatro tarefas que costumam ser misturadas: **criar clusters**, **descrevê-los**, **projetá-los para visualização** e **explicar modelos/pontuar anomalias**:
+
+- [Autoencoder de anomalias](ml/autoencoder_anomaly/README.md) — erro de reconstrução treinado sobre referência normal;
+- [Profiling de clusters](ml/cluster_profiling/README.md) — médias, razões e diferenças descritivas por grupo;
+- [Suite de clustering](ml/clustering_suite/README.md) — K-Means/GMM/DBSCAN e métricas internas;
+- [Relatório de explicabilidade](ml/explainability_report/README.md) — camada Markdown executiva/técnica;
+- [SHAP explainer](ml/shap_explainer/README.md) — atribuições, ranking e plots;
+- [UMAP](ml/umap_viz/README.md) — projeção exploratória 2D.
+
+Métrica interna, ranking, embedding e SHAP são evidências diferentes. Nenhum desses objetos cria causalidade, persona, política ou homologação por conta própria.
+
 #### 📊 Risco de Crédito e Scorecards
 
 - **`woe_iv_calculator`**: calcula *Weight of Evidence* (WOE) e *Information Value* (IV) para os tipos suportados.

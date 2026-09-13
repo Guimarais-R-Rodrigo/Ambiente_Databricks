@@ -64,28 +64,12 @@
       "sprint": "R11",
       "lote": "B"
     },
-    "hub_snippets/ml/autoencoder_anomaly": {
-      "sprint": "R08",
-      "lote": "A"
-    },
-    "hub_snippets/ml/cluster_profiling": {
-      "sprint": "R08",
-      "lote": "A"
-    },
-    "hub_snippets/ml/clustering_suite": {
-      "sprint": "R08",
-      "lote": "A"
-    },
     "hub_snippets/ml/curves_plotly": {
       "sprint": "R09",
       "lote": "A"
     },
     "hub_snippets/ml/drift_detection": {
       "sprint": "R09",
-      "lote": "A"
-    },
-    "hub_snippets/ml/explainability_report": {
-      "sprint": "R08",
       "lote": "A"
     },
     "hub_snippets/ml/metrics_report": {
@@ -98,14 +82,6 @@
     },
     "hub_snippets/ml/performance_monitor": {
       "sprint": "R09",
-      "lote": "A"
-    },
-    "hub_snippets/ml/shap_explainer": {
-      "sprint": "R08",
-      "lote": "A"
-    },
-    "hub_snippets/ml/umap_viz": {
-      "sprint": "R08",
       "lote": "A"
     }
   }

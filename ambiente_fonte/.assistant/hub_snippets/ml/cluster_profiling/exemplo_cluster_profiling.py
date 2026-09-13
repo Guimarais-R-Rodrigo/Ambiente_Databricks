@@ -6,6 +6,8 @@
 # MAGIC
 # MAGIC **O que este helper faz.** Descreve cada cluster por variável e aponta quais features mais o diferenciam dos demais.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -55,7 +57,7 @@ print(perfis.to_string(index=False) if hasattr(perfis, "to_string") else perfis)
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC Executado no laboratório, o resultado é:
+# MAGIC O bloco histórico abaixo é **abreviado**: a célula imprime todas as combinações cluster × feature, mas aqui foram preservadas apenas seis linhas como amostra visual:
 # MAGIC
 # MAGIC ```text
 # MAGIC  cluster   n  pct_total  feature  cluster_mean  global_mean  index  z_score
@@ -70,6 +72,10 @@ print(perfis.to_string(index=False) if hasattr(perfis, "to_string") else perfis)
 # MAGIC **Como ler.** Os clusters 0 e 2 foram construídos **quase idênticos** — de
 # MAGIC propósito. O perfil mostra isso: renda, idade e número de produtos ficam
 # MAGIC próximos entre os dois, e distantes do cluster 1.
+# MAGIC
+# MAGIC O campo `z_score` deste helper é apenas `(média_cluster - média_global) /
+# MAGIC desvio_global`. Ele expressa diferença de média em desvios globais; **não é
+# MAGIC z-test, p-value nem significância estatística**.
 # MAGIC
 # MAGIC É a situação que mais produz persona falsa. Nomear 0 e 2 de forma diferente
 # MAGIC — "jovem digital" e "jovem tradicional" — inventa uma distinção que os
@@ -89,8 +95,8 @@ for c in (0, 1, 2):
 # COMMAND ----------
 # MAGIC %md
 # MAGIC **Como ler.** Para o cluster 1 as diferenças devem ser grandes em todas as
-# MAGIC três variáveis. Para 0 e 2, o "top diferenciador" existe — a função sempre
-# MAGIC devolve um — mas a magnitude é pequena.
+# MAGIC três variáveis. Para 0 e 2, ainda existe um ranking entre as features
+# MAGIC disponíveis, mas a magnitude é pequena.
 # MAGIC
 # MAGIC O erro de interpretação mais provável está aí: **a função devolve um
 # MAGIC ranking mesmo quando não há diferença relevante**. Ranking não é evidência

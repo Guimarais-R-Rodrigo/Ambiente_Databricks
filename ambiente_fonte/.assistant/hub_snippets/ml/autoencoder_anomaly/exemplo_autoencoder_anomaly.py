@@ -6,6 +6,8 @@
 # MAGIC
 # MAGIC **O que este helper faz.** Treina um autoencoder apenas sobre casos normais; o que ele não consegue reconstruir bem é o candidato a anomalia.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -128,11 +130,10 @@ print(f"estranhos que passaram: {int(((marcados == 0) & (verdade == 1)).sum())}"
 # MAGIC não de escala. Com 25 épocas e código de dimensão 3, o autoencoder aprendeu
 # MAGIC a reconstruir bem o normal e razoavelmente bem o estranho também.
 # MAGIC
-# MAGIC **E repare no limiar:** `threshold_percentile=95` marca 5% do *treino* por
-# MAGIC construção, e no teste marcou 8,1%. O número de marcados é decidido pelo
-# MAGIC percentil que você escolheu, **não** pela quantidade de anomalias que
-# MAGIC existe. Aumentar para 99 marcaria menos e acharia menos; o método não sabe
-# MAGIC quantas anomalias há.
+# MAGIC **E repare no limiar:** `threshold_percentile=95` deixa aproximadamente 5% dos
+# MAGIC **erros do treino** acima do corte por construção, e no teste marcou 8,1%.
+# MAGIC Isso não estima a prevalência real de anomalias. Mudar o percentil muda o
+# MAGIC ponto de operação e precisa ser validado contra custo, cobertura e revisão.
 # MAGIC
 # MAGIC **E o alternativo óbvio vai pior aqui.** Medido sobre esta mesma fixture:
 # MAGIC
@@ -164,5 +165,5 @@ print(f"estranhos que passaram: {int(((marcados == 0) & (verdade == 1)).sum())}"
 # MAGIC
 # MAGIC - **Com o "normal" contaminado.** Se o treino já tem fraude dentro, o modelo aprende a reconstruí-la e ela deixa de se destacar.
 # MAGIC - **Como decisão automática.** O erro de reconstrução é um ranking de suspeita, não um veredito; ele alimenta fila de análise.
-# MAGIC - **Sem padronizar.** O erro fica dominado pela variável de maior escala, e a anomalia vira "quem tem valor alto".
-# MAGIC - **Em base pequena.** Rede neural com poucos milhares de linhas decora; Isolation Forest resolve melhor e mais barato.
+# MAGIC - **Sem uma convenção consistente de escala.** Este notebook padroniza externamente, mas o helper também padroniza internamente a partir do treino recebido. A etapa externa é redundante para esta API; em produção, versione o pipeline para treino e inferência usarem a mesma convenção.
+# MAGIC - **Em base pequena sem validação suficiente.** Uma rede pode sobreajustar e custar mais; compare com métodos mais simples, como Isolation Forest, em vez de presumir superioridade de qualquer um.

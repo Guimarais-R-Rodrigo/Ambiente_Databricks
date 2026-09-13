@@ -6,6 +6,8 @@
 # MAGIC
 # MAGIC **O que este helper faz.** Gera a versão executiva e a técnica do mesmo conjunto de importâncias, com a ressalva de causalidade embutida.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -96,9 +98,10 @@ except ImportError as erro:
 # MAGIC O que rodaria : generate_technical_summary(shap_importance, native_importance=nativa)
 # MAGIC Por que não   : ImportError: Missing optional dependency 'tabulate'.
 # MAGIC Onde verificar: hub_snippets/requirements-optional.txt
-# MAGIC O que falta   : instalar `tabulate` na sessão (%pip install tabulate),
-# MAGIC                 ou trocar `to_markdown()` por formatação própria —
-# MAGIC                 etapa 2, porque muda a saída.
+# MAGIC Primeiro bloqueio: instalar `tabulate` na sessão (%pip install tabulate).
+# MAGIC Segundo bloqueio: a comparação nativa atual também espera uma coluna `rank`
+# MAGIC em **ambos** os DataFrames; esta fixture não a fornece. Instalar `tabulate`
+# MAGIC sozinho, portanto, não faz a célula concluir.
 # MAGIC ```
 # MAGIC
 # MAGIC A dependência é **escondida**: não há `import tabulate` no topo do módulo.
@@ -111,14 +114,15 @@ except ImportError as erro:
 # MAGIC
 # MAGIC **Como ler, quando roda.** As duas ordenações **discordam**: SHAP põe `atraso_medio` em
 # MAGIC segundo e a importância nativa põe `renda`. Discordância é comum e não é
-# MAGIC defeito — as duas medem coisas diferentes. Importância nativa de árvore
-# MAGIC conta quantas vezes a variável foi usada para dividir; SHAP mede
-# MAGIC contribuição para a previsão de cada linha.
+# MAGIC defeito — as duas podem medir quantidades diferentes. A definição de
+# MAGIC importância nativa depende do estimador/configuração (por exemplo, ganho,
+# MAGIC redução de impureza ou contagem de splits); SHAP atribui contribuição no
+# MAGIC espaço de saída explicado pelo modelo.
 # MAGIC
-# MAGIC O que a discordância indica é **correlação entre features**: quando duas
-# MAGIC variáveis carregam a mesma informação, cada método distribui o crédito de
-# MAGIC um jeito. É sinal para investigar, não para escolher a ordenação que
-# MAGIC agrada.
+# MAGIC Correlação entre features **pode** contribuir para a discordância, mas não
+# MAGIC é a única causa: definições de importância, amostra e propriedades do modelo
+# MAGIC também importam. Discordância é sinal para investigar, não para escolher a
+# MAGIC ordenação que agrada.
 
 # COMMAND ----------
 # MAGIC %md

@@ -97,3 +97,6 @@ A R05 está integrada em `cae94988`. A R06 cobre cinco objetos de séries/valida
 
 ### READMEs de objeto — R07
 A R06 está integrada em `289731c`. A R07 cobre seis objetos de score, vintage e sobrevivência e pausa para revisão antes da R08. Consulte `readmes_objetos/RELATORIO_R07.md` e `readmes_objetos/MATRIZ_ALTERACOES_R07.md`.
+
+### READMEs de objeto — R08
+A R07 foi integrada pelo PR #25. A R08 cobre seis objetos de clusterização, anomalias e explicabilidade e preserva implementações/fachadas. Relatório, matriz e achados ficam em `docs/sprints/readmes_objetos/`. A cobertura esperada após validação é 55/75 operacionais + 3/3 exemplares; isso não representa aceite editorial antecipado.
