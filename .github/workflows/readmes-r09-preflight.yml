@@ -1,0 +1,93 @@
+name: Preflight READMEs R09
+on:
+  push:
+    branches: [codex/readmes-r09]
+    paths: [.github/workflows/readmes-r09-preflight.yml]
+permissions:
+  contents: read
+concurrency:
+  group: readmes-r09-preflight
+  cancel-in-progress: false
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      BASE: d5945e04328609878f63857cc15cf5e5039b3e75
+      BEFORE_WORKFLOW: 9cf9780423de9a76d6e9d58f4d600eeacd41f165
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Preparar arvore R09 em memoria
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$BEFORE_WORKFLOW"
+          test "$(git rev-parse origin/main)" = "$BASE"
+          python docs/sprints/readmes_objetos/evidencias_r09/aplicar_r09.py
+          python docs/sprints/readmes_objetos/evidencias_r09/integrar_agregadores_r09.py
+          python tools/render_simulado.py
+          rm .github/workflows/readmes-r09-preflight.yml
+          git diff --check
+          mkdir -p "$RUNNER_TEMP/r09-preflight"
+          git diff --name-only "$BASE" > "$RUNNER_TEMP/r09-preflight/caminhos.txt"
+          git diff --binary "$BASE" > "$RUNNER_TEMP/r09-preflight/arvore.diff"
+      - name: Dependencias do gate
+        run: python -m pip install -r tools/requirements-dev.txt
+      - name: Validador sem snapshot e R09 estatica
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validate_assistant.py | tee "$RUNNER_TEMP/r09-preflight/validator.txt"
+          python docs/sprints/readmes_objetos/evidencias_r09/verificar_r09.py --group static |& tee "$RUNNER_TEMP/r09-preflight/r09-static.txt"
+      - name: Gate permanente sem etapa de snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          for etapa in temas biblioteca ferramentas transicao readmes concierge-pacote concierge-regressoes concierge-integracao; do
+            python tools/ci_local.py --etapa "$etapa"
+          done
+          python tools/tests/test_visual_legado_v00.py
+      - name: Preservacao R09
+        run: python docs/sprints/readmes_objetos/evidencias_r09/verificar_preservacao.py --base "$BASE" | tee "$RUNNER_TEMP/r09-preflight/preservacao.txt"
+      - name: Runtime core isolado
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv "$RUNNER_TEMP/venv-core"
+          "$RUNNER_TEMP/venv-core/bin/python" -m pip install -q --upgrade pip
+          "$RUNNER_TEMP/venv-core/bin/python" -m pip install -q numpy pandas scipy scikit-learn plotly
+          "$RUNNER_TEMP/venv-core/bin/python" docs/sprints/readmes_objetos/evidencias_r09/verificar_r09.py --group core |& tee "$RUNNER_TEMP/r09-preflight/runtime-core.txt"
+          "$RUNNER_TEMP/venv-core/bin/python" -m pip freeze > "$RUNNER_TEMP/r09-preflight/core-pacotes.txt"
+      - name: Runtime MLflow isolado
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv "$RUNNER_TEMP/venv-mlflow"
+          "$RUNNER_TEMP/venv-mlflow/bin/python" -m pip install -q --upgrade pip
+          "$RUNNER_TEMP/venv-mlflow/bin/python" -m pip install -q 'mlflow>=2,<4' scikit-learn numpy pandas
+          "$RUNNER_TEMP/venv-mlflow/bin/python" docs/sprints/readmes_objetos/evidencias_r09/verificar_r09.py --group mlflow |& tee "$RUNNER_TEMP/r09-preflight/runtime-mlflow.txt"
+          "$RUNNER_TEMP/venv-mlflow/bin/python" -m pip freeze > "$RUNNER_TEMP/r09-preflight/mlflow-pacotes.txt"
+      - name: Reconferir base
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$BASE"
+          echo "$GITHUB_SHA" > "$RUNNER_TEMP/r09-preflight/workflow-head.txt"
+          git rev-parse HEAD^{tree} > "$RUNNER_TEMP/r09-preflight/checkout-tree.txt"
+      - name: Evidencias
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r09-preflight
+          retention-days: 7
+          path: ${{ runner.temp }}/r09-preflight/
+          if-no-files-found: warn
