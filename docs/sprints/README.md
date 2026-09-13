@@ -34,33 +34,31 @@ checkpoints desta iniciativa.
 
 O [checkpoint R02-I](readmes_objetos/CHECKPOINT_INTEGRACAO_R02.md) registra a
 composição candidata com o Concierge. O [piloto R02](readmes_objetos/CHECKPOINT_R02.md)
-e os relatos R00/R01 permanecem históricos; não houve início da R03.
+e os relatos R00/R01 permanecem históricos; não houve início da R03 naquele registro.
 
 ## Continuidade READMEs — 2026-09-12, R03-A
 
 Integração R02-I aprovada por Rodrigo e realizada pelo PR nº 7 (`5493f7d`).
 Contrato 1.0.0 estabilizado; sete novos guias da R03-A são entregues em branch
 separada para revisão. Registro, matriz, testes e próxima parada no
-[fechamento da R03-A](readmes_objetos/RELATORIO_R03A.md). R03-B não iniciada; sem publicação Databricks.
+[fechamento da R03-A](readmes_objetos/RELATORIO_R03A.md). R03-B não iniciada nesse registro; sem publicação Databricks.
 
 ## Continuidade READMEs — 2026-09-12, R03-B
 
 Seis guias de display/visual, preservando o contrato 1.0.0 e as APIs.
-Branch separada baseada na R03-A `c60f1e5`; PR nº 9 ainda não integrado.
-[Relatório, verificações e ponto de parada](readmes_objetos/RELATORIO_R03B.md).
-Sem aceite antecipado, merge automático, publicação ou início da R04-A.
+Branch separada baseada na R03-A `c60f1e5`; PR nº 9 foi posteriormente supersedido
+pela composição integrada. [Relatório, verificações e ponto de parada](readmes_objetos/RELATORIO_R03B.md).
 
 ## Integração READMEs com a main V01 — 2026-09-12
 
-Rodrigo autorizou a reconciliação e integração das R03-A/R03-B com a `main` que já contém V01. A candidata preserva os 19 READMEs operacionais, o contrato 1.0.0 e a documentação/guardas do sistema de temas. Registro em [`INTEGRACAO_R03_V01.md`](readmes_objetos/INTEGRACAO_R03_V01.md).
+Rodrigo autorizou a reconciliação e integração das R03-A/R03-B com a `main` que já contém V01. A composição preserva os 19 READMEs operacionais, o contrato 1.0.0 e a documentação/guardas do sistema de temas. Registro em [`INTEGRACAO_R03_V01.md`](readmes_objetos/INTEGRACAO_R03_V01.md).
 
 ## Continuidade READMEs — 2026-09-12, R04-A
 
-A `main` integrada `1be947b` é a base da nova leva. Seis snippets Spark recebem
+A `main` integrada `1be947b` foi a base dessa leva. Seis snippets Spark receberam
 README didático no contrato 1.0.0, com documentação de grão, ações/coletas,
 custos e interpretação. Estado, matriz e testes em
-[`RELATORIO_R04A.md`](readmes_objetos/RELATORIO_R04A.md). Cobertura candidata
-25/74; sem publicação, aceite antecipado ou início da R04-B.
+[`RELATORIO_R04A.md`](readmes_objetos/RELATORIO_R04A.md).
 
 ## Sistema de Temas do Hub
 
@@ -69,13 +67,20 @@ históricas e dos READMEs. V00, [V01](sistema_temas/V01/README.md),
 [V02](sistema_temas/V02/README.md), [V03](sistema_temas/V03/README.md) e
 [V04](sistema_temas/V04/README.md) estão aceitas e integradas no Git.
 
+A [V05](sistema_temas/V05/README.md) é a etapa corrente em desenvolvimento na
+PR #26. O [checkpoint V05](sistema_temas/V05/CHECKPOINT_V05.md) registra a
+reconciliação com a main R08, testes observados e bloqueios. Não há aceite V05,
+merge, publicação Databricks ou início da V06.
+
 A V02 entrega o núcleo de carga, validação e resolução de configurações completas.
 A V03 acrescenta somente o adaptador Plotly opt-in. A V04 estende a mesma
 arquitetura a componentes HTML, estilos compartilhados e tabela pandas por rotas
-opt-in `_resolvido`, preservando o caminho legado por padrão.
+opt-in `_resolvido`, preservando o caminho legado por padrão. A V05 acrescenta
+um laboratório pessoal candidato, ainda sem completar presets na interface,
+linhagem automática e reabertura autônoma.
 
-Não houve publicação Databricks; homologação operacional, auditoria independente
-e avaliação com usuário iniciante permanecem pendentes.
+Não houve publicação Databricks do Sistema de Temas; homologação operacional,
+auditoria independente e avaliação com usuário iniciante permanecem separadas.
 
 ### Continuidade do Sistema de Temas — V04
 
@@ -83,20 +88,23 @@ A V03 foi efetivamente integrada pelo PR #16 no commit `b83a7cde`. Rodrigo aceit
 a V04 em 12/09/2026 e ela foi integrada pelo PR #21 no commit
 `5a7b33d7137f88c1ec80315de1b422293b3ba206`. A árvore do merge coincide com a
 candidata validada e os seis workflows permanentes pós-merge concluíram com
-`success`. A homologação Databricks continua separada; V05 ainda não foi iniciada
-por este fechamento.
+`success`. A frase histórica de que V05 ainda não havia sido iniciada pertence ao
+fechamento V04 e não descreve o estado corrente.
 
 ### READMEs de objeto — R04-B
-A R04-A está integrada em `a8f314a`. A R04-B cobre seis Hub Scripts e pausa para revisão antes da R05. Consulte `readmes_objetos/RELATORIO_R04B.md` e `readmes_objetos/MATRIZ_ALTERACOES_R04B.md`.
+A R04-A está integrada em `a8f314a`. A R04-B cobre seis Hub Scripts. Consulte `readmes_objetos/RELATORIO_R04B.md` e `readmes_objetos/MATRIZ_ALTERACOES_R04B.md`.
 
 ### READMEs de objeto — R05
-A R04-B está integrada em `d9da056`. A R05 cobre seis modelos tabulares e pausa para revisão antes da R06. Consulte `readmes_objetos/RELATORIO_R05.md` e `readmes_objetos/MATRIZ_ALTERACOES_R05.md`.
+A R04-B está integrada em `d9da056`. A R05 cobre seis modelos tabulares. Consulte `readmes_objetos/RELATORIO_R05.md` e `readmes_objetos/MATRIZ_ALTERACOES_R05.md`.
 
 ### READMEs de objeto — R06
-A R05 está integrada em `cae94988`. A R06 cobre cinco objetos de séries/validação temporal e pausa para revisão antes da R07. Consulte `readmes_objetos/RELATORIO_R06.md` e `readmes_objetos/MATRIZ_ALTERACOES_R06.md`.
+A R05 está integrada em `cae94988`. A R06 cobre cinco objetos de séries/validação temporal. Consulte `readmes_objetos/RELATORIO_R06.md` e `readmes_objetos/MATRIZ_ALTERACOES_R06.md`.
 
 ### READMEs de objeto — R07
-A R06 está integrada em `289731c`. A R07 cobre seis objetos de score, vintage e sobrevivência e pausa para revisão antes da R08. Consulte `readmes_objetos/RELATORIO_R07.md` e `readmes_objetos/MATRIZ_ALTERACOES_R07.md`.
+A R06 está integrada em `289731c`. A R07 cobre seis objetos de score, vintage e sobrevivência. Consulte `readmes_objetos/RELATORIO_R07.md` e `readmes_objetos/MATRIZ_ALTERACOES_R07.md`.
 
 ### READMEs de objeto — R08
-A R07 foi integrada pelo PR #25. A R08 cobre seis objetos de clusterização, anomalias e explicabilidade e preserva implementações/fachadas. Relatório, matriz e achados ficam em `docs/sprints/readmes_objetos/`. A cobertura esperada após validação é 55/75 operacionais + 3/3 exemplares; isso não representa aceite editorial antecipado.
+A R07 foi integrada pelo PR #25 e a R08 foi aceita/integrada pelo PR #27 na main
+`d5945e0`. A R08 cobre seis objetos de clusterização, anomalias e explicabilidade,
+preservando implementações/fachadas. A cobertura estrutural registrada após o
+merge não representa homologação de runtime ou política.
