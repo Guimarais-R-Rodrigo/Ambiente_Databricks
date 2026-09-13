@@ -2,176 +2,114 @@
 
 <!-- readme-objeto: 1.0.0 -->
 
-Este recurso permite experimentar a aparência de uma proposta de notebook em uma
-prévia pessoal. **Não aprova e não publica temas.** A candidata V05 ainda depende
-de revisão e homologação; ela não muda o padrão da equipe nem os notebooks existentes.
+Este recurso permite experimentar a aparência de um notebook em uma **prévia pessoal**. A V05 candidata oferece escolha guiada de ponto de partida, edição visual, comparação, salvamento rastreável e reabertura. **Nada aqui aprova ou publica um tema.**
 
 ## Visão rápida
 
 | Pergunta | Resposta |
 |---|---|
-| O que é? | Editor de rascunho visual, com comparação sintética. |
-| Para que serve? | Experimentar cores, tamanhos e paletas sem consultar dados reais. |
-| Quando usar? | Para preparar uma proposta de aparência de notebook. |
-| Quando evitar? | Para publicar, aprovar ou certificar acessibilidade. |
-| O que exige? | Pacote completo do Hub e dependências preparadas pelo mantenedor. |
-| O que entrega? | Rascunho validado, prévia e JSON; gravação somente em pasta explícita. |
+| O que é? | Laboratório de rascunhos visuais para contexto notebook. |
+| Para que serve? | Escolher uma base, ajustar aparência, comparar e preservar uma sessão local. |
+| Quando usar? | Para preparar e retomar uma proposta de aparência sem alterar o padrão da equipe. |
+| Quando evitar? | Para aprovação, publicação, autenticação, certificação de acessibilidade ou recoloração de imagens. |
+| O que exige? | Pacote completo do Hub, dependências e, para persistência, pasta explicitamente preparada. |
+| O que entrega? | `ThemeLabDraft`, prévias sintéticas, JSON avulso ou sessão rastreável com base/proposta/histórico. |
 
-Primeiro acesso: [guia operacional](GUIA_PRIMEIRO_USO.md). Demonstração:
-[notebook de exemplo](exemplo_theme_lab.py). Contrato executável:
-[implementação](theme_lab.py) e [API pública](__init__.py).
+Primeiro acesso: [guia operacional](GUIA_PRIMEIRO_USO.md). Demonstração: [notebook de exemplo](exemplo_theme_lab.py). Contrato executável: [implementação](theme_lab.py) e [API pública](__init__.py).
 
 ## 1. O que é?
 
-É a superfície de experimentação do Sistema de Temas. Um tema é um conjunto
-completo de escolhas de aparência; cada escolha tem um nome técnico, chamado
-token. A interface apresenta também nomes em português, como Cor principal.
-O rascunho é uma cópia de trabalho em memória, não o padrão publicado do Hub.
+É a superfície de experimentação do Sistema de Temas. O núcleo V02 continua responsável por validar configurações completas; o laboratório organiza autoria, prévia e persistência sem transformar um rascunho em configuração aprovada.
+
+O import de `theme_lab` não carrega `ipywidgets`, não consulta rede, Spark, SQL ou MLflow e não altera `pio.templates.default`.
 
 ## 2. Que problema este recurso resolve?
 
-Permite responder “como esta proposta ficará em gráficos e tabelas?” sem editar
-vários notebooks. O laboratório usa o mesmo núcleo de validação V02 e os mesmos
-adaptadores Plotly/HTML V03/V04. Não recalcula indicadores de negócio.
+A V05 responde a quatro necessidades: **escolher**, **ajustar**, **comparar** e **preservar uma proposta**. O operador não precisa procurar cores em vários notebooks nem escrever código para reabrir uma sessão previamente salva pelo laboratório.
 
 ## 3. Quando faz sentido usar?
 
-Use para comparar a aparência de uma proposta com seu ponto de partida, preparar
-uma apresentação interna ou identificar ajustes de legibilidade. As comparações
-usam dados sintéticos fixos; não dependem de acesso a tabelas corporativas.
+Use para comparar alternativas visuais com dados sintéticos, preparar uma proposta para revisão e continuar o trabalho em outra sessão. A comparação usa os adaptadores reais V03/V04, portanto exercita o mesmo caminho técnico dos consumidores já integrados.
 
 ## 4. Quando não usar?
 
-Não use como publicador, gerenciador de permissões ou aprovador de marca. Um botão
-desabilitado não implementa autorização. O laboratório não oferece esses serviços.
-Não interprete uma tabela sintética como análise real, nem uma paleta denominada
-alto contraste como certificação de acessibilidade.
+Não use como publicador, workflow de aprovação ou mecanismo de permissão. `Submeter` e `Publicar` permanecem fora desta entrega. Uma referência chamada “demonstração” não é tema operacional aprovado. O laboratório também não recolore PNGs nem componentes que ainda não consomem o Sistema de Temas.
 
-## 5. Como funciona, intuitivamente?
+## 5. Escolher um ponto de partida
 
-O laboratório recebe um `ResolvedTheme` notebook, isto é, configuração revalidada
-pelo núcleo V02. Os campos da tela formam uma proposta. Aplicar valida o conjunto
-completo e prepara os dois lados da galeria antes de substituir o rascunho e a saída.
-Um erro nessa preparação conserva o estado anterior. Salvar/exportar é uma ação
-separada e recusa campos que ainda não tenham sido aplicados.
+`get_demo_presets()` expõe referências notebook empacotadas **explicitamente marcadas como demonstração**. `prepare_theme_lab_presets()` permite ao mantenedor fornecer outros `ResolvedTheme` notebook; todos são revalidados e um contexto incompatível é recusado.
 
-O schema canônico fornece tipos, descrições, unidades e limites. A cobertura da
-galeria é informada separadamente: controles sem demonstração correspondente ficam
-desabilitados. Isso não cria outro schema nem transforma metadados em autorização.
+`create_theme_lab_from_preset()` cria um rascunho a partir de uma chave conhecida. Chave inexistente não cai silenciosamente em outro preset. `build_theme_lab_launcher()` apresenta a escolha em dropdown e identifica visualmente opções de demonstração.
 
-## 6. Exemplo de situação
+Escolher uma opção não a aprova e não altera o padrão da equipe.
 
-Para apresentar uma alternativa ao gestor, abra o laboratório preparado, escolha
-outra Cor principal e clique Aplicar na prévia. Compare cabeçalhos e tabelas dos
-dois lados. Para mudar cores de séries, use Paleta categórica, não Cor principal:
-são escolhas diferentes. Os dados, nomes e posições das séries permanecem iguais.
+## 6. Ajustar
 
-## 7. O que você precisa antes de usar?
+`get_control_specs()` deriva tipo, descrição, unidade, limite e controle do schema canônico. Cor possui seletor + HEX; tamanhos e paletas respeitam o contrato. Todos os valores habilitados são tratados como uma proposta única: se qualquer campo falhar, o último estado válido permanece.
 
-O mantenedor prepara o caminho da pasta `.assistant` e as dependências. Validar
-exige `jsonschema`/`referencing`; a galeria exige pandas, Plotly e Jinja2; o painel
-exige ipywidgets/IPython. Importar este módulo não instala bibliotecas nem importa
-ipywidgets. A versão e a renderização no workspace precisam ser homologadas.
+Campos sem consumidor correspondente na galeria ficam desabilitados e explicam o motivo. Isso evita um controle que pareça funcionar sem efeito observável.
 
-Para salvar, a pasta deve existir, ser explicitamente autorizada e ter permissões
-controladas, inclusive nos diretórios pais. O laboratório não cria a pasta nem
-descobre quem pode vê-la. Os dados usados pela galeria não precisam ser fornecidos.
+## 7. Comparar
 
-## 8. O que este recurso entrega?
+`build_preview()` e `compare_preview()` usam dados sintéticos fixos em seis representações por lado: cabeçalho, KPI, barras, série temporal, heatmap e tabela. Valores, nomes e ordem dos dados permanecem iguais entre base e proposta; somente a aparência pode mudar.
 
-`ThemeLabDraft` guarda base, proposta atual, revisão local e até cem estados para
-Desfazer. `dirty` compara a proposta com a base: não comprova gravação em disco.
-`ControlSpec` descreve cada controle e sua cobertura. `ThemeLabPreview` contém
-cabeçalho, KPI, tabela e três figuras; `ThemeLabComparison` reúne base/proposta.
-`ThemeLabUI` reúne painel, controles, status e saída, sem persistir a sessão.
+A galeria completa continua limitada a `mode=light`, porque o adaptador Plotly V03 ainda recusa `dark`/`high_contrast`. Isso é fail-closed, não conversão silenciosa para claro.
 
-`export_bytes()` devolve JSON canônico. `save_proposal()` cria arquivo novo e,
-somente após conferir os bytes, devolve `ProposalReceipt` com destino, nome,
-SHA-256, tamanho e revisão. Esse recibo não significa submissão ou publicação.
+## 8. Rascunho e histórico em memória
 
-## 9. Como usar este recurso no Hub?
+`ThemeLabDraft` mantém `base`, `current`, revisão e até cem estados anteriores. `undo()` retorna ao estado válido anterior; `restore()` volta à base original. Erro de validação não cria histórico parcial.
 
-Siga o [guia de primeiro uso](GUIA_PRIMEIRO_USO.md) e abra o
-[exemplo](exemplo_theme_lab.py). O mantenedor preenche o caminho; a pessoa que
-ajusta a aparência opera os controles. Não precisa editar os valores do código.
+Duas instâncias não compartilham tema ou histórico. `dirty` apenas informa diferença entre proposta atual e base; não significa que algo foi salvo.
 
-O exemplo demonstra criação, alteração e restauração em memória, depois abre a
-interface e oferece comparação fora do painel. Não define pasta de salvamento.
-Não use Executar tudo depois de começar a editar: a célula de criação reinicia
-o rascunho. Nenhuma célula consulta Spark/SQL ou grava tabela.
+## 9. JSON avulso versus sessão rastreável
 
-## 10. Decisões e configurações que mais importam
+Existem dois mecanismos diferentes:
 
-A galeria completa usa contexto notebook e modo `light`. Temas `dark` e
-`high_contrast` continuam sem suporte Plotly completo; não são substituídos
-silenciosamente pelo tema claro. A seleção de outro ponto de partida é feita
-pelo mantenedor ao construir o rascunho, não por um catálogo de presets aprovado.
+- `export_bytes()` / `save_proposal()` produzem a configuração canônica atual; são adequados quando só o JSON da proposta é necessário;
+- `save_theme_lab_session()` cria um **bundle local de sessão** para retomar a autoria com sua linhagem.
 
-A paleta categórica aparece em quatro séries fixas. A divergente chega ao mapa
-de calor com escala de -1 a 1 e centro zero. Paletas e propriedades sem consumidor
-nesta galeria ficam desabilitadas, com motivo. A API programática pode preparar
-outros tokens válidos, mas isso não cria uma prévia deles.
+Uma sessão completa contém `base.json`, `proposal.json`, estados de histórico e `session.json`. O manifesto registra hashes de base/proposta/histórico e a revisão. Ele é escrito por último e funciona como marcador de sessão completa.
 
-Sem `save_root`, Salvar permanece desabilitado. Informar uma pasta não concede
-permissão. Alterar o formulário não altera o rascunho até Aplicar. Restaurar a
-base com mudanças exige confirmação, e restaurar um campo só ajusta o formulário.
+O diretório usa criação exclusiva e não sobrescreve uma sessão existente. Um diretório parcial sem `session.json` não aparece em `list_theme_lab_sessions()` e não pode ser reaberto como sessão válida.
 
-## 11. Limitações, riscos e armadilhas
+## 10. Linhagem e reabertura
 
-Não há recuperação automática da sessão, autenticação de papéis, aprovação ou
-publicação. A interface não recolore PNGs nem consumidores externos. O layout e
-a fonte fixa da tabela podem ter limites diferentes dos componentes HTML.
+`reopen_theme_lab_session()` lê os arquivos de uma sessão completa, revalida os temas e confere os hashes registrados. Divergência de conteúdo é recusada; o código não “corrige” o hash para continuar.
 
-Salvar não é transação de filesystem. Falta de espaço, escrita curta ou erro de
-sincronização podem deixar arquivo parcial: a operação retorna erro, não recibo,
-e não apaga arquivos para tentar corrigir. O mantenedor inspeciona o destino antes
-de reutilizar qualquer resíduo. A raiz precisa ser confiável; não é uma sandbox
-contra outro processo que altera diretórios durante a operação.
+A reabertura restaura a **base original, a proposta atual, o histórico e a revisão local**. Portanto, a proposta não vira silenciosamente uma nova base. `build_theme_lab_launcher()` lista sessões completas na pasta preparada e permite selecionar **Reabrir sessão** sem o operador escrever código de carregamento.
 
-A saída do painel usa mensagens HTML e Plotly, sem JavaScript/CDN injetado pelo
-laboratório. O frontend precisa suportar esses formatos. Preparar as mensagens
-em Python não comprova que o navegador as desenhou. Use a comparação fora do
-painel quando necessário e registre a limitação.
+Essa linhagem é local ao laboratório. Não autentica autor, não registra aprovação de governança e não é uma assinatura digital.
 
-## 12. Quais são as alternativas?
+## 11. Interface `ipywidgets` e fallback
 
-A [API V02](../tema/README.md) atende quem prefere manipulação programática de uma
-cópia completa do tema. O fallback nativo descrito no guia fornece sete campos
-primários e aplicação por reexecução de célula; não tem paridade de interface com
-ipywidgets. Um App futuro não está instalado por esta entrega.
+`build_ipywidgets_lab()` constrói o editor para um rascunho já escolhido. `build_theme_lab_launcher()` acrescenta a entrada guiada de presets e sessões. Importar o módulo continua sem importar `ipywidgets`; a dependência é exigida somente ao construir a interface.
 
-## 13. Como saber se o resultado faz sentido?
+Sem `ipywidgets`, `install_dbutils_fallback()` e `apply_dbutils_fallback()` oferecem sete campos primários em widgets nativos de texto. É um fallback funcionalmente menor: não oferece a experiência completa de catálogo/sessões do launcher.
 
-Compare os mesmos seis componentes dos dois lados, não só o gráfico de barras.
-Nomes, ordem e valores precisam continuar iguais; títulos e cores podem mudar.
-O exemplo informa os hashes para conferir restauração, sem tratá-los como assinatura.
+## 12. Salvamento e segurança operacional
 
-Teste uma cor inválida: não deve substituir a última proposta válida. Tente salvar
-sem aplicar campos novos: o laboratório deve recusar. Após salvar, confira destino,
-revisão e hash. Sem mensagem de sucesso, não considere o arquivo confirmado.
-Contraste, zoom, teclado, leitor de tela e uso por iniciante exigem avaliação própria.
+As funções de gravação exigem pasta regular já existente, rejeitam nomes fora do formato e não seguem atalhos simbólicos previstos pelas guardas locais. Arquivo ou sessão existente não é sobrescrito.
 
-## 14. Arquivos relacionados e próximos passos
+Uma falha de I/O nunca gera recibo de sucesso. O salvamento de JSON avulso pode deixar resíduo parcial quando o sistema de arquivos falha; a mensagem orienta inspeção pelo mantenedor. A persistência não é sandbox contra outro processo hostil e não substitui ACL do ambiente.
 
-O [guia](GUIA_PRIMEIRO_USO.md) explica acesso, botões, erros e reabertura. O
-[exemplo](exemplo_theme_lab.py) demonstra operações; a [implementação](theme_lab.py)
-e a [fachada](__init__.py) definem a API. O [adaptador Plotly](../theme_plotly/README.md)
-e o [componente de cabeçalho](../section_header/README.md) explicam consumidores.
-O [padrão de identidade visual](../../../hub_padroes/identidade_visual/README.md)
-é a entrada do contrato. Todos esses links permanecem dentro do produto.
+`ProposalReceipt` descreve JSON avulso. `ThemeLabSessionReceipt` descreve sessão completa e inclui hashes de base/proposta e do manifesto. Nenhum recibo significa submissão, aprovação ou publicação.
 
-O Manual Técnico da raiz `.assistant` continua sendo o catálogo integrado.
-Revisão técnica, aceite, merge e homologação do workspace são etapas distintas.
+## 13. Dependências e ambiente
 
-## 15. Referências
+Validar exige `jsonschema` e `referencing`; a galeria usa pandas, Plotly e Jinja2; a interface completa exige ipywidgets/IPython. O módulo não instala pacotes.
 
-Comportamento desta candidata: [código](theme_lab.py), [API](__init__.py) e
-[exemplo](exemplo_theme_lab.py). A saída registrada no exemplo é local e delimitada,
-não captura de interface Databricks nem aprovação de usuário iniciante.
+Testes em GitHub Actions comprovam o comportamento Python exercitado, não a renderização no navegador Databricks. Permanecem gates separados: runtime do workspace, callbacks no frontend, teclado/leitor de tela, contraste percebido, zoom, p95 da prévia, permissões reais da pasta e UAT por iniciante.
 
-Documentação oficial consultada em 13/09/2026:
-[ipywidgets — Output](https://ipywidgets.readthedocs.io/en/latest/reference/ipywidgets.html),
-[Databricks — ipywidgets](https://docs.databricks.com/aws/en/notebooks/ipywidgets) e
-[Databricks — limitações de notebooks](https://docs.databricks.com/aws/en/notebooks/notebook-limitations).
-As limitações de estado entre sessões e de frontend precisam ser verificadas no
-destino; testes no GitHub Actions não as eliminam.
+## 14. Como saber se faz sentido?
+
+Teste pelo launcher: selecione uma base, abra, altere uma cor, aplique, compare os seis componentes, salve uma sessão, feche o estado em memória e reabra pelo dropdown. A base e a proposta devem conservar hashes distintos quando houver alteração; após reabertura, `undo()` deve continuar retornando ao estado anterior salvo.
+
+Adulterar `proposal.json` deve impedir a reabertura. Uma pasta incompleta deve ficar fora da lista. Preset inexistente ou de outro contexto deve falhar sem fallback. Esses comportamentos possuem regressões automatizadas, mas ainda não substituem homologação do ambiente real.
+
+## 15. Arquivos relacionados e referências
+
+Leia o [guia de primeiro uso](GUIA_PRIMEIRO_USO.md), o [exemplo](exemplo_theme_lab.py), o [núcleo V02](../tema/README.md) e o [adaptador Plotly](../theme_plotly/README.md). O padrão central fica em `hub_padroes/identidade_visual/`.
+
+Documentação oficial consultada para a camada de notebook: [Databricks — ipywidgets](https://docs.databricks.com/aws/en/notebooks/ipywidgets), [Databricks — widgets](https://docs.databricks.com/aws/en/notebooks/widgets) e [ipywidgets](https://ipywidgets.readthedocs.io/en/latest/).
+
+A V05 permanece candidata até revisão técnica, aceite e integração. Não houve publicação Databricks por este objeto.

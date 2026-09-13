@@ -4,24 +4,15 @@
 # MAGIC
 # MAGIC Comece pelo [guia de primeiro uso](GUIA_PRIMEIRO_USO.md) e pelo
 # MAGIC [README](README.md). Este notebook não consulta dados corporativos,
-# MAGIC não treina modelos e não publica. O exemplo usa referência sintética.
-# MAGIC O mantenedor precisa preparar caminho e dependências antes da entrega.
+# MAGIC não treina modelos, não aprova e não publica temas. As referências
+# MAGIC empacotadas abaixo são **demonstrações**, não temas operacionais aprovados.
 
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## 1. Preparação do caminho — responsabilidade do mantenedor
 # MAGIC
-# MAGIC Substitua o placeholder uma única vez na cópia autorizada do notebook.
-# MAGIC Não há consulta SQL para descobrir usuário e nenhuma instalação automática.
-# MAGIC O operador final não precisa editar cor nem JSON no código.
-# MAGIC
-# MAGIC | Item | Exigência |
-# MAGIC |---|---|
-# MAGIC | Ambiente | notebook Python com o pacote completo do Hub |
-# MAGIC | Dependências | validação: jsonschema/referencing; galeria: pandas/Plotly/Jinja2; painel: ipywidgets/IPython |
-# MAGIC | Dados | sintéticos, em memória |
-# MAGIC | Escrita | apenas clique Salvar com pasta autorizada; esta demonstração não define pasta |
-# MAGIC | Publicação | inexistente nesta sprint |
+# MAGIC Substitua o placeholder na cópia autorizada. O operador final não deve
+# MAGIC precisar editar cores, hashes ou JSON no código.
 
 # COMMAND ----------
 from pathlib import Path
@@ -33,31 +24,35 @@ if not (assistant_root / "hub_snippets").is_dir():
 if str(assistant_root) not in sys.path:
     sys.path.insert(0, str(assistant_root))
 
-from hub_snippets.visual.tema import load_reference_theme
 from hub_snippets.visual.theme_lab import (
-    build_ipywidgets_lab, compare_preview, create_theme_lab, get_control_specs,
+    build_ipywidgets_lab,
+    build_theme_lab_launcher,
+    compare_preview,
+    create_theme_lab_from_preset,
+    get_control_specs,
+    get_demo_presets,
 )
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## 2. Criar, experimentar e restaurar sem gravar
+# MAGIC ## 2. Escolher uma referência de demonstração e provar isolamento
 # MAGIC
-# MAGIC Execute a célula inteira. Ela demonstra as operações usando somente valores
-# MAGIC já presentes no tema de referência, sem introduzir outro contrato de entrada.
-# MAGIC Reexecutá-la cria outro rascunho: não a use para atualizar o painel.
+# MAGIC Esta célula exercita a API sem gravar arquivos. Reexecutá-la cria outro
+# MAGIC rascunho; depois de começar a editar pelo painel, não use Executar tudo.
 
 # COMMAND ----------
 # V05_DEMO_BEGIN
-referencia = load_reference_theme("notebook")
-rascunho = create_theme_lab(referencia)
-hash_base = referencia.content_sha256
+presets = get_demo_presets()
+print("presets demonstrativos:", [item.key for item in presets])
+rascunho = create_theme_lab_from_preset(presets, "legado_notebook")
+hash_base = rascunho.base.content_sha256
 print("contexto:", rascunho.current.context)
 print("alterado ao abrir:", rascunho.dirty)
 cor_alternativa = rascunho.current.tokens["brand.accent"]
 rascunho.apply_updates({"brand.primary": cor_alternativa, "section.title_px": 20})
 print("cor aplicada:", rascunho.current.tokens["brand.primary"])
 print("alterado após aplicar:", rascunho.dirty)
-print("referência preservada:", referencia.content_sha256 == hash_base)
+print("base preservada:", rascunho.base.content_sha256 == hash_base)
 rascunho.undo()
 print("desfeito:", rascunho.current.content_sha256 == hash_base)
 rascunho.apply_updates({"section.title_px": 20})
@@ -69,29 +64,29 @@ print("JSON somente em memória:", isinstance(payload, bytes))
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC Saída da célula acima, executada em Python local em 13/09/2026 com o
-# MAGIC núcleo V02 e o módulo V05 desta revisão; não é captura do Databricks:
+# MAGIC Saída da célula acima, executada com a candidata V05; é evidência Python,
+# MAGIC não captura da interface Databricks:
 # MAGIC
 # MAGIC ```text
+# MAGIC presets demonstrativos: ['legado_notebook', 'executivo_claro']
 # MAGIC contexto: notebook
 # MAGIC alterado ao abrir: False
 # MAGIC cor aplicada: #F7941D
 # MAGIC alterado após aplicar: True
-# MAGIC referência preservada: True
+# MAGIC base preservada: True
 # MAGIC desfeito: True
 # MAGIC restaurado: True
 # MAGIC JSON somente em memória: True
 # MAGIC ```
 # MAGIC
-# MAGIC O JSON não é aprovação. `dirty` compara a proposta com a referência; não
-# MAGIC significa que existe um arquivo salvo. O histórico fica apenas nesta sessão.
+# MAGIC `dirty` compara proposta e base. Nenhuma linha acima salva ou publica.
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## 3. Conferir os campos antes de abrir a interface
+# MAGIC ## 3. Conferir os campos
 # MAGIC
-# MAGIC O contrato controla tipos e limites. Cobertura de prévia é informada à parte:
-# MAGIC campo sem componente na galeria aparece desabilitado, não como botão sem efeito.
+# MAGIC Tipos e limites vêm do schema canônico. Cobertura de prévia é informada
+# MAGIC separadamente: campo sem consumidor aparece desabilitado na interface.
 
 # COMMAND ----------
 for spec in get_control_specs(rascunho.current):
@@ -100,12 +95,10 @@ for spec in get_control_specs(rascunho.current):
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## 4. Abrir o painel
+# MAGIC ## 4. Editor de um rascunho já escolhido
 # MAGIC
-# MAGIC Depois desta célula, use os botões do painel, não Executar tudo.
-# MAGIC A mensagem inicial deve dizer prévia pessoal. Sem `save_root`, Salvar fica
-# MAGIC desabilitado. Reabrir sessão exige preparar outro painel; não promete recuperar
-# MAGIC o rascunho anterior. A compatibilidade visual precisa ser conferida no runtime.
+# MAGIC Esta rota é útil para manutenção/teste direto. Sem `save_root`, o botão de
+# MAGIC salvamento do JSON avulso fica desabilitado.
 
 # COMMAND ----------
 ui = build_ipywidgets_lab(rascunho)
@@ -113,11 +106,31 @@ display(ui.root)
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## 5. Comparação fora do painel
+# MAGIC ## 5. Entrada guiada recomendada para usuário iniciante
 # MAGIC
-# MAGIC Use esta célula se os controles aparecem, mas o frontend não desenha as
-# MAGIC figuras dentro do painel. Os mesmos objetos são exibidos pelo notebook.
-# MAGIC Não execute outra vez a criação do rascunho: isso perderia seu trabalho.
+# MAGIC O launcher oferece seleção de ponto de partida e, quando o mantenedor passa
+# MAGIC uma pasta autorizada, salvamento/reabertura de **sessão rastreável**.
+# MAGIC Aqui não informamos pasta para evitar escrita no exemplo.
+
+# COMMAND ----------
+launcher = build_theme_lab_launcher(render_initial=False)
+display(launcher.root)
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC Em uma cópia preparada pelo mantenedor, a chamada pode receber
+# MAGIC `save_root=PASTA_AUTORIZADA`. Após escolher uma base e aplicar alterações,
+# MAGIC o operador informa o nome da sessão e usa **Salvar sessão rastreável**.
+# MAGIC Em nova execução, escolhe a sessão no dropdown e usa **Reabrir sessão**.
+# MAGIC A base original, proposta, histórico e revisão são revalidados pelos hashes;
+# MAGIC a proposta não vira silenciosamente uma nova base.
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## 6. Comparação fora do painel
+# MAGIC
+# MAGIC Use esta célula se o frontend não desenhar as figuras embutidas. Ela usa o
+# MAGIC mesmo rascunho em memória e os mesmos dados sintéticos.
 
 # COMMAND ----------
 comparacao = compare_preview(rascunho)
@@ -131,11 +144,10 @@ for painel in (comparacao.current, comparacao.proposal):
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## 6. Sem ipywidgets, ou para salvar e reabrir
+# MAGIC ## 7. O que este notebook não comprova
 # MAGIC
-# MAGIC O [guia](GUIA_PRIMEIRO_USO.md) contém a rota nativa `dbutils.widgets`,
-# MAGIC a ordem das células de aplicação, recuperação pelo JSON e solução de erros.
-# MAGIC O mantenedor habilita a pasta de rascunhos fora da fonte do Hub e confere
-# MAGIC permissões. Salvar nunca significa submeter, aprovar ou publicar.
-# MAGIC Não confunda o modo escuro da interface Databricks com um tema `dark`:
-# MAGIC a galeria completa desta revisão é limitada a `light`.
+# MAGIC O [guia](GUIA_PRIMEIRO_USO.md) descreve fallback `dbutils.widgets`,
+# MAGIC salvamento, reabertura e erros. GitHub Actions testa os objetos Python,
+# MAGIC mas não homologa navegador Databricks, acessibilidade, p95, ACL da pasta
+# MAGIC ou uso autônomo por pessoa iniciante. Submeter/aprovar/publicar continuam
+# MAGIC fora da V05, assim como recoloração de PNGs e consumidores não integrados.
