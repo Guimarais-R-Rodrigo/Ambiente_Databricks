@@ -37,11 +37,13 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse origin/main)" = "$BASE"
+          python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt
           python docs/sprints/readmes_objetos/evidencias_r09/aplicar_r09.py
           python tools/render_simulado.py --write
           git rm .github/workflows/readmes-r09-validate.yml
           git add -A
           git diff --cached --check "$BASE"
+          python tools/validate_assistant.py 2>&1 | tee "$RUNNER_TEMP/validator-diagnostic.txt"
           python docs/sprints/readmes_objetos/evidencias_r09/aplicar_r09.py --snapshot
           python tools/validate_assistant.py --conferir-readme 2>&1 | tee "$RUNNER_TEMP/validator-pre.txt"
           grep -q 'APROVADO: 0 falha(s), 0 aviso(s)' "$RUNNER_TEMP/validator-pre.txt"
@@ -51,7 +53,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt
           python tools/ci_local.py --verbose 2>&1 | tee "$RUNNER_TEMP/gate-pre.txt"
           for suite in test_inventario_visual test_visual_legado_v00 test_baseline_visual_runner test_temas_v01 test_temas_v01_integracao test_temas_v02 test_temas_v03 test_temas_v04; do
             python "tools/tests/$suite.py" 2>&1 | tee "$RUNNER_TEMP/$suite.txt"
@@ -85,7 +86,7 @@ jobs:
           old='STATUS_R09: CANDIDATA — validação integral e aceite editorial pendentes.'
           assert s.count(old)==1
           s=s.replace(old,'STATUS_R09: PASS técnico — 29/29 casos aprovados, sem skips; aguarda aceite editorial específico.')
-          s+='\n## Fechamento remoto\n\nRun '+os.environ['GITHUB_RUN_ID']+': 21 casos portáveis e oito do grupo MLflow aprovados. O grupo MLflow inclui seis integrações reais e dois testes de despacho com log_model simulado explicitamente. Os cinco exemplos dos READMEs foram executados. Ambiente isolado Python 3.11, NumPy 1.26.4, pandas 2.2.3, SciPy 1.13.1, scikit-learn 1.4.2, Plotly 6.5.2 e MLflow 3.5.1; dependências transitivas em runtime-pacotes.txt do artefato. São versões de teste, não pins de produção.\n\nGate e preservação são reconferidos depois deste registro. CIs do PR e integrabilidade serão registradas no fechamento do PR após execução. Sem aceite presumido ou homologação Databricks.\n'
+          s+='\n## Fechamento remoto\n\nRun '+os.environ['GITHUB_RUN_ID']+': 21 casos portáveis e oito do grupo MLflow aprovados. O grupo MLflow inclui seis integrações reais e dois testes de despacho com log_model simulado explicitamente. Os cinco exemplos dos READMEs foram executados. Ambiente isolado Python 3.11, NumPy 1.26.4, pandas 2.2.3, SciPy 1.13.1, scikit-learn 1.4.2, Plotly 6.5.2 e MLflow 3.5.1; dependências transitivas em runtime-pacotes.txt do artefato. São versões de teste, não pins de produção.\n\nO primeiro run 34761683955 falhou antes do gate completo: o validador retornou erro e o capturador não mostrou seu texto. O workflow agora instala requisitos antes da validação e guarda o diagnóstico integral. Nenhuma proteção foi relaxada. Gate e preservação são reconferidos depois deste registro. CIs do PR e integrabilidade serão registradas no fechamento do PR após execução. Sem aceite presumido ou homologação Databricks.\n'
           p.write_text(s,encoding='utf-8')
           p=Path('docs/sprints/readmes_objetos/RUBRICA_R09.json');d=json.loads(p.read_text(encoding='utf-8'))
           d['remote_evidence'].update(state='PASS',run_id=int(os.environ['GITHUB_RUN_ID']),portable_passed=21,mlflow_passed=8,skips=0,readme_examples_executed=5)
