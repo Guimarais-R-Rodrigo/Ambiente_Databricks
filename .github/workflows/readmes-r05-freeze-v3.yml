@@ -18,7 +18,7 @@ jobs:
       MKL_NUM_THREADS: '1'
       BASE_COMMIT: d9da056c95bf5c4209b2f208de1c9a987580efe7
       BASE_TREE: d461d1a2ef8523d380f82bac6bb112287e6cd870
-      EXPECTED_PARENT: 1d4cec150e0bed9a9f028c6a35bb05033e90575f
+      EXPECTED_PARENT: 11451032c3e133b02124963a9630691694d870bd
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,6 +43,10 @@ jobs:
           assert line>=0
           insert=line+len('# MAGIC ')
           source=source[:insert]+'o '+source[insert:]
+          bad="s=s.replace('size=180) > 0).astype(int)','size=600) > 0).astype(int)')"
+          good="s=s.replace('rng.normal(scale=0.8, size=180) > 0).astype(int)','rng.normal(scale=0.8, size=600) > 0).astype(int)')"
+          assert source.count(bad)==1,source.count(bad)
+          source=source.replace(bad,good,1)
           exec(compile(source,'r05_integracao_extraida.py','exec'),{'__name__':'__main__'})
           PY
           cp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
