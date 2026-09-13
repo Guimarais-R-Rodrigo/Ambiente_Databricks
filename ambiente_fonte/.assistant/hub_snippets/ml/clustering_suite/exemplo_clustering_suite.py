@@ -2,10 +2,12 @@
 # MAGIC %md
 # MAGIC # `clustering_suite` — escolher k sem fingir que o dado escolheu
 # MAGIC
-# MAGIC **O problema.** A pergunta "quantos clusters?" não tem resposta no dado. Cotovelo e silhueta são heurísticas que discordam entre si com frequência, e o gráfico do cotovelo quase sempre tem mais de um joelho plausível. Apresentar o k como descoberta esconde que foi escolha.
+# MAGIC **O problema.** A pergunta "quantos clusters?" não tem resposta única garantida por uma única métrica. Cotovelo e silhueta são heurísticas e podem apontar escolhas diferentes. Apresentar o `k` recomendado como descoberta automática esconde os critérios usados.
 # MAGIC
 # MAGIC **O que este helper faz.** Roda a seleção de k por método declarado e o pipeline completo com padronização, devolvendo o que sustentou a escolha.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -52,7 +54,7 @@ print(resultado_k.to_string(index=False) if hasattr(resultado_k, "to_string") el
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC Executado no laboratório, o resultado é:
+# MAGIC A tabela histórica abaixo corresponde a `resultado_k["scores"]`, com `best_k` mostrado separadamente. A chamada `select_k` devolve um **dict**, portanto o `print(resultado_k)` literal da célula tem outra representação textual:
 # MAGIC
 # MAGIC ```text
 # MAGIC    k      inertia  silhouette     calinski  davies_bouldin
@@ -89,10 +91,10 @@ if isinstance(saida, dict):
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** A padronização não é detalhe: k-means mede distância
-# MAGIC euclidiana, e uma variável em reais domina outra em anos por três ordens de
-# MAGIC grandeza. Sem escalonar, o "cluster" acaba sendo a variável de maior
-# MAGIC amplitude, e nada no resultado avisa.
+# MAGIC **Como ler.** A escala é parte do problema: K-Means usa distância euclidiana.
+# MAGIC O `run_clustering_pipeline` aplica `standard` ou `robust` internamente; já
+# MAGIC `select_k` isolado pressupõe `X_scaled` na assinatura. Se você o chamar
+# MAGIC diretamente, é sua responsabilidade preparar uma escala coerente.
 # MAGIC
 # MAGIC `log_mlflow=False` está explícito porque este notebook declara não escrever
 # MAGIC nada. Em trabalho real, registrar o k escolhido e o método é o que permite

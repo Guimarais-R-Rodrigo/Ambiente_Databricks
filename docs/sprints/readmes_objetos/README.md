@@ -10,9 +10,9 @@ Rodrigo aprovou o padrão e autorizou a integração das R03-A/R03-B com a V01 e
 2026-09-12. O PR nº 13 foi integrado na `main` pelo commit `1be947b`; o
 [registro da composição](INTEGRACAO_R03_V01.md) preserva os gates e a V01.
 
-O contrato vigente é **1.0.0**. A R06 foi aceita e integrada pelo PR nº 20 no commit `289731c`, com CI geral e V00/V01/V02/V03 pós-merge verdes. A R07 documenta `kaplan_meier`, `score_bands`, `scorecard_builder`, `survival_cox`, `vintage_analysis` e `woe_iv_calculator` sem alterar suas implementações/fachadas. A cobertura esperada é **49/75 operacionais e 3/3 exemplares, com 26 pendências**; somente a saída do validador da árvore fechada é fonte de verdade. Isso não significa publicação no workspace nem aceite antecipado dos seis textos.
+O contrato vigente é **1.0.0**. A R07 foi aceita e integrada pelo PR nº 25 no commit `b73bbb9`, após reconciliação com a V04 e seu checkpoint documental. A R08 documenta `autoencoder_anomaly`, `cluster_profiling`, `clustering_suite`, `explainability_report`, `shap_explainer` e `umap_viz` sem alterar suas implementações/fachadas. A cobertura esperada é **55/75 operacionais e 3/3 exemplares, com 20 pendências**; somente a saída do validador da árvore fechada é fonte de verdade. Isso não significa publicação no workspace nem aceite antecipado dos seis textos.
 
-Consulte o [relatório R07](RELATORIO_R07.md), a [matriz nominal](MATRIZ_ALTERACOES_R07.md) e os [achados](ACHADOS_R07.md). A próxima parada é a revisão desta leva antes da R08.
+Consulte o [relatório R08](RELATORIO_R08.md), a [matriz nominal](MATRIZ_ALTERACOES_R08.md) e os [achados](ACHADOS_R08.md). A próxima parada é a revisão desta leva antes da R09.
 
 Os relatórios anteriores preservam o estado observado em cada data. PRs #9/#11
 foram supersedidos pela composição integrada do PR #13 e não devem ser tratados
@@ -24,9 +24,9 @@ como entregas independentes a mesclar novamente.
 |---|---|
 | Examinar o formato e a linguagem | [Template de objeto](../../../ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md) |
 | Julgar a qualidade, além da estrutura | [Checklist editorial](../../../ambiente_fonte/.assistant/hub_padroes/readme/checklist_objeto.md) |
-| Ver o que mudou além dos READMEs | [Matriz R07](MATRIZ_ALTERACOES_R07.md) |
-| Conhecer inconsistências observadas | [Achados R07](ACHADOS_R07.md) |
-| Ver o resultado da execução | [Relatório R07](RELATORIO_R07.md) |
+| Ver o que mudou além dos READMEs | [Matriz R08](MATRIZ_ALTERACOES_R08.md) |
+| Conhecer inconsistências observadas | [Achados R08](ACHADOS_R08.md) |
+| Ver o resultado da execução | [Relatório R08](RELATORIO_R08.md) |
 | Saber quais legados faltam | [Controle de migração](CONTROLE_MIGRACAO.json) |
 
 ## Como evitar deriva na continuação

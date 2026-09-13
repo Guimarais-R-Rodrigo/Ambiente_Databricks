@@ -2,10 +2,12 @@
 # MAGIC %md
 # MAGIC # `shap_explainer` — por que este cliente, e não só quais variáveis importam
 # MAGIC
-# MAGIC **O problema.** Importância de variável de árvore responde "quantas vezes o modelo usou isso", que não é o que o negócio pergunta. E não responde de jeito nenhum a pergunta que chega do atendimento: *por que este cliente foi recusado?*
+# MAGIC **O problema.** Importância nativa de árvore resume o modelo por uma definição que varia com o estimador/configuração e não substitui uma atribuição por observação. Já uma pergunta individual como *por que esta previsão mudou?* exige declarar também qual output/classe está sendo explicado.
 # MAGIC
 # MAGIC **O que este helper faz.** Calcula valores SHAP — contribuição por linha e por variável — e resume em importância global comparável.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -110,21 +112,23 @@ print(importancia.to_string(index=False))
 # MAGIC **Como ler.** Construímos o sinal com pesos 1,4 / −0,7 / 0,4 para as três
 # MAGIC primeiras variáveis, e zero para as duas últimas. O SHAP devolve
 # MAGIC **62,3% / 24,2% / 10,9%** — a mesma ordem e proporções próximas. A
-# MAGIC explicação recuperou o que plantamos, o que é a única forma de verificar
-# MAGIC um método de explicabilidade.
+# MAGIC ordenação ficou coerente com o sinal plantado nesta fixture. Isso é um
+# MAGIC **sanity check**, não prova geral de correção ou estabilidade do método.
 # MAGIC
 # MAGIC **O detalhe que ensina mais está no fim da lista.** `ruido` não entra no
 # MAGIC sinal e mesmo assim recebe **1,2%** — não zero. Nenhuma variável recebe
 # MAGIC zero: o modelo usa qualquer coluna para dividir alguma folha em algum
 # MAGIC lugar, e o SHAP atribui essa contribuição honestamente.
 # MAGIC
-# MAGIC A leitura prática: **importância pequena e não nula é a assinatura de
-# MAGIC "não tem sinal"**, e a linha de corte é sua, não do método. Quem ordena a
-# MAGIC tabela e pega o top-10 sempre acha dez variáveis importantes, inclusive
-# MAGIC numa base de puro ruído.
+# MAGIC A leitura prática é mais cautelosa: importância pequena e não nula pode
+# MAGIC surgir por ajuste amostral, dependência entre features ou uso residual pelo
+# MAGIC modelo. Não existe neste helper um cutoff universal que transforme valor
+# MAGIC pequeno em "sem sinal".
 # MAGIC
-# MAGIC O `valor base` de **0,3168** é a previsão média — igual à prevalência,
-# MAGIC como se espera. Todo valor SHAP é uma partida desse ponto.
+# MAGIC Nesta fixture o `valor base` de **0,3168** ficou próximo da prevalência.
+# MAGIC Em geral ele é o valor esperado do **output explicado** pelo explainer, cuja
+# MAGIC escala depende do modelo/configuração e não deve ser chamada genericamente
+# MAGIC de probabilidade ou prevalência.
 
 # COMMAND ----------
 # MAGIC %md

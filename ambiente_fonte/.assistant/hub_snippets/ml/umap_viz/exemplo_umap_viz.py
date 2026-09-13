@@ -2,10 +2,12 @@
 # MAGIC %md
 # MAGIC # `umap_viz` — ver grupos em duas dimensões sem acreditar demais no desenho
 # MAGIC
-# MAGIC **O problema.** Cluster em espaço de 30 variáveis não se enxerga, e PCA achata a estrutura local: dois grupos vizinhos mas separados viram uma mancha só. Sem ver, a discussão sobre segmentação vira opinião.
+# MAGIC **O problema.** Cluster em espaço de muitas variáveis não se enxerga diretamente. PCA oferece uma projeção linear; UMAP oferece outra visão, não linear, focada em vizinhanças. Nenhuma projeção prova sozinha que a segmentação é real.
 # MAGIC
 # MAGIC **O que este helper faz.** Projeta em 2D preservando vizinhança local com UMAP, e desenha os clusters com a identidade visual do Hub.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -105,15 +107,16 @@ figura.show()
 # MAGIC e trata a estrutura global com liberdade. Dois grupos desenhados lado a
 # MAGIC lado podem estar mais distantes que dois nos cantos opostos.
 # MAGIC
-# MAGIC O uso legítimo é responder "existem grupos distintos aqui?" — e para isso
-# MAGIC ele é excelente. O uso ilegítimo, e frequente, é medir no gráfico e
-# MAGIC concluir que "o segmento A está mais próximo do B do que do C".
+# MAGIC O uso seguro é **exploratório**: observar se os labels parecem misturados,
+# MAGIC isolados ou sensíveis à projeção e então voltar ao espaço original para
+# MAGIC validar. O desenho sozinho não responde "existem clusters reais aqui?" nem
+# MAGIC sustenta medir que A está mais próximo de B do que de C.
 
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
 # MAGIC - **Para medir distância.** A distância no gráfico UMAP **não** é proporcional à distância real. Grupos próximos no desenho podem estar longe.
-# MAGIC - **Como método de clusterização.** Ele projeta; quem agrupa é o k-means ou o HDBSCAN. Rodar cluster *sobre* a projeção inventa separação.
-# MAGIC - **Sem padronizar antes.** Variável em reais domina variável em anos, e a projeção vira um gráfico de renda.
-# MAGIC - **Sem `random_state`.** Duas execuções produzem desenhos diferentes, e a reunião seguinte discute o desenho.
+# MAGIC - **Como prova de clusterização.** UMAP projeta. Clustering sobre embedding pode existir em pipelines específicos, mas muda a geometria e precisa de validação própria.
+# MAGIC - **Sem revisar escala/métrica.** Variáveis em unidades muito diferentes podem dominar a noção de vizinhança.
+# MAGIC - **Confundindo uma semente com estabilidade.** Este helper fixa `random_state=42`; isso melhora repetibilidade da execução, mas uma única configuração não demonstra robustez da estrutura.
