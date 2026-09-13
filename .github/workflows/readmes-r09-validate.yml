@@ -1,0 +1,156 @@
+name: Validacao delimitada R09
+on:
+  push:
+    branches: [codex/readmes-r09-build]
+    paths: [.github/workflows/readmes-r09-validate.yml]
+permissions:
+  contents: read
+jobs:
+  validar:
+    if: github.ref == 'refs/heads/codex/readmes-r09-build'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    env:
+      BASE: d5945e04328609878f63857cc15cf5e5039b3e75
+      BASE_TREE: 793c057495905e9beeb469dfe76e2675f1fa1eab
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING: 'false'
+      MLFLOW_ENABLE_TRACING: 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+      - name: Compor apenas os caminhos R09 autorizados
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse origin/main)" = "$BASE"
+          python docs/sprints/readmes_objetos/evidencias_r09/aplicar_r09.py
+          python tools/render_simulado.py --write
+          git rm .github/workflows/readmes-r09-validate.yml
+          git add -A
+          git diff --cached --check "$BASE"
+          python docs/sprints/readmes_objetos/evidencias_r09/aplicar_r09.py --snapshot
+          python tools/validate_assistant.py --conferir-readme 2>&1 | tee "$RUNNER_TEMP/validator-pre.txt"
+          grep -q 'APROVADO: 0 falha(s), 0 aviso(s)' "$RUNNER_TEMP/validator-pre.txt"
+          python docs/sprints/readmes_objetos/evidencias_r09/verificar_preservacao.py > "$RUNNER_TEMP/preservacao-pre.json"
+          git write-tree > "$RUNNER_TEMP/tree-pre.txt"
+      - name: Gate vigente e regressoes V00-V04
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt
+          python tools/ci_local.py --verbose 2>&1 | tee "$RUNNER_TEMP/gate-pre.txt"
+          for suite in test_inventario_visual test_visual_legado_v00 test_baseline_visual_runner test_temas_v01 test_temas_v01_integracao test_temas_v02 test_temas_v03 test_temas_v04; do
+            python "tools/tests/$suite.py" 2>&1 | tee "$RUNNER_TEMP/$suite.txt"
+          done
+          test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/tree-pre.txt")"
+          git diff --exit-code
+      - name: Vinte e nove casos R09 em runtime isolado
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv "$RUNNER_TEMP/r09-env"
+          P="$RUNNER_TEMP/r09-env/bin/python"
+          "$P" -m pip install numpy==1.26.4 pandas==2.2.3 scipy==1.13.1 scikit-learn==1.4.2 plotly==6.5.2 mlflow==3.5.1
+          "$P" -m pip check 2>&1 | tee "$RUNNER_TEMP/pip-check.txt"
+          "$P" -m pip freeze > "$RUNNER_TEMP/runtime-pacotes.txt"
+          "$P" docs/sprints/readmes_objetos/evidencias_r09/verificar_r09.py --group portable 2>&1 | tee "$RUNNER_TEMP/r09-portable.txt"
+          "$P" docs/sprints/readmes_objetos/evidencias_r09/verificar_r09.py --group mlflow 2>&1 | tee "$RUNNER_TEMP/r09-mlflow.txt"
+          grep -q 'R09_GROUP_PASS: portable; cases=21; skips=0' "$RUNNER_TEMP/r09-portable.txt"
+          grep -q 'R09_GROUP_PASS: mlflow; cases=8; skips=0' "$RUNNER_TEMP/r09-mlflow.txt"
+          test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/tree-pre.txt")"
+          git diff --exit-code
+      - name: Registrar resultados e reconferir a arvore final
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path('docs/sprints/readmes_objetos/RELATORIO_R09.md')
+          s=p.read_text(encoding='utf-8')
+          old='STATUS_R09: CANDIDATA — validação integral e aceite editorial pendentes.'
+          assert s.count(old)==1
+          s=s.replace(old,'STATUS_R09: PASS técnico — 29/29 casos aprovados, sem skips; aguarda aceite editorial específico.')
+          s+='\n## Fechamento remoto\n\nRun '+os.environ['GITHUB_RUN_ID']+': 21 casos portáveis e oito do grupo MLflow aprovados. O grupo MLflow inclui seis integrações reais e dois testes de despacho com log_model simulado explicitamente. Os cinco exemplos dos READMEs foram executados. Ambiente isolado Python 3.11, NumPy 1.26.4, pandas 2.2.3, SciPy 1.13.1, scikit-learn 1.4.2, Plotly 6.5.2 e MLflow 3.5.1; dependências transitivas em runtime-pacotes.txt do artefato. São versões de teste, não pins de produção.\n\nGate e preservação são reconferidos depois deste registro. CIs do PR e integrabilidade serão registradas no fechamento do PR após execução. Sem aceite presumido ou homologação Databricks.\n'
+          p.write_text(s,encoding='utf-8')
+          p=Path('docs/sprints/readmes_objetos/RUBRICA_R09.json');d=json.loads(p.read_text(encoding='utf-8'))
+          d['remote_evidence'].update(state='PASS',run_id=int(os.environ['GITHUB_RUN_ID']),portable_passed=21,mlflow_passed=8,skips=0,readme_examples_executed=5)
+          p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          git add -A
+          python docs/sprints/readmes_objetos/evidencias_r09/aplicar_r09.py --snapshot > "$RUNNER_TEMP/snapshot-final.txt"
+          git diff --cached --check "$BASE"
+          python tools/ci_local.py --verbose 2>&1 | tee "$RUNNER_TEMP/gate-final.txt"
+          python tools/validate_assistant.py --conferir-readme 2>&1 | tee "$RUNNER_TEMP/validator-final.txt"
+          grep -q 'APROVADO: 0 falha(s), 0 aviso(s)' "$RUNNER_TEMP/validator-final.txt"
+          python docs/sprints/readmes_objetos/evidencias_r09/verificar_preservacao.py > "$RUNNER_TEMP/preservacao-final.json"
+          git diff --exit-code
+          git write-tree > "$RUNNER_TEMP/tree-final.txt"
+      - name: Materializar somente branch candidata sem atualizar main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, subprocess, urllib.request
+          from pathlib import Path
+          repo=os.environ['GITHUB_REPOSITORY'];base=os.environ['BASE']
+          target='codex/readmes-r09-final'
+          def api(path, data=None):
+              req=urllib.request.Request(os.environ['GITHUB_API_URL']+'/repos/'+repo+path,data=None if data is None else json.dumps(data).encode(),headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'})
+              with urllib.request.urlopen(req,timeout=60) as response:return json.load(response)
+          def git(*args):return subprocess.check_output(['git',*args]).decode().strip()
+          assert api('/git/ref/heads/main')['object']['sha']==base,'main mudou'
+          tree=git('write-tree');assert tree==Path(os.environ['RUNNER_TEMP'],'tree-final.txt').read_text().strip()
+          changes=subprocess.check_output(['git','diff','--cached','--name-status','-z',base]).decode().split('\0')
+          entries=[];i=0
+          while i<len(changes) and changes[i]:
+              status,path=changes[i:i+2];i+=2
+              assert status in ('A','M'),(status,path)
+              assert not path.startswith('.github/'),path
+              mode=git('ls-files','--stage','--',path).split()[0]
+              assert mode=='100644',mode
+              entries.append({'path':path,'mode':mode,'type':'blob','content':Path(path).read_bytes().decode('utf-8')})
+          assert len(entries)==39
+          remote=api('/git/trees',{'base_tree':os.environ['BASE_TREE'],'tree':entries})
+          assert remote['sha']==tree,'árvore remota divergiu'
+          commit=api('/git/commits',{'message':'docs(r09): cinco READMEs e documentacao relacionada com evidencias (ChatGPT)','tree':tree,'parents':[base]})['sha']
+          assert api('/git/ref/heads/main')['object']['sha']==base,'main mudou antes da candidata'
+          api('/git/refs',{'ref':'refs/heads/'+target,'sha':commit})
+          result={'base':base,'tree':tree,'commit':commit,'branch':target,'paths':39,'coverage':'60/75','pending':15,'run_id':int(os.environ['GITHUB_RUN_ID']),'supplement_cases':29,'skips':0,'main_changed':False,'human_acceptance':False}
+          Path(os.environ['RUNNER_TEMP'],'R09-FINAL.json').write_text(json.dumps(result,indent=2)+'\n')
+          print(json.dumps(result))
+          PY
+      - name: Guardar evidencias inclusive em falha
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r09-validacao-evidencias
+          retention-days: 7
+          path: |
+            ${{ runner.temp }}/validator-*.txt
+            ${{ runner.temp }}/gate-*.txt
+            ${{ runner.temp }}/preservacao-*.json
+            ${{ runner.temp }}/test_*.txt
+            ${{ runner.temp }}/r09-portable.txt
+            ${{ runner.temp }}/r09-mlflow.txt
+            ${{ runner.temp }}/runtime-pacotes.txt
+            ${{ runner.temp }}/pip-check.txt
+            ${{ runner.temp }}/tree-*.txt
+            ${{ runner.temp }}/R09-FINAL.json
+          if-no-files-found: warn
