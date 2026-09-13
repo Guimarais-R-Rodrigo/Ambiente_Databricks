@@ -1,0 +1,272 @@
+name: Reconcile R07 with V04
+on:
+  push:
+    branches: [codex/readmes-r07-v04-reconcile]
+    paths: [.github/workflows/readmes-r07-v04-reconcile.yml]
+permissions:
+  contents: read
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    permissions:
+      contents: write
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      BASE_V04: 5a7b33d7137f88c1ec80315de1b422293b3ba206
+      BASE_TREE: d2364100d3ed92d1a912f2261ffa2c9f25fc2a8c
+      R07_HEAD: 2f646cec6496123be54c75cdc651b4e89c1dc378
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: |
+            tools/requirements-dev.txt
+            tools/requirements-temas-dev.txt
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Compor R07 sobre V04 e resolver somente conflitos documentais conhecidos
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$BASE_V04"
+          python - <<'PY'
+          import os, shutil, subprocess, tempfile
+          from pathlib import Path
+
+          r07 = os.environ['R07_HEAD']
+          result = subprocess.run(['git','merge','--no-commit','--no-ff',r07])
+          conflicts = subprocess.check_output(['git','diff','--name-only','--diff-filter=U'], text=True).splitlines()
+          allowed = {
+              'CHANGELOG.md',
+              'CLAUDE.md',
+              'MANUAL_TECNICO.md',
+              'Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md',
+              'README.md',
+              'ambiente_fonte/.assistant/MANUAL_TECNICO.md',
+              'docs/sprints/README.md',
+          }
+          assert set(conflicts) <= allowed, (conflicts, sorted(set(conflicts) - allowed))
+          if result.returncode != 0 and not conflicts:
+              raise SystemExit('merge falhou sem conflito textual conhecido')
+          for path in conflicts:
+              with tempfile.TemporaryDirectory() as td:
+                  td = Path(td)
+                  ours, base, theirs = td/'ours', td/'base', td/'theirs'
+                  ours.write_bytes(subprocess.check_output(['git','show',f':2:{path}']))
+                  base.write_bytes(subprocess.check_output(['git','show',f':1:{path}']))
+                  theirs.write_bytes(subprocess.check_output(['git','show',f':3:{path}']))
+                  merged = subprocess.run(['git','merge-file','--union',str(ours),str(base),str(theirs)])
+                  assert merged.returncode in (0,1), (path, merged.returncode)
+                  Path(path).write_bytes(ours.read_bytes())
+                  subprocess.check_call(['git','add','--',path])
+          remaining = subprocess.check_output(['git','diff','--name-only','--diff-filter=U'], text=True).splitlines()
+          assert not remaining, remaining
+          print('CONFLITOS_RESOLVIDOS', conflicts)
+          PY
+
+          git rm .github/workflows/readmes-r07-v04-reconcile.yml
+
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          base = os.environ['BASE_V04']
+          run = os.environ['GITHUB_RUN_ID']
+          rel = Path('docs/sprints/readmes_objetos/RELATORIO_R07.md')
+          s = rel.read_text(encoding='utf-8')
+          heading = '## 10. Conciliação com V04'
+          if heading not in s:
+              s = s.rstrip() + f'''\n\n{heading}\n\nDurante o fechamento da R07, a `main` avançou para `{base}` com a V04 (PR #21). A candidata R07 original não foi forçada. Esta composição reaplica a R07 sobre a V04, preserva os 36 caminhos disjuntos automaticamente e resolve somente os sete documentos compartilhados. O run de reconciliação é **{run}**; V00–V04, validador, escopo e runtime R07 precisam passar novamente antes de qualquer merge.\n'''
+              rel.write_text(s, encoding='utf-8')
+
+          mat = Path('docs/sprints/readmes_objetos/MATRIZ_ALTERACOES_R07.md')
+          s = mat.read_text(encoding='utf-8')
+          h = '## Conciliação R07 × V04'
+          if h not in s:
+              s = s.rstrip() + f'''\n\n{h}\n\n- Base concorrente integrada: `{base}` (V04, PR #21).\n- Sobreposição nominal: `CHANGELOG.md`, `CLAUDE.md`, três cópias do Manual, `README.md` raiz e `docs/sprints/README.md`.\n- Registro adicional: `docs/sprints/readmes_objetos/CONCILIACAO_R07_V04.md`.\n- Fora desses documentos, a R07 não pode modificar caminhos exclusivos da V04.\n'''
+              mat.write_text(s, encoding='utf-8')
+
+          con = Path('docs/sprints/readmes_objetos/CONCILIACAO_R07_V04.md')
+          con.write_text(f'''# Conciliação R07 × V04\n\n**Base V04:** `{base}`  \n**R07 original:** `{os.environ['R07_HEAD']}`  \n**Run:** `{run}`\n\nA V04 entrou na `main` enquanto o PR R07 aguardava o fechamento das CIs. O PR antigo passou a reportar conflito e não foi forçado. A recomposição parte da V04 já integrada, aplica os caminhos R07 disjuntos e usa união textual somente nos sete documentos compartilhados.\n\nCritérios obrigatórios: diff final limitado aos 43 caminhos R07 originais + este registro; implementações/fachadas R07 intactas; V00–V04 verdes; cobertura 49/75; runtime R07 real sem skips; Manual canônico, cópia raiz e simulado sincronizados.\n\nSTATUS_RECONCILIACAO: PENDENTE\n''', encoding='utf-8')
+          PY
+
+          cp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
+          python tools/render_simulado.py --write
+          git add -A
+
+          python - <<'PY'
+          import subprocess
+          expected = {
+          'CHANGELOG.md','CLAUDE.md','MANUAL_TECNICO.md','Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md','Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/README.md','Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/kaplan_meier/README.md','Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/kaplan_meier/exemplo_kaplan_meier.py','Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/score_bands/README.md','Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/score_bands/exemplo_score_bands.py','Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/scorecard_builder/README.md','Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/scorecard_builder/exemplo_scorecard_builder.py','Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/survival_cox/README.md','Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/survival_cox/exemplo_survival_cox.py','Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/vintage_analysis/README.md','Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/vintage_analysis/exemplo_vintage_analysis.py','Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/woe_iv_calculator/README.md','Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/ml/woe_iv_calculator/exemplo_woe_iv_calculator.py','PLANO_HUB.md','README.md','ambiente_fonte/.assistant/MANUAL_TECNICO.md','ambiente_fonte/.assistant/hub_snippets/README.md','ambiente_fonte/.assistant/hub_snippets/ml/kaplan_meier/README.md','ambiente_fonte/.assistant/hub_snippets/ml/kaplan_meier/exemplo_kaplan_meier.py','ambiente_fonte/.assistant/hub_snippets/ml/score_bands/README.md','ambiente_fonte/.assistant/hub_snippets/ml/score_bands/exemplo_score_bands.py','ambiente_fonte/.assistant/hub_snippets/ml/scorecard_builder/README.md','ambiente_fonte/.assistant/hub_snippets/ml/scorecard_builder/exemplo_scorecard_builder.py','ambiente_fonte/.assistant/hub_snippets/ml/survival_cox/README.md','ambiente_fonte/.assistant/hub_snippets/ml/survival_cox/exemplo_survival_cox.py','ambiente_fonte/.assistant/hub_snippets/ml/vintage_analysis/README.md','ambiente_fonte/.assistant/hub_snippets/ml/vintage_analysis/exemplo_vintage_analysis.py','ambiente_fonte/.assistant/hub_snippets/ml/woe_iv_calculator/README.md','ambiente_fonte/.assistant/hub_snippets/ml/woe_iv_calculator/exemplo_woe_iv_calculator.py','docs/sprints/README.md','docs/sprints/readmes_objetos/ACHADOS_R07.md','docs/sprints/readmes_objetos/CONTROLE_MIGRACAO.json','docs/sprints/readmes_objetos/MATRIZ_ALTERACOES_R07.md','docs/sprints/readmes_objetos/README.md','docs/sprints/readmes_objetos/RELATORIO_R07.md','docs/sprints/readmes_objetos/RUBRICA_R07.json','docs/sprints/readmes_objetos/evidencias_r07/aplicar_r07.py','docs/sprints/readmes_objetos/evidencias_r07/verificar_preservacao.py','docs/sprints/readmes_objetos/evidencias_r07/verificar_r07.py','docs/sprints/readmes_objetos/CONCILIACAO_R07_V04.md'}
+          actual = set(subprocess.check_output(['git','diff','--cached','--name-only',os.environ['BASE_V04']], text=True).splitlines())
+          assert actual == expected, {'missing': sorted(expected-actual), 'extra': sorted(actual-expected)}
+          print('ESCOPO_EXATO', len(actual))
+          PY
+
+          git diff --cached --check "$BASE_V04"
+          cmp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
+          cmp ambiente_fonte/.assistant/MANUAL_TECNICO.md Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md
+          python tools/validate_assistant.py | tee "$RUNNER_TEMP/validator-pre.txt"
+          grep -q 'APROVADO: 0 falha(s), 0 aviso(s)' "$RUNNER_TEMP/validator-pre.txt"
+          grep -q '49/75 operacionais' "$RUNNER_TEMP/validator-pre.txt"
+          git write-tree | tee "$RUNNER_TEMP/tree-pre.txt"
+
+      - name: Gate completo V00-V04
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt >/dev/null
+          python tools/ci_local.py --verbose 2>&1 | tee "$RUNNER_TEMP/gate.txt"
+          for suite in test_inventario_visual test_visual_legado_v00 test_baseline_visual_runner test_temas_v01 test_temas_v01_integracao test_temas_v02 test_temas_v03 test_temas_v04; do python "tools/tests/$suite.py"; done
+          test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/tree-pre.txt")"
+          git diff --exit-code
+
+      - name: Preservação V04 e contratos R07
+        shell: bash
+        run: |
+          set -euo pipefail
+          for p in \
+            ambiente_fonte/.assistant/hub_snippets/ml/kaplan_meier/kaplan_meier.py \
+            ambiente_fonte/.assistant/hub_snippets/ml/kaplan_meier/__init__.py \
+            ambiente_fonte/.assistant/hub_snippets/ml/score_bands/score_bands.py \
+            ambiente_fonte/.assistant/hub_snippets/ml/score_bands/__init__.py \
+            ambiente_fonte/.assistant/hub_snippets/ml/scorecard_builder/scorecard_builder.py \
+            ambiente_fonte/.assistant/hub_snippets/ml/scorecard_builder/__init__.py \
+            ambiente_fonte/.assistant/hub_snippets/ml/survival_cox/survival_cox.py \
+            ambiente_fonte/.assistant/hub_snippets/ml/survival_cox/__init__.py \
+            ambiente_fonte/.assistant/hub_snippets/ml/vintage_analysis/vintage_analysis.py \
+            ambiente_fonte/.assistant/hub_snippets/ml/vintage_analysis/__init__.py \
+            ambiente_fonte/.assistant/hub_snippets/ml/woe_iv_calculator/woe_iv_calculator.py \
+            ambiente_fonte/.assistant/hub_snippets/ml/woe_iv_calculator/__init__.py; do
+            git diff --quiet "$BASE_V04" -- "$p"
+          done
+          grep -q 'V04: componentes HTML e tabelas opt-in' CHANGELOG.md
+          grep -q 'R07: READMEs de score, vintage e sobrevivência' CHANGELOG.md
+          grep -q 'Estado da migração de READMEs — R07' CLAUDE.md
+          grep -q 'Guias locais R07 — score, maturidade e sobrevivência' ambiente_fonte/.assistant/MANUAL_TECNICO.md
+          test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/tree-pre.txt")"
+
+      - name: Criar ambiente isolado R07
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m venv "$RUNNER_TEMP/r07-env"
+          PY="$RUNNER_TEMP/r07-env/bin/python"
+          "$PY" -m pip install --upgrade pip >/dev/null
+          "$PY" -m pip install "lifelines==0.30.3" "pyspark==4.0.1" "plotly>=5,<7" >/dev/null
+          "$PY" -m pip freeze > "$RUNNER_TEMP/r07-pacotes.txt"
+
+      - name: Runtime real R07
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/r07-work"
+          (cd "$RUNNER_TEMP/r07-work" && "$RUNNER_TEMP/r07-env/bin/python" "$GITHUB_WORKSPACE/docs/sprints/readmes_objetos/evidencias_r07/verificar_r07.py" --require-runtime) 2>&1 | tee "$RUNNER_TEMP/r07.txt"
+          ! grep -qi 'FAILED' "$RUNNER_TEMP/r07.txt"
+          ! grep -qi 'skipped=' "$RUNNER_TEMP/r07.txt"
+          test "$(git write-tree)" = "$(cat "$RUNNER_TEMP/tree-pre.txt")"
+
+      - name: Fechar registro e reconferir árvore final
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          log = Path(os.environ['RUNNER_TEMP'],'r07.txt').read_text()
+          m = re.search(r'Ran (\d+) tests', log); assert m, log[-2000:]
+          cases = int(m.group(1))
+          con = Path('docs/sprints/readmes_objetos/CONCILIACAO_R07_V04.md')
+          s = con.read_text(encoding='utf-8')
+          assert 'STATUS_RECONCILIACAO: PENDENTE' in s
+          s = s.replace('STATUS_RECONCILIACAO: PENDENTE', f'STATUS_RECONCILIACAO: PASS — V00–V04, validador e runtime R07 {cases}/{cases} aprovados no run {os.environ["GITHUB_RUN_ID"]}.')
+          con.write_text(s, encoding='utf-8')
+          rub = Path('docs/sprints/readmes_objetos/RUBRICA_R07.json')
+          data = json.loads(rub.read_text(encoding='utf-8'))
+          data.setdefault('criteria', {})['reconciliacao_v04'] = 'passed_self_review'
+          data['reconciliation_run_id'] = int(os.environ['GITHUB_RUN_ID'])
+          data['reconciled_base'] = os.environ['BASE_V04']
+          rub.write_text(json.dumps(data, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+          PY
+          git add -A
+          git diff --cached --check "$BASE_V04"
+          python tools/ci_local.py --verbose > "$RUNNER_TEMP/gate-final.txt" 2>&1
+          python tools/validate_assistant.py > "$RUNNER_TEMP/validator-final.txt"
+          grep -q 'APROVADO: 0 falha(s), 0 aviso(s)' "$RUNNER_TEMP/validator-final.txt"
+          grep -q '49/75 operacionais' "$RUNNER_TEMP/validator-final.txt"
+          cmp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
+          cmp ambiente_fonte/.assistant/MANUAL_TECNICO.md Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md
+          git diff --exit-code
+          git write-tree | tee "$RUNNER_TEMP/final-tree.txt"
+
+      - name: Materializar commit final reconciliado
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, subprocess, urllib.error, urllib.request
+          from pathlib import Path
+          def git(*args): return subprocess.check_output(['git',*args])
+          final = Path(os.environ['RUNNER_TEMP'],'final-tree.txt').read_text().strip()
+          assert git('write-tree').decode().strip() == final
+          raw = git('diff','--cached','--no-renames','--name-status','-z',os.environ['BASE_V04']).decode().split('\0')
+          entries=[]; i=0
+          while i < len(raw) and raw[i]:
+              st,p = raw[i:i+2]; i += 2
+              assert st in ('A','M'), (st,p)
+              mode = git('ls-files','--stage','--',p).decode().split()[0]
+              entries.append({'path':p,'mode':mode,'type':'blob','content':Path(p).read_text(encoding='utf-8')})
+          headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'}
+          base_url=os.environ['GITHUB_API_URL']+'/repos/'+os.environ['GITHUB_REPOSITORY']
+          req=urllib.request.Request(base_url+'/git/trees',data=json.dumps({'base_tree':os.environ['BASE_TREE'],'tree':entries}).encode(),method='POST',headers=headers)
+          with urllib.request.urlopen(req,timeout=90) as response: tree=json.load(response)['sha']
+          assert tree == final, (tree, final)
+          req=urllib.request.Request(base_url+'/git/commits',data=json.dumps({'message':'R07 — reconciliada com V04 e revalidada (ChatGPT)','tree':tree,'parents':[os.environ['BASE_V04']]}).encode(),method='POST',headers=headers)
+          with urllib.request.urlopen(req,timeout=90) as response: commit=json.load(response)['sha']
+          ref='refs/heads/codex/readmes-r07-v04-final'
+          req=urllib.request.Request(base_url+'/git/refs',data=json.dumps({'ref':ref,'sha':commit}).encode(),method='POST',headers=headers)
+          try:
+              with urllib.request.urlopen(req,timeout=90): pass
+          except urllib.error.HTTPError as exc:
+              if exc.code != 422: raise
+              req=urllib.request.Request(base_url+'/git/refs/heads/codex/readmes-r07-v04-final',data=json.dumps({'sha':commit,'force':False}).encode(),method='PATCH',headers=headers)
+              with urllib.request.urlopen(req,timeout=90): pass
+          result={'tree':tree,'commit':commit,'base':os.environ['BASE_V04'],'paths_vs_main':len(entries),'gate':'PASS','v00_v04':'PASS','r07_runtime':'PASS','coverage':'49/75','pending':26,'run_id':os.environ['GITHUB_RUN_ID'],'main_changed':False,'databricks_published':False}
+          Path(os.environ['RUNNER_TEMP'],'R07-V04-FINAL.json').write_text(json.dumps(result,indent=2)+'\n')
+          print(json.dumps(result))
+          PY
+
+      - name: Guardar evidências
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r07-v04-reconcile-evidencias
+          retention-days: 7
+          path: |
+            ${{ runner.temp }}/validator-pre.txt
+            ${{ runner.temp }}/validator-final.txt
+            ${{ runner.temp }}/gate.txt
+            ${{ runner.temp }}/gate-final.txt
+            ${{ runner.temp }}/r07.txt
+            ${{ runner.temp }}/r07-pacotes.txt
+            ${{ runner.temp }}/tree-pre.txt
+            ${{ runner.temp }}/final-tree.txt
+            ${{ runner.temp }}/R07-V04-FINAL.json
+          if-no-files-found: warn
