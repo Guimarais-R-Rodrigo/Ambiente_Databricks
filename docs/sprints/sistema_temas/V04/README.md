@@ -2,13 +2,17 @@
 
 ## Estado desta sprint
 
-**CANDIDATA EM IMPLEMENTAÇÃO E VALIDAÇÃO.** A V04 parte da `main`
-`b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`, que já contém V03 e R04-A.
-Esta sprint não está aceita nem integrada enquanto seu PR não passar pelos gates
-e receber decisão explícita do mantenedor.
+**CANDIDATA EM IMPLEMENTAÇÃO E VALIDAÇÃO.** A V04 foi iniciada na `main`
+`b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`, que já continha V03 e R04-A. Durante
+a implementação, a `main` avançou para `d9da056c95bf5c4209b2f208de1c9a987580efe7`
+com a R04-B; a branch V04 foi reconciliada explicitamente com essa revisão no run
+`34727070003`, preservando os dois lados e reexecutando os gates. A base efetiva
+da candidata, portanto, contém V03 + R04-A + R04-B.
 
-Não há publicação no Databricks nesta etapa. Não há seletor visual, folha de
-estilo global ou migração automática de todos os notebooks.
+Esta sprint não está aceita nem integrada enquanto seu PR não passar pelos gates
+finais e receber decisão explícita do mantenedor. Não há publicação no Databricks
+nesta etapa. Não há seletor visual, folha de estilo global ou migração automática
+de todos os notebooks.
 
 ## Para quem nunca entrou no Hub
 
@@ -155,6 +159,23 @@ A V04 mede explicitamente:
 
 A configuração de referência deve reproduzir a aparência histórica. Isso não
 autoriza substituir todos os usos antigos pelas rotas novas nesta sprint.
+
+## Reconciliação com R04-B
+
+A R04-B foi integrada na `main` durante a execução desta sprint. A primeira
+reconciliação V04/R04-B (`34726990399`) preservou os dois conjuntos de arquivos,
+mas ficou **FAILURE** porque as novas fachadas V04 ainda não tinham sido
+materializadas na árvore e o import público falhou. Nenhum commit reconciliado foi
+enviado nessa tentativa.
+
+A rodada corrigida `34727070003` materializou as fachadas pela ferramenta
+canônica, preservou 15 caminhos V04 e 43 caminhos efetivos da R04-B, aprovou V04,
+regressões de temas e validador, e executou **14/14 casos R04-B com PySpark 4.0.1,
+Java 17 e PyYAML 6.0.2**. O workflow transitório foi removido antes do commit de
+reconciliação `c2b91c5e3a3d80f754045dfc4fae8eb335e31bef`.
+
+Essa execução Spark é caracterização no GitHub Actions; não é homologação no
+Databricks.
 
 ## Fora de escopo
 
