@@ -70,6 +70,26 @@ jobs:
 
           echo "V04 preservada: $(wc -l < /tmp/v04_paths) caminhos"
           echo "R04-B preservada: $(wc -l < /tmp/r04b_paths) caminhos"
+      - name: Materializar fachadas públicas da V04
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, 'tools')
+          from api_publica import api_publica, conteudo_init
+          paths = [
+              'ambiente_fonte/.assistant/hub_snippets/constants/styles/styles.py',
+              'ambiente_fonte/.assistant/hub_snippets/visual/badge/badge.py',
+              'ambiente_fonte/.assistant/hub_snippets/visual/divider/divider.py',
+              'ambiente_fonte/.assistant/hub_snippets/visual/kpi_card/kpi_card.py',
+              'ambiente_fonte/.assistant/hub_snippets/visual/section_header/section_header.py',
+              'ambiente_fonte/.assistant/hub_snippets/visual/index_generator/index_generator.py',
+              'ambiente_fonte/.assistant/hub_snippets/display/dataframe_styled/dataframe_styled.py',
+          ]
+          for raw in paths:
+              p = Path(raw)
+              (p.parent / '__init__.py').write_text(conteudo_init(p.stem, api_publica(p)), encoding='utf-8')
+          PY
       - name: Revalidar V04 e sistema de temas
         shell: bash
         run: |
