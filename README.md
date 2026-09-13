@@ -211,15 +211,17 @@ readmes de objeto  : 43/75 operacionais; 3/3 exemplares; 32 pendentes (estrutura
 pastas de objeto   : 61 conferidas (nome, arquivos, __init__)
 forma da pasta     : 59 conferidas (o módulo tem o nome da pasta)
 contrato de dados  : 61 pares (saída: o que o notebook consome)
-contrato de entrada: 58 pares (entrada: o que o notebook passa)
+contrato de entrada: 59 pares (entrada: o que o notebook passa)
 saída colada       : 78 notebooks com bloco real, 0 sem
 idioma da docstring: 61 módulos, 0 com docstring em inglês
 normas do molde    : 71 arquivos, 0 violação(ões)
-notebook exercita  : 58 objetos, 0 notebook(s) que só importam
+notebook exercita  : 59 objetos, 0 notebook(s) que só importam
 python (AST)       : 214 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1173 arquivos varridos no repositório editável/derivado
-repo (links)       : 1318 links fora da raiz analisada
+repo (identidade)  : 1177 arquivos varridos no repositório editável/derivado
+repo (links)       : 1323 links fora da raiz analisada
+worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
+
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```

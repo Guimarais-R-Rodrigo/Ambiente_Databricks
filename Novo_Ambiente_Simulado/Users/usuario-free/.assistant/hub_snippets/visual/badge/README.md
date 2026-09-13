@@ -21,7 +21,7 @@
 
 Um **badge** é uma etiqueta visual compacta, como “Atenção” ou “Concluído”. Pode reduzir a procura por um estado no relatório, desde que o motivo continue acessível.
 
-A pasta fornece `badge_status`, `badge_score` e `badge_inline`. Não é um motor de qualidade de dados. `badge_status` recebe o estado escolhido; `badge_score` escolhe um estado a partir de limites fixos na implementação.
+O caminho legado fornece `badge_status`, `badge_score` e `badge_inline`. A V04 acrescenta as variantes `_resolvido`, que mudam somente a apresentação quando recebem um tema explícito. O módulo não é um motor de qualidade de dados: `badge_status` recebe o estado escolhido e `badge_score` continua usando os mesmos limites fixos.
 
 ## 2. Que problema este recurso resolve?
 
@@ -75,6 +75,18 @@ print("3/100" in html)
 
 Saída portátil conferida: `True`. Para ver o selo, renderize o retorno no ambiente apropriado. Não foi o helper que realizou a contagem citada.
 
+### Caminho V04 — badge com tema explícito
+
+```python
+from hub_snippets.visual.badge import badge_status_resolvido
+from hub_snippets.visual.tema import load_reference_theme
+
+tema = load_reference_theme("notebook")
+html = badge_status_resolvido("Conferido", tema, "ok")
+```
+
+Os cortes de `badge_score` não viram tokens e não mudam na V04. Apenas `status.*`, superfície informativa e dimensões do badge são materializados pelo tema. Um tipo desconhecido continua caindo no estilo informativo.
+
 ## 10. Decisões e configurações que mais importam
 
 Em `badge_status`, escolha `tipo` de modo explícito; o padrão é `"ok"`. Em `badge_score`, o máximo padrão é 100. Os limiares não são parâmetros configuráveis: estão no corpo da função.
@@ -87,7 +99,7 @@ Se um número estiver perto do corte, apresente a precisão necessária em texto
 
 O estilo `warn` usa texto `#B26A00` sobre `#FFF8E1`, com contraste calculado próximo de **3,99:1**, inferior a 4,5:1 para texto comum; a fonte declarada é de 11px. A [WCAG](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) orienta a avaliação. Não declare o componente plenamente acessível; as cores permaneceram intactas nesta migração.
 
-As cores de estado são parcialmente locais e não vêm de `constants.styles`. O escape de HTML não anonimiza conteúdo: mensagens ainda podem expor dados se o autor os inserir.
+Na rota V04, cores e dimensões de estado vêm de `constants.styles` materializado a partir do tema; a rota legada preserva os valores históricos. O escape de HTML não anonimiza conteúdo: mensagens ainda podem expor dados se o autor os inserir.
 
 ## 12. Quais são as alternativas?
 

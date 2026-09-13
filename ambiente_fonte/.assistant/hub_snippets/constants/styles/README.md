@@ -2,7 +2,7 @@
 
 <!-- readme-objeto: 1.0.0 -->
 
-> CSS descreve como um elemento aparece. Este módulo oferece trechos de CSS para uso explícito; ele não é um painel central que reestiliza todo o Hub.
+> CSS descreve como um elemento aparece. O módulo preserva as constantes legadas e, na V04, também materializa estilos a partir de um `ResolvedTheme` recebido explicitamente; ele continua sem reestilizar o Hub de forma global.
 
 ## Visão rápida
 
@@ -21,7 +21,7 @@
 
 HTML descreve elementos como um título ou uma linha. **CSS** descreve sua aparência: cor, espaço ao redor, borda e fonte. Aqui, cada constante `STYLE_*` é uma string com declarações CSS, pronta para o atributo `style` de um elemento.
 
-O módulo também fornece `FONT_FAMILY`. Não contém um arquivo de fonte nem instala tipografia. **Na implementação lida, os componentes visuais da biblioteca não importam este módulo**; eles mantêm seus próprios estilos. O recurso serve a quem o usa explicitamente.
+O módulo também fornece `FONT_FAMILY`. Não contém um arquivo de fonte nem instala tipografia. Na V04, badges, divisores, KPI cards, cabeçalhos, índice e tabela pandas consomem este módulo **somente nas novas rotas `_resolvido`**. As rotas legadas continuam usando constantes compatíveis e não são reestilizadas por carregar um tema.
 
 ## 2. Que problema este recurso resolve?
 
@@ -35,7 +35,7 @@ O uso é apropriado quando o autor controla a estrutura do HTML e os textos inse
 
 ## 4. Quando não usar?
 
-Não use este arquivo como controle global de identidade visual. Alterar `STYLE_KPI_CARD` não muda automaticamente o retorno de `kpi_card_html`: são implementações distintas.
+Não use este arquivo como controle global de identidade visual. `get_styles_resolvidos(theme)` devolve uma cópia para uso explícito; carregar ou editar uma configuração não reestiliza `kpi_card_html`, HTML já exibido nem outros componentes da sessão.
 
 Não escolha CSS inline como solução completa para uma aplicação com temas, navegação e acessibilidade. Também não presuma que todo destino de e-mail ou documento processe o mesmo HTML. Verifique o renderizador; uma string válida não garante a aparência pretendida.
 
@@ -59,7 +59,7 @@ Ao montar HTML manualmente, trate texto externo com `html.escape`. A constante d
 
 ## 8. O que este recurso entrega?
 
-Você recebe nove constantes públicas: uma família de fontes e oito trechos de estilo. Entre eles estão cabeçalho, cartão, divisórias leve/pesada, estados de badge e item de índice. Não há uma função que recebe dados e retorna um relatório.
+A API mantém as constantes públicas de compatibilidade e acrescenta `get_styles_resolvidos(theme)`. A função recebe somente um `ResolvedTheme` notebook íntegro e devolve um dicionário novo com estilos para seção, card, divisores, badges, índice e tabela. Não recebe dados analíticos nem retorna relatório.
 
 `STYLE_BADGE_WARN`, por exemplo, descreve fundo, cor de texto, espaço e tamanho. O nome “warn” não confere a severidade de um problema nem a acessibilidade do par de cores.
 
@@ -77,6 +77,19 @@ print("border-left" in html)
 
 O trecho portátil retorna `True` e foi conferido. Para renderizar no Databricks, a documentação indica `displayHTML`; isso é uma etapa do notebook, não uma chamada feita pelo módulo.
 
+### Caminho V04 — tema explícito
+
+```python
+from hub_snippets.constants.styles import get_styles_resolvidos
+from hub_snippets.visual.tema import load_reference_theme
+
+tema = load_reference_theme("notebook")
+styles = get_styles_resolvidos(tema)
+assert "section.container" in styles
+```
+
+A função revalida o `ResolvedTheme`, exige contexto `notebook` e não aceita dicionário cru. A configuração de referência reproduz os estilos legados. `dark` e `high_contrast` podem ser materializados quando a configuração completa é válida, mas isso não certifica acessibilidade nem homologa a renderização no Databricks.
+
 ## 10. Decisões e configurações que mais importam
 
 Escolha o estilo pelo papel do bloco e confira a combinação de texto, fundo e tamanho. `FONT_FAMILY` é uma lista de preferência: não incorpora fontes ao resultado. Na versão atual, os demais estilos já contêm suas próprias strings de fonte; reatribuir `FONT_FAMILY` não atualiza todas elas.
@@ -85,7 +98,7 @@ Evite modificações improvisadas na constante compartilhada. Uma necessidade de
 
 ## 11. Limitações, riscos e armadilhas
 
-Há duplicação de CSS com componentes da pasta `visual`. O módulo já importa `colors`, ao contrário do que dizia uma passagem antiga do notebook, mas isso não o transforma em fonte única de todos os estilos.
+A V04 elimina a duplicação no **caminho resolvido** dos componentes cobertos, que passam a pedir estilos a `get_styles_resolvidos`. O caminho legado permanece congelado por compatibilidade e não deve ser confundido com um tema global ou folha de estilo de aplicação.
 
 O par de atenção `#B26A00` sobre `#FFF8E1` tem contraste calculado de aproximadamente **3,99:1**, abaixo de 4,5:1 para texto comum, e o estilo declara 11px. Esta limitação foi documentada, não corrigida por troca silenciosa de cor. A [WCAG](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) orienta a avaliação; o nome de uma constante não constitui conformidade.
 

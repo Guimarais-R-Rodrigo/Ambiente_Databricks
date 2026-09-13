@@ -87,6 +87,18 @@ assert resumo.loc[0, "variacao"] == -0.025
 
 No Databricks, `displayHTML(html)` apresenta a string. O [notebook de exemplo](exemplo_dataframe_styled.py) é diferente deste bloco: executa `%pip install jinja2` e `%restart_python` antes de preparar imports. Isso modifica o ambiente Python e reinicia seu estado. Leia essas células antes de executar; o notebook não grava tabela persistente.
 
+### Caminho V04 — tabela com tema explícito
+
+```python
+from hub_snippets.display.dataframe_styled import display_styled_resolvido
+from hub_snippets.visual.tema import load_reference_theme
+
+tema = load_reference_theme("notebook")
+html = display_styled_resolvido(resumo, tema, highlight_cols=["variacao"])
+```
+
+A rota V04 usa `brand.primary` no cabeçalho, `table.header_text` no texto do cabeçalho e `semantic.negative` no realce de negativos. O DataFrame, `highlight_cols` e `format_dict` mantêm o contrato histórico. A fonte da tabela permanece fixa porque o contrato V01 não atribui `font.family` a esse consumidor.
+
 ## 10. Decisões e configurações que mais importam
 
 Escolha `highlight_cols` pelo significado do sinal. `format_dict` muda representação, não unidades armazenadas. Formatar antes ou durante a renderização são escolhas distintas: preformatar em texto pode perder o realce numérico.

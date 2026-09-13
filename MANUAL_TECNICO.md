@@ -2588,3 +2588,34 @@ python tools/ci_local.py
 Atualizar uma referência oficial exige rever a afirmação que ela sustenta; não basta trocar a data. Atualizar uma contagem exige executar sua verificação. Atualizar um teste requer preservar a distinção entre verificações locais, runtime Databricks, serviços remotos e conversa da Genie Code.
 
 **Síntese final:** o arquivo orienta; o import disponibiliza código; a chamada realiza trabalho; o runtime determina como esse trabalho pode ocorrer; a autorização delimita recursos e efeitos; a evidência permite conferir o resultado. Entender essas seis etapas elimina grande parte da impressão de que o Databricks “puxa uma API” ou de que a IA executa tudo o que encontra em uma pasta.
+
+---
+
+## Sistema de Temas — V04 (candidata)
+
+A V04 estende o tema validado aos componentes HTML e à tabela pandas sem mudar o
+caminho atual por padrão. As funções históricas continuam válidas. Para usar o
+tema, carregue/resolva um contexto `notebook` pelo núcleo V02 e escolha a função
+`_resolvido` correspondente.
+
+| Objeto | API V04 opt-in |
+|---|---|
+| `constants.styles` | `get_styles_resolvidos(theme)` |
+| `visual.badge` | `badge_status_resolvido`, `badge_score_resolvido`, `badge_inline_resolvido` |
+| `visual.divider` | `divider_light_resolvido`, `divider_medium_resolvido`, `divider_heavy_resolvido`, `divider_section_resolvido` |
+| `visual.kpi_card` | `kpi_card_html_resolvido` |
+| `visual.section_header` | `section_header_html_resolvido` |
+| `visual.index_generator` | `gerar_indice_eda_resolvido` |
+| `display.dataframe_styled` | `display_styled_resolvido` |
+
+A referência notebook reproduz a aparência histórica. O caminho resolvido
+revalida o `ResolvedTheme`, recusa dicionário cru e contexto não-notebook e não
+mantém tema global. `dark` e `high_contrast` podem ser materializados pelos
+componentes HTML quando a configuração é válida, mas isso não equivale a
+homologação de acessibilidade nem de renderização no Databricks.
+
+Não migre chamadas existentes em massa nesta sprint. Não há publicação,
+seletor, Visual Lab ou aprovação operacional de tema. Consulte
+`hub_padroes/identidade_visual/GUIA_OPERACIONAL.md` e
+`docs/sprints/sistema_temas/V04/README.md` no repositório de manutenção.
+
