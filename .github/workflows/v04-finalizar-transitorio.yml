@@ -86,6 +86,15 @@ jobs:
           if text.count(old)!=1: raise SystemExit('índice de temas: resumo base inesperado')
           text=text.replace(old,
                             'V00–V03 estão integradas no Git. A V03 foi mesclada pelo PR #16 no commit\n`b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`; depois, R04-A e R04-B foram\nintegradas pelos PRs #17 e #18. A V04 foi reconciliada com a `main`\n`d9da056c95bf5c4209b2f208de1c9a987580efe7` antes da candidata final.',1)
+          if 'V01/README.md' in text or 'V01/GUIA_PRIMEIRO_USO.md' in text:
+              raise SystemExit('índice de temas: entrypoints V01 duplicados antes da restauração')
+          marker='Não houve publicação Databricks, auditoria independente ou homologação visual.\n'
+          history=('### Entradas históricas preservadas\n\n'
+                   'A evolução continua navegável pela [V01 — contrato e experiência](V01/README.md) '
+                   'e pelo [guia de primeiro uso da V01](V01/GUIA_PRIMEIRO_USO.md). '
+                   'Esses arquivos são referência histórica/contratual e não substituem o estado corrente V04.\n\n')
+          if text.count(marker)!=1: raise SystemExit('índice de temas: marcador de limites inesperado')
+          text=text.replace(marker,history+marker,1)
           p.write_text(text,encoding='utf-8')
 
           one('docs/sprints/README.md',
@@ -94,7 +103,7 @@ jobs:
 
           one('CHANGELOG.md',
               '- (Codex) Code-check corrigido `34726621227`: 29 V04, 298 temas V01–V04, 12 V00 e `validate_assistant` aprovados.\n- (Codex) V04 é candidata: sem aceite, merge, publicação Databricks, homologação visual/acessibilidade ou início da V05.',
-              '- (Codex) Code-check corrigido `34726621227`: 29 V04, 298 temas V01–V04, 12 V00 e `validate_assistant` aprovados.\n- (Codex) Reconciliação `34726990399` permanece FAILURE por fachadas V04 ainda não materializadas; nenhum commit combinado foi enviado.\n- (Codex) Reconciliação corrigida `34727070003`: preservação V04/R04-B, regressões e 14/14 casos R04-B com Spark real aprovados; commit `c2b91c5e`.\n- (Codex) Finalização `34727324137` permanece FAILURE por marcador textual impossível do `ci_local.py`; nenhum derivado/candidato final foi gravado.\n- (Codex) V04 é candidata: sem aceite, merge, publicação Databricks, homologação visual/acessibilidade ou início da V05.')
+              '- (Codex) Code-check corrigido `34726621227`: 29 V04, 298 temas V01–V04, 12 V00 e `validate_assistant` aprovados.\n- (Codex) Reconciliação `34726990399` permanece FAILURE por fachadas V04 ainda não materializadas; nenhum commit combinado foi enviado.\n- (Codex) Reconciliação corrigida `34727070003`: preservação V04/R04-B, regressões e 14/14 casos R04-B com Spark real aprovados; commit `c2b91c5e`.\n- (Codex) Finalização `34727324137` permanece FAILURE por marcador textual impossível do `ci_local.py`; nenhum derivado/candidato final foi gravado.\n- (Codex) Finalização `34727521220` permanece FAILURE porque a regressão V01 exigiu preservar `V01/README.md` e `V01/GUIA_PRIMEIRO_USO.md` no índice agregado; nenhum commit final foi criado.\n- (Codex) V04 é candidata: sem aceite, merge, publicação Databricks, homologação visual/acessibilidade ou início da V05.')
 
           one('docs/sprints/sistema_temas/V04/README.md',
               '**CANDIDATA EM IMPLEMENTAÇÃO E VALIDAÇÃO.** A V04 foi iniciada na `main`',
@@ -106,9 +115,9 @@ jobs:
           if text.count(old)!=1: raise SystemExit('TESTES.md: seção de gates inesperada')
           text=text.replace(old,new,1)
           marker='## O que os 29 testes V04 medem\n'
-          failure='''## Finalização documental — tentativa 1 `34727324137`\n\n**Resultado: FAILURE.** O finalizador parou antes de gerar derivados ou medir a\ncandidata porque procurava a tupla `temas` do `ci_local.py` em uma única linha,\nenquanto o arquivo real a organiza em duas. A base já havia sido reconfirmada,\nmas nenhum commit final foi criado. O marcador foi corrigido sem relaxar gates.\n\n'''
+          failures='''## Finalização documental — tentativa 1 `34727324137`\n\n**Resultado: FAILURE.** O finalizador parou antes de gerar derivados ou medir a\ncandidata porque procurava a tupla `temas` do `ci_local.py` em uma única linha,\nenquanto o arquivo real a organiza em duas. A base já havia sido reconfirmada,\nmas nenhum commit final foi criado. O marcador foi corrigido sem relaxar gates.\n\n## Finalização da árvore — tentativa 2 `34727521220`\n\n**Resultado: FAILURE.** A finalização, a regeneração de fachadas/Manual/espelho,\na medição do README e a preservação R04-B passaram. Os 29 testes V04 também\npassaram, mas a regressão V01 `test_single_sprint_entrypoint` detectou que o\níndice agregado havia perdido as rotas explícitas `V01/README.md` e\n`V01/GUIA_PRIMEIRO_USO.md`. Nenhum commit final foi criado. A correção restaura\nesses entrypoints como históricos sem rebaixar o estado corrente da V04.\n\n'''
           if text.count(marker)!=1: raise SystemExit('TESTES.md: marcador dos 29 testes inesperado')
-          text=text.replace(marker,failure+marker,1)
+          text=text.replace(marker,failures+marker,1)
           p.write_text(text,encoding='utf-8')
           PY
       - name: Regenerar fachadas, Manual e espelho somente pela fonte
