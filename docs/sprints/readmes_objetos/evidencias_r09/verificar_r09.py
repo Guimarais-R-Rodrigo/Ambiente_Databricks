@@ -21,10 +21,19 @@ class StaticCases(unittest.TestCase):
         for obj in OBJECTS: self.assertNotIn(f"hub_snippets/ml/{obj}", data["pending"])
         idx=(ROOT/"docs/sprints/readmes_objetos/README.md").read_text(encoding="utf-8")
         self.assertIn("60/75 operacionais", idx); self.assertIn("15 pendências", idx)
-    def test_backlinks(self):
-        for obj in OBJECTS:
+
+    def test_backlinks_and_erratas(self):
+        expected={
+            "curves_plotly":"**não subamostra**",
+            "drift_detection":"min_non_null",
+            "metrics_report":"escala 0–100",
+            "mlflow_run":"observação histórica deste runtime",
+            "performance_monitor":"automatic_retrain_authorized",
+        }
+        for obj, marker in expected.items():
             text=(ASSISTANT/f"hub_snippets/ml/{obj}/exemplo_{obj}.py").read_text(encoding="utf-8")
             self.assertIn("Guia local completo:", text, obj)
+            self.assertIn(marker, text, obj)
 
 class CoreCases(unittest.TestCase):
     def test_curves_metrics_drift_and_monitor(self):
@@ -34,14 +43,18 @@ class CoreCases(unittest.TestCase):
         from hub_snippets.ml.drift_detection import detect_drift_all_features
         from hub_snippets.ml.performance_monitor import PerformanceMonitor, selecionar_metricas_do_relatorio
         y=np.array([0,0,1,1,0,1]); p=np.array([.1,.2,.7,.9,.3,.8])
-        roc=plot_roc_curve(y,p,n=999); self.assertTrue(any("999" in str(a.text) for a in roc.layout.annotations))
-        self.assertEqual(len(roc.data[0].x), len(set(roc.data[0].x)))
+        roc=plot_roc_curve(y,p,n=999)
+        self.assertTrue(any("999" in str(a.text) for a in roc.layout.annotations))
+        fpr=np.asarray(roc.data[0].x,dtype=float)
+        self.assertTrue(np.all(np.diff(fpr)>=0)); self.assertGreaterEqual(float(fpr.min()),0.0); self.assertLessEqual(float(fpr.max()),1.0)
         lift=plot_lift_curve(y,p,n_bins=3); self.assertEqual(len(lift.data[0].x),3)
         m=calculate_binary_metrics(y,p); self.assertGreater(m["ks_pct"],1); self.assertIn("auc_roc",m)
         r=calculate_regression_metrics(np.array([0.,0.]),np.array([1.,2.])); self.assertTrue(math.isnan(r["mape"]))
         ref=pd.DataFrame({"x":range(20),"cat":[None]*20}); cur=pd.DataFrame({"x":range(1,21),"cat":[None]*20})
         out=detect_drift_all_features(ref,cur,["x","cat"],numeric_cols=["x"],categorical_cols=["cat"],min_non_null=10)
-        self.assertEqual(out.loc[out.feature=="cat","status"].iloc[0],"NOT_CLASSIFIED")
+        cat=out.loc[out.feature=="cat"].iloc[0]
+        self.assertEqual(cat["status"],"NOT_CLASSIFIED")
+        self.assertTrue(math.isfinite(float(cat["psi"])))
         selected=selecionar_metricas_do_relatorio(m, metricas_obrigatorias=["auc","ks_pct"])
         self.assertIn("auc",selected); self.assertIn("ks_pct",selected)
         policy={"auc":{"warning":.03,"critical":.05,"direction":"higher","delta":"absolute"}}
