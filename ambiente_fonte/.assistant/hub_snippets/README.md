@@ -90,12 +90,14 @@ A biblioteca é dividida em seis categorias funcionais, agrupadas pela natureza 
 
 | Categoria | Natureza do problema |
 |---|---|
-| `ml` | Machine Learning e estatística aplicada |
-| `spark` | operações distribuídas em escala |
-| `display` | exibição e tabelas formatadas |
-| `visual` | identidade visual e design em Plotly |
-| `constants` | padrões brasileiros, cores e estilos compartilhados |
-| `testing` | dados sintéticos e fixtures |
+| [`ml`](ml/README.md) | Machine Learning e estatística aplicada |
+| [`spark`](spark/README.md) | operações distribuídas em escala |
+| [`display`](display/README.md) | exibição e tabelas formatadas |
+| [`visual`](visual/README.md) | identidade visual e design em Plotly |
+| [`constants`](constants/README.md) | padrões brasileiros, cores e estilos compartilhados |
+| [`testing`](testing/README.md) | dados sintéticos e fixtures |
+
+Cada categoria possui agora um índice local que lista todos os objetos diretamente nela e aponta para o README de cada recurso. `hub_snippets/tests/` permanece fora desse mapa porque é infraestrutura interna de regressão, não uma categoria de uso.
 
 ---
 

@@ -5,6 +5,14 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-13 — R12: índices de categoria e navegação (ChatGPT)
+
+- Cria índices para as seis categorias funcionais de `hub_snippets`.
+- Liga catálogo geral, entrada `.assistant` e Manual aos índices sem alterar objetos.
+- Registra que a migração estrutural terminou na R11.
+- Mantém `hub_snippets/tests/` como infraestrutura interna.
+- Sem publicação, homologação runtime, auditoria independente, merge ou início da R13.
+
 ## 2026-09-13 — R11: fechamento da migração de READMEs (ChatGPT)
 
 - Documenta os nove Hub Prompts restantes no contrato 1.0.0.
