@@ -1,6 +1,55 @@
 # Checkpoint V05 — Visual Lab em desenvolvimento
 
-## Estado vigente — 13/09/2026
+## Estado vigente — reconciliação com R08 em 13/09/2026
+
+V05 continua em desenvolvimento na PR #26, branch
+`codex/temas-v05-visual-lab-20260912`. Não há aceite V05, merge na main,
+publicação Databricks ou início da V06.
+
+A composição `5cace7f876b2bdb2a1eecaa73e3f7958dfd2764e` incorporou a main
+R08 `d5945e04328609878f63857cc15cf5e5039b3e75` à branch de desenvolvimento,
+preservando todos os arquivos dessa main e os 16 arquivos novos da candidata.
+A comparação das duas frentes mostrou sobreposição somente no README raiz,
+em suas contagens derivadas; sua narrativa R08 foi preservada.
+
+O commit `57062e86e0741e88fcd0b30c902ff57ece4be1c8` atualizou as métricas
+com a saída medida no run `34761074646`. Sua árvore é
+`d9ef6099313f1ab2622e42677b5a3f7e4d812ac5`. As alterações desta rodada não
+modificam a implementação, API, schema, fixtures ou ativos visuais da V05.
+
+### Resultado efetivo desta composição
+
+O workflow V05 `34761250018` terminou com success. V00 `34761250014`, V01
+`34761250034` e V02 `34761250027` também terminaram com success.
+O CI geral `34761250016` continua FAILURE: oito de suas nove etapas passaram,
+mas a guarda do inventário do Manual não encontrou a seção
+`hub_snippets.visual.theme_lab`. A validação estrutural passou com zero falhas
+e zero avisos. Isso não equivale a CI transversal aprovado.
+
+Os checks de PR usam um commit de teste de merge. Para o head `57062e8`, o log
+registra `1d83a9456518a0bba639f708bb8e95f9dce8f808`. Resultados pertencem a essa
+composição e não se estendem automaticamente ao próximo commit documental.
+
+### Próxima ação e pendências
+
+Completar a seção do laboratório no Manual canônico, preservar todo o texto
+anterior, sincronizar sua cópia da raiz e gerar o derivado pela ferramenta
+oficial. Registrar a V05 e esta rodada no CHANGELOG raiz; os commits e este
+checkpoint não substituem esse registro obrigatório. Completar os índices e
+as rotas de navegação, repetir os gates na árvore final e conferir o diff.
+
+Presets escolhidos pela interface, vínculo automático com a base original e
+reabertura autônoma continuam lacunas funcionais, não concluídas por este ajuste.
+A reabertura atual depende do mantenedor e transforma a proposta em nova base;
+hash do JSON não comprova sua linhagem. Não solicitar aceite integral apenas
+porque um futuro CI documental ficar verde.
+
+Não foi criado workflow transitório, ampliada permissão ou executado force-push.
+A main não foi alterada por esta rodada. Os arquivos da V05 e suas cópias já
+derivadas foram reutilizados por seus blobs; não houve re-render completo novo.
+Os registros abaixo preservam o estado das tentativas anteriores.
+
+## Estado anterior — retomada R07 em 13/09/2026
 
 V05 em desenvolvimento na branch `codex/temas-v05-visual-lab-20260912`.
 A retomada preserva integralmente a main R07 `b73bbb91961f9ba5f9031d648c42ec0891b63347`
@@ -10,7 +59,7 @@ Essa composição não é aprovação dos testes anteriores: exige nova rodada.
 Rodrigo autorizou continuar o desenvolvimento. Não concedeu aceite à V05 nem
 integração, publicação no Databricks ou início da V06.
 
-## Bloqueios de fechamento
+## Bloqueios de fechamento — registro da retomada R07
 
 - Corrigir navegação do README dentro do produto publicado.
 - Ajustar o notebook sem relaxar a guarda de contrato; registrar saída executada.
