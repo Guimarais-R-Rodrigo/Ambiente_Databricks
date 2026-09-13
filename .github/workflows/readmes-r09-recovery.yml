@@ -1,0 +1,143 @@
+name: Recuperacao documental R09
+on:
+  push:
+    branches: [codex/readmes-r09]
+    paths: [.github/workflows/readmes-r09-recovery.yml]
+permissions:
+  contents: write
+concurrency:
+  group: readmes-r09-recovery
+  cancel-in-progress: false
+jobs:
+  recovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      BASE: d5945e04328609878f63857cc15cf5e5039b3e75
+      BEFORE: bfa7b848517ce4b3087ec4cf6b9260cd9a2bfe6c
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Recuperar e conferir sem executar notebooks
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$BEFORE"
+          test "$(git rev-parse origin/main)" = "$BASE"
+          python - <<'PY'
+          import ast, hashlib, json, os, subprocess
+          from pathlib import Path
+          base = os.environ['BASE']
+          before = os.environ['BEFORE']
+          objects = ['curves_plotly', 'drift_detection', 'metrics_report', 'mlflow_run', 'performance_monitor']
+          prefix = 'ambiente_fonte/.assistant/hub_snippets/'
+          notebooks = [prefix + f'ml/{obj}/exemplo_{obj}.py' for obj in objects]
+          paths = [prefix + 'README.md', 'docs/sprints/readmes_objetos/README.md'] + notebooks
+          def show(ref, path):
+              return subprocess.check_output(['git', 'show', f'{ref}:{path}'])
+          def sha(raw):
+              return hashlib.sha256(raw).hexdigest()
+          def parsed(raw):
+              return ast.dump(ast.parse(raw.decode('utf-8')), include_attributes=False)
+          evidence = {'base': base, 'before': before, 'run_id': os.environ['GITHUB_RUN_ID'], 'restored': [], 'readmes_preserved': [], 'implementation_facades_preserved': []}
+          for path in paths:
+              original, damaged = show(base, path), show(before, path)
+              row = {'path': path, 'before_sha256': sha(damaged), 'restored_sha256': sha(original), 'before_lines': len(damaged.splitlines()), 'restored_lines': len(original.splitlines())}
+              if path in notebooks:
+                  row['prior_python_ast_changed'] = parsed(original) != parsed(damaged)
+              Path(path).write_bytes(original)
+              assert Path(path).read_bytes() == original, path
+              evidence['restored'].append(row)
+          for obj in objects:
+              readme = prefix + f'ml/{obj}/README.md'
+              assert Path(readme).read_bytes() == show(before, readme), readme
+              evidence['readmes_preserved'].append(readme)
+              for name in [f'{obj}.py', '__init__.py']:
+                  path = prefix + f'ml/{obj}/{name}'
+                  assert Path(path).read_bytes() == show(base, path), path
+                  evidence['implementation_facades_preserved'].append(path)
+          # Nao alterar pendencias das outras levas nem reinstalar dispensas.
+          control_path = 'docs/sprints/readmes_objetos/CONTROLE_MIGRACAO.json'
+          old = json.loads(show(base, control_path))
+          current = json.loads(Path(control_path).read_text(encoding='utf-8'))
+          expected = {f'hub_snippets/ml/{obj}' for obj in objects}
+          assert set(old['pending']) - set(current['pending']) == expected
+          assert not (set(current['pending']) - set(old['pending']))
+          for key, value in current['pending'].items():
+              assert value == old['pending'][key], key
+          assert Path(control_path).read_bytes() == show(before, control_path)
+          evidence['remaining_pending_unchanged'] = len(current['pending'])
+          evidence['scope'] = 'recuperacao de preservacao; nao e freeze, runtime ou aceite da R09'
+          table = ['| Arquivo restaurado | Linhas antes | Linhas recuperadas |', '|---|---:|---:|']
+          table += [f"| `{row['path']}` | {row['before_lines']} | {row['restored_lines']} |" for row in evidence['restored']]
+          changed_ast = [row['path'] for row in evidence['restored'] if row.get('prior_python_ast_changed')]
+          report = '\n'.join([
+              '# Recuperação da R09 — 2026-09-13 (ChatGPT)', '',
+              '## Resultado e alcance', '',
+              f'Recuperação baseada no commit integrado `{base}`. A construção anterior `{before}` continha reescritas fora do escopo documental. Os sete arquivos abaixo foram restaurados byte a byte; os cinco novos READMEs foram preservados sem reescrita.', '',
+              *table, '',
+              '## Correção do relato anterior', '',
+              'A descrição anterior de alterações exclusivamente editoriais estava incorreta. Além de remover conteúdo e saídas históricas, a edição de `exemplo_mlflow_run.py` modificou os literais de `limitacoes`, alterando dados efetivamente enviados ao MLflow. Houve também mudanças de formatação e comentários executáveis em outros exemplos. A recuperação repõe os arquivos completos, sem alegar que equivalência de AST seria suficiente para preservar magics ou saídas.', '',
+              'Notebooks cuja AST Python havia mudado: ' + ', '.join(f'`{p}`' for p in changed_ast) + '.', '',
+              '## Documentações alteradas além dos novos READMEs', '',
+              'Foram restaurados o catálogo `hub_snippets/README.md`, o índice `docs/sprints/readmes_objetos/README.md` e os cinco notebooks listados. Foram acrescentados este registro, uma nota no relatório R09, uma nota na matriz R09 e uma entrada no `CHANGELOG.md`. O Manual, os agregadores restantes e o simulado não são modificados nesta recuperação.', '',
+              '## Evidência', '',
+              f"Run de recuperação: `{os.environ['GITHUB_RUN_ID']}`. Conferências: sete arquivos iguais aos bytes da base; cinco READMEs iguais à construção anterior; dez implementações/fachadas iguais à base; metadados das quinze pendências restantes preservados. As provas incluem hashes SHA-256 e comparação de AST antes da restauração. Não houve execução de notebooks ou modelos.", '',
+              '## Pendências e próxima ação', '',
+              'R09 continua EM ELABORAÇÃO, sem PR final, freeze aprovado ou merge. As menções a R08 candidata no índice restaurado são históricas e deverão ser atualizadas cirurgicamente na integração R09; a R08 já foi integrada pelo PR #27. A retirada das cinco dispensas existe apenas na branch em construção e não certifica conclusão.', '',
+              'Reaplicar backlinks e erratas por alterações pontuais que preservem código, magics, comentários executáveis, saídas históricas, imagens e navegação. Reintegrar catálogo, Manual, índices e simulado. Reforçar o verificador que atualmente ignora indiscriminadamente linhas `# MAGIC`. Corrigir a asserção incorreta de unicidade de FPR na suíte core: curvas ROC podem ter segmentos verticais. Depois executar gate completo e runtimes isolados, com evidências por árvore e versões.', '',
+              'Sem publicação/homologação Databricks, aprovação de modelo, auditoria independente ou início da R10.', ''
+          ])
+          recovery_path = Path('docs/sprints/readmes_objetos/RECUPERACAO_R09.md')
+          assert not recovery_path.exists()
+          recovery_path.write_text(report, encoding='utf-8')
+          note = '\n\n## Recuperação de preservação — 2026-09-13\n\nA construção anterior foi interrompida por reescritas excessivas de catálogo/índice e notebooks. Os sete arquivos foram restaurados integralmente da base integrada; os cinco novos READMEs permanecem na branch. Consulte [RECUPERACAO_R09.md](RECUPERACAO_R09.md) para arquivos, evidências e pendências. Backlinks, erratas e integração transversal precisam ser reaplicados pontualmente. Esta recuperação não aprova o freeze nem os runtimes da R09.\n'
+          for filename in ['RELATORIO_R09.md', 'MATRIZ_ALTERACOES_R09.md']:
+              path = Path('docs/sprints/readmes_objetos') / filename
+              path.write_bytes(path.read_bytes() + note.encode('utf-8'))
+          changelog = Path('CHANGELOG.md')
+          entry = '\n\n## 2026-09-13 — R09: recuperação de preservação (ChatGPT)\n\n### Corrigido\n\n- (ChatGPT) Restaurados da base integrada o catálogo, o índice da iniciativa e cinco notebooks, recuperando navegação, imagens, código e saídas históricas removidos na construção R09.\n- (ChatGPT) Corrigido o relato de alterações somente editoriais: o exemplo MLflow também havia alterado literais executáveis.\n\n### Atualizado\n\n- (ChatGPT) Registro RECUPERACAO_R09, relatório e matriz distinguem recuperação concluída de integração, freeze e runtimes ainda pendentes. Cinco novos READMEs preservados; nenhuma mudança na main, em implementações/fachadas ou publicação Databricks.\n'
+          assert 'R09: recuperação de preservação' not in changelog.read_text(encoding='utf-8')
+          changelog.write_bytes(changelog.read_bytes() + entry.encode('utf-8'))
+          Path('.github/workflows/readmes-r09-recovery.yml').unlink()
+          expected_changed = set(paths) | {'CHANGELOG.md', str(recovery_path), 'docs/sprints/readmes_objetos/RELATORIO_R09.md', 'docs/sprints/readmes_objetos/MATRIZ_ALTERACOES_R09.md', '.github/workflows/readmes-r09-recovery.yml'}
+          subprocess.run(['git', 'add', '--', *sorted(expected_changed)], check=True)
+          actual = set(subprocess.check_output(['git', 'diff', '--cached', '--name-only'], text=True).splitlines())
+          assert actual == expected_changed, (sorted(actual), sorted(expected_changed))
+          evidence['changed_paths_in_repair'] = sorted(actual)
+          output = Path(os.environ['RUNNER_TEMP']) / 'r09-recuperacao'
+          output.mkdir()
+          (output / 'conferencia.json').write_text(json.dumps(evidence, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          (output / 'RECUPERACAO_R09.md').write_text(report, encoding='utf-8')
+          (output / 'recuperacao.diff').write_bytes(subprocess.check_output(['git', 'diff', '--cached', '--binary']))
+          print(json.dumps(evidence, ensure_ascii=False, indent=2))
+          PY
+          git diff --cached --check
+      - name: Persistir somente na branch R09
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main codex/readmes-r09
+          test "$(git rev-parse origin/main)" = "$BASE"
+          test "$(git rev-parse origin/codex/readmes-r09)" = "$GITHUB_SHA"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix(r09): recuperar catálogo, histórico e notebooks sem alterar modelos (ChatGPT)'
+          git push origin HEAD:refs/heads/codex/readmes-r09
+          git rev-parse HEAD > "$RUNNER_TEMP/r09-recuperacao/commit.txt"
+          git rev-parse HEAD^{tree} > "$RUNNER_TEMP/r09-recuperacao/tree.txt"
+          git bundle create "$RUNNER_TEMP/r09-recuperacao/repositorio.bundle" HEAD refs/remotes/origin/main
+      - name: Evidencias de recuperacao
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r09-recuperacao
+          retention-days: 7
+          path: ${{ runner.temp }}/r09-recuperacao/
+          if-no-files-found: warn
