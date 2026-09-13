@@ -1,0 +1,68 @@
+name: Correcao pos-freeze R12
+
+on:
+  push:
+    branches: [codex/readmes-r12]
+
+permissions:
+  contents: write
+
+jobs:
+  corrigir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+      - name: Aplicar correcao minima
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=d51ca5dddb76e960f44f5b106b918f3415cc25d4
+          PREV=ecbf2f748367a142b61222b83a03512cbc7e1fd7
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$BASE"
+          python - <<'PY'
+          from pathlib import Path
+          root=Path('README.md')
+          text=root.read_text(encoding='utf-8')
+          old='repo (identidade)  : 1302 arquivos varridos no repositório editável/derivado'
+          new='repo (identidade)  : 1303 arquivos varridos no repositório editável/derivado'
+          assert text.count(old)==1, text.count(old)
+          root.write_text(text.replace(old,new,1),encoding='utf-8')
+          report=Path('docs/sprints/readmes_objetos/RELATORIO_R12.md')
+          body=report.read_text(encoding='utf-8').rstrip()
+          marker='## Correção pós-freeze do snapshot — 2026-09-13'
+          if marker not in body:
+              body += '\n\n'+marker+'\n\nA CI permanente do PR observou `repo (identidade) = 1303`, enquanto o freeze havia registrado 1302 porque `FREEZE_R12.txt` foi criado depois da captura do snapshot. A correção altera somente o snapshot do README raiz; o arquivo histórico de freeze permanece intacto. Links, cobertura 75/75 e demais métricas permaneceram iguais.\n'
+          report.write_text(body+'\n',encoding='utf-8')
+          PY
+          rm .github/workflows/readmes-r12-postfreeze-fix.yml
+          git add -A
+          test "$(git diff --name-only "$PREV" | sort | tr '\n' ' ')" = "README.md docs/sprints/readmes_objetos/RELATORIO_R12.md "
+          git diff --cached --check
+      - name: Instalar dependencias
+        run: python -m pip install -r tools/requirements-dev.txt
+      - name: Revalidar arvore final
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validate_assistant.py --conferir-readme
+          python docs/sprints/readmes_objetos/evidencias_r12/verificar_r12.py
+          python tools/ci_local.py
+          git diff --cached --check
+      - name: Publicar correcao
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'docs(r12): corrigir snapshot final do inventario (ChatGPT)'
+          git push origin HEAD:codex/readmes-r12
