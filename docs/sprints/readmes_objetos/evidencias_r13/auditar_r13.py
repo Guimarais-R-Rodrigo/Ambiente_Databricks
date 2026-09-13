@@ -136,20 +136,27 @@ def main() -> None:
 
     fail_if(manual_path.read_bytes() != root_manual.read_bytes(), "Manual fonte diverge da cópia raiz", blockers)
 
+    # O renderer publica somente .assistant_instructions.md e .assistant/.
     users_root = ROOT / "Novo_Ambiente_Simulado/Users"
     users = sorted(p for p in users_root.iterdir() if p.is_dir()) if users_root.is_dir() else []
     fail_if(len(users) != 1, f"esperado um único usuário simulado, encontrados {len(users)}", blockers)
     if len(users) == 1:
         sim = users[0]
+        src_instruction = ROOT / "ambiente_fonte/.assistant_instructions.md"
+        dst_instruction = sim / ".assistant_instructions.md"
+        fail_if(not dst_instruction.is_file(), "espelho ausente: .assistant_instructions.md", blockers)
+        if dst_instruction.is_file():
+            fail_if(src_instruction.read_bytes() != dst_instruction.read_bytes(), "espelho divergente: .assistant_instructions.md", blockers)
+
         ignored = {"__pycache__", ".pytest_cache", ".ruff_cache"}
-        for src in sorted((ROOT / "ambiente_fonte").rglob("*")):
+        for src in sorted(ASSIST.rglob("*")):
             if not src.is_file() or any(part in ignored for part in src.parts) or src.suffix in {".pyc", ".pyo"}:
                 continue
-            rel = src.relative_to(ROOT / "ambiente_fonte")
-            dst = sim / rel
-            fail_if(not dst.is_file(), f"espelho ausente: {rel}", blockers)
+            rel = src.relative_to(ASSIST)
+            dst = sim / ".assistant" / rel
+            fail_if(not dst.is_file(), f"espelho ausente: .assistant/{rel}", blockers)
             if dst.is_file():
-                fail_if(src.read_bytes() != dst.read_bytes(), f"espelho divergente: {rel}", blockers)
+                fail_if(src.read_bytes() != dst.read_bytes(), f"espelho divergente: .assistant/{rel}", blockers)
 
     observations.extend([
         "A auditoria automática certifica estrutura, coerência interna e regressões; não certifica compreensão humana.",
