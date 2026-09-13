@@ -10,9 +10,9 @@ Rodrigo aprovou o padrão e autorizou a integração das R03-A/R03-B com a V01 e
 2026-09-12. O PR nº 13 foi integrado na `main` pelo commit `1be947b`; o
 [registro da composição](INTEGRACAO_R03_V01.md) preserva os gates e a V01.
 
-O contrato vigente é **1.0.0**. A R08 foi aceita e integrada pelo PR nº 27 no commit `d5945e0`. A R09 documenta `curves_plotly`, `drift_detection`, `metrics_report`, `mlflow_run` e `performance_monitor`, preservando implementações/fachadas. A cobertura candidata é **60/75 operacionais e 3/3 exemplares, com 15 pendências**; o validador da árvore fechada é fonte de verdade.
+O contrato vigente é **1.0.0**. A R09 foi aceita e integrada pelo PR nº 29 no commit `d412acb`. A R10 documenta seis Hub Prompts: `comparar_tabelas`, `cross_eda`, `data_quality`, `eda_completa`, `feature_engineering` e `stat_check`. A cobertura candidata é **66/75 operacionais e 3/3 exemplares, com 9 pendências**; o validador da árvore fechada é fonte de verdade.
 
-Consulte o [relatório R09](RELATORIO_R09.md), a [matriz nominal](MATRIZ_ALTERACOES_R09.md), os [achados](ACHADOS_R09.md) e o [registro de recuperação](RECUPERACAO_R09.md). A próxima parada é freeze técnico e revisão antes da R10.
+Consulte o [relatório R10](RELATORIO_R10.md), a [matriz nominal](MATRIZ_ALTERACOES_R10.md) e os [achados](ACHADOS_R10.md). A próxima parada é freeze técnico e revisão antes da R11.
 
 Os relatórios anteriores preservam o estado observado em cada data. PRs #9/#11
 foram supersedidos pela composição integrada do PR #13 e não devem ser tratados

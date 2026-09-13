@@ -7,17 +7,11 @@
     "hub_prompts/auditoria_skills": {"sprint": "R11", "lote": "B"},
     "hub_prompts/baseline_orchestration": {"sprint": "R11", "lote": "A"},
     "hub_prompts/comentar_notebook": {"sprint": "R11", "lote": "B"},
-    "hub_prompts/comparar_tabelas": {"sprint": "R10", "lote": "A"},
-    "hub_prompts/cross_eda": {"sprint": "R10", "lote": "A"},
-    "hub_prompts/data_quality": {"sprint": "R10", "lote": "A"},
-    "hub_prompts/eda_completa": {"sprint": "R10", "lote": "A"},
     "hub_prompts/explainability": {"sprint": "R11", "lote": "A"},
-    "hub_prompts/feature_engineering": {"sprint": "R10", "lote": "A"},
     "hub_prompts/monitoramento_modelo": {"sprint": "R11", "lote": "A"},
     "hub_prompts/novo_projeto": {"sprint": "R11", "lote": "B"},
     "hub_prompts/pipeline": {"sprint": "R11", "lote": "A"},
     "hub_prompts/safra": {"sprint": "R11", "lote": "A"},
-    "hub_prompts/stat_check": {"sprint": "R10", "lote": "A"},
     "hub_prompts/tutor_explicar": {"sprint": "R11", "lote": "B"}
   }
 }

@@ -5,6 +5,13 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-13 — R10: READMEs de Hub Prompts (ChatGPT)
+
+- Documenta seis prompts no contrato 1.0.0: `comparar_tabelas`, `cross_eda`, `data_quality`, `eda_completa`, `feature_engineering` e `stat_check`.
+- Preserva os seis briefings `.md`; notebooks recebem somente backlinks e três erratas Markdown sobre tabelas sintéticas já gravadas pelo código.
+- Retira exatamente seis dispensas R10 do controle de migração; cobertura alvo 66/75, sujeita ao validador.
+- Sem publicação Databricks, resposta Genie Code fabricada, auditoria independente, aceite editorial, merge ou início da R11.
+
 ## 2026-09-12 — R08: READMEs de clusters, anomalias e explicabilidade (ChatGPT)
 
 - Documenta seis objetos no contrato 1.0.0: `autoencoder_anomaly`, `cluster_profiling`, `clustering_suite`, `explainability_report`, `shap_explainer` e `umap_viz`.

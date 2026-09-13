@@ -2,6 +2,8 @@
 # MAGIC %md
 # MAGIC # `comparar_tabelas` — duas versões da mesma base, e onde elas divergem
 # MAGIC
+# MAGIC 📘 Guia local: [`README.md`](./README.md)
+# MAGIC
 # MAGIC **Prompt não executa.** Ele é um briefing para colar num chat, e a
 # MAGIC resposta vem de uma interação que notebook nenhum reproduz. Este notebook
 # MAGIC tem três partes, e só as duas primeiras rodam:
@@ -21,7 +23,7 @@
 # MAGIC | Compute | serverless ou clássico, indiferente |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, de `hub_snippets.testing.fixtures` |
-# MAGIC | Escrita | **sim** — cria a tabela `workspace.default.hub_exemplo_clientes_v1` para o chat poder consultá-la |
+# MAGIC | Escrita | **sim** — cria/sobrescreve as tabelas `workspace.default.hub_exemplo_clientes_v1` e `workspace.default.hub_exemplo_clientes_v2` para o chat poder consultá-las |
 # MAGIC | Diferença Free × trabalho | no trabalho, aponte o prompt para uma tabela real governada em vez da sintética |
 
 # COMMAND ----------
