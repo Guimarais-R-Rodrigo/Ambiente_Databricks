@@ -23,3 +23,8 @@
 ## Fora de escopo
 
 As cinco implementações e cinco fachadas públicas devem permanecer byte a byte iguais à base integrada. Não há publicação/homologação Databricks, alteração de política de modelo ou mudança funcional nesta sprint documental.
+
+
+## Recuperação de preservação — 2026-09-13
+
+A construção anterior foi interrompida por reescritas excessivas de catálogo/índice e notebooks. Os sete arquivos foram restaurados integralmente da base integrada; os cinco novos READMEs permanecem na branch. Consulte [RECUPERACAO_R09.md](RECUPERACAO_R09.md) para arquivos, evidências e pendências. Backlinks, erratas e integração transversal precisam ser reaplicados pontualmente. Esta recuperação não aprova o freeze nem os runtimes da R09.
