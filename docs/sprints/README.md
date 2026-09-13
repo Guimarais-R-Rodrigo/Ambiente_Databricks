@@ -76,3 +76,6 @@ A R04-A está integrada em `a8f314a`. A R04-B cobre seis Hub Scripts e pausa par
 
 ### READMEs de objeto — R05
 A R04-B está integrada em `d9da056`. A R05 cobre seis modelos tabulares e pausa para revisão antes da R06. Consulte `readmes_objetos/RELATORIO_R05.md` e `readmes_objetos/MATRIZ_ALTERACOES_R05.md`.
+
+### READMEs de objeto — R06
+A R05 está integrada em `cae94988`. A R06 cobre cinco objetos de séries/validação temporal e pausa para revisão antes da R07. Consulte `readmes_objetos/RELATORIO_R06.md` e `readmes_objetos/MATRIZ_ALTERACOES_R06.md`.

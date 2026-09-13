@@ -1470,6 +1470,18 @@ smart_sample(df: DataFrame, n: int=10000, stratify_col: Optional[str]=None, seed
 
 ### 27.4. Modelagem, tempo, métricas e monitoramento
 
+#### Guias locais R06 — como montar uma avaliação temporal sem misturar as camadas
+
+Para um usuário começando no Hub, a ordem conceitual recomendada é: **(1) construir features sem futuro → (2) definir partições/gaps → (3) avaliar em um ou vários cortes → (4) ajustar e comparar candidatos**. Os objetos R06 não formam um pipeline automático; cada um cobre uma parte:
+
+- `hub_snippets/ml/lgbm_temporal/README.md` — lags/rollings/calendário em pandas; não treina LightGBM;
+- `hub_snippets/ml/split_temporal/README.md` — um split treino/validação/teste por períodos observados;
+- `hub_snippets/ml/walk_forward/README.md` — vários folds expansivos; o callback faz o treino;
+- `hub_snippets/ml/arima_wrapper/README.md` — candidato auto-ARIMA; métricas retornadas são in-sample;
+- `hub_snippets/ml/prophet_wrapper/README.md` — candidato Prophet; atenção a feriados e grão agregado.
+
+`gap` e `gap_periods` não descobrem a maturação do target. Eles contam períodos observados da base e precisam ser configurados de acordo com o processo real. Métrica in-sample, validação temporal e teste final são evidências diferentes. Todos esses helpers operam no driver.
+
 #### `hub_snippets.ml.arima_wrapper`
 
 Recebe série NumPy ordenada, ajusta auto-ARIMA e devolve modelo, previsões e métricas. Requer frequência e período sazonal coerentes; lacunas temporais não são inferidas pela posição do array. Pmdarima é exigido na chamada e MLflow é importado no módulo.
