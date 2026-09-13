@@ -1,0 +1,139 @@
+name: Auditoria final READMEs R13
+
+on:
+  push:
+    branches: [codex/readmes-r13-auditoria-final]
+
+permissions:
+  contents: write
+
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+
+      - name: Preparar árvore final e auditorias específicas
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=ec4b559d098c96dfececbb17e52fbc276cb485c0
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$BASE"
+          python docs/sprints/readmes_objetos/evidencias_r13/registrar_r13.py
+          rm .github/workflows/readmes-r13-auditoria-final.yml
+          python docs/sprints/readmes_objetos/evidencias_r13/auditar_r13.py | tee /tmp/r13-auditoria.txt
+          python docs/sprints/readmes_objetos/evidencias_r13/mutantes_r13.py | tee /tmp/r13-mutantes.txt
+          git add -A
+          git diff --cached --check
+
+      - name: Instalar dependências do gate permanente
+        run: python -m pip install -r tools/requirements-dev.txt
+
+      - name: Capturar snapshot final do validador
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validate_assistant.py | tee /tmp/r13-validator.txt
+          python docs/sprints/readmes_objetos/evidencias_r13/snapshot_r13.py /tmp/r13-validator.txt
+          git add README.md
+          python tools/validate_assistant.py --conferir-readme
+
+      - name: Preservação e regressão completa
+        shell: bash
+        run: |
+          set -euo pipefail
+          python docs/sprints/readmes_objetos/evidencias_r13/verificar_preservacao_r13.py | tee /tmp/r13-preservacao.txt
+          python tools/ci_local.py | tee /tmp/r13-ci.txt
+
+      - name: Fechar evidências R13
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          root = Path('.')
+          docs = root / 'docs/sprints/readmes_objetos'
+          audit = json.loads((docs / 'evidencias_r13/AUDITORIA_R13.json').read_text(encoding='utf-8'))
+          mutants = json.loads((docs / 'evidencias_r13/MUTANTES_R13.json').read_text(encoding='utf-8'))
+          assert audit['status'] == 'PASS' and audit['blockers'] == [], audit
+          rejected = [k for k, v in mutants.items() if isinstance(v, dict) and v.get('status') == 'REJEITADO_COMO_ESPERADO']
+          assert len(rejected) == 6, rejected
+
+          findings = docs / 'ACHADOS_R13.md'
+          text = findings.read_text(encoding='utf-8')
+          old = 'Pendente até a execução do workflow R13.'
+          new = (
+              'Nenhum bloqueador local foi encontrado. O contrato permaneceu em 75/75 operacionais, '
+              '3/3 exemplares e 0 pendências; a composição observada foi 52 snippets, 7 scripts e 16 prompts. '
+              'Os seis mutantes negativos foram rejeitados como esperado e o gate local completo foi executado. '
+              'Permanecem fora do escopo auditoria independente, publicação no workspace e homologação Databricks/Genie Code.'
+          )
+          assert text.count(old) == 1
+          findings.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          report = docs / 'RELATORIO_R13.md'
+          body = report.read_text(encoding='utf-8').rstrip()
+          marker = '## Resultado técnico da candidata'
+          if marker not in body:
+              body += (
+                  '\n\n' + marker + '\n\n'
+                  'A auditoria consolidada local concluiu **PASS**, sem bloqueadores. Foram confirmados '
+                  '75/75 READMEs operacionais, 3/3 exemplares, 0 pendências, 52 snippets, 7 scripts e 16 prompts. '
+                  'Os seis índices de categoria cobrem exatamente os snippets correspondentes; os seis mutantes '
+                  'negativos foram rejeitados; fonte e simulado permaneceram equivalentes; o produto ficou congelado '
+                  'na base pós-R12. O `ci_local.py` também concluiu com sucesso.\n\n'
+                  'Esse resultado é `A0_light` e não deve ser descrito como auditoria independente, publicação ou homologação Databricks.'
+              )
+          report.write_text(body.rstrip() + '\n', encoding='utf-8')
+          PY
+
+          E=docs/sprints/readmes_objetos/evidencias_r13/FREEZE_R13.txt
+          {
+            echo 'R13 — auditoria final consolidada'
+            echo 'base=ec4b559d098c96dfececbb17e52fbc276cb485c0'
+            echo "workflow_source=${GITHUB_SHA}"
+            python --version
+            echo
+            echo '== auditoria consolidada =='
+            cat /tmp/r13-auditoria.txt
+            echo
+            echo '== mutantes =='
+            cat /tmp/r13-mutantes.txt
+            echo
+            echo '== validator =='
+            cat /tmp/r13-validator.txt
+            echo
+            echo '== preservacao =='
+            cat /tmp/r13-preservacao.txt
+            echo
+            echo '== ci_local =='
+            cat /tmp/r13-ci.txt
+          } > "$E"
+
+          git add -A
+          python tools/validate_assistant.py --conferir-readme
+          python docs/sprints/readmes_objetos/evidencias_r13/auditar_r13.py
+          python docs/sprints/readmes_objetos/evidencias_r13/verificar_preservacao_r13.py
+          git add -A
+          git diff --cached --check
+
+      - name: Publicar candidata de auditoria
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'docs(r13): auditar iniciativa de READMEs (ChatGPT)'
+          git push origin HEAD:codex/readmes-r13-auditoria-final
