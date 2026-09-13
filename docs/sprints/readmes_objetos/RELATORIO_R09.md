@@ -37,3 +37,9 @@ Preflight técnico **`34772019675`** aprovado integralmente: validador em 60/75 
 ## Recuperação de preservação — 2026-09-13
 
 A construção anterior foi interrompida por reescritas excessivas de catálogo/índice e notebooks. Os sete arquivos foram restaurados integralmente da base integrada; os cinco READMEs permaneceram. Consulte [RECUPERACAO_R09.md](RECUPERACAO_R09.md). A recuperação não é apresentada como auditoria independente nem como teste no Databricks.
+
+## Correção pós-freeze do snapshot — 2026-09-13
+
+O freeze técnico `34784634303` aprovou os gates funcionais, estruturais e de preservação. No primeiro CI permanente do head efetivo do PR, run `34785228161`, o validador revelou duas contagens repo-wide desatualizadas no snapshot do README: os cinco READMEs derivados criados pelo renderer e `FREEZE_R09.txt` ainda não estavam no inventário versionado quando o snapshot foi capturado.
+
+Na árvore final versionada, as contagens corretas são **1236 arquivos** na varredura de identidade e **1486 links** fora da raiz analisada, com **0 extras locais** em checkout limpo. A correção pós-freeze altera somente `README.md` e este relatório; implementações, fachadas, notebooks, READMEs dos cinco objetos e o conteúdo histórico de `FREEZE_R09.txt` permanecem intactos.
