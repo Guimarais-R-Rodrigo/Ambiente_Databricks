@@ -18,7 +18,7 @@ jobs:
       MKL_NUM_THREADS: '1'
       BASE_COMMIT: d9da056c95bf5c4209b2f208de1c9a987580efe7
       BASE_TREE: d461d1a2ef8523d380f82bac6bb112287e6cd870
-      EXPECTED_PARENT: de839c66de125698cd50166759f6f04546700295
+      EXPECTED_PARENT: 1d4cec150e0bed9a9f028c6a35bb05033e90575f
     steps:
       - uses: actions/checkout@v4
         with:
