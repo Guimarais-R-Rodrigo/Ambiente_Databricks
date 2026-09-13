@@ -330,6 +330,21 @@ Sim. Use `hub_padroes/` e `@hub-ml-criar-objeto`, mantendo código, exportação
 
 ---
 
+## Aparência do Hub — candidata V05
+
+O [laboratório visual](hub_snippets/visual/theme_lab/README.md) permite ajustar uma
+prévia pessoal sobre os adaptadores já integrados, sem mudar o padrão da equipe.
+Comece pelo [guia de primeiro uso](hub_snippets/visual/theme_lab/GUIA_PRIMEIRO_USO.md)
+e depois abra o notebook `hub_snippets/visual/theme_lab/exemplo_theme_lab.py`.
+
+O mantenedor precisa preparar pacote, caminho, dependências e, quando aplicável,
+a pasta autorizada para rascunhos. A candidata não submete, aprova ou publica
+um tema. A seleção visual de presets, a linhagem automática até a base original
+e a reabertura autônoma pelo operador ainda não estão concluídas. Quem já usa o
+Hub pode continuar pela rotina anterior; nada é ativado apenas ao abrir este README.
+
+---
+
 ## 🔗 Continue Explorando
 
 - [Agent Skills](skills/README.md)
