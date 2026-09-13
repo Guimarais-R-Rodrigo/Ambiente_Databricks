@@ -277,7 +277,7 @@ O catálogo abaixo preserva as famílias e acrescenta links diretos para o brief
 - **Skill recomendada:** `@hub-ml-analise-safra`.
 - **Cenário de Uso:**
   > *“Quero comparar a inadimplência de contratos originados em meses diferentes após maturidade equivalente.”*
-- **Arquivos:** `hub_prompts/safra/safra.md` · `hub_prompts/safra/exemplo_safra.py`
+- **Arquivos:** `hub_prompts/safra/safra.md` · `hub_prompts/safra/exemplo_safra.py` · [README local](safra/README.md)
 
 #### `stat_check` — Validação Estatística de Hipóteses
 
@@ -301,7 +301,7 @@ O catálogo abaixo preserva as famílias e acrescenta links diretos para o brief
 - **Skill recomendada:** `@hub-ml-baseline-ml`.
 - **Cenário de Uso:**
   > *“Preciso validar a esteira e estabelecer uma linha de base reproduzível antes de otimizar modelos.”*
-- **Arquivos:** `hub_prompts/baseline_orchestration/baseline_orchestration.md` · `hub_prompts/baseline_orchestration/exemplo_baseline_orchestration.py`
+- **Arquivos:** `hub_prompts/baseline_orchestration/baseline_orchestration.md` · `hub_prompts/baseline_orchestration/exemplo_baseline_orchestration.py` · [README local](baseline_orchestration/README.md)
 
 #### `pipeline` — Construção de Pipelines Modulares
 
@@ -309,7 +309,7 @@ O catálogo abaixo preserva as famílias e acrescenta links diretos para o brief
 - **Skill recomendada:** `@hub-ml-pipeline-builder`.
 - **Cenário de Uso:**
   > *“Quero decompor um notebook monolítico em etapas testáveis e preparar sua automação.”*
-- **Arquivos:** `hub_prompts/pipeline/pipeline.md` · `hub_prompts/pipeline/exemplo_pipeline.py`
+- **Arquivos:** `hub_prompts/pipeline/pipeline.md` · `hub_prompts/pipeline/exemplo_pipeline.py` · [README local](pipeline/README.md)
 
 #### `explainability` — Explicabilidade de Modelos de ML
 
@@ -317,7 +317,7 @@ O catálogo abaixo preserva as famílias e acrescenta links diretos para o brief
 - **Skill recomendada:** `@hub-ml-explainability`.
 - **Cenário de Uso:**
   > *“Preciso entender quais variáveis influenciaram o comportamento do modelo e comunicar as limitações da análise.”*
-- **Arquivos:** `hub_prompts/explainability/explainability.md` · `hub_prompts/explainability/exemplo_explainability.py`
+- **Arquivos:** `hub_prompts/explainability/explainability.md` · `hub_prompts/explainability/exemplo_explainability.py` · [README local](explainability/README.md)
 
 #### `monitoramento_modelo` — Acompanhamento de Performance e Drift
 
@@ -325,7 +325,7 @@ O catálogo abaixo preserva as famílias e acrescenta links diretos para o brief
 - **Skill recomendada:** `@hub-ml-monitoramento-modelo`.
 - **Cenário de Uso:**
   > *“Quero investigar se a população ou a performance mudou e produzir evidência para decidir o próximo passo.”*
-- **Arquivos:** `hub_prompts/monitoramento_modelo/monitoramento_modelo.md` · `hub_prompts/monitoramento_modelo/exemplo_monitoramento_modelo.py`
+- **Arquivos:** `hub_prompts/monitoramento_modelo/monitoramento_modelo.md` · `hub_prompts/monitoramento_modelo/exemplo_monitoramento_modelo.py` · [README local](monitoramento_modelo/README.md)
 
 ---
 
@@ -353,7 +353,7 @@ O catálogo abaixo preserva as famílias e acrescenta links diretos para o brief
 - **Skill recomendada:** `@hub-ml-auditoria-skills`.
 - **Cenário de Uso:**
   > *“Antes de aceitar um notebook gerado com IA, quero revisar segurança, temporalidade, custo e aderência ao contrato.”*
-- **Arquivos:** `hub_prompts/auditoria_skills/auditoria_skills.md` · `hub_prompts/auditoria_skills/exemplo_auditoria_skills.py`
+- **Arquivos:** `hub_prompts/auditoria_skills/auditoria_skills.md` · `hub_prompts/auditoria_skills/exemplo_auditoria_skills.py` · [README local](auditoria_skills/README.md)
 
 ---
 
@@ -365,7 +365,7 @@ O catálogo abaixo preserva as famílias e acrescenta links diretos para o brief
 - **Skill recomendada:** `@hub-ml-comentar-notebook`.
 - **Cenário de Uso:**
   > *“Quero tornar um notebook denso compreensível para a equipe sem alterar silenciosamente sua lógica.”*
-- **Arquivos:** `hub_prompts/comentar_notebook/comentar_notebook.md` · `hub_prompts/comentar_notebook/exemplo_comentar_notebook.py`
+- **Arquivos:** `hub_prompts/comentar_notebook/comentar_notebook.md` · `hub_prompts/comentar_notebook/exemplo_comentar_notebook.py` · [README local](comentar_notebook/README.md)
 
 #### `tutor_explicar` — Mentoria Técnica e Explicabilidade de Código
 
@@ -373,7 +373,7 @@ O catálogo abaixo preserva as famílias e acrescenta links diretos para o brief
 - **Skill recomendada:** `@hub-ml-tutor-databricks`.
 - **Cenário de Uso:**
   > *“Quero entender como o plano Spark, o particionamento e o join se relacionam com a lentidão observada.”*
-- **Arquivos:** `hub_prompts/tutor_explicar/tutor_explicar.md` · `hub_prompts/tutor_explicar/exemplo_tutor_explicar.py`
+- **Arquivos:** `hub_prompts/tutor_explicar/tutor_explicar.md` · `hub_prompts/tutor_explicar/exemplo_tutor_explicar.py` · [README local](tutor_explicar/README.md)
 
 #### `novo_projeto` — Kick-off Estruturado de Projetos de Dados
 
@@ -381,7 +381,7 @@ O catálogo abaixo preserva as famílias e acrescenta links diretos para o brief
 - **Skill recomendada:** Genie Code; selecione uma skill especializada depois que a natureza da entrega estiver clara.
 - **Cenário de Uso:**
   > *“Vamos iniciar um projeto de precificação e quero organizar perguntas, escopo, dependências e plano antes de criar artefatos.”*
-- **Arquivos:** `hub_prompts/novo_projeto/novo_projeto.md` · `hub_prompts/novo_projeto/exemplo_novo_projeto.py`
+- **Arquivos:** `hub_prompts/novo_projeto/novo_projeto.md` · `hub_prompts/novo_projeto/exemplo_novo_projeto.py` · [README local](novo_projeto/README.md)
 
 ---
 

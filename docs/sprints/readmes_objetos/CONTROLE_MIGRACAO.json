@@ -2,16 +2,6 @@
   "schema_version": 1,
   "base_commit": "f748c144dbb6909c7437b53498b25dd4f4854ab7",
   "template_version": "1.0.0",
-  "phase": "migration",
-  "pending": {
-    "hub_prompts/auditoria_skills": {"sprint": "R11", "lote": "B"},
-    "hub_prompts/baseline_orchestration": {"sprint": "R11", "lote": "A"},
-    "hub_prompts/comentar_notebook": {"sprint": "R11", "lote": "B"},
-    "hub_prompts/explainability": {"sprint": "R11", "lote": "A"},
-    "hub_prompts/monitoramento_modelo": {"sprint": "R11", "lote": "A"},
-    "hub_prompts/novo_projeto": {"sprint": "R11", "lote": "B"},
-    "hub_prompts/pipeline": {"sprint": "R11", "lote": "A"},
-    "hub_prompts/safra": {"sprint": "R11", "lote": "A"},
-    "hub_prompts/tutor_explicar": {"sprint": "R11", "lote": "B"}
-  }
+  "phase": "complete",
+  "pending": {}
 }

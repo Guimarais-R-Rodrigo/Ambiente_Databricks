@@ -10,9 +10,9 @@ Rodrigo aprovou o padrão e autorizou a integração das R03-A/R03-B com a V01 e
 2026-09-12. O PR nº 13 foi integrado na `main` pelo commit `1be947b`; o
 [registro da composição](INTEGRACAO_R03_V01.md) preserva os gates e a V01.
 
-O contrato vigente é **1.0.0**. A R09 foi aceita e integrada pelo PR nº 29 no commit `d412acb`. A R10 documenta seis Hub Prompts: `comparar_tabelas`, `cross_eda`, `data_quality`, `eda_completa`, `feature_engineering` e `stat_check`. A cobertura candidata é **66/75 operacionais e 3/3 exemplares, com 9 pendências**; o validador da árvore fechada é fonte de verdade.
+O contrato vigente é **1.0.0**. A R10 foi aceita e integrada pelo PR nº 30 no commit `7ba5d386`. A R11 documenta os nove Hub Prompts restantes em lotes A/B. A candidata busca fechar a migração estrutural em **75/75 operacionais e 3/3 exemplares, com 0 pendências**, sujeita ao validador real.
 
-Consulte o [relatório R10](RELATORIO_R10.md), a [matriz nominal](MATRIZ_ALTERACOES_R10.md) e os [achados](ACHADOS_R10.md). A próxima parada é freeze técnico e revisão antes da R11.
+Consulte o [relatório R11](RELATORIO_R11.md), a [matriz nominal](MATRIZ_ALTERACOES_R11.md) e os [achados](ACHADOS_R11.md). Fechar `pending` encerra a migração estrutural de READMEs, não homologação Databricks nem etapas posteriores da iniciativa.
 
 Os relatórios anteriores preservam o estado observado em cada data. PRs #9/#11
 foram supersedidos pela composição integrada do PR #13 e não devem ser tratados

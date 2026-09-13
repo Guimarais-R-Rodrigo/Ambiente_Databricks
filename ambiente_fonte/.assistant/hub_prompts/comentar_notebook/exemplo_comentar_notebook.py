@@ -2,6 +2,8 @@
 # MAGIC %md
 # MAGIC # `comentar_notebook` — documentar o notebook para quem vai lê-lo em seis meses
 # MAGIC
+# MAGIC 📘 Guia local: [`README.md`](./README.md)
+# MAGIC
 # MAGIC **Prompt não executa.** Ele é um briefing para colar num chat, e a
 # MAGIC resposta vem de uma interação que notebook nenhum reproduz. Este notebook
 # MAGIC tem três partes, e só as duas primeiras rodam:
@@ -49,7 +51,7 @@ print(f"linhas: {len(linhas)} | células: {celulas_codigo} | markdown: {celulas_
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC **Como ler.** O alvo é um notebook que já existe e que você pode abrir ao lado. Escolhi o `exemplo_pit_join` de propósito: ele é um dos onze sem saída colada, então tem espaço real para melhorar — e você consegue conferir se a sugestão do assistente faz sentido.
+# MAGIC **Como ler.** O alvo é um notebook real que você pode abrir ao lado. O estado atual do repositório já exige saída colada nos exemplos; o exercício aqui avalia clareza documental, não uma dívida antiga de outputs.
 
 # COMMAND ----------
 # MAGIC %md
@@ -118,7 +120,7 @@ print(f"linhas: {len(linhas)} | células: {celulas_codigo} | markdown: {celulas_
 # MAGIC
 # MAGIC **Como preencher**, quando for a hora:
 # MAGIC
-# MAGIC 1. Rode a Parte 1 deste notebook — ela cria `nenhuma — o insumo é um notebook`.
+# MAGIC 1. Rode a Parte 1 deste notebook — ela não cria tabela; apenas lê o notebook selecionado.
 # MAGIC 2. Abra um **chat novo** no Genie Code e cole o bloco da Parte 2.
 # MAGIC 3. Cole a resposta aqui, em markdown, com a data da captura.
 # MAGIC 4. Registre **qual skill foi carregada** — é a única forma de saber se o

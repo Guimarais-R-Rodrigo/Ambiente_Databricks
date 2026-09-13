@@ -5,6 +5,13 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-13 — R11: fechamento da migração de READMEs (ChatGPT)
+
+- Documenta os nove Hub Prompts restantes no contrato 1.0.0.
+- Preserva os nove briefings e limita notebooks a backlinks/erratas Markdown declaradas.
+- Fecha `pending` e muda o controle para `phase=complete`; meta estrutural 75/75 sujeita ao validador.
+- Sem publicação, homologação Databricks/Genie Code, auditoria independente, merge antecipado ou encerramento das etapas posteriores.
+
 ## 2026-09-13 — R10: READMEs de Hub Prompts (ChatGPT)
 
 - Documenta seis prompts no contrato 1.0.0: `comparar_tabelas`, `cross_eda`, `data_quality`, `eda_completa`, `feature_engineering` e `stat_check`.

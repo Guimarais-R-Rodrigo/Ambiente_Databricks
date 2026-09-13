@@ -2,6 +2,8 @@
 # MAGIC %md
 # MAGIC # `tutor_explicar` — entender o que o código faz, e por que ele faz assim
 # MAGIC
+# MAGIC 📘 Guia local: [`README.md`](./README.md)
+# MAGIC
 # MAGIC **Prompt não executa.** Ele é um briefing para colar num chat, e a
 # MAGIC resposta vem de uma interação que notebook nenhum reproduz. Este notebook
 # MAGIC tem três partes, e só as duas primeiras rodam:
@@ -73,7 +75,7 @@ print("\n".join(codigo.splitlines()[:20]))
 # MAGIC - Meu nível atual: intermediário em SQL, iniciante em Spark
 # MAGIC - Profundidade: passo a passo, com o porquê de cada decisão
 # MAGIC - Objetivo prático: entender por que a janela do join precisa do atraso de publicação, e o que aconteceria sem ele
-# MAGIC - Ambiente/compute/runtime: Databricks Free, serverless, Spark 4.1
+# MAGIC - Ambiente/compute/runtime: Databricks Free, serverless; confirme a versão efetiva do Spark antes de depender de comportamento específico
 # MAGIC - Contexto de negócio: CRM bancário; a decisão é abordar ou não um cliente numa campanha
 # MAGIC - Restrições: use analogia de negócio quando ajudar; não me dê a resposta pronta antes da explicação
 # MAGIC
@@ -118,7 +120,7 @@ print("\n".join(codigo.splitlines()[:20]))
 # MAGIC
 # MAGIC **Como preencher**, quando for a hora:
 # MAGIC
-# MAGIC 1. Rode a Parte 1 deste notebook — ela cria `nenhuma — o insumo é um trecho de código`.
+# MAGIC 1. Rode a Parte 1 deste notebook — ela não cria tabela; apenas lê o módulo Python selecionado.
 # MAGIC 2. Abra um **chat novo** no Genie Code e cole o bloco da Parte 2.
 # MAGIC 3. Cole a resposta aqui, em markdown, com a data da captura.
 # MAGIC 4. Registre **qual skill foi carregada** — é a única forma de saber se o
