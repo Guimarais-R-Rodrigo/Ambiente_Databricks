@@ -2470,6 +2470,19 @@ Se a dúvida estiver em um dos seis scripts abaixo, abra primeiro o README da pr
 
 Os scripts continuam sendo executados explicitamente. O README não torna o helper um gate automático e não substitui a implementação.
 
+### Guias locais R05 — modelos tabulares
+
+Para escolher entre os seis modelos/tabulares desta leva, abra primeiro o README da pasta. A rota recomendada é: baseline simples → baseline de árvore → somente depois tuning ou arquitetura neural, sempre sob a mesma validação.
+
+- `hub_snippets/ml/train_lgbm/README.md` — LightGBM e métricas por tarefa;
+- `hub_snippets/ml/train_catboost/README.md` — CatBoost e categóricas;
+- `hub_snippets/ml/lgbm_ranker/README.md` — ranking por grupos e NDCG;
+- `hub_snippets/ml/optuna_lgbm/README.md` — TPE e limites da busca;
+- `hub_snippets/ml/mlp_embeddings/README.md` — embeddings e contrato binário do treinador;
+- `hub_snippets/ml/tabnet_wrapper/README.md` — TabNet e importância global.
+
+Os notebooks instalam dependências de laboratório e reiniciam o Python. Leia esses efeitos antes de executar. Métrica de validação, importância ou tuning não equivalem a homologação do modelo.
+
 ## 30. Fontes, manutenção e alcance das afirmações
 
 ### 30.1. Como conferir a procedência

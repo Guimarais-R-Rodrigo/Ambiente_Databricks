@@ -2,10 +2,12 @@
 # MAGIC %md
 # MAGIC # `optuna_lgbm` — busca de hiperparâmetro que para quando deve
 # MAGIC
-# MAGIC **O problema.** Grid search testa combinações que já se sabe ruins e gasta o orçamento nas bordas. E busca sem validação separada acha o melhor jeito de decorar o conjunto de teste.
+# MAGIC **O problema.** Grid search percorre uma malha fixa sem usar o desempenho dos trials anteriores para sugerir o próximo ponto. E busca sem validação separada encontra o melhor ajuste à própria amostra usada para escolher.
 # MAGIC
 # MAGIC **O que este helper faz.** Roda busca bayesiana com Optuna sobre o espaço do LightGBM, medindo na validação e devolvendo o estudo completo.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste modelo](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -105,6 +107,6 @@ print(f"melhor valor: {estudo.best_value:.4f} | trials concluidos: {len(estudo.t
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
-# MAGIC - **Com poucos trials.** Abaixo de ~30, a busca bayesiana ainda está explorando; o resultado é quase sorteio.
+# MAGIC - **Com orçamento incompatível com o espaço.** Não há um número mínimo universal de trials; examine convergência, variabilidade, custo e tamanho do espaço.
 # MAGIC - **Sobre a mesma partição usada para reportar.** O ótimo encontrado é ótimo *daquela* validação; reporte num terceiro conjunto.
-# MAGIC - **Antes de ter feature boa.** Hiperparâmetro rende alguns pontos decimais; feature nova rende ordens de grandeza.
+# MAGIC - **Antes de estabilizar dados, features e validação.** Tuning não corrige leakage ou target mal definido e pode consumir orçamento otimizando o problema errado.

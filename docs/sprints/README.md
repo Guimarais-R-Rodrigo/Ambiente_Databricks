@@ -73,3 +73,6 @@ A [V03](sistema_temas/V03/README.md) recebeu aceite explícito de Rodrigo e teve
 
 ### READMEs de objeto — R04-B
 A R04-A está integrada em `a8f314a`. A R04-B cobre seis Hub Scripts e pausa para revisão antes da R05. Consulte `readmes_objetos/RELATORIO_R04B.md` e `readmes_objetos/MATRIZ_ALTERACOES_R04B.md`.
+
+### READMEs de objeto — R05
+A R04-B está integrada em `d9da056`. A R05 cobre seis modelos tabulares e pausa para revisão antes da R06. Consulte `readmes_objetos/RELATORIO_R05.md` e `readmes_objetos/MATRIZ_ALTERACOES_R05.md`.

@@ -96,10 +96,6 @@
       "sprint": "R07",
       "lote": "A"
     },
-    "hub_snippets/ml/lgbm_ranker": {
-      "sprint": "R05",
-      "lote": "A"
-    },
     "hub_snippets/ml/lgbm_temporal": {
       "sprint": "R06",
       "lote": "A"
@@ -110,14 +106,6 @@
     },
     "hub_snippets/ml/mlflow_run": {
       "sprint": "R09",
-      "lote": "A"
-    },
-    "hub_snippets/ml/mlp_embeddings": {
-      "sprint": "R05",
-      "lote": "A"
-    },
-    "hub_snippets/ml/optuna_lgbm": {
-      "sprint": "R05",
       "lote": "A"
     },
     "hub_snippets/ml/performance_monitor": {
@@ -146,18 +134,6 @@
     },
     "hub_snippets/ml/survival_cox": {
       "sprint": "R07",
-      "lote": "A"
-    },
-    "hub_snippets/ml/tabnet_wrapper": {
-      "sprint": "R05",
-      "lote": "A"
-    },
-    "hub_snippets/ml/train_catboost": {
-      "sprint": "R05",
-      "lote": "A"
-    },
-    "hub_snippets/ml/train_lgbm": {
-      "sprint": "R05",
       "lote": "A"
     },
     "hub_snippets/ml/umap_viz": {

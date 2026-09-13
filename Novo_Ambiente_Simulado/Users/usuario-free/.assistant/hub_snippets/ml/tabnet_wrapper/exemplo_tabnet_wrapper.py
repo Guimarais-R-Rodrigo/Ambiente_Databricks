@@ -2,10 +2,12 @@
 # MAGIC %md
 # MAGIC # `tabnet_wrapper` — rede neural tabular que diz onde olhou
 # MAGIC
-# MAGIC **O problema.** Rede neural em dado tabular costuma perder para árvore e, quando ganha, não explica. Isso a torna difícil de defender em contexto que exige justificar decisão.
+# MAGIC **O problema.** Redes neurais tabulares acrescentam custo e flexibilidade, mas precisam provar valor contra baselines mais simples. Quando usadas, também é útil entender quais features o próprio modelo priorizou.
 # MAGIC
-# MAGIC **O que este helper faz.** Treina TabNet, que seleciona features por passo com máscaras esparsas — o que dá uma explicação nativa, sem SHAP por cima.
+# MAGIC **O que este helper faz.** Treina TabNet e devolve a importância global calculada pela implementação a partir de suas máscaras/explicações internas. Isso não é causalidade nem substitui uma análise local quando ela for necessária.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste modelo](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -117,23 +119,20 @@ for posicao in ordem:
 # MAGIC só pelo produto `X[:,2] * X[:,3]`, aparecem juntas logo atrás. O termo de
 # MAGIC interação foi encontrado sem que ninguém o declarasse.
 # MAGIC
-# MAGIC **A importância aqui não vem de SHAP.** Ela sai das máscaras de atenção:
+# MAGIC **A importância aqui não vem de SHAP.** Na biblioteca usada, ela é derivada da explicação/máscaras do modelo sobre o treino:
 # MAGIC o TabNet decide, a cada passo, em quais features olhar, e a soma dessas
 # MAGIC decisões é a importância. Isso é mais barato que SHAP e mede outra coisa —
 # MAGIC "onde o modelo olhou", não "quanto cada variável moveu a previsão".
 # MAGIC
-# MAGIC As colunas 4 a 7 são ruído puro e receberam de 0,0145 a 0,0577. Como no
-# MAGIC SHAP, **nada recebe zero**, e a leitura útil continua sendo a mesma:
-# MAGIC o degrau entre 0,094 e 0,058 é onde o sinal acaba.
+# MAGIC Neste cenário sintético, as colunas 4 a 7 foram geradas como ruído e receberam importância menor que as quatro primeiras. Não existe regra de que ruído precise receber exatamente zero, nem um “degrau” universal que separe sinal de ruído; valide estabilidade e comportamento fora da amostra.
 # MAGIC
-# MAGIC Para comparar com um baseline honesto, `hub_snippets.ml.train_lgbm` dá
-# MAGIC 0,9268 num problema parecido, em uma fração do tempo.
+# MAGIC Para comparar com um baseline honesto, rode `hub_snippets.ml.train_lgbm` **nesta mesma base e partição**. O número 0,9268 aparece em outro notebook com outro dataset sintético e não é comparação direta.
 
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## Quando **não** usar
 # MAGIC
-# MAGIC - **Como primeira tentativa.** É o último recurso da lista tabular, não o primeiro. Comece pelo baseline de árvore.
-# MAGIC - **Com poucos dados.** Precisa de volume para as máscaras convergirem; abaixo disso, a explicação é instável entre execuções.
+# MAGIC - **Sem baseline anterior.** A complexidade extra só é justificável depois de uma referência comparável sob a mesma validação.
+# MAGIC - **Quando o volume não sustenta a arquitetura.** Estabilidade das máscaras e da métrica deve ser medida; não há corte universal de tamanho nesta documentação.
 # MAGIC - **Confiando na máscara como explicação suficiente.** Ela diz onde o modelo olhou, não por que aquilo importa.
 # MAGIC - **Sem orçamento de tempo.** É o mais lento dos treinadores desta biblioteca, por larga margem.

@@ -5,6 +5,14 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — R05: READMEs de modelos tabulares (ChatGPT)
+
+- Documenta `lgbm_ranker`, `mlp_embeddings`, `optuna_lgbm`, `tabnet_wrapper`, `train_catboost` e `train_lgbm` no contrato 1.0.0.
+- Corrige somente prosa/backlinks dos seis notebooks; código, magics executáveis e outputs históricos permanecem protegidos.
+- Retira exatamente seis dispensas R05 do controle de migração.
+- Registra limitações de API encontradas, relatório, matriz, rubrica e testes de runtime isolados.
+- Sem alteração de implementação, dependência permanente, publicação Databricks, auditoria independente ou início da R06.
+
 ## 2026-09-12 — R04-B: READMEs dos seis Hub Scripts (ChatGPT)
 
 - Documenta `data_quality_check`, `doc_coverage`, `drift_detector`, `naming_checker`, `rfv_calculator` e `schema_to_yaml` no contrato 1.0.0.
