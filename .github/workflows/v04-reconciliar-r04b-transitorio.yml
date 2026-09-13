@@ -1,0 +1,96 @@
+name: Reconciliar V04 com R04-B
+on:
+  push:
+    branches:
+      - codex/temas-v04-html-20260912
+permissions:
+  contents: write
+jobs:
+  reconciliar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      MAIN_ESPERADA: d9da056c95bf5c4209b2f208de1c9a987580efe7
+      BASE_V03: b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Dependências declaradas e Spark de caracterização
+        run: |
+          python -m pip install -r tools/requirements-dev.txt
+          python -m pip install 'pyspark==4.0.1' 'PyYAML==6.0.2'
+      - name: Reconciliar sem conflitos implícitos
+        shell: bash
+        run: |
+          set -euo pipefail
+          PRE="$(git rev-parse HEAD)"
+          echo "$PRE" > /tmp/v04_pre
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$MAIN_ESPERADA"
+          git config user.name "Codex"
+          git config user.email "codex@users.noreply.github.com"
+          git merge --no-commit --no-ff origin/main
+          test -z "$(git diff --name-only --diff-filter=U)"
+
+          # Tudo que a V04 alterou desde a base V03 precisa sobreviver ao merge.
+          git diff --name-only "$BASE_V03" "$PRE" > /tmp/v04_paths
+          while IFS= read -r p; do
+            [ -z "$p" ] && continue
+            [ "$p" = '.github/workflows/v04-reconciliar-r04b-transitorio.yml' ] && continue
+            if git cat-file -e "$PRE:$p" 2>/dev/null; then
+              test -e "$p"
+              cmp <(git show "$PRE:$p") "$p"
+            else
+              test ! -e "$p"
+            fi
+          done < /tmp/v04_paths
+
+          # A diferença real R04-B, medida a partir da main V03, precisa entrar intacta.
+          git diff --name-only "$BASE_V03" origin/main > /tmp/r04b_paths
+          while IFS= read -r p; do
+            [ -z "$p" ] && continue
+            if git cat-file -e "origin/main:$p" 2>/dev/null; then
+              test -e "$p"
+              cmp <(git show "origin/main:$p") "$p"
+            else
+              test ! -e "$p"
+            fi
+          done < /tmp/r04b_paths
+
+          echo "V04 preservada: $(wc -l < /tmp/v04_paths) caminhos"
+          echo "R04-B preservada: $(wc -l < /tmp/r04b_paths) caminhos"
+      - name: Revalidar V04 e sistema de temas
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B tools/tests/test_temas_v04.py -v
+          python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
+          python -B tools/tests/test_visual_legado_v00.py
+          python -B tools/validate_assistant.py
+      - name: Revalidar R04-B com Spark real
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B docs/sprints/readmes_objetos/evidencias_r04b/verificar_r04b.py --require-spark
+      - name: Congelar reconciliação somente se a main continuar igual
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$MAIN_ESPERADA"
+          git rm .github/workflows/v04-reconciliar-r04b-transitorio.yml
+          test -z "$(git diff --name-only --diff-filter=U)"
+          git add -A
+          git commit -m "merge: reconciliar V04 candidata com R04-B integrada"
+          git push origin HEAD:codex/temas-v04-html-20260912
