@@ -83,3 +83,6 @@ A R04-B está integrada em `d9da056`. A R05 cobre seis modelos tabulares e pausa
 
 ### READMEs de objeto — R06
 A R05 está integrada em `cae94988`. A R06 cobre cinco objetos de séries/validação temporal e pausa para revisão antes da R07. Consulte `readmes_objetos/RELATORIO_R06.md` e `readmes_objetos/MATRIZ_ALTERACOES_R06.md`.
+
+### READMEs de objeto — R07
+A R06 está integrada em `289731c`. A R07 cobre seis objetos de score, vintage e sobrevivência e pausa para revisão antes da R08. Consulte `readmes_objetos/RELATORIO_R07.md` e `readmes_objetos/MATRIZ_ALTERACOES_R07.md`.

@@ -10,6 +10,8 @@
 # MAGIC **O que este helper faz.** Organiza a carteira por **MOB** (meses desde a
 # MAGIC originação), que é o eixo em que safras se tornam comparáveis.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -160,7 +162,9 @@ print(f"convertido: {len(painel_pd)} linhas (volume controlado)")
 # MAGIC Duas colunas de data precisam existir, e a fixture não as traz de graça:
 # MAGIC `dt_originacao` é a safra virada em data, e `dt_referencia` é a foto. O
 # MAGIC parâmetro `mob_col` diz que o MOB já está calculado — mas **não dispensa**
-# MAGIC `dt_referencia`, que continua obrigatório.
+# MAGIC `dt_referencia`, que continua obrigatório. A célula abaixo fabrica `dt_ref` com
+# MAGIC `mob × 30 dias` apenas para satisfazer o exemplo sintético; como `mob_col` é
+# MAGIC fornecido, essa data não define o MOB e **30 dias não deve ser tratado como mês**.
 
 # COMMAND ----------
 
@@ -205,8 +209,8 @@ print(tabela.head(8).to_string(index=False))
 # MAGIC
 # MAGIC **Como ler.** Uma linha por safra × MOB. A taxa acumulada é a fração de
 # MAGIC contratos daquela safra que já tinham entrado em inadimplência **até**
-# MAGIC aquele MOB — e é por isso que ela nunca cai: uma vez inadimplente, o
-# MAGIC contrato não sai da conta.
+# MAGIC aquele MOB. O helper só publica essa taxa quando todos os contratos da safra
+# MAGIC estão observados naquele MOB; célula parcial fica `NaN`, não zero.
 # MAGIC
 # MAGIC A comparação entre safras só é honesta no mesmo MOB. É a armadilha que a
 # MAGIC seção anterior demonstrou com números.
