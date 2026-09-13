@@ -42,8 +42,9 @@ from hub_snippets.visual.theme_lab import (
 # MAGIC %md
 # MAGIC ## 2. Criar, experimentar e restaurar sem gravar
 # MAGIC
-# MAGIC Execute a célula inteira. Ela demonstra as operações, sem modificar a
-# MAGIC referência. Reexecutá-la cria outro rascunho: não a use para atualizar o painel.
+# MAGIC Execute a célula inteira. Ela demonstra as operações usando somente valores
+# MAGIC já presentes no tema de referência, sem introduzir outro contrato de entrada.
+# MAGIC Reexecutá-la cria outro rascunho: não a use para atualizar o painel.
 
 # COMMAND ----------
 # V05_DEMO_BEGIN
@@ -52,8 +53,9 @@ rascunho = create_theme_lab(referencia)
 hash_base = referencia.content_sha256
 print("contexto:", rascunho.current.context)
 print("alterado ao abrir:", rascunho.dirty)
-rascunho.apply_updates({"brand.primary": "#0066cc", "section.title_px": 20})
-print("cor normalizada:", rascunho.current.tokens["brand.primary"])
+cor_alternativa = rascunho.current.tokens["brand.accent"]
+rascunho.apply_updates({"brand.primary": cor_alternativa, "section.title_px": 20})
+print("cor aplicada:", rascunho.current.tokens["brand.primary"])
 print("alterado após aplicar:", rascunho.dirty)
 print("referência preservada:", referencia.content_sha256 == hash_base)
 rascunho.undo()
@@ -73,7 +75,7 @@ print("JSON somente em memória:", isinstance(payload, bytes))
 # MAGIC ```text
 # MAGIC contexto: notebook
 # MAGIC alterado ao abrir: False
-# MAGIC cor normalizada: #0066CC
+# MAGIC cor aplicada: #F7941D
 # MAGIC alterado após aplicar: True
 # MAGIC referência preservada: True
 # MAGIC desfeito: True
