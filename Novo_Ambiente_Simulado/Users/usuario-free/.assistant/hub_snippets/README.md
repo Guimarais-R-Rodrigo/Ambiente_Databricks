@@ -150,6 +150,19 @@ Os cinco recursos são customizados pelo Hub, driver-side e executados explicita
 - **`vintage_analysis`**: constrói curvas de safra e maturação por período de originação.
   - *Quando usar:* em risco, retenção ou eventos cujo denominador, janela e censura tenham sido definidos.
 
+#### 📘 Guias locais R07 — score, safra e sobrevivência
+
+Estes seis guias cobrem três perguntas diferentes: **como o score organiza risco**, **como coortes amadurecem** e **como analisar tempo até evento com censura**. Não misture as escalas:
+
+- [Kaplan–Meier](ml/kaplan_meier/README.md) — sobrevivência não ajustada e log-rank;
+- [Bandas de score](ml/score_bands/README.md) — quantis, evento e cobertura cumulativa;
+- [Scorecard](ml/scorecard_builder/README.md) — WOE + coeficientes em escala de pontos;
+- [Cox PH](ml/survival_cox/README.md) — hazard ratios condicionais e teste de proporcionalidade;
+- [Vintage](ml/vintage_analysis/README.md) — safra × MOB com maturidade observada;
+- [WOE/IV](ml/woe_iv_calculator/README.md) — separação por faixa em Spark; binning é externo.
+
+Os guias não definem política de crédito, causalidade, regulação ou cutoff. Cada contrato precisa ser validado no problema real antes de virar decisão.
+
 #### 📊 Risco de Crédito e Scorecards
 
 - **`woe_iv_calculator`**: calcula *Weight of Evidence* (WOE) e *Information Value* (IV) para os tipos suportados.

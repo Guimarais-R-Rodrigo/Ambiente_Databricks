@@ -88,10 +88,6 @@
       "sprint": "R08",
       "lote": "A"
     },
-    "hub_snippets/ml/kaplan_meier": {
-      "sprint": "R07",
-      "lote": "A"
-    },
     "hub_snippets/ml/metrics_report": {
       "sprint": "R09",
       "lote": "A"
@@ -104,32 +100,12 @@
       "sprint": "R09",
       "lote": "A"
     },
-    "hub_snippets/ml/score_bands": {
-      "sprint": "R07",
-      "lote": "A"
-    },
-    "hub_snippets/ml/scorecard_builder": {
-      "sprint": "R07",
-      "lote": "A"
-    },
     "hub_snippets/ml/shap_explainer": {
       "sprint": "R08",
       "lote": "A"
     },
-    "hub_snippets/ml/survival_cox": {
-      "sprint": "R07",
-      "lote": "A"
-    },
     "hub_snippets/ml/umap_viz": {
       "sprint": "R08",
-      "lote": "A"
-    },
-    "hub_snippets/ml/vintage_analysis": {
-      "sprint": "R07",
-      "lote": "A"
-    },
-    "hub_snippets/ml/woe_iv_calculator": {
-      "sprint": "R07",
       "lote": "A"
     }
   }

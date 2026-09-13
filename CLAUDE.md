@@ -107,3 +107,6 @@ A R04-B foi integrada na `main` em `d9da056`. A R05 documenta seis modelos tabul
 
 ### Estado da migração de READMEs — R06
 A R05 foi aceita e integrada na `main` em `cae94988`. A R06 documenta cinco objetos de séries/validação temporal sem alterar implementações/fachadas; consulte `docs/sprints/readmes_objetos/RELATORIO_R06.md`. Cobertura estrutural não é aceite editorial nem homologação.
+
+### Estado da migração de READMEs — R07
+A R06 foi aceita e integrada na `main` em `289731c`. A R07 documenta seis objetos de score, vintage e sobrevivência sem alterar implementações/fachadas; consulte `docs/sprints/readmes_objetos/RELATORIO_R07.md`. Cobertura estrutural não é aceite editorial, política de crédito nem homologação.
