@@ -45,13 +45,12 @@ jobs:
           test "$rc" -eq 1
 
           python - <<'PY'
-          import os, re, subprocess
+          import re, subprocess
           from pathlib import Path
           pre=Path('/tmp/v04_pre').read_text().strip()
           def show(ref,path):
               return subprocess.check_output(['git','show',f'{ref}:{path}'],text=True)
 
-          # 1) Changelog: main é a base; injeta a seção V04 exata da candidata.
           ours=show(pre,'CHANGELOG.md')
           main=show('origin/main','CHANGELOG.md')
           m=re.search(r'(?ms)^## 2026-09-12 — V04:.*?(?=^## 2026-09-12 — )',ours)
@@ -62,12 +61,8 @@ jobs:
           if not marker: raise SystemExit('changelog da main sem seção datada')
           Path('CHANGELOG.md').write_text(main[:marker.start()]+block+main[marker.start():],encoding='utf-8')
 
-          # 2) README raiz: a main contém o histórico R05/R06. O bloco medido será
-          # atualizado depois pelo validador na árvore já reconciliada.
           Path('README.md').write_text(show('origin/main','README.md'),encoding='utf-8')
 
-          # 3) Índice de sprints: preserva R05/R06 da main e substitui somente
-          # o bloco Sistema de Temas pelo bloco V04 da candidata.
           ours=show(pre,'docs/sprints/README.md')
           main=show('origin/main','docs/sprints/README.md')
           pat=r'(?ms)^## Sistema de Temas do Hub\n.*?(?=^### READMEs de objeto — R04-B\n)'
@@ -105,7 +100,7 @@ jobs:
 
           p=Path('docs/sprints/sistema_temas/V04/TESTES.md'); t=p.read_text(encoding='utf-8')
           marker='## Não medido por estes runs\n'
-          block=f'''## Reconciliação final com R05/R06 — run `{run}`\n\nA `main` avançou depois da validação `34727630459`. O diagnóstico `34731492694`\nfalhou antes do merge porque o checkout removeu as credenciais necessárias ao\n`fetch` privado; o diagnóstico corrigido `34731516515` identificou somente três\nconflitos documentais (`CHANGELOG.md`, `README.md` e `docs/sprints/README.md`).\nNenhum deles foi tratado por escolha cega de lado. A rodada `{run}` compõe esses\ntrês arquivos, preserva os demais caminhos R05/R06 da `main`, remove os workflows\ntransitórios e repete os gates na árvore final. Este bloco só será versionado se\na rodada terminar com sucesso.\n\n'''
+          block=f'''## Reconciliação final com R05/R06 — run `{run}`\n\nA `main` avançou depois da validação `34727630459`. O diagnóstico `34731492694`\nfalhou antes do merge porque o checkout removeu as credenciais necessárias ao\n`fetch` privado; o diagnóstico corrigido `34731516515` identificou somente três\nconflitos documentais (`CHANGELOG.md`, `README.md` e `docs/sprints/README.md`).\nA primeira composição `34731585141` permaneceu FAILURE porque a guarda de\npreservação tratou `CHECKPOINT_V04.md`, deliberadamente atualizado para registrar\na nova base, como se devesse permanecer byte a byte idêntico à candidata anterior.\nOs gates finais não foram executados e nenhum commit combinado foi enviado.\nA rodada `{run}` corrige somente essa classificação da guarda, compõe os três\nconflitos, preserva os demais caminhos R05/R06 da `main`, remove os workflows\ntransitórios e repete os gates na árvore final. Este bloco só será versionado se\na rodada terminar com sucesso.\n\n'''
           if t.count(marker)!=1: raise SystemExit('TESTES V04: marcador final inesperado')
           p.write_text(t.replace(marker,block+marker,1),encoding='utf-8')
           PY
@@ -141,18 +136,16 @@ jobs:
         run: |
           set -euo pipefail
           PRE="$(cat /tmp/v04_pre)"
-          # Caminhos V04 específicos devem permanecer iguais ao candidato anterior.
           git diff --name-only "$BASE_ANTERIOR" "$PRE" | while IFS= read -r p; do
             [ -z "$p" ] && continue
             case "$p" in
-              CHANGELOG.md|README.md|CLAUDE.md|MANUAL_TECNICO.md|docs/sprints/README.md|ambiente_fonte/.assistant/MANUAL_TECNICO.md|Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md|.github/workflows/v04-diagnostico-main-r06-transitorio.yml)
+              CHANGELOG.md|README.md|CLAUDE.md|MANUAL_TECNICO.md|docs/sprints/README.md|ambiente_fonte/.assistant/MANUAL_TECNICO.md|Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md|.github/workflows/v04-diagnostico-main-r06-transitorio.yml|.github/workflows/v04-reconciliar-r06-transitorio.yml|docs/sprints/sistema_temas/V04/README.md|docs/sprints/sistema_temas/V04/CHECKPOINT_V04.md|docs/sprints/sistema_temas/V04/TESTES.md)
                 continue;;
             esac
             if git cat-file -e "$PRE:$p" 2>/dev/null; then
               test -e "$p" && cmp <(git show "$PRE:$p") "$p"
             fi
           done
-          # Caminhos R05/R06 específicos devem permanecer iguais à main atual.
           git diff --name-only "$BASE_ANTERIOR" origin/main | while IFS= read -r p; do
             [ -z "$p" ] && continue
             case "$p" in
@@ -163,6 +156,8 @@ jobs:
               test -e "$p" && cmp <(git show "origin/main:$p") "$p"
             fi
           done
+          grep -q '289731c79e8ed43d82b39d61cdc41ba2e69ea717' docs/sprints/sistema_temas/V04/README.md
+          grep -q '289731c79e8ed43d82b39d61cdc41ba2e69ea717' docs/sprints/sistema_temas/V04/CHECKPOINT_V04.md
           cmp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
           cmp ambiente_fonte/.assistant/MANUAL_TECNICO.md Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md
           grep -q 'V04' ambiente_fonte/.assistant/MANUAL_TECNICO.md
