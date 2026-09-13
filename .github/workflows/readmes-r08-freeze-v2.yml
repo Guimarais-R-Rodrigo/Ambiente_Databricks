@@ -1,5 +1,4 @@
 name: Freeze R08 v2
-# rerun: preservation now mirrors the renderer publication scope
 on:
   push:
     branches: [codex/readmes-r08-build]
