@@ -205,25 +205,25 @@ reexecuta o gate e reprova se qualquer contagem ficar desatualizada.
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 88 caminhos verificados
-markdown / links   : 189 arquivos / 1003 links relativos
-notebooks / links  : 79 notebooks / 78 links relativos
-readmes de objeto  : 55/75 operacionais; 3/3 exemplares; 20 pendentes (estrutura, não aceite editorial)
-pastas de objeto   : 61 conferidas (nome, arquivos, __init__)
-forma da pasta     : 59 conferidas (o módulo tem o nome da pasta)
-contrato de dados  : 61 pares (saída: o que o notebook consome)
-contrato de entrada: 59 pares (entrada: o que o notebook passa)
-saída colada       : 78 notebooks com bloco real, 0 sem
-idioma da docstring: 61 módulos, 0 com docstring em inglês
-normas do molde    : 71 arquivos, 0 violação(ões)
-notebook exercita  : 59 objetos, 0 notebook(s) que só importam
-python (AST)       : 214 arquivos
+markdown / links   : 191 arquivos / 1023 links relativos
+notebooks / links  : 80 notebooks / 81 links relativos
+readmes de objeto  : 56/76 operacionais; 3/3 exemplares; 20 pendentes (estrutura, não aceite editorial)
+pastas de objeto   : 62 conferidas (nome, arquivos, __init__)
+forma da pasta     : 60 conferidas (o módulo tem o nome da pasta)
+contrato de dados  : 62 pares (saída: o que o notebook consome)
+contrato de entrada: 60 pares (entrada: o que o notebook passa)
+saída colada       : 79 notebooks com bloco real, 0 sem
+idioma da docstring: 62 módulos, 0 com docstring em inglês
+normas do molde    : 72 arquivos, 0 violação(ões)
+notebook exercita  : 60 objetos, 0 notebook(s) que só importam
+python (AST)       : 217 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1217 arquivos varridos no repositório editável/derivado
-repo (links)       : 1436 links fora da raiz analisada
+repo (identidade)  : 1232 arquivos varridos no repositório editável/derivado
+repo (links)       : 1462 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
-repo (identidade)  : 1217 arquivos varridos no repositório editável/derivado
-repo (links)       : 1436 links fora da raiz analisada
+repo (identidade)  : 1232 arquivos varridos no repositório editável/derivado
+repo (links)       : 1462 links fora da raiz analisada
 
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
