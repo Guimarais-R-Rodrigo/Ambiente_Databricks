@@ -1,0 +1,46 @@
+{
+  "sprint": "R06",
+  "date": "2026-09-12",
+  "base_commit": "cae94988cda66a8c61ecebbe6ceed487120a76f2",
+  "review_level": "A0_light",
+  "author": "ChatGPT",
+  "independent_reviewer": false,
+  "human_editorial_acceptance": false,
+  "objects": [
+    "hub_snippets/ml/arima_wrapper",
+    "hub_snippets/ml/lgbm_temporal",
+    "hub_snippets/ml/prophet_wrapper",
+    "hub_snippets/ml/split_temporal",
+    "hub_snippets/ml/walk_forward"
+  ],
+  "criteria": {
+    "contract_1_0_0": "pending_remote_close",
+    "concept_before_code": "passed_self_review",
+    "real_api_documented": "passed_self_review",
+    "limitations_explicit": "passed_self_review",
+    "notebook_prose_only": "pending_remote_close",
+    "implementation_unchanged": "pending_remote_close",
+    "facade_unchanged": "pending_remote_close",
+    "previous_readmes_preserved": "pending_remote_close",
+    "migration_exactly_five_removed": "pending_remote_close",
+    "repository_gate": "pending_remote_close",
+    "v00": "pending_remote_close",
+    "v01": "pending_remote_close",
+    "v02": "pending_remote_close",
+    "v03": "pending_remote_close",
+    "temporal_runtime": "pending_remote_close",
+    "forecast_runtime": "pending_remote_close",
+    "manual_mirrors": "pending_remote_close",
+    "databricks_publication": "not_performed",
+    "genie_homologation": "not_performed",
+    "independent_audit": "not_performed"
+  },
+  "validated_coverage": null,
+  "remote_run_id": null,
+  "notes": [
+    "Characterization tests document existing behavior; they do not approve limitations as desirable design.",
+    "R06 does not authorize functional changes to the five implementations or facades.",
+    "No merge or R07 start is authorized by this rubric.",
+    "Human editorial acceptance must be recorded separately after final technical closure."
+  ]
+}
