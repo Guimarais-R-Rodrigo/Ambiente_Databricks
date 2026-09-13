@@ -14,7 +14,7 @@ jobs:
     timeout-minutes: 30
     env:
       BASE: d5945e04328609878f63857cc15cf5e5039b3e75
-      BEFORE_WORKFLOW: 6da376ec8b11919aa838d01aab4804523cd2789a
+      BEFORE_WORKFLOW: 95abdff5faccdfa3b246aa3b0a807a70ed98eee3
       PYTHONDONTWRITEBYTECODE: '1'
       PYTHONUTF8: '1'
     steps:
@@ -81,7 +81,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git fetch origin main
           test "$(git rev-parse origin/main)" = "$BASE"
           echo "$GITHUB_SHA" > "$RUNNER_TEMP/r09-preflight/workflow-head.txt"
           git write-tree > "$RUNNER_TEMP/r09-preflight/candidate-tree.txt"
@@ -91,7 +90,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: r09-preflight-v5
+          name: r09-preflight-v6
           retention-days: 7
           path: ${{ runner.temp }}/r09-preflight/
           if-no-files-found: warn
