@@ -2,7 +2,7 @@
 
 <!-- readme-objeto: 1.0.0 -->
 
-O Visual Lab permite experimentar uma configuração notebook já validada, comparar a proposta com o ponto de partida e exportar ou salvar um **rascunho**. Ele não aprova nem publica temas e não altera o padrão da equipe.
+O Visual Lab permite experimentar uma configuração notebook já validada, comparar a proposta com o ponto de partida e exportar ou salvar um **rascunho**. Ele não publica temas, não aprova revisões e não altera o padrão da equipe.
 
 ## Visão rápida
 
