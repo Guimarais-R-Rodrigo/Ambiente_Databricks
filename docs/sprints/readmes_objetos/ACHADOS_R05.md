@@ -1,7 +1,7 @@
 # Achados R05 — modelos tabulares
 
-**Data:** 2026-09-12  
-**Base:** `d9da056c95bf5c4209b2f208de1c9a987580efe7`  
+**Data:** 2026-09-12
+**Base:** `d9da056c95bf5c4209b2f208de1c9a987580efe7`
 **Escopo:** leitura estática dos seis objetos R05 e confronto com documentação primária; testes de runtime são registrados separadamente.
 
 ## Achados por objeto
