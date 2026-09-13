@@ -176,6 +176,14 @@ A R08 separa quatro tarefas que costumam ser misturadas: **criar clusters**, **d
 
 Métrica interna, ranking, embedding e SHAP são evidências diferentes. Nenhum desses objetos cria causalidade, persona, política ou homologação por conta própria.
 
+#### 📘 Guias locais R09 — avaliação, drift e MLOps
+
+- [Curvas ROC/PR/lift/KS](ml/curves_plotly/README.md) — `n` é metadado visual e não subamostra;
+- [Drift de features](ml/drift_detection/README.md) — PSI, KS, CSI e política explícita;
+- [Relatório de métricas](ml/metrics_report/README.md) — `ks_pct` em 0–100;
+- [Run MLflow governado](ml/mlflow_run/README.md) — efeito externo e runtime a revalidar;
+- [Monitor de performance](ml/performance_monitor/README.md) — investigação, sem retreino automático.
+
 #### 📊 Risco de Crédito e Scorecards
 
 - **`woe_iv_calculator`**: calcula *Weight of Evidence* (WOE) e *Information Value* (IV) para os tipos suportados.

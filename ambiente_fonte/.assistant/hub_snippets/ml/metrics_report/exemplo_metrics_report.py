@@ -1,10 +1,12 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # `metrics_report` — métricas que não mentem em base desbalanceada
+# MAGIC # `metrics_report` — métricas sob população e threshold declarados
 # MAGIC
 # MAGIC **O problema.** Acurácia é a primeira métrica que todo mundo olha e a mais enganosa em risco: com 5% de eventos, responder "não" para todo mundo acerta 95%. E o limiar de 0,5, que vem por padrão em toda biblioteca, é uma escolha de negócio disfarçada de neutro.
 # MAGIC
-# MAGIC **O que este helper faz.** Devolve o conjunto de métricas de classificação com o limiar **declarado**, e as de regressão quando o caso é outro.
+# MAGIC **O que este helper faz.** Devolve métricas binárias e de regressão. As métricas hard usam o threshold declarado; `ks_pct` está na escala 0–100.
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 
 # COMMAND ----------
 # MAGIC %md
@@ -71,10 +73,7 @@ for k, v in m.items():
 # MAGIC todo mundo pede primeiro é a que menos informa aqui, e oferecê-la seria
 # MAGIC convidar a comparação errada.
 # MAGIC
-# MAGIC O par que decide é **precisão e recall**, e eles se movem em direções
-# MAGIC opostas conforme o limiar. AUC resume a ordenação — o quanto o score separa
-# MAGIC — e é independente do limiar, por isso é a métrica que sobrevive quando a
-# MAGIC política de corte muda.
+# MAGIC Precisão e recall descrevem consequências diferentes do corte e mudam com o threshold. AUC resume ordenação, mas não escolhe política operacional nem substitui calibração, custo ou capacidade.
 
 # COMMAND ----------
 # MAGIC %md
@@ -94,9 +93,7 @@ for corte in (0.10, 0.30, 0.50, 0.70):
 # MAGIC o padrão da biblioteca, e em base desbalanceada costuma ser péssimo: com
 # MAGIC 5% de prevalência, quase nenhum score passa de 0,5, e o recall despenca.
 # MAGIC
-# MAGIC O erro de interpretação mais provável: comparar o f1 de dois modelos
-# MAGIC medidos com limiares diferentes. A comparação justa é pela AUC, ou pelo
-# MAGIC mesmo limiar nos dois.
+# MAGIC Para comparar F1, precisão e recall, mantenha a mesma regra de corte e população; para AUC/AP e outras métricas sem corte, mantenha população, target e protocolo de avaliação comparáveis.
 # MAGIC
 # MAGIC Quem escolhe o limiar é o negócio: quanto custa um falso positivo contra
 # MAGIC um falso negativo. Nenhuma métrica responde isso.

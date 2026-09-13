@@ -4,7 +4,9 @@
 # MAGIC
 # MAGIC **O problema.** Registrar um experimento no MLflow é fácil e registrar **o suficiente** não é. Meses depois, o que falta nunca é a métrica: é qual base foi usada, como o split foi feito e o que o modelo não cobre. E há uma armadilha de runtime — dois wrappers de treino na mesma sessão colidem na chave `algorithm`, que o MLflow trata como imutável.
 # MAGIC
-# MAGIC **O que este helper faz.** Abre um run isolado e **recusa fechá-lo** sem dataset, split, assinatura e limitações declaradas.
+# MAGIC **O que este helper faz.** Abre um run isolado e **recusa fechá-lo** sem o conjunto mínimo de registro. O efeito depende do tracking MLflow disponível no ambiente.
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 
 # COMMAND ----------
 # MAGIC %md
@@ -12,11 +14,11 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico, indiferente |
+# MAGIC | Compute | runtime com tracking MLflow funcional; revalidar no destino |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, gerados aqui — o módulo opera **driver-side** |
 # MAGIC | Escrita | **tentada** — nenhum run chega a abrir neste runtime; ver a seção 3 |
-# MAGIC | Diferença Free × trabalho | **sim** — nenhum run do MLflow abre no serverless do Free; ver a seção 3 |
+# MAGIC | Diferença Free × trabalho | a seção 3 preserva observação histórica datada; não é regra universal do Free nem garantia sobre compute clássico |
 
 # COMMAND ----------
 
@@ -74,7 +76,7 @@ except ValueError as erro:
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC ## 3. O registro completo — e por que ele não abre aqui
+# MAGIC ## 3. O registro completo — e a observação histórica deste runtime
 # MAGIC
 # MAGIC Esta é a seção que importa: o caminho feliz do helper, com parâmetros,
 # MAGIC métricas e assinatura. A célula abaixo tenta executá-lo de verdade.
@@ -126,8 +128,7 @@ except Exception as erro:
 # MAGIC
 # MAGIC **Como ler.** É impedimento de runtime, não de escopo: a biblioteca não
 # MAGIC inicializa aqui. A célula acima captura a exceção em vez de escondê-la,
-# MAGIC então o notebook continua sendo executável e se auto-verifica — em compute
-# MAGIC clássico, no trabalho, ela imprime `run completo aceito e fechado`.
+# MAGIC então o notebook continua sendo executável e se auto-verifica. Em outro runtime, inclusive clássico, execute novamente: o sucesso depende do tracking/configuração vigentes.
 # MAGIC
 # MAGIC **E há um detalhe que vale mais que o erro em si.** Este mesmo caminho foi
 # MAGIC testado no laboratório em **14/08/2026** e passou:

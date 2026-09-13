@@ -1,0 +1,34 @@
+{
+  "sprint": "R09",
+  "base": "d5945e04328609878f63857cc15cf5e5039b3e75",
+  "objects": [
+    "curves_plotly",
+    "drift_detection",
+    "metrics_report",
+    "mlflow_run",
+    "performance_monitor"
+  ],
+  "target": {
+    "operational": "60/75",
+    "examples": "3/3",
+    "pending": 15
+  },
+  "status": "TECNICAMENTE_APROVADA_PRE_PR",
+  "preflight_run": "34772841948",
+  "preflight_artifact_id": 10322173358,
+  "preflight_artifact_sha256": "720bc038f4b23a38f15afe8bb12e8cacc7cd1e72175c002c88995e80bf96d40f",
+  "checks": {
+    "readme_contract": true,
+    "gate": true,
+    "v00_v04": true,
+    "preservation": true,
+    "runtime_core": true,
+    "runtime_mlflow": true
+  },
+  "runtime_core": "numpy=2.4.6; pandas=3.0.5; scikit-learn=1.9.1; scipy=1.17.1; plotly=7.0.0",
+  "runtime_mlflow": "mlflow=3.16.0; numpy=2.4.6; pandas=3.0.5; scikit-learn=1.9.1; backend=sqlite-local",
+  "databricks_published": false,
+  "databricks_homologated": false,
+  "independent_audit": false,
+  "editorial_acceptance": false
+}

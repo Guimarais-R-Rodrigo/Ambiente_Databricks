@@ -4,7 +4,9 @@
 # MAGIC
 # MAGIC **O problema.** Monitorar um modelo costuma virar um gráfico de AUC por mês, e o gráfico não responde a pergunta que importa: isto é degradação ou variação normal? Sem um limite declarado antes, cada queda vira discussão e cada alta vira comemoração.
 # MAGIC
-# MAGIC **O que este helper faz.** Registra métricas ao longo do tempo e as compara contra limites **calibrados e declarados**, devolvendo o veredito.
+# MAGIC **O que este helper faz.** Registra métricas ao longo do tempo e compara deterioração contra uma política declarada, devolvendo status e candidato a investigação — nunca autorização automática de retreino.
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 
 # COMMAND ----------
 # MAGIC %md
@@ -97,8 +99,7 @@ print(f"decisão de retreino: {monitor.should_retrain()}")
 # MAGIC comparação.
 # MAGIC
 # MAGIC O erro de interpretação mais provável é comparar cada mês com o anterior.
-# MAGIC Variação mês a mês é ruído; o que decide retreino é a comparação contra o
-# MAGIC limite, e a persistência abaixo dele.
+# MAGIC Variação mês a mês pode ser ruído; política e persistência ajudam a disparar **investigação**. Retreino exige causa raiz, avaliação offline e governança.
 
 # COMMAND ----------
 # MAGIC %md
@@ -111,5 +112,7 @@ print(f"decisão de retreino: {monitor.should_retrain()}")
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC **Leia `should_retrain()` pelo conteúdo do retorno:** o nome é legado e `automatic_retrain_authorized` permanece `False`.
+# MAGIC
 # MAGIC ### Contrato atualizado em 09/09/2026
 # MAGIC Seleção de métricas: valores inválidos selecionados pela política agora geram erro. Use metricas_obrigatorias para exigir auc e ks_pct; para excluir uma métrica deliberadamente, forneça uma política sem essa chave. KS antigo em 0–100 mantém o valor ao migrar para ks_pct.
