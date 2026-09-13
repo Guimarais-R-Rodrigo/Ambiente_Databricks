@@ -1,6 +1,6 @@
 # Matriz de alterações R07
 
-**Base:** `289731c79e8ed43d82b39d61cdc41ba2e69ea717`  
+**Base:** `289731c79e8ed43d82b39d61cdc41ba2e69ea717`
 **Contrato:** README de objeto 1.0.0
 
 Esta matriz é a lista nominal da R07. Qualquer caminho adicional precisa ser explicado no relatório final.
