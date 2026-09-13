@@ -40,8 +40,8 @@ jobs:
           body=report.read_text(encoding='utf-8').rstrip()
           marker='## Correção pós-freeze do snapshot — 2026-09-13'
           if marker not in body:
-              body += '\n\n'+marker+'\n\nA CI permanente do PR observou `repo (identidade) = 1303`, enquanto o freeze havia registrado 1302 porque `FREEZE_R12.txt` foi criado depois da captura do snapshot. A correção altera somente o snapshot do README raiz; o arquivo histórico de freeze permanece intacto. Links, cobertura 75/75 e demais métricas permaneceram iguais.\n'
-          report.write_text(body+'\n',encoding='utf-8')
+              body += '\n\n'+marker+'\n\nA CI permanente do PR observou `repo (identidade) = 1303`, enquanto o freeze havia registrado 1302 porque `FREEZE_R12.txt` foi criado depois da captura do snapshot. A correção altera somente o snapshot do README raiz; o arquivo histórico de freeze permanece intacto. Links, cobertura 75/75 e demais métricas permaneceram iguais.'
+          report.write_text(body.rstrip()+'\n',encoding='utf-8')
           PY
           rm .github/workflows/readmes-r12-postfreeze-fix.yml
           git add -A
