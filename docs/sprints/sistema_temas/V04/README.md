@@ -2,18 +2,22 @@
 
 ## Estado desta sprint
 
-**CANDIDATA TÉCNICA EM REVISÃO; ACEITE PENDENTE.** A V04 foi iniciada na `main`
+**ACEITA E INTEGRADA NO GIT.** A V04 foi iniciada na `main`
 `b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`, que já continha V03 e R04-A. Durante
 a implementação, a `main` avançou primeiro para `d9da056c95bf5c4209b2f208de1c9a987580efe7`
 com a R04-B e depois para `289731c79e8ed43d82b39d61cdc41ba2e69ea717`
 com R05/R06. A branch V04 foi reconciliada explicitamente com essas revisões; a
-reconciliação final usa o run `34731698772`. A base efetiva da candidata contém
-V03 + R04-A + R04-B + R05 + R06.
+reconciliação final usa o run `34731698772`.
 
-Esta sprint não está aceita nem integrada enquanto seu PR não passar pelos gates
-finais e receber decisão explícita do mantenedor. Não há publicação no Databricks
-nesta etapa. Não há seletor visual, folha de estilo global ou migração automática
-de todos os notebooks.
+Rodrigo concedeu aceite explícito em 12/09/2026 com a instrução `Aceito, siga`.
+A V04 foi integrada pelo PR #21 no commit
+`5a7b33d7137f88c1ec80315de1b422293b3ba206`. A árvore do merge é
+`d2364100d3ed92d1a912f2261ffa2c9f25fc2a8c`, exatamente a árvore candidata
+validada, e os seis workflows permanentes pós-merge concluíram com `success`.
+
+Não houve publicação no Databricks, homologação visual/runtime, auditoria
+independente ou migração automática de notebooks. Não há seletor visual nem
+folha de estilo global nesta etapa.
 
 ## Para quem nunca entrou no Hub
 
@@ -158,10 +162,11 @@ A V04 mede explicitamente:
 - preservação do DataFrame de entrada;
 - ausência de mutação ou estado visual global.
 
-A configuração de referência deve reproduzir a aparência histórica. Isso não
-autoriza substituir todos os usos antigos pelas rotas novas nesta sprint.
+A configuração de referência reproduz a aparência histórica nos casos cobertos.
+Isso não autoriza substituir todos os usos antigos pelas rotas novas nem prova a
+renderização no workspace Databricks.
 
-## Reconciliação com R04-B
+## Reconciliação com mudanças paralelas
 
 A R04-B foi integrada na `main` durante a execução desta sprint. A primeira
 reconciliação V04/R04-B (`34726990399`) preservou os dois conjuntos de arquivos,
@@ -170,13 +175,16 @@ materializadas na árvore e o import público falhou. Nenhum commit reconciliado
 enviado nessa tentativa.
 
 A rodada corrigida `34727070003` materializou as fachadas pela ferramenta
-canônica, preservou 15 caminhos V04 e 43 caminhos efetivos da R04-B, aprovou V04,
-regressões de temas e validador, e executou **14/14 casos R04-B com PySpark 4.0.1,
-Java 17 e PyYAML 6.0.2**. O workflow transitório foi removido antes do commit de
-reconciliação `c2b91c5e3a3d80f754045dfc4fae8eb335e31bef`.
+canônica, preservou os caminhos V04 e R04-B, aprovou V04, regressões de temas e
+validador, e executou **14/14 casos R04-B com PySpark 4.0.1, Java 17 e PyYAML
+6.0.2**. O workflow transitório foi removido antes do commit de reconciliação.
 
-Essa execução Spark é caracterização no GitHub Actions; não é homologação no
-Databricks.
+Depois, a `main` avançou com R05/R06. A reconciliação final `34731698772`
+identificou somente três conflitos documentais, preservou os caminhos específicos
+das duas iniciativas e repetiu toda a bateria antes de congelar a candidata.
+
+Essas execuções são caracterização no GitHub Actions; não constituem homologação
+no Databricks.
 
 ## Fora de escopo
 
@@ -199,22 +207,23 @@ Esses itens permanecem em sprints próprias do plano V00–V14.
 A bateria específica está em
 [`tools/tests/test_temas_v04.py`](../../../../tools/tests/test_temas_v04.py).
 Ela é complementada pelas regressões V00–V03, pelo `validate_assistant.py` e pelo
-gate completo `tools/ci_local.py` na candidata final.
+gate completo `tools/ci_local.py`.
 
 O histórico de execuções, inclusive falhas que não devem ser promovidas a PASS,
-fica em [TESTES.md](TESTES.md).
+fica em [TESTES.md](TESTES.md). A candidata final foi validada em `34731698772`;
+após o merge, os seis workflows permanentes da `main` concluíram com `success`.
 
 ## Aceite e integração
 
-O término técnico da implementação não significa aceite. O checkpoint desta
-sprint diferencia:
+Rodrigo concedeu aceite explícito com `Aceito, siga`. O PR #21 foi integrado no
+commit `5a7b33d7137f88c1ec80315de1b422293b3ba206` somente depois da checagem atômica
+de base, head e seis workflows verdes. A árvore do merge coincide com a árvore
+candidata validada.
 
-- implementação;
-- testes automatizados;
-- revisão/aceite humano;
-- integração Git;
-- homologação visual/runtime no Databricks.
+O [CHECKPOINT_V04.md](CHECKPOINT_V04.md) mantém separados implementação, testes,
+aceite humano, integração Git e homologação operacional. Auditoria independente,
+avaliação com usuário iniciante e homologação visual/runtime Databricks continuam
+pendentes.
 
-A próxima ação após uma candidata verde é revisar o PR e o
-[CHECKPOINT_V04.md](CHECKPOINT_V04.md). Sem aceite explícito, não fazer merge e
-não iniciar V05.
+A integração Git não publica tema, não muda permissões e não inicia V05. A V05 é
+o próximo desenvolvimento planejado, a ser executado como etapa separada.

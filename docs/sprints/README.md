@@ -65,15 +65,26 @@ custos e interpretação. Estado, matriz e testes em
 ## Sistema de Temas do Hub
 
 A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints
-históricas e dos READMEs. V00, [V01](sistema_temas/V01/README.md) e
-[V02](sistema_temas/V02/README.md) estão aceitas e integradas no Git. A V02 entrega
-o núcleo de carga, validação e resolução de configurações completas.
+históricas e dos READMEs. V00, [V01](sistema_temas/V01/README.md),
+[V02](sistema_temas/V02/README.md), [V03](sistema_temas/V03/README.md) e
+[V04](sistema_temas/V04/README.md) estão aceitas e integradas no Git.
 
-A [V03](sistema_temas/V03/README.md) recebeu aceite explícito de Rodrigo e teve sua integração Git autorizada pelo PR #16. Ela acrescenta apenas um adaptador Plotly opt-in, preserva o caminho legado por padrão e não migra consumidores existentes. O estado efetivo do merge é registrado na PR. Não houve publicação Databricks; homologação operacional, auditoria independente e avaliação com usuário iniciante permanecem pendentes.
+A V02 entrega o núcleo de carga, validação e resolução de configurações completas.
+A V03 acrescenta somente o adaptador Plotly opt-in. A V04 estende a mesma
+arquitetura a componentes HTML, estilos compartilhados e tabela pandas por rotas
+opt-in `_resolvido`, preservando o caminho legado por padrão.
+
+Não houve publicação Databricks; homologação operacional, auditoria independente
+e avaliação com usuário iniciante permanecem pendentes.
 
 ### Continuidade do Sistema de Temas — V04
 
-A V03 foi efetivamente integrada pelo PR #16 no commit `b83a7cde`. A [V04](sistema_temas/V04/README.md) é a candidata corrente para componentes HTML, estilos compartilhados e tabela pandas. O caminho novo é opt-in e não altera automaticamente consumidores legados; aceite, merge e homologação Databricks continuam separados.
+A V03 foi efetivamente integrada pelo PR #16 no commit `b83a7cde`. Rodrigo aceitou
+a V04 em 12/09/2026 e ela foi integrada pelo PR #21 no commit
+`5a7b33d7137f88c1ec80315de1b422293b3ba206`. A árvore do merge coincide com a
+candidata validada e os seis workflows permanentes pós-merge concluíram com
+`success`. A homologação Databricks continua separada; V05 ainda não foi iniciada
+por este fechamento.
 
 ### READMEs de objeto — R04-B
 A R04-A está integrada em `a8f314a`. A R04-B cobre seis Hub Scripts e pausa para revisão antes da R05. Consulte `readmes_objetos/RELATORIO_R04B.md` e `readmes_objetos/MATRIZ_ALTERACOES_R04B.md`.

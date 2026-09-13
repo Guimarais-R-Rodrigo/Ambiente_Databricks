@@ -1,16 +1,18 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Etapa atual — V04 candidata sobre V03 + R04-A + R04-B integradas
+## Etapa concluída — V04 aceita e integrada no Git
 
-V00–V03 estão integradas no Git. A V03 foi mesclada pelo PR #16 no commit
-`b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`; depois, R04-A e R04-B foram
-integradas pelos PRs #17 e #18. A V04 foi reconciliada com a `main`
-`d9da056c95bf5c4209b2f208de1c9a987580efe7` antes da candidata final.
+V00–V04 estão integradas no Git. A V03 foi mesclada pelo PR #16 no commit
+`b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`; depois, R04-A, R04-B, R05 e R06
+foram incorporadas à `main` durante a evolução paralela do repositório. A V04 foi
+reconciliada com essas mudanças antes de sua integração final.
 
-A [V04 — componentes HTML, estilos e tabelas](V04/README.md) é a etapa corrente
-em branch própria. Ela acrescenta apenas rotas opt-in `_resolvido` para badges,
-divisores, KPI cards, cabeçalho, índice e tabela pandas, além da materialização
-central de CSS em `constants.styles`. As APIs legadas permanecem o default.
+A [V04 — componentes HTML, estilos e tabelas](V04/README.md) foi aceita por
+Rodrigo em 12/09/2026 e integrada pelo PR #21 no commit
+`5a7b33d7137f88c1ec80315de1b422293b3ba206`. Ela acrescenta apenas rotas opt-in
+`_resolvido` para badges, divisores, KPI cards, cabeçalho, índice e tabela pandas,
+além da materialização central de CSS em `constants.styles`. As APIs legadas
+permanecem o default.
 
 Para quem nunca entrou no Hub: não há nada para ativar no Databricks. A V04 não
 instala seletor, não cria CSS global e não migra notebooks automaticamente. Leia o
@@ -22,7 +24,8 @@ instala seletor, não cria CSS global e não migra notebooks automaticamente. Le
 A evolução continua navegável pela [V01 — contrato e experiência](V01/README.md) e pelo [guia de primeiro uso da V01](V01/GUIA_PRIMEIRO_USO.md). Esses arquivos são referência histórica/contratual e não substituem o estado corrente V04.
 
 Não houve publicação Databricks, auditoria independente ou homologação visual.
-Aceite e integração Git da V04 permanecem gates posteriores à candidata verde.
+O aceite e a integração Git da V04 estão concluídos; esses gates operacionais
+permanecem separados. A V05 ainda não foi iniciada por este fechamento.
 
 ## Aceite de integração Git — 12/09/2026
 
@@ -107,4 +110,8 @@ Databricks ou publicação automática nesta entrega.
 
 ## Continuidade — V03/V04
 
-A V03 foi aceita e integrada pelo PR #16; seu adaptador Plotly continua opt-in. A [V04](V04/README.md) parte da `main` desse merge e estende a mesma arquitetura aos componentes HTML e à tabela pandas. V04 ainda é candidata: sem aceite, merge, publicação Databricks ou início da V05.
+A V03 foi aceita e integrada pelo PR #16; seu adaptador Plotly continua opt-in. A
+[V04](V04/README.md) estende a mesma arquitetura aos componentes HTML e à tabela
+pandas e foi aceita/integrada pelo PR #21 no commit
+`5a7b33d7137f88c1ec80315de1b422293b3ba206`. Sem publicação Databricks; V05 ainda
+não foi iniciada por este fechamento.
