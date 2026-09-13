@@ -2,14 +2,19 @@
 
 ## Estado vigente
 
-V04 em branch de implementação `codex/temas-v04-html-20260912`, baseada na
-`main` `b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`.
+V04 em branch `codex/temas-v04-html-20260912`. Foi iniciada sobre a `main`
+`b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2` e reconciliada com a `main`
+`d9da056c95bf5c4209b2f208de1c9a987580efe7`, que acrescentou a R04-B.
+A reconciliação verde está no commit
+`c2b91c5e3a3d80f754045dfc4fae8eb335e31bef`; a candidata final ainda precisa
+incorporar documentação/derivados e repetir os gates.
 
 | Gate | Estado |
 |---|---|
-| Implementação funcional | EM VALIDAÇÃO |
-| Regressões automatizadas | EM VALIDAÇÃO |
-| Documentação operacional | EM CONSTRUÇÃO |
+| Implementação funcional | EM VALIDAÇÃO FINAL |
+| Regressões automatizadas | EM VALIDAÇÃO FINAL |
+| Documentação operacional | EM FINALIZAÇÃO |
+| Reconciliação R04-B | PASS no run `34727070003` |
 | Auditoria independente | PENDENTE |
 | Avaliação com usuário iniciante | PENDENTE |
 | Homologação visual/runtime Databricks | NÃO EXECUTADA |
@@ -50,10 +55,11 @@ Todos devem estar satisfeitos na mesma árvore:
 7. `__init__.py` regenerados pela ferramenta canônica de API;
 8. `Novo_Ambiente_Simulado/` regenerado pelo renderer, nunca editado à mão;
 9. documentação dos objetos reconciliada com o novo comportamento;
-10. workflow temporário ausente da árvore candidata final;
+10. workflows transitórios ausentes da árvore candidata final;
 11. `main` reconferida antes de abrir/congelar o PR;
-12. nenhuma mudança acidental nos arquivos R04-A fora dos agregadores
-    deliberadamente atualizados.
+12. nenhuma mudança acidental nos arquivos específicos da R04-B fora dos
+    agregadores/documentos deliberadamente atualizados;
+13. suplemento R04-B executado com Spark real na composição reconciliada.
 
 ## Critérios que permanecem humanos/operacionais
 
