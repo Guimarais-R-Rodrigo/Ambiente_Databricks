@@ -1,22 +1,28 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Etapa atual — V03 aceita; integração Git autorizada pelo PR #16
+## Etapa atual — V04 candidata sobre V03 + R04-A + R04-B integradas
 
-A instrumentação V00 foi integrada pelo PR #8, a [V01 — contrato e experiência
-documentada](V01/README.md) foi aceita e integrada pelo PR #10 e a
-[V02 — núcleo de temas, validação e resolução](V02/README.md) foi aceita por Rodrigo
-e integrada pelo PR #14 no commit `d4cabdca4ac68c0a2edbd7f9f621f68962c8f6b8`.
-Os quatro checks pós-merge da V02 na `main` passaram. A V03 foi iniciada a partir dessa base verde, acrescenta somente uma rota Plotly opt-in e recebeu aceite explícito de Rodrigo em 12/09/2026. A integração Git foi autorizada pelo PR #16; o estado efetivo do merge deve ser verificado na própria PR. Não houve publicação Databricks.
+V00–V03 estão integradas no Git. A V03 foi mesclada pelo PR #16 no commit
+`b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`; depois, R04-A e R04-B foram
+integradas pelos PRs #17 e #18. A V04 foi reconciliada com a `main`
+`d9da056c95bf5c4209b2f208de1c9a987580efe7` antes da candidata final.
 
-Para quem nunca entrou no Hub: **nada muda automaticamente na aparência ou na rotina atual por causa
-da V03**. Quem já usa `aplicar_tema` continua no mesmo caminho legado. A V03 só acrescenta
-uma rota Plotly opt-in para um `ResolvedTheme` de notebook; não cria seletor e não publica
-nada no Databricks. Comece pelo [README da V03](V03/README.md), depois leia o
-[checkpoint](V03/CHECKPOINT_V03.md) e o
+A [V04 — componentes HTML, estilos e tabelas](V04/README.md) é a etapa corrente
+em branch própria. Ela acrescenta apenas rotas opt-in `_resolvido` para badges,
+divisores, KPI cards, cabeçalho, índice e tabela pandas, além da materialização
+central de CSS em `constants.styles`. As APIs legadas permanecem o default.
+
+Para quem nunca entrou no Hub: não há nada para ativar no Databricks. A V04 não
+instala seletor, não cria CSS global e não migra notebooks automaticamente. Leia o
+[README V04](V04/README.md), o [checkpoint](V04/CHECKPOINT_V04.md) e o
 [guia operacional](../../../ambiente_fonte/.assistant/hub_padroes/identidade_visual/GUIA_OPERACIONAL.md).
-O [guia de primeiro uso da V01](V01/GUIA_PRIMEIRO_USO.md) permanece acessível como
-referência do contrato e da experiência documentada já aceitos; ele não transforma
-V01 novamente na etapa corrente.
+
+### Entradas históricas preservadas
+
+A evolução continua navegável pela [V01 — contrato e experiência](V01/README.md) e pelo [guia de primeiro uso da V01](V01/GUIA_PRIMEIRO_USO.md). Esses arquivos são referência histórica/contratual e não substituem o estado corrente V04.
+
+Não houve publicação Databricks, auditoria independente ou homologação visual.
+Aceite e integração Git da V04 permanecem gates posteriores à candidata verde.
 
 ## Aceite de integração Git — 12/09/2026
 
@@ -99,9 +105,6 @@ A automação temporária utilizada para preparar e registrar as evidências foi
 removida da árvore final. Não há workflow de escrita recorrente, credencial
 Databricks ou publicação automática nesta entrega.
 
-## Continuidade — V03
+## Continuidade — V03/V04
 
-A V02 está aceita e integrada no Git. A [V03](V03/README.md) recebeu aceite explícito
-de Rodrigo e teve sua integração Git autorizada pelo PR #16: integra explicitamente o
-núcleo com Plotly preservando o comportamento legado por padrão. O estado efetivo do
-merge fica registrado na PR; não há publicação Databricks e V04/V05 não foram iniciadas.
+A V03 foi aceita e integrada pelo PR #16; seu adaptador Plotly continua opt-in. A [V04](V04/README.md) parte da `main` desse merge e estende a mesma arquitetura aos componentes HTML e à tabela pandas. V04 ainda é candidata: sem aceite, merge, publicação Databricks ou início da V05.

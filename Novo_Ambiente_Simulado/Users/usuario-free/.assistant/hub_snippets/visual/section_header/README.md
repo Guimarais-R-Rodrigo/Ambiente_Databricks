@@ -45,7 +45,7 @@ Não use o retorno como barra de progresso, resultado de teste ou navegador clic
 
 Se `etapa` existe em `SECOES_EDA`, a função consulta o mapa para preencher campos não informados. Valores explicitamente fornecidos e não vazios têm prioridade. Depois, aplica padrões aos campos que continuarem vazios.
 
-Antes de montar o HTML, o código converte os campos para texto e aplica `html.escape`, que representa sinais como `<` e `>` de modo que apareçam como conteúdo, não como marcação. O módulo monta seu próprio CSS com as cores importadas; não consome automaticamente `STYLE_SECTION_HEADER`.
+Antes de montar o HTML, o código converte os campos para texto e aplica `html.escape`, que representa sinais como `<` e `>` de modo que apareçam como conteúdo, não como marcação. A rota legada usa as constantes históricas; `section_header_html_resolvido` obtém container, título e descrição da materialização central da V04.
 
 ## 6. Exemplo de situação
 
@@ -83,6 +83,10 @@ print(cabecalho[:80])
 
 No notebook Databricks, `displayHTML(cabecalho)` mostra o resultado. O [exemplo completo](exemplo_section_header.py) consulta `current_user()` com Spark apenas para configurar o caminho da biblioteca. O helper é independente de Spark. O notebook não grava tabelas persistentes.
 
+### Caminho V04 — cabeçalho com tema explícito
+
+A função `section_header_html_resolvido(theme, ...)` mantém o preenchimento por `SECOES_EDA`, os defaults e o escape da rota legada. `brand.primary`, superfícies, texto, fonte e dimensões `section.*` passam a vir do `ResolvedTheme` notebook recebido explicitamente.
+
 ## 10. Decisões e configurações que mais importam
 
 `etapa` determina o preenchimento pelo mapa, mas `emoji`, `titulo` e `descricao` podem substituí-lo com valores não vazios. Essa flexibilidade exige coerência: um número correto com título de outro assunto continua enganoso.
@@ -93,7 +97,7 @@ A ordem das chamadas e a escolha de números são responsabilidade do autor. A f
 
 Uma etapa inválida pode passar silenciosamente para padrões genéricos. Strings vazias não apagam campos. Duplicar a mesma etapa no notebook não é impedido.
 
-Editar a constante `STYLE_SECTION_HEADER` não altera o CSS usado nesta implementação. Alterações nas constantes de cores exigem considerar a importação e o estado da sessão, e não atualizam HTML já exibido. Escape de texto reduz a interpretação de marcação, mas não comprova acessibilidade, contraste suficiente ou semântica correta do título. Essas checagens continuam necessárias no destino.
+Carregar outro tema não altera `section_header_html` nem HTML já exibido. Somente a chamada explícita de `section_header_html_resolvido(theme, ...)` usa os tokens do tema recebido. Escape de texto reduz a interpretação de marcação, mas não comprova acessibilidade, contraste suficiente ou semântica correta do título; essas checagens continuam necessárias no destino.
 
 ## 12. Quais são as alternativas?
 

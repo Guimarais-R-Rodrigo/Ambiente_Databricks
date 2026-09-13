@@ -60,6 +60,26 @@ a rotina do seu ambiente. Nenhum resultado analítico nem padrão compartilhado
 precisa ser restaurado, porque este núcleo não os modifica. Uma cópia editável
 é obtida com `to_dict()`, não alterando os dados internos do resultado.
 
+## Usar a rota V04 em um componente HTML
+
+A V04 é opt-in. Resolva/carregue primeiro um tema notebook íntegro; depois passe-o à função `_resolvido` do componente. Exemplo:
+
+```python
+from hub_snippets.visual.tema import load_reference_theme
+from hub_snippets.visual.section_header import section_header_html_resolvido
+
+tema = load_reference_theme("notebook")
+html = section_header_html_resolvido(
+    tema,
+    titulo="Resumo",
+    descricao="Base sintética.",
+)
+```
+
+A referência mantém a aparência histórica. Outras configurações completas podem mudar somente propriedades cobertas pelo contrato. Não passe dicionário cru, não edite `_values` e não use a função como folha de estilo global. `dark` e `high_contrast` são materializáveis no HTML quando válidos, porém isso não constitui homologação visual ou de acessibilidade.
+
+Para voltar ao comportamento anterior, use a função sem `_resolvido`; não é necessário limpar um tema global porque a V04 não cria um.
+
 ## Para pedir ajuda
 
 Informe ao mantenedor o código do erro, a etapa executada e a versão do pacote.

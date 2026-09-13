@@ -57,8 +57,9 @@ Escala planejada: pessoal → squad → missão.
 
 - README didático por pasta de objeto: `ADR-0012`, ratificado em 2026-09-12;
   contrato 1.0.0 estabilizado após aceite do piloto. R03-A/R03-B foram integradas
-  à main com V01 pelo PR nº 13; R04-A é a leva atual de seis snippets Spark em
-  branch de revisão. Estado e retomada: `docs/sprints/readmes_objetos/README.md`.
+  pelo PR nº 13, R04-A pelo PR nº 17 e R04-B pelo PR nº 18. As duas levas R04
+  foram reconciliadas com o Sistema de Temas antes do merge. Estado e retomada:
+  `docs/sprints/readmes_objetos/README.md`.
 
 - Sistema de Temas: contrato central e configuração completa por contexto
   aceitos no `docs/decisions/ADR-0013-sistema-de-temas.md`. A V01 está aceita
@@ -72,7 +73,7 @@ A V02 foi aceita por Rodrigo e integrada pelo PR #14 no commit
 `ambiente_fonte/.assistant/hub_padroes/identidade_visual/` e o núcleo de
 carga/validação/resolução está versionado, mas ainda não aplica aparência nem publica
 temas. Estado e limites: `docs/sprints/sistema_temas/V02/CHECKPOINT_V02.md`.
-A V03 está em desenvolvimento na branch `codex/temas-v03`, com adaptador Plotly opt-in; ainda não há aceite, merge ou migração de consumidores legados. Estado: `docs/sprints/sistema_temas/V03/CHECKPOINT_V03.md`.
+A V03 foi aceita e integrada pelo PR #16 no commit `b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`. A `main` avançou depois com a R04-B pelo PR #18 (`d9da056c95bf5c4209b2f208de1c9a987580efe7`). A V04 é a candidata atual e foi reconciliada com essa base: componentes HTML, estilos compartilhados e tabela pandas recebem rotas opt-in `_resolvido`, preservando as APIs legadas. Sem publicação Databricks ou início da V05. Estado: `docs/sprints/sistema_temas/V04/CHECKPOINT_V04.md`.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 

@@ -5,6 +5,30 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — V04: componentes HTML e tabelas opt-in (Codex)
+
+### Adicionado
+
+- (Codex) `get_styles_resolvidos(theme)` materializa CSS de notebook a partir do `ResolvedTheme` revalidado, sem CSS livre ou estado global.
+- (Codex) Variantes `_resolvido` para badges, divisores, KPI card HTML, cabeçalho de seção, índice EDA e tabela pandas.
+- (Codex) Suíte V04 com 29 casos e workflow permanente somente leitura.
+
+### Atualizado
+
+- (Codex) Componentes cobertos usam `constants.styles` no caminho V04; APIs legadas, cortes de score, conteúdo, ordem e dados permanecem preservados.
+- (Codex) Notebook/READMEs dos objetos, guia operacional, Manual e índices documentam o uso opt-in e os limites de `dark`/`high_contrast`.
+- (Codex) Gate `temas` continua descobrindo todas as `test_temas*.py`, agora descrito até V04.
+
+### Notas
+
+- (Codex) Code-check `34726526972` permanece FAILURE: V04/temas/V00 passaram, mas checkout raso e notebook `styles` não exercitando a nova API reprovaram o validador.
+- (Codex) Code-check corrigido `34726621227`: 29 V04, 298 temas V01–V04, 12 V00 e `validate_assistant` aprovados.
+- (Codex) Reconciliação `34726990399` permanece FAILURE por fachadas V04 ainda não materializadas; nenhum commit combinado foi enviado.
+- (Codex) Reconciliação corrigida `34727070003`: preservação V04/R04-B, regressões e 14/14 casos R04-B com Spark real aprovados; commit `c2b91c5e`.
+- (Codex) Finalização `34727324137` permanece FAILURE por marcador textual impossível do `ci_local.py`; nenhum derivado/candidato final foi gravado.
+- (Codex) Finalização `34727521220` permanece FAILURE porque a regressão V01 exigiu preservar `V01/README.md` e `V01/GUIA_PRIMEIRO_USO.md` no índice agregado; nenhum commit final foi criado.
+- (Codex) V04 é candidata: sem aceite, merge, publicação Databricks, homologação visual/acessibilidade ou início da V05.
+
 ## 2026-09-12 — R04-B: READMEs dos seis Hub Scripts (ChatGPT)
 
 - Documenta `data_quality_check`, `doc_coverage`, `drift_detector`, `naming_checker`, `rfv_calculator` e `schema_to_yaml` no contrato 1.0.0.

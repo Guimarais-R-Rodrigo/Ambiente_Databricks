@@ -81,6 +81,10 @@ print(divider_light().count("<hr"), divider_section().count("<hr"))
 
 Saída portátil conferida: `1 2`. O teste verifica os elementos gerados, não a aparência no workspace.
 
+### Caminho V04 — divisória com tema explícito
+
+`divider_light_resolvido(theme)`, `divider_medium_resolvido(theme)`, `divider_heavy_resolvido(theme)` e `divider_section_resolvido(theme)` mantêm a mesma estrutura HTML das funções históricas. O tema troca apenas cores mapeadas; margens e a composição de duas linhas da divisória de seção continuam contrato do componente.
+
 ## 10. Decisões e configurações que mais importam
 
 A configuração oferecida é a escolha da função. Não há argumento de espessura, largura ou margem. Um pedido de variação no componente exige outra alteração, com revisão de sua saída.
@@ -91,11 +95,11 @@ Mantenha o mesmo significado para cada peso ao longo do notebook. Não use a fun
 
 O efeito visual depende do destino e de sua escala de exibição. Diferenças pequenas de espessura podem ser discretas; não há teste perceptual no módulo. A renderização Databricks é documentada, mas este README não comprova equivalência entre todos os ambientes.
 
-As funções usam CSS próprio, não as constantes de `styles`. Os separadores mais fortes usam um valor de cor importado; mudanças de sessão não constituem mecanismo de atualização global. Mantenha os títulos mesmo quando a linha parecer suficiente.
+As funções legadas preservam seus estilos históricos. Na V04, as variantes `_resolvido` usam `constants.styles`: `divider.light`, `divider.medium` e `brand.primary` chegam do tema validado. Nenhuma delas cria mecanismo de atualização global. Mantenha os títulos mesmo quando a linha parecer suficiente.
 
 ## 12. Quais são as alternativas?
 
-Títulos e espaço em branco podem resolver a organização sem separadores. `---` atende a uma rota Markdown. [section_header](../section_header/section_header.py) oferece cabeçalho renderizado quando é necessário nomear a seção; [styles](../../constants/styles/README.md) permite composição HTML explícita, sem atualizar automaticamente estas funções.
+Títulos e espaço em branco podem resolver a organização sem separadores. `---` atende a uma rota Markdown. [section_header](../section_header/section_header.py) oferece cabeçalho renderizado quando é necessário nomear a seção; [styles](../../constants/styles/README.md) concentra a materialização da rota V04, sempre por chamada explícita.
 
 ## 13. Como saber se o resultado faz sentido?
 

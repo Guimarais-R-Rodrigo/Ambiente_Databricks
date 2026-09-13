@@ -11,9 +11,9 @@ incorporar documentação/derivados e repetir os gates.
 
 | Gate | Estado |
 |---|---|
-| Implementação funcional | EM VALIDAÇÃO FINAL |
-| Regressões automatizadas | EM VALIDAÇÃO FINAL |
-| Documentação operacional | EM FINALIZAÇÃO |
+| Implementação funcional | CANDIDATA |
+| Regressões automatizadas | CANDIDATA VALIDADA — evidência final run `34727630459` |
+| Documentação operacional | CANDIDATA |
 | Reconciliação R04-B | PASS no run `34727070003` |
 | Auditoria independente | PENDENTE |
 | Avaliação com usuário iniciante | PENDENTE |

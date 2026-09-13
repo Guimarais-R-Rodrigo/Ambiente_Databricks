@@ -2,7 +2,7 @@
 
 ## Estado desta sprint
 
-**CANDIDATA EM IMPLEMENTAÇÃO E VALIDAÇÃO.** A V04 foi iniciada na `main`
+**CANDIDATA TÉCNICA EM REVISÃO; ACEITE PENDENTE.** A V04 foi iniciada na `main`
 `b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`, que já continha V03 e R04-A. Durante
 a implementação, a `main` avançou para `d9da056c95bf5c4209b2f208de1c9a987580efe7`
 com a R04-B; a branch V04 foi reconciliada explicitamente com essa revisão no run

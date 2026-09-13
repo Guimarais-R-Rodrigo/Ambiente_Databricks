@@ -77,6 +77,18 @@ print(kpi_card_markdown(metricas))
 
 Saída portátil conferida: `> **1.000** Linhas | **92,8%** Cobertura`. Os números foram fornecidos pelo exemplo. A chamada não mede cobertura nem materializa uma tabela.
 
+### Caminho V04 — KPI HTML com tema explícito
+
+```python
+from hub_snippets.visual.kpi_card import kpi_card_html_resolvido
+from hub_snippets.visual.tema import load_reference_theme
+
+tema = load_reference_theme("notebook")
+html = kpi_card_html_resolvido({"Linhas": "1.000"}, tema)
+```
+
+A V04 não tematiza `kpi_card_markdown`: Markdown permanece textual. O tema controla somente a apresentação HTML do card; valores, ordem, unidades e contexto continuam responsabilidade do chamador.
+
 ## 10. Decisões e configurações que mais importam
 
 Escolha formato, ordem dos indicadores, precisão e contexto antes de chamar a função. O dicionário preserva a sequência de inserção; o helper não prioriza automaticamente métricas.
@@ -87,7 +99,7 @@ Para padrão brasileiro, considere [format_br](../../constants/format_br/README.
 
 O HTML escapa caracteres especiais, mas não anonimiza nem julga o conteúdo. A versão Markdown escapa apenas `|`: caracteres como `*`, quebras de linha e marcação HTML podem continuar alterando a apresentação no destino. Use rótulos controlados e confira o renderizador antes de transportar texto externo.
 
-A conversão de chaves para string pode descartar uma entrada Markdown se, por exemplo, o dicionário tiver as chaves `1` e `"1"`. Essa limitação foi reproduzida; a recomendação é usar rótulos textuais únicos desde a entrada. O CSS é próprio: alterar `STYLE_KPI_CARD` em `styles` não modifica automaticamente estes cartões.
+A conversão de chaves para string pode descartar uma entrada Markdown se, por exemplo, o dicionário tiver as chaves `1` e `"1"`. Essa limitação foi reproduzida; a recomendação é usar rótulos textuais únicos desde a entrada. Na V04, `kpi_card_html_resolvido` obtém o CSS de `constants.styles`; `kpi_card_html` continua no caminho legado e não muda por carregar um tema.
 
 ## 12. Quais são as alternativas?
 

@@ -45,7 +45,7 @@ Para um documento que exige navegação clicável, prefira um sumário apropriad
 
 A entrada é uma sequência de números de etapas. Para cada número, a função consulta `SECOES_EDA` e adiciona emoji, título e descrição. Se `etapas_ativas` for `None`, ela percorre os números de 0 a 8. Se for uma lista, conserva a ordem e as repetições recebidas.
 
-O parâmetro `markdown` muda apenas o formato da string. Não há varredura de células, ordenação automática, deduplicação ou acompanhamento de progresso. Os estilos HTML são montados no próprio módulo com cores importadas.
+O parâmetro `markdown` muda apenas o formato da string. Não há varredura de células, ordenação automática, deduplicação ou acompanhamento de progresso. A rota legada usa estilos históricos; `gerar_indice_eda_resolvido` obtém os estilos HTML da materialização V04. Em `markdown=True`, o tema é validado, mas nenhum CSS é inserido no texto.
 
 ## 6. Exemplo de situação
 
@@ -79,6 +79,10 @@ print(indice)
 ```
 
 Para a versão visual, obtenha `gerar_indice_eda([1, 3, 4, 8])` e apresente a string com `displayHTML`. O [notebook completo](exemplo_index_generator.py) usa a sessão Spark somente na preparação do caminho de importação; a função não precisa de Spark para montar o índice. Não há escrita persistente.
+
+### Caminho V04 — índice HTML com tema explícito
+
+`gerar_indice_eda_resolvido(theme, etapas_ativas=..., markdown=False)` preserva a ordem, repetições e conteúdo de `SECOES_EDA`. O tema controla fonte, cor principal, superfície de item e texto secundário somente na saída HTML.
 
 ## 10. Decisões e configurações que mais importam
 

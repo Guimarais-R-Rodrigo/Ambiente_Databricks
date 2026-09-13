@@ -82,6 +82,22 @@ A reconciliação foi congelada no commit
 `c2b91c5e3a3d80f754045dfc4fae8eb335e31bef`. Esta execução Spark é evidência no
 GitHub Actions e não deve ser chamada de homologação Databricks.
 
+## Finalização documental — tentativa 1 `34727324137`
+
+**Resultado: FAILURE.** O finalizador parou antes de gerar derivados ou medir a
+candidata porque procurava a tupla `temas` do `ci_local.py` em uma única linha,
+enquanto o arquivo real a organiza em duas. A base já havia sido reconfirmada,
+mas nenhum commit final foi criado. O marcador foi corrigido sem relaxar gates.
+
+## Finalização da árvore — tentativa 2 `34727521220`
+
+**Resultado: FAILURE.** A finalização, a regeneração de fachadas/Manual/espelho,
+a medição do README e a preservação R04-B passaram. Os 29 testes V04 também
+passaram, mas a regressão V01 `test_single_sprint_entrypoint` detectou que o
+índice agregado havia perdido as rotas explícitas `V01/README.md` e
+`V01/GUIA_PRIMEIRO_USO.md`. Nenhum commit final foi criado. A correção restaura
+esses entrypoints como históricos sem rebaixar o estado corrente da V04.
+
 ## O que os 29 testes V04 medem
 
 Os casos específicos cobrem quatro grupos.
@@ -120,10 +136,10 @@ Os casos específicos cobrem quatro grupos.
 - `dark` e `high_contrast` podem ser materializados no caminho HTML quando o
   tema completo é válido, sem declarar homologação de acessibilidade.
 
-## Gates ainda exigidos antes do PR final
+## Gates da validação final
 
-As rodadas acima foram intermediárias. A candidata final ainda precisa rodar,
-na árvore que contém documentação, fachadas versionadas e espelho renderizado:
+O run final registrado abaixo só será versionado se executar, na mesma árvore,
+a documentação, as fachadas versionadas e o espelho renderizado com todos os gates:
 
 1. `python -B tools/tests/test_temas_v04.py -v`;
 2. descoberta completa `test_temas*.py`;
@@ -133,6 +149,13 @@ na árvore que contém documentação, fachadas versionadas e espelho renderizad
 6. workflow permanente V04;
 7. verificação do diff contra a `main` `d9da056c...`, comprovando que arquivos
    específicos R04-B não foram alterados pela V04.
+
+## Validação final da candidata — run `34727630459`
+
+Este registro só será versionado se todos os passos seguintes do mesmo run
+terminarem com sucesso. A rodada mede a árvore já documentada, com fachadas e
+espelho materializados, workflow/script transitórios removidos e README raiz
+reconciliado contra a execução real.
 
 ## Não medido por estes runs
 

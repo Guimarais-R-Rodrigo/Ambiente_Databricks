@@ -71,5 +71,9 @@ o núcleo de carga, validação e resolução de configurações completas.
 
 A [V03](sistema_temas/V03/README.md) recebeu aceite explícito de Rodrigo e teve sua integração Git autorizada pelo PR #16. Ela acrescenta apenas um adaptador Plotly opt-in, preserva o caminho legado por padrão e não migra consumidores existentes. O estado efetivo do merge é registrado na PR. Não houve publicação Databricks; homologação operacional, auditoria independente e avaliação com usuário iniciante permanecem pendentes.
 
+### Continuidade do Sistema de Temas — V04
+
+A V03 foi efetivamente integrada pelo PR #16 no commit `b83a7cde`. A [V04](sistema_temas/V04/README.md) é a candidata corrente para componentes HTML, estilos compartilhados e tabela pandas. O caminho novo é opt-in e não altera automaticamente consumidores legados; aceite, merge e homologação Databricks continuam separados.
+
 ### READMEs de objeto — R04-B
-A R04-A está integrada em `a8f314a`. A R04-B cobre seis Hub Scripts e pausa para revisão antes da R05. Consulte `readmes_objetos/RELATORIO_R04B.md` e `readmes_objetos/MATRIZ_ALTERACOES_R04B.md`.
+A R04-A foi integrada pelo PR #17 e a R04-B pelo PR #18 (`d9da056c`). A cobertura estrutural da R04-B é 32/75 operacionais, 3/3 exemplares e 43 pendências; isso não equivale a aceite editorial dos demais objetos. Consulte `readmes_objetos/RELATORIO_R04B.md` e `readmes_objetos/MATRIZ_ALTERACOES_R04B.md`.
