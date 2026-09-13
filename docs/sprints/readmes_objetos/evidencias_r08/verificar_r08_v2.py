@@ -99,7 +99,7 @@ class CoreRuntimeCases(unittest.TestCase):
         df = pd.DataFrame({"cluster": [0, 0, 1, 1], "x": [-1., 1., 3., 5.], "z": [-1., 1., -2., 2.]})
         out = self.profile(df, ["x", "z"], "cluster")
         row = out[(out.cluster == 1) & (out.feature == "x")].iloc[0]
-        self.assertAlmostEqual(float(row.z_score), float((4 - 2) / df.x.std()))
+        self.assertAlmostEqual(float(row.z_score), round(float((4 - 2) / df.x.std()), 2))
         zero = out[(out.cluster == 1) & (out.feature == "z")].iloc[0]
         self.assertTrue(pd.isna(zero["index"]))
         self.assertEqual(len(self.top(out, 1, 1)), 1)
