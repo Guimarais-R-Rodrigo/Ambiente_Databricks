@@ -4,8 +4,10 @@
 # MAGIC
 # MAGIC **O problema.** Agrupar score em faixas é o passo antes de qualquer política de aprovação. E a informação que decide tudo — se score alto é bom ou ruim — não está no número: é convenção do modelo, e trocá-la sem perceber inverte a decisão sem mudar a aparência do relatório.
 # MAGIC
-# MAGIC **O que este helper faz.** Gera bandas por quantil **exigindo** que a direção do score seja declarada.
+# MAGIC **O que este helper faz.** Gera bandas por quantil e ordena segundo `higher_score_is_better`. A API possui default `True`, mas em uso real a direção deve ser passada explicitamente para não depender de convenção implícita.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -80,8 +82,9 @@ print(bandas.to_string(index=False))
 # MAGIC 1,625 → **59,625**. A concentração na última banda é o que torna o
 # MAGIC scorecard útil.
 # MAGIC
-# MAGIC O parâmetro não tem padrão silencioso de propósito. Um scorecard de crédito
-# MAGIC tradicional usa a convenção oposta: score alto é bom cliente. Trocar as duas
+# MAGIC A implementação **tem** `higher_score_is_better=True` como default. Por isso,
+# MAGIC passe a direção explicitamente. Um scorecard de crédito tradicional pode usar
+# MAGIC a convenção de score alto = bom cliente, enquanto um score de risco pode inverter isso. Trocar as duas
 # MAGIC sem perceber inverte a política de aprovação inteira, e o relatório continua
 # MAGIC parecendo certo — as bandas existem, os números somam, e o banco aprova
 # MAGIC exatamente quem deveria recusar.
@@ -102,7 +105,9 @@ print(invertida.to_string(index=False))
 # MAGIC
 # MAGIC Por isso a direção vale como informação a carregar junto do score, na
 # MAGIC documentação da tabela e no nome da coluna. `score_risco` e
-# MAGIC `score_qualidade` dizem sozinhos o que `score` não diz.
+# MAGIC `score_qualidade` ajudam a reduzir ambiguidade. A coluna `aprovacao_acum` do
+# MAGIC helper é cobertura cumulativa da base ordenada; só vira aprovação real quando
+# MAGIC uma política/cutoff é efetivamente aplicada.
 
 # COMMAND ----------
 # MAGIC %md
