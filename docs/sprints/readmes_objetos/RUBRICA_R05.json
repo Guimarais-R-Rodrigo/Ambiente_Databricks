@@ -1,0 +1,45 @@
+{
+  "sprint": "R05",
+  "date": "2026-09-12",
+  "base_commit": "d9da056c95bf5c4209b2f208de1c9a987580efe7",
+  "review_level": "A0_light",
+  "author": "ChatGPT",
+  "independent_reviewer": false,
+  "human_editorial_acceptance": false,
+  "objects": [
+    "hub_snippets/ml/lgbm_ranker",
+    "hub_snippets/ml/mlp_embeddings",
+    "hub_snippets/ml/optuna_lgbm",
+    "hub_snippets/ml/tabnet_wrapper",
+    "hub_snippets/ml/train_catboost",
+    "hub_snippets/ml/train_lgbm"
+  ],
+  "criteria": {
+    "contract_1_0_0": "pending_runtime_close",
+    "concept_before_code": "passed_self_review",
+    "real_api_documented": "passed_self_review",
+    "limitations_explicit": "passed_self_review",
+    "notebook_prose_only": "pending_preservation_check",
+    "implementation_unchanged": "pending_preservation_check",
+    "facade_unchanged": "pending_preservation_check",
+    "previous_readmes_preserved": "pending_preservation_check",
+    "migration_exactly_six_removed": "pending_preservation_check",
+    "repository_gate": "pending",
+    "v00": "pending",
+    "v01": "pending",
+    "v02": "pending",
+    "v03": "pending",
+    "model_runtime": "pending",
+    "manual_mirrors": "pending_preservation_check",
+    "databricks_publication": "not_performed",
+    "genie_homologation": "not_performed",
+    "independent_audit": "not_performed"
+  },
+  "validated_coverage": null,
+  "remote_run_id": null,
+  "notes": [
+    "Characterization tests document existing behavior; they do not approve limitations as desirable design.",
+    "No merge or R06 start is authorized by this rubric.",
+    "Human editorial acceptance must be recorded separately after final technical closure."
+  ]
+}
