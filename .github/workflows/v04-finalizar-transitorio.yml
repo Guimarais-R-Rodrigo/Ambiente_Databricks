@@ -1,0 +1,212 @@
+name: Finalizar candidata V04
+on:
+  push:
+    branches:
+      - codex/temas-v04-html-20260912
+permissions:
+  contents: write
+jobs:
+  finalizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      MAIN_ESPERADA: d9da056c95bf5c4209b2f208de1c9a987580efe7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Dependências declaradas e Spark R04-B
+        run: |
+          python -m pip install -r tools/requirements-dev.txt
+          python -m pip install 'pyspark==4.0.1' 'PyYAML==6.0.2'
+      - name: Confirmar base e normalizar marcadores de manutenção
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$MAIN_ESPERADA"
+          git config user.name "Codex"
+          git config user.email "codex@users.noreply.github.com"
+          python - <<'PY'
+          from pathlib import Path
+
+          def one(path, old, new):
+              p=Path(path); text=p.read_text(encoding='utf-8')
+              if text.count(old)!=1:
+                  raise SystemExit(f'{path}: marcador de preparação não é único: {old!r}')
+              p.write_text(text.replace(old,new,1),encoding='utf-8')
+
+          # O finalizador nasceu antes da reconciliação; normalize somente os
+          # marcadores que mudaram de estado, para ele continuar fail-closed.
+          one('docs/sprints/sistema_temas/V04/CHECKPOINT_V04.md',
+              '| Implementação funcional | EM VALIDAÇÃO FINAL |\n| Regressões automatizadas | EM VALIDAÇÃO FINAL |\n| Documentação operacional | EM FINALIZAÇÃO |',
+              '| Implementação funcional | EM VALIDAÇÃO |\n| Regressões automatizadas | EM VALIDAÇÃO |\n| Documentação operacional | EM CONSTRUÇÃO |')
+          one('tools/ci_local.py',
+              '1. Temas — adaptador Plotly V03, núcleo V02 e contrato V01, com regressões adversariais;',
+              '1. Temas — adaptador Plotly V03 + núcleo V02 + contrato V01 (todas as `test_temas*.py`)')
+          one('tools/ci_local.py',
+              '"adaptador Plotly V03 + núcleo V02 + contrato V01 (sem publicação)",',
+              '"Contrato/implementação do sistema de temas V03 + V02 + V01",')
+          PY
+      - name: Aplicar reconciliação documental V04
+        run: python -B tools/_v04_finalizar.py
+      - name: Reconciliar estado agregado com R04-B já integrada
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          def one(path, old, new):
+              p=Path(path); text=p.read_text(encoding='utf-8')
+              if text.count(old)!=1:
+                  raise SystemExit(f'{path}: estado agregado inesperado: {old[:90]!r}')
+              p.write_text(text.replace(old,new,1),encoding='utf-8')
+
+          one('CLAUDE.md',
+              '- README didático por pasta de objeto: `ADR-0012`, ratificado em 2026-09-12;\n  contrato 1.0.0 estabilizado após aceite do piloto. R03-A/R03-B foram integradas\n  pelo PR nº 13 e a R04-A foi integrada pelo PR nº 17, reconciliada com a V02.\n  R04-B permanece separada. Estado e retomada: `docs/sprints/readmes_objetos/README.md`.',
+              '- README didático por pasta de objeto: `ADR-0012`, ratificado em 2026-09-12;\n  contrato 1.0.0 estabilizado após aceite do piloto. R03-A/R03-B foram integradas\n  pelo PR nº 13, R04-A pelo PR nº 17 e R04-B pelo PR nº 18. As duas levas R04\n  foram reconciliadas com o Sistema de Temas antes do merge. Estado e retomada:\n  `docs/sprints/readmes_objetos/README.md`.')
+          one('CLAUDE.md',
+              'A V03 foi aceita e integrada pelo PR #16 no commit `b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`, após reconciliação com a R04-A. A V04 é a candidata atual: componentes HTML, estilos compartilhados e tabela pandas recebem rotas opt-in `_resolvido`, preservando as APIs legadas. Sem publicação Databricks ou início da V05. Estado: `docs/sprints/sistema_temas/V04/CHECKPOINT_V04.md`.',
+              'A V03 foi aceita e integrada pelo PR #16 no commit `b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`. A `main` avançou depois com a R04-B pelo PR #18 (`d9da056c95bf5c4209b2f208de1c9a987580efe7`). A V04 é a candidata atual e foi reconciliada com essa base: componentes HTML, estilos compartilhados e tabela pandas recebem rotas opt-in `_resolvido`, preservando as APIs legadas. Sem publicação Databricks ou início da V05. Estado: `docs/sprints/sistema_temas/V04/CHECKPOINT_V04.md`.')
+
+          p=Path('docs/sprints/sistema_temas/README.md'); text=p.read_text(encoding='utf-8')
+          text=text.replace('## Etapa atual — V04 candidata sobre V03 + R04-A integradas',
+                            '## Etapa atual — V04 candidata sobre V03 + R04-A + R04-B integradas',1)
+          text=text.replace('V00–V03 estão integradas no Git. A V03 foi mesclada pelo PR #16 no commit\n`b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`, depois de reconciliar a R04-A já\nintegrada pelo PR #17. Os cinco checks permanentes da V03 passaram novamente na\n`main` após o merge.',
+                            'V00–V03 estão integradas no Git. A V03 foi mesclada pelo PR #16 no commit\n`b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`; depois, R04-A e R04-B foram\nintegradas pelos PRs #17 e #18. A V04 foi reconciliada com a `main`\n`d9da056c95bf5c4209b2f208de1c9a987580efe7` antes da candidata final.',1)
+          p.write_text(text,encoding='utf-8')
+
+          one('docs/sprints/README.md',
+              '### READMEs de objeto — R04-B\nA R04-A está integrada em `a8f314a`. A R04-B cobre seis Hub Scripts e pausa para revisão antes da R05. Consulte `readmes_objetos/RELATORIO_R04B.md` e `readmes_objetos/MATRIZ_ALTERACOES_R04B.md`.',
+              '### READMEs de objeto — R04-B\nA R04-A foi integrada pelo PR #17 e a R04-B pelo PR #18 (`d9da056c`). A cobertura estrutural da R04-B é 32/75 operacionais, 3/3 exemplares e 43 pendências; isso não equivale a aceite editorial dos demais objetos. Consulte `readmes_objetos/RELATORIO_R04B.md` e `readmes_objetos/MATRIZ_ALTERACOES_R04B.md`.')
+
+          # Acrescente à nota do changelog a reconciliação efetivamente executada.
+          one('CHANGELOG.md',
+              '- (Codex) Code-check corrigido `34726621227`: 29 V04, 298 temas V01–V04, 12 V00 e `validate_assistant` aprovados.\n- (Codex) V04 é candidata: sem aceite, merge, publicação Databricks, homologação visual/acessibilidade ou início da V05.',
+              '- (Codex) Code-check corrigido `34726621227`: 29 V04, 298 temas V01–V04, 12 V00 e `validate_assistant` aprovados.\n- (Codex) Reconciliação `34726990399` permanece FAILURE por fachadas V04 ainda não materializadas; nenhum commit combinado foi enviado.\n- (Codex) Reconciliação corrigida `34727070003`: preservação V04/R04-B, regressões e 14/14 casos R04-B com Spark real aprovados; commit `c2b91c5e`.\n- (Codex) V04 é candidata: sem aceite, merge, publicação Databricks, homologação visual/acessibilidade ou início da V05.')
+          PY
+      - name: Regenerar fachadas, Manual e espelho somente pela fonte
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, 'tools')
+          from api_publica import api_publica, conteudo_init
+          paths = [
+              'ambiente_fonte/.assistant/hub_snippets/constants/styles/styles.py',
+              'ambiente_fonte/.assistant/hub_snippets/visual/badge/badge.py',
+              'ambiente_fonte/.assistant/hub_snippets/visual/divider/divider.py',
+              'ambiente_fonte/.assistant/hub_snippets/visual/kpi_card/kpi_card.py',
+              'ambiente_fonte/.assistant/hub_snippets/visual/section_header/section_header.py',
+              'ambiente_fonte/.assistant/hub_snippets/visual/index_generator/index_generator.py',
+              'ambiente_fonte/.assistant/hub_snippets/display/dataframe_styled/dataframe_styled.py',
+          ]
+          for raw in paths:
+              p=Path(raw)
+              (p.parent/'__init__.py').write_text(conteudo_init(p.stem,api_publica(p)),encoding='utf-8')
+          PY
+          cp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
+          python -B tools/render_simulado.py --write
+          cmp ambiente_fonte/.assistant/MANUAL_TECNICO.md MANUAL_TECNICO.md
+          cmp ambiente_fonte/.assistant/MANUAL_TECNICO.md Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md
+      - name: Registrar o run final antes de medir a árvore
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          run=os.environ['GITHUB_RUN_ID']
+          p=Path('docs/sprints/sistema_temas/V04/TESTES.md'); text=p.read_text(encoding='utf-8')
+          marker='## Não medido por estes runs\n'
+          block=f'''## Validação final da candidata — run `{run}`\n\nEste registro só será versionado se todos os passos seguintes do mesmo run\nterminarem com sucesso. A rodada mede a árvore já documentada, com fachadas e\nespelho materializados, workflow/script transitórios removidos e README raiz\nreconciliado contra a execução real.\n\n'''
+          if text.count(marker)!=1: raise SystemExit('TESTES.md: marcador final inesperado')
+          p.write_text(text.replace(marker,block+marker,1),encoding='utf-8')
+
+          p=Path('docs/sprints/sistema_temas/V04/CHECKPOINT_V04.md'); text=p.read_text(encoding='utf-8')
+          old='| Regressões automatizadas | CANDIDATA — exige run final verde |'
+          if text.count(old)!=1: raise SystemExit('CHECKPOINT: estado de regressões inesperado')
+          text=text.replace(old,f'| Regressões automatizadas | CANDIDATA — run final `{run}` em validação |',1)
+          p.write_text(text,encoding='utf-8')
+          PY
+      - name: Retirar toda preparação transitória antes da medição
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm tools/_v04_finalizar.py .github/workflows/v04-finalizar-transitorio.yml
+          test ! -e tools/_v04_finalizar.py
+          test ! -e .github/workflows/v04-finalizar-transitorio.yml
+      - name: Medir e reconciliar o bloco verificável do README raiz
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B tools/validate_assistant.py > /tmp/validate_v04.txt
+          cat /tmp/validate_v04.txt
+          python - <<'PY'
+          from pathlib import Path
+          out=Path('/tmp/validate_v04.txt').read_text(encoding='utf-8')
+          lines=out.splitlines()
+          start=next(i for i,l in enumerate(lines) if l.startswith('skills'))
+          end=next(i for i,l in enumerate(lines[start:],start) if l.startswith('APROVADO:'))
+          measured='\n'.join(lines[start:end+1])
+          p=Path('README.md'); text=p.read_text(encoding='utf-8')
+          heading='### Estado verificável do gate local'
+          h=text.index(heading)
+          a=text.index('```text',h)+len('```text')
+          b=text.index('```',a)
+          p.write_text(text[:a]+'\n'+measured+'\n'+text[b:],encoding='utf-8')
+          PY
+      - name: Preservar conteúdo específico R04-B
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Exclua somente agregadores deliberadamente atualizados pela V04.
+          git diff --name-only b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2 origin/main > /tmp/r04b_effective
+          while IFS= read -r p; do
+            [ -z "$p" ] && continue
+            case "$p" in
+              CHANGELOG.md|CLAUDE.md|MANUAL_TECNICO.md|README.md|PLANO_HUB.md|tools/ci_local.py|docs/sprints/README.md|docs/sprints/sistema_temas/README.md|ambiente_fonte/.assistant/MANUAL_TECNICO.md|Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md)
+                continue;;
+            esac
+            if git cat-file -e "origin/main:$p" 2>/dev/null; then
+              test -e "$p"
+              cmp <(git show "origin/main:$p") "$p"
+            else
+              test ! -e "$p"
+            fi
+          done < /tmp/r04b_effective
+      - name: Gates finais da árvore exata
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B tools/tests/test_temas_v04.py -v
+          python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
+          python -B tools/tests/test_visual_legado_v00.py
+          python -B tools/validate_assistant.py --conferir-readme
+          python -B docs/sprints/readmes_objetos/evidencias_r04b/verificar_r04b.py --require-spark
+          python -B tools/ci_local.py --verbose
+      - name: Congelar candidata somente se a main continuar igual
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$MAIN_ESPERADA"
+          test ! -e tools/_v04_finalizar.py
+          test ! -e .github/workflows/v04-finalizar-transitorio.yml
+          git status --short
+          git add -A
+          git commit -m "feat(temas): fechar candidata V04 HTML e tabelas"
+          git push origin HEAD:codex/temas-v04-html-20260912
