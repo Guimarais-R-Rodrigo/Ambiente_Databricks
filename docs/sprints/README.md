@@ -111,3 +111,6 @@ A R10 foi integrada pelo PR #30 (`7ba5d386`). A R11 cobre os nove Hub Prompts re
 
 ### READMEs R12 — integração de navegação
 Após a R11 fechar 75/75 objetos, a R12 cria os seis índices de categoria de `hub_snippets` e reconcilia a navegação com o catálogo, a entrada `.assistant` e o Manual Técnico. Não altera implementação nem reabre a migração de objetos.
+
+### READMEs R13 — auditoria final consolidada
+Após a integração da R12 pelo PR #32 (`ec4b559d`), a R13 audita em conjunto contrato, checklist, skill de criação, validador, Manual, 75 READMEs operacionais, três exemplares, seis índices de categoria e espelho derivado. A rodada é local e registra `A0_light`; homologação Databricks/Genie Code e auditoria independente permanecem gates separados.

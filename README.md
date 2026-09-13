@@ -219,7 +219,7 @@ normas do molde    : 71 arquivos, 0 violação(ões)
 notebook exercita  : 59 objetos, 0 notebook(s) que só importam
 python (AST)       : 214 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1303 arquivos varridos no repositório editável/derivado
+repo (identidade)  : 1316 arquivos varridos no repositório editável/derivado
 repo (links)       : 1794 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
@@ -335,4 +335,6 @@ A candidata R08 acrescenta guias locais para autoencoder de anomalias, profiling
 >
 > **READMEs R11 — integrada:** nove guias finais de Hub Prompts foram aceitos e integrados pelo PR #31 (`d51ca5dd`), fechando 75/75 e zero pendências estruturais.
 >
-> **READMEs R12 — candidata:** seis índices de categoria de `hub_snippets` e reconciliação de navegação com as entradas gerais e o Manual Técnico.
+> **READMEs R12 — integrada:** seis índices de categoria de `hub_snippets` foram aceitos e integrados pelo PR #32 (`ec4b559d`), preservando 75/75 objetos e zero pendências estruturais.
+>
+> **READMEs R13 — auditoria final candidata:** revisão consolidada de contrato, checklist, skill de criação, validador, Manual, READMEs, índices e espelho, com mutantes negativos e regressão local.
