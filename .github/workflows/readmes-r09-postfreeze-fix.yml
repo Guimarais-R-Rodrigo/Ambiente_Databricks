@@ -1,0 +1,85 @@
+name: Correcao pos-freeze READMEs R09
+on:
+  push:
+    branches: [codex/readmes-r09-final-v2]
+    paths: [.github/workflows/readmes-r09-postfreeze-fix.yml]
+permissions:
+  contents: write
+concurrency:
+  group: readmes-r09-postfreeze-fix
+  cancel-in-progress: false
+jobs:
+  corrigir-e-validar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BASE: d5945e04328609878f63857cc15cf5e5039b3e75
+      PREV: 1c417aa36763f1d227ee915d982c70c5aa453dbc
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Corrigir apenas o snapshot e registrar a causa
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$PREV"
+          test "$(git rev-parse origin/main)" = "$BASE"
+          python - <<'PY'
+          from pathlib import Path
+
+          readme = Path('README.md')
+          text = readme.read_text(encoding='utf-8')
+          replacements = {
+              'repo (identidade)  : 1230 arquivos varridos no repositório editável/derivado':
+                  'repo (identidade)  : 1236 arquivos varridos no repositório editável/derivado',
+              'repo (links)       : 1444 links fora da raiz analisada':
+                  'repo (links)       : 1486 links fora da raiz analisada',
+              'worktree (extras)  : 5 arquivos locais examinados, fora da contagem versionada':
+                  'worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada',
+          }
+          for old, new in replacements.items():
+              assert text.count(old) == 1, (old, text.count(old))
+              text = text.replace(old, new)
+          readme.write_text(text, encoding='utf-8')
+
+          report = Path('docs/sprints/readmes_objetos/RELATORIO_R09.md')
+          rtext = report.read_text(encoding='utf-8')
+          marker = '## Correção pós-freeze do snapshot — 2026-09-13'
+          if marker not in rtext:
+              rtext = rtext.rstrip() + f'''\n\n{marker}\n\nO freeze técnico `34784634303` aprovou os gates funcionais, estruturais e de preservação. No primeiro CI permanente do head efetivo do PR, run `34785228161`, o validador revelou duas contagens repo-wide desatualizadas no snapshot do README: os cinco READMEs derivados criados pelo renderer e `FREEZE_R09.txt` ainda não estavam no inventário versionado quando o snapshot foi capturado.\n\nNa árvore final versionada, as contagens corretas são **1236 arquivos** na varredura de identidade e **1486 links** fora da raiz analisada, com **0 extras locais** em checkout limpo. A correção pós-freeze altera somente `README.md` e este relatório; implementações, fachadas, notebooks, READMEs dos cinco objetos e o conteúdo histórico de `FREEZE_R09.txt` permanecem intactos.\n'''
+              report.write_text(rtext, encoding='utf-8')
+          PY
+          git rm -f .github/workflows/readmes-r09-postfreeze-fix.yml
+          git add README.md docs/sprints/readmes_objetos/RELATORIO_R09.md
+          mapfile -t changed < <(git diff --cached --name-only "$PREV")
+          printf '%s\n' "${changed[@]}"
+          test "${#changed[@]}" -eq 2
+          test "${changed[0]}" = "README.md"
+          test "${changed[1]}" = "docs/sprints/readmes_objetos/RELATORIO_R09.md"
+          git diff --cached --check "$PREV"
+      - name: Dependencias do gate
+        run: python -m pip install -r tools/requirements-dev.txt
+      - name: Validar snapshot e gate permanente
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validate_assistant.py --conferir-readme
+          python tools/ci_local.py
+          python docs/sprints/readmes_objetos/evidencias_r09/verificar_r09.py --group static
+          python docs/sprints/readmes_objetos/evidencias_r09/verificar_preservacao.py --base "$BASE"
+          git diff --cached --check "$PREV"
+          test "$(git rev-parse origin/main)" = "$BASE"
+      - name: Commitar correcao documental minima
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Rodrigo'
+          git config user.email 'guimarais.r.rodrigo@gmail.com'
+          git commit -m 'docs(r09): corrigir snapshot do inventário final (ChatGPT)'
+          git push origin HEAD:codex/readmes-r09-final-v2
