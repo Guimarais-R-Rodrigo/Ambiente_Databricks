@@ -1,6 +1,6 @@
 # Achados R07 — score, vintage e sobrevivência
 
-**Base:** `289731c79e8ed43d82b39d61cdc41ba2e69ea717`  
+**Base:** `289731c79e8ed43d82b39d61cdc41ba2e69ea717`
 **Escopo:** seis objetos R07; sem alteração de implementação/fachada.
 
 Os itens abaixo são achados de documentação/caracterização. Registrar um comportamento não significa aprová-lo como desenho desejável.
