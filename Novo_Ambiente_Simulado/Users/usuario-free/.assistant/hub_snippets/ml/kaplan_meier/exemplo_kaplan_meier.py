@@ -6,6 +6,8 @@
 # MAGIC
 # MAGIC **O que este helper faz.** Estima a curva de sobrevivência de Kaplan-Meier, que usa a informação parcial de quem ainda não teve o evento, e compara grupos com log-rank.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -104,10 +106,10 @@ figura.show()
 # COMMAND ----------
 # MAGIC %md
 # MAGIC **Como ler.** As duas curvas descem, e a do premium desce mais devagar. O que
-# MAGIC vale reparar são os **degraus**: a curva só cai quando há evento, e fica
-# MAGIC plana entre eles. As marcas de censura aparecem sem produzir queda — o
-# MAGIC contrato sai do denominador sem contar como evento, que é exatamente o
-# MAGIC tratamento correto.
+# MAGIC vale reparar são os **degraus**: a estimativa só cai quando há evento e fica
+# MAGIC plana entre eles. A censura entra corretamente no `KaplanMeierFitter`, mas
+# MAGIC **esta figura Plotly local não desenha marcas de censura**. Para auditar a
+# MAGIC cauda, confira também eventos/censurados e quantos casos ainda estão sob risco.
 # MAGIC
 # MAGIC A faixa de confiança abre à direita. Não é defeito do desenho: no fim da
 # MAGIC janela restam poucos contratos sob risco, e cada evento move muito a
@@ -131,8 +133,9 @@ for chave, valor in teste.items():
 # MAGIC ```
 # MAGIC
 # MAGIC **Como ler.** O log-rank compara as curvas inteiras, não um ponto delas. Com
-# MAGIC χ² de **32,73** e p de **1,06 × 10⁻⁸**, a diferença entre padrão e premium
-# MAGIC não é acaso de amostra.
+# MAGIC χ² de **32,73** e p de **1,06 × 10⁻⁸**, há forte evidência contra a
+# MAGIC igualdade das curvas sob as hipóteses do teste. Isso não mede magnitude nem
+# MAGIC demonstra que pertencer ao grupo cause a diferença.
 # MAGIC
 # MAGIC O que o teste **não** diz: que ser premium *causa* a permanência. Quem
 # MAGIC contrata premium é diferente de quem contrata padrão em várias dimensões, e

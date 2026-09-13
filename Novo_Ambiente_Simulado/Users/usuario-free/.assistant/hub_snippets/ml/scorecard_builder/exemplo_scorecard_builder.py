@@ -6,6 +6,8 @@
 # MAGIC
 # MAGIC **O que este helper faz.** Converte coeficientes e tabelas WOE em pontos, com PDO, score base e odds base declarados.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -66,7 +68,9 @@ print(card.to_string(index=False))
 
 # COMMAND ----------
 # MAGIC %md
-# MAGIC Executado no laboratório, o resultado é:
+# MAGIC Executado no laboratório, o bloco histórico abaixo é **abreviado**: o código
+# MAGIC imprime também as linhas de `tempo_woe`, mas o output colado antigo não as contém.
+# MAGIC O bloco é preservado como evidência histórica, não como schema completo do retorno.
 # MAGIC
 # MAGIC ```text
 # MAGIC        feature  faixa   woe  coef  pontos  event_is_bad
@@ -79,12 +83,13 @@ print(card.to_string(index=False))
 # MAGIC ```
 # MAGIC
 # MAGIC **Como ler.** Cada faixa de cada variável recebe pontos, e o score de um
-# MAGIC cliente é a soma das faixas dele — aritmética que qualquer pessoa confere
-# MAGIC à mão. É essa a razão de o scorecard existir num setor regulado.
+# MAGIC cliente é a soma das faixas dele — aritmética que pode ser conferida
+# MAGIC manualmente. Isso melhora rastreabilidade, mas não substitui binning versionado,
+# MAGIC validação, governança, política de decisão ou aprovação regulatória quando aplicável.
 # MAGIC
 # MAGIC Os três parâmetros que definem a escala são declarados, não descobertos:
 # MAGIC `base_score=600` com `base_odds=50` fixa a referência, e `pdo=20` diz
-# MAGIC quantos pontos dobram a chance.
+# MAGIC quantos pontos dobram as **odds de referência**, não a probabilidade.
 
 # COMMAND ----------
 # MAGIC %md

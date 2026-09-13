@@ -5,6 +5,14 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-12 — R07: READMEs de score, vintage e sobrevivência (ChatGPT)
+
+- Documenta `kaplan_meier`, `score_bands`, `scorecard_builder`, `survival_cox`, `vintage_analysis` e `woe_iv_calculator` no contrato 1.0.0.
+- Corrige somente prosa/backlinks dos seis notebooks; código, magics executáveis e outputs históricos permanecem protegidos.
+- Explicita limites de censura, hazard, score/odds/PDO, maturidade de safra e WOE/IV, sem transformar heurísticas em normas.
+- Retira exatamente seis dispensas R07 do controle de migração e registra achados, matriz, rubrica e testes.
+- Sem alteração de implementação/fachada, dependência permanente, publicação Databricks, homologação de política/modelo, auditoria independente ou início da R08.
+
 ## 2026-09-12 — R06: READMEs de séries e validação temporal (ChatGPT)
 
 - Documenta `arima_wrapper`, `lgbm_temporal`, `prophet_wrapper`, `split_temporal` e `walk_forward` no contrato 1.0.0.

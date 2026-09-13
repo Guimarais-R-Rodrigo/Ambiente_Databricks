@@ -1617,6 +1617,19 @@ profile_anomalies(df: pd.DataFrame, feature_cols: List[str], scores: np.ndarray,
 
 [Implementação](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/isolation_forest/isolation_forest.py) · [API exportada](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/isolation_forest/__init__.py) · [Notebook de exemplo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/isolation_forest/exemplo_isolation_forest.py)
 
+#### Guias locais R07 — score, maturidade e sobrevivência
+
+Para um usuário novo no Hub, separe as perguntas antes de escolher o objeto:
+
+- `hub_snippets/ml/score_bands/README.md` — diagnosticar como eventos se distribuem ao longo do score; `aprovacao_acum` é cobertura, não política pronta;
+- `hub_snippets/ml/woe_iv_calculator/README.md` — WOE/IV de uma feature **já discretizada** em Spark;
+- `hub_snippets/ml/scorecard_builder/README.md` — converter WOE + coeficientes em tabela de pontos; não aplica binning nem pontua linhas novas;
+- `hub_snippets/ml/vintage_analysis/README.md` — comparar safras no mesmo MOB sem preencher maturidade ausente;
+- `hub_snippets/ml/kaplan_meier/README.md` — descrever tempo até evento com censura;
+- `hub_snippets/ml/survival_cox/README.md` — associações de hazard ajustadas sob riscos proporcionais.
+
+Taxa acumulada de safra, função de sobrevivência, probabilidade de evento, hazard, odds e pontos são grandezas diferentes. Os helpers organizam cálculos; eles não escolhem política, causalidade ou aprovação regulatória.
+
 #### `hub_snippets.ml.kaplan_meier`
 
 Recebe pandas com duração e indicador de evento; devolve curvas Plotly ou resultado do teste log-rank. Lifelines é utilizado nas funções. Censura, duração e grupos precisam estar corretamente definidos antes da comparação.
