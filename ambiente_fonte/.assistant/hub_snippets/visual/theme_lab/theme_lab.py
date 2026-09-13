@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from hub_snippets.visual.tema import (
-    ResolvedTheme, ThemeError, export_theme, normalize_color, resolve_theme,
+    ResolvedTheme, ThemeError, export_theme, load_theme, normalize_color, resolve_theme,
 )
 
 
@@ -77,6 +77,43 @@ class ThemeLabComparison:
     proposal: ThemeLabPreview
 
 
+@dataclass(frozen=True)
+class ThemeLabPreset:
+    """Ponto de partida explicitamente fornecido; não implica aprovação."""
+
+    key: str
+    display_name: str
+    theme: ResolvedTheme
+    note: str = ""
+    demo: bool = False
+
+
+@dataclass(frozen=True)
+class ThemeLabSessionReceipt:
+    """Recibo de sessão rastreável; não é submissão, aprovação ou publicação."""
+
+    session_name: str
+    base_sha256: str
+    proposal_sha256: str
+    manifest_sha256: str
+    revision: int
+    history_depth: int
+    destination: str
+
+
+@dataclass(frozen=True)
+class ThemeLabSessionInfo:
+    """Metadados seguros de uma sessão reabrível."""
+
+    session_name: str
+    base_display_name: str
+    proposal_display_name: str
+    base_sha256: str
+    proposal_sha256: str
+    revision: int
+    history_depth: int
+
+
 _PRIMARY_TOKENS = (
     "brand.primary", "text.primary", "text.secondary", "surface.section",
     "surface.card", "chart.title_px", "section.title_px",
@@ -117,7 +154,11 @@ _NO_PREVIEW = frozenset({
 })
 _FILENAME_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{0,62}\.json$")
 _PREFIX_RE = re.compile(r"^[a-z][a-z0-9_]{0,39}$")
+_PRESET_RE = re.compile(r"^[a-z][a-z0-9_-]{0,39}$")
+_SESSION_RE = re.compile(r"^[a-z0-9][a-z0-9_-]{0,62}$")
+_HASH_RE = re.compile(r"^[0-9a-f]{64}$")
 _MAX_HISTORY = 100
+_MAX_SESSION_MANIFEST = 131072
 
 
 def _verified(theme: ResolvedTheme) -> ResolvedTheme:
@@ -129,6 +170,10 @@ def _verified(theme: ResolvedTheme) -> ResolvedTheme:
 
 def _schema_path() -> Path:
     return Path(__file__).absolute().parents[3] / "hub_padroes/identidade_visual/theme.schema.json"
+
+
+def _package_root() -> Path:
+    return Path(__file__).absolute().parents[3]
 
 
 def get_control_specs(theme: ResolvedTheme) -> tuple[ControlSpec, ...]:
@@ -268,49 +313,258 @@ class ThemeLabDraft:
         if type(filename) is not str or _FILENAME_RE.fullmatch(filename) is None:
             raise ThemeLabError("LAB_FILENAME", "Nome de arquivo inválido.",
                                 action="Use nome simples em minúsculas terminado em .json, sem pastas.")
-        try:
-            root_path = Path(root).absolute()
-            if not root_path.is_dir() or root_path.is_symlink() or any(p.is_symlink() for p in root_path.parents):
-                raise ValueError
-        except (TypeError, ValueError, OSError):
-            raise ThemeLabError("LAB_SAVE_ROOT", "A raiz de rascunhos precisa ser uma pasta regular existente.",
-                                action="Escolha uma pasta autorizada explicitamente, sem atalhos simbólicos.") from None
+        root_path = _controlled_root(root)
         target = root_path / filename
         payload = self.export_bytes()
         revision = self.revision
-        fd = None
-        try:
-            flags = os.O_RDWR | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
-            fd = os.open(target, flags, 0o600)
-            opened = os.fstat(fd)
-            if not stat.S_ISREG(opened.st_mode):
-                raise OSError
-            with os.fdopen(fd, "w+b") as stream:
-                fd = None
-                written = stream.write(payload)
-                if written != len(payload):
-                    raise OSError
-                stream.flush()
-                os.fsync(stream.fileno())
-                stream.seek(0)
-                observed = stream.read(len(payload) + 1)
-                if observed != payload:
-                    raise OSError
-            final = target.lstat()
-            if not stat.S_ISREG(final.st_mode) or (final.st_dev, final.st_ino, final.st_size) != (opened.st_dev, opened.st_ino, len(payload)):
-                raise OSError
-        except FileExistsError:
-            raise ThemeLabError("LAB_SAVE_EXISTS", "Já existe um arquivo com esse nome.",
-                                action="Escolha outro nome; nenhum arquivo existente será sobrescrito.") from None
-        except OSError:
-            # Nunca apagar target: uma falha de open pode ocorrer antes de termos
-            # criado qualquer arquivo. Remover um arquivo vazio aqui apagaria dado alheio.
-            raise ThemeLabError("LAB_SAVE_IO", "A proposta não foi confirmada no destino.",
-                                action="Nenhum sucesso foi registrado. Pode haver arquivo parcial; peça inspeção ao mantenedor e não o importe como salvo.") from None
-        finally:
-            if fd is not None:
-                os.close(fd)
+        _write_exclusive(target, payload, "LAB_SAVE_IO")
         return ProposalReceipt(filename, hashlib.sha256(payload).hexdigest(), len(payload), revision, str(target))
+
+
+def _controlled_root(root: str | Path) -> Path:
+    try:
+        root_path = Path(root).absolute()
+        if not root_path.is_dir() or root_path.is_symlink() or any(p.is_symlink() for p in root_path.parents):
+            raise ValueError
+        return root_path
+    except (TypeError, ValueError, OSError):
+        raise ThemeLabError("LAB_SAVE_ROOT", "A raiz de rascunhos precisa ser uma pasta regular existente.",
+                            action="Escolha uma pasta autorizada explicitamente, sem atalhos simbólicos.") from None
+
+
+def _write_exclusive(target: Path, payload: bytes, error_code: str) -> None:
+    fd = None
+    try:
+        flags = os.O_RDWR | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
+        fd = os.open(target, flags, 0o600)
+        opened = os.fstat(fd)
+        if not stat.S_ISREG(opened.st_mode):
+            raise OSError
+        with os.fdopen(fd, "w+b") as stream:
+            fd = None
+            written = stream.write(payload)
+            if written != len(payload):
+                raise OSError
+            stream.flush()
+            os.fsync(stream.fileno())
+            stream.seek(0)
+            observed = stream.read(len(payload) + 1)
+            if observed != payload:
+                raise OSError
+        final = target.lstat()
+        if not stat.S_ISREG(final.st_mode) or (final.st_dev, final.st_ino, final.st_size) != (opened.st_dev, opened.st_ino, len(payload)):
+            raise OSError
+    except FileExistsError:
+        raise ThemeLabError("LAB_SAVE_EXISTS", "Já existe um arquivo ou sessão com esse nome.",
+                            action="Escolha outro nome; conteúdo existente não será sobrescrito.") from None
+    except OSError:
+        raise ThemeLabError(error_code, "A gravação não foi confirmada no destino.",
+                            action="Nenhum sucesso foi registrado. Pode haver resíduo parcial; peça inspeção ao mantenedor e não o importe como salvo.") from None
+    finally:
+        if fd is not None:
+            os.close(fd)
+
+
+def _canonical_manifest(value: Mapping[str, Any]) -> bytes:
+    return (json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":"), allow_nan=False) + "\n").encode("utf-8")
+
+
+def _read_manifest(path: Path) -> dict[str, Any]:
+    fd = None
+    try:
+        if path.is_symlink() or any(p.is_symlink() for p in path.parents):
+            raise OSError
+        flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+        fd = os.open(path, flags)
+        opened = os.fstat(fd)
+        if not stat.S_ISREG(opened.st_mode) or opened.st_size > _MAX_SESSION_MANIFEST:
+            raise OSError
+        with os.fdopen(fd, "rb") as stream:
+            fd = None
+            raw = stream.read(_MAX_SESSION_MANIFEST + 1)
+        if len(raw) > _MAX_SESSION_MANIFEST:
+            raise OSError
+        text = raw.decode("utf-8")
+        def pairs(items):
+            result = {}
+            for key, value in items:
+                if key in result:
+                    raise ValueError
+                result[key] = value
+            return result
+        data = json.loads(text, object_pairs_hook=pairs)
+    except (OSError, UnicodeDecodeError, ValueError, json.JSONDecodeError):
+        raise ThemeLabError("LAB_SESSION_MANIFEST", "O manifesto da sessão é inválido ou ilegível.",
+                            action="Não reabra esta sessão; peça inspeção ao mantenedor.") from None
+    finally:
+        if fd is not None:
+            os.close(fd)
+    required = {"format_version", "context", "base_sha256", "proposal_sha256",
+                "base_display_name", "proposal_display_name", "revision", "history_sha256"}
+    if type(data) is not dict or set(data) != required or data.get("format_version") != 1 or data.get("context") != "notebook":
+        raise ThemeLabError("LAB_SESSION_MANIFEST", "O manifesto não corresponde ao formato V05.",
+                            action="Use uma sessão gerada por esta versão do laboratório.")
+    hashes = data.get("history_sha256")
+    if (type(data.get("revision")) is not int or data["revision"] < 0 or data["revision"] > 1_000_000
+            or type(hashes) is not list or len(hashes) > _MAX_HISTORY
+            or type(data.get("base_display_name")) is not str or type(data.get("proposal_display_name")) is not str
+            or len(data["base_display_name"]) > 200 or len(data["proposal_display_name"]) > 200):
+        raise ThemeLabError("LAB_SESSION_MANIFEST", "Metadados da sessão estão fora dos limites.",
+                            action="Não reabra esta sessão; peça inspeção ao mantenedor.")
+    for value in [data.get("base_sha256"), data.get("proposal_sha256"), *hashes]:
+        if type(value) is not str or _HASH_RE.fullmatch(value) is None:
+            raise ThemeLabError("LAB_SESSION_MANIFEST", "Um hash da sessão é inválido.",
+                                action="Não altere hashes para forçar a reabertura.")
+    return data
+
+
+def prepare_theme_lab_presets(presets: Mapping[str, ResolvedTheme]) -> tuple[ThemeLabPreset, ...]:
+    """Valida pontos de partida fornecidos pelo mantenedor; não infere aprovação."""
+    if not isinstance(presets, Mapping) or not presets or len(presets) > 20:
+        raise ThemeLabError("LAB_PRESETS", "Forneça entre 1 e 20 presets nomeados.",
+                            action="O mantenedor deve selecionar explicitamente os pontos de partida permitidos.")
+    result = []
+    for key, theme in presets.items():
+        if type(key) is not str or _PRESET_RE.fullmatch(key) is None:
+            raise ThemeLabError("LAB_PRESET_KEY", "Identificador de preset inválido.",
+                                action="Use minúsculas, números, hífen ou underscore, começando por letra.")
+        verified = _verified(theme)
+        display_name = verified.to_dict()["display_name"]
+        result.append(ThemeLabPreset(key, display_name, verified,
+                                     "Fornecido pelo mantenedor; disponibilidade não significa aprovação.", False))
+    return tuple(result)
+
+
+def get_demo_presets() -> tuple[ThemeLabPreset, ...]:
+    """Retorna somente referências empacotadas de demonstração, nunca temas aprovados."""
+    root = _package_root()
+    items = []
+    for key, filename in (("legado_notebook", "legado_notebook.json"),
+                          ("executivo_claro", "executivo_claro_exemplo.json")):
+        theme = load_theme(root, "hub_padroes/identidade_visual/exemplos/" + filename,
+                           expected_context="notebook")
+        items.append(ThemeLabPreset(key, theme.to_dict()["display_name"], theme,
+                                    "Referência sintética empacotada; não é tema operacional aprovado.", True))
+    return tuple(items)
+
+
+def create_theme_lab_from_preset(presets: tuple[ThemeLabPreset, ...], key: str) -> ThemeLabDraft:
+    """Cria rascunho a partir da escolha explícita do operador."""
+    if type(presets) is not tuple or not presets:
+        raise ThemeLabError("LAB_PRESETS", "Catálogo de presets vazio ou inválido.",
+                            action="Prepare presets antes de abrir o laboratório.")
+    for preset in presets:
+        if type(preset) is not ThemeLabPreset:
+            raise ThemeLabError("LAB_PRESETS", "O catálogo contém item inválido.", action="Reconstrua o catálogo.")
+        if preset.key == key:
+            return ThemeLabDraft(_verified(preset.theme))
+    raise ThemeLabError("LAB_PRESET_UNKNOWN", "O ponto de partida selecionado não existe neste catálogo.",
+                        action="Escolha uma opção exibida pelo laboratório.")
+
+
+def save_theme_lab_session(draft: ThemeLabDraft, root: str | Path, session_name: str) -> ThemeLabSessionReceipt:
+    """Salva base, proposta, histórico e manifesto em diretório novo; manifesto é gravado por último."""
+    if type(draft) is not ThemeLabDraft:
+        raise ThemeLabError("LAB_DRAFT_TYPE", "Rascunho inválido.", action="Use create_theme_lab ou reabra uma sessão válida.")
+    if type(session_name) is not str or _SESSION_RE.fullmatch(session_name) is None:
+        raise ThemeLabError("LAB_SESSION_NAME", "Nome de sessão inválido.",
+                            action="Use até 63 caracteres minúsculos, números, hífen ou underscore.")
+    root_path = _controlled_root(root)
+    session_dir = root_path / session_name
+    try:
+        os.mkdir(session_dir, 0o700)
+    except FileExistsError:
+        raise ThemeLabError("LAB_SESSION_EXISTS", "Já existe uma sessão com esse nome.",
+                            action="Escolha outro nome; nenhuma sessão é sobrescrita.") from None
+    except OSError:
+        raise ThemeLabError("LAB_SESSION_CREATE", "A pasta da sessão não pôde ser criada.",
+                            action="Confira permissão e raiz autorizada; nada foi confirmado como salvo.") from None
+
+    base_payload = export_theme(draft.base)
+    proposal_payload = export_theme(draft.current)
+    history_payloads = [export_theme(item) for item in draft._history]
+    base_sha = hashlib.sha256(base_payload).hexdigest()
+    proposal_sha = hashlib.sha256(proposal_payload).hexdigest()
+    history_sha = [hashlib.sha256(item).hexdigest() for item in history_payloads]
+    try:
+        _write_exclusive(session_dir / "base.json", base_payload, "LAB_SESSION_IO")
+        _write_exclusive(session_dir / "proposal.json", proposal_payload, "LAB_SESSION_IO")
+        for index, payload in enumerate(history_payloads):
+            _write_exclusive(session_dir / f"history_{index:03d}.json", payload, "LAB_SESSION_IO")
+        base_data, proposal_data = draft.base.to_dict(), draft.current.to_dict()
+        manifest = {
+            "format_version": 1,
+            "context": "notebook",
+            "base_sha256": base_sha,
+            "proposal_sha256": proposal_sha,
+            "base_display_name": base_data["display_name"],
+            "proposal_display_name": proposal_data["display_name"],
+            "revision": draft.revision,
+            "history_sha256": history_sha,
+        }
+        manifest_payload = _canonical_manifest(manifest)
+        _write_exclusive(session_dir / "session.json", manifest_payload, "LAB_SESSION_IO")
+    except ThemeLabError:
+        raise ThemeLabError("LAB_SESSION_INCOMPLETE", "A sessão não foi confirmada integralmente.",
+                            action="Pode existir uma pasta parcial sem recibo. Não a reabra; peça inspeção ao mantenedor.") from None
+    observed = _read_manifest(session_dir / "session.json")
+    if observed != manifest:
+        raise ThemeLabError("LAB_SESSION_VERIFY", "O manifesto salvo não corresponde ao estado preparado.",
+                            action="Não use esta sessão; peça inspeção ao mantenedor.")
+    return ThemeLabSessionReceipt(
+        session_name, base_sha, proposal_sha, hashlib.sha256(manifest_payload).hexdigest(),
+        draft.revision, len(history_payloads), str(session_dir),
+    )
+
+
+def reopen_theme_lab_session(root: str | Path, session_name: str) -> ThemeLabDraft:
+    """Reabre base, proposta e histórico de sessão V05 validando todos os hashes."""
+    if type(session_name) is not str or _SESSION_RE.fullmatch(session_name) is None:
+        raise ThemeLabError("LAB_SESSION_NAME", "Nome de sessão inválido.", action="Escolha uma sessão listada.")
+    root_path = _controlled_root(root)
+    session_dir = root_path / session_name
+    if not session_dir.is_dir() or session_dir.is_symlink():
+        raise ThemeLabError("LAB_SESSION_MISSING", "Sessão regular não encontrada.", action="Escolha uma sessão listada.")
+    manifest = _read_manifest(session_dir / "session.json")
+    try:
+        base = load_theme(session_dir, "base.json", expected_sha256=manifest["base_sha256"], expected_context="notebook")
+        proposal = load_theme(session_dir, "proposal.json", expected_sha256=manifest["proposal_sha256"], expected_context="notebook")
+        history = [
+            load_theme(session_dir, f"history_{index:03d}.json", expected_sha256=value, expected_context="notebook")
+            for index, value in enumerate(manifest["history_sha256"])
+        ]
+    except ThemeError as exc:
+        raise ThemeLabError("LAB_SESSION_HASH", "Um arquivo da sessão não corresponde ao manifesto.",
+                            action="Não altere o hash; use outra sessão ou restaure o arquivo correto.") from exc
+    draft = ThemeLabDraft(base)
+    draft.current = proposal
+    draft._history = history
+    draft.revision = manifest["revision"]
+    return draft
+
+
+def list_theme_lab_sessions(root: str | Path) -> tuple[ThemeLabSessionInfo, ...]:
+    """Lista somente sessões completas com manifesto válido; resíduos parciais ficam ocultos."""
+    root_path = _controlled_root(root)
+    result = []
+    try:
+        children = sorted(root_path.iterdir(), key=lambda item: item.name)
+    except OSError:
+        raise ThemeLabError("LAB_SAVE_ROOT", "Não foi possível listar a raiz de rascunhos.",
+                            action="Confira permissão da pasta autorizada.") from None
+    for child in children:
+        if not child.is_dir() or child.is_symlink() or _SESSION_RE.fullmatch(child.name) is None:
+            continue
+        try:
+            manifest = _read_manifest(child / "session.json")
+        except ThemeLabError:
+            continue
+        result.append(ThemeLabSessionInfo(
+            child.name, manifest["base_display_name"], manifest["proposal_display_name"],
+            manifest["base_sha256"], manifest["proposal_sha256"], manifest["revision"],
+            len(manifest["history_sha256"]),
+        ))
+    return tuple(result)
 
 
 def create_theme_lab(theme: ResolvedTheme) -> ThemeLabDraft:
@@ -335,7 +589,6 @@ def build_preview(theme: ResolvedTheme) -> ThemeLabPreview:
         raise ThemeLabError("LAB_PREVIEW_DEPENDENCY", "Dependências da galeria indisponíveis.",
                             action="Peça o ambiente declarado ao mantenedor; não há instalação automática.") from None
     bar = go.Figure()
-    # Quatro séries mantêm nomes e valores fixos ao comparar paletas.
     for name, values in (("Volume A", [12, 7, 15, 9]), ("Volume B", [9, 6, 11, 7]),
                          ("Volume C", [5, 8, 10, 6]), ("Volume D", [7, 4, 8, 12])):
         bar.add_trace(go.Bar(x=["A", "B", "C", "D"], y=values, name=name))
@@ -393,8 +646,6 @@ def install_dbutils_fallback(draft: ThemeLabDraft, dbutils: Any, *, prefix: str 
                 widgets.get(name)
                 existing = True
             except Exception:
-                # A API nativa não oferece um tipo de exceção portátil de ausência.
-                # Não removemos widgets; text usa a API do ambiente. Homologar no destino.
                 pass
         if not existing:
             widgets.text(name, str(values[token]), _LABELS[token])
@@ -426,6 +677,18 @@ class ThemeLabUI:
     controls: Mapping[str, Any]
     status: Any
     preview: Any
+    has_pending: Any = None
+
+
+@dataclass
+class ThemeLabLauncherUI:
+    """Entrada guiada para escolher base ou reabrir sessão, sem publicar."""
+
+    root: Any
+    status: Any
+    workspace: Any
+    preset_control: Any
+    session_control: Any
 
 
 def build_ipywidgets_lab(draft: ThemeLabDraft, *, save_root: str | Path | None = None,
@@ -440,7 +703,7 @@ def build_ipywidgets_lab(draft: ThemeLabDraft, *, save_root: str | Path | None =
         raise ThemeLabError("LAB_DRAFT_TYPE", "Rascunho inválido.", action="Use create_theme_lab.")
     try:
         import ipywidgets as widgets
-        import IPython  # disponibilidade da infraestrutura de notebook; não exibe a UI
+        import IPython
     except ImportError:
         raise ThemeLabError("LAB_IPYWIDGETS_MISSING", "ipywidgets/IPython indisponíveis.",
                             action="Use o fallback nativo ou ambiente compatível; não há instalação automática.") from None
@@ -531,8 +794,6 @@ def build_ipywidgets_lab(draft: ThemeLabDraft, *, save_root: str | Path | None =
         confirm_discard.value = False
 
     def present(comparison: ThemeLabComparison) -> None:
-        # Materializa toda a saída antes de trocar outputs. Não usa contexto
-        # Output (que pode capturar exceções) nem injeta JS/CDN de um renderer.
         outputs = []
         def html_output(text):
             outputs.append({"output_type": "display_data", "data": {"text/html": text}, "metadata": {}})
@@ -626,7 +887,7 @@ def build_ipywidgets_lab(draft: ThemeLabDraft, *, save_root: str | Path | None =
     intro = widgets.HTML(value=(
         "<h3>Aparência do Hub — prévia pessoal V05</h3><p>Alterações aqui não mudam o padrão da equipe.</p>"
         f"<p>Ponto de partida: {escape(base_data['display_name'])}; contexto notebook; revisão visual {escape(base_data['theme_version'])}. "
-        "Referência empacotada não significa tema aprovado.</p>"
+        "Disponibilidade no laboratório não significa tema aprovado.</p>"
         "<p>Guia: abra GUIA_PRIMEIRO_USO.md na mesma pasta do notebook. A galeria usa light, dados sintéticos e quatro séries; "
         "imagens e consumidores externos não são recoloridos.</p>"
     ))
@@ -646,4 +907,121 @@ def build_ipywidgets_lab(draft: ThemeLabDraft, *, save_root: str | Path | None =
             present(compare_preview(draft))
         except Exception as exc:
             status.value = f"<b>Prévia indisponível:</b> {safe_error(exc)}"
-    return ThemeLabUI(root, draft, control_widgets, status, preview)
+    return ThemeLabUI(root, draft, control_widgets, status, preview, pending)
+
+
+def build_theme_lab_launcher(presets: tuple[ThemeLabPreset, ...] | None = None, *,
+                             save_root: str | Path | None = None,
+                             render_initial: bool = True) -> ThemeLabLauncherUI:
+    """Constrói entrada guiada para escolher preset ou reabrir sessão rastreável."""
+    try:
+        import ipywidgets as widgets
+        import IPython
+    except ImportError:
+        raise ThemeLabError("LAB_IPYWIDGETS_MISSING", "ipywidgets/IPython indisponíveis.",
+                            action="Use o fallback documentado ou ambiente compatível.") from None
+    if presets is None:
+        presets = get_demo_presets()
+    if type(presets) is not tuple or not presets or len(presets) > 20 or any(type(item) is not ThemeLabPreset for item in presets):
+        raise ThemeLabError("LAB_PRESETS", "Catálogo de presets inválido.", action="Use prepare_theme_lab_presets ou get_demo_presets.")
+    keys = [item.key for item in presets]
+    if len(set(keys)) != len(keys):
+        raise ThemeLabError("LAB_PRESETS", "Há identificadores de preset duplicados.", action="Use chaves únicas.")
+    for item in presets:
+        _verified(item.theme)
+
+    status = widgets.HTML(value="<b>Escolha um ponto de partida ou reabra uma sessão.</b> Nada será publicado.")
+    preset_control = widgets.Dropdown(
+        options=[(f"{item.display_name}{' — demonstração' if item.demo else ''}", item.key) for item in presets],
+        description="Ponto de partida",
+    )
+    open_preset = widgets.Button(description="Abrir ponto de partida", button_style="primary")
+    session_name = widgets.Text(value="minha-proposta", description="Sessão")
+    session_control = widgets.Dropdown(options=[], description="Reabrir")
+    reopen_button = widgets.Button(description="Reabrir sessão", disabled=save_root is None)
+    save_session_button = widgets.Button(description="Salvar sessão rastreável", disabled=save_root is None)
+    workspace = widgets.VBox()
+    active = {"draft": None, "lab": None}
+
+    def safe_error(exc: Exception) -> str:
+        if isinstance(exc, (ThemeLabError, ThemeError)):
+            return escape(str(exc))
+        return "Falha inesperada. Preserve seu trabalho e peça revisão ao mantenedor."
+
+    def refresh_sessions() -> None:
+        if save_root is None:
+            session_control.options = []
+            return
+        try:
+            infos = list_theme_lab_sessions(save_root)
+            session_control.options = [(f"{item.session_name} — revisão {item.revision}", item.session_name) for item in infos]
+            reopen_button.disabled = not bool(infos)
+        except Exception as exc:
+            session_control.options = []
+            reopen_button.disabled = True
+            status.value = f"<b>Sessões indisponíveis:</b> {safe_error(exc)}"
+
+    def mount(draft: ThemeLabDraft, origin: str) -> None:
+        lab = build_ipywidgets_lab(draft, save_root=None, render_initial=render_initial)
+        active["draft"], active["lab"] = draft, lab
+        note = widgets.HTML(value=(
+            f"<p><b>{escape(origin)}</b></p>"
+            "<p>Nesta entrada guiada, o botão interno Salvar proposta fica desabilitado de propósito. "
+            "Use <b>Salvar sessão rastreável</b> abaixo para preservar base, proposta e histórico.</p>"
+        ))
+        workspace.children = (note, lab.root, widgets.HBox([session_name, save_session_button]))
+
+    def on_open(_):
+        try:
+            chosen = next(item for item in presets if item.key == preset_control.value)
+            mount(create_theme_lab_from_preset(presets, chosen.key),
+                  f"Ponto de partida: {chosen.display_name}. {chosen.note}")
+            status.value = "Ponto de partida aberto. Alterações continuam pessoais e não publicadas."
+        except Exception as exc:
+            status.value = f"<b>Não aberto:</b> {safe_error(exc)}"
+
+    def on_save_session(_):
+        lab = active.get("lab")
+        draft = active.get("draft")
+        if lab is None or draft is None:
+            status.value = "Abra um ponto de partida ou sessão antes de salvar."
+            return
+        if callable(lab.has_pending) and lab.has_pending():
+            status.value = "Há campos ainda não aplicados. Clique Aplicar na prévia antes de salvar a sessão."
+            return
+        try:
+            receipt = save_theme_lab_session(draft, save_root, session_name.value)
+            status.value = (f"<b>Sessão salva:</b> {escape(receipt.session_name)}; base {receipt.base_sha256}; "
+                            f"proposta {receipt.proposal_sha256}; revisão {receipt.revision}. Não publicada.")
+            refresh_sessions()
+        except Exception as exc:
+            status.value = f"<b>Não salva:</b> {safe_error(exc)}"
+
+    def on_reopen(_):
+        if not session_control.value:
+            status.value = "Nenhuma sessão completa está disponível para reabrir."
+            return
+        try:
+            draft = reopen_theme_lab_session(save_root, session_control.value)
+            mount(draft, f"Sessão reaberta: {session_control.value}; base e histórico validados pelo manifesto.")
+            session_name.value = session_control.value + "-nova"
+            status.value = "Sessão reaberta com base, proposta e histórico. Nada publicado."
+        except Exception as exc:
+            status.value = f"<b>Não reaberta:</b> {safe_error(exc)}"
+
+    open_preset.on_click(on_open)
+    save_session_button.on_click(on_save_session)
+    reopen_button.on_click(on_reopen)
+    refresh_sessions()
+    root = widgets.VBox([
+        widgets.HTML(value=(
+            "<h3>Aparência do Hub — entrada guiada V05</h3>"
+            "<p>Escolher uma opção não a torna aprovada. Referências de demonstração aparecem identificadas. "
+            "Salvar sessão preserva linhagem local; não submete, aprova ou publica.</p>"
+        )),
+        status,
+        widgets.HBox([preset_control, open_preset]),
+        widgets.HBox([session_control, reopen_button]),
+        workspace,
+    ])
+    return ThemeLabLauncherUI(root, status, workspace, preset_control, session_control)
