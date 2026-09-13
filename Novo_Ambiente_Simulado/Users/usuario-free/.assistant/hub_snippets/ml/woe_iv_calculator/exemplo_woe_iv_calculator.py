@@ -22,6 +22,8 @@
 # MAGIC **O que este helper faz.** Calcula WOE por faixa e o IV total, e classifica
 # MAGIC a força — inclusive a faixa que deveria acender alerta em vez de comemoração.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -84,9 +86,9 @@ tabela_woe.show(truncate=False)
 # MAGIC %md
 # MAGIC ### Por que IV muito alto é motivo de desconfiança
 # MAGIC
-# MAGIC O reflexo natural diante de um IV altíssimo é comemorar. Quase sempre é o
-# MAGIC contrário: significa que a variável **quase determina** o alvo, e isso
-# MAGIC costuma indicar vazamento.
+# MAGIC Um IV altíssimo merece investigação, não comemoração automática. Ele pode
+# MAGIC refletir leakage ou proxy do target, mas também concentração, bins muito
+# MAGIC específicos, seleção de amostra ou uma associação realmente forte no recorte.
 # MAGIC
 # MAGIC Vamos provar criando uma variável construída a partir do próprio alvo —
 # MAGIC o vazamento em sua forma mais crua:
@@ -142,11 +144,11 @@ print("o status de cobrança só existe DEPOIS que o cliente ficou inadimplente.
 # MAGIC
 # MAGIC - **Como seletor automático de variável.** IV mede separação na base que
 # MAGIC   você tem; não sabe se a variável existirá na hora da decisão.
-# MAGIC - **Com IV acima de 0,5, sem investigar.** Nessa faixa a hipótese mais
-# MAGIC   provável não é "variável excelente": é vazamento, ou variável derivada do
-# MAGIC   próprio alvo.
-# MAGIC - **Em variável contínua sem binning declarado.** O IV muda com o número de
-# MAGIC   faixas, e comparar IVs calculados com binnings diferentes não significa
-# MAGIC   nada.
+# MAGIC - **Com IV acima de 0,5, sem investigar.** A faixa é uma heurística local,
+# MAGIC   não diagnóstico universal. Verifique leakage, origem, concentração, binning e
+# MAGIC   estabilidade antes de interpretar o valor como poder preditivo útil.
+# MAGIC - **Em variável contínua sem binning declarado.** Este helper não cria bins;
+# MAGIC   valores distintos viram grupos. O IV depende da discretização, e comparar
+# MAGIC   resultados de regras de binning diferentes exige muito cuidado.
 # MAGIC - **Como substituto de validação temporal.** Uma variável com IV alto na
 # MAGIC   base inteira pode ter IV zero na safra mais recente.

@@ -28,6 +28,13 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 - (Codex) Finalização `34727324137` permanece FAILURE por marcador textual impossível do `ci_local.py`; nenhum derivado/candidato final foi gravado.
 - (Codex) Finalização `34727521220` permanece FAILURE porque a regressão V01 exigiu preservar `V01/README.md` e `V01/GUIA_PRIMEIRO_USO.md` no índice agregado; nenhum commit final foi criado.
 - (Codex) V04 é candidata: sem aceite, merge, publicação Databricks, homologação visual/acessibilidade ou início da V05.
+## 2026-09-12 — R07: READMEs de score, vintage e sobrevivência (ChatGPT)
+
+- Documenta `kaplan_meier`, `score_bands`, `scorecard_builder`, `survival_cox`, `vintage_analysis` e `woe_iv_calculator` no contrato 1.0.0.
+- Corrige somente prosa/backlinks dos seis notebooks; código, magics executáveis e outputs históricos permanecem protegidos.
+- Explicita limites de censura, hazard, score/odds/PDO, maturidade de safra e WOE/IV, sem transformar heurísticas em normas.
+- Retira exatamente seis dispensas R07 do controle de migração e registra achados, matriz, rubrica e testes.
+- Sem alteração de implementação/fachada, dependência permanente, publicação Databricks, homologação de política/modelo, auditoria independente ou início da R08.
 
 ## 2026-09-12 — R06: READMEs de séries e validação temporal (ChatGPT)
 

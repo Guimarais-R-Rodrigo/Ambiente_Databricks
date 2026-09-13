@@ -2,10 +2,12 @@
 # MAGIC %md
 # MAGIC # `survival_cox` — o efeito de cada variável sobre o tempo até o evento
 # MAGIC
-# MAGIC **O problema.** Kaplan-Meier compara grupos, e só. Para responder *quanto* a renda muda o risco de cancelamento, mantendo a idade constante, é preciso um modelo — e regressão comum não sabe o que fazer com censura.
+# MAGIC **O problema.** Kaplan-Meier compara curvas não ajustadas. Para estimar a associação entre renda e hazard de cancelamento condicionada às demais covariáveis do modelo, é preciso uma abordagem que também trate censura.
 # MAGIC
 # MAGIC **O que este helper faz.** Ajusta o modelo de riscos proporcionais de Cox e testa o pressuposto que ele exige, que é onde quase todo mundo escorrega.
 
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 # COMMAND ----------
 # MAGIC %md
 # MAGIC ## O que este notebook assume do ambiente
@@ -118,11 +120,11 @@ for chave, valor in metricas.items():
 # MAGIC modelo recuperou os dois. É a checagem que raramente se pode fazer com
 # MAGIC dado real, e que vale fazer sempre que se puder.
 # MAGIC
-# MAGIC O **C-index de 0,6848** é o contraponto necessário. Ele mede capacidade de
-# MAGIC ordenar quem falha antes, e 0,68 é modesto — os coeficientes estão certos e
-# MAGIC ainda assim o modelo prevê mal o caso individual. Efeito bem estimado e
-# MAGIC previsão boa são coisas diferentes, e confundi-las é como um modelo
-# MAGIC estatisticamente impecável vira uma decisão ruim.
+# MAGIC O **C-index de 0,6848** é calculado no próprio ajuste e mede ordenação de
+# MAGIC tempos/eventos nessa amostra. Não há corte universal que transforme 0,68 em
+# MAGIC `bom` ou `ruim`. Neste sintético, os coeficientes recuperam aproximadamente os
+# MAGIC parâmetros plantados, mas isso é diferente de demonstrar previsão individual
+# MAGIC fora da amostra.
 
 
 # COMMAND ----------
@@ -143,8 +145,9 @@ print(diagnostico.to_string())
 # MAGIC **Como ler.** Este é o teste que quase todo mundo pula. Cox assume que o
 # MAGIC efeito de cada variável é **constante ao longo do tempo** — o *hazard ratio*
 # MAGIC de 1,62 vale igual no mês 1 e no mês 23. Aqui os dois p-valores estão bem
-# MAGIC acima de 0,05 e nada é violado, o que era de esperar numa base gerada com
-# MAGIC efeito constante por construção.
+# MAGIC acima de 0,05 e o teste **não rejeita** proporcionalidade neste exemplo. Isso
+# MAGIC era esperado numa base gerada com efeito constante, mas p alto não prova que
+# MAGIC o pressuposto seja verdadeiro em dados reais.
 # MAGIC
 # MAGIC Em dado real a violação é comum, e o sintoma típico é uma variável que
 # MAGIC separa muito no começo e deixa de separar depois. Quando isso acontece, o
