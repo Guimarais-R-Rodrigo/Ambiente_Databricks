@@ -102,3 +102,6 @@ A R06 está integrada em `289731c`. A R07 cobre seis objetos de score, vintage e
 A R07 foi integrada pelo PR #25. A R08 cobre seis objetos de clusterização, anomalias e explicabilidade e preserva implementações/fachadas. Relatório, matriz e achados ficam em `docs/sprints/readmes_objetos/`. A cobertura esperada após validação é 55/75 operacionais + 3/3 exemplares; isso não representa aceite editorial antecipado.
 ### READMEs R09
 Leva de avaliação, drift e MLOps: cinco objetos; cobertura candidata 60/75, sujeita ao freeze e aceite.
+
+### READMEs R10
+Após a integração da R09 pelo PR #29 (`d412acb`), a R10 cobre seis Hub Prompts de exploração, qualidade, reconciliação, feature engineering e validação estatística. A cobertura alvo é 66/75 operacionais + 3/3 exemplares, sujeita ao validador e ao aceite editorial.

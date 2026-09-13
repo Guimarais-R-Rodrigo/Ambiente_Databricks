@@ -2,6 +2,8 @@
 # MAGIC %md
 # MAGIC # `feature_engineering` — especificar features sem vazar o futuro
 # MAGIC
+# MAGIC 📘 Guia local: [`README.md`](./README.md)
+# MAGIC
 # MAGIC **Prompt não executa.** Ele é um briefing para colar num chat, e a
 # MAGIC resposta vem de uma interação que notebook nenhum reproduz. Este notebook
 # MAGIC tem três partes, e só as duas primeiras rodam:
@@ -21,7 +23,7 @@
 # MAGIC | Compute | serverless ou clássico, indiferente |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, de `hub_snippets.testing.fixtures` |
-# MAGIC | Escrita | **sim** — cria a tabela `workspace.default.hub_exemplo_fatos` para o chat poder consultá-la |
+# MAGIC | Escrita | **sim** — cria/sobrescreve as tabelas `workspace.default.hub_exemplo_fatos` e `workspace.default.hub_exemplo_features` para o chat poder consultá-las |
 # MAGIC | Diferença Free × trabalho | no trabalho, aponte o prompt para uma tabela real governada em vez da sintética |
 
 # COMMAND ----------

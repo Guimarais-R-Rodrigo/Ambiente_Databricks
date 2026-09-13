@@ -256,7 +256,7 @@ O catálogo abaixo preserva as famílias e acrescenta links diretos para o brief
 - **O usuário precisa informar:** recurso, target, segmentos, janela, regras e restrições.
 - **Cenário de Uso:**
   > *“Vamos construir um modelo de propensão e preciso avaliar as features candidatas antes do pré-processamento.”*
-- **Arquivos:** `hub_prompts/eda_completa/eda_completa.md` · `hub_prompts/eda_completa/exemplo_eda_completa.py`
+- **Arquivos:** `hub_prompts/eda_completa/eda_completa.md` · `hub_prompts/eda_completa/exemplo_eda_completa.py` · [README local](eda_completa/README.md)
 
 #### `cross_eda` — Exploração Cruzada Multi-Tabelas
 
@@ -265,7 +265,7 @@ O catálogo abaixo preserva as famílias e acrescenta links diretos para o brief
 - **O usuário precisa informar:** tabelas, chaves, período, grão e resultado esperado do relacionamento.
 - **Cenário de Uso:**
   > *“Quero cruzar cadastro e transações e medir correspondência, perda e multiplicação antes da tabela final.”*
-- **Arquivos:** `hub_prompts/cross_eda/cross_eda.md` · `hub_prompts/cross_eda/exemplo_cross_eda.py`
+- **Arquivos:** `hub_prompts/cross_eda/cross_eda.md` · `hub_prompts/cross_eda/exemplo_cross_eda.py` · [README local](cross_eda/README.md)
 
 ---
 
@@ -285,7 +285,7 @@ O catálogo abaixo preserva as famílias e acrescenta links diretos para o brief
 - **Skill recomendada:** `@hub-ml-validacao-estatistica`.
 - **Cenário de Uso:**
   > *“Quero avaliar se a diferença observada em um teste A/B é estatisticamente e materialmente relevante.”*
-- **Arquivos:** `hub_prompts/stat_check/stat_check.md` · `hub_prompts/stat_check/exemplo_stat_check.py`
+- **Arquivos:** `hub_prompts/stat_check/stat_check.md` · `hub_prompts/stat_check/exemplo_stat_check.py` · [README local](stat_check/README.md)
 
 #### `feature_engineering` — Engenharia de Atributos Temporais
 
@@ -293,7 +293,7 @@ O catálogo abaixo preserva as famílias e acrescenta links diretos para o brief
 - **Skill recomendada:** `@hub-ml-feature-engineering`.
 - **Cenário de Uso:**
   > *“Quero calcular comportamento em 30, 60 e 90 dias usando apenas dados disponíveis até a decisão.”*
-- **Arquivos:** `hub_prompts/feature_engineering/feature_engineering.md` · `hub_prompts/feature_engineering/exemplo_feature_engineering.py`
+- **Arquivos:** `hub_prompts/feature_engineering/feature_engineering.md` · `hub_prompts/feature_engineering/exemplo_feature_engineering.py` · [README local](feature_engineering/README.md)
 
 #### `baseline_orchestration` — Modelo Baseline Ponta a Ponta
 
@@ -337,7 +337,7 @@ O catálogo abaixo preserva as famílias e acrescenta links diretos para o brief
 - **Skill recomendada:** `@hub-ml-eda-profissional`.
 - **Cenário de Uso:**
   > *“Antes de disponibilizar uma tabela, quero verificar chaves, nulos, intervalos e regras de domínio.”*
-- **Arquivos:** `hub_prompts/data_quality/data_quality.md` · `hub_prompts/data_quality/exemplo_data_quality.py`
+- **Arquivos:** `hub_prompts/data_quality/data_quality.md` · `hub_prompts/data_quality/exemplo_data_quality.py` · [README local](data_quality/README.md)
 
 #### `comparar_tabelas` — Reconciliação entre Bases de Dados
 
@@ -345,7 +345,7 @@ O catálogo abaixo preserva as famílias e acrescenta links diretos para o brief
 - **Skill recomendada:** Genie Code ou `@hub-ml-cross-eda-ml`, conforme o foco.
 - **Cenário de Uso:**
   > *“Quero reconciliar uma saída legada com a nova implementação e localizar divergências.”*
-- **Arquivos:** `hub_prompts/comparar_tabelas/comparar_tabelas.md` · `hub_prompts/comparar_tabelas/exemplo_comparar_tabelas.py`
+- **Arquivos:** `hub_prompts/comparar_tabelas/comparar_tabelas.md` · `hub_prompts/comparar_tabelas/exemplo_comparar_tabelas.py` · [README local](comparar_tabelas/README.md)
 
 #### `auditoria_skills` — Auditoria de Código Gerado por IA
 
