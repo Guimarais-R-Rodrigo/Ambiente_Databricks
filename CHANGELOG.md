@@ -3109,3 +3109,15 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
   MCP JSON vazio, identificador corporativo em 7+ arquivos).
 - Repositório GitHub privado confirmado; `Ambiente_Antigo/` mantido fora do
   git por conter identificador corporativo (ver ADR-0003).
+
+
+## 2026-09-13 — R09: recuperação de preservação (ChatGPT)
+
+### Corrigido
+
+- (ChatGPT) Restaurados da base integrada o catálogo, o índice da iniciativa e cinco notebooks, recuperando navegação, imagens, código e saídas históricas removidos na construção R09.
+- (ChatGPT) Corrigido o relato de alterações somente editoriais: o exemplo MLflow também havia alterado literais executáveis.
+
+### Atualizado
+
+- (ChatGPT) Registro RECUPERACAO_R09, relatório e matriz distinguem recuperação concluída de integração, freeze e runtimes ainda pendentes. Cinco novos READMEs preservados; nenhuma mudança na main, em implementações/fachadas ou publicação Databricks.

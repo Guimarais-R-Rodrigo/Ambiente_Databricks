@@ -4,7 +4,9 @@
 # MAGIC
 # MAGIC **O problema.** Quando alguém pergunta se os dados mudaram, a resposta depende de qual mudança importa. PSI mede deslocamento de forma numa variável numérica, KS a maior distância entre acumuladas, CSI a mesma ideia sobre categoria. Usar o índice errado devolve um número que responde outra pergunta.
 # MAGIC
-# MAGIC **O que este helper faz.** Calcula os três, e varre várias features de uma vez separando numéricas de categóricas.
+# MAGIC **O que este helper faz.** Calcula os três, e varre várias features de uma vez separando numéricas de categóricas. Sem thresholds do consumidor, mede evidência e retorna `NOT_CLASSIFIED`.
+# MAGIC
+# MAGIC **Guia local completo:** [README deste objeto](README.md).
 
 # COMMAND ----------
 # MAGIC %md
@@ -90,7 +92,7 @@ print(f"CSI entre as duas distribuições de UF: {calculate_csi(cat_ref, cat_atu
 # MAGIC **Como ler.** CSI é a mesma aritmética do PSI aplicada a categorias em vez
 # MAGIC de faixas. A diferença que importa é conceitual: em numérica os bins vêm da
 # MAGIC referência e são escolha de quem calcula; em categórica as "faixas" já
-# MAGIC existem, e o índice fica estável.
+# MAGIC existem. Isso evita escolher bins numéricos, mas categorias raras, novas ou de alta cardinalidade continuam exigindo revisão.
 # MAGIC
 # MAGIC Passar categórica para `calculate_psi` não é erro sutil — é erro de tipo, e
 # MAGIC a função não vai fingir que funciona.
@@ -183,6 +185,8 @@ print(com_politica[["feature", "psi", "status"]].to_string(index=False))
 
 # COMMAND ----------
 # MAGIC %md
+# MAGIC **Nota de contrato:** no ramo categórico atual, `min_non_null` é comparado ao comprimento total da série, apesar do nome do parâmetro. Se houver muitas ausências, valide externamente a contagem não nula.
+# MAGIC
 # MAGIC ## Quando **não** usar
 # MAGIC
 # MAGIC - **Como prova de que o modelo piorou.** Mede a entrada; performance se mede com o alvo realizado.

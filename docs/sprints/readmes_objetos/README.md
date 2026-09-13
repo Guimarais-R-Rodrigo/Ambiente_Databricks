@@ -10,9 +10,9 @@ Rodrigo aprovou o padrão e autorizou a integração das R03-A/R03-B com a V01 e
 2026-09-12. O PR nº 13 foi integrado na `main` pelo commit `1be947b`; o
 [registro da composição](INTEGRACAO_R03_V01.md) preserva os gates e a V01.
 
-O contrato vigente é **1.0.0**. A R07 foi aceita e integrada pelo PR nº 25 no commit `b73bbb9`, após reconciliação com a V04 e seu checkpoint documental. A R08 documenta `autoencoder_anomaly`, `cluster_profiling`, `clustering_suite`, `explainability_report`, `shap_explainer` e `umap_viz` sem alterar suas implementações/fachadas. A cobertura esperada é **55/75 operacionais e 3/3 exemplares, com 20 pendências**; somente a saída do validador da árvore fechada é fonte de verdade. Isso não significa publicação no workspace nem aceite antecipado dos seis textos.
+O contrato vigente é **1.0.0**. A R08 foi aceita e integrada pelo PR nº 27 no commit `d5945e0`. A R09 documenta `curves_plotly`, `drift_detection`, `metrics_report`, `mlflow_run` e `performance_monitor`, preservando implementações/fachadas. A cobertura candidata é **60/75 operacionais e 3/3 exemplares, com 15 pendências**; o validador da árvore fechada é fonte de verdade.
 
-Consulte o [relatório R08](RELATORIO_R08.md), a [matriz nominal](MATRIZ_ALTERACOES_R08.md) e os [achados](ACHADOS_R08.md). A próxima parada é a revisão desta leva antes da R09.
+Consulte o [relatório R09](RELATORIO_R09.md), a [matriz nominal](MATRIZ_ALTERACOES_R09.md), os [achados](ACHADOS_R09.md) e o [registro de recuperação](RECUPERACAO_R09.md). A próxima parada é freeze técnico e revisão antes da R10.
 
 Os relatórios anteriores preservam o estado observado em cada data. PRs #9/#11
 foram supersedidos pela composição integrada do PR #13 e não devem ser tratados
