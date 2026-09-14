@@ -1,0 +1,41 @@
+name: Contrato de micromodelos MM01
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'micromodelos/mm01-*'
+
+permissions:
+  contents: read
+
+jobs:
+  validar-mm01:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+
+      - name: Instalar dependências de manutenção
+        run: python -m pip install -r tools/requirements-dev.txt
+
+      - name: Executar contrato e mutantes MM01
+        run: python -B -m unittest tools/tests/test_micromodelo_mm01.py -v
+
+      - name: Executar gate estrutural
+        run: python -B tools/validate_assistant.py --root ambiente_fonte
+
+      - name: Registrar fronteira do gate
+        run: echo 'MM01 valida contrato/schema/template/fixtures sintéticos; não acessa Databricks, Unity Catalog, MLflow, ACLs, dados reais ou publicação externa.'
