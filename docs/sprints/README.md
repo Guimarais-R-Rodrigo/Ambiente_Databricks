@@ -70,25 +70,26 @@ custos e interpretação. Estado, matriz e testes em
 A [iniciativa MM00–MM13](micromodelos/README.md) usa trilha própria e está na
 MM00, dedicada exclusivamente a baseline, arquitetura e documentação. A
 [MM00](micromodelos/MM00/README.md) registra inventário, reuso, riscos,
-dependências, ADRs propostos, testes e checkpoint.
+dependências, ADRs propostos, testes, auditoria A1 e checkpoint.
 
 Esta candidata não altera o produto `.assistant`, não cria skill/helper de
-micromodelo e não autoriza MM01. O avanço depende de checks, auditoria
-independente, checkpoint, aceite explícito e merge da MM00.
+micromodelo e não autoriza MM01. O avanço depende de gates automáticos, correção
+ou exceção explícita do Q-01 do changelog, decisão sobre os ADRs, aceite humano e
+merge da MM00.
 
 ## Sistema de Temas do Hub
 
-A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V08 estão aceitas e integradas no Git.**
+A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V09 estão integradas no Git.**
+
+A V09 integra o Sistema de Temas ao kit offline de transição: contrato temático no manifesto v2, guarda fail-closed antes do build e conferência de presença/tamanho/SHA256 dos nove arquivos canônicos dentro do ZIP gerado. A integração funcional ocorreu pelo PR #45 no commit `0f7234c4734f1974ebb1a20123f3c26626c67ef3`; a correção da preparação Node do workflow operacional foi integrada pelo PR #46 no commit `4ae714a35a0aafd930a8cd796d962b0a79449b88`. Transporte não significa ativação ou publicação Databricks.
 
 A [V08 — integração transversal](sistema_temas/V08/README.md) conecta skills, Hub Padrões, entrada `.assistant` e Manual às mesmas fontes de verdade das V02–V07. A [matriz V08](sistema_temas/V08/MATRIZ_INTEGRACAO.json), o [checkpoint](sistema_temas/V08/CHECKPOINT_V08.md) e o [registro de testes](sistema_temas/V08/TESTES.md) preservam escopo, failures e a regra de zero alteração runtime Python.
 
 A V08 remove a política visual paralela do template EDA, preservando suas convenções editoriais, e explicita que tema não altera dados, métricas, denominadores, thresholds ou decisões. SHAP/Matplotlib e Kaplan–Meier continuam limites declarados do theming atual.
 
-A V08 foi aceita em 14/09/2026 e integrada pelo PR #42. O head final validado foi `9af5615d79b02cbd86f5a6d084444c83f203ae03`; o merge na `main` é `622d2c962a80998cf990b57036f7ae503bfc0458`. Os nove checks finais da PR e os dez workflows pós-merge da `main` concluíram com `success`.
+A V08 foi aceita em 14/09/2026 e integrada pelo PR #42. O head final validado foi `9af5615d79b02cbd86f5a6d084444c83f203ae03`; o merge na `main` é `622d2c962a80998cf990b57036f7ae503bfc0458`.
 
-A V07 permanece integrada pelo PR #40 no commit `67114605c7345a01c1144e5d6c6d24e9c24e2491`; o fechamento documental subsequente produziu a base V08 `1b6632194f4b25afc09960c27b069c16df365ee6`.
-
-Não houve publicação Databricks da V08; browser/runtime, acessibilidade, ACL real, UAT, promoção visual e seleção determinística de skill permanecem gates separados. A V09 não foi iniciada.
+Não houve publicação Databricks pela V08 ou V09; browser/runtime, acessibilidade, ACL real, UAT, promoção visual e seleção determinística de skill permanecem gates separados.
 
 ### Continuidade do Sistema de Temas — V04
 
