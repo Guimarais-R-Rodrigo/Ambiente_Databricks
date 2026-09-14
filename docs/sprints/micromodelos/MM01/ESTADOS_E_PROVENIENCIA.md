@@ -54,27 +54,48 @@ Estados aceitos:
 
 Ao entrar em `EM_VALIDACAO` ou fase posterior:
 
-- semântica `TRUE/FALSE/INDETERMINADO` deve estar aprovada;
+- `fontes`, `evidencias`, `contra_evidencias` e `validacao.criterios` devem estar não vazios;
+- semântica `TRUE/FALSE/INDETERMINADO` deve estar aprovada e as três definições precisam permanecer distintas mesmo após normalização editorial básica;
 - política de ausência de evidência deve estar aprovada;
 - score habilitado precisa ter semântica aprovada;
-- regras de evidência/contra-evidência existentes precisam estar aprovadas;
-- limiares e pesos existentes precisam estar aprovados.
+- regras de evidência e contra-evidência precisam estar aprovadas;
+- limiares e pesos existentes precisam estar aprovados;
+- linguagem probabilística em score não calibrado é recusada, ainda que o enum tenha sido deixado como `FORCA_EVIDENCIA` ou `OUTRA_APROVADA`.
 
 Ao chegar em `VALIDADO` ou posterior, o resultado de validação precisa ser medido e a decisão humana precisa estar aprovada.
 
 Ao chegar em `CANDIDATO_PRODUTO` ou posterior, o contrato de saída de publicação precisa estar definido, inclusive tratamento de `INDETERMINADO`.
 
-`EM_VALIDACAO_GOVERNANCA` exige handoff externo referenciado. `PUBLICADO` exige confirmação externa e referência do Produto de Dados.
+A interface de publicação acompanha a fase:
 
-## 5. Não equivalências que o contrato protege
+- antes de `CANDIDATO_PRODUTO`: `publicacao.status=NAO_INICIADA`;
+- em `CANDIDATO_PRODUTO`: `CANDIDATA` ou `REJEITADA`;
+- em `EM_VALIDACAO_GOVERNANCA`: `EM_VALIDACAO_EXTERNA` e `handoff_ref` obrigatório;
+- em `PUBLICADO`: `PUBLICADA` e `produto_dados_ref` obrigatório.
+
+Esses gates têm caminhos positivos cobertos pela suíte. A intenção não é tornar fases posteriores inalcançáveis, mas impedir que o rótulo de fase avance sem o contrato correspondente.
+
+## 5. Escopo de fontes
+
+Na MM01, `catalogo_ref` aceita exclusivamente o placeholder `CATALOGO_PRODUTO`. A ferramenta de validação não possui flag de linha de comando para ampliar esse conjunto. Fonte fora do catálogo padrão continua sendo decisão humana/arquitetural e não override local de validação.
+
+## 6. Integridade sintática e referencial
+
+- YAML e JSON com chaves duplicadas são rejeitados no carregamento; não se aceita “last key wins”.
+- Referências `fontes_ref` precisam apontar para fontes existentes.
+- IDs duplicados são rejeitados nas coleções controladas: fontes, evidências, contra-evidências, limiares, componentes do score e experimentos.
+
+## 7. Não equivalências que o contrato protege
 
 ```text
 sem evidência ≠ FALSE
 PROPOSTO ≠ APROVADO
 INFERIDO ≠ MEDIDO
 score 80 ≠ 80% de probabilidade
+linguagem de probabilidade ≠ probabilidade calibrada
 notebook executado ≠ publicação autorizada
 VALIDADO ≠ PUBLICADO
+fase declarada ≠ gate da fase satisfeito
 ```
 
 Essas diferenças são semânticas do domínio, não detalhes editoriais.
