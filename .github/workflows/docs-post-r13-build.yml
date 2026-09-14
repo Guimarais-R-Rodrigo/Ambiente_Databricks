@@ -27,7 +27,9 @@ jobs:
           test "$(git rev-parse origin/main)" = "99e01012c26621539b4379ca301e4782765f68c0"
           for f in .github/tmp_post_r13/apply_*.py; do python "$f"; done
           python tools/render_simulado.py --write
-          rm -rf .github/tmp_post_r13 .github/workflows/docs-post-r13-build.yml
+          cp .github_snapshot_post_r13.py /tmp/snapshot_post_r13.py
+          cp .github_guard_post_r13.py /tmp/guard_post_r13.py
+          rm -rf .github/tmp_post_r13 .github/workflows/docs-post-r13-build.yml .github_snapshot_post_r13.py .github_guard_post_r13.py
           git add -A
           git diff --cached --check
       - name: Instalar dependencias
@@ -37,14 +39,12 @@ jobs:
         run: |
           set -euo pipefail
           python tools/validate_assistant.py | tee /tmp/postr13-validator.txt
-          python .github_snapshot_post_r13.py
-          rm .github_snapshot_post_r13.py
-          git add -A
+          python /tmp/snapshot_post_r13.py
+          git add README.md
           python tools/validate_assistant.py --conferir-readme
-          python .github_guard_post_r13.py
-          rm .github_guard_post_r13.py
-          git add -A
+          python /tmp/guard_post_r13.py
           python tools/ci_local.py | tee /tmp/postr13-ci.txt
+          git add -A
           git diff --cached --check
       - name: Publicar candidata
         shell: bash
