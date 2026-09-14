@@ -56,6 +56,9 @@ Head `5eca34c95fc9970f864869282f59e2bb4cc61d56`: V11 **20/20**, regressões V01�
 ### `34901776770`
 Head `8785822e045edf158f04ea41ea0f6c059ef11cb1`: o novo teste de import pelo namespace funcionou, mas o oráculo esperava `legado_notebook` em vez do ID canônico `hub-legado-notebook`. Resultado: **20/21 PASS**, 1 failure de teste; etapas posteriores ficaram `SKIP`. A correção alterou somente essa expectativa e preservou a guarda.
 
+### `34904363803`
+Head `795edf879c6f013553afa725a02473d49c909624`: V11 **21/21**, regressões V01–V11 **457/457** e V00 **12/12** passaram. O validador reprovou com **3 falhas / 0 avisos** porque este checkpoint abreviou a base como um prefixo seguido de reticências; esse formato coincidiu com a guarda de identificador corporativo plausível, impedindo a emissão da linha `APROVADO` e fazendo o README raiz falhar por consequência. O escopo V11 ficou `SKIP`. A correção usa o SHA completo e não altera validador ou código funcional.
+
 Nenhum desses runs é reclassificado.
 
 ## Evidências integralmente verdes
@@ -100,14 +103,14 @@ APROVADO            : 0 falhas / 0 avisos
 2. regressões V01–V11 verdes — **FECHADO**;
 3. V00 verde — **FECHADO**;
 4. source/simulado equivalentes — **FECHADO**;
-5. validador 0/0 — **FECHADO**;
-6. escopo sem operação remota — **FECHADO**;
+5. validador 0/0 — **FECHADO NO ÚLTIMO HEAD INTEGRALMENTE VERDE; A REVALIDAR NESTA CORREÇÃO DOCUMENTAL**;
+6. escopo sem operação remota — **FECHADO NO ÚLTIMO HEAD INTEGRALMENTE VERDE; A REVALIDAR NESTA CORREÇÃO DOCUMENTAL**;
 7. diff limpo/sem credenciais — **FECHADO NA AUDITORIA PRÉ-PR**;
 8. documentação viva reconciliada — **FECHADO**;
 9. PR real mergeável/checks verdes — **PENDENTE**;
 10. aceite explícito — **PENDENTE**.
 
-A comparação contra a base `a9480391...` mostra cinco commits à frente e zero atrás, com mudanças restritas à superfície AI/BI V11, seu espelho, testes/CI e documentação. O schema central e o núcleo V02 não são alterados.
+A comparação contra a base `a9480391c78e2402986885db0ce08b10e0619a1a` mostra oito commits à frente e zero atrás, com mudanças restritas à superfície AI/BI V11, seu espelho, testes/CI e documentação. O schema central e o núcleo V02 não são alterados.
 
 ## Limites de homologação
 
@@ -115,4 +118,4 @@ Mesmo depois dos gates Git, continuarão pendentes export/import real, admin rea
 
 ## Próximo passo
 
-Reexecutar o workflow no head produzido por este registro final. Se continuar integralmente verde, abrir a PR V11 em **draft**, auditar mergeabilidade e todos os checks reais e então apresentar a candidata para aceite explícito. Não fazer merge nem iniciar V12 antes disso.
+Reexecutar o workflow no head produzido por esta correção documental. Se continuar integralmente verde, abrir a PR V11 em **draft**, auditar mergeabilidade e todos os checks reais e então apresentar a candidata para aceite explícito. Não fazer merge nem iniciar V12 antes disso.
