@@ -65,11 +65,13 @@ custos e interpretação. Estado, matriz e testes em
 [`RELATORIO_R04A.md`](readmes_objetos/RELATORIO_R04A.md). Cobertura candidata
 25/74; sem publicação, aceite antecipado ou início da R04-B.
 
-## Framework de Micromodelos — MM00 em execução
+## Framework de Micromodelos — MM00 integrada; MM01 não iniciada
 
-A [iniciativa MM00–MM13](micromodelos/README.md) usa trilha própria. A [MM00](micromodelos/MM00/README.md) é exclusivamente documental/arquitetural: baseline, inventário, reuso, riscos, dependências, ADRs propostos, testes, auditoria A1 e checkpoint.
+A [iniciativa MM00–MM13](micromodelos/README.md) usa trilha própria. A [MM00](micromodelos/MM00/README.md) foi exclusivamente documental/arquitetural: baseline, inventário, reuso, riscos, dependências, ADRs, testes, auditoria A1 e checkpoint.
 
-A candidata não altera o produto `.assistant`, não cria skill/helper de micromodelo e não autoriza MM01. A A1 devolveu `APTA_COM_CORRECOES`: M-01 foi corrigido e Q-01 do `CHANGELOG.md` continua bloqueador até alteração estritamente aditiva ou exceção humana explícita. O avanço também exige gates verdes, decisão sobre ADR-0014 a ADR-0020, aceite e merge da MM00.
+A MM00 recebeu aceite explícito e foi integrada pelo PR #43 no commit `36e89515a46df24f41deea4791b109f5a1f938f2`. ADR-0014 a ADR-0020 estão aceitos sem ressalvas. A A1 histórica devolveu `APTA_COM_CORRECOES`: M-01 foi corrigido, nenhum `DIVERGE` foi atribuído à MM00 e Q-01 do `CHANGELOG.md` foi fechado na manutenção imediatamente pós-merge por inserção byte a byte, com 22 adições e 0 deleções contra o merge MM00.
+
+A iniciativa continua sem alteração funcional própria no produto `.assistant`. **MM01 — contrato canônico `micromodelo.yaml` — é a próxima sprint e não foi iniciada por este fechamento.**
 
 ## Sistema de Temas do Hub
 

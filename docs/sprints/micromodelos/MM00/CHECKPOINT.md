@@ -2,34 +2,29 @@
 
 ## Estado
 
-**CANDIDATA TÉCNICA PÓS-A1/PÓS-D1/PÓS-D2 — PRONTA PARA ACEITE FINAL DA MM00.**
+**ENCERRADA E INTEGRADA — Q-01 FECHADO; MM01 É A PRÓXIMA SPRINT E NÃO FOI INICIADA.**
 
-A fundação documental e arquitetural da MM00 foi implementada, auditada independentemente, reconciliada com a `main` após o fechamento documental V09 e passou pelos gates humanos D1 e D2.
+A fundação documental e arquitetural da MM00 foi implementada, auditada independentemente, reconciliada com a `main`, aprovada nos gates humanos D1/D2, aceita explicitamente e integrada pelo PR #43.
 
-- D1-B foi autorizada como exceção exclusiva para diferir Q-01 do `CHANGELOG.md` para manutenção imediatamente pós-MM00; Q-01 não é PASS.
+- D1-B autorizou exclusivamente diferir Q-01 do `CHANGELOG.md` para a manutenção imediatamente pós-merge.
 - D2 aceitou sem ressalvas ADR-0014 a ADR-0020.
-- Os sete ADRs foram ratificados como Aceitos, preservando o corpo decisório original e registrando a ratificação datada.
-- A bateria pós-D2 inicialmente não executou por indisponibilidade de runner do GitHub Actions (`runner_id=0`, `steps=[]`). Após a normalização do serviço, a mesma árvore executou efetivamente CI geral, V00, V01 e V02 e os quatro concluíram com `success`.
+- O aceite final autorizou a integração da MM00.
+- A PR #43 foi integrada na `main` pelo commit `36e89515a46df24f41deea4791b109f5a1f938f2`.
+- Q-01 foi fechado nesta manutenção pós-merge por inserção byte a byte no `CHANGELOG.md`; a comparação contra o merge MM00 mostrou somente `CHANGELOG.md`, **22 adições e 0 deleções**, preservando integralmente o histórico anterior.
 
-Isso **não** autoriza ainda merge automático nem início da MM01. O próximo passo é o aceite final explícito da MM00.
+MM01 não faz parte desta manutenção e permanece **não iniciada**.
 
 ## Baseline e reconciliação
 
 - Base de abertura: `1b6632194f4b25afc09960c27b069c16df365ee6`.
-- Branch: `micromodelos/mm00-baseline`.
-- PR: #43, em draft.
+- Branch da MM00: `micromodelos/mm00-baseline`.
 - V08 integrada: `622d2c962a80998cf990b57036f7ae503bfc0458`.
 - Fechamento V08: `55f7006c47d90ae7f760992d252b658f53a59636`.
-- Reconciliação MM00/V08: `edfcf58e4700ccf5d58d2befddccbd9fe50ac124`.
 - Head auditado pela A1: `f5577f5933d2ab19b5adfb9c7eea1c8fb3c80843`.
-- V09 integrada: PR #45 / `0f7234c4734f1974ebb1a20123f3c26626c67ef3`.
-- Correção Node V09: PR #46 / `4ae714a35a0aafd930a8cd796d962b0a79449b88`.
-- Reconciliação MM00/V09: `922ae38491cb7a502b834b092ea637620b54300a`.
-- Fechamento documental V09: PR #47 / `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb`.
-- Reconciliação MM00 sobre a V09 fechada: `26cf7c8edd631f97b5c0541daff2e73dc2286a71`.
-- Head técnico pré-D1 validado: `6f1375efe1a610eca30815b1866cc5d7049514a4`.
-- Head pós-D1 consolidado e validado: `47389b09587198b4b9bd4cc14ed2b8dba6efe8fe`.
-- Head pós-D2 atual: `0a063161725456ea70fddea0c48fe0c5b2e66d83`.
+- V09 integrada/corrigida: PRs #45/#46; fechamento documental PR #47 em `d6655411ca4ac1834b0983f6ce6bdadc30b831bb`.
+- Head final da candidata aceita: `e3809b15b61f2bc1eeec06c9de6f38a329868e98`.
+- Merge da MM00: PR #43 / `36e89515a46df24f41deea4791b109f5a1f938f2`.
+- Branch de fechamento pós-merge: `micromodelos/mm00-fechamento-pos-merge`.
 
 ## Entregas
 
@@ -37,27 +32,24 @@ Isso **não** autoriza ainda merge automático nem início da MM01. O próximo p
 |---|---|
 | Plano Mestre MM00–MM13 | versionado |
 | README da iniciativa | versionado |
-| README MM00 | reconciliado após M-01/V09/D1/D2 |
+| README MM00 | fechado pós-merge |
 | Inventário | versionado |
 | Matriz de reuso | versionado; A1 confirmou fronteiras |
 | Matriz de riscos | versionado |
 | Matriz de dependências | versionado |
-| Testes/evidências | reconciliado pós-A1/V09/D1/D2 |
-| ADR-0014 a ADR-0020 | **Aceitos sem ressalvas em D2** |
+| Testes/evidências | fechados pós-A1/D1/D2/merge |
+| ADR-0014 a ADR-0020 | **Aceitos sem ressalvas** |
 | Índice de ADRs | sincronizado com status aceito |
-| Índice de sprints | `main` V09 fechada + seção MM00 |
-| `CLAUDE.md` | V00–V09 integradas; MM00 com ADRs aceitos |
 | Auditoria A1 independente | **executada** |
 | Resultado A1 | `APTA_COM_CORRECOES` |
 | M-01 — cronologia viva | **corrigido** |
-| Q-01 — entrada própria no `CHANGELOG.md` | **diferido por D1-B; não é PASS** |
-| D1 — tratamento de Q-01 | **D1-B autorizada** |
+| Q-01 — entrada própria no `CHANGELOG.md` | **fechado pós-merge; +22/-0 no changelog** |
+| D1 — tratamento de Q-01 | **D1-B consumida e encerrada** |
 | D2 — ADR-0014 a ADR-0020 | **aceitos sem ressalvas** |
-| Diff técnico contra a `main` fechada | **23 arquivos documentais/contextuais; zero alteração funcional própria** |
-| Métricas do README raiz | **1374 arquivos / 1859 links** |
-| Bateria pós-D2 no head `0a063161725456ea70fddea0c48fe0c5b2e66d83` | **CI geral + V00 + V01 + V02 = success** |
-| `main` após a bateria pós-D2 | **estável em `d6655411ca4ac1834b0983f6ce6bdadc30b831bb`** |
-| Aceite humano explícito da MM00 | **pendente** |
+| Aceite final da MM00 | **concedido** |
+| PR #43 | **integrada** |
+| Alteração funcional própria da MM00 | **nenhuma** |
+| MM01 | **não iniciada** |
 
 ## Resultado da A1
 
@@ -78,78 +70,42 @@ A A1 não encontrou achado `DIVERGE` atribuível à MM00.
 
 ### M-01 — cronologia
 
-**Procede. Corrigido e preservado após as reconciliações V09.** README, TESTES e CHECKPOINT distinguem abertura, V08, A1, integração V09, fechamento documental V09 e reconciliações correspondentes.
+**Procede e foi corrigido.** A documentação distingue abertura, V08, A1, V09, D1/D2, aceite, merge e fechamento pós-merge.
 
 ### Q-01 — changelog / D1-B
 
-**Procede. Tratamento humano registrado como D1-B.**
+**Procede e está fechado.**
 
-A tentativa de inserir a entrada MM00 por substituição integral alterou três linhas históricas além do bloco novo. A inspeção do patch recusou essa versão; o blob histórico original `2095dbcf1dd6b99e7ff008a9180361702222092b` foi restaurado por SHA e preservado nas reconciliações V09.
+A primeira tentativa de atualização integral do changelog foi rejeitada porque alterou conteúdo histórico. A versão aceita foi produzida por automação transitória restrita à branch de fechamento, que inseriu o bloco MM00 em bytes, verificou prefixo/sufixo e removeu o próprio workflow no mesmo commit.
 
-Foi concedida exceção explícita e exclusiva para diferir a entrada MM00 para a manutenção documental imediatamente posterior. Portanto:
+A comparação final contra `36e89515a46df24f41deea4791b109f5a1f938f2` registrou:
 
-- nenhuma linha histórica permanece alterada;
-- `CHANGELOG.md` continua idêntico à `main`;
-- a entrada MM00 ainda não existe;
-- Q-01 **não** é PASS;
-- Q-01 deixa de bloquear apenas o aceite/merge da MM00;
-- o fechamento documental pós-MM00 deverá registrar a entrada antes do início efetivo da MM01.
+- somente `CHANGELOG.md` como diferença do passo de Q-01;
+- 22 linhas adicionadas;
+- 0 linhas removidas;
+- nenhuma reescrita histórica.
 
-### D2 — ADRs MM00
-
-**ACEITO SEM RESSALVAS.** ADR-0014 a ADR-0020 passam a reger MM01/MM02 e sprints seguintes até eventual supersessão por novo ADR.
-
-O aceite D2 não antecipa o schema detalhado do YAML, máquina de estados, materialidade fina do fingerprint, API final do perfil rule-based do MLflow nem implementação visual; esses itens permanecem nas sprints próprias.
-
-## Escopo confirmado contra a `main` fechada V09
-
-A reconciliação foi montada usando `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb` como base documental. A conferência final confirmou:
-
-- a PR contém 23 arquivos alterados;
-- todos pertencem a contexto, ADRs, documentação e auditoria MM00;
-- nenhum arquivo funcional próprio aparece em `.assistant`, simulado, `tools` ou workflows;
-- a `main` permaneceu estável após a bateria pós-D2.
-
-## Gates automáticos
-
-### Head pós-D2 `0a063161725456ea70fddea0c48fe0c5b2e66d83`
-
-A primeira janela de execução foi afetada por indisponibilidade de runners do GitHub Actions: os jobs terminavam em segundos com `runner_id=0` e `steps=[]`, sem checkout ou execução de testes.
-
-Após a normalização do serviço, a mesma árvore foi reexecutada e os quatro gates efetivamente rodaram e concluíram com sucesso:
-
-- CI geral: `success`;
-- V00: `success`;
-- V01: `success`;
-- V02: `success`.
-
-Nenhum arquivo da candidata foi alterado para contornar o incidente e nenhum validador foi relaxado.
-
-## Bloqueios restantes para encerramento da MM00
-
-1. obter aceite humano explícito da MM00;
-2. somente depois do aceite, integrar a PR #43;
-3. após o merge, executar a manutenção documental imediatamente posterior que fecha Q-01;
-4. MM01 só pode iniciar depois desse fechamento pós-MM00.
-
-## Decisões do gate humano
-
-### D1 — Q-01 / changelog
-
-**RESOLVIDA COMO D1-B PARA FINS DE GATE DA MM00.** A exceção é exclusiva deste achado e não se propaga para nenhuma outra regra ou pendência.
+A exceção D1-B está, portanto, consumida e não cria precedente para dispensar changelog em sprints seguintes.
 
 ### D2 — ADRs MM00
 
-**ACEITA SEM RESSALVAS.** ADR-0014 a ADR-0020 estão ratificados como decisões arquiteturais vigentes da iniciativa.
+**ACEITO SEM RESSALVAS.** ADR-0014 a ADR-0020 regem as sprints seguintes até eventual supersessão por novo ADR.
 
-## Aceite final da MM00
+O aceite não antecipou schema detalhado do YAML, máquina de estados, materialidade fina do fingerprint, API final do perfil rule-based do MLflow nem implementação visual.
 
-**PENDENTE.** O próximo passo é uma declaração humana explícita de aceite da MM00. O comando genérico “siga” não é interpretado automaticamente como esse aceite final.
+## Gates automáticos da candidata final
 
-## O que o aceite final da MM00 autorizará
+No head final `e3809b15b61f2bc1eeec06c9de6f38a329868e98`:
 
-Autoriza integrar a PR #43 e executar imediatamente o fechamento documental pós-merge de Q-01.
+- CI geral `34893158270`: `success`;
+- V00 `34893158453`: `success`;
+- V01 `34893158339`: `success`;
+- V02 `34893158265`: `success`.
 
-Somente após esse fechamento poderá nascer a MM01 — contrato canônico `micromodelo.yaml`.
+Nenhum validador foi relaxado. A indisponibilidade temporária anterior de runners permaneceu registrada como incidente de infraestrutura e foi superada por execução real posterior.
 
-Não autoriza metadata real, mudança em helper compartilhado, piloto corporativo, publicação, composição visual definitiva ou migração de legado.
+## Encerramento
+
+A MM00 cumpriu seu objetivo: congelar baseline, fronteiras, riscos, reuso, governança e sequência de execução antes de qualquer implementação funcional de micromodelos.
+
+O próximo estágio previsto no Plano Mestre é **MM01 — contrato canônico `micromodelo.yaml`**. Esta manutenção pós-merge não inicia MM01 e não autoriza metadata real, mudança em helper compartilhado, piloto corporativo, publicação, composição visual definitiva ou migração de legado.

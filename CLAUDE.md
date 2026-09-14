@@ -74,32 +74,33 @@ Escala planejada: pessoal → squad → missão.
   browser/runtime, acessibilidade, ACL, UAT ou promoção visual. Estado vigente:
   `docs/sprints/sistema_temas/README.md`.
 
+- Framework de Micromodelos: ADR-0014 a ADR-0020 foram aceitos sem ressalvas e
+  integrados pela MM00. As decisões fixam micromodelo como artefato de domínio,
+  `micromodelo.yaml` como especificação canônica, MLflow como histórico de runs,
+  governança externa como autoridade de publicação, piloto greenfield antes dos
+  legados, consumo do Sistema de Temas e fontes limitadas ao catálogo configurado.
+
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 
-## Iniciativa de micromodelos — MM00 em fechamento
+## Iniciativa de micromodelos — MM00 integrada; MM01 não iniciada
 
-A branch `micromodelos/mm00-baseline` e a PR #43 registram a fundação documental
-da iniciativa MM00–MM13 em `docs/sprints/micromodelos/`. Os ADRs 0014–0020 foram
-**aceitos sem ressalvas pelo usuário em 2026-09-14**, mas sua integração na `main`
-permanece pendente até o aceite final e merge da MM00. As decisões cobrem:
-micromodelo como artefato de domínio; YAML canônico; MLflow para runs; governança
-externa como autoridade de publicação; piloto novo antes dos legados; consumo do
-Sistema de Temas; e fonte limitada ao catálogo de Produtos de Dados configurado
-no ambiente autorizado.
+A MM00 da iniciativa MM00–MM13 foi aceita explicitamente e integrada pelo PR #43
+no commit `36e89515a46df24f41deea4791b109f5a1f938f2`. O head final da candidata foi
+`e3809b15b61f2bc1eeec06c9de6f38a329868e98`, com CI geral, V00, V01 e V02 em
+`success` no mesmo head e sem relaxamento de validadores.
 
-A auditoria A1 independente devolveu `APTA_COM_CORRECOES`: não encontrou
-`DIVERGE` atribuível à arquitetura, apontou M-01 documental (corrigido) e Q-01
-pela ausência de entrada própria da MM00 no `CHANGELOG.md`. O usuário autorizou
-D1-B: Q-01 foi diferido exclusivamente para a manutenção documental imediatamente
-pós-MM00, sem ser reclassificado como PASS. Essa manutenção deve ocorrer antes
-do início efetivo da MM01.
+A auditoria A1 independente devolveu historicamente `APTA_COM_CORRECOES`: não
+encontrou `DIVERGE`, apontou M-01 documental (corrigido) e Q-01 pela ausência de
+entrada própria da MM00 no `CHANGELOG.md`. D1-B autorizou diferir exclusivamente
+Q-01 até imediatamente após o merge. O fechamento pós-merge inseriu a entrada em
+bytes, preservou o histórico anterior e foi conferido contra o merge MM00 com
+**22 adições e 0 deleções** no changelog. D1-B está consumida e encerrada.
 
-MM00 não altera o produto `.assistant` e ainda não autoriza MM01. O avanço exige
-checks finais verdes, aceite explícito da MM00 e merge; depois do merge, o
-fechamento documental pós-MM00 deve registrar Q-01 antes do início da MM01.
-Identificadores, nomes de catálogo e paths reais do ambiente de trabalho permanecem
-fora do Git; os documentos usam placeholders e resolvem o binding somente no
-workspace autorizado.
+MM00 não alterou funcionalmente o produto `.assistant`. O próximo estágio do
+Plano Mestre é MM01 — contrato canônico `micromodelo.yaml` —, mas MM01 **não foi
+iniciada** por este fechamento. Identificadores, nomes de catálogo e paths reais
+do ambiente de trabalho permanecem fora do Git; documentos versionados usam
+placeholders e resolvem o binding somente no workspace autorizado.
 
 ## Regras inegociáveis
 

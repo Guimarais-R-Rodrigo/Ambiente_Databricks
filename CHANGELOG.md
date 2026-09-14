@@ -5,6 +5,28 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-14 — MM00: integração e fechamento documental do Framework de Micromodelos (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) Fundação documental MM00–MM13 do Framework de Micromodelos, com Plano Mestre, inventário, matrizes de reuso/riscos/dependências, pacote de auditoria A1 e checkpoint fail-closed.
+- (ChatGPT) ADR-0014 a ADR-0020 para congelar as fronteiras arquiteturais: micromodelo como artefato de domínio, `micromodelo.yaml` canônico, MLflow para histórico de runs, governança externa de publicação, piloto greenfield antes dos legados, consumo do Sistema de Temas e fontes limitadas ao catálogo configurado.
+
+### Atualizado
+
+- (ChatGPT) PR #43 integrada após aceite humano explícito; head final validado `e3809b15b61f2bc1eeec06c9de6f38a329868e98` e merge `36e89515a46df24f41deea4791b109f5a1f938f2`.
+- (ChatGPT) ADR-0014 a ADR-0020 ratificados como aceitos sem ressalvas; MM01 continua condicionada às decisões detalhadas previstas nas sprints seguintes, sem antecipação silenciosa de schema, fingerprint ou tracking rule-based.
+- (ChatGPT) Q-01 da auditoria A1 é fechado por esta manutenção pós-merge, conforme exceção D1-B: a entrada da MM00 foi diferida para preservar o histórico do changelog e agora é registrada de forma aditiva.
+
+### Evidências
+
+- (ChatGPT) Auditoria A1 independente: `APTA_COM_CORRECOES`; M-01 corrigido, nenhum `DIVERGE` atribuível à MM00 e Q-01 tratado pela D1-B até este fechamento.
+- (ChatGPT) Bateria final da candidata: CI geral `34893158270`, V00 `34893158453`, V01 `34893158339` e V02 `34893158265`, todos `success` no mesmo head final; nenhum validador foi relaxado.
+
+### Limites
+
+- (ChatGPT) MM00 não cria skill, prompt funcional, helper, template executável, micromodelo real, consulta de dados, run MLflow, publicação ou migração de legado. Esta entrada fecha somente a pendência documental Q-01 antes da MM01.
+
 ## 2026-09-14 — V08: integração transversal e fechamento técnico (ChatGPT)
 
 ### Adicionado
