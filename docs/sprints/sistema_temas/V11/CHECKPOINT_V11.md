@@ -2,7 +2,7 @@
 
 ## Estado
 
-**PRIMEIRO GATE INTEGRALMENTE VERDE; RECONCILIAÇÃO DOCUMENTAL FINAL AINDA A REVALIDAR; SEM ACEITE, MERGE OU HOMOLOGAÇÃO DATABRICKS.**
+**CANDIDATA V11 COM HEAD DOCUMENTAL FINAL VERDE; PR AINDA NÃO ABERTA/VALIDADA; SEM ACEITE, MERGE OU HOMOLOGAÇÃO DATABRICKS.**
 
 Base: `a9480391c78e2402986885db0ce08b10e0619a1a`.
 
@@ -10,7 +10,11 @@ Branch: `codex/temas-v11-aibi-20260914`.
 
 Primeiro head integralmente verde: `0d3180c50428d8716b44f264b915a91243ba96c3`.
 
-Run integralmente verde nesse head: `34902083889`.
+Primeiro run integralmente verde: `34902083889`.
+
+Head documental revalidado antes deste registro final: `5bb8234422fdd284a9e14815ef566ec0b52a2952`.
+
+Run integralmente verde nesse head: `34902853430`.
 
 ## Decisões congeladas para esta sprint
 
@@ -54,9 +58,11 @@ Head `8785822e045edf158f04ea41ea0f6c059ef11cb1`: o novo teste de import pelo nam
 
 Nenhum desses runs é reclassificado.
 
-## Primeiro gate integralmente verde
+## Evidências integralmente verdes
 
-No head `0d3180c50428d8716b44f264b915a91243ba96c3`, run `34902083889`:
+### Run `34902083889` — primeiro gate verde
+
+No head `0d3180c50428d8716b44f264b915a91243ba96c3`:
 - V11 específica: **21/21 PASS**;
 - sintaxe em memória: **PASS**;
 - regressões V01–V11: **457/457 PASS**;
@@ -65,17 +71,43 @@ No head `0d3180c50428d8716b44f264b915a91243ba96c3`, run `34902083889`:
 - escopo V11: **PASS**;
 - `Contents: read` e checkout sem credenciais persistentes.
 
+### Run `34902853430` — head documental revalidado
+
+No head `5bb8234422fdd284a9e14815ef566ec0b52a2952`, depois da reconciliação de navegação e documentação viva, o gate completo repetiu **SUCCESS**:
+- V11 específica: **21/21 PASS**;
+- sintaxe em memória: **PASS**;
+- regressões V01–V11: **457/457 PASS**;
+- V00: **12/12 PASS**;
+- validador estrutural/documental: **0 falhas / 0 avisos**;
+- escopo V11: **PASS**;
+- source/simulado V11 equivalentes;
+- workflow read-only e sem operação remota Databricks.
+
+Métricas observadas nesse run:
+
+```text
+markdown / links   : 222 arquivos / 1395 links relativos
+python (AST)       : 221 arquivos
+repo (identidade)  : 1409 arquivos varridos no repositório editável/derivado
+repo (links)       : 1887 links fora da raiz analisada
+worktree (extras)  : 0
+APROVADO            : 0 falhas / 0 avisos
+```
+
 ## Gates para pedir aceite
 
-1. suíte V11 verde — **FECHADO NO HEAD FUNCIONAL; A REVALIDAR NO HEAD DOCUMENTAL FINAL**;
-2. regressões V01–V11 verdes — **FECHADO NO HEAD FUNCIONAL; A REVALIDAR**;
-3. V00 verde — **FECHADO NO HEAD FUNCIONAL; A REVALIDAR**;
-4. source/simulado equivalentes — **FECHADO NO HEAD FUNCIONAL; A REVALIDAR**;
-5. validador 0/0 — **FECHADO NO HEAD FUNCIONAL; A REVALIDAR**;
-6. escopo sem operação remota — **FECHADO NO HEAD FUNCIONAL; A REVALIDAR**;
-7. diff limpo/sem credenciais — **PENDENTE DA AUDITORIA FINAL**;
-8. documentação viva reconciliada — **EM EXECUÇÃO**;
-9. PR real mergeável/checks verdes — **PENDENTE**.
+1. suíte V11 verde — **FECHADO**;
+2. regressões V01–V11 verdes — **FECHADO**;
+3. V00 verde — **FECHADO**;
+4. source/simulado equivalentes — **FECHADO**;
+5. validador 0/0 — **FECHADO**;
+6. escopo sem operação remota — **FECHADO**;
+7. diff limpo/sem credenciais — **FECHADO NA AUDITORIA PRÉ-PR**;
+8. documentação viva reconciliada — **FECHADO**;
+9. PR real mergeável/checks verdes — **PENDENTE**;
+10. aceite explícito — **PENDENTE**.
+
+A comparação contra a base `a9480391...` mostra cinco commits à frente e zero atrás, com mudanças restritas à superfície AI/BI V11, seu espelho, testes/CI e documentação. O schema central e o núcleo V02 não são alterados.
 
 ## Limites de homologação
 
@@ -83,4 +115,4 @@ Mesmo depois dos gates Git, continuarão pendentes export/import real, admin rea
 
 ## Próximo passo
 
-Revalidar a árvore com a navegação/documentação viva reconciliada. Se o head final repetir os gates, abrir PR V11 em **draft**, auditar todos os checks reais e apresentar a candidata para aceite explícito. Não fazer merge nem iniciar V12 antes disso.
+Reexecutar o workflow no head produzido por este registro final. Se continuar integralmente verde, abrir a PR V11 em **draft**, auditar mergeabilidade e todos os checks reais e então apresentar a candidata para aceite explícito. Não fazer merge nem iniciar V12 antes disso.
