@@ -1,0 +1,148 @@
+{
+  "version": "V08",
+  "title": "Integração transversal com skills, padrões e Manual",
+  "base_sha": "1b6632194f4b25afc09960c27b069c16df365ee6",
+  "principles": [
+    "ResolvedTheme e o padrão hub_padroes/identidade_visual continuam sendo a fonte de verdade visual.",
+    "Skills orientam e roteiam; não redefinem paletas, tokens ou contratos de tema.",
+    "Documentação transversal não altera cálculo, dados, políticas analíticas ou APIs runtime.",
+    "Nenhuma integração documental implica publicação, aprovação ou homologação no Databricks."
+  ],
+  "source_of_truth": {
+    "schema": "ambiente_fonte/.assistant/hub_padroes/identidade_visual/theme.schema.json",
+    "tokens": "ambiente_fonte/.assistant/hub_padroes/identidade_visual/TOKENS.md",
+    "operational_pattern": "ambiente_fonte/.assistant/hub_padroes/identidade_visual/README.md",
+    "first_use": "ambiente_fonte/.assistant/hub_padroes/identidade_visual/GUIA_OPERACIONAL.md",
+    "runtime_resolver": "ambiente_fonte/.assistant/hub_snippets/visual/tema/tema.py",
+    "plotly_adapter": "ambiente_fonte/.assistant/hub_snippets/visual/theme_plotly/theme_plotly.py",
+    "hub_manual": "ambiente_fonte/.assistant/MANUAL_TECNICO.md"
+  },
+  "surfaces": [
+    {
+      "id": "assistant.entrypoint",
+      "path": "ambiente_fonte/.assistant/README.md",
+      "classification": "update_v08",
+      "reason": "Ainda descreve o Visual Lab como candidata V05 e não apresenta V06/V07 como partes integradas do Sistema de Temas.",
+      "expected_effect": "Usuário encontra o estado vigente e sabe diferenciar autoria, consumo runtime, assets e limites de publicação."
+    },
+    {
+      "id": "skills.catalog",
+      "path": "ambiente_fonte/.assistant/skills/README.md",
+      "classification": "update_v08",
+      "reason": "Templates visuais são descritos genericamente sem explicitar que tokens/paletas pertencem ao contrato central.",
+      "expected_effect": "Skills passam a orientar sem competir com a fonte de verdade visual."
+    },
+    {
+      "id": "skill.concierge",
+      "path": "ambiente_fonte/.assistant/skills/hub-ml-concierge/SKILL.md",
+      "classification": "update_v08",
+      "reason": "O roteamento geral ainda não possui uma rota explícita para pedidos de tema, identidade visual ou Visual Lab.",
+      "expected_effect": "Pedidos visuais são encaminhados ao padrão/Manual/consumidor correto, com limites e exceções explícitos."
+    },
+    {
+      "id": "skill.criar_objeto",
+      "path": "ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/SKILL.md",
+      "classification": "update_v08",
+      "reason": "A tabela de helpers ainda pode fazer constants.colors parecer fonte configurável de paleta para objetos novos.",
+      "expected_effect": "Objetos novos consomem ResolvedTheme quando tematizáveis e não recriam política visual local."
+    },
+    {
+      "id": "skill.eda",
+      "path": "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/SKILL.md",
+      "classification": "update_v08",
+      "reason": "A skill aponta para um template visual que hoje replica política visual legada.",
+      "expected_effect": "EDA usa rotas resolvidas quando há tema selecionado sem mudar agregação, amostra ou interpretação."
+    },
+    {
+      "id": "skill.eda.visual_template",
+      "path": "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/templates/estilo_visual_eda.md",
+      "classification": "update_v08",
+      "reason": "Declara-se fonte central, replica hexadecimais/TEMA_EDA e recomenda registro global legado.",
+      "expected_effect": "Template vira guia de composição EDA sobre o Sistema de Temas, sem segunda fonte de tokens."
+    },
+    {
+      "id": "skill.baseline",
+      "path": "ambiente_fonte/.assistant/skills/hub-ml-baseline-ml/SKILL.md",
+      "classification": "update_v08",
+      "reason": "Usa curves_plotly mas não diferencia cálculo de métricas da aparência opt-in V07.",
+      "expected_effect": "Curvas podem consumir tema resolvido sem alterar métricas ou seleção de modelo."
+    },
+    {
+      "id": "skill.safra",
+      "path": "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/SKILL.md",
+      "classification": "update_v08",
+      "reason": "Usa vintage_analysis/theme_plotly sem registrar as rotas resolvidas V07.",
+      "expected_effect": "Curvas/heatmap tematizados permanecem subordinados aos mesmos MOBs, denominadores e taxas."
+    },
+    {
+      "id": "skill.monitoramento",
+      "path": "ambiente_fonte/.assistant/skills/hub-ml-monitoramento-modelo/SKILL.md",
+      "classification": "update_v08",
+      "reason": "Usa performance_monitor/curves_plotly sem explicitar que o tema não muda política e thresholds.",
+      "expected_effect": "Aparência opt-in fica separada da governança de monitoramento."
+    },
+    {
+      "id": "skill.explainability",
+      "path": "ambiente_fonte/.assistant/skills/hub-ml-explainability/SKILL.md",
+      "classification": "exception_boundary",
+      "reason": "Curvas Plotly suportam tema V07, mas SHAP/Matplotlib permanece exceção sem contrato de theming.",
+      "expected_effect": "A skill não promete que selecionar tema recolore SHAP ou PNG."
+    },
+    {
+      "id": "skill.comentar_notebook",
+      "path": "ambiente_fonte/.assistant/skills/hub-ml-comentar-notebook/SKILL.md",
+      "classification": "already_aligned_no_edit",
+      "reason": "A skill documenta notebook e proíbe alteração de código; inserir theming violaria o próprio contrato.",
+      "expected_effect": "Nenhuma edição V08; a matriz registra a decisão para impedir escopo acidental."
+    },
+    {
+      "id": "patterns.index",
+      "path": "ambiente_fonte/.assistant/hub_padroes/README.md",
+      "classification": "update_v08",
+      "reason": "O índice ainda resume apenas V02–V04.",
+      "expected_effect": "Padrões apresentam V02–V07 integradas e encaminham autoria/consumo para as rotas corretas."
+    },
+    {
+      "id": "patterns.identity",
+      "path": "ambiente_fonte/.assistant/hub_padroes/identidade_visual/README.md",
+      "classification": "update_v08",
+      "reason": "O cabeçalho e o estado vigente param em V04.",
+      "expected_effect": "Contrato central descreve núcleo, adaptadores, lab, assets e consumidores atuais sem ampliar seu papel."
+    },
+    {
+      "id": "patterns.identity.first_use",
+      "path": "ambiente_fonte/.assistant/hub_padroes/identidade_visual/GUIA_OPERACIONAL.md",
+      "classification": "update_v08",
+      "reason": "O guia ainda diz que operações permanecem fora de V00–V04 e ensina apenas a rota V04.",
+      "expected_effect": "Primeiro uso distingue verificar tema, Visual Lab, consumidores V07, geração V06 e o que ainda não é homologado."
+    },
+    {
+      "id": "manual.canonical",
+      "path": "ambiente_fonte/.assistant/MANUAL_TECNICO.md",
+      "classification": "update_v08",
+      "reason": "A seção viva do Sistema de Temas ainda diz V04 integrada / V05 candidata.",
+      "expected_effect": "Manual torna-se a entrada transversal vigente para V02–V07 e seus limites."
+    },
+    {
+      "id": "manual.root_copy",
+      "path": "MANUAL_TECNICO.md",
+      "classification": "derived_mirror",
+      "reason": "Cópia de navegação do Manual canônico.",
+      "expected_effect": "Permanece byte a byte idêntica ao Manual canônico."
+    },
+    {
+      "id": "manual.simulated_copy",
+      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md",
+      "classification": "derived_mirror",
+      "reason": "Cópia derivada no ambiente simulado.",
+      "expected_effect": "Permanece byte a byte idêntica ao Manual canônico."
+    },
+    {
+      "id": "runtime.visual_objects",
+      "path_prefix": "ambiente_fonte/.assistant/hub_snippets/",
+      "classification": "already_owned_v03_v07_no_runtime_edit",
+      "reason": "V08 integra documentação transversal; runtime e READMEs locais já foram tratados nas sprints donas.",
+      "expected_effect": "Nenhum módulo Python de hub_snippets/hub_scripts é alterado pela V08."
+    }
+  ]
+}

@@ -61,7 +61,7 @@ Para cada achado relevante, informar:
 - ação recomendada;
 - validação de aceite.
 
-Usar [templates/roteiro_eda.md](templates/roteiro_eda.md) para estruturar o notebook, [templates/matriz_graficos_eda.md](templates/matriz_graficos_eda.md) para selecionar visualizações e [templates/relatorio_executivo_eda.md](templates/relatorio_executivo_eda.md) para o resumo. Consultar [templates/estilo_visual_eda.md](templates/estilo_visual_eda.md) apenas para orientação visual customizada, não como API nativa Databricks.
+Usar [templates/roteiro_eda.md](templates/roteiro_eda.md) para estruturar o notebook, [templates/matriz_graficos_eda.md](templates/matriz_graficos_eda.md) para selecionar visualizações e [templates/relatorio_executivo_eda.md](templates/relatorio_executivo_eda.md) para o resumo. Consultar [templates/estilo_visual_eda.md](templates/estilo_visual_eda.md) para composição e leitura da EDA. Paleta/tokens configuráveis vêm de `ResolvedTheme` e do padrão `hub_padroes/identidade_visual`; o template não é uma segunda fonte de tema.
 
 ## Usar helpers da biblioteca
 
@@ -74,6 +74,8 @@ Importar de `hub_snippets`/`hub_scripts` em vez de reimplementar a lógica. Cat�
 | Amostra reprodutível e exibição limitada | `hub_snippets.spark.smart_sample`, `hub_snippets.spark.safe_display` |
 | Correlação e grid de distribuições | `hub_snippets.display.correlation_matrix`, `hub_snippets.display.distribution_grid` |
 | Tema, índice e formatação brasileira | `hub_snippets.visual.theme_plotly`, `hub_snippets.visual.index_generator`, `hub_snippets.constants.format_br` |
+
+Quando um tema notebook validado tiver sido selecionado, mantenha a mesma análise e use as rotas opt-in: `plot_correlation_resolvido`, `plot_distributions_resolvido` e `aplicar_tema_resolvido`/outro consumidor `_resolvido` aplicável. Sem tema selecionado, preserve as APIs legadas. `ResolvedTheme` muda aparência coberta pelo contrato; não muda agregação Spark, amostra, denominador ou interpretação.
 
 `quick_profile` distingue o que é calculado na tabela inteira do que vem da amostra; preservar essa distinção ao relatar números.
 

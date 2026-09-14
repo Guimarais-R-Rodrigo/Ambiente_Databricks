@@ -2,7 +2,7 @@
 
 ## Antes de começar
 
-O núcleo V02 está integrado no Git como verificador com exemplo guiado, não como painel de cores. V03 e V04 acrescentam consumidores opt-in, sem trocar o caminho legado por padrão.
+O núcleo V02 está integrado no Git como verificador/resolvedor. V03/V04 acrescentam consumidores Plotly/HTML opt-in; V05 oferece o Visual Lab; V06 integra geração editorial; V07 amplia consumidores runtime e formatos exercitados. Nenhuma dessas camadas troca o caminho legado por padrão.
 Seu notebook atual continua igual. Para usar o pacote no workspace de trabalho, a revisão integrada ainda precisa ser instalada/publicada pelo procedimento autorizado e homologada no destino. Não publique arquivos por conta própria para experimentar uma cor.
 
 Quem só precisa acompanhar a entrega pode ler a seção “Interpretar a saída” abaixo.
@@ -42,7 +42,7 @@ se a paleta é bonita, acessível ou autorizada. Compare-o somente entre versõe
 compatíveis do protocolo descrito no [contrato](README.md).
 
 Não confunda `export_theme` com salvar: ele devolve bytes em memória. Salvar em
-uma pasta, compartilhar, aprovar e publicar são ações distintas. Essas operações permanecem fora de V00–V04 integradas; uma etapa futura só pode ser considerada disponível quando estiver efetivamente integrada e homologada no escopo correspondente.
+uma pasta, compartilhar, aprovar e publicar são ações distintas. V05 pode persistir sessão/proposta em pasta autorizada e V06 pode gerar variantes editoriais candidatas, mas nenhuma dessas ações equivale a aprovar ou publicar um tema. Publicação e homologação no workspace continuam gates separados.
 
 ## Carregar um arquivo da sua pasta autorizada
 
@@ -76,6 +76,20 @@ html = section_header_html_resolvido(
 A referência mantém a aparência histórica. Outras configurações completas podem mudar somente propriedades cobertas pelo contrato. Não passe dicionário cru, não edite `_values` e não use a função como folha de estilo global. `dark` e `high_contrast` são materializáveis no HTML quando válidos, porém isso não constitui homologação visual ou de acessibilidade.
 
 Para voltar ao comportamento anterior, use a função sem `_resolvido`; não é necessário limpar um tema global porque a V04 não cria um.
+
+## Usar o Visual Lab V05
+
+Para editar/comparar uma proposta sem mudar o padrão da equipe, abra `hub_snippets.visual.theme_lab`. Ele parte de configuração notebook validada, aplica alterações de forma atômica e compara Atual/Proposta com dados sintéticos. Salvar uma sessão preserva trabalho; não publica nem aprova o tema.
+
+## Usar consumidores V07
+
+Quando um consumidor documentar uma rota `_resolvido`, carregue primeiro um `ResolvedTheme` íntegro e passe-o explicitamente. Exemplos incluem `plot_correlation_resolvido`, `plot_distributions_resolvido`, curvas de ML, timeline de monitoramento, UMAP e safras. A rota temática muda somente propriedades visuais cobertas; dados, agregações, amostragem, métricas e thresholds permanecem os mesmos.
+
+SHAP/Matplotlib e Kaplan–Meier continuam exceções explícitas ao theming atual. Não assuma suporte apenas porque outras figuras do notebook usam um tema.
+
+## Geração editorial V06
+
+A geração orientada por tema recebe um derivado controlado do `ResolvedTheme` e produz candidatos fora do pacote visual ativo. Gerar um asset não o promove. Preserve hashes/recursos congelados e siga o fluxo de revisão antes de qualquer substituição.
 
 ## Para pedir ajuda
 

@@ -135,13 +135,25 @@ Dentro das pastas de algumas skills existe uma subpasta chamada **`templates/`**
 
 Pense neles como formulários técnicos especializados:
 
-- **Gabaritos de Estilo Visual**, como `estilo_visual_eda.md`: orientam paleta, hierarquia e leitura de gráficos.
+- **Gabaritos de Estilo Visual**, como `estilo_visual_eda.md`: orientam composição, hierarquia e leitura; paletas e tokens configuráveis pertencem ao `ResolvedTheme` e ao padrão `hub_padroes/identidade_visual`, não ao template da skill.
 - **Checklists de Validação**, como `checklist-objeto-novo.md`: organizam requisitos que devem ser conferidos antes de concluir uma entrega.
 - **Formatos de Laudo**, como `notebook_output_stat.md`: estruturam hipótese, teste, efeito, incerteza, limitações e decisão.
 
 Um template não é executável e não é um helper. Ele só influencia a resposta quando a skill o referencia e o assistente o utiliza como contexto.
 
 ---
+
+## 🎨 Skills e Sistema de Temas
+
+Skills podem **recomendar** consumidores visuais, mas não são fonte de paleta, token ou aprovação. Quando uma tarefa pedir identidade visual, tema ou consistência entre gráficos:
+
+1. trate `hub_padroes/identidade_visual` e `ResolvedTheme` como fontes canônicas;
+2. use a rota `_resolvido` do consumidor quando ela existir;
+3. mantenha dados, métricas, thresholds e decisões analíticas independentes da aparência;
+4. não presuma publicação ou homologação no Databricks;
+5. preserve limites declarados — por exemplo, SHAP/Matplotlib e Kaplan–Meier não possuem theming V07 homologado.
+
+`estilo_visual_eda.md` continua útil para decisões **editoriais da EDA** (estrutura, escolha de gráfico, anotações e leitura), mas não pode redeclarar a paleta do Hub.
 
 <a id="estrutura-de-uma-skill-profissional"></a>
 

@@ -81,6 +81,18 @@ arquivos atuais. Use apenas ferramentas de leitura autorizadas; não importe nem
 execute módulos para descobrir o que contêm. Sem ferramenta, solicite os arquivos
 necessários e marque a resposta como parcial. Não simule uma varredura inexistente.
 
+### 3.1. Rota específica para tema e identidade visual
+
+Quando o pedido mencionar tema, identidade visual, paleta, Visual Lab, aparência de gráficos ou consistência visual, não trate um template de skill nem `constants.colors` como fonte configurável. Verifique primeiro `HUB_ROOT/hub_padroes/identidade_visual/README.md` e a seção vigente do Sistema de Temas no Manual.
+
+- autoria/comparação em notebook: `hub_snippets.visual.theme_lab`;
+- Plotly: `hub_snippets.visual.theme_plotly` e rotas `_resolvido` dos consumidores;
+- HTML/tabelas: rotas `_resolvido` documentadas pelos componentes V04;
+- assets editoriais: contrato V06, sem promoção automática;
+- consumidores V07: confirmar a função `_resolvido` concreta antes de recomendar.
+
+Explicite limites: **SHAP/Matplotlib** e **Kaplan–Meier** permanecem exceções ao theming V07. Um tema válido não significa publicado, aprovado ou homologado no browser Databricks. Se a solicitação for somente escolher cores, encaminhe ao fluxo de autoria/contrato em vez de inventar uma paleta na resposta.
+
 ### 4. Verificar antes de recomendar
 
 Para cada finalista, confira o recurso adequado:

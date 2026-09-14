@@ -96,6 +96,8 @@ Importar de `hub_snippets`/`hub_scripts` em vez de reimplementar a lógica. Cat�
 | Acompanhar métricas contra política calibrada | `hub_snippets.ml.performance_monitor` |
 | Métricas e curvas de performance | `hub_snippets.ml.metrics_report`, `hub_snippets.ml.curves_plotly` |
 
+Se a entrega usar um `ResolvedTheme` notebook validado, `PerformanceMonitor.plot_timeline_resolvido` e as curvas `*_resolvido` podem ajustar a aparência. O tema não recalibra threshold, baseline, direção da métrica, status nem decisão de retreino; política e evidência continuam independentes da camada visual.
+
 `interpretar_psi` só classifica quando recebe os limites do consumidor — não há faixa universal. `PerformanceMonitor` sinaliza degradação e nunca autoriza retreino: a decisão exige investigação, champion-challenger e aprovação.
 
 ## Entregar

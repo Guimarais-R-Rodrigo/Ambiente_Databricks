@@ -5,6 +5,28 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-14 — V08: candidata de integração transversal (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) Matriz transversal de integração entre Sistema de Temas, skills, Hub Padrões, entrada `.assistant` e Manual Técnico.
+- (ChatGPT) Suíte V08 e workflow permanente read-only com guarda explícita que proíbe alterações runtime Python em `hub_snippets` e `hub_scripts`.
+
+### Atualizado
+
+- (ChatGPT) Concierge, criação de objeto, EDA, baseline, safra, monitoramento e explainability passam a apontar para `ResolvedTheme` e consumidores `_resolvido` sem redefinir paletas ou política visual.
+- (ChatGPT) O template visual da EDA deixa de ser uma segunda fonte de tema e preserva composição, hierarquia, leitura, tabelas, KPIs, emojis, índice e demais convenções editoriais.
+- (ChatGPT) Hub Padrões e Manual passam a descrever V02–V07 integradas, Visual Lab, geração editorial, consumidores V07 e limites atuais.
+
+### Evidências
+
+- (ChatGPT) Failures `34866320427`, `34866493021`, `34866578667`, `34866767026`, `34866944219` e `34867002420` permanecem registrados com suas causas reais.
+- (ChatGPT) No head sincronizado anterior ao fechamento, V08 atingiu 22/22 testes específicos, 405/405 regressões V01–V08 e 12/12 V00; o bloqueio restante era somente a saída colada do README raiz.
+
+### Limites
+
+- (ChatGPT) V08 permanece candidata: sem aceite, merge ou publicação Databricks. Não altera runtime, não homologa browser/acessibilidade/UAT e não prova seleção determinística de skill pela Genie Code.
+
 ## 2026-09-14 — V07: candidata de consumidores e formatos de saída (ChatGPT)
 
 ### Adicionado
