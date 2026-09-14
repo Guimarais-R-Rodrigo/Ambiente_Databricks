@@ -2,9 +2,7 @@
 from __future__ import annotations
 
 import hashlib
-import importlib.util
 import json
-import os
 import subprocess
 import sys
 import tempfile
@@ -30,6 +28,19 @@ from app_service import (
     retention_policy,
     save_own_session,
 )
+
+
+def _product_files(root: Path) -> set[str]:
+    """Compara arquivos de produto; caches transitórios do interpretador não contam."""
+    result = set()
+    for path in root.rglob("*"):
+        if not path.is_file():
+            continue
+        relative = path.relative_to(root)
+        if "__pycache__" in relative.parts or path.suffix in {".pyc", ".pyo"}:
+            continue
+        result.add(relative.as_posix())
+    return result
 
 
 class IdentityTests(unittest.TestCase):
@@ -59,6 +70,14 @@ class ConfigTests(unittest.TestCase):
             with self.assertRaises(ThemeAppError) as cm:
                 load_config(env={"HUB_THEME_VOLUME": tmp, "HUB_THEME_APP_MODE": "authoring_only"})
             self.assertEqual(cm.exception.code, "APP_STORAGE_NOT_VOLUME")
+
+    def test_production_rejects_traversal_with_volumes_prefix(self):
+        with self.assertRaises(ThemeAppError) as cm:
+            load_config(env={
+                "HUB_THEME_VOLUME": "/Volumes/catalog/schema/volume/../../../../tmp",
+                "HUB_THEME_APP_MODE": "authoring_only",
+            })
+        self.assertEqual(cm.exception.code, "APP_STORAGE_NOT_VOLUME")
 
     def test_local_mode_accepts_explicit_temp_directory(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -158,8 +177,8 @@ class PolicyTests(unittest.TestCase):
 
 class PackagingTests(unittest.TestCase):
     def test_app_source_and_simulated_mirror_are_identical(self):
-        names = {path.relative_to(APP).as_posix() for path in APP.rglob("*") if path.is_file()}
-        mirror_names = {path.relative_to(MIRROR).as_posix() for path in MIRROR.rglob("*") if path.is_file()}
+        names = _product_files(APP)
+        mirror_names = _product_files(MIRROR)
         self.assertEqual(names, mirror_names)
         for name in names:
             self.assertEqual((APP / name).read_bytes(), (MIRROR / name).read_bytes(), name)
@@ -178,6 +197,11 @@ class PackagingTests(unittest.TestCase):
         self.assertNotIn("publish(", text)
         self.assertNotIn("approve(", text)
         self.assertIn("X-Forwarded", (APP / "README.md").read_text(encoding="utf-8"))
+
+    def test_workflow_syntax_check_does_not_pollute_product_tree(self):
+        workflow = (ROOT / ".github/workflows/temas-v10-ci.yml").read_text(encoding="utf-8")
+        self.assertNotIn("python -m py_compile", workflow)
+        self.assertIn("compile(path.read_text", workflow)
 
     def test_bundle_builder_creates_and_verifies_derived_app(self):
         with tempfile.TemporaryDirectory() as tmp:
