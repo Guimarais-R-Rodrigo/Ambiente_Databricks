@@ -4,7 +4,7 @@
 
 **CANDIDATA TÉCNICA — BLOQUEADA PARA ACEITE/MM01.**
 
-A fundação documental e arquitetural da MM00 está implementada e tecnicamente validada no snapshot registrado abaixo. Isso **não** autoriza MM01, merge ou promoção de ADRs propostos para aceitos.
+A fundação documental e arquitetural da MM00 está implementada e tecnicamente validada nos snapshots registrados abaixo. Isso **não** autoriza MM01, merge ou promoção de ADRs propostos para aceitos.
 
 ## Baseline e reconciliação
 
@@ -15,7 +15,7 @@ A fundação documental e arquitetural da MM00 está implementada e tecnicamente
 - Durante a MM00: V08 foi integrada na `main` por `622d2c962a80998cf990b57036f7ae503bfc0458`.
 - Fechamento documental V08: `main` em `55f7006c47d90ae7f760992d252b658f53a59636`.
 - Reconciliação final da MM00 sobre essa base: merge `edfcf58e4700ccf5d58d2befddccbd9fe50ac124`.
-- Última reconsulta antes desta atualização: `main` ainda em `55f7006c47d90ae7f760992d252b658f53a59636`.
+- Última reconsulta antes desta correção documental: `main` ainda em `55f7006c47d90ae7f760992d252b658f53a59636`.
 
 ## Entregas
 
@@ -34,12 +34,12 @@ A fundação documental e arquitetural da MM00 está implementada e tecnicamente
 | Índice de sprints | reconciliado; V08 fechada + MM00 em execução |
 | `CLAUDE.md` | reconciliado; V00–V08 integradas, MM00 proposta |
 | Pacote da auditoria A1 | preparado e congelado para sessão independente |
-| Diff da PR contra `main` vigente | 21 arquivos documentais/contextuais; zero alteração funcional própria |
+| Diff da PR contra `main` vigente | 22 arquivos documentais/contextuais; zero alteração funcional própria |
 | Métricas do README raiz | medidas: 1368 arquivos / 1859 links |
-| CI geral no snapshot `f5e57db5...` | `success` — run `34876036424` |
-| V00 no snapshot `f5e57db5...` | `success` — run `34876036437` |
-| V01 no snapshot `f5e57db5...` | `success` — run `34876036418` |
-| V02 no snapshot `f5e57db5...` | `success` — run `34876036413` |
+| CI geral no snapshot `efd866cc...` | `success` — run `34876564764` |
+| V00 no snapshot `efd866cc...` | `success` — run `34876564723` |
+| V01 no snapshot `efd866cc...` | `success` — run `34876564784` |
+| V02 no snapshot `efd866cc...` | `success` — run `34876564718` |
 | Auditoria A1 independente | **não executada** |
 | Entrada própria da MM00 no `CHANGELOG.md` | **pendente** |
 | Aceite explícito de Rodrigo | **pendente** |
@@ -49,6 +49,7 @@ A fundação documental e arquitetural da MM00 está implementada e tecnicamente
 A comparação da PR #43 contra a `main` fechada da V08 contém somente:
 
 - `CLAUDE.md`;
+- `README.md` raiz, apenas para sincronizar as métricas medidas pelo gate;
 - pacote de auditoria A1;
 - ADR-0014 a ADR-0020 e índice de ADRs;
 - índice de sprints;
@@ -95,11 +96,15 @@ A regra do projeto exige entrada em `CHANGELOG.md`. A integração disponível n
 
 ### A08 — gates automáticos não substituem julgamento arquitetural
 
-CI geral, V00, V01 e V02 ficaram verdes no snapshot técnico, mas isso prova apenas os contratos automatizados cobertos. A coerência de fronteiras, reuso, proveniência, fingerprint, MLflow e migração tardia ainda precisa do contraditório A1.
+CI geral, V00, V01 e V02 ficaram verdes no snapshot técnico `efd866cc...`, mas isso prova apenas os contratos automatizados cobertos. A coerência de fronteiras, reuso, proveniência, fingerprint, MLflow e migração tardia ainda precisa do contraditório A1.
+
+### A09 — contagem do diff também é tratada como evidência, não estimativa
+
+A entrada do README raiz no diff elevou o total nominal de 21 para 22 arquivos. O próprio checkpoint, os testes e o contexto A1 foram corrigidos antes do freeze para que o auditor receba a árvore efetiva, não uma fotografia anterior.
 
 ## Bloqueios restantes para aceite da MM00
 
-1. o head corrente, após esta atualização de gate, deve repetir CI e permanecer verde;
+1. o head corrente, após esta correção documental final, deve repetir CI e permanecer verde;
 2. executar a auditoria A1 em sessão independente usando o pacote versionado;
 3. verificar cada achado e corrigir somente os que procederem;
 4. registrar entrada aditiva da MM00 em `CHANGELOG.md` por meio seguro **ou** obter exceção humana explícita, justificada e registrada para adiar esse único registro;
