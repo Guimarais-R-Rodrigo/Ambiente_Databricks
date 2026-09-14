@@ -2,10 +2,8 @@
 
 ## Antes de começar
 
-O que existe nesta V02 é um verificador com exemplo guiado, não um painel de cores.
-Seu notebook atual continua igual. A candidata precisa ser instalada e homologada
-pelo mantenedor antes de ser usada no workspace de trabalho. Não publique arquivos
-por conta própria para experimentar uma cor.
+O núcleo V02 está integrado no Git como verificador com exemplo guiado, não como painel de cores. V03 e V04 acrescentam consumidores opt-in, sem trocar o caminho legado por padrão.
+Seu notebook atual continua igual. Para usar o pacote no workspace de trabalho, a revisão integrada ainda precisa ser instalada/publicada pelo procedimento autorizado e homologada no destino. Não publique arquivos por conta própria para experimentar uma cor.
 
 Quem só precisa acompanhar a entrega pode ler a seção “Interpretar a saída” abaixo.
 Quem vai executar precisa de Python, do pacote completo `.assistant` e das bibliotecas
@@ -44,8 +42,7 @@ se a paleta é bonita, acessível ou autorizada. Compare-o somente entre versõe
 compatíveis do protocolo descrito no [contrato](README.md).
 
 Não confunda `export_theme` com salvar: ele devolve bytes em memória. Salvar em
-uma pasta, compartilhar, aprovar e publicar são ações distintas. O laboratório
-e a gestão dessas ações serão entregues em sprints posteriores.
+uma pasta, compartilhar, aprovar e publicar são ações distintas. Essas operações permanecem fora de V00–V04 integradas; uma etapa futura só pode ser considerada disponível quando estiver efetivamente integrada e homologada no escopo correspondente.
 
 ## Carregar um arquivo da sua pasta autorizada
 

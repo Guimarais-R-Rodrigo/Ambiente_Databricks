@@ -5,6 +5,13 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-13 — D05: reconciliação documental do Sistema de Temas (ChatGPT)
+
+- Alinha documentação viva ao estado V00–V04 aceito e integrado no Git.
+- Preserva notas históricas de candidatura e registra o fechamento por nova entrada, sem reescrever evidência.
+- D05 é manutenção documental e não inicia a sprint funcional V05.
+- Sem publicação Databricks, homologação visual/runtime, auditoria independente ou mudança de API.
+
 ## 2026-09-14 — pós-R13 D01–D04 (ChatGPT)
 
 - Documentação viva reconciliada com R00–R13 encerrada.

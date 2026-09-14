@@ -1,6 +1,6 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Etapa concluída — V04 aceita e integrada no Git
+## Estado vigente — V04 aceita e integrada no Git; documentação viva reconciliada em D05
 
 V00–V04 estão integradas no Git. A V03 foi mesclada pelo PR #16 no commit
 `b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`; depois, R04-A, R04-B, R05 e R06
@@ -25,7 +25,7 @@ A evolução continua navegável pela [V01 — contrato e experiência](V01/READ
 
 Não houve publicação Databricks, auditoria independente ou homologação visual.
 O aceite e a integração Git da V04 estão concluídos; esses gates operacionais
-permanecem separados. A V05 ainda não foi iniciada por este fechamento.
+permanecem separados. A [D05 documental](RECONCILIACAO_DOCUMENTAL_D05.md) sincroniza os rótulos vivos pós-merge e **não** inicia a sprint funcional V05 do plano.
 
 ## Aceite de integração Git — 12/09/2026
 

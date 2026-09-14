@@ -107,8 +107,7 @@ Abaixo você encontra o papel de cada objeto e o momento em que ele pode ser út
 
 ---
 
-**Novo núcleo candidato:** [`visual.tema`](visual/tema/README.md) confere configurações
-completas e isoladas, sem aplicar cores ou alterar consumidores legados.
+**Núcleo de temas integrado no Git:** [`visual.tema`](visual/tema/README.md) confere configurações completas e isoladas. V03 conecta Plotly por opt-in e V04 estende a rota explícita a HTML/estilos/tabela pandas; consumidores legados permanecem o default e nenhuma dessas integrações publica ou homologa aparência no Databricks.
 
 ### 1. Categoria: `ml` (Machine Learning e Estatística Aplicada)
 
