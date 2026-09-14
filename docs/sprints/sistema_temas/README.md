@@ -1,14 +1,14 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Estado vigente — V07 candidata em execução; V00–V06 integradas
+## Estado vigente — V00–V07 integradas; V08 ainda não iniciada neste fechamento
 
-A V07 foi iniciada em 14/09/2026 a partir da `main` fechada em `0c0c71bce4bbc09130ec51eec8245057be4f3d81`, na branch isolada `codex/temas-v07-consumidores-formatos-20260914`. Ela está **em execução**, sem aceite, PR de integração, merge ou publicação Databricks.
+A V07 foi aceita por Rodrigo e integrada em 14/09/2026 pelo PR #40. O head final validado foi `6b50151738a311eff8530c3191e24693af3fb036`, e o merge efetivo na `main` é `67114605c7345a01c1144e5d6c6d24e9c24e2491`. A árvore do merge é idêntica à árvore da candidata testada.
 
-A [V07 — demais consumidores e formatos de saída](V07/README.md) fecha consumidores runtime de `display` e `ml` que ainda tinham aparência dispersa, sempre por rotas opt-in `_resolvido`. Cálculo, agregação, amostragem, dados e decisões analíticas permanecem fora do tema. `dataframe_styled` já estava coberto pela V04; Kaplan–Meier e SHAP/Matplotlib ficam como exceções explícitas porque o contrato atual não permite mapeamento semântico seguro para suas aparências próprias.
+A [V07 — demais consumidores e formatos de saída](V07/README.md) fecha consumidores runtime de `display` e `ml` por rotas opt-in `_resolvido`, mantendo cálculo, agregação, amostragem, dados e decisões analíticas fora do tema. `dataframe_styled` continua sob a V04; Kaplan–Meier e SHAP/Matplotlib permanecem exceções explícitas porque o contrato atual não permite um mapeamento semântico seguro para suas aparências próprias.
 
-O [registro estruturado de consumidores](V07/CONSUMIDORES.json), o [registro de testes](V07/TESTES.md) e o [checkpoint V07](V07/CHECKPOINT_V07.md) distinguem suporte real, exceções e formatos não homologados. Até o checkpoint corrente, as suítes funcionais V07 e regressões cumulativas passaram; os runs reprovados continuam registrados como failures documentais e ainda não há um head final aceito para integração.
+O [registro estruturado de consumidores](V07/CONSUMIDORES.json), o [registro de testes](V07/TESTES.md) e o [checkpoint V07](V07/CHECKPOINT_V07.md) preservam failures documentais reais, a correção semântica para `palette.diverging`, o head final e os nove checks pós-merge. CI geral e V00–V07 concluíram com `success` na `main` após o merge.
 
-Nenhuma publicação Databricks, alteração de ACL/compute, execução remota de Spark/SQL/MLflow, promoção visual ou início da V08 foi realizada.
+Nenhuma publicação Databricks, alteração de ACL/compute, execução remota de Spark/SQL/MLflow, promoção visual, homologação de browser/acessibilidade ou UAT foi realizada. A V08 será aberta em branch própria após esta reconciliação pós-merge; seu escopo é integração transversal com skills, padrões e Manual, não reimplementação das V00–V07.
 
 ## Estado integrado anterior — V06 integrada no Git
 
@@ -66,7 +66,7 @@ instala seletor, não cria CSS global e não migra notebooks automaticamente. Le
 
 ### Entradas históricas preservadas
 
-A evolução continua navegável pela [V01 — contrato e experiência](V01/README.md) e pelo [guia de primeiro uso da V01](V01/GUIA_PRIMEIRO_USO.md). Esses arquivos são referência histórica/contratual e não substituem o estado corrente V07.
+A evolução continua navegável pela [V01 — contrato e experiência](V01/README.md) e pelo [guia de primeiro uso da V01](V01/GUIA_PRIMEIRO_USO.md). Esses arquivos são referência histórica/contratual e não substituem o estado corrente da iniciativa.
 
 Não houve publicação Databricks, auditoria independente ou homologação visual.
 O aceite e a integração Git da V04 estão concluídos; esses gates operacionais
