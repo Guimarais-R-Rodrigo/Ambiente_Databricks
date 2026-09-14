@@ -2,7 +2,7 @@
 
 ## Estado
 
-Candidata técnica com primeiro gate integralmente verde antes da reconciliação final de navegação. Este arquivo registra somente resultados observados; nenhum PASS local equivale a homologação Databricks.
+Candidata técnica com navegação/documentação reconciliada e gate completo revalidado no head `5bb8234422fdd284a9e14815ef566ec0b52a2952`. Este arquivo registra somente resultados observados; nenhum PASS local equivale a homologação Databricks.
 
 ## Suíte específica
 
@@ -65,7 +65,7 @@ No head `8785822e045edf158f04ea41ea0f6c059ef11cb1`, a guarda nova de import pelo
 
 A correção alterou somente a expectativa do teste para o ID canônico real. A guarda de import e a varredura de todos os módulos Python continuam ativas. Como a suíte V11 falhou, sintaxe, regressões, V00, validador e escopo foram `SKIP` nesse run. O run `34901776770` permanece **FAILURE**.
 
-## Primeira evidência integralmente verde
+## Evidências integralmente verdes
 
 ### Run `34902083889` — SUCCESS no head `0d3180c50428d8716b44f264b915a91243ba96c3`
 
@@ -79,13 +79,29 @@ A execução confirmou:
 - token do workflow: `Contents: read`;
 - checkout: `persist-credentials: false`.
 
+Esse foi o primeiro gate integralmente verde antes da reconciliação final de navegação.
+
+### Run `34902853430` — SUCCESS no head documental `5bb8234422fdd284a9e14815ef566ec0b52a2952`
+
+Depois da reconciliação da navegação e dos documentos vivos, o gate completo foi repetido no head exato da candidata e confirmou:
+- V11 específica: **21/21 PASS**;
+- sintaxe da fachada compilada em memória: **PASS**;
+- regressões cumulativas V01–V11: **457/457 PASS**;
+- compatibilidade visual V00: **12/12 PASS**;
+- validador estrutural/documental: **0 falhas / 0 avisos**;
+- etapa de escopo: **PASS**;
+- source/simulado V11 byte a byte equivalentes;
+- token do workflow: `Contents: read`;
+- checkout: `persist-credentials: false`;
+- nenhuma operação/API/SDK/CLI Databricks executada.
+
 Métricas verificáveis observadas nesse run:
 
 ```text
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 92 caminhos verificados
-markdown / links   : 222 arquivos / 1394 links relativos
+markdown / links   : 222 arquivos / 1395 links relativos
 notebooks / links  : 80 notebooks / 101 links relativos
 readmes de objeto  : 76/76 operacionais; 3/3 exemplares; 0 pendentes
 pastas de objeto   : 62 conferidas
@@ -99,11 +115,13 @@ notebook exercita  : 60 objetos, 0 notebook(s) que só importam
 python (AST)       : 221 arquivos
 instrucoes         : 9043/20000 caracteres
 repo (identidade)  : 1409 arquivos varridos no repositório editável/derivado
-repo (links)       : 1878 links fora da raiz analisada
+repo (links)       : 1887 links fora da raiz analisada
 worktree (extras)  : 0
+
+APROVADO: 0 falha(s), 0 aviso(s)
 ```
 
-Esse run antecede a reconciliação final dos índices/guia. O head documental final deve repetir o gate completo; resultados futuros só serão registrados depois de observados.
+O commit documental posterior apenas registra essas evidências. Ele precisa repetir o mesmo gate antes da abertura da PR.
 
 ## Gates de ambiente ainda pendentes
 
