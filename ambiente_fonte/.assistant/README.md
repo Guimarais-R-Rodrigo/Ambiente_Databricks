@@ -20,6 +20,7 @@
 | entender o que é automático ou manual | [Arquitetura](#️-arquitetura-completa-do-ecossistema) |
 | fornecer contexto corretamente | [Fluxo de Contexto](#-como-o-contexto-chega-ao-genie-code) |
 | iniciar uma tarefa concreta | [Ponto de Partida](#-como-escolher-o-ponto-de-partida) |
+| experimentar aparência de notebook sem publicar tema | [Visual Lab](hub_snippets/visual/theme_lab/README.md) |
 | conferir runtime, dependências e segurança | [Compute e Segurança](#️-dependências-compute-e-segurança) |
 
 ---
@@ -158,6 +159,14 @@ Consulte o Hub Padrões em `.assistant/hub_padroes/README.md`.
 ### 📘 README local do recurso
 
 Ao chegar a um snippet, script ou prompt concreto, leia primeiro o `README.md` da pasta. Ele orienta escolha, requisitos, efeitos, limites e interpretação; depois use o notebook de exemplo e a implementação ou briefing. O guia não equivale a homologação de runtime ou aprovação de negócio.
+
+### 🎨 Visual Lab do Sistema de Temas — V05 candidata
+
+O `hub_snippets.visual.theme_lab` oferece uma superfície **opt-in** para escolher uma base `notebook` validada, ajustar tokens, comparar **Atual / Proposta** com dados sintéticos e salvar ou reabrir uma sessão preservando base original, proposta, revisão e histórico. Ele não altera o padrão da equipe e **não publica nem aprova temas**.
+
+Para começar, leia o [README do Visual Lab](hub_snippets/visual/theme_lab/README.md), siga o [guia de primeiro uso](hub_snippets/visual/theme_lab/GUIA_PRIMEIRO_USO.md) e, se precisar inspecionar uma execução orientada, abra o [exemplo](hub_snippets/visual/theme_lab/exemplo_theme_lab.py). O mantenedor precisa disponibilizar o pacote completo e as dependências; para persistência, também precisa preparar explicitamente uma pasta regular com as permissões adequadas.
+
+A candidata V05 possui testes Python/GitHub Actions para presets, aplicação atômica, callbacks, histórico, sessão, hashes de linhagem e reabertura. Esses testes **não** homologam renderização no navegador Databricks, acessibilidade, contraste/zoom, p95, ACL real da pasta ou UAT por pessoa iniciante. A V05 ainda não possui aceite nem merge na `main`.
 
 > **INFRAESTRUTURA EDITORIAL DO HUB.** A pasta
 > `hub_readmes_visual_assets/` mantém os diagramas e os cabeçalhos compartilhados

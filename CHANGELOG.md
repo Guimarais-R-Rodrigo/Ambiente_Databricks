@@ -5,6 +5,27 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-14 — V05: fechamento técnico do Visual Lab em candidata (Codex)
+
+### Adicionado
+
+- (Codex) `hub_snippets.visual.theme_lab` entra no inventário do Manual com presets, edição atômica, comparação, sessão rastreável, reabertura e limites operacionais.
+- (Codex) Entrada de primeiro uso no README do Hub para localizar o laboratório sem confundi-lo com publicação ou aprovação de tema.
+
+### Atualizado
+
+- (Codex) Candidata V05 reconciliada com a `main` pós-D05 `24ffce29`, preservando a documentação R13/D05 e mantendo a PR #26 como evidência histórica.
+- (Codex) README do objeto migrado ao contrato `readme-objeto: 1.0.0`; checkpoint, testes e índices registram presets/linhagem/reabertura como contratos Python implementados, não homologação Databricks.
+- (Codex) `CLAUDE.md` e Manual distinguem V04 integrada de V05 ainda candidata; a cobertura estrutural passa a incluir o novo 76º objeto fora do escopo histórico R00–R13.
+
+### Notas
+
+- (Codex) Runs reprovados continuam reprovados. `34797774791` falhou por contrato textual; `34798200237`, `34798497708` e `34798674298` mantiveram funções/regressões verdes e reprovaram o fechamento documental/métricas então desatualizadas.
+- (Codex) Nas composições recentes foram observados 31/31 testes específicos V05, 14/14 de sessões, 359/359 regressões de temas e 12/12 V00; esses resultados são Python/GitHub Actions, não homologação de navegador/runtime Databricks.
+- (Codex) As métricas finais do README foram medidas no run `34831939535`; depois da atualização numérica, o head limpo `efb9dd32` obteve `success` no workflow V05 `34832202757`, incluindo validação documental e escopo.
+- (Codex) A PR #37 foi aberta em draft contra a `main` pós-D05; os checks iniciais da PR concluíram com `success` no CI geral `34832408423`, V00 `34832408496`, V01 `34832408407`, V02 `34832408460` e V05 `34832408426`. O registro final continua sem autorizar merge.
+- (Codex) Sem aceite V05, merge, publicação Databricks, homologação operacional ou início da V06.
+
 ## 2026-09-13 — D05: reconciliação documental do Sistema de Temas (ChatGPT)
 
 - Alinha documentação viva ao estado V00–V04 aceito e integrado no Git.

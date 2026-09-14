@@ -72,6 +72,14 @@ históricas e dos READMEs. V00, [V01](sistema_temas/V01/README.md),
 [V02](sistema_temas/V02/README.md), [V03](sistema_temas/V03/README.md) e
 [V04](sistema_temas/V04/README.md) estão aceitas e integradas no Git.
 
+A [V05 — Visual Lab em notebook](sistema_temas/V05/README.md) está em fechamento
+numa branch separada, reconciliada com a `main` pós-D05. Ela acrescenta escolha
+guiada de ponto de partida, ajuste, comparação e sessão rastreável/reabertura,
+mas **ainda não possui aceite nem merge**. O
+[checkpoint V05](sistema_temas/V05/CHECKPOINT_V05.md) preserva as execuções e os
+bloqueios; nenhum teste Python equivale a homologação Databricks. A V06 não foi
+iniciada.
+
 A V02 entrega o núcleo de carga, validação e resolução de configurações completas.
 A V03 acrescenta somente o adaptador Plotly opt-in. A V04 estende a mesma
 arquitetura a componentes HTML, estilos compartilhados e tabela pandas por rotas
@@ -122,4 +130,6 @@ Após a integração da R12 pelo PR #32 (`ec4b559d`), a R13 audita em conjunto c
 A R13 foi aceita e integrada pelo PR #33 (`b0e953cc`). A iniciativa própria de READMEs R00–R13 está encerrada no Git com 75/75 objetos operacionais, 3/3 exemplares, 0 pendências e auditoria final local `A0_light` aprovada. Homologação Databricks/Genie Code e auditoria independente continuam fora deste fechamento.
 
 ### Reconciliação documental pós-R13
-Escopo D01–D04: `docs/sprints/documentacao_pos_r13.md`.
+Escopo D01–D04: `docs/sprints/documentacao_pos_r13.md`. A D05 do Sistema de Temas
+foi integrada antes da retomada V05 e está registrada em
+[`sistema_temas/RECONCILIACAO_DOCUMENTAL_D05.md`](sistema_temas/RECONCILIACAO_DOCUMENTAL_D05.md).

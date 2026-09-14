@@ -1,6 +1,30 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Estado vigente — V04 aceita e integrada no Git; documentação viva reconciliada em D05
+## Estado vigente — V05 candidata em fechamento; V00–V04 integradas no Git
+
+V00–V04 estão integradas no Git e a documentação viva dessas versões foi
+reconciliada pela D05, integrada à `main` no commit
+`24ffce298ed543755eb15d5d7c553d02ce15e73e`. A V05 está em branch separada de
+fechamento e **não possui aceite, merge ou publicação**.
+
+A [V05 — Visual Lab em notebook](V05/README.md) acrescenta uma superfície opt-in
+de autoria: escolha guiada de ponto de partida, edição de tokens, comparação com
+dados sintéticos e persistência/reabertura de sessão com base, proposta e
+histórico. O [checkpoint V05](V05/CHECKPOINT_V05.md) e o
+[registro de testes](V05/TESTES.md) distinguem contratos Python exercitados de
+homologação Databricks ainda pendente.
+
+Para quem nunca entrou no Hub: nada é ativado automaticamente. O laboratório
+precisa ser aberto explicitamente no notebook, não muda o padrão da equipe e não
+publica temas. O
+[guia de primeiro uso](../../../ambiente_fonte/.assistant/hub_snippets/visual/theme_lab/GUIA_PRIMEIRO_USO.md)
+explica o fluxo operacional da candidata.
+
+Não houve publicação Databricks, auditoria independente ou homologação visual da
+V05. Browser/runtime, acessibilidade, p95, permissões reais da persistência e UAT
+por iniciante permanecem gates separados. A V06 não foi iniciada.
+
+## Estado integrado anterior — V04 aceita e integrada no Git; documentação viva reconciliada em D05
 
 V00–V04 estão integradas no Git. A V03 foi mesclada pelo PR #16 no commit
 `b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`; depois, R04-A, R04-B, R05 e R06
@@ -21,11 +45,11 @@ instala seletor, não cria CSS global e não migra notebooks automaticamente. Le
 
 ### Entradas históricas preservadas
 
-A evolução continua navegável pela [V01 — contrato e experiência](V01/README.md) e pelo [guia de primeiro uso da V01](V01/GUIA_PRIMEIRO_USO.md). Esses arquivos são referência histórica/contratual e não substituem o estado corrente V04.
+A evolução continua navegável pela [V01 — contrato e experiência](V01/README.md) e pelo [guia de primeiro uso da V01](V01/GUIA_PRIMEIRO_USO.md). Esses arquivos são referência histórica/contratual e não substituem o estado corrente V05.
 
 Não houve publicação Databricks, auditoria independente ou homologação visual.
 O aceite e a integração Git da V04 estão concluídos; esses gates operacionais
-permanecem separados. A [D05 documental](RECONCILIACAO_DOCUMENTAL_D05.md) sincroniza os rótulos vivos pós-merge e **não** inicia a sprint funcional V05 do plano.
+permanecem separados. A [D05 documental](RECONCILIACAO_DOCUMENTAL_D05.md) sincroniza os rótulos vivos pós-merge e **não** constitui entrega funcional da V05.
 
 ## Aceite de integração Git — 12/09/2026
 
@@ -72,7 +96,8 @@ a publicar no workspace.
 O Manual Técnico existente permanece dono da orientação operacional do produto:
 [Manual Técnico](../../../MANUAL_TECNICO.md). V00 não o altera porque não entrega
 uma nova operação ao usuário do Hub. As instruções de primeiro uso do laboratório
-serão incorporadas quando a respectiva interface for implementada.
+foram incorporadas na candidata V05; os parágrafos históricos abaixo permanecem
+como registro do estado observado em seus respectivos fechamentos.
 
 ## Estado e limites
 
@@ -113,5 +138,6 @@ Databricks ou publicação automática nesta entrega.
 A V03 foi aceita e integrada pelo PR #16; seu adaptador Plotly continua opt-in. A
 [V04](V04/README.md) estende a mesma arquitetura aos componentes HTML e à tabela
 pandas e foi aceita/integrada pelo PR #21 no commit
-`5a7b33d7137f88c1ec80315de1b422293b3ba206`. Sem publicação Databricks; V05 ainda
-não foi iniciada por este fechamento.
+`5a7b33d7137f88c1ec80315de1b422293b3ba206`. Sem publicação Databricks; a frase
+histórica de que “V05 ainda não foi iniciada por este fechamento” descreve o
+fechamento V04. O estado corrente da V05 está no início deste documento.
