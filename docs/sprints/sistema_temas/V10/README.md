@@ -2,13 +2,15 @@
 
 ## Estado
 
-**CANDIDATA EM IMPLEMENTAÇÃO NA BRANCH `codex/temas-v10-databricks-app-20260914`; SEM ACEITE, MERGE OU DEPLOY DATABRICKS.**
+**ACEITA E INTEGRADA NO GIT; SEM DEPLOY DATABRICKS.**
 
 Base de início: `d6655411ca4ac1834b0983f6ce6bdadc30b831bb`, fechamento documental da V09.
 
+Após a integração e o fechamento documental da MM00 na `main`, a candidata V10 foi reconciliada no head `cb942ee955ff9236f19099e5ed4ceee9beb32000`. Rodrigo deu aceite explícito em 14/09/2026 e o PR #48 foi integrado no merge `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`.
+
 ## Escopo recuperado do plano
 
-O plano V00–V14 posiciona a V10 como **Databricks App de gestão visual** e a V11 como superfície AI/BI. O App deve reutilizar núcleo, contratos, adaptadores e fixtures já existentes; identidade, papéis, persistência, retenção, custos e publicação precisam estar definidos antes de tratar a interface como pronta. A documentação de App e AI/BI deve permanecer separada.
+O plano V00–V14 posiciona a V10 como **Databricks App de gestão visual** e a V11 como superfície AI/BI. O App reutiliza núcleo, contratos, adaptadores e fixtures já existentes; identidade, papéis, persistência, retenção, custos e publicação permanecem explicitamente definidos. A documentação de App e AI/BI continua separada.
 
 A política V01 continua sendo a fonte canônica dos cinco papéis e transições. A V10 não cria outro workflow de aprovação.
 
@@ -94,9 +96,9 @@ O desenho padrão consome somente Databricks Apps + armazenamento de UC Volume. 
 
 O builder recusa destino existente, symlinks, `app.yaml` sem o recurso esperado ou declaração de publicação.
 
-## Critérios de aceite da candidata
+## Critérios de aceite Git atendidos
 
-A V10 só poderá pedir aceite quando demonstrar:
+A integração V10 demonstrou:
 
 1. fonte e simulado equivalentes para os arquivos de produto V10;
 2. importação/compilação do App sem alterar o contrato anterior;
@@ -113,6 +115,14 @@ A V10 só poderá pedir aceite quando demonstrar:
 13. validador estrutural/documental verde;
 14. documentação de primeiro uso e deploy/rollback suficiente para operador não técnico/técnico respectivamente;
 15. nenhuma chamada, criação ou deploy Databricks executado pela CI/implementação Git.
+
+## Evidência de integração Git
+
+- push final original `34887162337`: **SUCCESS**;
+- head reconciliado aceito `cb942ee955ff9236f19099e5ed4ceee9beb32000`: dez workflows reais de PR em **success**;
+- PR #48: integrado em `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`;
+- pós-merge: **12/12 workflows de `push` em success**, incluindo V10 `34896944061`;
+- failures históricos permanecem preservados em `TESTES.md` e não foram reclassificados.
 
 ## O que PASS não prova
 
@@ -133,4 +143,4 @@ Esses itens não devem ser convertidos em PASS por inferência.
 
 ## Fronteira com V11
 
-V11 trata AI/BI. A V10 não implementa tradutor AI/BI, não muda `context="aibi"`, não cria paleta específica para dashboards e não inicia essa sprint.
+V11 trata AI/BI. A V10 não implementa tradutor AI/BI, não muda `context="aibi"`, não cria paleta específica para dashboards e não iniciou essa sprint. O fechamento Git da V10 apenas remove o bloqueio sequencial para que V11 possa ser planejada/executada separadamente.

@@ -2,19 +2,23 @@
 
 ## Estado
 
-**CANDIDATA TECNICAMENTE VERDE NA BRANCH; SEM ACEITE, MERGE OU DEPLOY DATABRICKS.**
+**V10 ACEITA E INTEGRADA NO GIT; FECHAMENTO DOCUMENTAL PÓS-MERGE EM CURSO; SEM DEPLOY DATABRICKS.**
 
-Base: `d6655411ca4ac1834b0983f6ce6bdadc30b831bb`.
+Base de início: `d6655411ca4ac1834b0983f6ce6bdadc30b831bb`.
 
-Branch: `codex/temas-v10-databricks-app-20260914`.
+Branch funcional: `codex/temas-v10-databricks-app-20260914`.
 
-Head técnico com gate completo verde antes do registro final de evidências: `c114cddedd7775cecb1cf8b672ad33e4a9f5365f`.
+Head reconciliado aceito: `cb942ee955ff9236f19099e5ed4ceee9beb32000`.
 
-Run integralmente verde nesse head: `34886828579`.
+PR funcional: #48.
+
+Merge funcional na `main`: `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`.
+
+Rodrigo deu aceite explícito em 14/09/2026. O aceite cobriu a integração Git da V10 e não autorizou deploy Databricks.
 
 ## Escopo recuperado
 
-V10 é a frente de Databricks App de gestão visual. V11 permanece reservada para AI/BI. O App reutiliza os contratos e o Visual Lab já integrados e deve ter identidade, papéis, persistência, retenção, custos e deploy/rollback explicitamente definidos.
+V10 é a frente de Databricks App de gestão visual. V11 permanece reservada para AI/BI. O App reutiliza os contratos e o Visual Lab já integrados e mantém identidade, papéis, persistência, retenção, custos e deploy/rollback explicitamente definidos.
 
 ## Decisões
 
@@ -31,7 +35,7 @@ V10 é a frente de Databricks App de gestão visual. V11 permanece reservada par
 - bundle de deploy é derivado em `.artifacts/`, nunca fonte editável paralela;
 - CI é local/read-only e não recebe credenciais Databricks.
 
-## Arquivos principais da candidata
+## Arquivos principais integrados
 
 - `ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/app.py`;
 - `.../app_service.py`;
@@ -60,20 +64,36 @@ No head `0ddcdd6b92372186c130d226c4b72d141cb7d67e` passaram V10 **19/19**, regre
 
 No head `88cfea4d5cf29991c5bad23b61a3bec97feb2978`, todos os gates funcionais continuaram verdes, mas o validador encontrou **4 falhas / 0 avisos** porque quatro métricas do README raiz ainda estavam stale. A medição real foi 220 Markdown / 1394 links relativos, 219 arquivos Python AST, 1373 arquivos na identidade do repo e 1869 links fora da raiz. O README foi reconciliado com esses números sem alteração do validador. O run permanece FAILURE.
 
-### Run `34886828579` — SUCCESS
+### Primeiras evidências integralmente verdes
 
-No head `c114cddedd7775cecb1cf8b672ad33e4a9f5365f`:
+O run `34886828579`, no head `c114cddedd7775cecb1cf8b672ad33e4a9f5365f`, confirmou V10 **19/19**, regressões V01–V10 **436/436**, V00 **12/12**, bundle **247 arquivos + `V10_APP_MANIFEST.json`**, verificação de inventário/tamanho/SHA-256, validador **0 falhas / 0 avisos** e escopo sem deploy/aprovação/promoção/ativação/publicação.
 
-- V10 específica: **19/19 PASS**;
-- sintaxe Streamlit compilada em memória: **PASS**;
-- regressões V01–V10: **436/436 PASS**;
-- V00: **12/12 PASS**;
-- bundle: **247 arquivos + `V10_APP_MANIFEST.json`**;
-- verificação de inventário, tamanho e SHA-256 do bundle: **PASS**;
-- validador estrutural/documental: **0 falhas / 0 avisos**;
-- escopo V10: **PASS**, sem deploy/aprovação/promoção/ativação/publicação.
+O push final original `34887162337`, no head `8e59739cbe3e1ce6d49503e7c953c82a98d2dc2c`, repetiu o gate completo com **SUCCESS**.
 
-## Gates antes de pedir aceite
+### Reconciliação com a MM00 e checks reais da PR #48
+
+A `main` avançou com a MM00 enquanto a V10 aguardava integração. A candidata foi reconciliada sem alterar o produto V10; o head aceito passou a ser `cb942ee955ff9236f19099e5ed4ceee9beb32000`.
+
+Nesse head, dez workflows reais de `pull_request` concluíram com `success`:
+
+- `34894892652` — Contrato de temas V01;
+- `34894892747` — Adaptador Plotly V03;
+- `34894892632` — Assets e geração V06;
+- `34894892622` — Databricks App de gestão visual V10;
+- `34894892726` — Regressões da instrumentação V00;
+- `34894892777` — CI local reproduzível;
+- `34894892631` — Componentes HTML e tabelas V04;
+- `34894892738` — Visual Lab notebook V05;
+- `34894892661` — Núcleo de temas V02;
+- `34894892620` — Integração transversal V08.
+
+Os failures iniciais de PR que terminaram antes da alocação do runner continuam históricos e não foram reclassificados.
+
+### Integração e pós-merge
+
+O PR #48 foi integrado no commit `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b` após o aceite explícito. No pós-merge, **12/12 workflows disparados por `push` na `main` concluíram com `success`**; o workflow específico V10 é o run `34896944061`. Não houve failure pós-merge nesse commit.
+
+## Gates de fechamento Git
 
 1. suíte V10 verde — **FECHADO**;
 2. regressões V01–V10 verdes — **FECHADO**;
@@ -81,13 +101,14 @@ No head `c114cddedd7775cecb1cf8b672ad33e4a9f5365f`:
 4. bundle V10 criado e verificado — **FECHADO**;
 5. source/simulado equivalentes — **FECHADO**;
 6. validador 0 falhas / 0 avisos — **FECHADO**;
-7. PR mergeável e checks reais verdes — **PENDENTE DA PR**;
-8. diff sem temporários e sem credenciais — **FECHADO NA AUDITORIA PRÉ-PR**;
-9. documentação com resultados reais e failures preservados — **FECHADO NA BRANCH; A REVALIDAR NO HEAD DOCUMENTAL FINAL**.
+7. PR mergeável e checks reais verdes — **FECHADO**;
+8. diff sem temporários e sem credenciais — **FECHADO**;
+9. aceite explícito — **FECHADO**;
+10. merge funcional — **FECHADO**;
+11. workflows pós-merge — **FECHADO, 12/12 SUCCESS**;
+12. reconciliação documental viva — **EM FECHAMENTO NESTA ETAPA DOCUMENTAL**.
 
-A comparação pré-PR mostrou a candidata à frente da base, sem commits atrás, e alterações restritas ao App V10, seu espelho, tooling/testes/CI e documentação. Não entram schema, tokens, paleta ou adaptadores visuais existentes.
-
-## Pendências que não bloqueiam a candidata Git, mas bloqueiam homologação operacional
+## Pendências que não bloqueiam o fechamento Git, mas bloqueiam homologação operacional
 
 - deploy autorizado de Databricks App;
 - associação real do UC Volume;
@@ -101,4 +122,4 @@ A comparação pré-PR mostrou a candidata à frente da base, sem commits atrás
 
 ## Próximo passo
 
-Reexecutar o workflow no head documental final. Se continuar integralmente verde, abrir a PR V10 em **draft**, auditar mergeability e todos os checks realmente disparados. A PR pode ser apresentada como candidata pronta para aceite, mas o merge continua dependente de aceite explícito de Rodrigo. V11 não deve ser iniciada.
+Integrar esta reconciliação exclusivamente documental após os gates da própria PR. Depois disso, a V10 fica fechada no Git. V11/AI-BI permanece uma sprint separada e não é iniciada por este fechamento.
