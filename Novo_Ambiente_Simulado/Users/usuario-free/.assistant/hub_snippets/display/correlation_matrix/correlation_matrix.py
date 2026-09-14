@@ -1,5 +1,9 @@
+"""Heatmap de correlação com Plotly para DataFrames PySpark.
 
-"""Heatmap de correlação com Plotly para DataFrames PySpark."""
+A API legada continua usando a escala ``Blues`` e o tema institucional histórico.
+A V07 acrescenta uma rota opt-in que recebe ``ResolvedTheme``; cálculo, seleção
+de colunas e pares fortes são compartilhados pelas duas rotas.
+"""
 
 from __future__ import annotations
 
@@ -10,11 +14,25 @@ from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.stat import Correlation
 from pyspark.sql import DataFrame
 
-from hub_snippets.visual.theme_plotly import aplicar_tema
+from hub_snippets.visual.tema import ResolvedTheme
+from hub_snippets.visual.theme_plotly import aplicar_tema, aplicar_tema_resolvido, get_tokens_plotly
 
 
-def plot_correlation(df: DataFrame, cols: Optional[Iterable[str]] = None, method: str = "pearson", threshold_highlight: float = 0.8):
-    """Compute correlation matrix in Spark and return a Plotly heatmap plus strong pairs."""
+def _escala_sequencial(theme: ResolvedTheme):
+    tokens = get_tokens_plotly(theme)
+    cores = list(tokens["palette.sequential"])
+    return [[i / (len(cores) - 1), cor] for i, cor in enumerate(cores)]
+
+
+def _plot_correlation(
+    df: DataFrame,
+    cols: Optional[Iterable[str]],
+    method: str,
+    threshold_highlight: float,
+    *,
+    theme: Optional[ResolvedTheme],
+):
+    colorscale = "Blues" if theme is None else _escala_sequencial(theme)
     selected_cols = list(cols) if cols else [
         c for c, t in df.dtypes
         if any(token in t for token in ("tinyint", "smallint", "int", "bigint", "float", "double", "decimal"))
@@ -30,9 +48,12 @@ def plot_correlation(df: DataFrame, cols: Optional[Iterable[str]] = None, method
     vector_df = assembler.transform(df.select(*selected_cols).na.drop())
     matrix = Correlation.corr(vector_df, "features", method).collect()[0][0].toArray().tolist()
 
-    fig = go.Figure(data=go.Heatmap(z=matrix, x=selected_cols, y=selected_cols, colorscale="Blues", zmin=-1, zmax=1))
+    fig = go.Figure(data=go.Heatmap(z=matrix, x=selected_cols, y=selected_cols, colorscale=colorscale, zmin=-1, zmax=1))
     fig.update_layout(title="Matriz de correlação")
-    fig = aplicar_tema(fig, subtitulo=f"Método: {method}")
+    if theme is None:
+        aplicar_tema(fig, subtitulo=f"Método: {method}")
+    else:
+        aplicar_tema_resolvido(fig, theme, subtitulo=f"Método: {method}")
 
     strong_pairs: List[Tuple[str, str, float]] = []
     for i, c1 in enumerate(selected_cols):
@@ -42,4 +63,21 @@ def plot_correlation(df: DataFrame, cols: Optional[Iterable[str]] = None, method
     return fig, strong_pairs
 
 
+def plot_correlation(df: DataFrame, cols: Optional[Iterable[str]] = None, method: str = "pearson", threshold_highlight: float = 0.8):
+    """Compute correlation matrix in Spark and return the legacy Plotly heatmap plus strong pairs."""
+    return _plot_correlation(df, cols, method, threshold_highlight, theme=None)
+
+
+def plot_correlation_resolvido(
+    df: DataFrame,
+    theme: ResolvedTheme,
+    cols: Optional[Iterable[str]] = None,
+    method: str = "pearson",
+    threshold_highlight: float = 0.8,
+):
+    """Compute a mesma correlação e aplica explicitamente um tema V02 notebook/light."""
+    return _plot_correlation(df, cols, method, threshold_highlight, theme=theme)
+
+
 plot_correlation_matrix = plot_correlation
+plot_correlation_matrix_resolvido = plot_correlation_resolvido

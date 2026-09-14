@@ -2,11 +2,13 @@
 
 As três funções legadas permanecem compatíveis. A V03 acrescenta uma rota opt-in
 que consome ``ResolvedTheme`` da V02 sem alterar sessão, figura ou configuração
-legada durante o simples import.
+legada durante o simples import. A V07 expõe uma cópia dos tokens já revalidados
+para consumidores visuais que precisam preservar semânticas próprias de cor.
 """
 
 from __future__ import annotations
 
+from copy import deepcopy
 import json
 import re
 from typing import Any, Dict, Optional
@@ -102,6 +104,18 @@ def _dados_tema_plotly(theme: ResolvedTheme) -> tuple[dict[str, Any], Any]:
             action="Mantenha o modo light nesta etapa; dark/high_contrast exigem tokens de superfície próprios antes de uso.",
         )
     return data, data["tokens"]
+
+
+def get_tokens_plotly(theme: ResolvedTheme) -> Dict[str, Any]:
+    """Devolve cópia dos tokens notebook/light após as mesmas guardas da V03.
+
+    Esta função existe para consumidores V07 que possuem semântica visual própria,
+    como ``palette.curves_legacy`` ou ``semantic.warning``. Ela não aceita
+    dicionário cru, não lê campos privados de ``ResolvedTheme`` e não altera a
+    sessão Plotly. A cópia impede que o consumidor modifique o resultado validado.
+    """
+    _data, tokens = _dados_tema_plotly(theme)
+    return deepcopy(tokens)
 
 
 def get_tema_plotly(theme: ResolvedTheme) -> Dict[str, Any]:

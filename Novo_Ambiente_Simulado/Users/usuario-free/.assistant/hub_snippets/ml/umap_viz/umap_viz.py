@@ -1,12 +1,12 @@
 """
 Visualização 2D com UMAP para clusters.
 
-Uso:
+Uso legado:
     from hub_snippets.ml.umap_viz import plot_umap_clusters
-    fig = plot_umap_clusters(X_scaled, labels, title="Segmentação de clientes")
+    fig = plot_umap_clusters(X_scaled, labels)
 
-Autor: Rodrigo via assistente
-Versão: 1.1 — Adequação visual (paleta Caixa + tema institucional)
+A V07 acrescenta ``plot_umap_clusters_resolvido``. A função reaproveita a rota
+legada para calcular exatamente o mesmo embedding e altera somente aparência.
 """
 
 import numpy as np
@@ -14,12 +14,11 @@ import plotly.express as px
 import plotly.graph_objects as go
 from typing import Optional, List
 
+from hub_snippets.constants import colors
+from hub_snippets.visual.tema import ResolvedTheme
+from hub_snippets.visual.theme_plotly import aplicar_tema_resolvido, get_tokens_plotly
 
 SEED = 42
-
-# Paleta institucional Caixa
-from hub_snippets.constants import colors
-
 PALETA_CATEGORICA = colors.PALETA_CATEGORICA
 AZUL_CAIXA = colors.AZUL_CAIXA
 
@@ -41,17 +40,7 @@ def compute_umap(
     n_neighbors: int = 15,
     min_dist: float = 0.1,
 ) -> np.ndarray:
-    """Calcula embedding UMAP 2D.
-
-    Args:
-        X: Dados escalados (N x features).
-        n_components: Dimensões do embedding (2 ou 3).
-        n_neighbors: Vizinhos para UMAP.
-        min_dist: Distância mínima entre pontos.
-
-    Returns:
-        Array (N x n_components) com coordenadas UMAP.
-    """
+    """Calcula embedding UMAP 2D."""
     from umap import UMAP
 
     reducer = UMAP(
@@ -71,19 +60,7 @@ def plot_umap_clusters(
     point_size: int = 3,
     n: Optional[int] = None,
 ) -> go.Figure:
-    """Gera scatter plot UMAP 2D colorido por cluster com tema institucional.
-
-    Args:
-        X_scaled: Dados escalados.
-        labels: Array de labels de cluster.
-        title: Título do gráfico.
-        cluster_names: Nomes opcionais para clusters.
-        point_size: Tamanho dos pontos.
-        n: N amostral para rodapé.
-
-    Returns:
-        Plotly Figure.
-    """
+    """Gera scatter plot UMAP 2D colorido por cluster com tema institucional legado."""
     embedding = compute_umap(X_scaled)
 
     import pandas as pd
@@ -109,7 +86,6 @@ def plot_umap_clusters(
     fig.update_layout(**TEMA_BASE)
     fig.update_layout(title=title)
 
-    # Rodapé
     n_display = n or len(X_scaled)
     n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
     footer = f"N = {n_display:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")
@@ -119,5 +95,28 @@ def plot_umap_clusters(
         x=0, y=-0.15, showarrow=False,
         font=dict(size=10, color=colors.TEXTO_SECUNDARIO), xanchor="left",
     )
+    return fig
 
+
+def plot_umap_clusters_resolvido(
+    X_scaled: np.ndarray,
+    labels: np.ndarray,
+    theme: ResolvedTheme,
+    title: str = "Clusters (UMAP 2D)",
+    cluster_names: Optional[List[str]] = None,
+    point_size: int = 3,
+    n: Optional[int] = None,
+) -> go.Figure:
+    """Calcula o mesmo UMAP e aplica explicitamente um tema V02 notebook/light."""
+    tokens = get_tokens_plotly(theme)  # valida antes do cálculo potencialmente caro
+    fig = plot_umap_clusters(X_scaled, labels, title, cluster_names, point_size, n)
+    palette = list(tokens["palette.categorical"])
+    for idx, trace in enumerate(fig.data):
+        trace.marker.color = palette[idx % len(palette)]
+    aplicar_tema_resolvido(fig, theme)
+    fig.update_layout(title=title)
+    if fig.layout.annotations:
+        footer = fig.layout.annotations[-1]
+        footer.font.color = tokens["text.secondary"]
+        footer.font.size = tokens["chart.footer_px"]
     return fig
