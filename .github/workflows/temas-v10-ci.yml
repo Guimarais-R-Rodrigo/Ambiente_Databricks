@@ -45,8 +45,18 @@ jobs:
           pnpm --dir tools/readme_visuals install --frozen-lockfile
       - name: V10 — App, identidade, persistência e bundle
         run: python -B tools/tests/test_temas_v10.py -v
-      - name: Sintaxe do shell Streamlit
-        run: python -m py_compile ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/app.py ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/app_service.py
+      - name: Sintaxe do shell Streamlit sem bytecode no produto
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          paths = [
+              Path('ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/app.py'),
+              Path('ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/app_service.py'),
+          ]
+          for path in paths:
+              compile(path.read_text(encoding='utf-8'), str(path), 'exec')
+          print('OK: sintaxe V10 compilada em memória')
+          PY
       - name: Regressões de temas V01–V10
         run: python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
       - name: Compatibilidade visual V00
