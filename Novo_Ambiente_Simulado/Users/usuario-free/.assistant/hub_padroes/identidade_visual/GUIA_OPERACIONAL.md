@@ -2,10 +2,10 @@
 
 ## Antes de começar
 
-O núcleo V02 está integrado no Git como verificador/resolvedor. V03/V04 acrescentam consumidores Plotly/HTML opt-in; V05 oferece o Visual Lab; V06 integra geração editorial; V07 amplia consumidores runtime e formatos exercitados; V08 alinha orientação transversal e V09 protege o transporte no kit. Nenhuma dessas camadas troca o caminho legado por padrão.
+O núcleo V02 está integrado no Git como verificador/resolvedor. V03/V04 acrescentam consumidores Plotly/HTML opt-in; V05 oferece o Visual Lab; V06 integra geração editorial; V07 amplia consumidores runtime e formatos exercitados; V08 alinha orientação transversal; V09 protege o transporte no kit; e V10 integra a superfície Databricks App `authoring_only`. Nenhuma dessas camadas troca o caminho legado por padrão.
 Seu notebook atual continua igual. Para usar o pacote no workspace de trabalho, a revisão integrada ainda precisa ser instalada/publicada pelo procedimento autorizado e homologada no destino. Não publique arquivos por conta própria para experimentar uma cor.
 
-A V10 está em candidata separada e acrescenta uma interface Databricks App de autoria/persistência sobre o mesmo Visual Lab. Ela ainda não foi aceita, mesclada ou implantada e não cria caminho de aprovação/publicação.
+A V11 está em candidata separada. Ela acrescenta uma ponte local/fail-closed entre um `ResolvedTheme` notebook e capacidades de tema de dashboards AI/BI. A ponte não altera `theme.schema.json`, não torna `context="aibi"` válido, não chama Databricks e não publica dashboard.
 
 Quem só precisa acompanhar a entrega pode ler a seção “Interpretar a saída” abaixo.
 Quem vai executar precisa de Python, do pacote completo `.assistant` e das bibliotecas
@@ -93,13 +93,21 @@ SHAP/Matplotlib e Kaplan–Meier continuam exceções explícitas ao theming atu
 
 A geração orientada por tema recebe um derivado controlado do `ResolvedTheme` e produz candidatos fora do pacote visual ativo. Gerar um asset não o promove. Preserve hashes/recursos congelados e siga o fluxo de revisão antes de qualquer substituição.
 
-## Usar o Databricks App V10 candidato
+## Usar o Databricks App V10 integrado
 
-Se você estiver revisando a candidata V10 no Git, consulte o [guia de primeiro uso do App](databricks_app/GUIA_PRIMEIRO_USO.md). A interface reaproveita o Visual Lab para escolher uma base, ajustar, comparar, salvar e reabrir a própria sessão.
+O [guia de primeiro uso do App](databricks_app/GUIA_PRIMEIRO_USO.md) explica a superfície V10. Ela reaproveita o Visual Lab para escolher uma base, ajustar, comparar, salvar e reabrir a própria sessão.
 
-A candidata é `authoring_only`: não existe botão para aprovar, publicar, promover ou apagar histórico. O modo de desenvolvimento local não substitui autenticação Databricks. Um deploy futuro exige autorização separada, recurso `theme_storage` apontando para Unity Catalog Volume e permissões reais no workspace.
+A superfície é `authoring_only`: não existe botão para aprovar, publicar, promover ou apagar histórico. O modo de desenvolvimento local não substitui autenticação Databricks. Um deploy real continua exigindo autorização separada, recurso `theme_storage` apontando para Unity Catalog Volume e permissões reais no workspace.
 
-A própria presença desses arquivos no Hub não cria um Databricks App. Até existir deploy autorizado e evidência do destino, headers reais, UC Volume real, browser, acessibilidade, concorrência multiusuário e UAT permanecem não homologados.
+A presença dos arquivos V10 no Git não prova deploy. Headers reais, UC Volume real, browser, acessibilidade, concorrência multiusuário e UAT continuam não homologados.
+
+## Usar a ponte AI/BI V11 candidata
+
+Para entender o fluxo de AI/BI, abra o [guia de primeiro uso V11](aibi/GUIA_PRIMEIRO_USO.md). A ponte recebe somente um `ResolvedTheme` `notebook` íntegro e produz uma projeção auditável dos 48 tokens: traduzidos, aproximados ou não suportados.
+
+A projeção `hub-aibi-theme-projection` **não é** o JSON nativo aceito pelo botão `Import theme`. Como o schema completo desse arquivo não está publicado nas fontes oficiais verificadas, a V11 não inventa campos. Um candidato nativo só pode ser criado sobre um export real, com SHA-256 fixado e JSON Pointers revisados para campos já existentes; aproximações nunca são aplicadas automaticamente.
+
+O tema do workspace e o tema local do dashboard também não são intercambiáveis. Gerenciar o tema do workspace exige administrador; um dashboard existente recebe snapshot ao aplicar o workspace theme e mudanças futuras não se propagam automaticamente. Publicar dashboard permanece ação separada e não é implementada pela V11.
 
 ## Para pedir ajuda
 

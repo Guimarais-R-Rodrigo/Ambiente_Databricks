@@ -53,7 +53,9 @@ A separação principal é entre **contexto** e **execução**:
 
 ## 🎨 Sistema de Temas
 
-V00–V10 estão aceitas e integradas no Git. A V10 foi aceita por Rodrigo em 14/09/2026 e integrada pelo PR #48: o head reconciliado aceito foi `cb942ee955ff9236f19099e5ed4ceee9beb32000` e o merge efetivo na `main` é `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`. Nenhum deploy Databricks foi autorizado ou executado. A V10 acrescenta uma interface Streamlit para Databricks Apps sobre o mesmo núcleo V02 e Visual Lab V05, com autoria/persistência `authoring_only`, identidade encaminhada pelo proxy e sessões isoladas em Unity Catalog Volume configurado como recurso do App.
+V00–V10 estão aceitas e integradas no Git. A V11 está em candidata separada na branch `codex/temas-v11-aibi-20260914`; não há aceite, merge ou operação real no Databricks. A V10 continua integrada pelo PR #48 no merge `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`, sem deploy Databricks.
+
+A V11 projeta um `ResolvedTheme` `notebook` para capacidades documentadas de temas nativos AI/BI sem criar uma segunda fonte de verdade. `context="aibi"` continua reservado no schema central. A matriz candidata cobre os 48 tokens notebook como **3 traduzidos, 23 aproximados e 22 não suportados**. Como as fontes oficiais verificadas não publicam um schema completo e versionado do JSON produzido por `Export theme`, a V11 não inventa campos nativos: um candidato de importação só pode ser construído sobre um export real fixado por SHA-256 e um binding revisado para campos já existentes. O primeiro gate integralmente verde é o run `34902083889` no head `0d3180c50428d8716b44f264b915a91243ba96c3`: V11 21/21, regressões V01–V11 457/457, V00 12/12 e validador 0 falhas / 0 avisos.
 
 Regras atuais:
 
@@ -64,13 +66,14 @@ Regras atuais:
 - o kit V09 exige `theme_contract` v1 com nove caminhos canônicos protegidos por hash;
 - transporte é obrigatório, ativação continua `manual_opt_in` e publicação continua `not_performed`;
 - a V10 não implementa `context="app"`; o App gerencia propostas `notebook` existentes;
-- a V10 não possui botão/função de aprovar, publicar, promover ou apagar histórico;
+- a V11 não implementa `context="aibi"`, não chama SDK/REST/CLI Databricks e não publica dashboard;
+- tema do workspace e tema local do dashboard têm escopos distintos; reaplicação de workspace theme em dashboard existente é manual, não propagação universal;
 - SHAP/Matplotlib e Kaplan–Meier continuam limites explícitos onde o contrato atual não representa a semântica necessária;
 - nada disso publica automaticamente no Databricks.
 
-Na V10, os gates Git/CI exercitam identidade sintética, isolamento, persistência V05, bundle implantável derivado e regressões locais. No head reconciliado `cb942ee955ff9236f19099e5ed4ceee9beb32000`, os dez workflows reais de PR concluíram com `success`; depois do merge `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`, os 12 workflows disparados por `push` na `main` também concluíram com `success`, incluindo o workflow V10 `34896944061`. Isso **não** comprova headers reais, permissões/grupos do workspace, UC Volume real, browser, acessibilidade, concorrência multiusuário ou UAT. Nenhuma criação/atualização de Databricks App foi executada por esta sprint.
+Na V10, os gates Git/CI exercitam identidade sintética, isolamento, persistência V05, bundle implantável derivado e regressões locais. No head reconciliado `cb942ee955ff9236f19099e5ed4ceee9beb32000`, os dez workflows reais de PR concluíram com `success`; depois do merge `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`, os 12 workflows disparados por `push` na `main` também concluíram com `success`, incluindo o workflow V10 `34896944061`. Isso **não** comprova headers reais, permissões/grupos do workspace, UC Volume real, browser, acessibilidade, concorrência multiusuário ou UAT. Nenhuma criação/atualização de Databricks App foi executada por essa sprint.
 
-Detalhes da integração: [V10](docs/sprints/sistema_temas/V10/README.md) e [checkpoint V10](docs/sprints/sistema_temas/V10/CHECKPOINT_V10.md). As evidências V09 permanecem em [V09](docs/sprints/sistema_temas/V09/README.md).
+Detalhes da candidata atual: [V11](docs/sprints/sistema_temas/V11/README.md) e [checkpoint V11](docs/sprints/sistema_temas/V11/CHECKPOINT_V11.md). A integração anterior permanece em [V10](docs/sprints/sistema_temas/V10/README.md), [checkpoint V10](docs/sprints/sistema_temas/V10/CHECKPOINT_V10.md) e [V09](docs/sprints/sistema_temas/V09/README.md).
 
 ## 🔄 Como o contexto chega à Genie Code
 
@@ -102,7 +105,7 @@ raiz analisada     : /home/runner/work/Ambiente_Databricks/Ambiente_Databricks/a
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 92 caminhos verificados
-markdown / links   : 220 arquivos / 1394 links relativos
+markdown / links   : 222 arquivos / 1395 links relativos
 notebooks / links  : 80 notebooks / 101 links relativos
 readmes de objeto  : 76/76 operacionais; 3/3 exemplares; 0 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 62 conferidas (nome, arquivos, __init__)
@@ -113,10 +116,10 @@ saída colada       : 79 notebooks com bloco real, 0 sem
 idioma da docstring: 62 módulos, 0 com docstring em inglês
 normas do molde    : 72 arquivos, 0 violação(ões)
 notebook exercita  : 60 objetos, 0 notebook(s) que só importam
-python (AST)       : 219 arquivos
+python (AST)       : 221 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1392 arquivos varridos no repositório editável/derivado
-repo (links)       : 1878 links fora da raiz analisada
+repo (identidade)  : 1409 arquivos varridos no repositório editável/derivado
+repo (links)       : 1887 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)
