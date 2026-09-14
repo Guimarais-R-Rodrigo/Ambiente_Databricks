@@ -21,7 +21,7 @@ Handles, nomes, versões e paths externos não são hardcoded no repositório. S
 
 ## Consequências
 
-- O contrato `GEGOD_HANDOFF` citado nas conversas será tratado no Git por nome genérico de handoff de governança; binding real fica no ambiente de trabalho.
+- O contrato de handoff de governança usa nome genérico no Git; o binding para handles institucionais reais fica no ambiente de trabalho.
 - Mudança nas regras externas não deve exigir reescrever a metodologia interna, exceto se o contrato de handoff mudar materialmente.
 
 ## Referências
