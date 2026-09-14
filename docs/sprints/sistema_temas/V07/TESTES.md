@@ -2,7 +2,7 @@
 
 ## Escopo automatizado
 
-A suíte específica é `tools/tests/test_temas_v07.py`. Ela prova, sem Databricks remoto:
+A suíte específica da V07 é a família `tools/tests/test_temas_v07*.py`, formada por `test_temas_v07.py` e `test_temas_v07_mirror.py`. Ela prova, sem Databricks remoto:
 
 - o registro estruturado cobre todos os nove consumidores runtime de `display`/`ml` identificados para esta sprint;
 - controles declarados pela V07 possuem ao menos um consumidor suportado;
@@ -12,6 +12,7 @@ A suíte específica é `tools/tests/test_temas_v07.py`. Ela prova, sem Databric
 - timeline do monitor preserva períodos, valores e thresholds; apenas cores/layout variam;
 - UMAP resolvido reaproveita as mesmas coordenadas/labels e não torna `umap-learn` import obrigatório;
 - vintage resolvido preserva pontos e matriz e usa paletas categórica/sequencial;
+- a correlação resolvida usa `palette.diverging`, coerente com o domínio simétrico de -1 a +1, e a guarda rejeita regressão para `palette.sequential`;
 - consumidores PySpark possuem rotas resolvidas sem duplicar contrato analítico;
 - SHAP e Kaplan–Meier permanecem exceções declaradas, não suporte implícito;
 - exportação HTML local de uma figura resolvida preserva o tema;
@@ -75,7 +76,7 @@ Uma rodada de escrita controlada substituiu no checkout os dois números do READ
 
 Esse sucesso é preservado como evidência da reconciliação, mas não é usado sozinho como aceite da candidata porque o workflow daquele run possuía permissão de escrita transitória. O commit produzido tocou somente `README.md` e `CHANGELOG.md`.
 
-## `34861318310` — SUCCESS com workflow permanente read-only
+## `34861318310` — SUCCESS permanente antes da revisão semântica
 
 Depois da reconciliação, o workflow V07 foi restaurado para `contents: read` e `persist-credentials: false`. Nesse head permanente concluíram com `success`:
 
@@ -85,13 +86,45 @@ Depois da reconciliação, o workflow V07 foi restaurado para `contents: read` e
 - validação estrutural/documental;
 - escopo.
 
-A `main` continuava em `0c0c71bce4bbc09130ec51eec8245057be4f3d81`, portanto a branch permanecia `behind_by=0`.
+Esse run permanece sucesso real, mas foi superado por uma revisão semântica posterior antes da PR.
 
-## Estado antes da PR
+## Revisão semântica da correlação
 
-Este registro é a última edição documental planejada antes da PR. Como a própria atualização deste arquivo cria um novo SHA, o workflow permanente V07 deve ser repetido nesse head exato. Só depois de verde o diff será revisado novamente e a PR será aberta em draft; CI agregado e demais checks disparados pela PR devem ser auditados no mesmo SHA.
+A revisão do diff antes da PR identificou uma inconsistência que os testes anteriores não capturavam: o heatmap de correlação possui domínio simétrico de **-1 a +1**, enquanto a primeira implementação V07 havia conectado a rota resolvida a `palette.sequential`.
 
-Nenhum failure acima é convertido retroativamente em sucesso.
+O contrato de temas já possui `palette.diverging`, com centro neutro e extremos de sinais opostos. A correção, portanto, foi usar `palette.diverging` na correlação, sincronizar código/README no ambiente simulado, atualizar o registro estruturado e acrescentar uma guarda permanente que falha se a implementação voltar a usar `palette.sequential` nesse consumidor. Cálculo Spark, matriz, threshold e pares fortes não foram alterados.
+
+## `34861831151` — SUCCESS transitório da correção semântica
+
+A rodada transitória que sincronizou a correção semântica concluiu com:
+
+- V07: **19/19 PASS**;
+- regressões V01–V07: **383/383 PASS**;
+- V00: **12/12 PASS**;
+- validação estrutural/documental: **APROVADO — 0 falhas, 0 avisos**;
+- métricas do README conferidas em **1345 arquivos** de identidade e **1849 links fora da raiz**;
+- escopo: **PASS**.
+
+Esse run usou permissão de escrita somente para sincronizar os arquivos envolvidos e, por isso, não substitui a evidência de um head permanente read-only.
+
+## `34862109553` — SUCCESS permanente após a correção semântica
+
+No head `a7982d3d439584dd9d952df8ced326bf908f40e3`, com workflow novamente permanente (`contents: read`, `persist-credentials: false`), passaram:
+
+- suíte V07: **19/19**;
+- regressões cumulativas V01–V07: **383/383**;
+- compatibilidade visual V00: **12/12**;
+- validação estrutural/documental: **APROVADO — 0 falhas, 0 avisos**;
+- métricas conferidas: **1345 arquivos** de identidade e **1849 links fora da raiz**;
+- escopo: **PASS**.
+
+Esse head também confirmou a guarda `test_correlation_uses_diverging_palette` e a equivalência byte a byte entre fonte e ambiente simulado.
+
+## Último gate antes da PR
+
+Esta atualização consolida o histórico e cria um novo SHA. Por governança, o workflow permanente V07 deve ser repetido nesse SHA exato. Somente depois de verde serão feitas a revisão final de diff/base e a abertura da PR em **draft**. Os checks disparados pela PR também precisarão concluir no mesmo head antes de solicitar aceite de integração.
+
+Nenhum failure acima é convertido retroativamente em sucesso. Nenhuma publicação Databricks foi realizada e a V08 não foi iniciada.
 
 ## O que PASS não prova
 
