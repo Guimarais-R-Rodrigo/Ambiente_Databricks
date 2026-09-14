@@ -2,9 +2,9 @@
 
 ## Estado
 
-**CANDIDATA TÉCNICA PÓS-A1 E PÓS-FECHAMENTO V09 — PRONTA PARA GATE HUMANO APÓS A ÚLTIMA REPETIÇÃO AUTOMÁTICA; Q-01 CONTINUA BLOQUEADOR.**
+**CANDIDATA TÉCNICA PÓS-A1 E PÓS-FECHAMENTO V09 — D1-B REGISTRADA; D2 CONTINUA PENDENTE.**
 
-A fundação documental e arquitetural da MM00 foi implementada, auditada independentemente e reconciliada com a `main` após o fechamento documental V09. A auditoria devolveu `APTA_COM_CORRECOES`; M-01 foi corrigido e Q-01 permanece aberto. Isso **não** autoriza MM01, merge ou promoção dos ADRs propostos para aceitos.
+A fundação documental e arquitetural da MM00 foi implementada, auditada independentemente e reconciliada com a `main` após o fechamento documental V09. A auditoria devolveu `APTA_COM_CORRECOES`; M-01 foi corrigido. Q-01 permanece um achado procedente, mas sua resolução foi diferida por exceção humana exclusiva D1-B. Isso **não** autoriza MM01, merge ou promoção dos ADRs propostos para aceitos.
 
 ## Baseline e reconciliação
 
@@ -20,6 +20,7 @@ A fundação documental e arquitetural da MM00 foi implementada, auditada indepe
 - Reconciliação MM00/V09: `922ae38491cb7a502b834b092ea637620b54300a`.
 - Fechamento documental V09: PR #47 / `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb`.
 - Reconciliação MM00 sobre a V09 fechada: `26cf7c8edd631f97b5c0541daff2e73dc2286a71`.
+- Head técnico pré-D1 validado: `6f1375efe1a610eca30815b1866cc5d7049514a4`.
 
 ## Entregas
 
@@ -27,12 +28,12 @@ A fundação documental e arquitetural da MM00 foi implementada, auditada indepe
 |---|---|
 | Plano Mestre MM00–MM13 | versionado |
 | README da iniciativa | versionado |
-| README MM00 | reconciliado após M-01 e fechamento V09 |
+| README MM00 | reconciliado após M-01/V09 e atualizado para D1-B |
 | Inventário | versionado |
 | Matriz de reuso | versionado; A1 confirmou fronteiras |
 | Matriz de riscos | versionado |
 | Matriz de dependências | versionado |
-| Testes/evidências | reconciliado pós-A1/V09 |
+| Testes/evidências | reconciliado pós-A1/V09/D1 |
 | ADR-0014 a ADR-0020 | versionados como **Propostos** |
 | Índice de ADRs | sem promoção de status |
 | Índice de sprints | `main` V09 fechada + seção MM00 |
@@ -40,12 +41,14 @@ A fundação documental e arquitetural da MM00 foi implementada, auditada indepe
 | Auditoria A1 independente | **executada** |
 | Resultado A1 | `APTA_COM_CORRECOES` |
 | M-01 — cronologia viva | **corrigido** |
-| Q-01 — entrada própria no `CHANGELOG.md` | **aberto / bloqueador** |
-| Diff técnico contra a `main` fechada | 23 arquivos documentais/contextuais; zero alteração funcional própria |
+| Q-01 — entrada própria no `CHANGELOG.md` | **diferido por D1-B; não é PASS** |
+| D1 — tratamento de Q-01 | **D1-B autorizada** |
+| D2 — ADR-0014 a ADR-0020 | **pendente** |
+| Diff técnico contra a `main` fechada | 23 arquivos documentais/contextuais antes do registro D1; zero alteração funcional própria |
 | Métricas do README raiz | **1374 arquivos / 1859 links** |
-| Bateria no head `26cf7c8e...` | **4/4 workflows verdes** |
-| Última repetição desta atualização de evidência | pendente |
-| Aceite humano explícito | pendente |
+| Bateria no head `6f1375efe1a610eca30815b1866cc5d7049514a4` | **4/4 workflows verdes** |
+| Bateria pós-registro D1-B | pendente |
+| Aceite humano explícito da MM00 | pendente |
 
 ## Resultado da A1
 
@@ -62,28 +65,30 @@ A auditoria independente confirmou:
 
 A A1 não encontrou achado `DIVERGE` atribuível à MM00.
 
-## Correções da A1
+## Correções e decisões pós-A1
 
 ### M-01 — cronologia
 
 **Procede. Corrigido e preservado após as reconciliações V09.** README, TESTES e CHECKPOINT distinguem abertura, V08, A1, integração V09, fechamento documental V09 e reconciliações correspondentes.
 
-### Q-01 — changelog
+### Q-01 — changelog / D1-B
 
-**Procede. Continua bloqueador.**
+**Procede. Tratamento humano registrado como D1-B.**
 
-A tentativa de inserir a entrada MM00 por substituição integral alterou três linhas históricas além do bloco novo. A inspeção do patch recusou essa versão; o blob histórico original `2095dbcf1dd6b99e7ff008a9180361702222092b` foi restaurado por SHA e preservado nas duas reconciliações V09.
+A tentativa de inserir a entrada MM00 por substituição integral alterou três linhas históricas além do bloco novo. A inspeção do patch recusou essa versão; o blob histórico original `2095dbcf1dd6b99e7ff008a9180361702222092b` foi restaurado por SHA e preservado nas reconciliações V09.
 
-Consequência:
+Foi concedida exceção explícita e exclusiva para diferir a entrada MM00 para a manutenção documental imediatamente posterior. Portanto:
 
 - nenhuma linha histórica permanece alterada;
 - `CHANGELOG.md` continua idêntico à `main`;
 - a entrada MM00 ainda não existe;
-- Q-01 não será convertido em PASS sem alteração estritamente aditiva comprovada ou exceção humana explícita.
+- Q-01 **não** é PASS;
+- Q-01 deixa de bloquear apenas o aceite/merge da MM00;
+- o fechamento documental pós-MM00 deverá registrar a entrada antes do início efetivo da MM01.
 
 ## Escopo confirmado contra a `main` fechada V09
 
-O merge `26cf7c8e...` foi montado usando `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb` como base documental. Verificações de patch confirmaram:
+A reconciliação foi montada usando `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb` como base documental. Verificações de patch confirmaram:
 
 - `README.md` raiz difere da `main` **somente** nas duas linhas de métricas: 1355→1374 arquivos e 1850→1859 links;
 - `docs/sprints/README.md` difere da `main` **somente** pela seção Framework de Micromodelos — MM00;
@@ -92,48 +97,39 @@ O merge `26cf7c8e...` foi montado usando `main=d6655411ca4ac1834b0983f6ce6bdadc3
 
 ## Gates automáticos
 
-### Head técnico `ffc7981a...`, antes do fechamento documental V09
+### Head técnico `6f1375efe1a610eca30815b1866cc5d7049514a4`, antes do registro D1-B
 
-- CI geral `34882724684`: `success`;
-- V00 `34882724514`: `success`;
-- V01 `34882724892`: `success`;
-- V02 `34882724729`: `success`.
-
-### Head técnico `26cf7c8e...`, reconciliado com `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb`
-
-- CI geral `34883378412`: `success`;
-- V00 `34883378511`: `success`;
-- V01 `34883378518`: `success`;
-- V02 `34883378432`: `success`.
+- CI geral `34884154201`: `success`;
+- V00 `34884154328`: `success`;
+- V01 `34884154292`: `success`;
+- V02 `34884154221`: `success`.
 
 O gate manteve a composição em **1374 arquivos / 1859 links**, sem relaxar validador.
 
-Como TESTES/CHECKPOINT/README MM00 foram atualizados somente para registrar esse último marco, a árvore corrente deve executar uma repetição final. Depois dela não haverá novo commit antes da decisão humana, salvo falha demonstrada ou ação decorrente de Q-01.
+A árvore atual contém somente o registro documental da decisão D1-B e deve repetir os mesmos gates antes do próximo gate humano.
 
 ## Bloqueios restantes para aceite da MM00
 
-1. última repetição automática desta atualização de evidência deve ficar verde;
-2. reconsultar `main` e reconfirmar os 23 arquivos do diff imediatamente antes da decisão;
-3. resolver Q-01 com alteração **estritamente aditiva** do `CHANGELOG.md`, comprovada por patch, **ou** obter exceção humana explícita e registrada para diferir esse único registro;
-4. apresentar ADR-0014 a ADR-0020 para decisão humana explícita;
-5. após o aceite, registrar os status aceitos, revalidar a árvore exata e somente então integrar a MM00;
-6. MM01 nasce em branch/sprint própria apenas após integração da MM00.
+1. bateria automática pós-D1-B deve ficar verde;
+2. reconsultar `main` e reconfirmar o diff imediatamente antes da decisão final;
+3. decidir D2 sobre ADR-0014 a ADR-0020;
+4. obter aceite humano explícito da MM00;
+5. registrar os estados finais autorizados, revalidar a árvore exata e somente então integrar a MM00;
+6. após o merge, executar a manutenção documental imediatamente posterior que fecha Q-01;
+7. MM01 só pode iniciar depois desse fechamento pós-MM00.
 
 ## Decisões do gate humano
 
 ### D1 — Q-01 / changelog
 
-- **D1-A:** exigir a entrada estritamente aditiva da MM00 no `CHANGELOG.md` antes do aceite; ou
-- **D1-B:** conceder exceção explícita, exclusiva e rastreada para diferir essa entrada para manutenção documental imediatamente posterior, sem converter qualquer outra pendência em PASS.
+**RESOLVIDA COMO D1-B PARA FINS DE GATE DA MM00.** A exceção é exclusiva deste achado e não se propaga para nenhuma outra regra ou pendência.
 
 ### D2 — ADRs MM00
 
-Aceitar ou rejeitar, em bloco ou com ressalvas explícitas, ADR-0014 a ADR-0020 como restrições arquiteturais da MM01/MM02 e sprints seguintes.
-
-O simples comando “prossiga” não é interpretado como D1-B nem como aceite de D2.
+**PENDENTE.** Aceitar, rejeitar ou aceitar com ressalvas explícitas ADR-0014 a ADR-0020 como restrições arquiteturais da MM01/MM02 e sprints seguintes.
 
 ## O que o futuro aceite da MM00 autorizará
 
-Somente preparar/iniciar MM01 — contrato canônico `micromodelo.yaml` — após o merge da MM00.
+Somente concluir a integração da MM00 e, após o fechamento documental pós-merge de Q-01, preparar/iniciar MM01 — contrato canônico `micromodelo.yaml`.
 
 Não autoriza metadata real, mudança em helper compartilhado, piloto corporativo, publicação, composição visual definitiva ou migração de legado.
