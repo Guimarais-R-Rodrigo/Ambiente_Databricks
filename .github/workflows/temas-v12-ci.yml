@@ -67,7 +67,10 @@ jobs:
                 ;;
             esac
           done
-          forbidden='DATABRICKS_'TOKEN'|DATABRICKS_CLIENT_'SECRET'|adb-[0-9]+\.|/Workspace/Users/[^<]|/Volumes/[^<]'
+          credential_pat='DATABRICKS_'TOKEN'|DATABRICKS_CLIENT_'SECRET'|adb-[0-9]+\.'
+          workspace_pat='/Workspace/'Users'/[^<]'
+          volume_pat='/Vol'umes'/[^<]'
+          forbidden="${credential_pat}|${workspace_pat}|${volume_pat}"
           if grep -R -n -E "$forbidden" tools/temas_v12_homologacao.py tools/tests/test_temas_v12.py docs/sprints/sistema_temas/V12; then
             echo 'V12_HYGIENE_FAIL'
             exit 1
