@@ -31,93 +31,99 @@ E reprova se `git diff` contra o SHA-base V08 contiver alteração Python em `am
 
 ### `34866320427` — FAILURE antes da escrita
 
-A migração transitória abortou antes de commit porque o regex do Manual exigia um próximo heading `##`, mas o Sistema de Temas era a última seção do arquivo. Nenhuma integração transversal foi persistida por esse run. O regex foi corrigido para aceitar próximo heading **ou EOF**.
+A migração transitória abortou antes de commit porque o regex do Manual exigia um próximo heading `##`, mas o Sistema de Temas era a última seção do arquivo. Nenhuma integração transversal foi persistida por esse run.
 
 ### `34866493021` — FAILURE transitório da primeira migração
 
-A migração foi aplicada, mas a suíte V08 encontrou duas condições:
-
-1. o template EDA ainda citava literalmente nomes da antiga política local ao dizer para não usá-los;
-2. o teste de workflow read-only reprovou corretamente porque o próprio run de migração usava permissão de escrita temporária.
-
-O mecanismo transitório foi removido pelo próprio commit de migração e o workflow permanente voltou a `contents: read`/`persist-credentials: false`.
+A migração foi aplicada, mas a suíte V08 encontrou nomenclatura visual local residual no template EDA e o teste de workflow read-only reprovou corretamente porque o próprio run era write-enabled.
 
 ### `34866578667` — FAILURE permanente por nomenclatura residual
 
-Com o workflow já read-only, restou apenas a nomenclatura local residual do template EDA. A correção removeu inclusive esses identificadores textuais, mantendo a guarda estrita de “sem segunda fonte de tema”.
+Com o workflow já read-only, restou apenas a nomenclatura local residual no template EDA. A correção removeu inclusive esses identificadores textuais.
 
 ### `34866767026` — FAILURE documental
 
-No head sincronizado após a correção textual:
-
-- V08: **22/22 PASS**;
-- regressões V01–V08: **405/405 PASS**;
-- V00: **12/12 PASS**.
-
-O bloqueio ficou restrito ao validador porque a saída colada do README raiz ainda refletia métricas anteriores.
+Passaram V08 **22/22**, regressões V01–V08 **405/405** e V00 **12/12**. O bloqueio ficou restrito ao README raiz desatualizado.
 
 ### `34866944219` — FAILURE intermediário de espelho
 
-Durante a revisão editorial do template EDA, a fonte foi atualizada em um commit e o espelho no commit imediatamente seguinte. O run disparado no commit intermediário reprovou corretamente `test_updated_assistant_surfaces_match_simulated_bytes`. Nenhum outro contrato foi utilizado para mascarar essa divergência.
+Durante a revisão editorial do template EDA, fonte e simulado ficaram temporariamente diferentes entre dois commits sequenciais. A guarda de espelho reprovou corretamente.
 
 ### `34867002420` — FAILURE documental no head sincronizado
 
-Depois de sincronizar o template revisado, passaram:
+Passaram V08 **22/22**, regressões **405/405** e V00 **12/12**. O validador encontrou apenas métricas antigas no README raiz.
+
+### `34867738695` — FAILURE de configuração transitória
+
+Uma tentativa de reconciliação foi recusada antes da criação de jobs. Nenhum arquivo de produto foi alterado por esse run.
+
+### `34867935251` e `34869358530` — FAILURES documentais de medição
+
+Com checkpoint, índices e changelog estabilizados, os testes permaneceram verdes e o validador mediu o estado final pré-compactação do README. Os failures foram preservados e não mascarados.
+
+### Checks da PR #42 no head `cf5f4523...`
+
+V00, V01, V02 e V03 concluíram com `success`. CI geral, V04, V05, V06 e V08 falharam somente em validação documental. Nos workflows V04/V05/V06/V08, as suítes específicas, regressões cumulativas e V00 passaram antes da etapa documental. No CI geral, todas as demais etapas do gate local passaram.
+
+### `34871141693` — FAILURE documental de uma linha
+
+Depois da compactação do README raiz, passaram:
+
+- V08: **22/22**;
+- regressões V01–V08: **405/405**;
+- V00: **12/12**.
+
+O validador encontrou apenas uma divergência: `repo (links)` estava colado como 1851 e o valor real era **1850**. Foram **1 falha e 0 avisos**.
+
+Nenhum failure acima é reclassificado retroativamente.
+
+## Sucesso final antes do fechamento documental
+
+### `34871401757` — SUCCESS permanente read-only
+
+No head `e80c3abc974022cc3daec8533af4cf47ed09d801`, o workflow permanente concluiu integralmente com `success`:
 
 - V08: **22/22 PASS**;
 - regressões V01–V08: **405/405 PASS**;
-- V00: **12/12 PASS**.
-
-A reprovação ficou somente na saída colada do README raiz. O validador mediu naquele checkout:
-
-- helpers citados: **92**, contra 88 colados;
-- Markdown/links: **217 arquivos / 1382 links**, contra 217/1383 colados;
-- identidade do repositório: **1349 arquivos**, contra 1345 colados;
-- links fora da raiz: **1850**, já coincidente.
-
-Foram três falhas documentais e zero avisos. Esses valores ainda não eram finais porque checkpoint, índices e changelog da própria V08 ainda seriam estabilizados.
-
-### `34867738695` — FAILURE de configuração do workflow transitório
-
-A primeira tentativa de reconciliar índices/changelog por workflow foi recusada pelo GitHub antes de criar jobs. Nenhum arquivo de produto ou documentação foi alterado por esse run. A escrita foi redesenhada para usar um script transitório versionado e auto-removido.
-
-### `34867935251` — FAILURE documental da medição final
-
-Com checkpoint, índices vivos e changelog já estabilizados e workflow permanente novamente read-only, passaram:
-
-- V08: **22/22 PASS**;
-- regressões V01–V08: **405/405 PASS**;
-- V00: **12/12 PASS**.
-
-O validador apontou somente quatro divergências numéricas na saída colada do README raiz, com **0 avisos**. A medição final da candidata é:
-
-- helpers citados: **92 caminhos**;
-- Markdown/links: **217 arquivos / 1382 links relativos**;
+- V00: **12/12 PASS**;
+- validador: **APROVADO — 0 falhas, 0 avisos**;
+- helpers citados: **92**;
+- Markdown/links: **217 / 1382**;
 - identidade do repositório: **1350 arquivos**;
-- links fora da raiz: **1855**.
-
-Esses são os valores usados na reconciliação final do README raiz. Nenhum failure acima é reclassificado retroativamente.
+- links fora da raiz: **1850**;
+- `V08_RUNTIME_EDIT=0`;
+- escopo: **PASS**;
+- `GITHUB_TOKEN`: `Contents: read`, `Metadata: read`;
+- checkout com `persist-credentials: false`.
 
 ## Revisão editorial do template EDA
 
 A primeira versão pós-migração removeu corretamente a política visual paralela, mas reduziu demais o conteúdo do antigo guia. A revisão seguinte recuperou convenções úteis — escolha de gráficos, anotações, emojis, números, tabelas, KPI-line, hierarquia, narrativa de resultados, índice e section headers — sem reintroduzir hexadecimais, paleta própria, dicionário de tema ou CSS visual paralelo.
 
-Fonte e simulado voltaram a apontar para o mesmo conteúdo após a revisão.
+Fonte e simulado permanecem equivalentes nas superfícies cobertas pela V08.
 
-## Estado de fechamento
+## README raiz
 
-A documentação final da sprint — checkpoint, índices vivos e changelog — foi concluída **antes** da medição final do README raiz. A próxima etapa é reconciliar exatamente os quatro números medidos no run `34867935251` e repetir o workflow V08 permanente no novo SHA.
+O README raiz foi compactado para permanecer uma entrada operacional atual e direcionar o histórico detalhado ao índice de sprints, onde ele já é mantido de forma canônica. A compactação eliminou duplicação documental e permitiu que o bloco de métricas voltasse a ser verificável pelo gate.
 
-O head final precisa comprovar:
+O valor final de `repo (links)` é **1850**, confirmado no run `34871401757`.
 
-- 22/22 testes V08;
-- 405/405 regressões V01–V08;
-- 12/12 V00;
-- validador 0 falhas/0 avisos;
+## Último gate da candidata
+
+A atualização de `CHECKPOINT_V08.md` e deste arquivo cria um novo SHA exclusivamente documental. Esse SHA precisa repetir os gates e todos os checks de PR antes do pedido de aceite.
+
+A candidata só será apresentada para integração quando o mesmo head comprovar:
+
+- V08 **22/22**;
+- regressões **405/405**;
+- V00 **12/12**;
+- validador **0/0**;
 - `V08_RUNTIME_EDIT=0`;
-- escopo verde.
+- CI geral e checks aplicáveis da PR verdes;
+- branch sem drift de base;
+- PR #42 ainda em draft.
 
-Então o diff/base serão revisados e uma PR **draft** será aberta no SHA exato. A V08 não será mesclada sem aceite explícito de Rodrigo.
+A V08 não será mesclada sem aceite explícito de Rodrigo. A V09 não foi iniciada.
 
 ## O que PASS não prova
 
