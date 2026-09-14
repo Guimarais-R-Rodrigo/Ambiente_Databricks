@@ -35,19 +35,50 @@ jobs:
       - name: Aplicar correções A1
         run: python tools/mm01_apply_a1_fixes.py
 
+      - name: Ajustar regressão para rejeição na camada formal
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('tools/tests/test_micromodelo_mm01.py')
+          text = path.read_text(encoding='utf-8')
+          old = '        self.assertIn("VALIDATION_HUMAN_GATE", self.codes(approved))\n'
+          new = '        self.assertIn("SCHEMA", self.codes(approved))\n'
+          if text.count(old) != 1:
+              raise SystemExit(f'assertion alvo inesperada: {text.count(old)} ocorrencias')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+
+      - name: Preparar árvore final sem mecanismos transitórios
+        shell: bash
+        run: |
+          git rm tools/mm01_apply_a1_fixes.py .github/workflows/mm01-a1-fix-transient.yml
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('README.md')
+          text = path.read_text(encoding='utf-8')
+          old = 'repo (identidade)  : 1409 arquivos varridos no repositório editável/derivado'
+          new = 'repo (identidade)  : 1420 arquivos varridos no repositório editável/derivado'
+          if text.count(old) != 1:
+              raise SystemExit(f'linha verificavel README inesperada: {text.count(old)} ocorrencias')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+
       - name: Testes MM01 corrigidos
         run: python -B -m unittest tools/tests/test_micromodelo_mm01.py -v
 
-      - name: Gate estrutural
+      - name: Gate estrutural na árvore final
         run: python -B tools/validate_assistant.py --root ambiente_fonte
 
-      - name: Remover mecanismo transitório e publicar correções
+      - name: Publicar correções validadas
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm tools/mm01_apply_a1_fixes.py .github/workflows/mm01-a1-fix-transient.yml
-          git add tools/micromodelo_mm01_contract.py \
+          git add README.md \
+                  tools/micromodelo_mm01_contract.py \
                   tools/tests/test_micromodelo_mm01.py \
                   docs/sprints/micromodelos/MM01/micromodelo.schema.json
           git commit -m "fix(mm01): corrigir achados bloqueantes da auditoria A1"
