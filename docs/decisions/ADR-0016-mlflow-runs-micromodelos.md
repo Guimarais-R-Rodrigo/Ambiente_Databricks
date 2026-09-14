@@ -1,7 +1,7 @@
 # ADR-0016 — MLflow registra runs; YAML registra definição
 
 Data: 2026-09-14
-Status: Proposto
+Status: Aceito pelo usuário em 2026-09-14; integração da MM00 pendente
 Autor: ChatGPT
 
 ## Contexto
@@ -34,3 +34,7 @@ Tracking registra agregados, parâmetros, tags e artifacts. Resultados individua
 
 - `ambiente_fonte/.assistant/hub_snippets/ml/mlflow_run/`
 - `docs/sprints/micromodelos/PLANO_MESTRE.md`
+
+## Ratificação de status — 14/09/2026
+
+O usuário declarou: “D2: Aceito ADR-0014 a ADR-0020 sem ressalvas.” Este ADR fica aceito sem alteração do corpo decisório. O aceite não aprova ainda uma API específica para o perfil rule-based do helper compartilhado; essa adaptação continua sujeita à sprint própria e aos gates previstos. MM01 permanece bloqueada até o merge da MM00 e o fechamento documental pós-MM00 previsto pela exceção D1-B.
