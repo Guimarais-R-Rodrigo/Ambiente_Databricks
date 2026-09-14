@@ -5,8 +5,8 @@ source_of_truth:
   theme: "hub_snippets.visual.tema.ResolvedTheme"
   bridge: "tools/readme_visuals/theme_bridge.py"
   renderer: "tools/readme_visuals/theme_assets.mjs"
-  visual_contracts: "specs/visual_contracts.yaml"
-  frozen_asset_contract: "../hub_padroes/identidade_visual/assets.json"
+  visual_contracts: "ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml"
+  frozen_asset_contract: "ambiente_fonte/.assistant/hub_padroes/identidade_visual/assets.json"
 
 rules:
   - "theme_id seleciona uma configuração canônica; caminho JSON arbitrário não é entrada pública."
@@ -39,31 +39,8 @@ output:
   active_package_mutated: false
 
 manifest_fields:
-  theme:
-    - theme_id
-    - theme_version
-    - context
-    - asset_set_id
-    - source
-    - content_sha256
-    - schema_sha256
-    - asset_manifest_sha256
-    - fingerprint
-  asset:
-    - id
-    - type
-    - variant
-    - classification
-    - action
-    - theme_id
-    - theme_version
-    - width
-    - height
-    - intended_use
-    - files
-    - sha256
-    - svg_sha256
-    - active
+  theme: [theme_id, theme_version, context, asset_set_id, source, content_sha256, schema_sha256, asset_manifest_sha256, fingerprint]
+  asset: [id, type, variant, classification, action, theme_id, theme_version, width, height, intended_use, files, sha256, svg_sha256, active]
 
 scope_limits:
   - "não publica no Databricks"
