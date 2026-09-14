@@ -2,13 +2,15 @@
 
 ## Estado
 
-**CANDIDATA TÉCNICA FUNCIONALMENTE VERDE; NAVEGAÇÃO/DOCUMENTAÇÃO FINAL EM REVALIDAÇÃO; SEM ACEITE, MERGE OU OPERAÇÃO NO DATABRICKS REAL.**
+**CANDIDATA TÉCNICA COM HEAD DOCUMENTAL REVALIDADO; PR AINDA NÃO VALIDADA; SEM ACEITE, MERGE OU OPERAÇÃO NO DATABRICKS REAL.**
 
 Base de início: `a9480391c78e2402986885db0ce08b10e0619a1a`, fechamento documental da V10.
 
 Branch: `codex/temas-v11-aibi-20260914`.
 
-Primeiro head integralmente verde antes da reconciliação final de navegação: `0d3180c50428d8716b44f264b915a91243ba96c3`, run `34902083889`.
+Primeiro head integralmente verde: `0d3180c50428d8716b44f264b915a91243ba96c3`, run `34902083889`.
+
+Head documental reconciliado e revalidado antes deste registro final: `5bb8234422fdd284a9e14815ef566ec0b52a2952`, run `34902853430`.
 
 ## Objetivo
 
@@ -77,15 +79,18 @@ A V11 codifica essas propriedades apenas como política local testável; não co
 
 O arquivo declara `databricks_importable=false`: **não é formato Databricks** e não deve ser importado no workspace.
 
-## Evidência técnica já obtida
+## Evidência técnica obtida
 
-No run `34902083889`, head `0d3180c50428d8716b44f264b915a91243ba96c3`:
+No primeiro run verde `34902083889`, head `0d3180c50428d8716b44f264b915a91243ba96c3`, passaram 21/21 V11, 457/457 regressões V01–V11, V00 12/12, validador 0/0 e escopo.
+
+Depois da reconciliação de navegação/documentação, o run `34902853430`, no head `5bb8234422fdd284a9e14815ef566ec0b52a2952`, repetiu o gate completo em **SUCCESS**:
 - suíte V11: **21/21 PASS**;
 - sintaxe em memória: **PASS**;
 - regressões V01–V11: **457/457 PASS**;
 - V00: **12/12 PASS**;
 - validador estrutural/documental: **0 falhas / 0 avisos**;
 - escopo V11: **PASS**;
+- source/simulado equivalentes;
 - workflow com `Contents: read` e checkout sem credenciais persistentes.
 
 Os failures anteriores `34900693160`, `34901091132` e `34901776770` permanecem registrados como **FAILURE** em `TESTES.md`.
@@ -110,6 +115,8 @@ A V11 só pode pedir aceite quando:
 15. regressões V01–V11 e V00 permanecem verdes;
 16. validador estrutural/documental termina com 0 falhas / 0 avisos;
 17. o head documental final repete o gate completo e os checks reais da PR ficam verdes.
+
+Os itens 1–16 estão comprovados no head documental revalidado. O item 17 permanece pendente até a abertura e execução dos checks reais da PR no novo head documental final.
 
 ## O que PASS não prova
 
