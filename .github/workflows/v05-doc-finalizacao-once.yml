@@ -6,7 +6,7 @@ on:
       - codex/temas-v05-fechamento-r13-20260913
     paths:
       - .github/workflows/v05-doc-finalizacao-once.yml
-      - tools/v05_finalize_docs_once.py
+      - tools/v05_finalize_docs_once_v2.py
 
 permissions:
   contents: write
@@ -20,7 +20,7 @@ jobs:
           fetch-depth: 0
 
       - name: Aplicar patch, renderizar e conferir escopo
-        run: python tools/v05_finalize_docs_once.py
+        run: python tools/v05_finalize_docs_once_v2.py
 
       - name: Commitar somente documentacao conferida
         shell: bash
