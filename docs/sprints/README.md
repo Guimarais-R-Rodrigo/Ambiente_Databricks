@@ -65,13 +65,19 @@ custos e interpretação. Estado, matriz e testes em
 [`RELATORIO_R04A.md`](readmes_objetos/RELATORIO_R04A.md). Cobertura candidata
 25/74; sem publicação, aceite antecipado ou início da R04-B.
 
+## Framework de Micromodelos — MM00 em execução
+
+A [iniciativa MM00–MM13](micromodelos/README.md) usa trilha própria. A [MM00](micromodelos/MM00/README.md) é exclusivamente documental/arquitetural: baseline, inventário, reuso, riscos, dependências, ADRs propostos, testes, auditoria A1 e checkpoint.
+
+A candidata não altera o produto `.assistant`, não cria skill/helper de micromodelo e não autoriza MM01. A A1 devolveu `APTA_COM_CORRECOES`: M-01 foi corrigido e Q-01 do `CHANGELOG.md` continua bloqueador até alteração estritamente aditiva ou exceção humana explícita. O avanço também exige gates verdes, decisão sobre ADR-0014 a ADR-0020, aceite e merge da MM00.
+
 ## Sistema de Temas do Hub
 
-A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V09 estão aceitas e integradas no Git; a V10 é candidata de Databricks App e ainda não possui aceite, merge ou deploy.**
+A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V09 estão aceitas e integradas no Git; a V10 foi aceita por Rodrigo em 14/09/2026 e esta candidata reconciliada aguarda integração no `main`. Não houve deploy Databricks.**
 
 A V10 reutiliza o núcleo V02 e o Visual Lab V05 em uma superfície Streamlit `authoring_only`, com identidade encaminhada pelo proxy, namespace de sessão por SHA-256 e persistência planejada em Unity Catalog Volume via recurso `theme_storage`. Ela não implementa `context="app"`, aprovação, publicação, promoção ou delete de histórico. Evidências e limites estão em [V10](sistema_temas/V10/README.md), [testes V10](sistema_temas/V10/TESTES.md) e [checkpoint V10](sistema_temas/V10/CHECKPOINT_V10.md).
 
-Os runs V10 `34884790130` e `34885407907` permanecem failures. No segundo, V10 19/19, regressões V01–V10 436/436, V00 12/12 e o bundle de 247 arquivos passaram; a reprovação ficou restrita à reconciliação documental/links. Nenhuma operação Databricks foi executada e V11/AI-BI não foi iniciada.
+Os runs V10 `34884790130`, `34885407907` e `34886250755` permanecem failures históricos. O head original `8e59739cbe3e1ce6d49503e7c953c82a98d2dc2c` concluiu o gate de `push` `34887162337` e, após a regularização de quota/billing do GitHub Actions, os dez workflows reais de PR também concluíram com `success`. A reconciliação com a `main` atual deve passar novamente pelos gates antes do merge. Nenhuma operação Databricks foi executada e V11/AI-BI não foi iniciada.
 
 A V09 integra explicitamente o Sistema de Temas ao kit offline de transição: contrato temático no manifesto v2, guarda fail-closed antes do build e conferência de presença/tamanho/SHA256 dos nove arquivos canônicos dentro do ZIP gerado. No pós-merge final, 12/12 workflows de `push` concluíram com `success`, incluindo 43/43 testes com Spark local no workflow operacional. Transporte não significa ativação, promoção ou publicação.
 

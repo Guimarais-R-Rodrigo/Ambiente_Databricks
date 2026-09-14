@@ -62,39 +62,44 @@ Escala planejada: pessoal → squad → missão.
   `A0_light`; não equivale a publicação nem homologação Databricks/Genie Code.
   Estado vigente: `docs/sprints/readmes_objetos/README.md`.
 
-- Sistema de Temas: contrato central e configuração completa por contexto
-  aceitos no `docs/decisions/ADR-0013-sistema-de-temas.md`. A V01 está aceita
-  e integrada no Git; fixtures são entradas de teste, não temas operacionais
-  aprovados. Sem seletor instalado, mudança visual ou publicação no Databricks.
-  Homologação operacional permanece pendente. Estado, limites e retomada:
-  `docs/sprints/sistema_temas/V01/CHECKPOINT_V01.md`.
-
-A V02 foi aceita por Rodrigo e integrada pelo PR #14 no commit
-`d4cabdca4ac68c0a2edbd7f9f621f68962c8f6b8`. O contrato ativo foi promovido para
-`ambiente_fonte/.assistant/hub_padroes/identidade_visual/` e o núcleo de
-carga/validação/resolução está versionado, mas ainda não aplica aparência nem publica
-temas. Estado e limites: `docs/sprints/sistema_temas/V02/CHECKPOINT_V02.md`.
-
-A V03 foi aceita e integrada pelo PR #16 no commit
-`b83a7cde84d7a44fc8a1fed996fda4f8b5b1eec2`. A V04 também foi aceita por Rodrigo
-e integrada pelo PR #21 no commit `5a7b33d7137f88c1ec80315de1b422293b3ba206`:
-componentes HTML, estilos compartilhados e tabela pandas recebem rotas opt-in
-`_resolvido`, preservando as APIs legadas. A árvore do merge coincide com a
-candidata validada e os seis workflows permanentes pós-merge concluíram com
-`success`. Sem publicação Databricks ou homologação operacional. Estado histórico:
-`docs/sprints/sistema_temas/V04/CHECKPOINT_V04.md`.
-
-A reconciliação documental D05 pós-R13 foi integrada à `main` pelo PR #36, commit
-`24ffce298ed543755eb15d5d7c553d02ce15e73e`. Sobre essa base, a V05 — Visual Lab
-— está **somente em candidata de fechamento** na branch
-`codex/temas-v05-fechamento-r13-20260913`: seleção guiada de presets notebook,
-ajuste/compare, rascunho com histórico e persistência/reabertura de sessão com base
-original, proposta, revisão e hashes de linhagem local. Os contratos Python foram
-exercitados em GitHub Actions, mas não há aceite V05, merge, publicação Databricks,
-homologação de navegador/runtime, acessibilidade, ACL real, UAT ou início da V06.
-Estado vigente: `docs/sprints/sistema_temas/V05/CHECKPOINT_V05.md`.
+- Sistema de Temas: contrato central e configuração por contexto definidos em
+  `docs/decisions/ADR-0013-sistema-de-temas.md`. **V00–V09 estão integradas no
+  Git.** A V08 alinhou skills, Hub Padrões, entrada `.assistant`, template EDA e
+  Manual Técnico às fontes de verdade visuais; a V09 levou o contrato temático ao
+  kit offline de transição com guarda de presença/integridade, sem transformar
+  transporte em ativação ou publicação. A integração V09 ocorreu pelo PR #45
+  (`0f7234c4734f1974ebb1a20123f3c26626c67ef3`) e a correção de preparação Node
+  do workflow pelo PR #46 (`4ae714a35a0aafd930a8cd796d962b0a79449b88`).
+  Integração Git não equivale a publicação Databricks nem a homologação de
+  browser/runtime, acessibilidade, ACL, UAT ou promoção visual. Estado vigente:
+  `docs/sprints/sistema_temas/README.md`.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
+
+## Iniciativa de micromodelos — MM00 em fechamento
+
+A branch `micromodelos/mm00-baseline` e a PR #43 registram a fundação documental
+da iniciativa MM00–MM13 em `docs/sprints/micromodelos/`. Os ADRs 0014–0020 foram
+**aceitos sem ressalvas pelo usuário em 2026-09-14**, mas sua integração na `main`
+permanece pendente até o aceite final e merge da MM00. As decisões cobrem:
+micromodelo como artefato de domínio; YAML canônico; MLflow para runs; governança
+externa como autoridade de publicação; piloto novo antes dos legados; consumo do
+Sistema de Temas; e fonte limitada ao catálogo de Produtos de Dados configurado
+no ambiente autorizado.
+
+A auditoria A1 independente devolveu `APTA_COM_CORRECOES`: não encontrou
+`DIVERGE` atribuível à arquitetura, apontou M-01 documental (corrigido) e Q-01
+pela ausência de entrada própria da MM00 no `CHANGELOG.md`. O usuário autorizou
+D1-B: Q-01 foi diferido exclusivamente para a manutenção documental imediatamente
+pós-MM00, sem ser reclassificado como PASS. Essa manutenção deve ocorrer antes
+do início efetivo da MM01.
+
+MM00 não altera o produto `.assistant` e ainda não autoriza MM01. O avanço exige
+checks finais verdes, aceite explícito da MM00 e merge; depois do merge, o
+fechamento documental pós-MM00 deve registrar Q-01 antes do início da MM01.
+Identificadores, nomes de catálogo e paths reais do ambiente de trabalho permanecem
+fora do Git; os documentos usam placeholders e resolvem o binding somente no
+workspace autorizado.
 
 ## Regras inegociáveis
 
@@ -115,9 +120,10 @@ A migração estrutural terminou na R11 e a iniciativa R00–R13 foi encerrada a
 auditoria final R13 e o fechamento documental pós-merge. O contrato vigente é
 `readme-objeto: 1.0.0`; os 75 objetos do escopo R00–R13 continuam cobertos, os três
 exemplares permanecem separados e `CONTROLE_MIGRACAO.json` está em
-`phase=complete` com `pending={}`. O novo objeto `hub_snippets.visual.theme_lab`
-da candidata V05 já entrou no mesmo contrato editorial; a validação estrutural da
-candidata mede 76/76 objetos operacionais, sem transformar essa cobertura em aceite.
+`phase=complete` com `pending={}`. Objetos adicionados depois desse encerramento,
+como `hub_snippets.visual.theme_lab`, devem entrar diretamente no mesmo contrato;
+a cobertura corrente deve ser medida pelo validador, não inferida dos números
+históricos R00–R13.
 
 Para manutenção futura, todo novo snippet, script ou prompt precisa entrar já com
 README no mesmo contrato; reintroduzir dispensa é regressão. Use o
