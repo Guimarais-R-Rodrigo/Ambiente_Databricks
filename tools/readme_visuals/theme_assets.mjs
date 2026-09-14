@@ -99,7 +99,7 @@ async function verifiedFrozen(theme){
 async function loadRenderers(selected){
   const map={};
   for(const [moduleName,families] of [['top',['raiz','assistant']],['snippets',['snippets']],['scripts',['scripts']],['methods',['skills','prompts']]]){
-    if(selected.some(f=>families.includes(f)))Object.assign(map,(await import(`./archetypes/${moduleName}.mjs?theme_v06=1`)).renderers);
+    if(selected.some(f=>families.includes(f)))Object.assign(map,(await import(`./archetypes/${moduleName}.mjs`)).renderers);
   }
   return map;
 }
@@ -138,7 +138,7 @@ if(flag('--verify')){
 }
 const time=generatedAt();
 const selected=family==='all'?Object.values(FAMILY_GROUPS).flat():FAMILY_GROUPS[family];
-const lib=await import('./lib.mjs?theme_v06=1');
+const lib=await import('./lib.mjs');
 applyTheme(lib,theme);
 const contracts=(await readYaml(path.join(ASSET,'specs/visual_contracts.yaml'))).contracts;
 const approved=JSON.parse(await fs.readFile(path.join(ASSET,'specs/approved_signatures.json'),'utf8'));
