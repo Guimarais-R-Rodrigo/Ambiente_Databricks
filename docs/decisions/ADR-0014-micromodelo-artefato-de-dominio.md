@@ -1,7 +1,7 @@
 # ADR-0014 — Micromodelo é artefato de domínio, não tipo do Hub
 
 Data: 2026-09-14
-Status: Proposto
+Status: Aceito pelo usuário em 2026-09-14; integração da MM00 pendente
 Autor: ChatGPT
 
 ## Contexto
@@ -30,3 +30,7 @@ Micromodelo também permanece distinto do Produto de Dados: o primeiro represent
 - `ambiente_fonte/.assistant/hub_padroes/skill/template.md`
 - `ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/SKILL.md`
 - `docs/sprints/micromodelos/PLANO_MESTRE.md`
+
+## Ratificação de status — 14/09/2026
+
+O usuário declarou: “D2: Aceito ADR-0014 a ADR-0020 sem ressalvas.” Este ADR fica aceito sem alteração do corpo decisório. O aceite não autoriza iniciar MM01 antes do merge da MM00 e do fechamento documental pós-MM00 previsto pela exceção D1-B.
