@@ -2,13 +2,15 @@
 
 ## Estado
 
-**CANDIDATA; SEM ACEITE, MERGE OU DEPLOY DATABRICKS.**
+**CANDIDATA TECNICAMENTE VERDE NA BRANCH; SEM ACEITE, MERGE OU DEPLOY DATABRICKS.**
 
 Base: `d6655411ca4ac1834b0983f6ce6bdadc30b831bb`.
 
 Branch: `codex/temas-v10-databricks-app-20260914`.
 
-Head funcional/documental antes da reconciliação final: `0ddcdd6b92372186c130d226c4b72d141cb7d67e`.
+Head técnico com gate completo verde antes do registro final de evidências: `c114cddedd7775cecb1cf8b672ad33e4a9f5365f`.
+
+Run integralmente verde nesse head: `34886828579`.
 
 ## Escopo recuperado
 
@@ -44,7 +46,7 @@ V10 é a frente de Databricks App de gestão visual. V11 permanece reservada par
 - `.github/workflows/temas-v10-ci.yml`;
 - documentação V10 e matriz de papéis.
 
-## Evidências já obtidas
+## Evidências obtidas
 
 ### Run `34884790130` — FAILURE preservado
 
@@ -52,29 +54,38 @@ A suíte V10 passou, mas o cumulativo terminou **433/434** porque a etapa `py_co
 
 ### Run `34885407907` — FAILURE preservado
 
-No head `0ddcdd6b92372186c130d226c4b72d141cb7d67e` passaram:
+No head `0ddcdd6b92372186c130d226c4b72d141cb7d67e` passaram V10 **19/19**, regressões V01–V10 **436/436**, V00 **12/12**, bundle **247 arquivos + manifesto** e a verificação de hashes/tamanhos. O validador reprovou com **7 falhas / 0 avisos** por métricas antigas no README raiz e um link relativo inválido no README espelhado do App. O run permanece FAILURE.
 
-- V10 **19/19**;
-- regressões V01–V10 **436/436**;
-- V00 **12/12**;
-- bundle **247 arquivos + `V10_APP_MANIFEST.json`**;
-- verificação de hashes/tamanhos do bundle.
+### Run `34886250755` — FAILURE preservado
 
-O validador reprovou com **7 falhas / 0 avisos** por métricas antigas no README raiz e um link relativo inválido no README espelhado do App. Nenhuma falha funcional do App permaneceu nesse run.
+No head `88cfea4d5cf29991c5bad23b61a3bec97feb2978`, todos os gates funcionais continuaram verdes, mas o validador encontrou **4 falhas / 0 avisos** porque quatro métricas do README raiz ainda estavam stale. A medição real foi 220 Markdown / 1394 links relativos, 219 arquivos Python AST, 1373 arquivos na identidade do repo e 1869 links fora da raiz. O README foi reconciliado com esses números sem alteração do validador. O run permanece FAILURE.
+
+### Run `34886828579` — SUCCESS
+
+No head `c114cddedd7775cecb1cf8b672ad33e4a9f5365f`:
+
+- V10 específica: **19/19 PASS**;
+- sintaxe Streamlit compilada em memória: **PASS**;
+- regressões V01–V10: **436/436 PASS**;
+- V00: **12/12 PASS**;
+- bundle: **247 arquivos + `V10_APP_MANIFEST.json`**;
+- verificação de inventário, tamanho e SHA-256 do bundle: **PASS**;
+- validador estrutural/documental: **0 falhas / 0 avisos**;
+- escopo V10: **PASS**, sem deploy/aprovação/promoção/ativação/publicação.
 
 ## Gates antes de pedir aceite
 
-1. suíte V10 verde;
-2. regressões V01–V10 verdes;
-3. V00 verde;
-4. bundle V10 criado e verificado;
-5. source/simulado equivalentes;
-6. validador 0 falhas / 0 avisos;
-7. PR mergeável e checks reais verdes;
-8. diff sem temporários e sem credenciais;
-9. documentação atualizada com resultados reais e failures preservados.
+1. suíte V10 verde — **FECHADO**;
+2. regressões V01–V10 verdes — **FECHADO**;
+3. V00 verde — **FECHADO**;
+4. bundle V10 criado e verificado — **FECHADO**;
+5. source/simulado equivalentes — **FECHADO**;
+6. validador 0 falhas / 0 avisos — **FECHADO**;
+7. PR mergeável e checks reais verdes — **PENDENTE DA PR**;
+8. diff sem temporários e sem credenciais — **FECHADO NA AUDITORIA PRÉ-PR**;
+9. documentação com resultados reais e failures preservados — **FECHADO NA BRANCH; A REVALIDAR NO HEAD DOCUMENTAL FINAL**.
 
-Os gates 1–5 já foram exercitados com sucesso no run `34885407907`; o gate 6 exige a reconciliação documental corrente. Os gates 7–9 serão fechados no head final/PR.
+A comparação pré-PR mostrou a candidata à frente da base, sem commits atrás, e alterações restritas ao App V10, seu espelho, tooling/testes/CI e documentação. Não entram schema, tokens, paleta ou adaptadores visuais existentes.
 
 ## Pendências que não bloqueiam a candidata Git, mas bloqueiam homologação operacional
 
@@ -90,4 +101,4 @@ Os gates 1–5 já foram exercitados com sucesso no run `34885407907`; o gate 6 
 
 ## Próximo passo
 
-Corrigir a navegação documental, repetir o validador e medir o estado final. Só depois atualizar o bloco verificável do README raiz com números observados, repetir o gate completo e abrir PR em draft. Merge continua dependente de aceite explícito de Rodrigo. V11 não deve ser iniciada.
+Reexecutar o workflow no head documental final. Se continuar integralmente verde, abrir a PR V10 em **draft**, auditar mergeability e todos os checks realmente disparados. A PR pode ser apresentada como candidata pronta para aceite, mas o merge continua dependente de aceite explícito de Rodrigo. V11 não deve ser iniciada.
