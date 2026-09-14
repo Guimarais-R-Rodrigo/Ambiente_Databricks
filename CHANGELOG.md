@@ -5,6 +5,25 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-14 — V06: integração Git e fechamento técnico (ChatGPT)
+
+### Atualizado
+
+- (ChatGPT) PR #38 integrada após aceite explícito de Rodrigo; head final validado `70499e1803ce0d61a148a0da975c4f52611046e0`, merge `418946de8d1e95e87cbfd9df528ddcced5075237` e árvore `68ddec3d691047e890ba2785e1e2e007039fa0e3` idêntica entre candidata testada e merge.
+- (ChatGPT) V06 registra geração determinística por `ResolvedTheme`, bridge Python → compositor, 12 assets congelados protegidos por SHA-256, manifesto/fingerprints, detecção de adulteração e separação entre gerar, revisar, aprovar, promover e publicar.
+- (ChatGPT) CI agregado, V04 e V05 passaram a preparar Node 22, `pnpm@10.34.5` e dependências do compositor antes da descoberta cumulativa V01–V06; nenhum teste foi removido ou filtrado.
+
+### Evidências
+
+- (ChatGPT) Head final da PR #38: CI geral, V00, V01, V02, V04, V05 e V06 concluíram com `success`; suíte V06 5/5, regressões V01–V06 364/364 e V00 12/12.
+- (ChatGPT) Pós-merge da PR #38: oito workflows na `main` concluíram com `success` — CI geral e V00–V06, incluindo V03.
+- (ChatGPT) Failures históricos da V06 permanecem failures, incluindo `34845378370`, `34845593931`, `34845754341`, `34845937711`, `34846291082`, `34847723861`, `34848445012`, `34848898532` e `34848898536`; suas causas e correções estão preservadas nos documentos V06.
+- (ChatGPT) Durante a reconciliação documental pós-merge, os runs transitórios `34852055234`, `34852259063` e `34852831840` foram recusados antes da criação de jobs por YAML inválido; não alteraram produto nem changelog. Já `34853339999` (CI geral) e `34853335827` (V06) executaram os contratos, mas reprovaram na validação documental porque o README registrava `1837` links fora da raiz diante de `1840` medidos pelo validador. Essas execuções permanecem failures históricos.
+
+### Limites
+
+- (ChatGPT) Sem publicação Databricks, promoção automática de variante, ACL/compute/Spark/SQL/MLflow remoto, homologação de navegador/acessibilidade/UAT ou início da V07.
+
 ## 2026-09-14 — V05: fechamento técnico do Visual Lab em candidata (Codex)
 
 ### Adicionado
