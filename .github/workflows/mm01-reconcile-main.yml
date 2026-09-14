@@ -1,0 +1,51 @@
+name: MM01 reconciliação transitória com main
+
+on:
+  push:
+    branches:
+      - micromodelos/mm01-contrato-canonico
+    paths:
+      - .github/workflows/mm01-reconcile-main.yml
+
+permissions:
+  contents: write
+
+jobs:
+  reconciliar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout da candidata
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fixar e conferir main esperada
+        env:
+          EXPECTED_MAIN: a9480391c78e2402986885db0ce08b10e0619a1a
+        run: |
+          git fetch origin main
+          ACTUAL_MAIN="$(git rev-parse origin/main)"
+          echo "expected_main=${EXPECTED_MAIN}"
+          echo "actual_main=${ACTUAL_MAIN}"
+          test "${ACTUAL_MAIN}" = "${EXPECTED_MAIN}"
+
+      - name: Compor main na candidata sem publicar ainda
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git merge --no-ff -m "chore(mm01): reconciliar main pós-V10" origin/main
+
+      - name: Instalar dependências de manutenção
+        run: python -m pip install -r tools/requirements-dev.txt
+
+      - name: Executar suíte MM01 após reconciliação
+        run: python -B -m unittest tools/tests/test_micromodelo_mm01.py
+
+      - name: Executar gate estrutural após reconciliação
+        run: python -B tools/validate_assistant.py --root ambiente_fonte
+
+      - name: Remover workflow transitório e publicar composição validada
+        run: |
+          git rm .github/workflows/mm01-reconcile-main.yml
+          git commit -m "chore(mm01): fechar reconciliação pós-V10"
+          git push origin HEAD
