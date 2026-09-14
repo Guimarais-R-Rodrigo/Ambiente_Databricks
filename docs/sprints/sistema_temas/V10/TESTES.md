@@ -2,7 +2,7 @@
 
 ## Estado
 
-Candidata tecnicamente verde no CI da branch, ainda sem aceite, merge ou deploy Databricks. Este arquivo registra somente evidências observadas; teste Git/local não é homologação do workspace.
+V10 aceita e integrada no Git pelo PR #48; o merge funcional é `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`. Este arquivo registra somente evidências observadas; teste Git/local não é homologação do workspace e nenhum deploy Databricks foi executado.
 
 ## Suíte específica
 
@@ -155,6 +155,16 @@ repo (identidade)  : 1373 arquivos varridos no repositório editável/derivado
 repo (links)       : 1869 links fora da raiz analisada
 worktree (extras)  : 0
 ```
+
+## Evidência final antes do merge
+
+O push final original `34887162337`, no head `8e59739cbe3e1ce6d49503e7c953c82a98d2dc2c`, repetiu o gate completo com `success`. Depois da integração da MM00, a candidata foi reconciliada no head `cb942ee955ff9236f19099e5ed4ceee9beb32000`.
+
+Nesse head reconciliado, dez workflows reais de PR concluíram com `success`: `34894892652`, `34894892747`, `34894892632`, `34894892622`, `34894892726`, `34894892777`, `34894892631`, `34894892738`, `34894892661` e `34894892620`. Os primeiros runs de PR anteriores à normalização dos runners permanecem failures históricos; eles não foram reclassificados.
+
+## Evidência pós-merge
+
+Após o aceite explícito de Rodrigo, o PR #48 foi integrado no commit `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`. Os **12 workflows de `push`** disparados nesse commit concluíram com `success`; o workflow específico V10 é `34896944061`. Não houve failure pós-merge nesse SHA.
 
 ## O que PASS não prova
 
