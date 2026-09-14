@@ -1,7 +1,8 @@
 # MM01 — Contrato canônico de micromodelos
 
-Status da sprint: **CANDIDATA EM IMPLEMENTAÇÃO**  
-Base congelada: `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5`  
+Status da sprint: **CANDIDATA EM VALIDAÇÃO; NÃO ACEITA; NÃO INTEGRADA**  
+Base inicial: `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5`  
+Base reconciliada após V10: `a9480391c78e2402986885db0ce08b10e0619a1a`  
 Branch: `micromodelos/mm01-contrato-canonico`
 
 ## Objetivo
@@ -9,6 +10,8 @@ Branch: `micromodelos/mm01-contrato-canonico`
 Transformar as decisões arquiteturais aceitas na MM00 em um contrato estrutural verificável para cada micromodelo. A MM01 define o conteúdo mínimo de `micromodelo.yaml`, a máquina de fases, as condições operacionais, a proveniência das afirmações materiais e os gates semânticos que impedem avançar um artefato incompleto.
 
 A sprint não cria a skill `hub-ml-micromodelos`. O validador desta entrega vive em `tools/` como **oráculo de construção e CI** porque a lista de skills é fechada e a skill só nasce na MM04. Quando a MM04 criar o objeto roteável, ela deverá incorporar/derivar o contrato vigente sem criar uma segunda fonte de verdade.
+
+A implementação começou sobre a `main` final da MM00. Durante a sprint, a frente do Sistema de Temas integrou a V10; por isso a candidata foi reconciliada de forma fail-closed com `main@a9480391...` antes da abertura da PR. A reconciliação passou novamente pela suíte MM01 e pelo gate estrutural. Nenhum arquivo da V10 foi reimplementado ou alterado pela MM01.
 
 ## Entregas
 
@@ -19,6 +22,7 @@ A sprint não cria a skill `hub-ml-micromodelos`. O validador desta entrega vive
 - `tools/micromodelo_mm01_contract.py`: validador de referência/CI;
 - fixtures sintéticos positivos e negativos em `tools/tests/fixtures/micromodelos_mm01/`;
 - `tools/tests/test_micromodelo_mm01.py`: suíte automatizada da sprint;
+- `.github/workflows/micromodelos-mm01-ci.yml`: gate permanente, read-only, para branch/PR/`main`;
 - `TESTES.md` e `CHECKPOINT.md`.
 
 ## Decisões fechadas nesta sprint
@@ -68,6 +72,6 @@ A fase `CANDIDATO_PRODUTO` ou posterior exige contrato explícito de publicaçã
 
 ## Gate de saída
 
-A MM01 só pode ser aceita quando o schema formal for válido, o template e o fixture positivo passarem, todos os fixtures negativos forem rejeitados pelo motivo esperado, `tools/validate_assistant.py` e a suíte agregada continuarem verdes e uma auditoria A1 independente reproduzir os gates sem depender desta documentação de autoria.
+A MM01 só pode ser aceita quando o schema formal for válido, o template e o fixture positivo passarem, todos os fixtures negativos forem rejeitados pelo motivo esperado, o gate permanente MM01, `tools/validate_assistant.py` e a suíte agregada continuarem verdes e uma auditoria A1 independente reproduzir os gates sem depender desta documentação de autoria.
 
 A MM02 permanece bloqueada até aceite e integração da MM01.
