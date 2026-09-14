@@ -18,6 +18,8 @@ Versão do formato estrutural. Na MM01 o único valor aceito é `1.0.0`. Mudanç
 
 Contém `nome`, `titulo`, `micromodel_version` e `estado`. `micromodel_version` identifica a evolução humana do micromodelo; não substitui o `spec_fingerprint` que será criado na MM02.
 
+`fase_anterior` e `fase_atual` tornam o par declarado localmente verificável, mas o documento corrente não é prova suficiente do próprio histórico. Quando existe uma especificação anterior confiável, o validador pode recebê-la por `--previous`: nesse modo ele confere identidade, versão e transição real entre snapshots, impede regressão de versão e recusa rewind de uma versão já `PUBLICADO`. Isso resolve a auditabilidade da MM01 sem introduzir fingerprint antecipadamente.
+
 ### `negocio`
 
 Explicita a característica, o objetivo, a definição operacional, os usos pretendidos e os usos proibidos. A definição deve ser observável e auditável; rótulo de negócio sem critério operacional não é suficiente.
@@ -46,7 +48,9 @@ O tipo inicial é `BOOLEANO_COM_INDETERMINADO`. O contrato exige três definiç�
 - `quando_false`: quando há base suficiente para negar a característica;
 - `quando_indeterminado`: quando a informação não permite concluir nem TRUE nem FALSE.
 
-A distinção é verificada após normalização editorial básica de caixa, acentuação, pontuação e espaços; não basta copiar a mesma definição mudando apenas forma textual. A política de ausência de evidência só aceita `INDETERMINADO` ou `REGRA_EXPLICITA_APROVADA`. Limiares materiais têm operador, valor, unidade e proveniência `APROVADO`.
+A distinção é verificada após normalização editorial básica de caixa, acentuação, pontuação e espaços; não basta copiar a mesma definição mudando apenas forma textual. A política de ausência de evidência só aceita `INDETERMINADO` ou `REGRA_EXPLICITA_APROVADA`.
+
+Limiar material pode ser registrado como `PROPOSTO` enquanto o micromodelo ainda está em descoberta/estudo. A partir de `EM_VALIDACAO`, todo limiar existente precisa carregar proveniência `APROVADO`. Dessa forma, a fonte canônica preserva propostas sem permitir que elas atravessem o gate formal como decisões válidas.
 
 ### `score`
 
@@ -59,7 +63,11 @@ Score pode ser habilitado ou desabilitado. Quando habilitado, exige:
 - componentes/pesos, quando existirem;
 - proveniência da decisão de score.
 
-Peso material exige `APROVADO`. `PROBABILIDADE_CALIBRADA` exige calibração com proveniência `MEDIDO` e referência de execução. Além do enum, o validador barra linguagem probabilística em um score não calibrado; portanto não basta deixar `tipo_semantica=FORCA_EVIDENCIA` e escrever “probabilidade” ou “chance” na descrição.
+Assim como limiares, pesos podem permanecer `PROPOSTO` nas fases pré-gate, mas todo peso existente precisa estar `APROVADO` ao entrar em `EM_VALIDACAO` ou fase posterior.
+
+`PROBABILIDADE_CALIBRADA` exige calibração com proveniência `MEDIDO` e referência de execução. Além disso, `calibracao.evidencia_ref` precisa resolver para um `experimentos[].id` existente cujo experimento esteja `EXECUTADO` e com proveniência `MEDIDO`. A referência não é texto decorativo: ela possui integridade referencial dentro da especificação.
+
+Além do enum, o validador barra linguagem probabilística em um score não calibrado; portanto não basta deixar `tipo_semantica=FORCA_EVIDENCIA` e escrever “probabilidade” ou “chance” na descrição.
 
 Quando score está desabilitado, semântica, escala, normalização, componentes, calibração e campo de score na saída devem permanecer vazios/nulos.
 
@@ -67,14 +75,16 @@ Quando score está desabilitado, semântica, escala, normalização, componentes
 
 Registra hipóteses relevantes da especificação. Um experimento `EXECUTADO` exige resultado e proveniência `MEDIDO`. O identificador da execução é referência externa; o YAML não incorpora o histórico das runs.
 
+Experimentos também formam o namespace canônico usado por `score.calibracao.evidencia_ref`: uma calibração probabilística só é aceita se a evidência apontada existir e tiver sido efetivamente executada/medida.
+
 ### `validacao`
 
 Separa resultado técnico medido da aprovação humana. `APROVADO` exige ambos:
 
 1. resultado com proveniência `MEDIDO`;
-2. `aprovacao_humana.status=APROVADO`, com responsável, timestamp e referência.
+2. `aprovacao_humana.status=APROVADO`, com responsável, timestamp e referência materialmente preenchida.
 
-Fase `VALIDADO` ou posterior não é aceita se esse gate não estiver satisfeito.
+Fase `VALIDADO` ou posterior não é aceita se esse gate não estiver satisfeito. Strings compostas apenas por whitespace ou caracteres invisíveis não contam como referência auditável; o contrato é fail-closed também para esse tipo de preenchimento aparente.
 
 ### `saida`
 
@@ -82,7 +92,9 @@ Possui dois contratos distintos.
 
 `saida.estudo` preserva `TRUE`, `FALSE` e `INDETERMINADO`, além do score quando habilitado.
 
-`saida.publicacao` começa `PENDENTE`. A partir de `CANDIDATO_PRODUTO`, precisa estar `DEFINIDO`, com campo final `BOOLEAN` e uma política aprovada para `INDETERMINADO`: excluir do universo publicado, usar campo de cobertura separado ou outra solução explicitamente aprovada. O contrato não fornece a opção implícita “mapear indeterminado para FALSE”.
+`saida.publicacao` começa `PENDENTE`. A partir de `CANDIDATO_PRODUTO`, precisa estar `DEFINIDO`, com campo final `BOOLEAN` e uma política aprovada para `INDETERMINADO`: excluir do universo publicado, usar campo de cobertura separado ou outra solução explicitamente aprovada.
+
+A política possui o campo estruturado `indeterminado_vira_false`, fixado em `false`. O validador também recusa descrição que contradiga essa regra estruturada. Assim, nenhum consumidor válido do contrato pode interpretar uma política aceita como autorização implícita para converter `INDETERMINADO` em `FALSE`.
 
 ### `tracking`
 
@@ -96,19 +108,25 @@ Reserva campos para classificação de dados, LGPD, gestor da informação e obs
 
 Registra apenas o estado de interface com a governança externa: `NAO_INICIADA`, `CANDIDATA`, `EM_VALIDACAO_EXTERNA`, `PUBLICADA` ou `REJEITADA`. Não replica regras institucionais.
 
-O estado de publicação precisa ser coerente com a fase do ciclo: antes de `CANDIDATO_PRODUTO`, permanece `NAO_INICIADA`; em `CANDIDATO_PRODUTO`, é `CANDIDATA` ou `REJEITADA`; `EM_VALIDACAO_GOVERNANCA` exige `EM_VALIDACAO_EXTERNA` e `handoff_ref`; `PUBLICADO` exige `PUBLICADA` e `produto_dados_ref`. A suíte inclui caminhos positivos até publicação para provar que esses gates são satisfazíveis e não apenas negativos.
+O estado de publicação precisa ser coerente com a fase do ciclo: antes de `CANDIDATO_PRODUTO`, permanece `NAO_INICIADA`; em `CANDIDATO_PRODUTO`, é `CANDIDATA` ou `REJEITADA`; `EM_VALIDACAO_GOVERNANCA` exige `EM_VALIDACAO_EXTERNA` e `handoff_ref`; `PUBLICADO` exige `PUBLICADA` e `produto_dados_ref`. As referências de handoff e Produto de Dados precisam conter texto material, não apenas whitespace/invisíveis. A suíte inclui caminhos positivos até publicação para provar que esses gates são satisfazíveis e não apenas negativos.
 
 ### `proveniencia`
 
 Registra criação do arquivo e, quando necessário, referências adicionais por alvo. As afirmações materiais também carregam proveniência junto do próprio bloco para permitir validação local.
 
+`APROVADO` exige bloco de aprovação com conteúdo auditável; `MEDIDO` exige medição com referência de execução material. A presença sintática de uma string vazia visualmente não satisfaz esses estados.
+
 ## 3. IDs e referências
 
 IDs internos usam `snake_case`, começam por letra e possuem de 3 a 64 caracteres. Referências de evidência para fontes precisam resolver para um `fontes[].id` existente. IDs duplicados são inválidos nas coleções controladas, incluindo fontes, evidências, contra-evidências, limiares, componentes do score e experimentos.
 
+`score.calibracao.evidencia_ref` usa especificamente o namespace de `experimentos[].id` e só aceita experimento executado/medido.
+
 ## 4. Valores pendentes
 
 O contrato prefere `PENDENTE`, lista vazia ou `null` explícito a um valor inventado. “Ainda não executado” é estado válido da especificação; transformar lacuna em número, aprovação ou resultado observado é erro de proveniência.
+
+`PROPOSTO` também é estado válido nas fases de construção. O gate transforma a ausência de aprovação em bloqueio apenas quando a fase exige decisão formal; não obriga a fonte canônica a esconder propostas ainda em análise.
 
 ## 5. O que não está definido na MM01
 
