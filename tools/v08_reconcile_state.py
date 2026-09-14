@@ -1,0 +1,91 @@
+"""Script transitório: reconciliar índices vivos e changelog da candidata V08."""
+from __future__ import annotations
+
+import re
+from pathlib import Path
+
+
+def sub_once(path: Path, pattern: str, replacement: str, label: str) -> None:
+    text = path.read_text(encoding="utf-8")
+    updated, count = re.subn(pattern, replacement, text, count=1, flags=re.MULTILINE | re.DOTALL)
+    if count != 1:
+        raise SystemExit(f"{label}: matches={count}")
+    path.write_text(updated, encoding="utf-8")
+
+
+system_index = Path("docs/sprints/sistema_temas/README.md")
+system_block = """## Estado vigente — V00–V07 integradas; V08 candidata em fechamento
+
+A V08 está em branch isolada `codex/temas-v08-integracao-transversal-20260914`, criada a partir da `main` estabilizada em `1b6632194f4b25afc09960c27b069c16df365ee6`. Ela está **em fechamento**, sem aceite, merge ou publicação Databricks.
+
+A [V08 — integração transversal com skills, padrões e Manual](V08/README.md) reconcilia orientação e roteamento com as capacidades V02–V07 já integradas. Skills deixam de competir com o contrato visual, o template EDA deixa de possuir política própria de tema e o Manual/padrões passam a descrever `ResolvedTheme`, Visual Lab, geração editorial, consumidores V07 e limites atuais de forma consistente.
+
+A [matriz transversal](V08/MATRIZ_INTEGRACAO.json), o [registro de testes](V08/TESTES.md) e o [checkpoint V08](V08/CHECKPOINT_V08.md) distinguem superfícies alteradas, decisões de não edição, failures preservados e a proibição de mudança runtime. A candidata não altera módulos Python de `hub_snippets` ou `hub_scripts`.
+
+V00–V07 permanecem aceitas e integradas. A V07 foi mesclada pelo PR #40 no commit `67114605c7345a01c1144e5d6c6d24e9c24e2491`; seu fechamento documental posterior foi integrado pela PR #41, formando a base V08 `1b6632194f4b25afc09960c27b069c16df365ee6`.
+
+Nenhuma publicação Databricks, alteração de ACL/compute, execução remota Spark/SQL/MLflow, promoção visual ou homologação de browser/acessibilidade/UAT foi realizada. A V08 também não prova seleção determinística de skill pela Genie Code.
+
+"""
+sub_once(
+    system_index,
+    r"^## Estado vigente — V00–V07 integradas; V08 ainda não iniciada neste fechamento\n.*?(?=^## Estado integrado anterior — V06 integrada no Git)",
+    system_block,
+    "system themes current state",
+)
+
+sprints = Path("docs/sprints/README.md")
+sprints_block = """## Sistema de Temas do Hub
+
+A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V07 estão aceitas e integradas no Git; a V08 está como candidata em fechamento**, sem aceite ou merge.
+
+A [V08 — integração transversal](sistema_temas/V08/README.md) conecta skills, Hub Padrões, entrada `.assistant` e Manual às mesmas fontes de verdade das V02–V07. A [matriz V08](sistema_temas/V08/MATRIZ_INTEGRACAO.json), o [checkpoint](sistema_temas/V08/CHECKPOINT_V08.md) e o [registro de testes](sistema_temas/V08/TESTES.md) preservam escopo, failures e a regra de zero alteração runtime Python.
+
+A V08 remove a política visual paralela do template EDA, preservando suas convenções editoriais, e explicita que tema não altera dados, métricas, denominadores, thresholds ou decisões. SHAP/Matplotlib e Kaplan–Meier continuam limites declarados do theming atual.
+
+A V07 permanece integrada pelo PR #40 no commit `67114605c7345a01c1144e5d6c6d24e9c24e2491`; o fechamento documental subsequente produziu a base V08 `1b6632194f4b25afc09960c27b069c16df365ee6`.
+
+Não houve publicação Databricks da V08; browser/runtime, acessibilidade, ACL real, UAT, promoção visual e seleção determinística de skill permanecem gates separados.
+
+"""
+sub_once(
+    sprints,
+    r"^## Sistema de Temas do Hub\n.*?(?=^### Continuidade do Sistema de Temas — V04)",
+    sprints_block,
+    "sprints themes current state",
+)
+
+changelog = Path("CHANGELOG.md")
+history = changelog.read_text(encoding="utf-8")
+marker = "## 2026-09-14 — V07: candidata de consumidores e formatos de saída (ChatGPT)"
+title = "## 2026-09-14 — V08: candidata de integração transversal (ChatGPT)"
+if title not in history:
+    if history.count(marker) != 1:
+        raise SystemExit(f"changelog marker count={history.count(marker)}")
+    entry = """## 2026-09-14 — V08: candidata de integração transversal (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) Matriz transversal de integração entre Sistema de Temas, skills, Hub Padrões, entrada `.assistant` e Manual Técnico.
+- (ChatGPT) Suíte V08 e workflow permanente read-only com guarda explícita que proíbe alterações runtime Python em `hub_snippets` e `hub_scripts`.
+
+### Atualizado
+
+- (ChatGPT) Concierge, criação de objeto, EDA, baseline, safra, monitoramento e explainability passam a apontar para `ResolvedTheme` e consumidores `_resolvido` sem redefinir paletas ou política visual.
+- (ChatGPT) O template visual da EDA deixa de ser uma segunda fonte de tema e preserva composição, hierarquia, leitura, tabelas, KPIs, emojis, índice e demais convenções editoriais.
+- (ChatGPT) Hub Padrões e Manual passam a descrever V02–V07 integradas, Visual Lab, geração editorial, consumidores V07 e limites atuais.
+
+### Evidências
+
+- (ChatGPT) Failures `34866320427`, `34866493021`, `34866578667`, `34866767026`, `34866944219` e `34867002420` permanecem registrados com suas causas reais.
+- (ChatGPT) No head sincronizado anterior ao fechamento, V08 atingiu 22/22 testes específicos, 405/405 regressões V01–V08 e 12/12 V00; o bloqueio restante era somente a saída colada do README raiz.
+
+### Limites
+
+- (ChatGPT) V08 permanece candidata: sem aceite, merge ou publicação Databricks. Não altera runtime, não homologa browser/acessibilidade/UAT e não prova seleção determinística de skill pela Genie Code.
+
+"""
+    history = history.replace(marker, entry + marker, 1)
+    changelog.write_text(history, encoding="utf-8")
+
+print("V08_STATE_RECONCILED=1")
