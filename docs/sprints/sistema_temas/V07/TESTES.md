@@ -89,6 +89,12 @@ O push na `main` disparou nove checks, todos concluídos com `success`:
 
 Esse fechamento pós-merge confirma que a composição efetiva da `main`, e não apenas a branch candidata, preserva os gates V00–V07.
 
+### `34864154609` — FAILURE documental do fechamento pós-merge
+
+A primeira rodada da reconciliação documental pós-merge manteve **19/19 V07**, **383/383 regressões V01–V07** e **12/12 V00** verdes. O único failure foi `validate_assistant.py --conferir-readme`: os novos links de navegação do próprio fechamento elevaram a medição real de `repo (links)` de **1849 para 1850**, enquanto a saída colada do README raiz ainda registrava 1849. Foram **1 falha documental e 0 avisos**; nenhum teste funcional regrediu.
+
+O run permanece registrado como `failure`. A correção alterou somente a métrica viva do README raiz para 1850 e, depois da escrita controlada, o workflow V07 foi restaurado para `contents: read` e `persist-credentials: false` antes do gate final do fechamento.
+
 ## O que PASS não prova
 
 - render real no browser Databricks;
