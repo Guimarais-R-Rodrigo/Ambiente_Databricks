@@ -130,6 +130,18 @@ class ThemeTransitionContractTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 validate_theme_zip(tampered)
 
+    def test_operational_workflow_prepares_node_dependencies_before_ci_gate(self):
+        text = (ROOT / ".github/workflows/kit-transicao-trabalho.yml").read_text(encoding="utf-8")
+        setup_node = "actions/setup-node@v4"
+        install_pnpm = "npm install --global pnpm@10.34.5"
+        install_visuals = "pnpm --dir tools/readme_visuals install --frozen-lockfile"
+        ci_gate = "python tools/ci_local.py --verbose"
+        for expected in (setup_node, install_pnpm, install_visuals, ci_gate):
+            self.assertIn(expected, text)
+        self.assertLess(text.index(setup_node), text.index(install_pnpm))
+        self.assertLess(text.index(install_pnpm), text.index(install_visuals))
+        self.assertLess(text.index(install_visuals), text.index(ci_gate))
+
     def test_both_workflows_verify_generated_zip_before_use(self):
         command = "python -B tools/temas_v09_transicao.py --kit-dir"
         v09 = (ROOT / ".github/workflows/temas-v09-ci.yml").read_text(encoding="utf-8")
