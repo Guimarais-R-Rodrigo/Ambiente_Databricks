@@ -35,7 +35,7 @@ jobs:
       - name: Aplicar correções A1
         run: python tools/mm01_apply_a1_fixes.py
 
-      - name: Ajustar regressão para rejeição na camada formal
+      - name: Ajustar regressões para rejeição na camada formal
         shell: bash
         run: |
           python - <<'PY'
@@ -43,11 +43,23 @@ jobs:
 
           path = Path('tools/tests/test_micromodelo_mm01.py')
           text = path.read_text(encoding='utf-8')
-          old = '        self.assertIn("VALIDATION_HUMAN_GATE", self.codes(approved))\n'
-          new = '        self.assertIn("SCHEMA", self.codes(approved))\n'
-          if text.count(old) != 1:
-              raise SystemExit(f'assertion alvo inesperada: {text.count(old)} ocorrencias')
-          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          replacements = (
+              (
+                  '        self.assertIn("VALIDATION_HUMAN_GATE", self.codes(approved))\n',
+                  '        self.assertIn("SCHEMA", self.codes(approved))\n',
+                  'aprovacao humana em branco',
+              ),
+              (
+                  '        self.assertIn("PUBLICATION_GATE", self.codes(published))\n',
+                  '        self.assertIn("SCHEMA", self.codes(published))\n',
+                  'referencia de publicacao em branco',
+              ),
+          )
+          for old, new, label in replacements:
+              if text.count(old) != 1:
+                  raise SystemExit(f'{label}: esperado 1 match, encontrado {text.count(old)}')
+              text = text.replace(old, new, 1)
+          path.write_text(text, encoding='utf-8')
           PY
 
       - name: Preparar árvore final sem mecanismos transitórios
