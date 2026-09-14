@@ -39,7 +39,7 @@ A migração foi aplicada, mas a suíte V08 encontrou nomenclatura visual local 
 
 ### `34866578667` — FAILURE permanente por nomenclatura residual
 
-Com o workflow já read-only, restou apenas a nomenclatura local residual no template EDA. A correção removeu inclusive esses identificadores textuais.
+Com o workflow já read-only, restou apenas a nomenclatura local residual do template EDA. A correção removeu inclusive esses identificadores textuais.
 
 ### `34866767026` — FAILURE documental
 
@@ -92,6 +92,16 @@ A primeira tentativa transitória de reconciliar o bloco V08 no changelog foi re
 ### `34873908522` — FAILURE transitório com escrita controlada
 
 A segunda tentativa usou o bloco do changelog codificado e a etapa `Reconciliar bloco V08 do changelog (transitório)` concluiu com `success`, produzindo o commit `8ea54df54d64e764f1d7a3f01d18e84ef7a7dde5`. A suíte V08 do próprio run reprovou depois, como esperado, porque o workflow daquela execução estava temporariamente com `contents: write` e `persist-credentials: true`; regressões posteriores foram puladas. O workflow permanente foi restaurado byte a byte para read-only no commit seguinte.
+
+### `34874103274` — FAILURE documental no fechamento pós-merge
+
+Com o workflow permanente novamente read-only, passaram antes do validador:
+
+- V08: **22/22 PASS**;
+- regressões V01–V08: **405/405 PASS**;
+- V00: **12/12 PASS**.
+
+O validador apontou uma única divergência, com **0 avisos**: `repo (links)` estava colado como **1849**, enquanto o estado documental pós-merge media **1850**. As etapas de guarda runtime e escopo foram corretamente puladas após a reprovação documental. Esse failure permanece evidência histórica e não é reclassificado.
 
 Nenhum failure acima é reclassificado retroativamente.
 
@@ -174,7 +184,7 @@ Fonte e simulado permanecem equivalentes nas superfícies cobertas pela V08.
 
 O README raiz foi compactado para permanecer uma entrada operacional atual e direcionar o histórico detalhado ao índice de sprints, onde ele já é mantido de forma canônica. A compactação eliminou duplicação documental e mantém o bloco de métricas verificável pelo gate.
 
-O valor final de `repo (links)` no head integrado é **1849**.
+No head funcional integrado `9af5615d79b02cbd86f5a6d084444c83f203ae03`, `repo (links)` era **1849**. Após a reconciliação documental pós-merge, a medição real passou a **1850**, sem alteração de runtime.
 
 ## Estado encerrado
 
