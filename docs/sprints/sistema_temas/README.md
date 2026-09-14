@@ -1,18 +1,18 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Estado vigente — V00–V10 integradas; V11 candidata AI/BI
+## Estado vigente — V00–V11 integradas; V12 não iniciada
 
-V00–V10 estão aceitas e integradas no Git. A V11 está em candidata separada na branch `codex/temas-v11-aibi-20260914`; não há aceite, merge ou operação real no Databricks.
+V00–V11 estão aceitas e integradas no Git. A V11 foi aceita em 14/09/2026 e integrada pelo PR #52 no merge `9305bc49eaf002caec042361bf35efa66af7ca18`. Os 11 workflows reais da PR e os 13 workflows pós-merge da `main` concluíram com `success`.
 
-A V11 cria uma ponte fail-closed entre um `ResolvedTheme` `notebook` e capacidades documentadas de temas nativos Databricks AI/BI. O schema central permanece inalterado e `context="aibi"` continua reservado. A matriz candidata cobre exatamente os 48 tokens notebook: **3 traduzidos, 23 aproximados e 22 não suportados**. Somente as três correspondências traduzidas podem ter binding direto; aproximações exigem revisão e itens não suportados permanecem explícitos.
+A V11 cria uma ponte fail-closed entre um `ResolvedTheme` `notebook` e capacidades documentadas de temas nativos Databricks AI/BI. O schema central permanece inalterado e `context="aibi"` continua reservado. A matriz integrada cobre exatamente os 48 tokens notebook: **3 traduzidos, 23 aproximados e 22 não suportados**. Somente as três correspondências traduzidas podem ter binding direto; aproximações exigem revisão e itens não suportados permanecem explícitos.
 
 As fontes oficiais verificadas descrevem tipografia, canvas, widgets, paletas, `Color mappings`, temas de workspace e import/export de tema, mas não publicam um schema completo e versionado do JSON produzido por `Export theme`. Por isso a V11 não inventa campos nativos. Um candidato de importação só pode ser derivado de um export real fixado por SHA-256 e de JSON Pointers revisados para campos já existentes. A CI e o código não usam SDK, REST ou CLI Databricks e não publicam dashboards.
 
 Workspace theme e dashboard theme permanecem escopos diferentes: gerenciar o tema do workspace exige administrador; um dashboard existente recebe um snapshot ao aplicar o workspace theme; mudanças futuras não se propagam automaticamente e precisam de reaplicação manual. Selecionar/importar tema e publicar dashboard também permanecem ações separadas.
 
-Os runs `34900693160`, `34901091132` e `34901776770` permanecem **FAILURE** e não foram reclassificados. Eles registram, respectivamente, a fronteira de exceção corrigida, três métricas stale no README depois dos gates funcionais verdes e um oráculo novo com o ID canônico da fixture incorreto. O primeiro gate integralmente verde é o run `34902083889`, no head `0d3180c50428d8716b44f264b915a91243ba96c3`: V11 **21/21**, regressões V01–V11 **457/457**, V00 **12/12**, validador **0 falhas / 0 avisos** e escopo V11 em `success`.
+Os runs `34900693160`, `34901091132`, `34901776770` e `34904363803` permanecem **FAILURE** e não foram reclassificados. O head final pré-PR `5532ca6d8f1b243ca705088f4b57823a333b9b1f` passou integralmente no run `34905080083`; os 11 workflows reais da PR #52 e os 13 workflows pós-merge no commit `9305bc49eaf002caec042361bf35efa66af7ca18` também terminaram em `success`.
 
-O detalhamento corrente está em [V11/README.md](V11/README.md), [V11/TESTES.md](V11/TESTES.md) e [V11/CHECKPOINT_V11.md](V11/CHECKPOINT_V11.md). Nenhum desses resultados prova export/import real, permissões administrativas, snapshot/reaplicação em workspace, browser, acessibilidade ou UAT.
+O detalhamento corrente está em [V11/README.md](V11/README.md), [V11/TESTES.md](V11/TESTES.md) e [V11/CHECKPOINT_V11.md](V11/CHECKPOINT_V11.md). Nenhum desses resultados prova export/import real, permissões administrativas, snapshot/reaplicação em workspace, browser, acessibilidade ou UAT. A V12 permanece separada e não foi iniciada por este fechamento.
 
 A V10 integrada permanece a etapa anterior: Rodrigo deu aceite explícito em 14/09/2026; a entrega funcional foi integrada pelo PR #48 no commit `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b` e o fechamento documental pelo PR #50 no commit `a9480391c78e2402986885db0ce08b10e0619a1a`. Os failures históricos V10 permanecem em [V10/TESTES.md](V10/TESTES.md) e o estado de decisão em [V10/CHECKPOINT_V10.md](V10/CHECKPOINT_V10.md). Nenhuma criação/atualização real de Databricks App, associação de UC Volume, alteração de ACL/compute ou publicação foi executada.
 

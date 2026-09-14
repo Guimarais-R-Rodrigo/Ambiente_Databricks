@@ -2,7 +2,7 @@
 
 ## Estado
 
-Candidata técnica com navegação/documentação reconciliada. O último head funcional/documental integralmente verde antes deste registro é `6561dfbe147c454fdc07eebac3d644b6ae1bf6d0`, run `34904743766`. Este arquivo registra somente resultados observados; nenhum PASS local equivale a homologação Databricks.
+V11 aceita e integrada no Git pelo PR #52. O head funcional/documental aceito é `5532ca6d8f1b243ca705088f4b57823a333b9b1f`; o merge funcional é `9305bc49eaf002caec042361bf35efa66af7ca18`. Este arquivo registra somente resultados observados; nenhum PASS local/GitHub equivale a homologação Databricks.
 
 ## Suíte específica
 
@@ -27,7 +27,7 @@ Candidata técnica com navegação/documentação reconciliada. O último head f
 - equivalência fonte/simulado;
 - import da fachada tanto no modo local quanto pelo namespace do produto;
 - workflow read-only;
-- varredura de todos os módulos Python V11 contra API/SDK/CLI Databricks.
+- varredura dos módulos Python V11 contra API/SDK/CLI Databricks.
 
 ## Workflow
 
@@ -39,7 +39,7 @@ Candidata técnica com navegação/documentação reconciliada. O último head f
 
 No head `ed1fdaac22e3ceece54b6ada96427b5a8afcba95`, a suíte V11 executou **20 testes: 19 PASS / 1 FAILURE**. O caso de contexto editorial era corretamente recusado pelo núcleo V02, mas a exceção escapava como `ThemeError`, atravessando a fronteira pública da V11 em vez de ser normalizada para `AibiThemeError`.
 
-A correção foi feita sem alterar V02 e sem relaxar o teste: `aibi_theme.py` tornou-se uma fachada pública pequena, com a implementação detalhada em `_aibi_theme_impl.py`, e a fronteira `notebook` passou a ser validada antes da delegação. O run `34900693160` permanece **FAILURE**.
+A correção foi feita sem alterar V02 e sem relaxar o teste: `aibi_theme.py` tornou-se uma fachada pública pequena, com a implementação detalhada em `_aibi_theme_impl.py`, e a fronteira `notebook` passou a ser validada antes da delegação. O run permanece **FAILURE**.
 
 ### Run `34901091132` — FAILURE documental após gates funcionais verdes
 
@@ -49,71 +49,51 @@ No head `5eca34c95fc9970f864869282f59e2bb4cc61d56` passaram antes do validador:
 - regressões V01–V11: **456/456 PASS**;
 - compatibilidade V00: **12/12 PASS**.
 
-O validador terminou com **3 falhas / 0 avisos**, exclusivamente por três métricas antigas no README raiz:
-
-```text
-markdown / links   : 222 arquivos / 1394 links relativos
-python (AST)       : 221 arquivos
-repo (identidade)  : 1409 arquivos varridos no repositório editável/derivado
-```
-
-O valor de `repo (links)` observado permaneceu **1878**. A etapa de escopo V11 foi `SKIP` por consequência do failure anterior do job; ela não é reclassificada como PASS. O run `34901091132` permanece **FAILURE**.
+O validador terminou com **3 falhas / 0 avisos** por métricas antigas no README raiz. A etapa de escopo V11 foi `SKIP` por consequência; ela não é reclassificada. O run permanece **FAILURE**.
 
 ### Run `34901776770` — FAILURE do novo oráculo de import
 
-No head `8785822e045edf158f04ea41ea0f6c059ef11cb1`, a guarda nova de import pelo namespace do produto funcionou e a projeção foi criada corretamente, mas o teste comparou o `source_theme_id` com `legado_notebook`. A fixture canônica V02 usa `hub-legado-notebook`; portanto o único failure entre **21 testes** foi um oráculo incorreto introduzido pelo próprio endurecimento.
-
-A correção alterou somente a expectativa do teste para o ID canônico real. A guarda de import e a varredura de todos os módulos Python continuam ativas. Como a suíte V11 falhou, sintaxe, regressões, V00, validador e escopo foram `SKIP` nesse run. O run `34901776770` permanece **FAILURE**.
+No head `8785822e045edf158f04ea41ea0f6c059ef11cb1`, a guarda de import pelo namespace do produto funcionou e a projeção foi criada corretamente, mas o teste comparou o `source_theme_id` com `legado_notebook`; a fixture canônica usa `hub-legado-notebook`. O único failure entre **21 testes** foi esse oráculo incorreto. As etapas posteriores ficaram `SKIP`; o run permanece **FAILURE**.
 
 ### Run `34904363803` — FAILURE documental no registro final
 
-No head `795edf879c6f013553afa725a02473d49c909624`, a suíte V11 passou **21/21**, as regressões passaram **457/457** e V00 passou **12/12**. O validador terminou em **3 falhas / 0 avisos** porque `CHECKPOINT_V11.md` abreviou o SHA base como prefixo seguido de reticências; esse texto coincidiu com a guarda de identificador corporativo plausível. Como o validador já tinha uma falha, ele não emitiu a linha `APROVADO`, e a conferência do README raiz também falhou por consequência. O escopo V11 ficou `SKIP`.
+No head `795edf879c6f013553afa725a02473d49c909624`, V11 passou **21/21**, as regressões **457/457** e V00 **12/12**. O validador terminou em **3 falhas / 0 avisos** porque um SHA abreviado no checkpoint coincidiu com a guarda de identificador corporativo plausível; como o validador já tinha uma falha, não emitiu a linha `APROVADO`, e a conferência do README raiz falhou por consequência. O escopo ficou `SKIP`. A correção não alterou validador, produto ou testes funcionais. O run permanece **FAILURE**.
 
-A correção usa o SHA completo e não altera o validador, o produto ou os testes funcionais. O run `34904363803` permanece **FAILURE**.
+Nenhum failure ou `SKIP` acima é reclassificado.
 
 ## Evidências integralmente verdes
 
-### Run `34902083889` — SUCCESS no head `0d3180c50428d8716b44f264b915a91243ba96c3`
+### Run `34902083889` — primeiro gate verde
 
-A execução confirmou:
+Head `0d3180c50428d8716b44f264b915a91243ba96c3`:
 - V11 específica: **21/21 PASS**;
-- sintaxe da fachada compilada em memória: **PASS**;
-- regressões cumulativas V01–V11: **457/457 PASS**;
-- compatibilidade visual V00: **12/12 PASS**;
-- validador estrutural/documental: **0 falhas / 0 avisos**;
-- etapa de escopo: **PASS**;
-- token do workflow: `Contents: read`;
-- checkout: `persist-credentials: false`.
+- sintaxe: **PASS**;
+- regressões V01–V11: **457/457 PASS**;
+- V00: **12/12 PASS**;
+- validador: **0 falhas / 0 avisos**;
+- escopo V11: **PASS**.
 
-Esse foi o primeiro gate integralmente verde antes da reconciliação final de navegação.
+### Run `34902853430` — navegação/documentação revalidada
 
-### Run `34902853430` — SUCCESS no head documental `5bb8234422fdd284a9e14815ef566ec0b52a2952`
+Head `5bb8234422fdd284a9e14815ef566ec0b52a2952`: repetiu V11 **21/21**, regressões **457/457**, V00 **12/12**, validador **0/0**, escopo **PASS**, source/simulado equivalentes e workflow read-only.
 
-Depois da reconciliação da navegação e dos documentos vivos, o gate completo foi repetido e confirmou:
-- V11 específica: **21/21 PASS**;
-- sintaxe da fachada compilada em memória: **PASS**;
-- regressões cumulativas V01–V11: **457/457 PASS**;
-- compatibilidade visual V00: **12/12 PASS**;
-- validador estrutural/documental: **0 falhas / 0 avisos**;
-- etapa de escopo: **PASS**;
-- source/simulado V11 byte a byte equivalentes;
-- token do workflow: `Contents: read`;
-- checkout: `persist-credentials: false`;
-- nenhuma operação/API/SDK/CLI Databricks executada.
+### Run `34904743766` — correção de higiene documental revalidada
 
-### Run `34904743766` — SUCCESS após correção de higiene documental
+Head `6561dfbe147c454fdc07eebac3d644b6ae1bf6d0`: repetiu integralmente V11 **21/21**, regressões **457/457**, V00 **12/12**, validador **0/0** e escopo **PASS**.
 
-No head `6561dfbe147c454fdc07eebac3d644b6ae1bf6d0`, a execução repetiu integralmente:
+### Run `34905080083` — gate definitivo pré-PR
+
+Head final `5532ca6d8f1b243ca705088f4b57823a333b9b1f`:
 - V11 específica: **21/21 PASS**;
 - sintaxe V11: **PASS**;
 - regressões V01–V11: **457/457 PASS**;
 - V00: **12/12 PASS**;
 - validador estrutural/documental: **0 falhas / 0 avisos**;
-- escopo V11: **PASS**.
+- escopo V11: **PASS**;
+- source/simulado equivalentes;
+- `Contents: read` e checkout sem credenciais persistentes.
 
-Esse run comprova que a falha `34904363803` era exclusivamente textual e que a correção não alterou comportamento funcional.
-
-Métricas verificáveis vigentes:
+Métricas verificáveis nesse head:
 
 ```text
 skills             : 14 · 14/14 com as 5 seções estruturais
@@ -139,7 +119,28 @@ worktree (extras)  : 0
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
 
-Este registro documental move o head novamente; o workflow V11 deve ser repetido uma última vez no head definitivo e, se verde, esse resultado será usado como evidência pré-PR sem nova edição documental.
+## Evidência real de PR
+
+A PR #52 foi aberta inicialmente em draft sobre o head exato `5532ca6d8f1b243ca705088f4b57823a333b9b1f`. **11/11 workflows reais de `pull_request`** concluíram com `success`:
+- V00;
+- V01;
+- V02;
+- V03;
+- V04;
+- V05;
+- V06;
+- V08;
+- V10;
+- V11;
+- CI local reproduzível.
+
+Após aceite explícito, a PR foi marcada pronta e integrada sem alterar o head aceito.
+
+## Evidência pós-merge funcional
+
+Merge: `9305bc49eaf002caec042361bf35efa66af7ca18`.
+
+Os **13 workflows** disparados por `push` na `main` concluíram com `success`; não houve `failure` nem job remanescente em execução na auditoria final. Isso fecha o gate funcional de integração da V11.
 
 ## Gates de ambiente ainda pendentes
 
@@ -153,4 +154,4 @@ Este registro documental move o head novamente; o workflow V11 deve ser repetido
 - acessibilidade;
 - UAT.
 
-Esses gates não bloqueiam uma candidata Git estritamente local, mas bloqueiam homologação operacional.
+Esses gates não invalidam o fechamento Git da V11, mas bloqueiam qualquer afirmação de homologação operacional. Nenhuma mutação Databricks foi executada pela V11.

@@ -53,9 +53,9 @@ A separação principal é entre **contexto** e **execução**:
 
 ## 🎨 Sistema de Temas
 
-V00–V10 estão aceitas e integradas no Git. A V11 está em candidata separada na branch `codex/temas-v11-aibi-20260914`; não há aceite, merge ou operação real no Databricks. A V10 continua integrada pelo PR #48 no merge `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`, sem deploy Databricks.
+V00–V11 estão aceitas e integradas no Git. A V11 foi aceita em 14/09/2026 e integrada pelo PR #52 no merge `9305bc49eaf002caec042361bf35efa66af7ca18`. Os 11 workflows reais da PR concluíram com `success`; depois do merge, os 13 workflows disparados por `push` na `main` também concluíram com `success`. Nenhuma operação real de tema AI/BI foi executada no Databricks.
 
-A V11 projeta um `ResolvedTheme` `notebook` para capacidades documentadas de temas nativos AI/BI sem criar uma segunda fonte de verdade. `context="aibi"` continua reservado no schema central. A matriz candidata cobre os 48 tokens notebook como **3 traduzidos, 23 aproximados e 22 não suportados**. Como as fontes oficiais verificadas não publicam um schema completo e versionado do JSON produzido por `Export theme`, a V11 não inventa campos nativos: um candidato de importação só pode ser construído sobre um export real fixado por SHA-256 e um binding revisado para campos já existentes. O primeiro gate integralmente verde é o run `34902083889` no head `0d3180c50428d8716b44f264b915a91243ba96c3`: V11 21/21, regressões V01–V11 457/457, V00 12/12 e validador 0 falhas / 0 avisos.
+A V11 projeta um `ResolvedTheme` `notebook` para capacidades documentadas de temas nativos AI/BI sem criar uma segunda fonte de verdade. `context="aibi"` continua reservado no schema central. A matriz integrada cobre os 48 tokens notebook como **3 traduzidos, 23 aproximados e 22 não suportados**. Como as fontes oficiais verificadas não publicam um schema completo e versionado do JSON produzido por `Export theme`, a V11 não inventa campos nativos: um candidato de importação só pode ser construído sobre um export real fixado por SHA-256 e um binding revisado para campos já existentes.
 
 Regras atuais:
 
@@ -73,7 +73,7 @@ Regras atuais:
 
 Na V10, os gates Git/CI exercitam identidade sintética, isolamento, persistência V05, bundle implantável derivado e regressões locais. No head reconciliado `cb942ee955ff9236f19099e5ed4ceee9beb32000`, os dez workflows reais de PR concluíram com `success`; depois do merge `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`, os 12 workflows disparados por `push` na `main` também concluíram com `success`, incluindo o workflow V10 `34896944061`. Isso **não** comprova headers reais, permissões/grupos do workspace, UC Volume real, browser, acessibilidade, concorrência multiusuário ou UAT. Nenhuma criação/atualização de Databricks App foi executada por essa sprint.
 
-Detalhes da candidata atual: [V11](docs/sprints/sistema_temas/V11/README.md) e [checkpoint V11](docs/sprints/sistema_temas/V11/CHECKPOINT_V11.md). A integração anterior permanece em [V10](docs/sprints/sistema_temas/V10/README.md), [checkpoint V10](docs/sprints/sistema_temas/V10/CHECKPOINT_V10.md) e [V09](docs/sprints/sistema_temas/V09/README.md).
+Detalhes da etapa integrada mais recente: [V11](docs/sprints/sistema_temas/V11/README.md) e [checkpoint V11](docs/sprints/sistema_temas/V11/CHECKPOINT_V11.md). As etapas anteriores permanecem em [V10](docs/sprints/sistema_temas/V10/README.md), [checkpoint V10](docs/sprints/sistema_temas/V10/CHECKPOINT_V10.md) e [V09](docs/sprints/sistema_temas/V09/README.md).
 
 ## 🔄 Como o contexto chega à Genie Code
 

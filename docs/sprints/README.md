@@ -75,11 +75,11 @@ A iniciativa continua sem alteração funcional própria no produto `.assistant`
 
 ## Sistema de Temas do Hub
 
-A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V10 estão aceitas e integradas no Git. A V11 está em candidata separada na branch `codex/temas-v11-aibi-20260914`; não há aceite, merge nem operação real no Databricks.**
+A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V11 estão aceitas e integradas no Git. A V11 foi aceita em 14/09/2026 e integrada pelo PR #52 no merge `9305bc49eaf002caec042361bf35efa66af7ca18`.**
 
 A V11 cria uma ponte fail-closed entre um `ResolvedTheme` `notebook` e capacidades documentadas de temas nativos AI/BI sem ampliar silenciosamente o schema V01/V02: `context="aibi"` continua reservado. A matriz cobre exatamente 48 tokens, classificados em 3 traduzidos, 23 aproximados e 22 não suportados. O projeto não inventa o schema do JSON nativo de `Import theme`; um binding nativo futuro exige export real fixado por SHA-256 e revisão de JSON Pointers. Estado e limites estão em [V11](sistema_temas/V11/README.md), [testes V11](sistema_temas/V11/TESTES.md) e [checkpoint V11](sistema_temas/V11/CHECKPOINT_V11.md).
 
-Os runs V11 `34900693160`, `34901091132` e `34901776770` permanecem **FAILURE**. Eles registram, respectivamente, uma fronteira de exceção corrigida, métricas antigas do README após os gates funcionais verdes e um oráculo novo com ID de fixture incorreto. Nenhum foi reclassificado. A candidata continua em validação no Git; não houve export/import real de tema, gestão de workspace theme, publicação de dashboard ou qualquer chamada Databricks.
+Os runs V11 `34900693160`, `34901091132`, `34901776770` e `34904363803` permanecem **FAILURE** e não foram reclassificados. O head final `5532ca6d8f1b243ca705088f4b57823a333b9b1f` teve o push pré-PR `34905080083` integralmente verde; os 11 workflows reais da PR #52 concluíram com `success`, e os 13 workflows pós-merge no commit `9305bc49eaf002caec042361bf35efa66af7ca18` também concluíram com `success`. Não houve export/import real de tema, gestão de workspace theme, publicação de dashboard ou qualquer chamada Databricks.
 
 A V10 foi aceita por Rodrigo em 14/09/2026 e integrada pelo PR #48 no merge `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`. Ela reutiliza o núcleo V02 e o Visual Lab V05 em uma superfície Streamlit `authoring_only`, com identidade encaminhada pelo proxy, namespace de sessão por SHA-256 e persistência projetada em Unity Catalog Volume via recurso `theme_storage`. Ela não implementa `context="app"`, aprovação, publicação, promoção ou delete de histórico. Evidências e limites estão em [V10](sistema_temas/V10/README.md), [testes V10](sistema_temas/V10/TESTES.md) e [checkpoint V10](sistema_temas/V10/CHECKPOINT_V10.md).
 
@@ -113,7 +113,7 @@ A R04-A está integrada em `a8f314a`. A R04-B cobre seis Hub Scripts e pausa par
 A R04-B está integrada em `d9da056`. A R05 cobre seis modelos tabulares e pausa para revisão antes da R06. Consulte `readmes_objetos/RELATORIO_R05.md` e `readmes_objetos/MATRIZ_ALTERACOES_R05.md`.
 
 ### READMEs de objeto — R06
-A R05 está integrada em `cae94988`. A R06 cobre cinco objetos de séries/validação temporal e pausa para revisão antes da R07. Consulte `readmes_objetos/RELATORIO_R06.md` e `readmes_objetos/MATRIZ_ALTERACOES_R06.md`.
+A R05 foi integrada em `cae94988`. A R06 cobre cinco objetos de séries/validação temporal e pausa para revisão antes da R07. Consulte `readmes_objetos/RELATORIO_R06.md` e `readmes_objetos/MATRIZ_ALTERACOES_R06.md`.
 
 ### READMEs de objeto — R07
 A R06 foi integrada em `289731c`. A R07 cobre seis objetos de score, vintage e sobrevivência e pausa para revisão antes da R08. Consulte `readmes_objetos/RELATORIO_R07.md` e `readmes_objetos/MATRIZ_ALTERACOES_R07.md`.
