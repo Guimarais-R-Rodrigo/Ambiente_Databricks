@@ -28,13 +28,16 @@ correspondência com a identidade `hub_`/`hub-` está no
 
 ## Iniciativa de READMEs por objeto
 
-A [migração R00–R13](readmes_objetos/README.md) usa numeração própria. Os
-relatórios históricos acima permanecem intactos; não são substituídos pelos
-checkpoints desta iniciativa.
+A [iniciativa R00–R13](readmes_objetos/README.md) usa numeração própria e está
+encerrada no Git desde 14/09/2026: 75/75 READMEs operacionais, 3/3 exemplares,
+zero pendências e auditoria final local `A0_light`. Homologação Databricks/Genie
+Code e auditoria independente permanecem gates separados.
 
-O [checkpoint R02-I](readmes_objetos/CHECKPOINT_INTEGRACAO_R02.md) registra a
-composição candidata com o Concierge. O [piloto R02](readmes_objetos/CHECKPOINT_R02.md)
-e os relatos R00/R01 permanecem históricos; não houve início da R03.
+As subseções cronológicas abaixo preservam o estado observado em cada etapa. O
+[checkpoint R02-I](readmes_objetos/CHECKPOINT_INTEGRACAO_R02.md), o
+[piloto R02](readmes_objetos/CHECKPOINT_R02.md) e os relatos R00/R01 continuam
+históricos; frases como “R03 não iniciada” descrevem aquele checkpoint, não o
+estado vigente.
 
 ## Continuidade READMEs — 2026-09-12, R03-A
 
@@ -117,3 +120,6 @@ Após a integração da R12 pelo PR #32 (`ec4b559d`), a R13 audita em conjunto c
 
 ### READMEs R13 — encerramento da iniciativa
 A R13 foi aceita e integrada pelo PR #33 (`b0e953cc`). A iniciativa própria de READMEs R00–R13 está encerrada no Git com 75/75 objetos operacionais, 3/3 exemplares, 0 pendências e auditoria final local `A0_light` aprovada. Homologação Databricks/Genie Code e auditoria independente continuam fora deste fechamento.
+
+### Reconciliação documental pós-R13
+Escopo D01–D04: `docs/sprints/documentacao_pos_r13.md`.

@@ -11,7 +11,7 @@ conteúdo.
 
 | Quero criar… | Template | Exemplo preenchido |
 |---|---|---|
-| README | [`readme/template.md`](readme/template.md) | [`readme/exemplo.md`](readme/exemplo.md) |
+| README agregador/guia | [`readme/template.md`](readme/template.md) | [`readme/exemplo.md`](readme/exemplo.md) |
 | snippet | [`snippet/template.md`](snippet/template.md) | [`taxa_resposta_campanha`](snippet/taxa_resposta_campanha/) |
 | script | [`script/template.md`](script/template.md) | [`checar_base_campanha`](script/checar_base_campanha/) |
 | prompt | [`prompt/template.md`](prompt/template.md) | [`analisar_campanha`](prompt/analisar_campanha/) |
@@ -91,10 +91,15 @@ Todo objeto precisa deixar explícitos:
 - [Manual Técnico — índice de termos](../MANUAL_TECNICO.md#indice-termos)
 - [Manual Técnico — inventário de helpers](../MANUAL_TECNICO.md#catalogo-helpers)
 
-## README de objeto — contrato candidato
+## README de objeto — contrato vigente 1.0.0
 
-Use o [molde local](readme/template_objeto.md) e o
-[checklist editorial](readme/checklist_objeto.md) para novos snippets, scripts
-e prompts. Os exemplares de snippet, script e prompt têm guias preenchidos.
-O piloto R02 precede o congelamento do contrato em 1.0; não crie outro tipo de
-objeto nem replique o catálogo do Manual.
+O template genérico `readme/template.md` atende guias agregadores. Para pastas
+operacionais de snippet, script ou prompt, use o
+[molde de objeto](readme/template_objeto.md) e o
+[checklist editorial](readme/checklist_objeto.md). A transição terminou com
+75/75 objetos operacionais, 3/3 exemplares e zero pendências.
+
+Todo novo objeto desses três tipos deve nascer com README local no mesmo
+contrato. O guia explica conceito, adequação, requisitos, efeitos e
+interpretação; código, fachada ou briefing continuam definindo o comportamento
+técnico. Não reabra dispensas nem replique o catálogo integrado do Manual.

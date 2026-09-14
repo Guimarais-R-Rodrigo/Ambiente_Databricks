@@ -5,6 +5,11 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-14 — pós-R13 D01–D04 (ChatGPT)
+
+- Documentação viva reconciliada com R00–R13 encerrada.
+- Sem alteração de implementação nem homologação Databricks.
+
 ## 2026-09-13 — R13: integração e encerramento da iniciativa de READMEs (ChatGPT)
 
 - Integra o PR #33 no commit `b0e953cc`, após auditoria R13, mutantes negativos e CIs permanentes aprovados.

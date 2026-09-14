@@ -99,6 +99,5 @@ O procedimento completo e os critérios de parada estão no
 
 ## Documentação por objeto
 
-O produto inclui [um molde de README local](.assistant/hub_padroes/readme/template_objeto.md)
-para snippets, scripts e prompts. Ele complementa os exemplos e o Manual;
-esta mudança é documental e não publica automaticamente o workspace.
+Os 75 objetos operacionais atuais possuem README local. Novos snippets, scripts e prompts usam o [molde 1.0.0](.assistant/hub_padroes/readme/template_objeto.md) e o checklist editorial. Ele complementa os exemplos e o Manual;
+o README local é obrigatório para novos snippets, scripts e prompts; ele não homologa runtime nem publica o workspace.

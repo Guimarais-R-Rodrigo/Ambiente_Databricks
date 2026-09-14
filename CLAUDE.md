@@ -56,10 +56,11 @@ Escala planejada: pessoal → squad → missão.
   Publicação e homologação conversacional são gates separados da integração Git.
 
 - README didático por pasta de objeto: `ADR-0012`, ratificado em 2026-09-12;
-  contrato 1.0.0 estabilizado após aceite do piloto. R03-A/R03-B foram integradas
-  pelo PR nº 13, R04-A pelo PR nº 17 e R04-B pelo PR nº 18. As duas levas R04
-  foram reconciliadas com o Sistema de Temas antes do merge. Estado e retomada:
-  `docs/sprints/readmes_objetos/README.md`.
+  contrato **1.0.0** vigente. A iniciativa própria R00–R13 foi aceita e encerrada
+  no Git após PR #33 (`b0e953cc`) e fechamento documental PR #34 (`99e01012`):
+  **75/75 operacionais, 3/3 exemplares e 0 pendências**. A auditoria final é
+  `A0_light`; não equivale a publicação nem homologação Databricks/Genie Code.
+  Estado vigente: `docs/sprints/readmes_objetos/README.md`.
 
 - Sistema de Temas: contrato central e configuração completa por contexto
   aceitos no `docs/decisions/ADR-0013-sistema-de-temas.md`. A V01 está aceita
@@ -99,17 +100,17 @@ O índice completo, com o status de cada ADR, está em `docs/decisions/README.md
   antes de afirmar.
 - Não duplique regra longa entre arquivos: mova para `.claude/` e referencie.
 
-### Estado da migração de READMEs — R04-B
-A R04-A foi integrada na `main` em `a8f314a`. A R04-B documenta os seis `hub_scripts` previstos no controle de migração; use `docs/sprints/readmes_objetos/RELATORIO_R04B.md` para escopo, testes e limites. Não trate cobertura estrutural como aceite editorial.
+### Estado vigente dos READMEs de objeto
+A migração estrutural terminou na R11 e a iniciativa R00–R13 foi encerrada após a
+auditoria final R13 e o fechamento documental pós-merge. O contrato vigente é
+`readme-objeto: 1.0.0`; todos os 75 objetos operacionais possuem README, os três
+exemplares permanecem separados e `CONTROLE_MIGRACAO.json` está em
+`phase=complete` com `pending={}`.
 
-### Estado da migração de READMEs — R05
-A R04-B foi integrada na `main` em `d9da056`. A R05 documenta seis modelos tabulares sem alterar implementações/fachadas; consulte `docs/sprints/readmes_objetos/RELATORIO_R05.md`. Cobertura estrutural não é aceite editorial nem homologação.
-
-### Estado da migração de READMEs — R06
-A R05 foi aceita e integrada na `main` em `cae94988`. A R06 documenta cinco objetos de séries/validação temporal sem alterar implementações/fachadas; consulte `docs/sprints/readmes_objetos/RELATORIO_R06.md`. Cobertura estrutural não é aceite editorial nem homologação.
-
-### Estado da migração de READMEs — R07
-A R06 foi aceita e integrada na `main` em `289731c`. A R07 documenta seis objetos de score, vintage e sobrevivência sem alterar implementações/fachadas; consulte `docs/sprints/readmes_objetos/RELATORIO_R07.md`. Cobertura estrutural não é aceite editorial, política de crédito nem homologação.
-
-### Estado da migração de READMEs — R08
-A R07 foi aceita e integrada na `main` pelo PR #25 no commit `b73bbb9`. A R08 documenta seis objetos de clusterização, anomalias e explicabilidade sem alterar implementações/fachadas: `autoencoder_anomaly`, `cluster_profiling`, `clustering_suite`, `explainability_report`, `shap_explainer` e `umap_viz`. Estado: `docs/sprints/readmes_objetos/RELATORIO_R08.md`. Cobertura estrutural não é aceite editorial, homologação de modelo nem publicação Databricks.
+Para manutenção futura, todo novo snippet, script ou prompt precisa entrar já com
+README no mesmo contrato; reintroduzir dispensa é regressão. Use o
+[estado vigente](docs/sprints/readmes_objetos/README.md), o
+[relatório final R13](docs/sprints/readmes_objetos/RELATORIO_R13.md) e o
+[contrato editorial](ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md).
+Cobertura estrutural não é homologação de runtime, publicação no workspace nem
+auditoria independente.

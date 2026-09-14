@@ -61,7 +61,7 @@ Os scripts seguem o padrão de organização **Pasta de Objeto**. Cada utilitár
 
 *Leitura da figura: interface, implementação e demonstração permanecem separadas; a implementação define o contrato específico da ferramenta.*
 
-**Equivalente textual da figura:** a pasta contém `__init__.py`, que expõe a interface pública; `<nome>.py`, que contém a implementação; e `exemplo_<nome>.py`, que demonstra a chamada em formato de notebook. A saída não é universal: conforme o utilitário, pode ser dicionário, DataFrame Spark, texto YAML/JSON ou lista de violações.
+**Equivalente textual da figura:** o núcleo executável contém `__init__.py`, implementação e `exemplo_<nome>.py`; cada objeto operacional possui também `README.md`, que explica adequação, requisitos, efeitos, limites e interpretação antes da execução. A saída não é universal: conforme o utilitário, pode ser dicionário, DataFrame Spark, texto YAML/JSON ou lista de violações.
 
 O notebook `exemplo_<nome>.py` mostra uma chamada com dados controlados e a saída observada. Alguns exemplos simulam falhas; outros demonstram apenas o caminho principal. Por isso, o exemplo ensina o contrato exercitado, mas não substitui testes de volume, permissões ou runtime.
 
@@ -95,6 +95,8 @@ Este grupo reúne a inspeção inicial e seu preparo analítico próximo. Há um
 - **Quando usar:** ao receber uma tabela nova ou como diagnóstico anterior a uma etapa de treino. Os thresholds são política fornecida à chamada, não defaults oficiais da Databricks.
 
 #### `quick_profile` — Raio-X de Schema e Distribuição
+
+- **Guia local:** [quick_profile: guia local](quick_profile/README.md)
 
 - **O que faz:** lê a tabela, calcula volume e nulos no conjunto completo e usa uma amostra configurada para cardinalidade e resumos adicionais.
 - **O que retorna:** dicionário com metadados, métricas e informações de perfilamento.

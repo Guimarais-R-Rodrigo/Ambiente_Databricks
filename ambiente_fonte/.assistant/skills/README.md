@@ -396,6 +396,7 @@ Analogias facilitam a compreensão, mas não substituem o comportamento técnico
 
 - **O que faz:** orienta a criação ou alteração de snippet, script, prompt, README, notebook ou skill usando os padrões do Hub.
 - **Templates:** `checklist-objeto-novo.md` e os moldes em `hub_padroes/`.
+- **Documentação:** snippet, script ou prompt novo deve incluir README local no contrato 1.0.0.
 - **Helpers recomendados:** variam conforme o tipo criado; a própria skill lista recursos de estrutura, teste, visual e documentação.
 - **Caso de Uso Real:**
   > *“Desenvolvi uma função de LTV útil para a equipe. Quero estruturá-la com API pública, exemplo sintético, testes, documentação e revisão.”*

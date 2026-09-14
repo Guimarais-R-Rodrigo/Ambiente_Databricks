@@ -21,6 +21,10 @@ flowchart LR
   P --> W
 ```
 
+## Estado local/documental pós-R13 — 14/09/2026
+
+A iniciativa de READMEs R00–R13 foi encerrada localmente com 75/75 objetos operacionais, 3/3 exemplares e zero pendências. Esse fechamento não altera retroativamente as rodadas Databricks abaixo: publicação, smoke e testes conversacionais continuam valendo apenas para o ambiente e a data em que foram observados.
+
 ## Transição ao trabalho — preparação em 11/09/2026
 
 O [guia vigente](../playbooks/replicacao-trabalho.md) separa integridade, runtime sintético e aceite humano. O kit gera um notebook próprio; ele não considera testes pulados como aprovação e não presume que a rodada de 09/09 homologue as novas instruções de 11/09 ou o workspace corporativo. A execução no trabalho permanece pendente.

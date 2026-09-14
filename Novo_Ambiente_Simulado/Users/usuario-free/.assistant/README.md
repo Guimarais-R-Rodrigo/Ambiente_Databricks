@@ -155,6 +155,10 @@ Quando uma informação for desconhecida, use `NÃO INFORMADO` e peça inspeçã
 
 Consulte o Hub Padrões em `.assistant/hub_padroes/README.md`.
 
+### 📘 README local do recurso
+
+Ao chegar a um snippet, script ou prompt concreto, leia primeiro o `README.md` da pasta. Ele orienta escolha, requisitos, efeitos, limites e interpretação; depois use o notebook de exemplo e a implementação ou briefing. O guia não equivale a homologação de runtime ou aprovação de negócio.
+
 > **INFRAESTRUTURA EDITORIAL DO HUB.** A pasta
 > `hub_readmes_visual_assets/` mantém os diagramas e os cabeçalhos compartilhados
 > de CRM e Squad, com fontes de composição e PNGs. Ela
