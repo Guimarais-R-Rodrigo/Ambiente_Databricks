@@ -1,7 +1,7 @@
 # ADR-0018 — Provar a esteira com caso novo antes de migrar legados
 
 Data: 2026-09-14
-Status: Proposto
+Status: Aceito pelo usuário em 2026-09-14; integração da MM00 pendente
 Autor: ChatGPT
 
 ## Contexto
@@ -26,3 +26,7 @@ Exigir um piloto greenfield ponta a ponta antes da migração. A migração dos 
 ## Referências
 
 - `docs/sprints/micromodelos/PLANO_MESTRE.md`
+
+## Ratificação de status — 14/09/2026
+
+O usuário declarou: “D2: Aceito ADR-0014 a ADR-0020 sem ressalvas.” Este ADR fica aceito sem alteração do corpo decisório. O aceite congela a ordem greenfield antes de legados, mas não autoriza iniciar piloto corporativo, migração ou MM01 antes dos gates próprios e do fechamento da MM00.
