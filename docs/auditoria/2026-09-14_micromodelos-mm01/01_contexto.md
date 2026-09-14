@@ -31,10 +31,10 @@ Para requisitos arquiteturais, consulte somente as decisões aceitas e política
 
 - `docs/decisions/ADR-0014-micromodelo-artefato-de-dominio.md`;
 - `docs/decisions/ADR-0015-micromodelo-yaml-canonico.md`;
-- `docs/decisions/ADR-0016-mlflow-historico-execucao.md`;
+- `docs/decisions/ADR-0016-mlflow-runs-micromodelos.md`;
 - `docs/decisions/ADR-0017-governanca-externa-publicacao.md`;
-- `docs/decisions/ADR-0018-migracao-legado-pos-piloto.md`;
-- `docs/decisions/ADR-0019-integracao-visual-tardia.md`;
+- `docs/decisions/ADR-0018-piloto-novo-antes-legados.md`;
+- `docs/decisions/ADR-0019-micromodelos-consomem-temas.md`;
 - `docs/decisions/ADR-0020-fontes-catalogo-configurado.md`;
 - `tools/project_policy.py`;
 - `tools/validate_assistant.py`;
