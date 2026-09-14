@@ -48,8 +48,12 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.schema = module.load_schema(SCHEMA)
-        cls.valid = json.loads((FIXTURES / "valido_validado.json").read_text(encoding="utf-8"))
-        cls.invalid_cases = json.loads((FIXTURES / "casos_invalidos.json").read_text(encoding="utf-8"))
+        cls.valid = json.loads(
+            (FIXTURES / "valido_validado.json").read_text(encoding="utf-8")
+        )
+        cls.invalid_cases = json.loads(
+            (FIXTURES / "casos_invalidos.json").read_text(encoding="utf-8")
+        )
 
     def codes(self, document: dict) -> set[str]:
         return {issue.code for issue in module.validate_spec(document, self.schema)}
@@ -86,7 +90,6 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
         document["score"]["habilitado"] = False
         self.assertIn("SCORE_DISABLED", self.codes(document))
 
-
     def test_human_validation_decision_must_match_status(self) -> None:
         document = copy.deepcopy(self.valid)
         document["validacao"]["aprovacao_humana"]["status"] = "REPROVADO"
@@ -98,6 +101,96 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
         self.assertNotIn(("IDEIA", "EM_ESTUDO"), module.TRANSICOES_FASE)
         self.assertNotIn(("VALIDADO", "PUBLICADO"), module.TRANSICOES_FASE)
         self.assertNotIn(("PUBLICADO", "EM_ESTUDO"), module.TRANSICOES_FASE)
+
+    def test_cosmetic_semantic_duplicates_are_rejected(self) -> None:
+        document = copy.deepcopy(self.valid)
+        original = document["classificacao"]["semantica"]["quando_true"]
+        document["classificacao"]["semantica"]["quando_false"] = (
+            f"  {original.upper()} !!!  "
+        )
+        self.assertIn("AMBIGUOUS_BINARY_SEMANTICS", self.codes(document))
+
+    def test_probability_language_requires_calibrated_semantics(self) -> None:
+        document = copy.deepcopy(self.valid)
+        document["score"]["semantica"] = (
+            "probabilidade estimada de o cliente possuir a característica"
+        )
+        self.assertIn("SCORE_PROBABILITY_LANGUAGE", self.codes(document))
+
+        calibrated = copy.deepcopy(self.valid)
+        calibrated["score"]["tipo_semantica"] = "PROBABILIDADE_CALIBRADA"
+        calibrated["score"]["semantica"] = (
+            "probabilidade calibrada de o cliente possuir a característica"
+        )
+        calibrated["score"]["calibracao"] = {
+            "metodo": "calibracao_sintetica",
+            "evidencia_ref": "exp_001",
+            "proveniencia": {
+                "status": "MEDIDO",
+                "origem": "execucao sintetica",
+                "referencia": "calibracao_sintetica",
+                "observado_em_utc": "2026-09-14T13:30:00Z",
+                "aprovacao": None,
+                "medicao": {
+                    "referencia_execucao": "run-calibracao-001",
+                    "medido_em_utc": "2026-09-14T13:30:00Z",
+                },
+            },
+        }
+        self.assertEqual([], module.validate_spec(calibrated, self.schema))
+
+    def test_duplicate_ids_are_rejected_in_components_and_experiments(self) -> None:
+        document = copy.deepcopy(self.valid)
+        document["score"]["componentes"].append(
+            copy.deepcopy(document["score"]["componentes"][0])
+        )
+        self.assertIn("DUPLICATE_ID", self.codes(document))
+
+        document = copy.deepcopy(self.valid)
+        document["experimentos"].append(
+            copy.deepcopy(document["experimentos"][0])
+        )
+        self.assertIn("DUPLICATE_ID", self.codes(document))
+
+    def test_validation_phase_requires_nonempty_material_content(self) -> None:
+        for field in ("fontes", "evidencias", "contra_evidencias"):
+            with self.subTest(field=field):
+                document = copy.deepcopy(self.valid)
+                document[field] = []
+                self.assertIn("PHASE_CONTENT_GATE", self.codes(document))
+
+        document = copy.deepcopy(self.valid)
+        document["validacao"]["criterios"] = []
+        self.assertIn("PHASE_CONTENT_GATE", self.codes(document))
+
+    def test_publication_status_must_match_lifecycle_phase(self) -> None:
+        document = copy.deepcopy(self.valid)
+        document["publicacao"]["status"] = "PUBLICADA"
+        document["publicacao"]["produto_dados_ref"] = "produto-sintetico"
+        self.assertIn("PUBLICATION_STATUS_PHASE", self.codes(document))
+
+    def test_unknown_property_in_material_block_is_rejected(self) -> None:
+        document = copy.deepcopy(self.valid)
+        document["classificacao"]["campo_desconhecido"] = "nao permitido"
+        self.assertIn("SCHEMA", self.codes(document))
+
+    def test_duplicate_yaml_and_json_keys_are_rejected_on_load(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            yaml_path = Path(tmp) / "duplicado.yaml"
+            yaml_path.write_text(
+                'schema_version: "1.0.0"\nschema_version: "2.0.0"\n',
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, "duplicada"):
+                module.load_document(yaml_path)
+
+            json_path = Path(tmp) / "duplicado.json"
+            json_path.write_text(
+                '{"schema_version":"1.0.0","schema_version":"2.0.0"}',
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, "duplicada"):
+                module.load_document(json_path)
 
     def test_cli_returns_zero_for_template_and_one_for_invalid_document(self) -> None:
         ok = subprocess.run(
@@ -114,9 +207,32 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
         document["fontes"][0]["catalogo_ref"] = "OUTRO_CATALOGO"
         with tempfile.TemporaryDirectory() as tmp:
             invalid_path = Path(tmp) / "invalido.json"
-            invalid_path.write_text(json.dumps(document, ensure_ascii=False), encoding="utf-8")
+            invalid_path.write_text(
+                json.dumps(document, ensure_ascii=False), encoding="utf-8"
+            )
             bad = subprocess.run(
-                [sys.executable, str(CONTRACT), str(invalid_path), "--schema", str(SCHEMA)],
+                [
+                    sys.executable,
+                    str(CONTRACT),
+                    str(invalid_path),
+                    "--schema",
+                    str(SCHEMA),
+                ],
+                cwd=REPO,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            bypass = subprocess.run(
+                [
+                    sys.executable,
+                    str(CONTRACT),
+                    str(invalid_path),
+                    "--schema",
+                    str(SCHEMA),
+                    "--catalog-ref",
+                    "OUTRO_CATALOGO",
+                ],
                 cwd=REPO,
                 capture_output=True,
                 text=True,
@@ -124,6 +240,8 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
             )
         self.assertEqual(1, bad.returncode, bad.stdout + bad.stderr)
         self.assertIn("CATALOG_SCOPE", bad.stdout)
+        self.assertEqual(2, bypass.returncode, bypass.stdout + bypass.stderr)
+        self.assertIn("unrecognized arguments", bypass.stderr)
 
 
 if __name__ == "__main__":
