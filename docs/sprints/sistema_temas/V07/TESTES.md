@@ -46,11 +46,23 @@ A execução reprovou em `validate_assistant.py --conferir-readme` por duas clas
 
 A correção das fachadas foi feita pelo contrato exaustivo de API pública, não por relaxamento do validador. As métricas do README não foram corrigidas imediatamente porque a documentação dos objetos ainda acrescentaria arquivos/links e exigiria nova medição.
 
-## Migração documental dos objetos
+## `34859769442` — FAILURE documental da migração
 
-Sete READMEs operacionais receberam uma nota `Atualização V07 — estado atual` imediatamente após o marcador `readme-objeto: 1.0.0`, com a mesma alteração aplicada ao ambiente simulado. A migração foi executada por mecanismo transitório de escrita somente para evitar reescrever/truncar documentos longos; depois da escrita, o workflow permanente foi restaurado para `contents: read`, checkout sem credencial persistente e o script transitório foi removido.
+A rodada transitória que atualizou sete READMEs fonte/simulado concluiu com:
 
-A guarda `test_temas_v07_mirror.py` foi ampliada para comparar também esses sete READMEs byte a byte. O run associado à migração e os runs posteriores devem permanecer registrados com sua conclusão real quando finalizados.
+- suíte específica V07: **18/18 PASS**;
+- regressões cumulativas V01–V07: **382/382 PASS**;
+- compatibilidade visual V00: **12/12 PASS**.
+
+O run permaneceu **FAILURE** porque `validate_assistant.py --conferir-readme` mediu **1345 arquivos** na identidade do repositório e **1841 links fora da raiz**, enquanto o README ainda registrava 1339/1840. Esse failure é evidência histórica e não é convertido em sucesso por execuções posteriores.
+
+Sete READMEs operacionais receberam uma nota `Atualização V07 — estado atual` imediatamente após o marcador `readme-objeto: 1.0.0`, com a mesma alteração aplicada ao ambiente simulado. O mecanismo transitório existiu somente para evitar reescrever/truncar documentos longos. Depois da escrita, o workflow permanente foi restaurado para `contents: read`, checkout sem credencial persistente, e o script transitório foi removido da árvore permanente.
+
+A guarda `test_temas_v07_mirror.py` foi ampliada para comparar também esses sete READMEs byte a byte.
+
+## Estado de fechamento em andamento
+
+Checkpoint e índices vivos já registram V07 como candidata em execução, sem aceite/merge/publicação. As métricas finais do README raiz só serão gravadas depois de todos esses documentos estarem estáveis. O head final ainda precisa repetir V07, regressões cumulativas, V00, validação documental e CI agregado antes de abertura da PR draft.
 
 ## O que PASS não prova
 
