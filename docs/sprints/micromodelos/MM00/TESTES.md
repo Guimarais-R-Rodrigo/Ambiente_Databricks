@@ -58,7 +58,7 @@ YAML define política/identidade; MLflow guarda histórico de runs; dados indivi
 
 ## T09 — Não alteração funcional pela MM00
 
-Contra `main=d6655411...`, a PR permanece restrita a contexto, ADRs e documentação/auditoria MM00. O patch do README raiz altera somente as métricas medidas; o patch de `docs/sprints/README.md` acrescenta somente a seção MM00. Nenhum arquivo MM00 próprio pertence a `ambiente_fonte/.assistant/`, `Novo_Ambiente_Simulado/`, `tools/` ou `.github/workflows/`.
+Contra `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb`, a PR permanece restrita a contexto, ADRs e documentação/auditoria MM00. O patch do README raiz altera somente as métricas medidas; o patch de `docs/sprints/README.md` acrescenta somente a seção MM00. Nenhum arquivo MM00 próprio pertence a `ambiente_fonte/.assistant/`, `Novo_Ambiente_Simulado/`, `tools/` ou `.github/workflows/`.
 
 **Status:** PASS nominal; reconfirmar a lista final antes do aceite.
 
