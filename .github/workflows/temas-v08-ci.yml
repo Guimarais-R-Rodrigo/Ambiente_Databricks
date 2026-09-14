@@ -36,43 +36,18 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/codex/temas-v08-fechamento-pos-merge-20260914'
         run: |
           python - <<'PY'
+          import base64
           from pathlib import Path
-
           path = Path('CHANGELOG.md')
           text = path.read_text(encoding='utf-8')
           start = '## 2026-09-14 — V08: candidata de integração transversal (ChatGPT)'
           end = '## 2026-09-14 — V07: candidata de consumidores e formatos de saída (ChatGPT)'
           if text.count(start) != 1 or text.count(end) != 1:
               raise SystemExit(f'V08_CHANGELOG_MARKERS start={text.count(start)} end={text.count(end)}')
+          encoded = 'IyMgMjAyNi0wOS0xNCDigJQgVjA4OiBpbnRlZ3Jhw6fDo28gdHJhbnN2ZXJzYWwgZSBmZWNoYW1lbnRvIHTDqWNuaWNvIChDaGF0R1BUKQoKIyMjIEFkaWNpb25hZG8KCi0gKENoYXRHUFQpIE1hdHJpeiB0cmFuc3ZlcnNhbCBkZSBpbnRlZ3Jhw6fDo28gZW50cmUgU2lzdGVtYSBkZSBUZW1hcywgc2tpbGxzLCBIdWIgUGFkcsO1ZXMsIGVudHJhZGEgYC5hc3Npc3RhbnRgIGUgTWFudWFsIFTDqWNuaWNvLgotIChDaGF0R1BUKSBTdcOtdGUgVjA4IGUgd29ya2Zsb3cgcGVybWFuZW50ZSByZWFkLW9ubHkgY29tIGd1YXJkYSBleHBsw61jaXRhIHF1ZSBwcm/DrWJlIGFsdGVyYcOnw7VlcyBydW50aW1lIFB5dGhvbiBlbSBgaHViX3NuaXBwZXRzYCBlIGBodWJfc2NyaXB0c2AuCgojIyMgQXR1YWxpemFkbwoKLSAoQ2hhdEdQVCkgQ29uY2llcmdlLCBjcmlhw6fDo28gZGUgb2JqZXRvLCBFREEsIGJhc2VsaW5lLCBzYWZyYSwgbW9uaXRvcmFtZW50byBlIGV4cGxhaW5hYmlsaXR5IHBhc3NhbSBhIGFwb250YXIgcGFyYSBgUmVzb2x2ZWRUaGVtZWAgZSBjb25zdW1pZG9yZXMgYF9yZXNvbHZpZG9gIHNlbSByZWRlZmluaXIgcGFsZXRhcyBvdSBwb2zDrXRpY2EgdmlzdWFsLgotIChDaGF0R1BUKSBPIHRlbXBsYXRlIHZpc3VhbCBkYSBFREEgZGVpeGEgZGUgc2VyIHVtYSBzZWd1bmRhIGZvbnRlIGRlIHRlbWEgZSBwcmVzZXJ2YSBjb21wb3Npw6fDo28sIGhpZXJhcnF1aWEsIGxlaXR1cmEsIHRhYmVsYXMsIEtQSXMsIGVtb2ppcywgw61uZGljZSBlIGRlbWFpcyBjb252ZW7Dp8O1ZXMgZWRpdG9yaWFpcy4KLSAoQ2hhdEdQVCkgSHViIFBhZHLDtWVzIGUgTWFudWFsIHBhc3NhbSBhIGRlc2NyZXZlciBWMDLigJNWMDcgaW50ZWdyYWRhcywgVmlzdWFsIExhYiwgZ2VyYcOnw6NvIGVkaXRvcmlhbCwgY29uc3VtaWRvcmVzIFYwNyBlIGxpbWl0ZXMgYXR1YWlzLgotIChDaGF0R1BUKSBPIFJFQURNRSByYWl6IGZvaSBjb21wYWN0YWRvIHBhcmEgYXR1YXIgY29tbyBlbnRyYWRhIG9wZXJhY2lvbmFsLCBtYW50ZW5kbyBvIGhpc3TDs3JpY28gZGV0YWxoYWRvIG5vIMOtbmRpY2UgY2Fuw7RuaWNvIGRlIHNwcmludHMgZSBwcmVzZXJ2YW5kbyBvIGJsb2NvIHZlcmlmaWPDoXZlbCBkbyBnYXRlIGxvY2FsLgotIChDaGF0R1BUKSBQUiAjNDIgaW50ZWdyYWRhIGFww7NzIGFjZWl0ZSBleHBsw61jaXRvIGRlIFJvZHJpZ287IGhlYWQgZmluYWwgdmFsaWRhZG8gYDlhZjU2MTVkNzliMDJjYmQ4NmY1YTZkMDg0NDQ0YzgzZjIwM2FlMDNgIGUgbWVyZ2UgYDYyMmQyYzk2MmE4MDk5OGNmOTkwYjU3MDM2ZjdhZTUwM2JmYzA0NThgLCBjb20gw6Fydm9yZSBpZMOqbnRpY2Egw6AgY2FuZGlkYXRhIHRlc3RhZGEuCgojIyMgRXZpZMOqbmNpYXMKCi0gKENoYXRHUFQpIEZhaWx1cmVzIGludGVybWVkacOhcmlvcyBwZXJtYW5lY2VtIHJlZ2lzdHJhZG9zIGNvbSBzdWFzIGNhdXNhcyByZWFpcywgaW5jbHVpbmRvIG1pZ3Jhw6fDo28sIGRpdmVyZ8OqbmNpYSB0ZW1wb3LDoXJpYSBmb250ZS9zaW11bGFkbyBlIG3DqXRyaWNhcyBkb2N1bWVudGFpczsgbmVuaHVtIGZvaSByZWNsYXNzaWZpY2FkbyByZXRyb2F0aXZhbWVudGUuCi0gKENoYXRHUFQpIEdhdGUgZmluYWwgZGUgcHVzaCBgMzQ4NzIxNzg4MDlgOiBWMDggMjIvMjIsIHJlZ3Jlc3PDtWVzIFYwMeKAk1YwOCA0MDUvNDA1LCBWMDAgMTIvMTIsIHZhbGlkYWRvciAwIGZhbGhhcy8wIGF2aXNvcywgYFYwOF9SVU5USU1FX0VESVQ9MGAgZSBlc2NvcG8gdmVyZGUuCi0gKENoYXRHUFQpIFRvZG9zIG9zIG5vdmUgY2hlY2tzIGZpbmFpcyBkYSBQUiAjNDIgY29uY2x1w61yYW0gY29tIGBzdWNjZXNzYCBubyBtZXNtbyBoZWFkIGZpbmFsLgotIChDaGF0R1BUKSBQw7NzLW1lcmdlIGA2MjJkMmM5NjJhODA5OThjZjk5MGI1NzAzNmY3YWU1MDNiZmMwNDU4YDogZGV6IHdvcmtmbG93cyBuYSBgbWFpbmAg4oCUIENJIGdlcmFsIGUgVjAw4oCTVjA4IOKAlCBjb25jbHXDrXJhbSBjb20gYHN1Y2Nlc3NgLgoKIyMjIExpbWl0ZXMKCi0gKENoYXRHUFQpIFNlbSBwdWJsaWNhw6fDo28gRGF0YWJyaWNrcywgYWx0ZXJhw6fDo28gZGUgQUNML2NvbXB1dGUsIGV4ZWN1w6fDo28gcmVtb3RhIFNwYXJrL1NRTC9NTGZsb3csIHByb21vw6fDo28gdmlzdWFsLCBob21vbG9nYcOnw6NvIGRlIGJyb3dzZXIvYWNlc3NpYmlsaWRhZGUvVUFUIG91IHByb3ZhIGRlIHNlbGXDp8OjbyBkZXRlcm1pbsOtc3RpY2EgZGUgc2tpbGwgcGVsYSBHZW5pZSBDb2RlLiBBIFYwOSBuw6NvIGZvaSBpbmljaWFkYS4KCg=='
+          block = base64.b64decode(encoded).decode('utf-8')
           before, tail = text.split(start, 1)
           _, after = tail.split(end, 1)
-          block = '''## 2026-09-14 — V08: integração transversal e fechamento técnico (ChatGPT)
-
-### Adicionado
-
-- (ChatGPT) Matriz transversal de integração entre Sistema de Temas, skills, Hub Padrões, entrada `.assistant` e Manual Técnico.
-- (ChatGPT) Suíte V08 e workflow permanente read-only com guarda explícita que proíbe alterações runtime Python em `hub_snippets` e `hub_scripts`.
-
-### Atualizado
-
-- (ChatGPT) Concierge, criação de objeto, EDA, baseline, safra, monitoramento e explainability passam a apontar para `ResolvedTheme` e consumidores `_resolvido` sem redefinir paletas ou política visual.
-- (ChatGPT) O template visual da EDA deixa de ser uma segunda fonte de tema e preserva composição, hierarquia, leitura, tabelas, KPIs, emojis, índice e demais convenções editoriais.
-- (ChatGPT) Hub Padrões e Manual passam a descrever V02–V07 integradas, Visual Lab, geração editorial, consumidores V07 e limites atuais.
-- (ChatGPT) O README raiz foi compactado para atuar como entrada operacional, mantendo o histórico detalhado no índice canônico de sprints e preservando o bloco verificável do gate local.
-- (ChatGPT) PR #42 integrada após aceite explícito de Rodrigo; head final validado `9af5615d79b02cbd86f5a6d084444c83f203ae03` e merge `622d2c962a80998cf990b57036f7ae503bfc0458`, com árvore idêntica à candidata testada.
-
-### Evidências
-
-- (ChatGPT) Failures intermediários permanecem registrados com suas causas reais, incluindo migração, divergência temporária fonte/simulado e métricas documentais; nenhum foi reclassificado retroativamente.
-- (ChatGPT) Gate final de push `34872178809`: V08 22/22, regressões V01–V08 405/405, V00 12/12, validador 0 falhas/0 avisos, `V08_RUNTIME_EDIT=0` e escopo verde.
-- (ChatGPT) Todos os nove checks finais da PR #42 concluíram com `success` no mesmo head final.
-- (ChatGPT) Pós-merge `622d2c962a80998cf990b57036f7ae503bfc0458`: dez workflows na `main` — CI geral e V00–V08 — concluíram com `success`.
-
-### Limites
-
-- (ChatGPT) Sem publicação Databricks, alteração de ACL/compute, execução remota Spark/SQL/MLflow, promoção visual, homologação de browser/acessibilidade/UAT ou prova de seleção determinística de skill pela Genie Code. A V09 não foi iniciada.
-
-'''
           path.write_text(before + block + end + after, encoding='utf-8')
           PY
           git config user.name "github-actions[bot]"
