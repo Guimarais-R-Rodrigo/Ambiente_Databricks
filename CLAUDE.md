@@ -65,10 +65,12 @@ Escala planejada: pessoal → squad → missão.
 - Sistema de Temas: contrato central e configuração completa por contexto
   definidos em `docs/decisions/ADR-0013-sistema-de-temas.md`. **V00–V07 estão
   aceitas e integradas no Git**. A V07 acrescenta consumidores runtime opt-in
-  sem alterar cálculo, agregação, amostragem ou decisões analíticas; V08 ainda
-  não foi iniciada. Integração Git não equivale a publicação Databricks nem a
-  homologação de browser/runtime, acessibilidade, ACL, UAT ou promoção visual.
-  Estado vigente: `docs/sprints/sistema_temas/V07/CHECKPOINT_V07.md` e
+  sem alterar cálculo, agregação, amostragem ou decisões analíticas. A V08 ainda
+  não está integrada na `main`; há trabalho paralelo em PR draft, cujo resultado
+  não deve ser presumido por outras iniciativas. Integração Git não equivale a
+  publicação Databricks nem a homologação de browser/runtime, acessibilidade,
+  ACL, UAT ou promoção visual. Estado integrado vigente:
+  `docs/sprints/sistema_temas/V07/CHECKPOINT_V07.md` e
   `docs/sprints/sistema_temas/README.md`.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
