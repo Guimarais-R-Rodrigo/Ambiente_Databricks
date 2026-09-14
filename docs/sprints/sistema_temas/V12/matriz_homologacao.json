@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "sprint": "V12",
+  "title": "Homologação de jornadas com pessoas e ambiente",
+  "source_of_truth": [
+    "docs/sprints/sistema_temas/V01/PLANO_DOCUMENTACAO.md",
+    "docs/sprints/sistema_temas/V01/TESTES_E_ACEITE.md",
+    "docs/sprints/sistema_temas/V01/matriz_testes.json",
+    "docs/sprints/sistema_temas/V05/README.md",
+    "docs/sprints/sistema_temas/V10/CHECKPOINT_V10.md",
+    "docs/sprints/sistema_temas/V11/CHECKPOINT_V11.md"
+  ],
+  "claim_policy": {
+    "git_local_does_not_prove_databricks": true,
+    "databricks_does_not_prove_human_uat": true,
+    "automated_test_does_not_prove_human_uat": true,
+    "publication_is_separate_gate": true,
+    "production_ready_is_not_v12_synonym": true
+  },
+  "evidence_classes": [
+    "git_local",
+    "databricks_environment",
+    "human_uat"
+  ],
+  "status_values": [
+    "PENDENTE",
+    "BLOQUEADO_AUTORIZACAO",
+    "BLOQUEADO_AMBIENTE",
+    "PASS",
+    "FAIL"
+  ],
+  "cases": [
+    {
+      "id": "DOC-02",
+      "title": "Encontrar a próxima ação",
+      "evidence_class": "human_uat",
+      "surface": "documentacao",
+      "mutation_required": false,
+      "publication_may_be_required": false,
+      "oracle": "Ação identificada sem ajuda; tempo observado é registrado. A meta de até 60 segundos permanece candidata, não SLA.",
+      "required_facts": ["participant_authorized", "observed_seconds", "help_events", "document_version", "oracle_met", "next_action_identified_without_help"]
+    },
+    {
+      "id": "DOC-03",
+      "title": "Compreender alcance e persistência",
+      "evidence_class": "human_uat",
+      "surface": "documentacao",
+      "mutation_required": false,
+      "publication_may_be_required": false,
+      "oracle": "Participante distingue prévia, salvar, submeter, aprovar, publicar e recuperar sessão.",
+      "required_facts": ["participant_authorized", "help_events", "document_version", "oracle_met", "scope_persistence_explained_correctly"]
+    },
+    {
+      "id": "A11-01",
+      "title": "Contraste e leitura contextual no render final",
+      "evidence_class": "human_uat",
+      "surface": "render_final",
+      "mutation_required": false,
+      "publication_may_be_required": false,
+      "oracle": "Contraste 4,5:1 para texto comum e 3:1 para texto grande somente quando a classificação se aplica; nunca arredondar para passar.",
+      "required_facts": ["participant_authorized", "render_observed", "contrast_measurements", "keyboard_review", "zoom_review", "oracle_met"]
+    },
+    {
+      "id": "SEC-01",
+      "title": "Papéis, identidade e transições em ambiente real",
+      "evidence_class": "databricks_environment",
+      "surface": "controle_de_acesso",
+      "mutation_required": false,
+      "publication_may_be_required": false,
+      "oracle": "Identidade e permissões efetivas são observadas no ambiente; valores autodeclarados não contam como autorização.",
+      "required_facts": ["environment_authorized", "identity_checked", "permission_checked", "synthetic_data_only", "oracle_met"]
+    },
+    {
+      "id": "UAT-01",
+      "title": "Primeiro uso sem ajuda verbal",
+      "evidence_class": "human_uat",
+      "surface": "jornada_integrada",
+      "mutation_required": false,
+      "publication_may_be_required": false,
+      "oracle": "Iniciante escolhe, ajusta, compara, desfaz e salva sem alteração compartilhada acidental; qualquer ajuda é achado.",
+      "required_facts": ["participant_authorized", "observed_seconds", "help_events", "journey_completed", "shared_change_absent", "oracle_met"]
+    },
+    {
+      "id": "V12-LAB-01",
+      "title": "Visual Lab em navegador/runtime Databricks",
+      "evidence_class": "databricks_environment",
+      "surface": "visual_lab",
+      "mutation_required": true,
+      "publication_may_be_required": false,
+      "oracle": "Controles reais, prévia, comparação, desfazer, salvar/reabrir e isolamento funcionam no ambiente autorizado sem publicação.",
+      "required_facts": ["environment_authorized", "authorization_ref", "synthetic_data_only", "rollback_plan_verified", "browser_observed", "persistence_observed", "oracle_met"]
+    },
+    {
+      "id": "V12-APP-01",
+      "title": "Databricks App de autoria visual em ambiente controlado",
+      "evidence_class": "databricks_environment",
+      "surface": "databricks_app",
+      "mutation_required": true,
+      "publication_may_be_required": false,
+      "oracle": "App autorizado preserva identidade, isolamento por usuário, persistência e ausência de ações de aprovação/publicação.",
+      "required_facts": ["environment_authorized", "authorization_ref", "synthetic_data_only", "rollback_plan_verified", "identity_checked", "permission_checked", "browser_observed", "oracle_met", "isolation_observed", "publication_actions_absent"]
+    },
+    {
+      "id": "V12-AIBI-01",
+      "title": "Tema AI/BI em dashboard draft real",
+      "evidence_class": "databricks_environment",
+      "surface": "aibi_dashboard",
+      "mutation_required": true,
+      "publication_may_be_required": false,
+      "oracle": "Export real é fixado por SHA-256, binding usa apenas translated/direct, import ocorre em draft e sem mudança semântica de datasets, queries, filtros ou widgets.",
+      "required_facts": ["environment_authorized", "authorization_ref", "synthetic_data_only", "rollback_plan_verified", "dashboard_draft", "export_sha256", "reviewed_export_sha256", "used_export_sha256", "semantic_before_sha256", "semantic_after_sha256", "synthetic_fixture_used_as_databricks_input", "approximated_automated", "unsupported_automated", "published", "oracle_met", "light_dark_observed"]
+    },
+    {
+      "id": "V12-AIBI-02",
+      "title": "Workspace theme, snapshot e reaplicação",
+      "evidence_class": "databricks_environment",
+      "surface": "aibi_workspace_theme",
+      "mutation_required": true,
+      "publication_may_be_required": true,
+      "oracle": "Administrador autorizado observa herança de dashboard novo e snapshot/reaplicação de dashboard existente sem tratar snapshot como vínculo vivo.",
+      "required_facts": ["environment_authorized", "authorization_ref", "synthetic_data_only", "rollback_plan_verified", "identity_checked", "permission_checked", "workspace_admin_observed", "snapshot_observed", "auto_propagation_claimed", "published", "oracle_met", "new_dashboard_inheritance_observed", "reapply_observed"]
+    }
+  ],
+  "later_or_outside_v12": [
+    {"item": "deploy_recorrente_e_suporte_do_app", "classification": "V13_V14", "reason": "V12 pode exigir um deploy controlado como pré-requisito de UAT, mas operação recorrente, suporte e promoção pertencem às etapas posteriores."},
+    {"item": "custos_observados_e_politica_de_retencao_operacional", "classification": "V13_V14", "reason": "Não é necessário para provar a jornada formativa V12."},
+    {"item": "pronto_para_producao", "classification": "FORA_DO_ACEITE_V12", "reason": "UAT/homologação formativa não equivale a readiness de produção."},
+    {"item": "publicacao_de_dashboard_ou_tema_compartilhado", "classification": "GATE_SEPARADO", "reason": "Só pode ocorrer quando uma jornada específica exigir e houver autorização explícita própria."}
+  ]
+}
