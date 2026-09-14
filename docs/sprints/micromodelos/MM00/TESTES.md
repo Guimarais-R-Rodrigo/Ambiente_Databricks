@@ -18,11 +18,11 @@ MM00 é uma sprint documental/arquitetural. Os testes verificam baseline, ausên
 
 **Esperado:** plano não depender de fotografia desatualizada.
 
-**Observado:** V00–V07 estão integradas; V08 ainda não iniciada no baseline. A V07 preserva cálculo/semântica e acrescenta rotas visuais opt-in.
+**Observado na `main`:** V00–V07 estão integradas. Durante a execução da MM00 foi identificada a PR draft #42 para V08 em trabalho paralelo; portanto a afirmação anterior “V08 não iniciada” foi retirada dos documentos MM00. A MM00 só afirma que V08 ainda não está integrada na `main` e não presume o resultado da frente paralela.
 
-**Ação executada:** `CLAUDE.md` foi reconciliado para remover o estado obsoleto de V05 candidata e apontar o estado vigente V07/V08, sem alteração da implementação visual.
+**Ação executada:** `CLAUDE.md` havia sido reconciliado com V07; uma nova correção ainda precisa substituir a frase “V08 ainda não foi iniciada” por formulação compatível com a PR paralela.
 
-**Status:** PASS para a decisão de desacoplar o visual até MM11.
+**Status:** CORREÇÃO EM CURSO. A decisão arquitetural de desacoplar o visual até MM11 permanece válida.
 
 ## T03 — Colisão nominal
 
@@ -54,7 +54,9 @@ MM00 é uma sprint documental/arquitetural. Os testes verificam baseline, ausên
 
 **Evidência:** plano e MM00 usam placeholders; nenhuma fixture real foi adicionada.
 
-**Status:** PASS documental no diff examinado até o head atual. A auditoria independente deve tentar quebrar esta afirmação.
+**Primeiro CI:** o validador detectou um handle corporativo histórico dentro do ADR-0017. O trecho foi removido e substituído por descrição genérica do handoff institucional.
+
+**Status:** CORRIGIDO; novo CI precisa confirmar.
 
 ## T07 — Migração tardia
 
@@ -78,15 +80,22 @@ MM00 é uma sprint documental/arquitetural. Os testes verificam baseline, ausên
 
 **Executado:** comparação da candidata contra a base e listagem nominal da PR #43.
 
-**Observado:** o primeiro commit modificou apenas `docs/`; a reconciliação posterior alterou apenas `CLAUDE.md`; o pacote de auditoria adicionou somente `docs/auditoria/`. Nenhum arquivo do produto funcional, ferramenta ou workflow foi alterado.
+**Observado:** os commits da MM00 alteram documentação, ADRs, `CLAUDE.md` e o pacote de auditoria. Nenhum arquivo do produto funcional, ferramenta ou workflow foi alterado.
 
 **Status:** PASS no head atual. Revalidar após qualquer commit adicional.
 
 ## T10 — Validação automática
 
-A PR #43 disparou os workflows permanentes. No primeiro head, V00, V01 e V02 concluíram com `success` enquanto o CI geral ainda executava. O head posterior reexecutou os checks por causa da reconciliação documental e do pacote de auditoria.
+No head `5adcac3291ace7a9bcad5ef6201b75e4093d6cd4`:
 
-**Status:** EM EXECUÇÃO no head atual. Registrar conclusões finais antes do checkpoint de aceite. CI verde cobre apenas contratos automatizados; não substitui auditoria independente.
+- V00: `34871696028` — `success`;
+- V01: `34871695981` — `success`;
+- V02: `34871696024` — `success`;
+- CI geral: `34871695827` — `failure` na etapa `validacao`.
+
+O CI geral encontrou cinco falhas documentais: três no bloco de saída congelada do `README.md` raiz, porque a MM00 alterou a contagem do repositório; uma decorrente do próprio estado reprovado do bloco; e uma sanitização no ADR-0017. Os valores medidos naquele head foram `1363` arquivos e `1858` links fora da raiz. O ADR foi corrigido. O README raiz ainda precisa ser reconciliado sem relaxar o validador.
+
+**Status:** FAIL CONHECIDO, CORREÇÃO EM CURSO. Não aceitar MM00 com esse CI vermelho.
 
 ## T11 — Auditoria independente A1
 
@@ -103,11 +112,11 @@ O prompt contém doze testes obrigatórios e bloqueia histórico/justificativas 
 
 **Esperado:** o arquivo canônico não induz novas sessões a trabalhar com estado visual obsoleto e não transforma ADR proposto em ativo.
 
-**Executado:** atualização de `CLAUDE.md` na branch.
+**Executado:** atualização de `CLAUDE.md` na branch para retirar V05 candidata e registrar a iniciativa MM00 como proposta.
 
-**Observado:** V00–V07 aparecem como integradas, V08 como não iniciada; ADRs 0014–0020 estão rotulados como propostos; MM01 permanece bloqueada; números pós-R13 de cobertura são tratados como históricos, não como medida corrente.
+**Achado posterior:** a existência da PR draft V08 tornou a frase “V08 ainda não foi iniciada” imprecisa. A correção deve registrar apenas que V08 ainda não está integrada na `main` e que existe trabalho paralelo, sem presumir seu aceite.
 
-**Status:** PASS documental no head atual.
+**Status:** CORREÇÃO EM CURSO.
 
 ## T13 — Regra de changelog
 
