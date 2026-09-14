@@ -1,8 +1,12 @@
 """V09 — integração explícita do Sistema de Temas ao kit de transição."""
 from __future__ import annotations
 
+import hashlib
+import json
 import sys
+import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -14,6 +18,7 @@ from temas_v09_transicao import (  # noqa: E402
     THEME_REQUIRED_PATHS,
     validate_theme_contract,
     validate_theme_inventory,
+    validate_theme_zip,
 )
 
 SIM = ROOT / "Novo_Ambiente_Simulado" / "Users" / "usuario-free"
@@ -23,6 +28,34 @@ class ThemeTransitionContractTests(unittest.TestCase):
     def entries(self):
         return [{"path": path, "sha256": "0" * 64, "bytes": 1, "object_type": "FILE"}
                 for path in THEME_REQUIRED_PATHS]
+
+    def package_fixture(self):
+        payloads = {path: ("v09:" + path).encode("utf-8") for path in THEME_REQUIRED_PATHS}
+        entries = [
+            {
+                "path": path,
+                "sha256": hashlib.sha256(raw).hexdigest(),
+                "bytes": len(raw),
+                "object_type": "FILE",
+            }
+            for path, raw in payloads.items()
+        ]
+        manifest = {
+            "schema_version": 2,
+            "files": entries,
+            "theme_contract": validate_theme_inventory(entries),
+        }
+        return payloads, manifest
+
+    def write_package(self, path: Path, *, omit=None, tamper=None):
+        payloads, manifest = self.package_fixture()
+        with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as archive:
+            for name, raw in payloads.items():
+                if name == omit:
+                    continue
+                archive.writestr(name, b"adulterado" if name == tamper else raw)
+            archive.writestr("MANIFEST.json", json.dumps(manifest, ensure_ascii=False))
+        return manifest
 
     def test_required_theme_files_exist_in_simulated_product(self):
         self.assertGreaterEqual(len(THEME_REQUIRED_PATHS), 9)
@@ -75,6 +108,36 @@ class ThemeTransitionContractTests(unittest.TestCase):
         self.assertIn("contents: read", text)
         self.assertIn("persist-credentials: false", text)
         self.assertNotIn("contents: write", text)
+
+    def test_valid_zip_verifies_actual_theme_bytes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            package = Path(directory) / "01_IMPORTAR_HUB_fixture.zip"
+            manifest = self.write_package(package)
+            contract = validate_theme_zip(package)
+            self.assertEqual(contract, manifest["theme_contract"])
+            self.assertEqual(contract["required_paths"], list(THEME_REQUIRED_PATHS))
+
+    def test_zip_missing_or_tampered_required_file_fails(self):
+        target = THEME_REQUIRED_PATHS[0]
+        with tempfile.TemporaryDirectory() as directory:
+            missing = Path(directory) / "missing.zip"
+            self.write_package(missing, omit=target)
+            with self.assertRaises(ValueError):
+                validate_theme_zip(missing)
+
+            tampered = Path(directory) / "tampered.zip"
+            self.write_package(tampered, tamper=target)
+            with self.assertRaises(ValueError):
+                validate_theme_zip(tampered)
+
+    def test_both_workflows_verify_generated_zip_before_use(self):
+        command = "python -B tools/temas_v09_transicao.py --kit-dir"
+        v09 = (ROOT / ".github/workflows/temas-v09-ci.yml").read_text(encoding="utf-8")
+        kit = (ROOT / ".github/workflows/kit-transicao-trabalho.yml").read_text(encoding="utf-8")
+        self.assertIn(command, v09)
+        self.assertIn(command, kit)
+        self.assertLess(kit.index(command), kit.index("actions/upload-artifact@v4"))
+        self.assertNotIn("contents: write", kit)
 
 
 if __name__ == "__main__":
