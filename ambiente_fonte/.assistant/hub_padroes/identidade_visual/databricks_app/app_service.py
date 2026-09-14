@@ -99,6 +99,39 @@ def resolve_user(headers: Mapping[str, str] | None, *, env: Mapping[str, str] | 
     return ThemeAppUser(subject=subject, display_name=preferred or "usuário autenticado", namespace=namespace, source=source)
 
 
+def _production_volume_path(raw_root: str) -> Path:
+    """Valida a forma /Volumes/catalog/schema/volume sem traversal ou symlink."""
+    raw_path = Path(raw_root)
+    parts = raw_path.parts
+    if (
+        not raw_path.is_absolute()
+        or len(parts) < 5
+        or parts[0] != os.sep
+        or parts[1] != "Volumes"
+        or ".." in parts
+        or any(not part or part == "." for part in parts[2:])
+    ):
+        raise ThemeAppError(
+            "APP_STORAGE_NOT_VOLUME",
+            "Em produção, a raiz precisa seguir /Volumes/<catalog>/<schema>/<volume>.",
+            action="Configure o recurso theme_storage; não use traversal, DBFS, /tmp ou caminho pessoal.",
+        )
+    root = raw_path.absolute()
+    if not root.as_posix().startswith("/Volumes/"):
+        raise ThemeAppError(
+            "APP_STORAGE_NOT_VOLUME",
+            "Em produção, a raiz precisa permanecer sob /Volumes/.",
+            action="Configure o recurso theme_storage sem aliases ou atalhos.",
+        )
+    if root.is_symlink() or any(parent.is_symlink() for parent in root.parents if parent != Path(os.sep)):
+        raise ThemeAppError(
+            "APP_STORAGE_SYMLINK",
+            "A raiz persistente não pode atravessar atalhos simbólicos.",
+            action="Use diretamente o caminho resolvido pelo recurso Unity Catalog Volume.",
+        )
+    return root
+
+
 def load_config(*, env: Mapping[str, str] | None = None) -> ThemeAppConfig:
     """Carrega somente configuração estática; recusa storage não governado em produção."""
     env = os.environ if env is None else env
@@ -117,13 +150,7 @@ def load_config(*, env: Mapping[str, str] | None = None) -> ThemeAppConfig:
             "A persistência do App não foi configurada.",
             action="Associe um Unity Catalog Volume ao recurso theme_storage antes de usar o App.",
         )
-    root = Path(raw_root).absolute()
-    if not local_dev and not root.as_posix().startswith("/Volumes/"):
-        raise ThemeAppError(
-            "APP_STORAGE_NOT_VOLUME",
-            "Em produção, a raiz precisa ser um Unity Catalog Volume.",
-            action="Configure o recurso theme_storage; não use DBFS, /tmp ou caminho pessoal.",
-        )
+    root = Path(raw_root).absolute() if local_dev else _production_volume_path(raw_root)
     if not root.is_dir() or root.is_symlink():
         raise ThemeAppError(
             "APP_STORAGE_UNAVAILABLE",
