@@ -65,6 +65,12 @@ custos e interpretação. Estado, matriz e testes em
 [`RELATORIO_R04A.md`](readmes_objetos/RELATORIO_R04A.md). Cobertura candidata
 25/74; sem publicação, aceite antecipado ou início da R04-B.
 
+## Framework de Micromodelos — MM00 em execução
+
+A [iniciativa MM00–MM13](micromodelos/README.md) usa trilha própria. A [MM00](micromodelos/MM00/README.md) é exclusivamente documental/arquitetural: baseline, inventário, reuso, riscos, dependências, ADRs propostos, testes, auditoria A1 e checkpoint.
+
+A candidata não altera o produto `.assistant`, não cria skill/helper de micromodelo e não autoriza MM01. A A1 devolveu `APTA_COM_CORRECOES`: M-01 foi corrigido e Q-01 do `CHANGELOG.md` continua bloqueador até alteração estritamente aditiva ou exceção humana explícita. O avanço também exige gates verdes, decisão sobre ADR-0014 a ADR-0020, aceite e merge da MM00.
+
 ## Sistema de Temas do Hub
 
 A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V09 estão aceitas e integradas no Git.** A V09 foi aceita por Rodrigo em 14/09/2026, integrada funcionalmente pelo PR #45 e recebeu a correção pós-merge do workflow operacional pelo PR #46; o head técnico final validado é `4ae714a35a0aafd930a8cd796d962b0a79449b88`.
