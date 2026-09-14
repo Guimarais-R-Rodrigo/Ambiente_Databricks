@@ -42,7 +42,9 @@ O template de skill e `hub-ml-criar-objeto` sustentam a lista fechada de seis ti
 
 O primeiro CI detectou um handle corporativo histórico no ADR-0017; ele foi removido e substituído por contrato genérico. A A1 não encontrou identificador externo no diff auditado.
 
-**Status:** PASS.
+Uma rodada posterior detectou um falso positivo documental: a abreviação do SHA da `main` fechada casava com o padrão genérico de identificador corporativo. A correção preservou a política e substituiu somente a abreviação pelo SHA completo.
+
+**Status:** PASS sem relaxamento de regra.
 
 ## T07 — Migração tardia
 
@@ -94,9 +96,18 @@ No head `26cf7c8edd631f97b5c0541daff2e73dc2286a71`:
 - V01 `34883378518`: `success`;
 - V02 `34883378432`: `success`.
 
-A composição preservou **1374 arquivos / 1859 links**. O patch do README raiz foi verificado e contém somente a atualização de 1355/1850 para 1374/1859; o índice de sprints contém somente a seção MM00 além da `main`.
+### Head final antes da decisão D1
 
-**Status:** PASS nos heads técnicos registrados. Como este arquivo e o checkpoint foram atualizados para registrar o último fechamento, a árvore resultante deve repetir os mesmos gates uma vez antes do gate humano; nenhuma nova alteração documental será feita depois dessa repetição salvo falha real ou decisão sobre Q-01.
+No head `6f1375efe1a610eca30815b1866cc5d7049514a4`:
+
+- CI geral `34884154201`: `success`;
+- V00 `34884154328`: `success`;
+- V01 `34884154292`: `success`;
+- V02 `34884154221`: `success`.
+
+A composição preservou **1374 arquivos / 1859 links** e nenhum validador foi relaxado.
+
+**Status:** PASS técnico. A decisão D1-B altera apenas o tratamento humano de Q-01; a árvore resultante deve repetir os mesmos gates antes do próximo gate humano.
 
 ## T11 — Auditoria independente A1
 
@@ -104,28 +115,30 @@ Arquivos: `01_contexto.md`, `02_prompt_auditoria.md` e `03_resultado_a1.md` em `
 
 **Resultado:** `APTA_COM_CORRECOES`.
 
-- Q-01 — falta de entrada própria MM00 no `CHANGELOG.md`: **PROCEDE e continua bloqueador**;
+- Q-01 — falta de entrada própria MM00 no `CHANGELOG.md`: **PROCEDE**;
 - M-01 — cronologia não reconciliada uniformemente: **PROCEDE e está corrigido**;
 - `DIVERGE`: nenhum achado atribuível à MM00.
 
 A A1 confirmou como escopo legítimo de MM01/MM02 as decisões de encoding do YAML, máquina de estados detalhada e materialidade fina do fingerprint.
 
-**Status:** EXECUTADA.
+**Status:** EXECUTADA. O resultado histórico não é reescrito pela decisão D1-B.
 
 ## T12 — Contexto canônico
 
 `CLAUDE.md` registra V00–V09 integradas, distingue transporte de ativação/publicação, registra a A1 da MM00 e mantém ADR-0014 a ADR-0020 como propostos.
 
-**Status:** PASS documental, sujeito à repetição final e reconsulta da `main`.
+**Status:** PASS documental, sujeito à reconsulta final da `main`.
 
 ## T13 — Regra de changelog
 
 A A1 classificou a ausência da entrada MM00 como **QUEBRA Q-01**. Uma tentativa de atualização integral acrescentou o bloco desejado, mas também modificou três linhas históricas. O patch detectou as mudanças; a tentativa foi rejeitada e o blob histórico original `2095dbcf1dd6b99e7ff008a9180361702222092b` foi restaurado por SHA. As reconciliações V09 preservaram esse mesmo blob.
 
-**Status:** BLOQUEIO CONHECIDO. A entrada MM00 continua ausente. Não converter em PASS sem atualização estritamente aditiva comprovada ou exceção humana explícita e registrada.
+Foi concedida a decisão humana **D1-B**: exceção explícita e exclusiva para diferir a entrada MM00 para a manutenção documental imediatamente posterior.
+
+**Status:** DEFERIDO POR EXCEÇÃO HUMANA D1-B — **não é PASS**. Q-01 deixa de bloquear o aceite/merge da MM00, mas permanece débito documental obrigatório e deve ser fechado antes do início efetivo da MM01.
 
 ## Critério final
 
-PASS global exige T01–T13 resolvidos, diff delimitado contra a `main` vigente, CI verde na árvore de decisão e aceite humano explícito.
+T01–T12 permanecem técnicos; T13 está coberto pela exceção D1-B, sem apagar o achado. O fechamento da MM00 ainda exige gates verdes na árvore pós-D1, `main` estável, decisão D2 sobre ADR-0014 a ADR-0020 e aceite humano explícito da MM00.
 
-No fechamento técnico, o único bloqueio de conteúdo conhecido é T13/Q-01. A última repetição automática desta atualização de evidência deve ficar verde antes do gate humano.
+Após o merge, a manutenção documental imediatamente posterior deve registrar a entrada da MM00 no `CHANGELOG.md` antes do início efetivo da MM01.
