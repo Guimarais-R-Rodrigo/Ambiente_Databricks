@@ -75,9 +75,28 @@ A reprovação ficou somente na saída colada do README raiz. O validador mediu 
 - identidade do repositório: **1349 arquivos**, contra 1345 colados;
 - links fora da raiz: **1850**, já coincidente.
 
-Foram três falhas documentais e zero avisos. Esses valores ainda não são tratados como finais porque checkpoint, índices e changelog da própria V08 são estabilizados antes da reconciliação do README raiz.
+Foram três falhas documentais e zero avisos. Esses valores ainda não eram finais porque checkpoint, índices e changelog da própria V08 ainda seriam estabilizados.
 
-Nenhum failure acima é reclassificado retroativamente.
+### `34867738695` — FAILURE de configuração do workflow transitório
+
+A primeira tentativa de reconciliar índices/changelog por workflow foi recusada pelo GitHub antes de criar jobs. Nenhum arquivo de produto ou documentação foi alterado por esse run. A escrita foi redesenhada para usar um script transitório versionado e auto-removido.
+
+### `34867935251` — FAILURE documental da medição final
+
+Com checkpoint, índices vivos e changelog já estabilizados e workflow permanente novamente read-only, passaram:
+
+- V08: **22/22 PASS**;
+- regressões V01–V08: **405/405 PASS**;
+- V00: **12/12 PASS**.
+
+O validador apontou somente quatro divergências numéricas na saída colada do README raiz, com **0 avisos**. A medição final da candidata é:
+
+- helpers citados: **92 caminhos**;
+- Markdown/links: **217 arquivos / 1382 links relativos**;
+- identidade do repositório: **1350 arquivos**;
+- links fora da raiz: **1855**.
+
+Esses são os valores usados na reconciliação final do README raiz. Nenhum failure acima é reclassificado retroativamente.
 
 ## Revisão editorial do template EDA
 
@@ -87,9 +106,9 @@ Fonte e simulado voltaram a apontar para o mesmo conteúdo após a revisão.
 
 ## Estado de fechamento
 
-A documentação final da sprint — checkpoint, índices vivos e changelog — é concluída **antes** da medição final do README raiz. Em seguida, um novo run V08 deve fornecer as métricas finais; somente esses valores serão reconciliados na saída colada.
+A documentação final da sprint — checkpoint, índices vivos e changelog — foi concluída **antes** da medição final do README raiz. A próxima etapa é reconciliar exatamente os quatro números medidos no run `34867935251` e repetir o workflow V08 permanente no novo SHA.
 
-Depois da reconciliação, o head permanente precisa repetir:
+O head final precisa comprovar:
 
 - 22/22 testes V08;
 - 405/405 regressões V01–V08;
