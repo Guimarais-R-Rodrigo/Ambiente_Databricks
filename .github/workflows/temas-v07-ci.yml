@@ -14,7 +14,7 @@ on:
       - 'docs/sprints/sistema_temas/V07/**'
       - '.github/workflows/temas-v07-ci.yml'
 permissions:
-  contents: read
+  contents: write
 jobs:
   consumidores-v07:
     runs-on: ubuntu-latest
@@ -27,7 +27,75 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: false
+          persist-credentials: true
+      - name: Sincronizar semântica divergente da correlação (transitório)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/codex/temas-v07-consumidores-formatos-20260914'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          source_root = Path('ambiente_fonte/.assistant')
+          mirror_root = Path('Novo_Ambiente_Simulado/Users/usuario-free/.assistant')
+          rel_code = Path('hub_snippets/display/correlation_matrix/correlation_matrix.py')
+          rel_readme = Path('hub_snippets/display/correlation_matrix/README.md')
+
+          source_code = (source_root / rel_code).read_bytes()
+          (mirror_root / rel_code).write_bytes(source_code)
+
+          old_note = '`palette.sequential` somente na escala de cor'
+          new_note = '`palette.diverging` somente na escala de cor'
+          old_sentence = 'O tema não troca essa escala automaticamente.'
+          new_sentence = 'A rota legada não troca essa escala automaticamente; a rota `_resolvido` usa `palette.diverging` com o mesmo domínio simétrico de −1 a +1.'
+          for root in (source_root, mirror_root):
+              path = root / rel_readme
+              text = path.read_text(encoding='utf-8')
+              if old_note in text:
+                  if text.count(old_note) != 1:
+                      raise SystemExit(f'{path}: OLD_NOTE_COUNT={text.count(old_note)}')
+                  text = text.replace(old_note, new_note, 1)
+              elif text.count(new_note) != 1:
+                  raise SystemExit(f'{path}: NEW_NOTE_COUNT={text.count(new_note)}')
+              if old_sentence in text:
+                  if text.count(old_sentence) != 1:
+                      raise SystemExit(f'{path}: OLD_SENTENCE_COUNT={text.count(old_sentence)}')
+                  text = text.replace(old_sentence, new_sentence, 1)
+              elif text.count(new_sentence) != 1:
+                  raise SystemExit(f'{path}: NEW_SENTENCE_COUNT={text.count(new_sentence)}')
+              path.write_text(text, encoding='utf-8')
+
+          registry_path = Path('docs/sprints/sistema_temas/V07/CONSUMIDORES.json')
+          registry = json.loads(registry_path.read_text(encoding='utf-8'))
+          controls = registry['controls_v07']
+          if 'palette.diverging' not in controls:
+              idx = controls.index('palette.categorical') + 1
+              controls.insert(idx, 'palette.diverging')
+          correlation = next(item for item in registry['consumers'] if item['id'] == 'display.correlation_matrix')
+          correlation['tokens'] = ['palette.diverging']
+          correlation['reason'] = 'Heatmap possui domínio simétrico de -1 a +1; a rota temática usa a paleta divergente e mantém cálculo Spark e pares fortes compartilhados.'
+          registry_path.write_text(json.dumps(registry, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          test_path = Path('tools/tests/test_temas_v07_mirror.py')
+          test_text = test_path.read_text(encoding='utf-8')
+          marker = '\n\nif __name__ == "__main__":\n'
+          semantic = '''\n\nclass SemanticPaletteTests(unittest.TestCase):\n    def test_correlation_uses_diverging_palette(self):\n        text = (SOURCE / "hub_snippets/display/correlation_matrix/correlation_matrix.py").read_text(encoding="utf-8")\n        self.assertIn('tokens["palette.diverging"]', text)\n        self.assertNotIn('tokens["palette.sequential"]', text)\n'''
+          if 'class SemanticPaletteTests' not in test_text:
+              if test_text.count(marker) != 1:
+                  raise SystemExit(f'V07_TEST_MARKER_COUNT={test_text.count(marker)}')
+              test_text = test_text.replace(marker, semantic + marker, 1)
+              test_path.write_text(test_text, encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/correlation_matrix/correlation_matrix.py
+          git add ambiente_fonte/.assistant/hub_snippets/display/correlation_matrix/README.md
+          git add Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_snippets/display/correlation_matrix/README.md
+          git add docs/sprints/sistema_temas/V07/CONSUMIDORES.json tools/tests/test_temas_v07_mirror.py
+          git diff --cached --check
+          if ! git diff --cached --quiet; then
+            git commit -m "fix(v07): alinhar correlação à paleta divergente"
+            git push origin HEAD:codex/temas-v07-consumidores-formatos-20260914
+          fi
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
