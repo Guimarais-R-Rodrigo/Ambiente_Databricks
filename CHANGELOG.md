@@ -22,7 +22,7 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
 - (ChatGPT) A primeira materialização transitória (`34899029039`) permaneceu `failure` por corrupção do pacote gzip antes dos testes e não publicou os artefatos candidatos.
 - (ChatGPT) Materialização corrigida `34899617125`, reconciliação pós-V10 `34900062786` e primeiro gate permanente MM01 `34900332458` concluíram com `success`; os dois workflows transitórios se removeram antes de publicar suas composições.
-- (ChatGPT) O gate permanente executa instalação limpa, 9 testes MM01 e `validate_assistant.py --root ambiente_fonte`; CI agregado de PR e auditoria A1 permanecem pendentes.
+- (ChatGPT) O gate permanente executa instalação limpa, 17 métodos de teste MM01 e `validate_assistant.py --root ambiente_fonte`; a suíte inclui mutantes negativos, bypasses adversariais e caminhos positivos de publicação; auditoria A1 permanece pendente.
 
 ### Limites
 
