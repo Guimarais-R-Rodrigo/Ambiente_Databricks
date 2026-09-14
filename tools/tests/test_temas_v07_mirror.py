@@ -9,17 +9,24 @@ MIRROR = ROOT / "Novo_Ambiente_Simulado/Users/usuario-free/.assistant"
 RELATIVE_PATHS = [
     "hub_snippets/visual/theme_plotly/theme_plotly.py",
     "hub_snippets/visual/theme_plotly/__init__.py",
+    "hub_snippets/visual/theme_plotly/README.md",
     "hub_snippets/display/correlation_matrix/correlation_matrix.py",
     "hub_snippets/display/correlation_matrix/__init__.py",
+    "hub_snippets/display/correlation_matrix/README.md",
     "hub_snippets/display/distribution_grid/distribution_grid.py",
     "hub_snippets/display/distribution_grid/__init__.py",
+    "hub_snippets/display/distribution_grid/README.md",
     "hub_snippets/ml/curves_plotly/curves_plotly.py",
     "hub_snippets/ml/curves_plotly/__init__.py",
+    "hub_snippets/ml/curves_plotly/README.md",
     "hub_snippets/ml/performance_monitor/performance_monitor.py",
+    "hub_snippets/ml/performance_monitor/README.md",
     "hub_snippets/ml/umap_viz/umap_viz.py",
     "hub_snippets/ml/umap_viz/__init__.py",
+    "hub_snippets/ml/umap_viz/README.md",
     "hub_snippets/ml/vintage_analysis/vintage_analysis.py",
     "hub_snippets/ml/vintage_analysis/__init__.py",
+    "hub_snippets/ml/vintage_analysis/README.md",
 ]
 
 
