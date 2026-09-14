@@ -1,5 +1,5 @@
 from pathlib import Path
-ROOT=Path(__file__).resolve().parent
+ROOT=Path.cwd()
 
 def text(rel): return (ROOT/rel).read_text(encoding="utf-8")
 def need(rel,*needles):
