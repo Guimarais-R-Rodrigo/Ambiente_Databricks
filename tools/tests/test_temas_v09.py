@@ -1,8 +1,6 @@
 """V09 — integração explícita do Sistema de Temas ao kit de transição."""
 from __future__ import annotations
 
-import importlib.util
-import json
 import sys
 import unittest
 from pathlib import Path
@@ -69,7 +67,7 @@ class ThemeTransitionContractTests(unittest.TestCase):
     def test_transition_checklist_names_theme_contract(self):
         text = (ROOT / "docs/playbooks/checklist-replicacao.md").read_text(encoding="utf-8")
         self.assertIn("theme_contract", text)
-        self.assertIn("manual/opt-in", text)
+        self.assertIn("manual_opt_in", text)
         self.assertIn("não é publicação", text.lower())
 
     def test_v09_workflow_is_read_only(self):
