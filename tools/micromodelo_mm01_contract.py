@@ -152,15 +152,144 @@ def _uses_probability_language(value: str) -> bool:
     return bool(re.search(r"\bprobabil\w*\b|\bchance(?:s)?\b", normalized))
 
 
+
+def _has_material_text(value: Any) -> bool:
+    """True apenas quando há conteúdo auditável além de espaço/controle/formatação."""
+    if not isinstance(value, str):
+        return False
+    normalized = unicodedata.normalize("NFKC", value)
+    visible = "".join(
+        char
+        for char in normalized
+        if unicodedata.category(char)[0] not in {"Z", "C"}
+    )
+    return bool(visible.strip())
+
+
+def _semver_tuple(value: str) -> tuple[int, int, int]:
+    match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)", value)
+    if not match:
+        raise ValueError(f"versão semântica inválida: {value!r}")
+    return tuple(int(part) for part in match.groups())
+
+
+def _description_maps_indeterminate_to_false(value: str) -> bool:
+    normalized = _normalize_semantic_text(value)
+    if not re.search(r"\bindetermin\w*\b", normalized):
+        return False
+    if not re.search(r"\b(?:false|falso)\b", normalized):
+        return False
+    if re.search(r"\bnao\b.{0,60}\b(?:false|falso)\b", normalized):
+        return False
+    return bool(
+        re.search(
+            r"\b(?:grav\w*|convert\w*|mape\w*|trat\w*|registr\w*|defin\w*|vira\w*|equival\w*)\b",
+            normalized,
+        )
+    )
+
+
+def _validate_previous_state(
+    spec: dict[str, Any], previous_spec: dict[str, Any], issues: list[Issue]
+) -> None:
+    current_identity = spec["identidade"]
+    previous_identity = previous_spec["identidade"]
+    if current_identity["nome"] != previous_identity["nome"]:
+        issues.append(
+            Issue(
+                "identidade.nome",
+                "PREVIOUS_IDENTITY_MISMATCH",
+                "a especificação anterior precisa pertencer ao mesmo micromodelo",
+            )
+        )
+        return
+
+    current_version = _semver_tuple(current_identity["micromodel_version"])
+    previous_version = _semver_tuple(previous_identity["micromodel_version"])
+    if current_version < previous_version:
+        issues.append(
+            Issue(
+                "identidade.micromodel_version",
+                "VERSION_REWIND",
+                "micromodel_version não pode regredir em relação à especificação anterior",
+            )
+        )
+        return
+
+    # Uma nova versão material inicia seu próprio ciclo; MM02 ainda cuidará do fingerprint.
+    if current_version > previous_version:
+        return
+
+    current_state = current_identity["estado"]
+    previous_state = previous_identity["estado"]
+    current_phase = current_state["fase_atual"]
+    previous_phase = previous_state["fase_atual"]
+
+    if current_phase == previous_phase:
+        if current_state["fase_anterior"] != previous_state["fase_anterior"]:
+            issues.append(
+                Issue(
+                    "identidade.estado.fase_anterior",
+                    "PREVIOUS_HISTORY_REWRITE",
+                    "a mesma versão não pode reescrever fase_anterior sem mudar de fase",
+                )
+            )
+        return
+
+    if previous_phase == "PUBLICADO":
+        issues.append(
+            Issue(
+                "identidade.estado.fase_atual",
+                "STATE_REWIND",
+                "uma versão já PUBLICADA não pode voltar a fase anterior; crie versão material superior",
+            )
+        )
+        return
+
+    if current_state["fase_anterior"] != previous_phase:
+        issues.append(
+            Issue(
+                "identidade.estado.fase_anterior",
+                "PREVIOUS_STATE_MISMATCH",
+                f"fase_anterior deve refletir a fase observada na especificação anterior: {previous_phase}",
+            )
+        )
+        return
+
+    if (previous_phase, current_phase) not in TRANSICOES_FASE:
+        issues.append(
+            Issue(
+                "identidade.estado",
+                "STATE_TRANSITION",
+                f"transição observada {previous_phase!r} -> {current_phase!r} não é permitida",
+            )
+        )
+
 def _validate_provenance(prov: dict[str, Any], path: str, issues: list[Issue]) -> None:
     status = prov.get("status")
     approval = prov.get("aprovacao")
     measurement = prov.get("medicao")
 
+    if not _has_material_text(prov.get("origem")):
+        issues.append(Issue(f"{path}.origem", "PROV_ORIGIN_REQUIRED", "origem precisa ter conteúdo auditável"))
+    if prov.get("referencia") is not None and not _has_material_text(prov.get("referencia")):
+        issues.append(Issue(f"{path}.referencia", "PROV_REFERENCE_BLANK", "referencia não pode ser vazia/whitespace"))
+
     if status == "APROVADO":
         if not isinstance(approval, dict):
             issues.append(
                 Issue(path, "PROV_APPROVAL_REQUIRED", "APROVADO exige bloco aprovacao completo")
+            )
+        elif not (
+            _has_material_text(approval.get("por"))
+            and _has_material_text(approval.get("referencia"))
+        ):
+            issues.append(
+                Issue(
+                    f"{path}.aprovacao",
+                    "PROV_APPROVAL_REQUIRED",
+                    "APROVADO exige por/referencia com conteúdo auditável",
+                )
             )
     elif approval is not None:
         issues.append(
@@ -176,11 +305,18 @@ def _validate_provenance(prov: dict[str, Any], path: str, issues: list[Issue]) -
                     "MEDIDO exige medicao com referencia_execucao e medido_em_utc",
                 )
             )
+        elif not _has_material_text(measurement.get("referencia_execucao")):
+            issues.append(
+                Issue(
+                    f"{path}.medicao.referencia_execucao",
+                    "PROV_MEASUREMENT_REQUIRED",
+                    "MEDIDO exige referencia_execucao com conteúdo auditável",
+                )
+            )
     elif measurement is not None:
         issues.append(
             Issue(path, "PROV_MEASUREMENT_MISMATCH", "medicao só é permitida quando status=MEDIDO")
         )
-
 
 def _check_duplicate_ids(items: list[dict[str, Any]], base: str, issues: list[Issue]) -> None:
     seen: set[str] = set()
@@ -191,7 +327,11 @@ def _check_duplicate_ids(items: list[dict[str, Any]], base: str, issues: list[Is
         seen.add(item_id)
 
 
-def validate_spec(spec: dict[str, Any], schema: dict[str, Any]) -> list[Issue]:
+def validate_spec(
+    spec: dict[str, Any],
+    schema: dict[str, Any],
+    previous_spec: dict[str, Any] | None = None,
+) -> list[Issue]:
     issues: list[Issue] = []
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
     for error in sorted(validator.iter_errors(spec), key=lambda e: list(e.absolute_path)):
@@ -199,7 +339,21 @@ def validate_spec(spec: dict[str, Any], schema: dict[str, Any]) -> list[Issue]:
     if issues:
         return issues
 
+    if previous_spec is not None:
+        previous_issues = validate_spec(previous_spec, schema)
+        if previous_issues:
+            issues.append(
+                Issue(
+                    "$previous",
+                    "PREVIOUS_SPEC_INVALID",
+                    "a especificação anterior fornecida também precisa ser válida no contrato MM01",
+                )
+            )
+            return issues
+        _validate_previous_state(spec, previous_spec, issues)
+
     estado = spec["identidade"]["estado"]
+    phase = estado["fase_atual"]
     transition = (estado["fase_anterior"], estado["fase_atual"])
     if transition not in TRANSICOES_FASE:
         issues.append(
@@ -338,7 +492,10 @@ def validate_spec(spec: dict[str, Any], schema: dict[str, Any]) -> list[Issue]:
             f"classificacao.limiares[{index}].proveniencia",
             issues,
         )
-        if threshold["proveniencia"]["status"] != "APROVADO":
+        if (
+            FASE_ORDEM[phase] >= FASE_ORDEM["EM_VALIDACAO"]
+            and threshold["proveniencia"]["status"] != "APROVADO"
+        ):
             issues.append(
                 Issue(
                     f"classificacao.limiares[{index}].proveniencia.status",
@@ -346,6 +503,8 @@ def validate_spec(spec: dict[str, Any], schema: dict[str, Any]) -> list[Issue]:
                     "limiar material exige decisão humana APROVADO",
                 )
             )
+
+    experiment_by_id = {item["id"]: item for item in spec["experimentos"]}
 
     score = spec["score"]
     _validate_provenance(score["proveniencia"], "score.proveniencia", issues)
@@ -406,7 +565,10 @@ def validate_spec(spec: dict[str, Any], schema: dict[str, Any]) -> list[Issue]:
                 f"score.componentes[{index}].proveniencia",
                 issues,
             )
-            if component["proveniencia"]["status"] != "APROVADO":
+            if (
+                FASE_ORDEM[phase] >= FASE_ORDEM["EM_VALIDACAO"]
+                and component["proveniencia"]["status"] != "APROVADO"
+            ):
                 issues.append(
                     Issue(
                         f"score.componentes[{index}].proveniencia.status",
@@ -435,6 +597,27 @@ def validate_spec(spec: dict[str, Any], schema: dict[str, Any]) -> list[Issue]:
                             "score.calibracao.proveniencia.status",
                             "CALIBRATION_EVIDENCE",
                             "probabilidade só pode ser declarada com calibração MEDIDA",
+                        )
+                    )
+                evidence_ref = score["calibracao"]["evidencia_ref"]
+                referenced_experiment = experiment_by_id.get(evidence_ref)
+                if referenced_experiment is None:
+                    issues.append(
+                        Issue(
+                            "score.calibracao.evidencia_ref",
+                            "CALIBRATION_EVIDENCE_REF",
+                            "evidencia_ref deve apontar para experimentos[].id existente",
+                        )
+                    )
+                elif (
+                    referenced_experiment["status"] != "EXECUTADO"
+                    or referenced_experiment["proveniencia"]["status"] != "MEDIDO"
+                ):
+                    issues.append(
+                        Issue(
+                            "score.calibracao.evidencia_ref",
+                            "CALIBRATION_EVIDENCE_REF",
+                            "calibração exige experimento EXECUTADO com proveniência MEDIDO",
                         )
                     )
     else:
@@ -521,8 +704,11 @@ def validate_spec(spec: dict[str, Any], schema: dict[str, Any]) -> list[Issue]:
 
     approval = validation["aprovacao_humana"]
     if validation["status"] in {"APROVADO", "REPROVADO"}:
-        if approval["status"] != validation["status"] or not all(
-            approval.get(k) for k in ("por", "em_utc", "referencia")
+        if (
+            approval["status"] != validation["status"]
+            or not _has_material_text(approval.get("por"))
+            or not approval.get("em_utc")
+            or not _has_material_text(approval.get("referencia"))
         ):
             issues.append(
                 Issue(
@@ -533,7 +719,6 @@ def validate_spec(spec: dict[str, Any], schema: dict[str, Any]) -> list[Issue]:
                 )
             )
 
-    phase = estado["fase_atual"]
     if FASE_ORDEM[phase] >= FASE_ORDEM["EM_VALIDACAO"]:
         required_nonempty = (
             ("fontes", spec["fontes"]),
@@ -630,6 +815,23 @@ def validate_spec(spec: dict[str, Any], schema: dict[str, Any]) -> list[Issue]:
                         "tratamento de INDETERMINADO na publicação exige APROVADO",
                     )
                 )
+            policy = publication_output["politica_indeterminado"]
+            if policy["indeterminado_vira_false"] is not False:
+                issues.append(
+                    Issue(
+                        "saida.publicacao.politica_indeterminado.indeterminado_vira_false",
+                        "INDETERMINATE_FALSE_POLICY",
+                        "INDETERMINADO nunca pode ser implicitamente convertido em FALSE",
+                    )
+                )
+            if _description_maps_indeterminate_to_false(policy["descricao"]):
+                issues.append(
+                    Issue(
+                        "saida.publicacao.politica_indeterminado.descricao",
+                        "INDETERMINATE_POLICY_CONTRADICTION",
+                        "descricao contradiz a regra estruturada que preserva INDETERMINADO distinto de FALSE",
+                    )
+                )
 
     publication = spec["publicacao"]
     publication_status = publication["status"]
@@ -652,7 +854,10 @@ def validate_spec(spec: dict[str, Any], schema: dict[str, Any]) -> list[Issue]:
                 )
             )
     elif phase == "EM_VALIDACAO_GOVERNANCA":
-        if publication_status != "EM_VALIDACAO_EXTERNA" or not publication["handoff_ref"]:
+        if (
+            publication_status != "EM_VALIDACAO_EXTERNA"
+            or not _has_material_text(publication["handoff_ref"])
+        ):
             issues.append(
                 Issue(
                     "publicacao",
@@ -662,7 +867,10 @@ def validate_spec(spec: dict[str, Any], schema: dict[str, Any]) -> list[Issue]:
                 )
             )
     elif phase == "PUBLICADO":
-        if publication_status != "PUBLICADA" or not publication["produto_dados_ref"]:
+        if (
+            publication_status != "PUBLICADA"
+            or not _has_material_text(publication["produto_dados_ref"])
+        ):
             issues.append(
                 Issue(
                     "publicacao",
@@ -698,12 +906,17 @@ def main() -> int:
         required=True,
         help="caminho para micromodelo.schema.json",
     )
+    parser.add_argument(
+        "--previous",
+        help="especificação anterior confiável para validar evolução/anti-rewind",
+    )
     args = parser.parse_args()
 
     try:
         spec = load_document(args.documento)
         schema = load_schema(args.schema)
-        issues = validate_spec(spec, schema)
+        previous_spec = load_document(args.previous) if args.previous else None
+        issues = validate_spec(spec, schema, previous_spec=previous_spec)
     except Exception as exc:
         print(f"ERRO_DE_CARGA: {exc}")
         return 2

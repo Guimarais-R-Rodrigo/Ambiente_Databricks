@@ -179,6 +179,7 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
             },
             "politica_indeterminado": {
                 "tratamento": "CAMPO_COBERTURA_SEPARADO",
+                "indeterminado_vira_false": False,
                 "descricao": "publicar cobertura separada para preservar casos indeterminados",
                 "proveniencia": {
                     "status": "APROVADO",
@@ -289,6 +290,188 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
         self.assertIn("CATALOG_SCOPE", bad.stdout)
         self.assertEqual(2, bypass.returncode, bypass.stdout + bypass.stderr)
         self.assertIn("unrecognized arguments", bypass.stderr)
+
+
+    def test_previous_published_same_version_cannot_be_rewound(self) -> None:
+        previous = copy.deepcopy(self.valid)
+        previous["identidade"]["estado"]["fase_anterior"] = "EM_VALIDACAO_GOVERNANCA"
+        previous["identidade"]["estado"]["fase_atual"] = "PUBLICADO"
+        previous["saida"]["publicacao"] = {
+            "estado": "DEFINIDO",
+            "campo_booleano": {"nome": "possui_caracteristica", "tipo": "BOOLEAN"},
+            "politica_indeterminado": {
+                "tratamento": "CAMPO_COBERTURA_SEPARADO",
+                "indeterminado_vira_false": False,
+                "descricao": "preservar casos indeterminados em cobertura separada",
+                "proveniencia": copy.deepcopy(self.valid["classificacao"]["semantica"]["proveniencia"]),
+            },
+        }
+        previous["publicacao"]["status"] = "PUBLICADA"
+        previous["publicacao"]["handoff_ref"] = "handoff-001"
+        previous["publicacao"]["produto_dados_ref"] = "produto-001"
+        self.assertEqual([], module.validate_spec(previous, self.schema))
+
+        rewritten = copy.deepcopy(self.valid)
+        rewritten["identidade"]["estado"]["fase_anterior"] = "VALIDADO"
+        rewritten["identidade"]["estado"]["fase_atual"] = "EM_ESTUDO"
+        rewritten["publicacao"]["status"] = "NAO_INICIADA"
+        self.assertIn(
+            "STATE_REWIND",
+            {issue.code for issue in module.validate_spec(rewritten, self.schema, previous)},
+        )
+
+    def test_previous_spec_allows_real_transition_and_rejects_version_rewind(self) -> None:
+        previous = copy.deepcopy(self.valid)
+        current = copy.deepcopy(self.valid)
+        current["identidade"]["estado"]["fase_anterior"] = "VALIDADO"
+        current["identidade"]["estado"]["fase_atual"] = "CANDIDATO_PRODUTO"
+        current["saida"]["publicacao"] = {
+            "estado": "DEFINIDO",
+            "campo_booleano": {"nome": "possui_caracteristica", "tipo": "BOOLEAN"},
+            "politica_indeterminado": {
+                "tratamento": "CAMPO_COBERTURA_SEPARADO",
+                "indeterminado_vira_false": False,
+                "descricao": "preservar casos indeterminados em cobertura separada",
+                "proveniencia": copy.deepcopy(self.valid["classificacao"]["semantica"]["proveniencia"]),
+            },
+        }
+        current["publicacao"]["status"] = "CANDIDATA"
+        self.assertEqual([], module.validate_spec(current, self.schema, previous))
+
+        newer_previous = copy.deepcopy(previous)
+        newer_previous["identidade"]["micromodel_version"] = "2.0.0"
+        self.assertIn(
+            "VERSION_REWIND",
+            {issue.code for issue in module.validate_spec(current, self.schema, newer_previous)},
+        )
+
+    def test_audit_material_references_reject_whitespace_and_invisible_text(self) -> None:
+        approved = copy.deepcopy(self.valid)
+        approved["validacao"]["aprovacao_humana"]["por"] = "   "
+        self.assertIn("SCHEMA", self.codes(approved))
+
+        measured = copy.deepcopy(self.valid)
+        measured["experimentos"][0]["proveniencia"]["medicao"]["referencia_execucao"] = "\u200b"
+        self.assertIn("PROV_MEASUREMENT_REQUIRED", self.codes(measured))
+
+        published = copy.deepcopy(self.valid)
+        published["identidade"]["estado"]["fase_anterior"] = "EM_VALIDACAO_GOVERNANCA"
+        published["identidade"]["estado"]["fase_atual"] = "PUBLICADO"
+        published["saida"]["publicacao"] = {
+            "estado": "DEFINIDO",
+            "campo_booleano": {"nome": "possui_caracteristica", "tipo": "BOOLEAN"},
+            "politica_indeterminado": {
+                "tratamento": "CAMPO_COBERTURA_SEPARADO",
+                "indeterminado_vira_false": False,
+                "descricao": "preservar casos indeterminados em cobertura separada",
+                "proveniencia": copy.deepcopy(self.valid["classificacao"]["semantica"]["proveniencia"]),
+            },
+        }
+        published["publicacao"]["status"] = "PUBLICADA"
+        published["publicacao"]["produto_dados_ref"] = "   "
+        self.assertIn("SCHEMA", self.codes(published))
+
+    def test_proposed_threshold_and_weight_are_allowed_before_validation_gate(self) -> None:
+        study = copy.deepcopy(self.valid)
+        study["identidade"]["estado"]["fase_anterior"] = "EM_DESCOBERTA"
+        study["identidade"]["estado"]["fase_atual"] = "EM_ESTUDO"
+        for prov in (
+            study["classificacao"]["limiares"][0]["proveniencia"],
+            study["score"]["componentes"][0]["proveniencia"],
+        ):
+            prov["status"] = "PROPOSTO"
+            prov["aprovacao"] = None
+        codes = self.codes(study)
+        self.assertNotIn("THRESHOLD_APPROVAL", codes)
+        self.assertNotIn("WEIGHT_APPROVAL", codes)
+
+        formal = copy.deepcopy(study)
+        formal["identidade"]["estado"]["fase_anterior"] = "EM_ESTUDO"
+        formal["identidade"]["estado"]["fase_atual"] = "EM_VALIDACAO"
+        formal_codes = self.codes(formal)
+        self.assertIn("THRESHOLD_APPROVAL", formal_codes)
+        self.assertIn("WEIGHT_APPROVAL", formal_codes)
+
+    def test_indeterminate_publication_policy_cannot_contradict_false_semantics(self) -> None:
+        document = copy.deepcopy(self.valid)
+        document["identidade"]["estado"]["fase_anterior"] = "VALIDADO"
+        document["identidade"]["estado"]["fase_atual"] = "CANDIDATO_PRODUTO"
+        document["saida"]["publicacao"] = {
+            "estado": "DEFINIDO",
+            "campo_booleano": {"nome": "possui_caracteristica", "tipo": "BOOLEAN"},
+            "politica_indeterminado": {
+                "tratamento": "CAMPO_COBERTURA_SEPARADO",
+                "indeterminado_vira_false": False,
+                "descricao": "indeterminado deve ser gravado como FALSE",
+                "proveniencia": copy.deepcopy(self.valid["classificacao"]["semantica"]["proveniencia"]),
+            },
+        }
+        document["publicacao"]["status"] = "CANDIDATA"
+        self.assertIn("INDETERMINATE_POLICY_CONTRADICTION", self.codes(document))
+
+    def test_calibration_evidence_ref_must_resolve_to_executed_measured_experiment(self) -> None:
+        calibrated = copy.deepcopy(self.valid)
+        calibrated["score"]["tipo_semantica"] = "PROBABILIDADE_CALIBRADA"
+        calibrated["score"]["semantica"] = "probabilidade calibrada da característica"
+        calibrated["score"]["calibracao"] = {
+            "metodo": "calibracao_sintetica",
+            "evidencia_ref": "exp_inexistente",
+            "proveniencia": {
+                "status": "MEDIDO",
+                "origem": "execucao sintetica",
+                "referencia": "calibracao_sintetica",
+                "observado_em_utc": "2026-09-14T13:30:00Z",
+                "aprovacao": None,
+                "medicao": {
+                    "referencia_execucao": "run-calibracao-001",
+                    "medido_em_utc": "2026-09-14T13:30:00Z",
+                },
+            },
+        }
+        self.assertIn("CALIBRATION_EVIDENCE_REF", self.codes(calibrated))
+
+    def test_cli_previous_blocks_rewind(self) -> None:
+        previous = copy.deepcopy(self.valid)
+        previous["identidade"]["estado"]["fase_anterior"] = "EM_VALIDACAO_GOVERNANCA"
+        previous["identidade"]["estado"]["fase_atual"] = "PUBLICADO"
+        previous["saida"]["publicacao"] = {
+            "estado": "DEFINIDO",
+            "campo_booleano": {"nome": "possui_caracteristica", "tipo": "BOOLEAN"},
+            "politica_indeterminado": {
+                "tratamento": "CAMPO_COBERTURA_SEPARADO",
+                "indeterminado_vira_false": False,
+                "descricao": "preservar casos indeterminados em cobertura separada",
+                "proveniencia": copy.deepcopy(self.valid["classificacao"]["semantica"]["proveniencia"]),
+            },
+        }
+        previous["publicacao"]["status"] = "PUBLICADA"
+        previous["publicacao"]["handoff_ref"] = "handoff-001"
+        previous["publicacao"]["produto_dados_ref"] = "produto-001"
+        rewritten = copy.deepcopy(self.valid)
+        rewritten["identidade"]["estado"]["fase_anterior"] = "VALIDADO"
+        rewritten["identidade"]["estado"]["fase_atual"] = "EM_ESTUDO"
+        with tempfile.TemporaryDirectory() as tmp:
+            previous_path = Path(tmp) / "previous.json"
+            current_path = Path(tmp) / "current.json"
+            previous_path.write_text(json.dumps(previous, ensure_ascii=False), encoding="utf-8")
+            current_path.write_text(json.dumps(rewritten, ensure_ascii=False), encoding="utf-8")
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(CONTRACT),
+                    str(current_path),
+                    "--schema",
+                    str(SCHEMA),
+                    "--previous",
+                    str(previous_path),
+                ],
+                cwd=REPO,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+        self.assertIn("STATE_REWIND", result.stdout)
 
 
 if __name__ == "__main__":

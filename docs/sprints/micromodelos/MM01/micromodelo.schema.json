@@ -42,7 +42,8 @@
         },
         "origem": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": ".*\\S.*"
         },
         "referencia": {
           "type": [
@@ -66,7 +67,8 @@
           "properties": {
             "por": {
               "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "pattern": ".*\\S.*"
             },
             "em_utc": {
               "type": "string",
@@ -74,7 +76,8 @@
             },
             "referencia": {
               "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "pattern": ".*\\S.*"
             }
           },
           "required": [
@@ -92,7 +95,8 @@
           "properties": {
             "referencia_execucao": {
               "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "pattern": ".*\\S.*"
             },
             "medido_em_utc": {
               "type": "string",
@@ -614,7 +618,8 @@
             },
             "evidencia_ref": {
               "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "description": "ID de experimentos[].id que sustenta a calibração; deve referenciar experimento EXECUTADO e MEDIDO."
             },
             "proveniencia": {
               "$ref": "#/$defs/proveniencia"
@@ -734,7 +739,8 @@
               "type": [
                 "string",
                 "null"
-              ]
+              ],
+              "pattern": ".*\\S.*"
             },
             "em_utc": {
               "type": [
@@ -747,7 +753,8 @@
               "type": [
                 "string",
                 "null"
-              ]
+              ],
+              "pattern": ".*\\S.*"
             }
           }
         }
@@ -838,6 +845,9 @@
                     "OUTRA_APROVADA"
                   ]
                 },
+                "indeterminado_vira_false": {
+                  "const": false
+                },
                 "descricao": {
                   "type": "string",
                   "minLength": 5
@@ -848,6 +858,7 @@
               },
               "required": [
                 "tratamento",
+                "indeterminado_vira_false",
                 "descricao",
                 "proveniencia"
               ]
@@ -935,13 +946,15 @@
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "pattern": ".*\\S.*"
         },
         "produto_dados_ref": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "pattern": ".*\\S.*"
         }
       }
     },
