@@ -22,7 +22,8 @@ A fundação documental e arquitetural da MM00 foi implementada, auditada indepe
 - Reconciliação MM00 sobre a V09 fechada: `26cf7c8edd631f97b5c0541daff2e73dc2286a71`.
 - Head técnico pré-D1 validado: `6f1375efe1a610eca30815b1866cc5d7049514a4`.
 - Head pós-registro D1-B validado: `e027223049380014fbfa59dea6bd6fbd7744e8a7`.
-- Head final de evidência pós-D1-B: `6f60c27e8cdb95d9e5f5feaaa0ccd471444295c4`.
+- Head de evidência pós-D1-B validado: `6f60c27e8cdb95d9e5f5feaaa0ccd471444295c4`.
+- Head corrente, contendo apenas o congelamento deste checkpoint: `8465e5afd6188006f4a0d3bb3cb9b6b75d3570b6`.
 
 ## Entregas
 
@@ -49,7 +50,8 @@ A fundação documental e arquitetural da MM00 foi implementada, auditada indepe
 | Diff técnico contra a `main` fechada | **23 arquivos documentais/contextuais; zero alteração funcional própria** |
 | Métricas do README raiz | **1374 arquivos / 1859 links** |
 | Bateria pós-registro D1-B | **4/4 workflows verdes** |
-| Bateria da árvore final de evidência | **4/4 workflows verdes** |
+| Bateria do head de evidência | **4/4 workflows verdes** |
+| Bateria do head corrente `8465e5afd6188006f4a0d3bb3cb9b6b75d3570b6` | **4/4 workflows verdes** |
 | `main` após a bateria final | **estável em `d6655411ca4ac1834b0983f6ce6bdadc30b831bb`** |
 | Aceite humano explícito da MM00 | pendente |
 
@@ -115,12 +117,19 @@ A reconciliação foi montada usando `main=d6655411ca4ac1834b0983f6ce6bdadc30b83
 - V01 `34885007509`: `success`;
 - V02 `34885007567`: `success`.
 
-### Árvore final de evidência `6f60c27e8cdb95d9e5f5feaaa0ccd471444295c4`
+### Head de evidência `6f60c27e8cdb95d9e5f5feaaa0ccd471444295c4`
 
 - CI geral `34885242394`: `success`;
 - V00 `34885242458`: `success`;
 - V01 `34885242492`: `success`;
 - V02 `34885242445`: `success`.
+
+### Head corrente `8465e5afd6188006f4a0d3bb3cb9b6b75d3570b6`
+
+- CI geral `34885525839`: `success`;
+- V00 `34885525938`: `success`;
+- V01 `34885525871`: `success`;
+- V02 `34885525857`: `success`.
 
 A reconsulta posterior confirmou `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb`, sem novo avanço concorrente. O gate manteve a composição em **1374 arquivos / 1859 links**, sem relaxar validador.
 
