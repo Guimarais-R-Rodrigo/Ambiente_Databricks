@@ -1,0 +1,32 @@
+name: V05 atualizar metricas one-shot
+
+on:
+  push:
+    branches:
+      - codex/temas-v05-fechamento-r13-20260913
+    paths:
+      - .github/workflows/v05-metrics-once.yml
+
+permissions:
+  contents: write
+
+jobs:
+  atualizar-metricas:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Atualizar somente metricas medidas
+        run: python tools/v05_update_metrics_once.py
+
+      - name: Commitar README medido
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- README.md
+          git diff --cached --check
+          git commit -m "docs(temas): atualizar métricas medidas da candidata V05"
+          git push origin HEAD:${GITHUB_REF_NAME}
