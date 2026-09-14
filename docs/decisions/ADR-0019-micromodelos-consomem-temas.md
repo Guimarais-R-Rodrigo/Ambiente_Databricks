@@ -1,7 +1,7 @@
 # ADR-0019 — Micromodelos consomem o Sistema de Temas; não criam tema paralelo
 
 Data: 2026-09-14
-Status: Proposto
+Status: Aceito pelo usuário em 2026-09-14; integração da MM00 pendente
 Autor: ChatGPT
 
 ## Contexto
@@ -30,3 +30,7 @@ Micromodelo não cria novo contexto visual obrigatório; README e notebook perma
 - `docs/decisions/ADR-0013-sistema-de-temas.md`
 - `docs/sprints/sistema_temas/V07/README.md`
 - `docs/sprints/micromodelos/PLANO_MESTRE.md`
+
+## Ratificação de status — 14/09/2026
+
+O usuário declarou: “D2: Aceito ADR-0014 a ADR-0020 sem ressalvas.” Este ADR fica aceito sem alteração do corpo decisório. O aceite não cria contexto visual novo nem antecipa a integração visual definitiva; ela permanece na fase de hardening e deve consumir o contrato central vigente naquele momento.
