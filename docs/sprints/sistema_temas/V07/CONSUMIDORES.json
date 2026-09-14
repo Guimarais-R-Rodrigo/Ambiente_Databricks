@@ -1,0 +1,152 @@
+{
+  "version": "V07",
+  "title": "Demais consumidores e formatos de saída",
+  "source_inventory": "docs/testes/sistema_temas/V00/MATRIZ_AUTOMATICA.md",
+  "runtime_scope": ["display", "ml"],
+  "controls_v07": [
+    "brand.primary",
+    "text.plot",
+    "text.secondary",
+    "surface.card",
+    "semantic.warning",
+    "semantic.negative",
+    "palette.categorical",
+    "palette.curves_legacy",
+    "palette.sequential"
+  ],
+  "format_policy": {
+    "supported": [
+      "plotly_figure_memory",
+      "plotly_html_file"
+    ],
+    "already_supported_elsewhere": [
+      "pandas_styler_html"
+    ],
+    "legacy_unchanged_not_theme_aware": [
+      "shap_matplotlib_screen",
+      "shap_matplotlib_png"
+    ],
+    "not_homologated": [
+      "plotly_static_png",
+      "pdf",
+      "pptx",
+      "databricks_browser_render",
+      "accessibility_render"
+    ]
+  },
+  "consumers": [
+    {
+      "id": "display.dataframe_styled",
+      "path": "ambiente_fonte/.assistant/hub_snippets/display/dataframe_styled/dataframe_styled.py",
+      "classification": "already_supported_v04",
+      "routes": ["display_styled_resolvido"],
+      "tokens": ["semantic.negative"],
+      "output": "pandas_styler_html",
+      "reason": "Rota opt-in por ResolvedTheme já integrada na V04; V07 não duplica o adaptador.",
+      "owner": "Sistema de Temas / V04",
+      "user_effect": "Tabelas continuam com API legada e rota temática já disponível."
+    },
+    {
+      "id": "display.correlation_matrix",
+      "path": "ambiente_fonte/.assistant/hub_snippets/display/correlation_matrix/correlation_matrix.py",
+      "classification": "supported_v07",
+      "routes": ["plot_correlation_resolvido", "plot_correlation_matrix_resolvido"],
+      "tokens": ["palette.sequential"],
+      "output": "plotly_figure_memory",
+      "reason": "Heatmap possui consumidor real; cálculo Spark e pares fortes permanecem compartilhados.",
+      "owner": "Sistema de Temas / V07",
+      "user_effect": "Ao optar por tema, a escala sequencial e o layout mudam; correlações e threshold não mudam."
+    },
+    {
+      "id": "display.distribution_grid",
+      "path": "ambiente_fonte/.assistant/hub_snippets/display/distribution_grid/distribution_grid.py",
+      "classification": "supported_v07",
+      "routes": ["plot_distributions_resolvido", "plot_distribution_grid_resolvido"],
+      "tokens": ["palette.categorical"],
+      "output": "plotly_figure_memory",
+      "reason": "Consumidor Plotly real identificado na V00; amostragem smart_sample permanece única.",
+      "owner": "Sistema de Temas / V07",
+      "user_effect": "Ao optar por tema, histogramas usam o layout/paleta configurados sem mudar a amostra."
+    },
+    {
+      "id": "ml.curves_plotly",
+      "path": "ambiente_fonte/.assistant/hub_snippets/ml/curves_plotly/curves_plotly.py",
+      "classification": "supported_v07",
+      "routes": ["plot_roc_curve_resolvido", "plot_pr_curve_resolvido", "plot_lift_curve_resolvido", "plot_ks_curve_resolvido"],
+      "tokens": ["palette.curves_legacy", "text.plot", "surface.card"],
+      "output": "plotly_figure_memory",
+      "reason": "O contrato V01 possui palette.curves_legacy precisamente para preservar a família histórica de seis cores.",
+      "owner": "Sistema de Temas / V07",
+      "user_effect": "Tema muda apenas aparência; AUC, AP, lift, KS, eixos e séries continuam calculados pela mesma lógica."
+    },
+    {
+      "id": "ml.performance_monitor",
+      "path": "ambiente_fonte/.assistant/hub_snippets/ml/performance_monitor/performance_monitor.py",
+      "classification": "supported_v07",
+      "routes": ["PerformanceMonitor.plot_timeline_resolvido"],
+      "tokens": ["brand.primary", "text.secondary", "semantic.warning", "semantic.negative"],
+      "output": "plotly_figure_memory",
+      "reason": "A timeline possui semânticas explícitas de baseline, warning e critical já representadas pelo contrato.",
+      "owner": "Sistema de Temas / V07",
+      "user_effect": "Cores podem mudar; política, deterioração, thresholds e decisão de governança não mudam."
+    },
+    {
+      "id": "ml.umap_viz",
+      "path": "ambiente_fonte/.assistant/hub_snippets/ml/umap_viz/umap_viz.py",
+      "classification": "supported_v07",
+      "routes": ["plot_umap_clusters_resolvido"],
+      "tokens": ["palette.categorical", "text.secondary"],
+      "output": "plotly_figure_memory",
+      "reason": "A paleta de clusters é visual; o embedding permanece calculado por compute_umap uma única vez.",
+      "owner": "Sistema de Temas / V07",
+      "user_effect": "Cores/layout mudam; coordenadas UMAP, labels, opacidade e tamanho solicitado permanecem."
+    },
+    {
+      "id": "ml.vintage_analysis",
+      "path": "ambiente_fonte/.assistant/hub_snippets/ml/vintage_analysis/vintage_analysis.py",
+      "classification": "supported_v07",
+      "routes": ["plot_vintage_curves_resolvido", "plot_vintage_heatmap_resolvido"],
+      "tokens": ["palette.categorical", "palette.sequential"],
+      "output": "plotly_figure_memory",
+      "reason": "Curvas e heatmap têm tokens de paleta correspondentes; build_vintage_table e compare_safras não são alterados.",
+      "owner": "Sistema de Temas / V07",
+      "user_effect": "Aparência muda; MOB, maturidade, denominadores, taxas e células do heatmap permanecem."
+    },
+    {
+      "id": "ml.kaplan_meier",
+      "path": "ambiente_fonte/.assistant/hub_snippets/ml/kaplan_meier/kaplan_meier.py",
+      "classification": "exception_deferred",
+      "routes": [],
+      "tokens": [],
+      "output": "plotly_figure_memory",
+      "reason": "O consumidor possui ordem própria de oito cores. O contrato atual não contém token que represente essa ordem sem remapear grupos silenciosamente.",
+      "owner": "Mantenedor do Sistema de Temas",
+      "user_effect": "Kaplan-Meier continua com aparência legada; selecionar tema não o recolore nesta versão."
+    },
+    {
+      "id": "ml.shap_explainer",
+      "path": "ambiente_fonte/.assistant/hub_snippets/ml/shap_explainer/shap_explainer.py",
+      "classification": "exception_deferred",
+      "routes": [],
+      "tokens": [],
+      "output": "shap_matplotlib_screen/shap_matplotlib_png",
+      "reason": "SHAP controla internamente parte relevante da aparência via Matplotlib; não existe contrato V01 para colormap/estilo SHAP nem exportação estática tematizada.",
+      "owner": "Mantenedor do Sistema de Temas + consumidor SHAP",
+      "user_effect": "Plots SHAP e PNGs salvos permanecem legados; nenhum controle do Visual Lab promete efeito sobre eles."
+    }
+  ],
+  "excluded_nonruntime": [
+    {
+      "path": "ambiente_fonte/.assistant/hub_padroes/notebook/template.py",
+      "reason": "template de autoria, não consumidor runtime ativo"
+    },
+    {
+      "path": "ambiente_fonte/.assistant/hub_padroes/snippet/taxa_resposta_campanha/taxa_resposta_campanha.py",
+      "reason": "exemplo de padrão, não consumidor runtime promovido"
+    },
+    {
+      "path_prefix": "ambiente_fonte/.assistant/hub_readmes_visual_assets/",
+      "reason": "assets/editorial cobertos pela pipeline V06 e fora do fechamento de consumidores runtime V07"
+    }
+  ]
+}
