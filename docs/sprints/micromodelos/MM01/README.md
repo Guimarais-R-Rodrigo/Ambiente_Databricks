@@ -11,7 +11,7 @@ Transformar as decisões arquiteturais aceitas na MM00 em um contrato estrutural
 
 A sprint não cria a skill `hub-ml-micromodelos`. O validador desta entrega vive em `tools/` como **oráculo de construção e CI** porque a lista de skills é fechada e a skill só nasce na MM04. Quando a MM04 criar o objeto roteável, ela deverá incorporar/derivar o contrato vigente sem criar uma segunda fonte de verdade.
 
-A implementação começou sobre a `main` final da MM00. Durante a sprint, a frente do Sistema de Temas integrou a V10; por isso a candidata foi reconciliada de forma fail-closed com `main@a9480391...` antes da abertura da PR. A reconciliação passou novamente pela suíte MM01 e pelo gate estrutural. Nenhum arquivo da V10 foi reimplementado ou alterado pela MM01.
+A implementação começou sobre a `main` final da MM00. Durante a sprint, a frente do Sistema de Temas integrou a V10; por isso a candidata foi reconciliada de forma fail-closed com `main@a9480391c78e2402986885db0ce08b10e0619a1a` antes da abertura da PR. A reconciliação passou novamente pela suíte MM01 e pelo gate estrutural. Nenhum arquivo da V10 foi reimplementado ou alterado pela MM01.
 
 ## Entregas
 
