@@ -1,0 +1,62 @@
+name: Temas nativos AI/BI V11
+on:
+  push:
+    branches: [main, 'codex/temas-v11*']
+  pull_request:
+    paths:
+      - 'ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/**'
+      - 'Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/aibi/**'
+      - 'tools/tests/test_temas_v11.py'
+      - 'docs/sprints/sistema_temas/V11/**'
+      - 'docs/sprints/sistema_temas/README.md'
+      - 'docs/sprints/README.md'
+      - 'README.md'
+      - '.github/workflows/temas-v11-ci.yml'
+permissions:
+  contents: read
+jobs:
+  aibi-v11:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      SOURCE_DATE_EPOCH: '1700000000'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Dependências Python de manutenção
+        run: |
+          python -m pip install -r tools/requirements-dev.txt
+          python -m pip install 'ipywidgets>=8,<9'
+          python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+      - name: Dependências do compositor V06
+        run: |
+          npm install --global pnpm@10.34.5
+          pnpm --dir tools/readme_visuals install --frozen-lockfile
+      - name: V11 — projeção AI/BI e guardas
+        run: python -B tools/tests/test_temas_v11.py -v
+      - name: Sintaxe V11 sem bytecode no produto
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/aibi_theme.py')
+          compile(path.read_text(encoding='utf-8'), str(path), 'exec')
+          print('OK: sintaxe V11 compilada em memória')
+          PY
+      - name: Regressões de temas V01–V11
+        run: python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
+      - name: Compatibilidade visual V00
+        run: python -B tools/tests/test_visual_legado_v00.py
+      - name: Validação estrutural e documental
+        run: python -B tools/validate_assistant.py --conferir-readme
+      - name: Escopo V11
+        run: echo 'V11 projeta temas para capacidades AI/BI sem chamar Databricks, publicar dashboards, alterar workspace theme ou prometer propagação automática.'

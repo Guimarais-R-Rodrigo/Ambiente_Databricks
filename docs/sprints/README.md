@@ -75,11 +75,15 @@ A iniciativa continua sem alteração funcional própria no produto `.assistant`
 
 ## Sistema de Temas do Hub
 
-A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V10 estão aceitas e integradas no Git. A V10 foi aceita por Rodrigo em 14/09/2026 e integrada pelo PR #48 no merge `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`. Não houve deploy Databricks.**
+A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V11 estão aceitas e integradas no Git. A V11 foi aceita em 14/09/2026 e integrada pelo PR #52 no merge `9305bc49eaf002caec042361bf35efa66af7ca18`.**
 
-A V10 reutiliza o núcleo V02 e o Visual Lab V05 em uma superfície Streamlit `authoring_only`, com identidade encaminhada pelo proxy, namespace de sessão por SHA-256 e persistência projetada em Unity Catalog Volume via recurso `theme_storage`. Ela não implementa `context="app"`, aprovação, publicação, promoção ou delete de histórico. Evidências e limites estão em [V10](sistema_temas/V10/README.md), [testes V10](sistema_temas/V10/TESTES.md) e [checkpoint V10](sistema_temas/V10/CHECKPOINT_V10.md).
+A V11 cria uma ponte fail-closed entre um `ResolvedTheme` `notebook` e capacidades documentadas de temas nativos AI/BI sem ampliar silenciosamente o schema V01/V02: `context="aibi"` continua reservado. A matriz cobre exatamente 48 tokens, classificados em 3 traduzidos, 23 aproximados e 22 não suportados. O projeto não inventa o schema do JSON nativo de `Import theme`; um binding nativo futuro exige export real fixado por SHA-256 e revisão de JSON Pointers. Estado e limites estão em [V11](sistema_temas/V11/README.md), [testes V11](sistema_temas/V11/TESTES.md) e [checkpoint V11](sistema_temas/V11/CHECKPOINT_V11.md).
 
-Os runs V10 `34884790130`, `34885407907` e `34886250755` permanecem failures históricos. O push final original `34887162337` concluiu com `success`; após a reconciliação com a MM00, os dez workflows reais de PR do head `cb942ee955ff9236f19099e5ed4ceee9beb32000` também concluíram com `success`. Depois do merge, os 12 workflows disparados por `push` no commit `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b` concluíram com `success`, incluindo o workflow V10 `34896944061`. Nenhuma operação Databricks foi executada e V11/AI-BI não foi iniciada.
+Os runs V11 `34900693160`, `34901091132`, `34901776770` e `34904363803` permanecem **FAILURE** e não foram reclassificados. O head final `5532ca6d8f1b243ca705088f4b57823a333b9b1f` teve o push pré-PR `34905080083` integralmente verde; os 11 workflows reais da PR #52 concluíram com `success`, e os 13 workflows pós-merge no commit `9305bc49eaf002caec042361bf35efa66af7ca18` também concluíram com `success`. Não houve export/import real de tema, gestão de workspace theme, publicação de dashboard ou qualquer chamada Databricks.
+
+A V10 foi aceita por Rodrigo em 14/09/2026 e integrada pelo PR #48 no merge `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`. Ela reutiliza o núcleo V02 e o Visual Lab V05 em uma superfície Streamlit `authoring_only`, com identidade encaminhada pelo proxy, namespace de sessão por SHA-256 e persistência projetada em Unity Catalog Volume via recurso `theme_storage`. Ela não implementa `context="app"`, aprovação, publicação, promoção ou delete de histórico. Evidências e limites estão em [V10](sistema_temas/V10/README.md), [testes V10](sistema_temas/V10/TESTES.md) e [checkpoint V10](sistema_temas/V10/CHECKPOINT_V10.md).
+
+Os runs V10 `34884790130`, `34885407907` e `34886250755` permanecem failures históricos. O push final original `34887162337` concluiu com `success`; após a reconciliação com a MM00, os dez workflows reais de PR do head `cb942ee955ff9236f19099e5ed4ceee9beb32000` também concluíram com `success`. Depois do merge, os 12 workflows disparados por `push` no commit `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b` concluíram com `success`, incluindo o workflow V10 `34896944061`.
 
 A V09 integra explicitamente o Sistema de Temas ao kit offline de transição: contrato temático no manifesto v2, guarda fail-closed antes do build e conferência de presença/tamanho/SHA256 dos nove arquivos canônicos dentro do ZIP gerado. No pós-merge final, 12/12 workflows de `push` concluíram com `success`, incluindo 43/43 testes com Spark local no workflow operacional. Transporte não significa ativação, promoção ou publicação.
 
@@ -109,7 +113,7 @@ A R04-A está integrada em `a8f314a`. A R04-B cobre seis Hub Scripts e pausa par
 A R04-B está integrada em `d9da056`. A R05 cobre seis modelos tabulares e pausa para revisão antes da R06. Consulte `readmes_objetos/RELATORIO_R05.md` e `readmes_objetos/MATRIZ_ALTERACOES_R05.md`.
 
 ### READMEs de objeto — R06
-A R05 está integrada em `cae94988`. A R06 cobre cinco objetos de séries/validação temporal e pausa para revisão antes da R07. Consulte `readmes_objetos/RELATORIO_R06.md` e `readmes_objetos/MATRIZ_ALTERACOES_R06.md`.
+A R05 foi integrada em `cae94988`. A R06 cobre cinco objetos de séries/validação temporal e pausa para revisão antes da R07. Consulte `readmes_objetos/RELATORIO_R06.md` e `readmes_objetos/MATRIZ_ALTERACOES_R06.md`.
 
 ### READMEs de objeto — R07
 A R06 foi integrada em `289731c`. A R07 cobre seis objetos de score, vintage e sobrevivência e pausa para revisão antes da R08. Consulte `readmes_objetos/RELATORIO_R07.md` e `readmes_objetos/MATRIZ_ALTERACOES_R07.md`.
