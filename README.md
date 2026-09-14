@@ -64,7 +64,7 @@ Regras atuais:
 - SHAP/Matplotlib e Kaplan–Meier continuam limites explícitos onde o contrato atual não representa a semântica necessária;
 - transportar o contrato temático no kit não equivale a ativação, promoção ou publicação Databricks.
 
-Detalhes da frente permanecem em `docs/sprints/sistema_temas/`; a integração temática não substitui os gates próprios de runtime, browser, acessibilidade, ACL ou UAT.
+Detalhes da integração transversal anterior: [V08](docs/sprints/sistema_temas/V08/README.md) e [checkpoint V08](docs/sprints/sistema_temas/V08/CHECKPOINT_V08.md). O estado V09 permanece documentado em `docs/sprints/sistema_temas/V09/`.
 
 ## 🔄 Como o contexto chega à Genie Code
 
