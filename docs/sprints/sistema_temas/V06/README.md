@@ -2,7 +2,7 @@
 
 ## Estado desta sprint
 
-**CANDIDATA EM EXECUÇÃO; SEM ACEITE OU MERGE.** A V06 parte da `main` já contendo a V05 integrada (`d728b872c77c89723a016919bd80534fb297b488`) e trabalha somente na branch `codex/temas-v06-assets-geracao-20260914`.
+**INTEGRADA NO GIT; SEM PUBLICAÇÃO DATABRICKS; V07 NÃO INICIADA.** A V06 foi aceita por Rodrigo em 14/09/2026 e integrada pelo PR #38. O head final validado foi `70499e1803ce0d61a148a0da975c4f52611046e0`; o merge na `main` é `418946de8d1e95e87cbfd9df528ddcced5075237`. A árvore do merge (`68ddec3d691047e890ba2785e1e2e007039fa0e3`) é idêntica à árvore do head final testado.
 
 O objetivo canônico desta sprint é **documentar assets e geração**. A implementação conecta o compositor editorial v2 ao núcleo de temas V02 sem criar uma segunda fonte de verdade: o usuário fornece um `theme_id` canônico, o tema é carregado e revalidado como `ResolvedTheme` e somente um derivado controlado é entregue ao renderer.
 
@@ -68,11 +68,15 @@ Cada geração candidata registra no manifesto:
 
 O manifesto declara `status: candidate_not_approved` e `approval_or_publication_performed: false`.
 
-## Testes
+## Testes e integração
 
 `tools/tests/test_temas_v06.py` cobre seleção fail-closed por `theme_id`, determinismo, proteção dos 12 assets congelados, hashes/dimensões da variante, adulteração, proibição de saída no pacote ativo e paridade do contrato fonte/espelho.
 
-O workflow permanente `.github/workflows/temas-v06-ci.yml` usa `contents: read`, instala as dependências declaradas, roda a suíte V06, regressões V01–V06, compatibilidade V00 e `validate_assistant.py --conferir-readme`.
+No head final `70499e18...`, os workflows da PR concluíram com `success`: CI geral, V00, V01, V02, V04, V05 e V06. A suíte específica V06 permaneceu em **5/5**, a descoberta cumulativa V01–V06 em **364/364** e a compatibilidade V00 em **12/12**.
+
+Depois do merge `418946de...`, oito workflows disparados por `push` na `main` concluíram com `success`: CI geral e V00–V06, incluindo o V03. Os IDs finais estão registrados em [TESTES.md](TESTES.md).
+
+A correção final de CI não removeu nem filtrou testes: V04 e V05 continuaram executando `test_temas*.py` cumulativamente até V06, com Node 22 e `pnpm@10.34.5` preparados antes da regressão. `ci_local.py` continua fail-closed e não instala dependências Node silenciosamente para o operador local.
 
 Falhas históricas não são reclassificadas como sucesso. Consulte [TESTES.md](TESTES.md) e [CHECKPOINT_V06.md](CHECKPOINT_V06.md).
 
@@ -80,6 +84,6 @@ Falhas históricas não são reclassificadas como sucesso. Consulte [TESTES.md](
 
 A V06 não prova renderização no navegador Databricks, acessibilidade percebida, UAT por iniciante, ACL real, publicação, promoção de variante ou operação em workspace corporativo. Essas evidências continuam gates separados.
 
-## Ponto de parada
+## Fechamento
 
-A sprint só deve ir a aceite quando a mesma árvore candidata tiver suíte V06, regressões, V00 e validação documental verdes, documentação sincronizada, diff revisado e PR draft final. Mesmo depois disso, merge exige aceite explícito e publicação Databricks continua fora do escopo.
+A integração Git da V06 está concluída. O pacote ativo não foi publicado nem alterado por uma promoção de candidata; nenhuma ação remota de Spark, SQL, MLflow, ACL ou workspace foi executada nesta rota. A V07 ainda não foi iniciada.
