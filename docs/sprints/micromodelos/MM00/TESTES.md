@@ -8,21 +8,23 @@ MM00 é uma sprint documental/arquitetural. Os testes verificam baseline, ausên
 
 **Abertura:** `micromodelos/mm00-baseline` nasceu da `main` em `1b6632194f4b25afc09960c27b069c16df365ee6`.
 
-**Evento concorrente:** durante a execução, a V08 foi integrada na `main` pelo commit `622d2c962a80998cf990b57036f7ae503bfc0458`.
+**Concorrência observada:** durante a MM00, a V08 foi integrada pelo commit `622d2c962a80998cf990b57036f7ae503bfc0458` e depois fechada documentalmente em `55f7006c47d90ae7f760992d252b658f53a59636`.
 
-**Reconciliação:** a branch MM00 incorporou a nova `main` por merge de dois pais no commit `e322e73fc0dc73c3081c99662ac29cb7721add67`, preservando os arquivos funcionais da V08 e os documentos MM00.
+**Reconciliação final observada:** a branch MM00 incorporou a `main` fechada da V08 no merge `edfcf58e4700ccf5d58d2befddccbd9fe50ac124`, preservando a árvore funcional da V08 e reaplicando somente artefatos MM00/documentos compartilhados necessários.
 
-**Status:** PASS para a reconciliação estrutural. Revalidar `main` antes do aceite/merge final.
+**Reconsulta:** antes desta atualização de gate, a `main` permanecia em `55f7006c47d90ae7f760992d252b658f53a59636`.
+
+**Status:** PASS. Reconsultar imediatamente antes do aceite/merge.
 
 ## T02 — Estado visual
 
 **Esperado:** o plano não pode depender de fotografia desatualizada de outra frente.
 
-**Observado:** V00–V08 estão integradas no Git. V08 alinha skills, padrões, entrada `.assistant`, template EDA e Manual ao Sistema de Temas sem alterar runtime Python.
+**Observado:** V00–V08 estão aceitas/integradas no Git; V09 não havia sido iniciada na `main` reconsultada. A V08 alinha skills, padrões, entrada `.assistant`, template EDA e Manual ao Sistema de Temas sem alterar runtime Python.
 
-**Conclusão:** o framework de micromodelos deve respeitar essa integração transversal desde a criação de suas futuras skills, mas a composição visual específica continua adiada para MM11.
+**Conclusão:** o framework de micromodelos deve respeitar essa integração transversal desde a criação de suas futuras skills, enquanto a composição visual específica continua adiada para MM11.
 
-**Status:** PASS arquitetural após reconciliação; nova auditoria independente deve validar a interpretação.
+**Status:** PASS arquitetural; a auditoria A1 deve revisar a interpretação.
 
 ## T03 — Colisão nominal
 
@@ -46,7 +48,7 @@ MM00 é uma sprint documental/arquitetural. Os testes verificam baseline, ausên
 
 **Evidência:** `MATRIZ_REUSO.md` classifica Concierge, EDA, cross-EDA, feature engineering, validação, auditoria, `schema_to_yaml`, helpers Spark e `mlflow_run`.
 
-**Status:** PASS documental; auditor A1 deve confirmar contratos citados contra a árvore pós-V08.
+**Status:** PASS documental; auditor A1 deve confirmar os contratos citados contra a árvore vigente.
 
 ## T06 — Sanitização
 
@@ -54,9 +56,9 @@ MM00 é uma sprint documental/arquitetural. Os testes verificam baseline, ausên
 
 **Primeira rodada:** o CI detectou um handle corporativo histórico no ADR-0017.
 
-**Correção:** o handle foi removido e substituído por contrato genérico de handoff. O CI do head `4c162436b6947681e58ea94f342d0acf11399688` passou após a correção.
+**Correção:** o handle foi removido e substituído por contrato genérico de handoff. Rodadas posteriores do CI passaram a etapa de validação sem novo achado de sanitização.
 
-**Status:** PASS naquele head; reexecutar no head reconciliado com V08.
+**Status:** PASS automatizado, sujeito à revisão semântica A1.
 
 ## T07 — Migração tardia
 
@@ -78,30 +80,30 @@ MM00 é uma sprint documental/arquitetural. Os testes verificam baseline, ausên
 
 **Esperado:** a iniciativa MM00 não cria/modifica funcionalidade do produto.
 
-**Observado antes da reconciliação V08:** a PR MM00 alterava apenas `CLAUDE.md`, `README.md`, ADRs e documentação MM00/auditoria.
+**Observado contra a `main` fechada da V08:** a PR #43 contém 21 arquivos alterados e nenhum deles pertence a `ambiente_fonte/.assistant/`, `Novo_Ambiente_Simulado/`, `tools/` ou `.github/workflows/`.
 
-**Após a reconciliação:** a branch contém alterações funcionais da V08 porque elas já são parte da nova `main`, não porque a MM00 as criou. O diff relevante para escopo deve ser calculado contra a `main` reconciliada, não contra a base histórica V07.
+Os 21 arquivos são contexto canônico, ADRs, índices e documentação/auditoria da MM00.
 
-**Status:** PENDENTE de nova listagem/diff contra a `main` pós-V08.
+**Status:** PASS nominal. A auditoria A1 deve verificar que nenhum conteúdo documental cria efeito funcional indireto incompatível com o escopo.
 
 ## T10 — Validação automática
 
-### Head pré-reconciliação V08
+### Rodada que encontrou as divergências finais
 
-No head `4c162436b6947681e58ea94f342d0acf11399688`:
+No head anterior, o CI geral `34875814570` reprovou somente porque o bloco congelado do README raiz ainda registrava 1350 arquivos/1850 links, enquanto o validador mediu 1368 arquivos/1859 links. Temas, biblioteca, ferramentas, transição, READMEs e todos os checks do Concierge passaram nessa mesma execução.
 
-- V00: success;
-- V01: success;
-- V02: success;
-- CI geral `34872513600`: success.
+### Rodada corrigida
 
-Isso comprovou a correção dos failures anteriores de sanitização e métricas do README naquele snapshot.
+No head `f5e57db5c7fd1fdd21385eaa3f5f6aa07fcaa0a5`:
 
-### Head reconciliado V08
+- CI geral `34876036424`: `success`;
+- V00 `34876036437`: `success`;
+- V01 `34876036418`: `success`;
+- V02 `34876036413`: `success`.
 
-A incorporação da V08 muda a contagem e amplia os workflows aplicáveis. O gate precisa ser executado novamente sobre o head pós-reconciliação; resultados antigos não são transferidos por inferência.
+O README foi corrigido apenas para os valores medidos `1368` e `1859`; nenhum validador foi relaxado.
 
-**Status:** PENDENTE de CI final.
+**Status:** PASS no snapshot `f5e57db5...`. As atualizações finais destes documentos de gate devem receber nova rodada de CI; o aceite permanece proibido enquanto o head corrente não estiver verde.
 
 ## T11 — Auditoria independente A1
 
@@ -118,18 +120,20 @@ A sessão implementadora não se autoqualifica como auditor independente.
 
 **Esperado:** `CLAUDE.md` reflete a `main` vigente e não transforma ADR proposto em decisão ativa.
 
-**Ação:** a candidata será reconciliada para V00–V08 integradas e MM00/ADRs 0014–0020 em estado proposto.
+**Observado:** `CLAUDE.md` registra V00–V08 como integradas, V09 não iniciada, MM00 como proposta e ADR-0014 a ADR-0020 como propostos. O índice de ADRs mantém os mesmos status.
 
-**Status:** PENDENTE do commit documental pós-merge e CI.
+**Status:** PASS documental, sujeito à A1.
 
 ## T13 — Regra de changelog
 
 `CLAUDE.md` exige entrada em `CHANGELOG.md` para toda sessão que altera algo.
 
-A `main` pós-V08 já traz a entrada da V08; a entrada própria da MM00 ainda não foi adicionada. A interface disponível nesta sessão oferece substituição integral para esse arquivo histórico extenso, sem patch/append seguro; a MM00 não deve arriscar reescrever o histórico apenas para marcar o checkbox.
+A reconciliação com a `main` preservou integralmente o `CHANGELOG.md` oficial da V08. A entrada própria da MM00 ainda não foi adicionada. A interface disponível nesta sessão oferece substituição integral para esse arquivo histórico extenso, sem operação de patch/append segura; reescrever o histórico apenas para marcar o gate seria um risco maior.
 
-**Status:** BLOQUEIO CONHECIDO. Requer atualização aditiva segura antes do aceite, ou decisão humana explícita de exceção documentada.
+**Status:** BLOQUEIO CONHECIDO. Requer atualização aditiva segura antes do aceite, ou exceção humana explícita e registrada.
 
 ## Critério final
 
-PASS global exige T01–T13 resolvidos, diff da MM00 delimitado contra a `main` vigente, CI verde no head final, auditoria independente registrada e checkpoint reconciliado.
+PASS global exige T01–T13 resolvidos, diff da MM00 delimitado contra a `main` vigente, CI verde no head corrente, auditoria independente registrada e checkpoint reconciliado.
+
+Neste momento, os bloqueios deliberados são T11 (A1 independente) e T13 (changelog próprio da MM00), além da revalidação automática do head após esta atualização documental.
