@@ -65,6 +65,15 @@ custos e interpretação. Estado, matriz e testes em
 [`RELATORIO_R04A.md`](readmes_objetos/RELATORIO_R04A.md). Cobertura candidata
 25/74; sem publicação, aceite antecipado ou início da R04-B.
 
+## Framework de Micromodelos
+
+A [iniciativa MM00–MM13](micromodelos/README.md) usa numeração própria. A MM00
+registra baseline, Plano Mestre, inventário, matrizes de reuso/risco/dependência,
+ADRs, testes e checkpoint antes de qualquer implementação funcional. O desenho
+obriga piloto greenfield antes da migração de legados e mantém a integração
+visual definitiva para a fase de hardening. MM01 não começa sem aceite explícito
+do checkpoint MM00.
+
 ## Sistema de Temas do Hub
 
 A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints
@@ -115,7 +124,7 @@ A R04-A está integrada em `a8f314a`. A R04-B cobre seis Hub Scripts e pausa par
 A R04-B está integrada em `d9da056`. A R05 cobre seis modelos tabulares e pausa para revisão antes da R06. Consulte `readmes_objetos/RELATORIO_R05.md` e `readmes_objetos/MATRIZ_ALTERACOES_R05.md`.
 
 ### READMEs de objeto — R06
-A R05 está integrada em `cae94988`. A R06 cobre cinco objetos de séries/validação temporal e pausa para revisão antes da R07. Consulte `readmes_objetos/RELATORIO_R06.md` e `readmes_objetos/MATRIZ_ALTERACOES_R06.md`.
+A R05 foi integrada em `cae94988`. A R06 cobre cinco objetos de séries/validação temporal e pausa para revisão antes da R07. Consulte `readmes_objetos/RELATORIO_R06.md` e `readmes_objetos/MATRIZ_ALTERACOES_R06.md`.
 
 ### READMEs de objeto — R07
 A R06 foi integrada em `289731c`. A R07 cobre seis objetos de score, vintage e sobrevivência e pausa para revisão antes da R08. Consulte `readmes_objetos/RELATORIO_R07.md` e `readmes_objetos/MATRIZ_ALTERACOES_R07.md`.
