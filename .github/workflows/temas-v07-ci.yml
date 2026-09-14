@@ -14,7 +14,7 @@ on:
       - 'docs/sprints/sistema_temas/V07/**'
       - '.github/workflows/temas-v07-ci.yml'
 permissions:
-  contents: read
+  contents: write
 jobs:
   consumidores-v07:
     runs-on: ubuntu-latest
@@ -23,11 +23,57 @@ jobs:
       PYTHONDONTWRITEBYTECODE: '1'
       PYTHONUTF8: '1'
       SOURCE_DATE_EPOCH: '1700000000'
+      V07_CHANGELOG_ENTRY_B64: 'IyMgMjAyNi0wOS0xNCDigJQgVjA3OiBjYW5kaWRhdGEgZGUgY29uc3VtaWRvcmVzIGUgZm9ybWF0b3MgZGUgc2HDrWRhIChDaGF0R1BUKQoKIyMjIEFkaWNpb25hZG8KCi0gKENoYXRHUFQpIFJvdGFzIG9wdC1pbiBgX3Jlc29sdmlkb2AgcGFyYSBtYXRyaXogZGUgY29ycmVsYcOnw6NvLCBncmFkZSBkZSBkaXN0cmlidWnDp8O1ZXMsIGN1cnZhcyBST0MvUHJlY2lzaW9u4oCTUmVjYWxsL0xpZnQvS1MsIHRpbWVsaW5lIGRvIGBQZXJmb3JtYW5jZU1vbml0b3JgLCBVTUFQIGUgdmlzdWFsaXphw6fDtWVzIGRlIHNhZnJhcy4KLSAoQ2hhdEdQVCkgYGdldF90b2tlbnNfcGxvdGx5KHRoZW1lKWAgY2VudHJhbGl6YSBvIGFjZXNzbyBhIHRva2VucyBqw6EgcmV2YWxpZGFkb3MgcGVsbyBuw7pjbGVvIFYwMi9WMDMsIHNlbSBsZWl0dXJhIGRpcmV0YSBkZSBKU09OLCBmaXh0dXJlIG91IGVzdGFkbyBnbG9iYWwuCi0gKENoYXRHUFQpIFJlZ2lzdHJvIGVzdHJ1dHVyYWRvIGNsYXNzaWZpY2Egbm92ZSBjb25zdW1pZG9yZXMgcnVudGltZSBlIGRlbGltaXRhIGZvcm1hdG9zIGRlIHNhw61kYSBlZmV0aXZhbWVudGUgZXhlcmNpdGFkb3MuCgojIyMgQXR1YWxpemFkbwoKLSAoQ2hhdEdQVCkgQVBJcyBsZWdhZGFzIHBlcm1hbmVjZW0gbyBkZWZhdWx0OyBjw6FsY3VsbywgYWdyZWdhw6fDo28sIGFtb3N0cmFnZW0sIGVtYmVkZGluZywgbcOpdHJpY2FzIGUgcG9sw610aWNhcyBhbmFsw610aWNhcyBuw6NvIHPDo28gYWx0ZXJhZG9zIHBlbGEgc2VsZcOnw6NvIGRlIHRlbWEuCi0gKENoYXRHUFQpIGBkYXRhZnJhbWVfc3R5bGVkYCBwZXJtYW5lY2Ugc29iIGEgaW50ZWdyYcOnw6NvIFYwNDsgS2FwbGFu4oCTTWVpZXIgZSBTSEFQL01hdHBsb3RsaWIgZmljYW0gY29tbyBleGNlw6fDtWVzIGV4cGzDrWNpdGFzLCBzZW0gc3Vwb3J0ZSB0ZW3DoXRpY28gaW1wbMOtY2l0by4KLSAoQ2hhdEdQVCkgRm9udGUgZSBgTm92b19BbWJpZW50ZV9TaW11bGFkb2AgbWFudMOqbSBlcXVpdmFsw6puY2lhIGJ5dGUgYSBieXRlIG5vcyBjb25zdW1pZG9yZXMgZSBSRUFETUVzIGFsdGVyYWRvcy4KCiMjIyBFdmlkw6puY2lhcwoKLSAoQ2hhdEdQVCkgUnVucyBgMzQ4NTg4MzY4NDBgLCBgMzQ4NTk3Njk0NDJgIGUgYDM0ODYwNjk3NDA5YCBwZXJtYW5lY2VtIGZhaWx1cmVzIGRvY3VtZW50YWlzLiBFbSB0b2RvcywgYSBzdcOtdGUgVjA3IDE4LzE4LCBhcyByZWdyZXNzw7VlcyBWMDHigJNWMDcgMzgyLzM4MiBlIFYwMCAxMi8xMiBwYXNzYXJhbSBhbnRlcyBkYSB2YWxpZGHDp8OjbyBkb2N1bWVudGFsLgotIChDaGF0R1BUKSBPIHJ1biBgMzQ4NjA2OTc0MDlgIG1lZGl1IG8gZXN0YWRvIGRvY3VtZW50YWwgZXN0YWJpbGl6YWRvIGVtIDEzNDUgYXJxdWl2b3MgZGUgaWRlbnRpZGFkZSBlIDE4NDkgbGlua3MgZm9yYSBkYSByYWl6OyBvIFJFQURNRSByYWl6IMOpIHJlY29uY2lsaWFkbyBjb20gZXNzZXMgdmFsb3JlcyBzZW0gcmVsYXhhciBvIHZhbGlkYWRvci4KLSAoQ2hhdEdQVCkgSFRNTCBQbG90bHkgbG9jYWwgw6kgZXhlcmNpdGFkbzsgUE5HIFBsb3RseS9LYWxlaWRvLCBQREYsIFBQVFgsIGJyb3dzZXIgRGF0YWJyaWNrcyBlIGFjZXNzaWJpbGlkYWRlIG7Do28gc8OjbyBob21vbG9nYWRvcyBuZXN0YSBzcHJpbnQuCgojIyMgTGltaXRlcwoKLSAoQ2hhdEdQVCkgVjA3IGNvbnRpbnVhIGNhbmRpZGF0YTogc2VtIGFjZWl0ZSwgUFIgZGUgaW50ZWdyYcOnw6NvLCBtZXJnZSwgcHVibGljYcOnw6NvIERhdGFicmlja3MsIGFsdGVyYcOnw6NvIGRlIEFDTC9jb21wdXRlLCBleGVjdcOnw6NvIHJlbW90YSBTcGFyay9TUUwvTUxmbG93LCBwcm9tb8Onw6NvIHZpc3VhbCwgVUFUIG91IGluw61jaW8gZGEgVjA4Lgo='
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: false
+          persist-credentials: true
+      - name: Reconciliar README e changelog da candidata V07
+        if: github.event_name == 'push' && github.ref == 'refs/heads/codex/temas-v07-consumidores-formatos-20260914'
+        run: |
+          python - <<'PY'
+          import base64
+          import os
+          from pathlib import Path
+
+          readme = Path('README.md')
+          text = readme.read_text(encoding='utf-8')
+          replacements = [
+              ('repo (identidade)  : 1339 arquivos varridos no repositório editável/derivado', 'repo (identidade)  : 1345 arquivos varridos no repositório editável/derivado'),
+              ('repo (links)       : 1840 links fora da raiz analisada', 'repo (links)       : 1849 links fora da raiz analisada'),
+          ]
+          changed = False
+          for old, new in replacements:
+              if old in text:
+                  if text.count(old) != 1:
+                      raise SystemExit(f'README_OLD_COUNT={old}:{text.count(old)}')
+                  text = text.replace(old, new, 1)
+                  changed = True
+              elif text.count(new) != 1:
+                  raise SystemExit(f'README_EXPECTED_VALUE_NOT_FOUND={new}')
+          if changed:
+              readme.write_text(text, encoding='utf-8')
+
+          changelog = Path('CHANGELOG.md')
+          history = changelog.read_text(encoding='utf-8')
+          marker = '## 2026-09-14 — V06: integração Git e fechamento técnico (ChatGPT)'
+          title = '## 2026-09-14 — V07: candidata de consumidores e formatos de saída (ChatGPT)'
+          if title not in history:
+              if history.count(marker) != 1:
+                  raise SystemExit(f'V07_CHANGELOG_MARKER_COUNT={history.count(marker)}')
+              entry = base64.b64decode(os.environ['V07_CHANGELOG_ENTRY_B64']).decode('utf-8')
+              history = history.replace(marker, entry + '\n' + marker, 1)
+              changelog.write_text(history, encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md CHANGELOG.md
+          git diff --cached --check
+          if ! git diff --cached --quiet; then
+            git commit -m "docs(v07): reconciliar métricas e changelog da candidata"
+            git push origin HEAD:codex/temas-v07-consumidores-formatos-20260914
+          fi
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
