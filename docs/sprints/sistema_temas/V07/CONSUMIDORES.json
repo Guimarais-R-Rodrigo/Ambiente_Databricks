@@ -68,7 +68,7 @@
       "output": "plotly_figure_memory",
       "reason": "Heatmap possui domínio simétrico de -1 a +1; a rota temática usa a paleta divergente e mantém cálculo Spark e pares fortes compartilhados.",
       "owner": "Sistema de Temas / V07",
-      "user_effect": "Ao optar por tema, a escala sequencial e o layout mudam; correlações e threshold não mudam."
+      "user_effect": "Ao optar por tema, a escala divergente e o layout mudam; correlações e threshold não mudam."
     },
     {
       "id": "display.distribution_grid",
