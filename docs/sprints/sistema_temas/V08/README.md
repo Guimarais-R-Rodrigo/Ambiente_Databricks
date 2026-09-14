@@ -1,6 +1,6 @@
 # V08 — integração transversal com skills, padrões e Manual
 
-> **Estado atual:** em execução na branch `codex/temas-v08-integracao-transversal-20260914`, criada a partir da `main` estabilizada em `1b6632194f4b25afc09960c27b069c16df365ee6`. Sem aceite, merge ou publicação Databricks.
+> **Estado atual:** candidata em fechamento na branch `codex/temas-v08-integracao-transversal-20260914`, criada a partir da `main` estabilizada em `1b6632194f4b25afc09960c27b069c16df365ee6`. Sem aceite, merge ou publicação Databricks. O [checkpoint](CHECKPOINT_V08.md) e o [registro de testes](TESTES.md) concentram evidências, failures preservados e pendências finais.
 
 ## Objetivo
 
@@ -22,12 +22,38 @@ Depois da V07, o runtime e os READMEs locais estavam atualizados, mas parte da o
 
 - o Manual ainda dizia “V04 integrada; V05 candidata”;
 - o padrão central de identidade visual ainda parava em V04;
-- o template visual da EDA se declarava fonte central, repetia hexadecimais e construía `TEMA_EDA` próprio;
+- o template visual da EDA se declarava fonte central, repetia hexadecimais e construía política visual própria;
 - a criação de objetos podia fazer `constants.colors` parecer a fonte configurável para novos temas;
 - skills que consomem curvas, safras e monitoramento não distinguiam claramente cálculo de aparência temática;
 - a skill de explicabilidade não registrava que SHAP/Matplotlib permanece exceção ao theming V07.
 
 A [`MATRIZ_INTEGRACAO.json`](MATRIZ_INTEGRACAO.json) registra cada superfície, motivo e efeito esperado.
+
+## O que a candidata integra
+
+- `.assistant/README.md` apresenta V00–V07 como camadas integradas e separa autoria, consumo, geração e publicação;
+- `skills/README.md` declara que templates/skills não são fonte de tokens;
+- Concierge ganha rota explícita para tema/identidade visual;
+- criação de objeto passa a tratar `ResolvedTheme`/padrão central como fonte configurável e `constants.colors` como compatibilidade legada;
+- EDA profissional usa consumidores `_resolvido` quando houver tema selecionado e mantém análise independente da aparência;
+- baseline, safra e monitoramento passam a registrar explicitamente que tema não muda métricas, denominadores ou policy;
+- explainability registra SHAP/Matplotlib como exceção ao theming atual;
+- Hub Padrões, identidade visual e guia operacional chegam ao estado V07;
+- a seção viva do Manual Técnico passa a descrever V02–V07 e os limites atuais;
+- as três cópias do Manual permanecem byte a byte iguais.
+
+A skill `hub-ml-comentar-notebook` foi deliberadamente classificada como **sem edição**: ela documenta notebook e proíbe alteração de código; fazer V08 injetar theming nela contrariaria o contrato da própria skill.
+
+## Template EDA
+
+O antigo `estilo_visual_eda.md` foi convertido de fonte visual paralela em guia editorial sobre o Sistema de Temas. A candidata preserva orientações úteis de escolha de gráficos, anotações, emojis, números, tabelas, KPI-line, hierarquia, narrativa pós-código, índice e cabeçalhos, mas remove:
+
+- paleta/dicionário local usados como política de tema;
+- literais hexadecimais de política visual;
+- recomendação de registro global legado como preparação padrão;
+- CSS/HTML manual como substituto dos componentes V04.
+
+Quando houver tema notebook válido, o guia usa `ResolvedTheme` e rotas `_resolvido`; sem tema selecionado, preserva APIs legadas.
 
 ## Princípios de implementação
 
@@ -37,20 +63,6 @@ A [`MATRIZ_INTEGRACAO.json`](MATRIZ_INTEGRACAO.json) registra cada superfície, 
 4. **Sem semântica analítica no tema.** Thresholds, dados, métricas, agregações, amostras e decisões não mudam com a aparência.
 5. **Exceções permanecem visíveis.** SHAP/Matplotlib e Kaplan–Meier não são apresentados como tematizados onde o contrato ainda não suporta isso.
 6. **Sem falsa homologação.** Integração Git continua distinta de publicação Databricks, browser, acessibilidade, ACL e UAT.
-
-## Escopo de edição
-
-A V08 pode atualizar:
-
-- entrada `.assistant/README.md`;
-- catálogo `skills/README.md`;
-- skills que roteiam ou usam diretamente consumidores visuais relevantes;
-- template `estilo_visual_eda.md`;
-- `hub_padroes/README.md` e `hub_padroes/identidade_visual/*` de orientação;
-- seção viva do Sistema de Temas no Manual Técnico;
-- cópias derivadas dessas superfícies no `Novo_Ambiente_Simulado` e do Manual raiz.
-
-A skill `hub-ml-comentar-notebook` foi deliberadamente classificada como **sem edição**: ela documenta notebook e proíbe alteração de código; fazer V08 injetar theming nela contrariaria o contrato da própria skill.
 
 ## Escopo proibido
 
@@ -76,6 +88,12 @@ A candidata V08 precisa demonstrar:
 9. workflow permanente read-only;
 10. PR draft no SHA final e parada para aceite explícito antes de merge.
 
+## Evidência atual
+
+No head sincronizado anterior ao fechamento documental, a suíte V08 atingiu **22/22 PASS**, as regressões cumulativas V01–V08 **405/405 PASS** e V00 **12/12 PASS**. O bloqueio restante era exclusivamente a saída colada do README raiz, ainda com métricas anteriores. O histórico completo está em [TESTES.md](TESTES.md).
+
 ## Limites
 
 A V08 melhora orientação, roteamento e documentação. Ela não prova que a Genie Code sempre selecionará a skill correta por relevância, não homologa o visual no navegador Databricks e não transforma documentação em controle técnico de permissão.
+
+Nenhuma publicação Databricks foi executada pela V08.
