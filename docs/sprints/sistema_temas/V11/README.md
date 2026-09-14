@@ -2,9 +2,13 @@
 
 ## Estado
 
-**CANDIDATA EM IMPLEMENTAÇÃO NA BRANCH `codex/temas-v11-aibi-20260914`; SEM ACEITE, MERGE OU OPERAÇÃO NO DATABRICKS REAL.**
+**CANDIDATA TÉCNICA FUNCIONALMENTE VERDE; NAVEGAÇÃO/DOCUMENTAÇÃO FINAL EM REVALIDAÇÃO; SEM ACEITE, MERGE OU OPERAÇÃO NO DATABRICKS REAL.**
 
 Base de início: `a9480391c78e2402986885db0ce08b10e0619a1a`, fechamento documental da V10.
+
+Branch: `codex/temas-v11-aibi-20260914`.
+
+Primeiro head integralmente verde antes da reconciliação final de navegação: `0d3180c50428d8716b44f264b915a91243ba96c3`, run `34902083889`.
 
 ## Objetivo
 
@@ -23,7 +27,7 @@ O escopo recuperado do plano V00–V14 exige:
 
 `ResolvedTheme` continua sendo a fonte configurável de verdade. A V11 **não** altera `theme.schema.json` e **não** torna `context="aibi"` válido.
 
-Isso é deliberado: a documentação oficial atual descreve capacidades de tema e oferece `Export theme` / `Import theme`, mas não publica um schema estável e completo do JSON de tema exportado. Alterar o contrato central ou gerar um JSON supostamente nativo sem esse contrato criaria uma interpretação paralela e insegura.
+Isso é deliberado: a documentação oficial verificada descreve capacidades de tema e oferece `Export theme` / `Import theme`, mas não publica um schema estável e completo do JSON de tema exportado. Alterar o contrato central ou gerar um JSON supostamente nativo sem esse contrato criaria uma interpretação paralela e insegura.
 
 A ponte fica em `ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/` e possui espelho byte a byte em `Novo_Ambiente_Simulado`.
 
@@ -73,6 +77,19 @@ A V11 codifica essas propriedades apenas como política local testável; não co
 
 O arquivo declara `databricks_importable=false`: **não é formato Databricks** e não deve ser importado no workspace.
 
+## Evidência técnica já obtida
+
+No run `34902083889`, head `0d3180c50428d8716b44f264b915a91243ba96c3`:
+- suíte V11: **21/21 PASS**;
+- sintaxe em memória: **PASS**;
+- regressões V01–V11: **457/457 PASS**;
+- V00: **12/12 PASS**;
+- validador estrutural/documental: **0 falhas / 0 avisos**;
+- escopo V11: **PASS**;
+- workflow com `Contents: read` e checkout sem credenciais persistentes.
+
+Os failures anteriores `34900693160`, `34901091132` e `34901776770` permanecem registrados como **FAILURE** em `TESTES.md`.
+
 ## Critérios de aceite Git da candidata
 
 A V11 só pode pedir aceite quando:
@@ -91,7 +108,8 @@ A V11 só pode pedir aceite quando:
 13. fonte e espelho são byte a byte equivalentes;
 14. workflow é read-only e não chama API/CLI/SDK Databricks;
 15. regressões V01–V11 e V00 permanecem verdes;
-16. validador estrutural/documental termina com 0 falhas / 0 avisos.
+16. validador estrutural/documental termina com 0 falhas / 0 avisos;
+17. o head documental final repete o gate completo e os checks reais da PR ficam verdes.
 
 ## O que PASS não prova
 

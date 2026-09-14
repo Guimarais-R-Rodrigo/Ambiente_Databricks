@@ -2,7 +2,7 @@
 
 ## Estado
 
-Candidata em implementação. Este arquivo registra somente resultados observados; nenhum PASS local equivale a homologação Databricks.
+Candidata técnica com primeiro gate integralmente verde antes da reconciliação final de navegação. Este arquivo registra somente resultados observados; nenhum PASS local equivale a homologação Databricks.
 
 ## Suíte específica
 
@@ -63,18 +63,47 @@ O valor de `repo (links)` observado permaneceu **1878**. A etapa de escopo V11 f
 
 No head `8785822e045edf158f04ea41ea0f6c059ef11cb1`, a guarda nova de import pelo namespace do produto funcionou e a projeção foi criada corretamente, mas o teste comparou o `source_theme_id` com `legado_notebook`. A fixture canônica V02 usa `hub-legado-notebook`; portanto o único failure entre **21 testes** foi um oráculo incorreto introduzido pelo próprio endurecimento.
 
-A correção altera somente a expectativa do teste para o ID canônico real. A guarda de import e a varredura de todos os módulos Python continuam ativas. Como a suíte V11 falhou, sintaxe, regressões, V00, validador e escopo foram `SKIP` nesse run. O run `34901776770` permanece **FAILURE**.
+A correção alterou somente a expectativa do teste para o ID canônico real. A guarda de import e a varredura de todos os módulos Python continuam ativas. Como a suíte V11 falhou, sintaxe, regressões, V00, validador e escopo foram `SKIP` nesse run. O run `34901776770` permanece **FAILURE**.
 
-## Ajustes para o próximo head
+## Primeira evidência integralmente verde
 
-A revisão seguinte:
-- mantém no README raiz somente as três métricas medidas pelo validador;
-- mantém import robusto da fachada local/namespace;
-- mantém varredura negativa de todos os módulos Python da ponte V11;
-- corrige apenas o oráculo de `source_theme_id` para `hub-legado-notebook`;
-- mantém fonte e espelho byte a byte equivalentes.
+### Run `34902083889` — SUCCESS no head `0d3180c50428d8716b44f264b915a91243ba96c3`
 
-Os resultados dessa revisão devem ser registrados somente após execução real no head correspondente.
+A execução confirmou:
+- V11 específica: **21/21 PASS**;
+- sintaxe da fachada compilada em memória: **PASS**;
+- regressões cumulativas V01–V11: **457/457 PASS**;
+- compatibilidade visual V00: **12/12 PASS**;
+- validador estrutural/documental: **0 falhas / 0 avisos**;
+- etapa de escopo: **PASS**;
+- token do workflow: `Contents: read`;
+- checkout: `persist-credentials: false`.
+
+Métricas verificáveis observadas nesse run:
+
+```text
+skills             : 14 · 14/14 com as 5 seções estruturais
+prompts            : 16 · 161 campos com guia e contrato humano
+helpers citados    : 92 caminhos verificados
+markdown / links   : 222 arquivos / 1394 links relativos
+notebooks / links  : 80 notebooks / 101 links relativos
+readmes de objeto  : 76/76 operacionais; 3/3 exemplares; 0 pendentes
+pastas de objeto   : 62 conferidas
+forma da pasta     : 60 conferidas
+contrato de dados  : 62 pares
+contrato de entrada: 60 pares
+saída colada       : 79 notebooks com bloco real, 0 sem
+idioma da docstring: 62 módulos, 0 com docstring em inglês
+normas do molde    : 72 arquivos, 0 violações
+notebook exercita  : 60 objetos, 0 notebook(s) que só importam
+python (AST)       : 221 arquivos
+instrucoes         : 9043/20000 caracteres
+repo (identidade)  : 1409 arquivos varridos no repositório editável/derivado
+repo (links)       : 1878 links fora da raiz analisada
+worktree (extras)  : 0
+```
+
+Esse run antecede a reconciliação final dos índices/guia. O head documental final deve repetir o gate completo; resultados futuros só serão registrados depois de observados.
 
 ## Gates de ambiente ainda pendentes
 
