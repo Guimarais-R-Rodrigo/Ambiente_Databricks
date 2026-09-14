@@ -2,11 +2,27 @@
 
 ## Estado
 
-**CANDIDATA TECNICAMENTE FECHADA; SEM ACEITE, MERGE OU PUBLICAÇÃO DATABRICKS.**
+**ACEITA E INTEGRADA NO GIT; SEM PUBLICAÇÃO DATABRICKS.**
 
-Base: `55f7006c47d90ae7f760992d252b658f53a59636`.
+Aceite explícito: Rodrigo, 14/09/2026 — “voce tem meu aceite”.
 
-Branch: `codex/temas-v09-kit-transicao-20260914`.
+Entrega funcional:
+
+- PR #45 — `V09 — integrar Sistema de Temas ao kit de transição`;
+- head validado: `3b69dd25fd4af434fda414496c2ca3d80fd78a8e`;
+- merge real na `main`: `0f7234c4734f1974ebb1a20123f3c26626c67ef3`;
+- `merged_at`: `2026-09-14T18:24:36Z`;
+- árvore candidata = árvore do merge: `26689420a2c0693c0ff0c08f625e80babb2180a8`.
+
+Correção pós-merge:
+
+- PR #46 — `V09 — corrigir preparação Node do workflow operacional`;
+- head validado: `d1c67f06d96b929a58961c50fc31c06ca7c0cfe2`;
+- merge real na `main`: `4ae714a35a0aafd930a8cd796d962b0a79449b88`;
+- `merged_at`: `2026-09-14T18:32:29Z`;
+- árvore candidata corretiva = árvore do merge: `32de1224093407d6fc91e08842c6f5ef3d0f456a`.
+
+O SHA `4ae714a35a0aafd930a8cd796d962b0a79449b88` é a referência técnica final da V09 antes deste fechamento exclusivamente documental.
 
 ## Achado de entrada
 
@@ -22,15 +38,14 @@ O contrato distingue explicitamente:
 - **ativar:** somente opt-in/manual;
 - **publicar:** não realizado pela V09.
 
-## Implementação atual
+## Implementação integrada
 
 - `tools/temas_v09_transicao.py`: contrato, validação fail-closed do inventário e verificação pós-build do ZIP;
 - `tools/bundle_implantacao.py`: valida o contrato antes de criar o ZIP e grava `theme_contract` no manifesto;
-- `tools/tests/test_temas_v09.py`: mutantes negativos, invariantes e verificação dos bytes do ZIP;
+- `tools/tests/test_temas_v09.py`: mutantes negativos, invariantes, verificação dos bytes do ZIP e guarda da preparação Node do workflow operacional;
 - `docs/playbooks/checklist-replicacao.md`: instrução operacional para usuário não técnico;
 - `.github/workflows/temas-v09-ci.yml`: gate permanente read-only, incluindo reabertura do ZIP gerado;
-- `.github/workflows/kit-transicao-trabalho.yml`: gate V09 e verificação do ZIP antes de `upload-artifact`;
-- documentação e índices da V09.
+- `.github/workflows/kit-transicao-trabalho.yml`: gate V09, Spark local, preparação do compositor V06 e verificação do ZIP antes de `upload-artifact`.
 
 ## Limite arquitetural deliberado
 
@@ -44,44 +59,124 @@ Por isso, a cadeia de confiança V09 é:
 4. conferência SHA256 de todos os FILEs pelo aceite no staging/final;
 5. conferência humana explícita do `theme_contract` pelo checklist.
 
-## Failures preservados
+## Failures históricos preservados
 
-Os runs `34877035267` e `34877297808` permanecem **FAILURE** e estão detalhados em `TESTES.md`.
+Os três runs abaixo permanecem **FAILURE**. Nenhum foi reclassificado como success.
 
-- `34877035267`: 7/8 V09; falhou por oráculo textual incorreto que procurava `manual/opt-in` em vez da chave real `manual_opt_in`.
-- `34877297808`: todos os gates funcionais passaram, mas o validador reprovou porque o README raiz ainda registrava 1350 arquivos em vez dos 1355 medidos.
+### `34877035267` — FAILURE
 
-Nenhum deles foi reclassificado.
+Head `17a95762b9f6dc19c13cf008ee581bc7c1041d26`.
 
-## Gate completo verde de referência
+- 7/8 testes V09 passaram;
+- único erro: `test_transition_checklist_names_theme_contract`;
+- causa: o checklist usava corretamente `manual_opt_in`, mas o teste procurava `manual/opt-in`;
+- ação correta: corrigir o oráculo textual, sem relaxar a implementação.
 
-O run `34878578986`, no head `6c19ef6da1012b4c33bd0e15c1bb332a6cb046a3`, concluiu com `success` em todas as etapas:
+### `34877297808` — FAILURE
 
-- V09 **11/11**;
-- kit de transição **43 testes, 36 PASS + 7 SKIP Spark** nessa chamada sem `--spark`;
-- cumulativo V01–V09 **416/416**;
-- V00 **12/12**;
-- bundle offline **535 arquivos + `MANIFEST.json`**;
-- `theme_contract` v1 **9/9 caminhos presentes e SHA256 válidos no ZIP**;
-- validador **0 falhas / 0 avisos**;
-- `GITHUB_TOKEN` somente `Contents: read` / `Metadata: read`;
-- nenhuma publicação, ativação ou promoção Databricks.
+Head `b7d16ab6eccf59a266353dc74502cf51703ad8c3`.
 
-As alterações posteriores a esse run são somente documentais: reconciliação dos índices e deste registro. O head que for aberto em PR precisa repetir o gate exato; o resultado da PR, e não este parágrafo, será a evidência final de mergeabilidade.
+- V09: 8/8 PASS;
+- kit: 43 testes, 36 PASS + 7 SKIP explícitos por Spark local desabilitado nessa chamada;
+- V01–V09: 413/413 PASS;
+- V00: 12/12 PASS;
+- kit real: 535 arquivos + `MANIFEST.json`;
+- bloqueio: `validate_assistant.py --conferir-readme` encontrou `1350` no README contra `1355` arquivos medidos;
+- resultado do validador: 1 falha / 0 avisos.
 
-## Escopo do diff
+### `34880619346` — FAILURE pós-merge do PR #45
 
-A V09 não altera qualquer arquivo do produto em `ambiente_fonte/.assistant` ou `Novo_Ambiente_Simulado`. O runtime, schema temático, tokens, paletas, APIs legadas e rotas `_resolvido` permanecem byte a byte como estavam na base V08. A mudança funcional fica na ferramenta de empacotamento e nas guardas offline.
+Merge funcional `0f7234c4734f1974ebb1a20123f3c26626c67ef3`.
+
+- 12 workflows foram disparados pelo push;
+- 11 terminaram `success`;
+- `Kit de transição para o trabalho` falhou no primeiro gate local antes de V09, Spark, geração do kit e upload;
+- causa real: o runner não instalava previamente as dependências Node do compositor V06 antes de `python tools/ci_local.py --verbose`;
+- as etapas seguintes ficaram corretamente `skipped`;
+- correção: PR #46 adicionou Node 22, `pnpm@10.34.5`, instalação com `--frozen-lockfile` e teste de regressão de ordenação.
+
+Esse run permanece **FAILURE** e constitui evidência da causa que motivou a correção.
+
+## Validação da correção — PR #46
+
+No head `d1c67f06d96b929a58961c50fc31c06ca7c0cfe2`, os cinco checks realmente disparados pela PR concluíram com `success`:
+
+- Regressões da instrumentação V00 — run `34881120187`;
+- Contrato de temas V01 — run `34881120270`;
+- Núcleo de temas V02 — run `34881120196`;
+- CI local reproduzível — run `34881120184`;
+- Kit de transição e temas V09 — run `34881120261`.
+
+O diff corretivo tinha somente dois arquivos: `.github/workflows/kit-transicao-trabalho.yml` e `tools/tests/test_temas_v09.py`.
+
+## Pós-merge final — workflows realmente disparados
+
+No push da `main` no SHA `4ae714a35a0aafd930a8cd796d962b0a79449b88`, foram disparados exatamente **12 workflows**. Todos concluíram com `success`:
+
+| Workflow | Run ID | Conclusão |
+|---|---:|---|
+| Regressões da instrumentação V00 | `34881426341` | success |
+| Contrato de temas V01 | `34881426372` | success |
+| Núcleo de temas V02 | `34881426402` | success |
+| Adaptador Plotly V03 | `34881426334` | success |
+| Componentes HTML e tabelas V04 | `34881426326` | success |
+| Visual Lab notebook V05 | `34881426353` | success |
+| Assets e geração V06 | `34881426337` | success |
+| Consumidores e formatos V07 | `34881426400` | success |
+| Integração transversal V08 | `34881426331` | success |
+| Kit de transição e temas V09 | `34881426379` | success |
+| CI local reproduzível | `34881426388` | success |
+| Kit de transição para o trabalho | `34881426374` | success |
+
+Não são contados aqui workflows que não foram disparados por esse `push`.
+
+## Gate operacional final
+
+O run `34881426374` executou o workflow operacional completo e terminou `success`.
+
+Passaram, na ordem:
+
+- checkout sem credenciais persistentes;
+- Python 3.11;
+- Java 17;
+- Node 22;
+- dependências Python e `pyspark==4.0.1`;
+- `pnpm@10.34.5` e dependências do compositor V06 com `--frozen-lockfile`;
+- `python tools/ci_local.py --verbose`;
+- `python -B tools/tests/test_temas_v09.py -v` — **12/12 PASS**;
+- `python tools/tests/test_transicao_trabalho.py --spark -v` — **43/43 PASS com Spark local**;
+- geração do kit — **535 arquivos + `MANIFEST.json`**;
+- validação do ZIP — `theme_contract` v1 com **9/9 caminhos e SHA256 válido**, `manual_opt_in`, `not_performed`;
+- `upload-artifact` somente depois da validação do ZIP.
+
+O kit gerado registrou commit `4ae714a35a0a`; SHA256 do `MANIFEST.json`: `7b8e811038bb34a4aebade9d3c58e2c308495ce60ccc563bb860ff43ade8e6ea`.
+
+O artefato GitHub Actions `kit-transicao-trabalho` foi criado com artifact ID `10363302284`; isso é transporte de evidência no GitHub Actions e **não é publicação no Databricks**.
+
+No CI local do mesmo head:
+
+- validador: **APROVADO — 0 falhas / 0 avisos**;
+- identidade medida: **1355 arquivos**;
+- links fora da raiz: **1850**;
+- `GITHUB_TOKEN`: `Contents: read` / `Metadata: read`.
+
+## Escopo do diff funcional
+
+A V09 funcional não alterou qualquer arquivo do produto em `ambiente_fonte/.assistant` ou `Novo_Ambiente_Simulado`. O runtime, schema temático, tokens, paletas, APIs legadas e rotas `_resolvido` permaneceram byte a byte como estavam na base V08. A mudança funcional ficou na ferramenta de empacotamento e nas guardas offline.
+
+A correção pós-merge também não alterou produto/runtime; somente preparou corretamente o runner do workflow operacional e adicionou a respectiva regressão.
 
 ## Restrições preservadas
 
-- sem alteração de runtime do produto em `.assistant`;
 - sem registro global de tema;
 - sem alteração de paleta/schema/tokens;
-- sem upload, publicação ou chamada Databricks;
-- workflows com `contents: read` e checkout sem credenciais persistentes;
-- sem início da V10.
+- sem alteração de dados, métricas, amostragem, denominadores, thresholds, embeddings ou lógica analítica;
+- sem upload manual, publicação ou chamada Databricks;
+- sem alteração de ACL, compute, workspace, Spark/SQL/MLflow remoto;
+- Spark do gate operacional foi **local no runner**, não Databricks;
+- sem homologação declarada de browser, acessibilidade ou UAT;
+- V10 não iniciada por este fechamento.
 
 ## Próximo gate
 
-Executar o workflow V09 no **head documental final**, confirmar `behind_by=0`, abrir PR em draft e auditar os checks realmente disparados pela PR. Merge exige aceite explícito de Rodrigo.
+Este arquivo integra o fechamento documental pós-merge. O próximo gate é validar e integrar a PR documental correspondente, confirmar o estado vivo da `main` e somente então considerar a V09 integralmente encerrada. **A V10 não pode iniciar antes desse fechamento documental.**
