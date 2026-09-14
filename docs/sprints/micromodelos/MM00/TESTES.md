@@ -7,18 +7,19 @@ MM00 é uma sprint documental/arquitetural. Os testes verificam baseline, ausên
 ## T01 — Baseline Git e reconciliação
 
 - Abertura: `main=1b6632194f4b25afc09960c27b069c16df365ee6`, com V00–V07 integradas.
-- V08: integração `622d2c962a80998cf990b57036f7ae503bfc0458`, fechamento `55f7006c47d90ae7f760992d252b658f53a59636`, reconciliação MM00 `edfcf58e4700ccf5d58d2befddccbd9fe50ac124`.
-- V09: integração PR #45 `0f7234c4734f1974ebb1a20123f3c26626c67ef3`, correção PR #46 `4ae714a35a0aafd930a8cd796d962b0a79449b88`, reconciliação MM00 `922ae38491cb7a502b834b092ea637620b54300a`.
-- Fechamento documental V09: PR #47 / `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb`.
-- Reconciliação MM00 sobre a base V09 fechada: `26cf7c8edd631f97b5c0541daff2e73dc2286a71`.
+- V08: integração `622d2c962a80998cf990b57036f7ae503bfc0458` e fechamento `55f7006c47d90ae7f760992d252b658f53a59636`.
+- A1: head auditado `f5577f5933d2ab19b5adfb9c7eea1c8fb3c80843`.
+- V09: PRs #45/#46 e fechamento documental PR #47 em `d6655411ca4ac1834b0983f6ce6bdadc30b831bb`.
+- Head final da candidata: `e3809b15b61f2bc1eeec06c9de6f38a329868e98`.
+- Merge MM00: PR #43 / `36e89515a46df24f41deea4791b109f5a1f938f2`.
 
-**Status:** PASS estrutural. Reconsultar `main` imediatamente antes do aceite/merge.
+**Status:** PASS final.
 
 ## T02 — Estado visual
 
-V00–V09 estão aceitas/integradas no Git. V08 cobre integração transversal; V09 leva o contrato temático ao kit offline de transição sem converter transporte em publicação ou ativação.
+V00–V09 estavam integradas no Git no fechamento da MM00. A A1 confirmou a fronteira visual proposta: micromodelos consomem o Sistema de Temas e não criam tema paralelo.
 
-**Status:** PASS. A A1 confirmou a fronteira visual proposta; as reconciliações V09 não alteram a arquitetura de micromodelos.
+**Status:** PASS. MM00 não alterou implementação visual.
 
 ## T03 — Colisão nominal
 
@@ -40,9 +41,7 @@ O template de skill e `hub-ml-criar-objeto` sustentam a lista fechada de seis ti
 
 ## T06 — Sanitização
 
-O primeiro CI detectou um handle corporativo histórico no ADR-0017; ele foi removido e substituído por contrato genérico. A A1 não encontrou identificador externo no diff auditado.
-
-Uma rodada posterior detectou falso positivo documental em SHA abreviado; a correção preservou a política e passou a usar o SHA completo.
+O primeiro CI detectou conteúdo incompatível com a política de sanitização no ADR-0017; ele foi removido e substituído por contrato genérico. Uma rodada posterior detectou falso positivo documental em SHA abreviado; a correção preservou a política e passou a usar o SHA completo.
 
 **Status:** PASS sem relaxamento de regra.
 
@@ -60,54 +59,73 @@ YAML define política/identidade; MLflow guarda histórico de runs; dados indivi
 
 ## T09 — Não alteração funcional pela MM00
 
-Contra a `main` V09 fechada, a PR permanece restrita a contexto, ADRs e documentação/auditoria MM00. O patch do README raiz altera somente métricas medidas; o índice de sprints acrescenta somente a seção MM00. Nenhum arquivo MM00 próprio pertence a `ambiente_fonte/.assistant/`, `Novo_Ambiente_Simulado/`, `tools/` ou `.github/workflows/`.
+A PR #43 foi integrada contendo somente contexto, ADRs e documentação/auditoria MM00; nenhuma alteração funcional própria pertenceu a `ambiente_fonte/.assistant/`, `Novo_Ambiente_Simulado/`, `tools/` ou workflows.
 
-**Status:** PASS nominal; reconfirmar a lista final antes do aceite.
+**Status:** PASS.
 
 ## T10 — Validação automática
 
-A candidata acumulou rodadas verdes após A1, reconciliações V08/V09, correções de sanitização e D1-B. Antes de D2, os quatro workflows permanentes estavam verdes no head então vigente, preservando **1374 arquivos / 1859 links** e sem relaxar validadores.
+No head final `e3809b15b61f2bc1eeec06c9de6f38a329868e98`:
 
-**Status:** PASS técnico pré-D2. A árvore resultante da ratificação D2 deve repetir CI geral, V00, V01 e V02 antes do aceite final da MM00. A evidência final será registrada na descrição da PR para evitar novo commit apenas por run ID.
+- CI geral `34893158270`: `success`;
+- V00 `34893158453`: `success`;
+- V01 `34893158339`: `success`;
+- V02 `34893158265`: `success`.
+
+A indisponibilidade temporária anterior de runners do GitHub Actions ficou registrada e não foi confundida com regressão da candidata.
+
+**Status:** PASS técnico final da candidata aceita.
 
 ## T11 — Auditoria independente A1
 
 Arquivos: `01_contexto.md`, `02_prompt_auditoria.md` e `03_resultado_a1.md` em `docs/auditoria/2026-09-14_micromodelos-mm00/`.
 
-**Resultado:** `APTA_COM_CORRECOES`.
+**Resultado histórico:** `APTA_COM_CORRECOES`.
 
 - Q-01 — falta de entrada própria MM00 no `CHANGELOG.md`: **PROCEDE**;
-- M-01 — cronologia não reconciliada uniformemente: **PROCEDE e está corrigido**;
+- M-01 — cronologia não reconciliada uniformemente: **PROCEDE e foi corrigido**;
 - `DIVERGE`: nenhum achado atribuível à MM00.
 
 A A1 confirmou como escopo legítimo de MM01/MM02 as decisões de encoding do YAML, máquina de estados detalhada e materialidade fina do fingerprint.
 
-**Status:** EXECUTADA. O resultado histórico não é reescrito por D1-B ou D2.
+**Status:** EXECUTADA. O resultado histórico não é reescrito pelos fechamentos posteriores.
 
 ## T12 — Contexto canônico e D2
 
-`CLAUDE.md` registra V00–V09 integradas, D1-B, a A1 e o aceite sem ressalvas dos ADR-0014 a ADR-0020. O índice de ADRs e os sete ADRs foram sincronizados para `Aceito`, com integração da MM00 ainda pendente.
+ADR-0014 a ADR-0020 foram aceitos sem ressalvas e integrados com a MM00. O contexto canônico é reconciliado no fechamento pós-merge para registrar MM00 integrada e MM01 ainda não iniciada.
 
-**Status:** PASS documental sujeito à bateria pós-D2.
+**Status:** PASS documental após esta manutenção.
 
-## T13 — Regra de changelog
+## T13 — Regra de changelog / Q-01
 
-A A1 classificou a ausência da entrada MM00 como **QUEBRA Q-01**. Uma tentativa de atualização integral acrescentou o bloco desejado, mas também modificou três linhas históricas. O patch detectou as mudanças; a tentativa foi rejeitada e o blob histórico original foi restaurado por SHA.
+A primeira tentativa de inserção integral do bloco MM00 foi rejeitada porque alterava linhas históricas. O histórico foi restaurado antes do merge.
 
-Foi concedida a decisão humana **D1-B**: exceção explícita e exclusiva para diferir a entrada MM00 para a manutenção documental imediatamente posterior.
+Após a integração da PR #43, uma automação transitória restrita à branch `micromodelos/mm00-fechamento-pos-merge`:
 
-**Status:** DEFERIDO POR EXCEÇÃO HUMANA D1-B — **não é PASS**. Q-01 deixa de bloquear o aceite/merge da MM00, mas permanece débito documental obrigatório e deve ser fechado antes do início efetivo da MM01.
+1. leu `CHANGELOG.md` como bytes;
+2. encontrou o primeiro cabeçalho histórico após o preâmbulo;
+3. inseriu o bloco MM00 sem decodificar/reformatar o conteúdo anterior;
+4. verificou prefixo e sufixo byte a byte;
+5. removeu o próprio workflow no mesmo commit.
+
+A comparação entre `36e89515a46df24f41deea4791b109f5a1f938f2` e o commit resultante do passo Q-01 mostrou somente `CHANGELOG.md`, com **22 adições, 0 deleções**.
+
+**Status:** PASS. Q-01 está fechado; D1-B foi consumida e não cria exceção permanente à regra de changelog.
 
 ## T14 — Ratificação arquitetural D2
 
-O usuário declarou: `D2: Aceito ADR-0014 a ADR-0020 sem ressalvas.`
+Foi concedido aceite explícito sem ressalvas a ADR-0014 a ADR-0020. Os sete ADRs preservaram o corpo decisório, receberam ratificação datada e foram integrados pela PR #43.
 
-Os sete ADRs preservaram o corpo decisório e receberam ratificação datada. O índice de decisões e o contexto canônico foram sincronizados. O D2 não autoriza implementação funcional, acesso a metadata real, publicação, migração ou início da MM01.
+**Status:** PASS humano e integrado.
 
-**Status:** PASS humano para as decisões arquiteturais; integração na `main` ainda depende do aceite final da MM00 e do merge.
+## T15 — Aceite final e merge
+
+A MM00 recebeu aceite final explícito e autorização de integração. A PR #43 foi retirada de draft e integrada com `expected_head_sha=e3809b15b61f2bc1eeec06c9de6f38a329868e98`, resultando no merge `36e89515a46df24f41deea4791b109f5a1f938f2`.
+
+**Status:** PASS.
 
 ## Critério final
 
-T01–T12 permanecem técnicos; T13 está coberto pela exceção D1-B sem apagar o achado; T14 registra o aceite arquitetural. O fechamento da MM00 agora exige bateria pós-D2 verde, `main` estável e aceite humano explícito da MM00.
+T01–T15 estão fechados. MM00 cumpriu seu objetivo e está integrada. Esta manutenção pós-merge fecha o último débito documental Q-01 e atualiza o estado vivo.
 
-Após o merge, a manutenção documental imediatamente posterior deve registrar a entrada da MM00 no `CHANGELOG.md` antes do início efetivo da MM01.
+**MM01 é a próxima sprint prevista, mas não foi iniciada por esta manutenção.**
