@@ -5,29 +5,6 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
-## 2026-09-14 — MM00: baseline e arquitetura do framework de micromodelos (ChatGPT)
-
-### Adicionado
-
-- (ChatGPT) Plano Mestre MM00–MM13, inventário, matrizes de reuso/riscos/dependências, pacote de auditoria A1 e ADR-0014 a ADR-0020 em estado proposto.
-- (ChatGPT) Resultado da auditoria independente A1 preservado em `docs/auditoria/2026-09-14_micromodelos-mm00/03_resultado_a1.md`.
-
-### Atualizado
-
-- (ChatGPT) MM00 reconciliada com a `main` pós-fechamento V08 (`55f7006c...`), preservando a frente visual e sem alteração funcional própria em `.assistant`, simulado, ferramentas ou workflows.
-- (ChatGPT) Cronologia viva da MM00 reconciliada após o achado M-01 da A1; o README da sprint passa a distinguir base de abertura, integração V08, fechamento documental, reconciliação final e snapshots de validação.
-- (ChatGPT) Métrica viva do README raiz atualizada somente com valor medido pelo gate pós-A1: 1369 arquivos e 1859 links.
-
-### Evidências
-
-- (ChatGPT) A1 auditou o head `f5577f5933d2ab19b5adfb9c7eea1c8fb3c80843` contra `main=55f7006c47d90ae7f760992d252b658f53a59636` e devolveu `APTA_COM_CORRECOES`: Q-01 para este changelog e M-01 para a cronologia; nenhum achado `DIVERGE` atribuível à MM00.
-- (ChatGPT) V00, V01 e V02 permaneceram verdes após o registro da A1; o CI geral pós-A1 recusou somente a contagem congelada 1368 diante de 1369 medidos, sem relaxamento de validador.
-- (ChatGPT) Q-01 é fechado por esta entrada estritamente aditiva; o histórico anterior deve permanecer byte a byte fora deste novo bloco.
-
-### Limites
-
-- (ChatGPT) Sem skill/helper/prompt funcional novo, dado corporativo, run MLflow, publicação, alteração de ACL/compute, migração de legado ou início da MM01. ADR-0014 a ADR-0020 continuam propostos até decisão humana explícita.
-
 ## 2026-09-14 — V08: integração transversal e fechamento técnico (ChatGPT)
 
 ### Adicionado
@@ -1752,7 +1729,8 @@ Dezoito achados, todos procedentes. Resposta completa no fim de
 
 ## 2026-08-17 — Sprint 12: fechamento, com dois ADRs e três guardas
 
-Última sprint de execução do `PLANO_HUB.md`. Relatório em `docs/sprints/sprint-12-fechamento.md`.
+Última sprint de execução do `PLANO_HUB.md`. Relatório em
+`docs/sprints/sprint-12-fechamento.md`.
 
 ### Adicionado
 
@@ -2200,7 +2178,8 @@ Treze achados, todos procedentes. Detalhe em
 
 Os 14 módulos com dependência opcional viraram pasta de objeto, com notebook
 próprio que **instala a biblioteca e executa**. Com isso a seção `ml` fica
-completa: 30 objetos. Relatório em `docs/sprints/sprint-8-ml-dependencia-opcional.md`.
+completa: 30 objetos. Relatório em
+`docs/sprints/sprint-8-ml-dependencia-opcional.md`.
 
 ### Adicionado
 
@@ -2309,7 +2288,7 @@ procedentes. Relatório completo em `docs/sprints/sprint-7-ml-nucleo.md`.
 3. (Claude) `exemplo_mlflow_run` usava o bloco canônico com motivo que o template
    proíbe ("decisão de escopo, não impedimento técnico"). Ao executar, apareceu
    impedimento real — ver Notas.
-4. (Claude) `exemplo_split_temporal`: 60 das 720 linhas sumiam sem menção;
+4. (Claude) `exemplo_split_temporal`: 60 das 720 linhas somiam sem menção;
    `gap_periods` explicado. `exemplo_score_bands`: pede 5 bandas e recebe 4, por
    colapso de quantis com 26,8% da base empatada no piso. `exemplo_curves_plotly`:
    prevalência 0,0185, não 0,02.
