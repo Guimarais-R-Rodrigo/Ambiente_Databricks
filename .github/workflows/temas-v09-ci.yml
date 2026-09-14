@@ -52,6 +52,8 @@ jobs:
         run: python -B tools/tests/test_visual_legado_v00.py
       - name: Gerar kit offline do próprio commit
         run: python -B tools/kit_transicao_trabalho.py --output .artifacts/v09-kit
+      - name: Conferir theme_contract dentro do ZIP distribuível
+        run: python -B tools/temas_v09_transicao.py --kit-dir .artifacts/v09-kit
       - name: Validação estrutural e documental
         run: python -B tools/validate_assistant.py --conferir-readme
       - name: Escopo
