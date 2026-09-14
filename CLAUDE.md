@@ -63,13 +63,15 @@ Escala planejada: pessoal → squad → missão.
   Estado vigente: `docs/sprints/readmes_objetos/README.md`.
 
 - Sistema de Temas: contrato central e configuração por contexto definidos em
-  `docs/decisions/ADR-0013-sistema-de-temas.md`. **V00–V08 estão aceitas e
-  integradas no Git.** A V08 alinha skills, Hub Padrões, entrada `.assistant`,
-  template EDA e Manual Técnico às fontes de verdade visuais já existentes, sem
-  alterar runtime Python nem semântica analítica. A V09 ainda não foi iniciada.
+  `docs/decisions/ADR-0013-sistema-de-temas.md`. **V00–V09 estão integradas no
+  Git.** A V08 alinhou skills, Hub Padrões, entrada `.assistant`, template EDA e
+  Manual Técnico às fontes de verdade visuais; a V09 levou o contrato temático ao
+  kit offline de transição com guarda de presença/integridade, sem transformar
+  transporte em ativação ou publicação. A integração V09 ocorreu pelo PR #45
+  (`0f7234c4734f1974ebb1a20123f3c26626c67ef3`) e a correção de preparação Node
+  do workflow pelo PR #46 (`4ae714a35a0aafd930a8cd796d962b0a79449b88`).
   Integração Git não equivale a publicação Databricks nem a homologação de
   browser/runtime, acessibilidade, ACL, UAT ou promoção visual. Estado vigente:
-  `docs/sprints/sistema_temas/V08/CHECKPOINT_V08.md` e
   `docs/sprints/sistema_temas/README.md`.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
@@ -83,11 +85,17 @@ MLflow para runs; governança externa como autoridade de publicação; piloto no
 antes dos legados; consumo do Sistema de Temas; e fonte limitada ao catálogo de
 Produtos de Dados configurado no ambiente autorizado.
 
+A auditoria A1 independente foi executada sobre a candidata pré-V09 e devolveu
+`APTA_COM_CORRECOES`: não encontrou `DIVERGE` atribuível à arquitetura, apontou
+M-01 documental (corrigido) e Q-01 pela ausência de entrada própria da MM00 no
+`CHANGELOG.md` (ainda bloqueador). A candidata foi depois reconciliada com a V09
+integrada e deve repetir seus gates antes de qualquer aceite.
+
 MM00 não altera o produto `.assistant` e não autoriza MM01. O avanço exige checks,
-auditoria independente, checkpoint, aceite explícito e merge. Identificadores,
-nomes de catálogo e paths reais do ambiente de trabalho permanecem fora do Git;
-os documentos usam placeholders e resolvem o binding somente no workspace
-autorizado.
+fechamento ou exceção humana explícita do Q-01, decisão sobre os ADRs, checkpoint,
+aceite explícito e merge. Identificadores, nomes de catálogo e paths reais do
+ambiente de trabalho permanecem fora do Git; os documentos usam placeholders e
+resolvem o binding somente no workspace autorizado.
 
 ## Regras inegociáveis
 
