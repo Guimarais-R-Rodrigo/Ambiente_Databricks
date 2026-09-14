@@ -39,7 +39,7 @@ A migração foi aplicada, mas a suíte V08 encontrou nomenclatura visual local 
 
 ### `34866578667` — FAILURE permanente por nomenclatura residual
 
-Com o workflow já read-only, restou apenas a nomenclatura local residual no template EDA. A correção removeu inclusive esses identificadores textuais.
+Com o workflow já read-only, restou apenas a nomenclatura local residual do template EDA. A correção removeu inclusive esses identificadores textuais.
 
 ### `34866767026` — FAILURE documental
 
@@ -75,13 +75,56 @@ Depois da compactação do README raiz, passaram:
 
 O validador encontrou apenas uma divergência: `repo (links)` estava colado como 1851 e o valor real era **1850**. Foram **1 falha e 0 avisos**.
 
+### `34871866915` — FAILURE documental após fechamento da candidata
+
+Depois da atualização do checkpoint e deste registro, passaram novamente:
+
+- V08: **22/22**;
+- regressões V01–V08: **405/405**;
+- V00: **12/12**.
+
+A única divergência foi `repo (links)`: **1850 colado versus 1849 real**. Foram **1 falha e 0 avisos**. As etapas posteriores de guarda runtime e escopo foram corretamente puladas porque o validador já havia reprovado.
+
+### `34873780887` — FAILURE de configuração no fechamento pós-merge
+
+A primeira tentativa transitória de reconciliar o bloco V08 no changelog foi recusada pelo GitHub antes da criação de jobs porque o conteúdo multilinha não estava encapsulado de forma válida no YAML. Nenhum arquivo de produto ou changelog foi alterado por esse run.
+
+### `34873908522` — FAILURE transitório com escrita controlada
+
+A segunda tentativa usou o bloco do changelog codificado e a etapa `Reconciliar bloco V08 do changelog (transitório)` concluiu com `success`, produzindo o commit `8ea54df54d64e764f1d7a3f01d18e84ef7a7dde5`. A suíte V08 do próprio run reprovou depois, como esperado, porque o workflow daquela execução estava temporariamente com `contents: write` e `persist-credentials: true`; regressões posteriores foram puladas. O workflow permanente foi restaurado byte a byte para read-only no commit seguinte.
+
+### `34874103274` — FAILURE documental no fechamento pós-merge
+
+Com o workflow permanente novamente read-only, passaram antes do validador:
+
+- V08: **22/22 PASS**;
+- regressões V01–V08: **405/405 PASS**;
+- V00: **12/12 PASS**.
+
+O validador apontou uma única divergência, com **0 avisos**: `repo (links)` estava colado como **1849**, enquanto o estado documental pós-merge media **1850**. As etapas de guarda runtime e escopo foram corretamente puladas após a reprovação documental. Esse failure permanece evidência histórica e não é reclassificado.
+
 Nenhum failure acima é reclassificado retroativamente.
 
-## Sucesso final antes do fechamento documental
+## Sucessos finais antes do merge
 
-### `34871401757` — SUCCESS permanente read-only
+### `34871401757` — SUCCESS permanente read-only intermediário
 
 No head `e80c3abc974022cc3daec8533af4cf47ed09d801`, o workflow permanente concluiu integralmente com `success`:
+
+- V08: **22/22 PASS**;
+- regressões V01–V08: **405/405 PASS**;
+- V00: **12/12 PASS**;
+- validador: **APROVADO — 0 falhas, 0 avisos**;
+- `V08_RUNTIME_EDIT=0`;
+- escopo: **PASS**;
+- `GITHUB_TOKEN`: `Contents: read`, `Metadata: read`;
+- checkout com `persist-credentials: false`.
+
+Naquele checkout, antes da última atualização documental, `repo (links)` era **1850**.
+
+### `34872178809` — SUCCESS permanente read-only no head final
+
+No head final `9af5615d79b02cbd86f5a6d084444c83f203ae03`, o gate V08 de push comprovou:
 
 - V08: **22/22 PASS**;
 - regressões V01–V08: **405/405 PASS**;
@@ -90,11 +133,46 @@ No head `e80c3abc974022cc3daec8533af4cf47ed09d801`, o workflow permanente conclu
 - helpers citados: **92**;
 - Markdown/links: **217 / 1382**;
 - identidade do repositório: **1350 arquivos**;
-- links fora da raiz: **1850**;
+- links fora da raiz: **1849**;
 - `V08_RUNTIME_EDIT=0`;
-- escopo: **PASS**;
-- `GITHUB_TOKEN`: `Contents: read`, `Metadata: read`;
-- checkout com `persist-credentials: false`.
+- escopo: **PASS**.
+
+## Checks finais da PR #42
+
+No mesmo head final `9af5615d79b02cbd86f5a6d084444c83f203ae03`, todos os checks disparados pela PR #42 concluíram com `success`:
+
+- V00 — `34872182858`;
+- V01 — `34872182762`;
+- V02 — `34872182754`;
+- V03 — `34872182780`;
+- V04 — `34872182788`;
+- V05 — `34872183073`;
+- V06 — `34872182761`;
+- CI geral — `34872182808`;
+- V08 — `34872182789`.
+
+## Aceite e merge
+
+Rodrigo autorizou explicitamente a integração da V08. A PR #42 foi marcada como pronta e mesclada com proteção pelo head esperado `9af5615d79b02cbd86f5a6d084444c83f203ae03`.
+
+O merge efetivo na `main` é `622d2c962a80998cf990b57036f7ae503bfc0458`. A árvore do merge é idêntica à árvore da candidata testada.
+
+## Pós-merge na `main`
+
+No merge `622d2c962a80998cf990b57036f7ae503bfc0458`, os dez workflows disparados por `push` concluíram com `success`:
+
+- V00 — `34872703807`;
+- V01 — `34872703784`;
+- V02 — `34872703942`;
+- V03 — `34872703701`;
+- V04 — `34872703770`;
+- V05 — `34872703955`;
+- V06 — `34872703775`;
+- V07 — `34872703931`;
+- V08 — `34872703962`;
+- CI geral — `34872703809`.
+
+Não houve workflow pós-merge em failure, cancelado ou ainda em execução quando a bateria foi fechada.
 
 ## Revisão editorial do template EDA
 
@@ -104,26 +182,15 @@ Fonte e simulado permanecem equivalentes nas superfícies cobertas pela V08.
 
 ## README raiz
 
-O README raiz foi compactado para permanecer uma entrada operacional atual e direcionar o histórico detalhado ao índice de sprints, onde ele já é mantido de forma canônica. A compactação eliminou duplicação documental e permitiu que o bloco de métricas voltasse a ser verificável pelo gate.
+O README raiz foi compactado para permanecer uma entrada operacional atual e direcionar o histórico detalhado ao índice de sprints, onde ele já é mantido de forma canônica. A compactação eliminou duplicação documental e mantém o bloco de métricas verificável pelo gate.
 
-O valor final de `repo (links)` é **1850**, confirmado no run `34871401757`.
+No head funcional integrado `9af5615d79b02cbd86f5a6d084444c83f203ae03`, `repo (links)` era **1849**. Após a reconciliação documental pós-merge, a medição real passou a **1850**, sem alteração de runtime.
 
-## Último gate da candidata
+## Estado encerrado
 
-A atualização de `CHECKPOINT_V08.md` e deste arquivo cria um novo SHA exclusivamente documental. Esse SHA precisa repetir os gates e todos os checks de PR antes do pedido de aceite.
+A V08 está integrada no Git. Este fechamento não publica o Hub no Databricks, não altera ACL/compute e não homologa browser, acessibilidade ou UAT.
 
-A candidata só será apresentada para integração quando o mesmo head comprovar:
-
-- V08 **22/22**;
-- regressões **405/405**;
-- V00 **12/12**;
-- validador **0/0**;
-- `V08_RUNTIME_EDIT=0`;
-- CI geral e checks aplicáveis da PR verdes;
-- branch sem drift de base;
-- PR #42 ainda em draft.
-
-A V08 não será mesclada sem aceite explícito de Rodrigo. A V09 não foi iniciada.
+A V09 não foi iniciada.
 
 ## O que PASS não prova
 

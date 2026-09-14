@@ -5,7 +5,7 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
-## 2026-09-14 — V08: candidata de integração transversal (ChatGPT)
+## 2026-09-14 — V08: integração transversal e fechamento técnico (ChatGPT)
 
 ### Adicionado
 
@@ -17,15 +17,19 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 - (ChatGPT) Concierge, criação de objeto, EDA, baseline, safra, monitoramento e explainability passam a apontar para `ResolvedTheme` e consumidores `_resolvido` sem redefinir paletas ou política visual.
 - (ChatGPT) O template visual da EDA deixa de ser uma segunda fonte de tema e preserva composição, hierarquia, leitura, tabelas, KPIs, emojis, índice e demais convenções editoriais.
 - (ChatGPT) Hub Padrões e Manual passam a descrever V02–V07 integradas, Visual Lab, geração editorial, consumidores V07 e limites atuais.
+- (ChatGPT) O README raiz foi compactado para atuar como entrada operacional, mantendo o histórico detalhado no índice canônico de sprints e preservando o bloco verificável do gate local.
+- (ChatGPT) PR #42 integrada após aceite explícito de Rodrigo; head final validado `9af5615d79b02cbd86f5a6d084444c83f203ae03` e merge `622d2c962a80998cf990b57036f7ae503bfc0458`, com árvore idêntica à candidata testada.
 
 ### Evidências
 
-- (ChatGPT) Failures `34866320427`, `34866493021`, `34866578667`, `34866767026`, `34866944219` e `34867002420` permanecem registrados com suas causas reais.
-- (ChatGPT) No head sincronizado anterior ao fechamento, V08 atingiu 22/22 testes específicos, 405/405 regressões V01–V08 e 12/12 V00; o bloqueio restante era somente a saída colada do README raiz.
+- (ChatGPT) Failures intermediários permanecem registrados com suas causas reais, incluindo migração, divergência temporária fonte/simulado e métricas documentais; nenhum foi reclassificado retroativamente.
+- (ChatGPT) Gate final de push `34872178809`: V08 22/22, regressões V01–V08 405/405, V00 12/12, validador 0 falhas/0 avisos, `V08_RUNTIME_EDIT=0` e escopo verde.
+- (ChatGPT) Todos os nove checks finais da PR #42 concluíram com `success` no mesmo head final.
+- (ChatGPT) Pós-merge `622d2c962a80998cf990b57036f7ae503bfc0458`: dez workflows na `main` — CI geral e V00–V08 — concluíram com `success`.
 
 ### Limites
 
-- (ChatGPT) V08 permanece candidata: sem aceite, merge ou publicação Databricks. Não altera runtime, não homologa browser/acessibilidade/UAT e não prova seleção determinística de skill pela Genie Code.
+- (ChatGPT) Sem publicação Databricks, alteração de ACL/compute, execução remota Spark/SQL/MLflow, promoção visual, homologação de browser/acessibilidade/UAT ou prova de seleção determinística de skill pela Genie Code. A V09 não foi iniciada.
 
 ## 2026-09-14 — V07: candidata de consumidores e formatos de saída (ChatGPT)
 
