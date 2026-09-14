@@ -1,5 +1,5 @@
 from pathlib import Path
-ROOT=Path(__file__).resolve().parent
+ROOT=Path.cwd()
 out=Path('/tmp/d05-validator.txt').read_text(encoding='utf-8').strip()
 if 'APROVADO: 0 falha(s), 0 aviso(s)' not in out: raise SystemExit('validator D05 nao aprovado')
 p=ROOT/'README.md'; t=p.read_text(encoding='utf-8')
