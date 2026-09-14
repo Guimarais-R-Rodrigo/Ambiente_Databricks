@@ -31,9 +31,9 @@ Esta rodada é `A0_light`: o mesmo agente que conduziu a iniciativa executa a au
 
 ## Resultado
 
-O resultado técnico é preenchido pelas evidências geradas no freeze R13. Aprovação automática significa estrutura/coerência/regressões locais aprovadas; aceite humano continua sendo gate separado.
+O resultado técnico foi preenchido pelas evidências do freeze R13 e aceito pelo usuário. A R13 foi integrada pelo PR #33 no commit `b0e953cc6274b385e42dcd675f2d8dbd145f349b`. A aprovação continua limitada a estrutura, coerência e regressões locais; auditoria independente, publicação e homologação Databricks/Genie Code permanecem gates separados.
 
-## Resultado técnico da candidata
+## Resultado técnico integrado
 
 A auditoria consolidada local concluiu **PASS**, sem bloqueadores. Foram confirmados 75/75 READMEs operacionais, 3/3 exemplares, 0 pendências, 52 snippets, 7 scripts e 16 prompts. Os seis índices de categoria cobrem exatamente os snippets correspondentes; os seis mutantes negativos foram rejeitados; fonte e simulado permaneceram equivalentes; o produto ficou congelado na base pós-R12. O `ci_local.py` também concluiu com sucesso.
 

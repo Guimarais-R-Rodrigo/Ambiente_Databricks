@@ -337,4 +337,4 @@ A candidata R08 acrescenta guias locais para autoencoder de anomalias, profiling
 >
 > **READMEs R12 — integrada:** seis índices de categoria de `hub_snippets` foram aceitos e integrados pelo PR #32 (`ec4b559d`), preservando 75/75 objetos e zero pendências estruturais.
 >
-> **READMEs R13 — auditoria final candidata:** revisão consolidada de contrato, checklist, skill de criação, validador, Manual, READMEs, índices e espelho, com mutantes negativos e regressão local.
+> **READMEs R13 — integrada e encerrada:** a auditoria final foi aceita e integrada pelo PR #33 (`b0e953cc`), concluindo a iniciativa R00–R13 com 75/75 READMEs operacionais, 3/3 exemplares e 0 pendências estruturais.
