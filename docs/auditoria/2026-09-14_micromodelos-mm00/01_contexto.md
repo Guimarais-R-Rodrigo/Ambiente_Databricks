@@ -35,8 +35,9 @@ Não editar, commitar, publicar, executar operações persistentes ou acessar da
 - durante a execução, V08 foi integrada na `main` pelo commit `622d2c962a80998cf990b57036f7ae503bfc0458`;
 - o fechamento documental pós-merge da V08 levou a `main` para `55f7006c47d90ae7f760992d252b658f53a59636`;
 - a MM00 foi reconciliada novamente sobre essa base no merge `edfcf58e4700ccf5d58d2befddccbd9fe50ac124` e teve seus documentos compartilhados reconciliados sem alterar o produto V08;
-- os checks do head `f5e57db5c7fd1fdd21385eaa3f5f6aa07fcaa0a5` concluíram em `success` para CI geral, V00, V01 e V02 após o README raiz ser alinhado aos valores medidos de 1368 arquivos e 1859 links;
-- o diff da PR contra a `main` fechada da V08 contém 21 arquivos de contexto, ADRs e documentação MM00/auditoria, sem alteração funcional própria do produto/ferramentas/workflows;
+- os checks do head `efd866cce13f826ace23c8625629f7ad359ed5c2` concluíram em `success` para CI geral, V00, V01 e V02 após a consolidação dos documentos de gate;
+- o validador mede 1368 arquivos e 1859 links no estado documental da MM00;
+- o diff da PR contra a `main` fechada da V08 contém 22 arquivos: `CLAUDE.md`, `README.md`, ADRs, índices e documentação MM00/auditoria. O `README.md` raiz muda somente para reconciliar as métricas medidas pelo gate; não existe alteração funcional própria do produto/ferramentas/workflows;
 - nenhum artefato específico de micromodelo existia na `main` de abertura segundo a busca realizada;
 - ADR-0014 a ADR-0020 permanecem propostos, não aceitos;
 - MM01 permanece bloqueada.
