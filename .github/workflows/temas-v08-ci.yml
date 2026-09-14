@@ -17,7 +17,7 @@ on:
       - 'docs/sprints/sistema_temas/V08/**'
       - '.github/workflows/temas-v08-ci.yml'
 permissions:
-  contents: read
+  contents: write
 jobs:
   transversal-v08:
     runs-on: ubuntu-latest
@@ -31,7 +31,58 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: false
+          persist-credentials: true
+      - name: Reconciliar bloco V08 do changelog (transitório)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/codex/temas-v08-fechamento-pos-merge-20260914'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('CHANGELOG.md')
+          text = path.read_text(encoding='utf-8')
+          start = '## 2026-09-14 — V08: candidata de integração transversal (ChatGPT)'
+          end = '## 2026-09-14 — V07: candidata de consumidores e formatos de saída (ChatGPT)'
+          if text.count(start) != 1 or text.count(end) != 1:
+              raise SystemExit(f'V08_CHANGELOG_MARKERS start={text.count(start)} end={text.count(end)}')
+          before, tail = text.split(start, 1)
+          _, after = tail.split(end, 1)
+          block = '''## 2026-09-14 — V08: integração transversal e fechamento técnico (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) Matriz transversal de integração entre Sistema de Temas, skills, Hub Padrões, entrada `.assistant` e Manual Técnico.
+- (ChatGPT) Suíte V08 e workflow permanente read-only com guarda explícita que proíbe alterações runtime Python em `hub_snippets` e `hub_scripts`.
+
+### Atualizado
+
+- (ChatGPT) Concierge, criação de objeto, EDA, baseline, safra, monitoramento e explainability passam a apontar para `ResolvedTheme` e consumidores `_resolvido` sem redefinir paletas ou política visual.
+- (ChatGPT) O template visual da EDA deixa de ser uma segunda fonte de tema e preserva composição, hierarquia, leitura, tabelas, KPIs, emojis, índice e demais convenções editoriais.
+- (ChatGPT) Hub Padrões e Manual passam a descrever V02–V07 integradas, Visual Lab, geração editorial, consumidores V07 e limites atuais.
+- (ChatGPT) O README raiz foi compactado para atuar como entrada operacional, mantendo o histórico detalhado no índice canônico de sprints e preservando o bloco verificável do gate local.
+- (ChatGPT) PR #42 integrada após aceite explícito de Rodrigo; head final validado `9af5615d79b02cbd86f5a6d084444c83f203ae03` e merge `622d2c962a80998cf990b57036f7ae503bfc0458`, com árvore idêntica à candidata testada.
+
+### Evidências
+
+- (ChatGPT) Failures intermediários permanecem registrados com suas causas reais, incluindo migração, divergência temporária fonte/simulado e métricas documentais; nenhum foi reclassificado retroativamente.
+- (ChatGPT) Gate final de push `34872178809`: V08 22/22, regressões V01–V08 405/405, V00 12/12, validador 0 falhas/0 avisos, `V08_RUNTIME_EDIT=0` e escopo verde.
+- (ChatGPT) Todos os nove checks finais da PR #42 concluíram com `success` no mesmo head final.
+- (ChatGPT) Pós-merge `622d2c962a80998cf990b57036f7ae503bfc0458`: dez workflows na `main` — CI geral e V00–V08 — concluíram com `success`.
+
+### Limites
+
+- (ChatGPT) Sem publicação Databricks, alteração de ACL/compute, execução remota Spark/SQL/MLflow, promoção visual, homologação de browser/acessibilidade/UAT ou prova de seleção determinística de skill pela Genie Code. A V09 não foi iniciada.
+
+'''
+          path.write_text(before + block + end + after, encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git diff --cached --check
+          if ! git diff --cached --quiet; then
+            git commit -m "docs(v08): fechar changelog pós-merge"
+            git push origin HEAD:codex/temas-v08-fechamento-pos-merge-20260914
+          fi
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
