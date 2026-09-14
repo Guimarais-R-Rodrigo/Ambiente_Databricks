@@ -53,7 +53,7 @@ A separação principal é entre **contexto** e **execução**:
 
 ## 🎨 Sistema de Temas
 
-V00–V07 estão integradas no Git. A V08 está em candidata de integração transversal e **não altera runtime Python**: ela alinha skills, Hub Padrões, entrada `.assistant`, template de EDA e Manual Técnico ao contrato de temas já existente.
+V00–V08 estão integradas no Git. A V08 realizou a integração transversal do contrato de temas com skills, Hub Padrões, entrada `.assistant`, template de EDA e Manual Técnico, mantendo o runtime Python inalterado.
 
 Regras atuais:
 
@@ -64,7 +64,7 @@ Regras atuais:
 - SHAP/Matplotlib e Kaplan–Meier continuam limites explícitos onde o contrato atual não representa a semântica necessária;
 - nada disso publica automaticamente no Databricks.
 
-Detalhes e evidências da candidata: [V08](docs/sprints/sistema_temas/V08/README.md) e [checkpoint V08](docs/sprints/sistema_temas/V08/CHECKPOINT_V08.md).
+Detalhes e evidências: [V08](docs/sprints/sistema_temas/V08/README.md) e [checkpoint V08](docs/sprints/sistema_temas/V08/CHECKPOINT_V08.md).
 
 ## 🔄 Como o contexto chega à Genie Code
 
@@ -109,8 +109,8 @@ normas do molde    : 72 arquivos, 0 violação(ões)
 notebook exercita  : 60 objetos, 0 notebook(s) que só importam
 python (AST)       : 217 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1350 arquivos varridos no repositório editável/derivado
-repo (links)       : 1849 links fora da raiz analisada
+repo (identidade)  : 1368 arquivos varridos no repositório editável/derivado
+repo (links)       : 1857 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)
