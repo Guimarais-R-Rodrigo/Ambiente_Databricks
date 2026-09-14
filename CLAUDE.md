@@ -81,8 +81,18 @@ e integrada pelo PR #21 no commit `5a7b33d7137f88c1ec80315de1b422293b3ba206`:
 componentes HTML, estilos compartilhados e tabela pandas recebem rotas opt-in
 `_resolvido`, preservando as APIs legadas. A árvore do merge coincide com a
 candidata validada e os seis workflows permanentes pós-merge concluíram com
-`success`. Sem publicação Databricks, homologação operacional ou início da V05.
-Estado: `docs/sprints/sistema_temas/V04/CHECKPOINT_V04.md`.
+`success`. Sem publicação Databricks ou homologação operacional. Estado histórico:
+`docs/sprints/sistema_temas/V04/CHECKPOINT_V04.md`.
+
+A reconciliação documental D05 pós-R13 foi integrada à `main` pelo PR #36, commit
+`24ffce298ed543755eb15d5d7c553d02ce15e73e`. Sobre essa base, a V05 — Visual Lab
+— está **somente em candidata de fechamento** na branch
+`codex/temas-v05-fechamento-r13-20260913`: seleção guiada de presets notebook,
+ajuste/compare, rascunho com histórico e persistência/reabertura de sessão com base
+original, proposta, revisão e hashes de linhagem local. Os contratos Python foram
+exercitados em GitHub Actions, mas não há aceite V05, merge, publicação Databricks,
+homologação de navegador/runtime, acessibilidade, ACL real, UAT ou início da V06.
+Estado vigente: `docs/sprints/sistema_temas/V05/CHECKPOINT_V05.md`.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 
@@ -103,9 +113,11 @@ O índice completo, com o status de cada ADR, está em `docs/decisions/README.md
 ### Estado vigente dos READMEs de objeto
 A migração estrutural terminou na R11 e a iniciativa R00–R13 foi encerrada após a
 auditoria final R13 e o fechamento documental pós-merge. O contrato vigente é
-`readme-objeto: 1.0.0`; todos os 75 objetos operacionais possuem README, os três
+`readme-objeto: 1.0.0`; os 75 objetos do escopo R00–R13 continuam cobertos, os três
 exemplares permanecem separados e `CONTROLE_MIGRACAO.json` está em
-`phase=complete` com `pending={}`.
+`phase=complete` com `pending={}`. O novo objeto `hub_snippets.visual.theme_lab`
+da candidata V05 já entrou no mesmo contrato editorial; a validação estrutural da
+candidata mede 76/76 objetos operacionais, sem transformar essa cobertura em aceite.
 
 Para manutenção futura, todo novo snippet, script ou prompt precisa entrar já com
 README no mesmo contrato; reintroduzir dispensa é regressão. Use o
