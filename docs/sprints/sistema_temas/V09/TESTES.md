@@ -40,6 +40,20 @@ No head `17a95762b9f6dc19c13cf008ee581bc7c1041d26`, sete dos oito testes V09 pas
 
 Esse run permanece **FAILURE**.
 
+### `34877297808` — FAILURE documental após todos os gates funcionais passarem
+
+No head `b7d16ab6eccf59a266353dc74502cf51703ad8c3` passaram:
+
+- V09 específica: **8/8**;
+- regressões do kit de transição: **43 testes executados, 36 PASS e 7 SKIP** porque a chamada dessa etapa não usa `--spark`;
+- regressões cumulativas V01–V09: **413/413**;
+- compatibilidade V00: **12/12**;
+- geração real do kit offline: **535 arquivos + `MANIFEST.json`**, commit do kit `b7d16ab6eccf...`.
+
+O único bloqueio foi `validate_assistant.py --conferir-readme`: a execução mediu `1355` arquivos no repositório editável/derivado, enquanto o README raiz ainda continha `1350`. O validador terminou com **1 falha e 0 avisos**. A correção altera somente esse número colado no README; nenhum contrato ou runtime foi relaxado.
+
+Esse run permanece **FAILURE**.
+
 ## Evidência pendente
 
 Os resultados posteriores serão preenchidos a partir dos runs reais da branch. Nenhum resultado é declarado antecipadamente.
