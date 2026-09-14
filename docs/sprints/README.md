@@ -75,9 +75,11 @@ A iniciativa continua sem alteração funcional própria no produto `.assistant`
 
 ## Sistema de Temas do Hub
 
-A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V11 estão aceitas e integradas no Git. A V11 foi aceita em 14/09/2026 e integrada pelo PR #52 no merge `9305bc49eaf002caec042361bf35efa66af7ca18`.**
+A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V11 estão aceitas e integradas no Git. A V12 está em candidata isolada, ainda sem aceite ou merge.** A base da candidata é `d106ef3158e5827a2eec3aa183dbb3b47885c960`; o escopo recuperado do próprio repositório é homologação formativa de jornadas com pessoas e ambiente, com evidências Git/local, Databricks environment e Human/UAT mantidas separadas.
 
 A V11 cria uma ponte fail-closed entre um `ResolvedTheme` `notebook` e capacidades documentadas de temas nativos AI/BI sem ampliar silenciosamente o schema V01/V02: `context="aibi"` continua reservado. A matriz cobre exatamente 48 tokens, classificados em 3 traduzidos, 23 aproximados e 22 não suportados. O projeto não inventa o schema do JSON nativo de `Import theme`; um binding nativo futuro exige export real fixado por SHA-256 e revisão de JSON Pointers. Estado e limites estão em [V11](sistema_temas/V11/README.md), [testes V11](sistema_temas/V11/TESTES.md) e [checkpoint V11](sistema_temas/V11/CHECKPOINT_V11.md).
+
+A candidata V12 acrescenta somente protocolo, matriz de evidências, validação fail-closed, testes e CI read-only. O estado detalhado fica em `docs/sprints/sistema_temas/V12/`. Nenhum deploy de App, import de tema, workspace theme, ACL, publicação, dado corporativo ou sessão UAT foi executado pela preparação inicial; esses estados não serão marcados como `PASS` sem execução real autorizada.
 
 Os runs V11 `34900693160`, `34901091132`, `34901776770` e `34904363803` permanecem **FAILURE** e não foram reclassificados. O head final `5532ca6d8f1b243ca705088f4b57823a333b9b1f` teve o push pré-PR `34905080083` integralmente verde; os 11 workflows reais da PR #52 concluíram com `success`, e os 13 workflows pós-merge no commit `9305bc49eaf002caec042361bf35efa66af7ca18` também concluíram com `success`. Não houve export/import real de tema, gestão de workspace theme, publicação de dashboard ou qualquer chamada Databricks.
 

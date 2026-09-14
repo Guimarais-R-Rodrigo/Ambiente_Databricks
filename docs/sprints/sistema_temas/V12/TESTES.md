@@ -36,7 +36,21 @@ A V12 começa com **evidência Git/local apenas**. Nenhuma operação Databricks
 6. higiene de credenciais/identidade;
 7. nenhum efeito remoto.
 
-Resultados de runs reais serão acrescentados sem reclassificar failures.
+## Histórico preservado
+
+### Run `34908962030` — FAILURE
+
+Head: `fb2d0eaf319a37a1a62e322e7f8458a47097b4f0`.
+
+- V12 específica: **26/26 PASS**;
+- regressões cumulativas V01–V12: **483/483 PASS**;
+- compatibilidade visual V00: **12/12 PASS**;
+- validador estrutural/documental: **FAILURE** por duas métricas stale no README raiz;
+- valor colado para `repo (identidade)`: `1409`; valor medido: `1418`;
+- valor colado para `repo (links)`: `1887`; valor medido: `1889`;
+- gate de escopo/higiene: **SKIP**, porque a etapa anterior falhou.
+
+A causa é documental e compatível com a adição dos arquivos V12. A correção atualiza somente os valores medidos e o estado vivo da documentação; o validador não foi enfraquecido nem alterado. Este run permanece `FAILURE` no histórico.
 
 ## O que não pode ser PASS ainda
 
@@ -52,3 +66,5 @@ Até execução real, permanecem `PENDENTE`/`BLOQUEADO`:
 - light/dark real;
 - acessibilidade em render final;
 - `DOC-02`, `DOC-03`, `A11-01`, `SEC-01`, `UAT-01`.
+
+Resultados de novos runs serão acrescentados sem reclassificar o `34908962030`.

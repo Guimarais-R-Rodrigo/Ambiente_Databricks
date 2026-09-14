@@ -30,6 +30,14 @@ Nenhum desses estados será promovido por inferência.
 - workspace theme e dashboard theme continuam escopos distintos;
 - import/select e publish continuam gates distintos.
 
+## Primeiro run real da candidata
+
+Run `34908962030`, head `fb2d0eaf319a37a1a62e322e7f8458a47097b4f0`: **FAILURE preservado**.
+
+A suíte V12 passou 26/26, as regressões V01–V12 passaram 483/483 e V00 passou 12/12. O validador estrutural/documental encontrou somente duas métricas stale no README raiz: `repo (identidade)` estava `1409` e mediu `1418`; `repo (links)` estava `1887` e mediu `1889`. O gate de escopo ficou `SKIP` por dependência da etapa anterior.
+
+A correção não altera o validador: reconcilia os valores documentados com a saída medida e atualiza os documentos vivos que ainda diziam que V12 não havia iniciado.
+
 ## Bloqueio operacional atual
 
 A primeira mutação real necessária para algumas jornadas não está autorizada pelo prompt que iniciou a V12. Assim, deploy de App, import de tema, alteração de workspace theme, alteração de ACL e publicação permanecem bloqueados até autorização explícita adicional.
@@ -38,4 +46,4 @@ O bloqueio é estado correto, não failure do código.
 
 ## Próximo gate
 
-Concluir CI local/GitHub da candidata. Depois, para avançar no ambiente, registrar operação, ambiente, risco, rollback e autorização antes da primeira mutação.
+Reexecutar CI da candidata após a reconciliação documental. Depois, para avançar no ambiente, registrar operação, ambiente, risco, rollback e autorização antes da primeira mutação.
