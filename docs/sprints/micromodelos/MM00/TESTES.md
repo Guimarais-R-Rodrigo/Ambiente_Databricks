@@ -4,33 +4,33 @@
 
 MM00 é uma sprint documental/arquitetural. Os testes verificam baseline, ausência de deriva funcional, coerência cruzada e capacidade de avançar com segurança; não homologam Databricks nem executam micromodelos.
 
-## T01 — Baseline Git
+## T01 — Baseline Git e reconciliação
 
-**Esperado:** branch MM00 parte da `main` vigente.
+**Abertura:** `micromodelos/mm00-baseline` nasceu da `main` em `1b6632194f4b25afc09960c27b069c16df365ee6`.
 
-**Observado na abertura:** `micromodelos/mm00-baseline` e `main` apontavam para `1b6632194f4b25afc09960c27b069c16df365ee6`.
+**Evento concorrente:** durante a execução, a V08 foi integrada na `main` pelo commit `622d2c962a80998cf990b57036f7ae503bfc0458`.
 
-**Revalidação durante a execução:** a `main` continuava no mesmo SHA após a criação da PR e do pacote de auditoria.
+**Reconciliação:** a branch MM00 incorporou a nova `main` por merge de dois pais no commit `e322e73fc0dc73c3081c99662ac29cb7721add67`, preservando os arquivos funcionais da V08 e os documentos MM00.
 
-**Status:** PASS até o head atual. Revalidar uma última vez antes do aceite/merge.
+**Status:** PASS para a reconciliação estrutural. Revalidar `main` antes do aceite/merge final.
 
 ## T02 — Estado visual
 
-**Esperado:** plano não depender de fotografia desatualizada.
+**Esperado:** o plano não pode depender de fotografia desatualizada de outra frente.
 
-**Observado na `main`:** V00–V07 estão integradas. Durante a execução da MM00 foi identificada a PR draft #42 para V08 em trabalho paralelo; portanto a afirmação anterior “V08 não iniciada” foi retirada dos documentos MM00. A MM00 só afirma que V08 ainda não está integrada na `main` e não presume o resultado da frente paralela.
+**Observado:** V00–V08 estão integradas no Git. V08 alinha skills, padrões, entrada `.assistant`, template EDA e Manual ao Sistema de Temas sem alterar runtime Python.
 
-**Ação executada:** `CLAUDE.md` havia sido reconciliado com V07; uma nova correção ainda precisa substituir a frase “V08 ainda não foi iniciada” por formulação compatível com a PR paralela.
+**Conclusão:** o framework de micromodelos deve respeitar essa integração transversal desde a criação de suas futuras skills, mas a composição visual específica continua adiada para MM11.
 
-**Status:** CORREÇÃO EM CURSO. A decisão arquitetural de desacoplar o visual até MM11 permanece válida.
+**Status:** PASS arquitetural após reconciliação; nova auditoria independente deve validar a interpretação.
 
 ## T03 — Colisão nominal
 
-**Método:** busca por `micromodel` na `main`.
+**Método:** busca por `micromodel` na `main` de abertura.
 
 **Observado:** nenhum resultado específico encontrado.
 
-**Status:** PASS. Isso não prova inexistência fora do repositório.
+**Status:** PASS delimitado ao repositório. Não prova inexistência no ambiente de trabalho.
 
 ## T04 — Taxonomia do Hub
 
@@ -42,27 +42,27 @@ MM00 é uma sprint documental/arquitetural. Os testes verificam baseline, ausên
 
 ## T05 — Reuso de componentes
 
-**Esperado:** plano deve mapear skills/helpers existentes antes de propor novos objetos.
+**Esperado:** mapear cobertura atual antes de criar novos objetos.
 
 **Evidência:** `MATRIZ_REUSO.md` classifica Concierge, EDA, cross-EDA, feature engineering, validação, auditoria, `schema_to_yaml`, helpers Spark e `mlflow_run`.
 
-**Status:** PASS documental.
+**Status:** PASS documental; auditor A1 deve confirmar contratos citados contra a árvore pós-V08.
 
 ## T06 — Sanitização
 
-**Esperado:** nenhum identificador/path real do ambiente externo deve ser necessário ao framework versionado.
+**Esperado:** nenhum identificador/path real do ambiente externo no framework versionado.
 
-**Evidência:** plano e MM00 usam placeholders; nenhuma fixture real foi adicionada.
+**Primeira rodada:** o CI detectou um handle corporativo histórico no ADR-0017.
 
-**Primeiro CI:** o validador detectou um handle corporativo histórico dentro do ADR-0017. O trecho foi removido e substituído por descrição genérica do handoff institucional.
+**Correção:** o handle foi removido e substituído por contrato genérico de handoff. O CI do head `4c162436b6947681e58ea94f342d0acf11399688` passou após a correção.
 
-**Status:** CORRIGIDO; novo CI precisa confirmar.
+**Status:** PASS naquele head; reexecutar no head reconciliado com V08.
 
 ## T07 — Migração tardia
 
-**Esperado:** nenhuma skill/briefing de migração deve ser criado antes do piloto greenfield e freeze V1.
+**Esperado:** skill/briefing de migração não existem antes do piloto greenfield e freeze V1.
 
-**Evidência:** Plano Mestre posiciona migração em MM12; ADR-0018 mantém o gate como decisão proposta.
+**Evidência:** Plano Mestre posiciona migração em MM12; ADR-0018 permanece proposto.
 
 **Status:** PASS documental.
 
@@ -74,56 +74,62 @@ MM00 é uma sprint documental/arquitetural. Os testes verificam baseline, ausên
 
 **Status:** PASS arquitetural; implementação só em sprint futura.
 
-## T09 — Não alteração funcional
+## T09 — Não alteração funcional pela MM00
 
-**Esperado:** MM00 não modifica `ambiente_fonte/.assistant/`, helpers/skills, `tools/` ou workflows.
+**Esperado:** a iniciativa MM00 não cria/modifica funcionalidade do produto.
 
-**Executado:** comparação da candidata contra a base e listagem nominal da PR #43.
+**Observado antes da reconciliação V08:** a PR MM00 alterava apenas `CLAUDE.md`, `README.md`, ADRs e documentação MM00/auditoria.
 
-**Observado:** os commits da MM00 alteram documentação, ADRs, `CLAUDE.md` e o pacote de auditoria. Nenhum arquivo do produto funcional, ferramenta ou workflow foi alterado.
+**Após a reconciliação:** a branch contém alterações funcionais da V08 porque elas já são parte da nova `main`, não porque a MM00 as criou. O diff relevante para escopo deve ser calculado contra a `main` reconciliada, não contra a base histórica V07.
 
-**Status:** PASS no head atual. Revalidar após qualquer commit adicional.
+**Status:** PENDENTE de nova listagem/diff contra a `main` pós-V08.
 
 ## T10 — Validação automática
 
-No head `5adcac3291ace7a9bcad5ef6201b75e4093d6cd4`:
+### Head pré-reconciliação V08
 
-- V00: `34871696028` — `success`;
-- V01: `34871695981` — `success`;
-- V02: `34871696024` — `success`;
-- CI geral: `34871695827` — `failure` na etapa `validacao`.
+No head `4c162436b6947681e58ea94f342d0acf11399688`:
 
-O CI geral encontrou cinco falhas documentais: três no bloco de saída congelada do `README.md` raiz, porque a MM00 alterou a contagem do repositório; uma decorrente do próprio estado reprovado do bloco; e uma sanitização no ADR-0017. Os valores medidos naquele head foram `1363` arquivos e `1858` links fora da raiz. O ADR foi corrigido. O README raiz ainda precisa ser reconciliado sem relaxar o validador.
+- V00: success;
+- V01: success;
+- V02: success;
+- CI geral `34872513600`: success.
 
-**Status:** FAIL CONHECIDO, CORREÇÃO EM CURSO. Não aceitar MM00 com esse CI vermelho.
+Isso comprovou a correção dos failures anteriores de sanitização e métricas do README naquele snapshot.
+
+### Head reconciliado V08
+
+A incorporação da V08 muda a contagem e amplia os workflows aplicáveis. O gate precisa ser executado novamente sobre o head pós-reconciliação; resultados antigos não são transferidos por inferência.
+
+**Status:** PENDENTE de CI final.
 
 ## T11 — Auditoria independente A1
 
-O pacote reproduzível foi criado em:
+Pacote reproduzível:
 
 - `docs/auditoria/2026-09-14_micromodelos-mm00/01_contexto.md`;
 - `docs/auditoria/2026-09-14_micromodelos-mm00/02_prompt_auditoria.md`.
 
-O prompt contém doze testes obrigatórios e bloqueia histórico/justificativas antes da formação dos achados.
+A sessão implementadora não se autoqualifica como auditor independente.
 
-**Status:** PREPARADA, NÃO EXECUTADA. A sessão implementadora não se autoqualifica como auditor independente. MM00 não fecha sem o parecer ou sem decisão explícita de exceção ao gate.
+**Status:** PREPARADA, NÃO EXECUTADA.
 
 ## T12 — Contexto canônico
 
-**Esperado:** o arquivo canônico não induz novas sessões a trabalhar com estado visual obsoleto e não transforma ADR proposto em ativo.
+**Esperado:** `CLAUDE.md` reflete a `main` vigente e não transforma ADR proposto em decisão ativa.
 
-**Executado:** atualização de `CLAUDE.md` na branch para retirar V05 candidata e registrar a iniciativa MM00 como proposta.
+**Ação:** a candidata será reconciliada para V00–V08 integradas e MM00/ADRs 0014–0020 em estado proposto.
 
-**Achado posterior:** a existência da PR draft V08 tornou a frase “V08 ainda não foi iniciada” imprecisa. A correção deve registrar apenas que V08 ainda não está integrada na `main` e que existe trabalho paralelo, sem presumir seu aceite.
-
-**Status:** CORREÇÃO EM CURSO.
+**Status:** PENDENTE do commit documental pós-merge e CI.
 
 ## T13 — Regra de changelog
 
 `CLAUDE.md` exige entrada em `CHANGELOG.md` para toda sessão que altera algo.
 
-**Status:** PENDENTE no head atual. A candidata não deve ser aceita enquanto a entrada aditiva da MM00 não estiver registrada sem reescrever o histórico existente.
+A `main` pós-V08 já traz a entrada da V08; a entrada própria da MM00 ainda não foi adicionada. A interface disponível nesta sessão oferece substituição integral para esse arquivo histórico extenso, sem patch/append seguro; a MM00 não deve arriscar reescrever o histórico apenas para marcar o checkbox.
+
+**Status:** BLOQUEIO CONHECIDO. Requer atualização aditiva segura antes do aceite, ou decisão humana explícita de exceção documentada.
 
 ## Critério final
 
-PASS global exige T01–T13 resolvidos, nenhuma mudança funcional escondida, auditoria independente registrada e checkpoint atualizado com evidências do head final.
+PASS global exige T01–T13 resolvidos, diff da MM00 delimitado contra a `main` vigente, CI verde no head final, auditoria independente registrada e checkpoint reconciliado.

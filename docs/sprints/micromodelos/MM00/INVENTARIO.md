@@ -2,9 +2,11 @@
 
 ## 1. Estado do repositório
 
-Baseline: `main` em `1b6632194f4b25afc09960c27b069c16df365ee6`.
+Baseline de abertura: `main` em `1b6632194f4b25afc09960c27b069c16df365ee6`.
 
-A busca por `micromodel` no código da `main` não retornou implementação ou documentação específica. A iniciativa começa, portanto, sem objeto homônimo concorrente no repositório.
+Durante a MM00, a V08 do Sistema de Temas foi integrada na `main` pelo commit `622d2c962a80998cf990b57036f7ae503bfc0458`. A branch da MM00 foi reconciliada com essa evolução antes do fechamento.
+
+A busca por `micromodel` na `main` de abertura não retornou implementação ou documentação específica. A iniciativa começa, portanto, sem objeto homônimo concorrente no repositório. Isso não afirma inexistência de micromodelos no ambiente de trabalho.
 
 ## 2. Fonte de verdade e disciplina de alteração
 
@@ -14,9 +16,9 @@ A busca por `micromodel` no código da `main` não retornou implementação ou d
 - Workspaces são superfícies operacionais, não fonte canônica.
 - Mudanças estruturais exigem ADR; toda sessão que altera algo exige changelog.
 
-### Achado MM00-A01
+### Achado MM00-A01 — contexto canônico e frente visual
 
-O `CLAUDE.md` ainda descreve a frente visual em estado anterior, enquanto a `main` já contém V00–V07 integradas. Isso é risco documental para sessões futuras e deve ser reconciliado em manutenção documental, sem alterar implementação visual.
+Na abertura, `CLAUDE.md` descrevia um estado visual anterior ao observado na `main`. A MM00 corrigiu o contexto e, depois da integração paralela da V08, reconciliou novamente a descrição. Esse achado demonstra que estado de outra frente não deve ser congelado por memória: precisa ser reconsultado nos gates relevantes.
 
 ## 3. Taxonomia do Hub
 
@@ -116,14 +118,14 @@ Conclusão MM00: reutilização é obrigatória; uma extensão aditiva para micr
 
 ## 10. Sistema de Temas
 
-No baseline:
+Estado reconciliado durante a MM00:
 
-- V00–V07 aceitas/integradas no Git;
+- V00–V08 estão integradas no Git;
 - `ResolvedTheme` permanece fonte visual central;
-- V07 adiciona consumidores opt-in para visualizações de display/ML sem alterar cálculo analítico;
-- V08 é a próxima camada transversal segundo a documentação da frente visual.
+- V07 adicionou consumidores opt-in para visualizações de display/ML sem alterar cálculo analítico;
+- V08 integrou o contrato de temas a skills, Hub Padrões, entrada `.assistant`, template EDA e Manual Técnico, mantendo runtime Python inalterado.
 
-Conclusão: MM00–MM10 não dependem da finalização visual; MM11 reconsulta o estado real e integra apenas por APIs centrais então vigentes.
+Conclusão: a futura skill de micromodelos deve nascer aderente às orientações transversais já incorporadas pela V08, mas a composição visual específica dos artefatos de micromodelos continua uma decisão tardia. MM11 reconsulta o estado real e valida essa composição sem criar paleta ou tema paralelo.
 
 ## 11. Governança externa de Produto de Dados
 
