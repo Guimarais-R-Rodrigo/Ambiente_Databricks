@@ -53,7 +53,7 @@ A separação principal é entre **contexto** e **execução**:
 
 ## 🎨 Sistema de Temas
 
-V00–V07 estão integradas no Git. A V08 está em candidata de integração transversal e **não altera runtime Python**: ela alinha skills, Hub Padrões, entrada `.assistant`, template de EDA e Manual Técnico ao contrato de temas já existente.
+V00–V08 estão integradas no Git. A V08 foi aceita em 14/09/2026 e integrada pelo PR #42 no merge `622d2c962a80998cf990b57036f7ae503bfc0458`; ela **não altera runtime Python** e alinha skills, Hub Padrões, entrada `.assistant`, template de EDA e Manual Técnico ao contrato de temas já existente.
 
 Regras atuais:
 
@@ -64,7 +64,7 @@ Regras atuais:
 - SHAP/Matplotlib e Kaplan–Meier continuam limites explícitos onde o contrato atual não representa a semântica necessária;
 - nada disso publica automaticamente no Databricks.
 
-Detalhes e evidências da candidata: [V08](docs/sprints/sistema_temas/V08/README.md) e [checkpoint V08](docs/sprints/sistema_temas/V08/CHECKPOINT_V08.md).
+Detalhes e evidências da integração: [V08](docs/sprints/sistema_temas/V08/README.md) e [checkpoint V08](docs/sprints/sistema_temas/V08/CHECKPOINT_V08.md).
 
 ## 🔄 Como o contexto chega à Genie Code
 
