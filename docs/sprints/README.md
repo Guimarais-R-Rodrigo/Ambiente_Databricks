@@ -75,9 +75,13 @@ A iniciativa continua sem alteração funcional própria no produto `.assistant`
 
 ## Sistema de Temas do Hub
 
-A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V09 estão aceitas e integradas no Git.** A V09 foi aceita por Rodrigo em 14/09/2026, integrada funcionalmente pelo PR #45 e recebeu a correção pós-merge do workflow operacional pelo PR #46; o head técnico final validado é `4ae714a35a0aafd930a8cd796d962b0a79449b88`.
+A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V10 estão aceitas e integradas no Git. A V10 foi aceita por Rodrigo em 14/09/2026 e integrada pelo PR #48 no merge `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`. Não houve deploy Databricks.**
 
-A V09 integra explicitamente o Sistema de Temas ao kit offline de transição: contrato temático no manifesto v2, guarda fail-closed antes do build e conferência de presença/tamanho/SHA256 dos nove arquivos canônicos dentro do ZIP gerado. No pós-merge final, 12/12 workflows de `push` concluíram com `success`, incluindo 43/43 testes com Spark local no workflow operacional. Transporte não significa ativação, promoção ou publicação; nenhuma operação Databricks foi executada e a V10 não foi iniciada por este fechamento.
+A V10 reutiliza o núcleo V02 e o Visual Lab V05 em uma superfície Streamlit `authoring_only`, com identidade encaminhada pelo proxy, namespace de sessão por SHA-256 e persistência projetada em Unity Catalog Volume via recurso `theme_storage`. Ela não implementa `context="app"`, aprovação, publicação, promoção ou delete de histórico. Evidências e limites estão em [V10](sistema_temas/V10/README.md), [testes V10](sistema_temas/V10/TESTES.md) e [checkpoint V10](sistema_temas/V10/CHECKPOINT_V10.md).
+
+Os runs V10 `34884790130`, `34885407907` e `34886250755` permanecem failures históricos. O push final original `34887162337` concluiu com `success`; após a reconciliação com a MM00, os dez workflows reais de PR do head `cb942ee955ff9236f19099e5ed4ceee9beb32000` também concluíram com `success`. Depois do merge, os 12 workflows disparados por `push` no commit `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b` concluíram com `success`, incluindo o workflow V10 `34896944061`. Nenhuma operação Databricks foi executada e V11/AI-BI não foi iniciada.
+
+A V09 integra explicitamente o Sistema de Temas ao kit offline de transição: contrato temático no manifesto v2, guarda fail-closed antes do build e conferência de presença/tamanho/SHA256 dos nove arquivos canônicos dentro do ZIP gerado. No pós-merge final, 12/12 workflows de `push` concluíram com `success`, incluindo 43/43 testes com Spark local no workflow operacional. Transporte não significa ativação, promoção ou publicação.
 
 A [V08 — integração transversal](sistema_temas/V08/README.md) conecta skills, Hub Padrões, entrada `.assistant` e Manual às mesmas fontes de verdade das V02–V07. A [matriz V08](sistema_temas/V08/MATRIZ_INTEGRACAO.json), o [checkpoint](sistema_temas/V08/CHECKPOINT_V08.md) e o [registro de testes](sistema_temas/V08/TESTES.md) preservam escopo, failures e a regra de zero alteração runtime Python.
 
