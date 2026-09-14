@@ -2710,38 +2710,40 @@ Atualizar uma referência oficial exige rever a afirmação que ela sustenta; n�
 
 ---
 
-## Sistema de Temas — V04 integrada no Git; V05 candidata em fechamento
+## Sistema de Temas — V00–V07 integradas no Git
 
-A V04 foi aceita e integrada no Git. Isso confirma a disponibilidade das rotas opt-in no produto versionado; não confirma publicação no workspace, homologação visual/runtime, acessibilidade ou aprovação de uma identidade.
+O Sistema de Temas está integrado no repositório até a V07. Isso significa que o contrato, os adaptadores e consumidores descritos abaixo existem no produto versionado; **não** significa que um tema tenha sido publicado no workspace, aprovado visualmente ou homologado em browser/acessibilidade.
 
-A V04 estende o tema validado aos componentes HTML e à tabela pandas sem mudar o
-caminho atual por padrão. As funções históricas continuam válidas. Para usar o
-tema, carregue/resolva um contexto `notebook` pelo núcleo V02 e escolha a função
-`_resolvido` correspondente.
+### Camadas e responsabilidade
 
-| Objeto | API V04 opt-in |
-|---|---|
-| `constants.styles` | `get_styles_resolvidos(theme)` |
-| `visual.badge` | `badge_status_resolvido`, `badge_score_resolvido`, `badge_inline_resolvido` |
-| `visual.divider` | `divider_light_resolvido`, `divider_medium_resolvido`, `divider_heavy_resolvido`, `divider_section_resolvido` |
-| `visual.kpi_card` | `kpi_card_html_resolvido` |
-| `visual.section_header` | `section_header_html_resolvido` |
-| `visual.index_generator` | `gerar_indice_eda_resolvido` |
-| `display.dataframe_styled` | `display_styled_resolvido` |
+- **V02 — núcleo:** carrega, valida e resolve configurações completas em `ResolvedTheme`. Não aplica nem aprova aparência.
+- **V03 — Plotly:** `aplicar_tema_resolvido` e registro explícito de template; sem efeito global por import.
+- **V04 — HTML/tabelas:** componentes `_resolvido` e estilos derivados do mesmo tema.
+- **V05 — Visual Lab:** autoria/comparação opt-in em notebook, com sessão e histórico; não publica.
+- **V06 — assets/geração:** renderização editorial orientada por tema em área candidata; geração não promove asset.
+- **V07 — consumidores/formatos:** correlação, distribuições, curvas de ML, monitoramento, UMAP e safras recebem rotas temáticas explícitas; HTML Plotly local foi exercitado.
 
-A referência notebook reproduz a aparência histórica. O caminho resolvido
-revalida o `ResolvedTheme`, recusa dicionário cru e contexto não-notebook e não
-mantém tema global. `dark` e `high_contrast` podem ser materializados pelos
-componentes HTML quando a configuração é válida, mas isso não equivale a
-homologação de acessibilidade nem de renderização no Databricks.
+A fonte canônica de campos/limites está em `hub_padroes/identidade_visual/theme.schema.json`; a referência de tokens é `TOKENS.md`. Skills e templates podem orientar uso e composição, mas não devem copiar paletas para criar uma segunda política visual.
 
-Não migre chamadas existentes em massa. A V04 permanece integrada e opt-in. A
-V05 acrescenta o Visual Lab descrito no inventário acima, também de forma opt-in,
-mas continua candidata: não há aceite, merge da V05, publicação no workspace ou
-aprovação operacional de identidade. Presets, comparação e sessão rastreável com
-reabertura foram exercitados no contrato Python; navegador/runtime Databricks,
-acessibilidade, p95, ACL real e UAT continuam gates separados. Consulte
-`hub_padroes/identidade_visual/GUIA_OPERACIONAL.md` e
-`docs/sprints/sistema_temas/V05/README.md` no repositório de manutenção. A V06
-não foi iniciada.
+### Fluxo recomendado para notebook
+
+1. Se você só quer o comportamento histórico, use a API legada.
+2. Para escolher/editar uma proposta, use o Visual Lab ou carregue uma configuração completa pela API `hub_snippets.visual.tema`.
+3. Para uma figura/componente tematizável, use a rota `_resolvido` documentada pelo objeto.
+4. Revise saída, dados, unidade e limites; aparência não valida o resultado analítico.
+5. Trate salvar, compartilhar, aprovar e publicar como ações diferentes.
+
+### Limites atuais
+
+- `dark`/`high_contrast` têm cobertura diferente entre HTML e Plotly; não trate modo válido como homologação de acessibilidade.
+- SHAP/Matplotlib e o PNG do helper SHAP permanecem fora do theming V07.
+- Kaplan–Meier preserva aparência legada enquanto sua ordem de cores não estiver representada pelo contrato sem remapeamento silencioso.
+- PNG Plotly/Kaleido, PDF, PPTX e render real no browser Databricks não foram homologados pela V07.
+- Tema não muda threshold, métrica, amostra, agregação, modelo, policy ou decisão de negócio.
+
+### V08 — integração transversal em execução
+
+A V08 não adiciona runtime: ela reconcilia skills, padrões e este Manual para que todos apontem às mesmas fontes de verdade e limites das V02–V07. Até aceite/merge da V08, essa reconciliação deve ser tratada como candidata de documentação transversal, não como nova capacidade publicada.
+
+Para primeiro uso, consulte `hub_padroes/identidade_visual/GUIA_OPERACIONAL.md`. Para autoria, consulte `hub_snippets/visual/theme_lab/README.md`. Para um consumidor específico, o README local continua sendo a fonte de uso daquele objeto.
 

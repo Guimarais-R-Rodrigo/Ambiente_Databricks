@@ -160,13 +160,15 @@ Consulte o Hub Padrões em `.assistant/hub_padroes/README.md`.
 
 Ao chegar a um snippet, script ou prompt concreto, leia primeiro o `README.md` da pasta. Ele orienta escolha, requisitos, efeitos, limites e interpretação; depois use o notebook de exemplo e a implementação ou briefing. O guia não equivale a homologação de runtime ou aprovação de negócio.
 
-### 🎨 Visual Lab do Sistema de Temas — V05 candidata
+### 🎨 Sistema de Temas — V00–V07 integradas no Git
 
-O `hub_snippets.visual.theme_lab` oferece uma superfície **opt-in** para escolher uma base `notebook` validada, ajustar tokens, comparar **Atual / Proposta** com dados sintéticos e salvar ou reabrir uma sessão preservando base original, proposta, revisão e histórico. Ele não altera o padrão da equipe e **não publica nem aprova temas**.
+O Sistema de Temas possui um núcleo validado (`ResolvedTheme`), adaptadores opt-in para Plotly e HTML, Visual Lab de autoria em notebook, geração editorial orientada por tema e consumidores runtime integrados em `display`/`ml`. **Nada disso troca automaticamente o padrão da equipe nem publica um tema.**
 
-Para começar, leia o [README do Visual Lab](hub_snippets/visual/theme_lab/README.md), siga o [guia de primeiro uso](hub_snippets/visual/theme_lab/GUIA_PRIMEIRO_USO.md) e, se precisar inspecionar uma execução orientada, abra o [exemplo](hub_snippets/visual/theme_lab/exemplo_theme_lab.py). O mantenedor precisa disponibilizar o pacote completo e as dependências; para persistência, também precisa preparar explicitamente uma pasta regular com as permissões adequadas.
+Para autoria e comparação, comece pelo [Visual Lab](hub_snippets/visual/theme_lab/README.md). Para contrato, tokens, primeiro uso e limites, consulte o [padrão de identidade visual](hub_padroes/identidade_visual/README.md). Para um consumidor concreto, abra o README local e use a rota `_resolvido` quando ela existir.
 
-A candidata V05 possui testes Python/GitHub Actions para presets, aplicação atômica, callbacks, histórico, sessão, hashes de linhagem e reabertura. Esses testes **não** homologam renderização no navegador Databricks, acessibilidade, contraste/zoom, p95, ACL real da pasta ou UAT por pessoa iniciante. A V05 ainda não possui aceite nem merge na `main`.
+A V07 integrou, entre outros, correlação, distribuições, curvas de ML, timeline de monitoramento, UMAP e safras. `dataframe_styled` já era coberto pela V04. SHAP/Matplotlib e Kaplan–Meier permanecem exceções explícitas ao theming atual; selecionar um tema não autoriza afirmar que seus plots foram recoloridos.
+
+Integração Git não equivale a publicação no workspace, aprovação visual, acessibilidade, ACL real ou UAT. A V08 organiza transversalmente essas orientações em skills, padrões e Manual sem criar uma segunda fonte de verdade.
 
 > **INFRAESTRUTURA EDITORIAL DO HUB.** A pasta
 > `hub_readmes_visual_assets/` mantém os diagramas e os cabeçalhos compartilhados

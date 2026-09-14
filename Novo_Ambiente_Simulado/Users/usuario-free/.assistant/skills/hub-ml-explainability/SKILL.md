@@ -90,6 +90,8 @@ Importar de `hub_snippets` em vez de reimplementar a lógica. Catálogo completo
 | Relatório dual-layer (executivo e técnico) | `hub_snippets.ml.explainability_report` |
 | Curvas diagnósticas de apoio | `hub_snippets.ml.curves_plotly` |
 
+Para curvas diagnósticas Plotly auxiliares, um tema notebook validado pode ser aplicado pelas rotas como `plot_roc_curve_resolvido`. **SHAP/Matplotlib é uma exceção explícita:** o Sistema de Temas V07 não controla o estilo interno dos plots SHAP nem o PNG salvo por `shap_explainer`. Não prometa recoloração/consistência temática dessas figuras apenas porque o notebook usa `ResolvedTheme` em outros gráficos.
+
 `shap` é dependência opcional resolvida na chamada: o import do módulo passa mesmo sem a biblioteca instalada. Os textos gerados evitam tratar importância SHAP como causalidade ou como percentual de poder preditivo; preservar essa formulação ao adaptar.
 
 ## Entregar

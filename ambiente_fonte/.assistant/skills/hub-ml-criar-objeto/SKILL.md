@@ -162,6 +162,12 @@ O que nunca fazer:
 - Importar biblioteca opcional no topo quando ela puder ser adiada — isso decide
   se o objeto importa ou não no laboratório.
 
+#### Sistema de Temas em objetos visuais
+
+Ao criar um objeto que aceite aparência configurável, não invente `TEMA_*`, paleta local ou JSON paralelo. Consulte `hub_padroes/identidade_visual`, receba/propague um `ResolvedTheme` quando o contrato do objeto exigir theming e reutilize o adaptador/consumidor `_resolvido` existente.
+
+`hub_snippets.constants.colors` continua válido para **compatibilidade legada** e componentes não configuráveis que já dependem dessas constantes; ele não é a fonte de um tema novo. Não altere cálculo, threshold, agregação ou amostragem para fazer uma proposta visual funcionar. Não registre template global como efeito padrão de um objeto novo.
+
 ### 6. Escrever o notebook, que não é opcional
 
 **Todo snippet e todo script têm o seu**, inclusive os triviais. Um leitor que
@@ -251,8 +257,8 @@ completo em [MANUAL_TECNICO.md#catalogo-helpers](../../MANUAL_TECNICO.md#catalog
 |---|---|
 | Base sintética determinística para o notebook | `hub_snippets.testing.fixtures` |
 | Números do notebook no padrão brasileiro | `hub_snippets.constants.format_br` |
-| Tema visual e rodapé com a contagem de pontos | `hub_snippets.visual.theme_plotly` |
-| Paleta e cores semânticas | `hub_snippets.constants.colors` |
+| Tema visual configurável e rodapé | `hub_snippets.visual.tema`, `hub_snippets.visual.theme_plotly` |
+| Cores institucionais legadas | `hub_snippets.constants.colors` — compatibilidade legada; não é fonte de tema novo |
 | Exibir DataFrame grande sem varredura completa | `hub_snippets.spark.safe_display` |
 
 Duas ferramentas do repositório, que não são helpers de notebook e sim de quem

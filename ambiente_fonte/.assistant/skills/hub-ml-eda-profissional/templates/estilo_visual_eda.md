@@ -1,203 +1,164 @@
-# Estilo Visual — Padrão EDA Profissional
+# Estilo Visual — EDA Profissional sobre o Sistema de Temas
 
-Este arquivo centraliza todas as decisões estéticas para notebooks de EDA.
-Ambas as skills (`hub-ml-eda-profissional` e `hub-ml-comentar-notebook`)
-devem seguir estas convenções.
+Este template orienta **composição, hierarquia e leitura** de uma EDA. Ele não é fonte de paleta, token ou aprovação. As escolhas configuráveis pertencem ao contrato `hub_padroes/identidade_visual` e chegam ao consumidor por `ResolvedTheme`.
 
 ---
 
-## 1. Paleta de Cores
+## 1. Fonte de verdade visual
 
-Paleta principal (6 cores) para gráficos Plotly e referências em Markdown:
+- Não declare paleta, dicionário de tema ou convenção local que replique a política visual do Hub.
+- Não copie valores de `TOKENS.md` para “congelar” uma aparência local.
+- Não registre template global como preparação padrão do notebook; **não registre template global** apenas para aplicar uma proposta.
+- Se não houver tema explicitamente selecionado, use as APIs legadas do Hub.
+- Se houver tema notebook válido, use as rotas `_resolvido` do consumidor.
 
-| Índice | Nome         | Hex       | Uso principal                          |
-| ------ | ------------ | --------- | -------------------------------------- |
-| 1      | Azul CAIXA   | `#005CA9` | Barras primárias, linhas principais    |
-| 2      | Laranja      | `#F7941D` | Destaque, alertas, segunda série       |
-| 3      | Azul Claro   | `#6CBDE1` | Preenchimento, áreas, séries terciárias |
-| 4      | Cinza Escuro | `#333333` | Texto, eixos, linhas de referência     |
-| 5      | Verde        | `#8DC63F` | Positivo, aprovado, meta atingida      |
-| 6      | Vermelho     | `#C4262E` | Negativo, risco, meta não atingida     |
-
-Paleta estendida (para >6 categorias):
-`#005CA9`, `#F7941D`, `#6CBDE1`, `#333333`, `#8DC63F`, `#C4262E`,
-`#7B2D8B`, `#00A79D`, `#F15A29`, `#A7A9AC`
-
----
-
-## 2. Template Plotly Reutilizável
-
-Todo notebook de EDA deve inicializar o tema visual numa célula de
-configuração (logo após os imports):
+Fluxo mínimo para uma figura Plotly genérica:
 
 ```python
-import plotly.express as px
-import plotly.io as pio
-import plotly.graph_objects as go
+from hub_snippets.visual.tema import load_reference_theme
+from hub_snippets.visual.theme_plotly import aplicar_tema_resolvido
 
-# === CONFIGURAÇÃO VISUAL ===
-PALETA_EDA = ["#005CA9", "#F7941D", "#6CBDE1", "#333333", "#8DC63F", "#C4262E"]
-
-TEMA_EDA = dict(
-    template="plotly_white",
-    font=dict(family="Segoe UI, Roboto, sans-serif", size=12, color="#333333"),
-    title=dict(font=dict(size=16, color="#005CA9"), x=0.01, xanchor="left"),
-    colorway=PALETA_EDA,
-    height=450,
-    width=900,
-    margin=dict(l=60, r=30, t=70, b=60),
-    legend=dict(orientation="h", yanchor="bottom", y=-0.25, xanchor="center", x=0.5),
-)
-
-def aplicar_tema(fig, subtitulo=None, fonte=None, n=None):
-    """Aplica tema padrão + anotações opcionais."""
-    fig.update_layout(**TEMA_EDA)
-    
-    anotacoes = []
-    if subtitulo or fonte or n:
-        texto_rodape = []
-        if n:
-            texto_rodape.append(f"N = {n:,.0f}")
-        if fonte:
-            texto_rodape.append(f"Fonte: {fonte}")
-        if subtitulo:
-            texto_rodape.append(subtitulo)
-        fig.add_annotation(
-            text=" | ".join(texto_rodape),
-            xref="paper", yref="paper",
-            x=0, y=-0.18, showarrow=False,
-            font=dict(size=10, color="#666666"),
-            xanchor="left"
-        )
-    return fig
+tema = load_reference_theme("notebook")
+fig = ...  # mesmos dados, agregações e eixos da análise
+aplicar_tema_resolvido(fig, tema, subtitulo="Recorte analisado", n=n_amostra)
+fig.show()
 ```
 
-### Regras de uso:
-
-- **Sempre** chamar `aplicar_tema(fig, ...)` antes de `fig.show()`.
-- **Subtítulo** vai como anotação inferior (não no título principal).
-- **Título**: frase curta e objetiva (≤60 chars). Sem "Gráfico de...".
-- **Formato do título**: `"Distribuição de X por Y"` ou `"Top N — Métrica"`.
+Para componentes especializados, prefira a própria rota resolvida, por exemplo `plot_correlation_resolvido`, `plot_distributions_resolvido`, curvas `*_resolvido`, `plot_vintage_curves_resolvido` ou `plot_timeline_resolvido`. Isso evita reconstruir semântica de cor no notebook.
 
 ---
 
-## 3. Regras de Gráficos
+## 2. O que o tema pode e não pode mudar
 
-### 3.1 Anotações obrigatórias
+O tema pode controlar propriedades visuais cobertas pelo contrato, como tipografia, dimensões, margens, paletas e cores semânticas. Ele **não** muda:
 
-Todo gráfico do relatório final (Etapa 6) deve ter:
-- **Rodapé** com N amostral e fonte (via `aplicar_tema`).
-- **Pelo menos 1 anotação de destaque** no corpo do gráfico para o
-  achado principal (ex.: seta apontando para pico, texto com o valor
-  máximo, linha de referência para mediana).
+- filtro, população ou data de corte;
+- amostragem, seed ou agregação;
+- bins, denominadores e unidade;
+- threshold analítico ou política de monitoramento;
+- métrica, modelo ou conclusão de negócio.
 
-### 3.2 Tamanhos padrão
-
-| Tipo de gráfico   | height | width |
-| ----------------- | ------ | ----- |
-| Padrão (bar, line)| 450    | 900   |
-| Pie chart         | 400    | 600   |
-| Heatmap           | 500    | 900   |
-| Boxplot           | 450    | 800   |
-| Small multiples   | 300    | 400   |
-
-### 3.3 Quando usar cada ferramenta
-
-| Ferramenta              | Quando usar                                      |
-| ----------------------- | ------------------------------------------------ |
-| `createVisualization`   | Exploração rápida sobre resultados de `display()` |
-| Plotly                  | Relatório final, gráficos do corpo da EDA        |
-| Matplotlib              | Gráficos estáticos simples (se Plotly for overkill) |
-| Visualização nativa     | Tabelas com agregação no backend (>64k linhas)   |
+Aparência consistente não valida a análise.
 
 ---
 
-## 4. Emojis Padronizados
+## 3. Regras de gráficos
 
-Uso **limitado e semântico** — nunca decorativo.
+### 3.1. Escolher o visual pela pergunta
 
-| Emoji | Significado                | Contexto de uso                    |
-| ----- | -------------------------- | ---------------------------------- |
-| ✅    | Validação passou / OK      | Checks de qualidade                |
-| ❌    | Validação falhou / erro    | Checks de qualidade                |
-| ⚠️    | Atenção / risco moderado   | Pontos de atenção                  |
-| 🟢    | Status positivo            | Indicadores de qualidade           |
-| 🟡    | Status intermediário       | Indicadores de qualidade           |
-| 🔴    | Status crítico             | Indicadores de qualidade           |
-| 📌    | Insight-chave / destaque   | Interpretação de negócio           |
-| 📊    | Resultado factual          | Cabeçalho de seção de dados        |
-| 🔍    | Interpretação / análise    | Cabeçalho de seção interpretativa  |
-| 💼    | Visão de negócio           | Cabeçalho de seção executiva       |
-| ➡️    | Próximo passo              | Transição entre etapas             |
+| Tipo de dado/pergunta | Visual sugerido | Cuidados |
+| --- | --- | --- |
+| numérica univariada | histograma, ECDF ou box plot | declarar amostra/agregação |
+| categórica | barras ordenadas | mostrar denominador, top-N e cauda |
+| temporal | linha em frequência regular | rotular janela e gaps |
+| associação numérica | scatter/agregado ou correlação | sinal não implica causalidade |
+| matriz com centro significativo | heatmap divergente | preservar centro e domínio |
+| comparação de segmentos | small multiples ou barras | manter escala comparável |
 
-**Máximo**: 3 emojis por célula Markdown. Nunca em títulos `##`.
+Use Plotly para gráficos do relatório quando a interatividade ajudar. `createVisualization` ou visualização nativa podem ser melhores para exploração rápida ou agregações que devem ficar no backend. Matplotlib permanece válido para casos estáticos específicos, mas não herda automaticamente o Sistema de Temas Plotly.
+
+### 3.2. Anotações do relatório final
+
+Todo gráfico material deve deixar explícitos, quando aplicável:
+
+- N amostral ou volume agregado;
+- fonte/snapshot;
+- janela, segmento ou recorte;
+- unidade e denominador;
+- uma anotação de destaque somente quando houver achado realmente sustentado.
+
+Não transforme anotação em conclusão causal. Em rotas Plotly do Hub, use os argumentos de rodapé do adaptador/consumidor em vez de criar um segundo estilo.
+
+### 3.3. Dimensão da figura
+
+Não copie uma tabela local de alturas/larguras para simular o tema. Dimensões configuráveis pertencem aos tokens do contexto. Ajustes excepcionais por conteúdo — por exemplo, um heatmap com muitas safras — podem complementar o tema quando o próprio consumidor documentar essa regra.
 
 ---
 
-## 5. Formato de Números
+## 4. Emojis padronizados
 
-| Tipo              | Formato Python         | Exemplo          |
-| ----------------- | ---------------------- | ---------------- |
-| Inteiro grande    | `{:,.0f}`              | 3.375.674        |
-| Monetário (BRL)   | `R$ {:,.2f}`           | R$ 29.516,15     |
-| Percentual        | `{:.1f}%` ou `{:.2f}%`| 92,8% ou 12,29%  |
-| Razão / taxa      | `{:.4f}`               | 0,9998           |
-| Contagem pequena  | `{:,}` (sem decimal)   | 54               |
+Uso **limitado e semântico**, nunca apenas decorativo.
 
-Em tabelas Markdown: usar separador de milhar com ponto (padrão BR).
-Exemplo: `3.375.674` (não `3,375,674`).
+| Emoji | Significado | Contexto de uso |
+| --- | --- | --- |
+| ✅ | validação passou / OK | checks de qualidade |
+| ❌ | validação falhou / erro | checks de qualidade |
+| ⚠️ | atenção / risco moderado | ponto de atenção |
+| 🟢 | status positivo | indicador de qualidade |
+| 🟡 | status intermediário | indicador de qualidade |
+| 🔴 | status crítico | indicador de qualidade |
+| 📌 | insight-chave | interpretação material |
+| 📊 | resultado factual | seção de dados |
+| 🔍 | interpretação/análise | seção técnica |
+| 💼 | visão de negócio | seção executiva |
+| ➡️ | próximo passo | transição entre etapas |
+
+Use no máximo três emojis por célula Markdown. Evite emojis nos títulos `##`; prefira-os em subtítulos ou blocos de resultado quando acrescentarem significado.
+
+---
+
+## 5. Formato de números
+
+Prefira `hub_snippets.constants.format_br` quando a entrega exigir convenção brasileira. O ponto importante é manter a **mesma unidade e convenção em todo o notebook**, não copiar formatações ad hoc em cada célula.
+
+| Tipo | Apresentação esperada |
+| --- | --- |
+| inteiro grande | separador de milhar consistente |
+| monetário BRL | símbolo, duas casas quando materiais e convenção BR |
+| percentual | uma ou duas casas conforme precisão útil |
+| razão/taxa | casas suficientes para não esconder variação relevante |
+| contagem pequena | inteiro sem decimal |
+
+Em tabelas Markdown destinadas ao público brasileiro, use a convenção de milhares/decimais prevista pelo helper. Não transforme arredondamento de apresentação em alteração do valor calculado.
 
 ---
 
 ## 6. Tabelas Markdown
 
-### Regras de formatação:
+- Prefira até seis colunas por bloco legível; se houver muitas dimensões, divida a apresentação.
+- Alinhe números à direita quando a superfície permitir.
+- Use nomes de coluna curtos, sem repetir o título inteiro.
+- Use negrito apenas para destaques semânticos.
+- Use backticks para nomes técnicos, como `` `valor_pago` ``.
+- Trunque texto longo apenas na apresentação e deixe claro quando houver perda de conteúdo.
+- Sempre declare unidade/denominador quando eles não forem óbvios pelo rótulo.
 
-- **Máximo 6 colunas** por tabela. Se precisar mais → quebrar em 2 tabelas.
-- **Alinhar números à direita** quando possível (Databricks nem sempre
-  renderiza alignment, mas manter a convenção).
-- **Nomes de coluna**: curtos, sem redundância com o título da tabela.
-- **Negrito** apenas para destaques semânticos (não para toda a coluna).
-- **Backticks** para nomes técnicos: `` `valor_pago` ``.
-- **Truncar texto longo**: máximo 40 chars por célula.
-
-### Padrão de tabelas de resultado:
+Exemplo de estrutura:
 
 ```markdown
 | Métrica | Valor | Status |
 | --- | ---: | :---: |
-| Total de linhas | 3.375.674 | 🟢 |
-| PK única | 99,998% | 🟡 |
-| Nulos | 0% | 🟢 |
+| Total de linhas | ... | 🟢 |
+| PK única | ... | 🟡 |
+| Nulos | ... | 🟢 |
 ```
 
 ---
 
-## 7. KPI Card — Linha de Impacto
+## 7. KPI card — linha de impacto
 
-Toda célula PÓS-código deve **abrir** com uma linha de KPIs de impacto
-rápido (scan de 2 segundos):
+Uma célula pós-código pode abrir com poucos KPIs materiais para leitura rápida:
 
 ```markdown
-> **3,37M** propostas | **22** colunas | **0%** nulos | **54** duplicatas
+> **N linhas** | **P colunas** | **x% nulos** | **D duplicatas**
 ```
 
 Regras:
-- Usar blockquote (`>`) com **negrito** nos valores.
-- Máximo **4-5 KPIs** por linha.
-- Separador: ` | ` (pipe com espaço).
-- Números formatados conforme seção 5.
-- Unidades abreviadas quando possível (M, k, bi, %).
+
+- use somente valores observados na saída;
+- limite-se a quatro ou cinco KPIs por linha;
+- mantenha unidade explícita;
+- não preencha um card com números inventados para completar layout;
+- quando precisar de HTML/card institucional, use `hub_snippets.visual.kpi_card` e sua rota `_resolvido` quando houver `ResolvedTheme`.
 
 ---
 
-## 8. Output de Código (prints)
+## 8. Output de código e cabeçalhos de seção
 
-Substituir `print("="*60)` por formato limpo com box-drawing:
+Para notebook exploratório, um output textual simples é suficiente. Se quiser um cabeçalho textual, priorize função sem política de cor local:
 
 ```python
 def exibir_secao(titulo, subtitulo=None):
-    """Exibe cabeçalho de seção formatado no output."""
     largura = 60
     print(f"\n┌{'─' * (largura - 2)}┐")
     print(f"│ {titulo:<{largura - 4}} │")
@@ -206,112 +167,108 @@ def exibir_secao(titulo, subtitulo=None):
     print(f"└{'─' * (largura - 2)}┘")
 ```
 
-Alternativa com `displayHTML` para outputs mais ricos:
-
-```python
-def exibir_html_secao(titulo, metricas=None):
-    """Exibe seção como HTML estilizado."""
-    html = f'''
-    <div style="background:#f8f9fa; border-left:4px solid #005CA9;
-                padding:12px 16px; margin:8px 0; border-radius:4px;">
-        <h4 style="margin:0; color:#005CA9; font-size:14px;">{titulo}</h4>
-    </div>
-    '''
-    if metricas:
-        badges = " ".join([
-            f'<span style="background:#e8f4fd; padding:4px 10px; '
-            f'border-radius:12px; font-size:12px; margin-right:8px;">'
-            f'<b>{v}</b> {k}</span>'
-            for k, v in metricas.items()
-        ])
-        html += f'<div style="margin:8px 0;">{badges}</div>'
-    displayHTML(html)
-```
-
-O agente deve **escolher a abordagem mais simples que atenda**:
-- Se o notebook é exploratório → box-drawing com `print` é suficiente.
-- Se o notebook é para apresentação → `displayHTML` para seções principais.
+Para apresentação rica, não escreva `displayHTML` com CSS/cores inline para recriar o padrão. Use `hub_snippets.visual.section_header`, `kpi_card`, `badge` e `divider`; com tema selecionado, use a rota `_resolvido` documentada pelo componente.
 
 ---
 
-## 9. Hierarquia de Títulos Markdown
+## 9. Hierarquia de títulos Markdown
 
-| Nível | Uso                              | Exemplo                         |
-| ----- | -------------------------------- | ------------------------------- |
-| `#`   | Apenas no cabeçalho do notebook  | `# EDA — Tabela X`             |
-| `##`  | Etapas principais                | `## Etapa 3 — Qualidade`       |
-| `###` | Subseções dentro de etapa / PÓS  | `### ✅ Resultado — Etapa 3`   |
-| `####`| Tópicos dentro de PÓS           | `#### 📊 Resultado observado`  |
+| Nível | Uso | Exemplo |
+| --- | --- | --- |
+| `#` | título único do notebook | `# EDA — Tabela X` |
+| `##` | etapas principais | `## Etapa 3 — Qualidade` |
+| `###` | subseções/resultados | `### Resultado — Etapa 3` |
+| `####` | tópicos internos | `#### Resultado observado` |
 
-Nunca usar `#####` ou inferior — sinal de profundidade excessiva.
+Evite `#####` ou níveis inferiores; em geral indicam profundidade excessiva.
 
 ---
 
-## 10. Separadores Visuais em PÓS
+## 10. Separadores e narrativa pós-código
 
-Usar `---` (horizontal rule) para separar seções semânticas dentro de
-PÓS longos:
+Para um bloco de resultado longo, mantenha uma ordem previsível:
 
 ```markdown
-### ✅ Resultado — Etapa N
+### Resultado — Etapa N
 
-> **KPI1** | **KPI2** | **KPI3** | **KPI4**
+> **KPI1** | **KPI2** | **KPI3**
 
 ---
 
 #### 📊 Resultado observado
-(tabela factual)
+(tabela ou fatos)
 
 ---
 
 #### 🔍 Interpretação técnica
-(bullets com análise)
+(análise suportada pela saída)
 
 ---
 
 #### 💼 Interpretação de negócio
-> (blockquote com visão executiva)
+(implicação, sem transformar associação em causalidade)
 
 ---
 
 #### ➡️ Próximo passo
-(1 linha indicando continuidade)
+(continuidade concreta)
 ```
 
-## 11. Índice de Seções (obrigatório)
+Use `hub_snippets.visual.divider` quando precisar de um componente institucional; não replique borda/cor manualmente.
 
-Todo notebook EDA deve começar com um índice visual. O padrão oficial é usar `hub_snippets/visual/index_generator.py`.
+---
 
-* Mapeamento emoji ↔ seção: definido em `hub_snippets/constants/emojis.py`
-* O índice deve listar etapa, título e descrição curta.
-* O índice pode ser renderizado em HTML ou Markdown.
+## 11. Índice de seções
 
-Exemplo de referência:
+Todo notebook EDA extenso deve oferecer uma rota de navegação no início. O helper oficial é `hub_snippets.visual.index_generator`.
 
-* `gerar_indice_eda()`
+- O mapeamento de emojis compartilhados vive em `hub_snippets.constants.emojis`.
+- Liste etapa, título e descrição curta.
+- O índice pode ser Markdown ou HTML conforme o consumidor; com `ResolvedTheme`, prefira a rota resolvida existente.
+- O índice não substitui títulos reais no notebook.
 
-## 12. Section Headers (padrão por seção)
+---
 
-Cada seção principal da EDA deve abrir com header visual via `hub_snippets/visual/section_header.py`.
+## 12. Section headers
 
-Formato esperado:
+Cada seção principal pode abrir com `hub_snippets.visual.section_header`.
 
-* borda lateral azul Caixa
-* emoji da seção
-* título padronizado
-* descrição de uma frase
+O cabeçalho deve comunicar:
 
-A descrição padrão pode ser expandida, mas nunca omitida.
+- etapa/seção;
+- título objetivo;
+- descrição de uma frase;
+- hierarquia coerente com o restante do notebook.
 
-## 13. Referência de Snippets Compartilhados
+Cor, fonte e borda não são especificadas neste template: vêm da implementação legada ou do `ResolvedTheme` pela rota `_resolvido`.
 
-| Snippet | Quando usar | Como chamar |
-| --- | --- | --- |
-| `theme_plotly.py` | Antes de qualquer Plotly | `registrar_template_plotly()` |
-| `section_header.py` | Abertura de seção | `section_header_html(etapa=3)` |
-| `kpi_card.py` | KPI cards de impacto | `kpi_card_html(metricas)` |
-| `divider.py` | Separação visual | `divider_heavy()` |
-| `index_generator.py` | Índice do notebook | `gerar_indice_eda()` |
-| `badge.py` | Badges de score/status | `badge_score(84)` |
+---
 
-Nota: `estilo_visual_eda.md` documenta o padrão; a implementação opcional vive na extensão customizada `.assistant/hub_snippets/` e exige import explícito.
+## 13. Referência de componentes compartilhados
+
+| Necessidade | Fonte/consumidor |
+| --- | --- |
+| contrato e primeiro uso | `hub_padroes/identidade_visual/README.md` e `GUIA_OPERACIONAL.md` |
+| carregar/validar tema | `hub_snippets.visual.tema` |
+| aplicar tema Plotly | `hub_snippets.visual.theme_plotly.aplicar_tema_resolvido` |
+| correlação | `hub_snippets.display.correlation_matrix.plot_correlation_resolvido` |
+| distribuições | `hub_snippets.display.distribution_grid.plot_distributions_resolvido` |
+| índice | `hub_snippets.visual.index_generator` |
+| cabeçalho de seção | `hub_snippets.visual.section_header` |
+| KPI cards | `hub_snippets.visual.kpi_card` |
+| divisores | `hub_snippets.visual.divider` |
+| badges | `hub_snippets.visual.badge` |
+| autoria/comparação | `hub_snippets.visual.theme_lab` |
+
+Use a API legada quando não houver tema explicitamente selecionado; use a rota `_resolvido` quando houver um `ResolvedTheme` válido e o componente documentar suporte.
+
+---
+
+## 14. Consumidores com limite explícito
+
+- **SHAP/Matplotlib:** o theming V07 não cobre sua aparência interna nem o PNG salvo pelo helper.
+- **Kaplan–Meier:** permanece com a ordem visual legada até existir token que represente sua semântica sem remapeamento silencioso.
+
+Não prometa consistência temática para essas superfícies apenas porque o restante do notebook usa `ResolvedTheme`.
+
+O template EDA organiza a apresentação. A fonte de verdade do tema permanece fora desta skill.
