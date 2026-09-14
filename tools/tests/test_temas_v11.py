@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib
 import json
 import sys
 import unittest
@@ -80,7 +81,7 @@ class ProjectionTests(unittest.TestCase):
     def test_projection_rejects_editorial_context(self):
         with self.assertRaises(AibiThemeError) as cm:
             project_theme(load_reference_theme("readme"))
-        self.assertIn(cm.exception.code, {"AIBI_THEME_INTEGRITY", "AIBI_TOKEN_COVERAGE"})
+        self.assertEqual(cm.exception.code, "AIBI_THEME_INTEGRITY")
 
     def test_projection_export_is_deterministic(self):
         projection = project_theme(load_reference_theme("notebook"))
@@ -244,6 +245,14 @@ class FixtureAndPackagingTests(unittest.TestCase):
         for name in source_names:
             self.assertEqual((AIBI / name).read_bytes(), (MIRROR / name).read_bytes(), name)
 
+    def test_public_facade_imports_as_namespace_package(self):
+        module = importlib.import_module("hub_padroes.identidade_visual.aibi.aibi_theme")
+        projection = module.project_theme(load_reference_theme("notebook"))
+        self.assertEqual(projection.source_theme_id, "legado_notebook")
+        with self.assertRaises(module.AibiThemeError) as cm:
+            module.project_theme(load_reference_theme("readme"))
+        self.assertEqual(cm.exception.code, "AIBI_THEME_INTEGRITY")
+
     def test_v11_workflow_is_read_only_and_has_no_remote_databricks_action(self):
         text = (ROOT / ".github/workflows/temas-v11-ci.yml").read_text(encoding="utf-8")
         self.assertIn("permissions:\n  contents: read", text)
@@ -258,15 +267,19 @@ class FixtureAndPackagingTests(unittest.TestCase):
             self.assertNotIn(forbidden, text)
 
     def test_v11_code_does_not_call_databricks_or_workspace_api(self):
-        code = (AIBI / "aibi_theme.py").read_text(encoding="utf-8")
-        for forbidden in (
+        forbidden = (
             "databricks.sdk",
             "WorkspaceClient",
             "requests.",
             "urllib.request",
             "/api/2.0/",
-        ):
-            self.assertNotIn(forbidden, code)
+        )
+        python_files = sorted(AIBI.glob("*.py"))
+        self.assertEqual({path.name for path in python_files}, {"aibi_theme.py", "_aibi_theme_impl.py"})
+        for path in python_files:
+            code = path.read_text(encoding="utf-8")
+            for needle in forbidden:
+                self.assertNotIn(needle, code, f"{needle} encontrado em {path.name}")
 
 
 if __name__ == "__main__":

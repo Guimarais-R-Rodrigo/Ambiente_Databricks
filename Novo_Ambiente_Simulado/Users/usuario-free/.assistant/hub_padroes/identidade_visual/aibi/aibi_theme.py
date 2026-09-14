@@ -6,7 +6,10 @@ entradas de outros contextos falhem com erro pertencente à própria ponte AI/BI
 """
 from __future__ import annotations
 
-import _aibi_theme_impl as _impl
+if __package__:
+    from . import _aibi_theme_impl as _impl
+else:
+    import _aibi_theme_impl as _impl
 
 AibiThemeError = _impl.AibiThemeError
 AibiThemeProjection = _impl.AibiThemeProjection
