@@ -1,18 +1,18 @@
 # Checkpoint V07 — demais consumidores e formatos de saída
 
-## Estado
+## Estado final
 
-**CANDIDATA EM EXECUÇÃO; SEM ACEITE, SEM PR DE INTEGRAÇÃO, SEM MERGE E SEM PUBLICAÇÃO DATABRICKS.**
+**ACEITA E INTEGRADA NO GIT EM 14/09/2026. SEM PUBLICAÇÃO DATABRICKS.**
 
-A V07 foi iniciada em 14/09/2026 a partir da `main` em `0c0c71bce4bbc09130ec51eec8245057be4f3d81`, depois do fechamento documental da V06. A branch isolada é `codex/temas-v07-consumidores-formatos-20260914`.
+Rodrigo autorizou explicitamente a aprovação e integração da V07. A PR #40 foi integrada com o head final `6b50151738a311eff8530c3191e24693af3fb036`; o merge efetivo na `main` é `67114605c7345a01c1144e5d6c6d24e9c24e2491`. A árvore do merge é `5438288bda2326e96372c7464b3aef0cb8375102`, idêntica à árvore do head final validado.
 
-Este checkpoint não antecipa aceite. O próximo gate é concluir documentação/métricas, obter um head final verde, revisar o diff, abrir PR draft e repetir os checks no SHA exato da candidata.
+A V07 havia sido iniciada a partir da `main` em `0c0c71bce4bbc09130ec51eec8245057be4f3d81`, na branch `codex/temas-v07-consumidores-formatos-20260914`.
 
 ## Objetivo e decisão arquitetural
 
 A V07 não cria novo catálogo de temas nem uma segunda resolução de configuração. `ResolvedTheme` continua sendo a fonte de verdade e `theme_plotly` continua sendo o adaptador Plotly central.
 
-A mudança adiciona `get_tokens_plotly(theme)`, que passa pelas mesmas guardas fail-closed V02/V03 e devolve cópia dos tokens já revalidados. Consumidores com semântica própria podem então usar tokens como `palette.curves_legacy`, `palette.sequential`, `semantic.warning` e `semantic.negative` sem ler JSON, campos privados ou fixtures diretamente.
+A mudança adiciona `get_tokens_plotly(theme)`, que passa pelas mesmas guardas fail-closed V02/V03 e devolve cópia dos tokens já revalidados. Consumidores com semântica própria podem usar tokens como `palette.curves_legacy`, `palette.diverging`, `palette.sequential`, `semantic.warning` e `semantic.negative` sem ler JSON, campos privados ou fixtures diretamente.
 
 As rotas novas são opt-in e usam sufixo `_resolvido`. As APIs legadas permanecem disponíveis por padrão.
 
@@ -22,7 +22,7 @@ O registro estruturado está em [`CONSUMIDORES.json`](CONSUMIDORES.json).
 
 ### Suporte V07
 
-- `display.correlation_matrix`: `plot_correlation_resolvido` / `plot_correlation_matrix_resolvido`;
+- `display.correlation_matrix`: `plot_correlation_resolvido` / `plot_correlation_matrix_resolvido`, com `palette.diverging`;
 - `display.distribution_grid`: `plot_distributions_resolvido` / `plot_distribution_grid_resolvido`;
 - `ml.curves_plotly`: ROC, Precision–Recall, Lift e KS com rotas `_resolvido`;
 - `ml.performance_monitor`: `PerformanceMonitor.plot_timeline_resolvido`;
@@ -37,8 +37,6 @@ O registro estruturado está em [`CONSUMIDORES.json`](CONSUMIDORES.json).
 
 - `ml.kaplan_meier`: permanece legado porque sua ordem histórica própria de oito cores não possui hoje um token que a represente sem remapeamento silencioso de grupos;
 - `ml.shap_explainer`: permanece legado porque SHAP/Matplotlib controla aparência própria e o contrato vigente não define colormap/estilo SHAP nem exportação estática tematizada.
-
-As exceções possuem motivo, responsável e efeito visível no registro estruturado. Elas não são tratadas como suporte parcial implícito.
 
 ## Invariantes analíticas
 
@@ -74,48 +72,37 @@ Permanecem fora do aceite V07:
 
 ## Fonte e ambiente simulado
 
-Os arquivos de implementação/fachada modificados foram sincronizados reutilizando os mesmos blobs Git entre `ambiente_fonte` e `Novo_Ambiente_Simulado`.
+Os arquivos de implementação/fachada modificados foram sincronizados entre `ambiente_fonte` e `Novo_Ambiente_Simulado`. Sete READMEs operacionais receberam notas V07 idênticas nos dois lados, e `tools/tests/test_temas_v07_mirror.py` verifica os arquivos cobertos byte a byte.
 
-Sete READMEs operacionais também receberam notas V07 idênticas nos dois lados. `tools/tests/test_temas_v07_mirror.py` verifica byte a byte os arquivos de código/fachada e esses READMEs.
+Mecanismos de escrita utilizados apenas durante migrações controladas foram removidos antes da candidata final. O workflow permanente V07 está com `contents: read` e `persist-credentials: false`.
 
-A migração dos READMEs longos foi feita por um script/workflow transitório para evitar reconstrução manual ou truncamento. Depois da escrita, o workflow V07 foi restaurado para `contents: read`, `persist-credentials: false`, e o script transitório foi removido da árvore permanente.
+## Evidências finais
 
-## Evidências até este checkpoint
+Failures históricos permanecem failures e não foram reclassificados: `34858836840`, `34859769442` e `34860697409`. Eles registram problemas documentais reais encontrados e corrigidos durante a sprint.
 
-### `34858836840` — FAILURE documental
+Após a correção semântica da correlação, os sucessos permanentes culminaram no head final `6b50151738a311eff8530c3191e24693af3fb036`:
 
-Antes da validação documental:
+- run V07 pré-PR `34862446870`: 19/19 V07, 383/383 regressões V01–V07, 12/12 V00, validador 0 falhas/0 avisos;
+- os sete checks de `pull_request` no mesmo head concluíram com `success`;
+- PR #40 integrada sem mover o head da candidata;
+- merge commit `67114605c7345a01c1144e5d6c6d24e9c24e2491` preserva a mesma árvore da candidata.
 
-- V07: **18/18 PASS**;
-- regressões V01–V07: **382/382 PASS**;
-- V00: **12/12 PASS**.
+### Pós-merge na `main`
 
-O run reprovou porque quatro fachadas `__init__.py` ainda não coincidiam com a saída canônica de `tools/api_publica.py` e porque o README raiz trazia métricas anteriores. As fachadas foram corrigidas conforme o contrato, sem filtrar testes nem relaxar o validador.
+O push do merge disparou nove workflows/checks, todos com `success`:
 
-### `34859769442` — FAILURE documental preservado
-
-A rodada transitória atualizou sete READMEs fonte/simulado e voltou a obter:
-
-- V07: **18/18 PASS**;
-- regressões V01–V07: **382/382 PASS**;
-- V00: **12/12 PASS**.
-
-O validador reprovou apenas a saída colada do README raiz. Naquele checkout mediu **1345 arquivos** na identidade do repositório e **1841 links fora da raiz**, contra 1339/1840 ainda registrados. A execução permanece `failure`; o mecanismo de escrita transitório foi removido depois da migração.
-
-## Pendências para formar a candidata final
-
-1. reconciliar os índices vivos com o estado **V07 candidata**, sem dizer que foi aceita ou integrada;
-2. registrar V07 no changelog como candidata, preservando failures;
-3. medir as métricas finais do README raiz depois de todos os documentos estáveis;
-4. executar novamente V07, regressões V01–V07, V00 e validação documental;
-5. executar o CI agregado no head final;
-6. revisar diff e confirmar ausência de mecanismos transitórios;
-7. confirmar que a `main` não avançou ou reconciliar a branch se necessário;
-8. abrir PR draft e validar todos os checks no SHA exato;
-9. parar para aceite explícito de Rodrigo antes de qualquer merge.
+- V00: `34863452273`;
+- V01: `34863452340`;
+- V02: `34863452364`;
+- V03: `34863452332`;
+- V04: `34863452339`;
+- V05: `34863452252`;
+- V06: `34863452347`;
+- V07: `34863452328`;
+- CI geral: `34863452363`.
 
 ## Limites
 
 Nenhuma publicação ou escrita remota no Databricks foi executada. Não houve alteração de ACL, compute, Spark/SQL/MLflow remoto, promoção visual, homologação de browser, acessibilidade ou UAT humano.
 
-A V08 **não foi iniciada**.
+O encerramento da V07 autoriza apenas a continuidade do plano de sprints já aprovado. A V08 começa em branch própria a partir da `main` estabilizada; ela não deve reinterpretar o aceite V07 como homologação operacional no Databricks.

@@ -1,6 +1,6 @@
 # V07 — demais consumidores e formatos de saída
 
-> **Estado atual:** candidata em execução. Sem aceite, PR de integração, merge ou publicação Databricks. O [checkpoint V07](CHECKPOINT_V07.md) concentra base, evidências, failures preservados e pendências de fechamento.
+> **Estado atual:** aceita por Rodrigo e integrada no Git em 14/09/2026 pelo PR #40. O head final validado foi `6b50151738a311eff8530c3191e24693af3fb036` e o merge efetivo na `main` é `67114605c7345a01c1144e5d6c6d24e9c24e2491`. A árvore do merge (`5438288bda2326e96372c7464b3aef0cb8375102`) é a mesma árvore da candidata validada. Nenhuma publicação Databricks foi realizada.
 
 ## Objetivo
 
@@ -8,20 +8,20 @@ A V07 fecha a dispersão visual nos consumidores runtime que ficaram fora das in
 
 A fonte de verdade continua sendo `ResolvedTheme`. Nenhum consumidor lê JSON de tema diretamente, inventa fallback ou altera tema de sessão por simples import.
 
-## O que muda
+## O que mudou
 
 A V07 acrescenta rotas explícitas com sufixo `_resolvido` para:
 
-- matriz de correlação (`display/correlation_matrix`);
+- matriz de correlação (`display/correlation_matrix`), usando `palette.diverging` no domínio simétrico de -1 a +1;
 - grade de distribuições (`display/distribution_grid`);
 - curvas ROC, Precision–Recall, Lift e KS (`ml/curves_plotly`);
 - timeline de monitoramento (`PerformanceMonitor.plot_timeline_resolvido`);
 - UMAP (`ml/umap_viz`);
 - curvas e heatmap de safras (`ml/vintage_analysis`).
 
-`theme_plotly` passa a expor `get_tokens_plotly(theme)`, que devolve uma cópia dos tokens já revalidados pelas guardas V02/V03. Isso permite que consumidores com semântica própria usem, por exemplo, `palette.curves_legacy`, `semantic.warning` ou `palette.sequential` sem reconstruir o tema.
+`theme_plotly` passa a expor `get_tokens_plotly(theme)`, que devolve uma cópia dos tokens já revalidados pelas guardas V02/V03. Isso permite que consumidores com semântica própria usem, por exemplo, `palette.curves_legacy`, `palette.diverging`, `semantic.warning` ou `palette.sequential` sem reconstruir o tema.
 
-## O que não muda
+## O que não mudou
 
 As APIs legadas permanecem disponíveis e com suas assinaturas atuais. Em especial:
 
@@ -45,7 +45,7 @@ As APIs legadas permanecem disponíveis e com suas assinaturas atuais. Em especi
 
 ## Formatos de saída
 
-Nesta sprint, suporte significa:
+Suporte exercitado na V07:
 
 - `plotly_figure_memory`: figura Plotly em memória/notebook;
 - `plotly_html_file`: serialização HTML local da mesma figura, preservando os atributos visuais já presentes nela.
@@ -59,7 +59,7 @@ Permanecem legados e não theme-aware:
 - tela Matplotlib/SHAP;
 - PNG salvo pelo helper SHAP.
 
-Não estão homologados pela V07:
+Não foram homologados pela V07:
 
 - PNG estático de Plotly/Kaleido;
 - PDF;
@@ -84,7 +84,7 @@ Se o tema não for um `ResolvedTheme` íntegro, não for contexto `notebook` ou 
 
 ## Inventário e rastreabilidade
 
-O arquivo [`CONSUMIDORES.json`](CONSUMIDORES.json) é o registro estruturado da sprint. Ele classifica todos os consumidores runtime de `display` e `ml` apontados pelo inventário V00 em uma destas categorias:
+O arquivo [`CONSUMIDORES.json`](CONSUMIDORES.json) é o registro estruturado da sprint. Ele classifica todos os consumidores runtime de `display` e `ml` apontados pelo inventário V00 em:
 
 - `supported_v07`;
 - `already_supported_v04`;
@@ -92,23 +92,14 @@ O arquivo [`CONSUMIDORES.json`](CONSUMIDORES.json) é o registro estruturado da 
 
 Cada exceção possui motivo, responsável e efeito visível para o usuário. Templates de autoria e assets editoriais são declarados separadamente como fora do runtime desta sprint.
 
-## Critérios de aceite
+## Evidência de integração
 
-A V07 só pode ser considerada candidata quando:
+No head final `6b50151738a311eff8530c3191e24693af3fb036`, o run permanente `34862446870` passou com 19/19 testes V07, 383/383 regressões V01–V07, 12/12 V00, validação documental com 0 falhas/0 avisos e workflow somente leitura. Os sete checks disparados pela PR #40 também concluíram com `success` no mesmo SHA.
 
-1. todos os consumidores runtime do escopo estiverem classificados;
-2. cada consumidor suportado tiver rota opt-in e teste de preservação de dados/cálculo;
-3. as APIs legadas permanecerem compatíveis;
-4. dependências opcionais não se tornarem imports obrigatórios por causa da V07;
-5. exportação HTML local tiver evidência explícita;
-6. formatos não homologados não forem apresentados como suportados;
-7. exceções tiverem motivo, responsável e efeito visível;
-8. fonte e `Novo_Ambiente_Simulado` estiverem sincronizados;
-9. regressões V00–V07 e validação documental estiverem verdes;
-10. não houver publicação, promoção ou escrita remota no Databricks.
+Depois do merge, a `main` em `67114605c7345a01c1144e5d6c6d24e9c24e2491` disparou nove checks — CI geral e V00–V07 — e todos concluíram com `success`. Os IDs e failures históricos preservados estão em [TESTES.md](TESTES.md) e o fechamento em [CHECKPOINT_V07.md](CHECKPOINT_V07.md).
 
 ## Limites de aceite
 
 PASS local/GitHub Actions prova contratos Python/Plotly exercitados naquele checkout. Não prova aparência real no Databricks, acessibilidade, permissões de workspace, renderização por browser, Kaleido/PDF/PPTX ou UAT humano.
 
-A V08 continua separada: ela fará a integração transversal com skills, padrões, READMEs gerais e Manual. Documentação dos objetos alterados na V07, porém, deve ser atualizada nesta própria sprint.
+A V08 é uma sprint separada de integração transversal com skills, padrões e Manual. A documentação dos objetos alterados na V07 foi atualizada na própria V07; não foi acumulada como dívida para a V08.
