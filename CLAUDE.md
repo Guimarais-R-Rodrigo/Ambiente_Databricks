@@ -76,26 +76,30 @@ Escala planejada: pessoal → squad → missão.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 
-## Iniciativa de micromodelos — proposta MM00
+## Iniciativa de micromodelos — MM00 em fechamento
 
 A branch `micromodelos/mm00-baseline` e a PR #43 registram a fundação documental
-da iniciativa MM00–MM13 em `docs/sprints/micromodelos/`. Os ADRs 0014–0020 estão
-**propostos**, não aceitos: micromodelo como artefato de domínio; YAML canônico;
-MLflow para runs; governança externa como autoridade de publicação; piloto novo
-antes dos legados; consumo do Sistema de Temas; e fonte limitada ao catálogo de
-Produtos de Dados configurado no ambiente autorizado.
+da iniciativa MM00–MM13 em `docs/sprints/micromodelos/`. Os ADRs 0014–0020 foram
+**aceitos sem ressalvas pelo usuário em 2026-09-14**, mas sua integração na `main`
+permanece pendente até o aceite final e merge da MM00. As decisões cobrem:
+micromodelo como artefato de domínio; YAML canônico; MLflow para runs; governança
+externa como autoridade de publicação; piloto novo antes dos legados; consumo do
+Sistema de Temas; e fonte limitada ao catálogo de Produtos de Dados configurado
+no ambiente autorizado.
 
-A auditoria A1 independente foi executada sobre a candidata pré-V09 e devolveu
-`APTA_COM_CORRECOES`: não encontrou `DIVERGE` atribuível à arquitetura, apontou
-M-01 documental (corrigido) e Q-01 pela ausência de entrada própria da MM00 no
-`CHANGELOG.md` (ainda bloqueador). A candidata foi depois reconciliada com a V09
-integrada e deve repetir seus gates antes de qualquer aceite.
+A auditoria A1 independente devolveu `APTA_COM_CORRECOES`: não encontrou
+`DIVERGE` atribuível à arquitetura, apontou M-01 documental (corrigido) e Q-01
+pela ausência de entrada própria da MM00 no `CHANGELOG.md`. O usuário autorizou
+D1-B: Q-01 foi diferido exclusivamente para a manutenção documental imediatamente
+pós-MM00, sem ser reclassificado como PASS. Essa manutenção deve ocorrer antes
+do início efetivo da MM01.
 
-MM00 não altera o produto `.assistant` e não autoriza MM01. O avanço exige checks,
-fechamento ou exceção humana explícita do Q-01, decisão sobre os ADRs, checkpoint,
-aceite explícito e merge. Identificadores, nomes de catálogo e paths reais do
-ambiente de trabalho permanecem fora do Git; os documentos usam placeholders e
-resolvem o binding somente no workspace autorizado.
+MM00 não altera o produto `.assistant` e ainda não autoriza MM01. O avanço exige
+checks finais verdes, aceite explícito da MM00 e merge; depois do merge, o
+fechamento documental pós-MM00 deve registrar Q-01 antes do início da MM01.
+Identificadores, nomes de catálogo e paths reais do ambiente de trabalho permanecem
+fora do Git; os documentos usam placeholders e resolvem o binding somente no
+workspace autorizado.
 
 ## Regras inegociáveis
 
