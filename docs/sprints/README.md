@@ -65,6 +65,17 @@ custos e interpretação. Estado, matriz e testes em
 [`RELATORIO_R04A.md`](readmes_objetos/RELATORIO_R04A.md). Cobertura candidata
 25/74; sem publicação, aceite antecipado ou início da R04-B.
 
+## Framework de Micromodelos — MM00 em execução
+
+A [iniciativa MM00–MM13](micromodelos/README.md) usa trilha própria e está na
+MM00, dedicada exclusivamente a baseline, arquitetura e documentação. A
+[MM00](micromodelos/MM00/README.md) registra inventário, reuso, riscos,
+dependências, ADRs propostos, testes e checkpoint.
+
+Esta candidata não altera o produto `.assistant`, não cria skill/helper de
+micromodelo e não autoriza MM01. O avanço depende de checks, auditoria
+independente, checkpoint, aceite explícito e merge da MM00.
+
 ## Sistema de Temas do Hub
 
 A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V08 estão aceitas e integradas no Git.**
@@ -92,16 +103,17 @@ V05 ainda não havia sido iniciada descreve o fechamento V04.
 A R04-A está integrada em `a8f314a`. A R04-B cobre seis Hub Scripts e pausa para revisão antes da R05. Consulte `readmes_objetos/RELATORIO_R04B.md` e `readmes_objetos/MATRIZ_ALTERACOES_R04B.md`.
 
 ### READMEs de objeto — R05
-A R04-B está integrada em `d9da056`. A R05 cobre seis modelos tabulares e pausa para revisão antes da R06. Consulte `readmes_objetos/RELATORIO_R05.md` e `readmes_objetos/MATRIZ_ALTERACOES_R05.md`.
+Após a integração da R04-B (`d9da056`), a R05 documenta seis modelos tabulares e pausa para revisão antes da R06. Consulte `readmes_objetos/RELATORIO_R05.md` e `readmes_objetos/MATRIZ_ALTERACOES_R05.md`.
 
 ### READMEs de objeto — R06
-A R05 está integrada em `cae94988`. A R06 cobre cinco objetos de séries/validação temporal e pausa para revisão antes da R07. Consulte `readmes_objetos/RELATORIO_R06.md` e `readmes_objetos/MATRIZ_ALTERACOES_R06.md`.
+A R05 foi integrada em `cae94988`. A R06 cobre cinco objetos de séries/validação temporal e pausa para revisão antes da R07. Consulte `readmes_objetos/RELATORIO_R06.md` e `readmes_objetos/MATRIZ_ALTERACOES_R06.md`.
 
 ### READMEs de objeto — R07
 A R06 foi integrada em `289731c`. A R07 cobre seis objetos de score, vintage e sobrevivência e pausa para revisão antes da R08. Consulte `readmes_objetos/RELATORIO_R07.md` e `readmes_objetos/MATRIZ_ALTERACOES_R07.md`.
 
 ### READMEs de objeto — R08
 A R07 foi integrada pelo PR #25. A R08 cobre seis objetos de clusterização, anomalias e explicabilidade e preserva implementações/fachadas. Relatório, matriz e achados ficam em `docs/sprints/readmes_objetos/`. A cobertura esperada após validação é 55/75 operacionais + 3/3 exemplares; isso não representa aceite editorial antecipado.
+
 ### READMEs R09
 Leva de avaliação, drift e MLOps: cinco objetos; cobertura candidata 60/75, sujeita ao freeze e aceite.
 
