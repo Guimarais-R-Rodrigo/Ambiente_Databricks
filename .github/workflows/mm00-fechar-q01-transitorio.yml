@@ -19,48 +19,22 @@ jobs:
 
       - name: Inserir entrada MM00 preservando bytes históricos
         shell: bash
+        env:
+          MM00_BLOCK_B64: IyMgMjAyNi0wOS0xNCDigJQgTU0wMDogaW50ZWdyYcOnw6NvIGUgZmVjaGFtZW50byBkb2N1bWVudGFsIGRvIEZyYW1ld29yayBkZSBNaWNyb21vZGVsb3MgKENoYXRHUFQpCgojIyMgQWRpY2lvbmFkbwoKLSAoQ2hhdEdQVCkgRnVuZGHDp8OjbyBkb2N1bWVudGFsIE1NMDDigJNNTTEzIGRvIEZyYW1ld29yayBkZSBNaWNyb21vZGVsb3MsIGNvbSBQbGFubyBNZXN0cmUsIGludmVudMOhcmlvLCBtYXRyaXplcyBkZSByZXVzby9yaXNjb3MvZGVwZW5kw6puY2lhcywgcGFjb3RlIGRlIGF1ZGl0b3JpYSBBMSBlIGNoZWNrcG9pbnQgZmFpbC1jbG9zZWQuCi0gKENoYXRHUFQpIEFEUi0wMDE0IGEgQURSLTAwMjAgcGFyYSBjb25nZWxhciBhcyBmcm9udGVpcmFzIGFycXVpdGV0dXJhaXM6IG1pY3JvbW9kZWxvIGNvbW8gYXJ0ZWZhdG8gZGUgZG9tw61uaW8sIGBtaWNyb21vZGVsby55YW1sYCBjYW7DtG5pY28sIE1MZmxvdyBwYXJhIGhpc3TDs3JpY28gZGUgcnVucywgZ292ZXJuYW7Dp2EgZXh0ZXJuYSBkZSBwdWJsaWNhw6fDo28sIHBpbG90byBncmVlbmZpZWxkIGFudGVzIGRvcyBsZWdhZG9zLCBjb25zdW1vIGRvIFNpc3RlbWEgZGUgVGVtYXMgZSBmb250ZXMgbGltaXRhZGFzIGFvIGNhdMOhbG9nbyBjb25maWd1cmFkby4KCiMjIyBBdHVhbGl6YWRvCgotIChDaGF0R1BUKSBQUiAjNDMgaW50ZWdyYWRhIGFww7NzIGFjZWl0ZSBodW1hbm8gZXhwbMOtY2l0bzsgaGVhZCBmaW5hbCB2YWxpZGFkbyBgZTM4MDliMTViNjFmMmJjMWVlZWMwNmM5ZGU2ZjM4YTMyOTg2OGU5OGAgZSBtZXJnZSBgMzZlODk1MTVhNDZkZjI0ZjQxZGVlYTQ3OTFiMTA5ZjVhMWY5MzhmMmAuCi0gKENoYXRHUFQpIEFEUi0wMDE0IGEgQURSLTAwMjAgcmF0aWZpY2Fkb3MgY29tbyBhY2VpdG9zIHNlbSByZXNzYWx2YXM7IE1NMDEgY29udGludWEgY29uZGljaW9uYWRhIMOgcyBkZWNpc8O1ZXMgZGV0YWxoYWRhcyBwcmV2aXN0YXMgbmFzIHNwcmludHMgc2VndWludGVzLCBzZW0gYW50ZWNpcGHDp8OjbyBzaWxlbmNpb3NhIGRlIHNjaGVtYSwgZmluZ2VycHJpbnQgb3UgdHJhY2tpbmcgcnVsZS1iYXNlZC4KLSAoQ2hhdEdQVCkgUS0wMSBkYSBhdWRpdG9yaWEgQTEgw6kgZmVjaGFkbyBwb3IgZXN0YSBtYW51dGVuw6fDo28gcMOzcy1tZXJnZSwgY29uZm9ybWUgZXhjZcOnw6NvIEQxLUI6IGEgZW50cmFkYSBkYSBNTTAwIGZvaSBkaWZlcmlkYSBwYXJhIHByZXNlcnZhciBvIGhpc3TDs3JpY28gZG8gY2hhbmdlbG9nIGUgYWdvcmEgw6kgcmVnaXN0cmFkYSBkZSBmb3JtYSBhZGl0aXZhLgoKIyMjIEV2aWTDqm5jaWFzCgotIChDaGF0R1BUKSBBdWRpdG9yaWEgQTEgaW5kZXBlbmRlbnRlOiBgQVBUQV9DT01fQ09SUkVDT0VTYDsgTS0wMSBjb3JyaWdpZG8sIG5lbmh1bSBgRElWRVJHRWAgYXRyaWJ1w612ZWwgw6AgTU0wMCBlIFEtMDEgdHJhdGFkbyBwZWxhIEQxLUIgYXTDqSBlc3RlIGZlY2hhbWVudG8uCi0gKENoYXRHUFQpIEJhdGVyaWEgZmluYWwgZGEgY2FuZGlkYXRhOiBDSSBnZXJhbCBgMzQ4OTMxNTgyNzBgLCBWMDAgYDM0ODkzMTU4NDUzYCwgVjAxIGAzNDg5MzE1ODMzOWAgZSBWMDIgYDM0ODkzMTU4MjY1YCwgdG9kb3MgYHN1Y2Nlc3NgIG5vIG1lc21vIGhlYWQgZmluYWw7IG5lbmh1bSB2YWxpZGFkb3IgZm9pIHJlbGF4YWRvLgoKIyMjIExpbWl0ZXMKCi0gKENoYXRHUFQpIE1NMDAgbsOjbyBjcmlhIHNraWxsLCBwcm9tcHQgZnVuY2lvbmFsLCBoZWxwZXIsIHRlbXBsYXRlIGV4ZWN1dMOhdmVsLCBtaWNyb21vZGVsbyByZWFsLCBjb25zdWx0YSBkZSBkYWRvcywgcnVuIE1MZmxvdywgcHVibGljYcOnw6NvIG91IG1pZ3Jhw6fDo28gZGUgbGVnYWRvLiBFc3RhIGVudHJhZGEgZmVjaGEgc29tZW50ZSBhIHBlbmTDqm5jaWEgZG9jdW1lbnRhbCBRLTAxIGFudGVzIGRhIE1NMDEuCgo=
         run: |
           python - <<'PY'
           from pathlib import Path
-          import hashlib
-
+          import base64, hashlib, os
           path = Path('CHANGELOG.md')
           raw = path.read_bytes()
           marker = '## 2026-09-14 — V08: integração transversal e fechamento técnico (ChatGPT)'.encode('utf-8')
           idx = raw.index(marker)
-
-          block = '''## 2026-09-14 — MM00: integração e fechamento documental do Framework de Micromodelos (ChatGPT)
-
-### Adicionado
-
-- (ChatGPT) Fundação documental MM00–MM13 do Framework de Micromodelos, com Plano Mestre, inventário, matrizes de reuso/riscos/dependências, pacote de auditoria A1 e checkpoint fail-closed.
-- (ChatGPT) ADR-0014 a ADR-0020 para congelar as fronteiras arquiteturais: micromodelo como artefato de domínio, `micromodelo.yaml` canônico, MLflow para histórico de runs, governança externa de publicação, piloto greenfield antes dos legados, consumo do Sistema de Temas e fontes limitadas ao catálogo configurado.
-
-### Atualizado
-
-- (ChatGPT) PR #43 integrada após aceite humano explícito; head final validado `e3809b15b61f2bc1eeec06c9de6f38a329868e98` e merge `36e89515a46df24f41deea4791b109f5a1f938f2`.
-- (ChatGPT) ADR-0014 a ADR-0020 ratificados como aceitos sem ressalvas; MM01 continua condicionada às decisões detalhadas previstas nas sprints seguintes, sem antecipação silenciosa de schema, fingerprint ou tracking rule-based.
-- (ChatGPT) Q-01 da auditoria A1 é fechado por esta manutenção pós-merge, conforme exceção D1-B: a entrada da MM00 foi diferida para preservar o histórico do changelog e agora é registrada de forma aditiva.
-
-### Evidências
-
-- (ChatGPT) Auditoria A1 independente: `APTA_COM_CORRECOES`; M-01 corrigido, nenhum `DIVERGE` atribuível à MM00 e Q-01 tratado pela D1-B até este fechamento.
-- (ChatGPT) Bateria final da candidata: CI geral `34893158270`, V00 `34893158453`, V01 `34893158339` e V02 `34893158265`, todos `success` no mesmo head final; nenhum validador foi relaxado.
-
-### Limites
-
-- (ChatGPT) MM00 não cria skill, prompt funcional, helper, template executável, micromodelo real, consulta de dados, run MLflow, publicação ou migração de legado. Esta entrada fecha somente a pendência documental Q-01 antes da MM01.
-
-'''.encode('utf-8')
-
+          block = base64.b64decode(os.environ['MM00_BLOCK_B64'])
           if block in raw:
               raise SystemExit('Entrada MM00 já existe; recusando duplicação.')
-
-          before = raw[:idx]
-          after = raw[idx:]
+          before, after = raw[:idx], raw[idx:]
           new = before + block + after
           path.write_bytes(new)
-
           reread = path.read_bytes()
           assert reread[:idx] == before
           assert reread[idx:idx + len(block)] == block
@@ -74,12 +48,10 @@ jobs:
         shell: bash
         run: |
           git diff --check
-          git diff -- CHANGELOG.md
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add CHANGELOG.md
           git rm .github/workflows/mm00-fechar-q01-transitorio.yml
-          git diff --cached --name-only
           test "$(git diff --cached --name-only | sort | tr '\n' ' ')" = ".github/workflows/mm00-fechar-q01-transitorio.yml CHANGELOG.md "
           git commit -m "MM00 — fechar Q-01 de forma estritamente aditiva"
           git push origin HEAD:micromodelos/mm00-fechamento-pos-merge
