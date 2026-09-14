@@ -18,9 +18,10 @@ from hub_snippets.visual.tema import ResolvedTheme
 from hub_snippets.visual.theme_plotly import aplicar_tema, aplicar_tema_resolvido, get_tokens_plotly
 
 
-def _escala_sequencial(theme: ResolvedTheme):
+def _escala_divergente(theme: ResolvedTheme):
+    """Mapeia a paleta divergente ao domínio simétrico [-1, 1] da correlação."""
     tokens = get_tokens_plotly(theme)
-    cores = list(tokens["palette.sequential"])
+    cores = list(tokens["palette.diverging"])
     return [[i / (len(cores) - 1), cor] for i, cor in enumerate(cores)]
 
 
@@ -32,7 +33,7 @@ def _plot_correlation(
     *,
     theme: Optional[ResolvedTheme],
 ):
-    colorscale = "Blues" if theme is None else _escala_sequencial(theme)
+    colorscale = "Blues" if theme is None else _escala_divergente(theme)
     selected_cols = list(cols) if cols else [
         c for c, t in df.dtypes
         if any(token in t for token in ("tinyint", "smallint", "int", "bigint", "float", "double", "decimal"))

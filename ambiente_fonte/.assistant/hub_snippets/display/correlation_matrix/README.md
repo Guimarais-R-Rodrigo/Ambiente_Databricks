@@ -6,7 +6,7 @@
 > `plot_correlation_matrix` continuam sendo as rotas legadas. Para aplicar um
 > `ResolvedTheme` notebook/light de forma opt-in, use
 > `plot_correlation_resolvido` ou `plot_correlation_matrix_resolvido`. A rota
-> temática usa `palette.sequential` somente na escala de cor; seleção de colunas,
+> temática usa `palette.diverging` somente na escala de cor; seleção de colunas,
 > descarte de faltantes, cálculo Spark, método e `strong_pairs` permanecem na
 > mesma implementação. Um tema inválido falha antes do cálculo.
 
@@ -103,7 +103,7 @@ A lista `cols` muda tanto os pares comparados quanto as linhas mantidas. Acresce
 
 O trabalho distribuído continua dependendo do número de linhas; não existe custo independente do volume. A matriz coletada tem tamanho quadrático no número de colunas. Spearman acrescenta ordenações para construir as posições, o que pode elevar o custo. Reduza o escopo com base na pergunta, não por um número universal de colunas.
 
-A escala `Blues` é sequencial e fixa de −1 a +1: uma associação negativa forte fica clara, embora seja forte em módulo. Leia sinal e coeficiente, não interprete “mais escuro” como “mais forte em qualquer direção”. O tema não troca essa escala automaticamente.
+A escala `Blues` é sequencial e fixa de −1 a +1: uma associação negativa forte fica clara, embora seja forte em módulo. Leia sinal e coeficiente, não interprete “mais escuro” como “mais forte em qualquer direção”. A rota legada não troca essa escala automaticamente; a rota `_resolvido` usa `palette.diverging` com o mesmo domínio simétrico de −1 a +1.
 
 A exclusão conjunta de nulos pode mudar a população representada. Valores infinitos, colunas constantes e casos muito pequenos exigem checagem. Mesmo uma matriz correta não elimina efeitos de composição de grupos, tempo ou seleção da amostra.
 

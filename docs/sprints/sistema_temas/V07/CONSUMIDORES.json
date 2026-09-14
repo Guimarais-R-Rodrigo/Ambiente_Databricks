@@ -2,7 +2,10 @@
   "version": "V07",
   "title": "Demais consumidores e formatos de saída",
   "source_inventory": "docs/testes/sistema_temas/V00/MATRIZ_AUTOMATICA.md",
-  "runtime_scope": ["display", "ml"],
+  "runtime_scope": [
+    "display",
+    "ml"
+  ],
   "controls_v07": [
     "brand.primary",
     "text.plot",
@@ -11,6 +14,7 @@
     "semantic.warning",
     "semantic.negative",
     "palette.categorical",
+    "palette.diverging",
     "palette.curves_legacy",
     "palette.sequential"
   ],
@@ -39,8 +43,12 @@
       "id": "display.dataframe_styled",
       "path": "ambiente_fonte/.assistant/hub_snippets/display/dataframe_styled/dataframe_styled.py",
       "classification": "already_supported_v04",
-      "routes": ["display_styled_resolvido"],
-      "tokens": ["semantic.negative"],
+      "routes": [
+        "display_styled_resolvido"
+      ],
+      "tokens": [
+        "semantic.negative"
+      ],
       "output": "pandas_styler_html",
       "reason": "Rota opt-in por ResolvedTheme já integrada na V04; V07 não duplica o adaptador.",
       "owner": "Sistema de Temas / V04",
@@ -50,10 +58,15 @@
       "id": "display.correlation_matrix",
       "path": "ambiente_fonte/.assistant/hub_snippets/display/correlation_matrix/correlation_matrix.py",
       "classification": "supported_v07",
-      "routes": ["plot_correlation_resolvido", "plot_correlation_matrix_resolvido"],
-      "tokens": ["palette.sequential"],
+      "routes": [
+        "plot_correlation_resolvido",
+        "plot_correlation_matrix_resolvido"
+      ],
+      "tokens": [
+        "palette.diverging"
+      ],
       "output": "plotly_figure_memory",
-      "reason": "Heatmap possui consumidor real; cálculo Spark e pares fortes permanecem compartilhados.",
+      "reason": "Heatmap possui domínio simétrico de -1 a +1; a rota temática usa a paleta divergente e mantém cálculo Spark e pares fortes compartilhados.",
       "owner": "Sistema de Temas / V07",
       "user_effect": "Ao optar por tema, a escala sequencial e o layout mudam; correlações e threshold não mudam."
     },
@@ -61,8 +74,13 @@
       "id": "display.distribution_grid",
       "path": "ambiente_fonte/.assistant/hub_snippets/display/distribution_grid/distribution_grid.py",
       "classification": "supported_v07",
-      "routes": ["plot_distributions_resolvido", "plot_distribution_grid_resolvido"],
-      "tokens": ["palette.categorical"],
+      "routes": [
+        "plot_distributions_resolvido",
+        "plot_distribution_grid_resolvido"
+      ],
+      "tokens": [
+        "palette.categorical"
+      ],
       "output": "plotly_figure_memory",
       "reason": "Consumidor Plotly real identificado na V00; amostragem smart_sample permanece única.",
       "owner": "Sistema de Temas / V07",
@@ -72,8 +90,17 @@
       "id": "ml.curves_plotly",
       "path": "ambiente_fonte/.assistant/hub_snippets/ml/curves_plotly/curves_plotly.py",
       "classification": "supported_v07",
-      "routes": ["plot_roc_curve_resolvido", "plot_pr_curve_resolvido", "plot_lift_curve_resolvido", "plot_ks_curve_resolvido"],
-      "tokens": ["palette.curves_legacy", "text.plot", "surface.card"],
+      "routes": [
+        "plot_roc_curve_resolvido",
+        "plot_pr_curve_resolvido",
+        "plot_lift_curve_resolvido",
+        "plot_ks_curve_resolvido"
+      ],
+      "tokens": [
+        "palette.curves_legacy",
+        "text.plot",
+        "surface.card"
+      ],
       "output": "plotly_figure_memory",
       "reason": "O contrato V01 possui palette.curves_legacy precisamente para preservar a família histórica de seis cores.",
       "owner": "Sistema de Temas / V07",
@@ -83,8 +110,15 @@
       "id": "ml.performance_monitor",
       "path": "ambiente_fonte/.assistant/hub_snippets/ml/performance_monitor/performance_monitor.py",
       "classification": "supported_v07",
-      "routes": ["PerformanceMonitor.plot_timeline_resolvido"],
-      "tokens": ["brand.primary", "text.secondary", "semantic.warning", "semantic.negative"],
+      "routes": [
+        "PerformanceMonitor.plot_timeline_resolvido"
+      ],
+      "tokens": [
+        "brand.primary",
+        "text.secondary",
+        "semantic.warning",
+        "semantic.negative"
+      ],
       "output": "plotly_figure_memory",
       "reason": "A timeline possui semânticas explícitas de baseline, warning e critical já representadas pelo contrato.",
       "owner": "Sistema de Temas / V07",
@@ -94,8 +128,13 @@
       "id": "ml.umap_viz",
       "path": "ambiente_fonte/.assistant/hub_snippets/ml/umap_viz/umap_viz.py",
       "classification": "supported_v07",
-      "routes": ["plot_umap_clusters_resolvido"],
-      "tokens": ["palette.categorical", "text.secondary"],
+      "routes": [
+        "plot_umap_clusters_resolvido"
+      ],
+      "tokens": [
+        "palette.categorical",
+        "text.secondary"
+      ],
       "output": "plotly_figure_memory",
       "reason": "A paleta de clusters é visual; o embedding permanece calculado por compute_umap uma única vez.",
       "owner": "Sistema de Temas / V07",
@@ -105,8 +144,14 @@
       "id": "ml.vintage_analysis",
       "path": "ambiente_fonte/.assistant/hub_snippets/ml/vintage_analysis/vintage_analysis.py",
       "classification": "supported_v07",
-      "routes": ["plot_vintage_curves_resolvido", "plot_vintage_heatmap_resolvido"],
-      "tokens": ["palette.categorical", "palette.sequential"],
+      "routes": [
+        "plot_vintage_curves_resolvido",
+        "plot_vintage_heatmap_resolvido"
+      ],
+      "tokens": [
+        "palette.categorical",
+        "palette.sequential"
+      ],
       "output": "plotly_figure_memory",
       "reason": "Curvas e heatmap têm tokens de paleta correspondentes; build_vintage_table e compare_safras não são alterados.",
       "owner": "Sistema de Temas / V07",

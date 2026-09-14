@@ -40,5 +40,12 @@ class MirrorTests(unittest.TestCase):
             self.assertEqual(source.read_bytes(), mirror.read_bytes(), relative)
 
 
+class SemanticPaletteTests(unittest.TestCase):
+    def test_correlation_uses_diverging_palette(self):
+        text = (SOURCE / "hub_snippets/display/correlation_matrix/correlation_matrix.py").read_text(encoding="utf-8")
+        self.assertIn('tokens["palette.diverging"]', text)
+        self.assertNotIn('tokens["palette.sequential"]', text)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
