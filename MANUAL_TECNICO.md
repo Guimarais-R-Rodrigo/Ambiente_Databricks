@@ -1226,7 +1226,7 @@ Para uma falha de visualização, não publique novamente todos os helpers. Para
 <a id="catalogo-helpers"></a>
 ## 27. Inventário técnico dos helpers realmente existentes
 
-Este inventário cobre as 51 pastas de snippets e os sete scripts do snapshot examinado. A unidade contada é a pasta de objeto, não o número de funções: um objeto pode exportar várias funções, classes ou constantes. Os dois exemplares de padrões são apresentados separadamente. Nomes e assinaturas abaixo foram extraídos das definições Python, sem executar treinadores nem importar dependências opcionais.
+Este inventário cobre as 52 pastas de snippets da candidata V05 e os sete scripts do snapshot examinado. A unidade contada é a pasta de objeto, não o número de funções: um objeto pode exportar várias funções, classes ou constantes. Os dois exemplares de padrões são apresentados separadamente. Nomes e assinaturas abaixo foram extraídos das definições Python, sem executar treinadores nem importar dependências opcionais.
 
 **Como usar:** procure a finalidade, leia o tipo de entrada e de retorno, abra o exemplo específico e só então adapte a chamada. A assinatura é uma referência de consulta; os capítulos 4 a 7 explicam sua notação. Ela não substitui a docstring, os testes ou a revisão de efeitos. As dependências citadas nas fichas destacam pontos de atenção, não constituem um lockfile completo. Nenhuma ficha significa “homologado hoje no seu workspace”.
 
@@ -2143,6 +2143,96 @@ As referências legadas empacotadas não são temas operacionais aprovados. A c�
 completa é obrigatória; levar apenas `tema.py` perde o schema e o manifesto.
 Não há configuração implícita, cache global ou fallback diante de erro.
 
+#### `hub_snippets.visual.theme_lab`
+
+**Candidata V05 — Visual Lab de aparência, sem aprovação ou publicação.** Este
+objeto oferece uma prévia pessoal para escolher uma base `notebook`, ajustar
+tokens, comparar a aparência e preservar uma sessão de autoria. Ele recebe temas
+revalidados pelo núcleo V02 e reutiliza os consumidores V03/V04; não consulta
+rede, Spark, SQL ou MLflow e não altera `plotly.io.templates.default` ao importar.
+
+**Primeiro acesso.** Na cópia autorizada de `.assistant`, leia
+`hub_snippets/visual/theme_lab/README.md`, siga
+`hub_snippets/visual/theme_lab/GUIA_PRIMEIRO_USO.md` e use
+`exemplo_theme_lab.py` como demonstração. O launcher é opt-in: abrir o Hub não
+muda o padrão da equipe e escolher um preset não o torna aprovado.
+
+**Escolher e ajustar.** `get_demo_presets()` expõe referências empacotadas
+marcadas como demonstração; `prepare_theme_lab_presets()` aceita bases fornecidas
+pelo mantenedor e as revalida; `create_theme_lab_from_preset()` recusa chave
+inexistente e contexto diferente de `notebook`, sem fallback silencioso.
+`get_control_specs()` deriva tipo, unidade, limites e controle do schema. As
+alterações são aplicadas atomicamente: um valor inválido preserva o último estado
+válido. Campos ainda sem consumidor na galeria ficam desabilitados e explicam o
+motivo, em vez de simular efeito.
+
+**Rascunho e comparação.** `ThemeLabDraft` preserva base, proposta corrente,
+revisão e histórico local limitado; `undo()` e `restore()` não publicam nada.
+`build_preview()` e `compare_preview()` usam os mesmos dados sintéticos em
+cabeçalho, KPI, barras, série temporal, heatmap e tabela. A galeria completa
+permanece `light`, porque a rota Plotly V03 recusa `dark` e `high_contrast` até
+que exista suporte explícito.
+
+<details>
+<summary>Consultar a API deste objeto: nomes e contratos</summary>
+
+```text
+ThemeLabError(code, message, *, action)
+ControlSpec
+ProposalReceipt
+ThemeLabPreview
+ThemeLabComparison
+ThemeLabPreset
+ThemeLabSessionReceipt
+ThemeLabSessionInfo
+ThemeLabDraft(base: ResolvedTheme)
+ThemeLabUI
+ThemeLabLauncherUI
+get_control_specs(theme: ResolvedTheme) -> tuple[ControlSpec, ...]
+prepare_theme_lab_presets(presets) -> tuple[ThemeLabPreset, ...]
+get_demo_presets() -> tuple[ThemeLabPreset, ...]
+create_theme_lab_from_preset(preset_key, presets) -> ThemeLabDraft
+save_theme_lab_session(draft, root, session_name) -> ThemeLabSessionReceipt
+reopen_theme_lab_session(root, session_name) -> ThemeLabDraft
+list_theme_lab_sessions(root) -> tuple[ThemeLabSessionInfo, ...]
+create_theme_lab(theme: ResolvedTheme) -> ThemeLabDraft
+build_preview(theme: ResolvedTheme) -> ThemeLabPreview
+compare_preview(draft: ThemeLabDraft) -> ThemeLabComparison
+install_dbutils_fallback(draft, dbutils, *, prefix="hub_tema_") -> dict[str, str]
+apply_dbutils_fallback(draft, dbutils, *, prefix="hub_tema_") -> ResolvedTheme
+build_ipywidgets_lab(draft, *, save_root=None, render_initial=True) -> ThemeLabUI
+build_theme_lab_launcher(*, presets=None, save_root=None) -> ThemeLabLauncherUI
+```
+
+A fachada `__init__.py` é a referência exata dos nomes públicos; o README local
+documenta assinaturas, opções e exemplos com mais detalhe.
+
+</details>
+
+**Persistência e linhagem local.** JSON avulso e sessão são produtos diferentes.
+`save_proposal()` salva apenas a configuração atual. `save_theme_lab_session()`
+cria um diretório novo com `base.json`, `proposal.json`, histórico e
+`session.json`; o manifesto é escrito por último e registra hashes e revisão.
+Sessão incompleta não aparece na listagem nem é reaberta. A reabertura revalida
+os temas, confere os hashes e restaura base original, proposta, revisão e
+histórico; adulteração é recusada em vez de ter o hash “corrigido”. O bundle não
+autentica autor, não assina conteúdo e não registra aprovação de governança.
+
+**Interface e dependências.** Importar o módulo não carrega `ipywidgets`.
+Validação exige `jsonschema`/`referencing`; a galeria usa pandas, Plotly e Jinja2;
+a interface completa usa ipywidgets/IPython quando construída. O fallback
+`dbutils.widgets` recebe `dbutils` explicitamente e é funcionalmente menor: não
+tem paridade com o launcher de presets/sessões. Nenhuma função instala pacotes.
+
+**Segurança e limites de evidência.** Persistência exige pasta regular já
+existente, não sobrescreve sessão/arquivo existente e não emite recibo de sucesso
+quando a escrita falha. Essas guardas não substituem ACL do ambiente nem formam
+uma sandbox. Os testes Python/GitHub Actions exercitam estado, callbacks no
+kernel, presets, sessões, hashes e roundtrip; não homologam navegador/runtime
+Databricks, teclado/leitor de tela, contraste percebido, zoom, p95, ACL real,
+reinício de sessão ou UAT por iniciante. A V05 continua candidata: sem aceite,
+merge, publicação Databricks ou início da V06.
+
 #### `hub_snippets.visual.theme_plotly`
 
 **Guia local do objeto (R03-B):** na pasta `hub_snippets/visual/theme_plotly/`, abra `README.md` antes de `exemplo_theme_plotly.py`. O guia distingue conceito, contrato, efeitos e interpretação; as referências históricas abaixo permanecem vinculadas à sua base.
@@ -2620,7 +2710,7 @@ Atualizar uma referência oficial exige rever a afirmação que ela sustenta; n�
 
 ---
 
-## Sistema de Temas — V04 integrada no Git
+## Sistema de Temas — V04 integrada no Git; V05 candidata em fechamento
 
 A V04 foi aceita e integrada no Git. Isso confirma a disponibilidade das rotas opt-in no produto versionado; não confirma publicação no workspace, homologação visual/runtime, acessibilidade ou aprovação de uma identidade.
 
@@ -2645,8 +2735,13 @@ mantém tema global. `dark` e `high_contrast` podem ser materializados pelos
 componentes HTML quando a configuração é válida, mas isso não equivale a
 homologação de acessibilidade nem de renderização no Databricks.
 
-Não migre chamadas existentes em massa nesta sprint. Não há publicação,
-seletor, Visual Lab ou aprovação operacional de tema. Consulte
+Não migre chamadas existentes em massa. A V04 permanece integrada e opt-in. A
+V05 acrescenta o Visual Lab descrito no inventário acima, também de forma opt-in,
+mas continua candidata: não há aceite, merge da V05, publicação no workspace ou
+aprovação operacional de identidade. Presets, comparação e sessão rastreável com
+reabertura foram exercitados no contrato Python; navegador/runtime Databricks,
+acessibilidade, p95, ACL real e UAT continuam gates separados. Consulte
 `hub_padroes/identidade_visual/GUIA_OPERACIONAL.md` e
-`docs/sprints/sistema_temas/V04/README.md` no repositório de manutenção.
+`docs/sprints/sistema_temas/V05/README.md` no repositório de manutenção. A V06
+não foi iniciada.
 

@@ -20,6 +20,7 @@
 | entender o que é automático ou manual | [Arquitetura](#️-arquitetura-completa-do-ecossistema) |
 | fornecer contexto corretamente | [Fluxo de Contexto](#-como-o-contexto-chega-ao-genie-code) |
 | iniciar uma tarefa concreta | [Ponto de Partida](#-como-escolher-o-ponto-de-partida) |
+| experimentar aparência de notebook sem publicar tema | [Visual Lab](hub_snippets/visual/theme_lab/README.md) |
 | conferir runtime, dependências e segurança | [Compute e Segurança](#️-dependências-compute-e-segurança) |
 
 ---
