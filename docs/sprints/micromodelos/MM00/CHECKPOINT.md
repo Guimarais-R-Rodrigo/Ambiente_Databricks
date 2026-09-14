@@ -2,9 +2,9 @@
 
 ## Estado
 
-**EM EXECUÇÃO — NÃO AUTORIZA MM01.**
+**CANDIDATA TÉCNICA — BLOQUEADA PARA ACEITE/MM01.**
 
-Este arquivo registra somente evidência observada. Pendência não vira PASS por intenção.
+A fundação documental e arquitetural da MM00 está implementada e tecnicamente validada no snapshot registrado abaixo. Isso **não** autoriza MM01, merge ou promoção de ADRs propostos para aceitos.
 
 ## Baseline e reconciliação
 
@@ -12,76 +12,112 @@ Este arquivo registra somente evidência observada. Pendência não vira PASS po
 - Branch: `micromodelos/mm00-baseline`.
 - PR: #43, em draft.
 - Na abertura: Sistema de Temas V00–V07 integrado.
-- Durante a MM00: V08 foi integrada na `main` pelo commit `622d2c962a80998cf990b57036f7ae503bfc0458`.
-- Reconciliação da branch MM00 com a nova `main`: merge `e322e73fc0dc73c3081c99662ac29cb7721add67`.
+- Durante a MM00: V08 foi integrada na `main` por `622d2c962a80998cf990b57036f7ae503bfc0458`.
+- Fechamento documental V08: `main` em `55f7006c47d90ae7f760992d252b658f53a59636`.
+- Reconciliação final da MM00 sobre essa base: merge `edfcf58e4700ccf5d58d2befddccbd9fe50ac124`.
+- Última reconsulta antes desta atualização: `main` ainda em `55f7006c47d90ae7f760992d252b658f53a59636`.
 
 ## Entregas
 
 | Entrega | Estado |
 |---|---|
-| Plano Mestre | versionado |
+| Plano Mestre MM00–MM13 | versionado |
 | README da iniciativa | versionado |
-| README MM00 | versionado; reconciliação V08 preparada |
-| Inventário | versionado; reconciliação V08 preparada |
+| README MM00 | versionado e reconciliado com V08 |
+| Inventário | versionado e reconciliado com V08 |
 | Matriz de reuso | versionado |
 | Matriz de riscos | versionado |
-| Dependências | versionado |
-| Testes | versionado; reconciliação V08 preparada |
+| Matriz de dependências | versionado |
+| Testes/evidências | versionado |
 | ADR-0014 a ADR-0020 | versionados como **Propostos** |
-| Índice de ADRs | atualizado |
-| Índice de sprints | precisa refletir V08 integrada + MM00 no mesmo head |
-| `CLAUDE.md` | precisa refletir V08 integrada + MM00 proposta no mesmo head |
-| Pacote da auditoria A1 | preparado; contexto precisa refletir reconciliação V08 |
-| CI pré-reconciliação | verde no head `4c162436...` |
-| CI pós-reconciliação | pendente |
+| Índice de ADRs | reconciliado; V00–V08 + ADRs MM00 |
+| Índice de sprints | reconciliado; V08 fechada + MM00 em execução |
+| `CLAUDE.md` | reconciliado; V00–V08 integradas, MM00 proposta |
+| Pacote da auditoria A1 | preparado e congelado para sessão independente |
+| Diff da PR contra `main` vigente | 21 arquivos documentais/contextuais; zero alteração funcional própria |
+| Métricas do README raiz | medidas: 1368 arquivos / 1859 links |
+| CI geral no snapshot `f5e57db5...` | `success` — run `34876036424` |
+| V00 no snapshot `f5e57db5...` | `success` — run `34876036437` |
+| V01 no snapshot `f5e57db5...` | `success` — run `34876036418` |
+| V02 no snapshot `f5e57db5...` | `success` — run `34876036413` |
 | Auditoria A1 independente | **não executada** |
-| Entrada própria da MM00 no `CHANGELOG.md` | pendente |
-| Reconciliação final com `main` | realizada uma vez; revalidar antes do aceite |
+| Entrada própria da MM00 no `CHANGELOG.md` | **pendente** |
+| Aceite explícito de Rodrigo | **pendente** |
 
-## Achados materiais
+## Escopo confirmado
+
+A comparação da PR #43 contra a `main` fechada da V08 contém somente:
+
+- `CLAUDE.md`;
+- pacote de auditoria A1;
+- ADR-0014 a ADR-0020 e índice de ADRs;
+- índice de sprints;
+- documentos da iniciativa `docs/sprints/micromodelos/`.
+
+Não há alteração MM00 própria em:
+
+- `ambiente_fonte/.assistant/`;
+- `Novo_Ambiente_Simulado/`;
+- `tools/`;
+- `.github/workflows/`.
+
+A presença de funcionalidades V08 na branch decorre da reconciliação com a `main`, não do escopo da MM00.
+
+## Achados materiais da execução
 
 ### A01 — concorrência entre frentes é real
 
-A V08 avançou de draft para integrada enquanto a MM00 estava em execução. O gate de reconsulta da `main` evitou fechar a MM00 contra uma base obsoleta. A arquitetura de micromodelos não precisa ser redesenhada, mas seus documentos precisam reconhecer a V08 como contrato transversal vigente.
+A frente visual avançou duas vezes enquanto a MM00 estava em execução: integração funcional V08 e fechamento documental. O gate de reconsulta da `main` evitou fechar a sprint sobre uma base obsoleta.
 
-### A02 — contexto canônico precisa acompanhar a fonte real
+### A02 — contexto canônico estava desatualizado
 
-O `CLAUDE.md` estava desatualizado na abertura e foi corrigido; a integração V08 exige nova reconciliação antes do fechamento. Estado de outra frente não deve ser inferido de memória.
+O `CLAUDE.md` de abertura ainda descrevia estado visual antigo. Ele foi reconciliado sem alterar implementação visual. A MM00 mostrou que contexto canônico precisa ser verificado contra a árvore real antes de decisões arquiteturais.
 
-### A03 — sanitização dos nomes externos
+### A03 — sanitização funcionou fail-closed
 
-O framework conhece semanticamente o catálogo corporativo de Produtos de Dados, mas o repositório usa `<CATALOGO_PRODUTO>` e outros placeholders. Um handle corporativo detectado no ADR-0017 foi removido; CI subsequente confirmou a correção no snapshot pré-V08.
+O primeiro CI detectou um handle corporativo em ADR proposto. O texto foi substituído por contrato genérico; nenhum relaxamento do detector foi necessário.
 
-### A04 — não havia artefato de micromodelo versionado na abertura
+### A04 — README verificável funcionou fail-closed
 
-Busca na `main` de abertura não encontrou implementação/documentação específica com `micromodel`. Isso não afirma inexistência no ambiente de trabalho.
+Após a V08/MM00 alterarem a árvore, o validador recusou contagens congeladas antigas. A execução mediu 1368 arquivos e 1859 links; somente esses valores observados foram registrados.
 
-### A05 — auditoria independente é gate real
+### A05 — não havia artefato de micromodelo versionado na abertura
 
-A sessão implementadora preparou o prompt A1, mas não o executou como se fosse independente.
+A busca na `main` de abertura não encontrou implementação/documentação específica com `micromodel`. Isso é afirmação limitada ao repositório e não implica inexistência no ambiente corporativo.
 
-### A06 — changelog próprio da MM00 continua pendente
+### A06 — auditoria independente continua sendo um gate real
 
-A regra do projeto exige entrada em `CHANGELOG.md`. A interface de escrita desta sessão não oferece patch/append seguro para o arquivo histórico extenso. Reescrever integralmente o histórico é risco maior que manter o gate explicitamente aberto.
+A sessão implementadora preparou contexto e prompt, mas não se declarou auditora independente. Nenhum score ou autorrevisão será usado como substituto da A1.
 
-### A07 — o CI encontrou defeitos e os gates funcionaram
+### A07 — changelog próprio da MM00 permanece aberto
 
-A primeira rodada do CI geral detectou métricas congeladas desatualizadas e um identificador proibido. As causas foram corrigidas sem relaxar o validador, e o head `4c162436...` passou CI geral, V00, V01 e V02. A reconciliação V08 exige nova execução.
+A regra do projeto exige entrada em `CHANGELOG.md`. A integração disponível nesta sessão não oferece patch/append seguro para o arquivo histórico extenso; a substituição integral foi deliberadamente evitada para não arriscar perda/reformatação do histórico V08 e anterior.
 
-## Bloqueios para candidato a aceite
+### A08 — gates automáticos não substituem julgamento arquitetural
 
-1. aplicar a reconciliação documental V08 nos arquivos MM00/contexto/índice;
-2. executar CI no head reconciliado, incluindo workflows V03–V08 que forem disparados;
-3. delimitar o diff da MM00 contra a `main` vigente e confirmar ausência de mudança funcional própria;
-4. executar auditoria A1 independente;
-5. verificar e corrigir achados que procederem;
-6. registrar a entrada aditiva da MM00 no `CHANGELOG.md` por meio seguro, ou obter exceção humana explícita e registrada;
-7. reconsultar a `main` imediatamente antes do aceite;
-8. atualizar este checkpoint para candidato a aceite;
-9. obter aceite explícito de Rodrigo.
+CI geral, V00, V01 e V02 ficaram verdes no snapshot técnico, mas isso prova apenas os contratos automatizados cobertos. A coerência de fronteiras, reuso, proveniência, fingerprint, MLflow e migração tardia ainda precisa do contraditório A1.
+
+## Bloqueios restantes para aceite da MM00
+
+1. o head corrente, após esta atualização de gate, deve repetir CI e permanecer verde;
+2. executar a auditoria A1 em sessão independente usando o pacote versionado;
+3. verificar cada achado e corrigir somente os que procederem;
+4. registrar entrada aditiva da MM00 em `CHANGELOG.md` por meio seguro **ou** obter exceção humana explícita, justificada e registrada para adiar esse único registro;
+5. reconsultar a `main` imediatamente antes do aceite;
+6. apresentar o checkpoint e obter aceite explícito de Rodrigo;
+7. somente depois do aceite, integrar a MM00 e preparar a MM01 em branch/sprint própria.
 
 ## O que o aceite da MM00 autorizará
 
 Somente iniciar MM01 — contrato canônico `micromodelo.yaml`.
 
 Não autoriza metadata real, mudança em helper compartilhado, piloto corporativo, publicação, composição visual definitiva ou migração de legado.
+
+## Decisão requerida no próximo gate humano
+
+A sessão implementadora **não solicita ainda aceite da MM00**. Primeiro deve haver A1 independente.
+
+Se a A1 devolver `APTA_PARA_ACEITE_MM00` ou achados corrigíveis que sejam resolvidos e revalidados, o próximo checkpoint será apresentado a Rodrigo com duas decisões explícitas:
+
+1. aceitar/rejeitar a MM00 e os ADRs propostos;
+2. caso ainda não exista meio seguro de append no `CHANGELOG.md`, decidir se o registro pode ser diferido para uma manutenção documental imediatamente posterior, sem usar essa exceção para esconder qualquer outra pendência.
