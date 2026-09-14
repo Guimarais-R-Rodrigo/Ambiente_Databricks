@@ -13,7 +13,7 @@ on:
       - 'docs/sprints/sistema_temas/V06/**'
       - '.github/workflows/temas-v06-ci.yml'
 permissions:
-  contents: write
+  contents: read
 jobs:
   assets-v06:
     runs-on: ubuntu-latest
@@ -51,59 +51,3 @@ jobs:
         run: python -B tools/validate_assistant.py --conferir-readme
       - name: Escopo
         run: echo 'V06 gera e verifica variantes candidatas locais a partir de ResolvedTheme; não aprova, não publica no Databricks e não homologa browser, acessibilidade ou UAT.'
-
-  patch-changelog:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/codex/temas-v06-fechamento-documental-20260914'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: true
-      - name: Inserir fechamento V06 por marcador exato
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          path = Path('CHANGELOG.md')
-          text = path.read_text(encoding='utf-8')
-          marker = '## 2026-09-14 — V05: fechamento técnico do Visual Lab em candidata (Codex)'
-          title = '## 2026-09-14 — V06: integração Git e fechamento técnico (ChatGPT)'
-          if title in text:
-              raise SystemExit('V06_CHANGELOG_ALREADY_PRESENT')
-          if text.count(marker) != 1:
-              raise SystemExit(f'V06_CHANGELOG_MARKER_COUNT={text.count(marker)}')
-
-          entry = '''## 2026-09-14 — V06: integração Git e fechamento técnico (ChatGPT)
-
-### Atualizado
-
-- (ChatGPT) PR #38 integrada após aceite explícito de Rodrigo; head final validado `70499e1803ce0d61a148a0da975c4f52611046e0`, merge `418946de8d1e95e87cbfd9df528ddcced5075237` e árvore `68ddec3d691047e890ba2785e1e2e007039fa0e3` idêntica entre candidata testada e merge.
-- (ChatGPT) V06 registra geração determinística por `ResolvedTheme`, bridge Python → compositor, 12 assets congelados protegidos por SHA-256, manifesto/fingerprints, detecção de adulteração e separação entre gerar, revisar, aprovar, promover e publicar.
-- (ChatGPT) CI agregado, V04 e V05 passaram a preparar Node 22, `pnpm@10.34.5` e dependências do compositor antes da descoberta cumulativa V01–V06; nenhum teste foi removido ou filtrado.
-
-### Evidências
-
-- (ChatGPT) Head final da PR: CI geral, V00, V01, V02, V04, V05 e V06 concluíram com `success`; suíte V06 5/5, regressões V01–V06 364/364 e V00 12/12.
-- (ChatGPT) Pós-merge: oito workflows na `main` concluíram com `success` — CI geral e V00–V06, incluindo V03.
-- (ChatGPT) Failures históricos permanecem failures, incluindo `34845378370`, `34845593931`, `34845754341`, `34845937711`, `34846291082`, `34847723861`, `34848445012`, `34848898532` e `34848898536`; suas causas e correções estão preservadas nos documentos V06.
-- (ChatGPT) Durante o fechamento documental pós-merge, os runs transitórios `34852055234` e `34852259063` foram recusados antes da criação de jobs; não alteraram produto nem changelog e permanecem failures históricos da própria correção documental.
-
-### Limites
-
-- (ChatGPT) Sem publicação Databricks, promoção automática de variante, ACL/compute/Spark/SQL/MLflow remoto, homologação de navegador/acessibilidade/UAT ou início da V07.
-'''
-          path.write_text(text.replace(marker, entry + '\n' + marker, 1), encoding='utf-8')
-          PY
-      - name: Restaurar o workflow permanente e gravar somente o fechamento documental
-        run: |
-          git fetch origin main --no-tags
-          git show origin/main:.github/workflows/temas-v06-ci.yml > .github/workflows/temas-v06-ci.yml
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add CHANGELOG.md .github/workflows/temas-v06-ci.yml
-          git diff --cached --check
-          test -n "$(git diff --cached --name-only)"
-          git commit -m "docs(v06): registrar fechamento no changelog"
-          git push origin HEAD:codex/temas-v06-fechamento-documental-20260914
