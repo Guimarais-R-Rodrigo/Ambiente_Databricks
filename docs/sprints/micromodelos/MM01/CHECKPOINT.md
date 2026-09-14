@@ -41,7 +41,7 @@ Status: **CANDIDATA EM VALIDAÇÃO; NÃO ACEITA; NÃO INTEGRADA**
 
 - suíte isolada: 9 testes, `OK`;
 - materialização validada: run `34899617125`, `success`;
-- reconciliação fail-closed com `main@a9480391...`: run `34900062786`, `success`;
+- reconciliação fail-closed com `main@a9480391c78e2402986885db0ce08b10e0619a1a`: run `34900062786`, `success`;
 - primeiro run do gate permanente MM01: `34900332458`, `success`;
 - falha histórica de transporte `34899029039` preservada como `failure`; ocorreu antes dos testes e não foi reclassificada.
 
