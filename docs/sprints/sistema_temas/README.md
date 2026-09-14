@@ -1,14 +1,16 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Estado vigente — V00–V07 integradas; V08 ainda não iniciada neste fechamento
+## Estado vigente — V00–V07 integradas; V08 candidata em fechamento
 
-A V07 foi aceita por Rodrigo e integrada em 14/09/2026 pelo PR #40. O head final validado foi `6b50151738a311eff8530c3191e24693af3fb036`, e o merge efetivo na `main` é `67114605c7345a01c1144e5d6c6d24e9c24e2491`. A árvore do merge é idêntica à árvore da candidata testada.
+A V08 está em branch isolada `codex/temas-v08-integracao-transversal-20260914`, criada a partir da `main` estabilizada em `1b6632194f4b25afc09960c27b069c16df365ee6`. Ela está **em fechamento**, sem aceite, merge ou publicação Databricks.
 
-A [V07 — demais consumidores e formatos de saída](V07/README.md) fecha consumidores runtime de `display` e `ml` por rotas opt-in `_resolvido`, mantendo cálculo, agregação, amostragem, dados e decisões analíticas fora do tema. `dataframe_styled` continua sob a V04; Kaplan–Meier e SHAP/Matplotlib permanecem exceções explícitas porque o contrato atual não permite um mapeamento semântico seguro para suas aparências próprias.
+A [V08 — integração transversal com skills, padrões e Manual](V08/README.md) reconcilia orientação e roteamento com as capacidades V02–V07 já integradas. Skills deixam de competir com o contrato visual, o template EDA deixa de possuir política própria de tema e o Manual/padrões passam a descrever `ResolvedTheme`, Visual Lab, geração editorial, consumidores V07 e limites atuais de forma consistente.
 
-O [registro estruturado de consumidores](V07/CONSUMIDORES.json), o [registro de testes](V07/TESTES.md) e o [checkpoint V07](V07/CHECKPOINT_V07.md) preservam failures documentais reais, a correção semântica para `palette.diverging`, o head final e os nove checks pós-merge. CI geral e V00–V07 concluíram com `success` na `main` após o merge.
+A [matriz transversal](V08/MATRIZ_INTEGRACAO.json), o [registro de testes](V08/TESTES.md) e o [checkpoint V08](V08/CHECKPOINT_V08.md) distinguem superfícies alteradas, decisões de não edição, failures preservados e a proibição de mudança runtime. A candidata não altera módulos Python de `hub_snippets` ou `hub_scripts`.
 
-Nenhuma publicação Databricks, alteração de ACL/compute, execução remota de Spark/SQL/MLflow, promoção visual, homologação de browser/acessibilidade ou UAT foi realizada. A V08 será aberta em branch própria após esta reconciliação pós-merge; seu escopo é integração transversal com skills, padrões e Manual, não reimplementação das V00–V07.
+V00–V07 permanecem aceitas e integradas. A V07 foi mesclada pelo PR #40 no commit `67114605c7345a01c1144e5d6c6d24e9c24e2491`; seu fechamento documental posterior foi integrado pela PR #41, formando a base V08 `1b6632194f4b25afc09960c27b069c16df365ee6`.
+
+Nenhuma publicação Databricks, alteração de ACL/compute, execução remota Spark/SQL/MLflow, promoção visual ou homologação de browser/acessibilidade/UAT foi realizada. A V08 também não prova seleção determinística de skill pela Genie Code.
 
 ## Estado integrado anterior — V06 integrada no Git
 
