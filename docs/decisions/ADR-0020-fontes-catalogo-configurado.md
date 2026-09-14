@@ -1,7 +1,7 @@
 # ADR-0020 — Fontes de micromodelos ficam no catálogo corporativo configurado
 
 Data: 2026-09-14
-Status: Proposto
+Status: Aceito pelo usuário em 2026-09-14; integração da MM00 pendente
 Autor: ChatGPT
 
 ## Contexto
@@ -29,3 +29,7 @@ A descoberta será metadata-first e declarará o escopo efetivamente visível. F
 
 - `CLAUDE.md`
 - `docs/sprints/micromodelos/PLANO_MESTRE.md`
+
+## Ratificação de status — 14/09/2026
+
+O usuário declarou: “D2: Aceito ADR-0014 a ADR-0020 sem ressalvas.” Este ADR fica aceito sem alteração do corpo decisório. O aceite não amplia automaticamente o escopo de fontes e não autoriza acesso, descoberta ou leitura de dados reais antes dos gates e bindings do ambiente autorizado.
