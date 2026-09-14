@@ -1,0 +1,76 @@
+name: Homologação de jornadas V12
+on:
+  push:
+    branches: [main, 'codex/temas-v12*']
+  pull_request:
+    paths:
+      - 'tools/temas_v12_homologacao.py'
+      - 'tools/tests/test_temas_v12.py'
+      - 'docs/sprints/sistema_temas/V12/**'
+      - 'docs/sprints/sistema_temas/README.md'
+      - 'docs/sprints/README.md'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - '.github/workflows/temas-v12-ci.yml'
+permissions:
+  contents: read
+jobs:
+  homologacao-v12:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      SOURCE_DATE_EPOCH: '1700000000'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Dependências Python de manutenção
+        run: |
+          python -m pip install -r tools/requirements-dev.txt
+          python -m pip install 'ipywidgets>=8,<9'
+          python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+      - name: Dependências do compositor V06
+        run: |
+          npm install --global pnpm@10.34.5
+          pnpm --dir tools/readme_visuals install --frozen-lockfile
+      - name: V12 — protocolo e mutantes negativos
+        run: python -B tools/tests/test_temas_v12.py -v
+      - name: Regressões de temas V01–V12
+        run: python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
+      - name: Compatibilidade visual V00
+        run: python -B tools/tests/test_visual_legado_v00.py
+      - name: Validação estrutural e documental
+        run: python -B tools/validate_assistant.py --conferir-readme
+      - name: Escopo V12 e higiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          mapfile -t changed < <(git diff --name-only origin/main...HEAD)
+          printf 'Arquivos V12 alterados:\n%s\n' "${changed[*]}"
+          for path in "${changed[@]}"; do
+            case "$path" in
+              tools/temas_v12_homologacao.py|tools/tests/test_temas_v12.py|docs/sprints/sistema_temas/V12/*|docs/sprints/sistema_temas/README.md|docs/sprints/README.md|README.md|CHANGELOG.md|.github/workflows/temas-v12-ci.yml)
+                ;;
+              *)
+                echo "V12_SCOPE_FAIL: $path"
+                exit 1
+                ;;
+            esac
+          done
+          forbidden='DATABRICKS_'TOKEN'|DATABRICKS_CLIENT_'SECRET'|adb-[0-9]+\.|/Workspace/Users/[^<]|/Volumes/[^<]'
+          if grep -R -n -E "$forbidden" tools/temas_v12_homologacao.py tools/tests/test_temas_v12.py docs/sprints/sistema_temas/V12 .github/workflows/temas-v12-ci.yml; then
+            echo 'V12_HYGIENE_FAIL'
+            exit 1
+          fi
+          echo 'V12_SCOPE=PASS'
+          echo 'V12_REMOTE_MUTATION=0'
