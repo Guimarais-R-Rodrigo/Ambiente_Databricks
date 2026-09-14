@@ -53,7 +53,7 @@ A separação principal é entre **contexto** e **execução**:
 
 ## 🎨 Sistema de Temas
 
-V00–V09 estão integradas no Git. A V09 integra o contrato mínimo do Sistema de Temas ao kit offline de transição, com validação fail-closed do conteúdo transportado; a integração funcional ocorreu no PR #45 (`0f7234c4734f1974ebb1a20123f3c26626c67ef3`) e a correção da preparação Node do workflow operacional no PR #46 (`4ae714a35a0aafd930a8cd796d962b0a79449b88`). Isso não publica nem ativa tema no Databricks.
+V00–V09 estão integradas no Git. A V09 foi aceita em 14/09/2026 e integrada pelo PR #45; o primeiro pós-merge preservou como failure um defeito real de preparação do runner do workflow operacional, corrigido pelo PR #46. O head técnico final validado é `4ae714a35a0aafd930a8cd796d962b0a79449b88`, com 12/12 workflows de `push` em `success`.
 
 Regras atuais:
 
@@ -61,10 +61,14 @@ Regras atuais:
 - consumidores visuais usam rotas explícitas `_resolvido` quando suportadas;
 - aparência não pode alterar cálculo, amostragem, embedding, política de monitoramento ou métricas;
 - o template EDA não mantém paleta ou dicionário de tema paralelos;
+- o kit de transição exige `theme_contract` v1 com nove caminhos canônicos protegidos por hash;
+- transporte é obrigatório, ativação continua `manual_opt_in` e publicação continua `not_performed`;
 - SHAP/Matplotlib e Kaplan–Meier continuam limites explícitos onde o contrato atual não representa a semântica necessária;
-- transportar o contrato temático no kit não equivale a ativação, promoção ou publicação Databricks.
+- nada disso publica automaticamente no Databricks.
 
-Detalhes da integração transversal anterior: [V08](docs/sprints/sistema_temas/V08/README.md) e [checkpoint V08](docs/sprints/sistema_temas/V08/CHECKPOINT_V08.md). O estado V09 permanece documentado em `docs/sprints/sistema_temas/V09/`.
+No gate operacional final, o kit foi gerado offline, os 43 contratos Spark passaram com Spark local no runner e o ZIP foi reaberto para validar presença, tamanho e SHA256 dos nove arquivos antes do upload do artefato de CI. Nenhuma publicação, ativação, promoção, ACL, compute ou execução remota Databricks foi realizada; a V10 não foi iniciada por este fechamento.
+
+Detalhes e evidências da integração: [V09](docs/sprints/sistema_temas/V09/README.md) e [checkpoint V09](docs/sprints/sistema_temas/V09/CHECKPOINT_V09.md).
 
 ## 🔄 Como o contexto chega à Genie Code
 

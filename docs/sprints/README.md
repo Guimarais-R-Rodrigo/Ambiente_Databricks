@@ -67,29 +67,25 @@ custos e interpretação. Estado, matriz e testes em
 
 ## Framework de Micromodelos — MM00 em execução
 
-A [iniciativa MM00–MM13](micromodelos/README.md) usa trilha própria e está na
-MM00, dedicada exclusivamente a baseline, arquitetura e documentação. A
-[MM00](micromodelos/MM00/README.md) registra inventário, reuso, riscos,
-dependências, ADRs propostos, testes, auditoria A1 e checkpoint.
+A [iniciativa MM00–MM13](micromodelos/README.md) usa trilha própria. A [MM00](micromodelos/MM00/README.md) é exclusivamente documental/arquitetural: baseline, inventário, reuso, riscos, dependências, ADRs propostos, testes, auditoria A1 e checkpoint.
 
-Esta candidata não altera o produto `.assistant`, não cria skill/helper de
-micromodelo e não autoriza MM01. O avanço depende de gates automáticos, correção
-ou exceção explícita do Q-01 do changelog, decisão sobre os ADRs, aceite humano e
-merge da MM00.
+A candidata não altera o produto `.assistant`, não cria skill/helper de micromodelo e não autoriza MM01. A A1 devolveu `APTA_COM_CORRECOES`: M-01 foi corrigido e Q-01 do `CHANGELOG.md` continua bloqueador até alteração estritamente aditiva ou exceção humana explícita. O avanço também exige gates verdes, decisão sobre ADR-0014 a ADR-0020, aceite e merge da MM00.
 
 ## Sistema de Temas do Hub
 
-A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V09 estão integradas no Git.**
+A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V09 estão aceitas e integradas no Git.** A V09 foi aceita por Rodrigo em 14/09/2026, integrada funcionalmente pelo PR #45 e recebeu a correção pós-merge do workflow operacional pelo PR #46; o head técnico final validado é `4ae714a35a0aafd930a8cd796d962b0a79449b88`.
 
-A V09 integra o Sistema de Temas ao kit offline de transição: contrato temático no manifesto v2, guarda fail-closed antes do build e conferência de presença/tamanho/SHA256 dos nove arquivos canônicos dentro do ZIP gerado. A integração funcional ocorreu pelo PR #45 no commit `0f7234c4734f1974ebb1a20123f3c26626c67ef3`; a correção da preparação Node do workflow operacional foi integrada pelo PR #46 no commit `4ae714a35a0aafd930a8cd796d962b0a79449b88`. Transporte não significa ativação ou publicação Databricks.
+A V09 integra explicitamente o Sistema de Temas ao kit offline de transição: contrato temático no manifesto v2, guarda fail-closed antes do build e conferência de presença/tamanho/SHA256 dos nove arquivos canônicos dentro do ZIP gerado. No pós-merge final, 12/12 workflows de `push` concluíram com `success`, incluindo 43/43 testes com Spark local no workflow operacional. Transporte não significa ativação, promoção ou publicação; nenhuma operação Databricks foi executada e a V10 não foi iniciada por este fechamento.
 
 A [V08 — integração transversal](sistema_temas/V08/README.md) conecta skills, Hub Padrões, entrada `.assistant` e Manual às mesmas fontes de verdade das V02–V07. A [matriz V08](sistema_temas/V08/MATRIZ_INTEGRACAO.json), o [checkpoint](sistema_temas/V08/CHECKPOINT_V08.md) e o [registro de testes](sistema_temas/V08/TESTES.md) preservam escopo, failures e a regra de zero alteração runtime Python.
 
 A V08 remove a política visual paralela do template EDA, preservando suas convenções editoriais, e explicita que tema não altera dados, métricas, denominadores, thresholds ou decisões. SHAP/Matplotlib e Kaplan–Meier continuam limites declarados do theming atual.
 
-A V08 foi aceita em 14/09/2026 e integrada pelo PR #42. O head final validado foi `9af5615d79b02cbd86f5a6d084444c83f203ae03`; o merge na `main` é `622d2c962a80998cf990b57036f7ae503bfc0458`.
+A V08 foi aceita em 14/09/2026 e integrada pelo PR #42. O head final validado foi `9af5615d79b02cbd86f5a6d084444c83f203ae03`; o merge na `main` é `622d2c962a80998cf990b57036f7ae503bfc0458`. Os nove checks finais da PR e os dez workflows pós-merge da `main` concluíram com `success`.
 
-Não houve publicação Databricks pela V08 ou V09; browser/runtime, acessibilidade, ACL real, UAT, promoção visual e seleção determinística de skill permanecem gates separados.
+A V07 permanece integrada pelo PR #40 no commit `67114605c7345a01c1144e5d6c6d24e9c24e2491`; o fechamento documental subsequente produziu a base V08 `1b6632194f4b25afc09960c27b069c16df365ee6`.
+
+Não houve publicação Databricks da V08; browser/runtime, acessibilidade, ACL real, UAT, promoção visual e seleção determinística de skill permanecem gates separados. Naquele fechamento, a V09 ainda não havia sido iniciada.
 
 ### Continuidade do Sistema de Temas — V04
 
@@ -104,17 +100,16 @@ V05 ainda não havia sido iniciada descreve o fechamento V04.
 A R04-A está integrada em `a8f314a`. A R04-B cobre seis Hub Scripts e pausa para revisão antes da R05. Consulte `readmes_objetos/RELATORIO_R04B.md` e `readmes_objetos/MATRIZ_ALTERACOES_R04B.md`.
 
 ### READMEs de objeto — R05
-Após a integração da R04-B (`d9da056`), a R05 documenta seis modelos tabulares e pausa para revisão antes da R06. Consulte `readmes_objetos/RELATORIO_R05.md` e `readmes_objetos/MATRIZ_ALTERACOES_R05.md`.
+A R04-B está integrada em `d9da056`. A R05 cobre seis modelos tabulares e pausa para revisão antes da R06. Consulte `readmes_objetos/RELATORIO_R05.md` e `readmes_objetos/MATRIZ_ALTERACOES_R05.md`.
 
 ### READMEs de objeto — R06
-A R05 foi integrada em `cae94988`. A R06 cobre cinco objetos de séries/validação temporal e pausa para revisão antes da R07. Consulte `readmes_objetos/RELATORIO_R06.md` e `readmes_objetos/MATRIZ_ALTERACOES_R06.md`.
+A R05 está integrada em `cae94988`. A R06 cobre cinco objetos de séries/validação temporal e pausa para revisão antes da R07. Consulte `readmes_objetos/RELATORIO_R06.md` e `readmes_objetos/MATRIZ_ALTERACOES_R06.md`.
 
 ### READMEs de objeto — R07
 A R06 foi integrada em `289731c`. A R07 cobre seis objetos de score, vintage e sobrevivência e pausa para revisão antes da R08. Consulte `readmes_objetos/RELATORIO_R07.md` e `readmes_objetos/MATRIZ_ALTERACOES_R07.md`.
 
 ### READMEs de objeto — R08
 A R07 foi integrada pelo PR #25. A R08 cobre seis objetos de clusterização, anomalias e explicabilidade e preserva implementações/fachadas. Relatório, matriz e achados ficam em `docs/sprints/readmes_objetos/`. A cobertura esperada após validação é 55/75 operacionais + 3/3 exemplares; isso não representa aceite editorial antecipado.
-
 ### READMEs R09
 Leva de avaliação, drift e MLOps: cinco objetos; cobertura candidata 60/75, sujeita ao freeze e aceite.
 
