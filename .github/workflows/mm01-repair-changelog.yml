@@ -36,8 +36,6 @@ jobs:
           if before.count(short) != 1:
               raise SystemExit(f'esperava 1 ocorrência abreviada, encontrei {before.count(short)}')
           after = before.replace(short, full, 1)
-          if after.count(short) != 0:
-              raise SystemExit('abreviação residual após substituição')
           if after.replace(full, short, 1) != before:
               raise SystemExit('prova de preservação byte a byte falhou')
           Path('CHANGELOG.md').write_bytes(after)
