@@ -68,34 +68,36 @@ custos e interpretação. Estado, matriz e testes em
 ## Sistema de Temas do Hub
 
 A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints
-históricas. V00–V06 estão aceitas e integradas no Git. A V07 está em branch
-isolada como **candidata em execução**, sem aceite, PR de integração, merge ou
-publicação Databricks.
+históricas. **V00–V07 estão aceitas e integradas no Git.** A V08 ainda não foi
+iniciada neste fechamento pós-merge da V07.
 
 A [V07 — demais consumidores e formatos de saída](sistema_temas/V07/README.md)
 cria rotas temáticas opt-in para consumidores runtime de `display` e `ml`, sem
 mudar cálculo, agregação, amostragem ou decisões analíticas. O
 [checkpoint V07](sistema_temas/V07/CHECKPOINT_V07.md) e o
-[registro de testes](sistema_temas/V07/TESTES.md) preservam failures documentais
-já observados e separam suporte real de exceções como Kaplan–Meier e SHAP.
+[registro de testes](sistema_temas/V07/TESTES.md) preservam failures históricos,
+a correção para `palette.diverging`, a PR #40 e os nove checks pós-merge verdes.
 
-A V06 foi mesclada pelo PR #38 no commit
-`418946de8d1e95e87cbfd9df528ddcced5075237`, a partir do head final
-`70499e1803ce0d61a148a0da975c4f52611046e0`; as duas referências apontam para a
-mesma árvore de conteúdo validada. O fechamento documental posterior da V06 foi
+A V07 foi mesclada no commit
+`67114605c7345a01c1144e5d6c6d24e9c24e2491`, a partir do head final
+`6b50151738a311eff8530c3191e24693af3fb036`; merge e candidata apontam para a
+mesma árvore `5438288bda2326e96372c7464b3aef0cb8375102`.
+
+A V06 havia sido mesclada pelo PR #38 no commit
+`418946de8d1e95e87cbfd9df528ddcced5075237`, e seu fechamento documental foi
 integrado pela PR #39 no commit `0c0c71bce4bbc09130ec51eec8245057be4f3d81`,
-que é a base de criação da V07.
+base de criação da V07.
 
 A V02 entrega o núcleo de carga, validação e resolução de configurações completas.
-A V03 acrescenta somente o adaptador Plotly opt-in. A V04 estende a mesma
-arquitetura a componentes HTML, estilos compartilhados e tabela pandas por rotas
-opt-in `_resolvido`. A V05 acrescenta o Visual Lab opt-in em notebook. A V06 atua
-na camada de geração editorial. A V07 completa consumidores runtime e delimita os
-formatos de saída realmente exercitados.
+A V03 acrescenta o adaptador Plotly opt-in. A V04 estende a mesma arquitetura a
+componentes HTML, estilos compartilhados e tabela pandas. A V05 acrescenta o
+Visual Lab opt-in em notebook. A V06 atua na camada de geração editorial. A V07
+completa consumidores runtime e delimita os formatos de saída exercitados. A V08
+é a próxima camada transversal: liga o sistema já implementado a skills, padrões
+e Manual sem duplicar fontes de verdade.
 
 Não houve publicação Databricks da V07; browser/runtime, acessibilidade, ACL real,
-UAT, promoção visual e auditoria independente permanecem gates separados. A V08
-não foi iniciada.
+UAT, promoção visual e auditoria independente permanecem gates separados.
 
 ### Continuidade do Sistema de Temas — V04
 
