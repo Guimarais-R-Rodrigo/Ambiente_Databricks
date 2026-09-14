@@ -22,7 +22,8 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
 - (Codex) Runs reprovados continuam reprovados. `34797774791` falhou por contrato textual; `34798200237`, `34798497708` e `34798674298` mantiveram funções/regressões verdes e reprovaram o fechamento documental/métricas então desatualizadas.
 - (Codex) Nas composições recentes foram observados 31/31 testes específicos V05, 14/14 de sessões, 359/359 regressões de temas e 12/12 V00; esses resultados são Python/GitHub Actions, não homologação de navegador/runtime Databricks.
-- (Codex) Métricas finais do README, CI geral e PR final ainda dependem da árvore de fechamento; nenhum sucesso é antecipado nesta entrada.
+- (Codex) As métricas finais do README foram medidas no run `34831939535`; depois da atualização numérica, o head limpo `efb9dd32` obteve `success` no workflow V05 `34832202757`, incluindo validação documental e escopo.
+- (Codex) A PR #37 foi aberta em draft contra a `main` pós-D05; os checks iniciais da PR concluíram com `success` no CI geral `34832408423`, V00 `34832408496`, V01 `34832408407`, V02 `34832408460` e V05 `34832408426`. O registro final continua sem autorizar merge.
 - (Codex) Sem aceite V05, merge, publicação Databricks, homologação operacional ou início da V06.
 
 ## 2026-09-13 — D05: reconciliação documental do Sistema de Temas (ChatGPT)

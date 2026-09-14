@@ -1,5 +1,23 @@
 # V05 — evidências e limites de teste
 
+## Fechamento técnico pré-registro final — PR #37
+
+No head limpo `efb9dd3270ac0f5240612cf3b7e9e39111e51c46`, o run V05 `34832202757` concluiu com **success** em todas as etapas: 31/31 testes específicos V05, 14/14 testes de sessões, 359/359 regressões `test_temas*.py`, 12/12 regressões visuais V00, validação estrutural/documental e gate de escopo.
+
+A PR final #37 foi aberta em draft contra a `main` pós-D05 `24ffce298ed543755eb15d5d7c553d02ce15e73e`. Os checks iniciais da PR concluíram com **success**:
+
+| Execução | Workflow | Resultado |
+|---|---|---|
+| 34832408423 | CI local reproduzível | success |
+| 34832408496 | Regressões da instrumentação V00 | success |
+| 34832408407 | Contrato de temas V01 | success |
+| 34832408460 | Núcleo de temas V02 | success |
+| 34832408426 | Visual Lab notebook V05 | success |
+
+V03 e V04 possuem workflows com filtros de caminho próprios e não foram disparados por esta PR. Seus testes continuam dentro da regressão `test_temas*.py` executada pelo workflow V05. O run `34831939535`, imediatamente anterior à atualização numérica, mediu as contagens finais do README raiz; a única reprovação naquele head eram as 14 linhas ainda antigas, posteriormente substituídas pelos valores medidos.
+
+Este registro não transforma PASS de GitHub Actions em homologação Databricks. Browser/runtime, frontend de widgets, acessibilidade, p95, ACL real, reinício e UAT continuam fora do alcance automatizado descrito aqui. A alteração documental deste registro requer seus próprios checks no head subsequente da PR.
+
 ## Fechamento pós-D05/R13 — 14/09/2026
 
 A candidata corrente está em `codex/temas-v05-fechamento-r13-20260913`, reconciliada com a `main` `24ffce298ed543755eb15d5d7c553d02ce15e73e`, que já incorpora a D05 documental. A comparação confirmou merge-base nessa `main`, `behind=0` e diff líquido restrito aos artefatos V05 antes das atualizações documentais de fechamento.

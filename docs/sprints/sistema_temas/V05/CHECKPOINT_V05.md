@@ -31,15 +31,15 @@ No run `34798200237` dessa composição, os gates funcionais passaram: 31/31 V05
 
 O commit `81052d099627b3ab919217fa4f78a9d9e57d770b` migrou o README do Visual Lab para as quinze seções obrigatórias, em fonte e simulado, preservando o comportamento documentado e a frase explícita de não publicação. Novas edições documentais exigem nova execução; nenhum run anterior aprova automaticamente esta árvore.
 
-### Próximas ações de fechamento
+### Fechamento técnico e PR final
 
-- completar o inventário de `hub_snippets.visual.theme_lab` no Manual Técnico canônico;
-- sincronizar Manual raiz e derivado sem substituir a redação D05/R13;
-- atualizar README do Hub, `CLAUDE.md` e índices com o estado V05 candidato;
-- registrar a rodada no CHANGELOG, preservando D05 e histórico anterior;
-- executar renderer/conferências disponíveis e recalcular as métricas do README somente na árvore final;
-- abrir uma nova PR **draft** contra `main`, executar CI geral/permanente e corrigir qualquer falha;
-- parar antes de merge e solicitar aceite explícito.
+O Manual canônico, a cópia raiz e o derivado foram sincronizados sem substituir a redação D05/R13. O README do Hub e seu derivado, `CLAUDE.md`, índices e CHANGELOG também foram reconciliados. As métricas do README raiz foram medidas no run `34831939535` e atualizadas sem estimativa manual.
+
+No head limpo `efb9dd3270ac0f5240612cf3b7e9e39111e51c46`, o workflow V05 `34832202757` terminou com **success** em todas as etapas. A PR final **#37** foi aberta em draft contra a `main` `24ffce298ed543755eb15d5d7c553d02ce15e73e`. Os checks disparados pela PR também concluíram com **success**: CI geral `34832408423`, V00 `34832408496`, V01 `34832408407`, V02 `34832408460` e V05 `34832408426`.
+
+Os workflows V03/V04 isolados não foram disparados pela PR porque seus filtros de caminho não abrangem os arquivos V05. Isso não remove suas regressões da bateria: o workflow V05 executa a descoberta `test_temas*.py`, que inclui V01–V05 e passou com 359 casos no head técnico validado.
+
+Após este registro documental, a própria PR deve repetir os checks no novo head. Permanecem como próximas ações somente: confirmar o CI do head documental final, revisar o diff final, manter a PR em draft e parar antes de qualquer merge para aceite explícito. Nenhuma dessas etapas autoriza publicação Databricks ou início da V06.
 
 ### Limites que permanecem
 
