@@ -1,21 +1,14 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Estado vigente — V06 candidata; V00–V05 integradas no Git
+## Estado vigente — V06 integrada no Git; V00–V06 integradas
 
-A V05 foi aceita por Rodrigo em 14/09/2026 e integrada pelo PR #37 no merge
-`d728b872c77c89723a016919bd80534fb297b488`. Os sete workflows permanentes
-pós-merge concluíram com `success`. Essa integração Git não equivale a publicação
-Databricks nem às homologações de navegador/runtime, acessibilidade, ACL ou UAT.
+A V06 foi aceita por Rodrigo em 14/09/2026 e integrada pelo PR #38. O head final validado foi `70499e1803ce0d61a148a0da975c4f52611046e0` e o merge efetivo na `main` é `418946de8d1e95e87cbfd9df528ddcced5075237`. A árvore do merge é idêntica à árvore do head final testado.
 
-A [V06 — assets e geração orientados por tema](V06/README.md) evolui o compositor
-editorial v2 sem criar uma segunda fonte de verdade: `theme_id` é resolvido pelo
-núcleo V02, o renderer recebe um derivado controlado do `ResolvedTheme`, recursos
-congelados continuam protegidos por SHA-256 e variantes candidatas ficam em
-`.artifacts/`, fora do pacote visual ativo.
+A [V06 — assets e geração orientados por tema](V06/README.md) evolui o compositor editorial v2 sem criar uma segunda fonte de verdade: `theme_id` é resolvido pelo núcleo V02, o renderer recebe um derivado controlado do `ResolvedTheme`, recursos congelados continuam protegidos por SHA-256 e variantes candidatas ficam em `.artifacts/`, fora do pacote visual ativo.
 
-Rodrigo concedeu aceite explícito de integração da V06 nesta conversa em
-14/09/2026. O aceite autoriza o merge somente depois dos checks verdes do head
-final; não autoriza publicação Databricks e não inicia a V07.
+No head final da PR, CI geral, V00, V01, V02, V04, V05 e V06 concluíram com `success`. Depois do merge, os oito workflows disparados por `push` — CI geral e V00–V06, incluindo V03 — também concluíram com `success`. As evidências e IDs estão no [registro de testes V06](V06/TESTES.md) e no [checkpoint V06](V06/CHECKPOINT_V06.md).
+
+Essa integração Git não equivale a publicação Databricks nem às homologações de navegador/runtime, acessibilidade, ACL, promoção visual ou UAT. Nenhuma publicação Databricks foi executada e a V07 não foi iniciada.
 
 ## Registro anterior — V05 candidata em fechamento
 
