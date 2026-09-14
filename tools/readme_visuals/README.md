@@ -5,6 +5,24 @@ Os cabeçalhos e as cinco assinaturas aprovadas têm hashes de preservação. O
 compositor de produção não depende da pasta temporária de protótipos para
 regenerar os PNGs.
 
+## V06 — gerar variante candidata a partir de tema resolvido
+
+A rota V06 não substitui a produção ativa. Ela resolve um `theme_id` pelo núcleo
+V02, aplica os tokens validados ao compositor v2 e grava a variante apenas em
+`.artifacts/visual-v2/theme-variants/`. `SOURCE_DATE_EPOCH` é obrigatório para o
+manifesto reproduzível.
+
+```powershell
+$env:SOURCE_DATE_EPOCH = '1700000000'
+python tools/readme_visuals/theme_bridge.py --theme-id hub-legado-editorial --context readme
+node tools/readme_visuals/theme_assets.mjs --theme-id hub-legado-editorial --family all
+node tools/readme_visuals/theme_assets.mjs --theme-id hub-legado-editorial --verify
+```
+
+`theme_assets.mjs` recusa destino fora de `.artifacts`, confere os assets congelados
+por SHA-256 e classifica mudanças paramétricas como `variant_review_required`.
+Gerar ou verificar não aprova, não promove e não publica no Databricks.
+
 ## Produção v2 — caminho recomendado
 
 ```powershell
