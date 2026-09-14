@@ -8,7 +8,8 @@ Registrar o estado real do repositório e congelar as fronteiras da iniciativa a
 
 - Branch: `micromodelos/mm00-baseline`.
 - Base: `main` em `1b6632194f4b25afc09960c27b069c16df365ee6`.
-- Sistema de Temas: V00–V07 integradas no Git; V08 ainda não iniciada neste baseline.
+- Sistema de Temas na `main`: V00–V07 integradas no Git.
+- V08 não está integrada na `main`; durante a MM00 foi identificada a PR draft #42 em trabalho paralelo. A iniciativa de micromodelos não presume seu resultado e reconsulta o estado visual somente no gate tardio de integração.
 
 ## Entregas
 
