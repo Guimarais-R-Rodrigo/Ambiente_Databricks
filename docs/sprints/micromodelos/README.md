@@ -1,6 +1,6 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: **MM00 encerrada e integrada. MM01 é a próxima sprint e não foi iniciada.**
+> Estado: **MM00 encerrada e integrada. MM01 iniciada em branch própria; candidata ainda não aceita nem integrada.**
 
 ## Objetivo
 
@@ -29,14 +29,21 @@ A MM00 congelou baseline, arquitetura, reuso, riscos, dependências e fronteiras
 - M-01 corrigido;
 - D1-B autorizada e posteriormente consumida no fechamento pós-merge;
 - ADR-0014 a ADR-0020 aceitos sem ressalvas;
-- candidata final aprovada em CI geral, V00, V01 e V02;
 - PR #43 integrada em `36e89515a46df24f41deea4791b109f5a1f938f2`;
-- Q-01 fechado imediatamente após o merge por entrada estritamente aditiva no `CHANGELOG.md`, preservando o histórico anterior.
+- Q-01 fechado pela PR #49;
+- fechamento pós-MM00 integrado na `main` em `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5`;
+- CI geral e V00–V09 pós-merge concluídos com sucesso.
 
 A exceção D1-B terminou com o fechamento de Q-01 e não se propaga às próximas sprints.
 
-## Próximo passo
+## Estado da MM01
 
-A próxima sprint prevista é **MM01 — contrato canônico `micromodelo.yaml`**.
+A MM01 foi iniciada a partir de `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5` na branch `micromodelos/mm01-contrato-canonico`.
 
-MM01 não foi iniciada por este fechamento. O início de MM01 deverá partir da `main` já contendo a MM00 e seu fechamento documental, seguindo novamente a regra de branch/PR/testes/auditoria/checkpoint.
+O escopo é exclusivamente o contrato canônico `micromodelo.yaml`: schema, fases/condições, proveniência, validador de referência/CI e fixtures sintéticos. A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprint continua reservado para MM02; descoberta de metadata continua reservada para MM03.
+
+A candidata MM01 só poderá ser integrada após testes, auditoria A1 independente, verificação/correção dos achados, checkpoint final e aceite explícito.
+
+## Próximo gate
+
+Concluir a candidata MM01 e submetê-la à auditoria A1. **MM02 permanece bloqueada.**
