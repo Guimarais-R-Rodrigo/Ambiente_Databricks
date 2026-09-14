@@ -24,8 +24,7 @@ transversais de processo, não novos tipos.
 ## Sistema de Temas
 
 O [padrão de identidade visual](identidade_visual/README.md) define configurações
-completas e sua validação. É transversal, não um sétimo tipo de objeto. A V02
-não instala painel nem altera automaticamente as cores dos consumidores.
+completas e sua validação. É transversal, não um sétimo tipo de objeto. V02 integra o núcleo; V03 e V04 acrescentam consumidores opt-in. Não há painel, tema global, migração automática de notebooks ou publicação implícita.
 
 ## Fluxo recomendado
 

@@ -59,6 +59,6 @@ publicado depois dele.
 
 Volte ao [README raiz](../README.md) para o ciclo de contribuição.
 
-## Sistema de Temas — execução candidata
+## Sistema de Temas — estado vigente no Git
 
-[Diagnóstico V00 e próximos critérios de aceite](sprints/sistema_temas/README.md). Sem mudança no visual do produto.
+[V00–V04 estão aceitas e integradas no Git](sprints/sistema_temas/README.md). A D05 reconcilia somente documentação viva e não é a sprint funcional V05. Continuam separados: publicação no Databricks, homologação visual/runtime, auditoria independente e avaliação com usuário iniciante.
