@@ -1,6 +1,16 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Estado vigente — V00–V08 integradas no Git
+## Estado vigente — V09 candidata de integração do kit
+
+V00–V08 permanecem aceitas e integradas no Git. A V09 está em branch candidata separada, `codex/temas-v09-kit-transicao-20260914`, baseada na `main` `55f7006c47d90ae7f760992d252b658f53a59636`; não há aceite nem merge antecipado.
+
+A V09 torna explícito no `MANIFEST.json` v2 o contrato mínimo do Sistema de Temas transportado pelo kit de transição. O bundle falha se perder qualquer uma das nove peças canônicas, e o ZIP final é reaberto para conferir presença única, tamanho e SHA256 antes de ser considerado distribuível. `activation = manual_opt_in` e `publication = not_performed` permanecem limites contratuais.
+
+O gate completo da candidata no head `6c19ef6da1012b4c33bd0e15c1bb332a6cb046a3` concluiu com V09 11/11, cumulativo V01–V09 416/416, V00 12/12, geração offline de 535 arquivos, contrato temático 9/9 dentro do ZIP e validador com 0 falhas / 0 avisos. Os failures anteriores `34877035267` e `34877297808` permanecem registrados como failures em `V09/TESTES.md`.
+
+Nenhuma publicação Databricks, ativação de tema, alteração de ACL/compute ou execução remota Spark/SQL/MLflow foi realizada. A V10 não foi iniciada.
+
+## Estado integrado anterior — V00–V08 integradas no Git
 
 A V08 foi aceita por Rodrigo em 14/09/2026 e integrada pelo PR #42. O head final validado foi `9af5615d79b02cbd86f5a6d084444c83f203ae03` e o merge efetivo na `main` é `622d2c962a80998cf990b57036f7ae503bfc0458`. A árvore do merge é idêntica à árvore da candidata testada.
 
@@ -10,7 +20,7 @@ A [matriz transversal](V08/MATRIZ_INTEGRACAO.json), o [registro de testes](V08/T
 
 Antes do merge, o gate final comprovou V08 **22/22**, regressões V01–V08 **405/405**, V00 **12/12**, validador **0 falhas / 0 avisos** e `V08_RUNTIME_EDIT=0`. Depois do merge, os dez workflows da `main` — CI geral e V00–V08 — concluíram com `success`.
 
-Nenhuma publicação Databricks, alteração de ACL/compute, execução remota Spark/SQL/MLflow, promoção visual ou homologação de browser/acessibilidade/UAT foi realizada. A V08 também não prova seleção determinística de skill pela Genie Code. A V09 não foi iniciada.
+Nenhuma publicação Databricks, alteração de ACL/compute, execução remota Spark/SQL/MLflow, promoção visual ou homologação de browser/acessibilidade/UAT foi realizada. A V08 também não prova seleção determinística de skill pela Genie Code. Naquele fechamento, a V09 ainda não havia sido iniciada.
 
 ## Estado integrado anterior — V06 integrada no Git
 
