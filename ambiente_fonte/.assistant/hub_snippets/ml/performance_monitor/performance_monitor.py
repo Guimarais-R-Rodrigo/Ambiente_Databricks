@@ -13,6 +13,10 @@ silencioso está no contorno óbvio: selecionar à mão só as chaves cujo nome 
 coincide com a política deixa a AUC de fora, porque ela se chama ``auc_roc``, e o
 monitoramento passa a rodar sem a métrica principal sem nunca reclamar.
 ``selecionar_metricas_do_relatorio`` faz a seleção e a tradução no mesmo passo.
+
+A V07 acrescenta ``plot_timeline_resolvido`` como rota visual opt-in. A política,
+os limites e o histórico continuam exatamente os mesmos; somente cores/layout
+são derivados de ``ResolvedTheme``.
 """
 
 from __future__ import annotations
@@ -21,8 +25,9 @@ from copy import deepcopy
 import math
 from typing import Any, Dict, List, Optional
 
-
 from hub_snippets.constants import colors
+from hub_snippets.visual.tema import ResolvedTheme
+from hub_snippets.visual.theme_plotly import aplicar_tema_resolvido, get_tokens_plotly
 
 # Derivado, nao redeclarado: o valor tem uma fonte so. A forma e atribuicao
 # porque `api_publica.py` nao reexporta nome importado, e estes tres fazem
@@ -43,10 +48,6 @@ EXAMPLE_THRESHOLDS = {
     "c_index": {"warning": 0.03, "critical": 0.05, "direction": "higher", "delta": "absolute"},
 }
 
-
-# Vocabulário do relatório -> vocabulário da política. Explícito de propósito:
-# uma conversão por heurística de nome erraria em silêncio, que é exatamente o
-# defeito que este mapa existe para impedir.
 CHAVES_DO_RELATORIO = {
     "auc_roc": "auc",
     "ks_pct": "ks_pct",
@@ -67,27 +68,7 @@ def selecionar_metricas_do_relatorio(
     *,
     metricas_obrigatorias: Optional[List[str]] = None,
 ) -> Dict[str, float]:
-    """Traduza a saída de ``metrics_report`` para o vocabulário da política.
-
-    Args:
-        relatorio: dicionário devolvido por ``calculate_binary_metrics`` ou
-            ``calculate_regression_metrics``.
-        politica: política de limiares; ``EXAMPLE_THRESHOLDS`` por padrão.
-        metricas_obrigatorias: nomes da política exigidos pela tarefa, por
-            exemplo ['auc', 'ks_pct']; não exige todas as métricas da política
-            genérica. Para excluir uma métrica, retire-a explicitamente da política.
-
-    Returns:
-        Somente as métricas presentes na política, já com a chave dela e com
-        valor numérico finito. Métrica sem política é descartada de propósito:
-        limiar ausente não é limiar zero.
-
-    Raises:
-        ValueError: métrica selecionada inválida, alias conflitante, obrigação
-            ausente ou nenhuma métrica do relatório pertencente à política. Devolver
-            um dicionário vazio faria o monitor aceitar um período sem medir
-            nada, que é pior do que falhar.
-    """
+    """Traduza a saída de ``metrics_report`` para o vocabulário da política."""
     alvo = EXAMPLE_THRESHOLDS if politica is None else politica
     selecionadas: Dict[str, float] = {}
     for chave_relatorio, valor in relatorio.items():
@@ -113,12 +94,7 @@ def selecionar_metricas_do_relatorio(
 
 
 class PerformanceMonitor:
-    """Store periodic metric evidence and flag investigation candidates.
-
-    This class never authorizes retraining or deployment. ``should_retrain`` is kept
-    as a compatibility name but returns a governance recommendation requiring root
-    cause analysis, offline validation, and approval.
-    """
+    """Store periodic metric evidence and flag investigation candidates."""
 
     THRESHOLDS = EXAMPLE_THRESHOLDS
 
@@ -275,4 +251,20 @@ class PerformanceMonitor:
         fig.add_hline(y=boundary(rule["warning"]), line_dash="dot", line_color=LARANJA, annotation_text="Warning policy")
         fig.add_hline(y=boundary(rule["critical"]), line_dash="dot", line_color=VERMELHO, annotation_text="Critical policy")
         fig.update_layout(template="plotly_white", title=f"{metric} ao longo do tempo", xaxis_title="Período", yaxis_title=metric)
+        return fig
+
+    def plot_timeline_resolvido(self, metric: str, theme: ResolvedTheme) -> Any:
+        """Plota o mesmo histórico/limiares com aparência do tema V02 notebook/light."""
+        tokens = get_tokens_plotly(theme)
+        fig = self.plot_timeline(metric)
+        if self.history:
+            fig.data[0].line.color = tokens["brand.primary"]
+            shapes = list(fig.layout.shapes or [])
+            if len(shapes) != 3:
+                raise RuntimeError("estrutura visual inesperada da timeline de monitoramento")
+            shapes[0].line.color = tokens["text.secondary"]
+            shapes[1].line.color = tokens["semantic.warning"]
+            shapes[2].line.color = tokens["semantic.negative"]
+        aplicar_tema_resolvido(fig, theme)
+        fig.update_layout(title=f"{metric} ao longo do tempo", xaxis_title="Período", yaxis_title=metric)
         return fig

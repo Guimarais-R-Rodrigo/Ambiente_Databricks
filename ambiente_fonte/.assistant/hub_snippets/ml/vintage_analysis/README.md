@@ -1,6 +1,14 @@
 # `vintage_analysis` — maturação por safra sem preencher o que ainda não foi observado
 
 <!-- readme-objeto: 1.0.0 -->
+<!-- sistema-temas-v07: consumidores -->
+> **Atualização V07 — estado atual.** `build_vintage_table` e `compare_safras`
+> continuam sem lógica de tema. Para as figuras, V07 adiciona
+> `plot_vintage_curves_resolvido` (usa `palette.categorical`) e
+> `plot_vintage_heatmap_resolvido` (usa `palette.sequential`). As duas rotas
+> reutilizam os mesmos pontos/matriz das funções legadas: MOB, maturidade,
+> denominadores, taxas, cobertura e células `NaN` não são alterados pela
+> aparência.
 
 Análise de vintage organiza contratos pela safra de originação e pelo tempo decorrido desde a originação, aqui expresso em MOB (*months on book*). Este helper constrói taxas acumuladas somente quando a célula safra×MOB está completamente observada e oferece curvas, heatmap e comparação de checkpoints. Ele ajuda a comparar maturação; **não extrapola safras imaturas nem corrige sozinho definição de evento, denominator ou censura operacional**.
 

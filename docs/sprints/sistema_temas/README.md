@@ -1,6 +1,16 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Estado vigente — V06 integrada no Git; V00–V06 integradas
+## Estado vigente — V07 candidata em execução; V00–V06 integradas
+
+A V07 foi iniciada em 14/09/2026 a partir da `main` fechada em `0c0c71bce4bbc09130ec51eec8245057be4f3d81`, na branch isolada `codex/temas-v07-consumidores-formatos-20260914`. Ela está **em execução**, sem aceite, PR de integração, merge ou publicação Databricks.
+
+A [V07 — demais consumidores e formatos de saída](V07/README.md) fecha consumidores runtime de `display` e `ml` que ainda tinham aparência dispersa, sempre por rotas opt-in `_resolvido`. Cálculo, agregação, amostragem, dados e decisões analíticas permanecem fora do tema. `dataframe_styled` já estava coberto pela V04; Kaplan–Meier e SHAP/Matplotlib ficam como exceções explícitas porque o contrato atual não permite mapeamento semântico seguro para suas aparências próprias.
+
+O [registro estruturado de consumidores](V07/CONSUMIDORES.json), o [registro de testes](V07/TESTES.md) e o [checkpoint V07](V07/CHECKPOINT_V07.md) distinguem suporte real, exceções e formatos não homologados. Até o checkpoint corrente, as suítes funcionais V07 e regressões cumulativas passaram; os runs reprovados continuam registrados como failures documentais e ainda não há um head final aceito para integração.
+
+Nenhuma publicação Databricks, alteração de ACL/compute, execução remota de Spark/SQL/MLflow, promoção visual ou início da V08 foi realizada.
+
+## Estado integrado anterior — V06 integrada no Git
 
 A V06 foi aceita por Rodrigo em 14/09/2026 e integrada pelo PR #38. O head final validado foi `70499e1803ce0d61a148a0da975c4f52611046e0` e o merge efetivo na `main` é `418946de8d1e95e87cbfd9df528ddcced5075237`. A árvore do merge é idêntica à árvore do head final testado.
 
@@ -8,7 +18,7 @@ A [V06 — assets e geração orientados por tema](V06/README.md) evolui o compo
 
 No head final da PR, CI geral, V00, V01, V02, V04, V05 e V06 concluíram com `success`. Depois do merge, os oito workflows disparados por `push` — CI geral e V00–V06, incluindo V03 — também concluíram com `success`. As evidências e IDs estão no [registro de testes V06](V06/TESTES.md) e no [checkpoint V06](V06/CHECKPOINT_V06.md).
 
-Essa integração Git não equivale a publicação Databricks nem às homologações de navegador/runtime, acessibilidade, ACL, promoção visual ou UAT. Nenhuma publicação Databricks foi executada e a V07 não foi iniciada.
+Essa integração Git não equivale a publicação Databricks nem às homologações de navegador/runtime, acessibilidade, ACL, promoção visual ou UAT. Nenhuma publicação Databricks foi executada; naquele fechamento, a V07 ainda não havia sido iniciada.
 
 ## Registro anterior — V05 candidata em fechamento
 
@@ -56,7 +66,7 @@ instala seletor, não cria CSS global e não migra notebooks automaticamente. Le
 
 ### Entradas históricas preservadas
 
-A evolução continua navegável pela [V01 — contrato e experiência](V01/README.md) e pelo [guia de primeiro uso da V01](V01/GUIA_PRIMEIRO_USO.md). Esses arquivos são referência histórica/contratual e não substituem o estado corrente V06.
+A evolução continua navegável pela [V01 — contrato e experiência](V01/README.md) e pelo [guia de primeiro uso da V01](V01/GUIA_PRIMEIRO_USO.md). Esses arquivos são referência histórica/contratual e não substituem o estado corrente V07.
 
 Não houve publicação Databricks, auditoria independente ou homologação visual.
 O aceite e a integração Git da V04 estão concluídos; esses gates operacionais

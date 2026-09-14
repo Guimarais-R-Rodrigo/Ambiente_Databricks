@@ -4,16 +4,18 @@ Análise de safras (vintage/cohort): curvas de maturação, heatmap e métricas.
 Uso:
     from hub_snippets.ml.vintage_analysis import build_vintage_table, plot_vintage_curves, plot_vintage_heatmap
 
-Autor: Rodrigo via assistente
-Versão: 1.0
+A V07 acrescenta rotas ``*_resolvido`` que reutilizam as figuras legadas e
+alteram somente aparência. Agregação, maturidade, denominadores e comparação de
+safras permanecem em uma única implementação.
 """
 
 import pandas as pd
 import numpy as np
 from typing import Any, Dict, List, Optional, Tuple
 
-# Paleta institucional Caixa
 from hub_snippets.constants import colors
+from hub_snippets.visual.tema import ResolvedTheme
+from hub_snippets.visual.theme_plotly import aplicar_tema_resolvido, get_tokens_plotly
 
 PALETA_CATEGORICA = colors.PALETA_CATEGORICA
 AZUL_CAIXA = colors.AZUL_CAIXA
@@ -38,20 +40,7 @@ def build_vintage_table(
     mob_col: Optional[str] = None,
     target_is_cumulative: bool = False,
 ) -> pd.DataFrame:
-    """Constrói tabela de safras agregada.
-
-    Args:
-        df: DataFrame com dados de contratos ao longo do tempo.
-        contract_id: Coluna de ID do contrato.
-        dt_originacao: Coluna de data de originação.
-        dt_referencia: Coluna de data de referência (foto).
-        target: Coluna do evento (0/1).
-        safra_grain: 'month' ou 'quarter'.
-        mob_col: Coluna de MOB (se já existir; senão calcula).
-
-    Returns:
-        DataFrame agregado: safra × MOB com taxa.
-    """
+    """Constrói tabela de safras agregada."""
     required = {contract_id, dt_originacao, dt_referencia, target}
     missing = required - set(df.columns)
     if missing:
@@ -62,7 +51,6 @@ def build_vintage_table(
     df[dt_originacao] = pd.to_datetime(df[dt_originacao])
     df[dt_referencia] = pd.to_datetime(df[dt_referencia])
 
-    # Calcular MOB se não fornecido
     if mob_col is None:
         df["mob"] = (
             (df[dt_referencia].dt.year - df[dt_originacao].dt.year) * 12
@@ -71,7 +59,6 @@ def build_vintage_table(
     else:
         df["mob"] = df[mob_col]
 
-    # Safra
     if safra_grain == "month":
         df["safra"] = df[dt_originacao].dt.to_period("M").astype(str)
     elif safra_grain == "quarter":
@@ -91,9 +78,6 @@ def build_vintage_table(
     if not df[target].isin([0, 1]).all():
         raise ValueError("target must be binary (0/1)")
 
-    # Collapse duplicate snapshots, but never manufacture a missing snapshot.
-    # Observation at MOB m means an actual row exists at m; maturity and a gap in
-    # the source are different facts and cannot both be represented by fillna(0).
     contract_mob = (
         df.groupby(["safra", contract_id, "mob"], as_index=False)
         .agg(event_at_mob=(target, "max"))
@@ -128,9 +112,6 @@ def build_vintage_table(
         .merge(cohort_size, on="safra", how="left")
         .sort_values(["safra", "mob"])
     )
-    # Publish a cohort/MOB rate only when every cohort contract is mature/observed
-    # through that MOB. Partial cells remain NaN instead of treating immature
-    # contracts as non-events or changing the denominator silently.
     complete_cell = agg["n_contratos_observados"] == agg["n_contratos_safra"]
     agg["taxa_acumulada"] = np.where(
         complete_cell,
@@ -138,7 +119,6 @@ def build_vintage_table(
         np.nan,
     )
     agg["cobertura_observada"] = agg["n_contratos_observados"] / agg["n_contratos_safra"]
-    # Backward-compatible alias: 'taxa' now has the same cumulative-incidence meaning.
     agg["taxa"] = agg["taxa_acumulada"]
 
     print(f"Vintage table: {agg['safra'].nunique()} safras, MOB range [{agg['mob'].min()}-{agg['mob'].max()}]")
@@ -151,21 +131,10 @@ def plot_vintage_curves(
     max_mob: int = 24,
     top_n_safras: Optional[int] = None,
 ) -> Any:
-    """Plota curvas de maturação (vintage curves).
-
-    Args:
-        vintage_df: DataFrame de build_vintage_table().
-        title: Título do gráfico.
-        max_mob: MOB máximo a exibir.
-        top_n_safras: Se definido, mostra apenas as N safras mais recentes.
-
-    Returns:
-        Plotly Figure.
-    """
+    """Plota curvas de maturação com a aparência legada."""
     import plotly.express as px
 
     plot_df = vintage_df[vintage_df["mob"] <= max_mob].copy()
-
     if top_n_safras:
         safras = sorted(plot_df["safra"].unique())[-top_n_safras:]
         plot_df = plot_df[plot_df["safra"].isin(safras)]
@@ -178,13 +147,26 @@ def plot_vintage_curves(
         labels={"mob": "MOB (Months on Books)", "taxa_acumulada": "Taxa acumulada", "safra": "Safra"},
         color_discrete_sequence=PALETA_CATEGORICA,
     )
-
     fig.update_layout(**TEMA_BASE)
-    fig.update_layout(
-        yaxis_tickformat=".1%",
-        legend_title_text="Safra",
-    )
+    fig.update_layout(yaxis_tickformat=".1%", legend_title_text="Safra")
+    return fig
 
+
+def plot_vintage_curves_resolvido(
+    vintage_df: pd.DataFrame,
+    theme: ResolvedTheme,
+    title: str = "Curvas de Maturação por Safra",
+    max_mob: int = 24,
+    top_n_safras: Optional[int] = None,
+) -> Any:
+    """Reusa os mesmos pontos da curva e aplica paleta/layout do tema explícito."""
+    tokens = get_tokens_plotly(theme)
+    fig = plot_vintage_curves(vintage_df, title, max_mob, top_n_safras)
+    palette = list(tokens["palette.categorical"])
+    for idx, trace in enumerate(fig.data):
+        trace.line.color = palette[idx % len(palette)]
+    aplicar_tema_resolvido(fig, theme)
+    fig.update_layout(title=title, yaxis_tickformat=".1%", legend_title_text="Safra")
     return fig
 
 
@@ -194,22 +176,10 @@ def plot_vintage_heatmap(
     max_mob: int = 24,
     metric: str = "taxa_acumulada",
 ) -> Any:
-    """Plota heatmap de safras × MOB.
-
-    Args:
-        vintage_df: DataFrame de build_vintage_table().
-        title: Título.
-        max_mob: MOB máximo.
-        metric: Coluna para colorir ('taxa', 'taxa_acumulada').
-
-    Returns:
-        Plotly Figure.
-    """
+    """Plota heatmap de safras × MOB com a aparência legada."""
     import plotly.graph_objects as go
 
     plot_df = vintage_df[vintage_df["mob"] <= max_mob].copy()
-
-    # Pivot: safra × MOB
     pivot = plot_df.pivot_table(index="safra", columns="mob", values=metric)
     pivot = pivot.sort_index(ascending=False)
 
@@ -223,7 +193,6 @@ def plot_vintage_heatmap(
         textfont={"size": 9},
         colorbar_title="Taxa (%)",
     ))
-
     fig.update_layout(**TEMA_BASE)
     fig.update_layout(
         title=title,
@@ -231,7 +200,29 @@ def plot_vintage_heatmap(
         xaxis_title="MOB",
         yaxis_title="Safra",
     )
+    return fig
 
+
+def plot_vintage_heatmap_resolvido(
+    vintage_df: pd.DataFrame,
+    theme: ResolvedTheme,
+    title: str = "Heatmap de Safras",
+    max_mob: int = 24,
+    metric: str = "taxa_acumulada",
+) -> Any:
+    """Reusa a mesma matriz e aplica ``palette.sequential`` do tema explícito."""
+    tokens = get_tokens_plotly(theme)
+    fig = plot_vintage_heatmap(vintage_df, title, max_mob, metric)
+    cores = list(tokens["palette.sequential"])
+    fig.data[0].colorscale = [[i / (len(cores) - 1), cor] for i, cor in enumerate(cores)]
+    n_safras = len(fig.data[0].y)
+    aplicar_tema_resolvido(fig, theme)
+    fig.update_layout(
+        title=title,
+        height=max(tokens["chart.height_px"], n_safras * 25),
+        xaxis_title="MOB",
+        yaxis_title="Safra",
+    )
     return fig
 
 
@@ -239,37 +230,21 @@ def compare_safras(
     vintage_df: pd.DataFrame,
     mob_checkpoints: Optional[List[int]] = None,
 ) -> pd.DataFrame:
-    """Compara performance das safras em MOBs fixos.
-
-    Args:
-        vintage_df: DataFrame de build_vintage_table().
-        mob_checkpoints: MOBs para comparação.
-
-    Returns:
-        DataFrame comparativo.
-    """
+    """Compara performance das safras em MOBs fixos."""
     mob_checkpoints = [3, 6, 12, 24] if mob_checkpoints is None else list(mob_checkpoints)
     results = []
     for safra in sorted(vintage_df["safra"].unique()):
         safra_data = vintage_df[vintage_df["safra"] == safra]
         row = {"safra": safra, "n_contratos": safra_data["n_contratos_safra"].iloc[0]}
-
         for mob in mob_checkpoints:
             mob_data = safra_data[safra_data["mob"] == mob]
-            if len(mob_data) > 0:
-                row[f"taxa_mob_{mob}"] = mob_data["taxa_acumulada"].iloc[0]
-            else:
-                row[f"taxa_mob_{mob}"] = None
-
+            row[f"taxa_mob_{mob}"] = mob_data["taxa_acumulada"].iloc[0] if len(mob_data) > 0 else None
         results.append(row)
 
     result_df = pd.DataFrame(results)
-
-    # Calcular média e desvio
     for mob in mob_checkpoints:
         col = f"taxa_mob_{mob}"
         if col in result_df.columns:
             mean_val = result_df[col].mean()
             result_df[f"vs_media_mob_{mob}"] = result_df[col] - mean_val
-
     return result_df

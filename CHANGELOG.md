@@ -5,6 +5,30 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-14 — V07: candidata de consumidores e formatos de saída (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) Rotas opt-in `_resolvido` para matriz de correlação, grade de distribuições, curvas ROC/Precision–Recall/Lift/KS, timeline do `PerformanceMonitor`, UMAP e visualizações de safras.
+- (ChatGPT) `get_tokens_plotly(theme)` centraliza o acesso a tokens já revalidados pelo núcleo V02/V03, sem leitura direta de JSON, fixture ou estado global.
+- (ChatGPT) Registro estruturado classifica nove consumidores runtime e delimita formatos de saída efetivamente exercitados.
+
+### Atualizado
+
+- (ChatGPT) APIs legadas permanecem o default; cálculo, agregação, amostragem, embedding, métricas e políticas analíticas não são alterados pela seleção de tema.
+- (ChatGPT) `dataframe_styled` permanece sob a integração V04; Kaplan–Meier e SHAP/Matplotlib ficam como exceções explícitas, sem suporte temático implícito.
+- (ChatGPT) Fonte e `Novo_Ambiente_Simulado` mantêm equivalência byte a byte nos consumidores e READMEs alterados.
+
+### Evidências
+
+- (ChatGPT) Runs `34858836840`, `34859769442` e `34860697409` permanecem failures documentais. Em todos, a suíte V07 18/18, as regressões V01–V07 382/382 e V00 12/12 passaram antes da validação documental.
+- (ChatGPT) O run `34860697409` mediu o estado documental estabilizado em 1345 arquivos de identidade e 1849 links fora da raiz; o README raiz é reconciliado com esses valores sem relaxar o validador.
+- (ChatGPT) HTML Plotly local é exercitado; PNG Plotly/Kaleido, PDF, PPTX, browser Databricks e acessibilidade não são homologados nesta sprint.
+
+### Limites
+
+- (ChatGPT) V07 continua candidata: sem aceite, PR de integração, merge, publicação Databricks, alteração de ACL/compute, execução remota Spark/SQL/MLflow, promoção visual, UAT ou início da V08.
+
 ## 2026-09-14 — V06: integração Git e fechamento técnico (ChatGPT)
 
 ### Atualizado

@@ -1,6 +1,13 @@
 # `umap_viz` — projeção UMAP para exploração visual de clusters, não prova de separação
 
 <!-- readme-objeto: 1.0.0 -->
+<!-- sistema-temas-v07: consumidores -->
+> **Atualização V07 — estado atual.** `plot_umap_clusters` permanece a rota
+> legada. `plot_umap_clusters_resolvido(..., theme)` valida o tema antes do
+> cálculo, chama o mesmo `compute_umap` e troca somente paleta/layout. Coordenadas,
+> labels, opacidade e tamanho solicitado não são recalculados por uma segunda
+> lógica. `umap-learn` continua importado de forma lazy; selecionar um tema não
+> instala dependências nem prova estabilidade dos clusters.
 
 Este objeto calcula embedding UMAP e cria um scatter Plotly colorido por label. Ele ajuda a **explorar vizinhanças em baixa dimensão**, mas a geometria do desenho depende de hiperparâmetros e não deve ser tratada como medida fiel das distâncias originais ou prova de que clusters “existem”.
 

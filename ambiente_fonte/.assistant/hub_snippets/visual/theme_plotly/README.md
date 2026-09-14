@@ -1,6 +1,15 @@
 # `theme_plotly` — padronize a figura sem esconder seus efeitos
 
 <!-- readme-objeto: 1.0.0 -->
+<!-- sistema-temas-v07: consumidores -->
+> **Atualização V07 — estado atual.** Além das rotas V03, `theme_plotly` agora
+> expõe `get_tokens_plotly(theme)`: ele revalida o `ResolvedTheme` pelas mesmas
+> guardas de `notebook/light` e devolve uma **cópia** dos tokens para consumidores
+> que precisam de semânticas específicas, como `palette.curves_legacy`,
+> `palette.sequential` ou `semantic.warning`. A função não registra template nem
+> altera `pio.templates.default`. A V07 também migrou explicitamente
+> `correlation_matrix` e `distribution_grid`; referências abaixo que os descrevem
+> como consumidores apenas legados registram o estado histórico da V03.
 
 > Aplique o tema do Hub a gráficos Plotly e declare contexto no rodapé, distinguindo alterações na figura de padrões da sessão.
 

@@ -1,6 +1,14 @@
 # `distribution_grid` — veja a forma das variáveis, não só a média
 
 <!-- readme-objeto: 1.0.0 -->
+<!-- sistema-temas-v07: consumidores -->
+> **Atualização V07 — estado atual.** As rotas legadas `plot_distributions` e
+> `plot_distribution_grid` permanecem disponíveis. Para aparência derivada de um
+> `ResolvedTheme`, use `plot_distributions_resolvido` ou
+> `plot_distribution_grid_resolvido`. O tema é validado antes da amostragem;
+> `smart_sample`, conversão para pandas, colunas e valores dos histogramas não têm
+> uma segunda implementação. A V07 não transforma a amostra em evidência da
+> população inteira nem homologa a renderização no browser Databricks.
 
 > Reúna histogramas de colunas numéricas para investigar concentração, assimetria e grupos, observando o alcance da amostra.
 
