@@ -21,7 +21,8 @@ A fundação documental e arquitetural da MM00 foi implementada, auditada indepe
 - Fechamento documental V09: PR #47 / `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb`.
 - Reconciliação MM00 sobre a V09 fechada: `26cf7c8edd631f97b5c0541daff2e73dc2286a71`.
 - Head técnico pré-D1 validado: `6f1375efe1a610eca30815b1866cc5d7049514a4`.
-- Head pós-registro D1-B: `e027223049380014fbfa59dea6bd6fbd7744e8a7`.
+- Head pós-registro D1-B validado: `e027223049380014fbfa59dea6bd6fbd7744e8a7`.
+- Head final de evidência pós-D1-B: `6f60c27e8cdb95d9e5f5feaaa0ccd471444295c4`.
 
 ## Entregas
 
@@ -48,7 +49,8 @@ A fundação documental e arquitetural da MM00 foi implementada, auditada indepe
 | Diff técnico contra a `main` fechada | **23 arquivos documentais/contextuais; zero alteração funcional própria** |
 | Métricas do README raiz | **1374 arquivos / 1859 links** |
 | Bateria pós-registro D1-B | **4/4 workflows verdes** |
-| `main` pós-D1-B | **estável em `d6655411ca4ac1834b0983f6ce6bdadc30b831bb`** |
+| Bateria da árvore final de evidência | **4/4 workflows verdes** |
+| `main` após a bateria final | **estável em `d6655411ca4ac1834b0983f6ce6bdadc30b831bb`** |
 | Aceite humano explícito da MM00 | pendente |
 
 ## Resultado da A1
@@ -112,6 +114,13 @@ A reconciliação foi montada usando `main=d6655411ca4ac1834b0983f6ce6bdadc30b83
 - V00 `34885007403`: `success`;
 - V01 `34885007509`: `success`;
 - V02 `34885007567`: `success`.
+
+### Árvore final de evidência `6f60c27e8cdb95d9e5f5feaaa0ccd471444295c4`
+
+- CI geral `34885242394`: `success`;
+- V00 `34885242458`: `success`;
+- V01 `34885242492`: `success`;
+- V02 `34885242445`: `success`.
 
 A reconsulta posterior confirmou `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb`, sem novo avanço concorrente. O gate manteve a composição em **1374 arquivos / 1859 links**, sem relaxar validador.
 
