@@ -95,3 +95,10 @@ Auditoria independente, avaliação com iniciante e homologações de runtime
 continuam pendentes. Não altera ADRs anteriores nem implementa V02.
 O registro operacional é o [checkpoint V01](../sprints/sistema_temas/V01/CHECKPOINT_V01.md).
 
+## Registro de implementação V02–V04 e reconciliação D05 — 2026-09-13
+
+Após a ratificação da V01, a implementação evoluiu de forma aditiva sem alterar a decisão arquitetural: V02 promoveu o schema e integrou o núcleo de carga/validação/resolução; V03 integrou o adaptador Plotly opt-in; V04 integrou rotas opt-in para componentes HTML, estilos compartilhados e tabela pandas, preservando as APIs legadas como default.
+
+Os estados de integração estão registrados nos checkpoints e READMEs próprios da iniciativa. A D05 apenas reconcilia documentos vivos que ainda usavam rótulos pré-merge como “candidata”; não cria a sprint funcional V05, não modifica o contrato visual 0.1.0, não altera APIs e não reclassifica testes Git/locais como publicação ou homologação Databricks.
+
+Permanecem separados: publicação no workspace, homologação visual/runtime, acessibilidade, auditoria independente, avaliação com usuário iniciante e qualquer etapa posterior do plano V00–V14.

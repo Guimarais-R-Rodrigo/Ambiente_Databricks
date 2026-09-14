@@ -2620,7 +2620,9 @@ Atualizar uma referência oficial exige rever a afirmação que ela sustenta; n�
 
 ---
 
-## Sistema de Temas — V04 (candidata)
+## Sistema de Temas — V04 integrada no Git
+
+A V04 foi aceita e integrada no Git. Isso confirma a disponibilidade das rotas opt-in no produto versionado; não confirma publicação no workspace, homologação visual/runtime, acessibilidade ou aprovação de uma identidade.
 
 A V04 estende o tema validado aos componentes HTML e à tabela pandas sem mudar o
 caminho atual por padrão. As funções históricas continuam válidas. Para usar o
