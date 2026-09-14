@@ -1,0 +1,85 @@
+name: MM00 fechamento Q-01 transitório
+
+on:
+  push:
+    branches:
+      - micromodelos/mm00-fechamento-pos-merge
+
+permissions:
+  contents: write
+
+jobs:
+  fechar-q01:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Inserir entrada MM00 preservando bytes históricos
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+
+          path = Path('CHANGELOG.md')
+          raw = path.read_bytes()
+          marker = '## 2026-09-14 — V08: integração transversal e fechamento técnico (ChatGPT)'.encode('utf-8')
+          idx = raw.index(marker)
+
+          block = '''## 2026-09-14 — MM00: integração e fechamento documental do Framework de Micromodelos (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) Fundação documental MM00–MM13 do Framework de Micromodelos, com Plano Mestre, inventário, matrizes de reuso/riscos/dependências, pacote de auditoria A1 e checkpoint fail-closed.
+- (ChatGPT) ADR-0014 a ADR-0020 para congelar as fronteiras arquiteturais: micromodelo como artefato de domínio, `micromodelo.yaml` canônico, MLflow para histórico de runs, governança externa de publicação, piloto greenfield antes dos legados, consumo do Sistema de Temas e fontes limitadas ao catálogo configurado.
+
+### Atualizado
+
+- (ChatGPT) PR #43 integrada após aceite humano explícito; head final validado `e3809b15b61f2bc1eeec06c9de6f38a329868e98` e merge `36e89515a46df24f41deea4791b109f5a1f938f2`.
+- (ChatGPT) ADR-0014 a ADR-0020 ratificados como aceitos sem ressalvas; MM01 continua condicionada às decisões detalhadas previstas nas sprints seguintes, sem antecipação silenciosa de schema, fingerprint ou tracking rule-based.
+- (ChatGPT) Q-01 da auditoria A1 é fechado por esta manutenção pós-merge, conforme exceção D1-B: a entrada da MM00 foi diferida para preservar o histórico do changelog e agora é registrada de forma aditiva.
+
+### Evidências
+
+- (ChatGPT) Auditoria A1 independente: `APTA_COM_CORRECOES`; M-01 corrigido, nenhum `DIVERGE` atribuível à MM00 e Q-01 tratado pela D1-B até este fechamento.
+- (ChatGPT) Bateria final da candidata: CI geral `34893158270`, V00 `34893158453`, V01 `34893158339` e V02 `34893158265`, todos `success` no mesmo head final; nenhum validador foi relaxado.
+
+### Limites
+
+- (ChatGPT) MM00 não cria skill, prompt funcional, helper, template executável, micromodelo real, consulta de dados, run MLflow, publicação ou migração de legado. Esta entrada fecha somente a pendência documental Q-01 antes da MM01.
+
+'''.encode('utf-8')
+
+          if block in raw:
+              raise SystemExit('Entrada MM00 já existe; recusando duplicação.')
+
+          before = raw[:idx]
+          after = raw[idx:]
+          new = before + block + after
+          path.write_bytes(new)
+
+          reread = path.read_bytes()
+          assert reread[:idx] == before
+          assert reread[idx:idx + len(block)] == block
+          assert reread[idx + len(block):] == after
+          print('OLD_SHA256=' + hashlib.sha256(raw).hexdigest())
+          print('NEW_SHA256=' + hashlib.sha256(reread).hexdigest())
+          print('INSERTED_BYTES=' + str(len(block)))
+          PY
+
+      - name: Verificar escopo e auto-remover workflow transitório
+        shell: bash
+        run: |
+          git diff --check
+          git diff -- CHANGELOG.md
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git rm .github/workflows/mm00-fechar-q01-transitorio.yml
+          git diff --cached --name-only
+          test "$(git diff --cached --name-only | sort | tr '\n' ' ')" = ".github/workflows/mm00-fechar-q01-transitorio.yml CHANGELOG.md "
+          git commit -m "MM00 — fechar Q-01 de forma estritamente aditiva"
+          git push origin HEAD:micromodelos/mm00-fechamento-pos-merge
