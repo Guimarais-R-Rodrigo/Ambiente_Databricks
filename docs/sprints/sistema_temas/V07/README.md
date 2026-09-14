@@ -1,5 +1,7 @@
 # V07 — demais consumidores e formatos de saída
 
+> **Estado atual:** candidata em execução. Sem aceite, PR de integração, merge ou publicação Databricks. O [checkpoint V07](CHECKPOINT_V07.md) concentra base, evidências, failures preservados e pendências de fechamento.
+
 ## Objetivo
 
 A V07 fecha a dispersão visual nos consumidores runtime que ficaram fora das integrações V03/V04 e da pipeline de assets V06. O princípio é estrito: **cálculo, agregação, amostragem, domínio dos dados e decisões analíticas não pertencem ao tema**. A V07 só cria rotas visuais opt-in sobre consumidores reais identificados no inventário V00.
