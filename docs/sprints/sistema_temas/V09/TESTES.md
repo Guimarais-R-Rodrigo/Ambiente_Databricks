@@ -2,11 +2,11 @@
 
 ## Estado
 
-Candidata em execução. Este documento registra resultados sem transformar failures em successes.
+Candidata em fechamento técnico. Este documento registra successes e failures sem reclassificar resultados históricos.
 
 ## Suíte específica
 
-`tools/tests/test_temas_v09.py` cobre inicialmente:
+`tools/tests/test_temas_v09.py` cobre:
 
 - existência real de todos os caminhos obrigatórios no produto sanitizado;
 - metadados fail-closed de transporte, ativação e publicação;
@@ -15,7 +15,10 @@ Candidata em execução. Este documento registra resultados sem transformar fail
 - integração da guarda ao gerador antes da escrita do ZIP;
 - preservação de `schema_version = 2`;
 - instrução operacional no checklist;
-- workflow permanente read-only.
+- workflow permanente read-only;
+- ZIP sintético válido com conferência dos bytes reais;
+- ZIP com arquivo temático ausente ou adulterado recusado;
+- ambos os workflows executando a validação pós-build, com o workflow operacional verificando antes do upload.
 
 ## Gate V09
 
@@ -27,10 +30,11 @@ python -B tools/tests/test_transicao_trabalho.py -v
 python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
 python -B tools/tests/test_visual_legado_v00.py
 python -B tools/kit_transicao_trabalho.py --output .artifacts/v09-kit
+python -B tools/temas_v09_transicao.py --kit-dir .artifacts/v09-kit
 python -B tools/validate_assistant.py --conferir-readme
 ```
 
-A geração do kit é local ao runner e não usa credenciais Databricks.
+A geração e inspeção do kit são locais ao runner e não usam credenciais Databricks. O workflow permanente declara `contents: read` e o checkout usa `persist-credentials: false`.
 
 ## Failures preservados
 
@@ -54,9 +58,26 @@ O único bloqueio foi `validate_assistant.py --conferir-readme`: a execução me
 
 Esse run permanece **FAILURE**.
 
-## Evidência pendente
+## Gate completo verde de referência
 
-Os resultados posteriores serão preenchidos a partir dos runs reais da branch. Nenhum resultado é declarado antecipadamente.
+### `34878578986` — SUCCESS no head `6c19ef6da1012b4c33bd0e15c1bb332a6cb046a3`
+
+O run executou a versão já endurecida com verificação pós-build do ZIP:
+
+- V09 específica: **11/11 PASS**;
+- regressões do kit de transição: **43 testes**, com **36 PASS e 7 SKIP** porque essa etapa deliberadamente não usa `--spark`; os sete casos Spark permanecem cobertos pelo workflow operacional do kit com `--spark`;
+- regressões cumulativas V01–V09: **416/416 PASS**;
+- compatibilidade visual V00: **12/12 PASS**;
+- bundle real: **535 arquivos + `MANIFEST.json`**;
+- commit gravado no kit: `6c19ef6da1012b4c33bd0e15c1bb332a6cb046a3`;
+- SHA256 do manifesto: `5a2df33ce8c97b426efd0fd231f2e4974fa505c507753cf0a0698274430ff1a7`;
+- inspeção pós-build: `theme_contract v1`, **9 caminhos obrigatórios presentes e com SHA256 válido**, `manual_opt_in`, `not_performed`;
+- validador: **APROVADO — 0 falhas / 0 avisos**;
+- métricas vivas do validador: 14 skills, 16 prompts/161 campos, 92 helpers citados, 217 Markdown/1382 links relativos, 80 notebooks/101 links, 76/76 READMEs de objeto + 3/3 exemplares, 62 pastas de objeto, 60 formas de pasta, 62 contratos de saída, 60 contratos de entrada, 79 notebooks com saída colada, 62 docstrings e 0 em inglês, 72 arquivos de molde e 0 violações, 60 objetos exercitados, 217 arquivos Python AST, instruções 9043/20000, 1355 arquivos de identidade, 1850 links fora da raiz e 0 extras locais;
+- `GITHUB_TOKEN`: `Contents: read`, `Metadata: read`;
+- escopo final do workflow confirmou explicitamente ausência de publicação/ativação Databricks.
+
+Depois desse run foram feitas somente reconciliações documentais dos índices vivos; nenhuma implementação, contrato ou arquivo `.assistant` foi alterado. O head que for levado à PR deve receber novo gate exato antes de ser considerado candidato final.
 
 ## O que PASS não prova
 
