@@ -19,6 +19,7 @@ from pathlib import Path
 from project_policy import SAFE_SIMULATED_USERNAME, EXPECTED_HUB_DIRS, EXPECTED_SKILL_NAMES, LEGACY_MANAGED_SKILL_NAMES
 from notebook_marker import eh_notebook
 from publicar_free import conferir_fonte_espelho
+from temas_v09_transicao import validate_theme_inventory
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -100,6 +101,11 @@ def main() -> int:
                 "object_type": "NOTEBOOK" if path.suffix == ".ipynb" or (path.suffix == ".py" and eh_notebook(path)) else "FILE",
             }
         )
+    try:
+        theme_contract = validate_theme_inventory(entries)
+    except ValueError as exc:
+        print(f"FAIL pacote recusado: {exc}")
+        return 1
     manifest = {
         "schema_version": 2,
         "source_commit": commit,
@@ -107,6 +113,7 @@ def main() -> int:
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "target": "/Users/<username-trabalho>/",
         "files": entries,
+        "theme_contract": theme_contract,
         "managed_hub_directories": sorted(EXPECTED_HUB_DIRS),
         "managed_skill_names": sorted(EXPECTED_SKILL_NAMES),
         "legacy_skill_names_for_review": sorted(LEGACY_MANAGED_SKILL_NAMES),
