@@ -45,7 +45,7 @@ A fundação documental e arquitetural da MM00 foi implementada, auditada indepe
 | Métricas do README raiz | **1374 arquivos / 1859 links** |
 | Bateria no head `26cf7c8e...` | **4/4 workflows verdes** |
 | Última repetição desta atualização de evidência | pendente |
-| Aceite explícito de Rodrigo | pendente |
+| Aceite humano explícito | pendente |
 
 ## Resultado da A1
 
@@ -83,7 +83,7 @@ Consequência:
 
 ## Escopo confirmado contra a `main` fechada V09
 
-O merge `26cf7c8e...` foi montado usando `main=d6655411...` como base documental. Verificações de patch confirmaram:
+O merge `26cf7c8e...` foi montado usando `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb` como base documental. Verificações de patch confirmaram:
 
 - `README.md` raiz difere da `main` **somente** nas duas linhas de métricas: 1355→1374 arquivos e 1850→1859 links;
 - `docs/sprints/README.md` difere da `main` **somente** pela seção Framework de Micromodelos — MM00;
@@ -99,7 +99,7 @@ O merge `26cf7c8e...` foi montado usando `main=d6655411...` como base documental
 - V01 `34882724892`: `success`;
 - V02 `34882724729`: `success`.
 
-### Head técnico `26cf7c8e...`, reconciliado com `main=d6655411...`
+### Head técnico `26cf7c8e...`, reconciliado com `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb`
 
 - CI geral `34883378412`: `success`;
 - V00 `34883378511`: `success`;
