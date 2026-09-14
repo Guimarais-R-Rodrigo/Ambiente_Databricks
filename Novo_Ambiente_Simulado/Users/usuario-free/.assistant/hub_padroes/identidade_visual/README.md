@@ -1,13 +1,13 @@
 # Identidade visual — contrato central do Sistema de Temas
 
-> **PADRÃO TRANSVERSAL DO HUB · V02 INTEGRADA; CONSUMO OPT-IN ATÉ V04.** Não é um novo tipo de objeto,
-> App ou configuração ativa de todos os notebooks. Nada muda na rotina legada.
+> **PADRÃO TRANSVERSAL DO HUB · V02–V07 INTEGRADAS NO GIT.** Não é um novo tipo de objeto,
+> App ou configuração ativa de todos os notebooks. Consumo e autoria continuam opt-in; nada muda silenciosamente na rotina legada.
 
 Para começar, abra o [guia operacional](GUIA_OPERACIONAL.md). Para corrigir uma
 mensagem, consulte [Erros e recuperação](ERROS.md). Para implementar um consumidor,
 leia o [objeto `visual.tema`](../../hub_snippets/visual/tema/README.md).
 
-**Estado vigente no Git:** V02 integrou o núcleo de carga/validação/resolução; V03 acrescentou o adaptador Plotly opt-in; V04 estendeu a mesma arquitetura aos componentes HTML, estilos compartilhados e tabela pandas por rotas `_resolvido`. As APIs legadas permanecem o default. Integração Git não equivale a publicação no workspace, homologação visual/runtime, acessibilidade ou aprovação de uma identidade.
+**Estado vigente no Git:** V02 integrou o núcleo de carga/validação/resolução; V03 o adaptador Plotly; V04 componentes HTML/tabela; V05 o Visual Lab de autoria; V06 a geração editorial orientada por tema; V07 consumidores runtime e formatos exercitados. `ResolvedTheme` permanece a fonte efetiva para consumo configurável e as APIs legadas continuam o default. Integração Git não equivale a publicação no workspace, homologação visual/runtime, acessibilidade ou aprovação de uma identidade.
 
 ## Fonte única e promoção
 
@@ -59,7 +59,7 @@ arquivo do módulo, não pelo diretório de trabalho nem pela proposta recebida.
 Leia o [guia operacional](GUIA_OPERACIONAL.md) antes de executar o exemplo.
 A [coleção de padrões](../README.md) e o [Manual Técnico](../../MANUAL_TECNICO.md#catalogo-helpers)
 continuam sendo as entradas gerais. A publicação e sua homologação são gates
-separados; V00–V04 integradas no Git não oferecem, por si só, comando ou autorização para publicar um tema.
+separados; V00–V07 integradas no Git não oferecem, por si só, comando ou autorização para publicar um tema.
 
 ## Versões que não devem ser confundidas
 

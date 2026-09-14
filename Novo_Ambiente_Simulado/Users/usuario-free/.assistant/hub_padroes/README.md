@@ -23,8 +23,9 @@ transversais de processo, não novos tipos.
 
 ## Sistema de Temas
 
-O [padrão de identidade visual](identidade_visual/README.md) define configurações
-completas e sua validação. É transversal, não um sétimo tipo de objeto. V02 integra o núcleo; V03 e V04 acrescentam consumidores opt-in. Não há painel, tema global, migração automática de notebooks ou publicação implícita.
+O [padrão de identidade visual](identidade_visual/README.md) é o contrato transversal; não é um sétimo tipo de objeto. `ResolvedTheme` é a representação validada. V03/V04 integram consumidores Plotly/HTML, V05 fornece o Visual Lab opt-in, V06 conecta geração editorial e V07 amplia os consumidores runtime e formatos exercitados.
+
+Templates e skills podem orientar composição, mas não redeclaram tokens ou paletas. Para um objeto visual configurável novo, use o contrato central e a rota `_resolvido` aplicável. Não há tema global automático, migração silenciosa de notebooks ou publicação implícita.
 
 ## Fluxo recomendado
 

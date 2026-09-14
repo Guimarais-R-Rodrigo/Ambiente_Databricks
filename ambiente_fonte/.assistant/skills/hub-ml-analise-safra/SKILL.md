@@ -82,6 +82,8 @@ Importar de `hub_snippets` em vez de reimplementar a lógica. Catálogo completo
 | Features de calendário para derivar MOB | `hub_snippets.spark.date_features` |
 | Tema visual e formatação brasileira | `hub_snippets.visual.theme_plotly`, `hub_snippets.constants.format_br` |
 
+Com um `ResolvedTheme` notebook explicitamente selecionado, use `plot_vintage_curves_resolvido` e `plot_vintage_heatmap_resolvido`. Essas rotas mudam paleta/layout, não MOB, denominador, maturidade, cobertura ou taxa. Sem tema selecionado, mantenha as funções legadas.
+
 `build_vintage_table` calcula incidência acumulada no nível contrato × MOB. Somar taxas por safra produz número diferente e incorreto — erro recorrente em painéis de vintage.
 
 ## Verificar atualidade Databricks

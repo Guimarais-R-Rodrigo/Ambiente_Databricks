@@ -140,6 +140,8 @@ Importar de `hub_snippets` em vez de reimplementar a lógica. Catálogo completo
 | Scorecard e bandas de score | `hub_snippets.ml.scorecard_builder`, `hub_snippets.ml.score_bands` |
 | Suites não tabulares | `hub_snippets.ml.lgbm_ranker`, `hub_snippets.ml.clustering_suite`, `hub_snippets.ml.isolation_forest`, `hub_snippets.ml.survival_cox`, `hub_snippets.ml.prophet_wrapper` |
 
+Se um `ResolvedTheme` notebook tiver sido selecionado para a entrega, as curvas podem usar `plot_roc_curve_resolvido`, `plot_pr_curve_resolvido`, `plot_lift_curve_resolvido` e `plot_ks_curve_resolvido`. Isso é somente aparência: métricas, probabilidades, thresholds e a seleção do modelo continuam definidos pelo fluxo analítico, não pelo tema.
+
 `temporal_split` e `walk_forward_cv` operam em unidades de calendário; substituí-los por fatia de linhas reintroduz o leakage que eles evitam. Os wrappers de treino dependem de bibliotecas opcionais — confirmar instalação e versão fixada antes de prometer execução.
 
 ## Entregar
