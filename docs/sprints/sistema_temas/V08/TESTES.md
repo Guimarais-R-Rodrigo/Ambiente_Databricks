@@ -85,6 +85,14 @@ Depois da atualização do checkpoint e deste registro, passaram novamente:
 
 A única divergência foi `repo (links)`: **1850 colado versus 1849 real**. Foram **1 falha e 0 avisos**. As etapas posteriores de guarda runtime e escopo foram corretamente puladas porque o validador já havia reprovado.
 
+### `34873780887` — FAILURE de configuração no fechamento pós-merge
+
+A primeira tentativa transitória de reconciliar o bloco V08 no changelog foi recusada pelo GitHub antes da criação de jobs porque o conteúdo multilinha não estava encapsulado de forma válida no YAML. Nenhum arquivo de produto ou changelog foi alterado por esse run.
+
+### `34873908522` — FAILURE transitório com escrita controlada
+
+A segunda tentativa usou o bloco do changelog codificado e a etapa `Reconciliar bloco V08 do changelog (transitório)` concluiu com `success`, produzindo o commit `8ea54df54d64e764f1d7a3f01d18e84ef7a7dde5`. A suíte V08 do próprio run reprovou depois, como esperado, porque o workflow daquela execução estava temporariamente com `contents: write` e `persist-credentials: true`; regressões posteriores foram puladas. O workflow permanente foi restaurado byte a byte para read-only no commit seguinte.
+
 Nenhum failure acima é reclassificado retroativamente.
 
 ## Sucessos finais antes do merge
