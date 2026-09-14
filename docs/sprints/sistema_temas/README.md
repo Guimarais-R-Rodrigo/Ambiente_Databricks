@@ -1,8 +1,20 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Estado vigente — V00–V09 integradas no Git
+## Estado vigente — V00–V09 integradas; V10 candidata de Databricks App
 
-V00–V09 estão aceitas e integradas no Git. Rodrigo deu aceite explícito para a V09 em 14/09/2026. A entrega funcional foi integrada pelo PR #45, com head `3b69dd25fd4af434fda414496c2ca3d80fd78a8e` e merge real `0f7234c4734f1974ebb1a20123f3c26626c67ef3`.
+V00–V09 estão aceitas e integradas no Git. A V10 está em candidata separada na branch `codex/temas-v10-databricks-app-20260914`, baseada no fechamento V09 `d6655411ca4ac1834b0983f6ce6bdadc30b831bb`; não há aceite, merge ou deploy Databricks.
+
+A V10 acrescenta uma interface Streamlit de gestão visual sobre o núcleo V02 e o Visual Lab V05. A superfície é `authoring_only`: escolhe base, ajusta/valida tokens, compara base × proposta e salva/reabre somente a própria sessão. Identidade vem dos headers encaminhados pelo proxy Databricks; o namespace persistente usa SHA-256 e o storage produtivo exige Unity Catalog Volume via recurso `theme_storage`.
+
+A política V01 permanece canônica para `leitor`, `proponente`, `aprovador`, `publicador` e `mantenedor`. A V10 não implementa seletor de papel nem ações de aprovar, publicar, promover ou apagar histórico. `context="app"` continua deliberadamente não implementado como contexto temático: o App candidato gerencia propostas `notebook` existentes.
+
+Os runs `34884790130` e `34885407907` permanecem **FAILURE**. O primeiro revelou autocontaminação do runner por `.pyc`; o segundo comprovou V10 19/19, regressões V01–V10 436/436, V00 12/12 e bundle de 247 arquivos, mas o validador recusou métricas documentais antigas e um link relativo inválido. O detalhamento está em [V10/TESTES.md](V10/TESTES.md) e o estado de decisão em [V10/CHECKPOINT_V10.md](V10/CHECKPOINT_V10.md).
+
+Nenhuma criação/atualização de Databricks App, associação real de UC Volume, alteração de ACL/compute ou publicação de tema foi executada. Headers reais, grupos/permissões, browser, acessibilidade, concorrência multiusuário, custo observado e UAT permanecem gates de ambiente. V11/AI-BI não foi iniciada.
+
+## Estado integrado anterior — V09
+
+Rodrigo deu aceite explícito para a V09 em 14/09/2026. A entrega funcional foi integrada pelo PR #45, com head `3b69dd25fd4af434fda414496c2ca3d80fd78a8e` e merge real `0f7234c4734f1974ebb1a20123f3c26626c67ef3`.
 
 O primeiro pós-merge revelou um defeito real apenas na preparação do runner do workflow operacional: o run `34880619346` falhou antes dos gates V09/Spark porque as dependências Node do compositor V06 ainda não eram instaladas antes de `ci_local.py`. O failure foi preservado e a correção mínima foi integrada pelo PR #46, produzindo o head técnico final `4ae714a35a0aafd930a8cd796d962b0a79449b88`.
 
@@ -12,7 +24,7 @@ No pós-merge final do SHA `4ae714a35a0aafd930a8cd796d962b0a79449b88`, os 12 wor
 
 Os failures `34877035267`, `34877297808` e `34880619346` permanecem registrados como **FAILURE** em `V09/TESTES.md`; nenhum foi reclassificado.
 
-Nenhuma publicação Databricks, ativação de tema, alteração de ACL/compute ou execução remota Spark/SQL/MLflow foi realizada. Spark no gate operacional foi local no runner. Browser/runtime Databricks, acessibilidade e UAT continuam gates separados. A V10 não foi iniciada por este fechamento.
+Nenhuma publicação Databricks, ativação de tema, alteração de ACL/compute ou execução remota Spark/SQL/MLflow foi realizada. Spark no gate operacional foi local no runner. Browser/runtime Databricks, acessibilidade e UAT continuam gates separados.
 
 ## Estado integrado anterior — V00–V08 integradas no Git
 

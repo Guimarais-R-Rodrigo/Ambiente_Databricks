@@ -176,6 +176,6 @@ Rollback do **App** significa voltar a uma versão anterior do código/bundle va
 - [`app.yaml`](app.yaml)
 - [Visual Lab V05](../../../hub_snippets/visual/theme_lab/README.md)
 - [Contrato de identidade visual](../README.md)
-- [Matriz de papéis V10](../../../../../docs/sprints/sistema_temas/V10/MATRIZ_PAPEIS.json)
+- Matriz de papéis V10: `docs/sprints/sistema_temas/V10/MATRIZ_PAPEIS.json` no repositório.
 
 A V10 candidata não equivale a deploy, UAT, acessibilidade ou publicação. V11/AI-BI não é iniciada por este diretório.

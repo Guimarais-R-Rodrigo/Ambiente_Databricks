@@ -1,13 +1,13 @@
 # Identidade visual — contrato central do Sistema de Temas
 
-> **PADRÃO TRANSVERSAL DO HUB · V02–V07 INTEGRADAS NO GIT.** Não é um novo tipo de objeto,
-> App ou configuração ativa de todos os notebooks. Consumo e autoria continuam opt-in; nada muda silenciosamente na rotina legada.
+> **PADRÃO TRANSVERSAL DO HUB · V02–V09 INTEGRADAS NO GIT; V10 EM CANDIDATA.** Não é um novo tipo de objeto,
+> configuração ativa de todos os notebooks nem autorização para implantar um App. Consumo e autoria continuam opt-in; nada muda silenciosamente na rotina legada.
 
 Para começar, abra o [guia operacional](GUIA_OPERACIONAL.md). Para corrigir uma
 mensagem, consulte [Erros e recuperação](ERROS.md). Para implementar um consumidor,
-leia o [objeto `visual.tema`](../../hub_snippets/visual/tema/README.md).
+leia o [objeto `visual.tema`](../../hub_snippets/visual/tema/README.md). Para a superfície de App V10 ainda candidata, use o [guia do Databricks App](databricks_app/README.md).
 
-**Estado vigente no Git:** V02 integrou o núcleo de carga/validação/resolução; V03 o adaptador Plotly; V04 componentes HTML/tabela; V05 o Visual Lab de autoria; V06 a geração editorial orientada por tema; V07 consumidores runtime e formatos exercitados. `ResolvedTheme` permanece a fonte efetiva para consumo configurável e as APIs legadas continuam o default. Integração Git não equivale a publicação no workspace, homologação visual/runtime, acessibilidade ou aprovação de uma identidade.
+**Estado vigente no Git:** V02 integrou o núcleo de carga/validação/resolução; V03 o adaptador Plotly; V04 componentes HTML/tabela; V05 o Visual Lab de autoria; V06 a geração editorial orientada por tema; V07 consumidores runtime e formatos exercitados; V08 alinhou as superfícies transversais; V09 integrou o contrato mínimo de temas ao kit de transição. `ResolvedTheme` permanece a fonte efetiva para consumo configurável e as APIs legadas continuam o default. A V10 está sendo desenvolvida separadamente como interface Databricks App para autoria/persistência, sem aceite, merge ou deploy. Integração Git não equivale a publicação no workspace, homologação visual/runtime, acessibilidade ou aprovação de uma identidade.
 
 ## Fonte única e promoção
 
@@ -32,7 +32,7 @@ fora do JSON do tema, conforme ADR-0013. Contrato válido não é permissão.
 Aceita somente UTF-8 sem BOM, até 131.072 bytes e 12 níveis. Campos desconhecidos,
 chaves repetidas, números não finitos, ciclos, herança e referências externas são
 recusados. Cada contexto tem configuração completa: notebook, readme ou presentation.
-Não há contexto App ou AI/BI implementado nesta versão.
+Não há contexto temático App ou AI/BI implementado nesta versão. A existência da interface V10 não muda essa fronteira: o App candidato gerencia propostas `notebook`; ele não torna `context="app"` válido.
 
 Cores no contrato são `#RRGGBB` em maiúsculas, sem transparência ou espaços.
 `normalize_color` pode converter minúsculas explicitamente durante a autoria;
@@ -51,15 +51,17 @@ A origem de cada token é o documento completo; não existem defaults injetados.
 
 ## Manutenção e efeitos
 
-O import não carrega Spark, Plotly, MLflow ou Streamlit. `jsonschema` e `referencing`
+O import do núcleo não carrega Spark, Plotly, MLflow ou Streamlit. `jsonschema` e `referencing`
 são dependências declaradas para validar, importadas na chamada. Não há instalação
 automática, acesso à rede, escrita ou cache. A pasta do pacote é resolvida pelo
 arquivo do módulo, não pelo diretório de trabalho nem pela proposta recebida.
 
+A V10 candidata possui dependências próprias de interface em `databricks_app/requirements.txt`; isso não altera as dependências do núcleo nem faz Streamlit virar requisito de quem apenas importa `hub_snippets.visual.tema`.
+
 Leia o [guia operacional](GUIA_OPERACIONAL.md) antes de executar o exemplo.
 A [coleção de padrões](../README.md) e o [Manual Técnico](../../MANUAL_TECNICO.md#catalogo-helpers)
 continuam sendo as entradas gerais. A publicação e sua homologação são gates
-separados; V00–V07 integradas no Git não oferecem, por si só, comando ou autorização para publicar um tema.
+separados; V00–V09 integradas no Git e a existência de uma candidata V10 não oferecem, por si só, comando ou autorização para publicar ou implantar um tema/App.
 
 ## Versões que não devem ser confundidas
 
