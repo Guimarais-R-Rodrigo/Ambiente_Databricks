@@ -42,72 +42,33 @@ O template de skill e `hub-ml-criar-objeto` sustentam a lista fechada de seis ti
 
 O primeiro CI detectou um handle corporativo histórico no ADR-0017; ele foi removido e substituído por contrato genérico. A A1 não encontrou identificador externo no diff auditado.
 
-Uma rodada posterior detectou um falso positivo documental: a abreviação do SHA da `main` fechada casava com o padrão genérico de identificador corporativo. A correção preservou a política e substituiu somente a abreviação pelo SHA completo.
+Uma rodada posterior detectou falso positivo documental em SHA abreviado; a correção preservou a política e passou a usar o SHA completo.
 
 **Status:** PASS sem relaxamento de regra.
 
 ## T07 — Migração tardia
 
-Plano Mestre posiciona migração em MM12; ADR-0018 permanece proposto. A A1 confirmou que a fundação não depende da skill de migração antecipadamente.
+Plano Mestre posiciona migração em MM12. O ADR-0018 foi aceito sem ressalvas em D2 e mantém a migração posterior ao piloto greenfield e freeze V1.
 
 **Status:** PASS.
 
 ## T08 — Tracking separado da especificação
 
-YAML define política/identidade; MLflow guarda histórico de runs; dados individuais permanecem fora do tracking. A A1 confirmou que o helper atual ainda não satisfaz o perfil rule-based e que a adaptação futura foi corretamente delimitada.
+YAML define política/identidade; MLflow guarda histórico de runs; dados individuais permanecem fora do tracking. O ADR-0016 foi aceito em D2. A A1 confirmou que o helper atual ainda não satisfaz o perfil rule-based e que a adaptação futura foi corretamente delimitada.
 
 **Status:** PASS arquitetural.
 
 ## T09 — Não alteração funcional pela MM00
 
-Contra `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb`, a PR permanece restrita a contexto, ADRs e documentação/auditoria MM00. O patch do README raiz altera somente as métricas medidas; o patch de `docs/sprints/README.md` acrescenta somente a seção MM00. Nenhum arquivo MM00 próprio pertence a `ambiente_fonte/.assistant/`, `Novo_Ambiente_Simulado/`, `tools/` ou `.github/workflows/`.
+Contra a `main` V09 fechada, a PR permanece restrita a contexto, ADRs e documentação/auditoria MM00. O patch do README raiz altera somente métricas medidas; o índice de sprints acrescenta somente a seção MM00. Nenhum arquivo MM00 próprio pertence a `ambiente_fonte/.assistant/`, `Novo_Ambiente_Simulado/`, `tools/` ou `.github/workflows/`.
 
 **Status:** PASS nominal; reconfirmar a lista final antes do aceite.
 
 ## T10 — Validação automática
 
-### Snapshot auditado
+A candidata acumulou rodadas verdes após A1, reconciliações V08/V09, correções de sanitização e D1-B. Antes de D2, os quatro workflows permanentes estavam verdes no head então vigente, preservando **1374 arquivos / 1859 links** e sem relaxar validadores.
 
-No head `f5577f5933d2ab19b5adfb9c7eea1c8fb3c80843`, CI geral, V00, V01 e V02 estavam em `success` antes da A1.
-
-### Pós-A1 / base V08
-
-A inclusão do resultado A1 elevou a identidade medida de 1368 para 1369 arquivos, mantendo 1859 links. O CI `34878871911` reprovou exclusivamente a contagem congelada 1368; as demais etapas e V00/V01/V02 passaram.
-
-### Pós-integração V09
-
-No head `922ae38491cb7a502b834b092ea637620b54300a`, V00/V01/V02 passaram e o CI `34881774760` reprovou somente porque o README da `main` V09 isolada registrava 1355/1850 enquanto a composição mediu **1374/1859**.
-
-### Candidata reconciliada antes do fechamento documental V09
-
-No head `ffc7981a9d8bcebb406f918aaff2b7d414effb6f`:
-
-- CI geral `34882724684`: `success`;
-- V00 `34882724514`: `success`;
-- V01 `34882724892`: `success`;
-- V02 `34882724729`: `success`.
-
-### Candidata reconciliada com o fechamento V09
-
-No head `26cf7c8edd631f97b5c0541daff2e73dc2286a71`:
-
-- CI geral `34883378412`: `success`;
-- V00 `34883378511`: `success`;
-- V01 `34883378518`: `success`;
-- V02 `34883378432`: `success`.
-
-### Head final antes da decisão D1
-
-No head `6f1375efe1a610eca30815b1866cc5d7049514a4`:
-
-- CI geral `34884154201`: `success`;
-- V00 `34884154328`: `success`;
-- V01 `34884154292`: `success`;
-- V02 `34884154221`: `success`.
-
-A composição preservou **1374 arquivos / 1859 links** e nenhum validador foi relaxado.
-
-**Status:** PASS técnico. A decisão D1-B altera apenas o tratamento humano de Q-01; a árvore resultante deve repetir os mesmos gates antes do próximo gate humano.
+**Status:** PASS técnico pré-D2. A árvore resultante da ratificação D2 deve repetir CI geral, V00, V01 e V02 antes do aceite final da MM00. A evidência final será registrada na descrição da PR para evitar novo commit apenas por run ID.
 
 ## T11 — Auditoria independente A1
 
@@ -121,24 +82,32 @@ Arquivos: `01_contexto.md`, `02_prompt_auditoria.md` e `03_resultado_a1.md` em `
 
 A A1 confirmou como escopo legítimo de MM01/MM02 as decisões de encoding do YAML, máquina de estados detalhada e materialidade fina do fingerprint.
 
-**Status:** EXECUTADA. O resultado histórico não é reescrito pela decisão D1-B.
+**Status:** EXECUTADA. O resultado histórico não é reescrito por D1-B ou D2.
 
-## T12 — Contexto canônico
+## T12 — Contexto canônico e D2
 
-`CLAUDE.md` registra V00–V09 integradas, distingue transporte de ativação/publicação, registra a A1 da MM00 e mantém ADR-0014 a ADR-0020 como propostos.
+`CLAUDE.md` registra V00–V09 integradas, D1-B, a A1 e o aceite sem ressalvas dos ADR-0014 a ADR-0020. O índice de ADRs e os sete ADRs foram sincronizados para `Aceito`, com integração da MM00 ainda pendente.
 
-**Status:** PASS documental, sujeito à reconsulta final da `main`.
+**Status:** PASS documental sujeito à bateria pós-D2.
 
 ## T13 — Regra de changelog
 
-A A1 classificou a ausência da entrada MM00 como **QUEBRA Q-01**. Uma tentativa de atualização integral acrescentou o bloco desejado, mas também modificou três linhas históricas. O patch detectou as mudanças; a tentativa foi rejeitada e o blob histórico original `2095dbcf1dd6b99e7ff008a9180361702222092b` foi restaurado por SHA. As reconciliações V09 preservaram esse mesmo blob.
+A A1 classificou a ausência da entrada MM00 como **QUEBRA Q-01**. Uma tentativa de atualização integral acrescentou o bloco desejado, mas também modificou três linhas históricas. O patch detectou as mudanças; a tentativa foi rejeitada e o blob histórico original foi restaurado por SHA.
 
 Foi concedida a decisão humana **D1-B**: exceção explícita e exclusiva para diferir a entrada MM00 para a manutenção documental imediatamente posterior.
 
 **Status:** DEFERIDO POR EXCEÇÃO HUMANA D1-B — **não é PASS**. Q-01 deixa de bloquear o aceite/merge da MM00, mas permanece débito documental obrigatório e deve ser fechado antes do início efetivo da MM01.
 
+## T14 — Ratificação arquitetural D2
+
+O usuário declarou: `D2: Aceito ADR-0014 a ADR-0020 sem ressalvas.`
+
+Os sete ADRs preservaram o corpo decisório e receberam ratificação datada. O índice de decisões e o contexto canônico foram sincronizados. O D2 não autoriza implementação funcional, acesso a metadata real, publicação, migração ou início da MM01.
+
+**Status:** PASS humano para as decisões arquiteturais; integração na `main` ainda depende do aceite final da MM00 e do merge.
+
 ## Critério final
 
-T01–T12 permanecem técnicos; T13 está coberto pela exceção D1-B, sem apagar o achado. O fechamento da MM00 ainda exige gates verdes na árvore pós-D1, `main` estável, decisão D2 sobre ADR-0014 a ADR-0020 e aceite humano explícito da MM00.
+T01–T12 permanecem técnicos; T13 está coberto pela exceção D1-B sem apagar o achado; T14 registra o aceite arquitetural. O fechamento da MM00 agora exige bateria pós-D2 verde, `main` estável e aceite humano explícito da MM00.
 
 Após o merge, a manutenção documental imediatamente posterior deve registrar a entrada da MM00 no `CHANGELOG.md` antes do início efetivo da MM01.
