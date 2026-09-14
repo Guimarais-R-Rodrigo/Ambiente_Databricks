@@ -15,7 +15,7 @@ quem mantém ou aprova mudanças começa aqui.
 | “O que foi realmente testado?” | [Testes](testes/README.md) |
 | “Como publico ou replico?” | [Playbooks](playbooks/README.md) |
 | “O que cada sprint entregou?” | [Sprints](sprints/README.md) |
-| “Como está a migração dos READMEs de objeto?” | [Iniciativa R00–R13](sprints/readmes_objetos/README.md) |
+| “Qual é o estado final dos READMEs de objeto?” | [Iniciativa R00–R13](sprints/readmes_objetos/README.md) |
 | “O que ficou pendente entre sessões?” | [Handoffs](handoffs/README.md) |
 | “Por que este arquivo saiu do produto?” | [Histórico](historico/README.md) |
 
@@ -43,7 +43,11 @@ Por isso um resultado antigo pode contradizer o estado atual sem estar “errado
 ele registra o runtime e a data em que foi observado. Para decidir hoje, use o
 resumo vigente em [testes](testes/README.md) e abra o JSON ou a rodada citada.
 
-## Estado vigente
+## Estado documental/local atual
+
+A iniciativa R00–R13 de READMEs por objeto foi encerrada em 14/09/2026 com 75/75 objetos operacionais, 3/3 exemplares, zero pendências e auditoria final local `A0_light`. Esse fechamento não publica nem homologa Databricks/Genie Code.
+
+## Última evidência Databricks real registrada
 
 Em 29/08/2026, validação local, publicação no Free e smoke no Spark 4.2.0 estavam
 aprovados. Os testes conversacionais do Genie Code continuavam parcialmente

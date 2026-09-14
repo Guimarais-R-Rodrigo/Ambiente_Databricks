@@ -84,3 +84,9 @@ auditoria independente, teste com usuários, homologação Databricks ou autoriz
 de publicação. A R03-A encerra antes da R03-B.
 
 Procedência e alterações desta ratificação: [aceite e versão estável](../sprints/readmes_objetos/ACEITE_V1.md).
+
+## Registro de conclusão — 2026-09-14
+
+A implementação da decisão foi concluída pela iniciativa R00–R13. O estado integrado confirma contrato 1.0.0, 75/75 READMEs operacionais, 3/3 exemplares, zero pendências e seis índices funcionais de snippets. A auditoria final R13 foi `A0_light`, aceita e integrada pelo PR #33; o fechamento documental pós-merge foi integrado pelo PR #34.
+
+Esta nota registra implementação e encerramento sem alterar o corpo decisório original. Não equivale a auditoria independente, publicação no workspace ou homologação Databricks/Genie Code.

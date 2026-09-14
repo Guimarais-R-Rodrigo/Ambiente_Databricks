@@ -58,6 +58,7 @@ Seguindo o padrão de organização **Pasta de Objeto**, cada demanda do Hub Pro
 ```text
 hub_prompts/
 └── eda_rapida/
+    ├── README.md                 <- guia local para escolher e interpretar
     ├── eda_rapida.md             <- briefing técnico preenchível
     └── exemplo_eda_rapida.py     <- notebook didático de acompanhamento
 ```
@@ -67,6 +68,8 @@ hub_prompts/
 *Leitura da figura: o template permanece o contrato copiável; a figura mostra como seus blocos reduzem ambiguidade e tornam o aceite verificável.*
 
 A figura funciona como um mapa de preenchimento. O template continua sendo o contrato copiável e deve carregar os detalhes concretos que não cabem no resumo visual.
+
+A pasta de prompt tem três camadas complementares: **README local para decidir se o recurso é adequado**, **briefing para preencher** e **notebook para preparar o cenário e registrar evidência**. O README não substitui o briefing, e o notebook não transforma uma resposta esperada em execução real.
 
 ### 1. O Arquivo Markdown (`<nome>.md`)
 
@@ -247,7 +250,7 @@ O catálogo abaixo preserva as famílias e acrescenta links diretos para o brief
 - **O usuário precisa informar:** recurso, objetivo, foco, chave candidata, coluna temporal, filtros e limite de custo/tempo.
 - **Cenário de Uso:**
   > *“Recebi acesso a uma tabela nova. Antes de propor uma análise, preciso entender estrutura, qualidade e bloqueios.”*
-- **Arquivos:** `hub_prompts/eda_rapida/eda_rapida.md` · `hub_prompts/eda_rapida/exemplo_eda_rapida.py`
+- **Arquivos:** `hub_prompts/eda_rapida/eda_rapida.md` · `hub_prompts/eda_rapida/exemplo_eda_rapida.py` · [README local](eda_rapida/README.md)
 
 #### `eda_completa` — Análise Exploratória Profunda
 

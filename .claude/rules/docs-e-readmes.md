@@ -69,16 +69,22 @@ do inventário integrado de helpers e termos (ADR-0010). Edite em
 `MANUAL_TECNICO.md` da raiz e gere o simulado pelo renderer. As três cópias devem
 conservar o mesmo conteúdo. Não reintroduza catálogo ou glossário independentes.
 
-## README de objeto — R01
+## README de objeto — contrato vigente 1.0.0
 
 A escala Objeto segue `ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md`
-e seu checklist editorial. É complemento do ADR-0007/0010, conforme ADR-0012 ratificado em 2026-09-12. Novos snippets, scripts e prompts incluem README; legados têm dispensa
-transitória rastreada, que só diminui. O gate mede estrutura, não qualidade da
-explicação nem execução.
+e o respectivo checklist editorial, conforme ADR-0012. A iniciativa R00–R13
+encerrou a transição: existem **75/75 READMEs operacionais, 3/3 exemplares e zero
+pendências estruturais**. `CONTROLE_MIGRACAO.json` permanece como evidência e
+guarda de ratchet; não é backlog ativo.
 
-Pausar ao fim da sprint com checkpoint e diff. O contrato 1.0.0 foi estabilizado
-após piloto R02 e aceite humano em 2026-09-12. Cada lote novo exige revisão
-própria; aceite do padrão não equivale a homologação de runtime. Documento pequeno não precisa de texto de
-enchimento. Relatórios discriminam READMEs, outras documentações, ferramentas
-e derivados. Preservar imagens e corpos históricos. Não carregar READMEs em
-massa nas instruções nem criar outro catálogo ou glossário.
+A partir desse estado, todo novo snippet, script ou prompt precisa incluir seu
+README na mesma mudança. Não crie dispensa automática nem reabra `pending`; uma
+reintrodução é regressão e deve falhar no gate. O contrato 1.0.0 mantém quinze
+seções para READMEs de objeto; índices, skills e outros documentos agregadores não
+herdam mecanicamente esse formato.
+
+O gate automático comprova estrutura, links, cobertura e invariantes; não certifica
+qualidade didática, correção estatística, execução no Databricks ou aceite humano.
+Relatórios e freezes R00–R13 são evidência histórica e não devem ser reescritos para
+acompanhar o estado atual. Mudanças vivas pertencem aos índices, regras, Manual e
+READMEs agregadores donos da informação.

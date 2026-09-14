@@ -56,9 +56,7 @@ Cada snippet resolve uma **dor analítica específica**, expondo uma API públic
 
 Para favorecer que o código seja limpo, fácil de encontrar e intuitivo tanto para pessoas quanto para a IA, os snippets seguem o padrão de organização chamado **Pasta de Objeto**.
 
-Cada snippet mantém o núcleo executável de três componentes abaixo. O objeto
-novo inclui também `README.md`, a camada humana de conceito e escolha; a
-migração das pastas legadas é gradual:
+Cada snippet mantém o núcleo executável de três componentes abaixo. Cada objeto operacional inclui também `README.md`, a camada humana de conceito e escolha. A migração estrutural foi encerrada na R13:
 
 ![Vista explodida de uma pasta de snippet com fachada, implementação e notebook didático.](../hub_readmes_visual_assets/readmes/snippets/png/01_anatomia_pasta.png)
 
@@ -116,7 +114,7 @@ completas e isoladas, sem aplicar cores ou alterar consumidores legados.
 
 *É o coração algorítmico do Hub, voltado a modelagem preditiva, risco de crédito, séries temporais e governança de modelos.*
 
-#### 📘 Guias locais R05 — modelos tabulares
+#### 📘 Modelos tabulares
 
 Antes de treinar ou ajustar estes modelos, use os guias locais para distinguir objetivo, métrica, dependência e limite de cada API:
 
@@ -129,7 +127,7 @@ Antes de treinar ou ajustar estes modelos, use os guias locais para distinguir o
 
 Os seis recursos são customizados pelo Hub e executados explicitamente; nenhum README aprova um modelo para produção.
 
-#### 📘 Guias locais R06 — séries e validação temporal
+#### 📘 Séries e validação temporal
 
 Antes de modelar uma série, separe as camadas: features, partição/backtest e modelo. Os guias locais R06 documentam os contratos atuais:
 
@@ -152,7 +150,7 @@ Os cinco recursos são customizados pelo Hub, driver-side e executados explicita
 - **`vintage_analysis`**: constrói curvas de safra e maturação por período de originação.
   - *Quando usar:* em risco, retenção ou eventos cujo denominador, janela e censura tenham sido definidos.
 
-#### 📘 Guias locais R07 — score, safra e sobrevivência
+#### 📘 Score, safra e sobrevivência
 
 Estes seis guias cobrem três perguntas diferentes: **como o score organiza risco**, **como coortes amadurecem** e **como analisar tempo até evento com censura**. Não misture as escalas:
 
@@ -165,7 +163,7 @@ Estes seis guias cobrem três perguntas diferentes: **como o score organiza risc
 
 Os guias não definem política de crédito, causalidade, regulação ou cutoff. Cada contrato precisa ser validado no problema real antes de virar decisão.
 
-#### 📘 Guias locais R08 — clusters, anomalias e explicabilidade
+#### 📘 Clusters, anomalias e explicabilidade
 
 A R08 separa quatro tarefas que costumam ser misturadas: **criar clusters**, **descrevê-los**, **projetá-los para visualização** e **explicar modelos/pontuar anomalias**:
 
@@ -178,7 +176,7 @@ A R08 separa quatro tarefas que costumam ser misturadas: **criar clusters**, **d
 
 Métrica interna, ranking, embedding e SHAP são evidências diferentes. Nenhum desses objetos cria causalidade, persona, política ou homologação por conta própria.
 
-#### 📘 Guias locais R09 — avaliação, drift e MLOps
+#### 📘 Avaliação, drift e MLOps
 
 - [Curvas ROC/PR/lift/KS](ml/curves_plotly/README.md) — `n` é metadado visual e não subamostra;
 - [Drift de features](ml/drift_detection/README.md) — PSI, KS, CSI e política explícita;
@@ -501,24 +499,6 @@ Eles priorizam operações distribuídas, mas algumas rotinas executam ações e
 
 ## Guias locais por objeto
 
-Cada objeto novo inclui um `README.md` para explicar conceito, contexto e
-limites antes do exemplo. A migração dos legados é gradual. O
-[contrato editorial](../hub_padroes/readme/template_objeto.md) padroniza essa
-leitura; o Manual continua sendo o catálogo integrado. Leia o aviso de efeitos
-do exemplo: ele pode escrever mesmo quando o helper apenas lê.
+A migração estrutural está concluída: os 52 snippets operacionais possuem README local. Para descobrir recursos, use os seis índices de categoria: [constants](constants/README.md), [display](display/README.md), [ml](ml/README.md), [spark](spark/README.md), [testing](testing/README.md) e [visual](visual/README.md). Cada índice enumera os filhos reais da categoria e aponta para o guia do objeto.
 
-O piloto R02 oferece guias de [XGBoost](ml/train_xgboost/README.md),
-[Isolation Forest](ml/isolation_forest/README.md),
-[junção point-in-time](spark/pit_join/README.md) e
-[formatação brasileira](constants/format_br/README.md). São entradas conceituais
-para os mesmos objetos, não novos helpers ou homologações de runtime.
-
-A R03-A acrescenta guias de [cores](constants/colors/README.md),
-[emojis e roteiro de EDA](constants/emojis/README.md),
-[estilos CSS](constants/styles/README.md),
-[dados sintéticos](testing/fixtures/README.md),
-[badges de status](visual/badge/README.md),
-[divisórias](visual/divider/README.md) e
-[cartões de indicadores](visual/kpi_card/README.md). Os guias distinguem
-formatação e comunicação de cálculo ou decisão de negócio. Não implicam
-unificação automática de estilos nem homologação visual no destino.
+O [contrato editorial](../hub_padroes/readme/template_objeto.md) continua obrigatório para novos snippets. Leia o README local antes do notebook de exemplo; o exemplo pode ter efeitos próprios mesmo quando o helper apenas lê. O Manual permanece o inventário integrado e a presença do guia não significa homologação de runtime.

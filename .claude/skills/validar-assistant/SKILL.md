@@ -21,12 +21,13 @@ Exit code 0 = aprovado; 1 = há falha bloqueante.
 
 | Check | Bloqueante? | Critério |
 |---|---|---|
-| Inventário/frontmatter das skills | sim | conjunto exato das 13 pastas; YAML escalar válido; `name` + `description`; `name` == pasta |
+| Inventário/frontmatter das skills | sim | conjunto exato das 14 pastas; YAML escalar válido; `name` + `description`; `name` == pasta |
 | Contrato dos prompts | sim | 16 prompts; cada um dos 161 campos tem como preencher, motivo e exemplo; QA e limites presentes |
 | Tamanho de SKILL.md | não (warn) | alerta acima de 500 linhas (progressive disclosure) |
 | Links Markdown relativos | sim | resolve para arquivo existente, **com a caixa exata** — NTFS ignora maiúsculas, o workspace Databricks não |
 | Links dentro de notebook | sim | idem, para links escritos em célula `%md` de arquivo `.py` |
 | Links fora da raiz analisada | sim | idem, para `README.md`, `docs/` e `.claude/` |
+| READMEs de objeto | sim | contrato 1.0.0; 75/75 operacionais, 3/3 exemplares e `pending=0`; novos objetos sem README reprovam |
 | Cercas de código | sim | blocos ``` balanceados em todos os .md |
 | AST Python | sim | todos os .py compilam |
 | Pastas de objeto | sim | nome identificador, módulo com o nome da pasta, notebook `exemplo_*`, e `__init__.py` idêntico à API pública derivada por AST |

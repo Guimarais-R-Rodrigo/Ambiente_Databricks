@@ -133,7 +133,7 @@ origem, hashes completos por arquivo e resultado da comparação. O bundle e o
 publicador recusam espelho antigo e extras/caches no pacote. Os hashes agregados
 da comparação não são hashes do ZIP. A integração real ainda exige teste Free.
 
-## READMEs de objeto — R01
+## READMEs de objeto — contrato vigente 1.0.0
 
 `python tools/ci_local.py --etapa readmes` executa regressões próprias da nova
 guarda e as regressões de convivência com o Concierge. A etapa descobre os
@@ -142,11 +142,11 @@ comuns e as três do Concierge, além desta etapa de READMEs. O contrato vem do 
 títulos dentro da ferramenta.
 
 [CONTROLE_MIGRACAO.json](../docs/sprints/readmes_objetos/CONTROLE_MIGRACAO.json)
-identifica legados pendentes. Um README entregue precisa sair da dispensa no
-mesmo commit. Novos objetos sem README reprovam. A versão anterior diferente do
-controle, na história first-parent, delimita o conjunto máximo de dispensas;
-na introdução inicial, só objetos existentes na base anterior são elegíveis.
-Histórico raso reprova com orientação para usar `fetch-depth: 0`.
+registra o fechamento da transição: `phase=complete`, `pending={}`, 75/75 READMEs
+operacionais e 3/3 exemplares. Ele permanece como evidência e guarda de ratchet,
+não como fila ativa de legados. Novos objetos sem README reprovam e reintroduzir
+uma dispensa também deve reprovar. Histórico raso continua incompatível com a
+verificação monotônica e exige `fetch-depth: 0`.
 
 Essas verificações não importam helpers nem executam código Markdown. Não provam
 clareza, estatística, veracidade de links externos ou compatibilidade de runtime.
