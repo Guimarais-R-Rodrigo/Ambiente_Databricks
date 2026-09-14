@@ -1,12 +1,14 @@
 # Checklist — transição pessoal para o Databricks do trabalho
 
-Procedimento dono: [guia de transição](replicacao-trabalho.md). Versão 11/09/2026. Não preencher identificadores corporativos nesta cópia versionada; anotações reais ficam no ambiente autorizado.
+Procedimento dono: [guia de transição](replicacao-trabalho.md). Versão 14/09/2026. Não preencher identificadores corporativos nesta cópia versionada; anotações reais ficam no ambiente autorizado.
 
 ## Origem e pacote
 
 - [ ] Confirmar o commit escolhido e checkout limpo; manter README/widgets, Manual e instruções aprovados.
 - [ ] Executar renderer, gate local e testes do kit. Não interpretar teste local como teste do trabalho.
 - [ ] Gerar `tools/kit_transicao_trabalho.py --output .artifacts/kit-trabalho` em diretório novo ou baixar o artefato do workflow.
+- [ ] Conferir no `MANIFEST.json` o bloco `theme_contract`: contrato v1, caminhos obrigatórios presentes e transportados com SHA256. Ausência ou divergência bloqueia o kit.
+- [ ] Tratar `theme_contract.activation = manual_opt_in` e `publication = not_performed` literalmente: transportar e conferir o Sistema de Temas **não é publicação**, ativação global nem aprovação visual no Databricks.
 - [ ] Levar ZIP 01, ZIP 02, guias e SHA256SUMS pelo canal corporativo permitido; não levar Git/histórico/segredos.
 - [ ] Conferir hashes e commit. Não misturar releases; não importar o ZIP externo de download.
 
@@ -24,6 +26,7 @@ Procedimento dono: [guia de transição](replicacao-trabalho.md). Versão 11/09/
 
 - [ ] Sessão Python nova; preencher USER_HOME/KIT_DIR; `PHASE="staging"`; opções extras desligadas.
 - [ ] Manifesto PASS e todos os FILEs SHA256 PASS. Não editar o manifesto para contornar erro.
+- [ ] Confirmar que schema, tokens, registro de assets, resolvedor e adaptador Plotly listados em `theme_contract.required_paths` também aparecem no inventário de arquivos e passaram na conferência SHA256.
 - [ ] Conferir tipos de arquivos/notebooks pela UI; metadata via API é opcional e não atesta células.
 - [ ] Conferir dependências necessárias e compute autorizado. Nenhuma instalação indiscriminada.
 - [ ] Habilitar Spark sintético; recomeçar em sessão nova; imports e Python PASS.

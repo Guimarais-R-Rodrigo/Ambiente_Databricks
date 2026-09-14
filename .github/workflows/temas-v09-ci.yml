@@ -1,0 +1,60 @@
+name: Kit de transição e temas V09
+on:
+  push:
+    branches: [main, 'codex/temas-v09*']
+  pull_request:
+    paths:
+      - 'tools/temas_v09_transicao.py'
+      - 'tools/bundle_implantacao.py'
+      - 'tools/kit_transicao_trabalho.py'
+      - 'tools/aceite_trabalho.py'
+      - 'tools/tests/test_temas_v09.py'
+      - 'tools/tests/test_transicao_trabalho.py'
+      - 'docs/playbooks/**'
+      - 'docs/sprints/sistema_temas/V09/**'
+      - '.github/workflows/temas-v09-ci.yml'
+permissions:
+  contents: read
+jobs:
+  kit-temas-v09:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      SOURCE_DATE_EPOCH: '1700000000'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Dependências Python
+        run: |
+          python -m pip install -r tools/requirements-dev.txt
+          python -m pip install 'ipywidgets>=8,<9'
+      - name: Dependências do compositor V06
+        run: |
+          npm install --global pnpm@10.34.5
+          pnpm --dir tools/readme_visuals install --frozen-lockfile
+      - name: V09 — contrato do kit
+        run: python -B tools/tests/test_temas_v09.py -v
+      - name: Regressões do kit de transição
+        run: python -B tools/tests/test_transicao_trabalho.py -v
+      - name: Regressões de temas V01–V09
+        run: python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
+      - name: Compatibilidade visual V00
+        run: python -B tools/tests/test_visual_legado_v00.py
+      - name: Gerar kit offline do próprio commit
+        run: python -B tools/kit_transicao_trabalho.py --output .artifacts/v09-kit
+      - name: Conferir theme_contract dentro do ZIP distribuível
+        run: python -B tools/temas_v09_transicao.py --kit-dir .artifacts/v09-kit
+      - name: Validação estrutural e documental
+        run: python -B tools/validate_assistant.py --conferir-readme
+      - name: Escopo
+        run: echo 'V09 integra o Sistema de Temas ao kit offline; não publica, ativa ou promove tema no Databricks.'

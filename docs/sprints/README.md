@@ -67,7 +67,9 @@ custos e interpretação. Estado, matriz e testes em
 
 ## Sistema de Temas do Hub
 
-A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V08 estão aceitas e integradas no Git.**
+A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V08 estão aceitas e integradas no Git; a V09 está em candidata separada, ainda sem aceite ou merge.**
+
+A V09 integra explicitamente o Sistema de Temas ao kit offline de transição: contrato temático no manifesto v2, guarda fail-closed antes do build e conferência de presença/tamanho/SHA256 dos nove arquivos canônicos dentro do ZIP gerado. A evidência corrente está em `docs/sprints/sistema_temas/V09/`; transporte não significa ativação ou publicação Databricks.
 
 A [V08 — integração transversal](sistema_temas/V08/README.md) conecta skills, Hub Padrões, entrada `.assistant` e Manual às mesmas fontes de verdade das V02–V07. A [matriz V08](sistema_temas/V08/MATRIZ_INTEGRACAO.json), o [checkpoint](sistema_temas/V08/CHECKPOINT_V08.md) e o [registro de testes](sistema_temas/V08/TESTES.md) preservam escopo, failures e a regra de zero alteração runtime Python.
 
@@ -77,7 +79,7 @@ A V08 foi aceita em 14/09/2026 e integrada pelo PR #42. O head final validado fo
 
 A V07 permanece integrada pelo PR #40 no commit `67114605c7345a01c1144e5d6c6d24e9c24e2491`; o fechamento documental subsequente produziu a base V08 `1b6632194f4b25afc09960c27b069c16df365ee6`.
 
-Não houve publicação Databricks da V08; browser/runtime, acessibilidade, ACL real, UAT, promoção visual e seleção determinística de skill permanecem gates separados. A V09 não foi iniciada.
+Não houve publicação Databricks da V08; browser/runtime, acessibilidade, ACL real, UAT, promoção visual e seleção determinística de skill permanecem gates separados. Naquele fechamento, a V09 ainda não havia sido iniciada.
 
 ### Continuidade do Sistema de Temas — V04
 
