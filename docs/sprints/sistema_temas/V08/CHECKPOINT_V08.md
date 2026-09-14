@@ -21,7 +21,7 @@ Skills orientam e roteiam; não substituem o contrato visual.
 
 ## Superfícies integradas
 
-A matriz `MATRIZ_INTEGRACAO.json` classifica explicitamente as superfícies da sprint. A V08 atualiza:
+A [matriz `MATRIZ_INTEGRACAO.json`](MATRIZ_INTEGRACAO.json) classifica explicitamente as superfícies da sprint. A V08 atualiza:
 
 - entrada `.assistant/README.md`;
 - catálogo de skills;
