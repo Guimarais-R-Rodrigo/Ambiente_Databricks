@@ -68,9 +68,22 @@ jobs:
             esac
           done
           forbidden='DATABRICKS_'TOKEN'|DATABRICKS_CLIENT_'SECRET'|adb-[0-9]+\.|/Workspace/Users/[^<]|/Volumes/[^<]'
-          if grep -R -n -E "$forbidden" tools/temas_v12_homologacao.py tools/tests/test_temas_v12.py docs/sprints/sistema_temas/V12 .github/workflows/temas-v12-ci.yml; then
+          if grep -R -n -E "$forbidden" tools/temas_v12_homologacao.py tools/tests/test_temas_v12.py docs/sprints/sistema_temas/V12; then
             echo 'V12_HYGIENE_FAIL'
             exit 1
           fi
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          text = Path('.github/workflows/temas-v12-ci.yml').read_text(encoding='utf-8')
+          literals = (
+              'DATABRICKS_' + 'TOKEN',
+              'DATABRICKS_CLIENT_' + 'SECRET',
+              '/Workspace/' + 'Users/',
+              '/Vol' + 'umes/',
+          )
+          if any(value in text for value in literals) or re.search('adb-' + r'[0-9]+\.', text):
+              raise SystemExit('V12_WORKFLOW_HYGIENE_FAIL')
+          PY
           echo 'V12_SCOPE=PASS'
           echo 'V12_REMOTE_MUTATION=0'
