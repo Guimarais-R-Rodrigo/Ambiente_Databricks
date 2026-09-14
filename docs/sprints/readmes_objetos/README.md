@@ -24,31 +24,31 @@ como entregas independentes a mesclar novamente.
 |---|---|
 | Examinar o formato e a linguagem | [Template de objeto](../../../ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md) |
 | Julgar a qualidade, além da estrutura | [Checklist editorial](../../../ambiente_fonte/.assistant/hub_padroes/readme/checklist_objeto.md) |
-| Ver o que mudou além dos READMEs | [Matriz R08](MATRIZ_ALTERACOES_R08.md) |
-| Conhecer inconsistências observadas | [Achados R08](ACHADOS_R08.md) |
-| Ver o resultado da execução | [Relatório R08](RELATORIO_R08.md) |
-| Saber quais legados faltam | [Controle de migração](CONTROLE_MIGRACAO.json) |
+| Ver a matriz final da auditoria | [Matriz R13](MATRIZ_AUDITORIA_R13.md) |
+| Conhecer achados e limitações finais | [Achados R13](ACHADOS_R13.md) |
+| Ver o fechamento técnico | [Relatório R13](RELATORIO_R13.md) |
+| Confirmar cobertura e zero pendências | [Controle de migração](CONTROLE_MIGRACAO.json) · [Auditoria R13](evidencias_r13/AUDITORIA_R13.json) |
 
-## Como evitar deriva na continuação
+## Como evitar deriva após o encerramento
 
-Cada sprint parte de um commit conferido e da versão do template registrada.
-Redatores trabalham em caminhos disjuntos; um integrador cuida de documentos
-compartilhados. Cada objeto entregue sai de `pending` no mesmo commit do README.
-Não há dispensa automática para novos objetos. O histórico Git impede que uma
-dispensa retirada seja reintroduzida sem reprovação do gate.
+O contrato 1.0.0 continua ativo mesmo com a migração encerrada. Todo novo snippet,
+script ou prompt deve nascer com README local, e uma alteração estrutural precisa
+preservar o template, o checklist e o ratchet de zero pendências. O
+`CONTROLE_MIGRACAO.json` é evidência do fechamento, não backlog a reabrir.
 
-A última contagem gerada pelo validador distingue operacional, exemplar e
-pendência. O gate confere forma e existência, não certifica a pedagogia.
-Registre revisão técnica, didática e aceite humano separadamente. Um revisor
-não se torna independente por fazer uma segunda leitura do próprio texto.
+O gate automático confere forma, links e cobertura, mas não certifica pedagogia,
+correção estatística ou execução no Databricks. Revisão técnica/didática, runtime,
+publicação e auditoria independente permanecem dimensões separadas.
 
-## Limites desta etapa
+## Limites do encerramento
 
-Os exemplares ensinam os padrões e não contam como helpers operacionais.
-Os notebooks podem escrever tabelas sintéticas: os READMEs alertam antes de
-encaminhar à execução. R01 não os executa no Databricks e não modifica suas
-instruções executáveis. O [ADR-0012](../../decisions/ADR-0012-readmes-de-objeto.md)
-foi ratificado pelo usuário em 2026-09-12, com nota anexada sem apagar o relato inicial.
+Os exemplares continuam didáticos e não contam como objetos operacionais. A R13
+foi uma auditoria local `A0_light`: confirmou coerência e regressões, sem publicar
+o workspace nem homologar Databricks Runtime, Spark opcional ou Genie Code. Os
+registros abaixo permanecem históricos e não devem ser reescritos para refletir o
+estado atual.
+
+## Registros históricos preservados
 
 ### Conciliação durante a R03-A
 
