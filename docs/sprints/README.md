@@ -68,15 +68,16 @@ custos e interpretação. Estado, matriz e testes em
 ## Sistema de Temas do Hub
 
 A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints
-históricas. V00–V05 estão aceitas e integradas no Git. A V05 foi mesclada pelo
-PR #37 no commit `d728b872c77c89723a016919bd80534fb297b488`; os sete workflows
-permanentes pós-merge concluíram com `success`.
+históricas. V00–V06 estão aceitas e integradas no Git. A V06 foi mesclada pelo
+PR #38 no commit `418946de8d1e95e87cbfd9df528ddcced5075237`, a partir do head final
+`70499e1803ce0d61a148a0da975c4f52611046e0`; as duas referências apontam para a
+mesma árvore de conteúdo validada.
 
-A [V06 — assets e geração](sistema_temas/V06/README.md) está em candidata de
-fechamento. Ela conecta o compositor editorial v2 ao `ResolvedTheme`, preserva
-assets congelados por SHA-256, gera somente variantes locais em `.artifacts` e
-registra manifesto reproduzível. Rodrigo concedeu aceite explícito de integração
-em 14/09/2026; o merge permanece condicionado aos checks verdes do head final.
+A [V06 — assets e geração](sistema_temas/V06/README.md) conecta o compositor
+editorial v2 ao `ResolvedTheme`, preserva assets congelados por SHA-256, gera
+somente variantes locais em `.artifacts` e registra manifesto reproduzível. No
+head final, os workflows relevantes da PR concluíram com `success`; depois do
+merge, oito workflows — CI geral e V00–V06 — concluíram novamente com `success`.
 
 A V02 entrega o núcleo de carga, validação e resolução de configurações completas.
 A V03 acrescenta somente o adaptador Plotly opt-in. A V04 estende a mesma
@@ -85,7 +86,8 @@ opt-in `_resolvido`. A V05 acrescenta o Visual Lab opt-in em notebook. A V06 atu
 na camada de geração editorial e não altera esses caminhos de consumo por padrão.
 
 Não houve publicação Databricks da V06; browser/runtime, acessibilidade, ACL real,
-UAT e auditoria independente permanecem gates separados. A V07 não foi iniciada.
+UAT, promoção visual e auditoria independente permanecem gates separados. A V07
+não foi iniciada.
 
 ### Continuidade do Sistema de Temas — V04
 
@@ -106,7 +108,7 @@ A R04-B está integrada em `d9da056`. A R05 cobre seis modelos tabulares e pausa
 A R05 está integrada em `cae94988`. A R06 cobre cinco objetos de séries/validação temporal e pausa para revisão antes da R07. Consulte `readmes_objetos/RELATORIO_R06.md` e `readmes_objetos/MATRIZ_ALTERACOES_R06.md`.
 
 ### READMEs de objeto — R07
-A R06 está integrada em `289731c`. A R07 cobre seis objetos de score, vintage e sobrevivência e pausa para revisão antes da R08. Consulte `readmes_objetos/RELATORIO_R07.md` e `readmes_objetos/MATRIZ_ALTERACOES_R07.md`.
+A R06 foi integrada em `289731c`. A R07 cobre seis objetos de score, vintage e sobrevivência e pausa para revisão antes da R08. Consulte `readmes_objetos/RELATORIO_R07.md` e `readmes_objetos/MATRIZ_ALTERACOES_R07.md`.
 
 ### READMEs de objeto — R08
 A R07 foi integrada pelo PR #25. A R08 cobre seis objetos de clusterização, anomalias e explicabilidade e preserva implementações/fachadas. Relatório, matriz e achados ficam em `docs/sprints/readmes_objetos/`. A cobertura esperada após validação é 55/75 operacionais + 3/3 exemplares; isso não representa aceite editorial antecipado.
