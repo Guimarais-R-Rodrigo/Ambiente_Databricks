@@ -21,6 +21,7 @@ A fundação documental e arquitetural da MM00 foi implementada, auditada indepe
 - Fechamento documental V09: PR #47 / `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb`.
 - Reconciliação MM00 sobre a V09 fechada: `26cf7c8edd631f97b5c0541daff2e73dc2286a71`.
 - Head técnico pré-D1 validado: `6f1375efe1a610eca30815b1866cc5d7049514a4`.
+- Head pós-registro D1-B: `e027223049380014fbfa59dea6bd6fbd7744e8a7`.
 
 ## Entregas
 
@@ -44,10 +45,10 @@ A fundação documental e arquitetural da MM00 foi implementada, auditada indepe
 | Q-01 — entrada própria no `CHANGELOG.md` | **diferido por D1-B; não é PASS** |
 | D1 — tratamento de Q-01 | **D1-B autorizada** |
 | D2 — ADR-0014 a ADR-0020 | **pendente** |
-| Diff técnico contra a `main` fechada | 23 arquivos documentais/contextuais antes do registro D1; zero alteração funcional própria |
+| Diff técnico contra a `main` fechada | **23 arquivos documentais/contextuais; zero alteração funcional própria** |
 | Métricas do README raiz | **1374 arquivos / 1859 links** |
-| Bateria no head `6f1375efe1a610eca30815b1866cc5d7049514a4` | **4/4 workflows verdes** |
-| Bateria pós-registro D1-B | pendente |
+| Bateria pós-registro D1-B | **4/4 workflows verdes** |
+| `main` pós-D1-B | **estável em `d6655411ca4ac1834b0983f6ce6bdadc30b831bb`** |
 | Aceite humano explícito da MM00 | pendente |
 
 ## Resultado da A1
@@ -88,11 +89,12 @@ Foi concedida exceção explícita e exclusiva para diferir a entrada MM00 para 
 
 ## Escopo confirmado contra a `main` fechada V09
 
-A reconciliação foi montada usando `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb` como base documental. Verificações de patch confirmaram:
+A reconciliação foi montada usando `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb` como base documental. Verificações de patch e a conferência final confirmaram:
 
 - `README.md` raiz difere da `main` **somente** nas duas linhas de métricas: 1355→1374 arquivos e 1850→1859 links;
 - `docs/sprints/README.md` difere da `main` **somente** pela seção Framework de Micromodelos — MM00;
-- documentos V09 do PR #47 permanecem exatamente os da `main`;
+- documentos V09 do PR #47 permanecem os da `main`;
+- a PR contém 23 arquivos alterados;
 - nenhum arquivo funcional próprio aparece em `.assistant`, simulado, `tools` ou workflows.
 
 ## Gates automáticos
@@ -104,19 +106,22 @@ A reconciliação foi montada usando `main=d6655411ca4ac1834b0983f6ce6bdadc30b83
 - V01 `34884154292`: `success`;
 - V02 `34884154221`: `success`.
 
-O gate manteve a composição em **1374 arquivos / 1859 links**, sem relaxar validador.
+### Head pós-D1-B `e027223049380014fbfa59dea6bd6fbd7744e8a7`
 
-A árvore atual contém somente o registro documental da decisão D1-B e deve repetir os mesmos gates antes do próximo gate humano.
+- CI geral `34885007465`: `success`;
+- V00 `34885007403`: `success`;
+- V01 `34885007509`: `success`;
+- V02 `34885007567`: `success`.
+
+A reconsulta posterior confirmou `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb`, sem novo avanço concorrente. O gate manteve a composição em **1374 arquivos / 1859 links**, sem relaxar validador.
 
 ## Bloqueios restantes para aceite da MM00
 
-1. bateria automática pós-D1-B deve ficar verde;
-2. reconsultar `main` e reconfirmar o diff imediatamente antes da decisão final;
-3. decidir D2 sobre ADR-0014 a ADR-0020;
-4. obter aceite humano explícito da MM00;
-5. registrar os estados finais autorizados, revalidar a árvore exata e somente então integrar a MM00;
-6. após o merge, executar a manutenção documental imediatamente posterior que fecha Q-01;
-7. MM01 só pode iniciar depois desse fechamento pós-MM00.
+1. decidir D2 sobre ADR-0014 a ADR-0020;
+2. obter aceite humano explícito da MM00;
+3. registrar os estados finais autorizados, revalidar a árvore exata e somente então integrar a MM00;
+4. após o merge, executar a manutenção documental imediatamente posterior que fecha Q-01;
+5. MM01 só pode iniciar depois desse fechamento pós-MM00.
 
 ## Decisões do gate humano
 
