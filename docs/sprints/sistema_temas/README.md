@@ -1,14 +1,18 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Estado vigente — V09 candidata de integração do kit
+## Estado vigente — V00–V09 integradas no Git
 
-V00–V08 permanecem aceitas e integradas no Git. A V09 está em branch candidata separada, `codex/temas-v09-kit-transicao-20260914`, baseada na `main` `55f7006c47d90ae7f760992d252b658f53a59636`; não há aceite nem merge antecipado.
+V00–V09 estão aceitas e integradas no Git. Rodrigo deu aceite explícito para a V09 em 14/09/2026. A entrega funcional foi integrada pelo PR #45, com head `3b69dd25fd4af434fda414496c2ca3d80fd78a8e` e merge real `0f7234c4734f1974ebb1a20123f3c26626c67ef3`.
+
+O primeiro pós-merge revelou um defeito real apenas na preparação do runner do workflow operacional: o run `34880619346` falhou antes dos gates V09/Spark porque as dependências Node do compositor V06 ainda não eram instaladas antes de `ci_local.py`. O failure foi preservado e a correção mínima foi integrada pelo PR #46, produzindo o head técnico final `4ae714a35a0aafd930a8cd796d962b0a79449b88`.
 
 A V09 torna explícito no `MANIFEST.json` v2 o contrato mínimo do Sistema de Temas transportado pelo kit de transição. O bundle falha se perder qualquer uma das nove peças canônicas, e o ZIP final é reaberto para conferir presença única, tamanho e SHA256 antes de ser considerado distribuível. `activation = manual_opt_in` e `publication = not_performed` permanecem limites contratuais.
 
-O gate completo da candidata no head `6c19ef6da1012b4c33bd0e15c1bb332a6cb046a3` concluiu com V09 11/11, cumulativo V01–V09 416/416, V00 12/12, geração offline de 535 arquivos, contrato temático 9/9 dentro do ZIP e validador com 0 falhas / 0 avisos. Os failures anteriores `34877035267` e `34877297808` permanecem registrados como failures em `V09/TESTES.md`.
+No pós-merge final do SHA `4ae714a35a0aafd930a8cd796d962b0a79449b88`, os 12 workflows realmente disparados por `push` concluíram com `success`. O workflow operacional `Kit de transição para o trabalho`, run `34881426374`, passou por CI local, V09 12/12, 43/43 testes com Spark local, geração offline de 535 arquivos + `MANIFEST.json`, verificação do `theme_contract` 9/9 dentro do ZIP e upload do artefato somente depois dessa conferência. O validador terminou com 0 falhas / 0 avisos.
 
-Nenhuma publicação Databricks, ativação de tema, alteração de ACL/compute ou execução remota Spark/SQL/MLflow foi realizada. A V10 não foi iniciada.
+Os failures `34877035267`, `34877297808` e `34880619346` permanecem registrados como **FAILURE** em `V09/TESTES.md`; nenhum foi reclassificado.
+
+Nenhuma publicação Databricks, ativação de tema, alteração de ACL/compute ou execução remota Spark/SQL/MLflow foi realizada. Spark no gate operacional foi local no runner. Browser/runtime Databricks, acessibilidade e UAT continuam gates separados. A V10 não foi iniciada por este fechamento.
 
 ## Estado integrado anterior — V00–V08 integradas no Git
 
