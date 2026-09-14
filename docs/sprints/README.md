@@ -65,27 +65,19 @@ custos e interpretação. Estado, matriz e testes em
 [`RELATORIO_R04A.md`](readmes_objetos/RELATORIO_R04A.md). Cobertura candidata
 25/74; sem publicação, aceite antecipado ou início da R04-B.
 
-## Framework de Micromodelos
-
-A [iniciativa MM00–MM13](micromodelos/README.md) usa numeração própria. A MM00
-registra baseline, Plano Mestre, inventário, matrizes de reuso/risco/dependência,
-ADRs propostos, testes e checkpoint antes de qualquer implementação funcional.
-O desenho obriga um piloto greenfield antes da migração dos legados e mantém a
-integração visual específica para a fase de hardening. A MM00 foi aberta sobre o
-fechamento V07 e reconciliada com a V08 depois de sua integração na `main`.
-MM01 não começa sem auditoria independente, checkpoint, aceite explícito e merge.
-
 ## Sistema de Temas do Hub
 
-A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V08 estão integradas no Git.**
+A [iniciativa V00–V14](sistema_temas/README.md) preserva a numeração das sprints históricas. **V00–V08 estão aceitas e integradas no Git.**
 
 A [V08 — integração transversal](sistema_temas/V08/README.md) conecta skills, Hub Padrões, entrada `.assistant` e Manual às mesmas fontes de verdade das V02–V07. A [matriz V08](sistema_temas/V08/MATRIZ_INTEGRACAO.json), o [checkpoint](sistema_temas/V08/CHECKPOINT_V08.md) e o [registro de testes](sistema_temas/V08/TESTES.md) preservam escopo, failures e a regra de zero alteração runtime Python.
 
 A V08 remove a política visual paralela do template EDA, preservando suas convenções editoriais, e explicita que tema não altera dados, métricas, denominadores, thresholds ou decisões. SHAP/Matplotlib e Kaplan–Meier continuam limites declarados do theming atual.
 
-A V08 foi integrada na `main` pelo commit `622d2c962a80998cf990b57036f7ae503bfc0458`, a partir do head validado `9af5615d79b02cbd86f5a6d084444c83f203ae03`. A V07 permanece integrada pelo PR #40 no commit `67114605c7345a01c1144e5d6c6d24e9c24e2491`.
+A V08 foi aceita em 14/09/2026 e integrada pelo PR #42. O head final validado foi `9af5615d79b02cbd86f5a6d084444c83f203ae03`; o merge na `main` é `622d2c962a80998cf990b57036f7ae503bfc0458`. Os nove checks finais da PR e os dez workflows pós-merge da `main` concluíram com `success`.
 
-Integração Git não equivale a publicação Databricks. Browser/runtime, acessibilidade, ACL real, UAT, promoção visual e seleção determinística de skill permanecem gates separados.
+A V07 permanece integrada pelo PR #40 no commit `67114605c7345a01c1144e5d6c6d24e9c24e2491`; o fechamento documental subsequente produziu a base V08 `1b6632194f4b25afc09960c27b069c16df365ee6`.
+
+Não houve publicação Databricks da V08; browser/runtime, acessibilidade, ACL real, UAT, promoção visual e seleção determinística de skill permanecem gates separados. A V09 não foi iniciada.
 
 ### Continuidade do Sistema de Temas — V04
 

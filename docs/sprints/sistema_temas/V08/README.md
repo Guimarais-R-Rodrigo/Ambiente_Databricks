@@ -1,6 +1,6 @@
 # V08 — integração transversal com skills, padrões e Manual
 
-> **Estado atual:** candidata em fechamento na branch `codex/temas-v08-integracao-transversal-20260914`, criada a partir da `main` estabilizada em `1b6632194f4b25afc09960c27b069c16df365ee6`. Sem aceite, merge ou publicação Databricks. O [checkpoint](CHECKPOINT_V08.md) e o [registro de testes](TESTES.md) concentram evidências, failures preservados e pendências finais.
+> **Estado atual:** aceita por Rodrigo e integrada no Git em 14/09/2026 pelo PR #42. O head final validado foi `9af5615d79b02cbd86f5a6d084444c83f203ae03` e o merge efetivo na `main` é `622d2c962a80998cf990b57036f7ae503bfc0458`. Sem publicação Databricks. O [checkpoint](CHECKPOINT_V08.md) e o [registro de testes](TESTES.md) concentram evidências, failures preservados e limites do fechamento.
 
 ## Objetivo
 
@@ -29,7 +29,7 @@ Depois da V07, o runtime e os READMEs locais estavam atualizados, mas parte da o
 
 A [`MATRIZ_INTEGRACAO.json`](MATRIZ_INTEGRACAO.json) registra cada superfície, motivo e efeito esperado.
 
-## O que a candidata integra
+## O que a V08 integrou
 
 - `.assistant/README.md` apresenta V00–V07 como camadas integradas e separa autoria, consumo, geração e publicação;
 - `skills/README.md` declara que templates/skills não são fonte de tokens;
@@ -46,7 +46,7 @@ A skill `hub-ml-comentar-notebook` foi deliberadamente classificada como **sem e
 
 ## Template EDA
 
-O antigo `estilo_visual_eda.md` foi convertido de fonte visual paralela em guia editorial sobre o Sistema de Temas. A candidata preserva orientações úteis de escolha de gráficos, anotações, emojis, números, tabelas, KPI-line, hierarquia, narrativa pós-código, índice e cabeçalhos, mas remove:
+O antigo `estilo_visual_eda.md` foi convertido de fonte visual paralela em guia editorial sobre o Sistema de Temas. A V08 preserva orientações úteis de escolha de gráficos, anotações, emojis, números, tabelas, KPI-line, hierarquia, narrativa pós-código, índice e cabeçalhos, mas remove:
 
 - paleta/dicionário local usados como política de tema;
 - literais hexadecimais de política visual;
@@ -73,9 +73,9 @@ Quando houver tema notebook válido, o guia usa `ResolvedTheme` e rotas `_resolv
 - publicar tema, asset ou pacote no Databricks;
 - afirmar que dark/high-contrast, SHAP, browser ou acessibilidade estão homologados sem evidência correspondente.
 
-## Critérios de aceite
+## Critérios comprovados
 
-A candidata V08 precisa demonstrar:
+A V08 demonstrou antes do merge:
 
 1. matriz transversal completa e consistente;
 2. template EDA sem paleta/tema paralelo e sem literais `#RRGGBB` usados como política visual;
@@ -86,14 +86,16 @@ A candidata V08 precisa demonstrar:
 7. nenhum módulo Python runtime alterado em relação à base V08;
 8. suíte V08, regressões V01–V08, V00 e validador documental verdes;
 9. workflow permanente read-only;
-10. PR draft no SHA final e parada para aceite explícito antes de merge.
+10. PR #42 validada no SHA final, aceita explicitamente e mesclada somente depois de todos os checks verdes.
 
-## Evidência atual
+## Evidência final
 
-No head sincronizado anterior ao fechamento documental, a suíte V08 atingiu **22/22 PASS**, as regressões cumulativas V01–V08 **405/405 PASS** e V00 **12/12 PASS**. O bloqueio restante era exclusivamente a saída colada do README raiz, ainda com métricas anteriores. O histórico completo está em [TESTES.md](TESTES.md).
+No head final `9af5615d79b02cbd86f5a6d084444c83f203ae03`, o gate permanente de push `34872178809` concluiu com **22/22 V08**, **405/405 regressões V01–V08**, **12/12 V00**, validador **0 falhas / 0 avisos**, `V08_RUNTIME_EDIT=0` e escopo verde. Os nove checks da PR #42 também concluíram com `success` no mesmo head.
+
+Depois do merge `622d2c962a80998cf990b57036f7ae503bfc0458`, os dez workflows disparados na `main` — CI geral e V00–V08 — concluíram com `success`. O histórico completo está em [TESTES.md](TESTES.md).
 
 ## Limites
 
 A V08 melhora orientação, roteamento e documentação. Ela não prova que a Genie Code sempre selecionará a skill correta por relevância, não homologa o visual no navegador Databricks e não transforma documentação em controle técnico de permissão.
 
-Nenhuma publicação Databricks foi executada pela V08.
+Nenhuma publicação Databricks foi executada pela V08. A V09 não foi iniciada.

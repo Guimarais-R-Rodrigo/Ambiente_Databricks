@@ -1,16 +1,16 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Estado vigente — V00–V07 integradas; V08 candidata em fechamento
+## Estado vigente — V00–V08 integradas no Git
 
-A V08 está em branch isolada `codex/temas-v08-integracao-transversal-20260914`, criada a partir da `main` estabilizada em `1b6632194f4b25afc09960c27b069c16df365ee6`. Ela está **em fechamento**, sem aceite, merge ou publicação Databricks.
+A V08 foi aceita por Rodrigo em 14/09/2026 e integrada pelo PR #42. O head final validado foi `9af5615d79b02cbd86f5a6d084444c83f203ae03` e o merge efetivo na `main` é `622d2c962a80998cf990b57036f7ae503bfc0458`. A árvore do merge é idêntica à árvore da candidata testada.
 
 A [V08 — integração transversal com skills, padrões e Manual](V08/README.md) reconcilia orientação e roteamento com as capacidades V02–V07 já integradas. Skills deixam de competir com o contrato visual, o template EDA deixa de possuir política própria de tema e o Manual/padrões passam a descrever `ResolvedTheme`, Visual Lab, geração editorial, consumidores V07 e limites atuais de forma consistente.
 
-A [matriz transversal](V08/MATRIZ_INTEGRACAO.json), o [registro de testes](V08/TESTES.md) e o [checkpoint V08](V08/CHECKPOINT_V08.md) distinguem superfícies alteradas, decisões de não edição, failures preservados e a proibição de mudança runtime. A candidata não altera módulos Python de `hub_snippets` ou `hub_scripts`.
+A [matriz transversal](V08/MATRIZ_INTEGRACAO.json), o [registro de testes](V08/TESTES.md) e o [checkpoint V08](V08/CHECKPOINT_V08.md) distinguem superfícies alteradas, decisões de não edição, failures preservados e a proibição de mudança runtime. A V08 não altera módulos Python de `hub_snippets` ou `hub_scripts`.
 
-V00–V07 permanecem aceitas e integradas. A V07 foi mesclada pelo PR #40 no commit `67114605c7345a01c1144e5d6c6d24e9c24e2491`; seu fechamento documental posterior foi integrado pela PR #41, formando a base V08 `1b6632194f4b25afc09960c27b069c16df365ee6`.
+Antes do merge, o gate final comprovou V08 **22/22**, regressões V01–V08 **405/405**, V00 **12/12**, validador **0 falhas / 0 avisos** e `V08_RUNTIME_EDIT=0`. Depois do merge, os dez workflows da `main` — CI geral e V00–V08 — concluíram com `success`.
 
-Nenhuma publicação Databricks, alteração de ACL/compute, execução remota Spark/SQL/MLflow, promoção visual ou homologação de browser/acessibilidade/UAT foi realizada. A V08 também não prova seleção determinística de skill pela Genie Code.
+Nenhuma publicação Databricks, alteração de ACL/compute, execução remota Spark/SQL/MLflow, promoção visual ou homologação de browser/acessibilidade/UAT foi realizada. A V08 também não prova seleção determinística de skill pela Genie Code. A V09 não foi iniciada.
 
 ## Estado integrado anterior — V06 integrada no Git
 
