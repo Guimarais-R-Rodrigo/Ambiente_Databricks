@@ -32,9 +32,17 @@ python -B tools/validate_assistant.py --conferir-readme
 
 A geração do kit é local ao runner e não usa credenciais Databricks.
 
+## Failures preservados
+
+### `34877035267` — FAILURE de oráculo textual da suíte V09
+
+No head `17a95762b9f6dc19c13cf008ee581bc7c1041d26`, sete dos oito testes V09 passaram. O único failure foi `test_transition_checklist_names_theme_contract`: o checklist registra corretamente a chave real `manual_opt_in`, mas o teste procurava a expressão inexistente `manual/opt-in`. A implementação do contrato não foi alterada para acomodar o teste; o oráculo foi corrigido no commit seguinte. As etapas posteriores foram puladas porque a suíte específica já havia reprovado.
+
+Esse run permanece **FAILURE**.
+
 ## Evidência pendente
 
-Os resultados serão preenchidos a partir dos runs reais da branch. Nenhum resultado é declarado antecipadamente.
+Os resultados posteriores serão preenchidos a partir dos runs reais da branch. Nenhum resultado é declarado antecipadamente.
 
 ## O que PASS não prova
 
