@@ -19,7 +19,7 @@ O detalhe mutável do estado de fechamento pertence ao `CHECKPOINT.md`. Esta se�
 - O fechamento documental pós-merge da V09 entrou pelo PR #47 e levou a `main` a `d6655411ca4ac1834b0983f6ce6bdadc30b831bb`.
 - A MM00 foi reconciliada com essa base final V09 em `26cf7c8edd631f97b5c0541daff2e73dc2286a71`, preservando os documentos V09 da `main` e reaplicando somente a documentação própria da MM00 e os documentos compartilhados estritamente necessários.
 - O patch resultante do README raiz altera somente as duas métricas medidas do repositório; o patch do índice de sprints acrescenta somente a seção MM00.
-- O head técnico `6f1375efe1a610eca30815b1866cc5d7049514a4` passou CI geral, V00, V01 e V02 após a correção conservadora de sanitização documental.
+- Os gates técnicos subsequentes permaneceram verdes após as correções de sanitização e o registro da decisão D1-B.
 
 V09 é a fonte vigente da frente de temas/transição. A MM00 não altera seus arquivos funcionais.
 
@@ -52,8 +52,12 @@ Foi concedida a opção **D1-B**: exceção humana explícita e exclusiva para d
 
 A exceção não transforma Q-01 em PASS e não altera o resultado histórico da A1. Ela remove Q-01 somente como bloqueio de aceite/merge da MM00 e cria uma obrigação documental de fechamento imediatamente posterior: registrar a entrada MM00 de forma segura, preservando o histórico do changelog.
 
+## Decisão D2 — ADRs
+
+ADR-0014 a ADR-0020 foram **aceitos sem ressalvas em 14/09/2026**. O corpo decisório de cada ADR foi preservado e recebeu ratificação datada. A aceitação congela as fronteiras arquiteturais da iniciativa, mas não antecipa detalhes de implementação próprios das sprints seguintes.
+
 ## Gate
 
-D1 está resolvida por exceção controlada. Permanecem pendentes a decisão D2 sobre ADR-0014 a ADR-0020, o aceite explícito da MM00, a revalidação da árvore resultante e o merge.
+D1 e D2 estão resolvidas. Permanecem pendentes apenas a revalidação da árvore pós-D2, o aceite final explícito da MM00 e o merge.
 
-A manutenção documental pós-MM00 deve fechar Q-01 antes do início efetivo da MM01. A exceção D1-B não autoriza metadata real, mudança funcional, publicação ou migração de legado.
+A manutenção documental pós-MM00 deve fechar Q-01 antes do início efetivo da MM01. D1-B e D2 não autorizam metadata real, mudança funcional, publicação ou migração de legado.
