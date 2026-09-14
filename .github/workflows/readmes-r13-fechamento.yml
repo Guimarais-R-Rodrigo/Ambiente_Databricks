@@ -1,0 +1,53 @@
+name: Fechamento documental R13
+
+on:
+  push:
+    branches: [codex/readmes-r13-fechamento]
+
+permissions:
+  contents: write
+
+jobs:
+  fechar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+      - name: Aplicar fechamento
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=b0e953cc6274b385e42dcd675f2d8dbd145f349b
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$BASE"
+          python docs/sprints/readmes_objetos/evidencias_r13/fechar_integracao_r13.py
+          rm .github/workflows/readmes-r13-fechamento.yml
+          rm docs/sprints/readmes_objetos/evidencias_r13/fechar_integracao_r13.py
+          git add -A
+          test "$(git diff --name-only "$BASE" | sort | tr '\n' ' ')" = "CHANGELOG.md README.md docs/sprints/README.md docs/sprints/readmes_objetos/README.md docs/sprints/readmes_objetos/RELATORIO_R13.md "
+          git diff --cached --check
+      - name: Instalar dependencias
+        run: python -m pip install -r tools/requirements-dev.txt
+      - name: Validar fechamento
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validate_assistant.py --conferir-readme
+          python tools/ci_local.py
+          git diff --cached --check
+      - name: Publicar fechamento
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'docs(r13): registrar encerramento integrado (ChatGPT)'
+          git push origin HEAD:codex/readmes-r13-fechamento
