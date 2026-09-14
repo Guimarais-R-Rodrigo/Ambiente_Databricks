@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "role_source": "docs/sprints/sistema_temas/V01/politica_workflow.json",
+  "canonical_roles": [
+    "leitor",
+    "proponente",
+    "aprovador",
+    "publicador",
+    "mantenedor"
+  ],
+  "v10_surface": "authoring_only",
+  "identity_source": "Databricks Apps forwarded identity headers; local fallback only with explicit HUB_THEME_LOCAL_DEV",
+  "role_assignment": "external_to_app_by_environment_owner",
+  "self_declared_role": "forbidden",
+  "roles": {
+    "leitor": {
+      "v01_rights": ["ver_temas_aprovados", "experimentar"],
+      "v10_authoring_app": "not_target_audience",
+      "notes": "Pode continuar experimentando por superfícies autorizadas; esta instância V10 de autoria não concede persistência por ser leitor."
+    },
+    "proponente": {
+      "v01_rights": ["experimentar", "exportar_proposta", "editar_rascunho_proprio", "submeter"],
+      "v10_authoring_app": "target_audience",
+      "implemented_v10": ["experimentar", "editar_rascunho_proprio", "persistir_sessao_propria", "reabrir_sessao_propria"],
+      "not_implemented_v10": ["submeter", "aprovar", "publicar"]
+    },
+    "aprovador": {
+      "v01_rights": ["revisar", "aprovar", "rejeitar", "revogar"],
+      "v10_authoring_app": "no_privileged_action",
+      "not_implemented_v10": ["aprovar", "rejeitar", "revogar"]
+    },
+    "publicador": {
+      "v01_rights": ["publicar_revisao_aprovada"],
+      "v10_authoring_app": "no_privileged_action",
+      "not_implemented_v10": ["publicar", "promover", "rollback_de_tema"]
+    },
+    "mantenedor": {
+      "v01_rights": ["manter_contrato", "manter_testes", "propor_revisoes"],
+      "v10_authoring_app": "target_audience",
+      "implemented_v10": ["experimentar", "editar_rascunho_proprio", "persistir_sessao_propria", "reabrir_sessao_propria"],
+      "not_implemented_v10": ["aprovar_por_ser_mantenedor", "publicar_por_ser_mantenedor"]
+    }
+  },
+  "deployment_rule": "Restrict Databricks App CAN USE to real groups mapped by the environment owner to proponente/mantenedor for the authoring instance.",
+  "security_rule": "UI visibility is not authorization; privileged governance transitions remain absent from V10 code."
+}

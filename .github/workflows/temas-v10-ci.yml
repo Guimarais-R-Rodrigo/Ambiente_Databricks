@@ -1,0 +1,61 @@
+name: Databricks App de gestão visual V10
+on:
+  push:
+    branches: [main, 'codex/temas-v10*']
+  pull_request:
+    paths:
+      - 'ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/**'
+      - 'Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/identidade_visual/databricks_app/**'
+      - 'tools/temas_v10_app.py'
+      - 'tools/tests/test_temas_v10.py'
+      - 'docs/sprints/sistema_temas/V10/**'
+      - 'docs/sprints/sistema_temas/README.md'
+      - 'docs/sprints/README.md'
+      - 'README.md'
+      - '.github/workflows/temas-v10-ci.yml'
+permissions:
+  contents: read
+jobs:
+  databricks-app-v10:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      SOURCE_DATE_EPOCH: '1700000000'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Dependências Python de manutenção
+        run: |
+          python -m pip install -r tools/requirements-dev.txt
+          python -m pip install 'ipywidgets>=8,<9'
+          python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+      - name: Dependências do compositor V06
+        run: |
+          npm install --global pnpm@10.34.5
+          pnpm --dir tools/readme_visuals install --frozen-lockfile
+      - name: V10 — App, identidade, persistência e bundle
+        run: python -B tools/tests/test_temas_v10.py -v
+      - name: Sintaxe do shell Streamlit
+        run: python -m py_compile ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/app.py ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/app_service.py
+      - name: Regressões de temas V01–V10
+        run: python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
+      - name: Compatibilidade visual V00
+        run: python -B tools/tests/test_visual_legado_v00.py
+      - name: Montar bundle derivado do App
+        run: python -B tools/temas_v10_app.py --output .artifacts/v10-app
+      - name: Verificar bundle derivado do App
+        run: python -B tools/temas_v10_app.py --verify .artifacts/v10-app
+      - name: Validação estrutural e documental
+        run: python -B tools/validate_assistant.py --conferir-readme
+      - name: Escopo V10
+        run: echo 'V10 implementa autoria e persistência do App; não faz deploy, aprovação, promoção, ativação ou publicação Databricks.'
