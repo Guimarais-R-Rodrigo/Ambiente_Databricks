@@ -2,7 +2,7 @@
 
 ## Estado
 
-**V10 ACEITA E INTEGRADA NO GIT; FECHAMENTO DOCUMENTAL PÓS-MERGE EM CURSO; SEM DEPLOY DATABRICKS.**
+**V10 ACEITA E INTEGRADA NO GIT; DOCUMENTAÇÃO VIVA RECONCILIADA NESTA ENTREGA; SEM DEPLOY DATABRICKS.**
 
 Base de início: `d6655411ca4ac1834b0983f6ce6bdadc30b831bb`.
 
@@ -106,7 +106,7 @@ O PR #48 foi integrado no commit `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b` apó
 9. aceite explícito — **FECHADO**;
 10. merge funcional — **FECHADO**;
 11. workflows pós-merge — **FECHADO, 12/12 SUCCESS**;
-12. reconciliação documental viva — **EM FECHAMENTO NESTA ETAPA DOCUMENTAL**.
+12. reconciliação documental viva — **FECHADO NESTA ENTREGA DOCUMENTAL**.
 
 ## Pendências que não bloqueiam o fechamento Git, mas bloqueiam homologação operacional
 
@@ -122,4 +122,4 @@ O PR #48 foi integrado no commit `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b` apó
 
 ## Próximo passo
 
-Integrar esta reconciliação exclusivamente documental após os gates da própria PR. Depois disso, a V10 fica fechada no Git. V11/AI-BI permanece uma sprint separada e não é iniciada por este fechamento.
+A V10 não possui outro passo de fechamento Git depois da integração desta entrega documental. V11/AI-BI permanece uma sprint separada e não foi iniciada por este fechamento. Qualquer deploy ou homologação Databricks continua exigindo autorização própria.
