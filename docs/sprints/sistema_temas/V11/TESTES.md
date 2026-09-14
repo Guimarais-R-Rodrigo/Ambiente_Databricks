@@ -2,7 +2,7 @@
 
 ## Estado
 
-Candidata técnica com navegação/documentação reconciliada e gate completo revalidado no head `5bb8234422fdd284a9e14815ef566ec0b52a2952`. Este arquivo registra somente resultados observados; nenhum PASS local equivale a homologação Databricks.
+Candidata técnica com navegação/documentação reconciliada. O último head funcional/documental integralmente verde antes deste registro é `6561dfbe147c454fdc07eebac3d644b6ae1bf6d0`, run `34904743766`. Este arquivo registra somente resultados observados; nenhum PASS local equivale a homologação Databricks.
 
 ## Suíte específica
 
@@ -65,6 +65,12 @@ No head `8785822e045edf158f04ea41ea0f6c059ef11cb1`, a guarda nova de import pelo
 
 A correção alterou somente a expectativa do teste para o ID canônico real. A guarda de import e a varredura de todos os módulos Python continuam ativas. Como a suíte V11 falhou, sintaxe, regressões, V00, validador e escopo foram `SKIP` nesse run. O run `34901776770` permanece **FAILURE**.
 
+### Run `34904363803` — FAILURE documental no registro final
+
+No head `795edf879c6f013553afa725a02473d49c909624`, a suíte V11 passou **21/21**, as regressões passaram **457/457** e V00 passou **12/12**. O validador terminou em **3 falhas / 0 avisos** porque `CHECKPOINT_V11.md` abreviou o SHA base como prefixo seguido de reticências; esse texto coincidiu com a guarda de identificador corporativo plausível. Como o validador já tinha uma falha, ele não emitiu a linha `APROVADO`, e a conferência do README raiz também falhou por consequência. O escopo V11 ficou `SKIP`.
+
+A correção usa o SHA completo e não altera o validador, o produto ou os testes funcionais. O run `34904363803` permanece **FAILURE**.
+
 ## Evidências integralmente verdes
 
 ### Run `34902083889` — SUCCESS no head `0d3180c50428d8716b44f264b915a91243ba96c3`
@@ -83,7 +89,7 @@ Esse foi o primeiro gate integralmente verde antes da reconciliação final de n
 
 ### Run `34902853430` — SUCCESS no head documental `5bb8234422fdd284a9e14815ef566ec0b52a2952`
 
-Depois da reconciliação da navegação e dos documentos vivos, o gate completo foi repetido no head exato da candidata e confirmou:
+Depois da reconciliação da navegação e dos documentos vivos, o gate completo foi repetido e confirmou:
 - V11 específica: **21/21 PASS**;
 - sintaxe da fachada compilada em memória: **PASS**;
 - regressões cumulativas V01–V11: **457/457 PASS**;
@@ -95,7 +101,19 @@ Depois da reconciliação da navegação e dos documentos vivos, o gate completo
 - checkout: `persist-credentials: false`;
 - nenhuma operação/API/SDK/CLI Databricks executada.
 
-Métricas verificáveis observadas nesse run:
+### Run `34904743766` — SUCCESS após correção de higiene documental
+
+No head `6561dfbe147c454fdc07eebac3d644b6ae1bf6d0`, a execução repetiu integralmente:
+- V11 específica: **21/21 PASS**;
+- sintaxe V11: **PASS**;
+- regressões V01–V11: **457/457 PASS**;
+- V00: **12/12 PASS**;
+- validador estrutural/documental: **0 falhas / 0 avisos**;
+- escopo V11: **PASS**.
+
+Esse run comprova que a falha `34904363803` era exclusivamente textual e que a correção não alterou comportamento funcional.
+
+Métricas verificáveis vigentes:
 
 ```text
 skills             : 14 · 14/14 com as 5 seções estruturais
@@ -121,7 +139,7 @@ worktree (extras)  : 0
 APROVADO: 0 falha(s), 0 aviso(s)
 ```
 
-O commit documental posterior apenas registra essas evidências. Ele precisa repetir o mesmo gate antes da abertura da PR.
+Este registro documental move o head novamente; o workflow V11 deve ser repetido uma última vez no head definitivo e, se verde, esse resultado será usado como evidência pré-PR sem nova edição documental.
 
 ## Gates de ambiente ainda pendentes
 
