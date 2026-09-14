@@ -6,6 +6,8 @@
 
 O arquivo real de cada micromodelo pertence ao ambiente corporativo autorizado. Este repositório contém apenas o contrato, o template e fixtures sintéticos.
 
+O carregador da MM01 é fail-closed também na sintaxe: chaves duplicadas em YAML ou JSON são recusadas. Não se aceita o comportamento implícito de parsers que preservam silenciosamente apenas a última ocorrência.
+
 ## 2. Grupos obrigatórios
 
 ### `schema_version`
@@ -26,15 +28,15 @@ Declara entidade, chave lógica, granularidade, população elegível e referên
 
 ### `fontes`
 
-Cada fonte recebe `id`, `catalogo_ref`, `schema`, `objeto`, tipo, campos, papel e proveniência. O binding padrão permitido é `CATALOGO_PRODUTO`, que representa simbolicamente o catálogo oficial configurado no workspace. O validador reprova outra referência por padrão.
+Cada fonte recebe `id`, `catalogo_ref`, `schema`, `objeto`, tipo, campos, papel e proveniência. A referência permitida na MM01 é `CATALOGO_PRODUTO`, que representa simbolicamente o catálogo oficial configurado no workspace. O validador reprova outra referência.
 
-O nome real do catálogo não é versionado no Git e o contrato não concede acesso à fonte.
+O nome real do catálogo não é versionado no Git e o contrato não concede acesso à fonte. A CLI da MM01 também não possui argumento para ampliar o conjunto de `catalogo_ref`: ampliar o escopo de fontes é gate humano e deve nascer em mudança explícita posterior, não como override de execução.
 
 ### `evidencias` e `contra_evidencias`
 
-Regras favoráveis e desfavoráveis são registradas separadamente. Cada item referencia fontes conhecidas, descreve a regra e carrega proveniência. Em `EM_VALIDACAO` ou fase posterior, a regra precisa estar `APROVADO`.
+Regras favoráveis e desfavoráveis são registradas separadamente. Cada item referencia fontes conhecidas, descreve a regra e carrega proveniência.
 
-Contra-evidência é parte obrigatória do desenho do domínio mesmo quando a lista ainda está vazia durante a ideia inicial. Vazio significa “ainda não especificado”, não “provado que não existe contra-evidência”.
+Durante as fases iniciais as listas podem permanecer vazias. Ao entrar em `EM_VALIDACAO` ou fase posterior, `fontes`, `evidencias`, `contra_evidencias` e `validacao.criterios` precisam estar não vazios, e as regras de evidência/contra-evidência precisam estar `APROVADO`. Assim, vazio antes do estudo significa “ainda não especificado”; vazio durante validação formal não é aceito como se significasse “provado que não existe”.
 
 ### `classificacao`
 
@@ -44,7 +46,7 @@ O tipo inicial é `BOOLEANO_COM_INDETERMINADO`. O contrato exige três definiç�
 - `quando_false`: quando há base suficiente para negar a característica;
 - `quando_indeterminado`: quando a informação não permite concluir nem TRUE nem FALSE.
 
-A política de ausência de evidência só aceita `INDETERMINADO` ou `REGRA_EXPLICITA_APROVADA`. Limiares materiais têm operador, valor, unidade e proveniência `APROVADO`.
+A distinção é verificada após normalização editorial básica de caixa, acentuação, pontuação e espaços; não basta copiar a mesma definição mudando apenas forma textual. A política de ausência de evidência só aceita `INDETERMINADO` ou `REGRA_EXPLICITA_APROVADA`. Limiares materiais têm operador, valor, unidade e proveniência `APROVADO`.
 
 ### `score`
 
@@ -57,7 +59,7 @@ Score pode ser habilitado ou desabilitado. Quando habilitado, exige:
 - componentes/pesos, quando existirem;
 - proveniência da decisão de score.
 
-Peso material exige `APROVADO`. `PROBABILIDADE_CALIBRADA` exige calibração com proveniência `MEDIDO` e referência de execução. Portanto, “score 80” não pode ser descrito como “80% de probabilidade” apenas por estar na escala 0–100.
+Peso material exige `APROVADO`. `PROBABILIDADE_CALIBRADA` exige calibração com proveniência `MEDIDO` e referência de execução. Além do enum, o validador barra linguagem probabilística em um score não calibrado; portanto não basta deixar `tipo_semantica=FORCA_EVIDENCIA` e escrever “probabilidade” ou “chance” na descrição.
 
 Quando score está desabilitado, semântica, escala, normalização, componentes, calibração e campo de score na saída devem permanecer vazios/nulos.
 
@@ -80,7 +82,7 @@ Possui dois contratos distintos.
 
 `saida.estudo` preserva `TRUE`, `FALSE` e `INDETERMINADO`, além do score quando habilitado.
 
-`saida.publicacao` começa `PENDENTE`. A partir de `CANDIDATO_PRODUTO`, precisa estar `DEFINIDO`, com campo final `BOOLEAN` e uma política aprovada para `INDETERMINADO`: excluir do universo publicado, usar campo de cobertura separado ou outra solução explicitamente aprovada. O contrato não fornece a opção “mapear indeterminado para FALSE”.
+`saida.publicacao` começa `PENDENTE`. A partir de `CANDIDATO_PRODUTO`, precisa estar `DEFINIDO`, com campo final `BOOLEAN` e uma política aprovada para `INDETERMINADO`: excluir do universo publicado, usar campo de cobertura separado ou outra solução explicitamente aprovada. O contrato não fornece a opção implícita “mapear indeterminado para FALSE”.
 
 ### `tracking`
 
@@ -92,7 +94,9 @@ Reserva campos para classificação de dados, LGPD, gestor da informação e obs
 
 ### `publicacao`
 
-Registra apenas o estado de interface com a governança externa: `NAO_INICIADA`, `CANDIDATA`, `EM_VALIDACAO_EXTERNA`, `PUBLICADA` ou `REJEITADA`. Não replica regras institucionais. `EM_VALIDACAO_GOVERNANCA` exige `handoff_ref`; `PUBLICADO` exige confirmação externa e `produto_dados_ref`.
+Registra apenas o estado de interface com a governança externa: `NAO_INICIADA`, `CANDIDATA`, `EM_VALIDACAO_EXTERNA`, `PUBLICADA` ou `REJEITADA`. Não replica regras institucionais.
+
+O estado de publicação precisa ser coerente com a fase do ciclo: antes de `CANDIDATO_PRODUTO`, permanece `NAO_INICIADA`; em `CANDIDATO_PRODUTO`, é `CANDIDATA` ou `REJEITADA`; `EM_VALIDACAO_GOVERNANCA` exige `EM_VALIDACAO_EXTERNA` e `handoff_ref`; `PUBLICADO` exige `PUBLICADA` e `produto_dados_ref`. A suíte inclui caminhos positivos até publicação para provar que esses gates são satisfazíveis e não apenas negativos.
 
 ### `proveniencia`
 
@@ -100,7 +104,7 @@ Registra criação do arquivo e, quando necessário, referências adicionais por
 
 ## 3. IDs e referências
 
-IDs internos usam `snake_case`, começam por letra e possuem de 3 a 64 caracteres. Referências de evidência para fontes precisam resolver para um `fontes[].id` existente. IDs duplicados dentro da mesma coleção são inválidos.
+IDs internos usam `snake_case`, começam por letra e possuem de 3 a 64 caracteres. Referências de evidência para fontes precisam resolver para um `fontes[].id` existente. IDs duplicados são inválidos nas coleções controladas, incluindo fontes, evidências, contra-evidências, limiares, componentes do score e experimentos.
 
 ## 4. Valores pendentes
 
