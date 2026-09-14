@@ -22,7 +22,7 @@ A suíte específica da V07 é a família `tools/tests/test_temas_v07*.py`, form
 
 ## Regressões obrigatórias
 
-Além da suíte V07, o workflow específico executa:
+O workflow específico executa também:
 
 ```bash
 python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
@@ -32,99 +32,62 @@ python -B tools/validate_assistant.py --conferir-readme
 
 Os testes V06 continuam exigindo Node 22, `pnpm@10.34.5` e dependências do compositor. O workflow V07 prepara o mesmo ambiente; não é permitido filtrar V06 para obter verde.
 
-## `34858836840` — FAILURE documental inicial
+## Failures históricos preservados
 
-O primeiro run V07 não foi reclassificado como sucesso. Antes da etapa documental, passaram:
+### `34858836840` — FAILURE documental inicial
 
-- suíte específica V07: **18/18 PASS**;
-- regressões cumulativas V01–V07: **382/382 PASS**;
-- compatibilidade visual V00: **12/12 PASS**.
+Antes da etapa documental, passaram 18/18 V07, 382/382 regressões V01–V07 e 12/12 V00. A execução reprovou porque quatro fachadas `__init__.py` não coincidiam com a saída canônica de `tools/api_publica.py` e porque o README raiz trazia métricas anteriores. As fachadas foram corrigidas conforme o contrato, sem relaxar o validador.
 
-A execução reprovou em `validate_assistant.py --conferir-readme` por duas classes de divergência:
+### `34859769442` — FAILURE documental da migração
 
-1. quatro fachadas `__init__.py` (`correlation_matrix`, `distribution_grid`, `curves_plotly` e `vintage_analysis`) haviam sido escritas manualmente e não coincidiam byte a byte com a saída canônica de `tools/api_publica.py`;
-2. o README raiz ainda registrava `1339` arquivos de identidade e `1840` links fora da raiz, enquanto o validador mediu **1344** e **1841** naquele checkout.
+Passaram novamente 18/18 V07, 382/382 regressões e 12/12 V00. O validador mediu 1345 arquivos de identidade e 1841 links fora da raiz, enquanto o README ainda registrava os valores anteriores. O mecanismo transitório utilizado para atualizar READMEs foi posteriormente removido.
 
-A correção das fachadas foi feita pelo contrato exaustivo de API pública, não por relaxamento do validador.
+### `34860697409` — FAILURE documental de medição final
 
-## `34859769442` — FAILURE documental da migração
+As camadas funcionais ficaram verdes, mas o README raiz ainda não refletia a medição estabilizada de 1345 arquivos e 1849 links fora da raiz. Foram duas falhas numéricas e zero avisos; não houve erro novo de API pública, link quebrado ou contrato de objeto.
 
-A rodada transitória que atualizou sete READMEs fonte/simulado concluiu com:
+Nenhum desses failures foi convertido retroativamente em sucesso.
 
-- suíte específica V07: **18/18 PASS**;
-- regressões cumulativas V01–V07: **382/382 PASS**;
-- compatibilidade visual V00: **12/12 PASS**.
+## Sucessos de reconciliação e revisão
 
-O run permaneceu **FAILURE** porque o validador mediu **1345 arquivos** na identidade do repositório e **1841 links fora da raiz**, enquanto o README ainda registrava 1339/1840. Esse failure é evidência histórica e não é convertido em sucesso por execuções posteriores.
+- `34861248396`: sucesso transitório ao reconciliar métricas/changelog;
+- `34861318310`: sucesso permanente read-only antes da revisão semântica;
+- revisão do diff detectou que correlação [-1,+1] deveria usar `palette.diverging`, não `palette.sequential`;
+- `34861831151`: sucesso transitório da sincronização dessa correção;
+- `34862109553`: sucesso permanente read-only após a correção semântica.
 
-Sete READMEs operacionais receberam uma nota `Atualização V07 — estado atual` imediatamente após o marcador `readme-objeto: 1.0.0`, com a mesma alteração aplicada ao ambiente simulado. O mecanismo transitório existiu somente para evitar reescrever/truncar documentos longos. Depois da escrita, o workflow permanente foi restaurado para `contents: read`, checkout sem credencial persistente, e o script transitório foi removido da árvore permanente.
+## Head final pré-merge — `6b50151738a311eff8530c3191e24693af3fb036`
 
-## `34860697409` — FAILURE documental de medição final
-
-Depois de checkpoint, índices vivos e estado explícito da candidata já estarem presentes, as camadas funcionais voltaram a passar:
-
-- V07: **18/18 PASS**;
-- regressões V01–V07: **382/382 PASS**;
-- V00: **12/12 PASS**;
-- guarda de espelho fonte/simulado: **PASS**.
-
-A única reprovação foi a saída colada do README raiz. O validador mediu o estado documental estabilizado em **1345 arquivos** de identidade e **1849 links fora da raiz**, enquanto o README ainda continha 1339/1840. Foram exatamente duas falhas numéricas e zero avisos; não houve novo erro de API pública, link quebrado ou contrato de objeto.
-
-## `34861248396` — SUCCESS transitório de reconciliação
-
-Uma rodada de escrita controlada substituiu no checkout os dois números do README por **1345/1849** e inseriu no changelog a entrada V07 como **candidata**, sem links relativos novos. Nessa árvore, passaram suíte V07, regressões V01–V07, V00, validação estrutural/documental e escopo.
-
-Esse sucesso é preservado como evidência da reconciliação, mas não é usado sozinho como aceite da candidata porque o workflow daquele run possuía permissão de escrita transitória. O commit produzido tocou somente `README.md` e `CHANGELOG.md`.
-
-## `34861318310` — SUCCESS permanente antes da revisão semântica
-
-Depois da reconciliação, o workflow V07 foi restaurado para `contents: read` e `persist-credentials: false`. Nesse head permanente concluíram com `success`:
-
-- suíte específica V07: **18/18**;
-- regressões cumulativas V01–V07: **382/382**;
-- compatibilidade visual V00: **12/12**;
-- validação estrutural/documental;
-- escopo.
-
-Esse run permanece sucesso real, mas foi superado por uma revisão semântica posterior antes da PR.
-
-## Revisão semântica da correlação
-
-A revisão do diff antes da PR identificou uma inconsistência que os testes anteriores não capturavam: o heatmap de correlação possui domínio simétrico de **-1 a +1**, enquanto a primeira implementação V07 havia conectado a rota resolvida a `palette.sequential`.
-
-O contrato de temas já possui `palette.diverging`, com centro neutro e extremos de sinais opostos. A correção, portanto, foi usar `palette.diverging` na correlação, sincronizar código/README no ambiente simulado, atualizar o registro estruturado e acrescentar uma guarda permanente que falha se a implementação voltar a usar `palette.sequential` nesse consumidor. Cálculo Spark, matriz, threshold e pares fortes não foram alterados.
-
-## `34861831151` — SUCCESS transitório da correção semântica
-
-A rodada transitória que sincronizou a correção semântica concluiu com:
+O run permanente `34862446870`, com `contents: read` e `persist-credentials: false`, concluiu:
 
 - V07: **19/19 PASS**;
 - regressões V01–V07: **383/383 PASS**;
 - V00: **12/12 PASS**;
 - validação estrutural/documental: **APROVADO — 0 falhas, 0 avisos**;
-- métricas do README conferidas em **1345 arquivos** de identidade e **1849 links fora da raiz**;
-- escopo: **PASS**.
-
-Esse run usou permissão de escrita somente para sincronizar os arquivos envolvidos e, por isso, não substitui a evidência de um head permanente read-only.
-
-## `34862109553` — SUCCESS permanente após a correção semântica
-
-No head `a7982d3d439584dd9d952df8ced326bf908f40e3`, com workflow novamente permanente (`contents: read`, `persist-credentials: false`), passaram:
-
-- suíte V07: **19/19**;
-- regressões cumulativas V01–V07: **383/383**;
-- compatibilidade visual V00: **12/12**;
-- validação estrutural/documental: **APROVADO — 0 falhas, 0 avisos**;
 - métricas conferidas: **1345 arquivos** de identidade e **1849 links fora da raiz**;
 - escopo: **PASS**.
 
-Esse head também confirmou a guarda `test_correlation_uses_diverging_palette` e a equivalência byte a byte entre fonte e ambiente simulado.
+A PR #40 foi aberta sobre esse SHA exato. Os sete workflows disparados pelo evento `pull_request` — CI geral, V00, V01, V02, V03, V05 e V07 — concluíram todos com `success`. V04 e V06 não foram disparados separadamente pela regra de paths da PR; ambos já estavam contidos na regressão cumulativa V01–V07 do próprio gate V07.
 
-## Último gate antes da PR
+Rodrigo então autorizou explicitamente a aprovação e integração da V07.
 
-Esta atualização consolida o histórico e cria um novo SHA. Por governança, o workflow permanente V07 deve ser repetido nesse SHA exato. Somente depois de verde serão feitas a revisão final de diff/base e a abertura da PR em **draft**. Os checks disparados pela PR também precisarão concluir no mesmo head antes de solicitar aceite de integração.
+## Integração e pós-merge
 
-Nenhum failure acima é convertido retroativamente em sucesso. Nenhuma publicação Databricks foi realizada e a V08 não foi iniciada.
+A PR #40 foi mesclada com proteção pelo expected head SHA `6b50151738a311eff8530c3191e24693af3fb036`. O merge commit resultante é `67114605c7345a01c1144e5d6c6d24e9c24e2491` e sua árvore `5438288bda2326e96372c7464b3aef0cb8375102` coincide com a árvore do head final testado.
+
+O push na `main` disparou nove checks, todos concluídos com `success`:
+
+- V00 — `34863452273`;
+- V01 — `34863452340`;
+- V02 — `34863452364`;
+- V03 — `34863452332`;
+- V04 — `34863452339`;
+- V05 — `34863452252`;
+- V06 — `34863452347`;
+- V07 — `34863452328`;
+- CI geral — `34863452363`.
+
+Esse fechamento pós-merge confirma que a composição efetiva da `main`, e não apenas a branch candidata, preserva os gates V00–V07.
 
 ## O que PASS não prova
 
@@ -136,3 +99,5 @@ Nenhum failure acima é convertido retroativamente em sucesso. Nenhuma publicaç
 - PNG Plotly/Kaleido;
 - PDF ou PPTX;
 - suporte temático de SHAP ou Kaplan–Meier.
+
+Nenhuma publicação Databricks foi realizada durante V07.
