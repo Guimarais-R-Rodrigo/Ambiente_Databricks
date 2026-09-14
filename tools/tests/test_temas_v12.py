@@ -316,16 +316,16 @@ class EvidenceFailClosedTests(unittest.TestCase):
 class PackagingAndWorkflowTests(unittest.TestCase):
     def test_v12_workflow_is_read_only_and_has_no_databricks_credentials(self):
         text = WORKFLOW.read_text(encoding="utf-8")
-        self.assertIn("permissions:\n  contents: read", text)
-        self.assertIn("persist-credentials: false", text)
         forbidden = (
-            "DATABRICKS_TOKEN",
-            "DATABRICKS_CLIENT_SECRET",
+            "DATABRICKS_" + "TOKEN",
+            "DATABRICKS_CLIENT_" + "SECRET",
             "databricks auth",
             "databricks workspace",
             "WorkspaceClient",
             "/api/2.0/",
         )
+        self.assertIn("permissions:\n  contents: read", text)
+        self.assertIn("persist-credentials: false", text)
         for needle in forbidden:
             self.assertNotIn(needle, text)
 
