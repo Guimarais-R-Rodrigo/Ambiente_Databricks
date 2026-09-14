@@ -1,10 +1,11 @@
 # MM01 — Checkpoint
 
-Status: **CANDIDATA; NÃO ACEITA; NÃO INTEGRADA**
+Status: **CANDIDATA EM VALIDAÇÃO; NÃO ACEITA; NÃO INTEGRADA**
 
 ## Base
 
 - `main` congelada no início: `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5`;
+- `main` reconciliada durante a sprint após integração/fechamento da V10: `a9480391c78e2402986885db0ce08b10e0619a1a`;
 - branch: `micromodelos/mm01-contrato-canonico`;
 - MM00: encerrada e integrada;
 - MM02: bloqueada até aceite e merge desta sprint.
@@ -20,7 +21,8 @@ Status: **CANDIDATA; NÃO ACEITA; NÃO INTEGRADA**
 7. score 0–100 com semântica/normalização e calibração obrigatória antes de chamar de probabilidade;
 8. gates humanos para limiares, pesos, validação e política de publicação;
 9. fronteira de tracking preservada para MM06;
-10. validador de referência/CI e fixtures sintéticos.
+10. validador de referência/CI e fixtures sintéticos;
+11. gate permanente `.github/workflows/micromodelos-mm01-ci.yml`, read-only e sem acesso a ambiente corporativo.
 
 ## O que não foi feito
 
@@ -31,14 +33,22 @@ Status: **CANDIDATA; NÃO ACEITA; NÃO INTEGRADA**
 - não houve descoberta de metadata;
 - não houve leitura de dados;
 - não houve alteração de `mlflow_run`;
-- não houve integração visual;
+- não houve integração visual da MM01; a V10 foi apenas absorvida como nova base da `main`;
 - não houve handoff/publicação real;
 - não houve migração de legado.
 
+## Evidência já obtida
+
+- suíte isolada: 9 testes, `OK`;
+- materialização validada: run `34899617125`, `success`;
+- reconciliação fail-closed com `main@a9480391...`: run `34900062786`, `success`;
+- primeiro run do gate permanente MM01: `34900332458`, `success`;
+- falha histórica de transporte `34899029039` preservada como `failure`; ocorreu antes dos testes e não foi reclassificada.
+
 ## Gates ainda pendentes
 
-- CI permanente sobre o head final da branch;
-- auditoria A1 independente;
+- abertura da PR e CI permanente/agregado sobre o head final;
+- auditoria A1 independente em sessão nova;
 - verificação dos achados da A1;
 - correções/reteste, se houver;
 - atualização final de `TESTES.md`/checkpoint;
