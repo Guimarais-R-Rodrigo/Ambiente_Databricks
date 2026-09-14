@@ -1,0 +1,54 @@
+name: TEMP MM01 A1 fix
+
+on:
+  push:
+    branches:
+      - micromodelos/mm01-contrato-canonico
+    paths:
+      - tools/mm01_apply_a1_fixes.py
+      - .github/workflows/mm01-a1-fix-transient.yml
+
+permissions:
+  contents: write
+
+jobs:
+  aplicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout da branch
+        uses: actions/checkout@v4
+        with:
+          ref: micromodelos/mm01-contrato-canonico
+          fetch-depth: 0
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+
+      - name: Dependências de manutenção
+        run: python -m pip install -r tools/requirements-dev.txt
+
+      - name: Aplicar correções A1
+        run: python tools/mm01_apply_a1_fixes.py
+
+      - name: Testes MM01 corrigidos
+        run: python -B -m unittest tools/tests/test_micromodelo_mm01.py -v
+
+      - name: Gate estrutural
+        run: python -B tools/validate_assistant.py --root ambiente_fonte
+
+      - name: Remover mecanismo transitório e publicar correções
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm tools/mm01_apply_a1_fixes.py .github/workflows/mm01-a1-fix-transient.yml
+          git add tools/micromodelo_mm01_contract.py \
+                  tools/tests/test_micromodelo_mm01.py \
+                  docs/sprints/micromodelos/MM01/micromodelo.schema.json
+          git commit -m "fix(mm01): corrigir achados bloqueantes da auditoria A1"
+          git push origin HEAD:micromodelos/mm01-contrato-canonico
