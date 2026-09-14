@@ -2,7 +2,7 @@
 
 ## Estado
 
-Candidata em execução. Este arquivo registra somente evidências observadas; não transforma teste local em homologação Databricks.
+Candidata tecnicamente verde no CI da branch, ainda sem aceite, merge ou deploy Databricks. Este arquivo registra somente evidências observadas; teste Git/local não é homologação do workspace.
 
 ## Suíte específica
 
@@ -100,11 +100,61 @@ repo (links)       : 1862 links fora da raiz analisada
 worktree (extras)  : 0
 ```
 
-Seis falhas decorriam das métricas antigas coladas no README raiz e da impossibilidade consequente de certificar a linha `APROVADO`; a sétima era um link relativo inválido da cópia simulada do README do App para a matriz V10, porque `docs/` não existe dentro do espelho `.assistant`. A correção substitui esse link externo por referência textual e reconcilia os índices antes da nova medição. O run permanece **FAILURE**.
+Seis falhas decorriam das métricas antigas coladas no README raiz e da impossibilidade consequente de certificar a linha `APROVADO`; a sétima era um link relativo inválido da cópia simulada do README do App para a matriz V10, porque `docs/` não existe dentro do espelho `.assistant`. A correção substituiu esse link externo por referência textual e reconciliou os índices. O run permanece **FAILURE**.
 
-## Próxima evidência
+### `34886250755` — FAILURE por quatro métricas stale no README raiz
 
-Após a reconciliação documental, o workflow deve ser repetido no novo head. Os números do README raiz só serão atualizados com a medição desse estado final, porque alterações de navegação podem mudar a contagem de links.
+No head `88cfea4d5cf29991c5bad23b61a3bec97feb2978`, todos os gates substantivos anteriores ao validador ficaram verdes: V10 **19/19**, regressões V01–V10 **436/436**, V00 **12/12**, bundle **247 arquivos + manifesto** e verificação do bundle em PASS.
+
+O validador terminou com **4 falhas / 0 avisos**, exclusivamente porque o README raiz ainda continha quatro medições anteriores. A execução observou:
+
+```text
+markdown / links   : 220 arquivos / 1394 links relativos
+python (AST)       : 219 arquivos
+repo (identidade)  : 1373 arquivos varridos no repositório editável/derivado
+repo (links)       : 1869 links fora da raiz analisada
+```
+
+Esses valores foram copiados para o bloco verificável sem estimativa e sem alterar o validador. O run `34886250755` permanece **FAILURE**.
+
+## Primeira evidência integralmente verde da candidata
+
+### `34886828579` — SUCCESS no head `c114cddedd7775cecb1cf8b672ad33e4a9f5365f`
+
+A execução confirmou:
+
+- V10 específica: **19/19 PASS**;
+- sintaxe do shell Streamlit compilada em memória: **PASS**;
+- regressões cumulativas V01–V10: **436/436 PASS**;
+- compatibilidade visual V00: **12/12 PASS**;
+- bundle derivado: **247 arquivos + `V10_APP_MANIFEST.json`**;
+- verificação de inventário/tamanho/SHA-256 do bundle: **PASS**;
+- validador estrutural/documental: **0 falhas / 0 avisos**;
+- etapa de escopo: **PASS**, reafirmando ausência de deploy, aprovação, promoção, ativação ou publicação Databricks.
+
+Métricas verificáveis observadas nesse run:
+
+```text
+skills             : 14 · 14/14 com as 5 seções estruturais
+prompts            : 16 · 161 campos com guia e contrato humano
+helpers citados    : 92 caminhos verificados
+markdown / links   : 220 arquivos / 1394 links relativos
+notebooks / links  : 80 notebooks / 101 links relativos
+readmes de objeto  : 76/76 operacionais; 3/3 exemplares; 0 pendentes
+pastas de objeto   : 62 conferidas
+forma da pasta     : 60 conferidas
+contrato de dados  : 62 pares
+contrato de entrada: 60 pares
+saída colada       : 79 notebooks com bloco real, 0 sem
+idioma da docstring: 62 módulos, 0 com docstring em inglês
+normas do molde    : 72 arquivos, 0 violações
+notebook exercita  : 60 objetos, 0 notebook(s) que só importam
+python (AST)       : 219 arquivos
+instrucoes         : 9043/20000 caracteres
+repo (identidade)  : 1373 arquivos varridos no repositório editável/derivado
+repo (links)       : 1869 links fora da raiz analisada
+worktree (extras)  : 0
+```
 
 ## O que PASS não prova
 
