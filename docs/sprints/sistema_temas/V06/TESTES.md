@@ -90,6 +90,19 @@ O job V06 pós-merge executou, em ordem, checkout, Python, Node, dependências P
 
 O CI geral pós-merge também concluiu com `success` depois de configurar Node e instalar as dependências do compositor antes de `Executar o gate sem credenciais`.
 
+## Reconciliação documental pós-merge
+
+A auditoria de fechamento detectou que `CHANGELOG.md`, os documentos V06 e os índices vivos ainda descreviam a sprint como candidata, embora a PR #38 já estivesse integrada. A correção foi isolada na PR #39 e não altera implementação, testes, schemas, assets nem publicação.
+
+Failures dessa reconciliação permanecem registrados como failures:
+
+- `34852055234`, `34852259063` e `34852831840`: definições transitórias de workflow foram recusadas antes da criação de qualquer job por YAML inválido. Não houve escrita de produto, README ou changelog nesses runs; os arquivos transitórios foram removidos/restaurados.
+- `34853339999`: CI geral executou o gate e reprovou somente a saída colada do README, que registrava `1837` links fora da raiz diante de **1840** medidos. Os demais blocos, incluindo a suíte de temas, permaneceram verdes.
+- `34853335827`: V06 passou dependências, suíte específica, regressões V01–V06 e V00; reprovou somente na validação estrutural/documental pela mesma divergência `1837→1840`, e a etapa de gravação ficou corretamente `skipped`.
+- `34853839243`: rodada corretiva aplicou no checkout o valor realmente medido **1840**, repetiu suíte V06, regressões V01–V06, V00, validação estrutural/documental e escopo com `success` e somente então gravou README + changelog. Depois desse commit, o workflow V06 permanente foi restaurado byte a byte ao conteúdo da `main` antes da validação final da PR #39.
+
+Nenhuma dessas tentativas foi reclassificada retroativamente. A evidência positiva de uma rodada posterior não apaga as execuções reprovadas.
+
 ## Interpretação
 
 PASS em Python/GitHub Actions prova os contratos exercitados naquele checkout. Não prova aparência em navegador Databricks, acessibilidade, UAT, permissões do workspace, publicação nem aprovação de uma variante visual.
