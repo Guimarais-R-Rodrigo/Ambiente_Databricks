@@ -2,7 +2,7 @@
 
 <!-- readme-objeto: 1.0.0 -->
 
-Este recurso permite experimentar a aparência de um notebook em uma **prévia pessoal**. A V05 candidata oferece escolha guiada de ponto de partida, edição visual, comparação, salvamento rastreável e reabertura. **Nada aqui aprova ou publica um tema.**
+Este recurso permite experimentar a aparência de um notebook em uma **prévia pessoal**. A V05 candidata oferece escolha guiada de ponto de partida, edição visual, comparação, salvamento rastreável e reabertura. **Nada aqui aprova ou publica um tema; o laboratório não publica temas.**
 
 ## Visão rápida
 
