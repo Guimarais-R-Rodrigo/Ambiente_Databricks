@@ -1,6 +1,6 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: **MM00 encerrada e integrada. MM01 materializada na PR #51 e tecnicamente pronta para auditoria A1; ainda não aceita nem integrada.**
+> Estado: **MM00 encerrada e integrada. MM01 corrigida após a primeira A1, com reteste técnico verde e reauditoria independente pendente; ainda não aceita nem integrada.**
 
 ## Objetivo
 
@@ -38,12 +38,28 @@ A exceção D1-B terminou com o fechamento de Q-01 e não se propaga às próxim
 
 ## Estado da MM01
 
-A MM01 foi iniciada a partir de `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5` na branch `micromodelos/mm01-contrato-canonico` e reconciliada com a `main` pós-V10 `a9480391c78e2402986885db0ce08b10e0619a1a`.
+A MM01 foi iniciada na branch `micromodelos/mm01-contrato-canonico` e reconciliada de forma fail-closed com as evoluções da `main`, inclusive as bases pós-V10 e pós-V11. A PR #51 permanece aberta, não aceita e não integrada.
 
-A PR #51 contém exclusivamente o contrato canônico `micromodelo.yaml`: schema, fases/condições, proveniência, validador de referência/CI, fixtures sintéticos, suíte com 17 métodos de teste, documentação e pacote A1. A candidata foi endurecida contra chaves duplicadas, IDs duplicados, ambiguidade semântica cosmética, linguagem probabilística sem calibração, coleções materiais vazias em validação, status de publicação incompatível e tentativa de ampliar o catálogo pela CLI.
+A candidata contém exclusivamente o contrato canônico `micromodelo.yaml`: schema, fases/condições, proveniência, validador de referência/CI, fixtures sintéticos, suíte com **24 métodos de teste**, documentação e pacote A1. Não cria skill de micromodelos nem altera `.assistant`.
 
-A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprint continua reservado para MM02; descoberta de metadata continua reservada para MM03.
+A primeira A1 independente concluiu `NAO_APTA` com cinco bloqueios. O contraditório confirmou todos como procedentes e a candidata foi corrigida para:
+
+- validar rewind pós-`PUBLICADO` contra especificação anterior confiável por `--previous`, sem antecipar fingerprint;
+- rejeitar referências auditáveis compostas apenas por whitespace/caracteres invisíveis;
+- permitir limiares/pesos `PROPOSTO` antes do gate e exigir `APROVADO` a partir de `EM_VALIDACAO`;
+- impedir contradição entre tratamento estruturado de `INDETERMINADO` e descrição que o converta para `FALSE`;
+- exigir que `score.calibracao.evidencia_ref` resolva para experimento existente, executado e medido.
+
+O reteste de construção das correções executou 24 métodos com `OK` e o gate estrutural com zero falhas/avisos antes de publicar os artefatos permanentes. Os mecanismos transitórios usados para aplicar as correções não permanecem na árvore da PR.
+
+A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprint continua reservado para MM02; descoberta de metadata continua reservada para MM03; tracking definitivo continua reservado para MM06.
 
 ## Próximo gate
 
-Executar a auditoria A1 da PR #51 em sessão independente, confrontar os achados e só então preparar o aceite final da MM01. **MM02 permanece bloqueada.**
+1. concluir os workflows permanentes do HEAD final corrigido;
+2. executar a **reauditoria A1** em sessão independente contra esse HEAD;
+3. confrontar qualquer novo achado e corrigir somente se procedente;
+4. sincronizar o bloco MM01 do `CHANGELOG.md` com a A1/correções antes do merge, preservando byte a byte o histórico anterior;
+5. solicitar aceite final e integrar a PR #51.
+
+**MM02 permanece bloqueada.**
