@@ -5,6 +5,14 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-13 — R13: auditoria final da iniciativa de READMEs (ChatGPT)
+
+- Audita contrato, checklist, skill de criação, validador, Manual, 75 READMEs, três exemplares e seis índices de categoria.
+- Adiciona inventário por SHA-256 e mutantes negativos para demonstrar sensibilidade do gate.
+- Congela produto na base pós-R12; correções de produto não são feitas silenciosamente pela auditoria.
+- Registra revisão `A0_light`: não é auditoria independente nem homologação Databricks/Genie Code.
+- Sem publicação no workspace, merge antecipado ou início de outra iniciativa.
+
 ## 2026-09-13 — R12: índices de categoria e navegação (ChatGPT)
 
 - Cria índices para as seis categorias funcionais de `hub_snippets`.
