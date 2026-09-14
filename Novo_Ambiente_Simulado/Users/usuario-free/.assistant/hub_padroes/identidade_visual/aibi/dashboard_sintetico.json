@@ -1,0 +1,48 @@
+{
+  "fixture_version": 1,
+  "kind": "hub_v11_synthetic_dashboard_draft",
+  "databricks_importable": false,
+  "data_classification": "synthetic_only",
+  "purpose": "Exercitar correspondência de tema sem criar nem importar um dashboard real.",
+  "datasets": [
+    {
+      "id": "clientes_sinteticos",
+      "grain": "mes_segmento",
+      "source": "inline_synthetic_fixture"
+    }
+  ],
+  "queries": [
+    {
+      "id": "q_evolucao",
+      "dataset_id": "clientes_sinteticos",
+      "semantic_signature": "clientes_ativos_por_mes",
+      "fields": ["mes", "clientes_ativos"]
+    },
+    {
+      "id": "q_segmento",
+      "dataset_id": "clientes_sinteticos",
+      "semantic_signature": "clientes_ativos_por_segmento",
+      "fields": ["segmento", "clientes_ativos"]
+    }
+  ],
+  "filters": [
+    {"id": "f_mes", "field": "mes", "operator": "between", "default": "all"},
+    {"id": "f_segmento", "field": "segmento", "operator": "in", "default": "all"}
+  ],
+  "widgets": [
+    {"id": "kpi_total", "type": "kpi", "query_id": "q_evolucao", "fields": ["clientes_ativos"]},
+    {"id": "line_evolucao", "type": "line", "query_id": "q_evolucao", "fields": ["mes", "clientes_ativos"]},
+    {"id": "bar_segmento", "type": "bar", "query_id": "q_segmento", "fields": ["segmento", "clientes_ativos"]},
+    {"id": "table_segmento", "type": "table", "query_id": "q_segmento", "fields": ["segmento", "clientes_ativos"]},
+    {"id": "texto_contexto", "type": "text", "text": "Dados sintéticos para validação visual; sem uso analítico."}
+  ],
+  "theme_test_cases": [
+    "categorical_palette",
+    "widget_background",
+    "widget_corner_radius",
+    "text_categories",
+    "grid_color",
+    "dashboard_color_mappings",
+    "light_dark_preview"
+  ]
+}

@@ -1,0 +1,426 @@
+{
+  "contract_version": 1,
+  "source_context": "notebook",
+  "target_product": "Databricks AI/BI dashboards",
+  "native_theme_json_schema_status": "not_publicly_documented_in_verified_sources",
+  "native_import_ready_by_default": false,
+  "classifications": [
+    "translated",
+    "approximated",
+    "unsupported"
+  ],
+  "binding_strategies": [
+    "direct",
+    "manual",
+    "none"
+  ],
+  "capabilities": {
+    "widget.selection_color": {
+      "scope": "workspace_and_dashboard",
+      "official_status": "documented"
+    },
+    "typography.category.color": {
+      "scope": "workspace_and_dashboard",
+      "official_status": "documented"
+    },
+    "typography.category.size": {
+      "scope": "workspace_and_dashboard",
+      "official_status": "documented"
+    },
+    "typography.font_family": {
+      "scope": "workspace_and_dashboard",
+      "official_status": "documented"
+    },
+    "canvas.background": {
+      "scope": "workspace_and_dashboard",
+      "official_status": "documented"
+    },
+    "widget.background": {
+      "scope": "workspace_and_dashboard",
+      "official_status": "documented"
+    },
+    "widget.border": {
+      "scope": "workspace_and_dashboard",
+      "official_status": "documented"
+    },
+    "widget.corner_radius": {
+      "scope": "workspace_and_dashboard",
+      "official_status": "documented"
+    },
+    "widget.padding": {
+      "scope": "workspace_and_dashboard",
+      "official_status": "documented"
+    },
+    "visualization.grid_color": {
+      "scope": "workspace_and_dashboard",
+      "official_status": "documented"
+    },
+    "visualization.categorical_palette": {
+      "scope": "workspace_and_dashboard",
+      "official_status": "documented"
+    },
+    "visualization.continuous_gradient": {
+      "scope": "workspace_and_dashboard",
+      "official_status": "documented"
+    },
+    "dashboard.color_mappings": {
+      "scope": "dashboard_only",
+      "official_status": "documented"
+    }
+  },
+  "mappings": [
+    {
+      "hub_token": "brand.primary",
+      "classification": "approximated",
+      "target_capability": "widget.selection_color",
+      "binding_strategy": "manual",
+      "note": "Cor de marca pode aproximar a cor de seleção; não é equivalência semântica universal."
+    },
+    {
+      "hub_token": "brand.accent",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "AI/BI não expõe no contrato público um segundo token institucional genérico equivalente."
+    },
+    {
+      "hub_token": "text.primary",
+      "classification": "approximated",
+      "target_capability": "typography.category.color",
+      "binding_strategy": "manual",
+      "note": "AI/BI configura cor por categoria de texto; um único text.primary não cobre todas as categorias."
+    },
+    {
+      "hub_token": "text.plot",
+      "classification": "approximated",
+      "target_capability": "typography.category.color",
+      "binding_strategy": "manual",
+      "note": "Pode orientar categorias de eixo/legenda, mas exige escolha explícita da categoria nativa."
+    },
+    {
+      "hub_token": "text.secondary",
+      "classification": "approximated",
+      "target_capability": "typography.category.color",
+      "binding_strategy": "manual",
+      "note": "Pode orientar subtítulos/notas, mas a correspondência depende da categoria nativa."
+    },
+    {
+      "hub_token": "surface.section",
+      "classification": "approximated",
+      "target_capability": "canvas.background",
+      "binding_strategy": "manual",
+      "note": "Fundo de seção de notebook não equivale necessariamente ao canvas inteiro do dashboard."
+    },
+    {
+      "hub_token": "surface.card",
+      "classification": "translated",
+      "target_capability": "widget.background",
+      "binding_strategy": "direct",
+      "note": "Fundo de cartão é semanticamente compatível com fundo de widget."
+    },
+    {
+      "hub_token": "table.header_text",
+      "classification": "approximated",
+      "target_capability": "typography.category.color",
+      "binding_strategy": "manual",
+      "note": "Cabeçalho de tabela depende da categoria de texto suportada pelo dashboard."
+    },
+    {
+      "hub_token": "divider.light",
+      "classification": "approximated",
+      "target_capability": "visualization.grid_color",
+      "binding_strategy": "manual",
+      "note": "Separador leve pode orientar linhas de grade, mas os elementos têm funções distintas."
+    },
+    {
+      "hub_token": "divider.medium",
+      "classification": "approximated",
+      "target_capability": "widget.border",
+      "binding_strategy": "manual",
+      "note": "Separador médio pode orientar borda de widget, sem equivalência de espessura/estado."
+    },
+    {
+      "hub_token": "status.ok_bg",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Tema nativo não publica um token genérico de fundo de status equivalente."
+    },
+    {
+      "hub_token": "status.ok_text",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Tema nativo não publica um token genérico de texto de status equivalente."
+    },
+    {
+      "hub_token": "status.warn_bg",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Tema nativo não publica um token genérico de fundo de alerta equivalente."
+    },
+    {
+      "hub_token": "status.warn_text",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Tema nativo não publica um token genérico de texto de alerta equivalente."
+    },
+    {
+      "hub_token": "status.fail_bg",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Tema nativo não publica um token genérico de fundo de falha equivalente."
+    },
+    {
+      "hub_token": "status.fail_text",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Tema nativo não publica um token genérico de texto de falha equivalente."
+    },
+    {
+      "hub_token": "semantic.positive",
+      "classification": "approximated",
+      "target_capability": "dashboard.color_mappings",
+      "binding_strategy": "manual",
+      "note": "Color mappings são locais ao dashboard e exigem nomes de valores; não são semântica positiva global."
+    },
+    {
+      "hub_token": "semantic.negative",
+      "classification": "approximated",
+      "target_capability": "dashboard.color_mappings",
+      "binding_strategy": "manual",
+      "note": "Color mappings são locais ao dashboard e exigem nomes de valores; não são semântica negativa global."
+    },
+    {
+      "hub_token": "semantic.neutral",
+      "classification": "approximated",
+      "target_capability": "dashboard.color_mappings",
+      "binding_strategy": "manual",
+      "note": "Color mappings são locais ao dashboard e exigem nomes de valores; não são semântica neutra global."
+    },
+    {
+      "hub_token": "semantic.warning",
+      "classification": "approximated",
+      "target_capability": "dashboard.color_mappings",
+      "binding_strategy": "manual",
+      "note": "Color mappings são locais ao dashboard e exigem nomes de valores; não são semântica de alerta global."
+    },
+    {
+      "hub_token": "palette.categorical",
+      "classification": "translated",
+      "target_capability": "visualization.categorical_palette",
+      "binding_strategy": "direct",
+      "note": "Paleta categórica corresponde à capacidade nativa de cores categóricas."
+    },
+    {
+      "hub_token": "palette.curves_legacy",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Paleta legada de curvas é específica do Hub e não deve substituir silenciosamente a paleta categórica nativa."
+    },
+    {
+      "hub_token": "palette.sequential",
+      "classification": "approximated",
+      "target_capability": "visualization.continuous_gradient",
+      "binding_strategy": "manual",
+      "note": "Pode orientar gradiente contínuo, mas a forma nativa e a interpolação precisam ser confirmadas."
+    },
+    {
+      "hub_token": "palette.diverging",
+      "classification": "approximated",
+      "target_capability": "visualization.continuous_gradient",
+      "binding_strategy": "manual",
+      "note": "Pode orientar gradiente contínuo, mas não há contrato público de gradiente divergente equivalente."
+    },
+    {
+      "hub_token": "font.family",
+      "classification": "approximated",
+      "target_capability": "typography.font_family",
+      "binding_strategy": "manual",
+      "note": "O Hub usa aliases de fontes; a opção nativa disponível precisa ser resolvida no ambiente."
+    },
+    {
+      "hub_token": "chart.font_px",
+      "classification": "approximated",
+      "target_capability": "typography.category.size",
+      "binding_strategy": "manual",
+      "note": "Tamanho geral do gráfico deve ser distribuído por categorias de texto nativas."
+    },
+    {
+      "hub_token": "chart.title_px",
+      "classification": "approximated",
+      "target_capability": "typography.category.size",
+      "binding_strategy": "manual",
+      "note": "Pode orientar a categoria de título, mas não é aplicado automaticamente sem binding revisado."
+    },
+    {
+      "hub_token": "chart.footer_px",
+      "classification": "approximated",
+      "target_capability": "typography.category.size",
+      "binding_strategy": "manual",
+      "note": "Pode orientar texto pequeno/nota, mas depende da categoria nativa."
+    },
+    {
+      "hub_token": "chart.height_px",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Tema AI/BI não é contrato de dimensão individual de gráfico."
+    },
+    {
+      "hub_token": "chart.width_px",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Tema AI/BI não é contrato de dimensão individual de gráfico."
+    },
+    {
+      "hub_token": "chart.margin_left_px",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Margens do gráfico não pertencem ao tema nativo documentado."
+    },
+    {
+      "hub_token": "chart.margin_right_px",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Margens do gráfico não pertencem ao tema nativo documentado."
+    },
+    {
+      "hub_token": "chart.margin_top_px",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Margens do gráfico não pertencem ao tema nativo documentado."
+    },
+    {
+      "hub_token": "chart.margin_bottom_px",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Margens do gráfico não pertencem ao tema nativo documentado."
+    },
+    {
+      "hub_token": "section.title_px",
+      "classification": "approximated",
+      "target_capability": "typography.category.size",
+      "binding_strategy": "manual",
+      "note": "Título de seção pode orientar categoria de título, mas conflita com outros títulos se aplicado globalmente."
+    },
+    {
+      "hub_token": "section.description_px",
+      "classification": "approximated",
+      "target_capability": "typography.category.size",
+      "binding_strategy": "manual",
+      "note": "Descrição de seção pode orientar categoria secundária de texto."
+    },
+    {
+      "hub_token": "section.radius_px",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Raio de seção não tem consumidor nativo separado do widget."
+    },
+    {
+      "hub_token": "section.padding_y_px",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Padding de seção do notebook não é um token nativo de dashboard separado."
+    },
+    {
+      "hub_token": "section.padding_x_px",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Padding de seção do notebook não é um token nativo de dashboard separado."
+    },
+    {
+      "hub_token": "section.border_px",
+      "classification": "approximated",
+      "target_capability": "widget.border",
+      "binding_strategy": "manual",
+      "note": "Espessura de borda de seção pode orientar borda de widget, sem binding automático."
+    },
+    {
+      "hub_token": "card.font_px",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "O tamanho de fonte de cartão não tem categoria nativa própria garantida."
+    },
+    {
+      "hub_token": "card.radius_px",
+      "classification": "translated",
+      "target_capability": "widget.corner_radius",
+      "binding_strategy": "direct",
+      "note": "Raio de cartão corresponde à capacidade nativa de raio de canto do widget."
+    },
+    {
+      "hub_token": "card.padding_y_px",
+      "classification": "approximated",
+      "target_capability": "widget.padding",
+      "binding_strategy": "manual",
+      "note": "AI/BI possui padding de widget, mas o contrato público não garante eixos separados."
+    },
+    {
+      "hub_token": "card.padding_x_px",
+      "classification": "approximated",
+      "target_capability": "widget.padding",
+      "binding_strategy": "manual",
+      "note": "AI/BI possui padding de widget, mas o contrato público não garante eixos separados."
+    },
+    {
+      "hub_token": "badge.font_px",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Badge do Hub não possui consumidor nativo equivalente documentado."
+    },
+    {
+      "hub_token": "badge.radius_px",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Badge do Hub não possui consumidor nativo equivalente documentado."
+    },
+    {
+      "hub_token": "badge.padding_y_px",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Badge do Hub não possui consumidor nativo equivalente documentado."
+    },
+    {
+      "hub_token": "badge.padding_x_px",
+      "classification": "unsupported",
+      "target_capability": null,
+      "binding_strategy": "none",
+      "note": "Badge do Hub não possui consumidor nativo equivalente documentado."
+    }
+  ],
+  "official_sources": [
+    {
+      "title": "Manage AI/BI dashboard workspace themes",
+      "url": "https://docs.databricks.com/aws/en/ai-bi/admin/themes",
+      "verified_on": "2026-09-14"
+    },
+    {
+      "title": "Dashboard settings",
+      "url": "https://docs.databricks.com/aws/en/dashboards/manage/settings",
+      "verified_on": "2026-09-14"
+    },
+    {
+      "title": "Custom visualizations in AI/BI dashboards",
+      "url": "https://docs.databricks.com/aws/en/dashboards/manage/visualizations/custom-visualizations",
+      "verified_on": "2026-09-14"
+    }
+  ]
+}
