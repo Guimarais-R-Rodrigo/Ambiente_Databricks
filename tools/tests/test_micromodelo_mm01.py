@@ -169,6 +169,53 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
         document["publicacao"]["produto_dados_ref"] = "produto-sintetico"
         self.assertIn("PUBLICATION_STATUS_PHASE", self.codes(document))
 
+    def test_publication_lifecycle_has_valid_positive_path(self) -> None:
+        ready = copy.deepcopy(self.valid)
+        ready["saida"]["publicacao"] = {
+            "estado": "DEFINIDO",
+            "campo_booleano": {
+                "nome": "possui_caracteristica",
+                "tipo": "BOOLEAN",
+            },
+            "politica_indeterminado": {
+                "tratamento": "CAMPO_COBERTURA_SEPARADO",
+                "descricao": "publicar cobertura separada para preservar casos indeterminados",
+                "proveniencia": {
+                    "status": "APROVADO",
+                    "origem": "decisao humana sintetica",
+                    "referencia": "PUB-001",
+                    "observado_em_utc": "2026-09-14T15:00:00Z",
+                    "aprovacao": {
+                        "por": "analista_responsavel",
+                        "em_utc": "2026-09-14T15:00:00Z",
+                        "referencia": "PUB-001",
+                    },
+                    "medicao": None,
+                },
+            },
+        }
+
+        candidate = copy.deepcopy(ready)
+        candidate["identidade"]["estado"]["fase_anterior"] = "VALIDADO"
+        candidate["identidade"]["estado"]["fase_atual"] = "CANDIDATO_PRODUTO"
+        candidate["publicacao"]["status"] = "CANDIDATA"
+        self.assertEqual([], module.validate_spec(candidate, self.schema))
+
+        external = copy.deepcopy(ready)
+        external["identidade"]["estado"]["fase_anterior"] = "CANDIDATO_PRODUTO"
+        external["identidade"]["estado"]["fase_atual"] = "EM_VALIDACAO_GOVERNANCA"
+        external["publicacao"]["status"] = "EM_VALIDACAO_EXTERNA"
+        external["publicacao"]["handoff_ref"] = "handoff-sintetico-001"
+        self.assertEqual([], module.validate_spec(external, self.schema))
+
+        published = copy.deepcopy(ready)
+        published["identidade"]["estado"]["fase_anterior"] = "EM_VALIDACAO_GOVERNANCA"
+        published["identidade"]["estado"]["fase_atual"] = "PUBLICADO"
+        published["publicacao"]["status"] = "PUBLICADA"
+        published["publicacao"]["handoff_ref"] = "handoff-sintetico-001"
+        published["publicacao"]["produto_dados_ref"] = "produto-sintetico-001"
+        self.assertEqual([], module.validate_spec(published, self.schema))
+
     def test_unknown_property_in_material_block_is_rejected(self) -> None:
         document = copy.deepcopy(self.valid)
         document["classificacao"]["campo_desconhecido"] = "nao permitido"
