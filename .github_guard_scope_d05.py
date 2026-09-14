@@ -1,6 +1,6 @@
 from pathlib import Path
 import subprocess
-ROOT=Path(__file__).resolve().parent
+ROOT=Path.cwd()
 BASE="88106290a8c92b52ef2ec5294247064237dfc8c2"
 
 def git(*a):
