@@ -326,6 +326,7 @@ class PackagingAndWorkflowTests(unittest.TestCase):
         )
         self.assertIn("permissions:\n  contents: read", text)
         self.assertIn("persist-credentials: false", text)
+        self.assertNotIn("git fetch --no-tags origin main", text)
         for needle in forbidden:
             self.assertNotIn(needle, text)
 
