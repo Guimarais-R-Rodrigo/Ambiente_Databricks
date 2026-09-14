@@ -59,12 +59,19 @@ repo (identidade)  : 1409 arquivos varridos no repositório editável/derivado
 
 O valor de `repo (links)` observado permaneceu **1878**. A etapa de escopo V11 foi `SKIP` por consequência do failure anterior do job; ela não é reclassificada como PASS. O run `34901091132` permanece **FAILURE**.
 
-## Ajustes posteriores ao segundo failure
+### Run `34901776770` — FAILURE do novo oráculo de import
 
-A reconciliação seguinte:
-- copia para o README raiz apenas as três métricas medidas pelo próprio validador;
-- torna o import da fachada robusto tanto como módulo local quanto via namespace `hub_padroes.identidade_visual.aibi`;
-- amplia a guarda negativa para inspecionar **todos** os arquivos Python da ponte V11, não apenas a fachada;
+No head `8785822e045edf158f04ea41ea0f6c059ef11cb1`, a guarda nova de import pelo namespace do produto funcionou e a projeção foi criada corretamente, mas o teste comparou o `source_theme_id` com `legado_notebook`. A fixture canônica V02 usa `hub-legado-notebook`; portanto o único failure entre **21 testes** foi um oráculo incorreto introduzido pelo próprio endurecimento.
+
+A correção altera somente a expectativa do teste para o ID canônico real. A guarda de import e a varredura de todos os módulos Python continuam ativas. Como a suíte V11 falhou, sintaxe, regressões, V00, validador e escopo foram `SKIP` nesse run. O run `34901776770` permanece **FAILURE**.
+
+## Ajustes para o próximo head
+
+A revisão seguinte:
+- mantém no README raiz somente as três métricas medidas pelo validador;
+- mantém import robusto da fachada local/namespace;
+- mantém varredura negativa de todos os módulos Python da ponte V11;
+- corrige apenas o oráculo de `source_theme_id` para `hub-legado-notebook`;
 - mantém fonte e espelho byte a byte equivalentes.
 
 Os resultados dessa revisão devem ser registrados somente após execução real no head correspondente.

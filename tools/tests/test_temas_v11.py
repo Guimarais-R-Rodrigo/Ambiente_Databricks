@@ -248,7 +248,7 @@ class FixtureAndPackagingTests(unittest.TestCase):
     def test_public_facade_imports_as_namespace_package(self):
         module = importlib.import_module("hub_padroes.identidade_visual.aibi.aibi_theme")
         projection = module.project_theme(load_reference_theme("notebook"))
-        self.assertEqual(projection.source_theme_id, "legado_notebook")
+        self.assertEqual(projection.source_theme_id, "hub-legado-notebook")
         with self.assertRaises(module.AibiThemeError) as cm:
             module.project_theme(load_reference_theme("readme"))
         self.assertEqual(cm.exception.code, "AIBI_THEME_INTEGRITY")
