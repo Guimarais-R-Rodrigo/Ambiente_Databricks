@@ -1,6 +1,14 @@
 # `performance_monitor` — métricas periódicas contra política explícita
 
 <!-- readme-objeto: 1.0.0 -->
+<!-- sistema-temas-v07: consumidores -->
+> **Atualização V07 — estado atual.** `PerformanceMonitor.plot_timeline(metric)`
+> continua legado. `plot_timeline_resolvido(metric, theme)` reutiliza exatamente
+> o mesmo histórico, baseline e thresholds e altera apenas aparência:
+> `brand.primary` para a série, `text.secondary` para baseline,
+> `semantic.warning` para warning e `semantic.negative` para critical. A rota
+> temática não altera `should_retrain`, não recalibra a política e não autoriza
+> retreino automático.
 
 Este objeto mantém um histórico em memória de métricas de modelo e compara deterioração contra uma política declarada. Ele produz evidência para investigação; não agenda execução, não persiste dados, não envia alertas e não autoriza mudanças de modelo automaticamente.
 

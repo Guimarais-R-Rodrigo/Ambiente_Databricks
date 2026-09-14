@@ -1,6 +1,14 @@
 # `curves_plotly` — ROC, Precision-Recall, lift e KS em Plotly
 
 <!-- readme-objeto: 1.0.0 -->
+<!-- sistema-temas-v07: consumidores -->
+> **Atualização V07 — estado atual.** Cada curva legada possui agora uma rota
+> opt-in `*_resolvido`: ROC, Precision–Recall, Lift e KS. A aparência usa o token
+> dedicado `palette.curves_legacy`, preservando a decisão do contrato V01 de
+> manter a família histórica de seis cores separada da paleta categórica geral.
+> AUC, AP, lift, KS, eixos e séries continuam calculados pela mesma lógica. A
+> figura Plotly resolvida pode ser serializada localmente para HTML; PNG Plotly,
+> PDF e PPTX não são formatos homologados pela V07.
 
 Este objeto produz quatro visualizações diagnósticas para classificação binária com tema local do Hub. Ele facilita leitura e comunicação, mas não escolhe threshold, não mede calibração e não substitui validação estatística ou de negócio.
 

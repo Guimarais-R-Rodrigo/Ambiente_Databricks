@@ -1,6 +1,14 @@
 # `correlation_matrix` — entenda relações entre variáveis numéricas
 
 <!-- readme-objeto: 1.0.0 -->
+<!-- sistema-temas-v07: consumidores -->
+> **Atualização V07 — estado atual.** `plot_correlation` e
+> `plot_correlation_matrix` continuam sendo as rotas legadas. Para aplicar um
+> `ResolvedTheme` notebook/light de forma opt-in, use
+> `plot_correlation_resolvido` ou `plot_correlation_matrix_resolvido`. A rota
+> temática usa `palette.sequential` somente na escala de cor; seleção de colunas,
+> descarte de faltantes, cálculo Spark, método e `strong_pairs` permanecem na
+> mesma implementação. Um tema inválido falha antes do cálculo.
 
 > Compare como variáveis se movimentam em conjunto e encontre pares para investigar, sem confundir associação com causa.
 
