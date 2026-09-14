@@ -114,3 +114,6 @@ Após a R11 fechar 75/75 objetos, a R12 cria os seis índices de categoria de `h
 
 ### READMEs R13 — auditoria final consolidada
 Após a integração da R12 pelo PR #32 (`ec4b559d`), a R13 audita em conjunto contrato, checklist, skill de criação, validador, Manual, 75 READMEs operacionais, três exemplares, seis índices de categoria e espelho derivado. A rodada é local e registra `A0_light`; homologação Databricks/Genie Code e auditoria independente permanecem gates separados.
+
+### READMEs R13 — encerramento da iniciativa
+A R13 foi aceita e integrada pelo PR #33 (`b0e953cc`). A iniciativa própria de READMEs R00–R13 está encerrada no Git com 75/75 objetos operacionais, 3/3 exemplares, 0 pendências e auditoria final local `A0_light` aprovada. Homologação Databricks/Genie Code e auditoria independente continuam fora deste fechamento.
