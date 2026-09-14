@@ -24,7 +24,7 @@ Os testes da MM01 exercitam o contrato estrutural e semântico. Não acessam Dat
 | T14 | score desabilitado com resíduos de score | `SCORE_DISABLED` |
 | T15 | CLI em documento válido/inválido | exit code 0/1 respectivamente |
 | T16 | gate estrutural do repositório | `tools/validate_assistant.py` sem FAIL |
-| T17 | suíte agregada de manutenção | regressão zero |
+| T17 | suíte agregada de manutenção na PR | regressão zero |
 
 ## Teste específico de YAML
 
@@ -34,7 +34,7 @@ O template não usa chaves literais `true:`/`false:`. PyYAML trata essas palavra
 
 `tools/tests/fixtures/micromodelos_mm01/` contém `valido_validado.json` e `casos_invalidos.json`. O segundo descreve nove mutações negativas determinísticas aplicadas sobre a base válida; cada caso modifica apenas a dimensão que pretende quebrar sempre que possível, reduzindo duplicação e falso positivo por múltiplos defeitos independentes.
 
-## Evidência local antes do commit
+## Evidência local antes do primeiro commit
 
 A suíte isolada foi executada em árvore temporária equivalente à estrutura final:
 
@@ -45,10 +45,43 @@ OK
 
 As nove mutações negativas reprovaram pelo código esperado. O fixture positivo e o template foram aprovados. A suíte também confirma que uma decisão humana de validação não pode divergir do `validacao.status`.
 
-## Evidência de CI da branch
+## Evidências da branch
 
-Pendente até o primeiro commit da candidata. Esta seção deve ser atualizada com SHA e runs reais antes do checkpoint final.
+### Materialização inicial — falha histórica preservada
+
+- run: `34899029039`;
+- resultado: **failure** antes da instalação de dependências/testes;
+- causa: corrupção do pacote gzip usado apenas como transporte transitório (`zlib.error: invalid distance too far back`);
+- efeito na candidata: nenhum artefato de produto foi commitado por essa execução;
+- tratamento: mecanismo de transporte substituído por três blobs menores com allowlist exata; a falha não foi apagada nem reclassificada como teste funcional.
+
+### Materialização validada
+
+- run: `34899617125`;
+- resultado: **success**;
+- executou materialização com allowlist, instalação de dependências, os 9 testes MM01 e `tools/validate_assistant.py --root ambiente_fonte`;
+- o workflow transitório se removeu antes do commit final dos artefatos.
+
+### Reconciliação com a `main` pós-V10
+
+- `main` observada e fixada: `a9480391c78e2402986885db0ce08b10e0619a1a`;
+- run transitório fail-closed: `34900062786`;
+- resultado: **success**;
+- executou merge local da base, reinstalação, 9 testes MM01 e gate estrutural antes do `push`;
+- o workflow transitório de reconciliação se removeu antes da publicação da composição.
+
+### Gate permanente MM01
+
+- workflow: `.github/workflows/micromodelos-mm01-ci.yml`;
+- primeiro head exercitado: `6ef778de8802967bdce0e99c4df2eeb6da96cc73`;
+- run: `34900332458`;
+- resultado: **success**;
+- escopo: instalação limpa, `test_micromodelo_mm01.py -v`, `validate_assistant.py --root ambiente_fonte` e declaração explícita de que o gate não acessa sistemas/dados corporativos.
+
+## Evidência de PR / suíte agregada
+
+Pendente da abertura da PR. O CI geral (`.github/workflows/ci.yml`) não substitui o gate específico MM01: ele serve como regressão agregada do repositório. Ambos devem permanecer verdes no head final da candidata.
 
 ## Auditoria A1
 
-Pendente. O prompt independente deverá proibir `CHANGELOG.md`, histórico do Git, `docs/auditoria/` e a documentação narrativa de autoria da sprint. Como o schema/template são o próprio objeto auditado e vivem em `docs/sprints/micromodelos/MM01/`, eles serão uma exceção de leitura explicitamente enumerada; `README.md`, `CONTRATO_MICROMODELO.md`, `ESTADOS_E_PROVENIENCIA.md`, `TESTES.md` e `CHECKPOINT.md` permanecerão vedados ao auditor.
+Pendente. O auditor deverá trabalhar em sessão nova, executar os gates e criar casos adversariais próprios. `CHANGELOG.md`, histórico Git, relatórios prévios e a documentação narrativa de autoria da sprint ficam vedados; schema/template, validador, testes, fixtures e ADRs aceitos formam o conjunto permitido de evidências primárias.
