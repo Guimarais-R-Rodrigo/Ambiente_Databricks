@@ -4,7 +4,7 @@ Este template orienta **composição, hierarquia e leitura** de uma EDA. Ele nã
 
 ## 1. Fonte de verdade visual
 
-- Não declare `PALETA_EDA`, `TEMA_EDA` ou dicionário paralelo de tema.
+- Não declare paleta, dicionário de tema ou convenção local que replique a política visual do Hub.
 - Não copie valores de `TOKENS.md` para “congelar” uma aparência local.
 - Não registre template global como preparação padrão do notebook; **não registre template global** apenas para aplicar uma proposta.
 - Se não houver tema explicitamente selecionado, use as APIs legadas do Hub.
