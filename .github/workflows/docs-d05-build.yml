@@ -1,0 +1,47 @@
+name: D05 docs temas
+on:
+  push:
+    branches: [codex/docs-post-r13-d05-temas]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Aplicar
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse origin/main)" = "88106290a8c92b52ef2ec5294247064237dfc8c2"
+          python .github/tmp_d05/apply_product.py
+          python .github/tmp_d05/apply_governance.py
+          python tools/render_simulado.py --write
+          cp .github_guard_scope_d05.py /tmp/g1.py
+          cp .github_guard_state_d05.py /tmp/g2.py
+          cp .github_snapshot_d05.py /tmp/snap.py
+          rm -rf .github/tmp_d05 .github_guard_scope_d05.py .github_guard_state_d05.py .github_snapshot_d05.py .github/workflows/docs-d05-build.yml
+          git add -A
+          git diff --cached --check
+      - name: Validar
+        run: |
+          python -m pip install -r tools/requirements-dev.txt
+          python tools/validate_assistant.py | tee /tmp/d05-validator.txt
+          python /tmp/snap.py
+          git add README.md
+          python tools/validate_assistant.py --conferir-readme
+          python /tmp/g1.py
+          python /tmp/g2.py
+          python tools/ci_local.py
+          git add -A
+          git diff --cached --check
+      - name: Publicar
+        run: |
+          git config user.name github-actions
+          git config user.email actions@users.noreply.github.com
+          git commit -m 'docs(d05): reconciliar Sistema de Temas (ChatGPT)'
+          git push origin HEAD:codex/docs-post-r13-d05-temas
