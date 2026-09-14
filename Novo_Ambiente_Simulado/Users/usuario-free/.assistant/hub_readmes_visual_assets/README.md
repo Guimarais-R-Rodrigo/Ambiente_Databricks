@@ -19,7 +19,7 @@ hub_readmes_visual_assets/
 │   ├── README.md
 │   ├── src/                  # arte-base raster + texto e camada tipográfica
 │   └── png/                  # CRM e Squad, prontos para uso
-├── specs/                    # contratos semânticos e microcopy das assinaturas
+├── specs/                    # contratos semânticos, microcopy e geração por tema
 ├── visual_system/
 ├── licenses/                 # Inter e Lucide
 ├── qa/                       # verificações e metadados de composição
@@ -55,6 +55,23 @@ Use um único cabeçalho por documento, preservando o título e as instruções 
 Markdown. Não copie esses PNGs para cada notebook: referencie a localização
 compartilhada. O [guia de cabeçalhos](headers/README.md) contém exemplos e os
 cuidados com caminhos relativos e acessibilidade.
+
+## Geração candidata por tema — V06
+
+A V06 acrescenta uma rota de manutenção **separada do pacote ativo**. Um
+`theme_id` canônico é resolvido pelo núcleo `hub_snippets.visual.tema`; somente
+depois disso o compositor v2 recebe os tokens validados. A geração vai para
+`.artifacts/visual-v2/theme-variants/` e nunca substitui automaticamente os PNGs
+deste diretório.
+
+O contrato está em [specs/theme_generation.yaml](specs/theme_generation.yaml).
+Assets congelados continuam protegidos por hash e não são recoloridos. Quando um
+asset paramétrico muda de bytes, a saída é marcada `variant_review_required` e
+precisa de nova revisão antes de qualquer promoção.
+
+Para o operador comum do Hub, nada muda: continue consumindo os PNGs canônicos.
+A rota V06 é uma ferramenta de manutenção local; gerar uma variante não significa
+aprovar, publicar ou instalar um tema no Databricks.
 
 ## Como manter
 

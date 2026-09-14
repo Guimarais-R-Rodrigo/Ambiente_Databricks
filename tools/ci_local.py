@@ -5,7 +5,7 @@
 Executa, em ordem, e sempre até o fim — um gate que para no primeiro erro
 esconde os outros e obriga a rodar de novo para cada um:
 
-1. Temas — HTML/tabelas V04 + Plotly V03 + núcleo V02 + contrato V01 (todas as `test_temas*.py`)
+1. Temas — assets/geração V06 + Visual Lab V05 + HTML/tabelas V04 + Plotly V03 + núcleo V02 + contrato V01 (todas as `test_temas*.py`)
 2. `validate_assistant.py`  — forma, links, contratos, identidade e higiene;
 3. `hub_snippets/tests/test_core.py`   — regressões da biblioteca;
 4. `tools/tests/test_tool_guards.py`   — guardas das próprias ferramentas.
@@ -21,9 +21,17 @@ de credencial, rede ou runtime Databricks. Publicação, verify remoto, smoke em
 Spark e testes conversacionais do Genie Code são etapas próprias, com evidência
 datada. Um gate que mistura os dois nunca roda em máquina nova nem em CI.
 
-Dependências declaradas em `tools/requirements-dev.txt`:
+Dependências Python declaradas em `tools/requirements-dev.txt`:
 
     python -m pip install -r tools/requirements-dev.txt
+
+A V06 também exercita o compositor Node local. Prepare as dependências fixadas
+antes de rodar o gate completo:
+
+    npm install --global pnpm@10.34.5
+    pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+O gate não instala dependências automaticamente nem faz chamadas ao Databricks.
 """
 
 from __future__ import annotations
@@ -32,6 +40,7 @@ import argparse
 import importlib.util
 import locale
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -52,9 +61,22 @@ DEPENDENCIAS = [
     ("jinja2", "jinja2"),
 ]
 
+# A V06 chama o compositor Node pelos testes. Conferimos somente presença local
+# das dependências declaradas; instalação automática continuaria sendo efeito de
+# rede impróprio para um gate local/fail-closed.
+DEPENDENCIAS_NODE = [
+    "@fontsource/inter/package.json",
+    "@svgdotjs/svg.js/package.json",
+    "fontkit/package.json",
+    "lucide-static/package.json",
+    "sharp/package.json",
+    "svgdom/package.json",
+    "yaml/package.json",
+]
+
 ETAPAS = [
     (
-        "temas", "Sistema de temas V04 + V03 + V02 + V01",
+        "temas", "Sistema de temas V06 + V05 + V04 + V03 + V02 + V01",
         [sys.executable, "-B", "-m", "unittest", "discover", "-s", "tools/tests", "-p", "test_temas*.py", "-v"],
     ),
     (
@@ -101,11 +123,23 @@ ETAPAS = [
 
 
 def conferir_dependencias() -> list[str]:
-    """Devolve os pacotes ausentes, pelo nome com que se instala."""
+    """Devolve os pacotes Python ausentes, pelo nome com que se instala."""
     ausentes = []
     for modulo, pacote in DEPENDENCIAS:
         if importlib.util.find_spec(modulo) is None:
             ausentes.append(pacote)
+    return ausentes
+
+
+def conferir_dependencias_node() -> list[str]:
+    """Devolve pré-requisitos locais ausentes para os testes V06 do compositor."""
+    ausentes = []
+    if shutil.which("node") is None:
+        ausentes.append("node>=20")
+    base = RAIZ / "tools" / "readme_visuals" / "node_modules"
+    for relativo in DEPENDENCIAS_NODE:
+        if not (base / relativo).is_file():
+            ausentes.append(f"node_modules/{relativo}")
     return ausentes
 
 
@@ -160,6 +194,13 @@ def main() -> int:
     if ausentes:
         print("\nFAIL dependências de teste ausentes: " + ", ".join(ausentes))
         print("     python -m pip install -r tools/requirements-dev.txt")
+        return 2
+
+    ausentes_node = conferir_dependencias_node()
+    if ausentes_node:
+        print("\nFAIL dependências do compositor V06 ausentes: " + ", ".join(ausentes_node))
+        print("     npm install --global pnpm@10.34.5")
+        print("     pnpm --dir tools/readme_visuals install --frozen-lockfile")
         return 2
 
     etapas = [e for e in ETAPAS if args.etapa is None or e[0] == args.etapa]
