@@ -23,8 +23,9 @@ A fundação documental e arquitetural da MM00 foi implementada, auditada indepe
 - Head técnico pré-D1 validado: `6f1375efe1a610eca30815b1866cc5d7049514a4`.
 - Head pós-registro D1-B validado: `e027223049380014fbfa59dea6bd6fbd7744e8a7`.
 - Head de evidência pós-D1-B validado: `6f60c27e8cdb95d9e5f5feaaa0ccd471444295c4`.
-- Head corrente, contendo o congelamento deste checkpoint: `8465e5afd6188006f4a0d3bb3cb9b6b75d3570b6`.
-- Validação do congelamento produziu a árvore corrente `dc32c918561246826fe77fd72a32b54f0f1d246a`.
+- Head de congelamento validado: `8465e5afd6188006f4a0d3bb3cb9b6b75d3570b6`.
+- Head intermediário de consolidação validado: `dc32c918561246826fe77fd72a32b54f0f1d246a`.
+- Head final desta etapa D1-B: `faa5319855c7899251b8e06b6ba9b7716e09c0c3`.
 
 ## Entregas
 
@@ -50,10 +51,7 @@ A fundação documental e arquitetural da MM00 foi implementada, auditada indepe
 | D2 — ADR-0014 a ADR-0020 | **pendente** |
 | Diff técnico contra a `main` fechada | **23 arquivos documentais/contextuais; zero alteração funcional própria** |
 | Métricas do README raiz | **1374 arquivos / 1859 links** |
-| Bateria pós-registro D1-B | **4/4 workflows verdes** |
-| Bateria do head de evidência | **4/4 workflows verdes** |
-| Bateria do head `8465e5afd6188006f4a0d3bb3cb9b6b75d3570b6` | **4/4 workflows verdes** |
-| Bateria da árvore corrente `dc32c918561246826fe77fd72a32b54f0f1d246a` | **4/4 workflows verdes** |
+| Bateria do head final D1-B `faa5319855c7899251b8e06b6ba9b7716e09c0c3` | **4/4 workflows verdes** |
 | `main` após a bateria final | **estável em `d6655411ca4ac1834b0983f6ce6bdadc30b831bb`** |
 | Aceite humano explícito da MM00 | pendente |
 
@@ -105,40 +103,12 @@ A reconciliação foi montada usando `main=d6655411ca4ac1834b0983f6ce6bdadc30b83
 
 ## Gates automáticos
 
-### Head técnico `6f1375efe1a610eca30815b1866cc5d7049514a4`, antes do registro D1-B
+### Head final D1-B `faa5319855c7899251b8e06b6ba9b7716e09c0c3`
 
-- CI geral `34884154201`: `success`;
-- V00 `34884154328`: `success`;
-- V01 `34884154292`: `success`;
-- V02 `34884154221`: `success`.
-
-### Head pós-D1-B `e027223049380014fbfa59dea6bd6fbd7744e8a7`
-
-- CI geral `34885007465`: `success`;
-- V00 `34885007403`: `success`;
-- V01 `34885007509`: `success`;
-- V02 `34885007567`: `success`.
-
-### Head de evidência `6f60c27e8cdb95d9e5f5feaaa0ccd471444295c4`
-
-- CI geral `34885242394`: `success`;
-- V00 `34885242458`: `success`;
-- V01 `34885242492`: `success`;
-- V02 `34885242445`: `success`.
-
-### Head `8465e5afd6188006f4a0d3bb3cb9b6b75d3570b6`
-
-- CI geral `34885525839`: `success`;
-- V00 `34885525938`: `success`;
-- V01 `34885525871`: `success`;
-- V02 `34885525857`: `success`.
-
-### Árvore corrente `dc32c918561246826fe77fd72a32b54f0f1d246a`
-
-- CI geral `34885764013`: `success`;
-- V00 `34885763928`: `success`;
-- V01 `34885764026`: `success`;
-- V02 `34885763914`: `success`.
+- CI geral `34885965678`: `success`;
+- V00 `34885965629`: `success`;
+- V01 `34885965749`: `success`;
+- V02 `34885965763`: `success`.
 
 A reconsulta posterior confirmou `main=d6655411ca4ac1834b0983f6ce6bdadc30b831bb`, sem novo avanço concorrente. O gate manteve a composição em **1374 arquivos / 1859 links**, sem relaxar validador.
 
