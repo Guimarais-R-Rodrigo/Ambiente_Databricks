@@ -2,8 +2,10 @@
 
 ## Antes de começar
 
-O núcleo V02 está integrado no Git como verificador/resolvedor. V03/V04 acrescentam consumidores Plotly/HTML opt-in; V05 oferece o Visual Lab; V06 integra geração editorial; V07 amplia consumidores runtime e formatos exercitados. Nenhuma dessas camadas troca o caminho legado por padrão.
+O núcleo V02 está integrado no Git como verificador/resolvedor. V03/V04 acrescentam consumidores Plotly/HTML opt-in; V05 oferece o Visual Lab; V06 integra geração editorial; V07 amplia consumidores runtime e formatos exercitados; V08 alinha orientação transversal e V09 protege o transporte no kit. Nenhuma dessas camadas troca o caminho legado por padrão.
 Seu notebook atual continua igual. Para usar o pacote no workspace de trabalho, a revisão integrada ainda precisa ser instalada/publicada pelo procedimento autorizado e homologada no destino. Não publique arquivos por conta própria para experimentar uma cor.
+
+A V10 está em candidata separada e acrescenta uma interface Databricks App de autoria/persistência sobre o mesmo Visual Lab. Ela ainda não foi aceita, mesclada ou implantada e não cria caminho de aprovação/publicação.
 
 Quem só precisa acompanhar a entrega pode ler a seção “Interpretar a saída” abaixo.
 Quem vai executar precisa de Python, do pacote completo `.assistant` e das bibliotecas
@@ -90,6 +92,14 @@ SHAP/Matplotlib e Kaplan–Meier continuam exceções explícitas ao theming atu
 ## Geração editorial V06
 
 A geração orientada por tema recebe um derivado controlado do `ResolvedTheme` e produz candidatos fora do pacote visual ativo. Gerar um asset não o promove. Preserve hashes/recursos congelados e siga o fluxo de revisão antes de qualquer substituição.
+
+## Usar o Databricks App V10 candidato
+
+Se você estiver revisando a candidata V10 no Git, consulte o [guia de primeiro uso do App](databricks_app/GUIA_PRIMEIRO_USO.md). A interface reaproveita o Visual Lab para escolher uma base, ajustar, comparar, salvar e reabrir a própria sessão.
+
+A candidata é `authoring_only`: não existe botão para aprovar, publicar, promover ou apagar histórico. O modo de desenvolvimento local não substitui autenticação Databricks. Um deploy futuro exige autorização separada, recurso `theme_storage` apontando para Unity Catalog Volume e permissões reais no workspace.
+
+A própria presença desses arquivos no Hub não cria um Databricks App. Até existir deploy autorizado e evidência do destino, headers reais, UC Volume real, browser, acessibilidade, concorrência multiusuário e UAT permanecem não homologados.
 
 ## Para pedir ajuda
 

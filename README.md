@@ -53,7 +53,7 @@ A separação principal é entre **contexto** e **execução**:
 
 ## 🎨 Sistema de Temas
 
-V00–V09 estão integradas no Git. A V09 foi aceita em 14/09/2026 e integrada pelo PR #45; o primeiro pós-merge preservou como failure um defeito real de preparação do runner do workflow operacional, corrigido pelo PR #46. O head técnico final validado é `4ae714a35a0aafd930a8cd796d962b0a79449b88`, com 12/12 workflows de `push` em `success`.
+V00–V09 estão integradas no Git. A V10 foi aceita por Rodrigo em 14/09/2026 e esta candidata reconciliada aguarda integração no `main`; nenhum deploy Databricks foi autorizado ou executado. Ela acrescenta uma interface Streamlit para Databricks Apps sobre o mesmo núcleo V02 e Visual Lab V05, com autoria/persistência `authoring_only`, identidade encaminhada pelo proxy e sessões isoladas em Unity Catalog Volume configurado como recurso do App.
 
 Regras atuais:
 
@@ -61,14 +61,16 @@ Regras atuais:
 - consumidores visuais usam rotas explícitas `_resolvido` quando suportadas;
 - aparência não pode alterar cálculo, amostragem, embedding, política de monitoramento ou métricas;
 - o template EDA não mantém paleta ou dicionário de tema paralelos;
-- o kit de transição exige `theme_contract` v1 com nove caminhos canônicos protegidos por hash;
+- o kit V09 exige `theme_contract` v1 com nove caminhos canônicos protegidos por hash;
 - transporte é obrigatório, ativação continua `manual_opt_in` e publicação continua `not_performed`;
+- a V10 não implementa `context="app"`; o App gerencia propostas `notebook` existentes;
+- a V10 não possui botão/função de aprovar, publicar, promover ou apagar histórico;
 - SHAP/Matplotlib e Kaplan–Meier continuam limites explícitos onde o contrato atual não representa a semântica necessária;
 - nada disso publica automaticamente no Databricks.
 
-No gate operacional final, o kit foi gerado offline, os 43 contratos Spark passaram com Spark local no runner e o ZIP foi reaberto para validar presença, tamanho e SHA256 dos nove arquivos antes do upload do artefato de CI. Nenhuma publicação, ativação, promoção, ACL, compute ou execução remota Databricks foi realizada; a V10 não foi iniciada por este fechamento.
+Na V10, os gates Git/CI exercitam identidade sintética, isolamento, persistência V05, bundle implantável derivado e regressões locais. O head original `8e59739cbe3e1ce6d49503e7c953c82a98d2dc2c` concluiu os dez workflows de PR com `success`; a reconciliação com a `main` atual deve ser validada novamente antes do merge. Isso **não** comprova headers reais, permissões/grupos do workspace, UC Volume real, browser, acessibilidade, concorrência multiusuário ou UAT. Nenhuma criação/atualização de Databricks App foi executada por esta sprint.
 
-Detalhes e evidências da integração: [V09](docs/sprints/sistema_temas/V09/README.md) e [checkpoint V09](docs/sprints/sistema_temas/V09/CHECKPOINT_V09.md).
+Detalhes da candidata: [V10](docs/sprints/sistema_temas/V10/README.md) e [checkpoint V10](docs/sprints/sistema_temas/V10/CHECKPOINT_V10.md). O estado integrado anterior e as evidências V09 permanecem em [V09](docs/sprints/sistema_temas/V09/README.md).
 
 ## 🔄 Como o contexto chega à Genie Code
 
@@ -100,7 +102,7 @@ raiz analisada     : /home/runner/work/Ambiente_Databricks/Ambiente_Databricks/a
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 92 caminhos verificados
-markdown / links   : 217 arquivos / 1382 links relativos
+markdown / links   : 220 arquivos / 1394 links relativos
 notebooks / links  : 80 notebooks / 101 links relativos
 readmes de objeto  : 76/76 operacionais; 3/3 exemplares; 0 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 62 conferidas (nome, arquivos, __init__)
@@ -111,10 +113,10 @@ saída colada       : 79 notebooks com bloco real, 0 sem
 idioma da docstring: 62 módulos, 0 com docstring em inglês
 normas do molde    : 72 arquivos, 0 violação(ões)
 notebook exercita  : 60 objetos, 0 notebook(s) que só importam
-python (AST)       : 217 arquivos
+python (AST)       : 219 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1374 arquivos varridos no repositório editável/derivado
-repo (links)       : 1859 links fora da raiz analisada
+repo (identidade)  : 1392 arquivos varridos no repositório editável/derivado
+repo (links)       : 1878 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)
