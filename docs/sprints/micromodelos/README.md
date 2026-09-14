@@ -1,6 +1,6 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: MM00 em execução. Esta sprint é apenas documental e arquitetural; não cria skill, helper, micromodelo, tabela, run MLflow ou publicação.
+> Estado: MM00 em fechamento. Esta sprint é apenas documental e arquitetural; não cria skill, helper, micromodelo, tabela, run MLflow ou publicação.
 
 ## Objetivo
 
@@ -21,4 +21,4 @@ O repositório usa somente fixtures e placeholders. O catálogo real do trabalho
 
 `implementar → testar → auditar → corrigir → retestar → documentar → checkpoint → aceite → merge`
 
-MM01 permanece bloqueada até aceite explícito da MM00.
+Na MM00, D1-B foi autorizada exclusivamente para diferir a entrada do `CHANGELOG.md`, e D2 aceitou sem ressalvas ADR-0014 a ADR-0020. Falta o aceite final da MM00, a revalidação da árvore exata e o merge. Após o merge, o fechamento documental de Q-01 deve ocorrer antes do início efetivo da MM01.
