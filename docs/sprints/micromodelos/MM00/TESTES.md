@@ -80,9 +80,11 @@ MM00 é uma sprint documental/arquitetural. Os testes verificam baseline, ausên
 
 **Esperado:** a iniciativa MM00 não cria/modifica funcionalidade do produto.
 
-**Observado contra a `main` fechada da V08:** a PR #43 contém 21 arquivos alterados e nenhum deles pertence a `ambiente_fonte/.assistant/`, `Novo_Ambiente_Simulado/`, `tools/` ou `.github/workflows/`.
+**Observado contra a `main` fechada da V08:** a PR #43 contém 22 arquivos alterados. Eles são `CLAUDE.md`, `README.md`, pacote A1, ADR-0014 a ADR-0020, índices e documentação da iniciativa MM00.
 
-Os 21 arquivos são contexto canônico, ADRs, índices e documentação/auditoria da MM00.
+O `README.md` raiz foi alterado exclusivamente para reconciliar as métricas que o próprio validador mediu após a inclusão documental: 1368 arquivos e 1859 links.
+
+Nenhum arquivo alterado pertence a `ambiente_fonte/.assistant/`, `Novo_Ambiente_Simulado/`, `tools/` ou `.github/workflows/`.
 
 **Status:** PASS nominal. A auditoria A1 deve verificar que nenhum conteúdo documental cria efeito funcional indireto incompatível com o escopo.
 
@@ -92,7 +94,7 @@ Os 21 arquivos são contexto canônico, ADRs, índices e documentação/auditori
 
 No head anterior, o CI geral `34875814570` reprovou somente porque o bloco congelado do README raiz ainda registrava 1350 arquivos/1850 links, enquanto o validador mediu 1368 arquivos/1859 links. Temas, biblioteca, ferramentas, transição, READMEs e todos os checks do Concierge passaram nessa mesma execução.
 
-### Rodada corrigida
+### Rodada com README corrigido
 
 No head `f5e57db5c7fd1fdd21385eaa3f5f6aa07fcaa0a5`:
 
@@ -101,9 +103,18 @@ No head `f5e57db5c7fd1fdd21385eaa3f5f6aa07fcaa0a5`:
 - V01 `34876036418`: `success`;
 - V02 `34876036413`: `success`.
 
-O README foi corrigido apenas para os valores medidos `1368` e `1859`; nenhum validador foi relaxado.
+### Rodada após consolidação dos gates
 
-**Status:** PASS no snapshot `f5e57db5...`. As atualizações finais destes documentos de gate devem receber nova rodada de CI; o aceite permanece proibido enquanto o head corrente não estiver verde.
+No head `efd866cce13f826ace23c8625629f7ad359ed5c2`:
+
+- CI geral `34876564764`: `success`;
+- V00 `34876564723`: `success`;
+- V01 `34876564784`: `success`;
+- V02 `34876564718`: `success`.
+
+Nenhum validador foi relaxado. As correções posteriores a esse snapshot alteram somente textos de gate para corrigir a contagem nominal de 21 para 22 arquivos e, portanto, precisam de uma última rodada automática antes do aceite.
+
+**Status:** PASS nos snapshots registrados; head corrente ainda precisa revalidar após esta correção documental final.
 
 ## T11 — Auditoria independente A1
 
@@ -136,4 +147,4 @@ A reconciliação com a `main` preservou integralmente o `CHANGELOG.md` oficial 
 
 PASS global exige T01–T13 resolvidos, diff da MM00 delimitado contra a `main` vigente, CI verde no head corrente, auditoria independente registrada e checkpoint reconciliado.
 
-Neste momento, os bloqueios deliberados são T11 (A1 independente) e T13 (changelog próprio da MM00), além da revalidação automática do head após esta atualização documental.
+Neste momento, os bloqueios deliberados são T11 (A1 independente) e T13 (changelog próprio da MM00), além da última revalidação automática deste ajuste documental de contagem.
