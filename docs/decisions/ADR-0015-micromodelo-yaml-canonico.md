@@ -1,7 +1,7 @@
 # ADR-0015 — `micromodelo.yaml` como especificação canônica
 
 Data: 2026-09-14
-Status: Proposto
+Status: Aceito pelo usuário em 2026-09-14; integração da MM00 pendente
 Autor: ChatGPT
 
 ## Contexto
@@ -30,3 +30,7 @@ O contrato deverá separar afirmações descobertas, propostas/inferidas, aprova
 
 - `ambiente_fonte/.assistant/hub_padroes/output/proveniencia.md`
 - `docs/sprints/micromodelos/PLANO_MESTRE.md`
+
+## Ratificação de status — 14/09/2026
+
+O usuário declarou: “D2: Aceito ADR-0014 a ADR-0020 sem ressalvas.” Este ADR fica aceito sem alteração do corpo decisório. O aceite não antecipa o schema detalhado, a máquina de estados ou outras decisões próprias da MM01, e não autoriza iniciar MM01 antes do merge da MM00 e do fechamento documental pós-MM00 previsto pela exceção D1-B.
