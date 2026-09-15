@@ -1,6 +1,6 @@
 # MM01 — Checkpoint
 
-Status: **CORRIGIDA APÓS SEGUNDA A1; RETESTE DE CONSTRUÇÃO VERDE; TERCEIRA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
+Status: **TERCEIRA A1 `APTA_COM_CORRECOES`; TRÊS DIVERGÊNCIAS CORRIGIDAS; RETESTE DE CONSTRUÇÃO VERDE; QUARTA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
 
 ## Base e superfície
 
@@ -34,9 +34,9 @@ Status: **CORRIGIDA APÓS SEGUNDA A1; RETESTE DE CONSTRUÇÃO VERDE; TERCEIRA A1
 18. conteúdo material mínimo obrigatório ao entrar em `EM_VALIDACAO`;
 19. coerência entre fase e status da interface de publicação, com caminhos positivos testados até `PUBLICADO`;
 20. fronteira de tracking preservada para MM06;
-21. validador de referência/CI, fixtures sintéticos e suíte com **26 métodos de teste**;
+21. validador de referência/CI, fixtures sintéticos e suíte com **29 métodos de teste**;
 22. gate permanente `.github/workflows/micromodelos-mm01-ci.yml`, read-only e sem acesso a ambiente corporativo;
-23. pacote neutro de auditoria com os resultados históricos da primeira e segunda A1 preservados.
+23. pacote neutro de auditoria com os resultados históricos das três A1 preservados, sem reclassificação retroativa.
 
 ## O que não foi feito
 
@@ -83,22 +83,39 @@ O workflow transitório `34912665666` preparou a árvore sem os próprios mecani
 
 Esse run comprova a construção da correção, mas não substitui os workflows permanentes do próximo HEAD documental congelado.
 
+## Terceira auditoria A1
+
+A terceira A1 independente concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com três divergências bloqueantes: autoridade ASCII conflitante em `$defs.material_ref`, campos de proveniência de topo fora da política material e gates de conteúdo material aceitando strings visualmente vazias. O resultado histórico foi preservado em `05_resultado_a1_reauditoria_2.md`.
+
+## Correções da terceira A1
+
+A política de materialidade foi unificada sem ampliar o escopo da MM01:
+
+- `_has_material_text` continua a autoridade Unicode: NFKC seguido da exigência de pelo menos uma categoria Unicode `L*` ou `N*`;
+- o JSON Schema usa `format: material-text`, registrado no `FormatChecker` do próprio validador e delegado à mesma função;
+- referências, proveniência material, semânticas obrigatórias, critérios, nomes de fontes e campos operacionais relevantes usam essa autoridade;
+- prosa narrativa livre não recebeu a restrição indiscriminadamente;
+- CJK, árabe/algarismos Unicode, Devanagari, caracteres acentuados e combining marks acompanhados de base material permanecem válidos.
+
+O run transitório `34955861169` executou a suíte ampliada, CLI positiva/negativa/`--previous` e `validate_assistant` antes de publicar `4f686e5de163b649c4ee5e7643f75ecd56db47e7`. O mecanismo transitório não permaneceu na árvore candidata.
+
 ## Dívida documental antes do merge
 
 O bloco MM01 do `CHANGELOG.md` ainda descreve a candidata pré-A1. Ele deve ser sincronizado **antes do merge**, por operação que preserve byte a byte o histórico anterior. Essa pendência não deve ser usada para apagar ou reclassificar as auditorias históricas.
 
 ## Gate independente pendente
 
-Como a candidata mudou materialmente após a segunda A1, é obrigatória uma **terceira A1 independente** sobre o próximo HEAD congelado. O auditor deve repetir os gates mínimos e construir adversariais próprios, sem usar `03_resultado_a1.md` ou `04_resultado_a1_reauditoria.md` como prova da correção.
+Como a candidata mudou materialmente após a terceira A1, é obrigatória uma **quarta A1 independente** sobre o novo HEAD congelado. O auditor deve repetir os gates mínimos e construir adversariais próprios, sem usar os relatórios A1 anteriores, narrativa do autor, changelog ou mensagens de commit como prova da correção.
 
 ## Gates restantes
 
 1. congelar e validar os workflows permanentes do HEAD documental final;
-2. executar terceira A1 em sessão independente;
+2. executar quarta A1 em sessão independente;
 3. confrontar qualquer novo achado com a árvore e corrigir/retestar somente se procedente;
-4. sincronizar o bloco MM01 do `CHANGELOG.md` preservando o histórico;
-5. revalidar a árvore exata depois dessa sincronização;
-6. apresentar checkpoint final para aceite explícito;
-7. integrar a PR #51 somente após o aceite.
+4. se a quarta A1 for `APTA`, executar contraditório final;
+5. sincronizar o bloco MM01 do `CHANGELOG.md` preservando o histórico;
+6. revalidar a árvore exata depois dessa sincronização e reconfirmar `main`/`behind_by`/mergeabilidade;
+7. apresentar checkpoint final para aceite explícito;
+8. integrar a PR #51 somente após o aceite.
 
 Enquanto qualquer item acima estiver pendente, **MM02 permanece bloqueada**.

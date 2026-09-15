@@ -140,3 +140,9 @@ fase declarada ≠ gate da fase satisfeito
 ```
 
 Essas diferenças são semânticas do domínio, não detalhes editoriais.
+
+## Materialidade das provas e da proveniência
+
+A proveniência só serve como evidência auditável quando seus campos materiais possuem conteúdo efetivo. A MM01 aplica a autoridade Unicode compartilhada (`material-text` → `_has_material_text`) tanto às referências aninhadas quanto a `proveniencia.pedido_original_ref`, `proveniencia.gerado_por` e `proveniencia.registros[].alvo`.
+
+A política é positiva: após NFKC, deve existir pelo menos uma letra ou número Unicode. Marcas combinantes isoladas, zero-width, formatos invisíveis, whitespace, pontuação ou símbolos sem letra/número não constituem prova. Essa regra não altera a máquina de estados nem cria fingerprint; `--previous` continua sendo comparação explícita de snapshots fornecidos.

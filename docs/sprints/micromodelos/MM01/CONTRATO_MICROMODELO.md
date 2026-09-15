@@ -144,3 +144,9 @@ O contrato prefere `PENDENTE`, lista vazia ou `null` explícito a um valor inven
 ## 5. O que não está definido na MM01
 
 A MM01 não define fingerprint, crawler de catálogo, feature engineering específica, contrato de runs, notebook de estudo, README do micromodelo, handoff de publicação real, visual ou migração. Esses temas permanecem nas sprints posteriores do Plano Mestre.
+
+## Autoridade única de materialidade textual Unicode
+
+Campos materiais — referências auditáveis, proveniência material, nomes operacionais, semânticas obrigatórias e critérios — são validados pelo formato customizado `material-text`. O `FormatChecker` do JSON Schema não contém uma segunda heurística: ele delega à mesma `_has_material_text` usada pelos gates semânticos. A regra normaliza por NFKC e exige ao menos um caractere cuja categoria Unicode comece por `L` ou `N`.
+
+Consequentemente, whitespace, NBSP/EM SPACE, `Cf`, zero-width, variation selectors, combining marks isolados, pontuação e símbolos isolados não satisfazem um campo material. CJK, Devanagari, caracteres acentuados, algarismos Unicode e combining marks acompanhados de uma base material continuam válidos. Campos narrativos livres não recebem `material-text` apenas por serem strings.

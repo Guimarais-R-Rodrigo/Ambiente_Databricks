@@ -49,8 +49,11 @@ Os testes da MM01 exercitam o contrato estrutural e semântico. Não acessam Dat
 | T39 | CLI válido/inválido e tentativa de `--catalog-ref` não contratada | exit 0/1/2 |
 | T40 | gate estrutural do repositório | `tools/validate_assistant.py` sem FAIL |
 | T41 | CI agregado da PR | regressão zero no head final técnico |
+| T42 | política `material-text`: marcas/formatos/whitespace/pontuação/símbolo isolados | `SCHEMA` |
+| T43 | materialidade Unicode positiva (`é`, CJK, algarismos Unicode, Devanagari, combining mark com base material) | APROVADO |
+| T44 | proveniência de topo e gates materiais usam a mesma política Unicode | rejeição/aceite coerentes |
 
-A suíte `tools/tests/test_micromodelo_mm01.py` contém **26 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz. `casos_invalidos.json` mantém nove mutações negativas determinísticas além dos casos adversariais construídos diretamente pela suíte.
+A suíte `tools/tests/test_micromodelo_mm01.py` contém **29 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz. `casos_invalidos.json` mantém nove mutações negativas determinísticas além dos casos adversariais construídos diretamente pela suíte.
 
 ## Teste específico de YAML
 
@@ -122,10 +125,32 @@ O relatório histórico está versionado em `04_resultado_a1_reauditoria.md` e n
 
 O run transitório é evidência de construção, não substitui os workflows permanentes da candidata documental final. Os IDs dos checks permanentes do próximo HEAD congelado serão mantidos na descrição da PR #51 para evitar commits autorreferentes.
 
+## Terceira A1 — `APTA_COM_CORRECOES`
+
+A terceira auditoria independente concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, e registrou três divergências bloqueantes de materialidade textual/Unicode:
+
+1. `$defs.material_ref` impunha ASCII no schema enquanto o validador aceitava letra/número Unicode;
+2. `proveniencia.pedido_original_ref`, `proveniencia.gerado_por` e `proveniencia.registros[].alvo` escapavam da política material;
+3. semânticas obrigatórias, critérios, nomes de fonte e campos de saída podiam satisfazer gates com whitespace, zero-width, pontuação ou símbolos sem conteúdo material.
+
+O resultado histórico está versionado em `05_resultado_a1_reauditoria_2.md` e permanece `APTA_COM_CORRECOES`, independentemente das correções posteriores.
+
+### Reteste das correções da terceira A1
+
+O mecanismo transitório foi executado novamente no run `34955861169`. Antes de publicar qualquer artefato permanente, ele removeu seus próprios arquivos e concluiu com sucesso:
+
+- instalação por `python -m pip install -r tools/requirements-dev.txt`;
+- `python -B -m unittest tools/tests/test_micromodelo_mm01.py -v`, com **29 métodos**;
+- CLI direta sobre template, fixture positiva, caso Unicode positivo, caso Unicode negativo e continuidade por `--previous`;
+- `python -B tools/validate_assistant.py --root ambiente_fonte`;
+- publicação do commit permanente `4f686e5de163b649c4ee5e7643f75ecd56db47e7`.
+
+Esse reteste é evidência de construção. A candidata documental final ainda precisa dos workflows permanentes verdes no SHA exato e de uma nova auditoria independente.
+
 ## Próxima auditoria A1
 
-Uma **terceira auditoria A1 independente** é obrigatória porque a candidata mudou materialmente depois da segunda A1. Ela deve trabalhar sobre o próximo HEAD congelado e não pode reutilizar como prova os relatórios `03_resultado_a1.md` ou `04_resultado_a1_reauditoria.md`.
+Uma **quarta auditoria A1 independente** é obrigatória porque a candidata mudou materialmente depois da terceira A1. Ela deve trabalhar sobre o novo HEAD congelado e não pode usar os relatórios anteriores, a narrativa do autor, o changelog ou mensagens de commit como prova.
 
-Deve repetir instalação, 26+ testes, gate estrutural, CLI direta do template e adversariais próprios sobre: marcas Unicode `M*`, ausência de prosa normativa, políticas de `INDETERMINADO`, semântica probabilística estruturada, integridade da calibração e continuidade histórica por `--previous`.
+A quarta A1 deve repetir instalação, 29 testes, gate estrutural, CLI direta e adversariais próprios; verificar simultaneamente falsos positivos e falsos negativos Unicode; cobrir todos os campos equivalentes; confirmar a unicidade da autoridade de materialidade; validar `--previous`; e confirmar que MM01 não antecipou MM02/MM03/MM04/MM06.
 
-MM02 permanece bloqueada até nova A1, contraditório se necessário, aceite explícito e integração da MM01.
+MM02 permanece bloqueada até nova A1, contraditório se necessário, fechamento do changelog, aceite explícito e integração da MM01.

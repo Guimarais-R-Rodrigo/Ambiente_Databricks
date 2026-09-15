@@ -1,6 +1,6 @@
 # MM01 — Contrato canônico de micromodelos
 
-Status da sprint: **CORRIGIDA APÓS SEGUNDA A1; RETESTE DE CONSTRUÇÃO VERDE; TERCEIRA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**  
+Status da sprint: **TERCEIRA A1 `APTA_COM_CORRECOES`; TRÊS DIVERGÊNCIAS CORRIGIDAS; RETESTE DE CONSTRUÇÃO VERDE; QUARTA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**  
 Base inicial: `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5`  
 Branch: `micromodelos/mm01-contrato-canonico`  
 PR: `#51`
@@ -21,9 +21,9 @@ A implementação começou sobre a `main` final da MM00 e foi reconciliada de fo
 - `ESTADOS_E_PROVENIENCIA.md`: máquina de fases, condições, proveniência e gates;
 - `tools/micromodelo_mm01_contract.py`: validador de referência/CI;
 - fixtures sintéticos positivos e negativos em `tools/tests/fixtures/micromodelos_mm01/`;
-- `tools/tests/test_micromodelo_mm01.py`: suíte automatizada com **26 métodos** e múltiplos subtests;
+- `tools/tests/test_micromodelo_mm01.py`: suíte automatizada com **29 métodos** e múltiplos subtests;
 - `.github/workflows/micromodelos-mm01-ci.yml`: gate permanente, read-only, para branch/PR/`main`;
-- pacote de auditoria A1 com contexto, prompt e os dois resultados históricos `NAO_APTA`;
+- pacote de auditoria A1 com contexto, prompt e três resultados históricos preservados (`NAO_APTA`, `NAO_APTA`, `APTA_COM_CORRECOES`);
 - `TESTES.md` e `CHECKPOINT.md`.
 
 ## Decisões fechadas nesta sprint
@@ -69,9 +69,9 @@ Na mesma fase, fontes, evidências, contra-evidências e critérios de validaç�
 
 ### Provas auditáveis precisam conter informação material
 
-A segunda A1 demonstrou que uma blacklist de whitespace/controles não era suficiente para caracteres Unicode `M*`. A regra atual é positiva: após NFKC, uma referência auditável precisa conter ao menos uma letra ou número Unicode.
+A segunda A1 demonstrou que uma blacklist de whitespace/controles não era suficiente para caracteres Unicode `M*`. A terceira A1 mostrou que schema e validador ainda podiam divergir e que campos materiais equivalentes não compartilhavam a mesma autoridade. A regra atual é positiva e única: após NFKC, conteúdo material precisa conter ao menos uma letra ou número Unicode.
 
-Isso rejeita strings compostas somente por espaços, zero-width, variation selectors, COMBINING GRAPHEME JOINER ou outros combining marks isolados em aprovação, medição, handoff e referência de Produto de Dados.
+O JSON Schema usa `format: material-text` e o `FormatChecker` do validador delega esse formato à mesma função `_has_material_text`. Isso rejeita strings compostas somente por espaços, zero-width, variation selectors, combining marks isolados, pontuação ou símbolos nos campos materiais, sem rejeitar CJK, Devanagari, caracteres acentuados, algarismos Unicode ou combining marks acompanhados de texto material. Campos puramente narrativos não foram restringidos indiscriminadamente.
 
 ### Publicação não apaga o indeterminado
 
@@ -97,6 +97,12 @@ Os três foram confirmados como procedentes. A correção removeu a fragilidade 
 
 O workflow de construção `34912665666` executou a árvore corrigida sem os próprios mecanismos transitórios: **26 testes, OK**, e `validate_assistant.py` com **0 falhas / 0 avisos**. Só então publicou o commit permanente `f46b69790fc23ac6c3ebfa633053a3acb6f9ed1a`.
 
+### Terceira A1
+
+A terceira auditoria independente concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com três divergências bloqueantes: `$defs.material_ref` ainda impunha ASCII no schema, campos auditáveis de proveniência de topo escapavam da materialidade e alguns gates de conteúdo material podiam ser satisfeitos por strings visualmente vazias.
+
+O resultado histórico permanece em `05_resultado_a1_reauditoria_2.md`. As três divergências foram corrigidas por uma autoridade Unicode única e testes positivos/negativos multilíngues. O run de construção `34955861169` removeu os mecanismos transitórios, executou suíte, CLI adversarial e `validate_assistant`, e só então publicou o commit permanente `4f686e5de163b649c4ee5e7643f75ecd56db47e7`.
+
 ## Fronteiras preservadas
 
 - Micromodelo continua artefato de domínio, não sétimo tipo do Hub.
@@ -110,14 +116,14 @@ O workflow de construção `34912665666` executou a árvore corrigida sem os pr�
 
 ## Evidência técnica atual
 
-A suíte MM01 possui **26 métodos automatizados**, além de mutações e subtests. O reteste de construção das correções da segunda A1 ficou verde antes da publicação do commit permanente.
+A suíte MM01 possui **29 métodos automatizados**, além de mutações e subtests. O reteste de construção das correções da terceira A1 ficou verde antes da publicação do commit permanente.
 
 Run IDs e o SHA final da árvore documental não são congelados neste arquivo para evitar que registrar a evidência altere a própria árvore validada. A descrição da PR #51 é o registro operacional do head e dos runs finais; `TESTES.md` mantém a cronologia histórica.
 
 ## Gate de saída
 
-Como o contrato mudou materialmente depois da segunda A1, a MM01 só pode ser aceita após uma **terceira A1 independente** sobre o novo HEAD congelado. O auditor deve reproduzir instalação, suíte, gate estrutural e CLI e criar adversariais próprios sem usar os relatórios anteriores como prova.
+Como o contrato mudou materialmente depois da terceira A1, a MM01 só pode ser aceita após uma **quarta A1 independente** sobre o novo HEAD congelado. O auditor deve reproduzir instalação, suíte, gate estrutural e CLI e criar adversariais próprios, incluindo falsos positivos e falsos negativos Unicode, sem usar os relatórios anteriores, a narrativa do autor, o changelog ou mensagens de commit como prova.
 
-O bloco MM01 do `CHANGELOG.md` também precisa ser sincronizado antes do merge por operação preservadora do histórico e a árvore resultante deve ser novamente validada.
+O bloco MM01 do `CHANGELOG.md` permanece dívida bloqueante de merge e só deve ser sincronizado, de forma byte-preserving fora do bloco MM01, após uma quarta A1 limpa e contraditório final. A árvore resultante deverá ser novamente validada.
 
-**MM02 permanece bloqueada até terceira A1, eventual contraditório, fechamento documental, aceite explícito e integração da MM01.**
+**MM02 permanece bloqueada até quarta A1, eventual contraditório, fechamento do changelog, aceite explícito e integração da MM01.**
