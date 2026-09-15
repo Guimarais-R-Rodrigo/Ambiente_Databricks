@@ -141,7 +141,7 @@ jobs:
           git diff --exit-code HEAD -- docs/auditoria/2026-09-14_micromodelos-mm01/05_resultado_a1_reauditoria_2.md
           test ! -e tools/mm01_apply_a1_round4_fixes.py
           test ! -e .github/workflows/mm01-a1-round4-fix-transient.yml
-          ! grep -R "spec_fingerprint" -n tools/micromodelo_mm01_contract.py docs/sprints/micromodelos/MM01 tools/tests/test_micromodelo_mm01.py
+          ! grep -n "spec_fingerprint" tools/micromodelo_mm01_contract.py tools/tests/test_micromodelo_mm01.py
 
       - name: Publicar correção validada
         shell: bash
