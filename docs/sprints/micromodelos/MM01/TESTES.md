@@ -56,9 +56,11 @@ Os testes da MM01 exercitam o contrato estrutural e semântico. Não acessam Dat
 | T46 | os mesmos campos normativos com conteúdo Unicode legítimo multilíngue | APROVADO |
 | T47 | textos obrigatórios adicionais com conteúdo não material que ainda satisfaz `minLength` | `SCHEMA` |
 | T48 | os mesmos campos adicionais com conteúdo Unicode legítimo multilíngue | APROVADO |
-| T49 | todo `type=string` + `minLength` possui `material-text`, `pattern` ou exceção narrativa explícita | invariável estrutural |
+| T49 | todo `type=string` + `minLength` possui `material-text` | invariável estrutural fail-closed |
+| T50 | qualquer `pattern` do schema pertence à allowlist estrutural exata por path + regex | invariável estrutural |
+| T51 | nó sintético `string + minLength + pattern: .*\\S.*` sem `material-text` | detectado como violação |
 
-A suíte `tools/tests/test_micromodelo_mm01.py` contém **34 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz. `casos_invalidos.json` mantém nove mutações negativas determinísticas além dos casos adversariais construídos diretamente pela suíte.
+A suíte `tools/tests/test_micromodelo_mm01.py` contém **36 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz. `casos_invalidos.json` mantém nove mutações negativas determinísticas além dos casos adversariais construídos diretamente pela suíte.
 
 ## Teste específico de YAML
 
@@ -181,3 +183,18 @@ A correção fecha a classe de defeito: textos obrigatórios com `minLength` pre
 Uma **sexta A1 independente** é obrigatória porque a candidata mudou materialmente depois da quinta A1. Ela deve auditar o HEAD efetivamente encontrado, repetir os gates mínimos e criar adversariais próprios sobre os campos adicionais submetidos à política comum.
 
 MM02 permanece bloqueada até sexta A1, contraditório se necessário, fechamento do changelog, aceite explícito e integração da MM01.
+
+
+## Sexta A1 — `APTA_COM_CORRECOES`
+
+A sexta auditoria independente identificou duas divergências bloqueantes preservadas em `08_resultado_a1_reauditoria_5.md`: três regex genéricas `.*\S.*` ainda coexistiam com `material-text`, e o guard estrutural aceitava qualquer `pattern` como política suficiente.
+
+### Correção da sexta A1
+
+- removidos os três `pattern: ".*\\S.*"` concorrentes de proveniência/aprovação;
+- todo `type=string + minLength` passa a exigir `format: material-text`;
+- os patterns remanescentes são congelados por allowlist exata de path + regex e correspondem somente a ID interno, nome técnico e versão;
+- um adversarial sintético prova que `minLength + pattern: .*\\S.*` sem `material-text` não satisfaz a invariável;
+- a suíte passa a **36 métodos**, preservando os adversariais Unicode e os caminhos positivos multilíngues.
+
+O próximo gate é uma sétima A1 independente sobre o HEAD permanente corrigido.

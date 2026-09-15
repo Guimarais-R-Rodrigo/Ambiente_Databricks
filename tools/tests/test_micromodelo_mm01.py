@@ -713,22 +713,55 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
         self.assertEqual([], module.validate_spec(document, self.schema))
 
 
-    def test_required_minlength_text_fields_have_explicit_material_policy(self) -> None:
-        narrative_exemptions = {
-            "properties.governanca.properties.observacoes.items",
-        }
-        unclassified: list[str] = []
+    def _required_minlength_without_material_text(self, schema: dict) -> list[str]:
+        violations: list[str] = []
 
         def walk(node: object, path: tuple[str, ...] = ()) -> None:
             if isinstance(node, dict):
                 if node.get("type") == "string" and "minLength" in node:
-                    joined = ".".join(path)
-                    if (
-                        node.get("format") != "material-text"
-                        and "pattern" not in node
-                        and joined not in narrative_exemptions
-                    ):
-                        unclassified.append(joined)
+                    if node.get("format") != "material-text":
+                        violations.append(".".join(path))
+                for key, value in node.items():
+                    walk(value, path + (str(key),))
+            elif isinstance(node, list):
+                for index, value in enumerate(node):
+                    walk(value, path + (str(index),))
+
+        walk(schema)
+        return violations
+
+    def test_required_minlength_text_fields_have_explicit_material_policy(self) -> None:
+        self.assertEqual([], self._required_minlength_without_material_text(self.schema))
+
+    def test_generic_textual_pattern_cannot_replace_material_text(self) -> None:
+        mutated = copy.deepcopy(self.schema)
+        mutated["$defs"]["synthetic_textual_escape"] = {
+            "type": "string",
+            "minLength": 3,
+            "pattern": r".*\S.*",
+        }
+        self.assertIn(
+            "$defs.synthetic_textual_escape",
+            self._required_minlength_without_material_text(mutated),
+        )
+
+    def test_schema_patterns_are_exact_structural_allowlist(self) -> None:
+        expected = {
+            "$defs.id": r"^[a-z][a-z0-9_]{2,63}$",
+            "properties.identidade.properties.nome": r"^[a-z][a-z0-9-]{2,63}$",
+            "properties.identidade.properties.micromodel_version": r"^\d+\.\d+\.\d+$",
+        }
+        observed: dict[str, str] = {}
+
+        def walk(node: object, path: tuple[str, ...] = ()) -> None:
+            if isinstance(node, dict):
+                joined = ".".join(path)
+                if "pattern" in node:
+                    observed[joined] = node["pattern"]
+                self.assertFalse(
+                    node.get("format") == "material-text" and "pattern" in node,
+                    msg=f"autoridade textual concorrente em {joined}",
+                )
                 for key, value in node.items():
                     walk(value, path + (str(key),))
             elif isinstance(node, list):
@@ -736,7 +769,7 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
                     walk(value, path + (str(index),))
 
         walk(self.schema)
-        self.assertEqual([], unclassified)
+        self.assertEqual(expected, observed)
 
     def test_canonical_required_text_fields_reject_nonmaterial_content(self) -> None:
         raw_negatives = [

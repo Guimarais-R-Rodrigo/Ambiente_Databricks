@@ -1,6 +1,6 @@
 # MM01 — Checkpoint
 
-Status: **QUINTA A1 `APTA_COM_CORRECOES`; `DIVERGE-01` BLOQUEANTE CONFIRMADA E CORRIGIDA; RETESTE DE CONSTRUÇÃO VERDE; SEXTA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
+Status: **SEXTA A1 `APTA_COM_CORRECOES`; `DIVERGE-01` E `DIVERGE-02` BLOQUEANTES CONFIRMADAS E CORRIGIDAS; RETESTE DE CONSTRUÇÃO PENDENTE; SÉTIMA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
 
 ## Base e superfície
 
@@ -34,9 +34,9 @@ Status: **QUINTA A1 `APTA_COM_CORRECOES`; `DIVERGE-01` BLOQUEANTE CONFIRMADA E C
 18. conteúdo material mínimo obrigatório ao entrar em `EM_VALIDACAO`;
 19. coerência entre fase e status da interface de publicação, com caminhos positivos testados até `PUBLICADO`;
 20. fronteira de tracking preservada para MM06;
-21. validador de referência/CI, fixtures sintéticos e suíte com **34 métodos de teste**;
+21. validador de referência/CI, fixtures sintéticos e suíte com **36 métodos de teste**;
 22. gate permanente `.github/workflows/micromodelos-mm01-ci.yml`, read-only e sem acesso a ambiente corporativo;
-23. pacote neutro de auditoria com os resultados históricos das cinco A1 preservados, sem reclassificação retroativa.
+23. pacote neutro de auditoria com os resultados históricos das seis A1 preservados, sem reclassificação retroativa.
 
 ## O que não foi feito
 
@@ -119,20 +119,28 @@ A quinta A1 independente sobre `0b7a712cd2c897483da34517f10516012711f153` conclu
 
 A correção mantém `_has_material_text` como autoridade única e amplia `format: material-text` aos textos obrigatórios que participam do contrato. Um teste estrutural protege a classificação futura; `governanca.observacoes[]` é a exceção narrativa opcional explícita. A suíte passa a **34 métodos**.
 
+## Sexta auditoria A1
+
+A sexta A1 independente sobre `e0b6ed916386bef19006e7d41e183ffde25e360a` concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`. Dois desvios bloqueantes foram confirmados: três `pattern: ".*\\S.*"` ainda competiam com `material-text`, e o guard de `string + minLength` considerava qualquer `pattern` suficiente. O relatório foi preservado em `08_resultado_a1_reauditoria_5.md`.
+
+## Correções da sexta A1
+
+A correção remove as três regex textuais genéricas e deixa `_has_material_text` → `format: material-text` como única autoridade de conteúdo material. Os únicos patterns remanescentes são contratos de estrutura (`$defs.id`, `identidade.nome` e `micromodel_version`) e ficam congelados por path + regex exata em regressão permanente. Todo `type=string + minLength` passa a exigir `material-text`; um nó sintético `minLength + pattern: .*\\S.*` sem format deve ser detectado como violação. A suíte passa a **36 métodos**.
+
 ## Dívida documental antes do merge
 
 O bloco MM01 do `CHANGELOG.md` ainda descreve a candidata pré-A1. Ele deve ser sincronizado **antes do merge**, por operação que preserve byte a byte o histórico anterior. Essa pendência não deve ser usada para apagar ou reclassificar as auditorias históricas.
     
 ## Gate independente pendente
 
-Como a candidata mudou materialmente após a quinta A1, é obrigatória uma **sexta A1 independente** sobre o novo HEAD congelado.
+Como a candidata mudou materialmente após a sexta A1, é obrigatória uma **sétima A1 independente** sobre o novo HEAD congelado.
 
 ## Gates restantes
 
 1. concluir o reteste de construção e validar os workflows permanentes do novo HEAD;
-2. executar sexta A1 em sessão independente;
+2. executar sétima A1 em sessão independente;
 3. confrontar qualquer novo achado com a árvore;
-4. se a sexta A1 for limpa, executar contraditório final;
+4. se a sétima A1 for limpa, executar contraditório final;
 5. sincronizar o bloco MM01 do `CHANGELOG.md` preservando byte-for-byte o restante do arquivo;
 6. revalidar a árvore exata e reconfirmar `main`, `behind_by` e mergeabilidade;
 7. obter aceite explícito;

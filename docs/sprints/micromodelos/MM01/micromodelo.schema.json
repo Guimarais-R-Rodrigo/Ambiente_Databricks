@@ -43,7 +43,6 @@
         "origem": {
           "type": "string",
           "minLength": 1,
-          "pattern": ".*\\S.*",
           "format": "material-text"
         },
         "referencia": {
@@ -66,7 +65,6 @@
             "por": {
               "type": "string",
               "minLength": 1,
-              "pattern": ".*\\S.*",
               "format": "material-text"
             },
             "em_utc": {
@@ -808,7 +806,6 @@
                 "string",
                 "null"
               ],
-              "pattern": ".*\\S.*",
               "format": "material-text"
             },
             "em_utc": {

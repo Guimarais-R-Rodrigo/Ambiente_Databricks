@@ -1,6 +1,6 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: **MM00 encerrada e integrada. MM01 passou por quatro A1 (`NAO_APTA`, `NAO_APTA`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`); a divergência bloqueante da quarta A1 foi corrigida e o reteste de construção ficou verde; quinta A1 independente pendente. MM01 ainda não aceita nem integrada.**
+> Estado: **MM00 encerrada e integrada. MM01 passou por seis A1 (`NAO_APTA`, `NAO_APTA`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`); os dois desvios bloqueantes da sexta A1 foram confirmados e corrigidos; reteste e sétima A1 independentes pendentes. MM01 ainda não aceita nem integrada.**
 
 ## Objetivo
 
@@ -42,7 +42,7 @@ A exceção D1-B terminou com o fechamento de Q-01 e não se propaga às próxim
 
 A MM01 foi iniciada na branch `micromodelos/mm01-contrato-canonico` e reconciliada de forma fail-closed com as evoluções da `main`, inclusive as bases pós-V10 e pós-V11. A PR #51 permanece aberta, não aceita e não integrada.
 
-A candidata contém exclusivamente o contrato canônico `micromodelo.yaml`: schema, fases/condições, proveniência, validador de referência/CI, fixtures sintéticos, suíte com **31 métodos de teste**, documentação e pacote A1. Não cria skill de micromodelos nem altera `.assistant`.
+A candidata contém exclusivamente o contrato canônico `micromodelo.yaml`: schema, fases/condições, proveniência, validador de referência/CI, fixtures sintéticos, suíte com **36 métodos de teste**, documentação e pacote A1. Não cria skill de micromodelos nem altera `.assistant`.
 
 ### Primeira A1
 
@@ -83,14 +83,20 @@ A correção reutilizou `material-text` → `_has_material_text` nos seis campos
 
 Os quatro resultados A1 permanecem históricos e não são reclassificados depois das correções.
 
+### Quinta e sexta A1
+
+A quinta A1 concluiu `APTA_COM_CORRECOES` e levou a política `material-text` aos demais textos obrigatórios, elevando a suíte a 34 métodos. A sexta A1, também `APTA_COM_CORRECOES`, encontrou duas sobras da mesma classe: três regex genéricas concorrentes e um guard que aceitava qualquer `pattern`. O sexto relatório está preservado em `08_resultado_a1_reauditoria_5.md`.
+
+A correção da sexta A1 remove as regex genéricas, exige `material-text` em todo `string + minLength` e congela os únicos patterns estruturais por path + regex exata. A suíte passa a 36 métodos.
+
 A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprint continua reservado para MM02; descoberta de metadata continua reservada para MM03; tracking definitivo continua reservado para MM06.
 
 ## Próximo gate
 
-1. congelar o HEAD documental pós-quarta A1 e obter todos os workflows permanentes verdes;
-2. executar uma **quinta A1 independente** sobre esse HEAD, sem usar relatórios anteriores, narrativa do autor, changelog ou mensagens de commit como prova;
+1. concluir o reteste de construção e obter os workflows permanentes verdes no HEAD corrigido;
+2. executar uma **sétima A1 independente** sobre esse HEAD, sem usar relatórios anteriores, narrativa do autor, changelog ou mensagens de commit como prova;
 3. confrontar qualquer novo achado e corrigir somente se procedente;
-4. se a quinta A1 for `APTA`, executar contraditório final;
+4. se a sétima A1 for limpa, executar contraditório final;
 5. sincronizar o bloco MM01 do `CHANGELOG.md` antes do merge, preservando byte a byte o histórico anterior;
 6. revalidar a árvore exata após o changelog, reconfirmar `main`/`behind_by`/mergeabilidade e solicitar aceite final explícito;
 7. integrar a PR #51 somente após o aceite.

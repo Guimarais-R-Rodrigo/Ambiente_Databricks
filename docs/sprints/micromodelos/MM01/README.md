@@ -1,6 +1,6 @@
 # MM01 — Contrato canônico de micromodelos
 
-Status da sprint: **QUINTA A1 `APTA_COM_CORRECOES`; `DIVERGE-01` BLOQUEANTE CONFIRMADA E CORRIGIDA; RETESTE DE CONSTRUÇÃO VERDE; SEXTA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**  
+Status da sprint: **SEXTA A1 `APTA_COM_CORRECOES`; `DIVERGE-01` E `DIVERGE-02` BLOQUEANTES CONFIRMADAS E CORRIGIDAS; RETESTE DE CONSTRUÇÃO PENDENTE; SÉTIMA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
 Base inicial: `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5`  
 Branch: `micromodelos/mm01-contrato-canonico`  
 PR: `#51`
@@ -21,9 +21,9 @@ A implementação começou sobre a `main` final da MM00 e foi reconciliada de fo
 - `ESTADOS_E_PROVENIENCIA.md`: máquina de fases, condições, proveniência e gates;
 - `tools/micromodelo_mm01_contract.py`: validador de referência/CI;
 - fixtures sintéticos positivos e negativos em `tools/tests/fixtures/micromodelos_mm01/`;
-- `tools/tests/test_micromodelo_mm01.py`: suíte automatizada com **34 métodos** e múltiplos subtests;
+- `tools/tests/test_micromodelo_mm01.py`: suíte automatizada com **36 métodos** e múltiplos subtests;
 - `.github/workflows/micromodelos-mm01-ci.yml`: gate permanente, read-only, para branch/PR/`main`;
-- pacote de auditoria A1 com contexto, prompt e cinco resultados históricos preservados (`NAO_APTA`, `NAO_APTA`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`);
+- pacote de auditoria A1 com contexto, prompt e seis resultados históricos preservados (`NAO_APTA`, `NAO_APTA`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`);
 - `TESTES.md` e `CHECKPOINT.md`.
 
 ## Decisões fechadas nesta sprint
@@ -115,7 +115,13 @@ O resultado histórico permanece em `06_resultado_a1_reauditoria_3.md`. A corre�
 
 A quinta auditoria independente sobre `0b7a712cd2c897483da34517f10516012711f153` concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com `DIVERGE-01`: textos centrais ainda eram validados apenas por comprimento. O resultado permanece em `07_resultado_a1_reauditoria_4.md`.
 
-O contraditório confirmou a divergência. A correção reutiliza `material-text` nos demais textos obrigatórios do contrato e acrescenta uma invariável estrutural para impedir novos `string + minLength` sem política explícita. `governanca.observacoes[]` permanece narrativa opcional. A suíte passa a **34 métodos**.
+O contraditório confirmou a divergência. A correção reutiliza `material-text` nos demais textos obrigatórios do contrato e acrescenta uma invariável estrutural para impedir novos `string + minLength` sem política explícita. `governanca.observacoes[]` permanece narrativa opcional. A suíte passou a **34 métodos**.
+
+### Sexta A1
+
+A sexta auditoria independente sobre `e0b6ed916386bef19006e7d41e183ffde25e360a` concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com duas divergências bloqueantes. `DIVERGE-01` mostrou três regex genéricas `.*\S.*` ainda concorrendo com `material-text`; `DIVERGE-02` mostrou que o guard permanente aceitava qualquer `pattern` como política suficiente. O resultado histórico permanece em `08_resultado_a1_reauditoria_5.md`.
+
+O contraditório confirmou ambos os achados. A correção remove as três regex textuais genéricas, exige `material-text` em todo `type=string + minLength` e congela os únicos patterns remanescentes por path e regex exata como contratos estruturais. Um adversarial sintético prova que `minLength + pattern: .*\S.*` sem `material-text` é violação. A suíte passa a **36 métodos**.
 
 ## Fronteiras preservadas
 
@@ -130,14 +136,14 @@ O contraditório confirmou a divergência. A correção reutiliza `material-text
 
 ## Evidência técnica atual
 
-A suíte MM01 possui **34 métodos automatizados**, além de mutações e subtests. O reteste de construção das correções da quinta A1 deve ficar verde no novo HEAD antes da próxima auditoria independente.
+A suíte MM01 possui **36 métodos automatizados**, além de mutações e subtests. O reteste de construção das correções da quinta A1 deve ficar verde no novo HEAD antes da próxima auditoria independente.
 
 Run IDs e o SHA final da árvore documental não são congelados neste arquivo para evitar que registrar a evidência altere a própria árvore validada. A descrição da PR #51 é o registro operacional do head e dos runs finais; `TESTES.md` mantém a cronologia histórica.
 
 ## Gate de saída
 
-Como o contrato mudou materialmente depois da quinta A1, a MM01 só pode ser aceita após uma **sexta A1 independente** sobre o novo HEAD congelado. O auditor deve reproduzir instalação, suíte, gate estrutural e CLI e construir adversariais próprios sobre todos os campos adicionados à política comum.
+Como o contrato mudou materialmente depois da sexta A1, a MM01 só pode ser aceita após uma **sétima A1 independente** sobre o novo HEAD congelado. O auditor deve reproduzir instalação, suíte, gate estrutural e CLI e construir adversariais próprios sobre todos os campos adicionados à política comum.
 
-O bloco MM01 do `CHANGELOG.md` permanece dívida bloqueante de merge e só deve ser sincronizado, de forma byte-preserving fora do bloco MM01, após uma sexta A1 limpa e contraditório final.
+O bloco MM01 do `CHANGELOG.md` permanece dívida bloqueante de merge e só deve ser sincronizado, de forma byte-preserving fora do bloco MM01, após uma sétima A1 limpa e contraditório final.
 
-**MM02 permanece bloqueada até sexta A1, eventual contraditório, fechamento do changelog, aceite explícito e integração da MM01.**
+**MM02 permanece bloqueada até sétima A1, eventual contraditório, fechamento do changelog, aceite explícito e integração da MM01.**

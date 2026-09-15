@@ -155,10 +155,15 @@ A mesma autoridade cobre também os campos normativos que satisfazem gates de ev
 
 ### Classificação explícita dos textos obrigatórios
 
-A quinta A1 mostrou que a distinção entre texto material e narrativa livre precisava ser explícita. Todo campo textual obrigatório protegido por `minLength` deve ter uma política executável: `format: material-text`, quando participa da definição canônica, ou `pattern`, quando a sintaxe fechada já exige conteúdo material. A autoridade de materialidade continua sendo exclusivamente `_has_material_text` após NFKC; não há regex, `.strip()` ou segundo predicado concorrente.
+A quinta A1 mostrou que a distinção entre texto material e narrativa livre precisava ser explícita. Após a sexta A1, a classificação ficou fail-closed: todo `type=string` protegido por `minLength` deve usar `format: material-text`. Regex não substitui materialidade. `pattern` permanece somente em contratos estritamente estruturais e é congelado por path + expressão exata (`$defs.id`, `identidade.nome` e `micromodel_version`). A autoridade de materialidade é exclusivamente `_has_material_text` após NFKC; não há regex genérica, `.strip()` ou segundo predicado concorrente.
 
 Além dos campos já protegidos anteriormente, usam `material-text`: `identidade.titulo`; todos os valores textuais requeridos de `negocio`; todos os valores textuais requeridos de `entidade`; `fontes[].catalogo_ref`; `evidencias[].descricao`; `contra_evidencias[].descricao`; `classificacao.limiares[].descricao`; `classificacao.limiares[].unidade`; `score.componentes[].descricao`; `score.calibracao.metodo`; `governanca.classificacao_dados`; `governanca.lgpd`; e `governanca.gestor_informacao`.
 
 Identificadores internos, `identidade.nome` e `identidade.micromodel_version` permanecem fechados por `pattern`. `fontes[].catalogo_ref` permanece adicionalmente sujeito ao gate semântico `CATALOGO_PRODUTO`.
 
 `governanca.observacoes[]` é a exceção narrativa explícita: é opcional, não satisfaz gate material e não substitui campo normativo. Por isso não recebe `material-text` apenas por ser string.
+
+
+### Hardening após a sexta A1
+
+A sexta A1 encontrou três ocorrências residuais de `pattern: ".*\\S.*"` nos campos materiais `proveniencia.origem`, `proveniencia.aprovacao.por` e `validacao.aprovacao_humana.por`, além de um guard que tratava qualquer `pattern` como suficiente. Esses caminhos foram removidos. A regressão permanente agora exige `material-text` para `string + minLength`, rejeita explicitamente um pattern textual genérico sintético e compara todos os patterns existentes com uma allowlist estrutural exata. `governanca.observacoes[]` continua narrativa opcional e sem função de gate.
