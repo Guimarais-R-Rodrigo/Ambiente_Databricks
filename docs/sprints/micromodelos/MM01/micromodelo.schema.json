@@ -202,7 +202,8 @@
               "type": [
                 "string",
                 "null"
-              ]
+              ],
+              "format": "material-text"
             }
           }
         }
@@ -373,7 +374,8 @@
           },
           "regra": {
             "type": "string",
-            "minLength": 5
+            "minLength": 5,
+            "format": "material-text"
           },
           "proveniencia": {
             "$ref": "#/$defs/proveniencia"
@@ -411,7 +413,8 @@
           },
           "regra": {
             "type": "string",
-            "minLength": 5
+            "minLength": 5,
+            "format": "material-text"
           },
           "proveniencia": {
             "$ref": "#/$defs/proveniencia"
@@ -694,7 +697,8 @@
           },
           "hipotese": {
             "type": "string",
-            "minLength": 5
+            "minLength": 5,
+            "format": "material-text"
           },
           "status": {
             "enum": [
@@ -708,7 +712,8 @@
             "type": [
               "string",
               "null"
-            ]
+            ],
+            "format": "material-text"
           },
           "proveniencia": {
             "$ref": "#/$defs/proveniencia"
@@ -751,7 +756,8 @@
           "properties": {
             "resumo": {
               "type": "string",
-              "minLength": 3
+              "minLength": 3,
+              "format": "material-text"
             },
             "proveniencia": {
               "$ref": "#/$defs/proveniencia"

@@ -356,7 +356,7 @@ def validate_spec(
                 "ATIVO não deve carregar motivo de bloqueio/suspensão/depreciação",
             )
         )
-    if condicao != "ATIVO" and not (isinstance(motivo, str) and motivo.strip()):
+    if condicao != "ATIVO" and not _has_material_text(motivo):
         issues.append(
             Issue(
                 "identidade.estado.motivo_condicao",
@@ -688,7 +688,7 @@ def validate_spec(
             experiment["proveniencia"], f"experimentos[{index}].proveniencia", issues
         )
         if experiment["status"] == "EXECUTADO":
-            if not isinstance(experiment["resultado"], str) or not experiment["resultado"].strip():
+            if not _has_material_text(experiment["resultado"]):
                 issues.append(
                     Issue(
                         f"experimentos[{index}].resultado",

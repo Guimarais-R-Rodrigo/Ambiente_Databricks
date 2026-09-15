@@ -659,5 +659,59 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
         self.assertEqual([], module.validate_spec(publication, self.schema))
 
 
+    def test_normative_material_fields_reject_nonmaterial_unicode_classes(self) -> None:
+        negatives = [
+            "\u0301",          # Mn
+            "\u093e",          # Mc
+            "\u20dd",          # Me
+            "\u200b",          # Cf / ZWSP
+            "\u200c",          # ZWNJ
+            "\u200d",          # ZWJ
+            "\u2060",          # WORD JOINER
+            "\u2063",          # INVISIBLE SEPARATOR
+            "   ",
+            "\u00a0",          # NBSP
+            "\u2003",          # EM SPACE
+            "\u2007",          # FIGURE SPACE
+            "\u202f",          # NARROW NO-BREAK SPACE
+            "!!!!!",
+            "∑€🧿",
+            "\u0301\u093e\u20dd\u200b\u2060\u00a0!!!€",
+        ]
+
+        mutations = [
+            ("evidencias.regra", lambda d, v: d["evidencias"][0].__setitem__("regra", v)),
+            ("contra_evidencias.regra", lambda d, v: d["contra_evidencias"][0].__setitem__("regra", v)),
+            ("experimentos.hipotese", lambda d, v: d["experimentos"][0].__setitem__("hipotese", v)),
+            ("experimentos.resultado", lambda d, v: d["experimentos"][0].__setitem__("resultado", v)),
+            ("validacao.resultado.resumo", lambda d, v: d["validacao"]["resultado"].__setitem__("resumo", v)),
+        ]
+
+        for field, mutate in mutations:
+            for value in negatives:
+                with self.subTest(field=field, value=repr(value)):
+                    document = copy.deepcopy(self.valid)
+                    mutate(document, value)
+                    self.assertIn("SCHEMA", self.codes(document))
+
+        for value in negatives:
+            with self.subTest(field="identidade.estado.motivo_condicao", value=repr(value)):
+                document = copy.deepcopy(self.valid)
+                document["identidade"]["estado"]["condicao"] = "SUSPENSO"
+                document["identidade"]["estado"]["motivo_condicao"] = value
+                self.assertIn("SCHEMA", self.codes(document))
+
+    def test_normative_material_fields_accept_legitimate_unicode(self) -> None:
+        document = copy.deepcopy(self.valid)
+        document["evidencias"][0]["regra"] = "规则有效 ٤٢"
+        document["contra_evidencias"][0]["regra"] = "नियम वैध ४२"
+        document["experimentos"][0]["hipotese"] = "Δοκιμή δεδομένων"
+        document["experimentos"][0]["resultado"] = "результат Jose\u0301"
+        document["validacao"]["resultado"]["resumo"] = "結果 válido ٤٢"
+        document["identidade"]["estado"]["condicao"] = "SUSPENSO"
+        document["identidade"]["estado"]["motivo_condicao"] = "تعليق تشغيلي ١"
+        self.assertEqual([], module.validate_spec(document, self.schema))
+
+
 if __name__ == "__main__":
     unittest.main()
