@@ -245,7 +245,8 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
             check=False,
         )
         self.assertEqual(0, ok.returncode, ok.stdout + ok.stderr)
-        self.assertIn("APROVADO", ok.stdout)
+        self.assertIn("SNAPSHOT_VALIDO", ok.stdout)
+        self.assertIn("HISTORICO_NAO_CERTIFICADO", ok.stdout)
 
         document = copy.deepcopy(self.valid)
         document["fontes"][0]["catalogo_ref"] = "OUTRO_CATALOGO"
@@ -766,8 +767,8 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
                 document = copy.deepcopy(self.valid)
                 disguised = base.replace("disponível", f"dispo{invisible}nível", 1)
                 self.assertEqual(
-                    module._normalize_semantic_text(base),
-                    module._normalize_semantic_text(disguised),
+                    module._normalize_editorial_text(base),
+                    module._normalize_editorial_text(disguised),
                 )
                 document["classificacao"]["semantica"]["quando_false"] = disguised
                 self.assertIn("AMBIGUOUS_BINARY_SEMANTICS", self.codes(document))
@@ -832,6 +833,168 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
                     json_path.write_text(f'{{"valor": {token}}}', encoding="utf-8")
                     with self.assertRaisesRegex(ValueError, "não finita"):
                         module.load_document(json_path)
+
+    def test_material_text_rejects_default_ignorable_fillers(self) -> None:
+        negatives = ["\u115f", "\u1160", "\u3164", "\uffa0"]
+        for value in negatives:
+            with self.subTest(value=hex(ord(value))):
+                self.assertFalse(module._has_material_text(value))
+                document = copy.deepcopy(self.valid)
+                document["validacao"]["aprovacao_humana"]["referencia"] = value * 5
+                self.assertIn("SCHEMA", self.codes(document))
+
+    def test_editorial_equivalence_is_conservative_and_unicode_robust(self) -> None:
+        base = "evidência disponível"
+        invisibles = [
+            "\u034f", "\u180b", "\u2065", "\u115f",
+            "\u1160", "\u3164", "\uffa0", "\u200b", "\ufe0f",
+        ]
+        for invisible in invisibles:
+            with self.subTest(invisible=hex(ord(invisible))):
+                disguised = base.replace("disponível", f"dispo{invisible}nível")
+                self.assertEqual(
+                    module._normalize_editorial_text(base),
+                    module._normalize_editorial_text(disguised),
+                )
+
+        distinct_pairs = [
+            ("score > 70", "score < 70"),
+            ("valor ≥ 10", "valor ≤ 10"),
+            ("o modelo pode concluir", "o modelo pôde concluir"),
+            ("عَلَم", "عِلْم"),
+        ]
+        for left, right in distinct_pairs:
+            with self.subTest(left=left, right=right):
+                self.assertNotEqual(
+                    module._normalize_editorial_text(left),
+                    module._normalize_editorial_text(right),
+                )
+
+    def test_finite_number_uses_canonical_numeric_domain(self) -> None:
+        from decimal import Decimal
+        import numpy as np
+
+        for value in (10**309, -(10**309)):
+            with self.subTest(kind="huge_int", value_sign=value > 0):
+                document = copy.deepcopy(self.valid)
+                document["classificacao"]["limiares"][0]["valor"] = value
+                self.assertNotIn("SCHEMA", self.codes(document))
+
+        external_values = [
+            Decimal("1.5"), Decimal("NaN"), Decimal("Infinity"),
+            np.float16(1.5), np.float32(float("inf")),
+        ]
+        for value in external_values:
+            with self.subTest(kind="noncanonical", value=repr(value)):
+                document = copy.deepcopy(self.valid)
+                document["classificacao"]["limiares"][0]["valor"] = value
+                self.assertIn("SCHEMA", self.codes(document))
+
+    def test_human_approval_intrinsics_are_always_enforced(self) -> None:
+        pending = module.load_document(TEMPLATE)
+        pending["validacao"]["aprovacao_humana"]["status"] = "APROVADO"
+        self.assertIn("VALIDATION_HUMAN_GATE", self.codes(pending))
+
+        contradictory = module.load_document(TEMPLATE)
+        contradictory["validacao"]["aprovacao_humana"] = {
+            "status": "APROVADO",
+            "por": "analista",
+            "em_utc": "2026-09-15T18:00:00Z",
+            "referencia": "DEC-001",
+        }
+        self.assertIn("VALIDATION_HUMAN_GATE", self.codes(contradictory))
+
+        dangling = module.load_document(TEMPLATE)
+        dangling["validacao"]["aprovacao_humana"]["por"] = "analista"
+        self.assertIn("VALIDATION_HUMAN_GATE", self.codes(dangling))
+
+    def test_existing_publication_policy_provenance_is_always_validated(self) -> None:
+        document = copy.deepcopy(self.valid)
+        document["saida"]["publicacao"] = {
+            "estado": "PENDENTE",
+            "campo_booleano": None,
+            "politica_indeterminado": {
+                "tratamento": "CAMPO_COBERTURA_SEPARADO",
+                "indeterminado_vira_false": False,
+                "regra_ref": None,
+                "proveniencia": {
+                    "status": "APROVADO",
+                    "origem": "decisao antecipada",
+                    "referencia": "PUB-ANT-001",
+                    "observado_em_utc": None,
+                    "aprovacao": None,
+                    "medicao": None,
+                },
+            },
+        }
+        self.assertIn("PROV_APPROVAL_REQUIRED", self.codes(document))
+
+    def test_nonexecuted_experiment_cannot_store_observed_result(self) -> None:
+        for status in ("PROPOSTO", "EM_EXECUCAO", "DESCARTADO"):
+            with self.subTest(status=status):
+                document = copy.deepcopy(self.valid)
+                experiment = document["experimentos"][0]
+                experiment["status"] = status
+                experiment["resultado"] = "resultado observado indevido"
+                experiment["proveniencia"] = {
+                    "status": "PROPOSTO",
+                    "origem": "planejamento",
+                    "referencia": None,
+                    "observado_em_utc": None,
+                    "aprovacao": None,
+                    "medicao": None,
+                }
+                self.assertIn("EXPERIMENT_RESULT", self.codes(document))
+
+    def test_cli_distinguishes_snapshot_from_evolution_certification(self) -> None:
+        snapshot = subprocess.run(
+            [sys.executable, str(CONTRACT), str(TEMPLATE), "--schema", str(SCHEMA)],
+            cwd=REPO, capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(0, snapshot.returncode, snapshot.stdout + snapshot.stderr)
+        self.assertIn("SNAPSHOT_VALIDO", snapshot.stdout)
+        self.assertIn("HISTORICO_NAO_CERTIFICADO", snapshot.stdout)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            previous_path = Path(tmp) / "previous.json"
+            current_path = Path(tmp) / "current.json"
+            payload = json.dumps(self.valid, ensure_ascii=False)
+            previous_path.write_text(payload, encoding="utf-8")
+            current_path.write_text(payload, encoding="utf-8")
+            evolution = subprocess.run(
+                [
+                    sys.executable, str(CONTRACT), str(current_path),
+                    "--schema", str(SCHEMA), "--previous", str(previous_path),
+                ],
+                cwd=REPO, capture_output=True, text=True, check=False,
+            )
+        self.assertEqual(0, evolution.returncode, evolution.stdout + evolution.stderr)
+        self.assertIn("APROVADO_EVOLUCAO", evolution.stdout)
+
+    def test_schema_authoring_profile_prevents_unreviewed_composition(self) -> None:
+        observed_anyof: set[str] = set()
+
+        def walk(node: object, path: tuple[str, ...] = ()) -> None:
+            if isinstance(node, dict):
+                joined = ".".join(path)
+                self.assertNotIn("allOf", node, msg=f"allOf fora do perfil em {joined}")
+                self.assertNotIn("oneOf", node, msg=f"oneOf fora do perfil em {joined}")
+                if "anyOf" in node:
+                    observed_anyof.add(joined)
+                if "$ref" in node:
+                    forbidden = {"type", "minLength", "format", "pattern"} & set(node)
+                    self.assertFalse(
+                        forbidden,
+                        msg=f"constraints irmãs de $ref fora do perfil em {joined}: {forbidden}",
+                    )
+                for key, value in node.items():
+                    walk(value, path + (str(key),))
+            elif isinstance(node, list):
+                for index, value in enumerate(node):
+                    walk(value, path + (str(index),))
+
+        walk(self.schema)
+        self.assertEqual({"$defs.material_ref_nullable"}, observed_anyof)
 
     def test_schema_patterns_are_exact_structural_allowlist(self) -> None:
         expected = {

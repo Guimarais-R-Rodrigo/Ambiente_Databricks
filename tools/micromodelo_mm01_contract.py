@@ -12,6 +12,8 @@ import json
 import math
 import re
 import unicodedata
+
+import regex
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -142,36 +144,33 @@ def load_schema(path: str | Path) -> dict[str, Any]:
     return loaded
 
 
-def _is_semantic_default_ignorable(char: str) -> bool:
-    codepoint = ord(char)
-    return (
-        unicodedata.category(char) == "Cf"
-        or 0xFE00 <= codepoint <= 0xFE0F
-        or 0xE0100 <= codepoint <= 0xE01EF
-    )
+_DEFAULT_IGNORABLE_RE = regex.compile(r"\p{Default_Ignorable_Code_Point}+")
+_EDITORIAL_EDGE_PUNCTUATION = ".!?…"
 
 
-def _normalize_semantic_text(value: str) -> str:
-    decomposed = unicodedata.normalize("NFKD", value).casefold()
-    normalized = "".join(
-        char
-        for char in decomposed
-        if not unicodedata.combining(char)
-        and not _is_semantic_default_ignorable(char)
-    )
-    words_only = re.sub(r"[\W_]+", " ", normalized, flags=re.UNICODE)
-    return " ".join(words_only.split())
+def _remove_default_ignorables(value: str) -> str:
+    """Remove a propriedade Unicode padronizada Default_Ignorable_Code_Point."""
+    return _DEFAULT_IGNORABLE_RE.sub("", value)
+
+
+def _normalize_editorial_text(value: str) -> str:
+    """Canonicaliza somente diferenças editoriais assumidas pela MM01.
+
+    Preserva diacríticos, operadores e pontuação interna potencialmente
+    semânticos; não tenta resolver equivalência de linguagem natural.
+    """
+    normalized = unicodedata.normalize("NFKC", value).casefold()
+    normalized = _remove_default_ignorables(normalized)
+    normalized = " ".join(normalized.split())
+    return normalized.strip().strip(_EDITORIAL_EDGE_PUNCTUATION).strip()
 
 
 def _has_material_text(value: Any) -> bool:
-    """Exige ao menos uma letra ou número Unicode após normalização.
-
-    Marcas combinantes, variation selectors, espaços, controles e pontuação
-    isolada não constituem identidade/referência auditável.
-    """
+    """Exige letra/número Unicode material após NFKC e default-ignorables."""
     if not isinstance(value, str):
         return False
     normalized = unicodedata.normalize("NFKC", value)
+    normalized = _remove_default_ignorables(normalized)
     return any(unicodedata.category(char)[0] in {"L", "N"} for char in normalized)
 
 
@@ -188,10 +187,14 @@ def _check_material_text_format(value: Any) -> bool:
 
 @MATERIAL_FORMAT_CHECKER.checks("finite-number")
 def _check_finite_number_format(value: Any) -> bool:
-    """Recusa NaN e infinitos em números materiais do contrato."""
-    if isinstance(value, bool) or not isinstance(value, (int, float)):
-        return True
-    return math.isfinite(value)
+    """Finitude no domínio numérico canônico JSON/YAML da MM01."""
+    if isinstance(value, bool):
+        return True  # o keyword type:number já rejeita bool
+    if isinstance(value, int):
+        return True  # inteiros Python são finitos e não devem virar float
+    if isinstance(value, float):
+        return math.isfinite(value)
+    return False  # Decimal/NumPy/outros tipos não pertencem ao domínio canônico
 
 
 def _semver_tuple(value: str) -> tuple[int, int, int]:
@@ -458,9 +461,9 @@ def validate_spec(
         semantics_prov, "classificacao.semantica.proveniencia", issues
     )
     semantic_values = [
-        _normalize_semantic_text(semantics["quando_true"]),
-        _normalize_semantic_text(semantics["quando_false"]),
-        _normalize_semantic_text(semantics["quando_indeterminado"]),
+        _normalize_editorial_text(semantics["quando_true"]),
+        _normalize_editorial_text(semantics["quando_false"]),
+        _normalize_editorial_text(semantics["quando_indeterminado"]),
     ]
     if len(set(semantic_values)) != 3:
         issues.append(
@@ -723,7 +726,7 @@ def validate_spec(
                     Issue(
                         f"experimentos[{index}].resultado",
                         "EXPERIMENT_RESULT",
-                        "EXECUTADO exige resultado",
+                        "EXECUTADO exige resultado observado",
                     )
                 )
             if experiment["proveniencia"]["status"] != "MEDIDO":
@@ -734,14 +737,23 @@ def validate_spec(
                         "EXECUTADO exige proveniência MEDIDO",
                     )
                 )
-        elif experiment["proveniencia"]["status"] == "MEDIDO":
-            issues.append(
-                Issue(
-                    f"experimentos[{index}].proveniencia.status",
-                    "EXPERIMENT_MEASUREMENT",
-                    "resultado MEDIDO só é válido para experimento EXECUTADO",
+        else:
+            if experiment["resultado"] is not None:
+                issues.append(
+                    Issue(
+                        f"experimentos[{index}].resultado",
+                        "EXPERIMENT_RESULT",
+                        "resultado observado deve permanecer null antes de EXECUTADO",
+                    )
                 )
-            )
+            if experiment["proveniencia"]["status"] == "MEDIDO":
+                issues.append(
+                    Issue(
+                        f"experimentos[{index}].proveniencia.status",
+                        "EXPERIMENT_MEASUREMENT",
+                        "resultado MEDIDO só é válido para experimento EXECUTADO",
+                    )
+                )
 
     validation = spec["validacao"]
     if validation["resultado"] is not None:
@@ -768,19 +780,46 @@ def validate_spec(
         )
 
     approval = validation["aprovacao_humana"]
-    if validation["status"] in {"APROVADO", "REPROVADO"}:
-        if (
-            approval["status"] != validation["status"]
-            or not _has_material_text(approval.get("por"))
-            or not approval.get("em_utc")
-            or not _has_material_text(approval.get("referencia"))
+    approval_final = approval["status"] in {"APROVADO", "REPROVADO"}
+    approval_metadata = (
+        approval.get("por"), approval.get("em_utc"), approval.get("referencia")
+    )
+    if approval_final:
+        if not (
+            _has_material_text(approval.get("por"))
+            and approval.get("em_utc")
+            and _has_material_text(approval.get("referencia"))
         ):
             issues.append(
                 Issue(
                     "validacao.aprovacao_humana",
                     "VALIDATION_HUMAN_GATE",
-                    "decisão humana precisa coincidir com validacao.status e registrar "
-                    "por/em_utc/referencia",
+                    "decisão humana final exige por/em_utc/referencia auditáveis",
+                )
+            )
+        if validation["status"] != approval["status"]:
+            issues.append(
+                Issue(
+                    "validacao.aprovacao_humana.status",
+                    "VALIDATION_HUMAN_GATE",
+                    "decisão humana final precisa coincidir com validacao.status",
+                )
+            )
+    else:
+        if any(value is not None for value in approval_metadata):
+            issues.append(
+                Issue(
+                    "validacao.aprovacao_humana",
+                    "VALIDATION_HUMAN_GATE",
+                    "decisão PENDENTE não pode carregar metadados de decisão final",
+                )
+            )
+        if validation["status"] in {"APROVADO", "REPROVADO"}:
+            issues.append(
+                Issue(
+                    "validacao.aprovacao_humana.status",
+                    "VALIDATION_HUMAN_GATE",
+                    "validacao.status final exige decisão humana final coincidente",
                 )
             )
 
@@ -849,6 +888,14 @@ def validate_spec(
         )
 
     publication_output = spec["saida"]["publicacao"]
+    publication_policy = publication_output["politica_indeterminado"]
+    if isinstance(publication_policy, dict):
+        _validate_provenance(
+            publication_policy["proveniencia"],
+            "saida.publicacao.politica_indeterminado.proveniencia",
+            issues,
+        )
+
     if FASE_ORDEM[phase] >= FASE_ORDEM["CANDIDATO_PRODUTO"]:
         if (
             publication_output["estado"] != "DEFINIDO"
@@ -864,15 +911,7 @@ def validate_spec(
                 )
             )
         else:
-            _validate_provenance(
-                publication_output["politica_indeterminado"]["proveniencia"],
-                "saida.publicacao.politica_indeterminado.proveniencia",
-                issues,
-            )
-            if (
-                publication_output["politica_indeterminado"]["proveniencia"]["status"]
-                != "APROVADO"
-            ):
+            if publication_policy["proveniencia"]["status"] != "APROVADO":
                 issues.append(
                     Issue(
                         "saida.publicacao.politica_indeterminado.proveniencia.status",
@@ -880,7 +919,7 @@ def validate_spec(
                         "tratamento de INDETERMINADO na publicação exige APROVADO",
                     )
                 )
-            policy = publication_output["politica_indeterminado"]
+            policy = publication_policy
             if policy["indeterminado_vira_false"] is not False:
                 issues.append(
                     Issue(
@@ -1000,7 +1039,13 @@ def main() -> int:
             print(issue)
         print(f"REPROVADO: {len(issues)} problema(s)")
         return 1
-    print("APROVADO: contrato MM01 válido")
+    if args.previous:
+        print("APROVADO_EVOLUCAO: snapshot válido e evolução histórica certificada")
+    else:
+        print(
+            "SNAPSHOT_VALIDO: contrato MM01 válido; "
+            "HISTORICO_NAO_CERTIFICADO sem --previous"
+        )
     return 0
 
 
