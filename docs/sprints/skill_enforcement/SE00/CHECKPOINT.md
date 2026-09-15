@@ -2,9 +2,9 @@
 
 ## Veredito atual
 
-**ABERTA / NÃO HOMOLOGADA — 5/16 RUNS REGISTRADOS.**
+**ABERTA / NÃO HOMOLOGADA — 6/16 RUNS REGISTRADOS.**
 
-A baseline conversacional continua em execução no Databricks Free. A família P1 foi encerrada em **3/3 FAIL**. O primeiro run M1 também foi classificado como **FAIL**, apesar da seleção explícita de `@hub-ml-eda-profissional`: nenhum helper aplicável foi importado, chamado ou concluído.
+A baseline conversacional continua em execução no Databricks Free. A família P1 foi encerrada em **3/3 FAIL**. O primeiro run M1 também foi **FAIL** apesar da seleção explícita de `@hub-ml-eda-profissional`. As duas auditorias A1 executadas até aqui também são **FAIL contra o protocolo SE00**: a segunda melhorou a detecção e aplicou veto correto, mas ainda não entrega estados verificáveis nem cobertura semântica suficiente.
 
 Nenhum resultado pendente pode ser interpretado como aprovação.
 
@@ -37,7 +37,7 @@ Nenhum resultado pendente pode ser interpretado como aprovação.
 - achados analíticos altos detectados: **1/3**;
 - state ladder: **FAIL**;
 - falsas inferências de observabilidade: **sim**;
-- false reassurance: **sim**.
+- false reassurance/false approval: **sim**.
 
 ### B00-M1-R1 — skill explícita
 
@@ -52,7 +52,24 @@ Nenhum resultado pendente pode ser interpretado como aprovação.
 - computação redundante: **>=6 padrões**;
 - correção humana necessária: **sim**.
 
-O M1-R1 elimina falta de seleção explícita como explicação suficiente para a baixa aderência: o contrato foi selecionado pelo usuário, mas não produziu execução dos recursos declarados.
+O M1-R1 elimina falta de seleção explícita como explicação suficiente: o contrato foi selecionado pelo usuário e, ainda assim, nenhum recurso aplicável foi executado.
+
+### B00-A1-M1 — auditoria do M1
+
+- status: **FAIL contra o protocolo SE00**;
+- score declarado pelo auditor: **7.1/10**;
+- veto final: **correto — não aprovar sem corrigir aderência à biblioteca**;
+- reimplementações centrais detectadas: **5/5**;
+- state ladder: **FAIL**;
+- templates com estados `located/read/consumed/not_observable`: **0/4**;
+- aplicabilidade conditional/optional: **parcial/incorreta**;
+- redundância: **parcial**;
+- achados semânticos altos/alto-médio da referência detectados: **0/4**;
+- false approval final: **não**;
+- false reassurance técnico residual: **sim**;
+- correção humana necessária: **sim**.
+
+O A1-M1 melhora em relação ao A1-P1 porque detecta todas as cinco reimplementações centrais e aplica veto. Contudo, ainda usa uma visão binária “utilizado?” em vez da escada `declared → located → read → imported → called → completed`, não audita os templates como recursos e perde erros semânticos materiais, inclusive o tratamento de ZIPs nominais como contínuos.
 
 ## Evidências registradas
 
@@ -60,18 +77,20 @@ O M1-R1 elimina falta de seleção explícita como explicação suficiente para 
 - `docs/testes/skill_execution/resultados/B00-A1-P1.md` — SHA-256 `25e59218a759a3ea2c2bb960ddb1e5cc698d65946f967a0018aac026aba66de0`;
 - `docs/testes/skill_execution/resultados/B00-P1-R2.md` — SHA-256 `6f26d5aac16473af2f1bd635e3ff89833394ffc2ca953adf5c7fa335935eb877`;
 - `docs/testes/skill_execution/resultados/B00-P1-R3.md` — SHA-256 `639121fa56f15cb5e63ed684eaba3bdd5ea71be4dc129d1c6cc10d664c2cdbd4`;
-- `docs/testes/skill_execution/resultados/B00-M1-R1.md` — SHA-256 `fdb848e816acd011303657a54b28bafc7f272d473f2fae2803b4bd48084c3bf8`.
+- `docs/testes/skill_execution/resultados/B00-M1-R1.md` — SHA-256 `fdb848e816acd011303657a54b28bafc7f272d473f2fae2803b4bd48084c3bf8`;
+- `docs/testes/skill_execution/resultados/B00-A1-M1.md` — SHA-256 `3d4c9fb164ce14d32528501537f0f5e5c821d09d1189c73361901c56d813ffc3`.
 
 ## Leitura provisória
 
-Os cinco runs já expõem quatro falhas diferentes:
+Os seis runs expõem cinco falhas relevantes:
 
-1. **ignorar recursos:** R1/R3 produzem a análise sem helpers;
-2. **import sem execução:** R2 importa três helpers e não chama nenhum;
-3. **auditoria textual insuficiente:** A1 encontra parte dos desvios e ainda produz false reassurance;
-4. **falha pós-seleção:** M1-R1 falha mesmo com `@hub-ml-eda-profissional` explícita.
+1. **ignorar recursos:** executor produz a EDA sem helpers;
+2. **import sem execução:** executor importa helpers e não os chama;
+3. **auditoria textual insuficiente:** pode perder desvios e produzir false reassurance;
+4. **falha pós-seleção:** skill explícita não garante execução dos recursos;
+5. **veto correto ainda sem receipt:** mesmo uma auditoria que bloqueia o output não consegue provar estados de execução nem resolver aplicabilidade/template consumption de forma confiável.
 
-A evidência até aqui reforça a necessidade de estados verificáveis `declared → located → read → imported → called → completed` e do fluxo `Contract → Preflight → Execute → Receipt → Postflight`.
+A evidência reforça a necessidade de `Contract → Preflight → Execute → Receipt → Postflight`. A skill auditora deve consumir o receipt/postflight, não substituí-los.
 
 ## Pendências obrigatórias
 
@@ -81,7 +100,7 @@ A evidência até aqui reforça a necessidade de estados verificáveis `declared
 - [x] executar `B00-P1-R1..R3`;
 - [x] executar `B00-A1-P1`;
 - [x] executar `B00-M1-R1`;
-- [ ] executar `B00-A1-M1` antes de M1-R2;
+- [x] executar `B00-A1-M1`;
 - [ ] executar `B00-M1-R2..R3`;
 - [ ] executar `B00-R1-R1..R3`;
 - [ ] executar `B00-A1-R1`;
@@ -94,9 +113,9 @@ A evidência até aqui reforça a necessidade de estados verificáveis `declared
 
 ## Próximo gate experimental
 
-O próximo run obrigatório é **`B00-A1-M1`**, em chat novo, usando `@hub-ml-auditoria-skills` sobre o notebook produzido em `B00-M1-R1`.
+O próximo run é **`B00-M1-R2`**, em chat novo, usando novamente seleção explícita `@hub-ml-eda-profissional` e o prompt literal congelado do caso M1.
 
-`B00-M1-R2` não deve começar antes de a auditoria A1-M1 ser registrada. Isso preserva a ordem experimental congelada e mede se a skill de auditoria detecta a falha pós-seleção com maior precisão do que no caso P1.
+Não fornecer M1-R1, A1-M1, P1 ou achados anteriores como contexto. Não editar/republicar o Hub entre repetições.
 
 ## Gate de congelamento do ambiente
 
