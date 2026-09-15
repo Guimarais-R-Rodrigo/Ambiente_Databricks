@@ -9,6 +9,8 @@ TESTS = Path("tools/tests/test_micromodelo_mm01.py")
 
 schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
 
+# A política material é deliberadamente Unicode e compartilhada com o validador.
+# O schema não tenta reproduzi-la com regex ASCII/Unicode parcial.
 material_ref = schema["$defs"]["material_ref"]
 material_ref.pop("pattern", None)
 material_ref["format"] = "material-text"
@@ -17,47 +19,23 @@ material_ref["description"] = (
     "o format customizado é aplicado pelo validador MM01."
 )
 
+# Somente campos cujo contrato exige conteúdo material recebem o format.
+# Campos narrativos livres não são convertidos indiscriminadamente para
+# material-text: pontuação/símbolos podem ser conteúdo legítimo em prosa livre.
 format_paths = [
     ("$defs", "proveniencia", "properties", "origem"),
     ("$defs", "proveniencia", "properties", "aprovacao", "properties", "por"),
-    ("properties", "identidade", "properties", "titulo"),
-    ("properties", "identidade", "properties", "estado", "properties", "motivo_condicao"),
-    ("properties", "negocio", "properties", "caracteristica"),
-    ("properties", "negocio", "properties", "objetivo"),
-    ("properties", "negocio", "properties", "definicao_operacional"),
-    ("properties", "negocio", "properties", "uso_pretendido", "items"),
-    ("properties", "negocio", "properties", "nao_usar_para", "items"),
-    ("properties", "entidade", "properties", "tipo"),
-    ("properties", "entidade", "properties", "chave_logica"),
-    ("properties", "entidade", "properties", "granularidade"),
-    ("properties", "entidade", "properties", "populacao_elegivel"),
-    ("properties", "entidade", "properties", "referencia_temporal"),
     ("properties", "fontes", "items", "properties", "schema"),
     ("properties", "fontes", "items", "properties", "objeto"),
     ("properties", "fontes", "items", "properties", "campos", "items"),
-    ("properties", "evidencias", "items", "properties", "descricao"),
-    ("properties", "evidencias", "items", "properties", "regra"),
-    ("properties", "contra_evidencias", "items", "properties", "descricao"),
-    ("properties", "contra_evidencias", "items", "properties", "regra"),
     ("properties", "classificacao", "properties", "semantica", "properties", "quando_true"),
     ("properties", "classificacao", "properties", "semantica", "properties", "quando_false"),
     ("properties", "classificacao", "properties", "semantica", "properties", "quando_indeterminado"),
-    ("properties", "classificacao", "properties", "limiares", "items", "properties", "descricao"),
-    ("properties", "classificacao", "properties", "limiares", "items", "properties", "unidade"),
-    ("properties", "score", "properties", "componentes", "items", "properties", "descricao"),
-    ("properties", "score", "properties", "calibracao", "properties", "metodo"),
-    ("properties", "experimentos", "items", "properties", "hipotese"),
-    ("properties", "experimentos", "items", "properties", "resultado"),
     ("properties", "validacao", "properties", "criterios", "items"),
-    ("properties", "validacao", "properties", "resultado", "properties", "resumo"),
     ("properties", "validacao", "properties", "aprovacao_humana", "properties", "por"),
     ("properties", "saida", "properties", "estudo", "properties", "campo_classificacao"),
     ("properties", "saida", "properties", "estudo", "properties", "campo_score"),
     ("properties", "saida", "properties", "publicacao", "properties", "campo_booleano", "properties", "nome"),
-    ("properties", "governanca", "properties", "classificacao_dados"),
-    ("properties", "governanca", "properties", "lgpd"),
-    ("properties", "governanca", "properties", "gestor_informacao"),
-    ("properties", "governanca", "properties", "observacoes", "items"),
     ("properties", "proveniencia", "properties", "gerado_por"),
     ("properties", "proveniencia", "properties", "pedido_original_ref"),
     ("properties", "proveniencia", "properties", "registros", "items", "properties", "alvo"),
@@ -87,10 +65,21 @@ contract = contract.replace(old, new, 1)
 CONTRACT.write_text(contract, encoding="utf-8")
 
 tests = TESTS.read_text(encoding="utf-8")
+
+# Um teste histórico verificava a camada semântica específica. Com material-text,
+# o mesmo valor também pode ser recusado antes pelo schema; ambas as camadas são
+# fail-closed e o requisito é a rejeição, não o código intermediário específico.
+old_assert = '''                approved["validacao"]["aprovacao_humana"]["por"] = mark\n                self.assertIn("VALIDATION_HUMAN_GATE", self.codes(approved))\n'''
+new_assert = '''                approved["validacao"]["aprovacao_humana"]["por"] = mark\n                self.assertTrue(\n                    {"SCHEMA", "VALIDATION_HUMAN_GATE"} & self.codes(approved)\n                )\n'''
+if old_assert in tests:
+    tests = tests.replace(old_assert, new_assert, 1)
+elif new_assert not in tests:
+    raise SystemExit("assert de materialidade da aprovação humana não encontrado")
+
 anchor = '\n\nif __name__ == "__main__":\n'
 methods = r'''
     def test_material_text_unicode_policy_is_shared_by_schema_and_validator(self) -> None:
-        positives = ["é", "文档", "١", "देवनागरी", "Cafe\u0301"]
+        positives = ["é", "文档", "١", "देवनागरी", "José", "Jose\u0301"]
         negatives = [
             "\u034f",
             "\ufe0f",
@@ -101,11 +90,13 @@ methods = r'''
             "\u200c",
             "\u200d",
             "\u2060",
+            "   ",
             "\u00a0",
             "\u2003",
             "!!!",
             "€",
             "\u034f\u200b\u0301",
+            "\u00a0\u2060!!!\u0301",
         ]
 
         for value in positives:
@@ -121,29 +112,49 @@ methods = r'''
                 self.assertIn("SCHEMA", self.codes(document))
 
     def test_root_provenance_material_fields_are_guarded(self) -> None:
-        for field in ("gerado_por", "pedido_original_ref"):
-            with self.subTest(field=field):
-                document = copy.deepcopy(self.valid)
-                document["proveniencia"][field] = "\u200b!!!"
-                self.assertIn("SCHEMA", self.codes(document))
-
-        record = copy.deepcopy(self.valid)
-        record["proveniencia"]["registros"] = [
-            {
-                "alvo": "\u034f",
-                "proveniencia": copy.deepcopy(
-                    self.valid["classificacao"]["semantica"]["proveniencia"]
-                ),
-            }
+        negatives = [
+            "\u034f",
+            "\ufe0f",
+            "\u0301",
+            "\u093e",
+            "\u20dd",
+            "\u200b",
+            "\u200c",
+            "\u200d",
+            "\u2060",
+            "   ",
+            "\u00a0",
+            "\u2003",
+            "!!!",
+            "€",
+            "\u034f\u200b\u0301",
         ]
-        self.assertIn("SCHEMA", self.codes(record))
+        for field in ("gerado_por", "pedido_original_ref"):
+            for value in negatives:
+                with self.subTest(field=field, value=repr(value)):
+                    document = copy.deepcopy(self.valid)
+                    document["proveniencia"][field] = value
+                    self.assertIn("SCHEMA", self.codes(document))
+
+        for value in negatives:
+            with self.subTest(field="registros.alvo", value=repr(value)):
+                document = copy.deepcopy(self.valid)
+                document["proveniencia"]["registros"] = [
+                    {
+                        "alvo": value,
+                        "proveniencia": copy.deepcopy(
+                            self.valid["classificacao"]["semantica"]["proveniencia"]
+                        ),
+                    }
+                ]
+                self.assertIn("SCHEMA", self.codes(document))
 
         positive = copy.deepcopy(self.valid)
         positive["proveniencia"]["gerado_por"] = "生成器"
         positive["proveniencia"]["pedido_original_ref"] = "文档١"
         positive["proveniencia"]["registros"] = [
             {
-                "alvo": "目标",
+                "alvo": "लक्ष्य١",
                 "proveniencia": copy.deepcopy(
                     self.valid["classificacao"]["semantica"]["proveniencia"]
                 ),
@@ -153,22 +164,28 @@ methods = r'''
 
     def test_material_content_gates_reject_nonmaterial_and_accept_unicode(self) -> None:
         mutations = [
-            lambda d: d["classificacao"]["semantica"].__setitem__("quando_true", "\u200b" * 5),
-            lambda d: d["validacao"].__setitem__("criterios", ["!!!"]),
-            lambda d: d["fontes"][0].__setitem__("schema", "\u200b"),
-            lambda d: d["fontes"][0].__setitem__("objeto", "\u200b"),
-            lambda d: d["fontes"][0]["campos"].__setitem__(0, "\u200b"),
-            lambda d: d["saida"]["estudo"].__setitem__("campo_classificacao", "\u200b"),
-            lambda d: d["saida"]["estudo"].__setitem__("campo_score", "\u200b"),
+            ("quando_true", lambda d, v: d["classificacao"]["semantica"].__setitem__("quando_true", v)),
+            ("quando_false", lambda d, v: d["classificacao"]["semantica"].__setitem__("quando_false", v)),
+            ("quando_indeterminado", lambda d, v: d["classificacao"]["semantica"].__setitem__("quando_indeterminado", v)),
+            ("validacao.criterios", lambda d, v: d["validacao"].__setitem__("criterios", [v])),
+            ("fontes.schema", lambda d, v: d["fontes"][0].__setitem__("schema", v)),
+            ("fontes.objeto", lambda d, v: d["fontes"][0].__setitem__("objeto", v)),
+            ("fontes.campos", lambda d, v: d["fontes"][0]["campos"].__setitem__(0, v)),
+            ("saida.campo_classificacao", lambda d, v: d["saida"]["estudo"].__setitem__("campo_classificacao", v)),
+            ("saida.campo_score", lambda d, v: d["saida"]["estudo"].__setitem__("campo_score", v)),
         ]
-        for index, mutate in enumerate(mutations):
-            with self.subTest(index=index):
-                document = copy.deepcopy(self.valid)
-                mutate(document)
-                self.assertIn("SCHEMA", self.codes(document))
+        representatives = ["   ", "!!!", "€", "\u200b", "\u034f"]
+        for field, mutate in mutations:
+            for value in representatives:
+                with self.subTest(field=field, value=repr(value)):
+                    document = copy.deepcopy(self.valid)
+                    mutate(document, value)
+                    self.assertIn("SCHEMA", self.codes(document))
 
         unicode_document = copy.deepcopy(self.valid)
         unicode_document["classificacao"]["semantica"]["quando_true"] = "证据充分确认特征"
+        unicode_document["classificacao"]["semantica"]["quando_false"] = "证据充分否定特征"
+        unicode_document["classificacao"]["semantica"]["quando_indeterminado"] = "जानकारी अपर्याप्त है"
         unicode_document["validacao"]["criterios"] = ["标准一"]
         unicode_document["fontes"][0]["schema"] = "数据域"
         unicode_document["fontes"][0]["objeto"] = "客户视图"
