@@ -55,7 +55,7 @@ A separação principal é entre **contexto** e **execução**:
 
 V00–V11 estão aceitas e integradas no Git. A V11 foi aceita em 14/09/2026 e integrada pelo PR #52 no merge `9305bc49eaf002caec042361bf35efa66af7ca18`. Os 11 workflows reais da PR concluíram com `success`; depois do merge, os 13 workflows disparados por `push` na `main` também concluíram com `success`.
 
-A V12 foi iniciada em branch isolada a partir da `main` `d106ef3158e5827a2eec3aa183dbb3b47885c960` e permanece **candidata**, sem aceite ou merge. Seu escopo é homologação formativa de jornadas com pessoas e ambiente, com separação explícita entre evidência Git/local, observação Databricks real e evidência humana/UAT. `V12-AIBI-01` possui agora **PASS real de ambiente** em dashboard AI/BI draft descartável: export nativo fixado por SHA-256, binding revisado somente nos três mappings diretos da V11, queries temporárias exclusivamente sintéticas via SQL `VALUES`, `Import theme` sem `Publish`, observação Light/Dark, invariância de `datasets`/`pages` e rollback integral. A primeira tentativa permanece `FAIL` porque usava dado público de amostra em vez de dado sintético. Os demais casos V12 continuam pendentes ou bloqueados; CI não substitui observação humana e `V12-AIBI-01 = PASS` não encerra a V12.
+A V12 foi iniciada em branch isolada a partir da `main` `d106ef3158e5827a2eec3aa183dbb3b47885c960` e permanece **candidata**, sem aceite ou merge. Seu escopo é homologação formativa de jornadas com pessoas e ambiente, com separação explícita entre evidência Git/local, observação Databricks real e evidência humana/UAT. `V12-AIBI-01` possui **PASS real de ambiente** em dashboard AI/BI draft descartável: export nativo fixado por SHA-256, binding revisado somente nos três mappings diretos da V11, queries temporárias exclusivamente sintéticas via SQL `VALUES`, `Import theme` sem `Publish`, observação Light/Dark, invariância de `datasets`/`pages` e rollback integral. `SEC-01` também possui **PASS real de ambiente**: identidade autenticada foi observada na UI e a permissão efetiva de edição foi comprovada pelas ações concluídas na mesma sessão sintética de `V12-AIBI-01`, sem confiar em papel autodeclarado e sem versionar PII. A primeira tentativa AI/BI permanece `FAIL` porque usava dado público de amostra em vez de dado sintético. Os demais casos V12 continuam pendentes ou bloqueados; CI não substitui observação humana e esses PASS ambientais não encerram a V12.
 
 A V11 projeta um `ResolvedTheme` `notebook` para capacidades documentadas de temas nativos AI/BI sem criar uma segunda fonte de verdade. `context="aibi"` continua reservado no schema central. A matriz integrada cobre os 48 tokens notebook como **3 traduzidos, 23 aproximados e 22 não suportados**. Como as fontes oficiais verificadas não publicam um schema completo e versionado do JSON produzido por `Export theme`, a V11 não inventa campos nativos: um candidato de importação só pode ser construído sobre um export real fixado por SHA-256 e um binding revisado para campos já existentes.
 
@@ -70,7 +70,7 @@ Regras atuais:
 - a V10 não implementa `context="app"`; o App gerencia propostas `notebook` existentes;
 - a V11 não implementa `context="aibi"`, não chama SDK/REST/CLI Databricks e não publica dashboard;
 - a V12 não converte CI em homologação de ambiente ou UAT e falha fechado sem autorização, identidade, classificação de dados, evidência ou rollback aplicável;
-- o PASS real `V12-AIBI-01` cobre somente import de tema em dashboard draft de teste; workspace theme, ACL, deploy de App e `Publish` continuam não autorizados;
+- o PASS real `V12-AIBI-01` cobre somente import de tema em dashboard draft de teste, e `SEC-01` cobre somente identidade/permissão efetiva observadas; workspace theme, ACL, deploy de App e `Publish` continuam não autorizados;
 - tema do workspace e tema local do dashboard têm escopos distintos; reaplicação de workspace theme em dashboard existente é manual, não propagação universal;
 - SHAP/Matplotlib e Kaplan–Meier continuam limites explícitos onde o contrato atual não representa a semântica necessária;
 - nada disso publica automaticamente no Databricks.
@@ -122,7 +122,7 @@ normas do molde    : 72 arquivos, 0 violação(ões)
 notebook exercita  : 60 objetos, 0 notebook(s) que só importam
 python (AST)       : 221 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1422 arquivos varridos no repositório editável/derivado
+repo (identidade)  : 1423 arquivos varridos no repositório editável/derivado
 repo (links)       : 1887 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
