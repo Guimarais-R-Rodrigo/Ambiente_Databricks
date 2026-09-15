@@ -2,7 +2,7 @@
 
 ## Estado
 
-**EM EXECUÇÃO — 6/16 runs registrados no Databricks Free; nenhuma alteração comportamental introduzida.**
+**EM EXECUÇÃO — 7/16 runs registrados no Databricks Free; nenhuma alteração comportamental introduzida.**
 
 A SE00 é a primeira sprint de implementação do Skill Enforcement Framework. Ela não implementa enforcement. Seu objetivo é congelar e medir o comportamento atual do Genie Code antes de qualquer mudança de contrato, preflight, runner, receipt ou postflight.
 
@@ -92,15 +92,17 @@ Total mínimo: **16 execuções em chats novos**.
 
 ### Progresso experimental atual
 
-- runs registrados: **6/16**;
+- runs registrados: **7/16**;
 - `B00-P1`: **encerrada — 3/3 FAIL, 0/18 helpers concluídos**;
 - `B00-A1-P1`: **FAIL**, com falsos negativos e false reassurance;
 - `B00-M1-R1`: **FAIL — 0/5 helpers**, mesmo com `@hub-ml-eda-profissional` explícita;
 - `B00-A1-M1`: **FAIL contra o protocolo SE00**, embora tenha detectado 5/5 reimplementações centrais e aplicado veto correto;
+- `B00-M1-R2`: **FAIL — 0/6 helpers**, com `ValueError` Plotly, visualizações posteriores não executadas e resumo executivo vazio;
+- helper adherence agregado dos cinco runs de execução: **0/29 (0%)**;
 - auditorias com state ladder completo: **0/2**;
-- próximo run: `B00-M1-R2`.
+- próximo run: `B00-M1-R3`.
 
-A evidência já distingue falha de roteamento de falha pós-seleção: o M1-R1 prova que seleção explícita, isoladamente, não garante import, chamada nem conclusão de recursos.
+A evidência já distingue falha de roteamento, falha pós-seleção, import sem chamada, auditoria textual insuficiente e execução incompleta. A seleção explícita da skill, isoladamente, não garante import, chamada, conclusão nem finalização sem erro.
 
 ## Evidência aceitável
 
@@ -126,6 +128,10 @@ A baseline conversacional deve ser executada sem republicar ou editar o Hub entr
 
 Os resultados são consolidados em [`RESULTADOS.md`](RESULTADOS.md). A sprint permanece aberta até que o usuário revise as evidências no Free.
 
+## Divergência com `main`
+
+A `main` avançou depois do ponto congelado da SE00. A branch experimental permanece deliberadamente ancorada no merge inicial para não contaminar os runs. A reconciliação será feita antes da integração final, depois da coleta completa, preservando as evidências fixadas por SHA-256.
+
 ## Critério de aceite
 
 A SE00 pode ser encerrada quando:
@@ -136,6 +142,7 @@ A SE00 pode ser encerrada quando:
 4. métricas agregadas estiverem calculadas com numerador e denominador;
 5. limitações de observabilidade estiverem registradas;
 6. nenhuma mudança comportamental tiver sido introduzida;
-7. o usuário der aceite explícito sobre a baseline observada.
+7. a branch estiver reconciliada com a `main` sem alterar a interpretação dos runs congelados;
+8. o usuário der aceite explícito sobre a baseline observada.
 
 Somente depois disso o projeto pode iniciar a SE01.
