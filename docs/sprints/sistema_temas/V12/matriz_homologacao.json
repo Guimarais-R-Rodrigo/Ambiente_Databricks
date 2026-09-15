@@ -68,7 +68,15 @@
       "mutation_required": false,
       "publication_may_be_required": false,
       "oracle": "Identidade e permissões efetivas são observadas no ambiente; valores autodeclarados não contam como autorização.",
-      "required_facts": ["environment_authorized", "identity_checked", "permission_checked", "synthetic_data_only", "oracle_met"]
+      "required_facts": ["environment_authorized", "identity_checked", "permission_checked", "synthetic_data_only", "oracle_met", "self_declared_role_used", "identity_bytes_versioned"],
+      "v01_specialization": {
+        "v01_case_source": "docs/sprints/sistema_temas/V01/matriz_testes.json",
+        "v01_human_required": true,
+        "v12_evidence_class": "databricks_environment",
+        "alters_v01": false,
+        "ratified_on": "2026-09-15",
+        "rationale": "O oraculo canonico da V01 para SEC-01 determina que somente ambiente real comprova autorizacao efetiva. A V12 especializa o caso para a classe databricks_environment e ratifica a especializacao aqui, sem editar a V01, que permanece intacta como registro historico. A especializacao vale somente para SEC-01: DOC-02, DOC-03, A11-01 e UAT-01 continuam human_uat e continuam exigindo participante real autorizado."
+      }
     },
     {
       "id": "UAT-01",
@@ -108,7 +116,8 @@
       "mutation_required": true,
       "publication_may_be_required": false,
       "oracle": "Export real é fixado por SHA-256, binding usa apenas translated/direct, import ocorre em draft e sem mudança semântica de datasets, queries, filtros ou widgets.",
-      "required_facts": ["environment_authorized", "authorization_ref", "synthetic_data_only", "rollback_plan_verified", "dashboard_draft", "export_sha256", "reviewed_export_sha256", "used_export_sha256", "semantic_before_sha256", "semantic_after_sha256", "synthetic_fixture_used_as_databricks_input", "approximated_automated", "unsupported_automated", "published", "oracle_met", "light_dark_observed"]
+      "required_facts": ["environment_authorized", "authorization_ref", "synthetic_data_only", "rollback_plan_verified", "dashboard_draft", "export_sha256", "reviewed_export_sha256", "used_export_sha256", "semantic_before_sha256", "semantic_after_sha256", "synthetic_fixture_used_as_databricks_input", "approximated_automated", "unsupported_automated", "published", "oracle_met", "light_dark_observed"],
+      "required_facts_on_pass": ["rollback_original_semantic_sha256", "rollback_final_semantic_sha256"]
     },
     {
       "id": "V12-AIBI-02",

@@ -3,6 +3,11 @@
 Este módulo NÃO acessa Databricks, não executa deploy, não importa temas e não
 substitui observação humana. Ele valida somente o formato e a coerência de um
 registro de evidência produzido por uma execução autorizada separada.
+
+Também expõe `scan_hygiene`, a varredura de credencial, identificador de
+workspace e path corporativo usada pelo gate da V12. Ela é pura: recebe
+texto e devolve achados sanitizados, sem abrir arquivo, consultar Git ou
+acessar rede. Quem escolhe o que varrer é o chamador.
 """
 from __future__ import annotations
 
@@ -63,6 +68,9 @@ def load_matrix(path: Path = DEFAULT_MATRIX) -> dict[str, Any]:
             _fail("V12_MATRIX_CLASS", "Classe de evidência não reconhecida.")
         if type(case.get("required_facts")) is not list:
             _fail("V12_MATRIX_FACTS", "Caso V12 sem fatos obrigatórios.")
+        extras = case.get("required_facts_on_pass")
+        if extras is not None and type(extras) is not list:
+            _fail("V12_MATRIX_FACTS", "required_facts_on_pass precisa ser lista quando declarado.")
     return data
 
 
@@ -138,6 +146,13 @@ def validate_evidence(record: dict[str, Any], matrix: dict[str, Any] | None = No
     if record["status"] != "PASS":
         return record
 
+    # Fatos que só um PASS pode ter. Ficam fora de required_facts porque
+    # exigi-los de todo registro invalidaria retroativamente um FAIL real
+    # preservado, e a saída seria fabricar evidência que não foi observada.
+    for name in case.get("required_facts_on_pass", []):
+        if name not in record["facts"]:
+            _fail("V12_FACT_MISSING", f"Fato obrigatório para PASS ausente: {name}.")
+
     if not record["artifacts"]:
         _fail("V12_PASS_WITHOUT_EVIDENCE", "PASS exige ao menos um artefato/evidência referenciada.")
     for item in record["artifacts"]:
@@ -205,6 +220,10 @@ def _validate_environment_pass(record: dict[str, Any], case: dict[str, Any]) -> 
     if record["case_id"] == "SEC-01":
         _require_bool(facts, "identity_checked", True)
         _require_bool(facts, "permission_checked", True)
+        # O oráculo proíbe sustentar permissão efetiva em papel autodeclarado,
+        # e o repositório não pode guardar os bytes da identidade observada.
+        _require_bool(facts, "self_declared_role_used", False)
+        _require_bool(facts, "identity_bytes_versioned", False)
 
     if record["case_id"] == "V12-AIBI-01":
         _require_bool(facts, "dashboard_draft", True)
@@ -220,6 +239,13 @@ def _validate_environment_pass(record: dict[str, Any], case: dict[str, Any]) -> 
         _require_bool(facts, "unsupported_automated", False)
         _require_bool(facts, "published", False)
         _require_bool(facts, "light_dark_observed", True)
+        # Rollback integral é afirmação verificável: o estado restaurado tem
+        # de bater com o original. Sem esta conferência a alegação de rollback
+        # seria documental, ao contrário da invariância semântica, que já era
+        # exigida acima.
+        rollback_original = _require_sha(facts, "rollback_original_semantic_sha256")
+        if _require_sha(facts, "rollback_final_semantic_sha256") != rollback_original:
+            _fail("V12_ROLLBACK_DRIFT", "O estado restaurado diverge do original: o rollback não foi integral.")
 
     if record["case_id"] == "V12-AIBI-02":
         _require_bool(facts, "identity_checked", True)
@@ -287,6 +313,68 @@ def _validate_human_pass(record: dict[str, Any], case: dict[str, Any]) -> None:
     if record["case_id"] == "UAT-01":
         _require_bool(facts, "journey_completed", True)
         _require_bool(facts, "shared_change_absent", True)
+
+
+# --- Higiene de conteúdo -----------------------------------------------------
+#
+# Os padrões abaixo são montados por concatenação de propósito. Escritos
+# inteiros, este arquivo seria apanhado pela própria varredura que ele
+# implementa — foi essa autoinspeção que reprovou os runs `34909800421` e
+# `34910134591`. A concatenação é o que permite ao gate varrer o próprio código
+# sem falso positivo.
+_HYGIENE_PATTERNS = (
+    ("V12_HYGIENE_CREDENTIAL", re.compile("DATABRICKS_" + "TOKEN")),
+    ("V12_HYGIENE_CREDENTIAL", re.compile("DATABRICKS_CLIENT_" + "SECRET")),
+    ("V12_HYGIENE_WORKSPACE_ID", re.compile("adb-" + r"[0-9]+\.")),
+    ("V12_HYGIENE_WORKSPACE_PATH", re.compile("/Workspace/" + "Users/[^<]")),
+    ("V12_HYGIENE_VOLUME_PATH", re.compile("/Vol" + "umes/[^<]")),
+)
+
+
+def scan_hygiene(origem: str, texto: str) -> list[tuple[str, str, int]]:
+    """Procura credencial, identificador de workspace ou path corporativo.
+
+    Função pura: não abre arquivo, não consulta Git, não acessa rede. Quem
+    decide o que varrer é o chamador — o gate varre o arquivo inteiro nos
+    caminhos que a V12 criou e somente as linhas adicionadas nos documentos
+    compartilhados, para não reprovar dívida histórica que já está na `main`.
+
+    Devolve `(codigo, origem, numero_da_linha)`. O trecho que casou **não** é
+    devolvido: um relatório de higiene que imprime o segredo encontrado publica
+    o segredo no log do CI.
+    """
+    achados: list[tuple[str, str, int]] = []
+    for numero, linha in enumerate(texto.splitlines(), start=1):
+        for codigo, padrao in _HYGIENE_PATTERNS:
+            if padrao.search(linha):
+                achados.append((codigo, origem, numero))
+    return achados
+
+
+def linhas_adicionadas(diff: str) -> dict[str, str]:
+    """Extrai de um diff unificado somente o conteúdo adicionado, por arquivo.
+
+    Existe para que a higiene cubra os documentos compartilhados — `README.md`,
+    `CHANGELOG.md` e os índices de sprint — pelo que **esta candidata
+    escreveu**, sem varrer o histórico inteiro desses arquivos nem transformar
+    dívida antiga em reprovação desta PR.
+    """
+    por_arquivo: dict[str, list[str]] = {}
+    atual = None
+    em_hunk = False
+    for linha in diff.splitlines():
+        # Cabeçalho e corpo são distinguidos pela posição, não pelo prefixo: uma
+        # linha de conteúdo que comece com "++ " vira "+++ " no diff e seria
+        # confundida com cabeçalho, sumindo da varredura sem ninguém notar.
+        if linha.startswith("diff --git "):
+            atual, em_hunk = None, False
+        elif linha.startswith("@@"):
+            em_hunk = True
+        elif not em_hunk and linha.startswith("+++ b/"):
+            atual = linha[len("+++ b/"):]
+        elif em_hunk and atual is not None and linha.startswith("+"):
+            por_arquivo.setdefault(atual, []).append(linha[1:])
+    return {caminho: "\n".join(linhas) for caminho, linhas in por_arquivo.items()}
 
 
 def main() -> int:

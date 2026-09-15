@@ -72,10 +72,18 @@ Este `PASS` comprova somente `V12-AIBI-01`. Ele **não** comprova:
 - workspace theme, herança, snapshot ou reaplicação (`V12-AIBI-02`);
 - Databricks App (`V12-APP-01`);
 - Visual Lab completo (`V12-LAB-01`);
-- identidade/permissão efetiva de `SEC-01`;
+- `SEC-01` — ver a reconciliação abaixo;
 - acessibilidade completa `A11-01`;
 - `DOC-02`, `DOC-03` ou `UAT-01`;
 - prontidão de produção;
 - publicação de dashboard.
 
 A primeira tentativa continua registrada como `FAIL`; não foi apagada nem reclassificada.
+
+## Relação com `SEC-01`
+
+Esta jornada AI/BI, **isoladamente, não prova `SEC-01`**. As ações concluídas aqui — edição temporária das queries e `Import theme` em dashboard draft — são **evidência comportamental de permissão efetiva**: comprovam que a identidade autenticada conseguia executar aquelas operações naquele workspace, e nada além disso.
+
+O `PASS` de `SEC-01` exigiu, além dessa evidência comportamental, **observação independente da identidade** no menu de conta do mesmo ambiente. São duas metades distintas do oráculo, e nenhuma substitui a outra: ação concluída sem identidade observada não identifica quem agiu; identidade observada sem ação concluída não demonstra permissão efetiva.
+
+Por isso `SEC-01` tem registro próprio, em `evidencias/SEC-01/SEC-01_attempt-01.json`, que referencia esta tentativa como base comportamental (`permission_basis_record_id`) em vez de se apoiar em papel autodeclarado.

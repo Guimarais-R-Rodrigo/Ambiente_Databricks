@@ -58,38 +58,64 @@ jobs:
         run: |
           set -euo pipefail
           git rev-parse --verify origin/main >/dev/null
-          mapfile -t changed < <(git diff --name-only origin/main...HEAD)
-          printf 'Arquivos V12 alterados:\n%s\n' "${changed[*]}"
-          for path in "${changed[@]}"; do
-            case "$path" in
-              tools/temas_v12_homologacao.py|tools/tests/test_temas_v12.py|tools/tests/test_temas_v12_evidencia_real.py|docs/sprints/sistema_temas/V12/*|docs/sprints/sistema_temas/README.md|docs/sprints/README.md|README.md|CHANGELOG.md|.github/workflows/temas-v12-ci.yml)
-                ;;
-              *)
-                echo "V12_SCOPE_FAIL: $path"
-                exit 1
-                ;;
-            esac
-          done
-          credential_pat='DATABRICKS_'TOKEN'|DATABRICKS_CLIENT_'SECRET'|adb-[0-9]+\.'
-          workspace_pat='/Workspace/'Users'/[^<]'
-          volume_pat='/Vol'umes'/[^<]'
-          forbidden="${credential_pat}|${workspace_pat}|${volume_pat}"
-          if grep -R -n -E "$forbidden" tools/temas_v12_homologacao.py tools/tests/test_temas_v12.py tools/tests/test_temas_v12_evidencia_real.py docs/sprints/sistema_temas/V12; then
-            echo 'V12_HYGIENE_FAIL'
-            exit 1
-          fi
+          git diff --name-only origin/main...HEAD > "$RUNNER_TEMP/v12_alterados.txt"
+          git diff --unified=0 origin/main...HEAD -- README.md CHANGELOG.md docs/sprints/README.md docs/sprints/sistema_temas/README.md > "$RUNNER_TEMP/v12_compartilhados.diff"
           python - <<'PY'
+          import os
+          import sys
           from pathlib import Path
-          import re
-          text = Path('.github/workflows/temas-v12-ci.yml').read_text(encoding='utf-8')
-          literals = (
-              'DATABRICKS_' + 'TOKEN',
-              'DATABRICKS_CLIENT_' + 'SECRET',
-              '/Workspace/' + 'Users/',
-              '/Vol' + 'umes/',
+
+          sys.path.insert(0, "tools")
+          from temas_v12_homologacao import linhas_adicionadas, scan_hygiene
+
+          PROPRIOS = (
+              "tools/temas_v12_homologacao.py",
+              "tools/tests/test_temas_v12.py",
+              "tools/tests/test_temas_v12_evidencia_real.py",
+              ".github/workflows/temas-v12-ci.yml",
           )
-          if any(value in text for value in literals) or re.search('adb-' + r'[0-9]+\.', text):
-              raise SystemExit('V12_WORKFLOW_HYGIENE_FAIL')
+          COMPARTILHADOS = (
+              "README.md",
+              "CHANGELOG.md",
+              "docs/sprints/README.md",
+              "docs/sprints/sistema_temas/README.md",
+          )
+          PREFIXO_V12 = "docs/sprints/sistema_temas/V12/"
+
+          temp = Path(os.environ["RUNNER_TEMP"])
+          alterados = [c for c in temp.joinpath("v12_alterados.txt").read_text(encoding="utf-8").splitlines() if c]
+          print("Arquivos V12 alterados:")
+          for caminho in alterados:
+              print("  " + caminho)
+
+          fora = [c for c in alterados if not (c in PROPRIOS or c in COMPARTILHADOS or c.startswith(PREFIXO_V12))]
+          for caminho in fora:
+              print("V12_SCOPE_FAIL: " + caminho)
+          if fora:
+              raise SystemExit(1)
+
+          # Caminhos que a candidata criou: varredura integral do conteúdo.
+          integrais = [c for c in alterados if c in PROPRIOS or c.startswith(PREFIXO_V12)]
+          achados = []
+          for caminho in integrais:
+              arquivo = Path(caminho)
+              if arquivo.is_file():
+                  achados += scan_hygiene(caminho, arquivo.read_text(encoding="utf-8", errors="replace"))
+
+          # Documentos compartilhados: somente o que esta candidata adicionou.
+          # Varrer o arquivo inteiro transformaria dívida histórica da main em
+          # reprovação desta PR, que é outro problema e outro gate.
+          diff = temp.joinpath("v12_compartilhados.diff").read_text(encoding="utf-8", errors="replace")
+          adicionados = linhas_adicionadas(diff)
+          for caminho, conteudo in sorted(adicionados.items()):
+              achados += scan_hygiene(caminho + " (linhas adicionadas)", conteudo)
+
+          print("higiene : %d caminho(s) integrais, %d documento(s) compartilhado(s) pelo diff" % (len(integrais), len(adicionados)))
+          for codigo, origem, numero in achados:
+              print("%s: %s:%d" % (codigo, origem, numero))
+          if achados:
+              print("V12_HYGIENE_FAIL")
+              raise SystemExit(1)
+          print("V12_SCOPE=PASS")
+          print("V12_REMOTE_MUTATION=0")
           PY
-          echo 'V12_SCOPE=PASS'
-          echo 'V12_REMOTE_MUTATION=0'
