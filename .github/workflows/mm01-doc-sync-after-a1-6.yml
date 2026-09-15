@@ -106,7 +106,7 @@ jobs:
           test "$(git diff --name-only HEAD -- CHANGELOG.md | wc -l)" -eq 0
           test "$(git diff --name-only HEAD -- ambiente_fonte/.assistant | wc -l)" -eq 0
           changed="$(git diff --name-only HEAD | sort)"
-          expected="$(printf '%s\n' docs/sprints/micromodelos/MM01/CHECKPOINT.md docs/sprints/micromodelos/MM01/README.md docs/sprints/micromodelos/README.md | sort)"
+          expected="$(printf '%s\n' .github/workflows/mm01-doc-sync-after-a1-6.yml docs/sprints/micromodelos/MM01/CHECKPOINT.md docs/sprints/micromodelos/MM01/README.md docs/sprints/micromodelos/README.md | sort)"
           test "$changed" = "$expected"
 
       - name: Publicar sincronizacao documental
