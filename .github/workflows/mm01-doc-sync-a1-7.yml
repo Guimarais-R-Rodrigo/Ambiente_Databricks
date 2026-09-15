@@ -1,0 +1,87 @@
+name: MM01 - sincronizar docs apos setima A1
+
+on:
+  push:
+    branches:
+      - micromodelos/mm01-contrato-canonico
+    paths:
+      - .github/workflows/mm01-doc-sync-a1-7.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sincronizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Baixar branch MM01
+        uses: actions/checkout@v4
+        with:
+          ref: micromodelos/mm01-contrato-canonico
+          fetch-depth: 0
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+
+      - name: Sincronizar documentação pós-sétima A1
+        run: python tools/_tmp_mm01_a1_7_docs.py
+
+      - name: Remover mecanismos transitórios
+        run: |
+          git rm tools/_tmp_mm01_a1_7_docs.py
+          git rm .github/workflows/mm01-doc-sync-a1-7.yml
+
+      - name: Instalar dependências
+        run: python -m pip install -r tools/requirements-dev.txt
+
+      - name: Executar suíte MM01
+        run: python -B -m unittest tools/tests/test_micromodelo_mm01.py -v
+
+      - name: Executar CLI sobre template e fixture positiva
+        shell: bash
+        run: |
+          python -B tools/micromodelo_mm01_contract.py docs/sprints/micromodelos/MM01/micromodelo.template.yaml --schema docs/sprints/micromodelos/MM01/micromodelo.schema.json
+          python -B tools/micromodelo_mm01_contract.py tools/tests/fixtures/micromodelos_mm01/valido_validado.json --schema docs/sprints/micromodelos/MM01/micromodelo.schema.json
+
+      - name: Executar gate estrutural e README congelado
+        run: python -B tools/validate_assistant.py --root ambiente_fonte --conferir-readme
+
+      - name: Conferir escopo documental
+        shell: bash
+        run: |
+          git diff --check
+          test ! -e tools/_tmp_mm01_a1_7_docs.py
+          test ! -e .github/workflows/mm01-doc-sync-a1-7.yml
+          test "$(git diff --name-only HEAD -- CHANGELOG.md | wc -l)" -eq 0
+          test "$(git diff --name-only HEAD -- ambiente_fonte/.assistant | wc -l)" -eq 0
+          grep -q 'OITAVA A1 PENDENTE' docs/sprints/micromodelos/MM01/README.md
+          grep -q 'OITAVA A1 PENDENTE' docs/sprints/micromodelos/MM01/CHECKPOINT.md
+          grep -q '39 métodos' docs/sprints/micromodelos/MM01/README.md
+          grep -q '39 métodos' docs/sprints/micromodelos/MM01/TESTES.md
+          grep -q 'default-ignorable' docs/sprints/micromodelos/MM01/CONTRATO_MICROMODELO.md
+          grep -q 'valores numéricos precisam ser finitos' docs/sprints/micromodelos/MM01/ESTADOS_E_PROVENIENCIA.md
+          changed="$(git diff --name-only HEAD | sort)"
+          expected="$(printf '%s\n' \
+            .github/workflows/mm01-doc-sync-a1-7.yml \
+            docs/sprints/micromodelos/MM01/CHECKPOINT.md \
+            docs/sprints/micromodelos/MM01/CONTRATO_MICROMODELO.md \
+            docs/sprints/micromodelos/MM01/ESTADOS_E_PROVENIENCIA.md \
+            docs/sprints/micromodelos/MM01/README.md \
+            docs/sprints/micromodelos/MM01/TESTES.md \
+            docs/sprints/micromodelos/README.md \
+            tools/_tmp_mm01_a1_7_docs.py | sort)"
+          test "$changed" = "$expected"
+
+      - name: Publicar sincronização documental
+        shell: bash
+        run: |
+          git config user.name "Rodrigo"
+          git config user.email "guimarais.r.rodrigo@gmail.com"
+          git add -A
+          git commit -m "docs(mm01): sincronizar estado apos setima A1"
+          git push origin HEAD:micromodelos/mm01-contrato-canonico
