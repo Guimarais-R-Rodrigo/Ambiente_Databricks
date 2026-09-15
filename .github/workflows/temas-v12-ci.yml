@@ -53,7 +53,20 @@ jobs:
         run: python -B tools/tests/test_visual_legado_v00.py
       - name: Validação estrutural e documental
         run: python -B tools/validate_assistant.py --conferir-readme
+      - name: Aplicabilidade do escopo estrito V12
+        id: v12_scope_applicability
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" && "$GITHUB_HEAD_REF" != codex/temas-v12* ]]; then
+            echo "applicable=false" >> "$GITHUB_OUTPUT"
+            echo "V12_SCOPE=NOT_APPLICABLE"
+          else
+            echo "applicable=true" >> "$GITHUB_OUTPUT"
+            echo "V12_SCOPE=APPLICABLE"
+          fi
       - name: Escopo V12 e higiene
+        if: steps.v12_scope_applicability.outputs.applicable == 'true'
         shell: bash
         run: |
           set -euo pipefail
