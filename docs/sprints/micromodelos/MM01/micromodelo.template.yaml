@@ -45,7 +45,8 @@ classificacao:
       medicao: null
   ausencia_evidencia:
     tratamento: "INDETERMINADO"
-    descricao: "ausência de evidência não é convertida automaticamente em FALSE"
+    resultado_sem_evidencia: "INDETERMINADO"
+    regra_ref: null
     proveniencia:
       status: "PROPOSTO"
       origem: "template MM01"
@@ -58,11 +59,20 @@ classificacao:
 score:
   habilitado: true
   tipo_semantica: "FORCA_EVIDENCIA"
-  semantica: "intensidade relativa da evidência observada; não é probabilidade calibrada"
+  semantica_ref: null
   escala:
     min: 0
     max: 100
-  normalizacao: "combinação ainda a aprovar; nenhum peso foi definido neste template"
+  normalizacao:
+    metodo: "PENDENTE"
+    referencia: null
+    proveniencia:
+      status: "PROPOSTO"
+      origem: "template MM01"
+      referencia: null
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
   componentes: []
   calibracao: null
   proveniencia:

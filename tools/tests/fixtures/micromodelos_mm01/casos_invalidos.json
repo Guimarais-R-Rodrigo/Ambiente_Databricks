@@ -44,9 +44,9 @@
         "acao": "set",
         "path": [
           "score",
-          "semantica"
+          "semantica_ref"
         ],
-        "value": ""
+        "value": null
       }
     ]
   },

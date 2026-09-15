@@ -46,10 +46,7 @@
           "pattern": ".*\\S.*"
         },
         "referencia": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "$ref": "#/$defs/material_ref_nullable"
         },
         "observado_em_utc": {
           "type": [
@@ -75,9 +72,7 @@
               "format": "date-time"
             },
             "referencia": {
-              "type": "string",
-              "minLength": 1,
-              "pattern": ".*\\S.*"
+              "$ref": "#/$defs/material_ref"
             }
           },
           "required": [
@@ -94,9 +89,7 @@
           "additionalProperties": false,
           "properties": {
             "referencia_execucao": {
-              "type": "string",
-              "minLength": 1,
-              "pattern": ".*\\S.*"
+              "$ref": "#/$defs/material_ref"
             },
             "medido_em_utc": {
               "type": "string",
@@ -113,6 +106,22 @@
     "id": {
       "type": "string",
       "pattern": "^[a-z][a-z0-9_]{2,63}$"
+    },
+    "material_ref": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*[A-Za-z0-9].*",
+      "description": "Referência auditável com ao menos um caractere alfanumérico ASCII; validação semântica aplica regra Unicode adicional."
+    },
+    "material_ref_nullable": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/material_ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
     }
   },
   "properties": {
@@ -450,7 +459,8 @@
           "additionalProperties": false,
           "required": [
             "tratamento",
-            "descricao",
+            "resultado_sem_evidencia",
+            "regra_ref",
             "proveniencia"
           ],
           "properties": {
@@ -460,12 +470,19 @@
                 "REGRA_EXPLICITA_APROVADA"
               ]
             },
-            "descricao": {
-              "type": "string",
-              "minLength": 5
-            },
             "proveniencia": {
               "$ref": "#/$defs/proveniencia"
+            },
+            "resultado_sem_evidencia": {
+              "enum": [
+                "TRUE",
+                "FALSE",
+                "INDETERMINADO"
+              ],
+              "description": "Resultado estruturado aplicável quando não há evidência suficiente."
+            },
+            "regra_ref": {
+              "$ref": "#/$defs/material_ref_nullable"
             }
           }
         },
@@ -520,7 +537,7 @@
       "required": [
         "habilitado",
         "tipo_semantica",
-        "semantica",
+        "semantica_ref",
         "escala",
         "normalizacao",
         "componentes",
@@ -541,12 +558,6 @@
             "FORCA_EVIDENCIA",
             "PROBABILIDADE_CALIBRADA",
             "OUTRA_APROVADA"
-          ]
-        },
-        "semantica": {
-          "type": [
-            "string",
-            "null"
           ]
         },
         "escala": {
@@ -570,8 +581,31 @@
         },
         "normalizacao": {
           "type": [
-            "string",
+            "object",
             "null"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "metodo": {
+              "enum": [
+                "PENDENTE",
+                "SOMA_PONDERADA_0_100",
+                "MIN_MAX_0_100",
+                "LINEAR_0_100",
+                "CUSTOM_APROVADO"
+              ]
+            },
+            "referencia": {
+              "$ref": "#/$defs/material_ref_nullable"
+            },
+            "proveniencia": {
+              "$ref": "#/$defs/proveniencia"
+            }
+          },
+          "required": [
+            "metodo",
+            "referencia",
+            "proveniencia"
           ]
         },
         "componentes": {
@@ -617,9 +651,7 @@
               "minLength": 3
             },
             "evidencia_ref": {
-              "type": "string",
-              "minLength": 1,
-              "description": "ID de experimentos[].id que sustenta a calibração; deve referenciar experimento EXECUTADO e MEDIDO."
+              "$ref": "#/$defs/material_ref"
             },
             "proveniencia": {
               "$ref": "#/$defs/proveniencia"
@@ -630,6 +662,9 @@
             "evidencia_ref",
             "proveniencia"
           ]
+        },
+        "semantica_ref": {
+          "$ref": "#/$defs/material_ref_nullable"
         }
       }
     },
@@ -750,11 +785,7 @@
               "format": "date-time"
             },
             "referencia": {
-              "type": [
-                "string",
-                "null"
-              ],
-              "pattern": ".*\\S.*"
+              "$ref": "#/$defs/material_ref_nullable"
             }
           }
         }
@@ -848,18 +879,17 @@
                 "indeterminado_vira_false": {
                   "const": false
                 },
-                "descricao": {
-                  "type": "string",
-                  "minLength": 5
-                },
                 "proveniencia": {
                   "$ref": "#/$defs/proveniencia"
+                },
+                "regra_ref": {
+                  "$ref": "#/$defs/material_ref_nullable"
                 }
               },
               "required": [
                 "tratamento",
                 "indeterminado_vira_false",
-                "descricao",
+                "regra_ref",
                 "proveniencia"
               ]
             }
@@ -943,18 +973,10 @@
           "const": "GOVERNANCA_EXTERNA"
         },
         "handoff_ref": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "pattern": ".*\\S.*"
+          "$ref": "#/$defs/material_ref_nullable"
         },
         "produto_dados_ref": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "pattern": ".*\\S.*"
+          "$ref": "#/$defs/material_ref_nullable"
         }
       }
     },

@@ -141,29 +141,16 @@ def _normalize_semantic_text(value: str) -> str:
     return " ".join(words_only.split())
 
 
-def _uses_probability_language(value: str) -> bool:
-    normalized = _normalize_semantic_text(value)
-    for disclaimer in (
-        "nao e probabilidade",
-        "nao representa probabilidade",
-        "sem interpretacao probabilistica",
-    ):
-        normalized = normalized.replace(disclaimer, " ")
-    return bool(re.search(r"\bprobabil\w*\b|\bchance(?:s)?\b", normalized))
-
-
-
 def _has_material_text(value: Any) -> bool:
-    """True apenas quando há conteúdo auditável além de espaço/controle/formatação."""
+    """Exige ao menos uma letra ou número Unicode após normalização.
+
+    Marcas combinantes, variation selectors, espaços, controles e pontuação
+    isolada não constituem identidade/referência auditável.
+    """
     if not isinstance(value, str):
         return False
     normalized = unicodedata.normalize("NFKC", value)
-    visible = "".join(
-        char
-        for char in normalized
-        if unicodedata.category(char)[0] not in {"Z", "C"}
-    )
-    return bool(visible.strip())
+    return any(unicodedata.category(char)[0] in {"L", "N"} for char in normalized)
 
 
 def _semver_tuple(value: str) -> tuple[int, int, int]:
@@ -171,22 +158,6 @@ def _semver_tuple(value: str) -> tuple[int, int, int]:
     if not match:
         raise ValueError(f"versão semântica inválida: {value!r}")
     return tuple(int(part) for part in match.groups())
-
-
-def _description_maps_indeterminate_to_false(value: str) -> bool:
-    normalized = _normalize_semantic_text(value)
-    if not re.search(r"\bindetermin\w*\b", normalized):
-        return False
-    if not re.search(r"\b(?:false|falso)\b", normalized):
-        return False
-    if re.search(r"\bnao\b.{0,60}\b(?:false|falso)\b", normalized):
-        return False
-    return bool(
-        re.search(
-            r"\b(?:grav\w*|convert\w*|mape\w*|trat\w*|registr\w*|defin\w*|vira\w*|equival\w*)\b",
-            normalized,
-        )
-    )
 
 
 def _validate_previous_state(
@@ -464,17 +435,35 @@ def validate_spec(
     _validate_provenance(
         absence["proveniencia"], "classificacao.ausencia_evidencia.proveniencia", issues
     )
-    if (
-        absence["tratamento"] == "REGRA_EXPLICITA_APROVADA"
-        and absence["proveniencia"]["status"] != "APROVADO"
-    ):
-        issues.append(
-            Issue(
-                "classificacao.ausencia_evidencia.proveniencia.status",
-                "MISSING_POLICY_APPROVAL",
-                "REGRA_EXPLICITA_APROVADA exige proveniência APROVADO",
+    if absence["tratamento"] == "INDETERMINADO":
+        if (
+            absence["resultado_sem_evidencia"] != "INDETERMINADO"
+            or absence["regra_ref"] is not None
+        ):
+            issues.append(
+                Issue(
+                    "classificacao.ausencia_evidencia",
+                    "MISSING_POLICY_CONTRADICTION",
+                    "tratamento INDETERMINADO exige resultado_sem_evidencia=INDETERMINADO e regra_ref=null",
+                )
             )
-        )
+    else:
+        if absence["proveniencia"]["status"] != "APROVADO":
+            issues.append(
+                Issue(
+                    "classificacao.ausencia_evidencia.proveniencia.status",
+                    "MISSING_POLICY_APPROVAL",
+                    "REGRA_EXPLICITA_APROVADA exige proveniência APROVADO",
+                )
+            )
+        if not _has_material_text(absence["regra_ref"]):
+            issues.append(
+                Issue(
+                    "classificacao.ausencia_evidencia.regra_ref",
+                    "MISSING_POLICY_RULE_REF",
+                    "REGRA_EXPLICITA_APROVADA exige referência auditável para a regra",
+                )
+            )
 
     threshold_ids: set[str] = set()
     for index, threshold in enumerate(classification["limiares"]):
@@ -510,18 +499,12 @@ def validate_spec(
     _validate_provenance(score["proveniencia"], "score.proveniencia", issues)
     _check_duplicate_ids(score["componentes"], "score.componentes", issues)
     if score["habilitado"]:
-        if (
-            not score["tipo_semantica"]
-            or not isinstance(score["semantica"], str)
-            or not score["semantica"].strip()
-            or not isinstance(score["normalizacao"], str)
-            or not score["normalizacao"].strip()
-        ):
+        if not score["tipo_semantica"]:
             issues.append(
                 Issue(
-                    "score",
+                    "score.tipo_semantica",
                     "SCORE_SEMANTICS",
-                    "score habilitado exige tipo_semantica, semantica e normalizacao explícitos",
+                    "score habilitado exige tipo_semantica estruturado",
                 )
             )
         if (
@@ -544,21 +527,15 @@ def validate_spec(
                     "score habilitado exige campo_score no contrato de estudo",
                 )
             )
-        if score["tipo_semantica"] != "PROBABILIDADE_CALIBRADA":
-            semantic_text = " ".join(
-                value
-                for value in (score["semantica"], score["normalizacao"])
-                if isinstance(value, str)
+
+        normalization = score["normalizacao"]
+        if isinstance(normalization, dict):
+            _validate_provenance(
+                normalization["proveniencia"],
+                "score.normalizacao.proveniencia",
+                issues,
             )
-            if _uses_probability_language(semantic_text):
-                issues.append(
-                    Issue(
-                        "score.semantica",
-                        "SCORE_PROBABILITY_LANGUAGE",
-                        "linguagem probabilística exige tipo_semantica=PROBABILIDADE_CALIBRADA "
-                        "e calibração medida",
-                    )
-                )
+
         for index, component in enumerate(score["componentes"]):
             _validate_provenance(
                 component["proveniencia"],
@@ -576,6 +553,45 @@ def validate_spec(
                         "peso material exige decisão humana APROVADO",
                     )
                 )
+
+        if FASE_ORDEM[phase] >= FASE_ORDEM["EM_VALIDACAO"]:
+            if not _has_material_text(score["semantica_ref"]):
+                issues.append(
+                    Issue(
+                        "score.semantica_ref",
+                        "SCORE_SEMANTICS",
+                        "EM_VALIDACAO ou posterior exige referência auditável da semântica do score",
+                    )
+                )
+            if not isinstance(normalization, dict) or normalization["metodo"] == "PENDENTE":
+                issues.append(
+                    Issue(
+                        "score.normalizacao",
+                        "SCORE_NORMALIZATION",
+                        "EM_VALIDACAO ou posterior exige método estruturado de normalização",
+                    )
+                )
+            elif normalization["proveniencia"]["status"] != "APROVADO":
+                issues.append(
+                    Issue(
+                        "score.normalizacao.proveniencia.status",
+                        "SCORE_NORMALIZATION_APPROVAL",
+                        "normalização material exige decisão humana APROVADO",
+                    )
+                )
+            if (
+                isinstance(normalization, dict)
+                and normalization["metodo"] == "CUSTOM_APROVADO"
+                and not _has_material_text(normalization["referencia"])
+            ):
+                issues.append(
+                    Issue(
+                        "score.normalizacao.referencia",
+                        "SCORE_NORMALIZATION_REF",
+                        "CUSTOM_APROVADO exige referência auditável da regra de normalização",
+                    )
+                )
+
         if score["tipo_semantica"] == "PROBABILIDADE_CALIBRADA":
             if not isinstance(score["calibracao"], dict):
                 issues.append(
@@ -620,11 +636,19 @@ def validate_spec(
                             "calibração exige experimento EXECUTADO com proveniência MEDIDO",
                         )
                     )
+        elif score["calibracao"] is not None:
+            issues.append(
+                Issue(
+                    "score.calibracao",
+                    "CALIBRATION_UNEXPECTED",
+                    "calibração probabilística só é permitida para PROBABILIDADE_CALIBRADA",
+                )
+            )
     else:
         if any(
             (
                 score["tipo_semantica"] is not None,
-                score["semantica"] is not None,
+                score["semantica_ref"] is not None,
                 score["escala"] is not None,
                 score["normalizacao"] is not None,
                 score["componentes"],
@@ -635,7 +659,7 @@ def validate_spec(
                 Issue(
                     "score",
                     "SCORE_DISABLED",
-                    "score desabilitado deve manter semântica, escala, componentes e calibração vazios/nulos",
+                    "score desabilitado deve manter semântica, escala, normalização, componentes e calibração vazios/nulos",
                 )
             )
         if spec["saida"]["estudo"]["campo_score"] is not None:
@@ -824,12 +848,21 @@ def validate_spec(
                         "INDETERMINADO nunca pode ser implicitamente convertido em FALSE",
                     )
                 )
-            if _description_maps_indeterminate_to_false(policy["descricao"]):
+            if policy["tratamento"] == "OUTRA_APROVADA":
+                if not _has_material_text(policy["regra_ref"]):
+                    issues.append(
+                        Issue(
+                            "saida.publicacao.politica_indeterminado.regra_ref",
+                            "PUBLICATION_POLICY_RULE_REF",
+                            "OUTRA_APROVADA exige referência auditável da regra externa",
+                        )
+                    )
+            elif policy["regra_ref"] is not None:
                 issues.append(
                     Issue(
-                        "saida.publicacao.politica_indeterminado.descricao",
-                        "INDETERMINATE_POLICY_CONTRADICTION",
-                        "descricao contradiz a regra estruturada que preserva INDETERMINADO distinto de FALSE",
+                        "saida.publicacao.politica_indeterminado.regra_ref",
+                        "PUBLICATION_POLICY_RULE_REF",
+                        "regra_ref só é usada quando tratamento=OUTRA_APROVADA",
                     )
                 )
 

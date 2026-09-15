@@ -111,24 +111,20 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
         self.assertIn("AMBIGUOUS_BINARY_SEMANTICS", self.codes(document))
 
     def test_probability_language_requires_calibrated_semantics(self) -> None:
-        document = copy.deepcopy(self.valid)
-        document["score"]["semantica"] = (
-            "probabilidade estimada de o cliente possuir a característica"
-        )
-        self.assertIn("SCORE_PROBABILITY_LANGUAGE", self.codes(document))
+        legacy = copy.deepcopy(self.valid)
+        legacy["score"]["semantica"] = "risco percentual de ocorrência da característica"
+        self.assertIn("SCHEMA", self.codes(legacy))
 
         calibrated = copy.deepcopy(self.valid)
         calibrated["score"]["tipo_semantica"] = "PROBABILIDADE_CALIBRADA"
-        calibrated["score"]["semantica"] = (
-            "probabilidade calibrada de o cliente possuir a característica"
-        )
+        calibrated["score"]["semantica_ref"] = "SEM-PROB-001"
         calibrated["score"]["calibracao"] = {
             "metodo": "calibracao_sintetica",
             "evidencia_ref": "exp_001",
             "proveniencia": {
                 "status": "MEDIDO",
                 "origem": "execucao sintetica",
-                "referencia": "calibracao_sintetica",
+                "referencia": "CAL-001",
                 "observado_em_utc": "2026-09-14T13:30:00Z",
                 "aprovacao": None,
                 "medicao": {
@@ -180,7 +176,7 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
             "politica_indeterminado": {
                 "tratamento": "CAMPO_COBERTURA_SEPARADO",
                 "indeterminado_vira_false": False,
-                "descricao": "publicar cobertura separada para preservar casos indeterminados",
+                "regra_ref": None,
                 "proveniencia": {
                     "status": "APROVADO",
                     "origem": "decisao humana sintetica",
@@ -302,7 +298,7 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
             "politica_indeterminado": {
                 "tratamento": "CAMPO_COBERTURA_SEPARADO",
                 "indeterminado_vira_false": False,
-                "descricao": "preservar casos indeterminados em cobertura separada",
+                "regra_ref": None,
                 "proveniencia": copy.deepcopy(self.valid["classificacao"]["semantica"]["proveniencia"]),
             },
         }
@@ -331,7 +327,7 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
             "politica_indeterminado": {
                 "tratamento": "CAMPO_COBERTURA_SEPARADO",
                 "indeterminado_vira_false": False,
-                "descricao": "preservar casos indeterminados em cobertura separada",
+                "regra_ref": None,
                 "proveniencia": copy.deepcopy(self.valid["classificacao"]["semantica"]["proveniencia"]),
             },
         }
@@ -346,30 +342,40 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
         )
 
     def test_audit_material_references_reject_whitespace_and_invisible_text(self) -> None:
-        approved = copy.deepcopy(self.valid)
-        approved["validacao"]["aprovacao_humana"]["por"] = "   "
-        self.assertIn("SCHEMA", self.codes(approved))
+        invisible_marks = ("\u034f", "\ufe0f", "\u0301")
+        for mark in invisible_marks:
+            with self.subTest(mark=mark, field="approval_por"):
+                approved = copy.deepcopy(self.valid)
+                approved["validacao"]["aprovacao_humana"]["por"] = mark
+                self.assertIn("VALIDATION_HUMAN_GATE", self.codes(approved))
 
-        measured = copy.deepcopy(self.valid)
-        measured["experimentos"][0]["proveniencia"]["medicao"]["referencia_execucao"] = "\u200b"
-        self.assertIn("PROV_MEASUREMENT_REQUIRED", self.codes(measured))
+            with self.subTest(mark=mark, field="approval_ref"):
+                approved = copy.deepcopy(self.valid)
+                approved["validacao"]["aprovacao_humana"]["referencia"] = mark
+                self.assertTrue({"SCHEMA", "VALIDATION_HUMAN_GATE"} & self.codes(approved))
 
-        published = copy.deepcopy(self.valid)
-        published["identidade"]["estado"]["fase_anterior"] = "EM_VALIDACAO_GOVERNANCA"
-        published["identidade"]["estado"]["fase_atual"] = "PUBLICADO"
-        published["saida"]["publicacao"] = {
-            "estado": "DEFINIDO",
-            "campo_booleano": {"nome": "possui_caracteristica", "tipo": "BOOLEAN"},
-            "politica_indeterminado": {
-                "tratamento": "CAMPO_COBERTURA_SEPARADO",
-                "indeterminado_vira_false": False,
-                "descricao": "preservar casos indeterminados em cobertura separada",
-                "proveniencia": copy.deepcopy(self.valid["classificacao"]["semantica"]["proveniencia"]),
-            },
-        }
-        published["publicacao"]["status"] = "PUBLICADA"
-        published["publicacao"]["produto_dados_ref"] = "   "
-        self.assertIn("SCHEMA", self.codes(published))
+            with self.subTest(mark=mark, field="measurement_ref"):
+                measured = copy.deepcopy(self.valid)
+                measured["experimentos"][0]["proveniencia"]["medicao"]["referencia_execucao"] = mark
+                self.assertTrue({"SCHEMA", "PROV_MEASUREMENT_REQUIRED"} & self.codes(measured))
+
+            with self.subTest(mark=mark, field="product_ref"):
+                published = copy.deepcopy(self.valid)
+                published["identidade"]["estado"]["fase_anterior"] = "EM_VALIDACAO_GOVERNANCA"
+                published["identidade"]["estado"]["fase_atual"] = "PUBLICADO"
+                published["saida"]["publicacao"] = {
+                    "estado": "DEFINIDO",
+                    "campo_booleano": {"nome": "possui_caracteristica", "tipo": "BOOLEAN"},
+                    "politica_indeterminado": {
+                        "tratamento": "CAMPO_COBERTURA_SEPARADO",
+                        "indeterminado_vira_false": False,
+                        "regra_ref": None,
+                        "proveniencia": copy.deepcopy(self.valid["classificacao"]["semantica"]["proveniencia"]),
+                    },
+                }
+                published["publicacao"]["status"] = "PUBLICADA"
+                published["publicacao"]["produto_dados_ref"] = mark
+                self.assertTrue({"SCHEMA", "PUBLICATION_GATE"} & self.codes(published))
 
     def test_proposed_threshold_and_weight_are_allowed_before_validation_gate(self) -> None:
         study = copy.deepcopy(self.valid)
@@ -402,17 +408,27 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
             "politica_indeterminado": {
                 "tratamento": "CAMPO_COBERTURA_SEPARADO",
                 "indeterminado_vira_false": False,
-                "descricao": "indeterminado deve ser gravado como FALSE",
+                "regra_ref": None,
                 "proveniencia": copy.deepcopy(self.valid["classificacao"]["semantica"]["proveniencia"]),
             },
         }
         document["publicacao"]["status"] = "CANDIDATA"
-        self.assertIn("INDETERMINATE_POLICY_CONTRADICTION", self.codes(document))
+        self.assertEqual([], module.validate_spec(document, self.schema))
+
+        contradictory = copy.deepcopy(document)
+        contradictory["saida"]["publicacao"]["politica_indeterminado"]["descricao"] = (
+            "casos INDETERMINADOS retornam FALSE"
+        )
+        self.assertIn("SCHEMA", self.codes(contradictory))
+
+        contradictory = copy.deepcopy(document)
+        contradictory["saida"]["publicacao"]["politica_indeterminado"]["indeterminado_vira_false"] = True
+        self.assertIn("SCHEMA", self.codes(contradictory))
 
     def test_calibration_evidence_ref_must_resolve_to_executed_measured_experiment(self) -> None:
         calibrated = copy.deepcopy(self.valid)
         calibrated["score"]["tipo_semantica"] = "PROBABILIDADE_CALIBRADA"
-        calibrated["score"]["semantica"] = "probabilidade calibrada da característica"
+        calibrated["score"]["semantica_ref"] = "SEM-PROB-001"
         calibrated["score"]["calibracao"] = {
             "metodo": "calibracao_sintetica",
             "evidencia_ref": "exp_inexistente",
@@ -430,6 +446,35 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
         }
         self.assertIn("CALIBRATION_EVIDENCE_REF", self.codes(calibrated))
 
+    def test_absence_policy_is_structured_and_cannot_hide_false_in_prose(self) -> None:
+        contradiction = copy.deepcopy(self.valid)
+        contradiction["classificacao"]["ausencia_evidencia"]["resultado_sem_evidencia"] = "FALSE"
+        self.assertIn("MISSING_POLICY_CONTRADICTION", self.codes(contradiction))
+
+        legacy_prose = copy.deepcopy(self.valid)
+        legacy_prose["classificacao"]["ausencia_evidencia"]["descricao"] = (
+            "na ausência de evidência classificar como FALSE"
+        )
+        self.assertIn("SCHEMA", self.codes(legacy_prose))
+
+        explicit = copy.deepcopy(self.valid)
+        explicit["classificacao"]["ausencia_evidencia"]["tratamento"] = "REGRA_EXPLICITA_APROVADA"
+        explicit["classificacao"]["ausencia_evidencia"]["resultado_sem_evidencia"] = "FALSE"
+        explicit["classificacao"]["ausencia_evidencia"]["regra_ref"] = "REGRA-SEM-EVIDENCIA-001"
+        self.assertEqual([], module.validate_spec(explicit, self.schema))
+
+    def test_score_normalization_requires_structured_contract_at_validation(self) -> None:
+        legacy = copy.deepcopy(self.valid)
+        legacy["score"]["normalizacao"] = "percentual estimado de ocorrência"
+        self.assertIn("SCHEMA", self.codes(legacy))
+
+        pending = copy.deepcopy(self.valid)
+        pending["score"]["normalizacao"]["metodo"] = "PENDENTE"
+        pending["score"]["normalizacao"]["referencia"] = None
+        pending["score"]["normalizacao"]["proveniencia"]["status"] = "PROPOSTO"
+        pending["score"]["normalizacao"]["proveniencia"]["aprovacao"] = None
+        self.assertIn("SCORE_NORMALIZATION", self.codes(pending))
+
     def test_cli_previous_blocks_rewind(self) -> None:
         previous = copy.deepcopy(self.valid)
         previous["identidade"]["estado"]["fase_anterior"] = "EM_VALIDACAO_GOVERNANCA"
@@ -440,7 +485,7 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
             "politica_indeterminado": {
                 "tratamento": "CAMPO_COBERTURA_SEPARADO",
                 "indeterminado_vira_false": False,
-                "descricao": "preservar casos indeterminados em cobertura separada",
+                "regra_ref": None,
                 "proveniencia": copy.deepcopy(self.valid["classificacao"]["semantica"]["proveniencia"]),
             },
         }

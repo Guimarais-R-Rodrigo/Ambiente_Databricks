@@ -117,7 +117,6 @@
     },
     "ausencia_evidencia": {
       "tratamento": "INDETERMINADO",
-      "descricao": "ausência de evidência não é convertida automaticamente em FALSE",
       "proveniencia": {
         "status": "APROVADO",
         "origem": "decisao humana",
@@ -129,7 +128,9 @@
           "referencia": "DEC-001"
         },
         "medicao": null
-      }
+      },
+      "resultado_sem_evidencia": "INDETERMINADO",
+      "regra_ref": null
     },
     "limiares": [
       {
@@ -156,12 +157,26 @@
   "score": {
     "habilitado": true,
     "tipo_semantica": "FORCA_EVIDENCIA",
-    "semantica": "intensidade relativa da evidência observada; não é probabilidade calibrada",
     "escala": {
       "min": 0,
       "max": 100
     },
-    "normalizacao": "soma ponderada normalizada linearmente para a escala de 0 a 100",
+    "normalizacao": {
+      "metodo": "SOMA_PONDERADA_0_100",
+      "referencia": "NORM-001",
+      "proveniencia": {
+        "status": "APROVADO",
+        "origem": "decisao humana",
+        "referencia": "DEC-001",
+        "observado_em_utc": "2026-09-14T12:00:00Z",
+        "aprovacao": {
+          "por": "analista_responsavel",
+          "em_utc": "2026-09-14T12:00:00Z",
+          "referencia": "DEC-001"
+        },
+        "medicao": null
+      }
+    },
     "componentes": [
       {
         "id": "recorrencia",
@@ -193,7 +208,8 @@
         "referencia": "DEC-001"
       },
       "medicao": null
-    }
+    },
+    "semantica_ref": "SEM-001"
   },
   "experimentos": [
     {
