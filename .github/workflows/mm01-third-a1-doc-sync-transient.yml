@@ -166,6 +166,8 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # As duas deleções transitórias já estão staged por `git rm`.
+          # Aqui adicionamos somente artefatos permanentes que ainda existem.
           git add README.md \
                   docs/auditoria/2026-09-14_micromodelos-mm01/05_resultado_a1_reauditoria_2.md \
                   docs/sprints/micromodelos/MM01/CONTRATO_MICROMODELO.md \
@@ -173,8 +175,33 @@ jobs:
                   docs/sprints/micromodelos/MM01/TESTES.md \
                   docs/sprints/micromodelos/MM01/CHECKPOINT.md \
                   docs/sprints/micromodelos/MM01/README.md \
-                  docs/sprints/micromodelos/README.md \
-                  tools/mm01_sync_third_a1_docs.py \
-                  .github/workflows/mm01-third-a1-doc-sync-transient.yml
+                  docs/sprints/micromodelos/README.md
+          python - <<'PY'
+          import subprocess
+
+          allowed = {
+              'README.md',
+              'docs/auditoria/2026-09-14_micromodelos-mm01/05_resultado_a1_reauditoria_2.md',
+              'docs/sprints/micromodelos/MM01/CONTRATO_MICROMODELO.md',
+              'docs/sprints/micromodelos/MM01/ESTADOS_E_PROVENIENCIA.md',
+              'docs/sprints/micromodelos/MM01/TESTES.md',
+              'docs/sprints/micromodelos/MM01/CHECKPOINT.md',
+              'docs/sprints/micromodelos/MM01/README.md',
+              'docs/sprints/micromodelos/README.md',
+              'tools/mm01_sync_third_a1_docs.py',
+              '.github/workflows/mm01-third-a1-doc-sync-transient.yml',
+          }
+          staged = set(subprocess.check_output(['git', 'diff', '--cached', '--name-only'], text=True).splitlines())
+          unexpected = staged - allowed
+          if unexpected:
+              raise SystemExit(f'arquivos inesperados no commit documental: {sorted(unexpected)}')
+          required_deletions = {
+              'tools/mm01_sync_third_a1_docs.py',
+              '.github/workflows/mm01-third-a1-doc-sync-transient.yml',
+          }
+          if not required_deletions <= staged:
+              raise SystemExit(f'deleções transitórias ausentes do staging: {sorted(required_deletions - staged)}')
+          print('staged:', *sorted(staged), sep='\n- ')
+          PY
           git commit -m 'docs(mm01): registrar terceira A1 e preparar quarta auditoria'
           git push origin HEAD:micromodelos/mm01-contrato-canonico
