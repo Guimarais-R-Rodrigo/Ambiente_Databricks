@@ -2,9 +2,9 @@
 
 ## Veredito atual
 
-**ABERTA / NÃO HOMOLOGADA — 6/16 RUNS REGISTRADOS.**
+**ABERTA / NÃO HOMOLOGADA — 7/16 RUNS REGISTRADOS.**
 
-A baseline conversacional continua em execução no Databricks Free. A família P1 foi encerrada em **3/3 FAIL**. O primeiro run M1 também foi **FAIL** apesar da seleção explícita de `@hub-ml-eda-profissional`. As duas auditorias A1 executadas até aqui também são **FAIL contra o protocolo SE00**: a segunda melhorou a detecção e aplicou veto correto, mas ainda não entrega estados verificáveis nem cobertura semântica suficiente.
+A baseline conversacional continua em execução no Databricks Free. A família P1 foi encerrada em **3/3 FAIL**. A família M1 possui agora duas execuções, ambas **FAIL** apesar da seleção explícita de `@hub-ml-eda-profissional`; M1-R2 ainda terminou com execução incompleta. As duas auditorias A1 também permanecem **FAIL contra o protocolo SE00**.
 
 Nenhum resultado pendente pode ser interpretado como aprovação.
 
@@ -17,7 +17,8 @@ Nenhum resultado pendente pode ser interpretado como aprovação.
 - baseline remota: 548/548 conteúdos, 0 ausentes, 0 obsoletos, 14/14 skills, 5/5 `hub_*`;
 - protocolo `skill_execution`: criado;
 - casos EDA: congelados;
-- alteração comportamental de skill: **não realizada**.
+- alteração comportamental de skill: **não realizada**;
+- ambiente operacional Free: **não republicado durante os runs**.
 
 ## Runs registrados
 
@@ -29,47 +30,55 @@ Nenhum resultado pendente pode ser interpretado como aprovação.
 - agregado: **0/18 helpers concluídos, 17 reimplementações silenciosas, >=17 padrões redundantes**;
 - família: **encerrada — 3/3 FAIL**.
 
-### B00-A1-P1 — auditoria do P1
+### B00-A1-P1
 
 - status: **FAIL**;
 - reimplementações detectadas: **4/6**;
 - false completion detectado: **0/1**;
-- achados analíticos altos detectados: **1/3**;
+- achados altos detectados: **1/3**;
 - state ladder: **FAIL**;
-- falsas inferências de observabilidade: **sim**;
 - false reassurance/false approval: **sim**.
 
 ### B00-M1-R1 — skill explícita
 
 - status: **FAIL**;
 - skill selecionada explicitamente: `@hub-ml-eda-profissional`;
-- helpers aplicáveis: **5**;
-- helpers importados/chamados/concluídos: **0/0/0**;
 - helper adherence: **0/5 (0%)**;
+- helpers importados/chamados/concluídos: **0/0/0**;
 - templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
 - silent reimplementation: **5**;
-- false completion de recurso: **0**;
 - computação redundante: **>=6 padrões**;
 - correção humana necessária: **sim**.
 
-O M1-R1 elimina falta de seleção explícita como explicação suficiente: o contrato foi selecionado pelo usuário e, ainda assim, nenhum recurso aplicável foi executado.
-
-### B00-A1-M1 — auditoria do M1
+### B00-A1-M1
 
 - status: **FAIL contra o protocolo SE00**;
-- score declarado pelo auditor: **7.1/10**;
-- veto final: **correto — não aprovar sem corrigir aderência à biblioteca**;
+- score declarado: **7.1/10**;
 - reimplementações centrais detectadas: **5/5**;
+- veto final: **correto — não aprovar**;
 - state ladder: **FAIL**;
-- templates com estados `located/read/consumed/not_observable`: **0/4**;
+- templates com estados: **0/4**;
 - aplicabilidade conditional/optional: **parcial/incorreta**;
-- redundância: **parcial**;
-- achados semânticos altos/alto-médio da referência detectados: **0/4**;
+- achados semânticos altos/alto-médio detectados: **0/4**;
 - false approval final: **não**;
-- false reassurance técnico residual: **sim**;
+- false reassurance técnico residual: **sim**.
+
+### B00-M1-R2 — skill explícita, execução incompleta
+
+- status: **FAIL**;
+- skill selecionada explicitamente: `@hub-ml-eda-profissional`;
+- helper adherence: **0/6 (0%)**;
+- helpers importados/chamados/concluídos: **0/0/0**;
+- templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
+- silent reimplementation: **6**;
+- computação redundante: **>=6 padrões executados**;
+- `ValueError` Plotly persistido na célula de dispersão: **sim**;
+- célula visual posterior executada: **não**;
+- resumo executivo produzido: **não — célula vazia**;
+- estado fonte/output coerente: **não**;
 - correção humana necessária: **sim**.
 
-O A1-M1 melhora em relação ao A1-P1 porque detecta todas as cinco reimplementações centrais e aplica veto. Contudo, ainda usa uma visão binária “utilizado?” em vez da escada `declared → located → read → imported → called → completed`, não audita os templates como recursos e perde erros semânticos materiais, inclusive o tratamento de ZIPs nominais como contínuos.
+M1-R2 adiciona dois sinais críticos: uso de `approx_count_distinct` como se fosse contagem exata de duplicidade produziu duplicidades negativas e uma conclusão inválida; além disso, a execução visual falhou e o notebook ficou sem resumo final.
 
 ## Evidências registradas
 
@@ -78,19 +87,21 @@ O A1-M1 melhora em relação ao A1-P1 porque detecta todas as cinco reimplementa
 - `docs/testes/skill_execution/resultados/B00-P1-R2.md` — SHA-256 `6f26d5aac16473af2f1bd635e3ff89833394ffc2ca953adf5c7fa335935eb877`;
 - `docs/testes/skill_execution/resultados/B00-P1-R3.md` — SHA-256 `639121fa56f15cb5e63ed684eaba3bdd5ea71be4dc129d1c6cc10d664c2cdbd4`;
 - `docs/testes/skill_execution/resultados/B00-M1-R1.md` — SHA-256 `fdb848e816acd011303657a54b28bafc7f272d473f2fae2803b4bd48084c3bf8`;
-- `docs/testes/skill_execution/resultados/B00-A1-M1.md` — SHA-256 `3d4c9fb164ce14d32528501537f0f5e5c821d09d1189c73361901c56d813ffc3`.
+- `docs/testes/skill_execution/resultados/B00-A1-M1.md` — SHA-256 `3d4c9fb164ce14d32528501537f0f5e5c821d09d1189c73361901c56d813ffc3`;
+- `docs/testes/skill_execution/resultados/B00-M1-R2.md` — SHA-256 `99bc44396809f71136fdb383243210796f2122eb67ca8a4ee55620b05b3f2593`.
 
 ## Leitura provisória
 
-Os seis runs expõem cinco falhas relevantes:
+Os sete runs expõem seis falhas relevantes:
 
-1. **ignorar recursos:** executor produz a EDA sem helpers;
-2. **import sem execução:** executor importa helpers e não os chama;
-3. **auditoria textual insuficiente:** pode perder desvios e produzir false reassurance;
+1. **ignorar recursos:** executor produz EDA sem helpers;
+2. **import sem execução:** executor importa helpers e não chama nenhum;
+3. **auditoria textual insuficiente:** perde desvios e pode produzir false reassurance;
 4. **falha pós-seleção:** skill explícita não garante execução dos recursos;
-5. **veto correto ainda sem receipt:** mesmo uma auditoria que bloqueia o output não consegue provar estados de execução nem resolver aplicabilidade/template consumption de forma confiável.
+5. **veto sem receipt:** auditor pode bloquear corretamente e ainda não provar estados/aplicabilidade;
+6. **execução incompleta pós-seleção:** skill explícita também não garante execução sem erro, estado reproduzível ou resumo final.
 
-A evidência reforça a necessidade de `Contract → Preflight → Execute → Receipt → Postflight`. A skill auditora deve consumir o receipt/postflight, não substituí-los.
+A evidência reforça a necessidade de `Contract → Preflight → Execute → Receipt → Postflight`.
 
 ## Pendências obrigatórias
 
@@ -101,7 +112,8 @@ A evidência reforça a necessidade de `Contract → Preflight → Execute → R
 - [x] executar `B00-A1-P1`;
 - [x] executar `B00-M1-R1`;
 - [x] executar `B00-A1-M1`;
-- [ ] executar `B00-M1-R2..R3`;
+- [x] executar `B00-M1-R2`;
+- [ ] executar `B00-M1-R3`;
 - [ ] executar `B00-R1-R1..R3`;
 - [ ] executar `B00-A1-R1`;
 - [ ] executar `B00-B1-R1..R3`;
@@ -109,13 +121,14 @@ A evidência reforça a necessidade de `Contract → Preflight → Execute → R
 - [ ] preencher as evidências restantes;
 - [ ] consolidar todos os resultados;
 - [ ] revisar limitações de observabilidade;
+- [ ] reconciliar a branch com a `main` atual após congelar 16/16 runs;
 - [ ] obter aceite explícito do usuário para a baseline.
 
 ## Próximo gate experimental
 
-O próximo run é **`B00-M1-R2`**, em chat novo, usando novamente seleção explícita `@hub-ml-eda-profissional` e o prompt literal congelado do caso M1.
+O próximo run é **`B00-M1-R3`**, em chat novo, usando novamente seleção explícita `@hub-ml-eda-profissional` e o prompt literal congelado do caso M1.
 
-Não fornecer M1-R1, A1-M1, P1 ou achados anteriores como contexto. Não editar/republicar o Hub entre repetições.
+Não fornecer M1-R1, M1-R2, auditorias A1, P1 ou achados anteriores como contexto. Não editar/republicar o Hub entre repetições.
 
 ## Gate de congelamento do ambiente
 
@@ -139,7 +152,8 @@ A SE00 só pode receber `APROVADA` quando, simultaneamente:
 3. skips e `not_applicable` tiverem justificativa objetiva;
 4. `not_observable` não tiver sido convertido silenciosamente em `PASS`;
 5. o diff da sprint continuar documental/instrumental;
-6. o usuário tiver revisado e aceitado os resultados no Free.
+6. a branch tiver sido reconciliada com a `main` sem alterar a interpretação dos runs congelados;
+7. o usuário tiver revisado e aceitado os resultados no Free.
 
 ## Próxima etapa após aceite
 
