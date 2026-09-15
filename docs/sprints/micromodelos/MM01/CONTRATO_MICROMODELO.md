@@ -2,7 +2,7 @@
 
 ## 1. Papel do arquivo
 
-`micromodelo.yaml` é a especificação estruturada canônica do micromodelo. Ele registra **o que o micromodelo significa e como deve ser avaliado**, não o histórico crescente das execuções. README, notebook, catálogo e handoffs futuros devem ser derivados ou confrontados com esse contrato.
+`micromodelo.yaml` é a especificação estruturada canônica do micromodelo. Ele registra **o que o micromodelo significa e como deve ser avaliado**, não o histórico crescente das execuções. README, notebook, catálogo e handoffs futuros devem ser derivados ou confrontados com esse contrato. Para a finalização da sprint, `MATRIZ_ACEITE_FINAL.md` congela o threat model, as entradas suportadas e a condição objetiva de aceite.
 
 O arquivo real de cada micromodelo pertence ao ambiente corporativo autorizado. Este repositório contém apenas o contrato, o template e fixtures sintéticos.
 
@@ -18,7 +18,7 @@ Versão do formato estrutural. Na MM01 o único valor aceito é `1.0.0`. Mudanç
 
 Contém `nome`, `titulo`, `micromodel_version` e `estado`. `micromodel_version` identifica a evolução humana do micromodelo; não substitui o `spec_fingerprint` que será criado na MM02.
 
-`fase_anterior` e `fase_atual` tornam o par declarado localmente verificável, mas o documento corrente não é prova suficiente do próprio histórico. Quando existe uma especificação anterior confiável, o validador pode recebê-la por `--previous`: nesse modo ele confere identidade, versão e transição real entre snapshots, impede regressão de versão e recusa rewind de uma versão já `PUBLICADO`. Isso resolve a auditabilidade da MM01 sem introduzir fingerprint antecipadamente.
+`fase_anterior` e `fase_atual` tornam o par declarado localmente verificável, mas o documento corrente não é prova suficiente do próprio histórico. A CLI standalone certifica somente o snapshot e declara `HISTORICO_NAO_CERTIFICADO`. Quando existe uma especificação anterior confiável, `--previous` ativa a certificação de evolução: identidade, versão e transição real entre snapshots são comparadas, regressão de versão e rewind pós-`PUBLICADO` são recusados. A MM01 não descobre histórico automaticamente nem introduz fingerprint antecipadamente.
 
 ### `negocio`
 
@@ -48,7 +48,7 @@ O tipo inicial é `BOOLEANO_COM_INDETERMINADO`. O contrato exige três definiç�
 - `quando_false`: quando há base suficiente para negar a característica;
 - `quando_indeterminado`: quando a informação não permite concluir nem TRUE nem FALSE.
 
-A distinção é verificada após normalização editorial de caixa, acentuação, pontuação e espaços. Caracteres Unicode default-ignorable (`Cf`) e variation selectors são removidos antes da tokenização, para que inserções invisíveis dentro de palavras não fabriquem uma diferença semântica artificial; não basta copiar a mesma definição mudando apenas forma textual.
+A distinção é verificada por **equivalência editorial conservadora**, não por inferência semântica: NFKC, `casefold`, remoção de `Default_Ignorable_Code_Point`, normalização de whitespace e tolerância somente a pontuação terminal editorial prevista. Diacríticos, operadores (`<`, `>`, `≤`, `≥`, `+`, `-`) e pontuação interna potencialmente semânticos são preservados. A MM01 não tenta decidir se duas frases diferentes têm o mesmo significado.
 
 A política de ausência de evidência deixou de depender de prosa normativa. `classificacao.ausencia_evidencia` possui comportamento estruturado:
 
@@ -57,7 +57,7 @@ A política de ausência de evidência deixou de depender de prosa normativa. `c
 
 Não existe campo livre capaz de redefinir esse comportamento. Uma propriedade legada como `descricao` nesse bloco é recusada pelo schema fechado. Portanto uma regra que converta ausência em `FALSE` só pode existir de forma explícita, estruturada, referenciada e aprovada.
 
-Limiar material pode ser registrado como `PROPOSTO` enquanto o micromodelo ainda está em descoberta/estudo. A partir de `EM_VALIDACAO`, todo limiar existente precisa carregar proveniência `APROVADO`. `classificacao.limiares[].valor` precisa ser um número finito: NaN e ±Infinity são recusados. Dessa forma, a fonte canônica preserva propostas sem permitir que elas atravessem o gate formal como decisões inválidas.
+Limiar material pode ser registrado como `PROPOSTO` enquanto o micromodelo ainda está em descoberta/estudo. A partir de `EM_VALIDACAO`, todo limiar existente precisa carregar proveniência `APROVADO`. `classificacao.limiares[].valor` pertence ao domínio numérico canônico JSON/YAML: inteiros Python, inclusive arbitrariamente grandes, são finitos; floats precisam ser finitos; NaN/±Infinity e tipos numéricos externos ao domínio canônico são recusados deterministicamente. Dessa forma, a fonte canônica preserva propostas sem permitir que elas atravessem o gate formal como decisões inválidas.
 
 ### `score`
 
@@ -74,7 +74,7 @@ A MM01 não usa mais texto livre `score.semantica` para inferir se um score é p
 
 `normalizacao` também deixou de ser prosa normativa. Os métodos estruturados são `PENDENTE`, `SOMA_PONDERADA_0_100`, `MIN_MAX_0_100`, `LINEAR_0_100` e `CUSTOM_APROVADO`. Antes do gate formal, `PENDENTE` pode permanecer proposto. A partir de `EM_VALIDACAO`, o método precisa estar definido e aprovado; `CUSTOM_APROVADO` exige referência auditável da regra.
 
-Assim como limiares, pesos podem permanecer `PROPOSTO` nas fases pré-gate, mas todo peso existente precisa estar `APROVADO` ao entrar em `EM_VALIDACAO` ou fase posterior. `score.componentes[].peso` também precisa ser finito; NaN e ±Infinity não são valores materiais válidos.
+Assim como limiares, pesos podem permanecer `PROPOSTO` nas fases pré-gate, mas todo peso existente precisa estar `APROVADO` ao entrar em `EM_VALIDACAO` ou fase posterior. `score.componentes[].peso` segue o mesmo domínio numérico canônico: inteiros são finitos sem conversão para float, floats precisam ser finitos e tipos numéricos externos são recusados em vez de interpretados implicitamente.
 
 `PROBABILIDADE_CALIBRADA` exige calibração com proveniência `MEDIDO` e referência de execução. Além disso, `calibracao.evidencia_ref` precisa resolver para um `experimentos[].id` existente cujo experimento esteja `EXECUTADO` e com proveniência `MEDIDO`. Para os demais tipos de semântica, um bloco de calibração probabilística é recusado como inesperado.
 
@@ -82,7 +82,7 @@ Quando score está desabilitado, tipo de semântica, referência de semântica, 
 
 ### `experimentos`
 
-Registra hipóteses relevantes da especificação. Um experimento `EXECUTADO` exige resultado e proveniência `MEDIDO`. O identificador da execução é referência externa; o YAML não incorpora o histórico das runs.
+Registra hipóteses relevantes da especificação. Um experimento `EXECUTADO` exige resultado observado material e proveniência `MEDIDO`. Enquanto estiver `PROPOSTO`, `EM_EXECUCAO` ou `DESCARTADO`, `resultado` deve permanecer `null`; resultado esperado pertence à hipótese, não ao campo de resultado observado. O identificador da execução é referência externa; o YAML não incorpora o histórico das runs.
 
 Experimentos também formam o namespace canônico usado por `score.calibracao.evidencia_ref`: uma calibração probabilística só é aceita se a evidência apontada existir e tiver sido efetivamente executada/medida.
 
@@ -93,9 +93,9 @@ Separa resultado técnico medido da aprovação humana. `APROVADO` exige ambos:
 1. resultado com proveniência `MEDIDO`;
 2. `aprovacao_humana.status=APROVADO`, com responsável, timestamp e referência materialmente preenchida.
 
-Fase `VALIDADO` ou posterior não é aceita se esse gate não estiver satisfeito.
+Fase `VALIDADO` ou posterior não é aceita se esse gate não estiver satisfeito. Além disso, a decisão humana é intrinsecamente coerente em qualquer fase: `APROVADO`/`REPROVADO` exigem `por`, `em_utc` e `referencia`, precisam coincidir com `validacao.status`, e `PENDENTE` não pode carregar metadados de decisão final.
 
-A definição de “texto material” é positiva: após normalização NFKC, o validador exige ao menos uma letra ou número Unicode. Espaços, controles, caracteres de formatação, variation selectors e marcas combinantes isoladas não satisfazem uma prova auditável. Isso se aplica a aprovação, medição e referências externas de publicação.
+A definição de “texto material” é positiva: após NFKC, o validador remove caracteres com a propriedade Unicode `Default_Ignorable_Code_Point` e exige ao menos uma letra ou número Unicode restante. Assim, fillers invisíveis também não satisfazem uma prova auditável. Isso se aplica a aprovação, medição e referências externas de publicação sem depender de blacklist manual de code points.
 
 ### `saida`
 
@@ -125,7 +125,7 @@ O estado de publicação precisa ser coerente com a fase do ciclo: antes de `CAN
 
 Registra criação do arquivo e, quando necessário, referências adicionais por alvo. As afirmações materiais também carregam proveniência junto do próprio bloco para permitir validação local.
 
-`APROVADO` exige bloco de aprovação com conteúdo auditável; `MEDIDO` exige medição com referência de execução material. Presença sintática de caracteres invisíveis não satisfaz esses estados.
+`APROVADO` exige bloco de aprovação com conteúdo auditável; `MEDIDO` exige medição com referência de execução material. Esses invariantes são verificados sempre que um bloco de proveniência existe, independentemente da fase; a fase apenas define quando determinado status se torna obrigatório. Presença sintática de caracteres invisíveis/default-ignorable não satisfaz esses estados.
 
 ## 3. IDs e referências
 
@@ -147,7 +147,7 @@ A MM01 não define fingerprint, crawler de catálogo, feature engineering espec�
 
 ## Autoridade única de materialidade textual Unicode
 
-Campos materiais — referências auditáveis, proveniência material, nomes operacionais, semânticas obrigatórias e critérios — são validados pelo formato customizado `material-text`. O `FormatChecker` do JSON Schema não contém uma segunda heurística: ele delega à mesma `_has_material_text` usada pelos gates semânticos. A regra normaliza por NFKC e exige ao menos um caractere cuja categoria Unicode comece por `L` ou `N`.
+Campos materiais — referências auditáveis, proveniência material, nomes operacionais, semânticas obrigatórias e critérios — são validados pelo formato customizado `material-text`. O `FormatChecker` do JSON Schema não contém uma segunda heurística: ele delega à mesma `_has_material_text` usada pelos gates semânticos. A regra normaliza por NFKC, remove `Default_Ignorable_Code_Point` usando propriedade Unicode padronizada e exige ao menos um caractere restante cuja categoria Unicode comece por `L` ou `N`.
 
 Consequentemente, whitespace, NBSP/EM SPACE, `Cf`, zero-width, variation selectors, combining marks isolados, pontuação e símbolos isolados não satisfazem um campo material. CJK, Devanagari, caracteres acentuados, algarismos Unicode e combining marks acompanhados de uma base material continuam válidos. Campos narrativos livres não recebem `material-text` apenas por serem strings.
 

@@ -62,8 +62,16 @@ Os testes da MM01 exercitam o contrato estrutural e semântico. Não acessam Dat
 | T52 | default-ignorables dentro de palavra em semânticas equivalentes | `AMBIGUOUS_BINARY_SEMANTICS` |
 | T53 | `type=[string]` / `[string,null]` + `minLength`, inclusive aninhado | detectado pelo guard |
 | T54 | NaN/±Infinity em limiar/peso e constantes JSON não padrão | `SCHEMA` / carga fail-closed |
+| T55 | fillers/default-ignorables Unicode (`U+115F/U+1160/U+3164/U+FFA0`) como texto material | `SCHEMA` / `_has_material_text=False` |
+| T56 | equivalência editorial com invisíveis em múltiplas posições + pares distintos por operador/diacrítico | invisíveis equivalentes; diferenças semânticas preservadas |
+| T57 | inteiro finito acima do intervalo de float + tipos numéricos externos | inteiro aceito; tipos externos rejeitados deterministicamente |
+| T58 | aprovação humana final durante validação pendente ou sem metadados | `VALIDATION_HUMAN_GATE` |
+| T59 | política de publicação antecipada com proveniência intrinsecamente inválida | `PROV_APPROVAL_REQUIRED` |
+| T60 | experimento não `EXECUTADO` com resultado observado material | `EXPERIMENT_RESULT` |
+| T61 | CLI sem/com `--previous` | `SNAPSHOT_VALIDO/HISTORICO_NAO_CERTIFICADO` vs `APROVADO_EVOLUCAO` |
+| T62 | perfil canônico de autoria do schema | recusa `allOf`/`oneOf`, `anyOf` fora da allowlist e constraints irmãs de `$ref` |
 
-A suíte `tools/tests/test_micromodelo_mm01.py` contém **39 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz. `casos_invalidos.json` mantém nove mutações negativas determinísticas além dos casos adversariais construídos diretamente pela suíte.
+A suíte `tools/tests/test_micromodelo_mm01.py` contém **47 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz. `casos_invalidos.json` mantém nove mutações negativas determinísticas além dos casos adversariais construídos diretamente pela suíte.
 
 ## Teste específico de YAML
 
@@ -73,7 +81,7 @@ Além disso, o carregador customizado rejeita chaves duplicadas em YAML e JSON. 
 
 ## Regressões de materialidade Unicode
 
-A segunda A1 demonstrou que excluir apenas categorias `Z*`/`C*` deixava passar marcas Unicode `M*`. A suíte agora testa U+034F, U+FE0F e U+0301 nos campos auditáveis relevantes. A regra semântica positiva exige, após NFKC, pelo menos uma letra ou número Unicode; marcas combinantes/variation selectors isolados não satisfazem aprovação, medição ou confirmação externa.
+As auditorias exploratórias demonstraram que categorias Unicode e listas manuais de code points não bastam para materialidade. A suíte cobre marcas, variation selectors e fillers como U+115F/U+1160/U+3164/U+FFA0. A autoridade agora usa a propriedade Unicode `Default_Ignorable_Code_Point`: após NFKC e remoção desses caracteres, precisa restar letra ou número Unicode. Os positivos multilíngues continuam protegidos.
 
 ## Semântica executável sem regex de intenção
 
@@ -85,6 +93,12 @@ A segunda A1 também demonstrou que listas abertas de verbos/sinônimos não con
 - `score.normalizacao` é um objeto estruturado, não uma frase livre.
 
 Os testes verificam tanto os caminhos positivos quanto tentativas de reintroduzir os campos livres legados, que devem falhar com `SCHEMA`.
+
+## Matriz de aceite final e condição de término
+
+A oitava A1 (`NAO_APTA`) foi preservada em `10_resultado_a1_reauditoria_7.md`. O contraditório posterior congelou `MATRIZ_ACEITE_FINAL.md` para separar requisitos materiais de hardening e adversariais fora do threat model. As regressões T55–T62 exercitam diretamente R01–R08.
+
+A próxima auditoria é final e fechada contra essa matriz. Ela pode construir novos adversariais, mas um caso só é bloqueante quando demonstra violação de requisito já assumido pela matriz ou ADR aceito. `Decimal`/NumPy como suporte positivo, resolução universal de composição JSON Schema e coerções históricas YAML 1.1 não são gates de aceite da MM01.
 
 ## Fixtures
 
@@ -207,3 +221,9 @@ O próximo gate é uma sétima A1 independente sobre o HEAD permanente corrigido
 A sétima auditoria independente sobre `9e3ce44ae0750321802b95d96ff43bb29468eab2` encontrou três divergências bloqueantes: caracteres Unicode default-ignorable podiam mascarar equivalência `FALSE` × `INDETERMINADO`; o guard de `string + minLength` ignorava `type` em array; e NaN/±Infinity atravessavam limiares/pesos. O relatório histórico permanece em `09_resultado_a1_reauditoria_6.md`.
 
 As regressões adicionadas após o contraditório cobrem os três vetores: default-ignorables em posição interna, arrays de tipos e branches aninhados, além de valores não finitos via objeto Python, YAML e constantes JSON permissivas.
+
+## Oitava A1 — `NAO_APTA` e contraditório de escopo
+
+A oitava auditoria independente sobre `fe3a9d8b39c0016d9b487036f1d5e3ad38cb2630` encontrou seis `QUEBRA`, dois `DIVERGE` bloqueantes e uma melhoria; o resultado histórico permanece em `10_resultado_a1_reauditoria_7.md`. O contraditório confirmou defeitos materiais, mas classificou suporte positivo a tipos numéricos externos, resolução universal de JSON Schema e coerções YAML 1.1 como fora do gate final.
+
+A matriz final congelada levou a suíte de 39 para **47 métodos**. O run de construção correspondente deve permanecer como evidência técnica da correção, enquanto a certificação final depende dos workflows permanentes no HEAD documental congelado.

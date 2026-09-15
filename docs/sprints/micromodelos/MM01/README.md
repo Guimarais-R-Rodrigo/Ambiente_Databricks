@@ -1,6 +1,6 @@
 # MM01 — Contrato canônico de micromodelos
 
-Status da sprint: **SÉTIMA A1 `APTA_COM_CORRECOES`; `DIVERGE-01`, `DIVERGE-02` E `DIVERGE-03` BLOQUEANTES CONFIRMADAS E CORRIGIDAS; RETESTE DE CONSTRUÇÃO VERDE; 7 WORKFLOWS PERMANENTES VERDES; OITAVA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
+Status da sprint: **OITAVA A1 `NAO_APTA` PRESERVADA; CONTRADITÓRIO DE ESCOPO CONCLUÍDO; MATRIZ DE ACEITE FINAL CONGELADA; 47 TESTES DE CONSTRUÇÃO VERDES; AUDITORIA FINAL FECHADA PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
 Base inicial: `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5`  
 Branch: `micromodelos/mm01-contrato-canonico`  
 PR: `#51`
@@ -21,9 +21,9 @@ A implementação começou sobre a `main` final da MM00 e foi reconciliada de fo
 - `ESTADOS_E_PROVENIENCIA.md`: máquina de fases, condições, proveniência e gates;
 - `tools/micromodelo_mm01_contract.py`: validador de referência/CI;
 - fixtures sintéticos positivos e negativos em `tools/tests/fixtures/micromodelos_mm01/`;
-- `tools/tests/test_micromodelo_mm01.py`: suíte automatizada com **39 métodos** e múltiplos subtests;
+- `tools/tests/test_micromodelo_mm01.py`: suíte automatizada com **47 métodos** e múltiplos subtests;
 - `.github/workflows/micromodelos-mm01-ci.yml`: gate permanente, read-only, para branch/PR/`main`;
-- pacote de auditoria A1 com contexto, prompt e sete resultados históricos preservados (`NAO_APTA`, `NAO_APTA`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`);
+- pacote de auditoria A1 com contexto, prompt e oito resultados históricos preservados (`NAO_APTA`, `NAO_APTA`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `NAO_APTA`), além da `MATRIZ_ACEITE_FINAL.md` congelada após o contraditório da oitava A1;
 - `TESTES.md` e `CHECKPOINT.md`.
 
 ## Decisões fechadas nesta sprint
@@ -45,11 +45,11 @@ IDEIA
 
 `BLOQUEADO`, `SUSPENSO` e `DEPRECATED` são condições ortogonais, não saltos da máquina de fases.
 
-`fase_anterior` torna o par declarado localmente verificável, mas não é tratada como prova autorreferente de histórico. Quando um snapshot anterior confiável existe, a CLI aceita `--previous` e valida a transição contra a fase efetivamente observada nele. Uma versão já `PUBLICADO` não pode ser silenciosamente reescrita para fase anterior mantendo a mesma `micromodel_version`.
+`fase_anterior` torna o par declarado localmente verificável, mas não é tratada como prova autorreferente de histórico. Sem `--previous`, a CLI certifica apenas a consistência interna do snapshot e declara explicitamente `HISTORICO_NAO_CERTIFICADO`. Quando um snapshot anterior confiável é fornecido por `--previous`, a validação passa a certificar evolução histórica: confere identidade/versão, valida a transição observada e impede rewind de uma versão já `PUBLICADO`. Esse modo não descobre histórico por conta própria nem antecipa fingerprint/MM02.
 
 ### `FALSE` não significa “não encontrei evidência”
 
-O contrato exige três definições distintas: `quando_true`, `quando_false` e `quando_indeterminado`. A comparação normaliza diferenças editoriais simples; não é possível contornar o gate copiando a mesma definição com caixa, acento ou pontuação diferente.
+O contrato exige três definições distintas: `quando_true`, `quando_false` e `quando_indeterminado`. A comparação é deliberadamente **editorial, não semântica**: aplica NFKC/casefold, remove `Default_Ignorable_Code_Point`, normaliza whitespace e tolera apenas pontuação terminal editorial prevista. Diacríticos, operadores e pontuação interna potencialmente semânticos são preservados; a MM01 não tenta resolver equivalência geral de linguagem natural.
 
 Após a segunda A1, a política de ausência de evidência deixou de depender de prosa normativa. O comportamento é declarado por `tratamento`, `resultado_sem_evidencia`, `regra_ref` e proveniência. `tratamento=INDETERMINADO` exige resultado `INDETERMINADO`; uma conversão explícita para outro resultado só pode existir como `REGRA_EXPLICITA_APROVADA` com referência auditável.
 
@@ -69,7 +69,7 @@ Na mesma fase, fontes, evidências, contra-evidências e critérios de validaç�
 
 ### Provas auditáveis precisam conter informação material
 
-A segunda A1 demonstrou que uma blacklist de whitespace/controles não era suficiente para caracteres Unicode `M*`. A terceira A1 mostrou que schema e validador ainda podiam divergir e que campos materiais equivalentes não compartilhavam a mesma autoridade. A regra atual é positiva e única: após NFKC, conteúdo material precisa conter ao menos uma letra ou número Unicode.
+A segunda A1 demonstrou que uma blacklist de whitespace/controles não era suficiente para caracteres Unicode `M*`. A terceira A1 mostrou que schema e validador ainda podiam divergir e que campos materiais equivalentes não compartilhavam a mesma autoridade. A regra atual é positiva e única: após NFKC, caracteres com a propriedade Unicode `Default_Ignorable_Code_Point` são removidos e o conteúdo restante precisa conter ao menos uma letra ou número Unicode.
 
 O JSON Schema usa `format: material-text` e o `FormatChecker` do validador delega esse formato à mesma função `_has_material_text`. Isso rejeita strings compostas somente por espaços, zero-width, variation selectors, combining marks isolados, pontuação ou símbolos nos campos materiais, sem rejeitar CJK, Devanagari, caracteres acentuados, algarismos Unicode ou combining marks acompanhados de texto material. Campos puramente narrativos não foram restringidos indiscriminadamente.
 
@@ -129,6 +129,14 @@ A sétima auditoria independente sobre `9e3ce44ae0750321802b95d96ff43bb29468eab2
 
 O contraditório confirmou os três achados. A correção remove `Cf` e variation selectors antes da tokenização semântica, torna o guard sensível a arrays de tipos contendo `string`, registra `finite-number` no mesmo `FormatChecker` para limiares/pesos e recusa constantes JSON não finitas no loader. A suíte passa a **39 métodos**.
 
+### Oitava A1, contraditório e matriz final
+
+A oitava A1 independente sobre `fe3a9d8b39c0016d9b487036f1d5e3ad38cb2630` concluiu `NAO_APTA` e permanece historicamente preservada em `10_resultado_a1_reauditoria_7.md`. O relatório trouxe seis `QUEBRA`, dois `DIVERGE` bloqueantes e uma melhoria. O contraditório confirmou defeitos materiais, mas também demonstrou que a auditoria exploratória vinha ampliando o threat model a cada rodada.
+
+Para encerrar o ciclo de expansão aberta, `MATRIZ_ACEITE_FINAL.md` congela os requisitos R01–R08, as entradas suportadas, o perfil de autoria do schema e os não requisitos. A candidata foi corrigida contra essa matriz: materialidade passa a usar `Default_Ignorable_Code_Point`; a comparação passa a ser editorial conservadora; o domínio numérico canônico é determinístico; decisão humana e proveniência têm invariantes intrínsecos; resultado observado só existe após `EXECUTADO`; snapshot e evolução histórica têm níveis de garantia distintos; e o schema oficial permanece dentro do perfil de composição revisado. A suíte passa a **47 métodos**.
+
+A próxima auditoria é **final e fechada contra a matriz**. Um adversarial novo só pode bloquear se demonstrar violação de requisito já assumido na matriz ou ADR aceito; não pode criar novo requisito implicitamente.
+
 ## Fronteiras preservadas
 
 - Micromodelo continua artefato de domínio, não sétimo tipo do Hub.
@@ -142,14 +150,14 @@ O contraditório confirmou os três achados. A correção remove `Cf` e variatio
 
 ## Evidência técnica atual
 
-A suíte MM01 possui **39 métodos automatizados**, além de mutações e subtests. O reteste das correções da sétima A1 ficou verde, e os sete workflows permanentes executaram com sucesso antes da sincronização documental para a oitava A1.
+A suíte MM01 possui **47 métodos automatizados**, além de mutações e subtests. O reteste de construção da matriz final ficou verde antes da sincronização documental; a certificação dos workflows permanentes será executada sobre o HEAD documental final antes da auditoria final fechada.
 
 Run IDs e o SHA final da árvore documental não são congelados neste arquivo para evitar que registrar a evidência altere a própria árvore validada. A descrição da PR #51 é o registro operacional do head e dos runs finais; `TESTES.md` mantém a cronologia histórica.
 
 ## Gate de saída
 
-Como o contrato mudou materialmente depois da sétima A1, a MM01 só pode ser aceita após uma **oitava A1 independente** sobre o novo HEAD congelado. O auditor deve reproduzir instalação, suíte, gate estrutural, CLI e construir adversariais próprios sobre as três classes corrigidas.
+A MM01 agora possui condição objetiva de término em `MATRIZ_ACEITE_FINAL.md`. O próximo gate é uma **auditoria final fechada** sobre o HEAD congelado: ela deve reproduzir instalação, 47 testes, CLI, gate estrutural e adversariais próprios, mas só pode classificar como bloqueante uma violação de requisito já assumido pela matriz ou ADR aceito.
 
-O bloco MM01 do `CHANGELOG.md` permanece dívida bloqueante de merge e só deve ser sincronizado, de forma byte-preserving fora do bloco MM01, após uma oitava A1 limpa e contraditório final.
+O bloco MM01 do `CHANGELOG.md` permanece dívida bloqueante de merge e só deve ser sincronizado, de forma byte-preserving fora do bloco MM01, após auditoria final limpa e contraditório final.
 
-**MM02 permanece bloqueada até oitava A1, eventual contraditório, fechamento do changelog, aceite explícito e integração da MM01.**
+**MM02 permanece bloqueada até auditoria final, contraditório final, fechamento do changelog, aceite explícito e integração da MM01.**

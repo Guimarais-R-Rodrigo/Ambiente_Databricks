@@ -1,6 +1,6 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: **MM00 encerrada e integrada. MM01 passou por sete A1 (`NAO_APTA`, `NAO_APTA`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`); os três desvios bloqueantes da sétima A1 foram confirmados e corrigidos; reteste e sete workflows permanentes verdes; oitava A1 independente pendente. MM01 ainda não aceita nem integrada.**
+> Estado: **MM00 encerrada e integrada. MM01 possui oito A1 históricas (`NAO_APTA`, `NAO_APTA`, cinco `APTA_COM_CORRECOES`, `NAO_APTA`); após o contraditório da oitava A1, a `MATRIZ_ACEITE_FINAL.md` congelou o threat model e a condição de término. As correções da matriz têm 47 testes de construção verdes; auditoria final fechada ainda pendente. MM01 não aceita nem integrada.**
 
 ## Objetivo
 
@@ -42,7 +42,7 @@ A exceção D1-B terminou com o fechamento de Q-01 e não se propaga às próxim
 
 A MM01 foi iniciada na branch `micromodelos/mm01-contrato-canonico` e reconciliada de forma fail-closed com as evoluções da `main`, inclusive as bases pós-V10 e pós-V11. A PR #51 permanece aberta, não aceita e não integrada.
 
-A candidata contém exclusivamente o contrato canônico `micromodelo.yaml`: schema, fases/condições, proveniência, validador de referência/CI, fixtures sintéticos, suíte com **39 métodos de teste**, documentação e pacote A1. Não cria skill de micromodelos nem altera `.assistant`.
+A candidata contém exclusivamente o contrato canônico `micromodelo.yaml`: schema, fases/condições, proveniência, validador de referência/CI, fixtures sintéticos, suíte com **47 métodos de teste**, documentação e pacote A1. Não cria skill de micromodelos nem altera `.assistant`.
 
 ### Primeira A1
 
@@ -93,14 +93,18 @@ A sétima A1, novamente `APTA_COM_CORRECOES`, encontrou três bloqueios: bypass 
 
 A correção da sétima A1 remove default-ignorables antes da tokenização semântica, fecha o guard para listas contendo `string` e exige `finite-number` para limiar/peso, com JSON estrito contra `NaN/Infinity`. A suíte passa a 39 métodos.
 
+### Oitava A1 e matriz de aceite final
+
+A oitava A1 concluiu `NAO_APTA` e está preservada em `10_resultado_a1_reauditoria_7.md`. O contraditório posterior encerrou as auditorias exploratórias abertas: requisitos reais foram separados de hardening e de adversariais fora do threat model, e `MATRIZ_ACEITE_FINAL.md` foi congelada. A candidata agora usa materialidade baseada em `Default_Ignorable_Code_Point`, equivalência editorial conservadora, domínio numérico canônico, invariantes intrínsecos de aprovação/proveniência, resultado observado apenas após execução, níveis distintos de garantia para snapshot/evolução e perfil canônico de autoria do schema. A suíte passa a 47 métodos.
+
 A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprint continua reservado para MM02; descoberta de metadata continua reservada para MM03; tracking definitivo continua reservado para MM06.
 
 ## Próximo gate
 
-1. executar uma **oitava A1 independente** sobre esse HEAD, sem usar relatórios anteriores, narrativa do autor, changelog ou mensagens de commit como prova;
-2. confrontar qualquer novo achado e corrigir somente se procedente;
-3. se a oitava A1 for limpa, executar contraditório final;
-4. sincronizar o bloco MM01 do `CHANGELOG.md` antes do merge, preservando byte a byte o histórico anterior;
+1. certificar os sete workflows permanentes sobre o HEAD documental final;
+2. executar **uma auditoria final fechada contra `MATRIZ_ACEITE_FINAL.md`**, sem permitir expansão implícita de requisitos;
+3. executar contraditório final sobre achados que efetivamente violem a matriz/ADRs;
+4. se limpa, sincronizar o bloco MM01 do `CHANGELOG.md` antes do merge, preservando byte a byte o histórico anterior;
 5. revalidar a árvore exata após o changelog, reconfirmar `main`/`behind_by`/mergeabilidade e solicitar aceite final explícito;
 6. integrar a PR #51 somente após o aceite.
 

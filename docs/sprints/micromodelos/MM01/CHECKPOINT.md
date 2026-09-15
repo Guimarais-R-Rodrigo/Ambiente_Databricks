@@ -1,6 +1,6 @@
 # MM01 — Checkpoint
 
-Status: **SÉTIMA A1 `APTA_COM_CORRECOES`; `DIVERGE-01`, `DIVERGE-02` E `DIVERGE-03` BLOQUEANTES CONFIRMADAS E CORRIGIDAS; RETESTE DE CONSTRUÇÃO VERDE; 7 WORKFLOWS PERMANENTES VERDES; OITAVA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
+Status: **OITAVA A1 `NAO_APTA` PRESERVADA; CONTRADITÓRIO DE ESCOPO CONCLUÍDO; MATRIZ DE ACEITE FINAL CONGELADA; 47 TESTES DE CONSTRUÇÃO VERDES; AUDITORIA FINAL FECHADA PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
 
 ## Base e superfície
 
@@ -10,18 +10,18 @@ Status: **SÉTIMA A1 `APTA_COM_CORRECOES`; `DIVERGE-01`, `DIVERGE-02` E `DIVERGE
 - branch: `micromodelos/mm01-contrato-canonico`;
 - PR: `#51`;
 - MM00: encerrada e integrada;
-- MM02: bloqueada até nova A1, aceite explícito e merge desta sprint.
+- MM02: bloqueada até auditoria final fechada, contraditório final, aceite explícito e merge desta sprint.
 
 ## O que a candidata entrega
 
 1. schema formal `1.0.0` para `micromodelo.yaml`;
 2. template YAML inicial válido e sanitizado;
 3. máquina de fases com rework explícito e `PUBLICADO` terminal por versão;
-4. comparação opcional com especificação anterior confiável (`--previous`) para verificar transição real, impedir rewind pós-`PUBLICADO` na mesma versão e recusar regressão de versão, sem antecipar fingerprint/MM02;
+4. dois níveis explícitos de garantia: validação standalone certifica apenas o snapshot (`HISTORICO_NAO_CERTIFICADO`); `--previous` certifica evolução histórica, impede rewind pós-`PUBLICADO` na mesma versão e recusa regressão de versão, sem antecipar fingerprint/MM02;
 5. condições operacionais ortogonais (`ATIVO`, `BLOQUEADO`, `SUSPENSO`, `DEPRECATED`);
 6. proveniência `DESCOBERTO`, `INFERIDO`, `PROPOSTO`, `APROVADO`, `MEDIDO` com gates próprios;
-7. regra positiva de materialidade textual: referências auditáveis precisam conter letra/número Unicode após NFKC; whitespace, controles, zero-width, variation selectors e marcas combinantes isoladas não contam;
-8. proteção explícita de `FALSE` versus `INDETERMINADO`, inclusive contra equivalência apenas cosmeticamente diferente;
+7. regra positiva de materialidade textual: após NFKC, `Default_Ignorable_Code_Point` é removido e referências auditáveis precisam conter letra/número Unicode restante; fillers invisíveis não contam;
+8. proteção explícita de `FALSE` versus `INDETERMINADO` por equivalência editorial conservadora, sem tentar inferir equivalência semântica de linguagem natural;
 9. política de ausência de evidência totalmente estruturada por `tratamento`, `resultado_sem_evidencia`, `regra_ref` e proveniência, sem prosa normativa livre;
 10. política de publicação de `INDETERMINADO` totalmente estruturada, com `indeterminado_vira_false=false` e `regra_ref` somente para `OUTRA_APROVADA`;
 11. score 0–100 cuja natureza é determinada exclusivamente por `tipo_semantica`; campo livre `score.semantica` não faz parte do schema;
@@ -34,9 +34,9 @@ Status: **SÉTIMA A1 `APTA_COM_CORRECOES`; `DIVERGE-01`, `DIVERGE-02` E `DIVERGE
 18. conteúdo material mínimo obrigatório ao entrar em `EM_VALIDACAO`;
 19. coerência entre fase e status da interface de publicação, com caminhos positivos testados até `PUBLICADO`;
 20. fronteira de tracking preservada para MM06;
-21. validador de referência/CI, fixtures sintéticos e suíte com **39 métodos de teste**;
+21. validador de referência/CI, fixtures sintéticos e suíte com **47 métodos de teste**;
 22. gate permanente `.github/workflows/micromodelos-mm01-ci.yml`, read-only e sem acesso a ambiente corporativo;
-23. pacote neutro de auditoria com os resultados históricos das sete A1 preservados, sem reclassificação retroativa.
+23. pacote neutro de auditoria com os resultados históricos das oito A1 preservados, sem reclassificação retroativa, e `MATRIZ_ACEITE_FINAL.md` congelando o threat model e a condição de término.
 
 ## O que não foi feito
 
@@ -135,20 +135,26 @@ A sétima A1 independente sobre `9e3ce44ae0750321802b95d96ff43bb29468eab2` concl
 
 A normalização semântica remove `Cf` e variation selectors antes da tokenização; o guard de `string + minLength` reconhece tanto `type="string"` quanto listas contendo `string`; e `finite-number` recusa NaN/±Infinity nos valores materiais, enquanto o loader JSON recusa constantes não padrão. A suíte passa a **39 métodos**.
 
+## Oitava auditoria A1 e mudança de governança
+
+A oitava A1 independente sobre `fe3a9d8b39c0016d9b487036f1d5e3ad38cb2630` concluiu `NAO_APTA`. O resultado permanece em `10_resultado_a1_reauditoria_7.md`. O contraditório separou violações reais do contrato, decisões arquiteturais e hardening fora do threat model.
+
+`MATRIZ_ACEITE_FINAL.md` foi então congelada. Ela define R01–R08, entradas suportadas, não requisitos e a regra de que a auditoria final pode criar adversariais, mas não criar requisitos novos implicitamente. As correções permanentes associadas elevaram a suíte a **47 métodos** e cobrem materialidade por propriedade Unicode, equivalência editorial conservadora, domínio numérico canônico, decisão humana/proveniência intrínsecas, resultado somente após execução, distinção snapshot × evolução e perfil de autoria do schema.
+
 ## Dívida documental antes do merge
 
 O bloco MM01 do `CHANGELOG.md` ainda descreve a candidata pré-A1. Ele deve ser sincronizado **antes do merge**, por operação que preserve byte a byte o histórico anterior. Essa pendência não deve ser usada para apagar ou reclassificar as auditorias históricas.
     
-## Gate independente pendente
+## Auditoria final fechada pendente
 
-Como a candidata mudou materialmente após a sétima A1, é obrigatória uma **oitava A1 independente** sobre o novo HEAD congelado.
+A candidata deve passar por **uma única auditoria final contra `MATRIZ_ACEITE_FINAL.md`**. Achado novo só é bloqueante se demonstrar violação de requisito da matriz ou ADR aceito. Ampliação de threat model exige decisão explícita do usuário e não pode nascer implicitamente da auditoria.
 
 ## Gates restantes
 
-1. executar oitava A1 em sessão independente;
-2. confrontar qualquer novo achado com a árvore;
-3. se a oitava A1 for limpa, executar contraditório final;
-4. sincronizar o bloco MM01 do `CHANGELOG.md` preservando byte-for-byte o restante do arquivo;
+1. certificar os workflows permanentes no HEAD documental final;
+2. executar a auditoria final fechada em sessão independente;
+3. executar contraditório final sobre qualquer achado dentro da matriz;
+4. se limpa, sincronizar o bloco MM01 do `CHANGELOG.md` preservando byte-for-byte o restante do arquivo;
 5. revalidar a árvore exata e reconfirmar `main`, `behind_by` e mergeabilidade;
 6. obter aceite explícito;
 7. só então integrar a PR #51.

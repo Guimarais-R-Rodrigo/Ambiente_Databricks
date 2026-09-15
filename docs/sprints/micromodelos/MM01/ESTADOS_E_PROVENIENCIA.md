@@ -23,7 +23,7 @@ Transições permitidas em `schema_version=1.0.0`:
 
 `PUBLICADO` é terminal para a versão corrente. Mudança material posterior deve gerar nova versão do micromodelo; o contrato não rebobina silenciosamente uma versão já publicada.
 
-A validação isolada do documento corrente consegue conferir somente o par declarado `fase_anterior → fase_atual`. Para provar continuidade histórica entre snapshots, a MM01 aceita uma especificação anterior confiável por `--previous`. Nesse modo, o validador confere identidade e versão, usa a fase efetivamente observada no snapshot anterior como origem da transição e recusa rewind de `PUBLICADO` na mesma versão. Esse mecanismo não calcula nem substitui o `spec_fingerprint` da MM02.
+A validação isolada do documento corrente consegue conferir somente o par declarado `fase_anterior → fase_atual` e, por isso, a CLI a classifica como `SNAPSHOT_VALIDO` com `HISTORICO_NAO_CERTIFICADO`. Para provar continuidade histórica, uma especificação anterior confiável deve ser fornecida por `--previous`; nesse modo, o validador certifica evolução, confere identidade/versão, usa a fase observada no snapshot anterior como origem e recusa rewind de `PUBLICADO` na mesma versão. Esse mecanismo não descobre histórico nem substitui o `spec_fingerprint` da MM02.
 
 ## 2. Condição operacional
 
@@ -48,11 +48,11 @@ Estados aceitos:
 | `APROVADO` | decisão humana material aceita | bloco `aprovacao` com responsável, timestamp e referência material |
 | `MEDIDO` | resultado observado por execução | bloco `medicao` com `referencia_execucao` material e timestamp |
 
-`APROVADO` sem bloco de aprovação é inválido. `MEDIDO` sem execução referenciável é inválido. Inversamente, blocos de aprovação/medição não podem ser pendurados em outro status apenas para guardar contexto.
+`APROVADO` sem bloco de aprovação é inválido. `MEDIDO` sem execução referenciável é inválido. Inversamente, blocos de aprovação/medição não podem ser pendurados em outro status apenas para guardar contexto. Essas invariantes são locais ao bloco e são validadas sempre que a proveniência existe; a fase apenas determina quando um status específico se torna obrigatório.
 
 ### Materialidade textual
 
-Os campos que funcionam como prova auditável usam uma regra positiva, não uma blacklist incompleta de whitespace/invisíveis. Depois de normalização NFKC, precisa existir ao menos um caractere Unicode de categoria letra (`L*`) ou número (`N*`). Portanto strings compostas apenas por espaços, controles, zero-width, variation selectors ou marcas combinantes (`M*`) não são referência material.
+Os campos que funcionam como prova auditável usam uma regra positiva, não uma blacklist incompleta. Depois de NFKC, caracteres com a propriedade Unicode `Default_Ignorable_Code_Point` são removidos; precisa restar ao menos uma letra (`L*`) ou número (`N*`). Portanto espaços, controles, zero-width, variation selectors, fillers default-ignorable ou marcas combinantes isoladas não são referência material.
 
 A regra se aplica, entre outros, a:
 
@@ -69,11 +69,11 @@ A regra se aplica, entre outros, a:
 Ao entrar em `EM_VALIDACAO` ou fase posterior:
 
 - `fontes`, `evidencias`, `contra_evidencias` e `validacao.criterios` devem estar não vazios;
-- semântica `TRUE/FALSE/INDETERMINADO` deve estar aprovada e as três definições precisam permanecer distintas após normalização editorial que remove acentos, pontuação/espaçamento e caracteres Unicode default-ignorable antes da tokenização;
+- semântica `TRUE/FALSE/INDETERMINADO` deve estar aprovada e as três definições precisam permanecer distintas após equivalência editorial conservadora (NFKC/casefold, remoção de `Default_Ignorable_Code_Point`, whitespace normalizado e somente pontuação terminal editorial tolerada), preservando diacríticos, operadores e pontuação interna potencialmente semânticos;
 - política de ausência de evidência precisa estar estruturalmente consistente e aprovada quando usar regra explícita;
 - score habilitado precisa ter `tipo_semantica` e `semantica_ref` materiais, além de normalização estruturada/aprovada;
 - regras de evidência e contra-evidência precisam estar aprovadas;
-- limiares e pesos existentes precisam estar `APROVADO` e seus valores numéricos precisam ser finitos; antes de `EM_VALIDACAO`, podem permanecer `PROPOSTO`.
+- limiares e pesos existentes precisam estar `APROVADO` e seus valores precisam pertencer ao domínio numérico canônico finito; inteiros arbitrariamente grandes não são convertidos para float e tipos numéricos externos são recusados; antes de `EM_VALIDACAO`, podem permanecer `PROPOSTO`.
 
 Ao chegar em `VALIDADO` ou posterior, o resultado de validação precisa ser medido e a decisão humana precisa estar aprovada.
 
@@ -99,7 +99,7 @@ Uma propriedade livre que tente mandar “classificar como FALSE” não é inte
 
 ### Publicação de `INDETERMINADO`
 
-`saida.publicacao.politica_indeterminado` também não aceita prosa normativa. `indeterminado_vira_false` é constante `false`. O tratamento é fechado e, se for `OUTRA_APROVADA`, precisa de `regra_ref` auditável.
+`saida.publicacao.politica_indeterminado` também não aceita prosa normativa. `indeterminado_vira_false` é constante `false`. O tratamento é fechado e, se for `OUTRA_APROVADA`, precisa de `regra_ref` auditável. Se a política for preenchida antecipadamente, sua proveniência já precisa ser intrinsecamente válida; chegar a `CANDIDATO_PRODUTO` apenas passa a exigir que ela esteja efetivamente `APROVADO`.
 
 ### Score probabilístico
 
@@ -145,6 +145,6 @@ Essas diferenças são semânticas do domínio, não detalhes editoriais.
 
 A proveniência só serve como evidência auditável quando seus campos materiais possuem conteúdo efetivo. A MM01 aplica a autoridade Unicode compartilhada (`material-text` → `_has_material_text`) tanto às referências aninhadas quanto a `proveniencia.pedido_original_ref`, `proveniencia.gerado_por` e `proveniencia.registros[].alvo`.
 
-A política é positiva: após NFKC, deve existir pelo menos uma letra ou número Unicode. Marcas combinantes isoladas, zero-width, formatos invisíveis, whitespace, pontuação ou símbolos sem letra/número não constituem prova. Essa regra não altera a máquina de estados nem cria fingerprint; `--previous` continua sendo comparação explícita de snapshots fornecidos.
+A política é positiva: após NFKC e remoção de `Default_Ignorable_Code_Point`, deve existir pelo menos uma letra ou número Unicode. Marcas combinantes isoladas, zero-width, fillers invisíveis, whitespace, pontuação ou símbolos sem letra/número não constituem prova. Essa regra não altera a máquina de estados nem cria fingerprint; `--previous` continua sendo comparação explícita de snapshots fornecidos.
 
 A política também é aplicada aos campos normativos equivalentes que atravessam gates: regras de evidência e contra-evidência, hipótese e resultado de experimento, resumo do resultado de validação e motivo de condição operacional. Em especial, experimento `EXECUTADO` e condição não `ATIVO` são verificados por `_has_material_text`, não por `.strip()`.
