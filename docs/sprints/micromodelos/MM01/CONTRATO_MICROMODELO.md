@@ -48,7 +48,7 @@ O tipo inicial é `BOOLEANO_COM_INDETERMINADO`. O contrato exige três definiç�
 - `quando_false`: quando há base suficiente para negar a característica;
 - `quando_indeterminado`: quando a informação não permite concluir nem TRUE nem FALSE.
 
-A distinção é verificada após normalização editorial básica de caixa, acentuação, pontuação e espaços; não basta copiar a mesma definição mudando apenas forma textual.
+A distinção é verificada após normalização editorial de caixa, acentuação, pontuação e espaços. Caracteres Unicode default-ignorable (`Cf`) e variation selectors são removidos antes da tokenização, para que inserções invisíveis dentro de palavras não fabriquem uma diferença semântica artificial; não basta copiar a mesma definição mudando apenas forma textual.
 
 A política de ausência de evidência deixou de depender de prosa normativa. `classificacao.ausencia_evidencia` possui comportamento estruturado:
 
@@ -57,7 +57,7 @@ A política de ausência de evidência deixou de depender de prosa normativa. `c
 
 Não existe campo livre capaz de redefinir esse comportamento. Uma propriedade legada como `descricao` nesse bloco é recusada pelo schema fechado. Portanto uma regra que converta ausência em `FALSE` só pode existir de forma explícita, estruturada, referenciada e aprovada.
 
-Limiar material pode ser registrado como `PROPOSTO` enquanto o micromodelo ainda está em descoberta/estudo. A partir de `EM_VALIDACAO`, todo limiar existente precisa carregar proveniência `APROVADO`. Dessa forma, a fonte canônica preserva propostas sem permitir que elas atravessem o gate formal como decisões válidas.
+Limiar material pode ser registrado como `PROPOSTO` enquanto o micromodelo ainda está em descoberta/estudo. A partir de `EM_VALIDACAO`, todo limiar existente precisa carregar proveniência `APROVADO`. `classificacao.limiares[].valor` precisa ser um número finito: NaN e ±Infinity são recusados. Dessa forma, a fonte canônica preserva propostas sem permitir que elas atravessem o gate formal como decisões inválidas.
 
 ### `score`
 
@@ -74,7 +74,7 @@ A MM01 não usa mais texto livre `score.semantica` para inferir se um score é p
 
 `normalizacao` também deixou de ser prosa normativa. Os métodos estruturados são `PENDENTE`, `SOMA_PONDERADA_0_100`, `MIN_MAX_0_100`, `LINEAR_0_100` e `CUSTOM_APROVADO`. Antes do gate formal, `PENDENTE` pode permanecer proposto. A partir de `EM_VALIDACAO`, o método precisa estar definido e aprovado; `CUSTOM_APROVADO` exige referência auditável da regra.
 
-Assim como limiares, pesos podem permanecer `PROPOSTO` nas fases pré-gate, mas todo peso existente precisa estar `APROVADO` ao entrar em `EM_VALIDACAO` ou fase posterior.
+Assim como limiares, pesos podem permanecer `PROPOSTO` nas fases pré-gate, mas todo peso existente precisa estar `APROVADO` ao entrar em `EM_VALIDACAO` ou fase posterior. `score.componentes[].peso` também precisa ser finito; NaN e ±Infinity não são valores materiais válidos.
 
 `PROBABILIDADE_CALIBRADA` exige calibração com proveniência `MEDIDO` e referência de execução. Além disso, `calibracao.evidencia_ref` precisa resolver para um `experimentos[].id` existente cujo experimento esteja `EXECUTADO` e com proveniência `MEDIDO`. Para os demais tipos de semântica, um bloco de calibração probabilística é recusado como inesperado.
 
@@ -155,7 +155,7 @@ A mesma autoridade cobre também os campos normativos que satisfazem gates de ev
 
 ### Classificação explícita dos textos obrigatórios
 
-A quinta A1 mostrou que a distinção entre texto material e narrativa livre precisava ser explícita. Após a sexta A1, a classificação ficou fail-closed: todo `type=string` protegido por `minLength` deve usar `format: material-text`. Regex não substitui materialidade. `pattern` permanece somente em contratos estritamente estruturais e é congelado por path + expressão exata (`$defs.id`, `identidade.nome` e `micromodel_version`). A autoridade de materialidade é exclusivamente `_has_material_text` após NFKC; não há regex genérica, `.strip()` ou segundo predicado concorrente.
+A quinta A1 mostrou que a distinção entre texto material e narrativa livre precisava ser explícita. Após a sétima A1, a classificação ficou fail-closed: todo nó que aceite instância `string` (inclusive `type` em array) e use `minLength` deve usar `format: material-text`. Regex não substitui materialidade. `pattern` permanece somente em contratos estritamente estruturais e é congelado por path + expressão exata (`$defs.id`, `identidade.nome` e `micromodel_version`). A autoridade de materialidade é exclusivamente `_has_material_text` após NFKC; não há regex genérica, `.strip()` ou segundo predicado concorrente.
 
 Além dos campos já protegidos anteriormente, usam `material-text`: `identidade.titulo`; todos os valores textuais requeridos de `negocio`; todos os valores textuais requeridos de `entidade`; `fontes[].catalogo_ref`; `evidencias[].descricao`; `contra_evidencias[].descricao`; `classificacao.limiares[].descricao`; `classificacao.limiares[].unidade`; `score.componentes[].descricao`; `score.calibracao.metodo`; `governanca.classificacao_dados`; `governanca.lgpd`; e `governanca.gestor_informacao`.
 

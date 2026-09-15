@@ -1,6 +1,6 @@
 # MM01 — Checkpoint
 
-Status: **SEXTA A1 `APTA_COM_CORRECOES`; `DIVERGE-01` E `DIVERGE-02` BLOQUEANTES CONFIRMADAS E CORRIGIDAS; RETESTE DE CONSTRUÇÃO VERDE; 7 WORKFLOWS PERMANENTES VERDES; SÉTIMA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
+Status: **SÉTIMA A1 `APTA_COM_CORRECOES`; `DIVERGE-01`, `DIVERGE-02` E `DIVERGE-03` BLOQUEANTES CONFIRMADAS E CORRIGIDAS; RETESTE DE CONSTRUÇÃO VERDE; 7 WORKFLOWS PERMANENTES VERDES; OITAVA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
 
 ## Base e superfície
 
@@ -34,9 +34,9 @@ Status: **SEXTA A1 `APTA_COM_CORRECOES`; `DIVERGE-01` E `DIVERGE-02` BLOQUEANTES
 18. conteúdo material mínimo obrigatório ao entrar em `EM_VALIDACAO`;
 19. coerência entre fase e status da interface de publicação, com caminhos positivos testados até `PUBLICADO`;
 20. fronteira de tracking preservada para MM06;
-21. validador de referência/CI, fixtures sintéticos e suíte com **36 métodos de teste**;
+21. validador de referência/CI, fixtures sintéticos e suíte com **39 métodos de teste**;
 22. gate permanente `.github/workflows/micromodelos-mm01-ci.yml`, read-only e sem acesso a ambiente corporativo;
-23. pacote neutro de auditoria com os resultados históricos das seis A1 preservados, sem reclassificação retroativa.
+23. pacote neutro de auditoria com os resultados históricos das sete A1 preservados, sem reclassificação retroativa.
 
 ## O que não foi feito
 
@@ -127,19 +127,27 @@ A sexta A1 independente sobre `e0b6ed916386bef19006e7d41e183ffde25e360a` conclui
 
 A correção remove as três regex textuais genéricas e deixa `_has_material_text` → `format: material-text` como única autoridade de conteúdo material. Os únicos patterns remanescentes são contratos de estrutura (`$defs.id`, `identidade.nome` e `micromodel_version`) e ficam congelados por path + regex exata em regressão permanente. Todo `type=string + minLength` passa a exigir `material-text`; um nó sintético `minLength + pattern: .*\\S.*` sem format deve ser detectado como violação. A suíte passa a **36 métodos**.
 
+## Sétima auditoria A1
+
+A sétima A1 independente sobre `9e3ce44ae0750321802b95d96ff43bb29468eab2` concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com três divergências bloqueantes: equivalência semântica burlável por Unicode default-ignorable, guard incompleto para `type` em array e números não finitos em limiares/pesos. O resultado foi preservado em `09_resultado_a1_reauditoria_6.md`.
+
+## Correções da sétima A1
+
+A normalização semântica remove `Cf` e variation selectors antes da tokenização; o guard de `string + minLength` reconhece tanto `type="string"` quanto listas contendo `string`; e `finite-number` recusa NaN/±Infinity nos valores materiais, enquanto o loader JSON recusa constantes não padrão. A suíte passa a **39 métodos**.
+
 ## Dívida documental antes do merge
 
 O bloco MM01 do `CHANGELOG.md` ainda descreve a candidata pré-A1. Ele deve ser sincronizado **antes do merge**, por operação que preserve byte a byte o histórico anterior. Essa pendência não deve ser usada para apagar ou reclassificar as auditorias históricas.
     
 ## Gate independente pendente
 
-Como a candidata mudou materialmente após a sexta A1, é obrigatória uma **sétima A1 independente** sobre o novo HEAD congelado.
+Como a candidata mudou materialmente após a sétima A1, é obrigatória uma **oitava A1 independente** sobre o novo HEAD congelado.
 
 ## Gates restantes
 
-1. executar sétima A1 em sessão independente;
+1. executar oitava A1 em sessão independente;
 2. confrontar qualquer novo achado com a árvore;
-3. se a sétima A1 for limpa, executar contraditório final;
+3. se a oitava A1 for limpa, executar contraditório final;
 4. sincronizar o bloco MM01 do `CHANGELOG.md` preservando byte-for-byte o restante do arquivo;
 5. revalidar a árvore exata e reconfirmar `main`, `behind_by` e mergeabilidade;
 6. obter aceite explícito;

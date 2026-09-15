@@ -59,8 +59,11 @@ Os testes da MM01 exercitam o contrato estrutural e semântico. Não acessam Dat
 | T49 | todo `type=string` + `minLength` possui `material-text` | invariável estrutural fail-closed |
 | T50 | qualquer `pattern` do schema pertence à allowlist estrutural exata por path + regex | invariável estrutural |
 | T51 | nó sintético `string + minLength + pattern: .*\\S.*` sem `material-text` | detectado como violação |
+| T52 | default-ignorables dentro de palavra em semânticas equivalentes | `AMBIGUOUS_BINARY_SEMANTICS` |
+| T53 | `type=[string]` / `[string,null]` + `minLength`, inclusive aninhado | detectado pelo guard |
+| T54 | NaN/±Infinity em limiar/peso e constantes JSON não padrão | `SCHEMA` / carga fail-closed |
 
-A suíte `tools/tests/test_micromodelo_mm01.py` contém **36 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz. `casos_invalidos.json` mantém nove mutações negativas determinísticas além dos casos adversariais construídos diretamente pela suíte.
+A suíte `tools/tests/test_micromodelo_mm01.py` contém **39 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz. `casos_invalidos.json` mantém nove mutações negativas determinísticas além dos casos adversariais construídos diretamente pela suíte.
 
 ## Teste específico de YAML
 
@@ -198,3 +201,9 @@ A sexta auditoria independente identificou duas divergências bloqueantes preser
 - a suíte passa a **36 métodos**, preservando os adversariais Unicode e os caminhos positivos multilíngues.
 
 O próximo gate é uma sétima A1 independente sobre o HEAD permanente corrigido.
+
+## Sétima A1 — `APTA_COM_CORRECOES`
+
+A sétima auditoria independente sobre `9e3ce44ae0750321802b95d96ff43bb29468eab2` encontrou três divergências bloqueantes: caracteres Unicode default-ignorable podiam mascarar equivalência `FALSE` × `INDETERMINADO`; o guard de `string + minLength` ignorava `type` em array; e NaN/±Infinity atravessavam limiares/pesos. O relatório histórico permanece em `09_resultado_a1_reauditoria_6.md`.
+
+As regressões adicionadas após o contraditório cobrem os três vetores: default-ignorables em posição interna, arrays de tipos e branches aninhados, além de valores não finitos via objeto Python, YAML e constantes JSON permissivas.

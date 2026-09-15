@@ -69,11 +69,11 @@ A regra se aplica, entre outros, a:
 Ao entrar em `EM_VALIDACAO` ou fase posterior:
 
 - `fontes`, `evidencias`, `contra_evidencias` e `validacao.criterios` devem estar não vazios;
-- semântica `TRUE/FALSE/INDETERMINADO` deve estar aprovada e as três definições precisam permanecer distintas após normalização editorial básica;
+- semântica `TRUE/FALSE/INDETERMINADO` deve estar aprovada e as três definições precisam permanecer distintas após normalização editorial que remove acentos, pontuação/espaçamento e caracteres Unicode default-ignorable antes da tokenização;
 - política de ausência de evidência precisa estar estruturalmente consistente e aprovada quando usar regra explícita;
 - score habilitado precisa ter `tipo_semantica` e `semantica_ref` materiais, além de normalização estruturada/aprovada;
 - regras de evidência e contra-evidência precisam estar aprovadas;
-- limiares e pesos existentes precisam estar `APROVADO`; antes de `EM_VALIDACAO`, podem permanecer `PROPOSTO`.
+- limiares e pesos existentes precisam estar `APROVADO` e seus valores numéricos precisam ser finitos; antes de `EM_VALIDACAO`, podem permanecer `PROPOSTO`.
 
 Ao chegar em `VALIDADO` ou posterior, o resultado de validação precisa ser medido e a decisão humana precisa estar aprovada.
 
