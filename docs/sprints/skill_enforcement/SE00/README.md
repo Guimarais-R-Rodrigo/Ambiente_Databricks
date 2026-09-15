@@ -2,7 +2,7 @@
 
 ## Estado
 
-**EM EXECUÇÃO — instrumentação versionada; baseline conversacional no Databricks Free pendente.**
+**EM EXECUÇÃO — 6/16 runs registrados no Databricks Free; nenhuma alteração comportamental introduzida.**
 
 A SE00 é a primeira sprint de implementação do Skill Enforcement Framework. Ela não implementa enforcement. Seu objetivo é congelar e medir o comportamento atual do Genie Code antes de qualquer mudança de contrato, preflight, runner, receipt ou postflight.
 
@@ -90,6 +90,18 @@ Casos mínimos:
 
 Total mínimo: **16 execuções em chats novos**.
 
+### Progresso experimental atual
+
+- runs registrados: **6/16**;
+- `B00-P1`: **encerrada — 3/3 FAIL, 0/18 helpers concluídos**;
+- `B00-A1-P1`: **FAIL**, com falsos negativos e false reassurance;
+- `B00-M1-R1`: **FAIL — 0/5 helpers**, mesmo com `@hub-ml-eda-profissional` explícita;
+- `B00-A1-M1`: **FAIL contra o protocolo SE00**, embora tenha detectado 5/5 reimplementações centrais e aplicado veto correto;
+- auditorias com state ladder completo: **0/2**;
+- próximo run: `B00-M1-R2`.
+
+A evidência já distingue falha de roteamento de falha pós-seleção: o M1-R1 prova que seleção explícita, isoladamente, não garante import, chamada nem conclusão de recursos.
+
 ## Evidência aceitável
 
 A avaliação distingue explicitamente:
@@ -112,7 +124,7 @@ Os testes forward existentes continuam medindo roteamento/conversação. A SE00 
 
 A baseline conversacional deve ser executada sem republicar ou editar o Hub entre repetições. Qualquer mutação da árvore `.assistant` invalida a rodada em andamento.
 
-Os resultados serão consolidados em [`RESULTADOS.md`](RESULTADOS.md). A sprint permanece aberta até que o usuário revise as evidências no Free.
+Os resultados são consolidados em [`RESULTADOS.md`](RESULTADOS.md). A sprint permanece aberta até que o usuário revise as evidências no Free.
 
 ## Critério de aceite
 
