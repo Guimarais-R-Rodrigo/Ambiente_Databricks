@@ -143,4 +143,4 @@ APROVADO: 0 falha(s), 0 aviso(s)
 
 O histórico detalhado de sprints, iniciativas R00–R13, integrações e reconciliações documentais permanece no [índice de sprints](docs/sprints/README.md). O README raiz deixa de duplicar esse histórico para permanecer uma entrada operacional curta e atual.
 
-Para instalação/replicação no trabalho, siga o [playbook de replicacao](docs/playbooks/replicacao-trabalho.md).
+Para instalação/replicação no trabalho, siga o [playbook de replicação](docs/playbooks/replicacao-trabalho.md).
