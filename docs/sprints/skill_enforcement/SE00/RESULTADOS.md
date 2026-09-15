@@ -33,7 +33,7 @@ Este documento consolida somente execuções reais com evidência observável. R
 | `B00-B1-R1` | B1 | PENDENTE | — | — | — | — | — | n/a | — | — |
 | `B00-B1-R2` | B1 | PENDENTE | — | — | — | — | — | n/a | — | — |
 | `B00-B1-R3` | B1 | PENDENTE | — | — | — | — | — | n/a | — | — |
-| `B00-A1-P1` | A1 audit P1 | **FAIL** | **estado-ladder FAIL; 4/6 reimpl. detectadas** | **não distinguiu NOT_OBSERVABLE corretamente** | **4/6 detectadas** | **0/1 detectado** | **parcial** | n/a | **sim** | `docs/testes/skill_execution/resultados/B00-A1-P1.md` |
+| `B00-A1-P1` | A1 audit P1 | **FAIL** | **state ladder FAIL; 4/6 reimpl. detectadas** | **não distinguiu NOT_OBSERVABLE corretamente** | **4/6 detectadas** | **0/1 detectado** | **parcial** | n/a | **sim** | `docs/testes/skill_execution/resultados/B00-A1-P1.md` |
 | `B00-A1-M1` | A1 audit M1 | PENDENTE | — | — | — | — | — | n/a | — | — |
 | `B00-A1-R1` | A1 audit R1 | PENDENTE | — | — | — | — | — | n/a | — | — |
 | `B00-A1-B1` | A1 audit B1 | PENDENTE | — | — | — | — | — | n/a | — | — |
@@ -208,7 +208,7 @@ Esse comportamento impede usar a skill textual de auditoria, isoladamente, como 
 - reimplementações P1 detectadas explicitamente: **4/6**;
 - false completion P1 detectado: **0/1**;
 - achados altos P1 detectados: **1/3**;
-- estado-ladder exigido entregue: **não**;
+- state ladder exigido entregue: **não**;
 - falsas inferências de observabilidade: **sim**;
 - limitações de observabilidade reconhecidas adequadamente: **parcial**.
 
