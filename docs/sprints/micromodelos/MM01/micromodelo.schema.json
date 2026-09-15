@@ -146,7 +146,8 @@
         },
         "titulo": {
           "type": "string",
-          "minLength": 3
+          "minLength": 3,
+          "format": "material-text"
         },
         "micromodel_version": {
           "type": "string",
@@ -222,28 +223,33 @@
       "properties": {
         "caracteristica": {
           "type": "string",
-          "minLength": 3
+          "minLength": 3,
+          "format": "material-text"
         },
         "objetivo": {
           "type": "string",
-          "minLength": 10
+          "minLength": 10,
+          "format": "material-text"
         },
         "definicao_operacional": {
           "type": "string",
-          "minLength": 10
+          "minLength": 10,
+          "format": "material-text"
         },
         "uso_pretendido": {
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 3
+            "minLength": 3,
+            "format": "material-text"
           }
         },
         "nao_usar_para": {
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 3
+            "minLength": 3,
+            "format": "material-text"
           }
         }
       }
@@ -261,23 +267,28 @@
       "properties": {
         "tipo": {
           "type": "string",
-          "minLength": 2
+          "minLength": 2,
+          "format": "material-text"
         },
         "chave_logica": {
           "type": "string",
-          "minLength": 2
+          "minLength": 2,
+          "format": "material-text"
         },
         "granularidade": {
           "type": "string",
-          "minLength": 5
+          "minLength": 5,
+          "format": "material-text"
         },
         "populacao_elegivel": {
           "type": "string",
-          "minLength": 10
+          "minLength": 10,
+          "format": "material-text"
         },
         "referencia_temporal": {
           "type": "string",
-          "minLength": 5
+          "minLength": 5,
+          "format": "material-text"
         }
       }
     },
@@ -302,7 +313,8 @@
           },
           "catalogo_ref": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "format": "material-text"
           },
           "schema": {
             "type": "string",
@@ -362,7 +374,8 @@
           },
           "descricao": {
             "type": "string",
-            "minLength": 5
+            "minLength": 5,
+            "format": "material-text"
           },
           "fontes_ref": {
             "type": "array",
@@ -401,7 +414,8 @@
           },
           "descricao": {
             "type": "string",
-            "minLength": 5
+            "minLength": 5,
+            "format": "material-text"
           },
           "fontes_ref": {
             "type": "array",
@@ -516,7 +530,8 @@
               },
               "descricao": {
                 "type": "string",
-                "minLength": 3
+                "minLength": 3,
+                "format": "material-text"
               },
               "operador": {
                 "enum": [
@@ -532,7 +547,8 @@
               },
               "unidade": {
                 "type": "string",
-                "minLength": 1
+                "minLength": 1,
+                "format": "material-text"
               },
               "proveniencia": {
                 "$ref": "#/$defs/proveniencia"
@@ -636,7 +652,8 @@
               },
               "descricao": {
                 "type": "string",
-                "minLength": 3
+                "minLength": 3,
+                "format": "material-text"
               },
               "peso": {
                 "type": "number"
@@ -659,7 +676,8 @@
           "properties": {
             "metodo": {
               "type": "string",
-              "minLength": 3
+              "minLength": 3,
+              "format": "material-text"
             },
             "evidencia_ref": {
               "$ref": "#/$defs/material_ref"
@@ -951,15 +969,18 @@
       "properties": {
         "classificacao_dados": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "format": "material-text"
         },
         "lgpd": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "format": "material-text"
         },
         "gestor_informacao": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "format": "material-text"
         },
         "observacoes": {
           "type": "array",

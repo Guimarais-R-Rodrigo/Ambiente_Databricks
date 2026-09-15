@@ -152,3 +152,13 @@ Campos materiais — referências auditáveis, proveniência material, nomes ope
 Consequentemente, whitespace, NBSP/EM SPACE, `Cf`, zero-width, variation selectors, combining marks isolados, pontuação e símbolos isolados não satisfazem um campo material. CJK, Devanagari, caracteres acentuados, algarismos Unicode e combining marks acompanhados de uma base material continuam válidos. Campos narrativos livres não recebem `material-text` apenas por serem strings.
 
 A mesma autoridade cobre também os campos normativos que satisfazem gates de evidência e validação: `evidencias[].regra`, `contra_evidencias[].regra`, `experimentos[].hipotese`, `experimentos[].resultado`, `validacao.resultado.resumo` e, quando a condição não é `ATIVO`, `identidade.estado.motivo_condicao`. Resultado `EXECUTADO` e motivo operacional não possuem uma heurística paralela por `.strip()`; ambos usam `_has_material_text`.
+
+### Classificação explícita dos textos obrigatórios
+
+A quinta A1 mostrou que a distinção entre texto material e narrativa livre precisava ser explícita. Todo campo textual obrigatório protegido por `minLength` deve ter uma política executável: `format: material-text`, quando participa da definição canônica, ou `pattern`, quando a sintaxe fechada já exige conteúdo material. A autoridade de materialidade continua sendo exclusivamente `_has_material_text` após NFKC; não há regex, `.strip()` ou segundo predicado concorrente.
+
+Além dos campos já protegidos anteriormente, usam `material-text`: `identidade.titulo`; todos os valores textuais requeridos de `negocio`; todos os valores textuais requeridos de `entidade`; `fontes[].catalogo_ref`; `evidencias[].descricao`; `contra_evidencias[].descricao`; `classificacao.limiares[].descricao`; `classificacao.limiares[].unidade`; `score.componentes[].descricao`; `score.calibracao.metodo`; `governanca.classificacao_dados`; `governanca.lgpd`; e `governanca.gestor_informacao`.
+
+Identificadores internos, `identidade.nome` e `identidade.micromodel_version` permanecem fechados por `pattern`. `fontes[].catalogo_ref` permanece adicionalmente sujeito ao gate semântico `CATALOGO_PRODUTO`.
+
+`governanca.observacoes[]` é a exceção narrativa explícita: é opcional, não satisfaz gate material e não substitui campo normativo. Por isso não recebe `material-text` apenas por ser string.

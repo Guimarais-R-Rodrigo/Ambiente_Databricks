@@ -54,8 +54,11 @@ Os testes da MM01 exercitam o contrato estrutural e semântico. Não acessam Dat
 | T44 | proveniência de topo e gates materiais usam a mesma política Unicode | rejeição/aceite coerentes |
 | T45 | regras de evidência, hipótese/resultado experimental, resumo de validação e motivo operacional não materiais | `SCHEMA` / gate fail-closed |
 | T46 | os mesmos campos normativos com conteúdo Unicode legítimo multilíngue | APROVADO |
+| T47 | textos obrigatórios adicionais com conteúdo não material que ainda satisfaz `minLength` | `SCHEMA` |
+| T48 | os mesmos campos adicionais com conteúdo Unicode legítimo multilíngue | APROVADO |
+| T49 | todo `type=string` + `minLength` possui `material-text`, `pattern` ou exceção narrativa explícita | invariável estrutural |
 
-A suíte `tools/tests/test_micromodelo_mm01.py` contém **31 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz. `casos_invalidos.json` mantém nove mutações negativas determinísticas além dos casos adversariais construídos diretamente pela suíte.
+A suíte `tools/tests/test_micromodelo_mm01.py` contém **34 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz. `casos_invalidos.json` mantém nove mutações negativas determinísticas além dos casos adversariais construídos diretamente pela suíte.
 
 ## Teste específico de YAML
 
@@ -165,10 +168,16 @@ A correção reutilizou exclusivamente a autoridade existente `material-text` �
 
 O run transitório `34960256357` removeu seus próprios mecanismos e concluiu com sucesso **31 métodos**, CLI direta positiva/negativa/`--previous`, `validate_assistant`, métrica congelada e invariantes históricos antes de publicar o commit permanente `8fd8e7892ead1bb63a554b5283f7062adf582976`.
 
+## Quinta A1 — `APTA_COM_CORRECOES`
+
+A quinta auditoria independente sobre `0b7a712cd2c897483da34517f10516012711f153` concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com `DIVERGE-01` bloqueante: campos centrais ainda podiam satisfazer `minLength` usando apenas pontuação, zero-width, marks, whitespace ou símbolos. O resultado histórico permanece em `07_resultado_a1_reauditoria_4.md` e não é reclassificado por correções posteriores.
+
+### Correção da quinta A1
+
+A correção fecha a classe de defeito: textos obrigatórios com `minLength` precisam usar `material-text`, `pattern` ou constar na exceção narrativa explícita `governanca.observacoes[]`. `_has_material_text` e o `FormatChecker` não foram alterados. A suíte passa a **34 métodos**, com adversariais que deliberadamente excedem `minLength` usando conteúdo não material e positivos multilíngues.
+
 ## Próxima auditoria A1
 
-Uma **quinta auditoria A1 independente** é obrigatória porque a candidata mudou materialmente depois da quarta A1. Ela deve auditar o HEAD efetivamente encontrado e não pode usar relatórios anteriores, narrativa do autor, changelog ou mensagens de commit como prova.
+Uma **sexta A1 independente** é obrigatória porque a candidata mudou materialmente depois da quinta A1. Ela deve auditar o HEAD efetivamente encontrado, repetir os gates mínimos e criar adversariais próprios sobre os campos adicionais submetidos à política comum.
 
-A quinta A1 deve repetir instalação, 31 testes, gate estrutural, CLI direta e adversariais próprios; testar isoladamente todos os seis campos corrigidos com `Mn/Mc/Me`, `Cf`, zero-width, espaços Unicode, pontuação, símbolos e combinações; confirmar positivos multilíngues; provar que não surgiu uma segunda autoridade de materialidade; validar `--previous`; e confirmar as fronteiras MM02/MM03/MM04/MM06.
-
-MM02 permanece bloqueada até nova A1, contraditório se necessário, fechamento do changelog, aceite explícito e integração da MM01.
+MM02 permanece bloqueada até sexta A1, contraditório se necessário, fechamento do changelog, aceite explícito e integração da MM01.

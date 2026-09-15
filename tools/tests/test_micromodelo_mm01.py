@@ -713,5 +713,156 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
         self.assertEqual([], module.validate_spec(document, self.schema))
 
 
+    def test_required_minlength_text_fields_have_explicit_material_policy(self) -> None:
+        narrative_exemptions = {
+            "properties.governanca.properties.observacoes.items",
+        }
+        unclassified: list[str] = []
+
+        def walk(node: object, path: tuple[str, ...] = ()) -> None:
+            if isinstance(node, dict):
+                if node.get("type") == "string" and "minLength" in node:
+                    joined = ".".join(path)
+                    if (
+                        node.get("format") != "material-text"
+                        and "pattern" not in node
+                        and joined not in narrative_exemptions
+                    ):
+                        unclassified.append(joined)
+                for key, value in node.items():
+                    walk(value, path + (str(key),))
+            elif isinstance(node, list):
+                for index, value in enumerate(node):
+                    walk(value, path + (str(index),))
+
+        walk(self.schema)
+        self.assertEqual([], unclassified)
+
+    def test_canonical_required_text_fields_reject_nonmaterial_content(self) -> None:
+        raw_negatives = [
+            "\u0301",
+            "\u093e",
+            "\u20dd",
+            "\u200b",
+            "\u200c",
+            "\u200d",
+            "\u2060",
+            "\u2063",
+            " ",
+            "\u00a0",
+            "\u2003",
+            "\u2007",
+            "\u202f",
+            "!",
+            "€",
+            "\u0301\u200b!€",
+        ]
+
+        mutations = [
+            ("identidade.titulo", 3, lambda d, v: d["identidade"].__setitem__("titulo", v)),
+            ("negocio.caracteristica", 3, lambda d, v: d["negocio"].__setitem__("caracteristica", v)),
+            ("negocio.objetivo", 10, lambda d, v: d["negocio"].__setitem__("objetivo", v)),
+            ("negocio.definicao_operacional", 10, lambda d, v: d["negocio"].__setitem__("definicao_operacional", v)),
+            ("negocio.uso_pretendido[]", 3, lambda d, v: d["negocio"]["uso_pretendido"].__setitem__(0, v)),
+            ("negocio.nao_usar_para[]", 3, lambda d, v: d["negocio"]["nao_usar_para"].__setitem__(0, v)),
+            ("entidade.tipo", 2, lambda d, v: d["entidade"].__setitem__("tipo", v)),
+            ("entidade.chave_logica", 2, lambda d, v: d["entidade"].__setitem__("chave_logica", v)),
+            ("entidade.granularidade", 5, lambda d, v: d["entidade"].__setitem__("granularidade", v)),
+            ("entidade.populacao_elegivel", 10, lambda d, v: d["entidade"].__setitem__("populacao_elegivel", v)),
+            ("entidade.referencia_temporal", 5, lambda d, v: d["entidade"].__setitem__("referencia_temporal", v)),
+            ("fontes.catalogo_ref", 1, lambda d, v: d["fontes"][0].__setitem__("catalogo_ref", v)),
+            ("evidencias.descricao", 5, lambda d, v: d["evidencias"][0].__setitem__("descricao", v)),
+            ("contra_evidencias.descricao", 5, lambda d, v: d["contra_evidencias"][0].__setitem__("descricao", v)),
+            ("classificacao.limiares.descricao", 3, lambda d, v: d["classificacao"]["limiares"][0].__setitem__("descricao", v)),
+            ("classificacao.limiares.unidade", 1, lambda d, v: d["classificacao"]["limiares"][0].__setitem__("unidade", v)),
+            ("score.componentes.descricao", 3, lambda d, v: d["score"]["componentes"][0].__setitem__("descricao", v)),
+            ("governanca.classificacao_dados", 1, lambda d, v: d["governanca"].__setitem__("classificacao_dados", v)),
+            ("governanca.lgpd", 1, lambda d, v: d["governanca"].__setitem__("lgpd", v)),
+            ("governanca.gestor_informacao", 1, lambda d, v: d["governanca"].__setitem__("gestor_informacao", v)),
+        ]
+
+        for field, min_length, mutate in mutations:
+            for raw in raw_negatives:
+                value = raw * (min_length // max(1, len(raw)) + 1)
+                self.assertGreaterEqual(len(value), min_length)
+                self.assertFalse(module._has_material_text(value))
+                with self.subTest(field=field, value=repr(value)):
+                    document = copy.deepcopy(self.valid)
+                    mutate(document, value)
+                    self.assertIn("SCHEMA", self.codes(document))
+
+        calibrated = copy.deepcopy(self.valid)
+        calibrated["score"]["tipo_semantica"] = "PROBABILIDADE_CALIBRADA"
+        calibrated["score"]["semantica_ref"] = "SEM-PROB-001"
+        calibrated["score"]["calibracao"] = {
+            "metodo": "calibracao_sintetica",
+            "evidencia_ref": "exp_001",
+            "proveniencia": {
+                "status": "MEDIDO",
+                "origem": "execucao sintetica",
+                "referencia": "CAL-001",
+                "observado_em_utc": "2026-09-14T13:30:00Z",
+                "aprovacao": None,
+                "medicao": {
+                    "referencia_execucao": "run-calibracao-001",
+                    "medido_em_utc": "2026-09-14T13:30:00Z",
+                },
+            },
+        }
+        for raw in raw_negatives:
+            value = raw * (3 // max(1, len(raw)) + 1)
+            self.assertGreaterEqual(len(value), 3)
+            self.assertFalse(module._has_material_text(value))
+            with self.subTest(field="score.calibracao.metodo", value=repr(value)):
+                document = copy.deepcopy(calibrated)
+                document["score"]["calibracao"]["metodo"] = value
+                self.assertIn("SCHEMA", self.codes(document))
+
+    def test_canonical_required_text_fields_accept_legitimate_unicode(self) -> None:
+        document = copy.deepcopy(self.valid)
+        material_long = "Texto válido 文档 देवनागरी ١٢٣ Jose\u0301"
+        material_short = "文档١"
+        document["identidade"]["titulo"] = material_long
+        document["negocio"]["caracteristica"] = material_long
+        document["negocio"]["objetivo"] = material_long
+        document["negocio"]["definicao_operacional"] = material_long
+        document["negocio"]["uso_pretendido"] = [material_long]
+        document["negocio"]["nao_usar_para"] = [material_long]
+        document["entidade"]["tipo"] = material_short
+        document["entidade"]["chave_logica"] = material_short
+        document["entidade"]["granularidade"] = material_long
+        document["entidade"]["populacao_elegivel"] = material_long
+        document["entidade"]["referencia_temporal"] = material_long
+        document["evidencias"][0]["descricao"] = material_long
+        document["contra_evidencias"][0]["descricao"] = material_long
+        document["classificacao"]["limiares"][0]["descricao"] = material_long
+        document["classificacao"]["limiares"][0]["unidade"] = material_short
+        document["score"]["componentes"][0]["descricao"] = material_long
+        document["governanca"]["classificacao_dados"] = material_short
+        document["governanca"]["lgpd"] = material_short
+        document["governanca"]["gestor_informacao"] = material_short
+        self.assertEqual([], module.validate_spec(document, self.schema))
+
+        calibrated = copy.deepcopy(document)
+        calibrated["score"]["tipo_semantica"] = "PROBABILIDADE_CALIBRADA"
+        calibrated["score"]["semantica_ref"] = "SEM-PROB-001"
+        calibrated["score"]["calibracao"] = {
+            "metodo": "校准方法 ١٢٣",
+            "evidencia_ref": "exp_001",
+            "proveniencia": {
+                "status": "MEDIDO",
+                "origem": "execucao sintetica",
+                "referencia": "CAL-001",
+                "observado_em_utc": "2026-09-14T13:30:00Z",
+                "aprovacao": None,
+                "medicao": {
+                    "referencia_execucao": "run-calibracao-001",
+                    "medido_em_utc": "2026-09-14T13:30:00Z",
+                },
+            },
+        }
+        self.assertEqual([], module.validate_spec(calibrated, self.schema))
+
+
 if __name__ == "__main__":
     unittest.main()

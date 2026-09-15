@@ -1,6 +1,6 @@
 # MM01 — Checkpoint
 
-Status: **QUARTA A1 `APTA_COM_CORRECOES`; DIVERGÊNCIA BLOQUEANTE CORRIGIDA; RETESTE DE CONSTRUÇÃO VERDE; QUINTA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
+Status: **QUINTA A1 `APTA_COM_CORRECOES`; `DIVERGE-01` BLOQUEANTE CONFIRMADA E CORRIGIDA; RETESTE DE CONSTRUÇÃO VERDE; SEXTA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
 
 ## Base e superfície
 
@@ -34,9 +34,9 @@ Status: **QUARTA A1 `APTA_COM_CORRECOES`; DIVERGÊNCIA BLOQUEANTE CORRIGIDA; RET
 18. conteúdo material mínimo obrigatório ao entrar em `EM_VALIDACAO`;
 19. coerência entre fase e status da interface de publicação, com caminhos positivos testados até `PUBLICADO`;
 20. fronteira de tracking preservada para MM06;
-21. validador de referência/CI, fixtures sintéticos e suíte com **31 métodos de teste**;
+21. validador de referência/CI, fixtures sintéticos e suíte com **34 métodos de teste**;
 22. gate permanente `.github/workflows/micromodelos-mm01-ci.yml`, read-only e sem acesso a ambiente corporativo;
-23. pacote neutro de auditoria com os resultados históricos das quatro A1 preservados, sem reclassificação retroativa.
+23. pacote neutro de auditoria com os resultados históricos das cinco A1 preservados, sem reclassificação retroativa.
 
 ## O que não foi feito
 
@@ -111,23 +111,31 @@ A correção não criou nova heurística: `evidencias[].regra`, `contra_evidenci
 
 A suíte passou para **31 métodos**, incluindo negativos de `Mn/Mc/Me`, `Cf`, zero-width, whitespace Unicode, pontuação, símbolos e combinações, e positivos multilíngues. O run transitório `34960256357` executou suíte, CLI positiva/negativa/`--previous`, `validate_assistant`, conferência do README e invariantes históricos antes de publicar `8fd8e7892ead1bb63a554b5283f7062adf582976`; os mecanismos transitórios foram removidos.
 
+## Quinta auditoria A1
+
+A quinta A1 independente sobre `0b7a712cd2c897483da34517f10516012711f153` concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`. O único achado, `DIVERGE-01`, foi confirmado no contraditório: textos centrais de identidade, negócio, entidade, calibração e outros campos equivalentes ainda podiam ser materialmente vazios. O relatório histórico foi preservado em `07_resultado_a1_reauditoria_4.md`.
+
+## Correções da quinta A1
+
+A correção mantém `_has_material_text` como autoridade única e amplia `format: material-text` aos textos obrigatórios que participam do contrato. Um teste estrutural protege a classificação futura; `governanca.observacoes[]` é a exceção narrativa opcional explícita. A suíte passa a **34 métodos**.
+
 ## Dívida documental antes do merge
 
 O bloco MM01 do `CHANGELOG.md` ainda descreve a candidata pré-A1. Ele deve ser sincronizado **antes do merge**, por operação que preserve byte a byte o histórico anterior. Essa pendência não deve ser usada para apagar ou reclassificar as auditorias históricas.
-
+    
 ## Gate independente pendente
 
-Como a candidata mudou materialmente após a quarta A1, é obrigatória uma **quinta A1 independente** sobre o novo HEAD congelado. O auditor deve repetir os gates mínimos e construir adversariais próprios, sem usar relatórios A1 anteriores, narrativa do autor, changelog ou mensagens de commit como prova da correção.
+Como a candidata mudou materialmente após a quinta A1, é obrigatória uma **sexta A1 independente** sobre o novo HEAD congelado.
 
 ## Gates restantes
 
-1. congelar e validar os workflows permanentes do HEAD documental final;
-2. executar quinta A1 em sessão independente;
-3. confrontar qualquer novo achado com a árvore e corrigir/retestar somente se procedente;
-4. se a quinta A1 for `APTA`, executar contraditório final;
-5. sincronizar o bloco MM01 do `CHANGELOG.md` preservando o histórico;
-6. revalidar a árvore exata depois dessa sincronização e reconfirmar `main`/`behind_by`/mergeabilidade;
-7. apresentar checkpoint final para aceite explícito;
-8. integrar a PR #51 somente após o aceite.
+1. concluir o reteste de construção e validar os workflows permanentes do novo HEAD;
+2. executar sexta A1 em sessão independente;
+3. confrontar qualquer novo achado com a árvore;
+4. se a sexta A1 for limpa, executar contraditório final;
+5. sincronizar o bloco MM01 do `CHANGELOG.md` preservando byte-for-byte o restante do arquivo;
+6. revalidar a árvore exata e reconfirmar `main`, `behind_by` e mergeabilidade;
+7. obter aceite explícito;
+8. só então integrar a PR #51.
 
-Enquanto qualquer item acima estiver pendente, **MM02 permanece bloqueada**.
+Enquanto qualquer item estiver pendente, **MM02 permanece bloqueada**.
