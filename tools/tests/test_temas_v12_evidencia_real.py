@@ -1,9 +1,10 @@
-"""V12 — regressão da evidência real AI/BI, sem converter CI em ambiente."""
+"""V12 — regressão das evidências reais AI/BI e SEC-01, sem converter CI em ambiente."""
 from __future__ import annotations
 
 import importlib.util
 import json
 from pathlib import Path
+import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -16,10 +17,12 @@ SPEC.loader.exec_module(v12)
 EVIDENCE = ROOT / "docs" / "sprints" / "sistema_temas" / "V12" / "evidencias" / "V12-AIBI-01"
 ATTEMPT_1 = EVIDENCE / "V12-AIBI-01_attempt-01.json"
 ATTEMPT_2 = EVIDENCE / "V12-AIBI-01_attempt-02.json"
+SEC_01 = ROOT / "docs" / "sprints" / "sistema_temas" / "V12" / "evidencias" / "SEC-01" / "SEC-01_attempt-01.json"
 SYNTHETIC_SQL = (
     EVIDENCE / "synthetic_trips.sql",
     EVIDENCE / "synthetic_route_revenue.sql",
 )
+_EMAIL_RE = re.compile(r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}")
 
 
 class RealAibiEvidenceTests(unittest.TestCase):
@@ -45,6 +48,24 @@ class RealAibiEvidenceTests(unittest.TestCase):
             self.assertNotIn("SAMPLES.NYCTAXI", upper)
             for forbidden in ("CREATE TABLE", "CREATE SCHEMA", "CREATE VOLUME", "INSERT INTO", "MERGE INTO"):
                 self.assertNotIn(forbidden, upper)
+
+    def test_sec_01_identity_and_effective_permission_are_sanitized_and_valid(self):
+        matrix = v12.load_matrix()
+        raw = SEC_01.read_text(encoding="utf-8")
+        record = json.loads(raw)
+
+        self.assertEqual(record["status"], "PASS")
+        self.assertEqual(record["case_id"], "SEC-01")
+        self.assertTrue(record["facts"]["identity_checked"])
+        self.assertTrue(record["facts"]["permission_checked"])
+        self.assertTrue(record["facts"]["synthetic_data_only"])
+        self.assertFalse(record["facts"]["self_declared_role_used"])
+        self.assertFalse(record["facts"]["identity_bytes_versioned"])
+        self.assertEqual(record["human"], {})
+        self.assertIsNone(_EMAIL_RE.search(raw))
+        self.assertNotIn("workspace_id", raw.lower())
+        self.assertNotIn("opensharing", raw.lower())
+        v12.validate_evidence(record, matrix)
 
 
 if __name__ == "__main__":
