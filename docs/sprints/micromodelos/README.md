@@ -1,6 +1,6 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: **MM00 encerrada e integrada. MM01 passou por seis A1 (`NAO_APTA`, `NAO_APTA`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`); os dois desvios bloqueantes da sexta A1 foram confirmados e corrigidos; reteste e sétima A1 independentes pendentes. MM01 ainda não aceita nem integrada.**
+> Estado: **MM00 encerrada e integrada. MM01 passou por seis A1 (`NAO_APTA`, `NAO_APTA`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`); os dois desvios bloqueantes da sexta A1 foram confirmados e corrigidos; reteste e sete workflows permanentes verdes; sétima A1 independente pendente. MM01 ainda não aceita nem integrada.**
 
 ## Objetivo
 
@@ -93,12 +93,11 @@ A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprin
 
 ## Próximo gate
 
-1. concluir o reteste de construção e obter os workflows permanentes verdes no HEAD corrigido;
-2. executar uma **sétima A1 independente** sobre esse HEAD, sem usar relatórios anteriores, narrativa do autor, changelog ou mensagens de commit como prova;
-3. confrontar qualquer novo achado e corrigir somente se procedente;
-4. se a sétima A1 for limpa, executar contraditório final;
-5. sincronizar o bloco MM01 do `CHANGELOG.md` antes do merge, preservando byte a byte o histórico anterior;
-6. revalidar a árvore exata após o changelog, reconfirmar `main`/`behind_by`/mergeabilidade e solicitar aceite final explícito;
-7. integrar a PR #51 somente após o aceite.
+1. executar uma **sétima A1 independente** sobre esse HEAD, sem usar relatórios anteriores, narrativa do autor, changelog ou mensagens de commit como prova;
+2. confrontar qualquer novo achado e corrigir somente se procedente;
+3. se a sétima A1 for limpa, executar contraditório final;
+4. sincronizar o bloco MM01 do `CHANGELOG.md` antes do merge, preservando byte a byte o histórico anterior;
+5. revalidar a árvore exata após o changelog, reconfirmar `main`/`behind_by`/mergeabilidade e solicitar aceite final explícito;
+6. integrar a PR #51 somente após o aceite.
 
 **MM02 permanece bloqueada.**

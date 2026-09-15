@@ -1,11 +1,11 @@
 # MM01 — Checkpoint
 
-Status: **SEXTA A1 `APTA_COM_CORRECOES`; `DIVERGE-01` E `DIVERGE-02` BLOQUEANTES CONFIRMADAS E CORRIGIDAS; RETESTE DE CONSTRUÇÃO PENDENTE; SÉTIMA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
+Status: **SEXTA A1 `APTA_COM_CORRECOES`; `DIVERGE-01` E `DIVERGE-02` BLOQUEANTES CONFIRMADAS E CORRIGIDAS; RETESTE DE CONSTRUÇÃO VERDE; 7 WORKFLOWS PERMANENTES VERDES; SÉTIMA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
 
 ## Base e superfície
 
 - `main` inicial da iniciativa MM01: `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5`;
-- a candidata foi reconciliada sucessivamente com as bases pós-V10 e pós-V11;
+- a candidata foi reconciliada sucessivamente com as bases pós-V10, pós-V11 e com `main@28669f99db27cf23df73549297bbf57eda033f58` após a integração do plano mestre SEF;
 - base vigente na segunda A1: `d106ef3158e5827a2eec3aa183dbb3b47885c960`;
 - branch: `micromodelos/mm01-contrato-canonico`;
 - PR: `#51`;
@@ -137,13 +137,12 @@ Como a candidata mudou materialmente após a sexta A1, é obrigatória uma **sé
 
 ## Gates restantes
 
-1. concluir o reteste de construção e validar os workflows permanentes do novo HEAD;
-2. executar sétima A1 em sessão independente;
-3. confrontar qualquer novo achado com a árvore;
-4. se a sétima A1 for limpa, executar contraditório final;
-5. sincronizar o bloco MM01 do `CHANGELOG.md` preservando byte-for-byte o restante do arquivo;
-6. revalidar a árvore exata e reconfirmar `main`, `behind_by` e mergeabilidade;
-7. obter aceite explícito;
-8. só então integrar a PR #51.
+1. executar sétima A1 em sessão independente;
+2. confrontar qualquer novo achado com a árvore;
+3. se a sétima A1 for limpa, executar contraditório final;
+4. sincronizar o bloco MM01 do `CHANGELOG.md` preservando byte-for-byte o restante do arquivo;
+5. revalidar a árvore exata e reconfirmar `main`, `behind_by` e mergeabilidade;
+6. obter aceite explícito;
+7. só então integrar a PR #51.
 
 Enquanto qualquer item estiver pendente, **MM02 permanece bloqueada**.

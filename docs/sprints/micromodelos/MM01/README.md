@@ -1,6 +1,6 @@
 # MM01 — Contrato canônico de micromodelos
 
-Status da sprint: **SEXTA A1 `APTA_COM_CORRECOES`; `DIVERGE-01` E `DIVERGE-02` BLOQUEANTES CONFIRMADAS E CORRIGIDAS; RETESTE DE CONSTRUÇÃO PENDENTE; SÉTIMA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
+Status da sprint: **SEXTA A1 `APTA_COM_CORRECOES`; `DIVERGE-01` E `DIVERGE-02` BLOQUEANTES CONFIRMADAS E CORRIGIDAS; RETESTE DE CONSTRUÇÃO VERDE; 7 WORKFLOWS PERMANENTES VERDES; SÉTIMA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
 Base inicial: `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5`  
 Branch: `micromodelos/mm01-contrato-canonico`  
 PR: `#51`
@@ -136,7 +136,7 @@ O contraditório confirmou ambos os achados. A correção remove as três regex 
 
 ## Evidência técnica atual
 
-A suíte MM01 possui **36 métodos automatizados**, além de mutações e subtests. O reteste de construção das correções da quinta A1 deve ficar verde no novo HEAD antes da próxima auditoria independente.
+A suíte MM01 possui **36 métodos automatizados**, além de mutações e subtests. O reteste de construção das correções da sexta A1 está verde no HEAD reconciliado, e os sete workflows permanentes foram executados com sucesso antes do congelamento para a sétima A1.
 
 Run IDs e o SHA final da árvore documental não são congelados neste arquivo para evitar que registrar a evidência altere a própria árvore validada. A descrição da PR #51 é o registro operacional do head e dos runs finais; `TESTES.md` mantém a cronologia histórica.
 
