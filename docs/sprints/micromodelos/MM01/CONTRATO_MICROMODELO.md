@@ -48,28 +48,37 @@ O tipo inicial é `BOOLEANO_COM_INDETERMINADO`. O contrato exige três definiç�
 - `quando_false`: quando há base suficiente para negar a característica;
 - `quando_indeterminado`: quando a informação não permite concluir nem TRUE nem FALSE.
 
-A distinção é verificada após normalização editorial básica de caixa, acentuação, pontuação e espaços; não basta copiar a mesma definição mudando apenas forma textual. A política de ausência de evidência só aceita `INDETERMINADO` ou `REGRA_EXPLICITA_APROVADA`.
+A distinção é verificada após normalização editorial básica de caixa, acentuação, pontuação e espaços; não basta copiar a mesma definição mudando apenas forma textual.
+
+A política de ausência de evidência deixou de depender de prosa normativa. `classificacao.ausencia_evidencia` possui comportamento estruturado:
+
+- `tratamento=INDETERMINADO` exige `resultado_sem_evidencia=INDETERMINADO` e `regra_ref=null`;
+- `tratamento=REGRA_EXPLICITA_APROVADA` exige proveniência `APROVADO` e `regra_ref` auditável; o resultado aplicável fica declarado em `resultado_sem_evidencia`.
+
+Não existe campo livre capaz de redefinir esse comportamento. Uma propriedade legada como `descricao` nesse bloco é recusada pelo schema fechado. Portanto uma regra que converta ausência em `FALSE` só pode existir de forma explícita, estruturada, referenciada e aprovada.
 
 Limiar material pode ser registrado como `PROPOSTO` enquanto o micromodelo ainda está em descoberta/estudo. A partir de `EM_VALIDACAO`, todo limiar existente precisa carregar proveniência `APROVADO`. Dessa forma, a fonte canônica preserva propostas sem permitir que elas atravessem o gate formal como decisões válidas.
 
 ### `score`
 
-Score pode ser habilitado ou desabilitado. Quando habilitado, exige:
+Score pode ser habilitado ou desabilitado. Quando habilitado, a semântica executável é determinada exclusivamente por campos estruturados:
 
 - `tipo_semantica`: `FORCA_EVIDENCIA`, `PROBABILIDADE_CALIBRADA` ou `OUTRA_APROVADA`;
-- descrição da semântica;
-- escala 0–100;
-- regra de normalização;
+- `semantica_ref`: referência auditável para a decisão/definição de semântica quando o gate formal é atingido; essa referência **não substitui nem sobrescreve** `tipo_semantica`;
+- escala exatamente 0–100;
+- `normalizacao` estruturada com método, referência quando aplicável e proveniência;
 - componentes/pesos, quando existirem;
 - proveniência da decisão de score.
 
+A MM01 não usa mais texto livre `score.semantica` para inferir se um score é probabilístico. Esse campo legado é propriedade desconhecida e é rejeitado. Assim, sinônimos como “percentual estimado”, “risco percentual” ou `likelihood` não podem redefinir um `FORCA_EVIDENCIA` por prosa. Se o score representa probabilidade, o único contrato válido é `tipo_semantica=PROBABILIDADE_CALIBRADA`.
+
+`normalizacao` também deixou de ser prosa normativa. Os métodos estruturados são `PENDENTE`, `SOMA_PONDERADA_0_100`, `MIN_MAX_0_100`, `LINEAR_0_100` e `CUSTOM_APROVADO`. Antes do gate formal, `PENDENTE` pode permanecer proposto. A partir de `EM_VALIDACAO`, o método precisa estar definido e aprovado; `CUSTOM_APROVADO` exige referência auditável da regra.
+
 Assim como limiares, pesos podem permanecer `PROPOSTO` nas fases pré-gate, mas todo peso existente precisa estar `APROVADO` ao entrar em `EM_VALIDACAO` ou fase posterior.
 
-`PROBABILIDADE_CALIBRADA` exige calibração com proveniência `MEDIDO` e referência de execução. Além disso, `calibracao.evidencia_ref` precisa resolver para um `experimentos[].id` existente cujo experimento esteja `EXECUTADO` e com proveniência `MEDIDO`. A referência não é texto decorativo: ela possui integridade referencial dentro da especificação.
+`PROBABILIDADE_CALIBRADA` exige calibração com proveniência `MEDIDO` e referência de execução. Além disso, `calibracao.evidencia_ref` precisa resolver para um `experimentos[].id` existente cujo experimento esteja `EXECUTADO` e com proveniência `MEDIDO`. Para os demais tipos de semântica, um bloco de calibração probabilística é recusado como inesperado.
 
-Além do enum, o validador barra linguagem probabilística em um score não calibrado; portanto não basta deixar `tipo_semantica=FORCA_EVIDENCIA` e escrever “probabilidade” ou “chance” na descrição.
-
-Quando score está desabilitado, semântica, escala, normalização, componentes, calibração e campo de score na saída devem permanecer vazios/nulos.
+Quando score está desabilitado, tipo de semântica, referência de semântica, escala, normalização, componentes, calibração e campo de score na saída devem permanecer vazios/nulos.
 
 ### `experimentos`
 
@@ -84,7 +93,9 @@ Separa resultado técnico medido da aprovação humana. `APROVADO` exige ambos:
 1. resultado com proveniência `MEDIDO`;
 2. `aprovacao_humana.status=APROVADO`, com responsável, timestamp e referência materialmente preenchida.
 
-Fase `VALIDADO` ou posterior não é aceita se esse gate não estiver satisfeito. Strings compostas apenas por whitespace ou caracteres invisíveis não contam como referência auditável; o contrato é fail-closed também para esse tipo de preenchimento aparente.
+Fase `VALIDADO` ou posterior não é aceita se esse gate não estiver satisfeito.
+
+A definição de “texto material” é positiva: após normalização NFKC, o validador exige ao menos uma letra ou número Unicode. Espaços, controles, caracteres de formatação, variation selectors e marcas combinantes isoladas não satisfazem uma prova auditável. Isso se aplica a aprovação, medição e referências externas de publicação.
 
 ### `saida`
 
@@ -92,9 +103,9 @@ Possui dois contratos distintos.
 
 `saida.estudo` preserva `TRUE`, `FALSE` e `INDETERMINADO`, além do score quando habilitado.
 
-`saida.publicacao` começa `PENDENTE`. A partir de `CANDIDATO_PRODUTO`, precisa estar `DEFINIDO`, com campo final `BOOLEAN` e uma política aprovada para `INDETERMINADO`: excluir do universo publicado, usar campo de cobertura separado ou outra solução explicitamente aprovada.
+`saida.publicacao` começa `PENDENTE`. A partir de `CANDIDATO_PRODUTO`, precisa estar `DEFINIDO`, com campo final `BOOLEAN` e uma política aprovada para `INDETERMINADO`.
 
-A política possui o campo estruturado `indeterminado_vira_false`, fixado em `false`. O validador também recusa descrição que contradiga essa regra estruturada. Assim, nenhum consumidor válido do contrato pode interpretar uma política aceita como autorização implícita para converter `INDETERMINADO` em `FALSE`.
+A política de publicação também é exclusivamente estruturada: `indeterminado_vira_false` é fixado em `false`; `tratamento` pode ser `EXCLUIR_DA_PUBLICACAO`, `CAMPO_COBERTURA_SEPARADO` ou `OUTRA_APROVADA`; e `regra_ref` só é usada por `OUTRA_APROVADA`, quando passa a ser obrigatória e auditável. O bloco não possui descrição normativa livre que possa contradizer a estrutura.
 
 ### `tracking`
 
@@ -108,19 +119,21 @@ Reserva campos para classificação de dados, LGPD, gestor da informação e obs
 
 Registra apenas o estado de interface com a governança externa: `NAO_INICIADA`, `CANDIDATA`, `EM_VALIDACAO_EXTERNA`, `PUBLICADA` ou `REJEITADA`. Não replica regras institucionais.
 
-O estado de publicação precisa ser coerente com a fase do ciclo: antes de `CANDIDATO_PRODUTO`, permanece `NAO_INICIADA`; em `CANDIDATO_PRODUTO`, é `CANDIDATA` ou `REJEITADA`; `EM_VALIDACAO_GOVERNANCA` exige `EM_VALIDACAO_EXTERNA` e `handoff_ref`; `PUBLICADO` exige `PUBLICADA` e `produto_dados_ref`. As referências de handoff e Produto de Dados precisam conter texto material, não apenas whitespace/invisíveis. A suíte inclui caminhos positivos até publicação para provar que esses gates são satisfazíveis e não apenas negativos.
+O estado de publicação precisa ser coerente com a fase do ciclo: antes de `CANDIDATO_PRODUTO`, permanece `NAO_INICIADA`; em `CANDIDATO_PRODUTO`, é `CANDIDATA` ou `REJEITADA`; `EM_VALIDACAO_GOVERNANCA` exige `EM_VALIDACAO_EXTERNA` e `handoff_ref`; `PUBLICADO` exige `PUBLICADA` e `produto_dados_ref`. `handoff_ref` e `produto_dados_ref` precisam conter referência auditável material segundo a mesma regra positiva de letras/números.
 
 ### `proveniencia`
 
 Registra criação do arquivo e, quando necessário, referências adicionais por alvo. As afirmações materiais também carregam proveniência junto do próprio bloco para permitir validação local.
 
-`APROVADO` exige bloco de aprovação com conteúdo auditável; `MEDIDO` exige medição com referência de execução material. A presença sintática de uma string vazia visualmente não satisfaz esses estados.
+`APROVADO` exige bloco de aprovação com conteúdo auditável; `MEDIDO` exige medição com referência de execução material. Presença sintática de caracteres invisíveis não satisfaz esses estados.
 
 ## 3. IDs e referências
 
 IDs internos usam `snake_case`, começam por letra e possuem de 3 a 64 caracteres. Referências de evidência para fontes precisam resolver para um `fontes[].id` existente. IDs duplicados são inválidos nas coleções controladas, incluindo fontes, evidências, contra-evidências, limiares, componentes do score e experimentos.
 
 `score.calibracao.evidencia_ref` usa especificamente o namespace de `experimentos[].id` e só aceita experimento executado/medido.
+
+Referências auditáveis externas não são IDs de negócio reais neste repositório: fixtures e template usam somente valores sintéticos. A regra de materialidade impede valores visualmente vazios; ela não concede acesso nem valida existência no ambiente corporativo.
 
 ## 4. Valores pendentes
 
@@ -130,4 +143,4 @@ O contrato prefere `PENDENTE`, lista vazia ou `null` explícito a um valor inven
 
 ## 5. O que não está definido na MM01
 
-A MM01 não define fingerprint, crawler de catálogo, feature engineering, cálculo de score específico, contrato de runs, notebook de estudo, README do micromodelo, handoff de publicação, visual ou migração. Esses temas permanecem nas sprints posteriores do Plano Mestre.
+A MM01 não define fingerprint, crawler de catálogo, feature engineering específica, contrato de runs, notebook de estudo, README do micromodelo, handoff de publicação real, visual ou migração. Esses temas permanecem nas sprints posteriores do Plano Mestre.
