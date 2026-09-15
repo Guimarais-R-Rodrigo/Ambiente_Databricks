@@ -1,16 +1,16 @@
 # MM01 — Checkpoint
 
-Status: **OITAVA A1 `NAO_APTA` PRESERVADA; CONTRADITÓRIO DE ESCOPO CONCLUÍDO; MATRIZ DE ACEITE FINAL CONGELADA; 47 TESTES DE CONSTRUÇÃO VERDES; AUDITORIA FINAL FECHADA PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
+Status: **AUDITORIA FINAL FECHADA `NAO_APTA_PARA_FECHAMENTO_DOCUMENTAL` PRESERVADA; B01/B02 CORRIGIDOS; 47 TESTES DA MATRIZ + 1 REGRESSÃO R03 VERDES; REAUDITORIA FINAL INDEPENDENTE PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
 
 ## Base e superfície
 
 - `main` inicial da iniciativa MM01: `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5`;
-- a candidata foi reconciliada sucessivamente com as bases pós-V10, pós-V11 e com `main@28669f99db27cf23df73549297bbf57eda033f58` após a integração do plano mestre SEF;
+- a candidata foi reconciliada sucessivamente com as bases pós-V10, pós-V11, pós-V12 e com a `main` vigente após a integração do Plano Mestre V13;
 - base vigente na segunda A1: `d106ef3158e5827a2eec3aa183dbb3b47885c960`;
 - branch: `micromodelos/mm01-contrato-canonico`;
 - PR: `#51`;
 - MM00: encerrada e integrada;
-- MM02: bloqueada até auditoria final fechada, contraditório final, aceite explícito e merge desta sprint.
+- MM02: bloqueada até reauditoria final independente, contraditório final, fechamento documental, aceite explícito e merge desta sprint.
 
 ## O que a candidata entrega
 
@@ -34,9 +34,9 @@ Status: **OITAVA A1 `NAO_APTA` PRESERVADA; CONTRADITÓRIO DE ESCOPO CONCLUÍDO; 
 18. conteúdo material mínimo obrigatório ao entrar em `EM_VALIDACAO`;
 19. coerência entre fase e status da interface de publicação, com caminhos positivos testados até `PUBLICADO`;
 20. fronteira de tracking preservada para MM06;
-21. validador de referência/CI, fixtures sintéticos e suíte com **47 métodos de teste**;
+21. validador de referência/CI, fixtures sintéticos, suíte canônica com **47 métodos de teste** e uma regressão permanente dedicada a R03/`np.float64`;
 22. gate permanente `.github/workflows/micromodelos-mm01-ci.yml`, read-only e sem acesso a ambiente corporativo;
-23. pacote neutro de auditoria com os resultados históricos das oito A1 preservados, sem reclassificação retroativa, e `MATRIZ_ACEITE_FINAL.md` congelando o threat model e a condição de término.
+23. pacote neutro de auditoria com as oito A1 exploratórias preservadas, a auditoria final fechada preservada separadamente e `MATRIZ_ACEITE_FINAL.md` congelando o threat model e a condição de término.
 
 ## O que não foi feito
 
@@ -47,7 +47,7 @@ Status: **OITAVA A1 `NAO_APTA` PRESERVADA; CONTRADITÓRIO DE ESCOPO CONCLUÍDO; 
 - não houve descoberta de metadata;
 - não houve leitura de dados;
 - não houve alteração de `mlflow_run`;
-- não houve integração visual específica da MM01; V11 foi absorvida apenas como base do repositório;
+- não houve integração visual específica da MM01; evoluções do Sistema de Temas foram absorvidas apenas como base vigente do repositório;
 - não houve handoff/publicação real;
 - não houve migração de legado.
 
@@ -139,24 +139,47 @@ A normalização semântica remove `Cf` e variation selectors antes da tokeniza�
 
 A oitava A1 independente sobre `fe3a9d8b39c0016d9b487036f1d5e3ad38cb2630` concluiu `NAO_APTA`. O resultado permanece em `10_resultado_a1_reauditoria_7.md`. O contraditório separou violações reais do contrato, decisões arquiteturais e hardening fora do threat model.
 
-`MATRIZ_ACEITE_FINAL.md` foi então congelada. Ela define R01–R08, entradas suportadas, não requisitos e a regra de que a auditoria final pode criar adversariais, mas não criar requisitos novos implicitamente. As correções permanentes associadas elevaram a suíte a **47 métodos** e cobrem materialidade por propriedade Unicode, equivalência editorial conservadora, domínio numérico canônico, decisão humana/proveniência intrínsecas, resultado somente após execução, distinção snapshot × evolução e perfil de autoria do schema.
+`MATRIZ_ACEITE_FINAL.md` foi então congelada. Ela define R01–R08, entradas suportadas, não requisitos e a regra de que a auditoria final pode criar adversariais, mas não criar requisitos novos implicitamente. As correções permanentes associadas elevaram a suíte canônica a **47 métodos** e cobrem materialidade por propriedade Unicode, equivalência editorial conservadora, domínio numérico canônico, decisão humana/proveniência intrínsecas, resultado somente após execução, distinção snapshot × evolução e perfil de autoria do schema.
+
+## Auditoria final fechada — `NAO_APTA_PARA_FECHAMENTO_DOCUMENTAL`
+
+A auditoria final fechada contra a matriz examinou o HEAD `337055d70a28c6d595594fa1e8c351a47615e66b` e está preservada, sem reclassificação, em `docs/auditoria/2026-09-14_micromodelos-mm01/11_resultado_a1_reauditoria_8.md`.
+
+Dois bloqueios independentes foram confirmados:
+
+1. **B01 / R03 / `MATRIX_VIOLATION`:** `np.float64(1.5)` atravessava `_check_finite_number_format` porque `isinstance(value, float)` tratava o escalar externo como `float` canônico;
+2. **B02 / `FINAL_GATE_VIOLATION`:** a candidata estava `behind_by=4` contra a `main` vigente naquele julgamento, embora o merge-ref armazenado ainda reproduzisse uma base anterior.
+
+O relatório também manteve `"?true" × "true"` como `BACKLOG_HARDENING`, sem criar requisito novo, e classificou a incompatibilidade de escopo do workflow V12 então observada como externa à MM01.
+
+## Correções da auditoria final
+
+As correções foram deliberadamente estreitas:
+
+- o domínio numérico canônico passou a usar identidade estrita de tipo (`type(value) is int` / `type(value) is float`), recusando deterministicamente `Decimal`, escalares NumPy e outros tipos externos em vez de interpretá-los implicitamente;
+- `tools/tests/test_micromodelo_mm01_r03.py` adiciona regressão permanente para `np.float64(1.5)` tanto em `classificacao.limiares[].valor` quanto em `score.componentes[].peso`;
+- a branch foi reconciliada por merge real com a `main` vigente, eliminando o `behind_by` sem ampliar o escopo MM01;
+- a manutenção de CI trazida pela `main` torna o gate V12 aplicável somente quando seu escopo estrito é pertinente, sem afrouxar a allowlist da MM01;
+- o relatório da auditoria final foi preservado como documento histórico separado; nenhuma A1 anterior foi reclassificada.
+
+A correção técnica, a reconciliação com `main` e a primeira sincronização documental foram certificadas em runners reais antes desta atualização. Como esta própria sincronização documental altera o HEAD, os workflows permanentes precisam ser recertificados na árvore resultante antes da reauditoria final independente.
 
 ## Dívida documental antes do merge
 
-O bloco MM01 do `CHANGELOG.md` ainda descreve a candidata pré-A1. Ele deve ser sincronizado **antes do merge**, por operação que preserve byte a byte o histórico anterior. Essa pendência não deve ser usada para apagar ou reclassificar as auditorias históricas.
-    
-## Auditoria final fechada pendente
+O bloco MM01 do `CHANGELOG.md` ainda descreve a candidata pré-A1. Ele deve permanecer assim até uma reauditoria final independente limpa e contraditório final. Quando autorizado pelo gate, sua sincronização deve preservar byte a byte o histórico fora do bloco MM01.
 
-A candidata deve passar por **uma única auditoria final contra `MATRIZ_ACEITE_FINAL.md`**. Achado novo só é bloqueante se demonstrar violação de requisito da matriz ou ADR aceito. Ampliação de threat model exige decisão explícita do usuário e não pode nascer implicitamente da auditoria.
+## Reauditoria final independente pendente
+
+A próxima auditoria deve reexaminar, em sessão independente e contra a mesma `MATRIZ_ACEITE_FINAL.md` congelada, o novo HEAD resultante das correções B01/B02. Ela pode criar adversariais próprios, mas um caso só é bloqueante quando demonstra violação de requisito já assumido pela matriz ou ADR aceito; o threat model não é reaberto implicitamente.
 
 ## Gates restantes
 
-1. certificar os workflows permanentes no HEAD documental final;
-2. executar a auditoria final fechada em sessão independente;
-3. executar contraditório final sobre qualquer achado dentro da matriz;
-4. se limpa, sincronizar o bloco MM01 do `CHANGELOG.md` preservando byte-for-byte o restante do arquivo;
-5. revalidar a árvore exata e reconfirmar `main`, `behind_by` e mergeabilidade;
-6. obter aceite explícito;
+1. recertificar os workflows permanentes no HEAD documental resultante desta sincronização;
+2. executar a reauditoria final independente contra a matriz congelada;
+3. executar contraditório final sobre qualquer achado material dentro da matriz;
+4. se a reauditoria for limpa, sincronizar o bloco MM01 do `CHANGELOG.md` preservando byte a byte todo o restante do arquivo;
+5. revalidar a árvore exata e reconfirmar `main`, `behind_by`, merge-ref e mergeabilidade;
+6. obter aceite explícito do usuário;
 7. só então integrar a PR #51.
 
 Enquanto qualquer item estiver pendente, **MM02 permanece bloqueada**.

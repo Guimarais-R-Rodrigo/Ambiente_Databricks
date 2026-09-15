@@ -1,6 +1,6 @@
 # MM01 — Contrato canônico de micromodelos
 
-Status da sprint: **OITAVA A1 `NAO_APTA` PRESERVADA; CONTRADITÓRIO DE ESCOPO CONCLUÍDO; MATRIZ DE ACEITE FINAL CONGELADA; 47 TESTES DE CONSTRUÇÃO VERDES; AUDITORIA FINAL FECHADA PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
+Status da sprint: **AUDITORIA FINAL FECHADA `NAO_APTA_PARA_FECHAMENTO_DOCUMENTAL` PRESERVADA; B01/B02 CORRIGIDOS; 47 TESTES DA MATRIZ + 1 REGRESSÃO R03 VERDES; REAUDITORIA FINAL INDEPENDENTE PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
 Base inicial: `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5`  
 Branch: `micromodelos/mm01-contrato-canonico`  
 PR: `#51`
@@ -11,7 +11,7 @@ Transformar as decisões arquiteturais aceitas na MM00 em um contrato estrutural
 
 A sprint não cria a skill `hub-ml-micromodelos`. O validador desta entrega vive em `tools/` como **oráculo de construção e CI** porque a lista de skills é fechada e a skill só nasce na MM04. Quando a MM04 criar o objeto roteável, ela deverá incorporar/derivar o contrato vigente sem criar uma segunda fonte de verdade.
 
-A implementação começou sobre a `main` final da MM00 e foi reconciliada de forma fail-closed com as evoluções posteriores do Sistema de Temas, inclusive V10 e V11. Nenhum arquivo funcional dessas sprints foi reimplementado pela MM01; elas foram absorvidas apenas como base vigente do repositório.
+A implementação começou sobre a `main` final da MM00 e foi reconciliada de forma fail-closed com as evoluções posteriores do Sistema de Temas. Nenhum arquivo funcional dessas sprints foi reimplementado pela MM01; as evoluções foram absorvidas apenas como base vigente do repositório.
 
 ## Entregas
 
@@ -21,9 +21,10 @@ A implementação começou sobre a `main` final da MM00 e foi reconciliada de fo
 - `ESTADOS_E_PROVENIENCIA.md`: máquina de fases, condições, proveniência e gates;
 - `tools/micromodelo_mm01_contract.py`: validador de referência/CI;
 - fixtures sintéticos positivos e negativos em `tools/tests/fixtures/micromodelos_mm01/`;
-- `tools/tests/test_micromodelo_mm01.py`: suíte automatizada com **47 métodos** e múltiplos subtests;
+- `tools/tests/test_micromodelo_mm01.py`: suíte canônica automatizada com **47 métodos** e múltiplos subtests;
+- `tools/tests/test_micromodelo_mm01_r03.py`: regressão permanente dedicada ao requisito R03 para recusar `np.float64` e demais tipos numéricos externos ao domínio canônico;
 - `.github/workflows/micromodelos-mm01-ci.yml`: gate permanente, read-only, para branch/PR/`main`;
-- pacote de auditoria A1 com contexto, prompt e oito resultados históricos preservados (`NAO_APTA`, `NAO_APTA`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `NAO_APTA`), além da `MATRIZ_ACEITE_FINAL.md` congelada após o contraditório da oitava A1;
+- pacote de auditoria com contexto, prompt, oito resultados A1 exploratórios preservados e a auditoria final fechada preservada separadamente, além da `MATRIZ_ACEITE_FINAL.md` congelada após o contraditório da oitava A1;
 - `TESTES.md` e `CHECKPOINT.md`.
 
 ## Decisões fechadas nesta sprint
@@ -49,7 +50,7 @@ IDEIA
 
 ### `FALSE` não significa “não encontrei evidência”
 
-O contrato exige três definições distintas: `quando_true`, `quando_false` e `quando_indeterminado`. A comparação é deliberadamente **editorial, não semântica**: aplica NFKC/casefold, remove `Default_Ignorable_Code_Point`, normaliza whitespace e tolera apenas pontuação terminal editorial prevista. Diacríticos, operadores e pontuação interna potencialmente semânticos são preservados; a MM01 não tenta resolver equivalência geral de linguagem natural.
+O contrato exige três definições distintas: `quando_true`, `quando_false` e `quando_indeterminado`. A comparação é deliberadamente **editorial, não semântica**: aplica NFKC/casefold, remove `Default_Ignorable_Code_Point`, normaliza whitespace e tolera apenas pontuação editorial prevista. Diacríticos, operadores e pontuação interna potencialmente semânticos são preservados; a MM01 não tenta resolver equivalência geral de linguagem natural.
 
 Após a segunda A1, a política de ausência de evidência deixou de depender de prosa normativa. O comportamento é declarado por `tratamento`, `resultado_sem_evidencia`, `regra_ref` e proveniência. `tratamento=INDETERMINADO` exige resultado `INDETERMINADO`; uma conversão explícita para outro resultado só pode existir como `REGRA_EXPLICITA_APROVADA` com referência auditável.
 
@@ -74,6 +75,12 @@ A segunda A1 demonstrou que uma blacklist de whitespace/controles não era sufic
 O JSON Schema usa `format: material-text` e o `FormatChecker` do validador delega esse formato à mesma função `_has_material_text`. Isso rejeita strings compostas somente por espaços, zero-width, variation selectors, combining marks isolados, pontuação ou símbolos nos campos materiais, sem rejeitar CJK, Devanagari, caracteres acentuados, algarismos Unicode ou combining marks acompanhados de texto material. Campos puramente narrativos não foram restringidos indiscriminadamente.
 
 A quarta A1 identificou seis campos normativos equivalentes que ainda escapavam dessa autoridade. `evidencias[].regra`, `contra_evidencias[].regra`, `experimentos[].hipotese`, `experimentos[].resultado`, `validacao.resultado.resumo` e `identidade.estado.motivo_condicao` agora usam o mesmo `material-text`; os gates de resultado executado e motivo operacional chamam `_has_material_text` em vez de `.strip()`.
+
+### O domínio numérico canônico é estrito
+
+R03 distingue o domínio canônico de entradas Python de tipos externos. Inteiros Python arbitrariamente grandes são aceitos sem coerção para `float`; `float` Python precisa ser finito. `Decimal`, escalares NumPy e outros tipos externos não recebem suporte positivo nem conversão implícita: quando chegam diretamente à API Python, são recusados deterministicamente.
+
+Após a auditoria final fechada, `_check_finite_number_format` passou de `isinstance` para identidade estrita de tipo. Isso impede que `np.float64`, que pode satisfazer `isinstance(value, float)`, atravesse o ramo reservado ao `float` Python. A regressão dedicada cobre limiar e peso.
 
 ### Publicação não apaga o indeterminado
 
@@ -133,9 +140,18 @@ O contraditório confirmou os três achados. A correção remove `Cf` e variatio
 
 A oitava A1 independente sobre `fe3a9d8b39c0016d9b487036f1d5e3ad38cb2630` concluiu `NAO_APTA` e permanece historicamente preservada em `10_resultado_a1_reauditoria_7.md`. O relatório trouxe seis `QUEBRA`, dois `DIVERGE` bloqueantes e uma melhoria. O contraditório confirmou defeitos materiais, mas também demonstrou que a auditoria exploratória vinha ampliando o threat model a cada rodada.
 
-Para encerrar o ciclo de expansão aberta, `MATRIZ_ACEITE_FINAL.md` congela os requisitos R01–R08, as entradas suportadas, o perfil de autoria do schema e os não requisitos. A candidata foi corrigida contra essa matriz: materialidade passa a usar `Default_Ignorable_Code_Point`; a comparação passa a ser editorial conservadora; o domínio numérico canônico é determinístico; decisão humana e proveniência têm invariantes intrínsecos; resultado observado só existe após `EXECUTADO`; snapshot e evolução histórica têm níveis de garantia distintos; e o schema oficial permanece dentro do perfil de composição revisado. A suíte passa a **47 métodos**.
+Para encerrar o ciclo de expansão aberta, `MATRIZ_ACEITE_FINAL.md` congela os requisitos R01–R08, as entradas suportadas, o perfil de autoria do schema e os não requisitos. A candidata foi corrigida contra essa matriz: materialidade passa a usar `Default_Ignorable_Code_Point`; a comparação passa a ser editorial conservadora; o domínio numérico canônico é determinístico; decisão humana e proveniência têm invariantes intrínsecos; resultado observado só existe após `EXECUTADO`; snapshot e evolução histórica têm níveis de garantia distintos; e o schema oficial permanece dentro do perfil de composição revisado. A suíte canônica passa a **47 métodos**.
 
-A próxima auditoria é **final e fechada contra a matriz**. Um adversarial novo só pode bloquear se demonstrar violação de requisito já assumido na matriz ou ADR aceito; não pode criar novo requisito implicitamente.
+### Auditoria final fechada — `NAO_APTA_PARA_FECHAMENTO_DOCUMENTAL`
+
+A auditoria final fechada examinou o HEAD `337055d70a28c6d595594fa1e8c351a47615e66b` contra a matriz congelada e permanece preservada em `11_resultado_a1_reauditoria_8.md`, sem reclassificação retroativa.
+
+Ela encontrou dois bloqueios:
+
+1. **R03 / `MATRIX_VIOLATION`:** `np.float64(1.5)` era aceito na API direta porque `_check_finite_number_format` usava `isinstance(value, float)`;
+2. **gate final / `FINAL_GATE_VIOLATION`:** a candidata estava `behind_by=4` contra a `main` vigente no momento do julgamento.
+
+O contraditório corretivo foi objetivo: a implementação passou a definir positivamente o domínio canônico por identidade estrita de tipo, ganhou regressão permanente para `np.float64` e foi reconciliada por merge real com a `main` vigente. O caso editorial `"?true" × "true"` permanece apenas como `BACKLOG_HARDENING`; não foi convertido em requisito novo.
 
 ## Fronteiras preservadas
 
@@ -150,14 +166,14 @@ A próxima auditoria é **final e fechada contra a matriz**. Um adversarial novo
 
 ## Evidência técnica atual
 
-A suíte MM01 possui **47 métodos automatizados**, além de mutações e subtests. O reteste de construção da matriz final ficou verde antes da sincronização documental; a certificação dos workflows permanentes será executada sobre o HEAD documental final antes da auditoria final fechada.
+A suíte canônica MM01 permanece com **47 métodos automatizados**, além de mutações e subtests. O workflow permanente executa adicionalmente **1 regressão R03 dedicada** em `tools/tests/test_micromodelo_mm01_r03.py`, totalizando a prova operacional como **47 + 1**, sem reclassificar a identidade da suíte congelada.
 
-Run IDs e o SHA final da árvore documental não são congelados neste arquivo para evitar que registrar a evidência altere a própria árvore validada. A descrição da PR #51 é o registro operacional do head e dos runs finais; `TESTES.md` mantém a cronologia histórica.
+A correção B01, a reconciliação B02 e a primeira sincronização documental foram certificadas com sucesso em runner real. Esta atualização documental altera novamente o HEAD; portanto, a árvore resultante precisa ser recertificada integralmente antes de ser congelada para a reauditoria final independente. Run IDs e o SHA definitivo permanecem na conversação da PR para evitar commits autorreferentes.
 
 ## Gate de saída
 
-A MM01 agora possui condição objetiva de término em `MATRIZ_ACEITE_FINAL.md`. O próximo gate é uma **auditoria final fechada** sobre o HEAD congelado: ela deve reproduzir instalação, 47 testes, CLI, gate estrutural e adversariais próprios, mas só pode classificar como bloqueante uma violação de requisito já assumido pela matriz ou ADR aceito.
+A MM01 mantém a condição objetiva de término em `MATRIZ_ACEITE_FINAL.md`. O próximo gate é uma **reauditoria final independente** sobre o novo HEAD congelado, usando a mesma matriz e sem reabrir implicitamente o threat model. Ela deve reproduzir instalação, 47 testes da suíte canônica, a regressão R03, CLI, gate estrutural e adversariais próprios; um achado só pode bloquear se demonstrar violação de requisito já assumido pela matriz ou ADR aceito.
 
-O bloco MM01 do `CHANGELOG.md` permanece dívida bloqueante de merge e só deve ser sincronizado, de forma byte-preserving fora do bloco MM01, após auditoria final limpa e contraditório final.
+O bloco MM01 do `CHANGELOG.md` permanece dívida bloqueante de merge e só deve ser sincronizado, de forma byte-preserving fora do bloco MM01, após reauditoria final limpa e contraditório final.
 
-**MM02 permanece bloqueada até auditoria final, contraditório final, fechamento do changelog, aceite explícito e integração da MM01.**
+**MM02 permanece bloqueada até reauditoria final, contraditório final, fechamento do changelog, aceite explícito e integração da MM01.**

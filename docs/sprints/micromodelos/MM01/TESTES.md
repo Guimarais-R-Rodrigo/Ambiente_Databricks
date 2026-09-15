@@ -70,8 +70,9 @@ Os testes da MM01 exercitam o contrato estrutural e semântico. Não acessam Dat
 | T60 | experimento não `EXECUTADO` com resultado observado material | `EXPERIMENT_RESULT` |
 | T61 | CLI sem/com `--previous` | `SNAPSHOT_VALIDO/HISTORICO_NAO_CERTIFICADO` vs `APROVADO_EVOLUCAO` |
 | T62 | perfil canônico de autoria do schema | recusa `allOf`/`oneOf`, `anyOf` fora da allowlist e constraints irmãs de `$ref` |
+| T63 | `np.float64(1.5)` fornecido diretamente em limiar e peso | `SCHEMA`; tipo numérico externo recusado deterministicamente |
 
-A suíte `tools/tests/test_micromodelo_mm01.py` contém **47 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz. `casos_invalidos.json` mantém nove mutações negativas determinísticas além dos casos adversariais construídos diretamente pela suíte.
+A suíte canônica `tools/tests/test_micromodelo_mm01.py` contém **47 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz. A regressão permanente `tools/tests/test_micromodelo_mm01_r03.py` adiciona **1 método dedicado** ao achado R03 da auditoria final, exercitando `np.float64` tanto em limiar quanto em peso. O workflow MM01 executa, portanto, **47 + 1** métodos permanentes. `casos_invalidos.json` mantém nove mutações negativas determinísticas além dos casos adversariais construídos diretamente pelas suítes.
 
 ## Teste específico de YAML
 
@@ -96,9 +97,9 @@ Os testes verificam tanto os caminhos positivos quanto tentativas de reintroduzi
 
 ## Matriz de aceite final e condição de término
 
-A oitava A1 (`NAO_APTA`) foi preservada em `10_resultado_a1_reauditoria_7.md`. O contraditório posterior congelou `MATRIZ_ACEITE_FINAL.md` para separar requisitos materiais de hardening e adversariais fora do threat model. As regressões T55–T62 exercitam diretamente R01–R08.
+A oitava A1 (`NAO_APTA`) foi preservada em `10_resultado_a1_reauditoria_7.md`. O contraditório posterior congelou `MATRIZ_ACEITE_FINAL.md` para separar requisitos materiais de hardening e adversariais fora do threat model. As regressões T55–T62 exercitam diretamente R01–R08 no conjunto canônico.
 
-A próxima auditoria é final e fechada contra essa matriz. Ela pode construir novos adversariais, mas um caso só é bloqueante quando demonstra violação de requisito já assumido pela matriz ou ADR aceito. `Decimal`/NumPy como suporte positivo, resolução universal de composição JSON Schema e coerções históricas YAML 1.1 não são gates de aceite da MM01.
+A auditoria final fechada posterior foi executada sobre `337055d70a28c6d595594fa1e8c351a47615e66b` e está preservada em `11_resultado_a1_reauditoria_8.md`. Ela identificou a violação R03 por `np.float64` e o `behind_by=4` como bloqueios independentes. T63 e a suíte dedicada tornam a primeira violação regressiva; a reconciliação com `main` trata o segundo gate. A candidata corrigida precisa agora de **reauditoria final independente contra a mesma matriz congelada**. O threat model não é reaberto: suporte positivo a `Decimal`/NumPy, resolução universal de composição JSON Schema e coerções históricas YAML 1.1 continuam não requisitos.
 
 ## Fixtures
 
@@ -147,7 +148,7 @@ O relatório histórico está versionado em `04_resultado_a1_reauditoria.md` e n
 - script e workflow transitórios foram removidos antes do commit permanente `f46b69790fc23ac6c3ebfa633053a3acb6f9ed1a`;
 - a correção não introduziu fingerprint, crawler, MLflow definitivo, publicação real, visual próprio ou migração.
 
-O run transitório é evidência de construção, não substitui os workflows permanentes da candidata documental final. Os IDs dos checks permanentes do próximo HEAD congelado serão mantidos na descrição da PR #51 para evitar commits autorreferentes.
+O run transitório é evidência de construção, não substitui os workflows permanentes da candidata documental final. Os IDs dos checks permanentes do HEAD congelado são mantidos na conversação da PR #51 para evitar commits autorreferentes.
 
 ## Terceira A1 — `APTA_COM_CORRECOES`
 
@@ -169,7 +170,7 @@ O mecanismo transitório foi executado novamente no run `34955861169`. Antes de 
 - `python -B tools/validate_assistant.py --root ambiente_fonte`;
 - publicação do commit permanente `4f686e5de163b649c4ee5e7643f75ecd56db47e7`.
 
-Esse reteste é evidência de construção. A candidata documental final ainda precisa dos workflows permanentes verdes no SHA exato e de uma nova auditoria independente.
+Esse reteste é evidência de construção. A candidata documental final ainda precisava dos workflows permanentes verdes no SHA exato e de auditoria independente.
 
 ## Quarta A1 — `APTA_COM_CORRECOES`
 
@@ -197,10 +198,7 @@ A correção fecha a classe de defeito: textos obrigatórios com `minLength` pre
 
 ## Próxima auditoria A1
 
-Uma **sexta A1 independente** é obrigatória porque a candidata mudou materialmente depois da quinta A1. Ela deve auditar o HEAD efetivamente encontrado, repetir os gates mínimos e criar adversariais próprios sobre os campos adicionais submetidos à política comum.
-
-MM02 permanece bloqueada até sexta A1, contraditório se necessário, fechamento do changelog, aceite explícito e integração da MM01.
-
+Uma **sexta A1 independente** era obrigatória porque a candidata havia mudado materialmente depois da quinta A1. Esse registro é histórico; a sexta A1 foi executada e está descrita abaixo.
 
 ## Sexta A1 — `APTA_COM_CORRECOES`
 
@@ -214,8 +212,6 @@ A sexta auditoria independente identificou duas divergências bloqueantes preser
 - um adversarial sintético prova que `minLength + pattern: .*\\S.*` sem `material-text` não satisfaz a invariável;
 - a suíte passa a **36 métodos**, preservando os adversariais Unicode e os caminhos positivos multilíngues.
 
-O próximo gate é uma sétima A1 independente sobre o HEAD permanente corrigido.
-
 ## Sétima A1 — `APTA_COM_CORRECOES`
 
 A sétima auditoria independente sobre `9e3ce44ae0750321802b95d96ff43bb29468eab2` encontrou três divergências bloqueantes: caracteres Unicode default-ignorable podiam mascarar equivalência `FALSE` × `INDETERMINADO`; o guard de `string + minLength` ignorava `type` em array; e NaN/±Infinity atravessavam limiares/pesos. O relatório histórico permanece em `09_resultado_a1_reauditoria_6.md`.
@@ -226,4 +222,26 @@ As regressões adicionadas após o contraditório cobrem os três vetores: defau
 
 A oitava auditoria independente sobre `fe3a9d8b39c0016d9b487036f1d5e3ad38cb2630` encontrou seis `QUEBRA`, dois `DIVERGE` bloqueantes e uma melhoria; o resultado histórico permanece em `10_resultado_a1_reauditoria_7.md`. O contraditório confirmou defeitos materiais, mas classificou suporte positivo a tipos numéricos externos, resolução universal de JSON Schema e coerções YAML 1.1 como fora do gate final.
 
-A matriz final congelada levou a suíte de 39 para **47 métodos**. O run de construção correspondente deve permanecer como evidência técnica da correção, enquanto a certificação final depende dos workflows permanentes no HEAD documental congelado.
+A matriz final congelada levou a suíte de 39 para **47 métodos**. O run de construção correspondente permanece como evidência técnica da correção.
+
+## Auditoria final fechada — `NAO_APTA_PARA_FECHAMENTO_DOCUMENTAL`
+
+A auditoria final fechada sobre `337055d70a28c6d595594fa1e8c351a47615e66b` foi a primeira aplicação integral da matriz congelada como gate de encerramento. O relatório preservado em `11_resultado_a1_reauditoria_8.md` identificou:
+
+- **B01 / R03:** `np.float64(1.5)` era aceito pela API direta por causa de `isinstance(value, float)`;
+- **B02 / gate final:** a branch estava `behind_by=4` contra a `main` vigente.
+
+A correção B01 troca classificação por subtipo por identidade estrita do domínio Python canônico e adiciona T63 em suíte dedicada. A correção B02 reconcilia a branch por merge real com a `main` vigente. Nenhum desses reparos reabre a matriz ou promove o `BACKLOG_HARDENING` editorial a requisito.
+
+## Reteste da correção final
+
+O gate permanente MM01 executa agora, em sequência:
+
+- os **47 métodos** da suíte canônica;
+- **1 regressão R03** dedicada para `np.float64` em limiar e peso;
+- `validate_assistant.py --root ambiente_fonte`;
+- fronteira read-only, sem Databricks/Unity Catalog/MLflow/ACL/dado corporativo/publicação externa.
+
+A correção técnica e a reconciliação já foram certificadas em runner real antes desta sincronização documental. Como a documentação atual altera o HEAD, a árvore resultante deve ser recertificada integralmente. Depois disso, o próximo gate é uma **reauditoria final independente**, contra a mesma matriz congelada, antes de qualquer atualização do `CHANGELOG.md`, aceite ou merge.
+
+**MM02 permanece bloqueada.**
