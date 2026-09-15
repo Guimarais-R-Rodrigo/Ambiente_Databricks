@@ -2,9 +2,9 @@
 
 ## Estado atual
 
-A V12 continua em andamento. A camada Git/local tem baseline verde anterior e `V12-AIBI-01` possui agora uma execução real `PASS` em ambiente Databricks autorizado, com uma tentativa real `FAIL` anterior preservada por classificação inadequada dos dados.
+A V12 continua em andamento. O head `ad4a66f65ae390f2e98576dffac83635963ecab6` possui 7/7 workflows reais da PR em `success`. `V12-AIBI-01` e `SEC-01` possuem execuções reais `PASS` em ambiente Databricks autorizado. A tentativa AI/BI real `FAIL` anterior permanece preservada por classificação inadequada dos dados.
 
-Human/UAT e as demais superfícies ambientais não são convertidos em PASS por esse resultado.
+Human/UAT e as demais superfícies ambientais não são convertidos em PASS por esses resultados.
 
 ## Suíte V12
 
@@ -30,20 +30,23 @@ Human/UAT e as demais superfícies ambientais não são convertidos em PASS por 
 - isolamento de identidade do App e ausência de ação de publicação;
 - workflow read-only e sem credenciais/cliente remoto Databricks.
 
-`tools/tests/test_temas_v12_evidencia_real.py` acrescenta uma guarda permanente sobre a evidência executada:
+`tools/tests/test_temas_v12_evidencia_real.py` acrescenta guardas permanentes sobre as evidências executadas:
 
-- a tentativa real #1 precisa continuar `FAIL`;
-- a tentativa real #2 precisa continuar `PASS` e ser aceita pelo mesmo `validate_evidence()` fail-closed;
+- a tentativa AI/BI real #1 precisa continuar `FAIL`;
+- a tentativa AI/BI real #2 precisa continuar `PASS` e ser aceita pelo mesmo `validate_evidence()` fail-closed;
 - as queries sintéticas precisam continuar usando `FROM VALUES`;
 - não podem voltar a referenciar `samples.nyctaxi`;
-- não podem criar tabela, schema, Volume nem usar `INSERT`/`MERGE`.
+- não podem criar tabela, schema, Volume nem usar `INSERT`/`MERGE`;
+- `SEC-01` precisa continuar com `identity_checked=true`, `permission_checked=true` e `synthetic_data_only=true`;
+- o registro `SEC-01` não pode versionar e-mail, `workspace_id`, OpenSharing ID nem bytes da identidade;
+- a permissão efetiva não pode ser sustentada por papel autodeclarado.
 
-Esse teste valida o registro versionado. Ele não substitui nem reexecuta a observação real no Databricks.
+Esses testes validam os registros versionados. Eles não substituem nem reexecutam as observações reais no Databricks.
 
 ## Gates da candidata Git
 
 1. V12 específica;
-2. evidência real AI/BI versionada;
+2. evidências reais AI/BI e SEC-01 versionadas;
 3. regressões V01–V12;
 4. compatibilidade visual V00;
 5. paridade/contratos source-simulado exercitados pelas regressões anteriores;
@@ -52,7 +55,7 @@ Esse teste valida o registro versionado. Ele não substitui nem reexecuta a obse
 8. higiene de credenciais/identidade;
 9. nenhum efeito remoto pelo CI.
 
-A V12 não altera produto `.assistant`; a incorporação da evidência adiciona somente documentação, registros, SQL sintético, teste e ajuste do workflow read-only.
+A V12 não altera produto `.assistant`; a incorporação das evidências adiciona somente documentação, registros, SQL sintético, teste e ajuste do workflow read-only.
 
 ## Histórico original dos runs V12
 
@@ -111,9 +114,15 @@ Fatos principais:
 
 Arquivo: `evidencias/V12-AIBI-01/V12-AIBI-01_attempt-02.json`.
 
-## Failures intermediários ao incorporar a evidência
+## Evidência real `SEC-01`
 
-A evidência adicionou arquivos versionados e as reconciliações documentais alteraram métricas medidas pelo validador. Os workflows falharam corretamente enquanto o bloco de métricas do README estava stale. Esses failures são parte do histórico, não ruído a apagar.
+`SEC-01_attempt-01.json` registra PASS ambiental observacional sem versionar PII. A identidade autenticada foi observada diretamente na UI e a permissão efetiva de edição foi comprovada pelas ações concluídas na mesma sessão sintética de `V12-AIBI-01` tentativa #2. Nenhum papel autodeclarado é usado como prova.
+
+O registro contém somente fatos sanitizados e hashes dos artefatos observados. O teste permanente rejeitaria e-mail, `workspace_id`, OpenSharing ID ou tentativa de sustentar autorização por identidade autodeclarada.
+
+## Failures intermediários ao incorporar as evidências
+
+As evidências adicionaram arquivos versionados e as reconciliações documentais alteraram métricas medidas pelo validador. Os workflows falharam corretamente enquanto o bloco de métricas do README estava stale. Esses failures são parte do histórico, não ruído a apagar.
 
 ### `79083bcbc3070e62c76bd2d671418900cbb29645`
 
@@ -160,7 +169,45 @@ A primeira reconciliação documental acertou `repo (identidade)=1422`, mas a ed
 - V01 `34980425371`: SUCCESS;
 - V02 `34980425547`: SUCCESS.
 
-A correção seguinte atualiza somente a métrica documentada de links para o valor medido `1887`; nenhum gate é relaxado.
+### Incorporação de `SEC-01` e incidente Git preservado
+
+Uma chamada incorreta produziu o commit `468eb637b2a3c5f76ceb1ea0cafdf4db999f7787`, no qual `README.md` ficou temporariamente substituído por um placeholder. A correção foi aditiva: nenhum reset e nenhum force. O commit fast-forward `4823f3ab13b7a153873003fd42b50e454f931dfd` restaurou byte a byte o README anterior e incorporou o registro `SEC-01` + teste. A comparação líquida contra o baseline anterior mostrou apenas esses dois arquivos como mudança efetiva.
+
+No head reparado:
+
+- V12 `34986472469`: FAILURE no validador;
+  - V12 26/26 PASS;
+  - evidências reais 2/2 PASS;
+  - regressões V01–V12 485/485 PASS;
+  - V00 12/12 PASS;
+  - validador: medido `1423`, documentado `1422`;
+  - links `1887` corretos;
+  - escopo/higiene: SKIP.
+
+O failure foi preservado e a métrica congelada foi corrigida sem relaxar o validador.
+
+## Baseline verde após `SEC-01`
+
+Head `ad4a66f65ae390f2e98576dffac83635963ecab6`: **7/7 workflows reais da PR em success**.
+
+- V01 `34987044469`;
+- V00 `34987044317` — SUCCESS, com a etapa condicional da branch isolada em `SKIP`;
+- V02 `34987044361`;
+- CI geral `34987044538`;
+- V10 `34987044459`;
+- V11 `34987044460`;
+- V12 `34987044468`.
+
+Auditoria V12:
+
+- 26/26 V12 PASS;
+- 2/2 evidências reais PASS;
+- 485/485 regressões PASS;
+- 12/12 V00 PASS;
+- validador `APROVADO: 0 falha(s), 0 aviso(s)`;
+- `1423` arquivos / `1887` links;
+- `V12_SCOPE=PASS`;
+- `V12_REMOTE_MUTATION=0`.
 
 ## Testes negativos relevantes
 
@@ -177,16 +224,16 @@ A suíte continua falhando fechado para:
 - automação de capacidade aproximada/não suportada;
 - publicação acidental;
 - claim de propagação automática de snapshot;
-- workspace theme/publicação sem autorização específica.
+- workspace theme/publicação sem autorização específica;
+- identidade/permissão efetiva baseada apenas em autodeclaração.
 
 ## O que ainda não é PASS
 
-Apesar de `V12-AIBI-01 = PASS`, continuam `PENDENTE` ou `BLOQUEADO`:
+Apesar de `V12-AIBI-01 = PASS` e `SEC-01 = PASS`, continuam `PENDENTE` ou `BLOQUEADO`:
 
 - Visual Lab completo em browser/runtime (`V12-LAB-01`);
 - App V10 real (`V12-APP-01`); deploy não autorizado;
 - workspace theme/admin/snapshot/reaplicação (`V12-AIBI-02`); mutação não autorizada;
-- `SEC-01`;
 - `A11-01` completo;
 - `DOC-02`;
 - `DOC-03`;
@@ -196,4 +243,4 @@ Nenhuma dessas lacunas foi convertida em aprovação por inferência.
 
 ## Regra para o próximo head
 
-O run `34980425138` comprova as suítes e a falha documental do head `07a6dde...`; não certifica o commit que corrige a métrica de links. O próximo head precisa repetir toda a cadeia e só poderá ser chamado de Git/local verde se suas próprias execuções terminarem corretamente.
+O run `34987044468` certifica o head `ad4a66f...`; não certifica uma edição documental posterior. Qualquer novo head precisa repetir toda a cadeia e só poderá ser chamado de Git/local verde se suas próprias execuções terminarem corretamente.

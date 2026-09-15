@@ -2,7 +2,7 @@
 
 ## Estado
 
-**V12 em andamento. Camada Git/local validada e `V12-AIBI-01` homologado em ambiente Databricks real; demais jornadas continuam pendentes ou bloqueadas.**
+**V12 em andamento. Camada Git/local validada; `V12-AIBI-01` e `SEC-01` homologados em ambiente Databricks real; demais jornadas continuam pendentes ou bloqueadas.**
 
 A V12 parte da `main` `d106ef3158e5827a2eec3aa183dbb3b47885c960`, onde V00–V11 estão integradas. Ela não cria um novo engine de temas e não reabre a arquitetura V11: organiza e instrumenta a etapa canônica em que gaps deliberadamente deixados como “não homologados” passam a ser jornadas observáveis de **pessoa + ambiente**.
 
@@ -10,7 +10,7 @@ CI não vira UAT, um `PASS` de ambiente não prova compreensão humana e uma hom
 
 ## Fonte canônica recuperada
 
-A V01 determina que **“V12 testa jornadas com pessoas; V13/V14 consolidam operação e suporte”**. A matriz V01 mantém cinco cenários humanos/ambientais pendentes: `DOC-02`, `DOC-03`, `A11-01`, `SEC-01` e `UAT-01`. V05, V10 e V11 acumulam pré-requisitos de ambiente para superfícies reais.
+A V01 determina que **“V12 testa jornadas com pessoas; V13/V14 consolidam operação e suporte”**. A matriz V01 mantém cinco cenários humanos/ambientais originalmente pendentes: `DOC-02`, `DOC-03`, `A11-01`, `SEC-01` e `UAT-01`. Nesta execução, `SEC-01` atingiu seu oráculo ambiental; os quatro casos restantes continuam sem PASS suficiente. V05, V10 e V11 acumulam pré-requisitos de ambiente para superfícies reais.
 
 O repositório não fixa tamanho estatístico para a amostra formativa. Portanto a V12 registra cada sessão executada e não inventa `n`, representatividade ou SLA. A meta de 60 segundos de `DOC-02` e qualquer medição exploratória permanecem medições candidatas até decisão explícita.
 
@@ -30,18 +30,22 @@ A V12 acrescenta uma camada de **protocolo e evidência**, não uma nova camada 
 
 ### Git/local
 
-A candidata possui gates locais e de PR exercitados. O head de evidência `efb1b24ceb64a09ec4dcea22f81710515f80556c` comprovou:
+O head `ad4a66f65ae390f2e98576dffac83635963ecab6` é o baseline verde após a incorporação de `SEC-01`. Os sete workflows reais da PR concluíram em `success`. No workflow V12 `34987044468` foram comprovados:
 
 - V12 específica: **26/26 PASS**;
-- teste dedicado da evidência real AI/BI: **1/1 PASS**;
-- regressões V01–V12: **484/484 PASS**;
-- V00: **12/12 PASS**.
+- teste dedicado das evidências reais AI/BI + SEC-01: **2/2 PASS**;
+- regressões V01–V12: **485/485 PASS**;
+- V00: **12/12 PASS**;
+- validador: **0 falhas / 0 avisos**;
+- métricas medidas: **1423 arquivos / 1887 links**;
+- `V12_SCOPE=PASS`;
+- `V12_REMOTE_MUTATION=0`.
 
-Esse head terminou o workflow V12 `34979351097` como **FAILURE**, não como sucesso, porque o validador documental mediu `1422` arquivos e o README raiz ainda declarava `1418`. A suíte funcional e a evidência real passaram antes dessa falha; o gate de escopo ficou `SKIP`. Esta reconciliação corrige a documentação, mas precisa de sua própria rodada de CI: resultado antigo não aprova automaticamente um novo commit.
+No workflow V00, a etapa condicional `Gate da branch isolada sem depender da integração com main` permaneceu `SKIP`; esse estado não é promovido a PASS. O warning de Node 20 pertence à plataforma GitHub Actions e não é warning do validador do projeto.
 
 ### Databricks environment — `V12-AIBI-01`
 
-`V12-AIBI-01` possui agora **PASS real de ambiente** em dashboard AI/BI descartável em estado draft, no Databricks Free Edition, com dados sintéticos gerados somente por SQL `VALUES` e sem `Publish`.
+`V12-AIBI-01` possui **PASS real de ambiente** em dashboard AI/BI descartável em estado draft, no Databricks Free Edition, com dados sintéticos gerados somente por SQL `VALUES` e sem `Publish`.
 
 A evidência fica em `docs/sprints/sistema_temas/V12/evidencias/V12-AIBI-01/`.
 
@@ -71,6 +75,16 @@ As autorizações operacionais registradas foram:
 
 Essas autorizações **não** abrangem workspace theme, ACL, deploy do App ou publicação.
 
+### Databricks environment — `SEC-01`
+
+`SEC-01` possui **PASS real de ambiente** como jornada observacional, sem nova mutação. O oráculo exige identidade e permissões efetivas observadas, sem aceitar valor autodeclarado como autorização.
+
+A evidência sanitizada registra somente fatos booleanos e hashes. A identidade autenticada e o workspace foram observados no menu de conta do mesmo Databricks Free Edition usado pela tentativa sintética válida de `V12-AIBI-01`; nome, e-mail, identificador de workspace e bytes da captura não foram versionados.
+
+A permissão efetiva foi comprovada comportamentalmente pelas ações concluídas na mesma sessão sintética: edição temporária das queries e `Import theme` em dashboard draft. O registro não inventa rótulo de papel como “Admin” ou “Editor” e não usa papel autodeclarado. O próprio `SEC-01` não executou mutação adicional.
+
+O arquivo versionado é `docs/sprints/sistema_temas/V12/evidencias/SEC-01/SEC-01_attempt-01.json`. O teste permanente confirma `identity_checked=true`, `permission_checked=true`, `synthetic_data_only=true`, ausência de e-mail/identificador sensível no JSON e aceitação pelo mesmo validador fail-closed da V12.
+
 ### Human/UAT e demais superfícies
 
 Continuam sem `PASS` real:
@@ -78,13 +92,12 @@ Continuam sem `PASS` real:
 - `DOC-02`;
 - `DOC-03`;
 - `A11-01` completo;
-- `SEC-01`;
 - `UAT-01`;
 - `V12-LAB-01` — Visual Lab completo em browser/runtime real;
 - `V12-APP-01` — App V10 real; deploy continua não autorizado;
 - `V12-AIBI-02` — workspace theme, herança, snapshot e reaplicação; alteração de workspace theme continua não autorizada.
 
-Nenhum deles é promovido pelo `PASS` de `V12-AIBI-01`.
+Nenhum deles é promovido pelos PASS ambientais de `V12-AIBI-01` e `SEC-01`.
 
 ## Quando usar
 
@@ -137,7 +150,7 @@ Sem esses itens, não avance.
 | Classe | Sinal de sucesso | O que continua não provado |
 |---|---|---|
 | Git/local | suíte, regressões, V00, validador e gate de escopo/higiene verdes no mesmo head | comportamento real Databricks e compreensão humana |
-| Databricks environment | jornada realmente observada, com autorização, artefatos, rollback e oráculo satisfeitos | UAT, representatividade e produção |
+| Databricks environment | jornada realmente observada, com autorização quando aplicável, artefatos, rollback quando aplicável e oráculo satisfeitos | UAT, representatividade e produção |
 | Human/UAT | participante autorizado executa a jornada e satisfaz o oráculo | autorização administrativa, deploy, produção ou generalização estatística |
 
 “Revisado”, “testado”, “homologado em ambiente”, “UAT aprovado”, “acessibilidade avaliada”, “pronto para produção” e “publicado” não são sinônimos.
@@ -156,15 +169,15 @@ Interrompa ou invalide a homologação diante de:
 - publicação acidental;
 - snapshot tratado como vínculo vivo;
 - dado que não atende à classificação exigida pelo caso;
-- ausência de rollback ou autorização específica.
+- ausência de rollback ou autorização específica quando aplicáveis.
 
 A tentativa AI/BI #1 é exemplo deliberadamente preservado de fail-closed por classificação inadequada dos dados.
 
 ## O que é automatizado e o que depende de humano
 
-A automação V12 verifica formato/coerência de evidências, hashes, contratos V11, cenários negativos, regressões e ausência de ação remota no CI. O teste `tools/tests/test_temas_v12_evidencia_real.py` garante que a tentativa #1 continue `FAIL`, a tentativa #2 continue validável como `PASS` e as queries sintéticas permaneçam `VALUES` sem criação de objetos ou referência à amostra NYC Taxi.
+A automação V12 verifica formato/coerência de evidências, hashes, contratos V11, cenários negativos, regressões e ausência de ação remota no CI. O teste `tools/tests/test_temas_v12_evidencia_real.py` garante que a tentativa AI/BI #1 continue `FAIL`, a tentativa #2 continue validável como `PASS`, as queries sintéticas permaneçam `VALUES` sem criação de objetos ou referência à amostra NYC Taxi e o registro `SEC-01` permaneça sanitizado e validável.
 
-Essa automação **não reproduz** o workspace nem substitui a observação real que gerou o registro.
+Essa automação **não reproduz** o workspace nem substitui as observações reais que geraram os registros.
 
 ## Escopo V12
 
@@ -172,18 +185,18 @@ A V12 cobre:
 
 1. documentação/primeiro uso (`DOC-02`, `DOC-03`);
 2. render final e acessibilidade (`A11-01`);
-3. identidade/permissões efetivas (`SEC-01`);
+3. identidade/permissões efetivas (`SEC-01`, agora com PASS ambiental);
 4. primeiro uso sem ajuda verbal (`UAT-01`);
 5. Visual Lab real quando houver ambiente autorizado;
 6. App V10 real quando houver deploy de teste explicitamente autorizado;
-7. AI/BI V11 em dashboard draft real (`V12-AIBI-01` agora com PASS ambiental);
+7. AI/BI V11 em dashboard draft real (`V12-AIBI-01`, com PASS ambiental);
 8. workspace theme/snapshot/reaplicação somente em workspace de teste e com autorização administrativa específica.
 
 Operação recorrente, suporte, custos/retention operacionais e readiness de produção ficam para V13/V14 ou gates posteriores.
 
 ## O que não está autorizado
 
-A autorização já exercida em `V12-AIBI-01` não autoriza:
+As autorizações já exercidas em `V12-AIBI-01` não autorizam:
 
 - deploy de Databricks App;
 - mudança de workspace theme;
@@ -192,6 +205,8 @@ A autorização já exercida em `V12-AIBI-01` não autoriza:
 - compute/recurso adicional pago;
 - uso de dados corporativos/reais para fabricar evidência;
 - qualquer mutação fora do roteiro explicitamente autorizado.
+
+`SEC-01` foi observacional e não amplia nenhuma autorização.
 
 ## Gates Git/local
 
@@ -215,4 +230,4 @@ Se uma mutação autorizada já ocorreu e o oráculo falhou, execute somente o r
 
 ## Próximo gate
 
-Esta atualização documental **não fecha a V12**. O novo head precisa repetir integralmente CI/PR checks. Depois disso ainda restam as jornadas humanas/ambientais acima. V13 permanece bloqueada.
+O fechamento de `SEC-01` **não fecha a V12**. Permanecem as jornadas humanas e ambientais listadas acima; qualquer nova mutação exige seu próprio gate de autorização. V13 permanece bloqueada.
