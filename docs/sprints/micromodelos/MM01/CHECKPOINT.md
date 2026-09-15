@@ -1,15 +1,16 @@
 # MM01 — Checkpoint
 
-Status: **CORRIGIDA APÓS A1; RETESTE TÉCNICO VERDE; REAUDITORIA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
+Status: **CORRIGIDA APÓS SEGUNDA A1; RETESTE DE CONSTRUÇÃO VERDE; TERCEIRA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
 
 ## Base e superfície
 
 - `main` inicial da iniciativa MM01: `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5`;
-- a candidata foi reconciliada sucessivamente com as bases pós-V10 e pós-V11 antes do reteste final;
+- a candidata foi reconciliada sucessivamente com as bases pós-V10 e pós-V11;
+- base vigente na segunda A1: `d106ef3158e5827a2eec3aa183dbb3b47885c960`;
 - branch: `micromodelos/mm01-contrato-canonico`;
 - PR: `#51`;
 - MM00: encerrada e integrada;
-- MM02: bloqueada até reauditoria A1, aceite explícito e merge desta sprint.
+- MM02: bloqueada até nova A1, aceite explícito e merge desta sprint.
 
 ## O que a candidata entrega
 
@@ -19,21 +20,23 @@ Status: **CORRIGIDA APÓS A1; RETESTE TÉCNICO VERDE; REAUDITORIA A1 PENDENTE; N
 4. comparação opcional com especificação anterior confiável (`--previous`) para verificar transição real, impedir rewind pós-`PUBLICADO` na mesma versão e recusar regressão de versão, sem antecipar fingerprint/MM02;
 5. condições operacionais ortogonais (`ATIVO`, `BLOQUEADO`, `SUSPENSO`, `DEPRECATED`);
 6. proveniência `DESCOBERTO`, `INFERIDO`, `PROPOSTO`, `APROVADO`, `MEDIDO` com gates próprios;
-7. rejeição de referências auditáveis semanticamente vazias, incluindo whitespace e caracteres invisíveis;
+7. regra positiva de materialidade textual: referências auditáveis precisam conter letra/número Unicode após NFKC; whitespace, controles, zero-width, variation selectors e marcas combinantes isoladas não contam;
 8. proteção explícita de `FALSE` versus `INDETERMINADO`, inclusive contra equivalência apenas cosmeticamente diferente;
-9. política estruturada de publicação que não permite contradizer o tratamento de `INDETERMINADO` com uma descrição que o converta implicitamente em `FALSE`;
-10. score 0–100 com semântica/normalização e calibração medida antes de linguagem probabilística;
-11. integridade referencial de `score.calibracao.evidencia_ref` contra experimento existente, executado e medido;
-12. limiares e pesos podem permanecer `PROPOSTO` nas fases pré-gate e passam a exigir `APROVADO` a partir de `EM_VALIDACAO`;
-13. gates humanos para validação, regras materiais e política de publicação;
-14. escopo de fontes fail-closed em `CATALOGO_PRODUTO`, sem override de CLI;
-15. recusa de chaves duplicadas em YAML/JSON e de IDs duplicados em coleções controladas;
-16. conteúdo material mínimo obrigatório ao entrar em `EM_VALIDACAO`;
-17. coerência entre fase e status da interface de publicação, com caminhos positivos testados até `PUBLICADO`;
-18. fronteira de tracking preservada para MM06;
-19. validador de referência/CI, fixtures sintéticos e suíte com **24 métodos de teste**;
-20. gate permanente `.github/workflows/micromodelos-mm01-ci.yml`, read-only e sem acesso a ambiente corporativo;
-21. pacote neutro para auditoria A1 independente.
+9. política de ausência de evidência totalmente estruturada por `tratamento`, `resultado_sem_evidencia`, `regra_ref` e proveniência, sem prosa normativa livre;
+10. política de publicação de `INDETERMINADO` totalmente estruturada, com `indeterminado_vira_false=false` e `regra_ref` somente para `OUTRA_APROVADA`;
+11. score 0–100 cuja natureza é determinada exclusivamente por `tipo_semantica`; campo livre `score.semantica` não faz parte do schema;
+12. normalização de score estruturada por método/referência/proveniência, sem frase livre normativa;
+13. calibração probabilística somente para `PROBABILIDADE_CALIBRADA`, com integridade referencial contra experimento existente, executado e medido;
+14. limiares e pesos podem permanecer `PROPOSTO` nas fases pré-gate e passam a exigir `APROVADO` a partir de `EM_VALIDACAO`;
+15. gates humanos para validação e demais decisões materiais;
+16. escopo de fontes fail-closed em `CATALOGO_PRODUTO`, sem override de CLI;
+17. recusa de chaves duplicadas em YAML/JSON e de IDs duplicados em coleções controladas;
+18. conteúdo material mínimo obrigatório ao entrar em `EM_VALIDACAO`;
+19. coerência entre fase e status da interface de publicação, com caminhos positivos testados até `PUBLICADO`;
+20. fronteira de tracking preservada para MM06;
+21. validador de referência/CI, fixtures sintéticos e suíte com **26 métodos de teste**;
+22. gate permanente `.github/workflows/micromodelos-mm01-ci.yml`, read-only e sem acesso a ambiente corporativo;
+23. pacote neutro de auditoria com os resultados históricos da primeira e segunda A1 preservados.
 
 ## O que não foi feito
 
@@ -50,48 +53,52 @@ Status: **CORRIGIDA APÓS A1; RETESTE TÉCNICO VERDE; REAUDITORIA A1 PENDENTE; N
 
 ## Primeira auditoria A1
 
-A primeira A1 independente auditou o head pré-correção e concluiu `NAO_APTA`. Foram registrados cinco achados bloqueantes, todos confirmados como procedentes no contraditório:
+A primeira A1 independente auditou o head pré-correção e concluiu `NAO_APTA`. Cinco achados bloqueantes foram confirmados como procedentes: proteção histórica contra rewind, referências semanticamente vazias, gate prematuro para `PROPOSTO`, contradição de `INDETERMINADO` por prosa e calibração com referência órfã. O relatório permanece em `03_resultado_a1.md`.
 
-1. proteção histórica insuficiente contra rewind de uma versão já `PUBLICADO`;
-2. referências de aprovação, medição e publicação podiam ser semanticamente vazias;
-3. `PROPOSTO` para limiares/pesos era rejeitado antes da fase que exige aprovação;
-4. política de `INDETERMINADO` podia conter descrição contraditória com o tratamento estruturado;
-5. calibração probabilística podia apontar para `evidencia_ref` órfã.
+As cinco correções foram implementadas, a suíte passou a 24 métodos e o reteste de construção `34909835696` ficou verde.
 
-O relatório original permanece histórico e não será reclassificado ou reescrito.
+## Segunda auditoria A1
 
-## Correções e evidência técnica
+A reauditoria independente sobre `2783bcbd6ad7f07f9f3893c66c9dc36d0557f57e` também concluiu `NAO_APTA`. Três novos achados bloqueantes foram confirmados como procedentes:
 
-As cinco correções foram implementadas dentro das fronteiras da MM01. O reteste transitório final `34909835696` concluiu com `success` depois de preparar a mesma árvore permanente que seria publicada:
+1. referências compostas exclusivamente por marcas Unicode `M*` ainda satisfaziam materialidade;
+2. `FALSE` × `INDETERMINADO` ainda dependia parcialmente de interpretação de prosa livre por regex;
+3. semântica probabilística ainda podia ser escondida por sinônimos não cobertos pela regex.
 
-- `python -B -m unittest tools/tests/test_micromodelo_mm01.py -v`: **24 métodos, OK**;
+O resultado está preservado em `04_resultado_a1_reauditoria.md` e não foi reclassificado.
+
+## Correções da segunda A1
+
+As três correções foram estruturais, sem ampliar escopo:
+
+- `_has_material_text` passou a exigir positivamente letra/número Unicode após NFKC;
+- campos de descrição normativa foram removidos das políticas de ausência e publicação; comportamento executável ficou fechado em campos estruturados;
+- `score.tipo_semantica` passou a ser a única autoridade executável sobre natureza probabilística; `score.semantica` livre foi removido e `score.normalizacao` virou contrato estruturado.
+
+O workflow transitório `34912665666` preparou a árvore sem os próprios mecanismos temporários e então executou:
+
+- `python -B -m unittest tools/tests/test_micromodelo_mm01.py -v`: **26 métodos, OK**;
 - `python -B tools/validate_assistant.py --root ambiente_fonte`: **APROVADO, 0 falhas, 0 avisos**;
-- mecanismo transitório e script de aplicação removidos antes do commit das correções;
-- nenhum artefato de MM02, MM03, MM06, publicação real, visual ou migração foi introduzido.
+- commit permanente das correções: `f46b69790fc23ac6c3ebfa633053a3acb6f9ed1a`.
 
-A métrica verificável do README raiz foi recalibrada para a árvore permanente final. Os workflows permanentes precisam ser observados novamente no HEAD documental final desta candidata; seus IDs ficarão na descrição da PR para evitar commit autorreferente.
+Esse run comprova a construção da correção, mas não substitui os workflows permanentes do próximo HEAD documental congelado.
+
+## Dívida documental antes do merge
+
+O bloco MM01 do `CHANGELOG.md` ainda descreve a candidata pré-A1. Ele deve ser sincronizado **antes do merge**, por operação que preserve byte a byte o histórico anterior. Essa pendência não deve ser usada para apagar ou reclassificar as auditorias históricas.
 
 ## Gate independente pendente
 
-A candidata corrigida precisa passar por **reauditoria A1 independente** em sessão separada. A reauditoria deve partir do novo HEAD e repetir os gates mínimos e os cinco adversariais que motivaram o primeiro veredito.
-
-O pacote permanece em:
-
-```text
-docs/auditoria/2026-09-14_micromodelos-mm01/
-├── 01_contexto.md
-└── 02_prompt_auditoria.md
-```
-
-O auditor não deve implementar correções e não deve usar a documentação narrativa da sprint para confirmar a intenção do autor.
+Como a candidata mudou materialmente após a segunda A1, é obrigatória uma **terceira A1 independente** sobre o próximo HEAD congelado. O auditor deve repetir os gates mínimos e construir adversariais próprios, sem usar `03_resultado_a1.md` ou `04_resultado_a1_reauditoria.md` como prova da correção.
 
 ## Gates restantes
 
-1. confirmar os checks permanentes do HEAD documental final e estabilidade da `main`;
-2. executar reauditoria A1 em sessão independente;
-3. confrontar eventual novo achado com a árvore;
-4. corrigir/retestar somente se houver achado procedente;
-5. apresentar checkpoint final para aceite explícito;
-6. integrar a PR #51 somente após o aceite.
+1. congelar e validar os workflows permanentes do HEAD documental final;
+2. executar terceira A1 em sessão independente;
+3. confrontar qualquer novo achado com a árvore e corrigir/retestar somente se procedente;
+4. sincronizar o bloco MM01 do `CHANGELOG.md` preservando o histórico;
+5. revalidar a árvore exata depois dessa sincronização;
+6. apresentar checkpoint final para aceite explícito;
+7. integrar a PR #51 somente após o aceite.
 
 Enquanto qualquer item acima estiver pendente, **MM02 permanece bloqueada**.
