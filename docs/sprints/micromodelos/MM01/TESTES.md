@@ -13,13 +13,13 @@ Os testes da MM01 exercitam o contrato estrutural e semântico. Não acessam Dat
 | T03 | fixture `VALIDADO` completo | APROVADO |
 | T04 | grupo obrigatório ausente | `SCHEMA` |
 | T05 | salto `IDEIA → EM_VALIDACAO` | `STATE_TRANSITION` |
-| T06 | score habilitado sem semântica | `SCORE_SEMANTICS` |
+| T06 | score habilitado sem semântica estruturada | `SCORE_SEMANTICS` |
 | T07 | limiar/peso `PROPOSTO` antes de `EM_VALIDACAO` | permitido como proposta |
 | T08 | limiar/peso não aprovado em `EM_VALIDACAO+` | `THRESHOLD_APPROVAL` / `WEIGHT_APPROVAL` |
 | T09 | resultado `MEDIDO` sem referência material de execução | rejeição fail-closed |
-| T10 | aprovação humana com referência vazia, whitespace ou caractere invisível | rejeição fail-closed |
+| T10 | aprovação humana com referência vazia, whitespace, zero-width ou marca Unicode isolada | rejeição fail-closed |
 | T11 | fase `PUBLICADO` sem validação/saída/publicação externa | gates de fase/publicação |
-| T12 | `PUBLICADO` com referência externa vazia/whitespace | rejeição fail-closed |
+| T12 | `PUBLICADO` com referência externa vazia, whitespace ou marca Unicode isolada | rejeição fail-closed |
 | T13 | fonte com `catalogo_ref` não autorizado | `CATALOG_SCOPE` |
 | T14 | definições TRUE/FALSE/INDETERMINADO semanticamente iguais | `AMBIGUOUS_BINARY_SEMANTICS` |
 | T15 | `PROBABILIDADE_CALIBRADA` sem calibração | `CALIBRATION_REQUIRED` |
@@ -31,26 +31,47 @@ Os testes da MM01 exercitam o contrato estrutural e semântico. Não acessam Dat
 | T21 | especificação anterior `PUBLICADO` reescrita na mesma versão para fase anterior | `STATE_REWIND` |
 | T22 | comparação com especificação anterior preserva identidade/versão e valida transição real | fail-closed |
 | T23 | CLI `--previous` bloqueia rewind pós-publicação | exit não zero + diagnóstico |
-| T24 | linguagem probabilística em score não calibrado | `SCORE_PROBABILITY_LANGUAGE` |
-| T25 | probabilidade calibrada com evidência medida e experimento resolvido | APROVADO |
-| T26 | IDs duplicados em componentes/experimentos | `DUPLICATE_ID` |
-| T27 | `EM_VALIDACAO+` com fontes/evidências/contra-evidências/critérios vazios | `PHASE_CONTENT_GATE` |
-| T28 | status de publicação incompatível com fase | `PUBLICATION_STATUS_PHASE` |
-| T29 | política estruturada de `INDETERMINADO` contradiz descrição que manda converter para `FALSE` | `INDETERMINATE_POLICY_CONFLICT` |
-| T30 | caminhos positivos `CANDIDATO_PRODUTO → EM_VALIDACAO_GOVERNANCA → PUBLICADO` | APROVADOS |
-| T31 | propriedade material desconhecida | `SCHEMA` |
-| T32 | YAML/JSON com chave duplicada | erro de carga fail-closed |
-| T33 | CLI válido/inválido e tentativa de `--catalog-ref` não contratada | exit 0/1/2 |
-| T34 | gate estrutural do repositório | `tools/validate_assistant.py` sem FAIL |
-| T35 | CI agregado da PR | regressão zero no head final técnico |
+| T24 | propriedade livre `score.semantica` tenta reintroduzir prosa probabilística | `SCHEMA` |
+| T25 | `tipo_semantica=PROBABILIDADE_CALIBRADA` com calibração medida/resolvida | APROVADO |
+| T26 | calibração presente em score não probabilístico | `CALIBRATION_UNEXPECTED` |
+| T27 | normalização textual/legada em vez de contrato estruturado | `SCHEMA` |
+| T28 | normalização `PENDENTE` ao chegar em `EM_VALIDACAO+` | `SCORE_NORMALIZATION` |
+| T29 | IDs duplicados em componentes/experimentos | `DUPLICATE_ID` |
+| T30 | `EM_VALIDACAO+` com fontes/evidências/contra-evidências/critérios vazios | `PHASE_CONTENT_GATE` |
+| T31 | status de publicação incompatível com fase | `PUBLICATION_STATUS_PHASE` |
+| T32 | política de ausência `INDETERMINADO` com `resultado_sem_evidencia=FALSE` | `MISSING_POLICY_CONTRADICTION` |
+| T33 | tentativa de reintroduzir `descricao` normativa em ausência/publicação | `SCHEMA` |
+| T34 | política `REGRA_EXPLICITA_APROVADA` com regra auditável | APROVADO |
+| T35 | `indeterminado_vira_false=true` | `SCHEMA` / gate estruturado |
+| T36 | caminhos positivos `CANDIDATO_PRODUTO → EM_VALIDACAO_GOVERNANCA → PUBLICADO` | APROVADOS |
+| T37 | propriedade material desconhecida | `SCHEMA` |
+| T38 | YAML/JSON com chave duplicada | erro de carga fail-closed |
+| T39 | CLI válido/inválido e tentativa de `--catalog-ref` não contratada | exit 0/1/2 |
+| T40 | gate estrutural do repositório | `tools/validate_assistant.py` sem FAIL |
+| T41 | CI agregado da PR | regressão zero no head final técnico |
 
-A suíte `tools/tests/test_micromodelo_mm01.py` contém **24 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz acima. `casos_invalidos.json` mantém nove mutações negativas determinísticas além dos casos adversariais construídos diretamente pela suíte.
+A suíte `tools/tests/test_micromodelo_mm01.py` contém **26 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz. `casos_invalidos.json` mantém nove mutações negativas determinísticas além dos casos adversariais construídos diretamente pela suíte.
 
 ## Teste específico de YAML
 
 O template não usa chaves literais `true:`/`false:`. PyYAML pode interpretar essas palavras como booleanos; por isso o contrato usa `quando_true`, `quando_false` e `quando_indeterminado`.
 
 Além disso, o carregador customizado rejeita chaves duplicadas em YAML e JSON. A MM01 não aceita o comportamento “última chave vence”, porque uma especificação material poderia aparentar um valor na revisão humana e efetivamente validar outro.
+
+## Regressões de materialidade Unicode
+
+A segunda A1 demonstrou que excluir apenas categorias `Z*`/`C*` deixava passar marcas Unicode `M*`. A suíte agora testa U+034F, U+FE0F e U+0301 nos campos auditáveis relevantes. A regra semântica positiva exige, após NFKC, pelo menos uma letra ou número Unicode; marcas combinantes/variation selectors isolados não satisfazem aprovação, medição ou confirmação externa.
+
+## Semântica executável sem regex de intenção
+
+A segunda A1 também demonstrou que listas abertas de verbos/sinônimos não conseguem garantir coerência semântica. A correção removeu esse mecanismo:
+
+- `classificacao.ausencia_evidencia` é estruturada por `tratamento`, `resultado_sem_evidencia`, `regra_ref` e proveniência;
+- `saida.publicacao.politica_indeterminado` não possui descrição normativa livre; `indeterminado_vira_false=false` é estrutural;
+- `score.tipo_semantica` é a autoridade executável; `score.semantica` livre deixou de fazer parte do schema;
+- `score.normalizacao` é um objeto estruturado, não uma frase livre.
+
+Os testes verificam tanto os caminhos positivos quanto tentativas de reintroduzir os campos livres legados, que devem falhar com `SCHEMA`.
 
 ## Fixtures
 
@@ -59,7 +80,7 @@ Além disso, o carregador customizado rejeita chaves duplicadas em YAML e JSON. 
 - `valido_validado.json`: caso completo em fase `VALIDADO`;
 - `casos_invalidos.json`: nove mutações negativas aplicadas à base válida.
 
-Os testes adversariais adicionais criam cópias em memória para evitar inflar fixtures com variações mecânicas. Após a primeira A1, a suíte passou a cobrir explicitamente rewind pós-`PUBLICADO` com especificação anterior confiável, referências materialmente vazias, proposta progressiva de limiares/pesos, contradição da política de `INDETERMINADO` e integridade referencial da calibração.
+Os testes adversariais adicionais criam cópias em memória para evitar inflar fixtures com variações mecânicas.
 
 ## Evidências históricas preservadas
 
@@ -70,44 +91,41 @@ Os testes adversariais adicionais criam cópias em memória para evitar inflar f
 - nenhum artefato de produto foi publicado por essa execução;
 - a falha é histórica e não foi reclassificada como teste funcional.
 
-### Materialização validada
-
-- run `34899617125`: **success**;
-- materialização com allowlist, instalação, suíte então vigente e gate estrutural;
-- workflow transitório removido antes da composição final.
-
-### Reconciliações de base
-
-- a candidata foi reconciliada primeiro com a `main` pós-V10 e depois com a `main` pós-V11 antes da correção dos achados A1;
-- as reconciliações preservaram a frente visual como base, sem reimplementá-la dentro da MM01;
-- a PR voltou a `mergeable=true` antes das correções funcionais.
-
 ### Primeira A1 — `NAO_APTA`
 
-A auditoria independente encontrou cinco bloqueios procedentes:
+A primeira auditoria independente encontrou cinco bloqueios procedentes: rewind pós-`PUBLICADO`, referências semanticamente vazias, gate prematuro para `PROPOSTO`, contradição de `INDETERMINADO` por prosa e `evidencia_ref` de calibração órfã. O relatório permanece versionado em `03_resultado_a1.md`.
 
-1. rewind pós-`PUBLICADO` não era verificável contra estado anterior confiável;
-2. referências auditáveis podiam ser preenchidas apenas com whitespace;
-3. limiares/pesos `PROPOSTO` eram rejeitados cedo demais;
-4. a descrição da política de `INDETERMINADO` podia contradizer o tratamento estruturado;
-5. `score.calibracao.evidencia_ref` aceitava referência órfã.
-
-Nenhum achado foi descartado no contraditório. Todos foram tratados dentro do escopo da MM01.
-
-### Reteste das correções A1
+### Reteste das correções da primeira A1
 
 - run transitório final `34909835696`: **success**;
-- 24 métodos de teste executados: `Ran 24 tests`, `OK`;
-- o gate estrutural executado sobre a árvore preparada para publicação concluiu `APROVADO: 0 falha(s), 0 aviso(s)`;
-- o mecanismo transitório e o script de aplicação foram removidos antes da publicação das correções;
-- o commit publicado pela automação contém apenas os artefatos permanentes corrigidos e a métrica verificável do README.
+- 24 métodos: `OK`;
+- gate estrutural: `APROVADO`, zero falhas/avisos;
+- mecanismos transitórios removidos antes da publicação.
 
-O run transitório é evidência de construção, não substitui os workflows permanentes da candidata final. Os IDs dos checks permanentes do head final serão registrados na descrição da PR #51, evitando commits autorreferentes apenas para copiar seus próprios run IDs.
+### Segunda A1 — `NAO_APTA`
 
-## Reauditoria A1
+A reauditoria independente sobre `2783bcbd6ad7f07f9f3893c66c9dc36d0557f57e` encontrou três novos bloqueios procedentes:
 
-**Pendente.** A primeira A1 permanece historicamente `NAO_APTA`; seu resultado não será reescrito. A candidata corrigida precisa ser reavaliada em sessão independente contra um novo HEAD identificado.
+1. marcas Unicode `M*` ainda satisfaziam provas auditáveis;
+2. proteção `FALSE` × `INDETERMINADO` ainda dependia de regex sobre prosa livre;
+3. interpretação probabilística ainda podia escapar por sinônimos não cobertos.
 
-A reauditoria deve repetir instalação, suíte MM01, gate estrutural, CLI do template e os adversariais de rewind pós-`PUBLICADO`, whitespace/invisíveis em provas auditáveis, `PROPOSTO` pré-gate, política contraditória de `INDETERMINADO` e calibração com referência órfã.
+O relatório histórico está versionado em `04_resultado_a1_reauditoria.md` e não será reclassificado.
 
-MM02 permanece bloqueada até reauditoria, aceite explícito e integração da MM01.
+### Reteste das correções da segunda A1
+
+- workflow transitório `34912665666`: **success**;
+- `python -B -m unittest tools/tests/test_micromodelo_mm01.py -v`: **26 métodos, OK**;
+- `python -B tools/validate_assistant.py --root ambiente_fonte`: **APROVADO, 0 falhas, 0 avisos**;
+- script e workflow transitórios foram removidos antes do commit permanente `f46b69790fc23ac6c3ebfa633053a3acb6f9ed1a`;
+- a correção não introduziu fingerprint, crawler, MLflow definitivo, publicação real, visual próprio ou migração.
+
+O run transitório é evidência de construção, não substitui os workflows permanentes da candidata documental final. Os IDs dos checks permanentes do próximo HEAD congelado serão mantidos na descrição da PR #51 para evitar commits autorreferentes.
+
+## Próxima auditoria A1
+
+Uma **terceira auditoria A1 independente** é obrigatória porque a candidata mudou materialmente depois da segunda A1. Ela deve trabalhar sobre o próximo HEAD congelado e não pode reutilizar como prova os relatórios `03_resultado_a1.md` ou `04_resultado_a1_reauditoria.md`.
+
+Deve repetir instalação, 26+ testes, gate estrutural, CLI direta do template e adversariais próprios sobre: marcas Unicode `M*`, ausência de prosa normativa, políticas de `INDETERMINADO`, semântica probabilística estruturada, integridade da calibração e continuidade histórica por `--previous`.
+
+MM02 permanece bloqueada até nova A1, contraditório se necessário, aceite explícito e integração da MM01.
