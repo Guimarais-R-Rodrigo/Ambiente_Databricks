@@ -1,0 +1,89 @@
+name: MM01 - corrigir setima A1
+
+on:
+  push:
+    branches:
+      - micromodelos/mm01-contrato-canonico
+    paths:
+      - .github/workflows/mm01-fix-a1-7.yml
+
+permissions:
+  contents: write
+
+jobs:
+  corrigir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Baixar branch MM01
+        uses: actions/checkout@v4
+        with:
+          ref: micromodelos/mm01-contrato-canonico
+          fetch-depth: 0
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+
+      - name: Aplicar correções da sétima A1
+        run: python tools/_tmp_mm01_a1_7_fix.py
+
+      - name: Remover mecanismos transitórios
+        run: |
+          git rm tools/_tmp_mm01_a1_7_fix.py
+          git rm .github/workflows/mm01-fix-a1-7.yml
+
+      - name: Instalar dependências
+        run: python -m pip install -r tools/requirements-dev.txt
+
+      - name: Executar suíte MM01
+        run: python -B -m unittest tools/tests/test_micromodelo_mm01.py -v
+
+      - name: Executar CLI sobre template e fixture positiva
+        shell: bash
+        run: |
+          python -B tools/micromodelo_mm01_contract.py docs/sprints/micromodelos/MM01/micromodelo.template.yaml --schema docs/sprints/micromodelos/MM01/micromodelo.schema.json
+          python -B tools/micromodelo_mm01_contract.py tools/tests/fixtures/micromodelos_mm01/valido_validado.json --schema docs/sprints/micromodelos/MM01/micromodelo.schema.json
+
+      - name: Executar gate estrutural e README congelado
+        run: python -B tools/validate_assistant.py --root ambiente_fonte --conferir-readme
+
+      - name: Conferir invariantes da correção
+        shell: bash
+        run: |
+          git diff --check
+          test ! -e tools/_tmp_mm01_a1_7_fix.py
+          test ! -e .github/workflows/mm01-fix-a1-7.yml
+          test "$(git diff --name-only HEAD -- CHANGELOG.md | wc -l)" -eq 0
+          test "$(git diff --name-only HEAD -- ambiente_fonte/.assistant | wc -l)" -eq 0
+          test "$(grep -c '^    def test_' tools/tests/test_micromodelo_mm01.py)" -eq 39
+          grep -q 'finite-number' docs/sprints/micromodelos/MM01/micromodelo.schema.json
+          grep -q 'parse_constant=_reject_nonfinite_json_constant' tools/micromodelo_mm01_contract.py
+          grep -q 'isinstance(node_type, list) and "string" in node_type' tools/tests/test_micromodelo_mm01.py
+          grep -q '_is_semantic_default_ignorable' tools/micromodelo_mm01_contract.py
+          changed="$(git diff --name-only HEAD | sort)"
+          expected="$(printf '%s\n' \
+            .github/workflows/mm01-fix-a1-7.yml \
+            README.md \
+            docs/sprints/micromodelos/MM01/CHECKPOINT.md \
+            docs/sprints/micromodelos/MM01/CONTRATO_MICROMODELO.md \
+            docs/sprints/micromodelos/MM01/README.md \
+            docs/sprints/micromodelos/MM01/TESTES.md \
+            docs/sprints/micromodelos/MM01/micromodelo.schema.json \
+            docs/sprints/micromodelos/README.md \
+            tools/_tmp_mm01_a1_7_fix.py \
+            tools/micromodelo_mm01_contract.py \
+            tools/tests/test_micromodelo_mm01.py | sort)"
+          test "$changed" = "$expected"
+
+      - name: Publicar correção permanente
+        shell: bash
+        run: |
+          git config user.name "Rodrigo"
+          git config user.email "guimarais.r.rodrigo@gmail.com"
+          git add -A
+          git commit -m "fix(mm01): fechar bloqueios da setima A1"
+          git push origin HEAD:micromodelos/mm01-contrato-canonico
