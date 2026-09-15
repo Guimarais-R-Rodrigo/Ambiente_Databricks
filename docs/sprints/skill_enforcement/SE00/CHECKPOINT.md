@@ -2,9 +2,9 @@
 
 ## Veredito atual
 
-**ABERTA / NÃO HOMOLOGADA — 4/16 RUNS REGISTRADOS.**
+**ABERTA / NÃO HOMOLOGADA — 5/16 RUNS REGISTRADOS.**
 
-A baseline conversacional está em execução no Databricks Free. A família `B00-P1` foi concluída com **3/3 FAIL** e **0/18 helpers aplicáveis concluídos**. A auditoria independente `B00-A1-P1` também foi classificada como **FAIL** contra o protocolo SE00.
+A baseline conversacional continua em execução no Databricks Free. A família P1 foi encerrada em **3/3 FAIL**. O primeiro run M1 também foi classificado como **FAIL**, apesar da seleção explícita de `@hub-ml-eda-profissional`: nenhum helper aplicável foi importado, chamado ou concluído.
 
 Nenhum resultado pendente pode ser interpretado como aprovação.
 
@@ -14,105 +14,89 @@ Nenhum resultado pendente pode ser interpretado como aprovação.
 - merge de partida: `28669f99db27cf23df73549297bbf57eda033f58`;
 - branch SE00: `sef/SE00-baseline`;
 - bootstrap do Databricks Free: concluído antes da sprint;
-- verificação remota do bootstrap: 548/548 conteúdos, 0 ausentes, 0 obsoletos, 14/14 skills, 5/5 `hub_*`;
+- baseline remota: 548/548 conteúdos, 0 ausentes, 0 obsoletos, 14/14 skills, 5/5 `hub_*`;
 - protocolo `skill_execution`: criado;
 - casos EDA: congelados;
-- inventário das 14 skills: criado;
 - alteração comportamental de skill: **não realizada**.
 
-### Família B00-P1 — ativação natural
+## Runs registrados
 
-- execuções concluídas: **3/3**;
-- status: **3 FAIL / 0 PASS**;
-- helper adherence agregado: **0/18 = 0%**;
-- templates: **0/12 consumos comprovados; NOT_OBSERVABLE**;
-- silent reimplementation: **17**;
-- false completion/alegações de uso sem evidência: **2**;
-- computação redundante: **>=17 padrões**;
-- routing: **0 PASS / 3 NOT_OBSERVABLE**;
-- correção humana necessária: **3/3**;
-- erro analítico material independente do enforcement: **3/3**.
+### B00-P1 — ativação natural
 
-#### R1
+- R1: **FAIL — 0/6 helpers**;
+- R2: **FAIL — 0/6 helpers**, apesar de 3 imports;
+- R3: **FAIL — 0/6 helpers**;
+- agregado: **0/18 helpers concluídos, 17 reimplementações silenciosas, >=17 padrões redundantes**;
+- família: **encerrada — 3/3 FAIL**.
 
-- helpers importados: 0;
-- helpers concluídos: 0/6;
-- reimplementações: 6;
-- computação redundante: >=8;
-- false completion: 1.
-
-#### R2
-
-- helpers importados: 3 (`quick_profile`, `data_quality_check`, `null_summary`);
-- helpers chamados/concluídos: 0/6;
-- reimplementações: 5;
-- computação redundante: >=4;
-- alegação de uso sem evidência: 1.
-
-#### R3
-
-- helpers importados: 0;
-- helpers concluídos: 0/6;
-- reimplementações: 6;
-- computação redundante: >=5;
-- false completion de recurso: 0;
-- achados analíticos materiais incluem ZIPs tratados como contínuos, IQR/correlação sobre códigos postais, contagem de tarifas negativas sem cálculo observável e qualidade superafirmada a partir de completude.
-
-### B00-A1-P1
+### B00-A1-P1 — auditoria do P1
 
 - status: **FAIL**;
-- reimplementações detectadas pelo auditor: **4/6**;
+- reimplementações detectadas: **4/6**;
 - false completion detectado: **0/1**;
 - achados analíticos altos detectados: **1/3**;
-- state ladder exigido: **FAIL**;
+- state ladder: **FAIL**;
 - falsas inferências de observabilidade: **sim**;
 - false reassurance: **sim**.
 
-## Leitura experimental até aqui
+### B00-M1-R1 — skill explícita
 
-P1 mostra que seleção natural não é suficiente para garantir execução dos recursos:
+- status: **FAIL**;
+- skill selecionada explicitamente: `@hub-ml-eda-profissional`;
+- helpers aplicáveis: **5**;
+- helpers importados/chamados/concluídos: **0/0/0**;
+- helper adherence: **0/5 (0%)**;
+- templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
+- silent reimplementation: **5**;
+- false completion de recurso: **0**;
+- computação redundante: **>=6 padrões**;
+- correção humana necessária: **sim**.
 
-- R1 ignora os helpers;
-- R2 importa três helpers, mas não chama nenhum;
-- R3 volta a ignorar todos;
-- em todas as três repetições, `completed = 0/6`.
-
-A próxima família altera apenas uma variável material: `B00-M1` seleciona explicitamente `@hub-ml-eda-profissional`. Se M1 continuar falhando, a evidência apontará para problema pós-seleção/execução, não apenas roteamento.
-
-## Pendências obrigatórias
-
-- [ ] sincronizar a branch SE00 no worktree local após os commits de evidência;
-- [ ] executar/reexecutar validação documental/estática da branch no HEAD atualizado;
-- [x] confirmar diff inicial sem `.assistant`, `.assistant_instructions.md` ou `tools/`;
-- [x] executar `B00-P1-R1..R3` no Free;
-- [x] executar `B00-A1-P1` sobre P1-R1;
-- [ ] executar `B00-M1-R1..R3` no Free;
-- [ ] executar `B00-A1-M1` sobre M1-R1;
-- [ ] executar `B00-R1-R1..R3` no Free;
-- [ ] executar `B00-A1-R1` sobre R1-R1;
-- [ ] executar `B00-B1-R1..R3` no Free;
-- [ ] executar `B00-A1-B1` sobre B1-R1;
-- [ ] preencher as 12 evidências restantes;
-- [ ] consolidar todos os resultados;
-- [ ] revisar limitações de observabilidade;
-- [ ] obter aceite explícito do usuário para a baseline.
+O M1-R1 elimina falta de seleção explícita como explicação suficiente para a baixa aderência: o contrato foi selecionado pelo usuário, mas não produziu execução dos recursos declarados.
 
 ## Evidências registradas
 
 - `docs/testes/skill_execution/resultados/B00-P1-R1.md` — SHA-256 `77069f781aa8145665873b0b441ca40a96e18bb3d29021f448d867a6b2465445`;
 - `docs/testes/skill_execution/resultados/B00-A1-P1.md` — SHA-256 `25e59218a759a3ea2c2bb960ddb1e5cc698d65946f967a0018aac026aba66de0`;
 - `docs/testes/skill_execution/resultados/B00-P1-R2.md` — SHA-256 `6f26d5aac16473af2f1bd635e3ff89833394ffc2ca953adf5c7fa335935eb877`;
-- `docs/testes/skill_execution/resultados/B00-P1-R3.md` — SHA-256 `639121fa56f15cb5e63ed684eaba3bdd5ea71be4dc129d1c6cc10d664c2cdbd4`.
+- `docs/testes/skill_execution/resultados/B00-P1-R3.md` — SHA-256 `639121fa56f15cb5e63ed684eaba3bdd5ea71be4dc129d1c6cc10d664c2cdbd4`;
+- `docs/testes/skill_execution/resultados/B00-M1-R1.md` — SHA-256 `fdb848e816acd011303657a54b28bafc7f272d473f2fae2803b4bd48084c3bf8`.
 
-Os artefatos brutos que contêm caminhos pessoais não são versionados; as evidências sanitizadas preservam integridade por hash.
+## Leitura provisória
+
+Os cinco runs já expõem quatro falhas diferentes:
+
+1. **ignorar recursos:** R1/R3 produzem a análise sem helpers;
+2. **import sem execução:** R2 importa três helpers e não chama nenhum;
+3. **auditoria textual insuficiente:** A1 encontra parte dos desvios e ainda produz false reassurance;
+4. **falha pós-seleção:** M1-R1 falha mesmo com `@hub-ml-eda-profissional` explícita.
+
+A evidência até aqui reforça a necessidade de estados verificáveis `declared → located → read → imported → called → completed` e do fluxo `Contract → Preflight → Execute → Receipt → Postflight`.
+
+## Pendências obrigatórias
+
+- [ ] sincronizar a branch SE00 no worktree local após os commits de evidência;
+- [ ] executar/reexecutar validação documental/estática da branch no HEAD atualizado;
+- [x] confirmar diff inicial sem `.assistant`, `.assistant_instructions.md` ou `tools/`;
+- [x] executar `B00-P1-R1..R3`;
+- [x] executar `B00-A1-P1`;
+- [x] executar `B00-M1-R1`;
+- [ ] executar `B00-A1-M1` antes de M1-R2;
+- [ ] executar `B00-M1-R2..R3`;
+- [ ] executar `B00-R1-R1..R3`;
+- [ ] executar `B00-A1-R1`;
+- [ ] executar `B00-B1-R1..R3`;
+- [ ] executar `B00-A1-B1`;
+- [ ] preencher as evidências restantes;
+- [ ] consolidar todos os resultados;
+- [ ] revisar limitações de observabilidade;
+- [ ] obter aceite explícito do usuário para a baseline.
 
 ## Próximo gate experimental
 
-O próximo run permitido é **`B00-M1-R1`**, em chat novo, com seleção explícita da skill `@hub-ml-eda-profissional` e o prompt literal congelado em `casos_eda.json`.
+O próximo run obrigatório é **`B00-A1-M1`**, em chat novo, usando `@hub-ml-auditoria-skills` sobre o notebook produzido em `B00-M1-R1`.
 
-Não fornecer R1/R2/R3, A1-P1 ou achados anteriores como contexto.
-
-Após `B00-M1-R1`, executar `B00-A1-M1` antes de `B00-M1-R2`, conforme protocolo congelado.
+`B00-M1-R2` não deve começar antes de a auditoria A1-M1 ser registrada. Isso preserva a ordem experimental congelada e mede se a skill de auditoria detecta a falha pós-seleção com maior precisão do que no caso P1.
 
 ## Gate de congelamento do ambiente
 
