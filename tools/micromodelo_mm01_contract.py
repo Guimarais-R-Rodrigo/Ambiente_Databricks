@@ -153,6 +153,17 @@ def _has_material_text(value: Any) -> bool:
     return any(unicodedata.category(char)[0] in {"L", "N"} for char in normalized)
 
 
+MATERIAL_FORMAT_CHECKER = FormatChecker()
+
+
+@MATERIAL_FORMAT_CHECKER.checks("material-text")
+def _check_material_text_format(value: Any) -> bool:
+    """Implementa no schema a mesma política Unicode usada pelos gates semânticos."""
+    if not isinstance(value, str):
+        return True
+    return _has_material_text(value)
+
+
 def _semver_tuple(value: str) -> tuple[int, int, int]:
     match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)", value)
     if not match:
@@ -304,7 +315,7 @@ def validate_spec(
     previous_spec: dict[str, Any] | None = None,
 ) -> list[Issue]:
     issues: list[Issue] = []
-    validator = Draft202012Validator(schema, format_checker=FormatChecker())
+    validator = Draft202012Validator(schema, format_checker=MATERIAL_FORMAT_CHECKER)
     for error in sorted(validator.iter_errors(spec), key=lambda e: list(e.absolute_path)):
         issues.append(Issue(_path(error.absolute_path), "SCHEMA", error.message))
     if issues:

@@ -347,7 +347,9 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
             with self.subTest(mark=mark, field="approval_por"):
                 approved = copy.deepcopy(self.valid)
                 approved["validacao"]["aprovacao_humana"]["por"] = mark
-                self.assertIn("VALIDATION_HUMAN_GATE", self.codes(approved))
+                self.assertTrue(
+                    {"SCHEMA", "VALIDATION_HUMAN_GATE"} & self.codes(approved)
+                )
 
             with self.subTest(mark=mark, field="approval_ref"):
                 approved = copy.deepcopy(self.valid)
@@ -517,6 +519,144 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
             )
         self.assertEqual(1, result.returncode, result.stdout + result.stderr)
         self.assertIn("STATE_REWIND", result.stdout)
+
+
+    def test_material_text_unicode_policy_is_shared_by_schema_and_validator(self) -> None:
+        positives = ["é", "文档", "١", "देवनागरी", "José", "Jose\u0301"]
+        negatives = [
+            "\u034f",
+            "\ufe0f",
+            "\u0301",
+            "\u093e",
+            "\u20dd",
+            "\u200b",
+            "\u200c",
+            "\u200d",
+            "\u2060",
+            "   ",
+            "\u00a0",
+            "\u2003",
+            "!!!",
+            "€",
+            "\u034f\u200b\u0301",
+            "\u00a0\u2060!!!\u0301",
+        ]
+
+        for value in positives:
+            with self.subTest(kind="positive", value=repr(value)):
+                document = copy.deepcopy(self.valid)
+                document["validacao"]["aprovacao_humana"]["referencia"] = value
+                self.assertEqual([], module.validate_spec(document, self.schema))
+
+        for value in negatives:
+            with self.subTest(kind="negative", value=repr(value)):
+                document = copy.deepcopy(self.valid)
+                document["validacao"]["aprovacao_humana"]["referencia"] = value
+                self.assertIn("SCHEMA", self.codes(document))
+
+    def test_root_provenance_material_fields_are_guarded(self) -> None:
+        negatives = [
+            "\u034f",
+            "\ufe0f",
+            "\u0301",
+            "\u093e",
+            "\u20dd",
+            "\u200b",
+            "\u200c",
+            "\u200d",
+            "\u2060",
+            "   ",
+            "\u00a0",
+            "\u2003",
+            "!!!",
+            "€",
+            "\u034f\u200b\u0301",
+        ]
+        for field in ("gerado_por", "pedido_original_ref"):
+            for value in negatives:
+                with self.subTest(field=field, value=repr(value)):
+                    document = copy.deepcopy(self.valid)
+                    document["proveniencia"][field] = value
+                    self.assertIn("SCHEMA", self.codes(document))
+
+        for value in negatives:
+            with self.subTest(field="registros.alvo", value=repr(value)):
+                document = copy.deepcopy(self.valid)
+                document["proveniencia"]["registros"] = [
+                    {
+                        "alvo": value,
+                        "proveniencia": copy.deepcopy(
+                            self.valid["classificacao"]["semantica"]["proveniencia"]
+                        ),
+                    }
+                ]
+                self.assertIn("SCHEMA", self.codes(document))
+
+        positive = copy.deepcopy(self.valid)
+        positive["proveniencia"]["gerado_por"] = "生成器"
+        positive["proveniencia"]["pedido_original_ref"] = "文档١"
+        positive["proveniencia"]["registros"] = [
+            {
+                "alvo": "लक्ष्य١",
+                "proveniencia": copy.deepcopy(
+                    self.valid["classificacao"]["semantica"]["proveniencia"]
+                ),
+            }
+        ]
+        self.assertEqual([], module.validate_spec(positive, self.schema))
+
+    def test_material_content_gates_reject_nonmaterial_and_accept_unicode(self) -> None:
+        mutations = [
+            ("quando_true", lambda d, v: d["classificacao"]["semantica"].__setitem__("quando_true", v)),
+            ("quando_false", lambda d, v: d["classificacao"]["semantica"].__setitem__("quando_false", v)),
+            ("quando_indeterminado", lambda d, v: d["classificacao"]["semantica"].__setitem__("quando_indeterminado", v)),
+            ("validacao.criterios", lambda d, v: d["validacao"].__setitem__("criterios", [v])),
+            ("fontes.schema", lambda d, v: d["fontes"][0].__setitem__("schema", v)),
+            ("fontes.objeto", lambda d, v: d["fontes"][0].__setitem__("objeto", v)),
+            ("fontes.campos", lambda d, v: d["fontes"][0]["campos"].__setitem__(0, v)),
+            ("saida.campo_classificacao", lambda d, v: d["saida"]["estudo"].__setitem__("campo_classificacao", v)),
+            ("saida.campo_score", lambda d, v: d["saida"]["estudo"].__setitem__("campo_score", v)),
+        ]
+        representatives = ["   ", "!!!", "€", "\u200b", "\u034f"]
+        for field, mutate in mutations:
+            for value in representatives:
+                with self.subTest(field=field, value=repr(value)):
+                    document = copy.deepcopy(self.valid)
+                    mutate(document, value)
+                    self.assertIn("SCHEMA", self.codes(document))
+
+        unicode_document = copy.deepcopy(self.valid)
+        unicode_document["classificacao"]["semantica"]["quando_true"] = "证据充分确认特征"
+        unicode_document["classificacao"]["semantica"]["quando_false"] = "证据充分否定特征"
+        unicode_document["classificacao"]["semantica"]["quando_indeterminado"] = "जानकारी अपर्याप्त है"
+        unicode_document["validacao"]["criterios"] = ["标准一"]
+        unicode_document["fontes"][0]["schema"] = "数据域"
+        unicode_document["fontes"][0]["objeto"] = "客户视图"
+        unicode_document["fontes"][0]["campos"][0] = "字段一"
+        unicode_document["saida"]["estudo"]["campo_classificacao"] = "分类"
+        unicode_document["saida"]["estudo"]["campo_score"] = "评分"
+        self.assertEqual([], module.validate_spec(unicode_document, self.schema))
+
+        publication = copy.deepcopy(self.valid)
+        publication["identidade"]["estado"]["fase_anterior"] = "VALIDADO"
+        publication["identidade"]["estado"]["fase_atual"] = "CANDIDATO_PRODUTO"
+        publication["publicacao"]["status"] = "CANDIDATA"
+        publication["saida"]["publicacao"] = {
+            "estado": "DEFINIDO",
+            "campo_booleano": {"nome": "\u200b", "tipo": "BOOLEAN"},
+            "politica_indeterminado": {
+                "tratamento": "CAMPO_COBERTURA_SEPARADO",
+                "indeterminado_vira_false": False,
+                "regra_ref": None,
+                "proveniencia": copy.deepcopy(
+                    self.valid["classificacao"]["semantica"]["proveniencia"]
+                ),
+            },
+        }
+        self.assertIn("SCHEMA", self.codes(publication))
+
+        publication["saida"]["publicacao"]["campo_booleano"]["nome"] = "是否具备特征"
+        self.assertEqual([], module.validate_spec(publication, self.schema))
 
 
 if __name__ == "__main__":
