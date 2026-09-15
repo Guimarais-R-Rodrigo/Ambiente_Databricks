@@ -53,9 +53,9 @@ A separação principal é entre **contexto** e **execução**:
 
 ## 🎨 Sistema de Temas
 
-V00–V11 estão aceitas e integradas no Git. A V11 foi aceita em 14/09/2026 e integrada pelo PR #52 no merge `9305bc49eaf002caec042361bf35efa66af7ca18`. Os 11 workflows reais da PR concluíram com `success`; depois do merge, os 13 workflows disparados por `push` na `main` também concluíram com `success`.
+V00–V12 estão aceitas e integradas no Git. A V12 foi integrada pela PR #54 no merge `a6309a4d0b3a3530c52330e65ee5a18674118378`, preservando estados honestos distintos: `DOC-02`, `DOC-03`, `SEC-01`, `UAT-01` e `V12-AIBI-01` possuem PASS no alcance documentado; `A11-01` permanece **FAIL** rastreado na issue #57; `V12-LAB-01`, `V12-APP-01` e `V12-AIBI-02` permanecem **BLOQUEADO_AUTORIZACAO**. Esses estados não são intercambiáveis.
 
-A V12 foi iniciada em branch isolada a partir da `main` `d106ef3158e5827a2eec3aa183dbb3b47885c960` e permanece **candidata**, sem aceite ou merge. Seu escopo é homologação formativa de jornadas com pessoas e ambiente, com separação explícita entre evidência Git/local, observação Databricks real e evidência humana/UAT. `V12-AIBI-01` possui **PASS real de ambiente** em dashboard AI/BI draft descartável: export nativo fixado por SHA-256, binding revisado somente nos três mappings diretos da V11, queries temporárias exclusivamente sintéticas via SQL `VALUES`, `Import theme` sem `Publish`, observação Light/Dark, invariância de `datasets`/`pages` e rollback integral. `SEC-01` também possui **PASS real de ambiente**: identidade autenticada foi observada na UI e a permissão efetiva de edição foi comprovada pelas ações concluídas na mesma sessão sintética de `V12-AIBI-01`, sem confiar em papel autodeclarado e sem versionar PII. A primeira tentativa AI/BI permanece `FAIL` porque usava dado público de amostra em vez de dado sintético. Os demais casos V12 continuam pendentes ou bloqueados; CI não substitui observação humana e esses PASS ambientais não encerram a V12.
+O Plano Mestre V13 foi aceito e integrado pela PR #58 no merge `c339ed177f4b901a907ea6ad43f0803f5b7ccc09`. A etapa vigente é **V13 — S0: reconciliação pós-V12 e freeze de escopo**, em candidata documental separada. A S0 não altera runtime, não cria os artefatos operacionais da S1 e não executa nenhuma mutação Databricks. Para um usuário não técnico: não há nada para instalar ou aplicar nesta etapa; a próxima ação é revisar o checkpoint S0 antes de qualquer avanço.
 
 A V11 projeta um `ResolvedTheme` `notebook` para capacidades documentadas de temas nativos AI/BI sem criar uma segunda fonte de verdade. `context="aibi"` continua reservado no schema central. A matriz integrada cobre os 48 tokens notebook como **3 traduzidos, 23 aproximados e 22 não suportados**. Como as fontes oficiais verificadas não publicam um schema completo e versionado do JSON produzido por `Export theme`, a V11 não inventa campos nativos: um candidato de importação só pode ser construído sobre um export real fixado por SHA-256 e um binding revisado para campos já existentes.
 
@@ -77,7 +77,7 @@ Regras atuais:
 
 Na V10, os gates Git/CI exercitam identidade sintética, isolamento, persistência V05, bundle implantável derivado e regressões locais. No head reconciliado `cb942ee955ff9236f19099e5ed4ceee9beb32000`, os dez workflows reais de PR concluíram com `success`; depois do merge `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`, os 12 workflows disparados por `push` na `main` também concluíram com `success`, incluindo o workflow V10 `34896944061`. Isso **não** comprova headers reais, permissões/grupos do workspace, UC Volume real, browser, acessibilidade, concorrência multiusuário ou UAT. Nenhuma criação/atualização de Databricks App foi executada por essa sprint.
 
-Detalhes da etapa integrada mais recente: [V11](docs/sprints/sistema_temas/V11/README.md) e [checkpoint V11](docs/sprints/sistema_temas/V11/CHECKPOINT_V11.md). O estado V12 em andamento está documentado em `docs/sprints/sistema_temas/V12/`. As etapas anteriores permanecem em [V10](docs/sprints/sistema_temas/V10/README.md), [checkpoint V10](docs/sprints/sistema_temas/V10/CHECKPOINT_V10.md) e [V09](docs/sprints/sistema_temas/V09/README.md).
+Estado corrente e próxima decisão: [V13](docs/sprints/sistema_temas/V13/README.md), [Plano Mestre V13](docs/sprints/sistema_temas/V13/PLANO_MESTRE.md) e [checkpoint S0](docs/sprints/sistema_temas/V13/CHECKPOINT_S0.md). O fechamento herdado permanece em [V12](docs/sprints/sistema_temas/V12/README.md) e [escopo/aceite V12](docs/sprints/sistema_temas/V12/ESCOPO_E_ACEITE.md). As etapas anteriores continuam navegáveis em [V11](docs/sprints/sistema_temas/V11/README.md), [V10](docs/sprints/sistema_temas/V10/README.md) e [V09](docs/sprints/sistema_temas/V09/README.md).
 
 ## 🔄 Como o contexto chega à Genie Code
 
@@ -122,8 +122,8 @@ normas do molde    : 72 arquivos, 0 violação(ões)
 notebook exercita  : 60 objetos, 0 notebook(s) que só importam
 python (AST)       : 221 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1448 arquivos varridos no repositório editável/derivado
-repo (links)       : 1894 links fora da raiz analisada
+repo (identidade)  : 1450 arquivos varridos no repositório editável/derivado
+repo (links)       : 1918 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)
