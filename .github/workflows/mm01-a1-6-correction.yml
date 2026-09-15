@@ -31,6 +31,9 @@ jobs:
       - name: Aplicar correcao da sexta A1
         run: python -B tools/mm01_a1_6_fix.py
 
+      - name: Normalizar linha editorial alterada
+        run: sed -i '3s/  $//' docs/sprints/micromodelos/MM01/README.md
+
       - name: Remover artefatos transitorios
         run: git rm tools/mm01_a1_6_fix.py .github/workflows/mm01-a1-6-correction.yml
 
