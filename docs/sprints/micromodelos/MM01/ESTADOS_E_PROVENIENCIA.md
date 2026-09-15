@@ -21,9 +21,9 @@ Transições permitidas em `schema_version=1.0.0`:
 | `EM_VALIDACAO_GOVERNANCA` | `PUBLICADO` | publicação externa confirmada |
 | `EM_VALIDACAO_GOVERNANCA` | `CANDIDATO_PRODUTO` | retorno da governança para ajuste |
 
-`PUBLICADO` é terminal para a versão corrente. Mudança material posterior deve gerar nova versão do micromodelo; o contrato não “rebobina” silenciosamente uma versão já publicada.
+`PUBLICADO` é terminal para a versão corrente. Mudança material posterior deve gerar nova versão do micromodelo; o contrato não rebobina silenciosamente uma versão já publicada.
 
-A validação isolada do documento corrente consegue conferir somente o par declarado `fase_anterior → fase_atual`. Para provar a continuidade histórica entre snapshots, a MM01 aceita uma especificação anterior confiável por `--previous`. Nesse modo, o validador confere identidade e versão, usa a fase efetivamente observada no snapshot anterior como origem da transição e recusa rewind de `PUBLICADO` na mesma versão. Esse mecanismo é histórico/comparativo e não é o `spec_fingerprint` da MM02.
+A validação isolada do documento corrente consegue conferir somente o par declarado `fase_anterior → fase_atual`. Para provar continuidade histórica entre snapshots, a MM01 aceita uma especificação anterior confiável por `--previous`. Nesse modo, o validador confere identidade e versão, usa a fase efetivamente observada no snapshot anterior como origem da transição e recusa rewind de `PUBLICADO` na mesma versão. Esse mecanismo não calcula nem substitui o `spec_fingerprint` da MM02.
 
 ## 2. Condição operacional
 
@@ -35,8 +35,6 @@ A condição é ortogonal à fase:
 - `DEPRECATED`: versão/artefato não deve receber evolução normal.
 
 Toda condição diferente de `ATIVO` exige `motivo_condicao`. `PUBLICADO` não usa `BLOQUEADO`; para um publicado indisponível use `SUSPENSO` ou `DEPRECATED` conforme o caso.
-
-Separar fase e condição resolve uma ambiguidade importante: não é necessário permitir “BLOQUEADO → qualquer fase” para retomar o trabalho, porque a fase continua registrada enquanto a condição muda.
 
 ## 3. Proveniência controlada
 
@@ -50,27 +48,36 @@ Estados aceitos:
 | `APROVADO` | decisão humana material aceita | bloco `aprovacao` com responsável, timestamp e referência material |
 | `MEDIDO` | resultado observado por execução | bloco `medicao` com `referencia_execucao` material e timestamp |
 
-`APROVADO` sem bloco de aprovação é inválido. `MEDIDO` sem execução referenciável é inválido. Inversamente, blocos de aprovação/medição não podem ser pendurados em outro status apenas para “guardar contexto”.
+`APROVADO` sem bloco de aprovação é inválido. `MEDIDO` sem execução referenciável é inválido. Inversamente, blocos de aprovação/medição não podem ser pendurados em outro status apenas para guardar contexto.
 
-Referência “presente” apenas sintaticamente não é suficiente: strings compostas só por whitespace ou caracteres invisíveis são tratadas como ausência de conteúdo material pelos guardrails semânticos. O schema também rejeita os casos triviais de whitespace nos campos materiais que consegue expressar formalmente.
+### Materialidade textual
 
-`PROPOSTO` é deliberadamente representável no YAML. O estado serve para preservar propostas antes da decisão humana; ele só se torna insuficiente quando o micromodelo atravessa um gate de fase que exige aprovação.
+Os campos que funcionam como prova auditável usam uma regra positiva, não uma blacklist incompleta de whitespace/invisíveis. Depois de normalização NFKC, precisa existir ao menos um caractere Unicode de categoria letra (`L*`) ou número (`N*`). Portanto strings compostas apenas por espaços, controles, zero-width, variation selectors ou marcas combinantes (`M*`) não são referência material.
+
+A regra se aplica, entre outros, a:
+
+- responsável/referência de decisão humana;
+- `referencia_execucao` de medição;
+- referências de regra estruturada;
+- `handoff_ref`;
+- `produto_dados_ref`.
+
+`PROPOSTO` continua deliberadamente representável no YAML. O estado serve para preservar propostas antes da decisão humana; ele só se torna insuficiente quando o micromodelo atravessa um gate de fase que exige aprovação.
 
 ## 4. Gates por fase
 
 Ao entrar em `EM_VALIDACAO` ou fase posterior:
 
 - `fontes`, `evidencias`, `contra_evidencias` e `validacao.criterios` devem estar não vazios;
-- semântica `TRUE/FALSE/INDETERMINADO` deve estar aprovada e as três definições precisam permanecer distintas mesmo após normalização editorial básica;
-- política de ausência de evidência deve estar aprovada;
-- score habilitado precisa ter semântica aprovada;
+- semântica `TRUE/FALSE/INDETERMINADO` deve estar aprovada e as três definições precisam permanecer distintas após normalização editorial básica;
+- política de ausência de evidência precisa estar estruturalmente consistente e aprovada quando usar regra explícita;
+- score habilitado precisa ter `tipo_semantica` e `semantica_ref` materiais, além de normalização estruturada/aprovada;
 - regras de evidência e contra-evidência precisam estar aprovadas;
-- limiares e pesos existentes precisam estar `APROVADO`; antes de `EM_VALIDACAO`, podem permanecer `PROPOSTO`;
-- linguagem probabilística em score não calibrado é recusada, ainda que o enum tenha sido deixado como `FORCA_EVIDENCIA` ou `OUTRA_APROVADA`.
+- limiares e pesos existentes precisam estar `APROVADO`; antes de `EM_VALIDACAO`, podem permanecer `PROPOSTO`.
 
 Ao chegar em `VALIDADO` ou posterior, o resultado de validação precisa ser medido e a decisão humana precisa estar aprovada.
 
-Ao chegar em `CANDIDATO_PRODUTO` ou posterior, o contrato de saída de publicação precisa estar definido, inclusive tratamento de `INDETERMINADO`. O campo estruturado `indeterminado_vira_false` permanece `false`, e descrição contraditória que tente mandar converter `INDETERMINADO` em `FALSE` é recusada.
+Ao chegar em `CANDIDATO_PRODUTO` ou posterior, o contrato de saída de publicação precisa estar definido, inclusive tratamento estruturado de `INDETERMINADO`.
 
 A interface de publicação acompanha a fase:
 
@@ -79,29 +86,52 @@ A interface de publicação acompanha a fase:
 - em `EM_VALIDACAO_GOVERNANCA`: `EM_VALIDACAO_EXTERNA` e `handoff_ref` material obrigatório;
 - em `PUBLICADO`: `PUBLICADA` e `produto_dados_ref` material obrigatório.
 
-Esses gates têm caminhos positivos cobertos pela suíte. A intenção não é tornar fases posteriores inalcançáveis, mas impedir que o rótulo de fase avance sem o contrato correspondente.
+## 5. Semântica estruturada: ausência, indeterminado e score
 
-## 5. Escopo de fontes
+### Ausência de evidência
+
+`classificacao.ausencia_evidencia` não possui descrição normativa livre. O comportamento é determinado por `tratamento`, `resultado_sem_evidencia`, `regra_ref` e proveniência.
+
+- `INDETERMINADO` exige resultado `INDETERMINADO` e nenhuma `regra_ref`;
+- `REGRA_EXPLICITA_APROVADA` exige proveniência `APROVADO` e `regra_ref` material.
+
+Uma propriedade livre que tente mandar “classificar como FALSE” não é interpretada: o schema fechado a rejeita.
+
+### Publicação de `INDETERMINADO`
+
+`saida.publicacao.politica_indeterminado` também não aceita prosa normativa. `indeterminado_vira_false` é constante `false`. O tratamento é fechado e, se for `OUTRA_APROVADA`, precisa de `regra_ref` auditável.
+
+### Score probabilístico
+
+`score.tipo_semantica` é a única autoridade executável sobre a natureza do score. `semantica_ref` registra uma referência auditável, mas não pode sobrescrever o enum. Não existe campo livre `score.semantica` cujo vocabulário seja analisado por regex.
+
+Somente `PROBABILIDADE_CALIBRADA` admite calibração probabilística; ela exige proveniência `MEDIDO` e `evidencia_ref` resolvida para experimento `EXECUTADO`/`MEDIDO`. Para tipos não probabilísticos, um bloco de calibração é recusado.
+
+`score.normalizacao` é estruturada, não uma frase livre. Em `EM_VALIDACAO+` o método precisa estar definido e aprovado; `CUSTOM_APROVADO` exige referência material.
+
+## 6. Escopo de fontes
 
 Na MM01, `catalogo_ref` aceita exclusivamente o placeholder `CATALOGO_PRODUTO`. A ferramenta de validação não possui flag de linha de comando para ampliar esse conjunto. Fonte fora do catálogo padrão continua sendo decisão humana/arquitetural e não override local de validação.
 
-## 6. Integridade sintática e referencial
+## 7. Integridade sintática e referencial
 
 - YAML e JSON com chaves duplicadas são rejeitados no carregamento; não se aceita “last key wins”.
 - Referências `fontes_ref` precisam apontar para fontes existentes.
 - IDs duplicados são rejeitados nas coleções controladas: fontes, evidências, contra-evidências, limiares, componentes do score e experimentos.
 - `score.calibracao.evidencia_ref` pertence ao namespace de `experimentos[].id` e precisa apontar para experimento `EXECUTADO` com proveniência `MEDIDO`.
-- quando uma especificação anterior é fornecida, nome e versão precisam ser coerentes e a transição entre snapshots é validada contra a fase realmente observada no documento anterior.
+- quando uma especificação anterior é fornecida, nome e versão precisam ser coerentes e a transição entre snapshots é validada contra a fase observada no documento anterior.
 
-## 7. Não equivalências que o contrato protege
+## 8. Não equivalências que o contrato protege
 
 ```text
 sem evidência ≠ FALSE
 PROPOSTO ≠ APROVADO
 INFERIDO ≠ MEDIDO
-string visualmente vazia ≠ referência auditável
+caractere invisível ≠ referência auditável
 score 80 ≠ 80% de probabilidade
-linguagem de probabilidade ≠ probabilidade calibrada
+tipo_semantica ≠ texto livre inferido
+semantica_ref ≠ autorização para sobrescrever tipo_semantica
+normalização estruturada ≠ frase normativa livre
 evidencia_ref textual ≠ evidência de calibração resolvida
 notebook executado ≠ publicação autorizada
 VALIDADO ≠ PUBLICADO
