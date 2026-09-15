@@ -1,6 +1,6 @@
 # MM01 — Contrato canônico de micromodelos
 
-Status da sprint: **TERCEIRA A1 `APTA_COM_CORRECOES`; TRÊS DIVERGÊNCIAS CORRIGIDAS; RETESTE DE CONSTRUÇÃO VERDE; QUARTA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**  
+Status da sprint: **QUARTA A1 `APTA_COM_CORRECOES`; DIVERGÊNCIA BLOQUEANTE CORRIGIDA; RETESTE DE CONSTRUÇÃO VERDE; QUINTA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**  
 Base inicial: `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5`  
 Branch: `micromodelos/mm01-contrato-canonico`  
 PR: `#51`
@@ -21,9 +21,9 @@ A implementação começou sobre a `main` final da MM00 e foi reconciliada de fo
 - `ESTADOS_E_PROVENIENCIA.md`: máquina de fases, condições, proveniência e gates;
 - `tools/micromodelo_mm01_contract.py`: validador de referência/CI;
 - fixtures sintéticos positivos e negativos em `tools/tests/fixtures/micromodelos_mm01/`;
-- `tools/tests/test_micromodelo_mm01.py`: suíte automatizada com **29 métodos** e múltiplos subtests;
+- `tools/tests/test_micromodelo_mm01.py`: suíte automatizada com **31 métodos** e múltiplos subtests;
 - `.github/workflows/micromodelos-mm01-ci.yml`: gate permanente, read-only, para branch/PR/`main`;
-- pacote de auditoria A1 com contexto, prompt e três resultados históricos preservados (`NAO_APTA`, `NAO_APTA`, `APTA_COM_CORRECOES`);
+- pacote de auditoria A1 com contexto, prompt e quatro resultados históricos preservados (`NAO_APTA`, `NAO_APTA`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`);
 - `TESTES.md` e `CHECKPOINT.md`.
 
 ## Decisões fechadas nesta sprint
@@ -73,6 +73,8 @@ A segunda A1 demonstrou que uma blacklist de whitespace/controles não era sufic
 
 O JSON Schema usa `format: material-text` e o `FormatChecker` do validador delega esse formato à mesma função `_has_material_text`. Isso rejeita strings compostas somente por espaços, zero-width, variation selectors, combining marks isolados, pontuação ou símbolos nos campos materiais, sem rejeitar CJK, Devanagari, caracteres acentuados, algarismos Unicode ou combining marks acompanhados de texto material. Campos puramente narrativos não foram restringidos indiscriminadamente.
 
+A quarta A1 identificou seis campos normativos equivalentes que ainda escapavam dessa autoridade. `evidencias[].regra`, `contra_evidencias[].regra`, `experimentos[].hipotese`, `experimentos[].resultado`, `validacao.resultado.resumo` e `identidade.estado.motivo_condicao` agora usam o mesmo `material-text`; os gates de resultado executado e motivo operacional chamam `_has_material_text` em vez de `.strip()`.
+
 ### Publicação não apaga o indeterminado
 
 A fase `CANDIDATO_PRODUTO` ou posterior exige contrato explícito de publicação: campo final BOOLEAN e política aprovada para os casos `INDETERMINADO`.
@@ -103,6 +105,12 @@ A terceira auditoria independente concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, c
 
 O resultado histórico permanece em `05_resultado_a1_reauditoria_2.md`. As três divergências foram corrigidas por uma autoridade Unicode única e testes positivos/negativos multilíngues. O run de construção `34955861169` removeu os mecanismos transitórios, executou suíte, CLI adversarial e `validate_assistant`, e só então publicou o commit permanente `4f686e5de163b649c4ee5e7643f75ecd56db47e7`.
 
+### Quarta A1
+
+A quarta auditoria independente concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com uma divergência bloqueante: a autoridade Unicode comum estava correta, mas seis campos normativos/materialmente decisivos equivalentes ainda aceitavam conteúdo não material por `minLength` ou `.strip()`.
+
+O resultado histórico permanece em `06_resultado_a1_reauditoria_3.md`. A correção aplicou a mesma autoridade `material-text` aos seis campos, removeu `.strip()` dos dois gates materiais correspondentes e ampliou a suíte para **31 métodos**. O run `34960256357` validou a árvore sem seus mecanismos transitórios e só então publicou `8fd8e7892ead1bb63a554b5283f7062adf582976`.
+
 ## Fronteiras preservadas
 
 - Micromodelo continua artefato de domínio, não sétimo tipo do Hub.
@@ -116,14 +124,14 @@ O resultado histórico permanece em `05_resultado_a1_reauditoria_2.md`. As três
 
 ## Evidência técnica atual
 
-A suíte MM01 possui **29 métodos automatizados**, além de mutações e subtests. O reteste de construção das correções da terceira A1 ficou verde antes da publicação do commit permanente.
+A suíte MM01 possui **31 métodos automatizados**, além de mutações e subtests. O reteste de construção das correções da quarta A1 ficou verde antes da publicação do commit permanente.
 
 Run IDs e o SHA final da árvore documental não são congelados neste arquivo para evitar que registrar a evidência altere a própria árvore validada. A descrição da PR #51 é o registro operacional do head e dos runs finais; `TESTES.md` mantém a cronologia histórica.
 
 ## Gate de saída
 
-Como o contrato mudou materialmente depois da terceira A1, a MM01 só pode ser aceita após uma **quarta A1 independente** sobre o novo HEAD congelado. O auditor deve reproduzir instalação, suíte, gate estrutural e CLI e criar adversariais próprios, incluindo falsos positivos e falsos negativos Unicode, sem usar os relatórios anteriores, a narrativa do autor, o changelog ou mensagens de commit como prova.
+Como o contrato mudou materialmente depois da quarta A1, a MM01 só pode ser aceita após uma **quinta A1 independente** sobre o novo HEAD congelado. O auditor deve reproduzir instalação, suíte, gate estrutural e CLI e criar adversariais próprios sobre todos os campos corrigidos, sem usar os relatórios anteriores, a narrativa do autor, o changelog ou mensagens de commit como prova.
 
-O bloco MM01 do `CHANGELOG.md` permanece dívida bloqueante de merge e só deve ser sincronizado, de forma byte-preserving fora do bloco MM01, após uma quarta A1 limpa e contraditório final. A árvore resultante deverá ser novamente validada.
+O bloco MM01 do `CHANGELOG.md` permanece dívida bloqueante de merge e só deve ser sincronizado, de forma byte-preserving fora do bloco MM01, após uma quinta A1 limpa e contraditório final. A árvore resultante deverá ser novamente validada.
 
-**MM02 permanece bloqueada até quarta A1, eventual contraditório, fechamento do changelog, aceite explícito e integração da MM01.**
+**MM02 permanece bloqueada até quinta A1, eventual contraditório, fechamento do changelog, aceite explícito e integração da MM01.**

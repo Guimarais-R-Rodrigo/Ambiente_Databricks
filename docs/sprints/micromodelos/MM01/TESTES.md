@@ -52,8 +52,10 @@ Os testes da MM01 exercitam o contrato estrutural e semântico. Não acessam Dat
 | T42 | política `material-text`: marcas/formatos/whitespace/pontuação/símbolo isolados | `SCHEMA` |
 | T43 | materialidade Unicode positiva (`é`, CJK, algarismos Unicode, Devanagari, combining mark com base material) | APROVADO |
 | T44 | proveniência de topo e gates materiais usam a mesma política Unicode | rejeição/aceite coerentes |
+| T45 | regras de evidência, hipótese/resultado experimental, resumo de validação e motivo operacional não materiais | `SCHEMA` / gate fail-closed |
+| T46 | os mesmos campos normativos com conteúdo Unicode legítimo multilíngue | APROVADO |
 
-A suíte `tools/tests/test_micromodelo_mm01.py` contém **29 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz. `casos_invalidos.json` mantém nove mutações negativas determinísticas além dos casos adversariais construídos diretamente pela suíte.
+A suíte `tools/tests/test_micromodelo_mm01.py` contém **31 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz. `casos_invalidos.json` mantém nove mutações negativas determinísticas além dos casos adversariais construídos diretamente pela suíte.
 
 ## Teste específico de YAML
 
@@ -147,10 +149,26 @@ O mecanismo transitório foi executado novamente no run `34955861169`. Antes de 
 
 Esse reteste é evidência de construção. A candidata documental final ainda precisa dos workflows permanentes verdes no SHA exato e de uma nova auditoria independente.
 
+## Quarta A1 — `APTA_COM_CORRECOES`
+
+A quarta auditoria independente sobre `c0b6f5872f47f8e37ed8f55f262c276b8c105063` concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com uma divergência bloqueante: a autoridade comum `material-text` já era única, porém campos normativos/materialmente decisivos equivalentes ainda dependiam apenas de `minLength` ou `.strip()`.
+
+O achado alcançou `evidencias[].regra`, `contra_evidencias[].regra`, `experimentos[].hipotese`, `experimentos[].resultado`, `validacao.resultado.resumo` e `identidade.estado.motivo_condicao`. O resultado histórico está preservado em `06_resultado_a1_reauditoria_3.md` e não é reclassificado pelas correções posteriores.
+
+### Reteste das correções da quarta A1
+
+A correção reutilizou exclusivamente a autoridade existente `material-text` → `_has_material_text`:
+
+- os seis campos citados passaram a usar `format: material-text` no schema;
+- os gates semânticos de resultado `EXECUTADO` e motivo de condição não `ATIVO` deixaram de usar `.strip()` e passaram a chamar `_has_material_text`;
+- a suíte ganhou adversariais permanentes para `Mn`, `Mc`, `Me`, `Cf`, zero-width, espaços Unicode, pontuação, símbolos e combinações, além de caminhos positivos multilíngues.
+
+O run transitório `34960256357` removeu seus próprios mecanismos e concluiu com sucesso **31 métodos**, CLI direta positiva/negativa/`--previous`, `validate_assistant`, métrica congelada e invariantes históricos antes de publicar o commit permanente `8fd8e7892ead1bb63a554b5283f7062adf582976`.
+
 ## Próxima auditoria A1
 
-Uma **quarta auditoria A1 independente** é obrigatória porque a candidata mudou materialmente depois da terceira A1. Ela deve trabalhar sobre o novo HEAD congelado e não pode usar os relatórios anteriores, a narrativa do autor, o changelog ou mensagens de commit como prova.
+Uma **quinta auditoria A1 independente** é obrigatória porque a candidata mudou materialmente depois da quarta A1. Ela deve auditar o HEAD efetivamente encontrado e não pode usar relatórios anteriores, narrativa do autor, changelog ou mensagens de commit como prova.
 
-A quarta A1 deve repetir instalação, 29 testes, gate estrutural, CLI direta e adversariais próprios; verificar simultaneamente falsos positivos e falsos negativos Unicode; cobrir todos os campos equivalentes; confirmar a unicidade da autoridade de materialidade; validar `--previous`; e confirmar que MM01 não antecipou MM02/MM03/MM04/MM06.
+A quinta A1 deve repetir instalação, 31 testes, gate estrutural, CLI direta e adversariais próprios; testar isoladamente todos os seis campos corrigidos com `Mn/Mc/Me`, `Cf`, zero-width, espaços Unicode, pontuação, símbolos e combinações; confirmar positivos multilíngues; provar que não surgiu uma segunda autoridade de materialidade; validar `--previous`; e confirmar as fronteiras MM02/MM03/MM04/MM06.
 
 MM02 permanece bloqueada até nova A1, contraditório se necessário, fechamento do changelog, aceite explícito e integração da MM01.

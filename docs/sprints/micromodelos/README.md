@@ -1,6 +1,6 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: **MM00 encerrada e integrada. MM01 passou por três A1 (`NAO_APTA`, `NAO_APTA`, `APTA_COM_CORRECOES`); as três divergências da terceira A1 foram corrigidas e o reteste de construção ficou verde; quarta A1 independente pendente. MM01 ainda não aceita nem integrada.**
+> Estado: **MM00 encerrada e integrada. MM01 passou por quatro A1 (`NAO_APTA`, `NAO_APTA`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`); a divergência bloqueante da quarta A1 foi corrigida e o reteste de construção ficou verde; quinta A1 independente pendente. MM01 ainda não aceita nem integrada.**
 
 ## Objetivo
 
@@ -42,7 +42,7 @@ A exceção D1-B terminou com o fechamento de Q-01 e não se propaga às próxim
 
 A MM01 foi iniciada na branch `micromodelos/mm01-contrato-canonico` e reconciliada de forma fail-closed com as evoluções da `main`, inclusive as bases pós-V10 e pós-V11. A PR #51 permanece aberta, não aceita e não integrada.
 
-A candidata contém exclusivamente o contrato canônico `micromodelo.yaml`: schema, fases/condições, proveniência, validador de referência/CI, fixtures sintéticos, suíte com **29 métodos de teste**, documentação e pacote A1. Não cria skill de micromodelos nem altera `.assistant`.
+A candidata contém exclusivamente o contrato canônico `micromodelo.yaml`: schema, fases/condições, proveniência, validador de referência/CI, fixtures sintéticos, suíte com **31 métodos de teste**, documentação e pacote A1. Não cria skill de micromodelos nem altera `.assistant`.
 
 ### Primeira A1
 
@@ -75,14 +75,22 @@ A terceira correção unificou a autoridade em NFKC + letra/número Unicode por 
 
 Os três resultados A1 permanecem históricos e não são reclassificados depois das correções.
 
+### Quarta A1
+
+A quarta auditoria independente concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com uma divergência: regras de evidência/contra-evidência, hipótese/resultado experimental, resumo de validação e motivo operacional ainda escapavam da autoridade comum de materialidade. O resultado está preservado em `06_resultado_a1_reauditoria_3.md`.
+
+A correção reutilizou `material-text` → `_has_material_text` nos seis campos e removeu `.strip()` dos gates de resultado executado e motivo de condição. A suíte passou para 31 métodos. O run transitório `34960256357` executou suíte, CLI adversarial, `--previous` e gates estruturais antes de publicar `8fd8e7892ead1bb63a554b5283f7062adf582976`; os mecanismos transitórios foram removidos.
+
+Os quatro resultados A1 permanecem históricos e não são reclassificados depois das correções.
+
 A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprint continua reservado para MM02; descoberta de metadata continua reservada para MM03; tracking definitivo continua reservado para MM06.
 
 ## Próximo gate
 
-1. congelar o HEAD documental pós-terceira A1 e obter todos os workflows permanentes verdes;
-2. executar uma **quarta A1 independente** sobre esse HEAD, sem usar relatórios anteriores, narrativa do autor, changelog ou mensagens de commit como prova;
+1. congelar o HEAD documental pós-quarta A1 e obter todos os workflows permanentes verdes;
+2. executar uma **quinta A1 independente** sobre esse HEAD, sem usar relatórios anteriores, narrativa do autor, changelog ou mensagens de commit como prova;
 3. confrontar qualquer novo achado e corrigir somente se procedente;
-4. se a quarta A1 for `APTA`, executar contraditório final;
+4. se a quinta A1 for `APTA`, executar contraditório final;
 5. sincronizar o bloco MM01 do `CHANGELOG.md` antes do merge, preservando byte a byte o histórico anterior;
 6. revalidar a árvore exata após o changelog, reconfirmar `main`/`behind_by`/mergeabilidade e solicitar aceite final explícito;
 7. integrar a PR #51 somente após o aceite.
