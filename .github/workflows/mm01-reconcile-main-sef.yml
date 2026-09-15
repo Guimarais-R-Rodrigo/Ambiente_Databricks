@@ -28,9 +28,11 @@ jobs:
           cache: pip
           cache-dependency-path: tools/requirements-dev.txt
 
-      - name: Confirmar main esperada
+      - name: Confirmar main esperada e configurar Git
         shell: bash
         run: |
+          git config user.name "Rodrigo"
+          git config user.email "guimarais.r.rodrigo@gmail.com"
           git fetch origin main
           test "$(git rev-parse origin/main)" = "28669f99db27cf23df73549297bbf57eda033f58"
 
@@ -116,8 +118,6 @@ jobs:
       - name: Publicar merge de reconciliacao
         shell: bash
         run: |
-          git config user.name "Rodrigo"
-          git config user.email "guimarais.r.rodrigo@gmail.com"
           git add -A
           git commit -m "chore(mm01): reconciliar main apos plano SEF"
           test "$(git show -s --format=%P HEAD | wc -w)" -eq 2
