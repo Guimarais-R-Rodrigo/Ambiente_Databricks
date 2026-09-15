@@ -39,7 +39,7 @@ O JSON é deliberadamente **referencial**. Ele não contém:
 - novo schema de tema;
 - novo manifesto de implantação.
 
-Esses contratos continuam com seus owners originais. O validador [`tools/temas_v13_operacional.py`](../../../tools/temas_v13_operacional.py) falha fechado se a matriz tentar introduzir chaves que representem essas duplicações.
+Esses contratos continuam com seus owners originais. O validador [`tools/temas_v13_operacional.py`](../../../../tools/temas_v13_operacional.py) falha fechado se a matriz tentar introduzir chaves que representem essas duplicações.
 
 ## As seis superfícies inventariadas
 
