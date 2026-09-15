@@ -99,6 +99,8 @@ A política de materialidade foi unificada sem ampliar o escopo da MM01:
 
 O run transitório `34955861169` executou a suíte ampliada, CLI positiva/negativa/`--previous` e `validate_assistant` antes de publicar `4f686e5de163b649c4ee5e7643f75ecd56db47e7`. O mecanismo transitório não permaneceu na árvore candidata.
 
+A sincronização documental posterior também foi validada antes da publicação: o run `34956548413` confirmou **29 métodos**, suíte MM01, CLI direta com casos Unicode positivo/negativo e `--previous`, `validate_assistant`, métrica congelada do README e invariantes dos relatórios A1 anteriores. Ele publicou `431e22cf25164dee8f8c1a5a1fc1da2943704b7a` já sem os mecanismos transitórios. Os workflows associados a esse commit automático ficaram em `action_required` e, por isso, não são tratados como evidência de CI permanente; a certificação deve ocorrer no HEAD normal subsequente.
+
 ## Dívida documental antes do merge
 
 O bloco MM01 do `CHANGELOG.md` ainda descreve a candidata pré-A1. Ele deve ser sincronizado **antes do merge**, por operação que preserve byte a byte o histórico anterior. Essa pendência não deve ser usada para apagar ou reclassificar as auditorias históricas.
