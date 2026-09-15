@@ -1,8 +1,10 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Estado vigente — V00–V11 integradas; V12 não iniciada
+## Estado vigente — V00–V11 integradas; V12 candidata em branch isolada
 
 V00–V11 estão aceitas e integradas no Git. A V11 foi aceita em 14/09/2026 e integrada pelo PR #52 no merge `9305bc49eaf002caec042361bf35efa66af7ca18`. Os 11 workflows reais da PR e os 13 workflows pós-merge da `main` concluíram com `success`.
+
+A V12 foi iniciada em 14/09/2026 na branch `codex/temas-v12-homologacao-jornadas-20260914`, baseada em `d106ef3158e5827a2eec3aa183dbb3b47885c960`. Ela permanece candidata, sem aceite e sem integração. Seu escopo canônico é homologação formativa de jornadas com pessoas e ambiente; Git/local, Databricks environment e Human/UAT são classes de evidência distintas e não podem ser promovidas umas às outras por inferência. Os documentos da candidata ficam em `docs/sprints/sistema_temas/V12/`. Nenhuma mutação Databricks real nem sessão UAT foi executada pela preparação inicial.
 
 A V11 cria uma ponte fail-closed entre um `ResolvedTheme` `notebook` e capacidades documentadas de temas nativos Databricks AI/BI. O schema central permanece inalterado e `context="aibi"` continua reservado. A matriz integrada cobre exatamente os 48 tokens notebook: **3 traduzidos, 23 aproximados e 22 não suportados**. Somente as três correspondências traduzidas podem ter binding direto; aproximações exigem revisão e itens não suportados permanecem explícitos.
 
@@ -12,7 +14,7 @@ Workspace theme e dashboard theme permanecem escopos diferentes: gerenciar o tem
 
 Os runs `34900693160`, `34901091132`, `34901776770` e `34904363803` permanecem **FAILURE** e não foram reclassificados. O head final pré-PR `5532ca6d8f1b243ca705088f4b57823a333b9b1f` passou integralmente no run `34905080083`; os 11 workflows reais da PR #52 e os 13 workflows pós-merge no commit `9305bc49eaf002caec042361bf35efa66af7ca18` também terminaram em `success`.
 
-O detalhamento corrente está em [V11/README.md](V11/README.md), [V11/TESTES.md](V11/TESTES.md) e [V11/CHECKPOINT_V11.md](V11/CHECKPOINT_V11.md). Nenhum desses resultados prova export/import real, permissões administrativas, snapshot/reaplicação em workspace, browser, acessibilidade ou UAT. A V12 permanece separada e não foi iniciada por este fechamento.
+O detalhamento integrado permanece em [V11/README.md](V11/README.md), [V11/TESTES.md](V11/TESTES.md) e [V11/CHECKPOINT_V11.md](V11/CHECKPOINT_V11.md). Nenhum desses resultados prova export/import real, permissões administrativas, snapshot/reaplicação em workspace, browser, acessibilidade ou UAT. A V12 trata essa fronteira por protocolo e evidência, sem declarar como homologado o que ainda não foi executado.
 
 A V10 integrada permanece a etapa anterior: Rodrigo deu aceite explícito em 14/09/2026; a entrega funcional foi integrada pelo PR #48 no commit `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b` e o fechamento documental pelo PR #50 no commit `a9480391c78e2402986885db0ce08b10e0619a1a`. Os failures históricos V10 permanecem em [V10/TESTES.md](V10/TESTES.md) e o estado de decisão em [V10/CHECKPOINT_V10.md](V10/CHECKPOINT_V10.md). Nenhuma criação/atualização real de Databricks App, associação de UC Volume, alteração de ACL/compute ou publicação foi executada.
 
