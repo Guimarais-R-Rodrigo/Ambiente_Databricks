@@ -2,7 +2,7 @@
 
 ## Estado atual
 
-A V12 continua em andamento. O head `ad4a66f65ae390f2e98576dffac83635963ecab6` possui 7/7 workflows reais da PR em `success`. `V12-AIBI-01` e `SEC-01` possuem execuções reais `PASS` em ambiente Databricks autorizado. A tentativa AI/BI real `FAIL` anterior permanece preservada por classificação inadequada dos dados.
+A V12 continua em andamento. O head funcional endurecido `26f84d872bc6192ef67e792877934a5cd424e89a` possui 7/7 workflows reais da PR em `success`. `V12-AIBI-01` e `SEC-01` possuem execuções reais `PASS` em ambiente Databricks autorizado. `A11-01` foi executado com participante real autorizado e ficou **FAIL** por contraste insuficiente de texto monetário em Dark; a percepção humana não substituiu a medição objetiva. A tentativa AI/BI real `FAIL` anterior permanece preservada por classificação inadequada dos dados.
 
 Human/UAT e as demais superfícies ambientais não são convertidos em PASS por esses resultados.
 
@@ -209,6 +209,56 @@ Auditoria V12:
 - `V12_SCOPE=PASS`;
 - `V12_REMOTE_MUTATION=0`.
 
+## Baseline endurecido antes de `A11-01`
+
+Head `26f84d872bc6192ef67e792877934a5cd424e89a`: **7/7 workflows reais de `pull_request` em success**.
+
+- V01 `35014029439`;
+- V02 `35014029521`;
+- V00 `35014029308` — SUCCESS, com `Gate da branch isolada sem depender da integração com main` em `SKIP`;
+- V10 `35014029362`;
+- CI geral `35014029316`;
+- V11 `35014029450`;
+- V12 `35014029276`.
+
+Auditoria V12:
+
+- 47/47 V12 PASS;
+- 10/10 evidência/hardening permanente PASS;
+- 514/514 regressões V01–V12 PASS;
+- 12/12 V00 PASS;
+- validador `APROVADO: 0 falha(s), 0 aviso(s)`;
+- `1423` arquivos / `1887` links;
+- `V12_SCOPE=PASS`;
+- `V12_REMOTE_MUTATION=0`.
+
+O head intermediário `10785088ca85724fa298cf9681708eb5e5778eba` permanece historicamente FAILURE porque publicou matriz/validador endurecidos sem a suíte V12 correspondente; o reparo foi aditivo e não reclassificou esse failure.
+
+## `A11-01` — tentativa #1, FAIL real preservado
+
+Sessão em 15/09/2026, participante autorizado sanitizado como `P-MAINT-01`, papel `maintainer`, referência de autorização `AUTH-V12-A11-01-20260915-PR54`. O participante observou o render real do mesmo dashboard draft descartável, com queries temporariamente sintéticas por `VALUES`, sem `Publish`, e reportou **nenhuma irregularidade perceptiva** nos sete itens de revisão: Light/Dark, foco visível, alcançabilidade por teclado, keyboard trap, zoom 200%, dependência exclusiva de cor e rótulos/ícones.
+
+A medição objetiva, porém, reprovou o oráculo. A coluna `Total Revenue` possui formatação condicional explícita do próprio dashboard: valores `< 51` usam texto `#9C2638`. Com o tema candidato importado, o fundo de widget em Dark é `#11171C`. Pela fórmula WCAG/sRGB, sem arredondar para aprovação:
+
+- texto padrão `#11171C` sobre widget Light `#E8F4FD`: `16.154091708398724:1` — PASS contra 4,5:1;
+- texto padrão `#E8ECF0` sobre widget Dark `#11171C`: `15.206494294052865:1` — PASS contra 4,5:1;
+- `Total Revenue < 51`, `#9C2638` sobre widget Light `#E8F4FD`: `6.837793163467097:1` — PASS contra 4,5:1;
+- `Total Revenue < 51`, `#9C2638` sobre widget Dark `#11171C`: `2.3624715346329377:1` — **FAIL** contra 4,5:1.
+
+Logo, `A11-01 = FAIL` e `oracle_met=false`. A ausência de desconforto relatado pelo participante não substitui o limite objetivo. Nenhum texto foi classificado como “texto grande” para reduzir o limiar a 3:1.
+
+Artefatos não versionados; somente hashes sanitizados são registrados aqui:
+
+- export nativo após import do candidato: SHA-256 `1c136fa9218c49754caa849883a13cefb51a913ad5df7d47e773a5ea65085802`;
+- captura Light 100%: SHA-256 `108cd1e5f2f9863aa9f190bcef2eca24a451a73e961d22e2104c2f7c016590e8`;
+- captura Dark 100%: SHA-256 `717bb77127af33581303b7a1eeca715115087f9b9236084138dfd5975af2929a`;
+- tema final restaurado: SHA-256 `71c8038d5b68b35ff888ea6bb7406dcfc74d5d1798b0af71626e592a2a50091b`;
+- dashboard final restaurado desta sessão: SHA-256 `0ba3a8399728de7776c0c80ce505123e2553c44d864d47bd49283d8b0c000308`.
+
+O rollback foi confirmado: as duas queries voltaram às versões originais com `samples.nyctaxi.trips`, e o tema retornou a `widgetHeaderAlignment = ALIGNMENT_UNSPECIFIED`. Em comparação com o export restaurado anterior, a única diferença foi uma quebra de linha final/linha vazia na query `route revenue`; não houve diferença lógica de SQL, layout, widgets ou tema.
+
+A causa está fora dos três bindings diretos V11: `#9C2638` é cor explícita de formatação condicional do dashboard e não existe no repositório do Hub. A V12 **não** amplia a V11 nem automatiza campos `approximated`/`unsupported` para transformar esse FAIL em PASS. O achado precisa ser tratado como incompatibilidade de conteúdo/formatação do dashboard com Dark ou por uma decisão arquitetural posterior explicitamente aprovada.
+
 ## Testes negativos relevantes
 
 A suíte continua falhando fechado para:
@@ -229,12 +279,12 @@ A suíte continua falhando fechado para:
 
 ## O que ainda não é PASS
 
-Apesar de `V12-AIBI-01 = PASS` e `SEC-01 = PASS`, continuam `PENDENTE` ou `BLOQUEADO`:
+Apesar de `V12-AIBI-01 = PASS` e `SEC-01 = PASS`, continuam sem PASS:
 
+- `A11-01`: **FAIL observado** por contraste `2.3624715346329377:1` do texto `#9C2638` sobre fundo Dark `#11171C`;
 - Visual Lab completo em browser/runtime (`V12-LAB-01`);
 - App V10 real (`V12-APP-01`); deploy não autorizado;
 - workspace theme/admin/snapshot/reaplicação (`V12-AIBI-02`); mutação não autorizada;
-- `A11-01` completo;
 - `DOC-02`;
 - `DOC-03`;
 - `UAT-01`.
@@ -243,4 +293,4 @@ Nenhuma dessas lacunas foi convertida em aprovação por inferência.
 
 ## Regra para o próximo head
 
-O run `34987044468` certifica o head `ad4a66f...`; não certifica uma edição documental posterior. Qualquer novo head precisa repetir toda a cadeia e só poderá ser chamado de Git/local verde se suas próprias execuções terminarem corretamente.
+O run `35014029276` certifica o head `26f84d872bc6192ef67e792877934a5cd424e89a`; não certifica esta edição documental posterior. O novo head precisa repetir toda a cadeia e só poderá ser chamado de Git/local verde se suas próprias execuções terminarem corretamente.
