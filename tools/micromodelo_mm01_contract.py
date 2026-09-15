@@ -188,11 +188,11 @@ def _check_material_text_format(value: Any) -> bool:
 @MATERIAL_FORMAT_CHECKER.checks("finite-number")
 def _check_finite_number_format(value: Any) -> bool:
     """Finitude no domínio numérico canônico JSON/YAML da MM01."""
-    if isinstance(value, bool):
+    if type(value) is bool:
         return True  # o keyword type:number já rejeita bool
-    if isinstance(value, int):
+    if type(value) is int:
         return True  # inteiros Python são finitos e não devem virar float
-    if isinstance(value, float):
+    if type(value) is float:
         return math.isfinite(value)
     return False  # Decimal/NumPy/outros tipos não pertencem ao domínio canônico
 

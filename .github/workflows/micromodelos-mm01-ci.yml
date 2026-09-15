@@ -32,7 +32,9 @@ jobs:
         run: python -m pip install -r tools/requirements-dev.txt
 
       - name: Executar contrato e mutantes MM01
-        run: python -B -m unittest tools/tests/test_micromodelo_mm01.py -v
+        run: |
+          python -B -m unittest tools/tests/test_micromodelo_mm01.py -v
+          python -B -m unittest tools/tests/test_micromodelo_mm01_r03.py -v
 
       - name: Executar gate estrutural
         run: python -B tools/validate_assistant.py --root ambiente_fonte
