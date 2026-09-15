@@ -6,6 +6,7 @@ on:
     paths:
       - 'tools/temas_v12_homologacao.py'
       - 'tools/tests/test_temas_v12.py'
+      - 'tools/tests/test_temas_v12_evidencia_real.py'
       - 'docs/sprints/sistema_temas/V12/**'
       - 'docs/sprints/sistema_temas/README.md'
       - 'docs/sprints/README.md'
@@ -44,6 +45,8 @@ jobs:
           pnpm --dir tools/readme_visuals install --frozen-lockfile
       - name: V12 — protocolo e mutantes negativos
         run: python -B tools/tests/test_temas_v12.py -v
+      - name: V12 — evidência real AI/BI
+        run: python -B tools/tests/test_temas_v12_evidencia_real.py -v
       - name: Regressões de temas V01–V12
         run: python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
       - name: Compatibilidade visual V00
@@ -59,7 +62,7 @@ jobs:
           printf 'Arquivos V12 alterados:\n%s\n' "${changed[*]}"
           for path in "${changed[@]}"; do
             case "$path" in
-              tools/temas_v12_homologacao.py|tools/tests/test_temas_v12.py|docs/sprints/sistema_temas/V12/*|docs/sprints/sistema_temas/README.md|docs/sprints/README.md|README.md|CHANGELOG.md|.github/workflows/temas-v12-ci.yml)
+              tools/temas_v12_homologacao.py|tools/tests/test_temas_v12.py|tools/tests/test_temas_v12_evidencia_real.py|docs/sprints/sistema_temas/V12/*|docs/sprints/sistema_temas/README.md|docs/sprints/README.md|README.md|CHANGELOG.md|.github/workflows/temas-v12-ci.yml)
                 ;;
               *)
                 echo "V12_SCOPE_FAIL: $path"
@@ -71,7 +74,7 @@ jobs:
           workspace_pat='/Workspace/'Users'/[^<]'
           volume_pat='/Vol'umes'/[^<]'
           forbidden="${credential_pat}|${workspace_pat}|${volume_pat}"
-          if grep -R -n -E "$forbidden" tools/temas_v12_homologacao.py tools/tests/test_temas_v12.py docs/sprints/sistema_temas/V12; then
+          if grep -R -n -E "$forbidden" tools/temas_v12_homologacao.py tools/tests/test_temas_v12.py tools/tests/test_temas_v12_evidencia_real.py docs/sprints/sistema_temas/V12; then
             echo 'V12_HYGIENE_FAIL'
             exit 1
           fi
