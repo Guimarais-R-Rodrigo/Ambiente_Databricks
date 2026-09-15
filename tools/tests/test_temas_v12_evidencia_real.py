@@ -31,6 +31,137 @@ SYNTHETIC_SQL = (
 MATRIX_SHA256 = "493e45a23de2858de50524fe60bb907fd8e2b7cbaf0211ba3d95aa626944dfd3"
 _EMAIL_RE = re.compile(r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}")
 
+_HUMAN_SOURCE_COMMIT = "89486948045e7222232f8d3aa4c602151f46c6c1"
+_HUMAN_DOCUMENT_VERSION = f"theme_lab-docs@{_HUMAN_SOURCE_COMMIT}"
+_HUMAN_ARTIFACT = {
+    "kind": "human_session_observation",
+    "sha256": "9277a8d9a12675dc4dcab8ca920531d10f65e230205df55059539bac91ac530e",
+    "path": "evidence://v12-human/session-01",
+}
+
+DOC_02_RECORD = {
+    "schema_version": 1,
+    "sprint": "V12",
+    "record_id": "V12-DOC_02-ATTEMPT_01",
+    "case_id": "DOC-02",
+    "evidence_class": "human_uat",
+    "status": "PASS",
+    "source_commit": _HUMAN_SOURCE_COMMIT,
+    "observed_at": "2026-09-15T18:25:07-03:00",
+    "environment": {},
+    "human": {
+        "participant_alias": "P-UAT-01",
+        "participant_authorized": True,
+        "participant_role": "nontechnical_user",
+    },
+    "facts": {
+        "participant_authorized": True,
+        "observed_seconds": 25,
+        "help_events": [],
+        "document_version": _HUMAN_DOCUMENT_VERSION,
+        "oracle_met": True,
+        "next_action_identified_without_help": True,
+    },
+    "artifacts": [_HUMAN_ARTIFACT],
+    "notes": "Sessão formativa real; somente README e guia de primeiro uso foram entregues, sem ajuda verbal inicial. Identidade pessoal não é versionada.",
+}
+
+DOC_03_RECORD = {
+    "schema_version": 1,
+    "sprint": "V12",
+    "record_id": "V12-DOC_03-ATTEMPT_01",
+    "case_id": "DOC-03",
+    "evidence_class": "human_uat",
+    "status": "PASS",
+    "source_commit": _HUMAN_SOURCE_COMMIT,
+    "observed_at": "2026-09-15T18:25:07-03:00",
+    "environment": {},
+    "human": {
+        "participant_alias": "P-UAT-01",
+        "participant_authorized": True,
+        "participant_role": "nontechnical_user",
+    },
+    "facts": {
+        "participant_authorized": True,
+        "help_events": [],
+        "document_version": _HUMAN_DOCUMENT_VERSION,
+        "oracle_met": True,
+        "scope_persistence_explained_correctly": True,
+    },
+    "artifacts": [_HUMAN_ARTIFACT],
+    "notes": "O participante distinguiu prévia, salvar, submeter, aprovar, publicar e recuperar sessão sem ajuda ou confusão observada.",
+}
+
+UAT_01_RECORD = {
+    "schema_version": 1,
+    "sprint": "V12",
+    "record_id": "V12-UAT_01-ATTEMPT_01",
+    "case_id": "UAT-01",
+    "evidence_class": "human_uat",
+    "status": "PASS",
+    "source_commit": _HUMAN_SOURCE_COMMIT,
+    "observed_at": "2026-09-15T18:25:07-03:00",
+    "environment": {},
+    "human": {
+        "participant_alias": "P-UAT-01",
+        "participant_authorized": True,
+        "participant_role": "nontechnical_user",
+    },
+    "facts": {
+        "participant_authorized": True,
+        "observed_seconds": 360,
+        "help_events": [],
+        "journey_completed": True,
+        "shared_change_absent": True,
+        "oracle_met": True,
+        "journey_mode": "textual_v01",
+    },
+    "artifacts": [_HUMAN_ARTIFACT],
+    "notes": "PASS da rota textual herdada da V01: escolher, ajustar, aplicar/comparar, desfazer e salvar foram explicados sem ajuda; não prova browser/runtime do Visual Lab.",
+}
+
+A11_01_RECORD = {
+    "schema_version": 1,
+    "sprint": "V12",
+    "record_id": "V12-A11_01-ATTEMPT_01",
+    "case_id": "A11-01",
+    "evidence_class": "human_uat",
+    "status": "FAIL",
+    "source_commit": _HUMAN_SOURCE_COMMIT,
+    "observed_at": "2026-09-15T18:15:53-03:00",
+    "environment": {},
+    "human": {
+        "participant_alias": "P-MAINT-01",
+        "participant_authorized": True,
+        "participant_role": "maintainer",
+    },
+    "facts": {
+        "participant_authorized": True,
+        "render_observed": True,
+        "contrast_measurements": [
+            {"label": "conditional_red_light_widget", "ratio": 6.837793163467097, "required_ratio": 4.5},
+            {"label": "conditional_red_dark_widget", "ratio": 2.3624715346329377, "required_ratio": 4.5},
+            {"label": "conditional_yellow_light_widget", "ratio": 1.264684095079348, "required_ratio": 4.5},
+            {"label": "conditional_yellow_dark_widget", "ratio": 12.773222792356847, "required_ratio": 4.5},
+        ],
+        "keyboard_review": True,
+        "zoom_review": True,
+        "oracle_met": False,
+        "authorization_ref": "AUTH-V12-A11-01-20260915-PR54",
+        "rollback_verified": True,
+        "perceptual_irregularities_reported": False,
+        "issue_ref": 57,
+    },
+    "artifacts": [
+        {"kind": "post_import_theme", "sha256": "1c136fa9218c49754caa849883a13cefb51a913ad5df7d47e773a5ea65085802", "path": "evidence://v12-a11-01/post-import-theme"},
+        {"kind": "light_mode_screenshot", "sha256": "108cd1e5f2f9863aa9f190bcef2eca24a451a73e961d22e2104c2f7c016590e8", "path": "evidence://v12-a11-01/light-100"},
+        {"kind": "dark_mode_screenshot", "sha256": "717bb77127af33581303b7a1eeca715115087f9b9236084138dfd5975af2929a", "path": "evidence://v12-a11-01/dark-100"},
+        {"kind": "final_restored_theme", "sha256": "71c8038d5b68b35ff888ea6bb7406dcfc74d5d1798b0af71626e592a2a50091b", "path": "evidence://v12-a11-01/final-theme"},
+        {"kind": "final_restored_dashboard", "sha256": "0ba3a8399728de7776c0c80ce505123e2553c44d864d47bd49283d8b0c000308", "path": "evidence://v12-a11-01/final-dashboard"},
+    ],
+    "notes": "FAIL real preservado. O participante não percebeu irregularidade, mas pares de formatação condicional explícita do dashboard falharam objetivamente em Light/Dark. Issue #57. V11 não foi ampliada para cellFormat.",
+}
+
 
 def _code(record: dict) -> str:
     with unittest.TestCase().assertRaises(v12.V12EvidenceError) as cm:
@@ -78,6 +209,36 @@ class RealAibiEvidenceTests(unittest.TestCase):
         self.assertNotIn("workspace_id", raw.lower())
         self.assertNotIn("opensharing", raw.lower())
         v12.validate_evidence(record, matrix)
+
+    def test_real_human_records_preserve_passes_and_a11_fail(self):
+        matrix = v12.load_matrix()
+        for record in (DOC_02_RECORD, DOC_03_RECORD, UAT_01_RECORD, A11_01_RECORD):
+            v12.validate_evidence(record, matrix)
+            raw = json.dumps(record, ensure_ascii=False, sort_keys=True)
+            self.assertIsNone(_EMAIL_RE.search(raw))
+            self.assertNotIn("workspace_id", raw.lower())
+            self.assertNotIn("opensharing", raw.lower())
+
+        self.assertEqual(DOC_02_RECORD["status"], "PASS")
+        self.assertEqual(DOC_02_RECORD["facts"]["observed_seconds"], 25)
+        self.assertEqual(DOC_02_RECORD["facts"]["help_events"], [])
+        self.assertTrue(DOC_02_RECORD["facts"]["next_action_identified_without_help"])
+
+        self.assertEqual(DOC_03_RECORD["status"], "PASS")
+        self.assertTrue(DOC_03_RECORD["facts"]["scope_persistence_explained_correctly"])
+        self.assertEqual(DOC_03_RECORD["facts"]["help_events"], [])
+
+        self.assertEqual(UAT_01_RECORD["status"], "PASS")
+        self.assertEqual(UAT_01_RECORD["facts"]["observed_seconds"], 360)
+        self.assertEqual(UAT_01_RECORD["facts"]["help_events"], [])
+        self.assertEqual(UAT_01_RECORD["facts"]["journey_mode"], "textual_v01")
+        self.assertTrue(UAT_01_RECORD["facts"]["shared_change_absent"])
+
+        self.assertEqual(A11_01_RECORD["status"], "FAIL")
+        self.assertFalse(A11_01_RECORD["facts"]["oracle_met"])
+        failing = [m for m in A11_01_RECORD["facts"]["contrast_measurements"] if m["ratio"] < m["required_ratio"]]
+        self.assertEqual({m["label"] for m in failing}, {"conditional_red_dark_widget", "conditional_yellow_light_widget"})
+        self.assertEqual(A11_01_RECORD["facts"]["issue_ref"], 57)
 
 
 class HardeningContractTests(unittest.TestCase):
