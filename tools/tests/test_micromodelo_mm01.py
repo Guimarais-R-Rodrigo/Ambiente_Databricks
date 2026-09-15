@@ -718,7 +718,11 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
 
         def walk(node: object, path: tuple[str, ...] = ()) -> None:
             if isinstance(node, dict):
-                if node.get("type") == "string" and "minLength" in node:
+                node_type = node.get("type")
+                accepts_string = node_type == "string" or (
+                    isinstance(node_type, list) and "string" in node_type
+                )
+                if accepts_string and "minLength" in node:
                     if node.get("format") != "material-text":
                         violations.append(".".join(path))
                 for key, value in node.items():
@@ -744,6 +748,90 @@ class MicromodeloMM01ContractTests(unittest.TestCase):
             "$defs.synthetic_textual_escape",
             self._required_minlength_without_material_text(mutated),
         )
+
+    def test_semantic_equivalence_rejects_default_ignorable_infix(self) -> None:
+        base = self.valid["classificacao"]["semantica"]["quando_indeterminado"]
+        self.assertIn("disponível", base)
+        invisibles = [
+            "\u200b",
+            "\u200c",
+            "\u200d",
+            "\u2060",
+            "\u2063",
+            "\ufe0f",
+            "\U000e0100",
+        ]
+        for invisible in invisibles:
+            with self.subTest(invisible=hex(ord(invisible))):
+                document = copy.deepcopy(self.valid)
+                disguised = base.replace("disponível", f"dispo{invisible}nível", 1)
+                self.assertEqual(
+                    module._normalize_semantic_text(base),
+                    module._normalize_semantic_text(disguised),
+                )
+                document["classificacao"]["semantica"]["quando_false"] = disguised
+                self.assertIn("AMBIGUOUS_BINARY_SEMANTICS", self.codes(document))
+
+    def test_required_minlength_guard_handles_string_type_arrays(self) -> None:
+        for node_type in (["string"], ["string", "null"]):
+            with self.subTest(node_type=node_type):
+                mutated = copy.deepcopy(self.schema)
+                mutated["$defs"]["synthetic_type_array_escape"] = {
+                    "type": node_type,
+                    "minLength": 3,
+                }
+                self.assertIn(
+                    "$defs.synthetic_type_array_escape",
+                    self._required_minlength_without_material_text(mutated),
+                )
+
+        nested = copy.deepcopy(self.schema)
+        nested["$defs"]["synthetic_nested_escape"] = {
+            "allOf": [{"type": ["string", "null"], "minLength": 3}]
+        }
+        self.assertIn(
+            "$defs.synthetic_nested_escape.allOf.0",
+            self._required_minlength_without_material_text(nested),
+        )
+
+    def test_nonfinite_material_numbers_and_json_constants_are_rejected(self) -> None:
+        values = [float("nan"), float("inf"), float("-inf")]
+        mutations = [
+            (
+                "classificacao.limiares.valor",
+                lambda d, v: d["classificacao"]["limiares"][0].__setitem__("valor", v),
+            ),
+            (
+                "score.componentes.peso",
+                lambda d, v: d["score"]["componentes"][0].__setitem__("peso", v),
+            ),
+        ]
+        for field, mutate in mutations:
+            for value in values:
+                with self.subTest(field=field, value=repr(value)):
+                    document = copy.deepcopy(self.valid)
+                    mutate(document, value)
+                    self.assertIn("SCHEMA", self.codes(document))
+
+        with tempfile.TemporaryDirectory() as tmp:
+            import yaml
+
+            yaml_document = copy.deepcopy(self.valid)
+            yaml_document["classificacao"]["limiares"][0]["valor"] = float("nan")
+            yaml_path = Path(tmp) / "nonfinite.yaml"
+            yaml_path.write_text(
+                yaml.safe_dump(yaml_document, allow_unicode=True, sort_keys=False),
+                encoding="utf-8",
+            )
+            loaded_yaml = module.load_document(yaml_path)
+            self.assertIn("SCHEMA", self.codes(loaded_yaml))
+
+            for token in ("NaN", "Infinity", "-Infinity"):
+                with self.subTest(json_token=token):
+                    json_path = Path(tmp) / "nonfinite.json"
+                    json_path.write_text(f'{{"valor": {token}}}', encoding="utf-8")
+                    with self.assertRaisesRegex(ValueError, "não finita"):
+                        module.load_document(json_path)
 
     def test_schema_patterns_are_exact_structural_allowlist(self) -> None:
         expected = {

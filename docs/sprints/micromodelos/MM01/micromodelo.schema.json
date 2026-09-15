@@ -541,7 +541,8 @@
                 ]
               },
               "valor": {
-                "type": "number"
+                "type": "number",
+                "format": "finite-number"
               },
               "unidade": {
                 "type": "string",
@@ -654,7 +655,8 @@
                 "format": "material-text"
               },
               "peso": {
-                "type": "number"
+                "type": "number",
+                "format": "finite-number"
               },
               "proveniencia": {
                 "$ref": "#/$defs/proveniencia"

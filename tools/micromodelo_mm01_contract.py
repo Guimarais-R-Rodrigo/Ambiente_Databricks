@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import unicodedata
 from dataclasses import dataclass
@@ -110,11 +111,19 @@ def _load_yaml_without_duplicate_keys(text: str) -> Any:
     return yaml.load(text, Loader=UniqueKeyLoader)
 
 
+def _reject_nonfinite_json_constant(value: str) -> Any:
+    raise ValueError(f"constante JSON não finita recusada: {value}")
+
+
 def load_document(path: str | Path) -> dict[str, Any]:
     file_path = Path(path)
     text = file_path.read_text(encoding="utf-8")
     if file_path.suffix.lower() == ".json":
-        loaded = json.loads(text, object_pairs_hook=_pairs_without_duplicates)
+        loaded = json.loads(
+            text,
+            object_pairs_hook=_pairs_without_duplicates,
+            parse_constant=_reject_nonfinite_json_constant,
+        )
     else:
         loaded = _load_yaml_without_duplicate_keys(text)
     if not isinstance(loaded, dict):
@@ -126,18 +135,31 @@ def load_schema(path: str | Path) -> dict[str, Any]:
     loaded = json.loads(
         Path(path).read_text(encoding="utf-8"),
         object_pairs_hook=_pairs_without_duplicates,
+        parse_constant=_reject_nonfinite_json_constant,
     )
     if not isinstance(loaded, dict):
         raise ValueError("schema raiz precisa ser um objeto JSON")
     return loaded
 
 
+def _is_semantic_default_ignorable(char: str) -> bool:
+    codepoint = ord(char)
+    return (
+        unicodedata.category(char) == "Cf"
+        or 0xFE00 <= codepoint <= 0xFE0F
+        or 0xE0100 <= codepoint <= 0xE01EF
+    )
+
+
 def _normalize_semantic_text(value: str) -> str:
     decomposed = unicodedata.normalize("NFKD", value).casefold()
-    without_accents = "".join(
-        char for char in decomposed if not unicodedata.combining(char)
+    normalized = "".join(
+        char
+        for char in decomposed
+        if not unicodedata.combining(char)
+        and not _is_semantic_default_ignorable(char)
     )
-    words_only = re.sub(r"[\W_]+", " ", without_accents, flags=re.UNICODE)
+    words_only = re.sub(r"[\W_]+", " ", normalized, flags=re.UNICODE)
     return " ".join(words_only.split())
 
 
@@ -162,6 +184,14 @@ def _check_material_text_format(value: Any) -> bool:
     if not isinstance(value, str):
         return True
     return _has_material_text(value)
+
+
+@MATERIAL_FORMAT_CHECKER.checks("finite-number")
+def _check_finite_number_format(value: Any) -> bool:
+    """Recusa NaN e infinitos em números materiais do contrato."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return True
+    return math.isfinite(value)
 
 
 def _semver_tuple(value: str) -> tuple[int, int, int]:
