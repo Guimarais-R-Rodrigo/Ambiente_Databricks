@@ -14,7 +14,7 @@ Human/UAT e as demais superfícies ambientais não são convertidos em PASS por 
 - separação das três classes de evidência;
 - preservação do fixture AI/BI como não importável;
 - preservação do contrato V11 3/23/22 e dos três alvos diretos;
-- recusa de PASS sem artefato ou sem oráculo explicitamente satisfeito;
+- recusa de `PASS` sem artefato ou sem oráculo explicitamente satisfeito;
 - recusa de UAT sem participante autorizado;
 - recusa de tempo não observado;
 - recusa de mutação sem autorização e rollback;
@@ -66,7 +66,7 @@ A V12 não altera produto `.assistant`; a incorporação da evidência adiciona 
 | `34910391401` | `c2cf064b1d1bb9983af75932b22976765df51c56` | SUCCESS | todos os gates | primeiro baseline técnico integralmente verde |
 | `34913817674` | `2dca57907153b599d59e0b13c6eca8dafe1e03b0` | SUCCESS | todos os gates | fechamento documental pré-PR no head exato |
 
-Nenhum run FAILURE acima foi reclassificado e nenhum `SKIP` é tratado como PASS.
+Nenhum run `FAILURE` acima foi reclassificado e nenhum `SKIP` é tratado como `PASS`.
 
 ## Workflows reais da PR no head inicial `2dca579...`
 
@@ -113,7 +113,7 @@ Arquivo: `evidencias/V12-AIBI-01/V12-AIBI-01_attempt-02.json`.
 
 ## Failures intermediários ao incorporar a evidência
 
-A evidência adicionou arquivos versionados; isso deixou a métrica `repo (identidade)` do README stale. Os workflows falharam corretamente na validação documental. Esses failures são parte do histórico, não ruído a apagar.
+A evidência adicionou arquivos versionados e as reconciliações documentais alteraram métricas medidas pelo validador. Os workflows falharam corretamente enquanto o bloco de métricas do README estava stale. Esses failures são parte do histórico, não ruído a apagar.
 
 ### `79083bcbc3070e62c76bd2d671418900cbb29645`
 
@@ -148,7 +148,19 @@ A evidência adicionou arquivos versionados; isso deixou a métrica `repo (ident
 - V01 `34979351048`: SUCCESS;
 - V02 `34979351188`: SUCCESS.
 
-A correção desta rodada é documental: atualizar o estado real e a métrica medida no README. Nenhum gate é relaxado.
+### `07a6dde44410855fd9170bf6e759a1ec3a2bf097`
+
+A primeira reconciliação documental acertou `repo (identidade)=1422`, mas a edição do README reduziu a contagem real de links para `1887` e ainda declarava `1889`.
+
+- V12 `34980425138`: FAILURE no validador; as suítes V12, evidência real, regressões e V00 passaram antes da falha; escopo/higiene ficou `SKIP`;
+- V10 `34980425181`: FAILURE na validação estrutural/documental depois dos gates anteriores passarem;
+- V11 `34980425298`: FAILURE na validação estrutural/documental depois dos gates anteriores passarem;
+- CI geral `34980425337`: FAILURE no gate de validação, com medição real `1422` arquivos / `1887` links;
+- V00 `34980425517`: SUCCESS;
+- V01 `34980425371`: SUCCESS;
+- V02 `34980425547`: SUCCESS.
+
+A correção seguinte atualiza somente a métrica documentada de links para o valor medido `1887`; nenhum gate é relaxado.
 
 ## Testes negativos relevantes
 
@@ -184,4 +196,4 @@ Nenhuma dessas lacunas foi convertida em aprovação por inferência.
 
 ## Regra para o próximo head
 
-O run `34979351097` comprova as suítes e a falha documental do head `efb1b24...`; não certifica o commit que corrige a documentação. O próximo head precisa repetir toda a cadeia e só poderá ser chamado de Git/local verde se suas próprias execuções terminarem corretamente.
+O run `34980425138` comprova as suítes e a falha documental do head `07a6dde...`; não certifica o commit que corrige a métrica de links. O próximo head precisa repetir toda a cadeia e só poderá ser chamado de Git/local verde se suas próprias execuções terminarem corretamente.
