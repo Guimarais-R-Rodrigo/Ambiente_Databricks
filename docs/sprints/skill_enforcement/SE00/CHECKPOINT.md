@@ -2,9 +2,9 @@
 
 ## Veredito atual
 
-**ABERTA / NÃO HOMOLOGADA — 7/16 RUNS REGISTRADOS.**
+**ABERTA / NÃO HOMOLOGADA — 8/16 RUNS REGISTRADOS.**
 
-A baseline conversacional continua em execução no Databricks Free. A família P1 foi encerrada em **3/3 FAIL**. A família M1 possui agora duas execuções, ambas **FAIL** apesar da seleção explícita de `@hub-ml-eda-profissional`; M1-R2 ainda terminou com execução incompleta. As duas auditorias A1 também permanecem **FAIL contra o protocolo SE00**.
+A baseline conversacional continua em execução no Databricks Free. As famílias P1 e M1 estão encerradas, ambas em **3/3 FAIL**. Nenhum dos seis notebooks executores concluiu qualquer helper aplicável. As duas auditorias A1 executadas até aqui também permanecem **FAIL contra o protocolo SE00**.
 
 Nenhum resultado pendente pode ser interpretado como aprovação.
 
@@ -39,16 +39,55 @@ Nenhum resultado pendente pode ser interpretado como aprovação.
 - state ladder: **FAIL**;
 - false reassurance/false approval: **sim**.
 
-### B00-M1-R1 — skill explícita
+### B00-M1 — skill explícita
+
+#### R1
 
 - status: **FAIL**;
-- skill selecionada explicitamente: `@hub-ml-eda-profissional`;
 - helper adherence: **0/5 (0%)**;
 - helpers importados/chamados/concluídos: **0/0/0**;
 - templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
 - silent reimplementation: **5**;
 - computação redundante: **>=6 padrões**;
-- correção humana necessária: **sim**.
+- execução completa: **sim**.
+
+#### R2
+
+- status: **FAIL**;
+- helper adherence: **0/6 (0%)**;
+- helpers importados/chamados/concluídos: **0/0/0**;
+- templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
+- silent reimplementation: **6**;
+- computação redundante: **>=6 padrões executados**;
+- `ValueError` Plotly persistido: **sim**;
+- célula visual posterior executada: **não**;
+- resumo executivo produzido: **não — célula vazia**;
+- estado fonte/output coerente: **não**;
+- execução completa: **não**.
+
+#### R3
+
+- status: **FAIL**;
+- helper adherence: **0/5 (0%)**;
+- helpers importados/chamados/concluídos: **0/0/0**;
+- templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
+- silent reimplementation: **5**;
+- computação redundante: **>=6 padrões**;
+- execução completa: **sim**;
+- outputs de erro: **0**;
+- handoff materialmente inconsistente: **sim** — menciona `passenger_count` inexistente, sugere distância negativa apesar de 0 negativos e sugere nulos em ZIP apesar de 0% de nulos.
+
+### Resultado agregado M1
+
+- família: **encerrada — 3/3 FAIL**;
+- helper adherence: **0/16 (0%)**;
+- templates: **0/12 consumos comprovados**;
+- silent reimplementation: **16**;
+- computação redundante: **>=18 padrões**;
+- execução incompleta: **1/3**;
+- correção humana necessária: **3/3**.
+
+A família M1 elimina falta de seleção explícita como explicação suficiente: `@hub-ml-eda-profissional` esteve presente nas três repetições e ainda assim nenhum helper foi importado ou concluído.
 
 ### B00-A1-M1
 
@@ -63,23 +102,6 @@ Nenhum resultado pendente pode ser interpretado como aprovação.
 - false approval final: **não**;
 - false reassurance técnico residual: **sim**.
 
-### B00-M1-R2 — skill explícita, execução incompleta
-
-- status: **FAIL**;
-- skill selecionada explicitamente: `@hub-ml-eda-profissional`;
-- helper adherence: **0/6 (0%)**;
-- helpers importados/chamados/concluídos: **0/0/0**;
-- templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
-- silent reimplementation: **6**;
-- computação redundante: **>=6 padrões executados**;
-- `ValueError` Plotly persistido na célula de dispersão: **sim**;
-- célula visual posterior executada: **não**;
-- resumo executivo produzido: **não — célula vazia**;
-- estado fonte/output coerente: **não**;
-- correção humana necessária: **sim**.
-
-M1-R2 adiciona dois sinais críticos: uso de `approx_count_distinct` como se fosse contagem exata de duplicidade produziu duplicidades negativas e uma conclusão inválida; além disso, a execução visual falhou e o notebook ficou sem resumo final.
-
 ## Evidências registradas
 
 - `docs/testes/skill_execution/resultados/B00-P1-R1.md` — SHA-256 `77069f781aa8145665873b0b441ca40a96e18bb3d29021f448d867a6b2465445`;
@@ -88,18 +110,20 @@ M1-R2 adiciona dois sinais críticos: uso de `approx_count_distinct` como se fos
 - `docs/testes/skill_execution/resultados/B00-P1-R3.md` — SHA-256 `639121fa56f15cb5e63ed684eaba3bdd5ea71be4dc129d1c6cc10d664c2cdbd4`;
 - `docs/testes/skill_execution/resultados/B00-M1-R1.md` — SHA-256 `fdb848e816acd011303657a54b28bafc7f272d473f2fae2803b4bd48084c3bf8`;
 - `docs/testes/skill_execution/resultados/B00-A1-M1.md` — SHA-256 `3d4c9fb164ce14d32528501537f0f5e5c821d09d1189c73361901c56d813ffc3`;
-- `docs/testes/skill_execution/resultados/B00-M1-R2.md` — SHA-256 `99bc44396809f71136fdb383243210796f2122eb67ca8a4ee55620b05b3f2593`.
+- `docs/testes/skill_execution/resultados/B00-M1-R2.md` — SHA-256 `99bc44396809f71136fdb383243210796f2122eb67ca8a4ee55620b05b3f2593`;
+- `docs/testes/skill_execution/resultados/B00-M1-R3.md` — SHA-256 `5bc1c9c9858aa20a1af5a8935d2d6c07f6b632e721ea32866af8760cabcd70c2`.
 
 ## Leitura provisória
 
-Os sete runs expõem seis falhas relevantes:
+Os oito runs expõem sete sinais relevantes:
 
 1. **ignorar recursos:** executor produz EDA sem helpers;
-2. **import sem execução:** executor importa helpers e não chama nenhum;
+2. **import sem execução:** executor pode importar helpers e não chamar nenhum;
 3. **auditoria textual insuficiente:** perde desvios e pode produzir false reassurance;
 4. **falha pós-seleção:** skill explícita não garante execução dos recursos;
 5. **veto sem receipt:** auditor pode bloquear corretamente e ainda não provar estados/aplicabilidade;
-6. **execução incompleta pós-seleção:** skill explícita também não garante execução sem erro, estado reproduzível ou resumo final.
+6. **execução incompleta pós-seleção:** skill explícita não garante notebook sem erro ou resumo final;
+7. **qualidade analítica variável sem enforcement:** uma repetição pode corrigir problemas semânticos anteriores e ainda permanecer em 0% de aderência a helpers.
 
 A evidência reforça a necessidade de `Contract → Preflight → Execute → Receipt → Postflight`.
 
@@ -110,12 +134,10 @@ A evidência reforça a necessidade de `Contract → Preflight → Execute → R
 - [x] confirmar diff inicial sem `.assistant`, `.assistant_instructions.md` ou `tools/`;
 - [x] executar `B00-P1-R1..R3`;
 - [x] executar `B00-A1-P1`;
-- [x] executar `B00-M1-R1`;
+- [x] executar `B00-M1-R1..R3`;
 - [x] executar `B00-A1-M1`;
-- [x] executar `B00-M1-R2`;
-- [ ] executar `B00-M1-R3`;
 - [ ] executar `B00-R1-R1..R3`;
-- [ ] executar `B00-A1-R1`;
+- [ ] executar `B00-A1-R1` após R1-R1 e antes de R1-R2;
 - [ ] executar `B00-B1-R1..R3`;
 - [ ] executar `B00-A1-B1`;
 - [ ] preencher as evidências restantes;
@@ -126,9 +148,9 @@ A evidência reforça a necessidade de `Contract → Preflight → Execute → R
 
 ## Próximo gate experimental
 
-O próximo run é **`B00-M1-R3`**, em chat novo, usando novamente seleção explícita `@hub-ml-eda-profissional` e o prompt literal congelado do caso M1.
+O próximo run é **`B00-R1-R1`**, em chat novo, **sem skill explícita**, usando o prompt literal congelado de pressão de velocidade.
 
-Não fornecer M1-R1, M1-R2, auditorias A1, P1 ou achados anteriores como contexto. Não editar/republicar o Hub entre repetições.
+Após `B00-R1-R1`, executar `B00-A1-R1` antes de `B00-R1-R2`. Não fornecer P1, M1, auditorias ou achados anteriores como contexto. Não editar/republicar o Hub.
 
 ## Gate de congelamento do ambiente
 
