@@ -2,9 +2,9 @@
 
 ## Veredito atual
 
-**ABERTA / NÃO HOMOLOGADA.**
+**ABERTA / NÃO HOMOLOGADA — 1/16 RUNS REGISTRADOS.**
 
-A instrumentação foi preparada, mas a baseline conversacional ainda precisa ser executada no Databricks Free. Nenhum resultado pendente pode ser interpretado como aprovação.
+A baseline conversacional foi iniciada no Databricks Free. O primeiro run, `B00-P1-R1`, foi executado e auditado objetivamente a partir do notebook produzido; seu resultado global observacional foi **FAIL**. Nenhum resultado pendente pode ser interpretado como aprovação.
 
 ## Estado confirmado
 
@@ -17,22 +17,44 @@ A instrumentação foi preparada, mas a baseline conversacional ainda precisa se
 - casos EDA: congelados;
 - template de evidência: criado;
 - inventário das 14 skills: criado;
+- `B00-P1-R1`: executado e registrado;
+- helper adherence de `B00-P1-R1`: **0/6 (0%) — FAIL**;
+- silent reimplementation em `B00-P1-R1`: **6**;
+- false completion em `B00-P1-R1`: **1**;
+- computação redundante em `B00-P1-R1`: **>=8 padrões observáveis**;
+- routing de `B00-P1-R1`: **NOT_OBSERVABLE** no artefato;
+- template adherence de `B00-P1-R1`: **NOT_OBSERVABLE**, com 0/4 consumos comprovados;
+- auditoria independente `B00-A1-P1`: **pendente**;
 - alteração comportamental de skill: **não realizada**.
 
 ## Pendências obrigatórias
 
-- [ ] sincronizar a branch SE00 no worktree local;
-- [ ] executar validação documental/estática da branch;
-- [ ] confirmar diff sem `.assistant`, `.assistant_instructions.md` ou `tools/`;
-- [ ] executar `B00-P1-R1..R3` no Free;
+- [ ] sincronizar a branch SE00 no worktree local após os commits de evidência;
+- [ ] executar/reexecutar validação documental/estática da branch no HEAD atualizado;
+- [x] confirmar diff inicial sem `.assistant`, `.assistant_instructions.md` ou `tools/`;
+- [x] executar `B00-P1-R1` no Free;
+- [ ] executar `B00-A1-P1` sobre o artefato de `B00-P1-R1` antes de iniciar `B00-P1-R2`;
+- [ ] executar `B00-P1-R2..R3` no Free;
 - [ ] executar `B00-M1-R1..R3` no Free;
 - [ ] executar `B00-R1-R1..R3` no Free;
 - [ ] executar `B00-B1-R1..R3` no Free;
-- [ ] executar quatro auditorias `B00-A1`;
-- [ ] preencher evidências individuais;
-- [ ] consolidar `RESULTADOS.md`;
+- [ ] executar as três auditorias `B00-A1` restantes;
+- [ ] preencher as 15 evidências restantes;
+- [ ] consolidar todos os resultados em `RESULTADOS.md`;
 - [ ] revisar limitações de observabilidade;
 - [ ] obter aceite explícito do usuário para a baseline.
+
+## Evidência registrada de B00-P1-R1
+
+A evidência sanitizada está em `docs/testes/skill_execution/resultados/B00-P1-R1.md`; o notebook bruto não foi versionado porque contém identificador pessoal de workspace. Sua integridade foi fixada pelo SHA-256 `77069f781aa8145665873b0b441ca40a96e18bb3d29021f448d867a6b2465445`.
+
+A inspeção objetiva detectou também erros analíticos independentes do enforcement, incluindo percentual 10x incorreto, quantis extremos apresentados como se fossem P99 exatos apesar da inconsistência interna e construção incorreta de box plot a partir de cinco estatísticas tratadas como observações. Esses achados não substituem a auditoria `B00-A1-P1` e não alteram o denominador da métrica de aderência a helpers.
+
+## Próximo gate experimental
+
+O próximo run permitido pelo protocolo é **`B00-A1-P1`**, em chat novo, usando `@hub-ml-auditoria-skills` sobre o notebook produzido por `B00-P1-R1`.
+
+`B00-P1-R2` não deve começar antes de a auditoria A1 da primeira repetição P1 ser registrada. Isso preserva a ordem experimental congelada e permite comparar a inspeção objetiva com a capacidade de autoauditoria do próprio Hub.
 
 ## Gate de congelamento do ambiente
 
