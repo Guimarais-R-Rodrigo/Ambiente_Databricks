@@ -1,4 +1,4 @@
-name: MM01 quinta A1 - correção transitória
+name: MM01 quinta A1 - correcao transitoria
 
 on:
   push:
@@ -27,457 +27,52 @@ jobs:
           cache: pip
           cache-dependency-path: tools/requirements-dev.txt
 
-      - name: Aplicar correção DIVERGE-01 e sincronizar documentação
-        shell: bash
-        run: |
-          python - <<'PY'
-          from __future__ import annotations
+      - name: Aplicar correcao da quinta A1
+        run: python -B .github/scripts/mm01_a1_5_correction.py
 
-          import json
-          from pathlib import Path
-
-          ROOT = Path('.')
-          schema_path = ROOT / 'docs/sprints/micromodelos/MM01/micromodelo.schema.json'
-          schema = json.loads(schema_path.read_text(encoding='utf-8'))
-
-          material_paths = {
-              'identidade.titulo': ('properties', 'identidade', 'properties', 'titulo'),
-              'negocio.caracteristica': ('properties', 'negocio', 'properties', 'caracteristica'),
-              'negocio.objetivo': ('properties', 'negocio', 'properties', 'objetivo'),
-              'negocio.definicao_operacional': ('properties', 'negocio', 'properties', 'definicao_operacional'),
-              'negocio.uso_pretendido[]': ('properties', 'negocio', 'properties', 'uso_pretendido', 'items'),
-              'negocio.nao_usar_para[]': ('properties', 'negocio', 'properties', 'nao_usar_para', 'items'),
-              'entidade.tipo': ('properties', 'entidade', 'properties', 'tipo'),
-              'entidade.chave_logica': ('properties', 'entidade', 'properties', 'chave_logica'),
-              'entidade.granularidade': ('properties', 'entidade', 'properties', 'granularidade'),
-              'entidade.populacao_elegivel': ('properties', 'entidade', 'properties', 'populacao_elegivel'),
-              'entidade.referencia_temporal': ('properties', 'entidade', 'properties', 'referencia_temporal'),
-              'fontes[].catalogo_ref': ('properties', 'fontes', 'items', 'properties', 'catalogo_ref'),
-              'evidencias[].descricao': ('properties', 'evidencias', 'items', 'properties', 'descricao'),
-              'contra_evidencias[].descricao': ('properties', 'contra_evidencias', 'items', 'properties', 'descricao'),
-              'classificacao.limiares[].descricao': ('properties', 'classificacao', 'properties', 'limiares', 'items', 'properties', 'descricao'),
-              'classificacao.limiares[].unidade': ('properties', 'classificacao', 'properties', 'limiares', 'items', 'properties', 'unidade'),
-              'score.componentes[].descricao': ('properties', 'score', 'properties', 'componentes', 'items', 'properties', 'descricao'),
-              'score.calibracao.metodo': ('properties', 'score', 'properties', 'calibracao', 'properties', 'metodo'),
-              'governanca.classificacao_dados': ('properties', 'governanca', 'properties', 'classificacao_dados'),
-              'governanca.lgpd': ('properties', 'governanca', 'properties', 'lgpd'),
-              'governanca.gestor_informacao': ('properties', 'governanca', 'properties', 'gestor_informacao'),
-          }
-
-          def get_node(path: tuple[str, ...]) -> dict:
-              node = schema
-              for part in path:
-                  node = node[part]
-              assert isinstance(node, dict)
-              return node
-
-          for label, path in material_paths.items():
-              node = get_node(path)
-              if node.get('type') != 'string':
-                  raise AssertionError(f'{label}: type inesperado {node.get("type")!r}')
-              if 'minLength' not in node:
-                  raise AssertionError(f'{label}: minLength ausente')
-              node['format'] = 'material-text'
-
-          remaining_unclassified: list[str] = []
-
-          def walk(node: object, path: tuple[str, ...] = ()) -> None:
-              if isinstance(node, dict):
-                  if node.get('type') == 'string' and 'minLength' in node:
-                      if node.get('format') != 'material-text' and 'pattern' not in node:
-                          remaining_unclassified.append('.'.join(path))
-                  for key, value in node.items():
-                      walk(value, path + (str(key),))
-              elif isinstance(node, list):
-                  for index, value in enumerate(node):
-                      walk(value, path + (str(index),))
-
-          walk(schema)
-          if remaining_unclassified:
-              raise AssertionError(
-                  'campos string+minLength sem material-text/pattern: '
-                  + ', '.join(remaining_unclassified)
-              )
-
-          schema_path.write_text(
-              json.dumps(schema, ensure_ascii=False, indent=2) + '\n',
-              encoding='utf-8',
-          )
-
-          test_path = ROOT / 'tools/tests/test_micromodelo_mm01.py'
-          test_text = test_path.read_text(encoding='utf-8')
-          marker = '\n\nif __name__ == "__main__":\n    unittest.main()\n'
-          if marker not in test_text:
-              raise AssertionError('sentinela final da suíte MM01 não encontrada')
-          if 'test_required_minlength_text_fields_have_explicit_material_policy' in test_text:
-              raise AssertionError('novas regressões já existem; abortando para evitar duplicação')
-
-          methods = r'''
-
-    def test_required_minlength_text_fields_have_explicit_material_policy(self) -> None:
-        unclassified: list[str] = []
-
-        def walk(node: object, path: tuple[str, ...] = ()) -> None:
-            if isinstance(node, dict):
-                if node.get("type") == "string" and "minLength" in node:
-                    if node.get("format") != "material-text" and "pattern" not in node:
-                        unclassified.append(".".join(path))
-                for key, value in node.items():
-                    walk(value, path + (str(key),))
-            elif isinstance(node, list):
-                for index, value in enumerate(node):
-                    walk(value, path + (str(index),))
-
-        walk(self.schema)
-        self.assertEqual([], unclassified)
-
-    def test_canonical_required_text_fields_reject_nonmaterial_content(self) -> None:
-        raw_negatives = [
-            "\u0301",          # Mn
-            "\u093e",          # Mc
-            "\u20dd",          # Me
-            "\u200b",          # Cf / ZWSP
-            "\u200c",          # ZWNJ
-            "\u200d",          # ZWJ
-            "\u2060",          # WORD JOINER
-            "\u2063",          # INVISIBLE SEPARATOR
-            " ",
-            "\u00a0",          # NBSP
-            "\u2003",          # EM SPACE
-            "\u2007",          # FIGURE SPACE
-            "\u202f",          # NARROW NO-BREAK SPACE
-            "!",
-            "€",
-            "\u0301\u200b!€",
-        ]
-
-        mutations = [
-            ("identidade.titulo", 3, lambda d, v: d["identidade"].__setitem__("titulo", v)),
-            ("negocio.caracteristica", 3, lambda d, v: d["negocio"].__setitem__("caracteristica", v)),
-            ("negocio.objetivo", 10, lambda d, v: d["negocio"].__setitem__("objetivo", v)),
-            ("negocio.definicao_operacional", 10, lambda d, v: d["negocio"].__setitem__("definicao_operacional", v)),
-            ("negocio.uso_pretendido[]", 3, lambda d, v: d["negocio"]["uso_pretendido"].__setitem__(0, v)),
-            ("negocio.nao_usar_para[]", 3, lambda d, v: d["negocio"]["nao_usar_para"].__setitem__(0, v)),
-            ("entidade.tipo", 2, lambda d, v: d["entidade"].__setitem__("tipo", v)),
-            ("entidade.chave_logica", 2, lambda d, v: d["entidade"].__setitem__("chave_logica", v)),
-            ("entidade.granularidade", 5, lambda d, v: d["entidade"].__setitem__("granularidade", v)),
-            ("entidade.populacao_elegivel", 10, lambda d, v: d["entidade"].__setitem__("populacao_elegivel", v)),
-            ("entidade.referencia_temporal", 5, lambda d, v: d["entidade"].__setitem__("referencia_temporal", v)),
-            ("fontes.catalogo_ref", 1, lambda d, v: d["fontes"][0].__setitem__("catalogo_ref", v)),
-            ("evidencias.descricao", 5, lambda d, v: d["evidencias"][0].__setitem__("descricao", v)),
-            ("contra_evidencias.descricao", 5, lambda d, v: d["contra_evidencias"][0].__setitem__("descricao", v)),
-            ("classificacao.limiares.descricao", 3, lambda d, v: d["classificacao"]["limiares"][0].__setitem__("descricao", v)),
-            ("classificacao.limiares.unidade", 1, lambda d, v: d["classificacao"]["limiares"][0].__setitem__("unidade", v)),
-            ("score.componentes.descricao", 3, lambda d, v: d["score"]["componentes"][0].__setitem__("descricao", v)),
-            ("governanca.classificacao_dados", 1, lambda d, v: d["governanca"].__setitem__("classificacao_dados", v)),
-            ("governanca.lgpd", 1, lambda d, v: d["governanca"].__setitem__("lgpd", v)),
-            ("governanca.gestor_informacao", 1, lambda d, v: d["governanca"].__setitem__("gestor_informacao", v)),
-        ]
-
-        for field, min_length, mutate in mutations:
-            for raw in raw_negatives:
-                value = raw * (min_length // max(1, len(raw)) + 1)
-                self.assertGreaterEqual(len(value), min_length)
-                self.assertFalse(module._has_material_text(value))
-                with self.subTest(field=field, value=repr(value)):
-                    document = copy.deepcopy(self.valid)
-                    mutate(document, value)
-                    self.assertIn("SCHEMA", self.codes(document))
-
-        calibrated = copy.deepcopy(self.valid)
-        calibrated["score"]["tipo_semantica"] = "PROBABILIDADE_CALIBRADA"
-        calibrated["score"]["semantica_ref"] = "SEM-PROB-001"
-        calibrated["score"]["calibracao"] = {
-            "metodo": "calibracao_sintetica",
-            "evidencia_ref": "exp_001",
-            "proveniencia": {
-                "status": "MEDIDO",
-                "origem": "execucao sintetica",
-                "referencia": "CAL-001",
-                "observado_em_utc": "2026-09-14T13:30:00Z",
-                "aprovacao": None,
-                "medicao": {
-                    "referencia_execucao": "run-calibracao-001",
-                    "medido_em_utc": "2026-09-14T13:30:00Z",
-                },
-            },
-        }
-        for raw in raw_negatives:
-            value = raw * (3 // max(1, len(raw)) + 1)
-            self.assertGreaterEqual(len(value), 3)
-            self.assertFalse(module._has_material_text(value))
-            with self.subTest(field="score.calibracao.metodo", value=repr(value)):
-                document = copy.deepcopy(calibrated)
-                document["score"]["calibracao"]["metodo"] = value
-                self.assertIn("SCHEMA", self.codes(document))
-
-    def test_canonical_required_text_fields_accept_legitimate_unicode(self) -> None:
-        document = copy.deepcopy(self.valid)
-        material_long = "Texto válido 文档 देवनागरी ١٢٣ Jose\u0301"
-        material_short = "文档١"
-        document["identidade"]["titulo"] = material_long
-        document["negocio"]["caracteristica"] = material_long
-        document["negocio"]["objetivo"] = material_long
-        document["negocio"]["definicao_operacional"] = material_long
-        document["negocio"]["uso_pretendido"] = [material_long]
-        document["negocio"]["nao_usar_para"] = [material_long]
-        document["entidade"]["tipo"] = material_short
-        document["entidade"]["chave_logica"] = material_short
-        document["entidade"]["granularidade"] = material_long
-        document["entidade"]["populacao_elegivel"] = material_long
-        document["entidade"]["referencia_temporal"] = material_long
-        document["evidencias"][0]["descricao"] = material_long
-        document["contra_evidencias"][0]["descricao"] = material_long
-        document["classificacao"]["limiares"][0]["descricao"] = material_long
-        document["classificacao"]["limiares"][0]["unidade"] = material_short
-        document["score"]["componentes"][0]["descricao"] = material_long
-        document["governanca"]["classificacao_dados"] = material_short
-        document["governanca"]["lgpd"] = material_short
-        document["governanca"]["gestor_informacao"] = material_short
-        self.assertEqual([], module.validate_spec(document, self.schema))
-
-        calibrated = copy.deepcopy(document)
-        calibrated["score"]["tipo_semantica"] = "PROBABILIDADE_CALIBRADA"
-        calibrated["score"]["semantica_ref"] = "SEM-PROB-001"
-        calibrated["score"]["calibracao"] = {
-            "metodo": "校准方法 ١٢٣",
-            "evidencia_ref": "exp_001",
-            "proveniencia": {
-                "status": "MEDIDO",
-                "origem": "execucao sintetica",
-                "referencia": "CAL-001",
-                "observado_em_utc": "2026-09-14T13:30:00Z",
-                "aprovacao": None,
-                "medicao": {
-                    "referencia_execucao": "run-calibracao-001",
-                    "medido_em_utc": "2026-09-14T13:30:00Z",
-                },
-            },
-        }
-        self.assertEqual([], module.validate_spec(calibrated, self.schema))
-'''
-
-          test_path.write_text(test_text.replace(marker, methods + marker), encoding='utf-8')
-
-          contrato_path = ROOT / 'docs/sprints/micromodelos/MM01/CONTRATO_MICROMODELO.md'
-          contrato = contrato_path.read_text(encoding='utf-8')
-          if '### Classificação explícita dos textos obrigatórios' not in contrato:
-              contrato += '''
-
-### Classificação explícita dos textos obrigatórios
-
-A quinta A1 mostrou que a distinção entre texto material e narrativa livre precisava ser explícita, não inferida apenas pelo contexto. A regra adotada é fail-closed: todo campo textual obrigatório protegido por `minLength` deve estar em uma de duas classes executáveis — `format: material-text`, quando seu conteúdo participa da definição canônica, ou `pattern`, quando a própria sintaxe fechada já exige letras/números. Não existe terceiro predicado de materialidade.
-
-Usam `material-text`, além dos campos já protegidos anteriormente: `identidade.titulo`; todos os valores textuais requeridos de `negocio`; todos os valores textuais requeridos de `entidade`; `fontes[].catalogo_ref`; `evidencias[].descricao`; `contra_evidencias[].descricao`; `classificacao.limiares[].descricao`; `classificacao.limiares[].unidade`; `score.componentes[].descricao`; `score.calibracao.metodo`; `governanca.classificacao_dados`; `governanca.lgpd`; e `governanca.gestor_informacao`.
-
-Continuam estruturalmente fechados por `pattern`, sem necessidade de `material-text`, os identificadores internos, `identidade.nome` e `identidade.micromodel_version`. `fontes[].catalogo_ref` permanece adicionalmente sujeito ao gate semântico fechado `CATALOGO_PRODUTO`.
-
-`governanca.observacoes[]` é a exceção narrativa explícita: é opcional, não satisfaz gate material, não substitui nenhum campo normativo e pode conter notas livres. Portanto não recebe `material-text` apenas por ser string. Essa exceção não se aplica a `classificacao_dados`, `lgpd` ou `gestor_informacao`, que fazem parte do contrato canônico e precisam conter conteúdo material quando preenchidos.
-'''
-          contrato_path.write_text(contrato, encoding='utf-8')
-
-          testes_path = ROOT / 'docs/sprints/micromodelos/MM01/TESTES.md'
-          testes = testes_path.read_text(encoding='utf-8')
-          old_count = 'A suíte `tools/tests/test_micromodelo_mm01.py` contém **31 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz.'
-          new_count = 'A suíte `tools/tests/test_micromodelo_mm01.py` contém **34 métodos de teste**; alguns métodos percorrem múltiplos casos/subtests da matriz.'
-          if old_count not in testes:
-              raise AssertionError('contagem canônica de testes não encontrada em TESTES.md')
-          testes = testes.replace(old_count, new_count, 1)
-          t46 = '| T46 | os mesmos campos normativos com conteúdo Unicode legítimo multilíngue | APROVADO |\n'
-          if t46 not in testes:
-              raise AssertionError('linha T46 não encontrada')
-          testes = testes.replace(
-              t46,
-              t46
-              + '| T47 | textos obrigatórios de identidade/negócio/entidade/descrições/score/governança com conteúdo não material que satisfaz `minLength` | `SCHEMA` |\n'
-              + '| T48 | os mesmos campos adicionais com conteúdo Unicode legítimo multilíngue | APROVADO |\n'
-              + '| T49 | todo `type=string` + `minLength` do schema possui `material-text` ou sintaxe fechada por `pattern` | invariável estrutural |\n',
-              1,
-          )
-          marker_testes = '## Próxima auditoria A1\n'
-          if marker_testes not in testes:
-              raise AssertionError('seção Próxima auditoria A1 não encontrada em TESTES.md')
-          prefix = testes.split(marker_testes, 1)[0].rstrip()
-          testes = prefix + '''
-
-## Quinta A1 — `APTA_COM_CORRECOES`
-
-A quinta auditoria independente sobre `0b7a712cd2c897483da34517f10516012711f153` concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com `DIVERGE-01` bloqueante: campos centrais do contrato ainda podiam satisfazer `minLength` usando apenas pontuação, zero-width, marks, whitespace ou símbolos. O resultado histórico está preservado em `07_resultado_a1_reauditoria_4.md` e não é reclassificado por correções posteriores.
-
-### Correção da quinta A1
-
-A correção fecha a classe de defeito em vez de tratar somente os exemplos do relatório:
-
-- todos os campos `type=string` com `minLength` passam a ter `format: material-text` ou uma sintaxe material fechada por `pattern`;
-- título, negócio, entidade, `catalogo_ref`, descrições de evidência/contra-evidência, descrição/unidade de limiar, descrição de componente, método de calibração e campos canônicos de governança reutilizam o mesmo `material-text`;
-- `_has_material_text` e seu `FormatChecker` não foram alterados, e não foi criada regex, `.strip()` ou segunda heurística de materialidade;
-- `governanca.observacoes[]` permanece narrativa opcional explícita e não satisfaz qualquer gate material;
-- a suíte passa a **34 métodos**, incluindo mutações construídas para exceder o `minLength` com conteúdo não material e um teste estrutural que impede novo `string + minLength` sem política material explícita.
-
-## Próxima auditoria A1
-
-Uma **sexta auditoria A1 independente** é obrigatória porque a candidata mudou materialmente depois da quinta A1. Ela deve auditar o HEAD efetivamente encontrado, repetir os gates mínimos, construir adversariais próprios sobre todos os campos adicionados à política `material-text` e confirmar que não surgiu autoridade concorrente de materialidade.
-
-MM02 permanece bloqueada até sexta A1, contraditório se necessário, fechamento do changelog, aceite explícito e integração da MM01.
-'''
-          testes_path.write_text(testes, encoding='utf-8')
-
-          checkpoint_path = ROOT / 'docs/sprints/micromodelos/MM01/CHECKPOINT.md'
-          checkpoint = checkpoint_path.read_text(encoding='utf-8')
-          checkpoint = checkpoint.replace(
-              'Status: **QUARTA A1 `APTA_COM_CORRECOES`; DIVERGÊNCIA BLOQUEANTE CORRIGIDA; RETESTE DE CONSTRUÇÃO VERDE; QUINTA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**',
-              'Status: **QUINTA A1 `APTA_COM_CORRECOES`; `DIVERGE-01` BLOQUEANTE CONFIRMADA E CORRIGIDA; RETESTE DE CONSTRUÇÃO PENDENTE; SEXTA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**',
-              1,
-          )
-          checkpoint = checkpoint.replace(
-              '21. validador de referência/CI, fixtures sintéticos e suíte com **31 métodos de teste**;',
-              '21. validador de referência/CI, fixtures sintéticos e suíte com **34 métodos de teste**;',
-              1,
-          )
-          checkpoint = checkpoint.replace(
-              '23. pacote neutro de auditoria com os resultados históricos das quatro A1 preservados, sem reclassificação retroativa.',
-              '23. pacote neutro de auditoria com os resultados históricos das cinco A1 preservados, sem reclassificação retroativa.',
-              1,
-          )
-          marker_checkpoint = '## Dívida documental antes do merge\n'
-          if marker_checkpoint not in checkpoint:
-              raise AssertionError('marcador Dívida documental não encontrado')
-          before, after = checkpoint.split(marker_checkpoint, 1)
-          if '## Quinta auditoria A1' not in before:
-              before = before.rstrip() + '''
-
-## Quinta auditoria A1
-
-A quinta A1 independente sobre `0b7a712cd2c897483da34517f10516012711f153` concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`. O único achado foi `DIVERGE-01`, bloqueante: textos centrais de identidade, negócio, entidade e calibração — e outros campos `minLength` normativamente equivalentes — ainda podiam ser materialmente vazios. O relatório histórico foi preservado em `07_resultado_a1_reauditoria_4.md`.
-
-## Correções da quinta A1
-
-O contraditório confirmou o achado. A correção mantém `_has_material_text` como autoridade única e amplia apenas a aplicação do `format: material-text` aos textos obrigatórios que participam do contrato canônico. A varredura foi fechada por invariável estrutural: todo `type=string` com `minLength` precisa ter `material-text` ou `pattern`. `governanca.observacoes[]` foi classificada explicitamente como narrativa opcional e permanece fora dos gates materiais.
-
-A suíte passa para **34 métodos**, com negativos que deliberadamente satisfazem `minLength` usando somente `Mn/Mc/Me`, `Cf`, zero-width, whitespace Unicode, pontuação, símbolos e combinações, e com positivos multilíngues. Não foi criada regex, `.strip()` ou segundo predicado de materialidade.
-
-'''
-          tail_marker = '## Gate independente pendente\n'
-          if tail_marker not in after:
-              raise AssertionError('marcador Gate independente pendente não encontrado')
-          debt, _old_tail = after.split(tail_marker, 1)
-          checkpoint = before + marker_checkpoint + debt.rstrip() + '''
-
-## Gate independente pendente
-
-Como a candidata mudou materialmente após a quinta A1, é obrigatória uma **sexta A1 independente** sobre o novo HEAD congelado. O auditor deve repetir os gates mínimos e construir adversariais próprios, sem usar relatórios A1 anteriores, narrativa do autor, changelog ou mensagens de commit como prova da correção.
-
-## Gates restantes
-
-1. concluir o reteste de construção e validar os workflows permanentes do novo HEAD;
-2. executar sexta A1 em sessão independente;
-3. confrontar qualquer novo achado com a árvore e corrigir/retestar somente se procedente;
-4. se a sexta A1 for `APTA`, executar contraditório final;
-5. sincronizar o bloco MM01 do `CHANGELOG.md` preservando o histórico;
-6. revalidar a árvore exata depois dessa sincronização e reconfirmar `main`/`behind_by`/mergeabilidade;
-7. apresentar checkpoint final para aceite explícito;
-8. integrar a PR #51 somente após o aceite.
-
-Enquanto qualquer item acima estiver pendente, **MM02 permanece bloqueada**.
-'''
-          checkpoint_path.write_text(checkpoint, encoding='utf-8')
-
-          mm01_readme_path = ROOT / 'docs/sprints/micromodelos/MM01/README.md'
-          mm01_readme = mm01_readme_path.read_text(encoding='utf-8')
-          mm01_readme = mm01_readme.replace(
-              'Status da sprint: **QUARTA A1 `APTA_COM_CORRECOES`; DIVERGÊNCIA BLOQUEANTE CORRIGIDA; RETESTE DE CONSTRUÇÃO VERDE; QUINTA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**',
-              'Status da sprint: **QUINTA A1 `APTA_COM_CORRECOES`; `DIVERGE-01` BLOQUEANTE CONFIRMADA E CORRIGIDA; RETESTE DE CONSTRUÇÃO PENDENTE; SEXTA A1 PENDENTE; NÃO ACEITA; NÃO INTEGRADA**',
-              1,
-          )
-          mm01_readme = mm01_readme.replace(
-              '- `tools/tests/test_micromodelo_mm01.py`: suíte automatizada com **31 métodos** e múltiplos subtests;',
-              '- `tools/tests/test_micromodelo_mm01.py`: suíte automatizada com **34 métodos** e múltiplos subtests;',
-              1,
-          )
-          mm01_readme = mm01_readme.replace(
-              '- pacote de auditoria A1 com contexto, prompt e quatro resultados históricos preservados (`NAO_APTA`, `NAO_APTA`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`);',
-              '- pacote de auditoria A1 com contexto, prompt e cinco resultados históricos preservados (`NAO_APTA`, `NAO_APTA`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`, `APTA_COM_CORRECOES`);',
-              1,
-          )
-          marker_fronteiras = '## Fronteiras preservadas\n'
-          if marker_fronteiras not in mm01_readme:
-              raise AssertionError('marcador Fronteiras preservadas não encontrado')
-          head_readme, tail_readme = mm01_readme.split(marker_fronteiras, 1)
-          if '### Quinta A1' not in head_readme:
-              head_readme = head_readme.rstrip() + '''
-
-### Quinta A1
-
-A quinta auditoria independente sobre `0b7a712cd2c897483da34517f10516012711f153` concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com `DIVERGE-01`: parte dos textos centrais ainda era validada apenas por comprimento e podia ser preenchida com pontuação, zero-width, marks, whitespace ou símbolos. O resultado está preservado em `07_resultado_a1_reauditoria_4.md`.
-
-O contraditório confirmou a divergência. A correção aplica a autoridade já existente `material-text` aos demais textos obrigatórios do contrato canônico, incluindo título, negócio, entidade, descrições materiais, limiares, componentes, calibração, governança e `catalogo_ref`. Um teste estrutural agora impede que qualquer novo `type=string` + `minLength` fique sem `material-text` ou `pattern`. `governanca.observacoes[]` permanece narrativa opcional e não participa de gates materiais. A suíte passa a **34 métodos**.
-
-'''
-          mm01_readme = head_readme + marker_fronteiras + tail_readme
-          mm01_readme = mm01_readme.replace(
-              'A suíte MM01 possui **31 métodos automatizados**, além de mutações e subtests. O reteste de construção das correções da quarta A1 ficou verde antes da publicação do commit permanente.',
-              'A suíte MM01 possui **34 métodos automatizados**, além de mutações e subtests. O reteste de construção das correções da quinta A1 precisa ficar verde no novo HEAD antes da próxima auditoria independente.',
-              1,
-          )
-          gate_marker = '## Gate de saída\n'
-          if gate_marker not in mm01_readme:
-              raise AssertionError('Gate de saída não encontrado')
-          readme_prefix = mm01_readme.split(gate_marker, 1)[0].rstrip()
-          mm01_readme = readme_prefix + '''
-
-## Gate de saída
-
-Como o contrato mudou materialmente depois da quinta A1, a MM01 só pode ser aceita após uma **sexta A1 independente** sobre o novo HEAD congelado. O auditor deve reproduzir instalação, suíte, gate estrutural e CLI e criar adversariais próprios sobre todos os campos adicionados à política material, sem usar os relatórios anteriores, a narrativa do autor, o changelog ou mensagens de commit como prova.
-
-O bloco MM01 do `CHANGELOG.md` permanece dívida bloqueante de merge e só deve ser sincronizado, de forma byte-preserving fora do bloco MM01, após uma sexta A1 limpa e contraditório final. A árvore resultante deverá ser novamente validada.
-
-**MM02 permanece bloqueada até sexta A1, eventual contraditório, fechamento do changelog, aceite explícito e integração da MM01.**
-'''
-          mm01_readme_path.write_text(mm01_readme, encoding='utf-8')
-
-          root_readme_path = ROOT / 'README.md'
-          root_readme = root_readme_path.read_text(encoding='utf-8')
-          frozen = 'repo (identidade)  : 1425 arquivos varridos no repositório editável/derivado'
-          if frozen not in root_readme:
-              raise AssertionError('métrica congelada 1425 não encontrada no README raiz')
-          root_readme = root_readme.replace(
-              frozen,
-              'repo (identidade)  : 1426 arquivos varridos no repositório editável/derivado',
-              1,
-          )
-          root_readme_path.write_text(root_readme, encoding='utf-8')
-          PY
-
-      - name: Remover mecanismo transitório do índice final
-        shell: bash
+      - name: Remover artefatos transitorios
         run: |
           git rm .github/workflows/mm01-a1-5-correction.yml
+          git rm .github/scripts/mm01_a1_5_correction.py
           git add -A
 
-      - name: Instalar dependências
-        shell: bash
+      - name: Instalar dependencias
         run: python -m pip install -r tools/requirements-dev.txt
 
-      - name: Executar suíte MM01 ampliada
-        shell: bash
+      - name: Executar suite MM01 ampliada
         run: python -B -m unittest tools/tests/test_micromodelo_mm01.py -v
 
       - name: Executar gate estrutural
-        shell: bash
         run: python -B tools/validate_assistant.py --root ambiente_fonte
 
-      - name: Conferir fronteiras e árvore transitória limpa
-        shell: bash
+      - name: Conferir fronteiras e metrica
         run: |
           test ! -e .github/workflows/mm01-a1-5-correction.yml
+          test ! -e .github/scripts/mm01_a1_5_correction.py
           test -z "$(git diff --name-only --cached | grep '^ambiente_fonte/.assistant/' || true)"
-          test -z "$(git diff --name-only --cached | grep -E '(^|/)CHANGELOG.md$' || true)"
-          grep -q 'repo (identidade)  : 1426 arquivos' README.md
-          grep -q 'contém \*\*34 métodos de teste\*\*' docs/sprints/micromodelos/MM01/TESTES.md
-          grep -q 'sexta A1' docs/sprints/micromodelos/MM01/CHECKPOINT.md
+          test -z "$(git diff --name-only --cached | grep '^CHANGELOG.md$' || true)"
+          test -z "$(git diff --name-only --cached | grep '^tools/micromodelo_mm01_contract.py$' || true)"
+          grep -Fq 'repo (identidade)  : 1426 arquivos varridos no repositório editável/derivado' README.md
+          grep -Fq 'contém **34 métodos de teste**' docs/sprints/micromodelos/MM01/TESTES.md
+          grep -Fq 'sexta A1' docs/sprints/micromodelos/MM01/CHECKPOINT.md
 
-      - name: Publicar correção permanente
-        shell: bash
+      - name: Marcar reteste de construcao verde
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          for name in [
+              'docs/sprints/micromodelos/MM01/CHECKPOINT.md',
+              'docs/sprints/micromodelos/MM01/README.md',
+          ]:
+              path = Path(name)
+              text = path.read_text(encoding='utf-8')
+              text = text.replace('RETESTE DE CONSTRUÇÃO EM EXECUÇÃO', 'RETESTE DE CONSTRUÇÃO VERDE')
+              path.write_text(text, encoding='utf-8')
+          PY
+          git add docs/sprints/micromodelos/MM01/CHECKPOINT.md docs/sprints/micromodelos/MM01/README.md
+          python -B tools/validate_assistant.py --root ambiente_fonte
+
+      - name: Publicar correcao permanente
         run: |
           git config user.name 'Rodrigo'
           git config user.email 'guimarais.r.rodrigo@gmail.com'
