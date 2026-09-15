@@ -45,7 +45,7 @@ Este documento consolida somente execuções reais com evidência observável. R
 - helper adherence: **0/6 = 0% — FAIL**;
 - templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
 - silent reimplementation: **6**;
-- false completion: **1** (`EDA COMPLETA` sem atendimento do contrato de recursos);
+- false completion: **1**;
 - computação redundante: **>=8 padrões**;
 - routing: **NOT_OBSERVABLE**;
 - resultado global: **FAIL**.
@@ -55,16 +55,16 @@ Achados analíticos altos preservados: percentual 10x incorreto para durações 
 ## B00-A1-P1 — auditoria independente do primeiro P1
 
 - resposta auditora SHA-256: `25e59218a759a3ea2c2bb960ddb1e5cc698d65946f967a0018aac026aba66de0`;
-- score declarado pelo auditor: `6.3/10 — Funcional com gaps relevantes`;
+- score declarado: `6.3/10 — Funcional com gaps relevantes`;
 - reimplementações detectadas: **4/6**;
 - false completion detectado: **0/1**;
 - achados analíticos altos detectados: **1/3**;
-- state ladder `declared/located/read/imported/called/completed`: **FAIL**;
+- state ladder: **FAIL**;
 - falsas inferências de observabilidade: **sim**;
 - false reassurance: **sim**;
 - resultado global: **FAIL**.
 
-A auditoria detectou o problema central de não uso do Hub, mas inferiu estados sem prova, perdeu erros materiais e concluiu de forma excessivamente favorável que a análise seria tecnicamente correta/compartilhável. Isso impede usar auditoria textual isolada como gate fail-closed.
+A auditoria detectou o problema central, mas perdeu erros materiais e concluiu de forma excessivamente favorável. Auditoria textual isolada não serve como gate fail-closed.
 
 ## B00-P1-R2 — ativação natural, repetição 2
 
@@ -77,54 +77,49 @@ A auditoria detectou o problema central de não uso do Hub, mas inferiu estados 
 - 11/11 células de código com timestamps;
 - janela observável: `2026-09-15T21:23:36.408Z` a `2026-09-15T21:23:58.462Z`;
 - outputs de exceção Databricks: 0; há uma exceção capturada na célula de qualidade;
-- roteamento automático: **NOT_OBSERVABLE**.
+- routing: **NOT_OBSERVABLE**.
 
-### Aderência aos helpers
+### Helpers
 
-R2 importou `quick_profile`, `data_quality_check` e `null_summary`, mas nenhum dos três foi chamado.
+R2 importou `quick_profile`, `data_quality_check` e `null_summary`, mas nenhum foi chamado.
 
-- `quick_profile`: `imported`, depois perfil reimplementado manualmente;
-- `data_quality_check`: `imported`; chamada real ficou comentada; a célula captura `quality_result` indefinido, portanto o helper não falhou porque nunca foi executado;
-- `null_summary`: `imported`; nunca chamado; o nome foi sobrescrito por um DataFrame manual;
-- `safe_display`: aplicável por haver exibição controlada de amostra, mas não usado;
-- `correlation_matrix`: aplicável, mas correlação foi omitida;
-- `distribution_grid`: aplicável, mas distribuições foram feitas manualmente;
-- `smart_sample`: `not_applicable` nesta repetição;
-- `theme_plotly`: `not_applicable` sem `ResolvedTheme`.
+- `quick_profile`: `imported`, perfil reimplementado;
+- `data_quality_check`: `imported`, chamada real comentada; a célula erra por `quality_result` indefinido;
+- `null_summary`: `imported`, nunca chamado e depois sobrescrito por DataFrame;
+- `safe_display`: aplicável, não usado;
+- `correlation_matrix`: aplicável, correlação omitida;
+- `distribution_grid`: aplicável, distribuições manuais;
+- `smart_sample`: `not_applicable`;
+- `theme_plotly`: `not_applicable`.
 
 **Helper adherence: 0/6 = 0% — FAIL.**
 
-A diferença relevante para R1 é somente de estado: três recursos chegaram a `imported`; nenhum chegou a `called` ou `completed`.
-
 ### Templates
 
-A estrutura editorial ficou mais próxima dos templates — três células Markdown, contextualização separada, resumo executivo e contrato de entrega — mas não há trace que comprove leitura/consumo de qualquer template.
-
-**Template adherence formal: 0/4 consumos comprovados — NOT_OBSERVABLE.**
+A estrutura editorial está mais próxima dos templates, mas não há trace de leitura/consumo. **0/4 consumos comprovados — NOT_OBSERVABLE.**
 
 ### Reimplementação, false completion e redundância
 
-- silent reimplementation: **5** (`quick_profile`, `data_quality_check`, `null_summary`, `safe_display`, `distribution_grid`);
-- `correlation_matrix` foi omitido, não reimplementado;
-- false completion/alegação de uso sem evidência: **1**, porque a célula declara análise de nulos “usando helper do Hub”, mas `null_summary()` nunca é chamado;
-- computação redundante/scans fragmentados: **>=4 padrões**, incluindo nulos coluna a coluna e múltiplas ações separadas por variável numérica.
+- silent reimplementation: **5**;
+- false completion/alegação sem evidência: **1**, pois a célula declara análise de nulos “usando helper do Hub” sem chamar `null_summary()`;
+- computação redundante/scans fragmentados: **>=4 padrões**.
 
-### Achados analíticos independentes do enforcement
+### Achados analíticos independentes
 
-1. **Alto:** correlações aplicáveis foram omitidas; o próprio resumo escreve `correlação positiva esperada (não calculada explicitamente)`.
-2. **Alto:** erro aritmético temporal — 12h+13h+14h+15h = `1060+1094+1107+1172 = 4433`, mas o resumo informa `3373`.
-3. **Alto/médio:** `pickup_zip` e `dropoff_zip` foram tratados como medidas contínuas por serem `integer`, recebendo média, desvio, percentis e visualizações numéricas; a semântica de CEP é nominal/categórica.
-4. **Alto/médio:** o suposto histograma faz `groupBy(valor).count().orderBy(valor).limit(100)`; não cria bins e, em alta cardinalidade, trunca pelos menores valores.
-5. **Médio/alto:** ausência de uma coluna ID foi apresentada como impossibilidade de detectar duplicatas; full-row duplicates e chaves compostas ainda podem ser avaliadas.
-6. **Médio/alto:** P99 de `fare_amount` retorna o próprio máximo sob `approxQuantile(..., 0.01)` e é comunicado sem ressalva de aproximação/cauda.
-7. **Médio:** `1 acima de $100` aparece no contrato final sem cálculo observável correspondente.
-8. **Médio:** `Snapshot = 2026-09-15` é registrado sem fixar versão/time-travel da tabela.
-9. **Médio:** “concentração em Manhattan e arredores” é inferida sem lookup/mapeamento de ZIPs.
+1. **Alto:** correlações aplicáveis omitidas; resumo admite `não calculada explicitamente`.
+2. **Alto:** 12h–15h soma **4433**, mas resumo registra **3373**.
+3. **Alto/médio:** ZIPs tratados como medidas contínuas por serem inteiros.
+4. **Alto/médio:** suposto histograma usa `groupBy(valor).count().orderBy(valor).limit(100)`, sem bins e com truncamento pelos menores valores.
+5. **Médio/alto:** ausência de ID confundida com impossibilidade de detectar duplicatas.
+6. **Médio/alto:** P99 de tarifa igual ao máximo é comunicado sem ressalva de `approxQuantile(..., 0.01)`.
+7. **Médio:** `1 acima de $100` sem cálculo observável correspondente.
+8. **Médio:** snapshot datado sem versão/time-travel da tabela.
+9. **Médio:** “concentração em Manhattan e arredores” sem mapeamento de ZIPs.
 
 ### Veredito P1-R2
 
 - helpers: **FAIL — 0/6**;
-- templates: **NOT_OBSERVABLE — 0/4 consumos comprovados**;
+- templates: **NOT_OBSERVABLE**;
 - routing: **NOT_OBSERVABLE**;
 - resultado global: **FAIL**.
 
@@ -134,15 +129,14 @@ A estrutura editorial ficou mais próxima dos templates — três células Markd
 |---|---|---|---|
 | helpers importados | 0 | 3 | aumento de consciência/import, sem execução |
 | helpers concluídos | 0/6 | 0/6 | **falha central permanece estável** |
-| reimplementações silenciosas | 6 | 5 | redução ocorre em parte porque correlação foi omitida |
-| templates comprovadamente consumidos | 0/4 | 0/4 | permanece `NOT_OBSERVABLE` |
+| reimplementações | 6 | 5 | redução em parte porque correlação foi omitida |
+| templates consumidos comprovadamente | 0/4 | 0/4 | `NOT_OBSERVABLE` |
 | células Markdown | 1 | 3 | melhoria editorial |
 | correlação | manual | omitida | regressão de completude |
 | helper DQ | ausente | importado, chamada comentada, erro local capturado | não executado |
 | `null_summary` | ausente | importado e sobrescrito | não executado |
-| qualidade analítica | erros materiais | novos erros materiais | enforcement e rigor científico continuam gates distintos |
 
-A variabilidade natural já mostra que `import` não é uma evidência suficiente de execução. O SEF precisa distinguir `imported`, `called` e `completed` programaticamente.
+A variabilidade natural mostra que `import` não é evidência suficiente. O SEF precisa distinguir `imported`, `called` e `completed` programaticamente.
 
 ## Agregados por família
 
@@ -151,8 +145,6 @@ A variabilidade natural já mostra que `import` não é uma evidência suficient
 - runs de execução concluídos: **2/3**;
 - routing: **0 PASS / 2 NOT_OBSERVABLE**;
 - helper adherence agregado: **0/12 = 0%**;
-- required concluídos: **0/6**;
-- conditional aplicáveis concluídos: **0/6**;
 - template consumption comprovado: **0/8; NOT_OBSERVABLE**;
 - silent reimplementation: **11**;
 - false completion/alegações sem evidência: **2**;
@@ -195,22 +187,21 @@ A variabilidade natural já mostra que `import` não é uma evidência suficient
 
 - auditorias concluídas: **1/4**;
 - auditoria P1: **FAIL**;
-- reimplementações P1 detectadas explicitamente: **4/6**;
-- false completion P1 detectado: **0/1**;
-- achados altos P1 detectados: **1/3**;
-- state ladder exigido entregue: **não**;
-- falsas inferências de observabilidade: **sim**;
-- limitações de observabilidade reconhecidas adequadamente: **parcial**.
+- reimplementações P1 detectadas: **4/6**;
+- false completion detectado: **0/1**;
+- achados altos detectados: **1/3**;
+- state ladder entregue: **não**;
+- falsas inferências de observabilidade: **sim**.
 
 ## Leitura provisória da baseline
 
-Os três primeiros runs já distinguem três problemas:
+Os três primeiros runs distinguem três problemas:
 
-1. **executor sem recursos:** R1 produz EDA extensa com 0/6 helpers e reimplementação silenciosa;
-2. **auditor textual:** A1 detecta parte do problema, mas gera falsos negativos e false reassurance;
-3. **executor com imports:** R2 importa três helpers, mas continua com 0/6 concluídos e substitui/omite o uso real.
+1. **executor sem recursos:** R1 produz EDA extensa com 0/6 helpers;
+2. **auditor textual:** A1 encontra parte dos desvios, mas produz falsos negativos e false reassurance;
+3. **executor com imports:** R2 importa três helpers e continua com 0/6 concluídos.
 
-Isso reforça a necessidade do fluxo `Contract → Preflight → Execute → Receipt → Postflight`: nem texto contratual, nem import isolado, nem auditoria textual fornecem garantia suficiente.
+Isso reforça o fluxo `Contract → Preflight → Execute → Receipt → Postflight`: nem texto contratual, nem import isolado, nem auditoria textual garantem execução correta.
 
 ## Consolidado SE00
 
@@ -223,7 +214,7 @@ Isso reforça a necessidade do fluxo `Contract → Preflight → Execute → Rec
 
 ## Próximo run
 
-O próximo run é `B00-P1-R3`, em chat novo, com o mesmo prompt literal de P1 e sem contexto dos runs anteriores. Não existe auditoria A1 adicional para R2/R3; o protocolo audita somente a primeira repetição de cada família.
+O próximo run é `B00-P1-R3`, em chat novo, com o mesmo prompt literal de P1 e sem contexto dos runs anteriores. Não há A1 adicional para R2/R3; o protocolo audita somente a primeira repetição de cada família.
 
 ## Regras para atualização
 
