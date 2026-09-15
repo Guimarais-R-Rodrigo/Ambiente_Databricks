@@ -68,12 +68,7 @@ jobs:
           expected="$(printf '%s\n' \
             .github/workflows/mm01-fix-a1-7.yml \
             README.md \
-            docs/sprints/micromodelos/MM01/CHECKPOINT.md \
-            docs/sprints/micromodelos/MM01/CONTRATO_MICROMODELO.md \
-            docs/sprints/micromodelos/MM01/README.md \
-            docs/sprints/micromodelos/MM01/TESTES.md \
             docs/sprints/micromodelos/MM01/micromodelo.schema.json \
-            docs/sprints/micromodelos/README.md \
             tools/_tmp_mm01_a1_7_fix.py \
             tools/micromodelo_mm01_contract.py \
             tools/tests/test_micromodelo_mm01.py | sort)"
