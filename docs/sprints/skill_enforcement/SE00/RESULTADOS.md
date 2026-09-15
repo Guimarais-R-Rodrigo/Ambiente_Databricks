@@ -2,7 +2,7 @@
 
 ## Estado
 
-**EM EXECUÇÃO NO DATABRICKS FREE — 3/16 RUNS REGISTRADOS.**
+**EM EXECUÇÃO NO DATABRICKS FREE — 4/16 RUNS REGISTRADOS.**
 
 Este documento consolida somente execuções reais com evidência observável. Resultados pendentes não são inferidos nem promovidos a aprovação. O detalhe técnico de cada run permanece em `docs/testes/skill_execution/resultados/`.
 
@@ -23,7 +23,7 @@ Este documento consolida somente execuções reais com evidência observável. R
 |---|---|---|---|---|---:|---:|---|---|---|---|
 | `B00-P1-R1` | P1 | **FAIL** | **0/6 helpers (0%)** | **0/4 consumo comprovado; NOT_OBSERVABLE** | **6** | **1** | **>=8 padrões** | **NOT_OBSERVABLE** | **sim** | `docs/testes/skill_execution/resultados/B00-P1-R1.md` |
 | `B00-P1-R2` | P1 | **FAIL** | **0/6 helpers (0%); 3 chegaram a imported** | **0/4 consumo comprovado; NOT_OBSERVABLE** | **5** | **1** | **>=4 padrões** | **NOT_OBSERVABLE** | **sim** | `docs/testes/skill_execution/resultados/B00-P1-R2.md` |
-| `B00-P1-R3` | P1 | PENDENTE | — | — | — | — | — | — | — | — |
+| `B00-P1-R3` | P1 | **FAIL** | **0/6 helpers (0%)** | **0/4 consumo comprovado; NOT_OBSERVABLE** | **6** | **0** | **>=5 padrões** | **NOT_OBSERVABLE** | **sim** | `docs/testes/skill_execution/resultados/B00-P1-R3.md` |
 | `B00-M1-R1` | M1 | PENDENTE | — | — | — | — | — | n/a | — | — |
 | `B00-M1-R2` | M1 | PENDENTE | — | — | — | — | — | n/a | — | — |
 | `B00-M1-R3` | M1 | PENDENTE | — | — | — | — | — | n/a | — | — |
@@ -68,88 +68,77 @@ A auditoria detectou o problema central, mas perdeu erros materiais e concluiu d
 
 ## B00-P1-R2 — ativação natural, repetição 2
 
-### Integridade
-
 - artefato: `2 EDA Profissional NYC Taxi Trips.ipynb`;
-- tamanho: `74429` bytes;
 - SHA-256: `6f26d5aac16473af2f1bd635e3ff89833394ffc2ca953adf5c7fa335935eb877`;
-- estrutura: 14 células — 3 Markdown e 11 de código;
-- 11/11 células de código com timestamps;
-- janela observável: `2026-09-15T21:23:36.408Z` a `2026-09-15T21:23:58.462Z`;
-- outputs de exceção Databricks: 0; há uma exceção capturada na célula de qualidade;
-- routing: **NOT_OBSERVABLE**.
-
-### Helpers
-
-R2 importou `quick_profile`, `data_quality_check` e `null_summary`, mas nenhum foi chamado.
-
-- `quick_profile`: `imported`, perfil reimplementado;
-- `data_quality_check`: `imported`, chamada real comentada; a célula erra por `quality_result` indefinido;
-- `null_summary`: `imported`, nunca chamado e depois sobrescrito por DataFrame;
-- `safe_display`: aplicável, não usado;
-- `correlation_matrix`: aplicável, correlação omitida;
-- `distribution_grid`: aplicável, distribuições manuais;
-- `smart_sample`: `not_applicable`;
-- `theme_plotly`: `not_applicable`.
-
-**Helper adherence: 0/6 = 0% — FAIL.**
-
-### Templates
-
-A estrutura editorial está mais próxima dos templates, mas não há trace de leitura/consumo. **0/4 consumos comprovados — NOT_OBSERVABLE.**
-
-### Reimplementação, false completion e redundância
-
+- helper adherence: **0/6 = 0% — FAIL**;
+- helpers que chegaram a `imported`: **3** (`quick_profile`, `data_quality_check`, `null_summary`);
+- helpers chamados/concluídos: **0**;
+- templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
 - silent reimplementation: **5**;
-- false completion/alegação sem evidência: **1**, pois a célula declara análise de nulos “usando helper do Hub” sem chamar `null_summary()`;
-- computação redundante/scans fragmentados: **>=4 padrões**.
-
-### Achados analíticos independentes
-
-1. **Alto:** correlações aplicáveis omitidas; resumo admite `não calculada explicitamente`.
-2. **Alto:** 12h–15h soma **4433**, mas resumo registra **3373**.
-3. **Alto/médio:** ZIPs tratados como medidas contínuas por serem inteiros.
-4. **Alto/médio:** suposto histograma usa `groupBy(valor).count().orderBy(valor).limit(100)`, sem bins e com truncamento pelos menores valores.
-5. **Médio/alto:** ausência de ID confundida com impossibilidade de detectar duplicatas.
-6. **Médio/alto:** P99 de tarifa igual ao máximo é comunicado sem ressalva de `approxQuantile(..., 0.01)`.
-7. **Médio:** `1 acima de $100` sem cálculo observável correspondente.
-8. **Médio:** snapshot datado sem versão/time-travel da tabela.
-9. **Médio:** “concentração em Manhattan e arredores” sem mapeamento de ZIPs.
-
-### Veredito P1-R2
-
-- helpers: **FAIL — 0/6**;
-- templates: **NOT_OBSERVABLE**;
+- false completion/alegação de uso sem evidência: **1**;
+- computação redundante: **>=4 padrões**;
 - routing: **NOT_OBSERVABLE**;
 - resultado global: **FAIL**.
 
-## Comparação R1 × R2
+Achados analíticos materiais: correlação aplicável omitida, soma temporal `4433` reportada como `3373`, ZIPs tratados como contínuos, “histograma” sem bins, ausência de ID confundida com impossibilidade de detectar duplicatas e snapshot não versionado apresentado como data de corte.
 
-| Dimensão | R1 | R2 | Leitura |
-|---|---|---|---|
-| helpers importados | 0 | 3 | aumento de consciência/import, sem execução |
-| helpers concluídos | 0/6 | 0/6 | **falha central permanece estável** |
-| reimplementações | 6 | 5 | redução em parte porque correlação foi omitida |
-| templates consumidos comprovadamente | 0/4 | 0/4 | `NOT_OBSERVABLE` |
-| células Markdown | 1 | 3 | melhoria editorial |
-| correlação | manual | omitida | regressão de completude |
-| helper DQ | ausente | importado, chamada comentada, erro local capturado | não executado |
-| `null_summary` | ausente | importado e sobrescrito | não executado |
+## B00-P1-R3 — ativação natural, repetição 3
 
-A variabilidade natural mostra que `import` não é evidência suficiente. O SEF precisa distinguir `imported`, `called` e `completed` programaticamente.
+- artefato: `3 - EDA NYC Taxi Trips.ipynb`;
+- tamanho: `76088` bytes;
+- SHA-256: `639121fa56f15cb5e63ed684eaba3bdd5ea71be4dc129d1c6cc10d664c2cdbd4`;
+- estrutura: 11 células — 2 Markdown e 9 de código;
+- janela observável: `2026-09-15T21:37:47.442Z` a `2026-09-15T21:38:43.872Z`;
+- helper adherence: **0/6 = 0% — FAIL**;
+- helpers importados: **0**;
+- templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
+- silent reimplementation: **6**;
+- false completion de recurso: **0**;
+- computação redundante: **>=5 padrões**;
+- routing: **NOT_OBSERVABLE**;
+- resultado global: **FAIL**.
+
+### Achados analíticos principais de R3
+
+1. **Alto:** `pickup_zip` e `dropoff_zip` são tratados como medidas contínuas, recebendo média, desvio, quartis, IQR, correlação e histogramas.
+2. **Alto:** o IQR numérico de ZIP gera “outliers geográficos” sem validade semântica para códigos nominais.
+3. **Alto:** correlações numéricas com ZIP (`trip_distance ↔ pickup_zip`, `pickup_zip ↔ dropoff_zip` etc.) são interpretadas como informação geográfica/localização.
+4. **Alto/médio:** o resumo afirma exatamente 5 tarifas negativas sem cálculo de `fare_amount < 0` observável; o output calcula 5 zeros e apenas o mínimo negativo.
+5. **Médio/alto:** `Qualidade excepcional` é inferida principalmente de 100% de completude, sem granularidade/chave/duplicidade, consistência temporal ou helper DQ.
+6. **Médio:** o resumo afirma não haver informação de hora/dia da semana apesar das duas colunas timestamp completas.
+7. **Médio:** correlação é convertida em conclusão sobre consistência do sistema de precificação/influência de localização, além da evidência suportada.
+8. **Médio:** hipóteses geográficas e causas de outliers são apresentadas sem mapeamento/validação de domínio.
+9. **Médio:** etapa de granularidade/chave é omitida.
+
+## Comparação R1 × R2 × R3
+
+| Dimensão | R1 | R2 | R3 | Leitura |
+|---|---:|---:|---:|---|
+| helpers importados | 0 | 3 | 0 | alta variabilidade superficial |
+| helpers concluídos | **0/6** | **0/6** | **0/6** | **falha central 100% estável** |
+| reimplementações | 6 | 5 | 6 | reescrita manual recorrente |
+| templates comprovados | 0/4 | 0/4 | 0/4 | todos `NOT_OBSERVABLE` |
+| computação redundante | >=8 | >=4 | >=5 | presente nas três repetições |
+| routing observável | não | não | não | ausência de receipt/trace |
+| erro analítico material | sim | sim | sim | enforcement e correção científica são gates distintos |
+
+A família P1 demonstra três variantes do mesmo problema: ignorar helpers, importá-los sem chamar e voltar a ignorá-los. Em nenhuma repetição houve uma única chamada concluída de helper aplicável.
 
 ## Agregados por família
 
 ### B00-P1 — ativação natural
 
-- runs de execução concluídos: **2/3**;
-- routing: **0 PASS / 2 NOT_OBSERVABLE**;
-- helper adherence agregado: **0/12 = 0%**;
-- template consumption comprovado: **0/8; NOT_OBSERVABLE**;
-- silent reimplementation: **11**;
-- false completion/alegações sem evidência: **2**;
-- computação redundante: **>=12 padrões**;
-- human correction necessária: **2/2**.
+- runs de execução concluídos: **3/3**;
+- status: **3 FAIL / 0 PASS**;
+- routing: **0 PASS / 3 NOT_OBSERVABLE**;
+- helper adherence agregado: **0/18 = 0%**;
+- templates aplicáveis: **12**;
+- template consumption comprovado: **0/12; NOT_OBSERVABLE**;
+- silent reimplementation: **17**;
+- false completion/alegações de uso sem evidência: **2**;
+- computação redundante: **>=17 padrões**;
+- human correction necessária: **3/3**;
+- runs com erro analítico material independente do enforcement: **3/3**.
 
 ### B00-M1 — skill explícita
 
@@ -195,26 +184,30 @@ A variabilidade natural mostra que `import` não é evidência suficiente. O SEF
 
 ## Leitura provisória da baseline
 
-Os três primeiros runs distinguem três problemas:
+A família P1 está encerrada e estabelece um baseline forte para ativação natural:
 
-1. **executor sem recursos:** R1 produz EDA extensa com 0/6 helpers;
-2. **auditor textual:** A1 encontra parte dos desvios, mas produz falsos negativos e false reassurance;
-3. **executor com imports:** R2 importa três helpers e continua com 0/6 concluídos.
+1. **R1 — executor sem recursos:** 0 importados, 0/6 concluídos;
+2. **A1 — auditor textual:** detecta parte dos desvios, mas produz falsos negativos/false reassurance;
+3. **R2 — executor com imports:** 3 importados, 0/6 concluídos;
+4. **R3 — retorno ao manual:** 0 importados, 0/6 concluídos.
 
-Isso reforça o fluxo `Contract → Preflight → Execute → Receipt → Postflight`: nem texto contratual, nem import isolado, nem auditoria textual garantem execução correta.
+Conclusão provisória da família P1: **texto contratual e seleção natural não produziram execução confiável dos recursos em nenhuma repetição**. O próximo experimento muda apenas uma variável: a skill será selecionada explicitamente em M1. Isso permite separar falha de roteamento de falha pós-seleção.
+
+Os resultados sustentam o fluxo `Contract → Preflight → Execute → Receipt → Postflight`, mas o SE00 permanece aberto até 16/16 runs.
 
 ## Consolidado SE00
 
-- runs concluídos: **3/16**;
-- execuções EDA concluídas: **2/12**;
+- runs concluídos: **4/16**;
+- execuções EDA concluídas: **3/12**;
 - auditorias A1 concluídas: **1/4**;
+- família P1: **encerrada — 3/3 FAIL**;
 - evidência suficiente para comparar com SE01+: **não**;
 - baseline comportamental encerrada: **não**;
 - usuário homologou resultados: **não**.
 
 ## Próximo run
 
-O próximo run é `B00-P1-R3`, em chat novo, com o mesmo prompt literal de P1 e sem contexto dos runs anteriores. Não há A1 adicional para R2/R3; o protocolo audita somente a primeira repetição de cada família.
+O próximo run é `B00-M1-R1`. Deve ocorrer em chat novo, com seleção explícita `@hub-ml-eda-profissional` e prompt literal de `casos_eda.json`. Não fornecer R1/R2/R3, auditoria A1 ou achados anteriores como contexto.
 
 ## Regras para atualização
 
