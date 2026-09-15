@@ -4,7 +4,7 @@ Data: 15/09/2026.
 
 Branch: `codex/temas-v13-s1-inventario-operacional-20260915`.
 
-Estado deste documento: **candidata S1 em certificação final**. O HEAD imediatamente anterior à criação deste checkpoint, `280b5a75c8799cb7e8b07b906695fd62c6e08623`, concluiu 8/8 workflows de PR com `success`. Como este checkpoint altera a árvore, a certificação do novo HEAD deve ser refeita antes do aceite.
+Estado deste documento: **candidata S1 em certificação final**. O HEAD `280b5a75c8799cb7e8b07b906695fd62c6e08623` concluiu 8/8 workflows de PR com `success`. A criação deste checkpoint gerou o HEAD `24914e720fbe600ccea5292f5293d9346070d3e1`, cujo único finding novo foi a alteração medida da contagem de arquivos de 1431 para 1432. Esta versão registra esse failure e acompanha a correção documental; o commit que a contém ainda precisa ser certificado antes do aceite.
 
 ## 1. Baseline de abertura
 
@@ -29,9 +29,8 @@ Artefatos próprios:
 - `tools/tests/test_temas_v13_s1.py`;
 - `.github/workflows/temas-v13-ci.yml`;
 - atualização do estado vivo em `docs/sprints/sistema_temas/V13/README.md`;
-- atualização do estado vivo e das métricas realmente medidas em `README.md`.
-
-Este checkpoint é o oitavo caminho documental/técnico próprio da candidata S1.
+- atualização do estado vivo e das métricas realmente medidas em `README.md`;
+- `docs/sprints/sistema_temas/V13/CHECKPOINT_S1.md`.
 
 Não houve alteração em `ambiente_fonte/`, `Novo_Ambiente_Simulado/`, contratos funcionais V01–V12, `CHANGELOG.md`, App, binder AI/BI, schema ou tokens.
 
@@ -216,29 +215,56 @@ O validador S1 não importa cliente Databricks, `requests`, `socket`, `urllib`, 
 
 Git/CI permanecem evidência técnica, não homologação de ambiente.
 
-## 13. Métricas verificáveis
+## 13. Checkpoint head e failure de métrica preservado
 
-No SHA `280b5a75...`, antes da criação deste checkpoint, o validador mediu:
+A criação do checkpoint gerou o SHA `24914e720fbe600ccea5292f5293d9346070d3e1`.
 
-- `repo (identidade) = 1431` arquivos;
-- `repo (links) = 1922` links fora da raiz analisada;
-- 0 arquivos locais extras;
-- 0 falhas e 0 avisos após a correção.
+Workflows desse SHA:
 
-A criação deste checkpoint adiciona um arquivo à árvore e, portanto, exige nova medição antes do HEAD final. Nenhum número novo será estimado neste documento.
+| Workflow | Run | Resultado |
+|---|---:|---|
+| Contrato de temas V01 | `35037633558` | `success` |
+| Regressões da instrumentação V00 | `35037633585` | `success` |
+| Núcleo de temas V02 | `35037633595` | `success` |
+| CI local reproduzível | `35037633635` | `failure` |
+| Databricks App de gestão visual V10 | `35037633829` | `failure` |
+| Temas nativos AI/BI V11 | `35037633640` | `failure` |
+| Homologação de jornadas V12 | `35037633581` | `failure` |
+| Contrato operacional V13 | `35037633694` | `failure` |
 
-## 14. Estado Git/PR antes do checkpoint final
+A causa comum foi única: `CHECKPOINT_S1.md` adicionou um arquivo e o validador mediu **1432 arquivos / 1922 links**, enquanto o README ainda declarava 1431/1922.
 
-Antes da criação deste arquivo:
+No workflow V13, antes dessa falha documental, passaram:
 
-- base da PR #60: `main` `1d46c9625fb5bfd6d1b666ddff055507238788bf`;
-- HEAD: `280b5a75c8799cb7e8b07b906695fd62c6e08623`;
-- PR #60: aberta e draft;
+- testes S1: **20/20**;
+- validador operacional S1;
+- regressões V01–V13: **535/535**;
+- compatibilidade V00: **12/12**.
+
+A etapa `Validação estrutural e documental` falhou apenas pela contagem 1431→1432. `Fronteira S1` ficou `skipped`, não PASS.
+
+No workflow V12 do mesmo SHA passaram protocolo/mutantes, evidência real, regressões e V00 antes da mesma falha documental. Por consequência, `Aplicabilidade do escopo estrito V12` e `Escopo V12 e higiene` ficaram `skipped`; esse SHA não é descrito como `V12_SCOPE=NOT_APPLICABLE`, porque o step de aplicabilidade não chegou a executar.
+
+## 14. Correção documental candidata
+
+Esta versão atualiza `README.md` para os valores **1432 arquivos / 1922 links**, medidos no SHA `24914e72...`, e registra o failure no checkpoint.
+
+A correção não adiciona nem remove arquivos e não acrescenta links Markdown verificáveis; ainda assim, os números são tratados como candidatos até o próprio commit desta correção concluir o validador real.
+
+Nenhum gate é relaxado e nenhum failure anterior é reclassificado.
+
+## 15. Estado Git/PR a reconfirmar no fechamento
+
+Base conhecida da PR #60 antes desta correção:
+
+- `main` de abertura: `1d46c9625fb5bfd6d1b666ddff055507238788bf`;
+- branch: `codex/temas-v13-s1-inventario-operacional-20260915`;
+- PR #60 aberta e draft;
 - S2 não iniciada.
 
-A reconciliação final de `main`, merge-base, `ahead_by`/`behind_by`, mergeabilidade, diff, PRs paralelas e workflows será preenchida no fechamento após a certificação do novo HEAD.
+Depois que esta correção concluir o CI do SHA exato, serão reconfirmados: HEAD da `main`, merge-base, `ahead_by`/`behind_by`, mergeabilidade, diff final, PRs paralelas, issues relevantes e todos os workflows do candidato.
 
-## 15. O que fica para S2
+## 16. O que fica para S2
 
 Somente após aceite explícito da S1:
 
@@ -249,8 +275,8 @@ Somente após aceite explícito da S1:
 
 A S1 **não** antecipa esses itens.
 
-## 16. Ponto de parada
+## 17. Ponto de parada
 
-Após medir a árvore com este checkpoint, reconciliar o README apenas com números observados, certificar o SHA final e reconfirmar a `main`, a PR #60 deve permanecer sem merge até aceite explícito do mantenedor.
+Após certificar esta correção e reconfirmar o baseline, a PR #60 deve permanecer sem merge até aceite explícito do mantenedor.
 
 **Parar antes da S2.**
