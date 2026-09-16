@@ -185,12 +185,13 @@ class V13S6OperationalRehearsalTests(unittest.TestCase):
         for case_id in ("V12-LAB-01", "V12-APP-01", "V12-AIBI-02"):
             self.assertIn(case_id, text)
 
-    def test_v13_live_readme_moves_to_s6_without_starting_s7(self):
+    def test_v13_live_readme_preserves_s6_history_when_s7_starts(self):
         text = (ROOT / "docs/sprints/sistema_temas/V13/README.md").read_text(encoding="utf-8")
-        self.assertIn("S5 — PR #64", text)
-        self.assertIn("11e4e17f02d4ba7846f5b80bd88c0180124b5772", text)
-        self.assertIn("S6 — ensaios operacionais por superfície", text)
-        self.assertIn("S7 não foi iniciada", text)
+        self.assertIn("S6 — PR #65", text)
+        self.assertIn("6dfb8707835921f2f48020f383cf571902080109", text)
+        self.assertIn("S7 — handoff operacional e fechamento", text)
+        self.assertIn("HUMAN-01 = PASS", text)
+        self.assertIn("V14 não foi iniciada", text)
 
     def test_workflow_runs_s6_read_only(self):
         text = (ROOT / ".github/workflows/temas-v13-ci.yml").read_text(encoding="utf-8")
@@ -209,11 +210,12 @@ class V13S6OperationalRehearsalTests(unittest.TestCase):
             "V13_S6_IMPLICIT_PUBLICATION=0",
             "V13_S6_LOCAL_OR_SIMULATED_REHEARSALS=5",
             "V13_S6_REAL_ENVIRONMENT_CASES_BLOCKED=3",
-            "V13_S7_NOT_STARTED=1",
         ):
             self.assertIn(marker, text)
         self.assertNotIn('echo "V13_S6_NOT_STARTED=1"', text)
         self.assertIn("Historical S5 checkpoint assertion: V13_S6_NOT_STARTED=1", text)
+        self.assertNotIn('echo "V13_S7_NOT_STARTED=1"', text)
+        self.assertIn("Historical S6 checkpoint assertion: V13_S7_NOT_STARTED=1", text)
 
     def test_no_product_or_simulated_tree_is_an_s6_artifact(self):
         doc = (ROOT / "docs/sprints/sistema_temas/V13/S6_ENSAIOS_OPERACIONAIS.md").read_text(encoding="utf-8")
