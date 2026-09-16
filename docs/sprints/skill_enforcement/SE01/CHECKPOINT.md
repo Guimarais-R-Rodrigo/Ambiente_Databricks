@@ -36,12 +36,13 @@ Contrato, suíte, renderer, CI e publicação/verify por conteúdo no Databricks
 - [x] resíduo SE00 identificado por `object_type=NOTEBOOK` + SHA-256 congelado;
 - [x] resíduo SE00 removido somente após identidade byte a byte confirmada;
 - [x] `--verify --conteudo` final no Free: **APROVADO — 0 problema(s)**;
+- [x] drift posterior da `main` classificado como ortogonal ao pacote publicado;
 - [ ] capability probe executado em chat novo;
 - [ ] regressão natural SE00-P1 executada em chat novo;
 - [ ] limitações reais do Genie Code registradas;
 - [ ] decisão sobre remover/promover o probe;
 - [ ] entrada SE01 registrada no `CHANGELOG.md` antes do fechamento;
-- [ ] reconciliação final com `main` se ela avançar novamente;
+- [ ] reconciliação final com `main`;
 - [ ] aceite explícito do usuário;
 - [ ] merge da PR.
 
@@ -89,6 +90,12 @@ O verify final retornou:
 
 Esse PASS não prova execução do capability probe pela Genie Code. A prova comportamental continua separada.
 
+## Drift posterior da main
+
+Depois da certificação, `main` avançou para `e89ef4f79d9f9b7c901f1bbf490259ee5ce3d493`. Os cinco commits posteriores à base reconciliada tocam apenas workflow/testes/documentação da V14 e o README raiz. Não alteram `ambiente_fonte/.assistant`, o simulado publicado, o capability probe ou `tools/publicar_free.py`.
+
+Por isso, o pacote já certificado permanece válido para o capability probe. A branch deve ser reconciliada novamente com a `main` antes do fechamento/merge, não antes deste teste comportamental.
+
 ## Fronteira de escopo
 
 Não implementado nesta sprint:
@@ -110,7 +117,7 @@ Não implementado nesta sprint:
 4. registrar resultados e limitações reais do Genie Code;
 5. decidir se o probe é removido ou promovido a componente definitivo;
 6. registrar a entrada final SE01 no changelog;
-7. reconciliar novamente com a `main` vigente se necessário;
+7. reconciliar novamente com a `main` vigente;
 8. reexecutar os gates finais da árvore de fechamento;
 9. pedir homologação explícita da SE01;
 10. somente após aceite, integrar a PR #69.
