@@ -256,7 +256,7 @@ class V13S5CompatibilityTests(unittest.TestCase):
         self.assertIn("S6 — PR #65", text)
         self.assertIn("6dfb8707835921f2f48020f383cf571902080109", text)
         self.assertIn("S7 — handoff operacional e fechamento", text)
-        self.assertIn("HUMAN-01 = BLOCKED", text)
+        self.assertIn("HUMAN-01 = PASS", text)
         self.assertIn("V14 não foi iniciada", text)
 
 
