@@ -1241,6 +1241,18 @@ links clicáveis dentro do produto. Essa convenção evita links relativos que
 funcionariam na cópia canônica, mas quebrariam na cópia da raiz. A revisão é
 documental e tem evidência delimitada; não representa publicação no workspace.
 
+### 27.0. Preflight e governança de execução
+
+#### `hub_scripts.skill_execution`
+
+Guia conceitual e de decisão: `hub_scripts/skill_execution/README.md` (a partir de `.assistant/`).
+
+Resolve `execution_contract.json` antes do core analítico e devolve um `PreflightResult` estruturado com `PASS` ou `BLOCKED`, decisões por recurso/template, issues bloqueantes e `writes_performed=false`. Na SE02, `run_preflight` avalia apenas pré-condições objetivas: não executa a EDA, não chama helpers analíticos e não prova aderência posterior.
+
+A API pública é `run_preflight`. O contrato v0.1 continua em `mode="audit"`; runner determinístico, Execution Receipt e postflight pertencem a estágios posteriores do Skill Enforcement Framework. Condição usada pelo contrato sem contexto explícito bloqueia o preflight em vez de ser tratada silenciosamente como falsa.
+
+---
+
 ### 27.1. Constantes e formatação
 
 #### `hub_snippets.constants.colors`
