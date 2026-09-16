@@ -1,20 +1,26 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Estado vigente — V00–V11 integradas; V12 não iniciada
+## Estado vigente — V00–V12 integradas; V13 em S0
 
-V00–V11 estão aceitas e integradas no Git. A V11 foi aceita em 14/09/2026 e integrada pelo PR #52 no merge `9305bc49eaf002caec042361bf35efa66af7ca18`. Os 11 workflows reais da PR e os 13 workflows pós-merge da `main` concluíram com `success`.
+V00–V12 estão aceitas e integradas no Git. A V12 foi integrada pela PR #54 no merge `a6309a4d0b3a3530c52330e65ee5a18674118378`. Seu fechamento preserva estados distintos, sem transformar ausência de autorização em PASS: `DOC-02`, `DOC-03`, `SEC-01`, `UAT-01` e `V12-AIBI-01` possuem PASS no alcance documentado; `A11-01` permanece **FAIL** na issue #57; `V12-LAB-01`, `V12-APP-01` e `V12-AIBI-02` permanecem **BLOQUEADO_AUTORIZACAO**.
 
-A V11 cria uma ponte fail-closed entre um `ResolvedTheme` `notebook` e capacidades documentadas de temas nativos Databricks AI/BI. O schema central permanece inalterado e `context="aibi"` continua reservado. A matriz integrada cobre exatamente os 48 tokens notebook: **3 traduzidos, 23 aproximados e 22 não suportados**. Somente as três correspondências traduzidas podem ter binding direto; aproximações exigem revisão e itens não suportados permanecem explícitos.
+O [Plano Mestre V13](V13/PLANO_MESTRE.md) foi aceito e integrado pela PR #58 no merge `c339ed177f4b901a907ea6ad43f0803f5b7ccc09`. A etapa corrente é **S0 — reconciliação pós-V12 e freeze de escopo**, em candidata documental separada. Consulte o [README vivo da V13](V13/README.md) e o [checkpoint S0](V13/CHECKPOINT_S0.md). S1 não foi iniciada; a S0 não altera runtime/produto, não edita `Novo_Ambiente_Simulado/` e não executa mutação Databricks.
 
-As fontes oficiais verificadas descrevem tipografia, canvas, widgets, paletas, `Color mappings`, temas de workspace e import/export de tema, mas não publicam um schema completo e versionado do JSON produzido por `Export theme`. Por isso a V11 não inventa campos nativos. Um candidato de importação só pode ser derivado de um export real fixado por SHA-256 e de JSON Pointers revisados para campos já existentes. A CI e o código não usam SDK, REST ou CLI Databricks e não publicam dashboards.
+Para quem nunca entrou no Hub: nesta etapa não há seletor, App, dashboard ou configuração para aplicar. A finalidade da S0 é alinhar os índices ao estado real, confirmar os owners canônicos e deixar claro o que pertence à V13 e o que permanece reservado à V14 antes de qualquer implementação operacional.
+
+A V11 continua dona da ponte fail-closed entre um `ResolvedTheme` `notebook` e capacidades documentadas de temas nativos Databricks AI/BI. O schema central permanece inalterado e `context="aibi"` continua reservado. A matriz integrada cobre exatamente os 48 tokens notebook: **3 traduzidos, 23 aproximados e 22 não suportados**. Somente as três correspondências traduzidas podem ter binding direto; aproximações exigem revisão e itens não suportados permanecem explícitos.
+
+As fontes oficiais verificadas descrevem tipografia, canvas, widgets, paletas, `Color mappings`, temas de workspace e import/export de tema, mas não publicam um schema completo e versionado do JSON produzido por `Export theme`. Por isso a V11 não inventa campos nativos. Um candidato de importação só pode ser derivado de um export real fixado por SHA-256 e de JSON Pointers revisados para campos já existentes. A CI e o código V11 não usam SDK, REST ou CLI Databricks e não publicam dashboards.
 
 Workspace theme e dashboard theme permanecem escopos diferentes: gerenciar o tema do workspace exige administrador; um dashboard existente recebe um snapshot ao aplicar o workspace theme; mudanças futuras não se propagam automaticamente e precisam de reaplicação manual. Selecionar/importar tema e publicar dashboard também permanecem ações separadas.
 
 Os runs `34900693160`, `34901091132`, `34901776770` e `34904363803` permanecem **FAILURE** e não foram reclassificados. O head final pré-PR `5532ca6d8f1b243ca705088f4b57823a333b9b1f` passou integralmente no run `34905080083`; os 11 workflows reais da PR #52 e os 13 workflows pós-merge no commit `9305bc49eaf002caec042361bf35efa66af7ca18` também terminaram em `success`.
 
-O detalhamento corrente está em [V11/README.md](V11/README.md), [V11/TESTES.md](V11/TESTES.md) e [V11/CHECKPOINT_V11.md](V11/CHECKPOINT_V11.md). Nenhum desses resultados prova export/import real, permissões administrativas, snapshot/reaplicação em workspace, browser, acessibilidade ou UAT. A V12 permanece separada e não foi iniciada por este fechamento.
+O detalhamento V11 permanece em [V11/README.md](V11/README.md), [V11/TESTES.md](V11/TESTES.md) e [V11/CHECKPOINT_V11.md](V11/CHECKPOINT_V11.md). A homologação real posteriormente executada pertence à V12 e continua limitada à evidência efetivamente registrada; ela não cria autorização permanente para novas operações.
 
-A V10 integrada permanece a etapa anterior: Rodrigo deu aceite explícito em 14/09/2026; a entrega funcional foi integrada pelo PR #48 no commit `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b` e o fechamento documental pelo PR #50 no commit `a9480391c78e2402986885db0ce08b10e0619a1a`. Os failures históricos V10 permanecem em [V10/TESTES.md](V10/TESTES.md) e o estado de decisão em [V10/CHECKPOINT_V10.md](V10/CHECKPOINT_V10.md). Nenhuma criação/atualização real de Databricks App, associação de UC Volume, alteração de ACL/compute ou publicação foi executada.
+A V10 integrada permanece a etapa de Databricks App: Rodrigo deu aceite explícito em 14/09/2026; a entrega funcional foi integrada pelo PR #48 no commit `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b` e o fechamento documental pelo PR #50 no commit `a9480391c78e2402986885db0ce08b10e0619a1a`. Os failures históricos V10 permanecem em [V10/TESTES.md](V10/TESTES.md) e o estado de decisão em [V10/CHECKPOINT_V10.md](V10/CHECKPOINT_V10.md). Nenhuma criação/atualização real de Databricks App, associação de UC Volume, alteração de ACL/compute ou publicação foi executada pela V10; `V12-APP-01` permaneceu bloqueado por autorização.
+
+As seções cronológicas abaixo preservam o estado observado nos respectivos fechamentos. Frases como “V05 candidata”, “V09 não iniciada” ou “V12 ainda não começou” dentro de um registro histórico não representam o estado vigente desta iniciativa e não devem ser reescritas apenas para parecer atuais.
 
 ## Estado integrado anterior — V09
 
@@ -24,7 +30,7 @@ O primeiro pós-merge revelou um defeito real apenas na preparação do runner d
 
 A V09 torna explícito no `MANIFEST.json` v2 o contrato mínimo do Sistema de Temas transportado pelo kit de transição. O bundle falha se perder qualquer uma das nove peças canônicas, e o ZIP final é reaberto para conferir presença única, tamanho e SHA256 antes de ser considerado distribuível. `activation = manual_opt_in` e `publication = not_performed` permanecem limites contratuais.
 
-No pós-merge final do SHA `4ae714a35a0aafd930a8cd796d962b0a79449b88`, os 12 workflows realmente disparados por `push` concluíram com `success`. O workflow operacional `Kit de transição para o trabalho`, run `34881426374`, passou por CI local, V09 12/12, 43/43 testes com Spark local, geração offline de 535 arquivos + `MANIFEST.json`, verificação do `theme_contract` 9/9 dentro do ZIP e upload do artefato somente depois dessa conferência. O validador terminou com 0 falhas / 0 avisos.
+No pós-merge final do SHA `4ae714a35a0aafd930a8cd796d962b0a79449b88`, os 12/12 workflows realmente disparados por `push` concluíram com `success`. O workflow operacional `Kit de transição para o trabalho`, run `34881426374`, passou por CI local, V09 12/12, 43/43 testes com Spark local, geração offline de 535 arquivos + `MANIFEST.json`, verificação do `theme_contract` 9/9 dentro do ZIP e upload do artefato somente depois dessa conferência. O validador terminou com 0 falhas / 0 avisos.
 
 Os failures `34877035267`, `34877297808` e `34880619346` permanecem registrados como **FAILURE** em `V09/TESTES.md`; nenhum foi reclassificado.
 
@@ -44,7 +50,7 @@ Nenhuma publicação Databricks, alteração de ACL/compute, execução remota S
 
 ## Estado integrado anterior — V06 integrada no Git
 
-A V06 foi aceita por Rodrigo em 14/09/2026 e integrada pelo PR #38. O head final validado foi `70499e1803ce0d61a148a0da975c4f52611046e0` e o merge efetivo na `main` é `418946de8d1e95e87cbfd9df528ddcced5075237`. A árvore do merge é idêntica à árvore do head final testado.
+A V06 foi aceita por Rodrigo em 14/09/2026 e integrada pelo PR #38. O head final validado foi `70499e1803ce0d61a148a0da975c4f52611046e0` e o merge efetivo na `main` é `418946de8d1e95e87cbfd9df528ddcced5075237`. A árvore do merge (`68ddec3d691047e890ba2785e1e2e007039fa0e3`) é idêntica à árvore do head final testado.
 
 A [V06 — assets e geração orientados por tema](V06/README.md) evolui o compositor editorial v2 sem criar uma segunda fonte de verdade: `theme_id` é resolvido pelo núcleo V02, o renderer recebe um derivado controlado do `ResolvedTheme`, recursos congelados continuam protegidos por SHA-256 e variantes candidatas ficam em `.artifacts/`, fora do pacote visual ativo.
 

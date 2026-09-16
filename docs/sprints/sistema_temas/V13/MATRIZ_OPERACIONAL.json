@@ -1,0 +1,696 @@
+{
+  "contract_version": 1,
+  "kind": "hub_theme_operational_inventory",
+  "sprint": "V13-S1",
+  "canonical_plan_ref": "docs/sprints/sistema_temas/V13/PLANO_MESTRE.md",
+  "governance_policy_ref": "docs/sprints/sistema_temas/V01/politica_workflow.json",
+  "rules": {
+    "references_only": true,
+    "preflight_stage": "S2_NOT_IMPLEMENTED",
+    "remote_mutation_performed_by_s1": false,
+    "source_root": "ambiente_fonte/",
+    "derived_root": "Novo_Ambiente_Simulado/",
+    "derived_root_editable": false
+  },
+  "relationships": [
+    {
+      "relationship_id": "visual_lab_reuses_core",
+      "from_surface": "visual_lab",
+      "to_surface": "notebook_visual_core",
+      "relation": "depends_on",
+      "refs": [
+        "docs/sprints/sistema_temas/V05/README.md",
+        "docs/sprints/sistema_temas/V02/README.md"
+      ]
+    },
+    {
+      "relationship_id": "app_reuses_visual_lab",
+      "from_surface": "databricks_app",
+      "to_surface": "visual_lab",
+      "relation": "depends_on",
+      "refs": [
+        "docs/sprints/sistema_temas/V10/README.md",
+        "docs/sprints/sistema_temas/V05/README.md"
+      ]
+    },
+    {
+      "relationship_id": "transition_bundle_transports_core_without_activation",
+      "from_surface": "transition_bundle",
+      "to_surface": "notebook_visual_core",
+      "relation": "transports_without_activating",
+      "refs": [
+        "docs/sprints/sistema_temas/V09/README.md"
+      ]
+    },
+    {
+      "relationship_id": "transition_bundle_does_not_replace_app_bundle",
+      "from_surface": "transition_bundle",
+      "to_surface": "databricks_app",
+      "relation": "separate_artifact_boundary",
+      "refs": [
+        "docs/sprints/sistema_temas/V09/README.md",
+        "docs/sprints/sistema_temas/V10/README.md"
+      ]
+    },
+    {
+      "relationship_id": "aibi_projects_from_resolved_theme",
+      "from_surface": "aibi_dashboard",
+      "to_surface": "notebook_visual_core",
+      "relation": "projects_from",
+      "refs": [
+        "docs/sprints/sistema_temas/V11/README.md",
+        "docs/sprints/sistema_temas/V02/README.md"
+      ]
+    },
+    {
+      "relationship_id": "workspace_theme_is_separate_from_dashboard_theme",
+      "from_surface": "workspace_theme",
+      "to_surface": "aibi_dashboard",
+      "relation": "separate_surface",
+      "refs": [
+        "docs/sprints/sistema_temas/V11/README.md"
+      ]
+    }
+  ],
+  "surfaces": [
+    {
+      "surface_id": "notebook_visual_core",
+      "label": "Núcleo notebook / Plotly / HTML",
+      "primary_owner": {
+        "version": "V02",
+        "contract_ref": "docs/sprints/sistema_temas/V02/README.md"
+      },
+      "dependency_owners": [
+        {
+          "version": "V03",
+          "contract_ref": "docs/sprints/sistema_temas/V03/README.md"
+        },
+        {
+          "version": "V04",
+          "contract_ref": "docs/sprints/sistema_temas/V04/README.md"
+        },
+        {
+          "version": "V07",
+          "contract_ref": "docs/sprints/sistema_temas/V07/README.md"
+        }
+      ],
+      "artifact": {
+        "kind": "canonical_source_and_contracts",
+        "refs": [
+          "ambiente_fonte/.assistant/hub_padroes/identidade_visual/README.md",
+          "ambiente_fonte/.assistant/hub_padroes/identidade_visual/theme.schema.json",
+          "ambiente_fonte/.assistant/hub_snippets/visual/tema/tema.py",
+          "docs/sprints/sistema_temas/V02/README.md"
+        ]
+      },
+      "preflight": {
+        "stage": "S2_NOT_IMPLEMENTED",
+        "existing_check_refs": [
+          "tools/tests/test_temas_v02.py",
+          "tools/tests/test_temas_v03.py",
+          "tools/tests/test_temas_v04.py",
+          "tools/tests/test_temas_v07.py"
+        ]
+      },
+      "authorization": {
+        "policy_ref": "docs/sprints/sistema_temas/V01/politica_workflow.json",
+        "required_for_persistent_mutation": false,
+        "current_state": "NOT_APPLICABLE_READ_ONLY"
+      },
+      "smoke": {
+        "refs": [
+          "tools/tests/test_temas_v02.py",
+          "tools/tests/test_temas_v03.py",
+          "tools/tests/test_temas_v04.py"
+        ]
+      },
+      "rollback": {
+        "strategy": "not_applicable_no_persistent_mutation",
+        "refs": [
+          "docs/sprints/sistema_temas/V02/README.md"
+        ]
+      },
+      "minimum_evidence": "Git/CI validates contracts; environment evidence remains a separate gate.",
+      "known_homologation_states": [
+        {
+          "case_id": "UAT-01",
+          "state": "PASS",
+          "scope": "textual_v01_only",
+          "evidence_ref": "docs/sprints/sistema_temas/V12/TESTES.md"
+        }
+      ],
+      "actions": [
+        {
+          "action_id": "render_with_resolved_theme",
+          "mode": "read_only",
+          "performed_by_s1": false,
+          "authorization": {
+            "required": false,
+            "basis": "read_only_in_memory",
+            "state": "NOT_APPLICABLE"
+          },
+          "verification_refs": [
+            "tools/tests/test_temas_v02.py",
+            "tools/tests/test_temas_v04.py"
+          ],
+          "rollback": {
+            "required": false,
+            "strategy": "not_applicable_no_persistent_mutation",
+            "refs": [
+              "docs/sprints/sistema_temas/V02/README.md"
+            ]
+          }
+        }
+      ],
+      "limitations": [
+        "No real Databricks browser/runtime homologation is inferred from Git/CI.",
+        "Appearance must not change analytical calculation or data semantics."
+      ]
+    },
+    {
+      "surface_id": "visual_lab",
+      "label": "Visual Lab",
+      "primary_owner": {
+        "version": "V05",
+        "contract_ref": "docs/sprints/sistema_temas/V05/README.md"
+      },
+      "dependency_owners": [
+        {
+          "version": "V02",
+          "contract_ref": "docs/sprints/sistema_temas/V02/README.md"
+        },
+        {
+          "version": "V03",
+          "contract_ref": "docs/sprints/sistema_temas/V03/README.md"
+        },
+        {
+          "version": "V04",
+          "contract_ref": "docs/sprints/sistema_temas/V04/README.md"
+        }
+      ],
+      "artifact": {
+        "kind": "canonical_source_and_user_guides",
+        "refs": [
+          "ambiente_fonte/.assistant/hub_snippets/visual/theme_lab/README.md",
+          "ambiente_fonte/.assistant/hub_snippets/visual/theme_lab/GUIA_PRIMEIRO_USO.md",
+          "docs/sprints/sistema_temas/V05/README.md"
+        ]
+      },
+      "preflight": {
+        "stage": "S2_NOT_IMPLEMENTED",
+        "existing_check_refs": [
+          "tools/tests/test_temas_v05.py",
+          "tools/tests/test_temas_v05_integracao.py",
+          "tools/tests/test_temas_v05_sessions.py"
+        ]
+      },
+      "authorization": {
+        "policy_ref": "docs/sprints/sistema_temas/V01/politica_workflow.json",
+        "required_for_persistent_mutation": true,
+        "current_state": "BLOQUEADO_AUTORIZACAO"
+      },
+      "smoke": {
+        "refs": [
+          "tools/tests/test_temas_v05.py",
+          "tools/tests/test_temas_v05_integracao.py",
+          "tools/tests/test_temas_v05_sessions.py"
+        ]
+      },
+      "rollback": {
+        "strategy": "restore_valid_session_or_remove_only_new_authorized_artifact",
+        "refs": [
+          "docs/sprints/sistema_temas/V05/README.md",
+          "docs/sprints/sistema_temas/V12/TESTES.md"
+        ]
+      },
+      "minimum_evidence": "Browser/runtime operation requires authorized environment evidence; textual UAT is not a substitute.",
+      "known_homologation_states": [
+        {
+          "case_id": "UAT-01",
+          "state": "PASS",
+          "scope": "textual_v01_only",
+          "evidence_ref": "docs/sprints/sistema_temas/V12/TESTES.md"
+        },
+        {
+          "case_id": "V12-LAB-01",
+          "state": "BLOQUEADO_AUTORIZACAO",
+          "scope": "real_visual_lab_environment",
+          "evidence_ref": "docs/sprints/sistema_temas/V12/TESTES.md"
+        }
+      ],
+      "actions": [
+        {
+          "action_id": "preview_proposal",
+          "mode": "read_only",
+          "performed_by_s1": false,
+          "authorization": {
+            "required": false,
+            "basis": "local_preview_without_persistence",
+            "state": "NOT_APPLICABLE"
+          },
+          "verification_refs": [
+            "tools/tests/test_temas_v05_integracao.py"
+          ],
+          "rollback": {
+            "required": false,
+            "strategy": "not_applicable_no_persistent_mutation",
+            "refs": [
+              "docs/sprints/sistema_temas/V05/README.md"
+            ]
+          }
+        },
+        {
+          "action_id": "persist_workspace_session",
+          "mode": "persistent_mutation",
+          "performed_by_s1": false,
+          "authorization": {
+            "required": true,
+            "basis": "explicit_destination_and_environment_authorization",
+            "state": "BLOQUEADO_AUTORIZACAO"
+          },
+          "verification_refs": [
+            "tools/tests/test_temas_v05_sessions.py"
+          ],
+          "rollback": {
+            "required": true,
+            "strategy": "restore_valid_session_or_remove_only_new_authorized_artifact",
+            "refs": [
+              "docs/sprints/sistema_temas/V05/README.md",
+              "docs/sprints/sistema_temas/V12/TESTES.md"
+            ]
+          }
+        }
+      ],
+      "limitations": [
+        "V12-LAB-01 remains blocked; S1 does not perform workspace persistence.",
+        "Textual UAT-01 does not prove the real Visual Lab frontend."
+      ]
+    },
+    {
+      "surface_id": "transition_bundle",
+      "label": "Bundle/kit de transição V09",
+      "primary_owner": {
+        "version": "V09",
+        "contract_ref": "docs/sprints/sistema_temas/V09/README.md"
+      },
+      "dependency_owners": [
+        {
+          "version": "V02",
+          "contract_ref": "docs/sprints/sistema_temas/V02/README.md"
+        }
+      ],
+      "artifact": {
+        "kind": "transport_builder_and_contract",
+        "refs": [
+          "tools/temas_v09_transicao.py",
+          "tools/bundle_implantacao.py",
+          "docs/sprints/sistema_temas/V09/README.md"
+        ]
+      },
+      "preflight": {
+        "stage": "S2_NOT_IMPLEMENTED",
+        "existing_check_refs": [
+          "tools/tests/test_temas_v09.py"
+        ]
+      },
+      "authorization": {
+        "policy_ref": "docs/sprints/sistema_temas/V01/politica_workflow.json",
+        "required_for_persistent_mutation": true,
+        "current_state": "LOCAL_BUILD_EXPLICIT_INVOCATION"
+      },
+      "smoke": {
+        "refs": [
+          "tools/tests/test_temas_v09.py",
+          "tools/tests/test_transicao_trabalho.py"
+        ]
+      },
+      "rollback": {
+        "strategy": "discard_new_local_bundle_artifact; transport_never_implies_activation",
+        "refs": [
+          "docs/sprints/sistema_temas/V09/README.md"
+        ]
+      },
+      "minimum_evidence": "Bundle integrity and transport contract are Git/CI evidence only; installation/activation require separate evidence.",
+      "known_homologation_states": [
+        {
+          "case_id": "V09-GIT-CI",
+          "state": "PASS",
+          "scope": "transport_and_integrity_only",
+          "evidence_ref": "docs/sprints/sistema_temas/V09/README.md"
+        }
+      ],
+      "actions": [
+        {
+          "action_id": "build_transition_bundle",
+          "mode": "local_artifact_mutation",
+          "performed_by_s1": false,
+          "authorization": {
+            "required": true,
+            "basis": "explicit_operator_invocation",
+            "state": "AVAILABLE_LOCAL_BUILD"
+          },
+          "verification_refs": [
+            "tools/tests/test_temas_v09.py"
+          ],
+          "rollback": {
+            "required": true,
+            "strategy": "discard_new_local_bundle_artifact",
+            "refs": [
+              "docs/sprints/sistema_temas/V09/README.md"
+            ]
+          }
+        }
+      ],
+      "limitations": [
+        "The V09 transport contract remains canonical and is referenced, not copied.",
+        "Transport is not installation, activation, promotion, or publication."
+      ]
+    },
+    {
+      "surface_id": "databricks_app",
+      "label": "Databricks App V10",
+      "primary_owner": {
+        "version": "V10",
+        "contract_ref": "docs/sprints/sistema_temas/V10/README.md"
+      },
+      "dependency_owners": [
+        {
+          "version": "V05",
+          "contract_ref": "docs/sprints/sistema_temas/V05/README.md"
+        },
+        {
+          "version": "V02",
+          "contract_ref": "docs/sprints/sistema_temas/V02/README.md"
+        }
+      ],
+      "artifact": {
+        "kind": "app_source_and_derived_bundle_builder",
+        "refs": [
+          "ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/README.md",
+          "ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/DEPLOY_ROLLBACK.md",
+          "tools/temas_v10_app.py",
+          "docs/sprints/sistema_temas/V10/README.md"
+        ]
+      },
+      "preflight": {
+        "stage": "S2_NOT_IMPLEMENTED",
+        "existing_check_refs": [
+          "tools/tests/test_temas_v10.py"
+        ]
+      },
+      "authorization": {
+        "policy_ref": "docs/sprints/sistema_temas/V01/politica_workflow.json",
+        "required_for_persistent_mutation": true,
+        "current_state": "BLOQUEADO_AUTORIZACAO"
+      },
+      "smoke": {
+        "refs": [
+          "tools/tests/test_temas_v10.py"
+        ]
+      },
+      "rollback": {
+        "strategy": "use_v10_deploy_rollback_contract_after_explicit_authorization",
+        "refs": [
+          "ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/DEPLOY_ROLLBACK.md",
+          "docs/sprints/sistema_temas/V10/README.md"
+        ]
+      },
+      "minimum_evidence": "Local bundle validation does not prove deployed App identity, permissions, storage, browser behavior, or rollback.",
+      "known_homologation_states": [
+        {
+          "case_id": "V12-APP-01",
+          "state": "BLOQUEADO_AUTORIZACAO",
+          "scope": "real_databricks_app_deploy",
+          "evidence_ref": "docs/sprints/sistema_temas/V12/TESTES.md"
+        }
+      ],
+      "actions": [
+        {
+          "action_id": "build_app_bundle",
+          "mode": "local_artifact_mutation",
+          "performed_by_s1": false,
+          "authorization": {
+            "required": true,
+            "basis": "explicit_operator_invocation",
+            "state": "AVAILABLE_LOCAL_BUILD"
+          },
+          "verification_refs": [
+            "tools/tests/test_temas_v10.py"
+          ],
+          "rollback": {
+            "required": true,
+            "strategy": "discard_new_local_app_bundle",
+            "refs": [
+              "docs/sprints/sistema_temas/V10/README.md"
+            ]
+          }
+        },
+        {
+          "action_id": "deploy_app",
+          "mode": "remote_mutation",
+          "performed_by_s1": false,
+          "authorization": {
+            "required": true,
+            "basis": "specific_databricks_deploy_authorization",
+            "state": "BLOQUEADO_AUTORIZACAO"
+          },
+          "verification_refs": [
+            "tools/tests/test_temas_v10.py"
+          ],
+          "rollback": {
+            "required": true,
+            "strategy": "use_v10_deploy_rollback_contract_after_explicit_authorization",
+            "refs": [
+              "ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/DEPLOY_ROLLBACK.md"
+            ]
+          }
+        }
+      ],
+      "limitations": [
+        "V12-APP-01 remains blocked; S1 performs no Databricks App deployment.",
+        "The V10 App bundle is distinct from the V09 general transition bundle."
+      ]
+    },
+    {
+      "surface_id": "aibi_dashboard",
+      "label": "Dashboard Databricks AI/BI",
+      "primary_owner": {
+        "version": "V11",
+        "contract_ref": "docs/sprints/sistema_temas/V11/README.md"
+      },
+      "dependency_owners": [
+        {
+          "version": "V02",
+          "contract_ref": "docs/sprints/sistema_temas/V02/README.md"
+        },
+        {
+          "version": "V12",
+          "contract_ref": "docs/sprints/sistema_temas/V12/TESTES.md"
+        }
+      ],
+      "artifact": {
+        "kind": "aibi_projection_and_fail_closed_binding",
+        "refs": [
+          "ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/README.md",
+          "ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/aibi_theme.py",
+          "ambiente_fonte/.assistant/hub_padroes/identidade_visual/aibi/aibi_mapping.json",
+          "docs/sprints/sistema_temas/V11/README.md"
+        ]
+      },
+      "preflight": {
+        "stage": "S2_NOT_IMPLEMENTED",
+        "existing_check_refs": [
+          "tools/tests/test_temas_v11.py",
+          "tools/tests/test_temas_v12.py",
+          "tools/tests/test_temas_v12_evidencia_real.py"
+        ]
+      },
+      "authorization": {
+        "policy_ref": "docs/sprints/sistema_temas/V01/politica_workflow.json",
+        "required_for_persistent_mutation": true,
+        "current_state": "ACTION_SPECIFIC"
+      },
+      "smoke": {
+        "refs": [
+          "tools/tests/test_temas_v11.py",
+          "tools/tests/test_temas_v12_evidencia_real.py"
+        ]
+      },
+      "rollback": {
+        "strategy": "restore_original_dashboard_theme_and_semantics_for_each_authorized_mutation",
+        "refs": [
+          "docs/sprints/sistema_temas/V11/README.md",
+          "docs/sprints/sistema_temas/V12/TESTES.md"
+        ]
+      },
+      "minimum_evidence": "Import, accessibility, and Publish are separate gates; each claim must retain its own evidence class and scope.",
+      "known_homologation_states": [
+        {
+          "case_id": "V12-AIBI-01",
+          "state": "PASS",
+          "scope": "real_draft_synthetic_data_import_and_rollback_only",
+          "evidence_ref": "docs/sprints/sistema_temas/V12/TESTES.md"
+        },
+        {
+          "case_id": "A11-01",
+          "state": "FAIL",
+          "scope": "conditional_formatting_contrast_observed",
+          "evidence_ref": "docs/sprints/sistema_temas/V12/TESTES.md",
+          "issue_ref": "#57"
+        }
+      ],
+      "actions": [
+        {
+          "action_id": "project_theme",
+          "mode": "read_only",
+          "performed_by_s1": false,
+          "authorization": {
+            "required": false,
+            "basis": "local_projection_only",
+            "state": "NOT_APPLICABLE"
+          },
+          "verification_refs": [
+            "tools/tests/test_temas_v11.py"
+          ],
+          "rollback": {
+            "required": false,
+            "strategy": "not_applicable_no_persistent_mutation",
+            "refs": [
+              "docs/sprints/sistema_temas/V11/README.md"
+            ]
+          }
+        },
+        {
+          "action_id": "import_theme_draft",
+          "mode": "remote_mutation",
+          "performed_by_s1": false,
+          "authorization": {
+            "required": true,
+            "basis": "specific_dashboard_draft_import_authorization",
+            "state": "PASS_EVIDENCE_EXISTS_FOR_V12_AIBI_01_SCOPE_ONLY"
+          },
+          "verification_refs": [
+            "tools/tests/test_temas_v12_evidencia_real.py"
+          ],
+          "rollback": {
+            "required": true,
+            "strategy": "restore_original_dashboard_theme_and_verify_semantics",
+            "refs": [
+              "docs/sprints/sistema_temas/V12/TESTES.md"
+            ]
+          }
+        },
+        {
+          "action_id": "publish_dashboard",
+          "mode": "remote_mutation",
+          "performed_by_s1": false,
+          "authorization": {
+            "required": true,
+            "basis": "independent_publish_authorization",
+            "state": "NOT_AUTHORIZED"
+          },
+          "verification_refs": [
+            "tools/tests/test_temas_v11.py",
+            "tools/tests/test_temas_v12.py"
+          ],
+          "rollback": {
+            "required": true,
+            "strategy": "blocked_until_authorized_publish_and_rollback_procedure_exists",
+            "refs": [
+              "docs/sprints/sistema_temas/V11/README.md",
+              "docs/sprints/sistema_temas/V12/TESTES.md"
+            ]
+          }
+        }
+      ],
+      "limitations": [
+        "A11-01 remains FAIL in issue #57 and must not be hidden by V12-AIBI-01 PASS.",
+        "The synthetic dashboard fixture is not a Databricks import artifact.",
+        "No approximated or unsupported mapping is automated."
+      ]
+    },
+    {
+      "surface_id": "workspace_theme",
+      "label": "Tema de workspace Databricks",
+      "primary_owner": {
+        "version": "V11",
+        "contract_ref": "docs/sprints/sistema_temas/V11/README.md"
+      },
+      "dependency_owners": [
+        {
+          "version": "V12",
+          "contract_ref": "docs/sprints/sistema_temas/V12/TESTES.md"
+        }
+      ],
+      "artifact": {
+        "kind": "documented_admin_surface",
+        "refs": [
+          "docs/sprints/sistema_temas/V11/README.md",
+          "docs/sprints/sistema_temas/V12/TESTES.md"
+        ]
+      },
+      "preflight": {
+        "stage": "S2_NOT_IMPLEMENTED",
+        "existing_check_refs": [
+          "tools/tests/test_temas_v11.py",
+          "tools/tests/test_temas_v12.py"
+        ]
+      },
+      "authorization": {
+        "policy_ref": "docs/sprints/sistema_temas/V01/politica_workflow.json",
+        "required_for_persistent_mutation": true,
+        "current_state": "BLOQUEADO_AUTORIZACAO"
+      },
+      "smoke": {
+        "refs": [
+          "tools/tests/test_temas_v11.py",
+          "tools/tests/test_temas_v12.py"
+        ]
+      },
+      "rollback": {
+        "strategy": "blocked_until_admin_authorization_and_workspace_snapshot_rollback_are_defined",
+        "refs": [
+          "docs/sprints/sistema_temas/V11/README.md",
+          "docs/sprints/sistema_temas/V12/TESTES.md"
+        ]
+      },
+      "minimum_evidence": "Workspace theme requires separate administrative authorization and environment evidence.",
+      "known_homologation_states": [
+        {
+          "case_id": "V12-AIBI-02",
+          "state": "BLOQUEADO_AUTORIZACAO",
+          "scope": "workspace_theme_admin_snapshot_reapplication",
+          "evidence_ref": "docs/sprints/sistema_temas/V12/TESTES.md"
+        }
+      ],
+      "actions": [
+        {
+          "action_id": "apply_workspace_theme",
+          "mode": "remote_mutation",
+          "performed_by_s1": false,
+          "authorization": {
+            "required": true,
+            "basis": "specific_workspace_admin_authorization",
+            "state": "BLOQUEADO_AUTORIZACAO"
+          },
+          "verification_refs": [
+            "tools/tests/test_temas_v11.py",
+            "tools/tests/test_temas_v12.py"
+          ],
+          "rollback": {
+            "required": true,
+            "strategy": "blocked_until_admin_authorization_and_workspace_snapshot_rollback_are_defined",
+            "refs": [
+              "docs/sprints/sistema_temas/V11/README.md",
+              "docs/sprints/sistema_temas/V12/TESTES.md"
+            ]
+          }
+        }
+      ],
+      "limitations": [
+        "Workspace theme is separate from dashboard theme.",
+        "No workspace theme mutation is authorized or performed by S1."
+      ]
+    }
+  ]
+}
