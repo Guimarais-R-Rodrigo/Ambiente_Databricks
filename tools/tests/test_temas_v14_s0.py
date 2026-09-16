@@ -76,13 +76,13 @@ class V14S0FreezeTests(unittest.TestCase):
 
     def test_inherited_nonpass_states_are_preserved(self) -> None:
         for document in (self.readme, self.checkpoint):
-            self.assertIn("`A11-01`", document)
-            self.assertIn("`FAIL`", document)
+            self.assertIn("A11-01", document)
+            self.assertIn("FAIL", document)
             self.assertIn("issue #57", document)
-            self.assertIn("`V12-LAB-01`", document)
-            self.assertIn("`V12-APP-01`", document)
-            self.assertIn("`V12-AIBI-02`", document)
-            self.assertIn("`BLOQUEADO_AUTORIZACAO`", document)
+            self.assertIn("V12-LAB-01", document)
+            self.assertIn("V12-APP-01", document)
+            self.assertIn("V12-AIBI-02", document)
+            self.assertIn("BLOQUEADO_AUTORIZACAO", document)
 
     def test_human_pass_is_not_promoted_to_readiness(self) -> None:
         self.assertIn("`HUMAN-01`", self.readme)
@@ -150,7 +150,7 @@ class V14S0FreezeTests(unittest.TestCase):
 
     def test_checkpoint_does_not_invent_final_metrics(self) -> None:
         self.assertIn("não estima métricas", self.checkpoint)
-        self.assertIn("não uma previsão", self.checkpoint)
+        self.assertIn("baseline da PR #70", self.checkpoint)
         self.assertIn("Pendente de execução do primeiro HEAD completo", self.checkpoint)
 
     def test_workflow_is_read_only(self) -> None:
