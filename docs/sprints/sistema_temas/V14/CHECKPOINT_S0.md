@@ -4,7 +4,7 @@ Data: 16/09/2026.
 
 Branch: `codex/temas-v14-s0-reconciliacao-readiness-20260916`.
 
-Estado deste documento: **S0 em execução; candidata ainda não aceita nem integrada. A árvore já foi medida pelo runner, mas a certificação final do HEAD permanece pendente após a correção fail-closed das métricas.**
+Estado deste documento: **S0 tecnicamente executada e certificada no candidato `d6331791809d7a75ef1f4e37f19e683d9d01c891`; a candidata permanece não aceita, não integrada e parada antes da S1. Este registro documental final deve ser recertificado no seu próprio HEAD antes do aceite.**
 
 ## 1. Baseline inicial confirmado
 
@@ -258,34 +258,77 @@ No mesmo HEAD, V00/V01/V02 concluíram em `success`; CI/V10/V11/V12/V13/V14 conc
 
 ### Snapshot medido para a correção
 
-Os valores que passam a ser canônicos para esta candidata, sujeitos à recertificação do novo HEAD, são:
+Os valores canônicos medidos para a candidata são:
 
 - repo identidade: **1485 arquivos**;
 - repo links: **1971 links**;
 - worktree extras: **0**.
 
-O README raiz é corrigido somente para esses valores observados. A correção não relaxa gate nem estima contagem.
+O README raiz foi corrigido somente para esses valores observados. A correção não relaxou gate nem estimou contagem.
 
-## 10. Estado Git da candidata
+## 10. Certificação técnica da candidata após a correção medida
+
+HEAD certificado antes deste registro documental: `d6331791809d7a75ef1f4e37f19e683d9d01c891`.
+
+Os **9/9 workflows de PR** concluíram em `success`:
+
+- V00 — run `35128580131`;
+- V01 — run `35128580277`;
+- V02 — run `35128580318`;
+- CI local reproduzível — run `35128580133`;
+- V10 — run `35128580125`;
+- V11 — run `35128580113`;
+- V12 — run `35128580141`;
+- V13 — run `35128580148`;
+- V14 — run `35128580199`.
+
+No workflow V14 do mesmo HEAD:
+
+- guarda S0: **17/17 PASS**;
+- regressões canônicas V01–V14 S0: **718/718 PASS**;
+- V00: **12/12 PASS**;
+- validador: **APROVADO — 0 falhas / 0 avisos**;
+- repo identidade: **1485 arquivos**;
+- repo links: **1971 links**;
+- worktree extras: **0**;
+- fronteira S0 read-only: `success`;
+- `V14_S0_NETWORK=0`;
+- `V14_S0_REMOTE_MUTATION=0`;
+- `V14_S0_DATABRICKS_MUTATION=0`;
+- `V14_S0_PRODUCTION_READINESS_DECLARED=0`;
+- `V14_S0_GO_LIVE_DECISION=0`;
+- `V14_S1_NOT_STARTED=1`.
+
+No V12 em contexto desta PR:
+
+- protocolo/mutantes: `success`;
+- evidência real AI/BI: `success`;
+- regressões: `success`;
+- V00: `success`;
+- validador: `success`;
+- aplicabilidade: `success` com escopo V12 não aplicável a esta PR;
+- `Escopo V12 e higiene`: `skipped`, não PASS.
+
+No V13, S1–S7, regressões, V00, validador e fronteiras S1–S7 concluíram em `success`.
+
+Esta certificação comprova a candidata Git/read-only. Não autoriza ambiente remoto, não reclassifica dívidas e não constitui production readiness.
+
+## 11. Estado Git e gate final de aceite
 
 Na abertura:
 
 - branch base: `350dcf0b37e730042ef961f12f11b30b2660d2c6`;
 - merge-base inicial: o próprio baseline;
 - primeiro HEAD completo: `42eb2074425e827a7865e4e6a5771818f3881940`;
-- segundo HEAD, após correção da guarda: `18465913feab5591e07e780737093294aae6c8bb`.
+- segundo HEAD, após correção da guarda: `18465913feab5591e07e780737093294aae6c8bb`;
+- candidato certificado após correção das métricas: `d6331791809d7a75ef1f4e37f19e683d9d01c891`.
 
-A certificação final será atribuída somente ao HEAD que contiver a correção medida 1485/1971 e concluir os workflows reais. Se a `main` avançar, essa certificação ficará stale e exigirá reconciliação aditiva.
+O commit que contém este registro final altera somente este checkpoint e precisa de uma última recertificação no próprio SHA. Se a `main` avançar, qualquer certificação fica stale e exige reconciliação aditiva.
 
-## 11. Gate de aceite
+A S0 deve parar antes da S1. Para solicitar aceite, o HEAD final precisa demonstrar novamente:
 
-A S0 deve parar antes da S1.
-
-Para solicitar aceite, a candidata precisa demonstrar no HEAD exato:
-
-- CI real concluída;
-- regressões aplicáveis verdes;
-- métricas reais reconciliadas;
+- 9/9 workflows reais verdes;
+- métricas 1485/1971/0 e validador 0/0;
 - #57 aberta;
 - três bloqueios preservados;
 - zero mutação Databricks;
