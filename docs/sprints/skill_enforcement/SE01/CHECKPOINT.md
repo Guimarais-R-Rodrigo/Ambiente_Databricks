@@ -6,7 +6,7 @@
 
 A SE01 iniciou a camada L1 (`Contract`) do Skill Enforcement Framework na branch `sef/SE01-contrato`.
 
-Contrato, suíte, renderer, CI e publicação/verify por conteúdo no Databricks Free possuem evidência positiva. O gate final continua aberto porque o capability probe real da Genie Code, a regressão natural da EDA, a decisão sobre o probe, o changelog final e o aceite explícito do usuário ainda estão pendentes.
+Contrato, suíte, renderer, CI e publicação/verify por conteúdo no Databricks Free possuem evidência positiva. O primeiro capability probe real foi executado, mas ficou `NOT_OBSERVABLE`: a Genie Code declarou leitura/execução do script e narrou valores compatíveis com o esperado, porém a evidência recebida não preservou o marcador JSON bruto nem trace/célula material que prove a execução do script relativo. A regressão natural da EDA, a decisão sobre o probe, o changelog final, a reconciliação final e o aceite explícito do usuário ainda estão pendentes.
 
 ## Estado implementado
 
@@ -20,7 +20,7 @@ Contrato, suíte, renderer, CI e publicação/verify por conteúdo no Databricks
 - [x] vocabulário fechado de conditions;
 - [x] capability probe read-only criado;
 - [x] testes positivos/negativos adicionados;
-- [x] coerência JSON Schema ↔ validator coberta por teste;
+- [x] coerência de vocabulário entre JSON Schema e validator coberta por teste;
 - [x] publicador Free compatibilizado com `import-dir` que já materializa notebooks;
 - [x] fallback SOURCE preservado e coberto por teste;
 - [x] fonte ↔ `Novo_Ambiente_Simulado` regenerada pelo renderer canônico;
@@ -37,9 +37,11 @@ Contrato, suíte, renderer, CI e publicação/verify por conteúdo no Databricks
 - [x] resíduo SE00 removido somente após identidade byte a byte confirmada;
 - [x] `--verify --conteudo` final no Free: **APROVADO — 0 problema(s)**;
 - [x] drift posterior da `main` classificado como ortogonal ao pacote publicado;
-- [ ] capability probe executado em chat novo;
+- [x] capability probe Run 1 executado em chat novo informado pelo usuário;
+- [x] capability probe Run 1 classificado rigorosamente como **`NOT_OBSERVABLE`**;
+- [ ] evidência material suficiente do capability probe (`PASS`) ou decisão arquitetural explícita sobre limitação da superfície;
 - [ ] regressão natural SE00-P1 executada em chat novo;
-- [ ] limitações reais do Genie Code registradas;
+- [ ] limitações reais do Genie Code consolidadas;
 - [ ] decisão sobre remover/promover o probe;
 - [ ] entrada SE01 registrada no `CHANGELOG.md` antes do fechamento;
 - [ ] reconciliação final com `main`;
@@ -90,11 +92,23 @@ O verify final retornou:
 
 Esse PASS não prova execução do capability probe pela Genie Code. A prova comportamental continua separada.
 
+## Capability probe — Run 1
+
+O prompt canônico foi enviado com seleção explícita de `@hub-ml-eda-profissional`. A Genie Code afirmou que carregaria a skill, localizaria e leria `scripts/capability_probe.py` e executaria sua função principal.
+
+Entretanto, no ponto em que declarou retornar integralmente o marcador JSON, a evidência textual recebida continha apenas `canvascanvas`. Os valores esperados foram depois narrados em linguagem natural, mas não houve JSON bruto observável nem trace/célula material preservado.
+
+Por regra congelada da SE01, autorrelato da LLM não comprova execução do script. Como também não há prova de falha ou reimplementação, o resultado é:
+
+**Capability probe Run 1: `NOT_OBSERVABLE`.**
+
+Se a interface ainda expuser tool cards/trace da mesma execução, essa evidência pode complementar o Run 1. Caso contrário, um Run 2 em chat novo deve repetir o prompt canônico e preservar visualmente a execução antes de copiar a resposta.
+
 ## Drift posterior da main
 
 Depois da certificação, `main` avançou para `e89ef4f79d9f9b7c901f1bbf490259ee5ce3d493`. Os cinco commits posteriores à base reconciliada tocam apenas workflow/testes/documentação da V14 e o README raiz. Não alteram `ambiente_fonte/.assistant`, o simulado publicado, o capability probe ou `tools/publicar_free.py`.
 
-Por isso, o pacote já certificado permanece válido para o capability probe. A branch deve ser reconciliada novamente com a `main` antes do fechamento/merge, não antes deste teste comportamental.
+Por isso, o pacote já certificado permanece válido para os testes comportamentais. A branch deve ser reconciliada novamente com a `main` antes do fechamento/merge, não antes destes testes.
 
 ## Fronteira de escopo
 
@@ -111,15 +125,16 @@ Não implementado nesta sprint:
 
 ## Próximos gates
 
-1. executar o capability probe em chat completamente novo do Genie Code;
-2. classificar a evidência como `PASS`, `FAIL` ou `NOT_OBSERVABLE` sem inferência;
-3. em outro chat completamente novo, executar a regressão natural SE00-P1;
-4. registrar resultados e limitações reais do Genie Code;
-5. decidir se o probe é removido ou promovido a componente definitivo;
-6. registrar a entrada final SE01 no changelog;
-7. reconciliar novamente com a `main` vigente;
-8. reexecutar os gates finais da árvore de fechamento;
-9. pedir homologação explícita da SE01;
-10. somente após aceite, integrar a PR #69.
+1. verificar se a UI do Run 1 ainda expõe tool cards/trace executável; se sim, preservar screenshot/evidência;
+2. se o Run 1 continuar sem observabilidade material, repetir o prompt canônico em outro chat novo e preservar os tool cards/trace do Run 2;
+3. classificar o capability probe sem inferência;
+4. em outro chat completamente novo, executar a regressão natural SE00-P1;
+5. consolidar limitações reais do Genie Code;
+6. decidir se o probe é removido ou promovido a componente definitivo;
+7. registrar a entrada final SE01 no changelog;
+8. reconciliar novamente com a `main` vigente;
+9. reexecutar os gates finais da árvore de fechamento;
+10. pedir homologação explícita da SE01;
+11. somente após aceite, integrar a PR #69.
 
 SE02 permanece bloqueada até esse fechamento.
