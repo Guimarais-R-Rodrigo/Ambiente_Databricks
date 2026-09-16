@@ -11,7 +11,9 @@ on:
       - 'docs/sprints/README.md'
       - 'docs/sprints/sistema_temas/README.md'
       - 'docs/sprints/sistema_temas/V14/**'
+      - 'tools/temas_v14_ownership.py'
       - 'tools/tests/test_temas_v14_s0.py'
+      - 'tools/tests/test_temas_v14_s1.py'
       - '.github/workflows/temas-v14-ci.yml'
 
 permissions:
@@ -52,8 +54,13 @@ jobs:
           npm install --global pnpm@10.34.5
           pnpm --dir tools/readme_visuals install --frozen-lockfile
 
-      - name: V14 S0 — reconciliação e freeze de readiness
+      - name: V14 S0 — regressão histórica de freeze
         run: python -B tools/tests/test_temas_v14_s0.py -v
+
+      - name: V14 S1 — ownership, autoridade e negativos
+        run: |
+          python -B tools/temas_v14_ownership.py --check
+          python -B tools/tests/test_temas_v14_s1.py -v
 
       - name: Regressões canônicas de temas
         run: python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
@@ -64,13 +71,16 @@ jobs:
       - name: Validação estrutural e documental
         run: python -B tools/validate_assistant.py --conferir-readme
 
-      - name: Fronteira S0 read-only
+      - name: Fronteira S1 read-only
         shell: bash
         run: |
           set -euo pipefail
           echo "V14_S0_NETWORK=0"
           echo "V14_S0_REMOTE_MUTATION=0"
           echo "V14_S0_DATABRICKS_MUTATION=0"
-          echo "V14_S0_PRODUCTION_READINESS_DECLARED=0"
-          echo "V14_S0_GO_LIVE_DECISION=0"
-          echo "V14_S1_NOT_STARTED=1"
+          echo "V14_S1_NETWORK=0"
+          echo "V14_S1_REMOTE_MUTATION=0"
+          echo "V14_S1_DATABRICKS_MUTATION=0"
+          echo "V14_S1_PRODUCTION_READINESS_DECLARED=0"
+          echo "V14_S1_GO_LIVE_DECISION=0"
+          echo "V14_S2_NOT_STARTED=1"
