@@ -6,7 +6,7 @@
 
 A SE01 iniciou a camada L1 (`Contract`) do Skill Enforcement Framework na branch `sef/SE01-contrato`, baseada em `main@99161fdeb9253c30a82243644ba89af8cd50d79e`.
 
-O contrato e a suíte dirigida já possuem evidência positiva. O gate final ainda não está fechado porque o Databricks Free não foi testado e a rodada mais recente do GitHub Actions não obteve runner.
+O contrato, a suíte dirigida e a validação local do HEAD atual possuem evidência positiva. O gate final ainda não está fechado porque o Databricks Free não foi testado e as rodadas recentes do GitHub Actions não obtiveram runner/steps executáveis.
 
 ## Estado implementado
 
@@ -20,11 +20,17 @@ O contrato e a suíte dirigida já possuem evidência positiva. O gate final ain
 - [x] vocabulário fechado de conditions;
 - [x] capability probe read-only criado;
 - [x] testes positivos/negativos adicionados;
+- [x] coerência de vocabulário entre JSON Schema e validador coberta por teste;
 - [x] fonte ↔ `Novo_Ambiente_Simulado` regenerada pelo renderer canônico;
 - [x] snapshot raiz atualizado por medição real: 1494 arquivos / 1961 links;
-- [x] contrato v0.1 observado em PASS no CI;
-- [x] suíte SE01 observada em 11/11 PASS no CI;
-- [x] validador estrutural observado com 0 falhas / 0 avisos;
+- [x] contrato v0.1 observado em PASS no CI anterior;
+- [x] suíte SE01 observada em 11/11 PASS no CI anterior;
+- [x] validador estrutural observado com 0 falhas / 0 avisos no CI anterior;
+- [x] HEAD `e442b2423c02de59f23183783b493f4b8fb44497` validado localmente em worktree isolado;
+- [x] contrato local atual: 1/1 PASS;
+- [x] suíte local atual: 12/12 PASS;
+- [x] `validate_assistant.py --conferir-readme` local: 0 falhas / 0 avisos;
+- [x] worktree local SE01 limpo e separado das alterações locais V12;
 - [ ] registrar entrada SE01 no `CHANGELOG.md` antes do fechamento da sprint;
 - [ ] CI final executado integralmente no HEAD corrente;
 - [ ] publicação no Databricks Free;
@@ -47,9 +53,32 @@ No commit `fda26d130e559d3fdb8ee69fcb785ffecc76a049`, o workflow dedicado execut
 
 O gate de snapshot desse mesmo run mediu 1494 arquivos e 1961 links; o README foi então corrigido no commit `264981cb4ce1a5aff8d3c1f6dd54caa1fa57c174`.
 
+## Validação local do HEAD atual
+
+Em 16/09/2026, a candidata `e442b2423c02de59f23183783b493f4b8fb44497` foi sincronizada em worktree Git dedicado:
+
+`C:\Users\Rodrigo\Projetos_IA\Projetos_Diversos\Ambiente_Databricks_SE01`
+
+O worktree V12 original permaneceu intocado e com suas alterações locais preservadas.
+
+Resultados observados no worktree SE01:
+
+- branch: `sef/SE01-contrato`;
+- `git status --short`: limpo;
+- contrato: **1/1 PASS**;
+- recursos: **10**;
+- templates: **4**;
+- suíte SE01: **12/12 PASS**;
+- teste schema ↔ validator: **PASS**;
+- probe local read-only: **PASS**;
+- `validate_assistant.py --conferir-readme`: **0 falhas / 0 avisos**;
+- snapshot: **1494 arquivos / 1961 links / 0 extras**.
+
+Essa evidência confirma o HEAD localmente, mas não substitui o gate real do Genie Code no Free nem o CI final.
+
 ## Incidente de CI após o snapshot
 
-Todos os workflows acionados no commit `264981cb4ce1a5aff8d3c1f6dd54caa1fa57c174` terminaram como `failure` sem executar steps. O job SE01 registrou `runner_id=0`, `runner_name=""` e lista de steps vazia. Um rerun do mesmo job, sem alteração da branch, repetiu o comportamento.
+As rodadas recentes do GitHub Actions terminaram como `failure` sem executar steps. O job SE01 e workflows independentes registraram `steps=[]`/`steps=null` e ausência de execução material dos comandos.
 
 Esse evento permanece classificado como **gate operacional pendente**, não como falha funcional da candidata. Nenhum PASS anterior é promovido para o novo HEAD, mas também não se atribui regressão a comandos que não chegaram a executar.
 
@@ -76,13 +105,13 @@ As quatro políticas de templates também foram confrontadas com a SE00 e coinci
 
 ## Próximos gates
 
-1. obter uma execução real de CI no HEAD corrente;
-2. registrar a entrada SE01 no changelog antes do fechamento;
-3. publicar a candidata no Free;
-4. executar `--verify --conteudo`;
-5. executar capability probe em chat novo;
-6. executar regressão natural da skill em outro chat novo;
-7. registrar resultados e limitações;
+1. publicar a candidata no Databricks Free a partir do worktree isolado;
+2. executar `--verify --conteudo` e registrar o relatório;
+3. executar capability probe em chat novo;
+4. executar regressão natural da skill em outro chat novo;
+5. registrar resultados e limitações;
+6. obter uma execução real de CI no HEAD final;
+7. registrar a entrada SE01 no changelog antes do fechamento;
 8. decidir se o probe é removido ou promovido ao componente definitivo;
 9. reconciliar a branch com a `main` vigente se ela tiver avançado;
 10. pedir homologação da SE01.
