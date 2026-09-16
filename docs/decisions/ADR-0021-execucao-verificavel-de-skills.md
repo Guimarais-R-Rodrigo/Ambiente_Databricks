@@ -1,7 +1,7 @@
 # ADR-0021 — Contrato verificável de execução de Agent Skills
 
 Data: 2026-09-16
-Status: Proposto
+Status: Aceito
 Autor: ChatGPT
 
 ## Contexto
@@ -114,8 +114,17 @@ aposentado antes da homologação da SE01:
 - preflight, runner, receipt e postflight continuam fora do escopo da SE01.
 
 A forma definitiva dessas camadas permanece decisão de sprints posteriores e
-não é antecipada por este ADR. O status do ADR permanece **Proposto** até o gate
-de aceite humano aplicável; este registro de resultado não equivale a aceitação.
+não é antecipada por este ADR.
+
+## Aceite humano
+
+Em 16/09/2026, após a candidata SE01 ser reconciliada com a `main`, ficar com
+`behind_by=0`, permanecer mergeável e concluir os 11 workflows aplicáveis em
+`SUCCESS`, o usuário concedeu aceite explícito para homologação e integração da
+SE01. Esse aceite muda o status deste ADR de **Proposto** para **Aceito**.
+
+O aceite não amplia o escopo: `mode="audit"` permanece vigente e SE02, preflight,
+runner determinístico, Execution Receipt e postflight continuam não iniciados.
 
 ## Referências
 
