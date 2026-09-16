@@ -9,17 +9,26 @@ Databricks real.
 |---|---|---|---|
 | [Spark](spark/README.md) | o helper executa no runtime observado? | job/notebook | JSON em `spark/resultados/` |
 | [Forward](forward/README.md) | a skill correta é carregada? | chat novo no Genie Code | Markdown em `forward/resultados/` |
+| [Skill execution](skill_execution/README.md) | depois de selecionada, a skill realmente usa os recursos declarados? | chat novo + inspeção do artefato | protocolo, matriz e evidências SE00 |
 | prompts | o contrato produz resposta útil e segura? | chat + notebook de exemplo | resposta real colada no notebook |
 
 ```mermaid
 flowchart LR
   L["validação local"] --> S["smoke Spark"]
   L --> F["forward tests"]
+  L --> E["skill execution"]
   L --> P["teste das respostas"]
   S --> W["novo smoke<br/>no trabalho"]
   F --> W
+  E --> W
   P --> W
 ```
+
+## Skill Enforcement Framework — SE00
+
+O diretório [skill_execution](skill_execution/README.md) mede uma dimensão que os testes forward não cobrem: **execução depois do roteamento**. A baseline SE00 diferencia recurso declarado, localizado, lido, importado, chamado e concluído; também registra template consumido, reimplementação silenciosa, false completion e computação redundante.
+
+Os casos iniciais usam `samples.nyctaxi.trips` e permanecem observacionais. Eles não alteram os contratos atuais das skills e não implementam enforcement.
 
 ## Estado local/documental pós-R13 — 14/09/2026
 
@@ -64,14 +73,16 @@ precisa ser reclassificado e documentado, não apenas celebrado.
 
 ## Por que os gates não se substituem
 
-| Falha real | Validação local | Smoke | Forward |
-|---|---:|---:|---:|
-| frontmatter inválido | pega | — | efeito indireto |
-| biblioteca opcional ausente | não | pega | não |
-| API bloqueada em serverless | não | pega | não |
-| skill vizinha rouba o pedido | não | não | pega |
-| resposta numericamente errada | às vezes, por known-answer local | se coberta | não |
-| ACL/política do trabalho | não | só no destino | não |
+| Falha real | Validação local | Smoke | Forward | Skill execution |
+|---|---:|---:|---:|---:|
+| frontmatter inválido | pega | — | efeito indireto | efeito indireto |
+| biblioteca opcional ausente | não | pega | não | pode aparecer na execução |
+| API bloqueada em serverless | não | pega | não | pode aparecer na execução |
+| skill vizinha rouba o pedido | não | não | pega | mede lateralmente |
+| helper declarado mas não chamado | não | não | não | pega |
+| template declarado mas ignorado | não | não | não | pega |
+| resposta numericamente errada | às vezes, por known-answer local | se coberta | não | não necessariamente |
+| ACL/política do trabalho | não | só no destino | não | só no destino |
 
 ## Validade temporal
 
@@ -91,6 +102,7 @@ Antes de replicar no trabalho:
 
 - [Método e histórico do smoke](spark/README.md)
 - [Método e rodadas de roteamento](forward/README.md)
+- [Baseline de execução de skills](skill_execution/README.md)
 - [Runbook de replicação](../playbooks/replicacao-trabalho.md)
 - [Índice de documentação](../README.md)
 
