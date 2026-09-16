@@ -4,7 +4,7 @@ Data: 16/09/2026.
 
 Branch: `codex/temas-v14-s1-ownership-autoridade-20260916`.
 
-Estado: **S1 em execução; candidata ainda não aceita nem integrada. Métricas medidas e correção fail-closed pendente de recertificação. S2 não iniciada.**
+Estado: **S1 tecnicamente certificada na candidata; ainda não aceita nem integrada. S2 não iniciada.**
 
 ## 1. Baseline S0 integrado e certificado
 
@@ -184,19 +184,55 @@ Os únicos valores autorizados para corrigir o README são os observados pelo ru
 - repo links: **1978 links**;
 - worktree extras: **0**.
 
-A correção não relaxa o validador e não estima contagem. O HEAD resultante precisa ser recertificado integralmente.
+A correção não relaxa o validador e não estima contagem.
 
-## 9. Estado Git da candidata
+## 9. Certificação técnica pré-fechamento
+
+O HEAD `42c93033efc838fb5ab5dc143aae5adaaa5e1e91`, que incorporou exclusivamente o snapshot medido 1490/1978 e o histórico fail-closed, foi executado em runners reais e concluiu com **9/9 workflows de PR em `success`**:
+
+- V00 — run `35132306258`;
+- V01 — run `35132306472`;
+- V02 — run `35132306281`;
+- CI local reproduzível — run `35132306523`;
+- V10 — run `35132306190`;
+- V11 — run `35132306199`;
+- V12 — run `35132306315`;
+- V13 — run `35132306609`;
+- V14 — run `35132306219`.
+
+No workflow V14 desse SHA:
+
+- regressão histórica S0: **17 testes OK, 1 `skipped` esperado**;
+- validador S1: `success`;
+- testes S1: **22/22 PASS**;
+- regressões canônicas V01–V14 S1: **740 testes OK, 1 `skipped` histórico**;
+- compatibilidade V00: **12/12 PASS**;
+- validador estrutural/documental: **APROVADO — 0 falhas / 0 avisos**;
+- métricas confirmadas: **1490 arquivos / 1978 links / 0 extras**;
+- fronteira S1 read-only: `success`;
+- `V14_S1_NETWORK=0`;
+- `V14_S1_REMOTE_MUTATION=0`;
+- `V14_S1_DATABRICKS_MUTATION=0`;
+- `V14_S1_PRODUCTION_READINESS_DECLARED=0`;
+- `V14_S1_GO_LIVE_DECISION=0`;
+- `V14_S2_NOT_STARTED=1`.
+
+Essa certificação é a base factual para este commit documental final. Como o checkpoint alterado precisa ser parte do HEAD aceito, o SHA resultante deste registro deve ser recertificado integralmente antes do pedido de aceite.
+
+## 10. Estado Git da candidata antes do registro final
 
 - baseline S1: `e89ef4f79d9f9b7c901f1bbf490259ee5ce3d493`;
 - primeiro HEAD completo: `a0479a5748cd0a5fc0feca4e11d4222f8a00cce2`;
 - segundo HEAD, após correção test-only: `26831f88f219ba3ed401b4dd9922385e3223627f`;
+- HEAD com métricas reconciliadas e primeira recertificação limpa: `42c93033efc838fb5ab5dc143aae5adaaa5e1e91`;
 - PR: #72, Draft;
+- `main` reconfirmada antes deste registro: `e89ef4f79d9f9b7c901f1bbf490259ee5ce3d493`;
+- comparação nesse ponto: `ahead_by=3`, `behind_by=0`, merge-base igual à `main`;
 - S2 permanece não iniciada.
 
-A certificação final será atribuída somente ao HEAD que contiver o snapshot medido 1490/1978, preservar este histórico e concluir os workflows reais. Se a `main` avançar, a certificação ficará stale e exigirá reconciliação aditiva.
+O SHA criado por este registro documental será o candidato final e deverá concluir novamente os workflows reais. Se a `main` avançar, a certificação ficará stale e exigirá reconciliação aditiva.
 
-## 10. Gate de aceite da S1
+## 11. Gate de aceite da S1
 
 Antes de solicitar aceite, o HEAD exato deve demonstrar:
 
