@@ -5,6 +5,26 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+
+## 2026-09-16 — SE02: preflight verificável do Skill Enforcement Framework (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) `hub_scripts.skill_execution` com API pública `run_preflight`, resultado estruturado `PASS`/`BLOCKED`, decisões por recurso/template e `writes_performed=false`.
+- (ChatGPT) Script fino `hub-ml-eda-profissional/scripts/preflight.py`, suíte SE02 com 18 casos e workflow dedicado `Skill Enforcement SE02`.
+
+### Atualizado
+
+- (ChatGPT) `hub-ml-eda-profissional` passa a exigir preflight L2 antes do core analítico, mantendo `execution_contract` v0.1 em `mode="audit"`.
+- (ChatGPT) Manual Técnico, catálogo de `hub_scripts`, Plano Mestre e ambiente simulado foram reconciliados; `Novo_Ambiente_Simulado` foi materializado exclusivamente pelo renderer canônico.
+- (ChatGPT) Branch SE02 reconciliada com `main@ae9337204a7c769c0b28b33321c8b81afdff6bae` após correção transversal do guard V08, sem force-push.
+
+### Evidências e limites
+
+- (ChatGPT) A implementação preserva SE03 não iniciada: sem runner determinístico, Execution Receipt, postflight, `mode="enforce"` ou alteração de `.assistant_instructions.md`.
+- (ChatGPT) Condições sem contexto explícito são fail-closed; a resistência do Genie Code a contexto falso/bypass permanece hipótese a medir no Databricks Free e não é tratada como enforcement comprovado.
+- (ChatGPT) Failures intermediários de estrutura, derivado, snapshot, Manual Técnico e guard V08 permanecem históricos e não são reclassificados como PASS.
+
 ## 2026-09-16 — SE01: contrato verificável e capability experiment (ChatGPT)
 
 ### Adicionado
