@@ -1,6 +1,6 @@
 # V14 — Plano Mestre de Production Readiness e Operação Sustentada do Sistema de Temas
 
-Status: **candidata de planejamento; nenhuma implementação S0–S8 iniciada**.
+Status: **candidata de planejamento tecnicamente certificada; nenhuma implementação S0–S8 iniciada**.
 
 Data de abertura do planejamento: 16/09/2026.
 
@@ -717,14 +717,67 @@ O aceite do plano **não** autorizará:
 
 Cada transição S0→S8 manterá checkpoint e aceite próprios.
 
-## 17. Estado ao final desta PR de planejamento
+## 17. Certificação técnica desta candidata
+
+HEAD tecnicamente certificado antes do aceite:
+
+`0b08e333727ec9d8546a0546c01d321e2506db9d`.
+
+No primeiro HEAD com `README.md` acionando os gates (`c9fced69e60f1a1ea0de1c34ebcdb6b715d7d50e`), houve inicialmente uma indisponibilidade de runner: os oito workflows terminaram antes de qualquer step, com `runner_id=0`. Esse evento foi preservado e não foi chamado de failure funcional.
+
+Depois da liberação da capacidade do GitHub Actions, o mesmo HEAD foi reexecutado. V00/V01/V02 passaram; CI/V10/V11/V12/V13 executaram suas suítes funcionais e falharam somente porque o runner mediu **1482 arquivos / 1960 links**, enquanto o README ainda declarava 1481/1959. Os steps posteriores ao validador ficaram `skipped` onde aplicável e não foram reclassificados como PASS.
+
+A correção aditiva final alterou somente as duas métricas medidas no README. No HEAD `0b08e333727ec9d8546a0546c01d321e2506db9d`, os oito workflows de PR concluíram em `success`:
+
+- V00 — `35123123011`;
+- V01 — `35123122932`;
+- V02 — `35123123006`;
+- CI local reproduzível — `35123122979`;
+- V10 — `35123122898`;
+- V11 — `35123122917`;
+- V12 — `35123122899`;
+- V13 — `35123123082`.
+
+No V13 final:
+
+- S1: 20/20 PASS;
+- S2: 27/27 PASS;
+- S3: 21/21 PASS;
+- S4: 30/30 PASS;
+- S5: 32/32 PASS;
+- S6: 28/28 PASS;
+- S7: 28/28 PASS;
+- regressões V01–V13: 701/701 PASS;
+- V00: 12/12 PASS;
+- validador: `APROVADO — 0 falha(s), 0 aviso(s)`;
+- métricas: 1482 arquivos / 1960 links / 0 extras;
+- fronteiras S1–S7: success;
+- `V13_S7_DATABRICKS_MUTATION=0`.
+
+No V12 final, protocolo, evidência real, regressões, V00, validador e aplicabilidade executaram com sucesso; como esta é uma PR fora da V12, `V12_SCOPE=NOT_APPLICABLE` e a etapa `Escopo V12 e higiene` ficou `skipped`, não PASS.
+
+Fotografia Git na certificação:
+
+- `main`: `99161fdeb9253c30a82243644ba89af8cd50d79e`;
+- merge-base: igual à `main`;
+- `ahead_by=3`;
+- `behind_by=0`;
+- diff: somente `README.md` e `docs/sprints/sistema_temas/V14/PLANO_MESTRE.md`;
+- issue #57: aberta;
+- PR #69/SE01: aberta em Draft e não integrada;
+- nenhuma mutação Databricks executada;
+- S0–S8 permanecem não iniciadas.
+
+## 18. Estado ao final desta PR de planejamento
 
 Enquanto esta candidata não estiver integrada:
 
 - V13 permanece a última versão operacional integrada do Sistema de Temas;
-- V14 possui somente uma candidata de planejamento;
+- V14 possui somente uma candidata de planejamento tecnicamente certificada;
 - S0–S8 permanecem não iniciadas;
 - #57 permanece aberta;
 - os três bloqueios V12 permanecem bloqueados;
 - nenhuma mutação Databricks é executada;
 - nenhuma decisão de production readiness/go-live é tomada.
+
+A integração desta candidata exige aceite explícito do mantenedor conforme a seção 16.
