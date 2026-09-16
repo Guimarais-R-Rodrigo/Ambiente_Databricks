@@ -15,6 +15,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 VALIDATOR_PATH = REPO_ROOT / "tools" / "skill_enforcement" / "validate_contracts.py"
+SCHEMA_PATH = REPO_ROOT / "tools" / "skill_enforcement" / "execution_contract.schema.json"
 CONTRACT_PATH = (
     REPO_ROOT
     / "ambiente_fonte"
@@ -37,6 +38,7 @@ class ContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.canonical = json.loads(CONTRACT_PATH.read_text(encoding="utf-8"))
+        cls.schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
 
     def validate_mutant(self, mutator):
         with tempfile.TemporaryDirectory() as tmp:
@@ -61,6 +63,23 @@ class ContractTests(unittest.TestCase):
         self.assertEqual(result.resources, 10)
         self.assertEqual(result.templates, 4)
         self.assertEqual(result.mode, "audit")
+
+    def test_schema_vocabularies_match_validator(self):
+        self.assertEqual(
+            {self.schema["properties"]["schema_version"]["const"]},
+            validator.SUPPORTED_SCHEMA_VERSIONS,
+        )
+        self.assertEqual(
+            {self.schema["properties"]["mode"]["const"]},
+            validator.SUPPORTED_MODES,
+        )
+        resource_props = self.schema["$defs"]["resource"]["properties"]
+        self.assertEqual(set(resource_props["policy"]["enum"]), validator.SUPPORTED_POLICIES)
+        self.assertEqual(set(resource_props["evidence"]["enum"]), validator.SUPPORTED_EVIDENCE)
+        condition_kinds = set(
+            self.schema["$defs"]["condition"]["properties"]["kind"]["enum"]
+        )
+        self.assertEqual(condition_kinds, set(validator.SUPPORTED_CONDITIONS))
 
     def test_missing_helper_module_fails(self):
         result = self.validate_mutant(
