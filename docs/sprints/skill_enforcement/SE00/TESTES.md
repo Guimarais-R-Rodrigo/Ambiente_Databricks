@@ -8,7 +8,7 @@ Comprovar que a baseline anterior ao enforcement foi medida de forma repetível 
 
 ### 1. Integridade documental/estática
 
-Executar no HEAD final/reconciliado da branch `sef/SE00-baseline`:
+O gate aplicável ao HEAD reconciliado é:
 
 ```powershell
 python tools/validate_assistant.py
@@ -17,7 +17,7 @@ python tools/validate_assistant.py --conferir-readme
 
 Critério: `APROVADO: 0 falha(s), 0 aviso(s)` nos validadores aplicáveis.
 
-A SE00 é documental/instrumental; não deve exigir alteração na árvore operacional `.assistant`. Se o renderer for executado no Windows, o conhecido efeito de EOL em `Novo_Ambiente_Simulado/README_GERADO.md` deve ser tratado separadamente e não confundido com mudança de produto.
+A SE00 é documental/instrumental e não altera a árvore operacional `.assistant`. O snapshot reconciliado medido pelo CI é **1476 arquivos / 1935 links / 0 extras**.
 
 ### 2. Regressão de produto
 
@@ -32,7 +32,7 @@ Antes da SE00, o pacote Free foi verificado por conteúdo com:
 - 548/548 conteúdos exportados e comparados;
 - veredito `APROVADO: 0 problema(s)`.
 
-Como a SE00 não altera `.assistant`, `.assistant_instructions.md`, helpers ou runtime, **não republicar** o ambiente apenas por causa dos documentos desta sprint.
+Como a SE00 não altera `.assistant`, `.assistant_instructions.md`, helpers ou runtime, o ambiente Free não foi republicado durante a coleta.
 
 ### 3. Baseline conversacional
 
@@ -116,29 +116,38 @@ Usar quando há desvio observável relevante, por exemplo:
 
 Usar quando a interface não fornece evidência para decidir. Não converter falta de telemetria em `PASS`.
 
-## Estado atual da coleta
+## Estado final da coleta
 
 **16/16 concluída.** Não há runs conversacionais pendentes.
 
 ## Teste de não regressão da sprint
 
-Antes de pedir aceite da SE00, revisar o diff da PR e confirmar:
+O diff reconciliado foi revisado e confirmou:
 
-- nenhuma alteração sob `ambiente_fonte/.assistant/`;
+- nenhuma alteração SE00 sob `ambiente_fonte/.assistant/`;
 - nenhuma alteração em `.assistant_instructions.md`;
-- nenhuma alteração em `tools/`;
+- nenhuma alteração SE00 em `tools/`;
 - nenhuma mudança em helpers/snippets/scripts;
 - somente documentação, inventário e instrumentação de baseline.
 
-Qualquer arquivo comportamental no diff bloqueia o fechamento da SE00.
+## Reconciliação e checks
 
-## Checks ainda obrigatórios
+A branch foi reconciliada, após o congelamento da coleta, com `main@6dfb8707835921f2f48020f383cf571902080109` sem reclassificar os 16 runs.
 
-1. sincronizar/reconciliar a branch com a `main` atual sem reclassificar os runs;
-2. executar/reexecutar `validate_assistant.py` e `--conferir-readme` no HEAD reconciliado;
-3. registrar workflows/checks remotos aplicáveis;
-4. revisar o diff final após reconciliação;
-5. obter aceite explícito do usuário.
+No HEAD de validação reconciliado, os oito workflows aplicáveis concluíram em `success`:
+
+1. Regressões da instrumentação V00;
+2. Contrato de temas V01;
+3. Núcleo de temas V02;
+4. Databricks App de gestão visual V10;
+5. Temas nativos AI/BI V11;
+6. Homologação de jornadas V12;
+7. Contrato operacional V13;
+8. CI local reproduzível.
+
+A validação estrutural confirmou **1476 arquivos / 1935 links / 0 extras** e `APROVADO: 0 falha(s), 0 aviso(s)`.
+
+Após qualquer commit puramente documental posterior, o estado autoritativo do HEAD corrente continua sendo o conjunto de checks da PR; o checkpoint final exige todos verdes antes de merge.
 
 ## Limitações conhecidas do ambiente Windows local
 
@@ -147,8 +156,12 @@ O gate local completo possui testes legados que podem falhar no Windows por raz�
 - criação de symlink sem privilégio (`WinError 1314`);
 - mocks de V02 sensíveis a separador POSIX (`/`) quando `Path` produz `\\` no Windows.
 
-Esses pontos não devem ser silenciosamente ignorados. A correção de portabilidade deve ocorrer em frente técnica própria, não nesta sprint documental.
+Esses pontos não foram corrigidos nem relaxados nesta sprint documental.
+
+## Gate restante
+
+Com coleta, reconciliação, diff e checks técnicos concluídos, resta **somente o aceite explícito do usuário** para homologar a SE00. A PR #56 permanece Draft e a SE01 não deve começar antes desse aceite.
 
 ## Saída esperada
 
-Os resultados consolidados estão em [`RESULTADOS.md`](RESULTADOS.md), e o estado de governança em [`CHECKPOINT.md`](CHECKPOINT.md). **Não iniciar SE01 antes do aceite formal da SE00.**
+Os resultados consolidados estão em [`RESULTADOS.md`](RESULTADOS.md), e o estado de governança em [`CHECKPOINT.md`](CHECKPOINT.md).

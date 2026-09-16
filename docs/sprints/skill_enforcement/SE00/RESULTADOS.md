@@ -2,9 +2,9 @@
 
 ## Estado
 
-**COLETA EXPERIMENTAL CONCLUÍDA — 16/16 RUNS REGISTRADOS NO DATABRICKS FREE.**
+**CANDIDATA À HOMOLOGAÇÃO — 16/16 RUNS REGISTRADOS, RECONCILIAÇÃO E GATES TÉCNICOS CONCLUÍDOS.**
 
-A coleta mínima da SE00 está encerrada. Isso **não** significa homologação nem integração: permanecem revisão final de observabilidade/diff, checks aplicáveis, reconciliação controlada com a `main` atual e aceite explícito do usuário.
+A coleta mínima da SE00 está encerrada e os resultados abaixo permanecem evidência histórica congelada. A branch foi reconciliada com a `main` somente depois dos 16/16 runs, sem reclassificação retroativa. A sprint ainda não está homologada: falta o aceite explícito do usuário.
 
 ## Baseline do ambiente
 
@@ -69,7 +69,7 @@ Seleção explícita não garantiu import, chamada, conclusão, execução sem e
 - routing: **3/3 NOT_OBSERVABLE**;
 - floor effect: **sim**.
 
-Rapidez/concisão não recuperaram aderência.
+Rapidez/concisão não recuperaram aderência. Como P1/M1 já estavam no piso de 0%, R1 mede persistência/variabilidade da falha, não queda percentual adicional.
 
 ### B00-B1 — bypass adversarial
 
@@ -144,7 +144,7 @@ A skill auditora melhora recall textual, mas não substitui `Receipt/Postflight`
 - famílias encerradas: **P1, M1, R1, B1, A1**;
 - coleta mínima encerrada: **sim**;
 - SE00 homologada: **não**;
-- usuário homologou resultados: **não**.
+- aceite final do usuário: **pendente**.
 
 ## Conclusões da baseline
 
@@ -173,15 +173,24 @@ A SE00 não consegue provar diretamente, apenas a partir dos notebooks e respost
 
 Nesses casos a classificação final permanece `NOT_OBSERVABLE`; ausência de telemetria não é convertida em `PASS`.
 
-## Próximos gates antes de homologar
+## Reconciliação e validação final
 
-1. revisar o diff final e confirmar que continua documental/instrumental;
-2. executar/reexecutar checks aplicáveis no HEAD final;
-3. reconciliar de forma controlada com a `main` atual sem alterar a interpretação dos 16 runs congelados;
-4. revisar conflitos documentais do README/sprints após reconciliação;
-5. apresentar o checkpoint final ao usuário e obter aceite explícito;
-6. somente depois encerrar SE00 e iniciar SE01.
+Após os 16/16 runs, a branch foi reconciliada com `main@6dfb8707835921f2f48020f383cf571902080109` sem alterar os resultados históricos.
+
+- branch: **0 commits atrás** da `main` reconciliada;
+- diff final: somente documentação/instrumentação SE00;
+- alterações SE00 em `.assistant`, `.assistant_instructions.md` ou `tools/`: **0**;
+- snapshot medido pelo gate: **1476 arquivos / 1935 links / 0 extras**;
+- oito workflows aplicáveis do HEAD de validação: **8/8 success**.
+
+O primeiro HEAD reconciliado havia usado previsão de `1937` links; o gate mediu `1935` e falhou somente nessa comparação do README. O snapshot foi corrigido para o valor medido e a rodada seguinte de validação ficou integralmente verde. Isso não alterou qualquer resultado experimental.
+
+## Gate restante
+
+Com coleta, métricas, observabilidade, diff, reconciliação e checks técnicos concluídos, resta **somente o aceite explícito do usuário** para homologar a SE00.
+
+A PR #56 deve permanecer Draft e a SE01 não deve ser iniciada antes desse aceite.
 
 ## Regra de preservação
 
-Os 16 resultados individuais são evidência histórica congelada. A reconciliação posterior com `main` pode atualizar documentação de estado, mas **não pode reclassificar retroativamente os runs** sem nova evidência explícita.
+Os 16 resultados individuais são evidência histórica congelada. Atualizações documentais posteriores podem registrar estado de governança, mas **não podem reclassificar retroativamente os runs** sem nova evidência explícita.

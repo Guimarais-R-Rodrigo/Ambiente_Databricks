@@ -2,20 +2,22 @@
 
 ## Estado
 
-**COLETA EXPERIMENTAL CONCLUÍDA — 16/16 runs registrados no Databricks Free; nenhuma alteração comportamental introduzida.**
+**CANDIDATA À HOMOLOGAÇÃO — 16/16 runs concluídos, branch reconciliada com `main` e gates técnicos aprovados; aceite final do usuário pendente.**
 
-A SE00 é a primeira sprint do Skill Enforcement Framework. Ela não implementa enforcement. Seu objetivo foi congelar e medir o comportamento atual da Genie Code antes de qualquer mudança de contrato, preflight, runner, receipt ou postflight.
+A SE00 é a primeira sprint do Skill Enforcement Framework. Ela não implementa enforcement. Seu objetivo foi congelar e medir o comportamento da Genie Code antes de qualquer mudança de contrato, preflight, runner, receipt ou postflight.
 
-A coleta está encerrada, mas a sprint **ainda não está homologada**: permanecem checks finais, reconciliação com a `main` atual e aceite explícito do usuário.
+A coleta, a consolidação, a reconciliação e a validação técnica foram concluídas. A PR #56 permanece Draft e a SE01 não deve começar antes da homologação explícita desta baseline.
 
 ## Linhagem
 
 - plano mestre integrado pela PR #55;
-- `main` de partida: `28669f99db27cf23df73549297bbf57eda033f58`;
+- base experimental: `28669f99db27cf23df73549297bbf57eda033f58`;
 - branch: `sef/SE00-baseline`;
 - laboratório: Databricks pessoal/Free;
 - bootstrap anterior ao SE00: 548/548 arquivos comparados, 0 ausentes, 0 obsoletos, 14/14 skills e 5/5 diretórios `hub_*`;
-- árvore operacional `.assistant`: inalterada durante os 16 runs.
+- árvore operacional `.assistant`: inalterada durante os 16 runs;
+- `main` reconciliada após o congelamento da coleta: `6dfb8707835921f2f48020f383cf571902080109`;
+- snapshot reconciliado validado: **1476 arquivos / 1935 links / 0 extras**.
 
 ## Objetivo
 
@@ -35,7 +37,7 @@ Somente documentação de teste, inventários, matriz de casos, templates de evi
 
 ## Fora de escopo
 
-É proibido editar `SKILL.md`, `.assistant_instructions.md`, helpers/snippets/scripts do produto, roteamento do Concierge ou implementar preflight/postflight/runner nesta sprint.
+É proibido nesta sprint editar `SKILL.md`, `.assistant_instructions.md`, helpers/snippets/scripts do produto, roteamento do Concierge ou implementar preflight/postflight/runner.
 
 ## Artefatos
 
@@ -47,7 +49,7 @@ Somente documentação de teste, inventários, matriz de casos, templates de evi
 - [`RESULTADOS.md`](RESULTADOS.md)
 - [`CHECKPOINT.md`](CHECKPOINT.md)
 
-## Piloto EDA — resultado final da coleta
+## Piloto EDA — resultado final
 
 Tabela congelada: `samples.nyctaxi.trips`.
 
@@ -61,7 +63,7 @@ Tabela congelada: `samples.nyctaxi.trips`.
 
 Total: **16/16 runs executados e evidenciados**.
 
-## Métricas finais da coleta
+## Métricas finais
 
 - execuções EDA: **12/12**;
 - auditorias A1: **4/4**;
@@ -71,6 +73,7 @@ Total: **16/16 runs executados e evidenciados**.
 - computação redundante: **>=77 padrões**;
 - execuções com correção humana necessária: **12/12**;
 - auditorias com correção humana necessária: **4/4**;
+- execução incompleta: **1/12**;
 - bypass resistance: **0/3**;
 - auditorias com state ladder completo: **0/4**.
 
@@ -105,23 +108,25 @@ Templates:
 
 Não promover estados sem evidência; quando a interface não permite decidir, usar `NOT_OBSERVABLE`.
 
-## Gate do Databricks Free
+## Reconciliação e gates
 
-A coleta foi concluída sem republicar ou editar o Hub entre repetições.
+Após o congelamento de 16/16, a branch foi reconciliada com `main@6dfb8707835921f2f48020f383cf571902080109` sem force-push e sem reclassificar resultados históricos.
+
+- branch: **0 commits atrás** da `main` reconciliada;
+- diff contra `main`: exclusivamente documental/instrumental;
+- `.assistant`, `.assistant_instructions.md` e `tools/`: sem alterações SE00;
+- snapshot reconciliado: **1476 arquivos / 1935 links / 0 extras**;
+- os oito workflows aplicáveis do HEAD de validação reconciliado concluíram em **success**;
+- o checkpoint final registra que o estado autoritativo do HEAD corrente deve ser confirmado nos checks da PR antes de qualquer merge.
 
 ## Critério de aceite da sprint
 
-A SE00 só fecha formalmente quando:
+Os gates técnicos estão cumpridos. A SE00 permanece **não homologada** até o usuário conceder aceite explícito sobre a baseline observada.
 
-1. 16/16 runs estiverem evidenciados — **cumprido**;
-2. métricas/limitações estiverem consolidadas — **cumprido**;
-3. diff final permanecer documental/instrumental — **a validar no HEAD reconciliado**;
-4. checks aplicáveis estiverem registrados — **pendente**;
-5. branch estiver reconciliada com a `main` atual — **pendente**;
-6. usuário der aceite explícito — **pendente**.
+A PR #56 deve continuar Draft e não deve ser integrada antes desse aceite.
 
-## Próximo gate
+## Próxima etapa
 
-**Não iniciar SE01.** Primeiro concluir checks, reconciliação controlada com `main` e checkpoint final de homologação.
+Após homologação explícita da SE00 e integração conforme autorizada, a iniciativa pode avançar para SE01 — ADR do enforcement, contrato estruturado inicial, validador estático e prova controlada de execução.
 
-Somente após o fechamento formal da SE00 pode começar a SE01.
+**Não iniciar SE01 antes do fechamento formal da SE00.**
