@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Regressões da SE01 — contrato estático e capability probe."""
+"""Regressões da SE01 — contrato estático, retirada do probe e publicação Free."""
 
 from __future__ import annotations
 
 import copy
 import importlib.util
 import json
-import subprocess
 import sys
 import tempfile
 import unittest
@@ -26,6 +25,7 @@ CONTRACT_PATH = (
     / "hub-ml-eda-profissional"
     / "execution_contract.json"
 )
+SKILL_PATH = CONTRACT_PATH.parent / "SKILL.md"
 PROBE_PATH = CONTRACT_PATH.parent / "scripts" / "capability_probe.py"
 ASSISTANT_ROOT = REPO_ROOT / "ambiente_fonte" / ".assistant"
 
@@ -157,27 +157,12 @@ class ContractTests(unittest.TestCase):
         self.assertEqual(row["symbol"], "gerar_indice_eda")
 
 
-class CapabilityProbeTests(unittest.TestCase):
-    def test_probe_runs_read_only_against_source_assistant(self):
-        run = subprocess.run(
-            [
-                sys.executable,
-                "-B",
-                str(PROBE_PATH),
-                "--assistant-root",
-                str(ASSISTANT_ROOT),
-            ],
-            cwd=REPO_ROOT,
-            check=False,
-            text=True,
-            capture_output=True,
-        )
-        self.assertEqual(run.returncode, 0, run.stderr or run.stdout)
-        payload = json.loads(run.stdout.strip())
-        self.assertEqual(payload["marker"], "SEF_CAPABILITY_PROBE_V0_1")
-        self.assertEqual(payload["status"], "PASS")
-        self.assertEqual(payload["sample_result"], "1.234")
-        self.assertFalse(payload["writes_performed"])
+class ProbeRetirementTests(unittest.TestCase):
+    def test_temporary_probe_is_retired_from_product(self):
+        self.assertFalse(PROBE_PATH.exists(), "probe temporário deve sair do produto final da SE01")
+        skill_text = SKILL_PATH.read_text(encoding="utf-8")
+        self.assertNotIn("Capability probe SE01", skill_text)
+        self.assertNotIn("scripts/capability_probe.py", skill_text)
 
 
 class FreePublisherCompatibilityTests(unittest.TestCase):
