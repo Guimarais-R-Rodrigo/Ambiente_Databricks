@@ -34,6 +34,7 @@ jobs:
       - name: Executar contrato e mutantes MM01
         run: |
           python -B -m unittest tools/tests/test_micromodelo_mm01.py -v
+          python -B -m unittest tools/tests/test_micromodelo_mm01_r02.py -v
           python -B -m unittest tools/tests/test_micromodelo_mm01_r03.py -v
 
       - name: Executar gate estrutural
