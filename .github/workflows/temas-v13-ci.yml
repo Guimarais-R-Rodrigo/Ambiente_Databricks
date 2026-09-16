@@ -12,9 +12,11 @@ on:
       - 'tools/temas_v13_operacional.py'
       - 'tools/temas_v13_preflight.py'
       - 'tools/temas_v13_release.py'
+      - 'tools/temas_v13_diagnostico.py'
       - 'tools/tests/test_temas_v13_s1.py'
       - 'tools/tests/test_temas_v13_s2.py'
       - 'tools/tests/test_temas_v13_s3.py'
+      - 'tools/tests/test_temas_v13_s4.py'
       - '.github/workflows/temas-v13-ci.yml'
 
 permissions:
@@ -67,6 +69,9 @@ jobs:
       - name: V13 S3 — release, staging e rollback dry-run
         run: python -B tools/tests/test_temas_v13_s3.py -v
 
+      - name: V13 S4 — observabilidade, diagnóstico e sanitização
+        run: python -B tools/tests/test_temas_v13_s4.py -v
+
       - name: Regressões de temas V01–V13
         run: python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
 
@@ -89,11 +94,20 @@ jobs:
           echo "V13_S2_NETWORK=0"
           echo "V13_S2_REMOTE_MUTATION=0"
 
-      - name: Fronteira S3
+      - name: Fronteira S3 preservada
         shell: bash
         run: |
           set -euo pipefail
           echo "V13_S3_NETWORK=0"
           echo "V13_S3_REMOTE_MUTATION=0"
           echo "V13_S3_LOCAL_DRY_RUN_ONLY=1"
-          echo "V13_S4_NOT_STARTED=1"
+          # Historical S3 checkpoint assertion: V13_S4_NOT_STARTED=1
+
+      - name: Fronteira S4
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "V13_S4_NETWORK=0"
+          echo "V13_S4_REMOTE_MUTATION=0"
+          echo "V13_S4_DIAGNOSIS_READ_ONLY=1"
+          echo "V13_S5_NOT_STARTED=1"

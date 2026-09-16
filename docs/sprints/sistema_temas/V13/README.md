@@ -2,48 +2,49 @@
 
 ## Estado vigente
 
-A S0 foi **aceita e integrada** pela PR #59 no merge
-`1d46c9625fb5bfd6d1b666ddff055507238788bf`.
+A V13 está em execução incremental, com cada sprint integrada somente depois de
+aceite explícito e certificação pós-merge da `main`.
 
-A S1 foi **aceita e integrada** pela PR #60 no merge
-`70f6a43748b9636f2bf8fe56aa07e9fb90a0d285`. Os 15/15 workflows de `push`
-disparados por esse merge concluíram com `success`.
+Histórico integrado:
 
-A S2 foi **aceita e integrada** pela PR #61 no merge
-`76f8a2dcc6d5dd69bd6c1af726fb40e2eced8af8`. A S3 só foi aberta depois de os
-15/15 workflows de `push` desse merge concluírem com `success`.
+- S0 — PR #59, merge `1d46c9625fb5bfd6d1b666ddff055507238788bf`;
+- S1 — PR #60, merge `70f6a43748b9636f2bf8fe56aa07e9fb90a0d285`, pós-merge 15/15 `success`;
+- S2 — PR #61, merge `76f8a2dcc6d5dd69bd6c1af726fb40e2eced8af8`, pós-merge 15/15 `success`;
+- S3 — PR #62, merge `298dfb986f67cc4c560ae22b59d2fccad0716ec0`, pós-merge 15/15 `success`.
 
-A etapa vigente é **S3 — release, instalação, atualização e rollback**, em branch
-candidata separada.
+A etapa vigente é **S4 — observabilidade e diagnóstico**, em branch candidata
+separada criada diretamente do merge S3 certificado.
 
-Para quem nunca entrou no Hub: a S3 pega um artefato que já passou pelo preflight
-S2 e prova, localmente, que ele pode ser staged, verificado e revertido. Ela não
-faz deploy no Databricks e não publica tema.
+Para quem nunca operou o Hub: a S4 não tenta “consertar” automaticamente uma
+falha. Ela recebe um relatório estruturado do preflight S2 ou do ciclo S3,
+classifica onde o problema ocorreu, mostra a próxima ação segura e evidencia
+quando uma classe de prova está faltando — sem copiar mensagem sensível do log de
+origem.
 
-A leitura operacional começa em
-[S3 — release, instalação, atualização e rollback](S3_RELEASE_OPERACIONAL.md).
+Leitura operacional da candidata:
 
-**S4 não foi iniciada.**
+- [S4 — observabilidade e diagnóstico](S4_OBSERVABILIDADE_DIAGNOSTICO.md).
 
-## Baseline certificado da S3
+**S5 não foi iniciada.**
 
-A branch S3 nasce diretamente de:
+## Baseline certificado da S4
 
-`76f8a2dcc6d5dd69bd6c1af726fb40e2eced8af8`
+A branch S4 nasce diretamente de:
 
-Esse SHA é o merge da S2 na `main`.
+`298dfb986f67cc4c560ae22b59d2fccad0716ec0`
 
-Antes da abertura da S3 foram confirmados:
+Esse SHA é o merge da S3 na `main`.
 
-- `main` no merge S2;
-- árvore integrada idêntica à árvore candidata S2;
-- PR #61 efetivamente `merged=true`;
-- 15 workflows de `push`;
-- 15 `success`;
-- 0 failures;
-- nenhuma mutação Databricks executada pela S2.
+Antes da abertura da S4 foram confirmados:
 
-A S3 não reaproveita a branch S2 como base paralela.
+- PR #62 integrada pelo HEAD S3 certificado `ee8f8198485a255ba5b4a79fba03d5f69d6d0ac0`;
+- `main` apontando para o merge S3;
+- **15 workflows de `push`** associados ao merge;
+- **15/15 `success`**;
+- nenhuma mutação Databricks executada pela S3;
+- issue #57 permanecendo aberta com `A11-01 = FAIL`.
+
+A S4 não reaproveita a branch S3 como base paralela.
 
 ## Plano canônico
 
@@ -54,187 +55,227 @@ A ordem permanece:
 
 `S0 → S1 → S2 → S3 → S4 → S5 → S6 → S7 → aceite → merge → auditoria pós-merge → V14`
 
-A S3 implementa exclusivamente:
+A S4 implementa exclusivamente:
 
-- runbook de release;
-- runbook de instalação/atualização;
-- runbook de rollback;
-- checklist de staging;
-- estratégia de last-known-good;
-- testes de árvore limpa, integridade, compatibilidade, staging, rollback e falso
-  recibo.
+- taxonomia de falhas;
+- relatório sanitizado de execução;
+- runbook de diagnóstico;
+- checklist de evidência;
+- regras de logging sem PII/segredo;
+- mutantes/fixtures para as classes de falha;
+- distinção explícita entre `PASS`, `BLOCKED`, `FAIL` e `NOT_APPLICABLE`;
+- fail-closed quando falta evidência.
 
-A S4 permanece responsável por observabilidade e diagnóstico.
+A S5 permanece responsável por compatibilidade e acessibilidade operacional,
+incluindo a decisão da issue #57.
 
 ## Artefatos históricos preservados
+
+Os artefatos de sprints integradas são históricos e não devem ser reescritos para
+simular o estado atual:
 
 - [checkpoint S0](CHECKPOINT_S0.md);
 - [inventário operacional S1](S1_INVENTARIO_OPERACIONAL.md);
 - [checkpoint S1](CHECKPOINT_S1.md);
 - [matriz operacional S1](MATRIZ_OPERACIONAL.json);
 - [S2 — preflight operacional](S2_PREFLIGHT_OPERACIONAL.md);
-- [checkpoint S2](CHECKPOINT_S2.md).
-
-A S3 consome esses artefatos. Ela não reescreve a matriz S1 para remover
-`S2_NOT_IMPLEMENTED`, porque essa frase continua sendo uma afirmação histórica
-sobre o que a própria S1 implementava.
-
-## S3 — artefatos próprios
-
-A candidata S3 adiciona:
-
-- `tools/temas_v13_release.py`;
-- `tools/tests/test_temas_v13_s3.py`;
+- [checkpoint S2](CHECKPOINT_S2.md);
 - [S3 — release, instalação, atualização e rollback](S3_RELEASE_OPERACIONAL.md);
-- evolução do workflow V13 para S1 + S2 + S3.
+- [checkpoint S3](CHECKPOINT_S3.md).
 
-A candidata não adiciona cliente Databricks, token, rede, deploy remoto ou
-publicação.
+Exemplo: a matriz S1 ainda contém `S2_NOT_IMPLEMENTED` porque registra o que a S1
+implementava naquele momento. A S4 não “corrige” essa frase histórica.
 
-## Ciclo operacional
+## Artefatos próprios da S4
 
-A S3 trabalha sobre o ciclo do Plano Mestre:
+A candidata adiciona:
 
-1. `PREPARE`;
-2. `PREFLIGHT`;
-3. `PACKAGE`;
-4. `STAGE`;
-5. `VERIFY`;
-6. `ROLLBACK` dry-run.
+- `tools/temas_v13_diagnostico.py`;
+- `tools/tests/test_temas_v13_s4.py`;
+- [S4 — observabilidade e diagnóstico](S4_OBSERVABILIDADE_DIAGNOSTICO.md);
+- evolução do workflow V13 para S1 + S2 + S3 + S4.
 
-`APPLY` remoto e `ACCEPT` de ambiente não são simulados.
+A candidata não adiciona:
 
-Um resultado `READY_FOR_AUTHORIZED_APPLY` significa somente que o ciclo local
-terminou sem falha e que o rollback local foi demonstrado.
+- cliente Databricks;
+- token/secret;
+- rede;
+- deploy remoto;
+- publicação;
+- alteração de App/dashboard/workspace;
+- novo schema/token/binding/role policy;
+- score/severidade/incidente/SLA/SLO.
 
-## Composição com owners existentes
+## Relação S2 → S3 → S4
 
-| Necessidade | Owner |
-|---|---|
-| readiness | S2 |
-| bundle geral / `theme_contract` | V09 |
-| bundle do App | V10 |
-| deploy/rollback do App | contrato V10 |
-| tema/schema/hash | V02 |
-| AI/BI | V11 |
-| evidência | V12 |
-| autorização/rollback por superfície | matriz S1 |
+### S2 — readiness
 
-Não existe segundo manifesto, segundo schema, segunda política de papéis ou
-segunda matriz de bindings.
+Pergunta: “a operação está preparada?”
 
-## Artefatos executáveis localmente
+Saída: relatório local `V13-S2` com estados/códigos estáveis.
 
-A S3 automatiza dry-run somente para os dois tipos de artefato que já possuem
-owner e verificador local claros:
+### S3 — ciclo local de release
 
-### `transition_bundle`
+Pergunta: “o artefato pode ser staged/verificado e o rollback local pode ser
+provado?”
 
-Owner: V09.
+Saída: relatório local `V13-S3`; recibo existe somente em PASS.
 
-- precisa estar sob `.artifacts/`;
-- precisa passar `validate_theme_zip`;
-- `worktree_dirty` deve ser `false`;
-- `source_commit` deve ser o checkout atual;
-- conteúdo é identificado por fingerprint ordenado de path/hash/bytes;
-- transporte continua sem ativação/publicação.
+### S4 — diagnóstico
 
-### `app_bundle`
+Pergunta: “onde a decisão ocorreu, o que falta de evidência e qual é a próxima
+ação segura?”
 
-Owner: V10.
+Entrada: somente relatórios estruturados S2/S3 + classes de evidência sanitizadas.
 
-- precisa estar sob `.artifacts/`;
-- precisa passar `tools.temas_v10_app.verify`;
-- `source_commit` deve ser o checkout atual;
-- duas gerações no mesmo commit devem ter o mesmo fingerprint de conteúdo;
-- deploy continua fora da ferramenta S3.
+Saída: diagnóstico local `V13-S4`.
 
-## Last known good
+A S4 observa. Ela não executa novamente a operação e não muta o source report.
 
-Update e rollback exigem LKG.
+## Estados continuam canônicos
 
-A referência S3 contém identidade técnica do artefato anterior e uma
-`acceptance_ref` sanitizada. A ferramenta confirma que commit e fingerprint
-correspondem aos bytes reais.
+A S4 reutiliza exatamente:
 
-A `acceptance_ref` não é autorização criada pela S3.
+- `PASS`;
+- `BLOCKED`;
+- `FAIL`;
+- `NOT_APPLICABLE`.
 
-## Compatibilidade de update
+Não existe um quinto status, nota, score ou “PASS parcial”.
 
-A S3 falha fechado quando candidate e LKG divergem em:
+A prioridade fail-closed permanece:
 
-- tipo de artefato;
-- `schema_version`;
-- versão do contrato;
-- metadados estruturais V10 relevantes.
+`FAIL > BLOCKED > PASS > NOT_APPLICABLE`.
 
-Não existe migração automática de versão nesta sprint.
+Assim:
 
-## Staging e rollback
+- uma lacuna de evidência pode tornar um source `PASS` em diagnóstico `BLOCKED`;
+- uma lacuna de evidência não apaga um `FAIL` já observado;
+- `NOT_APPLICABLE` nunca é contado como PASS.
 
-O staging ocorre em diretório temporário local.
+## Taxonomia S4
 
-Release inicial:
+A candidata classifica códigos dos owners em 11 classes diagnósticas:
 
-- copia e revalida candidato;
-- remove o stage;
-- comprova retorno ao estado sem artefato.
+1. `INPUT_CONTRACT`;
+2. `CANONICAL_CONTRACT`;
+3. `ARTIFACT_INTEGRITY`;
+4. `GIT_STATE`;
+5. `PREFLIGHT_READINESS`;
+6. `GOVERNANCE_AUTHORIZATION`;
+7. `ENVIRONMENT_IDENTITY`;
+8. `RECOVERY_ROLLBACK`;
+9. `COMPATIBILITY_LKG`;
+10. `STAGING_EXECUTION`;
+11. `EVIDENCE_GAP`.
 
-Update/rollback:
+A taxonomia não muda o código original. `safe_code` continua sendo o código
+estável S2/S3; `stage` é apenas a classificação diagnóstica S4.
 
-- copia e revalida candidato;
-- substitui o stage pelo LKG;
-- revalida LKG;
-- exige fingerprint restaurado idêntico.
+A suíte exige igualdade exata entre o registry S4 e `STABLE_CODES` dos owners S2
+e S3 para impedir drift silencioso.
 
-O diretório temporário é destruído ao final.
+## Sanitização
 
-## Recibo
+O diagnóstico nunca ecoa:
 
-Recibo existe somente em PASS.
+- `message` de origem;
+- `check_id` de origem;
+- conteúdo arbitrário do `receipt`;
+- path local;
+- `/Volumes/...`;
+- `authorization_ref`;
+- `identity_ref`;
+- `state_ref`;
+- `acceptance_ref`;
+- token/PAT/secret;
+- e-mail/username/workspace id.
 
-Ele registra de forma sanitizada:
+A saída usa somente códigos/status/classes previamente conhecidos e mensagens
+definidas no próprio diagnóstico.
 
-- engine/versão;
-- modo;
-- commit;
-- tipo/fingerprint;
-- staging verificado;
-- rollback dry-run verificado;
-- LKG técnico quando aplicável;
-- rede = 0;
-- mutação remota = 0;
-- publicação = 0.
+Código desconhecido vira `SOURCE_CODE_UNREGISTERED`; o texto recebido não é
+copiado para o relatório.
 
-Falha em qualquer etapa termina sem recibo de sucesso.
+## Evidência
 
-## Superfícies remotas continuam separadas
+O request S4 não transporta a referência sensível. Ele transporta apenas:
 
-### Visual Lab
+- `kind`;
+- `state`.
 
-`V12-LAB-01` continua `BLOQUEADO_AUTORIZACAO`. Persistência real não é executada
-pela S3.
+Kinds atuais:
 
-### Databricks App
+- `git_ci`;
+- `artifact`;
+- `authorization`;
+- `environment_identity`;
+- `rollback`;
+- `human`;
+- `browser_runtime`.
 
-`V12-APP-01` continua `BLOQUEADO_AUTORIZACAO`. A S3 prepara o bundle e o dry-run;
-deploy real continua no runbook V10 e exige autorização própria.
+States:
 
-### AI/BI
+- `REFERENCED`;
+- `MISSING`;
+- `NOT_APPLICABLE`.
 
-`V12-AIBI-01` continua PASS somente no escopo limitado já evidenciado.
-`publish_dashboard` continua não autorizado. A S3 não executa `Import theme` nem
-`Publish`.
+A S4 sempre declara `references_authenticated = false`. Ela não acessa o ambiente
+para provar que a referência é verdadeira.
 
-### Workspace theme
+## Logging seguro
 
-`V12-AIBI-02` continua `BLOQUEADO_AUTORIZACAO`. Nenhuma mutação administrativa é
-executada.
+Formato determinístico:
 
-### Acessibilidade
+```text
+NNN|STATUS|STAGE|SAFE_CODE[|EVIDENCE_KIND]
+```
 
-`A11-01` continua **FAIL**, issue #57. A S3 não fecha essa dívida; o tratamento
-operacional específico permanece previsto para S5.
+Exemplo:
+
+```text
+001|FAIL|ARTIFACT_INTEGRITY|BUNDLE_INCOMPLETE
+002|BLOCKED|EVIDENCE_GAP|EVIDENCE_MISSING|artifact
+```
+
+Não há timestamp gerado pela S4, texto bruto da exceção de origem ou referência
+privada no log.
+
+## Coerência fail-closed
+
+A S4 recusa:
+
+- engine fora de S2/S3;
+- shape divergente;
+- status desconhecido;
+- código desconhecido;
+- status de operação S2 incompatível com checks;
+- `overall_status` incompatível com checks;
+- S3 PASS sem recibo;
+- S3 não-PASS com recibo;
+- relatório que declare rede/mutação remota;
+- relatório S3 que declare publicação;
+- evidence kind/state desconhecido;
+- evidence kind duplicado.
+
+A S4 não tenta “ser tolerante” a relatório que não pertence ao contrato.
+
+## Estados herdados preservados
+
+A observabilidade não altera os resultados V12:
+
+- `DOC-02 = PASS`;
+- `DOC-03 = PASS`;
+- `SEC-01 = PASS` somente no alcance de ambiente observado;
+- `UAT-01 = PASS` somente textual;
+- `V12-AIBI-01 = PASS` somente no alcance V12 evidenciado;
+- `A11-01 = FAIL`, issue #57 aberta;
+- `V12-LAB-01 = BLOQUEADO_AUTORIZACAO`;
+- `V12-APP-01 = BLOQUEADO_AUTORIZACAO`;
+- `V12-AIBI-02 = BLOQUEADO_AUTORIZACAO`.
+
+S4 não amplia bindings V11, não automatiza `approximated`/`unsupported` e não
+trata cores de formatação condicional como tokens do Hub.
 
 ## CI e fronteiras
 
@@ -246,41 +287,46 @@ O workflow V13 deve permanecer:
 - sem `DATABRICKS_TOKEN`;
 - sem `secrets.*`.
 
-Fronteiras esperadas:
+A candidata executa em sequência S1/S2/S3/S4 antes das regressões completas.
 
-- `V13_S1_REMOTE_MUTATION=0`;
-- `V13_S2_NETWORK=0`;
-- `V13_S2_REMOTE_MUTATION=0`;
-- `V13_S3_NETWORK=0`;
-- `V13_S3_REMOTE_MUTATION=0`;
-- `V13_S3_LOCAL_DRY_RUN_ONLY=1`;
-- `V13_S4_NOT_STARTED=1`.
+Fronteiras vivas S4:
+
+- `V13_S4_NETWORK=0`;
+- `V13_S4_REMOTE_MUTATION=0`;
+- `V13_S4_DIAGNOSIS_READ_ONLY=1`;
+- `V13_S5_NOT_STARTED=1`.
+
+A asserção histórica `V13_S4_NOT_STARTED=1` permanece apenas como comentário no
+workflow, porque a suíte S3 comprova o estado do checkpoint S3. Ela não representa
+o estado vivo desta branch.
 
 ## Métricas do README raiz
 
-A S3 segue o mesmo protocolo da S2:
+O protocolo permanece o mesmo:
 
-1. primeiro head funcional;
-2. runner mede identidade e links;
-3. qualquer failure de métrica é preservado;
-4. `README.md` raiz só é corrigido com números observados;
-5. checkpoint S3 é adicionado depois;
-6. a árvore com checkpoint é medida novamente.
+1. primeiro head S4 sem alterar `README.md` raiz;
+2. runner mede identidade e links reais;
+3. qualquer failure fica preservado;
+4. README raiz é reconciliado apenas com números observados;
+5. checkpoint S4 é acrescentado depois;
+6. o checkpoint muda a árvore e exige nova medição;
+7. o SHA final é certificado de novo.
 
 Nenhuma contagem será estimada.
 
 ## Próxima ação
 
-A candidata S3 deve:
+A candidata S4 deve:
 
-1. executar os testes S3;
-2. repetir S1/S2 e regressões V01–V13;
-3. validar documentação/README;
-4. preservar failures intermediários;
-5. reconciliar métricas somente pelo runner;
-6. adicionar checkpoint S3;
-7. recertificar o SHA exato;
-8. reconfirmar `main`, merge-base, ahead/behind, diff e mergeabilidade;
-9. parar para aceite.
+1. executar a suíte S4 e seus mutantes;
+2. repetir S1/S2/S3;
+3. executar regressões V01–V13 e V00;
+4. validar documentação;
+5. preservar failures intermediários;
+6. reconciliar métricas apenas pelo runner;
+7. criar `CHECKPOINT_S4.md`;
+8. recertificar o HEAD exato;
+9. reconfirmar `main`, merge-base, ahead/behind, diff, issue #57 e concorrência;
+10. parar para aceite.
 
-**Não iniciar S4.**
+**Não iniciar S5.**
