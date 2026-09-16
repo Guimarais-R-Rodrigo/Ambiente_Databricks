@@ -1,7 +1,7 @@
 # Plano Mestre — Skill Enforcement Framework (SEF)
 
 **Data:** 2026-09-15  
-**Status:** planejamento aprovado conceitualmente; implementação ainda não iniciada  
+**Status:** SE00 concluída e integrada; SE01 em fechamento para homologação; SE02–SE08 não iniciadas  
 **Frente:** Skill Enforcement Framework (SEF)  
 **Branch deste plano:** `sef/00-plano-mestre`  
 **Baseline de criação:** `main@d106ef3158e5827a2eec3aa183dbb3b47885c960`  

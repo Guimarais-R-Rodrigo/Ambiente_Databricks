@@ -5,6 +5,33 @@ expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
+## 2026-09-16 — SE01: contrato verificável e capability experiment (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) `execution_contract.json` v0.1 adjacente à `hub-ml-eda-profissional`, com 10 recursos, 4 templates, políticas `required`/`conditional`/`optional`, evidências declarativas e `mode="audit"`.
+- (ChatGPT) JSON Schema Draft 2020-12, validador estático somente stdlib, suíte SE01 e workflow dedicado; o validator resolve API pública por `__init__.py`/AST e recusa paths de template inseguros, condições fora do vocabulário e modos não suportados.
+- (ChatGPT) ADR-0021 para registrar a decisão de contrato verificável antes de qualquer preflight/runner definitivo.
+
+### Atualizado
+
+- (ChatGPT) Branch `sef/SE01-contrato` reconciliada por merge normal com `main@79f53ba1a131d93cbb0fea7bd885da32b82a7588`, preservando integralmente V14 e sem force-push; após a reconciliação, `behind_by=0`.
+- (ChatGPT) `Novo_Ambiente_Simulado` rematerializado a partir da saída real de `tools/render_simulado.py --write`; o probe temporário e sua seção foram retirados da fonte e do derivado, enquanto o contrato permanece.
+- (ChatGPT) Snapshot verificável do README raiz novamente medido em 1501 arquivos e 1979 links; os demais campos do bloco permaneceram coerentes com a execução.
+- (ChatGPT) `tools/publicar_free.py` compatibilizado com notebook já materializado e fallback SOURCE, com regressões específicas na suíte SE01.
+
+### Evidências
+
+- (ChatGPT) Capability probe histórico no Databricks Free: `SEF_CAPABILITY_PROBE_V0_1`, `assistant_root_resolved=true`, import público de `fmt_int`, `sample_result="1.234"`, `writes_performed=false` e `status="PASS"` no cenário testado.
+- (ChatGPT) Regressão natural EDA histórica: PASS para ausência de degradação material atribuível ao contrato/probe; isso não constitui enforcement nem aprovação científica do notebook.
+- (ChatGPT) Na reconciliação final, failures intermediários permaneceram failures: primeiro o renderer detectou o derivado defasado; depois o snapshot detectou 1490/1978 versus 1501/1979. Após as correções correspondentes, o workflow dedicado SE01 passou integralmente na árvore com snapshot reconciliado.
+
+### Limites
+
+- (ChatGPT) SE01 permanece audit-only: não implementa preflight, deterministic runner, Execution Receipt, postflight, fail-closed runtime ou `mode="enforce"`; SE02 não foi iniciada.
+- (ChatGPT) A evidência do probe é histórica e não prova execução determinística universal pelo Genie Code. O script experimental foi aposentado do produto final, sem apagar os resultados observados.
+- (ChatGPT) PR #69 permanece Draft e não pode ser integrada sem aceite humano explícito; a homologação desta sprint não autoriza iniciar SE02.
+
 ## 2026-09-14 — MM00: integração e fechamento documental do Framework de Micromodelos (ChatGPT)
 
 ### Adicionado
