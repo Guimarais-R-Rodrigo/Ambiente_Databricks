@@ -6,7 +6,7 @@
 
 A SE01 iniciou a camada L1 (`Contract`) do Skill Enforcement Framework na branch `sef/SE01-contrato`.
 
-Contrato, suíte, renderer, CI, publicação/verify por conteúdo no Databricks Free, capability probe real e regressão natural da EDA possuem evidência positiva nos respectivos escopos. O fechamento ainda depende da decisão sobre remover/promover o probe, da entrada final no `CHANGELOG.md`, da reconciliação final com a `main`, dos gates finais da árvore de fechamento e do aceite explícito do usuário.
+Contrato, suíte, renderer, CI, publicação/verify por conteúdo no Databricks Free, capability probe real e regressão natural da EDA possuem evidência positiva nos respectivos escopos. O usuário aceitou retirar o capability probe temporário do produto final; o fechamento agora depende de materializar essa retirada pelo renderer canônico, registrar o `CHANGELOG.md`, reconciliar com a `main`, executar os gates finais da árvore exata e obter aceite explícito para merge.
 
 ## Estado implementado
 
@@ -18,14 +18,14 @@ Contrato, suíte, renderer, CI, publicação/verify por conteúdo no Databricks 
 - [x] resolução de templates relativos;
 - [x] políticas do contrato confrontadas com o inventário congelado da SE00;
 - [x] vocabulário fechado de conditions;
-- [x] capability probe read-only criado;
+- [x] capability probe read-only criado e exercitado no Free;
 - [x] testes positivos/negativos adicionados;
 - [x] coerência de vocabulário entre JSON Schema e validator coberta por teste;
 - [x] publicador Free compatibilizado com `import-dir` que já materializa notebooks;
 - [x] fallback SOURCE preservado e coberto por teste;
-- [x] fonte ↔ `Novo_Ambiente_Simulado` regenerada pelo renderer canônico;
+- [x] fonte ↔ `Novo_Ambiente_Simulado` regenerada pelo renderer canônico na candidata publicada;
 - [x] branch reconciliada com `main@350dcf0b37e730042ef961f12f11b30b2660d2c6`, sem force-push, antes da publicação;
-- [x] snapshot reconciliado: 1495 arquivos / 1962 links;
+- [x] snapshot reconciliado da candidata publicada: 1495 arquivos / 1962 links;
 - [x] HEAD publicado `637a4b38178c63ffee12ece801e847eedd83a054` validado localmente: contrato 1/1, suíte 14/14, validador 0/0;
 - [x] 10/10 workflows aplicáveis da PR no HEAD publicado: `success`;
 - [x] autenticação do profile pessoal do Databricks CLI validada;
@@ -44,10 +44,15 @@ Contrato, suíte, renderer, CI, publicação/verify por conteúdo no Databricks 
 - [x] routing natural da `hub-ml-eda-profissional`: observável;
 - [x] regressão natural: **PASS — sem degradação material atribuível ao contrato/probe**;
 - [x] limitações reais do Genie Code registradas;
-- [ ] decisão consciente sobre remover/promover o capability probe temporário;
+- [x] decisão consciente: **remover o capability probe temporário antes da integração**;
+- [x] fonte do probe e seção temporária removidas no commit `59d7d9431c1cbaf72695c9596bda246b5a5e7bf5`;
+- [x] teste de aposentadoria do probe substitui o teste local de execução, preservando a suíte em 14 casos;
+- [ ] `Novo_Ambiente_Simulado` rematerializado pelo renderer canônico após a retirada do probe;
 - [ ] entrada SE01 registrada no `CHANGELOG.md` antes do fechamento;
 - [ ] reconciliação final com `main`;
+- [ ] snapshot final reconciliado e documentado;
 - [ ] gates finais/CI da árvore de fechamento;
+- [ ] publicação/verify final da árvore sem o probe, se exigida pelo gate de promoção;
 - [ ] aceite explícito do usuário;
 - [ ] merge da PR.
 
@@ -91,7 +96,9 @@ O verify final retornou:
 - `.assistant/.mcp_servers.json`: reconhecido como gerenciado pela plataforma;
 - resultado: **APROVADO — 0 problema(s)**.
 
-**Gate Databricks Free: PASS.**
+**Gate Databricks Free: PASS para a candidata que continha o probe experimental.**
+
+A retirada do probe muda o pacote final e, por isso, a árvore de fechamento deverá ser revalidada antes da homologação.
 
 ## Capability probe — Run 1
 
@@ -115,6 +122,12 @@ Como a evidência adicional pertence ao mesmo Run 1 e satisfaz o marcador espera
 **Capability probe Run 1: PASS.**
 
 Limitação da superfície: conteúdo rico de canvas pode não sobreviver à cópia textual e deve ser preservado visualmente quando necessário para auditoria.
+
+## Decisão de encerramento do probe
+
+O probe cumpriu sua função experimental: comprovou, no Databricks Free, que a Genie Code consegue executar um script relativo à própria Agent Skill e obter uma API pública do Hub.
+
+Por aceite explícito do usuário, o probe **não será promovido a componente permanente** da skill EDA. A evidência permanece em ADR/RESULTADOS/CHECKPOINT; o produto final remove `scripts/capability_probe.py` e a seção temporária de `SKILL.md`. Essa retirada evita transformar um instrumento específico da SE01 em dívida operacional da skill e preserva a separação para o preflight real, que pertence à sprint futura apropriada.
 
 ## Regressão natural SE00-P1
 
@@ -177,7 +190,7 @@ Esse PASS não aprova o notebook cientificamente e não transforma `mode="audit"
 
 ## Drift posterior da main
 
-Depois da certificação, a `main` avançou em frente V14 sem tocar o pacote operacional publicado. Isso não exigiu republicação antes dos testes comportamentais, mas a branch precisa ser reconciliada com a `main` vigente antes do fechamento/merge.
+Depois da certificação, a `main` avançou em frente V14 sem tocar o pacote operacional publicado. Isso não exigiu republicação antes dos testes comportamentais. A reconciliação final continua obrigatória antes do fechamento/merge.
 
 ## Fronteira de escopo
 
@@ -194,12 +207,13 @@ Não implementado nesta sprint:
 
 ## Próximos gates
 
-1. decidir, com base no probe real, se o `capability_probe.py` temporário é removido ou promovido a componente diagnóstico definitivo;
+1. rematerializar `Novo_Ambiente_Simulado` pelo renderer canônico após a retirada do probe;
 2. registrar a entrada final SE01 no `CHANGELOG.md`;
-3. reconciliar novamente com a `main` vigente;
-4. atualizar snapshot/documentação se a reconciliação exigir;
-5. reexecutar os gates finais e confirmar CI da árvore exata de fechamento;
-6. pedir homologação explícita da SE01;
-7. somente após aceite, integrar a PR #69.
+3. reconciliar a branch com a `main` vigente;
+4. atualizar snapshot/documentação com valores medidos da composição final;
+5. executar os gates finais/CI da árvore exata de fechamento;
+6. se o pacote final publicado divergir do pacote já certificado, publicar/verificar a árvore sem o probe;
+7. pedir homologação explícita da SE01;
+8. somente após aceite, integrar a PR #69.
 
 SE02 permanece bloqueada até esse fechamento.
