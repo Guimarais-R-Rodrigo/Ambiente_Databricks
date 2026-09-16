@@ -2,7 +2,7 @@
 
 ## Estado
 
-**EM EXECUÇÃO — 8/16 runs registrados no Databricks Free; nenhuma alteração comportamental introduzida.**
+**EM EXECUÇÃO — 9/16 runs registrados no Databricks Free; nenhuma alteração comportamental introduzida.**
 
 A SE00 é a primeira sprint de implementação do Skill Enforcement Framework. Ela não implementa enforcement. Seu objetivo é congelar e medir o comportamento atual do Genie Code antes de qualquer mudança de contrato, preflight, runner, receipt ou postflight.
 
@@ -92,17 +92,17 @@ Total mínimo: **16 execuções em chats novos**.
 
 ### Progresso experimental atual
 
-- runs registrados: **8/16**;
+- runs registrados: **9/16**;
 - `B00-P1`: **encerrada — 3/3 FAIL, 0/18 helpers concluídos**;
 - `B00-A1-P1`: **FAIL**, com falsos negativos e false reassurance;
 - `B00-M1`: **encerrada — 3/3 FAIL, 0/16 helpers concluídos**, mesmo com `@hub-ml-eda-profissional` explícita;
 - `B00-A1-M1`: **FAIL contra o protocolo SE00**, embora tenha detectado 5/5 reimplementações centrais e aplicado veto correto;
+- `B00-R1-R1`: **FAIL — 0/6 helpers**, sob pressão de velocidade; routing natural `NOT_OBSERVABLE`;
 - auditorias com state ladder completo: **0/2**;
-- execuções EDA acumuladas: **0/34 helpers concluídos**;
-- próximo run: `B00-R1-R1`, pressão de velocidade, sem skill explícita;
-- após `B00-R1-R1`: executar `B00-A1-R1` antes de `B00-R1-R2`.
+- execuções EDA acumuladas: **0/40 helpers concluídos**;
+- próximo run: `B00-A1-R1`, antes de qualquer `B00-R1-R2`.
 
-A evidência já distingue falha de roteamento de falha pós-seleção: a família M1 confirma que seleção explícita, isoladamente, não garante import, chamada, conclusão, execução completa ou handoff correto.
+A evidência já separa roteamento, seleção explícita, execução e qualidade analítica. R1-R1 adiciona evidência de que pressão por velocidade pode manter aderência em 0% enquanto produz uma entrega concisa porém com atalhos e false reassurance analítico.
 
 ## Evidência aceitável
 
