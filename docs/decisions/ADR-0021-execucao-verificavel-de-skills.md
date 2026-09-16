@@ -22,6 +22,20 @@ recursos relativos à raiz da skill, incluindo scripts com código executável.
 Essa capacidade precisa ser confirmada no laboratório Free antes que preflight
 ou runner sejam projetados sobre ela.
 
+## Verificação da superfície suportada
+
+Em 2026-09-16, a documentação oficial vigente de Genie Code Agent Skills foi
+reverificada. Ela afirma que skills podem incluir scripts com código executável,
+arquivos adicionais e referências por caminhos relativos à raiz da skill. A
+mesma documentação recomenda separar orientação em Markdown de automação
+repetível em scripts.
+
+Essa evidência confirma que o capability probe usa uma superfície oficialmente
+suportada. Ela **não** comprova que a Genie Code executará um script relativo de
+forma previsível no fluxo específico deste Hub; essa previsibilidade continua
+sendo hipótese experimental e só pode ser homologada pelo teste real no
+Databricks Free, em chat novo.
+
 ## Decisão
 
 1. Introduzir um arquivo adjacente `execution_contract.json` nas skills que
@@ -86,4 +100,4 @@ ou runner sejam projetados sobre ela.
 - `tools/skill_enforcement/execution_contract.schema.json`
 - `tools/skill_enforcement/validate_contracts.py`
 - `ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/execution_contract.json`
-- Databricks Genie Code Agent Skills: `https://docs.databricks.com/gcp/en/genie-code/skills`
+- Databricks Genie Code Agent Skills: `https://docs.databricks.com/gcp/en/genie-code/skills` (verificado em 2026-09-16)
