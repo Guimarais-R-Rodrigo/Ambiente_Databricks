@@ -109,7 +109,7 @@ raiz analisada     : /home/runner/work/Ambiente_Databricks/Ambiente_Databricks/a
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 92 caminhos verificados
-markdown / links   : 222 arquivos / 1395 links relativos
+markdown / links   : 222 arquivos / 1396 links relativos
 notebooks / links  : 80 notebooks / 101 links relativos
 readmes de objeto  : 76/76 operacionais; 3/3 exemplares; 0 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 62 conferidas (nome, arquivos, __init__)
@@ -120,10 +120,10 @@ saída colada       : 79 notebooks com bloco real, 0 sem
 idioma da docstring: 62 módulos, 0 com docstring em inglês
 normas do molde    : 72 arquivos, 0 violação(ões)
 notebook exercita  : 60 objetos, 0 notebook(s) que só importam
-python (AST)       : 221 arquivos
+python (AST)       : 222 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1481 arquivos varridos no repositório editável/derivado
-repo (links)       : 1959 links fora da raiz analisada
+repo (identidade)  : 1494 arquivos varridos no repositório editável/derivado
+repo (links)       : 1961 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)
