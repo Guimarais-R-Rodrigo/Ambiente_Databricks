@@ -387,7 +387,62 @@ O próximo gate é:
 6. reconfirmar `main`, merge-base, ahead/behind, diff, mergeabilidade, issue #57 e concorrência;
 7. parar para aceite explícito.
 
-## 19. Ponto de parada
+## 19. Medição do head com checkpoint
+
+HEAD medido:
+
+`5d0067157f2f1c38182e73a1ac6f85ce3937e5d1`.
+
+Workflows observados:
+
+| Workflow | Run | Resultado |
+|---|---:|---|
+| Regressões da instrumentação V00 | `35076472206` | `success` |
+| Contrato de temas V01 | `35076472123` | `success` |
+| Núcleo de temas V02 | `35076472296` | `success` |
+| CI local reproduzível | `35076472185` | `failure` |
+| Databricks App V10 | `35076472144` | `failure` |
+| Temas nativos AI/BI V11 | `35076472202` | `failure` |
+| Homologação V12 | `35076472132` | `failure` |
+| Contrato operacional V13 | `35076472111` | `failure` |
+
+O runner mediu **1444 arquivos / 1916 links**. O checkpoint acrescentou exatamente um arquivo e nenhum link novo.
+
+No CI geral:
+
+- suíte `temas`: PASS;
+- biblioteca, ferramentas, transição, READMEs e Concierge aplicável: PASS;
+- validador: **1 falha / 0 avisos**;
+- única divergência: README ainda declarava 1443 arquivos enquanto a árvore real possuía 1444;
+- links permaneceram 1916;
+- worktree extras: 0.
+
+No V13:
+
+- S1: PASS;
+- S2: PASS;
+- S3: PASS;
+- S4: PASS;
+- regressões V01–V13: PASS;
+- compatibilidade V00: PASS;
+- validador estrutural/documental: FAIL somente em 1443→1444;
+- fronteiras S1/S2/S3/S4: **skipped**, não PASS.
+
+No V12:
+
+- protocolo/mutantes: PASS;
+- evidência real: PASS;
+- regressões transversais: PASS;
+- compatibilidade V00: PASS;
+- validador: FAIL somente em 1443→1444;
+- aplicabilidade do escopo estrito: **skipped**;
+- `Escopo V12 e higiene`: **skipped**.
+
+Neste SHA não se declara `V12_SCOPE=NOT_APPLICABLE`, porque o passo de aplicabilidade não chegou a executar após a falha do validador.
+
+A correção final deve alterar somente o snapshot do README de **1443 para 1444**, mantendo **1916 links**, sem adicionar arquivo nem expandir qualquer gate/allowlist.
+
+## 20. Ponto de parada
 
 S5 permanece não iniciada.
 
