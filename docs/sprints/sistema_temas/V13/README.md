@@ -2,49 +2,49 @@
 
 ## Estado vigente
 
-A V13 está em execução incremental, com cada sprint integrada somente depois de
-aceite explícito e certificação pós-merge da `main`.
+A V13 está em execução incremental. Cada sprint só é integrada depois de aceite
+explícito e certificação pós-merge da `main`.
 
 Histórico integrado:
 
 - S0 — PR #59, merge `1d46c9625fb5bfd6d1b666ddff055507238788bf`;
 - S1 — PR #60, merge `70f6a43748b9636f2bf8fe56aa07e9fb90a0d285`, pós-merge 15/15 `success`;
 - S2 — PR #61, merge `76f8a2dcc6d5dd69bd6c1af726fb40e2eced8af8`, pós-merge 15/15 `success`;
-- S3 — PR #62, merge `298dfb986f67cc4c560ae22b59d2fccad0716ec0`, pós-merge 15/15 `success`.
+- S3 — PR #62, merge `298dfb986f67cc4c560ae22b59d2fccad0716ec0`, pós-merge 15/15 `success`;
+- S4 — PR #63, merge `29c3f1afa9147286627b18325380ce5b3c811331`, pós-merge 15/15 `success`.
 
-A etapa vigente é **S4 — observabilidade e diagnóstico**, em branch candidata
-separada criada diretamente do merge S3 certificado.
+A etapa vigente é **S5 — compatibilidade e acessibilidade operacional**, em branch
+separada criada diretamente do merge S4 certificado.
 
-Para quem nunca operou o Hub: a S4 não tenta “consertar” automaticamente uma
-falha. Ela recebe um relatório estruturado do preflight S2 ou do ciclo S3,
-classifica onde o problema ocorreu, mostra a próxima ação segura e evidencia
-quando uma classe de prova está faltando — sem copiar mensagem sensível do log de
-origem.
+Para um operador novo: S5 não altera dashboard ou workspace. Ela acrescenta uma
+verificação local de contraste para pares explicitamente extraídos de export real
+revisado, documenta compatibilidade/limites por superfície e transforma a issue
+#57 em uma decisão operacional fail-closed sem apagar o FAIL histórico.
 
 Leitura operacional da candidata:
 
-- [S4 — observabilidade e diagnóstico](S4_OBSERVABILIDADE_DIAGNOSTICO.md).
+- [S5 — compatibilidade e acessibilidade operacional](S5_COMPATIBILIDADE_ACESSIBILIDADE.md).
 
-**S5 não foi iniciada.**
+**S6 não foi iniciada.**
 
-## Baseline certificado da S4
+## Baseline certificado da S5
 
-A branch S4 nasce diretamente de:
+A branch S5 nasce diretamente de:
 
-`298dfb986f67cc4c560ae22b59d2fccad0716ec0`
+`29c3f1afa9147286627b18325380ce5b3c811331`
 
-Esse SHA é o merge da S3 na `main`.
+Esse SHA é o merge da S4 na `main`.
 
-Antes da abertura da S4 foram confirmados:
+Antes da abertura da S5 foram confirmados:
 
-- PR #62 integrada pelo HEAD S3 certificado `ee8f8198485a255ba5b4a79fba03d5f69d6d0ac0`;
-- `main` apontando para o merge S3;
+- PR #63 integrada pelo HEAD S4 certificado `9b693845184877b18bf178d637a2cf25b0f18ebe`;
+- `main` apontando para o merge S4;
 - **15 workflows de `push`** associados ao merge;
 - **15/15 `success`**;
-- nenhuma mutação Databricks executada pela S3;
+- nenhuma mutação Databricks executada pela S4;
 - issue #57 permanecendo aberta com `A11-01 = FAIL`.
 
-A S4 não reaproveita a branch S3 como base paralela.
+A S5 não reaproveita a branch S4 como base paralela.
 
 ## Plano canônico
 
@@ -55,24 +55,21 @@ A ordem permanece:
 
 `S0 → S1 → S2 → S3 → S4 → S5 → S6 → S7 → aceite → merge → auditoria pós-merge → V14`
 
-A S4 implementa exclusivamente:
+A S5 implementa exclusivamente:
 
-- taxonomia de falhas;
-- relatório sanitizado de execução;
-- runbook de diagnóstico;
-- checklist de evidência;
-- regras de logging sem PII/segredo;
-- mutantes/fixtures para as classes de falha;
-- distinção explícita entre `PASS`, `BLOCKED`, `FAIL` e `NOT_APPLICABLE`;
-- fail-closed quando falta evidência.
+- decisão operacional da issue #57;
+- preflight de contraste/formato quando há evidência real aplicável;
+- matriz de compatibilidade por superfície;
+- limites Light/Dark/High Contrast explicitados;
+- política fail-closed para consumidor ou formatação fora do contrato;
+- regressão permanente do FAIL histórico A11.
 
-A S5 permanece responsável por compatibilidade e acessibilidade operacional,
-incluindo a decisão da issue #57.
+A S6 permanece responsável pelos ensaios operacionais por superfície.
 
 ## Artefatos históricos preservados
 
-Os artefatos de sprints integradas são históricos e não devem ser reescritos para
-simular o estado atual:
+Os artefatos de sprints integradas são históricos e não são reescritos para
+simular estado atual:
 
 - [checkpoint S0](CHECKPOINT_S0.md);
 - [inventário operacional S1](S1_INVENTARIO_OPERACIONAL.md);
@@ -81,19 +78,21 @@ simular o estado atual:
 - [S2 — preflight operacional](S2_PREFLIGHT_OPERACIONAL.md);
 - [checkpoint S2](CHECKPOINT_S2.md);
 - [S3 — release, instalação, atualização e rollback](S3_RELEASE_OPERACIONAL.md);
-- [checkpoint S3](CHECKPOINT_S3.md).
+- [checkpoint S3](CHECKPOINT_S3.md);
+- [S4 — observabilidade e diagnóstico](S4_OBSERVABILIDADE_DIAGNOSTICO.md);
+- [checkpoint S4](CHECKPOINT_S4.md).
 
-Exemplo: a matriz S1 ainda contém `S2_NOT_IMPLEMENTED` porque registra o que a S1
-implementava naquele momento. A S4 não “corrige” essa frase histórica.
+Exemplo: a matriz S1 mantém `S2_NOT_IMPLEMENTED` porque registra o estado da S1.
+S5 não reescreve essa evidência histórica.
 
-## Artefatos próprios da S4
+## Artefatos próprios da S5
 
 A candidata adiciona:
 
-- `tools/temas_v13_diagnostico.py`;
-- `tools/tests/test_temas_v13_s4.py`;
-- [S4 — observabilidade e diagnóstico](S4_OBSERVABILIDADE_DIAGNOSTICO.md);
-- evolução do workflow V13 para S1 + S2 + S3 + S4.
+- `tools/temas_v13_compatibilidade.py`;
+- `tools/tests/test_temas_v13_s5.py`;
+- [S5 — compatibilidade e acessibilidade operacional](S5_COMPATIBILIDADE_ACESSIBILIDADE.md);
+- evolução do workflow V13 para S1 + S2 + S3 + S4 + S5.
 
 A candidata não adiciona:
 
@@ -101,168 +100,89 @@ A candidata não adiciona:
 - token/secret;
 - rede;
 - deploy remoto;
-- publicação;
-- alteração de App/dashboard/workspace;
+- alteração de dashboard;
+- alteração de workspace theme;
+- `Publish`;
 - novo schema/token/binding/role policy;
-- score/severidade/incidente/SLA/SLO.
+- automação de `approximated`/`unsupported`;
+- suporte genérico inventado a `cellFormat`.
 
-## Relação S2 → S3 → S4
+## Decisão da issue #57
+
+A decisão S5 é:
+
+`PREFLIGHT_FAIL_CLOSED`
+
+A S5 adota preflight local de contraste para pares de foreground/background
+explicitamente fornecidos a partir de export real revisado e identificado por
+SHA-256.
+
+A issue #57 permanece aberta porque a S5 não corrige os pares observados na V12 e
+não produz nova evidência de ambiente. `A11-01 = FAIL` continua reproduzível.
+
+A decisão não altera a V11:
+
+- `ResolvedTheme` continua fonte configurável de verdade;
+- `context="aibi"` continua reservado;
+- 48 tokens continuam 3 `translated`, 23 `approximated`, 22 `unsupported`;
+- os três bindings diretos permanecem os únicos bindings diretos;
+- formatação condicional explícita não vira token do Hub.
+
+## Relação S2 → S3 → S4 → S5
 
 ### S2 — readiness
 
 Pergunta: “a operação está preparada?”
 
-Saída: relatório local `V13-S2` com estados/códigos estáveis.
+Saída: relatório local `V13-S2`.
 
 ### S3 — ciclo local de release
 
 Pergunta: “o artefato pode ser staged/verificado e o rollback local pode ser
 provado?”
 
-Saída: relatório local `V13-S3`; recibo existe somente em PASS.
+Saída: relatório local `V13-S3`.
 
 ### S4 — diagnóstico
 
-Pergunta: “onde a decisão ocorreu, o que falta de evidência e qual é a próxima
-ação segura?”
-
-Entrada: somente relatórios estruturados S2/S3 + classes de evidência sanitizadas.
+Pergunta: “onde a decisão ocorreu e qual é a próxima ação segura?”
 
 Saída: diagnóstico local `V13-S4`.
 
-A S4 observa. Ela não executa novamente a operação e não muta o source report.
+### S5 — compatibilidade/acessibilidade
 
-## Estados continuam canônicos
+Pergunta: “o estado visual explicitamente observado é compatível com o critério
+aplicável e o que ainda não foi exercitado?”
 
-A S4 reutiliza exatamente:
+Saída: relatório local `V13-S5` para o preflight de contraste suportado + matriz
+documental de compatibilidade.
 
-- `PASS`;
-- `BLOCKED`;
-- `FAIL`;
-- `NOT_APPLICABLE`.
+S5 não executa S2/S3/S4 novamente e não modifica seus relatórios.
 
-Não existe um quinto status, nota, score ou “PASS parcial”.
+## Contraste S5
 
-A prioridade fail-closed permanece:
+O núcleo calcula luminância relativa sRGB/WCAG e usa o ratio bruto:
 
-`FAIL > BLOCKED > PASS > NOT_APPLICABLE`.
+- texto `NORMAL`: 4,5:1;
+- texto `LARGE`: 3,0:1 somente quando declarado;
+- sem arredondamento para PASS.
 
-Assim:
+Modos:
 
-- uma lacuna de evidência pode tornar um source `PASS` em diagnóstico `BLOCKED`;
-- uma lacuna de evidência não apaga um `FAIL` já observado;
-- `NOT_APPLICABLE` nunca é contado como PASS.
+- `LIGHT`;
+- `DARK`;
+- `HIGH_CONTRAST`.
 
-## Taxonomia S4
+Estados não observados recebem `NOT_APPLICABLE` / `STATE_NOT_EXERCISED` e não
+recebem ratio calculado.
 
-A candidata classifica códigos dos owners em 11 classes diagnósticas:
-
-1. `INPUT_CONTRACT`;
-2. `CANONICAL_CONTRACT`;
-3. `ARTIFACT_INTEGRITY`;
-4. `GIT_STATE`;
-5. `PREFLIGHT_READINESS`;
-6. `GOVERNANCE_AUTHORIZATION`;
-7. `ENVIRONMENT_IDENTITY`;
-8. `RECOVERY_ROLLBACK`;
-9. `COMPATIBILITY_LKG`;
-10. `STAGING_EXECUTION`;
-11. `EVIDENCE_GAP`.
-
-A taxonomia não muda o código original. `safe_code` continua sendo o código
-estável S2/S3; `stage` é apenas a classificação diagnóstica S4.
-
-A suíte exige igualdade exata entre o registry S4 e `STABLE_CODES` dos owners S2
-e S3 para impedir drift silencioso.
-
-## Sanitização
-
-O diagnóstico nunca ecoa:
-
-- `message` de origem;
-- `check_id` de origem;
-- conteúdo arbitrário do `receipt`;
-- path local;
-- `/Volumes/...`;
-- `authorization_ref`;
-- `identity_ref`;
-- `state_ref`;
-- `acceptance_ref`;
-- token/PAT/secret;
-- e-mail/username/workspace id.
-
-A saída usa somente códigos/status/classes previamente conhecidos e mensagens
-definidas no próprio diagnóstico.
-
-Código desconhecido vira `SOURCE_CODE_UNREGISTERED`; o texto recebido não é
-copiado para o relatório.
-
-## Evidência
-
-O request S4 não transporta a referência sensível. Ele transporta apenas:
-
-- `kind`;
-- `state`.
-
-Kinds atuais:
-
-- `git_ci`;
-- `artifact`;
-- `authorization`;
-- `environment_identity`;
-- `rollback`;
-- `human`;
-- `browser_runtime`.
-
-States:
-
-- `REFERENCED`;
-- `MISSING`;
-- `NOT_APPLICABLE`.
-
-A S4 sempre declara `references_authenticated = false`. Ela não acessa o ambiente
-para provar que a referência é verdadeira.
-
-## Logging seguro
-
-Formato determinístico:
-
-```text
-NNN|STATUS|STAGE|SAFE_CODE[|EVIDENCE_KIND]
-```
-
-Exemplo:
-
-```text
-001|FAIL|ARTIFACT_INTEGRITY|BUNDLE_INCOMPLETE
-002|BLOCKED|EVIDENCE_GAP|EVIDENCE_MISSING|artifact
-```
-
-Não há timestamp gerado pela S4, texto bruto da exceção de origem ou referência
-privada no log.
-
-## Coerência fail-closed
-
-A S4 recusa:
-
-- engine fora de S2/S3;
-- shape divergente;
-- status desconhecido;
-- código desconhecido;
-- status de operação S2 incompatível com checks;
-- `overall_status` incompatível com checks;
-- S3 PASS sem recibo;
-- S3 não-PASS com recibo;
-- relatório que declare rede/mutação remota;
-- relatório S3 que declare publicação;
-- evidence kind/state desconhecido;
-- evidence kind duplicado.
-
-A S4 não tenta “ser tolerante” a relatório que não pertence ao contrato.
+O preflight atual é intencionalmente limitado a `aibi_dashboard`. Outros
+consumidores permanecem cobertos por seus owners e pela matriz S5; não são
+generalizados silenciosamente.
 
 ## Estados herdados preservados
 
-A observabilidade não altera os resultados V12:
+A S5 não altera os resultados V12:
 
 - `DOC-02 = PASS`;
 - `DOC-03 = PASS`;
@@ -274,12 +194,9 @@ A observabilidade não altera os resultados V12:
 - `V12-APP-01 = BLOQUEADO_AUTORIZACAO`;
 - `V12-AIBI-02 = BLOQUEADO_AUTORIZACAO`.
 
-S4 não amplia bindings V11, não automatiza `approximated`/`unsupported` e não
-trata cores de formatação condicional como tokens do Hub.
-
 ## CI e fronteiras
 
-O workflow V13 deve permanecer:
+O workflow V13 permanece:
 
 - `permissions: contents: read`;
 - checkout com `persist-credentials: false`;
@@ -287,46 +204,46 @@ O workflow V13 deve permanecer:
 - sem `DATABRICKS_TOKEN`;
 - sem `secrets.*`.
 
-A candidata executa em sequência S1/S2/S3/S4 antes das regressões completas.
+A candidata executa S1/S2/S3/S4/S5 antes das regressões completas.
 
-Fronteiras vivas S4:
+Fronteiras vivas S5:
 
-- `V13_S4_NETWORK=0`;
-- `V13_S4_REMOTE_MUTATION=0`;
-- `V13_S4_DIAGNOSIS_READ_ONLY=1`;
-- `V13_S5_NOT_STARTED=1`.
+- `V13_S5_NETWORK=0`;
+- `V13_S5_REMOTE_MUTATION=0`;
+- `V13_S5_CONTRAST_PREFLIGHT_LOCAL=1`;
+- `V13_S6_NOT_STARTED=1`.
 
-A asserção histórica `V13_S4_NOT_STARTED=1` permanece apenas como comentário no
-workflow, porque a suíte S3 comprova o estado do checkpoint S3. Ela não representa
-o estado vivo desta branch.
+A asserção histórica `V13_S5_NOT_STARTED=1` permanece apenas como comentário no
+step S4 do workflow, porque ela representa o checkpoint S4, não o estado vivo.
 
 ## Métricas do README raiz
 
-O protocolo permanece o mesmo:
+O protocolo continua:
 
-1. primeiro head S4 sem alterar `README.md` raiz;
-2. runner mede identidade e links reais;
+1. primeiro head S5 sem alterar `README.md` raiz;
+2. runner mede identidade/links reais;
 3. qualquer failure fica preservado;
-4. README raiz é reconciliado apenas com números observados;
-5. checkpoint S4 é acrescentado depois;
-6. o checkpoint muda a árvore e exige nova medição;
+4. README raiz é reconciliado somente com números observados;
+5. checkpoint S5 é acrescentado depois;
+6. a árvore muda e é medida novamente;
 7. o SHA final é certificado de novo.
 
 Nenhuma contagem será estimada.
 
 ## Próxima ação
 
-A candidata S4 deve:
+A candidata S5 deve:
 
-1. executar a suíte S4 e seus mutantes;
-2. repetir S1/S2/S3;
-3. executar regressões V01–V13 e V00;
-4. validar documentação;
-5. preservar failures intermediários;
-6. reconciliar métricas apenas pelo runner;
-7. criar `CHECKPOINT_S4.md`;
-8. recertificar o HEAD exato;
-9. reconfirmar `main`, merge-base, ahead/behind, diff, issue #57 e concorrência;
-10. parar para aceite.
+1. executar 32 testes próprios e mutantes;
+2. repetir S1/S2/S3/S4;
+3. reproduzir A11 histórico como FAIL;
+4. executar regressões V01–V13 e V00;
+5. validar documentação;
+6. preservar failures intermediários;
+7. reconciliar métricas somente pelo runner;
+8. criar `CHECKPOINT_S5.md`;
+9. recertificar o HEAD exato;
+10. reconfirmar `main`, merge-base, ahead/behind, diff, issue #57 e concorrência;
+11. parar para aceite.
 
-**Não iniciar S5.**
+**Não iniciar S6.**
