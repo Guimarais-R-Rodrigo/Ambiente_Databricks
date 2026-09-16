@@ -15,7 +15,7 @@
 | Entrada principal | contrato, raiz `.assistant` e contexto objetivo de condições |
 | Saída | `PreflightResult` estruturado e determinístico |
 
-Exemplo: [exemplo_skill_execution.py](exemplo_skill_execution.py). Implementação: [preflight.py](preflight.py).
+Exemplo: [exemplo_skill_execution.py](exemplo_skill_execution.py). Implementação: [skill_execution.py](skill_execution.py).
 
 ## 1. O que é?
 
@@ -77,7 +77,7 @@ Teste happy path, recurso obrigatório removido, condição verdadeira/falsa, te
 
 ## 14. Arquivos relacionados e próximos passos
 
-- [preflight.py](preflight.py): implementação L2.
+- [skill_execution.py](skill_execution.py): implementação L2.
 - [__init__.py](__init__.py): fachada pública.
 - [exemplo_skill_execution.py](exemplo_skill_execution.py): demonstração read-only.
 - `skills/hub-ml-eda-profissional/execution_contract.json`: contrato piloto.
