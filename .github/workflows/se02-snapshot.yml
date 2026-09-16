@@ -1,0 +1,63 @@
+name: SE02 Snapshot Maintenance
+
+on:
+  push:
+    branches:
+      - sef/SE02-preflight
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: sef/SE02-preflight
+          fetch-depth: 0
+
+      - name: Atualizar somente métricas medidas
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("README.md")
+          text = path.read_text(encoding="utf-8")
+          replacements = {
+              "helpers citados    : 92 caminhos verificados": "helpers citados    : 93 caminhos verificados",
+              "markdown / links   : 222 arquivos / 1395 links relativos": "markdown / links   : 223 arquivos / 1401 links relativos",
+              "notebooks / links  : 80 notebooks / 101 links relativos": "notebooks / links  : 81 notebooks / 102 links relativos",
+              "readmes de objeto  : 76/76 operacionais; 3/3 exemplares; 0 pendentes (estrutura, não aceite editorial)": "readmes de objeto  : 77/77 operacionais; 3/3 exemplares; 0 pendentes (estrutura, não aceite editorial)",
+              "pastas de objeto   : 62 conferidas (nome, arquivos, __init__)": "pastas de objeto   : 63 conferidas (nome, arquivos, __init__)",
+              "forma da pasta     : 60 conferidas (o módulo tem o nome da pasta)": "forma da pasta     : 61 conferidas (o módulo tem o nome da pasta)",
+              "contrato de dados  : 62 pares (saída: o que o notebook consome)": "contrato de dados  : 63 pares (saída: o que o notebook consome)",
+              "contrato de entrada: 60 pares (entrada: o que o notebook passa)": "contrato de entrada: 61 pares (entrada: o que o notebook passa)",
+              "saída colada       : 79 notebooks com bloco real, 0 sem": "saída colada       : 80 notebooks com bloco real, 0 sem",
+              "normas do molde    : 72 arquivos, 0 violação(ões)": "normas do molde    : 73 arquivos, 0 violação(ões)",
+              "notebook exercita  : 60 objetos, 0 notebook(s) que só importam": "notebook exercita  : 61 objetos, 0 notebook(s) que só importam",
+              "python (AST)       : 221 arquivos": "python (AST)       : 225 arquivos",
+              "repo (identidade)  : 1501 arquivos varridos no repositório editável/derivado": "repo (identidade)  : 1516 arquivos varridos no repositório editável/derivado",
+              "repo (links)       : 1979 links fora da raiz analisada": "repo (links)       : 1985 links fora da raiz analisada",
+          }
+          for old, new in replacements.items():
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"âncora inesperada ({count}): {old}")
+              text = text.replace(old, new)
+          path.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Restringir diff e commitar
+        shell: bash
+        run: |
+          changed=$(git diff --name-only)
+          test "$changed" = "README.md"
+          git config user.name "SE02 Snapshot"
+          git config user.email "actions@users.noreply.github.com"
+          git add README.md
+          git rm .github/workflows/se02-snapshot.yml
+          git commit -m "docs(SE02): atualizar snapshot medido"
+          git push origin HEAD:sef/SE02-preflight
