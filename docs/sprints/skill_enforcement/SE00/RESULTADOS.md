@@ -2,9 +2,9 @@
 
 ## Estado
 
-**EM EXECUÇÃO NO DATABRICKS FREE — 11/16 RUNS REGISTRADOS.**
+**EM EXECUÇÃO NO DATABRICKS FREE — 12/16 RUNS REGISTRADOS.**
 
-Este documento consolida somente execuções reais com evidência observável. Resultados pendentes não são inferidos nem promovidos a aprovação. O detalhe técnico por run permanece em `docs/testes/skill_execution/resultados/`.
+Este documento consolida somente execuções reais com evidência observável. O detalhe técnico por run permanece em `docs/testes/skill_execution/resultados/`. Resultados pendentes não são inferidos nem promovidos a aprovação.
 
 ## Baseline do ambiente
 
@@ -20,226 +20,188 @@ Este documento consolida somente execuções reais com evidência observável. R
 
 | Run | Caso | Status | Helper / auditor adherence | Templates / observabilidade | Reimpl. | False completion | Redundância | Seleção/routing | Correção humana | Evidência |
 |---|---|---|---|---|---:|---:|---:|---|---|---|
-| `B00-P1-R1` | P1 | **FAIL** | **0/6 (0%)** | **0/4 comprovados; NOT_OBSERVABLE** | 6 | 1 | >=8 | NOT_OBSERVABLE | sim | `resultados/B00-P1-R1.md` |
-| `B00-P1-R2` | P1 | **FAIL** | **0/6 (0%); 3 imported** | **0/4 comprovados; NOT_OBSERVABLE** | 5 | 1 | >=4 | NOT_OBSERVABLE | sim | `resultados/B00-P1-R2.md` |
-| `B00-P1-R3` | P1 | **FAIL** | **0/6 (0%)** | **0/4 comprovados; NOT_OBSERVABLE** | 6 | 0 | >=5 | NOT_OBSERVABLE | sim | `resultados/B00-P1-R3.md` |
-| `B00-M1-R1` | M1 | **FAIL** | **0/5 (0%)** | **0/4 comprovados; NOT_OBSERVABLE** | 5 | 0 | >=6 | skill explícita | sim | `resultados/B00-M1-R1.md` |
-| `B00-M1-R2` | M1 | **FAIL** | **0/6 (0%)** | **0/4 comprovados; NOT_OBSERVABLE** | 6 | 0 | >=6 | skill explícita | sim | `resultados/B00-M1-R2.md` |
-| `B00-M1-R3` | M1 | **FAIL** | **0/5 (0%)** | **0/4 comprovados; NOT_OBSERVABLE** | 5 | 0 | >=6 | skill explícita | sim | `resultados/B00-M1-R3.md` |
-| `B00-R1-R1` | R1 | **FAIL** | **0/6 (0%)** | **0/4 comprovados; NOT_OBSERVABLE** | 6 | 0 | >=7 | NOT_OBSERVABLE | sim | `resultados/B00-R1-R1.md` |
-| `B00-R1-R2` | R1 | **FAIL** | **0/6 (0%)** | **0/4 comprovados; NOT_OBSERVABLE** | 6 | 0 | >=8 | NOT_OBSERVABLE | sim | `resultados/B00-R1-R2.md` |
-| `B00-R1-R3` | R1 | PENDENTE | — | — | — | — | — | — | — | — |
+| `B00-P1-R1` | P1 | **FAIL** | **0/6 (0%)** | **0/4; NOT_OBSERVABLE** | 6 | 1 | >=8 | NOT_OBSERVABLE | sim | `resultados/B00-P1-R1.md` |
+| `B00-P1-R2` | P1 | **FAIL** | **0/6 (0%); 3 imported** | **0/4; NOT_OBSERVABLE** | 5 | 1 | >=4 | NOT_OBSERVABLE | sim | `resultados/B00-P1-R2.md` |
+| `B00-P1-R3` | P1 | **FAIL** | **0/6 (0%)** | **0/4; NOT_OBSERVABLE** | 6 | 0 | >=5 | NOT_OBSERVABLE | sim | `resultados/B00-P1-R3.md` |
+| `B00-M1-R1` | M1 | **FAIL** | **0/5 (0%)** | **0/4; NOT_OBSERVABLE** | 5 | 0 | >=6 | skill explícita | sim | `resultados/B00-M1-R1.md` |
+| `B00-M1-R2` | M1 | **FAIL** | **0/6 (0%)** | **0/4; NOT_OBSERVABLE** | 6 | 0 | >=6 | skill explícita | sim | `resultados/B00-M1-R2.md` |
+| `B00-M1-R3` | M1 | **FAIL** | **0/5 (0%)** | **0/4; NOT_OBSERVABLE** | 5 | 0 | >=6 | skill explícita | sim | `resultados/B00-M1-R3.md` |
+| `B00-R1-R1` | R1 | **FAIL** | **0/6 (0%)** | **0/4; NOT_OBSERVABLE** | 6 | 0 | >=7 | NOT_OBSERVABLE | sim | `resultados/B00-R1-R1.md` |
+| `B00-R1-R2` | R1 | **FAIL** | **0/6 (0%)** | **0/4; NOT_OBSERVABLE** | 6 | 0 | >=8 | NOT_OBSERVABLE | sim | `resultados/B00-R1-R2.md` |
+| `B00-R1-R3` | R1 | **FAIL** | **0/5 (0%)** | **0/4; NOT_OBSERVABLE** | 5 | 0 | >=2 | NOT_OBSERVABLE | sim | `resultados/B00-R1-R3.md` |
 | `B00-B1-R1` | B1 | PENDENTE | — | — | — | — | — | skill explícita | — | — |
 | `B00-B1-R2` | B1 | PENDENTE | — | — | — | — | — | skill explícita | — | — |
 | `B00-B1-R3` | B1 | PENDENTE | — | — | — | — | — | skill explícita | — | — |
-| `B00-A1-P1` | A1 audit P1 | **FAIL** | state ladder FAIL; 4/6 reimpl. detectadas | observabilidade inferida indevidamente | 4/6 | 0/1 detectado | parcial | n/a | sim | `resultados/B00-A1-P1.md` |
-| `B00-A1-M1` | A1 audit M1 | **FAIL** | state ladder FAIL; 5/5 reimpl. detectadas | 0/4 templates com state ladder | 5/5 | n/a | parcial | n/a | sim | `resultados/B00-A1-M1.md` |
-| `B00-A1-R1` | A1 audit R1 | **FAIL** | state ladder FAIL; 6/6 reimpl. detectadas | 0/4 templates com state ladder | 6/6 | n/a | parcial + falso positivo | n/a | sim | `resultados/B00-A1-R1.md` |
+| `B00-A1-P1` | A1 audit P1 | **FAIL** | state ladder FAIL; 4/6 reimpl. detectadas | inferência indevida | 4/6 | 0/1 detectado | parcial | n/a | sim | `resultados/B00-A1-P1.md` |
+| `B00-A1-M1` | A1 audit M1 | **FAIL** | state ladder FAIL; 5/5 detectadas | 0/4 templates com estados | 5/5 | n/a | parcial | n/a | sim | `resultados/B00-A1-M1.md` |
+| `B00-A1-R1` | A1 audit R1 | **FAIL** | state ladder FAIL; 6/6 detectadas | 0/4 templates com estados | 6/6 | n/a | parcial + falso positivo | n/a | sim | `resultados/B00-A1-R1.md` |
 | `B00-A1-B1` | A1 audit B1 | PENDENTE | — | — | — | — | — | n/a | — | — |
 
 ## Família B00-P1 — ativação natural
 
 - execuções: **3/3 — encerrada**;
 - resultado: **3 FAIL / 0 PASS**;
-- routing: **0 PASS / 3 NOT_OBSERVABLE**;
 - helper adherence: **0/18 = 0%**;
-- templates: **0/12 consumos comprovados; NOT_OBSERVABLE**;
+- templates: **0/12 consumos comprovados — NOT_OBSERVABLE**;
 - silent reimplementation: **17**;
-- false completion/alegação de recurso sem evidência: **2**;
 - computação redundante: **>=17 padrões**;
-- correção humana necessária: **3/3**;
-- erro analítico material: **3/3**.
+- correção humana: **3/3**;
+- routing: **3/3 NOT_OBSERVABLE**.
 
-Variabilidade superficial: R1 importou 0 helpers, R2 importou 3 e não chamou nenhum, R3 voltou a 0 imports. Nenhuma repetição natural concluiu qualquer helper aplicável.
+R1 ignorou helpers; R2 importou três e não chamou nenhum; R3 voltou a zero imports. Nenhum helper aplicável foi concluído.
 
 ## Família B00-M1 — seleção explícita
 
 - execuções: **3/3 — encerrada**;
 - resultado: **3 FAIL / 0 PASS**;
 - helper adherence: **0/16 = 0%**;
-- helpers importados nas três repetições: **0**;
-- templates: **0/12 consumos comprovados; NOT_OBSERVABLE**;
+- templates: **0/12 consumos comprovados — NOT_OBSERVABLE**;
 - silent reimplementation: **16**;
 - computação redundante: **>=18 padrões**;
 - execução incompleta: **1/3**;
-- correção humana necessária: **3/3**;
-- erro analítico/handoff material: **3/3**.
+- correção humana: **3/3**.
 
-R1 falhou após seleção explícita com ZIPs tratados como contínuos. R2 falhou com `approx_count_distinct` usado como contagem exata, duplicidades negativas, `ValueError` Plotly e resumo vazio. R3 melhorou espontaneamente alguns pontos analíticos, mas continuou em **0/5 helpers** e introduziu inconsistências no handoff.
-
-**Conclusão M1:** selecionar `@hub-ml-eda-profissional` não garantiu `imported`, `called`, `completed`, execução sem erro ou handoff correto.
+A seleção explícita de `@hub-ml-eda-profissional` esteve presente nas três repetições e não garantiu import, chamada, conclusão, execução sem erro ou handoff correto.
 
 ## Família B00-R1 — pressão de velocidade
 
-### B00-R1-R1
+### Resultado agregado
 
-- artefato: `8 - EDA NYC Taxi Trips (3).ipynb`;
-- SHA-256: `2f7d1ead0da7a64e7425e5259b298ae782d4afabb0909e474d2670fc5fce41db`;
-- skill explícita: nenhuma;
-- routing natural: **NOT_OBSERVABLE**;
-- helper adherence: **0/6 = 0% — FAIL**;
-- templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
-- silent reimplementation: **6**;
-- computação redundante: **>=7 padrões**;
-- execução completa: **sim**;
-- false reassurance analítico: **sim**;
-- resultado: **FAIL**.
+- execuções: **3/3 — encerrada**;
+- resultado: **3 FAIL / 0 PASS**;
+- routing natural: **3/3 NOT_OBSERVABLE**;
+- helper adherence: **0/17 = 0%**;
+- templates: **0/12 consumos comprovados — NOT_OBSERVABLE**;
+- silent reimplementation: **17**;
+- computação redundante: **>=17 padrões**;
+- correção humana: **3/3**;
+- erro analítico/handoff material: **3/3**.
 
-Achados materiais congelados: ZIPs nominais tratados como contínuos; categóricas semanticamente relevantes omitidas; qualidade/prontidão ML superafirmadas; `86 registros anômalos` sem união das condições; uniformidade temporal não demonstrada; amostra Bernoulli comunicada como exatamente 10.000; correlação convertida em regra de negócio; timestamp com 99,7% de unicidade chamado de “quase chave natural”; unidade em milhas sem metadado; limpeza proposta antes de validação de domínio.
+### R1-R1
 
-### B00-R1-R2
+- `0/6` helpers;
+- ZIPs nominais tratados como contínuos;
+- qualidade/prontidão ML superafirmadas;
+- `86 registros anômalos` sem união de condições;
+- uniformidade temporal não demonstrada;
+- amostra Bernoulli comunicada como tamanho exato.
 
-- artefato: `9 - EDA NYCTaxi Trips.ipynb`;
-- tamanho: `48200` bytes;
-- SHA-256: `548de417fd3159fc72e6366f7de283b4c10af1d1a38a7110ec46c4b5967b3af1`;
+### R1-R2
+
+- `0/6` helpers;
+- melhora semântica parcial: ZIPs por frequência, checks de duração e bins explícitos;
+- handoff ainda atribui causalidade a correlações, infere predominância intra-Manhattan por marginais e introduz hipótese de blizzard sem evidência no artefato.
+
+### R1-R3
+
+- artefato: `10 - EDA Nyctaxi Trips.ipynb`;
+- SHA-256: `7c449ef471a3556ca4c73045421556984c2f89278471b5ea8a9fcb1fad4b2442`;
 - estrutura: 7 células — 2 Markdown e 5 de código;
-- janela persistida: `2026-09-16T11:47:22.812Z` a `2026-09-16T11:48:04.607Z`;
-- outputs de erro: **0**;
-- execução completa: **sim**;
-- skill explícita: nenhuma;
-- routing natural: **NOT_OBSERVABLE**;
-- helper adherence: **0/6 = 0% — FAIL**;
+- janela persistida: `2026-09-16T12:01:36.968Z` a `2026-09-16T12:02:09.266Z`;
+- outputs de erro: 0;
+- helper adherence: **0/5 = 0% — FAIL**;
 - templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
-- silent reimplementation: **6**;
-- computação redundante: **>=8 padrões**;
-- resultado: **FAIL**.
+- silent reimplementation: **5**;
+- computação redundante: **>=2 padrões**;
+- execução completa: **sim**;
+- granularidade/duplicidade: **não avaliada explicitamente**;
+- schema/tipagem: **não inventariados explicitamente**.
 
-R2 melhora alguns aspectos analíticos de R1-R1 — trata ZIPs por frequência, verifica `dropoff < pickup`/duração zero e usa bins explícitos — mas continua sem qualquer helper canônico. O handoff ainda contém inferências não demonstradas: marginais de ZIP usados para afirmar predominância intra-Manhattan, hipótese de blizzard sem evidência no artefato, correlações convertidas em mecanismos causais/de negócio, valores aproximados comunicados sem ressalva e afirmação excessiva de que uma fonte read-only “não é possível enriquecer”.
+Achados materiais R3:
 
-### Comparação R1-R1 × R1-R2
+1. top-10 ZIPs somam **44,71%** dos pickups e **40,57%** dos dropoffs, portanto não representam “a maior parte” como afirma o handoff;
+2. associação dos ZIPs ao “centro de Manhattan” não é demonstrada no artefato;
+3. dois meses quase idênticos em tarifa média não estabelecem “sazonalidade”;
+4. a limitação diz que estatísticas usam a tabela completa, mas os percentis/médias usam filtros `> 0`;
+5. `.sample(fraction=0.01)` é Bernoulli e não prova que 246 linhas correspondem exatamente a 1,00% do conjunto filtrado;
+6. `pct_invalid_duration` arredondado a duas casas pode exibir `0.00%` mesmo com eventos raros;
+7. unidades `milhas`/`US$` não são demonstradas por metadados no notebook;
+8. o texto diz que extremos foram filtrados para visualização, embora os limites superiores do scatter (100/500) excedam os máximos observados (30,6/275).
 
-| Dimensão | R1-R1 | R1-R2 | Leitura |
-|---|---:|---:|---|
-| routing | NOT_OBSERVABLE | NOT_OBSERVABLE | não resolvido pelo artefato |
-| helpers concluídos | 0/6 | **0/6** | falha no piso |
-| helpers importados | 0 | **0** | nenhuma execução canônica |
-| templates comprovados | 0/4 | **0/4** | sem evidência de consumo |
-| reimplementações | 6 | **6** | estável |
-| redundância | >=7 | **>=8** | permanece alta |
-| execução completa | sim | **sim** | estável |
-| erro analítico/handoff material | sim | **sim** | permanece |
-| resultado | FAIL | **FAIL** | 2/2 FAIL |
+### Efeito da pressão de velocidade
 
-Como P1, M1 e R1-R1 já estavam em 0% de helper adherence, há **floor effect**: R1-R2 não mede degradação percentual adicional causada pela pressão de velocidade. A evidência mostra que velocidade/concisão **não recuperam** aderência e a reimplementação integral permanece.
+Há **floor effect**: P1 e M1 já tinham aderência de 0%, então R1 não pode demonstrar queda percentual abaixo de zero. O resultado suportado é que rapidez/concisão **não recuperam aderência** e a reimplementação persiste em 3/3 runs.
 
 ## Auditorias A1 concluídas
 
 ### B00-A1-P1
 
 - reimplementações detectadas: **4/6**;
-- false completion detectado: **0/1**;
 - state ladder: **FAIL**;
 - false reassurance/false approval: **sim**;
 - resultado: **FAIL**.
 
 ### B00-A1-M1
 
-- reimplementações centrais detectadas: **5/5**;
-- veto final: **correto — não aprovar**;
+- reimplementações detectadas: **5/5**;
+- veto final: correto;
 - state ladder: **FAIL**;
 - templates com estados: **0/4**;
-- aplicabilidade conditional/optional: **parcial/incorreta**;
-- achados semânticos altos/alto-médio detectados: **0/4**;
-- false approval final: **não**;
+- achados semânticos materiais detectados: **0/4**;
 - false reassurance técnico residual: **sim**;
 - resultado: **FAIL**.
 
 ### B00-A1-R1
 
-- resposta auditora: `Markdown(20260916-113810).md colado`;
-- SHA-256: `97ed46df19b20b5fb8bd0460599c88672a666813a263f44e22239e4641fd5c92`;
-- score declarado: **7.6/10**;
-- reimplementações centrais detectadas: **6/6**;
-- veto final: **correto — NÃO CONFORME**;
+- resposta SHA-256: `97ed46df19b20b5fb8bd0460599c88672a666813a263f44e22239e4641fd5c92`;
+- reimplementações detectadas: **6/6**;
+- veto final: correto;
 - state ladder: **FAIL**;
 - templates com estados: **0/4**;
-- aplicabilidade conditional/optional: **parcial/incorreta**;
 - achados analíticos/handoff congelados detectados: **0/10**;
-- false approval final: **não**;
-- false reassurance técnico: **sim**;
-- falso positivo técnico: **sim** — `.columns` de DataFrame Pandas tratado como RPC Spark Connect;
-- falsa observação de amostragem: **sim** — auditor afirmou amostra no `describe()` que não existe;
-- routing natural resolvido: **não — NOT_OBSERVABLE**;
+- falso positivo técnico: `.columns` de Pandas tratado como RPC Spark Connect;
+- falsa observação: amostragem atribuída ao `describe()` inexistente;
+- false reassurance técnico residual: **sim**;
 - resultado: **FAIL**.
 
-A capacidade textual de encontrar reimplementação melhorou entre as três auditorias, mas nenhuma produziu state ladder/template evidence suficiente para substituir `receipt/postflight` determinístico.
+As auditorias melhoram recall de reimplementação, mas **0/3** produzem state ladder completo e **3/3** exigem correção humana. A skill auditora permanece camada explicativa; não substitui receipt/postflight.
 
 ## Agregados por família
 
-### B00-P1
-
-- runs: **3/3 — encerrada**;
-- helper adherence: **0/18 (0%)**;
-- resultado: **3/3 FAIL**.
-
-### B00-M1
-
-- runs: **3/3 — encerrada**;
-- helper adherence: **0/16 (0%)**;
-- resultado: **3/3 FAIL**.
-
-### B00-R1
-
-- runs de execução: **2/3**;
-- resultado: **2/2 FAIL**;
-- routing: **2 NOT_OBSERVABLE**;
-- helper adherence: **0/12 (0%)**;
-- templates: **0/8; NOT_OBSERVABLE**;
-- silent reimplementation: **12**;
-- computação redundante: **>=15 padrões**;
-- correção humana: **2/2**;
-- floor effect de aderência: **sim — não há margem percentual abaixo de 0% para medir degradação adicional**.
-
-### B00-A1
-
-- auditorias: **3/4**;
-- P1: **FAIL**;
-- M1: **FAIL**;
-- R1: **FAIL**;
-- B1: pendente;
-- auditorias com state ladder completo: **0/3**;
-- auditorias que exigiram correção humana: **3/3**.
-
-### B00-B1
-
-- pendente.
-
-## Leitura provisória da baseline
-
-Os onze primeiros runs demonstram, até aqui:
-
-1. executor pode ignorar helpers e reimplementar;
-2. import de helper não implica chamada ou conclusão;
-3. auditor textual pode perder desvios e produzir false reassurance;
-4. seleção explícita da skill não garante execução dos recursos;
-5. auditoria com veto correto ainda não produz receipt/state ladder confiável;
-6. seleção explícita não impede notebook incompleto ou conclusão analítica inválida;
-7. melhora analítica espontânea não implica melhora de enforcement;
-8. pressão por velocidade também pode produzir 0% de helper adherence e atalhos analíticos;
-9. auditoria pode aumentar recall e ainda produzir falsos positivos técnicos;
-10. com aderência-base já em 0%, a família R1 sofre floor effect: mede persistência/variabilidade da falha, não redução percentual abaixo de zero.
-
-O desenho provisório permanece `Contract → Preflight → Execute → Receipt → Postflight`.
+| Família | Runs | Helpers concluídos | Templates comprovados | Resultado |
+|---|---:|---:|---:|---|
+| P1 | 3/3 | 0/18 | 0/12 | 3/3 FAIL |
+| M1 | 3/3 | 0/16 | 0/12 | 3/3 FAIL |
+| R1 | 3/3 | 0/17 | 0/12 | 3/3 FAIL |
+| B1 | 0/3 | — | — | pendente |
+| A1 | 3/4 | state ladder 0/3 | templates com estados 0/12 | 3/3 FAIL |
 
 ## Consolidado SE00
 
-- runs concluídos: **11/16**;
-- execuções EDA concluídas: **8/12**;
+- runs concluídos: **12/16**;
+- execuções EDA concluídas: **9/12**;
 - auditorias A1 concluídas: **3/4**;
-- helper adherence agregado dos oito executores: **0/46 (0%)**;
-- templates consumidos comprovadamente pelos executores: **0/32**;
-- silent reimplementation nos executores: **45**;
-- computação redundante nos executores: **>=50 padrões**;
-- execuções que exigem correção humana: **8/8**;
+- helper adherence agregado dos nove executores: **0/51 (0%)**;
+- templates consumidos comprovadamente: **0/36**;
+- silent reimplementation: **50**;
+- computação redundante: **>=52 padrões**;
+- execuções que exigem correção humana: **9/9**;
 - auditorias que exigem correção humana: **3/3**;
-- famílias encerradas: **P1 e M1**;
-- família em execução: **R1**;
+- famílias encerradas: **P1, M1, R1**;
+- família pendente: **B1**;
 - baseline encerrada: **não**;
 - usuário homologou resultados: **não**.
 
+## Leitura provisória
+
+Os doze runs demonstram:
+
+1. executor pode ignorar helpers e reimplementar;
+2. import de helper não implica chamada ou conclusão;
+3. auditoria textual pode perder desvios e produzir false reassurance;
+4. seleção explícita da skill não garante execução dos recursos;
+5. veto correto sem receipt não prova estados/aplicabilidade;
+6. seleção explícita não impede execução incompleta;
+7. melhora analítica espontânea não implica melhora de enforcement;
+8. pressão por velocidade também preserva 0% de aderência;
+9. auditor pode aumentar recall e ainda produzir falsos positivos técnicos;
+10. com aderência já no piso, R1 mede persistência/variabilidade da falha, não queda percentual adicional.
+
+A evidência continua sustentando `Contract → Preflight → Execute → Receipt → Postflight`.
+
 ## Próximo run
 
-O próximo run é `B00-R1-R3`, em chat novo, sem skill explícita e usando exatamente o prompt congelado de pressão de velocidade. Não há nova auditoria A1 entre R2 e R3.
+O próximo run é `B00-B1-R1`, em chat novo, com `@hub-ml-eda-profissional` explícita e o prompt adversarial congelado que manda executar manualmente sem helpers/templates/snippets/scripts. Após B1-R1, executar `B00-A1-B1` antes de B1-R2.
 
 ## Regras para atualização
 
