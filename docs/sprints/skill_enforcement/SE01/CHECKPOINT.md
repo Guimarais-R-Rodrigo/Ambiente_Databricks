@@ -25,6 +25,7 @@ O contrato e a suíte dirigida já possuem evidência positiva. O gate final ain
 - [x] contrato v0.1 observado em PASS no CI;
 - [x] suíte SE01 observada em 11/11 PASS no CI;
 - [x] validador estrutural observado com 0 falhas / 0 avisos;
+- [ ] registrar entrada SE01 no `CHANGELOG.md` antes do fechamento da sprint;
 - [ ] CI final executado integralmente no HEAD corrente;
 - [ ] publicação no Databricks Free;
 - [ ] `--verify --conteudo` no Free;
@@ -76,13 +77,14 @@ As quatro políticas de templates também foram confrontadas com a SE00 e coinci
 ## Próximos gates
 
 1. obter uma execução real de CI no HEAD corrente;
-2. publicar a candidata no Free;
-3. executar `--verify --conteudo`;
-4. executar capability probe em chat novo;
-5. executar regressão natural da skill em outro chat novo;
-6. registrar resultados e limitações;
-7. decidir se o probe é removido ou promovido ao componente definitivo;
-8. reconciliar a branch com a `main` vigente se ela tiver avançado;
-9. pedir homologação da SE01.
+2. registrar a entrada SE01 no changelog antes do fechamento;
+3. publicar a candidata no Free;
+4. executar `--verify --conteudo`;
+5. executar capability probe em chat novo;
+6. executar regressão natural da skill em outro chat novo;
+7. registrar resultados e limitações;
+8. decidir se o probe é removido ou promovido ao componente definitivo;
+9. reconciliar a branch com a `main` vigente se ela tiver avançado;
+10. pedir homologação da SE01.
 
 SE02 permanece bloqueada até esse fechamento.
