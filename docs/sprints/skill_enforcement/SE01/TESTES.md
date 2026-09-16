@@ -13,8 +13,7 @@ python tools/validate_assistant.py --conferir-readme
 python tools/ci_local.py --verbose
 ```
 
-O renderer deve ser executado pelo mecanismo canônico. `Novo_Ambiente_Simulado/`
-não pode ser corrigido manualmente.
+O renderer deve ser executado pelo mecanismo canônico. `Novo_Ambiente_Simulado/` não pode ser corrigido manualmente.
 
 ## 2. Matriz negativa do contrato
 
@@ -31,8 +30,7 @@ O teste automatizado deve provar rejeição de:
 | skill divergente da pasta | `SKILL_FOLDER_MISMATCH` |
 | `mode="enforce"` na SE01 | `MODE_INVALID` |
 
-O teste também fixa explicitamente o caminho público real do
-`index_generator`: `hub_snippets.visual.index_generator.gerar_indice_eda`.
+O teste também fixa explicitamente o caminho público real do `index_generator`: `hub_snippets.visual.index_generator.gerar_indice_eda`.
 
 ## 3. O que o teste local do probe prova
 
@@ -47,12 +45,43 @@ O teste local executa o script contra `ambiente_fonte/.assistant` e exige:
 }
 ```
 
-Isso prova apenas portabilidade Python/read-only do script. **Não prova que o
-Genie Code escolhe ou executa o script.**
+Isso prova apenas portabilidade Python/read-only do script. **Não prova que o Genie Code escolhe ou executa o script.**
 
-## 4. Preparação do Databricks Free
+## 4. Estado técnico já observado
 
-Somente depois de fonte/simulado/CI estarem consistentes:
+No commit `fda26d130e559d3fdb8ee69fcb785ffecc76a049`, o workflow SE01 executou efetivamente e registrou:
+
+- contrato: 1/1 PASS;
+- suíte SE01: 11/11 PASS;
+- `validate_assistant.py`: 0 falhas / 0 avisos;
+- renderer canônico: limpo após materialização do espelho.
+
+O snapshot medido foi 1494 arquivos / 1961 links, posteriormente colado no README raiz.
+
+A rodada de Actions seguinte não obteve runner (`runner_id=0`, `runner_name=""`, `steps=[]`), inclusive em rerun manual de um único job. Portanto, o CI final do HEAD vigente continua pendente; esse evento não substitui teste nem é classificado como regressão funcional.
+
+## 5. Preparação do Databricks Free
+
+Somente depois de fonte/simulado estarem consistentes e com a branch local sincronizada:
+
+```powershell
+git status --short
+git fetch origin --prune
+git switch sef/SE01-contrato
+git pull --ff-only origin sef/SE01-contrato
+```
+
+Se `git status --short` mostrar alterações locais não intencionais, não executar reset destrutivo. Preservar ou resolver conscientemente antes de sincronizar.
+
+Validar a candidata localmente:
+
+```powershell
+python -B tools/skill_enforcement/validate_contracts.py
+python -B tools/tests/test_skill_enforcement_se01.py
+python tools/validate_assistant.py --conferir-readme
+```
+
+Publicação no Free:
 
 ```powershell
 $FreeProfile = "FREE"
@@ -67,10 +96,9 @@ python tools/publicar_free.py --verify --conteudo --profile $FreeProfile --expec
 
 Critério de publicação: `APROVADO: 0 problema(s)`.
 
-## 5. Capability probe no Genie Code
+## 6. Capability probe no Genie Code
 
-Abrir **chat novo**. Selecionar explicitamente `@hub-ml-eda-profissional` e
-enviar exatamente:
+Abrir **chat novo**. Selecionar explicitamente `@hub-ml-eda-profissional` e enviar exatamente:
 
 ```text
 @hub-ml-eda-profissional Execute somente o capability probe SE01 da própria skill, sem iniciar a EDA. Use o script relativo scripts/capability_probe.py e retorne integralmente o marcador JSON produzido. Não reimplemente o probe.
@@ -87,23 +115,19 @@ Critérios mínimos observáveis:
 7. `sample_result = 1.234`;
 8. `writes_performed = false`.
 
-Se o agente apenas disser que executou, sem evidência material da execução do
-script, classificar como `NOT_OBSERVABLE`, não como PASS.
+Se o agente apenas disser que executou, sem evidência material da execução do script, classificar como `NOT_OBSERVABLE`, não como PASS.
 
-## 6. Regressão mínima de uso da skill
+## 7. Regressão mínima de uso da skill
 
-Depois do probe, abrir outro chat novo e repetir o prompt natural congelado da
-SE00-P1:
+Depois do probe, abrir outro chat novo e repetir o prompt natural congelado da SE00-P1:
 
 ```text
 Faça uma EDA profissional da tabela samples.nyctaxi.trips. Avalie estrutura e qualidade dos dados, nulos, estatísticas descritivas, distribuições, relações e correlações quando aplicáveis, possíveis outliers e achados relevantes. Organize o trabalho de forma eficiente para Databricks/Spark, evite computação redundante e finalize com um resumo executivo dos principais achados, limitações e próximos passos.
 ```
 
-Esta regressão não espera enforcement novo. Ela serve apenas para detectar se
-adicionar contrato/probe impediu ou degradou materialmente o carregamento/uso da
-skill.
+Esta regressão não espera enforcement novo. Ela serve apenas para detectar se adicionar contrato/probe impediu ou degradou materialmente o carregamento/uso da skill.
 
-## 7. Evidência a registrar
+## 8. Evidência a registrar
 
 Para cada teste no Free:
 
