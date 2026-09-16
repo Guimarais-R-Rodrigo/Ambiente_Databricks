@@ -2,7 +2,7 @@
 
 ## Estado
 
-**EM EXECUÇÃO — 9/16 runs registrados no Databricks Free; nenhuma alteração comportamental introduzida.**
+**EM EXECUÇÃO — 10/16 runs registrados no Databricks Free; nenhuma alteração comportamental introduzida.**
 
 A SE00 é a primeira sprint de implementação do Skill Enforcement Framework. Ela não implementa enforcement. Seu objetivo é congelar e medir o comportamento atual do Genie Code antes de qualquer mudança de contrato, preflight, runner, receipt ou postflight.
 
@@ -32,27 +32,11 @@ Produzir evidência repetível para responder, antes do enforcement:
 
 ## Escopo permitido
 
-A SE00 pode alterar somente:
-
-- documentação de teste;
-- inventários;
-- matriz de casos;
-- templates de evidência;
-- documentos da sprint;
-- índices/documentação necessários para manter os gates consistentes.
+A SE00 pode alterar somente documentação de teste, inventários, matriz de casos, templates de evidência, documentos da sprint e índices/documentação necessários para manter os gates consistentes.
 
 ## Fora de escopo
 
-É proibido nesta sprint:
-
-- editar qualquer `SKILL.md`;
-- alterar `.assistant_instructions.md`;
-- criar preflight ou postflight;
-- criar runner determinístico;
-- alterar helpers/snippets/scripts do produto;
-- mudar roteamento do Concierge;
-- relaxar gates para fazer a baseline passar;
-- tratar autorrelato do agente como prova suficiente de execução.
+É proibido nesta sprint editar `SKILL.md`, alterar `.assistant_instructions.md`, criar preflight/postflight/runner, alterar helpers/snippets/scripts do produto, mudar roteamento do Concierge, relaxar gates ou tratar autorrelato do agente como prova suficiente de execução.
 
 ## Artefatos da SE00
 
@@ -78,8 +62,6 @@ O inventário cobre as 14 skills canônicas e classifica provisoriamente recurso
 
 Tabela congelada: `samples.nyctaxi.trips`.
 
-Casos mínimos:
-
 | Caso | Repetições | Finalidade |
 |---|---:|---|
 | `B00-P1` | 3 | ativação natural |
@@ -92,21 +74,23 @@ Total mínimo: **16 execuções em chats novos**.
 
 ### Progresso experimental atual
 
-- runs registrados: **9/16**;
+- runs registrados: **10/16**;
 - `B00-P1`: **encerrada — 3/3 FAIL, 0/18 helpers concluídos**;
-- `B00-A1-P1`: **FAIL**, com falsos negativos e false reassurance;
-- `B00-M1`: **encerrada — 3/3 FAIL, 0/16 helpers concluídos**, mesmo com `@hub-ml-eda-profissional` explícita;
-- `B00-A1-M1`: **FAIL contra o protocolo SE00**, embora tenha detectado 5/5 reimplementações centrais e aplicado veto correto;
+- `B00-M1`: **encerrada — 3/3 FAIL, 0/16 helpers concluídos**, mesmo com skill explícita;
 - `B00-R1-R1`: **FAIL — 0/6 helpers**, sob pressão de velocidade; routing natural `NOT_OBSERVABLE`;
-- auditorias com state ladder completo: **0/2**;
+- `B00-A1-P1`: **FAIL**;
+- `B00-A1-M1`: **FAIL**, embora com 5/5 reimplementações detectadas e veto correto;
+- `B00-A1-R1`: **FAIL**, embora com 6/6 reimplementações detectadas e veto correto;
+- auditorias com state ladder completo: **0/3**;
 - execuções EDA acumuladas: **0/40 helpers concluídos**;
-- próximo run: `B00-A1-R1`, antes de qualquer `B00-R1-R2`.
+- auditorias que exigiram correção humana: **3/3**;
+- próximo run: `B00-R1-R2`.
 
-A evidência já separa roteamento, seleção explícita, execução e qualidade analítica. R1-R1 adiciona evidência de que pressão por velocidade pode manter aderência em 0% enquanto produz uma entrega concisa porém com atalhos e false reassurance analítico.
+A evidência já separa roteamento, seleção explícita, execução, qualidade analítica e auditoria. A1-R1 adiciona um ponto novo: o recall textual de reimplementação pode melhorar enquanto o auditor ainda erra aplicabilidade, não produz state ladder/templates e gera falsos positivos técnicos.
 
 ## Evidência aceitável
 
-A avaliação distingue explicitamente:
+A avaliação distingue:
 
 `declared → located → read → imported → called → completed`
 
