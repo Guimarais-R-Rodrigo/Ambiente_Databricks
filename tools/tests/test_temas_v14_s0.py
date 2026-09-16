@@ -148,10 +148,22 @@ class V14S0FreezeTests(unittest.TestCase):
         for fragment in required:
             self.assertIn(fragment, self.checkpoint)
 
-    def test_checkpoint_does_not_invent_final_metrics(self) -> None:
+    def test_checkpoint_records_measured_metrics_and_fail_closed_history(self) -> None:
+        required = (
+            "42eb2074425e827a7865e4e6a5771818f3881940",
+            "35127535148",
+            "18465913feab5591e07e780737093294aae6c8bb",
+            "35127864758",
+            "17/17 PASS",
+            "718/718 PASS",
+            "12/12 PASS",
+            "1485 arquivos",
+            "1971 links",
+            "2 falhas / 0 avisos",
+        )
+        for fragment in required:
+            self.assertIn(fragment, self.checkpoint)
         self.assertIn("não estima métricas", self.checkpoint)
-        self.assertIn("baseline da PR #70", self.checkpoint)
-        self.assertIn("Pendente de execução do primeiro HEAD completo", self.checkpoint)
 
     def test_workflow_is_read_only(self) -> None:
         self.assertIn("permissions:\n  contents: read", self.workflow)

@@ -4,7 +4,7 @@ Data: 16/09/2026.
 
 Branch: `codex/temas-v14-s0-reconciliacao-readiness-20260916`.
 
-Estado deste documento: **S0 em execução; candidata ainda não aceita nem integrada. Certificação final do HEAD permanece pendente até a execução dos workflows reais.**
+Estado deste documento: **S0 em execução; candidata ainda não aceita nem integrada. A árvore já foi medida pelo runner, mas a certificação final do HEAD permanece pendente após a correção fail-closed das métricas.**
 
 ## 1. Baseline inicial confirmado
 
@@ -58,9 +58,9 @@ Frases históricas como “V14 não iniciada” dentro de checkpoints de época 
 
 ### F14-S0-01 — índices vivos ficaram stale após o aceite/merge do Plano Mestre
 
-**Estado:** confirmado; tratamento previsto nesta candidata S0.
+**Estado:** confirmado; tratado nesta candidata S0.
 
-Após a integração da PR #70, superfícies vivas ainda descreviam a V14 como “candidata de planejamento pendente de aceite” ou “não iniciada”. Isso é incompatível com o estado real: o plano está integrado e a S0 foi aberta em branch própria.
+Após a integração da PR #70, superfícies vivas ainda descreviam a V14 como “candidata de planejamento pendente de aceite” ou “não iniciada”. Isso era incompatível com o estado real: o plano estava integrado e a S0 foi aberta em branch própria.
 
 Tratamento: alterar somente blocos vivos; preservar cronologia e evidências históricas.
 
@@ -220,29 +220,62 @@ O workflow V14 executa:
 
 ## 9. Métricas e failures intermediários
 
-**Pendente de execução do primeiro HEAD completo da S0.**
+A S0 não estima métricas do README. O runner mediu a árvore real antes da correção do snapshot e os failures intermediários ficam preservados.
 
-A S0 não estima métricas do README. Se o runner medir valores diferentes do snapshot vivo, o failure será preservado e somente os valores realmente observados serão usados numa correção aditiva.
+### Failure 1 — guarda S0 inicial
 
-Registro inicial do baseline antes dos novos artefatos S0:
+HEAD `42eb2074425e827a7865e4e6a5771818f3881940`, workflow V14 run `35127535148`.
 
-- repo identidade: 1482 arquivos;
-- repo links: 1960;
-- worktree extras: 0;
-- validador: 0 falhas / 0 avisos.
+- a guarda executou 17 testes e falhou em 2;
+- ambos os failures eram asserts de formatação excessivamente literais: um exigia backticks específicos ao redor de estados já preservados semanticamente e outro procurava uma frase sem a marcação Markdown presente no checkpoint;
+- não houve reclassificação de `A11-01`, bloqueios ou contratos;
+- no workflow V14, regressões, V00, validador e fronteira ficaram `skipped` após a guarda;
+- V00/V01/V02 independentes concluíram em `success`;
+- CI/V10/V11/V12/V13 também falharam porque a nova suíte V14 passou a integrar as regressões `test_temas*.py` e propagou os mesmos dois asserts.
 
-Esses números são baseline da PR #70, **não** uma previsão para a candidata S0.
+A correção `18465913feab5591e07e780737093294aae6c8bb` alterou somente a semântica dos asserts, sem modificar documentação, produto ou métricas.
+
+### Failure 2 — medição fail-closed das métricas
+
+HEAD `18465913feab5591e07e780737093294aae6c8bb`, workflow V14 run `35127864758`.
+
+Antes do validador:
+
+- guarda V14 S0: **17/17 PASS**;
+- regressões canônicas V01–V14 S0: **718/718 PASS**;
+- compatibilidade V00: **12/12 PASS**.
+
+O validador mediu:
+
+- repo identidade: **1485 arquivos**;
+- repo links: **1971 links**;
+- worktree extras: **0**;
+- divergência do README: 1482/1960 versus 1485/1971;
+- resultado: **2 falhas / 0 avisos**;
+- fronteira S0 ficou `skipped` depois do failure do validador.
+
+No mesmo HEAD, V00/V01/V02 concluíram em `success`; CI/V10/V11/V12/V13/V14 concluíram em `failure` pela mesma divergência documental do snapshot. Nenhum desses failures é reclassificado como PASS.
+
+### Snapshot medido para a correção
+
+Os valores que passam a ser canônicos para esta candidata, sujeitos à recertificação do novo HEAD, são:
+
+- repo identidade: **1485 arquivos**;
+- repo links: **1971 links**;
+- worktree extras: **0**.
+
+O README raiz é corrigido somente para esses valores observados. A correção não relaxa gate nem estima contagem.
 
 ## 10. Estado Git da candidata
 
 Na abertura:
 
 - branch base: `350dcf0b37e730042ef961f12f11b30b2660d2c6`;
-- merge-base inicial esperado: o próprio baseline;
-- `ahead_by` inicial antes do primeiro commit S0: 0;
-- `behind_by` inicial: 0.
+- merge-base inicial: o próprio baseline;
+- primeiro HEAD completo: `42eb2074425e827a7865e4e6a5771818f3881940`;
+- segundo HEAD, após correção da guarda: `18465913feab5591e07e780737093294aae6c8bb`.
 
-O SHA final, comparação final, runs e contagens serão preenchidos somente depois da execução real.
+A certificação final será atribuída somente ao HEAD que contiver a correção medida 1485/1971 e concluir os workflows reais. Se a `main` avançar, essa certificação ficará stale e exigirá reconciliação aditiva.
 
 ## 11. Gate de aceite
 
