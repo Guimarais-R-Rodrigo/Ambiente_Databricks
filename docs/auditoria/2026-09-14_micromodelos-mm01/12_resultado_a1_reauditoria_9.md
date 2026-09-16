@@ -26,7 +26,7 @@
 | Merge-base | `1d46c9625fb5bfd6d1b666ddff055507238788bf` | Compare GitHub `main...HEAD`. |
 | `ahead_by` | `125` | Compare GitHub retornou `status=ahead`, `ahead_by=125`. |
 | `behind_by` | `0` | Compare GitHub retornou `behind_by=0`. |
-| Integração real da `main` | PASS | HEAD é merge commit `chore(mm01): reconciliar main apos V13 S0`; seus pais são `e4567870...` e a `main` atual `1d46c962...`. |
+| Integração real da `main` | PASS | HEAD é merge commit `chore(mm01): reconciliar main apos V13 S0`; seus pais são `e4567870e52d03b9a435dba3dd102c00215451aa` e a `main` atual `1d46c962...`. |
 | Commits atuais da PR | `125` | REST atual da PR. |
 | Arquivos alterados | `29` | REST/compare atuais; superfície restrita a MM01, documentos compartilhados previstos, workflow e requisitos de manutenção. |
 | Estado da PR | aberta | `state=open`. |
