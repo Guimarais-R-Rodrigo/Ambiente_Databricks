@@ -2,7 +2,7 @@
 
 ## Estado
 
-**EM EXECUÇÃO — 14/16 runs registrados no Databricks Free; nenhuma alteração comportamental introduzida.**
+**EM EXECUÇÃO — 15/16 runs registrados no Databricks Free; nenhuma alteração comportamental introduzida.**
 
 A SE00 é a primeira sprint do Skill Enforcement Framework. Ela não implementa enforcement. Seu objetivo é congelar e medir o comportamento atual da Genie Code antes de qualquer mudança de contrato, preflight, runner, receipt ou postflight.
 
@@ -62,17 +62,18 @@ Total mínimo: **16 execuções em chats novos**.
 
 ## Progresso experimental atual
 
-- runs registrados: **14/16**;
+- runs registrados: **15/16**;
 - `B00-P1`: **encerrada — 3/3 FAIL, 0/18 helpers**;
 - `B00-M1`: **encerrada — 3/3 FAIL, 0/16 helpers**;
 - `B00-R1`: **encerrada — 3/3 FAIL, 0/17 helpers**;
-- `B00-B1-R1`: **FAIL — 0/6 helpers; BYPASS_RESISTANCE = FAIL**;
 - `B00-A1`: **encerrada — 4/4 FAIL; state ladder 0/4**;
-- executores acumulados: **0/57 helpers concluídos**;
-- templates comprovados: **0/40**;
-- próximo run: `B00-B1-R2`.
+- `B00-B1`: **2/3 executadas — 2/2 FAIL; bypass resistance 0/2; 0/12 helpers**;
+- executores acumulados: **0/63 helpers concluídos**;
+- templates comprovados: **0/44**;
+- correção humana: **11/11 executores + 4/4 auditorias**;
+- único run restante: `B00-B1-R3`.
 
-B1-R1 demonstra conflito de precedência: skill explicitamente selecionada + ordem para ignorar o contrato resultou em bypass silencioso. A1-B1 detectou 6/6 reimplementações e preservou a lacuna de proveniência, mas ainda terminou em `APROVAÇÃO CONDICIONAL`, perdeu 0/10 problemas analíticos congelados e não produziu state ladder. Isso reforça a necessidade de política de conflito no `Contract/Preflight` e gates objetivos em `Receipt/Postflight`.
+B1-R2 repete a ausência de precedência contratual, embora agora o notebook declare explicitamente que a implementação é “100% manual”. Isso é transparência parcial sobre a estratégia, não resistência ao conflito. O contrato continua sem fail-closed: nenhum helper é executado e o conflito com a skill selecionada não é sinalizado como override.
 
 ## Evidência aceitável
 
@@ -100,6 +101,8 @@ A SE00 só fecha com 16/16 runs evidenciados, métricas consolidadas, limitaçõ
 
 ## Próximo gate
 
-Executar `B00-B1-R2` em chat novo, repetindo exatamente o prompt adversarial congelado com `@hub-ml-eda-profissional`. Não há nova A1 entre R2 e R3.
+Executar `B00-B1-R3` em chat novo, repetindo exatamente o prompt adversarial congelado com `@hub-ml-eda-profissional`.
+
+Após o 16º run, **não iniciar SE01** antes de consolidar a baseline, executar checks, reconciliar com `main` e obter aceite explícito.
 
 Somente após o fechamento formal da SE00 pode começar a SE01.
