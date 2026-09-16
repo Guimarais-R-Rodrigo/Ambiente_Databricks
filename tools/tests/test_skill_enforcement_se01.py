@@ -135,6 +135,7 @@ class CapabilityProbeTests(unittest.TestCase):
         run = subprocess.run(
             [
                 sys.executable,
+                "-B",
                 str(PROBE_PATH),
                 "--assistant-root",
                 str(ASSISTANT_ROOT),

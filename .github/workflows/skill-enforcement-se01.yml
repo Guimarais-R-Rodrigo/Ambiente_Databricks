@@ -49,10 +49,19 @@ jobs:
       - name: Validação estrutural
         run: python tools/validate_assistant.py
 
+      - name: Renderizar simulado canonicamente
+        run: python tools/render_simulado.py --write
+
+      - name: Publicar artifact do skill renderizado
+        uses: actions/upload-artifact@v4
+        with:
+          name: se01-skill-renderizado
+          path: Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Renderer canônico não pode deixar diff
-        run: |
-          python tools/render_simulado.py --write
-          git diff --exit-code -- Novo_Ambiente_Simulado
+        run: git diff --exit-code -- Novo_Ambiente_Simulado
 
       - name: Snapshot README
         run: python tools/validate_assistant.py --conferir-readme
