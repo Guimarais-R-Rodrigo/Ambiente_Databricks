@@ -4,7 +4,7 @@ Data: 16/09/2026.
 
 Branch: `codex/temas-v13-s7-handoff-fechamento-20260916`.
 
-Estado deste documento: **checkpoint final candidato da S7/V13, pendente de recertificação do SHA que contém a evidência humana e este próprio arquivo**.
+Estado deste documento: **checkpoint final candidato da S7/V13, com homologação humana registrada e árvore medida; pendente apenas da reconciliação do README raiz e recertificação do SHA final exato**.
 
 ## 1. Baseline de abertura
 
@@ -45,8 +45,8 @@ Também evolui:
 
 - `docs/sprints/sistema_temas/V13/README.md`;
 - `.github/workflows/temas-v13-ci.yml`;
-- `README.md` somente quando o runner mede a árvore real;
-- guardas históricas S5/S6 exclusivamente para reconhecer a transição para S7.
+- `README.md` somente depois da medição real da árvore final;
+- guardas históricas S5/S6 exclusivamente para reconhecer a transição para S7 e, depois, o PASS humano já registrado.
 
 Não há alteração em `ambiente_fonte/` ou `Novo_Ambiente_Simulado/`.
 
@@ -79,7 +79,7 @@ Fronteira daquele SHA:
 
 O bloqueio era intencional: CI não podia fabricar a evidência humana exigida pelo Plano Mestre.
 
-## 5. Failures intermediários preservados
+## 5. Failures intermediários preservados antes da sessão humana
 
 ### 5.1 First head
 
@@ -211,22 +211,104 @@ O workflow candidato deve registrar:
 
 V14 continua não iniciada.
 
-## 12. Efeito deste checkpoint na árvore
+## 12. Failures de transição após a evidência humana
 
-Este arquivo adiciona um novo caminho versionado. As métricas 1455 arquivos / 1941 links pertencem ao HEAD técnico anterior à inclusão deste checkpoint e da evidência final.
+### 12.1 Primeiro head com a evidência e o checkpoint
 
-Nenhum valor novo é presumido.
+HEAD:
 
-O próximo gate é:
+`4e57db8bb7b6bde3ed1c8c27503b343f773065f3`.
 
-1. executar os workflows do HEAD que contém a evidência humana e este checkpoint;
-2. observar a medição real do validador;
-3. reconciliar o README raiz somente com valores medidos, se houver divergência;
-4. recertificar o SHA final exato;
-5. reconfirmar `main`, merge-base, ahead/behind, diff, mergeabilidade, issue #57 e concorrência;
-6. solicitar aceite explícito do mantenedor para integrar a PR S7 e encerrar V13.
+O workflow V13 `35103765065` não chegou ao gate humano final: S1–S4 passaram e S5 falhou porque a guarda histórica de S5 ainda exigia `HUMAN-01 = BLOCKED` no README vivo. S6, S7, regressões, V00, validador e fronteiras posteriores ficaram `skipped`.
 
-## 13. Ponto de parada
+A correção `db96839457874db92a0462cecda6b8b2779448a8` mudou somente a expectativa viva S5 de `BLOCKED` para `PASS`; o contrato histórico S5 permaneceu intacto.
+
+A mesma guarda de transição existia na suíte S6 e foi corrigida aditivamente em `31aaac45b5157cc556c5156fd1dfdbbfb8c94c73`, novamente sem alterar a engine S6 ou seus ensaios.
+
+### 12.2 Head funcionalmente completo e medição real
+
+HEAD:
+
+`31aaac45b5157cc556c5156fd1dfdbbfb8c94c73`.
+
+Resultados reais da PR:
+
+| Workflow | Run | Resultado |
+|---|---:|---|
+| V00 | `35104333636` | `success` |
+| V01 | `35104333999` | `success` |
+| V02 | `35104333757` | `success` |
+| V10 | `35104334511` | `failure` |
+| V11 | `35104333623` | `failure` |
+| V12 | `35104333626` | `failure` |
+| V13 | `35104333703` | `failure` |
+| CI geral | `35104333775` | `failure` |
+
+A causa compartilhada dos failures longos foi documental:
+
+- README raiz: 1455 arquivos / 1941 links;
+- runner: **1456 arquivos / 1942 links**;
+- CI geral: **2 falhas / 0 avisos**, ambas exclusivamente na saída colada do README.
+
+Antes do validador, o CI geral registrou `temas = OK`; biblioteca, ferramentas, transição, READMEs e Concierge também passaram nos respectivos alcances.
+
+No V13 desse SHA:
+
+- S1 PASS;
+- S2 PASS;
+- S3 PASS;
+- S4 PASS;
+- S5 PASS;
+- S6 PASS;
+- S7 PASS, incluindo a evidência humana versionada;
+- regressões V01–V13: **701/701 PASS**;
+- V00: **12/12 PASS**;
+- validador: failure somente pela divergência 1455/1941 → 1456/1942;
+- fronteiras S1–S7: `skipped`, não PASS.
+
+No V12 `35104333626`:
+
+- protocolo/mutantes: PASS;
+- evidência real: PASS;
+- regressões: PASS;
+- V00: PASS;
+- validador: failure pela mesma divergência documental;
+- `Aplicabilidade do escopo estrito V12`: skipped;
+- `Escopo V12 e higiene`: skipped.
+
+Portanto esse SHA não é chamado de `NOT_APPLICABLE` nem de PASS para os steps que não chegaram a executar.
+
+No V10 e V11, suites próprias, regressões e V00 passaram; ambos falharam somente na validação estrutural/documental e seus steps de escopo posteriores ficaram skipped.
+
+Nenhum gate foi relaxado para produzir a medição.
+
+## 13. Métricas finais medidas antes da reconciliação
+
+A árvore que contém a evidência humana e `CHECKPOINT_S7.md` foi medida em:
+
+- `repo (identidade) = 1456`;
+- `repo (links) = 1942`;
+- `worktree (extras) = 0`.
+
+Esses são os únicos valores autorizados para a correção final do README raiz. Não há estimativa.
+
+## 14. Próximo gate
+
+A próxima alteração deve ser exclusivamente a reconciliação do README raiz para:
+
+- estado humano `HUMAN-01 = PASS`;
+- métricas 1456/1942;
+- V14 ainda não iniciada.
+
+Depois disso:
+
+1. recertificar os oito workflows no SHA final exato;
+2. reconfirmar V12 e V13 no mesmo SHA;
+3. reconfirmar `main`, merge-base, ahead/behind, diff, mergeabilidade, issue #57 e concorrência;
+4. atualizar apenas a descrição da PR com a certificação final;
+5. solicitar aceite explícito do mantenedor para integrar a PR S7 e encerrar V13.
+
+## 15. Ponto de parada
 
 `HUMAN-01 = PASS`, mas a S7 ainda não está integrada.
 
