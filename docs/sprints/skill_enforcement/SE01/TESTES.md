@@ -49,16 +49,18 @@ Isso prova apenas portabilidade Python/read-only do script. **Não prova que o G
 
 ## 4. Estado técnico já observado
 
-No commit `fda26d130e559d3fdb8ee69fcb785ffecc76a049`, o workflow SE01 executou efetivamente e registrou:
+A candidata publicada/certificada no Free é `637a4b38178c63ffee12ece801e847eedd83a054`.
+
+Nesse HEAD:
 
 - contrato: 1/1 PASS;
-- suíte SE01: 11/11 PASS;
-- `validate_assistant.py`: 0 falhas / 0 avisos;
-- renderer canônico: limpo após materialização do espelho.
-
-O snapshot medido foi 1494 arquivos / 1961 links, posteriormente colado no README raiz.
-
-A rodada de Actions seguinte não obteve runner (`runner_id=0`, `runner_name=""`, `steps=[]`), inclusive em rerun manual de um único job. Portanto, o CI final do HEAD vigente continua pendente; esse evento não substitui teste nem é classificado como regressão funcional.
+- suíte SE01: 14/14 PASS;
+- `validate_assistant.py --conferir-readme`: 0 falhas / 0 avisos;
+- renderer: sem diff;
+- snapshot: 1495 arquivos / 1962 links;
+- 10/10 workflows aplicáveis: `success`;
+- publicação Free: PASS;
+- verify por conteúdo: 550/550 e `APROVADO: 0 problema(s)`.
 
 ## 5. Preparação do Databricks Free
 
@@ -117,6 +119,23 @@ Critérios mínimos observáveis:
 
 Se o agente apenas disser que executou, sem evidência material da execução do script, classificar como `NOT_OBSERVABLE`, não como PASS.
 
+### 6.1 Regra de repetição após `NOT_OBSERVABLE`
+
+Um run `NOT_OBSERVABLE` é preservado como resultado válido e não é reclassificado por uma repetição posterior.
+
+Se a interface do mesmo run ainda expuser tool cards, trace ou célula executada que não tenha sido preservada no texto copiado, essa evidência pode complementar **o mesmo run**. Na ausência dela, abrir **outro chat novo** e repetir **o mesmo prompt canônico, sem alterações**.
+
+No Run 2:
+
+- não acrescentar pedido de prova ao prompt;
+- não ajudar a localizar o script;
+- não executar o script manualmente;
+- não criar célula manual;
+- antes de copiar a resposta final, expandir e preservar por screenshot qualquer tool card/trace que mostre leitura/execução de `scripts/capability_probe.py`;
+- se a UI não expuser evidência material mesmo com resposta semanticamente correta, classificar novamente como `NOT_OBSERVABLE` e registrar isso como limitação real da superfície Genie Code.
+
+Dois `NOT_OBSERVABLE` independentes, com respostas semanticamente compatíveis, **não equivalem a PASS**; passam a ser evidência de limitação de observabilidade da superfície.
+
 ## 7. Regressão mínima de uso da skill
 
 Depois do probe, abrir outro chat novo e repetir o prompt natural congelado da SE00-P1:
@@ -134,12 +153,13 @@ Para cada teste no Free:
 - data/hora;
 - branch e commit publicados;
 - verify por conteúdo;
-- chat novo confirmado;
+- chat novo confirmado ou informado pelo usuário;
 - prompt exato;
 - skill selecionada/observada;
 - notebook/artefato, quando houver;
 - marcador bruto do probe;
 - se houve execução real do script ou reimplementação;
+- tool card/trace/célula material, quando disponível;
 - limitações/erros;
 - veredito `PASS`, `FAIL` ou `NOT_OBSERVABLE`.
 
