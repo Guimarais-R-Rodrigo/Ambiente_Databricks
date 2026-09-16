@@ -248,11 +248,12 @@ class V13S5CompatibilityTests(unittest.TestCase):
         self.assertNotIn("DATABRICKS_TOKEN", workflow)
         self.assertNotIn("secrets.", workflow)
 
-    def test_v13_live_readme_moves_to_s5_without_starting_s6(self):
+    def test_v13_live_readme_preserves_s5_history_when_s6_starts(self):
         text = V13_README.read_text(encoding="utf-8")
-        self.assertIn("S4 — PR #63", text)
-        self.assertIn("S5 — compatibilidade e acessibilidade operacional", text)
-        self.assertIn("S6 não foi iniciada", text)
+        self.assertIn("S5 — PR #64", text)
+        self.assertIn("11e4e17f02d4ba7846f5b80bd88c0180124b5772", text)
+        self.assertIn("S6 — ensaios operacionais por superfície", text)
+        self.assertIn("S7 não foi iniciada", text)
 
 
 if __name__ == "__main__":
