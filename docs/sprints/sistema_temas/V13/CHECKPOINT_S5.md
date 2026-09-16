@@ -4,7 +4,7 @@ Data: 16/09/2026.
 
 Branch: `codex/temas-v13-s5-compatibilidade-acessibilidade-20260916`.
 
-Estado deste documento: **candidata S5 em certificação final**. O HEAD imediatamente anterior à criação deste checkpoint, `d467c57ee9008f3a3ca2b2f198e2d24f1ac5adad`, concluiu 8/8 workflows de PR com `success`. Como este checkpoint acrescenta um novo arquivo à árvore, o novo HEAD precisa ser medido e certificado novamente antes de qualquer aceite.
+Estado deste documento: **candidata S5 em certificação final**. A implementação funcional já foi exercitada em múltiplas árvores. Este documento preserva os failures intermediários e a medição do próprio checkpoint; a certificação do HEAD final exato deve ser registrada na PR e na entrega ao mantenedor depois do commit corretivo final.
 
 ## 1. Baseline de abertura
 
@@ -366,22 +366,100 @@ A S5 não executou:
 
 Git/CI continuam evidência técnica, não homologação de ambiente.
 
-## 18. Efeito deste checkpoint na árvore
+## 18. Medição do checkpoint-head
 
-Este arquivo é um novo caminho versionado. Portanto, as métricas **1447/1918** pertencem ao HEAD anterior `d467c57e...` e **não são presumidas para o HEAD que contém este checkpoint**.
+O checkpoint foi incluído no HEAD:
 
-O próximo gate é:
+`3989bddbf4e205938cd33edc2d9c54af3df09a4e`.
 
-1. observar todos os workflows do novo SHA;
-2. registrar a medição real do validador;
-3. preservar qualquer failure de métrica;
-4. corrigir o README raiz somente com a saída real;
-5. atualizar este checkpoint com a nova evidência sem criar outro arquivo;
-6. recertificar o SHA resultante;
-7. reconfirmar `main`, merge-base, ahead/behind, diff, mergeabilidade, issue #57 e concorrência;
-8. parar para aceite explícito.
+O runner mediu:
 
-## 19. Ponto de parada
+- `repo (identidade) = 1448`;
+- `repo (links) = 1918`;
+- worktree extras = 0.
+
+O README raiz ainda declarava 1447/1918. Portanto, o checkpoint-head preserva um failure documental real de **1 falha / 0 avisos**.
+
+Resultados completos do checkpoint-head:
+
+- V00 `35086510802` — `success`;
+- V01 `35086510703` — `success`;
+- V02 `35086510712` — `success`;
+- CI geral `35086510798` — `failure`;
+- V10 `35086510862` — `failure`;
+- V11 `35086510869` — `failure`;
+- V12 `35086510786` — `failure`;
+- V13 `35086510719` — `failure`.
+
+No CI geral:
+
+- suíte de temas: PASS;
+- biblioteca: PASS;
+- ferramentas: PASS;
+- transição: PASS;
+- READMEs: PASS;
+- Concierge: PASS nos gates aplicáveis;
+- validador: FAIL somente pela identidade 1447→1448.
+
+No V10 e V11:
+
+- suites próprias: PASS;
+- regressões: PASS;
+- V00: PASS;
+- validador: FAIL pela mesma divergência documental;
+- steps de escopo posteriores: `skipped`, não PASS.
+
+No V12:
+
+- protocolo/mutantes: PASS;
+- evidência real: PASS;
+- regressões: PASS;
+- V00: PASS;
+- validador: FAIL pela mesma divergência documental;
+- aplicabilidade do escopo estrito: `skipped`;
+- `Escopo V12 e higiene`: `skipped`.
+
+Nesse SHA não se declara `V12_SCOPE=NOT_APPLICABLE`, pois o step de aplicabilidade não executou.
+
+No V13:
+
+- S1: PASS;
+- validador S1: PASS;
+- S2: PASS;
+- S3: PASS;
+- S4: PASS;
+- S5: PASS;
+- regressões V01–V13: PASS;
+- compatibilidade V00: PASS;
+- validador estrutural/documental: FAIL somente pela identidade 1447→1448;
+- fronteiras S1/S2/S3/S4/S5: `skipped`, não PASS.
+
+Nenhum failure funcional S5 foi observado nessa árvore.
+
+## 19. Correção final da candidata
+
+A correção final deve ser atômica e alterar somente dois arquivos existentes:
+
+- `README.md`: identidade 1447→**1448**, mantendo links em **1918**;
+- este checkpoint: preservação da medição e dos failures do checkpoint-head.
+
+Nenhum novo arquivo, gate, allowlist, contrato ou capability será adicionado nessa correção.
+
+Como o SHA final ainda não existe no momento em que este conteúdo é composto, este documento não antecipa nem inventa sua certificação. O SHA final exato, os run IDs e a fotografia Git serão registrados na descrição da PR #64 e na entrega ao mantenedor depois que todos os workflows terminarem.
+
+## 20. Gate final pendente
+
+Depois da correção atômica, é obrigatório:
+
+1. observar os 8 workflows do novo SHA;
+2. confirmar S1/S2/S3/S4/S5, regressões, V00 e validador no mesmo HEAD;
+3. confirmar V12 com `V12_SCOPE=NOT_APPLICABLE` somente se o step efetivamente executar e imprimir esse valor;
+4. distinguir `skipped` de PASS;
+5. reconfirmar `main`, merge-base, ahead/behind, diff e mergeabilidade;
+6. reconfirmar issue #57 e PRs concorrentes;
+7. parar para aceite explícito.
+
+## 21. Ponto de parada
 
 S6 permanece não iniciada.
 
