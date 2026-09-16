@@ -2,7 +2,7 @@
 
 ## Estado
 
-**EVIDÊNCIA LOCAL/CI PARCIAL REGISTRADA; DATABRICKS FREE AINDA PENDENTE.**
+**EVIDÊNCIA LOCAL/CI REGISTRADA; PUBLICAÇÃO DATABRICKS FREE AINDA NÃO CERTIFICADA.**
 
 Este arquivo recebe somente resultados realmente observados. Implementação, PR e autorrelato não são promovidos a evidência do Genie Code.
 
@@ -11,12 +11,13 @@ Este arquivo recebe somente resultados realmente observados. Implementação, PR
 - branch: `sef/SE01-contrato`;
 - commit que materializou fonte + simulado: `fda26d130e559d3fdb8ee69fcb785ffecc76a049`;
 - commit de snapshot medido: `264981cb4ce1a5aff8d3c1f6dd54caa1fa57c174`;
-- HEAD validado localmente pelo usuário: `e442b2423c02de59f23183783b493f4b8fb44497`;
+- HEAD validado localmente pelo usuário antes do primeiro publish: `dc4059a3bd7c116bcf40009ec66b1da7a2f809fd`;
+- candidata de compatibilidade do publicador: `77a26173e30929157216da3f9d6734cfa4018de3`;
 - PR: #69, Draft;
 - skill piloto: `hub-ml-eda-profissional`;
 - modo do contrato: `audit`.
 
-## Evidência estática confirmada em CI anterior
+## Evidência estática confirmada
 
 No workflow dedicado SE01 do commit `fda26d130e559d3fdb8ee69fcb785ffecc76a049`, antes do gate de snapshot:
 
@@ -25,46 +26,20 @@ No workflow dedicado SE01 do commit `fda26d130e559d3fdb8ee69fcb785ffecc76a049`, 
 - templates declarados: **4**;
 - suíte `test_skill_enforcement_se01.py`: **11/11 PASS**;
 - `validate_assistant.py`: **APROVADO — 0 falhas / 0 avisos**;
-- renderer canônico: **limpo após materialização do espelho**;
-- `__pycache__` gerado pelo primeiro subprocesso do probe: corrigido com execução filha `python -B` e não incorporado ao produto.
+- renderer canônico: **limpo após materialização do espelho**.
 
-A suíte cobria explicitamente:
+Depois da inclusão do gate schema ↔ validator, a validação local do HEAD `dc4059a3bd7c116bcf40009ec66b1da7a2f809fd` confirmou:
 
-1. contrato canônico válido;
-2. módulo/helper inexistente;
-3. símbolo não exportado pela API pública;
-4. template ausente;
-5. `schema_version` não suportada;
-6. resource duplicado;
-7. condition fora do vocabulário;
-8. skill divergente da pasta;
-9. tentativa prematura de `mode="enforce"`;
-10. resolução pública real de `index_generator`;
-11. execução local read-only do capability probe.
-
-## Validação local do HEAD atual
-
-Em 16/09/2026, o usuário executou a candidata em worktree Git isolado no Windows, preservando integralmente o worktree V12 que possuía alterações locais.
-
-Estado observado antes dos testes:
-
-- worktree: `<workspace-local>/Ambiente_Databricks_SE01`;
-- branch: `sef/SE01-contrato`;
-- HEAD: `e442b2423c02de59f23183783b493f4b8fb44497`;
-- `git status --short`: limpo.
-
-Resultados executados:
-
-- `python -B tools/skill_enforcement/validate_contracts.py`: **PASS — 1/1 contrato válido**;
-- recursos do contrato: **10**;
-- templates do contrato: **4**;
-- `python -B tools/tests/test_skill_enforcement_se01.py`: **12/12 PASS**;
-- novo teste `test_schema_vocabularies_match_validator`: **PASS**;
+- contrato: **1/1 PASS**;
+- recursos: **10**;
+- templates: **4**;
+- suíte SE01: **12/12 PASS**;
+- `test_schema_vocabularies_match_validator`: **PASS**;
 - capability probe local read-only: **PASS**;
-- `python tools/validate_assistant.py --conferir-readme`: **APROVADO — 0 falhas / 0 avisos**;
+- `validate_assistant.py --conferir-readme`: **APROVADO — 0 falhas / 0 avisos**;
 - worktree extras: **0**.
 
-A execução local atual confirma o novo gate de coerência entre JSON Schema e validador, mas não substitui o capability probe real no Genie Code nem o CI final do HEAD.
+No mesmo HEAD `dc4059a3bd7c116bcf40009ec66b1da7a2f809fd`, os **10/10 workflows aplicáveis da PR concluíram em `success`**, incluindo `Skill Enforcement SE01`, `CI local reproduzível`, V00, V01, V02, V08, V10, V11, V12 e V13.
 
 ## Snapshot medido
 
@@ -79,25 +54,51 @@ A árvore validada mantém:
 
 O README raiz registra esses valores medidos.
 
-## Incidente operacional do GitHub Actions
+## Incidente de publicação no Databricks Free
 
-As rodadas automáticas recentes terminaram como `failure` antes de executar testes.
+A autenticação do profile pessoal foi validada e o dry-run do publicador passou com:
 
-Observado nos workflows acionados:
+- árvore publicável: **550 arquivos**;
+- fonte ↔ simulado: **em dia**;
+- destino pessoal explicitamente protegido por profile + expected-host.
 
-- conclusão reportada pelo GitHub: `failure`;
-- job sem runner/steps executados (`steps=[]` ou `steps=null`);
-- o padrão também ocorreu em workflows não relacionados à SE01;
-- logs de execução dos comandos não existem porque nenhum step iniciou.
+Na primeira execução real do `tools/publicar_free.py --execute`, a fase `workspace import-dir --overwrite` materializou a árvore remota. Em seguida, a segunda fase histórica do publicador tentou reenviar individualmente o primeiro notebook didático como `SOURCE` e recebeu `PROTOCOL_ERROR`.
 
-**Classificação:** indisponibilidade/recusa operacional do GitHub Actions nessas rodadas. Não é classificada como regressão do contrato, dos testes ou do snapshot, porque os comandos não chegaram a executar.
+O diagnóstico controlado observou:
 
-O gate de CI final permanece **PENDENTE** até existir execução real dos jobs no HEAD vigente. A evidência local 12/12 não é promovida a CI.
+- o destino sem extensão já existia no workspace como `object_type=NOTEBOOK`, `language=PYTHON`;
+- o caminho equivalente com `.py` não existia;
+- o reenvio individual do mesmo notebook falhou **3/3** com o mesmo `PROTOCOL_ERROR`;
+- a publicação completa não foi repetida após esse diagnóstico;
+- o `--verify --conteudo` não foi executado nessa tentativa e, portanto, **nenhum PASS de publicação é declarado**.
+
+### Classificação do incidente
+
+A evidência demonstra que a premissa histórica do publicador — “`import-dir` sempre deixa o notebook didático como FILE e exige reenvio individual” — não vale para a CLI/runtime observados nesta rodada. O próprio `import-dir` já materializou o objeto como `NOTEBOOK`; a segunda escrita era redundante e foi o ponto de falha.
+
+Isso é classificado como **incompatibilidade operacional do publicador com o comportamento atual da CLI**, não como falha do contrato SE01 nem como falha do capability probe.
+
+## Correção de compatibilidade do publicador
+
+A candidata foi ajustada para um fluxo compatível e fail-safe:
+
+1. executar `workspace import-dir --overwrite`;
+2. para cada notebook didático, consultar `workspace get-status`;
+3. se o objeto já for `NOTEBOOK`, preservar o resultado e não fazer segunda escrita;
+4. se não for `NOTEBOOK`, usar o reenvio individual legado como fallback `SOURCE/PYTHON/--overwrite`;
+5. manter `--verify --conteudo` como autoridade final de inventário, tipo e bytes.
+
+A suíte dirigida ganhou dois casos adicionais:
+
+- notebook já materializado pelo `import-dir` → **não reimportar**;
+- objeto não materializado como notebook → **usar fallback SOURCE**.
+
+A suíte passa de 12 para **14 testes**. O gate dessa correção permanece pendente até execução efetiva do CI do HEAD correspondente e nova publicação + verify no Free.
 
 ## Capability probe no Free
 
 - status: **PENDENTE**;
-- branch/commit publicado: —;
+- branch/commit publicado e verificado: —;
 - verify por conteúdo: —;
 - chat novo: —;
 - prompt exato: definido em `TESTES.md`;
@@ -116,4 +117,4 @@ O gate de CI final permanece **PENDENTE** até existir execução real dos jobs 
 
 ## Regra
 
-Não preencher lacunas por inferência. `NOT_OBSERVABLE` é resultado válido e distinto de `PASS`. Uma falha de infraestrutura antes da alocação de runner também não é convertida em `PASS` nem em falha funcional da candidata.
+Não preencher lacunas por inferência. `NOT_OBSERVABLE` é resultado válido e distinto de `PASS`. Publicação parcial ou execução interrompida antes do `--verify --conteudo` também não é convertida em PASS.
