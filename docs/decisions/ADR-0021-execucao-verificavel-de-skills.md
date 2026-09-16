@@ -91,12 +91,39 @@ Databricks Free, em chat novo.
 - O resultado do capability probe poderá confirmar ou alterar a estrutura
   prevista para SE02/SE03 sem reescrever esta evidência histórica.
 
+## Resultado experimental da SE01 — registro append-only
+
+Em 16/09/2026, o capability probe foi executado no Databricks pessoal/Free em
+chat novo e retornou evidência observável do marcador esperado, incluindo
+`assistant_root_resolved=true`, import de
+`hub_snippets.constants.format_br.fmt_int`, `sample_result="1.234"`,
+`status="PASS"` e `writes_performed=false`.
+
+Esse resultado confirma a viabilidade da superfície **no cenário testado**. Ele
+não demonstra execução determinística universal pelo Genie Code e não transforma
+`mode="audit"` em enforcement.
+
+Após cumprir a função experimental, o probe temporário foi conscientemente
+aposentado antes da homologação da SE01:
+
+- `scripts/capability_probe.py` foi removido da fonte e do derivado;
+- a seção temporária foi removida do `SKILL.md`;
+- a suíte passou a proteger essa ausência;
+- a evidência histórica do experimento foi preservada em documentação;
+- o contrato v0.1, schema e validador permanecem;
+- preflight, runner, receipt e postflight continuam fora do escopo da SE01.
+
+A forma definitiva dessas camadas permanece decisão de sprints posteriores e
+não é antecipada por este ADR. O status do ADR permanece **Proposto** até o gate
+de aceite humano aplicável; este registro de resultado não equivale a aceitação.
+
 ## Referências
 
 - `docs/sprints/skill_enforcement/PLANO_MESTRE.md`
 - `docs/sprints/skill_enforcement/SE00/RESULTADOS.md`
 - `docs/sprints/skill_enforcement/SE00/CHECKPOINT.md`
 - `docs/sprints/skill_enforcement/SE01/README.md`
+- `docs/sprints/skill_enforcement/SE01/RESULTADOS.md`
 - `tools/skill_enforcement/execution_contract.schema.json`
 - `tools/skill_enforcement/validate_contracts.py`
 - `ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/execution_contract.json`
