@@ -2,109 +2,123 @@
 
 ## Veredito atual
 
-**ABERTA / NÃO HOMOLOGADA / NÃO INTEGRADA.**
+**CANDIDATA EM FECHAMENTO / NÃO HOMOLOGADA / NÃO INTEGRADA / PR #69 DRAFT.**
 
-A SE01 iniciou a camada L1 (`Contract`) do Skill Enforcement Framework na branch `sef/SE01-contrato`.
+A SE01 implementa L1 (`Contract`) para `hub-ml-eda-profissional`: contrato v0.1, schema, validador estático e evidência experimental do capability probe. O probe temporário já foi aposentado do produto; sua evidência histórica permanece preservada. A arquitetura continua `mode="audit"`.
 
-Contrato, suíte, renderer, CI, publicação/verify por conteúdo no Databricks Free, capability probe real e regressão natural da EDA possuem evidência positiva nos respectivos escopos. O usuário aceitou retirar o capability probe temporário do produto final; o fechamento agora depende de materializar essa retirada pelo renderer canônico, registrar o `CHANGELOG.md`, reconciliar com a `main`, executar os gates finais da árvore exata e obter aceite explícito para merge.
+SE02, preflight, runner, Execution Receipt e postflight não foram iniciados.
 
 ## Estado implementado
 
-- [x] branch SE01 criada da `main` vigente na abertura;
 - [x] ADR-0021 proposta;
 - [x] schema v0.1 definido;
 - [x] contrato piloto da EDA em `mode="audit"`;
-- [x] resolução estática de módulos/símbolos públicos;
-- [x] resolução de templates relativos;
-- [x] políticas do contrato confrontadas com o inventário congelado da SE00;
-- [x] vocabulário fechado de conditions;
-- [x] capability probe read-only criado e exercitado no Free;
-- [x] testes positivos/negativos adicionados;
-- [x] coerência de vocabulário entre JSON Schema e validator coberta por teste;
-- [x] publicador Free compatibilizado com `import-dir` que já materializa notebooks;
-- [x] fallback SOURCE preservado e coberto por teste;
-- [x] fonte ↔ `Novo_Ambiente_Simulado` regenerada pelo renderer canônico na candidata publicada;
-- [x] branch reconciliada com `main@350dcf0b37e730042ef961f12f11b30b2660d2c6`, sem force-push, antes da publicação;
-- [x] snapshot reconciliado da candidata publicada: 1495 arquivos / 1962 links;
-- [x] HEAD publicado `637a4b38178c63ffee12ece801e847eedd83a054` validado localmente: contrato 1/1, suíte 14/14, validador 0/0;
-- [x] 10/10 workflows aplicáveis da PR no HEAD publicado: `success`;
-- [x] autenticação do profile pessoal do Databricks CLI validada;
-- [x] dry-run do publicador: 550 arquivos, espelho em dia;
-- [x] publicação corrigida no Databricks Free concluída;
-- [x] 80 notebooks reconhecidos como já materializados pelo `import-dir`;
-- [x] conteúdo remoto exportado/comparado: 550/550 sem divergência;
-- [x] resíduo SE00 identificado por `object_type=NOTEBOOK` + SHA-256 congelado;
-- [x] resíduo SE00 removido somente após identidade byte a byte confirmada;
-- [x] `--verify --conteudo` final no Free: **APROVADO — 0 problema(s)**;
-- [x] drift posterior da `main` classificado como ortogonal ao pacote publicado para fins dos testes comportamentais;
-- [x] capability probe Run 1 executado em chat novo;
-- [x] JSON bruto do mesmo Run 1 recuperado do canvas;
-- [x] capability probe Run 1: **PASS**;
-- [x] regressão natural SE00-P1 executada em outro chat novo;
-- [x] routing natural da `hub-ml-eda-profissional`: observável;
-- [x] regressão natural: **PASS — sem degradação material atribuível ao contrato/probe**;
-- [x] limitações reais do Genie Code registradas;
-- [x] decisão consciente: **remover o capability probe temporário antes da integração**;
-- [x] fonte do probe e seção temporária removidas no commit `59d7d9431c1cbaf72695c9596bda246b5a5e7bf5`;
-- [x] teste de aposentadoria do probe substitui o teste local de execução, preservando a suíte em 14 casos;
-- [ ] `Novo_Ambiente_Simulado` rematerializado pelo renderer canônico após a retirada do probe;
-- [ ] entrada SE01 registrada no `CHANGELOG.md` antes do fechamento;
-- [ ] reconciliação final com `main`;
-- [ ] snapshot final reconciliado e documentado;
-- [ ] gates finais/CI da árvore de fechamento;
-- [ ] publicação/verify final da árvore sem o probe, se exigida pelo gate de promoção;
+- [x] resolução estática de módulos, símbolos públicos e templates relativos;
+- [x] políticas e vocabulário fechado de condições;
+- [x] coerência schema ↔ validator coberta por teste;
+- [x] suíte vigente com 14 casos;
+- [x] publicador Free compatibilizado com notebooks já materializados e fallback SOURCE;
+- [x] capability probe read-only executado no Free e documentado historicamente;
+- [x] regressão natural SE00-P1 executada e documentada;
+- [x] decisão de aposentar o probe temporário;
+- [x] probe removido da fonte;
+- [x] seção temporária removida do `SKILL.md`;
+- [x] teste de aposentadoria protege fonte e seção;
+- [x] branch reconciliada com `main@79f53ba1a131d93cbb0fea7bd885da32b82a7588`, sem force-push;
+- [x] `behind_by=0` após a reconciliação;
+- [x] `Novo_Ambiente_Simulado` rematerializado pela saída real do renderer canônico;
+- [x] probe removido também do derivado;
+- [x] contrato permanece no derivado;
+- [x] renderer canônico confirma derivado sem diff;
+- [x] snapshot final medido em 1501 arquivos / 1979 links;
+- [x] `README.md` raiz reconciliado com o snapshot medido;
+- [x] workflow dedicado `Skill Enforcement SE01` em `success` após a correção documental;
+- [ ] `CHANGELOG.md` registrado para SE01;
+- [ ] estado vivo do `PLANO_MESTRE.md` reconciliado;
+- [ ] ADR/índice/documentos finais reconciliados;
+- [ ] todos os workflows do HEAD documental final inspecionados;
+- [ ] checkpoint final publicado na PR #69;
 - [ ] aceite explícito do usuário;
 - [ ] merge da PR.
 
-## Evidência técnica consolidada do HEAD publicado
+## Reconciliação final com a main
 
-No commit `637a4b38178c63ffee12ece801e847eedd83a054`:
+Estado de partida observado em 16/09/2026:
 
-- contrato: **1/1 PASS**;
-- recursos: **10**;
-- templates: **4**;
-- suíte local/CI dirigida: **14/14 PASS**;
-- schema ↔ validator: **PASS**;
-- probe local read-only: **PASS**;
-- compatibilidade do publicador, skip de reenvio redundante: **PASS**;
-- compatibilidade do publicador, fallback SOURCE: **PASS**;
-- `validate_assistant.py --conferir-readme`: **0 falhas / 0 avisos**;
-- snapshot: **1495 arquivos / 1962 links / 0 extras**;
-- GitHub Actions: **10/10 workflows aplicáveis em success**.
+- `main`: `79f53ba1a131d93cbb0fea7bd885da32b82a7588`;
+- branch: `8b2e037db61344f559532f9f3c289ff4467f9ab2`;
+- merge-base: `350dcf0b37e730042ef961f12f11b30b2660d2c6`;
+- `ahead_by=32`;
+- `behind_by=10`;
+- PR #69: aberta, Draft e não mergeável naquele estado.
 
-## Gate Databricks Free
+A divergência foi reconciliada pelo commit:
 
-A publicação corrigida observou:
+`c824c8e973ed7b711ed654605166da794bcbde3c` — `chore(SE01): reconciliar com main`
 
+O merge commit tem como pais a branch SE01 anterior e `main@79f53ba...`. Não houve force-push. A árvore V14 da `main` foi preservada; o `README.md` raiz veio da `main` e suas métricas foram recalculadas depois.
+
+Após a reconciliação, `main` tornou-se o merge-base da PR e `behind_by=0`.
+
+## Materialização final do simulado
+
+Na primeira execução de CI após a reconciliação:
+
+- contrato v0.1: PASS;
+- suíte SE01: 14/14 PASS;
+- validação estrutural: PASS;
+- renderer: PASS;
+- artifact `se01-skill-renderizado`: publicado;
+- `git diff --exit-code -- Novo_Ambiente_Simulado`: FAIL, porque o derivado ainda continha o probe histórico.
+
+Esse failure foi tratado como diagnóstico válido, não reclassificado.
+
+O artifact real do renderer foi então usado para compor o commit:
+
+`70c0f5beb8746502949188bf34e9ac2a557d1125` — `chore(SE01): regenerar ambiente simulado`
+
+No commit seguinte, o workflow confirmou:
+
+- contrato: PASS;
+- 14/14 testes: PASS;
+- `validate_assistant.py`: PASS;
+- renderer: 550 arquivos;
+- artifact: publicado;
+- renderer sem diff: PASS;
+- snapshot README: FAIL apenas porque continha 1490/1978 diante de 1501/1979 medidos.
+
+Esse segundo failure também permanece histórico.
+
+O snapshot foi corrigido no commit:
+
+`0af02feed197b789b00518da898dac3447dc7f37` — `docs(SE01): atualizar snapshot reconciliado`
+
+A execução seguinte do workflow dedicado concluiu em `success`.
+
+## Evidência histórica do Databricks Free
+
+A candidata publicada/certificada no Free foi:
+
+`637a4b38178c63ffee12ece801e847eedd83a054`
+
+Nela foram observados:
+
+- contrato: 1/1 PASS;
+- suíte então vigente: 14/14 PASS;
+- publicação: PASS;
 - 550 arquivos publicáveis;
-- `workspace import-dir --overwrite`: PASS;
-- 80 notebooks já materializados corretamente;
-- 14/14 skills presentes;
-- 5/5 diretórios `hub_` presentes;
-- 0 arquivos ausentes;
-- 550/550 objetos exportados e comparados por conteúdo;
-- 0 divergências de conteúdo.
+- 14/14 skills;
+- 5/5 diretórios `hub_`;
+- 550/550 conteúdos exportados e comparados;
+- ausentes: 0;
+- divergências de conteúdo: 0;
+- verify final: `APROVADO — 0 problema(s)`.
 
-O primeiro verify encontrou apenas `.assistant/EDA Profissional - NYC Taxi Trips`, resíduo do experimento SE00. A limpeza não foi feita por inferência nominal: o objeto remoto era `NOTEBOOK`, e o export Jupyter teve SHA-256 `77069f781aa8145665873b0b441ca40a96e18bb3d29021f448d867a6b2465445`, exatamente o SHA congelado de `B00-P1-R1`. Somente então o objeto foi removido.
+Essa candidata ainda continha o probe experimental. O resultado permanece histórico e não é apresentado como estado remoto atual do pacote sem probe.
 
-O verify final retornou:
+## Capability probe — evidência histórica
 
-- esperados: **550**;
-- ausentes: **0**;
-- obsoletos: **0**;
-- conteúdo: **550/550**;
-- `.assistant/.mcp_servers.json`: reconhecido como gerenciado pela plataforma;
-- resultado: **APROVADO — 0 problema(s)**.
-
-**Gate Databricks Free: PASS para a candidata que continha o probe experimental.**
-
-A retirada do probe muda o pacote final e, por isso, a árvore de fechamento deverá ser revalidada antes da homologação.
-
-## Capability probe — Run 1
-
-O prompt canônico foi enviado com seleção explícita de `@hub-ml-eda-profissional`. A cópia textual inicial perdeu o conteúdo rico do marcador e mostrou apenas `canvascanvas`, gerando classificação provisória `NOT_OBSERVABLE`.
-
-O usuário então abriu o canvas da mesma execução e forneceu o JSON bruto:
+O Run 1 real no Databricks Free produziu, no canvas:
 
 ```json
 {
@@ -117,103 +131,54 @@ O usuário então abriu o canvas da mesma execução e forneceu o JSON bruto:
 }
 ```
 
-Como a evidência adicional pertence ao mesmo Run 1 e satisfaz o marcador esperado, o veredito final é:
+**Capability probe Run 1: PASS no cenário testado.**
 
-**Capability probe Run 1: PASS.**
+A cópia textual inicial ocultou o conteúdo rico como `canvascanvas`; a evidência do canvas complementou o mesmo run. Isso registra uma limitação de observabilidade da interface, não um segundo run.
 
-Limitação da superfície: conteúdo rico de canvas pode não sobreviver à cópia textual e deve ser preservado visualmente quando necessário para auditoria.
+## Regressão natural SE00-P1 — evidência histórica
 
-## Decisão de encerramento do probe
+A regressão natural em chat novo permaneceu funcional e tornou o routing observável. No denominador diretamente comparável ao P1 da SE00, helper adherence passou de 0/6 para 2/6.
 
-O probe cumpriu sua função experimental: comprovou, no Databricks Free, que a Genie Code consegue executar um script relativo à própria Agent Skill e obter uma API pública do Hub.
+Ainda foram observados recursos requeridos/condicionais omitidos ou reimplementados, templates sem prova individual de carregamento, redundância e problemas analíticos/documentais no notebook.
 
-Por aceite explícito do usuário, o probe **não será promovido a componente permanente** da skill EDA. A evidência permanece em ADR/RESULTADOS/CHECKPOINT; o produto final remove `scripts/capability_probe.py` e a seção temporária de `SKILL.md`. Essa retirada evita transformar um instrumento específico da SE01 em dívida operacional da skill e preserva a separação para o preflight real, que pertence à sprint futura apropriada.
+**Veredito da regressão: PASS — nenhuma degradação material atribuível ao contrato/probe.**
 
-## Regressão natural SE00-P1
+Esse PASS não é enforcement e não aprova cientificamente o notebook.
 
-O prompt natural congelado foi executado em outro chat novo. O trace observou roteamento para `hub-ml-eda-profissional` e carregamento da skill antes da construção do notebook.
+## Estado do produto final
 
-Artefato auditado:
+Deve permanecer verdadeiro até o merge:
 
-- `x1 - EDA NYC Taxi Trips.ipynb`;
-- SHA-256: `49b21342ef27059124c12d5cf7d05ed9d6c5bd9a5bb12fc8f210e878a11c8fc4`;
-- 109100 bytes;
-- 16 células: 3 Markdown + 13 código;
-- 13/13 células de código com output persistido;
-- 0 outputs de exceção no notebook final;
-- caminho pessoal hardcoded observado; por isso o notebook bruto não deve ser versionado.
+- contrato v0.1 presente;
+- schema presente;
+- validator presente;
+- probe temporário ausente na fonte;
+- probe temporário ausente no simulado;
+- seção temporária ausente do `SKILL.md`;
+- `mode="audit"`;
+- nenhuma alteração de `.assistant_instructions.md` para enforcement;
+- nenhum preflight;
+- nenhum runner determinístico;
+- nenhum receipt;
+- nenhum postflight;
+- nenhuma implementação SE02.
 
-### Aderência observada — contexto de audit, não enforcement
+## Classificação de evidência
 
-- `quick_profile`: called/completed;
-- `null_summary`: called/completed;
-- `data_quality_check`: não chamado; resumo manual usado no lugar;
-- `smart_sample`: não chamado; `.sample(...).toPandas()` manual;
-- `correlation_matrix`: não chamado; correlação pandas manual;
-- `distribution_grid`: não chamado; bins/Plotly manuais;
-- `safe_display`: não chamado; aplicabilidade não incluída na taxa comparável principal;
-- templates individualmente carregados: **0/4 observáveis**.
+- `PASS`: execução observável satisfez o critério;
+- `FAIL`: execução observável reprovou;
+- `BLOCKED`: gate necessário impedido externamente;
+- `NOT_OBSERVABLE`: evidência insuficiente.
 
-No denominador diretamente comparável ao P1 da SE00, helper adherence melhora de **0/6 para 2/6 (33,3%)**. Reimplementações conservadoras caem para **4** e redundância conservadora para **>=3 padrões**, sem prova de enforcement.
+Failures intermediários e incidentes de infraestrutura permanecem vinculados às árvores em que ocorreram. Nenhum é reescrito como PASS.
 
-### Qualidade analítica independente do gate de regressão
+## Próxima ação
 
-O notebook contém achados que impedem tratá-lo como entrega científica plenamente aprovada, embora não indiquem degradação causada pela SE01:
+1. fechar CHANGELOG, PLANO_MESTRE, ADR/índice e documentação da SE01;
+2. executar/observar os gates da árvore documental final;
+3. confirmar Git/PR/mergeabilidade e todos os workflows aplicáveis;
+4. atualizar o corpo da PR #69;
+5. publicar comentário de checkpoint final;
+6. parar antes do merge e pedir aceite explícito do usuário.
 
-1. resumo Markdown fala em “milhões” quando a execução mostra 21.932 registros;
-2. cita `payment_type`, `rate_code_id`, pedágios, gorjetas e coordenadas ausentes do schema observado;
-3. recomenda `tarifa por milha` junto a possível previsão de tarifa, criando risco de leakage se `fare_amount` for target;
-4. valida granularidade apenas procurando coluna com `id` no nome;
-5. superestima qualidade a partir de nulos sem duplicidade/chave e consistência temporal completas;
-6. mistura médias amostrais do `quick_profile` com resultados full-table sem rotular a população;
-7. descreve visualizações como amostradas quando várias são agregações do dataset inteiro;
-8. o trace mostra assinatura de helper inventada antes da inspeção correta da API;
-9. caminho pessoal do workspace permanece hardcoded.
-
-### Veredito
-
-O objetivo desta regressão era detectar degradação material do uso normal da skill após a introdução do contrato/probe, não exigir enforcement novo.
-
-**Regressão natural SE00-P1: PASS — nenhuma degradação material atribuível ao contrato/probe.**
-
-Esse PASS não aprova o notebook cientificamente e não transforma `mode="audit"` em enforcement. Ele mostra que o fluxo natural continua funcional e apresenta melhora parcial de aderência em relação à SE00.
-
-## Limitações reais consolidadas
-
-1. script relativo da Agent Skill foi executável no cenário testado;
-2. canvas pode ocultar evidência da cópia textual;
-3. carregar skill não garante inspeção prévia correta das assinaturas;
-4. carregar skill não garante chamadas de todos os helpers requeridos/condicionais;
-5. templates continuam sem telemetria automática de consumo;
-6. sem preflight/runner/receipt/postflight, omissões e reimplementações ainda chegam à conclusão normal;
-7. qualidade analítica continua independente da aderência contratual.
-
-## Drift posterior da main
-
-Depois da certificação, a `main` avançou em frente V14 sem tocar o pacote operacional publicado. Isso não exigiu republicação antes dos testes comportamentais. A reconciliação final continua obrigatória antes do fechamento/merge.
-
-## Fronteira de escopo
-
-Não implementado nesta sprint:
-
-- preflight;
-- runner determinístico;
-- receipt;
-- postflight;
-- modo `WARN`/`ENFORCE`;
-- mudança global em `.assistant_instructions.md`;
-- generalização para outra skill;
-- promoção ao workspace do trabalho.
-
-## Próximos gates
-
-1. rematerializar `Novo_Ambiente_Simulado` pelo renderer canônico após a retirada do probe;
-2. registrar a entrada final SE01 no `CHANGELOG.md`;
-3. reconciliar a branch com a `main` vigente;
-4. atualizar snapshot/documentação com valores medidos da composição final;
-5. executar os gates finais/CI da árvore exata de fechamento;
-6. se o pacote final publicado divergir do pacote já certificado, publicar/verificar a árvore sem o probe;
-7. pedir homologação explícita da SE01;
-8. somente após aceite, integrar a PR #69.
-
-SE02 permanece bloqueada até esse fechamento.
+Mesmo após eventual homologação da SE01, SE02 só pode começar em nova autorização.
