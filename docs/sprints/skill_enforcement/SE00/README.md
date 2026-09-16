@@ -2,28 +2,30 @@
 
 ## Estado
 
-**HOMOLOGADA — 16/16 runs concluídos, branch reconciliada com `main`, gates técnicos aprovados e integração da PR #56 autorizada pelo usuário em 16/09/2026.**
+**ENCERRADA / HOMOLOGADA / INTEGRADA — 16/16 runs concluídos, PR #56 integrada na `main` e auditoria pós-merge concluída em 16/09/2026.**
 
 A SE00 é a primeira sprint do Skill Enforcement Framework. Ela não implementa enforcement. Seu objetivo foi congelar e medir o comportamento da Genie Code antes de qualquer mudança de contrato, preflight, runner, receipt ou postflight.
 
-A coleta, a consolidação, a reconciliação e a validação técnica foram concluídas. A homologação aceita a baseline observada — inclusive os resultados FAIL que justificam o SEF — e não os reclassifica como PASS. A SE01 permanece fora deste ato e só pode começar depois da auditoria pós-merge da `main`.
+A homologação aceita a baseline observada como evidência do estado pré-enforcement. Os resultados `FAIL` não foram convertidos em `PASS`; eles constituem a evidência empírica que justifica as sprints seguintes do SEF.
 
-## Linhagem
+## Linhagem e fechamento
 
-- plano mestre integrado pela PR #55;
-- base experimental: `28669f99db27cf23df73549297bbf57eda033f58`;
-- branch: `sef/SE00-baseline`;
-- laboratório: Databricks pessoal/Free;
-- bootstrap anterior ao SE00: 548/548 arquivos comparados, 0 ausentes, 0 obsoletos, 14/14 skills e 5/5 diretórios `hub_*`;
-- árvore operacional `.assistant`: inalterada durante os 16 runs;
-- `main` reconciliada após o congelamento da coleta: `6dfb8707835921f2f48020f383cf571902080109`;
-- snapshot reconciliado validado: **1476 arquivos / 1935 links / 0 extras**;
-- homologação explícita do usuário: **concedida em 16/09/2026**;
-- integração da PR #56: **autorizada**.
+- plano mestre SEF integrado pela PR #55;
+- base experimental congelada: `28669f99db27cf23df73549297bbf57eda033f58`;
+- ambiente de coleta: Databricks pessoal/Free;
+- coleta executada sem republicar ou alterar o Hub entre os 16 runs;
+- branch de coleta: `sef/SE00-baseline`;
+- última `main` reconciliada antes da integração: `62e9404851d6a7902371bd5b6531a113d521311c`;
+- HEAD final da candidata integrada: `4379080a46781a543d8f7933d61c1d024076c096`;
+- PR #56: integrada em `main` pelo merge commit `3341f58a8ebffac8b3f0f8837c7d0d6f8aa0b245`;
+- auditoria pós-merge: **15/15 workflows de `push` concluídos em `success`**;
+- snapshot final validado na `main`: **1480 arquivos / 1957 links / 0 extras**;
+- `.assistant`, `.assistant_instructions.md` e helpers/snippets/scripts do produto: **sem alterações comportamentais pela SE00**;
+- SE01: **não iniciada neste fechamento**.
 
-## Objetivo
+## Objetivo experimental
 
-A baseline mede, separadamente:
+A baseline mediu separadamente:
 
 - ativação natural da skill;
 - execução após seleção explícita;
@@ -33,15 +35,7 @@ A baseline mede, separadamente:
 - estados observáveis de helpers/templates;
 - reimplementação, redundância, false completion e necessidade de correção humana.
 
-## Escopo permitido
-
-Somente documentação de teste, inventários, matriz de casos, templates de evidência, documentos da sprint e índices/documentação necessários para manter os gates consistentes.
-
-## Fora de escopo
-
-É proibido nesta sprint editar `SKILL.md`, `.assistant_instructions.md`, helpers/snippets/scripts do produto, roteamento do Concierge ou implementar preflight/postflight/runner.
-
-## Artefatos
+## Artefatos canônicos
 
 - [`../../../testes/skill_execution/README.md`](../../../testes/skill_execution/README.md)
 - [`../../../testes/skill_execution/casos_eda.json`](../../../testes/skill_execution/casos_eda.json)
@@ -51,86 +45,82 @@ Somente documentação de teste, inventários, matriz de casos, templates de evi
 - [`RESULTADOS.md`](RESULTADOS.md)
 - [`CHECKPOINT.md`](CHECKPOINT.md)
 
-`TESTES.md` e `RESULTADOS.md` preservam o registro técnico da candidata imediatamente antes do aceite; o estado de governança final da sprint é registrado neste README e em `CHECKPOINT.md`.
+`TESTES.md` e `RESULTADOS.md` preservam o registro técnico da candidata e dos 16 runs. Este README e `CHECKPOINT.md` registram o estado de governança pós-merge.
 
-## Piloto EDA — resultado final
+## Resultado final da baseline
 
 Tabela congelada: `samples.nyctaxi.trips`.
 
-| Caso | Repetições | Resultado |
-|---|---:|---|
-| `B00-P1` | 3 | **3/3 FAIL; 0/18 helpers** |
-| `B00-M1` | 3 | **3/3 FAIL; 0/16 helpers** |
-| `B00-R1` | 3 | **3/3 FAIL; 0/17 helpers** |
-| `B00-B1` | 3 | **3/3 FAIL; 0/18 helpers; bypass resistance 0/3** |
-| `B00-A1` | 4 | **4/4 FAIL; state ladder 0/4** |
+| Família | Resultado | Helpers concluídos | Templates comprovados |
+|---|---|---:|---:|
+| `B00-P1` | **3/3 FAIL** | 0/18 | 0/12 |
+| `B00-M1` | **3/3 FAIL** | 0/16 | 0/12 |
+| `B00-R1` | **3/3 FAIL** | 0/17 | 0/12 |
+| `B00-B1` | **3/3 FAIL; bypass resistance 0/3** | 0/18 | 0/12 |
+| `B00-A1` | **4/4 FAIL; state ladder 0/4** | n/a | 0/16 com state ladder |
 
-Total: **16/16 runs executados e evidenciados**.
+Consolidado:
 
-## Métricas finais
-
-- execuções EDA: **12/12**;
+- runs: **16/16**;
+- executores EDA: **12/12**;
 - auditorias A1: **4/4**;
-- helper adherence agregado: **0/69 (0%)**;
+- helper adherence dos executores: **0/69 (0%)**;
 - template consumption comprovado: **0/48**;
 - reimplementações manuais: **67**;
 - computação redundante: **>=77 padrões**;
-- execuções com correção humana necessária: **12/12**;
-- auditorias com correção humana necessária: **4/4**;
+- false completion de recurso/workflow: **3 ocorrências observadas**;
 - execução incompleta: **1/12**;
-- bypass resistance: **0/3**;
-- auditorias com state ladder completo: **0/4**.
+- correção humana: **12/12 executores + 4/4 auditorias**;
+- auditorias com state ladder completo: **0/4**;
+- bypass resistance: **0/3**.
 
-## Conclusão experimental
+## Conclusão de engenharia
 
-A SE00 demonstra que, no estado pré-enforcement:
+A baseline demonstra que, no estado pré-enforcement:
 
-1. selecionar uma skill não garante execução dos recursos declarados;
-2. import não prova chamada ou conclusão;
-3. a Genie pode reimplementar manualmente helpers canônicos;
+1. seleção natural ou explícita de skill não garante execução dos recursos canônicos;
+2. import não prova chamada nem conclusão;
+3. helpers podem ser reimplementados silenciosamente;
 4. templates podem permanecer sem prova de leitura/consumo;
-5. velocidade não recupera aderência;
-6. uma instrução conflitante do usuário pode prevalecer sobre o contrato da skill;
-7. auditoria por outra LLM melhora recall, mas não fornece receipt/state ladder confiável e pode produzir false reassurance;
+5. pressão por velocidade não recupera aderência;
+6. instruções conflitantes do usuário podem prevalecer sobre o contrato da skill;
+7. auditoria textual por outra LLM pode melhorar recall, mas não substitui receipt/state ladder verificável;
 8. qualidade analítica e enforcement são dimensões independentes.
 
-A evidência justifica o desenho:
+A evidência justifica a arquitetura:
 
 `Contract → Preflight → Execute → Receipt → Postflight`
 
-com política explícita de precedência/conflito e gates fail-closed baseados em estados objetivos.
+com política explícita de precedência/conflito, execução determinística quando aplicável, estados machine-readable e gates fail-closed.
 
-## Evidência aceitável
+## Observabilidade
 
-Helpers:
+Helpers seguem a escada:
 
 `declared → located → read → imported → called → completed`
 
-Templates:
+Templates seguem:
 
 `declared → located → read → consumed`
 
-Não promover estados sem evidência; quando a interface não permite decidir, usar `NOT_OBSERVABLE`.
+Quando a interface não permite decidir, o estado permanece `NOT_OBSERVABLE`; ausência de telemetria não é promovida a `PASS`.
 
-## Reconciliação e gates
+## Gate final da SE00
 
-Após o congelamento de 16/16, a branch foi reconciliada com `main@6dfb8707835921f2f48020f383cf571902080109` sem force-push e sem reclassificar resultados históricos.
-
-- branch: **0 commits atrás** da `main` reconciliada;
-- diff contra `main`: exclusivamente documental/instrumental;
-- `.assistant`, `.assistant_instructions.md` e `tools/`: sem alterações SE00;
-- snapshot reconciliado: **1476 arquivos / 1935 links / 0 extras**;
-- os oito workflows aplicáveis do HEAD técnico validado concluíram em **success**;
-- o commit que registra a homologação é exclusivamente documental e deve ter seus próprios checks confirmados antes do merge.
-
-## Homologação
-
-O usuário **homologou explicitamente a SE00 em 16/09/2026** e autorizou a integração da PR #56.
-
-A homologação encerra o gate humano da baseline e preserva todos os resultados individuais como evidência histórica congelada.
+- [x] 16/16 runs documentados;
+- [x] métricas e limitações consolidadas;
+- [x] evidências históricas preservadas;
+- [x] diff da candidata revisado como documental/instrumental;
+- [x] branch reconciliada com a `main` vigente antes do merge;
+- [x] snapshot final validado: 1480/1957/0 extras;
+- [x] 8/8 workflows de PR do HEAD final em `success`;
+- [x] homologação explícita do usuário;
+- [x] PR #56 integrada;
+- [x] `main` pós-merge auditada;
+- [x] 15/15 workflows de `push` pós-merge em `success`.
 
 ## Próxima etapa
 
-A integração da PR #56 está autorizada. Depois do merge e da auditoria pós-merge da `main`, a iniciativa poderá avançar para SE01 em etapa separada.
+A SE00 está formalmente encerrada na `main`.
 
-**A homologação da SE00 não autoriza iniciar SE01 antes da confirmação pós-merge.**
+A próxima sprint prevista é a SE01 — ADR do enforcement, contrato estruturado inicial, validador estático e prova controlada de execução — mas **não foi iniciada neste fechamento**.

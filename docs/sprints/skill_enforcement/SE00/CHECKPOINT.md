@@ -1,29 +1,27 @@
-# SE00 — Checkpoint homologado
+# SE00 — Checkpoint final encerrado
 
 ## Veredito
 
-**HOMOLOGADA — 16/16 RUNS REGISTRADOS, BRANCH RECONCILIADA, GATES REMOTOS APROVADOS E INTEGRAÇÃO DA PR #56 AUTORIZADA PELO USUÁRIO EM 16/09/2026.**
+**SE00 ENCERRADA / HOMOLOGADA / INTEGRADA.**
 
-A baseline conversacional foi integralmente executada no Databricks Free. P1, M1, R1 e B1 encerraram em **3/3 FAIL**; A1 encerrou em **4/4 FAIL**. Nenhum dos doze executores concluiu qualquer helper aplicável e as três repetições adversariais aceitaram o bypass do contrato.
+A baseline conversacional foi integralmente executada no Databricks Free, homologada explicitamente pelo usuário e integrada à `main` pela PR #56. A auditoria pós-merge também foi concluída.
 
-A homologação aceita a baseline observada como evidência do estado pré-enforcement. Ela **não** converte os FAILs experimentais em PASS; ao contrário, esses resultados são a justificativa empírica para o Skill Enforcement Framework.
+Os resultados `FAIL` abaixo permanecem válidos e congelados; homologar a SE00 significa aceitar essa baseline como evidência do comportamento pré-enforcement, não transformar falhas observadas em aprovação técnica dos executores ou auditorias.
 
-O usuário homologou explicitamente a SE00 e autorizou a integração da PR #56. A SE01 permanece fora deste ato e só pode começar depois da auditoria pós-merge da `main`.
-
-## Estado confirmado
+## Linhagem final
 
 - plano mestre SEF: PR #55 integrada;
 - base experimental congelada: `28669f99db27cf23df73549297bbf57eda033f58`;
-- branch: `sef/SE00-baseline`;
-- ambiente de coleta: Databricks pessoal/Free;
-- bootstrap remoto pré-SE00: 548/548 conteúdos, 0 ausentes, 0 obsoletos, 14/14 skills e 5/5 `hub_*`;
+- ambiente: Databricks pessoal/Free;
+- branch experimental: `sef/SE00-baseline`;
+- última `main` incorporada antes do merge: `62e9404851d6a7902371bd5b6531a113d521311c`;
+- HEAD final da candidata: `4379080a46781a543d8f7933d61c1d024076c096`;
+- PR #56: **merged**;
+- merge commit na `main`: `3341f58a8ebffac8b3f0f8837c7d0d6f8aa0b245`;
+- homologação explícita do usuário: **16/09/2026**;
 - `.assistant` e `.assistant_instructions.md`: **não alterados/republicados durante os 16 runs**;
-- mudança comportamental de skill: **não realizada**;
-- coleta mínima: **16/16 concluída**;
-- `main` incorporada após o congelamento da coleta: `6dfb8707835921f2f48020f383cf571902080109`;
-- branch após reconciliação: **0 commits atrás da `main`**;
-- snapshot validado no estado reconciliado: **1476 arquivos / 1935 links / 0 extras**;
-- PR #56: homologada pelo usuário e integração autorizada.
+- mudança comportamental de skill: **não realizada pela SE00**;
+- SE01: **não iniciada neste ato**.
 
 ## Resultado por família
 
@@ -35,9 +33,9 @@ O usuário homologou explicitamente a SE00 e autorizou a integração da PR #56.
 | `B00-B1` | **3/3 FAIL; bypass resistance 0/3** | 0/18 | 0/12 |
 | `B00-A1` | **4/4 FAIL; state ladder 0/4** | n/a | 0/16 com state ladder |
 
-## Consolidado final
+## Consolidado final da baseline
 
-- runs concluídos: **16/16**;
+- runs: **16/16**;
 - execuções EDA: **12/12**;
 - auditorias A1: **4/4**;
 - helper adherence dos executores: **0/69 (0%)**;
@@ -46,42 +44,39 @@ O usuário homologou explicitamente a SE00 e autorizou a integração da PR #56.
 - computação redundante: **>=77 padrões**;
 - false completion de recurso/workflow: **3 ocorrências observadas**;
 - execução incompleta: **1/12**;
-- execuções que exigem correção humana: **12/12**;
-- auditorias que exigem correção humana: **4/4**;
+- correção humana: **12/12 executores + 4/4 auditorias**;
 - auditorias com state ladder completo: **0/4**;
-- bypass resistance: **0/3**;
-- famílias encerradas: **P1, M1, R1, B1, A1**;
-- coleta mínima encerrada: **sim**;
-- baseline homologada: **sim**;
-- aceite final do usuário: **concedido em 16/09/2026**;
-- integração da PR #56: **autorizada**.
+- bypass resistance: **0/3**.
 
-## Reconciliação com `main`
+## Reconciliação final com `main`
 
-A `main` avançou durante a coleta e foi deliberadamente mantida fora da branch até o congelamento de 16/16 para não contaminar o experimento.
+A `main` avançou enquanto a baseline era coletada. Para preservar a validade experimental, nenhuma reconciliação ocorreu antes do congelamento de 16/16.
 
-Após autorização explícita do usuário para reconciliar:
+Depois da coleta:
 
-1. foi incorporada `main@6dfb8707835921f2f48020f383cf571902080109` por merge commit de dois pais, sem force-push;
-2. os 16 resultados históricos e os artefatos SE00 foram preservados sem reclassificação;
-3. a auditoria pré-merge identificou somente um arquivo alterado pelos dois lados: `README.md` raiz;
-4. o README da `main` foi preservado e somente o snapshot verificável foi recalculado;
-5. a branch ficou **0 commits atrás** da `main`, com merge-base igual ao HEAD reconciliado da `main`;
-6. o diff contra `main` voltou ao escopo exclusivo da SE00;
-7. não há mudanças SE00 em `ambiente_fonte/.assistant/`, `.assistant_instructions.md` ou `tools/`.
+1. a branch foi reconciliada com `main@6dfb8707835921f2f48020f383cf571902080109`;
+2. após novo avanço da `main`, foi reconciliada novamente com `main@62e9404851d6a7902371bd5b6531a113d521311c` (V13 S7);
+3. ambas as reconciliações usaram merge de dois pais, sem force-push;
+4. os 16 resultados históricos não foram reclassificados;
+5. o único overlap documental relevante continuou sendo o `README.md` raiz;
+6. o estado final pré-merge ficou `behind_by=0`;
+7. o diff da PR #56 permaneceu restrito a 26 arquivos documentais/instrumentais da SE00;
+8. não houve alterações SE00 em `ambiente_fonte/.assistant/`, `.assistant_instructions.md` ou `tools/`.
 
-## Snapshot e validação
+## Snapshot final validado
 
-Uma previsão intermediária do número de links foi `1937`, mas o gate remoto mediu `1935`. A única falha desse HEAD intermediário foi a divergência do snapshot colado no README; os testes funcionais daquele run haviam passado.
+Após incorporar V13 S7 e a SE00, o validador confirmou na candidata integrada:
 
-O README foi corrigido para o valor medido:
-
-- repo (identidade): **1476 arquivos**;
-- repo (links): **1935 links**;
+- repo (identidade): **1480 arquivos**;
+- repo (links): **1957 links**;
 - worktree extras: **0**;
-- validador: `APROVADO: 0 falha(s), 0 aviso(s)`.
+- resultado: `APROVADO: 0 falha(s), 0 aviso(s)`.
 
-No HEAD técnico imediatamente anterior ao registro da homologação, os oito workflows aplicáveis concluíram em `success`:
+Os valores anteriores `1476/1935` pertencem ao estado reconciliado anterior à integração de V13 S7 e permanecem apenas como histórico de uma etapa intermediária, não como snapshot corrente.
+
+## CI pré-merge
+
+No HEAD final `4379080a46781a543d8f7933d61c1d024076c096`, os oito workflows aplicáveis de PR concluíram em `success`:
 
 1. `Regressões da instrumentação V00`;
 2. `Contrato de temas V01`;
@@ -92,41 +87,53 @@ No HEAD técnico imediatamente anterior ao registro da homologação, os oito wo
 7. `Contrato operacional V13`;
 8. `CI local reproduzível`.
 
-O commit que registra a homologação é exclusivamente documental. Antes do merge da PR #56, seus próprios checks devem ser confirmados verdes; resultados de um SHA predecessor não são promovidos automaticamente.
+## Auditoria pós-merge
+
+A PR #56 foi integrada por merge commit `3341f58a8ebffac8b3f0f8837c7d0d6f8aa0b245`.
+
+Após o merge:
+
+- a `main` passou a apontar para esse commit;
+- o merge possui como pais `62e9404851d6a7902371bd5b6531a113d521311c` e `4379080a46781a543d8f7933d61c1d024076c096`;
+- o snapshot raiz permaneceu **1480 arquivos / 1957 links / 0 extras**;
+- **15/15 workflows disparados por `push` concluíram em `success`**;
+- workflows pós-merge em `failure`: **0**;
+- workflows pós-merge ainda em execução ao fechamento da auditoria: **0**.
 
 ## Conclusão de engenharia
 
-A SE00 fornece evidência empírica suficiente para justificar a arquitetura:
+A SE00 fornece evidência empírica para a arquitetura:
 
 `Contract → Preflight → Execute → Receipt → Postflight`
 
-Requisitos explícitos para as sprints seguintes:
+Requisitos transferidos às próximas sprints:
 
 1. contrato estruturado, machine-readable e versionado;
-2. política de precedência/conflito entre pedido do usuário e requisitos obrigatórios da skill;
-3. preflight fail-closed antes de executar;
+2. política explícita de precedência/conflito;
+3. preflight fail-closed;
 4. execução determinística de recursos obrigatórios quando aplicáveis;
-5. receipt capaz de provar `declared/located/read/imported/called/completed`;
-6. postflight que valide estados/resultados em vez de score textual médio;
+5. receipt verificável de `declared/located/read/imported/called/completed`;
+6. postflight baseado em estados/resultados objetivos;
 7. `NOT_OBSERVABLE` preservado como estado explícito;
-8. auditoria LLM como camada auxiliar, nunca como única evidência de conformidade.
+8. auditoria LLM apenas como camada auxiliar.
 
-## Gate de integração
+## Gate de encerramento
 
 - [x] 16/16 runs documentados;
 - [x] métricas e limitações consolidadas;
+- [x] evidências históricas preservadas;
 - [x] diff documental/instrumental revisado;
-- [x] branch reconciliada com `main` sem reclassificar evidência histórica;
-- [x] README/snapshot reconciliado com valor medido pelo CI;
-- [x] oito workflows aplicáveis aprovados no HEAD técnico validado;
-- [x] aceite explícito do usuário;
-- [x] autorização explícita para integrar a PR #56;
-- [ ] confirmar checks do commit documental de homologação;
-- [ ] integrar a PR #56;
-- [ ] auditar o estado pós-merge da `main`.
+- [x] reconciliação final com `main` concluída;
+- [x] snapshot 1480/1957 validado;
+- [x] 8/8 workflows de PR em `success`;
+- [x] homologação explícita do usuário;
+- [x] PR #56 integrada;
+- [x] `main` pós-merge auditada;
+- [x] 15/15 workflows de `push` pós-merge em `success`;
+- [x] inconsistência documental pós-merge corrigida.
 
-## Próxima etapa
+## Estado para continuidade
 
-Após a integração e a auditoria pós-merge, a SE00 estará formalmente encerrada na `main`.
+**SE00 formalmente encerrada.**
 
-**Não iniciar SE01 neste ato.**
+A próxima etapa da iniciativa é a SE01, mas ela permanece fora deste fechamento e deve ser iniciada em etapa/conversa própria.
