@@ -153,6 +153,29 @@ A correção é feita em branch própria de fechamento, de forma aditiva, sem re
 
 Este próprio arquivo acrescenta um caminho versionado; portanto as métricas 1456/1942 pertencem ao merge S7 auditado, não devem ser presumidas para a candidata documental de fechamento. O runner deve medir novamente a árvore e o README raiz só pode ser reconciliado com números efetivamente observados.
 
+### 7.1 Primeira candidata da reconciliação documental
+
+Durante a montagem desta correção, a PR #56/SE00 avançou a `main` para `3341f58a8ebffac8b3f0f8837c7d0d6f8aa0b245`. A branch V13 foi reconciliada aditivamente por merge de dois pais, sem rebase, reset ou force-push.
+
+Primeiro HEAD reconciliado da PR #67:
+
+`88dfa3d8397aa1605b4eb067da1a9e1cfbfe4b87`
+
+Nesse SHA:
+
+- V00, V01 e V02 concluíram em `success`;
+- CI geral, V10, V11, V12 e V13 concluíram em `failure`;
+- no CI geral, todos os grupos funcionais aplicáveis passaram e somente `validacao` falhou;
+- o runner mediu **1481 arquivos / 1959 links**;
+- o README raiz ainda declarava a baseline SE00 **1480 / 1957**;
+- o validador registrou exatamente **2 falhas / 0 avisos**, ambas por essa divergência;
+- no V13, S1–S7, 701/701 regressões e V00 12/12 passaram; `Validação estrutural e documental` falhou e as fronteiras S1–S7 ficaram `skipped`, não PASS;
+- no V12, protocolo/mutantes, evidência real, regressões e V00 passaram; o validador falhou e `Aplicabilidade do escopo estrito V12` e `Escopo V12 e higiene` ficaram `skipped`.
+
+Por isso, esse SHA **não** é classificado como `V12_SCOPE=NOT_APPLICABLE`: o step de aplicabilidade não chegou a executar.
+
+A correção seguinte altera somente os dois números medidos no README raiz e preserva este failure como parte da trilha de auditoria. Nenhum gate foi relaxado.
+
 ## 8. Ausência de mutação Databricks
 
 Nem a integração S7 nem esta auditoria executaram:
