@@ -11,8 +11,10 @@ on:
       - 'docs/sprints/sistema_temas/V13/**'
       - 'tools/temas_v13_operacional.py'
       - 'tools/temas_v13_preflight.py'
+      - 'tools/temas_v13_release.py'
       - 'tools/tests/test_temas_v13_s1.py'
       - 'tools/tests/test_temas_v13_s2.py'
+      - 'tools/tests/test_temas_v13_s3.py'
       - '.github/workflows/temas-v13-ci.yml'
 
 permissions:
@@ -62,6 +64,9 @@ jobs:
       - name: V13 S2 — preflight e mutantes negativos
         run: python -B tools/tests/test_temas_v13_s2.py -v
 
+      - name: V13 S3 — release, staging e rollback dry-run
+        run: python -B tools/tests/test_temas_v13_s3.py -v
+
       - name: Regressões de temas V01–V13
         run: python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
 
@@ -77,10 +82,18 @@ jobs:
           set -euo pipefail
           echo "V13_S1_REMOTE_MUTATION=0"
 
-      - name: Fronteira S2
+      - name: Fronteira S2 preservada
         shell: bash
         run: |
           set -euo pipefail
           echo "V13_S2_NETWORK=0"
           echo "V13_S2_REMOTE_MUTATION=0"
-          echo "V13_S3_NOT_STARTED=1"
+
+      - name: Fronteira S3
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "V13_S3_NETWORK=0"
+          echo "V13_S3_REMOTE_MUTATION=0"
+          echo "V13_S3_LOCAL_DRY_RUN_ONLY=1"
+          echo "V13_S4_NOT_STARTED=1"

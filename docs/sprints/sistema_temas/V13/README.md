@@ -2,210 +2,285 @@
 
 ## Estado vigente
 
-A S0 foi **aceita e integrada** pela PR #59 no merge `1d46c9625fb5bfd6d1b666ddff055507238788bf`.
+A S0 foi **aceita e integrada** pela PR #59 no merge
+`1d46c9625fb5bfd6d1b666ddff055507238788bf`.
 
-A S1 foi **aceita e integrada** pela PR #60 no merge `70f6a43748b9636f2bf8fe56aa07e9fb90a0d285`. Os **15/15 workflows de `push`** disparados por esse merge concluíram com `success`.
+A S1 foi **aceita e integrada** pela PR #60 no merge
+`70f6a43748b9636f2bf8fe56aa07e9fb90a0d285`. Os 15/15 workflows de `push`
+disparados por esse merge concluíram com `success`.
 
-A etapa vigente é **S2 — preflight operacional unificado**, em branch candidata separada.
+A S2 foi **aceita e integrada** pela PR #61 no merge
+`76f8a2dcc6d5dd69bd6c1af726fb40e2eced8af8`. A S3 só foi aberta depois de os
+15/15 workflows de `push` desse merge concluírem com `success`.
 
-Para quem nunca entrou no Hub: a S2 funciona como uma lista de conferência automática antes de uma operação. Ela verifica o que pode ser provado localmente e distingue `PASS`, `BLOCKED`, `FAIL` e `NOT_APPLICABLE`. Ela não executa a mudança e não consulta o Databricks.
+A etapa vigente é **S3 — release, instalação, atualização e rollback**, em branch
+candidata separada.
 
-A leitura operacional da etapa começa em [S2 — preflight operacional unificado](S2_PREFLIGHT_OPERACIONAL.md).
+Para quem nunca entrou no Hub: a S3 pega um artefato que já passou pelo preflight
+S2 e prova, localmente, que ele pode ser staged, verificado e revertido. Ela não
+faz deploy no Databricks e não publica tema.
 
-**S3 não foi iniciada.** Release, instalação, atualização e rollback operacional consolidado continuam pertencendo à próxima subfase.
+A leitura operacional começa em
+[S3 — release, instalação, atualização e rollback](S3_RELEASE_OPERACIONAL.md).
 
-## Baseline certificado da S2
+**S4 não foi iniciada.**
 
-A branch S2 nasce diretamente de:
+## Baseline certificado da S3
 
-`70f6a43748b9636f2bf8fe56aa07e9fb90a0d285`
+A branch S3 nasce diretamente de:
 
-Esse SHA é o merge da S1 na `main`.
+`76f8a2dcc6d5dd69bd6c1af726fb40e2eced8af8`
 
-O pós-merge da S1 foi certificado antes da abertura da S2:
+Esse SHA é o merge da S2 na `main`.
 
+Antes da abertura da S3 foram confirmados:
+
+- `main` no merge S2;
+- árvore integrada idêntica à árvore candidata S2;
+- PR #61 efetivamente `merged=true`;
 - 15 workflows de `push`;
 - 15 `success`;
 - 0 failures;
-- nenhuma mutação Databricks executada pelo fechamento S1.
+- nenhuma mutação Databricks executada pela S2.
 
-A S2 não reaproveita a branch S1 como base paralela.
+A S3 não reaproveita a branch S2 como base paralela.
 
 ## Plano canônico
 
-O [Plano Mestre V13](PLANO_MESTRE.md), aceito pela PR #58, continua sendo o contrato de escopo.
+O [Plano Mestre V13](PLANO_MESTRE.md), aceito pela PR #58, continua sendo o
+contrato de escopo.
 
 A ordem permanece:
 
 `S0 → S1 → S2 → S3 → S4 → S5 → S6 → S7 → aceite → merge → auditoria pós-merge → V14`
 
-A V13 continua responsável por consolidação operacional: inventário, preflight, release/install/update/rollback, observabilidade técnica, diagnóstico, compatibilidade/acessibilidade operacional, ensaios autorizados e handoff.
+A S3 implementa exclusivamente:
 
-A V14 continua responsável por production readiness e suporte sustentado.
+- runbook de release;
+- runbook de instalação/atualização;
+- runbook de rollback;
+- checklist de staging;
+- estratégia de last-known-good;
+- testes de árvore limpa, integridade, compatibilidade, staging, rollback e falso
+  recibo.
 
-## S0 e S1 preservadas
+A S4 permanece responsável por observabilidade e diagnóstico.
 
-Documentos históricos e de fechamento:
+## Artefatos históricos preservados
 
 - [checkpoint S0](CHECKPOINT_S0.md);
 - [inventário operacional S1](S1_INVENTARIO_OPERACIONAL.md);
 - [checkpoint S1](CHECKPOINT_S1.md);
-- [matriz operacional S1](MATRIZ_OPERACIONAL.json).
+- [matriz operacional S1](MATRIZ_OPERACIONAL.json);
+- [S2 — preflight operacional](S2_PREFLIGHT_OPERACIONAL.md);
+- [checkpoint S2](CHECKPOINT_S2.md).
 
-A S2 **consome** esses artefatos. Ela não reescreve o contrato S1 para remover a frase histórica `S2_NOT_IMPLEMENTED`.
+A S3 consome esses artefatos. Ela não reescreve a matriz S1 para remover
+`S2_NOT_IMPLEMENTED`, porque essa frase continua sendo uma afirmação histórica
+sobre o que a própria S1 implementava.
 
-Isso é intencional: o que a S1 dizia sobre si mesma continua verdadeiro.
+## S3 — artefatos próprios
 
-## S2 — artefatos próprios
+A candidata S3 adiciona:
 
-A candidata S2 adiciona:
+- `tools/temas_v13_release.py`;
+- `tools/tests/test_temas_v13_s3.py`;
+- [S3 — release, instalação, atualização e rollback](S3_RELEASE_OPERACIONAL.md);
+- evolução do workflow V13 para S1 + S2 + S3.
 
-- `tools/temas_v13_preflight.py`: porta de entrada local/read-only;
-- `tools/tests/test_temas_v13_s2.py`: testes de contrato, falhas e determinismo;
-- [S2 — preflight operacional unificado](S2_PREFLIGHT_OPERACIONAL.md): guia para público técnico e não técnico;
-- evolução do workflow `.github/workflows/temas-v13-ci.yml` para executar S1 e S2 no mesmo gate V13.
+A candidata não adiciona cliente Databricks, token, rede, deploy remoto ou
+publicação.
 
-A candidata não adiciona cliente Databricks, credencial, chamada de rede, deploy ou publicação.
+## Ciclo operacional
 
-## Modelo da S2
+A S3 trabalha sobre o ciclo do Plano Mestre:
 
-A entrada possui dois modos:
+1. `PREPARE`;
+2. `PREFLIGHT`;
+3. `PACKAGE`;
+4. `STAGE`;
+5. `VERIFY`;
+6. `ROLLBACK` dry-run.
 
-- `surface`: uma única superfície/ação;
-- `aggregate`: várias operações em um relatório determinístico.
+`APPLY` remoto e `ACCEPT` de ambiente não são simulados.
 
-A saída possui quatro estados:
-
-| Estado | Significado |
-|---|---|
-| `PASS` | checks localmente demonstráveis satisfeitos |
-| `BLOCKED` | condição necessária não pode ser fabricada pelo preflight, como autorização ou identidade efetiva |
-| `FAIL` | contrato ou pré-requisito local verificável falhou |
-| `NOT_APPLICABLE` | check não pertence à ação |
-
-Precedência:
-
-`FAIL > BLOCKED > PASS > NOT_APPLICABLE`
+Um resultado `READY_FOR_AUTHORIZED_APPLY` significa somente que o ciclo local
+terminou sem falha e que o rollback local foi demonstrado.
 
 ## Composição com owners existentes
 
-A S2 reutiliza:
-
-| Necessidade | Owner composto |
+| Necessidade | Owner |
 |---|---|
-| tema, schema, hash e contexto | V02 |
-| bundle/`theme_contract` | V09 |
-| bundle do Databricks App | V10 |
-| projeção/binding AI/BI | V11 |
-| owner, ação, autorização e rollback | matriz S1 |
+| readiness | S2 |
+| bundle geral / `theme_contract` | V09 |
+| bundle do App | V10 |
+| deploy/rollback do App | contrato V10 |
+| tema/schema/hash | V02 |
+| AI/BI | V11 |
+| evidência | V12 |
+| autorização/rollback por superfície | matriz S1 |
 
-A S2 não cria:
+Não existe segundo manifesto, segundo schema, segunda política de papéis ou
+segunda matriz de bindings.
 
-- segundo schema de tema;
-- segunda matriz de bindings;
-- segunda lista `theme_contract`;
-- nova política de papéis;
-- novo contexto `aibi`;
-- nova regra de publicação.
+## Artefatos executáveis localmente
 
-## Seis superfícies preservadas
+A S3 automatiza dry-run somente para os dois tipos de artefato que já possuem
+owner e verificador local claros:
 
-A S2 continua operando sobre as seis superfícies inventariadas na S1:
+### `transition_bundle`
 
-1. `notebook_visual_core`;
-2. `visual_lab`;
-3. `transition_bundle`;
-4. `databricks_app`;
-5. `aibi_dashboard`;
-6. `workspace_theme`.
+Owner: V09.
 
-Nenhuma superfície nova é criada nesta etapa.
+- precisa estar sob `.artifacts/`;
+- precisa passar `validate_theme_zip`;
+- `worktree_dirty` deve ser `false`;
+- `source_commit` deve ser o checkout atual;
+- conteúdo é identificado por fingerprint ordenado de path/hash/bytes;
+- transporte continua sem ativação/publicação.
 
-## Estados herdados preservados
+### `app_bundle`
 
-| Caso | Estado |
-|---|---|
-| `DOC-02` | `PASS` |
-| `DOC-03` | `PASS` |
-| `SEC-01` | `PASS` de ambiente |
-| `UAT-01` | `PASS` somente textual |
-| `V12-AIBI-01` | `PASS` limitado a dashboard draft, dados sintéticos, import + rollback |
-| `A11-01` | `FAIL`, issue #57 |
-| `V12-LAB-01` | `BLOQUEADO_AUTORIZACAO` |
-| `V12-APP-01` | `BLOQUEADO_AUTORIZACAO` |
-| `V12-AIBI-02` | `BLOQUEADO_AUTORIZACAO` |
+Owner: V10.
 
-A S2 não permite que um campo fornecido no request sobrescreva um `BLOQUEADO_AUTORIZACAO` ou `NOT_AUTHORIZED` canônico.
+- precisa estar sob `.artifacts/`;
+- precisa passar `tools.temas_v10_app.verify`;
+- `source_commit` deve ser o checkout atual;
+- duas gerações no mesmo commit devem ter o mesmo fingerprint de conteúdo;
+- deploy continua fora da ferramenta S3.
 
-## Identidade não é simulada como prova
+## Last known good
 
-O preflight local não autentica usuário ou administrador no Databricks.
+Update e rollback exigem LKG.
 
-Por isso:
+A referência S3 contém identidade técnica do artefato anterior e uma
+`acceptance_ref` sanitizada. A ferramenta confirma que commit e fingerprint
+correspondem aos bytes reais.
 
-- ausência de referência de identidade gera `IDENTITY_REQUIRED`;
-- presença de referência local não vira prova viva e permanece `IDENTITY_LIVE_UNVERIFIED`.
+A `acceptance_ref` não é autorização criada pela S3.
 
-Isso é fail-closed, não uma limitação escondida.
+## Compatibilidade de update
 
-## Rollback
+A S3 falha fechado quando candidate e LKG divergem em:
 
-Toda ação mutável continua submetida ao rollback da matriz S1.
+- tipo de artefato;
+- `schema_version`;
+- versão do contrato;
+- metadados estruturais V10 relevantes.
 
-A S2 diferencia:
+Não existe migração automática de versão nesta sprint.
 
-- rollback preparado e referenciado;
-- rollback ausente;
-- rollback canonicamente bloqueado porque o owner ainda depende de autorização/snapshot/procedimento futuro.
+## Staging e rollback
 
-Ela não executa rollback. A operacionalização do ciclo completo é S3.
+O staging ocorre em diretório temporário local.
 
-## AI/BI
+Release inicial:
 
-A S2 preserva integralmente V11:
+- copia e revalida candidato;
+- remove o stage;
+- comprova retorno ao estado sem artefato.
 
-- somente três bindings diretos;
-- `approximated` e `unsupported` não automatizados;
-- JSON nativo não inventado;
-- fixture sintético não importável;
-- dashboard theme separado de workspace theme;
-- `Import theme` separado de `Publish`.
+Update/rollback:
 
-O binder V11 é chamado por composição para detectar SHA stale, JSON Pointer inexistente e capacidade fora do contrato.
+- copia e revalida candidato;
+- substitui o stage pelo LKG;
+- revalida LKG;
+- exige fingerprint restaurado idêntico.
+
+O diretório temporário é destruído ao final.
+
+## Recibo
+
+Recibo existe somente em PASS.
+
+Ele registra de forma sanitizada:
+
+- engine/versão;
+- modo;
+- commit;
+- tipo/fingerprint;
+- staging verificado;
+- rollback dry-run verificado;
+- LKG técnico quando aplicável;
+- rede = 0;
+- mutação remota = 0;
+- publicação = 0.
+
+Falha em qualquer etapa termina sem recibo de sucesso.
+
+## Superfícies remotas continuam separadas
+
+### Visual Lab
+
+`V12-LAB-01` continua `BLOQUEADO_AUTORIZACAO`. Persistência real não é executada
+pela S3.
+
+### Databricks App
+
+`V12-APP-01` continua `BLOQUEADO_AUTORIZACAO`. A S3 prepara o bundle e o dry-run;
+deploy real continua no runbook V10 e exige autorização própria.
+
+### AI/BI
+
+`V12-AIBI-01` continua PASS somente no escopo limitado já evidenciado.
+`publish_dashboard` continua não autorizado. A S3 não executa `Import theme` nem
+`Publish`.
+
+### Workspace theme
+
+`V12-AIBI-02` continua `BLOQUEADO_AUTORIZACAO`. Nenhuma mutação administrativa é
+executada.
+
+### Acessibilidade
+
+`A11-01` continua **FAIL**, issue #57. A S3 não fecha essa dívida; o tratamento
+operacional específico permanece previsto para S5.
 
 ## CI e fronteiras
 
-O workflow V13 permanece:
+O workflow V13 deve permanecer:
 
 - `permissions: contents: read`;
-- `persist-credentials: false`;
+- checkout com `persist-credentials: false`;
 - sem `DATABRICKS_HOST`;
 - sem `DATABRICKS_TOKEN`;
 - sem `secrets.*`.
 
-A fronteira da S2 deve registrar:
+Fronteiras esperadas:
 
+- `V13_S1_REMOTE_MUTATION=0`;
 - `V13_S2_NETWORK=0`;
 - `V13_S2_REMOTE_MUTATION=0`;
-- `V13_S3_NOT_STARTED=1`.
-
-Git/CI continuam evidência técnica, não homologação de ambiente.
+- `V13_S3_NETWORK=0`;
+- `V13_S3_REMOTE_MUTATION=0`;
+- `V13_S3_LOCAL_DRY_RUN_ONLY=1`;
+- `V13_S4_NOT_STARTED=1`.
 
 ## Métricas do README raiz
 
-A S2 não estima contagens do repositório.
+A S3 segue o mesmo protocolo da S2:
 
-O primeiro head candidato é executado antes de qualquer ajuste de `repo (identidade)` ou `repo (links)`. Se a árvore nova alterar essas métricas, o failure intermediário será preservado e o README raiz será corrigido **somente com os valores realmente medidos pelo runner**.
+1. primeiro head funcional;
+2. runner mede identidade e links;
+3. qualquer failure de métrica é preservado;
+4. `README.md` raiz só é corrigido com números observados;
+5. checkpoint S3 é adicionado depois;
+6. a árvore com checkpoint é medida novamente.
+
+Nenhuma contagem será estimada.
 
 ## Próxima ação
 
-A candidata S2 deve:
+A candidata S3 deve:
 
-1. executar a suíte própria;
-2. executar regressões S1 e V01–V12;
-3. validar o README/estrutura;
-4. preservar qualquer failure intermediário;
-5. produzir checkpoint S2;
-6. reconfirmar `main`, merge-base, ahead/behind, mergeabilidade e concorrência.
+1. executar os testes S3;
+2. repetir S1/S2 e regressões V01–V13;
+3. validar documentação/README;
+4. preservar failures intermediários;
+5. reconciliar métricas somente pelo runner;
+6. adicionar checkpoint S3;
+7. recertificar o SHA exato;
+8. reconfirmar `main`, merge-base, ahead/behind, diff e mergeabilidade;
+9. parar para aceite.
 
-**Parar antes da S3.**
+**Não iniciar S4.**
