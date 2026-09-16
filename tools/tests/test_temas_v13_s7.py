@@ -116,7 +116,7 @@ class V13S7HandoffTests(unittest.TestCase):
             "não invente `authorization_ref` como prova",
             "não use CI como prova de identidade viva",
             "não transforme `cellFormat` em token nem amplie V11",
-            "não confunda Import theme com Publish",
+            "não confunda `Import theme` com `Publish`",
         ):
             self.assertIn(marker, self.handoff)
 

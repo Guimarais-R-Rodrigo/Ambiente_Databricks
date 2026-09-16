@@ -243,17 +243,21 @@ class V13S5CompatibilityTests(unittest.TestCase):
         self.assertIn("V13_S5_NETWORK=0", workflow)
         self.assertIn("V13_S5_REMOTE_MUTATION=0", workflow)
         self.assertIn("V13_S5_CONTRAST_PREFLIGHT_LOCAL=1", workflow)
-        self.assertIn("V13_S6_NOT_STARTED=1", workflow)
+        self.assertIn("Historical S5 checkpoint assertion: V13_S6_NOT_STARTED=1", workflow)
+        self.assertNotIn('echo "V13_S6_NOT_STARTED=1"', workflow)
         self.assertIn("Historical S4 checkpoint assertion: V13_S5_NOT_STARTED=1", workflow)
         self.assertNotIn("DATABRICKS_TOKEN", workflow)
         self.assertNotIn("secrets.", workflow)
 
-    def test_v13_live_readme_preserves_s5_history_when_s6_starts(self):
+    def test_v13_live_readme_preserves_s5_history_when_s7_starts(self):
         text = V13_README.read_text(encoding="utf-8")
         self.assertIn("S5 — PR #64", text)
         self.assertIn("11e4e17f02d4ba7846f5b80bd88c0180124b5772", text)
-        self.assertIn("S6 — ensaios operacionais por superfície", text)
-        self.assertIn("S7 não foi iniciada", text)
+        self.assertIn("S6 — PR #65", text)
+        self.assertIn("6dfb8707835921f2f48020f383cf571902080109", text)
+        self.assertIn("S7 — handoff operacional e fechamento", text)
+        self.assertIn("HUMAN-01 = BLOCKED", text)
+        self.assertIn("V14 não foi iniciada", text)
 
 
 if __name__ == "__main__":
