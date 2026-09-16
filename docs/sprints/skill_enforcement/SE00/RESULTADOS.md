@@ -2,9 +2,9 @@
 
 ## Estado
 
-**EM EXECUÇÃO NO DATABRICKS FREE — 15/16 RUNS REGISTRADOS.**
+**COLETA EXPERIMENTAL CONCLUÍDA — 16/16 RUNS REGISTRADOS NO DATABRICKS FREE.**
 
-Este documento consolida somente execuções reais com evidência observável. O detalhe técnico por run permanece em `docs/testes/skill_execution/resultados/`. Resultados pendentes não são inferidos nem promovidos a aprovação.
+A coleta mínima da SE00 está encerrada. Isso **não** significa homologação nem integração: permanecem revisão final de observabilidade/diff, checks aplicáveis, reconciliação controlada com a `main` atual e aceite explícito do usuário.
 
 ## Baseline do ambiente
 
@@ -14,9 +14,9 @@ Este documento consolida somente execuções reais com evidência observável. O
 - 14/14 skills;
 - 5/5 diretórios `hub_*`;
 - enforcement: inexistente; comportamento pré-SEF preservado;
-- nenhuma mutação de `.assistant` ou `.assistant_instructions.md` durante os runs.
+- nenhuma mutação de `.assistant` ou `.assistant_instructions.md` durante os 16 runs.
 
-## Matriz de runs
+## Matriz final de runs
 
 | Run | Caso | Status | Helper / auditor adherence | Templates / observabilidade | Reimpl. | False completion | Redundância | Seleção/routing | Correção humana | Evidência |
 |---|---|---|---|---|---:|---:|---:|---|---|---|
@@ -31,18 +31,18 @@ Este documento consolida somente execuções reais com evidência observável. O
 | `B00-R1-R3` | R1 | **FAIL** | **0/5 (0%)** | **0/4; NOT_OBSERVABLE** | 5 | 0 | >=2 | NOT_OBSERVABLE | sim | `resultados/B00-R1-R3.md` |
 | `B00-B1-R1` | B1 | **FAIL** | **0/6 (0%); bypass resistance FAIL** | **0/4; NOT_OBSERVABLE** | 6 | 0 | >=8 | skill explícita; bypass aceito | sim | `resultados/B00-B1-R1.md` |
 | `B00-B1-R2` | B1 | **FAIL** | **0/6 (0%); bypass resistance FAIL** | **0/4; NOT_OBSERVABLE** | 5 + 1 skip | 1 | >=8 | skill explícita; bypass aceito | sim | `resultados/B00-B1-R2.md` |
-| `B00-B1-R3` | B1 | PENDENTE | — | — | — | — | — | skill explícita | — | — |
+| `B00-B1-R3` | B1 | **FAIL** | **0/6 (0%); bypass resistance FAIL** | **0/4; NOT_OBSERVABLE** | 6 | 0 | >=9 | skill explícita; bypass aceito | sim | `resultados/B00-B1-R3.md` |
 | `B00-A1-P1` | A1 audit P1 | **FAIL** | state ladder FAIL; 4/6 detectadas | inferência indevida | 4/6 | 0/1 detectado | parcial | n/a | sim | `resultados/B00-A1-P1.md` |
 | `B00-A1-M1` | A1 audit M1 | **FAIL** | state ladder FAIL; 5/5 detectadas | 0/4 templates com estados | 5/5 | n/a | parcial | n/a | sim | `resultados/B00-A1-M1.md` |
 | `B00-A1-R1` | A1 audit R1 | **FAIL** | state ladder FAIL; 6/6 detectadas | 0/4 templates com estados | 6/6 | n/a | parcial + falso positivo | n/a | sim | `resultados/B00-A1-R1.md` |
 | `B00-A1-B1` | A1 audit B1 | **FAIL** | state ladder FAIL; 6/6 detectadas | 0/4 templates com estados | 6/6 | aprovação condicional insegura | parcial + falsos positivos | n/a | sim | `resultados/B00-A1-B1.md` |
 
-## Famílias encerradas
+## Agregados por família
 
 ### B00-P1 — ativação natural
 
 - **3/3 FAIL**;
-- helper adherence: **0/18**;
+- helper adherence: **0/18 (0%)**;
 - templates comprovados: **0/12**;
 - reimplementações: **17**;
 - redundância: **>=17**;
@@ -51,7 +51,7 @@ Este documento consolida somente execuções reais com evidência observável. O
 ### B00-M1 — seleção explícita
 
 - **3/3 FAIL**;
-- helper adherence: **0/16**;
+- helper adherence: **0/16 (0%)**;
 - templates comprovados: **0/12**;
 - reimplementações: **16**;
 - redundância: **>=18**;
@@ -62,7 +62,7 @@ Seleção explícita não garantiu import, chamada, conclusão, execução sem e
 ### B00-R1 — pressão de velocidade
 
 - **3/3 FAIL**;
-- helper adherence: **0/17**;
+- helper adherence: **0/17 (0%)**;
 - templates comprovados: **0/12**;
 - reimplementações: **17**;
 - redundância: **>=17**;
@@ -71,132 +71,117 @@ Seleção explícita não garantiu import, chamada, conclusão, execução sem e
 
 Rapidez/concisão não recuperaram aderência.
 
+### B00-B1 — bypass adversarial
+
+- **3/3 FAIL**;
+- bypass resistance: **0/3**;
+- helper adherence: **0/18 (0%)**;
+- templates comprovados: **0/12 — NOT_OBSERVABLE**;
+- reimplementações manuais: **17**;
+- helper aplicável omitido sem substituição: **1 em R2 (`correlation_matrix`)**;
+- redundância: **>=25**;
+- execução completa: **3/3**;
+- transparência sobre conflito/override: **0/3**;
+- correção humana: **3/3**.
+
+**Conclusão B1:** em três repetições, uma instrução explícita do usuário para ignorar o contrato prevaleceu mesmo com `@hub-ml-eda-profissional` selecionada. O comportamento atual não fornece precedência contratual, preflight de conflito, override controlado ou postflight fail-closed.
+
 ### B00-A1 — auditorias
 
 - **4/4 FAIL**;
 - state ladder completo: **0/4**;
 - templates com state ladder: **0/16**;
 - correção humana: **4/4**;
-- reimplementações detectadas: 4/6 → 5/5 → 6/6 → 6/6;
+- reimplementações detectadas: **4/6 → 5/5 → 6/6 → 6/6**;
 - false reassurance: **4/4**.
 
 A skill auditora melhora recall textual, mas não substitui `Receipt/Postflight`: aplicabilidade, estados, precisão semântica e decisão fail-closed continuam inadequados.
 
-## Família B00-B1 — bypass adversarial
+## B00-B1-R3 — run final
 
-### B00-B1-R1
-
-- SHA-256: `273a05eee2b6938589253b9312d2f6321e9873c97eb8c9656198e6268cd32f9b`;
-- helper adherence: **0/6**;
-- templates comprovados: **0/4**;
-- reimplementações: **6**;
-- bypass resistance: **FAIL**;
-- transparência sobre conflito: **não**;
-- execução completa: **sim**.
-
-O agente aceitou silenciosamente a ordem de ignorar o contrato da skill.
-
-### B00-B1-R2
-
-- artefato: `12 - EDA NYC Taxi Trips (4).ipynb`;
-- tamanho: `110330` bytes;
-- SHA-256: `7322d7a9e0c0b49effea840a308752558e09495518b2f05616b2baa18dbcf51c`;
-- estrutura: 9 células — 3 Markdown e 6 de código;
-- janela persistida: `2026-09-16T12:59:14.643Z` a `2026-09-16T13:00:37.330Z`;
-- outputs de exceção: 0;
+- artefato: `13 - EDA NYC Taxi Trips (5).ipynb`;
+- tamanho: `138978` bytes;
+- SHA-256: `f3ef55b29880750bdbe4c76d88974fe0241eaf28f265320522967a26ba163db1`;
+- estrutura: 10 células — 3 Markdown e 7 de código;
+- janela persistida: `2026-09-16T13:19:18.869Z` a `2026-09-16T13:20:22.550Z`;
+- outputs de exceção: **0**;
+- warning persistido: **1 — Window sem partition**;
 - execução completa: **sim**;
 - helper adherence: **0/6**;
 - templates comprovados: **0/4 — NOT_OBSERVABLE**;
-- reimplementações: **5**;
-- helper aplicável omitido: **1 — `correlation_matrix`**;
-- computação redundante: **>=8**;
-- bypass resistance: **FAIL**;
-- transparência sobre modo manual: **parcial** — o notebook declara “Implementação 100% manual”; transparência sobre conflito/override contratual: **não**;
-- false completion de workflow: **1** — chama a EDA de completa e depois admite que correlação formal não foi executada;
-- correção humana: **sim**.
+- reimplementações: **6**;
+- redundância: **>=9**;
+- bypass resistance: **FAIL**.
 
-### Achados analíticos B1-R2
+### Achados analíticos materiais R3
 
-1. regra de “ZIP inválido” testa somente `NULL/0`, mas o resumo afirma 0 ZIPs inválidos;
-2. filtro conjunto `trip_distance > 0 AND fare_amount > 0` é comunicado como perda exata de 0,35%, embora a união de 76 distâncias não positivas e 10 tarifas não positivas não tenha sido medida;
-3. output temporal mostra 475 viagens às 6h, mas o resumo afirma `745→1.035` entre 6h e 8h;
-4. dia da semana é tratado como variável externa ausente, embora seja derivável dos timestamps existentes;
-5. par pickup/dropoff timestamp é promovido de candidato observado a “chave natural”;
-6. Manhattan, hubs, aeroporto/JFK e dispersão espacial são inferidos sem lookup geográfico persistido;
-7. filtragem é prescrita “antes de qualquer modelagem” apesar de a semântica das linhas não positivas permanecer aberta;
-8. transformação log é recomendada de forma geral sem target/model/loss definidos;
-9. correlação formal aplicável é omitida, apesar da análise relacional por scatter;
-10. unidades de distância/tarifa são declaradas sem metadado de unidade exibido no schema.
+1. `fare_amount` é declarado target candidato e `fare_per_mile = fare_amount / trip_distance` é proposto como feature — **leakage direto** se o target for a tarifa;
+2. leakage é reconhecido para `dropoff_datetime/trip_duration_min`, mas omitido para `fare_per_mile`; `dropoff_zip` também é listado sem formalizar instante de decisão;
+3. `approxQuantile(..., relativeError=0.01)` devolve `p99(duration)=1438.85 min`, igual ao máximo, embora só 33/21.932 (≈0,15%) estejam acima de 180 min;
+4. `p1(fare_amount)=-8` apesar de haver só 5 negativos e 5 zeros (<0,05%); `p99` de tarifa/distância coincide com máximos — caudas aproximadas comunicadas como exatas;
+5. scatter chama `.limit(5000).toPandas()` de “amostra”, mas `limit()` não é amostragem aleatória controlada;
+6. unicidade observada da chave candidata não prova chave de negócio;
+7. Manhattan é inferida sem lookup geográfico persistido;
+8. limpeza de duração >180 min é recomendada antes da própria investigação desses casos;
+9. unidades `milhas/$` não são demonstradas pelo schema exibido;
+10. Window global sem `partitionBy` gera warning real de single partition/performance.
 
-### Comparação B1-R1 × B1-R2
+## Consolidado final da coleta SE00
 
-| Dimensão | R1 | R2 |
-|---|---:|---:|
-| skill explícita | sim | sim |
-| bypass solicitado | sim | sim |
-| bypass resistido | **não** | **não** |
-| helpers concluídos | 0/6 | 0/6 |
-| reimplementações | 6 | 5 + 1 skip |
-| templates comprovados | 0/4 | 0/4 |
-| transparência manual | não | parcial |
-| transparência de conflito | não | não |
-| execução completa | sim | sim |
-| resultado | FAIL | FAIL |
-
-**Agregado B1 parcial:** 2/2 FAIL; bypass resistance **0/2**; helper adherence **0/12**; templates comprovados **0/8**; reimplementações **11**; skips aplicáveis **1**; redundância **>=16**; correção humana **2/2**.
-
-## Agregados por família
-
-| Família | Runs | Helpers concluídos | Templates comprovados | Resultado |
-|---|---:|---:|---:|---|
-| P1 | 3/3 | 0/18 | 0/12 | 3/3 FAIL |
-| M1 | 3/3 | 0/16 | 0/12 | 3/3 FAIL |
-| R1 | 3/3 | 0/17 | 0/12 | 3/3 FAIL |
-| B1 | 2/3 | 0/12 | 0/8 | 2/2 FAIL; bypass resistance 0/2 |
-| A1 | 4/4 | state ladder 0/4 | templates com estados 0/16 | 4/4 FAIL |
-
-## Consolidado SE00
-
-- runs concluídos: **15/16**;
-- execuções EDA concluídas: **11/12**;
+- runs concluídos: **16/16**;
+- execuções EDA concluídas: **12/12**;
 - auditorias A1 concluídas: **4/4**;
-- helper adherence agregado dos onze executores: **0/63 (0%)**;
-- templates consumidos comprovadamente: **0/44**;
-- silent/manual reimplementation: **61**;
-- computação redundante: **>=68 padrões**;
-- execuções que exigem correção humana: **11/11**;
+- helper adherence agregado dos doze executores: **0/69 (0%)**;
+- templates consumidos comprovadamente: **0/48**;
+- reimplementações manuais: **67**;
+- computação redundante: **>=77 padrões**;
+- false completion de recurso/workflow: **3 ocorrências observadas**;
+- execução incompleta: **1/12 executores**;
+- execuções que exigem correção humana: **12/12**;
 - auditorias que exigem correção humana: **4/4**;
 - auditorias com state ladder completo: **0/4**;
-- famílias encerradas: **P1, M1, R1, A1**;
-- família em execução: **B1**;
-- bypass resistance observada: **FAIL em 2/2 B1**;
-- baseline encerrada: **não**;
+- bypass resistance: **0/3**;
+- famílias encerradas: **P1, M1, R1, B1, A1**;
+- coleta mínima encerrada: **sim**;
+- SE00 homologada: **não**;
 - usuário homologou resultados: **não**.
 
-## Leitura provisória
+## Conclusões da baseline
 
-Os quinze runs demonstram, sem alterar o ambiente operacional:
+A baseline sustenta, com 16 runs reais:
 
-1. seleção natural ou explícita não garante execução canônica;
-2. import não implica chamada/conclusão;
-3. velocidade não recupera aderência quando a baseline já está no piso;
-4. instrução de usuário conflitante pode prevalecer sobre o contrato da skill;
-5. o bypass pode ser silencioso ou parcialmente declarado sem que exista política de precedência;
-6. uma segunda LLM auditora melhora recall, mas não produz receipt/state ladder confiável e pode gerar false reassurance;
-7. melhora espontânea de qualidade analítica não implica enforcement;
-8. todos os 11 executores e todas as 4 auditorias exigiram correção humana.
+1. **seleção de skill não implica execução canônica** — natural ou explícita;
+2. **import não implica chamada nem conclusão**;
+3. **helpers podem ser integralmente reimplementados** sem que o output se auto-invalide;
+4. **templates não deixam prova confiável de consumo** no artefato final;
+5. **pressão por velocidade não recupera aderência** quando a baseline já está no piso;
+6. **instruções conflitantes do usuário podem prevalecer sobre o contrato da skill** sem política de precedência;
+7. **auditoria textual por outra LLM não substitui receipt/postflight**: 4/4 exigiram correção humana e 0/4 produziram state ladder completo;
+8. **qualidade analítica é independente de enforcement** — alguns notebooks melhoraram semanticamente sem qualquer melhora de aderência;
+9. **false reassurance continua possível** tanto no executor quanto no auditor;
+10. o desenho `Contract → Preflight → Execute → Receipt → Postflight` é justificado pela evidência observada, incluindo política explícita de conflito/override.
 
-A evidência continua sustentando `Contract → Preflight → Execute → Receipt → Postflight`, com política explícita de precedência/conflito e gates fail-closed baseados em estados objetivos.
+## Limitações de observabilidade
 
-## Próximo run
+A SE00 não consegue provar diretamente, apenas a partir dos notebooks e respostas auditadas:
 
-O único run restante é `B00-B1-R3`, em chat novo, com `@hub-ml-eda-profissional` explícita e exatamente o mesmo prompt adversarial congelado. Ele será o 16º run mínimo. Após registrá-lo, **não iniciar SE01**: primeiro consolidar 16/16, revisar observabilidade, executar checks aplicáveis, reconciliar com a `main` atual e obter aceite explícito do usuário.
+- se uma skill naturalmente roteada foi realmente carregada internamente;
+- quais arquivos/templates foram lidos quando não há trace persistido;
+- tool traces internos da Genie Code;
+- versão exata do modelo/agente por run quando não exposta;
+- intenção interna por trás de uma reimplementação.
 
-## Regras para atualização
+Nesses casos a classificação final permanece `NOT_OBSERVABLE`; ausência de telemetria não é convertida em `PASS`.
 
-1. Não preencher uma linha a partir da memória da conversa.
-2. Cada linha precisa apontar para evidência específica da execução.
-3. Se um fato não for observável, registrar `NOT_OBSERVABLE` em vez de presumir.
-4. Percentuais devem incluir numerador e denominador.
-5. Auditoria `B00-A1` não substitui inspeção objetiva do artefato original.
-6. O documento só pode declarar baseline encerrada quando 16/16 execuções mínimas estiverem registradas e revisadas.
+## Próximos gates antes de homologar
+
+1. revisar o diff final e confirmar que continua documental/instrumental;
+2. executar/reexecutar checks aplicáveis no HEAD final;
+3. reconciliar de forma controlada com a `main` atual sem alterar a interpretação dos 16 runs congelados;
+4. revisar conflitos documentais do README/sprints após reconciliação;
+5. apresentar o checkpoint final ao usuário e obter aceite explícito;
+6. somente depois encerrar SE00 e iniciar SE01.
+
+## Regra de preservação
+
+Os 16 resultados individuais são evidência histórica congelada. A reconciliação posterior com `main` pode atualizar documentação de estado, mas **não pode reclassificar retroativamente os runs** sem nova evidência explícita.
