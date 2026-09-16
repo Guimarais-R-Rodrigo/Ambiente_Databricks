@@ -7,6 +7,8 @@ Baseline de abertura: merge certificado da S2 na `main`,
 
 Este documento é o runbook operacional da S3. Ele não concede autorização de
 Databricks, não executa deploy remoto, não publica tema e não inicia a S4.
+O recibo S3 não autoriza aplicação remota nem substitui autorização, identidade
+ou permissão efetiva do ambiente.
 
 ## Para quem é
 

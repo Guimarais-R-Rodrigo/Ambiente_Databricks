@@ -55,7 +55,7 @@ A separação principal é entre **contexto** e **execução**:
 
 V00–V12 estão aceitas e integradas no Git. A V12 foi integrada pela PR #54 no merge `a6309a4d0b3a3530c52330e65ee5a18674118378`, preservando estados honestos distintos: `DOC-02`, `DOC-03`, `SEC-01`, `UAT-01` e `V12-AIBI-01` possuem PASS no alcance documentado; `A11-01` permanece **FAIL** rastreado na issue #57; `V12-LAB-01`, `V12-APP-01` e `V12-AIBI-02` permanecem **BLOQUEADO_AUTORIZACAO**. Esses estados não são intercambiáveis.
 
-O Plano Mestre V13 foi aceito e integrado pela PR #58 no merge `c339ed177f4b901a907ea6ad43f0803f5b7ccc09`. A S0 foi aceita e integrada pela PR #59 no merge `1d46c9625fb5bfd6d1b666ddff055507238788bf`, com 14/14 workflows de `push` concluídos em `success`. A S1 foi aceita e integrada pela PR #60 no merge `70f6a43748b9636f2bf8fe56aa07e9fb90a0d285`, com 15/15 workflows de `push` concluídos em `success`. A etapa vigente é **V13 — S2: preflight operacional unificado**, em candidata separada. A S2 verifica readiness local por composição com os contratos já integrados, não executa mutação Databricks e não inicia a S3.
+O Plano Mestre V13 foi aceito e integrado pela PR #58 no merge `c339ed177f4b901a907ea6ad43f0803f5b7ccc09`. A S0 foi aceita e integrada pela PR #59 no merge `1d46c9625fb5bfd6d1b666ddff055507238788bf`, com 14/14 workflows de `push` concluídos em `success`. A S1 foi aceita e integrada pela PR #60 no merge `70f6a43748b9636f2bf8fe56aa07e9fb90a0d285`, com 15/15 workflows de `push` concluídos em `success`. A S2 foi aceita e integrada pela PR #61 no merge `76f8a2dcc6d5dd69bd6c1af726fb40e2eced8af8`, com 15/15 workflows de `push` concluídos em `success`. A etapa vigente é **V13 — S3: release, instalação, atualização e rollback**, em candidata separada. A S3 prepara, valida, faz staging e comprova rollback local dos artefatos suportados, não executa mutação Databricks e não inicia a S4.
 
 A V11 projeta um `ResolvedTheme` `notebook` para capacidades documentadas de temas nativos AI/BI sem criar uma segunda fonte de verdade. `context="aibi"` continua reservado no schema central. A matriz integrada cobre os 48 tokens notebook como **3 traduzidos, 23 aproximados e 22 não suportados**. Como as fontes oficiais verificadas não publicam um schema completo e versionado do JSON produzido por `Export theme`, a V11 não inventa campos nativos: um candidato de importação só pode ser construído sobre um export real fixado por SHA-256 e um binding revisado para campos já existentes.
 
@@ -122,8 +122,8 @@ normas do molde    : 72 arquivos, 0 violação(ões)
 notebook exercita  : 60 objetos, 0 notebook(s) que só importam
 python (AST)       : 221 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1436 arquivos varridos no repositório editável/derivado
-repo (links)       : 1912 links fora da raiz analisada
+repo (identidade)  : 1439 arquivos varridos no repositório editável/derivado
+repo (links)       : 1914 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)
