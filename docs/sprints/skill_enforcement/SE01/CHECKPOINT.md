@@ -4,9 +4,9 @@
 
 **ABERTA / NÃO HOMOLOGADA / NÃO INTEGRADA.**
 
-A SE01 iniciou a camada L1 (`Contract`) do Skill Enforcement Framework na branch `sef/SE01-contrato`, baseada em `main@99161fdeb9253c30a82243644ba89af8cd50d79e`.
+A SE01 iniciou a camada L1 (`Contract`) do Skill Enforcement Framework na branch `sef/SE01-contrato`.
 
-Contrato, suíte, renderer e CI já possuem evidência positiva. O gate final continua aberto porque a primeira publicação real no Databricks Free foi interrompida por uma incompatibilidade operacional do publicador antes do `--verify --conteudo`. A correção de compatibilidade está implementada e precisa ser revalidada localmente/CI e exercitada novamente no Free.
+Contrato, suíte, renderer, CI e publicação/verify por conteúdo no Databricks Free possuem evidência positiva. O gate final continua aberto porque o capability probe real da Genie Code, a regressão natural da EDA, a decisão sobre o probe, o changelog final e o aceite explícito do usuário ainda estão pendentes.
 
 ## Estado implementado
 
@@ -20,57 +20,74 @@ Contrato, suíte, renderer e CI já possuem evidência positiva. O gate final co
 - [x] vocabulário fechado de conditions;
 - [x] capability probe read-only criado;
 - [x] testes positivos/negativos adicionados;
-- [x] coerência de vocabulário entre JSON Schema e validador coberta por teste;
+- [x] coerência JSON Schema ↔ validator coberta por teste;
+- [x] publicador Free compatibilizado com `import-dir` que já materializa notebooks;
+- [x] fallback SOURCE preservado e coberto por teste;
 - [x] fonte ↔ `Novo_Ambiente_Simulado` regenerada pelo renderer canônico;
-- [x] snapshot raiz atualizado por medição real: 1494 arquivos / 1961 links;
-- [x] HEAD `dc4059a3bd7c116bcf40009ec66b1da7a2f809fd` validado localmente: contrato 1/1, suíte 12/12, validador 0/0;
-- [x] 10/10 workflows aplicáveis da PR em `dc4059a3bd7c116bcf40009ec66b1da7a2f809fd`: `success`;
+- [x] branch reconciliada com `main@350dcf0b37e730042ef961f12f11b30b2660d2c6`, sem force-push;
+- [x] snapshot reconciliado: 1495 arquivos / 1962 links;
+- [x] HEAD publicado `637a4b38178c63ffee12ece801e847eedd83a054` validado localmente: contrato 1/1, suíte 14/14, validador 0/0;
+- [x] 10/10 workflows aplicáveis da PR no HEAD publicado: `success`;
 - [x] autenticação do profile pessoal do Databricks CLI validada;
 - [x] dry-run do publicador: 550 arquivos, espelho em dia;
-- [x] incidente de publicação diagnosticado sem repetição cega da escrita completa;
-- [x] objeto didático observado no remoto como `NOTEBOOK` após `import-dir`;
-- [x] reenvio individual redundante reproduziu `PROTOCOL_ERROR` em 3/3 tentativas;
-- [x] publicador corrigido para preservar notebook já materializado e manter fallback SOURCE;
-- [x] suíte ampliada para cobrir ambos os caminhos de compatibilidade (14 testes previstos);
-- [ ] CI do HEAD com a correção de compatibilidade executado integralmente;
-- [ ] nova execução local da suíte ampliada 14/14;
-- [ ] publicação no Databricks Free concluída pelo publicador corrigido;
-- [ ] `--verify --conteudo` no Free em PASS;
+- [x] publicação corrigida no Databricks Free concluída;
+- [x] 80 notebooks reconhecidos como já materializados pelo `import-dir`;
+- [x] conteúdo remoto exportado/comparado: 550/550 sem divergência;
+- [x] resíduo SE00 identificado por `object_type=NOTEBOOK` + SHA-256 congelado;
+- [x] resíduo SE00 removido somente após identidade byte a byte confirmada;
+- [x] `--verify --conteudo` final no Free: **APROVADO — 0 problema(s)**;
 - [ ] capability probe executado em chat novo;
 - [ ] regressão natural SE00-P1 executada em chat novo;
 - [ ] limitações reais do Genie Code registradas;
-- [ ] registrar entrada SE01 no `CHANGELOG.md` antes do fechamento da sprint;
 - [ ] decisão sobre remover/promover o probe;
+- [ ] entrada SE01 registrada no `CHANGELOG.md` antes do fechamento;
+- [ ] reconciliação final com `main` se ela avançar novamente;
 - [ ] aceite explícito do usuário;
 - [ ] merge da PR.
 
-## Evidência técnica consolidada
+## Evidência técnica consolidada do HEAD publicado
 
-No commit `dc4059a3bd7c116bcf40009ec66b1da7a2f809fd`:
+No commit `637a4b38178c63ffee12ece801e847eedd83a054`:
 
 - contrato: **1/1 PASS**;
 - recursos: **10**;
 - templates: **4**;
-- suíte local: **12/12 PASS**;
+- suíte local/CI dirigida: **14/14 PASS**;
 - schema ↔ validator: **PASS**;
 - probe local read-only: **PASS**;
+- compatibilidade do publicador, skip de reenvio redundante: **PASS**;
+- compatibilidade do publicador, fallback SOURCE: **PASS**;
 - `validate_assistant.py --conferir-readme`: **0 falhas / 0 avisos**;
-- snapshot: **1494 arquivos / 1961 links / 0 extras**;
+- snapshot: **1495 arquivos / 1962 links / 0 extras**;
 - GitHub Actions: **10/10 workflows aplicáveis em success**.
 
-## Incidente do gate Databricks Free
+## Gate Databricks Free
 
-A primeira chamada real do publicador atingiu o workspace. O `workspace import-dir --overwrite` materializou a árvore; em seguida, o publicador tentou reenviar individualmente um notebook didático como `SOURCE` e recebeu `PROTOCOL_ERROR`.
+A publicação corrigida observou:
 
-O diagnóstico controlado confirmou:
+- 550 arquivos publicáveis;
+- `workspace import-dir --overwrite`: PASS;
+- 80 notebooks já materializados corretamente;
+- 14/14 skills presentes;
+- 5/5 diretórios `hub_` presentes;
+- 0 arquivos ausentes;
+- 550/550 objetos exportados e comparados por conteúdo;
+- 0 divergências de conteúdo.
 
-- o destino sem `.py` já era `object_type=NOTEBOOK` e `language=PYTHON`;
-- o caminho com `.py` não existia;
-- o reenvio individual redundante falhou 3/3 com o mesmo erro;
-- a publicação completa não foi repetida depois do diagnóstico;
-- o verify por conteúdo não foi executado e nenhum PASS de publicação foi registrado.
+O primeiro verify encontrou apenas `.assistant/EDA Profissional - NYC Taxi Trips`, resíduo do experimento SE00. A limpeza não foi feita por inferência nominal: o objeto remoto era `NOTEBOOK`, e o export Jupyter teve SHA-256 `77069f781aa8145665873b0b441ca40a96e18bb3d29021f448d867a6b2465445`, exatamente o SHA congelado de `B00-P1-R1`. Somente então o objeto foi removido.
 
-A correção mantém compatibilidade regressiva: depois do `import-dir`, o publicador consulta `get-status`; se o objeto já for `NOTEBOOK`, não faz uma segunda escrita. Se não for, mantém o fallback individual `SOURCE/PYTHON/--overwrite`.
+O verify final retornou:
+
+- esperados: **550**;
+- ausentes: **0**;
+- obsoletos: **0**;
+- conteúdo: **550/550**;
+- `.assistant/.mcp_servers.json`: reconhecido como gerenciado pela plataforma;
+- resultado: **APROVADO — 0 problema(s)**.
+
+**Gate Databricks Free: PASS.**
+
+Esse PASS não prova execução do capability probe pela Genie Code. A prova comportamental continua separada.
 
 ## Fronteira de escopo
 
@@ -87,17 +104,15 @@ Não implementado nesta sprint:
 
 ## Próximos gates
 
-1. sincronizar o worktree isolado com o HEAD corrigido;
-2. executar a suíte local ampliada e o validador estrutural;
-3. obter CI verde do HEAD corrigido;
-4. repetir a publicação canônica no Free;
-5. executar `--verify --conteudo` e registrar o relatório;
-6. executar capability probe em chat novo;
-7. executar regressão natural da skill em outro chat novo;
-8. registrar resultados e limitações;
-9. registrar a entrada SE01 no changelog antes do fechamento;
-10. decidir se o probe é removido ou promovido ao componente definitivo;
-11. reconciliar a branch com a `main` vigente se ela tiver avançado;
-12. pedir homologação da SE01.
+1. executar o capability probe em chat completamente novo do Genie Code;
+2. classificar a evidência como `PASS`, `FAIL` ou `NOT_OBSERVABLE` sem inferência;
+3. em outro chat completamente novo, executar a regressão natural SE00-P1;
+4. registrar resultados e limitações reais do Genie Code;
+5. decidir se o probe é removido ou promovido a componente definitivo;
+6. registrar a entrada final SE01 no changelog;
+7. reconciliar novamente com a `main` vigente se necessário;
+8. reexecutar os gates finais da árvore de fechamento;
+9. pedir homologação explícita da SE01;
+10. somente após aceite, integrar a PR #69.
 
 SE02 permanece bloqueada até esse fechamento.
