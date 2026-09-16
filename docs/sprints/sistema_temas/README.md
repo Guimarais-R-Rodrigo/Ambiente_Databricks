@@ -1,6 +1,6 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Estado vigente — V00–V13 integradas; V14 não iniciada
+## Estado vigente — V00–V13 integradas; V14 S0 em execução
 
 V00–V13 estão aceitas e integradas no Git. A V13 concluiu consolidação operacional e handoff sem transformar ausência de autorização em PASS e sem executar mutação Databricks.
 
@@ -8,9 +8,9 @@ A S7 foi integrada pela PR #66 no merge `62e9404851d6a7902371bd5b6531a113d521311
 
 Os estados herdados continuam distintos: `DOC-02`, `DOC-03`, `SEC-01`, `UAT-01` e `V12-AIBI-01` possuem PASS somente no alcance documentado; `A11-01` permanece **FAIL** na issue #57; `V12-LAB-01`, `V12-APP-01` e `V12-AIBI-02` permanecem **BLOQUEADO_AUTORIZACAO**.
 
-Para quem nunca entrou no Hub: comece pelo [README vivo V13](V13/README.md) e pelo [handoff S7](V13/S7_HANDOFF_OPERACIONAL.md). A V13 organiza inventário, preflight, release/rollback local, diagnóstico, compatibilidade/acessibilidade, ensaios e handoff. Ela não publica tema nem autoriza operações remotas por inferência.
+O [Plano Mestre V14](V14/PLANO_MESTRE.md) foi aceito e integrado pela PR #70 no merge `350dcf0b37e730042ef961f12f11b30b2660d2c6`; os **15/15 workflows de `push`** desse SHA concluíram em `success`. A V14 está agora em **S0 — reconciliação pós-V13 e freeze de readiness**, com estado vivo no [README V14](V14/README.md) e evidência no [checkpoint S0](V14/CHECKPOINT_S0.md). **S1–S8 não foram iniciadas.** S0 não é production readiness, não decide go-live e não autoriza Databricks.
 
-O [Plano Mestre V13](V13/PLANO_MESTRE.md) permanece como contrato de escopo. **V14 não foi iniciada** e continua reservada à production readiness, ownership operacional definitivo, suporte sustentado, incidentes, SLA/SLO com base real, custos, retenção/housekeeping e decisão final de go-live.
+Para quem nunca entrou no Hub: use o [README V14](V14/README.md) para entender o estado corrente e o [handoff S7](V13/S7_HANDOFF_OPERACIONAL.md) para a operação herdada. A V13 continua dona de inventário, preflight, release/rollback local, diagnóstico, compatibilidade/acessibilidade, ensaios e handoff; a V14 não duplica esses mecanismos.
 
 A V11 continua dona da ponte fail-closed entre um `ResolvedTheme` `notebook` e capacidades documentadas de temas nativos Databricks AI/BI. O schema central permanece inalterado e `context="aibi"` continua reservado. A matriz integrada cobre exatamente os 48 tokens notebook: **3 traduzidos, 23 aproximados e 22 não suportados**. Somente as três correspondências traduzidas podem ter binding direto; aproximações exigem revisão e itens não suportados permanecem explícitos.
 
@@ -46,7 +46,7 @@ A V08 foi aceita por Rodrigo em 14/09/2026 e integrada pelo PR #42. O head final
 
 A [V08 — integração transversal com skills, padrões e Manual](V08/README.md) reconcilia orientação e roteamento com as capacidades V02–V07 já integradas. Skills deixam de competir com o contrato visual, o template EDA deixa de possuir política própria de tema e o Manual/padrões passam a descrever `ResolvedTheme`, Visual Lab, geração editorial, consumidores V07 e limites atuais de forma consistente.
 
-A [matriz transversal](V08/MATRIZ_INTEGRACAO.json), o [registro de testes](V08/TESTES.md) e o [checkpoint V08](V08/CHECKPOINT_V08.md) distinguem superfícies alteradas, decisões de não edição, failures preservados e a proibição de mudança runtime. A V08 não altera módulos Python de `hub_snippets` ou `hub_scripts`.
+A [matriz transversal](V08/MATRIZ_INTEGRACAO.json), o [checkpoint](V08/CHECKPOINT_V08.md) e o [registro de testes](V08/TESTES.md) distinguem superfícies alteradas, decisões de não edição, failures preservados e a proibição de mudança runtime. A V08 não altera módulos Python de `hub_snippets` ou `hub_scripts`.
 
 Antes do merge, o gate final comprovou V08 **22/22**, regressões V01–V08 **405/405**, V00 **12/12**, validador **0 falhas / 0 avisos** e `V08_RUNTIME_EDIT=0`. Depois do merge, os dez workflows da `main` — CI geral e V00–V08 — concluíram com `success`.
 

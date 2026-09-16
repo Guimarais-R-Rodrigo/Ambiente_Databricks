@@ -77,7 +77,7 @@ Regras atuais:
 
 Na V10, os gates Git/CI exercitam identidade sintética, isolamento, persistência V05, bundle implantável derivado e regressões locais. No head reconciliado `cb942ee955ff9236f19099e5ed4ceee9beb32000`, os dez workflows reais de PR concluíram com `success`; depois do merge `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`, os 12 workflows disparados por `push` na `main` também concluíram com `success`, incluindo o workflow V10 `34896944061`. Isso **não** comprova headers reais, permissões/grupos do workspace, UC Volume real, browser, acessibilidade, concorrência multiusuário ou UAT. Nenhuma criação/atualização de Databricks App foi executada por essa sprint.
 
-Estado corrente: [V13](docs/sprints/sistema_temas/V13/README.md) está encerrada no Git e sua [auditoria pós-merge](docs/sprints/sistema_temas/V13/AUDITORIA_POS_MERGE.md) preserva os limites e dívidas transferíveis. A V14 possui agora uma **candidata de planejamento tecnicamente certificada, pendente de aceite explícito**, documentada no [Plano Mestre V14](docs/sprints/sistema_temas/V14/PLANO_MESTRE.md); **S0–S8 ainda não foram iniciadas**, nenhuma decisão de production readiness/go-live foi tomada e nenhuma autorização Databricks decorre dessa candidata. O fechamento herdado permanece em [V12](docs/sprints/sistema_temas/V12/README.md) e [escopo/aceite V12](docs/sprints/sistema_temas/V12/ESCOPO_E_ACEITE.md). As etapas anteriores continuam navegáveis em [V11](docs/sprints/sistema_temas/V11/README.md), [V10](docs/sprints/sistema_temas/V10/README.md) e [V09](docs/sprints/sistema_temas/V09/README.md).
+Estado corrente: [V13](docs/sprints/sistema_temas/V13/README.md) está encerrada no Git e sua [auditoria pós-merge](docs/sprints/sistema_temas/V13/AUDITORIA_POS_MERGE.md) preserva os limites e dívidas transferíveis. O [Plano Mestre V14](docs/sprints/sistema_temas/V14/PLANO_MESTRE.md) foi aceito e integrado pela PR #70 no merge `350dcf0b37e730042ef961f12f11b30b2660d2c6`. A **S0 V14 foi aceita e integrada pela PR #71** no merge `e89ef4f79d9f9b7c901f1bbf490259ee5ce3d493`; os **16/16 workflows de `push`** desse SHA concluíram em `success`. A V14 está agora na **S1 — ownership, autoridade e modelo operacional**, documentada no [README V14](docs/sprints/sistema_temas/V14/README.md), na [matriz de ownership](docs/sprints/sistema_temas/V14/MATRIZ_OWNERSHIP.json), no [runbook S1](docs/sprints/sistema_temas/V14/S1_MODELO_OPERACIONAL.md) e no [checkpoint S1](docs/sprints/sistema_temas/V14/CHECKPOINT_S1.md). A S1 mantém owner/backup/autoridade não evidenciados em `BLOCKED`; **S2–S8 não foram iniciadas**, nenhuma decisão de production readiness/go-live foi tomada e nenhuma autorização Databricks decorre da S1. O fechamento herdado permanece em [V12](docs/sprints/sistema_temas/V12/README.md) e [escopo/aceite V12](docs/sprints/sistema_temas/V12/ESCOPO_E_ACEITE.md).
 
 ## 🔄 Como o contexto chega à Genie Code
 
@@ -109,7 +109,7 @@ raiz analisada     : /home/runner/work/Ambiente_Databricks/Ambiente_Databricks/a
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 92 caminhos verificados
-markdown / links   : 222 arquivos / 1396 links relativos
+markdown / links   : 222 arquivos / 1395 links relativos
 notebooks / links  : 80 notebooks / 101 links relativos
 readmes de objeto  : 76/76 operacionais; 3/3 exemplares; 0 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 62 conferidas (nome, arquivos, __init__)
@@ -120,10 +120,10 @@ saída colada       : 79 notebooks com bloco real, 0 sem
 idioma da docstring: 62 módulos, 0 com docstring em inglês
 normas do molde    : 72 arquivos, 0 violação(ões)
 notebook exercita  : 60 objetos, 0 notebook(s) que só importam
-python (AST)       : 222 arquivos
+python (AST)       : 221 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1495 arquivos varridos no repositório editável/derivado
-repo (links)       : 1962 links fora da raiz analisada
+repo (identidade)  : 1490 arquivos varridos no repositório editável/derivado
+repo (links)       : 1978 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)
