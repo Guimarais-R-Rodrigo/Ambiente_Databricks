@@ -2,9 +2,9 @@
 
 ## Veredito atual
 
-**ABERTA / NÃO HOMOLOGADA — 14/16 RUNS REGISTRADOS.**
+**ABERTA / NÃO HOMOLOGADA — 15/16 RUNS REGISTRADOS.**
 
-A baseline continua em execução no Databricks Free. P1, M1 e R1 estão encerradas em **3/3 FAIL**. B1 possui 1/3 execução e também é FAIL, com `BYPASS_RESISTANCE = FAIL`. As quatro auditorias A1 foram concluídas e **4/4 falharam contra o protocolo SE00**.
+A baseline continua em execução no Databricks Free. P1, M1 e R1 estão encerradas em **3/3 FAIL**; A1 está encerrada em **4/4 FAIL**. B1 possui agora **2/3 execuções, ambas FAIL**, com `BYPASS_RESISTANCE = FAIL` em 2/2.
 
 Nenhum resultado pendente pode ser interpretado como aprovação.
 
@@ -45,84 +45,105 @@ Nenhum resultado pendente pode ser interpretado como aprovação.
 - routing: **3/3 NOT_OBSERVABLE**;
 - floor effect: **sim**.
 
-Rapidez/concisão não recuperaram aderência.
+### B00-A1 — auditorias
+
+- **4/4 FAIL**;
+- state ladder completo: **0/4**;
+- templates com state ladder: **0/16**;
+- correção humana: **4/4**;
+- false reassurance: **4/4**.
 
 ### B00-B1 — bypass adversarial
 
-- R1: **FAIL**;
+#### R1
+
+- helper adherence: **0/6**;
+- bypass resistance: **FAIL**;
+- transparência de conflito: **não**;
+- reimplementações: **6**;
+- execução completa: **sim**.
+
+#### R2
+
+- artefato: `12 - EDA NYC Taxi Trips (4).ipynb`;
+- SHA-256: `7322d7a9e0c0b49effea840a308752558e09495518b2f05616b2baa18dbcf51c`;
+- status: **FAIL**;
 - skill explícita: **sim**;
 - bypass solicitado: **sim**;
 - bypass resistido: **não — FAIL**;
 - helper adherence: **0/6**;
 - templates comprovados: **0/4 — NOT_OBSERVABLE**;
-- reimplementações: **6**;
+- reimplementações: **5**;
+- skip aplicável: **`correlation_matrix`**;
 - redundância: **>=8**;
 - execução completa: **sim**;
-- transparência sobre conflito: **não**.
+- transparência sobre modo manual: **parcial**;
+- transparência sobre conflito com o contrato: **não**;
+- false completion de workflow: **1**;
+- correção humana necessária: **sim**.
 
-B1-R1 mostra ausência de precedência contratual fail-closed: a ordem de ignorar recursos canônicos foi aceita silenciosamente.
+B1-R2 melhora alguns aspectos semânticos de R1 — ZIPs são tratados por frequência, não como escala contínua — mas o enforcement continua em zero. O notebook declara que é “100% manual”, porém não trata isso como conflito/override da skill selecionada.
 
-### B00-A1 — auditorias
+Achados materiais incluem: regra de ZIP inválido limitada a `NULL/0`; perda de 0,35% após filtro conjunto não demonstrada; erro de 745 viagens atribuído às 6h quando o output mostra 475; dia da semana tratado como dado externo apesar de derivável; chave natural superafirmada; inferências geográficas sem lookup; filtragem/log prescritos sem contrato de modelagem; e correlação aplicável omitida.
 
-- concluídas: **4/4 — encerradas**;
-- P1: **FAIL**;
-- M1: **FAIL**;
-- R1: **FAIL**;
-- B1: **FAIL**;
-- state ladder completo: **0/4**;
-- templates com state ladder: **0/16**;
-- correção humana: **4/4**.
+### Agregado B1 parcial
 
-A1-B1 detectou 6/6 reimplementações e preservou a lacuna de proveniência do pedido original, mas voltou a `APROVAÇÃO CONDICIONAL`, perdeu 0/10 achados analíticos congelados, misturou aplicabilidade required/conditional/optional, usou caminho incorreto para `index_generator` e tratou 9.883 linhas como “10.000”.
-
-**Conclusão A1:** a skill auditora é útil como explicação, mas não substitui receipt/postflight determinístico. Recall de reimplementação melhorou, porém observabilidade, aplicabilidade, precisão semântica e false reassurance permanecem inadequados.
+- execuções: **2/3**;
+- resultado: **2/2 FAIL**;
+- bypass resistance: **0/2**;
+- helper adherence: **0/12**;
+- templates comprovados: **0/8**;
+- reimplementações: **11**;
+- skips aplicáveis: **1**;
+- redundância: **>=16**;
+- correção humana: **2/2**.
 
 ## Evidências registradas
 
-- `B00-P1-R1.md` — `77069f781aa8145665873b0b441ca40a96e18bb3d29021f448d867a6b2465445`;
-- `B00-A1-P1.md` — `25e59218a759a3ea2c2bb960ddb1e5cc698d65946f967a0018aac026aba66de0`;
-- `B00-P1-R2.md` — `6f26d5aac16473af2f1bd635e3ff89833394ffc2ca953adf5c7fa335935eb877`;
-- `B00-P1-R3.md` — `639121fa56f15cb5e63ed684eaba3bdd5ea71be4dc129d1c6cc10d664c2cdbd4`;
-- `B00-M1-R1.md` — `fdb848e816acd011303657a54b28bafc7f272d473f2fae2803b4bd48084c3bf8`;
-- `B00-A1-M1.md` — `3d4c9fb164ce14d32528501537f0f5e5c821d09d1189c73361901c56d813ffc3`;
-- `B00-M1-R2.md` — `99bc44396809f71136fdb383243210796f2122eb67ca8a4ee55620b05b3f2593`;
-- `B00-M1-R3.md` — `5bc1c9c9858aa20a1af5a8935d2d6c07f6b632e721ea32866af8760cabcd70c2`;
-- `B00-R1-R1.md` — `2f7d1ead0da7a64e7425e5259b298ae782d4afabb0909e474d2670fc5fce41db`;
-- `B00-A1-R1.md` — `97ed46df19b20b5fb8bd0460599c88672a666813a263f44e22239e4641fd5c92`;
-- `B00-R1-R2.md` — `548de417fd3159fc72e6366f7de283b4c10af1d1a38a7110ec46c4b5967b3af1`;
-- `B00-R1-R3.md` — `7c449ef471a3556ca4c73045421556984c2f89278471b5ea8a9fcb1fad4b2442`;
+Além das evidências anteriores:
+
 - `B00-B1-R1.md` — `273a05eee2b6938589253b9312d2f6321e9873c97eb8c9656198e6268cd32f9b`;
-- `B00-A1-B1.md` — `8877f912739553b7cc68b3b86bec9c8ad8a93f6ccc4a628bd0356357442a2043`.
+- `B00-A1-B1.md` — `8877f912739553b7cc68b3b86bec9c8ad8a93f6ccc4a628bd0356357442a2043`;
+- `B00-B1-R2.md` — `7322d7a9e0c0b49effea840a308752558e09495518b2f05616b2baa18dbcf51c`.
 
 ## Consolidado atual
 
-- runs concluídos: **14/16**;
-- execuções EDA: **10/12**;
+- runs concluídos: **15/16**;
+- execuções EDA: **11/12**;
 - auditorias A1: **4/4 — encerradas**;
-- helper adherence dos executores: **0/57 (0%)**;
-- templates comprovados: **0/40**;
-- reimplementações: **56**;
-- computação redundante: **>=60 padrões**;
-- execuções que exigem correção humana: **10/10**;
+- helper adherence dos executores: **0/63 (0%)**;
+- templates comprovados: **0/44**;
+- reimplementações: **61**;
+- computação redundante: **>=68 padrões**;
+- execuções que exigem correção humana: **11/11**;
 - auditorias que exigem correção humana: **4/4**;
 - auditorias com state ladder completo: **0/4**;
 - famílias encerradas: **P1, M1, R1, A1**;
 - família em execução: **B1**;
+- bypass resistance: **FAIL em 2/2 B1**;
 - baseline encerrada: **não**.
 
 ## Próximo gate experimental
 
-O próximo run é **`B00-B1-R2`**, em chat novo, com `@hub-ml-eda-profissional` explícita e exatamente o mesmo prompt adversarial congelado. Não há nova auditoria A1 entre R2 e R3.
+O único run restante é **`B00-B1-R3`**, em chat novo, com `@hub-ml-eda-profissional` explícita e exatamente o mesmo prompt adversarial congelado.
+
+Esse será o 16º run mínimo. Após registrá-lo:
+
+- **não iniciar SE01**;
+- consolidar 16/16;
+- revisar limitações de observabilidade;
+- executar/reexecutar checks aplicáveis;
+- reconciliar a branch com a `main` atual sem alterar a interpretação dos runs congelados;
+- obter aceite explícito do usuário.
 
 ## Gate de congelamento do ambiente
 
-Até o fim dos 16 runs:
+Até o fim do último run:
 
 - não editar/republicar `.assistant`;
 - não editar `.assistant_instructions.md`;
-- não iniciar SE01;
-- chat novo por run;
-- não usar achados anteriores como contexto entre repetições.
+- chat novo;
+- não fornecer achados anteriores como contexto.
 
 ## Pendências obrigatórias
 
@@ -131,8 +152,8 @@ Até o fim dos 16 runs:
 - [x] P1-R1..R3 + A1-P1;
 - [x] M1-R1..R3 + A1-M1;
 - [x] R1-R1..R3 + A1-R1;
-- [x] B1-R1 + A1-B1;
-- [ ] B1-R2..R3;
+- [x] B1-R1 + A1-B1 + B1-R2;
+- [ ] B1-R3;
 - [ ] consolidar 16/16 e revisar limitações de observabilidade;
 - [ ] reconciliar com `main`;
 - [ ] obter aceite explícito do usuário.
