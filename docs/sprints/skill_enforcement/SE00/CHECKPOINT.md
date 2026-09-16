@@ -6,7 +6,7 @@
 
 A baseline conversacional foi integralmente executada no Databricks Free. P1, M1, R1 e B1 encerraram em **3/3 FAIL**; A1 encerrou em **4/4 FAIL**. Nenhum dos doze executores concluiu qualquer helper aplicável e as três repetições adversariais aceitaram o bypass do contrato.
 
-A coleta está encerrada, mas a sprint permanece aberta enquanto não forem concluídos os gates de checks/reconciliação e o usuário não der aceite explícito.
+A coleta está encerrada, mas a sprint permanece aberta enquanto não forem concluídos reconciliação/checks no estado reconciliado e aceite explícito do usuário.
 
 ## Estado confirmado
 
@@ -108,6 +108,26 @@ A skill auditora é útil como camada explicativa, mas não substitui receipt/po
 - baseline homologada: **não**;
 - usuário homologou resultados: **não**.
 
+## Auditoria pré-reconciliação
+
+A revisão do HEAD congelado foi concluída antes de incorporar a `main` atual:
+
+- `main` atual observada: `6dfb8707835921f2f48020f383cf571902080109`;
+- `main` avançou **77 commits** desde a base experimental;
+- branch SE00 permanece ancorada no merge-base `28669f99db27cf23df73549297bbf57eda033f58`;
+- diff SE00 contra a base: **26 arquivos**;
+- arquivos comportamentais no diff SE00: **0**;
+- alterações sob `ambiente_fonte/.assistant/`: **0**;
+- `.assistant_instructions.md`: **inalterado**;
+- `tools/`: **inalterado**;
+- overlap entre mudanças da `main` e mudanças SE00: **somente `README.md` raiz**;
+- V12/V13 da `main` estão em caminhos distintos dos artefatos SE00;
+- snapshot pré-reconciliação da branch: **1434 arquivos / 1904 links**;
+- contagem de arquivos verificada pela regra de `iter_repo_files()`/`REPO_IGNORE`: nenhum dos 24 arquivos novos da SE00 é excluído do inventário;
+- workflows/statuses associados ao HEAD SE00 não foram retornados nas consultas até aqui; isso **não** é tratado como sucesso.
+
+A reconciliação é, portanto, estruturalmente de baixo risco e deve preservar os 16 resultados históricos. O único conflito documental esperado é o README/snapshot, que precisa incorporar o estado atual de V12/V13 e depois ser recalculado/validado.
+
 ## Conclusão de engenharia
 
 A SE00 fornece evidência empírica suficiente para justificar a arquitetura do SEF:
@@ -128,13 +148,15 @@ Requisitos explícitos para as sprints seguintes:
 ## Gates restantes antes do aceite
 
 - [ ] sincronizar a branch SE00 no worktree local após os commits de evidência;
-- [ ] executar/reexecutar validação documental/estática no HEAD final;
+- [ ] executar/reexecutar validação documental/estática no HEAD reconciliado;
 - [x] executar e registrar os 16/16 runs;
 - [x] consolidar métricas e limitações de observabilidade;
-- [ ] revisar o diff final contra a base congelada;
+- [x] revisar o diff congelado contra a base experimental;
+- [x] auditar sobreposição com a `main` atual;
 - [ ] reconciliar com a `main` atual sem reclassificar os 16 runs históricos;
-- [ ] revisar conflitos documentais/README após reconciliação;
+- [ ] resolver/recalcular README e snapshot após reconciliação;
 - [ ] confirmar checks aplicáveis no HEAD reconciliado;
+- [ ] revisar o diff final reconciliado;
 - [ ] obter aceite explícito do usuário.
 
 ## Gate para encerramento
@@ -143,9 +165,9 @@ A SE00 só pode receber `APROVADA` quando, simultaneamente:
 
 1. 16/16 runs estiverem documentados — **cumprido**;
 2. métricas e limitações estiverem consolidadas — **cumprido**;
-3. diff continuar documental/instrumental — **a confirmar no HEAD final/reconciliado**;
-4. checks aplicáveis estiverem registrados — **pendente**;
-5. branch estiver reconciliada com a `main` atual — **pendente**;
+3. diff congelado continuar documental/instrumental — **cumprido**;
+4. branch estiver reconciliada com a `main` atual — **pendente de autorização**;
+5. checks aplicáveis no HEAD reconciliado estiverem registrados — **pendente**;
 6. usuário tiver revisado e aceitado os resultados — **pendente**.
 
 ## Próxima etapa após aceite
