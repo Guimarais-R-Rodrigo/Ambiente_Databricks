@@ -2,23 +2,20 @@
 
 ## Estado
 
-**EM EXECUÇÃO / NÃO HOMOLOGADA.**
+**EM EXECUÇÃO / NÃO HOMOLOGADA / PR #69 DRAFT.**
 
-A SE01 inicia o nível L1 (`Contract`) do Skill Enforcement Framework. Ela cria
-uma representação machine-readable das obrigações da skill piloto e mede uma
-capacidade concreta do Genie Code: executar, de forma previsível, um script
-relativo à própria Agent Skill.
+A SE01 inicia o nível L1 (`Contract`) do Skill Enforcement Framework. Ela cria uma representação machine-readable das obrigações da skill piloto e mede uma capacidade concreta do Genie Code: executar, de forma previsível, um script relativo à própria Agent Skill.
 
 ## Base e branch
 
 - base de abertura: `main@99161fdeb9253c30a82243644ba89af8cd50d79e`;
 - branch: `sef/SE01-contrato`;
+- PR: #69, Draft;
 - piloto: `hub-ml-eda-profissional`;
 - laboratório obrigatório: Databricks pessoal/Free;
 - baseline de comparação: SE00, já encerrada/homologada/integrada.
 
-A branch nasceu da `main` vigente. Antes de eventual merge, qualquer novo avanço
-da `main` deverá ser reconciliado e revalidado.
+A branch nasceu da `main` vigente e permanece `behind_by=0` na última conferência. Antes de eventual merge, qualquer novo avanço da `main` deverá ser reconciliado e revalidado.
 
 ## Evidência herdada da SE00
 
@@ -30,8 +27,7 @@ A SE01 parte de fatos medidos, não de hipótese:
 - bypass resistance: `0/3`;
 - auditorias A1 com state ladder completo: `0/4`.
 
-Esses números não são metas da SE01; são a justificativa para criar contrato
-estruturado e prova de capacidade antes de implementar preflight/runner.
+Esses números não são metas da SE01; são a justificativa para criar contrato estruturado e prova de capacidade antes de implementar preflight/runner.
 
 ## Escopo implementado nesta sprint
 
@@ -48,6 +44,24 @@ estruturado e prova de capacidade antes de implementar preflight/runner.
 5. Testes positivos e mutantes negativos.
 6. Capability probe read-only dentro da skill piloto.
 7. Instrução temporária e estritamente acionada por pedido explícito de probe.
+8. Workflow dedicado da SE01.
+9. Espelho da skill regenerado pelo renderer canônico.
+10. Snapshot raiz atualizado a partir da medição real da candidata.
+
+## Evidência técnica já observada
+
+No commit `fda26d130e559d3fdb8ee69fcb785ffecc76a049`, antes de qualquer teste no Free:
+
+- contrato v0.1: **PASS — 1/1**;
+- recursos: **10**;
+- templates: **4**;
+- testes SE01: **11/11 PASS**;
+- `validate_assistant.py`: **0 falhas / 0 avisos**;
+- renderer: **sem diff** depois da materialização canônica do simulado.
+
+O validador mediu a árvore completa em **1494 arquivos / 1961 links**, e o README raiz foi atualizado com esses valores no commit `264981cb4ce1a5aff8d3c1f6dd54caa1fa57c174`.
+
+A rodada de GitHub Actions seguinte não chegou a executar steps: os jobs terminaram antes de alocar runner (`runner_id=0`, `runner_name=""`, `steps=[]`). Um rerun isolado do job SE01 repetiu o mesmo estado. Isso permanece registrado como indisponibilidade operacional; o CI final do HEAD corrente continua pendente e nenhum resultado antigo é promovido automaticamente.
 
 ## Fora de escopo
 
@@ -71,11 +85,9 @@ O contrato canônico vive em:
 
 `ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/execution_contract.json`
 
-Recursos declaram `module` e `symbol` separadamente para tornar a API pública
-verificável. Em particular, `index_generator` resolve para o objeto real
-`hub_snippets.visual.index_generator.gerar_indice_eda`; a SE01 não altera o
-inventário congelado da SE00 para corrigir retrospectivamente evidência
-histórica.
+Recursos declaram `module` e `symbol` separadamente para tornar a API pública verificável. Em particular, `index_generator` resolve para o objeto real `hub_snippets.visual.index_generator.gerar_indice_eda`; a SE01 não altera o inventário congelado da SE00 para corrigir retrospectivamente evidência histórica.
+
+As políticas foram confrontadas com o inventário SE00. Para os templates da EDA, `roteiro_eda` e `relatorio_executivo_eda` permanecem `required`, enquanto `matriz_graficos_eda` e `estilo_visual_eda` permanecem `conditional`.
 
 Políticas:
 
@@ -90,8 +102,7 @@ O probe está em:
 
 `ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/scripts/capability_probe.py`
 
-Ele não executa EDA e não escreve arquivos. O único objetivo é comprovar que o
-Genie Code consegue usar um script relativo da skill para:
+Ele não executa EDA e não escreve arquivos. O único objetivo é comprovar que o Genie Code consegue usar um script relativo da skill para:
 
 1. localizar uma raiz `.assistant` válida;
 2. adicionar essa raiz temporariamente ao `sys.path`;
@@ -100,8 +111,7 @@ Genie Code consegue usar um script relativo da skill para:
 5. devolver o marcador estruturado `SEF_CAPABILITY_PROBE_V0_1`;
 6. declarar `writes_performed=false`.
 
-Passar localmente não homologa a capacidade do Genie Code. O gate real ocorre no
-Free em chat novo e está descrito em `TESTES.md`.
+Passar localmente não homologa a capacidade do Genie Code. O gate real ocorre no Free em chat novo e está descrito em `TESTES.md`.
 
 ## Decisões deliberadas
 
@@ -110,6 +120,7 @@ Free em chat novo e está descrito em `TESTES.md`.
 - Condições são tokens fechados, sem `eval`/Python arbitrário.
 - A SE01 começa em `audit`; fail-closed pertence à SE02/SE05.
 - A forma definitiva do runner continua em aberto até o probe real.
+- O `CHANGELOG.md` ainda deve receber a entrada SE01 antes do fechamento, conforme a regra do índice de ADRs.
 
 ## Artefatos
 
@@ -128,11 +139,11 @@ A SE01 só pode fechar quando:
 - contrato canônico passar no validador;
 - todos os mutantes negativos pertinentes forem rejeitados;
 - fonte e simulado estiverem equivalentes pelo renderer canônico;
-- CI aplicável estiver verde;
+- CI aplicável do HEAD final estiver verde;
+- entrada de changelog estiver registrada;
 - candidata tiver sido publicada no Free e verificada por conteúdo;
 - capability probe tiver sido realmente executado em chat novo;
-- uma execução normal de EDA confirmar que o contrato/probe não degradou o uso
-  da skill;
+- uma execução normal de EDA confirmar que o contrato/probe não degradou o uso da skill;
 - limitações reais forem registradas;
 - probe for removido ou promovido conscientemente ao desenho definitivo;
 - houver aceite explícito do usuário.
