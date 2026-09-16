@@ -48,6 +48,6 @@ jobs:
         run: |
           git config user.name "SE02 Changelog"
           git config user.email "actions@users.noreply.github.com"
-          git add CHANGELOG.md .github/workflows/_se02-final-changelog.yml
+          git add -A
           git commit -m "docs(SE02): registrar changelog final"
           git push origin HEAD:sef/SE02-preflight
