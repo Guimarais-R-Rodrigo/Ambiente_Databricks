@@ -153,5 +153,6 @@ jobs:
           echo "V13_S7_NETWORK=0"
           echo "V13_S7_REMOTE_MUTATION=0"
           echo "V13_S7_DATABRICKS_MUTATION=0"
-          echo "V13_S7_HUMAN_VALIDATION=BLOCKED"
+          echo "V13_S7_HUMAN_VALIDATION=PASS"
+          echo "V13_S7_HUMAN_EVIDENCE=VERSIONED_HUMAN_SESSION"
           echo "V13_V14_NOT_STARTED=1"
