@@ -2,11 +2,11 @@
 
 ## Estado
 
-**CANDIDATA À HOMOLOGAÇÃO — 16/16 runs concluídos, branch reconciliada com `main` e gates técnicos aprovados; aceite final do usuário pendente.**
+**HOMOLOGADA — 16/16 runs concluídos, branch reconciliada com `main`, gates técnicos aprovados e integração da PR #56 autorizada pelo usuário em 16/09/2026.**
 
 A SE00 é a primeira sprint do Skill Enforcement Framework. Ela não implementa enforcement. Seu objetivo foi congelar e medir o comportamento da Genie Code antes de qualquer mudança de contrato, preflight, runner, receipt ou postflight.
 
-A coleta, a consolidação, a reconciliação e a validação técnica foram concluídas. A PR #56 permanece Draft e a SE01 não deve começar antes da homologação explícita desta baseline.
+A coleta, a consolidação, a reconciliação e a validação técnica foram concluídas. A homologação aceita a baseline observada — inclusive os resultados FAIL que justificam o SEF — e não os reclassifica como PASS. A SE01 permanece fora deste ato e só pode começar depois da auditoria pós-merge da `main`.
 
 ## Linhagem
 
@@ -17,7 +17,9 @@ A coleta, a consolidação, a reconciliação e a validação técnica foram con
 - bootstrap anterior ao SE00: 548/548 arquivos comparados, 0 ausentes, 0 obsoletos, 14/14 skills e 5/5 diretórios `hub_*`;
 - árvore operacional `.assistant`: inalterada durante os 16 runs;
 - `main` reconciliada após o congelamento da coleta: `6dfb8707835921f2f48020f383cf571902080109`;
-- snapshot reconciliado validado: **1476 arquivos / 1935 links / 0 extras**.
+- snapshot reconciliado validado: **1476 arquivos / 1935 links / 0 extras**;
+- homologação explícita do usuário: **concedida em 16/09/2026**;
+- integração da PR #56: **autorizada**.
 
 ## Objetivo
 
@@ -48,6 +50,8 @@ Somente documentação de teste, inventários, matriz de casos, templates de evi
 - [`TESTES.md`](TESTES.md)
 - [`RESULTADOS.md`](RESULTADOS.md)
 - [`CHECKPOINT.md`](CHECKPOINT.md)
+
+`TESTES.md` e `RESULTADOS.md` preservam o registro técnico da candidata imediatamente antes do aceite; o estado de governança final da sprint é registrado neste README e em `CHECKPOINT.md`.
 
 ## Piloto EDA — resultado final
 
@@ -116,17 +120,17 @@ Após o congelamento de 16/16, a branch foi reconciliada com `main@6dfb870783592
 - diff contra `main`: exclusivamente documental/instrumental;
 - `.assistant`, `.assistant_instructions.md` e `tools/`: sem alterações SE00;
 - snapshot reconciliado: **1476 arquivos / 1935 links / 0 extras**;
-- os oito workflows aplicáveis do HEAD de validação reconciliado concluíram em **success**;
-- o checkpoint final registra que o estado autoritativo do HEAD corrente deve ser confirmado nos checks da PR antes de qualquer merge.
+- os oito workflows aplicáveis do HEAD técnico validado concluíram em **success**;
+- o commit que registra a homologação é exclusivamente documental e deve ter seus próprios checks confirmados antes do merge.
 
-## Critério de aceite da sprint
+## Homologação
 
-Os gates técnicos estão cumpridos. A SE00 permanece **não homologada** até o usuário conceder aceite explícito sobre a baseline observada.
+O usuário **homologou explicitamente a SE00 em 16/09/2026** e autorizou a integração da PR #56.
 
-A PR #56 deve continuar Draft e não deve ser integrada antes desse aceite.
+A homologação encerra o gate humano da baseline e preserva todos os resultados individuais como evidência histórica congelada.
 
 ## Próxima etapa
 
-Após homologação explícita da SE00 e integração conforme autorizada, a iniciativa pode avançar para SE01 — ADR do enforcement, contrato estruturado inicial, validador estático e prova controlada de execução.
+A integração da PR #56 está autorizada. Depois do merge e da auditoria pós-merge da `main`, a iniciativa poderá avançar para SE01 em etapa separada.
 
-**Não iniciar SE01 antes do fechamento formal da SE00.**
+**A homologação da SE00 não autoriza iniciar SE01 antes da confirmação pós-merge.**
