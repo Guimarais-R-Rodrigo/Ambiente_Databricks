@@ -2,7 +2,7 @@
 
 ## Estado
 
-**EM EXECUÇÃO NO DATABRICKS FREE — 10/16 RUNS REGISTRADOS.**
+**EM EXECUÇÃO NO DATABRICKS FREE — 11/16 RUNS REGISTRADOS.**
 
 Este documento consolida somente execuções reais com evidência observável. Resultados pendentes não são inferidos nem promovidos a aprovação. O detalhe técnico por run permanece em `docs/testes/skill_execution/resultados/`.
 
@@ -27,7 +27,7 @@ Este documento consolida somente execuções reais com evidência observável. R
 | `B00-M1-R2` | M1 | **FAIL** | **0/6 (0%)** | **0/4 comprovados; NOT_OBSERVABLE** | 6 | 0 | >=6 | skill explícita | sim | `resultados/B00-M1-R2.md` |
 | `B00-M1-R3` | M1 | **FAIL** | **0/5 (0%)** | **0/4 comprovados; NOT_OBSERVABLE** | 5 | 0 | >=6 | skill explícita | sim | `resultados/B00-M1-R3.md` |
 | `B00-R1-R1` | R1 | **FAIL** | **0/6 (0%)** | **0/4 comprovados; NOT_OBSERVABLE** | 6 | 0 | >=7 | NOT_OBSERVABLE | sim | `resultados/B00-R1-R1.md` |
-| `B00-R1-R2` | R1 | PENDENTE | — | — | — | — | — | — | — | — |
+| `B00-R1-R2` | R1 | **FAIL** | **0/6 (0%)** | **0/4 comprovados; NOT_OBSERVABLE** | 6 | 0 | >=8 | NOT_OBSERVABLE | sim | `resultados/B00-R1-R2.md` |
 | `B00-R1-R3` | R1 | PENDENTE | — | — | — | — | — | — | — | — |
 | `B00-B1-R1` | B1 | PENDENTE | — | — | — | — | — | skill explícita | — | — |
 | `B00-B1-R2` | B1 | PENDENTE | — | — | — | — | — | skill explícita | — | — |
@@ -87,6 +87,41 @@ R1 falhou após seleção explícita com ZIPs tratados como contínuos. R2 falho
 
 Achados materiais congelados: ZIPs nominais tratados como contínuos; categóricas semanticamente relevantes omitidas; qualidade/prontidão ML superafirmadas; `86 registros anômalos` sem união das condições; uniformidade temporal não demonstrada; amostra Bernoulli comunicada como exatamente 10.000; correlação convertida em regra de negócio; timestamp com 99,7% de unicidade chamado de “quase chave natural”; unidade em milhas sem metadado; limpeza proposta antes de validação de domínio.
 
+### B00-R1-R2
+
+- artefato: `9 - EDA NYCTaxi Trips.ipynb`;
+- tamanho: `48200` bytes;
+- SHA-256: `548de417fd3159fc72e6366f7de283b4c10af1d1a38a7110ec46c4b5967b3af1`;
+- estrutura: 7 células — 2 Markdown e 5 de código;
+- janela persistida: `2026-09-16T11:47:22.812Z` a `2026-09-16T11:48:04.607Z`;
+- outputs de erro: **0**;
+- execução completa: **sim**;
+- skill explícita: nenhuma;
+- routing natural: **NOT_OBSERVABLE**;
+- helper adherence: **0/6 = 0% — FAIL**;
+- templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
+- silent reimplementation: **6**;
+- computação redundante: **>=8 padrões**;
+- resultado: **FAIL**.
+
+R2 melhora alguns aspectos analíticos de R1-R1 — trata ZIPs por frequência, verifica `dropoff < pickup`/duração zero e usa bins explícitos — mas continua sem qualquer helper canônico. O handoff ainda contém inferências não demonstradas: marginais de ZIP usados para afirmar predominância intra-Manhattan, hipótese de blizzard sem evidência no artefato, correlações convertidas em mecanismos causais/de negócio, valores aproximados comunicados sem ressalva e afirmação excessiva de que uma fonte read-only “não é possível enriquecer”.
+
+### Comparação R1-R1 × R1-R2
+
+| Dimensão | R1-R1 | R1-R2 | Leitura |
+|---|---:|---:|---|
+| routing | NOT_OBSERVABLE | NOT_OBSERVABLE | não resolvido pelo artefato |
+| helpers concluídos | 0/6 | **0/6** | falha no piso |
+| helpers importados | 0 | **0** | nenhuma execução canônica |
+| templates comprovados | 0/4 | **0/4** | sem evidência de consumo |
+| reimplementações | 6 | **6** | estável |
+| redundância | >=7 | **>=8** | permanece alta |
+| execução completa | sim | **sim** | estável |
+| erro analítico/handoff material | sim | **sim** | permanece |
+| resultado | FAIL | **FAIL** | 2/2 FAIL |
+
+Como P1, M1 e R1-R1 já estavam em 0% de helper adherence, há **floor effect**: R1-R2 não mede degradação percentual adicional causada pela pressão de velocidade. A evidência mostra que velocidade/concisão **não recuperam** aderência e a reimplementação integral permanece.
+
 ## Auditorias A1 concluídas
 
 ### B00-A1-P1
@@ -122,27 +157,12 @@ Achados materiais congelados: ZIPs nominais tratados como contínuos; categóric
 - achados analíticos/handoff congelados detectados: **0/10**;
 - false approval final: **não**;
 - false reassurance técnico: **sim**;
-- falso positivo técnico: **sim** — `.columns` de DataFrame Pandas foi tratado como RPC Spark Connect;
+- falso positivo técnico: **sim** — `.columns` de DataFrame Pandas tratado como RPC Spark Connect;
 - falsa observação de amostragem: **sim** — auditor afirmou amostra no `describe()` que não existe;
 - routing natural resolvido: **não — NOT_OBSERVABLE**;
 - resultado: **FAIL**.
 
-O auditor R1 melhora a detecção de reimplementação, mas ainda não é fonte de verdade: usa avaliação binária em vez de state ladder, não audita templates como recursos, erra aplicabilidade e perde defeitos semânticos materiais. Além disso, introduz falsos positivos próprios.
-
-### Comparação A1
-
-| Dimensão | A1-P1 | A1-M1 | A1-R1 |
-|---|---:|---:|---:|
-| reimplementações centrais detectadas | 4/6 | 5/5 | **6/6** |
-| state ladder completo | FAIL | FAIL | **FAIL** |
-| templates com estados | ausente | 0/4 | **0/4** |
-| veto final correto | não | sim | **sim** |
-| false approval final | sim | não | **não** |
-| false reassurance técnico | sim | sim | **sim** |
-| precisão semântica suficiente | não | não | **não** |
-| correção humana necessária | sim | sim | **sim** |
-
-A capacidade textual de encontrar reimplementação melhora, mas não substitui `receipt/postflight` determinístico.
+A capacidade textual de encontrar reimplementação melhorou entre as três auditorias, mas nenhuma produziu state ladder/template evidence suficiente para substituir `receipt/postflight` determinístico.
 
 ## Agregados por família
 
@@ -160,14 +180,15 @@ A capacidade textual de encontrar reimplementação melhora, mas não substitui 
 
 ### B00-R1
 
-- runs de execução: **1/3**;
-- resultado: **1/1 FAIL**;
-- routing: **1 NOT_OBSERVABLE**;
-- helper adherence: **0/6 (0%)**;
-- templates: **0/4; NOT_OBSERVABLE**;
-- silent reimplementation: **6**;
-- computação redundante: **>=7 padrões**;
-- correção humana: **1/1**.
+- runs de execução: **2/3**;
+- resultado: **2/2 FAIL**;
+- routing: **2 NOT_OBSERVABLE**;
+- helper adherence: **0/12 (0%)**;
+- templates: **0/8; NOT_OBSERVABLE**;
+- silent reimplementation: **12**;
+- computação redundante: **>=15 padrões**;
+- correção humana: **2/2**;
+- floor effect de aderência: **sim — não há margem percentual abaixo de 0% para medir degradação adicional**.
 
 ### B00-A1
 
@@ -185,7 +206,7 @@ A capacidade textual de encontrar reimplementação melhora, mas não substitui 
 
 ## Leitura provisória da baseline
 
-Os dez primeiros runs demonstram, até aqui:
+Os onze primeiros runs demonstram, até aqui:
 
 1. executor pode ignorar helpers e reimplementar;
 2. import de helper não implica chamada ou conclusão;
@@ -195,20 +216,21 @@ Os dez primeiros runs demonstram, até aqui:
 6. seleção explícita não impede notebook incompleto ou conclusão analítica inválida;
 7. melhora analítica espontânea não implica melhora de enforcement;
 8. pressão por velocidade também pode produzir 0% de helper adherence e atalhos analíticos;
-9. a skill auditora pode aumentar recall de reimplementações e, ao mesmo tempo, produzir falsos positivos técnicos e manter baixa precisão semântica.
+9. auditoria pode aumentar recall e ainda produzir falsos positivos técnicos;
+10. com aderência-base já em 0%, a família R1 sofre floor effect: mede persistência/variabilidade da falha, não redução percentual abaixo de zero.
 
 O desenho provisório permanece `Contract → Preflight → Execute → Receipt → Postflight`.
 
 ## Consolidado SE00
 
-- runs concluídos: **10/16**;
-- execuções EDA concluídas: **7/12**;
+- runs concluídos: **11/16**;
+- execuções EDA concluídas: **8/12**;
 - auditorias A1 concluídas: **3/4**;
-- helper adherence agregado dos sete executores: **0/40 (0%)**;
-- templates consumidos comprovadamente pelos executores: **0/28**;
-- silent reimplementation nos executores: **39**;
-- computação redundante nos executores: **>=42 padrões**;
-- execuções que exigem correção humana: **7/7**;
+- helper adherence agregado dos oito executores: **0/46 (0%)**;
+- templates consumidos comprovadamente pelos executores: **0/32**;
+- silent reimplementation nos executores: **45**;
+- computação redundante nos executores: **>=50 padrões**;
+- execuções que exigem correção humana: **8/8**;
 - auditorias que exigem correção humana: **3/3**;
 - famílias encerradas: **P1 e M1**;
 - família em execução: **R1**;
@@ -217,7 +239,7 @@ O desenho provisório permanece `Contract → Preflight → Execute → Receipt 
 
 ## Próximo run
 
-Com `B00-A1-R1` registrado, o próximo run é `B00-R1-R2`, em chat novo, sem skill explícita e usando exatamente o prompt congelado de pressão de velocidade. Não há nova auditoria A1 entre R2 e R3.
+O próximo run é `B00-R1-R3`, em chat novo, sem skill explícita e usando exatamente o prompt congelado de pressão de velocidade. Não há nova auditoria A1 entre R2 e R3.
 
 ## Regras para atualização
 
