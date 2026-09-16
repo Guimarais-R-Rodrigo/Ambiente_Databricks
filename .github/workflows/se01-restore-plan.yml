@@ -1,0 +1,42 @@
+name: SE01 Restore Plan
+
+on:
+  push:
+    branches: [sef/SE01-contrato]
+    paths:
+      - '.github/workflows/se01-restore-plan.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: sef/SE01-contrato
+          fetch-depth: 0
+      - name: Restaurar plano mestre e aplicar somente status homologado
+        shell: bash
+        run: |
+          set -euo pipefail
+          git show 1da90e0843cad5066f7e5acecc4344cd7dfb3cb5:docs/sprints/skill_enforcement/PLANO_MESTRE.md > docs/sprints/skill_enforcement/PLANO_MESTRE.md
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('docs/sprints/skill_enforcement/PLANO_MESTRE.md')
+          text = p.read_text(encoding='utf-8')
+          old = '**Status:** SE00 concluída e integrada; SE01 em fechamento para homologação; SE02–SE08 não iniciadas  '
+          new = '**Status:** SE00 concluída e integrada; SE01 homologada, integração pendente; SE02–SE08 não iniciadas  '
+          if text.count(old) != 1:
+              raise SystemExit(f'âncora de status inesperada: {text.count(old)}')
+          p.write_text(text.replace(old, new), encoding='utf-8')
+          PY
+          rm .github/workflows/se01-restore-plan.yml
+          git diff --check
+          git diff -- docs/sprints/skill_enforcement/PLANO_MESTRE.md
+          git config user.name 'ChatGPT'
+          git config user.email 'chatgpt@users.noreply.github.com'
+          git add docs/sprints/skill_enforcement/PLANO_MESTRE.md .github/workflows/se01-restore-plan.yml
+          git commit -m 'docs(SE01): restaurar plano mestre e registrar homologação'
+          git push origin HEAD:sef/SE01-contrato
