@@ -1,0 +1,74 @@
+name: Contrato operacional V13
+
+on:
+  push:
+    branches:
+      - main
+      - 'codex/temas-v13*'
+  pull_request:
+    paths:
+      - 'README.md'
+      - 'docs/sprints/sistema_temas/V13/**'
+      - 'tools/temas_v13_operacional.py'
+      - 'tools/tests/test_temas_v13_s1.py'
+      - '.github/workflows/temas-v13-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  contrato-operacional-v13:
+    runs-on: ubuntu-24.04
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+      SOURCE_DATE_EPOCH: '1700000000'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Dependências Python
+        run: |
+          python -m pip install -r tools/requirements-dev.txt
+          python -m pip install 'ipywidgets>=8,<9'
+          python -m pip install -r ambiente_fonte/.assistant/hub_padroes/identidade_visual/databricks_app/requirements.txt
+
+      - name: Dependências do compositor visual
+        run: |
+          npm install --global pnpm@10.34.5
+          pnpm --dir tools/readme_visuals install --frozen-lockfile
+
+      - name: V13 S1 — contrato e mutantes negativos
+        run: python -B tools/tests/test_temas_v13_s1.py -v
+
+      - name: V13 S1 — validador operacional read-only
+        run: python -B tools/temas_v13_operacional.py
+
+      - name: Regressões de temas V01–V13
+        run: python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
+
+      - name: Compatibilidade visual V00
+        run: python -B tools/tests/test_visual_legado_v00.py
+
+      - name: Validação estrutural e documental
+        run: python -B tools/validate_assistant.py --conferir-readme
+
+      - name: Fronteira S1
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "V13_S1_REMOTE_MUTATION=0"
+          echo "V13_S2_PREFLIGHT=NOT_IMPLEMENTED"

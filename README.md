@@ -55,7 +55,7 @@ A separação principal é entre **contexto** e **execução**:
 
 V00–V12 estão aceitas e integradas no Git. A V12 foi integrada pela PR #54 no merge `a6309a4d0b3a3530c52330e65ee5a18674118378`, preservando estados honestos distintos: `DOC-02`, `DOC-03`, `SEC-01`, `UAT-01` e `V12-AIBI-01` possuem PASS no alcance documentado; `A11-01` permanece **FAIL** rastreado na issue #57; `V12-LAB-01`, `V12-APP-01` e `V12-AIBI-02` permanecem **BLOQUEADO_AUTORIZACAO**. Esses estados não são intercambiáveis.
 
-O Plano Mestre V13 foi aceito e integrado pela PR #58 no merge `c339ed177f4b901a907ea6ad43f0803f5b7ccc09`. A etapa vigente é **V13 — S0: reconciliação pós-V12 e freeze de escopo**, em candidata documental separada. A S0 não altera runtime, não cria os artefatos operacionais da S1 e não executa nenhuma mutação Databricks. Para um usuário não técnico: não há nada para instalar ou aplicar nesta etapa; a próxima ação é revisar o checkpoint S0 antes de qualquer avanço.
+O Plano Mestre V13 foi aceito e integrado pela PR #58 no merge `c339ed177f4b901a907ea6ad43f0803f5b7ccc09`. A S0 foi aceita e integrada pela PR #59 no merge `1d46c9625fb5bfd6d1b666ddff055507238788bf`, com 14/14 workflows de `push` concluídos em `success`. A etapa vigente é **V13 — S1: inventário e contrato operacional**, em candidata separada. A S1 organiza owners, artefatos, autorização, smoke e rollback por superfície; não instala nada no Databricks e não implementa o preflight unificado da S2.
 
 A V11 projeta um `ResolvedTheme` `notebook` para capacidades documentadas de temas nativos AI/BI sem criar uma segunda fonte de verdade. `context="aibi"` continua reservado no schema central. A matriz integrada cobre os 48 tokens notebook como **3 traduzidos, 23 aproximados e 22 não suportados**. Como as fontes oficiais verificadas não publicam um schema completo e versionado do JSON produzido por `Export theme`, a V11 não inventa campos nativos: um candidato de importação só pode ser construído sobre um export real fixado por SHA-256 e um binding revisado para campos já existentes.
 
@@ -77,7 +77,7 @@ Regras atuais:
 
 Na V10, os gates Git/CI exercitam identidade sintética, isolamento, persistência V05, bundle implantável derivado e regressões locais. No head reconciliado `cb942ee955ff9236f19099e5ed4ceee9beb32000`, os dez workflows reais de PR concluíram com `success`; depois do merge `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`, os 12 workflows disparados por `push` na `main` também concluíram com `success`, incluindo o workflow V10 `34896944061`. Isso **não** comprova headers reais, permissões/grupos do workspace, UC Volume real, browser, acessibilidade, concorrência multiusuário ou UAT. Nenhuma criação/atualização de Databricks App foi executada por essa sprint.
 
-Estado corrente e próxima decisão: [V13](docs/sprints/sistema_temas/V13/README.md), [Plano Mestre V13](docs/sprints/sistema_temas/V13/PLANO_MESTRE.md) e [checkpoint S0](docs/sprints/sistema_temas/V13/CHECKPOINT_S0.md). O fechamento herdado permanece em [V12](docs/sprints/sistema_temas/V12/README.md) e [escopo/aceite V12](docs/sprints/sistema_temas/V12/ESCOPO_E_ACEITE.md). As etapas anteriores continuam navegáveis em [V11](docs/sprints/sistema_temas/V11/README.md), [V10](docs/sprints/sistema_temas/V10/README.md) e [V09](docs/sprints/sistema_temas/V09/README.md).
+Estado corrente e próxima decisão: [V13](docs/sprints/sistema_temas/V13/README.md), [Plano Mestre V13](docs/sprints/sistema_temas/V13/PLANO_MESTRE.md) e [inventário S1](docs/sprints/sistema_temas/V13/S1_INVENTARIO_OPERACIONAL.md). O fechamento herdado permanece em [V12](docs/sprints/sistema_temas/V12/README.md) e [escopo/aceite V12](docs/sprints/sistema_temas/V12/ESCOPO_E_ACEITE.md). As etapas anteriores continuam navegáveis em [V11](docs/sprints/sistema_temas/V11/README.md), [V10](docs/sprints/sistema_temas/V10/README.md) e [V09](docs/sprints/sistema_temas/V09/README.md).
 
 ## 🔄 Como o contexto chega à Genie Code
 
@@ -122,8 +122,8 @@ normas do molde    : 72 arquivos, 0 violação(ões)
 notebook exercita  : 60 objetos, 0 notebook(s) que só importam
 python (AST)       : 221 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1427 arquivos varridos no repositório editável/derivado
-repo (links)       : 1918 links fora da raiz analisada
+repo (identidade)  : 1432 arquivos varridos no repositório editável/derivado
+repo (links)       : 1922 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)
