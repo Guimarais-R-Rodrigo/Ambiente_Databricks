@@ -2,7 +2,7 @@
 
 ## Estado
 
-**EM EXECUÇÃO — 10/16 runs registrados no Databricks Free; nenhuma alteração comportamental introduzida.**
+**EM EXECUÇÃO — 11/16 runs registrados no Databricks Free; nenhuma alteração comportamental introduzida.**
 
 A SE00 é a primeira sprint de implementação do Skill Enforcement Framework. Ela não implementa enforcement. Seu objetivo é congelar e medir o comportamento atual do Genie Code antes de qualquer mudança de contrato, preflight, runner, receipt ou postflight.
 
@@ -74,19 +74,19 @@ Total mínimo: **16 execuções em chats novos**.
 
 ### Progresso experimental atual
 
-- runs registrados: **10/16**;
+- runs registrados: **11/16**;
 - `B00-P1`: **encerrada — 3/3 FAIL, 0/18 helpers concluídos**;
 - `B00-M1`: **encerrada — 3/3 FAIL, 0/16 helpers concluídos**, mesmo com skill explícita;
-- `B00-R1-R1`: **FAIL — 0/6 helpers**, sob pressão de velocidade; routing natural `NOT_OBSERVABLE`;
+- `B00-R1`: **2/3 execuções — 2/2 FAIL, 0/12 helpers concluídos**, routing natural `NOT_OBSERVABLE` nas duas;
 - `B00-A1-P1`: **FAIL**;
 - `B00-A1-M1`: **FAIL**, embora com 5/5 reimplementações detectadas e veto correto;
 - `B00-A1-R1`: **FAIL**, embora com 6/6 reimplementações detectadas e veto correto;
 - auditorias com state ladder completo: **0/3**;
-- execuções EDA acumuladas: **0/40 helpers concluídos**;
-- auditorias que exigiram correção humana: **3/3**;
-- próximo run: `B00-R1-R2`.
+- execuções EDA acumuladas: **0/46 helpers concluídos**;
+- templates comprovados nos executores: **0/32**;
+- próximo run: `B00-R1-R3`.
 
-A evidência já separa roteamento, seleção explícita, execução, qualidade analítica e auditoria. A1-R1 adiciona um ponto novo: o recall textual de reimplementação pode melhorar enquanto o auditor ainda erra aplicabilidade, não produz state ladder/templates e gera falsos positivos técnicos.
+R1-R2 confirma que pressão de velocidade/concisão não recupera aderência. Como a baseline já estava em 0%, há floor effect: a família R1 mede persistência e variabilidade da falha, não queda percentual abaixo de zero.
 
 ## Evidência aceitável
 
