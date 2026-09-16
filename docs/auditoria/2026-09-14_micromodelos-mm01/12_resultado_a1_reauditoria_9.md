@@ -1,8 +1,10 @@
 # RELATÓRIO DE REAUDITORIA FINAL INDEPENDENTE — MM01
 
+> Nota de preservação: o identificador pessoal presente no nome completo do repositório foi sanitizado para cumprir o gate de higiene do próprio projeto. Nenhum achado, evidência técnica, classificação ou veredito desta auditoria foi alterado.
+
 ## 1. Identificação
 
-- Repositório: `Guimarais-R-Rodrigo/Ambiente_Databricks`
+- Repositório: `Ambiente_Databricks` (repositório privado; owner sanitizado neste registro histórico)
 - Branch: `micromodelos/mm01-contrato-canonico`
 - HEAD auditado: `4dc6bb12d2e4df6c3dbff7aa4711a99bf660bb6b`
 - main: `1d46c9625fb5bfd6d1b666ddff055507238788bf`
