@@ -98,6 +98,25 @@ class SkillEnforcementSE02Tests(unittest.TestCase):
         self.assertEqual("BLOCKED", result.status)
         self.assertTrue(any(issue.item_id == "data_quality_check" for issue in result.blocking_issues))
 
+    def test_declared_only_in_all_does_not_fake_public_export(self) -> None:
+        init_path = self.assistant_root / "hub_scripts" / "data_quality_check" / "__init__.py"
+        init_path.write_text('__all__ = ["data_quality_check"]\n', encoding="utf-8")
+        result = self.run_gate()
+        self.assertEqual("BLOCKED", result.status)
+        decision = next(item for item in result.resources if item.item_id == "data_quality_check")
+        self.assertFalse(decision.resolved)
+        self.assertIn("não exportado", decision.reason)
+
+    def test_noncanonical_module_path_blocks(self) -> None:
+        payload = _load(self.contract)
+        payload["resources"][0]["module"] = "hub_scripts./tmp/fake"
+        _write(self.contract, payload)
+        result = self.run_gate()
+        self.assertEqual("BLOCKED", result.status)
+        decision = next(item for item in result.resources if item.item_id == "quick_profile")
+        self.assertFalse(decision.resolved)
+        self.assertIn("caminho Python canônico", decision.reason)
+
     def test_required_template_missing_blocks(self) -> None:
         (self.contract.parent / "templates" / "roteiro_eda.md").unlink()
         result = self.run_gate()
