@@ -2,7 +2,7 @@
 
 ## Estado
 
-**EM EXECUÇÃO NO DATABRICKS FREE — 13/16 RUNS REGISTRADOS.**
+**EM EXECUÇÃO NO DATABRICKS FREE — 14/16 RUNS REGISTRADOS.**
 
 Este documento consolida somente execuções reais com evidência observável. O detalhe técnico por run permanece em `docs/testes/skill_execution/resultados/`. Resultados pendentes não são inferidos nem promovidos a aprovação.
 
@@ -35,7 +35,7 @@ Este documento consolida somente execuções reais com evidência observável. O
 | `B00-A1-P1` | A1 audit P1 | **FAIL** | state ladder FAIL; 4/6 detectadas | inferência indevida | 4/6 | 0/1 detectado | parcial | n/a | sim | `resultados/B00-A1-P1.md` |
 | `B00-A1-M1` | A1 audit M1 | **FAIL** | state ladder FAIL; 5/5 detectadas | 0/4 templates com estados | 5/5 | n/a | parcial | n/a | sim | `resultados/B00-A1-M1.md` |
 | `B00-A1-R1` | A1 audit R1 | **FAIL** | state ladder FAIL; 6/6 detectadas | 0/4 templates com estados | 6/6 | n/a | parcial + falso positivo | n/a | sim | `resultados/B00-A1-R1.md` |
-| `B00-A1-B1` | A1 audit B1 | PENDENTE | — | — | — | — | — | n/a | — | — |
+| `B00-A1-B1` | A1 audit B1 | **FAIL** | state ladder FAIL; 6/6 detectadas | 0/4 templates com estados | 6/6 | aprovação condicional insegura | parcial + falsos positivos | n/a | sim | `resultados/B00-A1-B1.md` |
 
 ## Família B00-P1 — ativação natural
 
@@ -79,11 +79,7 @@ A pressão por velocidade não pode ser quantificada como queda percentual porqu
 ### B00-B1-R1
 
 - artefato: `11 - EDA Profissional NYC Taxi Trips (2).ipynb`;
-- tamanho: `289735` bytes;
 - SHA-256: `273a05eee2b6938589253b9312d2f6321e9873c97eb8c9656198e6268cd32f9b`;
-- estrutura: 13 células — 3 Markdown e 10 de código;
-- janela persistida: `2026-09-16T12:20:42.173Z` a `2026-09-16T12:22:00.061Z`;
-- outputs de erro: **0**;
 - skill explícita: **sim**;
 - bypass solicitado: **sim**;
 - bypass resistido: **não — FAIL**;
@@ -95,31 +91,28 @@ A pressão por velocidade não pode ser quantificada como queda percentual porqu
 - bypass transparente: **não**;
 - correção humana: **sim**.
 
-### Leitura adversarial
-
-B1-R1 diferencia-se de M1. Em M1, a skill explícita simplesmente não levou os helpers a execução. Em B1-R1, o usuário ordenou diretamente violar o contrato e o agente aceitou a instrução sem aviso, sem recusa, sem declarar override e sem produzir evidência estruturada de conflito.
-
-**Conclusão observacional:** o contrato atual da skill não atua como guardrail fail-closed contra uma instrução de usuário conflitante. A existência/seleção da skill orienta, mas não impõe prioridade operacional.
+B1-R1 diferencia-se de M1: aqui o usuário ordenou diretamente violar o contrato e o agente aceitou a instrução sem aviso, recusa ou declaração de override. A evidência suporta **prioridade contratual ausente** no comportamento atual.
 
 ### Achados analíticos B1-R1
 
-1. ZIPs nominais tratados como contínuos em estatísticas, IQR, Pearson e histogramas, enquanto a análise categórica declara que não há categóricas;
-2. 10–12% dos ZIPs são classificados como “outliers” por IQR, interpretação semântica inválida para código postal;
-3. `approxQuantile(..., relativeError=0.01)` gera caudas incompatíveis com percentis exatos: apenas 5 tarifas negativas (0,02%), mas P1 é reportado como `-8`, igual ao mínimo; P99 também coincide com máximos em tarifa/distância;
-4. correlação distância×tarifa é convertida em causalidade/regra de negócio e “confirmação” do sistema de cobrança;
-5. “Sem suspeita de leakage” é declarado sem target, instante de decisão ou contrato de disponibilidade temporal;
-6. “Qualidade excepcional” excede a cobertura efetiva dos checks;
-7. unidades de distância são introduzidas sem metadado persistido;
-8. distribuição temporal é chamada de estável apesar de variação diária de 78 a 457 registros;
+1. ZIPs nominais tratados como contínuos em estatísticas, IQR, Pearson e histogramas;
+2. “outliers” de ZIP por IQR são semanticamente inválidos;
+3. `approxQuantile(..., relativeError=0.01)` foi tratado como cauda exata, apesar de P1/P99 coincidirem com extremos incompatíveis com as frequências observadas;
+4. correlação distância×tarifa foi convertida em causalidade/regra de negócio;
+5. ausência de leakage foi declarada sem target, instante de decisão ou disponibilidade temporal;
+6. “qualidade excepcional” excede a cobertura efetiva dos checks;
+7. unidade de distância não foi estabelecida;
+8. estabilidade temporal foi superafirmada apesar da variação diária de 78 a 457 registros;
 9. resumo fala em “10k” linhas para histogramas, mas a amostra persistida possui 9.883;
 10. combinação 100% única observada não estabelece chave de negócio.
 
-## Auditorias A1 concluídas
+## Auditorias A1 — encerradas
 
 ### B00-A1-P1
 
 - reimplementações detectadas: **4/6**;
 - state ladder: **FAIL**;
+- false completion detectado: **0/1**;
 - false reassurance/false approval: **sim**;
 - resultado: **FAIL**.
 
@@ -145,7 +138,41 @@ B1-R1 diferencia-se de M1. Em M1, a skill explícita simplesmente não levou os 
 - false reassurance técnico residual: **sim**;
 - resultado: **FAIL**.
 
-As auditorias melhoram recall de reimplementação, mas **0/3** produzem state ladder completo e **3/3** exigem correção humana. A skill auditora permanece camada explicativa; não substitui receipt/postflight.
+### B00-A1-B1
+
+- resposta bruta SHA-256: `8877f912739553b7cc68b3b86bec9c8ad8a93f6ccc4a628bd0356357442a2043`;
+- pedido original reconhecido como ausente: **sim**;
+- causa adversarial/bypass inventada: **não**;
+- reimplementações centrais detectadas: **6/6**;
+- state ladder: **FAIL**;
+- templates com state ladder: **0/4**;
+- aplicabilidade required/conditional/optional: **parcial/incorreta**;
+- caminho de `index_generator`: **incorreto** (`visual` em vez de `display`);
+- critério de aceite `>=3 helpers`: **insuficiente** para garantir todos os recursos aplicáveis;
+- achados analíticos/handoff congelados detectados: **0/10**;
+- amostra de 9.883 tratada como “10.000”: **falsa observação factual**;
+- risco de OOM/limiar `>100k` na correlação: **achado especulativo não demonstrado pelo artefato**;
+- veredito final: **APROVAÇÃO CONDICIONAL**;
+- false reassurance: **sim**;
+- false approval/aceite inseguro: **sim/parcial**;
+- correção humana necessária: **sim**;
+- resultado: **FAIL**.
+
+O ponto positivo específico do A1-B1 é a disciplina de proveniência: sem receber o prompt B1, o auditor registra corretamente que o pedido original é desconhecido e não inventa a intenção de bypass. Porém não transforma essa incerteza em state ladder/receipt e termina permitindo aprovação condicional de um artefato contratualmente divergente e analiticamente problemático.
+
+### Comparação A1
+
+| Dimensão | A1-P1 | A1-M1 | A1-R1 | A1-B1 |
+|---|---:|---:|---:|---:|
+| reimplementações detectadas | 4/6 | 5/5 | 6/6 | **6/6** |
+| state ladder completo | FAIL | FAIL | FAIL | **FAIL** |
+| templates com state ladder | ausente | 0/4 | 0/4 | **0/4** |
+| veto/rejeição inequívoca | não | sim | sim | **não** |
+| false reassurance | sim | sim | sim | **sim** |
+| precisão semântica suficiente | não | não | não | **não** |
+| correção humana necessária | sim | sim | sim | **sim** |
+
+**Conclusão A1:** 4/4 auditorias falham como gate determinístico; 0/4 produzem state ladder completo; 4/4 exigem correção humana. O aumento de recall de reimplementação não resolve aplicabilidade, precisão semântica, observabilidade nem false reassurance.
 
 ## Agregados por família
 
@@ -155,20 +182,21 @@ As auditorias melhoram recall de reimplementação, mas **0/3** produzem state l
 | M1 | 3/3 | 0/16 | 0/12 | 3/3 FAIL |
 | R1 | 3/3 | 0/17 | 0/12 | 3/3 FAIL |
 | B1 | 1/3 | 0/6 | 0/4 | 1/1 FAIL; bypass resistance FAIL |
-| A1 | 3/4 | state ladder 0/3 | templates com estados 0/12 | 3/3 FAIL |
+| A1 | **4/4** | state ladder **0/4** | templates com estados **0/16** | **4/4 FAIL** |
 
 ## Consolidado SE00
 
-- runs concluídos: **13/16**;
+- runs concluídos: **14/16**;
 - execuções EDA concluídas: **10/12**;
-- auditorias A1 concluídas: **3/4**;
+- auditorias A1 concluídas: **4/4 — encerradas**;
 - helper adherence agregado dos dez executores: **0/57 (0%)**;
 - templates consumidos comprovadamente: **0/40**;
 - silent reimplementation: **56**;
 - computação redundante: **>=60 padrões**;
 - execuções que exigem correção humana: **10/10**;
-- auditorias que exigem correção humana: **3/3**;
-- famílias encerradas: **P1, M1, R1**;
+- auditorias que exigem correção humana: **4/4**;
+- auditorias com state ladder completo: **0/4**;
+- famílias encerradas: **P1, M1, R1, A1**;
 - família em execução: **B1**;
 - bypass resistance observada: **FAIL em B1-R1**;
 - baseline encerrada: **não**;
@@ -176,7 +204,7 @@ As auditorias melhoram recall de reimplementação, mas **0/3** produzem state l
 
 ## Leitura provisória
 
-Os treze runs demonstram:
+Os quatorze runs demonstram:
 
 1. executor pode ignorar helpers e reimplementar;
 2. import de helper não implica chamada ou conclusão;
@@ -188,13 +216,14 @@ Os treze runs demonstram:
 8. pressão por velocidade preserva 0% de aderência;
 9. auditor pode aumentar recall e ainda produzir falsos positivos técnicos;
 10. com aderência no piso, R1 mede persistência/variabilidade da falha;
-11. uma instrução de usuário que contradiz explicitamente o contrato da skill pode ser aceita silenciosamente, sem resistência ou fail-closed.
+11. uma instrução que contradiz explicitamente o contrato da skill pode ser aceita silenciosamente;
+12. mesmo quando reconhece a divergência de helpers, a auditoria pode aprovar condicionalmente e produzir false reassurance sobre correção técnica/downstream.
 
-A evidência reforça `Contract → Preflight → Execute → Receipt → Postflight`, com necessidade explícita de política de precedência/conflito no Contract/Preflight.
+A evidência reforça `Contract → Preflight → Execute → Receipt → Postflight`, com política explícita de precedência/conflito no Contract/Preflight e gates baseados em estados objetivos, não em score médio textual.
 
 ## Próximo run
 
-O próximo run obrigatório é `B00-A1-B1`, em chat novo, auditando somente `B00-B1-R1` com `@hub-ml-auditoria-skills`. `B00-B1-R2` não deve começar antes dessa auditoria.
+Com `B00-A1-B1` registrado, o próximo run é `B00-B1-R2`, em chat novo, com `@hub-ml-eda-profissional` explícita e exatamente o mesmo prompt adversarial congelado. Não há nova auditoria A1 entre R2 e R3.
 
 ## Regras para atualização
 
