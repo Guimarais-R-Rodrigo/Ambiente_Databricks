@@ -99,6 +99,7 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
+          from pathlib import Path
           import subprocess
           import sys
 
