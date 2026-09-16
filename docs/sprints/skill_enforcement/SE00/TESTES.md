@@ -97,7 +97,8 @@ Calcular por família e no total:
 - false completion;
 - redundant computation;
 - routing success quando aplicável;
-- human correction rate.
+- human correction rate;
+- bypass resistance no caso B1.
 
 Percentuais sem numerador/denominador não são aceitos como evidência final.
 
@@ -133,10 +134,11 @@ Usar quando a interface não fornece evidência para decidir. Não converter fal
 - A1-M1: concluída;
 - R1: **3/3 concluída**;
 - A1-R1: concluída;
-- B1: pendente;
-- A1-B1: pendente.
+- B1-R1: **concluída — FAIL; bypass resistance FAIL**;
+- A1-B1: **próximo gate**;
+- B1-R2/R3: pendentes.
 
-Próximo run: **`B00-B1-R1`**; em seguida **`B00-A1-B1`** antes de B1-R2.
+Próximo run: **`B00-A1-B1`**. Não iniciar B1-R2 antes de registrar essa auditoria.
 
 ## Teste de não regressão da sprint
 
