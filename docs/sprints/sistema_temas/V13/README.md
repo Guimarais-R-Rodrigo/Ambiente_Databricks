@@ -28,7 +28,9 @@ O protocolo humano separado é:
 
 Estado humano atual:
 
-`HUMAN-01 = BLOCKED` — `HUMAN_EVIDENCE_MISSING`.
+`HUMAN-01 = PASS` — `HUMAN_EVIDENCE_RECORDED`.
+
+A sessão real foi registrada pelo mantenedor com participante sanitizado `Tester`, autorizado e não construtor, duração de 5 minutos, zero ajuda, zero erros e H1–H6 em PASS. Esse resultado é formativo e não constitui production readiness.
 
 **V14 não foi iniciada.**
 
@@ -74,7 +76,7 @@ Entregáveis do Plano Mestre cobertos pelo handoff:
 - plano de rollback do próprio release V13;
 - checkpoint V13 após os gates finais.
 
-A homologação humana mínima não é simulada por CI. Enquanto não houver participante autorizado que não tenha construído o procedimento, sessão real, duração quando aplicável, ajuda/erros registrados e os oráculos satisfeitos, `HUMAN-01` continua `BLOCKED`.
+A homologação humana mínima foi executada e registrada. O PASS humano não foi inferido pela CI: decorre da sessão real informada pelo mantenedor e será apenas verificado pelos gates automatizados. Ainda são necessários checkpoint final, recertificação do SHA exato e aceite explícito antes da integração S7/V13.
 
 ## Artefatos históricos preservados
 
@@ -93,7 +95,8 @@ Os artefatos de sprints integradas são evidência histórica e não são reescr
 - [S5 — compatibilidade e acessibilidade operacional](S5_COMPATIBILIDADE_ACESSIBILIDADE.md);
 - [checkpoint S5](CHECKPOINT_S5.md);
 - [S6 — ensaios operacionais por superfície](S6_ENSAIOS_OPERACIONAIS.md);
-- [checkpoint S6](CHECKPOINT_S6.md).
+- [checkpoint S6](CHECKPOINT_S6.md);
+- [checkpoint S7](CHECKPOINT_S7.md).
 
 Exemplos de historicidade:
 
@@ -157,11 +160,22 @@ Nenhum cenário requer Databricks real.
 
 O participante precisa ser autorizado e não ter construído o procedimento. Não pode receber instrução verbal do autor durante a tarefa.
 
-Estado da candidata antes de sessão humana real:
+Sessão registrada:
 
-`HUMAN-01 = BLOCKED`.
+- `participant_id = Tester`;
+- autorizado = `true`;
+- não construtor = `true`;
+- duração = `5 minutos`;
+- ajuda verbal = `0`;
+- ajuda documental extra = `0`;
+- erros de interpretação = `0`;
+- H1–H6 = `PASS`.
 
-Ausência de evidência humana não é PASS e não pode ser inferida da suíte automatizada.
+Estado atual:
+
+`HUMAN-01 = PASS`.
+
+Esse PASS cobre somente a homologação humana formativa do handoff. Não altera resultados V12, não fecha #57 e não substitui production readiness V14.
 
 ## Estados herdados preservados
 
@@ -231,7 +245,8 @@ Fronteiras vivas S7:
 - `V13_S7_NETWORK=0`;
 - `V13_S7_REMOTE_MUTATION=0`;
 - `V13_S7_DATABRICKS_MUTATION=0`;
-- `V13_S7_HUMAN_VALIDATION=BLOCKED`;
+- `V13_S7_HUMAN_VALIDATION=PASS`;
+- `V13_S7_HUMAN_EVIDENCE=VERSIONED_HUMAN_SESSION`;
 - `V13_V14_NOT_STARTED=1`.
 
 A antiga asserção `V13_S7_NOT_STARTED=1` permanece apenas como fato histórico da S6, não como fronteira viva.
@@ -250,29 +265,28 @@ Como a S7 não executa mutação Databricks, ela não cria estado remoto para ap
 
 O protocolo de medição continua fail-closed:
 
-1. primeiro head S7 não estima novas contagens;
+1. a inclusão do checkpoint S7 muda a árvore;
 2. o runner mede identidade e links reais;
 3. qualquer failure fica preservado;
 4. o README raiz só é reconciliado com números observados;
-5. o checkpoint S7 muda a árvore e exige nova medição;
-6. o SHA final é recertificado.
+5. o SHA final é recertificado.
 
 ## Próxima ação
 
-A candidata S7 deve:
+A candidata S7 já concluiu:
 
-1. executar a suíte própria;
-2. repetir S1–S6 e regressões V01–V13/V00;
-3. validar documentação e fronteiras;
-4. preservar failures intermediários;
-5. reconciliar métricas somente com valores medidos;
-6. executar a homologação humana real conforme o protocolo;
-7. registrar o resultado sem PII/segredo;
-8. criar `CHECKPOINT_S7.md` apenas com evidência real;
-9. recertificar o HEAD exato;
-10. reconfirmar `main`, merge-base, ahead/behind, diff, issue #57 e concorrência;
-11. parar para aceite explícito antes de integrar/encerrar V13.
+1. suíte própria e regressões S1–S6/V01–V13/V00;
+2. validação documental e fronteiras;
+3. homologação humana real e sanitizada;
+4. criação de `CHECKPOINT_S7.md` com a evidência real.
 
-Enquanto `HUMAN-01 = BLOCKED`, a S7 pode estar tecnicamente preparada, mas a V13 **não está aceita nem encerrada**.
+Restam:
+
+5. medir/reconciliar a árvore que contém o checkpoint;
+6. recertificar o HEAD exato;
+7. reconfirmar `main`, merge-base, ahead/behind, diff, issue #57 e concorrência;
+8. parar para aceite explícito antes de integrar/encerrar V13.
+
+`HUMAN-01 = PASS` não significa que a PR já esteja integrada ou que V14 tenha começado.
 
 **V14 não foi iniciada.**
