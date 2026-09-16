@@ -18,6 +18,15 @@ testes de hipótese com p-valor e effect size (`hub-ml-validacao-estatistica`).
 
 Confirmar a pergunta, unidade de análise, data de corte, tabela, filtros, chave candidata e target. Se algo crítico estiver ausente, continuar com hipóteses explícitas e listar o que precisa ser confirmado.
 
+## Executar o preflight antes do core
+
+Antes de escrever ou executar lógica analítica protegida, execute [scripts/preflight.py](scripts/preflight.py) com contexto explícito para as condições do `execution_contract.json`. O contexto deve registrar, sem assumir silêncio como `false`, se há necessidade de amostra local, preview tabular, distribuições numéricas, tema resolvido, diagnósticos visuais e quantas colunas numéricas estão disponíveis após a inspeção de schema.
+
+- `PASS`: os requisitos obrigatórios/aplicáveis estão resolvidos e o fluxo pode seguir para as nove etapas abaixo.
+- `BLOCKED`: pare a execução canônica, preserve as issues estruturadas e informe o requisito ausente ou a condição não resolvida. Não substitua silenciosamente o helper/template por implementação manual.
+
+O preflight é somente L2: ele não executa a EDA, não chama o core, não produz Execution Receipt e não autoriza alegar enforcement completo. O contrato continua `mode="audit"` nesta sprint.
+
 ## Executar em nove etapas
 
 1. **Contextualizar:** registrar objetivo, fontes, snapshot, filtros e limitações.
@@ -69,6 +78,7 @@ Importar de `hub_snippets`/`hub_scripts` em vez de reimplementar a lógica. Cat�
 
 | Demanda | Módulo |
 |---|---|
+| Preflight do contrato antes do core | `hub_scripts.skill_execution` |
 | Perfil de tabela e checagem de qualidade | `hub_scripts.quick_profile`, `hub_scripts.data_quality_check` |
 | Nulos por coluna com semáforo | `hub_snippets.spark.null_summary` |
 | Amostra reprodutível e exibição limitada | `hub_snippets.spark.smart_sample`, `hub_snippets.spark.safe_display` |
