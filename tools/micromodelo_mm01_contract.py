@@ -162,7 +162,8 @@ def _normalize_editorial_text(value: str) -> str:
     normalized = unicodedata.normalize("NFKC", value).casefold()
     normalized = _remove_default_ignorables(normalized)
     normalized = " ".join(normalized.split())
-    return normalized.strip().strip(_EDITORIAL_EDGE_PUNCTUATION).strip()
+    normalized = normalized.strip()
+    return normalized.rstrip(_EDITORIAL_EDGE_PUNCTUATION).rstrip()
 
 
 def _has_material_text(value: Any) -> bool:
