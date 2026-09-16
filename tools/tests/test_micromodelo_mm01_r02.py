@@ -56,7 +56,7 @@ class MicromodeloMM01R02RegressionTests(unittest.TestCase):
             module._normalize_editorial_text("  ?RESULTADO   POSITIVO  "),
         )
         self.assertEqual(
-            "…resultado positivo",
+            "...resultado positivo",
             module._normalize_editorial_text("  …RESULTADO   POSITIVO  "),
         )
 
