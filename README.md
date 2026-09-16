@@ -118,7 +118,7 @@ normas do molde    : 72 arquivos, 0 violação(ões)
 notebook exercita  : 60 objetos, 0 notebook(s) que só importam
 python (AST)       : 221 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1426 arquivos varridos no repositório editável/derivado
+repo (identidade)  : 1427 arquivos varridos no repositório editável/derivado
 repo (links)       : 1904 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
@@ -143,4 +143,4 @@ APROVADO: 0 falha(s), 0 aviso(s)
 
 O histórico detalhado de sprints, iniciativas R00–R13, integrações e reconciliações documentais permanece no [índice de sprints](docs/sprints/README.md). O README raiz deixa de duplicar esse histórico para permanecer uma entrada operacional curta e atual.
 
-Para instalação/replicação no trabalho, siga o [playbook de replicação](docs/playbooks/replicacao-trabalho.md).
+Para instalação/replicação no trabalho, siga o [playbook de replicacao](docs/playbooks/replicacao-trabalho.md).
