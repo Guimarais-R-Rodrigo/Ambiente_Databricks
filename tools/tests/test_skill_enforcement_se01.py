@@ -12,10 +12,12 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 VALIDATOR_PATH = REPO_ROOT / "tools" / "skill_enforcement" / "validate_contracts.py"
 SCHEMA_PATH = REPO_ROOT / "tools" / "skill_enforcement" / "execution_contract.schema.json"
+PUBLISHER_PATH = REPO_ROOT / "tools" / "publicar_free.py"
 CONTRACT_PATH = (
     REPO_ROOT
     / "ambiente_fonte"
@@ -32,6 +34,12 @@ validator = importlib.util.module_from_spec(spec)
 assert spec and spec.loader
 sys.modules[spec.name] = validator
 spec.loader.exec_module(validator)
+
+publisher_spec = importlib.util.spec_from_file_location("sef_publicar_free", PUBLISHER_PATH)
+publisher = importlib.util.module_from_spec(publisher_spec)
+assert publisher_spec and publisher_spec.loader
+sys.modules[publisher_spec.name] = publisher
+publisher_spec.loader.exec_module(publisher)
 
 
 class ContractTests(unittest.TestCase):
@@ -170,6 +178,44 @@ class CapabilityProbeTests(unittest.TestCase):
         self.assertEqual(payload["status"], "PASS")
         self.assertEqual(payload["sample_result"], "1.234")
         self.assertFalse(payload["writes_performed"])
+
+
+class FreePublisherCompatibilityTests(unittest.TestCase):
+    def _run_plan(self, remote_status):
+        calls = []
+
+        def fake_databricks(*args):
+            calls.append(args)
+            return 0, "", ""
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            notebook = root / ".assistant" / "hub_padroes" / "notebook" / "template.py"
+            notebook.parent.mkdir(parents=True)
+            notebook.write_text("# Databricks notebook source\nprint('fixture')\n", encoding="utf-8")
+            with (
+                mock.patch.object(publisher, "conferir_fonte_espelho", return_value=[]),
+                mock.patch.object(publisher, "eh_notebook", return_value=True),
+                mock.patch.object(publisher, "databricks", side_effect=fake_databricks),
+                mock.patch.object(publisher, "databricks_json", return_value=remote_status),
+            ):
+                result = publisher.cmd_plan(root, [notebook], "/Users/tester", True)
+        return result, calls
+
+    def test_import_dir_notebook_materialized_skips_redundant_import(self):
+        result, calls = self._run_plan({"object_type": "NOTEBOOK", "language": "PYTHON"})
+        self.assertEqual(result, 0)
+        self.assertTrue(any(call[:2] == ("workspace", "import-dir") for call in calls))
+        self.assertFalse(any(call[:2] == ("workspace", "import") for call in calls))
+
+    def test_import_dir_without_notebook_uses_source_fallback(self):
+        result, calls = self._run_plan({"object_type": "FILE"})
+        self.assertEqual(result, 0)
+        fallback = [call for call in calls if call[:2] == ("workspace", "import")]
+        self.assertEqual(len(fallback), 1)
+        self.assertIn("SOURCE", fallback[0])
+        self.assertIn("PYTHON", fallback[0])
+        self.assertIn("--overwrite", fallback[0])
 
 
 if __name__ == "__main__":
