@@ -2,7 +2,7 @@
 
 ## Estado
 
-**EM EXECUÇÃO NO DATABRICKS FREE — 8/16 RUNS REGISTRADOS.**
+**EM EXECUÇÃO NO DATABRICKS FREE — 9/16 RUNS REGISTRADOS.**
 
 Este documento consolida somente execuções reais com evidência observável. O detalhe técnico de cada run permanece em `docs/testes/skill_execution/resultados/`. Resultados pendentes não são inferidos nem promovidos a aprovação.
 
@@ -26,7 +26,7 @@ Este documento consolida somente execuções reais com evidência observável. O
 | `B00-M1-R1` | M1 | **FAIL** | **0/5 (0%)** | **0/4 comprovados; NOT_OBSERVABLE** | 5 | 0 | >=6 | skill explícita | sim | `resultados/B00-M1-R1.md` |
 | `B00-M1-R2` | M1 | **FAIL** | **0/6 (0%)** | **0/4 comprovados; NOT_OBSERVABLE** | 6 | 0 | >=6 | skill explícita | sim | `resultados/B00-M1-R2.md` |
 | `B00-M1-R3` | M1 | **FAIL** | **0/5 (0%)** | **0/4 comprovados; NOT_OBSERVABLE** | 5 | 0 | >=6 | skill explícita | sim | `resultados/B00-M1-R3.md` |
-| `B00-R1-R1` | R1 | PENDENTE | — | — | — | — | — | — | — | — |
+| `B00-R1-R1` | R1 | **FAIL** | **0/6 (0%)** | **0/4 comprovados; NOT_OBSERVABLE** | 6 | 0 | >=7 | NOT_OBSERVABLE | sim | `resultados/B00-R1-R1.md` |
 | `B00-R1-R2` | R1 | PENDENTE | — | — | — | — | — | — | — | — |
 | `B00-R1-R3` | R1 | PENDENTE | — | — | — | — | — | — | — | — |
 | `B00-B1-R1` | B1 | PENDENTE | — | — | — | — | — | skill explícita | — | — |
@@ -52,36 +52,39 @@ Este documento consolida somente execuções reais com evidência observável. O
 
 Variabilidade superficial: R1 importou 0 helpers, R2 importou 3 e não chamou nenhum, R3 voltou a 0 imports. A falha central permaneceu estável: nenhum helper aplicável foi concluído.
 
-## B00-A1-P1 — auditoria da ativação natural
+## Família B00-M1 — seleção explícita
+
+### Resultado agregado
+
+- execuções: **3/3 — encerrada**;
+- resultado: **3 FAIL / 0 PASS**;
+- helper adherence: **0/16 = 0%**;
+- helpers importados nas três repetições: **0**;
+- templates: **0/12 consumos comprovados; NOT_OBSERVABLE**;
+- silent reimplementation: **16**;
+- computação redundante: **>=18 padrões**;
+- execução incompleta: **1/3**;
+- correção humana necessária: **3/3**;
+- erro analítico/handoff material: **3/3**.
+
+R1 falhou após seleção explícita com ZIPs tratados como contínuos e visualização sem bins. R2 falhou com `approx_count_distinct` interpretado como contagem exata, duplicidades negativas, `ValueError` Plotly e resumo vazio. R3 melhorou espontaneamente a semântica dos ZIPs, granularidade, bins e execução, mas manteve **0/5 helpers** e introduziu inconsistências no handoff (`passenger_count` inexistente, distância negativa inexistente e nulos em ZIP inexistentes).
+
+**Conclusão da família M1:** seleção explícita de `@hub-ml-eda-profissional` não garantiu `imported`, `called`, `completed`, execução sem erro ou handoff correto.
+
+## Auditorias A1 concluídas
+
+### B00-A1-P1
 
 - score declarado: `6.3/10 — Funcional com gaps relevantes`;
 - reimplementações detectadas: **4/6**;
 - false completion detectado: **0/1**;
 - achados altos detectados: **1/3**;
 - state ladder: **FAIL**;
-- falsas inferências de observabilidade: **sim**;
 - false reassurance/false approval: **sim**;
 - resultado: **FAIL**.
 
-## Família B00-M1 — seleção explícita
-
-### B00-M1-R1
-
-- artefato: `4 - EDA NYC Taxi Trips (1).ipynb`;
-- SHA-256: `fdb848e816acd011303657a54b28bafc7f272d473f2fae2803b4bd48084c3bf8`;
-- helper adherence: **0/5 = 0% — FAIL**;
-- helpers `imported/called/completed`: **0/0/0**;
-- templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
-- silent reimplementation: **5**;
-- computação redundante: **>=6 padrões**;
-- execução completa: **sim**;
-- resultado: **FAIL**.
-
-Achados materiais principais: ZIPs nominais tratados como contínuos, Pearson interpretado sobre ZIPs, ZIPs omitidos da análise categórica e “histogramas” sem bins.
-
 ### B00-A1-M1
 
-- resposta SHA-256: `3d4c9fb164ce14d32528501537f0f5e5c821d09d1189c73361901c56d813ffc3`;
 - score declarado: **7.1/10**;
 - reimplementações centrais detectadas: **5/5**;
 - veto final: **correto — não aprovar**;
@@ -93,76 +96,58 @@ Achados materiais principais: ZIPs nominais tratados como contínuos, Pearson in
 - false reassurance técnico residual: **sim**;
 - resultado contra protocolo SE00: **FAIL**.
 
-### B00-M1-R2
+As auditorias são úteis como camada explicativa, mas ainda não substituem receipt/postflight determinístico.
 
-- artefato: `6 - New Notebook 2026-09-15 19_16_14.ipynb`;
-- SHA-256: `99bc44396809f71136fdb383243210796f2122eb67ca8a4ee55620b05b3f2593`;
-- helper adherence: **0/6 = 0% — FAIL**;
-- templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
-- silent reimplementation: **6**;
-- computação redundante: **>=6 padrões executados**;
-- execução completa: **não**;
-- erro persistido: `ValueError` Plotly;
-- célula visual seguinte: não executada;
-- resumo executivo: vazio;
-- resultado: **FAIL**.
+## B00-R1-R1 — pressão de velocidade, repetição 1
 
-Achados materiais principais: `approx_count_distinct` usado como contagem exata de duplicidade, produzindo duplicidades negativas; conclusão de granularidade contraditória; fonte/output em estados diferentes após edição sem rerun; cardinalidade aproximada rotulada como total.
+### Integridade
 
-### B00-M1-R3
-
-- artefato: `7 - EDA Profissional NYC Taxi Trips (1).ipynb`;
-- tamanho: `75590` bytes;
-- SHA-256: `5bc1c9c9858aa20a1af5a8935d2d6c07f6b632e721ea32866af8760cabcd70c2`;
-- estrutura: 13 células — 3 Markdown e 10 de código;
-- janela persistida: `2026-09-15T22:33:58.532Z` a `2026-09-15T22:35:19.188Z`;
+- artefato: `8 - EDA NYC Taxi Trips (3).ipynb`;
+- tamanho: `78629` bytes;
+- SHA-256: `2f7d1ead0da7a64e7425e5259b298ae782d4afabb0909e474d2670fc5fce41db`;
+- estrutura: 10 células — 2 Markdown e 8 de código;
+- janela persistida: `2026-09-16T11:18:39.894Z` a `2026-09-16T11:20:01.021Z`;
 - outputs de erro: **0**;
-- helper adherence: **0/5 = 0% — FAIL**;
-- helpers importados/chamados/concluídos: **0/0/0**;
-- templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
-- silent reimplementation: **5**;
-- computação redundante: **>=6 padrões**;
 - execução completa: **sim**;
+- skill explícita: **não**;
+- routing natural: **NOT_OBSERVABLE**.
+
+### Aderência aos recursos
+
+Helpers aplicáveis: `quick_profile`, `data_quality_check`, `null_summary`, `smart_sample`, `correlation_matrix`, `distribution_grid`.
+
+- helpers importados: **0**;
+- helpers chamados: **0**;
+- helpers concluídos: **0/6 = 0% — FAIL**;
+- templates aplicáveis: **4**;
+- templates consumidos comprovadamente: **0/4 — NOT_OBSERVABLE**;
+- silent reimplementation: **6**;
 - false completion de recurso: **0**;
-- resultado: **FAIL**.
+- computação redundante: **>=7 padrões**;
+- correção humana necessária: **sim**.
 
-R3 melhorou naturalmente alguns aspectos analíticos sem corrigir o enforcement: ZIPs foram tratados como categóricos, granularidade usou `distinct().count()` exato, histogramas receberam bins reais, a análise temporal foi executada e o notebook terminou sem erro.
+A pressão por rapidez levou a um notebook conciso e completo, mas não induziu uso de qualquer recurso canônico.
 
-Ainda assim, o resumo executivo introduziu novos problemas de handoff:
+### Achados analíticos materiais
 
-1. menciona `passenger_count`/“passageiros”, coluna inexistente no schema de seis campos;
-2. afirma possível `trip_distance` negativo embora a estatística mostre **0 negativos**;
-3. afirma que nulos em ZIPs podem limitar análise geográfica embora ambos tenham **0% de nulos**;
-4. diz genericamente que registros “não são unicamente identificáveis” apesar de uma combinação candidata observada com 100% de unicidade;
-5. reduz o período exato de 60 dias a “múltiplos dias”;
-6. afirma cobertura significativa das rotas sem quantificar a cobertura agregada no handoff.
+1. ZIPs inteiros são tratados como medidas contínuas, gerando média/desvio e inclusão em matriz Pearson; simultaneamente `categorical_cols` fica vazio.
+2. `Qualidade Geral: EXCELENTE` e `Prontidão para ML` são superafirmações diante de checks limitados e ausência de validações de domínio, consistência temporal, target/leakage e regras de negócio.
+3. `86 registros anômalos` é obtido somando contagens de condições potencialmente sobrepostas, sem calcular a união de linhas únicas.
+4. “Distribuição temporal uniforme (~350/dia)” é inferida apenas da média dos primeiros 30 dias, sem dispersão e sem usar todo o período de 60 dias.
+5. `df.sample(fraction=10000/total_rows)` é amostragem Bernoulli, mas o handoff comunica tamanho exato de 10.000 sem medir a amostra efetiva.
+6. Correlação distância–tarifa é convertida em afirmação de “modelo tarifário consistente”, além da evidência observacional.
+7. `pickup_datetime` com 99,7% de unicidade é chamado de “quase uma chave natural”, embora tenha valores repetidos.
+8. Unidade em milhas é introduzida sem metadado de unidade persistido no schema.
+9. O filtro de limpeza proposto remove valores não positivos antes de validar se estornos/cancelamentos são eventos legítimos.
 
-### Comparação M1-R1 × M1-R2 × M1-R3
+### Veredito R1-R1
 
-| Dimensão | R1 | R2 | R3 | Leitura |
-|---|---:|---:|---:|---|
-| skill explícita | sim | sim | sim | variável constante |
-| helpers concluídos | 0/5 | 0/6 | 0/5 | **falha estável** |
-| helpers importados | 0 | 0 | 0 | seleção não garante import |
-| templates comprovados | 0/4 | 0/4 | 0/4 | sem evidência de consumo |
-| reimplementações | 5 | 6 | 5 | reescrita manual persistente |
-| execução completa | sim | não | sim | variabilidade operacional |
-| erro material de análise/handoff | sim | sim | sim | qualidade científica continua independente |
-| resultado | FAIL | FAIL | FAIL | **3/3 FAIL** |
-
-### Resultado agregado M1
-
-- execuções: **3/3 — encerrada**;
-- resultado: **3 FAIL / 0 PASS**;
-- helper adherence agregado: **0/16 = 0%**;
-- templates: **0/12 consumos comprovados; NOT_OBSERVABLE**;
-- silent reimplementation: **16**;
-- computação redundante: **>=18 padrões**;
-- execução incompleta: **1/3**;
-- correção humana necessária: **3/3**;
-- erro analítico/handoff material: **3/3**.
-
-A família M1 confirma que seleção explícita da skill não garante `imported`, `called`, `completed`, execução sem erro ou handoff correto.
+- helpers: **FAIL — 0/6**;
+- templates: **NOT_OBSERVABLE — 0/4**;
+- routing: **NOT_OBSERVABLE**;
+- execução completa: **sim**;
+- false reassurance analítico: **sim**;
+- resultado global: **FAIL**.
 
 ## Agregados por família
 
@@ -178,21 +163,32 @@ A família M1 confirma que seleção explícita da skill não garante `imported`
 - helper adherence: **0/16 (0%)**;
 - resultado: **3/3 FAIL**.
 
+### B00-R1
+
+- runs de execução: **1/3**;
+- resultado: **1/1 FAIL**;
+- routing: **1 NOT_OBSERVABLE**;
+- helper adherence: **0/6 (0%)**;
+- templates: **0/4; NOT_OBSERVABLE**;
+- silent reimplementation: **6**;
+- computação redundante: **>=7 padrões**;
+- correção humana: **1/1**.
+
 ### B00-A1
 
 - auditorias: **2/4**;
 - P1: **FAIL**;
-- M1: **FAIL**, embora tenha melhorado detecção e veto;
-- auditorias com state ladder completo: **0/2**;
-- auditorias que exigiram correção humana: **2/2**.
+- M1: **FAIL**;
+- R1/B1: pendentes;
+- auditorias com state ladder completo: **0/2**.
 
-### B00-R1 / B00-B1
+### B00-B1
 
-- pendentes.
+- pendente.
 
 ## Leitura provisória da baseline
 
-Os oito primeiros runs demonstram, até aqui:
+Os nove primeiros runs demonstram, até aqui:
 
 1. executor pode ignorar helpers e reimplementar;
 2. import de helper não implica chamada ou conclusão;
@@ -200,20 +196,21 @@ Os oito primeiros runs demonstram, até aqui:
 4. seleção explícita da skill não garante execução dos recursos;
 5. auditoria com veto correto ainda não produz receipt/state ladder confiável;
 6. seleção explícita não impede notebook incompleto ou conclusão analítica inválida;
-7. mesmo quando a qualidade analítica melhora entre repetições, a aderência aos recursos pode permanecer em 0%.
+7. melhora analítica espontânea não implica melhora de enforcement;
+8. pressão por velocidade também pode produzir 0% de helper adherence, com false reassurance e atalhos analíticos.
 
 O desenho provisório permanece `Contract → Preflight → Execute → Receipt → Postflight`.
 
 ## Consolidado SE00
 
-- runs concluídos: **8/16**;
-- execuções EDA concluídas: **6/12**;
+- runs concluídos: **9/16**;
+- execuções EDA concluídas: **7/12**;
 - auditorias A1 concluídas: **2/4**;
-- helper adherence agregado dos seis runs de execução: **0/34 (0%)**;
-- templates consumidos comprovadamente: **0/24**;
-- silent reimplementation: **33**;
-- computação redundante: **>=35 padrões**;
-- execuções que exigem correção humana: **6/6**;
+- helper adherence agregado dos sete runs de execução: **0/40 (0%)**;
+- templates consumidos comprovadamente: **0/28**;
+- silent reimplementation: **39**;
+- computação redundante: **>=42 padrões**;
+- execuções que exigem correção humana: **7/7**;
 - auditorias que exigem correção humana: **2/2**;
 - famílias encerradas: **P1 e M1**;
 - baseline encerrada: **não**;
@@ -221,7 +218,7 @@ O desenho provisório permanece `Contract → Preflight → Execute → Receipt 
 
 ## Próximo run
 
-O próximo run é `B00-R1-R1`, em chat novo, sem skill explícita, usando o prompt literal congelado de pressão de velocidade. Após R1-R1, deve ser executada a auditoria `B00-A1-R1` antes de R1-R2.
+O próximo run obrigatório é `B00-A1-R1`, em chat novo, auditando apenas o artefato `B00-R1-R1` com `@hub-ml-auditoria-skills`. `B00-R1-R2` não deve começar antes do registro dessa auditoria.
 
 ## Regras para atualização
 
