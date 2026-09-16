@@ -1,0 +1,53 @@
+name: SE02 Final Changelog
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.head_ref == 'sef/SE02-preflight'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: sef/SE02-preflight
+          fetch-depth: 0
+
+      - name: Inserir entrada SE02 de forma guardada
+        shell: python
+        run: |
+          from pathlib import Path
+          path = Path('CHANGELOG.md')
+          text = path.read_text(encoding='utf-8')
+          sentinel = '## 2026-09-16 — SE02: preflight verificável do Skill Enforcement Framework (ChatGPT)'
+          if sentinel not in text:
+              marker = '\n## 2026-'
+              pos = text.find(marker)
+              if pos < 0:
+                  raise SystemExit('âncora de changelog não encontrada')
+              entry = '''\n## 2026-09-16 — SE02: preflight verificável do Skill Enforcement Framework (ChatGPT)\n\n### Adicionado\n\n- (ChatGPT) `hub_scripts.skill_execution` com API pública `run_preflight`, resultado estruturado `PASS`/`BLOCKED`, decisões por recurso/template e `writes_performed=false`.\n- (ChatGPT) Script fino `hub-ml-eda-profissional/scripts/preflight.py`, suíte SE02 com 18 casos e workflow dedicado `Skill Enforcement SE02`.\n\n### Atualizado\n\n- (ChatGPT) `hub-ml-eda-profissional` passa a exigir preflight L2 antes do core analítico, mantendo `execution_contract` v0.1 em `mode="audit"`.\n- (ChatGPT) Manual Técnico, catálogo de `hub_scripts`, Plano Mestre e ambiente simulado foram reconciliados; `Novo_Ambiente_Simulado` foi materializado exclusivamente pelo renderer canônico.\n- (ChatGPT) Branch SE02 reconciliada com `main@ae9337204a7c769c0b28b33321c8b81afdff6bae` após correção transversal do guard V08, sem force-push.\n\n### Evidências e limites\n\n- (ChatGPT) A implementação preserva SE03 não iniciada: sem runner determinístico, Execution Receipt, postflight, `mode="enforce"` ou alteração de `.assistant_instructions.md`.\n- (ChatGPT) Condições sem contexto explícito são fail-closed; a resistência do Genie Code a contexto falso/bypass permanece hipótese a medir no Databricks Free e não é tratada como enforcement comprovado.\n- (ChatGPT) Failures intermediários de estrutura, derivado, snapshot, Manual Técnico e guard V08 permanecem históricos e não são reclassificados como PASS.\n\n'''
+              text = text[:pos+1] + entry + text[pos+1:]
+              path.write_text(text, encoding='utf-8')
+
+      - name: Remover workflow transitório e conferir diff
+        run: |
+          git rm .github/workflows/_se02-final-changelog.yml
+          git diff -- CHANGELOG.md .github/workflows/_se02-final-changelog.yml
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('CHANGELOG.md').read_text(encoding='utf-8')
+          assert text.count('## 2026-09-16 — SE02: preflight verificável do Skill Enforcement Framework (ChatGPT)') == 1
+          PY
+
+      - name: Commit
+        run: |
+          git config user.name "SE02 Changelog"
+          git config user.email "actions@users.noreply.github.com"
+          git add CHANGELOG.md .github/workflows/_se02-final-changelog.yml
+          git commit -m "docs(SE02): registrar changelog final"
+          git push origin HEAD:sef/SE02-preflight
