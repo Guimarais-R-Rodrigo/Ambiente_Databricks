@@ -2,11 +2,13 @@
 
 ## Veredito atual
 
-**CANDIDATA EM FECHAMENTO / NÃO HOMOLOGADA / NÃO INTEGRADA / PR #69 DRAFT.**
+**CANDIDATA DOCUMENTALMENTE FECHADA / NÃO HOMOLOGADA / NÃO INTEGRADA / PR #69 DRAFT.**
 
-A SE01 implementa L1 (`Contract`) para `hub-ml-eda-profissional`: contrato v0.1, schema, validador estático e evidência experimental do capability probe. O probe temporário já foi aposentado do produto; sua evidência histórica permanece preservada. A arquitetura continua `mode="audit"`.
+A SE01 implementa L1 (`Contract`) para `hub-ml-eda-profissional`: contrato v0.1, schema, validador estático e evidência experimental do capability probe. O probe temporário foi aposentado do produto; sua evidência histórica permanece preservada. A arquitetura continua `mode="audit"`.
 
 SE02, preflight, runner, Execution Receipt e postflight não foram iniciados.
+
+Este arquivo fecha o estado versionado da sprint. A inspeção dos workflows do HEAD candidato, a atualização final da PR e o aceite humano são gates externos à árvore e serão registrados na própria PR sem exigir nova alteração de produto.
 
 ## Estado implementado
 
@@ -33,10 +35,12 @@ SE02, preflight, runner, Execution Receipt e postflight não foram iniciados.
 - [x] snapshot final medido em 1501 arquivos / 1979 links;
 - [x] `README.md` raiz reconciliado com o snapshot medido;
 - [x] workflow dedicado `Skill Enforcement SE01` em `success` após a correção documental;
-- [ ] `CHANGELOG.md` registrado para SE01;
-- [ ] estado vivo do `PLANO_MESTRE.md` reconciliado;
-- [ ] ADR/índice/documentos finais reconciliados;
-- [ ] todos os workflows do HEAD documental final inspecionados;
+- [x] `CHANGELOG.md` registrado para SE01 de forma aditiva;
+- [x] estado vivo do `PLANO_MESTRE.md` reconciliado sem apagar baseline histórico;
+- [x] ADR-0021, índice, README, RESULTADOS, TESTES e CHECKPOINT reconciliados;
+- [x] `RESULTADOS.md` recebeu seção append-only de fechamento pós-reconciliação;
+- [x] workflows transitórios usados para patches longos foram removidos da árvore final;
+- [ ] todos os workflows do HEAD candidato inspecionados após este commit;
 - [ ] checkpoint final publicado na PR #69;
 - [ ] aceite explícito do usuário;
 - [ ] merge da PR.
@@ -62,7 +66,7 @@ Após a reconciliação, `main` tornou-se o merge-base da PR e `behind_by=0`.
 
 ## Materialização final do simulado
 
-Na primeira execução de CI após a reconciliação:
+Na primeira execução de CI após a reconciliação, run `35141272987`:
 
 - contrato v0.1: PASS;
 - suíte SE01: 14/14 PASS;
@@ -77,7 +81,7 @@ O artifact real do renderer foi então usado para compor o commit:
 
 `70c0f5beb8746502949188bf34e9ac2a557d1125` — `chore(SE01): regenerar ambiente simulado`
 
-No commit seguinte, o workflow confirmou:
+No run `35141385855`, o workflow confirmou:
 
 - contrato: PASS;
 - 14/14 testes: PASS;
@@ -94,6 +98,25 @@ O snapshot foi corrigido no commit:
 `0af02feed197b789b00518da898dac3447dc7f37` — `docs(SE01): atualizar snapshot reconciliado`
 
 A execução seguinte do workflow dedicado concluiu em `success`.
+
+## Fechamento documental
+
+O fechamento documental preservou cronologia e evitou reescrever evidência antiga como atual:
+
+- `README.md` da SE01 descreve o probe como experimento histórico já aposentado;
+- `TESTES.md` registra a suíte vigente de 14 casos e os gates atuais;
+- `RESULTADOS.md` preserva toda a evidência histórica e acrescenta uma seção append-only de fechamento pós-reconciliação;
+- ADR-0021 permanece `Proposto` até o aceite humano e registra o resultado experimental sem antecipar SE02/SE03;
+- o índice de ADRs reflete ADR-0021 em fechamento, ainda não aceito;
+- `PLANO_MESTRE.md` preserva a data/baseline de criação e atualiza apenas o estado vivo para SE00 concluída, SE01 em fechamento e SE02–SE08 não iniciadas;
+- `CHANGELOG.md` recebeu a entrada SE01 de forma aditiva;
+- `README.md` raiz usa o snapshot novamente medido de 1501 arquivos / 1979 links.
+
+Para preservar arquivos longos sem substituição insegura, foram usados workflows transitórios com sentinela, âncora, diff restrito e auto-remoção. Eles não permanecem no produto final.
+
+Uma tentativa de manutenção do changelog gerou o run `35142483764` com `jobs=[]` por YAML inválido antes da criação de qualquer job. Nenhum checkout, edição ou push ocorreu nesse run. A classificação correta permanece **FAIL de configuração da automação transitória**, não failure funcional da SE01 nem falha de runner. A automação corrigida executou o patch restrito e se auto-removeu.
+
+O fechamento append-only de `RESULTADOS.md` concluiu no commit `bb9ceaec3544d0b429db7fbd2fdf4fa12aafc13e`, também removendo seu workflow transitório.
 
 ## Evidência histórica do Databricks Free
 
@@ -115,6 +138,8 @@ Nela foram observados:
 - verify final: `APROVADO — 0 problema(s)`.
 
 Essa candidata ainda continha o probe experimental. O resultado permanece histórico e não é apresentado como estado remoto atual do pacote sem probe.
+
+Não houve republicação remota apenas para retirar o instrumento experimental. A revalidação remota do pacote final sem probe permanece `NOT_OBSERVABLE` por decisão explícita de escopo; a redução de pacote foi validada por teste de aposentadoria, renderer, equivalência fonte/derivado e CI.
 
 ## Capability probe — evidência histórica
 
@@ -170,15 +195,14 @@ Deve permanecer verdadeiro até o merge:
 - `BLOCKED`: gate necessário impedido externamente;
 - `NOT_OBSERVABLE`: evidência insuficiente.
 
-Failures intermediários e incidentes de infraestrutura permanecem vinculados às árvores em que ocorreram. Nenhum é reescrito como PASS.
+Failures intermediários e incidentes de infraestrutura/configuração permanecem vinculados às árvores em que ocorreram. Nenhum é reescrito como PASS.
 
-## Próxima ação
+## Gates externos restantes
 
-1. fechar CHANGELOG, PLANO_MESTRE, ADR/índice e documentação da SE01;
-2. executar/observar os gates da árvore documental final;
-3. confirmar Git/PR/mergeabilidade e todos os workflows aplicáveis;
-4. atualizar o corpo da PR #69;
-5. publicar comentário de checkpoint final;
-6. parar antes do merge e pedir aceite explícito do usuário.
+1. observar os workflows disparados pelo HEAD candidato deste fechamento;
+2. confirmar novamente `main`, merge-base, `behind_by`, mergeabilidade e changed files;
+3. atualizar o corpo da PR #69 com as evidências finais;
+4. publicar comentário de checkpoint final na PR;
+5. parar antes do merge e pedir aceite explícito do usuário.
 
-Mesmo após eventual homologação da SE01, SE02 só pode começar em nova autorização.
+Mesmo após eventual homologação e merge da SE01, SE02 só pode começar mediante nova autorização explícita.
