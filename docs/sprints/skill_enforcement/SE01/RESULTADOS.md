@@ -113,6 +113,19 @@ Depois da remoção controlada do resíduo SE00, `tools/publicar_free.py --verif
 
 Esse PASS certifica inventário, tipos e conteúdo do pacote publicado. Ainda não certifica execução previsível do script relativo pela Genie Code; esse é o capability probe seguinte.
 
+## Drift da main após a certificação
+
+Depois da certificação do pacote, a `main` avançou de `350dcf0b37e730042ef961f12f11b30b2660d2c6` para `e89ef4f79d9f9b7c901f1bbf490259ee5ce3d493`.
+
+A comparação mostra apenas arquivos da frente V14 e documentação/CI associada:
+
+- `.github/workflows/temas-v14-ci.yml`;
+- `README.md` raiz;
+- índices/documentação V14;
+- `tools/tests/test_temas_v14_s0.py`.
+
+Não houve alteração em `ambiente_fonte/.assistant`, `Novo_Ambiente_Simulado/Users/usuario-free`, `tools/publicar_free.py` ou nos artefatos SE01 publicados. Portanto, esse drift é classificado como **ortogonal ao pacote certificado** e não exige republicação antes do capability probe. A reconciliação final com a `main` permanece obrigatória antes do fechamento/merge.
+
 ## Capability probe no Free
 
 - status: **PENDENTE**;
