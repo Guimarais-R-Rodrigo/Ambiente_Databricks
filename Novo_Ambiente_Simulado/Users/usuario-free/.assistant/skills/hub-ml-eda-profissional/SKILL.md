@@ -79,20 +79,6 @@ Quando um tema notebook validado tiver sido selecionado, mantenha a mesma análi
 
 `quick_profile` distingue o que é calculado na tabela inteira do que vem da amostra; preservar essa distinção ao relatar números.
 
-## Capability probe SE01 (temporário)
-
-Somente quando o pedido mencionar explicitamente o capability probe da SE01,
-executar [scripts/capability_probe.py](scripts/capability_probe.py) **antes de
-qualquer EDA** e devolver integralmente o JSON emitido pelo script, sem
-reimplementar sua lógica no notebook.
-
-Este probe é diagnóstico e opera em `mode="audit"`. Ele apenas testa se um script
-relativo à skill consegue localizar `.assistant`, importar uma API pública e
-retornar um marcador estruturado. Ele **não** é preflight, runner, receipt ou
-postflight e não autoriza declarar enforcement implementado.
-
-Fora de um pedido explícito do probe SE01, preservar o fluxo normal desta skill.
-
 ## O que nunca fazer
 
 - **Trazer a tabela inteira para o driver.** `toPandas()` sem limite verificável
