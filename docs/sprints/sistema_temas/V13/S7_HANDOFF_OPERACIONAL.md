@@ -1,6 +1,6 @@
 # V13 — S7: handoff operacional e fechamento
 
-Status: **candidata S7; homologação humana ainda não executada**.
+Status: **candidata S7; homologação humana executada e registrada em PASS**.
 
 Baseline de abertura: merge certificado da S6 na `main`,
 `6dfb8707835921f2f48020f383cf571902080109`.
@@ -9,11 +9,15 @@ Certificação pós-merge observada antes de abrir esta candidata: **15/15 workf
 
 Esta etapa implementa somente o handoff operacional e o fechamento candidato da V13. Ela não cria uma nova engine de tema, não executa Databricks remoto, não publica nada e não inicia V14.
 
-O gate humano canônico desta candidata é:
+O gate humano canônico desta candidata foi inicialmente:
 
 `HUMAN-01 = BLOCKED` — `HUMAN_EVIDENCE_MISSING`.
 
-Esse estado só pode mudar por uma execução humana real conforme [o protocolo S7](S7_HOMOLOGACAO_HUMANA.md). Git/CI não podem transformá-lo em PASS.
+Após sessão real registrada pelo mantenedor conforme [o protocolo S7](S7_HOMOLOGACAO_HUMANA.md), o estado atual é:
+
+`HUMAN-01 = PASS` — `HUMAN_EVIDENCE_RECORDED`.
+
+Git/CI não fabricaram esse PASS; apenas podem verificar a evidência humana versionada.
 
 ## 1. Comece aqui
 
@@ -268,9 +272,9 @@ Como não houve mutação Databricks nesta S7, não há estado remoto criado por
 
 Se a reversão não reproduzir o LKG esperado, se o artefato/commit não puder ser identificado ou se algum owner canônico divergir, pare e preserve evidência. Não force a `main` e não improvise correção em produção.
 
-## 8. Homologação humana — gate que ainda falta
+## 8. Homologação humana — executada
 
-O protocolo executável está em [S7_HOMOLOGACAO_HUMANA.md](S7_HOMOLOGACAO_HUMANA.md).
+O protocolo executado e a evidência sanitizada estão em [S7_HOMOLOGACAO_HUMANA.md](S7_HOMOLOGACAO_HUMANA.md).
 
 Critério canônico do Plano Mestre: um operador autorizado que não tenha construído o procedimento deve, sem instrução verbal do autor:
 
@@ -280,11 +284,23 @@ Critério canônico do Plano Mestre: um operador autorizado que não tenha const
 - verificar o alcance do resultado;
 - localizar o rollback.
 
-Enquanto esse ensaio não existir com evidência sanitizada:
+Sessão registrada pelo mantenedor:
 
-`HUMAN-01 = BLOCKED`.
+- participante sanitizado: `Tester`;
+- autorizado: `true`;
+- não construtor: `true`;
+- duração: `5 minutos`;
+- ajuda verbal: `0`;
+- ajuda documental extra: `0`;
+- erros de interpretação: `0`;
+- H1–H6: `PASS`;
+- resultado humano: `PASS`.
 
-CI pode provar que este guia é consistente, que os links existem e que não há falsa autorização. CI **não** pode preencher duração, ajuda recebida ou erros de interpretação de uma pessoa real.
+Estado atual:
+
+`HUMAN-01 = PASS` — `HUMAN_EVIDENCE_RECORDED`.
+
+Esse resultado é formativo e de uma única sessão. Não produz inferência estatística, SLA/SLO, production readiness ou autorização Databricks.
 
 ## 9. Fronteira de segurança S7
 
@@ -293,7 +309,7 @@ Esta candidata preserva:
 - `V13_S7_NETWORK=0` no núcleo do handoff;
 - `V13_S7_REMOTE_MUTATION=0`;
 - `V13_S7_DATABRICKS_MUTATION=0`;
-- `V13_S7_HUMAN_VALIDATION=BLOCKED` até evidência humana real;
+- `V13_S7_HUMAN_VALIDATION=PASS` sustentado por evidência humana versionada, não por CI autônoma;
 - `V13_V14_NOT_STARTED=1`;
 - nenhum `DATABRICKS_HOST`/`DATABRICKS_TOKEN` no workflow;
 - nenhum segredo/PII em evidência versionada;
@@ -301,16 +317,20 @@ Esta candidata preserva:
 
 ## 10. Ponto de parada
 
-A candidata S7 deve primeiro passar por:
+A candidata S7 já cumpriu:
 
 1. validação automatizada do handoff;
 2. regressões S1–S6/V01–V13;
 3. validação documental;
-4. homologação humana S7 real e sanitizada;
-5. checkpoint final S7/V13;
-6. reconfirmação de `main`, merge-base, ahead/behind, issue #57, concorrência e diff;
-7. aceite explícito para integrar.
+4. homologação humana S7 real e sanitizada.
 
-Sem o item 4, a candidata pode estar **tecnicamente preparada**, mas não pode ser declarada V13 aceita/encerrada.
+Restam:
+
+5. checkpoint final S7/V13;
+6. recertificação do SHA exato que contém a evidência e o checkpoint;
+7. reconfirmação de `main`, merge-base, ahead/behind, issue #57, concorrência e diff;
+8. aceite explícito para integrar.
+
+Mesmo com `HUMAN-01 = PASS`, a V13 ainda não deve ser chamada de integrada/encerrada até o checkpoint final, recertificação e aceite do mantenedor.
 
 **Não iniciar V14 por esta candidata.**
