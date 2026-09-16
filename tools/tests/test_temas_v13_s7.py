@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import re
 import unittest
 from pathlib import Path
 
@@ -9,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[2]
 V13 = ROOT / "docs/sprints/sistema_temas/V13"
 HANDOFF = V13 / "S7_HANDOFF_OPERACIONAL.md"
 HUMAN = V13 / "S7_HOMOLOGACAO_HUMANA.md"
+CHECKPOINT = V13 / "CHECKPOINT_S7.md"
 README = V13 / "README.md"
 WORKFLOW = ROOT / ".github/workflows/temas-v13-ci.yml"
 MATRIX = V13 / "MATRIZ_OPERACIONAL.json"
@@ -19,6 +19,7 @@ class V13S7HandoffTests(unittest.TestCase):
     def setUpClass(cls):
         cls.handoff = HANDOFF.read_text(encoding="utf-8")
         cls.human = HUMAN.read_text(encoding="utf-8")
+        cls.checkpoint = CHECKPOINT.read_text(encoding="utf-8")
         cls.readme = README.read_text(encoding="utf-8")
         cls.workflow = WORKFLOW.read_text(encoding="utf-8")
         cls.matrix = json.loads(MATRIX.read_text(encoding="utf-8"))
@@ -26,6 +27,7 @@ class V13S7HandoffTests(unittest.TestCase):
     def test_s7_artifacts_exist(self):
         self.assertTrue(HANDOFF.is_file())
         self.assertTrue(HUMAN.is_file())
+        self.assertTrue(CHECKPOINT.is_file())
         self.assertTrue(MATRIX.is_file())
 
     def test_baseline_is_integrated_s6_merge(self):
@@ -33,17 +35,19 @@ class V13S7HandoffTests(unittest.TestCase):
         self.assertIn(sha, self.handoff)
         self.assertIn("15/15 workflows de `push` com `success`", self.handoff)
 
-    def test_human_gate_starts_blocked_not_pass(self):
-        self.assertIn("HUMAN-01 = BLOCKED", self.handoff)
-        self.assertIn("HUMAN_EVIDENCE_MISSING", self.handoff)
+    def test_human_gate_has_real_versioned_pass(self):
+        for text in (self.handoff, self.human, self.checkpoint, self.readme):
+            self.assertIn("HUMAN-01 = PASS", text)
+        self.assertIn("HUMAN_EVIDENCE_RECORDED", self.handoff)
+        self.assertIn("HUMAN_EVIDENCE_RECORDED", self.human)
         self.assertIn("HUMAN-01 = BLOCKED", self.human)
-        self.assertNotIn("HUMAN-01 = PASS", self.handoff)
-        self.assertNotIn("HUMAN-01 = PASS", self.human)
+        self.assertIn("HUMAN_EVIDENCE_MISSING", self.human)
 
     def test_human_gate_cannot_be_forged_by_ci(self):
         for text in (self.handoff, self.human):
             self.assertIn("CI", text)
-        self.assertIn("Git/CI não podem alterar o status inicial para PASS", self.human)
+        self.assertIn("Git/CI não podem fabricar nem alterar por conta própria", self.human)
+        self.assertIn("não por CI autônoma", self.handoff)
 
     def test_start_here_routes_to_existing_owners(self):
         expected = {
@@ -160,7 +164,7 @@ class V13S7HandoffTests(unittest.TestCase):
         self.assertIn("reversão normal do merge em branch/PR própria", self.handoff)
 
     def test_human_protocol_requires_non_builder_and_no_verbal_instruction(self):
-        self.assertIn("não tenha construído o procedimento", self.human)
+        self.assertIn("não ter construído o procedimento", self.human)
         self.assertIn("não receber instrução verbal do autor", self.human)
         self.assertIn("sem complemento verbal", self.human)
 
@@ -184,11 +188,26 @@ class V13S7HandoffTests(unittest.TestCase):
         ):
             self.assertIn(marker, self.human)
 
-    def test_human_protocol_does_not_fake_completed_evidence(self):
-        self.assertIn("<sanitizado>", self.human)
-        self.assertIn("<minutos>", self.human)
-        self.assertIn("Nenhuma sessão humana S7 foi executada", self.human)
-        self.assertIsNone(re.search(r"participant_id` \| `P-S7-\d+`", self.human))
+    def test_human_protocol_records_completed_evidence(self):
+        for marker in (
+            "`participant_id` | `Tester`",
+            "duração observada | `5 minutos`",
+            "ajuda verbal do autor | `0`",
+            "ajuda documental extra | `0`",
+            "erros de interpretação | `0`",
+            "H1 navegação | `PASS`",
+            "H2 notebook | `PASS`",
+            "H3 workspace BLOCKED | `PASS`",
+            "H4 diagnóstico | `PASS`",
+            "H5 rollback | `PASS`",
+            "H6 segurança/privacidade | `PASS`",
+            "resultado humano | `PASS`",
+        ):
+            self.assertIn(marker, self.human)
+        self.assertNotIn("<sanitizado>", self.human)
+        self.assertNotIn("<minutos>", self.human)
+        self.assertIn("Tester", self.checkpoint)
+        self.assertIn("5 minutos", self.checkpoint)
 
     def test_human_protocol_forbids_statistical_inference_and_sla(self):
         self.assertIn("sem inferência estatística", self.human)
@@ -202,7 +221,7 @@ class V13S7HandoffTests(unittest.TestCase):
         self.assertIn("S6 — PR #65", self.readme)
         self.assertIn("6dfb8707835921f2f48020f383cf571902080109", self.readme)
         self.assertIn("S7 — handoff operacional e fechamento", self.readme)
-        self.assertIn("HUMAN-01 = BLOCKED", self.readme)
+        self.assertIn("HUMAN-01 = PASS", self.readme)
         self.assertIn("V14 não foi iniciada", self.readme)
 
     def test_workflow_runs_s7_contract_before_regressions(self):
@@ -219,16 +238,17 @@ class V13S7HandoffTests(unittest.TestCase):
         for forbidden in ("DATABRICKS_TOKEN", "DATABRICKS_HOST", "secrets."):
             self.assertNotIn(forbidden, self.workflow)
 
-    def test_workflow_s7_frontier_is_explicit_and_human_stays_blocked(self):
+    def test_workflow_s7_frontier_is_explicit_and_human_is_versioned_pass(self):
         for marker in (
             "V13_S7_NETWORK=0",
             "V13_S7_REMOTE_MUTATION=0",
             "V13_S7_DATABRICKS_MUTATION=0",
-            "V13_S7_HUMAN_VALIDATION=BLOCKED",
+            "V13_S7_HUMAN_VALIDATION=PASS",
+            "V13_S7_HUMAN_EVIDENCE=VERSIONED_HUMAN_SESSION",
             "V13_V14_NOT_STARTED=1",
         ):
             self.assertIn(marker, self.workflow)
-        self.assertNotIn('echo "V13_S7_HUMAN_VALIDATION=PASS"', self.workflow)
+        self.assertNotIn('echo "V13_S7_HUMAN_VALIDATION=BLOCKED"', self.workflow)
 
     def test_s6_not_started_marker_becomes_historical_only(self):
         self.assertNotIn('echo "V13_S7_NOT_STARTED=1"', self.workflow)
