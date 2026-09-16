@@ -4,7 +4,7 @@ Data: 16/09/2026.
 
 Branch: `codex/temas-v13-s6-ensaios-operacionais-20260916`.
 
-Estado deste documento: **candidata S6 em certificação final**. O HEAD imediatamente anterior à criação deste checkpoint, `fccbc5c33052a541b90c2022a1020454ac9278b0`, concluiu 8/8 workflows reais de PR com `success`. Como este checkpoint acrescenta um novo arquivo à árvore, as métricas e a certificação desse HEAD anterior não são transferidas automaticamente ao novo HEAD.
+Estado deste documento: **candidata S6 em certificação final**. Este checkpoint consolida o escopo, as decisões, os failures intermediários e a certificação observada até o HEAD `b9e11db2be94bde6dc2a39eeb1b60206f408153a`. Como a atualização deste próprio arquivo cria um novo HEAD, a certificação desse SHA anterior não é transferida automaticamente: o SHA resultante desta atualização precisa ser recertificado integralmente antes de aceite ou integração.
 
 ## 1. Baseline de abertura
 
@@ -12,12 +12,12 @@ A S6 só foi iniciada depois do fechamento completo da S5:
 
 - S5 aceita e integrada pela PR #64;
 - merge S5 na `main`: `11e4e17f02d4ba7846f5b80bd88c0180124b5772`;
-- pós-merge S5: **15/15 workflows de `push` com `success`**;
+- pós-merge S5: **16/16 workflows de `push` concluídos com `success`**;
 - branch S6 criada diretamente desse merge certificado;
 - nenhuma mutação Databricks foi autorizada ou executada para abrir a S6;
 - S7 não foi iniciada.
 
-O aceite para iniciar S6 não foi interpretado como autorização para reexecutar operações remotas V12.
+O aceite para iniciar a S6 não foi interpretado como autorização para reexecutar operações remotas V12.
 
 ## 2. Escopo canônico recuperado do Plano Mestre
 
@@ -33,10 +33,19 @@ Ordem preferencial preservada:
 2. Visual Lab local/simulado;
 3. bundle V09;
 4. App V10 em build/dry-run local;
-5. AI/BI V11 com fixtures e export real somente quando já disponível/autorizado;
+5. AI/BI V11 com fixtures/export real somente quando já disponível e autorizado;
 6. ambiente Databricks real somente com autorização específica.
 
 Nesta candidata, as cinco primeiras rotas são exercitadas localmente ou com fixtures. O ambiente Databricks real permanece fora do alcance autorizado.
+
+Gates canônicos preservados:
+
+- invariantes de dados e semântica;
+- idempotência onde aplicável;
+- rollback verificável;
+- evidência sanitizada;
+- nenhuma publicação implícita;
+- PASS local não é promovido a PASS remoto.
 
 ## 3. Owners reutilizados
 
@@ -49,7 +58,7 @@ Owners compostos:
 - bundle de transição: V09 + S2 + S3;
 - App: V10 + S2 + S3;
 - AI/BI: V11 + S2;
-- workspace theme: V11 + S2, apenas para provar o bloqueio canônico.
+- workspace theme: V11 + S2, somente para provar o bloqueio canônico.
 
 A matriz S1 permanece o inventário canônico das superfícies. A S6 registra execução; não substitui `MATRIZ_OPERACIONAL.json`.
 
@@ -67,7 +76,7 @@ Também evolui:
 - `.github/workflows/temas-v13-ci.yml`;
 - `docs/sprints/sistema_temas/V13/README.md`;
 - `tools/tests/test_temas_v13_s5.py`, somente para transformar a antiga guarda de transição “S6 não iniciada” em evidência histórica e exigir S5 integrada/S6 vigente/S7 não iniciada;
-- `README.md`, somente depois da medição real do runner.
+- `README.md`, somente depois de medição real do runner.
 
 Não houve alteração em:
 
@@ -75,17 +84,14 @@ Não houve alteração em:
 - `Novo_Ambiente_Simulado/`;
 - schema ou tokens;
 - matriz S1;
-- engine S2;
-- engine S3;
-- engine S4;
-- engine S5;
+- engines S2, S3, S4 ou S5;
 - App V10;
 - binder V11;
 - contratos funcionais V01–V12.
 
 ## 5. Ensaio notebook/Plotly/HTML
 
-A candidata:
+A rota local:
 
 - carrega `ResolvedTheme` notebook pelo owner V02;
 - executa preflight S2 para a rota notebook;
@@ -159,11 +165,15 @@ A rota local:
 
 Continuam congelados:
 
+- `ResolvedTheme` como fonte configurável de verdade;
 - 48 tokens = 3 `translated`, 23 `approximated`, 22 `unsupported`;
 - `context="aibi"` reservado;
+- bindings diretos limitados a `surface.card -> widget.background`, `palette.categorical -> visualization.categorical_palette` e `card.radius_px -> widget.corner_radius`;
 - `dashboard_sintetico.json` não é import nativo;
 - `cellFormat` não vira token;
-- `approximated`/`unsupported` não são automatizados.
+- `approximated`/`unsupported` não são automatizados;
+- dashboard theme e workspace theme permanecem superfícies distintas;
+- `Import theme` e `Publish` permanecem gates distintos.
 
 O PASS histórico `V12-AIBI-01` não é reexecutado nem ampliado por este ensaio local.
 
@@ -200,7 +210,7 @@ A candidata mantém separadamente:
 
 Os três casos ambientais bloqueados aparecem explicitamente no relatório S6 como `BLOQUEADO_AUTORIZACAO`. Nenhum é contado como PASS ou SKIP.
 
-`A11-01 = FAIL` continua verdadeiro e a issue #57 deve permanecer aberta até correção + nova evidência aplicável.
+`A11-01 = FAIL` continua verdadeiro e a issue #57 permanece aberta até correção + nova evidência aplicável.
 
 ## 12. Fronteira operacional
 
@@ -273,10 +283,7 @@ Workflows observados:
 
 No V13:
 
-- S1: PASS;
-- S2: PASS;
-- S3: PASS;
-- S4: PASS;
+- S1–S4: PASS;
 - S5: **31/32**;
 - única falha S5: guarda de transição ainda exigia literalmente “S6 não foi iniciada” no README vivo;
 - step S6: `skipped`;
@@ -289,7 +296,7 @@ No CI geral houve duas causas independentes:
 1. suíte `temas` falhou pela mesma guarda S5 desatualizada;
 2. validador mediu **1451 arquivos / 1920 links**, enquanto o README ainda declarava 1448/1918 — **2 divergências documentais / 0 avisos**.
 
-Os demais grupos aplicáveis do CI passaram. O failure é preservado como histórico.
+Os demais grupos aplicáveis do CI passaram. O failure permanece histórico.
 
 ## 15. Correção de transição S5
 
@@ -333,7 +340,7 @@ No V13:
 
 Portanto **os 28 testes S6 não foram executados nesse HEAD**.
 
-O failure é preservado como problema de bootstrap da suíte, não como PASS parcial.
+O failure permanece registrado como problema de bootstrap da suíte, não como PASS parcial.
 
 ## 17. Correção de bootstrap S6
 
@@ -385,11 +392,11 @@ No CI geral:
 - ferramentas: PASS;
 - transição: PASS nos testes executados, com skips opcionais preservados;
 - READMEs: PASS;
-- Concierge: apenas os gates locais aplicáveis; nada disso homologa roteamento/Databricks/permissões reais.
+- Concierge: somente os gates locais aplicáveis; nada disso homologa roteamento/Databricks/permissões reais.
 
 Esse HEAD é a primeira evidência funcional completa da S6, mas não é candidato final por causa do drift documental.
 
-## 19. Reconciliação medida
+## 19. Reconciliação medida pré-checkpoint
 
 Commit/HEAD:
 
@@ -411,19 +418,18 @@ Nenhum gate, contrato, allowlist ou suíte foi relaxado.
 
 O SHA `fccbc5c33052a541b90c2022a1020454ac9278b0` acionou 8 workflows reais de PR, todos concluídos com `success`:
 
-- V00 `35090730140` — `success`;
-- V01 `35090730128` — `success`;
-- V02 `35090730138` — `success`;
-- V10 `35090730141` — `success`;
-- V11 `35090730127` — `success`;
-- V12 `35090730136` — `success`;
-- V13 `35090730137` — `success`;
-- CI geral `35090730130` — `success`.
+- V00 `35090730140`;
+- V01 `35090730128`;
+- V02 `35090730138`;
+- V10 `35090730141`;
+- V11 `35090730127`;
+- V12 `35090730136`;
+- V13 `35090730137`;
+- CI geral `35090730130`.
 
 No V13, no mesmo SHA:
 
 - S1: **20/20 PASS**;
-- validador S1: PASS;
 - S2: **27/27 PASS**;
 - S3: **21/21 PASS**;
 - S4: **30/30 PASS**;
@@ -431,25 +437,14 @@ No V13, no mesmo SHA:
 - S6: **28/28 PASS**;
 - regressões V01–V13: **673/673 PASS**;
 - compatibilidade V00: **12/12 PASS**;
-- validador estrutural/documental: **APROVADO — 0 falhas / 0 avisos**;
+- validador: **APROVADO — 0 falhas / 0 avisos**;
 - métricas: **1451 arquivos / 1920 links**;
 - worktree extras: 0;
-- fronteiras S1/S2/S3/S4/S5/S6: `success`.
-
-Fronteira S6 confirmada:
-
-- `V13_S6_NETWORK=0`;
-- `V13_S6_REMOTE_MUTATION=0`;
-- `V13_S6_IMPLICIT_PUBLICATION=0`;
-- `V13_S6_LOCAL_OR_SIMULATED_REHEARSALS=5`;
-- `V13_S6_REAL_ENVIRONMENT_CASES_BLOCKED=3`;
-- `V13_S7_NOT_STARTED=1`.
+- fronteiras S1–S6: `success`.
 
 ## 21. Preservação V12 no HEAD pré-checkpoint
 
-Workflow V12: `35090730136`.
-
-No mesmo SHA:
+Workflow V12 `35090730136`:
 
 - protocolo/mutantes V12: **47/47 PASS**;
 - evidência real V12: **11/11 PASS**;
@@ -462,7 +457,110 @@ No mesmo SHA:
 
 A allowlist V12 não foi ampliada.
 
-## 22. Ausência de mutação Databricks
+## 22. Head com checkpoint — failure documental preservado
+
+A inclusão deste arquivo produziu o HEAD:
+
+`f9cbdfcc30ef5556526c3874cb45b022bf354993`.
+
+Workflows observados:
+
+- V00 `35091303955` — `success`;
+- V01 `35091303868` — `success`;
+- V02 `35091303928` — `success`;
+- CI `35091303978` — `failure`;
+- V10 `35091303975` — `failure`;
+- V11 `35091303906` — `failure`;
+- V12 `35091303930` — `failure`;
+- V13 `35091303968` — `failure`.
+
+No V13:
+
+- S1: **20/20 PASS**;
+- S2: **27/27 PASS**;
+- S3: **21/21 PASS**;
+- S4: **30/30 PASS**;
+- S5: **32/32 PASS**;
+- S6: **28/28 PASS**;
+- regressões V01–V13: **673/673 PASS**;
+- compatibilidade V00: **12/12 PASS**;
+- validador mediu **1452 arquivos / 1920 links** e falhou somente porque o README ainda declarava 1451 arquivos;
+- fronteiras S1–S6: `skipped`, não PASS.
+
+No CI geral, os grupos funcionais passaram; o validador teve **1 falha / 0 avisos**, exclusivamente `repo (identidade)` 1451→1452.
+
+No V10/V11/V12, as suítes próprias e regressões anteriores ao validador passaram; os steps posteriores ao validador ficaram `skipped` quando aplicável.
+
+Nenhum failure funcional S6 foi observado nesse HEAD.
+
+## 23. Reconciliação medida pós-checkpoint
+
+Commit/HEAD:
+
+`b9e11db2be94bde6dc2a39eeb1b60206f408153a`.
+
+Alteração exclusiva desse commit:
+
+`README.md` raiz.
+
+Mudanças:
+
+- pós-merge S5 corrigido de 15/15 para **16/16 workflows de `push` com `success`**;
+- `repo (identidade)` de 1451 para **1452**;
+- `repo (links)` mantido em **1920**.
+
+Nenhum gate, contrato, allowlist ou suíte foi relaxado.
+
+## 24. Certificação do HEAD reconciliado
+
+O SHA `b9e11db2be94bde6dc2a39eeb1b60206f408153a` acionou 8 workflows reais de PR, todos concluídos com `success`:
+
+- V00 `35094080674` — `success`;
+- V01 `35094080602` — `success`;
+- V02 `35094080564` — `success`;
+- V10 `35094080572` — `success`;
+- V11 `35094080638` — `success`;
+- V12 `35094080570` — `success`;
+- V13 `35094080568` — `success`;
+- CI geral `35094080575` — `success`.
+
+No V13, no mesmo SHA:
+
+- S1: **20/20 PASS**;
+- S2: **27/27 PASS**;
+- S3: **21/21 PASS**;
+- S4: **30/30 PASS**;
+- S5: **32/32 PASS**;
+- S6: **28/28 PASS**;
+- regressões V01–V13: **673/673 PASS**;
+- compatibilidade V00: **12/12 PASS**;
+- validador: **APROVADO — 0 falhas / 0 avisos**;
+- métricas: **1452 arquivos / 1920 links**;
+- worktree extras: 0;
+- fronteiras S1/S2/S3/S4/S5/S6: `success`;
+- `V13_S6_NETWORK=0`;
+- `V13_S6_REMOTE_MUTATION=0`;
+- `V13_S6_IMPLICIT_PUBLICATION=0`;
+- `V13_S6_LOCAL_OR_SIMULATED_REHEARSALS=5`;
+- `V13_S6_REAL_ENVIRONMENT_CASES_BLOCKED=3`;
+- `V13_S7_NOT_STARTED=1`.
+
+## 25. Preservação V12 no HEAD reconciliado
+
+Workflow V12 `35094080570`, no mesmo SHA:
+
+- protocolo/mutantes V12: **47/47 PASS**;
+- evidência real V12: **11/11 PASS**;
+- regressões transversais: **673/673 PASS**;
+- compatibilidade V00: **12/12 PASS**;
+- validador: **0 falhas / 0 avisos**;
+- métricas: **1452/1920**;
+- aplicabilidade do escopo estrito: `success` com `V12_SCOPE=NOT_APPLICABLE`;
+- `Escopo V12 e higiene`: **skipped**, não PASS.
+
+A allowlist V12 não foi ampliada.
+
+## 26. Ausência de mutação Databricks
 
 A S6 não executou:
 
@@ -476,25 +574,26 @@ A S6 não executou:
 - criação/alteração de UC Volume;
 - qualquer outra mutação Databricks.
 
+Os três casos ambientais V12 permanecem `BLOQUEADO_AUTORIZACAO` e exigem autorização específica própria para eventual reexecução.
+
 Git/CI continuam evidência técnica, não homologação de ambiente.
 
-## 23. Efeito deste checkpoint na árvore
+## 27. Efeito desta atualização do checkpoint
 
-Este arquivo é um novo caminho versionado.
+Esta atualização modifica um caminho já versionado e não adiciona um novo arquivo. Mesmo assim, ela cria um novo commit e um novo HEAD.
 
-Consequentemente, as métricas **1451/1920** e a certificação 8/8 descritas acima pertencem ao HEAD anterior `fccbc5c...`. Elas **não são presumidas** para o HEAD que contém este checkpoint.
+Por isso, a certificação 8/8 do HEAD `b9e11db2...` é evidência histórica imediatamente anterior, não certificação automática do novo SHA.
 
 O próximo gate é:
 
 1. observar todos os workflows do novo SHA;
-2. registrar a medição real do validador;
-3. preservar qualquer failure provocado pela nova identidade da árvore;
-4. corrigir README e este checkpoint somente com números medidos, sem criar outro arquivo;
-5. recertificar o SHA final exato;
-6. reconfirmar `main`, merge-base, ahead/behind, diff, mergeabilidade, issue #57 e concorrência;
-7. parar para aceite explícito.
+2. confirmar a medição real do validador;
+3. preservar qualquer failure, caso apareça;
+4. reconfirmar `main`, merge-base, ahead/behind, diff, mergeabilidade, issue #57 e concorrência;
+5. atualizar a descrição da PR com o SHA final exato sem alterar a branch;
+6. parar para aceite explícito.
 
-## 24. Ponto de parada
+## 28. Ponto de parada
 
 S7 permanece não iniciada.
 
