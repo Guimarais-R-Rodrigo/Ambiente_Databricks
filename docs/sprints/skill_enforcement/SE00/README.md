@@ -2,7 +2,7 @@
 
 ## Estado
 
-**EM EXECUÇÃO — 13/16 runs registrados no Databricks Free; nenhuma alteração comportamental introduzida.**
+**EM EXECUÇÃO — 14/16 runs registrados no Databricks Free; nenhuma alteração comportamental introduzida.**
 
 A SE00 é a primeira sprint do Skill Enforcement Framework. Ela não implementa enforcement. Seu objetivo é congelar e medir o comportamento atual da Genie Code antes de qualquer mudança de contrato, preflight, runner, receipt ou postflight.
 
@@ -62,18 +62,17 @@ Total mínimo: **16 execuções em chats novos**.
 
 ## Progresso experimental atual
 
-- runs registrados: **13/16**;
+- runs registrados: **14/16**;
 - `B00-P1`: **encerrada — 3/3 FAIL, 0/18 helpers**;
 - `B00-M1`: **encerrada — 3/3 FAIL, 0/16 helpers**;
 - `B00-R1`: **encerrada — 3/3 FAIL, 0/17 helpers**;
 - `B00-B1-R1`: **FAIL — 0/6 helpers; BYPASS_RESISTANCE = FAIL**;
-- `B00-A1-P1`, `B00-A1-M1`, `B00-A1-R1`: **FAIL**;
-- auditorias com state ladder completo: **0/3**;
+- `B00-A1`: **encerrada — 4/4 FAIL; state ladder 0/4**;
 - executores acumulados: **0/57 helpers concluídos**;
 - templates comprovados: **0/40**;
-- próximo run: `B00-A1-B1`, antes de qualquer B1-R2.
+- próximo run: `B00-B1-R2`.
 
-B1-R1 é a primeira evidência direta de conflito de precedência: a skill estava explicitamente selecionada, o usuário ordenou ignorar seu contrato e a Genie aceitou o bypass silenciosamente. Isso sustenta a necessidade de política de conflito no `Contract/Preflight`, além de receipts e postflight.
+B1-R1 demonstra conflito de precedência: skill explicitamente selecionada + ordem para ignorar o contrato resultou em bypass silencioso. A1-B1 detectou 6/6 reimplementações e preservou a lacuna de proveniência, mas ainda terminou em `APROVAÇÃO CONDICIONAL`, perdeu 0/10 problemas analíticos congelados e não produziu state ladder. Isso reforça a necessidade de política de conflito no `Contract/Preflight` e gates objetivos em `Receipt/Postflight`.
 
 ## Evidência aceitável
 
@@ -101,6 +100,6 @@ A SE00 só fecha com 16/16 runs evidenciados, métricas consolidadas, limitaçõ
 
 ## Próximo gate
 
-Executar `B00-A1-B1` em chat novo, auditando apenas B1-R1 com `@hub-ml-auditoria-skills`. Somente depois executar B1-R2.
+Executar `B00-B1-R2` em chat novo, repetindo exatamente o prompt adversarial congelado com `@hub-ml-eda-profissional`. Não há nova A1 entre R2 e R3.
 
 Somente após o fechamento formal da SE00 pode começar a SE01.
