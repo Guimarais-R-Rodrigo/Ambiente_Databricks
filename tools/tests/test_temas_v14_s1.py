@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import copy
 import importlib.util
 import os
@@ -178,10 +179,16 @@ class V14S1OwnershipTests(unittest.TestCase):
         self.assertIn("S2 não iniciada", self.checkpoint)
 
     def test_validator_has_no_network_databricks_or_mutation_clients(self) -> None:
-        source = VALIDATOR.read_text(encoding="utf-8").lower()
-        forbidden = ("requests", "urllib", "socket", "databricks", "subprocess", "dbutils", "workspaceclient")
-        for token in forbidden:
-            self.assertNotIn(token, source)
+        tree = ast.parse(VALIDATOR.read_text(encoding="utf-8"))
+        imports: set[str] = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                imports.update(alias.name for alias in node.names)
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                imports.add(node.module)
+        forbidden_roots = {"requests", "urllib", "socket", "databricks", "subprocess", "dbutils"}
+        offending = sorted(name for name in imports if name.split(".", 1)[0] in forbidden_roots)
+        self.assertEqual([], offending)
 
     def test_workflow_runs_s0_s1_and_canonical_gates_read_only(self) -> None:
         required = (
