@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/skill-enforcement/execution-contract-0.1.schema.json",
+  "title": "SEF execution_contract v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "skill",
+    "mode",
+    "resources",
+    "templates"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "skill": {
+      "type": "string",
+      "pattern": "^hub-ml-[a-z0-9-]+$"
+    },
+    "mode": {
+      "const": "audit"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/resource"
+      }
+    },
+    "templates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/template"
+      }
+    }
+  },
+  "$defs": {
+    "condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "local_sample_required",
+            "tabular_preview_required",
+            "numeric_columns_at_least",
+            "numeric_distributions_requested",
+            "resolved_theme_selected",
+            "visual_diagnostics_requested"
+          ]
+        },
+        "value": {
+          "type": "integer",
+          "minimum": 2
+        }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "module",
+        "symbol",
+        "policy",
+        "evidence"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "module": {
+          "type": "string",
+          "pattern": "^hub_(snippets|scripts)\\.[A-Za-z0-9_.]+$"
+        },
+        "symbol": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        },
+        "policy": {
+          "enum": [
+            "required",
+            "conditional",
+            "optional"
+          ]
+        },
+        "evidence": {
+          "enum": [
+            "resolved",
+            "loaded",
+            "imported",
+            "call",
+            "result",
+            "decision",
+            "authorization"
+          ]
+        },
+        "condition": {
+          "$ref": "#/$defs/condition"
+        }
+      }
+    },
+    "template": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path",
+        "policy",
+        "evidence"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^[^/\\\\].*\\.md$"
+        },
+        "policy": {
+          "enum": [
+            "required",
+            "conditional",
+            "optional"
+          ]
+        },
+        "evidence": {
+          "const": "loaded"
+        },
+        "condition": {
+          "$ref": "#/$defs/condition"
+        }
+      }
+    }
+  }
+}

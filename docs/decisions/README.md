@@ -41,6 +41,7 @@ escolha for difícil de reverter ou afetar mais de um componente.
 | [0018](ADR-0018-piloto-novo-antes-legados.md) | provar esteira com caso novo antes de migrar legados | aceito em 2026-09-14; integração da MM00 pendente |
 | [0019](ADR-0019-micromodelos-consomem-temas.md) | micromodelos consomem Sistema de Temas e não criam tema paralelo | aceito em 2026-09-14; integração da MM00 pendente |
 | [0020](ADR-0020-fontes-catalogo-configurado.md) | fontes ficam no catálogo corporativo configurado via binding externo | aceito em 2026-09-14; integração da MM00 pendente |
+| [0021](ADR-0021-execucao-verificavel-de-skills.md) | `execution_contract` estruturado + capability probe antes de preflight/runner | proposto — SE01 em andamento |
 
 Ao adicionar um ADR, atualize esta tabela e o `CHANGELOG.md`.
 
