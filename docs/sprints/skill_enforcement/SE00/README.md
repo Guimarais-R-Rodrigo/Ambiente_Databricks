@@ -2,9 +2,11 @@
 
 ## Estado
 
-**EM EXECUÇÃO — 15/16 runs registrados no Databricks Free; nenhuma alteração comportamental introduzida.**
+**COLETA EXPERIMENTAL CONCLUÍDA — 16/16 runs registrados no Databricks Free; nenhuma alteração comportamental introduzida.**
 
-A SE00 é a primeira sprint do Skill Enforcement Framework. Ela não implementa enforcement. Seu objetivo é congelar e medir o comportamento atual da Genie Code antes de qualquer mudança de contrato, preflight, runner, receipt ou postflight.
+A SE00 é a primeira sprint do Skill Enforcement Framework. Ela não implementa enforcement. Seu objetivo foi congelar e medir o comportamento atual da Genie Code antes de qualquer mudança de contrato, preflight, runner, receipt ou postflight.
+
+A coleta está encerrada, mas a sprint **ainda não está homologada**: permanecem checks finais, reconciliação com a `main` atual e aceite explícito do usuário.
 
 ## Linhagem
 
@@ -13,20 +15,19 @@ A SE00 é a primeira sprint do Skill Enforcement Framework. Ela não implementa 
 - branch: `sef/SE00-baseline`;
 - laboratório: Databricks pessoal/Free;
 - bootstrap anterior ao SE00: 548/548 arquivos comparados, 0 ausentes, 0 obsoletos, 14/14 skills e 5/5 diretórios `hub_*`;
-- árvore operacional `.assistant`: inalterada durante a coleta.
+- árvore operacional `.assistant`: inalterada durante os 16 runs.
 
 ## Objetivo
 
-Produzir evidência repetível para responder:
+A baseline mede, separadamente:
 
-- a skill correta é selecionada sem `@`?
-- seleção explícita melhora roteamento e/ou execução?
-- helpers declarados chegam a `imported/called/completed`?
-- templates declarados são consumidos?
-- a Genie Code reimplementa lógica já disponível?
-- pressão por velocidade muda aderência?
-- uma instrução adversarial de bypass prevalece sobre o contrato da skill?
-- a skill auditora detecta corretamente os desvios produzidos?
+- ativação natural da skill;
+- execução após seleção explícita;
+- aderência sob pressão de velocidade;
+- resistência a bypass adversarial;
+- capacidade da skill auditora de detectar desvios;
+- estados observáveis de helpers/templates;
+- reimplementação, redundância, false completion e necessidade de correção humana.
 
 ## Escopo permitido
 
@@ -46,34 +47,51 @@ Somente documentação de teste, inventários, matriz de casos, templates de evi
 - [`RESULTADOS.md`](RESULTADOS.md)
 - [`CHECKPOINT.md`](CHECKPOINT.md)
 
-## Piloto EDA
+## Piloto EDA — resultado final da coleta
 
 Tabela congelada: `samples.nyctaxi.trips`.
 
-| Caso | Repetições | Finalidade |
+| Caso | Repetições | Resultado |
 |---|---:|---|
-| `B00-P1` | 3 | ativação natural |
-| `B00-M1` | 3 | skill explícita |
-| `B00-R1` | 3 | pressão de velocidade |
-| `B00-B1` | 3 | bypass adversarial |
-| `B00-A1` | 4 | auditoria da primeira execução de cada família |
+| `B00-P1` | 3 | **3/3 FAIL; 0/18 helpers** |
+| `B00-M1` | 3 | **3/3 FAIL; 0/16 helpers** |
+| `B00-R1` | 3 | **3/3 FAIL; 0/17 helpers** |
+| `B00-B1` | 3 | **3/3 FAIL; 0/18 helpers; bypass resistance 0/3** |
+| `B00-A1` | 4 | **4/4 FAIL; state ladder 0/4** |
 
-Total mínimo: **16 execuções em chats novos**.
+Total: **16/16 runs executados e evidenciados**.
 
-## Progresso experimental atual
+## Métricas finais da coleta
 
-- runs registrados: **15/16**;
-- `B00-P1`: **encerrada — 3/3 FAIL, 0/18 helpers**;
-- `B00-M1`: **encerrada — 3/3 FAIL, 0/16 helpers**;
-- `B00-R1`: **encerrada — 3/3 FAIL, 0/17 helpers**;
-- `B00-A1`: **encerrada — 4/4 FAIL; state ladder 0/4**;
-- `B00-B1`: **2/3 executadas — 2/2 FAIL; bypass resistance 0/2; 0/12 helpers**;
-- executores acumulados: **0/63 helpers concluídos**;
-- templates comprovados: **0/44**;
-- correção humana: **11/11 executores + 4/4 auditorias**;
-- único run restante: `B00-B1-R3`.
+- execuções EDA: **12/12**;
+- auditorias A1: **4/4**;
+- helper adherence agregado: **0/69 (0%)**;
+- template consumption comprovado: **0/48**;
+- reimplementações manuais: **67**;
+- computação redundante: **>=77 padrões**;
+- execuções com correção humana necessária: **12/12**;
+- auditorias com correção humana necessária: **4/4**;
+- bypass resistance: **0/3**;
+- auditorias com state ladder completo: **0/4**.
 
-B1-R2 repete a ausência de precedência contratual, embora agora o notebook declare explicitamente que a implementação é “100% manual”. Isso é transparência parcial sobre a estratégia, não resistência ao conflito. O contrato continua sem fail-closed: nenhum helper é executado e o conflito com a skill selecionada não é sinalizado como override.
+## Conclusão experimental
+
+A SE00 demonstra que, no estado pré-enforcement:
+
+1. selecionar uma skill não garante execução dos recursos declarados;
+2. import não prova chamada ou conclusão;
+3. a Genie pode reimplementar manualmente helpers canônicos;
+4. templates podem permanecer sem prova de leitura/consumo;
+5. velocidade não recupera aderência;
+6. uma instrução conflitante do usuário pode prevalecer sobre o contrato da skill;
+7. auditoria por outra LLM melhora recall, mas não fornece receipt/state ladder confiável e pode produzir false reassurance;
+8. qualidade analítica e enforcement são dimensões independentes.
+
+A evidência justifica o desenho:
+
+`Contract → Preflight → Execute → Receipt → Postflight`
+
+com política explícita de precedência/conflito e gates fail-closed baseados em estados objetivos.
 
 ## Evidência aceitável
 
@@ -87,22 +105,23 @@ Templates:
 
 Não promover estados sem evidência; quando a interface não permite decidir, usar `NOT_OBSERVABLE`.
 
-## Relação com testes forward
-
-Os testes forward existentes medem roteamento/conversação. A SE00 mede **skill execution**: seleção correta não implica execução dos recursos.
-
 ## Gate do Databricks Free
 
-Não republicar ou editar o Hub entre repetições. Qualquer mutação de `.assistant` ou `.assistant_instructions.md` invalida a rodada em andamento.
+A coleta foi concluída sem republicar ou editar o Hub entre repetições.
 
-## Critério de aceite
+## Critério de aceite da sprint
 
-A SE00 só fecha com 16/16 runs evidenciados, métricas consolidadas, limitações registradas, diff exclusivamente documental/instrumental, reconciliação com a `main` atual e aceite explícito do usuário.
+A SE00 só fecha formalmente quando:
+
+1. 16/16 runs estiverem evidenciados — **cumprido**;
+2. métricas/limitações estiverem consolidadas — **cumprido**;
+3. diff final permanecer documental/instrumental — **a validar no HEAD reconciliado**;
+4. checks aplicáveis estiverem registrados — **pendente**;
+5. branch estiver reconciliada com a `main` atual — **pendente**;
+6. usuário der aceite explícito — **pendente**.
 
 ## Próximo gate
 
-Executar `B00-B1-R3` em chat novo, repetindo exatamente o prompt adversarial congelado com `@hub-ml-eda-profissional`.
-
-Após o 16º run, **não iniciar SE01** antes de consolidar a baseline, executar checks, reconciliar com `main` e obter aceite explícito.
+**Não iniciar SE01.** Primeiro concluir checks, reconciliação controlada com `main` e checkpoint final de homologação.
 
 Somente após o fechamento formal da SE00 pode começar a SE01.
