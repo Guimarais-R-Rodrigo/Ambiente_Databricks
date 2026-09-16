@@ -2,119 +2,210 @@
 
 ## Estado vigente
 
-A V13 está em **S0 — reconciliação pós-V12 e freeze de escopo**, em candidata documental separada. A base inicial real da S0 é a `main` `c339ed177f4b901a907ea6ad43f0803f5b7ccc09`, merge da PR #58.
+A S0 foi **aceita e integrada** pela PR #59 no merge `1d46c9625fb5bfd6d1b666ddff055507238788bf`.
 
-A PR #58 integrou o [Plano Mestre V13](PLANO_MESTRE.md). O texto do plano preserva o estado em que foi escrito, antes de seu aceite; este README é a superfície viva para o estado posterior à integração. Alterar o estado corrente aqui não reescreve a evidência histórica nem modifica silenciosamente o plano aceito.
+A S1 foi **aceita e integrada** pela PR #60 no merge `70f6a43748b9636f2bf8fe56aa07e9fb90a0d285`. Os **15/15 workflows de `push`** disparados por esse merge concluíram com `success`.
 
-**S1 não foi iniciada.** A S0 não cria `MATRIZ_OPERACIONAL.json`, preflight, runbook executável, workflow V13, código de release/rollback nem qualquer alteração de runtime.
+A etapa vigente é **S2 — preflight operacional unificado**, em branch candidata separada.
 
-Para quem nunca entrou no Hub: nesta etapa não há nada para instalar, executar ou alterar no Databricks. A S0 apenas alinha a documentação ao estado real, confirma quem é dono de cada contrato e congela a fronteira entre V13 e V14.
+Para quem nunca entrou no Hub: a S2 funciona como uma lista de conferência automática antes de uma operação. Ela verifica o que pode ser provado localmente e distingue `PASS`, `BLOCKED`, `FAIL` e `NOT_APPLICABLE`. Ela não executa a mudança e não consulta o Databricks.
 
-## Plano canônico e limite desta S0
+A leitura operacional da etapa começa em [S2 — preflight operacional unificado](S2_PREFLIGHT_OPERACIONAL.md).
 
-O [Plano Mestre](PLANO_MESTRE.md) é o contrato aceito da V13. A S0 pode registrar o estado posterior à sua integração, mas não pode redefinir silenciosamente seu conteúdo.
+**S3 não foi iniciada.** Release, instalação, atualização e rollback operacional consolidado continuam pertencendo à próxima subfase.
 
-A V13 permanece a etapa de **consolidação operacional**: inventário operacional, preflight, release/install/update/rollback, observabilidade técnica, diagnóstico, compatibilidade e acessibilidade operacional, ensaios autorizados e handoff.
+## Baseline certificado da S2
 
-A V14 permanece responsável por **production readiness e suporte sustentado**: ownership operacional definitivo e substitutos, incidentes/severidades formais, SLA/SLO somente quando houver base real, custos observados, retenção/housekeeping final, escalonamento, calendário de revisão/depreciação e decisão final de go-live/uso compartilhado.
+A branch S2 nasce diretamente de:
 
-Essa fronteira é explicada em detalhe na seção 9 do Plano Mestre. A S0 não antecipa nenhuma dessas implementações.
+`70f6a43748b9636f2bf8fe56aa07e9fb90a0d285`
 
-## Estado herdado da V12
+Esse SHA é o merge da S1 na `main`.
 
-A V12 foi aceita e integrada pela PR #54 no merge `a6309a4d0b3a3530c52330e65ee5a18674118378`. Os estados herdados permanecem distintos:
+O pós-merge da S1 foi certificado antes da abertura da S2:
 
-| Caso | Estado herdado | Regra V13 |
-|---|---|---|
-| `DOC-02` | `PASS` | preservar evidência V12 |
-| `DOC-03` | `PASS` | preservar evidência V12 |
-| `SEC-01` | `PASS` de ambiente | não generalizar para outras autorizações |
-| `UAT-01` | `PASS` da rota textual | não confundir com browser/runtime do Visual Lab |
-| `V12-AIBI-01` | `PASS` real em dashboard draft sintético + rollback | não confundir com Publish ou workspace theme |
-| `A11-01` | `FAIL` | dívida real na issue #57 |
-| `V12-LAB-01` | `BLOQUEADO_AUTORIZACAO` | nova execução exige autorização específica |
-| `V12-APP-01` | `BLOQUEADO_AUTORIZACAO` | deploy/rollback real exige autorização específica |
-| `V12-AIBI-02` | `BLOQUEADO_AUTORIZACAO` | workspace theme/admin exige autorização específica |
+- 15 workflows de `push`;
+- 15 `success`;
+- 0 failures;
+- nenhuma mutação Databricks executada pelo fechamento S1.
 
-`FAIL`, `BLOQUEADO_AUTORIZACAO`, `NOT_APPLICABLE` e `PASS` continuam estados diferentes. Nenhum deles pode ser promovido por inferência.
+A S2 não reaproveita a branch S1 como base paralela.
 
-## Owners canônicos V01–V12
+## Plano canônico
 
-Este mapa é de navegação. Ele aponta para os donos já integrados e **não copia seus contratos como nova fonte de verdade**.
+O [Plano Mestre V13](PLANO_MESTRE.md), aceito pela PR #58, continua sendo o contrato de escopo.
 
-| Camada | Owner canônico | O que a V13 deve fazer |
-|---|---|---|
-| papéis, estados e transições de governança | [V01](../V01/README.md) | referenciar; não criar segunda política de papéis |
-| schema, parsing, validação e `ResolvedTheme` | [V02](../V02/README.md) | reutilizar; não criar segundo schema/resolvedor |
-| adaptação Plotly | [V03](../V03/README.md) | consumir sem redefinir tokens |
-| HTML, estilos e tabelas | [V04](../V04/README.md) | consumir sem CSS temático paralelo |
-| Visual Lab, draft, comparação, sessão e histórico | [V05](../V05/README.md) | reutilizar como superfície de autoria |
-| assets e geração editorial | [V06](../V06/README.md) | preservar hashes e derivação controlada |
-| consumidores visuais adicionais | [V07](../V07/README.md) | preservar cálculo separado de aparência |
-| integração transversal com skills/padrões/Manual | [V08](../V08/README.md) | manter orientação apontando para os mesmos owners |
-| transporte, kit e `theme_contract` | [V09](../V09/README.md) | reutilizar; não criar manifesto concorrente |
-| Databricks App | [V10](../V10/README.md) | tratar como superfície operacional própria |
-| ponte AI/BI | [V11](../V11/README.md) | preservar fail-closed e os três bindings diretos |
-| protocolo, evidência e homologação | [V12](../V12/README.md) | preservar classes de evidência e bloqueios honestos |
+A ordem permanece:
 
-## Contratos que a S0 não reabre
+`S0 → S1 → S2 → S3 → S4 → S5 → S6 → S7 → aceite → merge → auditoria pós-merge → V14`
 
-Continuam congelados:
+A V13 continua responsável por consolidação operacional: inventário, preflight, release/install/update/rollback, observabilidade técnica, diagnóstico, compatibilidade/acessibilidade operacional, ensaios autorizados e handoff.
 
-- `ResolvedTheme` é a fonte configurável de verdade;
-- `context="aibi"` permanece reservado;
-- a matriz V11 permanece com 48 tokens: 3 `translated`, 23 `approximated` e 22 `unsupported`;
-- somente `surface.card -> widget.background`, `palette.categorical -> visualization.categorical_palette` e `card.radius_px -> widget.corner_radius` podem ter binding direto;
-- `dashboard_sintetico.json` continua não importável no Databricks;
-- `approximated` e `unsupported` não são automatizados;
-- dashboard theme e workspace theme são superfícies distintas;
-- `Import theme` e `Publish` são gates independentes;
-- Git permanece a fonte canônica do projeto; `ambiente_fonte/` é fonte editável e `Novo_Ambiente_Simulado/` é derivado.
+A V14 continua responsável por production readiness e suporte sustentado.
 
-## Dívidas e bloqueios herdados
+## S0 e S1 preservadas
 
-Na abertura da S0, a busca por issues abertas do repositório encontrou somente a issue #57 relacionada ao Sistema de Temas. Ela preserva `A11-01 = FAIL` para contraste de formatação condicional explícita e **não autoriza ampliar silenciosamente a V11**.
+Documentos históricos e de fechamento:
 
-Os três casos ambientais bloqueados da V12 também permanecem no baseline: `V12-LAB-01`, `V12-APP-01` e `V12-AIBI-02`. Ausência de autorização é bloqueio, não erro técnico.
+- [checkpoint S0](CHECKPOINT_S0.md);
+- [inventário operacional S1](S1_INVENTARIO_OPERACIONAL.md);
+- [checkpoint S1](CHECKPOINT_S1.md);
+- [matriz operacional S1](MATRIZ_OPERACIONAL.json).
 
-Se uma subfase futura identificar nova dívida com evidência concreta, ela poderá ser registrada no momento apropriado. A S0 não cria dívida hipotética apenas para completar inventário.
+A S2 **consome** esses artefatos. Ela não reescreve o contrato S1 para remover a frase histórica `S2_NOT_IMPLEMENTED`.
 
-## Documentação viva × evidência histórica
+Isso é intencional: o que a S1 dizia sobre si mesma continua verdadeiro.
 
-A S0 usa a seguinte regra de manutenção:
+## S2 — artefatos próprios
 
-| Documento/superfície | Classificação na S0 | Tratamento |
-|---|---|---|
-| `README.md` da raiz | documentação viva | atualizar apenas o estado corrente e manter métricas somente quando medidas |
-| `docs/sprints/README.md` | índice misto: navegação viva + cronologia histórica | corrigir somente o bloco de estado corrente do Sistema de Temas |
-| `docs/sprints/sistema_temas/README.md` | índice misto: cabeçalho vivo + registros históricos | corrigir o bloco “Estado vigente”; preservar seções históricas |
-| este `V13/README.md` | documentação viva da V13 | manter estado, limites e próxima ação da V13 |
-| `V13/PLANO_MESTRE.md` | contrato de planejamento aceito | não reescrever silenciosamente após a PR #58 |
-| documentos V12 de fechamento, testes, checkpoint, protocolo e escopo | evidência/contrato V12 | preservar o estado da época, inclusive “candidata pré-aceite” |
-| READMEs/checkpoints V01–V11 | contratos e evidências de suas sprints | usar como owners; não modernizar frases históricas só para parecerem atuais |
+A candidata S2 adiciona:
 
-Uma frase antiga como “V13 ainda não começou” dentro de um checkpoint V12 continua correta como evidência daquele momento. O estado corrente deve ser obtido das superfícies vivas acima.
+- `tools/temas_v13_preflight.py`: porta de entrada local/read-only;
+- `tools/tests/test_temas_v13_s2.py`: testes de contrato, falhas e determinismo;
+- [S2 — preflight operacional unificado](S2_PREFLIGHT_OPERACIONAL.md): guia para público técnico e não técnico;
+- evolução do workflow `.github/workflows/temas-v13-ci.yml` para executar S1 e S2 no mesmo gate V13.
 
-## Concorrência documental observada
+A candidata não adiciona cliente Databricks, credencial, chamada de rede, deploy ou publicação.
 
-Na abertura da S0 existiam PRs paralelas que tocam documentação compartilhada. Em especial, há frentes abertas alterando `README.md`, `docs/sprints/README.md`, `docs/sprints/sistema_temas/README.md` e/ou `CHANGELOG.md`.
+## Modelo da S2
 
-Por isso a S0:
+A entrada possui dois modos:
 
-- trabalha sobre a `main` real e em branch exclusiva;
-- não altera `CHANGELOG.md`;
-- limita mudanças nos índices aos blocos necessários da V13;
-- reconfirma a `main`, o merge-base, o diff e as PRs paralelas antes do checkpoint final;
-- se a `main` avançar, reconcilia de forma aditiva e repete os gates aplicáveis.
+- `surface`: uma única superfície/ação;
+- `aggregate`: várias operações em um relatório determinístico.
 
-## CI e autorização
+A saída possui quatro estados:
 
-A manutenção do workflow V12 integrada pela PR #58 é preservada. Em PR não-V12, regressões e validador V12 continuam executando quando os caminhos compartilhados acionam o workflow, enquanto o gate estrito de escopo V12 deve ficar `NOT_APPLICABLE`. Isso não é `PASS` e não exige ampliar o allowlist histórico V12.
+| Estado | Significado |
+|---|---|
+| `PASS` | checks localmente demonstráveis satisfeitos |
+| `BLOCKED` | condição necessária não pode ser fabricada pelo preflight, como autorização ou identidade efetiva |
+| `FAIL` | contrato ou pré-requisito local verificável falhou |
+| `NOT_APPLICABLE` | check não pertence à ação |
 
-A S0 não autoriza nem executa deploy de App, workspace theme, ACL/grupos, `Import theme`, `Publish`, alteração de dashboard, persistência no workspace ou qualquer outra mutação Databricks.
+Precedência:
+
+`FAIL > BLOCKED > PASS > NOT_APPLICABLE`
+
+## Composição com owners existentes
+
+A S2 reutiliza:
+
+| Necessidade | Owner composto |
+|---|---|
+| tema, schema, hash e contexto | V02 |
+| bundle/`theme_contract` | V09 |
+| bundle do Databricks App | V10 |
+| projeção/binding AI/BI | V11 |
+| owner, ação, autorização e rollback | matriz S1 |
+
+A S2 não cria:
+
+- segundo schema de tema;
+- segunda matriz de bindings;
+- segunda lista `theme_contract`;
+- nova política de papéis;
+- novo contexto `aibi`;
+- nova regra de publicação.
+
+## Seis superfícies preservadas
+
+A S2 continua operando sobre as seis superfícies inventariadas na S1:
+
+1. `notebook_visual_core`;
+2. `visual_lab`;
+3. `transition_bundle`;
+4. `databricks_app`;
+5. `aibi_dashboard`;
+6. `workspace_theme`.
+
+Nenhuma superfície nova é criada nesta etapa.
+
+## Estados herdados preservados
+
+| Caso | Estado |
+|---|---|
+| `DOC-02` | `PASS` |
+| `DOC-03` | `PASS` |
+| `SEC-01` | `PASS` de ambiente |
+| `UAT-01` | `PASS` somente textual |
+| `V12-AIBI-01` | `PASS` limitado a dashboard draft, dados sintéticos, import + rollback |
+| `A11-01` | `FAIL`, issue #57 |
+| `V12-LAB-01` | `BLOQUEADO_AUTORIZACAO` |
+| `V12-APP-01` | `BLOQUEADO_AUTORIZACAO` |
+| `V12-AIBI-02` | `BLOQUEADO_AUTORIZACAO` |
+
+A S2 não permite que um campo fornecido no request sobrescreva um `BLOQUEADO_AUTORIZACAO` ou `NOT_AUTHORIZED` canônico.
+
+## Identidade não é simulada como prova
+
+O preflight local não autentica usuário ou administrador no Databricks.
+
+Por isso:
+
+- ausência de referência de identidade gera `IDENTITY_REQUIRED`;
+- presença de referência local não vira prova viva e permanece `IDENTITY_LIVE_UNVERIFIED`.
+
+Isso é fail-closed, não uma limitação escondida.
+
+## Rollback
+
+Toda ação mutável continua submetida ao rollback da matriz S1.
+
+A S2 diferencia:
+
+- rollback preparado e referenciado;
+- rollback ausente;
+- rollback canonicamente bloqueado porque o owner ainda depende de autorização/snapshot/procedimento futuro.
+
+Ela não executa rollback. A operacionalização do ciclo completo é S3.
+
+## AI/BI
+
+A S2 preserva integralmente V11:
+
+- somente três bindings diretos;
+- `approximated` e `unsupported` não automatizados;
+- JSON nativo não inventado;
+- fixture sintético não importável;
+- dashboard theme separado de workspace theme;
+- `Import theme` separado de `Publish`.
+
+O binder V11 é chamado por composição para detectar SHA stale, JSON Pointer inexistente e capacidade fora do contrato.
+
+## CI e fronteiras
+
+O workflow V13 permanece:
+
+- `permissions: contents: read`;
+- `persist-credentials: false`;
+- sem `DATABRICKS_HOST`;
+- sem `DATABRICKS_TOKEN`;
+- sem `secrets.*`.
+
+A fronteira da S2 deve registrar:
+
+- `V13_S2_NETWORK=0`;
+- `V13_S2_REMOTE_MUTATION=0`;
+- `V13_S3_NOT_STARTED=1`.
+
+Git/CI continuam evidência técnica, não homologação de ambiente.
+
+## Métricas do README raiz
+
+A S2 não estima contagens do repositório.
+
+O primeiro head candidato é executado antes de qualquer ajuste de `repo (identidade)` ou `repo (links)`. Se a árvore nova alterar essas métricas, o failure intermediário será preservado e o README raiz será corrigido **somente com os valores realmente medidos pelo runner**.
 
 ## Próxima ação
 
-A próxima decisão é o aceite explícito do [checkpoint S0](CHECKPOINT_S0.md). Somente depois desse aceite a S0 poderá ser integrada e/ou a S1 poderá ser iniciada, conforme a decisão do mantenedor.
+A candidata S2 deve:
 
-**Não iniciar S1 automaticamente.**
+1. executar a suíte própria;
+2. executar regressões S1 e V01–V12;
+3. validar o README/estrutura;
+4. preservar qualquer failure intermediário;
+5. produzir checkpoint S2;
+6. reconfirmar `main`, merge-base, ahead/behind, mergeabilidade e concorrência.
+
+**Parar antes da S3.**
