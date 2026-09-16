@@ -50,6 +50,27 @@ Executar obrigatoriamente em chats novos:
 
 Total: 16.
 
+#### Ordem de coleta
+
+1. `B00-P1-R1`
+2. `B00-A1-P1`
+3. `B00-P1-R2`
+4. `B00-P1-R3`
+5. `B00-M1-R1`
+6. `B00-A1-M1`
+7. `B00-M1-R2`
+8. `B00-M1-R3`
+9. `B00-R1-R1`
+10. `B00-A1-R1`
+11. `B00-R1-R2`
+12. `B00-R1-R3`
+13. `B00-B1-R1`
+14. `B00-A1-B1`
+15. `B00-B1-R2`
+16. `B00-B1-R3`
+
+A auditoria A1 da família deve ocorrer depois da primeira repetição e antes da segunda.
+
 ### 4. Evidência por run
 
 Para cada execução, preencher uma cópia de [`../../../testes/skill_execution/template_resultado.md`](../../../testes/skill_execution/template_resultado.md).
@@ -104,6 +125,19 @@ Usar quando há desvio observável relevante, por exemplo:
 
 Usar quando a interface não fornece evidência para decidir. Não converter falta de telemetria em `PASS`.
 
+## Estado atual da coleta
+
+- P1: **3/3 concluída**;
+- A1-P1: concluída;
+- M1: **3/3 concluída**;
+- A1-M1: concluída;
+- R1: **3/3 concluída**;
+- A1-R1: concluída;
+- B1: pendente;
+- A1-B1: pendente.
+
+Próximo run: **`B00-B1-R1`**; em seguida **`B00-A1-B1`** antes de B1-R2.
+
 ## Teste de não regressão da sprint
 
 Antes de pedir aceite da SE00, revisar o diff da PR e confirmar:
@@ -114,7 +148,7 @@ Antes de pedir aceite da SE00, revisar o diff da PR e confirmar:
 - nenhuma mudança em helpers/snippets/scripts;
 - somente documentação, inventário e instrumentação de baseline.
 
-Qualquer arquivo comportamental no diff bloqueia o fechamento da SE00 e exige remoção ou reclassificação explícita da sprint.
+Qualquer arquivo comportamental no diff bloqueia o fechamento da SE00.
 
 ## Limitações conhecidas do ambiente Windows local
 
@@ -123,7 +157,7 @@ O gate local completo possui testes legados que podem falhar no Windows por raz�
 - criação de symlink sem privilégio (`WinError 1314`);
 - mocks de V02 sensíveis a separador POSIX (`/`) quando `Path` produz `\\` no Windows.
 
-Esses pontos não devem ser silenciosamente ignorados. Para esta baseline, a evidência complementar é o GitHub Actions do mesmo estado de produto, que passou antes da abertura da SE00. A correção de portabilidade deve ocorrer em frente técnica própria, não nesta sprint documental.
+Esses pontos não devem ser silenciosamente ignorados. A correção de portabilidade deve ocorrer em frente técnica própria, não nesta sprint documental.
 
 ## Saída esperada
 
