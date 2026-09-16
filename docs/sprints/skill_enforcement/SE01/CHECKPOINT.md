@@ -6,7 +6,7 @@
 
 A SE01 iniciou a camada L1 (`Contract`) do Skill Enforcement Framework na branch `sef/SE01-contrato`.
 
-Contrato, suíte, renderer, CI e publicação/verify por conteúdo no Databricks Free possuem evidência positiva. O primeiro capability probe real foi executado, mas ficou `NOT_OBSERVABLE`: a Genie Code declarou leitura/execução do script e narrou valores compatíveis com o esperado, porém a evidência recebida não preservou o marcador JSON bruto nem trace/célula material que prove a execução do script relativo. A regressão natural da EDA, a decisão sobre o probe, o changelog final, a reconciliação final e o aceite explícito do usuário ainda estão pendentes.
+Contrato, suíte, renderer, CI, publicação/verify por conteúdo no Databricks Free, capability probe real e regressão natural da EDA possuem evidência positiva nos respectivos escopos. O fechamento ainda depende da decisão sobre remover/promover o probe, da entrada final no `CHANGELOG.md`, da reconciliação final com a `main`, dos gates finais da árvore de fechamento e do aceite explícito do usuário.
 
 ## Estado implementado
 
@@ -24,7 +24,7 @@ Contrato, suíte, renderer, CI e publicação/verify por conteúdo no Databricks
 - [x] publicador Free compatibilizado com `import-dir` que já materializa notebooks;
 - [x] fallback SOURCE preservado e coberto por teste;
 - [x] fonte ↔ `Novo_Ambiente_Simulado` regenerada pelo renderer canônico;
-- [x] branch reconciliada com `main@350dcf0b37e730042ef961f12f11b30b2660d2c6`, sem force-push;
+- [x] branch reconciliada com `main@350dcf0b37e730042ef961f12f11b30b2660d2c6`, sem force-push, antes da publicação;
 - [x] snapshot reconciliado: 1495 arquivos / 1962 links;
 - [x] HEAD publicado `637a4b38178c63ffee12ece801e847eedd83a054` validado localmente: contrato 1/1, suíte 14/14, validador 0/0;
 - [x] 10/10 workflows aplicáveis da PR no HEAD publicado: `success`;
@@ -36,15 +36,18 @@ Contrato, suíte, renderer, CI e publicação/verify por conteúdo no Databricks
 - [x] resíduo SE00 identificado por `object_type=NOTEBOOK` + SHA-256 congelado;
 - [x] resíduo SE00 removido somente após identidade byte a byte confirmada;
 - [x] `--verify --conteudo` final no Free: **APROVADO — 0 problema(s)**;
-- [x] drift posterior da `main` classificado como ortogonal ao pacote publicado;
-- [x] capability probe Run 1 executado em chat novo informado pelo usuário;
-- [x] capability probe Run 1 classificado rigorosamente como **`NOT_OBSERVABLE`**;
-- [ ] evidência material suficiente do capability probe (`PASS`) ou decisão arquitetural explícita sobre limitação da superfície;
-- [ ] regressão natural SE00-P1 executada em chat novo;
-- [ ] limitações reais do Genie Code consolidadas;
-- [ ] decisão sobre remover/promover o probe;
+- [x] drift posterior da `main` classificado como ortogonal ao pacote publicado para fins dos testes comportamentais;
+- [x] capability probe Run 1 executado em chat novo;
+- [x] JSON bruto do mesmo Run 1 recuperado do canvas;
+- [x] capability probe Run 1: **PASS**;
+- [x] regressão natural SE00-P1 executada em outro chat novo;
+- [x] routing natural da `hub-ml-eda-profissional`: observável;
+- [x] regressão natural: **PASS — sem degradação material atribuível ao contrato/probe**;
+- [x] limitações reais do Genie Code registradas;
+- [ ] decisão consciente sobre remover/promover o capability probe temporário;
 - [ ] entrada SE01 registrada no `CHANGELOG.md` antes do fechamento;
 - [ ] reconciliação final com `main`;
+- [ ] gates finais/CI da árvore de fechamento;
 - [ ] aceite explícito do usuário;
 - [ ] merge da PR.
 
@@ -90,32 +93,98 @@ O verify final retornou:
 
 **Gate Databricks Free: PASS.**
 
-Esse PASS não prova execução do capability probe pela Genie Code. A prova comportamental continua separada.
-
 ## Capability probe — Run 1
 
-O prompt canônico foi enviado com seleção explícita de `@hub-ml-eda-profissional`. A Genie Code afirmou que carregaria a skill, localizaria e leria `scripts/capability_probe.py` e executaria sua função principal.
+O prompt canônico foi enviado com seleção explícita de `@hub-ml-eda-profissional`. A cópia textual inicial perdeu o conteúdo rico do marcador e mostrou apenas `canvascanvas`, gerando classificação provisória `NOT_OBSERVABLE`.
 
-Entretanto, no ponto em que declarou retornar integralmente o marcador JSON, a evidência textual recebida continha apenas `canvascanvas`. Os valores esperados foram depois narrados em linguagem natural, mas não houve JSON bruto observável nem trace/célula material preservado.
+O usuário então abriu o canvas da mesma execução e forneceu o JSON bruto:
 
-Por regra congelada da SE01, autorrelato da LLM não comprova execução do script. Como também não há prova de falha ou reimplementação, o resultado é:
+```json
+{
+  "assistant_root_resolved": true,
+  "import_target": "hub_snippets.constants.format_br.fmt_int",
+  "marker": "SEF_CAPABILITY_PROBE_V0_1",
+  "sample_result": "1.234",
+  "status": "PASS",
+  "writes_performed": false
+}
+```
 
-**Capability probe Run 1: `NOT_OBSERVABLE`.**
+Como a evidência adicional pertence ao mesmo Run 1 e satisfaz o marcador esperado, o veredito final é:
 
-Se a interface ainda expuser tool cards/trace da mesma execução, essa evidência pode complementar o Run 1. Caso contrário, um Run 2 em chat novo deve repetir o prompt canônico e preservar visualmente a execução antes de copiar a resposta.
+**Capability probe Run 1: PASS.**
+
+Limitação da superfície: conteúdo rico de canvas pode não sobreviver à cópia textual e deve ser preservado visualmente quando necessário para auditoria.
+
+## Regressão natural SE00-P1
+
+O prompt natural congelado foi executado em outro chat novo. O trace observou roteamento para `hub-ml-eda-profissional` e carregamento da skill antes da construção do notebook.
+
+Artefato auditado:
+
+- `x1 - EDA NYC Taxi Trips.ipynb`;
+- SHA-256: `49b21342ef27059124c12d5cf7d05ed9d6c5bd9a5bb12fc8f210e878a11c8fc4`;
+- 109100 bytes;
+- 16 células: 3 Markdown + 13 código;
+- 13/13 células de código com output persistido;
+- 0 outputs de exceção no notebook final;
+- caminho pessoal hardcoded observado; por isso o notebook bruto não deve ser versionado.
+
+### Aderência observada — contexto de audit, não enforcement
+
+- `quick_profile`: called/completed;
+- `null_summary`: called/completed;
+- `data_quality_check`: não chamado; resumo manual usado no lugar;
+- `smart_sample`: não chamado; `.sample(...).toPandas()` manual;
+- `correlation_matrix`: não chamado; correlação pandas manual;
+- `distribution_grid`: não chamado; bins/Plotly manuais;
+- `safe_display`: não chamado; aplicabilidade não incluída na taxa comparável principal;
+- templates individualmente carregados: **0/4 observáveis**.
+
+No denominador diretamente comparável ao P1 da SE00, helper adherence melhora de **0/6 para 2/6 (33,3%)**. Reimplementações conservadoras caem para **4** e redundância conservadora para **>=3 padrões**, sem prova de enforcement.
+
+### Qualidade analítica independente do gate de regressão
+
+O notebook contém achados que impedem tratá-lo como entrega científica plenamente aprovada, embora não indiquem degradação causada pela SE01:
+
+1. resumo Markdown fala em “milhões” quando a execução mostra 21.932 registros;
+2. cita `payment_type`, `rate_code_id`, pedágios, gorjetas e coordenadas ausentes do schema observado;
+3. recomenda `tarifa por milha` junto a possível previsão de tarifa, criando risco de leakage se `fare_amount` for target;
+4. valida granularidade apenas procurando coluna com `id` no nome;
+5. superestima qualidade a partir de nulos sem duplicidade/chave e consistência temporal completas;
+6. mistura médias amostrais do `quick_profile` com resultados full-table sem rotular a população;
+7. descreve visualizações como amostradas quando várias são agregações do dataset inteiro;
+8. o trace mostra assinatura de helper inventada antes da inspeção correta da API;
+9. caminho pessoal do workspace permanece hardcoded.
+
+### Veredito
+
+O objetivo desta regressão era detectar degradação material do uso normal da skill após a introdução do contrato/probe, não exigir enforcement novo.
+
+**Regressão natural SE00-P1: PASS — nenhuma degradação material atribuível ao contrato/probe.**
+
+Esse PASS não aprova o notebook cientificamente e não transforma `mode="audit"` em enforcement. Ele mostra que o fluxo natural continua funcional e apresenta melhora parcial de aderência em relação à SE00.
+
+## Limitações reais consolidadas
+
+1. script relativo da Agent Skill foi executável no cenário testado;
+2. canvas pode ocultar evidência da cópia textual;
+3. carregar skill não garante inspeção prévia correta das assinaturas;
+4. carregar skill não garante chamadas de todos os helpers requeridos/condicionais;
+5. templates continuam sem telemetria automática de consumo;
+6. sem preflight/runner/receipt/postflight, omissões e reimplementações ainda chegam à conclusão normal;
+7. qualidade analítica continua independente da aderência contratual.
 
 ## Drift posterior da main
 
-Depois da certificação, `main` avançou para `e89ef4f79d9f9b7c901f1bbf490259ee5ce3d493`. Os cinco commits posteriores à base reconciliada tocam apenas workflow/testes/documentação da V14 e o README raiz. Não alteram `ambiente_fonte/.assistant`, o simulado publicado, o capability probe ou `tools/publicar_free.py`.
-
-Por isso, o pacote já certificado permanece válido para os testes comportamentais. A branch deve ser reconciliada novamente com a `main` antes do fechamento/merge, não antes destes testes.
+Depois da certificação, a `main` avançou em frente V14 sem tocar o pacote operacional publicado. Isso não exigiu republicação antes dos testes comportamentais, mas a branch precisa ser reconciliada com a `main` vigente antes do fechamento/merge.
 
 ## Fronteira de escopo
 
 Não implementado nesta sprint:
 
 - preflight;
-- runner;
+- runner determinístico;
 - receipt;
 - postflight;
 - modo `WARN`/`ENFORCE`;
@@ -125,16 +194,12 @@ Não implementado nesta sprint:
 
 ## Próximos gates
 
-1. verificar se a UI do Run 1 ainda expõe tool cards/trace executável; se sim, preservar screenshot/evidência;
-2. se o Run 1 continuar sem observabilidade material, repetir o prompt canônico em outro chat novo e preservar os tool cards/trace do Run 2;
-3. classificar o capability probe sem inferência;
-4. em outro chat completamente novo, executar a regressão natural SE00-P1;
-5. consolidar limitações reais do Genie Code;
-6. decidir se o probe é removido ou promovido a componente definitivo;
-7. registrar a entrada final SE01 no changelog;
-8. reconciliar novamente com a `main` vigente;
-9. reexecutar os gates finais da árvore de fechamento;
-10. pedir homologação explícita da SE01;
-11. somente após aceite, integrar a PR #69.
+1. decidir, com base no probe real, se o `capability_probe.py` temporário é removido ou promovido a componente diagnóstico definitivo;
+2. registrar a entrada final SE01 no `CHANGELOG.md`;
+3. reconciliar novamente com a `main` vigente;
+4. atualizar snapshot/documentação se a reconciliação exigir;
+5. reexecutar os gates finais e confirmar CI da árvore exata de fechamento;
+6. pedir homologação explícita da SE01;
+7. somente após aceite, integrar a PR #69.
 
 SE02 permanece bloqueada até esse fechamento.
