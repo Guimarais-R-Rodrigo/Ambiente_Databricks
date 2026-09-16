@@ -48,3 +48,17 @@ result = run_preflight(
 print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
 assert result.status == "PASS"
 assert result.writes_performed is False
+
+# COMMAND ----------
+# MAGIC %md
+# MAGIC ## Invariantes já reproduzidos pela suíte SE02
+# MAGIC
+# MAGIC O happy path automatizado executado no GitHub Actions confirmou estes
+# MAGIC invariantes. Este bloco não é uma captura do Databricks Free; a homologação
+# MAGIC remota permanece um gate separado da sprint.
+# MAGIC
+# MAGIC ```text
+# MAGIC status=PASS
+# MAGIC blocking_issues=0
+# MAGIC writes_performed=False
+# MAGIC ```
