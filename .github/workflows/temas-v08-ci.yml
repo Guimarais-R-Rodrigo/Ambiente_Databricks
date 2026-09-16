@@ -55,6 +55,9 @@ jobs:
       - name: Validação estrutural e documental
         run: python -B tools/validate_assistant.py --conferir-readme
       - name: Proibir mudança runtime na V08
+        if: >-
+          (github.event_name == 'pull_request' && startsWith(github.head_ref, 'codex/temas-v08')) ||
+          (github.event_name == 'push' && startsWith(github.ref_name, 'codex/temas-v08'))
         shell: bash
         run: |
           changed="$(git diff --name-only "$V08_BASE_SHA"..HEAD)"
