@@ -1,185 +1,207 @@
 # MM01 — Checkpoint
 
-Status: **AUDITORIA FINAL FECHADA `NAO_APTA_PARA_FECHAMENTO_DOCUMENTAL` PRESERVADA; B01/B02 CORRIGIDOS; 47 TESTES DA MATRIZ + 1 REGRESSÃO R03 VERDES; REAUDITORIA FINAL INDEPENDENTE PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
+Status: **NONA REAUDITORIA FINAL INDEPENDENTE `NAO_APTA` PRESERVADA; D-01/R02 CORRIGIDO; SUÍTE PERMANENTE 47 + 3 R02 + 1 R03; RECONCILIAÇÃO COM V13 S2 REALIZADA; CERTIFICAÇÃO DA ÁRVORE FINAL E NOVA REAUDITORIA INDEPENDENTE PENDENTES; NÃO ACEITA; NÃO INTEGRADA**
 
-## Base e superfície
+## Fonte de verdade e estado operacional
 
-- `main` inicial da iniciativa MM01: `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5`;
-- a candidata foi reconciliada sucessivamente com as bases pós-V10, pós-V11, pós-V12 e com a `main` vigente após a integração do Plano Mestre V13;
-- base vigente na segunda A1: `d106ef3158e5827a2eec3aa183dbb3b47885c960`;
 - branch: `micromodelos/mm01-contrato-canonico`;
 - PR: `#51`;
-- MM00: encerrada e integrada;
-- MM02: bloqueada até reauditoria final independente, contraditório final, fechamento documental, aceite explícito e merge desta sprint.
+- matriz final congelada: `docs/sprints/micromodelos/MM01/MATRIZ_ACEITE_FINAL.md`;
+- relatório independente mais recente: `docs/auditoria/2026-09-14_micromodelos-mm01/12_resultado_a1_reauditoria_9.md`;
+- último HEAD auditado de forma independente: `4dc6bb12d2e4df6c3dbff7aa4711a99bf660bb6b`;
+- veredito desse relatório: `NAO_APTA`, exclusivamente pelo `D-01` de R02;
+- `CHANGELOG.md`: deliberadamente pré-fechamento; não deve ser sincronizado como conclusão antes de nova reauditoria independente limpa e contraditório final;
+- MM02: bloqueada até reauditoria limpa, contraditório, fechamento documental, aceite explícito e integração da MM01.
 
-## O que a candidata entrega
+A `main` avançou durante a correção. A candidata foi reconciliada por merge real com `76f8a2dcc6d5dd69bd6c1af726fb40e2eced8af8`, que incorpora V13 S1 e S2. O merge de reconciliação MM01 é `877a3b9325281de3a276c909cabe6dfed4913b79`. Como outras iniciativas podem continuar avançando em paralelo, `main`, merge-base e `behind_by` precisam ser reconfirmados novamente imediatamente antes do próximo congelamento.
 
-1. schema formal `1.0.0` para `micromodelo.yaml`;
+## O que a MM01 entrega
+
+1. schema formal Draft 2020-12, versão `1.0.0`, para `micromodelo.yaml`;
 2. template YAML inicial válido e sanitizado;
 3. máquina de fases com rework explícito e `PUBLICADO` terminal por versão;
-4. dois níveis explícitos de garantia: validação standalone certifica apenas o snapshot (`HISTORICO_NAO_CERTIFICADO`); `--previous` certifica evolução histórica, impede rewind pós-`PUBLICADO` na mesma versão e recusa regressão de versão, sem antecipar fingerprint/MM02;
-5. condições operacionais ortogonais (`ATIVO`, `BLOQUEADO`, `SUSPENSO`, `DEPRECATED`);
-6. proveniência `DESCOBERTO`, `INFERIDO`, `PROPOSTO`, `APROVADO`, `MEDIDO` com gates próprios;
-7. regra positiva de materialidade textual: após NFKC, `Default_Ignorable_Code_Point` é removido e referências auditáveis precisam conter letra/número Unicode restante; fillers invisíveis não contam;
-8. proteção explícita de `FALSE` versus `INDETERMINADO` por equivalência editorial conservadora, sem tentar inferir equivalência semântica de linguagem natural;
-9. política de ausência de evidência totalmente estruturada por `tratamento`, `resultado_sem_evidencia`, `regra_ref` e proveniência, sem prosa normativa livre;
-10. política de publicação de `INDETERMINADO` totalmente estruturada, com `indeterminado_vira_false=false` e `regra_ref` somente para `OUTRA_APROVADA`;
-11. score 0–100 cuja natureza é determinada exclusivamente por `tipo_semantica`; campo livre `score.semantica` não faz parte do schema;
-12. normalização de score estruturada por método/referência/proveniência, sem frase livre normativa;
-13. calibração probabilística somente para `PROBABILIDADE_CALIBRADA`, com integridade referencial contra experimento existente, executado e medido;
-14. limiares e pesos podem permanecer `PROPOSTO` nas fases pré-gate e passam a exigir `APROVADO` a partir de `EM_VALIDACAO`;
-15. gates humanos para validação e demais decisões materiais;
-16. escopo de fontes fail-closed em `CATALOGO_PRODUTO`, sem override de CLI;
-17. recusa de chaves duplicadas em YAML/JSON e de IDs duplicados em coleções controladas;
-18. conteúdo material mínimo obrigatório ao entrar em `EM_VALIDACAO`;
-19. coerência entre fase e status da interface de publicação, com caminhos positivos testados até `PUBLICADO`;
-20. fronteira de tracking preservada para MM06;
-21. validador de referência/CI, fixtures sintéticos, suíte canônica com **47 métodos de teste** e uma regressão permanente dedicada a R03/`np.float64`;
-22. gate permanente `.github/workflows/micromodelos-mm01-ci.yml`, read-only e sem acesso a ambiente corporativo;
-23. pacote neutro de auditoria com as oito A1 exploratórias preservadas, a auditoria final fechada preservada separadamente e `MATRIZ_ACEITE_FINAL.md` congelando o threat model e a condição de término.
+4. distinção entre validação de snapshot e certificação de evolução histórica por `--previous`;
+5. condições operacionais ortogonais à fase: `ATIVO`, `BLOQUEADO`, `SUSPENSO` e `DEPRECATED`;
+6. proveniência estruturada com invariantes locais;
+7. materialidade textual Unicode baseada em NFKC, remoção de `Default_Ignorable_Code_Point` e presença de letra/número Unicode;
+8. equivalência editorial conservadora entre `TRUE`, `FALSE` e `INDETERMINADO`, sem equivalência semântica geral;
+9. política estruturada de ausência de evidência;
+10. política estruturada de publicação de `INDETERMINADO`, com `indeterminado_vira_false=false`;
+11. score 0–100 com natureza definida por `tipo_semantica` e normalização estruturada;
+12. calibração probabilística dependente de experimento existente, executado e medido;
+13. limiares/pesos progressivos antes do gate e aprovados em `EM_VALIDACAO+`;
+14. decisão humana final coerente com `validacao.status`;
+15. escopo de fontes fail-closed em `CATALOGO_PRODUTO`;
+16. recusa de chaves YAML/JSON duplicadas e IDs duplicados em coleções controladas;
+17. conteúdo material mínimo ao entrar em `EM_VALIDACAO`;
+18. coerência entre fase e status de publicação;
+19. tracking de runs mantido fora do YAML, preservando a fronteira com MM06;
+20. validador de referência/CI, fixtures sintéticos e suíte permanente;
+21. gate `.github/workflows/micromodelos-mm01-ci.yml` read-only, sem acesso ao ambiente corporativo;
+22. pacote de auditoria histórico, com relatórios independentes preservados sem reclassificação retroativa.
 
-## O que não foi feito
+## Fronteiras preservadas
 
-- não foi criada `hub-ml-micromodelos`;
-- não foi alterada a lista de skills roteáveis;
-- não foi criado sétimo tipo em `hub_padroes`;
-- não foi criado fingerprint nem qualquer hash material da especificação;
-- não houve descoberta de metadata;
-- não houve leitura de dados;
-- não houve alteração de `mlflow_run`;
-- não houve integração visual específica da MM01; evoluções do Sistema de Temas foram absorvidas apenas como base vigente do repositório;
-- não houve handoff/publicação real;
-- não houve migração de legado.
+A MM01 não cria nem antecipa:
 
-## Primeira auditoria A1
+- fingerprint ou identidade material da MM02;
+- crawler ou binding corporativo real da MM03;
+- skill `hub-ml-micromodelos` ou sétimo tipo funcional do Hub da MM04;
+- contrato definitivo de MLflow da MM06;
+- publicação corporativa real;
+- ACL real;
+- leitura de dado corporativo real;
+- migração de legado;
+- integração visual própria.
 
-A primeira A1 independente auditou o head pré-correção e concluiu `NAO_APTA`. Cinco achados bloqueantes foram confirmados como procedentes: proteção histórica contra rewind, referências semanticamente vazias, gate prematuro para `PROPOSTO`, contradição de `INDETERMINADO` por prosa e calibração com referência órfã. O relatório permanece em `03_resultado_a1.md`.
+A autoridade final de publicação continua `GOVERNANCA_EXTERNA`.
 
-As cinco correções foram implementadas, a suíte passou a 24 métodos e o reteste de construção `34909835696` ficou verde.
+## Autoridades congeladas R01–R08
 
-## Segunda auditoria A1
+### R01 — materialidade textual Unicode
 
-A reauditoria independente sobre `2783bcbd6ad7f07f9f3893c66c9dc36d0557f57e` também concluiu `NAO_APTA`. Três novos achados bloqueantes foram confirmados como procedentes:
+A autoridade é `_has_material_text` e o formato `material-text`. NFKC é aplicado, `Default_Ignorable_Code_Point` é removido e precisa restar pelo menos uma letra ou número Unicode. Whitespace, pontuação, símbolos, combining marks isolados e fillers invisíveis não satisfazem materialidade por si sós.
 
-1. referências compostas exclusivamente por marcas Unicode `M*` ainda satisfaziam materialidade;
-2. `FALSE` × `INDETERMINADO` ainda dependia parcialmente de interpretação de prosa livre por regex;
-3. semântica probabilística ainda podia ser escondida por sinônimos não cobertos pela regex.
+### R02 — equivalência editorial conservadora
 
-O resultado está preservado em `04_resultado_a1_reauditoria.md` e não foi reclassificado.
+A normalização autorizada é:
 
-## Correções da segunda A1
+1. NFKC;
+2. `casefold`;
+3. remoção de `Default_Ignorable_Code_Point`;
+4. normalização de whitespace;
+5. tolerância somente à pontuação **terminal** explicitamente definida.
 
-As três correções foram estruturais, sem ampliar escopo:
+Diacríticos, operadores, pontuação interna e pontuação inicial permanecem potencialmente semânticos. A MM01 não tenta resolver equivalência geral de linguagem natural.
 
-- `_has_material_text` passou a exigir positivamente letra/número Unicode após NFKC;
-- campos de descrição normativa foram removidos das políticas de ausência e publicação; comportamento executável ficou fechado em campos estruturados;
-- `score.tipo_semantica` passou a ser a única autoridade executável sobre natureza probabilística; `score.semantica` livre foi removido e `score.normalizacao` virou contrato estruturado.
+### R03 — domínio numérico canônico
 
-O workflow transitório `34912665666` preparou a árvore sem os próprios mecanismos temporários e então executou:
+A API Python aceita `int` Python e `float` Python finito. `NaN` e `±Infinity` são recusados. Tipos numéricos externos, inclusive escalares NumPy e `Decimal`, não pertencem ao domínio canônico e são recusados deterministicamente.
 
-- `python -B -m unittest tools/tests/test_micromodelo_mm01.py -v`: **26 métodos, OK**;
-- `python -B tools/validate_assistant.py --root ambiente_fonte`: **APROVADO, 0 falhas, 0 avisos**;
-- commit permanente das correções: `f46b69790fc23ac6c3ebfa633053a3acb6f9ed1a`.
+### R04–R08
 
-Esse run comprova a construção da correção, mas não substitui os workflows permanentes do próximo HEAD documental congelado.
+- R04: decisão humana é intrinsecamente coerente;
+- R05: invariantes de proveniência são locais e sempre válidos;
+- R06: resultado observado só existe após execução;
+- R07: snapshot e evolução histórica são garantias diferentes;
+- R08: o schema oficial segue o perfil de autoria congelado, sem pretensão de resolver toda composição Draft 2020-12.
 
-## Terceira auditoria A1
+## Histórico de auditoria preservado
 
-A terceira A1 independente concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com três divergências bloqueantes: autoridade ASCII conflitante em `$defs.material_ref`, campos de proveniência de topo fora da política material e gates de conteúdo material aceitando strings visualmente vazias. O resultado histórico foi preservado em `05_resultado_a1_reauditoria_2.md`.
+As auditorias anteriores permanecem historicamente verdadeiras no SHA que cada uma julgou. Correções posteriores não reclassificam relatórios antigos.
 
-## Correções da terceira A1
+- A1 inicial: `03_resultado_a1.md` — `NAO_APTA`;
+- reauditoria: `04_resultado_a1_reauditoria.md` — `NAO_APTA`;
+- rodadas seguintes: `05_resultado_a1_reauditoria_2.md` a `09_resultado_a1_reauditoria_6.md` — `APTA_COM_CORRECOES` nos respectivos SHAs;
+- oitava A1: `10_resultado_a1_reauditoria_7.md` — `NAO_APTA`;
+- auditoria final fechada: `11_resultado_a1_reauditoria_8.md` — `NAO_APTA_PARA_FECHAMENTO_DOCUMENTAL`;
+- nona reauditoria final independente: `12_resultado_a1_reauditoria_9.md` — `NAO_APTA` por R02.
 
-A política de materialidade foi unificada sem ampliar o escopo da MM01:
+`MATRIZ_ACEITE_FINAL.md` foi congelada após o contraditório da oitava A1 justamente para impedir expansão indefinida do threat model. Um novo adversarial só pode bloquear se demonstrar violação de R01–R08 ou de ADR já aceito.
 
-- `_has_material_text` continua a autoridade Unicode: NFKC seguido da exigência de pelo menos uma categoria Unicode `L*` ou `N*`;
-- o JSON Schema usa `format: material-text`, registrado no `FormatChecker` do próprio validador e delegado à mesma função;
-- referências, proveniência material, semânticas obrigatórias, critérios, nomes de fontes e campos operacionais relevantes usam essa autoridade;
-- prosa narrativa livre não recebeu a restrição indiscriminadamente;
-- CJK, árabe/algarismos Unicode, Devanagari, caracteres acentuados e combining marks acompanhados de base material permanecem válidos.
+## Auditoria final fechada anterior — R03 e sincronização
 
-O run transitório `34955861169` executou a suíte ampliada, CLI positiva/negativa/`--previous` e `validate_assistant` antes de publicar `4f686e5de163b649c4ee5e7643f75ecd56db47e7`. O mecanismo transitório não permaneceu na árvore candidata.
+O relatório `11_resultado_a1_reauditoria_8.md`, sobre `337055d70a28c6d595594fa1e8c351a47615e66b`, encontrou dois bloqueios:
 
-A sincronização documental posterior também foi validada antes da publicação: o run `34956548413` confirmou **29 métodos**, suíte MM01, CLI direta com casos Unicode positivo/negativo e `--previous`, `validate_assistant`, métrica congelada do README e invariantes dos relatórios A1 anteriores. Ele publicou `431e22cf25164dee8f8c1a5a1fc1da2943704b7a` já sem os mecanismos transitórios. Os workflows associados a esse commit automático ficaram em `action_required` e, por isso, não são tratados como evidência de CI permanente; a certificação deve ocorrer no HEAD normal subsequente.
+1. R03: `np.float64` atravessava o checker por `isinstance(value, float)`;
+2. gate final: a candidata estava atrasada em relação à `main` vigente.
 
-## Quarta auditoria A1
+As correções foram estreitas:
 
-A quarta A1 independente sobre `c0b6f5872f47f8e37ed8f55f262c276b8c105063` concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com uma divergência bloqueante: seis campos normativos equivalentes ainda aceitavam conteúdo não material por `minLength` ou `.strip()`. O resultado está preservado em `06_resultado_a1_reauditoria_3.md`.
+- `_check_finite_number_format` passou a definir positivamente o domínio por identidade estrita de `int`/`float` Python;
+- `tools/tests/test_micromodelo_mm01_r03.py` protege `np.float64` em limiar e peso;
+- a branch foi reconciliada por merge real com a `main` então vigente.
 
-## Correções da quarta A1
+R03 permaneceu PASS na nona reauditoria.
 
-A correção não criou nova heurística: `evidencias[].regra`, `contra_evidencias[].regra`, `experimentos[].hipotese`, `experimentos[].resultado`, `validacao.resultado.resumo` e `identidade.estado.motivo_condicao` passaram a usar a autoridade já existente `material-text`. Os gates semânticos de resultado executado e motivo operacional também passaram a chamar `_has_material_text` em vez de `.strip()`.
+## Nona reauditoria final independente — `NAO_APTA`
 
-A suíte passou para **31 métodos**, incluindo negativos de `Mn/Mc/Me`, `Cf`, zero-width, whitespace Unicode, pontuação, símbolos e combinações, e positivos multilíngues. O run transitório `34960256357` executou suíte, CLI positiva/negativa/`--previous`, `validate_assistant`, conferência do README e invariantes históricos antes de publicar `8fd8e7892ead1bb63a554b5283f7062adf582976`; os mecanismos transitórios foram removidos.
+A nona reauditoria julgou `4dc6bb12d2e4df6c3dbff7aa4711a99bf660bb6b` e encontrou um único bloqueio material:
 
-## Quinta auditoria A1
+**D-01 / R02 / DIVERGE / BLOQUEANTE** — `_normalize_editorial_text` usava `strip(_EDITORIAL_EDGE_PUNCTUATION)`, que remove a pontuação configurada nas duas bordas. A matriz, porém, autoriza tolerância somente à pontuação terminal. Como consequência, entradas como `?resultado` ou `…resultado` podiam colapsar indevidamente para a mesma canonicalização de `resultado`, gerando falso `AMBIGUOUS_BINARY_SEMANTICS`.
 
-A quinta A1 independente sobre `0b7a712cd2c897483da34517f10516012711f153` concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`. O único achado, `DIVERGE-01`, foi confirmado no contraditório: textos centrais de identidade, negócio, entidade, calibração e outros campos equivalentes ainda podiam ser materialmente vazios. O relatório histórico foi preservado em `07_resultado_a1_reauditoria_4.md`.
+O relatório está preservado em `12_resultado_a1_reauditoria_9.md` com veredito `NAO_APTA`. A sanitização posterior do identificador do owner e a expansão de um SHA abreviado foram apenas higiene necessária para o gate do repositório; achados, evidências, classificação e veredito não foram alterados.
 
-## Correções da quinta A1
+## Correção D-01 / R02
 
-A correção mantém `_has_material_text` como autoridade única e amplia `format: material-text` aos textos obrigatórios que participam do contrato. Um teste estrutural protege a classificação futura; `governanca.observacoes[]` é a exceção narrativa opcional explícita. A suíte passa a **34 métodos**.
+A correção substitui a remoção bilateral de pontuação por remoção exclusivamente terminal:
 
-## Sexta auditoria A1
+```python
+normalized = normalized.strip()
+return normalized.rstrip(_EDITORIAL_EDGE_PUNCTUATION).rstrip()
+```
 
-A sexta A1 independente sobre `e0b6ed916386bef19006e7d41e183ffde25e360a` concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`. Dois desvios bloqueantes foram confirmados: três `pattern: ".*\\S.*"` ainda competiam com `material-text`, e o guard de `string + minLength` considerava qualquer `pattern` suficiente. O relatório foi preservado em `08_resultado_a1_reauditoria_5.md`.
+Isso preserva o restante do contrato R02:
 
-## Correções da sexta A1
+- NFKC continua ativo;
+- `casefold` continua ativo;
+- DICP continua removido;
+- whitespace continua normalizado;
+- pontuação terminal configurada continua tolerada;
+- pontuação inicial deixa de ser apagada;
+- pontuação interna, diacríticos e operadores continuam preservados.
 
-A correção remove as três regex textuais genéricas e deixa `_has_material_text` → `format: material-text` como única autoridade de conteúdo material. Os únicos patterns remanescentes são contratos de estrutura (`$defs.id`, `identidade.nome` e `micromodel_version`) e ficam congelados por path + regex exata em regressão permanente. Todo `type=string + minLength` passa a exigir `material-text`; um nó sintético `minLength + pattern: .*\\S.*` sem format deve ser detectado como violação. A suíte passa a **36 métodos**.
+A implementação foi publicada em `b6c266924fcbc387f826c08aa4c0f275746fa5bf`.
 
-## Sétima auditoria A1
+## Regressões permanentes após D-01
 
-A sétima A1 independente sobre `9e3ce44ae0750321802b95d96ff43bb29468eab2` concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com três divergências bloqueantes: equivalência semântica burlável por Unicode default-ignorable, guard incompleto para `type` em array e números não finitos em limiares/pesos. O resultado foi preservado em `09_resultado_a1_reauditoria_6.md`.
+O gate MM01 executa três conjuntos separados:
 
-## Correções da sétima A1
+- `tools/tests/test_micromodelo_mm01.py`: **47 métodos canônicos** da matriz;
+- `tools/tests/test_micromodelo_mm01_r02.py`: **3 métodos dedicados R02**;
+- `tools/tests/test_micromodelo_mm01_r03.py`: **1 método dedicado R03**.
 
-A normalização semântica remove `Cf` e variation selectors antes da tokenização; o guard de `string + minLength` reconhece tanto `type="string"` quanto listas contendo `string`; e `finite-number` recusa NaN/±Infinity nos valores materiais, enquanto o loader JSON recusa constantes não padrão. A suíte passa a **39 métodos**.
+A regressão R02 prova simultaneamente que:
 
-## Oitava auditoria A1 e mudança de governança
+- pontuação terminal editorial permanece equivalente;
+- `?resultado` permanece diferente de `resultado`;
+- `…resultado` permanece diferente de `resultado` após NFKC — NFKC pode representar a elipse como `...`, mas a borda inicial continua materialmente preservada para a canonicalização;
+- pontuação inicial não cria falso `AMBIGUOUS_BINARY_SEMANTICS` em validação end-to-end.
 
-A oitava A1 independente sobre `fe3a9d8b39c0016d9b487036f1d5e3ad38cb2630` concluiu `NAO_APTA`. O resultado permanece em `10_resultado_a1_reauditoria_7.md`. O contraditório separou violações reais do contrato, decisões arquiteturais e hardening fora do threat model.
+No run intermediário `35044200964`, os **47 + 3 + 1 métodos** passaram em Python 3.12.14. O run ainda falhou no gate estrutural exclusivamente porque o relatório histórico recém-preservado continha um identificador pessoal e depois um SHA abreviado que colidia com o detector genérico de higiene. Esses dois pontos documentais foram corrigidos sem alterar o julgamento histórico e precisam ser recertificados na árvore final.
 
-`MATRIZ_ACEITE_FINAL.md` foi então congelada. Ela define R01–R08, entradas suportadas, não requisitos e a regra de que a auditoria final pode criar adversariais, mas não criar requisitos novos implicitamente. As correções permanentes associadas elevaram a suíte canônica a **47 métodos** e cobrem materialidade por propriedade Unicode, equivalência editorial conservadora, domínio numérico canônico, decisão humana/proveniência intrínsecas, resultado somente após execução, distinção snapshot × evolução e perfil de autoria do schema.
+## Reconciliação com V13
 
-## Auditoria final fechada — `NAO_APTA_PARA_FECHAMENTO_DOCUMENTAL`
+Durante esta rodada a `main` avançou primeiro para V13 S1 e depois para V13 S2. A candidata não foi congelada contra uma base obsoleta. Foi criado merge real:
 
-A auditoria final fechada contra a matriz examinou o HEAD `337055d70a28c6d595594fa1e8c351a47615e66b` e está preservada, sem reclassificação, em `docs/auditoria/2026-09-14_micromodelos-mm01/11_resultado_a1_reauditoria_8.md`.
+`877a3b9325281de3a276c909cabe6dfed4913b79` — `chore(mm01): reconciliar main apos V13 S2`
 
-Dois bloqueios independentes foram confirmados:
+O merge possui como pai da `main` `76f8a2dcc6d5dd69bd6c1af726fb40e2eced8af8` e preserva as mudanças V13 S1/S2 sem reimplementá-las pela MM01.
 
-1. **B01 / R03 / `MATRIX_VIOLATION`:** `np.float64(1.5)` atravessava `_check_finite_number_format` porque `isinstance(value, float)` tratava o escalar externo como `float` canônico;
-2. **B02 / `FINAL_GATE_VIOLATION`:** a candidata estava `behind_by=4` contra a `main` vigente naquele julgamento, embora o merge-ref armazenado ainda reproduzisse uma base anterior.
+Logo após a reconciliação, o compare confirmou `behind_by=0`. Isso não elimina a obrigação de reconfirmar a `main` imediatamente antes do próximo congelamento, porque V13 continua evoluindo em paralelo.
 
-O relatório também manteve `"?true" × "true"` como `BACKLOG_HARDENING`, sem criar requisito novo, e classificou a incompatibilidade de escopo do workflow V12 então observada como externa à MM01.
+## Evidência transitória que não conta como certificação funcional
 
-## Correções da auditoria final
+Foi tentado um workflow corretivo temporário no início da rodada. O run `35043439501` terminou antes de abrir jobs (`jobs=[]`) e não publicou a correção técnica. O mecanismo foi abandonado e removido da árvore. Ele é registro administrativo/transitório, não evidência de falha funcional da MM01.
 
-As correções foram deliberadamente estreitas:
+A correção foi aplicada posteriormente pela API GitHub, protegida pelos workflows permanentes.
 
-- o domínio numérico canônico passou a usar identidade estrita de tipo (`type(value) is int` / `type(value) is float`), recusando deterministicamente `Decimal`, escalares NumPy e outros tipos externos em vez de interpretá-los implicitamente;
-- `tools/tests/test_micromodelo_mm01_r03.py` adiciona regressão permanente para `np.float64(1.5)` tanto em `classificacao.limiares[].valor` quanto em `score.componentes[].peso`;
-- a branch foi reconciliada por merge real com a `main` vigente, eliminando o `behind_by` sem ampliar o escopo MM01;
-- a manutenção de CI trazida pela `main` torna o gate V12 aplicável somente quando seu escopo estrito é pertinente, sem afrouxar a allowlist da MM01;
-- o relatório da auditoria final foi preservado como documento histórico separado; nenhuma A1 anterior foi reclassificada.
+## Dívida documental deliberada
 
-A correção técnica, a reconciliação com `main` e a primeira sincronização documental foram certificadas em runners reais antes desta atualização. Como esta própria sincronização documental altera o HEAD, os workflows permanentes precisam ser recertificados na árvore resultante antes da reauditoria final independente.
+O bloco MM01 de `CHANGELOG.md` continua pré-fechamento. Isso é intencional.
 
-## Dívida documental antes do merge
+Não atualizar o changelog como fechamento enquanto não houver:
 
-O bloco MM01 do `CHANGELOG.md` ainda descreve a candidata pré-A1. Ele deve permanecer assim até uma reauditoria final independente limpa e contraditório final. Quando autorizado pelo gate, sua sincronização deve preservar byte a byte o histórico fora do bloco MM01.
-
-## Reauditoria final independente pendente
-
-A próxima auditoria deve reexaminar, em sessão independente e contra a mesma `MATRIZ_ACEITE_FINAL.md` congelada, o novo HEAD resultante das correções B01/B02. Ela pode criar adversariais próprios, mas um caso só é bloqueante quando demonstra violação de requisito já assumido pela matriz ou ADR aceito; o threat model não é reaberto implicitamente.
+1. árvore técnica/documental certificada;
+2. nova reauditoria final independente limpa contra a matriz congelada;
+3. contraditório final;
+4. sincronização byte-preserving do bloco MM01 do changelog;
+5. revalidação exata da árvore após essa sincronização;
+6. aceite explícito do usuário.
 
 ## Gates restantes
 
-1. recertificar os workflows permanentes no HEAD documental resultante desta sincronização;
-2. executar a reauditoria final independente contra a matriz congelada;
-3. executar contraditório final sobre qualquer achado material dentro da matriz;
-4. se a reauditoria for limpa, sincronizar o bloco MM01 do `CHANGELOG.md` preservando byte a byte todo o restante do arquivo;
-5. revalidar a árvore exata e reconfirmar `main`, `behind_by`, merge-ref e mergeabilidade;
-6. obter aceite explícito do usuário;
-7. só então integrar a PR #51.
+A sequência obrigatória é:
 
-Enquanto qualquer item estiver pendente, **MM02 permanece bloqueada**.
+1. recertificar todos os workflows aplicáveis na árvore documental final;
+2. reconfirmar HEAD, `main`, merge-base, `ahead_by`, `behind_by`, estado/mergeabilidade da PR e merge-ref;
+3. exigir `behind_by=0` e equivalência material entre HEAD e merge-ref;
+4. congelar o novo SHA candidato;
+5. realizar **nova reauditoria final independente**, em contexto separado desta sessão de implementação;
+6. executar contraditório final sobre qualquer finding material dentro da matriz;
+7. se a reauditoria for limpa, sincronizar somente o bloco MM01 de `CHANGELOG.md`, preservando byte a byte o restante;
+8. revalidar a árvore exata resultante;
+9. pedir aceite explícito do usuário;
+10. somente depois integrar a PR #51.
+
+Enquanto qualquer item estiver pendente, **MM01 não está aceita nem integrada e MM02 permanece bloqueada**.
