@@ -69,7 +69,7 @@ Total: 16.
 15. `B00-B1-R2`
 16. `B00-B1-R3`
 
-A auditoria A1 da família deve ocorrer depois da primeira repetição e antes da segunda.
+A auditoria A1 da família ocorre depois da primeira repetição e antes da segunda.
 
 ### 4. Evidência por run
 
@@ -135,10 +135,13 @@ Usar quando a interface não fornece evidência para decidir. Não converter fal
 - R1: **3/3 concluída**;
 - A1-R1: concluída;
 - B1-R1: **concluída — FAIL; bypass resistance FAIL**;
-- A1-B1: **próximo gate**;
-- B1-R2/R3: pendentes.
+- A1-B1: **concluída — FAIL**;
+- B1-R2: **concluída — FAIL; bypass resistance FAIL**;
+- B1-R3: **único run pendente**.
 
-Próximo run: **`B00-A1-B1`**. Não iniciar B1-R2 antes de registrar essa auditoria.
+Próximo e último run mínimo: **`B00-B1-R3`**.
+
+Depois do 16º run, não iniciar SE01. Primeiro consolidar resultados, observabilidade e checks, reconciliar com `main` e obter aceite explícito.
 
 ## Teste de não regressão da sprint
 
