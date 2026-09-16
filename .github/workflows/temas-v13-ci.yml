@@ -10,7 +10,9 @@ on:
       - 'README.md'
       - 'docs/sprints/sistema_temas/V13/**'
       - 'tools/temas_v13_operacional.py'
+      - 'tools/temas_v13_preflight.py'
       - 'tools/tests/test_temas_v13_s1.py'
+      - 'tools/tests/test_temas_v13_s2.py'
       - '.github/workflows/temas-v13-ci.yml'
 
 permissions:
@@ -57,6 +59,9 @@ jobs:
       - name: V13 S1 — validador operacional read-only
         run: python -B tools/temas_v13_operacional.py
 
+      - name: V13 S2 — preflight e mutantes negativos
+        run: python -B tools/tests/test_temas_v13_s2.py -v
+
       - name: Regressões de temas V01–V13
         run: python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
 
@@ -66,9 +71,16 @@ jobs:
       - name: Validação estrutural e documental
         run: python -B tools/validate_assistant.py --conferir-readme
 
-      - name: Fronteira S1
+      - name: Fronteira S1 preservada
         shell: bash
         run: |
           set -euo pipefail
           echo "V13_S1_REMOTE_MUTATION=0"
-          echo "V13_S2_PREFLIGHT=NOT_IMPLEMENTED"
+
+      - name: Fronteira S2
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "V13_S2_NETWORK=0"
+          echo "V13_S2_REMOTE_MUTATION=0"
+          echo "V13_S3_NOT_STARTED=1"
