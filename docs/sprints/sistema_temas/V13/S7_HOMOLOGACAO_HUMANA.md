@@ -1,10 +1,12 @@
 # V13 — S7: protocolo de homologação humana do handoff
 
-Status inicial: **`HUMAN-01 = BLOCKED` — `HUMAN_EVIDENCE_MISSING`**.
+Status histórico inicial: **`HUMAN-01 = BLOCKED` — `HUMAN_EVIDENCE_MISSING`**.
 
-Este documento define o ensaio humano mínimo exigido pelo Plano Mestre V13. Ele é um protocolo, não uma evidência preenchida e não autoriza operação Databricks.
+Estado atual após sessão real registrada pelo mantenedor: **`HUMAN-01 = PASS` — `HUMAN_EVIDENCE_RECORDED`**.
 
-Git/CI não podem alterar o status inicial para PASS. O status só pode mudar depois de uma execução real por participante autorizado que não tenha construído o procedimento.
+Este documento define o ensaio humano mínimo exigido pelo Plano Mestre V13 e preserva também a evidência sanitizada da sessão executada. Ele não autoriza operação Databricks.
+
+Git/CI não podem fabricar nem alterar por conta própria um status humano para PASS. O PASS atual decorre de uma sessão real informada pelo mantenedor e pode apenas ser verificado por CI como evidência versionada.
 
 ## 1. Objetivo
 
@@ -107,29 +109,29 @@ PASS somente se:
 
 ## 6. Registro mínimo da execução
 
-Preencher **somente depois** de uma sessão real.
+Sessão real informada pelo mantenedor após a execução do protocolo. O identificador `Tester` é tratado aqui como identificador sanitizado da sessão, não como identidade pessoal.
 
 | Campo | Valor |
 |---|---|
 | `case_id` | `HUMAN-01` |
-| `participant_id` | `<sanitizado>` |
-| participante não construiu o procedimento | `<true/false>` |
-| autorizado para o ensaio | `<true/false>` |
-| início observado | `<não versionar timestamp se ele identificar contexto sensível; registrar apenas quando necessário>` |
-| duração observada | `<minutos>` |
-| ajuda verbal do autor | `<0 ou quantidade>` |
-| ajuda documental extra | `<0 ou quantidade + referência pública/interna não sensível>` |
-| erros de interpretação | `<quantidade + categoria sanitizada>` |
-| H1 navegação | `<PASS/FAIL>` |
-| H2 notebook | `<PASS/FAIL>` |
-| H3 workspace BLOCKED | `<PASS/FAIL>` |
-| H4 diagnóstico | `<PASS/FAIL>` |
-| H5 rollback | `<PASS/FAIL>` |
-| H6 segurança/privacidade | `<PASS/FAIL>` |
-| resultado humano | `<PASS/FAIL/BLOCKED>` |
-| observação formativa | `<texto sanitizado, sem inferência estatística>` |
+| `participant_id` | `Tester` |
+| participante não construiu o procedimento | `true` |
+| autorizado para o ensaio | `true` |
+| início observado | `não versionado` |
+| duração observada | `5 minutos` |
+| ajuda verbal do autor | `0` |
+| ajuda documental extra | `0` |
+| erros de interpretação | `0` |
+| H1 navegação | `PASS` |
+| H2 notebook | `PASS` |
+| H3 workspace BLOCKED | `PASS` |
+| H4 diagnóstico | `PASS` |
+| H5 rollback | `PASS` |
+| H6 segurança/privacidade | `PASS` |
+| resultado humano | `PASS` |
+| observação formativa | `Sessão concluída com sucesso em 5 minutos; nenhum problema, ajuda ou erro de interpretação foi relatado.` |
 
-Não substituir `<...>` por dados inventados para satisfazer teste.
+A evidência acima foi preenchida a partir do relato do mantenedor após uma sessão real. Não há alegação de observação independente pela CI ou pelo autor deste registro.
 
 ## 7. Regra de decisão
 
@@ -142,6 +144,10 @@ Estados permitidos para `HUMAN-01`:
 `NOT_APPLICABLE` não é permitido para o caso HUMAN-01 porque a homologação humana é critério explícito da S7.
 
 Nenhum número agregado, score ou percentual substitui essa decisão.
+
+Para a sessão registrada na seção 6, todos os requisitos mínimos e H1–H6 estão registrados como satisfeitos. Portanto:
+
+`HUMAN-01 = PASS`.
 
 ## 8. Ajuda e erros de interpretação
 
@@ -156,9 +162,13 @@ Registrar de forma categórica e sanitizada, por exemplo:
 
 Ajuda do facilitador depois do erro pode ser registrada, mas o oráculo correspondente continua FAIL para aquela sessão. Não “corrigir” a evidência após ensinar a resposta.
 
+Na sessão `Tester`, ajuda verbal = 0, ajuda documental extra = 0 e erros de interpretação = 0.
+
 ## 9. Duração
 
 A duração deve ser observada na sessão quando aplicável, conforme o Plano Mestre. Ela é descritiva e formativa.
+
+A sessão registrada durou 5 minutos.
 
 Não definir SLA, SLO, meta de produtividade, percentil ou capacidade operacional a partir de uma única sessão. Esses assuntos pertencem à V14 somente se houver base real.
 
@@ -186,14 +196,14 @@ Não versionar:
 
 ## 11. Estado desta candidata
 
-Nenhuma sessão humana S7 foi executada por este documento.
+A sessão humana S7 foi registrada pelo mantenedor com participante sanitizado `Tester`, autorizado e não construtor, duração de 5 minutos, zero ajuda, zero erros e H1–H6 em PASS.
 
-Portanto o único estado honesto neste momento é:
+Estado atual:
 
-`HUMAN-01 = BLOCKED`
+`HUMAN-01 = PASS`
 
 Motivo:
 
-`HUMAN_EVIDENCE_MISSING`.
+`HUMAN_EVIDENCE_RECORDED`.
 
-A candidata técnica pode passar CI mantendo esse BLOCKED. **A V13 não pode ser declarada aceita/encerrada enquanto o gate humano permanecer BLOCKED.**
+Esse PASS é exclusivamente o gate humano formativo da S7. Ele não altera `A11-01 = FAIL`, não fecha a issue #57, não promove os três casos ambientais bloqueados e não prova production readiness. A V13 ainda depende do checkpoint final, recertificação do SHA exato e aceite explícito antes da integração da PR S7.
