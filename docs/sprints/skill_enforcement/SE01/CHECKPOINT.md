@@ -55,11 +55,7 @@ O gate de snapshot desse mesmo run mediu 1494 arquivos e 1961 links; o README fo
 
 ## Validação local do HEAD atual
 
-Em 16/09/2026, a candidata `e442b2423c02de59f23183783b493f4b8fb44497` foi sincronizada em worktree Git dedicado:
-
-`C:\Users\Rodrigo\Projetos_IA\Projetos_Diversos\Ambiente_Databricks_SE01`
-
-O worktree V12 original permaneceu intocado e com suas alterações locais preservadas.
+Em 16/09/2026, a candidata `e442b2423c02de59f23183783b493f4b8fb44497` foi sincronizada em worktree Git dedicado, separado do worktree local usado pela frente V12.
 
 Resultados observados no worktree SE01:
 
