@@ -2,7 +2,7 @@
 
 ## Estado
 
-**EVIDÊNCIA LOCAL/CI E DATABRICKS FREE CERTIFICADAS; CAPABILITY PROBE AINDA PENDENTE.**
+**EVIDÊNCIA LOCAL/CI E DATABRICKS FREE CERTIFICADAS; CAPABILITY PROBE RUN 1 = NOT_OBSERVABLE.**
 
 Este arquivo recebe somente resultados realmente observados. Implementação, PR e autorrelato não são promovidos a evidência do Genie Code.
 
@@ -128,15 +128,53 @@ Não houve alteração em `ambiente_fonte/.assistant`, `Novo_Ambiente_Simulado/U
 
 ## Capability probe no Free
 
-- status: **PENDENTE**;
-- branch/commit publicado e verificado: `sef/SE01-contrato@637a4b38178c63ffee12ece801e847eedd83a054`;
-- verify por conteúdo: **PASS — 550/550, 0 problemas**;
-- chat novo: —;
-- prompt exato: definido em `TESTES.md`;
-- marcador bruto: —;
-- execução do script observável: —;
-- limitações: —;
-- veredito: **PENDENTE**.
+### Run 1 — evidência conversacional
+
+Em 16/09/2026, em chat novo informado pelo usuário, foi enviado o prompt canônico definido em `TESTES.md`, com seleção explícita de `@hub-ml-eda-profissional`.
+
+A resposta da Genie Code afirmou, em sequência:
+
+1. que carregaria a skill;
+2. que localizaria o script;
+3. que leria o script antes de executar;
+4. que executaria o probe chamando sua função principal;
+5. que o capability probe teria sido executado com sucesso.
+
+No ponto em que a resposta anunciou `Segue o marcador JSON produzido integralmente`, o conteúdo bruto fornecido ao avaliador foi apenas:
+
+```text
+canvascanvas
+```
+
+Depois disso, a Genie Code resumiu narrativamente que:
+
+- a raiz `.assistant` foi localizada;
+- `hub_snippets.constants.format_br.fmt_int` foi importado;
+- `fmt_int(1234)` retornou `"1.234"`;
+- nenhuma escrita foi realizada;
+- status declarado: `PASS`.
+
+### Avaliação do Run 1
+
+Critérios materiais do protocolo:
+
+- skill explicitamente selecionada pelo prompt: **SIM**;
+- alegação textual de leitura/execução do script: **SIM**;
+- marcador JSON bruto `SEF_CAPABILITY_PROBE_V0_1`: **NÃO OBSERVADO**;
+- `status = PASS` dentro do JSON bruto: **NÃO OBSERVADO**;
+- `assistant_root_resolved = true` dentro do JSON bruto: **NÃO OBSERVADO**;
+- `import_target = hub_snippets.constants.format_br.fmt_int` dentro do JSON bruto: **NÃO OBSERVADO**;
+- `sample_result = 1.234` dentro do JSON bruto: **NÃO OBSERVADO**;
+- `writes_performed = false` dentro do JSON bruto: **NÃO OBSERVADO**;
+- tool trace/célula/execução material do `scripts/capability_probe.py`: **NÃO OBSERVADO na evidência textual recebida**;
+- reimplementação manual: **NÃO PROVADA**;
+- falha de execução do script: **NÃO PROVADA**.
+
+**Veredito Run 1: `NOT_OBSERVABLE`.**
+
+Racional: o protocolo proíbe promover autorrelato da LLM a evidência de execução. Os valores narrados são compatíveis com o resultado esperado, mas a resposta fornecida não preserva o JSON bruto nem um trace material que prove uso real do script relativo. A ausência dessa evidência também não prova que o script falhou; portanto o resultado não é `FAIL`.
+
+Se a interface ainda expuser tool cards/trace da mesma execução, eles podem ser anexados como evidência adicional do mesmo run. Sem isso, um segundo run em chat novo deve repetir o prompt canônico e preservar visualmente qualquer tool trace/execução antes de copiar a resposta.
 
 ## Regressão de uso da EDA
 
