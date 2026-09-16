@@ -1,0 +1,137 @@
+name: SE01 Resultados Maintenance
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  append-resultados:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout da branch SE01
+        uses: actions/checkout@v4
+        with:
+          ref: sef/SE01-contrato
+          fetch-depth: 0
+
+      - name: Acrescentar fechamento factual sem reescrever histórico
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('docs/sprints/skill_enforcement/SE01/RESULTADOS.md')
+          text = path.read_text(encoding='utf-8')
+          sentinel = '## Fechamento técnico pós-reconciliação — 16/09/2026'
+          if sentinel in text:
+              raise SystemExit('Sentinela de fechamento já existe; recusando duplicação.')
+
+          lines = [
+              '',
+              '## Fechamento técnico pós-reconciliação — 16/09/2026',
+              '',
+              'Esta seção é append-only e complementa as evidências históricas acima. Ela não altera os resultados do pacote publicado no Databricks Free nem reclassifica runs anteriores.',
+              '',
+              '### Reconciliação com a `main` vigente',
+              '',
+              '- estado observado antes da reconciliação: `main@79f53ba1a131d93cbb0fea7bd885da32b82a7588`, branch `8b2e037db61344f559532f9f3c289ff4467f9ab2`, merge-base `350dcf0b37e730042ef961f12f11b30b2660d2c6`, `ahead_by=32`, `behind_by=10`;',
+              '- PR #69 naquele estado: aberta, Draft e não mergeável;',
+              '- reconciliação executada por merge normal, sem force-push, no commit `c824c8e973ed7b711ed654605166da794bcbde3c`;',
+              '- a árvore V14 da `main` foi preservada; o único arquivo vivo em interseção material era o `README.md` raiz;',
+              '- depois da reconciliação, `behind_by=0` e `main@79f53ba...` passou a ser o merge-base.',
+              '',
+              '### Renderer e derivado — failures intermediários preservados',
+              '',
+              'No run `35141272987`, sobre o merge reconciliado:',
+              '',
+              '- contrato: PASS;',
+              '- suíte SE01: PASS — 14/14;',
+              '- validação estrutural: PASS;',
+              '- renderer: PASS;',
+              '- artifact `se01-skill-renderizado`: publicado;',
+              '- `git diff --exit-code -- Novo_Ambiente_Simulado`: **FAIL**, pois o derivado ainda continha o probe histórico.',
+              '',
+              'O failure foi usado como evidência diagnóstica e não foi reclassificado. A saída real do renderer foi materializada no commit `70c0f5beb8746502949188bf34e9ac2a557d1125`, removendo o probe do derivado e tornando o `SKILL.md` derivado equivalente à fonte.',
+              '',
+              'No run `35141385855`, sobre essa árvore:',
+              '',
+              '- contrato: PASS;',
+              '- suíte SE01: PASS — 14/14;',
+              '- `validate_assistant.py`: PASS;',
+              '- renderer: PASS — 550 arquivos;',
+              '- artifact: publicado;',
+              '- renderer sem diff: PASS;',
+              '- snapshot README: **FAIL** exclusivamente por divergência medida de `1490/1978` no texto contra `1501/1979` na árvore real.',
+              '',
+              'Esse segundo failure também permanece histórico. O `README.md` raiz foi atualizado com os números medidos no commit `0af02feed197b789b00518da898dac3447dc7f37`, e o workflow dedicado `Skill Enforcement SE01` passou integralmente no run subsequente.',
+              '',
+              '### Aposentadoria do capability probe',
+              '',
+              '- `scripts/capability_probe.py`: removido da fonte e do simulado;',
+              '- seção temporária do `SKILL.md`: removida da fonte e do simulado;',
+              '- teste de regressão: exige que o artefato temporário não reapareça;',
+              '- `execution_contract.json`: permanece;',
+              '- schema, validator e ADR: permanecem;',
+              '- evidência histórica do Free: permanece;',
+              '- arquitetura: continua `mode="audit"`.',
+              '',
+              'A retirada do probe é uma decisão de produto após o experimento. Ela não apaga o fato de que o probe foi executado e observado no Free.',
+              '',
+              '### Fechamento documental',
+              '',
+              '- `README.md` da SE01: reconciliado com o estado final da sprint;',
+              '- `TESTES.md`: atualizado para a suíte vigente de 14 casos e para a classificação histórica/atual das evidências;',
+              '- `CHECKPOINT.md`: atualizado com reconciliação, renderer e gates pendentes/finais;',
+              '- ADR-0021: mantém status `Proposto` até o aceite humano e recebeu registro append-only do resultado experimental;',
+              '- índice de ADRs: atualizado;',
+              '- `PLANO_MESTRE.md`: estado vivo corrigido para SE00 concluída, SE01 em fechamento e SE02–SE08 não iniciadas;',
+              '- `CHANGELOG.md`: entrada SE01 adicionada de forma aditiva;',
+              '- `README.md` raiz: snapshot verificável atualizado para 1501 arquivos / 1979 links.',
+              '',
+              '### Manutenção segura do CHANGELOG',
+              '',
+              'Uma primeira tentativa transitória de automação do patch do changelog gerou o run `35142483764` com `jobs=[]` por YAML inválido antes de qualquer job ser criado. Não houve checkout, edição ou push nesse run. A classificação correta é **FAIL de configuração do workflow transitório**, não falha funcional da SE01 nem falha de infraestrutura do runner.',
+              '',
+              'A automação foi corrigida para patch por sentinela/âncora, executou a inserção aditiva, validou que somente `CHANGELOG.md` e o próprio workflow transitório estavam no diff, commitou `docs(SE01): registrar changelog final` e removeu o workflow transitório da árvore. O HEAD resultante dessa manutenção foi `9d8b2af013837a52b7d839f789cc64978ba45928`.',
+              '',
+              '### Databricks Free no fechamento',
+              '',
+              'Não houve nova publicação no Free apenas para remover o probe. A revalidação remota atual fica **NOT_OBSERVABLE por decisão de escopo**, porque a retirada do instrumento temporário é uma redução de pacote já coberta por testes, renderer, equivalência fonte/derivado e CI. A evidência remota válida continua sendo histórica e explicitamente datada.',
+              '',
+              '### Limites preservados',
+              '',
+              '- nenhum preflight definitivo foi implementado;',
+              '- nenhum deterministic runner foi implementado;',
+              '- nenhum Execution Receipt foi implementado;',
+              '- nenhum postflight foi implementado;',
+              '- nenhum fail-closed runtime foi implementado;',
+              '- `mode` permanece `audit`;',
+              '- SE02 não foi iniciada.',
+          ]
+          path.write_text(text.rstrip() + '\n' + '\n'.join(lines) + '\n', encoding='utf-8')
+
+          transient = Path('.github/workflows/se01-resultados-maintenance.yml')
+          if not transient.exists():
+              raise SystemExit('Workflow transitório não encontrado para auto-remoção.')
+          transient.unlink()
+          PY
+
+      - name: Validar patch restrito
+        shell: bash
+        run: |
+          git diff -- docs/sprints/skill_enforcement/SE01/RESULTADOS.md .github/workflows/se01-resultados-maintenance.yml
+          test "$(git diff --name-only | sort | tr '\n' ' ')" = ".github/workflows/se01-resultados-maintenance.yml docs/sprints/skill_enforcement/SE01/RESULTADOS.md "
+          grep -Fq '## Fechamento técnico pós-reconciliação — 16/09/2026' docs/sprints/skill_enforcement/SE01/RESULTADOS.md
+
+      - name: Commitar fechamento e remover workflow transitório
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/sprints/skill_enforcement/SE01/RESULTADOS.md .github/workflows/se01-resultados-maintenance.yml
+          git commit -m 'docs(SE01): consolidar evidências finais em resultados'
+          git push origin HEAD:sef/SE01-contrato
