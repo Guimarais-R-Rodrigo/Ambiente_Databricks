@@ -1,8 +1,8 @@
 # SE01 — testes
 
-## 1. Testes estáticos/locais
+## 1. Gates da árvore candidata final
 
-Comandos previstos na raiz do repositório:
+Os comandos canônicos da SE01 são:
 
 ```powershell
 python -B tools/skill_enforcement/validate_contracts.py
@@ -13,14 +13,18 @@ python tools/validate_assistant.py --conferir-readme
 python tools/ci_local.py --verbose
 ```
 
-O renderer deve ser executado pelo mecanismo canônico. `Novo_Ambiente_Simulado/` não pode ser corrigido manualmente.
+`Novo_Ambiente_Simulado/` é derivado. A única forma admitida de rematerialização é `python tools/render_simulado.py --write`; edição manual do derivado não é evidência válida.
 
-## 2. Matriz negativa do contrato
+O workflow dedicado `Skill Enforcement SE01` executa, em runner GitHub real, o validator, a suíte dirigida, `validate_assistant.py`, o renderer, um `git diff --exit-code` sobre o derivado e `validate_assistant.py --conferir-readme`. Ele é evidência de CI, não substituto retórico para um comando que não tenha sido executado.
 
-O teste automatizado deve provar rejeição de:
+## 2. Matriz automatizada vigente
+
+A suíte `tools/tests/test_skill_enforcement_se01.py` contém 14 casos. Ela cobre:
 
 | Caso | Resultado esperado |
 |---|---|
+| contrato canônico v0.1 | PASS |
+| schema ↔ validator | vocabulários coerentes |
 | helper/módulo inexistente | `RESOURCE_MODULE_NOT_FOUND` |
 | símbolo fora da API pública | `RESOURCE_SYMBOL_NOT_EXPORTED` |
 | template ausente | `TEMPLATE_NOT_FOUND` |
@@ -29,12 +33,30 @@ O teste automatizado deve provar rejeição de:
 | condição fora do vocabulário | `CONDITION_INVALID` |
 | skill divergente da pasta | `SKILL_FOLDER_MISMATCH` |
 | `mode="enforce"` na SE01 | `MODE_INVALID` |
+| API pública do index generator | `hub_snippets.visual.index_generator.gerar_indice_eda` |
+| probe temporário aposentado | fonte e seção temporária ausentes |
+| publicador com notebook já materializado | não reenviar desnecessariamente |
+| fallback do publicador | SOURCE preservado quando necessário |
 
-O teste também fixa explicitamente o caminho público real do `index_generator`: `hub_snippets.visual.index_generator.gerar_indice_eda`.
+## 3. Resultado atual do gate dirigido
 
-## 3. O que o teste local do probe prova
+Na composição reconciliada de 16/09/2026, o workflow dedicado observou:
 
-O teste local executa o script contra `ambiente_fonte/.assistant` e exige:
+- contrato v0.1: **PASS — 1/1**;
+- recursos: **10**;
+- templates: **4**;
+- suíte SE01: **14/14 PASS**;
+- `validate_assistant.py`: **APROVADO — 0 falhas / 0 avisos**;
+- renderer: **550 arquivos renderizados**;
+- `git diff --exit-code -- Novo_Ambiente_Simulado`: **PASS** depois da materialização canônica;
+- snapshot medido: **1501 arquivos / 1979 links**;
+- `validate_assistant.py --conferir-readme`: passou depois da atualização do bloco raiz.
+
+A execução intermediária que mediu `1501/1979` reprovou somente porque o README ainda continha `1490/1978`. Ela permanece `failure` histórica e não foi reclassificada. A execução seguinte, com o snapshot corrigido, concluiu o workflow dedicado em `success`.
+
+## 4. Capability probe — procedimento histórico, não gate vigente do produto
+
+Durante a fase experimental, o teste local e o teste no Databricks Free usavam o marcador:
 
 ```json
 {
@@ -45,122 +67,74 @@ O teste local executa o script contra `ambiente_fonte/.assistant` e exige:
 }
 ```
 
-Isso prova apenas portabilidade Python/read-only do script. **Não prova que o Genie Code escolhe ou executa o script.**
-
-## 4. Estado técnico já observado
-
-A candidata publicada/certificada no Free é `637a4b38178c63ffee12ece801e847eedd83a054`.
-
-Nesse HEAD:
-
-- contrato: 1/1 PASS;
-- suíte SE01: 14/14 PASS;
-- `validate_assistant.py --conferir-readme`: 0 falhas / 0 avisos;
-- renderer: sem diff;
-- snapshot: 1495 arquivos / 1962 links;
-- 10/10 workflows aplicáveis: `success`;
-- publicação Free: PASS;
-- verify por conteúdo: 550/550 e `APROVADO: 0 problema(s)`.
-
-## 5. Preparação do Databricks Free
-
-Somente depois de fonte/simulado estarem consistentes e com a branch local sincronizada:
-
-```powershell
-git status --short
-git fetch origin --prune
-git switch sef/SE01-contrato
-git pull --ff-only origin sef/SE01-contrato
-```
-
-Se `git status --short` mostrar alterações locais não intencionais, não executar reset destrutivo. Preservar ou resolver conscientemente antes de sincronizar.
-
-Validar a candidata localmente:
-
-```powershell
-python -B tools/skill_enforcement/validate_contracts.py
-python -B tools/tests/test_skill_enforcement_se01.py
-python tools/validate_assistant.py --conferir-readme
-```
-
-Publicação no Free:
-
-```powershell
-$FreeProfile = "FREE"
-$FreeHost = "https://<SEU-WORKSPACE-FREE>"
-
-python tools/publicar_free.py --profile $FreeProfile --expected-host $FreeHost
-python tools/publicar_free.py --execute --profile $FreeProfile --expected-host $FreeHost
-
-New-Item -ItemType Directory -Force .artifacts\sef | Out-Null
-python tools/publicar_free.py --verify --conteudo --profile $FreeProfile --expected-host $FreeHost --relatorio .artifacts\sef\se01-verify-conteudo.json
-```
-
-Critério de publicação: `APROVADO: 0 problema(s)`.
-
-## 6. Capability probe no Genie Code
-
-Abrir **chat novo**. Selecionar explicitamente `@hub-ml-eda-profissional` e enviar exatamente:
+O prompt histórico no Genie Code foi:
 
 ```text
 @hub-ml-eda-profissional Execute somente o capability probe SE01 da própria skill, sem iniciar a EDA. Use o script relativo scripts/capability_probe.py e retorne integralmente o marcador JSON produzido. Não reimplemente o probe.
 ```
 
-Critérios mínimos observáveis:
+O Run 1 real produziu `PASS` após recuperação do JSON bruto no canvas. A cópia textual isolada havia perdido o conteúdo rico como `canvascanvas`; por isso a observabilidade textual inicial foi `NOT_OBSERVABLE` e a evidência do canvas complementou o mesmo run.
 
-1. a skill é explicitamente selecionada;
-2. o agente usa o script relativo, em vez de copiar sua lógica para uma célula;
-3. a saída contém `marker = SEF_CAPABILITY_PROBE_V0_1`;
-4. `status = PASS`;
-5. `assistant_root_resolved = true`;
-6. `import_target = hub_snippets.constants.format_br.fmt_int`;
-7. `sample_result = 1.234`;
-8. `writes_performed = false`.
+Esse procedimento está congelado como histórico. O script temporário e sua seção foram removidos do produto final, e a suíte atual protege essa aposentadoria em vez de voltar a executar o probe.
 
-Se o agente apenas disser que executou, sem evidência material da execução do script, classificar como `NOT_OBSERVABLE`, não como PASS.
+## 5. Regressão natural histórica SE00-P1
 
-### 6.1 Regra de repetição após `NOT_OBSERVABLE`
-
-Um run `NOT_OBSERVABLE` é preservado como resultado válido e não é reclassificado por uma repetição posterior.
-
-Se a interface do mesmo run ainda expuser tool cards, trace ou célula executada que não tenha sido preservada no texto copiado, essa evidência pode complementar **o mesmo run**. Na ausência dela, abrir **outro chat novo** e repetir **o mesmo prompt canônico, sem alterações**.
-
-No Run 2:
-
-- não acrescentar pedido de prova ao prompt;
-- não ajudar a localizar o script;
-- não executar o script manualmente;
-- não criar célula manual;
-- antes de copiar a resposta final, expandir e preservar por screenshot qualquer tool card/trace que mostre leitura/execução de `scripts/capability_probe.py`;
-- se a UI não expuser evidência material mesmo com resposta semanticamente correta, classificar novamente como `NOT_OBSERVABLE` e registrar isso como limitação real da superfície Genie Code.
-
-Dois `NOT_OBSERVABLE` independentes, com respostas semanticamente compatíveis, **não equivalem a PASS**; passam a ser evidência de limitação de observabilidade da superfície.
-
-## 7. Regressão mínima de uso da skill
-
-Depois do probe, abrir outro chat novo e repetir o prompt natural congelado da SE00-P1:
+Depois do probe, foi executado em chat novo o prompt natural congelado:
 
 ```text
 Faça uma EDA profissional da tabela samples.nyctaxi.trips. Avalie estrutura e qualidade dos dados, nulos, estatísticas descritivas, distribuições, relações e correlações quando aplicáveis, possíveis outliers e achados relevantes. Organize o trabalho de forma eficiente para Databricks/Spark, evite computação redundante e finalize com um resumo executivo dos principais achados, limitações e próximos passos.
 ```
 
-Esta regressão não espera enforcement novo. Ela serve apenas para detectar se adicionar contrato/probe impediu ou degradou materialmente o carregamento/uso da skill.
+Resultado histórico: `PASS — nenhuma degradação material atribuível ao contrato/probe`.
 
-## 8. Evidência a registrar
+Esse PASS não é enforcement. A execução ainda omitiu/reimplementou recursos e não provou consumo individual dos templates; os detalhes permanecem em `RESULTADOS.md`.
 
-Para cada teste no Free:
+## 6. Publicação histórica no Databricks Free
 
-- data/hora;
-- branch e commit publicados;
-- verify por conteúdo;
-- chat novo confirmado ou informado pelo usuário;
-- prompt exato;
-- skill selecionada/observada;
-- notebook/artefato, quando houver;
-- marcador bruto do probe;
-- se houve execução real do script ou reimplementação;
-- tool card/trace/célula material, quando disponível;
-- limitações/erros;
-- veredito `PASS`, `FAIL` ou `NOT_OBSERVABLE`.
+A candidata `637a4b38178c63ffee12ece801e847eedd83a054`, que ainda continha o probe experimental, foi publicada e verificada por conteúdo:
 
-Resultados reais entram somente em `RESULTADOS.md`.
+- dry-run: PASS;
+- arquivos publicáveis: 550;
+- 14/14 skills;
+- 5/5 diretórios `hub_`;
+- conteúdo: 550/550;
+- ausentes: 0;
+- obsoletos: 0 após remoção controlada de resíduo SE00;
+- resultado final: `APROVADO — 0 problema(s)`.
+
+Essa é evidência histórica da experimentação. A retirada do probe não apaga nem reclassifica esse teste.
+
+## 7. Critério para revalidação remota
+
+A retirada do probe é uma redução de pacote já coberta por:
+
+- teste automatizado de aposentadoria;
+- renderer canônico;
+- equivalência fonte ↔ simulado;
+- validação estrutural;
+- CI da árvore final.
+
+Nova publicação no Free só é necessária se houver necessidade objetiva de certificar o pacote remoto sem o instrumento histórico. Ela não é executada automaticamente apenas para apagar a evidência do experimento anterior.
+
+## 8. Classificação de evidências
+
+- `PASS`: comando/teste executou e satisfez o critério observado;
+- `FAIL`: comando/teste executou e reprovou;
+- `BLOCKED`: execução necessária não pôde ocorrer por bloqueio externo/material;
+- `NOT_OBSERVABLE`: não há evidência suficiente para classificar como PASS ou FAIL.
+
+Runs intermediários continuam vinculados ao commit em que ocorreram. Nenhum failure histórico é convertido retroativamente em PASS.
+
+## 9. Escopo negativo dos testes
+
+Nenhum teste da SE01 deve provar ou simular como já implementado:
+
+- preflight definitivo;
+- runner determinístico;
+- Execution Receipt;
+- postflight;
+- fail-closed runtime;
+- `mode="enforce"`;
+- SE02.
+
+Esses itens permanecem fora da sprint.
