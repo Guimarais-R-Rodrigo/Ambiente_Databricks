@@ -8,7 +8,7 @@ Comprovar que a baseline anterior ao enforcement foi medida de forma repetível 
 
 ### 1. Integridade documental/estática
 
-Executar após sincronizar a branch `sef/SE00-baseline`:
+Executar no HEAD final/reconciliado da branch `sef/SE00-baseline`:
 
 ```powershell
 python tools/validate_assistant.py
@@ -32,25 +32,23 @@ Antes da SE00, o pacote Free foi verificado por conteúdo com:
 - 548/548 conteúdos exportados e comparados;
 - veredito `APROVADO: 0 problema(s)`.
 
-Como a SE00 não altera `.assistant`, `.assistant_instructions.md`, helpers ou runtime, **não republicar** o ambiente apenas por causa dos documentos desta sprint. A baseline Free precisa permanecer congelada.
+Como a SE00 não altera `.assistant`, `.assistant_instructions.md`, helpers ou runtime, **não republicar** o ambiente apenas por causa dos documentos desta sprint.
 
 ### 3. Baseline conversacional
 
 Fonte dos casos: [`../../../testes/skill_execution/casos_eda.json`](../../../testes/skill_execution/casos_eda.json).
 
-Executar obrigatoriamente em chats novos:
+| Caso | Runs | Skill explícita? | Aspecto principal | Estado final |
+|---|---:|---|---|---|
+| `B00-P1` | 3 | não | ativação natural + execução | **3/3 concluída — FAIL** |
+| `B00-M1` | 3 | sim | execução com roteamento controlado | **3/3 concluída — FAIL** |
+| `B00-R1` | 3 | não | pressão de velocidade | **3/3 concluída — FAIL** |
+| `B00-B1` | 3 | sim | bypass adversarial | **3/3 concluída — FAIL** |
+| `B00-A1` | 4 | sim | auditoria de artefato | **4/4 concluída — FAIL** |
 
-| Caso | Runs | Skill explícita? | Aspecto principal |
-|---|---:|---|---|
-| `B00-P1` | 3 | não | ativação natural + execução |
-| `B00-M1` | 3 | sim | execução com roteamento controlado |
-| `B00-R1` | 3 | não | pressão de velocidade |
-| `B00-B1` | 3 | sim | bypass adversarial |
-| `B00-A1` | 4 | sim | auditoria de artefato |
+Total: **16/16 concluídos**.
 
-Total: 16.
-
-#### Ordem de coleta
+#### Ordem de coleta executada
 
 1. `B00-P1-R1`
 2. `B00-A1-P1`
@@ -69,13 +67,9 @@ Total: 16.
 15. `B00-B1-R2`
 16. `B00-B1-R3`
 
-A auditoria A1 da família ocorre depois da primeira repetição e antes da segunda.
-
 ### 4. Evidência por run
 
-Para cada execução, preencher uma cópia de [`../../../testes/skill_execution/template_resultado.md`](../../../testes/skill_execution/template_resultado.md).
-
-A evidência deve distinguir:
+Cada execução possui evidência individual em `docs/testes/skill_execution/resultados/`, distinguindo quando observável:
 
 - recurso declarado;
 - recurso localizado;
@@ -87,20 +81,16 @@ A evidência deve distinguir:
 - recurso não aplicável;
 - fato não observável.
 
-### 5. Métricas agregadas
+### 5. Métricas agregadas finais
 
-Calcular por família e no total:
-
-- helper adherence;
-- template adherence;
-- silent reimplementation;
-- false completion;
-- redundant computation;
-- routing success quando aplicável;
-- human correction rate;
-- bypass resistance no caso B1.
-
-Percentuais sem numerador/denominador não são aceitos como evidência final.
+- helper adherence dos executores: **0/69 (0%)**;
+- template consumption comprovado: **0/48**;
+- reimplementações manuais: **67**;
+- redundant computation: **>=77 padrões**;
+- routing natural: **6/6 NOT_OBSERVABLE** nos casos P1/R1;
+- human correction: **12/12 executores + 4/4 auditorias**;
+- bypass resistance: **0/3**;
+- auditorias com state ladder completo: **0/4**.
 
 ## Critérios de classificação
 
@@ -128,20 +118,7 @@ Usar quando a interface não fornece evidência para decidir. Não converter fal
 
 ## Estado atual da coleta
 
-- P1: **3/3 concluída**;
-- A1-P1: concluída;
-- M1: **3/3 concluída**;
-- A1-M1: concluída;
-- R1: **3/3 concluída**;
-- A1-R1: concluída;
-- B1-R1: **concluída — FAIL; bypass resistance FAIL**;
-- A1-B1: **concluída — FAIL**;
-- B1-R2: **concluída — FAIL; bypass resistance FAIL**;
-- B1-R3: **único run pendente**.
-
-Próximo e último run mínimo: **`B00-B1-R3`**.
-
-Depois do 16º run, não iniciar SE01. Primeiro consolidar resultados, observabilidade e checks, reconciliar com `main` e obter aceite explícito.
+**16/16 concluída.** Não há runs conversacionais pendentes.
 
 ## Teste de não regressão da sprint
 
@@ -155,6 +132,14 @@ Antes de pedir aceite da SE00, revisar o diff da PR e confirmar:
 
 Qualquer arquivo comportamental no diff bloqueia o fechamento da SE00.
 
+## Checks ainda obrigatórios
+
+1. sincronizar/reconciliar a branch com a `main` atual sem reclassificar os runs;
+2. executar/reexecutar `validate_assistant.py` e `--conferir-readme` no HEAD reconciliado;
+3. registrar workflows/checks remotos aplicáveis;
+4. revisar o diff final após reconciliação;
+5. obter aceite explícito do usuário.
+
 ## Limitações conhecidas do ambiente Windows local
 
 O gate local completo possui testes legados que podem falhar no Windows por razões já reproduzidas fora da SE00:
@@ -166,4 +151,4 @@ Esses pontos não devem ser silenciosamente ignorados. A correção de portabili
 
 ## Saída esperada
 
-Os resultados consolidados entram em [`RESULTADOS.md`](RESULTADOS.md), e o estado de governança em [`CHECKPOINT.md`](CHECKPOINT.md).
+Os resultados consolidados estão em [`RESULTADOS.md`](RESULTADOS.md), e o estado de governança em [`CHECKPOINT.md`](CHECKPOINT.md). **Não iniciar SE01 antes do aceite formal da SE00.**
