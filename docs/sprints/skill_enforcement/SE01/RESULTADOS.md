@@ -48,7 +48,7 @@ Em 16/09/2026, o usuário executou a candidata em worktree Git isolado no Window
 
 Estado observado antes dos testes:
 
-- worktree: `C:\Users\Rodrigo\Projetos_IA\Projetos_Diversos\Ambiente_Databricks_SE01`;
+- worktree: `<workspace-local>/Ambiente_Databricks_SE01`;
 - branch: `sef/SE01-contrato`;
 - HEAD: `e442b2423c02de59f23183783b493f4b8fb44497`;
 - `git status --short`: limpo.
