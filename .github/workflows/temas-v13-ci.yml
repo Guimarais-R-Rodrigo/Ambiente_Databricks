@@ -21,6 +21,7 @@ on:
       - 'tools/tests/test_temas_v13_s4.py'
       - 'tools/tests/test_temas_v13_s5.py'
       - 'tools/tests/test_temas_v13_s6.py'
+      - 'tools/tests/test_temas_v13_s7.py'
       - '.github/workflows/temas-v13-ci.yml'
 
 permissions:
@@ -82,6 +83,9 @@ jobs:
       - name: V13 S6 — ensaios operacionais locais/simulados
         run: python -B tools/tests/test_temas_v13_s6.py -v
 
+      - name: V13 S7 — handoff operacional e gate humano
+        run: python -B tools/tests/test_temas_v13_s7.py -v
+
       - name: Regressões de temas V01–V13
         run: python -B -m unittest discover -s tools/tests -p 'test_temas*.py' -v
 
@@ -131,7 +135,7 @@ jobs:
           echo "V13_S5_CONTRAST_PREFLIGHT_LOCAL=1"
           # Historical S5 checkpoint assertion: V13_S6_NOT_STARTED=1
 
-      - name: Fronteira S6
+      - name: Fronteira S6 preservada
         shell: bash
         run: |
           set -euo pipefail
@@ -140,4 +144,14 @@ jobs:
           echo "V13_S6_IMPLICIT_PUBLICATION=0"
           echo "V13_S6_LOCAL_OR_SIMULATED_REHEARSALS=5"
           echo "V13_S6_REAL_ENVIRONMENT_CASES_BLOCKED=3"
-          echo "V13_S7_NOT_STARTED=1"
+          # Historical S6 checkpoint assertion: V13_S7_NOT_STARTED=1
+
+      - name: Fronteira S7
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "V13_S7_NETWORK=0"
+          echo "V13_S7_REMOTE_MUTATION=0"
+          echo "V13_S7_DATABRICKS_MUTATION=0"
+          echo "V13_S7_HUMAN_VALIDATION=BLOCKED"
+          echo "V13_V14_NOT_STARTED=1"

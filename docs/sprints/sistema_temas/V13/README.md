@@ -2,7 +2,9 @@
 
 ## Estado vigente
 
-A V13 está em execução incremental. Cada sprint só é integrada depois de aceite explícito e certificação pós-merge da `main`.
+A V13 está na etapa final **S7 — handoff operacional e fechamento**.
+
+Cada sprint anterior só foi integrada depois de aceite explícito e certificação pós-merge da `main`.
 
 Histórico integrado:
 
@@ -11,37 +13,46 @@ Histórico integrado:
 - S2 — PR #61, merge `76f8a2dcc6d5dd69bd6c1af726fb40e2eced8af8`, pós-merge 15/15 `success`;
 - S3 — PR #62, merge `298dfb986f67cc4c560ae22b59d2fccad0716ec0`, pós-merge 15/15 `success`;
 - S4 — PR #63, merge `29c3f1afa9147286627b18325380ce5b3c811331`, pós-merge 15/15 `success`;
-- S5 — PR #64, merge `11e4e17f02d4ba7846f5b80bd88c0180124b5772`, pós-merge 15/15 `success`.
+- S5 — PR #64, merge `11e4e17f02d4ba7846f5b80bd88c0180124b5772`, pós-merge **16/16** `success`;
+- S6 — PR #65, merge `6dfb8707835921f2f48020f383cf571902080109`, pós-merge **15/15** `success`.
 
-A etapa vigente é **S6 — ensaios operacionais por superfície**, em branch separada criada diretamente do merge S5 certificado.
+A branch S7 nasce diretamente do merge S6 certificado. Nenhuma mutação Databricks foi executada para abrir esta etapa.
 
-Para um operador novo: a S6 prova o ciclo `PREPARE → PREFLIGHT → PACKAGE → STAGE → VERIFY → ROLLBACK` nas superfícies exercitáveis localmente ou com fixtures. Ela **não** transforma esse exercício em autorização de ambiente.
+Para um operador novo, o ponto de entrada é:
 
-Leitura operacional da candidata:
+- [S7 — handoff operacional e fechamento](S7_HANDOFF_OPERACIONAL.md).
 
-- [S6 — ensaios operacionais por superfície](S6_ENSAIOS_OPERACIONAIS.md).
+O protocolo humano separado é:
 
-**S7 não foi iniciada.**
+- [S7 — homologação humana do handoff](S7_HOMOLOGACAO_HUMANA.md).
 
-## Baseline certificado da S6
+Estado humano atual:
 
-A branch S6 nasce diretamente de:
+`HUMAN-01 = BLOCKED` — `HUMAN_EVIDENCE_MISSING`.
 
-`11e4e17f02d4ba7846f5b80bd88c0180124b5772`
+**V14 não foi iniciada.**
 
-Esse SHA é o merge da S5 na `main`.
+## Baseline certificado da S7
 
-Antes da abertura da S6 foram confirmados:
+Baseline Git:
 
-- PR #64 integrada pelo HEAD S5 certificado `515c23be131b9e78f8816e9a851099154f5a0332`;
-- `main` apontando para o merge S5;
+`6dfb8707835921f2f48020f383cf571902080109`
+
+Esse SHA é o merge da S6 na `main`.
+
+Antes da abertura da S7 foram confirmados:
+
+- PR #65 integrada a partir do HEAD S6 certificado `ed8857c3004d5d6ba8ec6745f26be02b569d0091`;
+- `main` apontando para o merge S6;
 - **15 workflows de `push`** associados ao merge;
 - **15/15 `success`**;
-- workflow V13 pós-merge com S1–S5, regressões, V00, validador e fronteiras verdes;
-- nenhuma mutação Databricks executada pela S5;
-- issue #57 permanecendo aberta com `A11-01 = FAIL`.
+- workflow V13 pós-merge com S1–S6, regressões, V00, validador e fronteiras verdes;
+- workflow V12 pós-merge com seu gate estrito de `push` executado em `success`;
+- nenhuma mutação Databricks executada pela S6;
+- issue #57 permanecendo aberta com `A11-01 = FAIL`;
+- `V12-LAB-01`, `V12-APP-01` e `V12-AIBI-02` permanecendo `BLOQUEADO_AUTORIZACAO`.
 
-A S6 não reaproveita a branch S5 como base paralela.
+A S7 não reaproveita branch anterior como linha paralela.
 
 ## Plano canônico
 
@@ -51,22 +62,23 @@ A ordem permanece:
 
 `S0 → S1 → S2 → S3 → S4 → S5 → S6 → S7 → aceite → merge → auditoria pós-merge → V14`
 
-A S6 implementa exclusivamente **ensaios operacionais por superfície**.
+A S7 implementa exclusivamente **handoff operacional e fechamento candidato da V13**.
 
-Ordem preferencial preservada:
+Entregáveis do Plano Mestre cobertos pelo handoff:
 
-1. notebook/Plotly/HTML local;
-2. Visual Lab local/simulado;
-3. bundle V09;
-4. App V10 em build/dry-run local;
-5. AI/BI V11 com fixtures e export real somente quando já disponível/autorizado;
-6. ambiente Databricks real somente com autorização específica.
+- guia “comece aqui” do operador;
+- roteiro de primeira operação;
+- matriz de decisão “o que fazer quando...”;
+- registro/referência dos ensaios;
+- lista de dívidas transferíveis à V14;
+- plano de rollback do próprio release V13;
+- checkpoint V13 após os gates finais.
 
-Nesta candidata, os cinco primeiros itens são exercitados localmente ou com fixture. O ambiente Databricks real permanece fora da autorização concedida para iniciar S6.
+A homologação humana mínima não é simulada por CI. Enquanto não houver participante autorizado que não tenha construído o procedimento, sessão real, duração quando aplicável, ajuda/erros registrados e os oráculos satisfeitos, `HUMAN-01` continua `BLOCKED`.
 
 ## Artefatos históricos preservados
 
-Os artefatos de sprints integradas são históricos e não são reescritos para simular estado atual:
+Os artefatos de sprints integradas são evidência histórica e não são reescritos para fingir estado atual:
 
 - [checkpoint S0](CHECKPOINT_S0.md);
 - [inventário operacional S1](S1_INVENTARIO_OPERACIONAL.md);
@@ -79,83 +91,81 @@ Os artefatos de sprints integradas são históricos e não são reescritos para 
 - [S4 — observabilidade e diagnóstico](S4_OBSERVABILIDADE_DIAGNOSTICO.md);
 - [checkpoint S4](CHECKPOINT_S4.md);
 - [S5 — compatibilidade e acessibilidade operacional](S5_COMPATIBILIDADE_ACESSIBILIDADE.md);
-- [checkpoint S5](CHECKPOINT_S5.md).
-
-Exemplo: a matriz S1 mantém `S2_NOT_IMPLEMENTED` porque registra o estado da S1. A S6 não reescreve essa evidência histórica.
-
-## Artefatos próprios da S6
-
-A candidata adiciona:
-
-- `tools/temas_v13_ensaios.py`;
-- `tools/tests/test_temas_v13_s6.py`;
+- [checkpoint S5](CHECKPOINT_S5.md);
 - [S6 — ensaios operacionais por superfície](S6_ENSAIOS_OPERACIONAIS.md);
-- evolução do workflow V13 para S1 + S2 + S3 + S4 + S5 + S6.
+- [checkpoint S6](CHECKPOINT_S6.md).
 
-A candidata não adiciona:
+Exemplos de historicidade:
 
-- cliente Databricks;
-- token/secret;
-- acesso de rede;
-- deploy remoto;
-- alteração de dashboard real;
-- alteração de workspace theme;
-- `Publish`;
-- novo schema/token/binding/role policy;
-- segundo empacotador V09/V10;
-- automação de `approximated`/`unsupported`;
-- suporte genérico inventado a `cellFormat`.
+- a matriz S1 mantém `S2_NOT_IMPLEMENTED` porque registra o estado da S1;
+- o relatório S6 mantém `s7_started = false` porque registra o momento da S6;
+- checkpoints antigos podem dizer que a próxima sprint ainda não havia começado.
 
-## Relação S2 → S3 → S4 → S5 → S6
+A S7 não “corrige” essas evidências históricas.
 
-### S2 — readiness
+## Owners que a S7 compõe
 
-Pergunta: “a operação está preparada?”
+A S7 não cria nova engine.
 
-Saída: relatório local `V13-S2`.
-
-### S3 — ciclo local de release
-
-Pergunta: “o artefato pode ser staged/verificado e o rollback local pode ser provado?”
-
-Saída: relatório local `V13-S3`.
-
-### S4 — diagnóstico
-
-Pergunta: “onde a decisão ocorreu e qual é a próxima ação segura?”
-
-Saída: diagnóstico local `V13-S4`.
-
-### S5 — compatibilidade/acessibilidade
-
-Pergunta: “o estado visual explicitamente observado é compatível com o critério aplicável e o que ainda não foi exercitado?”
-
-Saída: relatório local `V13-S5` + matriz documental de compatibilidade.
-
-### S6 — ensaio operacional
-
-Pergunta: “as etapas aplicáveis do ciclo operacional podem ser executadas e revertidas usando os owners existentes, sem publicação implícita?”
-
-Saída: relatório local `V13-S6`, com cada superfície e cada fase explicitamente classificada.
-
-S6 compõe os owners anteriores; não modifica relatórios S2/S3/S4/S5 nem redefine seus contratos.
-
-## Superfícies da S6
-
-| Superfície | Ensaio permitido nesta candidata |
+| Necessidade | Owner vigente |
 |---|---|
-| notebook/Plotly/HTML | aplicação opt-in somente em memória + invariantes + descarte do stage |
-| Visual Lab | preset sintético + proposta + save/reopen temporário + restore |
-| V09 | build local + S2 + staging S3 + rollback dry-run |
-| V10 | build local do App + S2 + staging S3 + rollback dry-run |
-| AI/BI | projeção/binding somente em fixture local + invariantes semânticos |
-| workspace theme | apenas provar `BLOCKED` no preflight local |
+| inventário/superfície/ação | S1 |
+| readiness/preflight | S2 |
+| release/staging/LKG/rollback | S3 |
+| diagnóstico/evidência segura | S4 |
+| compatibilidade/acessibilidade | S5 |
+| ensaios locais/simulados | S6 |
+| schema/hash/contexto do tema | V02 |
+| Visual Lab | V05 |
+| bundle/transporte | V09 |
+| App | V10 |
+| AI/BI/workspace theme local policy | V11 |
+| evidência/homologação histórica | V12 |
 
-A existência de um PASS local para Visual Lab, App ou AI/BI não reclassifica os casos ambientais V12.
+A S7 referencia esses owners. Não duplica token, role policy, schema, binding, manifesto ou catálogo de status.
+
+## Handoff operacional
+
+[S7_HANDOFF_OPERACIONAL.md](S7_HANDOFF_OPERACIONAL.md) orienta uma pessoa nova a:
+
+1. identificar superfície/owner;
+2. executar preflight S2;
+3. interpretar `PASS`, `BLOCKED`, `FAIL` e `NOT_APPLICABLE`;
+4. usar S4 diante de bloqueio/falha;
+5. localizar release/rollback S3;
+6. consultar S5 quando houver compatibilidade/acessibilidade;
+7. distinguir ensaio local S6 de homologação real;
+8. parar diante de autorização/identidade/evidência ausentes.
+
+O treinamento S7 usa somente tema versionado e requests temporários sob `.artifacts/`:
+
+- cenário notebook local esperado em `PASS`;
+- cenário workspace theme esperado em `BLOCKED`.
+
+Nenhum cenário requer Databricks real.
+
+## Gate humano
+
+[S7_HOMOLOGACAO_HUMANA.md](S7_HOMOLOGACAO_HUMANA.md) define seis oráculos:
+
+- H1 — navegação;
+- H2 — notebook/preflight local;
+- H3 — interpretação do workspace `BLOCKED`;
+- H4 — diagnóstico;
+- H5 — rollback;
+- H6 — segurança/privacidade.
+
+O participante precisa ser autorizado e não ter construído o procedimento. Não pode receber instrução verbal do autor durante a tarefa.
+
+Estado da candidata antes de sessão humana real:
+
+`HUMAN-01 = BLOCKED`.
+
+Ausência de evidência humana não é PASS e não pode ser inferida da suíte automatizada.
 
 ## Estados herdados preservados
 
-A S6 não altera os resultados V12:
+A S7 não altera os resultados V12:
 
 - `DOC-02 = PASS`;
 - `DOC-03 = PASS`;
@@ -167,59 +177,102 @@ A S6 não altera os resultados V12:
 - `V12-APP-01 = BLOQUEADO_AUTORIZACAO`;
 - `V12-AIBI-02 = BLOQUEADO_AUTORIZACAO`.
 
-Os três casos `BLOQUEADO_AUTORIZACAO` só podem ser reexecutados como ensaio real com autorização nova e específica. O aceite para iniciar S6 não é essa autorização.
+O aceite para iniciar S7 não foi interpretado como autorização para reexecutar os três casos ambientais bloqueados.
+
+## Contratos V11 que continuam congelados
+
+- `ResolvedTheme` continua fonte configurável de verdade;
+- `context="aibi"` continua reservado;
+- 48 tokens = 3 `translated`, 23 `approximated`, 22 `unsupported`;
+- únicos bindings diretos: `surface.card -> widget.background`, `palette.categorical -> visualization.categorical_palette`, `card.radius_px -> widget.corner_radius`;
+- `dashboard_sintetico.json` não é import nativo;
+- `cellFormat` não vira token;
+- `approximated`/`unsupported` não são automatizados;
+- dashboard theme ≠ workspace theme;
+- `Import theme` ≠ `Publish`.
+
+## Dívidas e fronteira V14
+
+A S7 registra para continuidade, sem resolver por decreto:
+
+- A11-01/issue #57;
+- três casos ambientais V12 ainda bloqueados;
+- estados visuais não observados que não podem ser inferidos.
+
+Permanecem reservados à V14:
+
+- production readiness final;
+- owner operacional definitivo/substitutos;
+- suporte sustentado;
+- severidades/incidentes formais;
+- SLA/SLO somente se houver base real;
+- escalonamento/canais corporativos;
+- retenção/housekeeping final;
+- custos observados em operação real;
+- calendário de revisão/depreciação;
+- decisão final de go-live.
+
+A S7 não inventa esses elementos.
 
 ## CI e fronteiras
 
 O workflow V13 permanece:
 
 - `permissions: contents: read`;
-- checkout com `persist-credentials: false`;
+- checkout `persist-credentials: false`;
 - sem `DATABRICKS_HOST`;
 - sem `DATABRICKS_TOKEN`;
 - sem `secrets.*`.
 
-A candidata executa S1/S2/S3/S4/S5/S6 antes das regressões completas.
+A candidata executa S1/S2/S3/S4/S5/S6/S7 antes das regressões completas.
 
-Fronteiras vivas S6:
+Fronteiras vivas S7:
 
-- `V13_S6_NETWORK=0`;
-- `V13_S6_REMOTE_MUTATION=0`;
-- `V13_S6_IMPLICIT_PUBLICATION=0`;
-- `V13_S6_LOCAL_OR_SIMULATED_REHEARSALS=5`;
-- `V13_S6_REAL_ENVIRONMENT_CASES_BLOCKED=3`;
-- `V13_S7_NOT_STARTED=1`.
+- `V13_S7_NETWORK=0`;
+- `V13_S7_REMOTE_MUTATION=0`;
+- `V13_S7_DATABRICKS_MUTATION=0`;
+- `V13_S7_HUMAN_VALIDATION=BLOCKED`;
+- `V13_V14_NOT_STARTED=1`.
 
-A asserção `V13_S6_NOT_STARTED=1` permanece apenas como comentário histórico do checkpoint S5.
+A antiga asserção `V13_S7_NOT_STARTED=1` permanece apenas como fato histórico da S6, não como fronteira viva.
+
+## Rollback do release V13
+
+O LKG Git antes do fechamento S7 é o merge S6:
+
+`6dfb8707835921f2f48020f383cf571902080109`.
+
+Se a futura integração S7 causar regressão, o handoff exige reversão normal do merge em branch/PR própria, preservação da evidência e recertificação. Force-push/reset da `main` não fazem parte do runbook.
+
+Como a S7 não executa mutação Databricks, ela não cria estado remoto para apagar. Qualquer rollback remoto futuro continua pertencendo ao owner específico e a uma autorização separada.
 
 ## Métricas do README raiz
 
-O protocolo permanece o mesmo:
+O protocolo de medição continua fail-closed:
 
-1. first head S6 sem alterar `README.md` raiz;
-2. runner mede identidade/links reais;
+1. primeiro head S7 não estima novas contagens;
+2. o runner mede identidade e links reais;
 3. qualquer failure fica preservado;
-4. README raiz é reconciliado somente com números observados;
-5. checkpoint S6 é acrescentado depois;
-6. a árvore muda e é medida novamente;
-7. o SHA final é certificado de novo.
-
-Nenhuma contagem será estimada.
+4. o README raiz só é reconciliado com números observados;
+5. o checkpoint S7 muda a árvore e exige nova medição;
+6. o SHA final é recertificado.
 
 ## Próxima ação
 
-A candidata S6 deve:
+A candidata S7 deve:
 
-1. executar a suíte própria e os ensaios locais/simulados;
-2. repetir S1/S2/S3/S4/S5;
-3. manter os três casos ambientais V12 bloqueados;
-4. executar regressões V01–V13 e V00;
-5. validar documentação;
-6. preservar failures intermediários;
-7. reconciliar métricas somente pelo runner;
-8. criar `CHECKPOINT_S6.md`;
+1. executar a suíte própria;
+2. repetir S1–S6 e regressões V01–V13/V00;
+3. validar documentação e fronteiras;
+4. preservar failures intermediários;
+5. reconciliar métricas somente com valores medidos;
+6. executar a homologação humana real conforme o protocolo;
+7. registrar o resultado sem PII/segredo;
+8. criar `CHECKPOINT_S7.md` apenas com evidência real;
 9. recertificar o HEAD exato;
 10. reconfirmar `main`, merge-base, ahead/behind, diff, issue #57 e concorrência;
-11. parar para aceite.
+11. parar para aceite explícito antes de integrar/encerrar V13.
 
-**S7 não foi iniciada.**
+Enquanto `HUMAN-01 = BLOCKED`, a S7 pode estar tecnicamente preparada, mas a V13 **não está aceita nem encerrada**.
+
+**V14 não foi iniciada.**
