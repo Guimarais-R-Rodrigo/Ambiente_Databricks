@@ -2,104 +2,122 @@
 
 ## Estado
 
-**EVIDÊNCIA LOCAL/CI REGISTRADA; PUBLICAÇÃO DATABRICKS FREE AINDA NÃO CERTIFICADA.**
+**EVIDÊNCIA LOCAL/CI E DATABRICKS FREE CERTIFICADAS; CAPABILITY PROBE AINDA PENDENTE.**
 
 Este arquivo recebe somente resultados realmente observados. Implementação, PR e autorrelato não são promovidos a evidência do Genie Code.
 
 ## Candidata observada
 
 - branch: `sef/SE01-contrato`;
-- commit que materializou fonte + simulado: `fda26d130e559d3fdb8ee69fcb785ffecc76a049`;
-- commit de snapshot medido: `264981cb4ce1a5aff8d3c1f6dd54caa1fa57c174`;
-- HEAD validado localmente pelo usuário antes do primeiro publish: `dc4059a3bd7c116bcf40009ec66b1da7a2f809fd`;
-- candidata de compatibilidade do publicador: `77a26173e30929157216da3f9d6734cfa4018de3`;
+- commit publicado e certificado no Databricks Free: `637a4b38178c63ffee12ece801e847eedd83a054`;
+- base reconciliada antes da publicação: `main@350dcf0b37e730042ef961f12f11b30b2660d2c6`;
 - PR: #69, Draft;
 - skill piloto: `hub-ml-eda-profissional`;
 - modo do contrato: `audit`.
 
-## Evidência estática confirmada
+## Evidência estática e CI do HEAD publicado
 
-No workflow dedicado SE01 do commit `fda26d130e559d3fdb8ee69fcb785ffecc76a049`, antes do gate de snapshot:
+No HEAD `637a4b38178c63ffee12ece801e847eedd83a054`:
 
 - contrato v0.1: **PASS — 1/1 contrato válido**;
 - recursos declarados: **10**;
 - templates declarados: **4**;
-- suíte `test_skill_enforcement_se01.py`: **11/11 PASS**;
-- `validate_assistant.py`: **APROVADO — 0 falhas / 0 avisos**;
-- renderer canônico: **limpo após materialização do espelho**.
-
-Depois da inclusão do gate schema ↔ validator, a validação local do HEAD `dc4059a3bd7c116bcf40009ec66b1da7a2f809fd` confirmou:
-
-- contrato: **1/1 PASS**;
-- recursos: **10**;
-- templates: **4**;
-- suíte SE01: **12/12 PASS**;
-- `test_schema_vocabularies_match_validator`: **PASS**;
+- suíte `test_skill_enforcement_se01.py`: **14/14 PASS**;
 - capability probe local read-only: **PASS**;
+- compatibilidade do publicador, notebook já materializado: **PASS**;
+- compatibilidade do publicador, fallback SOURCE: **PASS**;
 - `validate_assistant.py --conferir-readme`: **APROVADO — 0 falhas / 0 avisos**;
-- worktree extras: **0**.
-
-No mesmo HEAD `dc4059a3bd7c116bcf40009ec66b1da7a2f809fd`, os **10/10 workflows aplicáveis da PR concluíram em `success`**, incluindo `Skill Enforcement SE01`, `CI local reproduzível`, V00, V01, V02, V08, V10, V11, V12 e V13.
+- renderer canônico: **sem diff**;
+- GitHub Actions: **10/10 workflows aplicáveis em `success`**.
 
 ## Snapshot medido
 
-A árvore validada mantém:
+A árvore reconciliada e publicada mantém:
 
 - Markdown: **222 arquivos / 1396 links relativos**;
 - Python AST: **222 arquivos**;
-- repo identidade: **1494 arquivos**;
-- repo links: **1961**;
+- repo identidade: **1495 arquivos**;
+- repo links: **1962**;
 - worktree extras: **0**;
 - instruções: **9043/20000 caracteres**.
 
 O README raiz registra esses valores medidos.
 
-## Incidente de publicação no Databricks Free
+## Incidente de compatibilidade do publicador — histórico preservado
 
-A autenticação do profile pessoal foi validada e o dry-run do publicador passou com:
-
-- árvore publicável: **550 arquivos**;
-- fonte ↔ simulado: **em dia**;
-- destino pessoal explicitamente protegido por profile + expected-host.
-
-Na primeira execução real do `tools/publicar_free.py --execute`, a fase `workspace import-dir --overwrite` materializou a árvore remota. Em seguida, a segunda fase histórica do publicador tentou reenviar individualmente o primeiro notebook didático como `SOURCE` e recebeu `PROTOCOL_ERROR`.
+A primeira execução real do `tools/publicar_free.py --execute` materializou a árvore pelo `workspace import-dir --overwrite`. A segunda fase histórica tentou reenviar individualmente o primeiro notebook didático como `SOURCE` e recebeu `PROTOCOL_ERROR`.
 
 O diagnóstico controlado observou:
 
-- o destino sem extensão já existia no workspace como `object_type=NOTEBOOK`, `language=PYTHON`;
+- o destino sem extensão já existia como `object_type=NOTEBOOK`, `language=PYTHON`;
 - o caminho equivalente com `.py` não existia;
-- o reenvio individual do mesmo notebook falhou **3/3** com o mesmo `PROTOCOL_ERROR`;
-- a publicação completa não foi repetida após esse diagnóstico;
-- o `--verify --conteudo` não foi executado nessa tentativa e, portanto, **nenhum PASS de publicação é declarado**.
+- o reenvio individual redundante falhou **3/3** com o mesmo `PROTOCOL_ERROR`.
 
-### Classificação do incidente
+A correção passou a consultar `workspace get-status` depois do `import-dir`: notebook já materializado é preservado; caso contrário, o fallback `SOURCE/PYTHON/--overwrite` permanece disponível. A suíte cobre os dois caminhos.
 
-A evidência demonstra que a premissa histórica do publicador — “`import-dir` sempre deixa o notebook didático como FILE e exige reenvio individual” — não vale para a CLI/runtime observados nesta rodada. O próprio `import-dir` já materializou o objeto como `NOTEBOOK`; a segunda escrita era redundante e foi o ponto de falha.
+## Publicação corrigida no Databricks Free
 
-Isso é classificado como **incompatibilidade operacional do publicador com o comportamento atual da CLI**, não como falha do contrato SE01 nem como falha do capability probe.
+Em 16/09/2026, o HEAD `637a4b38178c63ffee12ece801e847eedd83a054` foi publicado no workspace pessoal/Free com o publicador corrigido.
 
-## Correção de compatibilidade do publicador
+Resultados observados:
 
-A candidata foi ajustada para um fluxo compatível e fail-safe:
+- dry-run: **PASS**;
+- arquivos publicáveis: **550**;
+- fonte ↔ simulado: **em dia**;
+- `workspace import-dir --overwrite`: **PASS**;
+- notebooks já materializados pelo `import-dir`: **80**;
+- reenvios redundantes desses notebooks: **0**;
+- inventário do pacote: **14/14 skills**;
+- diretórios `hub_`: **5/5**;
+- ausentes antes da limpeza: **0**;
+- conteúdo exportado/comparado: **550/550**;
+- divergências de conteúdo observadas: **0**;
+- arquivo gerenciado pela plataforma `.assistant/.mcp_servers.json`: reconhecido e permitido.
 
-1. executar `workspace import-dir --overwrite`;
-2. para cada notebook didático, consultar `workspace get-status`;
-3. se o objeto já for `NOTEBOOK`, preservar o resultado e não fazer segunda escrita;
-4. se não for `NOTEBOOK`, usar o reenvio individual legado como fallback `SOURCE/PYTHON/--overwrite`;
-5. manter `--verify --conteudo` como autoridade final de inventário, tipo e bytes.
+O primeiro verify corrigido encontrou um único objeto extra: `.assistant/EDA Profissional - NYC Taxi Trips`. O pacote publicado estava materialmente correto, mas o gate permaneceu FAIL por higiene de workspace até a identificação do extra.
 
-A suíte dirigida ganhou dois casos adicionais:
+## Identificação forense e limpeza do resíduo SE00
 
-- notebook já materializado pelo `import-dir` → **não reimportar**;
-- objeto não materializado como notebook → **usar fallback SOURCE**.
+O objeto extra foi tratado fail-closed, sem remoção por nome apenas.
 
-A suíte passa de 12 para **14 testes**. O gate dessa correção permanece pendente até execução efetiva do CI do HEAD correspondente e nova publicação + verify no Free.
+Evidência observada:
+
+- caminho remoto: `.assistant/EDA Profissional - NYC Taxi Trips`;
+- `object_type`: **NOTEBOOK**;
+- linguagem: **PYTHON**;
+- artefato histórico correspondente: `B00-P1-R1`, `EDA Profissional - NYC Taxi Trips.ipynb`;
+- SHA-256 congelado na SE00: `77069f781aa8145665873b0b441ca40a96e18bb3d29021f448d867a6b2465445`;
+- SHA-256 do export Jupyter remoto: `77069f781aa8145665873b0b441ca40a96e18bb3d29021f448d867a6b2465445`;
+- identidade byte a byte: **PASS**;
+- exclusão executada somente depois da coincidência de tipo + SHA: **PASS**.
+
+O export forense, status remoto, verify pré-limpeza e verify final foram preservados localmente sob `.artifacts/sef/`, que é diretório ignorado pelo Git.
+
+## Verify final do Databricks Free
+
+Depois da remoção controlada do resíduo SE00, `tools/publicar_free.py --verify --conteudo` retornou:
+
+- commit certificado: `637a4b38178c63ffee12ece801e847eedd83a054`;
+- esperados: **550**;
+- remotos: **551**, sendo 550 do pacote + 1 arquivo gerenciado pela plataforma;
+- ausentes: **0**;
+- obsoletos: **0**;
+- skills: **14/14**;
+- diretórios `hub_`: **5/5**;
+- conteúdo: **550/550 exportados e comparados**;
+- resultado: **APROVADO — 0 problema(s)**.
+
+### Veredito do gate Free
+
+**PASS — publicação e verify por conteúdo certificados no Databricks Free.**
+
+Esse PASS certifica inventário, tipos e conteúdo do pacote publicado. Ainda não certifica execução previsível do script relativo pela Genie Code; esse é o capability probe seguinte.
 
 ## Capability probe no Free
 
 - status: **PENDENTE**;
-- branch/commit publicado e verificado: —;
-- verify por conteúdo: —;
+- branch/commit publicado e verificado: `sef/SE01-contrato@637a4b38178c63ffee12ece801e847eedd83a054`;
+- verify por conteúdo: **PASS — 550/550, 0 problemas**;
 - chat novo: —;
 - prompt exato: definido em `TESTES.md`;
 - marcador bruto: —;
@@ -117,4 +135,4 @@ A suíte passa de 12 para **14 testes**. O gate dessa correção permanece pende
 
 ## Regra
 
-Não preencher lacunas por inferência. `NOT_OBSERVABLE` é resultado válido e distinto de `PASS`. Publicação parcial ou execução interrompida antes do `--verify --conteudo` também não é convertida em PASS.
+Não preencher lacunas por inferência. `NOT_OBSERVABLE` é resultado válido e distinto de `PASS`. O PASS de publicação não é promovido a PASS do capability probe e não prova aderência comportamental da Genie Code.
