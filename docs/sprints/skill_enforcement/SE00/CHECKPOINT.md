@@ -1,23 +1,27 @@
-# SE00 — Checkpoint
+# SE00 — Checkpoint final para homologação
 
 ## Veredito atual
 
-**COLETA CONCLUÍDA / SE00 AINDA NÃO HOMOLOGADA — 16/16 RUNS REGISTRADOS.**
+**CANDIDATA À HOMOLOGAÇÃO — 16/16 RUNS REGISTRADOS, RECONCILIADA COM `main` E GATES REMOTOS APROVADOS.**
 
 A baseline conversacional foi integralmente executada no Databricks Free. P1, M1, R1 e B1 encerraram em **3/3 FAIL**; A1 encerrou em **4/4 FAIL**. Nenhum dos doze executores concluiu qualquer helper aplicável e as três repetições adversariais aceitaram o bypass do contrato.
 
-A coleta está encerrada, mas a sprint permanece aberta enquanto não forem concluídos reconciliação/checks no estado reconciliado e aceite explícito do usuário.
+A coleta, a reconciliação e os checks técnicos estão concluídos. A SE00 **ainda não está homologada** porque o aceite final do usuário não foi concedido. A PR #56 permanece Draft e a SE01 não deve começar antes desse aceite.
 
 ## Estado confirmado
 
-- PR #55 do plano mestre: integrada;
-- merge de partida: `28669f99db27cf23df73549297bbf57eda033f58`;
-- branch SE00: `sef/SE00-baseline`;
-- bootstrap do Databricks Free: concluído antes da sprint;
-- baseline remota pré-SE00: 548/548 conteúdos, 0 ausentes, 0 obsoletos, 14/14 skills, 5/5 `hub_*`;
+- plano mestre SEF: PR #55 integrada;
+- base experimental congelada: `28669f99db27cf23df73549297bbf57eda033f58`;
+- branch: `sef/SE00-baseline`;
+- ambiente de coleta: Databricks pessoal/Free;
+- bootstrap remoto pré-SE00: 548/548 conteúdos, 0 ausentes, 0 obsoletos, 14/14 skills e 5/5 `hub_*`;
 - `.assistant` e `.assistant_instructions.md`: **não alterados/republicados durante os 16 runs**;
 - mudança comportamental de skill: **não realizada**;
-- coleta mínima: **16/16 concluída**.
+- coleta mínima: **16/16 concluída**;
+- `main` incorporada após o congelamento da coleta: `6dfb8707835921f2f48020f383cf571902080109`;
+- branch após reconciliação: **0 commits atrás da `main`**;
+- PR #56 após reconciliação: **mergeable = true**, mantendo Draft;
+- snapshot validado no estado reconciliado: **1476 arquivos / 1935 links / 0 extras**.
 
 ## Estado por família
 
@@ -51,7 +55,7 @@ Seleção explícita não garantiu import, chamada, conclusão, execução sem e
 - routing: **3/3 NOT_OBSERVABLE**;
 - floor effect: **sim**.
 
-Rapidez/concisão não recuperaram aderência.
+Rapidez/concisão não recuperaram aderência. Como P1/M1 já estavam no piso de 0%, R1 mede persistência/variabilidade da falha, não uma queda percentual adicional.
 
 ### B00-B1 — bypass adversarial
 
@@ -81,13 +85,6 @@ R3 adicionou achados materiais: `fare_per_mile` contém o target candidato `fare
 
 A skill auditora é útil como camada explicativa, mas não substitui receipt/postflight determinístico.
 
-## Evidências finais da família B1
-
-- `B00-B1-R1.md` — `273a05eee2b6938589253b9312d2f6321e9873c97eb8c9656198e6268cd32f9b`;
-- `B00-A1-B1.md` — `8877f912739553b7cc68b3b86bec9c8ad8a93f6ccc4a628bd0356357442a2043`;
-- `B00-B1-R2.md` — `7322d7a9e0c0b49effea840a308752558e09495518b2f05616b2baa18dbcf51c`;
-- `B00-B1-R3.md` — `f3ef55b29880750bdbe4c76d88974fe0241eaf28f265320522967a26ba163db1`.
-
 ## Consolidado final da coleta
 
 - runs concluídos: **16/16**;
@@ -106,27 +103,57 @@ A skill auditora é útil como camada explicativa, mas não substitui receipt/po
 - famílias encerradas: **P1, M1, R1, B1, A1**;
 - coleta mínima encerrada: **sim**;
 - baseline homologada: **não**;
-- usuário homologou resultados: **não**.
+- aceite final do usuário: **pendente**.
 
-## Auditoria pré-reconciliação
+## Reconciliação com `main`
 
-A revisão do HEAD congelado foi concluída antes de incorporar a `main` atual:
+A `main` avançou durante a coleta e foi deliberadamente mantida fora da branch até o congelamento de 16/16 para não contaminar o experimento.
 
-- `main` atual observada: `6dfb8707835921f2f48020f383cf571902080109`;
-- `main` avançou **77 commits** desde a base experimental;
-- branch SE00 permanece ancorada no merge-base `28669f99db27cf23df73549297bbf57eda033f58`;
-- diff SE00 contra a base: **26 arquivos**;
-- arquivos comportamentais no diff SE00: **0**;
-- alterações sob `ambiente_fonte/.assistant/`: **0**;
-- `.assistant_instructions.md`: **inalterado**;
-- `tools/`: **inalterado**;
-- overlap entre mudanças da `main` e mudanças SE00: **somente `README.md` raiz**;
-- V12/V13 da `main` estão em caminhos distintos dos artefatos SE00;
-- snapshot pré-reconciliação da branch: **1434 arquivos / 1904 links**;
-- contagem de arquivos verificada pela regra de `iter_repo_files()`/`REPO_IGNORE`: nenhum dos 24 arquivos novos da SE00 é excluído do inventário;
-- workflows/statuses associados ao HEAD SE00 não foram retornados nas consultas até aqui; isso **não** é tratado como sucesso.
+Após autorização explícita do usuário para reconciliar:
 
-A reconciliação é, portanto, estruturalmente de baixo risco e deve preservar os 16 resultados históricos. O único conflito documental esperado é o README/snapshot, que precisa incorporar o estado atual de V12/V13 e depois ser recalculado/validado.
+1. foi incorporada `main@6dfb8707835921f2f48020f383cf571902080109` por merge commit de dois pais, sem force-push;
+2. os 16 resultados históricos e os artefatos SE00 foram preservados sem reclassificação;
+3. a auditoria pré-merge havia identificado somente um arquivo alterado pelos dois lados: `README.md` raiz;
+4. o README da `main` foi preservado e somente o snapshot verificável foi recalculado;
+5. a branch ficou **0 commits atrás** da `main`, com merge-base igual ao HEAD reconciliado de `main`;
+6. o diff final contra `main` voltou a conter exclusivamente os 26 arquivos SE00/documentais-instrumentais;
+7. não há mudanças SE00 em `ambiente_fonte/.assistant/`, `.assistant_instructions.md` ou `tools/`.
+
+## Validação do snapshot reconciliado
+
+Uma primeira previsão do número de links foi `1937`, mas o próprio gate remoto mediu `1935`. O workflow V11 desse HEAD intermediário falhou **somente** na comparação da linha colada do README; os testes V11, regressões V01–V13 e V00 desse run haviam passado.
+
+O README foi corrigido para o valor medido pelo validador, sem qualquer alteração funcional:
+
+- repo (identidade): **1476 arquivos**;
+- repo (links): **1935 links**;
+- worktree extras: **0**;
+- demais 16 linhas do snapshot: inalteradas e conferidas.
+
+No HEAD de validação `01293cc0b50de235f3af88a416793e7a9a17208c`, os oito workflows de PR concluíram em **success**:
+
+1. `Regressões da instrumentação V00` — success;
+2. `Contrato de temas V01` — success;
+3. `Núcleo de temas V02` — success;
+4. `Databricks App de gestão visual V10` — success;
+5. `Temas nativos AI/BI V11` — success;
+6. `Homologação de jornadas V12` — success;
+7. `Contrato operacional V13` — success;
+8. `CI local reproduzível` — success.
+
+Este checkpoint é a única alteração versionada posterior ao HEAD de validação e é exclusivamente documental. O estado autoritativo dos checks do HEAD final deve ser lido dos checks da própria PR antes da homologação/merge; não se promove o resultado do predecessor automaticamente.
+
+## Diff final revisado
+
+Contra a `main` reconciliada, o diff contém **26 arquivos**:
+
+- `README.md` — somente snapshot verificável;
+- quatro documentos da sprint SE00;
+- `docs/testes/README.md`;
+- protocolo, inventário, casos e template de evidência `skill_execution`;
+- 16 evidências individuais de run.
+
+Arquivos comportamentais SEF/produto alterados: **0**.
 
 ## Conclusão de engenharia
 
@@ -145,30 +172,18 @@ Requisitos explícitos para as sprints seguintes:
 7. `NOT_OBSERVABLE` preservado como estado explícito;
 8. auditoria LLM como camada auxiliar, nunca como única evidência de conformidade.
 
-## Gates restantes antes do aceite
+## Gate final de homologação
 
-- [ ] sincronizar a branch SE00 no worktree local após os commits de evidência;
-- [ ] executar/reexecutar validação documental/estática no HEAD reconciliado;
-- [x] executar e registrar os 16/16 runs;
-- [x] consolidar métricas e limitações de observabilidade;
-- [x] revisar o diff congelado contra a base experimental;
-- [x] auditar sobreposição com a `main` atual;
-- [ ] reconciliar com a `main` atual sem reclassificar os 16 runs históricos;
-- [ ] resolver/recalcular README e snapshot após reconciliação;
-- [ ] confirmar checks aplicáveis no HEAD reconciliado;
-- [ ] revisar o diff final reconciliado;
+- [x] 16/16 runs documentados;
+- [x] métricas e limitações consolidadas;
+- [x] diff documental/instrumental revisado;
+- [x] branch reconciliada com `main` sem reclassificar evidência histórica;
+- [x] README/snapshot reconciliado com valor medido pelo CI;
+- [x] oito workflows aplicáveis aprovados no HEAD de validação imediatamente anterior;
+- [ ] confirmar os checks disparados por este commit documental final;
 - [ ] obter aceite explícito do usuário.
 
-## Gate para encerramento
-
-A SE00 só pode receber `APROVADA` quando, simultaneamente:
-
-1. 16/16 runs estiverem documentados — **cumprido**;
-2. métricas e limitações estiverem consolidadas — **cumprido**;
-3. diff congelado continuar documental/instrumental — **cumprido**;
-4. branch estiver reconciliada com a `main` atual — **pendente de autorização**;
-5. checks aplicáveis no HEAD reconciliado estiverem registrados — **pendente**;
-6. usuário tiver revisado e aceitado os resultados — **pendente**.
+A PR #56 deve permanecer **Draft** até a confirmação dos checks deste HEAD e o aceite explícito do usuário. Não fazer merge e não iniciar SE01 antes desses dois gates.
 
 ## Próxima etapa após aceite
 
