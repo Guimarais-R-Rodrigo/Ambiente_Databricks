@@ -1,0 +1,59 @@
+name: SE02 Materialize Simulado
+
+on:
+  push:
+    branches:
+      - sef/SE02-preflight
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: sef/SE02-preflight
+          fetch-depth: 0
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Renderizar canonicamente
+        run: python tools/render_simulado.py --write
+
+      - name: Restringir diff ao derivado SE02
+        shell: bash
+        run: |
+          python - <<'PY'
+          import subprocess
+          import sys
+
+          changed = subprocess.check_output(
+              ["git", "diff", "--name-only"], text=True
+          ).splitlines()
+          allowed = (
+              "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/",
+              "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/",
+          )
+          unexpected = [path for path in changed if not path.startswith(allowed)]
+          if unexpected:
+              print("Diff inesperado após renderer:")
+              print("\n".join(unexpected))
+              sys.exit(1)
+          print(f"Diff canônico restrito: {len(changed)} arquivo(s)")
+          PY
+
+      - name: Commitar derivado e remover workflow transitório
+        shell: bash
+        run: |
+          git config user.name "SE02 Materializer"
+          git config user.email "actions@users.noreply.github.com"
+          git add Novo_Ambiente_Simulado
+          git rm .github/workflows/se02-materialize.yml
+          git commit -m "chore(SE02): materializar simulado canônico"
+          git push origin HEAD:sef/SE02-preflight
