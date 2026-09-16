@@ -13,7 +13,7 @@
 | Para entender... | Vá para... |
 |---|---|
 | o papel de um Hub Script | [O que é um Script](#o-que-e-um-script-neste-ecossistema) |
-| os sete utilitários disponíveis | [Catálogo Detalhado](#catalogo-detalhado) |
+| os oito objetos disponíveis | [Catálogo Detalhado](#catalogo-detalhado) |
 | como escolher, executar e interpretar um utilitário | [Passo a Passo Operacional](#passo-a-passo-operacional-como-usar-um-script) |
 | custo e efeitos de cada utilitário | [O que Acontece Durante a Execução](#o-que-acontece-durante-a-execucao) |
 | a diferença entre diagnóstico e regra operacional | [Diagnóstico não é Enforcement](#diagnostico-nao-e-enforcement) |
@@ -72,13 +72,24 @@ O notebook `exemplo_<nome>.py` mostra uma chamada com dados controlados e a saí
 
 ## 📚 Catálogo Detalhado
 
-Os sete utilitários se distribuem por quatro frentes funcionais: qualidade e perfil, estabilidade, transformação analítica e governança técnica. Todos são executados sob demanda e cada um preserva seu próprio contrato de retorno.
+O catálogo reúne os sete utilitários históricos de qualidade, estabilidade, transformação e governança técnica, além do objeto transversal `skill_execution`, introduzido pelo Skill Enforcement Framework para resolver pré-condições antes do core analítico. Todos são executados sob demanda e cada um preserva seu próprio contrato de retorno.
 
 ![Bancada dos Hub Scripts com sete ferramentas executadas sob demanda, agrupadas em qualidade, estabilidade, transformação analítica e governança técnica.](../hub_readmes_visual_assets/readmes/scripts/png/02_catalogo_diagnosticos.png)
 
 *Leitura da figura: qualidade e perfil, estabilidade, transformação analítica e governança técnica respondem a necessidades diferentes.*
 
-**Equivalente textual da figura:** `data_quality_check` e `quick_profile` inspecionam qualidade e perfil; `drift_detector` compara distribuições; `rfv_calculator` constrói features RFV; `schema_to_yaml`, `naming_checker` e `doc_coverage` apoiam governança técnica. Os tipos de retorno estão explícitos no catálogo abaixo.
+**Equivalente textual da figura:** `data_quality_check` e `quick_profile` inspecionam qualidade e perfil; `drift_detector` compara distribuições; `rfv_calculator` constrói features RFV; `schema_to_yaml`, `naming_checker` e `doc_coverage` apoiam governança técnica. A figura retrata esses sete objetos históricos; `skill_execution` é um oitavo objeto transversal acrescentado depois dela. Os tipos de retorno estão explícitos no catálogo abaixo.
+
+---
+
+### 🛡️ 0. Preflight e Governança de Execução
+
+#### `skill_execution` — Preflight do Contrato de Skill
+
+- **Guia local:** [skill_execution: guia local](skill_execution/README.md)
+- **O que faz:** lê um `execution_contract.json`, avalia condições objetivas e resolve APIs públicas/templates aplicáveis antes do core analítico.
+- **O que retorna:** `PreflightResult` estruturado com `PASS` ou `BLOCKED`, decisões por item, issues bloqueantes e `writes_performed=false`.
+- **Quando usar:** antes de uma execução protegida pelo Skill Enforcement Framework. Na SE02, não executa a EDA, não chama helpers analíticos e não substitui runner, receipt ou postflight.
 
 ---
 
@@ -167,7 +178,7 @@ Integrar um Hub Script à rotina do Databricks segue um fluxo simples, mas delib
 
 ### Exemplo Prático de Código
 
-O exemplo abaixo usa especificamente `data_quality_check`. Os campos e o tratamento mostrados aqui não devem ser copiados como se fossem o contrato universal dos outros seis utilitários.
+O exemplo abaixo usa especificamente `data_quality_check`. Os campos e o tratamento mostrados aqui não devem ser copiados como se fossem o contrato universal dos demais objetos de `hub_scripts`.
 
 Se a raiz `.assistant` ainda não estiver no caminho do Python, configure-a antes do import:
 

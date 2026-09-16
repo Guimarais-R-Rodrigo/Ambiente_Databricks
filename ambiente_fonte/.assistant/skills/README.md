@@ -280,7 +280,7 @@ Templates de recomendação, handoff e registro de busca ficam no
 
 - **O que faz:** estrutura EDA com volumetria, qualidade, cardinalidade, distribuições, relações e síntese executiva.
 - **Templates:** `roteiro_eda.md`, `matriz_graficos_eda.md`, `relatorio_executivo_eda.md` e `estilo_visual_eda.md`.
-- **Helpers recomendados:** `hub_scripts.quick_profile`, `hub_scripts.data_quality_check`, `hub_snippets.spark.null_summary`, `hub_snippets.spark.smart_sample`, `hub_snippets.spark.safe_display`, `hub_snippets.display.correlation_matrix`, `hub_snippets.display.distribution_grid`, `hub_snippets.visual.theme_plotly`, `hub_snippets.visual.index_generator` e `hub_snippets.constants.format_br`.
+- **Helpers recomendados:** `hub_scripts.skill_execution`, `hub_scripts.quick_profile`, `hub_scripts.data_quality_check`, `hub_snippets.spark.null_summary`, `hub_snippets.spark.smart_sample`, `hub_snippets.spark.safe_display`, `hub_snippets.display.correlation_matrix`, `hub_snippets.display.distribution_grid`, `hub_snippets.visual.theme_plotly`, `hub_snippets.visual.index_generator` e `hub_snippets.constants.format_br`.
 - **Caso de Uso Real:**
   > *“Recebi uma tabela de sinistros com muitas colunas. Preciso entender grão, qualidade, distribuições e relações com o valor pago antes de formular hipóteses.”*
 
