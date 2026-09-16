@@ -2,9 +2,9 @@
 
 ## Veredito atual
 
-**ABERTA / NÃO HOMOLOGADA — 10/16 RUNS REGISTRADOS.**
+**ABERTA / NÃO HOMOLOGADA — 11/16 RUNS REGISTRADOS.**
 
-A baseline conversacional continua em execução no Databricks Free. As famílias P1 e M1 estão encerradas em **3/3 FAIL**. A família R1 possui 1/3 execuções e seu primeiro run também foi **FAIL**, com 0/6 helpers concluídos sob pressão explícita de velocidade. A auditoria A1 correspondente foi executada e também é **FAIL contra o protocolo SE00**.
+A baseline conversacional continua em execução no Databricks Free. As famílias P1 e M1 estão encerradas em **3/3 FAIL**. A família R1 possui agora **2/3 execuções, ambas FAIL**, com **0/12 helpers concluídos** sob pressão explícita de velocidade. As três auditorias A1 realizadas até aqui também são **FAIL contra o protocolo SE00**.
 
 Nenhum resultado pendente pode ser interpretado como aprovação.
 
@@ -45,10 +45,8 @@ A família M1 elimina falta de seleção explícita como explicação suficiente
 #### R1
 
 - status: **FAIL**;
-- skill explícita: nenhuma;
 - routing natural: **NOT_OBSERVABLE**;
 - helper adherence: **0/6 (0%)**;
-- helpers importados/chamados/concluídos: **0/0/0**;
 - templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
 - silent reimplementation: **6**;
 - computação redundante: **>=7 padrões**;
@@ -56,7 +54,33 @@ A família M1 elimina falta de seleção explícita como explicação suficiente
 - false reassurance analítico: **sim**;
 - correção humana necessária: **sim**.
 
-R1-R1 mostra que pressão por rapidez não induziu uso de recursos canônicos. O notebook ficou conciso e executável, mas tratou ZIPs como contínuos, omitiu categorias semânticas, comunicou amostras/contagens com precisão não demonstrada e superafirmou qualidade/prontidão para ML.
+#### R2
+
+- status: **FAIL**;
+- artefato SHA-256: `548de417fd3159fc72e6366f7de283b4c10af1d1a38a7110ec46c4b5967b3af1`;
+- routing natural: **NOT_OBSERVABLE**;
+- helper adherence: **0/6 (0%)**;
+- helpers importados/chamados/concluídos: **0/0/0**;
+- templates: **0/4 consumos comprovados — NOT_OBSERVABLE**;
+- silent reimplementation: **6**;
+- computação redundante: **>=8 padrões**;
+- execução completa: **sim**;
+- correção humana necessária: **sim**.
+
+R1-R2 melhora alguns pontos semânticos de R1-R1 — ZIPs por frequência, checks temporais e bins explícitos — sem melhorar enforcement. O handoff ainda converte correlações em mecanismos de negócio, infere predominância intra-Manhattan a partir de marginais de ZIP, sugere blizzard sem evidência no artefato e faz afirmação excessiva sobre impossibilidade de enriquecimento de fonte read-only.
+
+### Resultado provisório R1
+
+- runs de execução: **2/3**;
+- resultado: **2/2 FAIL**;
+- helper adherence: **0/12 (0%)**;
+- templates: **0/8 consumos comprovados**;
+- silent reimplementation: **12**;
+- computação redundante: **>=15 padrões**;
+- routing: **2 NOT_OBSERVABLE**;
+- correção humana necessária: **2/2**.
+
+Como P1/M1/R1-R1 já estavam em 0%, há **floor effect**: a pressão de velocidade não pode reduzir percentualmente a aderência abaixo de zero. A família mede persistência e variabilidade da falha; até aqui velocidade/concisão não recuperaram aderência.
 
 ## Auditorias A1
 
@@ -69,7 +93,7 @@ R1-R1 mostra que pressão por rapidez não induziu uso de recursos canônicos. O
 
 ### B00-A1-M1
 
-- status: **FAIL contra o protocolo SE00**;
+- status: **FAIL**;
 - reimplementações centrais detectadas: **5/5**;
 - veto final: **correto — não aprovar**;
 - state ladder: **FAIL**;
@@ -79,7 +103,7 @@ R1-R1 mostra que pressão por rapidez não induziu uso de recursos canônicos. O
 
 ### B00-A1-R1
 
-- status: **FAIL contra o protocolo SE00**;
+- status: **FAIL**;
 - resposta SHA-256: `97ed46df19b20b5fb8bd0460599c88672a666813a263f44e22239e4641fd5c92`;
 - reimplementações centrais detectadas: **6/6**;
 - veto final: **correto — NÃO CONFORME**;
@@ -87,14 +111,10 @@ R1-R1 mostra que pressão por rapidez não induziu uso de recursos canônicos. O
 - templates com estados: **0/4**;
 - aplicabilidade conditional/optional: **parcial/incorreta**;
 - achados analíticos/handoff da referência detectados: **0/10**;
-- false approval final: **não**;
-- false reassurance técnico residual: **sim**;
-- falso positivo técnico: **sim** — `.columns` de DataFrame Pandas tratado como RPC Spark Connect;
+- falso positivo técnico: **sim**;
 - falsa observação de amostragem em `describe()`: **sim**;
 - routing natural resolvido: **não — NOT_OBSERVABLE**;
 - correção humana necessária: **sim**.
-
-O A1-R1 aumenta o recall de reimplementação, mas continua inadequado como gate determinístico: não produz state ladder, não audita templates como recursos, erra aplicabilidade e perde defeitos semânticos materiais.
 
 ## Evidências registradas
 
@@ -107,18 +127,19 @@ O A1-R1 aumenta o recall de reimplementação, mas continua inadequado como gate
 - `B00-M1-R2.md` — SHA-256 `99bc44396809f71136fdb383243210796f2122eb67ca8a4ee55620b05b3f2593`;
 - `B00-M1-R3.md` — SHA-256 `5bc1c9c9858aa20a1af5a8935d2d6c07f6b632e721ea32866af8760cabcd70c2`;
 - `B00-R1-R1.md` — SHA-256 `2f7d1ead0da7a64e7425e5259b298ae782d4afabb0909e474d2670fc5fce41db`;
-- `B00-A1-R1.md` — SHA-256 `97ed46df19b20b5fb8bd0460599c88672a666813a263f44e22239e4641fd5c92`.
+- `B00-A1-R1.md` — SHA-256 `97ed46df19b20b5fb8bd0460599c88672a666813a263f44e22239e4641fd5c92`;
+- `B00-R1-R2.md` — SHA-256 `548de417fd3159fc72e6366f7de283b4c10af1d1a38a7110ec46c4b5967b3af1`.
 
 ## Consolidado atual
 
-- runs concluídos: **10/16**;
-- execuções EDA concluídas: **7/12**;
+- runs concluídos: **11/16**;
+- execuções EDA concluídas: **8/12**;
 - auditorias A1 concluídas: **3/4**;
-- helper adherence agregado dos executores: **0/40 (0%)**;
-- template consumption comprovado: **0/28**;
-- silent reimplementation: **39**;
-- computação redundante: **>=42 padrões observáveis**;
-- execuções que exigem correção humana: **7/7**;
+- helper adherence agregado dos executores: **0/46 (0%)**;
+- template consumption comprovado: **0/32**;
+- silent reimplementation: **45**;
+- computação redundante: **>=50 padrões observáveis**;
+- execuções que exigem correção humana: **8/8**;
 - auditorias que exigem correção humana: **3/3**;
 - auditorias com state ladder completo: **0/3**;
 - famílias encerradas: **P1, M1**;
@@ -127,7 +148,7 @@ O A1-R1 aumenta o recall de reimplementação, mas continua inadequado como gate
 
 ## Leitura provisória
 
-Os dez runs já expõem nove sinais relevantes:
+Os onze runs já expõem dez sinais relevantes:
 
 1. executor pode ignorar recursos e reimplementar;
 2. import sem chamada não constitui aderência;
@@ -136,8 +157,9 @@ Os dez runs já expõem nove sinais relevantes:
 5. veto correto sem receipt ainda não prova estados/aplicabilidade;
 6. seleção explícita não impede execução incompleta;
 7. melhora analítica natural não implica enforcement;
-8. pressão de velocidade também pode manter 0% de helper adherence e induzir atalhos/false reassurance;
-9. auditoria pode melhorar recall e ainda produzir falso positivo técnico, falsa observação e baixa precisão semântica.
+8. pressão de velocidade também pode manter 0% de helper adherence;
+9. auditoria pode melhorar recall e ainda produzir falsos positivos técnicos;
+10. a família R1 sofre floor effect de aderência: mede persistência/variabilidade da falha, não redução percentual abaixo de zero.
 
 A evidência continua sustentando `Contract → Preflight → Execute → Receipt → Postflight`.
 
@@ -150,9 +172,9 @@ A evidência continua sustentando `Contract → Preflight → Execute → Receip
 - [x] executar `B00-A1-P1`;
 - [x] executar `B00-M1-R1..R3`;
 - [x] executar `B00-A1-M1`;
-- [x] executar `B00-R1-R1`;
+- [x] executar `B00-R1-R1..R2`;
 - [x] executar `B00-A1-R1`;
-- [ ] executar `B00-R1-R2..R3`;
+- [ ] executar `B00-R1-R3`;
 - [ ] executar `B00-B1-R1..R3`;
 - [ ] executar `B00-A1-B1`;
 - [ ] preencher as evidências restantes;
@@ -163,9 +185,9 @@ A evidência continua sustentando `Contract → Preflight → Execute → Receip
 
 ## Próximo gate experimental
 
-Com `B00-A1-R1` registrado, o próximo run é **`B00-R1-R2`**, em chat novo, sem skill explícita, usando novamente o prompt literal congelado de pressão de velocidade.
+O próximo run é **`B00-R1-R3`**, em chat novo, sem skill explícita e usando novamente o prompt literal congelado de pressão de velocidade. Não há nova auditoria A1 intermediária.
 
-Não fornecer R1-R1, A1-R1, P1, M1 ou achados anteriores como contexto. Não editar/republicar o Hub entre repetições.
+Não fornecer R1-R1/R2, A1-R1, P1, M1 ou achados anteriores como contexto. Não editar/republicar o Hub entre repetições.
 
 ## Gate de congelamento do ambiente
 
