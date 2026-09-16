@@ -6,7 +6,7 @@
 
 A SE01 iniciou a camada L1 (`Contract`) do Skill Enforcement Framework na branch `sef/SE01-contrato`, baseada em `main@99161fdeb9253c30a82243644ba89af8cd50d79e`.
 
-O contrato, a suíte dirigida e a validação local do HEAD atual possuem evidência positiva. O gate final ainda não está fechado porque o Databricks Free não foi testado e as rodadas recentes do GitHub Actions não obtiveram runner/steps executáveis.
+Contrato, suíte, renderer e CI já possuem evidência positiva. O gate final continua aberto porque a primeira publicação real no Databricks Free foi interrompida por uma incompatibilidade operacional do publicador antes do `--verify --conteudo`. A correção de compatibilidade está implementada e precisa ser revalidada localmente/CI e exercitada novamente no Free.
 
 ## Estado implementado
 
@@ -23,60 +23,54 @@ O contrato, a suíte dirigida e a validação local do HEAD atual possuem evidê
 - [x] coerência de vocabulário entre JSON Schema e validador coberta por teste;
 - [x] fonte ↔ `Novo_Ambiente_Simulado` regenerada pelo renderer canônico;
 - [x] snapshot raiz atualizado por medição real: 1494 arquivos / 1961 links;
-- [x] contrato v0.1 observado em PASS no CI anterior;
-- [x] suíte SE01 observada em 11/11 PASS no CI anterior;
-- [x] validador estrutural observado com 0 falhas / 0 avisos no CI anterior;
-- [x] HEAD `e442b2423c02de59f23183783b493f4b8fb44497` validado localmente em worktree isolado;
-- [x] contrato local atual: 1/1 PASS;
-- [x] suíte local atual: 12/12 PASS;
-- [x] `validate_assistant.py --conferir-readme` local: 0 falhas / 0 avisos;
-- [x] worktree local SE01 limpo e separado das alterações locais V12;
-- [ ] registrar entrada SE01 no `CHANGELOG.md` antes do fechamento da sprint;
-- [ ] CI final executado integralmente no HEAD corrente;
-- [ ] publicação no Databricks Free;
-- [ ] `--verify --conteudo` no Free;
+- [x] HEAD `dc4059a3bd7c116bcf40009ec66b1da7a2f809fd` validado localmente: contrato 1/1, suíte 12/12, validador 0/0;
+- [x] 10/10 workflows aplicáveis da PR em `dc4059a3bd7c116bcf40009ec66b1da7a2f809fd`: `success`;
+- [x] autenticação do profile pessoal do Databricks CLI validada;
+- [x] dry-run do publicador: 550 arquivos, espelho em dia;
+- [x] incidente de publicação diagnosticado sem repetição cega da escrita completa;
+- [x] objeto didático observado no remoto como `NOTEBOOK` após `import-dir`;
+- [x] reenvio individual redundante reproduziu `PROTOCOL_ERROR` em 3/3 tentativas;
+- [x] publicador corrigido para preservar notebook já materializado e manter fallback SOURCE;
+- [x] suíte ampliada para cobrir ambos os caminhos de compatibilidade (14 testes previstos);
+- [ ] CI do HEAD com a correção de compatibilidade executado integralmente;
+- [ ] nova execução local da suíte ampliada 14/14;
+- [ ] publicação no Databricks Free concluída pelo publicador corrigido;
+- [ ] `--verify --conteudo` no Free em PASS;
 - [ ] capability probe executado em chat novo;
 - [ ] regressão natural SE00-P1 executada em chat novo;
 - [ ] limitações reais do Genie Code registradas;
+- [ ] registrar entrada SE01 no `CHANGELOG.md` antes do fechamento da sprint;
 - [ ] decisão sobre remover/promover o probe;
 - [ ] aceite explícito do usuário;
 - [ ] merge da PR.
 
-## Evidência técnica já obtida
+## Evidência técnica consolidada
 
-No commit `fda26d130e559d3fdb8ee69fcb785ffecc76a049`, o workflow dedicado executou efetivamente:
+No commit `dc4059a3bd7c116bcf40009ec66b1da7a2f809fd`:
 
-- validação do contrato: PASS;
-- 11/11 testes SE01: PASS;
-- `validate_assistant.py`: 0 falhas / 0 avisos;
-- renderer: sem diff depois da materialização do simulado.
-
-O gate de snapshot desse mesmo run mediu 1494 arquivos e 1961 links; o README foi então corrigido no commit `264981cb4ce1a5aff8d3c1f6dd54caa1fa57c174`.
-
-## Validação local do HEAD atual
-
-Em 16/09/2026, a candidata `e442b2423c02de59f23183783b493f4b8fb44497` foi sincronizada em worktree Git dedicado, separado do worktree local usado pela frente V12.
-
-Resultados observados no worktree SE01:
-
-- branch: `sef/SE01-contrato`;
-- `git status --short`: limpo;
 - contrato: **1/1 PASS**;
 - recursos: **10**;
 - templates: **4**;
-- suíte SE01: **12/12 PASS**;
-- teste schema ↔ validator: **PASS**;
+- suíte local: **12/12 PASS**;
+- schema ↔ validator: **PASS**;
 - probe local read-only: **PASS**;
 - `validate_assistant.py --conferir-readme`: **0 falhas / 0 avisos**;
-- snapshot: **1494 arquivos / 1961 links / 0 extras**.
+- snapshot: **1494 arquivos / 1961 links / 0 extras**;
+- GitHub Actions: **10/10 workflows aplicáveis em success**.
 
-Essa evidência confirma o HEAD localmente, mas não substitui o gate real do Genie Code no Free nem o CI final.
+## Incidente do gate Databricks Free
 
-## Incidente de CI após o snapshot
+A primeira chamada real do publicador atingiu o workspace. O `workspace import-dir --overwrite` materializou a árvore; em seguida, o publicador tentou reenviar individualmente um notebook didático como `SOURCE` e recebeu `PROTOCOL_ERROR`.
 
-As rodadas recentes do GitHub Actions terminaram como `failure` sem executar steps. O job SE01 e workflows independentes registraram `steps=[]`/`steps=null` e ausência de execução material dos comandos.
+O diagnóstico controlado confirmou:
 
-Esse evento permanece classificado como **gate operacional pendente**, não como falha funcional da candidata. Nenhum PASS anterior é promovido para o novo HEAD, mas também não se atribui regressão a comandos que não chegaram a executar.
+- o destino sem `.py` já era `object_type=NOTEBOOK` e `language=PYTHON`;
+- o caminho com `.py` não existia;
+- o reenvio individual redundante falhou 3/3 com o mesmo erro;
+- a publicação completa não foi repetida depois do diagnóstico;
+- o verify por conteúdo não foi executado e nenhum PASS de publicação foi registrado.
+
+A correção mantém compatibilidade regressiva: depois do `import-dir`, o publicador consulta `get-status`; se o objeto já for `NOTEBOOK`, não faz uma segunda escrita. Se não for, mantém o fallback individual `SOURCE/PYTHON/--overwrite`.
 
 ## Fronteira de escopo
 
@@ -91,25 +85,19 @@ Não implementado nesta sprint:
 - generalização para outra skill;
 - promoção ao workspace do trabalho.
 
-## Achado de modelagem incorporado
-
-A validação do contrato usa `module` + `symbol` e a fachada pública `__init__.py`. Isso evita transportar cegamente nomes de inventários históricos.
-
-Exemplo: o recurso `index_generator` está atualmente em `hub_snippets.visual.index_generator` e exporta `gerar_indice_eda`. A evidência congelada da SE00 não é reescrita retroativamente; o contrato SE01 usa a API pública atual.
-
-As quatro políticas de templates também foram confrontadas com a SE00 e coincidem: `roteiro_eda` e `relatorio_executivo_eda` required; `matriz_graficos_eda` e `estilo_visual_eda` conditional.
-
 ## Próximos gates
 
-1. publicar a candidata no Databricks Free a partir do worktree isolado;
-2. executar `--verify --conteudo` e registrar o relatório;
-3. executar capability probe em chat novo;
-4. executar regressão natural da skill em outro chat novo;
-5. registrar resultados e limitações;
-6. obter uma execução real de CI no HEAD final;
-7. registrar a entrada SE01 no changelog antes do fechamento;
-8. decidir se o probe é removido ou promovido ao componente definitivo;
-9. reconciliar a branch com a `main` vigente se ela tiver avançado;
-10. pedir homologação da SE01.
+1. sincronizar o worktree isolado com o HEAD corrigido;
+2. executar a suíte local ampliada e o validador estrutural;
+3. obter CI verde do HEAD corrigido;
+4. repetir a publicação canônica no Free;
+5. executar `--verify --conteudo` e registrar o relatório;
+6. executar capability probe em chat novo;
+7. executar regressão natural da skill em outro chat novo;
+8. registrar resultados e limitações;
+9. registrar a entrada SE01 no changelog antes do fechamento;
+10. decidir se o probe é removido ou promovido ao componente definitivo;
+11. reconciliar a branch com a `main` vigente se ela tiver avançado;
+12. pedir homologação da SE01.
 
 SE02 permanece bloqueada até esse fechamento.
