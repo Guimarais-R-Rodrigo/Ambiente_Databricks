@@ -7,6 +7,7 @@ import os
 import subprocess
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -34,6 +35,20 @@ ALLOWED_S1_PATHS = {
     "tools/tests/test_temas_v14_s0.py",
     "tools/tests/test_temas_v14_s1.py",
 }
+
+
+def _s1_scope_guard_applies() -> bool:
+    if os.environ.get("GITHUB_ACTIONS") != "true":
+        return False
+
+    event_name = os.environ.get("GITHUB_EVENT_NAME", "")
+    ref_name = os.environ.get("GITHUB_REF_NAME", "")
+    head_ref = os.environ.get("GITHUB_HEAD_REF", "")
+    if event_name == "push" and ref_name == "main":
+        return False
+
+    active_branch = head_ref or ref_name
+    return active_branch.startswith("codex/temas-v14-s1")
 
 
 class V14S1OwnershipTests(unittest.TestCase):
@@ -215,11 +230,39 @@ class V14S1OwnershipTests(unittest.TestCase):
         self.assertIn("S1", self.readme)
         self.assertIn("S2–S8 não foram iniciadas", self.readme)
 
+    def test_s1_allowlist_scope_is_branch_specific(self) -> None:
+        common = {
+            "GITHUB_ACTIONS": "true",
+            "GITHUB_EVENT_NAME": "pull_request",
+            "GITHUB_REF_NAME": "69/merge",
+        }
+        cases = (
+            ("codex/temas-v14-s1-ownership-autoridade-20260916", True),
+            ("sef/SE01-contrato", False),
+            ("codex/temas-v13-s7-handoff-fechamento-20260916", False),
+            ("fix/v14-s1-scope-guard", False),
+        )
+        for head_ref, expected in cases:
+            with self.subTest(head_ref=head_ref), mock.patch.dict(
+                os.environ, {**common, "GITHUB_HEAD_REF": head_ref}, clear=True
+            ):
+                self.assertEqual(expected, _s1_scope_guard_applies())
+
+        with mock.patch.dict(
+            os.environ,
+            {
+                "GITHUB_ACTIONS": "true",
+                "GITHUB_EVENT_NAME": "push",
+                "GITHUB_REF_NAME": "main",
+                "GITHUB_HEAD_REF": "",
+            },
+            clear=True,
+        ):
+            self.assertFalse(_s1_scope_guard_applies())
+
     def test_ci_diff_stays_inside_s1_allowlist(self) -> None:
-        if os.environ.get("GITHUB_ACTIONS") != "true":
-            self.skipTest("escopo Git é verificado no GitHub Actions")
-        if os.environ.get("GITHUB_EVENT_NAME") == "push" and os.environ.get("GITHUB_REF_NAME") == "main":
-            self.skipTest("push da main já representa baseline integrado")
+        if not _s1_scope_guard_applies():
+            self.skipTest("allowlist S1 só se aplica à branch S1 no GitHub Actions")
 
         try:
             merge_base = subprocess.check_output(
