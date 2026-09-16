@@ -1,37 +1,45 @@
 # MM01 — Contrato canônico de micromodelos
 
-Status da sprint: **AUDITORIA FINAL FECHADA `NAO_APTA_PARA_FECHAMENTO_DOCUMENTAL` PRESERVADA; B01/B02 CORRIGIDOS; 47 TESTES DA MATRIZ + 1 REGRESSÃO R03 VERDES; REAUDITORIA FINAL INDEPENDENTE PENDENTE; NÃO ACEITA; NÃO INTEGRADA**
+Status da sprint: **NONA REAUDITORIA FINAL INDEPENDENTE `NAO_APTA` PRESERVADA; D-01/R02 CORRIGIDO; 47 + 3 R02 + 1 R03 TESTES PERMANENTES; RECONCILIAÇÃO COM V13 S2 REALIZADA; CERTIFICAÇÃO FINAL E NOVA REAUDITORIA INDEPENDENTE PENDENTES; NÃO ACEITA; NÃO INTEGRADA**  
 Base inicial: `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5`  
 Branch: `micromodelos/mm01-contrato-canonico`  
 PR: `#51`
 
 ## Objetivo
 
-Transformar as decisões arquiteturais aceitas na MM00 em um contrato estrutural verificável para cada micromodelo. A MM01 define o conteúdo mínimo de `micromodelo.yaml`, a máquina de fases, as condições operacionais, a proveniência das afirmações materiais e os gates semânticos que impedem avançar um artefato incompleto.
+A MM01 transforma as decisões arquiteturais aceitas na MM00 em um contrato estrutural verificável para cada micromodelo. Ela define o conteúdo mínimo de `micromodelo.yaml`, a máquina de fases, as condições operacionais, a proveniência das afirmações materiais, os gates de validação e a ferramenta de construção/CI que verifica esse contrato.
 
-A sprint não cria a skill `hub-ml-micromodelos`. O validador desta entrega vive em `tools/` como **oráculo de construção e CI** porque a lista de skills é fechada e a skill só nasce na MM04. Quando a MM04 criar o objeto roteável, ela deverá incorporar/derivar o contrato vigente sem criar uma segunda fonte de verdade.
+A MM01 não cria a skill `hub-ml-micromodelos`. O validador vive em `tools/` como oráculo de construção e CI. A skill só pertence à MM04 e, quando existir, deverá derivar o contrato vigente sem criar uma segunda fonte de verdade.
 
-A implementação começou sobre a `main` final da MM00 e foi reconciliada de forma fail-closed com as evoluções posteriores do Sistema de Temas. Nenhum arquivo funcional dessas sprints foi reimplementado pela MM01; as evoluções foram absorvidas apenas como base vigente do repositório.
+## Autoridade de fechamento
+
+A condição objetiva de término está congelada em:
+
+`docs/sprints/micromodelos/MM01/MATRIZ_ACEITE_FINAL.md`
+
+A matriz define R01–R08, entradas suportadas e não requisitos. Uma auditoria pode criar adversariais novos, mas um caso só pode bloquear se demonstrar violação de requisito já assumido pela matriz ou de ADR aceito. A auditoria não pode ampliar implicitamente o threat model.
 
 ## Entregas
 
 - `micromodelo.schema.json`: schema formal Draft 2020-12, versão `1.0.0`;
 - `micromodelo.template.yaml`: template inicial válido e sanitizado;
-- `CONTRATO_MICROMODELO.md`: semântica de cada grupo e regras de preenchimento;
+- `CONTRATO_MICROMODELO.md`: semântica dos grupos e regras de preenchimento;
 - `ESTADOS_E_PROVENIENCIA.md`: máquina de fases, condições, proveniência e gates;
+- `MATRIZ_ACEITE_FINAL.md`: R01–R08 e condição objetiva de término;
 - `tools/micromodelo_mm01_contract.py`: validador de referência/CI;
 - fixtures sintéticos positivos e negativos em `tools/tests/fixtures/micromodelos_mm01/`;
-- `tools/tests/test_micromodelo_mm01.py`: suíte canônica automatizada com **47 métodos** e múltiplos subtests;
-- `tools/tests/test_micromodelo_mm01_r03.py`: regressão permanente dedicada ao requisito R03 para recusar `np.float64` e demais tipos numéricos externos ao domínio canônico;
-- `.github/workflows/micromodelos-mm01-ci.yml`: gate permanente, read-only, para branch/PR/`main`;
-- pacote de auditoria com contexto, prompt, oito resultados A1 exploratórios preservados e a auditoria final fechada preservada separadamente, além da `MATRIZ_ACEITE_FINAL.md` congelada após o contraditório da oitava A1;
-- `TESTES.md` e `CHECKPOINT.md`.
+- `tools/tests/test_micromodelo_mm01.py`: **47 métodos canônicos**;
+- `tools/tests/test_micromodelo_mm01_r02.py`: **3 métodos permanentes** para pontuação terminal versus inicial;
+- `tools/tests/test_micromodelo_mm01_r03.py`: **1 método permanente** para tipos numéricos externos/NumPy;
+- `.github/workflows/micromodelos-mm01-ci.yml`: gate permanente read-only;
+- `TESTES.md` e `CHECKPOINT.md`;
+- pacote histórico em `docs/auditoria/2026-09-14_micromodelos-mm01/`, sem reclassificação retroativa dos relatórios.
 
-## Decisões fechadas nesta sprint
+## Como o contrato deve ser entendido
 
 ### Fase e condição são dimensões diferentes
 
-A fase analítica segue o ciclo:
+A fase analítica segue:
 
 ```text
 IDEIA
@@ -44,136 +52,183 @@ IDEIA
 → PUBLICADO
 ```
 
-`BLOQUEADO`, `SUSPENSO` e `DEPRECATED` são condições ortogonais, não saltos da máquina de fases.
+`BLOQUEADO`, `SUSPENSO` e `DEPRECATED` são condições ortogonais. Elas não substituem a máquina de fases.
 
-`fase_anterior` torna o par declarado localmente verificável, mas não é tratada como prova autorreferente de histórico. Sem `--previous`, a CLI certifica apenas a consistência interna do snapshot e declara explicitamente `HISTORICO_NAO_CERTIFICADO`. Quando um snapshot anterior confiável é fornecido por `--previous`, a validação passa a certificar evolução histórica: confere identidade/versão, valida a transição observada e impede rewind de uma versão já `PUBLICADO`. Esse modo não descobre histórico por conta própria nem antecipa fingerprint/MM02.
+`fase_anterior` permite verificar a coerência local do snapshot. Sem `--previous`, a CLI certifica somente o snapshot e declara `HISTORICO_NAO_CERTIFICADO`. Com um snapshot anterior confiável fornecido explicitamente, `--previous` também verifica identidade, versão, transição observada e rewind pós-`PUBLICADO` na mesma versão.
 
-### `FALSE` não significa “não encontrei evidência”
+### R01 — texto material é Unicode e fail-closed
 
-O contrato exige três definições distintas: `quando_true`, `quando_false` e `quando_indeterminado`. A comparação é deliberadamente **editorial, não semântica**: aplica NFKC/casefold, remove `Default_Ignorable_Code_Point`, normaliza whitespace e tolera apenas pontuação editorial prevista. Diacríticos, operadores e pontuação interna potencialmente semânticos são preservados; a MM01 não tenta resolver equivalência geral de linguagem natural.
+`material-text` é a autoridade de conteúdo humano/auditável. A regra:
 
-Após a segunda A1, a política de ausência de evidência deixou de depender de prosa normativa. O comportamento é declarado por `tratamento`, `resultado_sem_evidencia`, `regra_ref` e proveniência. `tratamento=INDETERMINADO` exige resultado `INDETERMINADO`; uma conversão explícita para outro resultado só pode existir como `REGRA_EXPLICITA_APROVADA` com referência auditável.
+1. exige `str`;
+2. aplica NFKC;
+3. remove `Default_Ignorable_Code_Point`;
+4. exige ao menos uma letra ou número Unicode restante.
 
-### Score 0–100 não é probabilidade por padrão
+Assim, whitespace, zero-width, variation selectors, fillers, pontuação, símbolos e combining marks isolados não fabricam conteúdo material. Texto legítimo latino acentuado, CJK, árabe, grego, cirílico, Devanagari, dígitos Unicode e combining marks acompanhados de base material continuam válidos.
 
-`score.tipo_semantica` é a única autoridade executável sobre a natureza do score. `FORCA_EVIDENCIA`, `PROBABILIDADE_CALIBRADA` e `OUTRA_APROVADA` são estados estruturados; o campo livre `score.semantica` deixou de fazer parte do schema.
+### R02 — equivalência editorial, não equivalência semântica
 
-Assim, textos como “percentual estimado”, “risco percentual”, “likelihood”, “chance” ou “probabilidade” não podem redefinir silenciosamente um score não probabilístico. Se o score for probabilístico, o contrato exige `PROBABILIDADE_CALIBRADA`, calibração `MEDIDO` e `evidencia_ref` resolvida para experimento existente, `EXECUTADO` e `MEDIDO`.
+A MM01 só evita que `TRUE`, `FALSE` e `INDETERMINADO` sejam duplicados por maquiagem editorial. A canonicalização autorizada é conservadora:
 
-A normalização também é estruturada (`PENDENTE`, `SOMA_PONDERADA_0_100`, `MIN_MAX_0_100`, `LINEAR_0_100` ou `CUSTOM_APROVADO`) e carrega proveniência. Em `EM_VALIDACAO+`, ela precisa estar definida e aprovada.
+- NFKC;
+- `casefold`;
+- remoção de `Default_Ignorable_Code_Point`;
+- normalização de whitespace;
+- tolerância somente à pontuação **terminal** explicitamente definida.
 
-### Decisões materiais são progressivas, mas não atravessam gate sem aprovação
+Diferenças potencialmente semânticas precisam ser preservadas: diacríticos, `<`, `>`, `≤`, `≥`, `+`, `-`, pontuação interna e pontuação inicial.
 
-Limiar ou peso pode permanecer `PROPOSTO` em descoberta/estudo, preservando a alimentação progressiva da fonte canônica. A partir de `EM_VALIDACAO`, limiares e pesos existentes precisam estar `APROVADO`.
+Depois da nona reauditoria independente, `_normalize_editorial_text` foi corrigida para remover pontuação apenas à direita:
 
-Na mesma fase, fontes, evidências, contra-evidências e critérios de validação precisam estar presentes; semânticas, políticas e regras materiais precisam satisfazer seus contratos estruturados.
+```python
+normalized = normalized.strip()
+return normalized.rstrip(_EDITORIAL_EDGE_PUNCTUATION).rstrip()
+```
 
-### Provas auditáveis precisam conter informação material
+Portanto:
 
-A segunda A1 demonstrou que uma blacklist de whitespace/controles não era suficiente para caracteres Unicode `M*`. A terceira A1 mostrou que schema e validador ainda podiam divergir e que campos materiais equivalentes não compartilhavam a mesma autoridade. A regra atual é positiva e única: após NFKC, caracteres com a propriedade Unicode `Default_Ignorable_Code_Point` são removidos e o conteúdo restante precisa conter ao menos uma letra ou número Unicode.
+- `resultado?` e `resultado` podem ser equivalentes editorialmente;
+- `?resultado` e `resultado` permanecem distintos;
+- `…resultado` e `resultado` permanecem distintos, mesmo que NFKC represente a elipse como `...`;
+- pontuação interna continua preservada.
 
-O JSON Schema usa `format: material-text` e o `FormatChecker` do validador delega esse formato à mesma função `_has_material_text`. Isso rejeita strings compostas somente por espaços, zero-width, variation selectors, combining marks isolados, pontuação ou símbolos nos campos materiais, sem rejeitar CJK, Devanagari, caracteres acentuados, algarismos Unicode ou combining marks acompanhados de texto material. Campos puramente narrativos não foram restringidos indiscriminadamente.
+A regressão end-to-end garante que pontuação inicial não gere falso `AMBIGUOUS_BINARY_SEMANTICS`.
 
-A quarta A1 identificou seis campos normativos equivalentes que ainda escapavam dessa autoridade. `evidencias[].regra`, `contra_evidencias[].regra`, `experimentos[].hipotese`, `experimentos[].resultado`, `validacao.resultado.resumo` e `identidade.estado.motivo_condicao` agora usam o mesmo `material-text`; os gates de resultado executado e motivo operacional chamam `_has_material_text` em vez de `.strip()`.
+### `FALSE` não significa ausência de evidência
 
-### O domínio numérico canônico é estrito
+A classificação possui definições distintas para `quando_true`, `quando_false` e `quando_indeterminado`. A política de ausência de evidência é estruturada por `tratamento`, `resultado_sem_evidencia`, `regra_ref` e proveniência. `INDETERMINADO` não pode ser convertido silenciosamente em `FALSE`.
 
-R03 distingue o domínio canônico de entradas Python de tipos externos. Inteiros Python arbitrariamente grandes são aceitos sem coerção para `float`; `float` Python precisa ser finito. `Decimal`, escalares NumPy e outros tipos externos não recebem suporte positivo nem conversão implícita: quando chegam diretamente à API Python, são recusados deterministicamente.
+### R03 — domínio numérico canônico é estrito
 
-Após a auditoria final fechada, `_check_finite_number_format` passou de `isinstance` para identidade estrita de tipo. Isso impede que `np.float64`, que pode satisfazer `isinstance(value, float)`, atravesse o ramo reservado ao `float` Python. A regressão dedicada cobre limiar e peso.
+A API Python direta aceita:
 
-### Publicação não apaga o indeterminado
+- `int` Python, inclusive arbitrariamente grande;
+- `float` Python desde que `math.isfinite` seja verdadeiro.
 
-A fase `CANDIDATO_PRODUTO` ou posterior exige contrato explícito de publicação: campo final BOOLEAN e política aprovada para os casos `INDETERMINADO`.
+Recusa deterministicamente:
 
-Essa política também deixou de ter descrição normativa livre. `indeterminado_vira_false=false` é constante estrutural; `tratamento` é enum fechado e `OUTRA_APROVADA` exige `regra_ref` material. Não há texto livre no mesmo bloco capaz de ordenar comportamento oposto.
+- `NaN`;
+- `+Infinity` e `-Infinity`;
+- `Decimal`;
+- escalares NumPy;
+- outros tipos numéricos externos ao domínio canônico.
 
-## Auditorias A1 e correções
+A implementação usa identidade estrita de tipo, não `isinstance(value, float)`. A regressão R03 injeta `np.float64` tanto em limiar quanto em peso e exige rejeição por schema.
 
-### Primeira A1
+### R04 — decisão humana final é coerente
 
-A primeira auditoria independente concluiu `NAO_APTA` com cinco achados bloqueantes: rewind pós-`PUBLICADO`, provas auditáveis semanticamente vazias, gate prematuro para `PROPOSTO`, contradição textual de `INDETERMINADO` e calibração com referência órfã. Todos foram confirmados como procedentes e corrigidos. O relatório permanece em `03_resultado_a1.md`.
+`APROVADO` e `REPROVADO` exigem ator, timestamp e referência auditáveis. Uma decisão final não pode coexistir com `validacao.status=PENDENTE` ou `EM_ANALISE`, e o status humano precisa coincidir com o status final da validação.
 
-### Segunda A1
+### R05 — proveniência é válida localmente
 
-A reauditoria independente sobre `2783bcbd6ad7f07f9f3893c66c9dc36d0557f57e` também concluiu `NAO_APTA`, agora com três achados bloqueantes:
+Qualquer bloco de proveniência precisa ser intrinsecamente válido independentemente da fase. `APROVADO` exige aprovação completa; `MEDIDO` exige medição completa e referência de execução. Blocos incompatíveis com o status são recusados.
 
-1. marcas Unicode `M*` ainda satisfaziam provas auditáveis;
-2. `FALSE` × `INDETERMINADO` ainda dependia parcialmente de regex aplicada a prosa normativa;
-3. semântica probabilística podia escapar por sinônimos não cobertos.
+### R06 — resultado observado só existe depois da execução
 
-Os três foram confirmados como procedentes. A correção removeu a fragilidade de origem em vez de ampliar listas de regex. O relatório permanece em `04_resultado_a1_reauditoria.md`.
+Experimento não `EXECUTADO` precisa manter `resultado=null` e não pode declarar proveniência `MEDIDO`. `EXECUTADO` exige resultado material e proveniência medida.
 
-O workflow de construção `34912665666` executou a árvore corrigida sem os próprios mecanismos transitórios: **26 testes, OK**, e `validate_assistant.py` com **0 falhas / 0 avisos**. Só então publicou o commit permanente `f46b69790fc23ac6c3ebfa633053a3acb6f9ed1a`.
+### R07 — snapshot não é histórico
 
-### Terceira A1
+Sem `--previous`, a ferramenta certifica somente consistência interna. Com histórico fornecido, também verifica transição, versão e anti-rewind. A MM01 não descobre histórico por conta própria e não antecipa fingerprint/MM02.
 
-A terceira auditoria independente concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com três divergências bloqueantes: `$defs.material_ref` ainda impunha ASCII no schema, campos auditáveis de proveniência de topo escapavam da materialidade e alguns gates de conteúdo material podiam ser satisfeitos por strings visualmente vazias.
+### R08 — perfil de autoria do schema é fechado
 
-O resultado histórico permanece em `05_resultado_a1_reauditoria_2.md`. As três divergências foram corrigidas por uma autoridade Unicode única e testes positivos/negativos multilíngues. O run de construção `34955861169` removeu os mecanismos transitórios, executou suíte, CLI adversarial e `validate_assistant`, e só então publicou o commit permanente `4f686e5de163b649c4ee5e7643f75ecd56db47e7`.
+A MM01 não tenta implementar um resolvedor universal de JSON Schema. O schema oficial segue o perfil de composição revisado e protegido pela suíte: `allOf`/`oneOf` não fazem parte do perfil, `anyOf` é restrito e constraints irmãs de `$ref` são recusadas pelo guard de autoria.
 
-### Quarta A1
+## Score 0–100 não é probabilidade por padrão
 
-A quarta auditoria independente concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com uma divergência bloqueante: a autoridade Unicode comum estava correta, mas seis campos normativos/materialmente decisivos equivalentes ainda aceitavam conteúdo não material por `minLength` ou `.strip()`.
+`score.tipo_semantica` é a autoridade executável. `FORCA_EVIDENCIA`, `PROBABILIDADE_CALIBRADA` e `OUTRA_APROVADA` são estados estruturados.
 
-O resultado histórico permanece em `06_resultado_a1_reauditoria_3.md`. A correção aplicou a mesma autoridade `material-text` aos seis campos, removeu `.strip()` dos dois gates materiais correspondentes e ampliou a suíte para **31 métodos**. O run `34960256357` validou a árvore sem seus mecanismos transitórios e só então publicou `8fd8e7892ead1bb63a554b5283f7062adf582976`.
+Se a semântica for probabilística, o contrato exige calibração medida e `evidencia_ref` resolvida para experimento existente, `EXECUTADO` e `MEDIDO`. A normalização também é estruturada e, em `EM_VALIDACAO+`, precisa estar definida e aprovada.
 
-### Quinta A1
+## Publicação preserva `INDETERMINADO`
 
-A quinta auditoria independente sobre `0b7a712cd2c897483da34517f10516012711f153` concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com `DIVERGE-01`: textos centrais ainda eram validados apenas por comprimento. O resultado permanece em `07_resultado_a1_reauditoria_4.md`.
+A partir de `CANDIDATO_PRODUTO`, o contrato de publicação precisa estar explícito. `indeterminado_vira_false=false` é estrutural. `OUTRA_APROVADA` exige referência auditável.
 
-O contraditório confirmou a divergência. A correção reutiliza `material-text` nos demais textos obrigatórios do contrato e acrescenta uma invariável estrutural para impedir novos `string + minLength` sem política explícita. `governanca.observacoes[]` permanece narrativa opcional. A suíte passou a **34 métodos**.
+A autoridade final de publicação continua `GOVERNANCA_EXTERNA`; esta sprint não publica nada no ambiente corporativo.
 
-### Sexta A1
+## Fronteiras de escopo
 
-A sexta auditoria independente sobre `e0b6ed916386bef19006e7d41e183ffde25e360a` concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com duas divergências bloqueantes. `DIVERGE-01` mostrou três regex genéricas `.*\S.*` ainda concorrendo com `material-text`; `DIVERGE-02` mostrou que o guard permanente aceitava qualquer `pattern` como política suficiente. O resultado histórico permanece em `08_resultado_a1_reauditoria_5.md`.
+A MM01 não implementa:
 
-O contraditório confirmou ambos os achados. A correção remove as três regex textuais genéricas, exige `material-text` em todo `type=string + minLength` e congela os únicos patterns remanescentes por path e regex exata como contratos estruturais. Um adversarial sintético prova que `minLength + pattern: .*\S.*` sem `material-text` é violação. A suíte passa a **36 métodos**.
+- fingerprint/MM02;
+- descoberta, crawler ou binding corporativo/MM03;
+- skill `hub-ml-micromodelos` ou novo tipo do Hub/MM04;
+- contrato definitivo de MLflow/MM06;
+- publicação corporativa real;
+- ACL real;
+- dado corporativo real;
+- migração de legado;
+- integração visual própria.
 
-### Sétima A1
+## Histórico de auditoria
 
-A sétima auditoria independente sobre `9e3ce44ae0750321802b95d96ff43bb29468eab2` concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com três divergências bloqueantes. `DIVERGE-01` demonstrou bypass da equivalência `FALSE` × `INDETERMINADO` por caracteres Unicode default-ignorable inseridos dentro de palavras; `DIVERGE-02` mostrou que o guard de `string + minLength` não reconhecia `type` representado por array; `DIVERGE-03` demonstrou que `NaN` e `±Infinity` atravessavam limiares e pesos materiais. O resultado histórico permanece em `09_resultado_a1_reauditoria_6.md`.
+As auditorias anteriores permanecem verdadeiras para os SHAs julgados. Nenhum relatório é reclassificado por correções posteriores.
 
-O contraditório confirmou os três achados. A correção remove `Cf` e variation selectors antes da tokenização semântica, torna o guard sensível a arrays de tipos contendo `string`, registra `finite-number` no mesmo `FormatChecker` para limiares/pesos e recusa constantes JSON não finitas no loader. A suíte passa a **39 métodos**.
+O pacote histórico contém as A1 exploratórias, a matriz final congelada e duas rodadas finais relevantes para o fechamento atual.
 
-### Oitava A1, contraditório e matriz final
+### Auditoria final fechada — R03 e `behind_by`
 
-A oitava A1 independente sobre `fe3a9d8b39c0016d9b487036f1d5e3ad38cb2630` concluiu `NAO_APTA` e permanece historicamente preservada em `10_resultado_a1_reauditoria_7.md`. O relatório trouxe seis `QUEBRA`, dois `DIVERGE` bloqueantes e uma melhoria. O contraditório confirmou defeitos materiais, mas também demonstrou que a auditoria exploratória vinha ampliando o threat model a cada rodada.
+`11_resultado_a1_reauditoria_8.md` julgou `337055d70a28c6d595594fa1e8c351a47615e66b` e concluiu `NAO_APTA_PARA_FECHAMENTO_DOCUMENTAL` por dois bloqueios:
 
-Para encerrar o ciclo de expansão aberta, `MATRIZ_ACEITE_FINAL.md` congela os requisitos R01–R08, as entradas suportadas, o perfil de autoria do schema e os não requisitos. A candidata foi corrigida contra essa matriz: materialidade passa a usar `Default_Ignorable_Code_Point`; a comparação passa a ser editorial conservadora; o domínio numérico canônico é determinístico; decisão humana e proveniência têm invariantes intrínsecos; resultado observado só existe após `EXECUTADO`; snapshot e evolução histórica têm níveis de garantia distintos; e o schema oficial permanece dentro do perfil de composição revisado. A suíte canônica passa a **47 métodos**.
+1. R03 aceitava `np.float64` por classificação ampla de subtipo;
+2. a branch estava atrasada em relação à `main` vigente.
 
-### Auditoria final fechada — `NAO_APTA_PARA_FECHAMENTO_DOCUMENTAL`
+Ambos foram corrigidos. R03 passou na rodada independente seguinte.
 
-A auditoria final fechada examinou o HEAD `337055d70a28c6d595594fa1e8c351a47615e66b` contra a matriz congelada e permanece preservada em `11_resultado_a1_reauditoria_8.md`, sem reclassificação retroativa.
+### Nona reauditoria final independente — R02
 
-Ela encontrou dois bloqueios:
+`12_resultado_a1_reauditoria_9.md` julgou `4dc6bb12d2e4df6c3dbff7aa4711a99bf660bb6b` e concluiu `NAO_APTA` por um único finding:
 
-1. **R03 / `MATRIX_VIOLATION`:** `np.float64(1.5)` era aceito na API direta porque `_check_finite_number_format` usava `isinstance(value, float)`;
-2. **gate final / `FINAL_GATE_VIOLATION`:** a candidata estava `behind_by=4` contra a `main` vigente no momento do julgamento.
+**D-01 / R02 / DIVERGE / BLOQUEANTE** — pontuação inicial era apagada por `strip(chars)` apesar de a matriz autorizar tolerância somente terminal.
 
-O contraditório corretivo foi objetivo: a implementação passou a definir positivamente o domínio canônico por identidade estrita de tipo, ganhou regressão permanente para `np.float64` e foi reconciliada por merge real com a `main` vigente. O caso editorial `"?true" × "true"` permanece apenas como `BACKLOG_HARDENING`; não foi convertido em requisito novo.
+O finding foi aceito como procedente porque deriva diretamente do texto congelado de R02. A correção técnica está em `b6c266924fcbc387f826c08aa4c0f275746fa5bf` e a regressão permanente está em `tools/tests/test_micromodelo_mm01_r02.py`.
 
-## Fronteiras preservadas
+A sanitização posterior de metadados no relatório histórico foi necessária pelo gate de higiene do repositório e não altera seu conteúdo técnico ou veredito.
 
-- Micromodelo continua artefato de domínio, não sétimo tipo do Hub.
-- Nenhuma pasta nova é criada em `.assistant/skills/` nesta sprint.
-- Não há coleta de metadata nem leitura de dados; isso começa na MM03.
-- Não há fingerprint; pertence à MM02.
-- `--previous` compara snapshots explicitamente fornecidos e não calcula hash/fingerprint.
-- Não há contrato definitivo de MLflow; `tracking.politica=PENDENTE_MM06` preserva a fronteira.
-- Não há regra institucional de publicação copiada para o Hub; a autoridade permanece `GOVERNANCA_EXTERNA`.
-- Nenhum nome real de catálogo, schema, tabela, pessoa ou workspace corporativo entra nos fixtures.
+## Reconciliação com a `main`
 
-## Evidência técnica atual
+Durante a rodada corretiva, a `main` avançou pelas integrações V13 S1 e S2. A candidata foi reconciliada por merge real com a base S2 em:
 
-A suíte canônica MM01 permanece com **47 métodos automatizados**, além de mutações e subtests. O workflow permanente executa adicionalmente **1 regressão R03 dedicada** em `tools/tests/test_micromodelo_mm01_r03.py`, totalizando a prova operacional como **47 + 1**, sem reclassificar a identidade da suíte congelada.
+`877a3b9325281de3a276c909cabe6dfed4913b79`
 
-A correção B01, a reconciliação B02 e a primeira sincronização documental foram certificadas com sucesso em runner real. Esta atualização documental altera novamente o HEAD; portanto, a árvore resultante precisa ser recertificada integralmente antes de ser congelada para a reauditoria final independente. Run IDs e o SHA definitivo permanecem na conversação da PR para evitar commits autorreferentes.
+O merge preserva as alterações V13 trazidas pela `main`; a MM01 não reimplementa runtime, preflight ou documentação funcional da frente de Temas.
+
+A sincronização é um gate vivo: imediatamente antes do próximo congelamento será necessário reconfirmar a `main`, merge-base e `behind_by=0`.
+
+## Testes permanentes
+
+O workflow MM01 executa, em Python 3.12:
+
+```bash
+python -B -m unittest tools/tests/test_micromodelo_mm01.py -v
+python -B -m unittest tools/tests/test_micromodelo_mm01_r02.py -v
+python -B -m unittest tools/tests/test_micromodelo_mm01_r03.py -v
+python -B tools/validate_assistant.py --root ambiente_fonte
+```
+
+São **47 métodos canônicos + 3 R02 + 1 R03 = 51 métodos permanentes**, além de subtests e fixtures negativas.
+
+O run intermediário `35044200964` comprovou os 51 métodos em `CPython 3.12.14`. Ele ainda falhou no gate estrutural exclusivamente por higiene do relatório histórico recém-preservado. Os dois falsos positivos documentais identificados foram corrigidos; a árvore documental final precisa ser recertificada.
+
+## Workflow corretivo temporário
+
+Uma primeira tentativa de automação transitória gerou o run `35043439501`, que encerrou antes de abrir jobs (`jobs=[]`) e não publicou a correção. O mecanismo foi removido. Esse registro é administrativo e não representa falha funcional do contrato.
 
 ## Gate de saída
 
-A MM01 mantém a condição objetiva de término em `MATRIZ_ACEITE_FINAL.md`. O próximo gate é uma **reauditoria final independente** sobre o novo HEAD congelado, usando a mesma matriz e sem reabrir implicitamente o threat model. Ela deve reproduzir instalação, 47 testes da suíte canônica, a regressão R03, CLI, gate estrutural e adversariais próprios; um achado só pode bloquear se demonstrar violação de requisito já assumido pela matriz ou ADR aceito.
+A sequência obrigatória permanece:
 
-O bloco MM01 do `CHANGELOG.md` permanece dívida bloqueante de merge e só deve ser sincronizado, de forma byte-preserving fora do bloco MM01, após reauditoria final limpa e contraditório final.
+1. certificar todos os workflows aplicáveis no SHA final técnico/documental;
+2. reconfirmar HEAD, `main`, merge-base, `ahead_by`, `behind_by`, PR e merge-ref;
+3. exigir `behind_by=0` e equivalência material HEAD × merge-ref;
+4. congelar o SHA candidato;
+5. executar **nova reauditoria final independente**, em contexto separado da sessão que implementou a correção;
+6. executar contraditório final;
+7. somente se a auditoria for limpa, sincronizar o bloco MM01 do `CHANGELOG.md` preservando byte a byte o restante do arquivo;
+8. revalidar a árvore exata;
+9. obter aceite explícito do usuário;
+10. somente então integrar a PR #51.
 
-**MM02 permanece bloqueada até reauditoria final, contraditório final, fechamento do changelog, aceite explícito e integração da MM01.**
+**MM01 ainda não está aceita nem integrada. MM02 permanece bloqueada.**
