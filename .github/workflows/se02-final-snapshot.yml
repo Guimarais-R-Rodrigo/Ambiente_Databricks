@@ -1,0 +1,51 @@
+name: SE02 Final Snapshot
+
+on:
+  push:
+    branches:
+      - sef/SE02-preflight
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: sef/SE02-preflight
+          fetch-depth: 0
+
+      - name: Atualizar duas métricas finais medidas
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("README.md")
+          text = path.read_text(encoding="utf-8")
+          replacements = {
+              "markdown / links   : 223 arquivos / 1401 links relativos": "markdown / links   : 223 arquivos / 1402 links relativos",
+              "repo (links)       : 1985 links fora da raiz analisada": "repo (links)       : 1986 links fora da raiz analisada",
+          }
+          for old, new in replacements.items():
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"âncora inesperada ({count}): {old}")
+              text = text.replace(old, new)
+          path.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Restringir diff e commitar
+        shell: bash
+        run: |
+          changed=$(git diff --name-only)
+          test "$changed" = "README.md"
+          git config user.name "SE02 Snapshot"
+          git config user.email "actions@users.noreply.github.com"
+          git add README.md
+          git rm .github/workflows/se02-final-snapshot.yml
+          git commit -m "docs(SE02): reconciliar snapshot final"
+          git push origin HEAD:sef/SE02-preflight
