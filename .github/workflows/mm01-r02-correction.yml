@@ -1,0 +1,143 @@
+name: MM01 R02 corrective maintenance
+
+on:
+  push:
+    branches:
+      - micromodelos/mm01-contrato-canonico
+    paths:
+      - .github/workflows/mm01-r02-correction.yml
+
+permissions:
+  contents: write
+
+jobs:
+  corrigir-r02:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout da candidata
+        uses: actions/checkout@v4
+        with:
+          ref: micromodelos/mm01-contrato-canonico
+          fetch-depth: 0
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: tools/requirements-dev.txt
+
+      - name: Instalar dependências
+        run: python -m pip install -r tools/requirements-dev.txt
+
+      - name: Aplicar correção R02 e regressão permanente
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          contract = Path('tools/micromodelo_mm01_contract.py')
+          text = contract.read_text(encoding='utf-8')
+          old = '    return normalized.strip().strip(_EDITORIAL_EDGE_PUNCTUATION).strip()\n'
+          new = (
+              '    normalized = normalized.strip()\n'
+              '    return normalized.rstrip(_EDITORIAL_EDGE_PUNCTUATION).rstrip()\n'
+          )
+          if text.count(old) != 1:
+              raise SystemExit('R02_FIX_PRECONDITION_FAILED: retorno vulnerável não encontrado exatamente uma vez')
+          contract.write_text(text.replace(old, new), encoding='utf-8')
+
+          regression = Path('tools/tests/test_micromodelo_mm01_r02.py')
+          regression.write_text('''from __future__ import annotations
+
+import copy
+import importlib.util
+import json
+import sys
+import unittest
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parents[2]
+CONTRACT = REPO / "tools" / "micromodelo_mm01_contract.py"
+SCHEMA = REPO / "docs" / "sprints" / "micromodelos" / "MM01" / "micromodelo.schema.json"
+FIXTURE = REPO / "tools" / "tests" / "fixtures" / "micromodelos_mm01" / "valido_validado.json"
+
+spec = importlib.util.spec_from_file_location("micromodelo_mm01_contract_r02", CONTRACT)
+assert spec and spec.loader
+module = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = module
+spec.loader.exec_module(module)
+
+
+class MicromodeloMM01R02RegressionTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.schema = module.load_schema(SCHEMA)
+        cls.valid = json.loads(FIXTURE.read_text(encoding="utf-8"))
+
+    def codes(self, document: dict) -> set[str]:
+        return {issue.code for issue in module.validate_spec(document, self.schema)}
+
+    def test_terminal_editorial_punctuation_remains_equivalent(self) -> None:
+        self.assertEqual(
+            module._normalize_editorial_text("Resultado positivo"),
+            module._normalize_editorial_text("  RESULTADO   POSITIVO?!…  "),
+        )
+
+        document = copy.deepcopy(self.valid)
+        original = document["classificacao"]["semantica"]["quando_true"]
+        document["classificacao"]["semantica"]["quando_false"] = f"  {original.upper()}?!…  "
+        self.assertIn("AMBIGUOUS_BINARY_SEMANTICS", self.codes(document))
+
+    def test_initial_punctuation_is_not_canonicalized_away(self) -> None:
+        base = module._normalize_editorial_text("Resultado positivo")
+        self.assertNotEqual(base, module._normalize_editorial_text("?Resultado positivo"))
+        self.assertNotEqual(base, module._normalize_editorial_text("…Resultado positivo"))
+        self.assertEqual("?resultado positivo", module._normalize_editorial_text("  ?RESULTADO   POSITIVO  "))
+        self.assertEqual("…resultado positivo", module._normalize_editorial_text("  …RESULTADO   POSITIVO  "))
+
+    def test_initial_punctuation_does_not_create_false_ambiguity(self) -> None:
+        for prefix in ("?", "…"):
+            with self.subTest(prefix=prefix):
+                document = copy.deepcopy(self.valid)
+                original = document["classificacao"]["semantica"]["quando_true"]
+                document["classificacao"]["semantica"]["quando_false"] = f"{prefix}{original}"
+                self.assertNotIn("AMBIGUOUS_BINARY_SEMANTICS", self.codes(document))
+
+
+if __name__ == "__main__":
+    unittest.main()
+''', encoding='utf-8')
+
+          workflow = Path('.github/workflows/micromodelos-mm01-ci.yml')
+          workflow_text = workflow.read_text(encoding='utf-8')
+          old_workflow = (
+              '          python -B -m unittest tools/tests/test_micromodelo_mm01.py -v\n'
+              '          python -B -m unittest tools/tests/test_micromodelo_mm01_r03.py -v\n'
+          )
+          new_workflow = (
+              '          python -B -m unittest tools/tests/test_micromodelo_mm01.py -v\n'
+              '          python -B -m unittest tools/tests/test_micromodelo_mm01_r02.py -v\n'
+              '          python -B -m unittest tools/tests/test_micromodelo_mm01_r03.py -v\n'
+          )
+          if workflow_text.count(old_workflow) != 1:
+              raise SystemExit('R02_WORKFLOW_PRECONDITION_FAILED: bloco permanente não encontrado exatamente uma vez')
+          workflow.write_text(workflow_text.replace(old_workflow, new_workflow), encoding='utf-8')
+          PY
+
+      - name: Validar correção antes do commit
+        run: |
+          python -B -m unittest tools/tests/test_micromodelo_mm01.py -v
+          python -B -m unittest tools/tests/test_micromodelo_mm01_r02.py -v
+          python -B -m unittest tools/tests/test_micromodelo_mm01_r03.py -v
+          python -B tools/validate_assistant.py --root ambiente_fonte
+          git diff --check
+
+      - name: Publicar commit técnico
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tools/micromodelo_mm01_contract.py tools/tests/test_micromodelo_mm01_r02.py .github/workflows/micromodelos-mm01-ci.yml
+          git commit -m "fix(mm01): limitar pontuacao editorial ao terminal"
+          git push origin HEAD:micromodelos/mm01-contrato-canonico
