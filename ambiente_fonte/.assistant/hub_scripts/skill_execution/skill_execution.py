@@ -113,7 +113,10 @@ def _public_exports(init_path: Path) -> set[str]:
                     if isinstance(value, (list, tuple)) and all(isinstance(item, str) for item in value):
                         explicit_all = set(value)
 
-    return explicit_all if explicit_all is not None else imported | defined
+    available = imported | defined
+    if explicit_all is None:
+        return available
+    return explicit_all & available
 
 
 def _load_contract(contract_path: Path) -> dict[str, Any]:
@@ -167,15 +170,27 @@ def _safe_template_target(skill_dir: Path, rel: Any) -> tuple[Path | None, str |
     return skill_dir / candidate, None
 
 
+def _canonical_module_parts(module: Any) -> tuple[str, ...] | None:
+    if not isinstance(module, str):
+        return None
+    parts = tuple(module.split("."))
+    if len(parts) < 2 or parts[0] not in {"hub_snippets", "hub_scripts"}:
+        return None
+    if any(not part or not part.isidentifier() for part in parts):
+        return None
+    return parts
+
+
 def _resolve_resource(resource: Mapping[str, Any], assistant_root: Path) -> tuple[bool, str]:
     module = resource.get("module")
     symbol = resource.get("symbol")
-    if not isinstance(module, str) or not module.startswith(("hub_snippets.", "hub_scripts.")):
-        return False, "module fora de hub_snippets.* / hub_scripts.*"
-    if not isinstance(symbol, str) or not symbol or "." in symbol:
+    module_parts = _canonical_module_parts(module)
+    if module_parts is None:
+        return False, "module deve ser caminho Python canônico sob hub_snippets.* / hub_scripts.*"
+    if not isinstance(symbol, str) or not symbol or not symbol.isidentifier():
         return False, "symbol público inválido"
 
-    package_dir = assistant_root.joinpath(*module.split("."))
+    package_dir = assistant_root.joinpath(*module_parts)
     init_path = package_dir / "__init__.py"
     if not package_dir.is_dir() or not init_path.is_file():
         return False, f"fachada pública ausente para {module}"
