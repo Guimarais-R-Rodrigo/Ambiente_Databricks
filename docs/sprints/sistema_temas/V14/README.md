@@ -1,146 +1,186 @@
 # V14 — Production Readiness e Operação Sustentada do Sistema de Temas
 
-Status: **S0 — reconciliação pós-V13 e freeze de readiness em execução; candidata ainda não aceita nem integrada.**
+Status: **S0 aceita, integrada e certificada; S1 — ownership, autoridade e modelo operacional em execução. Candidata S1 ainda não aceita nem integrada.**
 
-Data de abertura da S0: 16/09/2026.
+Data de abertura da S1: 16/09/2026.
 
-Baseline Git da S0: `main@350dcf0b37e730042ef961f12f11b30b2660d2c6`, merge da PR #70 que integrou o [Plano Mestre V14](PLANO_MESTRE.md).
+Baseline Git da S1: `main@e89ef4f79d9f9b7c901f1bbf490259ee5ce3d493`, merge da PR #71 que integrou a S0.
 
 ## Comece aqui
 
-A V14 não adiciona um novo mecanismo visual. Ela é a etapa de **production readiness, operação sustentada e decisão final de go-live** do Sistema de Temas. A S0 apenas reconcilia o estado real do repositório, congela fronteiras e instala a guarda inicial de CI.
+A V14 não adiciona um novo mecanismo visual. Ela é a etapa de **production readiness, operação sustentada e decisão final de go-live** do Sistema de Temas.
 
-Para uma pessoa não técnica, a regra mais importante é simples: **nada nesta S0 publica, instala, altera ou ativa tema no Databricks**. Também não existe decisão de `GO`, SLA/SLO aprovado ou produção autorizada neste momento.
+A S0 já foi encerrada no Git. A S1 agora responde a uma pergunta diferente: **quais responsabilidades e autoridades estão realmente evidenciadas e quais ainda precisam permanecer bloqueadas?**
+
+Para uma pessoa não técnica, a regra principal é:
+
+> um owner técnico documentado não vira automaticamente owner operacional, aprovador, responsável por incidente, autoridade de go-live ou autoridade para aceitar risco.
+
+Se o repositório não comprovar owner, backup ou autoridade, a S1 registra `BLOCKED`. Ela não inventa a resposta.
 
 Use estes documentos nesta ordem:
 
 1. [Plano Mestre V14](PLANO_MESTRE.md) — contrato de escopo aceito e integrado;
-2. [Checkpoint S0](CHECKPOINT_S0.md) — evidência da reconciliação corrente;
-3. [Auditoria pós-merge V13](../V13/AUDITORIA_POS_MERGE.md) — fechamento herdado;
-4. [README V12](../V12/README.md) — classes de evidência e bloqueios herdados.
+2. [Matriz S1 de ownership e autoridade](MATRIZ_OWNERSHIP.json) — estado estruturado das seis superfícies;
+3. [Modelo operacional S1](S1_MODELO_OPERACIONAL.md) — responsabilidade e escalonamento;
+4. [Checkpoint S1](CHECKPOINT_S1.md) — baseline, findings, concorrência, failures e certificação;
+5. [Checkpoint S0](CHECKPOINT_S0.md) — evidência histórica da etapa já integrada;
+6. [Auditoria pós-merge V13](../V13/AUDITORIA_POS_MERGE.md) — fechamento operacional herdado.
 
-## O que a S0 faz
+## S0 encerrada
 
-A S0 está limitada ao contrato do Plano Mestre:
+A S0 foi aceita e integrada pela PR #71 no merge real de dois pais:
 
-- confirmar o fechamento real da V13;
-- separar documentação viva de evidência histórica;
-- congelar o escopo V14;
-- inventariar dívidas, bloqueios e concorrência;
-- criar a superfície viva V14;
-- criar a guarda/CI V14 inicial em modo read-only;
-- impedir afirmações de production readiness sem evidência.
-
-A S0 **não** executa S1 nem antecipa artefatos de ownership, matriz de readiness, suporte sustentado, SLIs/SLO/SLA, custos, lifecycle, risco residual ou decisão de go-live.
-
-## Baseline confirmado
-
-O Plano Mestre V14 foi integrado pela PR #70 no merge de dois pais:
-
-`350dcf0b37e730042ef961f12f11b30b2660d2c6`
+`e89ef4f79d9f9b7c901f1bbf490259ee5ce3d493`
 
 Pais:
 
-- `99161fdeb9253c30a82243644ba89af8cd50d79e` — `main` anterior;
-- `0ee5fba40fba26da0a3dd8f152640d9a58a9acce` — HEAD certificado da PR #70.
+- `350dcf0b37e730042ef961f12f11b30b2660d2c6` — `main` anterior;
+- `9a50abe4e9a4239dbffd62b9c2e5f055c9ac58a2` — HEAD S0 aceito e certificado.
 
-No merge, **15/15 workflows de `push` concluíram em `success`**. O V13 executou S1–S7, regressões, V00, validador e todas as fronteiras com sucesso; o V12 executou protocolo, evidência real, regressões, V00, validador, aplicabilidade e higiene com sucesso; o CI geral executou o gate sem credenciais com sucesso.
+No pós-merge, **16/16 workflows de `push` concluíram em `success`**. O workflow V14 passou guarda S0, regressões canônicas, V00, validador e fronteira read-only. V12 passou também aplicabilidade e higiene na `main`; V13 passou S1–S7 e suas fronteiras; o CI geral passou o gate sem credenciais.
 
-Esse resultado certifica o baseline Git. Ele não constitui production readiness nem autorização remota.
+Esse resultado encerra a S0 no Git. Não constitui production readiness nem autorização Databricks.
 
-## Estados herdados que a S0 preserva
+## O que a S1 faz
 
-| Item | Estado | Interpretação na S0 |
+A S1 segue estritamente o Plano Mestre:
+
+- referencia os owners técnicos já canônicos;
+- materializa a matriz de ownership/autoridade;
+- distingue owner técnico de responsabilidade operacional;
+- define slots de owner operacional, backup, aprovação, incidente, go-live e risco residual;
+- mantém esses slots `BLOCKED` quando não existe evidência concreta;
+- define um runbook de responsabilidade e escalonamento;
+- testa owner ausente, backup ausente, self-approval e autoridade inventada;
+- preserva a separação V01 entre aprovação e publicação.
+
+A S1 **não executa S2** e não cria `MATRIZ_READINESS.json`.
+
+## Ownership técnico evidenciado
+
+A S1 não muda os owners técnicos herdados da V13:
+
+| Superfície | Owner técnico canônico |
+|---|---|
+| `notebook_visual_core` | V02 |
+| `visual_lab` | V05 |
+| `transition_bundle` | V09 |
+| `databricks_app` | V10 |
+| `aibi_dashboard` | V11 |
+| `workspace_theme` | V11 |
+
+Esses owners apontam para contratos e artefatos versionados. Eles não provam autoridade corporativa.
+
+## Autoridade operacional: estado fail-closed
+
+A [matriz S1](MATRIZ_OWNERSHIP.json) contém, para cada superfície:
+
+- `operational_owner`;
+- `backup_operational_owner`;
+- `change_approver`;
+- `incident_responsible`;
+- `go_live_authority`;
+- `residual_risk_authority`.
+
+Na abertura da S1, nenhum desses slots possui identidade/autoridade concreta suficientemente evidenciada no repositório. Portanto **todos permanecem `BLOCKED`**.
+
+Isso não significa que nenhuma pessoa real possa exercer esses papéis na organização. Significa apenas que a S1 não possui evidência versionada suficiente para afirmar quem é essa pessoa ou grupo.
+
+Não foram inventados nomes, grupos, e-mails, canais, plantões, SLA/SLO, comitês ou autoridades.
+
+## Política V01 preservada
+
+A [governança V01](../V01/GOVERNANCA.md) continua sendo a fonte canônica de papéis:
+
+- `Leitor` não aprova nem publica;
+- `Proponente` não pode se autoaprovar;
+- `Aprovador` revisa e decide aprovação, mas aprovação não implica poder técnico de publicação;
+- `Publicador` promove somente revisão aprovada e autorizada;
+- `Mantenedor` mantém contrato/testes, sem receber automaticamente aprovação estética ou administração de workspace.
+
+A S1 não atribui esses papéis abstratos a pessoas reais sem evidência.
+
+## Estados herdados preservados
+
+| Item | Estado | Interpretação na S1 |
 |---|---|---|
 | `DOC-02` | `PASS` | somente no alcance documentado |
 | `DOC-03` | `PASS` | somente no alcance documentado |
 | `SEC-01` | `PASS` | somente no alcance observado |
 | `UAT-01` | `PASS` | somente textual |
-| `V12-AIBI-01` | `PASS` | somente no alcance V12 já evidenciado |
+| `V12-AIBI-01` | `PASS` | somente no alcance V12 evidenciado |
 | `HUMAN-01` | `PASS` | evidência formativa; não é readiness estatística |
 | `A11-01` | `FAIL` | issue #57 permanece aberta |
 | `V12-LAB-01` | `BLOQUEADO_AUTORIZACAO` | não reclassificado |
 | `V12-APP-01` | `BLOQUEADO_AUTORIZACAO` | não reclassificado |
 | `V12-AIBI-02` | `BLOQUEADO_AUTORIZACAO` | não reclassificado |
 
-`PASS`, `FAIL`, `BLOQUEADO_AUTORIZACAO` e `NOT_APPLICABLE` continuam estados distintos. A S0 não usa um PASS agregado para esconder um FAIL ou bloqueio.
+`PASS`, `FAIL`, `BLOQUEADO_AUTORIZACAO`, `BLOCKED` e `NOT_APPLICABLE` não são sinônimos.
 
-## Contratos congelados
+## Contratos V11 congelados
 
-A V14 referencia os owners V01–V13; não cria uma segunda fonte de verdade.
+A V14 referencia os owners anteriores e não cria segunda fonte de verdade.
 
-Em especial, a fronteira V11 permanece congelada:
+A fronteira V11 permanece:
 
-- `ResolvedTheme` continua fonte configurável de verdade;
-- `context="aibi"` continua reservado;
-- 48 tokens permanecem **3 `translated`, 23 `approximated`, 22 `unsupported`**;
-- somente três bindings diretos permanecem autorizados;
-- `cellFormat` não vira token;
-- `approximated` e `unsupported` não são automatizados;
-- dashboard theme e workspace theme continuam superfícies distintas;
-- `Import theme` continua distinto de `Publish`.
+- `ResolvedTheme` como fonte configurável de verdade;
+- `context="aibi"` reservado;
+- 48 tokens = **3 `translated`, 23 `approximated`, 22 `unsupported`**;
+- somente três bindings diretos;
+- `cellFormat` fora do contrato de tokens;
+- `approximated` e `unsupported` não automatizados;
+- dashboard theme e workspace theme como superfícies distintas;
+- `Import theme` distinto de `Publish`.
 
-A S0 também não copia schema, tokens, política de estados, engine de preflight/release ou contratos de evidência. Ela aponta para os owners existentes.
+A S1 não copia schema, tokens, bindings, preflight, release/rollback ou protocolo de evidência.
 
-## Superfícies congeladas para a V14
+## Concorrência
 
-A V14 mantém as seis superfícies herdadas da V13:
+Na abertura da S1:
 
-1. `notebook_visual_core`;
-2. `visual_lab`;
-3. `transition_bundle`;
-4. `databricks_app`;
-5. `aibi_dashboard`;
-6. `workspace_theme`.
+- PR #69 / SE01 está `ahead_by=21`, `behind_by=5` contra a `main` S0 e toca `README.md`;
+- PR #51 / MM01 está `ahead_by=139`, `behind_by=183` e também toca `README.md`.
 
-As dez dimensões de readiness permanecem definidas apenas no Plano Mestre até a S2. A S0 não cria `MATRIZ_READINESS.json` nem atribui estados de readiness novos por inferência.
-
-## Concorrência no repositório
-
-Na abertura da S0 existem frentes paralelas reais. As principais são:
-
-- PR #69 — Skill Enforcement / SE01, com sobreposição em `README.md`;
-- PR #51 — Micromodelos / MM01, também com sobreposição em `README.md`;
-- PRs históricas abertas #26, #6, #5 e #4.
-
-A S0 não incorpora essas frentes silenciosamente. Se a `main` avançar, esta branch deverá ser reconciliada aditivamente antes de qualquer integração. Reset/force-push não é mecanismo de reconciliação.
+Essas frentes permanecem independentes. Qualquer avanço da `main` antes do aceite S1 exige reconciliação aditiva e nova certificação. Não será usado reset ou force-push como mecanismo de reconciliação.
 
 ## Guarda e CI V14
 
-A S0 introduz uma guarda local e um workflow V14 read-only.
+O workflow V14 continua read-only e passa a executar:
 
-A guarda verifica, entre outros pontos:
+1. regressão da guarda histórica S0;
+2. validador de ownership/autoridade S1;
+3. testes S1, incluindo mutantes negativos;
+4. regressões canônicas `test_temas*.py`;
+5. compatibilidade V00;
+6. `validate_assistant.py --conferir-readme`;
+7. fronteira S1 read-only.
 
-- artefatos S0 obrigatórios;
-- preservação dos estados herdados;
-- manutenção da fronteira V11;
-- inexistência de artefatos prematuros de S1/S2;
-- coerência da documentação viva;
-- escopo do diff da S0 em CI;
-- workflow sem credenciais Databricks e sem persistência de credenciais de checkout.
-
-O workflow também reaproveita as regressões canônicas V01–V13, V00 e `validate_assistant.py --conferir-readme`. Isso é intencional: V14 não cria uma segunda suíte funcional para substituir os owners anteriores.
+A S1 não usa credenciais Databricks e não executa rede ou mutação remota.
 
 ## Limites operacionais
 
-Nesta S0:
+Nesta S1:
 
-- `V14_S0_REMOTE_MUTATION=0`;
-- `V14_S0_DATABRICKS_MUTATION=0`;
-- nenhuma credencial Databricks é usada;
-- nenhuma publicação, deploy, ACL, workspace theme, `Import theme`, `Publish` ou persistência remota é executada;
-- nenhuma autoridade corporativa, pessoa, canal, SLA, SLO ou custo é inventado;
+- nenhuma mutação Databricks é executada;
+- `V14_S1_REMOTE_MUTATION=0`;
+- `V14_S1_DATABRICKS_MUTATION=0`;
+- production readiness não é declarada;
+- go-live não é decidido;
 - issue #57 não é fechada;
-- S1 permanece não iniciada.
+- os três bloqueios V12 não viram PASS;
+- owner técnico não vira autoridade corporativa por inferência;
+- **S2–S8 não foram iniciadas**.
 
 ## Próximo gate
 
-A S0 só poderá ser considerada candidata aceita depois de:
+A S1 só poderá ser considerada candidata aceita depois de:
 
-1. certificar o HEAD exato da branch nos workflows reais;
-2. registrar qualquer failure intermediário sem reclassificá-lo;
-3. reconciliar eventual avanço concorrente da `main`;
-4. reconfirmar #57, bloqueios, métricas e fronteiras;
-5. obter **aceite explícito do mantenedor**.
+1. certificar o HEAD exato nos workflows reais;
+2. preservar qualquer failure intermediário;
+3. medir e reconciliar as métricas do README pelo runner;
+4. reconfirmar `main`, merge-base, concorrência e issue #57;
+5. demonstrar zero mutação Databricks e S2 não iniciada;
+6. obter **aceite explícito do mantenedor**.
 
-O aceite da S0 não inicia S1 automaticamente.
+O aceite da S1 não inicia S2 automaticamente.
