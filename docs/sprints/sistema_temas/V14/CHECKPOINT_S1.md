@@ -4,7 +4,7 @@ Data: 16/09/2026.
 
 Branch: `codex/temas-v14-s1-ownership-autoridade-20260916`.
 
-Estado: **S1 em execução; candidata ainda não aceita nem integrada. S2 não iniciada.**
+Estado: **S1 em execução; candidata ainda não aceita nem integrada. Métricas medidas e correção fail-closed pendente de recertificação. S2 não iniciada.**
 
 ## 1. Baseline S0 integrado e certificado
 
@@ -134,15 +134,69 @@ Também não executa:
 - decisão de go-live;
 - S2.
 
-## 8. Failures intermediários
+## 8. Failures intermediários preservados
 
-**Pendente do primeiro HEAD completo da S1.**
+Os failures abaixo permanecem historicamente verdadeiros para os SHAs em que ocorreram. Nenhum deles é reclassificado retroativamente como PASS.
 
-Failures serão registrados pelo SHA/run exatos e nunca reclassificados retroativamente.
+### Failure 1 — teste de imports excessivamente amplo
 
-Em particular, as métricas do README permanecem temporariamente no snapshot S0 (`1485` arquivos / `1971` links / `0` extras) até o primeiro runner S1 conseguir medir a nova árvore. A S1 não estima a contagem. Se houver divergência, o failure será preservado e a correção usará somente os valores medidos.
+HEAD `a0479a5748cd0a5fc0feca4e11d4222f8a00cce2`, workflow V14 run `35131346020`, job `104912834882`.
 
-## 9. Gate de aceite da S1
+- regressão histórica S0: `success`;
+- CLI do validador S1: `success`;
+- testes S1: **21/22 PASS, 1 FAIL**;
+- teste que falhou: `test_validator_has_no_network_databricks_or_mutation_clients`;
+- causa: a primeira versão do teste procurava a substring `databricks` no código-fonte completo e confundia o identificador legítimo `databricks_app` com import/cliente Databricks;
+- regressões canônicas, V00, validador estrutural e fronteira S1 ficaram `skipped` no workflow V14 após esse failure;
+- workflows independentes V00/V01/V02 concluíram em `success`;
+- CI/V10/V11/V12/V13/V14 concluíram em `failure` pela propagação do mesmo teste S1 na suíte global, não por seis defeitos semânticos distintos.
+
+A correção `26831f88f219ba3ed401b4dd9922385e3223627f` alterou somente `tools/tests/test_temas_v14_s1.py`, substituindo busca textual por inspeção AST dos imports proibidos. Matriz, runbook, README e métricas não foram alterados nessa correção.
+
+### Failure 2 — medição fail-closed das métricas S1
+
+HEAD `26831f88f219ba3ed401b4dd9922385e3223627f`, workflow V14 run `35131705079`, job `104914028455`.
+
+Antes do validador estrutural:
+
+- regressão histórica S0: **17 testes OK, 1 `skipped` esperado** porque a allowlist S0 só se aplica à branch S0;
+- validador S1: `success`;
+- testes S1: **22/22 PASS**;
+- regressões canônicas V01–V14 S1: **740 testes OK, 1 `skipped` histórico**;
+- compatibilidade V00: **12/12 PASS**.
+
+O runner mediu:
+
+- repo identidade: **1490 arquivos**;
+- repo links: **1978 links**;
+- worktree extras: **0**;
+- README ainda declarava 1485/1971;
+- resultado do validador: **2 falhas / 0 avisos**;
+- fronteira S1 ficou `skipped` depois do failure, e não é chamada de PASS.
+
+No mesmo HEAD, V00/V01/V02 concluíram em `success`; CI/V10/V11/V12/V13/V14 concluíram em `failure` pela mesma divergência documental do snapshot README.
+
+### Snapshot medido para a correção
+
+Os únicos valores autorizados para corrigir o README são os observados pelo runner:
+
+- repo identidade: **1490 arquivos**;
+- repo links: **1978 links**;
+- worktree extras: **0**.
+
+A correção não relaxa o validador e não estima contagem. O HEAD resultante precisa ser recertificado integralmente.
+
+## 9. Estado Git da candidata
+
+- baseline S1: `e89ef4f79d9f9b7c901f1bbf490259ee5ce3d493`;
+- primeiro HEAD completo: `a0479a5748cd0a5fc0feca4e11d4222f8a00cce2`;
+- segundo HEAD, após correção test-only: `26831f88f219ba3ed401b4dd9922385e3223627f`;
+- PR: #72, Draft;
+- S2 permanece não iniciada.
+
+A certificação final será atribuída somente ao HEAD que contiver o snapshot medido 1490/1978, preservar este histórico e concluir os workflows reais. Se a `main` avançar, a certificação ficará stale e exigirá reconciliação aditiva.
+
+## 10. Gate de aceite da S1
 
 Antes de solicitar aceite, o HEAD exato deve demonstrar:
 
