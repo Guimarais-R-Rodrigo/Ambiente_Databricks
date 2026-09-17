@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-import ast
 import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Mapping
+
+from .resource_resolution import resolve_public_symbol
 
 
 SUPPORTED_SCHEMA_VERSIONS = {"0.1"}
@@ -83,42 +84,6 @@ class PreflightContractError(ValueError):
     """Contrato ou contexto insuficiente para um preflight seguro."""
 
 
-def _public_exports(init_path: Path) -> set[str]:
-    tree = ast.parse(init_path.read_text(encoding="utf-8"), filename=str(init_path))
-    explicit_all: set[str] | None = None
-    imported: set[str] = set()
-    defined: set[str] = set()
-
-    for node in tree.body:
-        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-            if not node.name.startswith("_"):
-                defined.add(node.name)
-        elif isinstance(node, ast.ImportFrom):
-            for alias in node.names:
-                name = alias.asname or alias.name
-                if not name.startswith("_"):
-                    imported.add(name)
-        elif isinstance(node, ast.Import):
-            for alias in node.names:
-                name = alias.asname or alias.name.split(".", 1)[0]
-                if not name.startswith("_"):
-                    imported.add(name)
-        elif isinstance(node, ast.Assign):
-            for target in node.targets:
-                if isinstance(target, ast.Name) and target.id == "__all__":
-                    try:
-                        value = ast.literal_eval(node.value)
-                    except (ValueError, TypeError):
-                        value = None
-                    if isinstance(value, (list, tuple)) and all(isinstance(item, str) for item in value):
-                        explicit_all = set(value)
-
-    available = imported | defined
-    if explicit_all is None:
-        return available
-    return explicit_all & available
-
-
 def _load_contract(contract_path: Path) -> dict[str, Any]:
     try:
         raw = json.loads(contract_path.read_text(encoding="utf-8"))
@@ -168,39 +133,6 @@ def _safe_template_target(skill_dir: Path, rel: Any) -> tuple[Path | None, str |
     if candidate.is_absolute() or rel.startswith(("/", "\\")) or ".." in candidate.parts:
         return None, "path de template inseguro"
     return skill_dir / candidate, None
-
-
-def _canonical_module_parts(module: Any) -> tuple[str, ...] | None:
-    if not isinstance(module, str):
-        return None
-    parts = tuple(module.split("."))
-    if len(parts) < 2 or parts[0] not in {"hub_snippets", "hub_scripts"}:
-        return None
-    if any(not part or not part.isidentifier() for part in parts):
-        return None
-    return parts
-
-
-def _resolve_resource(resource: Mapping[str, Any], assistant_root: Path) -> tuple[bool, str]:
-    module = resource.get("module")
-    symbol = resource.get("symbol")
-    module_parts = _canonical_module_parts(module)
-    if module_parts is None:
-        return False, "module deve ser caminho Python canônico sob hub_snippets.* / hub_scripts.*"
-    if not isinstance(symbol, str) or not symbol or not symbol.isidentifier():
-        return False, "symbol público inválido"
-
-    package_dir = assistant_root.joinpath(*module_parts)
-    init_path = package_dir / "__init__.py"
-    if not package_dir.is_dir() or not init_path.is_file():
-        return False, f"fachada pública ausente para {module}"
-    try:
-        exports = _public_exports(init_path)
-    except (OSError, SyntaxError) as exc:
-        return False, f"fachada pública ilegível: {exc}"
-    if symbol not in exports:
-        return False, f"{module}.{symbol} não exportado pela fachada pública"
-    return True, "API pública resolvida estaticamente"
 
 
 def _base_applicability(
@@ -261,34 +193,85 @@ def run_preflight(
     skill_dir = contract_path.parent
 
     if not assistant_root.is_dir():
-        issues.append(PreflightIssue("ASSISTANT_ROOT_NOT_FOUND", "raiz .assistant ausente", "contract", "$"))
+        issues.append(
+            PreflightIssue(
+                "ASSISTANT_ROOT_NOT_FOUND", "raiz .assistant ausente", "contract", "$"
+            )
+        )
     if schema_version not in SUPPORTED_SCHEMA_VERSIONS:
-        issues.append(PreflightIssue("SCHEMA_VERSION_UNSUPPORTED", f"schema_version não suportada: {schema_version!r}", "contract", "$"))
+        issues.append(
+            PreflightIssue(
+                "SCHEMA_VERSION_UNSUPPORTED",
+                f"schema_version não suportada: {schema_version!r}",
+                "contract",
+                "$",
+            )
+        )
     if mode not in SUPPORTED_MODES:
-        issues.append(PreflightIssue("MODE_INVALID", f"mode não suportado pelo preflight SE02: {mode!r}", "contract", "$"))
+        issues.append(
+            PreflightIssue(
+                "MODE_INVALID",
+                f"mode não suportado pelo preflight SE02: {mode!r}",
+                "contract",
+                "$",
+            )
+        )
     if not isinstance(skill, str) or skill_dir.name != skill:
-        issues.append(PreflightIssue("SKILL_MISMATCH", f"skill do contrato não corresponde à pasta: {skill!r}", "contract", "$"))
+        issues.append(
+            PreflightIssue(
+                "SKILL_MISMATCH",
+                f"skill do contrato não corresponde à pasta: {skill!r}",
+                "contract",
+                "$",
+            )
+        )
 
     resources = raw.get("resources")
     templates = raw.get("templates")
     if not isinstance(resources, list):
-        issues.append(PreflightIssue("RESOURCES_INVALID", "resources deve ser lista", "contract", "$"))
+        issues.append(
+            PreflightIssue("RESOURCES_INVALID", "resources deve ser lista", "contract", "$")
+        )
         resources = []
     if not isinstance(templates, list):
-        issues.append(PreflightIssue("TEMPLATES_INVALID", "templates deve ser lista", "contract", "$"))
+        issues.append(
+            PreflightIssue("TEMPLATES_INVALID", "templates deve ser lista", "contract", "$")
+        )
         templates = []
 
     for item in resources:
         if not isinstance(item, dict):
-            issues.append(PreflightIssue("RESOURCE_INVALID", "resource deve ser objeto", "resource", "<sem-id>"))
+            issues.append(
+                PreflightIssue(
+                    "RESOURCE_INVALID", "resource deve ser objeto", "resource", "<sem-id>"
+                )
+            )
             continue
         item_id = str(item.get("id", "<sem-id>"))
         policy = str(item.get("policy", "<sem-policy>"))
         target = f"{item.get('module')}.{item.get('symbol')}"
         applicable, reason, applicability_issue = _base_applicability(item, context_dict)
         if applicability_issue:
-            issues.append(PreflightIssue(applicability_issue.code, applicability_issue.message, "resource", item_id))
-            resource_decisions.append(PreflightDecision("resource", item_id, policy, None, None, target, reason, item.get("condition")))
+            issues.append(
+                PreflightIssue(
+                    applicability_issue.code,
+                    applicability_issue.message,
+                    "resource",
+                    item_id,
+                )
+            )
+            resource_decisions.append(
+                PreflightDecision(
+                    "resource",
+                    item_id,
+                    policy,
+                    None,
+                    None,
+                    target,
+                    reason,
+                    item.get("condition"),
+                )
+            )
             continue
 
         resolved: bool | None
@@ -297,16 +280,40 @@ def run_preflight(
             resolved = None
             resolution_reason = f"não aplicável: {reason}"
         else:
-            resolved, resolution_reason = _resolve_resource(item, assistant_root)
+            resolved, resolution_reason = resolve_public_symbol(
+                assistant_root,
+                item.get("module"),
+                item.get("symbol"),
+            )
             if applicable is True and not resolved:
-                issues.append(PreflightIssue("RESOURCE_REQUIRED_UNAVAILABLE", resolution_reason, "resource", item_id))
+                issues.append(
+                    PreflightIssue(
+                        "RESOURCE_REQUIRED_UNAVAILABLE",
+                        resolution_reason,
+                        "resource",
+                        item_id,
+                    )
+                )
         resource_decisions.append(
-            PreflightDecision("resource", item_id, policy, applicable, resolved, target, resolution_reason if resolved is not None else reason, item.get("condition"))
+            PreflightDecision(
+                "resource",
+                item_id,
+                policy,
+                applicable,
+                resolved,
+                target,
+                resolution_reason if resolved is not None else reason,
+                item.get("condition"),
+            )
         )
 
     for item in templates:
         if not isinstance(item, dict):
-            issues.append(PreflightIssue("TEMPLATE_INVALID", "template deve ser objeto", "template", "<sem-id>"))
+            issues.append(
+                PreflightIssue(
+                    "TEMPLATE_INVALID", "template deve ser objeto", "template", "<sem-id>"
+                )
+            )
             continue
         item_id = str(item.get("id", "<sem-id>"))
         policy = str(item.get("policy", "<sem-policy>"))
@@ -314,8 +321,26 @@ def run_preflight(
         target = str(target_rel)
         applicable, reason, applicability_issue = _base_applicability(item, context_dict)
         if applicability_issue:
-            issues.append(PreflightIssue(applicability_issue.code, applicability_issue.message, "template", item_id))
-            template_decisions.append(PreflightDecision("template", item_id, policy, None, None, target, reason, item.get("condition")))
+            issues.append(
+                PreflightIssue(
+                    applicability_issue.code,
+                    applicability_issue.message,
+                    "template",
+                    item_id,
+                )
+            )
+            template_decisions.append(
+                PreflightDecision(
+                    "template",
+                    item_id,
+                    policy,
+                    None,
+                    None,
+                    target,
+                    reason,
+                    item.get("condition"),
+                )
+            )
             continue
 
         resolved: bool | None
@@ -333,9 +358,25 @@ def run_preflight(
                 resolved = template_target.is_file()
                 resolution_reason = "template resolvido" if resolved else "template ausente"
             if applicable is True and not resolved:
-                issues.append(PreflightIssue("TEMPLATE_REQUIRED_UNAVAILABLE", resolution_reason, "template", item_id))
+                issues.append(
+                    PreflightIssue(
+                        "TEMPLATE_REQUIRED_UNAVAILABLE",
+                        resolution_reason,
+                        "template",
+                        item_id,
+                    )
+                )
         template_decisions.append(
-            PreflightDecision("template", item_id, policy, applicable, resolved, target, resolution_reason if resolved is not None else reason, item.get("condition"))
+            PreflightDecision(
+                "template",
+                item_id,
+                policy,
+                applicable,
+                resolved,
+                target,
+                resolution_reason if resolved is not None else reason,
+                item.get("condition"),
+            )
         )
 
     return PreflightResult(
