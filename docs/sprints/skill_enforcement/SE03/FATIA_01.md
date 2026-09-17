@@ -2,9 +2,22 @@
 
 ## Estado
 
-**IMPLEMENTADA NA BRANCH / AINDA NÃO CERTIFICADA LOCALMENTE.**
+**CERTIFICADA LOCALMENTE.**
 
 Esta fatia é o menor vertical slice estrutural da SE03. Ela não fecha a sprint e não autoriza abrir PR.
+
+A certificação final da fatia 01 foi observada no HEAD `107a0c1575ec68133df6e0d702a3d4fe74e50897` em Windows 11 / Python 3.12.10:
+
+```text
+LOCAL_CERTIFICATION = PASS
+scope               = FULL_SE03_LOCAL
+DERIVED_STALE       = false
+failures            = 0
+```
+
+A suíte focada terminou em 13/13 PASS; regressões SE01/SE02, validação estrutural, renderer, verificação de drift e snapshot também passaram. Evidência externa ao repositório: `~/.ambiente_databricks/sef_certifications/20260917T174041Z_107a0c1575ec`.
+
+Uma rodada anterior no HEAD `115a318a1a7c6776fa1c39f4617649c1d08698ec` permaneceu corretamente `FAIL` por snapshot defasado e revelou que o antigo `git diff --exit-code` não detectava novos arquivos derivados não rastreados. O certifier foi corrigido para usar `git status --porcelain --untracked-files=all` no escopo derivado, e uma regressão específica passou a proteger esse caso.
 
 ## Decisões congeladas para a fatia
 
@@ -37,7 +50,7 @@ Protege quatro artefatos:
 
 A fatia usa `git_blob_sha1` como fingerprint de identidade de bytes porque esse valor é reproduzível tanto no Git quanto no runtime sem depender de metadados externos. Isso é um mecanismo de integridade acidental/operacional, não uma fronteira criptográfica contra atacante administrativo. A evolução para hashes/receipts formais continua pertencendo às sprints seguintes.
 
-### ExecutionTraceV0
+### ExecutionTraceV0 inicial
 
 O runner emite trace estruturado com:
 
@@ -72,7 +85,7 @@ VERIFY_RELEASE
 
 Falha de integridade ou preflight `BLOCKED` impede chamada do core. Exceção da primitive produz `FAIL`, sem fallback manual.
 
-## Evals cobertos nesta fatia
+## Evals certificados nesta fatia
 
 - E01 — caminho normal;
 - E04 — primitive required ausente;
@@ -80,43 +93,31 @@ Falha de integridade ou preflight `BLOCKED` impede chamada do core. Exceção da
 - E06 — primitive canônica falha;
 - E07 — chamada/output sem runner não satisfaz canonical compliance.
 
-Também há testes de input inválido, determinismo estrutural do trace e separação entre trace e resultado de negócio.
+Também passaram testes de input inválido, determinismo estrutural do trace, separação entre trace e resultado de negócio, ausência de hook público para injeção de primitive e detecção de arquivo derivado novo não rastreado.
 
-## Evals ainda não implementados
+## Evals transferidos para a fatia 02
 
-- E02 pressão por atalho no agente;
+- E02 pressão por atalho;
 - E03 output manual correto com evaluator completo;
 - E08 output sobrescrito após runner;
-- E09 trace stale/replay;
+- E09 trace stale/replay no alcance local;
 - E10 conflito de provenance;
 - E11 helper legacy concorrente;
-- E12 solução manual trivial no Genie Code.
+- E12 solução manual trivial.
 
-Esses casos não devem ser classificados como PASS enquanto não houver implementação/evidência observável.
+A política `runtime_derived` x `agent_declared` não foi implementada na fatia 01; ela é objeto da fatia 02.
 
-## Provenance
-
-A política `runtime_derived` x `agent_declared` ainda não foi implementada nesta fatia. O runner consome o mesmo contexto L2 explícito da SE02. Portanto F02-A2 continua uma limitação aberta até o slice que implemente E10.
-
-## Arquivos introduzidos
-
-- `ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/scripts/run.py`;
-- `ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/release_manifest.json`;
-- `tools/tests/test_skill_enforcement_se03.py`.
-
-O derivado `Novo_Ambiente_Simulado/` não é editado manualmente. Ele deve ser materializado pelo renderer canônico durante a certificação local.
-
-## Estado dos gates
+## Estado dos gates da fatia 01
 
 ```text
-LOCAL_CERTIFICATION        = NOT_RUN
-SYNTHETIC_AGENT_SCREENING = NOT_RUN
-DATABRICKS_FREE            = NOT_RUN
-GITHUB_ACTIONS             = NOT_RUN
+LOCAL_CERTIFICATION        = PASS
+SYNTHETIC_AGENT_SCREENING = NOT_RUN_SE03
+DATABRICKS_FREE            = NOT_RUN_SE03
+GITHUB_ACTIONS             = NOT_RUN_SE03
 FULLY_CERTIFIED            = false
 PR                         = NOT_OPEN
 ```
 
-## Próximo passo
+## Continuidade
 
-Sincronizar a branch no clone local, executar a nova suíte SE03 e o certifier. Corrigir qualquer falha observada antes de ampliar o runner para provenance/E10 ou novas primitives.
+A fatia 02 endurece provenance, binding do output e canonical compliance sem ampliar ainda o conjunto de primitives protegidas.
