@@ -405,9 +405,12 @@ class SkillEnforcementSE03Tests(unittest.TestCase):
         self.assertIn("DERIVED_STALE", output)
         self.assertIn("new-derived.txt", output)
 
-    def test_se05_artifacts_remain_absent(self) -> None:
+    def test_se05_temporal_boundary_is_explicit(self) -> None:
         execution_dir = SOURCE_ASSISTANT / "hub_scripts" / "skill_execution"
         self.assertTrue((execution_dir / "receipt" / "__init__.py").is_file())
+        self.assertTrue((execution_dir / "postflight" / "__init__.py").is_file())
+        self.assertTrue((SOURCE_SKILL / "scripts" / "run_enforced.py").is_file())
+        self.assertTrue((SOURCE_SKILL / "scripts" / "postflight.py").is_file())
         self.assertFalse((execution_dir / "postflight.py").exists())
 
 
