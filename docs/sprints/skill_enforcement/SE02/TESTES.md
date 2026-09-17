@@ -10,30 +10,32 @@ A estratégia de execução segue a revisão `../REVISAO_PLANO_2026-09-17_LOCAL_
 
 Arquivo: `tools/tests/test_skill_enforcement_se02.py`.
 
-Cobertura mínima vigente:
+Cobertura mínima vigente — **22 casos**:
 
 1. happy path em raiz `.assistant` não-placeholder;
 2. recurso `required` ausente → `BLOCKED`;
 3. símbolo obrigatório não exportado → `BLOCKED`;
 4. nome apenas declarado em `__all__`, sem import/definição real → `BLOCKED`;
 5. module path não canônico/path-like → `BLOCKED`;
-6. template obrigatório ausente → `BLOCKED`;
-7. condicional falsa não exige recurso;
-8. condicional verdadeira exige recurso;
-9. `numeric_columns_at_least` falsa pula correlação;
-10. `numeric_columns_at_least` verdadeira exige correlação;
-11. tema não selecionado não exige helper temático;
-12. optional ausente não bloqueia;
-13. contexto condicional ausente → fail-closed;
-14. tipo de contexto inválido → fail-closed;
-15. condição desconhecida → `BLOCKED`;
-16. template com traversal → `BLOCKED`;
-17. determinismo para mesmo input;
-18. ausência de escrita durante preflight;
-19. script da skill delega à API pública canônica;
-20. artefatos de SE03 permanecem ausentes.
+6. validador L1 também rejeita `__all__` fictício;
+7. validador L1 também rejeita module path não canônico;
+8. template obrigatório ausente → `BLOCKED`;
+9. condicional falsa não exige recurso;
+10. condicional verdadeira exige recurso;
+11. `numeric_columns_at_least` falsa pula correlação;
+12. `numeric_columns_at_least` verdadeira exige correlação;
+13. tema não selecionado não exige helper temático;
+14. optional ausente não bloqueia;
+15. contexto condicional ausente → fail-closed;
+16. tipo de contexto inválido → fail-closed;
+17. condição desconhecida → `BLOCKED`;
+18. template com traversal → `BLOCKED`;
+19. determinismo para mesmo input;
+20. ausência de escrita durante preflight;
+21. script da skill delega à API pública canônica;
+22. artefatos de SE03 permanecem ausentes.
 
-Além disso, a regressão `tools/tests/test_skill_enforcement_se01.py` deve permanecer integralmente em PASS e passa a cobrir a mesma semântica de fachada pública usada pelo preflight.
+Além disso, a regressão `tools/tests/test_skill_enforcement_se01.py` deve permanecer integralmente em PASS.
 
 ## Certificação local canônica
 
@@ -57,13 +59,15 @@ A execução gera evidência fora da árvore versionada por padrão, contendo SH
 
 ## Gate geral do repositório
 
-`tools/ci_local.py` deve incluir uma etapa SEF read-only/reproduzível para que o gate geral detecte regressões de contrato/preflight sem depender de Actions.
+`tools/ci_local.py` inclui uma etapa SEF em modo parcial/read-only (`--skip-render --no-evidence --allow-dirty`) para que o gate geral detecte regressões de contrato/preflight sem depender de Actions.
 
 Executar também:
 
 ```text
 python tools/ci_local.py --verbose
 ```
+
+Esse subgate não substitui a certificação SE02 completa porque não avalia renderer/diff.
 
 ## Estados de certificação
 
@@ -125,9 +129,9 @@ A revisão do Plano Mestre define uma matriz E01–E12 para o runner estrutural.
 
 ## GitHub Actions
 
-Enquanto a PR estiver Draft, o workflow dedicado da SE02 deve permanecer sem alocação de runner. Quando a candidata estiver estável e for marcada Ready-for-review, o workflow chama o mesmo `certify_local.py` usado no desenvolvimento.
+Enquanto a PR estiver Draft, o job dedicado da SE02 deve ser `skipped` antes de alocar runner. Quando a candidata estiver estável e for marcada Ready-for-review, o workflow chama o mesmo `certify_local.py` usado no desenvolvimento.
 
-`concurrency.cancel-in-progress=true` deve evitar gastar runner em certificações stale.
+`concurrency.cancel-in-progress=true` evita manter certificações stale em paralelo. Evidence bundle e artifact renderizado usam `if: always()` para preservar evidência inclusive em failure.
 
 ## Evidência
 
