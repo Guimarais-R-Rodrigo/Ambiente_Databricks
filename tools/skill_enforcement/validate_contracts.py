@@ -46,8 +46,8 @@ if str(SOURCE_ASSISTANT) not in sys.path:
     sys.path.insert(0, str(SOURCE_ASSISTANT))
 
 from hub_scripts.skill_execution.skill_execution import (  # noqa: E402
-    canonical_module_parts,
-    public_exports,
+    _canonical_module_parts,
+    _public_exports,
 )
 
 
@@ -221,7 +221,7 @@ def _validate_resource(
 
     module = resource.get("module")
     symbol = resource.get("symbol")
-    module_parts = canonical_module_parts(module)
+    module_parts = _canonical_module_parts(module)
     if module_parts is None:
         issues.append(
             _issue(
@@ -254,7 +254,7 @@ def _validate_resource(
         return
 
     try:
-        exports = public_exports(init_path)
+        exports = _public_exports(init_path)
     except ValueError as exc:
         issues.append(_issue("RESOURCE_MODULE_UNREADABLE", str(exc), location))
         return
