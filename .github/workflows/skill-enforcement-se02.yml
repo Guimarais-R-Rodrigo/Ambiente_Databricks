@@ -2,6 +2,7 @@ name: Skill Enforcement SE02
 
 on:
   pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
     paths:
       - "ambiente_fonte/.assistant/hub_scripts/skill_execution/**"
       - "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/**"
@@ -27,11 +28,16 @@ on:
       - ".github/workflows/skill-enforcement-se02.yml"
       - "README.md"
 
+concurrency:
+  group: sef-se02-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
 jobs:
   se02:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -45,20 +51,16 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Contrato v0.1
-        run: python -B tools/skill_enforcement/validate_contracts.py
+      - name: Certificação SE02 reproduzível
+        run: python -B tools/skill_enforcement/certify_local.py --profile se02 --evidence-dir "$RUNNER_TEMP/sef-certification"
 
-      - name: Regressão SE01
-        run: python -B tools/tests/test_skill_enforcement_se01.py
-
-      - name: Testes SE02
-        run: python -B tools/tests/test_skill_enforcement_se02.py -v
-
-      - name: Validação estrutural
-        run: python tools/validate_assistant.py
-
-      - name: Renderizar simulado canonicamente
-        run: python tools/render_simulado.py --write
+      - name: Publicar evidência de certificação
+        uses: actions/upload-artifact@v4
+        with:
+          name: se02-certification-evidence
+          path: ${{ runner.temp }}/sef-certification/
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Publicar artifact do preflight renderizado
         uses: actions/upload-artifact@v4
@@ -69,9 +71,3 @@ jobs:
             Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/
           if-no-files-found: error
           retention-days: 7
-
-      - name: Renderer canônico não pode deixar diff
-        run: git diff --exit-code -- Novo_Ambiente_Simulado
-
-      - name: Snapshot README
-        run: python tools/validate_assistant.py --conferir-readme
