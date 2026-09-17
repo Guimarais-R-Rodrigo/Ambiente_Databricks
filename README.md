@@ -120,10 +120,10 @@ saída colada       : 80 notebooks com bloco real, 0 sem
 idioma da docstring: 62 módulos, 0 com docstring em inglês
 normas do molde    : 73 arquivos, 0 violação(ões)
 notebook exercita  : 61 objetos, 0 notebook(s) que só importam
-python (AST)       : 225 arquivos
+python (AST)       : 226 arquivos
 instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1521 arquivos varridos no repositório editável/derivado
-repo (links)       : 1990 links fora da raiz analisada
+repo (identidade)  : 1531 arquivos varridos no repositório editável/derivado
+repo (links)       : 1994 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)
