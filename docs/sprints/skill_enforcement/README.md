@@ -9,6 +9,7 @@ Este diretório concentra o planejamento e as evidências do Skill Enforcement F
 3. `SE00/` — baseline e instrumentos históricos.
 4. `SE01/` — contrato verificável e capability experiment, concluída/integrada.
 5. `SE02/` — preflight L2, em fechamento/certificação.
+6. [SE02/RUNBOOK_FREE.md](SE02/RUNBOOK_FREE.md) — sequência operacional vigente para sincronizar o clone, certificar localmente, publicar/verify no Databricks Free e executar F02.
 
 ## Regra de leitura
 

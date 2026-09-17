@@ -8,6 +8,8 @@ A SE02 implementa o nível L2 (`Preflight`) do Skill Enforcement Framework sobre
 
 A revisão operacional vigente está em `../REVISAO_PLANO_2026-09-17_LOCAL_FIRST.md`.
 
+O runbook operacional para sincronização local, certificação e testes no Databricks Free está em [RUNBOOK_FREE.md](RUNBOOK_FREE.md).
+
 SE03 não foi iniciada.
 
 ## Baseline
@@ -111,6 +113,16 @@ Estados separados:
 
 O entrypoint local canônico da frente passa a ser `tools/skill_enforcement/certify_local.py`. O workflow remoto deve chamar esse mesmo entrypoint somente quando a PR estiver Ready-for-review ou na `main` pós-merge.
 
+## Probe Databricks Free
+
+O notebook `tools/skill_enforcement/se02_free_probe.py` é um probe específico da SE02 para o laboratório pessoal. Ele exercita:
+
+- F02-P1: happy path;
+- F02-C1: condição não aplicável;
+- F02-B1: recurso obrigatório ausente em fixture temporária, sem alterar o pacote publicado.
+
+A publicação do produto continua sendo feita por `tools/publicar_free.py`; o probe é importado separadamente apenas para teste e não faz parte do Hub publicado.
+
 ## Fora do escopo
 
 A SE02 não implementa:
@@ -138,10 +150,11 @@ A SE02 não implementa:
 8. certificação local reproduzível;
 9. `ci_local.py --verbose` com etapa SEF;
 10. publicação e verify no Databricks Free;
-11. um caso `PASS`, um `BLOCKED` e um teste deliberado de bypass/limitação no Free/Genie Code;
-12. fechamento documental;
-13. aceite explícito do usuário;
-14. GitHub Actions final no HEAD candidato quando houver crédito/execução disponível e conforme checks obrigatórios reais do repositório.
+11. probe F02-P1/F02-C1/F02-B1 no Free;
+12. um teste deliberado de bypass/limitação F02-A1 e um teste de contexto contraditório F02-A2 no Genie Code;
+13. fechamento documental;
+14. aceite explícito do usuário;
+15. GitHub Actions final no HEAD candidato quando houver crédito/execução disponível e conforme checks obrigatórios reais do repositório.
 
 ## Regra de encerramento
 

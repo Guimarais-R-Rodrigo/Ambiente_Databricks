@@ -64,6 +64,9 @@ python -B tools/tests/test_skill_enforcement_se01.py
 python -B tools/tests/test_skill_enforcement_se02.py -v
 ```
 
+A suíte SE02 contém 22 casos, incluindo falsos positivos de `__all__`, module
+path não canônico e consistência entre a resolução L1 e L2.
+
 ## Certificação local reproduzível
 
 Entry point canônico:
@@ -110,6 +113,24 @@ zero.
 
 Esse subgate existe para detectar regressões SEF no gate geral do repositório. Ele
 **não substitui** a certificação SE02 completa porque não prova renderer/diff.
+
+## Probe do Databricks Free
+
+`se02_free_probe.py` é um notebook SOURCE de teste para o laboratório Free. Ele
+não é publicado como parte de `.assistant/`.
+
+Depois de o produto ter sido publicado e verificado, importe o probe
+separadamente e execute-o no workspace. Ele cobre:
+
+- `F02-P1`: preflight normal → `PASS`;
+- `F02-C1`: condição falsa → item não aplicável sem bloqueio;
+- `F02-B1`: remove `quick_profile` somente numa fixture temporária → `BLOCKED`.
+
+O caso negativo não altera o pacote publicado.
+
+Runbook completo:
+
+`docs/sprints/skill_enforcement/SE02/RUNBOOK_FREE.md`
 
 ## GitHub Actions
 
