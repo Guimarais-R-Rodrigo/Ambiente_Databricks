@@ -5,6 +5,7 @@
 Uso principal:
 
     python -B tools/skill_enforcement/certify_local.py --profile se02
+    python -B tools/skill_enforcement/certify_local.py --profile se03
 
 O certifier é o gate determinístico de desenvolvimento do SEF. Ele não usa
 credenciais Databricks nem rede por conta própria. GitHub Actions deve chamar o
@@ -62,37 +63,58 @@ class GitState:
         return not self.status_short.strip()
 
 
+_CONTRACT_STEP = (
+    "contract_v0_1",
+    [sys.executable, "-B", "tools/skill_enforcement/validate_contracts.py"],
+)
+_SE01_STEP = (
+    "se01_regression",
+    [sys.executable, "-B", "tools/tests/test_skill_enforcement_se01.py"],
+)
+_SE02_STEP = (
+    "se02_regression",
+    [sys.executable, "-B", "tools/tests/test_skill_enforcement_se02.py", "-v"],
+)
+_SE03_STEP = (
+    "se03_tests",
+    [sys.executable, "-B", "tools/tests/test_skill_enforcement_se03.py", "-v"],
+)
+_COMMON_FINAL_STEPS = [
+    (
+        "assistant_structure",
+        [sys.executable, "tools/validate_assistant.py"],
+    ),
+    (
+        "render_simulado",
+        [sys.executable, "tools/render_simulado.py", "--write"],
+    ),
+    (
+        "render_diff",
+        ["git", "diff", "--exit-code", "--", "Novo_Ambiente_Simulado"],
+    ),
+    (
+        "readme_snapshot",
+        [sys.executable, "tools/validate_assistant.py", "--conferir-readme"],
+    ),
+]
+
 PROFILE_STEPS: dict[str, list[tuple[str, list[str]]]] = {
     "se02": [
-        (
-            "contract_v0_1",
-            [sys.executable, "-B", "tools/skill_enforcement/validate_contracts.py"],
-        ),
-        (
-            "se01_regression",
-            [sys.executable, "-B", "tools/tests/test_skill_enforcement_se01.py"],
-        ),
+        _CONTRACT_STEP,
+        _SE01_STEP,
         (
             "se02_tests",
             [sys.executable, "-B", "tools/tests/test_skill_enforcement_se02.py", "-v"],
         ),
-        (
-            "assistant_structure",
-            [sys.executable, "tools/validate_assistant.py"],
-        ),
-        (
-            "render_simulado",
-            [sys.executable, "tools/render_simulado.py", "--write"],
-        ),
-        (
-            "render_diff",
-            ["git", "diff", "--exit-code", "--", "Novo_Ambiente_Simulado"],
-        ),
-        (
-            "readme_snapshot",
-            [sys.executable, "tools/validate_assistant.py", "--conferir-readme"],
-        ),
-    ]
+        *_COMMON_FINAL_STEPS,
+    ],
+    "se03": [
+        _CONTRACT_STEP,
+        _SE01_STEP,
+        _SE02_STEP,
+        _SE03_STEP,
+        *_COMMON_FINAL_STEPS,
+    ],
 }
 
 
@@ -243,6 +265,14 @@ def _build_summary(
     }
 
 
+def _scope(profile: str, skip_render: bool) -> str:
+    return (
+        f"PARTIAL_{profile.upper()}_NO_RENDER"
+        if skip_render
+        else f"FULL_{profile.upper()}_LOCAL"
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--profile", choices=sorted(PROFILE_STEPS), default="se02")
@@ -258,7 +288,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--skip-render",
         action="store_true",
-        help="Pula renderer/diff; não equivale a certificação SE02 completa.",
+        help="Pula renderer/diff; não equivale à certificação completa do perfil selecionado.",
     )
     parser.add_argument(
         "--allow-dirty",
@@ -347,7 +377,7 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     after = _git_state()
-    scope = "PARTIAL_NO_RENDER" if args.skip_render else "FULL_SE02_LOCAL"
+    scope = _scope(args.profile, args.skip_render)
     summary = _build_summary(
         profile=args.profile,
         scope=scope,
