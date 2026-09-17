@@ -45,7 +45,7 @@ SKILLS_ROOT = SOURCE_ASSISTANT / "skills"
 if str(SOURCE_ASSISTANT) not in sys.path:
     sys.path.insert(0, str(SOURCE_ASSISTANT))
 
-from hub_scripts.skill_execution.resource_resolution import (  # noqa: E402
+from hub_scripts.skill_execution.skill_execution import (  # noqa: E402
     canonical_module_parts,
     public_exports,
 )
