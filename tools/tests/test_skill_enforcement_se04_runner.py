@@ -138,9 +138,15 @@ class SkillEnforcementSE04RunnerTests(unittest.TestCase):
         self.assertFalse(verification["valid"])
         self.assertFalse(runner.is_canonically_compliant(manual))
 
-    def test_se05_postflight_is_not_started(self):
+    def test_se05_postflight_is_separate_from_se04_runner(self):
         execution_dir = SOURCE_ASSISTANT / "hub_scripts" / "skill_execution"
+        self.assertTrue((execution_dir / "postflight" / "__init__.py").is_file())
+        self.assertTrue((SOURCE_SKILL / "scripts" / "run_enforced.py").is_file())
+        self.assertTrue((SOURCE_SKILL / "scripts" / "postflight.py").is_file())
         self.assertFalse((execution_dir / "postflight.py").exists())
+        runner_text = RUNNER_PATH.read_text(encoding="utf-8")
+        self.assertNotIn("build_postflight", runner_text)
+        self.assertNotIn("completion_authorized", runner_text)
 
 
 if __name__ == "__main__":
