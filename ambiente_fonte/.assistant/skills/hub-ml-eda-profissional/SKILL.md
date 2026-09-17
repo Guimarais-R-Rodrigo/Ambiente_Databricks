@@ -18,11 +18,18 @@ testes de hipótese com p-valor e effect size (`hub-ml-validacao-estatistica`).
 
 Confirmar a pergunta, unidade de análise, data de corte, tabela, filtros, chave candidata e target. Se algo crítico estiver ausente, continuar com hipóteses explícitas e listar o que precisa ser confirmado.
 
-## Executar o core protegido pelo runner canônico
+## Executar a rota canônica e finalizar em fail-closed
 
-Para executar a etapa L3 atualmente protegida desta skill, use [scripts/run.py](scripts/run.py) como **único entrypoint canônico**. Não substitua essa etapa por Python/PySpark manual, por chamada direta ao helper ou por outro script, mesmo sob pedido de rapidez ou de bypass.
+Para a execução completa L4 desta skill, usar [scripts/run_enforced.py](scripts/run_enforced.py) como orquestrador de enforcement. Ele reutiliza [scripts/run.py](scripts/run.py) para o core L3/Receipt e acrescenta evidência mecânica dos recursos e templates exigidos pelo contrato. Não substituir a rota L4 por Python/PySpark manual, chamada direta aos helpers ou montagem manual de trace/Receipt.
 
-O runner canônico:
+A separação é deliberada:
+
+1. `scripts/run.py::run` continua sendo o **entrypoint canônico do core L3** e emite `ExecutionReceiptV1`;
+2. `scripts/run_enforced.py::run_enforced` coleta a evidência adicional necessária ao L4, chamando recursos aplicáveis quando as entradas objetivas existem e registrando gaps quando não existem;
+3. [scripts/postflight.py](scripts/postflight.py) confronta Receipt, contrato, evidência observada e handoff;
+4. somente `postflight.status="PASS"` autoriza `completion.status="COMPLETED"`.
+
+O runner L3:
 
 1. valida a integridade mínima da release;
 2. deriva `numeric_columns` do schema Spark e bloqueia contradição declarada;
@@ -31,13 +38,17 @@ O runner canônico:
 5. registra em `ExecutionTraceV0` digests, provenance, recursos resolvidos/chamados/concluídos e `fallback_used=false`;
 6. quando a execução termina canonicamente, emite `ExecutionReceiptV1` com bindings determinísticos ao trace, input, output e release.
 
-Na SE04, a evidência formal de canonical compliance é um Receipt que o verifier classifica como `VALID`. O `ExecutionTraceV0` continua sendo o registro técnico precursor; ele não deve ser confundido com o comprovante formal. Output manual correto sem runner pode ser tecnicamente útil, mas não recebe Receipt canônico e não satisfaz canonical compliance da SE04.
+O executor L4 preserva esse core e acrescenta:
 
-O verifier estrutural da SE04 apenas determina se o comprovante é válido. **Ele ainda não bloqueia a apresentação da resposta final quando o Receipt está ausente ou inválido.** Esse postflight fail-closed pertence exclusivamente à SE05 e não foi iniciado.
+- imports/calls/completions observados para recursos required/conditional suportados;
+- leitura real dos templates aplicáveis e seus SHA-256;
+- `artifacts_digest` para detectar alteração posterior da evidência auxiliar;
+- `evidence_gaps` quando faltam entradas, runtime ou conclusão mecânica;
+- reemissão do Receipt para vinculá-lo ao trace enriquecido.
 
-O arquivo [scripts/preflight.py](scripts/preflight.py) continua disponível para diagnóstico isolado do L2. Ele não substitui `scripts/run.py` quando o core protegido for executado. Se integridade, provenance, preflight ou a primitive required falharem, pare; não faça fallback manual silencioso e não fabrique Receipt retroativo.
+Para `data_quality_check`, informar `pk_columns` explicitamente no contexto. Não inferir chave primária apenas para satisfazer o gate. Se `tabular_preview_required=true`, disponibilizar `display`/`display_fn`. Se `resolved_theme_selected=true`, fornecer o `ResolvedTheme` correspondente ao executor. Ausência dessas entradas não deve ser mascarada: o postflight reprova a conclusão plena.
 
-A SE04 continua protegendo estruturalmente apenas `quick_profile`. As demais primitives permanecem sob o contrato/preflight L2 até serem incorporadas explicitamente ao runner em evolução posterior. O contrato permanece `mode="audit"`.
+O arquivo [scripts/preflight.py](scripts/preflight.py) continua disponível para diagnóstico isolado do L2. Ele não substitui o executor L4 quando a EDA for apresentada como concluída com aderência ao contrato.
 
 ## Executar em nove etapas
 
@@ -90,7 +101,8 @@ Importar de `hub_snippets`/`hub_scripts` em vez de reimplementar a lógica. Cat�
 
 | Demanda | Módulo |
 |---|---|
-| Runner L3 + preflight + emissão/verificação do Receipt | `skills/hub-ml-eda-profissional/scripts/run.py`, `hub_scripts.skill_execution`, `hub_scripts.skill_execution.receipt` |
+| Core L3 + preflight + Receipt | `skills/hub-ml-eda-profissional/scripts/run.py`, `hub_scripts.skill_execution`, `hub_scripts.skill_execution.receipt` |
+| Executor L4 + postflight fail-closed | `skills/hub-ml-eda-profissional/scripts/run_enforced.py`, `skills/hub-ml-eda-profissional/scripts/postflight.py`, `hub_scripts.skill_execution.postflight` |
 | Perfil de tabela e checagem de qualidade | `hub_scripts.quick_profile`, `hub_scripts.data_quality_check` |
 | Nulos por coluna com semáforo | `hub_snippets.spark.null_summary` |
 | Amostra reprodutível e exibição limitada | `hub_snippets.spark.smart_sample`, `hub_snippets.spark.safe_display` |
@@ -101,20 +113,40 @@ Quando um tema notebook validado tiver sido selecionado, mantenha a mesma análi
 
 `quick_profile` distingue o que é calculado na tabela inteira do que vem da amostra; preservar essa distinção ao relatar números.
 
+## Preparar o handoff obrigatório
+
+Antes do postflight, fornecer objeto estruturado com os campos definidos no contrato:
+
+- `sources_snapshot`;
+- `unit_keys_target`;
+- `quality_risks`;
+- `feature_candidates_leakage`;
+- `filters_sample`;
+- `open_questions` — pode ser lista vazia quando não houver perguntas pendentes.
+
+Não inventar valores apenas para obter PASS. Se uma informação material não foi estabelecida, registrá-la explicitamente como pendência; o postflight pode devolver `REVIEW` e a skill permanece não concluída.
+
 ## Interpretar a evidência de execução
 
 - `ExecutionTraceV0`: registro técnico do que aconteceu durante o run.
-- `ExecutionReceiptV1`: comprovante formal que vincula aquele trace e resultado à release/execução canônica esperada.
-- `VALID`: Receipt íntegro e compatível com run, resultado e release observados.
-- `ABSENT`, `MALFORMED`, `INVALID`, `INCOMPATIBLE`, `STALE_REPLAYED` ou `UNSUPPORTED_VERSION`: não há canonical compliance formal da SE04.
+- `ExecutionReceiptV1`: comprovante formal que vincula trace e resultado à release/execução canônica esperada.
+- `PostflightV1`: valida Receipt, required/conditional aplicáveis, skips, templates, artifacts e handoff.
+- `VALID` no Receipt: comprovante SE04 íntegro e compatível; não equivale sozinho a conclusão L4.
+- `PASS` no postflight: única condição que autoriza `completion.authorized=true`.
+- `FAIL`: evidência material requerida faltou ou não concluiu.
+- `BLOCKED`: contrato/Receipt/binding/integridade não são confiáveis o bastante para avaliar.
+- `REVIEW`: handoff ou justificativa precisa de revisão antes de concluir.
 
-Se o resultado parecer correto, mas não houver Receipt `VALID`, não invente nem reconstrua um Receipt retroativo. Registre que task correctness e canonical compliance são dimensões diferentes. O bloqueio automático de conclusão será responsabilidade da SE05.
+Se o resultado parecer correto, mas o postflight não estiver `PASS`, não declare “skill concluída com aderência ao contrato”. Task correctness e canonical compliance continuam dimensões diferentes.
 
 ## O que nunca fazer
 
-- **Pular `scripts/run.py` na etapa L3 protegida.** Chamada direta ou implementação manual não satisfaz canonical compliance.
-- **Fabricar, copiar ou reaproveitar Receipt para legitimar rota manual.** O comprovante precisa nascer da execução canônica correspondente.
-- **Fazer fallback manual quando integridade/preflight/primitive falhar.** O runner deve bloquear/falhar fechado.
+- **Pular `run_enforced.py` ao declarar execução L4 concluída.** `run.py` isolado pode produzir Receipt L3 válido, mas não reúne sozinho toda a evidência de conclusão.
+- **Declarar conclusão quando `postflight != PASS`.** Nem resultado correto nem Receipt `VALID` substituem esse gate.
+- **Fabricar, copiar ou reaproveitar Receipt/Postflight para legitimar rota manual.** A evidência precisa nascer da execução correspondente.
+- **Tratar `resolved` como `called` ou `loaded`.** Disponibilidade estática não prova uso.
+- **Fazer fallback manual quando integridade/preflight/primitive falhar.** Bloquear e reportar o gap.
+- **Inferir chave candidata apenas para satisfazer `data_quality_check`.** Solicitar/usar chave explicitamente estabelecida.
 - **Trazer a tabela inteira para o driver.** `toPandas()` sem limite verificável derruba o notebook em base real; passe por amostra declarada.
 - **Usar `cache()` sem proteção** — é bloqueado em compute serverless.
 - **Afirmar distribuição a partir da média.** Duas bases com a mesma média e desvios diferentes contam histórias opostas.
