@@ -405,9 +405,9 @@ class SkillEnforcementSE03Tests(unittest.TestCase):
         self.assertIn("DERIVED_STALE", output)
         self.assertIn("new-derived.txt", output)
 
-    def test_se04_se05_artifacts_remain_absent(self) -> None:
+    def test_se05_artifacts_remain_absent(self) -> None:
         execution_dir = SOURCE_ASSISTANT / "hub_scripts" / "skill_execution"
-        self.assertFalse((execution_dir / "receipt.py").exists())
+        self.assertTrue((execution_dir / "receipt.py").is_file())
         self.assertFalse((execution_dir / "postflight.py").exists())
 
 
