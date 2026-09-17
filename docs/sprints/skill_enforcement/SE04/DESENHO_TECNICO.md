@@ -1,42 +1,43 @@
 # SE04 — desenho técnico do Execution Receipt
 
-## 1. Arquitetura
-
-Fluxo alvo:
+## 1. Fluxo
 
 ```text
-ExecutionTraceV0 + resultado
-        ↓
-validação de pré-condições de emissão
-        ↓
-canonical serialization
-        ↓
-ExecutionReceiptV1
-        ↓
-verifier determinístico
+release íntegra
+  → provenance/runtime válido
+  → preflight PASS
+  → quick_profile chamada
+  → quick_profile concluída
+  → ExecutionTraceV0 PASS
+  → output digest correspondente
+  → build_execution_receipt(...)
+  → ExecutionReceiptV1
 ```
 
-O receipt não copia o payload de negócio. Ele faz binding por digest ao trace e ao output e carrega apenas metadados probatórios necessários à auditoria.
+O Receipt não copia o payload de negócio. Ele carrega metadados probatórios e digests suficientes para vincular o resultado atual à execução observada.
 
-## 2. Localização
+## 2. Componentes
 
-- engine de receipt: `ambiente_fonte/.assistant/hub_scripts/skill_execution/receipt.py`;
-- emissão: chamada pelo runner `skills/hub-ml-eda-profissional/scripts/run.py` somente após trace `PASS`;
-- tooling de auditoria: wrapper/CLI da skill poderá usar o mesmo verifier, sem duplicar lógica;
-- schema lógico: documentado aqui e coberto por testes; não cria contrato genérico para todas as skills nesta sprint.
+- engine: `ambiente_fonte/.assistant/hub_scripts/skill_execution/receipt.py`;
+- emissor: `skills/hub-ml-eda-profissional/scripts/run.py::run`;
+- verifier de baixo nível: `verify_execution_receipt(...)`;
+- wrapper de release corrente: `scripts/run.py::verify_receipt(...)`;
+- manifest: `skills/hub-ml-eda-profissional/release_manifest.json`;
+- testes: `tools/tests/test_skill_enforcement_se04.py` e `test_skill_enforcement_se04_runner.py`;
+- probe Free: `tools/skill_enforcement/se04_free_probe.py`.
 
-O módulo fica no pacote `skill_execution` porque serialização, binding e verificação são infraestrutura do SEF, mas a implementação V1 permanece parametrizada/congelada para a skill piloto.
+Nenhum componente implementa postflight obrigatório.
 
 ## 3. Versionamento
 
-Nome lógico: `ExecutionReceiptV1`  
+Nome lógico: `ExecutionReceiptV1`.  
 Campo: `receipt_version = "1.0"`.
 
-Versões desconhecidas são rejeitadas. Não existe fallback silencioso entre versões.
+Versão desconhecida retorna `UNSUPPORTED_VERSION`; não há downgrade silencioso.
 
-## 4. Serialização canônica
+## 4. Serialização e digests
 
-Algoritmo:
+Serialização canônica:
 
 ```text
 JSON UTF-8
@@ -45,23 +46,11 @@ separators=(",", ":")
 ensure_ascii=false
 ```
 
-O digest de binding usa SHA-256 sobre os bytes dessa serialização. Ordenação de dicionário no runtime não pode alterar o digest.
+Bindings usam SHA-256. Contract e runner continuam identificados pelos `git_blob_sha1` já observados/protegidos pelo release manifest da SE03; o Receipt registra esses fingerprints e o wrapper confronta-os com a release corrente.
 
-## 5. Identidade
+## 5. Schema lógico V1
 
-`run_id` continua vindo do runner/trace.
-
-`receipt_id` é derivado deterministicamente do corpo protegido do receipt:
-
-```text
-receipt_id = "er1:" + sha256(canonical_json(receipt_body))
-```
-
-O `receipt_id` serve simultaneamente como identidade estável do comprovante e evidência de alteração acidental do corpo. O uso de SHA-256 não é assinatura/autenticação contra atacante capaz de reescrever código e recalcular hashes.
-
-## 6. Schema lógico V1
-
-Campos obrigatórios:
+Campos superiores obrigatórios:
 
 ```text
 receipt_version
@@ -75,6 +64,8 @@ preflight_status
 release
 bindings
 resources
+decisions
+templates_consumed
 provenance_summary
 fallback_used
 writes_performed
@@ -82,105 +73,105 @@ blocking_issue_codes
 integrity
 ```
 
-`release` contém:
+### `release`
 
-- `manifest_name`;
-- `manifest_sha256`;
-- `contract_git_blob_sha1`;
-- `runner_git_blob_sha1`.
+```text
+manifest_name
+manifest_sha256
+contract_git_blob_sha1
+runner_git_blob_sha1
+```
 
-`bindings` contém:
+### `bindings`
 
-- `trace_sha256`;
-- `input_sha256`;
-- `output_sha256`.
+```text
+trace_sha256
+input_sha256
+output_sha256
+```
 
-`resources` contém:
+### `resources`
 
-- `resolved`;
-- `called`;
-- `protected_primitive`.
+```text
+resolved
+imported
+called
+completed
+protected_primitive
+```
 
-`provenance_summary` contém somente metadados necessários para auditoria, por exemplo `numeric_columns -> {source, conflict}`; valores de negócio não são copiados.
+`imported` é `{status: "NOT_OBSERVABLE", items: []}` enquanto não existir instrumentação mecânica capaz de provar import efetivo. O Receipt não converte existência/resolução em import presumido.
 
-`integrity` contém convenções de serialização/digest e `release_integrity="PASS"`.
+### `decisions`
+
+Cópia probatória normalizada das decisões objetivas registradas no trace: `item_id`, `item_type`, `applicable`, `resolved`.
+
+### `templates_consumed`
+
+Também permanece `NOT_OBSERVABLE` nesta sprint. Resolver um arquivo de template no preflight não prova que seu conteúdo foi consumido durante a execução.
+
+### `provenance_summary`
+
+Registra somente `source` e `conflict` por chave. Valores de negócio não são copiados. Para `numeric_columns`, emissão exige `source=runtime_derived` e `conflict=false`.
+
+## 6. Identidade do Receipt
+
+```text
+receipt_id = "er1:" + sha256(canonical_json(receipt_body))
+```
+
+Modificar qualquer campo protegido sem recalcular o identificador produz `INVALID`. Mesmo que um atacante recalcule um Receipt internamente coerente, o verifier ainda o confronta com trace, output e release atuais; divergências produzem `INCOMPATIBLE`. Isso continua não sendo autenticação criptográfica contra comprometimento completo da release/verifier.
 
 ## 7. Emissão
 
-Receipt V1 somente é emitido quando todos os requisitos abaixo são verdadeiros:
+`build_execution_receipt(...)` retorna Receipt somente quando:
 
-- trace é mapping V0 conhecido;
-- `trace.status == "PASS"`;
-- `preflight_status == "PASS"`;
-- skill/entrypoint correspondem à skill piloto;
-- manifest/contract/runner digests estão presentes;
-- `input_digest` e `output_digest` estão presentes;
-- output atual confere com `trace.output_digest`;
-- `quick_profile` está em `resources_called`;
-- `fallback_used is False`;
-- `writes_performed is False` no alcance atual;
-- `numeric_columns` tem source `runtime_derived` e não está em conflito;
-- não há blocking issues.
+- trace V0.1 conhecido;
+- skill e entrypoint correspondem à skill piloto;
+- `status=PASS`;
+- `preflight_status=PASS`;
+- run id e digests têm formato válido;
+- output atual confere com `output_digest`;
+- primitive protegida aparece em `resources_called` **e** `resources_completed`;
+- provenance de `numeric_columns` é runtime-derived sem conflito;
+- `blocking_issues=[]`;
+- `fallback_used=false`;
+- `writes_performed=false` no alcance atual.
 
-Falha em qualquer condição produz **ausência de receipt válido**, não receipt `PASS` parcial.
+Qualquer falha retorna `None`; não existe Receipt parcial com canonical compliance `PASS`.
 
 ## 8. Verificação
 
-O verifier recebe o payload `{trace, receipt, result}` e expectativas do contexto atual. Ele classifica:
+Estados:
 
-- `VALID`;
-- `ABSENT`;
-- `MALFORMED`;
-- `INVALID`;
-- `INCOMPATIBLE`;
-- `STALE_REPLAYED`;
-- `UNSUPPORTED_VERSION`.
+- `VALID`: forma, identidade, bindings, run e release compatíveis;
+- `ABSENT`: Receipt não existe;
+- `MALFORMED`: schema/tipos/campos obrigatórios inválidos;
+- `INVALID`: integridade interna do Receipt não fecha, por exemplo `receipt_id` adulterado;
+- `INCOMPATIBLE`: Receipt pode ser internamente coerente, mas não corresponde ao trace/output/release esperados;
+- `STALE_REPLAYED`: `expected_run_id` não corresponde ao Receipt/trace apresentado;
+- `UNSUPPORTED_VERSION`: versão não conhecida.
 
-Semântica:
-
-- **MALFORMED**: forma/tipos/campos obrigatórios inválidos;
-- **INVALID**: receipt internamente incoerente ou adulterado;
-- **INCOMPATIBLE**: receipt íntegro em si, mas incompatível com trace/output/skill/release esperados;
-- **STALE_REPLAYED**: receipt/run não corresponde ao run atual explicitamente esperado pelo harness/consumidor;
-- **VALID**: todas as verificações pertinentes passam.
-
-A verificação V1 não bloqueia automaticamente a conclusão da skill; essa conexão pertence à SE05.
+Somente `VALID` produz `canonical_compliance="PASS"` no objeto de verificação.
 
 ## 9. Bindings
 
-### Trace
+- trace: `sha256(canonical_json(trace))`;
+- input: reutiliza `input_digest` runtime da SE03;
+- output: reutiliza `output_digest` e recalcula o resultado atual durante a verificação;
+- manifest: SHA-256 do arquivo atual;
+- contract/runner: fingerprints git-blob observados e protegidos pelo manifest.
 
-`trace_sha256 = sha256(canonical_json(trace))`.
+## 10. `resources_called` × `resources_completed`
 
-Qualquer alteração no trace após emissão invalida o binding.
+`resources_called` significa tentativa efetiva de invocação. `resources_completed` só é preenchido depois do retorno bem-sucedido da primitive. Assim, falha de `quick_profile` não pode parecer conclusão válida apenas porque houve chamada.
 
-### Output
+## 11. Replay/staleness
 
-O receipt copia o `output_digest` já derivado na SE03 e o verifier também recalcula o digest do resultado atual. Isso detecta output alterado, recriado de forma diferente ou receipt reutilizado com outro resultado.
+O Receipt inclui `run_id`, faz binding ao trace e aceita `expected_run_id` externo no verifier. Isso rejeita reutilização entre runs quando o consumidor conhece o run atual.
 
-### Release
+A SE04 não alega anti-replay universal sem nonce/estado confiável externo. Introduzir armazenamento de nonce, assinatura ou attestation permanece fora de escopo.
 
-O receipt vincula o manifest SHA-256 e fingerprints observados de contract/runner. O verifier também compara com as expectativas da release atual quando fornecidas pelo wrapper do runner.
+## 12. Relação com SE05
 
-### Input
-
-`input_sha256` é o `input_digest` já derivado pelo runner. O receipt não copia tabela/contexto bruto.
-
-## 10. Replay/staleness
-
-A proteção V1 é deliberadamente explícita e contextual:
-
-- `run_id` participa do receipt;
-- o verifier pode receber `expected_run_id`;
-- receipt de outro run é `STALE_REPLAYED` quando confrontado com o run atual esperado;
-- output/trace bindings impedem reutilização trivial em outro payload.
-
-Sem um nonce externo confiável, armazenamento de estado ou assinatura, a SE04 não alega anti-replay universal. A proteção é suficiente para o harness e consumidores que conhecem o run esperado.
-
-## 11. Provenance
-
-O receipt nunca usa `agent_declared` para legitimar fato que o runner consegue derivar. `numeric_columns` só permite emissão quando a provenance registrada é `runtime_derived` e `conflict=false`.
-
-## 12. Evolução futura
-
-A SE05 poderá consumir `verify_execution_receipt(...)` e exigir `VALID` antes de homologar conclusão. A API é desenhada para permitir esse consumo sem implementar o gate agora.
+A API foi desenhada para que a SE05 possa futuramente consumir `verify_receipt()` e exigir `VALID`. Nenhuma chamada automática desse tipo foi conectada ao fluxo de conclusão nesta sprint.

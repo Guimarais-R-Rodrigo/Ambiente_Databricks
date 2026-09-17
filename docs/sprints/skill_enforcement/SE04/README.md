@@ -2,79 +2,84 @@
 
 ## Estado
 
-**BOOTSTRAP ARQUITETURAL — implementação ainda não concluída.**
+**IMPLEMENTAÇÃO FUNCIONAL CONSTRUÍDA; gates oficiais local/Free ainda não observados neste ambiente.**
 
 Branch: `sef/SE04-execution-receipt`  
 Baseline: `main@216df1544c2b21a8ff94bb5ce51fd84b8a444057`  
 Skill piloto: `hub-ml-eda-profissional`  
-Contrato vigente: v0.1, `mode="audit"`.
+Contrato: v0.1, `mode="audit"`.
 
 ## Objetivo
 
-Transformar a evidência estrutural da SE03 em um `ExecutionReceiptV1` formal, versionado, verificável e auditável, emitido somente a partir de uma execução canônica válida do runner.
+A SE04 transforma a evidência estrutural da SE03 em um `ExecutionReceiptV1` formal, versionado, verificável e auditável. A pergunta operacional passa a ser:
 
-A SE04 deve tornar verificável a pergunta:
+> existe um Receipt formal `VALID` que vincula este resultado ao trace, input, release e run canônico esperados?
 
-> existe um receipt formal válido que vincula este resultado à execução canônica específica esperada?
+A resposta dessa pergunta continua separada da decisão de bloquear a conclusão. O **postflight fail-closed de produção permanece integralmente reservado à SE05**.
 
-Isso não equivale a bloquear a apresentação de resultado sem receipt. O bloqueio de conclusão/homologação continua reservado à SE05.
+## O que foi implementado
 
-## Precedência e reconciliação
+- engine `hub_scripts.skill_execution.receipt`;
+- `ExecutionReceiptV1`, `receipt_version="1.0"`;
+- serialização JSON canônica determinística e SHA-256;
+- `receipt_id = er1:sha256(body)`;
+- bindings de trace, input e output;
+- binding de manifest, execution contract e runner;
+- recursos `resolved`, `called` e `completed`;
+- `imported` e `templates_consumed` como `NOT_OBSERVABLE` quando não há instrumentação mecânica suficiente;
+- provenance resumida sem copiar payload de negócio;
+- verifier com estados `VALID`, `ABSENT`, `MALFORMED`, `INVALID`, `INCOMPATIBLE`, `STALE_REPLAYED` e `UNSUPPORTED_VERSION`;
+- emissão do Receipt exclusivamente pelo runner após execução canônica `PASS`;
+- `resources_completed` preenchido somente após retorno bem-sucedido da primitive protegida;
+- wrapper `run.py::verify_receipt()` para confrontar Receipt com a release corrente;
+- release manifest protegendo também o receipt engine;
+- suíte adversarial SE04 e suíte de integração com o runner;
+- perfil `se04` no certifier local;
+- probe determinístico para Databricks Free;
+- documentação operacional e guia não técnico.
 
-O Plano Mestre original descreve SE04 como produção de evidência estruturada e coloca a validação final de contrato no postflight da SE05. A revisão pós-SE03 transfere à SE04 a responsabilidade de formalizar o receipt e tornar distinguível a rota canônica da rota manual.
+## Invariantes preservados
 
-Nesta sprint, portanto:
+- entrypoint canônico continua `skills/hub-ml-eda-profissional/scripts/run.py::run`;
+- primitive protegida continua somente `hub_scripts.quick_profile.quick_profile`;
+- `ExecutionTraceV0` continua precursor técnico, sem copiar o resultado de negócio;
+- `numeric_columns` continua `runtime_derived`; conflito declarado bloqueia;
+- falha da primitive não recebe fallback manual;
+- `mode="audit"` não mudou;
+- E02 histórico não é reclassificado e `GENIE_BEHAVIORAL_SCREENING=MIXED` é preservado;
+- nenhum dado corporativo foi introduzido;
+- não existe `postflight.py` de produção nesta sprint.
 
-- SE04 implementa **verificação do receipt como objeto/evidência**;
-- SE04 não conecta essa verificação a um gate obrigatório de conclusão;
-- SE05 continuará responsável pelo **postflight fail-closed de produção**.
+## Reconciliação SE04 × SE05
 
-Essa separação preserva a fronteira canônica sem deixar o receipt impossível de testar deterministicamente.
+O Plano Mestre original posiciona a validação final do Receipt dentro do postflight da SE05. A revisão pós-SE03 e o escopo desta sprint exigem que o Receipt seja verificável deterministicamente já na SE04. A reconciliação adotada é:
 
-## Invariantes herdados
+- **SE04:** constrói, emite e verifica o Receipt como objeto/evidência;
+- **SE05:** decide fail-closed se uma conclusão homologada pode ocorrer sem Receipt válido.
 
-- `scripts/run.py::run` continua sendo o único entrypoint canônico do core protegido;
-- primitive protegida permanece somente `hub_scripts.quick_profile.quick_profile`;
-- `ExecutionTraceV0` continua precursor técnico e não é substituído pelo receipt;
-- `numeric_columns` permanece `runtime_derived` e conflito declarado continua `BLOCKED`;
-- `fallback_used=false` permanece requisito;
-- `mode="audit"` não muda nesta sprint;
-- E02 histórico permanece `FAIL_OBSERVED` e `GENIE_BEHAVIORAL_SCREENING=MIXED`;
-- nenhum dado corporativo é usado;
-- fonte editável é `ambiente_fonte/`; `Novo_Ambiente_Simulado/` continua derivado do renderer canônico.
+Assim, `verify_receipt()` não é um postflight e não bloqueia por si só a apresentação de uma resposta final.
 
-## Resultado funcional esperado
+## Limite criptográfico
 
-Uma execução bem-sucedida deve produzir:
+SHA-256 fornece **tamper evidence + deterministic binding + traceability**. Ele não autentica a origem contra um atacante capaz de alterar arbitrariamente código, release e verifier e recalcular todos os hashes. HMAC, PKI ou attestation externa não foram introduzidos por não existir, nesta sprint, uma âncora de confiança que justificasse essa complexidade.
 
-```text
-runner canônico
-+ release íntegra
-+ contexto/provenance válido
-+ preflight PASS
-+ quick_profile chamada
-+ trace PASS
-+ output correspondente
-→ ExecutionReceiptV1
-```
+## Gates ainda necessários antes de release candidate
 
-Rotas manuais, chamadas diretas, output adulterado, receipt adulterado, receipt stale/reutilizado, skill/release divergentes, conflito de provenance e falha/fallback não devem verificar como receipt canônico válido.
+1. executar o perfil oficial `se04` do certifier em checkout completo e worktree limpa;
+2. materializar `Novo_Ambiente_Simulado/` exclusivamente por `tools/render_simulado.py --write` e exigir drift zero;
+3. passar snapshot README/estrutura;
+4. publicar/verificar por conteúdo no Databricks Free;
+5. executar `SE04_FREE_PROBE_V1` e preservar o JSON bruto;
+6. somente com esses gates observados, congelar release candidate e abrir PR.
 
-## O que fica fora
+Nenhuma PR deve ser aberta antes desses itens.
 
-- postflight obrigatório;
-- bloqueio da resposta final por ausência de receipt;
-- generalização para todas as skills;
-- mudança para `mode="enforce"`;
-- assinatura com segredo/HMAC/PKI;
-- defesa contra atacante com capacidade de alterar arbitrariamente código e recalcular todas as evidências;
-- promoção corporativa;
-- merge sem aceite humano explícito.
+## Documentos
 
-## Documentos desta sprint
-
-- `DESENHO_TECNICO.md` — contrato técnico e decisões de serialização/binding;
-- `THREAT_MODEL.md` — cenários R01+ e limites de segurança;
-- `TESTES.md` — matriz local/Free e classificação de resultados;
-- `RUNBOOK_FREE.md` — será congelado antes da homologação Free;
-- `CHECKPOINT.md` — será atualizado a cada gate relevante.
+- [DESENHO_TECNICO.md](DESENHO_TECNICO.md)
+- [THREAT_MODEL.md](THREAT_MODEL.md)
+- [TESTES.md](TESTES.md)
+- [EVIDENCIAS_LOCAIS.md](EVIDENCIAS_LOCAIS.md)
+- [RUNBOOK_FREE.md](RUNBOOK_FREE.md)
+- [GUIA_USUARIO.md](GUIA_USUARIO.md)
+- [CHECKPOINT.md](CHECKPOINT.md)

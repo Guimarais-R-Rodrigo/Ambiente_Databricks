@@ -1,86 +1,115 @@
-# SE04 — plano de testes
+# SE04 — testes e micro-evals
 
 ## Princípio
 
-`task_correctness` e `receipt_validity/canonical_compliance` são dimensões independentes. Output matematicamente correto não recebe homologação canônica por equivalência de conteúdo.
+`task_correctness` e `canonical_compliance` permanecem dimensões independentes. Resultado manual correto não recebe Receipt retroativo.
 
-## Suíte local SE04
+## Suítes dedicadas
 
-A suíte dedicada deve cobrir pelo menos R01–R19 do threat model, incluindo:
+### `test_skill_enforcement_se04.py`
 
-- schema/versionamento;
-- serialização canônica determinística;
-- emissão somente em trace PASS;
-- binding de trace/input/output/release;
-- tamper de receipt;
-- tamper de trace;
-- output sobrescrito;
-- stale/replay com `expected_run_id`;
-- wrong skill;
-- wrong release/runner/contract;
-- provenance conflict;
-- primitive failure;
-- fallback;
-- manual/direct helper sem receipt;
-- campos faltantes/tipos errados;
-- versão desconhecida;
-- ausência de payload de negócio no receipt.
+Cobre o contrato do Receipt isoladamente, incluindo:
 
-## Regressões
+- R01 válido;
+- R02 manual sem Receipt;
+- R03 direct helper sem Receipt;
+- R05 Receipt adulterado;
+- R06 output adulterado;
+- R07 stale run;
+- R08 wrong skill;
+- R09 wrong release;
+- R10 provenance conflict;
+- R11 release integrity corrente falha;
+- R12 primitive/fallback inválidos;
+- R13 Receipt copiado para outro payload;
+- R14 Receipt parcial/malformed;
+- R15 versão desconhecida;
+- R16 trace adulterado;
+- R17 release anterior;
+- R18 determinismo independente da ordem JSON;
+- R19 agent-declared não substitui runtime-derived;
+- ausência de payload de negócio no Receipt;
+- ausência de evidência fabricada para import/template consumption.
 
-A certificação SE04 deve continuar executando:
+### `test_skill_enforcement_se04_runner.py`
 
-- contrato v0.1;
-- SE01;
-- SE02;
-- SE03;
-- SE04;
-- validação estrutural;
-- renderer canônico;
-- render-diff incluindo untracked;
-- snapshot README.
+Cobre integração com o produto real:
 
-Os guards históricos de SE02/SE03 que antes exigiam `receipt.py` ausente devem evoluir na SE04: passam a permitir o artefato da sprint corrente, mas continuam proibindo `postflight.py` e qualquer artefato funcional de SE05.
+- manifest protege o receipt engine e fingerprints batem;
+- runner canônico emite Receipt V1;
+- wrapper contra release corrente retorna `VALID`;
+- tamper de Receipt → `INVALID`;
+- tamper de output → `INCOMPATIBLE`;
+- Receipt anterior contra run atual → `STALE_REPLAYED`;
+- provenance conflict → `BLOCKED`, sem Receipt;
+- primitive failure → `FAIL`, chamada mas não concluída, sem Receipt e sem fallback;
+- output manual → `ABSENT`;
+- `postflight.py` permanece ausente.
 
-## Estados do verifier
+## Regressões SE01–SE03
 
-```text
-VALID
-ABSENT
-MALFORMED
-INVALID
-INCOMPATIBLE
-STALE_REPLAYED
-UNSUPPORTED_VERSION
-```
+O perfil oficial `se04` do certifier executa:
 
-Nenhum estado diferente de `VALID` implica canonical compliance.
+1. contrato v0.1;
+2. SE01;
+3. SE02;
+4. SE03;
+5. Receipt SE04;
+6. runner SE04;
+7. validação estrutural;
+8. renderer;
+9. render-diff incluindo arquivos untracked;
+10. snapshot README.
+
+Os antigos guards temporais de SE02/SE03 foram evoluídos apenas para reconhecer que SE04 agora existe. Eles continuam proibindo artefatos funcionais da SE05 e não reclassificam E01–E12 históricos.
+
+## Evidência já observada fora do certifier oficial
+
+Em harness isolado foram observados:
+
+- 20/20 testes do contrato do Receipt: PASS;
+- integração sintética runner → Receipt `1.0` → verifier `VALID`: PASS;
+- alteração posterior do output → `INCOMPATIBLE`: PASS.
+
+Essa evidência é útil para desenvolvimento, mas **não equivale a `LOCAL_CERTIFICATION=PASS`**, porque não executou a árvore completa, renderer, drift e snapshot.
 
 ## Databricks Free
 
-Probe SE04 deverá usar somente dados sintéticos e demonstrar:
+`tools/skill_enforcement/se04_free_probe.py` cobre, com view temporária sintética:
 
-1. receipt emitido e `VALID`;
-2. output adulterado;
-3. receipt adulterado;
-4. stale receipt;
-5. output manual sem receipt;
-6. chamada direta à primitive sem receipt;
-7. release integrity quebrada;
-8. provenance conflict;
-9. primitive failure sem fallback;
-10. `published_package_mutated=false`;
-11. `persistent_writes_performed=false`.
+- Receipt emitido e `VALID`;
+- Receipt adulterado;
+- output adulterado;
+- stale Receipt;
+- output manual sem Receipt;
+- chamada direta a `quick_profile` sem Receipt;
+- release integrity quebrada somente em fixture temporária;
+- provenance conflict;
+- primitive failure sem fallback;
+- `published_package_mutated=false`;
+- `persistent_writes_performed=false`.
 
-Screening conversacional do Genie Code não é gate estrutural da SE04. Se repetido, permanece em `GENIE_BEHAVIORAL_SCREENING`, sem reclassificar E02 histórico.
+Até existir execução real e JSON bruto preservado, `DATABRICKS_FREE` permanece `NOT_RUN`.
+
+## Genie Code
+
+A SE04 não repete comportamento estocástico como gate estrutural. O histórico da SE03 permanece:
+
+```text
+GENIE_BEHAVIORAL_SCREENING = MIXED
+E02 = FAIL_OBSERVED
+E12 = PASS_OBSERVED
+```
 
 ## Release candidate
 
-A candidata só pode abrir PR depois de:
+PR somente depois de observar no mesmo HEAD candidato:
 
-- `LOCAL_CERTIFICATION=PASS` no HEAD exato;
-- `DATABRICKS_FREE=PASS` no alcance determinístico SE04;
-- derivado sem drift;
-- documentação completa;
+- `LOCAL_CERTIFICATION=PASS`;
+- `DERIVED_STALE=false`;
+- regressões SE01–SE03 PASS;
+- suítes SE04 PASS;
+- `DATABRICKS_FREE=PASS` no alcance determinístico;
+- documentação reconciliada;
 - worktree limpa;
-- nenhum postflight SE05 presente.
+- nenhum artefato de SE05.
