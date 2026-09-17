@@ -2,7 +2,7 @@
 
 <!-- readme-objeto: 1.0.0 -->
 
-`hub_scripts.skill_execution` é a camada determinística do Skill Enforcement Framework usada pela skill piloto `hub-ml-eda-profissional`. Ela reúne o preflight L2 preservado da SE02 e, na SE04, o módulo de `ExecutionReceiptV1` usado pelo runner canônico para produzir e verificar evidência estrutural da execução.
+`hub_scripts.skill_execution` é a camada determinística do Skill Enforcement Framework usada pela skill piloto `hub-ml-eda-profissional`. Ela reúne o preflight L2 preservado da SE02 e, na SE04, o subpacote `receipt` usado pelo runner canônico para produzir e verificar evidência estrutural da execução.
 
 ## Visão rápida
 
@@ -15,14 +15,14 @@
 | Entrada principal | contrato/contexto no preflight; trace/result/release no Receipt |
 | Saída | `PreflightResult` e `ReceiptVerification` estruturados |
 
-Implementações: [skill_execution.py](skill_execution.py) e [receipt.py](receipt.py).
+Implementações: [skill_execution.py](skill_execution.py) e [receipt/__init__.py](receipt/__init__.py). Exemplo do objeto: [exemplo_skill_execution.py](exemplo_skill_execution.py).
 
 ## 1. O que é?
 
 A camada possui duas responsabilidades distintas:
 
 1. `run_preflight`: resolve o contrato v0.1 antes do core analítico;
-2. `receipt.py`: constrói e verifica o comprovante formal da execução depois que o runner protegido conclui com sucesso.
+2. o subpacote `receipt`: constrói e verifica o comprovante formal da execução depois que o runner protegido conclui com sucesso.
 
 O runner em si continua adjacente à skill em `skills/hub-ml-eda-profissional/scripts/run.py`.
 
@@ -100,7 +100,7 @@ Preflight pela fachada pública existente:
 from hub_scripts.skill_execution import run_preflight
 ```
 
-Receipt/verifier pela subcamada explícita:
+Receipt/verifier pelo subpacote explícito:
 
 ```python
 from hub_scripts.skill_execution.receipt import (
@@ -142,8 +142,9 @@ No Receipt, teste pelo menos: válido, ausente, tampered receipt, tampered outpu
 ## 14. Arquivos relacionados e próximos passos
 
 - [skill_execution.py](skill_execution.py): preflight L2.
-- [receipt.py](receipt.py): schema lógico, builder e verifier SE04.
+- [receipt/__init__.py](receipt/__init__.py): schema lógico, builder e verifier SE04.
 - [__init__.py](__init__.py): fachada pública histórica do preflight.
+- [exemplo_skill_execution.py](exemplo_skill_execution.py): exemplo operacional do objeto `skill_execution`.
 - `skills/hub-ml-eda-profissional/scripts/run.py`: runner/emissor e wrapper de verificação contra release corrente.
 - `skills/hub-ml-eda-profissional/release_manifest.json`: fingerprints protegidos.
 - `docs/sprints/skill_enforcement/SE04/`: desenho, threat model, testes e runbooks.
