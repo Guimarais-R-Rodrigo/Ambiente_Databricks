@@ -79,42 +79,62 @@ No run `35148293591`, já sobre o derivado materializado:
 
 As métricas medidas nessa árvore foram: 93 helpers citados, 223 Markdown/1401 links, 81 notebooks/102 links, 77/77 objetos documentados, 63 pastas de objeto, 61 módulos com forma canônica, 225 arquivos Python e 1516 arquivos / 1985 links globais. A atualização foi aplicada por âncoras exatas e sem inventar contagens.
 
-## Primeira certificação local no regime local-first
+No HEAD `e99b5ee6557bd8898c22986a2d1627f4942d132a`, os workflows funcionais e estruturais passaram, mas dois gates transversais detectaram pendências reais de governança:
 
-No HEAD `df240d056ca9b51318c6100c823eb40f6b42741d`, em Windows 11 / Python 3.12.10, o novo `certify_local.py` foi executado integralmente.
+1. `CI local reproduzível`, run `35148514349`: 8/9 etapas PASS; a única falha foi `ManualTecnicoTests.test_manual_inventory_covers_current_objects`, porque `hub_scripts.skill_execution` ainda não constava do Manual Técnico.
+2. `Integração transversal V08`, run `35148514303`: 22 testes V08 PASS, regressão global de temas com 741 testes e zero failure funcional, compatibilidade visual PASS e snapshot PASS; a única falha foi o guard histórico `V08_RUNTIME_EDIT_FORBIDDEN`, que aplicava a proibição própria da V08 a qualquer evolução posterior em `hub_scripts`.
 
-Resultados observados:
+Nenhuma dessas duas falhas foi reclassificada como PASS.
+
+## Correção transversal V08
+
+O guard V08 foi corrigido fora da SE02 pela PR #75, com diff de um único workflow e sem alteração de produto. A regra continua fail-closed na própria frente `codex/temas-v08*`, mas fica `skipped` em `main` integrada e em iniciativas posteriores.
+
+A PR #75, HEAD `72267f64c939a078a67ea7e0a192b622d6d305e1`, foi certificada com V00, V01, V02, `CI local reproduzível` e V08 em SUCCESS e integrada por squash na `main` em `ae9337204a7c769c0b28b33321c8b81afdff6bae`.
+
+A branch SE02 foi reconciliada por merge normal, sem force-push, no commit `3fe1078e743f7e317d3a814d85d321d7b6f45d85`; após isso, `behind_by=0`.
+
+## Reconciliação documental
+
+A dívida documental pós-SE01 e o inventário criado pela SE02 foram reconciliados de forma aditiva/ancorada:
+
+- Plano Mestre: SE00/SE01 integradas, SE02 em andamento, SE03–SE08 não iniciadas;
+- Manual Técnico fonte: entrada `hub_scripts.skill_execution`;
+- Manual Técnico raiz: cópia byte a byte da fonte;
+- `hub_scripts/README.md`: oitavo objeto e catálogo do preflight;
+- `skills/README.md`: EDA passa a listar `hub_scripts.skill_execution` entre os helpers recomendados.
+
+A primeira tentativa de manutenção documental, run `35149060047`, aplicou os patches em memória mas falhou na própria guarda de conferência por `NameError: Path is not defined`; nenhum commit foi produzido. A correção adicionou apenas o import ausente. A segunda tentativa concluiu todos os steps em `success` e produziu o commit `a8c4284e6f8974e133bcf9c6866668fedb18a879`, removendo o workflow transitório.
+
+Como esses documentos fonte também pertencem ao pacote publicado, o simulado foi rematerializado novamente pelo renderer. O workflow transitório `SE02 Rematerialize Docs`, run `35149573372`, conferiu que somente os três documentos derivados esperados mudaram e concluiu todos os steps em `success`, produzindo o commit `05017ad8fe60c7477d9fc20217e422efa5a0f1c1` e removendo a automação transitória.
+
+## Certificação local de 2026-09-17
+
+No HEAD `df240d056ca9b51318c6100c823eb40f6b42741d`, em Windows 11 / Python 3.12.10:
 
 - contrato v0.1: PASS, 1/1;
 - regressão SE01: PASS, 14/14;
-- suíte SE02 ampliada: PASS, 22/22;
-- validação estrutural: FAIL;
+- suíte SE02: PASS, 22/22;
+- validação estrutural: FAIL por `resource_resolution.py` como segundo módulo `.py` na pasta de objeto `hub_scripts/skill_execution`;
 - renderer: PASS, 556 arquivos;
-- `render_diff`: FAIL, `DERIVED_STALE=true`;
+- `render_diff`: FAIL / `DERIVED_STALE=true`;
 - snapshot README: FAIL;
-- resumo final: `LOCAL_CERTIFICATION=FAIL`, com `assistant_structure`, `render_diff` e `readme_snapshot` reprovados.
+- resumo: `LOCAL_CERTIFICATION=FAIL`, 3 steps reprovados.
 
-A falha estrutural foi precisa: `resource_resolution.py` era um segundo módulo `.py` dentro da pasta de objeto `hub_scripts/skill_execution`, violando a forma canônica que o próprio validador protege. Esse achado é atribuído ao desenho da candidata, não ao ambiente do usuário.
+No HEAD `18705156ce956050ca0ada74ff1523dd7815db04`, após consolidar o resolver dentro de `skill_execution.py`:
 
-A correção seguinte consolida `canonical_module_parts`, `public_exports` e `resolve_public_symbol` no módulo principal `skill_execution.py`, mantendo uma única semântica L1/L2 e removendo o módulo peer. O validador L1 passa a reutilizar as funções puras do módulo canônico. A candidata corrigida exige nova certificação completa; 22/22 do HEAD anterior não aprova automaticamente o HEAD novo.
+- contrato v0.1: PASS, 1/1;
+- regressão SE01: PASS, 14/14;
+- suíte SE02: PASS, 22/22;
+- o erro de módulo extra desapareceu;
+- validação estrutural: FAIL porque as funções de infraestrutura incorporadas ao módulo ficaram públicas para `tools/api_publica.py`, fazendo `__init__.py` divergir;
+- renderer: PASS, 555 arquivos;
+- `render_diff`: FAIL / `DERIVED_STALE=true`;
+- snapshot README: FAIL;
+- resumo: `LOCAL_CERTIFICATION=FAIL`, 3 steps reprovados.
 
-## Correção transversal V08 e reconciliação documental
-
-O guard V08 foi corrigido fora da SE02 pela PR #75, integrada na `main@ae9337204a7c769c0b28b33321c8b81afdff6bae`. A branch SE02 foi reconciliada por merge normal, sem force-push e permanece `behind_by=0` na baseline dessa reconciliação.
-
-Plano Mestre, Manual Técnico, catálogo `hub_scripts`, `skills/README.md`, revisão local-first, certifier, probe Free e runbook SE02 permanecem como superfícies vivas desta frente.
+Correção subsequente: essas funções compartilhadas passam a ser internas ao módulo canônico (`_canonical_module_parts`, `_public_exports`, `_resolve_public_symbol`), e o validador L1 reutiliza exatamente essas implementações internas. Isso preserva uma única semântica L1/L2 sem ampliar a API pública `hub_scripts.skill_execution`.
 
 ## Evidência pendente
 
-Para a candidata corrigida ainda faltam:
-
-- nova certificação local completa;
-- materialização canônica do derivado correspondente;
-- snapshot README reconciliado a partir da medição real;
-- `ci_local.py --verbose`;
-- publicação/verify no Databricks Free;
-- probe Free P1/C1/B1;
-- testes conversacionais F02-P1/F02-A1/F02-A2;
-- fechamento documental;
-- Actions finais quando aplicáveis;
-- aceite humano e merge.
+Ainda faltam a certificação completa da árvore corrigida, materialização/snapshot definitivos, publicação/verify no Databricks Free, testes `PASS`/`BLOCKED` no Free, teste conversacional do Genie Code, CHANGELOG final e CI completo da candidata de fechamento.
