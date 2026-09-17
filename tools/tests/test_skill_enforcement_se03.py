@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import importlib.util
 import inspect
@@ -407,7 +407,7 @@ class SkillEnforcementSE03Tests(unittest.TestCase):
 
     def test_se05_artifacts_remain_absent(self) -> None:
         execution_dir = SOURCE_ASSISTANT / "hub_scripts" / "skill_execution"
-        self.assertTrue((execution_dir / "receipt.py").is_file())
+        self.assertTrue((execution_dir / "receipt" / "__init__.py").is_file())
         self.assertFalse((execution_dir / "postflight.py").exists())
 
 

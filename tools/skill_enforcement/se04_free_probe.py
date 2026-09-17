@@ -1,4 +1,4 @@
-# Databricks notebook source
+﻿# Databricks notebook source
 from __future__ import annotations
 
 import copy
@@ -287,7 +287,7 @@ try:
 
     with tempfile.TemporaryDirectory(prefix="se04-free-r11-") as tmp:
         fixture_root = _copy_integrity_fixture(assistant_root, Path(tmp))
-        receipt_engine = fixture_root / "hub_scripts" / "skill_execution" / "receipt.py"
+        receipt_engine = fixture_root / "hub_scripts" / "skill_execution" / "receipt" / "__init__.py"
         receipt_engine.write_text(
             receipt_engine.read_text(encoding="utf-8") + "\n# tampered fixture\n",
             encoding="utf-8",
