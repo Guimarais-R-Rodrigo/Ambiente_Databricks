@@ -28,13 +28,16 @@ O runner canônico:
 2. deriva `numeric_columns` do schema Spark e bloqueia contradição declarada;
 3. executa o preflight L2 do `execution_contract.json`;
 4. chama a primitive protegida `hub_scripts.quick_profile.quick_profile`;
-5. emite `ExecutionTraceV0` com digests, provenance, chamadas reais e `fallback_used=false`.
+5. registra em `ExecutionTraceV0` digests, provenance, recursos resolvidos/chamados/concluídos e `fallback_used=false`;
+6. quando a execução termina canonicamente, emite `ExecutionReceiptV1` com bindings determinísticos ao trace, input, output e release.
 
-Somente um resultado com trace válido do runner pode ser classificado como **canonical compliance** para a etapa protegida. Output manual correto sem runner pode ser tecnicamente útil, mas não é uma execução canônica da skill.
+Na SE04, a evidência formal de canonical compliance é um Receipt que o verifier classifica como `VALID`. O `ExecutionTraceV0` continua sendo o registro técnico precursor; ele não deve ser confundido com o comprovante formal. Output manual correto sem runner pode ser tecnicamente útil, mas não recebe Receipt canônico e não satisfaz canonical compliance da SE04.
 
-O arquivo [scripts/preflight.py](scripts/preflight.py) continua disponível para diagnóstico isolado do L2. Ele não substitui `scripts/run.py` quando o core protegido for executado. Se integridade, provenance, preflight ou a primitive required falharem, pare; não faça fallback manual silencioso.
+O verifier estrutural da SE04 apenas determina se o comprovante é válido. **Ele ainda não bloqueia a apresentação da resposta final quando o Receipt está ausente ou inválido.** Esse postflight fail-closed pertence exclusivamente à SE05 e não foi iniciado.
 
-A SE03 ainda protege estruturalmente apenas `quick_profile`. As demais primitives continuam sob o contrato/preflight L2 até serem incorporadas explicitamente ao runner em evolução posterior. O contrato permanece `mode="audit"`; `ExecutionTraceV0` não é o Execution Receipt formal da SE04 nem o postflight da SE05.
+O arquivo [scripts/preflight.py](scripts/preflight.py) continua disponível para diagnóstico isolado do L2. Ele não substitui `scripts/run.py` quando o core protegido for executado. Se integridade, provenance, preflight ou a primitive required falharem, pare; não faça fallback manual silencioso e não fabrique Receipt retroativo.
+
+A SE04 continua protegendo estruturalmente apenas `quick_profile`. As demais primitives permanecem sob o contrato/preflight L2 até serem incorporadas explicitamente ao runner em evolução posterior. O contrato permanece `mode="audit"`.
 
 ## Executar em nove etapas
 
@@ -87,7 +90,7 @@ Importar de `hub_snippets`/`hub_scripts` em vez de reimplementar a lógica. Cat�
 
 | Demanda | Módulo |
 |---|---|
-| Runner L3 + preflight do contrato | `skills/hub-ml-eda-profissional/scripts/run.py`, `hub_scripts.skill_execution` |
+| Runner L3 + preflight + emissão/verificação do Receipt | `skills/hub-ml-eda-profissional/scripts/run.py`, `hub_scripts.skill_execution`, `hub_scripts.skill_execution.receipt` |
 | Perfil de tabela e checagem de qualidade | `hub_scripts.quick_profile`, `hub_scripts.data_quality_check` |
 | Nulos por coluna com semáforo | `hub_snippets.spark.null_summary` |
 | Amostra reprodutível e exibição limitada | `hub_snippets.spark.smart_sample`, `hub_snippets.spark.safe_display` |
@@ -98,9 +101,19 @@ Quando um tema notebook validado tiver sido selecionado, mantenha a mesma análi
 
 `quick_profile` distingue o que é calculado na tabela inteira do que vem da amostra; preservar essa distinção ao relatar números.
 
+## Interpretar a evidência de execução
+
+- `ExecutionTraceV0`: registro técnico do que aconteceu durante o run.
+- `ExecutionReceiptV1`: comprovante formal que vincula aquele trace e resultado à release/execução canônica esperada.
+- `VALID`: Receipt íntegro e compatível com run, resultado e release observados.
+- `ABSENT`, `MALFORMED`, `INVALID`, `INCOMPATIBLE`, `STALE_REPLAYED` ou `UNSUPPORTED_VERSION`: não há canonical compliance formal da SE04.
+
+Se o resultado parecer correto, mas não houver Receipt `VALID`, não invente nem reconstrua um Receipt retroativo. Registre que task correctness e canonical compliance são dimensões diferentes. O bloqueio automático de conclusão será responsabilidade da SE05.
+
 ## O que nunca fazer
 
 - **Pular `scripts/run.py` na etapa L3 protegida.** Chamada direta ou implementação manual não satisfaz canonical compliance.
+- **Fabricar, copiar ou reaproveitar Receipt para legitimar rota manual.** O comprovante precisa nascer da execução canônica correspondente.
 - **Fazer fallback manual quando integridade/preflight/primitive falhar.** O runner deve bloquear/falhar fechado.
 - **Trazer a tabela inteira para o driver.** `toPandas()` sem limite verificável derruba o notebook em base real; passe por amostra declarada.
 - **Usar `cache()` sem proteção** — é bloqueado em compute serverless.

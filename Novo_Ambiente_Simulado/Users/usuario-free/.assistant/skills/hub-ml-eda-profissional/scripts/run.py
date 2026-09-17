@@ -274,6 +274,7 @@ def _base_trace(
         "decisions": [],
         "resources_resolved": [],
         "resources_called": [],
+        "resources_completed": [],
         "fallback_used": False,
         "writes_performed": False,
         "blocking_issues": [],
@@ -286,6 +287,10 @@ def _trace_issue(trace: dict[str, Any], code: str, message: str, *, status: str)
     trace["status"] = status
 
 
+def _payload(trace: Mapping[str, Any], result: Any, execution_receipt: Any = None) -> dict[str, Any]:
+    return {"trace": dict(trace), "receipt": execution_receipt, "result": result}
+
+
 def run(
     table_name: str,
     context: Mapping[str, Any],
@@ -296,7 +301,7 @@ def run(
     max_categories: int = 20,
     seed: int = 42,
 ) -> dict[str, Any]:
-    """Executa o core protegido inicial da EDA pela rota canônica SE03."""
+    """Executa o core protegido da EDA e emite Receipt V1 quando a rota é canônica."""
     run_id = uuid.uuid4().hex
     root = Path(assistant_root) if assistant_root is not None else _resolve_assistant_root()
     skill_dir = root / "skills" / SKILL
@@ -310,7 +315,7 @@ def run(
             observed_fingerprints={},
         )
         _trace_issue(trace, "RUN_INPUT_INVALID", "table_name deve ser string não vazia", status="BLOCKED")
-        return {"trace": trace, "result": None}
+        return _payload(trace, None)
 
     if not isinstance(context, Mapping):
         trace = _base_trace(
@@ -320,7 +325,7 @@ def run(
             observed_fingerprints={},
         )
         _trace_issue(trace, "RUN_INPUT_INVALID", "context deve ser mapping", status="BLOCKED")
-        return {"trace": trace, "result": None}
+        return _payload(trace, None)
 
     integrity_ok, integrity_issues, observed = _verify_release(root, manifest)
     manifest_digest = _sha256(manifest) if manifest.is_file() else None
@@ -333,14 +338,14 @@ def run(
     if not integrity_ok:
         for issue in integrity_issues:
             _trace_issue(trace, issue["code"], issue["message"], status="BLOCKED")
-        return {"trace": trace, "result": None}
+        return _payload(trace, None)
 
     effective_context, provenance, provenance_issues = _derive_context(table_name, context)
     trace["context_provenance"] = provenance
     if provenance_issues or effective_context is None:
         for issue in provenance_issues:
             _trace_issue(trace, issue["code"], issue["message"], status="BLOCKED")
-        return {"trace": trace, "result": None}
+        return _payload(trace, None)
 
     trace["input_digest"] = _payload_digest(
         {
@@ -384,7 +389,7 @@ def run(
     if preflight.status != "PASS":
         trace["blocking_issues"].extend(preflight_payload["blocking_issues"])
         trace["status"] = "BLOCKED"
-        return {"trace": trace, "result": None}
+        return _payload(trace, None)
 
     trace["resources_called"].append(PROTECTED_PRIMITIVE_ID)
     try:
@@ -401,11 +406,22 @@ def run(
             f"{PROTECTED_PRIMITIVE_ID} falhou: {type(exc).__name__}: {exc}",
             status="FAIL",
         )
-        return {"trace": trace, "result": None}
+        return _payload(trace, None)
 
+    trace["resources_completed"].append(PROTECTED_PRIMITIVE_ID)
     trace["output_digest"] = _payload_digest(result)
     trace["status"] = "PASS"
-    return {"trace": trace, "result": result}
+
+    from hub_scripts.skill_execution.receipt import build_execution_receipt
+
+    execution_receipt = build_execution_receipt(
+        trace,
+        result,
+        expected_skill=SKILL,
+        expected_entrypoint=CANONICAL_ENTRYPOINT,
+        protected_primitive=PROTECTED_PRIMITIVE_ID,
+    )
+    return _payload(trace, result, execution_receipt)
 
 
 def is_canonically_compliant(
@@ -413,7 +429,7 @@ def is_canonically_compliant(
     *,
     expected_run_id: str | None = None,
 ) -> bool:
-    """Classifica evidência mínima da SE03; não substitui o Receipt SE04."""
+    """Classifica evidência L3 da SE03; preservado para regressão histórica."""
     trace = payload.get("trace")
     if not isinstance(trace, Mapping):
         return False
@@ -444,6 +460,43 @@ def is_canonically_compliant(
     )
 
 
+def verify_receipt(
+    payload: Mapping[str, Any],
+    *,
+    expected_run_id: str | None = None,
+    assistant_root: Path | str | None = None,
+    manifest_path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Verifica Receipt SE04 contra payload e release corrente; não é postflight SE05."""
+    root = Path(assistant_root) if assistant_root is not None else _resolve_assistant_root()
+    skill_dir = root / "skills" / SKILL
+    manifest = Path(manifest_path) if manifest_path is not None else skill_dir / "release_manifest.json"
+    integrity_ok, _, observed = _verify_release(root, manifest)
+    manifest_digest = _sha256(manifest) if manifest.is_file() else ""
+    contract_key = f"skills/{SKILL}/execution_contract.json"
+    runner_key = f"skills/{SKILL}/scripts/run.py"
+    expected_release = {
+        "manifest_sha256": manifest_digest,
+        "contract_git_blob_sha1": observed.get(contract_key, ""),
+        "runner_git_blob_sha1": observed.get(runner_key, ""),
+    }
+
+    root_text = str(root)
+    if root_text not in sys.path:
+        sys.path.insert(0, root_text)
+    from hub_scripts.skill_execution.receipt import verify_execution_receipt
+
+    return verify_execution_receipt(
+        payload,
+        expected_skill=SKILL,
+        expected_entrypoint=CANONICAL_ENTRYPOINT,
+        protected_primitive=PROTECTED_PRIMITIVE_ID,
+        expected_run_id=expected_run_id,
+        expected_release=expected_release,
+        release_integrity_ok=integrity_ok,
+    ).to_dict()
+
+
 def _load_context(raw: str) -> dict[str, Any]:
     try:
         parsed = json.loads(raw)
@@ -455,7 +508,7 @@ def _load_context(raw: str) -> dict[str, Any]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Runner estrutural SE03 da skill hub-ml-eda-profissional")
+    parser = argparse.ArgumentParser(description="Runner estrutural SE04 da skill hub-ml-eda-profissional")
     parser.add_argument("--table-name", required=True)
     parser.add_argument("--context-json", required=True)
     parser.add_argument("--sample-fraction", type=float, default=0.1)
@@ -483,6 +536,7 @@ def main() -> int:
                 "fallback_used": False,
                 "writes_performed": False,
             },
+            "receipt": None,
             "result": None,
         }
 
