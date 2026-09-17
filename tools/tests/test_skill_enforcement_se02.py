@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import shutil
 import sys
@@ -13,11 +14,18 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 SOURCE_ASSISTANT = REPO_ROOT / "ambiente_fonte" / ".assistant"
 SKILL = "hub-ml-eda-profissional"
 SOURCE_SKILL = SOURCE_ASSISTANT / "skills" / SKILL
+VALIDATOR_PATH = REPO_ROOT / "tools" / "skill_enforcement" / "validate_contracts.py"
 
 if str(SOURCE_ASSISTANT) not in sys.path:
     sys.path.insert(0, str(SOURCE_ASSISTANT))
 
 from hub_scripts.skill_execution import run_preflight
+
+validator_spec = importlib.util.spec_from_file_location("sef_validate_contracts_se02", VALIDATOR_PATH)
+validator = importlib.util.module_from_spec(validator_spec)
+assert validator_spec and validator_spec.loader
+sys.modules[validator_spec.name] = validator
+validator_spec.loader.exec_module(validator)
 
 
 DEFAULT_CONTEXT = {
@@ -77,6 +85,12 @@ class SkillEnforcementSE02Tests(unittest.TestCase):
             context=dict(DEFAULT_CONTEXT if context is None else context),
         )
 
+    def validate_contract(self):
+        return validator.validate_contract(
+            self.contract,
+            assistant_root=self.assistant_root,
+        )
+
     def test_happy_path_passes_on_non_placeholder_assistant_root(self) -> None:
         result = self.run_gate()
         self.assertEqual("PASS", result.status)
@@ -116,6 +130,23 @@ class SkillEnforcementSE02Tests(unittest.TestCase):
         decision = next(item for item in result.resources if item.item_id == "quick_profile")
         self.assertFalse(decision.resolved)
         self.assertIn("caminho Python canônico", decision.reason)
+
+    def test_contract_validator_rejects_declared_only_in_all(self) -> None:
+        init_path = self.assistant_root / "hub_scripts" / "data_quality_check" / "__init__.py"
+        init_path.write_text('__all__ = ["data_quality_check"]\n', encoding="utf-8")
+        result = self.validate_contract()
+        self.assertFalse(result.ok)
+        issues = {issue.code for issue in result.issues}
+        self.assertIn("RESOURCE_SYMBOL_NOT_EXPORTED", issues)
+
+    def test_contract_validator_rejects_noncanonical_module_path(self) -> None:
+        payload = _load(self.contract)
+        payload["resources"][0]["module"] = "hub_scripts./tmp/fake"
+        _write(self.contract, payload)
+        result = self.validate_contract()
+        self.assertFalse(result.ok)
+        issues = {issue.code for issue in result.issues}
+        self.assertIn("RESOURCE_MODULE_INVALID", issues)
 
     def test_required_template_missing_blocks(self) -> None:
         (self.contract.parent / "templates" / "roteiro_eda.md").unlink()
