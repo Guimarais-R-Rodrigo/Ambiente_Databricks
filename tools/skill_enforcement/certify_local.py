@@ -12,8 +12,9 @@ credenciais Databricks nem rede por conta própria. GitHub Actions deve chamar o
 mesmo entrypoint somente na release candidate/Ready-for-review e pós-merge.
 
 Por padrão a execução exige worktree limpo, materializa o simulado pelo renderer
-canônico e falha se o renderer deixar diff. Isso transforma drift do derivado em
-evidência explícita (`DERIVED_STALE`) em vez de permitir uma cópia manual.
+canônico e falha se o renderer deixar drift rastreado ou não rastreado. Isso
+transforma drift do derivado em evidência explícita (`DERIVED_STALE`) em vez de
+permitir uma cópia manual ou deixar arquivos novos invisíveis ao gate.
 
 A precondição de worktree limpo é uma barreira de segurança: se ela falhar, o
 certifier encerra antes de qualquer step mutável, especialmente antes do renderer.
@@ -37,6 +38,7 @@ from typing import Sequence
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_EVIDENCE_ROOT = Path.home() / ".ambiente_databricks" / "sef_certifications"
+DERIVED_ROOT = "Novo_Ambiente_Simulado"
 
 
 @dataclass(frozen=True)
@@ -90,7 +92,14 @@ _COMMON_FINAL_STEPS = [
     ),
     (
         "render_diff",
-        ["git", "diff", "--exit-code", "--", "Novo_Ambiente_Simulado"],
+        [
+            "git",
+            "status",
+            "--porcelain",
+            "--untracked-files=all",
+            "--",
+            DERIVED_ROOT,
+        ],
     ),
     (
         "readme_snapshot",
@@ -144,6 +153,33 @@ def _run(command: Sequence[str]) -> tuple[int, str, float]:
     duration = time.monotonic() - start
     output = _decode((proc.stdout or b"") + (proc.stderr or b""))
     return proc.returncode, output, duration
+
+
+def _run_render_diff_gate() -> tuple[int, str, float]:
+    """Falha se o derivado tiver qualquer drift, inclusive arquivo não rastreado."""
+    command = [
+        "git",
+        "status",
+        "--porcelain",
+        "--untracked-files=all",
+        "--",
+        DERIVED_ROOT,
+    ]
+    code, output, duration = _run(command)
+    if code != 0:
+        return code, output, duration
+
+    dirty = [line for line in output.splitlines() if line.strip()]
+    if dirty:
+        detail = "\n".join(dirty)
+        return (
+            1,
+            "DERIVED_STALE: alterações rastreadas ou não rastreadas em "
+            f"{DERIVED_ROOT}:\n{detail}\n",
+            duration,
+        )
+
+    return 0, "OK: derivado sem drift rastreado ou não rastreado\n", duration
 
 
 def _git_output(*args: str) -> str | None:
@@ -354,7 +390,10 @@ def main(argv: list[str] | None = None) -> int:
 
     for index, (name, command) in enumerate(_filtered_steps(args.profile, args.skip_render), 1):
         print(f"\n-- {index:02d} {name}")
-        code, output, duration = _run(command)
+        if name == "render_diff":
+            code, output, duration = _run_render_diff_gate()
+        else:
+            code, output, duration = _run(command)
         status = "PASS" if code == 0 else "FAIL"
         log_file = None
         if logs_dir is not None:
