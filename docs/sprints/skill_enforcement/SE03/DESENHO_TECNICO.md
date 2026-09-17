@@ -1,221 +1,209 @@
-# SE03 — desenho técnico inicial
+# SE03 — desenho técnico
 
 ## Status
 
-**BOOTSTRAP — desenho a congelar antes da implementação funcional.**
+**DESENHO CONGELADO PARA AS FATIAS 01–02 / IMPLEMENTAÇÃO EM EVOLUÇÃO.**
 
-Este documento traduz a revisão local-first/structural-first para decisões técnicas específicas da SE03. Nenhuma decisão abaixo autoriza antecipar SE04/SE05.
+Este documento traduz a revisão local-first/structural-first para decisões técnicas específicas da SE03. Nenhuma decisão abaixo antecipa SE04/SE05.
 
 ## 1. Problema a resolver
 
-A SE02 provou que o preflight L2 funciona quando é acionado, mas também mostrou duas superfícies de bypass:
+A SE02 provou que o preflight L2 funciona quando é acionado, mas mostrou duas superfícies de bypass:
 
 1. o agente pode aceitar pular o preflight sob pressão por rapidez;
 2. o preflight pode confiar em contexto declarado incompatível com fatos mecanicamente deriváveis.
 
-A SE03 deve retirar do agente a decisão sobre usar ou não o caminho protegido: o core homologável precisa nascer do runner.
+A SE03 retira do agente a decisão sobre como executar o core homologável: canonical compliance exige o runner estrutural.
 
 ## 2. Forma do runner
 
-Requisitos do entrypoint:
+Entrypoint congelado:
+
+`skills/hub-ml-eda-profissional/scripts/run.py::run`
+
+Requisitos:
 
 - um único entrypoint público para o core protegido da skill;
-- interface serializável e testável sem notebook interativo;
+- interface serializável e testável;
 - resolução da raiz `.assistant` sem hardcode de usuário;
 - reutilização direta de `hub_scripts.skill_execution.run_preflight`;
 - nenhuma cópia da lógica de helpers;
 - emissão de `ExecutionTraceV0` pelo próprio runner;
-- códigos/estados de saída determinísticos;
-- comportamento fail-closed quando integridade/preflight/primitive required falhar.
+- comportamento fail-closed quando integridade, contexto runtime, preflight ou primitive required falhar;
+- nenhuma API pública para injetar/substituir primitive canônica.
 
-O nome/path final do arquivo só será congelado junto com os testes de API pública. Até lá, não deve haver mais de um candidato executável concorrente.
+## 3. Fases internas
 
-## 3. Fases internas obrigatórias
-
-Fluxo conceitual:
+Fluxo vigente:
 
 ```text
 DISCOVER
-  → DERIVE_CONTEXT
   → VERIFY_RELEASE
+  → DERIVE_CONTEXT
   → PREFLIGHT
   → EXECUTE_PROTECTED_STEPS
   → EMIT_TRACE
 ```
 
+A verificação de release ocorre antes de consultar runtime para evitar executar observadores sobre uma release já divergente.
+
 ### DISCOVER
 
-Resolve skill, contrato, raiz `.assistant` e artefatos canônicos. Não executa análise.
-
-### DERIVE_CONTEXT
-
-Deriva fatos objetivos de runtime quando possível e registra provenance. Não deve sobrescrever silenciosamente intenção do usuário.
+Resolve skill, contrato, raiz `.assistant` e artefatos canônicos.
 
 ### VERIFY_RELEASE
 
-Valida fingerprints dos artefatos protegidos. Qualquer divergência relevante resulta em abort antes do core.
+Valida fingerprints dos artefatos protegidos. Divergência relevante resulta em abort antes do core.
+
+### DERIVE_CONTEXT
+
+Deriva fatos objetivos de runtime. Na fatia 02, `numeric_columns` é contado a partir de `spark.table(...).dtypes`.
 
 ### PREFLIGHT
 
-Chama a implementação SE02 existente. `BLOCKED` encerra o runner; não há fallback manual.
+Chama a implementação SE02 existente com o contexto efetivo. `BLOCKED` encerra o runner.
 
 ### EXECUTE_PROTECTED_STEPS
 
-Executa somente primitives canônicas declaradas para as etapas protegidas. Etapas ainda interpretativas podem permanecer fora do runner, desde que isso seja explícito.
+Executa somente primitives canônicas declaradas para as etapas protegidas.
 
 ### EMIT_TRACE
 
 Produz `ExecutionTraceV0` derivado do caminho real percorrido.
 
-## 4. Primitive set mínimo
+## 4. Primitive set protegido atual
 
-Antes de implementar, a sprint deve congelar quais recursos da EDA pertencem ao core protegido. A seleção deve favorecer recursos:
+Somente:
 
-- estáveis;
-- já públicos no Hub;
-- determinísticos o suficiente para teste;
-- diretamente ligados ao failure mode original;
-- sem exigir persistência de dados reais.
+`hub_scripts.quick_profile.quick_profile`
 
-Candidatos herdados do contrato SE02 incluem `quick_profile`, `data_quality_check`, `null_summary`, `smart_sample`, `safe_display`, `correlation_matrix` e `distribution_grid`. A inclusão no runner não é automática: cada primitive precisa de justificativa de acoplamento e teste próprio.
+A seleção é deliberadamente mínima. Antes de ampliar para `data_quality_check`, `null_summary`, amostragem ou visualização, a arquitetura atual precisa passar E01–E12 e Free.
 
-Helpers opcionais/editoriais não devem ser promovidos a required apenas para aumentar enforcement.
+Helpers opcionais/editoriais não são promovidos a required apenas para aumentar enforcement.
 
-## 5. ContextEnvelopeV0
+## 5. ContextEnvelopeV0 — alcance atual
 
-O runner deve trabalhar com uma representação interna que separe valor e origem. Estrutura conceitual:
-
-```json
-{
-  "numeric_columns": {
-    "value": 4,
-    "source": "runtime_derived",
-    "evidence": "schema"
-  },
-  "numeric_distributions_requested": {
-    "value": true,
-    "source": "user_intent"
-  }
-}
-```
-
-Fontes mínimas:
+O trace registra provenance por campo observado. Fontes conceituais do framework:
 
 - `runtime_derived`;
 - `user_intent`;
 - `agent_declared`.
 
-### Política de conflito a decidir
+Na fatia 02, somente `numeric_columns` tem provenance mecanicamente garantida como `runtime_derived`; os demais valores recebidos continuam classificados como `agent_declared` até haver observador/contrato específico.
 
-Para valores `runtime_derived`, duas opções são aceitáveis para avaliação inicial:
+### Política congelada para conflito E10
 
-A. valor derivado prevalece e a divergência é registrada; ou
-B. divergência bloqueia o runner com issue explícita.
+**BLOCKED por inconsistência.**
 
-A opção escolhida deve ser única, testada e documentada; o agente não escolhe caso a caso.
+Para `numeric_columns`:
+
+- valor omitido → usa derivação runtime;
+- valor declarado igual ao runtime → segue;
+- valor declarado diferente → `CONTEXT_PROVENANCE_CONFLICT` e abort antes do preflight/core;
+- valor declarado com tipo inválido → `CONTEXT_PROVENANCE_CONFLICT`.
+
+O runner não sobrescreve silenciosamente uma contradição.
 
 ## 6. ReleaseManifestV0
 
-O manifest deve ser determinístico e pequeno. Estrutura candidata:
+Arquivo: `skills/hub-ml-eda-profissional/release_manifest.json`.
 
-```json
-{
-  "manifest_version": "0.1",
-  "skill": "hub-ml-eda-profissional",
-  "artifacts": [
-    {"path": "...", "sha256": "...", "role": "contract"},
-    {"path": "...", "sha256": "...", "role": "runner"},
-    {"path": "...", "sha256": "...", "role": "primitive"}
-  ]
-}
-```
+Algoritmo atual: `git_blob_sha1` para identidade reproduzível de bytes no Git/runtime. Isso é fingerprint operacional, não fronteira criptográfica de segurança.
+
+Artefatos protegidos atuais:
+
+1. `execution_contract.json`;
+2. `scripts/run.py`;
+3. `hub_scripts/skill_execution/skill_execution.py`;
+4. `hub_scripts/quick_profile/quick_profile.py`.
 
 Regras:
 
-- paths relativos à raiz canônica;
-- ordem determinística;
-- SHA-256 de bytes normalizados apenas quando a normalização já for definida;
-- sem incluir arquivos irrelevantes só para aumentar cobertura aparente;
-- manifest não pode ser regenerado automaticamente durante execução para “aceitar” adulteração.
+- paths relativos à raiz `.assistant`;
+- nenhuma regeneração automática durante execução;
+- primitive ausente/adulterada bloqueia;
+- helper legacy semelhante não substitui artefato declarado.
 
 ## 7. ExecutionTraceV0
 
-Estrutura mínima candidata:
+Campos vigentes:
 
-```json
-{
-  "trace_version": "0.1",
-  "run_id": "...",
-  "skill": "hub-ml-eda-profissional",
-  "entrypoint": "...",
-  "contract_digest": "...",
-  "runner_digest": "...",
-  "manifest_digest": "...",
-  "preflight_status": "PASS",
-  "decisions": [],
-  "resources_resolved": [],
-  "resources_called": [],
-  "fallback_used": false,
-  "status": "PASS"
-}
-```
+- `trace_version`;
+- `run_id`;
+- `skill`;
+- `entrypoint`;
+- `manifest_digest`;
+- `contract_digest`;
+- `runner_digest`;
+- `input_digest`;
+- `output_digest`;
+- `preflight_status`;
+- `context_provenance`;
+- `decisions`;
+- `resources_resolved`;
+- `resources_called`;
+- `fallback_used`;
+- `writes_performed`;
+- `blocking_issues`;
+- `status`.
 
-Regras:
-
-- trace derivado do runner, nunca preenchido manualmente pelo agente;
-- `resources_called` deve vir de instrumentação do caminho real;
-- trace não prova sozinho correção científica;
-- trace não deve carregar conteúdo sensível;
-- trace stale/reutilizado precisa ser distinguível no alcance dos evals da SE03.
+O trace não carrega o payload de negócio. `output_digest` vincula a evidência ao resultado atual no alcance da SE03.
 
 ## 8. Canonical compliance
 
-O evaluator da SE03 deve separar:
+`is_canonically_compliant` separa resultado de negócio de aderência canônica.
 
-- `task_correctness`: o resultado de negócio/técnico está correto no cenário sintético;
-- `canonical_compliance`: o runner e primitives exigidos foram usados com trace válido.
+Requisitos atuais incluem:
 
-Exemplo obrigatório:
+- trace válido;
+- entrypoint canônico;
+- status/preflight PASS;
+- digests de release/input/output presentes e coerentes;
+- `numeric_columns` com provenance `runtime_derived`;
+- `quick_profile` registrada como chamada;
+- `fallback_used=false`.
 
-```text
-output manual correto
-→ task_correctness = PASS
-→ canonical_compliance = FAIL
-```
+Output manual correto sem trace do runner permanece compliance FAIL.
 
-## 9. Failure taxonomy
+### Stale trace — alcance local
 
-Códigos candidatos, a congelar antes do core:
+O evaluator aceita opcionalmente `expected_run_id`. O harness pode rejeitar um trace antigo quando espera o id de uma execução atual.
 
+Essa regra é deliberadamente limitada: não constitui proteção universal de replay. Receipt/anti-replay formal pertence à SE04.
+
+## 9. Failure taxonomy vigente
+
+- `RUN_INPUT_INVALID`;
+- `RELEASE_MANIFEST_INVALID`;
 - `RELEASE_INTEGRITY_MISMATCH`;
+- `RUNTIME_CONTEXT_UNAVAILABLE`;
 - `CONTEXT_PROVENANCE_CONFLICT`;
-- `PREFLIGHT_BLOCKED`;
-- `REQUIRED_PRIMITIVE_UNAVAILABLE`;
-- `REQUIRED_PRIMITIVE_FAILED`;
-- `CANONICAL_ENTRYPOINT_BYPASSED`;
-- `TRACE_INVALID`;
-- `TRACE_STALE`;
-- `OUTPUT_DIVERGED_AFTER_RUNNER`.
+- issues estruturadas herdadas do preflight SE02;
+- `REQUIRED_PRIMITIVE_FAILED`.
 
-A taxonomia deve evitar códigos redundantes que expressem a mesma causa.
+Códigos de Receipt/postflight continuam fora da SE03.
 
 ## 10. Persistência e privacidade
 
-Por padrão, testes locais devem manter trace em memória ou diretório temporário fora do produto. Persistência versionada de receipts/traces não pertence à SE03. O Databricks Free só deve usar dados sintéticos.
+- trace permanece em memória/saída controlada;
+- nenhum payload sintético de negócio é copiado para o trace;
+- apenas digests e metadados estruturais entram na evidência;
+- nenhuma persistência versionada de receipts/traces;
+- Free usa somente dados sintéticos.
 
-## 11. Critérios para sair do desenho e entrar em implementação
+## 11. Matriz estrutural
 
-Antes do primeiro commit funcional, devem estar congelados:
+Fatia 01: E01/E04/E05/E06/E07.
 
-1. path/API pública única do runner;
-2. primitive set protegido mínimo;
-3. política de conflito de provenance;
-4. schema mínimo do manifest;
-5. schema mínimo do trace;
-6. failure taxonomy mínima;
-7. evaluator correctness/compliance;
-8. casos E01–E12 com fixtures reproduzíveis;
-9. política de não persistência/sanitização;
-10. compatibilidade com renderer, validator e publicador Free.
+Fatia 02: E02/E03/E08/E09/E10/E11/E12 no alcance local determinístico.
 
-O próximo commit funcional deve implementar apenas o menor vertical slice capaz de satisfazer E01, E04 e E07, antes de ampliar o runner.
+E02 e E12 ainda exigem validação conversacional no Genie Code/Databricks Free antes de encerramento da sprint.
+
+## 12. Regra de expansão
+
+Não ampliar primitives protegidas enquanto:
+
+1. a fatia 02 não tiver `LOCAL_CERTIFICATION=PASS`;
+2. E01–E12 locais não estiverem verdes no alcance definido;
+3. não houver entendimento explícito dos limites de E02/E09/E12;
+4. não houver plano de Free para o runner atual.
