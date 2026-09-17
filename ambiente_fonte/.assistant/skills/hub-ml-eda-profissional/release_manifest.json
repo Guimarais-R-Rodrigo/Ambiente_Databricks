@@ -16,12 +16,17 @@
     {
       "path": "skills/hub-ml-eda-profissional/scripts/run.py",
       "role": "runner",
-      "git_blob_sha1": "96682938898e7fbd48f32571b21046d3620a0f43"
+      "git_blob_sha1": "c102df83c8b58c3e9aadfb831c65a2d158f367d2"
     },
     {
       "path": "hub_scripts/skill_execution/skill_execution.py",
       "role": "preflight_engine",
       "git_blob_sha1": "61c175827cacf60fe6aef4c24fbeb1842022f42d"
+    },
+    {
+      "path": "hub_scripts/skill_execution/receipt.py",
+      "role": "receipt_engine",
+      "git_blob_sha1": "0845b8109560c05a5a466638f02482b0541ab6b9"
     },
     {
       "path": "hub_scripts/quick_profile/quick_profile.py",
