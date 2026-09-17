@@ -6,6 +6,7 @@ Uso principal:
 
     python -B tools/skill_enforcement/certify_local.py --profile se02
     python -B tools/skill_enforcement/certify_local.py --profile se03
+    python -B tools/skill_enforcement/certify_local.py --profile se04
 
 O certifier é o gate determinístico de desenvolvimento do SEF. Ele não usa
 credenciais Databricks nem rede por conta própria. GitHub Actions deve chamar o
@@ -78,8 +79,16 @@ _SE02_STEP = (
     [sys.executable, "-B", "tools/tests/test_skill_enforcement_se02.py", "-v"],
 )
 _SE03_STEP = (
-    "se03_tests",
+    "se03_regression",
     [sys.executable, "-B", "tools/tests/test_skill_enforcement_se03.py", "-v"],
+)
+_SE04_RECEIPT_STEP = (
+    "se04_receipt_tests",
+    [sys.executable, "-B", "tools/tests/test_skill_enforcement_se04.py", "-v"],
+)
+_SE04_RUNNER_STEP = (
+    "se04_runner_tests",
+    [sys.executable, "-B", "tools/tests/test_skill_enforcement_se04_runner.py", "-v"],
 )
 _COMMON_FINAL_STEPS = [
     (
@@ -122,6 +131,15 @@ PROFILE_STEPS: dict[str, list[tuple[str, list[str]]]] = {
         _SE01_STEP,
         _SE02_STEP,
         _SE03_STEP,
+        *_COMMON_FINAL_STEPS,
+    ],
+    "se04": [
+        _CONTRACT_STEP,
+        _SE01_STEP,
+        _SE02_STEP,
+        _SE03_STEP,
+        _SE04_RECEIPT_STEP,
+        _SE04_RUNNER_STEP,
         *_COMMON_FINAL_STEPS,
     ],
 }
