@@ -20,10 +20,9 @@ A validação é estática: lê JSON, resolve módulos sob
 `ambiente_fonte/.assistant/`, inspeciona a fachada pública `__init__.py` por AST
 e confere templates relativos. Ela não importa nem executa helpers analíticos.
 
-A resolução de API pública é compartilhada com o preflight L2 por funções puras
-mantidas no módulo canônico `hub_scripts.skill_execution.skill_execution`,
-evitando que contrato e preflight tenham semânticas diferentes para `__all__`,
-module path ou símbolo público sem criar um segundo módulo na pasta de objeto.
+A resolução de API pública é compartilhada com o preflight L2 por funções
+internas do módulo canônico `hub_scripts.skill_execution.skill_execution`,
+evitando semânticas diferentes entre L1 e L2 sem ampliar a API pública do Hub.
 
 Saída JSON para automação:
 
