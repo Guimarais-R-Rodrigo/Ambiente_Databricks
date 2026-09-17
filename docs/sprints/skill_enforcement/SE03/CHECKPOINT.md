@@ -2,7 +2,7 @@
 
 ## Estado
 
-**SE03 EM DESENVOLVIMENTO — FATIAS 01/02 CERTIFICADAS LOCALMENTE; PREPARAÇÃO FREE EM REVALIDAÇÃO LOCAL.**
+**SE03 EM DESENVOLVIMENTO — FATIAS 01/02 CERTIFICADAS LOCALMENTE; PREPARAÇÃO FREE CORRIGIDA, AGUARDANDO RERODADA LOCAL.**
 
 - baseline: `main@0f1a8b18e8e7380aad75be096b0ce167e14f9662`;
 - origem: PR #74 / SE02 integrada por squash;
@@ -94,16 +94,38 @@ Depois do PASS em `c0f4176...`, a branch recebeu:
 - `SKILL.md` incluído no `release_manifest.json` como `skill_guidance` protegida;
 - snapshot raiz reconciliado para o estado pós-renderer esperado.
 
-Essas mudanças tornam o HEAD corrente diferente do HEAD certificado e exigem nova rodada do perfil `se03` antes de qualquer publicação Free.
+## Primeira revalidação da preparação Free — evidência negativa preservada
 
-A alteração do `SKILL.md` precisa ser materializada no `Novo_Ambiente_Simulado/` somente pelo renderer canônico. Não editar o derivado manualmente.
+No HEAD `3dcc0bc9fce906eb21b8fa5857637d1050bedd10`, em Windows 11 / Python 3.12.10:
+
+- suíte SE03: 22/22 PASS;
+- contrato: PASS;
+- SE01: 14/14 PASS;
+- SE02: 22/22 PASS;
+- estrutura do Hub: PASS;
+- renderer: PASS, 557 arquivos;
+- `render_diff`: FAIL esperado, exclusivamente porque o renderer atualizou `SKILL.md` e `release_manifest.json` no simulado;
+- `readme_snapshot`: FAIL porque `helpers citados` real passou de 93 para 94 com a nova referência operacional ao runner;
+- métricas reais pós-renderer: `helpers=94`, `markdown/links=223/1403`, `python(AST)=226`, `repo identidade=1534`, `repo links=1995`, extras=0;
+- resumo: `LOCAL_CERTIFICATION=FAIL`, `DERIVED_STALE=true`, 2 failures;
+- evidence bundle: `~/.ambiente_databricks/sef_certifications/20260917T180405Z_3dcc0bc9fce9`.
+
+Esse resultado não é reclassificado como PASS.
+
+## Remediação aplicada após a rodada negativa
+
+- snapshot raiz corrigido para `helpers citados=94` sem alterar as demais métricas observadas;
+- `SKILL.md` do simulado materializado com o mesmo blob da fonte;
+- `release_manifest.json` do simulado materializado com o mesmo blob da fonte;
+- nenhuma edição funcional do runner foi necessária;
+- próxima rodada deve partir de worktree limpa e provar `DERIVED_STALE=false`.
 
 ## Estado dos gates agora
 
 ```text
 FATIA_01_LOCAL_CERTIFICATION = PASS
 FATIA_02_LOCAL_CERTIFICATION = PASS
-FREE_PREP_LOCAL_REVALIDATION = NOT_RUN
+FREE_PREP_LOCAL_REVALIDATION = FAIL_OBSERVED_REMEDIATED_PENDING_RERUN
 SYNTHETIC_AGENT_SCREENING    = NOT_RUN_SE03
 DATABRICKS_FREE              = NOT_RUN_SE03
 GITHUB_ACTIONS               = NOT_RUN_SE03
@@ -116,5 +138,5 @@ PR                           = NOT_OPEN
 1. sincronizar o HEAD corrente da branch;
 2. executar `python -B tools/tests/test_skill_enforcement_se03.py -v`;
 3. executar `python -B tools/skill_enforcement/certify_local.py --profile se03 --verbose`;
-4. se o único drift for renderer em `SKILL.md`/`release_manifest.json`, versionar somente a saída do renderer e repetir até worktree limpa + PASS;
+4. exigir worktree limpa + `LOCAL_CERTIFICATION=PASS` + `DERIVED_STALE=false`;
 5. só então seguir `SE03/RUNBOOK_FREE.md` para publicação/verify/probe e E02/E12 no Genie Code.
