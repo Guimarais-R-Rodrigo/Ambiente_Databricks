@@ -1,4 +1,4 @@
-﻿# Databricks notebook source
+# Databricks notebook source
 from __future__ import annotations
 
 import copy
