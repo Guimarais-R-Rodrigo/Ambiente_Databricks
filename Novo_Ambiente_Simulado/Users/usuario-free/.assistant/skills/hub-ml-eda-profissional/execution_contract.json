@@ -7,7 +7,24 @@
     "sprint": "SE01",
     "pilot": true,
     "baseline": "SE00",
-    "purpose": "Declarar recursos verificáveis sem ainda bloquear ou executar deterministicamente."
+    "purpose": "Declarar recursos verificáveis e a política fail-closed de homologação da execução.",
+    "postflight": {
+      "schema_version": "1.0",
+      "policy": "fail_closed",
+      "handoff": {
+        "required": [
+          "sources_snapshot",
+          "unit_keys_target",
+          "quality_risks",
+          "feature_candidates_leakage",
+          "filters_sample",
+          "open_questions"
+        ],
+        "allow_empty": [
+          "open_questions"
+        ]
+      }
+    }
   },
   "resources": [
     {
