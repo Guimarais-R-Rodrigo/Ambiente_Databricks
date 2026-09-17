@@ -86,20 +86,40 @@ O aviso de duas pastas `__pycache__` surgiu depois de usar `python -m py_compile
 
 A correção operacional é remover somente `__pycache__` antes do certifier final e evitar `py_compile` como check final; usar AST parsing quando uma verificação sem escrita for necessária.
 
+## Materialização final do simulado
+
+No commit `65fe556ea70e17610af47cc3d6f1a4abf7438533` foi executado o renderer canônico após limpeza dos resíduos locais de Python.
+
+Resultado observado:
+
+```text
+render_simulado.py --write = PASS
+arquivos renderizados      = 561
+git diff --check            = PASS
+derivado versionado        = PASS
+validate_assistant.py       = PASS
+falhas estruturais          = 0
+avisos estruturais          = 0
+worktree final              = CLEAN
+branch_vs_main              = 0 behind / 25 ahead
+```
+
+As mudanças do renderer ficaram restritas ao derivado esperado da SE05: README/skill/contrato/manifest atualizados e os novos componentes `postflight` e `run_enforced`.
+
 ## Snapshot README
 
-As contagens observadas antes da documentação final da SE05 foram:
+As contagens finais observadas após a materialização foram:
 
 ```text
 helpers citados    = 96
-markdown / links   = 223 / 1407
+markdown / links   = 223 / 1409
 normas do molde    = 75
 python (AST)       = 230
-repo (identidade)  = 1552
-repo (links)       = 2005
+repo (identidade)  = 1563
+repo (links)       = 2019
 ```
 
-O snapshot foi atualizado com base nessa execução. Como documentação e derivado ainda evoluem depois desse ponto, as contagens devem ser conferidas novamente no HEAD candidato final.
+O snapshot raiz foi reconciliado com essas contagens. Como essa reconciliação altera apenas arquivos já existentes e não adiciona links, ela não muda a cardinalidade observada.
 
 ## Databricks Free
 
