@@ -10,6 +10,7 @@ from typing import Any, Mapping
 
 SKILL = "hub-ml-eda-profissional"
 FINALIZER_VERSION = "1.0"
+ENFORCED_ENTRYPOINT = "skills/hub-ml-eda-profissional/scripts/run_enforced.py::run_enforced"
 
 
 def _resolve_assistant_root() -> Path:
@@ -75,13 +76,36 @@ def _blocked_finalization(
     return result
 
 
+def _enforced_route_ok(payload: Mapping[str, Any]) -> bool:
+    trace = payload.get("trace")
+    return bool(
+        isinstance(trace, Mapping)
+        and trace.get("enforcement_entrypoint") == ENFORCED_ENTRYPOINT
+    )
+
+
 def finalize(
     payload: Mapping[str, Any],
     handoff: Mapping[str, Any],
     *,
     assistant_root: Path | str | None = None,
 ) -> dict[str, Any]:
-    """Finaliza a execução somente se Receipt, contrato e handoff satisfizerem o postflight."""
+    """Finaliza a execução somente se Receipt, rota L4, contrato e handoff satisfizerem o postflight."""
+    if not isinstance(payload, Mapping):
+        return _blocked_finalization(
+            None,
+            code="POSTFLIGHT_INPUT_INVALID",
+            message="payload deve ser mapping",
+            handoff=handoff,
+        )
+    if not _enforced_route_ok(payload):
+        return _blocked_finalization(
+            payload,
+            code="ENFORCED_ENTRYPOINT_MISSING",
+            message=f"trace não comprova a rota L4 canônica {ENFORCED_ENTRYPOINT}",
+            handoff=handoff,
+        )
+
     root = Path(assistant_root) if assistant_root is not None else _resolve_assistant_root()
     skill_dir = root / "skills" / SKILL
     contract_path = skill_dir / "execution_contract.json"
@@ -130,6 +154,23 @@ def verify_finalized(
     assistant_root: Path | str | None = None,
 ) -> dict[str, Any]:
     """Reverifica a finalização sem confiar no campo completion autodeclarado."""
+    if not isinstance(final_payload, Mapping):
+        return {
+            "status": "MALFORMED",
+            "valid": False,
+            "issues": ["FINAL_PAYLOAD_NOT_MAPPING"],
+            "completion_authorized": False,
+            "completion_claim_consistent": False,
+        }
+    if not _enforced_route_ok(final_payload):
+        return {
+            "status": "BLOCKED",
+            "valid": False,
+            "issues": ["ENFORCED_ENTRYPOINT_MISSING"],
+            "completion_authorized": False,
+            "completion_claim_consistent": False,
+        }
+
     root = Path(assistant_root) if assistant_root is not None else _resolve_assistant_root()
     skill_dir = root / "skills" / SKILL
     contract_path = skill_dir / "execution_contract.json"
@@ -153,6 +194,7 @@ def verify_finalized(
             "valid": False,
             "issues": [f"POSTFLIGHT_RUNTIME_ERROR:{exc}"],
             "completion_authorized": False,
+            "completion_claim_consistent": False,
         }
 
     completion = final_payload.get("completion")
@@ -186,7 +228,7 @@ def _load_json(raw: str, label: str) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Postflight fail-closed SE05 da hub-ml-eda-profissional")
-    parser.add_argument("--payload-json", required=True, help="payload JSON emitido pelo runner canônico")
+    parser.add_argument("--payload-json", required=True, help="payload JSON emitido pelo executor L4")
     parser.add_argument("--handoff-json", required=True, help="handoff final estruturado")
     args = parser.parse_args()
 
