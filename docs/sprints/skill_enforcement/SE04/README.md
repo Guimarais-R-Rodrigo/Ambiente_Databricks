@@ -2,12 +2,14 @@
 
 ## Estado
 
-**IMPLEMENTAÇÃO FUNCIONAL CONSTRUÍDA; gates oficiais local/Free ainda não observados neste ambiente.**
+**IMPLEMENTAÇÃO FUNCIONAL CONSTRUÍDA; certificação local e homologação determinística no Databricks Free observadas com PASS. Release candidate ainda depende da recertificação final do HEAD documental e da abertura controlada da PR.**
 
 Branch: `sef/SE04-execution-receipt`  
 Baseline: `main@216df1544c2b21a8ff94bb5ce51fd84b8a444057`  
 Skill piloto: `hub-ml-eda-profissional`  
 Contrato: v0.1, `mode="audit"`.
+
+Base de certificação funcional observada: `9d7d09daaf943e857b468a21f6f774560c519f7e`.
 
 ## Objetivo
 
@@ -63,16 +65,31 @@ Assim, `verify_receipt()` não é um postflight e não bloqueia por si só a apr
 
 SHA-256 fornece **tamper evidence + deterministic binding + traceability**. Ele não autentica a origem contra um atacante capaz de alterar arbitrariamente código, release e verifier e recalcular todos os hashes. HMAC, PKI ou attestation externa não foram introduzidos por não existir, nesta sprint, uma âncora de confiança que justificasse essa complexidade.
 
-## Gates ainda necessários antes de release candidate
+## Gates observados
 
-1. executar o perfil oficial `se04` do certifier em checkout completo e worktree limpa;
-2. materializar `Novo_Ambiente_Simulado/` exclusivamente por `tools/render_simulado.py --write` e exigir drift zero;
-3. passar snapshot README/estrutura;
-4. publicar/verificar por conteúdo no Databricks Free;
-5. executar `SE04_FREE_PROBE_V1` e preservar o JSON bruto;
-6. somente com esses gates observados, congelar release candidate e abrir PR.
+No HEAD funcional `9d7d09daaf943e857b468a21f6f774560c519f7e`:
 
-Nenhuma PR deve ser aberta antes desses itens.
+```text
+LOCAL_CERTIFICATION = PASS
+scope               = FULL_SE04_LOCAL
+DERIVED_STALE       = false
+failures            = 0
+DATABRICKS_FREE     = PASS
+```
+
+No Databricks Free, a publicação canônica foi verificada por inventário e por conteúdo, com `557/557` arquivos controlados exportados e comparados. O import individual do probe apresentou `PROTOCOL_ERROR` de transporte; o fallback `workspace import-dir` concluiu com sucesso e o probe remoto foi comparado ao arquivo local antes da execução.
+
+`SE04_FREE_PROBE_V1` terminou com `status=PASS`, `published_package_mutated=false` e `persistent_writes_performed=false`. Todos os nove cenários do probe tiveram `ok=true`, incluindo Receipt válido, tampering, output incompatível, stale/replay, ausência de Receipt em rotas manuais, quebra de integridade da release, conflito de provenance e falha da primitive sem fallback.
+
+## Gates restantes antes de release candidate/merge
+
+1. recertificar o HEAD documental final localmente, sem alterar o produto publicado;
+2. confirmar branch sem drift em relação à `main` (`behind_by=0`);
+3. somente então abrir a PR da SE04;
+4. consumir GitHub Actions uma única vez na candidata de release, conforme a política de créditos;
+5. não fazer merge sem aceite humano explícito.
+
+A SE05 continua fora do escopo e não foi iniciada.
 
 ## Documentos
 
