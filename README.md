@@ -91,7 +91,7 @@ Não existe uma leitura automática única de toda a pasta `.assistant`. A ativa
 ## 🧭 Como evitar duas fontes de verdade
 
 | Camada | Papel | Regra |
-|---|---|
+|---|---|---|
 | `ambiente_fonte/` | fonte do produto | editar aqui |
 | `Novo_Ambiente_Simulado/` | derivado de verificação | manter equivalente à fonte |
 | `tools/` | testes, gates e automação | executar antes de promover |
@@ -108,8 +108,8 @@ O bloco abaixo é conferido por `python tools/validate_assistant.py --conferir-r
 raiz analisada     : /home/runner/work/Ambiente_Databricks/Ambiente_Databricks/ambiente_fonte
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
-helpers citados    : 94 caminhos verificados
-markdown / links   : 223 arquivos / 1403 links relativos
+helpers citados    : 95 caminhos verificados
+markdown / links   : 223 arquivos / 1405 links relativos
 notebooks / links  : 81 notebooks / 102 links relativos
 readmes de objeto  : 77/77 operacionais; 3/3 exemplares; 0 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 63 conferidas (nome, arquivos, __init__)
@@ -118,12 +118,12 @@ contrato de dados  : 63 pares (saída: o que o notebook consome)
 contrato de entrada: 61 pares (entrada: o que o notebook passa)
 saída colada       : 80 notebooks com bloco real, 0 sem
 idioma da docstring: 62 módulos, 0 com docstring em inglês
-normas do molde    : 73 arquivos, 0 violação(ões)
+normas do molde    : 74 arquivos, 0 violação(ões)
 notebook exercita  : 61 objetos, 0 notebook(s) que só importam
-python (AST)       : 226 arquivos
+python (AST)       : 227 arquivos
 instrucoes         : 9992/20000 caracteres
-repo (identidade)  : 1534 arquivos varridos no repositório editável/derivado
-repo (links)       : 1995 links fora da raiz analisada
+repo (identidade)  : 1547 arquivos varridos no repositório editável/derivado
+repo (links)       : 2005 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)
