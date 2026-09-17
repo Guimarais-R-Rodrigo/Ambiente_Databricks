@@ -1,95 +1,161 @@
-# `skill_execution` — preflight verificável antes da lógica protegida
+# `skill_execution` — preflight e evidência verificável de execução
 
 <!-- readme-objeto: 1.0.0 -->
 
-`hub_scripts.skill_execution` é a camada determinística do Skill Enforcement Framework usada para resolver o contrato de execução antes do core analítico. Na SE02, sua API pública é `run_preflight`; ela não executa a EDA, não chama os helpers declarados e não escreve no workspace.
+`hub_scripts.skill_execution` é a camada determinística do Skill Enforcement Framework usada pela skill piloto `hub-ml-eda-profissional`. Ela reúne o preflight L2 preservado da SE02 e, na SE04, o módulo de `ExecutionReceiptV1` usado pelo runner canônico para produzir e verificar evidência estrutural da execução.
 
 ## Visão rápida
 
 | Item | Resumo |
 |---|---|
-| O que é | preflight L2 para `execution_contract.json` |
-| Serve para | decidir `PASS` ou `BLOCKED` antes da lógica protegida |
-| Usa | filesystem local da `.assistant`, JSON e AST da biblioteca padrão |
-| Não faz | runner, receipt, postflight, análise Spark ou publicação |
-| Entrada principal | contrato, raiz `.assistant` e contexto objetivo de condições |
-| Saída | `PreflightResult` estruturado e determinístico |
+| O que é | infraestrutura determinística de preflight + Receipt da skill piloto |
+| Serve para | resolver pré-condições e verificar evidência formal de uma execução canônica |
+| Usa | filesystem local da `.assistant`, JSON/AST, serialização canônica e SHA-256 |
+| Não faz | análise Spark por conta própria, postflight SE05, publicação ou enforcement universal |
+| Entrada principal | contrato/contexto no preflight; trace/result/release no Receipt |
+| Saída | `PreflightResult` e `ReceiptVerification` estruturados |
 
-Exemplo: [exemplo_skill_execution.py](exemplo_skill_execution.py). Implementação: [skill_execution.py](skill_execution.py).
+Implementações: [skill_execution.py](skill_execution.py) e [receipt.py](receipt.py).
 
 ## 1. O que é?
 
-É um resolvedor estático de pré-condições. Ele lê o contrato v0.1 da skill, classifica recursos `required`, `conditional` e `optional`, confere APIs públicas/templates aplicáveis e produz um estado estruturado. A SE02 continua em `mode="audit"`; ter preflight não equivale a enforcement completo.
+A camada possui duas responsabilidades distintas:
+
+1. `run_preflight`: resolve o contrato v0.1 antes do core analítico;
+2. `receipt.py`: constrói e verifica o comprovante formal da execução depois que o runner protegido conclui com sucesso.
+
+O runner em si continua adjacente à skill em `skills/hub-ml-eda-profissional/scripts/run.py`.
 
 ## 2. Que problema este recurso resolve?
 
-Antes da SE02, a skill podia declarar helpers e templates sem um gate reproduzível que dissesse se os requisitos aplicáveis estavam disponíveis. O preflight transforma essa verificação em uma decisão observável antes do core analítico.
+O preflight responde se os requisitos aplicáveis estão disponíveis antes do core. O Receipt responde se um resultado apresentado está formalmente vinculado ao trace, input, output e release da execução canônica específica.
+
+Essas respostas são diferentes. `PASS` no preflight não prova que a primitive foi chamada; um Receipt `VALID` exige evidência posterior da execução.
 
 ## 3. Quando faz sentido usar?
 
-Use antes de uma execução protegida por `execution_contract.json`, especialmente quando requisitos obrigatórios ou condicionais precisam ser resolvidos antes de o agente escrever ou executar lógica analítica. O piloto é `hub-ml-eda-profissional`.
+Use `run_preflight` antes da lógica protegida. O `ExecutionReceiptV1` é emitido pelo runner canônico da EDA piloto depois de release íntegra, provenance válida, preflight PASS e conclusão da primitive protegida.
+
+Para auditoria da SE04, use o verifier do Receipt ou o wrapper `run.py::verify_receipt()` quando a comparação também precisa considerar a release publicada/corrente.
 
 ## 4. Quando não usar?
 
-Não use como runner da EDA, para interpretar resultados, para validar qualidade dos dados ou como prova de que um helper foi de fato chamado. Um `PASS` indica que o plano prévio é resolvível; não prova aderência durante ou após a execução.
+Não use o Receipt para fabricar legitimidade de uma rota manual, chamada direta ao helper ou resultado apenas semanticamente semelhante. Não use o verifier como substituto do postflight da SE05: a SE04 classifica a evidência, mas ainda não bloqueia automaticamente a conclusão final.
 
 ## 5. Como funciona, intuitivamente?
 
-O preflight lê o contrato, avalia condições explícitas do contexto, resolve somente os itens aplicáveis e bloqueia quando um requisito obrigatório não pode ser comprovado. A resolução de helpers é estática: o `__init__.py` da pasta de objeto é analisado por AST, sem importar a biblioteca inteira.
+O fluxo da skill piloto é:
+
+```text
+execution_contract
+  → run_preflight
+  → runner canônico
+  → quick_profile chamada/concluída
+  → ExecutionTraceV0
+  → ExecutionReceiptV1
+  → verifier
+```
+
+O Receipt não copia o resultado de negócio. Ele faz bindings por digest e registra apenas metadados probatórios necessários.
 
 ## 6. Exemplo de situação
 
-Uma EDA pede visualizações e possui quatro colunas numéricas. O contexto informa `visual_diagnostics_requested=true` e `numeric_columns=4`; correlação, distribuições e templates visuais tornam-se aplicáveis. Se a fachada pública de um helper requerido estiver ausente, o resultado é `BLOCKED` antes da análise.
+Uma EDA executada por `scripts/run.py` termina com trace `PASS`, `quick_profile` em `resources_called` e `resources_completed`, output digest coerente e release íntegra. O runner emite um Receipt. Ao verificar o payload original, o estado esperado é `VALID`.
+
+Se o resultado for alterado depois da emissão, o Receipt deixa de corresponder ao output atual e a classificação esperada é `INCOMPATIBLE`.
 
 ## 7. O que você precisa antes de usar?
 
-É necessário um contrato v0.1 válido, uma raiz `.assistant` acessível, a pasta da skill correspondente e valores explícitos para as condições referenciadas. Na EDA piloto, o contexto usa booleanos objetivos e `numeric_columns` inteiro não negativo. O preflight não descobre esses fatos executando a análise.
+Para o preflight: contrato v0.1 válido, raiz `.assistant`, skill e contexto objetivo das condições.
+
+Para o Receipt: trace V0.1 coerente, result atual, skill/entrypoint esperados, primitive protegida concluída, digests válidos, provenance runtime sem conflito, ausência de blocking issues e release íntegra.
 
 ## 8. O que este recurso entrega?
 
-`PreflightResult` contém `status`, skill, versão, modo, decisões de recursos/templates, issues bloqueantes, contexto de condições e `writes_performed=false`. `PASS` significa que não houve issue bloqueante; `BLOCKED` significa que a execução canônica não deve prosseguir silenciosamente.
+### Preflight
+
+`PreflightResult` contém `PASS`/`BLOCKED`, decisões de recursos/templates, issues e `writes_performed=false`.
+
+### Receipt
+
+`ExecutionReceiptV1` contém versão, identidade do run, release, bindings, recursos observáveis, decisões, provenance resumida e flags de fallback/writes. O verifier retorna:
+
+```text
+VALID
+ABSENT
+MALFORMED
+INVALID
+INCOMPATIBLE
+STALE_REPLAYED
+UNSUPPORTED_VERSION
+```
+
+Somente `VALID` produz canonical compliance formal da SE04.
 
 ## 9. Como usar este recurso no Hub?
 
-Importe pela fachada pública:
+Preflight pela fachada pública existente:
 
 ```python
 from hub_scripts.skill_execution import run_preflight
 ```
 
-Passe `contract_path`, `assistant_root` e um contexto explícito. O notebook de exemplo demonstra o uso sem executar Spark nem escrever no workspace.
+Receipt/verifier pela subcamada explícita:
+
+```python
+from hub_scripts.skill_execution.receipt import (
+    build_execution_receipt,
+    verify_execution_receipt,
+)
+```
+
+Na operação normal da skill piloto, não é necessário montar Receipt manualmente: `scripts/run.py` emite o comprovante quando as pré-condições canônicas são satisfeitas.
 
 ## 10. Decisões e configurações que mais importam
 
-A política do item define o bloqueio: `required` sempre é aplicável; `conditional` depende do contexto objetivo; `optional` pode ser inspecionado sem bloquear. Condição sem contexto suficiente resulta em `BLOCKED`, evitando que ausência de evidência seja tratada como `false` silenciosamente.
+- contrato continua `mode="audit"`;
+- primitive protegida na SE04 continua somente `quick_profile`;
+- `numeric_columns` deve ser `runtime_derived` e sem conflito;
+- `resources_called` registra tentativa; `resources_completed` registra retorno bem-sucedido;
+- import e consumo de template não são inferidos: permanecem `NOT_OBSERVABLE` sem instrumentação mecânica;
+- serialização canônica evita dependência da ordem de chaves JSON;
+- SHA-256 fornece tamper evidence/binding, não autenticação contra comprometimento completo do código e da release.
 
 ## 11. Limitações, riscos e armadilhas
 
-A SE02 não impede um agente de ignorar o script; esse comportamento só pode ser medido no Genie Code real. O preflight também não prova chamada de helper, não produz Execution Receipt e não detecta bypass posterior. Paths e disponibilidade refletem o pacote presente no momento da execução.
+O Receipt não é assinatura digital, HMAC ou attestation. Um atacante com capacidade de substituir código/verifier/release e recalcular todas as evidências está fora do threat model desta sprint.
+
+A proteção de replay é contextual: `run_id`, binding ao trace e `expected_run_id` permitem rejeitar Receipt de outro run quando o consumidor conhece o run atual. Anti-replay universal exigiria estado/nonce confiável externo.
 
 ## 12. Quais são as alternativas?
 
-`tools/skill_enforcement/validate_contracts.py` valida contratos no repositório e é um gate de desenvolvimento, não um componente publicado do Hub. A SE03 poderá introduzir runner determinístico, mas ele tem responsabilidade diferente e não deve ser antecipado aqui.
+`tools/skill_enforcement/validate_contracts.py` continua sendo o gate estático de contrato no repositório. `scripts/preflight.py` continua útil para diagnóstico isolado L2. Nenhum deles substitui o Receipt da SE04.
+
+O postflight final não é alternativa presente: ele pertence à SE05 e não foi iniciado.
 
 ## 13. Como saber se o resultado faz sentido?
 
-Teste happy path, recurso obrigatório removido, condição verdadeira/falsa, template ausente e contexto incompleto. Rode o mesmo input duas vezes e confira saída idêntica. Em `BLOCKED`, a issue deve identificar o item e a razão sem executar análise nem produzir escrita.
+No preflight, teste happy path, recurso/template ausente, condições e contexto incompleto.
+
+No Receipt, teste pelo menos: válido, ausente, tampered receipt, tampered output/trace, stale run, wrong skill/release, provenance conflict, primitive failure/fallback, schema parcial e versão desconhecida. Output manual tecnicamente correto deve continuar sem Receipt canônico.
 
 ## 14. Arquivos relacionados e próximos passos
 
-- [skill_execution.py](skill_execution.py): implementação L2.
-- [__init__.py](__init__.py): fachada pública.
-- [exemplo_skill_execution.py](exemplo_skill_execution.py): demonstração read-only.
-- `skills/hub-ml-eda-profissional/execution_contract.json`: contrato piloto.
-- `skills/hub-ml-eda-profissional/scripts/preflight.py`: acionador fino da skill.
+- [skill_execution.py](skill_execution.py): preflight L2.
+- [receipt.py](receipt.py): schema lógico, builder e verifier SE04.
+- [__init__.py](__init__.py): fachada pública histórica do preflight.
+- `skills/hub-ml-eda-profissional/scripts/run.py`: runner/emissor e wrapper de verificação contra release corrente.
+- `skills/hub-ml-eda-profissional/release_manifest.json`: fingerprints protegidos.
+- `docs/sprints/skill_enforcement/SE04/`: desenho, threat model, testes e runbooks.
 
-SE03 é o próximo estágio arquitetural, mas não faz parte deste objeto nesta sprint.
+Próximo estágio arquitetural: SE05 consumirá a verificação para postflight fail-closed. Isso não faz parte desta implementação.
 
 ## 15. Referências
 
-- `docs/decisions/ADR-0021-execucao-verificavel-de-skills.md`.
-- `docs/sprints/skill_enforcement/PLANO_MESTRE.md` — SE02.
-- implementação local e testes `tools/tests/test_skill_enforcement_se02.py`.
-- Databricks Genie Code Agent Skills, verificada em 16/09/2026: scripts executáveis e recursos relativos à raiz da skill são superfícies suportadas.
+- `docs/decisions/ADR-0021-execucao-verificavel-de-skills.md`;
+- `docs/sprints/skill_enforcement/PLANO_MESTRE.md`;
+- `docs/sprints/skill_enforcement/REVISAO_PLANO_2026-09-17_LOCAL_FIRST.md`;
+- `docs/sprints/skill_enforcement/SE04/DESENHO_TECNICO.md`;
+- testes `tools/tests/test_skill_enforcement_se02.py`, `test_skill_enforcement_se03.py`, `test_skill_enforcement_se04.py` e `test_skill_enforcement_se04_runner.py`.
 
-Estado desta revisão: documentação e implementação SE02 em validação; homologação de runtime no Databricks Free é gate separado.
+Estado desta revisão: implementação SE04 presente na branch de desenvolvimento; certificação oficial local/Free permanece gate separado antes de release candidate.
