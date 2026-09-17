@@ -5,14 +5,16 @@
 Uso principal:
 
     python -B tools/skill_enforcement/certify_local.py --profile se02
+    python -B tools/skill_enforcement/certify_local.py --profile se03
 
 O certifier é o gate determinístico de desenvolvimento do SEF. Ele não usa
 credenciais Databricks nem rede por conta própria. GitHub Actions deve chamar o
 mesmo entrypoint somente na release candidate/Ready-for-review e pós-merge.
 
 Por padrão a execução exige worktree limpo, materializa o simulado pelo renderer
-canônico e falha se o renderer deixar diff. Isso transforma drift do derivado em
-evidência explícita (`DERIVED_STALE`) em vez de permitir uma cópia manual.
+canônico e falha se o renderer deixar drift rastreado ou não rastreado. Isso
+transforma drift do derivado em evidência explícita (`DERIVED_STALE`) em vez de
+permitir uma cópia manual ou deixar arquivos novos invisíveis ao gate.
 
 A precondição de worktree limpo é uma barreira de segurança: se ela falhar, o
 certifier encerra antes de qualquer step mutável, especialmente antes do renderer.
@@ -36,6 +38,7 @@ from typing import Sequence
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_EVIDENCE_ROOT = Path.home() / ".ambiente_databricks" / "sef_certifications"
+DERIVED_ROOT = "Novo_Ambiente_Simulado"
 
 
 @dataclass(frozen=True)
@@ -62,37 +65,65 @@ class GitState:
         return not self.status_short.strip()
 
 
+_CONTRACT_STEP = (
+    "contract_v0_1",
+    [sys.executable, "-B", "tools/skill_enforcement/validate_contracts.py"],
+)
+_SE01_STEP = (
+    "se01_regression",
+    [sys.executable, "-B", "tools/tests/test_skill_enforcement_se01.py"],
+)
+_SE02_STEP = (
+    "se02_regression",
+    [sys.executable, "-B", "tools/tests/test_skill_enforcement_se02.py", "-v"],
+)
+_SE03_STEP = (
+    "se03_tests",
+    [sys.executable, "-B", "tools/tests/test_skill_enforcement_se03.py", "-v"],
+)
+_COMMON_FINAL_STEPS = [
+    (
+        "assistant_structure",
+        [sys.executable, "tools/validate_assistant.py"],
+    ),
+    (
+        "render_simulado",
+        [sys.executable, "tools/render_simulado.py", "--write"],
+    ),
+    (
+        "render_diff",
+        [
+            "git",
+            "status",
+            "--porcelain",
+            "--untracked-files=all",
+            "--",
+            DERIVED_ROOT,
+        ],
+    ),
+    (
+        "readme_snapshot",
+        [sys.executable, "tools/validate_assistant.py", "--conferir-readme"],
+    ),
+]
+
 PROFILE_STEPS: dict[str, list[tuple[str, list[str]]]] = {
     "se02": [
-        (
-            "contract_v0_1",
-            [sys.executable, "-B", "tools/skill_enforcement/validate_contracts.py"],
-        ),
-        (
-            "se01_regression",
-            [sys.executable, "-B", "tools/tests/test_skill_enforcement_se01.py"],
-        ),
+        _CONTRACT_STEP,
+        _SE01_STEP,
         (
             "se02_tests",
             [sys.executable, "-B", "tools/tests/test_skill_enforcement_se02.py", "-v"],
         ),
-        (
-            "assistant_structure",
-            [sys.executable, "tools/validate_assistant.py"],
-        ),
-        (
-            "render_simulado",
-            [sys.executable, "tools/render_simulado.py", "--write"],
-        ),
-        (
-            "render_diff",
-            ["git", "diff", "--exit-code", "--", "Novo_Ambiente_Simulado"],
-        ),
-        (
-            "readme_snapshot",
-            [sys.executable, "tools/validate_assistant.py", "--conferir-readme"],
-        ),
-    ]
+        *_COMMON_FINAL_STEPS,
+    ],
+    "se03": [
+        _CONTRACT_STEP,
+        _SE01_STEP,
+        _SE02_STEP,
+        _SE03_STEP,
+        *_COMMON_FINAL_STEPS,
+    ],
 }
 
 
@@ -122,6 +153,33 @@ def _run(command: Sequence[str]) -> tuple[int, str, float]:
     duration = time.monotonic() - start
     output = _decode((proc.stdout or b"") + (proc.stderr or b""))
     return proc.returncode, output, duration
+
+
+def _run_render_diff_gate() -> tuple[int, str, float]:
+    """Falha se o derivado tiver qualquer drift, inclusive arquivo não rastreado."""
+    command = [
+        "git",
+        "status",
+        "--porcelain",
+        "--untracked-files=all",
+        "--",
+        DERIVED_ROOT,
+    ]
+    code, output, duration = _run(command)
+    if code != 0:
+        return code, output, duration
+
+    dirty = [line for line in output.splitlines() if line.strip()]
+    if dirty:
+        detail = "\n".join(dirty)
+        return (
+            1,
+            "DERIVED_STALE: alterações rastreadas ou não rastreadas em "
+            f"{DERIVED_ROOT}:\n{detail}\n",
+            duration,
+        )
+
+    return 0, "OK: derivado sem drift rastreado ou não rastreado\n", duration
 
 
 def _git_output(*args: str) -> str | None:
@@ -243,6 +301,14 @@ def _build_summary(
     }
 
 
+def _scope(profile: str, skip_render: bool) -> str:
+    return (
+        f"PARTIAL_{profile.upper()}_NO_RENDER"
+        if skip_render
+        else f"FULL_{profile.upper()}_LOCAL"
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--profile", choices=sorted(PROFILE_STEPS), default="se02")
@@ -258,7 +324,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--skip-render",
         action="store_true",
-        help="Pula renderer/diff; não equivale a certificação SE02 completa.",
+        help="Pula renderer/diff; não equivale à certificação completa do perfil selecionado.",
     )
     parser.add_argument(
         "--allow-dirty",
@@ -324,7 +390,10 @@ def main(argv: list[str] | None = None) -> int:
 
     for index, (name, command) in enumerate(_filtered_steps(args.profile, args.skip_render), 1):
         print(f"\n-- {index:02d} {name}")
-        code, output, duration = _run(command)
+        if name == "render_diff":
+            code, output, duration = _run_render_diff_gate()
+        else:
+            code, output, duration = _run(command)
         status = "PASS" if code == 0 else "FAIL"
         log_file = None
         if logs_dir is not None:
@@ -347,7 +416,7 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     after = _git_state()
-    scope = "PARTIAL_NO_RENDER" if args.skip_render else "FULL_SE02_LOCAL"
+    scope = _scope(args.profile, args.skip_render)
     summary = _build_summary(
         profile=args.profile,
         scope=scope,

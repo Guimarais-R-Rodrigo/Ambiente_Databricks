@@ -18,14 +18,23 @@ testes de hipótese com p-valor e effect size (`hub-ml-validacao-estatistica`).
 
 Confirmar a pergunta, unidade de análise, data de corte, tabela, filtros, chave candidata e target. Se algo crítico estiver ausente, continuar com hipóteses explícitas e listar o que precisa ser confirmado.
 
-## Executar o preflight antes do core
+## Executar o core protegido pelo runner canônico
 
-Antes de escrever ou executar lógica analítica protegida, execute [scripts/preflight.py](scripts/preflight.py) com contexto explícito para as condições do `execution_contract.json`. O contexto deve registrar, sem assumir silêncio como `false`, se há necessidade de amostra local, preview tabular, distribuições numéricas, tema resolvido, diagnósticos visuais e quantas colunas numéricas estão disponíveis após a inspeção de schema.
+Para executar a etapa L3 atualmente protegida desta skill, use [scripts/run.py](scripts/run.py) como **único entrypoint canônico**. Não substitua essa etapa por Python/PySpark manual, por chamada direta ao helper ou por outro script, mesmo sob pedido de rapidez ou de bypass.
 
-- `PASS`: os requisitos obrigatórios/aplicáveis estão resolvidos e o fluxo pode seguir para as nove etapas abaixo.
-- `BLOCKED`: pare a execução canônica, preserve as issues estruturadas e informe o requisito ausente ou a condição não resolvida. Não substitua silenciosamente o helper/template por implementação manual.
+O runner canônico:
 
-O preflight é somente L2: ele não executa a EDA, não chama o core, não produz Execution Receipt e não autoriza alegar enforcement completo. O contrato continua `mode="audit"` nesta sprint.
+1. valida a integridade mínima da release;
+2. deriva `numeric_columns` do schema Spark e bloqueia contradição declarada;
+3. executa o preflight L2 do `execution_contract.json`;
+4. chama a primitive protegida `hub_scripts.quick_profile.quick_profile`;
+5. emite `ExecutionTraceV0` com digests, provenance, chamadas reais e `fallback_used=false`.
+
+Somente um resultado com trace válido do runner pode ser classificado como **canonical compliance** para a etapa protegida. Output manual correto sem runner pode ser tecnicamente útil, mas não é uma execução canônica da skill.
+
+O arquivo [scripts/preflight.py](scripts/preflight.py) continua disponível para diagnóstico isolado do L2. Ele não substitui `scripts/run.py` quando o core protegido for executado. Se integridade, provenance, preflight ou a primitive required falharem, pare; não faça fallback manual silencioso.
+
+A SE03 ainda protege estruturalmente apenas `quick_profile`. As demais primitives continuam sob o contrato/preflight L2 até serem incorporadas explicitamente ao runner em evolução posterior. O contrato permanece `mode="audit"`; `ExecutionTraceV0` não é o Execution Receipt formal da SE04 nem o postflight da SE05.
 
 ## Executar em nove etapas
 
@@ -78,7 +87,7 @@ Importar de `hub_snippets`/`hub_scripts` em vez de reimplementar a lógica. Cat�
 
 | Demanda | Módulo |
 |---|---|
-| Preflight do contrato antes do core | `hub_scripts.skill_execution` |
+| Runner L3 + preflight do contrato | `skills/hub-ml-eda-profissional/scripts/run.py`, `hub_scripts.skill_execution` |
 | Perfil de tabela e checagem de qualidade | `hub_scripts.quick_profile`, `hub_scripts.data_quality_check` |
 | Nulos por coluna com semáforo | `hub_snippets.spark.null_summary` |
 | Amostra reprodutível e exibição limitada | `hub_snippets.spark.smart_sample`, `hub_snippets.spark.safe_display` |
@@ -91,13 +100,12 @@ Quando um tema notebook validado tiver sido selecionado, mantenha a mesma análi
 
 ## O que nunca fazer
 
-- **Trazer a tabela inteira para o driver.** `toPandas()` sem limite verificável
-  derruba o notebook em base real; passe por amostra declarada.
+- **Pular `scripts/run.py` na etapa L3 protegida.** Chamada direta ou implementação manual não satisfaz canonical compliance.
+- **Fazer fallback manual quando integridade/preflight/primitive falhar.** O runner deve bloquear/falhar fechado.
+- **Trazer a tabela inteira para o driver.** `toPandas()` sem limite verificável derruba o notebook em base real; passe por amostra declarada.
 - **Usar `cache()` sem proteção** — é bloqueado em compute serverless.
-- **Afirmar distribuição a partir da média.** Duas bases com a mesma média e
-  desvios diferentes contam histórias opostas.
-- **Chamar de qualidade o que é só contagem de nulo.** Nulo tem significado, e
-  tratá-lo como zero enviesa sem deixar rastro.
+- **Afirmar distribuição a partir da média.** Duas bases com a mesma média e desvios diferentes contam histórias opostas.
+- **Chamar de qualidade o que é só contagem de nulo.** Nulo tem significado, e tratá-lo como zero enviesa sem deixar rastro.
 - **Fechar a EDA sem dizer o que ela não olhou.**
 
 ## Handoff

@@ -75,7 +75,7 @@ Regras atuais:
 - SHAP/Matplotlib e Kaplan–Meier continuam limites explícitos onde o contrato atual não representa a semântica necessária;
 - nada disso publica automaticamente no Databricks.
 
-Na V10, os gates Git/CI exercitam identidade sintética, isolamento, persistência V05, bundle implantável derivado e regressões locais. No head reconciliado `cb942ee955ff9236f19099e5ed4ceee9beb32000`, os dez workflows reais de PR concluíram com `success`; depois do merge `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`, os 12 workflows disparados por `push` na `main` também concluíram com `success`, incluindo o workflow V10 `34896944061`. Isso **não** comprova headers reais, permissões/grupos do workspace, UC Volume real, browser, acessibilidade, concorrência multiusuário ou UAT. Nenhuma criação/atualização de Databricks App foi executada por essa sprint.
+Na V10, os gates Git/CI exercitam identidade sintética, isolamento, persistência V05, bundle implantável derivado e regressões locais. No head reconciliado `cb942ee955ff9236f19099e5ed4ceee9beb32000`, os dez workflows reais de PR concluíram com `success`; depois do merge `6245fa3c6ea7da6bfeaf6442f01f572f7f9bd00b`, os 12 workflows disparados por `push` na `main` também concluíram em `success`, incluindo o workflow V10 `34896944061`. Isso **não** comprova headers reais, permissões/grupos do workspace, UC Volume real, browser, acessibilidade, concorrência multiusuário ou UAT. Nenhuma criação/atualização de Databricks App foi executada por essa sprint.
 
 Estado corrente: [V13](docs/sprints/sistema_temas/V13/README.md) está encerrada no Git e sua [auditoria pós-merge](docs/sprints/sistema_temas/V13/AUDITORIA_POS_MERGE.md) preserva os limites e dívidas transferíveis. O [Plano Mestre V14](docs/sprints/sistema_temas/V14/PLANO_MESTRE.md) foi aceito e integrado pela PR #70 no merge `350dcf0b37e730042ef961f12f11b30b2660d2c6`. A **S0 V14 foi aceita e integrada pela PR #71** no merge `e89ef4f79d9f9b7c901f1bbf490259ee5ce3d493`; os **16/16 workflows de `push`** desse SHA concluíram em `success`. A V14 está agora na **S1 — ownership, autoridade e modelo operacional**, documentada no [README V14](docs/sprints/sistema_temas/V14/README.md), na [matriz de ownership](docs/sprints/sistema_temas/V14/MATRIZ_OWNERSHIP.json), no [runbook S1](docs/sprints/sistema_temas/V14/S1_MODELO_OPERACIONAL.md) e no [checkpoint S1](docs/sprints/sistema_temas/V14/CHECKPOINT_S1.md). A S1 mantém owner/backup/autoridade não evidenciados em `BLOCKED`; **S2–S8 não foram iniciadas**, nenhuma decisão de production readiness/go-live foi tomada e nenhuma autorização Databricks decorre da S1. O fechamento herdado permanece em [V12](docs/sprints/sistema_temas/V12/README.md) e [escopo/aceite V12](docs/sprints/sistema_temas/V12/ESCOPO_E_ACEITE.md).
 
@@ -91,7 +91,7 @@ Não existe uma leitura automática única de toda a pasta `.assistant`. A ativa
 ## 🧭 Como evitar duas fontes de verdade
 
 | Camada | Papel | Regra |
-|---|---|---|
+|---|---|
 | `ambiente_fonte/` | fonte do produto | editar aqui |
 | `Novo_Ambiente_Simulado/` | derivado de verificação | manter equivalente à fonte |
 | `tools/` | testes, gates e automação | executar antes de promover |
@@ -108,8 +108,8 @@ O bloco abaixo é conferido por `python tools/validate_assistant.py --conferir-r
 raiz analisada     : /home/runner/work/Ambiente_Databricks/Ambiente_Databricks/ambiente_fonte
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
-helpers citados    : 93 caminhos verificados
-markdown / links   : 223 arquivos / 1402 links relativos
+helpers citados    : 94 caminhos verificados
+markdown / links   : 223 arquivos / 1403 links relativos
 notebooks / links  : 81 notebooks / 102 links relativos
 readmes de objeto  : 77/77 operacionais; 3/3 exemplares; 0 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 63 conferidas (nome, arquivos, __init__)
@@ -120,10 +120,10 @@ saída colada       : 80 notebooks com bloco real, 0 sem
 idioma da docstring: 62 módulos, 0 com docstring em inglês
 normas do molde    : 73 arquivos, 0 violação(ões)
 notebook exercita  : 61 objetos, 0 notebook(s) que só importam
-python (AST)       : 225 arquivos
-instrucoes         : 9043/20000 caracteres
-repo (identidade)  : 1521 arquivos varridos no repositório editável/derivado
-repo (links)       : 1990 links fora da raiz analisada
+python (AST)       : 226 arquivos
+instrucoes         : 9992/20000 caracteres
+repo (identidade)  : 1534 arquivos varridos no repositório editável/derivado
+repo (links)       : 1995 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)

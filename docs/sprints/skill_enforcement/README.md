@@ -8,8 +8,12 @@ Este diretório concentra o planejamento e as evidências do Skill Enforcement F
 2. [REVISAO_PLANO_2026-09-17_LOCAL_FIRST.md](REVISAO_PLANO_2026-09-17_LOCAL_FIRST.md) — revisão operacional vigente a partir da SE02, incorporando o laboratório sintético, prioridade structural-first e regime local-first de certificação.
 3. `SE00/` — baseline e instrumentos históricos.
 4. `SE01/` — contrato verificável e capability experiment, concluída/integrada.
-5. `SE02/` — preflight L2, em fechamento/certificação.
-6. [SE02/RUNBOOK_FREE.md](SE02/RUNBOOK_FREE.md) — sequência operacional vigente para sincronizar o clone, certificar localmente, publicar/verify no Databricks Free e executar F02.
+5. `SE02/` — preflight L2, concluída e integrada pela PR #74 no merge `0f1a8b18e8e7380aad75be096b0ce167e14f9662`.
+6. [SE02/RUNBOOK_FREE.md](SE02/RUNBOOK_FREE.md) — sequência operacional usada para certificação local-first, publicação/verify no Databricks Free e F02.
+7. [SE03/README.md](SE03/README.md) — entrypoint estrutural L3, iniciativa corrente.
+8. [SE03/DESENHO_TECNICO.md](SE03/DESENHO_TECNICO.md) — desenho do runner, provenance, manifest e `ExecutionTraceV0`.
+9. [SE03/TESTES.md](SE03/TESTES.md) — matriz E01–E12 e gates da sprint.
+10. [SE03/CHECKPOINT.md](SE03/CHECKPOINT.md) — checkpoint de abertura branch-first.
 
 ## Regra de leitura
 
@@ -50,7 +54,8 @@ Uma PR Draft não deve ser usada como mecanismo principal de economia de CI, por
 
 - SE00: concluída e integrada;
 - SE01: concluída e integrada;
-- SE02: em certificação, `mode="audit"`, sem SE03 iniciada;
-- SE03–SE08: não iniciadas.
+- SE02: concluída e integrada pela PR #74;
+- SE03: iniciada em `sef/SE03-entrypoint-estrutural`, sem PR aberta e ainda em bootstrap arquitetural;
+- SE04–SE08: não iniciadas.
 
 A frente não deve declarar `FULLY_CERTIFIED` quando qualquer gate obrigatório estiver apenas `NOT_RUN` ou `DEFERRED_CREDIT`.

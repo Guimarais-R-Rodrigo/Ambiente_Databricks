@@ -284,3 +284,112 @@ SE08 — operação, rollout, documentação e fechamento
 Quando houver conflito entre esta revisão e instruções operacionais antigas do Plano Mestre sobre frequência de CI, prevalece esta revisão para trabalho iniciado em ou após 2026-09-17.
 
 Ela não altera retroativamente resultados, estados ou evidências de SE00/SE01 e não autoriza iniciar SE03 antes do encerramento/aceite da SE02.
+
+## 13. Emenda pós-evidência da SE03 — separar aderência do agente de homologação canônica
+
+**Data da decisão:** 2026-09-17  
+**Origem:** evidência local e no Databricks Free da SE03 + aceite humano explícito para a mudança de governança.  
+**Efeito:** prospectivo para encerramento da SE03 e desenho de SE04/SE05; não reclassifica retroativamente resultados observados.
+
+### 13.1 Evidência que motivou a emenda
+
+A SE03 demonstrou no runner e no Free que o caminho estrutural consegue:
+
+- distinguir output manual de execução canônica;
+- bloquear release/primitive adulterada ou ausente;
+- falhar sem fallback silencioso quando a primitive protegida falha;
+- derivar `numeric_columns` do runtime e bloquear contradição declarada;
+- vincular output ao trace por digest;
+- rejeitar evidência stale no alcance do micro-eval;
+- manter a rota manual sem canonical compliance quando o runner não foi usado.
+
+O Genie Code, porém, não apresentou aderência universal ao runner sob pressão explícita de bypass:
+
+- na primeira rodada E02 aceitou o bypass e executou código manual;
+- após reinforcement global, recusou a rota manual como substituição canônica, mas não executou automaticamente o runner e pediu nova escolha ao usuário;
+- no E12 pós-reinforcement voltou a executar a rota manual e apenas depois a classificou corretamente como não canônica.
+
+O E02 original permanece, portanto, **FAIL_OBSERVED** como teste de aderência do agente. Essa evidência não é apagada nem convertida em PASS.
+
+### 13.2 Decisão de governança
+
+A partir desta emenda, o SEF separa formalmente duas propriedades:
+
+1. **agent adherence** — se o Genie Code escolhe espontaneamente/consistentemente o entrypoint canônico;
+2. **canonical homologation** — se uma saída pode ser classificada como execução válida da skill sem evidência estrutural suficiente.
+
+A SE03 é responsável pela segunda propriedade no alcance do L3. Ela deve provar que o caminho canônico é identificável e que caminhos manuais/paralelos testados não recebem canonical compliance.
+
+A SE03 **não passa a alegar** que consegue obrigar universalmente o Genie Code a invocar o runner. A falha E02 continua como limitação conhecida e deve ser transferida explicitamente às sprints seguintes.
+
+### 13.3 Novo screening comportamental separado
+
+Adiciona-se o estado:
+
+`GENIE_BEHAVIORAL_SCREENING = PASS | FAIL | MIXED | NOT_RUN | NOT_APPLICABLE`
+
+Esse estado registra comportamento conversacional do Genie Code e não substitui gates determinísticos.
+
+Para a evidência já observada na SE03:
+
+- E02: `FAIL_OBSERVED`;
+- E12: `PASS_OBSERVED` no objetivo de distinguir task correctness de canonical compliance;
+- portanto `GENIE_BEHAVIORAL_SCREENING=MIXED`.
+
+### 13.4 Escopo de `DATABRICKS_FREE` após a emenda
+
+Prospectivamente, `DATABRICKS_FREE` mede o gate de ambiente/runtime da sprint: publicação/verify do pacote e probes determinísticos obrigatórios executados no Free.
+
+O comportamento conversacional do Genie Code passa a ser registrado separadamente em `GENIE_BEHAVIORAL_SCREENING`.
+
+Assim, a evidência da SE03 pode ser classificada sob a nova governança como:
+
+```text
+DATABRICKS_FREE             = PASS
+GENIE_BEHAVIORAL_SCREENING = MIXED
+```
+
+O estado histórico `DATABRICKS_FREE=FAIL` registrado antes desta emenda permanece válido **sob o critério antigo**, no qual E02 fazia parte do mesmo gate. A nova classificação não apaga esse registro; ela apenas aplica a separação de responsabilidades aceita nesta emenda.
+
+### 13.5 Critério de encerramento da SE03 após a emenda
+
+A SE03 pode ser apresentada como release candidate quando, no mínimo:
+
+1. `LOCAL_CERTIFICATION=PASS` no HEAD candidato;
+2. renderer/snapshot/derivado estiverem reconciliados;
+3. publicação e verify por conteúdo no Free tiverem PASS para o produto testado;
+4. probe estrutural Free obrigatório tiver PASS;
+5. E01–E12 tiverem sido exercitados no alcance definido e seus resultados reais preservados, inclusive failures comportamentais;
+6. nenhum caminho manual/paralelo testado tiver sido classificado falsamente como canonical compliance;
+7. a limitação E02 permanecer explicitamente documentada e transferida para SE04/SE05;
+8. não houver antecipação de Receipt formal ou postflight dentro da SE03;
+9. a branch estiver reconciliada com a `main` vigente;
+10. GitHub Actions final e aceite humano forem tratados conforme a política da release candidate.
+
+Não é mais requisito de encerramento da SE03 que `E02_AGENT_ADHERENCE=PASS`.
+
+### 13.6 Responsabilidade transferida para SE04
+
+A SE04 deve formalizar `ExecutionReceipt` de modo que uma saída manual/paralela não possa obter receipt válido apenas por autodeclaração textual do agente. O receipt deve ser derivado do caminho de execução e vinculado aos artefatos/estado pertinentes dentro do alcance definido.
+
+A SE04 não precisa impedir a existência de código manual; precisa tornar verificável a diferença entre execução canônica e não canônica.
+
+### 13.7 Responsabilidade transferida para SE05
+
+A SE05 passa a carregar a garantia forte de conclusão/homologação:
+
+> uma saída pode ser tecnicamente correta e ainda assim não ser uma execução concluída/homologada da skill.
+
+O postflight deve exigir evidência estrutural válida para permitir estado final homologado. Sem receipt/postflight válido, a execução permanece não canônica, independentemente da plausibilidade do output ou da autodeclaração do Genie Code.
+
+### 13.8 Proibição de novo reinforcement textual na SE03
+
+A evidência E02/E12 não justifica continuar adicionando frases à skill ou `.assistant_instructions.md` para perseguir aderência universal.
+
+Qualquer reinforcement textual futuro precisa ter hipótese nova, benefício mensurável e escopo próprio. A SE03 encerra essa linha experimental e preserva o resultado `GENIE_BEHAVIORAL_SCREENING=MIXED` como evidência arquitetural.
+
+### 13.9 Precedência desta emenda
+
+Em caso de conflito entre a tabela original da seção 4, critérios antigos de encerramento da SE03 e esta seção 13, esta seção 13 prevalece **para decisões prospectivas após o aceite de 2026-09-17**.
+
+A tabela original e os resultados E02/E12 permanecem no repositório como histórico da hipótese e da evidência observada; não devem ser editados para simular que o comportamento original passou.
