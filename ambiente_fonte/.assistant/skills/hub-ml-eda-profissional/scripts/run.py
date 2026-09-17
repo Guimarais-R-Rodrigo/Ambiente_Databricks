@@ -7,7 +7,7 @@ import json
 import sys
 import uuid
 from pathlib import Path
-from typing import Any, Callable, Mapping
+from typing import Any, Mapping
 
 
 SKILL = "hub-ml-eda-profissional"
@@ -15,8 +15,6 @@ TRACE_VERSION = "0.1"
 MANIFEST_VERSION = "0.1"
 CANONICAL_ENTRYPOINT = "skills/hub-ml-eda-profissional/scripts/run.py::run"
 PROTECTED_PRIMITIVE_ID = "quick_profile"
-
-PrimitiveInvoker = Callable[..., Any]
 
 
 def _resolve_assistant_root() -> Path:
@@ -181,7 +179,6 @@ def run(
     *,
     assistant_root: Path | str | None = None,
     manifest_path: Path | str | None = None,
-    primitive_invoker: PrimitiveInvoker | None = None,
     sample_fraction: float = 0.1,
     max_categories: int = 20,
     seed: int = 42,
@@ -249,10 +246,9 @@ def run(
         trace["status"] = "BLOCKED"
         return {"trace": trace, "result": None}
 
-    invoker = primitive_invoker or _default_quick_profile
     trace["resources_called"].append(PROTECTED_PRIMITIVE_ID)
     try:
-        result = invoker(
+        result = _default_quick_profile(
             table_name,
             sample_fraction=sample_fraction,
             max_categories=max_categories,

@@ -11,7 +11,7 @@
     {
       "path": "skills/hub-ml-eda-profissional/scripts/run.py",
       "role": "runner",
-      "git_blob_sha1": "26632a365823dbe22b53ca0e9a9dbf8361bd4349"
+      "git_blob_sha1": "6c75a29f6fda0c9c6671e18425004501a8debf5f"
     },
     {
       "path": "hub_scripts/skill_execution/skill_execution.py",

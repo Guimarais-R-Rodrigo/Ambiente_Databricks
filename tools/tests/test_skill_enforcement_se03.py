@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -65,6 +66,13 @@ class SkillEnforcementSE03FirstSliceTests(unittest.TestCase):
             self.assertTrue(target.is_file(), artifact["path"])
             self.assertEqual(artifact["git_blob_sha1"], runner._git_blob_sha1(target))
 
+    def test_public_run_signature_has_no_primitive_injection_hook(self) -> None:
+        import inspect
+
+        signature = inspect.signature(runner.run)
+        self.assertNotIn("primitive_invoker", signature.parameters)
+        self.assertNotIn("invoker", signature.parameters)
+
     def test_e01_happy_path_uses_runner_primitive_and_valid_trace(self) -> None:
         calls: list[dict] = []
 
@@ -72,12 +80,12 @@ class SkillEnforcementSE03FirstSliceTests(unittest.TestCase):
             calls.append({"table_name": table_name, **kwargs})
             return {"table": table_name, "ok": True}
 
-        payload = runner.run(
-            "catalog.schema.synthetic_table",
-            dict(DEFAULT_CONTEXT),
-            assistant_root=SOURCE_ASSISTANT,
-            primitive_invoker=fake_profile,
-        )
+        with mock.patch.object(runner, "_default_quick_profile", side_effect=fake_profile):
+            payload = runner.run(
+                "catalog.schema.synthetic_table",
+                dict(DEFAULT_CONTEXT),
+                assistant_root=SOURCE_ASSISTANT,
+            )
 
         trace = payload["trace"]
         self.assertEqual("PASS", trace["status"])
@@ -92,24 +100,17 @@ class SkillEnforcementSE03FirstSliceTests(unittest.TestCase):
     def test_e04_missing_required_primitive_aborts_before_core(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             assistant_root = _copy_minimal_release(Path(td), include_primitive=False)
-            calls = 0
-
-            def should_not_run(*args, **kwargs):
-                nonlocal calls
-                calls += 1
-                return {"unexpected": True}
-
-            payload = runner.run(
-                "catalog.schema.synthetic_table",
-                dict(DEFAULT_CONTEXT),
-                assistant_root=assistant_root,
-                primitive_invoker=should_not_run,
-            )
+            with mock.patch.object(runner, "_default_quick_profile") as mocked_profile:
+                payload = runner.run(
+                    "catalog.schema.synthetic_table",
+                    dict(DEFAULT_CONTEXT),
+                    assistant_root=assistant_root,
+                )
+                mocked_profile.assert_not_called()
 
         trace = payload["trace"]
         self.assertEqual("BLOCKED", trace["status"])
         self.assertEqual("NOT_RUN", trace["preflight_status"])
-        self.assertEqual(0, calls)
         self.assertTrue(
             any(issue["code"] == "RELEASE_INTEGRITY_MISMATCH" for issue in trace["blocking_issues"])
         )
@@ -121,12 +122,13 @@ class SkillEnforcementSE03FirstSliceTests(unittest.TestCase):
             primitive = assistant_root / "hub_scripts" / "quick_profile" / "quick_profile.py"
             primitive.write_text(primitive.read_text(encoding="utf-8") + "\n# tampered\n", encoding="utf-8")
 
-            payload = runner.run(
-                "catalog.schema.synthetic_table",
-                dict(DEFAULT_CONTEXT),
-                assistant_root=assistant_root,
-                primitive_invoker=lambda *args, **kwargs: {"unexpected": True},
-            )
+            with mock.patch.object(runner, "_default_quick_profile") as mocked_profile:
+                payload = runner.run(
+                    "catalog.schema.synthetic_table",
+                    dict(DEFAULT_CONTEXT),
+                    assistant_root=assistant_root,
+                )
+                mocked_profile.assert_not_called()
 
         self.assertEqual("BLOCKED", payload["trace"]["status"])
         self.assertTrue(
@@ -134,37 +136,32 @@ class SkillEnforcementSE03FirstSliceTests(unittest.TestCase):
         )
 
     def test_preflight_blocked_stops_core(self) -> None:
-        calls = 0
-
-        def should_not_run(*args, **kwargs):
-            nonlocal calls
-            calls += 1
-            return {"unexpected": True}
-
         context = dict(DEFAULT_CONTEXT)
         context.pop("visual_diagnostics_requested")
-        payload = runner.run(
-            "catalog.schema.synthetic_table",
-            context,
-            assistant_root=SOURCE_ASSISTANT,
-            primitive_invoker=should_not_run,
-        )
+
+        with mock.patch.object(runner, "_default_quick_profile") as mocked_profile:
+            payload = runner.run(
+                "catalog.schema.synthetic_table",
+                context,
+                assistant_root=SOURCE_ASSISTANT,
+            )
+            mocked_profile.assert_not_called()
 
         self.assertEqual("BLOCKED", payload["trace"]["status"])
         self.assertEqual("BLOCKED", payload["trace"]["preflight_status"])
-        self.assertEqual(0, calls)
         self.assertFalse(payload["trace"]["fallback_used"])
 
     def test_e06_primitive_failure_fails_without_fallback(self) -> None:
-        def failing_profile(*args, **kwargs):
-            raise RuntimeError("synthetic primitive failure")
-
-        payload = runner.run(
-            "catalog.schema.synthetic_table",
-            dict(DEFAULT_CONTEXT),
-            assistant_root=SOURCE_ASSISTANT,
-            primitive_invoker=failing_profile,
-        )
+        with mock.patch.object(
+            runner,
+            "_default_quick_profile",
+            side_effect=RuntimeError("synthetic primitive failure"),
+        ):
+            payload = runner.run(
+                "catalog.schema.synthetic_table",
+                dict(DEFAULT_CONTEXT),
+                assistant_root=SOURCE_ASSISTANT,
+            )
 
         trace = payload["trace"]
         self.assertEqual("FAIL", trace["status"])
@@ -180,22 +177,29 @@ class SkillEnforcementSE03FirstSliceTests(unittest.TestCase):
         self.assertFalse(runner.is_canonically_compliant(manual_output))
 
     def test_invalid_table_name_blocks_before_core(self) -> None:
-        payload = runner.run(
-            "",
-            dict(DEFAULT_CONTEXT),
-            assistant_root=SOURCE_ASSISTANT,
-            primitive_invoker=lambda *args, **kwargs: {"unexpected": True},
-        )
+        with mock.patch.object(runner, "_default_quick_profile") as mocked_profile:
+            payload = runner.run(
+                "",
+                dict(DEFAULT_CONTEXT),
+                assistant_root=SOURCE_ASSISTANT,
+            )
+            mocked_profile.assert_not_called()
+
         self.assertEqual("BLOCKED", payload["trace"]["status"])
         self.assertTrue(any(issue["code"] == "RUN_INPUT_INVALID" for issue in payload["trace"]["blocking_issues"]))
 
     def test_trace_does_not_copy_business_result(self) -> None:
-        payload = runner.run(
-            "catalog.schema.synthetic_table",
-            dict(DEFAULT_CONTEXT),
-            assistant_root=SOURCE_ASSISTANT,
-            primitive_invoker=lambda *args, **kwargs: {"secret_value": "do-not-copy"},
-        )
+        with mock.patch.object(
+            runner,
+            "_default_quick_profile",
+            return_value={"secret_value": "do-not-copy"},
+        ):
+            payload = runner.run(
+                "catalog.schema.synthetic_table",
+                dict(DEFAULT_CONTEXT),
+                assistant_root=SOURCE_ASSISTANT,
+            )
+
         self.assertNotIn("secret_value", json.dumps(payload["trace"], ensure_ascii=False))
         self.assertEqual("do-not-copy", payload["result"]["secret_value"])
 
@@ -203,18 +207,17 @@ class SkillEnforcementSE03FirstSliceTests(unittest.TestCase):
         def fake_profile(table_name: str, **kwargs):
             return {"table": table_name}
 
-        first = runner.run(
-            "catalog.schema.synthetic_table",
-            dict(DEFAULT_CONTEXT),
-            assistant_root=SOURCE_ASSISTANT,
-            primitive_invoker=fake_profile,
-        )["trace"]
-        second = runner.run(
-            "catalog.schema.synthetic_table",
-            dict(DEFAULT_CONTEXT),
-            assistant_root=SOURCE_ASSISTANT,
-            primitive_invoker=fake_profile,
-        )["trace"]
+        with mock.patch.object(runner, "_default_quick_profile", side_effect=fake_profile):
+            first = runner.run(
+                "catalog.schema.synthetic_table",
+                dict(DEFAULT_CONTEXT),
+                assistant_root=SOURCE_ASSISTANT,
+            )["trace"]
+            second = runner.run(
+                "catalog.schema.synthetic_table",
+                dict(DEFAULT_CONTEXT),
+                assistant_root=SOURCE_ASSISTANT,
+            )["trace"]
 
         self.assertNotEqual(first["run_id"], second["run_id"])
         first = dict(first)
