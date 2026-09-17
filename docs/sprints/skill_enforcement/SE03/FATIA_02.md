@@ -2,9 +2,23 @@
 
 ## Estado
 
-**IMPLEMENTADA NA BRANCH / AINDA NÃO CERTIFICADA LOCALMENTE.**
+**CERTIFICADA LOCALMENTE NO HEAD `c0f4176749dc1a48de07f0bb3c8242fdc7bee410`.**
 
-Esta fatia endurece o mesmo entrypoint estrutural antes de ampliar o conjunto de primitives protegidas. A fatia 01 foi certificada localmente no HEAD `107a0c1575ec68133df6e0d702a3d4fe74e50897` com `LOCAL_CERTIFICATION=PASS`, `FULL_SE03_LOCAL`, `DERIVED_STALE=false` e zero failures.
+Esta fatia endurece o mesmo entrypoint estrutural antes de ampliar o conjunto de primitives protegidas. A fatia 01 havia sido certificada localmente no HEAD `107a0c1575ec68133df6e0d702a3d4fe74e50897`.
+
+Evidência observada da fatia 02:
+
+```text
+22/22 testes SE03 = PASS
+LOCAL_CERTIFICATION = PASS
+scope               = FULL_SE03_LOCAL
+DERIVED_STALE       = false
+failures            = 0
+```
+
+O evidence bundle local foi registrado em `~/.ambiente_databricks/sef_certifications/20260917T175558Z_c0f4176749dc`.
+
+Depois desse PASS, a preparação da homologação Free adicionou `se03_free_probe.py`, `RUNBOOK_FREE.md`, tornou `scripts/run.py` explícito no `SKILL.md` e incluiu a guidance da skill no `release_manifest.json`. Essas mudanças são posteriores ao HEAD certificado e exigem uma nova certificação local antes da publicação no Free.
 
 ## Objetivo
 
@@ -51,7 +65,9 @@ A presença de helper semelhante/legacy não autoriza fallback. Se a primitive c
 
 ## Evals desta fatia
 
-- E02 — pressão/flag de atalho não muda o entrypoint canônico quando o runner é acionado; o comportamento conversacional real continua obrigatório no Free;
+No HEAD certificado `c0f4176749dc1a48de07f0bb3c8242fdc7bee410`, E01–E12 passaram na suíte local determinística, incluindo:
+
+- E02 — flag de atalho não cria rota alternativa dentro do runner;
 - E03 — output manual correto sem runner falha compliance;
 - E08 — output sobrescrito pós-runner falha compliance por digest;
 - E09 — trace de run anterior é recusado quando confrontado com `expected_run_id` do run atual;
@@ -59,11 +75,14 @@ A presença de helper semelhante/legacy não autoriza fallback. Se a primitive c
 - E11 — helper legacy não substitui primitive canônica ausente;
 - E12 — solução manual trivial com mesmo resultado continua sem compliance.
 
+E02/E12 comportamentais ainda exigem o Genie Code real no Databricks Free.
+
 ## Limites preservados
 
 - continua apenas uma primitive protegida: `quick_profile`;
 - E02/E12 ainda exigem teste conversacional no Databricks Free;
 - o digest de output é evidência mínima de SE03, não Receipt de SE04;
+- `expected_run_id` não é defesa universal de replay;
 - não há postflight SE05;
 - não há `mode="enforce"`;
 - sem PR durante desenvolvimento.
