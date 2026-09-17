@@ -2,7 +2,7 @@
 
 ## Estado
 
-**SE03 EM DESENVOLVIMENTO — FATIA 01 CERTIFICADA / FATIA 02 IMPLEMENTADA, NÃO CERTIFICADA.**
+**SE03 EM DESENVOLVIMENTO — FATIAS 01/02 CERTIFICADAS LOCALMENTE; PREPARAÇÃO FREE EM REVALIDAÇÃO LOCAL.**
 
 - baseline: `main@0f1a8b18e8e7380aad75be096b0ce167e14f9662`;
 - origem: PR #74 / SE02 integrada por squash;
@@ -56,57 +56,65 @@ Resultados observados:
 
 A primeira rodada no HEAD `115a318a1a7c6776fa1c39f4617649c1d08698ec` permaneceu `FAIL` por `readme_snapshot`, e revelou uma lacuna do certifier: `git diff --exit-code` não detectava novos arquivos derivados untracked. O gate foi corrigido e a regressão correspondente passou na rodada verde.
 
+## Fatia 02 — evidência observada
+
+HEAD certificado: `c0f4176749dc1a48de07f0bb3c8242fdc7bee410`.
+
+```text
+22/22 testes SE03 = PASS
+LOCAL_CERTIFICATION = PASS
+scope               = FULL_SE03_LOCAL
+DERIVED_STALE       = false
+failures            = 0
+```
+
+Também passaram contrato, SE01 14/14, SE02 22/22, estrutura, renderer, render diff e snapshot. O snapshot observado foi `python(AST)=226`, `repo identidade=1532`, `repo links=1994`, extras=0. Evidence bundle: `~/.ambiente_databricks/sef_certifications/20260917T175558Z_c0f4176749dc`.
+
+A matriz local cobriu E01–E12. Isso não substitui E02/E12 comportamentais no Genie Code real.
+
 ## Decisões estruturais congeladas
 
 1. Entrypoint único: `skills/hub-ml-eda-profissional/scripts/run.py::run`.
 2. Primitive protegida atual: somente `hub_scripts.quick_profile.quick_profile`.
 3. Manifest: `release_manifest.json`, com identidade Git blob dos artefatos acoplados.
-4. Falha de integridade/preflight/primitive é fail-closed; sem fallback manual.
+4. Falha de integridade/preflight/provenance/primitive é fail-closed; sem fallback manual.
 5. Output manual correto sem runner não satisfaz canonical compliance.
-6. Receipt formal continua SE04; postflight continua SE05.
-7. PR permanece proibida até local + Free + documentação estabilizados.
+6. `numeric_columns` é `runtime_derived`; conflito declarado bloqueia com `CONTEXT_PROVENANCE_CONFLICT`.
+7. Trace mínimo vincula input/output por digest e pode receber `expected_run_id` em micro-eval local.
+8. Receipt formal continua SE04; postflight continua SE05.
+9. PR permanece proibida até local + Free + documentação estabilizados.
 
-## Fatia 02 — implementação corrente
+## Preparação Free — alterações posteriores ao HEAD certificado
 
-Objetivo: endurecer o mesmo caminho antes de ampliar primitives.
+Depois do PASS em `c0f4176...`, a branch recebeu:
 
-Implementado:
+- `tools/skill_enforcement/se03_free_probe.py` para E01/E04/E06/E10 no runtime Free;
+- `SE03/RUNBOOK_FREE.md`;
+- `SKILL.md` explicitando `scripts/run.py` como único entrypoint canônico da etapa L3 protegida;
+- `SKILL.md` incluído no `release_manifest.json` como `skill_guidance` protegida;
+- snapshot raiz reconciliado para o estado pós-renderer esperado.
 
-- `numeric_columns` derivado mecanicamente de `spark.table(...).dtypes`;
-- conflito entre `numeric_columns` declarado e runtime observado → `BLOCKED` com `CONTEXT_PROVENANCE_CONFLICT`;
-- `context_provenance` no trace;
-- `input_digest` e `output_digest` mínimos;
-- evaluator rejeita output alterado após runner;
-- evaluator aceita `expected_run_id` apenas para micro-eval local de stale trace;
-- helper legacy não substitui primitive canônica ausente;
-- flags de atalho no contexto não criam rota alternativa no runner;
-- E02/E03/E08/E09/E10/E11/E12 adicionados à suíte local.
+Essas mudanças tornam o HEAD corrente diferente do HEAD certificado e exigem nova rodada do perfil `se03` antes de qualquer publicação Free.
 
-Limites explícitos:
-
-- E02/E12 ainda precisam do comportamento real do Genie Code no Free;
-- `expected_run_id` não é defesa universal de replay;
-- digest mínimo não é Receipt formal;
-- apenas `quick_profile` está protegida estruturalmente;
-- demais condições ainda não possuem provenance completa `user_intent` vs `agent_declared`.
+A alteração do `SKILL.md` precisa ser materializada no `Novo_Ambiente_Simulado/` somente pelo renderer canônico. Não editar o derivado manualmente.
 
 ## Estado dos gates agora
 
 ```text
 FATIA_01_LOCAL_CERTIFICATION = PASS
-FATIA_02_IMPLEMENTATION      = IMPLEMENTED_NOT_YET_RUN
+FATIA_02_LOCAL_CERTIFICATION = PASS
+FREE_PREP_LOCAL_REVALIDATION = NOT_RUN
 SYNTHETIC_AGENT_SCREENING    = NOT_RUN_SE03
-DATABRICKS_FREE               = NOT_RUN_SE03
-GITHUB_ACTIONS                = NOT_RUN_SE03
-FULLY_CERTIFIED               = false
-PR                            = NOT_OPEN
+DATABRICKS_FREE              = NOT_RUN_SE03
+GITHUB_ACTIONS               = NOT_RUN_SE03
+FULLY_CERTIFIED              = false
+PR                           = NOT_OPEN
 ```
 
 ## Próximo gate
 
-Sincronizar a branch atual no clone local e executar:
-
-1. `python -B tools/tests/test_skill_enforcement_se03.py -v`;
-2. `python -B tools/skill_enforcement/certify_local.py --profile se03 --verbose`.
-
-Somente depois dessa rodada os E02–E12 implementados podem receber classificação observada.
+1. sincronizar o HEAD corrente da branch;
+2. executar `python -B tools/tests/test_skill_enforcement_se03.py -v`;
+3. executar `python -B tools/skill_enforcement/certify_local.py --profile se03 --verbose`;
+4. se o único drift for renderer em `SKILL.md`/`release_manifest.json`, versionar somente a saída do renderer e repetir até worktree limpa + PASS;
+5. só então seguir `SE03/RUNBOOK_FREE.md` para publicação/verify/probe e E02/E12 no Genie Code.
