@@ -1,0 +1,75 @@
+name: Skill Enforcement SE02
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+    paths:
+      - "ambiente_fonte/.assistant/hub_scripts/skill_execution/**"
+      - "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/**"
+      - "Novo_Ambiente_Simulado/**"
+      - "tools/skill_enforcement/**"
+      - "tools/tests/test_skill_enforcement_se01.py"
+      - "tools/tests/test_skill_enforcement_se02.py"
+      - "docs/decisions/ADR-0021-execucao-verificavel-de-skills.md"
+      - "docs/sprints/skill_enforcement/**"
+      - ".github/workflows/skill-enforcement-se02.yml"
+      - "README.md"
+  push:
+    branches: [main]
+    paths:
+      - "ambiente_fonte/.assistant/hub_scripts/skill_execution/**"
+      - "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/**"
+      - "Novo_Ambiente_Simulado/**"
+      - "tools/skill_enforcement/**"
+      - "tools/tests/test_skill_enforcement_se01.py"
+      - "tools/tests/test_skill_enforcement_se02.py"
+      - "docs/decisions/ADR-0021-execucao-verificavel-de-skills.md"
+      - "docs/sprints/skill_enforcement/**"
+      - ".github/workflows/skill-enforcement-se02.yml"
+      - "README.md"
+
+concurrency:
+  group: sef-se02-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  se02:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Certificação SE02 reproduzível
+        run: python -B tools/skill_enforcement/certify_local.py --profile se02 --evidence-dir "$RUNNER_TEMP/sef-certification"
+
+      - name: Publicar evidência de certificação
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: se02-certification-evidence
+          path: ${{ runner.temp }}/sef-certification/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publicar artifact do preflight renderizado
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: se02-preflight-renderizado
+          path: |
+            Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/
+            Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/
+          if-no-files-found: error
+          retention-days: 7

@@ -4,15 +4,15 @@
 
 SE01 implementa somente o nível L1 (Contract), em modo ``audit``. Este módulo
 não executa helpers, não faz preflight e não altera o comportamento das skills.
-A resolução é estática: paths do Hub são conferidos contra a fachada pública
-``__init__.py`` de cada pasta de objeto.
+A resolução é estática e compartilha com o preflight L2 a mesma semântica de
+fachada pública, sem importar os helpers analíticos alvo.
 """
 
 from __future__ import annotations
 
 import argparse
-import ast
 import json
+import sys
 from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import Any, Iterable
@@ -41,6 +41,14 @@ SUPPORTED_CONDITIONS = {
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SOURCE_ASSISTANT = REPO_ROOT / "ambiente_fonte" / ".assistant"
 SKILLS_ROOT = SOURCE_ASSISTANT / "skills"
+
+if str(SOURCE_ASSISTANT) not in sys.path:
+    sys.path.insert(0, str(SOURCE_ASSISTANT))
+
+from hub_scripts.skill_execution.skill_execution import (  # noqa: E402
+    _canonical_module_parts,
+    _public_exports,
+)
 
 
 @dataclass(frozen=True)
@@ -82,48 +90,6 @@ class ContractValidation:
 
 def _issue(code: str, message: str, location: str) -> ContractIssue:
     return ContractIssue(code=code, message=message, location=location)
-
-
-def _public_exports(init_path: Path) -> set[str]:
-    """Extrai a fachada pública sem importar módulos nem executar código."""
-    try:
-        tree = ast.parse(init_path.read_text(encoding="utf-8"), filename=str(init_path))
-    except (OSError, SyntaxError) as exc:
-        raise ValueError(f"não foi possível analisar {init_path}: {exc}") from exc
-
-    explicit_all: set[str] | None = None
-    imported: set[str] = set()
-    defined: set[str] = set()
-
-    for node in tree.body:
-        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-            if not node.name.startswith("_"):
-                defined.add(node.name)
-        elif isinstance(node, ast.ImportFrom):
-            for alias in node.names:
-                name = alias.asname or alias.name
-                if not name.startswith("_"):
-                    imported.add(name)
-        elif isinstance(node, ast.Import):
-            for alias in node.names:
-                name = alias.asname or alias.name.split(".", 1)[0]
-                if not name.startswith("_"):
-                    imported.add(name)
-        elif isinstance(node, ast.Assign):
-            for target in node.targets:
-                if isinstance(target, ast.Name) and target.id == "__all__":
-                    try:
-                        value = ast.literal_eval(node.value)
-                    except (ValueError, TypeError):
-                        value = None
-                    if isinstance(value, (list, tuple)) and all(
-                        isinstance(item, str) for item in value
-                    ):
-                        explicit_all = set(value)
-
-    if explicit_all is not None:
-        return explicit_all
-    return imported | defined
 
 
 def _validate_condition(
@@ -255,28 +221,27 @@ def _validate_resource(
 
     module = resource.get("module")
     symbol = resource.get("symbol")
-    if not isinstance(module, str) or not module.startswith(
-        ("hub_snippets.", "hub_scripts.")
-    ):
+    module_parts = _canonical_module_parts(module)
+    if module_parts is None:
         issues.append(
             _issue(
                 "RESOURCE_MODULE_INVALID",
-                f"module deve apontar para hub_snippets.* ou hub_scripts.*: {module!r}",
+                f"module deve ser caminho Python canônico sob hub_snippets.* ou hub_scripts.*: {module!r}",
                 location,
             )
         )
         return
-    if not isinstance(symbol, str) or not symbol or "." in symbol:
+    if not isinstance(symbol, str) or not symbol or not symbol.isidentifier():
         issues.append(
             _issue(
                 "RESOURCE_INVALID",
-                "symbol deve ser nome público simples",
+                "symbol deve ser identificador público Python simples",
                 location,
             )
         )
         return
 
-    package_dir = assistant_root.joinpath(*module.split("."))
+    package_dir = assistant_root.joinpath(*module_parts)
     init_path = package_dir / "__init__.py"
     if not package_dir.is_dir() or not init_path.is_file():
         issues.append(
@@ -291,15 +256,13 @@ def _validate_resource(
     try:
         exports = _public_exports(init_path)
     except ValueError as exc:
-        issues.append(
-            _issue("RESOURCE_MODULE_UNREADABLE", str(exc), location)
-        )
+        issues.append(_issue("RESOURCE_MODULE_UNREADABLE", str(exc), location))
         return
     if symbol not in exports:
         issues.append(
             _issue(
                 "RESOURCE_SYMBOL_NOT_EXPORTED",
-                f"{module}.{symbol} não está na API pública de {init_path}",
+                f"{module}.{symbol} não está na API pública efetiva de {init_path}",
                 location,
             )
         )
@@ -476,9 +439,7 @@ def validate_contract(
 
     skill = raw.get("skill")
     if not isinstance(skill, str) or not skill.startswith("hub-ml-"):
-        issues.append(
-            _issue("SKILL_INVALID", f"skill inválida: {skill!r}", "skill")
-        )
+        issues.append(_issue("SKILL_INVALID", f"skill inválida: {skill!r}", "skill"))
 
     skill_dir = contract_path.parent
     if isinstance(skill, str) and skill_dir.name != skill:
@@ -502,22 +463,16 @@ def validate_contract(
 
     metadata = raw.get("metadata", {})
     if not isinstance(metadata, dict):
-        issues.append(
-            _issue("METADATA_INVALID", "metadata deve ser objeto", "metadata")
-        )
+        issues.append(_issue("METADATA_INVALID", "metadata deve ser objeto", "metadata"))
 
     resources = raw.get("resources")
     if not isinstance(resources, list):
-        issues.append(
-            _issue("RESOURCES_INVALID", "resources deve ser array", "resources")
-        )
+        issues.append(_issue("RESOURCES_INVALID", "resources deve ser array", "resources"))
         resources = []
 
     templates = raw.get("templates")
     if not isinstance(templates, list):
-        issues.append(
-            _issue("TEMPLATES_INVALID", "templates deve ser array", "templates")
-        )
+        issues.append(_issue("TEMPLATES_INVALID", "templates deve ser array", "templates"))
         templates = []
 
     seen_resources: set[str] = set()
@@ -568,9 +523,7 @@ def _format_human(results: list[ContractValidation]) -> str:
             f"(skill={result.skill!r}, resources={result.resources}, templates={result.templates})"
         )
         for issue in result.issues:
-            lines.append(
-                f"  - {issue.code} @ {issue.location}: {issue.message}"
-            )
+            lines.append(f"  - {issue.code} @ {issue.location}: {issue.message}")
     passed = sum(result.ok for result in results)
     lines.append(f"Resumo: {passed}/{len(results)} contratos válidos.")
     return "\n".join(lines)
@@ -596,7 +549,11 @@ def main(argv: list[str] | None = None) -> int:
             "code": "NO_CONTRACTS",
             "message": f"nenhum execution_contract.json em {SKILLS_ROOT}",
         }
-        print(json.dumps(payload, ensure_ascii=False, indent=2) if args.json else payload["message"])
+        print(
+            json.dumps(payload, ensure_ascii=False, indent=2)
+            if args.json
+            else payload["message"]
+        )
         return 2
 
     results = validate_many(paths)
