@@ -37,6 +37,8 @@ Cobertura mínima vigente — **22 casos**:
 
 Além disso, a regressão `tools/tests/test_skill_enforcement_se01.py` deve permanecer integralmente em PASS.
 
+A primeira certificação local completa do HEAD `df240d056ca9b51318c6100c823eb40f6b42741d` executou os 22 casos e obteve **22/22 PASS**, mas a certificação global permaneceu FAIL porque a validação estrutural detectou `resource_resolution.py` como módulo peer extra em `hub_scripts/skill_execution`. Essa falha estrutural foi corrigida na candidata seguinte consolidando a resolução compartilhada no módulo principal `skill_execution.py`; os 22/22 anteriores não aprovam automaticamente o novo HEAD.
+
 ## Certificação local canônica
 
 Entry point:
