@@ -55,6 +55,7 @@ jobs:
         run: python -B tools/skill_enforcement/certify_local.py --profile se02 --evidence-dir "$RUNNER_TEMP/sef-certification"
 
       - name: Publicar evidência de certificação
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: se02-certification-evidence
@@ -63,6 +64,7 @@ jobs:
           retention-days: 14
 
       - name: Publicar artifact do preflight renderizado
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: se02-preflight-renderizado
