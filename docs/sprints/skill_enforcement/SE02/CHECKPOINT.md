@@ -2,140 +2,192 @@
 
 ## Veredito atual
 
-**CANDIDATA TÉCNICA EM CERTIFICAÇÃO / NÃO HOMOLOGADA / NÃO INTEGRADA.**
+**CANDIDATA L2 EM RECONCILIAÇÃO LOCAL-FIRST / NÃO HOMOLOGADA / NÃO INTEGRADA.**
 
-A SE02 implementa exclusivamente L2 (`Preflight`) para `hub-ml-eda-profissional`. O contrato permanece `mode="audit"`; SE03, runner determinístico, Execution Receipt e postflight não foram iniciados.
+A SE02 implementa exclusivamente L2 (`Preflight`) para `hub-ml-eda-profissional`. O contrato permanece `mode="audit"`; SE03, runner determinístico, `ExecutionTraceV0`, Execution Receipt formal e postflight não foram iniciados.
 
-## Estado Git atual
+A partir de 2026-09-17, a frente segue a revisão `../REVISAO_PLANO_2026-09-17_LOCAL_FIRST.md`.
+
+## Estado Git de referência
 
 - `main`: `ae9337204a7c769c0b28b33321c8b81afdff6bae`;
 - branch: `sef/SE02-preflight`;
-- HEAD antes deste checkpoint: `fdfb3175d0facedd52a5a60ac587000e9df82be6`;
+- HEAD imediatamente anterior à consolidação deste checkpoint: `e5f44074a3bb79e12abaa6388e1db6b3fdab975c`;
 - merge-base: `ae9337204a7c769c0b28b33321c8b81afdff6bae`;
-- `ahead_by=34`;
-- `behind_by=0`;
+- comparação imediatamente anterior: `ahead_by=54`, `behind_by=0`;
 - PR #74: aberta, Draft e mergeável.
 
-A `main` avançou após a integração da SE01 por uma correção transversal da V08 (PR #75). A branch SE02 já foi reconciliada com essa `main` por merge normal, sem force-push.
+A `main` avançou após a integração da SE01 por uma correção transversal da V08 (PR #75). A branch SE02 foi reconciliada com essa `main` por merge normal, sem force-push.
 
-## Implementado
+## Estados separados de certificação
 
-- [x] contrato canônico da SE02 recuperado do Plano Mestre;
+```text
+LOCAL_CERTIFICATION        = NOT_RUN
+SYNTHETIC_AGENT_SCREENING = MIXED
+DATABRICKS_FREE            = NOT_RUN
+GITHUB_ACTIONS             = DEFERRED_CREDIT
+FULLY_CERTIFIED            = false
+```
+
+Interpretação:
+
+- `LOCAL_CERTIFICATION=NOT_RUN`: o novo HEAD consolidado ainda precisa ser executado em clone/worktree local limpo pelo certifier canônico;
+- `SYNTHETIC_AGENT_SCREENING=MIXED`: o laboratório externo isolado produziu evidência útil de priorização arquitetural, mas não testou o projeto real nem o Genie Code/Databricks;
+- `DATABRICKS_FREE=NOT_RUN`: os casos da candidata revisada ainda não foram publicados/verificados no Free;
+- `GITHUB_ACTIONS=DEFERRED_CREDIT`: não é PASS nem failure funcional. O orçamento de Actions está sendo preservado para release candidate/pós-merge;
+- `FULLY_CERTIFIED=false`: nenhum estado acima pode ser escondido por um PASS parcial.
+
+## Implementado na SE02
+
+- [x] contrato canônico v0.1 em `mode="audit"`;
 - [x] API pública `hub_scripts.skill_execution.run_preflight`;
 - [x] script fino `skills/hub-ml-eda-profissional/scripts/preflight.py`;
 - [x] instrução mínima no `SKILL.md` para executar o preflight antes do core;
 - [x] `PASS`/`BLOCKED` estruturados;
 - [x] required/conditional/optional tratados;
 - [x] contexto condicional fail-closed quando condição necessária está ausente ou inválida;
-- [x] resolução estática de APIs públicas por AST, sem importar helpers analíticos;
-- [x] templates relativos resolvidos com proteção contra path inseguro;
-- [x] `writes_performed=false` e teste de ausência de mutação;
-- [x] suíte SE02 com 18 casos;
-- [x] workflow dedicado SE02;
-- [x] regressão SE01 preservada;
-- [x] renderer executado canonicamente;
-- [x] derivado materializado apenas pelo renderer;
-- [x] Plano Mestre reconciliado para SE01 integrada / SE02 em andamento;
-- [x] Manual Técnico e catálogo `hub_scripts` reconciliados com `skill_execution`;
-- [x] `Novo_Ambiente_Simulado` atualizado a partir da fonte canônica;
-- [ ] CI completo executado no HEAD de fechamento por runner real;
-- [ ] Databricks Free publicado/verificado para a candidata final;
-- [ ] testes Free de `PASS`/`BLOCKED`;
-- [ ] teste conversacional do Genie Code;
-- [ ] CHANGELOG final da SE02;
+- [x] templates relativos com proteção contra traversal;
+- [x] `writes_performed=false`;
+- [x] hardening contra `__all__` fictício;
+- [x] hardening contra module path não canônico/path-like;
+- [x] resolução estática compartilhada entre L1 e L2 em `hub_scripts.skill_execution.resource_resolution`;
+- [x] suíte SE02 ampliada para 22 casos, incluindo consistência L1/L2;
+- [x] `tools/skill_enforcement/certify_local.py` como certifier reproduzível;
+- [x] `tools/ci_local.py` com subgate SEF parcial/read-only;
+- [x] workflow SE02 chama o mesmo certifier, com `concurrency.cancel-in-progress=true`;
+- [x] job dedicado SE02 é `skipped` enquanto a PR está Draft;
+- [x] revisão formal do Plano Mestre incorporada de forma aditiva;
+- [ ] renderer materializado para o novo resolver/refactor;
+- [ ] certificação local completa do HEAD revisado;
+- [ ] gate geral `ci_local.py --verbose` do HEAD revisado;
+- [ ] Databricks Free publicado/verificado para a candidata revisada;
+- [ ] casos Free/Genie Code revisados;
+- [ ] CHANGELOG final reconciliado;
 - [ ] aceite explícito do usuário;
+- [ ] Actions finais da release candidate quando houver crédito/necessidade;
 - [ ] merge.
 
-## Evidência histórica observada na branch
+## Evidência histórica preservada
 
-### Run inicial `35147659671`
+Os resultados abaixo pertencem a HEADs anteriores e continuam históricos; não são promovidos automaticamente para a candidata atual.
+
+### Run `35147659671`
 
 - contrato v0.1: PASS;
 - regressão SE01: 14/14 PASS;
-- suíte SE02: 18/18 PASS;
+- suíte SE02 histórica: 18/18 PASS;
 - validação estrutural: FAIL por quatro convenções estruturais do novo objeto.
-
-Os achados foram corrigidos sem mudar a semântica L2.
 
 ### Run `35148053257`
 
-- contrato v0.1: PASS;
-- regressão SE01: 14/14 PASS;
-- suíte SE02: 18/18 PASS;
+- contrato: PASS;
+- SE01: 14/14 PASS;
+- SE02: 18/18 PASS;
 - validação estrutural: PASS;
 - renderer: PASS;
-- artifact publicado;
-- diff do derivado: FAIL porque a saída do renderer ainda não estava materializada na branch.
+- artifact: PASS;
+- diff do derivado: FAIL porque a saída do renderer ainda não estava materializada.
 
-O derivado foi então materializado exclusivamente pelo renderer no workflow transitório `SE02 Materialize Simulado`, run `35148184892`, com todos os steps em `success`.
+O derivado foi materializado exclusivamente pelo renderer no workflow transitório `SE02 Materialize Simulado`, run `35148184892`.
 
 ### Run `35148293591`
 
 - contrato: PASS;
 - SE01: 14/14 PASS;
 - SE02: 18/18 PASS;
-- validação estrutural: PASS — 0 falhas / 0 avisos;
+- validação estrutural: PASS;
 - renderer: 555 arquivos;
 - artifact: PASS;
 - derivado sem diff: PASS;
 - snapshot: FAIL exclusivamente por métricas antigas no README.
 
-As métricas foram novamente medidas e reconciliadas para 1516 arquivos / 1985 links, além das demais métricas do snapshot.
+As métricas dessa árvore foram posteriormente reconciliadas para 1516 arquivos / 1985 links.
 
-### Gates transversais intermediários
+### Hardening posterior
 
-No HEAD `e99b5ee6557bd8898c22986a2d1627f4942d132a`:
+Antes da revisão local-first, a matriz SE02 foi ampliada de 18 para 20 casos para cobrir:
 
-- `CI local reproduzível`: 8/9 etapas PASS; única falha = inventário do Manual Técnico ainda sem `hub_scripts.skill_execution`;
-- V08: testes funcionais e regressões passaram; única falha = guard histórico V08 aplicado indevidamente a evoluções posteriores de `hub_scripts`.
+- `__all__` declarando símbolo inexistente;
+- module path não canônico.
 
-A dívida documental foi corrigida na SE02. O guard V08 foi corrigido fora da SE02 pela PR #75 e integrado na `main@ae9337204a7c769c0b28b33321c8b81afdff6bae`.
+Uma reprodução isolada desses 20 casos passou 20/20. Depois disso foram adicionados dois casos cruzados L1/L2, totalizando 22. **Os 22 casos ainda não foram executados como certificação da árvore consolidada atual**, portanto não há alegação de 22/22 PASS neste checkpoint.
 
-## Auditoria independente do desenho L2
+## Laboratório sintético e consequência arquitetural
 
-O preflight atual é coerente com a fronteira da SE02:
+O laboratório externo isolado executou 52 runs reais de coding agent e 31/31 testes do próprio harness/evaluator. Nos casos discriminantes de caminho canônico adulterado/falhando, reinforcement textual/contratual/procedural não mostrou ganho mensurável frente ao baseline, enquanto o entrypoint estrutural passou 7/7 tanto em V4 quanto em V5.
 
-- lê `execution_contract.json`;
-- resolve `.assistant`, skill, schema e `mode`;
-- resolve recursos via fachada pública por AST;
-- resolve templates relativos;
-- avalia condições objetivas fornecidas no `condition_context`;
-- bloqueia se contexto necessário estiver ausente/for inválido;
-- não executa helpers analíticos;
-- não executa EDA;
-- não cria runner/receipt/postflight;
-- não altera `.assistant_instructions.md`.
+Limites preservados:
 
-### Limitação deliberada a validar no Free
+- Claude Code/CLI local, não Genie Code;
+- uma tarefa sintética;
+- n pequeno em algumas variantes;
+- legacy/reimplementation saudável não foram provocados de forma discriminante;
+- não é prova de transfer para Databricks.
 
-Parte das condições (`local_sample_required`, `tabular_preview_required`, `numeric_distributions_requested`, `resolved_theme_selected`, `visual_diagnostics_requested`) é informada pelo chamador. `numeric_columns` também entra como contexto após inspeção de schema.
+Decisão: fechar SE02 como L2 correto e priorizar SE03 como experimento estrutural, sem iniciar SE03 dentro desta PR.
 
-Isso é suficiente para um gate L2 determinístico quando o contexto foi estabelecido corretamente, mas ainda não prova que o Genie Code não tentará fornecer contexto falso para evitar uma condição. A SE02 não deve transformar essa limitação em alegação de enforcement completo. O comportamento de bypass precisa ser medido nos testes Free/adversariais e, depois, endurecido nas camadas previstas do SEF quando houver evidência.
+## Achado operacional de GitHub Actions
 
-## HEAD atual e Actions
+O workflow dedicado SE02 foi alterado para não alocar runner em Draft. Essa regra foi observada no run `35212239257`, com conclusão `skipped`.
 
-O HEAD `fdfb3175d0facedd52a5a60ac587000e9df82be6` disparou 12 workflows com conclusão `action_required` e `jobs=[]`, por ter sido produzido por automação GitHub Actions. Esses runs não são PASS nem regressão funcional; não executaram testes.
+Porém, a mesma sincronização da PR disparou workflows transversais históricos do repositório (CI geral e várias frentes V00–V14). Logo, **manter uma PR Draft não elimina o consumo transversal de Actions**.
 
-Este checkpoint é um commit direto da frente e serve também para disparar nova rodada de CI com runner observável. A certificação só será considerada válida se os jobs realmente executarem steps.
+Regra para SE03 em diante: desenvolver a branch sem PR aberta; abrir a PR somente na release candidate. A SE02 não reescreverá dezenas de workflows históricos para resolver um problema de orçamento transversal.
+
+## Gate atual — renderer
+
+A fonte canônica mudou novamente com:
+
+- `resource_resolution.py` compartilhado;
+- refactor de `skill_execution.py`;
+- alinhamento do validador L1.
+
+O `Novo_Ambiente_Simulado` ainda não foi rematerializado para essa árvore. Portanto:
+
+```text
+RENDER_GATE = BLOCKED / DERIVED_STALE
+```
+
+Não editar o derivado manualmente.
+
+## Próximo gate local
+
+Em clone local limpo, na branch atualizada:
+
+```powershell
+git fetch origin --prune
+git switch sef/SE02-preflight
+git pull --ff-only origin sef/SE02-preflight
+git status --short
+python -B tools/skill_enforcement/certify_local.py --profile se02 --verbose
+git status --short
+git diff -- Novo_Ambiente_Simulado
+```
+
+A primeira execução completa pode reprovar corretamente em `render_diff` com `DERIVED_STALE`, pois o renderer materializará o novo arquivo/refactor. Nesse caso:
+
+1. revisar o diff derivado;
+2. confirmar que ele é somente consequência mecânica de `ambiente_fonte/`;
+3. versionar a saída canônica do renderer;
+4. voltar a worktree limpo;
+5. executar novamente o certifier até `LOCAL_CERTIFICATION=PASS`.
+
+Depois:
+
+```powershell
+python tools/ci_local.py --verbose
+```
+
+Somente após os gates locais estabilizarem, seguir para publicação/verify no Databricks Free e F02-P1/F02-B1/F02-C1/F02-A1/F02-A2.
 
 ## Limites preservados
 
 - `mode="audit"`;
 - sem runner determinístico;
-- sem Execution Receipt;
+- sem `ExecutionTraceV0` funcional;
+- sem Execution Receipt formal;
 - sem postflight;
 - sem `mode="enforce"`;
 - sem promoção corporativa;
 - `.assistant_instructions.md` não alterado;
 - SE03 não iniciada.
-
-## Próximos gates
-
-1. certificar o novo HEAD nos workflows aplicáveis, exigindo runner real;
-2. reconciliar CHANGELOG final sem reescrever história;
-3. publicar/verify a candidata no Databricks Free quando houver acesso ao CLI/ambiente autorizado;
-4. executar casos Free `PASS` e `BLOCKED`;
-5. executar o teste conversacional do Genie Code em chat novo;
-6. atualizar RESULTADOS/PR com evidência observada;
-7. apresentar a SE02 para aceite humano;
-8. não fazer merge sem aceite; não iniciar SE03.

@@ -13,6 +13,9 @@ mesmo entrypoint somente na release candidate/Ready-for-review e pós-merge.
 Por padrão a execução exige worktree limpo, materializa o simulado pelo renderer
 canônico e falha se o renderer deixar diff. Isso transforma drift do derivado em
 evidência explícita (`DERIVED_STALE`) em vez de permitir uma cópia manual.
+
+A precondição de worktree limpo é uma barreira de segurança: se ela falhar, o
+certifier encerra antes de qualquer step mutável, especialmente antes do renderer.
 """
 
 from __future__ import annotations
@@ -154,10 +157,14 @@ def _last_nonempty_line(text: str) -> str:
 
 def _resolve_evidence_dir(raw: str | None, head_sha: str | None) -> Path:
     if raw:
-        return Path(raw).expanduser().resolve()
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    suffix = (head_sha or "unknown")[:12]
-    return (DEFAULT_EVIDENCE_ROOT / f"{timestamp}_{suffix}").resolve()
+        target = Path(raw).expanduser().resolve()
+    else:
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        suffix = (head_sha or "unknown")[:12]
+        target = (DEFAULT_EVIDENCE_ROOT / f"{timestamp}_{suffix}").resolve()
+    if target == REPO_ROOT or target.is_relative_to(REPO_ROOT):
+        raise ValueError("evidence-dir deve ficar fora da árvore do repositório")
+    return target
 
 
 def _write_json(path: Path, payload: object) -> None:
@@ -176,6 +183,64 @@ def _filtered_steps(profile: str, skip_render: bool) -> list[tuple[str, list[str
         for item in steps
         if item[0] not in {"render_simulado", "render_diff"}
     ]
+
+
+def _persist_bundle(
+    evidence_dir: Path | None,
+    summary: dict[str, object],
+    results: list[StepResult],
+) -> None:
+    if evidence_dir is None:
+        return
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    _write_json(evidence_dir / "summary.json", summary)
+    _write_json(
+        evidence_dir / "environment.json",
+        {
+            "python": sys.version,
+            "platform": platform.platform(),
+            "executable": sys.executable,
+            "cwd": str(REPO_ROOT),
+        },
+    )
+    _write_json(
+        evidence_dir / "commands.json",
+        [{"name": result.name, "command": result.command} for result in results],
+    )
+
+
+def _build_summary(
+    *,
+    profile: str,
+    scope: str,
+    before: GitState,
+    after: GitState,
+    results: list[StepResult],
+) -> dict[str, object]:
+    failures = [result for result in results if result.exit_code != 0]
+    derived_stale = any(
+        result.name == "render_diff" and result.exit_code != 0 for result in results
+    )
+    return {
+        "schema_version": "1.0",
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "profile": profile,
+        "certification_scope": scope,
+        "LOCAL_CERTIFICATION": "PASS" if not failures else "FAIL",
+        "DERIVED_STALE": derived_stale,
+        "GITHUB_ACTIONS": "NOT_EVALUATED_BY_LOCAL_CERTIFIER",
+        "databricks_free": "NOT_EVALUATED_BY_LOCAL_CERTIFIER",
+        "synthetic_agent_screening": "NOT_EVALUATED_BY_LOCAL_CERTIFIER",
+        "environment": {
+            "python": sys.version,
+            "platform": platform.platform(),
+            "executable": sys.executable,
+        },
+        "git_before": asdict(before),
+        "git_after": asdict(after),
+        "steps": [asdict(result) for result in results],
+        "failure_count": len(failures),
+    }
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -205,11 +270,13 @@ def main(argv: list[str] | None = None) -> int:
 
     before = _git_state()
     evidence_dir: Path | None = None
-    logs_dir: Path | None = None
     if not args.no_evidence:
-        evidence_dir = _resolve_evidence_dir(args.evidence_dir, before.head_sha)
-        logs_dir = evidence_dir / "logs"
-        logs_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            evidence_dir = _resolve_evidence_dir(args.evidence_dir, before.head_sha)
+        except ValueError as exc:
+            print(f"FAIL evidence_dir: {exc}")
+            return 2
+        evidence_dir.mkdir(parents=True, exist_ok=True)
 
     print("== SKILL ENFORCEMENT LOCAL CERTIFICATION ==")
     print(f"profile : {args.profile}")
@@ -222,10 +289,9 @@ def main(argv: list[str] | None = None) -> int:
     results: list[StepResult] = []
 
     if not before.clean and not args.allow_dirty:
-        status_text = before.status_short.strip()
         print("\nFAIL precheck_git_clean: worktree deve estar limpo para certificação.")
-        if status_text:
-            print(status_text)
+        if before.status_short.strip():
+            print(before.status_short.strip())
         results.append(
             StepResult(
                 name="precheck_git_clean",
@@ -233,9 +299,28 @@ def main(argv: list[str] | None = None) -> int:
                 exit_code=1,
                 duration_seconds=0.0,
                 status="FAIL",
-                last_line="worktree sujo antes da certificação",
+                last_line="worktree sujo; nenhum step mutável foi executado",
             )
         )
+        after = _git_state()
+        summary = _build_summary(
+            profile=args.profile,
+            scope="PRECHECK_ONLY",
+            before=before,
+            after=after,
+            results=results,
+        )
+        _persist_bundle(evidence_dir, summary, results)
+        if evidence_dir is not None:
+            print(f"evidence: {evidence_dir}")
+        print("LOCAL_CERTIFICATION = FAIL")
+        print("failed_steps        = precheck_git_clean")
+        return 2
+
+    logs_dir: Path | None = None
+    if evidence_dir is not None:
+        logs_dir = evidence_dir / "logs"
+        logs_dir.mkdir(parents=True, exist_ok=True)
 
     for index, (name, command) in enumerate(_filtered_steps(args.profile, args.skip_render), 1):
         print(f"\n-- {index:02d} {name}")
@@ -262,61 +347,25 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     after = _git_state()
-    failures = [result for result in results if result.exit_code != 0]
-    derived_stale = any(
-        result.name == "render_diff" and result.exit_code != 0 for result in results
+    scope = "PARTIAL_NO_RENDER" if args.skip_render else "FULL_SE02_LOCAL"
+    summary = _build_summary(
+        profile=args.profile,
+        scope=scope,
+        before=before,
+        after=after,
+        results=results,
     )
+    _persist_bundle(evidence_dir, summary, results)
 
-    local_status = "PASS" if not failures else "FAIL"
-    if args.skip_render and local_status == "PASS":
-        certification_scope = "PARTIAL_NO_RENDER"
-    else:
-        certification_scope = "FULL_SE02_LOCAL"
-
-    summary = {
-        "schema_version": "1.0",
-        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "profile": args.profile,
-        "certification_scope": certification_scope,
-        "LOCAL_CERTIFICATION": local_status,
-        "DERIVED_STALE": derived_stale,
-        "GITHUB_ACTIONS": "NOT_EVALUATED_BY_LOCAL_CERTIFIER",
-        "databricks_free": "NOT_EVALUATED_BY_LOCAL_CERTIFIER",
-        "synthetic_agent_screening": "NOT_EVALUATED_BY_LOCAL_CERTIFIER",
-        "environment": {
-            "python": sys.version,
-            "platform": platform.platform(),
-            "executable": sys.executable,
-        },
-        "git_before": asdict(before),
-        "git_after": asdict(after),
-        "steps": [asdict(result) for result in results],
-        "failure_count": len(failures),
-    }
+    failures = [result for result in results if result.exit_code != 0]
+    derived_stale = bool(summary["DERIVED_STALE"])
 
     if evidence_dir is not None:
-        _write_json(evidence_dir / "summary.json", summary)
-        _write_json(
-            evidence_dir / "environment.json",
-            {
-                "python": sys.version,
-                "platform": platform.platform(),
-                "executable": sys.executable,
-                "cwd": str(REPO_ROOT),
-            },
-        )
-        _write_json(
-            evidence_dir / "commands.json",
-            [
-                {"name": result.name, "command": result.command}
-                for result in results
-            ],
-        )
         print(f"\nevidence: {evidence_dir}")
 
     print("\n== CERTIFICATION SUMMARY ==")
-    print(f"LOCAL_CERTIFICATION = {local_status}")
-    print(f"scope               = {certification_scope}")
+    print(f"LOCAL_CERTIFICATION = {summary['LOCAL_CERTIFICATION']}")
+    print(f"scope               = {scope}")
     print(f"DERIVED_STALE       = {str(derived_stale).lower()}")
     print(f"failures            = {len(failures)}")
     if args.skip_render:

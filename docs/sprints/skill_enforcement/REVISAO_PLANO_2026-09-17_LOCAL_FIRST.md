@@ -162,6 +162,8 @@ Databricks Free para comportamento do engine relevante
   ↓
 congelar release candidate
   ↓
+abrir PR / Ready-for-review
+  ↓
 GitHub Actions final
   ↓
 aceite humano
@@ -187,24 +189,38 @@ Estados permitidos:
 
 ### 7.2 GitHub Actions
 
-Durante desenvolvimento:
-
-- PR permanece Draft;
-- workflow dedicado não deve alocar runner em Draft;
-- commits intermediários não devem ser usados como mecanismo de descoberta de defeitos;
-- `concurrency.cancel-in-progress=true` deve eliminar runs stale quando a certificação remota for finalmente habilitada.
+Durante desenvolvimento, GitHub Actions não é o motor de descoberta de defeitos. A candidata deve chegar ao CI remoto já estabilizada pelos gates locais e pelo laboratório/Free aplicável.
 
 Na release candidate:
 
-- marcar Ready-for-review somente quando local + Free estiverem estabilizados;
+- abrir/ativar a PR somente quando local + Free estiverem estabilizados;
 - executar Actions no HEAD exato candidato;
 - repetir pós-merge na `main`.
+
+Quando o workflow de uma frente estiver sob nosso controle, usar `concurrency.cancel-in-progress=true` e um único entrypoint Python de certificação.
+
+### 7.3 Branch-first sem PR para SE03 em diante
+
+A experiência da própria PR #74 mostrou que manter uma PR Draft não é suficiente para eliminar consumo remoto: workflows transversais históricos do repositório ainda podem reagir a `pull_request/synchronize`, mesmo quando o job dedicado do SEF está corretamente `skipped`.
+
+Por isso, para SE03 e sprints posteriores, a regra operacional passa a ser:
+
+1. criar a branch da sprint a partir da `main` certificada;
+2. desenvolver e, se necessário, publicar a branch remota **sem abrir PR**;
+3. executar certificação local, screening sintético e Databricks Free conforme a sprint;
+4. estabilizar documentação e release candidate;
+5. somente então abrir a PR;
+6. usar GitHub Actions como certificação final da candidata e pós-merge.
+
+A SE02 é exceção histórica porque a PR #74 já existia quando esta revisão foi adotada. Nesta sprint, mudanças remotas devem ser consolidadas/batched para reduzir `synchronize` desnecessário.
+
+Não é objetivo da SE02 reescrever dezenas de workflows históricos de outras iniciativas apenas para otimizar orçamento. Uma eventual política transversal de economia de CI deve ser tratada como manutenção de infraestrutura separada, com análise de branch protection/checks obrigatórios próprios.
 
 ## 8. Mesmo gate, infraestruturas diferentes
 
 A lógica de certificação SEF deve viver em Python versionado, não duplicada dentro do YAML.
 
-Fonte operacional pretendida:
+Fonte operacional:
 
 `tools/skill_enforcement/certify_local.py`
 
@@ -216,7 +232,8 @@ Esse entrypoint de certificação deve:
 - executar snapshot aplicável;
 - capturar stdout/stderr/exit code/duração;
 - registrar SHA, plataforma, Python e estado Git;
-- gerar evidência JSON/textual reproduzível;
+- gerar evidência JSON/textual reproduzível fora da árvore do repositório;
+- recusar worktree sujo antes de qualquer step mutável na certificação completa;
 - não usar credenciais Databricks nem rede para os gates locais.
 
 O workflow de Actions deve chamar esse mesmo entrypoint em vez de reproduzir manualmente todos os comandos.

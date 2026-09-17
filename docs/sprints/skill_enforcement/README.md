@@ -5,7 +5,7 @@ Este diretório concentra o planejamento e as evidências do Skill Enforcement F
 ## Documentos canônicos
 
 1. [PLANO_MESTRE.md](PLANO_MESTRE.md) — arquitetura e sequência original SE00–SE08.
-2. [REVISAO_PLANO_2026-09-17_LOCAL_FIRST.md](REVISAO_PLANO_2026-09-17_LOCAL_FIRST.md) — revisão operacional vigente a partir da SE02, incorporando o laboratório sintético e o regime local-first de certificação.
+2. [REVISAO_PLANO_2026-09-17_LOCAL_FIRST.md](REVISAO_PLANO_2026-09-17_LOCAL_FIRST.md) — revisão operacional vigente a partir da SE02, incorporando o laboratório sintético, prioridade structural-first e regime local-first de certificação.
 3. `SE00/` — baseline e instrumentos históricos.
 4. `SE01/` — contrato verificável e capability experiment, concluída/integrada.
 5. `SE02/` — preflight L2, em fechamento/certificação.
@@ -18,9 +18,32 @@ O Plano Mestre original não é apagado nem reescrito para acomodar aprendizados
 - entrypoint estrutural como foco da SE03;
 - micro-evals adversariais já na SE03;
 - distinção entre correctness e canonical compliance;
+- provenance progressiva das condições;
 - certificação local-first durante desenvolvimento;
+- mesmo certifier Python para local e GitHub Actions;
 - GitHub Actions reservado para release candidate/Ready-for-review e pós-merge;
+- branch sem PR aberta durante desenvolvimento de SE03 em diante;
 - estados separados para local, laboratório sintético, Databricks Free e Actions.
+
+## Regra operacional para novas sprints
+
+A partir da SE03, o fluxo preferencial é:
+
+```text
+branch sem PR
+  → implementação
+  → gate local
+  → screening sintético quando útil
+  → Databricks Free
+  → release candidate
+  → abrir PR
+  → GitHub Actions final
+  → aceite
+  → merge
+  → certificação pós-merge
+```
+
+Uma PR Draft não deve ser usada como mecanismo principal de economia de CI, porque workflows transversais históricos podem continuar reagindo a `pull_request/synchronize`.
 
 ## Estado atual
 
