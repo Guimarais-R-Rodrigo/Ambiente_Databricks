@@ -57,7 +57,7 @@ class SkillEnforcementSE04RunnerTests(unittest.TestCase):
         roles = {item["role"]: item for item in manifest["artifacts"]}
         self.assertIn("receipt_engine", roles)
         self.assertEqual(
-            "hub_scripts/skill_execution/receipt.py",
+            "hub_scripts/skill_execution/receipt/__init__.py",
             roles["receipt_engine"]["path"],
         )
         for artifact in manifest["artifacts"]:
