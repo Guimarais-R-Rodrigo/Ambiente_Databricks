@@ -93,11 +93,36 @@ assistant_structure  = PASS (aviso local __pycache__)
 readme_snapshot      = FAIL por contagens stale
 ```
 
-O snapshot foi atualizado depois dessa execução; guards temporais SE03/SE04 também foram reconciliados para reconhecer a implementação legítima da SE05.
+Depois dessa execução, os guards temporais SE03/SE04 foram reconciliados e o snapshot README foi atualizado.
+
+Materialização final observada em `65fe556ea70e17610af47cc3d6f1a4abf7438533`:
+
+```text
+renderer                   = PASS
+rendered_files              = 561
+git_diff_check              = PASS
+derived_commit              = 65fe556ea70e17610af47cc3d6f1a4abf7438533
+assistant_structure         = PASS
+assistant_structure_failures= 0
+assistant_structure_warnings= 0
+worktree_after_validation   = CLEAN
+branch_vs_main              = 0 behind / 25 ahead
+```
+
+Contagens finais observadas após o renderer:
+
+```text
+helpers citados    = 96
+markdown / links   = 223 / 1409
+normas do molde    = 75
+python (AST)       = 230
+repo (identidade)  = 1563
+repo (links)       = 2019
+```
 
 ## Certificação atual
 
-Enquanto o renderer final, certifier completo e Free não forem executados:
+Enquanto o certifier completo e o gate Free não forem executados:
 
 ```text
 LOCAL_CERTIFICATION        = NOT_FINAL
@@ -105,22 +130,19 @@ DATABRICKS_FREE            = NOT_RUN
 GENIE_BEHAVIORAL_SCREENING = MIXED   # histórico SE03; não reclassificado
 GITHUB_ACTIONS             = NOT_RUN
 FULLY_CERTIFIED            = false
-DERIVED_STALE              = NOT_YET_MATERIALIZED_FOR_SE05
+DERIVED_STALE              = false   # renderer materializado e worktree limpa; certifier completo pendente
 PR                         = NOT_OPENED
 ```
 
 ## Próximos gates permitidos
 
-1. remover resíduos locais `__pycache__`;
-2. materializar `Novo_Ambiente_Simulado/` exclusivamente por `tools/render_simulado.py --write`;
-3. versionar somente o derivado gerado;
-4. obter contagens finais e reconciliar snapshot README se necessário;
-5. executar `certify_local.py --profile se05 --verbose` até `FULL_SE05_LOCAL=PASS`;
-6. publicar/verificar por conteúdo no Databricks Free;
-7. executar `SE05_FREE_PROBE_V1`;
-8. reconciliar evidências/checkpoint no HEAD final;
-9. congelar release candidate;
-10. somente então abrir PR e observar Actions uma vez.
+1. executar `certify_local.py --profile se05 --verbose` no HEAD documental reconciliado;
+2. exigir `LOCAL_CERTIFICATION=PASS`, `scope=FULL_SE05_LOCAL` e `DERIVED_STALE=false`;
+3. publicar/verificar por conteúdo no Databricks Free;
+4. executar `SE05_FREE_PROBE_V1`;
+5. reconciliar evidências/checkpoint no HEAD final;
+6. congelar release candidate;
+7. somente então abrir PR e observar Actions uma vez.
 
 ## O que continua proibido nesta fase
 
