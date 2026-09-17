@@ -108,7 +108,7 @@ O bloco abaixo é conferido por `python tools/validate_assistant.py --conferir-r
 raiz analisada     : /home/runner/work/Ambiente_Databricks/Ambiente_Databricks/ambiente_fonte
 skills             : 14 · 14/14 com as 5 seções estruturais
 prompts            : 16 · 161 campos com guia e contrato humano
-helpers citados    : 93 caminhos verificados
+helpers citados    : 94 caminhos verificados
 markdown / links   : 223 arquivos / 1403 links relativos
 notebooks / links  : 81 notebooks / 102 links relativos
 readmes de objeto  : 77/77 operacionais; 3/3 exemplares; 0 pendentes (estrutura, não aceite editorial)
