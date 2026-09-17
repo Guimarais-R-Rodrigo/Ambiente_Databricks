@@ -35,6 +35,20 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _canonical_json_bytes(value: Any) -> bytes:
+    return json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        default=str,
+    ).encode("utf-8")
+
+
+def _payload_digest(value: Any) -> str:
+    return hashlib.sha256(_canonical_json_bytes(value)).hexdigest()
+
+
 def _safe_relative_path(raw: Any) -> Path | None:
     if not isinstance(raw, str) or not raw:
         return None
@@ -122,6 +136,102 @@ def _verify_release(
     return not issues, issues, observed
 
 
+def _numeric_columns_from_dtypes(dtypes: list[tuple[str, str]]) -> int:
+    numeric_bases = {
+        "tinyint",
+        "smallint",
+        "int",
+        "bigint",
+        "float",
+        "double",
+        "decimal",
+    }
+    return sum(
+        1
+        for _, dtype in dtypes
+        if dtype.lower().split("(", 1)[0] in numeric_bases
+    )
+
+
+def _derive_numeric_columns(table_name: str) -> tuple[int, str]:
+    try:
+        from pyspark.sql import SparkSession
+    except Exception as exc:
+        raise RuntimeError(f"pyspark indisponível para derivar schema: {exc}") from exc
+
+    spark = SparkSession.getActiveSession() or SparkSession.builder.getOrCreate()
+    try:
+        dtypes = list(spark.table(table_name).dtypes)
+    except Exception as exc:
+        raise RuntimeError(f"não foi possível observar schema de {table_name}: {exc}") from exc
+    return _numeric_columns_from_dtypes(dtypes), "spark.table(...).dtypes"
+
+
+def _derive_context(
+    table_name: str,
+    context: Mapping[str, Any],
+) -> tuple[dict[str, Any] | None, dict[str, dict[str, Any]], list[dict[str, str]]]:
+    effective = dict(context)
+    provenance: dict[str, dict[str, Any]] = {
+        key: {
+            "value": value,
+            "source": "agent_declared",
+            "evidence": "runner_input",
+        }
+        for key, value in effective.items()
+    }
+    issues: list[dict[str, str]] = []
+
+    try:
+        observed_numeric, evidence = _derive_numeric_columns(table_name)
+    except RuntimeError as exc:
+        issues.append({"code": "RUNTIME_CONTEXT_UNAVAILABLE", "message": str(exc)})
+        return None, provenance, issues
+
+    declared_numeric = effective.get("numeric_columns")
+    if declared_numeric is not None and (
+        not isinstance(declared_numeric, int)
+        or isinstance(declared_numeric, bool)
+        or declared_numeric < 0
+    ):
+        issues.append(
+            {
+                "code": "CONTEXT_PROVENANCE_CONFLICT",
+                "message": "numeric_columns declarado deve ser inteiro >= 0 quando informado",
+            }
+        )
+        return None, provenance, issues
+
+    if declared_numeric is not None and declared_numeric != observed_numeric:
+        issues.append(
+            {
+                "code": "CONTEXT_PROVENANCE_CONFLICT",
+                "message": (
+                    f"numeric_columns declarado={declared_numeric} diverge do "
+                    f"runtime_derived={observed_numeric}"
+                ),
+            }
+        )
+        provenance["numeric_columns"] = {
+            "value": observed_numeric,
+            "source": "runtime_derived",
+            "evidence": evidence,
+            "declared_value": declared_numeric,
+            "conflict": True,
+        }
+        return None, provenance, issues
+
+    effective["numeric_columns"] = observed_numeric
+    provenance["numeric_columns"] = {
+        "value": observed_numeric,
+        "source": "runtime_derived",
+        "evidence": evidence,
+        "declared_value": declared_numeric,
+        "conflict": False,
+    }
+    return effective, provenance, issues
+
+
 def _default_quick_profile(
     table_name: str,
     *,
@@ -157,7 +267,10 @@ def _base_trace(
         "manifest_digest": manifest_digest,
         "contract_digest": observed_fingerprints.get(contract_key),
         "runner_digest": observed_fingerprints.get(runner_key),
+        "input_digest": None,
+        "output_digest": None,
         "preflight_status": "NOT_RUN",
+        "context_provenance": {},
         "decisions": [],
         "resources_resolved": [],
         "resources_called": [],
@@ -183,7 +296,7 @@ def run(
     max_categories: int = 20,
     seed: int = 42,
 ) -> dict[str, Any]:
-    """Executa o primeiro slice protegido da EDA pela rota canônica SE03."""
+    """Executa o core protegido inicial da EDA pela rota canônica SE03."""
     run_id = uuid.uuid4().hex
     root = Path(assistant_root) if assistant_root is not None else _resolve_assistant_root()
     skill_dir = root / "skills" / SKILL
@@ -199,6 +312,16 @@ def run(
         _trace_issue(trace, "RUN_INPUT_INVALID", "table_name deve ser string não vazia", status="BLOCKED")
         return {"trace": trace, "result": None}
 
+    if not isinstance(context, Mapping):
+        trace = _base_trace(
+            run_id=run_id,
+            manifest_path=manifest,
+            manifest_digest=None,
+            observed_fingerprints={},
+        )
+        _trace_issue(trace, "RUN_INPUT_INVALID", "context deve ser mapping", status="BLOCKED")
+        return {"trace": trace, "result": None}
+
     integrity_ok, integrity_issues, observed = _verify_release(root, manifest)
     manifest_digest = _sha256(manifest) if manifest.is_file() else None
     trace = _base_trace(
@@ -212,6 +335,23 @@ def run(
             _trace_issue(trace, issue["code"], issue["message"], status="BLOCKED")
         return {"trace": trace, "result": None}
 
+    effective_context, provenance, provenance_issues = _derive_context(table_name, context)
+    trace["context_provenance"] = provenance
+    if provenance_issues or effective_context is None:
+        for issue in provenance_issues:
+            _trace_issue(trace, issue["code"], issue["message"], status="BLOCKED")
+        return {"trace": trace, "result": None}
+
+    trace["input_digest"] = _payload_digest(
+        {
+            "table_name": table_name,
+            "context": effective_context,
+            "sample_fraction": sample_fraction,
+            "max_categories": max_categories,
+            "seed": seed,
+        }
+    )
+
     root_text = str(root)
     if root_text not in sys.path:
         sys.path.insert(0, root_text)
@@ -222,7 +362,7 @@ def run(
     preflight = run_preflight(
         contract_path,
         assistant_root=root,
-        context=dict(context),
+        context=effective_context,
     )
     preflight_payload = preflight.to_dict()
     trace["preflight_status"] = preflight.status
@@ -263,14 +403,31 @@ def run(
         )
         return {"trace": trace, "result": None}
 
+    trace["output_digest"] = _payload_digest(result)
     trace["status"] = "PASS"
     return {"trace": trace, "result": result}
 
 
-def is_canonically_compliant(payload: Mapping[str, Any]) -> bool:
-    """Classifica evidência mínima do primeiro slice; não substitui o Receipt SE04."""
+def is_canonically_compliant(
+    payload: Mapping[str, Any],
+    *,
+    expected_run_id: str | None = None,
+) -> bool:
+    """Classifica evidência mínima da SE03; não substitui o Receipt SE04."""
     trace = payload.get("trace")
     if not isinstance(trace, Mapping):
+        return False
+    if expected_run_id is not None and trace.get("run_id") != expected_run_id:
+        return False
+    if not isinstance(trace.get("output_digest"), str):
+        return False
+    if trace.get("output_digest") != _payload_digest(payload.get("result")):
+        return False
+    provenance = trace.get("context_provenance")
+    if not isinstance(provenance, Mapping):
+        return False
+    numeric = provenance.get("numeric_columns")
+    if not isinstance(numeric, Mapping) or numeric.get("source") != "runtime_derived":
         return False
     return bool(
         trace.get("trace_version") == TRACE_VERSION
@@ -282,6 +439,7 @@ def is_canonically_compliant(payload: Mapping[str, Any]) -> bool:
         and isinstance(trace.get("manifest_digest"), str)
         and isinstance(trace.get("contract_digest"), str)
         and isinstance(trace.get("runner_digest"), str)
+        and isinstance(trace.get("input_digest"), str)
         and PROTECTED_PRIMITIVE_ID in trace.get("resources_called", [])
     )
 
