@@ -23,7 +23,7 @@ _CONDITION_KEYS = {
 }
 
 
-def canonical_module_parts(module: Any) -> tuple[str, ...] | None:
+def _canonical_module_parts(module: Any) -> tuple[str, ...] | None:
     """Valida e decompõe um caminho Python canônico de recurso do Hub."""
     if not isinstance(module, str):
         return None
@@ -35,7 +35,7 @@ def canonical_module_parts(module: Any) -> tuple[str, ...] | None:
     return parts
 
 
-def public_exports(init_path: Path) -> set[str]:
+def _public_exports(init_path: Path) -> set[str]:
     """Extrai exports realmente disponíveis na fachada sem executar código.
 
     Se ``__all__`` existir, ele funciona como filtro dos nomes que também foram
@@ -86,14 +86,14 @@ def public_exports(init_path: Path) -> set[str]:
     return explicit_all & available
 
 
-def resolve_public_symbol(
+def _resolve_public_symbol(
     assistant_root: Path | str,
     module: Any,
     symbol: Any,
 ) -> tuple[bool, str]:
     """Resolve uma API pública do Hub sem importar o módulo-alvo."""
     assistant_root = Path(assistant_root)
-    module_parts = canonical_module_parts(module)
+    module_parts = _canonical_module_parts(module)
     if module_parts is None:
         return (
             False,
@@ -108,7 +108,7 @@ def resolve_public_symbol(
         return False, f"fachada pública ausente para {module}"
 
     try:
-        exports = public_exports(init_path)
+        exports = _public_exports(init_path)
     except ValueError as exc:
         return False, f"fachada pública ilegível: {exc}"
 
@@ -375,7 +375,7 @@ def run_preflight(
             resolved = None
             resolution_reason = f"não aplicável: {reason}"
         else:
-            resolved, resolution_reason = resolve_public_symbol(
+            resolved, resolution_reason = _resolve_public_symbol(
                 assistant_root,
                 item.get("module"),
                 item.get("symbol"),
