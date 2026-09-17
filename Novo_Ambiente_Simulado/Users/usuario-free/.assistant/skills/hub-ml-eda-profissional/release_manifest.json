@@ -1,0 +1,27 @@
+{
+  "manifest_version": "0.1",
+  "skill": "hub-ml-eda-profissional",
+  "algorithm": "git_blob_sha1",
+  "artifacts": [
+    {
+      "path": "skills/hub-ml-eda-profissional/execution_contract.json",
+      "role": "contract",
+      "git_blob_sha1": "4e78da53a0a9b64136f06f1c9f2377a4007177bf"
+    },
+    {
+      "path": "skills/hub-ml-eda-profissional/scripts/run.py",
+      "role": "runner",
+      "git_blob_sha1": "6c75a29f6fda0c9c6671e18425004501a8debf5f"
+    },
+    {
+      "path": "hub_scripts/skill_execution/skill_execution.py",
+      "role": "preflight_engine",
+      "git_blob_sha1": "61c175827cacf60fe6aef4c24fbeb1842022f42d"
+    },
+    {
+      "path": "hub_scripts/quick_profile/quick_profile.py",
+      "role": "protected_primitive",
+      "git_blob_sha1": "a8bead172dc1226b436ce9503821e2a5849a067c"
+    }
+  ]
+}
