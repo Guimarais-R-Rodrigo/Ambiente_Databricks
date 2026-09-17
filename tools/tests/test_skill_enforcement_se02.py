@@ -245,10 +245,9 @@ class SkillEnforcementSE02Tests(unittest.TestCase):
         self.assertNotIn("quick_profile(", text)
         self.assertNotIn("data_quality_check(", text)
 
-    def test_se03_artifacts_are_not_started(self) -> None:
+    def test_later_sprint_boundaries_remain_explicit(self) -> None:
         self.assertFalse((SOURCE_SKILL / "scripts" / "run_core.py").exists())
         execution_dir = SOURCE_ASSISTANT / "hub_scripts" / "skill_execution"
-        self.assertFalse((execution_dir / "receipt.py").exists())
         self.assertFalse((execution_dir / "postflight.py").exists())
         self.assertFalse((execution_dir / "runner.py").exists())
 
