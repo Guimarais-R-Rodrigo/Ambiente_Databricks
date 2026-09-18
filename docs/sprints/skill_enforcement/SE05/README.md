@@ -2,7 +2,7 @@
 
 ## Estado
 
-**IMPLEMENTAÇÃO FUNCIONAL EM DESENVOLVIMENTO; gates completos local/Free ainda pendentes.**
+**IMPLEMENTAÇÃO FUNCIONAL HOMOLOGADA LOCALMENTE E NO DATABRICKS FREE; release candidate documental em preparação.**
 
 Branch: `sef/SE05-postflight-fail-closed`  
 Baseline: `main@d74b2fcbf9accdf3878aa3aef9c0ec629a811028`  
@@ -89,11 +89,11 @@ contrato                    = PASS
 regressões SE01–SE04        = PASS no certifier parcial
 ```
 
-O certifier parcial `--profile se05 --skip-render` chegou até a validação estrutural; a única falha foi snapshot README desatualizado, posteriormente corrigido. O renderer ainda não foi materializado para a candidata atual.
+No HEAD funcional `0d4d6af630d2760c754313218f51cff0d6ad2375`, o certifier completo fechou `LOCAL_CERTIFICATION=PASS`, `scope=FULL_SE05_LOCAL`, `DERIVED_STALE=false` e `failures=0`. O renderer materializou 561 arquivos e o snapshot README passou.
 
 ## Databricks Free
 
-O gate Free é obrigatório. O probe `tools/skill_enforcement/se05_free_probe.py` usa apenas view sintética temporária e cobre:
+O gate Free foi executado e aprovado no HEAD funcional `0d4d6af630d2760c754313218f51cff0d6ad2375`. Publicação, verify rápido, verify completo e verify por conteúdo passaram; 560/560 arquivos controlados foram comparados sem ausentes ou obsoletos. O probe `tools/skill_enforcement/se05_free_probe.py` usa apenas view sintética temporária e cobre:
 
 - happy path L4 autorizado;
 - core L3 isolado sem autorização L4;
@@ -103,7 +103,9 @@ O gate Free é obrigatório. O probe `tools/skill_enforcement/se05_free_probe.py
 - nenhuma escrita persistente;
 - nenhuma mutação do pacote publicado.
 
-Consulte [RUNBOOK_FREE.md](RUNBOOK_FREE.md).
+Resultado global: `SE05_FREE_PROBE_V1 = PASS`, `published_package_mutated=false` e `persistent_writes_performed=false`.
+
+Consulte [RUNBOOK_FREE.md](RUNBOOK_FREE.md) e [EVIDENCIAS.md](EVIDENCIAS.md).
 
 ## Fora do escopo
 
