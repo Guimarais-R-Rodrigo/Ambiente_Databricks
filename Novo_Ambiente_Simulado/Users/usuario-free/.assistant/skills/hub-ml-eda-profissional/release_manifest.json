@@ -6,17 +6,27 @@
     {
       "path": "skills/hub-ml-eda-profissional/execution_contract.json",
       "role": "contract",
-      "git_blob_sha1": "4e78da53a0a9b64136f06f1c9f2377a4007177bf"
+      "git_blob_sha1": "aab617c9dff8d29d1d12fb00da697190ac6b3178"
     },
     {
       "path": "skills/hub-ml-eda-profissional/SKILL.md",
       "role": "skill_guidance",
-      "git_blob_sha1": "a154245fc34a63bd266b98523b63e724ee584070"
+      "git_blob_sha1": "4fd15105fabc1d4df1e622efbba6d2b71b19e3f4"
     },
     {
       "path": "skills/hub-ml-eda-profissional/scripts/run.py",
       "role": "runner",
       "git_blob_sha1": "c102df83c8b58c3e9aadfb831c65a2d158f367d2"
+    },
+    {
+      "path": "skills/hub-ml-eda-profissional/scripts/run_enforced.py",
+      "role": "enforced_runner",
+      "git_blob_sha1": "db0cb7e110e88b08b31778fdc6cf45b93c08054a"
+    },
+    {
+      "path": "skills/hub-ml-eda-profissional/scripts/postflight.py",
+      "role": "postflight_finalizer",
+      "git_blob_sha1": "7846240a16146f0b11a7d462fd0bbce9eebedd62"
     },
     {
       "path": "hub_scripts/skill_execution/skill_execution.py",
@@ -27,6 +37,11 @@
       "path": "hub_scripts/skill_execution/receipt/__init__.py",
       "role": "receipt_engine",
       "git_blob_sha1": "0845b8109560c05a5a466638f02482b0541ab6b9"
+    },
+    {
+      "path": "hub_scripts/skill_execution/postflight/__init__.py",
+      "role": "postflight_engine",
+      "git_blob_sha1": "ec7028a076418c8ab089b826d5dc3e2a6f582e51"
     },
     {
       "path": "hub_scripts/quick_profile/quick_profile.py",
