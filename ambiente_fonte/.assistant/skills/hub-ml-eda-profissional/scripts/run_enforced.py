@@ -627,7 +627,14 @@ def main() -> int:
         }
 
     print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True, default=str))
-    return 0 if isinstance(payload.get("receipt"), dict) else 2
+    trace = payload.get("trace")
+    canonical_pass = bool(
+        isinstance(payload.get("receipt"), dict)
+        and isinstance(trace, Mapping)
+        and trace.get("status") == "PASS"
+        and trace.get("enforcement_status") == "PASS"
+    )
+    return 0 if canonical_pass else 2
 
 
 if __name__ == "__main__":
