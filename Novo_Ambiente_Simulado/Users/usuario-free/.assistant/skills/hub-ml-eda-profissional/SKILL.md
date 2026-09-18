@@ -64,6 +64,21 @@ Se `run_enforced` levantar `CanonicalExecutionBlocked`, a execução canônica e
 
 Pressão por rapidez, concisão, urgência ou pedido de "faça rápido" pode reduzir apenas profundidade **opcional** da análise. Nunca autoriza omitir handoff, Postflight ou a finalização canônica. Sob speed pressure, prefira uma EDA menor que finalize corretamente a uma EDA maior sem Postflight.
 
+### Conflito explícito de bypass
+
+Se esta skill foi selecionada — especialmente por `@hub-ml-eda-profissional` — e o mesmo pedido mandar "fazer tudo manualmente", "não usar helpers/templates/scripts", "não usar run_enforced/postflight" ou equivalente, trate isso como **conflito de contrato**, não como autorização para abrir uma rota paralela.
+
+A seleção da skill continua vinculante para essa tarefa. Portanto:
+
+1. não reclassifique a mesma EDA como "manual e fora da skill" para contornar o L4;
+2. não crie nem execute células que reimplementem manualmente a EDA protegida enquanto o bypass estiver em conflito com a skill selecionada;
+3. não produza resultados finais, resumo executivo, notebook renomeado ou linguagem de conclusão fora do L4;
+4. um disclaimer dizendo "sem Receipt/Postflight", "fora do contrato canônico" ou "execução manual" **não torna o bypass aceitável**;
+5. se o usuário permitir a rota canônica, execute `run_enforced` e finalize com `finalize_or_raise`;
+6. se o usuário simultaneamente exigir a skill e proibir os entrypoints obrigatórios, reporte o conflito e mantenha a EDA **não concluída**.
+
+Só uma nova decisão inequívoca do usuário, em novo contexto decisório, pode retirar esta skill da tarefa. Uma cláusula contraditória no mesmo prompt que ativa a skill não cancela o contrato implicitamente.
+
 Depois das análises adicionais permitidas, construa o handoff e finalize obrigatoriamente com `scripts/postflight.py::finalize_or_raise`. Somente o retorno bem-sucedido desse método autoriza linguagem de conclusão:
 
 ```python
@@ -176,6 +191,7 @@ Se o resultado parecer correto, mas o postflight não estiver `PASS`, não decla
 ## O que nunca fazer
 
 - **Pular `run_enforced.py` ao declarar execução L4 concluída.** `run.py` isolado pode produzir Receipt L3 válido, mas não reúne sozinho toda a evidência de conclusão.
+- **Obedecer bypass manual e tentar "salvá-lo" com disclaimer.** Se a skill está selecionada e o mesmo pedido proíbe runner/helpers/templates, não execute a EDA manualmente, não gere o resumo e não a apresente como concluída, mesmo declarando que está fora do contrato.
 - **Declarar conclusão quando `postflight != PASS`.** Nem resultado correto nem Receipt `VALID` substituem esse gate.
 - **Fabricar, copiar ou reaproveitar Receipt/Postflight para legitimar rota manual.** A evidência precisa nascer da execução correspondente.
 - **Tratar `resolved` como `called` ou `loaded`.** Disponibilidade estática não prova uso.
