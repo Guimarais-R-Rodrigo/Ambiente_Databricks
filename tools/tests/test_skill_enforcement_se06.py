@@ -326,6 +326,32 @@ class SkillEnforcementSE06StructuralTests(unittest.TestCase):
         self.assertFalse(payload["completion"]["authorized"])
         self.assertEqual("NOT_COMPLETED", payload["completion"]["status"])
 
+    def test_blocked_route_does_not_emit_pending_postflight_marker(self):
+        def failing_import(item, *, trace, gaps):
+            if item.get("id") == "null_summary":
+                if "null_summary" not in trace["resources_imported"]:
+                    trace["resources_imported"].append("null_summary")
+                def fail(_df):
+                    raise RuntimeError("synthetic failure")
+                return fail
+            return self._fake_import(item, trace=trace, gaps=gaps)
+
+        with mock.patch("builtins.print") as mocked_print:
+            with self.assertRaises(enforced.CanonicalExecutionBlocked) as caught:
+                self._run(
+                    import_side_effect=failing_import,
+                    strict=True,
+                )
+
+        payload = caught.exception.payload
+        self.assertEqual("INCOMPLETE", payload["trace"]["enforcement_status"])
+        self.assertEqual("NOT_COMPLETED", payload["completion"]["status"])
+        emitted = " ".join(
+            " ".join(str(arg) for arg in call.args)
+            for call in mocked_print.call_args_list
+        )
+        self.assertNotIn("SEF_PENDING_POSTFLIGHT_V1", emitted)
+
     def test_runner_derives_pk_availability_false_when_pk_absent(self):
         with mock.patch.object(
             runner,

@@ -75,6 +75,8 @@ A nova correção atua sobre a classe de falha observada:
 4. adicionar regressão estrutural e de scorer para o padrão exato observado em R1;
 5. depois repetir certificação local, homologação Free e iniciar **novo bundle 0/25**.
 
+A primeira homologação Free da nova correção revelou um detalhe de ordenação no marker: C03 (`enforcement_status=INCOMPLETE`) emitia temporariamente `SEF_PENDING_POSTFLIGHT_V1` antes de `CanonicalExecutionBlocked`, apesar de terminar corretamente em `NOT_COMPLETED`. Isso não autorizava completion, mas a mensagem transitória era ambígua. A correção subsequente move `_raise_if_blocked` antes de `_mark_completion_pending` e adiciona regressão garantindo que rota bloqueada/incompleta **não emite** o marker de Postflight pendente.
+
 ## Baseline congelada
 
 A comparação primária usa a SE00:
