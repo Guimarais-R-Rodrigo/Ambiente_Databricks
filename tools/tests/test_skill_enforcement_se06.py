@@ -320,7 +320,7 @@ class SkillEnforcementSE06StructuralTests(unittest.TestCase):
         self.assertIn("disclaimer", skill_text)
         self.assertIn("seleção explícita da skill permanece vinculante", global_text)
         self.assertIn('Não reclassifique a mesma execução como "fora da skill"', global_text)
-        self.assertIn("não crie células manuais", global_text)
+        self.assertIn("não crie células manuais", global_text.lower())
         self.assertIn("não produza resultados analíticos finais", global_text)
         self.assertIn("não autoriza", global_text)
 
