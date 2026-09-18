@@ -206,8 +206,8 @@ def _derive_context(
     effective["pk_columns_available"] = pk_available
     provenance["pk_columns_available"] = {
         "value": pk_available,
-        "source": "runner_derived",
-        "evidence": "pk_columns_validated",
+        "source": "runtime_derived",
+        "evidence": "runner_input_pk_columns_validated",
         "declared_value": raw_pk,
         "conflict": False,
     }
