@@ -91,6 +91,7 @@ class SkillEnforcementSE06StructuralTests(unittest.TestCase):
         numeric_columns=3,
         resolved_theme=None,
         verify_release=None,
+        strict=False,
     ):
         effective = dict(DEFAULT_CONTEXT if context is None else context)
         fake_import = self._fake_import if import_side_effect is None else import_side_effect
@@ -111,12 +112,14 @@ class SkillEnforcementSE06StructuralTests(unittest.TestCase):
                         effective,
                         assistant_root=SOURCE_ASSISTANT,
                         resolved_theme=resolved_theme,
+                        strict=strict,
                     )
             return enforced.run_enforced(
                 "catalog.schema.synthetic_table",
                 effective,
                 assistant_root=SOURCE_ASSISTANT,
                 resolved_theme=resolved_theme,
+                strict=strict,
             )
 
     def _final(self, payload):
@@ -238,6 +241,71 @@ class SkillEnforcementSE06StructuralTests(unittest.TestCase):
         final = self._final(payload)
         self.assertEqual("PASS", final["postflight"]["status"])
         self.assertTrue(final["completion"]["authorized"])
+
+    def test_p1_minimal_context_uses_professional_defaults_without_fake_pk(self):
+        payload = self._run(context={}, numeric_columns=3)
+        self.assertEqual("PASS", payload["trace"]["status"])
+        self.assertEqual("PASS", payload["trace"]["preflight_status"])
+        self.assertEqual("PASS", payload["trace"]["enforcement_status"])
+        self.assertEqual([], payload["trace"]["evidence_gaps"])
+        decision = next(
+            item for item in payload["trace"]["decisions"]
+            if item["item_type"] == "resource"
+            and item["item_id"] == "data_quality_check"
+        )
+        self.assertFalse(decision["applicable"])
+        self.assertNotIn("data_quality_check", payload["trace"]["resources_called"])
+        self.assertIn("null_summary", payload["trace"]["resources_completed"])
+        self.assertIn("correlation_matrix", payload["trace"]["resources_completed"])
+        self.assertIn("distribution_grid", payload["trace"]["resources_completed"])
+        self.assertEqual(
+            {
+                "roteiro_eda",
+                "matriz_graficos_eda",
+                "relatorio_executivo_eda",
+                "estilo_visual_eda",
+            },
+            set(payload["trace"]["templates_loaded"]),
+        )
+        handoff = dict(HANDOFF)
+        handoff["unit_keys_target"] = "1 linha por evento; PK não confirmada; target=N/A"
+        final = finalizer.finalize_or_raise(
+            payload,
+            handoff,
+            assistant_root=SOURCE_ASSISTANT,
+        )
+        self.assertTrue(final["completion"]["authorized"])
+
+    def test_strict_mode_raises_instead_of_returning_incomplete_payload(self):
+        def failing_import(item, *, trace, gaps):
+            if item.get("id") == "null_summary":
+                if "null_summary" not in trace["resources_imported"]:
+                    trace["resources_imported"].append("null_summary")
+                def fail(_df):
+                    raise RuntimeError("synthetic failure")
+                return fail
+            return self._fake_import(item, trace=trace, gaps=gaps)
+
+        with self.assertRaises(enforced.CanonicalExecutionBlocked) as caught:
+            self._run(import_side_effect=failing_import, strict=True)
+        payload = caught.exception.payload
+        self.assertEqual("INCOMPLETE", payload["trace"]["enforcement_status"])
+        self.assertFalse(payload["completion"]["authorized"])
+        self.assertEqual("PENDING_POSTFLIGHT", payload["completion"]["status"])
+
+    def test_instruction_layers_forbid_manual_fallback_and_parallel_auditor(self):
+        skill_text = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
+        global_text = (REPO_ROOT / "ambiente_fonte" / ".assistant_instructions.md").read_text(
+            encoding="utf-8"
+        )
+        audit_text = (
+            SOURCE_ASSISTANT / "skills" / "hub-ml-auditoria-skills" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+        self.assertIn("CanonicalExecutionBlocked", skill_text)
+        self.assertIn("finalize_or_raise", skill_text)
+        self.assertIn("completion.authorized=true", global_text)
+        self.assertIn("verify_finalized", audit_text)
+        self.assertIn("não cria um segundo veredito", audit_text)
 
 
 class SkillEnforcementSE06ScorerTests(unittest.TestCase):
