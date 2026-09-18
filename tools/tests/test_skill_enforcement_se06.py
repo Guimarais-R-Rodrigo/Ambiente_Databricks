@@ -313,7 +313,7 @@ class SkillEnforcementSE06StructuralTests(unittest.TestCase):
         self.assertIsNotNone(effective)
         self.assertFalse(effective["pk_columns_available"])
         self.assertEqual(
-            "runner_derived",
+            "runtime_derived",
             provenance["pk_columns_available"]["source"],
         )
 
