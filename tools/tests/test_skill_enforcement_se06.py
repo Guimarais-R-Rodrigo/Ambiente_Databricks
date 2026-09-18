@@ -291,7 +291,7 @@ class SkillEnforcementSE06StructuralTests(unittest.TestCase):
         payload = caught.exception.payload
         self.assertEqual("INCOMPLETE", payload["trace"]["enforcement_status"])
         self.assertFalse(payload["completion"]["authorized"])
-        self.assertEqual("PENDING_POSTFLIGHT", payload["completion"]["status"])
+        self.assertEqual("NOT_COMPLETED", payload["completion"]["status"])
 
     def test_instruction_layers_forbid_manual_fallback_and_parallel_auditor(self):
         skill_text = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
