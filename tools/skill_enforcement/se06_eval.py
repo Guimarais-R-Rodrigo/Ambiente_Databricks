@@ -301,12 +301,31 @@ def validate_results(
     if results.get("schema_version") != "1.0" or results.get("benchmark_id") != "SE06":
         issues.append("RESULT_HEADER")
     source_head = results.get("source_head")
-    if not allow_incomplete and (not isinstance(source_head, str) or not HEX40_RE.fullmatch(source_head)):
-        issues.append("RESULT_SOURCE_HEAD")
+    environment = results.get("environment")
+    assistant_package_sha = (
+        environment.get("assistant_package_sha")
+        if isinstance(environment, Mapping)
+        else None
+    )
 
     raw_runs = results.get("runs")
     if not isinstance(raw_runs, list):
         return issues + ["RESULT_RUNS_NOT_LIST"]
+
+    observed_any = any(
+        isinstance(item, Mapping) and item.get("status") == "OBSERVED"
+        for item in raw_runs
+    )
+    identity_required = (not allow_incomplete) or observed_any
+    if identity_required and (
+        not isinstance(source_head, str) or not HEX40_RE.fullmatch(source_head)
+    ):
+        issues.append("RESULT_SOURCE_HEAD")
+    if identity_required and (
+        not isinstance(assistant_package_sha, str)
+        or not HEX40_RE.fullmatch(assistant_package_sha)
+    ):
+        issues.append("RESULT_ASSISTANT_PACKAGE_SHA")
 
     expected = expected_behavioral_run_ids(spec)
     expected_set = set(expected)
@@ -585,6 +604,61 @@ def _external_output_path(raw: str) -> Path:
     return path
 
 
+def bind_results_identity(
+    path: Path,
+    *,
+    source_head: str,
+    assistant_package_sha: str,
+) -> dict[str, Any]:
+    """Vincula identidade experimental antes do primeiro run observado."""
+    if not HEX40_RE.fullmatch(source_head):
+        raise ValueError("source_head deve ser SHA Git de 40 hexadecimais minúsculos")
+    if not HEX40_RE.fullmatch(assistant_package_sha):
+        raise ValueError("assistant_package_sha deve ser SHA Git de 40 hexadecimais minúsculos")
+
+    resolved = path.expanduser().resolve()
+    if resolved == REPO_ROOT or resolved.is_relative_to(REPO_ROOT):
+        raise ValueError("results.json da SE06 deve ficar fora da árvore do repositório")
+    value = _read_json(resolved)
+    if not isinstance(value, dict):
+        raise ValueError("results.json deve ser objeto JSON")
+    if value.get("schema_version") != "1.0" or value.get("benchmark_id") != "SE06":
+        raise ValueError("results.json não pertence ao benchmark SE06")
+
+    runs = value.get("runs")
+    if not isinstance(runs, list):
+        raise ValueError("results.runs deve ser lista")
+    if any(
+        isinstance(item, Mapping) and item.get("status") == "OBSERVED"
+        for item in runs
+    ):
+        raise ValueError("identidade não pode ser alterada depois do primeiro run OBSERVED")
+
+    current_source = value.get("source_head")
+    if current_source not in (None, source_head):
+        raise ValueError(
+            f"source_head já vinculado a outro SHA: {current_source!r}"
+        )
+
+    environment = value.get("environment")
+    if not isinstance(environment, dict):
+        raise ValueError("results.environment deve ser objeto")
+    current_package = environment.get("assistant_package_sha")
+    if current_package not in (None, assistant_package_sha):
+        raise ValueError(
+            "assistant_package_sha já vinculado a outro SHA: "
+            f"{current_package!r}"
+        )
+
+    value["source_head"] = source_head
+    environment["assistant_package_sha"] = assistant_package_sha
+    resolved.write_text(
+        json.dumps(value, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return value
+
+
 def _structural_status_from_summary(path: Path | None) -> str:
     if path is None:
         return "NOT_RUN"
@@ -606,6 +680,9 @@ def main() -> int:
     parser.add_argument("--spec", default=str(DEFAULT_SPEC))
     parser.add_argument("--validate-spec", action="store_true")
     parser.add_argument("--init-results")
+    parser.add_argument("--bind-results")
+    parser.add_argument("--source-head")
+    parser.add_argument("--assistant-package-sha")
     parser.add_argument("--results")
     parser.add_argument("--summary-out")
     parser.add_argument("--certification-summary")
@@ -626,6 +703,24 @@ def main() -> int:
             encoding="utf-8",
         )
         print(f"RESULTS_SKELETON = {target}")
+
+    if args.bind_results:
+        if not args.source_head or not args.assistant_package_sha:
+            parser.error(
+                "--bind-results exige --source-head e --assistant-package-sha"
+            )
+        target = _external_output_path(args.bind_results)
+        value = bind_results_identity(
+            target,
+            source_head=args.source_head,
+            assistant_package_sha=args.assistant_package_sha,
+        )
+        print(
+            "RESULTS_BOUND = "
+            f"{target} | source_head={value['source_head']} | "
+            "assistant_package_sha="
+            f"{value['environment']['assistant_package_sha']}"
+        )
 
     if args.results:
         value = _read_json(Path(args.results))
