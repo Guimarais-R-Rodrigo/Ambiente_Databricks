@@ -53,7 +53,8 @@
             "numeric_columns_at_least",
             "numeric_distributions_requested",
             "resolved_theme_selected",
-            "visual_diagnostics_requested"
+            "visual_diagnostics_requested",
+            "pk_columns_available"
           ]
         },
         "value": {
