@@ -182,6 +182,36 @@ def _derive_context(
     }
     issues: list[dict[str, str]] = []
 
+    raw_pk = effective.get("pk_columns")
+    if "pk_columns" in effective and raw_pk is not None:
+        valid_pk = (
+            isinstance(raw_pk, list)
+            and bool(raw_pk)
+            and all(isinstance(item, str) and item for item in raw_pk)
+        )
+        if not valid_pk:
+            issues.append(
+                {
+                    "code": "CONTEXT_PROVENANCE_CONFLICT",
+                    "message": "pk_columns deve ser lista não vazia de strings quando informada",
+                }
+            )
+            return None, provenance, issues
+        effective["pk_columns"] = list(raw_pk)
+        pk_available = True
+    else:
+        effective.pop("pk_columns", None)
+        pk_available = False
+
+    effective["pk_columns_available"] = pk_available
+    provenance["pk_columns_available"] = {
+        "value": pk_available,
+        "source": "runner_derived",
+        "evidence": "pk_columns_validated",
+        "declared_value": raw_pk,
+        "conflict": False,
+    }
+
     try:
         observed_numeric, evidence = _derive_numeric_columns(table_name)
     except RuntimeError as exc:
