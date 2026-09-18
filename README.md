@@ -123,7 +123,7 @@ notebook exercita  : 61 objetos, 0 notebook(s) que só importam
 python (AST)       : 230 arquivos
 instrucoes         : 9992/20000 caracteres
 repo (identidade)  : 1563 arquivos varridos no repositório editável/derivado
-repo (links)       : 2019 links fora da raiz analisada
+repo (links)       : 2020 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)
