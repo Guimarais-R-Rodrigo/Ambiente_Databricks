@@ -13,6 +13,18 @@ FINALIZER_VERSION = "1.0"
 ENFORCED_ENTRYPOINT = "skills/hub-ml-eda-profissional/scripts/run_enforced.py::run_enforced"
 
 
+class CompletionNotAuthorized(RuntimeError):
+    """Falha explícita para impedir claim de conclusão sem Postflight PASS."""
+
+    def __init__(self, final_payload: Mapping[str, Any], verification: Mapping[str, Any]):
+        self.final_payload = dict(final_payload)
+        self.verification = dict(verification)
+        super().__init__(
+            "COMPLETION_NOT_AUTHORIZED: postflight/verification não autorizou "
+            "completion; não declare a skill concluída"
+        )
+
+
 def _resolve_assistant_root() -> Path:
     current = Path(__file__).resolve()
     for parent in current.parents:
@@ -146,6 +158,32 @@ def finalize(
         "reason": "postflight PASS" if authorized else "postflight != PASS",
     }
     return result
+
+
+def finalize_or_raise(
+    payload: Mapping[str, Any],
+    handoff: Mapping[str, Any],
+    *,
+    assistant_root: Path | str | None = None,
+) -> dict[str, Any]:
+    """Finaliza e interrompe explicitamente se a completion não for autorizada."""
+    final_payload = finalize(
+        payload,
+        handoff,
+        assistant_root=assistant_root,
+    )
+    verification = verify_finalized(
+        final_payload,
+        assistant_root=assistant_root,
+    )
+    if not (
+        verification.get("status") == "VALID"
+        and verification.get("valid") is True
+        and verification.get("completion_authorized") is True
+        and verification.get("completion_claim_consistent") is True
+    ):
+        raise CompletionNotAuthorized(final_payload, verification)
+    return final_payload
 
 
 def verify_finalized(

@@ -46,7 +46,29 @@ O executor L4 preserva esse core e acrescenta:
 - `evidence_gaps` quando faltam entradas, runtime ou conclusão mecânica;
 - reemissão do Receipt para vinculá-lo ao trace enriquecido.
 
-Para `data_quality_check`, informar `pk_columns` explicitamente no contexto. Não inferir chave primária apenas para satisfazer o gate. Se `tabular_preview_required=true`, disponibilizar `display`/`display_fn`. Se `resolved_theme_selected=true`, fornecer o `ResolvedTheme` correspondente ao executor. Ausência dessas entradas não deve ser mascarada: o postflight reprova a conclusão plena.
+Na EDA profissional padrão, **não monte manualmente o contexto condicional**. O executor L4 aplica o perfil canônico de EDA: distribuições e diagnóstico visual ligados, preview/amostra local opt-in e tema desligado até existir `ResolvedTheme`. Chame o entrypoint com o mínimo de parâmetros:
+
+```python
+payload = run_enforced_mod.run_enforced(
+    TABLE_NAME,
+    assistant_root=ASSISTANT_ROOT,
+    display_fn=display,
+)
+```
+
+Só passe overrides quando houver evidência objetiva. Para `data_quality_check`, forneça `pk_columns` apenas quando uma PK/chave candidata tiver sido **explicitamente estabelecida**. Sem PK confirmada, o contrato marca esse helper como `not_applicable`; não invente uma chave para satisfazer o gate. Se `resolved_theme_selected=true`, forneça o `ResolvedTheme` correspondente.
+
+Se `run_enforced` levantar `CanonicalExecutionBlocked`, a execução canônica está encerrada naquele run: **não continue a mesma EDA manualmente e não declare conclusão**. Corrija uma entrada objetiva ausente e reinicie a rota canônica em novo run, ou reporte a etapa como não concluída.
+
+Depois das análises adicionais permitidas, construa o handoff e finalize obrigatoriamente com `scripts/postflight.py::finalize_or_raise`. Somente o retorno bem-sucedido desse método autoriza linguagem de conclusão:
+
+```python
+final_payload = postflight_mod.finalize_or_raise(
+    payload,
+    handoff,
+    assistant_root=ASSISTANT_ROOT,
+)
+```
 
 O arquivo [scripts/preflight.py](scripts/preflight.py) continua disponível para diagnóstico isolado do L2. Ele não substitui o executor L4 quando a EDA for apresentada como concluída com aderência ao contrato.
 
@@ -133,6 +155,7 @@ Não inventar valores apenas para obter PASS. Se uma informação material não 
 - `PostflightV1`: valida Receipt, required/conditional aplicáveis, skips, templates, artifacts e handoff.
 - `VALID` no Receipt: comprovante SE04 íntegro e compatível; não equivale sozinho a conclusão L4.
 - `PASS` no postflight: única condição que autoriza `completion.authorized=true`.
+- `PENDING_POSTFLIGHT`: o executor L4 terminou, mas **a skill ainda não terminou**; falta `finalize_or_raise`.
 - `FAIL`: evidência material requerida faltou ou não concluiu.
 - `BLOCKED`: contrato/Receipt/binding/integridade não são confiáveis o bastante para avaliar.
 - `REVIEW`: handoff ou justificativa precisa de revisão antes de concluir.
@@ -145,7 +168,8 @@ Se o resultado parecer correto, mas o postflight não estiver `PASS`, não decla
 - **Declarar conclusão quando `postflight != PASS`.** Nem resultado correto nem Receipt `VALID` substituem esse gate.
 - **Fabricar, copiar ou reaproveitar Receipt/Postflight para legitimar rota manual.** A evidência precisa nascer da execução correspondente.
 - **Tratar `resolved` como `called` ou `loaded`.** Disponibilidade estática não prova uso.
-- **Fazer fallback manual quando integridade/preflight/primitive falhar.** Bloquear e reportar o gap.
+- **Fazer fallback manual quando integridade/preflight/primitive falhar ou quando `CanonicalExecutionBlocked` ocorrer.** Bloquear e reportar o gap; não continuar a mesma tarefa por código paralelo.
+- **Usar “concluído”, “finalizado”, “sucesso” ou equivalente sem `completion.authorized=true` reverificado.**
 - **Inferir chave candidata apenas para satisfazer `data_quality_check`.** Solicitar/usar chave explicitamente estabelecida.
 - **Trazer a tabela inteira para o driver.** `toPandas()` sem limite verificável derruba o notebook em base real; passe por amostra declarada.
 - **Usar `cache()` sem proteção** — é bloqueado em compute serverless.

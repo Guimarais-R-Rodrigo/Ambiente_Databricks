@@ -231,6 +231,30 @@ def _load_templates(
         trace["template_digests"][item_id] = digest
 
 
+DEFAULT_PROFESSIONAL_CONTEXT = {
+    "local_sample_required": False,
+    "tabular_preview_required": False,
+    "numeric_distributions_requested": True,
+    "resolved_theme_selected": False,
+    "visual_diagnostics_requested": True,
+}
+
+
+class CanonicalExecutionBlocked(RuntimeError):
+    """Interrompe a rota L4 quando o caminho canônico não pode prosseguir."""
+
+    def __init__(self, payload: Mapping[str, Any]):
+        self.payload = dict(payload)
+        trace = self.payload.get("trace")
+        status = trace.get("status") if isinstance(trace, Mapping) else None
+        enforcement = trace.get("enforcement_status") if isinstance(trace, Mapping) else None
+        super().__init__(
+            "CANONICAL_EXECUTION_BLOCKED: "
+            f"trace_status={status!r}; enforcement_status={enforcement!r}; "
+            "não faça fallback manual para declarar a skill concluída"
+        )
+
+
 def _valid_pk_columns(value: Any) -> list[str] | None:
     if not isinstance(value, list) or not value:
         return None
@@ -239,9 +263,57 @@ def _valid_pk_columns(value: Any) -> list[str] | None:
     return list(value)
 
 
+def _normalize_context(context: Mapping[str, Any] | None) -> dict[str, Any]:
+    if context is None:
+        raw: dict[str, Any] = {}
+    elif isinstance(context, Mapping):
+        raw = dict(context)
+    else:
+        raise ValueError("context deve ser mapping ou null")
+
+    effective = {**DEFAULT_PROFESSIONAL_CONTEXT, **raw}
+    raw_pk = effective.get("pk_columns")
+    pk_columns = _valid_pk_columns(raw_pk)
+    if "pk_columns" in effective and raw_pk is not None and pk_columns is None:
+        raise ValueError("pk_columns deve ser lista não vazia de strings quando informada")
+    effective["pk_columns_available"] = pk_columns is not None
+    if pk_columns is None:
+        effective.pop("pk_columns", None)
+    else:
+        effective["pk_columns"] = pk_columns
+    return effective
+
+
+def _mark_completion_pending(payload: dict[str, Any], reason: str) -> None:
+    payload["completion"] = {
+        "authorized": False,
+        "status": "PENDING_POSTFLIGHT",
+        "reason": reason,
+    }
+
+
+def _raise_if_blocked(payload: dict[str, Any], *, strict: bool) -> dict[str, Any]:
+    trace = payload.get("trace")
+    trace_status = trace.get("status") if isinstance(trace, Mapping) else None
+    enforcement_status = (
+        trace.get("enforcement_status") if isinstance(trace, Mapping) else None
+    )
+    if trace_status != "PASS" or (
+        enforcement_status is not None and enforcement_status != "PASS"
+    ):
+        payload["completion"] = {
+            "authorized": False,
+            "status": "NOT_COMPLETED",
+            "reason": "canonical route not PASS",
+        }
+        if strict:
+            raise CanonicalExecutionBlocked(payload)
+    return payload
+
+
 def run_enforced(
     table_name: str,
-    context: Mapping[str, Any],
+    context: Mapping[str, Any] | None = None,
     *,
     assistant_root: Path | str | None = None,
     sample_fraction: float = 0.1,
@@ -249,6 +321,7 @@ def run_enforced(
     seed: int = 42,
     display_fn: Callable[[Any], None] | None = None,
     resolved_theme: Any = None,
+    strict: bool = True,
 ) -> dict[str, Any]:
     """Executa o core SE04 e coleta evidência adicional necessária ao postflight L4."""
     root = Path(assistant_root) if assistant_root is not None else _resolve_assistant_root()
@@ -260,9 +333,10 @@ def run_enforced(
 
     runner = _load_runner(skill_dir)
     contract = _load_contract(contract_path)
+    effective_context = _normalize_context(context)
     base = runner.run(
         table_name,
-        context,
+        effective_context,
         assistant_root=root,
         sample_fraction=sample_fraction,
         max_categories=max_categories,
@@ -271,9 +345,9 @@ def run_enforced(
     payload = dict(base)
     trace = payload.get("trace")
     if not isinstance(trace, dict) or trace.get("status") != "PASS":
-        return payload
+        return _raise_if_blocked(payload, strict=strict)
 
-    effective_context = dict(context)
+    effective_context = dict(effective_context)
     numeric_provenance = trace.get("context_provenance", {}).get("numeric_columns", {})
     if isinstance(numeric_provenance, Mapping) and isinstance(numeric_provenance.get("value"), int):
         effective_context["numeric_columns"] = numeric_provenance["value"]
@@ -330,11 +404,12 @@ def run_enforced(
             analysis_df = base_df
         return base_df
 
-    dq_item = resource_items.get("data_quality_check")
-    if dq_item is not None:
-        func = _import_symbol(dq_item, trace=trace, gaps=gaps)
-        pk_columns = _valid_pk_columns(context.get("pk_columns"))
-        date_column = context.get("date_column")
+    dq_decision = decisions.get(("resource", "data_quality_check"))
+    if isinstance(dq_decision, Mapping) and dq_decision.get("applicable") is True:
+        dq_item = resource_items.get("data_quality_check")
+        func = _import_symbol(dq_item or {}, trace=trace, gaps=gaps)
+        pk_columns = _valid_pk_columns(effective_context.get("pk_columns"))
+        date_column = effective_context.get("date_column")
         if func is None:
             pass
         elif pk_columns is None:
@@ -342,7 +417,7 @@ def run_enforced(
                 {
                     "code": "RESOURCE_INPUT_MISSING",
                     "item_id": "data_quality_check",
-                    "message": "pk_columns explícitas são necessárias para executar data_quality_check",
+                    "message": "pk_columns_available=true sem pk_columns válidas",
                 }
             )
         elif date_column is not None and not isinstance(date_column, str):
@@ -383,7 +458,7 @@ def run_enforced(
         item = resource_items.get("smart_sample")
         func = _import_symbol(item or {}, trace=trace, gaps=gaps)
         if func is not None:
-            raw_n = context.get("sample_n", 1000)
+            raw_n = effective_context.get("sample_n", 1000)
             n = raw_n if isinstance(raw_n, int) and not isinstance(raw_n, bool) and raw_n > 0 else 1000
             sampled, ok = _call_resource(
                 "smart_sample",
@@ -509,7 +584,8 @@ def run_enforced(
         expected_entrypoint=runner.CANONICAL_ENTRYPOINT,
         protected_primitive=runner.PROTECTED_PRIMITIVE_ID,
     )
-    return payload
+    _mark_completion_pending(payload, "postflight ainda não executado")
+    return _raise_if_blocked(payload, strict=strict)
 
 
 def _load_context(raw: str) -> dict[str, Any]:
@@ -525,7 +601,7 @@ def _load_context(raw: str) -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Executor L4 SE05 da hub-ml-eda-profissional")
     parser.add_argument("--table-name", required=True)
-    parser.add_argument("--context-json", required=True)
+    parser.add_argument("--context-json", default="{}")
     parser.add_argument("--sample-fraction", type=float, default=0.1)
     parser.add_argument("--max-categories", type=int, default=20)
     parser.add_argument("--seed", type=int, default=42)
@@ -539,6 +615,8 @@ def main() -> int:
             max_categories=args.max_categories,
             seed=args.seed,
         )
+    except CanonicalExecutionBlocked as exc:
+        payload = exc.payload
     except (RuntimeError, ValueError) as exc:
         payload = {
             "trace": {
@@ -556,7 +634,14 @@ def main() -> int:
         }
 
     print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True, default=str))
-    return 0 if isinstance(payload.get("receipt"), dict) else 2
+    trace = payload.get("trace")
+    canonical_pass = bool(
+        isinstance(payload.get("receipt"), dict)
+        and isinstance(trace, Mapping)
+        and trace.get("status") == "PASS"
+        and trace.get("enforcement_status") == "PASS"
+    )
+    return 0 if canonical_pass else 2
 
 
 if __name__ == "__main__":

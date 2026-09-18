@@ -20,6 +20,7 @@ _CONDITION_KEYS = {
     "numeric_distributions_requested": "numeric_distributions_requested",
     "resolved_theme_selected": "resolved_theme_selected",
     "visual_diagnostics_requested": "visual_diagnostics_requested",
+    "pk_columns_available": "pk_columns_available",
 }
 
 
