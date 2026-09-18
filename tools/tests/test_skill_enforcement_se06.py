@@ -248,6 +248,7 @@ class SkillEnforcementSE06ScorerTests(unittest.TestCase):
     def _good_results(self):
         result = evaluator.build_results_skeleton(self.spec)
         result["source_head"] = "a" * 40
+        result["environment"]["assistant_package_sha"] = "b" * 40
         for record in result["runs"]:
             record["status"] = "OBSERVED"
             record["task_correctness"] = "PASS"
