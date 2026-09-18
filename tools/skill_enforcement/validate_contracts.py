@@ -36,6 +36,7 @@ SUPPORTED_CONDITIONS = {
     "numeric_distributions_requested": {"value": False},
     "resolved_theme_selected": {"value": False},
     "visual_diagnostics_requested": {"value": False},
+    "pk_columns_available": {"value": False},
 }
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
