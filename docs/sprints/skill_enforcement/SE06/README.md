@@ -2,11 +2,11 @@
 
 ## Estado
 
-**EM DESENVOLVIMENTO BRANCH-FIRST / BENCHMARK AINDA NÃO EXECUTADO.**
+**EM DESENVOLVIMENTO BRANCH-FIRST / CANDIDATA DIAGNÓSTICA P1 REPROVADA / CORREÇÃO EM ANDAMENTO.**
 
 Branch: `sef/SE06-evals`  
 Baseline Git: `main@748b455d9b1a0d2f2e8878e65f27b2aabc675a0d`  
-Produto sob teste: SE05 integrada, sem mutação comportamental nesta sprint.  
+Produto de partida: SE05 integrada em `main@748b455d9b1a0d2f2e8878e65f27b2aabc675a0d`.  
 Skill piloto: `hub-ml-eda-profissional`.
 
 ## Objetivo
@@ -23,16 +23,24 @@ O DoD canônico permanece:
 - skips condicionais sem justificativa = 0;
 - required resources ausentes com PASS = 0.
 
-## Por que a SE06 não altera o runtime
+## Fases da SE06 e regra de congelamento
 
-Alterar `.assistant`, contrato, runner, Receipt ou Postflight enquanto o benchmark está sendo coletado contaminaria a comparação.
+Durante **uma candidata comportamental**, o produto publicado fica congelado. A candidata diagnóstica inicial preservou byte a byte o L4 integrado pela SE05.
 
-Por isso, nesta sprint:
+O caso P1 foi executado três vezes em chats novos e revelou o mesmo defeito de classe: a Genie apresentou a EDA como concluída sem `completion.authorized=true`; em duas repetições o runner L4 foi chamado, bloqueou e houve fallback manual, e em uma repetição não houve rota canônica observável.
 
-- o produto L4 integrado pela SE05 fica congelado;
-- mudanças da branch ficam em instrumentação, scorer, testes e documentação;
-- qualquer defeito funcional real encontrado pelo benchmark é registrado primeiro como achado;
-- correção comportamental do produto exige decisão explícita, nova candidata e reinício das observações afetadas.
+Como `false_completion_claims_max=0` e P1 exige pelo menos 2/3 outcomes seguros, a candidata ficou matematicamente reprovada antes do restante da matriz. Aplicou-se **early-stop**, sem apagar resultados.
+
+A partir desse achado, a SE06 entra em fase corretiva:
+
+1. preservar a candidata diagnóstica e seu bundle externo;
+2. alterar o produto somente depois do early-stop;
+3. certificar localmente a correção;
+4. publicar/homologar a candidata corrigida no Free;
+5. criar **novo bundle** com novo `source_head`/`assistant_package_sha`;
+6. reiniciar a matriz comportamental final em 0/25.
+
+Resultados da candidata diagnóstica nunca contam como PASS da candidata final e não são reclassificados retroativamente.
 
 ## Baseline congelada
 
@@ -113,7 +121,8 @@ Essa regra é uma calibração **nova da SE06**. Ela não altera os resultados h
 
 - `tools/skill_enforcement/se06_eval.py`: valida matriz, cria bundle externo de coleta e calcula métricas/DoD;
 - `tools/tests/test_skill_enforcement_se06.py`: scorer + 12 variantes estruturais;
-- `tools/skill_enforcement/certify_local.py --profile se06`: regressões SE01–SE05 + SE06 + renderer/snapshot.
+- `tools/skill_enforcement/certify_local.py --profile se06`: regressões SE01–SE05 + SE06 + renderer/snapshot;
+- `tools/skill_enforcement/se06_correction_free_probe.py`: homologação funcional da candidata corrigida, sem escrita persistente.
 
 ## Fluxo
 
