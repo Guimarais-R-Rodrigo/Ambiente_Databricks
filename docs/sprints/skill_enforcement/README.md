@@ -14,11 +14,14 @@ Este diretório concentra o planejamento e as evidências do Skill Enforcement F
 8. [SE04/README.md](SE04/README.md) — `ExecutionReceiptV1`, concluída e integrada pela PR #77 no merge `d74b2fcbf9accdf3878aa3aef9c0ec629a811028`.
 9. [SE04/DESENHO_TECNICO.md](SE04/DESENHO_TECNICO.md) — schema, bindings e verifier do Receipt.
 10. [SE04/THREAT_MODEL.md](SE04/THREAT_MODEL.md) — modelo de ameaça R01+.
-11. [SE05/README.md](SE05/README.md) — Postflight fail-closed L4, sprint corrente na branch `sef/SE05-postflight-fail-closed`.
+11. [SE05/README.md](SE05/README.md) — Postflight fail-closed L4, concluída e integrada pela PR #78 no merge `748b455d9b1a0d2f2e8878e65f27b2aabc675a0d`.
 12. [SE05/DESENHO_TECNICO.md](SE05/DESENHO_TECNICO.md) — executor L4, evidence gaps, PostflightV1 e finalizer.
 13. [SE05/TESTES.md](SE05/TESTES.md) — micro-evals, integração e critérios de aceite.
-14. [SE05/RUNBOOK_FREE.md](SE05/RUNBOOK_FREE.md) — homologação determinística L4 no Databricks Free.
-15. [SE05/GUIA_USUARIO.md](SE05/GUIA_USUARIO.md) — operação para usuário não técnico.
+14. [SE06/README.md](SE06/README.md) — benchmark/adversarial ampliado, sprint corrente na branch `sef/SE06-evals`.
+15. [SE06/PROTOCOLO.md](SE06/PROTOCOLO.md) — coleta comportamental congelada e separação dos canais de evidência.
+16. [SE06/METRICAS.md](SE06/METRICAS.md) — métricas, calibração e DoD computável.
+17. [SE06/RUNBOOK_FREE.md](SE06/RUNBOOK_FREE.md) — execução dos 25 chats no laboratório Free.
+18. [SE06/GUIA_USUARIO.md](SE06/GUIA_USUARIO.md) — operação para usuário não técnico.
 
 ## Regra de leitura
 
@@ -66,7 +69,8 @@ Uma PR Draft não deve ser usada como mecanismo de economia de CI, porque workfl
 - SE02: concluída e integrada pela PR #74;
 - SE03: concluída e integrada pela PR #76;
 - SE04: concluída e integrada pela PR #77;
-- SE05: em desenvolvimento branch-first; engine de Postflight, executor L4, finalizer, testes e probe Free presentes; gates completos local/Free ainda pendentes;
-- SE06–SE08: não iniciadas.
+- SE05: concluída e integrada pela PR #78; RC local/Free homologada, 12/12 workflows da PR e 18/18 workflows pós-merge em `success`;
+- SE06: em desenvolvimento branch-first; matriz, scorer, adversariais estruturais e protocolo presentes; benchmark comportamental ainda `NOT_RUN`;
+- SE07–SE08: não iniciadas.
 
 A frente não deve declarar `FULLY_CERTIFIED` quando qualquer gate obrigatório estiver `NOT_RUN`, `BLOCKED` ou `DEFERRED_CREDIT`.
