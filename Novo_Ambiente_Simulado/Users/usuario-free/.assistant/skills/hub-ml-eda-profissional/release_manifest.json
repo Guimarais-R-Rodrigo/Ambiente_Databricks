@@ -21,7 +21,7 @@
     {
       "path": "skills/hub-ml-eda-profissional/scripts/run_enforced.py",
       "role": "enforced_runner",
-      "git_blob_sha1": "37868b6d4c96683f30bb0b7c7dfbaf670bec461b"
+      "git_blob_sha1": "149305d8ad3c283203e10259c07e25d0fdec414a"
     },
     {
       "path": "skills/hub-ml-eda-profissional/scripts/postflight.py",

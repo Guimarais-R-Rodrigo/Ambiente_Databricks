@@ -594,8 +594,9 @@ def run_enforced(
         expected_entrypoint=runner.CANONICAL_ENTRYPOINT,
         protected_primitive=runner.PROTECTED_PRIMITIVE_ID,
     )
+    payload = _raise_if_blocked(payload, strict=strict)
     _mark_completion_pending(payload, "postflight ainda não executado")
-    return _raise_if_blocked(payload, strict=strict)
+    return payload
 
 
 def _load_context(raw: str) -> dict[str, Any]:
