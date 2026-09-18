@@ -121,7 +121,7 @@ idioma da docstring: 62 módulos, 0 com docstring em inglês
 normas do molde    : 75 arquivos, 0 violação(ões)
 notebook exercita  : 61 objetos, 0 notebook(s) que só importam
 python (AST)       : 230 arquivos
-instrucoes         : 10474/20000 caracteres
+instrucoes         : 10925/20000 caracteres
 repo (identidade)  : 1574 arquivos varridos no repositório editável/derivado
 repo (links)       : 2030 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
