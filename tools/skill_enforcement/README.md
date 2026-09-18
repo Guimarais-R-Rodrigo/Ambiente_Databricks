@@ -220,7 +220,8 @@ A execução continua após failures para revelar achados adicionais; qualquer s
 - `se02_free_probe.py`: preflight L2;
 - `se03_free_probe.py`: entrypoint/trace L3;
 - `se04_free_probe.py`: Receipt formal e adversarial cases;
-- `se05_free_probe.py`: autorização L4 e postflight fail-closed.
+- `se05_free_probe.py`: evidência histórica da autorização L4 original da SE05;
+- `se06_correction_free_probe.py`: candidata corrigida após o early-stop P1, cobrindo contexto mínimo, PK opcional, fail-fast e finalizer estrito.
 
 O probe SE05 usa somente view temporária sintética e cobre:
 
@@ -250,4 +251,7 @@ Actions permanece gate remoto final, não instrumento de desenvolvimento iterati
 - SHA-256 fornece tamper evidence/binding, não autenticação com segredo;
 - `run.py` continua o core L3 histórico; `run_enforced.py` é a rota L4 exigida para conclusão homologada;
 - recursos sem entrada suficiente não recebem evidência fabricada e impedem PASS quando aplicáveis;
+- desde a calibração SE06, `data_quality_check` é condicional à existência de `pk_columns` explicitamente estabelecidas; ausência de PK não autoriza inferi-la nem bloqueia os demais recursos da EDA;
+- `run_enforced` aplica contexto profissional padrão quando o caller omite flags condicionais e, em modo estrito, levanta `CanonicalExecutionBlocked` quando a rota não fica em PASS;
+- `finalize_or_raise` transforma ausência de autorização de completion em falha explícita;
 - nenhum estado `NOT_RUN`, `BLOCKED` ou `DEFERRED_CREDIT` pode ser tratado como `FULLY_CERTIFIED`.
