@@ -73,11 +73,26 @@ python -B tools/skill_enforcement/se06_eval.py `
 
 O arquivo fica fora do repositório.
 
-Preencher:
+Vincule a identidade experimental pelo próprio Python, sem editar JSON via PowerShell:
 
-- `source_head`;
-- `environment.assistant_package_sha`;
-- observações de cada run.
+```powershell
+$SE06_HEAD = (git rev-parse HEAD).Trim()
+$PRODUCT_SHA = (git rev-parse origin/main).Trim()
+
+python -B tools/skill_enforcement/se06_eval.py `
+  --bind-results $RESULTS `
+  --source-head $SE06_HEAD `
+  --assistant-package-sha $PRODUCT_SHA
+```
+
+Esse comando grava UTF-8 sem BOM e falha se:
+
+- qualquer SHA não tiver 40 hexadecimais;
+- o arquivo não for um bundle SE06;
+- a identidade já estiver vinculada a outro SHA;
+- já existir qualquer run `OBSERVED`.
+
+Depois do binding, não alterar `source_head` nem `assistant_package_sha` durante a rodada.
 
 ## 5. Execução
 
