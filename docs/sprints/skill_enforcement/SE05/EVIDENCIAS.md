@@ -121,17 +121,88 @@ repo (links)       = 2019
 
 O snapshot raiz foi reconciliado com essas contagens. Como essa reconciliação altera apenas arquivos já existentes e não adiciona links, ela não muda a cardinalidade observada.
 
-## Databricks Free
+## Certificação local final
 
-Ainda não executado para a SE05.
-
-Estado atual:
+No HEAD funcional `0d4d6af630d2760c754313218f51cff0d6ad2375`:
 
 ```text
-DATABRICKS_FREE = NOT_RUN
+LOCAL_CERTIFICATION = PASS
+scope               = FULL_SE05_LOCAL
+DERIVED_STALE       = false
+failures            = 0
 ```
 
-O probe determinístico `SE05_FREE_PROBE_V1` foi preparado para execução posterior ao `FULL_SE05_LOCAL`.
+Todos os gates SE01–SE05, estrutura, renderer, render-diff e snapshot README passaram.
+
+Evidence bundle:
+
+```text
+~/.ambiente_databricks/sef_certifications/20260918T002331Z_0d4d6af630d2
+```
+
+## Databricks Free
+
+O HEAD funcional `0d4d6af630d2760c754313218f51cff0d6ad2375` foi publicado e verificado por conteúdo no workspace Free pessoal.
+
+```text
+arquivos controlados = 560
+conteúdo              = 560/560
+ausentes              = 0
+obsoletos             = 0
+plataforma            = 1 arquivo gerenciado (.assistant/.mcp_servers.json)
+resultado             = APROVADO: 0 problema(s)
+```
+
+Relatório preservado:
+
+```text
+~/.ambiente_databricks/sef_certifications/se05_free_verify_0d4d6af630d2.json
+```
+
+O endpoint individual de import do probe retornou o `PROTOCOL_ERROR` de transporte já conhecido nas três tentativas. O fallback documentado por `workspace import-dir` passou, e o conteúdo exportado do notebook remoto ficou idêntico ao probe local.
+
+### `SE05_FREE_PROBE_V1`
+
+Resultado global:
+
+```text
+marker                      = SE05_FREE_PROBE_V1
+status                      = PASS
+published_package_mutated   = false
+persistent_writes_performed = false
+```
+
+Casos:
+
+```text
+P01_l4_happy_path                        = PASS
+P02_core_l3_cannot_finalize_l4           = PASS
+P03_missing_required_input_fails_closed  = PASS
+P04_incomplete_handoff_not_completed     = PASS
+P05_completion_claim_tamper_detected     = PASS
+```
+
+No P01 foi observado:
+
+```text
+enforcement_status                 = PASS
+receipt_present                    = true
+postflight_status                  = PASS
+completion_authorized              = true
+completion_status                  = COMPLETED
+verification_status                = VALID
+verification_valid                 = true
+verification_completion_authorized = true
+completion_claim_consistent        = true
+```
+
+Nos P02–P05, nenhum cenário não canônico conseguiu autorização de completion. O P02 permaneceu `BLOCKED` e não-validável como finalização L4; o P03 terminou `FAIL` por input obrigatório ausente; o P04 terminou `REVIEW` por handoff incompleto; o P05 detectou adulteração como `INVALID`.
+
+Classificação:
+
+```text
+DATABRICKS_FREE = PASS
+```
 
 ## GitHub Actions
 
