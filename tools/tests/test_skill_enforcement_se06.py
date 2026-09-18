@@ -293,6 +293,52 @@ class SkillEnforcementSE06StructuralTests(unittest.TestCase):
         self.assertFalse(payload["completion"]["authorized"])
         self.assertEqual("NOT_COMPLETED", payload["completion"]["status"])
 
+    def test_runner_derives_pk_availability_false_when_pk_absent(self):
+        with mock.patch.object(
+            runner,
+            "_derive_numeric_columns",
+            return_value=(3, "synthetic_schema"),
+        ):
+            effective, provenance, issues = runner._derive_context(
+                "catalog.schema.synthetic_table",
+                {
+                    "local_sample_required": False,
+                    "tabular_preview_required": False,
+                    "numeric_distributions_requested": False,
+                    "resolved_theme_selected": False,
+                    "visual_diagnostics_requested": False,
+                },
+            )
+        self.assertEqual([], issues)
+        self.assertIsNotNone(effective)
+        self.assertFalse(effective["pk_columns_available"])
+        self.assertEqual(
+            "runner_derived",
+            provenance["pk_columns_available"]["source"],
+        )
+
+    def test_runner_rejects_invalid_explicit_pk_columns(self):
+        with mock.patch.object(
+            runner,
+            "_derive_numeric_columns",
+            return_value=(3, "synthetic_schema"),
+        ):
+            effective, _provenance, issues = runner._derive_context(
+                "catalog.schema.synthetic_table",
+                {
+                    "pk_columns": "id",
+                    "local_sample_required": False,
+                    "tabular_preview_required": False,
+                    "numeric_distributions_requested": False,
+                    "resolved_theme_selected": False,
+                    "visual_diagnostics_requested": False,
+                },
+            )
+        self.assertIsNone(effective)
+        self.assertTrue(
+            any(item["code"] == "CONTEXT_PROVENANCE_CONFLICT" for item in issues)
+        )
+
     def test_instruction_layers_forbid_manual_fallback_and_parallel_auditor(self):
         skill_text = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
         global_text = (REPO_ROOT / "ambiente_fonte" / ".assistant_instructions.md").read_text(
