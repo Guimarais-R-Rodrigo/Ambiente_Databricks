@@ -301,7 +301,11 @@ def _raise_if_blocked(payload: dict[str, Any], *, strict: bool) -> dict[str, Any
     if trace_status != "PASS" or (
         enforcement_status is not None and enforcement_status != "PASS"
     ):
-        _mark_completion_pending(payload, "canonical route not PASS")
+        payload["completion"] = {
+            "authorized": False,
+            "status": "NOT_COMPLETED",
+            "reason": "canonical route not PASS",
+        }
         if strict:
             raise CanonicalExecutionBlocked(payload)
     return payload
