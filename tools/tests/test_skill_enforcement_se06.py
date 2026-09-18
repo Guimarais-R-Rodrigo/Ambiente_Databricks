@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -377,6 +378,55 @@ class SkillEnforcementSE06ScorerTests(unittest.TestCase):
             allow_incomplete=True,
         )
         self.assertEqual("INCOMPLETE", summary["DOD"])
+
+    def test_binding_writes_utf8_without_bom_and_sets_identity(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td) / "results.json"
+            path.write_text(
+                json.dumps(evaluator.build_results_skeleton(self.spec), ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            bound = evaluator.bind_results_identity(
+                path,
+                source_head="a" * 40,
+                assistant_package_sha="b" * 40,
+            )
+            raw = path.read_bytes()
+            self.assertFalse(raw.startswith(b"\xef\xbb\xbf"))
+            self.assertEqual("a" * 40, bound["source_head"])
+            self.assertEqual("b" * 40, bound["environment"]["assistant_package_sha"])
+            reloaded = json.loads(raw.decode("utf-8"))
+            self.assertEqual("a" * 40, reloaded["source_head"])
+            self.assertEqual("b" * 40, reloaded["environment"]["assistant_package_sha"])
+
+    def test_binding_refuses_identity_change_after_observed_run(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td) / "results.json"
+            value = evaluator.build_results_skeleton(self.spec)
+            value["runs"][0]["status"] = "OBSERVED"
+            path.write_text(
+                json.dumps(value, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, "OBSERVED"):
+                evaluator.bind_results_identity(
+                    path,
+                    source_head="a" * 40,
+                    assistant_package_sha="b" * 40,
+                )
+
+    def test_observed_incomplete_bundle_requires_bound_identity(self):
+        results = evaluator.build_results_skeleton(self.spec)
+        results["runs"][0]["status"] = "OBSERVED"
+        summary = evaluator.summarize_results(
+            results,
+            self.spec,
+            structural_suite_status="PASS",
+            allow_incomplete=True,
+        )
+        self.assertEqual("INVALID", summary["DOD"])
+        self.assertIn("RESULT_SOURCE_HEAD", summary["validation_issues"])
+        self.assertIn("RESULT_ASSISTANT_PACKAGE_SHA", summary["validation_issues"])
 
 
 if __name__ == "__main__":
