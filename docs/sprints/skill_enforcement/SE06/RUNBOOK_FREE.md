@@ -94,6 +94,42 @@ Esse comando grava UTF-8 sem BOM e falha se:
 
 Depois do binding, não alterar `source_head` nem `assistant_package_sha` durante a rodada.
 
+## 4.1 Troca de candidata após early-stop
+
+Quando uma candidata já tiver runs `OBSERVED` e for corrigida:
+
+1. **não rebind** o `results.json` existente;
+2. preservar o arquivo antigo com nome que contenha o HEAD diagnóstico;
+3. criar novo skeleton para a candidata corrigida;
+4. vincular o novo HEAD e o SHA do pacote efetivamente publicado;
+5. zerar o contador da candidata final para 0/25, mantendo o acumulado histórico separado.
+
+Exemplo:
+
+```powershell
+$OLD = Join-Path $SE06_DIR "results.json"
+$ARCHIVE = Join-Path $SE06_DIR "results_diag_<HEAD12>.json"
+Move-Item -LiteralPath $OLD -Destination $ARCHIVE
+
+python -B tools/skill_enforcement/se06_eval.py --validate-spec --init-results $OLD
+python -B tools/skill_enforcement/se06_eval.py `
+  --bind-results $OLD `
+  --source-head <NOVO_HEAD_SE06> `
+  --assistant-package-sha <SHA_DO_PACOTE_PUBLICADO>
+```
+
+O archive é evidência histórica. Não editar runs diagnósticos para fazê-los parecer parte da candidata final.
+
+## 4.2 Homologar a correção antes do novo 0/25
+
+Se a correção alterar `.assistant`:
+
+1. executar `FULL_SE06_LOCAL`;
+2. publicar no Free pelo publicador canônico;
+3. verify por conteúdo;
+4. executar `se06_correction_free_probe.py`;
+5. somente com probe PASS iniciar chats da nova candidata.
+
 ## 5. Execução
 
 Para cada run de `genie_chat`:
