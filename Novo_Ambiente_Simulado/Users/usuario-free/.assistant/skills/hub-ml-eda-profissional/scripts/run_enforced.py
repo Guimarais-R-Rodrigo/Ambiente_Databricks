@@ -12,6 +12,8 @@ from typing import Any, Callable, Mapping
 
 SKILL = "hub-ml-eda-profissional"
 ENFORCED_ENTRYPOINT = "skills/hub-ml-eda-profissional/scripts/run_enforced.py::run_enforced"
+PENDING_POSTFLIGHT_MARKER = "SEF_PENDING_POSTFLIGHT_V1"
+FINALIZER_ENTRYPOINT = "skills/hub-ml-eda-profissional/scripts/postflight.py::finalize_or_raise"
 
 
 def _resolve_assistant_root() -> Path:
@@ -289,7 +291,15 @@ def _mark_completion_pending(payload: dict[str, Any], reason: str) -> None:
         "authorized": False,
         "status": "PENDING_POSTFLIGHT",
         "reason": reason,
+        "claim_allowed": False,
+        "required_next_action": FINALIZER_ENTRYPOINT,
     }
+    print(
+        f"{PENDING_POSTFLIGHT_MARKER} | "
+        "completion.authorized=false | claim_allowed=false | "
+        "skill ainda NAO concluida | "
+        "execute finalize_or_raise antes de qualquer claim de conclusao"
+    )
 
 
 def _raise_if_blocked(payload: dict[str, Any], *, strict: bool) -> dict[str, Any]:

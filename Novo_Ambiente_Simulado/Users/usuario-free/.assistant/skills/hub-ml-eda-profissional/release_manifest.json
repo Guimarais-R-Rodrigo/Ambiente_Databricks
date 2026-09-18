@@ -11,7 +11,7 @@
     {
       "path": "skills/hub-ml-eda-profissional/SKILL.md",
       "role": "skill_guidance",
-      "git_blob_sha1": "3db822464f3ad2498a575c802ccfcfe345b9ea25"
+      "git_blob_sha1": "624fcd1d99e563a47dd9dc32e2eeef6e60cfd794"
     },
     {
       "path": "skills/hub-ml-eda-profissional/scripts/run.py",
@@ -21,7 +21,7 @@
     {
       "path": "skills/hub-ml-eda-profissional/scripts/run_enforced.py",
       "role": "enforced_runner",
-      "git_blob_sha1": "25ee175826785e34a25f9842c6bee4cf42d1414b"
+      "git_blob_sha1": "37868b6d4c96683f30bb0b7c7dfbaf670bec461b"
     },
     {
       "path": "skills/hub-ml-eda-profissional/scripts/postflight.py",

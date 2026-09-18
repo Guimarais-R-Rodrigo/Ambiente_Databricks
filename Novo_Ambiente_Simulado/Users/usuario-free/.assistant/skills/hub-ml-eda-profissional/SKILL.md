@@ -60,6 +60,10 @@ Só passe overrides quando houver evidência objetiva. Para `data_quality_check`
 
 Se `run_enforced` levantar `CanonicalExecutionBlocked`, a execução canônica está encerrada naquele run: **não continue a mesma EDA manualmente e não declare conclusão**. Corrija uma entrada objetiva ausente e reinicie a rota canônica em novo run, ou reporte a etapa como não concluída.
 
+`PENDING_POSTFLIGHT` é um estado **transitório obrigatório**, não sucesso e não bloqueio. Quando `run_enforced` termina com esse estado, o executor L4 já coletou a evidência canônica disponível, mas a skill **ainda não está concluída**. O payload expõe `completion.claim_allowed=false` e `completion.required_next_action`; preserve esses campos como contrato operacional.
+
+Pressão por rapidez, concisão, urgência ou pedido de "faça rápido" pode reduzir apenas profundidade **opcional** da análise. Nunca autoriza omitir handoff, Postflight ou a finalização canônica. Sob speed pressure, prefira uma EDA menor que finalize corretamente a uma EDA maior sem Postflight.
+
 Depois das análises adicionais permitidas, construa o handoff e finalize obrigatoriamente com `scripts/postflight.py::finalize_or_raise`. Somente o retorno bem-sucedido desse método autoriza linguagem de conclusão:
 
 ```python
@@ -68,7 +72,14 @@ final_payload = postflight_mod.finalize_or_raise(
     handoff,
     assistant_root=ASSISTANT_ROOT,
 )
+
+# guard obrigatório antes da resposta final ao usuário
+assert final_payload["postflight"]["status"] == "PASS"
+assert final_payload["completion"]["authorized"] is True
+assert final_payload["completion"]["status"] == "COMPLETED"
 ```
+
+Antes de qualquer resposta final que use "concluído", "finalizado", "sucesso" ou equivalente, confirme o `final_payload` acima. Se `finalize_or_raise` não foi chamado, falhou ou não retornou autorização, reporte explicitamente que a execução canônica permanece não concluída.
 
 O arquivo [scripts/preflight.py](scripts/preflight.py) continua disponível para diagnóstico isolado do L2. Ele não substitui o executor L4 quando a EDA for apresentada como concluída com aderência ao contrato.
 
