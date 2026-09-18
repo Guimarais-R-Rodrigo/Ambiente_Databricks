@@ -272,7 +272,10 @@ def _normalize_context(context: Mapping[str, Any] | None) -> dict[str, Any]:
         raise ValueError("context deve ser mapping ou null")
 
     effective = {**DEFAULT_PROFESSIONAL_CONTEXT, **raw}
-    pk_columns = _valid_pk_columns(effective.get("pk_columns"))
+    raw_pk = effective.get("pk_columns")
+    pk_columns = _valid_pk_columns(raw_pk)
+    if "pk_columns" in effective and raw_pk is not None and pk_columns is None:
+        raise ValueError("pk_columns deve ser lista não vazia de strings quando informada")
     effective["pk_columns_available"] = pk_columns is not None
     if pk_columns is None:
         effective.pop("pk_columns", None)
