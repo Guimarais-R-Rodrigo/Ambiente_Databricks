@@ -35,17 +35,23 @@ HANDOFF_NO_PK = {
 
 
 def _resolve_assistant_root() -> Path:
-    candidates = [
-        Path("/Workspace/Users/guimarais.r.rodrigo@gmail.com/.assistant"),
-        Path("/Workspace") / "Users" / "guimarais.r.rodrigo@gmail.com" / ".assistant",
-    ]
-    unique = []
-    for candidate in candidates:
-        if candidate.is_dir() and candidate not in unique:
-            unique.append(candidate)
-    if not unique:
-        raise RuntimeError("raiz .assistant publicada não encontrada")
-    return unique[0]
+    spark = SparkSession.getActiveSession() or SparkSession.builder.getOrCreate()
+    try:
+        current_user = spark.sql("SELECT current_user() AS user").first()["user"]
+    except Exception as exc:
+        raise RuntimeError(
+            f"não foi possível resolver o usuário atual do workspace: {exc}"
+        ) from exc
+
+    if not isinstance(current_user, str) or not current_user.strip():
+        raise RuntimeError("current_user() retornou identidade vazia")
+
+    candidate = Path("/Workspace/Users") / current_user.strip() / ".assistant"
+    if not candidate.is_dir():
+        raise RuntimeError(
+            "raiz .assistant publicada não encontrada para o usuário atual"
+        )
+    return candidate
 
 
 def _load_script(path: Path, name: str):
