@@ -158,3 +158,35 @@ O SE00 só pode ser fechado quando:
 - limitações do ambiente estiverem explicitadas;
 - o usuário tiver revisado a baseline no Databricks Free;
 - nenhuma mudança comportamental de skill tiver sido introduzida nesta sprint.
+
+
+---
+
+## Continuação SE06 — benchmark pós-enforcement
+
+A baseline acima permanece congelada como SE00. Ela não é reescrita.
+
+A SE06 usa uma especificação separada:
+
+[se06_cases.json](se06_cases.json)
+
+Objetivo: comparar o produto L4 integrado pela SE05 contra a baseline, preservando literalmente P1/M1/R1/B1 e A1 quando há mapeamento histórico.
+
+A SE06 divide a matriz em:
+
+- 25 runs de `genie_chat` em chats novos;
+- 12 variantes `deterministic_gate` executadas localmente.
+
+O scorer é:
+
+`tools/skill_enforcement/se06_eval.py`
+
+Métricas primárias:
+
+- escaped non-compliance;
+- false completion;
+- conditional skips injustificados;
+- required missing com PASS;
+- safe outcomes nas famílias comparáveis.
+
+Os resultados brutos de chats ficam fora do repositório durante coleta. Somente a consolidação sanitizada entra em `docs/sprints/skill_enforcement/SE06/RESULTADOS.md`.

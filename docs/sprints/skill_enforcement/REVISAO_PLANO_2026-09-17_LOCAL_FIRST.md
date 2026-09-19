@@ -393,3 +393,54 @@ Qualquer reinforcement textual futuro precisa ter hipótese nova, benefício men
 Em caso de conflito entre a tabela original da seção 4, critérios antigos de encerramento da SE03 e esta seção 13, esta seção 13 prevalece **para decisões prospectivas após o aceite de 2026-09-17**.
 
 A tabela original e os resultados E02/E12 permanecem no repositório como histórico da hipótese e da evidência observada; não devem ser editados para simular que o comportamento original passou.
+
+## 14. Emenda pós-coleta da SE06 — Gate G2
+
+**Data da decisão:** 2026-09-19  
+**Origem:** coleta comportamental SE06 encerrada deliberadamente em 24/25 + aceite humano explícito do Gate G2.  
+**Registro detalhado:** [SE06/DECISAO_G2.md](SE06/DECISAO_G2.md)
+
+### 14.1 Estado preservado
+
+A candidata comportamental permanece `b2cf143368512176e7397f7ebb493c272d26e376`.
+
+O `S06-A1-R4` permanece `NOT_RUN`. A ausência é deliberada: o artefato conversacional original do primeiro B1 não estava prontamente disponível com rastreabilidade suficiente, e a governança rejeita reconstruir ou fabricar evidência.
+
+A matriz permanece congelada em 25 runs esperados. O scorer e o DoD não são alterados.
+
+Logo:
+
+```text
+observed_runs = 24/25
+S06-A1-R4    = NOT_RUN
+SE06_DOD     = INCOMPLETE
+```
+
+### 14.2 Separar resultado técnico de completude formal
+
+G2 registra duas propriedades distintas:
+
+1. **resultado técnico observado** — thresholds primários observados satisfeitos, structural suite em PASS e `violations=[]` no último checkpoint preservado;
+2. **completude formal da certificação** — incompleta, porque 24 != 25.
+
+Nenhum resultado secundário ruim é apagado. Em especial, os três A1 válidos permanecem com `audit_false_reassurance=true`, e A1-R1 preserva ladder incompleta.
+
+### 14.3 Exceção prospectiva de sequência
+
+A regra geral continua sendo progressão sprint a sprint pela `main`. A única exceção criada por G2 é:
+
+> depois que a documentação G2 da SE06 estiver integrada à `main`, a SE07 pode ser iniciada apesar de `SE06_DOD=INCOMPLETE`.
+
+Essa exceção não transforma a SE06 em PASS, não define `FULLY_CERTIFIED=true` e não satisfaz o gate de promoção corporativa da SE08.
+
+A implementação da SE07 continua exigindo aceite explícito separado.
+
+### 14.4 Dívida transferida
+
+Os achados de qualidade analítica do executor seguem como dívida técnica. A fragilidade da `hub-ml-auditoria-skills` passa a ser input obrigatório do planejamento da SE07, porque a própria classificação provisória do Plano Mestre coloca essa skill em L2/L3 e exige que ela consuma contracts/receipts em vez de duplicar o veredito canônico.
+
+### 14.5 Precedência
+
+Esta seção prevalece, somente para a transição SE06 → SE07, sobre trechos anteriores que exijam implicitamente `DOD=PASS` como pré-condição absoluta de sequência.
+
+Ela não altera retroativamente o benchmark, seus resultados, sua especificação ou seu scorer.

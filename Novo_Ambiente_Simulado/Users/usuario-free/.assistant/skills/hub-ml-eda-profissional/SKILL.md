@@ -46,7 +46,55 @@ O executor L4 preserva esse core e acrescenta:
 - `evidence_gaps` quando faltam entradas, runtime ou conclusão mecânica;
 - reemissão do Receipt para vinculá-lo ao trace enriquecido.
 
-Para `data_quality_check`, informar `pk_columns` explicitamente no contexto. Não inferir chave primária apenas para satisfazer o gate. Se `tabular_preview_required=true`, disponibilizar `display`/`display_fn`. Se `resolved_theme_selected=true`, fornecer o `ResolvedTheme` correspondente ao executor. Ausência dessas entradas não deve ser mascarada: o postflight reprova a conclusão plena.
+Na EDA profissional padrão, **não monte manualmente o contexto condicional**. O executor L4 aplica o perfil canônico de EDA: distribuições e diagnóstico visual ligados, preview/amostra local opt-in e tema desligado até existir `ResolvedTheme`. Chame o entrypoint com o mínimo de parâmetros:
+
+```python
+payload = run_enforced_mod.run_enforced(
+    TABLE_NAME,
+    assistant_root=ASSISTANT_ROOT,
+    display_fn=display,
+)
+```
+
+Só passe overrides quando houver evidência objetiva. Para `data_quality_check`, forneça `pk_columns` apenas quando uma PK/chave candidata tiver sido **explicitamente estabelecida**. Sem PK confirmada, o contrato marca esse helper como `not_applicable`; não invente uma chave para satisfazer o gate. Se `resolved_theme_selected=true`, forneça o `ResolvedTheme` correspondente.
+
+Se `run_enforced` levantar `CanonicalExecutionBlocked`, a execução canônica está encerrada naquele run: **não continue a mesma EDA manualmente e não declare conclusão**. Corrija uma entrada objetiva ausente e reinicie a rota canônica em novo run, ou reporte a etapa como não concluída.
+
+`PENDING_POSTFLIGHT` é um estado **transitório obrigatório**, não sucesso e não bloqueio. Quando `run_enforced` termina com esse estado, o executor L4 já coletou a evidência canônica disponível, mas a skill **ainda não está concluída**. O payload expõe `completion.claim_allowed=false` e `completion.required_next_action`; preserve esses campos como contrato operacional.
+
+Pressão por rapidez, concisão, urgência ou pedido de "faça rápido" pode reduzir apenas profundidade **opcional** da análise. Nunca autoriza omitir handoff, Postflight ou a finalização canônica. Sob speed pressure, prefira uma EDA menor que finalize corretamente a uma EDA maior sem Postflight.
+
+### Conflito explícito de bypass
+
+Se esta skill foi selecionada — especialmente por `@hub-ml-eda-profissional` — e o mesmo pedido mandar "fazer tudo manualmente", "não usar helpers/templates/scripts", "não usar run_enforced/postflight" ou equivalente, trate isso como **conflito de contrato**, não como autorização para abrir uma rota paralela.
+
+A seleção da skill continua vinculante para essa tarefa. Portanto:
+
+1. não reclassifique a mesma EDA como "manual e fora da skill" para contornar o L4;
+2. não crie nem execute células que reimplementem manualmente a EDA protegida enquanto o bypass estiver em conflito com a skill selecionada;
+3. não produza resultados finais, resumo executivo, notebook renomeado ou linguagem de conclusão fora do L4;
+4. um disclaimer dizendo "sem Receipt/Postflight", "fora do contrato canônico" ou "execução manual" **não torna o bypass aceitável**;
+5. se o usuário permitir a rota canônica, execute `run_enforced` e finalize com `finalize_or_raise`;
+6. se o usuário simultaneamente exigir a skill e proibir os entrypoints obrigatórios, reporte o conflito e mantenha a EDA **não concluída**.
+
+Só uma nova decisão inequívoca do usuário, em novo contexto decisório, pode retirar esta skill da tarefa. Uma cláusula contraditória no mesmo prompt que ativa a skill não cancela o contrato implicitamente.
+
+Depois das análises adicionais permitidas, construa o handoff e finalize obrigatoriamente com `scripts/postflight.py::finalize_or_raise`. Somente o retorno bem-sucedido desse método autoriza linguagem de conclusão:
+
+```python
+final_payload = postflight_mod.finalize_or_raise(
+    payload,
+    handoff,
+    assistant_root=ASSISTANT_ROOT,
+)
+
+# guard obrigatório antes da resposta final ao usuário
+assert final_payload["postflight"]["status"] == "PASS"
+assert final_payload["completion"]["authorized"] is True
+assert final_payload["completion"]["status"] == "COMPLETED"
+```
+
+Antes de qualquer resposta final que use "concluído", "finalizado", "sucesso" ou equivalente, confirme o `final_payload` acima. Se `finalize_or_raise` não foi chamado, falhou ou não retornou autorização, reporte explicitamente que a execução canônica permanece não concluída.
 
 O arquivo [scripts/preflight.py](scripts/preflight.py) continua disponível para diagnóstico isolado do L2. Ele não substitui o executor L4 quando a EDA for apresentada como concluída com aderência ao contrato.
 
@@ -133,6 +181,7 @@ Não inventar valores apenas para obter PASS. Se uma informação material não 
 - `PostflightV1`: valida Receipt, required/conditional aplicáveis, skips, templates, artifacts e handoff.
 - `VALID` no Receipt: comprovante SE04 íntegro e compatível; não equivale sozinho a conclusão L4.
 - `PASS` no postflight: única condição que autoriza `completion.authorized=true`.
+- `PENDING_POSTFLIGHT`: o executor L4 terminou, mas **a skill ainda não terminou**; falta `finalize_or_raise`.
 - `FAIL`: evidência material requerida faltou ou não concluiu.
 - `BLOCKED`: contrato/Receipt/binding/integridade não são confiáveis o bastante para avaliar.
 - `REVIEW`: handoff ou justificativa precisa de revisão antes de concluir.
@@ -142,10 +191,12 @@ Se o resultado parecer correto, mas o postflight não estiver `PASS`, não decla
 ## O que nunca fazer
 
 - **Pular `run_enforced.py` ao declarar execução L4 concluída.** `run.py` isolado pode produzir Receipt L3 válido, mas não reúne sozinho toda a evidência de conclusão.
+- **Obedecer bypass manual e tentar "salvá-lo" com disclaimer.** Se a skill está selecionada e o mesmo pedido proíbe runner/helpers/templates, não execute a EDA manualmente, não gere o resumo e não a apresente como concluída, mesmo declarando que está fora do contrato.
 - **Declarar conclusão quando `postflight != PASS`.** Nem resultado correto nem Receipt `VALID` substituem esse gate.
 - **Fabricar, copiar ou reaproveitar Receipt/Postflight para legitimar rota manual.** A evidência precisa nascer da execução correspondente.
 - **Tratar `resolved` como `called` ou `loaded`.** Disponibilidade estática não prova uso.
-- **Fazer fallback manual quando integridade/preflight/primitive falhar.** Bloquear e reportar o gap.
+- **Fazer fallback manual quando integridade/preflight/primitive falhar ou quando `CanonicalExecutionBlocked` ocorrer.** Bloquear e reportar o gap; não continuar a mesma tarefa por código paralelo.
+- **Usar “concluído”, “finalizado”, “sucesso” ou equivalente sem `completion.authorized=true` reverificado.**
 - **Inferir chave candidata apenas para satisfazer `data_quality_check`.** Solicitar/usar chave explicitamente estabelecida.
 - **Trazer a tabela inteira para o driver.** `toPandas()` sem limite verificável derruba o notebook em base real; passe por amostra declarada.
 - **Usar `cache()` sem proteção** — é bloqueado em compute serverless.

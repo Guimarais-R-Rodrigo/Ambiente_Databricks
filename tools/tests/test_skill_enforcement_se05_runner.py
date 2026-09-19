@@ -105,6 +105,7 @@ class SkillEnforcementSE05RunnerTests(unittest.TestCase):
                 "catalog.schema.synthetic_table",
                 effective,
                 assistant_root=SOURCE_ASSISTANT,
+                strict=False,
             )
 
     def test_l4_happy_path_authorizes_completion(self):
@@ -151,22 +152,25 @@ class SkillEnforcementSE05RunnerTests(unittest.TestCase):
         self.assertFalse(finalized["completion"]["authorized"])
         self.assertEqual("ENFORCED_ENTRYPOINT_MISSING", finalized["postflight"]["issues"][0]["code"])
 
-    def test_missing_pk_columns_keeps_receipt_but_fails_postflight(self):
+    def test_missing_pk_columns_is_calibrated_to_not_applicable_in_se06(self):
         context = dict(DEFAULT_CONTEXT)
         context.pop("pk_columns")
         payload = self._run_enforced(context=context)
         self.assertIsInstance(payload["receipt"], dict)
-        self.assertEqual("INCOMPLETE", payload["trace"]["enforcement_status"])
-        self.assertTrue(
-            any(
-                item["code"] == "RESOURCE_INPUT_MISSING"
-                and item["item_id"] == "data_quality_check"
-                for item in payload["trace"]["evidence_gaps"]
-            )
+        self.assertEqual("PASS", payload["trace"]["enforcement_status"])
+        self.assertNotIn("data_quality_check", payload["trace"]["resources_called"])
+        decision = next(
+            item for item in payload["trace"]["decisions"]
+            if item["item_type"] == "resource"
+            and item["item_id"] == "data_quality_check"
         )
-        finalized = finalizer.finalize(payload, HANDOFF, assistant_root=SOURCE_ASSISTANT)
-        self.assertEqual("FAIL", finalized["postflight"]["status"])
-        self.assertFalse(finalized["completion"]["authorized"])
+        self.assertFalse(decision["applicable"])
+        self.assertEqual([], payload["trace"]["evidence_gaps"])
+        handoff = dict(HANDOFF)
+        handoff["unit_keys_target"] = "1 linha por evento; PK não confirmada; target=N/A"
+        finalized = finalizer.finalize(payload, handoff, assistant_root=SOURCE_ASSISTANT)
+        self.assertEqual("PASS", finalized["postflight"]["status"])
+        self.assertTrue(finalized["completion"]["authorized"])
 
     def test_applicable_safe_display_without_renderer_fails_closed(self):
         context = dict(DEFAULT_CONTEXT, tabular_preview_required=True)
@@ -201,6 +205,29 @@ class SkillEnforcementSE05RunnerTests(unittest.TestCase):
         finalized = finalizer.finalize(payload, HANDOFF, assistant_root=SOURCE_ASSISTANT)
         self.assertEqual("FAIL", finalized["postflight"]["status"])
         self.assertFalse(finalized["completion"]["authorized"])
+
+    def test_successful_l4_is_pending_until_postflight(self):
+        payload = self._run_enforced()
+        self.assertEqual("PENDING_POSTFLIGHT", payload["completion"]["status"])
+        self.assertFalse(payload["completion"]["authorized"])
+        finalized = finalizer.finalize_or_raise(
+            payload,
+            HANDOFF,
+            assistant_root=SOURCE_ASSISTANT,
+        )
+        self.assertEqual("COMPLETED", finalized["completion"]["status"])
+        self.assertTrue(finalized["completion"]["authorized"])
+
+    def test_finalize_or_raise_rejects_incomplete_handoff(self):
+        payload = self._run_enforced()
+        handoff = dict(HANDOFF)
+        handoff.pop("quality_risks")
+        with self.assertRaises(finalizer.CompletionNotAuthorized):
+            finalizer.finalize_or_raise(
+                payload,
+                handoff,
+                assistant_root=SOURCE_ASSISTANT,
+            )
 
     def test_completion_claim_tamper_is_detected(self):
         payload = self._run_enforced()

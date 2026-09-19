@@ -35,6 +35,7 @@ DEFAULT_CONTEXT = {
     "numeric_distributions_requested": True,
     "resolved_theme_selected": False,
     "visual_diagnostics_requested": True,
+    "pk_columns_available": True,
 }
 
 
@@ -153,6 +154,31 @@ class SkillEnforcementSE02Tests(unittest.TestCase):
         result = self.run_gate()
         self.assertEqual("BLOCKED", result.status)
         self.assertTrue(any(issue.item_id == "roteiro_eda" for issue in result.blocking_issues))
+
+    def test_pk_unavailable_does_not_require_data_quality_check(self) -> None:
+        shutil.rmtree(self.assistant_root / "hub_scripts" / "data_quality_check")
+        context = dict(DEFAULT_CONTEXT, pk_columns_available=False)
+        result = self.run_gate(context)
+        self.assertEqual("PASS", result.status)
+        decision = next(
+            item for item in result.resources
+            if item.item_id == "data_quality_check"
+        )
+        self.assertFalse(decision.applicable)
+        self.assertIsNone(decision.resolved)
+
+    def test_missing_pk_applicability_context_blocks_fail_closed(self) -> None:
+        context = dict(DEFAULT_CONTEXT)
+        context.pop("pk_columns_available")
+        result = self.run_gate(context)
+        self.assertEqual("BLOCKED", result.status)
+        self.assertTrue(
+            any(
+                issue.code == "CONDITION_CONTEXT_INVALID"
+                and issue.item_id == "data_quality_check"
+                for issue in result.blocking_issues
+            )
+        )
 
     def test_conditional_false_does_not_require_resource(self) -> None:
         shutil.rmtree(self.assistant_root / "hub_snippets" / "spark" / "smart_sample")

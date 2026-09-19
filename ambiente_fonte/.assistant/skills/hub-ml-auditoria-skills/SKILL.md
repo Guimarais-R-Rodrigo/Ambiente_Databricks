@@ -47,6 +47,36 @@ Não aprovar uma skill apenas por conter palavras-chave. Ler o contrato, testar 
 12. Executar o validador disponível e registrar comando, saída e data.
 13. Produzir achados priorizados e uma conclusão independente para cada skill e para o conjunto.
 
+## Integrar com evidência mecânica de enforcement
+
+Quando a skill produtora possuir contrato estruturado, Execution Receipt ou
+Postflight, a auditoria **não cria um segundo veredito de canonical compliance**.
+
+Ordem obrigatória:
+
+1. localizar o contrato/entrypoint/verifier da skill produtora;
+2. usar Receipt/Postflight/verifier existentes como fonte primária do estado de
+   execução;
+3. preservar literalmente estados como `VALID`, `ABSENT`, `INVALID`,
+   `BLOCKED`, `FAIL`, `REVIEW`, `PASS` e `completion.authorized`;
+4. usar inspeção do notebook/output apenas para complementar o mérito, apontar
+   gaps não cobertos e conferir se o claim conversacional é consistente com a
+   evidência mecânica;
+5. nunca converter ausência de Receipt/Postflight em PASS por leitura textual.
+
+Para `hub-ml-eda-profissional`, quando os artefatos L4 estiverem disponíveis:
+
+- reverificar o Receipt pela rota da própria skill;
+- reverificar o Postflight/final payload pela função
+  `scripts/postflight.py::verify_finalized`;
+- tratar `completion.authorized=true` reverificado como a única evidência de
+  conclusão canônica;
+- se o notebook declara “concluído” sem essa autorização, registrar
+  `false_completion_claim`; não substituir o verifier por score editorial.
+
+A rubrica da auditoria continua útil para qualidade, clareza, rigor e
+reprodutibilidade, mas **não pode sobrepor o gate mecânico**.
+
 ## Executar auditoria de output
 
 1. Exigir o pedido original, o output e o `SKILL.md` **explicitamente nomeado**
@@ -57,7 +87,9 @@ Não aprovar uma skill apenas por conter palavras-chave. Ler o contrato, testar 
 2. Extrair o contrato de entrada, as etapas obrigatórias, o contrato de saída, os
    limites de segurança e os gates de validação.
 3. Mapear cada requisito para evidência concreta no output. Marcar como ausente o que
-   não estiver demonstrado; não inferir execução por intenção textual.
+   não estiver demonstrado; não inferir execução por intenção textual. Quando houver
+   Receipt/Postflight/verifier da skill produtora, anexar primeiro a matriz mecânica
+   e manter o score editorial subordinado a ela.
 4. Verificar resultados, código, fórmulas, amostragem, leakage, efeitos de escrita,
    caminhos, dependências e reprodutibilidade proporcionalmente ao risco.
 5. Avaliar completude, reprodutibilidade, rigor, documentação, rastreabilidade,
@@ -119,6 +151,9 @@ Uma média alta não compensa achado crítico. Separar conformidade verificável
   `description`; auditar o corpo não diz nada sobre qual skill será carregada.
 - **Dar nota sem dizer o que muda a nota.** Score sem critério é opinião com
   número.
+- **Substituir Receipt/Postflight/verifier por julgamento textual.** Se a skill
+  produtora possui gate mecânico, a auditoria o consome; não cria um auditor
+  paralelo para canonical compliance.
 
 ## Usar recursos
 

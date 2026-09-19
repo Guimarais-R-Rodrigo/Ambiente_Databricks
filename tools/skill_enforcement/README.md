@@ -127,6 +127,47 @@ python -B tools/tests/test_skill_enforcement_se05.py -v
 python -B tools/tests/test_skill_enforcement_se05_runner.py -v
 ```
 
+## SE06 — benchmark/adversarial ampliado
+
+A SE06 mede o produto integrado da SE05 sem alterar o runtime.
+
+Especificação:
+
+```text
+docs/testes/skill_execution/se06_cases.json
+```
+
+Ferramenta:
+
+```powershell
+python -B tools/skill_enforcement/se06_eval.py --validate-spec
+```
+
+Criar bundle externo de coleta:
+
+```powershell
+python -B tools/skill_enforcement/se06_eval.py --validate-spec --init-results C:\temp\se06-results.json
+```
+
+Scoring final:
+
+```powershell
+python -B tools/skill_enforcement/se06_eval.py `
+  --results C:\temp\se06-results.json `
+  --certification-summary C:\temp\se06-cert\summary.json `
+  --summary-out C:\temp\se06-summary.json
+```
+
+A ferramenta não chama Databricks e não executa chats; ela valida matriz, evidence bundle e DoD.
+
+Testes:
+
+```powershell
+python -B tools/tests/test_skill_enforcement_se06.py -v
+```
+
+A suíte cobre 12 variantes estruturais e o scorer da coleta comportamental.
+
 ## Certificação local reproduzível
 
 Entry points:
@@ -136,6 +177,7 @@ python -B tools/skill_enforcement/certify_local.py --profile se02
 python -B tools/skill_enforcement/certify_local.py --profile se03
 python -B tools/skill_enforcement/certify_local.py --profile se04
 python -B tools/skill_enforcement/certify_local.py --profile se05
+python -B tools/skill_enforcement/certify_local.py --profile se06
 ```
 
 O perfil `se05` executa:
@@ -153,6 +195,8 @@ O perfil `se05` executa:
 11. render-diff incluindo untracked;
 12. snapshot README.
 
+O perfil `se06` acrescenta `test_skill_enforcement_se06.py` ao conjunto SE05 e preserva os mesmos gates de estrutura, renderer, render-diff e snapshot.
+
 Por padrão o certifier exige worktree limpo antes de qualquer step mutável. O evidence bundle fica fora do repositório em:
 
 ```text
@@ -169,14 +213,15 @@ A execução continua após failures para revelar achados adicionais; qualquer s
 
 ### Subgate do CI local
 
-`tools/ci_local.py` pode chamar o certifier em modo parcial/read-only com `--skip-render --no-evidence --allow-dirty`. Esse subgate **não substitui** `FULL_SE05_LOCAL`, porque não prova renderer/diff.
+`tools/ci_local.py` pode chamar o certifier em modo parcial/read-only com `--skip-render --no-evidence --allow-dirty`. Esse subgate **não substitui** a certificação FULL da sprint selecionada, porque não prova renderer/diff.
 
 ## Probes do Databricks Free
 
 - `se02_free_probe.py`: preflight L2;
 - `se03_free_probe.py`: entrypoint/trace L3;
 - `se04_free_probe.py`: Receipt formal e adversarial cases;
-- `se05_free_probe.py`: autorização L4 e postflight fail-closed.
+- `se05_free_probe.py`: evidência histórica da autorização L4 original da SE05;
+- `se06_correction_free_probe.py`: candidata corrigida após o early-stop P1, cobrindo contexto mínimo, PK opcional, fail-fast e finalizer estrito.
 
 O probe SE05 usa somente view temporária sintética e cobre:
 
@@ -206,4 +251,7 @@ Actions permanece gate remoto final, não instrumento de desenvolvimento iterati
 - SHA-256 fornece tamper evidence/binding, não autenticação com segredo;
 - `run.py` continua o core L3 histórico; `run_enforced.py` é a rota L4 exigida para conclusão homologada;
 - recursos sem entrada suficiente não recebem evidência fabricada e impedem PASS quando aplicáveis;
+- desde a calibração SE06, `data_quality_check` é condicional à existência de `pk_columns` explicitamente estabelecidas; ausência de PK não autoriza inferi-la nem bloqueia os demais recursos da EDA;
+- `run_enforced` aplica contexto profissional padrão quando o caller omite flags condicionais e, em modo estrito, levanta `CanonicalExecutionBlocked` quando a rota não fica em PASS;
+- `finalize_or_raise` transforma ausência de autorização de completion em falha explícita;
 - nenhum estado `NOT_RUN`, `BLOCKED` ou `DEFERRED_CREDIT` pode ser tratado como `FULLY_CERTIFIED`.

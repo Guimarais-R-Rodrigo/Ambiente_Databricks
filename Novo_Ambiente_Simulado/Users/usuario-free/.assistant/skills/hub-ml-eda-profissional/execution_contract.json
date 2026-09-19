@@ -38,8 +38,11 @@
       "id": "data_quality_check",
       "module": "hub_scripts.data_quality_check",
       "symbol": "data_quality_check",
-      "policy": "required",
-      "evidence": "call"
+      "policy": "conditional",
+      "evidence": "call",
+      "condition": {
+        "kind": "pk_columns_available"
+      }
     },
     {
       "id": "null_summary",
