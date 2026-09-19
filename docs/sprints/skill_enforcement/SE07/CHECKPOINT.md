@@ -310,11 +310,45 @@ original e artefato. Em IMPLEMENTACAO exige lista não vazia de targets.
 A policy SEF da produtora é resolvida quando possível. Uma skill existente sem
 policy registrada produz `evidence_gap`; o preflight não inventa nível.
 
+Homologação L2 observada no HEAD `a7504b30a71704315841833a543dac7fc6317d38`:
+
+```text
+LOCAL_CERTIFICATION            = PASS
+scope                          = FULL_SE07_LOCAL
+DERIVED_STALE                  = false
+DATABRICKS_FREE                = PASS
+SE07_AUDIT_L2_FREE_PROBE_V1    = PASS
+content_verify                 = PASS | 567/567
+output_happy_path              = PASS
+output_missing_request         = BLOCKED
+implementation_happy_path      = PASS
+invalid_mode                   = BLOCKED
+writes_performed               = false
+analytics_executed             = false
+verifier_executed              = false
+GITHUB_ACTIONS                 = NOT_RUN
+```
+
+
+## Onda L3 — auditoria-skills
+
+A auditoria alcança o target L3 com runner determinístico próprio.
+
+Decisão:
+
+- `hub-ml-auditoria-skills`: current L2 → L3; target L3;
+- `policy_status=implemented`;
+- o Receipt da auditoria certifica o runner da auditoria, não completion da produtora;
+- a escada de evidência é normalizada sem promoção implícita;
+- aplicabilidade condicional desconhecida permanece `NOT_OBSERVABLE`;
+- para EDA L4, o runner pode chamar diretamente `verify_finalized`;
+- sem verifier/payload compatível, producer compliance permanece `NOT_REVERIFIED`;
+- release manifest protege SKILL, contrato, preflight e runner.
+
 Gate atual:
 
 ```text
 LOCAL_CERTIFICATION = NOT_RUN
 DATABRICKS_FREE     = NOT_RUN
-L3_RUNNER           = NOT_IMPLEMENTED
 GITHUB_ACTIONS      = NOT_RUN
 ```

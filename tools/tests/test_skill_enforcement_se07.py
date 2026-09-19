@@ -25,7 +25,7 @@ class SE07PolicyTests(unittest.TestCase):
             "hub-ml-eda-profissional": "L4",
             "hub-ml-comentar-notebook": "L1",
             "hub-ml-concierge": "L1",
-            "hub-ml-auditoria-skills": "L2",
+            "hub-ml-auditoria-skills": "L3",
             "hub-ml-criar-objeto": "L1",
         }
         for skill, policy in self.by.items():
@@ -95,7 +95,7 @@ class SE07PolicyTests(unittest.TestCase):
         skill_dir = ASSISTANT/"skills"/"hub-ml-auditoria-skills"
         contract = json.loads((skill_dir/"execution_contract.json").read_text(encoding="utf-8"))
         meta = contract["metadata"]["se07"]
-        self.assertEqual("L2", meta["enforcement_level"])
+        self.assertEqual("L3", meta["enforcement_level"])
         self.assertEqual("L3", meta["target_level"])
         self.assertTrue(meta["runtime_gate"])
         preflight = _load("se07_audit_preflight", skill_dir/"scripts"/"preflight.py")
@@ -152,12 +152,172 @@ class SE07PolicyTests(unittest.TestCase):
             {item["code"] for item in missing_target["blocking_issues"]},
         )
 
+    def _audit_l3_evidence(self):
+        return {
+            "state_ladder": {
+                "execution_receipt": {
+                    "citado": True,
+                    "localizado": True,
+                    "lido": None,
+                    "importado": None,
+                    "chamado": None,
+                    "concluido": None,
+                }
+            },
+            "conditional_applicability": {
+                "smart_sample": None,
+            },
+            "persisted_mechanical_state": {
+                "postflight.status": "PASS",
+                "completion.authorized": True,
+            },
+        }
+
+    def test_audit_l3_runner_persisted_pass_remains_not_reverified(self):
+        runner = _load(
+            "se07_audit_l3_runner_not_reverified",
+            ASSISTANT/"skills"/"hub-ml-auditoria-skills"/"scripts"/"run.py",
+        )
+        payload = runner.run(
+            {
+                "audit_mode": "OUTPUT",
+                "producer_skill": "hub-ml-eda-profissional",
+                "original_request_present": True,
+                "artifact_present": True,
+            },
+            self._audit_l3_evidence(),
+            assistant_root=ASSISTANT,
+        )
+        self.assertEqual("PASS", payload["trace"]["status"])
+        self.assertIsInstance(payload["receipt"], dict)
+        self.assertEqual(
+            "NOT_REVERIFIED",
+            payload["result"]["producer_canonical_compliance"],
+        )
+        self.assertFalse(payload["result"]["producer_verification"]["executed"])
+        self.assertEqual(
+            "NOT_OBSERVABLE",
+            payload["result"]["state_ladder"]["execution_receipt"]["lido"],
+        )
+        self.assertEqual(
+            "NOT_OBSERVABLE",
+            payload["result"]["conditional_applicability"]["smart_sample"],
+        )
+        verification = runner.verify_receipt(payload, assistant_root=ASSISTANT)
+        self.assertEqual("VALID", verification["status"])
+        self.assertTrue(verification["valid"])
+
+    def test_audit_l3_runner_calls_real_eda_verifier(self):
+        runner = _load(
+            "se07_audit_l3_runner_real_verifier",
+            ASSISTANT/"skills"/"hub-ml-auditoria-skills"/"scripts"/"run.py",
+        )
+        payload = runner.run(
+            {
+                "audit_mode": "OUTPUT",
+                "producer_skill": "hub-ml-eda-profissional",
+                "original_request_present": True,
+                "artifact_present": True,
+            },
+            self._audit_l3_evidence(),
+            producer_final_payload={},
+            assistant_root=ASSISTANT,
+        )
+        observed = payload["result"]["producer_verification"]
+        self.assertTrue(observed["executed"])
+        self.assertIn("verify_finalized", observed["verifier_name"])
+        self.assertNotEqual("NOT_RUN", observed["status"])
+        self.assertEqual(
+            "NOT_PASS_REVERIFIED",
+            payload["result"]["producer_canonical_compliance"],
+        )
+
+    def test_audit_l3_runner_reverifies_valid_synthetic_eda(self):
+        se05 = _load(
+            "se07_se05_fixture",
+            ROOT/"tools"/"tests"/"test_skill_enforcement_se05_runner.py",
+        )
+        fixture = se05.SkillEnforcementSE05RunnerTests()
+        producer = fixture._run_enforced()
+        finalized = se05.finalizer.finalize(
+            producer,
+            se05.HANDOFF,
+            assistant_root=ASSISTANT,
+        )
+
+        runner = _load(
+            "se07_audit_l3_runner_valid_verifier",
+            ASSISTANT/"skills"/"hub-ml-auditoria-skills"/"scripts"/"run.py",
+        )
+        payload = runner.run(
+            {
+                "audit_mode": "OUTPUT",
+                "producer_skill": "hub-ml-eda-profissional",
+                "original_request_present": True,
+                "artifact_present": True,
+            },
+            self._audit_l3_evidence(),
+            producer_final_payload=finalized,
+            assistant_root=ASSISTANT,
+        )
+        self.assertEqual(
+            "PASS_REVERIFIED",
+            payload["result"]["producer_canonical_compliance"],
+        )
+        self.assertTrue(payload["result"]["producer_verification"]["executed"])
+        self.assertTrue(payload["result"]["producer_verification"]["valid"])
+        self.assertTrue(payload["result"]["producer_verification"]["completion_authorized"])
+
+    def test_audit_l3_runner_blocks_invalid_ladder(self):
+        runner = _load(
+            "se07_audit_l3_runner_invalid_ladder",
+            ASSISTANT/"skills"/"hub-ml-auditoria-skills"/"scripts"/"run.py",
+        )
+        evidence = self._audit_l3_evidence()
+        evidence["state_ladder"]["execution_receipt"].pop("lido")
+        payload = runner.run(
+            {
+                "audit_mode": "OUTPUT",
+                "producer_skill": "hub-ml-eda-profissional",
+                "original_request_present": True,
+                "artifact_present": True,
+            },
+            evidence,
+            assistant_root=ASSISTANT,
+        )
+        self.assertIsNone(payload["receipt"])
+        self.assertEqual("BLOCKED", payload["trace"]["status"])
+        self.assertIn(
+            "STATE_LADDER_INCOMPLETE",
+            {item["code"] for item in payload["trace"]["blocking_issues"]},
+        )
+
+    def test_audit_l3_receipt_detects_tamper(self):
+        runner = _load(
+            "se07_audit_l3_runner_tamper",
+            ASSISTANT/"skills"/"hub-ml-auditoria-skills"/"scripts"/"run.py",
+        )
+        payload = runner.run(
+            {
+                "audit_mode": "OUTPUT",
+                "producer_skill": "hub-ml-eda-profissional",
+                "original_request_present": True,
+                "artifact_present": True,
+            },
+            self._audit_l3_evidence(),
+            assistant_root=ASSISTANT,
+        )
+        payload["result"]["persisted_mechanical_state"]["postflight.status"] = "FAIL"
+        verification = runner.verify_receipt(payload, assistant_root=ASSISTANT)
+        self.assertFalse(verification["valid"])
+        self.assertIn(verification["status"], {"INCOMPATIBLE", "INVALID"})
+
     def test_pipeline_authorization(self):
         self.assertIn("authorization",{x["evidence"] for x in self.by["hub-ml-pipeline-builder"]["protected_surfaces"]})
     def test_tutor_remains_l0(self):
         p=self.by["hub-ml-tutor-databricks"]; self.assertEqual(("L0","L0","guidance"),(p["current_level"],p["target_level"],p["rollout_mode"]))
     def test_runtime_resolver(self):
-        p=self.runtime.get_skill_enforcement_policy("hub-ml-auditoria-skills",assistant_root=ASSISTANT); self.assertEqual(("L2","L3"),(p.current_level,p.target_level)); self.assertIn("AUDIT_FALSE_REASSURANCE",p.known_debt)
+        p=self.runtime.get_skill_enforcement_policy("hub-ml-auditoria-skills",assistant_root=ASSISTANT); self.assertEqual(("L3","L3"),(p.current_level,p.target_level)); self.assertIn("AUDIT_FALSE_REASSURANCE",p.known_debt)
     def test_unknown_fails_closed(self):
         with self.assertRaises(self.runtime.EnforcementPolicyError): self.runtime.get_skill_enforcement_policy("hub-ml-nao-existe",assistant_root=ASSISTANT)
 if __name__=="__main__": unittest.main()

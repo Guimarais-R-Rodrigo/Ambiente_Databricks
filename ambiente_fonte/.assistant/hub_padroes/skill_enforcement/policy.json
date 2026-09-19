@@ -47,17 +47,19 @@
     {
       "skill": "hub-ml-auditoria-skills",
       "risk_class": "high",
-      "current_level": "L2",
+      "current_level": "L3",
       "target_level": "L3",
       "scope_mode": "stage_specific",
       "rollout_mode": "audit",
-      "policy_status": "defined",
+      "policy_status": "implemented",
       "rationale": "A auditoria não pode elevar evidência fraca para estado forte nem duplicar o veredito de canonical compliance.",
       "implemented_artifacts": [
         "skills/hub-ml-auditoria-skills/SKILL.md",
         "skills/hub-ml-auditoria-skills/templates/relatorio_auditoria.md",
         "skills/hub-ml-auditoria-skills/execution_contract.json",
-        "skills/hub-ml-auditoria-skills/scripts/preflight.py"
+        "skills/hub-ml-auditoria-skills/scripts/preflight.py",
+        "skills/hub-ml-auditoria-skills/scripts/run.py",
+        "skills/hub-ml-auditoria-skills/release_manifest.json"
       ],
       "protected_surfaces": [
         {

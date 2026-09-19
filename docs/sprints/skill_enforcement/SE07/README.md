@@ -40,7 +40,7 @@ A política canônica fica em `hub_padroes/skill_enforcement/policy.json` e é r
 | hub-ml-pipeline-builder | L0 | L4 | crítico |
 | hub-ml-validacao-estatistica | L0 | L3 | alto |
 | hub-ml-analise-safra | L0 | L3 | alto |
-| hub-ml-auditoria-skills | L2 | L3 | alto |
+| hub-ml-auditoria-skills | L3 | L3 | alto |
 | hub-ml-criar-objeto | L1 | L3 | alto |
 | hub-ml-explainability | L0 | L3 | médio |
 | hub-ml-comentar-notebook | L1 | L1 | baixo |
@@ -97,3 +97,11 @@ A auditoria passa a possuir preflight estruturado antes da lógica substantiva.
 O gate resolve modo, inputs mínimos, existência da skill produtora/targets e
 policy SEF observável. Ele é somente leitura e não executa verifier. L3 continua
 fora desta onda.
+
+
+## Onda L3 — auditoria-skills
+
+O runner L3 estrutura a evidência, emite Receipt próprio e preserva a autoridade
+do verifier da skill produtora. Para EDA L4, o adapter chama diretamente
+`verify_finalized`; sem reverificação canônica, o estado continua
+`NOT_REVERIFIED`.

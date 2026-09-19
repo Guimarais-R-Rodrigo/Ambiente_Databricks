@@ -57,6 +57,36 @@ Regras do gate:
 - o preflight é somente leitura: não altera notebook, skill, artefato ou
   workspace e não executa análise.
 
+## Executar o runner SEF L3 para registrar a evidência
+
+Depois de um preflight L2 em `PASS`, usar `scripts/run.py::run` para
+estruturar a evidência material da auditoria e emitir
+`SE07-AUDIT-RECEIPT-1`.
+
+O runner recebe uma escada explícita para cada item auditado:
+
+`citado → localizado → lido → importado → chamado → concluído`.
+
+Cada degrau é independente. Usar `true`, `false` ou `null` no input do
+runner; `null` vira `NOT_OBSERVABLE`. O runner não promove um degrau a
+partir do seguinte.
+
+Para helpers condicionais, fornecer aplicabilidade como `true`, `false` ou
+`null`. `null` permanece `NOT_OBSERVABLE`.
+
+No Modo OUTPUT, quando houver um final payload da
+`hub-ml-eda-profissional`, o runner chama diretamente
+`scripts/postflight.py::verify_finalized` da skill produtora. Somente o
+resultado desse verifier pode produzir `PASS_REVERIFIED` para a conclusão da
+produtora.
+
+Sem payload compatível ou sem adapter canônico, registrar
+`producer_canonical_compliance=NOT_REVERIFIED`.
+
+O Receipt L3 da auditoria prova apenas que o **runner da auditoria** executou
+canonicamente e que seu resultado não foi adulterado. Ele não substitui
+Receipt/Postflight/verifier da skill produtora e não autoriza completion dela.
+
 ## Executar auditoria de implementação
 
 1. Inventariar cada pasta direta de `.assistant/skills`.

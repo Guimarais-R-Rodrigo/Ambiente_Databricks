@@ -4,7 +4,7 @@
   "mode": "audit",
   "metadata": {
     "se07": {
-      "enforcement_level": "L2",
+      "enforcement_level": "L3",
       "target_level": "L3",
       "scope": "stage_specific",
       "runtime_gate": true,
@@ -27,6 +27,20 @@
         ],
         "non_blocking_gap": [
           "producer_sef_policy_not_registered"
+        ]
+      },
+      "runner_contract": {
+        "entrypoint": "scripts/run.py::run",
+        "receipt_version": "SE07-AUDIT-RECEIPT-1",
+        "protected_step": "audit_evidence_classifier",
+        "direct_verifier_adapter": {
+          "hub-ml-eda-profissional": "scripts/postflight.py::verify_finalized"
+        },
+        "guarantees": [
+          "no_state_promotion_by_inference",
+          "producer_compliance_remains_not_reverified_without_canonical_verifier",
+          "audit_receipt_certifies_audit_runner_not_producer_completion",
+          "no_persistent_writes"
         ]
       }
     }

@@ -1,0 +1,27 @@
+{
+  "manifest_version": "0.1",
+  "skill": "hub-ml-auditoria-skills",
+  "algorithm": "git_blob_sha1",
+  "artifacts": [
+    {
+      "path": "skills/hub-ml-auditoria-skills/SKILL.md",
+      "role": "skill_guidance",
+      "git_blob_sha1": "3f4646a519b2d9d8110237622f7cde97c1d4a890"
+    },
+    {
+      "path": "skills/hub-ml-auditoria-skills/execution_contract.json",
+      "role": "contract",
+      "git_blob_sha1": "6f970e6d73e289ff240ec6b6ef80c821e25e11ad"
+    },
+    {
+      "path": "skills/hub-ml-auditoria-skills/scripts/preflight.py",
+      "role": "preflight",
+      "git_blob_sha1": "912dabd61ecde62e690d7852d3460fe3ce15543f"
+    },
+    {
+      "path": "skills/hub-ml-auditoria-skills/scripts/run.py",
+      "role": "runner",
+      "git_blob_sha1": "0a5562ecd9f09d9e9873c8e317b074f1e4eb75a1"
+    }
+  ]
+}

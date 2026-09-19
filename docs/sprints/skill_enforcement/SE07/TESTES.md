@@ -77,3 +77,20 @@ Critérios:
 7. preflight não executa verifier nem análise;
 8. `hub-ml-criar-objeto` permanece L1;
 9. regressões A07 e SE01–SE06 preservadas.
+
+
+## Onda L3 — auditoria-skills
+
+Critérios:
+
+1. current L3 = target L3 e policy_status implemented;
+2. release manifest protege SKILL/contract/preflight/run;
+3. persisted PASS sem verifier permanece NOT_REVERIFIED;
+4. null na ladder vira NOT_OBSERVABLE sem promoção;
+5. aplicabilidade null permanece NOT_OBSERVABLE;
+6. final payload EDA aciona diretamente verify_finalized;
+7. payload EDA válido sintético produz PASS_REVERIFIED;
+8. payload inválido não produz PASS_REVERIFIED;
+9. ladder incompleta bloqueia antes do Receipt;
+10. alteração de result invalida/incompatibiliza o Receipt;
+11. Receipt da auditoria não autoriza completion da produtora.
