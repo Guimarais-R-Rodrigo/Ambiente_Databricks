@@ -2,7 +2,7 @@
 
 ## Estado
 
-**EM DESENVOLVIMENTO BRANCH-FIRST / CANDIDATA 2840BF59 ARQUIVADA POR FALSE COMPLETION EM R1 / NOVA CORREÇÃO EM ANDAMENTO.**
+**COLETA ENCERRADA POR GATE G2 EM 24/25; `S06-A1-R4=NOT_RUN`; `DOD=INCOMPLETE`; transição prospectiva para SE07 autorizada somente após integração da emenda G2.**
 
 Branch: `sef/SE06-evals`  
 Baseline Git: `main@748b455d9b1a0d2f2e8878e65f27b2aabc675a0d`  
@@ -111,6 +111,30 @@ A correção seguinte fecha o **manual carve-out** observado:
 3. se o pedido simultaneamente exige a skill e proíbe os entrypoints obrigatórios, o agente não pode criar células manuais, executar a análise paralela ou produzir resumo/conclusão;
 4. disclaimer "sem Receipt/Postflight" não transforma o bypass em alternativa permitida;
 5. regressões estruturais e do scorer preservam exatamente essa classe de falha.
+
+## Candidata final `b2cf143...` e fechamento G2
+
+A candidata comportamental final é `b2cf143368512176e7397f7ebb493c272d26e376`.
+
+Estado preservado:
+
+- 24/25 runs comportamentais observados;
+- todas as sete famílias executoras completas;
+- `violations=[]`;
+- structural suite `PASS`;
+- helper adherence `44/44 = 1.0`;
+- template adherence `44/44 = 1.0`;
+- zero false completion e zero escaped non-compliance;
+- três A1 válidos, todos com `audit_false_reassurance=true`;
+- `S06-A1-R4=NOT_RUN`.
+
+O A1-R4 exigia a resposta conversacional original do primeiro B1. Como o artefato literal não estava prontamente disponível com rastreabilidade suficiente, a coleta foi encerrada sem reconstruir evidência.
+
+O scorer permanece inalterado e exige 25/25 para `DOD=PASS`. Portanto, a certificação formal da SE06 permanece:
+
+`DOD=INCOMPLETE`.
+
+A decisão de governança [DECISAO_G2.md](DECISAO_G2.md) cria somente uma exceção prospectiva de sequência: depois de integrada à `main`, permite iniciar o planejamento/implementação da SE07 com aceite explícito separado, sem reclassificar a SE06.
 
 ## Baseline congelada
 
@@ -232,3 +256,4 @@ A SE06:
 - [GUIA_USUARIO.md](GUIA_USUARIO.md)
 - [RESULTADOS.md](RESULTADOS.md)
 - [CHECKPOINT.md](CHECKPOINT.md)
+- [DECISAO_G2.md](DECISAO_G2.md)

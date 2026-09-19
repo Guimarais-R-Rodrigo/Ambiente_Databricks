@@ -202,3 +202,18 @@ Depois de DOD PASS:
 4. congelar RC;
 5. abrir PR uma única vez;
 6. observar Actions sem rerun automático.
+
+## 11. Exceção de governança G2
+
+A coleta final foi encerrada deliberadamente em 24/25 porque o artefato conversacional original necessário para `S06-A1-R4` não estava prontamente disponível com rastreabilidade suficiente.
+
+Sob G2:
+
+```text
+S06-A1-R4 = NOT_RUN
+DOD       = INCOMPLETE
+```
+
+Não executar o scoring final estrito como se a matriz estivesse completa e não alterar o scorer/spec para obter PASS.
+
+A exceção está documentada em [DECISAO_G2.md](DECISAO_G2.md). Depois que essa decisão e o checkpoint correspondente forem integrados à `main`, a governança permite iniciar SE07 com aceite explícito separado, apesar de a SE06 permanecer formalmente incompleta.

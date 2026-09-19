@@ -169,3 +169,17 @@ Ela carrega como referência:
 - P1/M1/R1/B1 3/3 FAIL.
 
 Qualquer interpretação causal deve mencionar que modelo/agente exato por run pode não ser observável e que o ambiente temporal é diferente. A comparação principal é operacional, não um experimento randomizado controlado.
+
+## Emenda G2 — efeito sobre o DoD
+
+A decisão de governança G2, registrada em [DECISAO_G2.md](DECISAO_G2.md), **não altera nenhuma fórmula desta página**.
+
+Com `S06-A1-R4=NOT_RUN`:
+
+```text
+observed_runs = 24
+expected_behavioral_runs = 25
+DOD = INCOMPLETE
+```
+
+G2 autoriza somente a transição prospectiva para SE07 depois da integração documental da decisão. Não converte `INCOMPLETE` em `PASS`, não muda thresholds e não autoriza editar o scorer ou a especificação para acomodar a exceção.

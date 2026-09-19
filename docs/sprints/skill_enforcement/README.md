@@ -22,6 +22,7 @@ Este diretório concentra o planejamento e as evidências do Skill Enforcement F
 16. [SE06/METRICAS.md](SE06/METRICAS.md) — métricas, calibração e DoD computável.
 17. [SE06/RUNBOOK_FREE.md](SE06/RUNBOOK_FREE.md) — execução dos 25 chats no laboratório Free.
 18. [SE06/GUIA_USUARIO.md](SE06/GUIA_USUARIO.md) — operação para usuário não técnico.
+19. [SE06/DECISAO_G2.md](SE06/DECISAO_G2.md) — fechamento deliberado em 24/25, `DOD=INCOMPLETE` preservado e exceção prospectiva de transição para SE07.
 
 ## Regra de leitura
 
@@ -70,7 +71,10 @@ Uma PR Draft não deve ser usada como mecanismo de economia de CI, porque workfl
 - SE03: concluída e integrada pela PR #76;
 - SE04: concluída e integrada pela PR #77;
 - SE05: concluída e integrada pela PR #78; RC local/Free homologada, 12/12 workflows da PR e 18/18 workflows pós-merge em `success`;
-- SE06: em desenvolvimento branch-first; matriz, scorer, adversariais estruturais e protocolo presentes; benchmark comportamental ainda `NOT_RUN`;
-- SE07–SE08: não iniciadas.
+- SE06: coleta comportamental encerrada por Gate G2 em 24/25; `S06-A1-R4=NOT_RUN`, structural suite `PASS`, thresholds primários observados satisfeitos e `DOD=INCOMPLETE` preservado;
+- SE07: autorizada prospectivamente por G2 somente depois da integração documental da SE06 e de aceite explícito separado para iniciar sua implementação;
+- SE08: não iniciada.
 
 A frente não deve declarar `FULLY_CERTIFIED` quando qualquer gate obrigatório estiver `NOT_RUN`, `BLOCKED` ou `DEFERRED_CREDIT`.
+
+O Gate G2 preserva essa regra: a exceção SE06 → SE07 é de sequência, não de certificação.
