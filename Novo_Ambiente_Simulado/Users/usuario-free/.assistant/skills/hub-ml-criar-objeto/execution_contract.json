@@ -1,0 +1,30 @@
+{
+  "schema_version": "0.1",
+  "skill": "hub-ml-criar-objeto",
+  "mode": "audit",
+  "metadata": {
+    "se07": {
+      "enforcement_level": "L1",
+      "target_level": "L3",
+      "scope": "stage_specific",
+      "runtime_gate": false,
+      "static_invariants": [
+        "choose_closed_object_type_before_writing",
+        "read_canonical_template_before_generation",
+        "search_existing_capability_before_new_object",
+        "generate_public_api_with_canonical_tool",
+        "run_validator_before_ready_claim",
+        "do_not_create_new_snippet_section_without_explicit_decision"
+      ]
+    }
+  },
+  "resources": [],
+  "templates": [
+    {
+      "id": "checklist_objeto_novo",
+      "path": "templates/checklist-objeto-novo.md",
+      "policy": "required",
+      "evidence": "loaded"
+    }
+  ]
+}

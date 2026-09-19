@@ -25,6 +25,8 @@ class SE07PolicyTests(unittest.TestCase):
             "hub-ml-eda-profissional": "L4",
             "hub-ml-comentar-notebook": "L1",
             "hub-ml-concierge": "L1",
+            "hub-ml-auditoria-skills": "L1",
+            "hub-ml-criar-objeto": "L1",
         }
         for skill, policy in self.by.items():
             self.assertEqual(expected_current.get(skill, "L0"), policy["current_level"], skill)
@@ -63,6 +65,40 @@ class SE07PolicyTests(unittest.TestCase):
         self.assertEqual({"AUDIT_FALSE_REASSURANCE","AUDIT_STATE_LADDER","AUDIT_CONDITIONAL_APPLICABILITY"},set(self.by["hub-ml-auditoria-skills"]["known_debt"]))
         text=(ASSISTANT/"skills"/"hub-ml-auditoria-skills"/"SKILL.md").read_text(encoding="utf-8")
         for token in ("citado","localizado","lido","importado","chamado","concluído","NOT_OBSERVABLE","get_skill_enforcement_policy","verify_finalized"): self.assertIn(token,text)
+    def test_tooling_l1_contracts_do_not_claim_l3(self):
+        expected = {
+            "hub-ml-auditoria-skills": {
+                "consume_existing_mechanical_verdict_before_editorial_judgment",
+                "preserve_cited_located_read_imported_called_completed_ladder",
+                "persisted_state_is_not_independent_reverification",
+                "conditional_applicability_requires_observable_evidence",
+                "pre_execution_absence_is_not_execution_failure",
+                "do_not_create_parallel_canonical_compliance_verdict",
+            },
+            "hub-ml-criar-objeto": {
+                "choose_closed_object_type_before_writing",
+                "read_canonical_template_before_generation",
+                "search_existing_capability_before_new_object",
+                "generate_public_api_with_canonical_tool",
+                "run_validator_before_ready_claim",
+                "do_not_create_new_snippet_section_without_explicit_decision",
+            },
+        }
+        for skill, invariants in expected.items():
+            contract = json.loads(
+                (ASSISTANT/"skills"/skill/"execution_contract.json").read_text(encoding="utf-8")
+            )
+            meta = contract["metadata"]["se07"]
+            self.assertEqual("L1", meta["enforcement_level"])
+            self.assertEqual("L3", meta["target_level"])
+            self.assertEqual("stage_specific", meta["scope"])
+            self.assertFalse(meta["runtime_gate"])
+            self.assertEqual(invariants, set(meta["static_invariants"]))
+            self.assertEqual([], contract["resources"])
+            skill_dir = ASSISTANT/"skills"/skill
+            for script in ("preflight.py","run.py","run_enforced.py","postflight.py"):
+                self.assertFalse((skill_dir/"scripts"/script).exists(), f"{skill} não deve alegar gate runtime via {script}")
+
     def test_pipeline_authorization(self):
         self.assertIn("authorization",{x["evidence"] for x in self.by["hub-ml-pipeline-builder"]["protected_surfaces"]})
     def test_tutor_remains_l0(self):

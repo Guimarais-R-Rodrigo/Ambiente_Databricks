@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1",
+  "skill": "hub-ml-auditoria-skills",
+  "mode": "audit",
+  "metadata": {
+    "se07": {
+      "enforcement_level": "L1",
+      "target_level": "L3",
+      "scope": "stage_specific",
+      "runtime_gate": false,
+      "static_invariants": [
+        "consume_existing_mechanical_verdict_before_editorial_judgment",
+        "preserve_cited_located_read_imported_called_completed_ladder",
+        "persisted_state_is_not_independent_reverification",
+        "conditional_applicability_requires_observable_evidence",
+        "pre_execution_absence_is_not_execution_failure",
+        "do_not_create_parallel_canonical_compliance_verdict"
+      ]
+    }
+  },
+  "resources": [],
+  "templates": [
+    {
+      "id": "rubrica_universal",
+      "path": "templates/rubrica_universal.md",
+      "policy": "optional",
+      "evidence": "loaded"
+    },
+    {
+      "id": "relatorio_auditoria",
+      "path": "templates/relatorio_auditoria.md",
+      "policy": "optional",
+      "evidence": "loaded"
+    }
+  ]
+}

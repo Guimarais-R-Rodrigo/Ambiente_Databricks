@@ -47,7 +47,7 @@
     {
       "skill": "hub-ml-auditoria-skills",
       "risk_class": "high",
-      "current_level": "L0",
+      "current_level": "L1",
       "target_level": "L3",
       "scope_mode": "stage_specific",
       "rollout_mode": "audit",
@@ -55,7 +55,8 @@
       "rationale": "A auditoria não pode elevar evidência fraca para estado forte nem duplicar o veredito de canonical compliance.",
       "implemented_artifacts": [
         "skills/hub-ml-auditoria-skills/SKILL.md",
-        "skills/hub-ml-auditoria-skills/templates/relatorio_auditoria.md"
+        "skills/hub-ml-auditoria-skills/templates/relatorio_auditoria.md",
+        "skills/hub-ml-auditoria-skills/execution_contract.json"
       ],
       "protected_surfaces": [
         {
@@ -154,14 +155,15 @@
     {
       "skill": "hub-ml-criar-objeto",
       "risk_class": "high",
-      "current_level": "L0",
+      "current_level": "L1",
       "target_level": "L3",
       "scope_mode": "stage_specific",
       "rollout_mode": "audit",
       "policy_status": "defined",
       "rationale": "Criação de arquivos e objetos deve seguir templates e validators determinísticos antes de ser apresentada como pronta.",
       "implemented_artifacts": [
-        "skills/hub-ml-criar-objeto/SKILL.md"
+        "skills/hub-ml-criar-objeto/SKILL.md",
+        "skills/hub-ml-criar-objeto/execution_contract.json"
       ],
       "protected_surfaces": [
         {
