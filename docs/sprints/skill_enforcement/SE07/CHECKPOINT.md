@@ -242,12 +242,19 @@ O contrato da auditoria fixa: consumo de veredito mecânico existente, ladder co
 
 O contrato de criar-objeto fixa: tipo fechado, leitura do template canônico, busca de capacidade existente, API pública pela ferramenta canônica, validator antes do claim de pronto e nenhuma seção nova de snippets sem decisão explícita.
 
-Gate atual:
+Homologação observada no HEAD `5808141ed10847272d70075507b905d55701842e`:
 
 ```text
-LOCAL_CERTIFICATION = NOT_RUN
-DATABRICKS_FREE     = NOT_RUN
-GITHUB_ACTIONS      = NOT_RUN
+LOCAL_CERTIFICATION              = PASS
+scope                            = FULL_SE07_LOCAL
+DERIVED_STALE                    = false
+DATABRICKS_FREE                  = PASS
+SE07_TOOLING_L1_FREE_PROBE_V1    = PASS
+contracts_validated              = 2/2
+runtime_gates_added              = 0
+l3_claimed_as_implemented        = false
+content_verify                   = PASS | 566/566
+GITHUB_ACTIONS                   = NOT_RUN
 ```
 
 
@@ -282,3 +289,32 @@ L0→L3  ->  L1→L3
 ```
 
 Não houve alteração da policy para satisfazer o teste. A próxima ação é executar novamente os testes dedicados e, somente depois de PASS, executar o FULL_SE07_LOCAL.
+
+
+## Onda L2 — auditoria-skills
+
+Primeiro salto real de enforcement após a base L1.
+
+Decisão:
+
+- `hub-ml-auditoria-skills`: current L1 → L2; target permanece L3;
+- `hub-ml-criar-objeto` permanece L1 → L3;
+- o novo preflight é somente leitura;
+- nenhuma execução de verifier, Receipt próprio ou runner L3 é introduzida;
+- `policy_status` da auditoria permanece `defined`.
+
+O preflight L2 bloqueia auditoria substantiva quando o modo ou as entradas
+mínimas não estão observáveis. Em OUTPUT exige produtora explícita, pedido
+original e artefato. Em IMPLEMENTACAO exige lista não vazia de targets.
+
+A policy SEF da produtora é resolvida quando possível. Uma skill existente sem
+policy registrada produz `evidence_gap`; o preflight não inventa nível.
+
+Gate atual:
+
+```text
+LOCAL_CERTIFICATION = NOT_RUN
+DATABRICKS_FREE     = NOT_RUN
+L3_RUNNER           = NOT_IMPLEMENTED
+GITHUB_ACTIONS      = NOT_RUN
+```

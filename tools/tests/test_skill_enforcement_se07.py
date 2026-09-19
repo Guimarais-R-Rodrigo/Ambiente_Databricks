@@ -25,7 +25,7 @@ class SE07PolicyTests(unittest.TestCase):
             "hub-ml-eda-profissional": "L4",
             "hub-ml-comentar-notebook": "L1",
             "hub-ml-concierge": "L1",
-            "hub-ml-auditoria-skills": "L1",
+            "hub-ml-auditoria-skills": "L2",
             "hub-ml-criar-objeto": "L1",
         }
         for skill, policy in self.by.items():
@@ -65,16 +65,8 @@ class SE07PolicyTests(unittest.TestCase):
         self.assertEqual({"AUDIT_FALSE_REASSURANCE","AUDIT_STATE_LADDER","AUDIT_CONDITIONAL_APPLICABILITY"},set(self.by["hub-ml-auditoria-skills"]["known_debt"]))
         text=(ASSISTANT/"skills"/"hub-ml-auditoria-skills"/"SKILL.md").read_text(encoding="utf-8")
         for token in ("citado","localizado","lido","importado","chamado","concluído","NOT_OBSERVABLE","get_skill_enforcement_policy","verify_finalized"): self.assertIn(token,text)
-    def test_tooling_l1_contracts_do_not_claim_l3(self):
+    def test_criar_objeto_l1_contract_does_not_claim_l3(self):
         expected = {
-            "hub-ml-auditoria-skills": {
-                "consume_existing_mechanical_verdict_before_editorial_judgment",
-                "preserve_cited_located_read_imported_called_completed_ladder",
-                "persisted_state_is_not_independent_reverification",
-                "conditional_applicability_requires_observable_evidence",
-                "pre_execution_absence_is_not_execution_failure",
-                "do_not_create_parallel_canonical_compliance_verdict",
-            },
             "hub-ml-criar-objeto": {
                 "choose_closed_object_type_before_writing",
                 "read_canonical_template_before_generation",
@@ -99,12 +91,73 @@ class SE07PolicyTests(unittest.TestCase):
             for script in ("preflight.py","run.py","run_enforced.py","postflight.py"):
                 self.assertFalse((skill_dir/"scripts"/script).exists(), f"{skill} não deve alegar gate runtime via {script}")
 
+    def test_audit_l2_preflight_contract_and_runtime(self):
+        skill_dir = ASSISTANT/"skills"/"hub-ml-auditoria-skills"
+        contract = json.loads((skill_dir/"execution_contract.json").read_text(encoding="utf-8"))
+        meta = contract["metadata"]["se07"]
+        self.assertEqual("L2", meta["enforcement_level"])
+        self.assertEqual("L3", meta["target_level"])
+        self.assertTrue(meta["runtime_gate"])
+        preflight = _load("se07_audit_preflight", skill_dir/"scripts"/"preflight.py")
+
+        happy = preflight.preflight({
+            "audit_mode": "OUTPUT",
+            "producer_skill": "hub-ml-eda-profissional",
+            "original_request_present": True,
+            "artifact_present": True,
+        })
+        self.assertEqual("PASS", happy["status"])
+        self.assertEqual("L4", happy["producer_policy"]["current_level"])
+        self.assertFalse(happy["writes_performed"])
+        self.assertFalse(happy["analytics_executed"])
+        self.assertFalse(happy["verifier_executed"])
+
+        blocked = preflight.preflight({
+            "audit_mode": "OUTPUT",
+            "producer_skill": "hub-ml-eda-profissional",
+            "original_request_present": False,
+            "artifact_present": True,
+        })
+        self.assertEqual("BLOCKED", blocked["status"])
+        self.assertIn(
+            "ORIGINAL_REQUEST_REQUIRED",
+            {item["code"] for item in blocked["blocking_issues"]},
+        )
+
+        implementation = preflight.preflight({
+            "audit_mode": "IMPLEMENTAÇÃO",
+            "target_skills": ["hub-ml-criar-objeto"],
+        })
+        self.assertEqual("PASS", implementation["status"])
+        self.assertEqual(["hub-ml-criar-objeto"], implementation["target_skills"])
+
+    def test_audit_l2_unknown_or_missing_inputs_fail_closed(self):
+        preflight = _load(
+            "se07_audit_preflight_negative",
+            ASSISTANT/"skills"/"hub-ml-auditoria-skills"/"scripts"/"preflight.py",
+        )
+        unknown_mode = preflight.preflight({"audit_mode": "QUALQUER"})
+        self.assertEqual("BLOCKED", unknown_mode["status"])
+        self.assertIn(
+            "AUDIT_MODE_INVALID",
+            {item["code"] for item in unknown_mode["blocking_issues"]},
+        )
+        missing_target = preflight.preflight({
+            "audit_mode": "IMPLEMENTACAO",
+            "target_skills": [],
+        })
+        self.assertEqual("BLOCKED", missing_target["status"])
+        self.assertIn(
+            "TARGET_SKILLS_REQUIRED",
+            {item["code"] for item in missing_target["blocking_issues"]},
+        )
+
     def test_pipeline_authorization(self):
         self.assertIn("authorization",{x["evidence"] for x in self.by["hub-ml-pipeline-builder"]["protected_surfaces"]})
     def test_tutor_remains_l0(self):
         p=self.by["hub-ml-tutor-databricks"]; self.assertEqual(("L0","L0","guidance"),(p["current_level"],p["target_level"],p["rollout_mode"]))
     def test_runtime_resolver(self):
-        p=self.runtime.get_skill_enforcement_policy("hub-ml-auditoria-skills",assistant_root=ASSISTANT); self.assertEqual(("L1","L3"),(p.current_level,p.target_level)); self.assertIn("AUDIT_FALSE_REASSURANCE",p.known_debt)
+        p=self.runtime.get_skill_enforcement_policy("hub-ml-auditoria-skills",assistant_root=ASSISTANT); self.assertEqual(("L2","L3"),(p.current_level,p.target_level)); self.assertIn("AUDIT_FALSE_REASSURANCE",p.known_debt)
     def test_unknown_fails_closed(self):
         with self.assertRaises(self.runtime.EnforcementPolicyError): self.runtime.get_skill_enforcement_policy("hub-ml-nao-existe",assistant_root=ASSISTANT)
 if __name__=="__main__": unittest.main()

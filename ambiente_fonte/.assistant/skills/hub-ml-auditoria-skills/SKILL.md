@@ -29,6 +29,34 @@ Não aprovar uma skill apenas por conter palavras-chave. Ler o contrato, testar 
 - Se as entradas forem ambíguas, perguntar qual modo usar. Não avaliar o output como
   se fosse a implementação, nem o inverso.
 
+## Executar o preflight SEF L2 antes da auditoria
+
+Antes de qualquer auditoria substantiva, executar `scripts/preflight.py::preflight`
+com o modo e as entradas observáveis da sessão.
+
+No **Modo OUTPUT**, informar explicitamente:
+
+- `audit_mode="OUTPUT"`;
+- `producer_skill` com o nome da skill produtora;
+- `original_request_present=true|false`;
+- `artifact_present=true|false`.
+
+No **Modo IMPLEMENTAÇÃO**, informar:
+
+- `audit_mode="IMPLEMENTACAO"`;
+- `target_skills` com uma lista não vazia das skills a auditar.
+
+Regras do gate:
+
+- `status=BLOCKED` encerra a rota antes da auditoria substantiva; reportar os
+  `blocking_issues` sem completar lacunas por inferência;
+- `status=PASS` apenas autoriza prosseguir para a auditoria: **não** prova
+  canonical compliance, não executa verifier e não equivale a reverificação;
+- ausência da policy SEF de uma skill produtora existente é registrada como
+  `evidence_gap`, não como nível inventado;
+- o preflight é somente leitura: não altera notebook, skill, artefato ou
+  workspace e não executa análise.
+
 ## Executar auditoria de implementação
 
 1. Inventariar cada pasta direta de `.assistant/skills`.

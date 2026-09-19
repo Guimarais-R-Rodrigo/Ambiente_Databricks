@@ -62,3 +62,18 @@ Para `hub-ml-auditoria-skills` e `hub-ml-criar-objeto`:
 7. regressões anteriores preservadas.
 
 O objetivo é provar a base contratual sem antecipar L2/L3.
+
+
+## Onda L2 — auditoria-skills
+
+Critérios:
+
+1. `current_level=L2`, target L3;
+2. `scripts/preflight.py` presente e somente leitura;
+3. OUTPUT PASS com produtora + pedido original + artefato;
+4. OUTPUT BLOCKED se pedido original ou artefato faltar;
+5. IMPLEMENTACAO PASS com target conhecido;
+6. modo inválido e target vazio falham fechado;
+7. preflight não executa verifier nem análise;
+8. `hub-ml-criar-objeto` permanece L1;
+9. regressões A07 e SE01–SE06 preservadas.

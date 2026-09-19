@@ -47,7 +47,7 @@
     {
       "skill": "hub-ml-auditoria-skills",
       "risk_class": "high",
-      "current_level": "L1",
+      "current_level": "L2",
       "target_level": "L3",
       "scope_mode": "stage_specific",
       "rollout_mode": "audit",
@@ -56,7 +56,8 @@
       "implemented_artifacts": [
         "skills/hub-ml-auditoria-skills/SKILL.md",
         "skills/hub-ml-auditoria-skills/templates/relatorio_auditoria.md",
-        "skills/hub-ml-auditoria-skills/execution_contract.json"
+        "skills/hub-ml-auditoria-skills/execution_contract.json",
+        "skills/hub-ml-auditoria-skills/scripts/preflight.py"
       ],
       "protected_surfaces": [
         {

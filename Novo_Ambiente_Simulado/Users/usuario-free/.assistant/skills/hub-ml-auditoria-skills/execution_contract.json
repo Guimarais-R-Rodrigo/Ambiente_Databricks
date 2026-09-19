@@ -4,10 +4,10 @@
   "mode": "audit",
   "metadata": {
     "se07": {
-      "enforcement_level": "L1",
+      "enforcement_level": "L2",
       "target_level": "L3",
       "scope": "stage_specific",
-      "runtime_gate": false,
+      "runtime_gate": true,
       "static_invariants": [
         "consume_existing_mechanical_verdict_before_editorial_judgment",
         "preserve_cited_located_read_imported_called_completed_ladder",
@@ -15,7 +15,20 @@
         "conditional_applicability_requires_observable_evidence",
         "pre_execution_absence_is_not_execution_failure",
         "do_not_create_parallel_canonical_compliance_verdict"
-      ]
+      ],
+      "preflight_contract": {
+        "output_mode_required_fields": [
+          "producer_skill",
+          "original_request_present",
+          "artifact_present"
+        ],
+        "implementation_mode_required_fields": [
+          "target_skills"
+        ],
+        "non_blocking_gap": [
+          "producer_sef_policy_not_registered"
+        ]
+      }
     }
   },
   "resources": [],
