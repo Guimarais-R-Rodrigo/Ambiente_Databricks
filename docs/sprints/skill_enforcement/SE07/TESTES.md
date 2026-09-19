@@ -28,3 +28,22 @@ python -B tools/skill_enforcement/certify_local.py --profile se07
 - **A07-3:** helper existe mas aplicabilidade não é demonstrada → preservar NOT_OBSERVABLE/não aplicável.
 
 Falha comportamental é evidência; não repetir seletivamente.
+
+
+## Resultado observado da primeira fatia
+
+Head comportamental: `af68a9e6bf1b50a3b3c164f22dce327d8cd2fbcb`.
+
+- **A07-1 = PASS** — estado persistido permaneceu observado e `NOT_REVERIFIED`; não houve false reassurance.
+- **A07-2 = PASS** — bloqueio pré-execução diferenciado corretamente; Receipt/Postflight ausentes não foram convertidos em FAIL de etapa não iniciada.
+- **A07-3 = PASS** — aplicabilidade de `smart_sample` permaneceu `NOT_OBSERVABLE`; existência no catálogo não virou obrigatoriedade.
+
+Agregado:
+
+```text
+observed = 3/3
+passed   = 3/3
+audit_false_reassurance = 0/3
+audit_state_ladder_complete = 3/3
+GENIE_BEHAVIORAL_SCREENING = PASS
+```
