@@ -19,8 +19,10 @@ se07_tests                       = IMPLEMENTED
 certifier_profile_se07           = IMPLEMENTED
 audit_state_ladder_reinforcement = IMPLEMENTED
 audit_output_template_ladder     = IMPLEMENTED
-l1_contract_comentar_notebook     = IMPLEMENTED_PENDING_GATE
-l1_contract_concierge             = IMPLEMENTED_PENDING_GATE
+l1_contract_comentar_notebook     = IMPLEMENTED_AND_HOMOLOGATED
+l1_contract_concierge             = IMPLEMENTED_AND_HOMOLOGATED
+l1_contract_auditoria_skills      = IMPLEMENTED_PENDING_GATE
+l1_contract_criar_objeto          = IMPLEMENTED_PENDING_GATE
 ```
 
 ## Gates
@@ -212,7 +214,35 @@ Os contratos codificam invariantes de baixo risco:
 - não inventar target/chave/limiar/orçamento/política/autorização;
 - handoff não amplia autoridade.
 
-Gate atual dessa onda:
+Homologação observada no HEAD `c12d41debcf9c32aa57672c1df36c5af53369e46`:
+
+```text
+LOCAL_CERTIFICATION   = PASS
+scope                 = FULL_SE07_LOCAL
+DERIVED_STALE         = false
+DATABRICKS_FREE       = PASS
+SE07_L1_FREE_PROBE_V1 = PASS
+contracts_validated   = 2/2
+runtime_gates_added   = 0
+content_verify        = PASS | 564/564
+GITHUB_ACTIONS        = NOT_RUN
+```
+
+
+## Onda L1 tooling — auditoria-skills + criar-objeto
+
+Segunda generalização estrutural, ainda sem runtime gate.
+
+- `hub-ml-auditoria-skills`: current L0 → L1; target permanece L3;
+- `hub-ml-criar-objeto`: current L0 → L1; target permanece L3;
+- nenhum preflight/runner/postflight foi introduzido;
+- `policy_status` permanece `defined`, pois L3 ainda não foi implementado.
+
+O contrato da auditoria fixa: consumo de veredito mecânico existente, ladder completa, diferença entre persistido e reverificado, aplicabilidade condicional baseada em evidência, bloqueio pré-execução e proibição de veredito canônico paralelo.
+
+O contrato de criar-objeto fixa: tipo fechado, leitura do template canônico, busca de capacidade existente, API pública pela ferramenta canônica, validator antes do claim de pronto e nenhuma seção nova de snippets sem decisão explícita.
+
+Gate atual:
 
 ```text
 LOCAL_CERTIFICATION = NOT_RUN
