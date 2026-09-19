@@ -108,14 +108,15 @@
     {
       "skill": "hub-ml-comentar-notebook",
       "risk_class": "low",
-      "current_level": "L0",
+      "current_level": "L1",
       "target_level": "L1",
       "scope_mode": "whole_skill",
       "rollout_mode": "audit",
-      "policy_status": "defined",
+      "policy_status": "implemented",
       "rationale": "É fluxo editorial; contrato estático de preservação do código é proporcional e runner analítico seria excesso.",
       "implemented_artifacts": [
-        "skills/hub-ml-comentar-notebook/SKILL.md"
+        "skills/hub-ml-comentar-notebook/SKILL.md",
+        "skills/hub-ml-comentar-notebook/execution_contract.json"
       ],
       "protected_surfaces": [
         {
@@ -130,14 +131,15 @@
     {
       "skill": "hub-ml-concierge",
       "risk_class": "low",
-      "current_level": "L0",
+      "current_level": "L1",
       "target_level": "L1",
       "scope_mode": "whole_skill",
       "rollout_mode": "audit",
-      "policy_status": "defined",
+      "policy_status": "implemented",
       "rationale": "Descoberta e handoff exigem contrato de escopo; execução analítica final continua fora desta skill.",
       "implemented_artifacts": [
-        "skills/hub-ml-concierge/SKILL.md"
+        "skills/hub-ml-concierge/SKILL.md",
+        "skills/hub-ml-concierge/execution_contract.json"
       ],
       "protected_surfaces": [
         {

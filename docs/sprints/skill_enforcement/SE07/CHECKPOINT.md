@@ -19,20 +19,22 @@ se07_tests                       = IMPLEMENTED
 certifier_profile_se07           = IMPLEMENTED
 audit_state_ladder_reinforcement = IMPLEMENTED
 audit_output_template_ladder     = IMPLEMENTED
+l1_contract_comentar_notebook     = IMPLEMENTED_PENDING_GATE
+l1_contract_concierge             = IMPLEMENTED_PENDING_GATE
 ```
 
 ## Gates
 
 ```text
-LOCAL_CERTIFICATION        = PASS
-scope                      = FULL_SE07_LOCAL
-DERIVED_STALE              = false
-DATABRICKS_FREE            = PASS
-SE07_FREE_POLICY_PROBE_V1  = PASS
-GENIE_BEHAVIORAL_SCREENING = PASS
-GITHUB_ACTIONS             = NOT_RUN
-FULLY_CERTIFIED            = false
-PR                         = NOT_OPENED
+FIRST_SLICE_LOCAL_CERTIFICATION        = PASS
+FIRST_SLICE_DATABRICKS_FREE             = PASS
+FIRST_SLICE_BEHAVIORAL_SCREENING        = PASS
+FIRST_SLICE_BEHAVIORAL_HEAD             = af68a9e6bf1b50a3b3c164f22dce327d8cd2fbcb
+CURRENT_HEAD_LOCAL_CERTIFICATION        = NOT_RUN
+CURRENT_HEAD_DATABRICKS_FREE             = NOT_RUN
+GITHUB_ACTIONS                           = NOT_RUN
+FULLY_CERTIFIED                          = false
+PR                                       = NOT_OPENED
 ```
 
 `target_level` é plano; `current_level` só muda quando artifacts/testes correspondentes existirem.
@@ -181,3 +183,39 @@ GENIE_BEHAVIORAL_SCREENING      = PASS
 ```
 
 Os três débitos históricos da SE06 permanecem registrados como origem da mudança; o screening direcionado mostra mitigação observada, não apaga o histórico.
+
+
+## Onda L1 — comentar-notebook + concierge
+
+Primeira generalização estrutural após a homologação da fatia de policy/auditoria.
+
+Decisão:
+
+- `hub-ml-comentar-notebook`: `current_level L0 → L1`;
+- `hub-ml-concierge`: `current_level L0 → L1`;
+- nenhuma delas recebe preflight/runner/postflight;
+- `rollout_mode` permanece `audit`;
+- contratos são estáticos, proporcionais e sem recursos obrigatórios;
+- templates são declarados como `optional` porque dependem do tipo de entrega.
+
+Os contratos codificam invariantes de baixo risco:
+
+### comentar-notebook
+
+- preservar células de código existentes;
+- adicionar documentação ao redor do código, não reescrever o comportamento;
+- não afirmar execução atual sem outputs validados.
+
+### concierge
+
+- descoberta/roteamento, não execução analítica final;
+- não inventar target/chave/limiar/orçamento/política/autorização;
+- handoff não amplia autoridade.
+
+Gate atual dessa onda:
+
+```text
+LOCAL_CERTIFICATION = NOT_RUN
+DATABRICKS_FREE     = NOT_RUN
+GITHUB_ACTIONS      = NOT_RUN
+```

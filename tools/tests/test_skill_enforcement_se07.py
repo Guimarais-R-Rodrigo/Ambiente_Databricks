@@ -21,9 +21,41 @@ class SE07PolicyTests(unittest.TestCase):
     def test_registry_validates_and_covers_catalog(self):
         self.assertEqual([],self.tool.validate_policy_registry(POLICY)); self.assertEqual(14,len(self.tool.discover_skills())); self.assertEqual(self.tool.discover_skills(),set(self.by))
     def test_current_level_is_evidence_based(self):
-        self.assertEqual("L4",self.by["hub-ml-eda-profissional"]["current_level"])
-        for skill,p in self.by.items():
-            if skill!="hub-ml-eda-profissional": self.assertEqual("L0",p["current_level"],skill)
+        expected_current = {
+            "hub-ml-eda-profissional": "L4",
+            "hub-ml-comentar-notebook": "L1",
+            "hub-ml-concierge": "L1",
+        }
+        for skill, policy in self.by.items():
+            self.assertEqual(expected_current.get(skill, "L0"), policy["current_level"], skill)
+
+    def test_l1_contracts_are_static_and_proportional(self):
+        expected = {
+            "hub-ml-comentar-notebook": {
+                "preserve_existing_code_cells",
+                "documentation_changes_only_around_existing_code",
+                "do_not_claim_current_execution_without_validated_outputs",
+            },
+            "hub-ml-concierge": {
+                "discovery_and_routing_only",
+                "do_not_execute_final_specialist_analysis",
+                "do_not_invent_target_key_threshold_budget_policy_or_authorization",
+                "handoff_does_not_expand_authority",
+            },
+        }
+        for skill, invariants in expected.items():
+            contract = json.loads(
+                (ASSISTANT/"skills"/skill/"execution_contract.json").read_text(encoding="utf-8")
+            )
+            meta = contract["metadata"]["se07"]
+            self.assertEqual("L1", meta["enforcement_level"])
+            self.assertEqual("whole_skill", meta["scope"])
+            self.assertFalse(meta["runtime_gate"])
+            self.assertEqual(invariants, set(meta["static_invariants"]))
+            self.assertEqual([], contract["resources"])
+            self.assertTrue(contract["templates"])
+            self.assertTrue(all(item["policy"] == "optional" for item in contract["templates"]))
+            self.assertTrue(all(item["evidence"] == "loaded" for item in contract["templates"]))
     def test_target_classification(self):
         expected={"hub-ml-analise-safra":"L3","hub-ml-auditoria-skills":"L3","hub-ml-baseline-ml":"L4","hub-ml-comentar-notebook":"L1","hub-ml-concierge":"L1","hub-ml-criar-objeto":"L3","hub-ml-cross-eda-ml":"L4","hub-ml-eda-profissional":"L4","hub-ml-explainability":"L3","hub-ml-feature-engineering":"L4","hub-ml-monitoramento-modelo":"L4","hub-ml-pipeline-builder":"L4","hub-ml-tutor-databricks":"L0","hub-ml-validacao-estatistica":"L3"}
         self.assertEqual(expected,{k:v["target_level"] for k,v in self.by.items()})
