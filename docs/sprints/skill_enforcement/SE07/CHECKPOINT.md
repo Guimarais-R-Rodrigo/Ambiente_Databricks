@@ -24,7 +24,8 @@ l1_contract_concierge             = IMPLEMENTED_AND_HOMOLOGATED
 l1_contract_auditoria_skills      = IMPLEMENTED_AND_HOMOLOGATED
 l1_contract_criar_objeto          = IMPLEMENTED_AND_HOMOLOGATED
 audit_l2_preflight                  = IMPLEMENTED_AND_HOMOLOGATED
-audit_l3_runner                     = IMPLEMENTED_PENDING_GATE
+audit_l3_runner                     = IMPLEMENTED_AND_HOMOLOGATED
+create_object_l2_preflight             = IMPLEMENTED_PENDING_GATE
 ```
 
 ## Gates
@@ -347,10 +348,48 @@ Decisão:
 - sem verifier/payload compatível, producer compliance permanece `NOT_REVERIFIED`;
 - release manifest protege SKILL, contrato, preflight e runner.
 
+Homologação L3 observada no HEAD `3b75edf04c1f890b449c07357df859ed19089265`:
+
+```text
+LOCAL_CERTIFICATION                         = PASS
+scope                                       = FULL_SE07_LOCAL
+DERIVED_STALE                               = false
+DATABRICKS_FREE                             = PASS
+SE07_AUDIT_L3_FREE_PROBE_V1                 = PASS
+content_verify                              = PASS | 569/569
+persisted_pass_without_verifier             = NOT_REVERIFIED
+audit_receipt_without_verifier              = VALID
+canonical_verifier_adapter_executed         = true
+invalid_producer_payload                    = NOT_PASS_REVERIFIED
+invalid_ladder                              = BLOCKED
+invalid_ladder_receipt                      = ABSENT
+tampered_audit_result_receipt_valid         = false
+smart_sample_applicability                  = NOT_OBSERVABLE
+writes_performed                            = false
+analytics_executed                          = false
+GITHUB_ACTIONS                              = NOT_RUN
+```
+
+
+## Onda L2 — criar-objeto
+
+A segunda skill de tooling avança de contrato estático para preflight somente leitura.
+
+Decisão:
+
+- `hub-ml-criar-objeto`: current L1 → L2; target permanece L3;
+- orientação sobre formato sem criação permanece fora do gate protegido;
+- antes de create/convert, tipo, nome, template, destino e decisão de sobreposição devem estar resolvidos;
+- seis tipos permanecem fechados;
+- seção nova de snippet exige decisão explícita;
+- conversão exige origem observável e preservação de comportamento;
+- nenhuma escrita, `api_publica.py`, validator ou execução analítica ocorre no L2.
+
 Gate atual:
 
 ```text
 LOCAL_CERTIFICATION = NOT_RUN
 DATABRICKS_FREE     = NOT_RUN
+L3_RUNNER           = NOT_IMPLEMENTED
 GITHUB_ACTIONS      = NOT_RUN
 ```

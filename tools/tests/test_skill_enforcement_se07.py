@@ -26,7 +26,7 @@ class SE07PolicyTests(unittest.TestCase):
             "hub-ml-comentar-notebook": "L1",
             "hub-ml-concierge": "L1",
             "hub-ml-auditoria-skills": "L3",
-            "hub-ml-criar-objeto": "L1",
+            "hub-ml-criar-objeto": "L2",
         }
         for skill, policy in self.by.items():
             self.assertEqual(expected_current.get(skill, "L0"), policy["current_level"], skill)
@@ -65,31 +65,128 @@ class SE07PolicyTests(unittest.TestCase):
         self.assertEqual({"AUDIT_FALSE_REASSURANCE","AUDIT_STATE_LADDER","AUDIT_CONDITIONAL_APPLICABILITY"},set(self.by["hub-ml-auditoria-skills"]["known_debt"]))
         text=(ASSISTANT/"skills"/"hub-ml-auditoria-skills"/"SKILL.md").read_text(encoding="utf-8")
         for token in ("citado","localizado","lido","importado","chamado","concluído","NOT_OBSERVABLE","get_skill_enforcement_policy","verify_finalized"): self.assertIn(token,text)
-    def test_criar_objeto_l1_contract_does_not_claim_l3(self):
-        expected = {
-            "hub-ml-criar-objeto": {
-                "choose_closed_object_type_before_writing",
-                "read_canonical_template_before_generation",
-                "search_existing_capability_before_new_object",
-                "generate_public_api_with_canonical_tool",
-                "run_validator_before_ready_claim",
-                "do_not_create_new_snippet_section_without_explicit_decision",
-            },
-        }
-        for skill, invariants in expected.items():
-            contract = json.loads(
-                (ASSISTANT/"skills"/skill/"execution_contract.json").read_text(encoding="utf-8")
-            )
-            meta = contract["metadata"]["se07"]
-            self.assertEqual("L1", meta["enforcement_level"])
-            self.assertEqual("L3", meta["target_level"])
-            self.assertEqual("stage_specific", meta["scope"])
-            self.assertFalse(meta["runtime_gate"])
-            self.assertEqual(invariants, set(meta["static_invariants"]))
-            self.assertEqual([], contract["resources"])
-            skill_dir = ASSISTANT/"skills"/skill
-            for script in ("preflight.py","run.py","run_enforced.py","postflight.py"):
-                self.assertFalse((skill_dir/"scripts"/script).exists(), f"{skill} não deve alegar gate runtime via {script}")
+    def test_criar_objeto_l2_preflight_contract_and_runtime(self):
+        skill_dir = ASSISTANT/"skills"/"hub-ml-criar-objeto"
+        contract = json.loads((skill_dir/"execution_contract.json").read_text(encoding="utf-8"))
+        meta = contract["metadata"]["se07"]
+        self.assertEqual("L2", meta["enforcement_level"])
+        self.assertEqual("L3", meta["target_level"])
+        self.assertTrue(meta["runtime_gate"])
+
+        preflight = _load(
+            "se07_create_object_preflight",
+            skill_dir/"scripts"/"preflight.py",
+        )
+
+        happy = preflight.preflight({
+            "operation": "create",
+            "object_type": "snippet",
+            "object_name": "sef_probe_snippet",
+            "type_confirmed": True,
+            "existing_capability_checked": True,
+            "existing_capability_status": "not_found",
+            "snippet_section": "testing",
+        })
+        self.assertEqual("PASS", happy["status"])
+        self.assertEqual(
+            "hub_padroes/snippet/template.md",
+            happy["template"]["path"],
+        )
+        self.assertTrue(happy["template"]["resolved"])
+        self.assertEqual("NOT_OBSERVABLE", happy["template"]["read_status"])
+        self.assertEqual(
+            "hub_snippets/testing/sef_probe_snippet",
+            happy["destination_relative"],
+        )
+        self.assertFalse(happy["writes_performed"])
+        self.assertEqual([], happy["tools_executed"])
+        self.assertFalse(happy["analytics_executed"])
+
+    def test_criar_objeto_l2_blocks_ambiguous_or_unsupported_routes(self):
+        preflight = _load(
+            "se07_create_object_preflight_negative",
+            ASSISTANT/"skills"/"hub-ml-criar-objeto"/"scripts"/"preflight.py",
+        )
+
+        bad_type = preflight.preflight({
+            "operation": "create",
+            "object_type": "auditoria",
+            "object_name": "x",
+            "type_confirmed": True,
+            "existing_capability_checked": True,
+            "existing_capability_status": "not_found",
+        })
+        self.assertEqual("BLOCKED", bad_type["status"])
+        self.assertIn(
+            "OBJECT_TYPE_INVALID",
+            {item["code"] for item in bad_type["blocking_issues"]},
+        )
+
+        new_section = preflight.preflight({
+            "operation": "create",
+            "object_type": "snippet",
+            "object_name": "sef_probe_snippet",
+            "type_confirmed": True,
+            "existing_capability_checked": True,
+            "existing_capability_status": "not_found",
+            "snippet_section": "nova_secao",
+        })
+        self.assertEqual("BLOCKED", new_section["status"])
+        self.assertIn(
+            "NEW_SNIPPET_SECTION_REQUIRES_DECISION",
+            {item["code"] for item in new_section["blocking_issues"]},
+        )
+
+        overlap = preflight.preflight({
+            "operation": "create",
+            "object_type": "script",
+            "object_name": "sef_probe_script",
+            "type_confirmed": True,
+            "existing_capability_checked": True,
+            "existing_capability_status": "found",
+            "overlap_resolution": "extend_existing",
+        })
+        self.assertEqual("BLOCKED", overlap["status"])
+        self.assertIn(
+            "NEW_OBJECT_NOT_AUTHORIZED_BY_OVERLAP_DECISION",
+            {item["code"] for item in overlap["blocking_issues"]},
+        )
+
+    def test_criar_objeto_l2_readme_and_conversion_guards(self):
+        preflight = _load(
+            "se07_create_object_preflight_readme",
+            ASSISTANT/"skills"/"hub-ml-criar-objeto"/"scripts"/"preflight.py",
+        )
+
+        readme = preflight.preflight({
+            "operation": "create",
+            "object_type": "readme",
+            "object_name": "guia_sef",
+            "type_confirmed": True,
+            "existing_capability_checked": True,
+            "existing_capability_status": "not_found",
+            "readme_scale": "objeto",
+            "destination_relative": "hub_scripts/sef_probe/README.md",
+        })
+        self.assertEqual("PASS", readme["status"])
+        self.assertEqual(
+            "hub_padroes/readme/template_objeto.md",
+            readme["template"]["path"],
+        )
+
+        conversion = preflight.preflight({
+            "operation": "convert",
+            "object_type": "script",
+            "object_name": "sef_probe_script",
+            "type_confirmed": True,
+            "existing_capability_checked": True,
+            "existing_capability_status": "found",
+            "overlap_resolution": "convert_existing",
+            "source_relative": "hub_scripts/quick_profile",
+        })
+        self.assertEqual("PASS", conversion["status"])
+        self.assertTrue(conversion["source_exists"])
+        self.assertTrue(conversion["conversion_behavior_preservation_required"])
 
     def test_audit_l2_preflight_contract_and_runtime(self):
         skill_dir = ASSISTANT/"skills"/"hub-ml-auditoria-skills"
@@ -318,6 +415,7 @@ class SE07PolicyTests(unittest.TestCase):
         p=self.by["hub-ml-tutor-databricks"]; self.assertEqual(("L0","L0","guidance"),(p["current_level"],p["target_level"],p["rollout_mode"]))
     def test_runtime_resolver(self):
         p=self.runtime.get_skill_enforcement_policy("hub-ml-auditoria-skills",assistant_root=ASSISTANT); self.assertEqual(("L3","L3"),(p.current_level,p.target_level)); self.assertIn("AUDIT_FALSE_REASSURANCE",p.known_debt)
+        c=self.runtime.get_skill_enforcement_policy("hub-ml-criar-objeto",assistant_root=ASSISTANT); self.assertEqual(("L2","L3"),(c.current_level,c.target_level))
     def test_unknown_fails_closed(self):
         with self.assertRaises(self.runtime.EnforcementPolicyError): self.runtime.get_skill_enforcement_policy("hub-ml-nao-existe",assistant_root=ASSISTANT)
 if __name__=="__main__": unittest.main()

@@ -25,6 +25,43 @@ Dois contra-exemplos, para não roubar a vez de quem faz o trabalho de verdade:
   objeto existente, não criação. Só entra aqui se o pedido for **converter ao
   padrão**; mudar comportamento é trabalho de quem conhece o domínio.
 
+## Executar o preflight SEF L2 antes de criar ou converter
+
+Pedidos puramente explicativos sobre o formato de um objeto permanecem em orientação.
+Antes de **criar** ou **converter** qualquer objeto, executar
+`scripts/preflight.py::preflight`.
+
+O contexto mínimo deve declarar:
+
+- `operation="create"|"convert"`;
+- `object_type` entre os seis tipos fechados;
+- `object_name`;
+- `type_confirmed=true`;
+- `existing_capability_checked=true`;
+- `existing_capability_status="not_found"|"found"`.
+
+Quando uma capacidade existente for encontrada, registrar também
+`overlap_resolution` como uma decisão explícita. Criar um recorte novo só é
+permitido com `create_declared_slice`; decisões como `extend_existing`,
+`convert_existing` ou `refuse` bloqueiam a rota de criação de objeto novo.
+
+Para snippet, informar `snippet_section`. As seis seções atuais são aceitas
+diretamente; uma seção nova exige `new_snippet_section_authorized=true`.
+
+Para README, informar `readme_scale="agregador"|"objeto"` e o destino
+relativo. Para notebook, informar o destino relativo `.py`.
+
+Em conversão, informar `source_relative`; o preflight valida que a origem
+existe e preserva a regra “converter é mover, não mudar comportamento”.
+
+O preflight:
+
+- resolve o template canônico e o destino antes da escrita;
+- valida somente regras de nome realmente definidas nesta skill;
+- não cria pasta, arquivo, `__init__.py` ou notebook;
+- não executa `api_publica.py`, `validate_assistant.py` ou código analítico;
+- retorna `BLOCKED` quando uma decisão obrigatória ainda não existe.
+
 ## Fluxo
 
 ### 1. Escolher o tipo, antes de escrever qualquer linha

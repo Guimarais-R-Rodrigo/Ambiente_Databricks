@@ -94,3 +94,19 @@ Critérios:
 9. ladder incompleta bloqueia antes do Receipt;
 10. alteração de result invalida/incompatibiliza o Receipt;
 11. Receipt da auditoria não autoriza completion da produtora.
+
+
+## Onda L2 — criar-objeto
+
+Critérios:
+
+1. current L2, target L3, policy_status ainda defined;
+2. preflight somente leitura;
+3. seis tipos fechados e template canônico resolvido;
+4. snippet exige seção; seção nova exige decisão explícita;
+5. nomes snake_case/skill são validados apenas onde a skill define regra;
+6. capacidade existente exige resolução explícita antes de criar novo objeto;
+7. README resolve escala e destino;
+8. conversão exige origem existente e preservação de comportamento;
+9. nenhum arquivo é criado e nenhuma ferramenta de escrita/validação é executada;
+10. regressões da auditoria L3 permanecem verdes.

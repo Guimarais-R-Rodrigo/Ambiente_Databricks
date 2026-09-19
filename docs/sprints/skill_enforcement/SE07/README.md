@@ -41,7 +41,7 @@ A política canônica fica em `hub_padroes/skill_enforcement/policy.json` e é r
 | hub-ml-validacao-estatistica | L0 | L3 | alto |
 | hub-ml-analise-safra | L0 | L3 | alto |
 | hub-ml-auditoria-skills | L3 | L3 | alto |
-| hub-ml-criar-objeto | L1 | L3 | alto |
+| hub-ml-criar-objeto | L2 | L3 | alto |
 | hub-ml-explainability | L0 | L3 | médio |
 | hub-ml-comentar-notebook | L1 | L1 | baixo |
 | hub-ml-concierge | L1 | L1 | baixo |
@@ -105,3 +105,10 @@ O runner L3 estrutura a evidência, emite Receipt próprio e preserva a autorida
 do verifier da skill produtora. Para EDA L4, o adapter chama diretamente
 `verify_finalized`; sem reverificação canônica, o estado continua
 `NOT_REVERIFIED`.
+
+
+## Onda L2 — criar-objeto
+
+O preflight resolve a forma do objeto antes de qualquer escrita: tipo fechado,
+nome, template, destino, sobreposição e, quando aplicável, seção de snippet ou
+origem de conversão. O gate é somente leitura; L3 continua fora desta onda.
