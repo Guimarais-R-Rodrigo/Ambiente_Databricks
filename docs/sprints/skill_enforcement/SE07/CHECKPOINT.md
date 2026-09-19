@@ -249,3 +249,36 @@ LOCAL_CERTIFICATION = NOT_RUN
 DATABRICKS_FREE     = NOT_RUN
 GITHUB_ACTIONS      = NOT_RUN
 ```
+
+
+## Onda L1 tooling — pré-gate local #1
+
+Execução real no clone Windows em 2026-09-19, HEAD:
+
+`069f2970515f497e1d21f131bc974b94f45b0946`
+
+Resultados observados antes da interrupção:
+
+```text
+validate_contracts             = PASS | 5/5
+SE07 dedicated tests           = FAIL | 9 PASS / 1 FAIL
+failed_test                    = test_runtime_resolver
+failure                        = expectativa obsoleta L0→L3 para hub-ml-auditoria-skills
+observed_policy                = L1→L3
+FULL_SE07_LOCAL                = NOT_RUN
+```
+
+A policy e o contrato estavam coerentes com a onda tooling; o defeito estava na asserção antiga do teste runtime.
+
+Correção aplicada:
+
+`06f8d70d3bcd82169e28265e198e89e0d4f29cd3`
+
+Mudança mínima:
+
+```text
+hub-ml-auditoria-skills runtime resolver expectation
+L0→L3  ->  L1→L3
+```
+
+Não houve alteração da policy para satisfazer o teste. A próxima ação é executar novamente os testes dedicados e, somente depois de PASS, executar o FULL_SE07_LOCAL.
