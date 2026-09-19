@@ -47,6 +47,54 @@ Não aprovar uma skill apenas por conter palavras-chave. Ler o contrato, testar 
 12. Executar o validador disponível e registrar comando, saída e data.
 13. Produzir achados priorizados e uma conclusão independente para cada skill e para o conjunto.
 
+## Resolver a política SEF antes de auditar
+
+Quando a skill produtora estiver no catálogo SEF, resolver a política canônica antes de inferir o nível de enforcement:
+
+```python
+from hub_scripts.skill_execution import get_skill_enforcement_policy
+policy = get_skill_enforcement_policy("<skill-produtora>")
+```
+
+Usar `policy.current_level` como realidade observável. `policy.target_level` é roadmap e **não prova** que contrato, preflight, runner, Receipt ou Postflight já existam.
+
+Se a política não puder ser carregada ou a skill não estiver registrada, reportar a lacuna; não inventar um nível.
+
+### Escada obrigatória de evidência
+
+Para cada helper/template/entrypoint material, distinguir explicitamente:
+
+`citado → localizado → lido → importado → chamado → concluído`
+
+Regras:
+
+- evidência de um estado não promove automaticamente o seguinte;
+- qualquer estado não demonstrado permanece `NOT_OBSERVABLE`;
+- existência no catálogo prova no máximo que o recurso pode ser localizado, não que foi lido/importado/chamado;
+- import não prova call;
+- call não prova conclusão bem-sucedida;
+- output persistido não prova reverificação independente.
+
+### Observado não é reverificado
+
+Um notebook pode conter `Receipt VALID`, `postflight=PASS` ou `completion.authorized=true`. Isso autoriza registrar **“estado persistido observado”**.
+
+Só usar **“reverificado”** quando a auditoria executar o verifier canônico aplicável sobre o artefato atual e registrar a execução. Para a EDA L4, isso inclui `scripts/postflight.py::verify_finalized` quando disponível e executável no contexto de auditoria.
+
+Se o verifier não foi executado, escrever `NOT_REVERIFIED`/“não reverificado independentemente”, mesmo quando o output persistido mostre PASS.
+
+### Aplicabilidade e bloqueios pré-execução
+
+Não marcar helper condicional como obrigatório apenas porque existe no catálogo. Derivar aplicabilidade do contrato e do contexto observável; quando faltar evidência, preservar `NOT_OBSERVABLE`.
+
+Ausência de Receipt/Postflight em uma rota corretamente bloqueada **antes da execução protegida** não é, por si só, FAIL de execução L4. Distinguir:
+
+- bloqueio pré-execução;
+- execução que falhou;
+- evidência ausente;
+- execução concluída.
+
+
 ## Integrar com evidência mecânica de enforcement
 
 Quando a skill produtora possuir contrato estruturado, Execution Receipt ou

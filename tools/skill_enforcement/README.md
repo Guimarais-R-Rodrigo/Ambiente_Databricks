@@ -168,6 +168,21 @@ python -B tools/tests/test_skill_enforcement_se06.py -v
 
 A suíte cobre 12 variantes estruturais e o scorer da coleta comportamental.
 
+## SE07 — generalização por risco
+
+Registry publicado:
+
+`ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json`
+
+Validação:
+
+```powershell
+python -B tools/skill_enforcement/se07_policy.py
+python -B tools/tests/test_skill_enforcement_se07.py -v
+```
+
+O registry cobre exatamente 14/14 skills e separa `current_level` de `target_level`. O validator impede que uma skill alegue L1–L4 sem os artifacts mínimos correspondentes.
+
 ## Certificação local reproduzível
 
 Entry points:
@@ -178,6 +193,7 @@ python -B tools/skill_enforcement/certify_local.py --profile se03
 python -B tools/skill_enforcement/certify_local.py --profile se04
 python -B tools/skill_enforcement/certify_local.py --profile se05
 python -B tools/skill_enforcement/certify_local.py --profile se06
+python -B tools/skill_enforcement/certify_local.py --profile se07
 ```
 
 O perfil `se05` executa:
@@ -195,7 +211,7 @@ O perfil `se05` executa:
 11. render-diff incluindo untracked;
 12. snapshot README.
 
-O perfil `se06` acrescenta `test_skill_enforcement_se06.py` ao conjunto SE05 e preserva os mesmos gates de estrutura, renderer, render-diff e snapshot.
+O perfil `se06` acrescenta `test_skill_enforcement_se06.py` ao conjunto SE05 e preserva os mesmos gates de estrutura, renderer, render-diff e snapshot. O perfil `se07` acrescenta o validador do registry e `test_skill_enforcement_se07.py`, mantendo todas as regressões anteriores.
 
 Por padrão o certifier exige worktree limpo antes de qualquer step mutável. O evidence bundle fica fora do repositório em:
 

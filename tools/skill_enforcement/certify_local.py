@@ -9,6 +9,7 @@ Uso principal:
     python -B tools/skill_enforcement/certify_local.py --profile se04
     python -B tools/skill_enforcement/certify_local.py --profile se05
     python -B tools/skill_enforcement/certify_local.py --profile se06
+    python -B tools/skill_enforcement/certify_local.py --profile se07
 
 O certifier é o gate determinístico de desenvolvimento do SEF. Ele não usa
 credenciais Databricks nem rede por conta própria. GitHub Actions deve chamar o
@@ -104,6 +105,14 @@ _SE06_EVAL_STEP = (
     "se06_eval_tests",
     [sys.executable, "-B", "tools/tests/test_skill_enforcement_se06.py", "-v"],
 )
+_SE07_POLICY_STEP = (
+    "se07_policy_validation",
+    [sys.executable, "-B", "tools/skill_enforcement/se07_policy.py"],
+)
+_SE07_TEST_STEP = (
+    "se07_policy_tests",
+    [sys.executable, "-B", "tools/tests/test_skill_enforcement_se07.py", "-v"],
+)
 _COMMON_FINAL_STEPS = [
     (
         "assistant_structure",
@@ -177,6 +186,20 @@ PROFILE_STEPS: dict[str, list[tuple[str, list[str]]]] = {
         _SE05_POSTFLIGHT_STEP,
         _SE05_RUNNER_STEP,
         _SE06_EVAL_STEP,
+        *_COMMON_FINAL_STEPS,
+    ],
+    "se07": [
+        _CONTRACT_STEP,
+        _SE01_STEP,
+        _SE02_STEP,
+        _SE03_STEP,
+        _SE04_RECEIPT_STEP,
+        _SE04_RUNNER_STEP,
+        _SE05_POSTFLIGHT_STEP,
+        _SE05_RUNNER_STEP,
+        _SE06_EVAL_STEP,
+        _SE07_POLICY_STEP,
+        _SE07_TEST_STEP,
         *_COMMON_FINAL_STEPS,
     ],
 }

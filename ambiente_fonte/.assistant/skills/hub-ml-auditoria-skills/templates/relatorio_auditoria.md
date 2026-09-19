@@ -22,6 +22,27 @@
 
 ---
 
+## Matriz de Evidencia SEF
+
+Preencher antes do score editorial quando houver enforcement/recursos declarados.
+
+```markdown
+## Matriz de Evidencia SEF
+
+| Recurso | Citado | Localizado | Lido | Importado | Chamado | Concluido | Aplicabilidade | Fonte |
+|---|---|---|---|---|---|---|---|---|
+| {recurso} | SIM/NAO/NOT_OBSERVABLE | ... | ... | ... | ... | ... | APLICAVEL/NAO_APLICAVEL/NOT_OBSERVABLE | {celula/receipt/verifier} |
+
+**Policy current_level:** {L0-L4}
+**Policy target_level:** {L0-L4} — roadmap, nao prova implementacao
+**Verifier independente executado?:** SIM/NAO
+**Estado de canonical compliance:** {REVERIFICADO / ESTADO_PERSISTIDO_OBSERVADO / NOT_OBSERVABLE / NAO_APLICAVEL}
+```
+
+Nunca preencher um estado por heranca do anterior. Se o verifier nao foi executado, nao escrever “reverificado”.
+
+---
+
 ## Score Consolidado
 
 ```markdown
