@@ -21,8 +21,10 @@ audit_state_ladder_reinforcement = IMPLEMENTED
 audit_output_template_ladder     = IMPLEMENTED
 l1_contract_comentar_notebook     = IMPLEMENTED_AND_HOMOLOGATED
 l1_contract_concierge             = IMPLEMENTED_AND_HOMOLOGATED
-l1_contract_auditoria_skills      = IMPLEMENTED_PENDING_GATE
-l1_contract_criar_objeto          = IMPLEMENTED_PENDING_GATE
+l1_contract_auditoria_skills      = IMPLEMENTED_AND_HOMOLOGATED
+l1_contract_criar_objeto          = IMPLEMENTED_AND_HOMOLOGATED
+audit_l2_preflight                  = IMPLEMENTED_AND_HOMOLOGATED
+audit_l3_runner                     = IMPLEMENTED_PENDING_GATE
 ```
 
 ## Gates
@@ -43,7 +45,7 @@ PR                                       = NOT_OPENED
 
 ## Próximo gate
 
-Executar `FULL_SE07_LOCAL`, materializar derivado, reconciliar snapshot, depois publicar/verify no Free e executar A07-1..A07-3.
+Certificar localmente a candidata L3 da `hub-ml-auditoria-skills`; somente após PASS executar publicação/verify e probe L3 no Databricks Free. Não abrir PR nem Actions antes desses gates.
 
 
 ## Gate local #1 — falha observada e preservada
