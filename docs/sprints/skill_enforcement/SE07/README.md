@@ -40,11 +40,11 @@ A política canônica fica em `hub_padroes/skill_enforcement/policy.json` e é r
 | hub-ml-pipeline-builder | L0 | L4 | crítico |
 | hub-ml-validacao-estatistica | L0 | L3 | alto |
 | hub-ml-analise-safra | L0 | L3 | alto |
-| hub-ml-auditoria-skills | L0 | L3 | alto |
-| hub-ml-criar-objeto | L0 | L3 | alto |
+| hub-ml-auditoria-skills | L1 | L3 | alto |
+| hub-ml-criar-objeto | L1 | L3 | alto |
 | hub-ml-explainability | L0 | L3 | médio |
-| hub-ml-comentar-notebook | L0 | L1 | baixo |
-| hub-ml-concierge | L0 | L1 | baixo |
+| hub-ml-comentar-notebook | L1 | L1 | baixo |
+| hub-ml-concierge | L1 | L1 | baixo |
 | hub-ml-tutor-databricks | L0 | L0 | baixo |
 
 ## Primeira fatia
@@ -82,3 +82,10 @@ FULLY_CERTIFIED             = false
 ```
 
 Esse PASS comportamental é específico aos três débitos direcionados da auditoria e não implica que as demais 13 skills já tenham alcançado seus `target_level`.
+
+
+## Onda L1 homologada
+
+No HEAD `c12d41debcf9c32aa57672c1df36c5af53369e46`, `hub-ml-comentar-notebook` e `hub-ml-concierge` foram homologadas em L1 localmente e no Free, com 2/2 contratos válidos e zero runtime gates adicionados.
+
+A onda seguinte eleva somente a camada contratual de `hub-ml-auditoria-skills` e `hub-ml-criar-objeto` para L1. Seus targets L3 permanecem roadmap.
