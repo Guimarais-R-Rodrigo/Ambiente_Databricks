@@ -2,7 +2,7 @@
 
 ## Estado
 
-**IMPLEMENTAÇÃO INICIAL PRESENTE NA BRANCH; gate local/renderer/Free ainda não executado.**
+**PRIMEIRA FATIA HOMOLOGADA LOCALMENTE E NO DATABRICKS FREE; screening comportamental direcionado 3/3 PASS.**
 
 Branch: `sef/SE07-generalizacao`  
 Baseline: `main@72894c5511abfa9a5ede3edb4a6f7c5fe11231b3`  
@@ -62,3 +62,23 @@ A política canônica fica em `hub_padroes/skill_enforcement/policy.json` e é r
 - criar contratos/runners em massa;
 - abrir PR/Actions antes dos gates local/Free;
 - iniciar SE08.
+
+
+## Evidência da primeira fatia
+
+No HEAD comportamental `af68a9e6bf1b50a3b3c164f22dce327d8cd2fbcb`:
+
+```text
+FULL_SE07_LOCAL             = PASS
+DERIVED_STALE               = false
+DATABRICKS_FREE             = PASS
+SE07_FREE_POLICY_PROBE_V1   = PASS
+A07-1                       = PASS
+A07-2                       = PASS
+A07-3                       = PASS
+GENIE_BEHAVIORAL_SCREENING  = PASS
+GITHUB_ACTIONS              = NOT_RUN
+FULLY_CERTIFIED             = false
+```
+
+Esse PASS comportamental é específico aos três débitos direcionados da auditoria e não implica que as demais 13 skills já tenham alcançado seus `target_level`.
