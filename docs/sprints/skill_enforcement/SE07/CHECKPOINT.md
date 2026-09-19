@@ -75,7 +75,7 @@ A policy runtime foi incorporada ao módulo canônico `skill_execution.py`; o `p
 Estado da remediação:
 
 ```text
-remediation_head = PENDING_CURRENT_BRANCH_HEAD
+remediation_code_head = ee08b33c95069efadc504df129e556667b5e57e2
 LOCAL_CERTIFICATION_AFTER_FIX = NOT_RUN
 ```
 
