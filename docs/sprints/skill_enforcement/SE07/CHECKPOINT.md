@@ -37,3 +37,46 @@ PR                         = NOT_OPENED
 ## Próximo gate
 
 Executar `FULL_SE07_LOCAL`, materializar derivado, reconciliar snapshot, depois publicar/verify no Free e executar A07-1..A07-3.
+
+
+## Gate local #1 — falha observada e preservada
+
+Execução real no clone Windows em 2026-09-19, HEAD:
+
+`537ea56e9012c06d7f484292922382fb001c1d55`
+
+Resultados:
+
+```text
+SE07_POLICY                     = PASS | catalog=14 | policies=14
+SE07 dedicated tests            = 8/8 PASS
+SE01–SE06 regressions           = PASS
+renderer                        = PASS | 564 arquivos
+render_diff                     = PASS
+assistant_structure             = FAIL
+readme_snapshot                 = FAIL por dependência do assistant_structure
+LOCAL_CERTIFICATION             = FAIL
+scope                           = FULL_SE07_LOCAL
+DERIVED_STALE                   = false
+failed_steps                    = assistant_structure, readme_snapshot
+```
+
+Falhas estruturais observadas:
+
+1. `hub_scripts/skill_execution/policy.py` era módulo extra numa pasta de objeto que exige módulo homônimo único;
+2. `hub_scripts/skill_execution/__init__.py` havia sido alterado fora da API exaustiva gerada por `tools/api_publica.py`.
+
+A falha é preservada como evidência da eficácia dos guards. Não houve afrouxamento do validador.
+
+### Remediação
+
+A policy runtime foi incorporada ao módulo canônico `skill_execution.py`; o `policy.py` extra foi removido; a fachada pública foi regenerada; o fingerprint protegido no `release_manifest.json` foi atualizado; o derivado foi sincronizado e o snapshot estrutural reconciliado.
+
+Estado da remediação:
+
+```text
+remediation_head = PENDING_CURRENT_BRANCH_HEAD
+LOCAL_CERTIFICATION_AFTER_FIX = NOT_RUN
+```
+
+A próxima ação é recertificar o HEAD remoto corrigido; não reaproveitar o PASS parcial do gate anterior como certificação final.
