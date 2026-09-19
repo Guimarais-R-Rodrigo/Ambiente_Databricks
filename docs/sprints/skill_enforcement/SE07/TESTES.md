@@ -47,3 +47,18 @@ audit_false_reassurance = 0/3
 audit_state_ladder_complete = 3/3
 GENIE_BEHAVIORAL_SCREENING = PASS
 ```
+
+
+## Onda L1 tooling
+
+Para `hub-ml-auditoria-skills` e `hub-ml-criar-objeto`:
+
+1. contrato v0.1 válido;
+2. `current_level=L1`, `target_level=L3`;
+3. `runtime_gate=false`;
+4. invariantes estáticos codificados em metadata;
+5. zero scripts `preflight.py`, `run.py`, `run_enforced.py` ou `postflight.py` introduzidos;
+6. fonte e derivado idênticos;
+7. regressões anteriores preservadas.
+
+O objetivo é provar a base contratual sem antecipar L2/L3.
