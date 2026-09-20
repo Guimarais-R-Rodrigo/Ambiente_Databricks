@@ -1,5 +1,23 @@
 # SE07 — checkpoint
 
+## Confirmação residual R1-C, 2026-09-20 (pré-certificação do novo SHA)
+
+O contraexemplo P01 foi confirmado antes de editar, em Ubuntu/WSL Python 3.12.3
+no blob R1-C hash-pinado: `alias_regular -> missing/../regular`, com `regular`
+como arquivo comum, devolvia PASS/CLI exit 0 para `alias_regular/new.py`; a rota
+direta sob o mesmo arquivo já bloqueava. A ausência inicial não pode ocultar
+`NotADirectoryError` no caminho efetivo. O fallback agora revalida esse caminho
+estritamente: ausência genuína permanece permitida; arquivo ancestral, ciclo e
+outro erro de resolução bloqueiam. P02 (`missing/../cycle`) permaneceu BLOCKED
+no runtime 3.12.3 e não é apresentado como execução 3.13.
+
+A regressão POSIX cobre API, CLI, topologia e ausência de escrita; ela é skip
+explícito no Windows porque exige semântica de symlink POSIX. Os ciclos por
+junction Windows continuam na suíte. F-02 e sua emissão LF permanecem intactos.
+Este registro antecede a certificação e não presume o resultado do novo SHA;
+identidade, gates e provas ficam no handoff residual externo. Não há mudança de
+contrato, D2, F-03/F-04, writer L3, R2, SE08, Free, Actions, push ou merge.
+
 ## Estado corrente — R1-C, 2026-09-20 (pré-certificação do novo commit)
 
 Correção pós-auditoria da R1, com um operador (Codex). A auditoria do SHA

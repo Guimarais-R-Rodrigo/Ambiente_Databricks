@@ -37,6 +37,14 @@ com pai/filho identificados quando alegar alcance sobre descendentes comuns.
 Timeout configurado não é prova de imposição; suspensão/escape não são cobertos.
 Métodos, subtests, controles e skips devem ser contados separadamente no handoff.
 
+P01 residual acrescenta um symlink POSIX `alias_regular -> missing/../regular`,
+onde `regular` é arquivo comum. O input continua lexicalmente seguro; a ausência
+inicial só aparece dentro do alvo do link. A API e a CLI devem bloquear porque o
+caminho efetivo `regular/new.py` acusa arquivo como ancestral. Destino novo e
+dangling link interno simples continuam PASS. Em Windows o teste é skip explícito
+por depender dessa semântica POSIX; junctions nativas continuam obrigatórias nos
+vetores Windows já existentes.
+
 ### Cobertura histórica R1
 
 `CreateObjectL2BoundaryTests` integra a suíte SE07 e usa somente fixtures

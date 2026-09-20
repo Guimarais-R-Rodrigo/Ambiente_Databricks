@@ -707,6 +707,38 @@ class CreateObjectL2BoundaryTests(unittest.TestCase):
         replacement.rmdir()
         self.assert_blocked(self.base, "CANONICAL_TEMPLATE_NOT_FOUND")
 
+    @unittest.skipIf(os.name == "nt", "P01 requer semântica de symlink POSIX; junction Windows já cobre os ciclos essenciais")
+    def test_missing_dotdot_alias_to_regular_file_blocks_api_and_cli(self):
+        regular = self.root / "regular"
+        regular.write_text("not a directory\n", encoding="utf-8")
+        alias = self.root / "alias_regular"
+        alias.symlink_to("missing/../regular")
+        self.addCleanup(alias.unlink)
+        self.assertTrue(regular.is_file())
+        self.assertEqual("missing/../regular", os.readlink(alias))
+        context = {**self.base, "object_type": "notebook",
+                   "destination_relative": "alias_regular/new.py"}
+        self.assert_blocked({**self.base, "object_type": "notebook",
+                             "destination_relative": "regular/new.py"}, "DESTINATION_REQUIRED")
+        with self.assertRaises(FileNotFoundError):
+            (self.root / "alias_regular/new.py").resolve(strict=True)
+        effective = (self.root / "alias_regular/new.py").resolve()
+        self.assertEqual(self.root / "regular/new.py", effective)
+        with self.assertRaises(NotADirectoryError):
+            effective.resolve(strict=True)
+        self.assert_blocked(context, "DESTINATION_REQUIRED")
+        script = self.root / "skills/hub-ml-criar-objeto/scripts/preflight.py"
+        script.parent.mkdir(parents=True)
+        shutil.copyfile(ASSISTANT / "skills/hub-ml-criar-objeto/scripts/preflight.py", script)
+        before = self.snapshot()
+        p = subprocess.run([sys.executable, "-B", str(script), "--context-json", json.dumps(context)],
+                           capture_output=True, text=True, encoding="utf-8", timeout=15,
+                           env={**os.environ, "PYTHONUTF8": "1", "PYTHONDONTWRITEBYTECODE": "1"})
+        self.assertEqual(2, p.returncode, p.stderr)
+        self.assertEqual("BLOCKED", json.loads(p.stdout)["status"])
+        self.assertEqual("", p.stderr)
+        self.assertEqual(before, self.snapshot())
+
     def test_d2_pending_relations_and_human_readme_name_are_preserved(self):
         for source, name in ((".", "probe"), ("hub_scripts", "probe"),
                              ("hub_scripts/same/source.py", "same"), ("old", "same")):

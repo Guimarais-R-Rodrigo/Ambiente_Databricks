@@ -74,6 +74,15 @@ def _contained_path(root: Path, relative: str | Path) -> Path | None:
             # A missing suffix (including an internal dangling link target)
             # is allowed. Other resolution errors must not take this fallback.
             resolved = candidate.resolve()
+            try:
+                # Non-strict normalization can pass through a missing component
+                # and reveal a file or loop in the effective path. That is not
+                # a valid missing suffix for a future destination.
+                effective = resolved.resolve(strict=True)
+            except FileNotFoundError:
+                pass
+            else:
+                resolved = effective
     except (OSError, ValueError, RuntimeError):
         # Erros de resolução de path (incluindo loop de links), não do preflight.
         return None

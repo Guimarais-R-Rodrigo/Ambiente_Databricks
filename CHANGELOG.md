@@ -6,6 +6,17 @@ subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
 
+## 2026-09-20 — SE07 R1-C: confirmação residual do preflight L2 (Codex)
+
+### Corrigido
+
+- (Codex) P01: após fallback por ausência, o preflight volta a resolver estritamente o caminho efetivo. Um alias composto que normaliza para arquivo como ancestral agora bloqueia API/CLI, enquanto sufixo novo e dangling link interno simples continuam permitidos.
+
+### Validado e preservado
+
+- (Codex) P01 foi reproduzido primeiro em Linux/WSL Python 3.12.3, no blob R1-C hash-pinado; P02 (`missing/../cycle`) permaneceu bloqueado nesse runtime. A regressão POSIX é skip explícito no Windows, sem remover os vetores de junction Windows.
+- (Codex) F-02, renderer, `.gitattributes`, certifier, contrato, policy, D2, SE06 e componentes L3 permanecem fora desta correção. A nova candidata requer certificação própria e revisão; a R1 auditada permanece NAO_APTA.
+
 ## 2026-09-20 — SE07 R1-C: correção pós-auditoria da R1 (Codex)
 
 ### Corrigido
