@@ -6,6 +6,18 @@ subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
 
+## 2026-09-20 — SE07 R1-C: correção pós-auditoria da R1 (Codex)
+
+### Corrigido
+
+- (Codex) F-01: resolução estrita antes da tolerância exclusiva a `FileNotFoundError`, bloqueando ciclos de junction Windows sem proibir destinos novos ou links internos resolvíveis. Regressões nativas de ciclos, origem/template, controles positivos e decisão D2 preservada.
+- (Codex) F-02: marker do renderer emitido explicitamente com LF, conforme `.gitattributes`, com teste de bytes, cópia fiel e duas renderizações idempotentes. Derivado regenerado pela ferramenta canônica.
+
+### Estado e limites
+
+- (Codex) R1 auditada `2d25bd2...` permanece `NAO_APTA`. Esta candidata corretiva exige FULL em clones novos Windows/Linux do mesmo SHA; identidades e resultados definitivos ficam no handoff externo indicado no checkpoint, sem autorreferência no commit.
+- (Codex) F-03 (adapter auditor L3) e F-04 (infraestrutura do certifier) continuam dívidas distintas; salvaguardas externas não corrigem esses componentes. Sem mudança de contrato, níveis, SE06, Receipt, política D2 ou autorização de escrita/publicação. R1-C é rótulo operacional, não nova sprint nem R2.
+
 ## 2026-09-20 — SE07 R1: estabilização delimitada de criar-objeto L2 (Codex)
 
 ### Corrigido

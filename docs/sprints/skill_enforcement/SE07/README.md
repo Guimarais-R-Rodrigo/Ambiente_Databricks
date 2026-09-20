@@ -2,6 +2,14 @@
 
 ## Estado
 
+**R1-C — correção pós-auditoria da R1**, exclusivamente F-01 (ciclo Windows
+no L2) e F-02 (LF do marker). O SHA R1 `2d25bd2...` permanece NAO_APTA; a nova
+candidata exige certificação Windows/Linux e revisão focalizada. Estado
+pré-certificação, evidências externas e dívidas: [CHECKPOINT.md](CHECKPOINT.md).
+Sem encerramento SE07, writer L3 ou início R2.
+
+### Registro R1 anterior à auditoria
+
 **R1 — estabilização local delimitada de criar-objeto L2.** A baseline intacta
 `a01d12ff4e0cb7cfd795ade164f9ce9daad372ba` passou o FULL_SE07_LOCAL. O commit
 candidato R1 exige certificação própria, vinculada ao SHA no bundle externo.

@@ -51,6 +51,9 @@ Essa autorização continua limitada a um único componente de caminho seguro.
 Origem, destino e template devem resolver dentro da raiz `.assistant`, inclusive
 quando há links ou junctions nos ancestrais; drive-relative, UNC e traversal
 não são destinos relativos válidos.
+Resolução cíclica ou erro de resolução bloqueia a pré-condição. Um sufixo
+inexistente sob cadeia resolvível e contida continua elegível; isso inclui
+destino novo por link quebrado interno. Não é proteção de escrita contra TOCTOU.
 
 Para README, informar `readme_scale="agregador"|"objeto"` e o destino
 relativo. Para notebook, informar o destino relativo `.py`.

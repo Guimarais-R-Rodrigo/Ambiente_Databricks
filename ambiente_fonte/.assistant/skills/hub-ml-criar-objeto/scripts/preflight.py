@@ -65,8 +65,15 @@ def _contained_path(root: Path, relative: str | Path) -> Path | None:
     if safe is None:
         return None
     try:
-        resolved_root = root.resolve()
-        resolved = (resolved_root / safe).resolve()
+        resolved_root = root.resolve(strict=True)
+        candidate = resolved_root / safe
+        try:
+            # Windows 3.12 can hide a junction loop in non-strict resolution.
+            resolved = candidate.resolve(strict=True)
+        except FileNotFoundError:
+            # A missing suffix (including an internal dangling link target)
+            # is allowed. Other resolution errors must not take this fallback.
+            resolved = candidate.resolve()
     except (OSError, ValueError, RuntimeError):
         # Erros de resolução de path (incluindo loop de links), não do preflight.
         return None

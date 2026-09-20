@@ -4,6 +4,7 @@ from __future__ import annotations
 import importlib.util, json, sys, unittest
 import hashlib
 import os
+import shutil
 import subprocess
 import tempfile
 from unittest.mock import patch
@@ -452,11 +453,20 @@ class CreateObjectL2BoundaryTests(unittest.TestCase):
                          existing_capability_status="not_found", snippet_section="testing")
 
     def snapshot(self):
-        return {p.relative_to(self.area).as_posix():
-                ("file", hashlib.sha256(p.read_bytes()).hexdigest()) if p.is_file()
-                else ("link", os.readlink(p)) if p.is_symlink() or p.is_junction()
-                else ("directory", None)
-                for p in self.area.rglob("*")}
+        result = {}
+        pending = [self.area]
+        while pending:
+            for p in pending.pop().iterdir():
+                key = p.relative_to(self.area).as_posix()
+                # Inspect links before following file/directory predicates.
+                if p.is_symlink() or p.is_junction():
+                    result[key] = ("link", os.readlink(p))
+                elif p.is_dir():
+                    result[key] = ("directory", None)
+                    pending.append(p)
+                else:
+                    result[key] = ("file", hashlib.sha256(p.read_bytes()).hexdigest())
+        return result
 
     def run_preflight(self, context):
         before = self.snapshot()
@@ -605,6 +615,106 @@ class CreateObjectL2BoundaryTests(unittest.TestCase):
             with patch.object(sys, "argv", ["preflight.py", "--context-json", json.dumps(self.base)]):
                 with self.assertRaisesRegex(RuntimeError, "implementation failure"):
                     self.module.main()
+
+    def make_cycle(self, *names):
+        """Real junctions on Windows, symlinks on POSIX; never recurse into them."""
+        paths = [self.root / name for name in names]
+        for p in paths:
+            p.mkdir()
+        temporary = []
+        for i, target in enumerate(paths[1:] + paths[:1]):
+            link = self.root / ("cycle_link_" + str(i))
+            if os.name == "nt":
+                import _winapi
+                # Failure is a test error, not a PASS obtained through skip.
+                _winapi.CreateJunction(str(target), str(link))
+            else:
+                link.symlink_to(target, target_is_directory=True)
+            holder = [link]
+            def remove_link(holder=holder):
+                p = holder[0]
+                self.assertEqual(self.root, p.parent)
+                p.rmdir() if os.name == "nt" else p.unlink()
+            self.addCleanup(remove_link)
+            temporary.append(holder)
+        for p in paths:
+            p.rmdir()  # Empty placeholders, not the links.
+        for holder, path, target in zip(temporary, paths, paths[1:] + paths[:1]):
+            holder[0].rename(path)
+            holder[0] = path
+            self.assertTrue(path.is_junction() if os.name == "nt" else path.is_symlink())
+            self.assertEqual(str(target).casefold(), os.readlink(path).removeprefix("\\\\?\\").casefold())
+        for path in paths:
+            with self.assertRaises((OSError, RuntimeError)):
+                (path / "new.py").resolve(strict=True)
+        return paths
+
+    def test_self_cycle_blocks_api_and_cli(self):
+        self.make_cycle("cycle")
+        context = {**self.base, "object_type": "notebook", "destination_relative": "cycle/new.py"}
+        self.assert_blocked(context, "DESTINATION_REQUIRED")
+        script = self.root / "skills/hub-ml-criar-objeto/scripts/preflight.py"
+        script.parent.mkdir(parents=True)
+        shutil.copyfile(ASSISTANT / "skills/hub-ml-criar-objeto/scripts/preflight.py", script)
+        before = self.snapshot()
+        p = subprocess.run([sys.executable, "-B", str(script), "--context-json", json.dumps(context)],
+                           capture_output=True, text=True, encoding="utf-8", timeout=15,
+                           env={**os.environ, "PYTHONUTF8": "1", "PYTHONDONTWRITEBYTECODE": "1"})
+        self.assertEqual(2, p.returncode, p.stderr)
+        self.assertEqual("BLOCKED", json.loads(p.stdout)["status"])
+        self.assertEqual("", p.stderr)
+        self.assertEqual(before, self.snapshot())
+
+    def test_two_node_cycle_blocks_destination_source_and_template(self):
+        self.make_cycle("cycle_a", "cycle_b")
+        self.assert_blocked({**self.base, "object_type": "notebook",
+                             "destination_relative": "cycle_a/new.py"}, "DESTINATION_REQUIRED")
+        self.assert_blocked(self.conversion(source_relative="cycle_b/source.py"), "CONVERSION_SOURCE_REQUIRED")
+        template = self.root / "hub_padroes/snippet"
+        (template / "template.md").unlink()
+        template.rmdir()
+        self.make_link(template, self.root / "cycle_a")
+        self.assert_blocked(self.base, "CANONICAL_TEMPLATE_NOT_FOUND")
+
+    def test_new_suffix_and_dangling_links_are_not_cycles(self):
+        self.assertEqual("PASS", self.run_preflight({**self.base, "object_type": "notebook",
+            "destination_relative": "new/several/missing/probe.py"})["status"])
+        inside = self.root / "inside"
+        outside = self.area / ".assistant_sibling"
+        inside.mkdir(); outside.mkdir()
+        (inside / "template.md").write_text("synthetic\n", encoding="utf-8")
+        self.make_link(self.root / "internal", inside)
+        self.make_link(self.root / "external", outside)
+        for broken in (False, True):
+            with self.subTest(broken=broken):
+                if broken:
+                    (inside / "template.md").unlink(); inside.rmdir(); outside.rmdir()
+                self.assertEqual("PASS", self.run_preflight({**self.base, "object_type": "notebook",
+                    "destination_relative": "internal/new/sub/probe.py"})["status"])
+                self.assert_blocked({**self.base, "object_type": "notebook",
+                    "destination_relative": "external/new.py"}, "DESTINATION_REQUIRED")
+        self.assert_blocked(self.conversion(source_relative="internal/source.py"), "CONVERSION_SOURCE_NOT_FOUND")
+
+    def test_internal_links_preserve_source_and_template_controls(self):
+        self.make_link(self.root / "source_alias", self.root / "old")
+        self.assertEqual("PASS", self.run_preflight(self.conversion(source_relative="source_alias/source.py"))["status"])
+        template = self.root / "hub_padroes/snippet"
+        replacement = self.root / "template_target"
+        template.rename(replacement)
+        self.make_link(template, replacement)
+        self.assertEqual("PASS", self.run_preflight(self.base)["status"])
+        (replacement / "template.md").unlink()
+        replacement.rmdir()
+        self.assert_blocked(self.base, "CANONICAL_TEMPLATE_NOT_FOUND")
+
+    def test_d2_pending_relations_and_human_readme_name_are_preserved(self):
+        for source, name in ((".", "probe"), ("hub_scripts", "probe"),
+                             ("hub_scripts/same/source.py", "same"), ("old", "same")):
+            with self.subTest(source=source, destination="hub_scripts/" + name):
+                self.assertEqual("PASS", self.run_preflight(self.conversion(
+                    source_relative=source, object_name=name))["status"])
+        self.assertEqual("PASS", self.run_preflight({**self.base, "object_type": "readme",
+            "object_name": "Guia do projeto", "readme_scale": "objeto", "destination_relative": "new/README.md"})["status"])
 
 
 if __name__=="__main__": unittest.main()

@@ -1,6 +1,49 @@
 # SE07 — checkpoint
 
-## Estado corrente — R1, 2026-09-20
+## Estado corrente — R1-C, 2026-09-20 (pré-certificação do novo commit)
+
+Correção pós-auditoria da R1, com um operador (Codex). A auditoria do SHA
+`2d25bd2dd4b13e8c9993633f3497df6a605df2f5` permanece **NAO_APTA**, por F-01 e
+F-02 herdados. R1-C é somente rótulo operacional; não inicia sprint ou R2.
+
+- F-01 reproduzido novamente em Windows/Python 3.12.10: junction autocíclica
+  e ciclo de dois nós receberam PASS, com CLI exit 0. Correção localizada:
+  resolução estrita; somente ausência (`FileNotFoundError`) admite resolução
+  não estrita para sufixo novo. Ciclos e outros erros bloqueiam; contenção usa
+  o caminho efetivo devolvido. Sem writer ou garantia contra TOCTOU.
+- F-02 reproduzido em clone novo: marker LF (254 bytes) tornou-se CRLF
+  (259 bytes). O renderer passa a emitir esse marker com `newline="\n"`;
+  cópia dos demais bytes e rigor de `render_diff` preservados.
+- Destinos novos, links internos e quebrados internos, seis tipos, seção
+  autorizada, nomes humanos README e conversões arquivo/diretório continuam
+  cobertos. D2 preservada: `.`, ancestralidade e destino existente distinto
+  seguem pendentes de política; identidade igual continua bloqueada.
+- Regressões focadas e certificação final são gates diferentes. FULL deve
+  executar os 15 gates sem dispensa em clones novos Windows e Linux/WSL do
+  mesmo SHA. O teste específico do renderer é executado adicionalmente.
+
+Handoff externo desta rodada: diretório temporário local
+`SEF_R1_C_20260920T151100Z`, arquivos `RELATORIO_R1_C.md` e `INDICE_EVIDENCIAS.md`.
+O relatório vincula o SHA final, resultados, tentativas, paths absolutos e selo.
+Este registro versionado antecede a certificação desse SHA e não a presume.
+
+F-03/D6 exige rodada própria para envelope, issues e falhas do adapter L3,
+antes de depender dele como gate decisivo de novos produtores. F-04/D10 exige
+proposta própria de status fail-closed, evidência exclusiva, imutabilidade SHA
+e supervisão antes de eventual R2; controle externo de timeout não sana o
+certifier. D4/D5 mantêm limites de evidência declarada, hashes sem autenticação
+de execução e âncoras escolhidas pelo consumidor. D7 não demanda convergência
+universal sem discrepância concreta. D2/D9 exigem decisão de conversão,
+autorização, rollback e fronteira runtime/repositório antes de writer L3.
+
+**Próximo gate proposto:** revisão focalizada da nova candidata → decisão
+humana de aceite R1-C → autorização específica da próxima rodada, com F-03
+como prioridade estrutural recomendada. Nenhum desses gates é executado aqui.
+SE07 não encerrada; Free/Genie, Actions, SE08 e promoção têm condições próprias.
+SE06: 24/25, A1-R4 NOT_RUN, DoD INCOMPLETE, FULLY_CERTIFIED=false. Último Free
+verificado histórico continua separado (`3b75edf04c1f`), sem consulta nesta rodada.
+
+## Registro histórico — R1, 2026-09-20
 
 A R0 foi aceita como reconciliação e planejamento. A R1 autorizou somente
 baseline herdada e estabilização delimitada de criar-objeto L2, com um operador.

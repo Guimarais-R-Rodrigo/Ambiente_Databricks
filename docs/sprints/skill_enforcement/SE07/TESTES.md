@@ -17,6 +17,28 @@ python -B tools/skill_enforcement/certify_local.py --profile se07 --evidence-dir
 
 ## Regressões R1 de criar-objeto L2
 
+### Complemento R1-C
+
+Além das regressões R1 abaixo, a suíte SE07 exercita ciclos reais de um/dois
+nós (junction Windows e symlink POSIX), API/CLI, origem/template cíclicos,
+destinos novos com vários componentes, links internos/externos/quebrados,
+raízes irmãs, template por link interno e controles D2. A montagem dos ciclos
+não usa skip no Windows e a inspeção de efeitos não percorre links.
+
+Executar também `python -B tools/tests/test_render_simulado.py -v`: esse teste
+não integra o perfil FULL. Confere bytes LF do marker, conteúdo canônico,
+cópia byte a byte dos demais arquivos e duas renderizações idempotentes em
+área sintética. Não normalizar o marker manualmente nem afrouxar render_diff.
+
+Certificar o mesmo SHA final em clones novos Windows/Python 3.12.10 e Linux/WSL
+disponível; preservar toda tentativa, status e identidade externos ao summary.
+Supervisor externo deve ter controle curto de timeout efetivamente disparado,
+com pai/filho identificados quando alegar alcance sobre descendentes comuns.
+Timeout configurado não é prova de imposição; suspensão/escape não são cobertos.
+Métodos, subtests, controles e skips devem ser contados separadamente no handoff.
+
+### Cobertura histórica R1
+
 `CreateObjectL2BoundaryTests` integra a suíte SE07 e usa somente fixtures
 sintéticas. Cobre os seis tipos, template ausente, resolução sem alegar leitura,
 traversal, separadores mistos, drive-relative, UNC, componente de seção inseguro,

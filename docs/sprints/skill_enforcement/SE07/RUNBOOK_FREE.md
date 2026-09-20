@@ -4,7 +4,12 @@
 
 Validar registry/resolver e a correção epistemológica da auditoria.
 
-## Situação corrente — R1
+## Situação corrente — R1-C
+
+A correção pós-auditoria cobre somente F-01/F-02 e gates locais Windows/Linux.
+Não homologar Free/Genie a partir desses resultados. R1 `2d25bd2...` continua
+NAO_APTA; nova candidata e resultados definitivos pertencem ao handoff R1-C.
+F-03/F-04 e decisões de conversão antes de L3 permanecem pendentes.
 
 Publicação e probes no Free não estão autorizados nesta rodada. O próximo gate
 proposto é a revisão independente da candidata local, conforme
