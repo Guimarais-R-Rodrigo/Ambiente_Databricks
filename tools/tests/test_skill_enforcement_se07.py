@@ -2,6 +2,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 import importlib.util, json, sys, unittest
+import hashlib
+import os
+import subprocess
+import tempfile
+from unittest.mock import patch
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -418,4 +423,188 @@ class SE07PolicyTests(unittest.TestCase):
         c=self.runtime.get_skill_enforcement_policy("hub-ml-criar-objeto",assistant_root=ASSISTANT); self.assertEqual(("L2","L3"),(c.current_level,c.target_level))
     def test_unknown_fails_closed(self):
         with self.assertRaises(self.runtime.EnforcementPolicyError): self.runtime.get_skill_enforcement_policy("hub-ml-nao-existe",assistant_root=ASSISTANT)
+class CreateObjectL2BoundaryTests(unittest.TestCase):
+    """Fixtures próprias: nenhum alvo adversarial aponta ao produto real."""
+
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix="sef_create_l2_")
+        self.addCleanup(self.temp.cleanup)
+        self.area = Path(self.temp.name)
+        self.root = self.area / ".assistant"
+        self.root.mkdir()
+        self.module = _load(
+            "se07_create_boundary",
+            ASSISTANT / "skills/hub-ml-criar-objeto/scripts/preflight.py",
+        )
+        self.root_patch = patch.object(self.module, "_resolve_assistant_root", return_value=self.root)
+        self.root_patch.start()
+        self.addCleanup(self.root_patch.stop)
+        for rel in [*self.module.TEMPLATES.values(), *self.module.README_TEMPLATES.values()]:
+            p = self.root / rel
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text("synthetic template\n", encoding="utf-8")
+        (self.root / "old").mkdir()
+        (self.root / "old/source.py").write_text("# synthetic\n", encoding="utf-8")
+        (self.root / "hub_scripts/same").mkdir(parents=True)
+        (self.root / "hub_scripts/same/source.py").write_text("# same\n", encoding="utf-8")
+        self.base = dict(operation="create", object_type="snippet", object_name="probe",
+                         type_confirmed=True, existing_capability_checked=True,
+                         existing_capability_status="not_found", snippet_section="testing")
+
+    def snapshot(self):
+        return {p.relative_to(self.area).as_posix():
+                ("file", hashlib.sha256(p.read_bytes()).hexdigest()) if p.is_file()
+                else ("link", os.readlink(p)) if p.is_symlink() or p.is_junction()
+                else ("directory", None)
+                for p in self.area.rglob("*")}
+
+    def run_preflight(self, context):
+        before = self.snapshot()
+        result = self.module.preflight(context)
+        self.assertEqual(before, self.snapshot())
+        self.assertFalse(result["writes_performed"])
+        self.assertEqual([], result["tools_executed"])
+        self.assertFalse(result["analytics_executed"])
+        return result
+
+    def assert_blocked(self, context, code=None):
+        result = self.run_preflight(context)
+        self.assertEqual("BLOCKED", result["status"], result)
+        self.assertTrue(result["blocking_issues"])
+        if code:
+            self.assertIn(code, {i["code"] for i in result["blocking_issues"]})
+
+    def conversion(self, **changes):
+        return {**self.base, "operation": "convert", "object_type": "script",
+                "source_relative": "old", "existing_capability_status": "found",
+                "overlap_resolution": "convert_existing", **changes}
+
+    def test_six_types_resolve_without_claiming_template_read(self):
+        for kind in ("snippet", "script", "prompt", "readme", "notebook", "skill"):
+            with self.subTest(kind=kind):
+                result = self.run_preflight({**self.base, "object_type": kind,
+                    "object_name": "hub-ml-probe" if kind == "skill" else "probe",
+                    "readme_scale": "objeto",
+                    "destination_relative": "new/README.md" if kind == "readme" else "new/probe.py"})
+                self.assertEqual("PASS", result["status"], result)
+                self.assertTrue(result["template"]["resolved"])
+                self.assertEqual("NOT_OBSERVABLE", result["template"]["read_status"])
+
+    def test_missing_template_is_blocked(self):
+        (self.root / self.module.TEMPLATES["snippet"]).unlink()
+        self.assert_blocked(self.base, "CANONICAL_TEMPLATE_NOT_FOUND")
+
+    def test_authorized_section_is_still_one_safe_component(self):
+        for section in ("../../outside", "..\\../outside", "../hub_scripts", "new/sub",
+                        "new\\sub", "C:outside", "/outside", ".", "..", "new\x00section"):
+            with self.subTest(section=section):
+                self.assert_blocked({**self.base, "snippet_section": section,
+                                     "new_snippet_section_authorized": True})
+        result = self.run_preflight({**self.base, "snippet_section": "new_section",
+                                    "new_snippet_section_authorized": True})
+        self.assertEqual("PASS", result["status"])
+
+    def test_unsafe_paths_are_rejected_before_filesystem_probe(self):
+        for raw in ("../outside/probe.py", "..\\outside/probe.py", "C:probe.py",
+                    "C:/probe.py", "//synthetic.invalid/share/probe.py",
+                    "\\\\synthetic.invalid\\share\\probe.py", "new/\x00probe.py",
+                    "new/probe:stream.py"):
+            with self.subTest(raw=raw):
+                self.assertIsNone(self.module._safe_relative(raw))
+                with patch.object(Path, "exists", side_effect=AssertionError("unsafe path probed")):
+                    self.assert_blocked({**self.base, "object_type": "notebook", "destination_relative": raw})
+                    self.assert_blocked(self.conversion(source_relative=raw, object_type="invalid"))
+
+    def make_link(self, link, target):
+        link.parent.mkdir(parents=True, exist_ok=True)
+        if os.name == "nt":
+            process = subprocess.run(["powershell", "-NoProfile", "-NonInteractive", "-Command",
+                "New-Item -ItemType Junction -Path '" + str(link).replace("'", "''") +
+                "' -Target '" + str(target).replace("'", "''") + "' | Out-Null"],
+                capture_output=True, timeout=15)
+            if process.returncode:
+                self.skipTest("junction indisponível sem ampliar privilégios: " + process.stderr.decode(errors="replace"))
+            self.addCleanup(link.rmdir)
+        else:
+            try:
+                link.symlink_to(target, target_is_directory=True)
+            except OSError as exc:
+                self.skipTest("symlink indisponível: " + str(exc))
+            self.addCleanup(link.unlink)
+
+    def test_link_escape_blocks_destination_source_and_template(self):
+        outside = self.area / "outside"
+        outside.mkdir()
+        (outside / "template.md").write_text("synthetic outside\n", encoding="utf-8")
+        self.make_link(self.root / "hub_snippets/linked", outside)
+        self.assert_blocked({**self.base, "snippet_section": "linked", "new_snippet_section_authorized": True})
+        self.assert_blocked(self.conversion(source_relative="hub_snippets/linked"))
+        template_dir = self.root / "hub_padroes/snippet"
+        (template_dir / "template.md").unlink()
+        template_dir.rmdir()
+        self.make_link(template_dir, outside)
+        self.assert_blocked(self.base)
+
+    def test_conversion_same_resolved_path_is_not_a_move(self):
+        for source in ("hub_scripts/same", "hub_scripts/./same", "hub_scripts\\same"):
+            with self.subTest(source=source):
+                self.assert_blocked(self.conversion(source_relative=source, object_name="same"), "CONVERSION_MUST_MOVE")
+        if os.name == "nt":
+            self.assert_blocked(self.conversion(source_relative="HUB_SCRIPTS/SAME", object_name="same"), "CONVERSION_MUST_MOVE")
+        self.make_link(self.root / "alias", self.root / "hub_scripts/same")
+        self.assert_blocked(self.conversion(source_relative="alias", object_name="same"), "CONVERSION_MUST_MOVE")
+
+    def test_conversion_accepts_existing_file_and_directory(self):
+        for source in ("old", "old/source.py"):
+            with self.subTest(source=source):
+                result = self.run_preflight(self.conversion(source_relative=source))
+                self.assertEqual("PASS", result["status"], result)
+                self.assertTrue(result["source_exists"])
+                self.assertTrue(result["conversion_behavior_preservation_required"])
+
+    def test_conversion_hardlink_to_same_file_is_not_a_move(self):
+        destination = self.root / "new/probe.py"
+        destination.parent.mkdir()
+        try:
+            os.link(self.root / "old/source.py", destination)
+        except OSError as exc:
+            self.skipTest("hardlink indisponível: " + str(exc))
+        self.assert_blocked(self.conversion(object_type="notebook",
+            source_relative="old/source.py", destination_relative="new/probe.py"), "CONVERSION_MUST_MOVE")
+
+    def test_invalid_api_root_has_structured_diagnostic(self):
+        for value in (None, [], ["create"], "create", False, 1):
+            with self.subTest(value=value):
+                self.assert_blocked(value, "PREFLIGHT_INPUT_INVALID")
+
+    def test_wrong_discriminant_types_have_structured_diagnostics(self):
+        for field in ("operation", "object_type", "existing_capability_status", "overlap_resolution",
+                      "readme_scale", "snippet_section", "object_name", "source_relative", "destination_relative"):
+            for value in ([], {}, None, False, 1):
+                with self.subTest(field=field, value=value):
+                    seed = self.conversion() if field in ("source_relative", "overlap_resolution") else self.base
+                    if field in ("readme_scale", "destination_relative"):
+                        seed = {**self.base, "object_type": "readme", "readme_scale": "objeto", "destination_relative": "new/README.md"}
+                    self.assert_blocked({**seed, field: value})
+
+    def test_cli_invalid_json_and_root_exit_two_without_traceback(self):
+        script = ASSISTANT / "skills/hub-ml-criar-objeto/scripts/preflight.py"
+        for raw in ("{", "[]", '{"operation": []}'):
+            with self.subTest(raw=raw):
+                p = subprocess.run([sys.executable, "-B", str(script), "--context-json", raw],
+                                   capture_output=True, text=True, encoding="utf-8", timeout=15,
+                                   env={**os.environ, "PYTHONUTF8": "1", "PYTHONDONTWRITEBYTECODE": "1"})
+                self.assertEqual(2, p.returncode, p.stderr)
+                self.assertEqual("BLOCKED", json.loads(p.stdout)["status"])
+                self.assertEqual("", p.stderr)
+
+    def test_unexpected_internal_error_is_not_input_validation(self):
+        with patch.object(self.module, "_resolve_assistant_root", side_effect=RuntimeError("synthetic implementation failure")):
+            with self.assertRaisesRegex(RuntimeError, "implementation failure"):
+                self.module.preflight(self.base)
+            with patch.object(sys, "argv", ["preflight.py", "--context-json", json.dumps(self.base)]):
+                with self.assertRaisesRegex(RuntimeError, "implementation failure"):
+                    self.module.main()
+
+
 if __name__=="__main__": unittest.main()

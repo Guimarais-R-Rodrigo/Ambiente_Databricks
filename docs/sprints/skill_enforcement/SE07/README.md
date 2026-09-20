@@ -2,7 +2,14 @@
 
 ## Estado
 
-**PRIMEIRA FATIA HOMOLOGADA LOCALMENTE E NO DATABRICKS FREE; screening comportamental direcionado 3/3 PASS.**
+**R1 — estabilização local delimitada de criar-objeto L2.** A baseline intacta
+`a01d12ff4e0cb7cfd795ade164f9ce9daad372ba` passou o FULL_SE07_LOCAL. O commit
+candidato R1 exige certificação própria, vinculada ao SHA no bundle externo.
+Estado, identidades e próximo gate: [CHECKPOINT.md](CHECKPOINT.md).
+
+A primeira fatia e as ondas anteriores têm homologações históricas no Free;
+elas não homologam a candidata R1. A próxima etapa proposta é revisão
+independente somente leitura, ainda não executada nesta rodada.
 
 Branch: `sef/SE07-generalizacao`  
 Baseline: `main@72894c5511abfa9a5ede3edb4a6f7c5fe11231b3`  
@@ -28,7 +35,7 @@ Uma skill citar helpers não a transforma em L2/L3. Sem contrato/preflight/runne
 
 A política canônica fica em `hub_padroes/skill_enforcement/policy.json` e é resolvida por `hub_scripts.skill_execution.get_skill_enforcement_policy`.
 
-## Classificação inicial
+## Classificação implementada na baseline R1
 
 | Skill | Current | Target | Risco |
 |---|---:|---:|---|
@@ -65,6 +72,9 @@ A política canônica fica em `hub_padroes/skill_enforcement/policy.json` e é r
 
 
 ## Evidência da primeira fatia
+
+As seções seguintes registram a sequência histórica das ondas. Seus próximos
+passos não substituem o estado corrente do checkpoint.
 
 No HEAD comportamental `af68a9e6bf1b50a3b3c164f22dce327d8cd2fbcb`:
 

@@ -1,5 +1,44 @@
 # SE07 — checkpoint
 
+## Estado corrente — R1, 2026-09-20
+
+A R0 foi aceita como reconciliação e planejamento. A R1 autorizou somente
+baseline herdada e estabilização delimitada de criar-objeto L2, com um operador.
+
+- `main`: `72894c5511abfa9a5ede3edb4a6f7c5fe11231b3`.
+- HEAD local anterior: `3b75edf04c1f890b449c07357df859ed19089265`.
+- Baseline herdada: `a01d12ff4e0cb7cfd795ade164f9ce9daad372ba`, alcançada por
+  fast-forward após reconferência remota e worktree limpa.
+- Baseline intacta: policy PASS, 19 testes SE07 PASS, cinco contratos PASS,
+  smoke L2 PASS e primeira execução integral `FULL_SE07_LOCAL=PASS` (15 gates),
+  sem diff nem mudança de SHA.
+- Último pacote Free com verify histórico disponível: `3b75edf04c1f`; a R1
+  não conferiu o estado atual do Free nem publicou a candidata.
+- Criar-objeto permanece L2, target L3 e policy_status `defined`.
+
+As correções R1 tratam paths fora da raiz, aliases do mesmo objeto e entradas
+inválidas. Por decisão explícita do usuário, origem `"."`, ancestralidade e
+destino existente em conversão mantêm a semântica anterior e ficam pendentes;
+PASS do preflight não autoriza escrita ou overwrite nesses casos.
+
+O SHA do commit R1 e sua certificação final são vinculados no bundle externo
+`~/.ambiente_databricks/sef_handoffs/R1_20260920T113329Z_a01d12ff_34889a/`.
+Consultar `RELATORIO_R1.md`, `final_identity.json` e o summary da certificação
+final desse SHA. O PASS da baseline não substitui esse gate. A revisão
+independente permanece um gate distinto da autoinspeção e dos testes locais.
+
+**Próximo gate proposto:** revisão independente em checkout isolado do SHA final,
+somente leitura. A nova conversa será preparada; a revisão substantiva depende
+de acionamento explícito. Não executar R2, L3, Free, push, PR, Actions ou merge.
+
+SE06 preservada: 24/25 observados, `S06-A1-R4=NOT_RUN`, `DOD=INCOMPLETE`.
+Os diagnósticos D4–D6 não alteram auditoria L3 nem reclassificam evidência antiga.
+
+## Registro histórico anterior à R1
+
+Os gates e próximos passos abaixo pertencem aos respectivos SHAs/ondas de
+2026-09-19. Valores `CURRENT_HEAD` nesses blocos são históricos.
+
 ## Base
 
 ```text
@@ -44,7 +83,7 @@ PR                                       = NOT_OPENED
 
 `target_level` é plano; `current_level` só muda quando artifacts/testes correspondentes existirem.
 
-## Próximo gate
+## Próximo gate registrado antes da R1 (histórico)
 
 Certificar localmente a candidata L3 da `hub-ml-auditoria-skills`; somente após PASS executar publicação/verify e probe L3 no Databricks Free. Não abrir PR nem Actions antes desses gates.
 

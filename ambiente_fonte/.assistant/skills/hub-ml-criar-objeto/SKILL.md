@@ -47,12 +47,20 @@ permitido com `create_declared_slice`; decisões como `extend_existing`,
 
 Para snippet, informar `snippet_section`. As seis seções atuais são aceitas
 diretamente; uma seção nova exige `new_snippet_section_authorized=true`.
+Essa autorização continua limitada a um único componente de caminho seguro.
+Origem, destino e template devem resolver dentro da raiz `.assistant`, inclusive
+quando há links ou junctions nos ancestrais; drive-relative, UNC e traversal
+não são destinos relativos válidos.
 
 Para README, informar `readme_scale="agregador"|"objeto"` e o destino
 relativo. Para notebook, informar o destino relativo `.py`.
 
 Em conversão, informar `source_relative`; o preflight valida que a origem
 existe e preserva a regra “converter é mover, não mudar comportamento”.
+Aliases que resolvem para o mesmo objeto não são movimento. A política para
+origem `"."`, relações ancestral/descendente e destino existente permanece
+pendente de decisão específica; o PASS L2 nesses casos não autoriza overwrite,
+merge, remoção nem execução de conversão.
 
 O preflight:
 
@@ -61,6 +69,12 @@ O preflight:
 - não cria pasta, arquivo, `__init__.py` ou notebook;
 - não executa `api_publica.py`, `validate_assistant.py` ou código analítico;
 - retorna `BLOCKED` quando uma decisão obrigatória ainda não existe.
+
+A API e a CLI devolvem diagnóstico estruturado para entradas inválidas; falhas
+inesperadas de implementação continuam visíveis como erros. Resolver o path do
+template não prova sua leitura: `template.read_status=NOT_OBSERVABLE`.
+A contenção é conferida no instante do preflight, sem garantia contra troca
+concorrente de links depois da checagem. Este L2 não é um mecanismo de escrita.
 
 ## Fluxo
 

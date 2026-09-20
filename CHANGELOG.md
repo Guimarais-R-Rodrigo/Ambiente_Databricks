@@ -6,6 +6,24 @@ subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
 
+## 2026-09-20 — SE07 R1: estabilização delimitada de criar-objeto L2 (Codex)
+
+### Corrigido
+
+- (Codex) Preflight de criar-objeto: contenção física de origem/destino/template, recusa de traversal, drive-relative, UNC e componentes inseguros de seção; aliases do mesmo objeto não satisfazem “converter é mover”.
+- (Codex) Entradas inadequadas na API/CLI retornam diagnóstico estruturado; falhas internas inesperadas não são disfarçadas de entrada inválida. Tipos, schema, níveis e permissões de escrita permanecem os do contrato vigente.
+
+### Adicionado e atualizado
+
+- (Codex) Regressões sintéticas na suíte SE07, incluindo seis tipos, links/junctions, hardlinks, template ausente e observação de ausência de escrita; prova dos defeitos originais preservada em bundle externo antes da correção.
+- (Codex) Checkpoint, README, testes e runbook reconciliados para distinguir baseline intacta, candidata local e pacote Free histórico; exemplos antigos permanecem identificados como históricos. Derivado regenerado pela ferramenta canônica.
+- (Codex) Reconciliação histórica, sem reivindicar autoria das implementações anteriores: a baseline herdada `a01d12ff4e0cb7cfd795ade164f9ce9daad372ba` passou os 15 gates do primeiro FULL_SE07_LOCAL da R1. O commit R1 exige evidência própria do SHA final no bundle externo indicado no checkpoint.
+
+### Limites preservados
+
+- (Codex) Por decisão explícita do usuário, origem `"."`, relações ancestral/descendente e destino existente em conversão mantêm a semântica herdada e ficam pendentes de política específica. PASS L2 não autoriza overwrite, merge ou conversão executada.
+- (Codex) Auditoria L3 foi apenas diagnosticada em fixtures externas; certifier, schemas, policy e SE06 não foram alterados. SE06 continua 24/25 observados, A1-R4 NOT_RUN e DoD INCOMPLETE. Sem L3 de criar-objeto, publicação Free, push, PR, Actions ou merge nesta rodada.
+
 ## 2026-09-16 — SE02: preflight verificável do Skill Enforcement Framework (ChatGPT)
 
 ### Adicionado

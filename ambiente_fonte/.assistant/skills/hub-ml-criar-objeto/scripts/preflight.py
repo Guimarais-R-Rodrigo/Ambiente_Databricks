@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from typing import Any, Mapping
 
 
@@ -51,9 +51,38 @@ def _safe_relative(raw: Any) -> Path | None:
         return None
     text = raw.strip().replace("\\", "/")
     path = Path(text)
-    if path.is_absolute() or text.startswith("/") or ".." in path.parts:
+    # As entradas viajam entre Windows e Databricks: drive-relative e ADS
+    # não podem virar paths relativos aparentemente seguros em outro host.
+    if (path.is_absolute() or PureWindowsPath(text).drive or text.startswith("/")
+            or ".." in path.parts or ":" in text or "\x00" in text):
         return None
     return path
+
+
+def _contained_path(root: Path, relative: str | Path) -> Path | None:
+    """Confere também links/junctions existentes, inclusive nos ancestrais."""
+    safe = _safe_relative(str(relative))
+    if safe is None:
+        return None
+    try:
+        resolved_root = root.resolve()
+        resolved = (resolved_root / safe).resolve()
+    except (OSError, ValueError, RuntimeError):
+        # Erros de resolução de path (incluindo loop de links), não do preflight.
+        return None
+    return resolved if resolved.is_relative_to(resolved_root) else None
+
+
+def _invalid_input(message: str) -> dict[str, Any]:
+    return {
+        "schema_version": "SE07-CREATE-OBJECT-PREFLIGHT-1",
+        "skill": SKILL,
+        "status": "BLOCKED",
+        "blocking_issues": [_issue("PREFLIGHT_INPUT_INVALID", message, "$")],
+        "writes_performed": False,
+        "tools_executed": [],
+        "analytics_executed": False,
+    }
 
 
 def _load_context(raw: str) -> dict[str, Any]:
@@ -75,7 +104,7 @@ def _template_for(
         return TEMPLATES.get(object_type)
 
     scale = context.get("readme_scale")
-    if scale not in README_TEMPLATES:
+    if not isinstance(scale, str) or scale not in README_TEMPLATES:
         issues.append(
             _issue(
                 "README_SCALE_REQUIRED",
@@ -103,6 +132,15 @@ def _destination_for(
                     "snippet_section",
                 )
             )
+            return None
+        section_path = _safe_relative(section)
+        if (section_path is None or section in {".", ".."}
+                or "/" in section or "\\" in section or not section_path.parts):
+            issues.append(_issue(
+                "SNIPPET_SECTION_INVALID",
+                "snippet_section deve ser um único componente de caminho seguro",
+                "snippet_section",
+            ))
             return None
         if section not in SNIPPET_SECTIONS and context.get("new_snippet_section_authorized") is not True:
             issues.append(
@@ -181,11 +219,13 @@ def _validate_name(
 
 def preflight(context: Mapping[str, Any]) -> dict[str, Any]:
     """Resolve forma e destino do objeto sem criar ou alterar arquivos."""
+    if not isinstance(context, Mapping):
+        return _invalid_input("context deve ser objeto JSON/mapping")
     root = _resolve_assistant_root()
     issues: list[dict[str, str]] = []
 
     operation = context.get("operation")
-    if operation not in OPERATIONS:
+    if not isinstance(operation, str) or operation not in OPERATIONS:
         issues.append(
             _issue(
                 "OPERATION_INVALID",
@@ -195,7 +235,7 @@ def preflight(context: Mapping[str, Any]) -> dict[str, Any]:
         )
 
     object_type = context.get("object_type")
-    if object_type not in OBJECT_TYPES:
+    if not isinstance(object_type, str) or object_type not in OBJECT_TYPES:
         issues.append(
             _issue(
                 "OBJECT_TYPE_INVALID",
@@ -237,7 +277,7 @@ def preflight(context: Mapping[str, Any]) -> dict[str, Any]:
         )
 
     capability_status = context.get("existing_capability_status")
-    if capability_status not in {"not_found", "found"}:
+    if not isinstance(capability_status, str) or capability_status not in {"not_found", "found"}:
         issues.append(
             _issue(
                 "EXISTING_CAPABILITY_STATUS_INVALID",
@@ -248,7 +288,7 @@ def preflight(context: Mapping[str, Any]) -> dict[str, Any]:
 
     overlap_resolution = context.get("overlap_resolution")
     if capability_status == "found":
-        if overlap_resolution not in OVERLAP_RESOLUTIONS:
+        if not isinstance(overlap_resolution, str) or overlap_resolution not in OVERLAP_RESOLUTIONS:
             issues.append(
                 _issue(
                     "OVERLAP_RESOLUTION_REQUIRED",
@@ -298,8 +338,8 @@ def preflight(context: Mapping[str, Any]) -> dict[str, Any]:
 
     template_exists = False
     if template_rel is not None:
-        template_path = root / template_rel
-        template_exists = template_path.is_file()
+        template_path = _contained_path(root, template_rel)
+        template_exists = template_path is not None and template_path.is_file()
         if not template_exists:
             issues.append(
                 _issue(
@@ -310,8 +350,17 @@ def preflight(context: Mapping[str, Any]) -> dict[str, Any]:
             )
 
     destination_exists = None
+    destination_path = None
     if destination_rel is not None:
-        destination_exists = (root / destination_rel).exists()
+        destination_path = _contained_path(root, destination_rel)
+        if destination_path is None:
+            issues.append(_issue(
+                "DESTINATION_REQUIRED",
+                "destino deve resolver dentro da raiz .assistant",
+                "destination_relative",
+            ))
+        else:
+            destination_exists = destination_path.exists()
         if operation == "create" and destination_exists:
             issues.append(
                 _issue(
@@ -325,17 +374,18 @@ def preflight(context: Mapping[str, Any]) -> dict[str, Any]:
     source_exists = None
     if operation == "convert":
         source = _safe_relative(context.get("source_relative"))
-        if source is None:
+        source_path = _contained_path(root, source) if source is not None else None
+        if source_path is None:
             issues.append(
                 _issue(
                     "CONVERSION_SOURCE_REQUIRED",
-                    "conversão exige source_relative seguro",
+                    "conversão exige source_relative seguro dentro da raiz .assistant",
                     "source_relative",
                 )
             )
         else:
             source_rel = source.as_posix()
-            source_exists = (root / source).exists()
+            source_exists = source_path.exists()
             if not source_exists:
                 issues.append(
                     _issue(
@@ -344,7 +394,10 @@ def preflight(context: Mapping[str, Any]) -> dict[str, Any]:
                         "source_relative",
                     )
                 )
-            if destination_rel is not None and source_rel == destination_rel:
+            if destination_path is not None and (
+                source_path == destination_path
+                or (source_exists and destination_exists and source_path.samefile(destination_path))
+            ):
                 issues.append(
                     _issue(
                         "CONVERSION_MUST_MOVE",
@@ -383,19 +436,12 @@ def main() -> int:
     args = parser.parse_args()
 
     try:
-        payload = preflight(_load_context(args.context_json))
-    except (RuntimeError, ValueError) as exc:
-        payload = {
-            "schema_version": "SE07-CREATE-OBJECT-PREFLIGHT-1",
-            "skill": SKILL,
-            "status": "BLOCKED",
-            "blocking_issues": [
-                _issue("PREFLIGHT_INPUT_INVALID", str(exc), "$")
-            ],
-            "writes_performed": False,
-            "tools_executed": [],
-            "analytics_executed": False,
-        }
+        context = _load_context(args.context_json)
+    except ValueError as exc:
+        payload = _invalid_input(str(exc))
+    else:
+        # Uma falha inesperada de implementação deve continuar visível.
+        payload = preflight(context)
 
     print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
     return 0 if payload.get("status") == "PASS" else 2

@@ -2,11 +2,41 @@
 
 ## Gate determinístico
 
+Executar com o Python histórico configurado, por caminho absoluto. O bundle de
+cada tentativa deve ser exclusivo e externo ao repositório, com stdout/stderr,
+códigos de saída, timeout supervisionado e SHA/branch/status antes e depois.
+Não reutilizar diretório de evidências. Um teste não iniciado é `NOT_RUN`;
+somente o perfil completo sem atalhos certifica `FULL_SE07_LOCAL`.
+
 ```powershell
 python -B tools/skill_enforcement/se07_policy.py
 python -B tools/tests/test_skill_enforcement_se07.py -v
-python -B tools/skill_enforcement/certify_local.py --profile se07
+python -B tools/skill_enforcement/validate_contracts.py
+python -B tools/skill_enforcement/certify_local.py --profile se07 --evidence-dir <diretorio-externo-novo>
 ```
+
+## Regressões R1 de criar-objeto L2
+
+`CreateObjectL2BoundaryTests` integra a suíte SE07 e usa somente fixtures
+sintéticas. Cobre os seis tipos, template ausente, resolução sem alegar leitura,
+traversal, separadores mistos, drive-relative, UNC, componente de seção inseguro,
+links/junctions, aliases e hardlinks do mesmo objeto, tipos inválidos na API/CLI
+e propagação de erro interno inesperado. Confere bytes, entradas de diretório e
+alvos de links antes/depois, além dos indicadores de ausência de efeitos.
+
+Casos que precisem de link são marcados como skip se o host não permitir criá-lo
+sem ampliar privilégios; isso não equivale a PASS do cenário nesse host.
+Origem `"."`, ancestralidade e destino existente em conversão foram reproduzidos
+com PASS na baseline e preservados por decisão explícita do usuário. Permanecem
+pendentes de política específica, sem autorizar overwrite ou mover dados.
+
+D4–D6 foram investigados em harness externo, sem mudança no auditor. SHA puro
+não autentica uma fabricação completa com recálculo de hashes, conforme o
+[threat model](../SE04/THREAT_MODEL.md). Um Receipt da auditoria válido não prova
+que declarações da ladder tenham fonte nem substitui o verifier da produtora.
+
+As ondas abaixo preservam critérios e observações históricos em seus SHAs;
+não são instruções para reduzir os níveis atuais da policy.
 
 ## Invariantes
 
