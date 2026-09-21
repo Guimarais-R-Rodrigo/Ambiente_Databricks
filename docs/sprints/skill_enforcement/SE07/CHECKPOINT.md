@@ -1,5 +1,26 @@
 # SE07 — checkpoint
 
+
+## Decisão humana sobre a corretiva de cleanup — 2026-09-21
+
+**ACEITE_HUMANO_REGISTRADO** para a corretiva publicada em
+`74f92f02fe9c9b6345489f499b6b1f926f08382f`, parent
+`44a587074736c45e5c268366a0688581e57b6069`, tree
+`f3ac3d1ca3ec4d438e02c8fb2ce156e6dab8d708`.
+
+Após a publicação e reconciliação da corretiva, o usuário declarou explicitamente
+aprovação humana e solicitou seu registro antes do próximo gate. Este aceite
+aprova a candidata corretiva para seguir à recertificação nativa Windows/NTFS.
+Ele não reclassifica a candidata original `19328661...`, não substitui
+certificação técnica, não elimina a dívida causal do WinError32 e não promove
+`current_level`.
+
+O próximo gate obrigatório é a recertificação nativa Windows/NTFS/Python 3.12.14,
+seguida de auditoria externa e nova decisão humana sobre eventual promoção.
+Este aceite não autoriza PR, Actions, Free, Genie, merge, alteração de `main`,
+avanço da canônica `sef/SE07-generalizacao` ou SE08.
+
+
 ## Decisão humana posterior ao piloto — 2026-09-21
 
 **ACEITE_HUMANO_REGISTRADO** para o piloto delimitado em

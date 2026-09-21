@@ -1,5 +1,18 @@
 # Handoff — SE07, corretiva da observabilidade de cleanup (ChatGPT)
 
+
+## Decisão humana posterior à implementação
+
+O usuário registrou aceite humano explícito da corretiva
+`74f92f02fe9c9b6345489f499b6b1f926f08382f` e autorizou seu avanço ao próximo
+gate técnico. O aceite é separado da certificação: a corretiva ainda precisa ser
+recertificada em Windows/NTFS/Python 3.12.14, e a causa nativa do WinError32
+permanece não estabelecida.
+
+Este registro não promove a canônica, não altera `current_level` e não autoriza
+PR, Actions, Free, Genie, merge ou SE08.
+
+
 ## Identidade, autorização e parada
 
 Falha auditada na candidata técnica `1932866140a5ef0eceaf9932c26bb7853f108eac`,

@@ -1,5 +1,13 @@
 # Changelog
 
+
+## 2026-09-21 — SE07: aceite humano da corretiva de cleanup
+
+### Atualizado
+
+- (ChatGPT) Registrado aceite humano explícito da corretiva `74f92f02...` em `CHECKPOINT.md` e no handoff correspondente. O aceite autoriza seguir à recertificação nativa Windows/NTFS, mas não equivale a PASS técnico, não elimina o WinError32 histórico e não promove canônica/current_level.
+
+
 ## 2026-09-21 — SE07: decisão humana sobre o piloto README
 
 ### Atualizado
