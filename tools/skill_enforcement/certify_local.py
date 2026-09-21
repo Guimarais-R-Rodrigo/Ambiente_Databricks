@@ -30,6 +30,11 @@ import argparse
 import json
 import locale
 import os
+import math
+import re
+import signal
+import tempfile
+import uuid
 import platform
 import subprocess
 import sys
@@ -54,6 +59,7 @@ class StepResult:
     status: str
     last_line: str
     log_file: str | None = None
+    process: dict[str, object] | None = None
 
 
 @dataclass(frozen=True)
@@ -64,9 +70,15 @@ class GitState:
     merge_base_sha: str | None
     status_short: str
 
+    observation_errors: tuple[str, ...] = ()
+
+    @property
+    def valid(self) -> bool:
+        return not self.observation_errors and bool(re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", self.head_sha or ""))
+
     @property
     def clean(self) -> bool:
-        return not self.status_short.strip()
+        return self.valid and not self.status_short.strip()
 
 
 _CONTRACT_STEP = (
@@ -200,6 +212,7 @@ PROFILE_STEPS: dict[str, list[tuple[str, list[str]]]] = {
         _SE06_EVAL_STEP,
         _SE07_POLICY_STEP,
         _SE07_TEST_STEP,
+        ("certifier_regression", [sys.executable, "-B", "tools/tests/test_certify_local.py", "-v"]),
         *_COMMON_FINAL_STEPS,
     ],
 }
@@ -214,23 +227,232 @@ def _decode(data: bytes) -> str:
     return data.decode("utf-8", errors="replace")
 
 
+# Per-process budgets, not a campaign deadline. No budget is extended after failure.
+GIT_TIMEOUT_SECONDS = 30.0
+STEP_TIMEOUT_SECONDS = 900.0
+CLEANUP_TIMEOUT_SECONDS = 10.0
+PROCESS_RECORDS: list[dict[str, object]] = []
+ACTIVE_EVIDENCE: Path | None = None
+RESERVATIONS: dict[Path, tuple[int, int]] = {}
+
+
+def _utc() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+class _WindowsJob:
+    """Own only processes assigned to this job; close also kills descendants.
+
+    A Python launcher waits on stdin before spawning the requested argv, so job
+    assignment precedes any gate child. No process-name kill or privileges used.
+    """
+    def __init__(self) -> None:
+        import ctypes
+        from ctypes import wintypes as w
+        self.ctypes = ctypes
+        self.k = ctypes.WinDLL("kernel32", use_last_error=True)
+        class Basic(ctypes.Structure):
+            _fields_ = [("PerProcessUserTimeLimit", ctypes.c_longlong),
+                        ("PerJobUserTimeLimit", ctypes.c_longlong), ("LimitFlags", w.DWORD),
+                        ("MinimumWorkingSetSize", ctypes.c_size_t), ("MaximumWorkingSetSize", ctypes.c_size_t),
+                        ("ActiveProcessLimit", w.DWORD), ("Affinity", ctypes.c_size_t),
+                        ("PriorityClass", w.DWORD), ("SchedulingClass", w.DWORD)]
+        class Limits(ctypes.Structure):
+            _fields_ = [("BasicLimitInformation", Basic), ("IoInfo", ctypes.c_ulonglong * 6),
+                        ("ProcessMemoryLimit", ctypes.c_size_t), ("JobMemoryLimit", ctypes.c_size_t),
+                        ("PeakProcessMemoryUsed", ctypes.c_size_t), ("PeakJobMemoryUsed", ctypes.c_size_t)]
+        class Accounting(ctypes.Structure):
+            _fields_ = [("Times", ctypes.c_longlong * 4), ("TotalPageFaultCount", w.DWORD),
+                        ("TotalProcesses", w.DWORD), ("ActiveProcesses", w.DWORD),
+                        ("TotalTerminatedProcesses", w.DWORD)]
+        self.accounting = Accounting
+        for name, restype, argtypes in [
+            ("CreateJobObjectW", w.HANDLE, [ctypes.c_void_p, w.LPCWSTR]),
+            ("SetInformationJobObject", w.BOOL, [w.HANDLE, ctypes.c_int, ctypes.c_void_p, w.DWORD]),
+            ("AssignProcessToJobObject", w.BOOL, [w.HANDLE, w.HANDLE]),
+            ("TerminateJobObject", w.BOOL, [w.HANDLE, w.UINT]),
+            ("QueryInformationJobObject", w.BOOL, [w.HANDLE, ctypes.c_int, ctypes.c_void_p, w.DWORD, ctypes.c_void_p]),
+            ("CloseHandle", w.BOOL, [w.HANDLE]),
+        ]:
+            fn = getattr(self.k, name); fn.restype = restype; fn.argtypes = argtypes
+        self.handle = self.k.CreateJobObjectW(None, None)
+        if not self.handle:
+            raise ctypes.WinError(ctypes.get_last_error())
+        limits = Limits(); limits.BasicLimitInformation.LimitFlags = 0x2000
+        if not self.k.SetInformationJobObject(self.handle, 9, ctypes.byref(limits), ctypes.sizeof(limits)):
+            error = ctypes.WinError(ctypes.get_last_error()); self.close(); raise error
+
+    def assign(self, process: subprocess.Popen) -> None:
+        if not self.k.AssignProcessToJobObject(self.handle, int(process._handle)):
+            raise self.ctypes.WinError(self.ctypes.get_last_error())
+
+    def terminate(self) -> None:
+        if not self.k.TerminateJobObject(self.handle, 1):
+            raise self.ctypes.WinError(self.ctypes.get_last_error())
+        until = time.monotonic() + CLEANUP_TIMEOUT_SECONDS
+        while True:
+            info = self.accounting()
+            if not self.k.QueryInformationJobObject(self.handle, 1, self.ctypes.byref(info), self.ctypes.sizeof(info), None):
+                raise self.ctypes.WinError(self.ctypes.get_last_error())
+            if info.ActiveProcesses == 0:
+                return
+            if time.monotonic() >= until:
+                raise OSError("job still has active processes after cleanup deadline")
+            time.sleep(0.02)
+
+    def close(self) -> None:
+        if self.handle:
+            handle, self.handle = self.handle, None
+            if not self.k.CloseHandle(handle):
+                raise self.ctypes.WinError(self.ctypes.get_last_error())
+
+
+# This launcher is used only on Windows; the job is assigned before stdin opens.
+_WINDOWS_LAUNCHER = """import json, pathlib, subprocess, sys
+if sys.stdin.buffer.read(1) != b'1': sys.exit(125)
+try:
+ p = subprocess.Popen(json.loads(sys.argv[1]), stdin=subprocess.DEVNULL)
+except OSError as exc:
+ pathlib.Path(sys.argv[2]).write_text(json.dumps({'start_error': repr(exc)}), encoding='utf8')
+ sys.exit(125)
+pathlib.Path(sys.argv[2]).write_text(json.dumps({'pid': p.pid}), encoding='utf8')
+sys.exit(p.wait())
+"""
+
+
+def _flush_process_records() -> None:
+    if ACTIVE_EVIDENCE is not None:
+        _assert_reserved(ACTIVE_EVIDENCE)
+        _write_json(ACTIVE_EVIDENCE / "processes.json", PROCESS_RECORDS)
+
+
+def _posix_group_alive(group: int) -> bool:
+    # Linux zombies have terminated but may wait on their external reaper. Only
+    # live group members matter. Other POSIX hosts conservatively query killpg.
+    procfs = Path("/proc")
+    if sys.platform.startswith("linux") and procfs.is_dir():
+        for entry in procfs.iterdir():
+            if not entry.name.isdigit():
+                continue
+            try:
+                fields = (entry / "stat").read_text().rsplit(")", 1)[1].split()
+                if int(fields[2]) == group and fields[0] != "Z":
+                    return True
+            except FileNotFoundError:
+                continue
+        return False
+    try:
+        os.killpg(group, 0)
+        return True
+    except ProcessLookupError:
+        return False
+
+
 def _run(command: Sequence[str]) -> tuple[int, str, float]:
-    env = dict(
-        os.environ,
-        PYTHONIOENCODING="utf-8",
-        PYTHONUTF8="1",
-        PYTHONDONTWRITEBYTECODE="1",
-    )
+    """Compatibility tuple; full observed metadata is appended to processes.json.
+
+    124/125/130 are conventions for timeout/infrastructure/interruption, never
+    fabricated observed child exits. File-backed streams preserve partial output.
+    """
+    env = dict(os.environ, PYTHONIOENCODING="utf-8", PYTHONUTF8="1", PYTHONDONTWRITEBYTECODE="1")
+    timeout = GIT_TIMEOUT_SECONDS if Path(command[0]).stem.lower() == "git" else STEP_TIMEOUT_SECONDS
     start = time.monotonic()
-    proc = subprocess.run(
-        list(command),
-        cwd=REPO_ROOT,
-        capture_output=True,
-        env=env,
-    )
-    duration = time.monotonic() - start
-    output = _decode((proc.stdout or b"") + (proc.stderr or b""))
-    return proc.returncode, output, duration
+    record = {"command": list(command), "cwd": str(REPO_ROOT), "started_at_utc": _utc(),
+              "started_monotonic": start, "timeout_seconds": timeout, "pid": None,
+              "observed_exit_code": None, "result": "STARTING", "cleanup": "NOT_STARTED"}
+    PROCESS_RECORDS.append(record)
+    _flush_process_records()  # Essential persistence must work before starting a gate.
+    process = None
+    job = None
+    code = 125
+    pending_exit = None
+    with tempfile.TemporaryDirectory(prefix="sef-process-") as temporary:
+        path = Path(temporary)
+        with (path / "stdout").open("w+b") as stdout, (path / "stderr").open("w+b") as stderr:
+            try:
+                kwargs = {"cwd": REPO_ROOT, "stdout": stdout, "stderr": stderr, "env": env}
+                if os.name == "nt":
+                    job = _WindowsJob()
+                    launcher = [sys.executable, "-B", "-c", _WINDOWS_LAUNCHER, json.dumps(list(command)), str(path / "child.json")]
+                    process = subprocess.Popen(launcher, stdin=subprocess.PIPE, **kwargs)
+                    record["launcher_pid"] = process.pid
+                    job.assign(process)
+                    process.stdin.write(b"1"); process.stdin.close()
+                else:
+                    process = subprocess.Popen(list(command), stdin=subprocess.DEVNULL, start_new_session=True, **kwargs)
+                    record["pid"] = process.pid
+                record["result"] = "RUNNING"
+                _flush_process_records()
+                code = process.wait(timeout=max(0.001, timeout - (time.monotonic() - start)))
+                record["observed_exit_code"] = code
+                record["result"] = "EXITED"
+            except subprocess.TimeoutExpired:
+                code = 124; record["result"] = "TIMEOUT"
+            except KeyboardInterrupt:
+                code = 130; record["result"] = "INTERRUPTED"
+            except SystemExit as exc:
+                code = 130; record["result"] = "INTERRUPTED"; pending_exit = exc
+            except OSError as exc:
+                code = 125; record["result"] = "INFRASTRUCTURE_ERROR"; record["error"] = repr(exc)
+            finally:
+                try:
+                    if job is not None:
+                        job.terminate()
+                    elif process is not None:
+                        try:
+                            os.killpg(process.pid, signal.SIGKILL)
+                        except ProcessLookupError:
+                            pass
+                    if process is not None:
+                        # Assignment can fail while the launcher is still waiting.
+                        if process.poll() is None:
+                            process.kill()
+                        record["exit_after_cleanup"] = process.wait(timeout=CLEANUP_TIMEOUT_SECONDS)
+                    if os.name != "nt" and process is not None:
+                        until = time.monotonic() + CLEANUP_TIMEOUT_SECONDS
+                        while _posix_group_alive(process.pid):
+                            if time.monotonic() >= until:
+                                raise OSError("process group still active after cleanup deadline")
+                            time.sleep(0.02)
+                    record["cleanup"] = "COMPLETE"
+                except (OSError, subprocess.TimeoutExpired) as exc:
+                    record["cleanup"] = "FAILED"; record["cleanup_error"] = repr(exc); code = 125
+                finally:
+                    if job is not None:
+                        try:
+                            job.close()
+                        except OSError as exc:
+                            record["cleanup"] = "FAILED"; record["cleanup_error"] = repr(exc); code = 125
+                    if process is not None and process.stdin is not None and not process.stdin.closed:
+                        process.stdin.close()
+                if os.name == "nt" and (path / "child.json").exists():
+                    try:
+                        child = json.loads((path / "child.json").read_text(encoding="utf8"))
+                        record.update(child)
+                        if "start_error" in child:
+                            record["result"] = "START_ERROR"; record["observed_exit_code"] = None; code = 125
+                    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+                        # Termination may interrupt the launcher's metadata write;
+                        # streams must still be recovered and the attempt fail.
+                        record["metadata_error"] = repr(exc)
+                        record["result"] = "INFRASTRUCTURE_ERROR"
+                        record["observed_exit_code"] = None
+                        code = 125
+                stdout.seek(0); stderr.seek(0)
+                raw_stdout, raw_stderr = stdout.read(), stderr.read()
+                record["stdout"], record["stderr"] = _decode(raw_stdout), _decode(raw_stderr)
+                try:
+                    raw_stdout.decode("utf-8"); raw_stderr.decode("utf-8")
+                    record["utf8_valid"] = True
+                except UnicodeDecodeError:
+                    record["utf8_valid"] = False
+                record["ended_at_utc"] = _utc()
+                record["ended_monotonic"] = time.monotonic()
+                record["conventional_exit_code"] = code
+                _flush_process_records()
+    if pending_exit is not None:
+        raise pending_exit
+    return code, record["stdout"] + record["stderr"], time.monotonic() - start
 
 
 def _run_render_diff_gate() -> tuple[int, str, float]:
@@ -261,27 +483,31 @@ def _run_render_diff_gate() -> tuple[int, str, float]:
 
 
 def _git_output(*args: str) -> str | None:
+    previous = len(PROCESS_RECORDS)
     code, output, _ = _run(["git", *args])
-    if code != 0:
+    record = PROCESS_RECORDS[-1] if len(PROCESS_RECORDS) > previous else None
+    if code != 0 or (record is not None and not record.get("utf8_valid", False)):
         return None
-    return output.strip()
+    # stderr is retained separately as evidence, never mixed into Git data.
+    return str(record["stdout"]).rstrip("\r\n") if record is not None else output.rstrip("\r\n")
 
 
 def _git_state() -> GitState:
-    head = _git_output("rev-parse", "HEAD")
+    head = _git_output("rev-parse", "--verify", "HEAD")
     branch = _git_output("branch", "--show-current")
-    origin_main = _git_output("rev-parse", "origin/main")
-    merge_base = None
-    if head and origin_main:
-        merge_base = _git_output("merge-base", head, origin_main)
-    status = _git_output("status", "--short", "--untracked-files=all")
-    return GitState(
-        head_sha=head,
-        branch=branch or None,
-        origin_main_sha=origin_main,
-        merge_base_sha=merge_base,
-        status_short=status or "",
-    )
+    origin_main = _git_output("rev-parse", "--verify", "origin/main")
+    merge_base = _git_output("merge-base", head, origin_main) if head and origin_main else None
+    status = _git_output("-c", "core.quotepath=true", "status", "--porcelain=v1", "--untracked-files=all")
+    errors = []
+    if not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", head or ""):
+        errors.append("HEAD_UNOBSERVABLE_OR_INVALID")
+    if any(r.get("cleanup") == "FAILED" for r in PROCESS_RECORDS):
+        errors.append("PROCESS_CLEANUP_FAILED")
+    if status is None:
+        errors.append("STATUS_UNOBSERVABLE")
+    elif any(len(line) < 4 or line[0] not in " MADRCU?!" or line[1] not in " MADRCU?!" or line[2] != " " for line in status.splitlines()):
+        errors.append("STATUS_INVALID")
+    return GitState(head, branch or None, origin_main, merge_base, status or "", tuple(errors))
 
 
 def _last_nonempty_line(text: str) -> str:
@@ -291,23 +517,55 @@ def _last_nonempty_line(text: str) -> str:
     return ""
 
 
+def _reject_aliases(target: Path) -> None:
+    for item in (target, *target.parents):
+        if item.is_symlink() or (hasattr(item, "is_junction") and item.is_junction()):
+            raise ValueError("evidence-dir não pode atravessar symlink/junction")
+
+
 def _resolve_evidence_dir(raw: str | None, head_sha: str | None) -> Path:
     if raw:
-        target = Path(raw).expanduser().resolve()
+        supplied = Path(raw).expanduser()
+        if ".." in supplied.parts:
+            raise ValueError("evidence-dir não aceita componentes ..")
+        target = Path(os.path.abspath(supplied))
     else:
-        timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-        suffix = (head_sha or "unknown")[:12]
-        target = (DEFAULT_EVIDENCE_ROOT / f"{timestamp}_{suffix}").resolve()
-    if target == REPO_ROOT or target.is_relative_to(REPO_ROOT):
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+        target = DEFAULT_EVIDENCE_ROOT / f"{timestamp}_{(head_sha or 'unknown')[:12]}_{uuid.uuid4().hex}"
+    _reject_aliases(target)
+    target = target.resolve()
+    root = REPO_ROOT.resolve()
+    if target == root or target.is_relative_to(root):
         raise ValueError("evidence-dir deve ficar fora da árvore do repositório")
     return target
 
 
+def _reserve_evidence(target: Path) -> None:
+    _reject_aliases(target)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.mkdir()  # Atomic exclusive acquisition; existing even empty is rejected.
+    _reject_aliases(target)
+    stat = target.stat()
+    RESERVATIONS[target] = (stat.st_dev, stat.st_ino)
+
+
+def _assert_reserved(target: Path) -> None:
+    _reject_aliases(target)
+    stat = target.stat()
+    if RESERVATIONS.get(target) != (stat.st_dev, stat.st_ino):
+        raise OSError("evidence reservation missing or replaced")
+
+
 def _write_json(path: Path, payload: object) -> None:
-    path.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
+    _reject_aliases(path.parent)
+    if path.exists() and (path.is_symlink() or path.stat().st_nlink > 1):
+        raise OSError("evidence file aliases another object")
+    temporary = path.with_name(path.name + "." + uuid.uuid4().hex + ".tmp")
+    with temporary.open("x", encoding="utf-8", newline="\n") as stream:
+        stream.write(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n")
+        stream.flush()
+        os.fsync(stream.fileno())
+    temporary.replace(path)
 
 
 def _filtered_steps(profile: str, skip_render: bool) -> list[tuple[str, list[str]]]:
@@ -328,8 +586,7 @@ def _persist_bundle(
 ) -> None:
     if evidence_dir is None:
         return
-    evidence_dir.mkdir(parents=True, exist_ok=True)
-    _write_json(evidence_dir / "summary.json", summary)
+    _assert_reserved(evidence_dir)
     _write_json(
         evidence_dir / "environment.json",
         {
@@ -343,185 +600,151 @@ def _persist_bundle(
         evidence_dir / "commands.json",
         [{"name": result.name, "command": result.command} for result in results],
     )
+    # Summary is the final essential write, so incomplete bundles cannot retain PASS.
+    _write_json(evidence_dir / "summary.json", summary)
 
 
 def _build_summary(
-    *,
-    profile: str,
-    scope: str,
-    before: GitState,
-    after: GitState,
-    results: list[StepResult],
+    *, profile: str, scope: str, before: GitState, after: GitState,
+    results: list[StepResult], expected_steps: list[str] | None = None,
+    allow_dirty: bool = False, infrastructure_errors: list[str] | None = None,
 ) -> dict[str, object]:
-    failures = [result for result in results if result.exit_code != 0]
-    derived_stale = any(
-        result.name == "render_diff" and result.exit_code != 0 for result in results
-    )
+    expected = expected_steps if expected_steps is not None else [name for name, _ in PROFILE_STEPS[profile]]
+    failed_steps = [result for result in results if result.exit_code != 0]
+    # Existing failure_count remains the number of failed steps. Explicit gate
+    # exits and infrastructure failures are additionally counted separately.
+    failures = failed_steps
+    gate_failures = [r for r in failed_steps if r.process is None or r.process.get("result") == "EXITED"]
+    errors = list(infrastructure_errors or [])
+    if not before.valid: errors.append("INITIAL_GIT_UNOBSERVABLE")
+    if not after.valid: errors.append("FINAL_GIT_UNOBSERVABLE")
+    if before.head_sha != after.head_sha: errors.append("HEAD_CHANGED")
+    if not allow_dirty and (not before.clean or not after.clean): errors.append("WORKTREE_NOT_CLEAN")
+    if not expected or [result.name for result in results] != expected: errors.append("INCOMPLETE_STEP_COVERAGE")
+    for result in results:
+        if result.status != "PASS" and result.exit_code == 0:
+            errors.append("INCONSISTENT_STEP_RESULT")
+        if result.process and (result.process.get("cleanup") != "COMPLETE" or result.process.get("result") != "EXITED"):
+            errors.append("PROCESS_INFRASTRUCTURE_FAILURE:" + result.name)
+    errors = list(dict.fromkeys(errors))
     return {
-        "schema_version": "1.0",
-        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "profile": profile,
-        "certification_scope": scope,
-        "LOCAL_CERTIFICATION": "PASS" if not failures else "FAIL",
-        "DERIVED_STALE": derived_stale,
+        "schema_version": "1.0", "generated_at_utc": _utc(), "profile": profile,
+        "certification_scope": scope, "LOCAL_CERTIFICATION": "FAIL" if failures or errors else "PASS",
+        "DERIVED_STALE": any(r.name == "render_diff" and r.exit_code != 0 for r in results),
         "GITHUB_ACTIONS": "NOT_EVALUATED_BY_LOCAL_CERTIFIER",
         "databricks_free": "NOT_EVALUATED_BY_LOCAL_CERTIFIER",
         "synthetic_agent_screening": "NOT_EVALUATED_BY_LOCAL_CERTIFIER",
-        "environment": {
-            "python": sys.version,
-            "platform": platform.platform(),
-            "executable": sys.executable,
-        },
-        "git_before": asdict(before),
-        "git_after": asdict(after),
-        "steps": [asdict(result) for result in results],
-        "failure_count": len(failures),
+        "environment": {"python": sys.version, "platform": platform.platform(), "executable": sys.executable},
+        "git_before": asdict(before), "git_after": asdict(after),
+        "steps": [asdict(result) for result in results], "failure_count": len(failures),
+        "gate_failure_count": len(gate_failures),
+        "scope_complete": bool(expected) and [r.name for r in results] == expected,
+        "infrastructure_errors": errors, "infrastructure_error_count": len(errors),
+        "expected_steps": expected, "not_started_steps": [n for n in expected if n not in {r.name for r in results}],
+        "diagnostic_allow_dirty": allow_dirty,
+        "release_clean_certification": not allow_dirty and scope == f"FULL_{profile.upper()}_LOCAL" and not failures and not errors,
+        "timeout_policy": {"git_process_seconds": GIT_TIMEOUT_SECONDS, "gate_process_seconds": STEP_TIMEOUT_SECONDS,
+                           "cleanup_seconds": CLEANUP_TIMEOUT_SECONDS, "campaign_deadline": None},
     }
 
 
-def _scope(profile: str, skip_render: bool) -> str:
-    return (
-        f"PARTIAL_{profile.upper()}_NO_RENDER"
-        if skip_render
-        else f"FULL_{profile.upper()}_LOCAL"
-    )
+def _scope(profile: str, skip_render: bool, allow_dirty: bool = False) -> str:
+    if allow_dirty:
+        return f"DIAGNOSTIC_{profile.upper()}" + ("_NO_RENDER" if skip_render else "")
+    return f"PARTIAL_{profile.upper()}_NO_RENDER" if skip_render else f"FULL_{profile.upper()}_LOCAL"
+
+
+def _positive_seconds(value: str) -> float:
+    number = float(value)
+    if not math.isfinite(number) or number <= 0:
+        raise argparse.ArgumentTypeError("timeout deve ser positivo e finito")
+    return number
 
 
 def main(argv: list[str] | None = None) -> int:
+    global GIT_TIMEOUT_SECONDS, STEP_TIMEOUT_SECONDS, ACTIVE_EVIDENCE
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--profile", choices=sorted(PROFILE_STEPS), default="se02")
-    parser.add_argument(
-        "--evidence-dir",
-        help="Diretório explícito para evidence bundle; por padrão usa ~/.ambiente_databricks/sef_certifications.",
-    )
-    parser.add_argument(
-        "--no-evidence",
-        action="store_true",
-        help="Não grava evidence bundle; útil quando chamado como subgate do ci_local.py.",
-    )
-    parser.add_argument(
-        "--skip-render",
-        action="store_true",
-        help="Pula renderer/diff; não equivale à certificação completa do perfil selecionado.",
-    )
-    parser.add_argument(
-        "--allow-dirty",
-        action="store_true",
-        help="Permite worktree já sujo; o padrão fail-closed exige worktree limpo.",
-    )
+    parser.add_argument("--evidence-dir", help="Diretório externo NOVO, reservado exclusivamente pela execução.")
+    parser.add_argument("--no-evidence", action="store_true")
+    parser.add_argument("--skip-render", action="store_true")
+    parser.add_argument("--allow-dirty", action="store_true", help="Diagnóstico; nunca certificação limpa de release.")
+    parser.add_argument("--git-timeout-seconds", type=_positive_seconds, default=30.0)
+    parser.add_argument("--step-timeout-seconds", type=_positive_seconds, default=900.0)
     parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args(argv)
-
-    before = _git_state()
-    evidence_dir: Path | None = None
-    if not args.no_evidence:
-        try:
-            evidence_dir = _resolve_evidence_dir(args.evidence_dir, before.head_sha)
-        except ValueError as exc:
-            print(f"FAIL evidence_dir: {exc}")
-            return 2
-        evidence_dir.mkdir(parents=True, exist_ok=True)
-
-    print("== SKILL ENFORCEMENT LOCAL CERTIFICATION ==")
-    print(f"profile : {args.profile}")
-    print(f"root    : {REPO_ROOT}")
-    print(f"branch  : {before.branch or '<unknown>'}")
-    print(f"HEAD    : {before.head_sha or '<unknown>'}")
-    print(f"python  : {sys.version.split()[0]}")
-    print(f"platform: {platform.platform()}")
-
+    GIT_TIMEOUT_SECONDS, STEP_TIMEOUT_SECONDS = args.git_timeout_seconds, args.step_timeout_seconds
+    PROCESS_RECORDS.clear()
+    ACTIVE_EVIDENCE = None
+    evidence_dir = None
     results: list[StepResult] = []
-
-    if not before.clean and not args.allow_dirty:
-        print("\nFAIL precheck_git_clean: worktree deve estar limpo para certificação.")
-        if before.status_short.strip():
-            print(before.status_short.strip())
-        results.append(
-            StepResult(
-                name="precheck_git_clean",
-                command=["git", "status", "--short", "--untracked-files=all"],
-                exit_code=1,
-                duration_seconds=0.0,
-                status="FAIL",
-                last_line="worktree sujo; nenhum step mutável foi executado",
-            )
-        )
-        after = _git_state()
-        summary = _build_summary(
-            profile=args.profile,
-            scope="PRECHECK_ONLY",
-            before=before,
-            after=after,
-            results=results,
-        )
-        _persist_bundle(evidence_dir, summary, results)
-        if evidence_dir is not None:
-            print(f"evidence: {evidence_dir}")
-        print("LOCAL_CERTIFICATION = FAIL")
-        print("failed_steps        = precheck_git_clean")
-        return 2
-
-    logs_dir: Path | None = None
-    if evidence_dir is not None:
-        logs_dir = evidence_dir / "logs"
-        logs_dir.mkdir(parents=True, exist_ok=True)
-
-    for index, (name, command) in enumerate(_filtered_steps(args.profile, args.skip_render), 1):
-        print(f"\n-- {index:02d} {name}")
-        if name == "render_diff":
-            code, output, duration = _run_render_diff_gate()
+    errors: list[str] = []
+    expected = _filtered_steps(args.profile, args.skip_render)
+    before = GitState(None, None, None, None, "", ("NOT_OBSERVED",))
+    after = before
+    scope = _scope(args.profile, args.skip_render, args.allow_dirty)
+    interrupted = False
+    try:
+        if not args.no_evidence:
+            evidence_dir = _resolve_evidence_dir(args.evidence_dir, None)
+            _reserve_evidence(evidence_dir)
+            ACTIVE_EVIDENCE = evidence_dir
+        before = _git_state()
+        print("== SKILL ENFORCEMENT LOCAL CERTIFICATION ==")
+        print(f"profile={args.profile} HEAD={before.head_sha} scope={scope}")
+        if not before.valid or (not args.allow_dirty and not before.clean):
+            errors.append("PRECHECK_GIT_FAILED_NO_MUTABLE_STEPS")
+            scope = "PRECHECK_ONLY"
         else:
-            code, output, duration = _run(command)
-        status = "PASS" if code == 0 else "FAIL"
-        log_file = None
-        if logs_dir is not None:
-            target = logs_dir / f"{index:02d}_{name}.log"
-            target.write_text(output, encoding="utf-8")
-            log_file = str(target)
-        if args.verbose or code != 0:
-            print(output.rstrip())
-        print(f"   {status} ({duration:.2f}s) {_last_nonempty_line(output)}")
-        results.append(
-            StepResult(
-                name=name,
-                command=list(command),
-                exit_code=code,
-                duration_seconds=round(duration, 4),
-                status=status,
-                last_line=_last_nonempty_line(output),
-                log_file=log_file,
-            )
-        )
-
-    after = _git_state()
-    scope = _scope(args.profile, args.skip_render)
-    summary = _build_summary(
-        profile=args.profile,
-        scope=scope,
-        before=before,
-        after=after,
-        results=results,
-    )
-    _persist_bundle(evidence_dir, summary, results)
-
-    failures = [result for result in results if result.exit_code != 0]
-    derived_stale = bool(summary["DERIVED_STALE"])
-
-    if evidence_dir is not None:
-        print(f"\nevidence: {evidence_dir}")
-
-    print("\n== CERTIFICATION SUMMARY ==")
-    print(f"LOCAL_CERTIFICATION = {summary['LOCAL_CERTIFICATION']}")
-    print(f"scope               = {scope}")
-    print(f"DERIVED_STALE       = {str(derived_stale).lower()}")
-    print(f"failures            = {len(failures)}")
-    if args.skip_render:
-        print("note                = renderer/diff não foram avaliados")
-
-    if failures:
-        print("failed_steps        = " + ", ".join(result.name for result in failures))
-        return 1
-    return 0
+            if evidence_dir is not None:
+                (evidence_dir / "logs").mkdir()
+            for index, (name, command) in enumerate(expected, 1):
+                print(f"-- {index:02d} {name}", flush=True)
+                previous = len(PROCESS_RECORDS)
+                code, output, duration = _run_render_diff_gate() if name == "render_diff" else _run(command)
+                process = dict(PROCESS_RECORDS[-1]) if len(PROCESS_RECORDS) > previous else None
+                log_file = None
+                if evidence_dir is not None:
+                    _assert_reserved(evidence_dir)
+                    target = evidence_dir / "logs" / f"{index:02d}_{name}.log"
+                    _reject_aliases(target.parent)
+                    with target.open("x", encoding="utf-8", newline="\n") as stream:
+                        stream.write(output)
+                    log_file = str(target)
+                status = "PASS" if code == 0 else "FAIL"
+                results.append(StepResult(name, list(command), code, round(duration, 4), status, _last_nonempty_line(output), log_file, process))
+                if args.verbose or code != 0: print(output.rstrip())
+                print(f"   {status} ({duration:.2f}s) {_last_nonempty_line(output)}")
+                if process and (process.get("result") != "EXITED" or process.get("cleanup") != "COMPLETE"):
+                    errors.append("PROCESS_ABORTED:" + name)
+                    interrupted = process.get("result") == "INTERRUPTED"
+                    break
+        after = _git_state()
+    except KeyboardInterrupt:
+        interrupted = True; errors.append("INTERRUPTED")
+    except (OSError, ValueError) as exc:
+        errors.append("INFRASTRUCTURE_ERROR:" + repr(exc))
+        print("FAIL infrastructure:", exc, file=sys.stderr)
+    finally:
+        summary = _build_summary(profile=args.profile, scope=scope, before=before, after=after, results=results,
+                                 expected_steps=[name for name, _ in expected], allow_dirty=args.allow_dirty, infrastructure_errors=errors)
+        # A failed reservation must never touch the existing winner's namespace.
+        if evidence_dir is not None and ACTIVE_EVIDENCE == evidence_dir:
+            try:
+                _persist_bundle(evidence_dir, summary, results)
+            except (OSError, ValueError) as exc:
+                summary["LOCAL_CERTIFICATION"] = "FAIL"
+                summary["release_clean_certification"] = False
+                summary["infrastructure_errors"].append("PERSISTENCE_FAILED:" + repr(exc))
+                summary["infrastructure_error_count"] = len(summary["infrastructure_errors"])
+                print("FAIL essential persistence:", exc, file=sys.stderr)
+        ACTIVE_EVIDENCE = None
+    print("LOCAL_CERTIFICATION =", summary["LOCAL_CERTIFICATION"])
+    print("scope =", scope)
+    print("infrastructure_errors =", summary["infrastructure_errors"])
+    if evidence_dir is not None: print("evidence:", evidence_dir)
+    if interrupted: return 130
+    return 0 if summary["LOCAL_CERTIFICATION"] == "PASS" else (2 if summary["infrastructure_errors"] else 1)
 
 
 if __name__ == "__main__":
