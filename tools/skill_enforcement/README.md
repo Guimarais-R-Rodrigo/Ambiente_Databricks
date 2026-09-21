@@ -216,7 +216,7 @@ O perfil `se06` acrescenta `test_skill_enforcement_se06.py` ao conjunto SE05 e p
 Por padrão o certifier exige worktree limpo antes de qualquer step mutável. O evidence bundle fica fora do repositório em:
 
 ```text
-~/.ambiente_databricks/sef_certifications/<timestamp>_<sha>/
+~/.ambiente_databricks/sef_certifications/<timestamp>_<identidade-ou-unknown>_<uuid>/
 ```
 
 Exemplo de destino explícito:
@@ -225,7 +225,9 @@ Exemplo de destino explícito:
 python -B tools/skill_enforcement/certify_local.py --profile se05 --evidence-dir C:\temp\sef-se05
 ```
 
-A execução continua após failures para revelar achados adicionais; qualquer step reprovado mantém exit code final diferente de zero.
+A execução continua após falhas ordinárias de gates; timeout, interrupção ou falha de infraestrutura interrompem a sequência e registram os steps não iniciados. Qualquer falha impede sucesso. O diretório de evidência deve ser novo e externo, mesmo quando vazio. O SE07 inclui a suíte do certifier.
+
+F-04 acrescenta limites finitos por processo, observação Git obrigatória e identidade final estável. Detalhes, opções, campos aditivos e limites: [F04_D10.md](../../docs/sprints/skill_enforcement/SE07/F04_D10.md).
 
 ### Subgate do CI local
 

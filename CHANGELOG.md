@@ -6,6 +6,23 @@ subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
 
+## 2026-09-21 — SE07: F-04/D10 e proposta D2/D9 (Codex)
+
+### Adicionado
+
+- (Codex, agente A) Suíte permanente do certifier com fault injection, controles externos, reserva concorrente de evidência e timeout real de árvore própria; preservados os gates e os consumidores existentes.
+- (Codex, agente B) Proposta D2/D9 NÃO APROVADA com matriz de conversão, fronteira runtime/repositório e piloto futuro de README agregador. Doze probes API L2 somente leitura na base, sem writer ou mudança de policy.
+
+### Corrigido
+
+- (Codex, coordenação após revisão B) Metadata Windows ausente/malformada impede sucesso; gate executado permanece registrado mesmo quando seu log falha; falha de cleanup é distinta de falha observada do gate na contagem.
+
+- (Codex, agente A) Certifier falha fechado em Git obrigatório não observável, reserva exclusiva de evidência, identidade final/cobertura e limites por processo. Saídas diagnósticas não certificam release limpa; falhas de persistência ou cleanup impedem sucesso.
+
+### Notas
+
+- (Codex, coordenação) Integração em clone e branch locais isolados, documentação operacional e snapshot README reconciliado com a medição final. Certificação do SHA exato e revisão interna B ficam no handoff externo; não equivalem a aceite humano, FULL multiplataforma ou homologação Free/Genie.
+
 ## 2026-09-21 — SE07: aceite F-03 e reconciliação E-01/E-02 (Codex)
 
 ### Corrigido

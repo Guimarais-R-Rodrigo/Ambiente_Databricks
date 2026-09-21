@@ -379,6 +379,47 @@ class CertifierTests(unittest.TestCase):
             with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
                 cert.main(["--no-evidence", "--step-timeout-seconds", value])
 
+    @unittest.skipUnless(os.name == "nt", "Windows launcher metadata boundary")
+    def test_missing_empty_or_invalid_child_metadata_cannot_pass(self):
+        original_exists, original_read = Path.exists, Path.read_text
+        for payload in (None, "{}", "[]", '{"pid": true}', '{"pid": 0}'):
+            with self.subTest(payload=payload):
+                def exists(path):
+                    return False if path.name == "child.json" and payload is None else original_exists(path)
+                def read(path, *args, **kwargs):
+                    return payload if path.name == "child.json" else original_read(path, *args, **kwargs)
+                with mock.patch.object(Path, "exists", exists), mock.patch.object(Path, "read_text", read):
+                    code, output, _ = cert._run([sys.executable, "-c", "print('REAL_GATE_METADATA_PROBE')"])
+                self.assertNotEqual(0, code)
+                self.assertIn("REAL_GATE_METADATA_PROBE", output)
+                self.assertIn("metadata_error", cert.PROCESS_RECORDS[-1])
+                self.assertEqual("INFRASTRUCTURE_ERROR", cert.PROCESS_RECORDS[-1]["result"])
+
+    def test_log_persistence_failure_preserves_executed_step(self):
+        original_open = Path.open
+        def fail_log(path, *args, **kwargs):
+            if path.suffix == ".log": raise OSError("injected gate log persistence failure")
+            return original_open(path, *args, **kwargs)
+        with mock.patch.object(Path, "open", fail_log):
+            self.assertNotEqual(0, self.run_main())
+        summary = self.summary()
+        self.assertEqual("FAIL", summary["LOCAL_CERTIFICATION"])
+        self.assertEqual([], summary["not_started_steps"])
+        self.assertEqual("synthetic", summary["steps"][0]["name"])
+        self.assertEqual(0, summary["steps"][0]["exit_code"])
+        self.assertIn("synthetic-ok", summary["steps"][0]["process"]["stdout"])
+        self.assertIsNone(summary["steps"][0]["log_file"])
+
+    def test_cleanup_failure_count_distinguishes_actual_gate_failure(self):
+        for observed in (0, 7):
+            with self.subTest(observed=observed):
+                step = cert.StepResult("synthetic", ["gate"], 125, 0, "FAIL", "cleanup failed", process={"result": "EXITED", "cleanup": "FAILED", "observed_exit_code": observed})
+                summary = cert._build_summary(profile="se02", scope="FULL_SE02_LOCAL", before=self.good, after=self.good, results=[step], expected_steps=["synthetic"])
+                self.assertEqual("FAIL", summary["LOCAL_CERTIFICATION"])
+                self.assertEqual(1, summary["failure_count"])
+                self.assertEqual(int(observed != 0), summary["gate_failure_count"])
+                self.assertGreater(summary["infrastructure_error_count"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

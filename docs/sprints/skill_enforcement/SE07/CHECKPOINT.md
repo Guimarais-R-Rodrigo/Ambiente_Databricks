@@ -5,7 +5,8 @@
 F-03 `1ce5806cc04654eda88966676fe90459488553d4` recebeu aceite humano focalizado.
 A [retificação E-01/E-02](RETIFICACAO_E01_E02.md) preserva os FAILs recuperados e
 esclarece o contrato de issues. O lote local seguinte reúne F-04/D10 e uma
-proposta D2/D9 **não aprovada**, sem writer. A certificação do SHA integrado é
+[proposta D2/D9](PROPOSTA_D2_D9.md) **não aprovada**, sem writer.
+Detalhes do certifier: [F04_D10.md](F04_D10.md). A certificação do SHA integrado é
 registrada no handoff externo após o freeze; o aceite anterior não a substitui.
 
 Checkpoint remoto: **BLOQUEIO_DE_PUBLICACAO** nesta rodada por indisponibilidade

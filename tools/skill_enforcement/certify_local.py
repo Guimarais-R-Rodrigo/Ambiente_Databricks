@@ -425,19 +425,29 @@ def _run(command: Sequence[str]) -> tuple[int, str, float]:
                             record["cleanup"] = "FAILED"; record["cleanup_error"] = repr(exc); code = 125
                     if process is not None and process.stdin is not None and not process.stdin.closed:
                         process.stdin.close()
-                if os.name == "nt" and (path / "child.json").exists():
+                if os.name == "nt":
                     try:
-                        child = json.loads((path / "child.json").read_text(encoding="utf8"))
-                        record.update(child)
-                        if "start_error" in child:
+                        metadata = path / "child.json"
+                        if not metadata.exists():
+                            raise ValueError("launcher metadata missing")
+                        child = json.loads(metadata.read_text(encoding="utf8"))
+                        if not isinstance(child, dict):
+                            raise ValueError("launcher metadata must be an object")
+                        if set(child) == {"pid"} and type(child["pid"]) is int and child["pid"] > 0:
+                            record["pid"] = child["pid"]
+                        elif set(child) == {"start_error"} and isinstance(child["start_error"], str) and child["start_error"]:
+                            record["start_error"] = child["start_error"]
                             record["result"] = "START_ERROR"; record["observed_exit_code"] = None; code = 125
-                    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
-                        # Termination may interrupt the launcher's metadata write;
-                        # streams must still be recovered and the attempt fail.
+                        else:
+                            raise ValueError("launcher metadata requires positive pid or start_error")
+                    except (OSError, UnicodeError, ValueError) as exc:
+                        # An unobservable child can never certify a successful gate.
+                        # Preserve timeout/interruption classification and partial streams.
                         record["metadata_error"] = repr(exc)
-                        record["result"] = "INFRASTRUCTURE_ERROR"
-                        record["observed_exit_code"] = None
-                        code = 125
+                        if record["result"] == "EXITED":
+                            record["result"] = "INFRASTRUCTURE_ERROR"
+                            record["observed_exit_code"] = None
+                            code = 125
                 stdout.seek(0); stderr.seek(0)
                 raw_stdout, raw_stderr = stdout.read(), stderr.read()
                 record["stdout"], record["stderr"] = _decode(raw_stdout), _decode(raw_stderr)
@@ -616,7 +626,12 @@ def _build_summary(
     # Existing failure_count remains the number of failed steps. Explicit gate
     # exits and infrastructure failures are additionally counted separately.
     failures = failed_steps
-    gate_failures = [r for r in failed_steps if r.process is None or r.process.get("result") == "EXITED"]
+    gate_failures = [r for r in failed_steps if r.process is None or (
+        r.process.get("result") == "EXITED" and (
+            r.process.get("cleanup") == "COMPLETE" or
+            (type(r.process.get("observed_exit_code")) is int and r.process["observed_exit_code"] != 0)
+        )
+    )]
     errors = list(infrastructure_errors or [])
     if not before.valid: errors.append("INITIAL_GIT_UNOBSERVABLE")
     if not after.valid: errors.append("FINAL_GIT_UNOBSERVABLE")
@@ -706,6 +721,9 @@ def main(argv: list[str] | None = None) -> int:
                 code, output, duration = _run_render_diff_gate() if name == "render_diff" else _run(command)
                 process = dict(PROCESS_RECORDS[-1]) if len(PROCESS_RECORDS) > previous else None
                 log_file = None
+                status = "PASS" if code == 0 else "FAIL"
+                # Record the observed step before essential log persistence can fail.
+                results.append(StepResult(name, list(command), code, round(duration, 4), status, _last_nonempty_line(output), None, process))
                 if evidence_dir is not None:
                     _assert_reserved(evidence_dir)
                     target = evidence_dir / "logs" / f"{index:02d}_{name}.log"
@@ -713,8 +731,7 @@ def main(argv: list[str] | None = None) -> int:
                     with target.open("x", encoding="utf-8", newline="\n") as stream:
                         stream.write(output)
                     log_file = str(target)
-                status = "PASS" if code == 0 else "FAIL"
-                results.append(StepResult(name, list(command), code, round(duration, 4), status, _last_nonempty_line(output), log_file, process))
+                results[-1] = StepResult(name, list(command), code, round(duration, 4), status, _last_nonempty_line(output), log_file, process)
                 if args.verbose or code != 0: print(output.rstrip())
                 print(f"   {status} ({duration:.2f}s) {_last_nonempty_line(output)}")
                 if process and (process.get("result") != "EXITED" or process.get("cleanup") != "COMPLETE"):
