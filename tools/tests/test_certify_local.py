@@ -56,6 +56,66 @@ def alive(pid):
         return False
 
 
+def wait_for_file(path, seconds=5):
+    """Readiness is an observed event, never an elapsed-time assumption."""
+    deadline = time.monotonic() + seconds
+    while not path.exists():
+        if time.monotonic() >= deadline:
+            raise TimeoutError(f"READY_NOT_OBSERVED: {path.name}")
+        time.sleep(.01)
+
+
+def main_cli_probe(mode, target, root, directory):
+    """Subprocess entry point: main's SystemExit deliberately remains uncaught."""
+    directory = Path(directory)
+    ready, executed = directory / "ready", directory / "executed"
+    code = ("import os,time;from pathlib import Path;"
+            f"Path({str(executed)!r}).write_text(str(os.getpid()));"
+            "print('CLI_BEFORE_INTERRUPT',flush=True);"
+            f"Path({str(ready)!r}).write_text('ready');"
+            + ("time.sleep(30)" if mode != "normal" and target != "finalization" else ""))
+    command = [sys.executable, "-B", "-c", code]
+    cert.REPO_ROOT = Path(root)
+    cert.PROFILE_STEPS["se02"] = [("observed_gate", command), ("later", [sys.executable, "-c", "print('later')"])]
+    requested = ["git", "branch", "--show-current"] if target == "optional_git" else command
+    original_wait = subprocess.Popen.wait
+    original_write, original_summary = cert._write_json, cert._build_summary
+    injected = []
+    built = []
+    def cancel():
+        if mode == "keyboard": raise KeyboardInterrupt()
+        raise SystemExit({"zero": 0, "none": None, "nonzero": 8}[mode])
+    def write(path, payload):
+        if target == "finalization" and path.name == "environment.json" and not injected:
+            injected.append({"boundary": path.name}); cancel()
+        return original_write(path, payload)
+    def capture(**kwargs):
+        data = original_summary(**kwargs); built.append(data); return data
+    def interrupt(process, *args, **kwargs):
+        # On Windows process.args names the Python launcher even for Git.
+        # Select the requested invocation, not the launcher's executable name.
+        record = next((r for r in reversed(cert.PROCESS_RECORDS)
+                       if r.get("launcher_pid", r.get("pid")) == process.pid), None)
+        if target != "finalization" and mode != "normal" and not injected and record and record["command"] == requested:
+            injected.append({"requested_argv": list(record["command"]), "supervised_pid": process.pid})
+            if target == "gate":
+                wait_for_file(ready)
+            else:
+                original_wait(process, timeout=5)
+            cancel()
+        return original_wait(process, *args, **kwargs)
+    with mock.patch.object(subprocess.Popen, "wait", interrupt), mock.patch.object(cert, "_write_json", side_effect=write), mock.patch.object(cert, "_build_summary", side_effect=capture):
+        try:
+            raise SystemExit(cert.main(["--profile", "se02", "--evidence-dir", str(directory / "bundle")]))
+        finally:
+            (directory / "observations.json").write_text(json.dumps({
+                "injected": injected, "processes": cert.PROCESS_RECORDS,
+                "executed": executed.exists(), "ready": ready.exists(),
+                "child_pid": int(executed.read_text()) if executed.exists() else None,
+                "summary_in_memory": built[-1] if built else None,
+            }, indent=2), encoding="utf8")
+
+
 class CertifierTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory(prefix="sef-cert-test-")
@@ -209,9 +269,48 @@ class CertifierTests(unittest.TestCase):
         self.assertEqual([], data["not_started_steps"])
 
     def test_start_error_stops_and_records_unstarted_steps(self):
-        self.assertNotEqual(0, self.run_main(plan=[("missing", [str(self.root / "missing-executable")]), *self.plan]))
-        data = self.summary(); self.assertEqual(["synthetic"], data["not_started_steps"])
-        self.assertIsNone(data["steps"][0]["process"]["observed_exit_code"])
+        sentinel = Path(self.tmp.name) / "later-not-executed"
+        command = [str(self.root / "missing-executable")]
+        later = [sys.executable, "-c", f"from pathlib import Path;Path({str(sentinel)!r}).touch()"]
+        self.assertNotEqual(0, self.run_main(plan=[("missing", command), ("synthetic", later)]))
+        data = self.summary()
+        self.assertFalse(sentinel.exists())
+        self.assertEqual(["missing"], [s["name"] for s in data["steps"]])
+        self.assertEqual([{"name": "missing", "command": command}], json.loads((self.out / "commands.json").read_text()))
+        process = data["steps"][0]["process"]
+        self.assertIsNone(process["observed_exit_code"])
+        self.assertIsNone(process["pid"], "a Windows launcher is not the requested command")
+        if process.get("launcher_pid"): self.assertFalse(alive(process["launcher_pid"]))
+        self.assertEqual(["missing", "synthetic"], data["not_started_steps"])
+        self.assertEqual(0, data["gate_failure_count"])
+
+    @unittest.skipUnless(os.name == "nt", "Windows launcher metadata boundary")
+    def test_main_missing_child_metadata_is_not_proof_of_no_start(self):
+        marker = Path(self.tmp.name) / "metadata-gate-executed"
+        command = [sys.executable, "-B", "-c",
+                   f"import os;from pathlib import Path;Path({str(marker)!r}).write_text(str(os.getpid()));print('METADATA_GATE_EXECUTED',flush=True)"]
+        original = Path.read_text
+        injected = []
+        def missing(path, *args, **kwargs):
+            if path.name == "child.json" and cert.PROCESS_RECORDS[-1]["command"] == command:
+                injected.append(str(path)); return "{}"
+            return original(path, *args, **kwargs)
+        with mock.patch.object(Path, "read_text", missing):
+            self.assertNotEqual(0, self.run_main(plan=[("metadata_gate", command), *self.plan]))
+        self.assertTrue(injected)
+        self.assertTrue(marker.exists(), "external execution oracle must fire")
+        self.assertFalse(alive(int(marker.read_text())))
+        data = self.summary()
+        self.assertEqual("FAIL", data["LOCAL_CERTIFICATION"])
+        self.assertEqual(["metadata_gate"], [s["name"] for s in data["steps"]])
+        self.assertEqual(["synthetic"], data["not_started_steps"], "missing metadata cannot prove no start")
+        self.assertEqual(["metadata_gate"], data.get("unknown_start_steps", []))
+        process = data["steps"][0]["process"]
+        self.assertIsNone(process["pid"])
+        self.assertIsNone(process["observed_exit_code"])
+        self.assertIn("metadata_error", process)
+        self.assertFalse(alive(process["launcher_pid"]))
+        self.assertEqual([{"name": "metadata_gate", "command": command}], json.loads((self.out / "commands.json").read_text()))
 
     def test_timeout_real_parent_child_external_oracle_and_partial_streams(self):
         pidfile = Path(self.tmp.name) / "pids.json"
@@ -238,20 +337,60 @@ class CertifierTests(unittest.TestCase):
         self.assertEqual("TIMEOUT", data["steps"][0]["process"]["result"])
 
     def test_keyboard_interrupt_cleanup_and_output(self):
+        code, output, record = self.interrupt_fixture("after_output")
+        self.assertEqual(130, code)
+        self.assertIn("before-interrupt", output)
+        self.assertEqual("INTERRUPTED", record["result"])
+
+    def interrupt_fixture(self, phase):
+        ready = Path(self.tmp.name) / "ready"
+        started = Path(self.tmp.name) / "started"
+        release = Path(self.tmp.name) / "release-never-created"
+        source = ("import os,time;from pathlib import Path;"
+                  f"Path({str(started)!r}).write_text(str(os.getpid()));\n")
+        if phase == "after_output":
+            source += f"print('before-interrupt',flush=True);Path({str(ready)!r}).write_text('ready');time.sleep(30)"
+        else:
+            source += f"while not Path({str(release)!r}).exists(): time.sleep(.01)\nprint('after-release',flush=True)"
         original = subprocess.Popen.wait
         first = True
         def interrupt(process, *args, **kwargs):
             nonlocal first
             if first:
-                first = False; time.sleep(.35); raise KeyboardInterrupt()
+                first = False
+                wait_for_file(started)
+                wait_for_file(ready, .3 if phase == "never_ready" else 5) if phase != "before_output" else None
+                raise KeyboardInterrupt()
             return original(process, *args, **kwargs)
-        with mock.patch.object(subprocess.Popen, "wait", interrupt):
-            code, output, _ = cert._run([sys.executable, "-c", "import time;print('before-interrupt',flush=True);time.sleep(30)"])
-        self.assertEqual(130, code)
-        self.assertIn("before-interrupt", output)
+        try:
+            with mock.patch.object(subprocess.Popen, "wait", interrupt):
+                code, output, _ = cert._run([sys.executable, "-B", "-c", source])
+        finally:
+            # _run's finally must also clean up a failed readiness handshake.
+            pids = [int(started.read_text())] if started.exists() else []
+            pids += [r[k] for r in cert.PROCESS_RECORDS for k in ("pid", "launcher_pid") if r.get(k)]
+            running = [pid for pid in set(pids) if alive(pid)]
+            try:
+                self.assertEqual([], running, "fixture left owned processes alive")
+            finally:
+                for pid in running: os.kill(pid, 9)
         record = cert.PROCESS_RECORDS[-1]
+        self.assertEqual("COMPLETE", record["cleanup"])
+        return code, output, record
+
+    def test_keyboard_interrupt_before_first_output(self):
+        code, output, record = self.interrupt_fixture("before_output")
+        self.assertEqual(130, code)
+        self.assertEqual("", output)
         self.assertEqual("INTERRUPTED", record["result"])
-        self.assertFalse(alive(record["pid"]))
+
+    def test_never_ready_has_finite_diagnostic_and_cleanup(self):
+        started = time.monotonic()
+        code, output, record = self.interrupt_fixture("never_ready")
+        self.assertNotEqual(0, code)
+        self.assertEqual("", output)
+        self.assertIn("READY_NOT_OBSERVED", record["error"])
+        self.assertLess(time.monotonic() - started, 12)
 
     def test_system_exit_not_swallowed(self):
         original = subprocess.Popen.wait
@@ -419,6 +558,179 @@ class CertifierTests(unittest.TestCase):
                 self.assertEqual(1, summary["failure_count"])
                 self.assertEqual(int(observed != 0), summary["gate_failure_count"])
                 self.assertGreater(summary["infrastructure_error_count"], 0)
+
+    def persistence_boundary(self, boundary):
+        """Only persistence is injected; Git, child execution and exits are real."""
+        marker = Path(self.tmp.name) / "observed-gate"
+        later = Path(self.tmp.name) / "later-gate"
+        command = [sys.executable, "-B", "-c",
+                   f"import os;from pathlib import Path;print('OBSERVED_GATE',flush=True);Path({str(marker)!r}).write_text(str(os.getpid()))"]
+        later_command = [sys.executable, "-B", "-c",
+                         f"from pathlib import Path;Path({str(later)!r}).write_text('later');print('LATER_GATE')"]
+        plan = [("observed", command), ("later", later_command)]
+        original_write, original_open = cert._write_json, Path.open
+        original_summary = cert._build_summary
+        built, faults = [], []
+        journal_state = {"before_start": "STARTING", "after_start": "RUNNING", "final_journal": "EXITED"}.get(boundary)
+        def fail_json(path, payload):
+            matching = (path.name == "processes.json" and journal_state and payload
+                        and payload[-1].get("command") == command
+                        and payload[-1].get("result") == journal_state)
+            if matching and not faults:
+                if boundary == "after_start": wait_for_file(marker)
+                faults.append(json.loads(json.dumps(payload[-1])))
+                raise OSError("FAULT_" + boundary)
+            if path.name == boundary + ".json":
+                faults.append(path.name)
+                raise OSError("FAULT_" + boundary)
+            return original_write(path, payload)
+        def fail_log(path, *args, **kwargs):
+            if boundary == "log" and path.suffix == ".log":
+                faults.append(str(path)); raise OSError("FAULT_log")
+            return original_open(path, *args, **kwargs)
+        def capture(**kwargs):
+            data = original_summary(**kwargs); built.append(data); return data
+        with mock.patch.object(cert, "_write_json", side_effect=fail_json), mock.patch.object(Path, "open", fail_log), mock.patch.object(cert, "_build_summary", side_effect=capture):
+            exit_code = self.run_main(plan=plan)
+        data = built[-1]
+        (Path(self.tmp.name) / "persistence-oracle.json").write_text(json.dumps({
+            "boundary": boundary, "exit": exit_code, "faults": faults,
+            "marker_exists": marker.exists(), "later_exists": later.exists(), "summary": data,
+        }, indent=2), encoding="utf8")
+        completed = boundary in ("environment", "summary", "positive")
+        expected_names = ["observed", "later"] if completed else ["observed"]
+        self.assertEqual(boundary != "before_start", marker.exists())
+        self.assertEqual(completed, later.exists())
+        self.assertEqual(expected_names, [s["name"] for s in data["steps"]])
+        not_started = [] if completed else (["observed", "later"] if boundary == "before_start" else ["later"])
+        self.assertEqual(not_started, data["not_started_steps"])
+        self.assertEqual(command, data["steps"][0]["command"])
+        process = data["steps"][0]["process"]
+        self.assertEqual(command, process["command"], "must not attach an adjacent Git invocation")
+        if boundary == "before_start":
+            self.assertIsNone(process["pid"])
+            self.assertIsNone(process["observed_exit_code"])
+            self.assertNotEqual("EXITED", process["result"])
+        else:
+            self.assertFalse(alive(int(marker.read_text())))
+            self.assertEqual("COMPLETE", process["cleanup"])
+            self.assertIn("OBSERVED_GATE", process["stdout"])
+            if boundary != "after_start":
+                self.assertEqual(0, process["observed_exit_code"])
+                self.assertEqual(0, data["steps"][0]["exit_code"])
+                self.assertEqual(0, data["failure_count"])
+        self.assertEqual(0, data["gate_failure_count"])
+        commands_path = self.out / "commands.json"
+        if boundary != "environment":
+            commands = json.loads(commands_path.read_text())
+            self.assertEqual(expected_names, [c["name"] for c in commands])
+            self.assertEqual(command, commands[0]["command"])
+        if boundary == "positive":
+            self.assertEqual(0, exit_code)
+            self.assertEqual("PASS", data["LOCAL_CERTIFICATION"])
+            self.assertEqual([], faults)
+        else:
+            self.assertTrue(faults, "fault injection must actually execute")
+            self.assertNotEqual(0, exit_code)
+            self.assertEqual("FAIL", data["LOCAL_CERTIFICATION"])
+            self.assertFalse(data["release_clean_certification"])
+            self.assertGreater(data["infrastructure_error_count"], 0)
+        if boundary in ("environment", "summary"):
+            self.assertFalse((self.out / "summary.json").exists(), "a failed essential write must not leave a durable PASS")
+
+    def test_journal_failure_before_start_preserves_attempt(self):
+        self.persistence_boundary("before_start")
+
+    def test_journal_failure_after_start_preserves_execution(self):
+        self.persistence_boundary("after_start")
+
+    def test_final_journal_failure_preserves_observed_exit_and_command(self):
+        self.persistence_boundary("final_journal")
+
+    def test_log_failure_external_execution_oracle(self):
+        self.persistence_boundary("log")
+
+    def test_environment_failure_external_execution_oracle(self):
+        self.persistence_boundary("environment")
+
+    def test_summary_failure_external_execution_oracle(self):
+        self.persistence_boundary("summary")
+
+    def test_persistence_positive_external_execution_oracle(self):
+        self.persistence_boundary("positive")
+
+    def cli_cancellation(self, mode, target):
+        directory = Path(self.tmp.name) / (mode + "_" + target)
+        directory.mkdir()
+        source = "import runpy,sys;runpy.run_path(sys.argv[1])['main_cli_probe'](*sys.argv[2:])"
+        command = [sys.executable, "-B", "-c", source, str(Path(__file__).resolve()), mode, target, str(self.root), str(directory)]
+        completed = subprocess.run(command, capture_output=True, text=True, timeout=30)
+        (directory / "external-exit.json").write_text(json.dumps({"argv": command, "exit": completed.returncode,
+            "stdout": completed.stdout, "stderr": completed.stderr}, indent=2), encoding="utf8")
+        observed = json.loads((directory / "observations.json").read_text())
+        summary_path = directory / "bundle/summary.json"
+        summary = json.loads(summary_path.read_text()) if summary_path.exists() else observed["summary_in_memory"]
+        records = observed["processes"]
+        pids = [r[k] for r in records for k in ("pid", "launcher_pid") if r.get(k)]
+        if observed["child_pid"]: pids.append(observed["child_pid"])
+        self.assertTrue(all(not alive(pid) for pid in pids), pids)
+        commands_path = directory / "bundle/commands.json"
+        commands = json.loads(commands_path.read_text()) if commands_path.exists() else None
+        if mode == "normal":
+            self.assertEqual(0, completed.returncode, completed.stderr)
+            self.assertEqual("PASS", summary["LOCAL_CERTIFICATION"])
+            self.assertEqual([], observed["injected"])
+            self.assertEqual([], summary["not_started_steps"])
+            self.assertEqual(["observed_gate", "later"], [s["name"] for s in summary["steps"]])
+            return
+        self.assertEqual(1, len(observed["injected"]), observed)
+        self.assertNotEqual(0, completed.returncode, completed.stdout)
+        self.assertEqual(8 if mode == "nonzero" else 130, completed.returncode)
+        self.assertEqual("FAIL", summary["LOCAL_CERTIFICATION"])
+        self.assertFalse(summary["release_clean_certification"])
+        if target == "finalization":
+            self.assertTrue(observed["executed"] and observed["ready"])
+            self.assertEqual(["observed_gate", "later"], [s["name"] for s in summary["steps"]])
+            self.assertEqual([], summary["not_started_steps"])
+            self.assertEqual(0, summary["gate_failure_count"])
+            self.assertGreater(summary["infrastructure_error_count"], 0)
+            return
+        if target == "gate":
+            self.assertTrue(observed["executed"] and observed["ready"])
+            self.assertEqual(["observed_gate"], [s["name"] for s in summary["steps"]])
+            self.assertEqual(["observed_gate"], [s["name"] for s in commands])
+            self.assertEqual(["later"], summary["not_started_steps"])
+            process = summary["steps"][0]["process"]
+            self.assertEqual("INTERRUPTED", process["result"])
+            self.assertIn("CLI_BEFORE_INTERRUPT", process["stdout"])
+            self.assertIsNone(process["observed_exit_code"])
+        else:
+            self.assertEqual(["git", "branch", "--show-current"], observed["injected"][0]["requested_argv"])
+            self.assertFalse(observed["executed"])
+            self.assertEqual([], summary["steps"])
+            self.assertEqual([], commands)
+            self.assertEqual(["observed_gate", "later"], summary["not_started_steps"])
+
+    def test_main_subprocess_cancellations_during_gate(self):
+        for mode in ("zero", "none", "nonzero", "keyboard"):
+            with self.subTest(mode=mode): self.cli_cancellation(mode, "gate")
+
+    def test_main_subprocess_cancellations_during_optional_git(self):
+        for mode in ("zero", "none", "nonzero", "keyboard"):
+            with self.subTest(mode=mode): self.cli_cancellation(mode, "optional_git")
+
+    def test_main_subprocess_normal_exit_zero(self):
+        self.cli_cancellation("normal", "gate")
+
+    def test_main_subprocess_cancellations_during_finalization(self):
+        for mode in ("zero", "none", "nonzero", "keyboard"):
+            with self.subTest(mode=mode): self.cli_cancellation(mode, "finalization")
+
+    def test_cli_help_and_parse_error_before_campaign(self):
+        for flag, expected in (("--help", 0), ("--not-a-certifier-option", 2)):
+            completed = subprocess.run([sys.executable, "-B", str(SOURCE), flag], capture_output=True, text=True, timeout=10)
+            self.assertEqual(expected, completed.returncode, completed.stderr)
+            self.assertFalse(self.out.exists())
 
 
 if __name__ == "__main__":
