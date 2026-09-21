@@ -1,5 +1,15 @@
 # Changelog
 
+
+## 2026-09-21 — SE07: encerramento humano com residual conhecido
+
+### Atualizado
+
+- (ChatGPT) Registrado o aceite humano explícito da PG-01 apesar da falha do oráculo sintético de resíduo. O gate permanece FAIL, o FULL permanece 16/16 PASS e `SE07_FULLY_CERTIFIED=false`.
+- (ChatGPT) SE07 encerrada com DoD de policy registry 14/14 satisfeito, dívida residual preservada e sem promoção global adicional de `hub-ml-criar-objeto`.
+- (ChatGPT) A candidata testada local `4b8bb46d...` e a publicação remota `b5a4eb9d...` compartilham parent `8db4c984...` e a tree exata `c36e5015...`.
+
+
 ## 2026-09-21 — SE07: PG-01, prontidão da fixture de timeout
 
 ### Corrigido

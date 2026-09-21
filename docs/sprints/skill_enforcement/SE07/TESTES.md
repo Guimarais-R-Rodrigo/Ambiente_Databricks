@@ -1,5 +1,20 @@
 # SE07 — testes e critérios
 
+## Resultado final aceito para encerramento — 2026-09-21
+
+Estado testado Windows/NTFS/Python 3.12.14: tree
+`c36e501542cd62cbb3646f69f0f6b8457d7d7ef4`.
+Gates finais: storage cleanup FAIL 8/9; F-04 PASS 45/45; repo-side PASS 28/28;
+writer L3 PASS 35/35; SE07 PASS 41 testes com 1 skip POSIX; renderer PASS;
+validator/snapshot PASS; FULL PASS 16/16. Não somar métodos como cobertura única.
+
+A decisão humana aceita explicitamente a falha residual do oráculo sintético de
+resíduo para fins de encerramento da SE07. O FAIL permanece FAIL e
+`SE07_FULLY_CERTIFIED=false`. Não houve reprodução do WinError32 nativo histórico.
+A causa do desaparecimento do diretório entre a injeção e o oráculo externo não
+foi estabelecida.
+
+
 ## PG-01 — prontidão da fixture, candidata local posterior a 8db4c984
 
 Proposta `SE07_Proposta_Fixture_Timeout.patch`, SHA-256

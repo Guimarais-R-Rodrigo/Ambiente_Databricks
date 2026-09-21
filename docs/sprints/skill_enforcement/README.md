@@ -73,7 +73,7 @@ Uma PR Draft não deve ser usada como mecanismo de economia de CI, porque workfl
 - SE04: concluída e integrada pela PR #77;
 - SE05: concluída e integrada pela PR #78; RC local/Free homologada, 12/12 workflows da PR e 18/18 workflows pós-merge em `success`;
 - SE06: coleta comportamental encerrada por Gate G2 em 24/25; `S06-A1-R4=NOT_RUN`, structural suite `PASS`, thresholds primários observados satisfeitos e `DOD=INCOMPLETE` preservado;
-- SE07: iniciada na branch `sef/SE07-generalizacao`; registry 14/14, resolver runtime, validador e reforço da auditoria em implementação; gates local/Free ainda pendentes;
+- SE07: encerrada por decisão humana com residual conhecido; DoD de policy registry 14/14 satisfeito, `SE07_FULLY_CERTIFIED=false` pela falha aceita do oráculo sintético de resíduo; `hub-ml-criar-objeto` permanece L2 global e o piloto L3 não implica promoção global;
 - SE08: não iniciada.
 
 A frente não deve declarar `FULLY_CERTIFIED` quando qualquer gate obrigatório estiver `NOT_RUN`, `BLOCKED` ou `DEFERRED_CREDIT`.

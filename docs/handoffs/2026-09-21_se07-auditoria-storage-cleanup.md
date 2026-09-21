@@ -1,5 +1,19 @@
 # Handoff — SE07, corretiva da observabilidade de cleanup (ChatGPT)
 
+## Fechamento posterior — aceite humano com residual
+
+O usuário aceitou explicitamente a candidata PG-01 com a falha residual do
+oráculo de resíduo e determinou o fechamento da SE07. O estado técnico permanece
+`NAO_PRONTA` sob o critério estrito da bateria porque o gate storage cleanup
+teve uma reprovação; essa reprovação não é reclassificada.
+
+A tree testada e aceita é `c36e501542cd62cbb3646f69f0f6b8457d7d7ef4`.
+A publicação remota equivalente dessa tree é
+`b5a4eb9d277697125740810d8869b49c797836fd`, com o mesmo parent `8db4c984...`.
+O fechamento é administrativo/governamental com dívida conhecida,
+`SE07_FULLY_CERTIFIED=false`, sem promoção global adicional de nível.
+
+
 
 ## Decisão humana posterior à implementação
 

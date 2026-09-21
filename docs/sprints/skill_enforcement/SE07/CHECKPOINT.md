@@ -1,5 +1,49 @@
 # SE07 — checkpoint
 
+## Checkpoint final — encerramento humano da SE07 — 2026-09-21
+
+A SE07 está **ENCERRADA_POR_DECISAO_HUMANA_COM_RESIDUAL_CONHECIDO**.
+
+A decisão humana aceita a candidata PG-01 recertificada no Windows apesar da
+reprovação do gate separado `01_storage_cleanup`. O resultado técnico não é
+reescrito: `01_storage_cleanup=FAIL` (8/9 métodos aprovados), enquanto F-04,
+repo-side, writer L3, regressão SE07, renderer, validator/snapshot e o FULL de
+16 gates passaram no mesmo estado testado.
+
+A candidata local testada foi `4b8bb46d40790ef8a7272e3a6f75c46eaee118b3`,
+parent `8db4c9842112ab31dc92f97fc2740ace7df6032e`, tree
+`c36e501542cd62cbb3646f69f0f6b8457d7d7ef4`. A publicação remota equivalente
+usa o mesmo parent e a mesma tree testada; seu SHA é
+`b5a4eb9d277697125740810d8869b49c797836fd`. A diferença de SHA decorre apenas
+dos metadados do commit de publicação, não dos bytes da tree.
+
+A falha aceita pertence ao oráculo sintético
+`test_residue_is_observed_not_deleted_or_certified_by_recovery`: a injeção
+observou o diretório antes do erro, mas o oráculo externo posterior já o encontrou
+ausente. O processo permaneceu corretamente `INTERRUPTED`, exit externo 130,
+`process_cleanup=COMPLETE`, `temporary_cleanup=FAILED` e `cleanup=FAILED`.
+A causa da remoção entre os dois pontos não foi estabelecida. O WinError32
+histórico nativo não foi reproduzido nesta recertificação; isso não significa
+que sua causa tenha sido resolvida.
+
+Semântica do fechamento:
+
+- `SE07_DOD_POLICY_REGISTRY=PASS`: 14/14 skills possuem política explícita;
+- `SE07_FULLY_CERTIFIED=false`: o gate obrigatório separado continua FAIL;
+- a falha residual é `ACCEPTED_FOR_SE07_CLOSURE_BY_HUMAN_DECISION`;
+- `hub-ml-criar-objeto` permanece L2 no registry global;
+- o piloto `create/readme/agregador` não promove a skill inteira nem recebe
+  promoção operacional adicional neste fechamento;
+- Free/Genie do piloto, PR, Actions e merge em main não são inferidos deste aceite;
+- SE06 permanece 24/25, A1-R4 NOT_RUN, DOD INCOMPLETE e FULLY_CERTIFIED=false.
+
+A dívida do oráculo de resíduo segue registrada para operação/rollout futuro.
+Qualquer promoção ao workspace do trabalho continua sujeita aos gates próprios
+da SE08, inclusive validações locais pertinentes e avaliação de achados abertos.
+
+SE08 permanece **NÃO_INICIADA** neste commit.
+
+
 
 ## Decisão humana sobre a corretiva de cleanup — 2026-09-21
 
