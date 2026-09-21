@@ -1,5 +1,19 @@
 # SE07 — Generalização por risco
 
+## Continuidade delimitada após aceite F-03 — 2026-09-21
+
+F-03 `1ce5806cc04654eda88966676fe90459488553d4` recebeu aceite humano focalizado.
+A [retificação E-01/E-02](RETIFICACAO_E01_E02.md) preserva os FAILs recuperados e
+esclarece o contrato de issues. O lote local seguinte reúne F-04/D10 e uma
+proposta D2/D9 **não aprovada**, sem writer. A certificação do SHA integrado é
+registrada no handoff externo após o freeze; o aceite anterior não a substitui.
+
+Checkpoint remoto: **BLOQUEIO_DE_PUBLICACAO** nesta rodada por indisponibilidade
+de credenciais Git. A consulta de leitura observou SE07 em `b6fb5952` e main em
+`72894c55`; nenhum push foi executado. O checkout do operador permanece na F-03.
+PR, Actions, Free/Genie, merge, R2 e SE08 não foram autorizados neste lote.
+Os estados e próximos passos datados abaixo são históricos.
+
 ## Estado
 
 O checkpoint humano aceito da correção R1-C é

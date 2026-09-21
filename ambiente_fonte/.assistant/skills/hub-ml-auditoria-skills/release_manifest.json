@@ -11,7 +11,7 @@
     {
       "path": "skills/hub-ml-auditoria-skills/execution_contract.json",
       "role": "contract",
-      "git_blob_sha1": "673b77fdd7ecc0528fc5a01485b9e8181623a3fa"
+      "git_blob_sha1": "69489de5bf1ca99ff9cb6b92a56d3ecd17c73721"
     },
     {
       "path": "skills/hub-ml-auditoria-skills/scripts/preflight.py",

@@ -44,7 +44,7 @@
             "completion_claim_consistent",
             "issues"
           ],
-          "issues": "lista ou tupla de strings; PASS_REVERIFIED exige lista vazia",
+          "issues": "lista ou tupla de strings; PASS_REVERIFIED exige coleção vazia (lista ou tupla), normalizada para lista na saída",
           "failure_boundary": "falha de importação não é reverificação; falha de chamada ou retorno malformado não passa"
         },
         "guarantees": [

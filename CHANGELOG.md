@@ -6,6 +6,17 @@ subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
 
+## 2026-09-21 — SE07: aceite F-03 e reconciliação E-01/E-02 (Codex)
+
+### Corrigido
+
+- (Codex, coordenação) Retificação aditiva das duas campanhas Linux FULL FAIL e da terceira interrompida, com paths/hashes dos bytes recuperados; relatórios e logs históricos preservados.
+- (Codex, coordenação) Desambiguação textual de issues no contrato de auditoria: coleção vazia lista/tupla, normalizada para lista; fingerprint correspondente e espelho canônico, sem alteração do runner.
+
+### Notas
+
+- (Codex, coordenação) Aceite humano focalizado de F-03 registrado. Push do checkpoint bloqueado por credenciais Git; novo lote apenas local e sujeito à certificação própria. SE06, política D2 e níveis atuais preservados.
+
 ## 2026-09-21 — SE07 F-03/D6: adapter canônico da auditoria (Codex)
 
 ### Corrigido
