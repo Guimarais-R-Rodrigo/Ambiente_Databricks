@@ -1,5 +1,18 @@
 # SE07 — Generalização por risco
 
+## Próxima ação — revisão da corretiva F-04
+
+O [checkpoint aceito](CHECKPOINT.md) é F-03, preservado na branch canônica remota.
+O lote F-04 `b4f8f7b...` permanece historicamente **NAO_APTA**; a rodada seguinte
+trata somente SUP-F04-01/02/03. Consulte o [handoff versionado](../../../handoffs/2026-09-21_se07-f04-corretiva.md)
+para candidata, gates, tentativas e limites; [TESTES.md](TESTES.md) é a matriz
+permanente e [F04_D10.md](F04_D10.md) explica o comportamento do certifier.
+
+O próximo evento é auditoria focalizada seguida de decisão humana. Branch de
+review não equivale a aceite, homologação nem avanço de nível. A
+[proposta D2/D9](PROPOSTA_D2_D9.md) permanece **PROPOSTA_NAO_APROVADA**, sem writer.
+As seções abaixo preservam a sequência histórica e os bloqueios de cada rodada.
+
 ## Continuidade delimitada após aceite F-03 — 2026-09-21
 
 F-03 `1ce5806cc04654eda88966676fe90459488553d4` recebeu aceite humano focalizado.

@@ -39,6 +39,7 @@ O template completo está em `.claude/templates/handoff.md`.
 
 | Data | Tema | Relevância atual |
 |---|---|---|
+| 2026-09-21 | [SE07, corretiva F-04](2026-09-21_se07-f04-corretiva.md) | candidata delimitada SUP-F04-01/02/03; protocolo GitHub e evidências externas |
 | 2026-08-14 | [calibração das descriptions](2026-08-14_calibracao-descriptions.md) | ler antes de alterar `description` de skill |
 | 2026-09-09 | [plano consolidado, pacotes T0 a T6](2026-09-09_plano-consolidado.md) | ler antes de mexer no escopo do validador ou retomar T3, T4 e T7 |
 

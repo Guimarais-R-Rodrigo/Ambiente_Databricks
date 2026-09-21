@@ -1,5 +1,32 @@
 # SE07 — testes e critérios
 
+## Regressões permanentes da corretiva SUP-F04
+
+Suíte: `python -B tools/tests/test_certify_local.py -v`. Os testes usam planos
+sintéticos e Git/processos reais em fixtures privadas; não executam FULL
+recursivamente. A matriz define requisitos, não afirma resultados de execução.
+
+| Achado | Controles negativos e positivos obrigatórios | Oráculo |
+|---|---|---|
+| SUP-F04-01 | Falha antes do start, depois do start, no journal final, no .log, environment/summary; positivo | Sentinela e processo reais comparados com steps, commands, not_started_steps, exit e contagens de falha do comando/infraestrutura |
+| SUP-F04-02 | SystemExit 0/None/não zero, KeyboardInterrupt, comando normal, help/parsing; gate, Git opcional e finalização | Main em subprocesso; exit externo, saída parcial, cleanup e resumo coerentes |
+| SUP-F04-03 | Interrupção antes da primeira saída, após ready, filho que nunca emite ready | Prontidão após print/flush, prazo finito e ausência de filho vivo ao final |
+
+No congelamento, executar de forma serializada: suíte F-04 completa, suíte SE07
+(F-03/P01 com skips identificados), teste específico do renderer e FULL SE07
+no SHA final exato, em clone novo com histórico completo. Sem --allow-dirty,
+--skip-render ou --no-evidence no FULL. Conferir HEAD/status externamente,
+logs completos, marker LF e igualdade fonte/espelho; repetir controles externos
+de cancelamento/exit e persistência sem confiar apenas no novo summary.
+
+Histórico de supervisão em Linux/Python 3.13.5: focado com 27 PASS, 1 FAIL e
+2 skips; FULL com 13 gates PASS e 3 FAIL. Um FAIL foi sincronização do teste;
+dois vieram do histórico raso transportado. Exit externo desse FULL não observado;
+o wrapper foi interrompido e o certifier continuou. Esses fatos não são corrigidos
+retroativamente por uma campanha verde. Demais tentativas e prova por runtime no
+[handoff](../../../handoffs/2026-09-21_se07-f04-corretiva.md); E-01 segue na
+[retificação existente](RETIFICACAO_E01_E02.md).
+
 ## Gate determinístico
 
 Executar com o Python histórico configurado, por caminho absoluto. O bundle de

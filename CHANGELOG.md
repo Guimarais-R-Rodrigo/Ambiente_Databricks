@@ -6,6 +6,17 @@ subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
 
+## 2026-09-21 — SE07: corretiva SUP-F04-01/02/03 (Codex)
+
+### Corrigido
+
+- (Codex, agente A) Preservação da invocação, streams e exit observado quando o journal falha; início confirmado, ausente e desconhecido separados. Cancelamento durante campanha/finalização mantém saída não zero, sem alterar help/parsing.
+- (Codex, agente B) Regressões adversariais de persistência e cancelamento externo; teste de interrupção usa ready após print/flush, com casos pré-output e never-ready e cleanup observado.
+
+### Documentado
+
+- (Codex, coordenação) Integração com procedência dos patches, handoff/checkpoint/testes versionados, prova bruta externa identificada por hash, F-03 remota aceita e review condicionada aos gates/workflows. FAILs históricos e WinError32 intermediário preservados; D2/D9 continua proposta não aprovada. Gates do SHA documental serão medidos após seu congelamento.
+
 ## 2026-09-21 — SE07: F-04/D10 e proposta D2/D9 (Codex)
 
 ### Adicionado

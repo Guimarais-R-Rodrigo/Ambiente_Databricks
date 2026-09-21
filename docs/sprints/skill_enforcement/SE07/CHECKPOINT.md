@@ -1,5 +1,29 @@
 # SE07 — checkpoint
 
+## Estado aceito e preservado no remoto — 2026-09-21
+
+Checkpoint humano aceito: `1ce5806cc04654eda88966676fe90459488553d4` (F-03),
+parent `b6fb595225e139329df450edfc33158ceb1e1253`. A branch canônica
+`sef/SE07-generalizacao` foi atualizada exclusivamente até F-03 por fast-forward
+após autorização humana e reconferência das refs, ancestralidade, limpeza,
+operações Git e todos os 19 workflows. A ref foi lida diretamente após o push;
+`main` permaneceu em `72894c5511abfa9a5ede3edb4a6f7c5fe11231b3`. A consulta de
+runs por SHA retornou zero. A falha de credenciais relatada nas seções históricas
+abaixo pertence à rodada anterior e permanece preservada.
+
+A candidata F-04 `b4f8f7b1f0dfcce75f15edec06c3e937ed42d1f6` recebeu parecer
+externo **NAO_APTA**, delimitado a SUP-F04-01/02/03. Sua corretiva é candidata
+separada, não altera este checkpoint e depende de nova auditoria e aceite humano.
+Estado da transição, identidade e provas: [handoff da corretiva](../../../handoffs/2026-09-21_se07-f04-corretiva.md).
+
+`CHECKPOINT.md` registra o aceito; o handoff registra a candidata. Publicar
+`sef/review-SE07-f04-corretiva` apenas preserva bytes para inspeção. Não autoriza
+avançar a branch canônica, publicar o produto ou encerrar SE07. D2/D9 continua
+`PROPOSTA_NAO_APROVADA`; criar-objeto permanece L2. SE06 continua 24/25,
+`S06-A1-R4=NOT_RUN`, `SE06_DOD=INCOMPLETE`, `FULLY_CERTIFIED=false`.
+
+Os registros datados seguintes são históricos e não substituem este estado aceito.
+
 ## Continuidade delimitada após aceite F-03 — 2026-09-21
 
 F-03 `1ce5806cc04654eda88966676fe90459488553d4` recebeu aceite humano focalizado.
