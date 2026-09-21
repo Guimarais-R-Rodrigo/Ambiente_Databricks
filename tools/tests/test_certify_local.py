@@ -361,6 +361,19 @@ class CertifierTests(unittest.TestCase):
         self.assertIn("metadata_error", cert.PROCESS_RECORDS[-1])
         self.assertIsNone(cert.PROCESS_RECORDS[-1]["observed_exit_code"])
 
+    def test_interrupt_optional_git_stops_before_mutable_gate(self):
+        original = cert._run
+        calls = []
+        def interrupt_branch(command):
+            calls.append(list(command))
+            if command[:2] == ["git", "branch"]:
+                cert.PROCESS_RECORDS.append({"command": list(command), "result": "INTERRUPTED", "cleanup": "COMPLETE", "utf8_valid": True, "stdout": "", "stderr": "", "observed_exit_code": None})
+                return 130, "", 0
+            return original(command)
+        with mock.patch.object(cert, "_run", side_effect=interrupt_branch):
+            self.assertEqual(130, self.run_main(["--no-evidence"]))
+        self.assertTrue(all(command[0] == "git" for command in calls))
+
     def test_timeout_configuration_positive_finite_only(self):
         for value in ("0", "-1", "nan", "inf"):
             with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):

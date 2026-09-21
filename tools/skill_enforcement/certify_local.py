@@ -486,6 +486,8 @@ def _git_output(*args: str) -> str | None:
     previous = len(PROCESS_RECORDS)
     code, output, _ = _run(["git", *args])
     record = PROCESS_RECORDS[-1] if len(PROCESS_RECORDS) > previous else None
+    if record is not None and record.get("result") == "INTERRUPTED":
+        raise KeyboardInterrupt()  # Optional Git metadata cannot swallow cancellation.
     if code != 0 or (record is not None and not record.get("utf8_valid", False)):
         return None
     # stderr is retained separately as evidence, never mixed into Git data.
