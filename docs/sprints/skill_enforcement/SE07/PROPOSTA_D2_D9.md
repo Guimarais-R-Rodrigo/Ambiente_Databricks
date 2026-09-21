@@ -1,5 +1,12 @@
 # D2/D9 — decisão prévia ao writer de criar-objeto
 
+> Atualização humana de 2026-09-21: aprovação **parcial**, somente
+> `create/readme/agregador`, um arquivo ausente em pasta existente, arquitetura
+> A+C. [Mandato implementado no piloto](PILOTO_README_L3.md). Todo o restante
+> continua **PROPOSTA_NAO_APROVADA**; policy e `current_level=L2` são preservados.
+> O status, a descrição da base e as conclusões abaixo registram a proposta
+> original, anterior à aprovação parcial; não foram reclassificados.
+
 **Status: PROPOSTA_NAO_APROVADA**
 Data: 2026-09-21 · Autor: Codex, agente B (arquitetura)
 Base examinada: `1ce5806cc04654eda88966676fe90459488553d4`.

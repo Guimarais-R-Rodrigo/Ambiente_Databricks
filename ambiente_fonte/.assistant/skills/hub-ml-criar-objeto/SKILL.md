@@ -81,6 +81,47 @@ template não prova sua leitura: `template.read_status=NOT_OBSERVABLE`.
 A contenção é conferida no instante do preflight, sem garantia contra troca
 concorrente de links depois da checagem. Este L2 não é um mecanismo de escrita.
 
+## Piloto determinístico — somente create/readme/agregador
+
+`scripts/run.py` oferece `generate` e `apply` separados. É piloto local;
+policy e `current_level=L2` continuam inalterados. O contrato e o preflight L2
+acima preservam suas regras; a superfície writer impõe limites adicionais.
+
+`generate(context, document, base_sha=..., assistant_root=...)` chama L2,
+lê o template agregador e devolve bytes completos UTF-8/LF em memória.
+`document` declara `title`, `identity`, `purpose`, `usage`, `limitations`,
+`next_steps` e `items` (`path`, `description`) correspondentes à pasta real.
+O binding registra operação/tipo/escala, destino, hash/tamanho dos bytes,
+generation_id, base Git, release e template. GERADO não é validado ou escrito.
+
+A validação estrutural depende de `tools/skill_enforcement/validate_create_readme.py`
+no repositório: clone descartável completo, overlay exato e validator real.
+Essa ferramenta não viaja no produto. O runtime exige seu registro vinculado;
+não alega executar `tools/` nem autenticar o emissor do registro local.
+
+`apply(candidate, authorization, validation, assistant_root=...,
+evidence_dir=..., evidence_authorized=True)` exige autorização
+`AUTHORIZE_CREATE`, authority `external_confirmation_record`, identificador
+não vazio e binding exatamente correspondente. Esse artefato prova apresentação
+de registro, não identidade humana ou assinatura. Não gerar autorização automática.
+O caller precisa autorizar separadamente a persistência em diretório externo
+novo de evidência. Sem isso, nenhuma escrita do produto é permitida.
+
+Somente um `README.md` ausente, em pasta real existente, dentro da raiz permitida.
+Windows/NTFS local é o envelope suportado quando demonstrado no host; outros
+hosts/filesystems bloqueiam. Não suportar symlink/junction nos ancestrais,
+hardlink/destino existente, escape, conversão, novos diretórios ou overwrite.
+`apply` revalida bindings, bytes, release/template, L2, raiz/ancestrais e ausência;
+nunca regenera o conteúdo. Criação exclusiva falha em caso de concorrência.
+
+Evidência diferencia GERADO, validação apresentada, autorização apresentada,
+ESCRITO e falha/interrupção. `homologated=False` sempre. Se houver criação
+parcial ou erro após a escrita, conservar o efeito e registrar inconclusão;
+não apagar nem repetir para sobrescrever. Inspecionar bytes e evidência antes
+de uma decisão humana de recuperação. Retry com destino existente bloqueia.
+O verifier comprova integridade/coerência dos registros, não autenticidade
+humana nem transação universal. Free/Genie e promoção de nível são gates futuros.
+
 ## Fluxo
 
 ### 1. Escolher o tipo, antes de escrever qualquer linha

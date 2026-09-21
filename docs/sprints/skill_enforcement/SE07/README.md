@@ -1,5 +1,23 @@
 # SE07 — Generalização por risco
 
+## Rodada atual — piloto de criação, após aceite F-04
+
+O usuário aceitou a corretiva F-04 `d49c8728f0e47adc15f7f78293c9fcc58c809a15`.
+A canônica `sef/SE07-generalizacao` foi promovida exclusivamente até esse SHA,
+por fast-forward; main e a review F-04 foram preservadas. A nova rodada implementa
+somente `create/readme/agregador`, conforme [piloto L3](PILOTO_README_L3.md) e
+[interface congelada](INTERFACE_README_L3.md). A candidata nova exige auditoria
+externa e decisão humana; não promove `current_level=L2`.
+
+A aprovação de D2/D9 é **parcial**, apenas esse piloto, com um destino ausente em
+pasta real existente. O restante permanece `PROPOSTA_NAO_APROVADA`. Arquitetura
+A+C: runner no produto; validator, renderer e certificação no repositório.
+Free/Genie, conversão, overwrite, R2 e SE08 não fazem parte desta rodada.
+
+Consulte [checkpoint](CHECKPOINT.md), [testes](TESTES.md) e
+[handoff do piloto](../../../handoffs/2026-09-21_se07-criar-objeto-l3-readme-piloto.md).
+As próximas seções registram estados históricos anteriores a esta decisão.
+
 ## Próxima ação — revisão da corretiva F-04
 
 O [checkpoint aceito](CHECKPOINT.md) é F-03, preservado na branch canônica remota.

@@ -1,5 +1,30 @@
 # SE07 — checkpoint
 
+## Checkpoint aceito atual — F-04, 2026-09-21
+
+Aceite humano explícito da corretiva `d49c8728f0e47adc15f7f78293c9fcc58c809a15`.
+Parent `b7cb7477e425be349ba763f44263d5c11c0f9211`; ancestralidade a F-03
+`1ce5806cc04654eda88966676fe90459488553d4` confirmada. Após reconferir refs,
+limpeza, operações Git, PRs e os 19 workflows, a canônica
+`sef/SE07-generalizacao` avançou somente por fast-forward de F-03 até F-04.
+Leitura remota posterior confirmou o SHA. Main permaneceu
+`72894c5511abfa9a5ede3edb4a6f7c5fe11231b3`; review F-04 permaneceu d49c8728.
+Consulta de Actions por d49c8728 observou zero runs após a promoção.
+
+O aceite não declara `F04_MULTIPLATFORM=PASS`: Linux/WSL e Python histórico
+3.12.10 permanecem `NOT_RUN`; WinError32 intermediário segue dívida conhecida
+sem causa raiz, não bloqueante por decisão humana, salvo recorrência nos gates
+finais novos. R1 `NAO_APTA`, SE06 24/25, A1-R4 `NOT_RUN` e G2 são preservados.
+
+A rodada posterior é candidata `create/readme/agregador`, não checkpoint aceito.
+D2/D9 recebe aprovação parcial apenas dessa fatia; conversão e demais opções
+continuam não aprovadas. Policy/registry e contrato L2 não mudam. A nova review
+pode ser publicada somente em `sef/review-SE07-criar-objeto-l3-readme-piloto`,
+depois dos gates e nova conferência dos workflows. A canônica fica na F-04.
+Identidades e evidências da candidata: [handoff do piloto](../../../handoffs/2026-09-21_se07-criar-objeto-l3-readme-piloto.md).
+
+Os registros seguintes são históricos e não substituem este aceite.
+
 ## Estado aceito e preservado no remoto — 2026-09-21
 
 Checkpoint humano aceito: `1ce5806cc04654eda88966676fe90459488553d4` (F-03),

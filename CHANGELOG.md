@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-21 — SE07: piloto estreito README L3 (Codex)
+
+- (Codex, agente A) Runner generate/apply para create/readme/agregador, bytes determinísticos e bindings, criação exclusiva Windows/NTFS e evidência de efeitos/falhas sem homologação. Proteção ancestral foi refutada em v1 e corrigida com prova causal.
+- (Codex, agente B) Suíte adversarial independente: autorização, topologia, concorrência, interrupção real, parciais, persistência, releitura e retry; vermelhos preservados antes das correções.
+- (Codex, agente C) Gate em clone completo com overlay único e validator real, checks editoriais/links, binding base/path/bytes e regressões de cancelamento/cleanup. Reusa certifier aceito sem alterá-lo; erro intermediário de compartilhamento e limites de observação preservados.
+- (Codex, coordenação) F-04 aceita promovida por fast-forward; integração isolada, SKILL/manifest/renderer, interface pré-dispatch, checkpoint/testes/handoff e evidência bruta selada. D2/D9 parcialmente aprovada somente para o piloto; policy/contrato L2, SE06 e históricos preservados. Gates do SHA documental serão medidos depois do freeze, com publicação exclusiva da review se segura.
+
 Toda mudança relevante deste projeto é registrada aqui, em entradas curtas, sem
 expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora

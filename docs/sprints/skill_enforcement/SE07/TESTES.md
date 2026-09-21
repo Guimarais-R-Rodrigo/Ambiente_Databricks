@@ -1,5 +1,32 @@
 # SE07 — testes e critérios
 
+## Piloto create/readme/agregador — gates separados
+
+A [interface congelada](INTERFACE_README_L3.md) define o contrato; a
+[documentação do piloto](PILOTO_README_L3.md) explica limites. Não há promoção
+global L3. Os testes novos usam apenas fixtures sintéticas externas.
+
+| Classe | Gate / oráculo |
+|---|---|
+| Geração e bindings | `test_skill_enforcement_se07_create_l3.py`: bytes, destino, release/template, L2 e ausência de efeitos na geração |
+| Apply e autorização | Mesma suíte: autorização/validação correspondentes, ausência, criação exclusiva, releitura, retry, efeitos e integridade de evidência |
+| Concorrência/topologia/falhas | Dois subprocessos reais; links/junctions, ancestrais, conteúdo/path, interrupção e falha de persistência, com limites declarados |
+| Repo-side | `test_validate_create_readme.py`: clone completo, HEAD limpo e base correta, overlay exato, validator real, estrutura/links, divergências |
+| Regressão | F-04, SE07/P01/F-02/F-03, renderer específico, validator e FULL SE07 aceito, serializados |
+
+Gates finais sobre o SHA congelado: as duas suítes dedicadas; suíte F-04;
+SE07; renderer específico; `validate_assistant.py --conferir-readme`; FULL
+SE07 em clone novo com histórico completo, sem dispensas. O FULL existente
+tem 16 gates e não inclui automaticamente as duas suítes novas; ambas são
+obrigatórias separadamente. Registrar HEAD/status e exit externos antes/depois.
+
+Windows/Python 3.12.14 é o runtime disponível nesta rodada. Probe WSL retornou
+lista vazia; Linux nativo = `NOT_RUN`. Python histórico 3.12.10 = `NOT_RUN`,
+acesso negado no probe sandbox, sem alteração de ACL. Windows/NTFS local é o envelope inicial
+do writer; nenhum PASS Free/Linux é inferido. Falha nova WinError32 em gate
+final exige investigação própria. Resultados e tentativas finais são externos
+e vinculados ao SHA; requisitos nesta matriz não são resultados de execução.
+
 ## Regressões permanentes da corretiva SUP-F04
 
 Suíte: `python -B tools/tests/test_certify_local.py -v`. Os testes usam planos
