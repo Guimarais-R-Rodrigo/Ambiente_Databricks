@@ -1,5 +1,44 @@
 # SE07 — testes e critérios
 
+## PG-01 — prontidão da fixture, candidata local posterior a 8db4c984
+
+Proposta `SE07_Proposta_Fixture_Timeout.patch`, SHA-256
+`e591684acea89f306d6ca49a3c3d848a9239c4fd40bae870fc0035a0077dfd2f`,
+integrada apenas localmente após revisão e sete diagnósticos Windows/Python
+3.12.14 sobre a base completa. O original com atraso sintético de dois segundos
+reprovou; a proposta com o mesmo atraso e o controle normal passaram; ausência
+definitiva de prontidão reprovou; KeyboardInterrupt, SystemExit(0) e cleanup
+sintético falho após interrupção passaram. São cinco aprovações e duas
+reprovações esperadas, não sete PASS de release. Logs e oráculos são externos.
+
+Somente `process_boundary` da suíte repo-side muda: espera `ready` com o prazo
+finito existente de cinco segundos, depois exerce timeout real de 1,5 s; exige
+presença de `owned-pids.json` antes de lê-lo. Preserva saída parcial, classificação,
+PIDs e asserções de cleanup. Este teste mede reação ao timeout após prontidão,
+não orçamento total de startup. Não houve aumento de timeout de produção,
+alteração de certifier, skips novos ou retry-until-green.
+
+Cobertura independente preservada em `test_certify_local.py`:
+`test_timeout_real_parent_child_external_oracle_and_partial_streams` usa timeout
+real desde a invocação; `test_timeout_main_does_not_promote_absent_gate` conserva
+o orçamento de 0,5 s sem esperar prontidão; `test_git_timeout_budget_is_applied_and_blocks_observation`
+confere o orçamento Git por injeção; `test_never_ready_has_finite_diagnostic_and_cleanup`
+confere a falha finita sem prontidão. Esses testes não foram modificados.
+
+Antes da certificação final, congelar o novo commit e exigir worktree limpa.
+Executar serialmente cleanup, F-04, repo-side, todas as 35 provas do writer,
+SE07, renderer específico, validator/snapshot e FULL de 16 gates no mesmo SHA.
+Retenção externa exclusiva por execução, inclusive F-04 dedicada versus FULL.
+Os resultados finais são vinculados externamente ao commit, sem reutilizar
+resultados da base como se fossem do SHA novo. No congelamento: NOT_RUN.
+
+O erro PG-01 de prontidão é separado do WinError32 e do histórico Linux raso.
+Se WinError32 não reaparecer, registrar somente
+`NATIVE_WINERROR32_NOT_REPRODUCED_IN_THIS_RECERTIFICATION`. Os aceites anteriores
+ficam preservados; esta mudança exige auditoria externa e decisão humana.
+Sem publicação, promoção ou mudança de policy. SE06 24/25, A1-R4 NOT_RUN,
+DoD INCOMPLETE e FULLY_CERTIFIED=false permanecem inalterados.
+
 ## Piloto create/readme/agregador — gates separados
 
 A [interface congelada](INTERFACE_README_L3.md) define o contrato; a

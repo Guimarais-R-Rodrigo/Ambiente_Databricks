@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-21 — SE07: PG-01, prontidão da fixture de timeout
+
+### Corrigido
+
+- (Codex) `tools/tests/test_validate_create_readme.py`: integrada localmente a proposta PG-01 conferida por SHA-256; a fixture observa prontidão com prazo finito antes do timeout real de 1,5 s e exige o artefato de PIDs. Nenhum timeout ou algoritmo de produção mudou.
+
+### Notas
+
+- (Codex) `docs/sprints/skill_enforcement/SE07/TESTES.md`: documentados escopo, cobertura independente de startup e controles Windows (cinco aprovações, duas reprovações esperadas). Novo SHA requer a bateria final completa; os aceites anteriores não aprovam esta alteração nem autorizam push.
+
 
 ## 2026-09-21 — SE07: aceite humano da corretiva de cleanup
 

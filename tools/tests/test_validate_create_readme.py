@@ -292,11 +292,14 @@ class ValidateCreateReadmeTests(unittest.TestCase):
         original_wait = subprocess.Popen.wait
         fired = []
         def wait(process, *args, **kwargs):
-            if cancellation is not None and not fired:
+            if not fired:
                 fired.append(process.pid)
                 wait_for_file(ready)
                 if cancellation == "keyboard": raise KeyboardInterrupt()
-                raise SystemExit(0)
+                if cancellation is not None: raise SystemExit(0)
+                # Test-only timeout starts after observable parent/child readiness.
+                # Production budgets and cleanup waits remain unchanged.
+                return original_wait(process, timeout=1.5)
             return original_wait(process, *args, **kwargs)
         original_exit = tempfile.TemporaryDirectory.__exit__
         injected = []
@@ -320,6 +323,7 @@ class ValidateCreateReadmeTests(unittest.TestCase):
             self.assertIn("certify_local.py", details["traceback"])
             self.assertTrue(any("SYNTHETIC_CLEANUP_AFTER_INTERRUPT" in issue for issue in result["issues"]))
         self.assertEqual("FAIL", result["status"])
+        self.assertTrue(pidfile.is_file(), "PIDS_NOT_OBSERVED: parent/child readiness was not established")
         pids = json.loads(pidfile.read_text())
         observation = result["commands"][0]["process"]
         if observation.get("launcher_pid"): pids.append(observation["launcher_pid"])
