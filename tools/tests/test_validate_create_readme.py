@@ -326,7 +326,11 @@ class ValidateCreateReadmeTests(unittest.TestCase):
         oracle = {"pids": pids, "alive_after": [alive(pid) for pid in pids], "fault_injection": "replace first Git observation command with owned parent/child fixture"}
         (self.out / "external-process-oracle.json").write_text(json.dumps(oracle, indent=2), encoding="utf8")
         self.assertFalse(any(oracle["alive_after"]), oracle)
-        self.assertEqual("COMPLETE", observation["cleanup"])
+        self.assertEqual("COMPLETE", observation["process_cleanup"])
+        self.assertEqual("FAILED" if cleanup_error else "COMPLETE", observation["temporary_cleanup"])
+        self.assertEqual("FAILED" if cleanup_error else "COMPLETE", observation["cleanup"])
+        if cleanup_error:
+            self.assertEqual(32, observation["temporary_cleanup_exception"]["winerror"])
         self.assertIn("BOUNDARY_OUTPUT", observation["stdout"])
         self.assertEqual("INTERRUPTED" if cancellation else "TIMEOUT", observation["result"])
         if cancellation:

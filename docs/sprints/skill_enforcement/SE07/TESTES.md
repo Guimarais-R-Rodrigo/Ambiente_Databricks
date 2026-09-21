@@ -27,6 +27,23 @@ do writer; nenhum PASS Free/Linux é inferido. Falha nova WinError32 em gate
 final exige investigação própria. Resultados e tentativas finais são externos
 e vinculados ao SHA; requisitos nesta matriz não são resultados de execução.
 
+## Corretiva de cleanup após auditoria do piloto
+
+Gate separado obrigatório: `python -B tools/tests/test_certify_storage_cleanup.py -v`.
+O perfil FULL preserva seus 16 gates; a nova suíte não está incorporada nele.
+Executar também F-04 completa, as duas suítes do piloto, SE07, renderer,
+validator/snapshot e FULL no mesmo SHA final. Os gates finais são serializados.
+
+Os nove métodos cobrem cancelamentos 0/None/8/KeyboardInterrupt em subprocesso,
+gate e Git opcional, comando exit 0/7, timeout real, resíduo e falha de journal.
+As falhas injetadas são sintéticas: não provam que a causa nativa de WinError32
+foi reproduzida ou eliminada. Processo encerrado e diretório removido são
+observações distintas; erro em qualquer cleanup impede sucesso agregado.
+
+O [handoff da corretiva](../../../handoffs/2026-09-21_se07-auditoria-storage-cleanup.md)
+registra a mudança de contrato probatório, a autorização e os limites. Nenhum
+resultado Windows anterior é reclassificado por teste Linux ou bancada Git sintética.
+
 ## Regressões permanentes da corretiva SUP-F04
 
 Suíte: `python -B tools/tests/test_certify_local.py -v`. Os testes usam planos

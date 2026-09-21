@@ -34,6 +34,7 @@ import math
 import re
 import signal
 import tempfile
+import traceback
 import uuid
 import platform
 import subprocess
@@ -357,6 +358,69 @@ def _posix_group_alive(group: int) -> bool:
         return False
 
 
+def _exception_details(exc: BaseException) -> dict[str, object]:
+    """Observed exception details; never infer a Win32 code from its message."""
+    return {"type": type(exc).__name__, "message": str(exc),
+            "errno": getattr(exc, "errno", None), "winerror": getattr(exc, "winerror", None),
+            "filename": getattr(exc, "filename", None), "filename2": getattr(exc, "filename2", None),
+            "traceback": "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))}
+
+
+class _ProcessTemporaryDirectory(tempfile.TemporaryDirectory):
+    """Observe filesystem cleanup separately from termination of owned processes.
+
+    Do not retry or ignore removal errors. A failed cleanup remains a failure,
+    even if a later inspection finds no residual directory. The original
+    interruption/timeout and observed child exit remain separate observations.
+    """
+    def __init__(self, record):
+        self.record = record
+        super().__init__(prefix="sef-process-")
+
+    def __enter__(self):
+        path = super().__enter__()
+        self.record["temporary_directory"] = path
+        self.record["temporary_cleanup"] = "PENDING"
+        return path
+
+    def __exit__(self, exc_type, exc, tb):
+        record = self.record
+        record["process_cleanup"] = record.get("process_cleanup", record["cleanup"])
+        record["temporary_cleanup"] = "RUNNING"
+        if record["process_cleanup"] == "COMPLETE":
+            record["cleanup"] = "PENDING"
+        if exc is not None:
+            record["body_exception"] = _exception_details(exc)
+        try:
+            result = super().__exit__(exc_type, exc, tb)
+            if os.path.lexists(self.name):
+                raise OSError("PROCESS_TEMPORARY_DIRECTORY_REMAINS", self.name)
+        except (OSError, ValueError) as cleanup_error:
+            record["temporary_cleanup"] = "FAILED"
+            record["cleanup"] = "FAILED"
+            record["temporary_cleanup_exception"] = _exception_details(cleanup_error)
+            record["temporary_directory_exists_after_cleanup"] = os.path.lexists(self.name)
+            record["conventional_exit_code"] = (130 if record["result"] == "INTERRUPTED" else
+                                                124 if record["result"] == "TIMEOUT" else 125)
+            try:
+                _persist_process_observation(record)
+            except (OSError, ValueError) as journal_error:
+                # Retain both errors in memory and preserve the original failure.
+                record["cleanup_journal_exception"] = _exception_details(journal_error)
+            raise
+        else:
+            record["temporary_cleanup"] = "COMPLETE"
+            record["temporary_directory_exists_after_cleanup"] = False
+            record["cleanup"] = record["process_cleanup"]
+            try:
+                # COMPLETE may only be persisted after filesystem cleanup.
+                _persist_process_observation(record)
+            except (OSError, ValueError) as journal_error:
+                record["cleanup_journal_exception"] = _exception_details(journal_error)
+                raise
+            return result
+
+
 def _run(command: Sequence[str]) -> tuple[int, str, float]:
     """Compatibility tuple; full observed metadata is appended to processes.json.
 
@@ -376,7 +440,7 @@ def _run(command: Sequence[str]) -> tuple[int, str, float]:
     job = None
     code = 125
     pending_exit = None
-    with tempfile.TemporaryDirectory(prefix="sef-process-") as temporary:
+    with _ProcessTemporaryDirectory(record) as temporary:
         path = Path(temporary)
         with (path / "stdout").open("w+b") as stdout, (path / "stderr").open("w+b") as stderr:
             try:
@@ -406,8 +470,10 @@ def _run(command: Sequence[str]) -> tuple[int, str, float]:
                 code = 124; record["result"] = "TIMEOUT"
             except KeyboardInterrupt:
                 code = 130; record["result"] = "INTERRUPTED"
+                record["interruption_exit_code"] = 130
             except SystemExit as exc:
                 code = 130; record["result"] = "INTERRUPTED"; pending_exit = exc
+                record["interruption_exit_code"] = _interruption_exit(exc)
             except OSError as exc:
                 code = 125; record["result"] = "INFRASTRUCTURE_ERROR"; record["error"] = repr(exc)
             finally:
@@ -477,6 +543,9 @@ def _run(command: Sequence[str]) -> tuple[int, str, float]:
                 record["ended_at_utc"] = _utc()
                 record["ended_monotonic"] = time.monotonic()
                 record["conventional_exit_code"] = code
+                record["process_cleanup"] = record["cleanup"]
+                if record["cleanup"] == "COMPLETE":
+                    record["cleanup"] = "PENDING"  # TemporaryDirectory has not exited yet.
                 _persist_process_observation(record)
     if pending_exit is not None:
         raise pending_exit
@@ -801,6 +870,13 @@ def main(argv: list[str] | None = None) -> int:
         errors.append("INTERRUPTED:SystemExit:" + repr(exc.code))
     except (OSError, ValueError) as exc:
         errors.append("INFRASTRUCTURE_ERROR:" + repr(exc))
+        # PROCESS_RECORDS is reset for this campaign. The last invocation owns
+        # the failure boundary: cleanup/journal errors must not mask its cancel.
+        observed = PROCESS_RECORDS[-1] if PROCESS_RECORDS else None
+        if observed is not None and observed.get("result") == "INTERRUPTED":
+            interrupted = True
+            interruption_exit = observed.get("interruption_exit_code", 130)
+            errors.append("INTERRUPTED_WITH_INFRASTRUCTURE_ERROR")
         print("FAIL infrastructure:", exc, file=sys.stderr)
     finally:
         summary = _build_summary(profile=args.profile, scope=scope, before=before, after=after, results=results,

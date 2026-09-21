@@ -6,6 +6,22 @@
 
 - (Codex) `docs/sprints/skill_enforcement/SE07/CHECKPOINT.md`: registrado o aceite humano de `19328661`, separado do resultado técnico NAO_PRONTA e do FAIL WinError32 preservado. Próximo passo recomendado: corretiva focalizada e recertificação; nenhum código ou nível alterado.
 
+## 2026-09-21 — SE07: corretiva de cleanup após auditoria (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) Suíte `tools/tests/test_certify_storage_cleanup.py`: oráculos externos de cancelamento, falha temporária/journal, resíduo, timeout e controles positivos.
+
+### Corrigido
+
+- (ChatGPT) `tools/skill_enforcement/certify_local.py`: separar término de processos da remoção temporária, registrar exceções completas e preservar cancelamento quando cleanup falha; nenhuma falha de limpeza vira PASS.
+- (ChatGPT) `test_validate_create_readme.py`: exigir cleanup agregado FAILED no erro sintético, sem perder interrupção/130 nem a evidência da exceção.
+- (ChatGPT) `README.md`: atualizar somente os dois censos medidos de arquivos/links alterados pela nova suíte e handoff; a validação histórica continua exigindo Git completo.
+
+### Notas
+
+- (ChatGPT) [Handoff da corretiva](docs/handoffs/2026-09-21_se07-auditoria-storage-cleanup.md): original NAO_APTA; causa nativa WinError32 não estabelecida; implementação local não equivale a certificação Windows, promoção ou aceite.
+
 ## 2026-09-21 — SE07: piloto estreito README L3 (Codex)
 
 - (Codex, agente A) Runner generate/apply para create/readme/agregador, bytes determinísticos e bindings, criação exclusiva Windows/NTFS e evidência de efeitos/falhas sem homologação. Proteção ancestral foi refutada em v1 e corrigida com prova causal.
