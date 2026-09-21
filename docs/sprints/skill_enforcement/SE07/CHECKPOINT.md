@@ -1,5 +1,45 @@
 # SE07 — checkpoint
 
+## Decisão humana posterior ao piloto — 2026-09-21
+
+**ACEITE_HUMANO_REGISTRADO** para o piloto delimitado em
+`1932866140a5ef0eceaf9932c26bb7853f108eac`, parent
+`c1e1a67e9af96519983cbf2f3d3e474f2e8bf4ef`, tree
+`ce47a97b8951160a6c56789dc16f1e073e635454`.
+
+Após receber o resultado e a ressalva bloqueante, o usuário declarou nesta
+conversa: “autorizo na decisao humana. registre isso e me diga qual é o proximo passo.”
+Este registro materializa a decisão humana favorável ao piloto apresentado;
+não afirma que houve parecer externo novo nem autenticação criptográfica do usuário.
+
+O resultado técnico da rodada permanece **NAO_PRONTA**: a regressão F-04
+separada teve WinError32 real, exit externo 2 em lugar de 130. FULL Windows
+16/16 PASS, writer 35/35 PASS e repo-side 28/28 PASS não reclassificam esse FAIL.
+A causa raiz continua indeterminada. O aceite humano e a certificação técnica
+são registros distintos; esta mensagem não declara dispensa técnica do gate.
+
+Evidência imutável: `SEF_SE07_L3_README_19328661_20260921.zip`, SHA-256
+`16fe5e684724afe2e1a83eb90c2baff1eb5c117b6bd4dd4a4945bc1ed8b1b4a7`;
+manifesto `802c0f0f52f02a700cb3f0dcff8a7ac05e8102a19c87486be6a8c2bfffb1d52d`.
+O [handoff original](../../../handoffs/2026-09-21_se07-criar-objeto-l3-readme-piloto.md)
+e os logs históricos permanecem preservados. Este registro posterior é documental
+e não herda uma alegação de certificação executável para seu próprio commit.
+
+**Próximo passo recomendado:** uma corretiva delimitada do tratamento de
+interrupção/cleanup no certifier, com reprodução do WinError32 e observação
+dos handles/processos, sem presumir causa raiz. Preservar a prova vermelha,
+demonstrar a correção e repetir serialmente a regressão F-04, as suítes do piloto
+e o FULL no novo SHA. Submeter esse resultado à auditoria e decisão humana.
+Essa corretiva é recomendação; não foi iniciada pelo pedido de registro.
+
+A canônica permanece no checkpoint F-04 aceito `d49c8728...`; este registro vai
+somente para a review do piloto, condicionado à reconferência de workflows.
+Policy/current_level continuam L2. Free/Genie, promoção de nível e publicação
+operacional continuam decisões separadas. Linux/WSL e Python histórico 3.12.10
+permanecem NOT_RUN; não há homologação multiplataforma.
+
+As seções seguintes conservam o histórico anterior a esta decisão.
+
 ## Checkpoint aceito atual — F-04, 2026-09-21
 
 Aceite humano explícito da corretiva `d49c8728f0e47adc15f7f78293c9fcc58c809a15`.

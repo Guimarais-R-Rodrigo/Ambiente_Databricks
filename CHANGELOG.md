@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-21 — SE07: decisão humana sobre o piloto README
+
+### Atualizado
+
+- (Codex) `docs/sprints/skill_enforcement/SE07/CHECKPOINT.md`: registrado o aceite humano de `19328661`, separado do resultado técnico NAO_PRONTA e do FAIL WinError32 preservado. Próximo passo recomendado: corretiva focalizada e recertificação; nenhum código ou nível alterado.
+
 ## 2026-09-21 — SE07: piloto estreito README L3 (Codex)
 
 - (Codex, agente A) Runner generate/apply para create/readme/agregador, bytes determinísticos e bindings, criação exclusiva Windows/NTFS e evidência de efeitos/falhas sem homologação. Proteção ancestral foi refutada em v1 e corrigida com prova causal.
