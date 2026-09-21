@@ -1,5 +1,29 @@
 # SE07 — checkpoint
 
+## Checkpoint humano aceito e próxima candidata local, 2026-09-21
+
+O aceite humano delimitado tornou `b6fb595225e139329df450edfc33158ceb1e1253`
+o checkpoint de estabilização local L2 de `hub-ml-criar-objeto`, dentro do
+escopo da revisão focalizada. A auditoria da R1 original em `2d25bd2...`
+permanece **NAO_APTA** como fato histórico; o aceite não a reclassifica.
+
+Após as precondições locais e a inspeção dos workflows, esse checkpoint foi
+publicado por fast-forward somente em `origin/sef/SE07-generalizacao`; `main`
+permaneceu em `72894c5511abfa9a5ede3edb4a6f7c5fe11231b3`. Não houve PR, merge,
+tag, Actions manual, Free/Genie, alteração de níveis ou encerramento da SE07.
+
+A rodada seguinte trata exclusivamente F-03/D6 no adapter L3 da auditoria. A
+reprodução no SHA aceito confirmou que erro de importação e `issues` com tipo
+inválido escapavam como exceção, e que quatro sinais positivos com
+`issues=["ERROR"]` geravam `PASS_REVERIFIED` sob injeção de fronteira. A forma
+do verifier EDA real exige os cinco campos atuais e não produz esse sucesso
+contraditório; portanto a correção local falha fechada sem criar uma taxonomia
+universal de warnings. A candidata F-03 é um SHA local novo, ainda pendente de
+certificação e revisão; não será enviada ao remoto sem novo aceite humano.
+
+F-02 permanece preservado. F-04/D10, D2/D9, criar-objeto L3, R2, SE08, Free e
+SE06 seguem fora desta rodada.
+
 ## Confirmação residual R1-C, 2026-09-20 (pré-certificação do novo SHA)
 
 O contraexemplo P01 foi confirmado antes de editar, em Ubuntu/WSL Python 3.12.3

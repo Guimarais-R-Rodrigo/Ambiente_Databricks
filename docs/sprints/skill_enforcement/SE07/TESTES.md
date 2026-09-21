@@ -15,6 +15,23 @@ python -B tools/skill_enforcement/validate_contracts.py
 python -B tools/skill_enforcement/certify_local.py --profile se07 --evidence-dir <diretorio-externo-novo>
 ```
 
+## Regressão F-03/D6 — adapter L3 da auditoria
+
+`SE07PolicyTests` exercita a fronteira do adapter EDA sem substituir o verifier
+canônico: caminho real válido e inválido, ausência de payload, falha de
+importação, `RuntimeError` na chamada, retorno não-mapping, mapping vazio,
+campos obrigatórios ausentes, tipos inválidos em `issues` e combinações
+contraditórias. O retorno deve conter `status`, `valid`,
+`completion_authorized`, `completion_claim_consistent` e `issues` (lista ou
+tupla de strings). `PASS_REVERIFIED` exige a forma válida, quatro sinais
+positivos, `status=VALID` e `issues` vazio.
+
+Importação não concluída preserva `NOT_REVERIFIED`; chamada concluída sem
+resultado válido e resultado contraditório preservam `NOT_PASS_REVERIFIED`.
+O `PASS` do runner e o Receipt da auditoria continuam distintos da compliance
+canônica da produtora. Esta cobertura não altera F-04/D10, Receipt/proveniência,
+política D2, criar-objeto L3, Free ou níveis SEF.
+
 ## Regressões R1 de criar-objeto L2
 
 ### Complemento R1-C

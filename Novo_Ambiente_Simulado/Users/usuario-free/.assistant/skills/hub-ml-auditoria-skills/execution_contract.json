@@ -36,6 +36,17 @@
         "direct_verifier_adapter": {
           "hub-ml-eda-profissional": "scripts/postflight.py::verify_finalized"
         },
+        "canonical_verifier_return": {
+          "required_fields": [
+            "status",
+            "valid",
+            "completion_authorized",
+            "completion_claim_consistent",
+            "issues"
+          ],
+          "issues": "lista ou tupla de strings; PASS_REVERIFIED exige lista vazia",
+          "failure_boundary": "falha de importação não é reverificação; falha de chamada ou retorno malformado não passa"
+        },
         "guarantees": [
           "no_state_promotion_by_inference",
           "producer_compliance_remains_not_reverified_without_canonical_verifier",

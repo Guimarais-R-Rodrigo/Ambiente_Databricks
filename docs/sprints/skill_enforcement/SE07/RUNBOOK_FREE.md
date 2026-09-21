@@ -4,12 +4,13 @@
 
 Validar registry/resolver e a correção epistemológica da auditoria.
 
-## Situação corrente — R1-C
+## Situação corrente — checkpoint R1-C aceito e F-03 local
 
-A correção pós-auditoria cobre somente F-01/F-02 e gates locais Windows/Linux.
-Não homologar Free/Genie a partir desses resultados. R1 `2d25bd2...` continua
-NAO_APTA; nova candidata e resultados definitivos pertencem ao handoff R1-C.
-F-03/F-04 e decisões de conversão antes de L3 permanecem pendentes.
+O checkpoint humano aceito `b6fb595225e139329df450edfc33158ceb1e1253` cobre
+somente F-01/F-02 e gates locais Windows/Linux; ele não homologa Free/Genie.
+R1 `2d25bd2...` continua NAO_APTA historicamente. A próxima candidata local
+trata F-03/D6 no adapter da auditoria e precisa de certificação e revisão
+próprias. F-04 e decisões de conversão antes de L3 permanecem pendentes.
 
 Publicação e probes no Free não estão autorizados nesta rodada. O próximo gate
 proposto é a revisão independente da candidata local, conforme

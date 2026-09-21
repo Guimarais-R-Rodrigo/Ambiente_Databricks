@@ -137,26 +137,69 @@ def _load_preflight(skill_dir: Path):
     return _load_module("sef_audit_preflight_runtime", skill_dir / "scripts" / "preflight.py")
 
 
-def _load_producer_verifier(
+def _producer_verifier_path(
     assistant_root: Path,
     producer_skill: str,
-):
+) -> Path | None:
     if producer_skill != "hub-ml-eda-profissional":
-        return None, None
-    path = (
+        return None
+    return (
         assistant_root
         / "skills"
         / producer_skill
         / "scripts"
         / "postflight.py"
     )
-    if not path.is_file():
+
+
+def _load_producer_verifier(
+    assistant_root: Path,
+    producer_skill: str,
+):
+    path = _producer_verifier_path(assistant_root, producer_skill)
+    if path is None or not path.is_file():
         return None, None
     module = _load_module("sef_audit_producer_postflight", path)
     verifier = getattr(module, "verify_finalized", None)
     if not callable(verifier):
         return None, None
     return verifier, f"skills/{producer_skill}/scripts/postflight.py::verify_finalized"
+
+
+def _producer_verification_base() -> dict[str, Any]:
+    return {
+        "verifier_name": None,
+        "verifier_located": False,
+        "verifier_imported": False,
+        "verifier_called": False,
+        "verifier_completed": False,
+        "result_well_formed": False,
+        "conclusion_validated": False,
+        "executed": False,
+        "status": "NOT_RUN",
+        "valid": False,
+        "completion_authorized": False,
+        "completion_claim_consistent": False,
+        "issues": [],
+    }
+
+
+def _malformed_verifier_result(
+    base: Mapping[str, Any],
+    *,
+    verifier_name: str,
+    code: str,
+) -> dict[str, Any]:
+    return {
+        **base,
+        "verifier_name": verifier_name,
+        "verifier_called": True,
+        "verifier_completed": True,
+        "executed": True,
+        "status": "MALFORMED",
+        "issues": [code],
+        "reason": "CANONICAL_VERIFIER_MALFORMED",
+    }
 
 
 def _normalize_ladder(raw: Any) -> tuple[dict[str, dict[str, str]], list[dict[str, str]]]:
@@ -214,30 +257,47 @@ def _producer_verification(
     producer_skill: str | None,
     producer_final_payload: Mapping[str, Any] | None,
 ) -> dict[str, Any]:
-    base = {
-        "verifier_name": None,
-        "executed": False,
-        "status": "NOT_RUN",
-        "valid": False,
-        "completion_authorized": False,
-        "completion_claim_consistent": False,
-        "issues": [],
-    }
+    base = _producer_verification_base()
     if producer_final_payload is None:
         return {**base, "reason": "PRODUCER_FINAL_PAYLOAD_NOT_PROVIDED"}
     if not producer_skill:
         return {**base, "reason": "PRODUCER_SKILL_NOT_RESOLVED"}
 
-    verifier, name = _load_producer_verifier(assistant_root, producer_skill)
-    if verifier is None:
+    verifier_path = _producer_verifier_path(assistant_root, producer_skill)
+    if verifier_path is None or not verifier_path.is_file():
         return {**base, "reason": "NO_CANONICAL_VERIFIER_ADAPTER"}
+
+    verifier_name = f"skills/{producer_skill}/scripts/postflight.py::verify_finalized"
+    located = {**base, "verifier_located": True, "verifier_name": verifier_name}
+    try:
+        verifier, name = _load_producer_verifier(assistant_root, producer_skill)
+    except Exception as exc:
+        return {
+            **located,
+            "status": "IMPORT_FAILED",
+            "issues": [f"VERIFIER_IMPORT_ERROR:{type(exc).__name__}:{exc}"],
+            "reason": "CANONICAL_VERIFIER_IMPORT_FAILED",
+        }
+
+    if verifier is None:
+        return {
+            **located,
+            "verifier_imported": True,
+            "reason": "CANONICAL_VERIFIER_ENTRYPOINT_UNAVAILABLE",
+        }
+
+    imported = {
+        **located,
+        "verifier_name": name,
+        "verifier_imported": True,
+    }
 
     try:
         result = verifier(producer_final_payload, assistant_root=assistant_root)
     except Exception as exc:
         return {
-            **base,
-            "verifier_name": name,
+            **imported,
+            "verifier_called": True,
             "executed": True,
             "status": "BLOCKED",
             "issues": [f"VERIFIER_RUNTIME_ERROR:{type(exc).__name__}:{exc}"],
@@ -245,35 +305,79 @@ def _producer_verification(
         }
 
     if not isinstance(result, Mapping):
-        return {
-            **base,
-            "verifier_name": name,
-            "executed": True,
-            "status": "MALFORMED",
-            "issues": ["VERIFIER_RESULT_NOT_MAPPING"],
-            "reason": "CANONICAL_VERIFIER_MALFORMED",
-        }
+        return _malformed_verifier_result(
+            imported,
+            verifier_name=name,
+            code="VERIFIER_RESULT_NOT_MAPPING",
+        )
+
+    required_fields = (
+        "status",
+        "valid",
+        "completion_authorized",
+        "completion_claim_consistent",
+        "issues",
+    )
+    for field in required_fields:
+        if field not in result:
+            return _malformed_verifier_result(
+                imported,
+                verifier_name=name,
+                code=f"VERIFIER_RESULT_REQUIRED_FIELD_MISSING:{field}",
+            )
+
+    if not isinstance(result["status"], str) or not result["status"]:
+        return _malformed_verifier_result(
+            imported,
+            verifier_name=name,
+            code="VERIFIER_RESULT_STATUS_INVALID",
+        )
+    for field in ("valid", "completion_authorized", "completion_claim_consistent"):
+        if not isinstance(result[field], bool):
+            return _malformed_verifier_result(
+                imported,
+                verifier_name=name,
+                code=f"VERIFIER_RESULT_FIELD_INVALID:{field}",
+            )
+    raw_issues = result["issues"]
+    if not isinstance(raw_issues, (list, tuple)) or not all(
+        isinstance(item, str) for item in raw_issues
+    ):
+        return _malformed_verifier_result(
+            imported,
+            verifier_name=name,
+            code="VERIFIER_RESULT_ISSUES_INVALID",
+        )
 
     return {
-        "verifier_name": name,
+        **imported,
+        "verifier_called": True,
+        "verifier_completed": True,
+        "result_well_formed": True,
+        "conclusion_validated": (
+            result["status"] == "VALID"
+            and result["valid"] is True
+            and result["completion_authorized"] is True
+            and result["completion_claim_consistent"] is True
+            and not raw_issues
+        ),
         "executed": True,
-        "status": str(result.get("status", "UNKNOWN")),
-        "valid": result.get("valid") is True,
-        "completion_authorized": result.get("completion_authorized") is True,
-        "completion_claim_consistent": result.get("completion_claim_consistent") is True,
-        "issues": list(result.get("issues") or []),
+        "status": result["status"],
+        "valid": result["valid"],
+        "completion_authorized": result["completion_authorized"],
+        "completion_claim_consistent": result["completion_claim_consistent"],
+        "issues": list(raw_issues),
         "reason": "CANONICAL_VERIFIER_EXECUTED",
     }
 
 
 def _producer_compliance(verification: Mapping[str, Any]) -> str:
-    if verification.get("executed") is not True:
+    if verification.get("verifier_called") is not True:
         return "NOT_REVERIFIED"
     if (
-        verification.get("status") == "VALID"
-        and verification.get("valid") is True
-        and verification.get("completion_authorized") is True
-        and verification.get("completion_claim_consistent") is True
+        verification.get("verifier_completed") is True
+        and verification.get("result_well_formed") is True
+        and verification.get("conclusion_validated") is True
     ):
         return "PASS_REVERIFIED"
     return "NOT_PASS_REVERIFIED"

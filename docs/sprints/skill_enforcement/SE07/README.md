@@ -2,11 +2,18 @@
 
 ## Estado
 
-**R1-C — correção pós-auditoria da R1**, exclusivamente F-01 (ciclo Windows
-no L2) e F-02 (LF do marker). O SHA R1 `2d25bd2...` permanece NAO_APTA; a nova
-candidata exige certificação Windows/Linux e revisão focalizada. Estado
-pré-certificação, evidências externas e dívidas: [CHECKPOINT.md](CHECKPOINT.md).
-Sem encerramento SE07, writer L3 ou início R2.
+O checkpoint humano aceito da correção R1-C é
+`b6fb595225e139329df450edfc33158ceb1e1253`: estabilização local L2 de
+criar-objeto, limitada a F-01/F-02. O SHA R1 `2d25bd2...` permanece NAO_APTA
+historicamente. O checkpoint aceito foi publicado somente na branch SE07, sem
+PR, merge, Actions ou Free/Genie.
+
+A candidata local seguinte trata F-03/D6 do adapter L3 de auditoria: distingue
+verifier localizado/importado/chamado/concluído, valida a forma canônica atual
+e não admite `PASS_REVERIFIED` com `issues` não vazio. Ela ainda exige
+certificação e revisão focalizada; F-02 permanece preservado. Estado,
+evidências externas e dívidas: [CHECKPOINT.md](CHECKPOINT.md). Sem encerramento
+SE07, writer L3 ou início R2.
 
 ### Registro R1 anterior à auditoria
 

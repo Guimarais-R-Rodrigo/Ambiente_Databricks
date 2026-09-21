@@ -6,12 +6,12 @@
     {
       "path": "skills/hub-ml-auditoria-skills/SKILL.md",
       "role": "skill_guidance",
-      "git_blob_sha1": "3f4646a519b2d9d8110237622f7cde97c1d4a890"
+      "git_blob_sha1": "794422cbada91c3f0dc570303ffe0a405e479a58"
     },
     {
       "path": "skills/hub-ml-auditoria-skills/execution_contract.json",
       "role": "contract",
-      "git_blob_sha1": "6f970e6d73e289ff240ec6b6ef80c821e25e11ad"
+      "git_blob_sha1": "673b77fdd7ecc0528fc5a01485b9e8181623a3fa"
     },
     {
       "path": "skills/hub-ml-auditoria-skills/scripts/preflight.py",
@@ -21,7 +21,7 @@
     {
       "path": "skills/hub-ml-auditoria-skills/scripts/run.py",
       "role": "runner",
-      "git_blob_sha1": "0a5562ecd9f09d9e9873c8e317b074f1e4eb75a1"
+      "git_blob_sha1": "b26b10c1ee50bd0681182ef11494f5321e5a9669"
     }
   ]
 }

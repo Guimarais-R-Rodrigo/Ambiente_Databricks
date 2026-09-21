@@ -83,6 +83,15 @@ produtora.
 Sem payload compatível ou sem adapter canônico, registrar
 `producer_canonical_compliance=NOT_REVERIFIED`.
 
+O adapter EDA registra separadamente se o verifier foi localizado, importado,
+chamado, concluído e se retornou uma forma válida. A forma vigente exige
+`status`, `valid`, `completion_authorized`, `completion_claim_consistent` e
+`issues`; `issues` é lista ou tupla de strings. `PASS_REVERIFIED` exige os quatro
+sinais positivos, `status="VALID"` e `issues` vazio. Falha de importação permanece
+`NOT_REVERIFIED`; falha de chamada e retorno malformado permanecem
+`NOT_PASS_REVERIFIED`, com diagnóstico estruturado. Isso descreve somente o
+adapter canônico EDA atual e não cria uma taxonomia universal de warnings.
+
 O Receipt L3 da auditoria prova apenas que o **runner da auditoria** executou
 canonicamente e que seu resultado não foi adulterado. Ele não substitui
 Receipt/Postflight/verifier da skill produtora e não autoriza completion dela.

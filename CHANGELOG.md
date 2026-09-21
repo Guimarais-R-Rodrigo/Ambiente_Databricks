@@ -6,6 +6,18 @@ subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 
 
+## 2026-09-21 — SE07 F-03/D6: adapter canônico da auditoria (Codex)
+
+### Corrigido
+
+- (Codex) O adapter L3 da auditoria agora distingue verifier localizado, importado, chamado, concluído, retorno bem formado e conclusão validada. Falha de importação retorna envelope `NOT_REVERIFIED`; falha de chamada e retorno malformado retornam `NOT_PASS_REVERIFIED` com diagnóstico estruturado.
+- (Codex) `PASS_REVERIFIED` passa a exigir a forma canônica atual do verifier EDA, os quatro sinais positivos, `status="VALID"` e `issues` vazio. A suíte cobre import/call failure, não-mapping, mapeamentos incompletos, tipos inválidos, sucesso real sintético e retorno contraditório.
+
+### Estado e limites
+
+- (Codex) O aceite humano de `b6fb595...` é registrado como checkpoint L2 local publicado por fast-forward na branch SE07. A candidata F-03 é local e requer certificação/revisão próprias; não houve push dessa nova candidata, PR, Actions, Free/Genie, merge ou mudança de níveis.
+- (Codex) F-02 permanece preservado. F-04/D10, D2/D9, criar-objeto L3, R2, SE08, Receipt/proveniência, policy, scorer e SE06 continuam fora desta rodada.
+
 ## 2026-09-20 — SE07 R1-C: confirmação residual do preflight L2 (Codex)
 
 ### Corrigido

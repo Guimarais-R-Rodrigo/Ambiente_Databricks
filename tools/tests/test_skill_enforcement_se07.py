@@ -371,6 +371,104 @@ class SE07PolicyTests(unittest.TestCase):
         self.assertTrue(payload["result"]["producer_verification"]["valid"])
         self.assertTrue(payload["result"]["producer_verification"]["completion_authorized"])
 
+    def _run_audit_l3_with_verifier(self, loader):
+        runner = _load(
+            "se07_audit_l3_runner_adapter_boundary",
+            ASSISTANT/"skills"/"hub-ml-auditoria-skills"/"scripts"/"run.py",
+        )
+        with patch.object(runner, "_load_producer_verifier", loader):
+            return runner.run(
+                {
+                    "audit_mode": "OUTPUT",
+                    "producer_skill": "hub-ml-eda-profissional",
+                    "original_request_present": True,
+                    "artifact_present": True,
+                },
+                self._audit_l3_evidence(),
+                producer_final_payload={"synthetic": True},
+                assistant_root=ASSISTANT,
+            )
+
+    def test_audit_l3_adapter_import_failure_is_not_reverified(self):
+        def import_failure(*_args):
+            raise ImportError("synthetic import failure")
+
+        payload = self._run_audit_l3_with_verifier(import_failure)
+        observed = payload["result"]["producer_verification"]
+        self.assertEqual("PASS", payload["trace"]["status"])
+        self.assertEqual("NOT_REVERIFIED", payload["result"]["producer_canonical_compliance"])
+        self.assertTrue(observed["verifier_located"])
+        self.assertFalse(observed["verifier_imported"])
+        self.assertFalse(observed["verifier_called"])
+        self.assertEqual("IMPORT_FAILED", observed["status"])
+        self.assertEqual("CANONICAL_VERIFIER_IMPORT_FAILED", observed["reason"])
+
+    def test_audit_l3_adapter_call_failure_and_non_mapping_do_not_pass(self):
+        def call_failure(_payload, **_kwargs):
+            raise RuntimeError("synthetic call failure")
+
+        cases = {
+            "call_failure": (lambda *_args: (call_failure, "synthetic::verify"), "BLOCKED"),
+            "not_mapping": (lambda *_args: (lambda _payload, **_kwargs: [], "synthetic::verify"), "MALFORMED"),
+        }
+        for name, (loader, expected_status) in cases.items():
+            with self.subTest(name=name):
+                payload = self._run_audit_l3_with_verifier(loader)
+                observed = payload["result"]["producer_verification"]
+                self.assertEqual("NOT_PASS_REVERIFIED", payload["result"]["producer_canonical_compliance"])
+                self.assertTrue(observed["verifier_called"])
+                self.assertEqual(expected_status, observed["status"])
+
+    def test_audit_l3_adapter_rejects_incomplete_or_invalid_result_shape(self):
+        canonical = {
+            "status": "VALID",
+            "valid": True,
+            "completion_authorized": True,
+            "completion_claim_consistent": True,
+            "issues": [],
+        }
+        cases = {"empty": {}}
+        for field in canonical:
+            result = dict(canonical)
+            result.pop(field)
+            cases[f"missing_{field}"] = result
+        cases["issues_integer"] = {**canonical, "issues": 123}
+        cases["issues_item_integer"] = {**canonical, "issues": [1]}
+        cases["valid_integer"] = {**canonical, "valid": 1}
+        for name, result in cases.items():
+            with self.subTest(name=name):
+                payload = self._run_audit_l3_with_verifier(
+                    lambda *_args, result=result: (lambda _payload, **_kwargs: result, "synthetic::verify")
+                )
+                observed = payload["result"]["producer_verification"]
+                self.assertEqual("NOT_PASS_REVERIFIED", payload["result"]["producer_canonical_compliance"])
+                self.assertTrue(observed["verifier_called"])
+                self.assertTrue(observed["verifier_completed"])
+                self.assertFalse(observed["result_well_formed"])
+                self.assertEqual("MALFORMED", observed["status"])
+
+    def test_audit_l3_adapter_requires_empty_issues_for_reverified_pass(self):
+        canonical = {
+            "status": "VALID",
+            "valid": True,
+            "completion_authorized": True,
+            "completion_claim_consistent": True,
+            "issues": [],
+        }
+        for name, result, expected in (
+            ("success", canonical, "PASS_REVERIFIED"),
+            ("contradictory_error", {**canonical, "issues": ["ERROR"]}, "NOT_PASS_REVERIFIED"),
+            ("contradictory_warning", {**canonical, "issues": ["WARNING"]}, "NOT_PASS_REVERIFIED"),
+        ):
+            with self.subTest(name=name):
+                payload = self._run_audit_l3_with_verifier(
+                    lambda *_args, result=result: (lambda _payload, **_kwargs: result, "synthetic::verify")
+                )
+                observed = payload["result"]["producer_verification"]
+                self.assertEqual(expected, payload["result"]["producer_canonical_compliance"])
+                self.assertTrue(observed["result_well_formed"])
+                self.assertEqual(expected == "PASS_REVERIFIED", observed["conclusion_validated"])
+
     def test_audit_l3_runner_blocks_invalid_ladder(self):
         runner = _load(
             "se07_audit_l3_runner_invalid_ladder",
