@@ -326,6 +326,15 @@ def _flush_process_records() -> None:
         _write_json(ACTIVE_EVIDENCE / "processes.json", PROCESS_RECORDS)
 
 
+def _persist_process_observation(record: dict[str, object]) -> None:
+    try:
+        _flush_process_records()
+    except (OSError, ValueError) as exc:
+        # The in-memory observation remains true even if its journal is stale.
+        record["journal_error"] = repr(exc)
+        raise
+
+
 def _posix_group_alive(group: int) -> bool:
     # Linux zombies have terminated but may wait on their external reaper. Only
     # live group members matter. Other POSIX hosts conservatively query killpg.
@@ -357,11 +366,12 @@ def _run(command: Sequence[str]) -> tuple[int, str, float]:
     env = dict(os.environ, PYTHONIOENCODING="utf-8", PYTHONUTF8="1", PYTHONDONTWRITEBYTECODE="1")
     timeout = GIT_TIMEOUT_SECONDS if Path(command[0]).stem.lower() == "git" else STEP_TIMEOUT_SECONDS
     start = time.monotonic()
-    record = {"command": list(command), "cwd": str(REPO_ROOT), "started_at_utc": _utc(),
+    record = {"invocation_id": uuid.uuid4().hex, "command": list(command), "cwd": str(REPO_ROOT), "started_at_utc": _utc(),
               "started_monotonic": start, "timeout_seconds": timeout, "pid": None,
+              "spawn_attempted": False, "command_started": False,
               "observed_exit_code": None, "result": "STARTING", "cleanup": "NOT_STARTED"}
     PROCESS_RECORDS.append(record)
-    _flush_process_records()  # Essential persistence must work before starting a gate.
+    _persist_process_observation(record)  # Must work before attempting a process start.
     process = None
     job = None
     code = 125
@@ -374,15 +384,21 @@ def _run(command: Sequence[str]) -> tuple[int, str, float]:
                 if os.name == "nt":
                     job = _WindowsJob()
                     launcher = [sys.executable, "-B", "-c", _WINDOWS_LAUNCHER, json.dumps(list(command)), str(path / "child.json")]
+                    record["spawn_attempted"] = True
                     process = subprocess.Popen(launcher, stdin=subprocess.PIPE, **kwargs)
                     record["launcher_pid"] = process.pid
                     job.assign(process)
+                    # Releasing the launcher permits a child; only its metadata
+                    # can confirm whether the requested command actually started.
+                    record["command_started"] = None
                     process.stdin.write(b"1"); process.stdin.close()
                 else:
+                    record["spawn_attempted"] = True
                     process = subprocess.Popen(list(command), stdin=subprocess.DEVNULL, start_new_session=True, **kwargs)
                     record["pid"] = process.pid
+                    record["command_started"] = True
                 record["result"] = "RUNNING"
-                _flush_process_records()
+                _persist_process_observation(record)
                 code = process.wait(timeout=max(0.001, timeout - (time.monotonic() - start)))
                 record["observed_exit_code"] = code
                 record["result"] = "EXITED"
@@ -435,8 +451,10 @@ def _run(command: Sequence[str]) -> tuple[int, str, float]:
                             raise ValueError("launcher metadata must be an object")
                         if set(child) == {"pid"} and type(child["pid"]) is int and child["pid"] > 0:
                             record["pid"] = child["pid"]
+                            record["command_started"] = True
                         elif set(child) == {"start_error"} and isinstance(child["start_error"], str) and child["start_error"]:
                             record["start_error"] = child["start_error"]
+                            record["command_started"] = False
                             record["result"] = "START_ERROR"; record["observed_exit_code"] = None; code = 125
                         else:
                             raise ValueError("launcher metadata requires positive pid or start_error")
@@ -459,7 +477,7 @@ def _run(command: Sequence[str]) -> tuple[int, str, float]:
                 record["ended_at_utc"] = _utc()
                 record["ended_monotonic"] = time.monotonic()
                 record["conventional_exit_code"] = code
-                _flush_process_records()
+                _persist_process_observation(record)
     if pending_exit is not None:
         raise pending_exit
     return code, record["stdout"] + record["stderr"], time.monotonic() - start
@@ -527,6 +545,24 @@ def _last_nonempty_line(text: str) -> str:
         if line.strip():
             return line.strip()[:240]
     return ""
+
+
+def _step_process(previous: int, command: Sequence[str]) -> dict[str, object] | None:
+    # Both a normal gate and render_diff invoke exactly one process. Bind its
+    # record by this call's boundary and requested argv, never the last Git read.
+    if len(PROCESS_RECORDS) == previous + 1:
+        record = PROCESS_RECORDS[previous]
+        if record.get("command") == list(command):
+            return dict(record)
+    return None
+
+
+def _interruption_exit(exc: SystemExit) -> int:
+    # Help/parsing happen before the campaign's try block. Inside a campaign,
+    # zero/None mean cancellation, not success; preserve ordinary nonzero exits.
+    if exc.code is None or exc.code == 0:
+        return 130
+    return exc.code if isinstance(exc.code, int) else 1
 
 
 def _reject_aliases(target: Path) -> None:
@@ -657,7 +693,13 @@ def _build_summary(
         "gate_failure_count": len(gate_failures),
         "scope_complete": bool(expected) and [r.name for r in results] == expected,
         "infrastructure_errors": errors, "infrastructure_error_count": len(errors),
-        "expected_steps": expected, "not_started_steps": [n for n in expected if n not in {r.name for r in results}],
+        # Absence of launcher metadata is unknown, not proof of a failed start.
+        # Legacy results without this observation retain compatibility semantics.
+        "expected_steps": expected, "not_started_steps": [n for n in expected if n not in {
+            r.name for r in results if r.process is None or r.process.get("command_started") is not False
+        }],
+        "unknown_start_steps": [r.name for r in results if r.process is not None
+                                and "command_started" in r.process and r.process["command_started"] is None],
         "diagnostic_allow_dirty": allow_dirty,
         "release_clean_certification": not allow_dirty and scope == f"FULL_{profile.upper()}_LOCAL" and not failures and not errors,
         "timeout_policy": {"git_process_seconds": GIT_TIMEOUT_SECONDS, "gate_process_seconds": STEP_TIMEOUT_SECONDS,
@@ -701,6 +743,7 @@ def main(argv: list[str] | None = None) -> int:
     after = before
     scope = _scope(args.profile, args.skip_render, args.allow_dirty)
     interrupted = False
+    interruption_exit = 130
     try:
         if not args.no_evidence:
             evidence_dir = _resolve_evidence_dir(args.evidence_dir, None)
@@ -718,8 +761,20 @@ def main(argv: list[str] | None = None) -> int:
             for index, (name, command) in enumerate(expected, 1):
                 print(f"-- {index:02d} {name}", flush=True)
                 previous = len(PROCESS_RECORDS)
-                code, output, duration = _run_render_diff_gate() if name == "render_diff" else _run(command)
-                process = dict(PROCESS_RECORDS[-1]) if len(PROCESS_RECORDS) > previous else None
+                try:
+                    code, output, duration = _run_render_diff_gate() if name == "render_diff" else _run(command)
+                except (OSError, ValueError, KeyboardInterrupt, SystemExit):
+                    process = _step_process(previous, command)
+                    if process is not None:
+                        # Preserve the invocation even when _run cannot return:
+                        # STARTING is an attempt, not an observed child execution.
+                        code = process.get("conventional_exit_code", 125)
+                        output = str(process.get("stdout", "")) + str(process.get("stderr", ""))
+                        duration = process.get("ended_monotonic", time.monotonic()) - process["started_monotonic"]
+                        results.append(StepResult(name, list(command), code, round(duration, 4),
+                                                  "PASS" if code == 0 else "FAIL", _last_nonempty_line(output), None, process))
+                    raise
+                process = _step_process(previous, command)
                 log_file = None
                 status = "PASS" if code == 0 else "FAIL"
                 # Record the observed step before essential log persistence can fail.
@@ -741,6 +796,9 @@ def main(argv: list[str] | None = None) -> int:
         after = _git_state()
     except KeyboardInterrupt:
         interrupted = True; errors.append("INTERRUPTED")
+    except SystemExit as exc:
+        interrupted = True; interruption_exit = _interruption_exit(exc)
+        errors.append("INTERRUPTED:SystemExit:" + repr(exc.code))
     except (OSError, ValueError) as exc:
         errors.append("INFRASTRUCTURE_ERROR:" + repr(exc))
         print("FAIL infrastructure:", exc, file=sys.stderr)
@@ -751,7 +809,10 @@ def main(argv: list[str] | None = None) -> int:
         if evidence_dir is not None and ACTIVE_EVIDENCE == evidence_dir:
             try:
                 _persist_bundle(evidence_dir, summary, results)
-            except (OSError, ValueError) as exc:
+            except (OSError, ValueError, KeyboardInterrupt, SystemExit) as exc:
+                if isinstance(exc, (KeyboardInterrupt, SystemExit)):
+                    interrupted = True
+                    interruption_exit = _interruption_exit(exc) if isinstance(exc, SystemExit) else 130
                 summary["LOCAL_CERTIFICATION"] = "FAIL"
                 summary["release_clean_certification"] = False
                 summary["infrastructure_errors"].append("PERSISTENCE_FAILED:" + repr(exc))
@@ -762,7 +823,7 @@ def main(argv: list[str] | None = None) -> int:
     print("scope =", scope)
     print("infrastructure_errors =", summary["infrastructure_errors"])
     if evidence_dir is not None: print("evidence:", evidence_dir)
-    if interrupted: return 130
+    if interrupted: return interruption_exit
     return 0 if summary["LOCAL_CERTIFICATION"] == "PASS" else (2 if summary["infrastructure_errors"] else 1)
 
 
