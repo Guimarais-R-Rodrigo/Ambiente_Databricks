@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import contextlib
+import io
 import sys
 import tempfile
 import unittest
@@ -53,8 +55,9 @@ class TestMM01LocalCertification(unittest.TestCase):
                 "test",
                 (sys.executable, "-c", "print('never completes')"),
             )
-            with mock.patch.object(cert.subprocess, "run", side_effect=KeyboardInterrupt):
-                result = cert.run_step(step, root, logs)
+            with mock.patch.object(cert.subprocess, "Popen", side_effect=KeyboardInterrupt):
+                with contextlib.redirect_stdout(io.StringIO()):
+                    result = cert.run_step(step, root, logs)
 
             self.assertEqual(result.status, "INTERRUPTED")
             self.assertIsNone(result.exit_code)
@@ -67,6 +70,28 @@ class TestMM01LocalCertification(unittest.TestCase):
             self.assertIn(
                 "MM01_LOCAL_CERTIFICATION_STEP_INTERRUPTED=KeyboardInterrupt",
                 (logs / "INTERRUPT_TEST.log").read_text(encoding="utf-8"),
+            )
+
+    def test_run_step_streams_and_persists_output(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            logs = root / "logs"
+            logs.mkdir()
+            step = cert.Step(
+                "STREAM_TEST",
+                "test",
+                (sys.executable, "-c", "print('stream-ok')"),
+            )
+            captured = io.StringIO()
+            with contextlib.redirect_stdout(captured):
+                result = cert.run_step(step, root, logs)
+
+            self.assertEqual(result.status, "PASS")
+            self.assertEqual(result.exit_code, 0)
+            self.assertIn("stream-ok", captured.getvalue())
+            self.assertIn(
+                "stream-ok",
+                (logs / "STREAM_TEST.log").read_text(encoding="utf-8"),
             )
 
     def test_resolve_argv_uses_windows_cmd_for_cmd_shim(self) -> None:
