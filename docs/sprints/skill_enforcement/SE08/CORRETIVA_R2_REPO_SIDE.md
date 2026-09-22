@@ -294,3 +294,97 @@ A consulta:
 - não muda verdict;
 - roda por recurso (`stderr`, `stdout`, `child.json` quando existentes);
 - é complementar ao Restart Manager, não substituta.
+
+
+## R4 Windows — campanha 50776fef
+
+A campanha Windows R4 foi executada sobre:
+
+- SHA `50776fefc35ae65a48b913b1b190adff9738d19e`;
+- tree `59b4ebadc6e35d5b1e40be1539f6d8fdc976068d`;
+- bundle `SEF_SE08_R4_WINDOWS_50776fef_20260922.zip`;
+- SHA-256 do ZIP: `ee42832a63f815937b8fe39488d91a81b07b4f5c1464bdee07edb480ebd6aac4`;
+- manifesto interno: 1081 arquivos verificados, zero divergências;
+- classificação: `R4_WINDOWS_NOT_READY`.
+
+Resultados:
+
+- Windows corrective: PASS 9/9;
+- storage standalone: PASS 9/9;
+- certifier standalone: exit 0, 50 métodos, 1 skip de escopo;
+- CI Windows: FAIL somente em `sef`;
+- FULL: `NOT_RUN_CONDITION_NOT_MET`.
+
+A ocorrência nativa foi novamente `test_timeout_real_parent_child_external_oracle_and_partial_streams`.
+
+No boundary:
+
+- `process_cleanup=COMPLETE`;
+- Job Object after terminate: `active=0`, PID list vazia;
+- Job Object before close: `active=0`, PID list vazia;
+- launcher e child estavam sinalizados e `running=false`;
+- Restart Manager retornou `NO_MATCHES_REPORTED_NOT_PROOF_OF_NO_HANDLES`;
+- `FileProcessIdsUsingFileInformation` retornou `NTSTATUS=0`, `information_bytes=8`, `count=0` tanto para `stderr` quanto para `stdout`.
+
+A observação pós-falha foi feita aproximadamente 2 ms depois do snapshot pré-remove. Ela não encontrou observer, launcher, child nem outro PID. Isso não significa `NO_OWNER`: o próprio sharing violation já prova que a tentativa de delete conflitava com um share/access state naquele instante; o dado mostra apenas que o estado não permaneceu observável nas APIs consultadas logo depois.
+
+### Interpretação R4
+
+As quatro rodadas Windows acumuladas sustentam um lock altamente transitório:
+
+1. a falha aparece em contextos diferentes e desaparece em execuções standalone;
+2. os processos supervisionados já estão encerrados quando a falha é registrada;
+3. o Job Object está vazio;
+4. duas APIs de owner consultadas depois da falha não encontram processos;
+5. a tentativa de delete falha duas vezes dentro do próprio `TemporaryDirectory.cleanup()`, mas o owner já desapareceu quando a telemetria pós-falha roda.
+
+Isso ainda não autoriza retry corretivo ou relaxamento do gate. A identificação precisa migrar de snapshot pós-falha para tracing contínuo do filesystem.
+
+## R5 — Process Monitor trace sobre a RC R4
+
+A R5 não altera produto, certifier, timeout nem testes. Ela deve executar sobre a mesma RC R4:
+
+- SHA `50776fefc35ae65a48b913b1b190adff9738d19e`;
+- tree `59b4ebadc6e35d5b1e40be1539f6d8fdc976068d`.
+
+Instrumento: Microsoft Sysinternals Process Monitor, portátil e obtido somente de fonte oficial Microsoft.
+
+Justificativa: a documentação Microsoft recomenda Process Monitor para investigar `ERROR_SHARING_VIOLATION`, e o ProcMon registra atividade de filesystem em tempo real, detalhes confiáveis de processo e stacks por operação. O tracing deve começar antes do teste e terminar depois dele; dessa forma o processo/driver pode ser observado mesmo se o handle fechar antes das consultas pós-falha.
+
+A campanha R5 é diagnóstica e separada da certificação:
+
+- não faz commit/push/merge;
+- não reclassifica gates;
+- não usa retry-until-green;
+- não desabilita antivírus/filter driver;
+- não mata processo;
+- não altera ACL;
+- não modifica a RC;
+- preserva PML original e export CSV;
+- qualquer elevação exigida pelo ProcMon deve ser explicitamente registrada como elevação da ferramenta de tracing, não da execução do produto.
+
+### Escopos R5
+
+Executar três cenários distintos, uma vez cada, sob traces independentes:
+
+1. teste focal `test_timeout_real_parent_child_external_oracle_and_partial_streams`;
+2. `test_gate_cancellation_with_storage_error`;
+3. CI local completo.
+
+São contextos distintos, não retries do mesmo gate. Não executar FULL nesta campanha de tracing.
+
+Para cada trace, preservar os eventos cujo Path contenha `\\sef-process-` e destacar:
+
+- `CreateFile`;
+- `CloseFile`;
+- `SetDispositionInformationFile` / operações de delete equivalentes;
+- operações com Result `SHARING VIOLATION`;
+- Process Name;
+- PID/TID;
+- timestamp;
+- Path;
+- Result;
+- Detail;
+- stack, quando disponível no PML.
+
+Se um `OTHER_PID` ou stack de filter driver aparecer imediatamente antes do sharing violation, retornar a evidência sem implementar correção.

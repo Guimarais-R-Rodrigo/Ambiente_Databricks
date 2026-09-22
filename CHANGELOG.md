@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-09-22 — SE08 R5: tracing contínuo do sharing violation
+
+### Incorporado
+
+- (ChatGPT) Incorporada a campanha Windows R4 em `50776fef...`: windows corrective 9/9, storage 9/9 e certifier standalone exit 0; CI FAIL apenas na etapa SEF por WinError32 em `test_timeout_real_parent_child_external_oracle_and_partial_streams`; FULL não executado.
+- (ChatGPT) Na ocorrência R4, Job Object estava vazio, launcher/child encerrados, Restart Manager sem matches e `NtQueryInformationFile(FileProcessIdsUsingFileInformation)` retornou sucesso com count=0 para `stderr` e `stdout` cerca de 2 ms após a falha.
+- (ChatGPT) A próxima investigação não altera mais o certifier: usa tracing contínuo do filesystem com Microsoft Sysinternals Process Monitor sobre a RC R4 exata, para capturar o processo/thread/stack que abre ou fecha `sef-process-*\\stderr` antes do `ERROR_SHARING_VIOLATION`.
+
+### Estado
+
+- R4 Windows: `R4_WINDOWS_NOT_READY`.
+- WinError32: reproduzido no CI; owner pós-falha não observável.
+- root cause: não estabelecida.
+- promoção ao trabalho: bloqueada.
+
+
 ## 2026-09-22 — SE08 R4: identificação diagnóstica de PIDs por arquivo
 
 ### Incorporado
