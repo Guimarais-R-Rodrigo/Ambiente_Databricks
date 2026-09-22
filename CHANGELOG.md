@@ -8,6 +8,11 @@
 - (ChatGPT) O perfil FULL SE08 passa a incluir explicitamente as suítes de storage cleanup, guardrails da corretiva Windows e regressões do observador diagnóstico. Assim, um FULL futuro não pode ficar verde omitindo novamente o gate de storage.
 - (ChatGPT) Adicionado observador opt-in de lifecycle/Job Object/Restart Manager. O probe nativo mira explicitamente `test_keyboard_interrupt_before_first_output`, que foi o caso real do WinError32; ausência de reprodução continua sem valor de certificado causal.
 
+### Corrigido durante a auditoria S5
+
+- (ChatGPT) O observador nativo agora falha fechado quando o teste-alvo não executa exatamente uma vez ou fica `skipped`; `unittest.wasSuccessful()` isoladamente não é mais suficiente para produzir exit 0. Isso impede que ausência de observação Windows seja tratada como resultado diagnóstico bem-sucedido.
+- (ChatGPT) A fixture de storage passou a registrar ownership/finalizer no instante do oráculo e usa `TemporaryDirectory.cleanup()` somente depois do snapshot, em vez de desarmar o finalizador manualmente; o teardown continua exclusivamente test-only.
+
 ### Reconciliado
 
 - (ChatGPT) Reaplicada à linha remota a correção local `3118e970`: a identidade corporativa sintética é construída em runtime para não ser capturada pela própria varredura estática.
