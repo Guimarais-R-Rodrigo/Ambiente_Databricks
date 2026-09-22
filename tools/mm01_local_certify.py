@@ -641,8 +641,12 @@ def run_step(step: Step, repo_root: Path, logs_dir: Path) -> StepResult:
             )
             if proc.stdout is None:
                 raise CertificationError("step stdout pipe unavailable: " + step.step_id)
-            for line in proc.stdout:
-                _emit_step_text(line, handle, repo_root)
+            stdout = proc.stdout
+            try:
+                for line in stdout:
+                    _emit_step_text(line, handle, repo_root)
+            finally:
+                stdout.close()
             return_code = proc.wait()
         except KeyboardInterrupt:
             if proc is not None:
