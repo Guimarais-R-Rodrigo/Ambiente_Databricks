@@ -38,7 +38,7 @@ def _required(skill,level):
 def validate_policy_registry(policy_path:Path|str=DEFAULT_POLICY)->list[PolicyIssue]:
     path=Path(policy_path); issues=[]
     try: raw=json.loads(path.read_text(encoding="utf-8"))
-    except (OSError,json.JSONDecodeError) as exc: return [_issue("POLICY_UNREADABLE",str(exc),"$")]
+    except (OSError,UnicodeDecodeError,json.JSONDecodeError) as exc: return [_issue("POLICY_UNREADABLE",str(exc),"$")]
     if not isinstance(raw,Mapping): return [_issue("POLICY_ROOT","policy registry deve ser objeto","$")]
     if raw.get("schema_version")!="1.0": issues.append(_issue("POLICY_SCHEMA","schema_version deve ser 1.0","schema_version"))
     if raw.get("policy_id")!="SE07-skill-enforcement-policy": issues.append(_issue("POLICY_ID","policy_id inesperado","policy_id"))
@@ -107,7 +107,7 @@ def validate_policy_registry(policy_path:Path|str=DEFAULT_POLICY)->list[PolicyIs
 def summarize(policy_path:Path|str=DEFAULT_POLICY)->dict[str,Any]:
     path=Path(policy_path); issues=validate_policy_registry(path)
     try: raw=json.loads(path.read_text(encoding="utf-8"))
-    except (OSError,json.JSONDecodeError): raw={}
+    except (OSError,UnicodeDecodeError,json.JSONDecodeError): raw={}
     entries=raw.get("skills",[]) if isinstance(raw,Mapping) else []
     return {"schema_version":"1.0","sprint":"SE07","status":"PASS" if not issues else "FAIL","catalog_skills":len(discover_skills()),"policy_entries":len(entries) if isinstance(entries,list) else 0,"issues":[x.to_dict() for x in issues]}
 
