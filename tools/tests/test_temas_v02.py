@@ -272,11 +272,10 @@ class FileTests(_ThemeFixture, unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td);(root/'real').mkdir();(root/'real/x.json').write_bytes(self.raw)
             link=root/'link'
-            if os.name == 'nt':
-                import _winapi
-                _winapi.CreateJunction(str(root/'real'),str(link))
-            else:
+            try:
                 link.symlink_to(root/'real',target_is_directory=True)
+            except (OSError, NotImplementedError) as exc:
+                self.skipTest(f'filesystem sem symlink de diretório: {exc}')
             self.reject('PATH_SYMLINK',load_theme,root,'link/x.json')
     def test_directory_is_not_configuration(self):
         with tempfile.TemporaryDirectory() as td:
