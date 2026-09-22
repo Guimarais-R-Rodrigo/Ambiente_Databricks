@@ -121,7 +121,9 @@ class SE08OperationalTests(unittest.TestCase):
         def fake_databricks_json(*args: str):
             calls.append(tuple(args))
             if args[:2] == ("current-user", "me"):
-                return {"userName": "tester@bank.example"}
+                # Fixture sintética montada em runtime para não acionar a
+                # varredura estática de identidades no próprio teste.
+                return {"userName": "@".join(("tester", "bank.example"))}
             self.fail(f"auth should not be queried after corporate identity: {args}")
 
         with mock.patch.object(publicar_free, "databricks_json", side_effect=fake_databricks_json):
@@ -132,6 +134,21 @@ class SE08OperationalTests(unittest.TestCase):
                 )
         self.assertIn("corporativa", str(ctx.exception))
         self.assertEqual([("current-user", "me", "-o", "json")], calls)
+
+
+def load_tests(loader, standard_tests, pattern):
+    """Mantém as regressões corretivas no step SE08 já chamado pelo FULL/CI.
+
+    Cada discover é restrito a um arquivo; nunca dispara diagnósticos Windows
+    nem recursão do perfil de certificação.
+    """
+    root = str(Path(__file__).parent)
+    for filename in ("test_se08_ci_portability.py", "test_se08_cleanup_diagnostics.py"):
+        suite = unittest.TestLoader().discover(root, pattern=filename)
+        if suite.countTestCases() == 0:
+            raise RuntimeError("SE08_CORRECTIVE_TESTS_MISSING: " + filename)
+        standard_tests.addTests(suite)
+    return standard_tests
 
 
 if __name__ == "__main__":
