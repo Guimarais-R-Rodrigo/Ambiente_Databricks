@@ -62,7 +62,7 @@ O observador:
 - pode consultar Restart Manager depois de WinError32;
 - trata lista vazia do Restart Manager como `NO_MATCHES_REPORTED_NOT_PROOF_OF_NO_HANDLES`.
 
-A R2 acrescenta o caso `keyboard-before-output`, que executa exatamente
+A R2 acrescenta o caso `before-output`, que executa exatamente
 `test_keyboard_interrupt_before_first_output`, o teste em que o WinError32 nativo apareceu na campanha anterior.
 
 Quando a consulta Restart Manager é habilitada, são registrados `stdout`, `stderr` e `child.json` da própria invocação. A consulta é diagnóstica e pode alterar timing; por isso não é certificação causal.
@@ -117,3 +117,28 @@ Executar uma vez por SHA congelado, com retenção externa exclusiva:
 9. FULL SE08 somente se as precondições anteriores não revelarem bloqueio.
 
 Falha não autoriza retry automático. Evidência deve voltar para auditoria antes de qualquer mudança causal adicional.
+
+
+## S5 — auditoria pré-Windows
+
+A auditoria repo-side foi executada depois do hardening de S1–S4, antes de qualquer nova campanha Windows.
+
+Achados e verificações:
+
+- o perfil FULL SE08 contém explicitamente `se08_storage_cleanup_tests`, `se08_windows_corrective_tests` e `se08_cleanup_diagnostics_tests`; o storage não pode mais ficar fora de um FULL futuro;
+- a fixture `before_removal` mantém ownership forte da `TemporaryDirectory` até o oráculo, registra se o finalizador ainda estava armado e só chama `cleanup()` depois do snapshot; não há retry nem alteração do certifier para tornar o caso verde;
+- o probe nativo `before-output` aponta nominalmente para `test_keyboard_interrupt_before_first_output`;
+- caso nativo ausente ou `skipped` é resultado não observável/infraestrutural, nunca sucesso do probe;
+- Restart Manager permanece consulta opt-in, posterior à falha e sem `RmShutdown`/`RmRestart`; lista vazia não prova ausência de handles;
+- os quatro arquivos materializados em `Novo_Ambiente_Simulado` têm blobs idênticos às respectivas fontes canônicas; `MANUAL_TECNICO.md` raiz também coincide byte a byte com a fonte;
+- a contagem `repo (identidade) = 1638` foi reconciliada com o contrato do validador: arquivos Git rastreados com extensões `.md`, `.py`, `.txt` e `.json` dentro do escopo; não é a contagem bruta de todos os blobs;
+- a R2 não altera `policy.json`, níveis de enforcement, contratos das skills ou lógica normal de cleanup do certifier além da composição explícita dos gates SE08;
+- nenhuma observação Linux/estática é reclassificada como certificação Windows, NTFS, FULL, Free ou Genie.
+
+Finding corrigido durante S5: a primeira versão do observador usava apenas `unittest.wasSuccessful()`; como `unittest` considera uma execução integralmente pulada como bem-sucedida, um probe ambiental poderia terminar com exit 0 sem observação nativa. A versão final exige exatamente um teste executado e zero skips para exit 0.
+
+### Classificação S5
+
+`R2_REPO_SIDE_AUDITED_READY_FOR_WINDOWS_CAMPAIGN`
+
+Essa classificação significa somente que o delta repo-side foi reconciliado e está pronto para ser submetido aos gates ambientais. Ela não é certificação da SE08 nem autorização de promoção.
