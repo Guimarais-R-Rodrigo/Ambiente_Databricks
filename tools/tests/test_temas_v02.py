@@ -217,12 +217,12 @@ class CoreTests(_ThemeFixture, unittest.TestCase):
 
     def test_missing_dependencies_reported_without_install(self):
         code = "import sys;sys.path.insert(0,sys.argv[1]);from hub_snippets.visual.tema import load_reference_theme,ThemeError\ntry:load_reference_theme()\nexcept ThemeError as e:print(e.code)"
-        p=subprocess.run([sys.executable,'-B','-S','-c',code,str(PRODUCT)],capture_output=True,text=True,timeout=15)
+        p=subprocess.run([sys.executable,'-B','-I','-S','-c',code,str(PRODUCT)],capture_output=True,text=True,timeout=15)
         self.assertEqual(p.returncode,0,p.stderr);self.assertEqual(p.stdout.strip(),'DEPENDENCY_MISSING')
 
     def test_import_without_third_party_modules_or_platform(self):
         code="import sys;sys.path.insert(0,sys.argv[1]);from hub_snippets.visual.tema import normalize_color;print(normalize_color('#abc123'));assert not any(x in sys.modules for x in ['jsonschema','referencing','pyspark','plotly','pandas','mlflow','streamlit'])"
-        p=subprocess.run([sys.executable,'-B','-S','-c',code,str(PRODUCT)],capture_output=True,text=True,timeout=15)
+        p=subprocess.run([sys.executable,'-B','-I','-S','-c',code,str(PRODUCT)],capture_output=True,text=True,timeout=15)
         self.assertEqual(p.returncode,0,p.stderr);self.assertEqual(p.stdout.strip(),'#ABC123')
 
     def test_api_is_exhaustive(self):
@@ -312,7 +312,7 @@ class LayoutTests(unittest.TestCase):
         from temas_v02_check import check_layout
         original=Path.exists
         def exists(path):
-            if str(path).endswith('V01/theme.schema.json'):return True
+            if path.as_posix().endswith('V01/theme.schema.json'):return True
             return original(path)
         with patch.object(Path,'exists',exists):
             with self.assertRaisesRegex(ValueError,'V02_DUPLICATE_SCHEMA'):check_layout()
@@ -321,7 +321,7 @@ class LayoutTests(unittest.TestCase):
         from temas_v02_check import check_layout
         original=Path.read_bytes
         def read(path):
-            if str(path).endswith('exemplos/legado_notebook.json'):return b'{}'
+            if path.as_posix().endswith('exemplos/legado_notebook.json'):return b'{}'
             return original(path)
         with patch.object(Path,'read_bytes',read):
             with self.assertRaisesRegex(ValueError,'V02_FIXTURE_DRIFT'):check_layout()
@@ -378,7 +378,7 @@ class AdditionalGuards(_ThemeFixture, unittest.TestCase):
         from temas_v02_check import check_layout
         original=Path.read_text
         def read(path,*args,**kwargs):
-            return 'changed' if str(path).endswith('identidade_visual/TOKENS.md') else original(path,*args,**kwargs)
+            return 'changed' if path.as_posix().endswith('identidade_visual/TOKENS.md') else original(path,*args,**kwargs)
         with patch.object(Path,'read_text',read):
             with self.assertRaisesRegex(ValueError,'V02_DICTIONARY'):check_layout()
 
@@ -386,7 +386,7 @@ class AdditionalGuards(_ThemeFixture, unittest.TestCase):
         from temas_v02_check import check_layout
         original=Path.read_text
         def read(path,*args,**kwargs):
-            return '' if str(path).endswith('tema/__init__.py') else original(path,*args,**kwargs)
+            return '' if path.as_posix().endswith('tema/__init__.py') else original(path,*args,**kwargs)
         with patch.object(Path,'read_text',read):
             with self.assertRaisesRegex(ValueError,'V02_API'):check_layout()
 
@@ -400,7 +400,7 @@ class AdditionalGuards(_ThemeFixture, unittest.TestCase):
     def test_layout_changed_schema(self):
         from temas_v02_check import check_layout
         original=Path.read_bytes
-        def read(path):return b'{}' if str(path).endswith('identidade_visual/theme.schema.json') else original(path)
+        def read(path):return b'{}' if path.as_posix().endswith('identidade_visual/theme.schema.json') else original(path)
         with patch.object(Path,'read_bytes',read):
             with self.assertRaisesRegex(ValueError,'V02_SCHEMA_HASH'):check_layout()
 
