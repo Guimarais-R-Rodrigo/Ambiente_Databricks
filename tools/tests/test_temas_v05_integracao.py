@@ -90,7 +90,11 @@ class SaveSafetyTests(unittest.TestCase):
         draft = _draft()
         with tempfile.TemporaryDirectory() as tmp:
             real = Path(tmp) / 'real.txt'; real.write_text('preservar')
-            link = Path(tmp) / 'proposta.json'; link.symlink_to(real)
+            link = Path(tmp) / 'proposta.json'
+            try:
+                link.symlink_to(real)
+            except (OSError, NotImplementedError) as exc:
+                self.skipTest(f'filesystem sem symlink de arquivo: {exc}')
             with self.assertRaises(ThemeLabError) as cm:
                 draft.save_proposal(tmp, link.name)
             self.assertEqual(cm.exception.code, 'LAB_SAVE_EXISTS')
