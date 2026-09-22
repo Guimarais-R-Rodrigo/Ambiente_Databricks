@@ -142,3 +142,15 @@ A próxima execução integral deverá usar o HEAD técnico/documental produzido
 - identidade dos workflows.
 
 MM01 continua não aceita, não integrada e MM02 permanece bloqueada.
+
+
+## Hardening adicional de observabilidade dos steps
+
+A R3 também mostrou que o modelo anterior bufferizava stdout/stderr do subprocesso até o término do step. Assim, uma interrupção durante um bootstrap longo podia perder a saída parcial do comando e manter o console externo silencioso.
+
+Foi introduzido:
+
+- `509ba1d30f47d241cfc8a0533e42056026925ead` — execução dos steps por `subprocess.Popen` com tee incremental: cada linha é sanitizada, gravada no log e emitida ao stdout em tempo real;
+- `be9f854d018028949a5aeb5d75ce0cb1cc93c5b9` — regressão que prova persistência e emissão do output incremental, além da interrupção estruturada.
+
+O comando lógico e o comando resolvido permanecem preservados no início do log. O return code continua sendo a única autoridade mecânica de PASS/FAIL do step. O tee não altera argumentos, ambiente ou gates.
