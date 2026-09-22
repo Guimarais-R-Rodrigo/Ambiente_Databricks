@@ -142,3 +142,19 @@ Finding corrigido durante S5: a primeira versão do observador usava apenas `uni
 `R2_REPO_SIDE_AUDITED_READY_FOR_WINDOWS_CAMPAIGN`
 
 Essa classificação significa somente que o delta repo-side foi reconciliado e está pronto para ser submetido aos gates ambientais. Ela não é certificação da SE08 nem autorização de promoção.
+
+
+### Actions observadas durante S5
+
+A criação da primeira ref de RC disparou workflows de `push` automaticamente no SHA `089a5e7d6f59ab5561cdd4c5dbc772bafc85fe32`.
+
+A primeira observação de `Skill Enforcement SE01` ficou **FAIL**, com todos os passos funcionais anteriores aprovados e falha exclusiva em `Snapshot README`:
+
+- validação estrutural: aprovado, mas com 1 warning de `__pycache__` em `ambiente_fonte`;
+- renderer: aprovado;
+- render diff: aprovado;
+- snapshot: esperava `APROVADO: 0 falha(s), 0 aviso(s)`, observou `APROVADO: 0 falha(s), 1 aviso(s)`.
+
+Causa repo-side identificada: `validate_assistant.py` importava `validate_contracts`, que carrega uma fachada estática sob `ambiente_fonte/.assistant`; sem supressão de bytecode, a própria validação criava `__pycache__` antes de executar sua guarda de higiene.
+
+Correção: `sys.dont_write_bytecode=True` é definido antes dos imports locais do validador. Nenhum warning foi ignorado, nenhum cache foi apagado para obter verde e nenhum valor do snapshot foi reduzido.

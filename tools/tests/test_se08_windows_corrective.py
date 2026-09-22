@@ -28,6 +28,15 @@ class SE08WindowsCorrectiveStaticTests(unittest.TestCase):
         for forbidden in ("sleep", "rmtree", "unlink", "remove", "kill", "terminate"):
             self.assertNotIn(forbidden, calls)
 
+    def test_validator_disables_bytecode_before_local_imports(self):
+        text = self.read("tools/validate_assistant.py")
+        lines = text.splitlines()
+        guard = next(i for i, line in enumerate(lines)
+                     if "sys.dont_write_bytecode = True" in line)
+        local_import = next(i for i, line in enumerate(lines)
+                            if line.startswith("from readme_objeto_contract import"))
+        self.assertLess(guard, local_import)
+
     def test_theme_dependency_probe_ignores_python_environment(self):
         text = self.read("tools/tests/test_temas_v02.py")
         self.assertGreaterEqual(text.count("'PYTHONPATH'"), 2)

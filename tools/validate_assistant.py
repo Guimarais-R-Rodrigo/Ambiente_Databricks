@@ -16,6 +16,10 @@ import re
 import sys
 from pathlib import Path
 
+# Este validador importa helpers estáticos a partir de ambiente_fonte/.assistant.
+# Não deve criar __pycache__ na própria árvore que ele audita.
+sys.dont_write_bytecode = True
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from readme_objeto_contract import check_readme_objects

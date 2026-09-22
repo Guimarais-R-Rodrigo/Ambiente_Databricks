@@ -10,6 +10,8 @@
 
 ### Corrigido durante a auditoria S5
 
+- (ChatGPT) A primeira rodada automática de Actions no SHA `089a5e7d...` preservou um FAIL em Skill Enforcement SE01 exclusivamente no snapshot README: o próprio `validate_assistant.py` importava um helper sob `ambiente_fonte/.assistant` sem suprimir bytecode, criava `__pycache__` e depois convertia essa sujeira criada por ele mesmo em warning. O validador passa a definir `sys.dont_write_bytecode=True` antes dos imports locais; a regra de warning e o snapshot não foram relaxados.
+
 - (ChatGPT) O observador nativo agora falha fechado quando o teste-alvo não executa exatamente uma vez ou fica `skipped`; `unittest.wasSuccessful()` isoladamente não é mais suficiente para produzir exit 0. Isso impede que ausência de observação Windows seja tratada como resultado diagnóstico bem-sucedido.
 - (ChatGPT) A fixture de storage passou a registrar ownership/finalizer no instante do oráculo e usa `TemporaryDirectory.cleanup()` somente depois do snapshot, em vez de desarmar o finalizador manualmente; o teardown continua exclusivamente test-only.
 
