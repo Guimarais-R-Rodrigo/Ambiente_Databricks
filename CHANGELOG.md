@@ -1,6 +1,18 @@
 # Changelog
 
 
+## 2026-09-21 — SE07: hotfix pós-merge para policy com UTF-8 inválido
+
+### Corrigido
+
+- (ChatGPT) `tools/skill_enforcement/se07_policy.py`: `UnicodeDecodeError` passa a ser tratado como `POLICY_UNREADABLE` tanto no validator quanto na leitura de resumo, preservando `FAIL` estruturado e evitando traceback no CLI `--json`.
+- (ChatGPT) `tools/tests/test_skill_enforcement_se07.py`: o adversarial de policy ilegível passa a cobrir também arquivo existente com bytes UTF-8 inválidos.
+
+### Proveniência
+
+- Achado P2 tardio do review automatizado da PR #81, surgido após o merge `73cacdd44fbccc80da835d96388ca23b6a6fcefc`. O hotfix não altera `policy.json`, níveis, registry, runtime das skills nem as dívidas preservadas de SE06/SE07.
+
+
 ## 2026-09-21 — SE07: hotfix pós-merge para policy ilegível
 
 ### Corrigido
