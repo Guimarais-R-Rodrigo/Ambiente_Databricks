@@ -348,6 +348,10 @@ class CertifierTests(unittest.TestCase):
             "launcher_pid": 456,
             "observed_exit_code": None,
             "exit_after_cleanup": 1,
+            "command_started": True,
+            "metadata_error": None,
+            "start_error": None,
+            "utf8_valid": True,
         }
         observation = cert._temporary_cleanup_observation(record, directory)
         self.assertTrue(observation["exists"])
@@ -355,6 +359,9 @@ class CertifierTests(unittest.TestCase):
         self.assertEqual("COMPLETE", observation["process_cleanup"])
         self.assertEqual(123, observation["pid"])
         self.assertEqual(456, observation["launcher_pid"])
+        self.assertTrue(observation["command_started"])
+        self.assertTrue(observation["utf8_valid"])
+        self.assertIsNone(observation["metadata_error"])
         self.assertEqual("COMPLETE", record["cleanup"], "telemetry must not mutate verdict state")
 
     def test_keyboard_interrupt_cleanup_and_output(self):
