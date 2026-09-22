@@ -1251,6 +1251,18 @@ Resolve `execution_contract.json` antes do core analítico e devolve um `Preflig
 
 A API pública inclui `run_preflight` e, desde a SE07, `get_skill_enforcement_policy`/`list_skill_enforcement_policies` para consultar a política transversal de nível por skill. O registry fica em `hub_padroes/skill_enforcement/policy.json`. `current_level` descreve somente enforcement implementado; `target_level` é roadmap e não prova existência de gates. O contrato v0.1 continua em `mode="audit"`; condição usada pelo contrato sem contexto explícito bloqueia o preflight em vez de ser tratada silenciosamente como falsa.
 
+Desde a SE08, contratos e policy participam do validador geral do Hub e o gate
+local chama o perfil cumulativo `se08` do certifier em modo parcial/read-only.
+A certificação FULL permanece separada: ela inclui regressões SEF acumuladas,
+renderer canônico, ausência de drift no derivado e snapshot documental. O
+subgate do `ci_local.py` não substitui esse FULL.
+
+Publicação/verify no Databricks Free e comportamento conversacional do Genie Code
+continuam canais de evidência distintos. Uma policy válida não prova que o agente
+carregou a skill, usou o runner ou resistiu a bypass. Da mesma forma, um
+`target_level` alto não promove `current_level`; cada salto exige os artefatos
+e gates do nível correspondente.
+
 ---
 
 ### 27.1. Constantes e formatação
