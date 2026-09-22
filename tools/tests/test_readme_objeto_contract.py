@@ -92,7 +92,12 @@ class ReadmeContractTests(unittest.TestCase):
 
     def test_waived_symlink_is_not_silently_accepted(self):
         target = self.repo / "outside"; target.mkdir()
-        (self.base / "hub_snippets/ml/link").symlink_to(target, target_is_directory=True)
+        link = self.base / "hub_snippets/ml/link"
+        if sys.platform == "win32":
+            import _winapi
+            _winapi.CreateJunction(str(target), str(link))
+        else:
+            link.symlink_to(target, target_is_directory=True)
         with self.assertRaisesRegex(ValueError, "simbólico"):
             rc.discover(self.base)
 
@@ -169,7 +174,10 @@ class ReadmeContractTests(unittest.TestCase):
     def test_symlink_readme_rejected(self):
         path = self.base / self.spec.path / "README.md"
         target = self.repo / "real.md"; target.write_text("texto")
-        path.symlink_to(target)
+        try:
+            path.symlink_to(target)
+        except (OSError, NotImplementedError) as exc:
+            self.skipTest(f"filesystem sem symlink de arquivo: {exc}")
         self.assertTrue(any("simbólico" in e for e in self.errors()))
 
     def test_editor_placeholder_rejected(self):
