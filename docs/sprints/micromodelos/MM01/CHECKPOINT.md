@@ -311,3 +311,28 @@ Depois da R4, a PSEF00 foi integrada em `main@11851e137dd7793b351ac08fc211c0be90
 O self-test R4 também revelou `ResourceWarning` não bloqueante no teste de streaming. O pipe passou a ser fechado explicitamente em `0d43519c000e107460f2d36c4aa04b9441d4ce60`; a regressão `46a32fd5ceaaa272911aaa38b67f87f87750381b` transforma novo leak desse tipo em erro de teste.
 
 Nenhum gate funcional foi relaxado.
+
+
+## Quinta tentativa da certificação local — PASS mecânico, bundle não conforme
+
+A R5 foi executada sobre `3e3e105f60e92f6ca58502cf0c92f4f461a84b04` contra `main=11851e137dd7793b351ac08fc211c0be90005dee`.
+
+O executor terminou com exit code 0, `status=PASS`, `preflight_ok=true`, `postflight_ok=true` e `failure=null`. Todos os 49 steps executáveis passaram e somente `V12_SCOPE_STRICT` foi `SKIP_ALLOWED`. O ZIP `c812454ecd011e99172f802d06ae556c830486fd2afd21bf5aec035bf72cf3fb` teve 54/54 checksums internos válidos.
+
+Os gates MM01 e transversais passaram integralmente, incluindo `CI_LOCAL=PASS`, V00–V13 e snapshot `1677/2109/0`.
+
+A revisão posterior dos bytes do bundle, porém, detectou paths locais do diretório pessoal persistidos em sete logs quando subprocessos imprimiam caminhos Windows em representação escapada. Isso viola as regras de sanitização já declaradas em `LOCAL_CERTIFICATION_V1.md`.
+
+Assim:
+
+- o veredito mecânico do manifest R5 permanece historicamente PASS;
+- os gates funcionais R5 permanecem historicamente PASS;
+- o bundle R5 não é aceito como bundle final de certificação v1;
+- auditoria independente final deve aguardar uma rodada integral com evidência sanitizada.
+
+Correção:
+
+- `cb9f97375e6effaddbfff7569c64c3cafdbce503` — redige variantes literais/normalizadas/escapadas de paths locais;
+- `74b0929433a58b4a17959fbb84cc85bb06407127` — regressão das variantes escapadas.
+
+Nenhum gate funcional foi relaxado.
