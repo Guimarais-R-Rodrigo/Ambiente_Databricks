@@ -7,6 +7,7 @@
 - (ChatGPT) Incorporada a campanha Windows da R2 em `d3720f59...`: storage standalone FAIL 8/9 por WinError32 nativo preemptando uma injeção sintética; certifier standalone 46/46 PASS; CI Windows FAIL somente em `sef/certifier_regression`, com segunda ocorrência nativa no timeout pai-filho; FULL não executado. O antigo teste de resíduo passou e sustenta a correção do problema de finalizer da fixture, sem implicar correção do WinError32.
 - (ChatGPT) O certifier passa a registrar, somente depois de um WinError32 já ocorrido, consulta read-only ao Restart Manager e estado instantâneo dos PIDs supervisionados. Também registra o Job Object após término e antes do fechamento. A telemetria não faz retry, sleep, remoção adicional, encerramento de aplicações ou mudança de verdict.
 - (ChatGPT) `ci_local.py` deixa de truncar em 4.000 caracteres a saída de uma etapa reprovada; failures futuros permanecem integralmente auditáveis no log do comando.
+- (ChatGPT) O loader do observador Restart Manager resolve explicitamente o arquivo irmão quando o certifier é carregado por `spec_from_file_location`; assim a regressão Windows do certifier não perde a observação por depender de `sys.path` incidental.
 
 ### Estado
 
