@@ -15,8 +15,9 @@ GitHub Actions não é gate obrigatório desta iniciativa enquanto os créditos 
 
 | Bloco | Estado |
 |---|---|
-| PSEF00 — reconciliação, inventário, baseline e freeze | CANDIDATA_PARA_REVISAO |
-| PSEF01–PSEF07 | NOT_STARTED |
+| PSEF00 — reconciliação, inventário, baseline e freeze | INTEGRADA — PR #98 / `main@11851e137dd7793b351ac08fc211c0be90005dee` |
+| PSEF01 — contrato editorial transversal e navegação policy-aware | CANDIDATA_PARA_REVISAO |
+| PSEF02–PSEF07 | NOT_STARTED |
 | PSEF-ACTIONS-RECERTIFICATION | DEFERRED_NO_CREDITS |
 | promoção ao workspace corporativo | NÃO_AUTORIZADA |
 
@@ -54,10 +55,14 @@ Não existe, nesta iniciativa, um segundo framework de enforcement próprio para
 - [Inventário PSEF00](PSEF00/INVENTARIO.md)
 - [Matriz Prompt × Skill × SEF](PSEF00/MATRIZ_PROMPT_SKILL_SEF.md)
 - [Achados](PSEF00/ACHADOS.md)
-- [Checkpoint](PSEF00/CHECKPOINT.md)
+- [Checkpoint PSEF00](PSEF00/CHECKPOINT.md)
+- [PSEF01](PSEF01/README.md)
+- [Mudanças PSEF01](PSEF01/MUDANCAS.md)
+- [Validação PSEF01](PSEF01/TESTES.md)
+- [Checkpoint PSEF01](PSEF01/CHECKPOINT.md)
 
 ## Fonte e derivado
 
 A fonte editável continua em `ambiente_fonte/`. `Novo_Ambiente_Simulado/` é derivado e só deve mudar por renderer canônico quando uma sprint futura efetivamente alterar fonte.
 
-PSEF00 é documental: não modifica prompts produtivos, skills, policy, instruções globais, Manual Técnico ou derivado.
+PSEF00 foi integrada sem modificar produto. PSEF01 altera somente o README fonte de `hub_prompts`; o derivado permanece deliberadamente intocado até passar pelo renderer canônico. Nenhuma sincronização manual do espelho é autorizada.
