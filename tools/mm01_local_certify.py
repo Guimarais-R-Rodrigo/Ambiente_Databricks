@@ -600,23 +600,51 @@ def run_step(step: Step, repo_root: Path, logs_dir: Path) -> StepResult:
     env = os.environ.copy()
     env.update(dict(step.env))
     executed = resolve_argv(step.argv)
-    proc = subprocess.run(
-        executed,
-        cwd=repo_root,
-        env=env,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        check=False,
-    )
-    ended = utc_now()
-    duration = time.monotonic() - start_clock
     log_rel = "logs/" + step.step_id + ".log"
     log_path = logs_dir / (step.step_id + ".log")
     logical = "$ " + " ".join(step.argv)
     resolved = "$[resolved] " + " ".join(executed)
+
+    try:
+        proc = subprocess.run(
+            executed,
+            cwd=repo_root,
+            env=env,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            check=False,
+        )
+    except KeyboardInterrupt:
+        ended = utc_now()
+        duration = time.monotonic() - start_clock
+        rendered = (
+            logical
+            + "\n"
+            + resolved
+            + "\n\nMM01_LOCAL_CERTIFICATION_STEP_INTERRUPTED=KeyboardInterrupt\n"
+        )
+        rendered = sanitize_text(rendered, repo_root)
+        log_path.write_text(rendered, encoding="utf-8")
+        return StepResult(
+            step_id=step.step_id,
+            source=step.source,
+            command=sanitize_argv(step.argv, repo_root),
+            started_utc=started,
+            ended_utc=ended,
+            duration_seconds=round(duration, 3),
+            exit_code=None,
+            status="INTERRUPTED",
+            log_file=log_rel,
+            log_sha256=sha256_file(log_path),
+            executed_command=sanitize_argv(executed, repo_root),
+            reason="KeyboardInterrupt during subprocess execution",
+        )
+
+    ended = utc_now()
+    duration = time.monotonic() - start_clock
     rendered = logical + "\n" + resolved + "\n\n" + proc.stdout
     rendered = sanitize_text(rendered, repo_root)
     log_path.write_text(rendered, encoding="utf-8")
@@ -874,7 +902,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         postflight_ok = True
         write_json(output_dir / "postflight.json", postflight)
 
-    except Exception as exc:
+    except (Exception, KeyboardInterrupt) as exc:
         failure = type(exc).__name__ + ": " + str(exc)
         try:
             if not postflight:
