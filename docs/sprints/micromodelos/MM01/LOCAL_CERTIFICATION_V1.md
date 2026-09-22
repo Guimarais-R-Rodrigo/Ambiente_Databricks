@@ -178,3 +178,12 @@ O certifier executa os gates com tee incremental:
 O streaming é probatório e operacional. Ele não altera o comando, não muda o environment do gate, não considera output textual como substituto do exit code e não permite continuar depois de falha.
 
 Se ocorrer interrupção controlável durante o streaming, o log parcial já emitido permanece disponível e o step é registrado como `INTERRUPTED` quando o processo Python conserva controle.
+
+
+## 13. Fechamento de pipes do streaming
+
+O tee incremental deve fechar explicitamente o pipe de stdout do subprocesso depois do consumo.
+
+A regressão do certifier trata `ResourceWarning` nesse caminho como erro. Isso impede que um step seja considerado operacionalmente limpo enquanto deixa file handle aberto.
+
+A regra não altera o comando executado, seus argumentos, o environment, o exit code ou a classificação PASS/FAIL do gate.
