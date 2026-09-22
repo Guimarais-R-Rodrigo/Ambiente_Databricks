@@ -187,3 +187,19 @@ O tee incremental deve fechar explicitamente o pipe de stdout do subprocesso dep
 A regressão do certifier trata `ResourceWarning` nesse caminho como erro. Isso impede que um step seja considerado operacionalmente limpo enquanto deixa file handle aberto.
 
 A regra não altera o comando executado, seus argumentos, o environment, o exit code ou a classificação PASS/FAIL do gate.
+
+
+## 14. Sanitização de representações escapadas
+
+A sanitização de paths locais deve cobrir não apenas a forma literal produzida pelo sistema operacional, mas também representações serializadas/escapadas emitidas por subprocessos e frameworks de teste.
+
+Para `<REPO>` e `<HOME>`, o certifier deve redigir pelo menos:
+
+- forma literal;
+- forma com separador normalizado para `/`;
+- forma com backslashes duplicados;
+- forma com níveis adicionais de escaping razoavelmente produzidos por `repr`, JSON ou mensagens de teste.
+
+A regra se aplica ao output incremental antes de persistência ou emissão.
+
+Um bundle que contenha path local identificável em qualquer dessas representações não satisfaz integralmente o contrato probatório v1, mesmo que todos os gates funcionais tenham exit code 0.
