@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-09-22 — SE08: integração, gate Free e fechamento
+
+### Integrado
+
+- (ChatGPT) RC `ee1cf04b...` certificada com FULL SE08 Windows 21/21, CI Windows 10/10 e gate Databricks Free PASS com 573/573 arquivos comparados, zero ausentes/obsoletos e 14/14 skills.
+- (ChatGPT) PR #90 integrada em `627bcc798...` após aceite humano. A primeira rodada pós-merge preservou um FAIL de portabilidade em Python 3.11: a suíte SE07 chamava `PosixPath.is_junction()` onde a API não existia.
+- (ChatGPT) PR #92 corrigiu a detecção de junction e o filtro de dependências do workflow de transição. Em `main@431c46fc...`, 17/17 workflows disparados concluíram em success, inclusive o workflow Python 3.11 que revelou o defeito.
+
+### Estado final
+
+- `SE08_FULLY_CERTIFIED=true` no alcance da sprint;
+- `DATABRICKS_FREE=PASS`;
+- `GENIE_BEHAVIORAL_SCREENING=NOT_APPLICABLE` ao delta SE08;
+- SE06/SE07 permanecem com suas classificações históricas;
+- WinError32 permanece intermitente, sem root cause estabelecida;
+- `PROMOCAO_TRABALHO=BLOQUEADA`.
+
+
 ## 2026-09-22 — SE08 R5: amostra prioritária no instante pós-WinError32
 
 ### Incorporado
