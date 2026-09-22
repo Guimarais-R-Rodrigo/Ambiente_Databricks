@@ -6,6 +6,8 @@ from pathlib import Path
 
 from tools import mm01_local_certify as cert
 
+REPO = Path(__file__).resolve().parents[2]
+
 
 class TestMM01LocalCertification(unittest.TestCase):
     def _result(
@@ -93,6 +95,15 @@ class TestMM01LocalCertification(unittest.TestCase):
         ids = {step.step_id for step in cert.command_plan("python")}
         self.assertEqual(ids | cert.ALLOWED_SKIP_IDS, cert.REQUIRED_STEP_IDS)
         self.assertFalse(ids & cert.ALLOWED_SKIP_IDS)
+
+    def test_workflow_pins_cover_exact_source_set(self) -> None:
+        self.assertEqual(set(cert.WORKFLOW_EXPECTED_BLOBS), set(cert.WORKFLOW_SOURCES))
+        self.assertEqual(set(cert.WORKFLOW_REQUIRED_SNIPPETS), set(cert.WORKFLOW_SOURCES))
+
+    def test_current_workflow_definitions_match_frozen_blob_pins(self) -> None:
+        report = cert.check_workflow_drift(REPO)
+        self.assertEqual(set(report), set(cert.WORKFLOW_SOURCES))
+        self.assertTrue(all(item["blob_matches"] for item in report.values()))
 
 
 if __name__ == "__main__":
