@@ -62,6 +62,7 @@ class SE08OperationalTests(unittest.TestCase):
         names = [name for name, _ in certify_local.PROFILE_STEPS["se08"]]
         self.assertIn("se07_policy_validation", names)
         self.assertIn("se07_policy_tests", names)
+        self.assertIn("se08_policy_io_tests", names)
         self.assertIn("se08_operational_tests", names)
         self.assertIn("assistant_structure", names)
         self.assertIn("render_simulado", names)
@@ -85,6 +86,31 @@ class SE08OperationalTests(unittest.TestCase):
         self.assertEqual("L3", item["target_level"])
         self.assertEqual("stage_specific", item["scope_mode"])
         self.assertEqual("audit", item["rollout_mode"])
+
+    def test_operational_docs_preserve_policy_semantics_and_promotion_blocker(self):
+        template = (ASSISTANT/"hub_padroes"/"skill"/"template.md").read_text(encoding="utf-8")
+        skills_readme = (ASSISTANT/"skills"/"README.md").read_text(encoding="utf-8")
+        policy_readme = (ASSISTANT/"hub_padroes"/"skill_enforcement"/"README.md").read_text(encoding="utf-8")
+        manual = (ASSISTANT/"MANUAL_TECNICO.md").read_text(encoding="utf-8")
+        root_manual = (ROOT/"MANUAL_TECNICO.md").read_text(encoding="utf-8")
+        playbook = (ROOT/"docs"/"playbooks"/"replicacao-trabalho.md").read_text(encoding="utf-8")
+        checklist = (ROOT/"docs"/"playbooks"/"checklist-replicacao.md").read_text(encoding="utf-8")
+
+        for text in (template, skills_readme, policy_readme, manual):
+            self.assertIn("current_level", text)
+            self.assertIn("target_level", text)
+        self.assertIn("--profile se08", manual)
+        self.assertEqual(manual, root_manual)
+        self.assertIn("S06-A1-R4=NOT_RUN", playbook)
+        self.assertIn("SE06_DOD=INCOMPLETE", playbook)
+        self.assertIn("PROMOCAO", playbook.upper())
+        self.assertIn("BLOQUEADA", checklist)
+        self.assertIn("publicar_free.py", checklist)
+
+    def test_se08_minimum_document_set_exists(self):
+        root = ROOT/"docs"/"sprints"/"skill_enforcement"/"SE08"
+        for name in ("README.md", "TESTES.md", "RESULTADOS.md", "CHECKPOINT.md", "RUNBOOK_LOCAL.md"):
+            self.assertTrue((root/name).is_file(), name)
 
     def test_free_publisher_rejects_corporate_identity_before_auth(self):
         calls: list[tuple[str, ...]] = []
