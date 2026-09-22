@@ -1,4 +1,4 @@
-# Política de enforcement por skill — SE07
+# Política de enforcement por skill — SEF
 
 Este diretório publica a política canônica de **nível de enforcement** do Skill Enforcement Framework (SEF).
 
