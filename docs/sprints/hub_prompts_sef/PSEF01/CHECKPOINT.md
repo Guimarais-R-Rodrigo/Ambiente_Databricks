@@ -7,6 +7,7 @@
 ```text
 BASE_MAIN = 11851e137dd7793b351ac08fc211c0be90005dee
 BRANCH    = psef/PSEF01-contrato-editorial-policy-aware
+HEAD      = d78bdb482fd41f3c397818fa7627007d0050450b
 ```
 
 ## Entrega
@@ -24,6 +25,7 @@ BRANCH    = psef/PSEF01-contrato-editorial-policy-aware
 PSEF01_SCOPE_VALIDATION      = PASS
 PSEF01_POLICY_AWARE_CONTRACT = PASS
 PSEF01_NO_LEVEL_HARDCODE     = PASS
+PSEF01_RELATIVE_LINKS         = PASS (26/26)
 DERIVED_STALE                = true
 DERIVED_MANUAL_EDIT          = false
 GITHUB_ACTIONS               = DEFERRED_NO_CREDITS
