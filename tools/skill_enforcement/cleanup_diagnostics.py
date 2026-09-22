@@ -210,7 +210,8 @@ def observe(cert, recorder, *, query_file_users=False):
                           finalizer_alive=self._finalizer.alive, snapshot=fs_snapshot(self.name))
             if query_file_users and getattr(exc, 'winerror', None) == 32:
                 try:
-                    users = file_users([Path(self.name)/'stdout', Path(self.name)/'stderr'])
+                    users = file_users([Path(self.name)/'stdout', Path(self.name)/'stderr',
+                                        Path(self.name)/'child.json'])
                 except Exception as query_error:
                     users = {'status': 'UNOBSERVABLE', 'error': error_info(query_error)}
                 recorder.emit('post_failure_file_users', path=self.name, observation=users,
@@ -329,7 +330,9 @@ def preflight(out):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--case', required=True, choices=('preflight', 'never-ready', 'storage-finalizer'))
+    parser.add_argument('--case', required=True,
+                        choices=('preflight', 'never-ready', 'keyboard-before-output',
+                                 'storage-finalizer'))
     parser.add_argument('--out', required=True, type=Path)
     parser.add_argument('--restart-manager', action='store_true', help='Consulta opcional após WinError32.')
     args = parser.parse_args(argv)
@@ -354,14 +357,18 @@ def main(argv=None):
             summary['preflight'] = preflight(out)
             code = 0 if all(v['status'] == 'CREATION_OBSERVED'
                             for v in summary['preflight']['symlinks'].values()) else 2
-        elif args.case == 'never-ready':
+        elif args.case in ('never-ready', 'keyboard-before-output'):
             if os.name != 'nt':
                 raise ValueError('NATIVE_WINDOWS_REQUIRED_FOR_THIS_PROBE')
             support = load_support(ROOT/'tools/tests/test_certify_local.py', 'se08_diag_support')
+            test_name = ('test_never_ready_has_finite_diagnostic_and_cleanup'
+                         if args.case == 'never-ready'
+                         else 'test_keyboard_interrupt_before_first_output')
+            summary['target_test'] = test_name
             with patch.dict(os.environ, {'SEF_CERTIFIER_TEST_ARTIFACT_DIR': str(out/'fixtures')}):
                 with observe(support.cert, recorder, query_file_users=args.restart_manager):
                     result = unittest.TextTestRunner(verbosity=2).run(unittest.TestSuite([
-                        support.CertifierTests('test_never_ready_has_finite_diagnostic_and_cleanup')]))
+                        support.CertifierTests(test_name)]))
             summary['test_result'] = {'tests': result.testsRun, 'failures': len(result.failures),
                                       'errors': len(result.errors), 'skips': len(result.skipped)}
             code = 0 if result.wasSuccessful() else 1
