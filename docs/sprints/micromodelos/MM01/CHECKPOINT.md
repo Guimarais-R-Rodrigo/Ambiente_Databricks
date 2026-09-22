@@ -272,3 +272,13 @@ O hardening probatório posterior entrou em:
 - `83aa8e6a23d7c3895eb5741ac6639ed96f05ff39` — regressão da interrupção estruturada.
 
 Nenhum gate funcional foi relaxado. A próxima tentativa integral deve usar novo diretório probatório e novo SHA após este registro, condicionado novamente a `behind_by=0`.
+
+
+### Hardening pós-R3 — streaming probatório
+
+Além da interrupção estruturada, o executor foi endurecido para não bufferizar silenciosamente steps longos:
+
+- `509ba1d30f47d241cfc8a0533e42056026925ead`: tee incremental sanitizado de stdout/stderr para log + console;
+- `be9f854d018028949a5aeb5d75ce0cb1cc93c5b9`: regressões do streaming e persistência de output parcial.
+
+Isso não altera gates nem critérios de PASS; reduz apenas a perda de evidência e o silêncio operacional durante bootstraps/testes longos.
