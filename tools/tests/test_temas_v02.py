@@ -10,7 +10,7 @@ from dataclasses import FrozenInstanceError, replace
 import hashlib
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import subprocess
 import sys
 import tempfile
@@ -307,6 +307,11 @@ def _path_endswith(path: Path, *parts: str) -> bool:
 
 
 class LayoutTests(unittest.TestCase):
+    def test_path_suffix_helper_is_separator_agnostic(self):
+        windows = PureWindowsPath(r"C:\repo\hub_padroes\identidade_visual\TOKENS.md")
+        self.assertTrue(_path_endswith(windows, "identidade_visual", "TOKENS.md"))
+        self.assertFalse(_path_endswith(windows, "identidade_visual", "theme.schema.json"))
+
     def test_real_layout(self):
         from temas_v02_check import check_layout
         self.assertEqual(check_layout()['status'],'PASS_V02_LAYOUT')
