@@ -518,14 +518,16 @@ def _windows_cleanup_failure_observation(
     file_process_ids_provider=None,
     pid_state_provider=None,
 ) -> dict[str, object] | None:
-    """Observe one native sharing violation after it already happened.
+    """Observe one native sharing violation as early as possible after failure.
 
+    The failing resource is queried before Restart Manager or secondary files.
     No retry, sleep, delete, handle close or verdict mutation is performed.
-    Provider injection exists only so the protocol is testable off Windows.
     """
     if getattr(cleanup_error, "winerror", None) != 32:
         return None
 
+    observer_started_ns = time.monotonic_ns()
+    error_ns = record.get("temporary_cleanup_error_monotonic_ns")
     resources: list[Path] = []
     filename = getattr(cleanup_error, "filename", None)
     if filename:
@@ -535,40 +537,43 @@ def _windows_cleanup_failure_observation(
         if os.path.lexists(candidate):
             resources.append(candidate)
     unique_resources = list(dict.fromkeys(resources))
+    priority_resource = Path(filename) if filename else (unique_resources[0] if unique_resources else None)
 
     observation: dict[str, object] = {
         "status": "OBSERVED_AFTER_NATIVE_WINERROR32",
         "observed_at_utc": _utc(),
+        "observer_started_monotonic_ns": observer_started_ns,
         "observer_pid": os.getpid(),
         "warning": "Post-failure diagnostic only; observation may perturb later timing.",
         "resources": [str(path) for path in unique_resources],
+        "priority_failed_resource": str(priority_resource) if priority_resource else None,
         "launcher_pid": record.get("launcher_pid"),
         "pid": record.get("pid"),
+        "observer_order": [],
     }
-
-    if file_users_provider is None and os.name == "nt":
-        file_users_provider = _restart_manager_file_users
-    if file_users_provider is None:
-        observation["restart_manager"] = {"status": "NOT_APPLICABLE_NON_WINDOWS"}
-    else:
-        try:
-            observation["restart_manager"] = file_users_provider(unique_resources)
-        except Exception as exc:
-            observation["restart_manager"] = {
-                "status": "UNOBSERVABLE",
-                "error": _exception_details(exc),
-            }
+    if type(error_ns) is int:
+        observation["observer_start_delta_from_cleanup_error_ns"] = observer_started_ns - error_ns
 
     if file_process_ids_provider is None and os.name == "nt":
         file_process_ids_provider = _file_process_ids_using_file
-    file_pid_observations = []
-    if file_process_ids_provider is None:
-        file_pid_observations.append({
-            "status": "NOT_APPLICABLE_NON_WINDOWS",
-            "process_ids": [],
+
+    file_pid_observations: list[dict[str, object]] = []
+
+    def observe_file_owner(resource: Path, phase: str) -> None:
+        started_ns = time.monotonic_ns()
+        observation["observer_order"].append({
+            "event": "file_process_ids_begin",
+            "path": str(resource),
+            "phase": phase,
+            "monotonic_ns": started_ns,
         })
-    else:
-        for resource in unique_resources:
+        if file_process_ids_provider is None:
+            item: dict[str, object] = {
+                "status": "NOT_APPLICABLE_NON_WINDOWS",
+                "path": str(resource),
+                "process_ids": [],
+            }
+        else:
             try:
                 item = dict(file_process_ids_provider(resource))
             except Exception as exc:
@@ -578,19 +583,74 @@ def _windows_cleanup_failure_observation(
                     "error": _exception_details(exc),
                     "process_ids": [],
                 }
-            relations = []
-            for owner_pid in item.get("process_ids", []):
-                if owner_pid == observation["observer_pid"]:
-                    relation = "OBSERVER_PID_QUERY_HANDLE_OR_EXISTING_HANDLE"
-                elif owner_pid == observation["launcher_pid"]:
-                    relation = "LAUNCHER_PID"
-                elif owner_pid == observation["pid"]:
-                    relation = "CHILD_PID"
-                else:
-                    relation = "OTHER_PID"
-                relations.append({"pid": owner_pid, "relation": relation})
-            item["relations"] = relations
-            file_pid_observations.append(item)
+        finished_ns = time.monotonic_ns()
+        item["observer_phase"] = phase
+        item["query_started_monotonic_ns"] = started_ns
+        item["query_finished_monotonic_ns"] = finished_ns
+        item["query_duration_ns"] = finished_ns - started_ns
+        if type(error_ns) is int:
+            item["query_start_delta_from_cleanup_error_ns"] = started_ns - error_ns
+        relations = []
+        for owner_pid in item.get("process_ids", []):
+            if owner_pid == observation["observer_pid"]:
+                relation = "OBSERVER_PID_QUERY_HANDLE_OR_EXISTING_HANDLE"
+            elif owner_pid == observation["launcher_pid"]:
+                relation = "LAUNCHER_PID"
+            elif owner_pid == observation["pid"]:
+                relation = "CHILD_PID"
+            else:
+                relation = "OTHER_PID"
+            relations.append({"pid": owner_pid, "relation": relation})
+        item["relations"] = relations
+        file_pid_observations.append(item)
+        observation["observer_order"].append({
+            "event": "file_process_ids_end",
+            "path": str(resource),
+            "phase": phase,
+            "monotonic_ns": finished_ns,
+            "status": item.get("status"),
+        })
+
+    # First discriminant: query exactly the resource whose unlink just failed.
+    if priority_resource is not None:
+        observe_file_owner(priority_resource, "PRIORITY_FAILED_RESOURCE")
+
+    # Only after the priority per-file query do the broader Restart Manager scan.
+    rm_started_ns = time.monotonic_ns()
+    observation["observer_order"].append({
+        "event": "restart_manager_begin",
+        "monotonic_ns": rm_started_ns,
+    })
+    if file_users_provider is None and os.name == "nt":
+        file_users_provider = _restart_manager_file_users
+    if file_users_provider is None:
+        rm_observation: dict[str, object] = {"status": "NOT_APPLICABLE_NON_WINDOWS"}
+    else:
+        try:
+            rm_observation = dict(file_users_provider(unique_resources))
+        except Exception as exc:
+            rm_observation = {
+                "status": "UNOBSERVABLE",
+                "error": _exception_details(exc),
+            }
+    rm_finished_ns = time.monotonic_ns()
+    rm_observation["query_started_monotonic_ns"] = rm_started_ns
+    rm_observation["query_finished_monotonic_ns"] = rm_finished_ns
+    rm_observation["query_duration_ns"] = rm_finished_ns - rm_started_ns
+    if type(error_ns) is int:
+        rm_observation["query_start_delta_from_cleanup_error_ns"] = rm_started_ns - error_ns
+    observation["restart_manager"] = rm_observation
+    observation["observer_order"].append({
+        "event": "restart_manager_end",
+        "monotonic_ns": rm_finished_ns,
+        "status": rm_observation.get("status"),
+    })
+
+    # Secondary resources are lower priority and cannot delay the primary sample.
+    for resource in unique_resources:
+        if priority_resource is not None and resource == priority_resource:
+            continue
+        observe_file_owner(resource, "SECONDARY_RESOURCE_AFTER_RESTART_MANAGER")
     observation["file_process_ids_using_file"] = file_pid_observations
 
     if pid_state_provider is None and os.name == "nt":
@@ -606,8 +666,8 @@ def _windows_cleanup_failure_observation(
             except Exception as exc:
                 pid_states[role] = {"status": "UNOBSERVABLE", "error": _exception_details(exc)}
     observation["pid_states"] = pid_states
+    observation["observer_finished_monotonic_ns"] = time.monotonic_ns()
     return observation
-
 
 def _temporary_cleanup_observation(record: dict[str, object], directory: Path) -> dict[str, object]:
     """Snapshot observacional imediatamente antes da remoção do diretório.
@@ -672,8 +732,7 @@ class _ProcessTemporaryDirectory(tempfile.TemporaryDirectory):
         except (OSError, ValueError) as cleanup_error:
             record["temporary_cleanup"] = "FAILED"
             record["cleanup"] = "FAILED"
-            record["temporary_cleanup_exception"] = _exception_details(cleanup_error)
-            record["temporary_directory_exists_after_cleanup"] = os.path.lexists(self.name)
+            record["temporary_cleanup_error_monotonic_ns"] = time.monotonic_ns()
             try:
                 native_observation = _windows_cleanup_failure_observation(
                     record, Path(self.name), cleanup_error
@@ -685,6 +744,10 @@ class _ProcessTemporaryDirectory(tempfile.TemporaryDirectory):
                 }
             if native_observation is not None:
                 record["windows_cleanup_failure_observation"] = native_observation
+            # Expensive traceback/filesystem serialization comes after the
+            # priority native sample so it cannot consume the transient window.
+            record["temporary_cleanup_exception"] = _exception_details(cleanup_error)
+            record["temporary_directory_exists_after_cleanup"] = os.path.lexists(self.name)
             record["conventional_exit_code"] = (130 if record["result"] == "INTERRUPTED" else
                                                 124 if record["result"] == "TIMEOUT" else 125)
             try:
@@ -846,6 +909,18 @@ def _run(command: Sequence[str]) -> tuple[int, str, float]:
                 if record["cleanup"] == "COMPLETE":
                     record["cleanup"] = "PENDING"  # TemporaryDirectory has not exited yet.
                 _persist_process_observation(record)
+        # We are outside the stdout/stderr context but still inside the process
+        # TemporaryDirectory. This proves whether the certifier's own Python file
+        # objects were already closed immediately before directory cleanup.
+        record["parent_streams_before_temporary_exit"] = {
+            "observed_at_utc": _utc(),
+            "monotonic_ns": time.monotonic_ns(),
+            "stdout_closed": bool(stdout.closed),
+            "stderr_closed": bool(stderr.closed),
+            "stdout_name": str(path / "stdout"),
+            "stderr_name": str(path / "stderr"),
+        }
+        _persist_process_observation(record)
     if pending_exit is not None:
         raise pending_exit
     return code, record["stdout"] + record["stderr"], time.monotonic() - start

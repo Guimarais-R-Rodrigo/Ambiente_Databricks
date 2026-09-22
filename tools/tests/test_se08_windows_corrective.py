@@ -71,6 +71,18 @@ class SE08WindowsCorrectiveStaticTests(unittest.TestCase):
         self.assertIn("FileProcessIdsUsingFileInformation", text)
         self.assertIn("observer_pid_may_be_query_handle", text)
 
+    def test_r5_priority_owner_query_precedes_restart_manager(self):
+        text = self.read("tools/skill_enforcement/certify_local.py")
+        start = text.index("def _windows_cleanup_failure_observation(")
+        end = text.index("def _temporary_cleanup_observation(", start)
+        body = text[start:end]
+        self.assertLess(
+            body.index('"PRIORITY_FAILED_RESOURCE"'),
+            body.index('"restart_manager_begin"'),
+        )
+        self.assertIn("temporary_cleanup_error_monotonic_ns", text)
+        self.assertIn("parent_streams_before_temporary_exit", text)
+
     def test_theme_dependency_probe_ignores_python_environment(self):
         text = self.read("tools/tests/test_temas_v02.py")
         self.assertGreaterEqual(text.count("'PYTHONPATH'"), 2)

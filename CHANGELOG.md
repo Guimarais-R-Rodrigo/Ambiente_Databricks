@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-09-22 — SE08 R5: amostra prioritária no instante pós-WinError32
+
+### Incorporado
+
+- (ChatGPT) Incorporada a campanha Windows R4: standalone storage/certifier verdes, CI FAIL apenas em SEF, com WinError32 no timeout pai-filho; Restart Manager e FileProcessIdsUsingFileInformation retornaram vazios após a falha.
+- (ChatGPT) A observação nativa passa a consultar primeiro o recurso cujo unlink falhou, antes de Restart Manager, traceback e inspeções secundárias. Cada amostra registra timestamps monotônicos, duração e delta desde o instante em que o cleanup error foi capturado.
+- (ChatGPT) O certifier registra que seus próprios objetos Python stdout/stderr já estão fechados imediatamente antes da saída do TemporaryDirectory, separando handle do processo pai de handles externos/herdados.
+
+### Estado
+
+- R4 Windows: `R4_WINDOWS_NOT_READY`.
+- WinError32: intermitente, sem owner identificado.
+- promoção ao trabalho: bloqueada.
+
+
 ## 2026-09-22 — SE08 R4: identificação diagnóstica de PIDs por arquivo
 
 ### Incorporado

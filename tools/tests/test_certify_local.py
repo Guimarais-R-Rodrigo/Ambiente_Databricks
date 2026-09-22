@@ -385,13 +385,16 @@ class CertifierTests(unittest.TestCase):
         error.winerror = 32
         file_calls = []
         owner_calls = []
+        call_order = []
         pid_calls = []
 
         def users(paths):
+            call_order.append("restart_manager")
             file_calls.append([str(path) for path in paths])
             return {"status": "MATCHES_REPORTED", "processes": [{"pid": 999}]}
 
         def owners(path):
+            call_order.append("owner:" + Path(path).name)
             owner_calls.append(str(path))
             return {"status": "OBSERVED", "path": str(path),
                     "process_ids": [os.getpid(), 456, 123, 999]}
@@ -414,12 +417,33 @@ class CertifierTests(unittest.TestCase):
         self.assertEqual(1, len(file_calls))
         self.assertEqual([str(stderr), str(stdout), str(child)], file_calls[0])
         self.assertEqual([str(stderr), str(stdout), str(child)], owner_calls)
+        self.assertEqual(
+            ["owner:stderr", "restart_manager", "owner:stdout", "owner:child.json"],
+            call_order,
+        )
+        self.assertEqual(
+            "PRIORITY_FAILED_RESOURCE",
+            observation["file_process_ids_using_file"][0]["observer_phase"],
+        )
+        self.assertGreaterEqual(
+            observation["restart_manager"]["query_start_delta_from_cleanup_error_ns"],
+            observation["file_process_ids_using_file"][0]["query_start_delta_from_cleanup_error_ns"],
+        )
         owner_rows = observation["file_process_ids_using_file"][0]["relations"]
         self.assertIn({"pid": os.getpid(),
                        "relation": "OBSERVER_PID_QUERY_HANDLE_OR_EXISTING_HANDLE"}, owner_rows)
         self.assertIn({"pid": 456, "relation": "LAUNCHER_PID"}, owner_rows)
         self.assertIn({"pid": 123, "relation": "CHILD_PID"}, owner_rows)
         self.assertIn({"pid": 999, "relation": "OTHER_PID"}, owner_rows)
+
+    def test_parent_streams_are_closed_before_temporary_directory_exit(self):
+        code, output, _ = cert._run([sys.executable, "-B", "-c", "print('stream-boundary')"])
+        self.assertEqual(0, code, output)
+        streams = cert.PROCESS_RECORDS[-1]["parent_streams_before_temporary_exit"]
+        self.assertTrue(streams["stdout_closed"])
+        self.assertTrue(streams["stderr_closed"])
+        self.assertIn("stdout", streams["stdout_name"])
+        self.assertIn("stderr", streams["stderr_name"])
 
     def test_non_winerror32_does_not_invoke_native_failure_observer(self):
         directory = Path(self.tmp.name) / "non-winerror32"

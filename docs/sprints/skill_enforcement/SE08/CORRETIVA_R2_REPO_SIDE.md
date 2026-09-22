@@ -294,3 +294,48 @@ A consulta:
 - não muda verdict;
 - roda por recurso (`stderr`, `stdout`, `child.json` quando existentes);
 - é complementar ao Restart Manager, não substituta.
+
+
+## R4 Windows — campanha 50776fef
+
+Campanha executada em `50776fefc35ae65a48b913b1b190adff9738d19e`, tree `59b4ebadc6e35d5b1e40be1539f6d8fdc976068d`.
+
+Bundle recebido:
+
+- `SEF_SE08_R4_WINDOWS_50776fef_20260922.zip`;
+- SHA-256 externo: `ee42832a63f815937b8fe39488d91a81b07b4f5c1464bdee07edb480ebd6aac4`;
+- ZIP CRC: íntegro;
+- manifesto interno: 1081/1081 arquivos conferidos, zero divergências;
+- classificação: `R4_WINDOWS_NOT_READY`.
+
+Resultados:
+
+- windows corrective: PASS 9/9;
+- storage standalone: PASS 9/9;
+- certifier standalone: exit 0, 50 métodos, 1 skip de escopo;
+- CI: FAIL apenas em `sef`;
+- FULL: `NOT_RUN_CONDITION_NOT_MET`.
+
+O WinError32 reapareceu no CI em `test_timeout_real_parent_child_external_oracle_and_partial_streams`.
+
+Na ocorrência:
+
+- Job Object após terminate e antes de close: `active=0`, PID list vazia;
+- launcher e child: `running=false`;
+- Restart Manager: nenhum match;
+- `FileProcessIdsUsingFileInformation` em `stderr` e `stdout`: NTSTATUS success, `count=0`, nenhum PID;
+- a query per-file era executada depois do Restart Manager, portanto o lock podia desaparecer antes da amostra específica do arquivo.
+
+## R5 — prioridade temporal no arquivo que falhou
+
+A R5 reduz deliberadamente a latência observacional:
+
+1. marca `temporary_cleanup_error_monotonic_ns` no primeiro instante do outer catch;
+2. antes de formatar traceback ou consultar o diretório, invoca o observador nativo;
+3. consulta primeiro, e somente uma vez, o arquivo cujo `unlink` retornou WinError32;
+4. só depois executa Restart Manager;
+5. somente depois consulta recursos secundários;
+6. registra início/fim/duração monotônica e delta desde a captura do cleanup error;
+7. registra se os objetos Python `stdout` e `stderr` do certifier pai já estavam fechados imediatamente antes do `TemporaryDirectory.__exit__`.
+
+A R5 continua sem retry, sleep, segunda remoção ou mudança de verdict.
