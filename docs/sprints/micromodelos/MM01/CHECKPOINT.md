@@ -247,3 +247,28 @@ Os sete commits novos da `main` alteravam somente `CHANGELOG.md` e documentaçã
 A reconciliação foi executada por merge real da PR operacional #97, produzindo `0224075a942d60fd5bf71449efbec3784ac10739`. Após a reconciliação, `behind_by=0` e todos os workflow Git blobs continuaram idênticos aos pins do certifier.
 
 A próxima tentativa integral é R3, sobre o HEAD técnico/documental posterior a este registro, condicionada a nova confirmação imediata de `main`, merge-base e `behind_by=0`.
+
+
+## Terceira tentativa da certificação local — interrupção no bootstrap
+
+A R3 foi executada sobre `8e7c7a8d2b11f83b0d5f558239d881c1ce66cdc6` contra `main=17640a6a31f562e9979d235ede27cf44cef9ebbf`.
+
+Desta vez o preflight canônico concluiu com sucesso:
+
+- `behind_by=0`;
+- HEAD/tree/main/merge-base corretos;
+- worktree limpa;
+- npm resolvido corretamente no Windows via shim `.CMD`;
+- nove workflows com blobs iguais aos pins e zero snippets ausentes;
+- hashes críticos capturados.
+
+O primeiro step, `BOOTSTRAP_PYTHON`, foi iniciado, mas o processo global terminou com `0xC000013A` / `-1073741510` durante o bootstrap. A origem externa da interrupção não foi determinada. Nenhum gate posterior foi executado.
+
+A tentativa está preservada em `LOCAL_CERTIFICATION_ATTEMPT_3.md` e permanece FAIL. Não houve manifest/postflight/ZIP final; inspeção read-only posterior confirmou worktree e 17 hashes críticos inalterados, sem substituir a exigência de postflight canônico.
+
+O hardening probatório posterior entrou em:
+
+- `72246b7b2a0c21f11ad3a2db2ef1626705ee2e72` — interrupção controlável passa a gerar `StepResult=INTERRUPTED`, log/reason e segue para o fechamento fail-closed quando o processo Python ainda mantém controle;
+- `83aa8e6a23d7c3895eb5741ac6639ed96f05ff39` — regressão da interrupção estruturada.
+
+Nenhum gate funcional foi relaxado. A próxima tentativa integral deve usar novo diretório probatório e novo SHA após este registro, condicionado novamente a `behind_by=0`.
