@@ -1,6 +1,6 @@
 # SE08 — CI, operação, documentação e gate de promoção ao trabalho
 
-**Status:** implementação repo-side em consolidação; não é release candidate, não está certificada e não autoriza promoção.
+**Status:** candidata técnica R5 passou CI e FULL SE08 local no Windows/NTFS e está pronta para revisão de integração. Free/Genie e promoção ao trabalho permanecem gates separados e não concluídos.
 
 ## Objetivo
 
@@ -45,9 +45,7 @@ auditoria permanece L3 stage-specific conforme a policy vigente.
 - nenhuma reclassificação da SE06/SE07;
 - nenhuma edição manual de `Novo_Ambiente_Simulado/`.
 
-As alterações em `ambiente_fonte/` exigem rematerialização pelo renderer
-canônico no próximo gate local. Até isso ocorrer, drift do derivado é esperado e
-deve ser resolvido pelo comando canônico, não por edição manual.
+O derivado foi rematerializado pelo renderer canônico e o snapshot do README foi reconciliado. A campanha R5 confirmou `DERIVED_STALE=false` no FULL. Nenhuma edição manual do simulado foi usada para obter o resultado.
 
 ## Gate de promoção ao trabalho
 
@@ -73,13 +71,25 @@ humana específica sustentada por evidência suficiente.
   `FULLY_CERTIFIED=false`;
 - SE07: encerrada por decisão humana com residual conhecido;
   `SE07_FULLY_CERTIFIED=false`;
-- storage cleanup histórico: FAIL 8/9, causa do desaparecimento intermediário do
-  resíduo não estabelecida;
-- WinError32: não reproduzido na recertificação final não equivale a corrigido;
+- storage cleanup histórico: FAIL 8/9 preservado como evidência de campanha anterior; a R5 observou 9/9 PASS;
+- WinError32: ocorrências nativas históricas R2–R4 permanecem sem root cause; ausência de reprodução na R5 não equivale a correção causal;
 - criar-objeto: L2 global; piloto L3 stage-specific não promove a skill inteira.
+
+## Evidência local atual
+
+A campanha Windows R5 testou `ee1cf04b031497bb5b7ddfa47ce28b8015d15668` e obteve:
+
+- storage standalone 9/9 PASS;
+- certifier exit 0;
+- CI 10/10 PASS;
+- FULL SE08 local 21/21 PASS;
+- `release_clean_certification=true`;
+- zero WinError32 nativos observados nessa campanha.
+
+O bundle e as campanhas anteriores estão detalhados em [RESULTADOS.md](RESULTADOS.md).
 
 ## Próximo gate
 
-A próxima etapa é local e está descrita em [RUNBOOK_LOCAL.md](RUNBOOK_LOCAL.md).
-Somente depois da materialização do derivado, bateria local e certificação FULL
-no SHA congelado a candidata pode ser avaliada para Free/Genie e posterior PR.
+A documentação final desta fase é um delta somente documental e cria novo SHA. Antes da integração final, esse SHA deve receber recertificação mínima Windows de identidade, CI e FULL.
+
+Depois da integração repo-side, Free/Genie continuam pendentes conforme o Plano Mestre. Nenhuma promoção ao trabalho é autorizada por esta certificação local.

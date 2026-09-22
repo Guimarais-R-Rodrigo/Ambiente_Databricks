@@ -96,3 +96,29 @@ rodada aplicável.
 Mesmo após todos os testes acima, promoção continua bloqueada enquanto os oito
 requisitos do gate SE08 não estiverem satisfeitos. Em particular, G2 não
 transformou SE06 24/25 em certificação suficiente para promoção corporativa.
+
+
+## Estado observado da candidata técnica R5
+
+No SHA `ee1cf04b031497bb5b7ddfa47ce28b8015d15668`, Windows 11/NTFS/Python 3.12.14:
+
+- Windows corrective: 10/10 PASS;
+- storage cleanup: 9/9 PASS;
+- certifier regression: 51 métodos, 0 failures/errors, 1 skip de escopo, exit 0;
+- CI local: 10/10 etapas PASS;
+- FULL SE08 local: 21/21 gates PASS;
+- `release_clean_certification=true`;
+- nenhuma ocorrência nativa WinError32 observada nessa campanha.
+
+Esses resultados não apagam as tentativas vermelhas anteriores e não demonstram root cause do WinError32 intermitente.
+
+## Recertificação do delta documental final
+
+Depois de atualizar CHECKPOINT/RESULTADOS/README/TESTES/RUNBOOK/CHANGELOG sem alterar código, o novo SHA deve executar somente:
+
+1. precheck de identidade/worktree;
+2. `python -B tools/ci_local.py`;
+3. FULL `python -B tools/skill_enforcement/certify_local.py --profile se08 --evidence-dir <NOVO_DIRETORIO>`;
+4. identidade final.
+
+O FULL contém storage, corretivas Windows, cleanup diagnostics e certifier regression. Não há necessidade de repetir separadamente os mesmos gates apenas por causa de alterações documentais, salvo finding novo.

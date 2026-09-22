@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-09-22 — SE08 R6: fechamento documental pós-R5
+
+### Atualizado
+
+- (ChatGPT) Documentação canônica da SE08 reconciliada com a campanha Windows R5: storage 9/9, CI 10/10 e FULL SE08 local 21/21 em PASS no SHA técnico `ee1cf04b...`.
+- (ChatGPT) CHECKPOINT, RESULTADOS, README, TESTES e RUNBOOK passam a distinguir explicitamente `FULL_SE08_LOCAL=PASS` de `SE08_FULLY_CERTIFIED=false` global enquanto Free/Genie e gates externos aplicáveis permanecerem pendentes.
+- (ChatGPT) Preservadas as ocorrências WinError32 e os FAILs das campanhas R2–R4 como evidência histórica; ausência de reprodução na R5 não é descrita como root cause corrigida.
+- (ChatGPT) Como este fechamento é exclusivamente documental e cria novo SHA, definido gate final reduzido de identidade + CI + FULL antes da integração.
+
+### Estado
+
+- candidata técnica R5: `R5_WINDOWS_READY_FOR_REVIEW`;
+- FULL R5: PASS;
+- delta R6: somente documentação;
+- promoção ao trabalho: bloqueada.
+
+
 ## 2026-09-22 — SE08 R5: amostra prioritária no instante pós-WinError32
 
 ### Incorporado

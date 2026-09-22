@@ -1,8 +1,8 @@
 # SE08 — runbook de materialização e certificação local
 
-Este runbook pressupõe que a autoria repo-side foi concluída no GitHub. A missão
-local é produzir a candidata materializada e a evidência que não pode ser
-fabricada remotamente.
+> Estado atual: o fluxo completo abaixo já foi executado nas campanhas R2–R5. A R5 técnica terminou com CI e FULL SE08 local em PASS. Esta seção permanece como procedimento reproduzível e registro operacional; para o delta documental final, use a recertificação mínima descrita ao fim.
+
+Este runbook pressupõe que a autoria repo-side foi concluída no GitHub. A missão local é produzir a candidata materializada e a evidência que não pode ser fabricada remotamente.
 
 ## 1. Reconciliar identidade
 
@@ -92,3 +92,18 @@ Entregar:
 
 Não abrir PR automaticamente. A decisão de seguir para Free/Genie deve ser
 tomada depois da auditoria dessa evidência.
+
+
+## 9. Recertificação mínima do SHA documental final
+
+Se a única diferença em relação à candidata técnica R5 certificada for documentação versionada de fechamento:
+
+1. confirmar SHA/tree/worktree clean;
+2. não rematerializar manualmente nada;
+3. executar uma vez `python -B tools/ci_local.py`;
+4. se CI passar, executar uma vez o FULL SE08 com evidence-dir externo novo;
+5. confirmar SHA/tree/worktree clean depois;
+6. preservar bundle e exits;
+7. não executar Free/Genie nessa campanha.
+
+Qualquer mudança de Python, policy, teste, código de ferramenta, `ambiente_fonte` ou derivado invalida esta forma reduzida e exige campanha técnica completa novamente.
