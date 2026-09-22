@@ -236,3 +236,14 @@ Antes de considerar uma nova candidata congelada:
 Mesmo com auditoria limpa, ainda não se faz merge imediatamente: vêm contraditório final, sincronização byte-preserving do bloco MM01 do `CHANGELOG.md`, revalidação da árvore exata e aceite explícito do usuário.
 
 **MM02 permanece bloqueada.**
+
+
+## MM01 Local Certification v1
+
+Com GitHub Actions indisponível como canal executável, os requisitos técnicos continuam inalterados e a execução mecânica passa a ser feita por `tools/mm01_local_certify.py`, conforme `LOCAL_CERTIFICATION_V1.md`.
+
+O certifier reproduz os comandos dos workflows permanentes relevantes, exige SHA/branch/`origin/main`/merge-base/`behind_by=0`, worktree limpa e checkout não-shallow, registra ambiente, exit codes e logs e gera bundle probatório com checksums.
+
+A lista de workflows-fonte é fail-closed por identidade Git blob. Se qualquer workflow for alterado, inclusive pela inclusão de um novo gate, a certificação falha até que o plano local seja reconciliado deliberadamente. O teste `tools/tests/test_mm01_local_certify.py` protege o conjunto exato de fontes e os pins correntes.
+
+Um bundle `PASS` não equivale a aceite MM01: ainda são obrigatórios auditoria independente, contraditório final, fechamento documental, revalidação da árvore e aceite humano explícito.
