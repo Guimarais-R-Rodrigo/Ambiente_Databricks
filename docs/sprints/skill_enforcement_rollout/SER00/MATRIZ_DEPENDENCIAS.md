@@ -12,7 +12,7 @@ Base auditada: `11851e137dd7793b351ac08fc211c0be90005dee`. Nenhuma branch concor
 | antiga SE08 / PR #91 | draft, não mergeável; 65d75dca58860e7e19c8dceb5f70ce4ddb568fcd | toca skills/README, Manual, tools/skill_enforcement, CI e derivado; preservar e não integrar por efeito colateral |
 | antiga V05 / PR #26 | aberta na listagem; 22 arquivos de theme_lab, testes, README, índices e workflow | superfície visual/derivado; não misturar com rollout |
 | antigas PR #4, #5, #6 | abertas na listagem inicial, frentes anteriores de READMEs | não fechadas/alteradas; reexaminar delta completo antes de qualquer integração concorrente |
-| SER00 | ser/SER00-rollout-baseline, criada diretamente na main auditada | somente docs/sprints/skill_enforcement_rollout |
+| SER00 | ser/SER00-rollout-baseline, criada diretamente na main auditada | documentação SER + ADR-0022/índice de ADR; zero produto/policy/runtime |
 
 A MM01 continuou avançando durante a SER00: depois de 3e3e105f.../R5, a PR passou a 94ba596c...; R5 ficou como PASS mecânico, mas o bundle foi recusado como certificação final por sanitização insuficiente de paths escapados, e R6 tornou-se o próximo gate. Não reutilizar PASS ou identidade anterior como evidência da nova HEAD.
 
