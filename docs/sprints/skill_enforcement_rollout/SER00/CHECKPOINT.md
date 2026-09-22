@@ -1,4 +1,4 @@
-# SER00 — checkpoint de revisão, sem autorização de avanço
+# SER00 — checkpoint pós-aceite arquitetural, integração ainda bloqueada
 
 ## A. Identidade e escopo
 
@@ -8,7 +8,7 @@ Escopo permitido: somente docs/sprints/skill_enforcement_rollout, com 14 documen
 
 ## B. Policy e targets
 
-14 skills; cinco no target e nove abaixo. Distribuição current L0/L1/L2/L3/L4 = 9/2/1/1/1; target = 1/2/0/5/6. Matriz completa em MATRIZ_CURRENT_TARGET.md. Target numérico não foi alterado. Treze recomendações técnicas CONFIRMED; criar-objeto HUMAN_DECISION_REQUIRED para cobertura/operação/host do L3, mantendo a proposta numérica L3.
+14 skills; cinco no target e nove abaixo. Distribuição current L0/L1/L2/L3/L4 = 9/2/1/1/1; target = 1/2/0/5/6. Matriz completa em MATRIZ_CURRENT_TARGET.md. Target numérico não foi alterado. Os 14 targets foram revalidados e aceitos arquiteturalmente sem mudança numérica. Para criar-objeto, target L3 e scope stage-specific foram confirmados; a cobertura operação×tipo×host×efeito deve ser provada na SER01, e o current permanece L2.
 
 ## C. Superfícies, recursos e ordem
 
@@ -18,7 +18,7 @@ Ordem candidata preservada: SER01 criar-objeto; SER02 explainability; SER03 safr
 
 ## D. Concorrência
 
-PSEF00 integrada; PSEF01 PR #99 em draft com derivado stale declarado; PSEF04 não encontrada na busca paginada. MM01 PR #51 observada em 3e3e105f60e92f6ca58502cf0c92f4f461a84b04, aguardando R5; não foi alterada. PR #91 antiga SE08 e outras candidatas antigas continuam preservadas. Reconfirmar refs antes de certificar/integrar.
+PSEF00 integrada; PSEF01 PR #99 em draft com derivado stale declarado; PSEF04 não encontrada na busca paginada. MM01 PR #51 avançou para 94ba596ca4385223248a102b9ff02c0252491c88, com R5 PASS mecânico/bundle recusado e R6 aguardada; não foi alterada. PR #91 antiga SE08 e outras candidatas antigas continuam preservadas. Reconfirmar refs antes de certificar/integrar.
 
 ## E. Testes e limites
 
@@ -35,12 +35,12 @@ PRODUCT_CHANGES = 0
 SKILL_CHANGES = 0
 RUNTIME_CHANGES = 0
 PROMOCAO_TRABALHO = BLOQUEADA
-PLAN_FREEZE = CANDIDATE_PENDING_HUMAN_DECISIONS
-SER00 = SER00_BLOCKED_BY_ARCHITECTURAL_FINDING
+PLAN_FREEZE = ARCHITECTURE_ACCEPTED_PENDING_A07
+SER00 = SER00_NOT_READY
 SER01 = NOT_STARTED
 MERGE = NOT_AUTHORIZED
 ```
 
 ## G. Decisão solicitada e parada
 
-Revisar A01–A03 em DESENHO_TECNICO.md e a recomendação de preservar os targets numéricos. O aceite do diagnóstico/plano candidato não elimina o complemento local A07, não autoriza merge automaticamente nem inicia SER01. Somente depois de resolver bloqueios, concluir validação da candidata exata e obter aceite explícito poderá haver integração. A autorização de SER01 deve ser separada.
+Em 2026-09-22 o usuário aprovou o encaminhamento A01–A03 e a manutenção dos targets. Esse aceite foi registrado no desenho e no ADR-0022. Ele não elimina A07, não autoriza merge e não inicia SER01. O próximo gate é executar o complemento local no SHA documental final, aplicar o changelog de forma preservadora, reconciliar snapshots e emitir novo checkpoint; só então pode ser solicitado aceite de integração. A autorização de SER01 permanece separada.
