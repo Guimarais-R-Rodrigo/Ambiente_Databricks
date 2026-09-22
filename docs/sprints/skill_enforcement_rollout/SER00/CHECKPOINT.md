@@ -4,7 +4,7 @@
 
 Repositório Guimarais-R-Rodrigo/Ambiente_Databricks. Base main 11851e137dd7793b351ac08fc211c0be90005dee, tree 76d5a7eec8293fd070eb518d4c48f72bbae32f2f. Branch ser/SER00-rollout-baseline criada diretamente dessa base. HEAD/tree/PR e ahead/behind finais constam da identidade externa e do comentário de checkpoint da PR; este documento não atribui a si próprio um SHA futuro.
 
-Escopo permitido: somente docs/sprints/skill_enforcement_rollout, com 14 documentos Markdown. Produto, policy, runtime, skills, prompts, Manual, instructions, ferramentas, workflows e derivado permanecem fora do delta.
+Escopo documental: `docs/sprints/skill_enforcement_rollout/` mais o novo `docs/decisions/ADR-0022-certificacao-prospectiva-ser.md` e uma linha aditiva em `docs/decisions/README.md`, exigidos pela decisão arquitetural aceita. Produto, policy, runtime, skills, prompts, Manual, instructions, ferramentas, workflows e derivado permanecem fora do delta.
 
 ## B. Policy e targets
 
