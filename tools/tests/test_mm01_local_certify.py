@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -41,6 +42,32 @@ class TestMM01LocalCertification(unittest.TestCase):
             else:
                 results.append(self._result(step_id))
         return results
+
+    def test_run_step_keyboard_interrupt_is_structured_fail(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            logs = root / "logs"
+            logs.mkdir()
+            step = cert.Step(
+                "INTERRUPT_TEST",
+                "test",
+                (sys.executable, "-c", "print('never completes')"),
+            )
+            with mock.patch.object(cert.subprocess, "run", side_effect=KeyboardInterrupt):
+                result = cert.run_step(step, root, logs)
+
+            self.assertEqual(result.status, "INTERRUPTED")
+            self.assertIsNone(result.exit_code)
+            self.assertEqual(
+                result.reason,
+                "KeyboardInterrupt during subprocess execution",
+            )
+            self.assertIsNotNone(result.log_sha256)
+            self.assertTrue((logs / "INTERRUPT_TEST.log").is_file())
+            self.assertIn(
+                "MM01_LOCAL_CERTIFICATION_STEP_INTERRUPTED=KeyboardInterrupt",
+                (logs / "INTERRUPT_TEST.log").read_text(encoding="utf-8"),
+            )
 
     def test_resolve_argv_uses_windows_cmd_for_cmd_shim(self) -> None:
         npm_cmd = r"C:\\Program Files\\nodejs\\npm.CMD"
