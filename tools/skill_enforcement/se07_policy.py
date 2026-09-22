@@ -37,10 +37,17 @@ def _required(skill,level):
     if i>=4: out.extend([f"skills/{skill}/scripts/run_enforced.py",f"skills/{skill}/scripts/postflight.py"])
     return out
 
+def _read_policy(path:Path)->tuple[Any,list[PolicyIssue]]:
+    try: return json.loads(path.read_text(encoding="utf-8")), []
+    except (OSError,UnicodeDecodeError,json.JSONDecodeError) as exc:
+        return None, [_issue("POLICY_UNREADABLE",str(exc),"$")]
+
 def validate_policy_registry(policy_path:Path|str=DEFAULT_POLICY, *, assistant_root:Path|str=ASSISTANT_ROOT)->list[PolicyIssue]:
-    path=Path(policy_path); assistant_root=Path(assistant_root); issues=[]
-    try: raw=json.loads(path.read_text(encoding="utf-8"))
-    except (OSError,UnicodeDecodeError,json.JSONDecodeError) as exc: return [_issue("POLICY_UNREADABLE",str(exc),"$")]
+    raw, issues=_read_policy(Path(policy_path))
+    return issues or _validate_policy_data(raw, Path(assistant_root))
+
+def _validate_policy_data(raw:Any, assistant_root:Path)->list[PolicyIssue]:
+    issues=[]
     if not isinstance(raw,Mapping): return [_issue("POLICY_ROOT","policy registry deve ser objeto","$")]
     if raw.get("schema_version")!="1.0": issues.append(_issue("POLICY_SCHEMA","schema_version deve ser 1.0","schema_version"))
     if raw.get("policy_id")!="SE07-skill-enforcement-policy": issues.append(_issue("POLICY_ID","policy_id inesperado","policy_id"))
@@ -107,9 +114,9 @@ def validate_policy_registry(policy_path:Path|str=DEFAULT_POLICY, *, assistant_r
     return issues
 
 def summarize(policy_path:Path|str=DEFAULT_POLICY, *, assistant_root:Path|str=ASSISTANT_ROOT)->dict[str,Any]:
-    path=Path(policy_path); assistant_root=Path(assistant_root); issues=validate_policy_registry(path, assistant_root=assistant_root)
-    try: raw=json.loads(path.read_text(encoding="utf-8"))
-    except (OSError,UnicodeDecodeError,json.JSONDecodeError): raw={}
+    assistant_root=Path(assistant_root)
+    raw, issues=_read_policy(Path(policy_path))
+    if not issues: issues=_validate_policy_data(raw, assistant_root)
     entries=raw.get("skills",[]) if isinstance(raw,Mapping) else []
     return {"schema_version":"1.0","sprint":"SE07","status":"PASS" if not issues else "FAIL","catalog_skills":len(discover_skills(assistant_root)),"policy_entries":len(entries) if isinstance(entries,list) else 0,"issues":[x.to_dict() for x in issues]}
 
