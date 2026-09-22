@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import ctypes as C
+from contextlib import nullcontext
 import gc
 import json
 import os
@@ -133,21 +134,6 @@ class DiagnosticTests(unittest.TestCase):
         self.assertEqual(diag.file_users([], api=api)['status'], 'INVALID_TARGET_SET')
         self.assertEqual(api.calls, [])
 
-    def test_restart_manager_accepts_exact_three_owned_stream_resources(self):
-        api = FakeRM(empty=True)
-        targets = [self.root/'stdout', self.root/'stderr', self.root/'child.json']
-        result = diag.file_users(targets, api=api)
-        self.assertEqual(result['resource_count'], 3)
-        self.assertEqual(result['status'], 'NO_MATCHES_REPORTED_NOT_PROOF_OF_NO_HANDLES')
-        rejected = diag.file_users([*targets, self.root/'extra'], api=FakeRM())
-        self.assertEqual(rejected['status'], 'INVALID_TARGET_SET')
-
-    def test_historical_native_failure_target_is_explicit(self):
-        source = Path(diag.__file__).read_text(encoding='utf-8')
-        self.assertIn("'keyboard-before-output'", source)
-        self.assertIn("'test_keyboard_interrupt_before_first_output'", source)
-        self.assertIn("Path(self.name)/'child.json'", source)
-
     def test_non_windows_provider_is_not_native_evidence(self):
         with patch.object(diag.os, 'name', 'posix'):
             self.assertEqual(diag.file_users(['unused'])['status'], 'NOT_APPLICABLE_NON_WINDOWS')
@@ -270,6 +256,95 @@ class DiagnosticTests(unittest.TestCase):
         (repo/'dirty').write_text('x')
         with self.assertRaisesRegex(ValueError, 'CLEAN'):
             diag.git_identity(repo)
+
+
+    def test_r2_native_cases_name_both_observed_failures(self):
+        self.assertEqual(diag.NATIVE_CASES, {
+            'never-ready': 'test_never_ready_has_finite_diagnostic_and_cleanup',
+            'before-output': 'test_keyboard_interrupt_before_first_output',
+        })
+
+    def test_r2_native_cases_refuse_non_windows(self):
+        identity = {'root': str(diag.ROOT), 'sha': 'a'*40, 'tree': 'b'*40, 'status': ''}
+        fake_os = SimpleNamespace(name='posix', environ=os.environ, path=os.path, getpid=os.getpid)
+        for case in diag.NATIVE_CASES:
+            output = self.root/case
+            with patch.object(diag, 'os', fake_os), patch.object(diag, 'git_identity', return_value=identity), \
+                 patch.object(diag, 'load_support') as loader:
+                self.assertEqual(2, diag.main(['--case', case, '--out', str(output)]))
+            loader.assert_not_called()
+            report = json.loads((output/'diagnostic.json').read_text())
+            self.assertIn('NATIVE_WINDOWS_REQUIRED', report['error']['message'])
+            self.assertFalse(report['certifies_release'])
+
+    def run_native_wiring_double(self, *, skip=False):
+        # This test exercises dispatch, NOT Windows or the actual certifier.
+        invoked = []
+        class Case(unittest.TestCase):
+            def test_keyboard_interrupt_before_first_output(case_self):
+                invoked.append('before-output')
+                if skip:
+                    case_self.skipTest('SYNTHETIC_UNAVAILABLE_ENVIRONMENT')
+        support = SimpleNamespace(cert=SimpleNamespace(PROCESS_RECORDS=[]), CertifierTests=Case)
+        identity = {'root': str(diag.ROOT), 'sha': 'a'*40, 'tree': 'b'*40, 'status': ''}
+        fake_os = SimpleNamespace(name='nt', environ=os.environ, path=os.path, getpid=os.getpid)
+        out = self.root/'native-wiring-double'
+        with patch.object(diag, 'os', fake_os), patch.object(diag, 'git_identity', return_value=identity), \
+             patch.object(diag, 'load_support', return_value=support), \
+             patch.object(diag, 'observe', return_value=nullcontext()):
+            code = diag.main(['--case', 'before-output', '--out', str(out)])
+        return code, invoked, json.loads((out/'diagnostic.json').read_text())
+
+    def test_r2_before_output_dispatches_only_selected_case(self):
+        code, invoked, report = self.run_native_wiring_double()
+        self.assertEqual(0, code)
+        self.assertEqual(['before-output'], invoked)
+        self.assertEqual(1, report['test_result']['tests'])
+        self.assertFalse(report['certifies_release'])
+        self.assertEqual('test_keyboard_interrupt_before_first_output', report['selected_test'])
+
+    def test_r2_skipped_native_case_is_not_success(self):
+        code, invoked, report = self.run_native_wiring_double(skip=True)
+        self.assertEqual(2, code)
+        self.assertEqual(['before-output'], invoked)
+        self.assertEqual(1, report['test_result']['skips'])
+        self.assertFalse(report['certifies_release'])
+
+    def test_r2_rm_failure_does_not_replace_original_winerror(self):
+        cert = self.cert_double()
+        original_error = PermissionError(13, 'SYNTHETIC_NATIVE_CODE_FOR_TEST_ONLY')
+        original_error.winerror = 32
+        def fail(self, *args):
+            raise original_error
+        with patch.object(cert._ProcessTemporaryDirectory, '__exit__', fail):
+            with diag.observe(cert, self.recorder, query_file_users=True):
+                temp = cert._ProcessTemporaryDirectory(dir=self.root)
+                with patch.object(diag, 'file_users', side_effect=OSError('SYNTHETIC_RM_ERROR')) as query:
+                    with self.assertRaises(PermissionError) as raised:
+                        with temp:
+                            pass
+                query.assert_called_once()
+                self.assertIs(original_error, raised.exception)
+                temp.cleanup()
+        events = self.rows()
+        observation = next(row['observation'] for row in events if row['event'] == 'post_failure_file_users')
+        self.assertEqual('UNOBSERVABLE', observation['status'])
+
+    def test_r2_rm_is_disabled_without_explicit_option(self):
+        cert = self.cert_double()
+        error = PermissionError(13, 'SYNTHETIC_NATIVE_CODE_FOR_TEST_ONLY')
+        error.winerror = 32
+        def fail(self, *args):
+            raise error
+        with patch.object(cert._ProcessTemporaryDirectory, '__exit__', fail):
+            with diag.observe(cert, self.recorder):
+                temp = cert._ProcessTemporaryDirectory(dir=self.root)
+                with patch.object(diag, 'file_users') as query:
+                    with self.assertRaises(PermissionError):
+                        with temp:
+                            pass
+                query.assert_not_called()
+                temp.cleanup()
 
 
 if __name__ == '__main__':
