@@ -68,8 +68,8 @@ class SE08OperationalTests(unittest.TestCase):
         self.assertIn("render_diff", names)
         self.assertIn("readme_snapshot", names)
 
-        sef_stage = next(stage for stage in ci_local.STAGES if stage.key == "sef")
-        command = list(sef_stage.command)
+        sef_stage = next(stage for stage in ci_local.ETAPAS if stage[0] == "sef")
+        command = list(sef_stage[2])
         self.assertIn("--profile", command)
         self.assertEqual("se08", command[command.index("--profile") + 1])
         self.assertIn("--skip-render", command)
