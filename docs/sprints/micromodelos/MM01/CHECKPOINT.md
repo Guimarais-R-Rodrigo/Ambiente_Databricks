@@ -282,3 +282,32 @@ Além da interrupção estruturada, o executor foi endurecido para não bufferiz
 - `be9f854d018028949a5aeb5d75ce0cb1cc93c5b9`: regressões do streaming e persistência de output parcial.
 
 Isso não altera gates nem critérios de PASS; reduz apenas a perda de evidência e o silêncio operacional durante bootstraps/testes longos.
+
+
+## Quarta tentativa da certificação local — FAIL no CI_LOCAL
+
+A R4 foi executada sobre `4cc537f0dd243773a4b250f5912fb7b4027bc6cc` contra `main=17640a6a31f562e9979d235ede27cf44cef9ebbf`.
+
+O preflight passou, a worktree permaneceu limpa e os nove workflow pins coincidiram. Os cinco bootstraps, os 15 self-tests, MM01 canônica (47 testes), R02 (3), R03 (1) e `validate_assistant --root ambiente_fonte` passaram.
+
+O bloqueio ocorreu em `CI_LOCAL`: somente os subgates `validacao` e `sef` falharam, ambos pelo mesmo snapshot stale do `README.md`:
+
+```text
+repo (identidade): colado 1638; real 1669
+```
+
+No subgate SEF, as 18 etapas anteriores ao `readme_snapshot` passaram. V00/V01/V02/V10/V11/V12/V13 ficaram `NOT_RUN` por fail-closed.
+
+O ZIP R4 é íntegro e possui SHA-256 `2a66d6c5135f3816f25b4b7fd907d3930028428becbbe8e1e0e0c1c761e447a0`.
+
+A tentativa está preservada em `LOCAL_CERTIFICATION_ATTEMPT_4.md` e permanece FAIL.
+
+### Reconciliação posterior
+
+Depois da R4, a PSEF00 foi integrada em `main@11851e137dd7793b351ac08fc211c0be90005dee` pela PR #98, adicionando sete documentos `.md`. A branch MM01 foi reconciliada por merge real da PR operacional #100, commit `1dd69d21d1d28231b92ed34ee654bcab7cee10e2`.
+
+### Hardening secundário
+
+O self-test R4 também revelou `ResourceWarning` não bloqueante no teste de streaming. O pipe passou a ser fechado explicitamente em `0d43519c000e107460f2d36c4aa04b9441d4ce60`; a regressão `46a32fd5ceaaa272911aaa38b67f87f87750381b` transforma novo leak desse tipo em erro de teste.
+
+Nenhum gate funcional foi relaxado.
