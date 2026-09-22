@@ -123,3 +123,19 @@ A certificação local não:
 - substitui governança externa;
 - transforma evidência local em aceite humano;
 - autoriza merge automaticamente.
+
+
+## 10. Portabilidade Windows
+
+A execução local precisa funcionar tanto em ambientes POSIX quanto no Windows.
+
+No Windows, entrypoints de ferramentas Node podem existir como shims `.cmd`/`.bat` em vez de executáveis `.exe`. O certifier deve:
+
+- resolver o comando pelo PATH/PATHEXT;
+- executar shims `.cmd`/`.bat` pelo command processor definido em `COMSPEC`;
+- continuar usando execução sem shell para executáveis normais;
+- falhar de forma fechada quando o comando não puder ser resolvido;
+- registrar separadamente no bundle o comando lógico do gate e o comando efetivamente resolvido;
+- sanitizar paths locais nos registros probatórios.
+
+Essa adaptação é exclusivamente de transporte do comando no sistema operacional. Ela não altera o conteúdo lógico dos gates nem permite substituir comandos.
