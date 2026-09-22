@@ -28,6 +28,10 @@ class SE08WindowsCorrectiveStaticTests(unittest.TestCase):
         for forbidden in ("sleep", "rmtree", "unlink", "remove", "kill", "terminate"):
             self.assertNotIn(forbidden, calls)
 
+    def test_se08_operational_module_is_valid_python(self):
+        text = self.read("tools/tests/test_skill_enforcement_se08.py")
+        ast.parse(text)
+
     def test_validator_disables_bytecode_before_local_imports(self):
         text = self.read("tools/validate_assistant.py")
         lines = text.splitlines()

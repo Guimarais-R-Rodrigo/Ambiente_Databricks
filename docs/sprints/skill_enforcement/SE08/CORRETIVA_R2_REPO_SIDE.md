@@ -158,3 +158,21 @@ A primeira observação de `Skill Enforcement SE01` ficou **FAIL**, com todos os
 Causa repo-side identificada: `validate_assistant.py` importava `validate_contracts`, que carrega uma fachada estática sob `ambiente_fonte/.assistant`; sem supressão de bytecode, a própria validação criava `__pycache__` antes de executar sua guarda de higiene.
 
 Correção: `sys.dont_write_bytecode=True` é definido antes dos imports locais do validador. Nenhum warning foi ignorado, nenhum cache foi apagado para obter verde e nenhum valor do snapshot foi reduzido.
+
+
+### Segundo finding repo-side observado em Actions
+
+No HEAD `9bd1e87c673a8484aa5a38954b4ffef10d0d1cfb`, o workflow `CI local reproduzível` preservou um FAIL no estágio `sef`, enquanto os demais estágios reportados no trecho final continuaram aprovados.
+
+A falha foi:
+
+`IndentationError: expected an indented block after 'if' statement on line 128`
+
+Causa confirmada em `tools/tests/test_skill_enforcement_se08.py`: uma edição anterior inseriu sequências literais `\\n` no comentário da fixture de identidade sintética. Como o comentário permanecia na mesma linha física, o `return` seguinte também ficou comentado e o `if` perdeu seu corpo.
+
+Correção repo-side:
+- converter as sequências literais em quebras de linha Python reais;
+- preservar a construção runtime da identidade sintética;
+- acrescentar guardrail com `ast.parse` do módulo operacional SE08.
+
+A tentativa vermelha permanece histórica; não foi feito rerun manual.
