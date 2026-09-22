@@ -176,6 +176,41 @@ Um teste pulado por configuração deixa o resumo **INCOMPLETO**, e pré-requisi
 
 **Modelos opcionais:** inventariar versões não é testar import ou `fit`. Só habilite LightGBM, XGBoost, CatBoost, SHAP, UMAP, séries temporais etc. quando sua tarefa precisar deles, em rodada dedicada com dados sintéticos, dependências mínimas, tracking conhecido e critérios próprios. O piloto básico não certifica os 58 helpers.
 
+## 6.5. Gate SE08 antes de qualquer promoção
+
+A transição do Hub pode ser preparada e testada em staging sem que o Skill
+Enforcement Framework esteja autorizado para promoção. Antes de mover uma
+candidata SEF para a instalação pessoal do trabalho, registre separadamente o
+gate SE08.
+
+Os oito requisitos canônicos são:
+
+1. validações locais pertinentes em PASS no SHA congelado;
+2. renderer sem divergência;
+3. publicação no Databricks Free verificada por conteúdo;
+4. casos críticos da SE06 sem escaped non-compliance;
+5. zero achados críticos/altos abertos relacionados ao enforcement;
+6. documentação operacional completa;
+7. aceite explícito do usuário;
+8. plano de rollback definido e executável.
+
+O Gate G2 da SE06 autorizou somente a transição SE06 → SE07. Ele preservou
+`behavioral_runs_observed=24/25`, `S06-A1-R4=NOT_RUN`,
+`SE06_DOD=INCOMPLETE` e `FULLY_CERTIFIED=false`, e declarou
+explicitamente que essa exceção **não satisfaz o gate de promoção corporativa
+da SE08**. Enquanto não houver nova decisão humana específica sustentada por
+evidência suficiente, registre o gate de promoção SE08 como **BLOQUEADO**; não
+converta o fechamento administrativo da SE07 em autorização para o trabalho.
+
+O residual aceito da SE07 também permanece histórico: storage cleanup FAIL 8/9
+e `SE07_FULLY_CERTIFIED=false`. FULL verde, aceite humano ou ausência de nova
+reprodução do WinError32 não apagam esses estados.
+
+`tools/publicar_free.py` continua exclusivo do laboratório Free. Para o
+workspace do trabalho use somente este runbook e apenas no escopo pessoal
+autorizado. Não publique em `Workspace/.assistant/skills/` nem altere
+instruções compartilhadas sem governança administrativa própria.
+
 ## 7. Promover seletivamente para a instalação pessoal
 
 Só avance com backup conferido, FILEs íntegros e núcleo técnico aprovado em staging. Feche conversas e evite alterações simultâneas no escopo do Hub; a cópia manual não é uma transação atômica.
@@ -190,11 +225,11 @@ hub_scripts/
 hub_snippets/
 ```
 
-Além deles, há `README.md`, `MANUAL_TECNICO.md` e `skills/` com as treze skills do pacote. O manifesto é a lista de arquivos da release; o roteiro da Genie contém os nomes exatos das skills atuais. A raiz documental do Hub continua com README e Manual, sem catálogo/glossário independentes.
+Além deles, há `README.md`, `MANUAL_TECNICO.md` e `skills/` com as 14 skills do pacote. O manifesto é a lista de arquivos da release; o roteiro da Genie contém os nomes exatos das skills atuais. A raiz documental do Hub continua com README e Manual, sem catálogo/glossário independentes.
 
 1. Pela UI, crie uma pasta de rollback pessoal fora de `.assistant/skills/`, se a política permitir. Não use as pastas nativas de descoberta para guardar cópias.
 2. Para cada um dos cinco diretórios `hub_`, confirme propriedade e ausência de customização desconhecida. Mova a versão anterior para rollback e copie/mova a candidata correspondente de staging para `.assistant/`. Se houver conteúdo de terceiros misturado, pare e faça reconciliação; não apague a pasta inteira.
-3. Em `skills/`, substitua **somente** as treze pastas atuais declaradas e retire as antigas pertencentes ao Hub após backup/identificação. Não selecione `skills/` inteira. Prefixo antigo sozinho não prova que um objeto pode ser removido; use o inventário anterior, `legacy_skill_names_for_review` no manifesto e os nomes do roteiro.
+3. Em `skills/`, substitua **somente** as 14 pastas atuais declaradas e retire as antigas pertencentes ao Hub após backup/identificação. Não selecione `skills/` inteira. Prefixo antigo sozinho não prova que um objeto pode ser removido; use o inventário anterior, `legacy_skill_names_for_review` no manifesto e os nomes do roteiro.
 4. Substitua `README.md` e `MANUAL_TECNICO.md` pelos arquivos candidatos. Retire `CATALOGO_HELPERS.md` e `GLOSSARIO.md` somente se forem as cópias geridas pelo Hub, preservando o backup.
 5. **Preserve `.assistant/.mcp_servers.json`, skills alheias, arquivos pessoais e instruções administrativas.** Não copie configuração MCP de outro ambiente.
 6. Só depois de o Hub estar no lugar, atualize `.assistant_instructions.md` na raiz do seu usuário. Prefira mover/importar o FILE exato do pacote, sem alterar a redação durante a instalação. Preserve no backup qualquer conteúdo pessoal anterior; não concatene instruções conflitantes automaticamente.

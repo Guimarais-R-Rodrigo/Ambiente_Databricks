@@ -7,7 +7,7 @@ esconde os outros e obriga a rodar de novo para cada um:
 
 1. Temas — assets/geração V06 + Visual Lab V05 + HTML/tabelas V04 + Plotly V03 + núcleo V02 + contrato V01 (todas as `test_temas*.py`)
 2. `validate_assistant.py`  — forma, links, contratos, identidade e higiene;
-3. Skill Enforcement — contrato/SE01/SE02 em perfil local read-only, sem renderer;
+3. Skill Enforcement — perfil SE08 cumulativo em modo local read-only, sem renderer;
 4. `hub_snippets/tests/test_core.py`   — regressões da biblioteca;
 5. `tools/tests/test_tool_guards.py`   — guardas das próprias ferramentas.
 6. `tools/tests/test_transicao_trabalho.py` — kit, notebook e guardas de aceite.
@@ -24,7 +24,7 @@ datada. Um gate que mistura os dois nunca roda em máquina nova nem em CI.
 
 A certificação SEF completa, incluindo renderer e evidence bundle, permanece em:
 
-    python -B tools/skill_enforcement/certify_local.py --profile se02
+    python -B tools/skill_enforcement/certify_local.py --profile se08
 
 Dependências Python declaradas em `tools/requirements-dev.txt`:
 
@@ -91,13 +91,13 @@ ETAPAS = [
     ),
     (
         "sef",
-        "Skill Enforcement SE01/SE02 — gate local parcial sem renderer",
+        "Skill Enforcement SE08 — gate local cumulativo parcial sem renderer",
         [
             sys.executable,
             "-B",
             "tools/skill_enforcement/certify_local.py",
             "--profile",
-            "se02",
+            "se08",
             "--skip-render",
             "--no-evidence",
             "--allow-dirty",
@@ -235,8 +235,8 @@ def main() -> int:
         estado = "OK  " if codigo == 0 else "FAIL"
         print(f"   {estado} ({duracao:.1f}s) {ultima}")
         if codigo != 0 and not args.verbose:
-            print("   --- saída da etapa que reprovou ---")
-            print("   " + saida.strip().replace("\n", "\n   ")[:4000])
+            print("   --- saída integral da etapa que reprovou ---")
+            print("   " + saida.strip().replace("\n", "\n   "))
         resultados.append((nome, codigo, duracao, ultima))
 
     print("\n== RESUMO ==")

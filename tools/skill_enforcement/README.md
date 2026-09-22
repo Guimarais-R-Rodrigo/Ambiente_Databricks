@@ -183,6 +183,30 @@ python -B tools/tests/test_skill_enforcement_se07.py -v
 
 O registry cobre exatamente 14/14 skills e separa `current_level` de `target_level`. O validator impede que uma skill alegue L1–L4 sem os artifacts mínimos correspondentes.
 
+## SE08 — operação permanente
+
+A SE08 incorpora o SEF aos gates permanentes do repositório sem promover níveis
+por conveniência. O validador geral executa os checks estáticos de contratos e
+policy; o `ci_local.py` chama o perfil cumulativo `se08` em modo parcial,
+read-only e sem renderer; a certificação FULL usa o mesmo perfil sem essas
+dispensas.
+
+Regressões específicas:
+
+```powershell
+python -B tools/tests/test_skill_enforcement_policy_io.py -v
+python -B tools/tests/test_skill_enforcement_se08.py -v
+```
+
+A suíte de I/O garante que a policy é lida/parseada uma única vez e que resumo e
+veredito descrevem o mesmo snapshot. A suíte operacional protege integração com
+validator/CI, o guardrail do publicador Free e a permanência de
+`hub-ml-criar-objeto` em L2 global.
+
+SE08 não transforma gate local em evidência de Free/Genie e não autoriza
+promoção ao workspace do trabalho. O gate corporativo e o rollback permanecem
+documentados separadamente.
+
 ## Certificação local reproduzível
 
 Entry points:
@@ -194,6 +218,7 @@ python -B tools/skill_enforcement/certify_local.py --profile se04
 python -B tools/skill_enforcement/certify_local.py --profile se05
 python -B tools/skill_enforcement/certify_local.py --profile se06
 python -B tools/skill_enforcement/certify_local.py --profile se07
+python -B tools/skill_enforcement/certify_local.py --profile se08
 ```
 
 O perfil `se05` executa:
@@ -211,7 +236,7 @@ O perfil `se05` executa:
 11. render-diff incluindo untracked;
 12. snapshot README.
 
-O perfil `se06` acrescenta `test_skill_enforcement_se06.py` ao conjunto SE05 e preserva os mesmos gates de estrutura, renderer, render-diff e snapshot. O perfil `se07` acrescenta o validador do registry e `test_skill_enforcement_se07.py`, mantendo todas as regressões anteriores.
+O perfil `se06` acrescenta `test_skill_enforcement_se06.py` ao conjunto SE05 e preserva os mesmos gates de estrutura, renderer, render-diff e snapshot. O perfil `se07` acrescenta o validador do registry e `test_skill_enforcement_se07.py`, mantendo todas as regressões anteriores. O perfil `se08` acrescenta `test_skill_enforcement_policy_io.py` e `test_skill_enforcement_se08.py`, preservando o restante da cadeia e os gates finais de renderer/diff/snapshot.
 
 Por padrão o certifier exige worktree limpo antes de qualquer step mutável. O evidence bundle fica fora do repositório em:
 

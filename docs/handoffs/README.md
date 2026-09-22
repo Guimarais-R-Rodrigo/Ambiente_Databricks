@@ -39,6 +39,7 @@ O template completo está em `.claude/templates/handoff.md`.
 
 | Data | Tema | Relevância atual |
 |---|---|---|
+| 2026-09-22 | [SE08, complemento de policy I/O e consolidação repo-side](2026-09-21_se08-policy-io-complemento.md) | leitura única da policy, documentação/gates SE08 e handoff para materialização/certificação local |
 | 2026-09-21 | [SE07, corretiva de cleanup após auditoria](2026-09-21_se07-auditoria-storage-cleanup.md) | interrupção preservada; cleanup de processo/temporário separado; causa nativa WinError32 não declarada resolvida |
 | 2026-09-21 | [SE07, piloto L3 README](2026-09-21_se07-criar-objeto-l3-readme-piloto.md) | candidata create/readme/agregador; F-04 aceita, D2 parcial, policy L2 e evidência externa |
 | 2026-09-21 | [SE07, corretiva F-04](2026-09-21_se07-f04-corretiva.md) | candidata delimitada SUP-F04-01/02/03; protocolo GitHub e evidências externas |

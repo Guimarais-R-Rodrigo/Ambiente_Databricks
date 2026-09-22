@@ -386,7 +386,7 @@ def validate_contract(
 
     try:
         raw = json.loads(contract_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         return ContractValidation(
             path=str(contract_path),
             skill=None,

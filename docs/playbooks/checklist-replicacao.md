@@ -33,6 +33,17 @@ Procedimento dono: [guia de transição](replicacao-trabalho.md). Versão 14/09/
 - [ ] Spark mínimo, DQ aviso, DQ duplicidade, RFV, PIT, PSI e objeto Plotly PASS.
 - [ ] Veredito `STAGING_TECNICO_APROVADO_NAO_ATIVADO`. Nenhuma alegação de Genie ativa nesta fase.
 
+## Gate SE08 de promoção
+
+- [ ] Congelar o SHA candidato e executar os gates locais pertinentes sem `--allow-dirty`, `--skip-render` ou `--no-evidence` no FULL.
+- [ ] Confirmar renderer sem divergência e publicação Free verificada por conteúdo; não substituir por mock/fixture.
+- [ ] Confirmar zero finding crítico/alto aberto relacionado ao enforcement.
+- [ ] Preservar explicitamente SE06 24/25, `S06-A1-R4=NOT_RUN` e `SE06_DOD=INCOMPLETE`.
+- [ ] Enquanto a exceção G2 continuar sendo apenas SE06 → SE07, marcar promoção SE08 como **BLOQUEADA**; não inferir autorização corporativa.
+- [ ] Preservar storage cleanup histórico FAIL 8/9, `SE07_FULLY_CERTIFIED=false` e a distinção entre WinError32 não reproduzido e corrigido.
+- [ ] Obter aceite explícito do usuário para a promoção específica e registrar um plano de rollback antes da primeira substituição.
+- [ ] Usar somente a instalação pessoal autorizada. Não usar `tools/publicar_free.py` contra o workspace do trabalho e não alterar escopo compartilhado.
+
 ## Promoção seletiva
 
 - [ ] Reservar janela sem alteração simultânea; preparar rollback fora da descoberta de skills.

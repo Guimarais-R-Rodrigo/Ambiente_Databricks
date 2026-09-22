@@ -1,5 +1,139 @@
 # Changelog
 
+## 2026-09-22 — SE08 R6: fechamento documental pós-R5
+
+### Atualizado
+
+- (ChatGPT) Documentação canônica da SE08 reconciliada com a campanha Windows R5: storage 9/9, CI 10/10 e FULL SE08 local 21/21 em PASS no SHA técnico `ee1cf04b...`.
+- (ChatGPT) CHECKPOINT, RESULTADOS, README, TESTES e RUNBOOK passam a distinguir explicitamente `FULL_SE08_LOCAL=PASS` de `SE08_FULLY_CERTIFIED=false` global enquanto Free/Genie e gates externos aplicáveis permanecerem pendentes.
+- (ChatGPT) Preservadas as ocorrências WinError32 e os FAILs das campanhas R2–R4 como evidência histórica; ausência de reprodução na R5 não é descrita como root cause corrigida.
+- (ChatGPT) Como este fechamento é exclusivamente documental e cria novo SHA, definido gate final reduzido de identidade + CI + FULL antes da integração.
+
+### Estado
+
+- candidata técnica R5: `R5_WINDOWS_READY_FOR_REVIEW`;
+- FULL R5: PASS;
+- delta R6: somente documentação;
+- promoção ao trabalho: bloqueada.
+
+
+## 2026-09-22 — SE08 R5: amostra prioritária no instante pós-WinError32
+
+### Incorporado
+
+- (ChatGPT) Incorporada a campanha Windows R4: standalone storage/certifier verdes, CI FAIL apenas em SEF, com WinError32 no timeout pai-filho; Restart Manager e FileProcessIdsUsingFileInformation retornaram vazios após a falha.
+- (ChatGPT) A observação nativa passa a consultar primeiro o recurso cujo unlink falhou, antes de Restart Manager, traceback e inspeções secundárias. Cada amostra registra timestamps monotônicos, duração e delta desde o instante em que o cleanup error foi capturado.
+- (ChatGPT) O certifier registra que seus próprios objetos Python stdout/stderr já estão fechados imediatamente antes da saída do TemporaryDirectory, separando handle do processo pai de handles externos/herdados.
+
+### Estado
+
+- R4 Windows: `R4_WINDOWS_NOT_READY`.
+- WinError32: intermitente, sem owner identificado.
+- promoção ao trabalho: bloqueada.
+
+
+## 2026-09-22 — SE08 R4: identificação diagnóstica de PIDs por arquivo
+
+### Incorporado
+
+- (ChatGPT) Incorporada a campanha Windows R3 em `3556f198...`: storage standalone 9/9, certifier standalone exit 0, CI 10/10 e FULL FAIL 20/21 por uma única ocorrência nativa WinError32 no storage. Na falha, Job Object estava vazio, launcher/child encerrados e Restart Manager não reportou processos.
+- (ChatGPT) Adicionada consulta pós-falha `NtQueryInformationFile(FileProcessIdsUsingFileInformation)` por recurso para observar PIDs que usam o arquivo no exato boundary do WinError32. A consulta é read-only, single-shot e não altera cleanup/verdict.
+- (ChatGPT) O PID do próprio observador é marcado como ambíguo porque o handle aberto para a consulta pode fazê-lo aparecer no resultado; somente PIDs adicionais são evidência discriminante de outro processo.
+
+### Estado
+
+- R3 Windows: `R3_WINDOWS_NOT_READY`.
+- FULL R3: FAIL 20/21.
+- owner do handle: ainda não identificado.
+- promoção ao trabalho: bloqueada.
+
+
+## 2026-09-22 — SE08 R3: observabilidade do WinError32 no boundary real
+
+### Incorporado
+
+- (ChatGPT) Incorporada a campanha Windows da R2 em `d3720f59...`: storage standalone FAIL 8/9 por WinError32 nativo preemptando uma injeção sintética; certifier standalone 46/46 PASS; CI Windows FAIL somente em `sef/certifier_regression`, com segunda ocorrência nativa no timeout pai-filho; FULL não executado. O antigo teste de resíduo passou e sustenta a correção do problema de finalizer da fixture, sem implicar correção do WinError32.
+- (ChatGPT) O certifier passa a registrar, somente depois de um WinError32 já ocorrido, consulta read-only ao Restart Manager e estado instantâneo dos PIDs supervisionados. Também registra o Job Object após término e antes do fechamento. A telemetria não faz retry, sleep, remoção adicional, encerramento de aplicações ou mudança de verdict.
+- (ChatGPT) `ci_local.py` deixa de truncar em 4.000 caracteres a saída de uma etapa reprovada; failures futuros permanecem integralmente auditáveis no log do comando.
+- (ChatGPT) O loader do observador Restart Manager resolve explicitamente o arquivo irmão quando o certifier é carregado por `spec_from_file_location`; assim a regressão Windows do certifier não perde a observação por depender de `sys.path` incidental.
+
+### Estado
+
+- R2 Windows: `WINDOWS_NOT_READY`.
+- FULL R2: `NOT_RUN_CONDITION_NOT_MET`.
+- WinError32: causa ainda não estabelecida.
+- promoção ao trabalho: bloqueada.
+
+
+## 2026-09-22 — SE08 R2: hardening repo-side antes da nova campanha Windows
+
+### Corrigido
+
+- (ChatGPT) A fixture sintética de storage mantém viva a `TemporaryDirectory` defeituosa até o oráculo externo observar o resíduo; somente depois do snapshot ocorre teardown explícito via `TemporaryDirectory.cleanup()`, que desarma o finalizador pelo caminho normal. Isso remove o falso negativo causado por limpeza implícita do CPython sem alterar o certifier de produção, sem retry e sem converter falha de cleanup em PASS.
+- (ChatGPT) O perfil FULL SE08 passa a incluir explicitamente as suítes de storage cleanup, guardrails da corretiva Windows e regressões do observador diagnóstico. Assim, um FULL futuro não pode ficar verde omitindo novamente o gate de storage.
+- (ChatGPT) Adicionado observador opt-in de lifecycle/Job Object/Restart Manager. O probe nativo mira explicitamente `test_keyboard_interrupt_before_first_output`, que foi o caso real do WinError32; ausência de reprodução continua sem valor de certificado causal.
+
+### Corrigido durante a auditoria S5
+
+- (ChatGPT) A rodada seguinte do CI geral preservou um segundo FAIL repo-side no gate SEF: `test_skill_enforcement_se08.py` continha sequências literais `\\n` dentro do comentário da fixture de identidade, deixando o `if` da linha 128 sem corpo e produzindo `IndentationError`. A fixture foi reformatada em linhas Python reais e a corretiva ganhou um `ast.parse` explícito do módulo operacional SE08.
+
+- (ChatGPT) A primeira rodada automática de Actions no SHA `089a5e7d...` preservou um FAIL em Skill Enforcement SE01 exclusivamente no snapshot README: o próprio `validate_assistant.py` importava um helper sob `ambiente_fonte/.assistant` sem suprimir bytecode, criava `__pycache__` e depois convertia essa sujeira criada por ele mesmo em warning. O validador passa a definir `sys.dont_write_bytecode=True` antes dos imports locais; a regra de warning e o snapshot não foram relaxados.
+
+- (ChatGPT) O observador nativo agora falha fechado quando o teste-alvo não executa exatamente uma vez ou fica `skipped`; `unittest.wasSuccessful()` isoladamente não é mais suficiente para produzir exit 0. Isso impede que ausência de observação Windows seja tratada como resultado diagnóstico bem-sucedido.
+- (ChatGPT) A fixture de storage passou a registrar ownership/finalizer no instante do oráculo e usa `TemporaryDirectory.cleanup()` somente depois do snapshot, em vez de desarmar o finalizador manualmente; o teardown continua exclusivamente test-only.
+
+### Reconciliado
+
+- (ChatGPT) Reaplicada à linha remota a correção local `3118e970`: a identidade corporativa sintética é construída em runtime para não ser capturada pela própria varredura estática.
+- (ChatGPT) Reconstituída a materialização local `e3e67bce` copiando os quatro blobs canônicos exatos para `Novo_Ambiente_Simulado`. Nenhuma edição manual de conteúdo derivado foi inventada.
+
+### Limites
+
+- Esta R2 é repo-side e ainda NÃO certifica Windows/NTFS, WinError32, FULL, Free ou Genie.
+- O SHA local histórico `5b2c1692` permanece evidência da campanha anterior; a R2 é uma nova linha remota e não reclassifica resultados históricos.
+- Permanecem `S06-A1-R4=NOT_RUN`, `SE06_DOD=INCOMPLETE`, `SE07_FULLY_CERTIFIED=false`, L2 global para `hub-ml-criar-objeto` e promoção ao trabalho bloqueada.
+
+## 2026-09-22 — SE08: integração local da corretiva Windows/CI (Codex)
+
+- (Codex) Integrados por cherry-pick os 17 commits da corretiva remota `49860959`, preservando os commits locais `3118e970` e `e3e67bce` e os quatro arquivos derivados. Telemetria observacional e reparos de testes serão certificados serialmente no SHA congelado; não constituem correção causal de WinError32. Skips ambientais não comprovam guardrails. Dívidas SE06/SE07, storage FAIL 8/9, L2 global e promoção ao trabalho bloqueada permanecem. Resultados brutos em evidência externa exclusiva desta rodada; nenhuma publicação autorizada por este registro.
+
+## 2026-09-22 — SE08: materialização local do derivado (Codex)
+
+### Atualizado
+
+- (Codex) Renderer canônico rematerializou os 574 arquivos do simulado; somente Manual Técnico, template de skill, README da policy e README de skills diferiram, refletindo mecanicamente a fonte consolidada. Snapshot do README conferido pela saída real, sem alteração de contagens. A certificação da nova candidata fica vinculada ao SHA congelado em evidência externa; este registro não presume PASS, publicação ou promoção.
+
+## 2026-09-22 — SE08: fixture sintética compatível com a guarda de identidade
+
+### Corrigido
+
+- (Codex) O teste de recusa de identidade corporativa monta a fixture sintética em runtime, preservando o valor e a asserção de bloqueio antes da autenticação. A primeira validação local da base `25013c53` reprovou por detectar o literal no código do teste; o FAIL está preservado na evidência externa. Nenhuma regra de identidade, policy ou nível foi alterada.
+
+## 2026-09-22 — SE08: consolidação repo-side para operação permanente
+
+### Adicionado
+
+- (ChatGPT) Perfil cumulativo `se08` no certifier, regressões operacionais e suíte dedicada de I/O da policy; o subgate SEF do `ci_local.py` usa o perfil SE08 em modo parcial/read-only, sem substituir a certificação FULL.
+- (ChatGPT) Pasta `docs/sprints/skill_enforcement/SE08/` com objetivo, matriz de testes, resultados observados, checkpoint e runbook local.
+- (ChatGPT) Gate de promoção SE08 e rollback incorporados ao runbook/checklist de transição para o trabalho.
+
+### Corrigido
+
+- (ChatGPT) `se07_policy.py`: validator e resumo usam o mesmo parse da policy, preservam `assistant_root` e retornam `POLICY_UNREADABLE` estruturado para arquivo ausente, ilegível, UTF-8 inválido ou JSON malformado, sem releitura contraditória.
+- (ChatGPT) `validate_contracts.py`: `UnicodeDecodeError` é tratado como contrato ilegível.
+- (ChatGPT) `validate_assistant.py`: contratos e registry SEF passam a integrar o validador geral contra a mesma raiz analisada.
+
+### Documentado
+
+- (ChatGPT) Template canônico de skill, guia de Agent Skills, policy README, Manual Técnico e ferramentas SEF passam a documentar `current_level`, `target_level`, rollout e os gates permanentes da SE08.
+- (ChatGPT) `hub-ml-criar-objeto` não foi promovida: permanece L2 global. `hub-ml-auditoria-skills` já estava integrada à policy/Receipt/verifier e não recebeu mudança artificial.
+- (ChatGPT) G2 continua limitado à transição SE06→SE07. Com `SE06_DOD=INCOMPLETE` e `S06-A1-R4=NOT_RUN`, a promoção corporativa da SE08 permanece bloqueada até nova decisão humana específica e evidência suficiente.
+
+### Estado e limites
+
+- (ChatGPT) Repo-side consolidado, porém ainda não release candidate: `Novo_Ambiente_Simulado/` deve ser rematerializado pelo renderer canônico; snapshot verificável do README, FULL SE08, CI local real, Windows/NTFS, Free/Genie e futura Actions/PR permanecem pendentes.
+- (ChatGPT) Preservados `SE07_FULLY_CERTIFIED=false`, storage cleanup histórico FAIL 8/9 e a distinção `NATIVE_WINERROR32_NOT_REPRODUCED_IN_THIS_RECERTIFICATION` ≠ `WINERROR32_FIXED`. Nenhum residual foi convertido em PASS.
+
 
 ## 2026-09-21 — SE07: hotfix pós-merge para policy com UTF-8 inválido
 
