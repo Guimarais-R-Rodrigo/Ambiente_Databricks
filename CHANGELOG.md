@@ -1,5 +1,39 @@
 # Changelog
 
+## 2026-09-22 — SE08 R2: hardening repo-side antes da nova campanha Windows
+
+### Corrigido
+
+- (ChatGPT) A fixture sintética de storage mantém viva a `TemporaryDirectory` defeituosa até o oráculo externo observar o resíduo; somente depois do snapshot ocorre teardown explícito e detach do finalizador. Isso remove o falso negativo causado por limpeza implícita do CPython sem alterar o certifier de produção, sem retry e sem converter falha de cleanup em PASS.
+- (ChatGPT) O perfil FULL SE08 passa a incluir explicitamente as suítes de storage cleanup, guardrails da corretiva Windows e regressões do observador diagnóstico. Assim, um FULL futuro não pode ficar verde omitindo novamente o gate de storage.
+- (ChatGPT) Adicionado observador opt-in de lifecycle/Job Object/Restart Manager. O probe nativo mira explicitamente `test_keyboard_interrupt_before_first_output`, que foi o caso real do WinError32; ausência de reprodução continua sem valor de certificado causal.
+
+### Reconciliado
+
+- (ChatGPT) Reaplicada à linha remota a correção local `3118e970`: a identidade corporativa sintética é construída em runtime para não ser capturada pela própria varredura estática.
+- (ChatGPT) Reconstituída a materialização local `e3e67bce` copiando os quatro blobs canônicos exatos para `Novo_Ambiente_Simulado`. Nenhuma edição manual de conteúdo derivado foi inventada.
+
+### Limites
+
+- Esta R2 é repo-side e ainda NÃO certifica Windows/NTFS, WinError32, FULL, Free ou Genie.
+- O SHA local histórico `5b2c1692` permanece evidência da campanha anterior; a R2 é uma nova linha remota e não reclassifica resultados históricos.
+- Permanecem `S06-A1-R4=NOT_RUN`, `SE06_DOD=INCOMPLETE`, `SE07_FULLY_CERTIFIED=false`, L2 global para `hub-ml-criar-objeto` e promoção ao trabalho bloqueada.
+
+## 2026-09-22 — SE08: integração local da corretiva Windows/CI (Codex)
+
+- (Codex) Integrados por cherry-pick os 17 commits da corretiva remota `49860959`, preservando os commits locais `3118e970` e `e3e67bce` e os quatro arquivos derivados. Telemetria observacional e reparos de testes serão certificados serialmente no SHA congelado; não constituem correção causal de WinError32. Skips ambientais não comprovam guardrails. Dívidas SE06/SE07, storage FAIL 8/9, L2 global e promoção ao trabalho bloqueada permanecem. Resultados brutos em evidência externa exclusiva desta rodada; nenhuma publicação autorizada por este registro.
+
+## 2026-09-22 — SE08: materialização local do derivado (Codex)
+
+### Atualizado
+
+- (Codex) Renderer canônico rematerializou os 574 arquivos do simulado; somente Manual Técnico, template de skill, README da policy e README de skills diferiram, refletindo mecanicamente a fonte consolidada. Snapshot do README conferido pela saída real, sem alteração de contagens. A certificação da nova candidata fica vinculada ao SHA congelado em evidência externa; este registro não presume PASS, publicação ou promoção.
+
+## 2026-09-22 — SE08: fixture sintética compatível com a guarda de identidade
+
+### Corrigido
+
+- (Codex) O teste de recusa de identidade corporativa monta a fixture sintética em runtime, preservando o valor e a asserção de bloqueio antes da autenticação. A primeira validação local da base `25013c53` reprovou por detectar o literal no código do teste; o FAIL está preservado na evidência externa. Nenhuma regra de identidade, policy ou nível foi alterada.
 
 ## 2026-09-22 — SE08: consolidação repo-side para operação permanente
 
