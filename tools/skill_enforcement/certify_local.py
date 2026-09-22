@@ -135,6 +135,18 @@ _SE08_TEST_STEP = (
     "se08_operational_tests",
     [sys.executable, "-B", "tools/tests/test_skill_enforcement_se08.py", "-v"],
 )
+_SE08_STORAGE_CLEANUP_STEP = (
+    "se08_storage_cleanup_tests",
+    [sys.executable, "-B", "tools/tests/test_certify_storage_cleanup.py", "-v"],
+)
+_SE08_WINDOWS_CORRECTIVE_STEP = (
+    "se08_windows_corrective_tests",
+    [sys.executable, "-B", "tools/tests/test_se08_windows_corrective.py", "-v"],
+)
+_SE08_CLEANUP_DIAGNOSTICS_STEP = (
+    "se08_cleanup_diagnostics_tests",
+    [sys.executable, "-B", "tools/tests/test_se08_cleanup_diagnostics.py", "-v"],
+)
 _COMMON_FINAL_STEPS = [
     (
         "assistant_structure",
@@ -239,6 +251,9 @@ PROFILE_STEPS: dict[str, list[tuple[str, list[str]]]] = {
         _SE07_TEST_STEP,
         _SE08_POLICY_IO_STEP,
         _SE08_TEST_STEP,
+        _SE08_STORAGE_CLEANUP_STEP,
+        _SE08_WINDOWS_CORRECTIVE_STEP,
+        _SE08_CLEANUP_DIAGNOSTICS_STEP,
         ("certifier_regression", [sys.executable, "-B", "tools/tests/test_certify_local.py", "-v"]),
         *_COMMON_FINAL_STEPS,
     ],
