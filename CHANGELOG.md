@@ -1,6 +1,32 @@
 # Changelog
 
 
+## 2026-09-22 — SE08: consolidação repo-side para operação permanente
+
+### Adicionado
+
+- (ChatGPT) Perfil cumulativo `se08` no certifier, regressões operacionais e suíte dedicada de I/O da policy; o subgate SEF do `ci_local.py` usa o perfil SE08 em modo parcial/read-only, sem substituir a certificação FULL.
+- (ChatGPT) Pasta `docs/sprints/skill_enforcement/SE08/` com objetivo, matriz de testes, resultados observados, checkpoint e runbook local.
+- (ChatGPT) Gate de promoção SE08 e rollback incorporados ao runbook/checklist de transição para o trabalho.
+
+### Corrigido
+
+- (ChatGPT) `se07_policy.py`: validator e resumo usam o mesmo parse da policy, preservam `assistant_root` e retornam `POLICY_UNREADABLE` estruturado para arquivo ausente, ilegível, UTF-8 inválido ou JSON malformado, sem releitura contraditória.
+- (ChatGPT) `validate_contracts.py`: `UnicodeDecodeError` é tratado como contrato ilegível.
+- (ChatGPT) `validate_assistant.py`: contratos e registry SEF passam a integrar o validador geral contra a mesma raiz analisada.
+
+### Documentado
+
+- (ChatGPT) Template canônico de skill, guia de Agent Skills, policy README, Manual Técnico e ferramentas SEF passam a documentar `current_level`, `target_level`, rollout e os gates permanentes da SE08.
+- (ChatGPT) `hub-ml-criar-objeto` não foi promovida: permanece L2 global. `hub-ml-auditoria-skills` já estava integrada à policy/Receipt/verifier e não recebeu mudança artificial.
+- (ChatGPT) G2 continua limitado à transição SE06→SE07. Com `SE06_DOD=INCOMPLETE` e `S06-A1-R4=NOT_RUN`, a promoção corporativa da SE08 permanece bloqueada até nova decisão humana específica e evidência suficiente.
+
+### Estado e limites
+
+- (ChatGPT) Repo-side consolidado, porém ainda não release candidate: `Novo_Ambiente_Simulado/` deve ser rematerializado pelo renderer canônico; snapshot verificável do README, FULL SE08, CI local real, Windows/NTFS, Free/Genie e futura Actions/PR permanecem pendentes.
+- (ChatGPT) Preservados `SE07_FULLY_CERTIFIED=false`, storage cleanup histórico FAIL 8/9 e a distinção `NATIVE_WINERROR32_NOT_REPRODUCED_IN_THIS_RECERTIFICATION` ≠ `WINERROR32_FIXED`. Nenhum residual foi convertido em PASS.
+
+
 ## 2026-09-21 — SE07: hotfix pós-merge para policy com UTF-8 inválido
 
 ### Corrigido
