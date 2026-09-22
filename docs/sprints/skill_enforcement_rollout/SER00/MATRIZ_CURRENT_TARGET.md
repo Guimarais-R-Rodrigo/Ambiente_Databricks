@@ -21,7 +21,7 @@ Snapshot de `11851e137dd7793b351ac08fc211c0be90005dee`, policy blob `01cabb4dc45
 
 ## Revisão crítica de todos os targets
 
-`CONFIRMED` significa recomendação técnica de manutenção do target, sujeita ao aceite deste plano. Não significa implementação comprovada nesta sessão. Não há proposta de reduzir target para eliminar gaps.
+`CONFIRMED` significa target revalidado e aceito arquiteturalmente na SER00. Não significa implementação comprovada, promoção de `current_level` ou autorização de SER01. Não há proposta de reduzir target para eliminar gaps.
 
 ### hub-ml-analise-safra
 
@@ -45,7 +45,7 @@ CONFIRMED: descoberta e handoff são read-only; tornar a recomendação um runne
 
 ### hub-ml-criar-objeto
 
-HUMAN_DECISION_REQUIRED: manter proposta numérica L3, mas aprovar cobertura por tipo/operação/host. O piloto Windows create/readme/agregador não sustenta promoção global.
+CONFIRMED: target L3 e escopo stage-specific aceitos em 2026-09-22. A SER01 deve provar a matriz operação×tipo×host×efeito; o piloto Windows create/readme/agregador não sustenta promoção global e `current_level` permanece L2 até evidência suficiente.
 
 ### hub-ml-cross-eda-ml
 
@@ -106,6 +106,6 @@ O terceiro runner físico é o piloto criar-objeto. Não contabilizá-lo como L3
 
 ## Regra de rollout candidata
 
-Preservar EDA em `enforce`, auditoria/comentar/concierge em `audit` e tutor em `guidance`. Nas nove skills, manter `audit` durante construção e primeira certificação. Para targets L3, considerar `warn` somente por decisão humana justificada; o validator atual recusa `enforce` abaixo de L4. Para as cinco novas L4, a ativação de `enforce` exige evidência discriminante, ausência de bypass relevante e autorização separada. Nenhuma duração ou promoção automática audit→warn→enforce é presumida.
+Preservar EDA em `enforce`, auditoria/comentar/concierge em `audit` e tutor em `guidance`. O aceite da SER00 não altera nenhum `rollout_mode`. Nas nove skills, manter `audit` durante construção e primeira certificação. Para targets L3, considerar `warn` somente por decisão humana justificada; o validator atual recusa `enforce` abaixo de L4. Para as cinco novas L4, a ativação de `enforce` exige evidência discriminante, ausência de bypass relevante e autorização separada. Nenhuma duração ou promoção automática audit→warn→enforce é presumida.
 
 `execution_contract.mode=audit` no schema 0.1 é outro campo: não editar esse valor para simular rollout. O mecanismo fail-closed de uma rota L4 e seu modo de implantação devem ser descritos separadamente.
