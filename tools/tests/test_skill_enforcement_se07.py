@@ -26,6 +26,35 @@ class SE07PolicyTests(unittest.TestCase):
         cls.raw=json.loads(POLICY.read_text(encoding="utf-8")); cls.by={i["skill"]:i for i in cls.raw["skills"]}
     def test_registry_validates_and_covers_catalog(self):
         self.assertEqual([],self.tool.validate_policy_registry(POLICY)); self.assertEqual(14,len(self.tool.discover_skills())); self.assertEqual(self.tool.discover_skills(),set(self.by))
+
+    def test_unreadable_policy_returns_structured_fail(self):
+        script = ROOT/"tools"/"skill_enforcement"/"se07_policy.py"
+        with tempfile.TemporaryDirectory(prefix="se07-policy-unreadable-") as tmp:
+            tmp = Path(tmp)
+            cases = [
+                ("missing", tmp/"missing.json"),
+                ("malformed", tmp/"malformed.json"),
+            ]
+            cases[1][1].write_text("{", encoding="utf-8")
+            for name, path in cases:
+                with self.subTest(case=name):
+                    summary = self.tool.summarize(path)
+                    self.assertEqual("FAIL", summary["status"])
+                    self.assertEqual(0, summary["policy_entries"])
+                    self.assertIn("POLICY_UNREADABLE", {item["code"] for item in summary["issues"]})
+
+                    completed = subprocess.run(
+                        [sys.executable, "-B", str(script), "--policy", str(path), "--json"],
+                        cwd=ROOT,
+                        capture_output=True,
+                        text=True,
+                        timeout=30,
+                    )
+                    self.assertEqual(1, completed.returncode, completed.stderr)
+                    payload = json.loads(completed.stdout)
+                    self.assertEqual("FAIL", payload["status"])
+                    self.assertIn("POLICY_UNREADABLE", {item["code"] for item in payload["issues"]})
+                    self.assertNotIn("Traceback", completed.stderr)
     def test_current_level_is_evidence_based(self):
         expected_current = {
             "hub-ml-eda-profissional": "L4",
