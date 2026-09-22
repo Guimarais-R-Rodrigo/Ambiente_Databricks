@@ -1,6 +1,6 @@
 # SE08 — CI, operação, documentação e gate de promoção ao trabalho
 
-**Status:** implementação repo-side em consolidação; não é release candidate, não está certificada e não autoriza promoção.
+**Status:** encerrada, certificada e integrada. `SE08_FULLY_CERTIFIED=true`. A promoção ao workspace do trabalho permanece bloqueada.
 
 ## Objetivo
 
@@ -8,46 +8,116 @@ Tornar o Skill Enforcement Framework uma capacidade permanente do Hub sem
 confundir estrutura válida, comportamento do Genie Code, publicação no Free e
 promoção ao workspace do trabalho.
 
-A SE08 operacionaliza o que já foi construído em SE01–SE07. Ela não promove
-skills apenas por atingir a sprint final e não reclassifica dívidas históricas.
+A SE08 operacionaliza o que foi construído em SE01–SE07. O fechamento da sprint
+não promove níveis de enforcement e não reclassifica dívidas históricas.
 
-## Escopo implementado no repositório
+## Estado final integrado
 
-A integração repo-side cobre:
+Release candidate funcional e de produto:
 
-- `tools/validate_assistant.py`: contratos e policy SEF passam a integrar o
-  validador geral contra a mesma raiz analisada;
-- `tools/ci_local.py`: o subgate SEF passa a usar o perfil cumulativo `se08`,
-  em modo parcial/read-only;
-- `tools/skill_enforcement/certify_local.py`: perfil FULL `se08` cumulativo,
-  incluindo regressão de I/O da policy, regressão operacional, renderer,
-  render-diff e snapshot;
-- `tools/skill_enforcement/se07_policy.py`: leitura única do registry, suporte
-  a `assistant_root` e FAIL estruturado para policy ilegível;
-- `validate_contracts.py`: arquivo JSON com UTF-8 inválido é contrato ilegível,
-  não traceback;
-- template canônico de skill, guia das skills, policy README e Manual Técnico:
-  distinção permanente entre `current_level`, `target_level` e rollout;
-- runbook/checklist de transição ao trabalho: gate SE08, rollback e bloqueio
-  corporativo enquanto a exceção G2 não satisfizer o gate de promoção;
-- regressões específicas da SE08.
+```text
+RC_SHA                      = ee1cf04b031497bb5b7ddfa47ce28b8015d15668
+RC_TREE                     = d29fb8221c08ab3ea1fb0198004d4720d4785f92
+LOCAL_CERTIFICATION         = PASS
+WINDOWS_R5                  = READY_FOR_REVIEW
+FULL_SE08_LOCAL             = PASS
+GITHUB_ACTIONS_RC           = PASS
+DATABRICKS_FREE             = PASS
+GENIE_BEHAVIORAL_SCREENING  = NOT_APPLICABLE
+SE08_FULLY_CERTIFIED        = true
+```
 
-`hub-ml-criar-objeto` e `hub-ml-auditoria-skills` já estavam integradas pela
-SE07 e não foram alteradas só para gerar churn. Criar-objeto permanece L2 global;
-auditoria permanece L3 stage-specific conforme a policy vigente.
+A PR #90 integrou a RC em `main@627bcc798261451b70d396550fb5f11ca6d609c2`.
+A primeira rodada pós-merge teve 18/19 workflows em success e revelou uma falha
+de portabilidade da suíte SE07 em Python 3.11: `PosixPath.is_junction` não
+existia naquele runtime. A falha foi preservada e não recebeu rerun.
 
-## O que não foi feito nesta fase repo-side
+A PR #92 corrigiu somente a portabilidade da suíte e o filtro de dependências do
+workflow de transição. O merge resultou em:
 
-- nenhuma promoção de `current_level`;
-- nenhuma alteração de `policy.json`;
-- nenhuma publicação no Databricks Free ou no trabalho;
-- nenhum teste conversacional Genie;
-- nenhuma reclassificação da SE06/SE07;
-- nenhuma edição manual de `Novo_Ambiente_Simulado/`.
+```text
+FINAL_MAIN = 431c46fcffc9345ad4c24280ba13f2ba1dba579b
+```
 
-As alterações em `ambiente_fonte/` exigem rematerialização pelo renderer
-canônico no próximo gate local. Até isso ocorrer, drift do derivado é esperado e
-deve ser resolvido pelo comando canônico, não por edição manual.
+A rodada de push desse SHA concluiu 17/17 workflows disparados em `success`,
+incluindo o mesmo `Kit de transição para o trabalho` em Python 3.11.
+
+## Evidência dos gates
+
+### Windows e FULL
+
+A campanha R5 executou no SHA da RC:
+
+- Windows corrective: 10/10 PASS;
+- storage cleanup: 9/9 PASS;
+- certifier regression: exit 0, 51 métodos, um skip de escopo;
+- CI Windows: PASS 10/10;
+- FULL SE08: PASS 21/21;
+- zero failures, gate failures e infrastructure errors;
+- `release_clean_certification=true`;
+- `scope_complete=true`.
+
+Bundle Windows R5 SHA-256:
+`215176bd9804ab38b2d55678778f1d0defaa334c5040aa13ce5810a43d105d03`.
+
+O WinError32 histórico não foi reproduzido na R5. Isso não significa root cause
+corrigida. As ocorrências R2–R4 continuam preservadas como evidência histórica
+de intermitência.
+
+### Databricks Free
+
+A mesma RC foi publicada no workspace pessoal/Free pelo publicador canônico:
+
+- dry-run PASS;
+- publicação PASS;
+- verify rápido PASS;
+- verify completo PASS;
+- verify por conteúdo PASS;
+- 573/573 arquivos comparados;
+- zero ausentes;
+- zero obsoletos;
+- 14/14 skills;
+- 5/5 diretórios hub;
+- `source_commit=ee1cf04b031497bb5b7ddfa47ce28b8015d15668`;
+- `SE08_FREE_OPERATIONAL_INTEGRITY_V1=PASS`.
+
+Bundle Free SHA-256:
+`630a0920955bbba2a7140e03c95d6e7149331ecf26aeb4f08a459130a98a2aae`.
+
+### Genie Code
+
+O delta SE08 não alterou `.assistant_instructions.md`, `policy.json`,
+`skills/*/SKILL.md` ou `skills/*/scripts/**`. Portanto não houve novo
+comportamento executável/conversacional a homologar e
+`GENIE_BEHAVIORAL_SCREENING=NOT_APPLICABLE` para a SE08.
+
+O screening da SE07 permanece histórico; ele não foi reexecutado nem
+reclassificado.
+
+## Equivalência entre RC e main final
+
+Depois da RC certificada, somente estes arquivos mudaram:
+
+- `.github/workflows/kit-transicao-trabalho.yml`;
+- `tools/tests/test_skill_enforcement_se07.py`.
+
+Não houve mudança em `ambiente_fonte/`, `Novo_Ambiente_Simulado/`, policy,
+certifier ou conteúdo publicado no Free. No Windows, quando `Path.is_junction`
+existe, o helper corretivo continua chamando a mesma API; no Python 3.11 sem essa
+API, o fallback foi provado pelo workflow que originalmente falhou.
+
+A evidência Windows/Free continua vinculada aos bytes de produto da RC. A prova
+pós-merge da corretiva pertence ao SHA final da `main`; não se afirma que o
+FULL Windows foi reexecutado no merge commit.
+
+## Dívidas históricas preservadas
+
+- SE06: 24/25; `S06-A1-R4=NOT_RUN`; `SE06_DOD=INCOMPLETE`;
+  `SE06_FULLY_CERTIFIED=false`;
+- SE07: encerrada por decisão humana com residual conhecido;
+  `SE07_FULLY_CERTIFIED=false`;
+- WinError32: intermitente; owner/root cause não estabelecidos;
+- criar-objeto: L2 global; piloto L3 stage-specific não promove a skill inteira.
 
 ## Gate de promoção ao trabalho
 
@@ -57,29 +127,26 @@ O Plano Mestre exige, cumulativamente:
 2. renderer sem divergência;
 3. publicação Free verificada por conteúdo;
 4. casos críticos SE06 sem escaped non-compliance;
-5. zero achados críticos/altos abertos relacionados ao enforcement;
+5. zero achados críticos/altos em aberto relacionados ao enforcement;
 6. documentação operacional completa;
 7. aceite explícito do usuário;
-8. rollback definido.
+8. plano de rollback definido.
 
-G2 preservou `SE06_DOD=INCOMPLETE` e declarou que sua exceção não satisfaz o
-gate de promoção corporativa da SE08. Portanto, no estado atual, preparação e
-staging podem ser estudados, mas **PROMOCAO_TRABALHO=BLOQUEADA** até nova decisão
-humana específica sustentada por evidência suficiente.
+A decisão G2 preservou `SE06_DOD=INCOMPLETE` e declarou explicitamente que a
+exceção de sequência SE06 → SE07 não satisfaz o gate corporativo da SE08.
 
-## Dívidas históricas carregadas
+Portanto:
 
-- SE06: 24/25; `S06-A1-R4=NOT_RUN`; `SE06_DOD=INCOMPLETE`;
-  `FULLY_CERTIFIED=false`;
-- SE07: encerrada por decisão humana com residual conhecido;
-  `SE07_FULLY_CERTIFIED=false`;
-- storage cleanup histórico: FAIL 8/9, causa do desaparecimento intermediário do
-  resíduo não estabelecida;
-- WinError32: não reproduzido na recertificação final não equivale a corrigido;
-- criar-objeto: L2 global; piloto L3 stage-specific não promove a skill inteira.
+```text
+PROMOCAO_TRABALHO = BLOQUEADA
+```
 
-## Próximo gate
+O aceite humano dado para integrar a SE08 não autoriza replicação corporativa,
+mudança de policy, promoção de níveis ou publicação no workspace do trabalho.
 
-A próxima etapa é local e está descrita em [RUNBOOK_LOCAL.md](RUNBOOK_LOCAL.md).
-Somente depois da materialização do derivado, bateria local e certificação FULL
-no SHA congelado a candidata pode ser avaliada para Free/Genie e posterior PR.
+## Operação futura
+
+A matriz local e o procedimento de reprodução permanecem em
+[RUNBOOK_LOCAL.md](RUNBOOK_LOCAL.md). A SE08 só deve ser reaberta por mudança
+funcional, regressão observada, decisão explícita sobre a dívida herdada ou nova
+autorização de rollout.
