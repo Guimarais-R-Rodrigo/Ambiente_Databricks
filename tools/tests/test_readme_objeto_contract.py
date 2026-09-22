@@ -93,11 +93,10 @@ class ReadmeContractTests(unittest.TestCase):
     def test_waived_symlink_is_not_silently_accepted(self):
         target = self.repo / "outside"; target.mkdir()
         link = self.base / "hub_snippets/ml/link"
-        if sys.platform == "win32":
-            import _winapi
-            _winapi.CreateJunction(str(target), str(link))
-        else:
+        try:
             link.symlink_to(target, target_is_directory=True)
+        except (OSError, NotImplementedError) as exc:
+            self.skipTest(f"filesystem sem symlink de diretório: {exc}")
         with self.assertRaisesRegex(ValueError, "simbólico"):
             rc.discover(self.base)
 
