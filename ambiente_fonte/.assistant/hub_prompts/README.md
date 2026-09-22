@@ -161,13 +161,31 @@ Os templates usam três convenções de preenchimento:
 
 ---
 
-## 🔄 A Sinergia Triangular: Prompts, Skills e Helpers
+## 🔄 Fluxo Integrado: Prompt, Skill, Policy e Helpers
 
-O Hub Prompts não opera isoladamente. Ele fornece o contexto do problema; uma skill pode fornecer a metodologia; snippets e scripts podem fornecer implementações reutilizáveis.
+O Hub Prompts não opera isoladamente. O briefing descreve a tarefa concreta; a skill define método e guardrails; a policy do Skill Enforcement Framework (SEF) informa qual enforcement existe hoje; a rota vigente da skill decide como uma etapa protegida pode ser executada; snippets e scripts fornecem implementações reutilizáveis.
 
-- **O Briefing (Prompt):** fornece objetivo, contexto de negócio, recursos e parâmetros.
-- **O Maestro (Skill):** orienta o fluxo metodológico e os guardrails, quando carregada por relevância ou selecionada por `@`.
-- **Os Instrumentos (Snippets & Scripts):** oferecem código reutilizável; não são importados nem executados automaticamente pela skill.
+```text
+Prompt / briefing
+        ↓
+Skill adequada
+        ↓
+Policy SEF / current_level
+        ↓
+rota realmente implementada
+        ↓
+Helpers / snippets / scripts
+        ↓
+evidência proporcional ao nível vigente
+```
+
+- **Briefing (Prompt):** fornece objetivo, contexto de negócio, recursos, parâmetros, restrições e contrato de saída.
+- **Skill:** orienta o fluxo metodológico e os guardrails, quando carregada por relevância ou selecionada por `@`.
+- **Policy SEF:** a fonte machine-readable fica em [`hub_padroes/skill_enforcement/policy.json`](../hub_padroes/skill_enforcement/policy.json). `current_level` descreve o enforcement realmente implementado; `target_level` é direção de evolução e não prova que contrato, preflight, runner, Receipt ou Postflight já existam. O `rollout_mode` também pertence à skill, não ao prompt.
+- **Rota vigente:** use somente mecanismos que a skill e sua policy sustentam hoje. Quando uma etapa protegida tiver entrypoint canônico, código manual ou chamada direta de helper não o substituem.
+- **Helpers, snippets e scripts:** oferecem implementação reutilizável; não são importados nem executados automaticamente por mencionar a skill.
+
+O prompt continua sendo um briefing: ele não recebe níveis L0–L4 próprios, policy paralela, Receipt ou Postflight. Evite copiar níveis para cada formulário; consulte a policy vigente quando o modo de execução depender deles.
 
 ---
 
@@ -422,9 +440,11 @@ Na Genie Code:
 
 Uma conversa nova é útil quando objetivo, conjunto de dados ou fase mudam materialmente. Para refinamentos do mesmo problema, o histórico validado pode ajudar.
 
-### 4. Revise o Plano antes de Executar
+### 4. Revise o Plano e a Rota Vigente antes de Executar
 
-Confirme recursos, filtros, período, operações, coleta no driver, custo e ações persistentes. Um prompt não amplia permissões e não substitui a política de aprovação configurada.
+Confirme recursos, filtros, período, operações, coleta no driver, custo e ações persistentes. Se uma skill foi selecionada, consulte sua policy SEF e use o `current_level` para determinar quais contratos, gates ou entrypoints existem de fato hoje. `target_level` continua sendo roadmap.
+
+Quando a skill declarar entrypoint canônico para uma etapa protegida, preserve essa rota: helper direto, PySpark/SQL manual, urgência ou um aviso de “execução fora do contrato” não criam uma alternativa equivalente. Um prompt não amplia permissões e não substitui a política de aprovação configurada.
 
 ### 5. Valide a Entrega contra o Contrato de Saída
 
@@ -460,9 +480,9 @@ Quando mudar materialmente o objetivo, os dados, a fase ou a skill recém-editad
 
 Sim. Use o padrão `<nome>/<nome>.md` e `<nome>/exemplo_<nome>.py`, explique cada campo e inclua limites, saída e checklist. A skill `@hub-ml-criar-objeto` pode orientar a estrutura, mas criar arquivos continua sendo uma ação explícita.
 
-### 6. O prompt carrega a skill e os helpers automaticamente?
+### 6. O prompt carrega a skill, a policy e os helpers automaticamente?
 
-Não. A skill pode ser selecionada por relevância ou `@`. Snippets e scripts precisam ser importados pelo notebook. O prompt apenas fornece contexto e instruções.
+Não. A skill pode ser selecionada por relevância ou `@`; mencionar uma skill no texto não comprova carregamento. A policy SEF continua sendo a fonte dos níveis vigentes da skill e deve ser consultada quando o fluxo depender deles. Snippets e scripts precisam ser importados e chamados no runtime. O prompt apenas fornece contexto e instruções; ele não substitui a rota de execução definida pela skill.
 
 ---
 
