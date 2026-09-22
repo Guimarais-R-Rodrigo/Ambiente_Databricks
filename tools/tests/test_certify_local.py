@@ -336,6 +336,27 @@ class CertifierTests(unittest.TestCase):
         self.assertEqual(["synthetic"], data["not_started_steps"])
         self.assertEqual("TIMEOUT", data["steps"][0]["process"]["result"])
 
+    def test_cleanup_pre_remove_observation_is_diagnostic_only(self):
+        directory = Path(self.tmp.name) / "cleanup-observation"
+        directory.mkdir()
+        (directory / "stderr").write_bytes(b"")
+        record = {
+            "result": "INFRASTRUCTURE_ERROR",
+            "cleanup": "COMPLETE",
+            "process_cleanup": "COMPLETE",
+            "pid": 123,
+            "launcher_pid": 456,
+            "observed_exit_code": None,
+            "exit_after_cleanup": 1,
+        }
+        observation = cert._temporary_cleanup_observation(record, directory)
+        self.assertTrue(observation["exists"])
+        self.assertEqual(["stderr"], observation["entries"])
+        self.assertEqual("COMPLETE", observation["process_cleanup"])
+        self.assertEqual(123, observation["pid"])
+        self.assertEqual(456, observation["launcher_pid"])
+        self.assertEqual("COMPLETE", record["cleanup"], "telemetry must not mutate verdict state")
+
     def test_keyboard_interrupt_cleanup_and_output(self):
         code, output, record = self.interrupt_fixture("after_output")
         self.assertEqual(130, code)
