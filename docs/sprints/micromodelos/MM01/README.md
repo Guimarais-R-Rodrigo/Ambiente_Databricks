@@ -232,3 +232,14 @@ A sequência obrigatória permanece:
 10. somente então integrar a PR #51.
 
 **MM01 ainda não está aceita nem integrada. MM02 permanece bloqueada.**
+
+
+## Certificação local reproduzível
+
+GitHub Actions deixou de ser o canal executável obrigatório desta iniciativa. Isso não reduz nenhum requisito da MM01.
+
+A especificação operacional está em `LOCAL_CERTIFICATION_V1.md` e o executor em `tools/mm01_local_certify.py`. O certifier exige identidade exata do SHA candidato e da `main`, `behind_by=0`, checkout dedicado/limpo, runtime controlado, execução de todos os gates aplicáveis, preflight/postflight, logs por step, hashes dos inputs e bundle ZIP verificável.
+
+Os workflows permanecem fonte dos comandos. Suas identidades Git blob são congeladas no certifier para que qualquer mudança de YAML — inclusive novo gate — provoque falha fechada até reconciliação explícita.
+
+A certificação local é evidência mecânica e não substitui a nova reauditoria final independente, o contraditório, o aceite humano nem o merge controlado.
