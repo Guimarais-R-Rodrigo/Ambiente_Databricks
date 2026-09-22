@@ -1253,9 +1253,10 @@ A API pública inclui `run_preflight` e, desde a SE07, `get_skill_enforcement_po
 
 Desde a SE08, contratos e policy participam do validador geral do Hub e o gate
 local chama o perfil cumulativo `se08` do certifier em modo parcial/read-only.
-A certificação FULL permanece separada: ela inclui regressões SEF acumuladas,
-renderer canônico, ausência de drift no derivado e snapshot documental. O
-subgate do `ci_local.py` não substitui esse FULL.
+A certificação FULL permanece separada e usa
+`python -B tools/skill_enforcement/certify_local.py --profile se08`: ela inclui
+regressões SEF acumuladas, renderer canônico, ausência de drift no derivado e
+snapshot documental. O subgate do `ci_local.py` não substitui esse FULL.
 
 Publicação/verify no Databricks Free e comportamento conversacional do Genie Code
 continuam canais de evidência distintos. Uma policy válida não prova que o agente
