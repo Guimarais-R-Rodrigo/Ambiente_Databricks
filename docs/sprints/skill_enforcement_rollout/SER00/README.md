@@ -12,7 +12,8 @@ Escopo desta rodada: leitura do GitHub, inventário 14/14, revisão de targets, 
 - [Helpers e primitives](MATRIZ_HELPERS_PRIMITIVES.md)
 - [Dependências e concorrência](MATRIZ_DEPENDENCIAS.md)
 - [Riscos e critérios de saída](MATRIZ_RISCOS.md)
-- [Desenho e decisões pendentes](DESENHO_TECNICO.md)
+- [Desenho e decisões aceitas](DESENHO_TECNICO.md)
+- [ADR-0022 — certificação prospectiva SER](../../../decisions/ADR-0022-certificacao-prospectiva-ser.md)
 - [Testes e limites](TESTES.md)
 - [Resultados](RESULTADOS.md)
 - [Checkpoint](CHECKPOINT.md)
@@ -20,6 +21,6 @@ Escopo desta rodada: leitura do GitHub, inventário 14/14, revisão de targets, 
 
 ## Limite de aceite
 
-`SER00_BLOCKED_BY_ARCHITECTURAL_FINDING`. A ordem de rollout é candidata, preservada sem renumeração; o freeze executivo depende das decisões A01–A03. Nada nesta pasta é uma segunda policy operacional. A fonte machine-readable continua sendo a policy do produto.
+`SER00_NOT_READY`. A01–A03 foram aceitas humanamente em 2026-09-22 e a ordem de rollout fica arquiteturalmente congelada. A07 — certificação local integral, changelog/snapshots e nova identidade da candidata — permanece pendente. Nada nesta pasta é uma segunda policy operacional. A fonte machine-readable continua sendo a policy do produto.
 
-Esta rodada não constitui recertificação integral do repositório, Windows, Free ou Genie. Validação documental própria e integridade de publicação são canais distintos dos validadores canônicos não executados.
+O aceite arquitetural não constitui recertificação integral do repositório, Windows, Free ou Genie. Validação documental própria e integridade de publicação são canais distintos dos validadores canônicos não executados.
