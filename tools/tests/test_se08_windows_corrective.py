@@ -71,6 +71,20 @@ class SE08WindowsCorrectiveStaticTests(unittest.TestCase):
         self.assertIn("FileProcessIdsUsingFileInformation", text)
         self.assertIn("observer_pid_may_be_query_handle", text)
 
+    def test_process_stream_uses_share_delete_without_retry(self):
+        text = self.read("tools/skill_enforcement/certify_local.py")
+        tree = ast.parse(text)
+        fn = next(n for n in tree.body if isinstance(n, ast.FunctionDef)
+                  and n.name == "_open_process_stream")
+        calls = {getattr(n.func, "attr", getattr(n.func, "id", ""))
+                 for n in ast.walk(fn) if isinstance(n, ast.Call)}
+        self.assertIn("CreateFileW", text)
+        self.assertIn("FILE_SHARE_DELETE", text)
+        self.assertIn("_open_process_stream(path / \"stdout\")", text)
+        self.assertIn("_open_process_stream(path / \"stderr\")", text)
+        for forbidden in ("sleep", "rmtree", "unlink", "remove", "kill", "terminate"):
+            self.assertNotIn(forbidden, calls)
+
     def test_theme_dependency_probe_ignores_python_environment(self):
         text = self.read("tools/tests/test_temas_v02.py")
         self.assertGreaterEqual(text.count("'PYTHONPATH'"), 2)

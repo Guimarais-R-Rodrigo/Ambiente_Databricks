@@ -336,6 +336,25 @@ class CertifierTests(unittest.TestCase):
         self.assertEqual(["synthetic"], data["not_started_steps"])
         self.assertEqual("TIMEOUT", data["steps"][0]["process"]["result"])
 
+    def test_process_stream_helper_round_trip(self):
+        path = Path(self.tmp.name) / "stream-round-trip"
+        with cert._open_process_stream(path) as stream:
+            stream.write(b"abc")
+            stream.flush()
+            stream.seek(0)
+            self.assertEqual(b"abc", stream.read())
+
+    @unittest.skipUnless(os.name == "nt", "Windows FILE_SHARE_DELETE boundary")
+    def test_process_stream_allows_delete_while_still_open_on_windows(self):
+        path = Path(self.tmp.name) / "share-delete-open-stream"
+        with cert._open_process_stream(path) as stream:
+            stream.write(b"share-delete")
+            stream.flush()
+            self.assertTrue(path.exists())
+            os.unlink(path)
+            self.assertFalse(path.exists())
+            self.assertFalse(stream.closed)
+
     def test_cleanup_pre_remove_observation_is_diagnostic_only(self):
         directory = Path(self.tmp.name) / "cleanup-observation"
         directory.mkdir()

@@ -294,3 +294,68 @@ A consulta:
 - não muda verdict;
 - roda por recurso (`stderr`, `stdout`, `child.json` quando existentes);
 - é complementar ao Restart Manager, não substituta.
+
+
+## R4 Windows — campanha 50776fef
+
+A campanha Windows R4 foi executada sobre:
+
+- SHA `50776fefc35ae65a48b913b1b190adff9738d19e`;
+- tree `59b4ebadc6e35d5b1e40be1539f6d8fdc976068d`;
+- bundle `SEF_SE08_R4_WINDOWS_50776fef_20260922.zip`;
+- SHA-256 verificado: `ee42832a63f815937b8fe39488d91a81b07b4f5c1464bdee07edb480ebd6aac4`;
+- ZIP: 1083 entradas, CRC íntegro;
+- manifesto: 1081 arquivos verificados, zero divergências;
+- classificação: `R4_WINDOWS_NOT_READY`.
+
+Resultados:
+
+- Windows corrective: PASS 9/9;
+- storage standalone: PASS 9/9;
+- certifier standalone: exit 0, 50 métodos, 1 skip de escopo;
+- CI Windows: FAIL somente na etapa `sef`;
+- FULL: `NOT_RUN_CONDITION_NOT_MET`.
+
+O WinError32 reapareceu no CI em `test_timeout_real_parent_child_external_oracle_and_partial_streams`.
+
+No boundary:
+
+- Job Object após terminate: `active=0`, lista vazia;
+- Job Object antes de close: `active=0`, lista vazia;
+- launcher/child: `running=false`, exit code 1;
+- Restart Manager: `NO_MATCHES_REPORTED_NOT_PROOF_OF_NO_HANDLES`;
+- `FileProcessIdsUsingFileInformation` em `stderr` e `stdout`: `NTSTATUS=SUCCESS`, `count=0`, zero PIDs.
+
+A amostra ocorreu cerca de 2 ms depois do snapshot imediatamente anterior à remoção. Portanto o WinError32 foi real, mas o conflito já não era observável na primeira consulta pós-falha.
+
+## R5 — abertura dos streams com FILE_SHARE_DELETE
+
+A combinação R3/R4 torna inadequado acrescentar espera arbitrária ou retry de remoção:
+
+- o processo supervisionado já estava terminado;
+- o Job Object já estava vazio;
+- duas APIs posteriores à falha não encontraram owner persistente;
+- o conflito desaparece numa janela muito curta.
+
+A semântica oficial de `CreateFile` estabelece que os share flags permanecem associados ao handle enquanto ele estiver aberto e que `FILE_SHARE_DELETE` permite operações subsequentes de delete/rename enquanto esse handle existe.
+
+A R5 modifica somente como `stdout` e `stderr` temporários são abertos no Windows:
+
+- `GENERIC_READ | GENERIC_WRITE`;
+- `FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE`;
+- `CREATE_ALWAYS`;
+- conversão do HANDLE para file descriptor Python via `msvcrt.open_osfhandle`.
+
+No POSIX o comportamento permanece `Path.open("w+b")`.
+
+Essa correção atua na propriedade de compartilhamento do próprio handle que é duplicado/herdado pelo subprocesso. Ela não:
+
+- muda timeout;
+- adiciona sleep;
+- repete `rmtree`;
+- ignora WinError32;
+- relaxa cleanup;
+- altera Job Object;
+- altera gates.
+
+Um teste Windows nativo exige que `os.unlink()` tenha sucesso enquanto o stream criado pelo helper ainda está aberto. Isso testa diretamente a propriedade causal antes da campanha completa.

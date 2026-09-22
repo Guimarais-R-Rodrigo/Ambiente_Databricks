@@ -706,6 +706,64 @@ class _ProcessTemporaryDirectory(tempfile.TemporaryDirectory):
             return result
 
 
+def _open_process_stream(path: Path):
+    """Open stdout/stderr so lingering inherited handles cannot block deletion.
+
+    Windows CreateFile share flags belong to the file object and remain in effect
+    for duplicated/inherited handles. FILE_SHARE_DELETE permits a later delete
+    request while those handles still exist. POSIX keeps the ordinary binary
+    file behavior.
+    """
+    if os.name != "nt":
+        return path.open("w+b")
+
+    import ctypes
+    import msvcrt
+    from ctypes import wintypes as w
+
+    k = ctypes.WinDLL("kernel32", use_last_error=True)
+    k.CreateFileW.restype = w.HANDLE
+    k.CreateFileW.argtypes = [
+        w.LPCWSTR, w.DWORD, w.DWORD, ctypes.c_void_p,
+        w.DWORD, w.DWORD, w.HANDLE,
+    ]
+    k.CloseHandle.restype = w.BOOL
+    k.CloseHandle.argtypes = [w.HANDLE]
+
+    GENERIC_READ = 0x80000000
+    GENERIC_WRITE = 0x40000000
+    FILE_SHARE_READ = 0x00000001
+    FILE_SHARE_WRITE = 0x00000002
+    FILE_SHARE_DELETE = 0x00000004
+    CREATE_ALWAYS = 2
+    FILE_ATTRIBUTE_NORMAL = 0x00000080
+    INVALID_HANDLE_VALUE = ctypes.c_void_p(-1).value
+
+    handle = k.CreateFileW(
+        str(path),
+        GENERIC_READ | GENERIC_WRITE,
+        FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+        None,
+        CREATE_ALWAYS,
+        FILE_ATTRIBUTE_NORMAL,
+        None,
+    )
+    if handle == INVALID_HANDLE_VALUE:
+        raise ctypes.WinError(ctypes.get_last_error())
+
+    try:
+        fd = msvcrt.open_osfhandle(int(handle), os.O_RDWR | os.O_BINARY)
+    except Exception:
+        k.CloseHandle(handle)
+        raise
+
+    try:
+        return os.fdopen(fd, "w+b")
+    except Exception:
+        os.close(fd)
+        raise
+
+
 def _run(command: Sequence[str]) -> tuple[int, str, float]:
     """Compatibility tuple; full observed metadata is appended to processes.json.
 
@@ -727,7 +785,7 @@ def _run(command: Sequence[str]) -> tuple[int, str, float]:
     pending_exit = None
     with _ProcessTemporaryDirectory(record) as temporary:
         path = Path(temporary)
-        with (path / "stdout").open("w+b") as stdout, (path / "stderr").open("w+b") as stderr:
+        with _open_process_stream(path / "stdout") as stdout, _open_process_stream(path / "stderr") as stderr:
             try:
                 kwargs = {"cwd": REPO_ROOT, "stdout": stdout, "stderr": stderr, "env": env}
                 if os.name == "nt":

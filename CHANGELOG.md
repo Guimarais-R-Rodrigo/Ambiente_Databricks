@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-09-22 — SE08 R5: streams Windows compatíveis com delete
+
+### Corrigido
+
+- (ChatGPT) Incorporada a campanha Windows R4 em `50776fef...`: storage standalone 9/9, certifier standalone exit 0, CI FAIL apenas em `sef/certifier_regression`, com WinError32 no timeout pai-filho; Restart Manager e `FileProcessIdsUsingFileInformation` observaram zero processos imediatamente após a falha.
+- (ChatGPT) No Windows, `stdout` e `stderr` temporários do certifier passam a ser criados com `FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE`. Isso permite que handles duplicados/herdados remanescentes não bloqueiem o delete do arquivo, sem retry ou sleep.
+- (ChatGPT) Adicionado teste Windows nativo que remove o path enquanto o stream ainda está aberto, provando diretamente a propriedade `FILE_SHARE_DELETE`; POSIX mantém o caminho de abertura anterior.
+
+### Estado
+
+- R4 Windows: `R4_WINDOWS_NOT_READY`.
+- owner persistente do handle: não observado.
+- R5: correção causal candidata, pendente de validação Windows.
+- promoção ao trabalho: bloqueada.
+
+
 ## 2026-09-22 — SE08 R4: identificação diagnóstica de PIDs por arquivo
 
 ### Incorporado
