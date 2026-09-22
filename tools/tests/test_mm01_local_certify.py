@@ -3,6 +3,7 @@ from __future__ import annotations
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from tools import mm01_local_certify as cert
 
@@ -40,6 +41,31 @@ class TestMM01LocalCertification(unittest.TestCase):
             else:
                 results.append(self._result(step_id))
         return results
+
+    def test_resolve_argv_uses_windows_cmd_for_cmd_shim(self) -> None:
+        npm_cmd = r"C:\\Program Files\\nodejs\\npm.CMD"
+        cmd_exe = r"C:\\Windows\\System32\\cmd.exe"
+        with (
+            mock.patch.object(cert.shutil, "which", return_value=npm_cmd),
+            mock.patch.dict(cert.os.environ, {"COMSPEC": cmd_exe}, clear=False),
+        ):
+            self.assertEqual(
+                cert.resolve_argv(("npm", "--version"), windows=True),
+                [cmd_exe, "/d", "/c", "call", npm_cmd, "--version"],
+            )
+
+    def test_resolve_argv_fails_closed_when_executable_is_missing(self) -> None:
+        with mock.patch.object(cert.shutil, "which", return_value=None):
+            with self.assertRaises(cert.CertificationError):
+                cert.resolve_argv(("definitely-not-a-real-command-mm01",), windows=False)
+
+    def test_sanitize_argv_redacts_repository_and_home_paths(self) -> None:
+        command = cert.sanitize_argv(
+            (str(REPO / "tool.py"), str(Path.home() / "venv" / "python.exe")),
+            REPO,
+        )
+        self.assertIn("<REPO>", command[0])
+        self.assertIn("<HOME>", command[1])
 
     def test_remote_normalization_accepts_canonical_forms(self) -> None:
         self.assertEqual(
