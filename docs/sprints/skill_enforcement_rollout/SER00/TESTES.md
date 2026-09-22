@@ -12,7 +12,7 @@ O clone Git do container falhou por resolução de github.com. As consultas aute
 python -B validar_ser00_documental.py --docs <pasta-skill_enforcement_rollout> --baseline baseline_observada.json --output resultado_documental.json
 ```
 
-O script integra o bundle externo da rodada, não o produto. Ele verifica 14 documentos, UTF-8/fences, links relativos, 14 linhas de policy, 24 superfícies, níveis/riscos/scope/rollout/status contra as observações, 13 recomendações CONFIRMED e uma HUMAN_DECISION_REQUIRED, sequência SER01–SER16, estados de canais e ausência de arquivos executáveis/produtivos no conjunto de publicação. Inclui controles negativos contra matriz adulterada, superfície extra e caminho fora do escopo.
+O script integra o bundle externo da rodada, não o produto. A rodada documental inicial verificou 14 documentos, UTF-8/fences, links relativos, 14 linhas de policy, 24 superfícies, níveis/riscos/scope/rollout/status contra as observações, 13 recomendações CONFIRMED e uma HUMAN_DECISION_REQUIRED. Após o aceite, a validação documental R2 verifica 14 targets CONFIRMED, o ADR-0022, a atualização do índice de ADRs, sequência SER01–SER16, estados de canais e ausência de mudanças de produto. Os controles negativos originais são preservados.
 
 A base é uma transcrição identificada das leituras da API, não um clone integral. A concordância documental não certifica o runtime nem o próprio validator da policy.
 
@@ -38,8 +38,8 @@ python -B tools/ci_local.py --verbose
 
 Para SER00 documental, a policy ainda é a baseline; A01 é conflito prospectivo de promoção, não autorização para omitir suite atual. Se snapshot README falhar, registrar a falha, atualizar somente o que o validator comprovar e criar nova rodada no novo SHA. Nunca editar derivado manualmente. Render que produza drift inesperado exige diagnóstico, não aceitação silenciosa.
 
-Além disso, resolver as decisões arquiteturais A01–A03 antes de liberar SER01. O PASS do complemento local não decide o target/scope por conta própria.
+A01–A03 estão arquiteturalmente resolvidas. O complemento local A07 continua obrigatório; seu PASS não promove skill nem autoriza SER01 por conta própria.
 
 ## Estados
 
-GITHUB_ACTIONS=DEFERRED_NO_CREDITS; DATABRICKS_FREE=NOT_RUN; GENIE_BEHAVIOR=NOT_RUN; CANONICAL_REPO_VALIDATORS=NOT_RUN nesta rodada. Execuções incidentais de Actions serão observadas e preservadas na PR/manifesto, sem rerun. Ausência de créditos não é FAIL funcional.
+GITHUB_ACTIONS=DEFERRED_NO_CREDITS; DATABRICKS_FREE=NOT_RUN; GENIE_BEHAVIOR=NOT_RUN; CANONICAL_REPO_VALIDATORS=NOT_RUN enquanto A07 não for executada. Execuções incidentais de Actions serão observadas e preservadas na PR/manifesto, sem rerun. Ausência de créditos não é FAIL funcional.
