@@ -6,11 +6,14 @@
 
 - (ChatGPT) RC `ee1cf04b...` certificada com FULL SE08 Windows 21/21, CI Windows 10/10 e gate Databricks Free PASS com 573/573 arquivos comparados, zero ausentes/obsoletos e 14/14 skills.
 - (ChatGPT) PR #90 integrada em `627bcc798...` após aceite humano. A primeira rodada pós-merge preservou um FAIL de portabilidade em Python 3.11: a suíte SE07 chamava `PosixPath.is_junction()` onde a API não existia.
-- (ChatGPT) PR #92 corrigiu a detecção de junction e o filtro de dependências do workflow de transição. Em `main@431c46fc...`, 17/17 workflows disparados concluíram em success, inclusive o workflow Python 3.11 que revelou o defeito.
+- (ChatGPT) PR #92 corrigiu a detecção de junction e o filtro de dependências do workflow de transição. No SHA de integração `431c46fc...`, 17/17 workflows disparados concluíram em success, inclusive o workflow Python 3.11 que revelou o defeito.
+- (ChatGPT) PR #93 realizou somente o fechamento documental e foi integrada em `85474968...`; sua rodada pós-merge concluiu 18/18 workflows em success, incluindo SE01 e SE02.
 
 ### Estado final
 
-- `SE08_FULLY_CERTIFIED=true` no alcance da sprint;
+- `SE08_RC_FULLY_CERTIFIED=true` para a release candidate certificada;
+- `SE08_INTEGRATED=true`;
+- `SE08_POST_MERGE_ACTIONS=PASS`;
 - `DATABRICKS_FREE=PASS`;
 - `GENIE_BEHAVIORAL_SCREENING=NOT_APPLICABLE` ao delta SE08;
 - SE06/SE07 permanecem com suas classificações históricas;
