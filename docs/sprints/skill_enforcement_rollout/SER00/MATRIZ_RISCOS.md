@@ -2,9 +2,9 @@
 
 | ID | Severidade | Risco constatado ou prospectivo | Controle / critério de saída | Dono lógico |
 |---|---|---|---|---|
-| A01 | BLOQUEADOR | assertions SE08 amarradas a current L2/cinco contratos/CI histórico | decisão explícita, ADR prospectivo e certifier SER aditivo, sem apagar falhas | SER00 decisão; primeira implementação autorizada |
-| A02 | ALTO | condições 0.1 não expressam domínios novos | schema/contexto/handlers versionados; desconhecido bloqueia; regressão 0.1 | desenho transversal antes do primeiro uso |
-| A03 | BLOQUEADOR DE TARGET/SCOPE | piloto criar-objeto apresentado como L3 global | matriz tipo×operação×host×efeito aprovada e provada; current L2 até lá | SER01 após decisão humana |
+| A01 | ALTO / DECISÃO ACEITA | assertions SE08 amarradas a current L2/cinco contratos/CI histórico | ADR-0022: certifier SER aditivo + histórico preservado; implementação/teste ainda pendentes | SER01 infraestrutura prospectiva |
+| A02 | ALTO / DECISÃO ACEITA | condições 0.1 não expressam domínios novos | evolução aditiva, skill-local quando específica, shared schema somente se transversal; desconhecido bloqueia | primeira sprint que necessitar nova condição |
+| A03 | ALTO / TARGET CONFIRMADO | piloto criar-objeto apresentado como L3 global | matriz tipo×operação×host×efeito precisa ser provada; current L2 até lá | SER01 |
 | R04 | ALTO | helper existente confundido com execução canônica | teste de chamada concluída + binding + Receipt; omissão e erro propagados | cada sprint L3 |
 | R05 | ALTO | producer novo sem verifier independente | NOT_REVERIFIED até adapter compatível; adulteração/replay negativos | cada produtora/SER15 |
 | R06 | ALTO | amostra SHAP não ligada às linhas efetivas | amostragem e output_index explícitos; verificação dimensional e provenance | SER02 |
@@ -23,4 +23,4 @@
 | R19 | ALTO | ampliar confiança criptográfica de hashes | declarar ameaça coberta; hashes vinculam bytes, não autorizam operação humana | Receipt/autorização |
 | R20 | MÉDIO | dívidas históricas apagadas pelo novo projeto | SE06 24/25, SE07 ressalvas, falhas e limitações imutáveis | documentação/certificação |
 
-O bloqueio não decorre de ausência de créditos: Actions continua fora do caminho crítico. Os bloqueios presentes são de arquitetura/escopo e de validação não executada no checkout completo. Nenhum risco foi reduzido na policy para facilitar a conclusão.
+O bloqueio não decorre de ausência de créditos: Actions continua fora do caminho crítico. As decisões arquiteturais A01–A03 estão resolvidas; permanecem riscos de implementação/escopo e a validação não executada no checkout completo. Nenhum risco foi reduzido na policy para facilitar a conclusão.
