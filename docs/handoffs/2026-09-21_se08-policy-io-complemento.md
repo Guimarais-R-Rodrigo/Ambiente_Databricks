@@ -126,9 +126,9 @@ PR ou promoção só porque testes focalizados passaram.
 - hub-ml-criar-objeto: current_level L2 global; piloto L3 stage-specific não promove a skill.
 - Sem dados reais, credenciais, identificadores corporativos ou alterações em outras frentes.
 
-A entrada atribuída desta execução está em
+A entrada atribuída desta execução está preservada em
 [fragmento de changelog](../sprints/skill_enforcement/SE08/ENTRADA_CHANGELOG_POLICY_IO.md).
-A incorporação ao CHANGELOG.md raiz está PENDENTE: não se reescreveu seu conteúdo
-de mais de 209 kB a partir de resposta truncada. Isso é pendência documental
-expressa e impede chamar a candidata de pronta. O operador local deve acrescentar
-o fragmento preservando os bytes históricos, sem reivindicar autoria de terceiros.
+O conteúdo pertinente foi incorporado ao `CHANGELOG.md` raiz pela consolidação
+repo-side, preservando as entradas históricas e sem reatribuir autoria de
+terceiros. A candidata ainda não é pronta: rematerialização do derivado,
+snapshot, certificação local/Windows e gates de ambiente permanecem pendentes.
