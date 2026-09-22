@@ -24,7 +24,7 @@ Este diretório concentra o planejamento e as evidências do Skill Enforcement F
 18. [SE06/GUIA_USUARIO.md](SE06/GUIA_USUARIO.md) — operação para usuário não técnico.
 19. [SE06/DECISAO_G2.md](SE06/DECISAO_G2.md) — fechamento deliberado em 24/25, `DOD=INCOMPLETE` preservado e exceção prospectiva de transição para SE07.
 20. [SE07/README.md](SE07/README.md) — generalização por risco, registry 14/14 e política de migração por nível.
-21. [SE08/README.md](SE08/README.md) — operação permanente, CI, documentação e gate de promoção ao trabalho.
+21. [SE08/README.md](SE08/README.md) — encerrada, certificada e integrada; operação permanente preservada e promoção ao trabalho bloqueada.
 22. [SE08/RUNBOOK_LOCAL.md](SE08/RUNBOOK_LOCAL.md) — materialização do derivado e certificação local da candidata.
 
 ## Regra de leitura
