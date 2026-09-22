@@ -1,0 +1,70 @@
+"""Guardrails da corretiva SE08 Windows/CI.
+
+Estes testes são estáticos/portáveis. Não afirmam reproduzir WinError32, NTFS ou
+privilégio de symlink; protegem apenas a instrumentação e os reparos de teste.
+"""
+from __future__ import annotations
+
+import ast
+from pathlib import Path
+import unittest
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+class SE08WindowsCorrectiveStaticTests(unittest.TestCase):
+    def read(self, relative: str) -> str:
+        return (ROOT / relative).read_text(encoding="utf-8")
+
+    def test_certifier_cleanup_diagnostic_is_observational(self):
+        text = self.read("tools/skill_enforcement/certify_local.py")
+        self.assertIn("def _temporary_cleanup_observation(", text)
+        self.assertIn('"temporary_cleanup_pre_remove"', text)
+        helper = ast.parse(text)
+        fn = next(n for n in helper.body if isinstance(n, ast.FunctionDef)
+                  and n.name == "_temporary_cleanup_observation")
+        calls = {getattr(n.func, "attr", getattr(n.func, "id", ""))
+                 for n in ast.walk(fn) if isinstance(n, ast.Call)}
+        for forbidden in ("sleep", "rmtree", "unlink", "remove", "kill", "terminate"):
+            self.assertNotIn(forbidden, calls)
+
+    def test_theme_dependency_probe_ignores_python_environment(self):
+        text = self.read("tools/tests/test_temas_v02.py")
+        self.assertGreaterEqual(text.count("'PYTHONPATH'"), 2)
+        self.assertGreaterEqual(text.count("'-B','-E','-S','-c'"), 2)
+
+    def test_theme_layout_mocks_do_not_depend_on_posix_separator(self):
+        text = self.read("tools/tests/test_temas_v02.py")
+        self.assertIn("def _path_endswith(", text)
+        for legacy in (
+            "endswith('V01/theme.schema.json')",
+            "endswith('exemplos/legado_notebook.json')",
+            "endswith('identidade_visual/TOKENS.md')",
+            "endswith('tema/__init__.py')",
+            "endswith('identidade_visual/theme.schema.json')",
+        ):
+            self.assertNotIn(legacy, text)
+        self.assertIn("PureWindowsPath", text)
+
+    def test_restricted_symlink_environment_is_explicit_not_pass(self):
+        for path in (
+            "tools/tests/test_temas_v01.py",
+            "tools/tests/test_temas_v02.py",
+            "tools/tests/test_temas_v05_integracao.py",
+            "tools/tests/test_transicao_trabalho.py",
+            "tools/tests/test_readme_objeto_contract.py",
+        ):
+            text = self.read(path)
+            self.assertIn("skipTest", text, path)
+        # Não substituir a propriedade original por junction nesses testes.
+        for path in (
+            "tools/tests/test_temas_v01.py",
+            "tools/tests/test_temas_v02.py",
+            "tools/tests/test_transicao_trabalho.py",
+            "tools/tests/test_readme_objeto_contract.py",
+        ):
+            self.assertNotIn("CreateJunction", self.read(path), path)
+
+
+if __name__ == "__main__":
+    unittest.main()
