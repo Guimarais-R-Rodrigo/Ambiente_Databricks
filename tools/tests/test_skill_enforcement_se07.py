@@ -34,8 +34,10 @@ class SE07PolicyTests(unittest.TestCase):
             cases = [
                 ("missing", tmp/"missing.json"),
                 ("malformed", tmp/"malformed.json"),
+                ("invalid_utf8", tmp/"invalid_utf8.json"),
             ]
             cases[1][1].write_text("{", encoding="utf-8")
+            cases[2][1].write_bytes(b'{"value":"\xff"}')
             for name, path in cases:
                 with self.subTest(case=name):
                     summary = self.tool.summarize(path)
