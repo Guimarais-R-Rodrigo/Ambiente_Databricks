@@ -125,15 +125,21 @@ A PR #92 corrigiu exclusivamente a portabilidade da suíte e o filtro de
 dependências do workflow. Foi mergeada e produziu:
 
 ```text
-main = 431c46fcffc9345ad4c24280ba13f2ba1dba579b
+SE08_INTEGRATION_SHA = 431c46fcffc9345ad4c24280ba13f2ba1dba579b
 ```
 
 Pós-merge corretivo: 17/17 workflows disparados em success, inclusive o mesmo
 workflow Python 3.11.
 
-O diff entre a RC certificada e a main final contém somente o workflow de
-transição e a suíte de teste SE07. Nenhum byte do pacote publicado, policy ou
-certifier mudou.
+A PR #93 realizou exclusivamente o fechamento documental e foi mergeada em
+`85474968f5548c13a9a41a3c84f99b3e18f6874c`. A rodada pós-merge documental
+fechou 18/18 workflows disparados em success, incluindo os workflows dedicados
+SE01 e SE02.
+
+O diff não documental entre a RC certificada e o SHA de integração da SE08
+contém somente o workflow de transição e a suíte de teste SE07. A PR #93 altera
+somente documentação. Nenhum byte do pacote publicado, policy ou certifier
+mudou.
 
 ### Classificação final
 
@@ -144,9 +150,13 @@ WINDOWS_R5                  = READY_FOR_REVIEW
 GITHUB_ACTIONS              = PASS
 DATABRICKS_FREE             = PASS
 GENIE_BEHAVIORAL_SCREENING  = NOT_APPLICABLE
-SE08_FULLY_CERTIFIED        = true
+SE08_RC_FULLY_CERTIFIED     = true
+SE08_INTEGRATED             = true
+SE08_POST_MERGE_ACTIONS     = PASS
 PROMOCAO_TRABALHO           = BLOQUEADA
 ```
 
-A classificação da SE08 não reclassifica SE06 ou SE07. A promoção corporativa
-continua bloqueada pela dívida explicitamente preservada em G2.
+A classificação da SE08 não reclassifica SE06 ou SE07. A evidência histórica
+`SE07_GENIE_BEHAVIORAL_SCREENING=PASS` permanece separada da classificação
+`NOT_APPLICABLE` do delta SE08. A promoção corporativa continua bloqueada pela
+dívida explicitamente preservada em G2.
