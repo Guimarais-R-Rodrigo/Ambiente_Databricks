@@ -18,11 +18,11 @@ PRs abertas relevantes na data do freeze:
 | PR | Head | Situação para PSEF00 |
 |---|---|---|
 | #51 MM01 | `micromodelos/mm01-contrato-canonico@8e7c7a8d…` | aberta; não toca `hub_prompts`, policy, instruções ou Manual |
-| #91 SE08 R6 | `sef/SE08-r6-final-documentation@65d75dca…` | branch histórica ainda aberta; toca documentação SEF/Manual, mas a SE08 já foi integrada e fechada em `main` |
+| #91 SE08 R6 | `sef/SE08-r6-final-documentation@65d75dca…` | branch histórica ainda aberta; diverge da `main` e toca documentação SEF/raiz, mas a SE08 já foi integrada e fechada em `main` |
 | #6 READMEs R02 | `codex/readmes-r02@5996574a…` | draft histórico; toca `hub_prompts`, inclusive `eda_rapida`, mas não integra a baseline atual |
 | #5 READMEs R01 | `codex/readmes-r01@af1efd14…` | draft histórico; toca `hub_prompts/README.md` e `.assistant_instructions.md`, mas não integra a baseline atual |
 
-Não foi encontrada branch existente com prefixo/nome `psef`. Nenhuma branch com “hub” foi encontrada na busca nominal; a concorrência material é representada pelas PRs antigas #5/#6.
+Antes da criação desta candidata, não havia outra frente PSEF materialmente concorrente identificada. Na reconciliação final, a branch `psef/PSEF00-reconciliacao-inventario` é a própria candidata desta sprint; a concorrência material externa permanece representada sobretudo pelas PRs antigas #5/#6.
 
 ## Fontes canônicas observadas
 
