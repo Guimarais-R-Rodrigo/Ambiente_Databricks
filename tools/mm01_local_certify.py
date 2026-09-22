@@ -75,6 +75,8 @@ WORKFLOW_REQUIRED_SNIPPETS = {
     ),
     ".github/workflows/temas-v10-ci.yml": (
         "python -B tools/tests/test_temas_v10.py -v",
+        "app.py",
+        "app_service.py",
         "test_temas*.py",
         "python -B tools/tests/test_visual_legado_v00.py",
         "python -B tools/temas_v10_app.py --output .artifacts/v10-app",
@@ -108,6 +110,14 @@ WORKFLOW_REQUIRED_SNIPPETS = {
         "test_temas*.py",
         "python -B tools/tests/test_visual_legado_v00.py",
         "python -B tools/validate_assistant.py --conferir-readme",
+        "V13_S1_REMOTE_MUTATION=0",
+        "V13_S2_NETWORK=0",
+        "V13_S3_LOCAL_DRY_RUN_ONLY=1",
+        "V13_S4_DIAGNOSIS_READ_ONLY=1",
+        "V13_S5_CONTRAST_PREFLIGHT_LOCAL=1",
+        "V13_S6_LOCAL_OR_SIMULATED_REHEARSALS=5",
+        "V13_S7_DATABRICKS_MUTATION=0",
+        "V13_S7_HUMAN_EVIDENCE=VERSIONED_HUMAN_SESSION",
         "V13_V14_NOT_STARTED=1",
     ),
 }
@@ -550,6 +560,47 @@ def version_output(argv: Sequence[str], repo_root: Path) -> str:
     return sanitize_text(out.strip(), repo_root)
 
 
+def base_runtime_preflight(repo_root: Path) -> dict[str, object]:
+    if sys.version_info[:2] != PYTHON_MAJOR_MINOR:
+        raise CertificationError(
+            "Python 3.12 required; found " + platform.python_version()
+        )
+    executable = Path(sys.executable).resolve()
+    try:
+        executable.relative_to(repo_root.resolve())
+    except ValueError:
+        pass
+    else:
+        raise CertificationError(
+            "Python environment must live outside the repository"
+        )
+    node = version_output(("node", "--version"), repo_root)
+    match = re.search(r"(\d+)", node)
+    if not match or int(match.group(1)) != NODE_MAJOR:
+        raise CertificationError("Node 22 required; found " + node)
+    residues = [
+        rel
+        for rel in (
+            ".artifacts/v10-app",
+            "tools/readme_visuals/node_modules",
+        )
+        if (repo_root / rel).exists()
+    ]
+    if residues:
+        raise CertificationError(
+            "dedicated checkout required; pre-existing generated residue: "
+            + ", ".join(residues)
+        )
+    return {
+        "python_version": platform.python_version(),
+        "python_implementation": platform.python_implementation(),
+        "python_environment_location": "OUTSIDE_REPOSITORY",
+        "node_version": node,
+        "npm_version": version_output(("npm", "--version"), repo_root),
+        "git_version": version_output(("git", "--version"), repo_root),
+    }
+
+
 def environment_snapshot(repo_root: Path) -> dict[str, object]:
     if sys.version_info[:2] != PYTHON_MAJOR_MINOR:
         raise CertificationError(
@@ -664,6 +715,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     expected_sha = validate_full_sha(args.expected_sha, "expected SHA")
     expected_main_sha = validate_full_sha(args.expected_main_sha, "expected main SHA")
     expected_branch = args.expected_branch
+    if expected_branch != DEFAULT_BRANCH:
+        raise CertificationError(
+            "MM01 Local Certification v1 only accepts the canonical MM01 branch"
+        )
     if os.environ.get("GITHUB_ACTIONS", "").lower() == "true":
         raise CertificationError("local certification must not run inside GitHub Actions")
 
@@ -694,6 +749,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     started_utc = utc_now()
 
     try:
+        base_runtime = base_runtime_preflight(repo_root)
         input_hashes_before = hash_inputs(repo_root)
         drift = check_workflow_drift(repo_root)
         pre_state = git_state(repo_root)
@@ -702,6 +758,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "captured_utc": utc_now(),
             "state": pre_state,
             "workflow_drift": drift,
+            "base_runtime": base_runtime,
             "critical_inputs_sha256": input_hashes_before,
         }
         write_json(output_dir / "preflight.json", preflight)
