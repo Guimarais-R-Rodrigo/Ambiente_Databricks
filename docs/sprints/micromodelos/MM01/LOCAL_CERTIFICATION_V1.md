@@ -139,3 +139,22 @@ No Windows, entrypoints de ferramentas Node podem existir como shims `.cmd`/`.ba
 - sanitizar paths locais nos registros probatórios.
 
 Essa adaptação é exclusivamente de transporte do comando no sistema operacional. Ela não altera o conteúdo lógico dos gates nem permite substituir comandos.
+
+
+## 11. Interrupções controláveis
+
+Interrupção não é sucesso.
+
+Se um step receber `KeyboardInterrupt` e o processo Python continuar com controle suficiente para tratar o evento, o certifier deve:
+
+- registrar o step com `status=INTERRUPTED`;
+- manter `exit_code=null`;
+- gravar log específico da interrupção;
+- registrar `reason`;
+- interromper o plano fail-closed;
+- tentar coletar postflight;
+- produzir manifest, checksums e ZIP de falha.
+
+O handler externo também captura `KeyboardInterrupt` quando possível para preservar a trilha probatória.
+
+Esse mecanismo não promete recuperar terminação externa abrupta que encerre o processo sem devolver controle ao Python. Nessas situações, a ausência de manifest/postflight/ZIP continua sendo evidência de uma execução incompleta e nunca pode ser reinterpretada como PASS.
