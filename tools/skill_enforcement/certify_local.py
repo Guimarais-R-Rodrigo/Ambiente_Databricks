@@ -127,6 +127,10 @@ _SE07_TEST_STEP = (
     "se07_policy_tests",
     [sys.executable, "-B", "tools/tests/test_skill_enforcement_se07.py", "-v"],
 )
+_SE08_POLICY_IO_STEP = (
+    "se08_policy_io_tests",
+    [sys.executable, "-B", "tools/tests/test_skill_enforcement_policy_io.py", "-v"],
+)
 _SE08_TEST_STEP = (
     "se08_operational_tests",
     [sys.executable, "-B", "tools/tests/test_skill_enforcement_se08.py", "-v"],
@@ -233,6 +237,7 @@ PROFILE_STEPS: dict[str, list[tuple[str, list[str]]]] = {
         _SE06_EVAL_STEP,
         _SE07_POLICY_STEP,
         _SE07_TEST_STEP,
+        _SE08_POLICY_IO_STEP,
         _SE08_TEST_STEP,
         ("certifier_regression", [sys.executable, "-B", "tools/tests/test_certify_local.py", "-v"]),
         *_COMMON_FINAL_STEPS,
