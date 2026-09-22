@@ -217,12 +217,14 @@ class CoreTests(_ThemeFixture, unittest.TestCase):
 
     def test_missing_dependencies_reported_without_install(self):
         code = "import sys;sys.path.insert(0,sys.argv[1]);from hub_snippets.visual.tema import load_reference_theme,ThemeError\ntry:load_reference_theme()\nexcept ThemeError as e:print(e.code)"
-        p=subprocess.run([sys.executable,'-B','-S','-c',code,str(PRODUCT)],capture_output=True,text=True,timeout=15)
+        env=dict(os.environ);env.pop('PYTHONPATH',None)
+        p=subprocess.run([sys.executable,'-B','-S','-c',code,str(PRODUCT)],capture_output=True,text=True,timeout=15,env=env)
         self.assertEqual(p.returncode,0,p.stderr);self.assertEqual(p.stdout.strip(),'DEPENDENCY_MISSING')
 
     def test_import_without_third_party_modules_or_platform(self):
         code="import sys;sys.path.insert(0,sys.argv[1]);from hub_snippets.visual.tema import normalize_color;print(normalize_color('#abc123'));assert not any(x in sys.modules for x in ['jsonschema','referencing','pyspark','plotly','pandas','mlflow','streamlit'])"
-        p=subprocess.run([sys.executable,'-B','-S','-c',code,str(PRODUCT)],capture_output=True,text=True,timeout=15)
+        env=dict(os.environ);env.pop('PYTHONPATH',None)
+        p=subprocess.run([sys.executable,'-B','-S','-c',code,str(PRODUCT)],capture_output=True,text=True,timeout=15,env=env)
         self.assertEqual(p.returncode,0,p.stderr);self.assertEqual(p.stdout.strip(),'#ABC123')
 
     def test_api_is_exhaustive(self):
@@ -260,11 +262,21 @@ class FileTests(_ThemeFixture, unittest.TestCase):
             (Path(td)/'x.txt').write_bytes(self.raw);self.reject('PATH_EXTENSION',load_theme,td,'x.txt')
     def test_symlink_file(self):
         with tempfile.TemporaryDirectory() as td:
-            (Path(td)/'real.json').write_bytes(self.raw);(Path(td)/'link.json').symlink_to(Path(td)/'real.json')
+            (Path(td)/'real.json').write_bytes(self.raw)
+            try:
+                (Path(td)/'link.json').symlink_to(Path(td)/'real.json')
+            except (OSError, NotImplementedError) as exc:
+                self.skipTest(f'filesystem sem symlink de arquivo: {exc}')
             self.reject('PATH_SYMLINK',load_theme,td,'link.json')
     def test_symlink_parent(self):
         with tempfile.TemporaryDirectory() as td:
-            root=Path(td);(root/'real').mkdir();(root/'real/x.json').write_bytes(self.raw);(root/'link').symlink_to(root/'real',target_is_directory=True)
+            root=Path(td);(root/'real').mkdir();(root/'real/x.json').write_bytes(self.raw)
+            link=root/'link'
+            if os.name == 'nt':
+                import _winapi
+                _winapi.CreateJunction(str(root/'real'),str(link))
+            else:
+                link.symlink_to(root/'real',target_is_directory=True)
             self.reject('PATH_SYMLINK',load_theme,root,'link/x.json')
     def test_directory_is_not_configuration(self):
         with tempfile.TemporaryDirectory() as td:
@@ -290,6 +302,10 @@ class FileTests(_ThemeFixture, unittest.TestCase):
 
 
 
+def _path_endswith(path: Path, *parts: str) -> bool:
+    return tuple(Path(path).parts[-len(parts):]) == tuple(parts)
+
+
 class LayoutTests(unittest.TestCase):
     def test_real_layout(self):
         from temas_v02_check import check_layout
@@ -312,7 +328,7 @@ class LayoutTests(unittest.TestCase):
         from temas_v02_check import check_layout
         original=Path.exists
         def exists(path):
-            if str(path).endswith('V01/theme.schema.json'):return True
+            if _path_endswith(path,'V01','theme.schema.json'):return True
             return original(path)
         with patch.object(Path,'exists',exists):
             with self.assertRaisesRegex(ValueError,'V02_DUPLICATE_SCHEMA'):check_layout()
@@ -321,7 +337,7 @@ class LayoutTests(unittest.TestCase):
         from temas_v02_check import check_layout
         original=Path.read_bytes
         def read(path):
-            if str(path).endswith('exemplos/legado_notebook.json'):return b'{}'
+            if _path_endswith(path,'exemplos','legado_notebook.json'):return b'{}'
             return original(path)
         with patch.object(Path,'read_bytes',read):
             with self.assertRaisesRegex(ValueError,'V02_FIXTURE_DRIFT'):check_layout()
@@ -378,7 +394,7 @@ class AdditionalGuards(_ThemeFixture, unittest.TestCase):
         from temas_v02_check import check_layout
         original=Path.read_text
         def read(path,*args,**kwargs):
-            return 'changed' if str(path).endswith('identidade_visual/TOKENS.md') else original(path,*args,**kwargs)
+            return 'changed' if _path_endswith(path,'identidade_visual','TOKENS.md') else original(path,*args,**kwargs)
         with patch.object(Path,'read_text',read):
             with self.assertRaisesRegex(ValueError,'V02_DICTIONARY'):check_layout()
 
@@ -386,7 +402,7 @@ class AdditionalGuards(_ThemeFixture, unittest.TestCase):
         from temas_v02_check import check_layout
         original=Path.read_text
         def read(path,*args,**kwargs):
-            return '' if str(path).endswith('tema/__init__.py') else original(path,*args,**kwargs)
+            return '' if _path_endswith(path,'tema','__init__.py') else original(path,*args,**kwargs)
         with patch.object(Path,'read_text',read):
             with self.assertRaisesRegex(ValueError,'V02_API'):check_layout()
 
@@ -400,7 +416,7 @@ class AdditionalGuards(_ThemeFixture, unittest.TestCase):
     def test_layout_changed_schema(self):
         from temas_v02_check import check_layout
         original=Path.read_bytes
-        def read(path):return b'{}' if str(path).endswith('identidade_visual/theme.schema.json') else original(path)
+        def read(path):return b'{}' if _path_endswith(path,'identidade_visual','theme.schema.json') else original(path)
         with patch.object(Path,'read_bytes',read):
             with self.assertRaisesRegex(ValueError,'V02_SCHEMA_HASH'):check_layout()
 
