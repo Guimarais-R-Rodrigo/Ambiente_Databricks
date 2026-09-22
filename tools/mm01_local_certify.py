@@ -253,11 +253,25 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _redact_path_variants(text: str, raw_path: str, marker: str) -> str:
+    if not raw_path:
+        return text
+
+    variants = {raw_path, raw_path.replace("\\", "/")}
+    escaped = raw_path
+    for _ in range(3):
+        escaped = escaped.replace("\\", "\\\\")
+        variants.add(escaped)
+
+    for variant in sorted(variants, key=len, reverse=True):
+        if variant:
+            text = text.replace(variant, marker)
+    return text
+
+
 def sanitize_text(text: str, repo_root: Path) -> str:
-    text = text.replace(str(repo_root), "<REPO>")
-    home = str(Path.home())
-    if home:
-        text = text.replace(home, "<HOME>")
+    text = _redact_path_variants(text, str(repo_root), "<REPO>")
+    text = _redact_path_variants(text, str(Path.home()), "<HOME>")
     text = re.sub(
         r"([A-Za-z][A-Za-z0-9+.-]*://)([^/\s@]+)@",
         r"\1<REDACTED>@",
