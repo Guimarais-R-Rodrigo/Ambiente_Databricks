@@ -380,7 +380,8 @@ class CertifierTests(unittest.TestCase):
         stderr.write_bytes(b"")
         stdout.write_bytes(b"partial")
         child.write_text('{"pid": 123}', encoding="utf-8")
-        record = {"cleanup": "FAILED", "launcher_pid": 456, "pid": 123}
+        record = {"cleanup": "FAILED", "launcher_pid": 456, "pid": 123,
+                  "temporary_cleanup_error_monotonic_ns": time.monotonic_ns()}
         error = PermissionError(13, "synthetic native sharing violation", str(stderr))
         error.winerror = 32
         file_calls = []
@@ -485,7 +486,7 @@ class CertifierTests(unittest.TestCase):
             file_process_ids_provider=fail_owners,
             pid_state_provider=fail_pid,
         )
-        self.assertEqual(["rm", ("owners", str(stderr)), ("pid", 7), ("pid", 8)], calls)
+        self.assertEqual([("owners", str(stderr)), "rm", ("pid", 7), ("pid", 8)], calls)
         self.assertEqual("UNOBSERVABLE", observation["restart_manager"]["status"])
         self.assertEqual("UNOBSERVABLE", observation["file_process_ids_using_file"][0]["status"])
         self.assertEqual("UNOBSERVABLE", observation["pid_states"]["launcher_pid"]["status"])
