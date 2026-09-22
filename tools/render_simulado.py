@@ -100,7 +100,9 @@ def main() -> int:
         else:
             shutil.copy2(src, dst)
 
-    (target_root / "README_GERADO.md").write_text(MARKER, encoding="utf-8")
+    (target_root / "README_GERADO.md").write_text(
+        MARKER, encoding="utf-8", newline="\n"
+    )
 
     n_files = sum(1 for p in target_root.rglob("*") if p.is_file())
     print(f"\nOK: {n_files} arquivos renderizados em {TARGET_ROOT}/")

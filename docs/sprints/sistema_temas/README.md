@@ -1,12 +1,16 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Estado vigente — V00–V12 integradas; V13 em S0
+## Estado vigente — V00–V13 integradas; V14 S0 em execução
 
-V00–V12 estão aceitas e integradas no Git. A V12 foi integrada pela PR #54 no merge `a6309a4d0b3a3530c52330e65ee5a18674118378`. Seu fechamento preserva estados distintos, sem transformar ausência de autorização em PASS: `DOC-02`, `DOC-03`, `SEC-01`, `UAT-01` e `V12-AIBI-01` possuem PASS no alcance documentado; `A11-01` permanece **FAIL** na issue #57; `V12-LAB-01`, `V12-APP-01` e `V12-AIBI-02` permanecem **BLOQUEADO_AUTORIZACAO**.
+V00–V13 estão aceitas e integradas no Git. A V13 concluiu consolidação operacional e handoff sem transformar ausência de autorização em PASS e sem executar mutação Databricks.
 
-O [Plano Mestre V13](V13/PLANO_MESTRE.md) foi aceito e integrado pela PR #58 no merge `c339ed177f4b901a907ea6ad43f0803f5b7ccc09`. A etapa corrente é **S0 — reconciliação pós-V12 e freeze de escopo**, em candidata documental separada. Consulte o [README vivo da V13](V13/README.md) e o [checkpoint S0](V13/CHECKPOINT_S0.md). S1 não foi iniciada; a S0 não altera runtime/produto, não edita `Novo_Ambiente_Simulado/` e não executa mutação Databricks.
+A S7 foi integrada pela PR #66 no merge `62e9404851d6a7902371bd5b6531a113d521311c`. Os **15/15 workflows de `push`** desse merge concluíram em `success`. O workflow V13 pós-merge confirmou S1–S7, 701/701 regressões, V00 12/12, validador sem falhas/avisos e `HUMAN-01 = PASS`. A [auditoria pós-merge V13](V13/AUDITORIA_POS_MERGE.md) registra a certificação e o drift exclusivamente documental encontrado nos índices vivos.
 
-Para quem nunca entrou no Hub: nesta etapa não há seletor, App, dashboard ou configuração para aplicar. A finalidade da S0 é alinhar os índices ao estado real, confirmar os owners canônicos e deixar claro o que pertence à V13 e o que permanece reservado à V14 antes de qualquer implementação operacional.
+Os estados herdados continuam distintos: `DOC-02`, `DOC-03`, `SEC-01`, `UAT-01` e `V12-AIBI-01` possuem PASS somente no alcance documentado; `A11-01` permanece **FAIL** na issue #57; `V12-LAB-01`, `V12-APP-01` e `V12-AIBI-02` permanecem **BLOQUEADO_AUTORIZACAO**.
+
+O [Plano Mestre V14](V14/PLANO_MESTRE.md) foi aceito e integrado pela PR #70 no merge `350dcf0b37e730042ef961f12f11b30b2660d2c6`; os **15/15 workflows de `push`** desse SHA concluíram em `success`. A V14 está agora em **S0 — reconciliação pós-V13 e freeze de readiness**, com estado vivo no [README V14](V14/README.md) e evidência no [checkpoint S0](V14/CHECKPOINT_S0.md). **S1–S8 não foram iniciadas.** S0 não é production readiness, não decide go-live e não autoriza Databricks.
+
+Para quem nunca entrou no Hub: use o [README V14](V14/README.md) para entender o estado corrente e o [handoff S7](V13/S7_HANDOFF_OPERACIONAL.md) para a operação herdada. A V13 continua dona de inventário, preflight, release/rollback local, diagnóstico, compatibilidade/acessibilidade, ensaios e handoff; a V14 não duplica esses mecanismos.
 
 A V11 continua dona da ponte fail-closed entre um `ResolvedTheme` `notebook` e capacidades documentadas de temas nativos Databricks AI/BI. O schema central permanece inalterado e `context="aibi"` continua reservado. A matriz integrada cobre exatamente os 48 tokens notebook: **3 traduzidos, 23 aproximados e 22 não suportados**. Somente as três correspondências traduzidas podem ter binding direto; aproximações exigem revisão e itens não suportados permanecem explícitos.
 
@@ -42,7 +46,7 @@ A V08 foi aceita por Rodrigo em 14/09/2026 e integrada pelo PR #42. O head final
 
 A [V08 — integração transversal com skills, padrões e Manual](V08/README.md) reconcilia orientação e roteamento com as capacidades V02–V07 já integradas. Skills deixam de competir com o contrato visual, o template EDA deixa de possuir política própria de tema e o Manual/padrões passam a descrever `ResolvedTheme`, Visual Lab, geração editorial, consumidores V07 e limites atuais de forma consistente.
 
-A [matriz transversal](V08/MATRIZ_INTEGRACAO.json), o [registro de testes](V08/TESTES.md) e o [checkpoint V08](V08/CHECKPOINT_V08.md) distinguem superfícies alteradas, decisões de não edição, failures preservados e a proibição de mudança runtime. A V08 não altera módulos Python de `hub_snippets` ou `hub_scripts`.
+A [matriz transversal](V08/MATRIZ_INTEGRACAO.json), o [checkpoint](V08/CHECKPOINT_V08.md) e o [registro de testes](V08/TESTES.md) distinguem superfícies alteradas, decisões de não edição, failures preservados e a proibição de mudança runtime. A V08 não altera módulos Python de `hub_snippets` ou `hub_scripts`.
 
 Antes do merge, o gate final comprovou V08 **22/22**, regressões V01–V08 **405/405**, V00 **12/12**, validador **0 falhas / 0 avisos** e `V08_RUNTIME_EDIT=0`. Depois do merge, os dez workflows da `main` — CI geral e V00–V08 — concluíram com `success`.
 

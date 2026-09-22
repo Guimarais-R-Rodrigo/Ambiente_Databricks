@@ -1,0 +1,67 @@
+name: Skill Enforcement SE01
+
+on:
+  pull_request:
+    paths:
+      - "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/**"
+      - "Novo_Ambiente_Simulado/**"
+      - "tools/skill_enforcement/**"
+      - "tools/tests/test_skill_enforcement_se01.py"
+      - "docs/decisions/ADR-0021-execucao-verificavel-de-skills.md"
+      - "docs/sprints/skill_enforcement/**"
+      - ".github/workflows/skill-enforcement-se01.yml"
+      - "README.md"
+  push:
+    branches: [main]
+    paths:
+      - "ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/**"
+      - "Novo_Ambiente_Simulado/**"
+      - "tools/skill_enforcement/**"
+      - "tools/tests/test_skill_enforcement_se01.py"
+      - "docs/decisions/ADR-0021-execucao-verificavel-de-skills.md"
+      - "docs/sprints/skill_enforcement/**"
+      - ".github/workflows/skill-enforcement-se01.yml"
+      - "README.md"
+
+permissions:
+  contents: read
+
+jobs:
+  se01:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Contrato v0.1
+        run: python -B tools/skill_enforcement/validate_contracts.py
+
+      - name: Testes SE01
+        run: python -B tools/tests/test_skill_enforcement_se01.py
+
+      - name: Validação estrutural
+        run: python tools/validate_assistant.py
+
+      - name: Renderizar simulado canonicamente
+        run: python tools/render_simulado.py --write
+
+      - name: Publicar artifact do skill renderizado
+        uses: actions/upload-artifact@v4
+        with:
+          name: se01-skill-renderizado
+          path: Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-eda-profissional/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Renderer canônico não pode deixar diff
+        run: git diff --exit-code -- Novo_Ambiente_Simulado
+
+      - name: Snapshot README
+        run: python tools/validate_assistant.py --conferir-readme

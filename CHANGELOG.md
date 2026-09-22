@@ -1,9 +1,229 @@
 # Changelog
 
+
+## 2026-09-21 — SE07: hotfix pós-merge para policy com UTF-8 inválido
+
+### Corrigido
+
+- (ChatGPT) `tools/skill_enforcement/se07_policy.py`: `UnicodeDecodeError` passa a ser tratado como `POLICY_UNREADABLE` tanto no validator quanto na leitura de resumo, preservando `FAIL` estruturado e evitando traceback no CLI `--json`.
+- (ChatGPT) `tools/tests/test_skill_enforcement_se07.py`: o adversarial de policy ilegível passa a cobrir também arquivo existente com bytes UTF-8 inválidos.
+
+### Proveniência
+
+- Achado P2 tardio do review automatizado da PR #81, surgido após o merge `73cacdd44fbccc80da835d96388ca23b6a6fcefc`. O hotfix não altera `policy.json`, níveis, registry, runtime das skills nem as dívidas preservadas de SE06/SE07.
+
+
+## 2026-09-21 — SE07: hotfix pós-merge para policy ilegível
+
+### Corrigido
+
+- (ChatGPT) `tools/skill_enforcement/se07_policy.py`: `summarize()` preserva o `POLICY_UNREADABLE` emitido pelo validator quando o arquivo de policy está ausente, ilegível ou com JSON malformado e retorna `FAIL` estruturado em vez de traceback.
+- (ChatGPT) `tools/tests/test_skill_enforcement_se07.py`: cobertura adversarial para policy ausente e JSON malformado, incluindo execução CLI `--json`, exit 1, payload estruturado e ausência de traceback.
+
+### Proveniência
+
+- Achado P2 do review automatizado da PR #80, surgido após o merge da SE07. O hotfix não altera policy, níveis, registry, runtime das skills nem a dívida residual já aceita.
+
+
+## 2026-09-21 — SE07: encerramento humano com residual conhecido
+
+### Atualizado
+
+- (ChatGPT) Registrado o aceite humano explícito da PG-01 apesar da falha do oráculo sintético de resíduo. O gate permanece FAIL, o FULL permanece 16/16 PASS e `SE07_FULLY_CERTIFIED=false`.
+- (ChatGPT) SE07 encerrada com DoD de policy registry 14/14 satisfeito, dívida residual preservada e sem promoção global adicional de `hub-ml-criar-objeto`.
+- (ChatGPT) A candidata testada local `4b8bb46d...` e a publicação remota `b5a4eb9d...` compartilham parent `8db4c984...` e a tree exata `c36e5015...`.
+
+
+## 2026-09-21 — SE07: PG-01, prontidão da fixture de timeout
+
+### Corrigido
+
+- (Codex) `tools/tests/test_validate_create_readme.py`: integrada localmente a proposta PG-01 conferida por SHA-256; a fixture observa prontidão com prazo finito antes do timeout real de 1,5 s e exige o artefato de PIDs. Nenhum timeout ou algoritmo de produção mudou.
+
+### Notas
+
+- (Codex) `docs/sprints/skill_enforcement/SE07/TESTES.md`: documentados escopo, cobertura independente de startup e controles Windows (cinco aprovações, duas reprovações esperadas). Novo SHA requer a bateria final completa; os aceites anteriores não aprovam esta alteração nem autorizam push.
+
+
+## 2026-09-21 — SE07: aceite humano da corretiva de cleanup
+
+### Atualizado
+
+- (ChatGPT) Registrado aceite humano explícito da corretiva `74f92f02...` em `CHECKPOINT.md` e no handoff correspondente. O aceite autoriza seguir à recertificação nativa Windows/NTFS, mas não equivale a PASS técnico, não elimina o WinError32 histórico e não promove canônica/current_level.
+
+
+## 2026-09-21 — SE07: decisão humana sobre o piloto README
+
+### Atualizado
+
+- (Codex) `docs/sprints/skill_enforcement/SE07/CHECKPOINT.md`: registrado o aceite humano de `19328661`, separado do resultado técnico NAO_PRONTA e do FAIL WinError32 preservado. Próximo passo recomendado: corretiva focalizada e recertificação; nenhum código ou nível alterado.
+
+## 2026-09-21 — SE07: corretiva de cleanup após auditoria (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) Suíte `tools/tests/test_certify_storage_cleanup.py`: oráculos externos de cancelamento, falha temporária/journal, resíduo, timeout e controles positivos.
+
+### Corrigido
+
+- (ChatGPT) `tools/skill_enforcement/certify_local.py`: separar término de processos da remoção temporária, registrar exceções completas e preservar cancelamento quando cleanup falha; nenhuma falha de limpeza vira PASS.
+- (ChatGPT) `test_validate_create_readme.py`: exigir cleanup agregado FAILED no erro sintético, sem perder interrupção/130 nem a evidência da exceção.
+- (ChatGPT) `README.md`: atualizar somente os dois censos medidos de arquivos/links alterados pela nova suíte e handoff; a validação histórica continua exigindo Git completo.
+
+### Notas
+
+- (ChatGPT) [Handoff da corretiva](docs/handoffs/2026-09-21_se07-auditoria-storage-cleanup.md): original NAO_APTA; causa nativa WinError32 não estabelecida; implementação local não equivale a certificação Windows, promoção ou aceite.
+
+## 2026-09-21 — SE07: piloto estreito README L3 (Codex)
+
+- (Codex, agente A) Runner generate/apply para create/readme/agregador, bytes determinísticos e bindings, criação exclusiva Windows/NTFS e evidência de efeitos/falhas sem homologação. Proteção ancestral foi refutada em v1 e corrigida com prova causal.
+- (Codex, agente B) Suíte adversarial independente: autorização, topologia, concorrência, interrupção real, parciais, persistência, releitura e retry; vermelhos preservados antes das correções.
+- (Codex, agente C) Gate em clone completo com overlay único e validator real, checks editoriais/links, binding base/path/bytes e regressões de cancelamento/cleanup. Reusa certifier aceito sem alterá-lo; erro intermediário de compartilhamento e limites de observação preservados.
+- (Codex, coordenação) F-04 aceita promovida por fast-forward; integração isolada, SKILL/manifest/renderer, interface pré-dispatch, checkpoint/testes/handoff e evidência bruta selada. D2/D9 parcialmente aprovada somente para o piloto; policy/contrato L2, SE06 e históricos preservados. Gates do SHA documental serão medidos depois do freeze, com publicação exclusiva da review se segura.
+
 Toda mudança relevante deste projeto é registrada aqui, em entradas curtas, sem
 expor identificadores corporativos, PII ou segredos. Formato: seções por data,
 subseções Adicionado/Atualizado/Corrigido/Removido, cada item com a IA autora
 entre parênteses. Template: `.claude/templates/changelog-entry.md`.
+
+
+## 2026-09-21 — SE07: corretiva SUP-F04-01/02/03 (Codex)
+
+### Corrigido
+
+- (Codex, agente A) Preservação da invocação, streams e exit observado quando o journal falha; início confirmado, ausente e desconhecido separados. Cancelamento durante campanha/finalização mantém saída não zero, sem alterar help/parsing.
+- (Codex, agente B) Regressões adversariais de persistência e cancelamento externo; teste de interrupção usa ready após print/flush, com casos pré-output e never-ready e cleanup observado.
+
+### Documentado
+
+- (Codex, coordenação) Integração com procedência dos patches, handoff/checkpoint/testes versionados, prova bruta externa identificada por hash, F-03 remota aceita e review condicionada aos gates/workflows. FAILs históricos e WinError32 intermediário preservados; D2/D9 continua proposta não aprovada. Gates do SHA documental serão medidos após seu congelamento.
+
+## 2026-09-21 — SE07: F-04/D10 e proposta D2/D9 (Codex)
+
+### Adicionado
+
+- (Codex, agente A) Suíte permanente do certifier com fault injection, controles externos, reserva concorrente de evidência e timeout real de árvore própria; preservados os gates e os consumidores existentes.
+- (Codex, agente B) Proposta D2/D9 NÃO APROVADA com matriz de conversão, fronteira runtime/repositório e piloto futuro de README agregador. Doze probes API L2 somente leitura na base, sem writer ou mudança de policy.
+
+### Corrigido
+
+- (Codex, coordenação após revisão B) Metadata Windows ausente/malformada impede sucesso; gate executado permanece registrado mesmo quando seu log falha; falha de cleanup é distinta de falha observada do gate na contagem.
+
+- (Codex, agente A) Certifier falha fechado em Git obrigatório não observável, reserva exclusiva de evidência, identidade final/cobertura e limites por processo. Saídas diagnósticas não certificam release limpa; falhas de persistência ou cleanup impedem sucesso.
+
+### Notas
+
+- (Codex, coordenação) Integração em clone e branch locais isolados, documentação operacional e snapshot README reconciliado com a medição final. Certificação do SHA exato e revisão interna B ficam no handoff externo; não equivalem a aceite humano, FULL multiplataforma ou homologação Free/Genie.
+
+## 2026-09-21 — SE07: aceite F-03 e reconciliação E-01/E-02 (Codex)
+
+### Corrigido
+
+- (Codex, coordenação) Retificação aditiva das duas campanhas Linux FULL FAIL e da terceira interrompida, com paths/hashes dos bytes recuperados; relatórios e logs históricos preservados.
+- (Codex, coordenação) Desambiguação textual de issues no contrato de auditoria: coleção vazia lista/tupla, normalizada para lista; fingerprint correspondente e espelho canônico, sem alteração do runner.
+
+### Notas
+
+- (Codex, coordenação) Aceite humano focalizado de F-03 registrado. Push do checkpoint bloqueado por credenciais Git; novo lote apenas local e sujeito à certificação própria. SE06, política D2 e níveis atuais preservados.
+
+## 2026-09-21 — SE07 F-03/D6: adapter canônico da auditoria (Codex)
+
+### Corrigido
+
+- (Codex) O adapter L3 da auditoria agora distingue verifier localizado, importado, chamado, concluído, retorno bem formado e conclusão validada. Falha de importação retorna envelope `NOT_REVERIFIED`; falha de chamada e retorno malformado retornam `NOT_PASS_REVERIFIED` com diagnóstico estruturado.
+- (Codex) `PASS_REVERIFIED` passa a exigir a forma canônica atual do verifier EDA, os quatro sinais positivos, `status="VALID"` e `issues` vazio. A suíte cobre import/call failure, não-mapping, mapeamentos incompletos, tipos inválidos, sucesso real sintético e retorno contraditório.
+
+### Estado e limites
+
+- (Codex) O aceite humano de `b6fb595...` é registrado como checkpoint L2 local publicado por fast-forward na branch SE07. A candidata F-03 é local e requer certificação/revisão próprias; não houve push dessa nova candidata, PR, Actions, Free/Genie, merge ou mudança de níveis.
+- (Codex) F-02 permanece preservado. F-04/D10, D2/D9, criar-objeto L3, R2, SE08, Receipt/proveniência, policy, scorer e SE06 continuam fora desta rodada.
+
+## 2026-09-20 — SE07 R1-C: confirmação residual do preflight L2 (Codex)
+
+### Corrigido
+
+- (Codex) P01: após fallback por ausência, o preflight volta a resolver estritamente o caminho efetivo. Um alias composto que normaliza para arquivo como ancestral agora bloqueia API/CLI, enquanto sufixo novo e dangling link interno simples continuam permitidos.
+
+### Validado e preservado
+
+- (Codex) P01 foi reproduzido primeiro em Linux/WSL Python 3.12.3, no blob R1-C hash-pinado; P02 (`missing/../cycle`) permaneceu bloqueado nesse runtime. A regressão POSIX é skip explícito no Windows, sem remover os vetores de junction Windows.
+- (Codex) F-02, renderer, `.gitattributes`, certifier, contrato, policy, D2, SE06 e componentes L3 permanecem fora desta correção. A nova candidata requer certificação própria e revisão; a R1 auditada permanece NAO_APTA.
+
+## 2026-09-20 — SE07 R1-C: correção pós-auditoria da R1 (Codex)
+
+### Corrigido
+
+- (Codex) F-01: resolução estrita antes da tolerância exclusiva a `FileNotFoundError`, bloqueando ciclos de junction Windows sem proibir destinos novos ou links internos resolvíveis. Regressões nativas de ciclos, origem/template, controles positivos e decisão D2 preservada.
+- (Codex) F-02: marker do renderer emitido explicitamente com LF, conforme `.gitattributes`, com teste de bytes, cópia fiel e duas renderizações idempotentes. Derivado regenerado pela ferramenta canônica.
+
+### Estado e limites
+
+- (Codex) R1 auditada `2d25bd2...` permanece `NAO_APTA`. Esta candidata corretiva exige FULL em clones novos Windows/Linux do mesmo SHA; identidades e resultados definitivos ficam no handoff externo indicado no checkpoint, sem autorreferência no commit.
+- (Codex) F-03 (adapter auditor L3) e F-04 (infraestrutura do certifier) continuam dívidas distintas; salvaguardas externas não corrigem esses componentes. Sem mudança de contrato, níveis, SE06, Receipt, política D2 ou autorização de escrita/publicação. R1-C é rótulo operacional, não nova sprint nem R2.
+
+## 2026-09-20 — SE07 R1: estabilização delimitada de criar-objeto L2 (Codex)
+
+### Corrigido
+
+- (Codex) Preflight de criar-objeto: contenção física de origem/destino/template, recusa de traversal, drive-relative, UNC e componentes inseguros de seção; aliases do mesmo objeto não satisfazem “converter é mover”.
+- (Codex) Entradas inadequadas na API/CLI retornam diagnóstico estruturado; falhas internas inesperadas não são disfarçadas de entrada inválida. Tipos, schema, níveis e permissões de escrita permanecem os do contrato vigente.
+
+### Adicionado e atualizado
+
+- (Codex) Regressões sintéticas na suíte SE07, incluindo seis tipos, links/junctions, hardlinks, template ausente e observação de ausência de escrita; prova dos defeitos originais preservada em bundle externo antes da correção.
+- (Codex) Checkpoint, README, testes e runbook reconciliados para distinguir baseline intacta, candidata local e pacote Free histórico; exemplos antigos permanecem identificados como históricos. Derivado regenerado pela ferramenta canônica.
+- (Codex) Reconciliação histórica, sem reivindicar autoria das implementações anteriores: a baseline herdada `a01d12ff4e0cb7cfd795ade164f9ce9daad372ba` passou os 15 gates do primeiro FULL_SE07_LOCAL da R1. O commit R1 exige evidência própria do SHA final no bundle externo indicado no checkpoint.
+
+### Limites preservados
+
+- (Codex) Por decisão explícita do usuário, origem `"."`, relações ancestral/descendente e destino existente em conversão mantêm a semântica herdada e ficam pendentes de política específica. PASS L2 não autoriza overwrite, merge ou conversão executada.
+- (Codex) Auditoria L3 foi apenas diagnosticada em fixtures externas; certifier, schemas, policy e SE06 não foram alterados. SE06 continua 24/25 observados, A1-R4 NOT_RUN e DoD INCOMPLETE. Sem L3 de criar-objeto, publicação Free, push, PR, Actions ou merge nesta rodada.
+
+## 2026-09-16 — SE02: preflight verificável do Skill Enforcement Framework (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) `hub_scripts.skill_execution` com API pública `run_preflight`, resultado estruturado `PASS`/`BLOCKED`, decisões por recurso/template e `writes_performed=false`.
+- (ChatGPT) Script fino `hub-ml-eda-profissional/scripts/preflight.py`, suíte SE02 com 18 casos e workflow dedicado `Skill Enforcement SE02`.
+
+### Atualizado
+
+- (ChatGPT) `hub-ml-eda-profissional` passa a exigir preflight L2 antes do core analítico, mantendo `execution_contract` v0.1 em `mode="audit"`.
+- (ChatGPT) Manual Técnico, catálogo de `hub_scripts`, Plano Mestre e ambiente simulado foram reconciliados; `Novo_Ambiente_Simulado` foi materializado exclusivamente pelo renderer canônico.
+- (ChatGPT) Branch SE02 reconciliada com `main@ae9337204a7c769c0b28b33321c8b81afdff6bae` após correção transversal do guard V08, sem force-push.
+
+### Evidências e limites
+
+- (ChatGPT) A implementação preserva SE03 não iniciada: sem runner determinístico, Execution Receipt, postflight, `mode="enforce"` ou alteração de `.assistant_instructions.md`.
+- (ChatGPT) Condições sem contexto explícito são fail-closed; a resistência do Genie Code a contexto falso/bypass permanece hipótese a medir no Databricks Free e não é tratada como enforcement comprovado.
+- (ChatGPT) Failures intermediários de estrutura, derivado, snapshot, Manual Técnico e guard V08 permanecem históricos e não são reclassificados como PASS.
+
+## 2026-09-16 — SE01: contrato verificável e capability experiment (ChatGPT)
+
+### Adicionado
+
+- (ChatGPT) `execution_contract.json` v0.1 adjacente à `hub-ml-eda-profissional`, com 10 recursos, 4 templates, políticas `required`/`conditional`/`optional`, evidências declarativas e `mode="audit"`.
+- (ChatGPT) JSON Schema Draft 2020-12, validador estático somente stdlib, suíte SE01 e workflow dedicado; o validator resolve API pública por `__init__.py`/AST e recusa paths de template inseguros, condições fora do vocabulário e modos não suportados.
+- (ChatGPT) ADR-0021 para registrar a decisão de contrato verificável antes de qualquer preflight/runner definitivo.
+
+### Atualizado
+
+- (ChatGPT) Branch `sef/SE01-contrato` reconciliada por merge normal com `main@79f53ba1a131d93cbb0fea7bd885da32b82a7588`, preservando integralmente V14 e sem force-push; após a reconciliação, `behind_by=0`.
+- (ChatGPT) `Novo_Ambiente_Simulado` rematerializado a partir da saída real de `tools/render_simulado.py --write`; o probe temporário e sua seção foram retirados da fonte e do derivado, enquanto o contrato permanece.
+- (ChatGPT) Snapshot verificável do README raiz novamente medido em 1501 arquivos e 1979 links; os demais campos do bloco permaneceram coerentes com a execução.
+- (ChatGPT) `tools/publicar_free.py` compatibilizado com notebook já materializado e fallback SOURCE, com regressões específicas na suíte SE01.
+
+### Evidências
+
+- (ChatGPT) Capability probe histórico no Databricks Free: `SEF_CAPABILITY_PROBE_V0_1`, `assistant_root_resolved=true`, import público de `fmt_int`, `sample_result="1.234"`, `writes_performed=false` e `status="PASS"` no cenário testado.
+- (ChatGPT) Regressão natural EDA histórica: PASS para ausência de degradação material atribuível ao contrato/probe; isso não constitui enforcement nem aprovação científica do notebook.
+- (ChatGPT) Na reconciliação final, failures intermediários permaneceram failures: primeiro o renderer detectou o derivado defasado; depois o snapshot detectou 1490/1978 versus 1501/1979. Após as correções correspondentes, o workflow dedicado SE01 passou integralmente na árvore com snapshot reconciliado.
+
+### Limites
+
+- (ChatGPT) SE01 permanece audit-only: não implementa preflight, deterministic runner, Execution Receipt, postflight, fail-closed runtime ou `mode="enforce"`; SE02 não foi iniciada.
+- (ChatGPT) A evidência do probe é histórica e não prova execução determinística universal pelo Genie Code. O script experimental foi aposentado do produto final, sem apagar os resultados observados.
+- (ChatGPT) PR #69 permanece Draft e não pode ser integrada sem aceite humano explícito; a homologação desta sprint não autoriza iniciar SE02.
 
 ## 2026-09-14 — MM01: candidata do contrato canônico de micromodelos (ChatGPT)
 

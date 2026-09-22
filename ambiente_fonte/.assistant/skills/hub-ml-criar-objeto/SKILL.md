@@ -25,6 +25,103 @@ Dois contra-exemplos, para não roubar a vez de quem faz o trabalho de verdade:
   objeto existente, não criação. Só entra aqui se o pedido for **converter ao
   padrão**; mudar comportamento é trabalho de quem conhece o domínio.
 
+## Executar o preflight SEF L2 antes de criar ou converter
+
+Pedidos puramente explicativos sobre o formato de um objeto permanecem em orientação.
+Antes de **criar** ou **converter** qualquer objeto, executar
+`scripts/preflight.py::preflight`.
+
+O contexto mínimo deve declarar:
+
+- `operation="create"|"convert"`;
+- `object_type` entre os seis tipos fechados;
+- `object_name`;
+- `type_confirmed=true`;
+- `existing_capability_checked=true`;
+- `existing_capability_status="not_found"|"found"`.
+
+Quando uma capacidade existente for encontrada, registrar também
+`overlap_resolution` como uma decisão explícita. Criar um recorte novo só é
+permitido com `create_declared_slice`; decisões como `extend_existing`,
+`convert_existing` ou `refuse` bloqueiam a rota de criação de objeto novo.
+
+Para snippet, informar `snippet_section`. As seis seções atuais são aceitas
+diretamente; uma seção nova exige `new_snippet_section_authorized=true`.
+Essa autorização continua limitada a um único componente de caminho seguro.
+Origem, destino e template devem resolver dentro da raiz `.assistant`, inclusive
+quando há links ou junctions nos ancestrais; drive-relative, UNC e traversal
+não são destinos relativos válidos.
+Resolução cíclica ou erro de resolução bloqueia a pré-condição. Um sufixo
+inexistente sob cadeia resolvível e contida continua elegível; isso inclui
+destino novo por link quebrado interno. A tolerância à ausência não mascara um
+arquivo como ancestral nem outro erro revelado pelo caminho efetivo normalizado.
+Não é proteção de escrita contra TOCTOU.
+
+Para README, informar `readme_scale="agregador"|"objeto"` e o destino
+relativo. Para notebook, informar o destino relativo `.py`.
+
+Em conversão, informar `source_relative`; o preflight valida que a origem
+existe e preserva a regra “converter é mover, não mudar comportamento”.
+Aliases que resolvem para o mesmo objeto não são movimento. A política para
+origem `"."`, relações ancestral/descendente e destino existente permanece
+pendente de decisão específica; o PASS L2 nesses casos não autoriza overwrite,
+merge, remoção nem execução de conversão.
+
+O preflight:
+
+- resolve o template canônico e o destino antes da escrita;
+- valida somente regras de nome realmente definidas nesta skill;
+- não cria pasta, arquivo, `__init__.py` ou notebook;
+- não executa `api_publica.py`, `validate_assistant.py` ou código analítico;
+- retorna `BLOCKED` quando uma decisão obrigatória ainda não existe.
+
+A API e a CLI devolvem diagnóstico estruturado para entradas inválidas; falhas
+inesperadas de implementação continuam visíveis como erros. Resolver o path do
+template não prova sua leitura: `template.read_status=NOT_OBSERVABLE`.
+A contenção é conferida no instante do preflight, sem garantia contra troca
+concorrente de links depois da checagem. Este L2 não é um mecanismo de escrita.
+
+## Piloto determinístico — somente create/readme/agregador
+
+`scripts/run.py` oferece `generate` e `apply` separados. É piloto local;
+policy e `current_level=L2` continuam inalterados. O contrato e o preflight L2
+acima preservam suas regras; a superfície writer impõe limites adicionais.
+
+`generate(context, document, base_sha=..., assistant_root=...)` chama L2,
+lê o template agregador e devolve bytes completos UTF-8/LF em memória.
+`document` declara `title`, `identity`, `purpose`, `usage`, `limitations`,
+`next_steps` e `items` (`path`, `description`) correspondentes à pasta real.
+O binding registra operação/tipo/escala, destino, hash/tamanho dos bytes,
+generation_id, base Git, release e template. GERADO não é validado ou escrito.
+
+A validação estrutural depende de `tools/skill_enforcement/validate_create_readme.py`
+no repositório: clone descartável completo, overlay exato e validator real.
+Essa ferramenta não viaja no produto. O runtime exige seu registro vinculado;
+não alega executar `tools/` nem autenticar o emissor do registro local.
+
+`apply(candidate, authorization, validation, assistant_root=...,
+evidence_dir=..., evidence_authorized=True)` exige autorização
+`AUTHORIZE_CREATE`, authority `external_confirmation_record`, identificador
+não vazio e binding exatamente correspondente. Esse artefato prova apresentação
+de registro, não identidade humana ou assinatura. Não gerar autorização automática.
+O caller precisa autorizar separadamente a persistência em diretório externo
+novo de evidência. Sem isso, nenhuma escrita do produto é permitida.
+
+Somente um `README.md` ausente, em pasta real existente, dentro da raiz permitida.
+Windows/NTFS local é o envelope suportado quando demonstrado no host; outros
+hosts/filesystems bloqueiam. Não suportar symlink/junction nos ancestrais,
+hardlink/destino existente, escape, conversão, novos diretórios ou overwrite.
+`apply` revalida bindings, bytes, release/template, L2, raiz/ancestrais e ausência;
+nunca regenera o conteúdo. Criação exclusiva falha em caso de concorrência.
+
+Evidência diferencia GERADO, validação apresentada, autorização apresentada,
+ESCRITO e falha/interrupção. `homologated=False` sempre. Se houver criação
+parcial ou erro após a escrita, conservar o efeito e registrar inconclusão;
+não apagar nem repetir para sobrescrever. Inspecionar bytes e evidência antes
+de uma decisão humana de recuperação. Retry com destino existente bloqueia.
+O verifier comprova integridade/coerência dos registros, não autenticidade
+humana nem transação universal. Free/Genie e promoção de nível são gates futuros.
+
 ## Fluxo
 
 ### 1. Escolher o tipo, antes de escrever qualquer linha

@@ -24,10 +24,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-# `import-dir` não honra o marcador de notebook: envia tudo como arquivo. Os
-# módulos da biblioteca precisam mesmo ser arquivo, senão o import quebra — mas o
-# material didático precisa ser notebook, ou não há células para executar.
-# A detecção é canônica em notebook_marker.py; ver o docstring de lá.
+# `import-dir` precisa preservar módulos `.py` como FILE, mas versões atuais da
+# CLI também podem reconhecer notebooks SOURCE e materializá-los diretamente sem
+# a extensão. O fallback individual abaixo só é usado quando o objeto remoto não
+# tiver sido materializado como NOTEBOOK. A detecção local continua canônica em
+# notebook_marker.py; ver o docstring de lá.
 from notebook_marker import eh_notebook  # noqa: E402
 from project_policy import (  # noqa: E402
     CORPORATE_RE,
@@ -162,6 +163,12 @@ def remote_walk(path: str) -> list[dict]:
     return encontrados
 
 
+def _notebook_ja_materializado(destino: str) -> bool:
+    """Confirma se `import-dir` já criou o notebook remoto corretamente."""
+    status = databricks_json("workspace", "get-status", destino, "-o", "json")
+    return isinstance(status, dict) and status.get("object_type") == "NOTEBOOK"
+
+
 def cmd_plan(root: Path, arquivos: list[Path], home: str, executar: bool) -> int:
     modo = "EXECUTE" if executar else "DRY-RUN"
     print(f"== PUBLICAR NO FREE ({modo}) ==")
@@ -197,12 +204,18 @@ def cmd_plan(root: Path, arquivos: list[Path], home: str, executar: bool) -> int
         print(f"\nFAIL publicação falhou:\n{out}{err}")
         return 1
 
-    # Reenviar como notebook o material didático, que o import-dir mandou como
-    # arquivo. Sem isto não há células para executar.
+    # Versões atuais da CLI podem materializar notebooks SOURCE diretamente no
+    # import-dir. Evitamos uma segunda escrita redundante quando o tipo remoto já
+    # está correto, preservando o reenvio individual apenas como fallback.
     cadernos = [a for a in arquivos if eh_notebook(a)]
+    materializados = 0
+    reenviados = 0
     for caderno in cadernos:
         relativo = str(caderno.relative_to(root)).replace("\\", "/")
         destino = f"{home}/{relativo[:-3]}"  # o workspace guarda notebook sem .py
+        if _notebook_ja_materializado(destino):
+            materializados += 1
+            continue
         rc, _out, err = databricks(
             "workspace", "import", destino, "--file", str(caderno),
             "--format", "SOURCE", "--language", "PYTHON", "--overwrite",
@@ -210,8 +223,11 @@ def cmd_plan(root: Path, arquivos: list[Path], home: str, executar: bool) -> int
         if rc != 0:
             print(f"FAIL notebook {relativo}: {err.strip()[:160]}")
             return 1
-    if cadernos:
-        print(f"  {len(cadernos)} arquivo(s) reenviado(s) como notebook")
+        reenviados += 1
+    if materializados:
+        print(f"  {materializados} notebook(s) já materializado(s) pelo import-dir")
+    if reenviados:
+        print(f"  {reenviados} notebook(s) reenviado(s) como fallback SOURCE")
 
     print(f"\nPublicado. Confira com: python {Path(__file__).name} --verify")
     return 0

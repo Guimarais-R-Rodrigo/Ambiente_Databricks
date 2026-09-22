@@ -7,19 +7,24 @@ esconde os outros e obriga a rodar de novo para cada um:
 
 1. Temas — assets/geração V06 + Visual Lab V05 + HTML/tabelas V04 + Plotly V03 + núcleo V02 + contrato V01 (todas as `test_temas*.py`)
 2. `validate_assistant.py`  — forma, links, contratos, identidade e higiene;
-3. `hub_snippets/tests/test_core.py`   — regressões da biblioteca;
-4. `tools/tests/test_tool_guards.py`   — guardas das próprias ferramentas.
-5. `tools/tests/test_transicao_trabalho.py` — kit, notebook e guardas de aceite.
-6. READMEs — contrato, migração e regressões de convivência com o Concierge;
-7. Concierge — estrutura do pacote;
-8. Concierge — regressões do verificador;
-9. Concierge — integração canônica e espelho.
+3. Skill Enforcement — contrato/SE01/SE02 em perfil local read-only, sem renderer;
+4. `hub_snippets/tests/test_core.py`   — regressões da biblioteca;
+5. `tools/tests/test_tool_guards.py`   — guardas das próprias ferramentas.
+6. `tools/tests/test_transicao_trabalho.py` — kit, notebook e guardas de aceite.
+7. READMEs — contrato, migração e regressões de convivência com o Concierge;
+8. Concierge — estrutura do pacote;
+9. Concierge — regressões do verificador;
+10. Concierge — integração canônica e espelho.
    Essas etapas não avaliam roteamento conversacional; esse gate continua no Genie Code.
 
 O que este gate **não** faz, por decisão do plano consolidado: nada que precise
 de credencial, rede ou runtime Databricks. Publicação, verify remoto, smoke em
 Spark e testes conversacionais do Genie Code são etapas próprias, com evidência
 datada. Um gate que mistura os dois nunca roda em máquina nova nem em CI.
+
+A certificação SEF completa, incluindo renderer e evidence bundle, permanece em:
+
+    python -B tools/skill_enforcement/certify_local.py --profile se02
 
 Dependências Python declaradas em `tools/requirements-dev.txt`:
 
@@ -83,6 +88,20 @@ ETAPAS = [
         "validacao",
         "validação local do ambiente_fonte",
         [sys.executable, "tools/validate_assistant.py", "--conferir-readme"],
+    ),
+    (
+        "sef",
+        "Skill Enforcement SE01/SE02 — gate local parcial sem renderer",
+        [
+            sys.executable,
+            "-B",
+            "tools/skill_enforcement/certify_local.py",
+            "--profile",
+            "se02",
+            "--skip-render",
+            "--no-evidence",
+            "--allow-dirty",
+        ],
     ),
     (
         "biblioteca",
