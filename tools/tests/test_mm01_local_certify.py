@@ -116,6 +116,34 @@ class TestMM01LocalCertification(unittest.TestCase):
             with self.assertRaises(cert.CertificationError):
                 cert.resolve_argv(("definitely-not-a-real-command-mm01",), windows=False)
 
+    def test_sanitize_text_redacts_escaped_windows_path_variants(self) -> None:
+        home = str(Path.home())
+        repo = str(REPO)
+        home_escaped = home.replace("\\", "\\\\")
+        home_double_escaped = home.replace("\\", "\\\\\\\\")
+        repo_escaped = repo.replace("\\", "\\\\")
+
+        rendered = cert.sanitize_text(
+            "\n".join(
+                (
+                    home,
+                    home_escaped,
+                    home_double_escaped,
+                    repo,
+                    repo_escaped,
+                )
+            ),
+            REPO,
+        )
+
+        self.assertNotIn(home, rendered)
+        self.assertNotIn(home_escaped, rendered)
+        self.assertNotIn(home_double_escaped, rendered)
+        self.assertNotIn(repo, rendered)
+        self.assertNotIn(repo_escaped, rendered)
+        self.assertGreaterEqual(rendered.count("<HOME>"), 3)
+        self.assertGreaterEqual(rendered.count("<REPO>"), 2)
+
     def test_sanitize_argv_redacts_repository_and_home_paths(self) -> None:
         command = cert.sanitize_argv(
             (str(REPO / "tool.py"), str(Path.home() / "venv" / "python.exe")),
