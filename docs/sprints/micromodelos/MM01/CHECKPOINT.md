@@ -232,3 +232,18 @@ A correção operacional entrou em:
 - `7e62ba0f3b9f8d877dfaacad783356661ce3482c` — regressões de resolução Windows/fail-closed/sanitização.
 
 Essa correção não altera R01–R08, schema, contrato MM01 ou gates funcionais. A árvore corrigida ainda precisa de nova reconciliação com a `main` vigente, se houver avanço, e de uma nova certificação integral em diretório de saída novo.
+
+
+## Segunda tentativa da certificação local — FAIL-closed de precondição
+
+A R2 foi preparada para `b3c7d3c67b0436a060b69c5aac5ec8b0329b64af` contra `main=85474968f5548c13a9a41a3c84f99b3e18f6874c`, mas o `git fetch --all --prune` obrigatório observou `origin/main=17640a6a31f562e9979d235ede27cf44cef9ebbf`.
+
+A candidata passou a `behind_by=7`. A certificação não foi iniciada: sem `--describe`, preflight, steps, bundle ou merge-ref R2. Nenhum arquivo versionado foi modificado localmente.
+
+A tentativa está preservada em `LOCAL_CERTIFICATION_ATTEMPT_2.md`.
+
+Os sete commits novos da `main` alteravam somente `CHANGELOG.md` e documentação SE08; nenhum dos nove workflows-fonte da certificação local mudou.
+
+A reconciliação foi executada por merge real da PR operacional #97, produzindo `0224075a942d60fd5bf71449efbec3784ac10739`. Após a reconciliação, `behind_by=0` e todos os workflow Git blobs continuaram idênticos aos pins do certifier.
+
+A próxima tentativa integral é R3, sobre o HEAD técnico/documental posterior a este registro, condicionada a nova confirmação imediata de `main`, merge-base e `behind_by=0`.
