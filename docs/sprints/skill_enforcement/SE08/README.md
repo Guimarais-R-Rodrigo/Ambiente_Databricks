@@ -102,7 +102,7 @@ comportamento executável/conversacional a homologar e
 O screening da SE07 permanece histórico; ele não foi reexecutado nem
 reclassificado: `SE07_GENIE_BEHAVIORAL_SCREENING=PASS`.
 
-## Equivalência entre RC e main final
+## Equivalência entre RC e SHA de integração
 
 Entre a RC certificada e o SHA de integração da SE08 (`431c46fcffc9345ad4c24280ba13f2ba1dba579b`), somente estes arquivos não documentais adicionais mudaram:
 
