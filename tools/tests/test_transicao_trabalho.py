@@ -3,7 +3,6 @@ from __future__ import annotations
 import ast
 import hashlib
 import json
-import os
 import sys
 import tempfile
 import unittest
@@ -71,11 +70,10 @@ class ManifestTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d); (root/".assistant").mkdir(); (root/"other").mkdir()
             link=root/".assistant/x"
-            if os.name == "nt":
-                import _winapi
-                _winapi.CreateJunction(str(root/"other"), str(link))
-            else:
+            try:
                 link.symlink_to(root/"other", target_is_directory=True)
+            except (OSError, NotImplementedError) as exc:
+                self.skipTest(f"filesystem sem symlink de diretório: {exc}")
             with self.assertRaises(core.CheckError): core.safe_payload_path(root, ".assistant/x")
 
     def test_check_exact_file_bytes(self):
