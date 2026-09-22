@@ -14,9 +14,25 @@ ROOT=Path(__file__).resolve().parents[2]
 ASSISTANT=ROOT/"ambiente_fonte"/".assistant"
 POLICY=ASSISTANT/"hub_padroes"/"skill_enforcement"/"policy.json"
 
+def _is_junction(path):
+    """Compatível com Python que ainda não expõe pathlib.Path.is_junction."""
+    probe = getattr(path, "is_junction", None)
+    return bool(probe()) if callable(probe) else False
+
 def _load(name,path):
     spec=importlib.util.spec_from_file_location(name,path); assert spec and spec.loader
     module=importlib.util.module_from_spec(spec); sys.modules[spec.name]=module; spec.loader.exec_module(module); return module
+
+class JunctionPortabilityTests(unittest.TestCase):
+    def test_missing_pathlib_is_junction_is_false(self):
+        self.assertFalse(_is_junction(object()))
+
+    def test_callable_is_junction_is_observed(self):
+        class JunctionLike:
+            def is_junction(self):
+                return True
+        self.assertTrue(_is_junction(JunctionLike()))
+
 
 class SE07PolicyTests(unittest.TestCase):
     @classmethod
@@ -588,7 +604,7 @@ class CreateObjectL2BoundaryTests(unittest.TestCase):
             for p in pending.pop().iterdir():
                 key = p.relative_to(self.area).as_posix()
                 # Inspect links before following file/directory predicates.
-                if p.is_symlink() or p.is_junction():
+                if p.is_symlink() or _is_junction(p):
                     result[key] = ("link", os.readlink(p))
                 elif p.is_dir():
                     result[key] = ("directory", None)
@@ -771,7 +787,7 @@ class CreateObjectL2BoundaryTests(unittest.TestCase):
         for holder, path, target in zip(temporary, paths, paths[1:] + paths[:1]):
             holder[0].rename(path)
             holder[0] = path
-            self.assertTrue(path.is_junction() if os.name == "nt" else path.is_symlink())
+            self.assertTrue(_is_junction(path) if os.name == "nt" else path.is_symlink())
             self.assertEqual(str(target).casefold(), os.readlink(path).removeprefix("\\\\?\\").casefold())
         for path in paths:
             with self.assertRaises((OSError, RuntimeError)):
