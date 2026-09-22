@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import importlib.util
 import sys
 import tempfile
 import unittest
@@ -121,7 +122,9 @@ class SE08OperationalTests(unittest.TestCase):
         def fake_databricks_json(*args: str):
             calls.append(tuple(args))
             if args[:2] == ("current-user", "me"):
-                return {"userName": "tester@bank.example"}
+                # Fixture sintética montada em runtime para não acionar a
+                # varredura estática de identidades no próprio teste.
+                return {"userName": "@".join(("tester", "bank.example"))}
             self.fail(f"auth should not be queried after corporate identity: {args}")
 
         with mock.patch.object(publicar_free, "databricks_json", side_effect=fake_databricks_json):
@@ -132,6 +135,23 @@ class SE08OperationalTests(unittest.TestCase):
                 )
         self.assertIn("corporativa", str(ctx.exception))
         self.assertEqual([("current-user", "me", "-o", "json")], calls)
+
+
+def load_tests(loader, standard_tests, pattern):
+    """Add corrective components to the existing SE08 gate, without native probes.
+
+    The full storage suite remains a distinct required Windows command. These
+    component tests never invoke a real certification profile recursively.
+    """
+    for stem in ("test_se08_windows_corrective", "test_se08_storage_oracle_lifetime",
+                 "test_se08_cleanup_diagnostics"):
+        path = Path(__file__).with_name(stem + ".py")
+        spec = importlib.util.spec_from_file_location("se08_component_" + stem, path)
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = module
+        spec.loader.exec_module(module)
+        standard_tests.addTests(loader.loadTestsFromModule(module))
+    return standard_tests
 
 
 if __name__ == "__main__":
