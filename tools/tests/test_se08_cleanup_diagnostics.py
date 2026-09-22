@@ -133,6 +133,21 @@ class DiagnosticTests(unittest.TestCase):
         self.assertEqual(diag.file_users([], api=api)['status'], 'INVALID_TARGET_SET')
         self.assertEqual(api.calls, [])
 
+    def test_restart_manager_accepts_exact_three_owned_stream_resources(self):
+        api = FakeRM(empty=True)
+        targets = [self.root/'stdout', self.root/'stderr', self.root/'child.json']
+        result = diag.file_users(targets, api=api)
+        self.assertEqual(result['resource_count'], 3)
+        self.assertEqual(result['status'], 'NO_MATCHES_REPORTED_NOT_PROOF_OF_NO_HANDLES')
+        rejected = diag.file_users([*targets, self.root/'extra'], api=FakeRM())
+        self.assertEqual(rejected['status'], 'INVALID_TARGET_SET')
+
+    def test_historical_native_failure_target_is_explicit(self):
+        source = Path(diag.__file__).read_text(encoding='utf-8')
+        self.assertIn("'keyboard-before-output'", source)
+        self.assertIn("'test_keyboard_interrupt_before_first_output'", source)
+        self.assertIn("Path(self.name)/'child.json'", source)
+
     def test_non_windows_provider_is_not_native_evidence(self):
         with patch.object(diag.os, 'name', 'posix'):
             self.assertEqual(diag.file_users(['unused'])['status'], 'NOT_APPLICABLE_NON_WINDOWS')
