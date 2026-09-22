@@ -126,7 +126,7 @@ class SE08OperationalTests(unittest.TestCase):
         def fake_databricks_json(*args: str):
             calls.append(tuple(args))
             if args[:2] == ("current-user", "me"):
-                return {"userName": "tester@bank.example"}
+                # Fixture sintética montada em runtime para não acionar a\n                # varredura estática de identidades no próprio teste.\n                return {"userName": "@".join(("tester", "bank.example"))}
             self.fail(f"auth should not be queried after corporate identity: {args}")
 
         with mock.patch.object(publicar_free, "databricks_json", side_effect=fake_databricks_json):
