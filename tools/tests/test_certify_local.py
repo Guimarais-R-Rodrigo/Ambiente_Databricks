@@ -364,6 +364,84 @@ class CertifierTests(unittest.TestCase):
         self.assertIsNone(observation["metadata_error"])
         self.assertEqual("COMPLETE", record["cleanup"], "telemetry must not mutate verdict state")
 
+    def test_winerror32_failure_observer_is_single_shot_and_diagnostic_only(self):
+        directory = Path(self.tmp.name) / "winerror32-observation"
+        directory.mkdir()
+        stderr = directory / "stderr"
+        stdout = directory / "stdout"
+        child = directory / "child.json"
+        stderr.write_bytes(b"")
+        stdout.write_bytes(b"partial")
+        child.write_text('{"pid": 123}', encoding="utf-8")
+        record = {"cleanup": "FAILED", "launcher_pid": 456, "pid": 123}
+        error = PermissionError(13, "synthetic native sharing violation", str(stderr))
+        error.winerror = 32
+        file_calls = []
+        pid_calls = []
+
+        def users(paths):
+            file_calls.append([str(path) for path in paths])
+            return {"status": "MATCHES_REPORTED", "processes": [{"pid": 999}]}
+
+        def pid_state(pid):
+            pid_calls.append(pid)
+            return {"status": "OBSERVED", "running": False, "exit_code": 1}
+
+        before = dict(record)
+        observation = cert._windows_cleanup_failure_observation(
+            record, directory, error,
+            file_users_provider=users,
+            pid_state_provider=pid_state,
+        )
+        self.assertEqual(before, record, "observer must not mutate verdict state")
+        self.assertEqual("OBSERVED_AFTER_NATIVE_WINERROR32", observation["status"])
+        self.assertEqual("MATCHES_REPORTED", observation["restart_manager"]["status"])
+        self.assertEqual([456, 123], pid_calls)
+        self.assertEqual(1, len(file_calls))
+        self.assertEqual(
+            [str(stderr), str(stdout), str(child)],
+            file_calls[0],
+        )
+
+    def test_non_winerror32_does_not_invoke_native_failure_observer(self):
+        directory = Path(self.tmp.name) / "non-winerror32"
+        directory.mkdir()
+        error = PermissionError(13, "different failure", str(directory / "stderr"))
+        calls = []
+        self.assertIsNone(cert._windows_cleanup_failure_observation(
+            {"launcher_pid": 1, "pid": 2}, directory, error,
+            file_users_provider=lambda paths: calls.append(paths),
+            pid_state_provider=lambda pid: calls.append(pid),
+        ))
+        self.assertEqual([], calls)
+
+    def test_winerror32_observer_errors_are_recorded_without_retry(self):
+        directory = Path(self.tmp.name) / "observer-error"
+        directory.mkdir()
+        stderr = directory / "stderr"
+        stderr.write_bytes(b"")
+        error = PermissionError(13, "synthetic native sharing violation", str(stderr))
+        error.winerror = 32
+        calls = []
+
+        def fail_users(paths):
+            calls.append("rm")
+            raise OSError("synthetic RM failure")
+
+        def fail_pid(pid):
+            calls.append(("pid", pid))
+            raise OSError("synthetic PID failure")
+
+        observation = cert._windows_cleanup_failure_observation(
+            {"launcher_pid": 7, "pid": 8}, directory, error,
+            file_users_provider=fail_users,
+            pid_state_provider=fail_pid,
+        )
+        self.assertEqual(["rm", ("pid", 7), ("pid", 8)], calls)
+        self.assertEqual("UNOBSERVABLE", observation["restart_manager"]["status"])
+        self.assertEqual("UNOBSERVABLE", observation["pid_states"]["launcher_pid"]["status"])
+        self.assertEqual("UNOBSERVABLE", observation["pid_states"]["pid"]["status"])
+
     def test_keyboard_interrupt_cleanup_and_output(self):
         code, output, record = self.interrupt_fixture("after_output")
         self.assertEqual(130, code)

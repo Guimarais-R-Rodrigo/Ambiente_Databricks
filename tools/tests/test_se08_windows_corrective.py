@@ -41,6 +41,24 @@ class SE08WindowsCorrectiveStaticTests(unittest.TestCase):
                             if line.startswith("from readme_objeto_contract import"))
         self.assertLess(guard, local_import)
 
+    def test_native_winerror32_observer_is_post_failure_only(self):
+        text = self.read("tools/skill_enforcement/certify_local.py")
+        tree = ast.parse(text)
+        fn = next(n for n in tree.body if isinstance(n, ast.FunctionDef)
+                  and n.name == "_windows_cleanup_failure_observation")
+        calls = {getattr(n.func, "attr", getattr(n.func, "id", ""))
+                 for n in ast.walk(fn) if isinstance(n, ast.Call)}
+        for forbidden in ("sleep", "rmtree", "unlink", "remove", "kill", "terminate"):
+            self.assertNotIn(forbidden, calls)
+        self.assertIn("windows_cleanup_failure_observation", text)
+        self.assertIn('record["windows_job_after_terminate"]', text)
+        self.assertIn('record["windows_job_before_close"]', text)
+
+    def test_ci_failure_output_is_not_truncated(self):
+        text = self.read("tools/ci_local.py")
+        self.assertNotIn('[:4000]', text)
+        self.assertIn('saida.strip().replace("\\n", "\\n   ")', text)
+
     def test_theme_dependency_probe_ignores_python_environment(self):
         text = self.read("tools/tests/test_temas_v02.py")
         self.assertGreaterEqual(text.count("'PYTHONPATH'"), 2)

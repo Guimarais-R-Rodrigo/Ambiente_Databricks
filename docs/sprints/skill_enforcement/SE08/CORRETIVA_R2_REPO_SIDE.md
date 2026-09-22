@@ -176,3 +176,68 @@ Correção repo-side:
 - acrescentar guardrail com `ast.parse` do módulo operacional SE08.
 
 A tentativa vermelha permanece histórica; não foi feito rerun manual.
+
+
+## R2 Windows — campanha d3720f59
+
+Campanha local executada em 2026-09-22 sobre:
+
+- SHA: `d3720f593d56dea64b1f027ad7ba725075f55ef3`;
+- tree: `4061694897bb86afbe4368969799d2d9525b04ad`;
+- Windows 11 build 26200;
+- Python 3.12.14;
+- NTFS.
+
+Bundle externo recebido:
+
+- arquivo: `SEF_SE08_R2_WINDOWS_d3720f59_20260922.zip`;
+- SHA-256: `7b276cd7ffa88104855d53eede60dc8f526e98e1fbf17e0b0f5dac8b95bf2e5e`;
+- classificação do executor: `WINDOWS_NOT_READY`.
+
+Resultados principais:
+
+- storage standalone: FAIL 8/9, porém o antigo caso `test_residue_is_observed_not_deleted_or_certified_by_recovery` PASSOU com `exists_at_oracle=true`, ownership forte e finalizer ativo observados;
+- a falha standalone nova ocorreu no subtest `nonzero/gate/after_removal` porque um WinError32 nativo ocorreu antes da injeção sintética;
+- windows corrective: PASS 6/6;
+- cleanup diagnostics: PASS 31/31;
+- before-output e never-ready: PASS diagnóstico, sem WinError32 nessas invocações;
+- certifier regression standalone: PASS 46/46;
+- CI Windows: FAIL apenas na etapa `sef`; 9/10 etapas OK;
+- no CI, storage/corrective/diagnostics passaram e `certifier_regression` sofreu WinError32 no teste `test_timeout_real_parent_child_external_oracle_and_partial_streams`;
+- FULL: `NOT_RUN_CONDITION_NOT_MET`.
+
+Foram observadas duas ocorrências nativas de WinError32:
+
+1. storage `nonzero/gate/after_removal`, em `stderr`;
+2. CI/certifier regression, timeout pai-filho, em `stderr`.
+
+Em ambas:
+
+- `process_cleanup=COMPLETE`;
+- `temporary_cleanup=FAILED`;
+- `cleanup=FAILED`;
+- launcher e child tinham sido encerrados segundo a telemetria disponível;
+- o dono do handle no instante da falha permaneceu `NOT_OBSERVED`.
+
+Os probes autorizados possuíam Restart Manager, mas ficaram verdes; as falhas reais ocorreram fora desses hooks. Portanto observações dos probes não podem ser transferidas para as invocações que falharam.
+
+### Leitura técnica
+
+A R2 resolveu o defeito do oráculo/finalizer sintético originalmente identificado, mas não resolveu o sharing violation nativo do certifier. O novo FAIL da suíte de storage é evidência do mesmo blocker de cleanup, não fundamento para enfraquecer a assertiva da fixture.
+
+A documentação Microsoft sobre Job Objects registra que processos filhos normalmente permanecem associados ao Job salvo breakaway explícito e que `ActiveProcesses` é contabilidade do Job. Isso torna insuficiente atribuir a falha aos processos supervisionados sem observar o owner real do recurso. A próxima rodada deve medir o owner no próprio boundary que falha, não apenas em probes paralelos.
+
+## R3 — observabilidade nativa no boundary real
+
+A R3 não tenta corrigir causalmente o WinError32 ainda.
+
+Mudanças autorizadas repo-side:
+
+- quando o cleanup já falhou com WinError32, consultar uma única vez o Restart Manager para os recursos remanescentes da própria invocação;
+- registrar estado instantâneo, sem espera, de launcher PID e child PID;
+- registrar snapshots do Job Object imediatamente após `TerminateJobObject` e antes de fechar o Job;
+- manter a exceção original e o verdict intactos;
+- não adicionar sleep, retry, nova remoção, `ignore_errors`, `RmShutdown` ou `RmRestart`;
+- fazer o CI imprimir integralmente a saída de uma etapa reprovada, eliminando a limitação histórica dos 4.000 caracteres.
+
+Próximo gate ambiental deve observar especificamente storage, certifier regression e CI Windows. FULL continua condicionado.

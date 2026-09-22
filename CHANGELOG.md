@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-09-22 — SE08 R3: observabilidade do WinError32 no boundary real
+
+### Incorporado
+
+- (ChatGPT) Incorporada a campanha Windows da R2 em `d3720f59...`: storage standalone FAIL 8/9 por WinError32 nativo preemptando uma injeção sintética; certifier standalone 46/46 PASS; CI Windows FAIL somente em `sef/certifier_regression`, com segunda ocorrência nativa no timeout pai-filho; FULL não executado. O antigo teste de resíduo passou e sustenta a correção do problema de finalizer da fixture, sem implicar correção do WinError32.
+- (ChatGPT) O certifier passa a registrar, somente depois de um WinError32 já ocorrido, consulta read-only ao Restart Manager e estado instantâneo dos PIDs supervisionados. Também registra o Job Object após término e antes do fechamento. A telemetria não faz retry, sleep, remoção adicional, encerramento de aplicações ou mudança de verdict.
+- (ChatGPT) `ci_local.py` deixa de truncar em 4.000 caracteres a saída de uma etapa reprovada; failures futuros permanecem integralmente auditáveis no log do comando.
+
+### Estado
+
+- R2 Windows: `WINDOWS_NOT_READY`.
+- FULL R2: `NOT_RUN_CONDITION_NOT_MET`.
+- WinError32: causa ainda não estabelecida.
+- promoção ao trabalho: bloqueada.
+
+
 ## 2026-09-22 — SE08 R2: hardening repo-side antes da nova campanha Windows
 
 ### Corrigido

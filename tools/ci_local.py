@@ -235,8 +235,8 @@ def main() -> int:
         estado = "OK  " if codigo == 0 else "FAIL"
         print(f"   {estado} ({duracao:.1f}s) {ultima}")
         if codigo != 0 and not args.verbose:
-            print("   --- saída da etapa que reprovou ---")
-            print("   " + saida.strip().replace("\n", "\n   ")[:4000])
+            print("   --- saída integral da etapa que reprovou ---")
+            print("   " + saida.strip().replace("\n", "\n   "))
         resultados.append((nome, codigo, duracao, ultima))
 
     print("\n== RESUMO ==")
