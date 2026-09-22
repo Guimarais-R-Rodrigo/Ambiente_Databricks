@@ -408,6 +408,10 @@ def _temporary_cleanup_observation(record: dict[str, object], directory: Path) -
         "launcher_pid": record.get("launcher_pid"),
         "observed_exit_code": record.get("observed_exit_code"),
         "exit_after_cleanup": record.get("exit_after_cleanup"),
+        "command_started": record.get("command_started"),
+        "metadata_error": record.get("metadata_error"),
+        "start_error": record.get("start_error"),
+        "utf8_valid": record.get("utf8_valid"),
     }
     try:
         observation["entries"] = sorted(item.name for item in directory.iterdir()) if directory.is_dir() else []
