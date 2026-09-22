@@ -45,6 +45,21 @@ WORKFLOW_SOURCES = (
     ".github/workflows/temas-v13-ci.yml",
 )
 
+# Exact Git blob identities of the workflow definitions whose executable gates
+# are mirrored below. Any workflow edit (including a newly added gate) must
+# fail closed until this certifier is deliberately reconciled and reviewed.
+WORKFLOW_EXPECTED_BLOBS = {
+    ".github/workflows/ci.yml": "af73cb6abbf4d09e4aacd217a6be0490ac36e7c1",
+    ".github/workflows/micromodelos-mm01-ci.yml": "7d45792cb733d3b42d0c8822091d253df185e726",
+    ".github/workflows/temas-v00-ci.yml": "a56c1243ee0e97574af25279c07bc3907c8ae33c",
+    ".github/workflows/temas-v01-ci.yml": "91e3a174930e5e27953719a14f7b4979f1b41424",
+    ".github/workflows/temas-v02-ci.yml": "53ebc80ccd7777430f5c37e7fd7fc05b6558071e",
+    ".github/workflows/temas-v10-ci.yml": "f05b501569d30e350100e05663e269062c6b7aea",
+    ".github/workflows/temas-v11-ci.yml": "b3cc6fc8f0c656d98db196c4998de230274a02e1",
+    ".github/workflows/temas-v12-ci.yml": "d47c925db7c97e9bad8931198d4cf09079a7c559",
+    ".github/workflows/temas-v13-ci.yml": "da1200bb158eaa11c8d3cf155cbfa28fd8a0d9ac",
+}
+
 WORKFLOW_REQUIRED_SNIPPETS = {
     ".github/workflows/ci.yml": (
         "python -m pip install -r tools/requirements-dev.txt",
@@ -313,14 +328,37 @@ def hash_inputs(repo_root: Path) -> dict[str, str]:
 
 
 def check_workflow_drift(repo_root: Path) -> dict[str, dict[str, object]]:
+    if set(WORKFLOW_EXPECTED_BLOBS) != set(WORKFLOW_SOURCES):
+        raise CertificationError("workflow blob pin set does not match workflow sources")
+    if set(WORKFLOW_REQUIRED_SNIPPETS) != set(WORKFLOW_SOURCES):
+        raise CertificationError("workflow snippet set does not match workflow sources")
+
     report: dict[str, dict[str, object]] = {}
-    for rel, snippets in WORKFLOW_REQUIRED_SNIPPETS.items():
+    for rel in WORKFLOW_SOURCES:
+        snippets = WORKFLOW_REQUIRED_SNIPPETS[rel]
         path = repo_root / rel
         if not path.is_file():
             raise CertificationError("workflow missing: " + rel)
+        actual_blob = git(repo_root, "hash-object", rel)
+        expected_blob = WORKFLOW_EXPECTED_BLOBS[rel]
         text = path.read_text(encoding="utf-8")
         missing = [snippet for snippet in snippets if snippet not in text]
-        report[rel] = {"sha256": sha256_file(path), "missing_snippets": missing}
+        report[rel] = {
+            "git_blob": actual_blob,
+            "expected_git_blob": expected_blob,
+            "blob_matches": actual_blob == expected_blob,
+            "sha256": sha256_file(path),
+            "missing_snippets": missing,
+        }
+        if actual_blob != expected_blob:
+            raise CertificationError(
+                "workflow definition changed since certification plan was frozen: "
+                + rel
+                + " expected "
+                + expected_blob
+                + " found "
+                + actual_blob
+            )
         if missing:
             raise CertificationError(
                 "workflow drift detected in " + rel + ": " + repr(missing)
