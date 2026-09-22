@@ -107,6 +107,7 @@ O bloco abaixo é conferido por `python tools/validate_assistant.py --conferir-r
 ```text
 raiz analisada     : /home/runner/work/Ambiente_Databricks/Ambiente_Databricks/ambiente_fonte
 skills             : 14 · 14/14 com as 5 seções estruturais
+skill enforcement  : 5/5 contratos válidos · 0 issue(s) de policy
 prompts            : 16 · 161 campos com guia e contrato humano
 helpers citados    : 97 caminhos verificados
 markdown / links   : 224 arquivos / 1411 links relativos
@@ -122,8 +123,8 @@ normas do molde    : 75 arquivos, 0 violação(ões)
 notebook exercita  : 61 objetos, 0 notebook(s) que só importam
 python (AST)       : 235 arquivos
 instrucoes         : 11623/20000 caracteres
-repo (identidade)  : 1624 arquivos varridos no repositório editável/derivado
-repo (links)       : 2096 links fora da raiz analisada
+repo (identidade)  : 1633 arquivos varridos no repositório editável/derivado
+repo (links)       : 2102 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)
