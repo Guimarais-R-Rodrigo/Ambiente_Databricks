@@ -73,6 +73,31 @@ A seção de helpers não é opcional e não é decorativa: o Genie Code **não*
 descobre `hub_snippets` sozinho. A skill recomenda o módulo no texto que injeta,
 e quem importa é a pessoa, no notebook (ADR-0004).
 
+## Declarar a política SEF proporcional ao risco
+
+Toda skill publicada no catálogo deve possuir uma entrada na policy canônica do
+Skill Enforcement Framework. A policy separa duas coisas que não podem ser
+confundidas:
+
+- `current_level`: nível realmente sustentado pelos artefatos existentes;
+- `target_level`: direção de migração aprovada, sem alegar implementação.
+
+Criar ou editar um `SKILL.md` não promove automaticamente o nível. Para declarar
+L1 é necessário contrato estruturado; L2 exige preflight; L3 exige rota
+determinística e Receipt; L4 exige Postflight fail-closed antes de conclusão
+homologada. Skills editoriais podem permanecer em L0/L1 quando isso for
+proporcional ao risco.
+
+O `rollout_mode` também não deve ser elevado por intenção. `audit` mede sem
+transformar o target em gate já existente; `warn` exige revisão explícita do
+desvio; `enforce` só é coerente quando a superfície implementada realmente
+pode bloquear homologação.
+
+Antes de considerar a mudança pronta, o validador geral e a certificação SEF
+pertinente devem confirmar policy, contratos e artefatos. Teste conversacional no
+Genie Code continua separado porque estrutura válida não prova aderência do
+agente.
+
 ## Antes de dar por pronto
 
 O checklist é **um só para os seis tipos**, e mora em
