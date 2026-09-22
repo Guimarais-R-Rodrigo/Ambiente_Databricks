@@ -14,7 +14,9 @@
 
 - (ChatGPT) Review isolada a partir de aa83e5cc, sem sobrescrever a SE08 canônica.
   Baseline ampliada: três falhas em 15 testes; correção: 15/15, zero skips, Linux/Python 3.13.5.
-- (ChatGPT) Certificação integral, Windows/NTFS, integração à canônica e incorporação
-  desta entrada ao changelog raiz pendentes. Não há aceite, PR, merge ou promoção.
+- (ChatGPT) O conteúdo pertinente desta entrada foi incorporado ao changelog raiz
+  durante a consolidação repo-side. Certificação integral, Windows/NTFS e
+  integração final à branch canônica permanecem pendentes. Não há aceite, PR,
+  merge ou promoção.
 - (ChatGPT) SE06 24/25 e A1-R4 NOT_RUN, SE07_FULLY_CERTIFIED=false, residual storage
   cleanup e criar-objeto L2 global preservados; WinError32 nativo não declarado corrigido.
