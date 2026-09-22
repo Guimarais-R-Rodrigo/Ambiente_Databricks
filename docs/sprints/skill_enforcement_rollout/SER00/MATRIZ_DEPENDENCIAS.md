@@ -8,21 +8,21 @@ Base auditada: `11851e137dd7793b351ac08fc211c0be90005dee`. Nenhuma branch concor
 |---|---|---|
 | main / PSEF00 | PR #98 integrada em 11851e137dd7793b351ac08fc211c0be90005dee | baseline de autoria |
 | PSEF01 / PR #99 | draft; b733bf3fa226bef964e640c0728c8dfecc9e992d; branch psef/PSEF01-contrato-editorial-policy-aware | toca hub_prompts/README e cinco documentos PSEF; derivado stale declarado; não incorporar candidata acumulada |
-| MM01 / PR #51 | aberta; 3e3e105f60e92f6ca58502cf0c92f4f461a84b04; 175 commits, 38 arquivos; R5 aguardada | delta observado não toca skills/policy/engine; compartilha README/CHANGELOG e gates; qualquer avanço main exige nova reconciliação |
+| MM01 / PR #51 | aberta; 94ba596ca4385223248a102b9ff02c0252491c88; 181 commits, 39 arquivos; R5 PASS mecânico com bundle não aceito e R6 aguardada | não incorporar; compartilha README/CHANGELOG e gates; qualquer avanço main exige nova reconciliação |
 | antiga SE08 / PR #91 | draft, não mergeável; 65d75dca58860e7e19c8dceb5f70ce4ddb568fcd | toca skills/README, Manual, tools/skill_enforcement, CI e derivado; preservar e não integrar por efeito colateral |
 | antiga V05 / PR #26 | aberta na listagem; 22 arquivos de theme_lab, testes, README, índices e workflow | superfície visual/derivado; não misturar com rollout |
 | antigas PR #4, #5, #6 | abertas na listagem inicial, frentes anteriores de READMEs | não fechadas/alteradas; reexaminar delta completo antes de qualquer integração concorrente |
 | SER00 | ser/SER00-rollout-baseline, criada diretamente na main auditada | somente docs/sprints/skill_enforcement_rollout |
 
-A MM01 mudou durante a leitura: o estado inicial 4cc537f0.../R4 foi substituído por 3e3e105f.../R5 aguardada. O relato da PR preserva a falha R4 de snapshot README e a reconciliação posterior pela PR operacional #100. Não reutilizar PASS ou identidade anterior como evidência da nova HEAD.
+A MM01 continuou avançando durante a SER00: depois de 3e3e105f.../R5, a PR passou a 94ba596c...; R5 ficou como PASS mecânico, mas o bundle foi recusado como certificação final por sanitização insuficiente de paths escapados, e R6 tornou-se o próximo gate. Não reutilizar PASS ou identidade anterior como evidência da nova HEAD.
 
 A busca paginada de branches psef/ retornou PSEF00 e PSEF01, sem PSEF04. A listagem inicial tinha sete PRs abertas: #4, #5, #6, #26, #51, #91 e #99. Esse conjunto é uma observação, não trava de concorrência; reconfirmar imediatamente antes de certificar/integrar. Não se declara auditoria exaustiva dos deltas das três PRs antigas de README nesta rodada.
 
 ## Grafo de execução candidato
 
 ```text
-SER00 decisões A01–A03 + complemento local A07 + aceite
-  -> SER01
+SER00 A01–A03 aceitas + complemento local A07 + aceite de integração
+  -> SER01 somente após autorização separada
   -> SER02
   -> SER03
   -> SER04
