@@ -1,6 +1,7 @@
 # PSEF01 — checkpoint
 
-**Estado:** `CANDIDATA_PARA_REVISAO`
+**Estado:** `CANDIDATA_PARA_REVISAO`  
+**PR:** `#99` — draft contra `main`
 
 ## Identidade
 
@@ -51,4 +52,4 @@ validação de equivalência
 
 ## Próximo gate
 
-Revisão humana da PSEF01. Após aceite, a PSEF02 pode ser iniciada sobre esta candidata acumulada, sem merge isolado da PSEF01.
+Revisão humana da PR #99 / PSEF01. Após aceite, a PSEF02 pode ser iniciada sobre esta candidata acumulada, sem merge isolado da PSEF01.
