@@ -40,7 +40,7 @@ A R2:
 - mantém a `TemporaryDirectory` defeituosa viva até o oráculo;
 - observa e copia o resíduo;
 - executa teardown explícito somente depois da observação;
-- desarma o finalizador depois do teardown;
+- usa `TemporaryDirectory.cleanup()` no teardown test-only depois do snapshot, deixando o próprio Python desarmar o finalizador pelo caminho normal;
 - não altera `certify_local.py` para esta correção;
 - não usa sleep, retry, `ignore_errors` ou redução de assertiva.
 
@@ -110,7 +110,7 @@ Executar uma vez por SHA congelado, com retenção externa exclusiva:
 2. testes estáticos Windows;
 3. testes do observador;
 4. probe `preflight`;
-5. probe `keyboard-before-output --restart-manager`;
+5. probe `before-output --restart-manager`;
 6. probe `never-ready --restart-manager`;
 7. certifier regression;
 8. CI;
