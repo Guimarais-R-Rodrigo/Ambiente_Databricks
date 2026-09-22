@@ -43,3 +43,8 @@ A01–A03 estão arquiteturalmente resolvidas. O complemento local A07 continua 
 ## Estados
 
 GITHUB_ACTIONS=DEFERRED_NO_CREDITS; DATABRICKS_FREE=NOT_RUN; GENIE_BEHAVIOR=NOT_RUN; CANONICAL_REPO_VALIDATORS=NOT_RUN enquanto A07 não for executada. Execuções incidentais de Actions serão observadas e preservadas na PR/manifesto, sem rerun. Ausência de créditos não é FAIL funcional.
+
+
+## Rodada R2 pós-aceite
+
+A R2 documental foi executada sobre os bytes reconciliados antes da publicação final. Ela inclui ADR-0022, índice de ADRs, 14 targets CONFIRMED, escopo puramente documental e estados pós-aceite. Resultado: `PASS_38_OF_38_DOCUMENTARY_CHECKS`. Isso continua separado dos validadores canônicos A07 e não herda o PASS da R1.
