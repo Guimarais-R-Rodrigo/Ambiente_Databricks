@@ -4,7 +4,7 @@
 
 ### Corrigido
 
-- (ChatGPT) A fixture sintética de storage mantém viva a `TemporaryDirectory` defeituosa até o oráculo externo observar o resíduo; somente depois do snapshot ocorre teardown explícito e detach do finalizador. Isso remove o falso negativo causado por limpeza implícita do CPython sem alterar o certifier de produção, sem retry e sem converter falha de cleanup em PASS.
+- (ChatGPT) A fixture sintética de storage mantém viva a `TemporaryDirectory` defeituosa até o oráculo externo observar o resíduo; somente depois do snapshot ocorre teardown explícito via `TemporaryDirectory.cleanup()`, que desarma o finalizador pelo caminho normal. Isso remove o falso negativo causado por limpeza implícita do CPython sem alterar o certifier de produção, sem retry e sem converter falha de cleanup em PASS.
 - (ChatGPT) O perfil FULL SE08 passa a incluir explicitamente as suítes de storage cleanup, guardrails da corretiva Windows e regressões do observador diagnóstico. Assim, um FULL futuro não pode ficar verde omitindo novamente o gate de storage.
 - (ChatGPT) Adicionado observador opt-in de lifecycle/Job Object/Restart Manager. O probe nativo mira explicitamente `test_keyboard_interrupt_before_first_output`, que foi o caso real do WinError32; ausência de reprodução continua sem valor de certificado causal.
 
