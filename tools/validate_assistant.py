@@ -377,7 +377,7 @@ def check_saida_de_comando_no_readme(problems: list[str], *, remoto: bool = Fals
         return 0
 
     rotulos = (
-        "skills             :", "prompts            :", "helpers citados    :", "markdown / links   :",
+        "skills             :", "skill enforcement  :", "prompts            :", "helpers citados    :", "markdown / links   :",
         "notebooks / links  :", "readmes de objeto  :", "pastas de objeto   :", "forma da pasta     :",
         "contrato de dados  :", "contrato de entrada:", "saída colada       :",
         "idioma da docstring:", "normas do molde    :", "notebook exercita  :",
