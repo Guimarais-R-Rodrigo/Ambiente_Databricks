@@ -444,17 +444,11 @@ def _exception_details(exc: BaseException) -> dict[str, object]:
             "traceback": "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))}
 
 
-def _restart_manager_file_users(paths: list[Path]) -> dict[str, object]:
-    """Load the existing read-only Restart Manager observer after WinError32.
-
-    The certifier is also loaded by spec_from_file_location in its regression
-    suite, where __package__ is empty and the sibling directory is not
-    necessarily on sys.path. Resolve that boundary explicitly instead of
-    silently losing the native observation.
-    """
+def _cleanup_diagnostics_runtime():
+    """Load the sibling observer even when this module was file-loaded."""
     if __package__:
-        from .cleanup_diagnostics import file_users
-        return file_users(paths)
+        from . import cleanup_diagnostics
+        return cleanup_diagnostics
 
     import importlib.util
     module_name = "_sef_cleanup_diagnostics_runtime"
@@ -467,7 +461,15 @@ def _restart_manager_file_users(paths: list[Path]) -> dict[str, object]:
         module = importlib.util.module_from_spec(spec)
         sys.modules[module_name] = module
         spec.loader.exec_module(module)
-    return module.file_users(paths)
+    return module
+
+
+def _restart_manager_file_users(paths: list[Path]) -> dict[str, object]:
+    return _cleanup_diagnostics_runtime().file_users(paths)
+
+
+def _file_process_ids_using_file(path: Path) -> dict[str, object]:
+    return _cleanup_diagnostics_runtime().file_process_ids_using_file(path)
 
 
 def _windows_process_state(pid: object) -> dict[str, object]:
@@ -513,6 +515,7 @@ def _windows_cleanup_failure_observation(
     cleanup_error: BaseException,
     *,
     file_users_provider=None,
+    file_process_ids_provider=None,
     pid_state_provider=None,
 ) -> dict[str, object] | None:
     """Observe one native sharing violation after it already happened.
@@ -555,6 +558,40 @@ def _windows_cleanup_failure_observation(
                 "status": "UNOBSERVABLE",
                 "error": _exception_details(exc),
             }
+
+    if file_process_ids_provider is None and os.name == "nt":
+        file_process_ids_provider = _file_process_ids_using_file
+    file_pid_observations = []
+    if file_process_ids_provider is None:
+        file_pid_observations.append({
+            "status": "NOT_APPLICABLE_NON_WINDOWS",
+            "process_ids": [],
+        })
+    else:
+        for resource in unique_resources:
+            try:
+                item = dict(file_process_ids_provider(resource))
+            except Exception as exc:
+                item = {
+                    "status": "UNOBSERVABLE",
+                    "path": str(resource),
+                    "error": _exception_details(exc),
+                    "process_ids": [],
+                }
+            relations = []
+            for owner_pid in item.get("process_ids", []):
+                if owner_pid == observation["observer_pid"]:
+                    relation = "OBSERVER_PID_QUERY_HANDLE_OR_EXISTING_HANDLE"
+                elif owner_pid == observation["launcher_pid"]:
+                    relation = "LAUNCHER_PID"
+                elif owner_pid == observation["pid"]:
+                    relation = "CHILD_PID"
+                else:
+                    relation = "OTHER_PID"
+                relations.append({"pid": owner_pid, "relation": relation})
+            item["relations"] = relations
+            file_pid_observations.append(item)
+    observation["file_process_ids_using_file"] = file_pid_observations
 
     if pid_state_provider is None and os.name == "nt":
         pid_state_provider = _windows_process_state

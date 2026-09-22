@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-09-22 — SE08 R4: identificação diagnóstica de PIDs por arquivo
+
+### Incorporado
+
+- (ChatGPT) Incorporada a campanha Windows R3 em `3556f198...`: storage standalone 9/9, certifier standalone exit 0, CI 10/10 e FULL FAIL 20/21 por uma única ocorrência nativa WinError32 no storage. Na falha, Job Object estava vazio, launcher/child encerrados e Restart Manager não reportou processos.
+- (ChatGPT) Adicionada consulta pós-falha `NtQueryInformationFile(FileProcessIdsUsingFileInformation)` por recurso para observar PIDs que usam o arquivo no exato boundary do WinError32. A consulta é read-only, single-shot e não altera cleanup/verdict.
+- (ChatGPT) O PID do próprio observador é marcado como ambíguo porque o handle aberto para a consulta pode fazê-lo aparecer no resultado; somente PIDs adicionais são evidência discriminante de outro processo.
+
+### Estado
+
+- R3 Windows: `R3_WINDOWS_NOT_READY`.
+- FULL R3: FAIL 20/21.
+- owner do handle: ainda não identificado.
+- promoção ao trabalho: bloqueada.
+
+
 ## 2026-09-22 — SE08 R3: observabilidade do WinError32 no boundary real
 
 ### Incorporado

@@ -104,6 +104,31 @@ class DiagnosticTests(unittest.TestCase):
                 diag.file_users([self.root/'stderr'], api=api)
         self.assertEqual(api.calls[-1], 'end')
 
+    def test_file_process_ids_parser_uses_pointer_alignment(self):
+        count = 3
+        offset = diag.FileProcessIdsUsingFileInformation.process_ids.offset
+        size = offset + count * C.sizeof(C.c_size_t)
+        raw = bytearray(size)
+        C.c_uint32.from_buffer(raw).value = count
+        values = (C.c_size_t * count).from_buffer(raw, offset)
+        values[:] = (111, 222, 333)
+        parsed = diag._parse_file_process_ids_buffer(raw)
+        self.assertEqual("OBSERVED", parsed["status"])
+        self.assertEqual([111, 222, 333], parsed["process_ids"])
+
+    def test_file_process_ids_parser_fails_closed_on_short_buffer(self):
+        offset = diag.FileProcessIdsUsingFileInformation.process_ids.offset
+        raw = bytearray(offset)
+        C.c_uint32.from_buffer(raw).value = 2
+        parsed = diag._parse_file_process_ids_buffer(raw)
+        self.assertEqual("INCOMPLETE_BUFFER", parsed["status"])
+        self.assertEqual([], parsed["process_ids"])
+
+    def test_file_process_ids_non_windows_is_not_native_evidence(self):
+        with patch.object(diag.os, 'name', 'posix'):
+            value = diag.file_process_ids_using_file(self.root/'unused')
+        self.assertEqual("NOT_APPLICABLE_NON_WINDOWS", value["status"])
+
     def test_job_snapshot_observes_only_supplied_job(self):
         class Accounting(C.Structure):
             _fields_ = [('ActiveProcesses', C.c_uint32), ('TotalProcesses', C.c_uint32),

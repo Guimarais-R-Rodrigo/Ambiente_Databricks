@@ -365,9 +365,11 @@ class CertifierTests(unittest.TestCase):
         self.assertEqual("COMPLETE", record["cleanup"], "telemetry must not mutate verdict state")
 
     @unittest.skipIf(os.name == "nt", "non-Windows loader regression")
-    def test_restart_manager_provider_loads_from_sibling_when_file_loaded(self):
+    def test_native_observer_providers_load_from_sibling_when_file_loaded(self):
         observation = cert._restart_manager_file_users([Path(self.tmp.name) / "unused"])
         self.assertEqual("NOT_APPLICABLE_NON_WINDOWS", observation["status"])
+        owners = cert._file_process_ids_using_file(Path(self.tmp.name) / "unused")
+        self.assertEqual("NOT_APPLICABLE_NON_WINDOWS", owners["status"])
 
     def test_winerror32_failure_observer_is_single_shot_and_diagnostic_only(self):
         directory = Path(self.tmp.name) / "winerror32-observation"
@@ -382,11 +384,17 @@ class CertifierTests(unittest.TestCase):
         error = PermissionError(13, "synthetic native sharing violation", str(stderr))
         error.winerror = 32
         file_calls = []
+        owner_calls = []
         pid_calls = []
 
         def users(paths):
             file_calls.append([str(path) for path in paths])
             return {"status": "MATCHES_REPORTED", "processes": [{"pid": 999}]}
+
+        def owners(path):
+            owner_calls.append(str(path))
+            return {"status": "OBSERVED", "path": str(path),
+                    "process_ids": [os.getpid(), 456, 123, 999]}
 
         def pid_state(pid):
             pid_calls.append(pid)
@@ -396,6 +404,7 @@ class CertifierTests(unittest.TestCase):
         observation = cert._windows_cleanup_failure_observation(
             record, directory, error,
             file_users_provider=users,
+            file_process_ids_provider=owners,
             pid_state_provider=pid_state,
         )
         self.assertEqual(before, record, "observer must not mutate verdict state")
@@ -403,10 +412,14 @@ class CertifierTests(unittest.TestCase):
         self.assertEqual("MATCHES_REPORTED", observation["restart_manager"]["status"])
         self.assertEqual([456, 123], pid_calls)
         self.assertEqual(1, len(file_calls))
-        self.assertEqual(
-            [str(stderr), str(stdout), str(child)],
-            file_calls[0],
-        )
+        self.assertEqual([str(stderr), str(stdout), str(child)], file_calls[0])
+        self.assertEqual([str(stderr), str(stdout), str(child)], owner_calls)
+        owner_rows = observation["file_process_ids_using_file"][0]["relations"]
+        self.assertIn({"pid": os.getpid(),
+                       "relation": "OBSERVER_PID_QUERY_HANDLE_OR_EXISTING_HANDLE"}, owner_rows)
+        self.assertIn({"pid": 456, "relation": "LAUNCHER_PID"}, owner_rows)
+        self.assertIn({"pid": 123, "relation": "CHILD_PID"}, owner_rows)
+        self.assertIn({"pid": 999, "relation": "OTHER_PID"}, owner_rows)
 
     def test_non_winerror32_does_not_invoke_native_failure_observer(self):
         directory = Path(self.tmp.name) / "non-winerror32"
@@ -416,6 +429,7 @@ class CertifierTests(unittest.TestCase):
         self.assertIsNone(cert._windows_cleanup_failure_observation(
             {"launcher_pid": 1, "pid": 2}, directory, error,
             file_users_provider=lambda paths: calls.append(paths),
+            file_process_ids_provider=lambda path: calls.append(path),
             pid_state_provider=lambda pid: calls.append(pid),
         ))
         self.assertEqual([], calls)
@@ -433,6 +447,10 @@ class CertifierTests(unittest.TestCase):
             calls.append("rm")
             raise OSError("synthetic RM failure")
 
+        def fail_owners(path):
+            calls.append(("owners", str(path)))
+            raise OSError("synthetic owner query failure")
+
         def fail_pid(pid):
             calls.append(("pid", pid))
             raise OSError("synthetic PID failure")
@@ -440,10 +458,12 @@ class CertifierTests(unittest.TestCase):
         observation = cert._windows_cleanup_failure_observation(
             {"launcher_pid": 7, "pid": 8}, directory, error,
             file_users_provider=fail_users,
+            file_process_ids_provider=fail_owners,
             pid_state_provider=fail_pid,
         )
-        self.assertEqual(["rm", ("pid", 7), ("pid", 8)], calls)
+        self.assertEqual(["rm", ("owners", str(stderr)), ("pid", 7), ("pid", 8)], calls)
         self.assertEqual("UNOBSERVABLE", observation["restart_manager"]["status"])
+        self.assertEqual("UNOBSERVABLE", observation["file_process_ids_using_file"][0]["status"])
         self.assertEqual("UNOBSERVABLE", observation["pid_states"]["launcher_pid"]["status"])
         self.assertEqual("UNOBSERVABLE", observation["pid_states"]["pid"]["status"])
 

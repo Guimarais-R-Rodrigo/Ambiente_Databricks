@@ -163,6 +163,116 @@ def file_users(paths, *, api=None):
             result['status'] = 'INCOMPLETE_SESSION_END'
 
 
+class IoStatusBlock(C.Structure):
+    # IO_STATUS_BLOCK begins with a pointer-sized union (Status/PVOID).
+    _fields_ = [('status_or_pointer', C.c_void_p), ('information', C.c_size_t)]
+
+
+class FileProcessIdsUsingFileInformation(C.Structure):
+    # FILE_PROCESS_IDS_USING_FILE_INFORMATION. The process-id array is variable
+    # length; this structure is used only to obtain the ABI-correct offset.
+    _fields_ = [('count', C.c_uint32), ('process_ids', C.c_size_t * 1)]
+
+
+def _parse_file_process_ids_buffer(buffer):
+    raw = bytes(buffer)
+    offset = FileProcessIdsUsingFileInformation.process_ids.offset
+    if len(raw) < offset:
+        return {'status': 'INCOMPLETE_BUFFER', 'process_ids': []}
+    count = int.from_bytes(raw[:4], 'little')
+    if count > 4096:
+        return {'status': 'INVALID_COUNT', 'count': count, 'process_ids': []}
+    required = offset + count * C.sizeof(C.c_size_t)
+    if required > len(raw):
+        return {'status': 'INCOMPLETE_BUFFER', 'count': count,
+                'required_bytes': required, 'available_bytes': len(raw),
+                'process_ids': []}
+    if count:
+        array = (C.c_size_t * count).from_buffer_copy(raw[offset:required])
+        pids = [int(value) for value in array]
+    else:
+        pids = []
+    return {'status': 'OBSERVED', 'count': count, 'process_ids': pids}
+
+
+def file_process_ids_using_file(path, *, provider=None):
+    """Single post-failure PID query for one file.
+
+    Uses NtQueryInformationFile(FileProcessIdsUsingFileInformation=47), a
+    diagnostic information class documented as reserved for system use. It is
+    intentionally read-only and never retries. Opening the query handle can
+    itself make the observer PID appear in the result, so observer_pid is always
+    marked as potentially self-induced and is not proof of a pre-existing lock.
+    """
+    path = Path(path)
+    if provider is not None:
+        return provider(path)
+    if os.name != 'nt':
+        return {'status': 'NOT_APPLICABLE_NON_WINDOWS', 'path': str(path),
+                'process_ids': []}
+
+    from ctypes import wintypes as w
+    k = C.WinDLL('kernel32', use_last_error=True)
+    ntdll = C.WinDLL('ntdll', use_last_error=True)
+
+    k.CreateFileW.restype = w.HANDLE
+    k.CreateFileW.argtypes = [w.LPCWSTR, w.DWORD, w.DWORD, C.c_void_p,
+                              w.DWORD, w.DWORD, w.HANDLE]
+    k.CloseHandle.restype = w.BOOL
+    k.CloseHandle.argtypes = [w.HANDLE]
+    ntdll.NtQueryInformationFile.restype = C.c_long
+    ntdll.NtQueryInformationFile.argtypes = [
+        w.HANDLE, C.POINTER(IoStatusBlock), C.c_void_p, w.ULONG, C.c_int
+    ]
+
+    FILE_READ_ATTRIBUTES = 0x80
+    FILE_SHARE_READ = 0x1
+    FILE_SHARE_WRITE = 0x2
+    FILE_SHARE_DELETE = 0x4
+    OPEN_EXISTING = 3
+    FILE_ATTRIBUTE_NORMAL = 0x80
+    INVALID_HANDLE_VALUE = C.c_void_p(-1).value
+
+    handle = k.CreateFileW(
+        str(path), FILE_READ_ATTRIBUTES,
+        FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+        None, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, None
+    )
+    if handle == INVALID_HANDLE_VALUE:
+        return {'status': 'OPEN_FAILED', 'path': str(path),
+                'winerror': C.get_last_error(), 'process_ids': []}
+
+    result = {
+        'status': 'UNOBSERVABLE',
+        'path': str(path),
+        'query': 'NtQueryInformationFile/FileProcessIdsUsingFileInformation',
+        'information_class': 47,
+        'information_class_reserved_for_system_use': True,
+        'observer_pid': os.getpid(),
+        'observer_pid_may_be_query_handle': True,
+        'process_ids': [],
+    }
+    try:
+        buffer = C.create_string_buffer(65536)
+        iosb = IoStatusBlock()
+        status = int(ntdll.NtQueryInformationFile(
+            handle, C.byref(iosb), buffer, C.sizeof(buffer), 47
+        ))
+        result['ntstatus'] = f'0x{status & 0xffffffff:08x}'
+        result['information_bytes'] = int(iosb.information)
+        if status != 0:
+            result['status'] = 'QUERY_FAILED'
+            return result
+        parsed = _parse_file_process_ids_buffer(buffer.raw)
+        result.update(parsed)
+        return result
+    finally:
+        if not k.CloseHandle(handle):
+            result['close_winerror'] = C.get_last_error()
+            if result.get('status') == 'OBSERVED':
+                result['status'] = 'OBSERVED_WITH_QUERY_HANDLE_CLOSE_ERROR'
+
+
 class JobPids(C.Structure):
     _fields_ = [('assigned', C.c_uint32), ('count', C.c_uint32), ('pids', C.c_size_t*256)]
 

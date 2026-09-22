@@ -241,3 +241,56 @@ Mudanças autorizadas repo-side:
 - fazer o CI imprimir integralmente a saída de uma etapa reprovada, eliminando a limitação histórica dos 4.000 caracteres.
 
 Próximo gate ambiental deve observar especificamente storage, certifier regression e CI Windows. FULL continua condicionado.
+
+
+## R3 Windows — campanha 3556f198
+
+A campanha Windows R3 foi executada sobre:
+
+- SHA `3556f198670c38d3ced118b3e84db59b5728efa8`;
+- tree `ce50b5414f39c40b0bf26610e3b5d78edda7b248`;
+- bundle `SEF_SE08_R3_WINDOWS_3556f198_20260922.zip`;
+- SHA-256 verificado externamente: `bc2d66bcd6fab1619b824458256622fbadd393c7372f04703ef16f90fb1ab5fb`;
+- manifesto interno: 1620 arquivos conferidos, zero divergências;
+- classificação: `R3_WINDOWS_NOT_READY`.
+
+Resultados:
+
+- Windows corrective: PASS 8/8;
+- storage standalone: PASS 9/9;
+- certifier regression: exit 0, 50 métodos, 1 skip de escopo;
+- CI Windows: PASS 10/10;
+- FULL SE08: FAIL 20/21, somente `se08_storage_cleanup_tests`.
+
+O WinError32 não reapareceu nos gates focalizados standalone/CI, mas reapareceu uma vez no FULL, em `test_gate_cancellation_with_storage_error`, modo `none`, gate, `after_removal`.
+
+Na ocorrência:
+
+- `process_cleanup=COMPLETE`;
+- `temporary_cleanup=FAILED`;
+- Job Object após terminate: `active=0`, PID list vazia;
+- Job Object antes de close: `active=0`, PID list vazia;
+- launcher PID e child PID estavam sinalizados, `running=false`, exit code 1;
+- Restart Manager retornou `NO_MATCHES_REPORTED_NOT_PROOF_OF_NO_HANDLES`;
+- owner do handle permaneceu não identificado.
+
+Conclusão: a R3 exclui como explicação suficiente a hipótese de launcher/child ainda vivos na amostra observada, mas não identifica o processo/handle que bloqueou `stderr`. A ausência de matches no Restart Manager não significa ausência de handle.
+
+## R4 — PIDs usando o arquivo no boundary de falha
+
+A R4 continua observacional. Ela acrescenta, somente depois de WinError32 já ocorrido, uma consulta read-only por recurso usando `NtQueryInformationFile` com `FileProcessIdsUsingFileInformation` (classe 47).
+
+A própria documentação do Windows classifica essa information class como reservada para uso do sistema; por isso seu resultado é diagnóstico e fail-closed, nunca requisito de produto. Orientação publicada por representante Microsoft descreve esse mecanismo para obter a lista de PIDs que mantêm um arquivo aberto.
+
+Limite importante: a consulta precisa abrir seu próprio handle de leitura de atributos para o arquivo; portanto o PID do observador pode aparecer por causa do próprio handle diagnóstico. Esse PID é rotulado como `OBSERVER_PID_QUERY_HANDLE_OR_EXISTING_HANDLE` e não prova um lock pré-existente.
+
+A consulta:
+
+- é uma única amostra;
+- não faz retry;
+- não dorme;
+- não remove arquivo;
+- não fecha handles de terceiros;
+- não muda verdict;
+- roda por recurso (`stderr`, `stdout`, `child.json` quando existentes);
+- é complementar ao Restart Manager, não substituta.

@@ -59,6 +59,18 @@ class SE08WindowsCorrectiveStaticTests(unittest.TestCase):
         self.assertNotIn('[:4000]', text)
         self.assertIn('saida.strip().replace("\\n", "\\n   ")', text)
 
+    def test_file_owner_pid_query_is_diagnostic_only(self):
+        text = self.read("tools/skill_enforcement/cleanup_diagnostics.py")
+        tree = ast.parse(text)
+        fn = next(n for n in tree.body if isinstance(n, ast.FunctionDef)
+                  and n.name == "file_process_ids_using_file")
+        calls = {getattr(n.func, "attr", getattr(n.func, "id", ""))
+                 for n in ast.walk(fn) if isinstance(n, ast.Call)}
+        for forbidden in ("sleep", "rmtree", "unlink", "remove", "kill", "terminate"):
+            self.assertNotIn(forbidden, calls)
+        self.assertIn("FileProcessIdsUsingFileInformation", text)
+        self.assertIn("observer_pid_may_be_query_handle", text)
+
     def test_theme_dependency_probe_ignores_python_environment(self):
         text = self.read("tools/tests/test_temas_v02.py")
         self.assertGreaterEqual(text.count("'PYTHONPATH'"), 2)
