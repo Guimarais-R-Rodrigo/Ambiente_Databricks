@@ -594,6 +594,25 @@ def result_is_complete(
     return True
 
 
+def _emit_step_text(text: str, handle, repo_root: Path) -> None:
+    rendered = sanitize_text(text, repo_root)
+    handle.write(rendered)
+    handle.flush()
+    sys.stdout.write(rendered)
+    sys.stdout.flush()
+
+
+def _terminate_interrupted_process(proc: subprocess.Popen[str]) -> None:
+    if proc.poll() is not None:
+        return
+    proc.terminate()
+    try:
+        proc.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        proc.wait()
+
+
 def run_step(step: Step, repo_root: Path, logs_dir: Path) -> StepResult:
     started = utc_now()
     start_clock = time.monotonic()
@@ -605,50 +624,51 @@ def run_step(step: Step, repo_root: Path, logs_dir: Path) -> StepResult:
     logical = "$ " + " ".join(step.argv)
     resolved = "$[resolved] " + " ".join(executed)
 
-    try:
-        proc = subprocess.run(
-            executed,
-            cwd=repo_root,
-            env=env,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            check=False,
-        )
-    except KeyboardInterrupt:
-        ended = utc_now()
-        duration = time.monotonic() - start_clock
-        rendered = (
-            logical
-            + "\n"
-            + resolved
-            + "\n\nMM01_LOCAL_CERTIFICATION_STEP_INTERRUPTED=KeyboardInterrupt\n"
-        )
-        rendered = sanitize_text(rendered, repo_root)
-        log_path.write_text(rendered, encoding="utf-8")
-        return StepResult(
-            step_id=step.step_id,
-            source=step.source,
-            command=sanitize_argv(step.argv, repo_root),
-            started_utc=started,
-            ended_utc=ended,
-            duration_seconds=round(duration, 3),
-            exit_code=None,
-            status="INTERRUPTED",
-            log_file=log_rel,
-            log_sha256=sha256_file(log_path),
-            executed_command=sanitize_argv(executed, repo_root),
-            reason="KeyboardInterrupt during subprocess execution",
-        )
+    with log_path.open("w", encoding="utf-8", newline="\n") as handle:
+        _emit_step_text(logical + "\n" + resolved + "\n\n", handle, repo_root)
+        proc: subprocess.Popen[str] | None = None
+        try:
+            proc = subprocess.Popen(
+                executed,
+                cwd=repo_root,
+                env=env,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                bufsize=1,
+            )
+            if proc.stdout is None:
+                raise CertificationError("step stdout pipe unavailable: " + step.step_id)
+            for line in proc.stdout:
+                _emit_step_text(line, handle, repo_root)
+            return_code = proc.wait()
+        except KeyboardInterrupt:
+            if proc is not None:
+                _terminate_interrupted_process(proc)
+            ended = utc_now()
+            duration = time.monotonic() - start_clock
+            marker = "MM01_LOCAL_CERTIFICATION_STEP_INTERRUPTED=KeyboardInterrupt\n"
+            _emit_step_text(marker, handle, repo_root)
+            return StepResult(
+                step_id=step.step_id,
+                source=step.source,
+                command=sanitize_argv(step.argv, repo_root),
+                started_utc=started,
+                ended_utc=ended,
+                duration_seconds=round(duration, 3),
+                exit_code=None,
+                status="INTERRUPTED",
+                log_file=log_rel,
+                log_sha256=sha256_file(log_path),
+                executed_command=sanitize_argv(executed, repo_root),
+                reason="KeyboardInterrupt during subprocess execution",
+            )
 
     ended = utc_now()
     duration = time.monotonic() - start_clock
-    rendered = logical + "\n" + resolved + "\n\n" + proc.stdout
-    rendered = sanitize_text(rendered, repo_root)
-    log_path.write_text(rendered, encoding="utf-8")
-    status = "PASS" if proc.returncode == 0 else "FAIL"
+    status = "PASS" if return_code == 0 else "FAIL"
     return StepResult(
         step_id=step.step_id,
         source=step.source,
@@ -656,13 +676,12 @@ def run_step(step: Step, repo_root: Path, logs_dir: Path) -> StepResult:
         started_utc=started,
         ended_utc=ended,
         duration_seconds=round(duration, 3),
-        exit_code=proc.returncode,
+        exit_code=return_code,
         status=status,
         log_file=log_rel,
         log_sha256=sha256_file(log_path),
         executed_command=sanitize_argv(executed, repo_root),
     )
-
 
 def version_output(argv: Sequence[str], repo_root: Path) -> str:
     code, out = run_capture(argv, repo_root)
