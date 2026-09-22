@@ -30,6 +30,12 @@ def cli_probe(mode, target, root, directory, fault):
     original_exit = tempfile.TemporaryDirectory.__exit__
     original_persist = cert._persist_process_observation
     injections, complete_writes = [], []
+    # Keep faulted TemporaryDirectory objects alive until the external oracle has
+    # observed the residue.  In the before_removal fixture the injected exception
+    # happens before TemporaryDirectory.cleanup() can detach its weakref finalizer;
+    # dropping the last reference here would let CPython implicitly delete the
+    # synthetic residue before the oracle measures it.
+    retained_temporaries = []
     def cleanup(temporary, *args):
         # The record is in the direct caller for both the original implementation
         # and the corrective observer. This is a test injection, not production.
@@ -42,6 +48,8 @@ def cli_probe(mode, target, root, directory, fault):
             return original_exit(temporary, *args)
         if fault != "before_removal":
             original_exit(temporary, *args)
+        else:
+            retained_temporaries.append(temporary)
         injections.append({"path": temporary.name, "kind": "SYNTHETIC_" + fault.upper(),
                            "exists_before_error": os.path.lexists(temporary.name)})
         error = PermissionError(13, "SYNTHETIC_STORAGE_CLEANUP", str(Path(temporary.name) / "stderr"))
@@ -68,6 +76,14 @@ def cli_probe(mode, target, root, directory, fault):
                 item["files_at_oracle"] = sorted(p.name for p in path.iterdir())
                 shutil.copytree(path, directory / "retained-temporary", dirs_exist_ok=False)
                 shutil.rmtree(path)
+        # The oracle owns explicit test-only cleanup.  Detach any still-armed
+        # finalizer only after the residue observation, so no implicit recovery
+        # can make the fixture look green or erase the evidence prematurely.
+        for temporary in retained_temporaries:
+            finalizer = getattr(temporary, "_finalizer", None)
+            if finalizer is not None and finalizer.alive:
+                finalizer.detach()
+        retained_temporaries.clear()
         (directory / "storage-oracles.json").write_text(json.dumps({"injections": injections, "complete_writes": complete_writes}, indent=2), encoding="utf8")
 
 
