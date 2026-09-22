@@ -216,3 +216,19 @@ Foi introduzido `tools/mm01_local_certify.py` e formalizado `LOCAL_CERTIFICATION
 Após a reconciliação operacional desta rodada, a branch absorveu a `main` vigente por merge real `25ca58c4e7d55d4b68caebd3e3f75357599f9e53`. Em seguida, o mecanismo de drift foi endurecido para pin exato dos workflows: `b9bfec9912ea79781eb6e355c881c2f3185acc4d`; as regressões correspondentes entraram em `e4487bec5655baaa05913ffef8f0af547a8a05ce`.
 
 A candidata ainda não está congelada nem certificada localmente. O próximo gate é executar a certificação local sobre o novo HEAD técnico/documental, analisar o bundle e somente então submeter o SHA a auditoria independente.
+
+
+## Primeira tentativa da certificação local — FAIL-closed
+
+A primeira execução da MM01 Local Certification v1 sobre `5fd97a35426677c296078982bb58479c061d280c` preservou a identidade Git esperada, `behind_by=0`, worktree limpa e equivalência material HEAD × merge-ref, mas terminou antes do primeiro gate por uma incompatibilidade operacional do certifier no Windows.
+
+O executor chamou `npm --version` diretamente via `subprocess.run(..., shell=False)`; no ambiente observado, npm estava disponível por shim `.cmd`, não por `npm.exe`. O bundle retornou `FAIL`, `steps=[]`, sem retry e sem substituição manual dos gates.
+
+A tentativa está preservada em `LOCAL_CERTIFICATION_ATTEMPT_1.md`; SHA-256 do ZIP probatório: `32b7eb9c42b160113d671f331a2ad4a984a2781447bbd640545899e0aa7fc773`.
+
+A correção operacional entrou em:
+
+- `75c24e1649e94b225404ae9b9f23ecaca10980e9` — resolução portável de shims npm/pnpm, registro do comando resolvido e sanitização;
+- `7e62ba0f3b9f8d877dfaacad783356661ce3482c` — regressões de resolução Windows/fail-closed/sanitização.
+
+Essa correção não altera R01–R08, schema, contrato MM01 ou gates funcionais. A árvore corrigida ainda precisa de nova reconciliação com a `main` vigente, se houver avanço, e de uma nova certificação integral em diretório de saída novo.
