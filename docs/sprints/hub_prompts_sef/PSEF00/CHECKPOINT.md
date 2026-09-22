@@ -3,7 +3,8 @@
 **Estado:** `CANDIDATA_PARA_REVISAO`  
 **Data:** 2026-09-22  
 **Base:** `main@17640a6a31f562e9979d235ede27cf44cef9ebbf`  
-**Branch:** `psef/PSEF00-reconciliacao-inventario`
+**Branch:** `psef/PSEF00-reconciliacao-inventario`  
+**PR:** `#98` — draft aberta contra `main`
 
 ## Escopo materializado
 
@@ -78,6 +79,6 @@ PSEF01                          = BLOCKED_PENDING_HUMAN_ACCEPTANCE
 
 ## Próximo gate
 
-Abrir PR da PSEF00 contra `main`, revisar o delta documental e aguardar aceite humano explícito.
+A PR #98 está aberta como draft contra `main`. Revisar o delta documental e aguardar aceite humano explícito.
 
 **Não iniciar PSEF01 antes desse aceite.**
