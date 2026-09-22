@@ -1,34 +1,34 @@
-# SER00 — decisões arquiteturais pendentes
+# SER00 — decisões arquiteturais aceitas e limites de implementação
 
-Status: proposta para decisão humana, não ADR aceito nem implementação. Base `11851e137dd7793b351ac08fc211c0be90005dee`.
+Status: A01–A03 aceitas humanamente em 2026-09-22; A01/A02 consolidadas no ADR-0022. Isso congela a direção arquitetural, não implementa certifier/schema/runner e não autoriza SER01. Base `11851e137dd7793b351ac08fc211c0be90005dee`.
 
-## A01 — certificação histórica versus árvore mutável (bloqueador)
+## A01 — certificação histórica versus árvore mutável — ACEITA
 
 Em tools/tests/test_skill_enforcement_se08.py, a suíte vigente exige simultaneamente: criar-objeto current=L2; README com cinco contratos; integração de ci_local apontando ao perfil se08. O certifier inclui essa suíte no perfil cumulativo se08. A promoção legítima de criar-objeto ou a criação de novos contratos conflita com essas assertions sobre a árvore atual.
 
 Portanto não é correto prometer que um perfil novo, sozinho, resolverá o problema. Também não é permitido apagar a assertion, mudar L2 para L3 por conveniência, filtrar silenciosamente testes, marcar FAIL como PASS ou reescrever a semântica histórica de --profile se08.
 
-**Recomendação:** aprovar uma separação explícita entre certificação histórica SE08, executada contra árvore histórica pinada, e certificação operacional SER na candidata atual. O controle SER deve ser aditivo, possuir identidade própria, executar invariantes de mecanismo preservadas e regras atuais de catálogo, e documentar a migração do ponto de integração de CI local. A composição exata e o tratamento de cada assertion temporal precisam de ADR prospectivo, teste adversarial e aceite antes de SER01. Falhas observadas nos comandos antigos sobre a árvore nova continuam registradas, não ocultadas.
+**Decisão aceita:** separar certificação histórica SE08 de certificação operacional SER. O controle SER será aditivo, terá identidade própria, executará invariantes de mecanismo e regras atuais de catálogo, e documentará a migração do ponto de integração de CI local. A decisão está registrada no ADR-0022. A implementação e os testes adversariais pertencem à primeira sprint funcional autorizada; falhas observadas nos comandos históricos sobre árvore nova continuam registradas, não ocultadas.
 
 **Alternativa:** adiar promoções e manter as verificações atuais intactas. Essa alternativa não fecha gaps; apenas mantém o estado vigente.
 
-A SER00 não escolhe por conta própria uma exceção ao gate solicitado pelo usuário. Até decisão explícita, SER01 está bloqueada. A campanha histórica nunca será apresentada como evidência SHA-bound da candidata SER.
+O aceite não cria exceção silenciosa ao gate nem converte a campanha histórica em evidência SHA-bound da candidata SER. SER01 continua NOT_STARTED e só poderá iniciar após integração da SER00 e autorização separada.
 
-## A02 — condições de domínio e verdade por superfície
+## A02 — condições de domínio e verdade por superfície — ACEITA
 
 O schema execution_contract 0.1 fixa mode=audit e aceita sete condition kinds, orientados a amostra, preview, numerais, distribuições, tema, visualização e PK. validate_contracts.py replica esse vocabulário. Nenhum deles expressa diretamente PIT, maturidade do target, autorização de materialização ou deployment intent.
 
-Recomendação: desenho aditivo de condições/contexto de domínio, com versões e handlers públicos explícitos, preservando contratos 0.1. Campos desconhecidos e aplicabilidade não determinada bloqueiam. Nunca reutilizar pk_columns_available ou resolved_theme_selected como sinônimo de autorização/PIT; nunca aceitar expressão arbitrária/eval no contrato. A fronteira entre preflight específico e schema compartilhado precisa ser documentada e testada, sem transformar a engine em framework analítico universal.
+Decisão aceita: evoluir condições/contexto de forma aditiva, versionada e fail-closed, preservando contratos 0.1. Campos desconhecidos e aplicabilidade não determinada bloqueiam. Nunca reutilizar `pk_columns_available` ou `resolved_theme_selected` como sinônimo de autorização/PIT e nunca aceitar expressão arbitrária/eval. Preferir condição local da skill quando a semântica for específica; elevar ao schema compartilhado somente quando houver significado transversal estável. A fronteira entre preflight específico e engine compartilhada deve permanecer explícita e testada.
 
 O campo protected_surfaces.level é desejado; ele não registra por si um current por superfície. Promoção parcial exige delimitação inequívoca e aceita do que está protegido. Não inferir cobertura total a partir do nível máximo de uma rota piloto.
 
-## A03 — criar-objeto: target numérico mantido, escopo não congelado
+## A03 — criar-objeto: target L3 confirmado; escopo de prova fica para SER01 — ACEITA
 
 O target L3 é proporcional à validação objetiva do objeto, mas o piloto disponível restringe-se a create/readme/agregador no Windows/NTFS, com validação repo-side. O SKILL cobre create/convert e seis tipos de objeto. O scope já é stage_specific; não propor whole_skill sem justificativa.
 
-Antes de qualquer promoção, aprovar uma matriz operação×tipo×host×efeito: geração, validação e aplicação separadas; APIs públicas por tipo; destino; overwrite proibido ou explicitamente autorizado por novo contrato; conversão; falha parcial; rollback; receipt; suporte Free. Nenhuma célula não provada pode entrar no claim L3. Enquanto apenas o piloto estiver provado, current global continua L2.
+Decisão aceita: manter target L3 e `scope_mode=stage_specific`. A SER01 deve congelar e provar a matriz operação×tipo×host×efeito antes de qualquer promoção: geração, validação e aplicação separadas; APIs públicas por tipo; destino; overwrite proibido ou explicitamente autorizado por novo contrato; conversão; falha parcial; rollback; Receipt; suporte Free. Nenhuma célula não provada pode entrar no claim L3. Enquanto apenas o piloto estiver provado, current global continua L2.
 
-Recomendação para SER01: primeiro fechar essa matriz e validar as rotas existentes; ampliar somente a superfície aprovada. Se a implementação completa exigir dividir a sprint, registrar replanejamento e pedir aceite, sem criar promoção nominal para encerrar SER01.
+Regra para SER01: primeiro fechar a matriz e validar as rotas existentes; ampliar somente a superfície comprovada. Se o claim global L3 não puder ser sustentado sem abarcar operações ainda não provadas, manter `current_level=L2` e replanejar com aceite, em vez de promover nominalmente.
 
 ## A04 — auditoria de novas produtoras
 
@@ -50,4 +50,4 @@ Toda evidência externa identifica parent/main/candidate/tree/dirty state, plata
 
 O acesso GitHub funcionou, mas o clone pelo container falhou por resolução de rede. Não existe checkout integral autenticado nesta sessão. Validação documental própria não substitui validate_assistant/README snapshot/CI/renderer. Antes de merge, executar esses gates no clone local e atualizar somente snapshots documentais que o comando comprovar. O CHANGELOG raiz não foi reescrito parcialmente: ENTRADA_CHANGELOG.md preserva a entrada preparada para aplicação byte-preserving, ainda pendente.
 
-Mesmo com decisões A01–A03 aceitas, A07 impede declarar a candidata totalmente pronta para integração. Nenhuma proteção será desabilitada para superar o bloqueio. Esta rodada preserva o máximo documental possível, sem falsa certificação.
+Com A01–A03 aceitas, o bloqueio arquitetural da SER00 está resolvido. A07 ainda impede declarar a candidata pronta para integração. Nenhuma proteção será desabilitada para superar o bloqueio. Esta rodada preserva o máximo documental possível, sem falsa certificação.
