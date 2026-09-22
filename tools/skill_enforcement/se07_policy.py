@@ -23,8 +23,10 @@ class PolicyIssue:
 
 def _issue(c,m,l): return PolicyIssue(c,m,l)
 def _li(level): return LEVELS.index(level) if level in LEVELS else None
-def discover_skills()->set[str]:
-    return {p.name for p in SKILLS_ROOT.iterdir() if p.is_dir() and (p/"SKILL.md").is_file() and p.name.startswith("hub-ml-")}
+def discover_skills(assistant_root:Path|str=ASSISTANT_ROOT)->set[str]:
+    skills_root=Path(assistant_root)/"skills"
+    if not skills_root.is_dir(): return set()
+    return {p.name for p in skills_root.iterdir() if p.is_dir() and (p/"SKILL.md").is_file() and p.name.startswith("hub-ml-")}
 
 def _required(skill,level):
     out=[f"skills/{skill}/SKILL.md"]; i=_li(level)
@@ -35,8 +37,8 @@ def _required(skill,level):
     if i>=4: out.extend([f"skills/{skill}/scripts/run_enforced.py",f"skills/{skill}/scripts/postflight.py"])
     return out
 
-def validate_policy_registry(policy_path:Path|str=DEFAULT_POLICY)->list[PolicyIssue]:
-    path=Path(policy_path); issues=[]
+def validate_policy_registry(policy_path:Path|str=DEFAULT_POLICY, *, assistant_root:Path|str=ASSISTANT_ROOT)->list[PolicyIssue]:
+    path=Path(policy_path); assistant_root=Path(assistant_root); issues=[]
     try: raw=json.loads(path.read_text(encoding="utf-8"))
     except (OSError,UnicodeDecodeError,json.JSONDecodeError) as exc: return [_issue("POLICY_UNREADABLE",str(exc),"$")]
     if not isinstance(raw,Mapping): return [_issue("POLICY_ROOT","policy registry deve ser objeto","$")]
@@ -44,7 +46,7 @@ def validate_policy_registry(policy_path:Path|str=DEFAULT_POLICY)->list[PolicyIs
     if raw.get("policy_id")!="SE07-skill-enforcement-policy": issues.append(_issue("POLICY_ID","policy_id inesperado","policy_id"))
     skills=raw.get("skills")
     if not isinstance(skills,list): return issues+[_issue("POLICY_SKILLS","skills deve ser lista","skills")]
-    discovered=discover_skills(); seen=set()
+    discovered=discover_skills(assistant_root); seen=set()
     for idx,item in enumerate(skills):
         loc=f"skills[{idx}]"
         if not isinstance(item,Mapping): issues.append(_issue("POLICY_SKILL_OBJECT","entrada deve ser objeto",loc)); continue
@@ -67,10 +69,10 @@ def validate_policy_registry(policy_path:Path|str=DEFAULT_POLICY)->list[PolicyIs
         artifacts=item.get("implemented_artifacts")
         if not isinstance(artifacts,list) or any(not isinstance(x,str) or not x for x in artifacts): issues.append(_issue("POLICY_ARTIFACTS","implemented_artifacts inválido",f"{loc}.implemented_artifacts")); artifacts=[]
         for rel in artifacts:
-            if not (ASSISTANT_ROOT/rel).is_file(): issues.append(_issue("POLICY_ARTIFACT_MISSING",f"artefato ausente: {rel}",f"{loc}.implemented_artifacts"))
+            if not (assistant_root/rel).is_file(): issues.append(_issue("POLICY_ARTIFACT_MISSING",f"artefato ausente: {rel}",f"{loc}.implemented_artifacts"))
         if isinstance(current,str) and current in LEVELS:
             for rel in _required(skill,current):
-                if not (ASSISTANT_ROOT/rel).is_file(): issues.append(_issue("POLICY_CURRENT_LEVEL_UNPROVEN",f"{current} declarado sem {rel}",loc))
+                if not (assistant_root/rel).is_file(): issues.append(_issue("POLICY_CURRENT_LEVEL_UNPROVEN",f"{current} declarado sem {rel}",loc))
         surfaces=item.get("protected_surfaces")
         if not isinstance(surfaces,list) or not surfaces: issues.append(_issue("POLICY_SURFACES","protected_surfaces deve ser lista não vazia",f"{loc}.protected_surfaces")); surfaces=[]
         ids=set()
@@ -104,16 +106,16 @@ def validate_policy_registry(policy_path:Path|str=DEFAULT_POLICY)->list[PolicyIs
         if "authorization" not in ev: issues.append(_issue("POLICY_PIPELINE_AUTHORIZATION","pipeline-builder precisa de surface authorization","hub-ml-pipeline-builder"))
     return issues
 
-def summarize(policy_path:Path|str=DEFAULT_POLICY)->dict[str,Any]:
-    path=Path(policy_path); issues=validate_policy_registry(path)
+def summarize(policy_path:Path|str=DEFAULT_POLICY, *, assistant_root:Path|str=ASSISTANT_ROOT)->dict[str,Any]:
+    path=Path(policy_path); assistant_root=Path(assistant_root); issues=validate_policy_registry(path, assistant_root=assistant_root)
     try: raw=json.loads(path.read_text(encoding="utf-8"))
     except (OSError,UnicodeDecodeError,json.JSONDecodeError): raw={}
     entries=raw.get("skills",[]) if isinstance(raw,Mapping) else []
-    return {"schema_version":"1.0","sprint":"SE07","status":"PASS" if not issues else "FAIL","catalog_skills":len(discover_skills()),"policy_entries":len(entries) if isinstance(entries,list) else 0,"issues":[x.to_dict() for x in issues]}
+    return {"schema_version":"1.0","sprint":"SE07","status":"PASS" if not issues else "FAIL","catalog_skills":len(discover_skills(assistant_root)),"policy_entries":len(entries) if isinstance(entries,list) else 0,"issues":[x.to_dict() for x in issues]}
 
 def main()->int:
-    p=argparse.ArgumentParser(); p.add_argument("--policy",default=str(DEFAULT_POLICY)); p.add_argument("--json",action="store_true"); a=p.parse_args()
-    s=summarize(Path(a.policy))
+    p=argparse.ArgumentParser(); p.add_argument("--policy",default=str(DEFAULT_POLICY)); p.add_argument("--assistant-root",default=str(ASSISTANT_ROOT)); p.add_argument("--json",action="store_true"); a=p.parse_args()
+    s=summarize(Path(a.policy), assistant_root=Path(a.assistant_root))
     if a.json: print(json.dumps(s,ensure_ascii=False,indent=2,sort_keys=True))
     else:
         print(f"SE07_POLICY = {s['status']} | catalog={s['catalog_skills']} | policies={s['policy_entries']}")
