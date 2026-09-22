@@ -225,11 +225,11 @@ hub_scripts/
 hub_snippets/
 ```
 
-Além deles, há `README.md`, `MANUAL_TECNICO.md` e `skills/` com as treze skills do pacote. O manifesto é a lista de arquivos da release; o roteiro da Genie contém os nomes exatos das skills atuais. A raiz documental do Hub continua com README e Manual, sem catálogo/glossário independentes.
+Além deles, há `README.md`, `MANUAL_TECNICO.md` e `skills/` com as 14 skills do pacote. O manifesto é a lista de arquivos da release; o roteiro da Genie contém os nomes exatos das skills atuais. A raiz documental do Hub continua com README e Manual, sem catálogo/glossário independentes.
 
 1. Pela UI, crie uma pasta de rollback pessoal fora de `.assistant/skills/`, se a política permitir. Não use as pastas nativas de descoberta para guardar cópias.
 2. Para cada um dos cinco diretórios `hub_`, confirme propriedade e ausência de customização desconhecida. Mova a versão anterior para rollback e copie/mova a candidata correspondente de staging para `.assistant/`. Se houver conteúdo de terceiros misturado, pare e faça reconciliação; não apague a pasta inteira.
-3. Em `skills/`, substitua **somente** as treze pastas atuais declaradas e retire as antigas pertencentes ao Hub após backup/identificação. Não selecione `skills/` inteira. Prefixo antigo sozinho não prova que um objeto pode ser removido; use o inventário anterior, `legacy_skill_names_for_review` no manifesto e os nomes do roteiro.
+3. Em `skills/`, substitua **somente** as 14 pastas atuais declaradas e retire as antigas pertencentes ao Hub após backup/identificação. Não selecione `skills/` inteira. Prefixo antigo sozinho não prova que um objeto pode ser removido; use o inventário anterior, `legacy_skill_names_for_review` no manifesto e os nomes do roteiro.
 4. Substitua `README.md` e `MANUAL_TECNICO.md` pelos arquivos candidatos. Retire `CATALOGO_HELPERS.md` e `GLOSSARIO.md` somente se forem as cópias geridas pelo Hub, preservando o backup.
 5. **Preserve `.assistant/.mcp_servers.json`, skills alheias, arquivos pessoais e instruções administrativas.** Não copie configuração MCP de outro ambiente.
 6. Só depois de o Hub estar no lugar, atualize `.assistant_instructions.md` na raiz do seu usuário. Prefira mover/importar o FILE exato do pacote, sem alterar a redação durante a instalação. Preserve no backup qualquer conteúdo pessoal anterior; não concatene instruções conflitantes automaticamente.
