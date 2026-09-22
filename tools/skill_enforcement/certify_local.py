@@ -392,6 +392,30 @@ def _exception_details(exc: BaseException) -> dict[str, object]:
             "traceback": "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))}
 
 
+def _temporary_cleanup_observation(record: dict[str, object], directory: Path) -> dict[str, object]:
+    """Snapshot observacional imediatamente antes da remoção do diretório.
+
+    Não espera, não fecha handles, não tenta remover e não altera o veredito.
+    O objetivo é tornar reproduções Windows/NTFS causalmente auditáveis.
+    """
+    observation: dict[str, object] = {
+        "observed_at_utc": _utc(),
+        "directory": str(directory),
+        "exists": os.path.lexists(directory),
+        "process_result": record.get("result"),
+        "process_cleanup": record.get("process_cleanup", record.get("cleanup")),
+        "pid": record.get("pid"),
+        "launcher_pid": record.get("launcher_pid"),
+        "observed_exit_code": record.get("observed_exit_code"),
+        "exit_after_cleanup": record.get("exit_after_cleanup"),
+    }
+    try:
+        observation["entries"] = sorted(item.name for item in directory.iterdir()) if directory.is_dir() else []
+    except OSError as exc:
+        observation["entries_error"] = _exception_details(exc)
+    return observation
+
+
 class _ProcessTemporaryDirectory(tempfile.TemporaryDirectory):
     """Observe filesystem cleanup separately from termination of owned processes.
 
@@ -417,6 +441,9 @@ class _ProcessTemporaryDirectory(tempfile.TemporaryDirectory):
             record["cleanup"] = "PENDING"
         if exc is not None:
             record["body_exception"] = _exception_details(exc)
+        record["temporary_cleanup_pre_remove"] = _temporary_cleanup_observation(
+            record, Path(self.name)
+        )
         try:
             result = super().__exit__(exc_type, exc, tb)
             if os.path.lexists(self.name):
