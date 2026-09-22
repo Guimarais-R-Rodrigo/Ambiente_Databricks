@@ -225,6 +225,7 @@ class StepResult:
     status: str
     log_file: str | None
     log_sha256: str | None
+    executed_command: list[str] | None = None
     reason: str | None = None
 
 
@@ -266,11 +267,49 @@ def sanitize_text(text: str, repo_root: Path) -> str:
     return text
 
 
+def resolve_argv(
+    argv: Sequence[str],
+    *,
+    windows: bool | None = None,
+) -> list[str]:
+    values = [str(item) for item in argv]
+    if not values:
+        raise CertificationError("empty command")
+
+    command = values[0]
+    candidate = Path(command)
+    if candidate.is_absolute() and candidate.is_file():
+        resolved = str(candidate)
+    else:
+        resolved = shutil.which(command)
+
+    if not resolved:
+        raise CertificationError("executable not found on PATH: " + command)
+
+    is_windows = os.name == "nt" if windows is None else windows
+    if is_windows and resolved.lower().endswith((".cmd", ".bat")):
+        comspec = os.environ.get("COMSPEC") or shutil.which("cmd.exe")
+        if not comspec:
+            raise CertificationError(
+                "Windows command processor not found for shim: " + resolved
+            )
+        return [comspec, "/d", "/c", "call", resolved, *values[1:]]
+
+    return [resolved, *values[1:]]
+
+
+def sanitize_argv(argv: Sequence[str], repo_root: Path) -> list[str]:
+    return [sanitize_text(str(item), repo_root) for item in argv]
+
+
 def run_capture(argv: Sequence[str], cwd: Path) -> tuple[int, str]:
+    executed = resolve_argv(argv)
     proc = subprocess.run(
-        list(argv),
+        executed,
         cwd=cwd,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         check=False,
@@ -560,11 +599,14 @@ def run_step(step: Step, repo_root: Path, logs_dir: Path) -> StepResult:
     start_clock = time.monotonic()
     env = os.environ.copy()
     env.update(dict(step.env))
+    executed = resolve_argv(step.argv)
     proc = subprocess.run(
-        list(step.argv),
+        executed,
         cwd=repo_root,
         env=env,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         check=False,
@@ -573,14 +615,16 @@ def run_step(step: Step, repo_root: Path, logs_dir: Path) -> StepResult:
     duration = time.monotonic() - start_clock
     log_rel = "logs/" + step.step_id + ".log"
     log_path = logs_dir / (step.step_id + ".log")
-    rendered = "$ " + " ".join(step.argv) + "\n\n" + proc.stdout
+    logical = "$ " + " ".join(step.argv)
+    resolved = "$[resolved] " + " ".join(executed)
+    rendered = logical + "\n" + resolved + "\n\n" + proc.stdout
     rendered = sanitize_text(rendered, repo_root)
     log_path.write_text(rendered, encoding="utf-8")
     status = "PASS" if proc.returncode == 0 else "FAIL"
     return StepResult(
         step_id=step.step_id,
         source=step.source,
-        command=list(step.argv),
+        command=sanitize_argv(step.argv, repo_root),
         started_utc=started,
         ended_utc=ended,
         duration_seconds=round(duration, 3),
@@ -588,6 +632,7 @@ def run_step(step: Step, repo_root: Path, logs_dir: Path) -> StepResult:
         status=status,
         log_file=log_rel,
         log_sha256=sha256_file(log_path),
+        executed_command=sanitize_argv(executed, repo_root),
     )
 
 
