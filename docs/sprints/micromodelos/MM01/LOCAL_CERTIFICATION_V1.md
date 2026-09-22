@@ -158,3 +158,23 @@ Se um step receber `KeyboardInterrupt` e o processo Python continuar com control
 O handler externo também captura `KeyboardInterrupt` quando possível para preservar a trilha probatória.
 
 Esse mecanismo não promete recuperar terminação externa abrupta que encerre o processo sem devolver controle ao Python. Nessas situações, a ausência de manifest/postflight/ZIP continua sendo evidência de uma execução incompleta e nunca pode ser reinterpretada como PASS.
+
+
+## 12. Saída incremental dos steps
+
+Os steps não devem permanecer silenciosos até o subprocesso encerrar.
+
+O certifier executa os gates com tee incremental:
+
+1. grava previamente no log o comando lógico;
+2. grava o comando efetivamente resolvido;
+3. lê stdout/stderr combinado linha a linha;
+4. sanitiza paths/tokens antes de persistir ou emitir;
+5. grava cada linha imediatamente no log;
+6. faz flush do log;
+7. emite a mesma linha sanitizada no stdout do certifier;
+8. faz flush do stdout.
+
+O streaming é probatório e operacional. Ele não altera o comando, não muda o environment do gate, não considera output textual como substituto do exit code e não permite continuar depois de falha.
+
+Se ocorrer interrupção controlável durante o streaming, o log parcial já emitido permanece disponível e o step é registrado como `INTERRUPTED` quando o processo Python conserva controle.
