@@ -205,3 +205,14 @@ A sequência obrigatória é:
 10. somente depois integrar a PR #51.
 
 Enquanto qualquer item estiver pendente, **MM01 não está aceita nem integrada e MM02 permanece bloqueada**.
+
+
+## Mudança operacional — MM01 Local Certification v1
+
+GitHub Actions não é mais tratado como autoridade executora obrigatória. A mudança é somente do canal de execução da evidência.
+
+Foi introduzido `tools/mm01_local_certify.py` e formalizado `LOCAL_CERTIFICATION_V1.md`. O executor é fail-closed, vinculado ao SHA, exige `behind_by=0`, worktree limpa, runtime controlado, executa os gates derivados dos workflows permanentes e produz bundle probatório com logs, exit codes, snapshots Git, ambiente e SHA-256.
+
+Após a reconciliação operacional desta rodada, a branch absorveu a `main` vigente por merge real `25ca58c4e7d55d4b68caebd3e3f75357599f9e53`. Em seguida, o mecanismo de drift foi endurecido para pin exato dos workflows: `b9bfec9912ea79781eb6e355c881c2f3185acc4d`; as regressões correspondentes entraram em `e4487bec5655baaa05913ffef8f0af547a8a05ce`.
+
+A candidata ainda não está congelada nem certificada localmente. O próximo gate é executar a certificação local sobre o novo HEAD técnico/documental, analisar o bundle e somente então submeter o SHA a auditoria independente.
