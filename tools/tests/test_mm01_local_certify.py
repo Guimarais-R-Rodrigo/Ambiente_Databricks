@@ -1,0 +1,99 @@
+from __future__ import annotations
+
+import tempfile
+import unittest
+from pathlib import Path
+
+from tools import mm01_local_certify as cert
+
+
+class TestMM01LocalCertification(unittest.TestCase):
+    def _result(
+        self,
+        step_id: str,
+        *,
+        status: str = "PASS",
+        exit_code: int | None = 0,
+    ) -> cert.StepResult:
+        return cert.StepResult(
+            step_id=step_id,
+            source="test",
+            command=["test"],
+            started_utc="2026-01-01T00:00:00Z",
+            ended_utc="2026-01-01T00:00:00Z",
+            duration_seconds=0.0,
+            exit_code=exit_code,
+            status=status,
+            log_file=None,
+            log_sha256=None,
+        )
+
+    def _complete_results(self) -> list[cert.StepResult]:
+        results = []
+        for step_id in sorted(cert.REQUIRED_STEP_IDS):
+            if step_id in cert.ALLOWED_SKIP_IDS:
+                results.append(
+                    self._result(step_id, status="SKIP_ALLOWED", exit_code=None)
+                )
+            else:
+                results.append(self._result(step_id))
+        return results
+
+    def test_remote_normalization_accepts_canonical_forms(self) -> None:
+        self.assertEqual(
+            cert.normalize_remote(
+                "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks.git"
+            ),
+            cert.REPOSITORY,
+        )
+        self.assertEqual(
+            cert.normalize_remote(
+                "git@github.com:Guimarais-R-Rodrigo/Ambiente_Databricks.git"
+            ),
+            cert.REPOSITORY,
+        )
+
+    def test_remote_normalization_rejects_other_repo(self) -> None:
+        self.assertIsNone(cert.normalize_remote("https://github.com/example/other.git"))
+
+    def test_output_must_be_outside_repo(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            with self.assertRaises(cert.CertificationError):
+                cert.require_outside_repo(root / "evidence", root)
+            outside = Path(tmp) / "evidence"
+            cert.require_outside_repo(outside, root)
+
+    def test_complete_result_requires_exact_required_set(self) -> None:
+        results = self._complete_results()
+        self.assertTrue(cert.result_is_complete(results, True, True))
+        self.assertFalse(cert.result_is_complete(results[:-1], True, True))
+
+    def test_required_failure_blocks_certification(self) -> None:
+        results = self._complete_results()
+        target = next(r for r in results if r.step_id not in cert.ALLOWED_SKIP_IDS)
+        target.status = "FAIL"
+        target.exit_code = 1
+        self.assertFalse(cert.result_is_complete(results, True, True))
+
+    def test_only_v12_scope_may_be_skipped(self) -> None:
+        results = self._complete_results()
+        other = next(r for r in results if r.step_id not in cert.ALLOWED_SKIP_IDS)
+        other.status = "SKIP_ALLOWED"
+        other.exit_code = None
+        self.assertFalse(cert.result_is_complete(results, True, True))
+
+    def test_preflight_and_postflight_are_mandatory(self) -> None:
+        results = self._complete_results()
+        self.assertFalse(cert.result_is_complete(results, False, True))
+        self.assertFalse(cert.result_is_complete(results, True, False))
+
+    def test_command_plan_covers_all_executable_required_steps(self) -> None:
+        ids = {step.step_id for step in cert.command_plan("python")}
+        self.assertEqual(ids | cert.ALLOWED_SKIP_IDS, cert.REQUIRED_STEP_IDS)
+        self.assertFalse(ids & cert.ALLOWED_SKIP_IDS)
+
+
+if __name__ == "__main__":
+    unittest.main()
