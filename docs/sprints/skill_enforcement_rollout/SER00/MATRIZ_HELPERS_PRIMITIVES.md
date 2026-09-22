@@ -12,7 +12,7 @@ Base: `11851e137dd7793b351ac08fc211c0be90005dee`. Legenda de profundidade: **P**
 | EDA scripts/run.py e run_enforced.py | run / run_enforced | referência concreta de core + coleta + Receipt | não copiar lógica analítica para um runner universal |
 | EDA scripts/postflight.py | finalize_or_raise / verify_finalized | finalização e adapter de auditoria descritos | criar contratos de verificação das novas produtoras |
 | tools/skill_enforcement/se07_policy.py | validação do registry pela CLI se07_policy.py | I: presença, enumerações e cardinalidade 14 | validação estrutural não demonstra semântica; enforce requer L4 |
-| tools/skill_enforcement/certify_local.py | perfis cumulativos se01–se08 | I parcial + README integral: Git state, logs, renderer, evidência externa | assertions históricas sobre árvore mutável bloqueiam rollout; A01 |
+| tools/skill_enforcement/certify_local.py | perfis cumulativos se01–se08 | I parcial + README integral: Git state, logs, renderer, evidência externa | assertions históricas sobre árvore mutável exigem separação histórica/prospectiva aceita no ADR-0022; implementação SER pendente |
 
 ## Mapa 14/14
 
