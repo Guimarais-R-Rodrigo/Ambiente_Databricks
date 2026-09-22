@@ -103,7 +103,7 @@ class SE08OperationalTests(unittest.TestCase):
         self.assertEqual(manual, root_manual)
         self.assertIn("S06-A1-R4=NOT_RUN", playbook)
         self.assertIn("SE06_DOD=INCOMPLETE", playbook)
-        self.assertIn("PROMOCAO", playbook.upper())
+        self.assertIn("PROMOÇÃO", playbook.upper())
         self.assertIn("BLOQUEADA", checklist)
         self.assertIn("publicar_free.py", checklist)
 
