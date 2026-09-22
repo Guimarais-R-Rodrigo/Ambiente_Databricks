@@ -1,4 +1,4 @@
-# Política de enforcement por skill — SE07
+# Política de enforcement por skill — SEF
 
 Este diretório publica a política canônica de **nível de enforcement** do Skill Enforcement Framework (SEF).
 
@@ -45,6 +45,23 @@ A API é somente leitura. Não altera contrato, arquivos, runtime ou estado de e
 - `enforce`: requisito implementado pode bloquear homologação.
 
 A SE07 começa com política explícita 14/14. Migração de uma skill para L1–L4 só ocorre quando os artefatos correspondentes existem e os testes pertinentes passam.
+
+## Operação permanente a partir da SE08
+
+A policy deixa de ser apenas artefato da sprint SE07 e passa a integrar os gates
+permanentes do Hub:
+
+- o validador geral confere contratos e policy contra a mesma raiz analisada;
+- o gate local usa o perfil cumulativo SE08 em modo parcial/read-only;
+- a certificação FULL SE08 inclui regressões anteriores, policy, I/O, renderer,
+  diff do derivado e snapshot documental;
+- publicação/verify no Free e comportamento do Genie Code continuam evidências
+  separadas, nunca inferidas do gate local.
+
+A promoção para o workspace do trabalho exige gate próprio. Ela não é autorizada
+por `target_level`, por uma rodada verde de CI ou pelo aceite humano de uma
+dívida histórica. O publicador do Free continua proibido como rota de escrita no
+workspace corporativo.
 
 ## Dívida da auditoria
 

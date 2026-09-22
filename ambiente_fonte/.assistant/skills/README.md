@@ -127,6 +127,37 @@ O objetivo é reduzir reinvenção e tornar a solução conferível — não pro
 
 ---
 
+## 🛡️ Skill Enforcement Framework
+
+O Hub usa uma policy transversal para declarar o nível de enforcement realmente
+existente em cada skill. Ela não substitui o `SKILL.md`; registra o quanto do
+fluxo já saiu de orientação textual e passou a ter gates estruturais
+verificáveis.
+
+| Nível | Evidência operacional |
+|---|---|
+| L0 | orientação textual |
+| L1 | contrato estruturado e validável |
+| L2 | preflight antes da lógica protegida |
+| L3 | execução determinística com evidência/Receipt |
+| L4 | Postflight fail-closed antes de conclusão homologada |
+
+`current_level` descreve o que existe agora. `target_level` é roadmap. Por
+isso uma skill pode ter target L3/L4 e continuar corretamente em L0/L1/L2 até
+que os artefatos correspondentes existam e seus gates passem.
+
+O rollout também é explícito: `guidance`, `audit`, `warn` e `enforce`.
+Um modo mais rígido não deve ser inferido do risco da tarefa nem de uma resposta
+bem-sucedida. A política é consultável pela API pública de
+`hub_scripts.skill_execution`.
+
+Na operação SE08, policy e contratos integram os validadores permanentes do Hub.
+Isso ainda não transforma CI local em teste de comportamento do Genie Code:
+seleção, uso de recursos e resistência a bypass precisam de evidência própria no
+ambiente alvo.
+
+---
+
 ## 📋 O que são os Templates das Skills?
 
 Dentro das pastas de algumas skills existe uma subpasta chamada **`templates/`**.
