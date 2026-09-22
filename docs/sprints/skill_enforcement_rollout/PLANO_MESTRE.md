@@ -1,6 +1,6 @@
 # Plano Mestre — Skill Enforcement Rollout
 
-**Versão candidata SER00, 2026-09-22.** Base `11851e137dd7793b351ac08fc211c0be90005dee`. Não constitui autorização de implementação ou freeze executivo aceito.
+**Versão candidata SER00 após aceite arquitetural de 2026-09-22.** Base `11851e137dd7793b351ac08fc211c0be90005dee`. A arquitetura A01–A03 está aceita; a SER00 ainda não está pronta para integração porque A07 permanece pendente. Não constitui autorização de SER01.
 
 ## 1. Objetivo e limites
 
@@ -8,7 +8,7 @@ Levar nove skills hoje abaixo do target ao nível correto e comprovado por super
 
 ## 2. Gate de entrada
 
-SER00 entrega inventário, matrizes e desenho candidato. A01 (certificação histórica), A02 (condições/verdade por superfície) e A03 (escopo criar-objeto) precisam de decisão humana. A07 exige complemento local do checkout e documentação raiz antes de ready/merge. Não começar SER01 enquanto esses gates não estiverem resolvidos e autorizados.
+SER00 entrega inventário, matrizes e desenho. Em 2026-09-22 houve aceite humano do encaminhamento A01–A03: certificação SER prospectiva e aditiva; evolução declarativa de condições sem sobrecarregar o schema 0.1; target L3 de criar-objeto mantido com escopo stage-specific a ser provado por matriz operação×tipo×host×efeito. A07 continua exigindo complemento local do checkout e documentação raiz antes de ready/merge. Não começar SER01 antes da integração da SER00 e de autorização humana separada.
 
 ## 3. Regime local-first
 
@@ -33,7 +33,7 @@ Rollout é dimensão distinta. Preservar EDA/enforce; novas L3 ficam inicialment
 
 LLM preserva metodologia e decisões não determinísticas; helpers implementam cálculos reutilizáveis; SEF fornece gates e evidências; policy declara a verdade do produto. Cada skill tem orquestração fina e domínio explícito, não cópia de helpers ou runner universal. Leitura/importação/chamada/conclusão são estados separados. Autorização não é execução. Hash não é identidade humana autenticada.
 
-A certificação SER será aditiva e terá identidade própria; a solução de A01 precisa ser aprovada antes de implementada. Preservar semântica histórica de perfis se01–se08, inclusive resultados vermelhos. Perfil novo sozinho não resolve tests históricos presos a números da árvore atual.
+A certificação SER será aditiva e terá identidade própria, conforme ADR-0022 aceito. Preservar semântica histórica de perfis se01–se08, inclusive resultados vermelhos. A implementação prospectiva deve separar assertions históricas temporalmente fixas de invariantes atuais; perfil novo sozinho não resolve testes históricos presos a números da árvore atual.
 
 ## 6. Ordem de integração candidata
 
@@ -243,7 +243,7 @@ Testes unitários usam fixtures sintéticas; mocks não provam Databricks real. 
 
 ## 9. Certificação local e evidências
 
-Conferir interfaces atuais com --help antes de executar. Comandos de referência existentes: validate_contracts.py, se07_policy.py, certify_local.py --profile se08, validate_assistant.py, render_simulado.py --write, validate_assistant.py --conferir-readme e ci_local.py --verbose. O perfil SE08 é referência histórica; a resolução A01 define explicitamente como será composto com o controle operacional SER. Não simplesmente retirar sua falha do relatório.
+Conferir interfaces atuais com --help antes de executar. Comandos de referência existentes: validate_contracts.py, se07_policy.py, certify_local.py --profile se08, validate_assistant.py, render_simulado.py --write, validate_assistant.py --conferir-readme e ci_local.py --verbose. O perfil SE08 é referência histórica. Pelo ADR-0022, a certificação operacional SER terá identidade própria e composição explícita; qualquer execução do perfil histórico na árvore nova continua registrada como canal separado. Não retirar sua falha do relatório nem reclassificar resultados antigos.
 
 Certificação final exige SHA/tree/main/merge-base, worktree pré/pós, diretório probatório externo novo, comandos e códigos de saída, versões/host, logs, hashes, renderer/diff e bundle verificável. Nenhum PASS de candidata anterior é transportado para novo SHA. Falha preservada; correção gera candidata/rodada nova, não retry-until-green. A indisponibilidade de rede/checkout impede uma alegação de full local, mas não deve ser mascarada como Actions failure.
 
