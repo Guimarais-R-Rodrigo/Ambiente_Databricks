@@ -445,12 +445,29 @@ def _exception_details(exc: BaseException) -> dict[str, object]:
 
 
 def _restart_manager_file_users(paths: list[Path]) -> dict[str, object]:
-    """Load the existing read-only Restart Manager observer only after a WinError32."""
+    """Load the existing read-only Restart Manager observer after WinError32.
+
+    The certifier is also loaded by spec_from_file_location in its regression
+    suite, where __package__ is empty and the sibling directory is not
+    necessarily on sys.path. Resolve that boundary explicitly instead of
+    silently losing the native observation.
+    """
     if __package__:
         from .cleanup_diagnostics import file_users
-    else:
-        from cleanup_diagnostics import file_users
-    return file_users(paths)
+        return file_users(paths)
+
+    import importlib.util
+    module_name = "_sef_cleanup_diagnostics_runtime"
+    module = sys.modules.get(module_name)
+    if module is None:
+        source = Path(__file__).with_name("cleanup_diagnostics.py")
+        spec = importlib.util.spec_from_file_location(module_name, source)
+        if spec is None or spec.loader is None:
+            raise ImportError("cleanup diagnostics loader unavailable")
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = module
+        spec.loader.exec_module(module)
+    return module.file_users(paths)
 
 
 def _windows_process_state(pid: object) -> dict[str, object]:

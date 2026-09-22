@@ -364,6 +364,11 @@ class CertifierTests(unittest.TestCase):
         self.assertIsNone(observation["metadata_error"])
         self.assertEqual("COMPLETE", record["cleanup"], "telemetry must not mutate verdict state")
 
+    @unittest.skipIf(os.name == "nt", "non-Windows loader regression")
+    def test_restart_manager_provider_loads_from_sibling_when_file_loaded(self):
+        observation = cert._restart_manager_file_users([Path(self.tmp.name) / "unused"])
+        self.assertEqual("NOT_APPLICABLE_NON_WINDOWS", observation["status"])
+
     def test_winerror32_failure_observer_is_single_shot_and_diagnostic_only(self):
         directory = Path(self.tmp.name) / "winerror32-observation"
         directory.mkdir()
