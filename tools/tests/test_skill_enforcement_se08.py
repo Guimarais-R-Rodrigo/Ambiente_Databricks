@@ -95,6 +95,7 @@ class SE08OperationalTests(unittest.TestCase):
         root_manual = (ROOT/"MANUAL_TECNICO.md").read_text(encoding="utf-8")
         playbook = (ROOT/"docs"/"playbooks"/"replicacao-trabalho.md").read_text(encoding="utf-8")
         checklist = (ROOT/"docs"/"playbooks"/"checklist-replicacao.md").read_text(encoding="utf-8")
+        root_readme = (ROOT/"README.md").read_text(encoding="utf-8")
 
         for text in (template, skills_readme, policy_readme, manual):
             self.assertIn("current_level", text)
@@ -103,7 +104,9 @@ class SE08OperationalTests(unittest.TestCase):
         self.assertEqual(manual, root_manual)
         self.assertIn("S06-A1-R4=NOT_RUN", playbook)
         self.assertIn("SE06_DOD=INCOMPLETE", playbook)
+        self.assertIn("14 skills", playbook)
         self.assertIn("PROMOÇÃO", playbook.upper())
+        self.assertIn("skill enforcement  : 5/5 contratos válidos", root_readme)
         self.assertIn("BLOQUEADA", checklist)
         self.assertIn("publicar_free.py", checklist)
 
