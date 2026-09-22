@@ -1,6 +1,6 @@
 # SE08 — CI, operação, documentação e gate de promoção ao trabalho
 
-**Status:** encerrada, certificada e integrada. `SE08_FULLY_CERTIFIED=true`. A promoção ao workspace do trabalho permanece bloqueada.
+**Status:** encerrada, certificada e integrada. `SE08_RC_FULLY_CERTIFIED=true`, `SE08_INTEGRATED=true` e `SE08_POST_MERGE_ACTIONS=PASS`. A promoção ao workspace do trabalho permanece bloqueada.
 
 ## Objetivo
 
@@ -21,10 +21,10 @@ RC_TREE                     = d29fb8221c08ab3ea1fb0198004d4720d4785f92
 LOCAL_CERTIFICATION         = PASS
 WINDOWS_R5                  = READY_FOR_REVIEW
 FULL_SE08_LOCAL             = PASS
-GITHUB_ACTIONS_RC           = PASS
+GITHUB_ACTIONS              = PASS
 DATABRICKS_FREE             = PASS
 GENIE_BEHAVIORAL_SCREENING  = NOT_APPLICABLE
-SE08_FULLY_CERTIFIED        = true
+SE08_RC_FULLY_CERTIFIED     = true
 ```
 
 A PR #90 integrou a RC em `main@627bcc798261451b70d396550fb5f11ca6d609c2`.
@@ -36,11 +36,19 @@ A PR #92 corrigiu somente a portabilidade da suíte e o filtro de dependências 
 workflow de transição. O merge resultou em:
 
 ```text
-FINAL_MAIN = 431c46fcffc9345ad4c24280ba13f2ba1dba579b
+SE08_INTEGRATION_SHA     = 431c46fcffc9345ad4c24280ba13f2ba1dba579b
+SE08_INTEGRATED          = true
+SE08_POST_MERGE_ACTIONS  = PASS
 ```
 
 A rodada de push desse SHA concluiu 17/17 workflows disparados em `success`,
 incluindo o mesmo `Kit de transição para o trabalho` em Python 3.11.
+
+A PR #93 executou somente o fechamento documental da SE08 e foi integrada em
+`85474968f5548c13a9a41a3c84f99b3e18f6874c`. A rodada de push desse merge
+documental concluiu 18/18 workflows disparados em `success`, incluindo os
+workflows dedicados `Skill Enforcement SE01` e `Skill Enforcement SE02`.
+Esse merge não altera a classificação dos bytes de produto da RC.
 
 ## Evidência dos gates
 
@@ -92,11 +100,11 @@ comportamento executável/conversacional a homologar e
 `GENIE_BEHAVIORAL_SCREENING=NOT_APPLICABLE` para a SE08.
 
 O screening da SE07 permanece histórico; ele não foi reexecutado nem
-reclassificado.
+reclassificado: `SE07_GENIE_BEHAVIORAL_SCREENING=PASS`.
 
 ## Equivalência entre RC e main final
 
-Depois da RC certificada, somente estes arquivos mudaram:
+Entre a RC certificada e o SHA de integração da SE08 (`431c46fcffc9345ad4c24280ba13f2ba1dba579b`), somente estes arquivos não documentais adicionais mudaram:
 
 - `.github/workflows/kit-transicao-trabalho.yml`;
 - `tools/tests/test_skill_enforcement_se07.py`.
@@ -106,9 +114,11 @@ certifier ou conteúdo publicado no Free. No Windows, quando `Path.is_junction`
 existe, o helper corretivo continua chamando a mesma API; no Python 3.11 sem essa
 API, o fallback foi provado pelo workflow que originalmente falhou.
 
+A PR #93 acrescentou somente os cinco arquivos documentais de fechamento
+(`CHANGELOG.md` e quatro documentos em `docs/sprints/skill_enforcement/`).
+
 A evidência Windows/Free continua vinculada aos bytes de produto da RC. A prova
-pós-merge da corretiva pertence ao SHA final da `main`; não se afirma que o
-FULL Windows foi reexecutado no merge commit.
+pós-merge da corretiva pertence ao SHA de integração `431c46fcffc9345ad4c24280ba13f2ba1dba579b`; não se afirma que o FULL Windows foi reexecutado nesse merge nem no merge documental.
 
 ## Dívidas históricas preservadas
 
