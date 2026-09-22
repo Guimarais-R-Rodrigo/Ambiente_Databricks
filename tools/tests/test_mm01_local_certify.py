@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import contextlib
+import gc
 import io
 import sys
+import warnings
 import tempfile
 import unittest
 from pathlib import Path
@@ -83,8 +85,11 @@ class TestMM01LocalCertification(unittest.TestCase):
                 (sys.executable, "-c", "print('stream-ok')"),
             )
             captured = io.StringIO()
-            with contextlib.redirect_stdout(captured):
-                result = cert.run_step(step, root, logs)
+            with warnings.catch_warnings():
+                warnings.simplefilter("error", ResourceWarning)
+                with contextlib.redirect_stdout(captured):
+                    result = cert.run_step(step, root, logs)
+                gc.collect()
 
             self.assertEqual(result.status, "PASS")
             self.assertEqual(result.exit_code, 0)
