@@ -105,7 +105,9 @@ def validate_policy_registry(policy_path:Path|str=DEFAULT_POLICY)->list[PolicyIs
     return issues
 
 def summarize(policy_path:Path|str=DEFAULT_POLICY)->dict[str,Any]:
-    issues=validate_policy_registry(policy_path); raw=json.loads(Path(policy_path).read_text(encoding="utf-8"))
+    path=Path(policy_path); issues=validate_policy_registry(path)
+    try: raw=json.loads(path.read_text(encoding="utf-8"))
+    except (OSError,json.JSONDecodeError): raw={}
     entries=raw.get("skills",[]) if isinstance(raw,Mapping) else []
     return {"schema_version":"1.0","sprint":"SE07","status":"PASS" if not issues else "FAIL","catalog_skills":len(discover_skills()),"policy_entries":len(entries) if isinstance(entries,list) else 0,"issues":[x.to_dict() for x in issues]}
 

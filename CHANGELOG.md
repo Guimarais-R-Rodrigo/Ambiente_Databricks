@@ -1,6 +1,18 @@
 # Changelog
 
 
+## 2026-09-21 — SE07: hotfix pós-merge para policy ilegível
+
+### Corrigido
+
+- (ChatGPT) `tools/skill_enforcement/se07_policy.py`: `summarize()` preserva o `POLICY_UNREADABLE` emitido pelo validator quando o arquivo de policy está ausente, ilegível ou com JSON malformado e retorna `FAIL` estruturado em vez de traceback.
+- (ChatGPT) `tools/tests/test_skill_enforcement_se07.py`: cobertura adversarial para policy ausente e JSON malformado, incluindo execução CLI `--json`, exit 1, payload estruturado e ausência de traceback.
+
+### Proveniência
+
+- Achado P2 do review automatizado da PR #80, surgido após o merge da SE07. O hotfix não altera policy, níveis, registry, runtime das skills nem a dívida residual já aceita.
+
+
 ## 2026-09-21 — SE07: encerramento humano com residual conhecido
 
 ### Atualizado
