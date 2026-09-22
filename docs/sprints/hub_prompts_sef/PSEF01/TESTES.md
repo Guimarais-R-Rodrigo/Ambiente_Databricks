@@ -24,7 +24,11 @@ O README pode explicar L0–L4 como conceito, mas não deve duplicar a classific
 
 Não alterar briefings individuais, skills, policy, instruções globais, Manual ou helpers.
 
-### V05 — derivado
+### V05 — links relativos
+
+Os 26 links relativos do README fonte foram resolvidos contra o Git tree da candidata: `26/26` existentes, `0` quebrados. Isso inclui o novo link para `hub_padroes/skill_enforcement/policy.json`.
+
+### V06 — derivado
 
 Confirmar que o derivado continua com o blob anterior e, portanto, está deliberadamente stale. Não editar o espelho manualmente.
 
@@ -35,6 +39,7 @@ PSEF01_SCOPE_VALIDATION      = PASS
 PSEF01_POLICY_AWARE_CONTRACT = PASS
 PSEF01_NO_LEVEL_HARDCODE     = PASS
 PSEF01_PROTECTED_SURFACES    = PASS
+PSEF01_RELATIVE_LINKS         = PASS (26/26)
 DERIVED_STALE                = true
 DERIVED_MANUAL_EDIT          = false
 GITHUB_ACTIONS               = DEFERRED_NO_CREDITS
