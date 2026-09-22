@@ -218,13 +218,13 @@ class CoreTests(_ThemeFixture, unittest.TestCase):
     def test_missing_dependencies_reported_without_install(self):
         code = "import sys;sys.path.insert(0,sys.argv[1]);from hub_snippets.visual.tema import load_reference_theme,ThemeError\ntry:load_reference_theme()\nexcept ThemeError as e:print(e.code)"
         env=dict(os.environ);env.pop('PYTHONPATH',None)
-        p=subprocess.run([sys.executable,'-B','-S','-c',code,str(PRODUCT)],capture_output=True,text=True,timeout=15,env=env)
+        p=subprocess.run([sys.executable,'-B','-E','-S','-c',code,str(PRODUCT)],capture_output=True,text=True,timeout=15,env=env)
         self.assertEqual(p.returncode,0,p.stderr);self.assertEqual(p.stdout.strip(),'DEPENDENCY_MISSING')
 
     def test_import_without_third_party_modules_or_platform(self):
         code="import sys;sys.path.insert(0,sys.argv[1]);from hub_snippets.visual.tema import normalize_color;print(normalize_color('#abc123'));assert not any(x in sys.modules for x in ['jsonschema','referencing','pyspark','plotly','pandas','mlflow','streamlit'])"
         env=dict(os.environ);env.pop('PYTHONPATH',None)
-        p=subprocess.run([sys.executable,'-B','-S','-c',code,str(PRODUCT)],capture_output=True,text=True,timeout=15,env=env)
+        p=subprocess.run([sys.executable,'-B','-E','-S','-c',code,str(PRODUCT)],capture_output=True,text=True,timeout=15,env=env)
         self.assertEqual(p.returncode,0,p.stderr);self.assertEqual(p.stdout.strip(),'#ABC123')
 
     def test_api_is_exhaustive(self):
