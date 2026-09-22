@@ -486,3 +486,245 @@ def run_preflight(
         blocking_issues=tuple(issues),
         condition_context=context_dict,
     )
+
+# ---------------------------------------------------------------------------
+# SE07 — política transversal de enforcement por skill
+# ---------------------------------------------------------------------------
+
+_POLICY_LEVELS = ("L0", "L1", "L2", "L3", "L4")
+_POLICY_ROLLOUT_MODES = {"guidance", "audit", "warn", "enforce"}
+_POLICY_RISK_CLASSES = {"low", "medium", "high", "critical"}
+_POLICY_STATUSES = {"defined", "implemented"}
+_POLICY_EVIDENCE_KINDS = {
+    "static", "preflight", "receipt", "postflight", "authorization"
+}
+
+
+class EnforcementPolicyError(ValueError):
+    """Política SEF ausente, ilegível ou estruturalmente inválida."""
+
+
+@dataclass(frozen=True)
+class EnforcementSurface:
+    id: str
+    level: str
+    evidence: str
+    rationale: str
+
+    def to_dict(self) -> dict[str, str]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class SkillEnforcementPolicy:
+    skill: str
+    risk_class: str
+    current_level: str
+    target_level: str
+    scope_mode: str
+    rollout_mode: str
+    policy_status: str
+    rationale: str
+    implemented_artifacts: tuple[str, ...]
+    protected_surfaces: tuple[EnforcementSurface, ...]
+    known_debt: tuple[str, ...]
+
+    def to_dict(self) -> dict[str, Any]:
+        value = asdict(self)
+        value["implemented_artifacts"] = list(self.implemented_artifacts)
+        value["protected_surfaces"] = [
+            item.to_dict() for item in self.protected_surfaces
+        ]
+        value["known_debt"] = list(self.known_debt)
+        return value
+
+
+def _policy_assistant_root() -> Path:
+    return Path(__file__).resolve().parents[2]
+
+
+def _policy_registry_path(assistant_root: Path) -> Path:
+    return assistant_root / "hub_padroes" / "skill_enforcement" / "policy.json"
+
+
+def _policy_level_index(level: str) -> int:
+    try:
+        return _POLICY_LEVELS.index(level)
+    except ValueError as exc:
+        raise EnforcementPolicyError(
+            f"nível SEF não suportado: {level!r}"
+        ) from exc
+
+
+def _policy_string(raw: Mapping[str, Any], key: str) -> str:
+    value = raw.get(key)
+    if not isinstance(value, str) or not value.strip():
+        raise EnforcementPolicyError(f"{key} deve ser string não vazia")
+    return value
+
+
+def _policy_surface(raw: Any) -> EnforcementSurface:
+    if not isinstance(raw, Mapping):
+        raise EnforcementPolicyError("protected_surface deve ser objeto")
+    level = _policy_string(raw, "level")
+    evidence = _policy_string(raw, "evidence")
+    _policy_level_index(level)
+    if evidence not in _POLICY_EVIDENCE_KINDS:
+        raise EnforcementPolicyError(f"evidence não suportada: {evidence!r}")
+    return EnforcementSurface(
+        id=_policy_string(raw, "id"),
+        level=level,
+        evidence=evidence,
+        rationale=_policy_string(raw, "rationale"),
+    )
+
+
+def _skill_policy(raw: Any) -> SkillEnforcementPolicy:
+    if not isinstance(raw, Mapping):
+        raise EnforcementPolicyError("skill policy deve ser objeto")
+    skill = _policy_string(raw, "skill")
+    risk = _policy_string(raw, "risk_class")
+    current = _policy_string(raw, "current_level")
+    target = _policy_string(raw, "target_level")
+    scope = _policy_string(raw, "scope_mode")
+    rollout = _policy_string(raw, "rollout_mode")
+    status = _policy_string(raw, "policy_status")
+    rationale = _policy_string(raw, "rationale")
+
+    current_i = _policy_level_index(current)
+    target_i = _policy_level_index(target)
+    if target_i < current_i:
+        raise EnforcementPolicyError(
+            f"{skill}: target_level não pode ser inferior a current_level"
+        )
+    if risk not in _POLICY_RISK_CLASSES:
+        raise EnforcementPolicyError(f"{skill}: risk_class inválida: {risk!r}")
+    if scope not in {"whole_skill", "stage_specific"}:
+        raise EnforcementPolicyError(f"{skill}: scope_mode inválido: {scope!r}")
+    if rollout not in _POLICY_ROLLOUT_MODES:
+        raise EnforcementPolicyError(
+            f"{skill}: rollout_mode inválido: {rollout!r}"
+        )
+    if status not in _POLICY_STATUSES:
+        raise EnforcementPolicyError(
+            f"{skill}: policy_status inválido: {status!r}"
+        )
+
+    artifacts = raw.get("implemented_artifacts")
+    debt = raw.get("known_debt")
+    surfaces = raw.get("protected_surfaces")
+    if not isinstance(artifacts, list) or any(
+        not isinstance(item, str) or not item for item in artifacts
+    ):
+        raise EnforcementPolicyError(f"{skill}: implemented_artifacts inválido")
+    if not isinstance(debt, list) or any(
+        not isinstance(item, str) or not item for item in debt
+    ):
+        raise EnforcementPolicyError(f"{skill}: known_debt inválido")
+    if not isinstance(surfaces, list) or not surfaces:
+        raise EnforcementPolicyError(
+            f"{skill}: protected_surfaces deve ser lista não vazia"
+        )
+
+    parsed = tuple(_policy_surface(item) for item in surfaces)
+    if any(_policy_level_index(item.level) > target_i for item in parsed):
+        raise EnforcementPolicyError(
+            f"{skill}: protected_surface excede target_level"
+        )
+    if status == "implemented" and current != target:
+        raise EnforcementPolicyError(
+            f"{skill}: policy_status=implemented exige current_level == target_level"
+        )
+    if rollout == "enforce" and current != "L4":
+        raise EnforcementPolicyError(
+            f"{skill}: rollout_mode=enforce exige L4 implementado"
+        )
+
+    return SkillEnforcementPolicy(
+        skill=skill,
+        risk_class=risk,
+        current_level=current,
+        target_level=target,
+        scope_mode=scope,
+        rollout_mode=rollout,
+        policy_status=status,
+        rationale=rationale,
+        implemented_artifacts=tuple(artifacts),
+        protected_surfaces=parsed,
+        known_debt=tuple(debt),
+    )
+
+
+def load_enforcement_policy_registry(
+    *,
+    assistant_root: Path | str | None = None,
+    policy_path: Path | str | None = None,
+) -> dict[str, SkillEnforcementPolicy]:
+    """Carrega o registry SE07 sem executar helpers nem escrever arquivos."""
+    root = (
+        Path(assistant_root)
+        if assistant_root is not None
+        else _policy_assistant_root()
+    )
+    target = (
+        Path(policy_path)
+        if policy_path is not None
+        else _policy_registry_path(root)
+    )
+    try:
+        raw = json.loads(target.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise EnforcementPolicyError(
+            f"policy registry ilegível: {exc}"
+        ) from exc
+    if not isinstance(raw, Mapping):
+        raise EnforcementPolicyError("policy registry deve ser objeto")
+    if raw.get("schema_version") != "1.0":
+        raise EnforcementPolicyError(
+            f"schema_version não suportada: {raw.get('schema_version')!r}"
+        )
+    skills = raw.get("skills")
+    if not isinstance(skills, list):
+        raise EnforcementPolicyError("skills deve ser lista")
+
+    result: dict[str, SkillEnforcementPolicy] = {}
+    for item in skills:
+        policy = _skill_policy(item)
+        if policy.skill in result:
+            raise EnforcementPolicyError(
+                f"skill duplicada: {policy.skill}"
+            )
+        result[policy.skill] = policy
+    return result
+
+
+def get_skill_enforcement_policy(
+    skill: str,
+    *,
+    assistant_root: Path | str | None = None,
+    policy_path: Path | str | None = None,
+) -> SkillEnforcementPolicy:
+    """Retorna a política canônica; skill desconhecida falha fechado."""
+    policies = load_enforcement_policy_registry(
+        assistant_root=assistant_root,
+        policy_path=policy_path,
+    )
+    try:
+        return policies[skill]
+    except KeyError as exc:
+        raise EnforcementPolicyError(
+            f"skill sem política SEF: {skill}"
+        ) from exc
+
+
+def list_skill_enforcement_policies(
+    *,
+    assistant_root: Path | str | None = None,
+    policy_path: Path | str | None = None,
+) -> tuple[SkillEnforcementPolicy, ...]:
+    policies = load_enforcement_policy_registry(
+        assistant_root=assistant_root,
+        policy_path=policy_path,
+    )
+    return tuple(policies[name] for name in sorted(policies))
+

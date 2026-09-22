@@ -1249,7 +1249,7 @@ Guia conceitual e de decisão: `hub_scripts/skill_execution/README.md` (a partir
 
 Resolve `execution_contract.json` antes do core analítico e devolve um `PreflightResult` estruturado com `PASS` ou `BLOCKED`, decisões por recurso/template, issues bloqueantes e `writes_performed=false`. Na SE02, `run_preflight` avalia apenas pré-condições objetivas: não executa a EDA, não chama helpers analíticos e não prova aderência posterior.
 
-A API pública é `run_preflight`. O contrato v0.1 continua em `mode="audit"`; runner determinístico, Execution Receipt e postflight pertencem a estágios posteriores do Skill Enforcement Framework. Condição usada pelo contrato sem contexto explícito bloqueia o preflight em vez de ser tratada silenciosamente como falsa.
+A API pública inclui `run_preflight` e, desde a SE07, `get_skill_enforcement_policy`/`list_skill_enforcement_policies` para consultar a política transversal de nível por skill. O registry fica em `hub_padroes/skill_enforcement/policy.json`. `current_level` descreve somente enforcement implementado; `target_level` é roadmap e não prova existência de gates. O contrato v0.1 continua em `mode="audit"`; condição usada pelo contrato sem contexto explícito bloqueia o preflight em vez de ser tratada silenciosamente como falsa.
 
 ---
 

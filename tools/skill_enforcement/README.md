@@ -168,6 +168,21 @@ python -B tools/tests/test_skill_enforcement_se06.py -v
 
 A suíte cobre 12 variantes estruturais e o scorer da coleta comportamental.
 
+## SE07 — generalização por risco
+
+Registry publicado:
+
+`ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json`
+
+Validação:
+
+```powershell
+python -B tools/skill_enforcement/se07_policy.py
+python -B tools/tests/test_skill_enforcement_se07.py -v
+```
+
+O registry cobre exatamente 14/14 skills e separa `current_level` de `target_level`. O validator impede que uma skill alegue L1–L4 sem os artifacts mínimos correspondentes.
+
 ## Certificação local reproduzível
 
 Entry points:
@@ -178,6 +193,7 @@ python -B tools/skill_enforcement/certify_local.py --profile se03
 python -B tools/skill_enforcement/certify_local.py --profile se04
 python -B tools/skill_enforcement/certify_local.py --profile se05
 python -B tools/skill_enforcement/certify_local.py --profile se06
+python -B tools/skill_enforcement/certify_local.py --profile se07
 ```
 
 O perfil `se05` executa:
@@ -195,12 +211,12 @@ O perfil `se05` executa:
 11. render-diff incluindo untracked;
 12. snapshot README.
 
-O perfil `se06` acrescenta `test_skill_enforcement_se06.py` ao conjunto SE05 e preserva os mesmos gates de estrutura, renderer, render-diff e snapshot.
+O perfil `se06` acrescenta `test_skill_enforcement_se06.py` ao conjunto SE05 e preserva os mesmos gates de estrutura, renderer, render-diff e snapshot. O perfil `se07` acrescenta o validador do registry e `test_skill_enforcement_se07.py`, mantendo todas as regressões anteriores.
 
 Por padrão o certifier exige worktree limpo antes de qualquer step mutável. O evidence bundle fica fora do repositório em:
 
 ```text
-~/.ambiente_databricks/sef_certifications/<timestamp>_<sha>/
+~/.ambiente_databricks/sef_certifications/<timestamp>_<identidade-ou-unknown>_<uuid>/
 ```
 
 Exemplo de destino explícito:
@@ -209,7 +225,9 @@ Exemplo de destino explícito:
 python -B tools/skill_enforcement/certify_local.py --profile se05 --evidence-dir C:\temp\sef-se05
 ```
 
-A execução continua após failures para revelar achados adicionais; qualquer step reprovado mantém exit code final diferente de zero.
+A execução continua após falhas ordinárias de gates; timeout, interrupção ou falha de infraestrutura interrompem a sequência e registram os steps não iniciados. Qualquer falha impede sucesso. O diretório de evidência deve ser novo e externo, mesmo quando vazio. O SE07 inclui a suíte do certifier.
+
+F-04 acrescenta limites finitos por processo, observação Git obrigatória e identidade final estável. Detalhes, opções, campos aditivos e limites: [F04_D10.md](../../docs/sprints/skill_enforcement/SE07/F04_D10.md).
 
 ### Subgate do CI local
 

@@ -21,6 +21,10 @@ conteúdo.
 Esses são os seis tipos de objeto do Hub. `auditoria/` e `output/` são padrões
 transversais de processo, não novos tipos.
 
+## Skill Enforcement Framework
+
+A política transversal de enforcement por skill está em [skill_enforcement/README.md](skill_enforcement/README.md). O arquivo `skill_enforcement/policy.json` é machine-readable e separa nível atual de target de migração. Ele não cria um novo tipo de objeto.
+
 ## Sistema de Temas
 
 O [padrão de identidade visual](identidade_visual/README.md) é o contrato transversal; não é um sétimo tipo de objeto. `ResolvedTheme` é a representação validada. V03/V04 integram consumidores Plotly/HTML, V05 fornece o Visual Lab opt-in, V06 conecta geração editorial e V07 amplia os consumidores runtime e formatos exercitados.

@@ -29,6 +29,73 @@ Não aprovar uma skill apenas por conter palavras-chave. Ler o contrato, testar 
 - Se as entradas forem ambíguas, perguntar qual modo usar. Não avaliar o output como
   se fosse a implementação, nem o inverso.
 
+## Executar o preflight SEF L2 antes da auditoria
+
+Antes de qualquer auditoria substantiva, executar `scripts/preflight.py::preflight`
+com o modo e as entradas observáveis da sessão.
+
+No **Modo OUTPUT**, informar explicitamente:
+
+- `audit_mode="OUTPUT"`;
+- `producer_skill` com o nome da skill produtora;
+- `original_request_present=true|false`;
+- `artifact_present=true|false`.
+
+No **Modo IMPLEMENTAÇÃO**, informar:
+
+- `audit_mode="IMPLEMENTACAO"`;
+- `target_skills` com uma lista não vazia das skills a auditar.
+
+Regras do gate:
+
+- `status=BLOCKED` encerra a rota antes da auditoria substantiva; reportar os
+  `blocking_issues` sem completar lacunas por inferência;
+- `status=PASS` apenas autoriza prosseguir para a auditoria: **não** prova
+  canonical compliance, não executa verifier e não equivale a reverificação;
+- ausência da policy SEF de uma skill produtora existente é registrada como
+  `evidence_gap`, não como nível inventado;
+- o preflight é somente leitura: não altera notebook, skill, artefato ou
+  workspace e não executa análise.
+
+## Executar o runner SEF L3 para registrar a evidência
+
+Depois de um preflight L2 em `PASS`, usar `scripts/run.py::run` para
+estruturar a evidência material da auditoria e emitir
+`SE07-AUDIT-RECEIPT-1`.
+
+O runner recebe uma escada explícita para cada item auditado:
+
+`citado → localizado → lido → importado → chamado → concluído`.
+
+Cada degrau é independente. Usar `true`, `false` ou `null` no input do
+runner; `null` vira `NOT_OBSERVABLE`. O runner não promove um degrau a
+partir do seguinte.
+
+Para helpers condicionais, fornecer aplicabilidade como `true`, `false` ou
+`null`. `null` permanece `NOT_OBSERVABLE`.
+
+No Modo OUTPUT, quando houver um final payload da
+`hub-ml-eda-profissional`, o runner chama diretamente
+`scripts/postflight.py::verify_finalized` da skill produtora. Somente o
+resultado desse verifier pode produzir `PASS_REVERIFIED` para a conclusão da
+produtora.
+
+Sem payload compatível ou sem adapter canônico, registrar
+`producer_canonical_compliance=NOT_REVERIFIED`.
+
+O adapter EDA registra separadamente se o verifier foi localizado, importado,
+chamado, concluído e se retornou uma forma válida. A forma vigente exige
+`status`, `valid`, `completion_authorized`, `completion_claim_consistent` e
+`issues`; `issues` é lista ou tupla de strings. `PASS_REVERIFIED` exige os quatro
+sinais positivos, `status="VALID"` e `issues` vazio. Falha de importação permanece
+`NOT_REVERIFIED`; falha de chamada e retorno malformado permanecem
+`NOT_PASS_REVERIFIED`, com diagnóstico estruturado. Isso descreve somente o
+adapter canônico EDA atual e não cria uma taxonomia universal de warnings.
+
+O Receipt L3 da auditoria prova apenas que o **runner da auditoria** executou
+canonicamente e que seu resultado não foi adulterado. Ele não substitui
+Receipt/Postflight/verifier da skill produtora e não autoriza completion dela.
+
 ## Executar auditoria de implementação
 
 1. Inventariar cada pasta direta de `.assistant/skills`.
@@ -46,6 +113,54 @@ Não aprovar uma skill apenas por conter palavras-chave. Ler o contrato, testar 
 11. Conferir a seção de helpers da skill contra [MANUAL_TECNICO.md#catalogo-helpers](../../MANUAL_TECNICO.md#catalogo-helpers): módulos citados existem, caminhos de import conferem, dependências opcionais estão sinalizadas e nenhum helper aplicável ao fluxo ficou de fora.
 12. Executar o validador disponível e registrar comando, saída e data.
 13. Produzir achados priorizados e uma conclusão independente para cada skill e para o conjunto.
+
+## Resolver a política SEF antes de auditar
+
+Quando a skill produtora estiver no catálogo SEF, resolver a política canônica antes de inferir o nível de enforcement:
+
+```python
+from hub_scripts.skill_execution import get_skill_enforcement_policy
+policy = get_skill_enforcement_policy("<skill-produtora>")
+```
+
+Usar `policy.current_level` como realidade observável. `policy.target_level` é roadmap e **não prova** que contrato, preflight, runner, Receipt ou Postflight já existam.
+
+Se a política não puder ser carregada ou a skill não estiver registrada, reportar a lacuna; não inventar um nível.
+
+### Escada obrigatória de evidência
+
+Para cada helper/template/entrypoint material, distinguir explicitamente:
+
+`citado → localizado → lido → importado → chamado → concluído`
+
+Regras:
+
+- evidência de um estado não promove automaticamente o seguinte;
+- qualquer estado não demonstrado permanece `NOT_OBSERVABLE`;
+- existência no catálogo prova no máximo que o recurso pode ser localizado, não que foi lido/importado/chamado;
+- import não prova call;
+- call não prova conclusão bem-sucedida;
+- output persistido não prova reverificação independente.
+
+### Observado não é reverificado
+
+Um notebook pode conter `Receipt VALID`, `postflight=PASS` ou `completion.authorized=true`. Isso autoriza registrar **“estado persistido observado”**.
+
+Só usar **“reverificado”** quando a auditoria executar o verifier canônico aplicável sobre o artefato atual e registrar a execução. Para a EDA L4, isso inclui `scripts/postflight.py::verify_finalized` quando disponível e executável no contexto de auditoria.
+
+Se o verifier não foi executado, escrever `NOT_REVERIFIED`/“não reverificado independentemente”, mesmo quando o output persistido mostre PASS.
+
+### Aplicabilidade e bloqueios pré-execução
+
+Não marcar helper condicional como obrigatório apenas porque existe no catálogo. Derivar aplicabilidade do contrato e do contexto observável; quando faltar evidência, preservar `NOT_OBSERVABLE`.
+
+Ausência de Receipt/Postflight em uma rota corretamente bloqueada **antes da execução protegida** não é, por si só, FAIL de execução L4. Distinguir:
+
+- bloqueio pré-execução;
+- execução que falhou;
+- evidência ausente;
+- execução concluída.
+
 
 ## Integrar com evidência mecânica de enforcement
 

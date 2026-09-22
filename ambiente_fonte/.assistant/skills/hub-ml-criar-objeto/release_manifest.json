@@ -1,0 +1,47 @@
+{
+  "manifest_version": "0.1",
+  "skill": "hub-ml-criar-objeto",
+  "algorithm": "git_blob_sha1",
+  "artifacts": [
+    {
+      "path": "hub_padroes/readme/template.md",
+      "role": "template",
+      "git_blob_sha1": "522f6cb4bd6b23d8190aae6e16aed0f81fb393b0"
+    },
+    {
+      "path": "hub_scripts/skill_execution/receipt/__init__.py",
+      "role": "receipt_engine",
+      "git_blob_sha1": "0845b8109560c05a5a466638f02482b0541ab6b9"
+    },
+    {
+      "path": "skills/hub-ml-criar-objeto/SKILL.md",
+      "role": "skill_guidance",
+      "git_blob_sha1": "7cc56ae8a320ebc95003752a2bd1e315b8e59a58"
+    },
+    {
+      "path": "skills/hub-ml-criar-objeto/execution_contract.json",
+      "role": "contract",
+      "git_blob_sha1": "bff3a97e24743894c3202c577b442ea210307c8e"
+    },
+    {
+      "path": "skills/hub-ml-criar-objeto/scripts/_windows_writer.py",
+      "role": "protected_primitive",
+      "git_blob_sha1": "90368d6054c2664e5f8c7684dff948683fbd6e79"
+    },
+    {
+      "path": "skills/hub-ml-criar-objeto/scripts/preflight.py",
+      "role": "preflight",
+      "git_blob_sha1": "2fbae791dfac07a640f3e03b61df9dcae6dc477f"
+    },
+    {
+      "path": "skills/hub-ml-criar-objeto/scripts/run.py",
+      "role": "runner",
+      "git_blob_sha1": "f01c7afc4febe73520e3982771d08d0bb792b312"
+    },
+    {
+      "path": "skills/hub-ml-criar-objeto/templates/checklist-objeto-novo.md",
+      "role": "checklist",
+      "git_blob_sha1": "dbd56f4fa6013d2245cc4945ca92600ca56198b9"
+    }
+  ]
+}

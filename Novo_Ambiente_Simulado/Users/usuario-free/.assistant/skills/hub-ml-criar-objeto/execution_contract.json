@@ -1,0 +1,68 @@
+{
+  "schema_version": "0.1",
+  "skill": "hub-ml-criar-objeto",
+  "mode": "audit",
+  "metadata": {
+    "se07": {
+      "enforcement_level": "L2",
+      "target_level": "L3",
+      "scope": "stage_specific",
+      "runtime_gate": true,
+      "static_invariants": [
+        "choose_closed_object_type_before_writing",
+        "read_canonical_template_before_generation",
+        "search_existing_capability_before_new_object",
+        "generate_public_api_with_canonical_tool",
+        "run_validator_before_ready_claim",
+        "do_not_create_new_snippet_section_without_explicit_decision"
+      ],
+      "preflight_contract": {
+        "protected_operations": [
+          "create",
+          "convert"
+        ],
+        "closed_object_types": [
+          "snippet",
+          "script",
+          "prompt",
+          "readme",
+          "notebook",
+          "skill"
+        ],
+        "required_common_fields": [
+          "operation",
+          "object_type",
+          "object_name",
+          "type_confirmed",
+          "existing_capability_checked",
+          "existing_capability_status"
+        ],
+        "conditional_fields": {
+          "snippet": [
+            "snippet_section"
+          ],
+          "readme": [
+            "readme_scale",
+            "destination_relative"
+          ],
+          "notebook": [
+            "destination_relative"
+          ],
+          "convert": [
+            "source_relative"
+          ]
+        },
+        "no_write_guarantee": true
+      }
+    }
+  },
+  "resources": [],
+  "templates": [
+    {
+      "id": "checklist_objeto_novo",
+      "path": "templates/checklist-objeto-novo.md",
+      "policy": "required",
+      "evidence": "loaded"
+    }
+  ]
+}

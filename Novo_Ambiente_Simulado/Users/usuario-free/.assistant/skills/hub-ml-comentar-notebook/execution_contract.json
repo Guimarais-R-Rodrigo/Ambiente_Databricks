@@ -1,0 +1,50 @@
+{
+  "schema_version": "0.1",
+  "skill": "hub-ml-comentar-notebook",
+  "mode": "audit",
+  "metadata": {
+    "se07": {
+      "enforcement_level": "L1",
+      "scope": "whole_skill",
+      "runtime_gate": false,
+      "static_invariants": [
+        "preserve_existing_code_cells",
+        "documentation_changes_only_around_existing_code",
+        "do_not_claim_current_execution_without_validated_outputs"
+      ]
+    }
+  },
+  "resources": [],
+  "templates": [
+    {
+      "id": "cabecalho_notebook",
+      "path": "templates/cabecalho_notebook.md",
+      "policy": "optional",
+      "evidence": "loaded"
+    },
+    {
+      "id": "bloco_markdown_pre_codigo",
+      "path": "templates/bloco_markdown_pre_codigo.md",
+      "policy": "optional",
+      "evidence": "loaded"
+    },
+    {
+      "id": "bloco_markdown_pre_compacto",
+      "path": "templates/bloco_markdown_pre_compacto.md",
+      "policy": "optional",
+      "evidence": "loaded"
+    },
+    {
+      "id": "bloco_markdown_pos_codigo",
+      "path": "templates/bloco_markdown_pos_codigo.md",
+      "policy": "optional",
+      "evidence": "loaded"
+    },
+    {
+      "id": "bloco_markdown_pos_compacto",
+      "path": "templates/bloco_markdown_pos_compacto.md",
+      "policy": "optional",
+      "evidence": "loaded"
+    }
+  ]
+}

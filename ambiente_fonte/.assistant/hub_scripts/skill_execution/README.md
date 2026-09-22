@@ -211,3 +211,20 @@ Próximo estágio arquitetural após a SE05: SE06 amplia evals repetidos/adversa
 - testes `tools/tests/test_skill_enforcement_se03.py`, `test_skill_enforcement_se04.py`, `test_skill_enforcement_se04_runner.py`, `test_skill_enforcement_se05.py` e `test_skill_enforcement_se05_runner.py`.
 
 Estado desta revisão: implementação SE05 presente na branch de desenvolvimento; certificação oficial local/Free permanece gate separado antes de release candidate.
+
+
+## Política transversal SE07
+
+A SE07 adiciona um registry publicado para as 14 skills:
+
+`hub_padroes/skill_enforcement/policy.json`
+
+Consulta:
+
+```python
+from hub_scripts.skill_execution import get_skill_enforcement_policy
+
+policy = get_skill_enforcement_policy("hub-ml-auditoria-skills")
+```
+
+`current_level` é evidence-based. `target_level` é roadmap. A API é somente leitura e não executa helpers, não cria Receipt e não promove uma skill de nível.

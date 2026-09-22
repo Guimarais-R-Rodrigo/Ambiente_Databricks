@@ -31,7 +31,7 @@
     {
       "path": "hub_scripts/skill_execution/skill_execution.py",
       "role": "preflight_engine",
-      "git_blob_sha1": "549f37654c575604247ae2fe3980d405edf6a0f6"
+      "git_blob_sha1": "f3f0d1647da161d051802ed53ce120194640e0e4"
     },
     {
       "path": "hub_scripts/skill_execution/receipt/__init__.py",
