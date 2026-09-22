@@ -183,11 +183,20 @@ class ContractTests(unittest.TestCase):
     def test_path_windows_drive(self): self.reject('PATH_SCOPE',c.safe_file,ROOT,'C:/README.md')
     def test_path_symlink(self):
         with tempfile.TemporaryDirectory() as tmp:
-            root=Path(tmp);(root/'x').write_text('ok');(root/'s').symlink_to(root/'x')
+            root=Path(tmp);(root/'x').write_text('ok')
+            try:
+                (root/'s').symlink_to(root/'x')
+            except (OSError, NotImplementedError) as exc:
+                self.skipTest(f'filesystem sem symlink de arquivo: {exc}')
             self.reject('PATH_SYMLINK',c.safe_file,root,'s')
     def test_parent_symlink_on_json_read(self):
         with tempfile.TemporaryDirectory() as tmp:
-            root=Path(tmp);(root/'a').mkdir();(root/'a/x.json').write_text('{}');(root/'b').symlink_to(root/'a',target_is_directory=True)
+            root=Path(tmp);(root/'a').mkdir();(root/'a/x.json').write_text('{}')
+            link=root/'b'
+            try:
+                link.symlink_to(root/'a',target_is_directory=True)
+            except (OSError, NotImplementedError) as exc:
+                self.skipTest(f'filesystem sem symlink de diretório: {exc}')
             self.reject('PATH_SYMLINK',c.read_json,root/'b/x.json')
     def test_theme_id_trailing_newline_rejected(self):
         self.theme['theme_id']='tema\n';self.reject('SCHEMA_PATTERN',self.validate)
@@ -209,7 +218,12 @@ class ContractTests(unittest.TestCase):
         p=copy.deepcopy(self.policy);p['new_revision_required_for'].remove('editar_publicado');self.reject('POLICY_IMMUTABLE',c.validate_policy,p)
     def test_file_root_parent_symlink(self):
         with tempfile.TemporaryDirectory() as tmp:
-            root=Path(tmp);(root/'actual/sub').mkdir(parents=True);(root/'actual/sub/x').write_text('x');(root/'alias').symlink_to(root/'actual',target_is_directory=True)
+            root=Path(tmp);(root/'actual/sub').mkdir(parents=True);(root/'actual/sub/x').write_text('x')
+            alias=root/'alias'
+            try:
+                alias.symlink_to(root/'actual',target_is_directory=True)
+            except (OSError, NotImplementedError) as exc:
+                self.skipTest(f'filesystem sem symlink de diretório: {exc}')
             self.reject('PATH_SYMLINK',c.safe_file,root/'alias/sub','x')
     def test_document_local_links_resolve(self):
         self.assertGreater(c.check_links(),20)

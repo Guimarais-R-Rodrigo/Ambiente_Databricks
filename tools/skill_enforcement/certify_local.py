@@ -10,6 +10,7 @@ Uso principal:
     python -B tools/skill_enforcement/certify_local.py --profile se05
     python -B tools/skill_enforcement/certify_local.py --profile se06
     python -B tools/skill_enforcement/certify_local.py --profile se07
+    python -B tools/skill_enforcement/certify_local.py --profile se08
 
 O certifier é o gate determinístico de desenvolvimento do SEF. Ele não usa
 credenciais Databricks nem rede por conta própria. GitHub Actions deve chamar o
@@ -126,6 +127,26 @@ _SE07_TEST_STEP = (
     "se07_policy_tests",
     [sys.executable, "-B", "tools/tests/test_skill_enforcement_se07.py", "-v"],
 )
+_SE08_POLICY_IO_STEP = (
+    "se08_policy_io_tests",
+    [sys.executable, "-B", "tools/tests/test_skill_enforcement_policy_io.py", "-v"],
+)
+_SE08_TEST_STEP = (
+    "se08_operational_tests",
+    [sys.executable, "-B", "tools/tests/test_skill_enforcement_se08.py", "-v"],
+)
+_SE08_STORAGE_CLEANUP_STEP = (
+    "se08_storage_cleanup_tests",
+    [sys.executable, "-B", "tools/tests/test_certify_storage_cleanup.py", "-v"],
+)
+_SE08_WINDOWS_CORRECTIVE_STEP = (
+    "se08_windows_corrective_tests",
+    [sys.executable, "-B", "tools/tests/test_se08_windows_corrective.py", "-v"],
+)
+_SE08_CLEANUP_DIAGNOSTICS_STEP = (
+    "se08_cleanup_diagnostics_tests",
+    [sys.executable, "-B", "tools/tests/test_se08_cleanup_diagnostics.py", "-v"],
+)
 _COMMON_FINAL_STEPS = [
     (
         "assistant_structure",
@@ -216,6 +237,26 @@ PROFILE_STEPS: dict[str, list[tuple[str, list[str]]]] = {
         ("certifier_regression", [sys.executable, "-B", "tools/tests/test_certify_local.py", "-v"]),
         *_COMMON_FINAL_STEPS,
     ],
+    "se08": [
+        _CONTRACT_STEP,
+        _SE01_STEP,
+        _SE02_STEP,
+        _SE03_STEP,
+        _SE04_RECEIPT_STEP,
+        _SE04_RUNNER_STEP,
+        _SE05_POSTFLIGHT_STEP,
+        _SE05_RUNNER_STEP,
+        _SE06_EVAL_STEP,
+        _SE07_POLICY_STEP,
+        _SE07_TEST_STEP,
+        _SE08_POLICY_IO_STEP,
+        _SE08_TEST_STEP,
+        _SE08_STORAGE_CLEANUP_STEP,
+        _SE08_WINDOWS_CORRECTIVE_STEP,
+        _SE08_CLEANUP_DIAGNOSTICS_STEP,
+        ("certifier_regression", [sys.executable, "-B", "tools/tests/test_certify_local.py", "-v"]),
+        *_COMMON_FINAL_STEPS,
+    ],
 }
 
 
@@ -266,7 +307,11 @@ class _WindowsJob:
             _fields_ = [("Times", ctypes.c_longlong * 4), ("TotalPageFaultCount", w.DWORD),
                         ("TotalProcesses", w.DWORD), ("ActiveProcesses", w.DWORD),
                         ("TotalTerminatedProcesses", w.DWORD)]
+        class ProcessIds(ctypes.Structure):
+            _fields_ = [("AssignedProcesses", w.DWORD), ("Count", w.DWORD),
+                        ("Pids", ctypes.c_size_t * 256)]
         self.accounting = Accounting
+        self.process_ids = ProcessIds
         for name, restype, argtypes in [
             ("CreateJobObjectW", w.HANDLE, [ctypes.c_void_p, w.LPCWSTR]),
             ("SetInformationJobObject", w.BOOL, [w.HANDLE, ctypes.c_int, ctypes.c_void_p, w.DWORD]),
@@ -286,6 +331,39 @@ class _WindowsJob:
     def assign(self, process: subprocess.Popen) -> None:
         if not self.k.AssignProcessToJobObject(self.handle, int(process._handle)):
             raise self.ctypes.WinError(self.ctypes.get_last_error())
+
+    def snapshot(self) -> dict[str, object]:
+        """Single diagnostic snapshot; never waits, terminates or changes the job."""
+        if not self.handle:
+            return {"status": "NO_OPEN_OWNED_JOB"}
+        info = self.accounting()
+        if not self.k.QueryInformationJobObject(
+            self.handle, 1, self.ctypes.byref(info), self.ctypes.sizeof(info), None
+        ):
+            return {"status": "UNOBSERVABLE", "winerror": self.ctypes.get_last_error()}
+        result: dict[str, object] = {
+            "status": "OBSERVED",
+            "active": info.ActiveProcesses,
+            "total": info.TotalProcesses,
+            "terminated": info.TotalTerminatedProcesses,
+        }
+        pids = self.process_ids()
+        ok = self.k.QueryInformationJobObject(
+            self.handle, 3, self.ctypes.byref(pids), self.ctypes.sizeof(pids), None
+        )
+        if ok and pids.Count <= len(pids.Pids):
+            result["pid_list"] = {
+                "status": "OBSERVED",
+                "assigned": pids.AssignedProcesses,
+                "pids": list(pids.Pids[:pids.Count]),
+            }
+        else:
+            result["pid_list"] = {
+                "status": "INCOMPLETE",
+                "assigned": pids.AssignedProcesses,
+                "winerror": 0 if ok else self.ctypes.get_last_error(),
+            }
+        return result
 
     def terminate(self) -> None:
         if not self.k.TerminateJobObject(self.handle, 1):
@@ -366,6 +444,259 @@ def _exception_details(exc: BaseException) -> dict[str, object]:
             "traceback": "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))}
 
 
+def _cleanup_diagnostics_runtime():
+    """Load the sibling observer even when this module was file-loaded."""
+    if __package__:
+        from . import cleanup_diagnostics
+        return cleanup_diagnostics
+
+    import importlib.util
+    module_name = "_sef_cleanup_diagnostics_runtime"
+    module = sys.modules.get(module_name)
+    if module is None:
+        source = Path(__file__).with_name("cleanup_diagnostics.py")
+        spec = importlib.util.spec_from_file_location(module_name, source)
+        if spec is None or spec.loader is None:
+            raise ImportError("cleanup diagnostics loader unavailable")
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = module
+        spec.loader.exec_module(module)
+    return module
+
+
+def _restart_manager_file_users(paths: list[Path]) -> dict[str, object]:
+    return _cleanup_diagnostics_runtime().file_users(paths)
+
+
+def _file_process_ids_using_file(path: Path) -> dict[str, object]:
+    return _cleanup_diagnostics_runtime().file_process_ids_using_file(path)
+
+
+def _windows_process_state(pid: object) -> dict[str, object]:
+    """Zero-wait snapshot of one PID; never terminates or waits for completion."""
+    if os.name != "nt":
+        return {"status": "NOT_APPLICABLE_NON_WINDOWS"}
+    if type(pid) is not int or pid <= 0:
+        return {"status": "INVALID_PID"}
+    import ctypes
+    from ctypes import wintypes as w
+
+    k = ctypes.WinDLL("kernel32", use_last_error=True)
+    k.OpenProcess.restype = w.HANDLE
+    k.OpenProcess.argtypes = [w.DWORD, w.BOOL, w.DWORD]
+    k.GetExitCodeProcess.restype = w.BOOL
+    k.GetExitCodeProcess.argtypes = [w.HANDLE, ctypes.POINTER(w.DWORD)]
+    k.WaitForSingleObject.restype = w.DWORD
+    k.WaitForSingleObject.argtypes = [w.HANDLE, w.DWORD]
+    k.CloseHandle.restype = w.BOOL
+    k.CloseHandle.argtypes = [w.HANDLE]
+
+    handle = k.OpenProcess(0x00100000 | 0x1000, False, pid)
+    if not handle:
+        return {"status": "OPEN_FAILED", "winerror": ctypes.get_last_error()}
+    try:
+        code = w.DWORD()
+        if not k.GetExitCodeProcess(handle, ctypes.byref(code)):
+            return {"status": "EXIT_CODE_UNOBSERVABLE", "winerror": ctypes.get_last_error()}
+        wait_result = int(k.WaitForSingleObject(handle, 0))
+        return {
+            "status": "OBSERVED",
+            "exit_code": int(code.value),
+            "wait_result": wait_result,
+            "running": code.value == 259,
+        }
+    finally:
+        k.CloseHandle(handle)
+
+
+def _windows_cleanup_failure_observation(
+    record: dict[str, object],
+    directory: Path,
+    cleanup_error: BaseException,
+    *,
+    file_users_provider=None,
+    file_process_ids_provider=None,
+    pid_state_provider=None,
+) -> dict[str, object] | None:
+    """Observe one native sharing violation as early as possible after failure.
+
+    The failing resource is queried before Restart Manager or secondary files.
+    No retry, sleep, delete, handle close or verdict mutation is performed.
+    """
+    if getattr(cleanup_error, "winerror", None) != 32:
+        return None
+
+    observer_started_ns = time.monotonic_ns()
+    error_ns = record.get("temporary_cleanup_error_monotonic_ns")
+    resources: list[Path] = []
+    filename = getattr(cleanup_error, "filename", None)
+    if filename:
+        resources.append(Path(filename))
+    for name in ("stdout", "stderr", "child.json"):
+        candidate = directory / name
+        if os.path.lexists(candidate):
+            resources.append(candidate)
+    unique_resources = list(dict.fromkeys(resources))
+    priority_resource = Path(filename) if filename else (unique_resources[0] if unique_resources else None)
+
+    observation: dict[str, object] = {
+        "status": "OBSERVED_AFTER_NATIVE_WINERROR32",
+        "observed_at_utc": _utc(),
+        "observer_started_monotonic_ns": observer_started_ns,
+        "observer_pid": os.getpid(),
+        "warning": "Post-failure diagnostic only; observation may perturb later timing.",
+        "resources": [str(path) for path in unique_resources],
+        "priority_failed_resource": str(priority_resource) if priority_resource else None,
+        "launcher_pid": record.get("launcher_pid"),
+        "pid": record.get("pid"),
+        "observer_order": [],
+    }
+    if type(error_ns) is int:
+        observation["observer_start_delta_from_cleanup_error_ns"] = observer_started_ns - error_ns
+
+    if file_process_ids_provider is None and os.name == "nt":
+        file_process_ids_provider = _file_process_ids_using_file
+
+    file_pid_observations: list[dict[str, object]] = []
+
+    def observe_file_owner(resource: Path, phase: str) -> None:
+        started_ns = time.monotonic_ns()
+        observation["observer_order"].append({
+            "event": "file_process_ids_begin",
+            "path": str(resource),
+            "phase": phase,
+            "monotonic_ns": started_ns,
+        })
+        if file_process_ids_provider is None:
+            item: dict[str, object] = {
+                "status": "NOT_APPLICABLE_NON_WINDOWS",
+                "path": str(resource),
+                "process_ids": [],
+            }
+        else:
+            try:
+                item = dict(file_process_ids_provider(resource))
+            except Exception as exc:
+                item = {
+                    "status": "UNOBSERVABLE",
+                    "path": str(resource),
+                    "error": _exception_details(exc),
+                    "process_ids": [],
+                }
+        finished_ns = time.monotonic_ns()
+        item["observer_phase"] = phase
+        item["query_started_monotonic_ns"] = started_ns
+        item["query_finished_monotonic_ns"] = finished_ns
+        item["query_duration_ns"] = finished_ns - started_ns
+        if type(error_ns) is int:
+            item["query_start_delta_from_cleanup_error_ns"] = started_ns - error_ns
+        relations = []
+        for owner_pid in item.get("process_ids", []):
+            if owner_pid == observation["observer_pid"]:
+                relation = "OBSERVER_PID_QUERY_HANDLE_OR_EXISTING_HANDLE"
+            elif owner_pid == observation["launcher_pid"]:
+                relation = "LAUNCHER_PID"
+            elif owner_pid == observation["pid"]:
+                relation = "CHILD_PID"
+            else:
+                relation = "OTHER_PID"
+            relations.append({"pid": owner_pid, "relation": relation})
+        item["relations"] = relations
+        file_pid_observations.append(item)
+        observation["observer_order"].append({
+            "event": "file_process_ids_end",
+            "path": str(resource),
+            "phase": phase,
+            "monotonic_ns": finished_ns,
+            "status": item.get("status"),
+        })
+
+    # First discriminant: query exactly the resource whose unlink just failed.
+    if priority_resource is not None:
+        observe_file_owner(priority_resource, "PRIORITY_FAILED_RESOURCE")
+
+    # Only after the priority per-file query do the broader Restart Manager scan.
+    rm_started_ns = time.monotonic_ns()
+    observation["observer_order"].append({
+        "event": "restart_manager_begin",
+        "monotonic_ns": rm_started_ns,
+    })
+    if file_users_provider is None and os.name == "nt":
+        file_users_provider = _restart_manager_file_users
+    if file_users_provider is None:
+        rm_observation: dict[str, object] = {"status": "NOT_APPLICABLE_NON_WINDOWS"}
+    else:
+        try:
+            rm_observation = dict(file_users_provider(unique_resources))
+        except Exception as exc:
+            rm_observation = {
+                "status": "UNOBSERVABLE",
+                "error": _exception_details(exc),
+            }
+    rm_finished_ns = time.monotonic_ns()
+    rm_observation["query_started_monotonic_ns"] = rm_started_ns
+    rm_observation["query_finished_monotonic_ns"] = rm_finished_ns
+    rm_observation["query_duration_ns"] = rm_finished_ns - rm_started_ns
+    if type(error_ns) is int:
+        rm_observation["query_start_delta_from_cleanup_error_ns"] = rm_started_ns - error_ns
+    observation["restart_manager"] = rm_observation
+    observation["observer_order"].append({
+        "event": "restart_manager_end",
+        "monotonic_ns": rm_finished_ns,
+        "status": rm_observation.get("status"),
+    })
+
+    # Secondary resources are lower priority and cannot delay the primary sample.
+    for resource in unique_resources:
+        if priority_resource is not None and resource == priority_resource:
+            continue
+        observe_file_owner(resource, "SECONDARY_RESOURCE_AFTER_RESTART_MANAGER")
+    observation["file_process_ids_using_file"] = file_pid_observations
+
+    if pid_state_provider is None and os.name == "nt":
+        pid_state_provider = _windows_process_state
+    pid_states: dict[str, object] = {}
+    if pid_state_provider is None:
+        pid_states["status"] = "NOT_APPLICABLE_NON_WINDOWS"
+    else:
+        for role in ("launcher_pid", "pid"):
+            value = record.get(role)
+            try:
+                pid_states[role] = pid_state_provider(value)
+            except Exception as exc:
+                pid_states[role] = {"status": "UNOBSERVABLE", "error": _exception_details(exc)}
+    observation["pid_states"] = pid_states
+    observation["observer_finished_monotonic_ns"] = time.monotonic_ns()
+    return observation
+
+def _temporary_cleanup_observation(record: dict[str, object], directory: Path) -> dict[str, object]:
+    """Snapshot observacional imediatamente antes da remoção do diretório.
+
+    Não espera, não fecha handles, não tenta remover e não altera o veredito.
+    O objetivo é tornar reproduções Windows/NTFS causalmente auditáveis.
+    """
+    observation: dict[str, object] = {
+        "observed_at_utc": _utc(),
+        "directory": str(directory),
+        "exists": os.path.lexists(directory),
+        "process_result": record.get("result"),
+        "process_cleanup": record.get("process_cleanup", record.get("cleanup")),
+        "pid": record.get("pid"),
+        "launcher_pid": record.get("launcher_pid"),
+        "observed_exit_code": record.get("observed_exit_code"),
+        "exit_after_cleanup": record.get("exit_after_cleanup"),
+        "command_started": record.get("command_started"),
+        "metadata_error": record.get("metadata_error"),
+        "start_error": record.get("start_error"),
+        "utf8_valid": record.get("utf8_valid"),
+    }
+    try:
+        observation["entries"] = sorted(item.name for item in directory.iterdir()) if directory.is_dir() else []
+    except OSError as exc:
+        observation["entries_error"] = _exception_details(exc)
+    return observation
+
+
 class _ProcessTemporaryDirectory(tempfile.TemporaryDirectory):
     """Observe filesystem cleanup separately from termination of owned processes.
 
@@ -391,6 +722,9 @@ class _ProcessTemporaryDirectory(tempfile.TemporaryDirectory):
             record["cleanup"] = "PENDING"
         if exc is not None:
             record["body_exception"] = _exception_details(exc)
+        record["temporary_cleanup_pre_remove"] = _temporary_cleanup_observation(
+            record, Path(self.name)
+        )
         try:
             result = super().__exit__(exc_type, exc, tb)
             if os.path.lexists(self.name):
@@ -398,6 +732,20 @@ class _ProcessTemporaryDirectory(tempfile.TemporaryDirectory):
         except (OSError, ValueError) as cleanup_error:
             record["temporary_cleanup"] = "FAILED"
             record["cleanup"] = "FAILED"
+            record["temporary_cleanup_error_monotonic_ns"] = time.monotonic_ns()
+            try:
+                native_observation = _windows_cleanup_failure_observation(
+                    record, Path(self.name), cleanup_error
+                )
+            except Exception as diagnostic_error:
+                native_observation = {
+                    "status": "OBSERVER_FAILED_WITHOUT_REPLACING_CLEANUP_ERROR",
+                    "error": _exception_details(diagnostic_error),
+                }
+            if native_observation is not None:
+                record["windows_cleanup_failure_observation"] = native_observation
+            # Expensive traceback/filesystem serialization comes after the
+            # priority native sample so it cannot consume the transient window.
             record["temporary_cleanup_exception"] = _exception_details(cleanup_error)
             record["temporary_directory_exists_after_cleanup"] = os.path.lexists(self.name)
             record["conventional_exit_code"] = (130 if record["result"] == "INTERRUPTED" else
@@ -480,6 +828,13 @@ def _run(command: Sequence[str]) -> tuple[int, str, float]:
                 try:
                     if job is not None:
                         job.terminate()
+                        try:
+                            record["windows_job_after_terminate"] = job.snapshot()
+                        except Exception as diagnostic_error:
+                            record["windows_job_after_terminate"] = {
+                                "status": "UNOBSERVABLE",
+                                "error": _exception_details(diagnostic_error),
+                            }
                     elif process is not None:
                         try:
                             os.killpg(process.pid, signal.SIGKILL)
@@ -501,6 +856,13 @@ def _run(command: Sequence[str]) -> tuple[int, str, float]:
                     record["cleanup"] = "FAILED"; record["cleanup_error"] = repr(exc); code = 125
                 finally:
                     if job is not None:
+                        try:
+                            record["windows_job_before_close"] = job.snapshot()
+                        except Exception as diagnostic_error:
+                            record["windows_job_before_close"] = {
+                                "status": "UNOBSERVABLE",
+                                "error": _exception_details(diagnostic_error),
+                            }
                         try:
                             job.close()
                         except OSError as exc:
@@ -547,6 +909,18 @@ def _run(command: Sequence[str]) -> tuple[int, str, float]:
                 if record["cleanup"] == "COMPLETE":
                     record["cleanup"] = "PENDING"  # TemporaryDirectory has not exited yet.
                 _persist_process_observation(record)
+        # We are outside the stdout/stderr context but still inside the process
+        # TemporaryDirectory. This proves whether the certifier's own Python file
+        # objects were already closed immediately before directory cleanup.
+        record["parent_streams_before_temporary_exit"] = {
+            "observed_at_utc": _utc(),
+            "monotonic_ns": time.monotonic_ns(),
+            "stdout_closed": bool(stdout.closed),
+            "stderr_closed": bool(stderr.closed),
+            "stdout_name": str(path / "stdout"),
+            "stderr_name": str(path / "stderr"),
+        }
+        _persist_process_observation(record)
     if pending_exit is not None:
         raise pending_exit
     return code, record["stdout"] + record["stderr"], time.monotonic() - start

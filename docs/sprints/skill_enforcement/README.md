@@ -24,6 +24,8 @@ Este diretório concentra o planejamento e as evidências do Skill Enforcement F
 18. [SE06/GUIA_USUARIO.md](SE06/GUIA_USUARIO.md) — operação para usuário não técnico.
 19. [SE06/DECISAO_G2.md](SE06/DECISAO_G2.md) — fechamento deliberado em 24/25, `DOD=INCOMPLETE` preservado e exceção prospectiva de transição para SE07.
 20. [SE07/README.md](SE07/README.md) — generalização por risco, registry 14/14 e política de migração por nível.
+21. [SE08/README.md](SE08/README.md) — operação permanente, CI, documentação e gate de promoção ao trabalho.
+22. [SE08/RUNBOOK_LOCAL.md](SE08/RUNBOOK_LOCAL.md) — materialização do derivado e certificação local da candidata.
 
 ## Regra de leitura
 
@@ -74,7 +76,7 @@ Uma PR Draft não deve ser usada como mecanismo de economia de CI, porque workfl
 - SE05: concluída e integrada pela PR #78; RC local/Free homologada, 12/12 workflows da PR e 18/18 workflows pós-merge em `success`;
 - SE06: coleta comportamental encerrada por Gate G2 em 24/25; `S06-A1-R4=NOT_RUN`, structural suite `PASS`, thresholds primários observados satisfeitos e `DOD=INCOMPLETE` preservado;
 - SE07: encerrada por decisão humana com residual conhecido; DoD de policy registry 14/14 satisfeito, `SE07_FULLY_CERTIFIED=false` pela falha aceita do oráculo sintético de resíduo; `hub-ml-criar-objeto` permanece L2 global e o piloto L3 não implica promoção global;
-- SE08: não iniciada.
+- SE08: implementação repo-side consolidada em branch; materialização do derivado, snapshot, certificação local/Windows e gates de ambiente ainda pendentes; promoção ao trabalho permanece bloqueada.
 
 A frente não deve declarar `FULLY_CERTIFIED` quando qualquer gate obrigatório estiver `NOT_RUN`, `BLOCKED` ou `DEFERRED_CREDIT`.
 

@@ -336,6 +336,162 @@ class CertifierTests(unittest.TestCase):
         self.assertEqual(["synthetic"], data["not_started_steps"])
         self.assertEqual("TIMEOUT", data["steps"][0]["process"]["result"])
 
+    def test_cleanup_pre_remove_observation_is_diagnostic_only(self):
+        directory = Path(self.tmp.name) / "cleanup-observation"
+        directory.mkdir()
+        (directory / "stderr").write_bytes(b"")
+        record = {
+            "result": "INFRASTRUCTURE_ERROR",
+            "cleanup": "COMPLETE",
+            "process_cleanup": "COMPLETE",
+            "pid": 123,
+            "launcher_pid": 456,
+            "observed_exit_code": None,
+            "exit_after_cleanup": 1,
+            "command_started": True,
+            "metadata_error": None,
+            "start_error": None,
+            "utf8_valid": True,
+        }
+        observation = cert._temporary_cleanup_observation(record, directory)
+        self.assertTrue(observation["exists"])
+        self.assertEqual(["stderr"], observation["entries"])
+        self.assertEqual("COMPLETE", observation["process_cleanup"])
+        self.assertEqual(123, observation["pid"])
+        self.assertEqual(456, observation["launcher_pid"])
+        self.assertTrue(observation["command_started"])
+        self.assertTrue(observation["utf8_valid"])
+        self.assertIsNone(observation["metadata_error"])
+        self.assertEqual("COMPLETE", record["cleanup"], "telemetry must not mutate verdict state")
+
+    @unittest.skipIf(os.name == "nt", "non-Windows loader regression")
+    def test_native_observer_providers_load_from_sibling_when_file_loaded(self):
+        observation = cert._restart_manager_file_users([Path(self.tmp.name) / "unused"])
+        self.assertEqual("NOT_APPLICABLE_NON_WINDOWS", observation["status"])
+        owners = cert._file_process_ids_using_file(Path(self.tmp.name) / "unused")
+        self.assertEqual("NOT_APPLICABLE_NON_WINDOWS", owners["status"])
+
+    def test_winerror32_failure_observer_is_single_shot_and_diagnostic_only(self):
+        directory = Path(self.tmp.name) / "winerror32-observation"
+        directory.mkdir()
+        stderr = directory / "stderr"
+        stdout = directory / "stdout"
+        child = directory / "child.json"
+        stderr.write_bytes(b"")
+        stdout.write_bytes(b"partial")
+        child.write_text('{"pid": 123}', encoding="utf-8")
+        record = {"cleanup": "FAILED", "launcher_pid": 456, "pid": 123,
+                  "temporary_cleanup_error_monotonic_ns": time.monotonic_ns()}
+        error = PermissionError(13, "synthetic native sharing violation", str(stderr))
+        error.winerror = 32
+        file_calls = []
+        owner_calls = []
+        call_order = []
+        pid_calls = []
+
+        def users(paths):
+            call_order.append("restart_manager")
+            file_calls.append([str(path) for path in paths])
+            return {"status": "MATCHES_REPORTED", "processes": [{"pid": 999}]}
+
+        def owners(path):
+            call_order.append("owner:" + Path(path).name)
+            owner_calls.append(str(path))
+            return {"status": "OBSERVED", "path": str(path),
+                    "process_ids": [os.getpid(), 456, 123, 999]}
+
+        def pid_state(pid):
+            pid_calls.append(pid)
+            return {"status": "OBSERVED", "running": False, "exit_code": 1}
+
+        before = dict(record)
+        observation = cert._windows_cleanup_failure_observation(
+            record, directory, error,
+            file_users_provider=users,
+            file_process_ids_provider=owners,
+            pid_state_provider=pid_state,
+        )
+        self.assertEqual(before, record, "observer must not mutate verdict state")
+        self.assertEqual("OBSERVED_AFTER_NATIVE_WINERROR32", observation["status"])
+        self.assertEqual("MATCHES_REPORTED", observation["restart_manager"]["status"])
+        self.assertEqual([456, 123], pid_calls)
+        self.assertEqual(1, len(file_calls))
+        self.assertEqual([str(stderr), str(stdout), str(child)], file_calls[0])
+        self.assertEqual([str(stderr), str(stdout), str(child)], owner_calls)
+        self.assertEqual(
+            ["owner:stderr", "restart_manager", "owner:stdout", "owner:child.json"],
+            call_order,
+        )
+        self.assertEqual(
+            "PRIORITY_FAILED_RESOURCE",
+            observation["file_process_ids_using_file"][0]["observer_phase"],
+        )
+        self.assertGreaterEqual(
+            observation["restart_manager"]["query_start_delta_from_cleanup_error_ns"],
+            observation["file_process_ids_using_file"][0]["query_start_delta_from_cleanup_error_ns"],
+        )
+        owner_rows = observation["file_process_ids_using_file"][0]["relations"]
+        self.assertIn({"pid": os.getpid(),
+                       "relation": "OBSERVER_PID_QUERY_HANDLE_OR_EXISTING_HANDLE"}, owner_rows)
+        self.assertIn({"pid": 456, "relation": "LAUNCHER_PID"}, owner_rows)
+        self.assertIn({"pid": 123, "relation": "CHILD_PID"}, owner_rows)
+        self.assertIn({"pid": 999, "relation": "OTHER_PID"}, owner_rows)
+
+    def test_parent_streams_are_closed_before_temporary_directory_exit(self):
+        code, output, _ = cert._run([sys.executable, "-B", "-c", "print('stream-boundary')"])
+        self.assertEqual(0, code, output)
+        streams = cert.PROCESS_RECORDS[-1]["parent_streams_before_temporary_exit"]
+        self.assertTrue(streams["stdout_closed"])
+        self.assertTrue(streams["stderr_closed"])
+        self.assertIn("stdout", streams["stdout_name"])
+        self.assertIn("stderr", streams["stderr_name"])
+
+    def test_non_winerror32_does_not_invoke_native_failure_observer(self):
+        directory = Path(self.tmp.name) / "non-winerror32"
+        directory.mkdir()
+        error = PermissionError(13, "different failure", str(directory / "stderr"))
+        calls = []
+        self.assertIsNone(cert._windows_cleanup_failure_observation(
+            {"launcher_pid": 1, "pid": 2}, directory, error,
+            file_users_provider=lambda paths: calls.append(paths),
+            file_process_ids_provider=lambda path: calls.append(path),
+            pid_state_provider=lambda pid: calls.append(pid),
+        ))
+        self.assertEqual([], calls)
+
+    def test_winerror32_observer_errors_are_recorded_without_retry(self):
+        directory = Path(self.tmp.name) / "observer-error"
+        directory.mkdir()
+        stderr = directory / "stderr"
+        stderr.write_bytes(b"")
+        error = PermissionError(13, "synthetic native sharing violation", str(stderr))
+        error.winerror = 32
+        calls = []
+
+        def fail_users(paths):
+            calls.append("rm")
+            raise OSError("synthetic RM failure")
+
+        def fail_owners(path):
+            calls.append(("owners", str(path)))
+            raise OSError("synthetic owner query failure")
+
+        def fail_pid(pid):
+            calls.append(("pid", pid))
+            raise OSError("synthetic PID failure")
+
+        observation = cert._windows_cleanup_failure_observation(
+            {"launcher_pid": 7, "pid": 8}, directory, error,
+            file_users_provider=fail_users,
+            file_process_ids_provider=fail_owners,
+            pid_state_provider=fail_pid,
+        )
+        self.assertEqual([("owners", str(stderr)), "rm", ("pid", 7), ("pid", 8)], calls)
+        self.assertEqual("UNOBSERVABLE", observation["restart_manager"]["status"])
+        self.assertEqual("UNOBSERVABLE", observation["file_process_ids_using_file"][0]["status"])
+        self.assertEqual("UNOBSERVABLE", observation["pid_states"]["launcher_pid"]["status"])
+        self.assertEqual("UNOBSERVABLE", observation["pid_states"]["pid"]["status"])
+
     def test_keyboard_interrupt_cleanup_and_output(self):
         code, output, record = self.interrupt_fixture("after_output")
         self.assertEqual(130, code)

@@ -68,7 +68,12 @@ class ManifestTests(unittest.TestCase):
 
     def test_reject_symlink(self):
         with tempfile.TemporaryDirectory() as d:
-            root=Path(d); (root/".assistant").mkdir(); (root/".assistant/x").symlink_to(root/"other")
+            root=Path(d); (root/".assistant").mkdir(); (root/"other").mkdir()
+            link=root/".assistant/x"
+            try:
+                link.symlink_to(root/"other", target_is_directory=True)
+            except (OSError, NotImplementedError) as exc:
+                self.skipTest(f"filesystem sem symlink de diretório: {exc}")
             with self.assertRaises(core.CheckError): core.safe_payload_path(root, ".assistant/x")
 
     def test_check_exact_file_bytes(self):
