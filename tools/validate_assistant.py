@@ -23,6 +23,7 @@ from repo_inventory import git_paths
 from markdown_contract import mask_code
 from notebook_marker import eh_notebook, texto_e_notebook  # noqa: E402
 from project_policy import CORPORATE_RE, EXPECTED_SKILL_NAMES, PERSONAL_RE  # noqa: E402
+from skill_enforcement import se07_policy, validate_contracts  # noqa: E402
 
 INSTRUCTION_LIMIT = 20_000
 SKILL_LINE_WARN = 500
@@ -474,6 +475,40 @@ def check_pycache(root: Path, warnings: list[str]) -> None:
             f"{len(caches)} pasta(s) __pycache__ em {root.name}/ — "
             "remova com: find <raiz> -name __pycache__ -type d -exec rm -rf {} +"
         )
+
+
+def check_skill_enforcement(root: Path, problems: list[str]) -> tuple[int, int, int]:
+    """Valida contratos e registry SEF contra a mesma raiz analisada.
+
+    Não executa helpers, preflights, runners ou Databricks. O objetivo aqui é
+    tornar permanentes no validator geral os invariantes estáticos do SEF sem
+    confundir validação estrutural com evidência comportamental.
+    """
+    assistant_root = root / ".assistant"
+    contracts = validate_contracts.discover_contracts(assistant_root / "skills")
+    if not contracts:
+        problems.append(f"{assistant_root}: SEF sem execution_contract.json descoberto")
+    results = [
+        validate_contracts.validate_contract(path, assistant_root=assistant_root)
+        for path in contracts
+    ]
+    for result in results:
+        for issue in result.issues:
+            problems.append(
+                f"{Path(result.path).relative_to(root)}: SEF {issue.code} "
+                f"@ {issue.location}: {issue.message}"
+            )
+
+    policy_path = assistant_root / "hub_padroes" / "skill_enforcement" / "policy.json"
+    policy_issues = se07_policy.validate_policy_registry(
+        policy_path, assistant_root=assistant_root
+    )
+    for issue in policy_issues:
+        problems.append(
+            f"{policy_path.relative_to(root)}: SEF {issue.code} "
+            f"@ {issue.location}: {issue.message}"
+        )
+    return len(results), sum(result.ok for result in results), len(policy_issues)
 
 
 def check_skill_sizes(root: Path, warnings: list[str]) -> None:
@@ -1541,6 +1576,7 @@ def main() -> int:
 
     readme_counts = check_readme_objects(root, problems)
     n_skills = check_skill_frontmatter(root, problems)
+    n_sef_contracts, n_sef_valid, n_sef_policy_issues = check_skill_enforcement(root, problems)
     n_prompts, n_prompt_fields = check_prompt_contract(root, problems)
     check_skill_sizes(root, warnings)
     check_pycache(root, warnings)
@@ -1576,6 +1612,7 @@ def main() -> int:
 
     print(f"raiz analisada     : {root}")
     print(f"skills             : {n_skills} · {n_completas}/{n_secoes} com as 5 seções estruturais")
+    print(f"skill enforcement  : {n_sef_valid}/{n_sef_contracts} contratos válidos · {n_sef_policy_issues} issue(s) de policy")
     print(f"prompts            : {n_prompts} · {n_prompt_fields} campos com guia e contrato humano")
     print(f"helpers citados    : {n_helpers} caminhos verificados")
     if args.conferir_readme:
