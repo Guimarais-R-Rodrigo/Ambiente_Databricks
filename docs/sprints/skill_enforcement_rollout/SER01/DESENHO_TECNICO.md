@@ -107,3 +107,24 @@ e binding no pacote publicado, mas declara `execution_reverified=false` e
 A ausência do checkout/tools é condição `NOT_AVAILABLE`, não autorização para
 bypass. Sem Receipt válido, a skill não pode fazer ready claim L3 dessa superfície.
 A rota antiga de writer README permanece separada e não é generalizada nesta A2.
+
+## 9. A3 — certificação prospectiva SER e rota canônica mínima
+
+O ADR-0022 exige identidade de certificação diferente da SE08. A3 materializa essa
+fronteira em `tools/skill_enforcement/ser_certify.py`. O primeiro profile é
+`ser01-object-validation-pre-promotion`; seu output usa `SER-CERT-1` e
+`sercert1:sha256(body)` apenas como tamper evidence, não assinatura.
+
+O certifier exige policy ainda em L2, target L3 e `object_validation` L3/receipt.
+Ele valida SKILL, contrato e release manifest; executa a suíte SER01 com integrações
+reais; inspeciona independentemente os sete `validation.json`; verifica os cinco
+Receipts positivos contra seus records e exige ausência nos dois negativos.
+
+O bypass mínimo agora é explícito: Receipt sem `local_record`, record PASS sem Receipt,
+Receipt adulterado ou candidato/base/run divergente não podem produzir prova válida.
+Isso não prova aderência conversacional do Genie; esse canal continua externo e deve
+ser observado separadamente antes de qualquer promoção final.
+
+O certifier também executa regressões repo/CI e chama `certify_local --profile se08`
+somente como canal histórico separado. Um PASS prospectivo nunca muda ou renomeia a
+semântica de SE08. A3 permanece pré-promoção e não edita policy.

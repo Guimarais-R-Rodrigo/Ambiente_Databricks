@@ -298,3 +298,26 @@ Actions permanece gate remoto final, não instrumento de desenvolvimento iterati
 - `run_enforced` aplica contexto profissional padrão quando o caller omite flags condicionais e, em modo estrito, levanta `CanonicalExecutionBlocked` quando a rota não fica em PASS;
 - `finalize_or_raise` transforma ausência de autorização de completion em falha explícita;
 - nenhum estado `NOT_RUN`, `BLOCKED` ou `DEFERRED_CREDIT` pode ser tratado como `FULLY_CERTIFIED`.
+
+## SER — certificação prospectiva
+
+O Skill Enforcement Rollout não reescreve `certify_local.py` nem os perfis históricos
+SE01-SE08. O certifier prospectivo vive em:
+
+```text
+tools/skill_enforcement/ser_certify.py
+```
+
+Perfil inicial:
+
+```powershell
+python -B tools/skill_enforcement/ser_certify.py `
+  --profile ser01-object-validation-pre-promotion `
+  --evidence-dir C:\temp\ser01-object-validation `
+  --evidence-authorized
+```
+
+`SER-CERT-1` exige worktree limpa/reconciliada, contrato/SKILL/manifest coerentes,
+records e Receipts reais, bypass mínimo fechado, regressões, renderer sem drift,
+snapshot e CI. O FULL SE08 é executado como canal histórico separado. O certifier
+não autentica pessoas, não muda policy e não autoriza merge/promoção sozinho.

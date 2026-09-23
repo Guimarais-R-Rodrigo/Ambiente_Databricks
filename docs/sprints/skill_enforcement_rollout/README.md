@@ -6,11 +6,11 @@ A SER sucede operacionalmente o SEF, sem reabrir SE01–SE08. O objetivo é sust
 
 A SER00 foi aceita e integrada pela PR #101 em `dedde0741ed4c387c3a500adfbf7de2c6166aba5`, após a certificação da candidata e as manutenções A07 #102/#105. A MM01 já compõe essa base. Os documentos históricos da candidata SER00 são preservados; seus estados de pending não desfazem o merge aceito.
 
-A SER01 foi iniciada em 2026-09-23. O recorte A1 prepara a validação repo-side de pacotes em overlay e aguarda laboratório delegado. Não alterou `current_level=L2` de criar-objeto, `target_level=L3` ou `rollout_mode=audit`.
+A SER01 foi iniciada em 2026-09-23. A1 e A2 já foram certificadas no host Windows/NTFS no alcance documentado. A frente corrente é A3: certifier prospectivo SER com identidade própria e gate de record+Receipt, ainda sem alterar `current_level=L2`, `target_level=L3` ou `rollout_mode=audit`.
 
 ```text
 SER00 = INTEGRATED
-SER01 = IN_PROGRESS_A1_PREPARED_NOT_CERTIFIED
+SER01 = IN_PROGRESS_A3_PREPARED_NOT_CERTIFIED
 POLICY_PROMOTION = NOT_AUTHORIZED
 SER02 = NOT_STARTED
 GITHUB_ACTIONS = DEFERRED_NO_CREDITS

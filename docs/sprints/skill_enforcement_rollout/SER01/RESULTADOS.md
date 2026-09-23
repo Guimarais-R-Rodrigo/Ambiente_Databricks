@@ -114,3 +114,29 @@ Esse PASS encerra somente A1. `current_level` continua L2. A2 adiciona uma prova
 de domínio verificável pela skill publicada e vincula o record repo-side a um
 Receipt específico de `object_validation`; não autoriza escrita nem promoção.
 Até a A2 ser certificada, o novo Receipt permanece implementação candidata.
+
+## A2-LAB — fechamento auditado
+
+```text
+A2_SHA = 8c33a765f9387a743456ea0aba26f3cec63d4421
+A2_RESULT = PASS
+G1_SER01 = 35/35 PASS
+LEGACY_CREATE = 35/35 PASS
+CONTRACTS = 5/5 PASS
+POLICY = PASS_CURRENT_L2
+VALIDATOR = PASS
+RENDERER_DRIFT = PASS
+SNAPSHOT = PASS
+CI_LOCAL = 10/10 PASS
+FULL_SE08 = 21/21 PASS
+POSITIVE_RECEIPTS = 5/5
+NEGATIVE_RECEIPTS_ABSENT = 2/2
+SHARE_HASHES = 458/458 VALID
+PUSH = PASS_FAST_FORWARD
+A2 = COMPLETE
+A3 = PREPARED_NOT_CERTIFIED
+```
+
+Finding não bloqueante transferido para A3: a campanha A2 verificou externamente
+a ausência de Receipt nos dois records negativos, mas os próprios métodos unittest
+não continham essa asserção. A3 a transforma em regressão durável.

@@ -88,3 +88,32 @@ congelado. O laboratorio deve ainda conferir `validate_contracts`, integridade d
 `release_manifest.json`, ausência de bypass sem Receipt e os claims fechados
 `runtime_validation=NOT_RUN`, `execution_reverified=false` e ausência de autoridade
 de apply/promoção. Nenhum resultado A1 é transportado automaticamente para A2.
+
+## A3 — certifier prospectivo SER e bypass de record (2026-09-23)
+
+A3 adiciona `tools/skill_enforcement/ser_certify.py` com identidade própria
+`SER-CERT-1` e perfil `ser01-object-validation-pre-promotion`. Ele não altera
+`certify_local.py` nem reinterpreta os perfis SE01-SE08.
+
+O verifier publicado passa a exigir `local_record` para qualquer resultado válido.
+Receipt autocoerente sem o record que o originou devolve `LOCAL_RECORD_REQUIRED`.
+Os dois negativos de integração passam a assertar diretamente ausência de Receipt.
+
+A suíte SER01 passa, por expectativa de autoria, a **36 métodos**: 29 unitários e
+sete integrações. `tools.tests.test_ser_certify` acrescenta quatro regressões puras
+do certifier. Contagens são expectativa até execução real.
+
+Após preparação mecânica do renderer/snapshot e freeze, executar primeiro as
+regressões de desenvolvimento e depois o certifier prospectivo:
+
+```text
+python -B -m unittest tools.tests.test_ser01_object_validation -v
+python -B -m unittest tools.tests.test_ser_certify -v
+python -B tools/skill_enforcement/ser_certify.py --profile ser01-object-validation-pre-promotion --evidence-dir <NOVO_DIRETORIO_EXTERNO> --evidence-authorized
+```
+
+O certifier exige checkout limpo, histórico completo, behind=0, policy L2→L3 em
+`audit`, contrato/manifest/SKILL coerentes, sete records reais, cinco Receipts PASS
+e dois negativos sem Receipt. Ele reexecuta regressões, validator, renderer/diff,
+snapshot, CI e o FULL SE08 como `PASS_SEPARATE_CHANNEL`. Qualquer FAIL interrompe
+a certificação prospectiva. O PASS não autoriza promoção por si só.

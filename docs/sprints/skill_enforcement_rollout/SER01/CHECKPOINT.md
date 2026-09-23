@@ -119,3 +119,39 @@ tipos, Linux, Databricks Free/Genie ou autenticação humana. A2 liga a superfí
 `object_validation` à skill publicada por Receipt de domínio próprio, sem reutilizar
 semanticamente o Receipt EDA V1 e sem mudar a policy. O SHA A2 exige nova campanha;
 nenhum PASS da A1 é transportado.
+
+## A2-LAB concluída e abertura A3 (registro aditivo, 2026-09-23)
+
+```text
+A2_SHA = 8c33a765f9387a743456ea0aba26f3cec63d4421
+A2_RESULT = A2_LAB_PASS
+A2_G1 = 35/35 PASS
+A2_LEGACY_CREATE = 35/35 PASS
+A2_CONTRACTS = 5/5 PASS
+A2_POLICY = 14/14 PASS; current_level=L2
+A2_VALIDATOR = PASS
+A2_RENDERER_DRIFT = PASS
+A2_CI_LOCAL = 10/10 PASS
+A2_FULL_SE08 = 21/21 PASS (HISTORICAL_SE08_REGRESSION)
+A2_POSITIVE_RECEIPTS = 5/5
+A2_NEGATIVE_RECEIPTS = 2/2 absent
+A2_SHARE_MANIFEST = 458/458 hashes and sizes verified independently
+A2_PUSH = PASS_FAST_FORWARD
+A2_HOST = Windows 11 / NTFS / Python 3.12.10
+A2 = COMPLETE
+A3_AUTHORING_HEAD = df66c9a21ce2680cf07e08b295072922f87c725a
+A3 = PREPARED_NOT_CERTIFIED
+CURRENT_LEVEL = L2_UNCHANGED
+POLICY_PROMOTION = NOT_AUTHORIZED
+MERGE = NOT_AUTHORIZED
+```
+
+A2 prova a ligação do record repo-side ao Receipt de domínio e seu verifier no host
+observado, com replay/tamper/missing Receipt bloqueados. O bundle SHARE é derivado
+sanitizado; a autenticidade da execução continua dependendo do RAW/auditoria, não do
+hash isolado.
+
+A3 cria a primeira certificação prospectiva SER com identidade `SER-CERT-1` e perfil
+`ser01-object-validation-pre-promotion`. Ela exige o record local junto do Receipt,
+fecha esse bypass estrutural, reexecuta a rota canônica e mantém o perfil histórico
+`se08` apenas como canal separado. A3 não muda policy e exige campanha própria.
