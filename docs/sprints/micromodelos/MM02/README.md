@@ -129,7 +129,7 @@ A ordem serial não é identidade quando o contrato não lhe atribui significado
 
 - `fontes`, evidências, contra-evidências, limiares e componentes: ordenados por `id`;
 - `fontes[].campos` e `fontes_ref`: ordenados;
-- listas de usos pretendidos/proibidos: normalizadas e ordenadas.
+- listas de usos pretendidos/proibidos: normalizadas, deduplicadas e ordenadas.
 
 Duplicidades e referências inválidas continuam responsabilidade fail-closed da MM01.
 
