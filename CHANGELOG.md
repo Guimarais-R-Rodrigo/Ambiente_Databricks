@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-09-23 — A07: streams temporários Win32 com delete sharing
+
+### Corrigido
+
+- (ChatGPT) O certifier abre somente os arquivos temporários de stdout/stderr de subprocessos Windows via `CreateFileW` com `FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE`. Os handles duplicados para launcher/child continuam capturando os mesmos bytes, mas deixam de bloquear `unlink` apenas por permanecerem em fechamento tardio após o Job Object zerar.
+- (ChatGPT) A mudança não adiciona sleep, retry, nova remoção, `ignore_errors` ou tolerância de verdict. Qualquer cleanup que ainda falhe continua `FAILED` e preserva WinError32/telemetria.
+- (ChatGPT) A regressão Windows mantém um child real vivo com o stream herdado e exige que o arquivo possa ser removido enquanto esse handle ainda existe; há também roundtrip portátil do stream e guarda estática contra retry de cleanup.
+
+### Fundamentação e limites
+
+- A documentação Win32 de `CreateFile` define `FILE_SHARE_DELETE` como o share mode que permite operações posteriores de delete/rename e registra que o share mode permanece válido enquanto o handle está aberto. O `subprocess` do Python aceita file objects como stdout/stderr e, no Windows, trabalha com handles herdáveis/duplicados para redirecionamento.
+- Esta é uma corretiva causal da compatibilidade de sharing dos streams controlados pelo certifier. Ela não afirma que todo WinError32 histórico tinha esse owner, não altera timeout/process termination e não reclassifica as campanhas vermelhas anteriores.
+- A SER00/PR #101 permanece separada e Draft. Esta manutenção exige campanha Windows própria antes de qualquer merge.
+
+
 ## 2026-09-23 — SER00 A07-R2: corretiva test-only do oráculo de storage
 
 ### Corrigido
