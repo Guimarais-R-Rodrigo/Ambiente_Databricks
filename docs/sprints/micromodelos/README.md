@@ -53,7 +53,7 @@ O fechamento consolidado está no [checkpoint pós-merge](MM01/POST_MERGE_CHECKP
 
 ## Histórico pré-merge da MM01
 
-A MM01 foi iniciada na branch `micromodelos/mm01-contrato-canonico` e reconciliada de forma fail-closed com as evoluções da `main`, inclusive as bases pós-V10 e pós-V11. A PR #51 permanece aberta, não aceita e não integrada.
+A MM01 foi iniciada na branch `micromodelos/mm01-contrato-canonico` e reconciliada de forma fail-closed com as evoluções da `main`, inclusive as bases pós-V10 e pós-V11. **Naquele estágio histórico**, a PR #51 permanecia aberta, não aceita e não integrada.
 
 A candidata contém exclusivamente o contrato canônico `micromodelo.yaml`: schema, fases/condições, proveniência, validador de referência/CI, fixtures sintéticos, suíte com **47 métodos de teste**, documentação e pacote A1. Não cria skill de micromodelos nem altera `.assistant`.
 
@@ -121,7 +121,7 @@ A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprin
 5. revalidar a árvore exata após o changelog, reconfirmar `main`/`behind_by`/mergeabilidade e solicitar aceite final explícito;
 6. integrar a PR #51 somente após o aceite.
 
-**MM02 permanece bloqueada.**
+**Naquele gate histórico, MM02 permanecia bloqueada.**
 
 
 ## Próxima sprint
@@ -130,4 +130,4 @@ A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprin
 MM02 = NOT_STARTED
 ```
 
-MM02 permanece bloqueada nesta frente: esta revisão documental precisa passar por revisão humana e merge próprios antes de abrir a implementação funcional de `spec_fingerprint`. O escopo congelado de MM02 está na [revisão pós-SEF](REVISAO_PLANO_POS_SEF_2026-09-23.md) e sua certificação seguirá o [protocolo de MM02–MM13](PROTOCOLO_CERTIFICACAO_SPRINTS.md).
+MM02 não é iniciada por esta revisão documental. Após a integração desta revisão, a implementação funcional de `spec_fingerprint` deverá ser aberta em frente própria. O escopo congelado de MM02 está na [revisão pós-SEF](REVISAO_PLANO_POS_SEF_2026-09-23.md) e sua certificação seguirá o [protocolo de MM02–MM13](PROTOCOLO_CERTIFICACAO_SPRINTS.md).
