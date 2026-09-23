@@ -361,3 +361,42 @@ Correção posterior:
 Registro: `LOCAL_CERTIFICATION_ATTEMPT_7.md`.
 
 Nenhum gate funcional foi relaxado.
+
+
+## Oitava e nona tentativas — WinError32 e PASS anterior ao drift
+
+### R8
+
+A R8 executou sobre `a5bb60a27ad8b0ab5cb8953642efbcdb14211328`. Encoding, sanitização, MM01 e validator passaram. O CI local falhou exclusivamente no subgate SEF por WinError32 intermitente no teste de timeout pai/filho.
+
+Resultado:
+
+`MECHANICAL_FAIL / BUNDLE_SANITIZATION_PASS / UNICODE_STREAMING_PASS`.
+
+Registro: `LOCAL_CERTIFICATION_ATTEMPT_8.md`.
+
+### R9
+
+A R9 repetiu uma única vez o mesmo SHA e completou todo o plano:
+
+- 49 steps executáveis PASS;
+- somente `V12_SCOPE_STRICT=SKIP_ALLOWED`;
+- CI local 10/10;
+- SEF OK, `infrastructure_errors=[]`;
+- V00–V13 PASS;
+- `MECHANICAL_CERTIFICATION=PASS`;
+- `BUNDLE_SANITIZATION=PASS`;
+- `UNICODE_STREAMING=PASS`;
+- `WINERROR32_R9=NOT_REPRODUCED`.
+
+Bundle: `74d39f615fc1507653f74b7ed87972c83aad6f14b1e1738eee6e6ce8a2fcd776`.
+
+Registro: `LOCAL_CERTIFICATION_ATTEMPT_9.md`.
+
+### Drift posterior
+
+Depois da R9, a `main` avançou para `515e673b17f21d4c912d9ae866a7e31967fd4488` com a integração da PR #102, que alterou duas regressões SEF de storage/Windows e dois documentos/snapshots.
+
+Como esse delta é material para `CI_LOCAL`, o PASS R9 continua histórico, mas não serve como freeze final contra a `main` vigente.
+
+A reconciliação foi executada por merge real da PR operacional #104, commit `0ba61628f6a39c873b2fed6936fca74126147922`, após pré-conciliação explícita dos conflitos documentais. Os testes transversais pós-PR102 passam a fazer parte da candidata MM01 final.
