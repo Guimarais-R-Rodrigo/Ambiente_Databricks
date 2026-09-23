@@ -53,6 +53,32 @@
           ]
         },
         "no_write_guarantee": true
+      },
+      "object_validation_contract": {
+        "protected_surface": "object_validation",
+        "candidate_level": "L3",
+        "producer_entrypoint": "tools/skill_enforcement/ser01_object_validation.py::validate_package",
+        "verifier_entrypoint": "scripts/object_validation.py::verify_receipt",
+        "receipt_version": "SER01-OBJECT-VALIDATION-RECEIPT-1",
+        "route": "repo_side_local_structural_validation",
+        "supported_operations": [
+          "create"
+        ],
+        "supported_object_types": [
+          "snippet",
+          "script",
+          "prompt",
+          "notebook",
+          "readme"
+        ],
+        "unsupported_object_types": [
+          "skill"
+        ],
+        "original_product_mutation": "forbidden",
+        "runtime_validation": "NOT_RUN",
+        "missing_or_invalid_receipt": "BLOCK_L3_READY_CLAIM",
+        "workspace_without_repo_checkout": "NOT_AVAILABLE",
+        "apply_authorized_by_receipt": false
       }
     }
   },
