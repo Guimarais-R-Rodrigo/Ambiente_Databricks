@@ -378,28 +378,33 @@ entre parênteses. Template: `.claude/templates/changelog-entry.md`.
 - (ChatGPT) A evidência do probe é histórica e não prova execução determinística universal pelo Genie Code. O script experimental foi aposentado do produto final, sem apagar os resultados observados.
 - (ChatGPT) PR #69 permanece Draft e não pode ser integrada sem aceite humano explícito; a homologação desta sprint não autoriza iniciar SE02.
 
-## 2026-09-14 — MM01: candidata do contrato canônico de micromodelos (ChatGPT)
+## 2026-09-14 — MM01: contrato canônico de micromodelos — fechamento técnico pré-merge (ChatGPT)
 
 ### Adicionado
 
 - (ChatGPT) Schema formal Draft 2020-12 `micromodelo.schema.json`, template YAML canônico, máquina de fases/condições, proveniência controlada e validador fail-closed de referência para a MM01.
-- (ChatGPT) Fixtures sintéticos e suíte `test_micromodelo_mm01.py` com casos positivos, mutantes negativos, proteção `FALSE` × `INDETERMINADO`, score 0–100, calibração, aprovações humanas, escopo de fontes e gates de publicação.
-- (ChatGPT) Workflow permanente read-only `micromodelos-mm01-ci.yml` e pacote neutro de auditoria A1 em `docs/auditoria/2026-09-14_micromodelos-mm01/`; a auditoria foi preparada, mas ainda não executada.
+- (ChatGPT) Fixtures sintéticos e suítes permanentes MM01, R02 e R03, cobrindo materialidade Unicode, equivalência editorial conservadora, domínio numérico finito, coerência de decisão humana, proveniência, resultado observado, evolução histórica e authoring profile do schema.
+- (ChatGPT) Workflow permanente read-only `micromodelos-mm01-ci.yml`, Certifier Local v1 fail-closed e pacote histórico de auditoria independente.
 
 ### Atualizado
 
-- (ChatGPT) `tools/requirements-dev.txt` recebe PyYAML apenas como dependência de manutenção/CI; isso não cria dependência runtime para a futura skill.
-- (ChatGPT) A candidata, iniciada sobre `main@ec52d379`, foi reconciliada de forma fail-closed com `main@a9480391c78e2402986885db0ce08b10e0619a1a` após a integração/fechamento da V10, sem reimplementar nem alterar a frente visual.
+- (ChatGPT) A candidata foi reconciliada sucessivamente com a `main` durante frentes concorrentes, sempre com `behind_by=0` antes dos freezes; a reconciliação final incorporou `main@515e673b17f21d4c912d9ae866a7e31967fd4488` por merge real `0ba61628f6a39c873b2fed6936fca74126147922`.
+- (ChatGPT) O Certifier Local v1 passou a cobrir portabilidade Windows de npm/pnpm, streaming incremental, interrupção estruturada, fechamento de pipes, sanitização de paths literais/escapados, UTF-8 determinístico, console charmap-safe, pins de nove workflows, preflight/postflight e bundle com checksums.
+- (ChatGPT) A corretiva transversal SEF A07-R2/PR #102 foi incorporada antes do freeze final; os testes de storage cleanup e Windows corrective na MM01 são byte-idênticos aos da `main`.
 
 ### Evidências
 
-- (ChatGPT) A primeira materialização transitória (`34899029039`) permaneceu `failure` por corrupção do pacote gzip antes dos testes e não publicou os artefatos candidatos.
-- (ChatGPT) Materialização corrigida `34899617125`, reconciliação pós-V10 `34900062786` e primeiro gate permanente MM01 `34900332458` concluíram com `success`; os dois workflows transitórios se removeram antes de publicar suas composições.
-- (ChatGPT) O gate permanente executa instalação limpa, 17 métodos de teste MM01 e `validate_assistant.py --root ambiente_fonte`; a suíte inclui mutantes negativos, bypasses adversariais e caminhos positivos de publicação; auditoria A1 permanece pendente.
+- (ChatGPT) Histórico preservado: R1–R4 FAIL; R5 `MECHANICAL_PASS / BUNDLE_NONCONFORMANT`; R6–R8 FAIL mecânicos com hardenings subsequentes; R9 PASS integral no baseline anterior, tornado stale apenas para freeze final após avanço material da `main`.
+- (ChatGPT) R10 final pós-reconciliação sobre `c43273fbb0cf40c1b9a3bc176cc1d4fd11d781a6` contra `main@515e673b17f21d4c912d9ae866a7e31967fd4488`: 50 StepResults, 49 PASS e somente `V12_SCOPE_STRICT=SKIP_ALLOWED`; CI local 10/10; V00–V13 executáveis PASS; snapshot `1682/2109/0`; preflight/postflight idênticos.
+- (ChatGPT) Bundle R10 `MM01_LOCAL_CERT_R10_c43273fbb0cf.zip`: SHA-256 `34f0ea4518eb8d2c8042871b40451e8c956710b95ccc097d9cc23ca2b14ad6ab`, 55 entries, 54/54 checksums internos válidos, 49/49 hashes de logs válidos, 17/17 inputs críticos correspondentes ao HEAD, sanitização e UTF-8 aprovadas.
+- (ChatGPT) Auditoria independente final não demonstrou BLOCKER técnico nem violação material de R01–R08. A limitação probatória F-01 da primeira sessão foi encerrada por auditoria complementar com acesso byte a byte ao R10; veredito consolidado: `APTA_PARA_CONTRADITORIO`.
+- (ChatGPT) Contraditório final concluído sem divergência bloqueante: F-01 permanece encerrado; failures incidentais de Actions sem steps não foram tratados como regressão; WinError32 permanece histórico/intermitente sem declaração de root cause corrigida.
 
 ### Limites
 
-- (ChatGPT) MM01 não cria skill, sétimo tipo do Hub, fingerprint, crawler de catálogo, feature engineering, contrato definitivo de MLflow, integração visual própria, publicação real ou migração de legado. MM02 permanece bloqueada até auditoria, aceite explícito e integração.
+- (ChatGPT) Esta entrada fecha apenas a documentação pré-merge. Não constitui aceite humano e não autoriza integração automática.
+- (ChatGPT) MM01 não cria skill `hub-ml-micromodelos`, sétimo tipo do Hub, fingerprint MM02, crawler/binding MM03, contrato definitivo de MLflow MM06, publicação corporativa real, ACL real, integração visual própria ou migração de legado.
+- (ChatGPT) A autoridade final de publicação permanece `GOVERNANCA_EXTERNA`; MM02 continua bloqueada até revalidação da árvore final, aceite humano explícito e integração da PR #51.
 
 ## 2026-09-14 — MM00: integração e fechamento documental do Framework de Micromodelos (ChatGPT)
 
