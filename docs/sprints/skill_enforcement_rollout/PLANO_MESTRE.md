@@ -1,6 +1,6 @@
 # Plano Mestre — Skill Enforcement Rollout
 
-**Versão candidata SER00 reconciliada em 2026-09-23.** Baseline histórica `11851e137dd7793b351ac08fc211c0be90005dee`; main atual após as manutenções A07 `4bc7c9aada96468505e51f279cf32c107d0b6dbb`. A01–A03 estão aceitas; #102 e #105 estão integradas. Falta apenas certificar a candidata documental final da SER00 no SHA exato. Não constitui autorização de SER01.
+**Versão candidata SER00 reconciliada em 2026-09-23.** Baseline histórica `11851e137dd7793b351ac08fc211c0be90005dee`; main atual `73d7659dcf11509a7fba392221c4810d10401c35`, após as manutenções A07 #102/#105 e a integração MM01. A01–A03 estão aceitas. Falta apenas certificar a candidata documental final da SER00 no SHA exato. Não constitui autorização de SER01.
 
 ## 1. Objetivo e limites
 
