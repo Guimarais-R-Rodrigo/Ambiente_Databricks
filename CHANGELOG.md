@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-23 — SER01 A1-LAB R1 reprovada e corretiva da fixture positiva
+
+### Corrigido
+
+- (Claude) `tools/tests/test_ser01_object_validation.py`: `replica()` passa a garantir LF terminal na fixture positiva montada a partir de fonte legado. O fonte `hub_scripts/data_quality_check/README.md` não foi alterado; a regra `CONTENT_REQUIRES_UTF8_LF` da primitive e o teste negativo sem newline seguem intactos.
+
+### Notas
+
+- (Claude) A1-LAB R1 sobre `5d61b8e52b4c` (Windows 11/NTFS, Python 3.12.10): FAIL em G1, `test_real_script_validation` BLOCKED por `CONTENT_REQUIRES_UTF8_LF`; G2–G8 não executados. O FAIL permanece registrado; a R2 roda sobre novo SHA e está pendente. Policy, skill, contrato, manifest, writer e validator de produção inalterados; L2, sem merge.
+
 ## 2026-09-23 — SER01 A1: validação repo-side pré-promoção de criar-objeto
 
 ### Adicionado

@@ -30,3 +30,24 @@ A unidade de contagem de testes é método unittest, não cada subteste. A execu
 O Git direto falhou por resolução de `github.com`; as leituras/escritas autenticadas pelo conector funcionaram. Por isso não se alega checkout integral/limpo deste ambiente. Entrada do changelog raiz e snapshot medido permanecem pendentes de preparação mecânica delegada. O SHA publicado e os hashes locais/remotos ficam no manifesto externo e na PR, sem autorreferência neste arquivo.
 
 A1 não habilita promoção: ainda faltam evidência real do componente, ligação à skill/contrato/manifest, composição prospectiva SER e provas externas do envelope que vier a ser aprovado. Nenhum PASS local futuro deverá apagar essa distinção.
+
+## A1-LAB R1 e corretiva R2 (registro aditivo, 2026-09-23)
+
+```text
+A1_LAB_R1_SHA = 5d61b8e52b4c3ebd0d40e142a71de6b5c66869a1
+A1_LAB_R1_HOST = Windows 11 / NTFS / Python 3.12.10
+A1_LAB_R1_RESULT = FAIL (G1)
+A1_LAB_R1_G1 = 31 coletados, 30 executados, 29 PASS, 1 FAIL, 0 SKIP, 1 não iniciado (failfast)
+A1_LAB_R1_FAILED_TEST = test_real_script_validation -> BLOCKED CONTENT_REQUIRES_UTF8_LF
+A1_LAB_R1_G2_G8 = NOT_RUN_PREVIOUS_GATE_FAILED
+CAUSE = fixture positiva de script herdou README legado sem LF terminal
+PRODUCTION_VALIDATOR = UNCHANGED
+LF_FAIL_CLOSED_RULE = UNCHANGED
+LEGACY_SOURCE = UNCHANGED
+CORRECTION = canonicalização da fixture positiva apenas (replica() no teste)
+R2 = PENDING
+CURRENT_LEVEL = L2_UNCHANGED
+MERGE = NOT_AUTHORIZED
+```
+
+A R1 não é reclassificada por qualquer resultado posterior: pertence ao SHA acima. O fonte `hub_scripts/data_quality_check/README.md` termina sem LF no próprio Git; a fixture positiva é um candidato novo (nome, destino e referências já são trocados) e por isso passa a cumprir também o contrato UTF-8/LF antes de chegar à primitive. Candidatos sem LF continuam `BLOCKED`.

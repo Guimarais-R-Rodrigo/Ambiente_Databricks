@@ -58,3 +58,7 @@ Identidade antes/depois; hashes dos arquivos declarativos; versões; comandos, e
 Preservar bruto local. Para transporte, pode-se excluir o conteúdo volumoso `.git` dos overlays somente com inventário explícito: conservar os candidatos, base/tree, registros e logs necessários à reprodução. Não apagar ou reescrever o bruto para sanitizar.
 
 O agente externo pode devolver `A1_LAB_PASS` ou um bloqueio/falha observado. Não pode declarar SER01 encerrada, promover L3, publicar no Free, fazer merge ou iniciar SER02.
+
+## Corretiva pós-R1 (2026-09-23)
+
+A R1 reprovou em `test_real_script_validation`: a réplica do script herdou o README legado sem LF terminal e a primitive recusou corretamente com `CONTENT_REQUIRES_UTF8_LF`. A corretiva altera só `replica()`, que acrescenta o LF terminal ausente à fixture positiva. Não há método novo: a suíte continua com 31 métodos (24 unitários, sete integrações). O caso negativo `"sem newline"` de `test_encoding_and_size_restrictions` permanece e deve continuar bloqueando. A R2 repete a campanha inteira, uma vez, sobre o novo SHA congelado; push só depois de todos os gates verdes.

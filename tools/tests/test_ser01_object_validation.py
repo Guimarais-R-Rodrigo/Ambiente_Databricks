@@ -319,6 +319,10 @@ class RepositoryIntegrationTests(unittest.TestCase):
         data["files"] = {}
         for name in ("README.md", old + (".md" if kind == "prompt" else ".py"), "exemplo_" + old + ".py") + (() if kind == "prompt" else ("__init__.py",)):
             text = (source / name).read_text(encoding="utf-8").replace(old, new)
+            # Fixture positiva é candidato novo: canoniza LF terminal só aqui. O
+            # fonte legado não muda e a primitive segue fail-closed sem LF.
+            if not text.endswith("\n"):
+                text += "\n"
             data["files"][folder + "/" + name.replace(old, new)] = text
         return data
 
