@@ -21,6 +21,6 @@ Escopo desta rodada: leitura do GitHub, inventário 14/14, revisão de targets, 
 
 ## Limite de aceite
 
-`SER00_NOT_READY`. A01–A03 foram aceitas humanamente em 2026-09-22 e a ordem de rollout fica arquiteturalmente congelada. A07 — certificação local integral, changelog/snapshots e nova identidade da candidata — permanece pendente. Nada nesta pasta é uma segunda policy operacional. A fonte machine-readable continua sendo a policy do produto.
+`SER00_NOT_READY_FINAL_LOCAL_CERTIFICATION`. A01–A03 foram aceitas em 2026-09-22 e a ordem de rollout fica arquiteturalmente congelada. Changelog/snapshot já foram reconciliados; as manutenções A07 #102/#105 estão integradas. Resta somente a certificação local integral da nova HEAD SER00. Nada nesta pasta é uma segunda policy operacional. A fonte machine-readable continua sendo a policy do produto.
 
 O aceite arquitetural não constitui recertificação integral do repositório, Windows, Free ou Genie. Validação documental própria e integridade de publicação são canais distintos dos validadores canônicos não executados.
