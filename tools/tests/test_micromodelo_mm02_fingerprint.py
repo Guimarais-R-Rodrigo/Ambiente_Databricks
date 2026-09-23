@@ -52,6 +52,19 @@ class MicromodeloMM02FingerprintTests(unittest.TestCase):
         self.assert_valid_static(document)
         self.assertNotEqual(self.fingerprint(self.valid), self.fingerprint(document))
 
+    def calibrated_score(self) -> dict:
+        document = copy.deepcopy(self.valid)
+        document["score"]["tipo_semantica"] = "PROBABILIDADE_CALIBRADA"
+        document["score"]["calibracao"] = {
+            "metodo": "platt sintetico",
+            "evidencia_ref": "exp_001",
+            "proveniencia": copy.deepcopy(
+                document["experimentos"][0]["proveniencia"]
+            ),
+        }
+        self.assert_valid_static(document)
+        return document
+
     def candidate_with_publication_contract(self) -> dict:
         candidate = copy.deepcopy(self.valid)
         candidate["identidade"]["estado"]["fase_anterior"] = "VALIDADO"
@@ -120,6 +133,23 @@ class MicromodeloMM02FingerprintTests(unittest.TestCase):
             "Texto explicativo alternativo que não modifica a definição operacional."
         )
         self.assert_preserves(document)
+
+    def test_structured_score_semantics_audit_reference_is_not_material(self) -> None:
+        document = copy.deepcopy(self.valid)
+        document["score"]["semantica_ref"] = "SEM-AUDIT-999"
+        self.assert_preserves(document)
+
+    def test_standard_normalization_audit_reference_is_not_material(self) -> None:
+        document = copy.deepcopy(self.valid)
+        document["score"]["normalizacao"]["referencia"] = "NORM-AUDIT-999"
+        self.assert_preserves(document)
+
+    def test_initial_punctuation_is_not_editorial_equivalent(self) -> None:
+        document = copy.deepcopy(self.valid)
+        document["negocio"]["definicao_operacional"] = (
+            "?" + document["negocio"]["definicao_operacional"]
+        )
+        self.assert_changes(document)
 
     def test_provenance_approval_and_timestamps_do_not_change_fingerprint(self) -> None:
         document = copy.deepcopy(self.valid)
@@ -211,6 +241,53 @@ class MicromodeloMM02FingerprintTests(unittest.TestCase):
         document = copy.deepcopy(self.valid)
         document["score"]["tipo_semantica"] = "OUTRA_APROVADA"
         self.assert_changes(document)
+
+    def test_custom_score_semantics_reference_is_material(self) -> None:
+        first = copy.deepcopy(self.valid)
+        first["score"]["tipo_semantica"] = "OUTRA_APROVADA"
+        self.assert_valid_static(first)
+
+        second = copy.deepcopy(first)
+        second["score"]["semantica_ref"] = "SEM-CUSTOM-999"
+        self.assert_valid_static(second)
+        self.assertNotEqual(self.fingerprint(first), self.fingerprint(second))
+
+    def test_custom_normalization_reference_is_material(self) -> None:
+        first = copy.deepcopy(self.valid)
+        first["score"]["normalizacao"]["metodo"] = "CUSTOM_APROVADO"
+        self.assert_valid_static(first)
+
+        second = copy.deepcopy(first)
+        second["score"]["normalizacao"]["referencia"] = "NORM-CUSTOM-999"
+        self.assert_valid_static(second)
+        self.assertNotEqual(self.fingerprint(first), self.fingerprint(second))
+
+    def test_calibration_evidence_id_is_material_but_run_is_not(self) -> None:
+        first = self.calibrated_score()
+
+        same_definition_new_run = copy.deepcopy(first)
+        same_definition_new_run["experimentos"][0]["resultado"] = (
+            "nova execução reproduziu a mesma calibração"
+        )
+        same_definition_new_run["experimentos"][0]["proveniencia"]["medicao"][
+            "referencia_execucao"
+        ] = "run-calibracao-999"
+        self.assert_valid_static(same_definition_new_run)
+        self.assertEqual(
+            self.fingerprint(first),
+            self.fingerprint(same_definition_new_run),
+        )
+
+        different_calibration = copy.deepcopy(first)
+        second_experiment = copy.deepcopy(different_calibration["experimentos"][0])
+        second_experiment["id"] = "exp_002"
+        different_calibration["experimentos"].append(second_experiment)
+        different_calibration["score"]["calibracao"]["evidencia_ref"] = "exp_002"
+        self.assert_valid_static(different_calibration)
+        self.assertNotEqual(
+            self.fingerprint(first),
+            self.fingerprint(different_calibration),
+        )
 
     def test_study_output_contract_change_changes_fingerprint(self) -> None:
         document = copy.deepcopy(self.valid)
