@@ -336,3 +336,28 @@ Correção:
 - `74b0929433a58b4a17959fbb84cc85bb06407127` — regressão das variantes escapadas.
 
 Nenhum gate funcional foi relaxado.
+
+
+## Sexta tentativa da certificação local — resíduos preexistentes
+
+A R6 executou o certifier sobre `94ba596ca4385223248a102b9ff02c0252491c88`, mas falhou antes do preflight e antes de qualquer step devido a dois resíduos gerados e ignorados pelo Git: `.artifacts/v10-app` e `tools/readme_visuals/node_modules`.
+
+Resultado: `MECHANICAL_FAIL / BUNDLE_SANITIZATION_PASS` no pequeno bundle de falha. Nenhum gate funcional foi exercitado.
+
+Registro: `LOCAL_CERTIFICATION_ATTEMPT_6.md`.
+
+## Sétima tentativa da certificação local — UnicodeEncodeError no tee
+
+A R7, no mesmo HEAD, completou preflight, cinco bootstraps, 16 self-tests e os grupos MM01 canônico/R02/R03. Durante `MM01_VALIDATE_ASSISTANT`, o streaming encontrou `UnicodeEncodeError` ao retransmitir ao console Windows um caractere replacement produzido por mismatch de encoding.
+
+O validator não recebeu `StepResult`; CI_LOCAL e V00–V13 permaneceram NOT_RUN.
+
+Correção posterior:
+
+- subprocessos de `run_step` forçam `PYTHONUTF8=1` e `PYTHONIOENCODING=utf-8`;
+- emissão ao console usa fallback `backslashreplace` quando o encoding corrente não representa o texto;
+- regressões específicas cobrem stdio UTF-8 e console cp1252/charmap.
+
+Registro: `LOCAL_CERTIFICATION_ATTEMPT_7.md`.
+
+Nenhum gate funcional foi relaxado.
