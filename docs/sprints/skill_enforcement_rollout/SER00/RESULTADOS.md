@@ -2,7 +2,7 @@
 
 ```text
 INITIAL_RECONCILIATION_SOURCE = main@11851e137dd7793b351ac08fc211c0be90005dee
-CURRENT_RECONCILIATION_SOURCE = main@4bc7c9aada96468505e51f279cf32c107d0b6dbb
+CURRENT_RECONCILIATION_SOURCE = main@73d7659dcf11509a7fba392221c4810d10401c35
 SKILLS_TOTAL = 14
 SKILLS_AT_TARGET = 5
 SKILLS_BELOW_TARGET = 9
@@ -30,7 +30,7 @@ VERDICT = SER00_NOT_READY_FINAL_LOCAL_CERTIFICATION
 
 A rodada inicial materializou 14 documentos Markdown: inventário, matrizes, desenho e Plano Mestre candidato SER01–SER16. A validação própria passou em 26/26 checagens, incluindo quatro controles negativos, e conferiu 15 links relativos. Não são 26 testes de runtime nem PASS de CI/SE08. Em 2026-09-22 o usuário aceitou o encaminhamento A01–A03 e a manutenção dos targets numéricos; isso não atribui capacidade implementada nem promove `current_level`.
 
-Os antigos achados A01–A03 foram resolvidos no plano/ADR. O A07-R1 revelou a falha do oráculo de storage e o snapshot stale; a #102 corrigiu esses pontos e foi integrada. A A07 FINAL R2 reproduziu WinError32 nativo histórico; a #105 introduziu `FILE_SHARE_DELETE` nos streams Win32, provou a propriedade com child vivo, passou stress 30/30, CI 10/10 e FULL SE08 21/21 e foi integrada em `4bc7c9aa...`. A SER00 permanece bloqueada somente porque sua nova HEAD documental ainda não recebeu a certificação canônica final. A enumeração exaustiva de testes analíticos de cada helper continua fora do alcance desta sprint documental.
+Os antigos achados A01–A03 foram resolvidos no plano/ADR. O A07-R1 revelou a falha do oráculo de storage e o snapshot stale; a #102 corrigiu esses pontos e foi integrada. A A07 FINAL R2 reproduziu WinError32 nativo histórico; a #105 introduziu `FILE_SHARE_DELETE` nos streams Win32, provou a propriedade com child vivo, passou stress 30/30, CI 10/10 e FULL SE08 21/21 e foi integrada em `4bc7c9aa...`. Em seguida, a MM01 foi reconciliada com essa main e integrada em `73d7659d...`, alterando a baseline global sem mudar policy/skills SER. A SER00 permanece bloqueada somente porque sua nova HEAD documental ainda não recebeu a certificação canônica final. A enumeração exaustiva de testes analíticos de cada helper continua fora do alcance desta sprint documental.
 
 Não houve execução analítica, publicação Free, probe de Genie ou início de SER01. Houve apenas os merges autorizados das manutenções #102 e #105; a PR #101 continua sem autorização de merge. O histórico SEF permanece intocado. A candidata SER00 só poderá ir a revisão após PASS local do SHA final; SER01 exige autorização própria depois da integração da SER00.
 
