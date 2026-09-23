@@ -160,19 +160,30 @@ def _git(runner, evidence: Path, steps: list[dict[str, Any]], name: str, *args: 
     return output.rstrip("\r\n")
 
 
-def _git_state(runner, evidence: Path, steps: list[dict[str, Any]]) -> dict[str, Any]:
-    counts = _git(runner, evidence, steps, "ahead_behind", "rev-list", "--left-right", "--count", "origin/main...HEAD").split()
+GIT_STATE_COMPONENTS = (
+    "ahead_behind", "head", "tree", "branch",
+    "origin_main", "merge_base", "shallow", "status",
+)
+
+
+def _git_state(runner, evidence: Path, steps: list[dict[str, Any]], *, phase: str) -> dict[str, Any]:
+    if phase not in {"before", "after"}:
+        raise ValueError("GIT_STATE_PHASE_INVALID")
+    def observe(name: str, *args: str) -> str:
+        return _git(runner, evidence, steps, f"{phase}_{name}", *args)
+
+    counts = observe("ahead_behind", "rev-list", "--left-right", "--count", "origin/main...HEAD").split()
     if len(counts) != 2:
         raise GateFailed("GIT_AHEAD_BEHIND_MALFORMED")
     behind, ahead = map(int, counts)
     return {
-        "head": _git(runner, evidence, steps, "head", "rev-parse", "HEAD"),
-        "tree": _git(runner, evidence, steps, "tree", "rev-parse", "HEAD^{tree}"),
-        "branch": _git(runner, evidence, steps, "branch", "rev-parse", "--abbrev-ref", "HEAD"),
-        "origin_main": _git(runner, evidence, steps, "origin_main", "rev-parse", "origin/main"),
-        "merge_base": _git(runner, evidence, steps, "merge_base", "merge-base", "HEAD", "origin/main"),
-        "shallow": _git(runner, evidence, steps, "shallow", "rev-parse", "--is-shallow-repository"),
-        "status": _git(runner, evidence, steps, "status", "status", "--porcelain=v1", "--untracked-files=all"),
+        "head": observe("head", "rev-parse", "HEAD"),
+        "tree": observe("tree", "rev-parse", "HEAD^{tree}"),
+        "branch": observe("branch", "rev-parse", "--abbrev-ref", "HEAD"),
+        "origin_main": observe("origin_main", "rev-parse", "origin/main"),
+        "merge_base": observe("merge_base", "merge-base", "HEAD", "origin/main"),
+        "shallow": observe("shallow", "rev-parse", "--is-shallow-repository"),
+        "status": observe("status", "status", "--porcelain=v1", "--untracked-files=all"),
         "behind": behind,
         "ahead": ahead,
     }
@@ -406,6 +417,8 @@ def verify_certification(payload: Any, *, expected_head: str | None = None) -> d
         "ser01_object_validation", "ser_certifier_regression", "legacy_create_l3",
         "contracts", "policy", "assistant", "renderer", "render_diff",
         "readme_snapshot", "ci_local", "historical_se08",
+        *(f"git_{phase}_{component}" for phase in ("before", "after")
+          for component in GIT_STATE_COMPONENTS),
     }
     if not isinstance(steps, list) or not steps or any(not isinstance(s, Mapping) for s in steps):
         issues.append("STEP_SET_INVALID")
@@ -418,6 +431,21 @@ def verify_certification(payload: Any, *, expected_head: str | None = None) -> d
             issues.append("STEP_SET_INVALID")
     return {"valid": not issues, "issues": issues,
             "verification_scope": "SER_PROSPECTIVE_CERTIFICATION_INTEGRITY_ONLY"}
+
+
+def _finalize_summary(summary: dict[str, Any]) -> dict[str, Any]:
+    _seal(summary)
+    if summary.get("status") == "PASS":
+        before = summary.get("git_before")
+        expected_head = before.get("head") if isinstance(before, Mapping) else None
+        checked = verify_certification(summary, expected_head=expected_head)
+        if checked.get("valid") is not True:
+            summary["status"] = "FAIL"
+            summary.setdefault("issues", []).append(
+                "SELF_VERIFICATION_FAILED:" + ",".join(checked.get("issues") or ["UNKNOWN"])
+            )
+            _seal(summary)
+    return summary
 
 
 def main(argv=None) -> int:
@@ -451,7 +479,7 @@ def main(argv=None) -> int:
         evidence = _reserve_evidence(args.evidence_dir, args.evidence_authorized)
         runner = _process_runner()
         runner.REPO_ROOT = ROOT
-        summary["git_before"] = _git_state(runner, evidence, steps)
+        summary["git_before"] = _git_state(runner, evidence, steps, phase="before")
         state = summary["git_before"]
         if state["branch"] != BRANCH or state["status"] != "" or state["shallow"] != "false":
             raise ValueError("GIT_PRECONDITION_FAILED")
@@ -504,7 +532,7 @@ def main(argv=None) -> int:
         )
         summary["historical_se08"] = "PASS_SEPARATE_CHANNEL"
 
-        summary["git_after"] = _git_state(runner, evidence, steps)
+        summary["git_after"] = _git_state(runner, evidence, steps, phase="after")
         if summary["git_after"] != summary["git_before"]:
             raise GateFailed("POST_CERTIFICATION_GIT_DRIFT")
         summary["status"] = "PASS"
@@ -513,12 +541,12 @@ def main(argv=None) -> int:
         summary["issues"].append(type(exc).__name__ + ":" + str(exc))
         if evidence is not None and runner is not None:
             try:
-                summary["git_after"] = _git_state(runner, evidence, steps)
+                summary["git_after"] = _git_state(runner, evidence, steps, phase="after")
             except Exception as state_exc:
                 summary["issues"].append("POST_STATE_FAILED:" + type(state_exc).__name__)
     finally:
         summary["ended_at_utc"] = _utc()
-        _seal(summary)
+        _finalize_summary(summary)
         if evidence is not None:
             _write_json(evidence / "summary.json", summary)
 

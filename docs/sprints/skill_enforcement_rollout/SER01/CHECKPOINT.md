@@ -155,3 +155,27 @@ A3 cria a primeira certificação prospectiva SER com identidade `SER-CERT-1` e 
 `ser01-object-validation-pre-promotion`. Ela exige o record local junto do Receipt,
 fecha esse bypass estrutural, reexecuta a rota canônica e mantém o perfil histórico
 `se08` apenas como canal separado. A3 não muda policy e exige campanha própria.
+
+## A3 SER-CERT R1 — FAIL de verificação e corretiva R2 (registro aditivo, 2026-09-23)
+
+```text
+A3_R1_LOCAL_FREEZE_SHA = 1ff6d563824ecf3dfd80fb86c1420bb46329cf5d
+A3_R1_LOCAL_TREE = 704df6500e8f01c35fd660c9d48d512cc9b0c19c
+SER_CERT_PRODUCER_STATUS = PASS
+SER_CERT_PRODUCER_EXIT = 0
+VERIFY_CERTIFICATION = FAIL
+FIRST_FAILURE = STEP_SET_INVALID
+PUSH = NO
+REMOTE_BRANCH_REMAINED = 98c886a972d85c6b0918510f55bb8586e103708b
+```
+
+A causa é interna ao certifier, não à rota A2: `_git_state` registrava os oito
+probes Git antes e depois com os mesmos nomes na lista única de `steps`, enquanto
+`verify_certification` exige unicidade de nomes. Assim uma campanha real completa
+produzia 27 steps com oito nomes duplicados, embora todos os gates materiais
+tivessem exit 0 e cleanup completo.
+
+A corretiva R2 distingue explicitamente `git_before_*` de `git_after_*`, passa a
+exigir os 27 nomes únicos no verifier e adiciona self-verification fail-closed no
+próprio produtor: um summary `PASS` que não seja verificável é convertido em
+`FAIL` antes do exit code. A R1 permanece vermelha e não foi publicada.

@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-09-23 — SER01 A3-R2: corrigida identidade duplicada dos probes Git
+
+### Corrigido
+
+- (ChatGPT) A3-R1 local em `1ff6d563824e` preservada como FAIL de verificação: o produtor `SER-CERT-1` terminou os gates materiais, mas `verify_certification` recusou o summary por `STEP_SET_INVALID`; não houve push.
+- (ChatGPT) `_git_state` passa a registrar `git_before_*` e `git_after_*`; o verifier exige os 16 probes Git e 11 gates materiais como nomes únicos.
+- (ChatGPT) O produtor passa a auto-verificar qualquer summary PASS antes de retornar sucesso; certificado semanticamente inválido é convertido em FAIL e re-selado. Regressões cobrem duplicação, fase, gate ausente e self-verification.
+
+### Limites
+
+- (ChatGPT) Nenhuma alteração em policy, `current_level=L2`, rollout, skill, Receipt de domínio ou semântica histórica SE08. Nova campanha A3-R2 continua obrigatória.
+
 ## 2026-09-23 — SER01 A3: hardening semântico do verifier SER-CERT-1
 
 ### Corrigido

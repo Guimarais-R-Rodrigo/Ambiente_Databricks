@@ -128,3 +128,13 @@ ser observado separadamente antes de qualquer promoção final.
 O certifier também executa regressões repo/CI e chama `certify_local --profile se08`
 somente como canal histórico separado. Um PASS prospectivo nunca muda ou renomeia a
 semântica de SE08. A3 permanece pré-promoção e não edita policy.
+
+## 10. A3-R2 — identidade temporal dos probes Git e auto-verificação
+
+Os probes Git de entrada e saída são observações distintas, embora consultem os
+mesmos campos. A certificação passa a nomeá-los por fase
+(`git_before_*`/`git_after_*`), preservando unicidade e permitindo ao verifier
+exigir explicitamente ambos os conjuntos. O produtor também executa
+`verify_certification` sobre seu próprio summary antes de retornar sucesso; se o
+verifier rejeitar o artefato, o status é convertido para FAIL e o summary é
+re-selado. Isso impede a classe de falso verde observada na A3-R1.

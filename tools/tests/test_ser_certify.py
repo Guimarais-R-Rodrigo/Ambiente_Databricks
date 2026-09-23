@@ -31,6 +31,8 @@ def synthetic_summary():
         "steps": [
             {"name": name, "exit_code": 0, "command_started": True, "process_cleanup": "COMPLETE"}
             for name in (
+                *(f"git_{phase}_{component}" for phase in ("before", "after")
+                  for component in cert.GIT_STATE_COMPONENTS),
                 "ser01_object_validation", "ser_certifier_regression", "legacy_create_l3",
                 "contracts", "policy", "assistant", "renderer", "render_diff",
                 "readme_snapshot", "ci_local", "historical_se08",
@@ -88,6 +90,27 @@ class SerCertifierTests(unittest.TestCase):
         payload = synthetic_summary()
         payload["steps"] = [row for row in payload["steps"] if row["name"] != "ci_local"]
         cert._seal(payload)
+        self.assertFalse(cert.verify_certification(payload, expected_head="a" * 40)["valid"])
+
+        payload = synthetic_summary()
+        payload["steps"].append(copy.deepcopy(payload["steps"][0]))
+        cert._seal(payload)
+        self.assertFalse(cert.verify_certification(payload, expected_head="a" * 40)["valid"])
+
+    def test_git_observation_steps_are_phase_distinct(self):
+        payload = synthetic_summary()
+        names = [row["name"] for row in payload["steps"]]
+        self.assertEqual(len(names), len(set(names)))
+        for phase in ("before", "after"):
+            for component in cert.GIT_STATE_COMPONENTS:
+                self.assertIn(f"git_{phase}_{component}", names)
+
+    def test_finalize_summary_fails_closed_on_invalid_pass(self):
+        payload = synthetic_summary()
+        payload["steps"] = [row for row in payload["steps"] if row["name"] != "ci_local"]
+        cert._finalize_summary(payload)
+        self.assertEqual("FAIL", payload["status"])
+        self.assertTrue(any(issue.startswith("SELF_VERIFICATION_FAILED:") for issue in payload["issues"]))
         self.assertFalse(cert.verify_certification(payload, expected_head="a" * 40)["valid"])
 
     def test_published_receipt_verifier_requires_local_record(self):

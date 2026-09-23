@@ -117,3 +117,15 @@ O certifier exige checkout limpo, histórico completo, behind=0, policy L2→L3 
 e dois negativos sem Receipt. Ele reexecuta regressões, validator, renderer/diff,
 snapshot, CI e o FULL SE08 como `PASS_SEPARATE_CHANNEL`. Qualquer FAIL interrompe
 a certificação prospectiva. O PASS não autoriza promoção por si só.
+
+## A3-R2 — regressão do defeito STEP_SET_INVALID
+
+A suíte prospectiva passa a exigir nomes Git distintos por fase:
+`git_before_<campo>` e `git_after_<campo>`. O verifier inclui os 16 probes Git
+e os 11 gates materiais no conjunto mínimo, totalizando 27 nomes únicos numa
+campanha completa. Há regressão para nome duplicado, ausência de gate, fases
+before/after e self-verification fail-closed do produtor.
+
+A3-R1 em `1ff6d563824ecf3dfd80fb86c1420bb46329cf5d` permanece
+`FAIL_VERIFICATION/STEP_SET_INVALID`, sem push. A próxima campanha deve usar novo
+SHA e novo diretório de evidência; nenhum PASS material interno da R1 é transportado.
