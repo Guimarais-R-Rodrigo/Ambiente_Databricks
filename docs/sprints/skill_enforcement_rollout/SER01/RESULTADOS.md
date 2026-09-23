@@ -51,3 +51,25 @@ MERGE = NOT_AUTHORIZED
 ```
 
 A R1 não é reclassificada por qualquer resultado posterior: pertence ao SHA acima. O fonte `hub_scripts/data_quality_check/README.md` termina sem LF no próprio Git; a fixture positiva é um candidato novo (nome, destino e referências já são trocados) e por isso passa a cumprir também o contrato UTF-8/LF antes de chegar à primitive. Candidatos sem LF continuam `BLOCKED`.
+
+## A1-LAB R2 e corretiva R3 (registro aditivo, 2026-09-23)
+
+```text
+A1_LAB_R2_SHA = 4992f10d5892cf804340316cec79e42420097e68
+A1_LAB_R2_PUSH = NO (commit apenas local)
+A1_LAB_R2_RESULT = FAIL_G1
+A1_LAB_R2_G1 = 31 coletados, 30 executados, 29 PASS, 1 FAIL, 0 SKIP, 1 não iniciado (failfast)
+R1_FIX = PASS_CAUSALLY_CONFIRMED (envelope aceitou o pacote script)
+R2_FAILED_TEST = test_real_script_validation
+R2_FAILURE = canonical_public_api
+CAUSE = transporte de newline do stdout no Windows (CRLF) versus candidato canônico LF
+API_CONTENT_AFTER_CRLF_NORMALIZATION = EXACT_MATCH (152 bytes/7 CR -> 145 bytes = __init__.py)
+PRODUCTION_API_TOOL = UNCHANGED (tools/api_publica.py)
+CANDIDATE_LF_RULE = UNCHANGED
+R3_CORRECTION = CRLF->LF somente no stdout de api_publica na comparação da SER01
+R3 = PENDING
+CURRENT_LEVEL = L2_UNCHANGED
+MERGE = NOT_AUTHORIZED
+```
+
+Na R2, o negativo `test_incorrect_public_api_is_rejected_without_repairing_candidate` passava sem discriminar no Windows, porque qualquer fachada reprovava pelo CRLF. A R3 deve mostrar fachada correta PASS e fachada incorreta FAIL no mesmo host. R1 e R2 não são reclassificadas por resultado posterior.

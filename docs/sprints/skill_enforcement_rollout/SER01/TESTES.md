@@ -62,3 +62,7 @@ O agente externo pode devolver `A1_LAB_PASS` ou um bloqueio/falha observado. Nã
 ## Corretiva pós-R1 (2026-09-23)
 
 A R1 reprovou em `test_real_script_validation`: a réplica do script herdou o README legado sem LF terminal e a primitive recusou corretamente com `CONTENT_REQUIRES_UTF8_LF`. A corretiva altera só `replica()`, que acrescenta o LF terminal ausente à fixture positiva. Não há método novo: a suíte continua com 31 métodos (24 unitários, sete integrações). O caso negativo `"sem newline"` de `test_encoding_and_size_restrictions` permanece e deve continuar bloqueando. A R2 repete a campanha inteira, uma vez, sobre o novo SHA congelado; push só depois de todos os gates verdes.
+
+## Corretiva pós-R2 (2026-09-23)
+
+A R2 confirmou a corretiva de LF e expôs um falso mismatch em `canonical_public_api`: o stdout de `api_publica.py` chega com CRLF no Windows. A R3 desfaz somente pares `\r\n` desse stdout antes da comparação, sem `strip` e sem tocar no candidato. Novo método unitário `test_api_stdout_canonicalizes_only_crlf_transport` (LF preservado, CRLF equivalente, CR isolado, bytes extras e conteúdo diferente não equivalentes). Suíte: 32 métodos (25 unitários, sete integrações). Critério adicional de G1: script e snippet com `canonical_public_api=PASS` e a fachada incorreta com `canonical_public_api=FAIL`.

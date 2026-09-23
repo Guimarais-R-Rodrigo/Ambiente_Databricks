@@ -194,6 +194,17 @@ class EnvelopeTests(unittest.TestCase):
         self.assertNotEqual(a["candidate_sha256"], b["candidate_sha256"])
         self.assertNotEqual(a["files"][0]["sha256"], b["files"][0]["sha256"])
 
+    def test_api_stdout_canonicalizes_only_crlf_transport(self):
+        lf = 'from .x import a\n\n__all__ = [\n    "a",\n]\n\n'
+        self.assertEqual(lf, module._api_stdout_lf(lf))
+        self.assertEqual(lf.encode("utf-8"), module._api_stdout_lf(lf.replace("\n", "\r\n")).encode("utf-8"))
+        for changed in (lf.replace("__all__", "\r__all__"),          # CR isolado permanece
+                        lf.replace("\n", "\r"),                       # só CR não vira LF
+                        lf + "\r\n",                                  # bytes extras não somem
+                        lf.replace('"a"', '"b"').replace("\n", "\r\n")):  # conteúdo diferente
+            with self.subTest(changed=repr(changed)):
+                self.assertNotEqual(lf, module._api_stdout_lf(changed))
+
     def test_unapproved_evidence_persistence_does_not_touch_disk(self):
         with tempfile.TemporaryDirectory() as folder:
             target = Path(folder) / "must-not-exist"

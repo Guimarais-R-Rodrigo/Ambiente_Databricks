@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-23 — SER01 A1-LAB R2 reprovada e corretiva do stdout de api_publica
+
+### Corrigido
+
+- (Claude) `tools/skill_enforcement/ser01_object_validation.py`: `canonical_public_api` compara o stdout de `api_publica.py` após desfazer somente pares CRLF (`_api_stdout_lf`). `api_publica.py`, a regra `CONTENT_REQUIRES_UTF8_LF` e os bytes do candidato não mudam; CR isolado, bytes extras e conteúdo diferente continuam reprovando.
+- (Claude) `tools/tests/test_ser01_object_validation.py`: regressão unitária portátil da canonicalização; a suíte passa a 32 métodos (25 unitários, sete integrações).
+
+### Notas
+
+- (Claude) A1-LAB R2 sobre `4992f10d5892` (local, sem push; Windows 11/NTFS): FAIL em G1, `test_real_script_validation` com `canonical_public_api`. A corretiva R1 foi confirmada (o envelope aceitou o pacote). Causa: `print()` no stdout textual do Windows emite CRLF; após CRLF→LF a saída é idêntica ao `__init__.py` candidato. R1 e R2 permanecem FAIL; R3 pendente; L2, sem merge.
+
 ## 2026-09-23 — SER01 A1-LAB R1 reprovada e corretiva da fixture positiva
 
 ### Corrigido

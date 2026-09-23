@@ -48,6 +48,11 @@ def digest(value: Any) -> str:
     return hashlib.sha256(_json_bytes(value)).hexdigest()
 
 
+def _api_stdout_lf(text: str) -> str:
+    """Desfaz só o CRLF do stdout textual (Windows); CR isolado e bytes extras ficam."""
+    return text.replace("\r\n", "\n")
+
+
 def loads_strict(text: str) -> Any:
     def pairs(items):
         result = {}
@@ -417,7 +422,8 @@ def validate_package(candidate: Any, *, repo_root: Path, evidence_dir: Path,
             name = candidate["context"]["object_name"]
             code, api = run("api_publica", [sys.executable, "-B", str(overlay / "tools/api_publica.py"),
                                             str(target / (name + ".py"))], overlay)
-            check("canonical_public_api", code == 0 and api.encode("utf-8") == (target / "__init__.py").read_bytes())
+            check("canonical_public_api", code == 0 and _api_stdout_lf(api).encode("utf-8")
+                  == (target / "__init__.py").read_bytes())
         if binding["object_type"] == "readme":
             details = legacy._readme_checks(candidate["files"][binding["destination_relative"]], target,
                                             candidate["document"], template.read_text(encoding="utf-8"))
