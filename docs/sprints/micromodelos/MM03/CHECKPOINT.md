@@ -23,7 +23,7 @@ MM04 = NOT_STARTED
 
 ## Histórico de certificação
 
-A preparação documental e o smoke canônico fecharam no SHA `b4325967...`.
+A preparação documental e o smoke canônico fecharam no SHA `b432596798c60eaf515c395cf6cdd97b1c48c8ce`.
 A primeira FULL permaneceu **FAIL** em G02 por uma newline excedente no EOF de
 `ENTRADA_CHANGELOG.md`; resultados posteriores ao primeiro FAIL não receberam
 crédito. O defeito do orquestrador que permitiu avanço pós-falha também foi
