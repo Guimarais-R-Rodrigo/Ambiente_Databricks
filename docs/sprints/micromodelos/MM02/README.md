@@ -3,11 +3,15 @@
 ## Estado
 
 ```text
-MM02 = EM_IMPLEMENTACAO
+MM02 = POS_CERTIFICACAO
 BASE_MAIN = 86d1ff6a52d8ef03f6d5567afed6897c1b96c8c3
 BRANCH = micromodelos/mm02-spec-fingerprint
-LOCAL_EXECUTION = NOT_RUN
-CANDIDATE_FREEZE = NOT_REACHED
+CERTIFIED_SHA = 3d3c6d40263a253449b448a3bcca679143252e54
+PRE_CERTIFICATION_SMOKE = PASS
+FULL_CERTIFICATION = PASS
+INDEPENDENT_AUDIT = APTA_COM_CORRECAO_PROBATORIA
+AUDIT_FINDINGS_OPEN = 0
+FINAL_TREE_REVALIDATION = PENDING
 ```
 
 A MM02 implementa exclusivamente o **fingerprint semântico da especificação material** de um micromodelo já válido segundo o contrato MM01.
@@ -157,17 +161,14 @@ A integração do fingerprint com tracking será tratada somente no gate `MM06_E
 - `tools/tests/test_micromodelo_mm02_fingerprint.py`: regressões e testes metamórficos;
 - fixture válida MM01 é reutilizada; não existe dado real.
 
+## Certificação e auditoria
+
+A candidata funcional congelada em `3d3c6d40263a253449b448a3bcca679143252e54` passou pelo smoke local e pela FULL Certification single-shot. A FULL preservou `behind_by=0`, worktree limpa, 30/30 testes MM02, regressões MM01 47/47 + 3/3 + 1/1, fingerprint esperado `4c88baa416dc4de6edc1f196416e9c12272962703eb3d26cd6790d653fd73eac`, snapshot `1707/2151/0` e CI local 10/10.
+
+A auditoria independente confirmou a evidência funcional. O único finding foi probatório: o ZIP fonte mantinha paths HOME Windows escapados em mensagens de SKIP do G07, apesar de declarar zero HOME leaks. A FULL permaneceu válida; foi produzido derivado auditavelmente sanitizado, sem alterar qualquer fato funcional, e o finding foi encerrado no contraditório.
+
 ## Próximo gate
 
-A candidata ainda não está congelada.
+O `DOC_CLOSE_MINIMO` atualiza apenas documentação viva. Em seguida, executar `FINAL_TREE_REVALIDATION` proporcional para provar que o delta certificado → final é exclusivamente documental e não tornou stale a certificação funcional.
 
-Antes de qualquer FULL:
-
-1. executar a suíte MM02 local;
-2. executar regressões MM01;
-3. executar CLI positiva da MM02;
-4. validar documentação/snapshot;
-5. reconfirmar `main`, merge-base e `behind_by=0`;
-6. só então decidir a composição proporcional da certificação MM02.
-
-Nenhum PASS local foi atribuído nesta etapa repo-side.
+A PR #109 permanece Draft e merge não está autorizado.
