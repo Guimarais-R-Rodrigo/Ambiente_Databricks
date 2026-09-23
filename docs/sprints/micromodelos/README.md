@@ -1,6 +1,6 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: **MM00 integrada. MM01 aceita e integrada pela PR #51. MM02 passou smoke, FULL single-shot e auditoria independente; fechamento documental mínimo aplicado, com revalidação final ainda pendente. PR #109 permanece Draft.**
+> Estado: **MM00, MM01 e MM02 integradas. MM03 concluiu FULL R2 e auditoria independente; gate humano da PR #110 pendente.**
 
 ## Objetivo
 
@@ -9,6 +9,13 @@ Construir uma esteira rastreável e auditável para descobrir, especificar, estu
 O repositório usa somente fixtures e placeholders. O catálogo real do trabalho é representado aqui por `<CATALOGO_PRODUTO>` e o binding para nomes reais ocorre apenas no workspace autorizado.
 
 Documentos vivos desta fase:
+
+- [MM03 — metadata-only](MM03/README.md);
+- [MM03 — contrato metadata v1](MM03/CONTRATO_METADATA.md);
+- [MM03 — testes e gates](MM03/TESTES.md);
+- [MM03 — checkpoint](MM03/CHECKPOINT.md);
+
+Documentos históricos da MM02:
 
 - [MM02 — spec fingerprint](MM02/README.md);
 - [MM02 — matriz de materialidade](MM02/MATRIZ_MATERIALIDADE.md);
@@ -52,7 +59,7 @@ A exceção D1-B terminou com o fechamento de Q-01 e não se propaga às próxim
 
 ## Estado vigente da MM01
 
-A MM01 foi aceita e integrada. O HEAD da branch no merge foi `fa1a3653e60472d171307663d1175344bb3f6a8d`; o merge da PR #51 é `73d7659dcf11509a7fba392221c4810d10401c35`. O contrato canônico `micromodelo.yaml` está na `main`; a MM02 foi aberta em frente própria e está em fechamento pós-certificação.
+A MM01 foi aceita e integrada. O HEAD da branch no merge foi `fa1a3653e60472d171307663d1175344bb3f6a8d`; o merge da PR #51 é `73d7659dcf11509a7fba392221c4810d10401c35`. O contrato canônico `micromodelo.yaml` está na `main`; a MM02 foi aceita e integrada pela PR #109, e a MM03 foi aberta em frente própria.
 
 O fechamento consolidado está no [checkpoint pós-merge](MM01/POST_MERGE_CHECKPOINT.md). A arquitetura prospectiva passa a consumir a [revisão pós-SEF](REVISAO_PLANO_POS_SEF_2026-09-23.md) sem reabrir MM01.
 
@@ -132,12 +139,14 @@ A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprin
 ## Sprint corrente
 
 ```text
-MM02 = POS_CERTIFICACAO
-CERTIFIED_SHA = 3d3c6d40263a253449b448a3bcca679143252e54
-FULL_CERTIFICATION = PASS
-INDEPENDENT_AUDIT = APTA_COM_CORRECAO_PROBATORIA
+MM02 = INTEGRADA_PR_109
+MM03 = POS_CERTIFICACAO
+FULL_R2 = PASS
+INDEPENDENT_AUDIT = APTA
 AUDIT_FINDINGS_OPEN = 0
 FINAL_TREE_REVALIDATION = PENDING
+HUMAN_ACCEPTANCE = PENDING
+MM04 = NOT_STARTED
 ```
 
-A MM02 foi aberta em frente própria após a integração da revisão pós-SEF. O escopo e a matriz material estão em [MM02](MM02/README.md); sua certificação segue o [protocolo de MM02–MM13](PROTOCOLO_CERTIFICACAO_SPRINTS.md).
+A MM03 foi aberta em frente própria após a integração da MM02. Seu núcleo metadata-only e seus limites estão em [MM03](MM03/README.md). A certificação segue o [protocolo de MM02–MM13](PROTOCOLO_CERTIFICACAO_SPRINTS.md). A FULL R1 permanece FAIL histórico; a candidata corrigida `ebbe6ec...` passou micro-smoke, FULL R2 e auditoria independente. O próximo gate é a revalidação final do fechamento documental e, se limpa, aceite humano explícito da PR #110. Os resultados anteriores da MM02 permanecem preservados em seus documentos históricos.

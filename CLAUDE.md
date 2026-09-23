@@ -82,7 +82,7 @@ Escala planejada: pessoal → squad → missão.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 
-## Iniciativa de micromodelos — MM00/MM01 integradas; MM02 pós-certificação
+## Iniciativa de micromodelos — MM00/MM01/MM02 integradas; MM03 pós-certificação
 
 A MM00 da iniciativa MM00–MM13 foi aceita e integrada pela PR #43 em `36e89515a46df24f41deea4791b109f5a1f938f2`. ADR-0014 a ADR-0020 permanecem as decisões arquiteturais aceitas: micromodelo é artefato de domínio, YAML é especificação canônica, MLflow é histórico de runs, publicação continua sob governança externa, greenfield precede migração, temas são consumidos do sistema central e fontes reais ficam limitadas ao catálogo autorizado.
 
@@ -90,7 +90,7 @@ A MM01 foi aceita e integrada pela PR #51. HEAD integrado: `fa1a3653e60472d17130
 
 A revisão arquitetural vigente está em [Micromodelos](docs/sprints/micromodelos/README.md), [revisão pós-SEF/PSEF/SER](docs/sprints/micromodelos/REVISAO_PLANO_POS_SEF_2026-09-23.md), [retrospectiva MM01](docs/sprints/micromodelos/RETROSPECTIVA_MM01.md) e [protocolo de certificação](docs/sprints/micromodelos/PROTOCOLO_CERTIFICACAO_SPRINTS.md). `current_level` da `policy.json` descreve capacidade presente; `target_level` é roadmap. O primeiro ponto material de criação de skill/prompt próprio na linha de Micromodelos permanece MM04.
 
-`MM02 = POS_CERTIFICACAO` na branch `micromodelos/mm02-spec-fingerprint`. O SHA funcional `3d3c6d40263a253449b448a3bcca679143252e54` passou smoke, FULL single-shot e auditoria independente; zero findings permanecem abertos após correção probatória de sanitização do bundle. O desenho corrente está em [MM02](docs/sprints/micromodelos/MM02/README.md). A sprint não cria skill, prompt, policy, acesso a Databricks nem altera o schema MM01; a revalidação final documental ainda precede aceite/merge.
+A MM02 foi aceita e integrada pela PR #109. A MM03 está na PR #110: a FULL R1 permanece FAIL histórico, a candidata corrigida `ebbe6ec374e38686bb76d56d7e76f6b3dcd73cb0` passou micro-smoke, FULL R2 e auditoria independente, com zero findings abertos. Seu núcleo metadata-only e limites estão em [MM03](docs/sprints/micromodelos/MM03/README.md). Falta somente revalidação final do fechamento documental e aceite humano; a sprint não cria skill, prompt, policy, acesso a Databricks nem altera MM01/MM02. MM04 permanece `NOT_STARTED`.
 
 ## Regras inegociáveis
 
