@@ -27,25 +27,44 @@ cert = support.cert
 def cli_probe(mode, target, root, directory, fault):
     """Fault only our process temporary directory; never retry the tested gate."""
     directory = Path(directory)
-    original_exit = tempfile.TemporaryDirectory.__exit__
+    original_cleanup = tempfile.TemporaryDirectory.cleanup
     original_persist = cert._persist_process_observation
-    injections, complete_writes = [], []
+    injections, complete_writes, native_preemptions = [], [], []
     # Test-only ownership: an exception injected before cleanup() leaves the
     # weakref finalizer armed. Keep the object alive until the external oracle
     # has recorded/copied the residue; never change the production finalizer.
     retained_temporaries = {}
-    def cleanup(temporary, *args):
-        # The record is in the direct caller for both the original implementation
-        # and the corrective observer. This is a test injection, not production.
-        record = sys._getframe(1).f_locals.get("record", {})
+    def cleanup(temporary):
+        # Patch the cleanup primitive that TemporaryDirectory.__exit__ delegates
+        # to. The production _ProcessTemporaryDirectory.__exit__ remains intact,
+        # so it still classifies/persists the injected failure. The record belongs
+        # to the concrete wrapper; no stack-frame introspection is needed.
+        record = getattr(temporary, "record", {})
         eligible = (Path(temporary.name).name.startswith("sef-process-") and not injections
                     and record.get("result") == ("EXITED" if mode == "normal" else "INTERRUPTED"))
         if mode == "normal":
             eligible = eligible and "CLI_BEFORE_INTERRUPT" in record.get("stdout", "")
+
+        def real_cleanup():
+            try:
+                return original_cleanup(temporary)
+            except (OSError, ValueError) as exc:
+                native_preemptions.append({
+                    "path": temporary.name,
+                    "type": type(exc).__name__,
+                    "message": str(exc),
+                    "errno": getattr(exc, "errno", None),
+                    "winerror": getattr(exc, "winerror", None),
+                    "filename": getattr(exc, "filename", None),
+                    "fault_requested": fault,
+                    "eligible_for_synthetic_injection": bool(eligible),
+                })
+                raise
+
         if not eligible or fault == "none":
-            return original_exit(temporary, *args)
+            return real_cleanup()
         if fault != "before_removal":
-            original_exit(temporary, *args)
+            real_cleanup()
         else:
             retained_temporaries[temporary.name] = temporary
         injections.append({"path": temporary.name, "kind": "SYNTHETIC_" + fault.upper(),
@@ -63,7 +82,7 @@ def cli_probe(mode, target, root, directory, fault):
             raise OSError("SYNTHETIC_CLEANUP_JOURNAL")
         return original_persist(record)
     try:
-        with mock.patch.object(tempfile.TemporaryDirectory, "__exit__", cleanup), mock.patch.object(cert, "_persist_process_observation", persist):
+        with mock.patch.object(tempfile.TemporaryDirectory, "cleanup", cleanup), mock.patch.object(cert, "_persist_process_observation", persist):
             support.main_cli_probe(mode, target, root, str(directory))
     finally:
         # Snapshot residue before explicit test-only cleanup. Never call it PASS.
@@ -84,7 +103,11 @@ def cli_probe(mode, target, root, directory, fault):
                 item["test_disposal_after_oracle"] = not path.exists()
             elif path.exists():
                 shutil.rmtree(path)
-        (directory / "storage-oracles.json").write_text(json.dumps({"injections": injections, "complete_writes": complete_writes}, indent=2), encoding="utf8")
+        (directory / "storage-oracles.json").write_text(json.dumps({
+            "injections": injections,
+            "complete_writes": complete_writes,
+            "native_preemptions": native_preemptions,
+        }, indent=2), encoding="utf8")
 
 
 class StorageCleanupTests(unittest.TestCase):
@@ -126,6 +149,11 @@ class StorageCleanupTests(unittest.TestCase):
         self.assertFalse(any(alive_after.values()), alive_after)
         self.assertTrue(oracle["complete_writes"])
         self.assertFalse(any(item["exists"] for item in oracle["complete_writes"]))
+        if oracle.get("native_preemptions"):
+            self.fail(
+                "NATIVE_STORAGE_CLEANUP_PREEMPTED_FIXTURE: "
+                + json.dumps(oracle["native_preemptions"], ensure_ascii=False, sort_keys=True)
+            )
         if fault == "none":
             self.assertEqual([], oracle["injections"])
         else:
