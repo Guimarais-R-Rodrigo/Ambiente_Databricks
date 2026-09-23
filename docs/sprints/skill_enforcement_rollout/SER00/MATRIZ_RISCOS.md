@@ -18,7 +18,7 @@
 | R14 | ALTO | mudança concorrente torna prova stale | refetch e comparação SHA/tree/worktree; nova rodada com evidências preservadas | todas |
 | R15 | ALTO | rollout enforce inferido de target/current | decisão por skill; validator só permite enforce com L4; não mudar mode 0.1 | cada promoção |
 | R16 | ALTO | local PASS apresentado como Free/Genie/Actions | canais e estados separados; logs reais; sem inferência de comportamento | todas |
-| R17 | BAIXO / RESIDUAL | snapshots/CHANGELOG/global validation da HEAD SER00 final ainda não recertificados | executar campanha final SHA-bound sobre main `4bc7c9aa...`; preservar qualquer FAIL sem retry | encerramento SER00 |
+| R17 | BAIXO / RESIDUAL | snapshots/CHANGELOG/global validation da HEAD SER00 final ainda não recertificados | executar campanha final SHA-bound sobre main `73d7659d...`; preservar qualquer FAIL sem retry | encerramento SER00 |
 | R18 | ALTO | interpretação criativa/causal determinizada por excesso | proteger somente superfície objetiva, runner fino e helper reutilizado | desenho de cada skill |
 | R19 | ALTO | ampliar confiança criptográfica de hashes | declarar ameaça coberta; hashes vinculam bytes, não autorizam operação humana | Receipt/autorização |
 | R20 | MÉDIO | dívidas históricas apagadas pelo novo projeto | SE06 24/25, SE07 ressalvas, falhas e limitações imutáveis | documentação/certificação |
