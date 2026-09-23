@@ -22,7 +22,7 @@ Calcular SHA-256 e Git blob SHA-1 de cada arquivo local. Depois da criação do 
 
 ## Certificação final obrigatória antes de merge
 
-A manutenção A07/PR #102 já está integrada. Na HEAD final da SER00, confirmar `origin/main=515e673b17f21d4c912d9ae866a7e31967fd4488`, merge-base igual à main, `behind=0`, clone não shallow e worktree limpa. Não transportar PASS da #102 para esse novo SHA.
+As manutenções A07/PR #102 e #105 já estão integradas. Na HEAD final da SER00, confirmar `origin/main=4bc7c9aada96468505e51f279cf32c107d0b6dbb`, merge-base igual à main, `behind=0`, clone não shallow e worktree limpa. Não transportar PASS das manutenções para esse novo SHA.
 
 Preparar dependências V06 somente pelo lockfile quando ausentes e provar que `package.json`/`pnpm-lock.yaml` não mudaram. Em seguida executar, sem retry-until-green:
 
@@ -53,6 +53,9 @@ A R2 documental foi executada sobre os bytes reconciliados antes da publicação
 - R1 SER00: FAIL funcional de storage + snapshot stale; sem retry.
 - R2 manutenção #102: storage 9/9, Windows 11/11 e certifier 51/51 PASS; CI bloqueado por dependências Node ausentes.
 - R3: ambiente preparado; CI revelou somente snapshot herdado da PSEF00; causa +7 arquivos/+6 links comprovada.
-- R4: CI 10/10 PASS e FULL SE08 21/21 PASS em `4a70834d...`, worktree limpa, zero infrastructure errors; manutenção integrada em `515e673b...`.
+- R4: CI 10/10 PASS e FULL SE08 21/21 PASS em `4a70834d...`, worktree limpa, zero infrastructure errors; manutenção #102 integrada em `515e673b...`.
+- FINAL R1: Gates 1–5 PASS; CI interrompido por stdout cp1252 no Windows PowerShell 5.1; FULL não executado.
+- FINAL R2: Gates 1–6 PASS e CI 10/10; FULL 20/21 por WinError32 nativo em `before_first_output`; FAIL preservado.
+- SHARE-DELETE R1 / #105: teste causal com child vivo PASS, guardas 12/12, storage 9/9, certifier 53/53 + 1 skip, stress 30/30, CI 10/10 e FULL 21/21; integrada em `4bc7c9aa...`.
 
 Nenhum desses PASS substitui a certificação da HEAD final SER00.
