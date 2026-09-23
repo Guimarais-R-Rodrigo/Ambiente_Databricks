@@ -100,7 +100,7 @@ Receipt autocoerente sem o record que o originou devolve `LOCAL_RECORD_REQUIRED`
 Os dois negativos de integração passam a assertar diretamente ausência de Receipt.
 
 A suíte SER01 passa, por expectativa de autoria, a **36 métodos**: 29 unitários e
-sete integrações. `tools.tests.test_ser_certify` acrescenta quatro regressões puras
+sete integrações. `tools.tests.test_ser_certify` acrescenta cinco regressões puras
 do certifier. Contagens são expectativa até execução real.
 
 Após preparação mecânica do renderer/snapshot e freeze, executar primeiro as

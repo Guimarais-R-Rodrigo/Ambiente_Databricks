@@ -375,11 +375,20 @@ def verify_certification(payload: Any, *, expected_head: str | None = None) -> d
         issues.append("CERTIFIER_IDENTITY_MISMATCH")
     if payload.get("status") != "PASS":
         issues.append("CERTIFICATION_NOT_PASS")
+    if payload.get("issues") != []:
+        issues.append("CERTIFICATION_ISSUES_NOT_EMPTY")
+    if payload.get("historical_se08") != "PASS_SEPARATE_CHANNEL":
+        issues.append("HISTORICAL_CHANNEL_INVALID")
     before, after = payload.get("git_before"), payload.get("git_after")
     if not isinstance(before, Mapping) or before != after:
         issues.append("GIT_IDENTITY_NOT_PRESERVED")
-    elif expected_head is not None and before.get("head") != expected_head:
-        issues.append("HEAD_BINDING_MISMATCH")
+    else:
+        if expected_head is not None and before.get("head") != expected_head:
+            issues.append("HEAD_BINDING_MISMATCH")
+        if (before.get("branch") != BRANCH or before.get("status") != ""
+                or before.get("shallow") != "false" or before.get("behind") != 0
+                or before.get("merge_base") != before.get("origin_main")):
+            issues.append("GIT_PRECONDITION_NOT_PROVEN")
     claims = payload.get("claims")
     if claims != {
         "skill": SKILL, "protected_surface": SURFACE,
@@ -393,8 +402,20 @@ def verify_certification(payload: Any, *, expected_head: str | None = None) -> d
     if (payload.get("evidence_gate") or {}).get("status") != "PASS":
         issues.append("EVIDENCE_GATE_NOT_PASS")
     steps = payload.get("steps")
-    if not isinstance(steps, list) or not steps or any(s.get("exit_code") != 0 for s in steps if isinstance(s, Mapping)):
+    required_steps = {
+        "ser01_object_validation", "ser_certifier_regression", "legacy_create_l3",
+        "contracts", "policy", "assistant", "renderer", "render_diff",
+        "readme_snapshot", "ci_local", "historical_se08",
+    }
+    if not isinstance(steps, list) or not steps or any(not isinstance(s, Mapping) for s in steps):
         issues.append("STEP_SET_INVALID")
+    else:
+        names = [s.get("name") for s in steps]
+        if (len(names) != len(set(names)) or not required_steps <= set(names)
+                or any(type(s.get("exit_code")) is not int or s.get("exit_code") != 0 for s in steps)
+                or any(s.get("command_started") is not True or s.get("process_cleanup") != "COMPLETE"
+                       for s in steps)):
+            issues.append("STEP_SET_INVALID")
     return {"valid": not issues, "issues": issues,
             "verification_scope": "SER_PROSPECTIVE_CERTIFICATION_INTEGRITY_ONLY"}
 

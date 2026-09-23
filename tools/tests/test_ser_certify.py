@@ -28,7 +28,14 @@ def synthetic_summary():
         "started_at_utc": "2026-09-23T00:00:00+00:00",
         "ended_at_utc": "2026-09-23T00:01:00+00:00",
         "status": "PASS", "issues": [],
-        "steps": [{"name": "gate", "exit_code": 0}],
+        "steps": [
+            {"name": name, "exit_code": 0, "command_started": True, "process_cleanup": "COMPLETE"}
+            for name in (
+                "ser01_object_validation", "ser_certifier_regression", "legacy_create_l3",
+                "contracts", "policy", "assistant", "renderer", "render_diff",
+                "readme_snapshot", "ci_local", "historical_se08",
+            )
+        ],
         "route_gate": {"status": "PASS", "issues": []},
         "evidence_gate": {"status": "PASS", "issues": []},
         "git_before": state, "git_after": copy.deepcopy(state),
@@ -60,6 +67,28 @@ class SerCertifierTests(unittest.TestCase):
         tampered["claims"]["policy_promotion_authorized"] = True
         self.assertFalse(cert.verify_certification(tampered, expected_head="a" * 40)["valid"])
         self.assertFalse(cert.verify_certification(payload, expected_head="e" * 40)["valid"])
+
+    def test_certification_record_rejects_resealed_semantic_overclaims(self):
+        for field, value in (
+            ("historical_se08", "NOT_RUN"),
+            ("issues", ["fabricated"]),
+        ):
+            payload = synthetic_summary()
+            payload[field] = value
+            cert._seal(payload)
+            with self.subTest(field=field):
+                self.assertFalse(cert.verify_certification(payload, expected_head="a" * 40)["valid"])
+
+        payload = synthetic_summary()
+        payload["git_before"]["behind"] = 1
+        payload["git_after"]["behind"] = 1
+        cert._seal(payload)
+        self.assertFalse(cert.verify_certification(payload, expected_head="a" * 40)["valid"])
+
+        payload = synthetic_summary()
+        payload["steps"] = [row for row in payload["steps"] if row["name"] != "ci_local"]
+        cert._seal(payload)
+        self.assertFalse(cert.verify_certification(payload, expected_head="a" * 40)["valid"])
 
     def test_published_receipt_verifier_requires_local_record(self):
         verifier = cert._load_module(

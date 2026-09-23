@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-23 — SER01 A3: hardening semântico do verifier SER-CERT-1
+
+### Corrigido
+
+- (ChatGPT) `verify_certification` passa a exigir canal histórico `PASS_SEPARATE_CHANNEL`, `issues=[]`, Git limpo/reconciliado e conjunto mínimo/íntegro de steps, em vez de depender apenas do digest recalculável.
+- (ChatGPT) A regressão do certifier cobre overclaims resealados, `behind>0` e remoção de gate obrigatório. Nenhuma alteração em policy, níveis ou semântica histórica SE08.
+
 ## 2026-09-23 — SER01 A1 encerrada; A2 liga object_validation à skill publicada
 
 ### Certificado
