@@ -12,7 +12,7 @@
 
 - (ChatGPT) Base de abertura: `main@86d1ff6a52d8ef03f6d5567afed6897c1b96c8c3`.
 - (ChatGPT) Branch: `micromodelos/mm02-spec-fingerprint`.
-- (ChatGPT) `MM02=EM_IMPLEMENTACAO`; `LOCAL_EXECUTION=NOT_RUN`; `CANDIDATE_FREEZE=NOT_REACHED`; PR #109 aberta em Draft e não pronta para revisão/merge.
+- (ChatGPT) SHA funcional `3d3c6d40263a253449b448a3bcca679143252e54`: smoke PASS; FULL single-shot PASS; auditoria independente funcionalmente apta. Bundle fonte `4c06fa14...` teve um único finding probatório de sanitização residual de HOME path escapado; derivado auditável `0acbddd1...` encerrou o finding sem reexecução. PR #109 permanece Draft; revalidação final documental e aceite humano ainda pendentes.
 - (ChatGPT) Nenhuma alteração em schema MM01, policy, skills, prompts, Databricks, MLflow ou dados reais.
 
 
