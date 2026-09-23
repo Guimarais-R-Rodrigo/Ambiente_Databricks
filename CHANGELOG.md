@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-23 — SER01 A3-R2: preparação da recertificação prospectiva
+
+### Notas
+
+- (Claude) Derivado `Novo_Ambiente_Simulado/` reconciliado pelo renderer com a fonte A3 (verifier `object_validation.py` e `release_manifest.json` de criar-objeto) e snapshot verificável do `README.md` atualizado somente pela medição do validator.
+- (Claude) `SER-CERT-1` R2 ainda NOT_RUN nesta preparação. A A3-R1 (`1ff6d563`) permanece FAIL por `STEP_SET_INVALID`. Policy inalterada: criar-objeto L2, alvo L3, `audit`; sem promoção nem merge.
+
 ## 2026-09-23 — SER01 A3-R2: corrigida identidade duplicada dos probes Git
 
 ### Corrigido
