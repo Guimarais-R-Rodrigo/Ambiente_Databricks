@@ -46,8 +46,8 @@ Não editar current para orientar testes. Implementar e testar artefatos mantend
 
 Toda evidência externa identifica parent/main/candidate/tree/dirty state, plataforma, comandos, códigos de saída, logs, hashes e limitações. Documentos não precisam conter seu próprio SHA autorreferente: um manifesto externo e comentário da PR vinculam a árvore final sem ciclo infinito de commits de checkpoint.
 
-## A07 — validação documental e integração repo-side pendentes
+## A07 — infraestrutura reconciliada; certificação final da SER00 pendente
 
 O acesso GitHub funcionou, mas o clone pelo container falhou por resolução de rede. Não existe checkout integral autenticado nesta sessão. Validação documental própria não substitui validate_assistant/README snapshot/CI/renderer. Antes de merge, executar esses gates no clone local e atualizar somente snapshots documentais que o comando comprovar. O CHANGELOG raiz não foi reescrito parcialmente: ENTRADA_CHANGELOG.md preserva a entrada preparada para aplicação byte-preserving, ainda pendente.
 
-Com A01–A03 aceitas, o bloqueio arquitetural da SER00 está resolvido. A07 ainda impede declarar a candidata pronta para integração. Nenhuma proteção será desabilitada para superar o bloqueio. Esta rodada preserva o máximo documental possível, sem falsa certificação.
+Com A01–A03 aceitas, o bloqueio arquitetural está resolvido. As manutenções #102 e #105 corrigiram o oráculo test-only e a compatibilidade Win32 dos streams sem relaxar cleanup/verdict e foram integradas após campanhas locais verdes. Resta somente certificar a HEAD documental final da SER00. Nenhuma proteção será desabilitada e os FAILs históricos permanecem preservados.
