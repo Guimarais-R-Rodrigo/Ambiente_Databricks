@@ -12,7 +12,7 @@
 
 - (ChatGPT) Base de abertura: `main@86d1ff6a52d8ef03f6d5567afed6897c1b96c8c3`.
 - (ChatGPT) Branch: `micromodelos/mm02-spec-fingerprint`.
-- (ChatGPT) `MM02=EM_IMPLEMENTACAO`; `LOCAL_EXECUTION=NOT_RUN`; `CANDIDATE_FREEZE=NOT_REACHED`; PR ainda não aberta.
+- (ChatGPT) `MM02=EM_IMPLEMENTACAO`; `LOCAL_EXECUTION=NOT_RUN`; `CANDIDATE_FREEZE=NOT_REACHED`; PR #109 aberta em Draft e não pronta para revisão/merge.
 - (ChatGPT) Nenhuma alteração em schema MM01, policy, skills, prompts, Databricks, MLflow ou dados reais.
 
 
