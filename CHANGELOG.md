@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-23 — SER01 L3: preparação da certificação pós-promoção R2
+
+### Notas
+
+- (Claude) Derivado `Novo_Ambiente_Simulado/` reconciliado pelo renderer com a policy L3 da fonte e snapshot verificável do `README.md` atualizado somente pela medição do validator.
+- (Claude) `SER-PROMOTION-CERT-2` ainda NOT_RUN nesta preparação. A R1 (`29252f33`) permanece bloqueada por teste de autoria pré-promoção stale. Sem merge da PR; SER02 não iniciada.
+
 ## 2026-09-23 — SER01 promoção R2: hardening do certifier pós-policy
 
 ### Corrigido
