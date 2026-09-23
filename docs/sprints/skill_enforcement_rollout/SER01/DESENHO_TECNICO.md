@@ -81,3 +81,29 @@ README de objeto entra como parte obrigatória dos pacotes snippet/script/prompt
 A1-LAB: executar sete integrações discriminantes e as regressões da base, em host identificado. O agente externo pode apenas instalar dependências declaradas, aplicar a entrada de changelog preparada e atualizar as linhas do snapshot a partir do validator real; depois congela SHA e executa a campanha uma vez.
 
 Após o retorno: decidir aqui o envelope final, ligação do artefato ao fluxo da skill, manifest e contrato pertinentes e o tratamento prospectivo SEF/SER. Só com prova suficiente e autorização humana será proposta/realizada a mudança de policy. Ausência de evidência Windows ou Free fica explícita, sem transpor PASS Linux para outro host.
+
+## 8. A2 — ligação à skill publicada por Receipt de domínio
+
+A A1 provou a primitive repo-side. A A2 não move essa primitive para o Databricks:
+`tools/` continua fora do produto publicado. Em vez disso, cria uma fronteira de
+prova explícita.
+
+- produtor: `tools/skill_enforcement/ser01_object_validation.py::validate_package`;
+- Receipt: `SER01-OBJECT-VALIDATION-RECEIPT-1`;
+- verifier publicado: `skills/hub-ml-criar-objeto/scripts/object_validation.py::verify_receipt`;
+- superfície: `object_validation`;
+- operação positiva: `create`;
+- tipos positivos: snippet, script, prompt, notebook e README agregador;
+- efeito no original: nenhum;
+- runtime de notebook/código candidato: `NOT_RUN`;
+- apply/promoção: não autorizados pelo Receipt.
+
+O record local `SER01-LOCAL-VALIDATION-1` continua evidência detalhada da execução
+repo-side. O Receipt de domínio não o substitui: vincula seu digest, run, base,
+`candidate_sha256`, destino e claims fechados. O verifier pode conferir integridade
+e binding no pacote publicado, mas declara `execution_reverified=false` e
+`human_authority_authenticated=false`. Hash não vira assinatura.
+
+A ausência do checkout/tools é condição `NOT_AVAILABLE`, não autorização para
+bypass. Sem Receipt válido, a skill não pode fazer ready claim L3 dessa superfície.
+A rota antiga de writer README permanece separada e não é generalizada nesta A2.

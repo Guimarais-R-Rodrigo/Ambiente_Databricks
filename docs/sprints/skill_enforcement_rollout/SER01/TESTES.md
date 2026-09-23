@@ -70,3 +70,21 @@ A R2 confirmou a corretiva de LF e expôs um falso mismatch em `canonical_public
 ## Reconciliação R4 (2026-09-23)
 
 A R3 passou localmente (32/32 no G1; G2–G8 PASS), mas não foi publicada por avanço concorrente da `main` (MM02). A R4 não altera código nem testes: a suíte continua com 32 métodos (25 unitários, sete integrações). Toda a campanha G1–G8 é repetida uma vez sobre o novo SHA composto; push somente com tudo verde e sem nova concorrência.
+
+## A2 — Receipt de domínio e ligação à skill (2026-09-23)
+
+A candidata A2 adiciona `scripts/object_validation.py` à skill publicada e faz o
+produtor repo-side emitir `SER01-OBJECT-VALIDATION-RECEIPT-1` somente quando o
+record local é PASS. `verify_record` passa a falhar fechado sem Receipt válido.
+
+A suíte existente recebe três métodos unitários de Receipt: presença/verificação,
+adulteração e mismatch de run/base/candidate. Assim, antes da nova campanha, a
+coleta esperada passa de 32 para **35 métodos** (28 unitários + sete integrações),
+mas esse número é expectativa da candidata, não PASS. As integrações positivas
+também devem conferir o Receipt emitido.
+
+A2 precisa de checkout completo, renderer, snapshot medido, CI e FULL sobre SHA
+congelado. O laboratorio deve ainda conferir `validate_contracts`, integridade do
+`release_manifest.json`, ausência de bypass sem Receipt e os claims fechados
+`runtime_validation=NOT_RUN`, `execution_reverified=false` e ausência de autoridade
+de apply/promoção. Nenhum resultado A1 é transportado automaticamente para A2.

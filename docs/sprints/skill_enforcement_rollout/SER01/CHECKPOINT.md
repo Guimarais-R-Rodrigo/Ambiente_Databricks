@@ -93,3 +93,29 @@ MERGE = NOT_AUTHORIZED
 ```
 
 O PASS da R3 pertence somente a `101afff9092d` sobre a base `86d1ff6a`. A R4 incorpora a `main` por merge preservador (sem rebase), mantém R1–R3 como ancestrais e exige nova campanha completa sobre o SHA composto antes de qualquer publicação. A matriz de cobertura não é alterada nesta etapa.
+
+## A1-LAB R4 concluída e abertura A2 (registro aditivo, 2026-09-23)
+
+```text
+R4_SHA = aef0f10886689a0018635535c0af105e62629de1
+R4_RESULT = PASS_RECONCILED
+R4_G1 = 32/32 PASS
+R4_G2_TO_G8 = PASS
+R4_FULL_SE08 = 21/21 PASS (HISTORICAL_SE08_REGRESSION)
+R4_PUSH = PASS_FAST_FORWARD
+R4_HOST = Windows 11 / NTFS / Python 3.12.10
+PR108_AFTER_R4 = OPEN / DRAFT / MERGEABLE
+MAIN_AFTER_R4 = 073762fd8e38afadf27aca0f4d77351d9bfb627f
+A1_LAB = COMPLETE
+A2 = PREPARED_NOT_CERTIFIED
+CURRENT_LEVEL = L2_UNCHANGED
+POLICY_PROMOTION = NOT_AUTHORIZED
+MERGE = NOT_AUTHORIZED
+```
+
+A R4 prova a validação estrutural local no host Windows/NTFS para snippet, script,
+prompt, notebook e README agregador. Não prova execução do notebook, apply desses
+tipos, Linux, Databricks Free/Genie ou autenticação humana. A2 liga a superfície
+`object_validation` à skill publicada por Receipt de domínio próprio, sem reutilizar
+semanticamente o Receipt EDA V1 e sem mudar a policy. O SHA A2 exige nova campanha;
+nenhum PASS da A1 é transportado.

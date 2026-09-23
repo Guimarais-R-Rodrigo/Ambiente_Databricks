@@ -94,3 +94,23 @@ MERGE = NOT_AUTHORIZED
 ```
 
 O PASS da R3 pertence somente a `101afff9092d` sobre a base `86d1ff6a`. A R4 incorpora a `main` por merge preservador (sem rebase), mantém R1–R3 como ancestrais e exige nova campanha completa sobre o SHA composto antes de qualquer publicação. A matriz de cobertura não é alterada nesta etapa.
+
+## A1-LAB R4 — fechamento auditado e candidata A2
+
+```text
+R4_SHA = aef0f10886689a0018635535c0af105e62629de1
+R4_RESULT = PASS_RECONCILED
+G1 = 32/32 PASS
+G2_TO_G8 = PASS
+G7_CI_LOCAL = 10/10 PASS
+G8_FULL_SE08 = 21/21 PASS
+HOST_EVIDENCE = WINDOWS_NTFS_PROVEN_FOR_LOCAL_STRUCTURAL_VALIDATION
+PUSH = PASS_FAST_FORWARD
+A1_LAB = COMPLETE
+A2 = PREPARED_NOT_CERTIFIED
+```
+
+Esse PASS encerra somente A1. `current_level` continua L2. A2 adiciona uma prova
+de domínio verificável pela skill publicada e vincula o record repo-side a um
+Receipt específico de `object_validation`; não autoriza escrita nem promoção.
+Até a A2 ser certificada, o novo Receipt permanece implementação candidata.
