@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-23 — manutenção MM03: falso positivo de identificador corporativo
+
+### Corrigido
+
+- (ChatGPT) `docs/sprints/micromodelos/MM03/CHECKPOINT.md`: a referência abreviada de oito caracteres ao commit de preparação foi substituída pelo SHA Git completo `b432596798c60eaf515c395cf6cdd97b1c48c8ce`.
+- (ChatGPT) A abreviação coincidia acidentalmente com a heurística `letra + 6–8 dígitos` de `CORPORATE_RE`; o conteúdo é um SHA público do próprio repositório, não um identificador pessoal/corporativo.
+
+### Limites
+
+- (ChatGPT) Nenhuma regra de `tools/project_policy.py`, código MM03, teste, policy, skill ou snapshot foi alterado. Esta manutenção ainda precisa de validação independente antes de qualquer merge.
+
 ## 2026-09-23 — MM03: núcleo de descoberta metadata-only
 
 ### Adicionado
