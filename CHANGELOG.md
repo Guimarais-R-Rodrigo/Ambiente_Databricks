@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-23 — SER01 A4: correção documental da montagem de autoria
+
+### Corrigido
+
+- (ChatGPT) Corrigida a troca acidental entre `docs/sprints/skill_enforcement_rollout/README.md` e `SER01/TESTES.md` no commit inicial de preparação A4. O índice e o histórico de testes voltam às respectivas bases A3 e recebem apenas os deltas A4 previstos.
+
+### Limites
+
+- (ChatGPT) O erro e a correção são exclusivamente documentais; `.assistant`, probe A4, runbooks, policy e evidências A3 não mudaram. O commit anterior permanece no histórico e A4 continua `NOT_RUN`.
+
 ## 2026-09-23 — SER01 A3 encerrada; A4 Free/Genie preparada
 
 ### Certificado
