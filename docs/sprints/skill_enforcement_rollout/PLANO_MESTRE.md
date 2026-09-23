@@ -1,6 +1,6 @@
 # Plano Mestre — Skill Enforcement Rollout
 
-**Versão candidata SER00 após aceite arquitetural de 2026-09-22.** Base `11851e137dd7793b351ac08fc211c0be90005dee`. A arquitetura A01–A03 está aceita; a SER00 ainda não está pronta para integração porque A07 permanece pendente. Não constitui autorização de SER01.
+**Versão candidata SER00 reconciliada em 2026-09-23.** Baseline histórica `11851e137dd7793b351ac08fc211c0be90005dee`; main atual após manutenção A07 `515e673b17f21d4c912d9ae866a7e31967fd4488`. A01–A03 estão aceitas e a manutenção #102 está integrada. Falta apenas certificar a candidata documental final da SER00 no SHA exato. Não constitui autorização de SER01.
 
 ## 1. Objetivo e limites
 
@@ -8,7 +8,7 @@ Levar nove skills hoje abaixo do target ao nível correto e comprovado por super
 
 ## 2. Gate de entrada
 
-SER00 entrega inventário, matrizes e desenho. Em 2026-09-22 houve aceite humano do encaminhamento A01–A03: certificação SER prospectiva e aditiva; evolução declarativa de condições sem sobrecarregar o schema 0.1; target L3 de criar-objeto mantido com escopo stage-specific a ser provado por matriz operação×tipo×host×efeito. A07 continua exigindo complemento local do checkout e documentação raiz antes de ready/merge. Não começar SER01 antes da integração da SER00 e de autorização humana separada.
+SER00 entrega inventário, matrizes e desenho. Em 2026-09-22 houve aceite humano do encaminhamento A01–A03: certificação SER prospectiva e aditiva; evolução declarativa de condições sem sobrecarregar o schema 0.1; target L3 de criar-objeto mantido com escopo stage-specific a ser provado por matriz operação×tipo×host×efeito. A corretiva A07 foi certificada na PR #102 e integrada em `515e673b...`. A SER00 precisa agora apenas repetir os gates canônicos sobre sua própria HEAD final limpa. Não começar SER01 antes da integração da SER00 e de autorização humana separada.
 
 ## 3. Regime local-first
 
