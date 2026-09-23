@@ -3,18 +3,36 @@
 Núcleo interno para organizar descoberta progressiva de fontes de micromodelos.
 Destina-se aos mantenedores do framework; ainda não é uma skill publicada.
 
-**Estado: IMPLEMENTADA_CANDIDATA / PREPARACAO_LOCAL_PENDENTE.**
+**Estado: POS_CERTIFICACAO / AUDITORIA_INDEPENDENTE_APTA / GATE_HUMANO_PENDENTE.**
 A MM02 foi integrada pela PR #109 no merge `073762fd8e38afadf27aca0f4d77351d9bfb627f`.
-Essa é a base de autoria da MM03; as seções antigas que ainda descrevem MM02 em
-implementação são históricas ou índices pendentes de reconciliação, não bloqueio
-para reiniciar a MM02.
+A MM03 está na PR #110. A candidata funcional corrigida é
+`ebbe6ec374e38686bb76d56d7e76f6b3dcd73cb0`; FULL R2 e bundle passaram,
+a auditoria independente não deixou finding aberto e o fechamento documental
+mínimo precede apenas a revalidação final e o aceite humano.
 
 ## Próxima ação
 
-Executar a [preparação local e smoke](PREPARACAO_LOCAL.md), sem modificar lógica
-nem testes. O [checkpoint](CHECKPOINT.md) distingue resultados reais de pendências.
-O [contrato](CONTRATO_METADATA.md) é o dono do escopo técnico; a
-[matriz de testes](TESTES.md) define os gates.
+Revalidar a árvore após este fechamento documental e solicitar aceite humano da
+PR #110. Não iniciar MM04, não retirar o Draft e não fazer merge antes desse gate.
+O [checkpoint](CHECKPOINT.md) preserva a R1 reprovada, a correção mínima e a R2.
+O [contrato](CONTRATO_METADATA.md) continua dono do escopo técnico; a
+[matriz de testes](TESTES.md) continua dona dos gates.
+
+## Certificação e auditoria
+
+```text
+PRE_CERTIFICATION_SMOKE = PASS
+FULL_R1 = FAIL_HISTORICAL_ON_b432596
+CORRECTED_SHA = ebbe6ec374e38686bb76d56d7e76f6b3dcd73cb0
+MICRO_SMOKE_R2 = PASS
+FULL_R2 = PASS
+BUNDLE_LINT = PASS
+INDEPENDENT_AUDIT = APTA
+AUDIT_FINDINGS_OPEN = 0
+SNAPSHOT = 1716/2166/0
+LIVE_DATABRICKS = NOT_RUN
+MM04 = NOT_STARTED
+```
 
 ## O que foi implementado
 

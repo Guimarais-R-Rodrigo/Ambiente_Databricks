@@ -1,19 +1,46 @@
-# MM03 — checkpoint de implementação candidata
+# MM03 — checkpoint pós-certificação
 
 ```text
 BASE_MAIN = 073762fd8e38afadf27aca0f4d77351d9bfb627f
-BASE_TREE = 3ef561af7ffcd9a613bb815c9470109375aea5ae
 BRANCH = micromodelos/mm03-metadata-only
 MM02 = ACEITA_E_INTEGRADA_PR109
-MM03 = IMPLEMENTADA_CANDIDATA
-DEVELOPMENT_TESTS = PASS_45_ON_LINUX_PY3135_PARTIAL_TREE
-CANONICAL_LOCAL_SMOKE = NOT_RUN
-CANDIDATE_FREEZE = NOT_REACHED
-FULL_CERTIFICATION = NOT_RUN
-INDEPENDENT_AUDIT = NOT_RUN
+MM03 = POS_CERTIFICACAO
+INITIAL_HEAD = 3572cfbf4b6931893c624151c31291f9e3062361
+PREPARED_AND_SMOKE_HEAD = b432596798c60eaf515c395cf6cdd97b1c48c8ce
+FULL_R1 = FAIL_HISTORICAL_G02
+CORRECTED_SHA = ebbe6ec374e38686bb76d56d7e76f6b3dcd73cb0
+MICRO_SMOKE_R2 = PASS
+FULL_R2 = PASS
+BUNDLE_LINT = PASS
+INDEPENDENT_AUDIT = APTA
+AUDIT_FINDINGS_OPEN = 0
+SNAPSHOT = 1716/2166/0
+FINAL_TREE_REVALIDATION = PENDING
+HUMAN_ACCEPTANCE = PENDING
 MERGE = NOT_AUTHORIZED
 MM04 = NOT_STARTED
 ```
+
+## Histórico de certificação
+
+A preparação documental e o smoke canônico fecharam no SHA `b4325967...`.
+A primeira FULL permaneceu **FAIL** em G02 por uma newline excedente no EOF de
+`ENTRADA_CHANGELOG.md`; resultados posteriores ao primeiro FAIL não receberam
+crédito. O defeito do orquestrador que permitiu avanço pós-falha também foi
+preservado como finding instrumental.
+
+A correção `ebbe6ec...` removeu somente essa newline: 1 arquivo, 0 adições e
+1 deleção, sem mudança funcional. O micro-smoke R2 passou e a FULL R2 executou
+G01–G09 single-shot: MM03 45/45, MM02 30/30, MM01 47/47 + R02 3/3 + R03 1/1,
+CLI metadata-only conforme, validators `1716/2166/0` e CI local 10/10.
+
+O bundle R2 possui SHA-256
+`2c51a9c64106027ef9a52b0f3dbf83348470557b5f329b0bdc395795ff263b38`.
+A auditoria independente conferiu 70 entries, 69/69 checksums, hashes dos logs,
+UTF-8, ausência de traversal/duplicatas/U+FFFD, sanitização de HOME/repo inclusive
+formas escapadas e zero padrões de credencial. O estado `bundle_lint=PENDING`
+dentro do manifest é o snapshot pré-lint; o lint pós-ZIP foi reproduzido pela
+auditoria e passou. Não há finding aberto.
 
 ## Reconciliação e escopo
 
@@ -39,24 +66,15 @@ O acesso Git direto falhou em DNS para github.com; o conector autenticado permit
 ler/publicar. Não houve clone completo, git status global local, validator global,
 regressão MM01/MM02 ou teste Windows. Não transportar o PASS dessas sprints para MM03.
 
-## Pendências bloqueantes antes do freeze
+## Fechamento pós-certificação
 
-1. Aplicar ENTRADA_CHANGELOG.md ao CHANGELOG.md raiz preservando todos os bytes
-   preexistentes; a entrada preparada nesta pasta ainda não substitui esse gate.
-2. Reconciliar apenas os parágrafos vivos de Micromodelos em CLAUDE.md,
-   docs/sprints/README.md, docs/sprints/micromodelos/README.md e PLANO_MESTRE.md:
-   MM02 integrada, MM03 candidata; históricos/ADRs/MM02 intocados.
-3. Medir o validator e reconciliar somente o snapshot verificável do README raiz.
-4. Publicar um commit de preparação exclusivamente documental, identificar seu SHA
-   e executar o smoke canônico. Nenhum patch funcional delegado está autorizado.
-
-A impossibilidade de modificar incrementalmente o CHANGELOG extenso pela rota de
-publicação desta sessão não é licença para reconstruí-lo parcialmente ou apagá-lo.
-A PR deve permanecer Draft e NOT_READY enquanto a preparação estiver pendente.
+As pendências pré-freeze foram consumidas. Não existe patch funcional pendente.
+Este fechamento altera somente documentação de estado; a próxima etapa é provar
+o delta certificado → final, reconfirmar `main`/merge-base/`behind_by`, snapshot
+e ausência de mudança em código/testes/fixture/contrato.
 
 ## Próximo responsável e parada
 
-ChatGPT mantém implementação/revisão; Codex é laboratório de preparação mecânica e
-validação do checkout completo, conforme PREPARACAO_LOCAL.md. Parar no primeiro
-FAIL e preservar evidências. Depois do retorno, reavaliar freeze/FULL proporcional.
-Não iniciar MM04, publicar, mudar proteção de branch ou pedir ACLs.
+ChatGPT executa a revalidação final da árvore e submete a PR #110 ao gate humano.
+A PR permanece Draft até aceite explícito. Não iniciar MM04, publicar, acessar
+Databricks, mudar proteção de branch ou fazer merge automaticamente.

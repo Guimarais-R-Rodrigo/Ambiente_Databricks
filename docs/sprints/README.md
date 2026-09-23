@@ -65,7 +65,7 @@ custos e interpretação. Estado, matriz e testes em
 [`RELATORIO_R04A.md`](readmes_objetos/RELATORIO_R04A.md). Cobertura candidata
 25/74; sem publicação, aceite antecipado ou início da R04-B.
 
-## Framework de Micromodelos — MM00, MM01 e MM02 integradas; MM03 candidata
+## Framework de Micromodelos — MM00, MM01 e MM02 integradas; MM03 pós-certificação
 
 A [iniciativa MM00–MM13](micromodelos/README.md) usa trilha própria. A MM00 foi aceita e integrada pela PR #43 no commit `36e89515a46df24f41deea4791b109f5a1f938f2`; ADR-0014 a ADR-0020 permanecem aceitos sem ressalvas.
 
@@ -73,7 +73,7 @@ A MM01 — contrato canônico `micromodelo.yaml` — foi aceita e integrada pela
 
 O estado vivo está no [README de Micromodelos](micromodelos/README.md), na [revisão pós-SEF/PSEF/SER](micromodelos/REVISAO_PLANO_POS_SEF_2026-09-23.md), na [retrospectiva MM01](micromodelos/RETROSPECTIVA_MM01.md) e no [protocolo de certificação](micromodelos/PROTOCOLO_CERTIFICACAO_SPRINTS.md).
 
-**MM02 = INTEGRADA pela PR #109. MM03 = CANDIDATA, pendente de certificação.** Estado corrente: [MM03 — metadata-only](micromodelos/MM03/README.md). Os resultados anteriores da MM02 permanecem históricos em [MM02 — spec fingerprint](micromodelos/MM02/README.md).
+**MM02 = INTEGRADA pela PR #109. MM03 = POS_CERTIFICACAO: FULL R2 PASS, auditoria independente APTA e zero findings abertos; PR #110 aguarda revalidação final + aceite humano.** Estado corrente: [MM03 — metadata-only](micromodelos/MM03/README.md). MM04 permanece `NOT_STARTED`; os resultados anteriores da MM02 permanecem históricos em [MM02 — spec fingerprint](micromodelos/MM02/README.md).
 
 ## Sistema de Temas do Hub
 

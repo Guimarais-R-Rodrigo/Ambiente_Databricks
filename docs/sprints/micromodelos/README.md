@@ -1,6 +1,6 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: **MM00 e MM01 integradas. MM02 aceita e integrada pela PR #109. MM03 é a candidata corrente, pendente de certificação.**
+> Estado: **MM00, MM01 e MM02 integradas. MM03 concluiu FULL R2 e auditoria independente; gate humano da PR #110 pendente.**
 
 ## Objetivo
 
@@ -140,8 +140,13 @@ A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprin
 
 ```text
 MM02 = INTEGRADA_PR_109
-MM03 = CANDIDATA
-CERTIFICATION = PENDING
+MM03 = POS_CERTIFICACAO
+FULL_R2 = PASS
+INDEPENDENT_AUDIT = APTA
+AUDIT_FINDINGS_OPEN = 0
+FINAL_TREE_REVALIDATION = PENDING
+HUMAN_ACCEPTANCE = PENDING
+MM04 = NOT_STARTED
 ```
 
-A MM03 foi aberta em frente própria após a integração da MM02. Seu núcleo metadata-only e seus limites estão em [MM03](MM03/README.md); sua certificação segue o [protocolo de MM02–MM13](PROTOCOLO_CERTIFICACAO_SPRINTS.md). Os resultados de certificação e auditoria da MM02 permanecem preservados em seus documentos históricos.
+A MM03 foi aberta em frente própria após a integração da MM02. Seu núcleo metadata-only e seus limites estão em [MM03](MM03/README.md). A FULL R1 permanece FAIL histórico; a candidata corrigida `ebbe6ec...` passou micro-smoke, FULL R2 e auditoria independente. O próximo gate é a revalidação final do fechamento documental e, se limpa, aceite humano explícito da PR #110. Os resultados anteriores da MM02 permanecem preservados em seus documentos históricos.

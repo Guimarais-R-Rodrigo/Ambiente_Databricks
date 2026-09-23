@@ -13,6 +13,14 @@
 - (ChatGPT) Testes próprios PASS em Linux/CPython 3.13.5 sobre materialização parcial; smoke do checkout completo, regressões MM01/MM02, FULL e auditoria independente ainda pendentes.
 - (ChatGPT) Nenhuma consulta de registros, SQL/rede, implantação Databricks, skill/prompt, mudança de policy, MM01/MM02, workflow ou derivado. Adaptador real e homologação ambiental não foram implementados/provados nesta rodada.
 
+### Certificação e auditoria
+
+- (ChatGPT) Smoke canônico PASS em `b432596798c60eaf515c395cf6cdd97b1c48c8ce`; FULL R1 preservada como FAIL em G02 por newline excedente em `ENTRADA_CHANGELOG.md`, sem crédito aos gates posteriores.
+- (ChatGPT) Correção mínima `ebbe6ec374e38686bb76d56d7e76f6b3dcd73cb0`: 1 arquivo, 0 adições, 1 deleção, sem mudança funcional. Micro-smoke R2 e FULL R2 single-shot em PASS: MM03 45/45, MM02 30/30, MM01 47/47 + 3/3 + 1/1, CLI metadata-only conforme, snapshot `1716/2166/0` e CI local 10/10.
+- (ChatGPT) Bundle R2 SHA-256 `2c51a9c64106027ef9a52b0f3dbf83348470557b5f329b0bdc395795ff263b38`; auditoria independente conferiu 70 entries, 69/69 checksums, sanitização de paths inclusive formas escapadas e zero finding aberto. O manifest interno preserva estado pré-lint `PENDING`; o lint pós-ZIP foi reproduzido independentemente e passou.
+- (ChatGPT) MM03 segue sem adaptador Databricks vivo, sem leitura de registros, sem skill/prompt/policy e sem início da MM04. PR #110 permanece sem autorização de merge até final-tree revalidation e aceite humano.
+
+
 ## 2026-09-23 — MM02: spec fingerprint iniciado
 
 ### Adicionado
