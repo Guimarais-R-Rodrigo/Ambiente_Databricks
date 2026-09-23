@@ -65,7 +65,7 @@ custos e interpretação. Estado, matriz e testes em
 [`RELATORIO_R04A.md`](readmes_objetos/RELATORIO_R04A.md). Cobertura candidata
 25/74; sem publicação, aceite antecipado ou início da R04-B.
 
-## Framework de Micromodelos — MM00 e MM01 integradas; MM02 não iniciada
+## Framework de Micromodelos — MM00 e MM01 integradas; MM02 pós-certificação
 
 A [iniciativa MM00–MM13](micromodelos/README.md) usa trilha própria. A MM00 foi aceita e integrada pela PR #43 no commit `36e89515a46df24f41deea4791b109f5a1f938f2`; ADR-0014 a ADR-0020 permanecem aceitos sem ressalvas.
 
@@ -73,7 +73,7 @@ A MM01 — contrato canônico `micromodelo.yaml` — foi aceita e integrada pela
 
 O estado vivo e a preparação de MM02 estão no [README de Micromodelos](micromodelos/README.md), na [revisão pós-SEF/PSEF/SER](micromodelos/REVISAO_PLANO_POS_SEF_2026-09-23.md), na [retrospectiva MM01](micromodelos/RETROSPECTIVA_MM01.md) e no [protocolo de certificação](micromodelos/PROTOCOLO_CERTIFICACAO_SPRINTS.md).
 
-**MM02 = NOT_STARTED.**
+**MM02 = POS_CERTIFICACAO**. O SHA funcional `3d3c6d40263a253449b448a3bcca679143252e54` passou smoke, FULL single-shot e auditoria independente; o único finding probatório de sanitização do bundle foi encerrado sem reexecução. A revalidação final documental ainda precede aceite e merge. Estado corrente: [MM02 — spec fingerprint](micromodelos/MM02/README.md).
 
 ## Sistema de Temas do Hub
 

@@ -1,7 +1,7 @@
 # Plano Mestre v2 — Framework de Micromodelos
 
 
-> **Revisão vigente pós-MM01/SEF — 2026-09-23.** MM01 está aceita e integrada; MM02 está `NOT_STARTED`. A [revisão pós-SEF](REVISAO_PLANO_POS_SEF_2026-09-23.md) complementa este Plano Mestre somente nos pontos explicitamente alterados. O restante do plano e os ADRs MM00 permanecem vigentes. O [protocolo de certificação](PROTOCOLO_CERTIFICACAO_SPRINTS.md) substitui, para MM02–MM13, o uso de FULL como detector de preconditions baratas.
+> **Revisão vigente pós-MM01/SEF — 2026-09-23.** MM01 está aceita e integrada; MM02 está `EM_IMPLEMENTACAO` na branch `micromodelos/mm02-spec-fingerprint`, ainda sem candidate freeze ou certificação local. A [revisão pós-SEF](REVISAO_PLANO_POS_SEF_2026-09-23.md) complementa este Plano Mestre somente nos pontos explicitamente alterados. O restante do plano e os ADRs MM00 permanecem vigentes. O [protocolo de certificação](PROTOCOLO_CERTIFICACAO_SPRINTS.md) substitui, para MM02–MM13, o uso de FULL como detector de preconditions baratas.
 
 ### Gates prospectivos adicionados
 
@@ -304,7 +304,7 @@ Schema e máquina de estados do YAML, proveniência, validador interno e fixture
 
 ### MM02 — fingerprint
 
-Canonicalização, campos materiais/editoriais, SHA-256, versionamento do algoritmo e testes metamórficos.
+Canonicalização, campos materiais/editoriais, SHA-256, versionamento do algoritmo e testes metamórficos. Estado corrente e perfil material: [MM02/README.md](MM02/README.md).
 
 ### MM03 — metadata-only
 

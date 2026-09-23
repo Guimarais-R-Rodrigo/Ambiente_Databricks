@@ -33,6 +33,22 @@
 - (ChatGPT) Desenvolvimento em Linux/Python 3.13.5: 24 métodos unitários PASS e sete integrações não executadas; três cenários adicionais com supervisor/validators sintéticos não constituem certificação canônica. Falhas iniciais de expectativa de teste permanecem no bundle de desenvolvimento.
 - (ChatGPT) Policy, skill, contrato, writer, manifests e infraestrutura A07 permanecem intactos. L2→L3, publicação, merge e SER02 não autorizados; A1 não encerra a SER01. Gates de clone completo ficam para execução delegada sobre SHA congelado após preparação documental.
 
+## 2026-09-23 — MM02: spec fingerprint iniciado
+
+### Adicionado
+
+- (ChatGPT) Implementação repo-side `tools/micromodelo_mm02_fingerprint.py` com SHA-256 sobre preimage canônico versionado e validação obrigatória pelo contrato MM01.
+- (ChatGPT) Suíte metamórfica MM02 e documentação própria: README, matriz de materialidade, TESTES e CHECKPOINT.
+- (ChatGPT) Separação explícita entre definição material e ciclo de vida/evidência: fonte, entidade, regra, missing, limiar, peso, semântica, normalização/calibração aplicável e saída entram; aprovação, runs, timestamps, tracking, governança e status institucional não substituem identidade material.
+
+### Estado
+
+- (ChatGPT) Base de abertura: `main@86d1ff6a52d8ef03f6d5567afed6897c1b96c8c3`.
+- (ChatGPT) Branch: `micromodelos/mm02-spec-fingerprint`.
+- (ChatGPT) SHA funcional `3d3c6d40263a253449b448a3bcca679143252e54`: smoke PASS; FULL single-shot PASS; auditoria independente funcionalmente apta. Bundle fonte `4c06fa14...` teve um único finding probatório de sanitização residual de HOME path escapado; derivado auditável `0acbddd1...` encerrou o finding sem reexecução. PR #109 permanece Draft; revalidação final documental e aceite humano ainda pendentes.
+- (ChatGPT) Nenhuma alteração em schema MM01, policy, skills, prompts, Databricks, MLflow ou dados reais.
+
+
 ## 2026-09-23 — Micromodelos: revisão pós-MM01 e reconciliação SEF/PSEF/SER
 
 ### Adicionado
