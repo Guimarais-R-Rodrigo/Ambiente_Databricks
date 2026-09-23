@@ -3,11 +3,17 @@
 ## Estado
 
 ```text
-MM02 = EM_IMPLEMENTACAO
+MM02 = POS_CERTIFICACAO
 BASE_MAIN = 86d1ff6a52d8ef03f6d5567afed6897c1b96c8c3
 BRANCH = micromodelos/mm02-spec-fingerprint
-CANDIDATE_FREEZE = NOT_REACHED
-LOCAL_EXECUTION = NOT_RUN
+CERTIFIED_SHA = 3d3c6d40263a253449b448a3bcca679143252e54
+CANDIDATE_FREEZE = REACHED
+PRE_CERTIFICATION_SMOKE = PASS
+FULL_CERTIFICATION = PASS
+INDEPENDENT_AUDIT = APTA_COM_CORRECAO_PROBATORIA
+AUDIT_FINDINGS_OPEN = 0
+DOC_CLOSE_MINIMO = IN_PROGRESS
+FINAL_TREE_REVALIDATION = PENDING
 PR = #109 OPEN_DRAFT
 ```
 
@@ -92,20 +98,35 @@ A revisão estática distinguiu referências que apenas provam uma decisão das 
 - Receipt/Postflight;
 - publicação;
 - integração Databricks;
-- certificação local;
-- auditoria independente.
+- persistência do fingerprint em artefato runtime;
+- homologação Databricks/Genie;
+- merge/aceite humano.
+
+## Certificação observada
+
+```text
+SMOKE_S1 = PASS
+FULL_R1 = PASS
+MM02_TESTS = 30/30
+MM01_CANONICAL = 47/47
+MM01_R02 = 3/3
+MM01_R03 = 1/1
+SPEC_FINGERPRINT = 4c88baa416dc4de6edc1f196416e9c12272962703eb3d26cd6790d653fd73eac
+SNAPSHOT = 1707/2151/0
+CI_LOCAL = 10/10
+RETRIES = 0
+PATCHES = 0
+COMMITS_DURING_FULL = 0
+PUSHES = 0
+MERGES = 0
+```
+
+Bundle fonte: SHA-256 `4c06fa14470464c311c43920affcfba43796b521bcd7a79c1876d8bf758f3ed0`.
+
+A auditoria independente encontrou somente `A1-BUNDLE-01`, sanitização residual de paths HOME escapados no G07. O contraditório manteve o finding como exclusivamente probatório e confirmou que nenhuma reexecução funcional era necessária. Derivado sanitizado auditável: SHA-256 `0acbddd116dd4fad2a78aa7b08e6fc45baf832903acee526cec283e38628df34`; zero findings abertos.
 
 ## Próximo gate
 
-Executar `PRE_CERTIFICATION_SMOKE` local, começando pela suíte MM02 e regressões MM01.
+Aplicar apenas fechamento documental mínimo e executar `FINAL_TREE_REVALIDATION` sobre a árvore resultante. A FULL não deve ser repetida se o compare `CERTIFIED_SHA → final` permanecer exclusivamente documental e fora dos inputs/gates certificados.
 
-Somente após o smoke verde:
-
-1. reconciliar qualquer avanço material da `main`;
-2. atualizar documentação viva/snapshot;
-3. congelar candidata;
-4. executar certificação proporcional single-shot;
-5. abrir PR para revisão;
-6. submeter à auditoria independente.
-
-Nenhum aceite ou merge é solicitado neste checkpoint inicial.
+PR #109 permanece Draft. Aceite humano e merge continuam bloqueados até a revalidação final.
