@@ -15,6 +15,19 @@
 - O A07-R1 da SER00 permanece FAIL preservado. A correção repo-side ainda requer uma única campanha Windows/NTFS sobre SHA congelado antes de qualquer integração; SER00 permanece `NOT_READY` e SER01 `NOT_STARTED`.
 
 
+## 2026-09-22 — SER00: baseline e plano candidato do Skill Enforcement Rollout
+
+### Adicionado
+
+- (Codex) Documentação nova em `docs/sprints/skill_enforcement_rollout`, baseada em `main` `11851e137dd7793b351ac08fc211c0be90005dee`. Inventário de 14 skills, cinco no target/nove abaixo, 24 protected surfaces, helpers/primitives, dependências PSEF/MM e Plano Mestre SER01–SER16 local-first.
+
+### Notas
+
+- (Codex) Nenhuma alteração em produto, policy, skill, runtime, workflows ou derivado. SE01–SE08 preservadas. Foram identificados A01–A03 e, em 2026-09-22, houve aceite humano do encaminhamento: certificação SER aditiva com histórico SE08 preservado; evolução declarativa/versionada de condições; target L3 stage-specific de criar-objeto mantido, sem promoção atual.
+- (ChatGPT) A manutenção A07/PR #102 foi certificada em Windows com CI 10/10 e FULL SE08 21/21 no SHA `4a70834d...` e integrada em `main@515e673b...` após autorização humana explícita. A SER00 foi reconciliada com essa main; SER01 continua `NOT_STARTED` e o merge da PR #101 permanece não autorizado até a certificação final do SHA documental.
+- (Codex) GitHub Actions=`DEFERRED_NO_CREDITS`; Free/Genie=`NOT_RUN`. Promoção corporativa bloqueada.
+
+
 ## 2026-09-22 — SE08: integração, gate Free e fechamento
 
 ### Integrado
