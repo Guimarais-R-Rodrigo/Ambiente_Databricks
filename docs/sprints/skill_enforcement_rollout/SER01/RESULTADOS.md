@@ -73,3 +73,24 @@ MERGE = NOT_AUTHORIZED
 ```
 
 Na R2, o negativo `test_incorrect_public_api_is_rejected_without_repairing_candidate` passava sem discriminar no Windows, porque qualquer fachada reprovava pelo CRLF. A R3 deve mostrar fachada correta PASS e fachada incorreta FAIL no mesmo host. R1 e R2 não são reclassificadas por resultado posterior.
+
+## A1-LAB R3 verde local e reconciliação R4 (registro aditivo, 2026-09-23)
+
+```text
+R3_SHA = 101afff9092dd7e8645ef49e131ddb5a24646a77
+R3_LOCAL_CERTIFICATION = PASS
+R3_G1 = 32/32 PASS
+R3_G2_TO_G8 = PASS
+R3_FULL_SE08 = 21/21 PASS (HISTORICAL_SE08_REGRESSION)
+R3_PUSH = NO
+R3_PUBLICATION = BLOCKED_CONCURRENT_REPOSITORY_CHANGE
+CONCURRENT_MAIN = 073762fd8e38afadf27aca0f4d77351d9bfb627f
+CONCURRENT_FRONT = MM02 / PR #109
+OVERLAP = CHANGELOG.md + README.md only
+PROTECTED_SER01_PATHS_CHANGED_BY_MM02 = NO
+R4 = RECONCILIATION_AND_RECERTIFICATION_PENDING
+CURRENT_LEVEL = L2_UNCHANGED
+MERGE = NOT_AUTHORIZED
+```
+
+O PASS da R3 pertence somente a `101afff9092d` sobre a base `86d1ff6a`. A R4 incorpora a `main` por merge preservador (sem rebase), mantém R1–R3 como ancestrais e exige nova campanha completa sobre o SHA composto antes de qualquer publicação. A matriz de cobertura não é alterada nesta etapa.

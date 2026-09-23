@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-23 — SER01 A1-LAB R3 verde local e reconciliação R4 com a MM02
+
+### Notas
+
+- (Claude) A1-LAB R3 sobre `101afff9092d` (base `86d1ff6a`, Windows 11/NTFS): G1 32/32 PASS e G2–G8 PASS, com FULL SE08 21/21 como regressão histórica. Script e snippet têm `canonical_public_api` PASS e a fachada incorreta FAIL no mesmo transporte CRLF. Sem push: a `main` avançou para `073762fd8e38` (MM02/PR #109) durante a rodada.
+- (Claude) R4: merge `--no-ff` da `main` preservando R1, R2 e R3. Sobreposição só em `CHANGELOG.md` (entradas SER01 e MM02 mantidas integralmente) e `README.md` (versão da `main`, snapshot re-medido). Nenhum caminho funcional protegido da SER01 mudou na MM02; a implementação R3 segue byte-idêntica. Recertificação R4 pendente; L2, sem merge da PR.
+
 ## 2026-09-23 — SER01 A1-LAB R2 reprovada e corretiva do stdout de api_publica
 
 ### Corrigido

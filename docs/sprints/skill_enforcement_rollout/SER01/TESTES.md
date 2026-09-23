@@ -66,3 +66,7 @@ A R1 reprovou em `test_real_script_validation`: a réplica do script herdou o RE
 ## Corretiva pós-R2 (2026-09-23)
 
 A R2 confirmou a corretiva de LF e expôs um falso mismatch em `canonical_public_api`: o stdout de `api_publica.py` chega com CRLF no Windows. A R3 desfaz somente pares `\r\n` desse stdout antes da comparação, sem `strip` e sem tocar no candidato. Novo método unitário `test_api_stdout_canonicalizes_only_crlf_transport` (LF preservado, CRLF equivalente, CR isolado, bytes extras e conteúdo diferente não equivalentes). Suíte: 32 métodos (25 unitários, sete integrações). Critério adicional de G1: script e snippet com `canonical_public_api=PASS` e a fachada incorreta com `canonical_public_api=FAIL`.
+
+## Reconciliação R4 (2026-09-23)
+
+A R3 passou localmente (32/32 no G1; G2–G8 PASS), mas não foi publicada por avanço concorrente da `main` (MM02). A R4 não altera código nem testes: a suíte continua com 32 métodos (25 unitários, sete integrações). Toda a campanha G1–G8 é repetida uma vez sobre o novo SHA composto; push somente com tudo verde e sem nova concorrência.
