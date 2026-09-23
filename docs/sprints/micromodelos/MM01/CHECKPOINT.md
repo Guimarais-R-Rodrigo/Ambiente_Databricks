@@ -1,6 +1,15 @@
 # MM01 — Checkpoint
 
-Status: **NONA REAUDITORIA FINAL INDEPENDENTE `NAO_APTA` PRESERVADA; D-01/R02 CORRIGIDO; SUÍTE PERMANENTE 47 + 3 R02 + 1 R03; RECONCILIAÇÃO COM V13 S2 REALIZADA; CERTIFICAÇÃO DA ÁRVORE FINAL E NOVA REAUDITORIA INDEPENDENTE PENDENTES; NÃO ACEITA; NÃO INTEGRADA**
+Status: **ACEITA E INTEGRADA — PR #51 / merge `73d7659dcf11509a7fba392221c4810d10401c35`; MM02 = NOT_STARTED.**
+
+## Pós-merge — estado vigente em 2026-09-23
+
+A PR #51 foi aceita e integrada. O HEAD final da branch foi `fa1a3653e60472d171307663d1175344bb3f6a8d`, a base imediatamente anterior ao merge foi `4bc7c9aada96468505e51f279cf32c107d0b6dbb` e o merge é `73d7659dcf11509a7fba392221c4810d10401c35`. HEAD e merge possuem a mesma tree `58beb10f5d849fa01f2c94f2ee682c2b3276ea1e`.
+
+O fechamento completo está consolidado em `POST_MERGE_CHECKPOINT.md`. **As seções abaixo deste aviso permanecem como checkpoint histórico pré-merge e não devem ser lidas como estado vigente.** Nenhuma delas é reescrita retroativamente.
+
+`MM02 = NOT_STARTED`.
+
 
 ## Fonte de verdade e estado operacional
 

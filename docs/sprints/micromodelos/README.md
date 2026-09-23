@@ -1,12 +1,19 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: **MM00 encerrada e integrada. MM01 possui oito A1 históricas (`NAO_APTA`, `NAO_APTA`, cinco `APTA_COM_CORRECOES`, `NAO_APTA`); após o contraditório da oitava A1, a `MATRIZ_ACEITE_FINAL.md` congelou o threat model e a condição de término. As correções da matriz têm 47 testes de construção verdes; auditoria final fechada ainda pendente. MM01 não aceita nem integrada.**
+> Estado: **MM00 integrada. MM01 aceita e integrada pela PR #51 no merge `73d7659dcf11509a7fba392221c4810d10401c35`. MM02 = `NOT_STARTED`.**
 
 ## Objetivo
 
 Construir uma esteira rastreável e auditável para descobrir, especificar, estudar, validar, publicar e, somente após um piloto novo e o congelamento da V1, migrar micromodelos.
 
 O repositório usa somente fixtures e placeholders. O catálogo real do trabalho é representado aqui por `<CATALOGO_PRODUTO>` e o binding para nomes reais ocorre apenas no workspace autorizado.
+
+Documentos vivos desta fase:
+
+- [revisão pós-MM01/SEF/PSEF/SER](REVISAO_PLANO_POS_SEF_2026-09-23.md);
+- [retrospectiva operacional da MM01](RETROSPECTIVA_MM01.md);
+- [protocolo de certificação para MM02–MM13](PROTOCOLO_CERTIFICACAO_SPRINTS.md);
+- [checkpoint pós-merge da MM01](MM01/POST_MERGE_CHECKPOINT.md).
 
 ## Fases
 
@@ -19,7 +26,7 @@ O repositório usa somente fixtures e placeholders. O catálogo real do trabalho
 
 ## Regra de avanço
 
-`implementar → testar → auditar → corrigir → retestar → documentar → checkpoint → aceite → merge`
+`desenvolvimento → smoke barato → candidate freeze → full certification → auditoria independente → contraditório → fechamento documental mínimo → final-tree revalidation → aceite → merge`
 
 Uma auditoria que encontra bloqueios não é reclassificada depois da correção. O resultado fica versionado como evidência histórica e a árvore corrigida volta para auditoria independente.
 
@@ -38,9 +45,15 @@ A MM00 congelou baseline, arquitetura, reuso, riscos, dependências e fronteiras
 
 A exceção D1-B terminou com o fechamento de Q-01 e não se propaga às próximas sprints.
 
-## Estado da MM01
+## Estado vigente da MM01
 
-A MM01 foi iniciada na branch `micromodelos/mm01-contrato-canonico` e reconciliada de forma fail-closed com as evoluções da `main`, inclusive as bases pós-V10 e pós-V11. A PR #51 permanece aberta, não aceita e não integrada.
+A MM01 foi aceita e integrada. O HEAD da branch no merge foi `fa1a3653e60472d171307663d1175344bb3f6a8d`; o merge da PR #51 é `73d7659dcf11509a7fba392221c4810d10401c35`. O contrato canônico `micromodelo.yaml` está na `main`; MM02 não foi iniciada.
+
+O fechamento consolidado está no [checkpoint pós-merge](MM01/POST_MERGE_CHECKPOINT.md). A arquitetura prospectiva passa a consumir a [revisão pós-SEF](REVISAO_PLANO_POS_SEF_2026-09-23.md) sem reabrir MM01.
+
+## Histórico pré-merge da MM01
+
+A MM01 foi iniciada na branch `micromodelos/mm01-contrato-canonico` e reconciliada de forma fail-closed com as evoluções da `main`, inclusive as bases pós-V10 e pós-V11. **Naquele estágio histórico**, a PR #51 permanecia aberta, não aceita e não integrada.
 
 A candidata contém exclusivamente o contrato canônico `micromodelo.yaml`: schema, fases/condições, proveniência, validador de referência/CI, fixtures sintéticos, suíte com **47 métodos de teste**, documentação e pacote A1. Não cria skill de micromodelos nem altera `.assistant`.
 
@@ -99,7 +112,7 @@ A oitava A1 concluiu `NAO_APTA` e está preservada em `10_resultado_a1_reauditor
 
 A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprint continua reservado para MM02; descoberta de metadata continua reservada para MM03; tracking definitivo continua reservado para MM06.
 
-## Próximo gate
+## Gate histórico de fechamento da MM01 — já consumido
 
 1. certificar os sete workflows permanentes sobre o HEAD documental final;
 2. executar **uma auditoria final fechada contra `MATRIZ_ACEITE_FINAL.md`**, sem permitir expansão implícita de requisitos;
@@ -108,4 +121,13 @@ A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprin
 5. revalidar a árvore exata após o changelog, reconfirmar `main`/`behind_by`/mergeabilidade e solicitar aceite final explícito;
 6. integrar a PR #51 somente após o aceite.
 
-**MM02 permanece bloqueada.**
+**Naquele gate histórico, MM02 permanecia bloqueada.**
+
+
+## Próxima sprint
+
+```text
+MM02 = NOT_STARTED
+```
+
+MM02 não é iniciada por esta revisão documental. Após a integração desta revisão, a implementação funcional de `spec_fingerprint` deverá ser aberta em frente própria. O escopo congelado de MM02 está na [revisão pós-SEF](REVISAO_PLANO_POS_SEF_2026-09-23.md) e sua certificação seguirá o [protocolo de MM02–MM13](PROTOCOLO_CERTIFICACAO_SPRINTS.md).
