@@ -1,21 +1,22 @@
 # SER00 — dependências, concorrência e ordem
 
-Baseline auditada: `11851e137dd7793b351ac08fc211c0be90005dee`. Main atual: `515e673b17f21d4c912d9ae866a7e31967fd4488`. A única branch concorrente incorporada foi a manutenção A07/PR #102, por merge explícito após CI/FULL locais verdes.
+Baseline auditada: `11851e137dd7793b351ac08fc211c0be90005dee`. Main atual: `4bc7c9aada96468505e51f279cf32c107d0b6dbb`. As únicas branches concorrentes incorporadas foram as manutenções A07/PR #102 e #105, por merges explícitos após certificação local.
 
 ## Estado Git observado
 
 | Frente | Estado e identidade | Interação com SER |
 |---|---|---|
-| main | `515e673b17f21d4c912d9ae866a7e31967fd4488`, merge da PR #102 sobre a baseline PSEF00 | base atual da certificação final SER00 |
+| main | `4bc7c9aada96468505e51f279cf32c107d0b6dbb`, após merges das PRs #102 e #105 sobre a baseline PSEF00 | base atual da certificação final SER00 |
 | PSEF01 / PR #99 | draft; b733bf3fa226bef964e640c0728c8dfecc9e992d; branch psef/PSEF01-contrato-editorial-policy-aware | toca hub_prompts/README e cinco documentos PSEF; derivado stale declarado; não incorporar candidata acumulada |
 | MM01 / PR #51 | aberta; HEAD observada `a5bb60a27ad8b0ab5cb8953642efbcdb14211328` em 2026-09-23 | não incorporar; compartilha README/CHANGELOG e gates; reconfirmar antes da certificação final |
 | antiga SE08 / PR #91 | draft, não mergeável; 65d75dca58860e7e19c8dceb5f70ce4ddb568fcd | toca skills/README, Manual, tools/skill_enforcement, CI e derivado; preservar e não integrar por efeito colateral |
 | antiga V05 / PR #26 | aberta na listagem; 22 arquivos de theme_lab, testes, README, índices e workflow | superfície visual/derivado; não misturar com rollout |
 | antigas PR #4, #5, #6 | abertas na listagem inicial, frentes anteriores de READMEs | não fechadas/alteradas; reexaminar delta completo antes de qualquer integração concorrente |
-| manutenção A07 / PR #102 | certificada localmente em `4a70834d...`, integrada em `515e673b...` | incorporada à main antes da certificação final SER00; corrigiu somente testes/oráculo e snapshot raiz |
-| SER00 | `ser/SER00-rollout-baseline`, reconciliada por merge normal com `main@515e673b...`, behind=0 | documentação SER + ADR-0022 + changelog/snapshot; zero produto/policy/runtime da SER00 |
+| manutenção A07 / PR #102 | certificada localmente em `4a70834d...`, integrada em `515e673b...` | corrigiu oráculo test-only e snapshot raiz |
+| manutenção A07 / PR #105 | certificada localmente em `7af65df5...`, integrada em `4bc7c9aa...` | adicionou delete sharing Win32; teste causal PASS, stress 30/30, CI/FULL verdes |
+| SER00 | `ser/SER00-rollout-baseline`, a reconciliar por merge normal com `main@4bc7c9aa...` | documentação SER + ADR-0022 + changelog/snapshot; zero produto/policy/runtime da SER00 |
 
-A MM01 continuou avançando independentemente e sua HEAD mudou novamente para `a5bb60a2...`; não transportar estados intermediários para a SER. A PR #102, ao contrário, foi explicitamente autorizada e integrada porque era pré-requisito técnico da certificação SER00.
+A MM01 continuou avançando independentemente e foi observada em `c43273fb...`; não transportar estados intermediários para a SER. As PRs #102 e #105 foram explicitamente autorizadas e integradas porque eram pré-requisitos técnicos da certificação SER00.
 
 A busca paginada de branches psef/ retornou PSEF00 e PSEF01, sem PSEF04. A listagem inicial tinha sete PRs abertas: #4, #5, #6, #26, #51, #91 e #99. Esse conjunto é uma observação, não trava de concorrência; reconfirmar imediatamente antes de certificar/integrar. Não se declara auditoria exaustiva dos deltas das três PRs antigas de README nesta rodada.
 
