@@ -7,6 +7,7 @@
 - (ChatGPT) `tools/tests/test_certify_storage_cleanup.py` deixa de recuperar o registro da invocação por `sys._getframe(1).f_locals` e passa a interceptar `TemporaryDirectory.cleanup()`, usando o `record` já pertencente ao wrapper concreto. O `certify_local.py` de produção permanece inalterado.
 - (ChatGPT) A fixture registra `native_preemptions` quando o cleanup real falha antes da injeção sintética. Esse caminho continua reprovando explicitamente com `NATIVE_STORAGE_CLEANUP_PREEMPTED_FIXTURE`; não há retry, sleep, `ignore_errors` nem conversão de WinError32 real em PASS.
 - (ChatGPT) `test_se08_windows_corrective.py` ganha guarda estática para impedir retorno à introspecção de stack e exigir o binding direto da fixture.
+- (ChatGPT) A A07-R3 comprovou que o snapshot do README já estava stale na `main`: a PSEF00/PR #98 adicionou exatamente sete arquivos documentais e seis links relativos sem reconciliar os censos. O bloco verificável é atualizado de `1638→1645` arquivos e `2103→2109` links; nenhuma regra do validador foi relaxada.
 
 ### Limites
 
