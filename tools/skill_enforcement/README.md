@@ -321,3 +321,15 @@ python -B tools/skill_enforcement/ser_certify.py `
 records e Receipts reais, bypass mínimo fechado, regressões, renderer sem drift,
 snapshot e CI. O FULL SE08 é executado como canal histórico separado. O certifier
 não autentica pessoas, não muda policy e não autoriza merge/promoção sozinho.
+
+### SER01 A4 — probe Free de `object_validation`
+
+Instrumento externo:
+
+```text
+tools/skill_enforcement/ser01_free_probe.py
+```
+
+O probe resolve a `.assistant` publicada, verifica o release manifest de `hub-ml-criar-objeto`, confirma que a primitive repo-side não é artifact publicado, executa o verifier com fixture sintética de integridade e testa ausência de `local_record`, Receipt ausente, tamper/replay e policy pré-promoção. Não executa a primitive repo-side, não escreve no produto e não transforma a fixture em prova de execução.
+
+Runbook: `docs/sprints/skill_enforcement_rollout/SER01/A4_RUNBOOK_FREE.md`.

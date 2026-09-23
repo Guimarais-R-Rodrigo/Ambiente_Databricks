@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-09-23 — SER01 A3 encerrada; A4 Free/Genie preparada
+
+### Certificado
+
+- (ChatGPT) A3-R3 em `fcec3e34898006081b3e9063c627b5783108687f`: `SER-CERT-1` PASS, verificação externa válida, 27/27 steps únicos, route/evidence/bypass gates verdes, CI e SE08 histórico verdes, push fast-forward do mesmo SHA certificado.
+- (ChatGPT) SHARE A3-R3 auditado: SHA externo confere; 510/510 arquivos manifestados com hash/tamanho válidos; `raw_bindings` e output RAW do verifier coerentes; PR #108 ficou ahead 17/behind 0 e mergeable.
+
+### Adicionado
+
+- (ChatGPT) A4-FREE: `tools/skill_enforcement/ser01_free_probe.py` e runbook para publicação/verify por conteúdo e portabilidade do verifier no Databricks Free.
+- (ChatGPT) A4-GENIE: cinco casos comportamentais fixos para `NOT_AVAILABLE`, bypass, Receipt inválido, autoridade limitada e não-colisão de roteamento.
+
+### Limites
+
+- (ChatGPT) A4 não altera `.assistant` nem policy. O probe usa fixture sintética apenas para integridade; a primitive `object_validation` continua repo-side. `current_level=L2`, promoção e merge continuam não autorizados.
+
 ## 2026-09-23 — SER01 A3-R3: retomada após o hotfix MM03 (PR #111)
 
 ### Notas

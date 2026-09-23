@@ -203,3 +203,23 @@ MERGE = NOT_AUTHORIZED
 ```
 
 A tentativa bloqueada não é reclassificada: permanece como proveniência da reconciliação. A recertificação exige nova execução única do `SER-CERT-1` sobre o SHA composto que inclui `8e703f1e`.
+
+## A3-R3 — fechamento auditado
+
+```text
+SHA = fcec3e34898006081b3e9063c627b5783108687f
+TREE = 0a133ff6e2df2598c9bf1981307d3ab394b3a27c
+SER-CERT-1 = PASS
+EXTERNAL_VERIFY = VALID
+TOTAL/UNIQUE_STEPS = 27/27
+ROUTE_GATE = PASS
+EVIDENCE_GATE = PASS
+BYPASS = PASS
+CI_LOCAL = PASS
+HISTORICAL_SE08 = PASS_SEPARATE_CHANNEL
+WORKTREE = CLEAN
+PUSH = PASS_FAST_FORWARD
+A3 = COMPLETE
+```
+
+A4 abre dois canais externos independentes: Free determinístico (`A4_FREE`) e Genie comportamental (`A4_GENIE`). Nenhum deles está executado neste commit de autoria e nenhum promove policy.

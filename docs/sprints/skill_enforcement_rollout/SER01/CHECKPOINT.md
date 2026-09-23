@@ -218,3 +218,31 @@ MERGE = NOT_AUTHORIZED
 ```
 
 A tentativa bloqueada não é reclassificada: permanece como proveniência da reconciliação. A recertificação exige nova execução única do `SER-CERT-1` sobre o SHA composto que inclui `8e703f1e`.
+
+## A3-R3 encerrada e abertura A4 (registro aditivo, 2026-09-23)
+
+```text
+A3_R3_FREEZE_SHA = fcec3e34898006081b3e9063c627b5783108687f
+A3_R3_FREEZE_TREE = 0a133ff6e2df2598c9bf1981307d3ab394b3a27c
+A3_R3_RESULT = A3_R3_SER_CERT_PASS_RECONCILED
+SER_CERT_ID = sercert1:339c633c6d8d9f1bc14ed558be15ffc9a5e4ce47b4f6e83ec184efe51f52d8e4
+VERIFY_CERTIFICATION = VALID
+STEPS = 27/27 UNIQUE
+ROUTE_GATE = PASS
+EVIDENCE_GATE = PASS
+SER01 = 36/36 PASS
+SER_CERT_REGRESSION = 7/7 PASS
+LEGACY_CREATE = 35/35 PASS
+CI = PASS
+HISTORICAL_SE08 = PASS_SEPARATE_CHANNEL
+PUSH = PASS_FAST_FORWARD
+REMOTE_FINAL_HEAD = fcec3e34898006081b3e9063c627b5783108687f
+MAIN = 8e703f1ea736593d8374b532e4a006c0cbd4691a
+A3 = COMPLETE
+A4 = PREPARED_NOT_RUN
+CURRENT_LEVEL = L2_UNCHANGED
+POLICY_PROMOTION = NOT_AUTHORIZED
+MERGE = NOT_AUTHORIZED
+```
+
+O SHARE A3-R3 foi auditado: SHA externo confere, 510/510 arquivos manifestados possuem hash/tamanho corretos, `raw_bindings` preserva a identidade RAW e o output de `verify_certification` é byte-idêntico ao hash RAW declarado. A4 não modifica os artifacts protegidos da A3.
