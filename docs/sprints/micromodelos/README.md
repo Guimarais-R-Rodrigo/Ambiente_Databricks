@@ -1,6 +1,6 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: **MM00 encerrada e integrada. MM01 é a próxima sprint e não foi iniciada.**
+> Estado: **MM00 encerrada e integrada. MM01 possui oito A1 históricas (`NAO_APTA`, `NAO_APTA`, cinco `APTA_COM_CORRECOES`, `NAO_APTA`); após o contraditório da oitava A1, a `MATRIZ_ACEITE_FINAL.md` congelou o threat model e a condição de término. As correções da matriz têm 47 testes de construção verdes; auditoria final fechada ainda pendente. MM01 não aceita nem integrada.**
 
 ## Objetivo
 
@@ -21,6 +21,8 @@ O repositório usa somente fixtures e placeholders. O catálogo real do trabalho
 
 `implementar → testar → auditar → corrigir → retestar → documentar → checkpoint → aceite → merge`
 
+Uma auditoria que encontra bloqueios não é reclassificada depois da correção. O resultado fica versionado como evidência histórica e a árvore corrigida volta para auditoria independente.
+
 ## Estado da MM00
 
 A MM00 congelou baseline, arquitetura, reuso, riscos, dependências e fronteiras de governança sem alterar funcionalmente o produto `.assistant`.
@@ -29,14 +31,81 @@ A MM00 congelou baseline, arquitetura, reuso, riscos, dependências e fronteiras
 - M-01 corrigido;
 - D1-B autorizada e posteriormente consumida no fechamento pós-merge;
 - ADR-0014 a ADR-0020 aceitos sem ressalvas;
-- candidata final aprovada em CI geral, V00, V01 e V02;
 - PR #43 integrada em `36e89515a46df24f41deea4791b109f5a1f938f2`;
-- Q-01 fechado imediatamente após o merge por entrada estritamente aditiva no `CHANGELOG.md`, preservando o histórico anterior.
+- Q-01 fechado pela PR #49;
+- fechamento pós-MM00 integrado em `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5`;
+- CI geral e V00–V09 pós-merge concluídos com sucesso.
 
 A exceção D1-B terminou com o fechamento de Q-01 e não se propaga às próximas sprints.
 
-## Próximo passo
+## Estado da MM01
 
-A próxima sprint prevista é **MM01 — contrato canônico `micromodelo.yaml`**.
+A MM01 foi iniciada na branch `micromodelos/mm01-contrato-canonico` e reconciliada de forma fail-closed com as evoluções da `main`, inclusive as bases pós-V10 e pós-V11. A PR #51 permanece aberta, não aceita e não integrada.
 
-MM01 não foi iniciada por este fechamento. O início de MM01 deverá partir da `main` já contendo a MM00 e seu fechamento documental, seguindo novamente a regra de branch/PR/testes/auditoria/checkpoint.
+A candidata contém exclusivamente o contrato canônico `micromodelo.yaml`: schema, fases/condições, proveniência, validador de referência/CI, fixtures sintéticos, suíte com **47 métodos de teste**, documentação e pacote A1. Não cria skill de micromodelos nem altera `.assistant`.
+
+### Primeira A1
+
+A primeira auditoria independente concluiu `NAO_APTA` com cinco bloqueios. Todos foram confirmados como procedentes e corrigidos: continuidade pós-`PUBLICADO` por snapshot anterior confiável, provas auditáveis materialmente preenchidas, `PROPOSTO` permitido pré-gate, política de `INDETERMINADO` mais forte e integridade referencial de calibração.
+
+### Segunda A1
+
+A reauditoria sobre o head corrigido também concluiu `NAO_APTA`, com três novos bloqueios procedentes:
+
+- marcas Unicode `M*` ainda podiam satisfazer provas auditáveis;
+- políticas de ausência/publicação ainda dependiam parcialmente de inferência sobre prosa normativa;
+- semântica probabilística podia ser escondida por sinônimos não cobertos por regex.
+
+A segunda correção mudou o desenho para eliminar essas classes de bypass:
+
+- materialidade textual exige positivamente letra/número Unicode após NFKC;
+- ausência de evidência e política de publicação de `INDETERMINADO` usam somente campos estruturados para comportamento executável;
+- `score.tipo_semantica` é a autoridade exclusiva sobre natureza probabilística; `score.semantica` livre foi removido do schema;
+- `score.normalizacao` passou a contrato estruturado com método/referência/proveniência.
+
+O workflow transitório `34912665666` executou **26 métodos com `OK`** e o gate estrutural com zero falhas/avisos antes de publicar o commit permanente `f46b69790fc23ac6c3ebfa633053a3acb6f9ed1a`. Os mecanismos transitórios não permanecem na árvore.
+
+Os resultados das duas A1 estão versionados separadamente e continuam historicamente `NAO_APTA`.
+
+### Terceira A1
+
+A terceira auditoria independente concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com três divergências de materialidade textual/Unicode: conflito ASCII no schema, proveniência de topo fora da política material e gates operacionais que aceitavam strings visualmente vazias. O resultado está preservado em `05_resultado_a1_reauditoria_2.md`.
+
+A terceira correção unificou a autoridade em NFKC + letra/número Unicode por `format: material-text`, sem impor essa restrição a toda prosa narrativa. O run transitório `34955861169` executou 29 métodos, CLI positiva/negativa/`--previous` e o gate estrutural antes de publicar `4f686e5de163b649c4ee5e7643f75ecd56db47e7`; os mecanismos transitórios foram removidos.
+
+Os três resultados A1 permanecem históricos e não são reclassificados depois das correções.
+
+### Quarta A1
+
+A quarta auditoria independente concluiu `APTA_COM_CORRECOES`, sem `QUEBRA`, com uma divergência: regras de evidência/contra-evidência, hipótese/resultado experimental, resumo de validação e motivo operacional ainda escapavam da autoridade comum de materialidade. O resultado está preservado em `06_resultado_a1_reauditoria_3.md`.
+
+A correção reutilizou `material-text` → `_has_material_text` nos seis campos e removeu `.strip()` dos gates de resultado executado e motivo de condição. A suíte passou para 31 métodos. O run transitório `34960256357` executou suíte, CLI adversarial, `--previous` e gates estruturais antes de publicar `8fd8e7892ead1bb63a554b5283f7062adf582976`; os mecanismos transitórios foram removidos.
+
+Os quatro resultados A1 permanecem históricos e não são reclassificados depois das correções.
+
+### Quinta, sexta e sétima A1
+
+A quinta A1 concluiu `APTA_COM_CORRECOES` e levou a política `material-text` aos demais textos obrigatórios, elevando a suíte a 34 métodos. A sexta A1, também `APTA_COM_CORRECOES`, encontrou duas sobras da mesma classe: três regex genéricas concorrentes e um guard que aceitava qualquer `pattern`. O sexto relatório está preservado em `08_resultado_a1_reauditoria_5.md`.
+
+A correção da sexta A1 remove as regex genéricas, exige `material-text` em todo `string + minLength` e congela os únicos patterns estruturais por path + regex exata. A suíte passa a 36 métodos.
+
+A sétima A1, novamente `APTA_COM_CORRECOES`, encontrou três bloqueios: bypass de equivalência por Unicode default-ignorable, guard incompleto para arrays de tipos e aceitação de números não finitos. O sétimo relatório está preservado em `09_resultado_a1_reauditoria_6.md`.
+
+A correção da sétima A1 remove default-ignorables antes da tokenização semântica, fecha o guard para listas contendo `string` e exige `finite-number` para limiar/peso, com JSON estrito contra `NaN/Infinity`. A suíte passa a 39 métodos.
+
+### Oitava A1 e matriz de aceite final
+
+A oitava A1 concluiu `NAO_APTA` e está preservada em `10_resultado_a1_reauditoria_7.md`. O contraditório posterior encerrou as auditorias exploratórias abertas: requisitos reais foram separados de hardening e de adversariais fora do threat model, e `MATRIZ_ACEITE_FINAL.md` foi congelada. A candidata agora usa materialidade baseada em `Default_Ignorable_Code_Point`, equivalência editorial conservadora, domínio numérico canônico, invariantes intrínsecos de aprovação/proveniência, resultado observado apenas após execução, níveis distintos de garantia para snapshot/evolução e perfil canônico de autoria do schema. A suíte passa a 47 métodos.
+
+A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprint continua reservado para MM02; descoberta de metadata continua reservada para MM03; tracking definitivo continua reservado para MM06.
+
+## Próximo gate
+
+1. certificar os sete workflows permanentes sobre o HEAD documental final;
+2. executar **uma auditoria final fechada contra `MATRIZ_ACEITE_FINAL.md`**, sem permitir expansão implícita de requisitos;
+3. executar contraditório final sobre achados que efetivamente violem a matriz/ADRs;
+4. se limpa, sincronizar o bloco MM01 do `CHANGELOG.md` antes do merge, preservando byte a byte o histórico anterior;
+5. revalidar a árvore exata após o changelog, reconfirmar `main`/`behind_by`/mergeabilidade e solicitar aceite final explícito;
+6. integrar a PR #51 somente após o aceite.
+
+**MM02 permanece bloqueada.**

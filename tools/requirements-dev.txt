@@ -13,6 +13,8 @@ pandas>=2.0
 scikit-learn>=1.4
 plotly>=5.20
 jinja2>=3.1  # pandas Styler nos exemplos portáveis dos READMEs
+PyYAML>=6.0  # MM01: parser de manutenção do contrato micromodelo.yaml; não implica dependência runtime da futura skill
+regex>=2024.11.6  # MM01: propriedade Unicode Default_Ignorable_Code_Point no gate de manutenção
 
 # NÃO entram aqui de propósito:
 # - pyspark: não entra no gate básico. O workflow readme-examples usa Spark
