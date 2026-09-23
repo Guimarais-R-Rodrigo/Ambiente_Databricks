@@ -81,6 +81,24 @@ template não prova sua leitura: `template.read_status=NOT_OBSERVABLE`.
 A contenção é conferida no instante do preflight, sem garantia contra troca
 concorrente de links depois da checagem. Este L2 não é um mecanismo de escrita.
 
+## Validação estrutural L3 candidata — rota repo-side com Receipt de domínio
+
+Para `create` de **snippet, script, prompt, notebook e README agregador**, a superfície
+`object_validation` possui uma rota determinística candidata separada da escrita.
+O produtor canônico é `tools/skill_enforcement/ser01_object_validation.py`, executado
+somente em checkout Git completo; ele não viaja com o pacote publicado.
+
+Um PASS precisa emitir `SER01-OBJECT-VALIDATION-RECEIPT-1`. O verifier publicado é
+`scripts/object_validation.py::verify_receipt`: confere versão, binding da candidata,
+base, run, record local e claims fechados. Ele não reexecuta Git/tools, não autentica
+pessoa/executor e não converte hash em assinatura. `runtime_validation` permanece
+`NOT_RUN`, inclusive para notebook.
+
+Sem Receipt válido, a skill não pode apresentar `object_validation` como L3 demonstrada
+nem declarar o objeto pronto por essa superfície. Onde a rota repo-side não existe,
+registrar `NOT_AVAILABLE`/bloqueio; não substituir por validação informal. O Receipt
+também não autoriza `apply`: geração, validação, autorização e escrita são gates distintos.
+
 ## Piloto determinístico — somente create/readme/agregador
 
 `scripts/run.py` oferece `generate` e `apply` separados. É piloto local;

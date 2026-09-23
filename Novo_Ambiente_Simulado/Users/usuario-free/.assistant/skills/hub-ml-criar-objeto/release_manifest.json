@@ -16,12 +16,12 @@
     {
       "path": "skills/hub-ml-criar-objeto/SKILL.md",
       "role": "skill_guidance",
-      "git_blob_sha1": "7cc56ae8a320ebc95003752a2bd1e315b8e59a58"
+      "git_blob_sha1": "58c926f12b0e2621f20294890675e6583410d469"
     },
     {
       "path": "skills/hub-ml-criar-objeto/execution_contract.json",
       "role": "contract",
-      "git_blob_sha1": "bff3a97e24743894c3202c577b442ea210307c8e"
+      "git_blob_sha1": "1c6ca1e727c5c253336315da483637dd3723032c"
     },
     {
       "path": "skills/hub-ml-criar-objeto/scripts/_windows_writer.py",
@@ -42,6 +42,11 @@
       "path": "skills/hub-ml-criar-objeto/templates/checklist-objeto-novo.md",
       "role": "checklist",
       "git_blob_sha1": "dbd56f4fa6013d2245cc4945ca92600ca56198b9"
+    },
+    {
+      "path": "skills/hub-ml-criar-objeto/scripts/object_validation.py",
+      "role": "object_validation_receipt_verifier",
+      "git_blob_sha1": "cf32aa6b2b3a3d91244b1e7497a09dab9b93eec0"
     }
   ]
 }

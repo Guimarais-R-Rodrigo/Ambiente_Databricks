@@ -1,5 +1,173 @@
 # Changelog
 
+## 2026-09-23 — SER01 L3: preparação da certificação pós-promoção R2
+
+### Notas
+
+- (Claude) Derivado `Novo_Ambiente_Simulado/` reconciliado pelo renderer com a policy L3 da fonte e snapshot verificável do `README.md` atualizado somente pela medição do validator.
+- (Claude) `SER-PROMOTION-CERT-2` ainda NOT_RUN nesta preparação. A R1 (`29252f33`) permanece bloqueada por teste de autoria pré-promoção stale. Sem merge da PR; SER02 não iniciada.
+
+## 2026-09-23 — SER01 promoção R2: hardening do certifier pós-policy
+
+### Corrigido
+
+- (ChatGPT) R1 em `29252f33...` preservada como BLOCKED por teste pré-promoção stale; nenhum freeze/certifier/push ocorreu.
+- (ChatGPT) Certifier promovido para `SER-PROMOTION-CERT-2`: regressão própria dentro da campanha, classificador histórico que rejeita ERROR, piloto L3 legado, policy-I/O, certifier regression e CI não-SEF.
+- (ChatGPT) `test_ser_certify` pré-promoção passa a canal histórico explícito; SE07/SE08 continuam imutáveis. Apenas failures temporais exatos são admissíveis.
+- (ChatGPT) Finalização passa a persistir summary fail-closed inclusive para exceções inesperadas após a reserva de evidência.
+
+### Limites
+
+- (ChatGPT) `policy.json` não foi alterada nesta corretiva: permanece L3/L3, implemented, audit, stage_specific. A promoção continua candidata até nova certificação SHA-bound e aceite humano.
+
+## 2026-09-23 — SER01: candidata formal de promoção L2→L3
+
+### Promovido na candidata
+
+- (ChatGPT) Após A1–A4 concluídas, `hub-ml-criar-objeto` passa na policy candidata de `current_level=L2` para `L3`; `target_level=L3`, `rollout_mode=audit` e `scope_mode=stage_specific` permanecem inalterados.
+- (ChatGPT) `policy_status` passa de `defined` para `implemented`; o inventário inclui SKILL, contrato, preflight, runner, verifier de object_validation e release manifest.
+
+### Certificação
+
+- (ChatGPT) O certifier pós-promoção `SER-PROMOTION-CERT-1` foi preparado antes da mudança de policy. A promoção ainda é `NOT_CERTIFIED`; novo SHA-bound lab e aceite humano específico são obrigatórios antes de merge.
+- (ChatGPT) SE07/SE08 históricos não são editados para acompanhar a promoção; assertions L2 antigas permanecem evidência temporal e serão observadas como canal histórico separado.
+
+## 2026-09-23 — SER01 A4-FREE R2: corrigidos prechecks da autoria
+
+### Corrigido
+
+- (ChatGPT) `ser01_free_probe.py`: literal `bytes` com caracteres não-ASCII substituído por texto UTF-8 explicitamente codificado; F01 passa também a exigir que o produtor repo-side não conste dos artifacts publicados.
+- (ChatGPT) `README.md`: snapshot reconciliado com a medição real da A4-R1 (`repo identidade=1732`, `repo links=2176`).
+
+### Evidência preservada
+
+- (ChatGPT) A4-FREE R1 em `fd04bd27...` permanece FAIL de precheck: validator estrutural PASS, snapshot stale e probe com SyntaxError; dry-run/publicação/import/probe não executados e zero escrita no workspace.
+- (ChatGPT) O usuário renovou depois da parada a sessão OAuth do profile FREE; isso remove o bloqueio ambiental para R2, sem reclassificar a R1.
+
+### Limites
+
+- (ChatGPT) Nenhum arquivo em `ambiente_fonte/` ou `Novo_Ambiente_Simulado/` mudou. Policy continua L2/audit; A4-GENIE, promoção e merge permanecem não autorizados.
+
+## 2026-09-23 — SER01 A4: correção documental da montagem de autoria
+
+### Corrigido
+
+- (ChatGPT) Corrigida a troca acidental entre `docs/sprints/skill_enforcement_rollout/README.md` e `SER01/TESTES.md` no commit inicial de preparação A4. O índice e o histórico de testes voltam às respectivas bases A3 e recebem apenas os deltas A4 previstos.
+
+### Limites
+
+- (ChatGPT) O erro e a correção são exclusivamente documentais; `.assistant`, probe A4, runbooks, policy e evidências A3 não mudaram. O commit anterior permanece no histórico e A4 continua `NOT_RUN`.
+
+## 2026-09-23 — SER01 A3 encerrada; A4 Free/Genie preparada
+
+### Certificado
+
+- (ChatGPT) A3-R3 em `fcec3e34898006081b3e9063c627b5783108687f`: `SER-CERT-1` PASS, verificação externa válida, 27/27 steps únicos, route/evidence/bypass gates verdes, CI e SE08 histórico verdes, push fast-forward do mesmo SHA certificado.
+- (ChatGPT) SHARE A3-R3 auditado: SHA externo confere; 510/510 arquivos manifestados com hash/tamanho válidos; `raw_bindings` e output RAW do verifier coerentes; PR #108 ficou ahead 17/behind 0 e mergeable.
+
+### Adicionado
+
+- (ChatGPT) A4-FREE: `tools/skill_enforcement/ser01_free_probe.py` e runbook para publicação/verify por conteúdo e portabilidade do verifier no Databricks Free.
+- (ChatGPT) A4-GENIE: cinco casos comportamentais fixos para `NOT_AVAILABLE`, bypass, Receipt inválido, autoridade limitada e não-colisão de roteamento.
+
+### Limites
+
+- (ChatGPT) A4 não altera `.assistant` nem policy. O probe usa fixture sintética apenas para integridade; a primitive `object_validation` continua repo-side. `current_level=L2`, promoção e merge continuam não autorizados.
+
+## 2026-09-23 — SER01 A3-R3: retomada após o hotfix MM03 (PR #111)
+
+### Notas
+
+- (Claude) A primeira tentativa da A3-R3 (merge local `cffb8388`) parou antes do freeze: a `main@3214a131` reprovava `validate_assistant.py` por falso positivo de identificador no checkpoint MM03. A manutenção PR #111 foi validada e integrada em `8e703f1e`; o merge dessa `main` preserva `cffb8388` e `0e687da9` como ancestrais. Implementação SER01/SER-CERT-1 byte-idêntica à A3-R2; recertificação pendente; L2, sem merge da PR.
+
+## 2026-09-23 — SER01 A3-R2 certificada localmente e reconciliação A3-R3 com a MM03
+
+### Notas
+
+- (Claude) A3-R2 sobre `0e687da96e72`: `SER-CERT-1` PASS (exit 0), `verify_certification` válida, 27/27 steps únicos, route e evidence gates PASS, SER01 36/36, regressão do certifier 7/7, piloto 35/35, CI local PASS e SE08 histórico em canal separado. Sem push: a `main` avançou para `3214a131` (MM03/PR #110) durante a campanha.
+- (Claude) A3-R3: merge `--no-ff` da `main` preservando a candidata A3-R2 como ancestral. Sobreposição só em `CHANGELOG.md` (entradas SER01 e MM03 mantidas integralmente) e `README.md` (versão da `main`, snapshot re-medido). A implementação SER01/SER-CERT-1 segue byte-idêntica; recertificação pendente; L2, sem merge da PR.
+
+## 2026-09-23 — SER01 A3-R2: preparação da recertificação prospectiva
+
+### Notas
+
+- (Claude) Derivado `Novo_Ambiente_Simulado/` reconciliado pelo renderer com a fonte A3 (verifier `object_validation.py` e `release_manifest.json` de criar-objeto) e snapshot verificável do `README.md` atualizado somente pela medição do validator.
+- (Claude) `SER-CERT-1` R2 ainda NOT_RUN nesta preparação. A A3-R1 (`1ff6d563`) permanece FAIL por `STEP_SET_INVALID`. Policy inalterada: criar-objeto L2, alvo L3, `audit`; sem promoção nem merge.
+
+## 2026-09-23 — SER01 A3-R2: corrigida identidade duplicada dos probes Git
+
+### Corrigido
+
+- (ChatGPT) A3-R1 local em `1ff6d563824e` preservada como FAIL de verificação: o produtor `SER-CERT-1` terminou os gates materiais, mas `verify_certification` recusou o summary por `STEP_SET_INVALID`; não houve push.
+- (ChatGPT) `_git_state` passa a registrar `git_before_*` e `git_after_*`; o verifier exige os 16 probes Git e 11 gates materiais como nomes únicos.
+- (ChatGPT) O produtor passa a auto-verificar qualquer summary PASS antes de retornar sucesso; certificado semanticamente inválido é convertido em FAIL e re-selado. Regressões cobrem duplicação, fase, gate ausente e self-verification.
+
+### Limites
+
+- (ChatGPT) Nenhuma alteração em policy, `current_level=L2`, rollout, skill, Receipt de domínio ou semântica histórica SE08. Nova campanha A3-R2 continua obrigatória.
+
+## 2026-09-23 — SER01 A3: hardening semântico do verifier SER-CERT-1
+
+### Corrigido
+
+- (ChatGPT) `verify_certification` passa a exigir canal histórico `PASS_SEPARATE_CHANNEL`, `issues=[]`, Git limpo/reconciliado e conjunto mínimo/íntegro de steps, em vez de depender apenas do digest recalculável.
+- (ChatGPT) A regressão do certifier cobre overclaims resealados, `behind>0` e remoção de gate obrigatório. Nenhuma alteração em policy, níveis ou semântica histórica SE08.
+
+## 2026-09-23 — SER01 A1 encerrada; A2 liga object_validation à skill publicada
+
+### Certificado
+
+- (ChatGPT) A1-LAB R4 em `aef0f10886689a0018635535c0af105e62629de1`: G1 32/32, G2–G8 verdes, CI local 10/10 e FULL SE08 21/21 como regressão histórica, Windows 11/NTFS, com push fast-forward.
+
+### Adicionado
+
+- (ChatGPT) A2: `skills/hub-ml-criar-objeto/scripts/object_validation.py` define `SER01-OBJECT-VALIDATION-RECEIPT-1` e verifier de integridade/binding.
+- (ChatGPT) O produtor repo-side passa a emitir esse Receipt apenas em PASS; contrato, SKILL e release manifest declaram a rota sem fingir execução de `tools/` no workspace.
+
+### Limites
+
+- (ChatGPT) Receipt não autentica pessoa/executor, não reverifica execução, mantém `runtime_validation=NOT_RUN`, não autoriza apply e não altera `current_level=L2`, rollout, policy ou merge.
+
+## 2026-09-23 — SER01 A1-LAB R3 verde local e reconciliação R4 com a MM02
+
+### Notas
+
+- (Claude) A1-LAB R3 sobre `101afff9092d` (base `86d1ff6a`, Windows 11/NTFS): G1 32/32 PASS e G2–G8 PASS, com FULL SE08 21/21 como regressão histórica. Script e snippet têm `canonical_public_api` PASS e a fachada incorreta FAIL no mesmo transporte CRLF. Sem push: a `main` avançou para `073762fd8e38` (MM02/PR #109) durante a rodada.
+- (Claude) R4: merge `--no-ff` da `main` preservando R1, R2 e R3. Sobreposição só em `CHANGELOG.md` (entradas SER01 e MM02 mantidas integralmente) e `README.md` (versão da `main`, snapshot re-medido). Nenhum caminho funcional protegido da SER01 mudou na MM02; a implementação R3 segue byte-idêntica. Recertificação R4 pendente; L2, sem merge da PR.
+
+## 2026-09-23 — SER01 A1-LAB R2 reprovada e corretiva do stdout de api_publica
+
+### Corrigido
+
+- (Claude) `tools/skill_enforcement/ser01_object_validation.py`: `canonical_public_api` compara o stdout de `api_publica.py` após desfazer somente pares CRLF (`_api_stdout_lf`). `api_publica.py`, a regra `CONTENT_REQUIRES_UTF8_LF` e os bytes do candidato não mudam; CR isolado, bytes extras e conteúdo diferente continuam reprovando.
+- (Claude) `tools/tests/test_ser01_object_validation.py`: regressão unitária portátil da canonicalização; a suíte passa a 32 métodos (25 unitários, sete integrações).
+
+### Notas
+
+- (Claude) A1-LAB R2 sobre `4992f10d5892` (local, sem push; Windows 11/NTFS): FAIL em G1, `test_real_script_validation` com `canonical_public_api`. A corretiva R1 foi confirmada (o envelope aceitou o pacote). Causa: `print()` no stdout textual do Windows emite CRLF; após CRLF→LF a saída é idêntica ao `__init__.py` candidato. R1 e R2 permanecem FAIL; R3 pendente; L2, sem merge.
+
+## 2026-09-23 — SER01 A1-LAB R1 reprovada e corretiva da fixture positiva
+
+### Corrigido
+
+- (Claude) `tools/tests/test_ser01_object_validation.py`: `replica()` passa a garantir LF terminal na fixture positiva montada a partir de fonte legado. O fonte `hub_scripts/data_quality_check/README.md` não foi alterado; a regra `CONTENT_REQUIRES_UTF8_LF` da primitive e o teste negativo sem newline seguem intactos.
+
+### Notas
+
+- (Claude) A1-LAB R1 sobre `5d61b8e52b4c` (Windows 11/NTFS, Python 3.12.10): FAIL em G1, `test_real_script_validation` BLOCKED por `CONTENT_REQUIRES_UTF8_LF`; G2–G8 não executados. O FAIL permanece registrado; a R2 roda sobre novo SHA e está pendente. Policy, skill, contrato, manifest, writer e validator de produção inalterados; L2, sem merge.
+
+## 2026-09-23 — SER01 A1: validação repo-side pré-promoção de criar-objeto
+
+### Adicionado
+
+- (ChatGPT) Primitive `tools/skill_enforcement/ser01_object_validation.py`: valida pacotes candidatos em clone isolado, reutiliza o preflight e as ferramentas canônicas e vincula entrada, bytes, base e resultados sem aplicar arquivos ao produto original.
+- (ChatGPT) Suíte de envelope/integridade e integrações opt-in; desenho, matriz operação×tipo×host×efeito e missão de laboratório restrita. O registro local não se apresenta como Receipt EDA nem como autenticação de execução ou autoridade humana.
+
+### Limites e evidências
+
+- (ChatGPT) Desenvolvimento em Linux/Python 3.13.5: 24 métodos unitários PASS e sete integrações não executadas; três cenários adicionais com supervisor/validators sintéticos não constituem certificação canônica. Falhas iniciais de expectativa de teste permanecem no bundle de desenvolvimento.
+- (ChatGPT) Policy, skill, contrato, writer, manifests e infraestrutura A07 permanecem intactos. L2→L3, publicação, merge e SER02 não autorizados; A1 não encerra a SER01. Gates de clone completo ficam para execução delegada sobre SHA congelado após preparação documental.
+
 ## 2026-09-23 — manutenção MM03: falso positivo de identificador corporativo
 
 ### Corrigido
