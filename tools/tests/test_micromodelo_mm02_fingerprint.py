@@ -125,6 +125,14 @@ class MicromodeloMM02FingerprintTests(unittest.TestCase):
         )
         self.assert_preserves(document)
 
+    def test_editorial_duplicate_in_use_lists_does_not_change_fingerprint(self) -> None:
+        document = copy.deepcopy(self.valid)
+        base = document["negocio"]["uso_pretendido"][0]
+        document["negocio"]["uso_pretendido"].append(
+            "  " + "   ".join(base.upper().split()) + "!!!  "
+        )
+        self.assert_preserves(document)
+
     def test_human_version_title_and_objective_are_not_material_identity(self) -> None:
         document = copy.deepcopy(self.valid)
         document["identidade"]["micromodel_version"] = "1.0.1"
