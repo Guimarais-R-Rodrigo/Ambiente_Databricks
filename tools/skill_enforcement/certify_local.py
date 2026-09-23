@@ -769,6 +769,66 @@ class _ProcessTemporaryDirectory(tempfile.TemporaryDirectory):
             return result
 
 
+def _open_process_stream(path: Path):
+    """Open one process stream with delete sharing on Windows.
+
+    The certifier closes its own Python streams before TemporaryDirectory cleanup,
+    but the Windows launcher/child receive duplicated standard handles. A process
+    can be terminated while a duplicated file handle is still completing kernel
+    teardown. Opening the original stream with FILE_SHARE_DELETE makes that late
+    inherited handle compatible with unlink/rename; it does not delete anything,
+    retry cleanup, wait, or convert a cleanup error into PASS.
+    """
+    if os.name != "nt":
+        return path.open("w+b")
+
+    import ctypes
+    import msvcrt
+    from ctypes import wintypes as w
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.CreateFileW.restype = w.HANDLE
+    kernel32.CreateFileW.argtypes = [
+        w.LPCWSTR, w.DWORD, w.DWORD, ctypes.c_void_p,
+        w.DWORD, w.DWORD, w.HANDLE,
+    ]
+    kernel32.CloseHandle.restype = w.BOOL
+    kernel32.CloseHandle.argtypes = [w.HANDLE]
+
+    GENERIC_READ = 0x80000000
+    GENERIC_WRITE = 0x40000000
+    FILE_SHARE_READ = 0x00000001
+    FILE_SHARE_WRITE = 0x00000002
+    FILE_SHARE_DELETE = 0x00000004
+    CREATE_ALWAYS = 2
+    FILE_ATTRIBUTE_NORMAL = 0x00000080
+    INVALID_HANDLE_VALUE = ctypes.c_void_p(-1).value
+
+    handle = kernel32.CreateFileW(
+        str(path),
+        GENERIC_READ | GENERIC_WRITE,
+        FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+        None,
+        CREATE_ALWAYS,
+        FILE_ATTRIBUTE_NORMAL,
+        None,
+    )
+    if handle == INVALID_HANDLE_VALUE:
+        raise ctypes.WinError(ctypes.get_last_error())
+
+    flags = os.O_RDWR | getattr(os, "O_BINARY", 0)
+    try:
+        fd = msvcrt.open_osfhandle(int(handle), flags)
+    except (OSError, ValueError):
+        kernel32.CloseHandle(handle)
+        raise
+    try:
+        return os.fdopen(fd, "w+b")
+    except BaseException:
+        os.close(fd)
+        raise
+
+
 def _run(command: Sequence[str]) -> tuple[int, str, float]:
     """Compatibility tuple; full observed metadata is appended to processes.json.
 
@@ -790,7 +850,7 @@ def _run(command: Sequence[str]) -> tuple[int, str, float]:
     pending_exit = None
     with _ProcessTemporaryDirectory(record) as temporary:
         path = Path(temporary)
-        with (path / "stdout").open("w+b") as stdout, (path / "stderr").open("w+b") as stderr:
+        with _open_process_stream(path / "stdout") as stdout, _open_process_stream(path / "stderr") as stderr:
             try:
                 kwargs = {"cwd": REPO_ROOT, "stdout": stdout, "stderr": stderr, "env": env}
                 if os.name == "nt":

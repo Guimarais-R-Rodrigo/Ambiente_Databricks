@@ -492,6 +492,48 @@ class CertifierTests(unittest.TestCase):
         self.assertEqual("UNOBSERVABLE", observation["pid_states"]["launcher_pid"]["status"])
         self.assertEqual("UNOBSERVABLE", observation["pid_states"]["pid"]["status"])
 
+    def test_process_stream_roundtrip(self):
+        path = Path(self.tmp.name) / "process-stream-roundtrip.bin"
+        with cert._open_process_stream(path) as stream:
+            stream.write(b"roundtrip")
+            stream.flush()
+            stream.seek(0)
+            self.assertEqual(b"roundtrip", stream.read())
+
+    @unittest.skipUnless(os.name == "nt", "Windows-only FILE_SHARE_DELETE regression")
+    def test_windows_process_stream_allows_unlink_while_child_holds_handle(self):
+        directory = Path(self.tmp.name) / "share-delete"
+        directory.mkdir()
+        stream_path = directory / "stderr"
+        ready = directory / "ready"
+        stream = cert._open_process_stream(stream_path)
+        process = None
+        try:
+            source = (
+                "import time;from pathlib import Path;"
+                "print('child-holds-stream',flush=True);"
+                f"Path({str(ready)!r}).write_text('ready');"
+                "time.sleep(30)"
+            )
+            process = subprocess.Popen(
+                [sys.executable, "-B", "-c", source],
+                stdin=subprocess.DEVNULL,
+                stdout=stream,
+                stderr=stream,
+            )
+            stream.close()
+            wait_for_file(ready)
+            self.assertTrue(alive(process.pid))
+            stream_path.unlink()
+            self.assertFalse(stream_path.exists())
+        finally:
+            if not stream.closed:
+                stream.close()
+            if process is not None and process.poll() is None:
+                process.kill()
+            if process is not None:
+                process.wait(timeout=5)
+
     def test_keyboard_interrupt_cleanup_and_output(self):
         code, output, record = self.interrupt_fixture("after_output")
         self.assertEqual(130, code)
