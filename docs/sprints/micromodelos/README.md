@@ -1,6 +1,6 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: **MM00 integrada. MM01 aceita e integrada pela PR #51 no merge `73d7659dcf11509a7fba392221c4810d10401c35`. MM02 = `NOT_STARTED`.**
+> Estado: **MM00 integrada. MM01 aceita e integrada pela PR #51. MM02 = `EM_IMPLEMENTACAO` na branch `micromodelos/mm02-spec-fingerprint`; candidata ainda não congelada/certificada.**
 
 ## Objetivo
 
@@ -9,6 +9,11 @@ Construir uma esteira rastreável e auditável para descobrir, especificar, estu
 O repositório usa somente fixtures e placeholders. O catálogo real do trabalho é representado aqui por `<CATALOGO_PRODUTO>` e o binding para nomes reais ocorre apenas no workspace autorizado.
 
 Documentos vivos desta fase:
+
+- [MM02 — spec fingerprint](MM02/README.md);
+- [MM02 — matriz de materialidade](MM02/MATRIZ_MATERIALIDADE.md);
+- [MM02 — testes e certificação](MM02/TESTES.md);
+- [MM02 — checkpoint](MM02/CHECKPOINT.md);
 
 - [revisão pós-MM01/SEF/PSEF/SER](REVISAO_PLANO_POS_SEF_2026-09-23.md);
 - [retrospectiva operacional da MM01](RETROSPECTIVA_MM01.md);
@@ -124,10 +129,12 @@ A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprin
 **Naquele gate histórico, MM02 permanecia bloqueada.**
 
 
-## Próxima sprint
+## Sprint corrente
 
 ```text
-MM02 = NOT_STARTED
+MM02 = EM_IMPLEMENTACAO
+CANDIDATE_FREEZE = NOT_REACHED
+LOCAL_EXECUTION = NOT_RUN
 ```
 
-MM02 não é iniciada por esta revisão documental. Após a integração desta revisão, a implementação funcional de `spec_fingerprint` deverá ser aberta em frente própria. O escopo congelado de MM02 está na [revisão pós-SEF](REVISAO_PLANO_POS_SEF_2026-09-23.md) e sua certificação seguirá o [protocolo de MM02–MM13](PROTOCOLO_CERTIFICACAO_SPRINTS.md).
+A MM02 foi aberta em frente própria após a integração da revisão pós-SEF. O escopo e a matriz material estão em [MM02](MM02/README.md); sua certificação segue o [protocolo de MM02–MM13](PROTOCOLO_CERTIFICACAO_SPRINTS.md).
