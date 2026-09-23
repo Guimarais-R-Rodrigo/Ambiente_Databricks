@@ -47,6 +47,43 @@ class TestMM01LocalCertification(unittest.TestCase):
                 results.append(self._result(step_id))
         return results
 
+    def test_safe_stdout_write_survives_unencodable_console(self) -> None:
+        raw = io.BytesIO()
+        console = io.TextIOWrapper(raw, encoding="cp1252", errors="strict")
+        try:
+            with mock.patch.object(cert.sys, "stdout", console):
+                cert._safe_stdout_write("unicode replacement: \ufffd\n")
+                console.flush()
+            rendered = raw.getvalue().decode("cp1252")
+            self.assertIn(r"\\ufffd", rendered)
+        finally:
+            console.close()
+
+    def test_run_step_forces_python_utf8_stdio(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            logs = root / "logs"
+            logs.mkdir()
+            step = cert.Step(
+                "UTF8_TEST",
+                "test",
+                (
+                    sys.executable,
+                    "-c",
+                    "import os,sys; print(os.environ.get('PYTHONUTF8')); "
+                    "print(os.environ.get('PYTHONIOENCODING')); "
+                    "print(sys.stdout.encoding)",
+                ),
+            )
+            captured = io.StringIO()
+            with contextlib.redirect_stdout(captured):
+                result = cert.run_step(step, root, logs)
+
+            self.assertEqual(result.status, "PASS")
+            output = (logs / "UTF8_TEST.log").read_text(encoding="utf-8")
+            self.assertIn("\n1\n", output)
+            self.assertIn("\nutf-8\n", output.lower())
+
     def test_run_step_keyboard_interrupt_is_structured_fail(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
