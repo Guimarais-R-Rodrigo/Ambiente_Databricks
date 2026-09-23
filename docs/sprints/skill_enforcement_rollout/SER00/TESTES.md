@@ -20,31 +20,39 @@ A base é uma transcrição identificada das leituras da API, não um clone inte
 
 Calcular SHA-256 e Git blob SHA-1 de cada arquivo local. Depois da criação do commit, comparar os blobs da árvore GitHub e o delta contra a baseline. Vincular o resultado ao HEAD/tree/base no manifesto externo e na PR. Conferir que ambiente_fonte, Novo_Ambiente_Simulado, tools e .github conservaram as trees originais. Essa comparação prova escopo/integridade do delta, não execução dos testes históricos.
 
-## Complemento local obrigatório antes de merge
+## Certificação final obrigatória antes de merge
 
-Em clone autenticado independente, confirmar origin/main, HEAD da SER, merge-base, ahead/behind e estado de trabalho. Não reaproveitar comandos/resultados de outra branch. Obter bytes completos e aplicar ENTRADA_CHANGELOG.md no CHANGELOG raiz sem perder histórico; qualquer mudança cria nova candidata.
+A manutenção A07/PR #102 já está integrada. Na HEAD final da SER00, confirmar `origin/main=515e673b17f21d4c912d9ae866a7e31967fd4488`, merge-base igual à main, `behind=0`, clone não shallow e worktree limpa. Não transportar PASS da #102 para esse novo SHA.
 
-Conferir --help das interfaces existentes. Executar sequencialmente, com logs e diretório externo novo:
+Preparar dependências V06 somente pelo lockfile quando ausentes e provar que `package.json`/`pnpm-lock.yaml` não mudaram. Em seguida executar, sem retry-until-green:
 
 ```text
 python -B tools/skill_enforcement/validate_contracts.py
 python -B tools/skill_enforcement/se07_policy.py
-python -B tools/skill_enforcement/certify_local.py --profile se08
 python -B tools/validate_assistant.py
 python -B tools/render_simulado.py --write
 python -B tools/validate_assistant.py --conferir-readme
-python -B tools/ci_local.py --verbose
+python tools/ci_local.py --verbose
+python -B tools/skill_enforcement/certify_local.py --profile se08 --evidence-dir <NOVO_DIRETORIO_EXTERNO>
 ```
 
-Para SER00 documental, a policy ainda é a baseline; A01 é conflito prospectivo de promoção, não autorização para omitir suite atual. Se snapshot README falhar, registrar a falha, atualizar somente o que o validator comprovar e criar nova rodada no novo SHA. Nunca editar derivado manualmente. Render que produza drift inesperado exige diagnóstico, não aceitação silenciosa.
-
-A01–A03 estão arquiteturalmente resolvidas. O complemento local A07 continua obrigatório; seu PASS não promove skill nem autoriza SER01 por conta própria.
+O FULL só deve rodar se os gates anteriores passarem. Espera-se que o snapshot confirme os valores já medidos na A07-R1, agora versionados: `repo (identidade)=1660`, `repo (links)=2126`; qualquer divergência é FAIL e deve ser preservada. Nunca editar derivado manualmente. A01–A03 estão resolvidas e a manutenção A07 está integrada; o PASS final apenas certifica a SER00 documental e não promove skill nem autoriza SER01.
 
 ## Estados
 
-GITHUB_ACTIONS=DEFERRED_NO_CREDITS; DATABRICKS_FREE=NOT_RUN; GENIE_BEHAVIOR=NOT_RUN; CANONICAL_REPO_VALIDATORS=NOT_RUN enquanto A07 não for executada. Execuções incidentais de Actions serão observadas e preservadas na PR/manifesto, sem rerun. Ausência de créditos não é FAIL funcional.
+GITHUB_ACTIONS=DEFERRED_NO_CREDITS; DATABRICKS_FREE=NOT_RUN; GENIE_BEHAVIOR=NOT_RUN; FINAL_SER00_CANONICAL_VALIDATORS=NOT_RUN_ON_FINAL_SHA. Execuções incidentais de Actions serão observadas e preservadas na PR/manifesto, sem rerun. Ausência de créditos não é FAIL funcional.
 
 
 ## Rodada R2 pós-aceite
 
 A R2 documental foi executada sobre os bytes reconciliados antes da publicação final. Ela inclui ADR-0022, índice de ADRs, 14 targets CONFIRMED, escopo puramente documental e estados pós-aceite. Resultado: `PASS_38_OF_38_DOCUMENTARY_CHECKS`. Isso continua separado dos validadores canônicos A07 e não herda o PASS da R1.
+
+
+## Histórico A07 preservado
+
+- R1 SER00: FAIL funcional de storage + snapshot stale; sem retry.
+- R2 manutenção #102: storage 9/9, Windows 11/11 e certifier 51/51 PASS; CI bloqueado por dependências Node ausentes.
+- R3: ambiente preparado; CI revelou somente snapshot herdado da PSEF00; causa +7 arquivos/+6 links comprovada.
+- R4: CI 10/10 PASS e FULL SE08 21/21 PASS em `4a70834d...`, worktree limpa, zero infrastructure errors; manutenção integrada em `515e673b...`.
+
+Nenhum desses PASS substitui a certificação da HEAD final SER00.
