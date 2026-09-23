@@ -55,7 +55,7 @@ class TestMM01LocalCertification(unittest.TestCase):
                 cert._safe_stdout_write("unicode replacement: \ufffd\n")
                 console.flush()
             rendered = raw.getvalue().decode("cp1252")
-            self.assertIn(r"\\ufffd", rendered)
+            self.assertIn(r"\ufffd", rendered)
         finally:
             console.close()
 
