@@ -1,6 +1,6 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: **MM00 integrada. MM01 aceita e integrada pela PR #51. MM02 = `EM_IMPLEMENTACAO` na branch `micromodelos/mm02-spec-fingerprint`; candidata ainda não congelada/certificada.**
+> Estado: **MM00 integrada. MM01 aceita e integrada pela PR #51. MM02 passou smoke, FULL single-shot e auditoria independente; fechamento documental mínimo aplicado, com revalidação final ainda pendente. PR #109 permanece Draft.**
 
 ## Objetivo
 
@@ -52,7 +52,7 @@ A exceção D1-B terminou com o fechamento de Q-01 e não se propaga às próxim
 
 ## Estado vigente da MM01
 
-A MM01 foi aceita e integrada. O HEAD da branch no merge foi `fa1a3653e60472d171307663d1175344bb3f6a8d`; o merge da PR #51 é `73d7659dcf11509a7fba392221c4810d10401c35`. O contrato canônico `micromodelo.yaml` está na `main`; MM02 não foi iniciada.
+A MM01 foi aceita e integrada. O HEAD da branch no merge foi `fa1a3653e60472d171307663d1175344bb3f6a8d`; o merge da PR #51 é `73d7659dcf11509a7fba392221c4810d10401c35`. O contrato canônico `micromodelo.yaml` está na `main`; a MM02 foi aberta em frente própria e está em fechamento pós-certificação.
 
 O fechamento consolidado está no [checkpoint pós-merge](MM01/POST_MERGE_CHECKPOINT.md). A arquitetura prospectiva passa a consumir a [revisão pós-SEF](REVISAO_PLANO_POS_SEF_2026-09-23.md) sem reabrir MM01.
 
@@ -132,9 +132,12 @@ A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprin
 ## Sprint corrente
 
 ```text
-MM02 = EM_IMPLEMENTACAO
-CANDIDATE_FREEZE = NOT_REACHED
-LOCAL_EXECUTION = NOT_RUN
+MM02 = POS_CERTIFICACAO
+CERTIFIED_SHA = 3d3c6d40263a253449b448a3bcca679143252e54
+FULL_CERTIFICATION = PASS
+INDEPENDENT_AUDIT = APTA_COM_CORRECAO_PROBATORIA
+AUDIT_FINDINGS_OPEN = 0
+FINAL_TREE_REVALIDATION = PENDING
 ```
 
 A MM02 foi aberta em frente própria após a integração da revisão pós-SEF. O escopo e a matriz material estão em [MM02](MM02/README.md); sua certificação segue o [protocolo de MM02–MM13](PROTOCOLO_CERTIFICACAO_SPRINTS.md).
