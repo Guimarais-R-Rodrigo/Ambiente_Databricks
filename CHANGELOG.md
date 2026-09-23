@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-09-23 — SER01 A4-FREE R2: corrigidos prechecks da autoria
+
+### Corrigido
+
+- (ChatGPT) `ser01_free_probe.py`: literal `bytes` com caracteres não-ASCII substituído por texto UTF-8 explicitamente codificado; F01 passa também a exigir que o produtor repo-side não conste dos artifacts publicados.
+- (ChatGPT) `README.md`: snapshot reconciliado com a medição real da A4-R1 (`repo identidade=1732`, `repo links=2176`).
+
+### Evidência preservada
+
+- (ChatGPT) A4-FREE R1 em `fd04bd27...` permanece FAIL de precheck: validator estrutural PASS, snapshot stale e probe com SyntaxError; dry-run/publicação/import/probe não executados e zero escrita no workspace.
+- (ChatGPT) O usuário renovou depois da parada a sessão OAuth do profile FREE; isso remove o bloqueio ambiental para R2, sem reclassificar a R1.
+
+### Limites
+
+- (ChatGPT) Nenhum arquivo em `ambiente_fonte/` ou `Novo_Ambiente_Simulado/` mudou. Policy continua L2/audit; A4-GENIE, promoção e merge permanecem não autorizados.
+
 ## 2026-09-23 — SER01 A4: correção documental da montagem de autoria
 
 ### Corrigido

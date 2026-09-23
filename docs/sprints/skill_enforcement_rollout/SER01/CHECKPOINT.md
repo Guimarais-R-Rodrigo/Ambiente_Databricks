@@ -246,3 +246,25 @@ MERGE = NOT_AUTHORIZED
 ```
 
 O SHARE A3-R3 foi auditado: SHA externo confere, 510/510 arquivos manifestados possuem hash/tamanho corretos, `raw_bindings` preserva a identidade RAW e o output de `verify_certification` é byte-idêntico ao hash RAW declarado. A4 não modifica os artifacts protegidos da A3.
+
+## A4-FREE R1 — FAIL de precheck e corretiva R2 (registro aditivo, 2026-09-23)
+
+```text
+A4_R1_SHA = fd04bd27d86df65b1a8ea22624b995e89326239c
+A4_R1_RESULT = FAIL_PRECHECK
+VALIDATE_ASSISTANT = PASS
+README_SNAPSHOT = FAIL (1729/2173 stale; medido 1732/2176)
+PROBE_SYNTAX = FAIL (non-ASCII bytes literal)
+DRY_RUN = NOT_RUN_PREVIOUS_GATE_FAILED
+PUBLISH = NOT_RUN_PREVIOUS_GATE_FAILED
+PROBE_IMPORT = NOT_RUN
+PROBE_EXECUTION = NOT_RUN
+WORKSPACE_WRITES = 0
+AUTH_AT_STOP = INVALID_OAUTH_SESSION
+AUTH_ADDENDUM = RENEWED_BY_USER_AFTER_STOP
+A4_FREE = FAIL_ON_R1
+A4_GENIE = NOT_RUN
+CURRENT_LEVEL = L2_UNCHANGED
+```
+
+A R1 parou corretamente antes de qualquer publicação. A corretiva R2 troca somente o literal `bytes` inválido por `str.encode("utf-8")`, torna explícito no F01 que o produtor repo-side não pode ser artifact publicado e reconcilia o snapshot medido do README. O profile FREE foi renovado pelo usuário depois da parada; isso não reclassifica R1 e apenas remove o bloqueio ambiental para a próxima rodada.

@@ -127,7 +127,7 @@ def _policy_entry(assistant_root: Path) -> Mapping[str, Any]:
 def _synthetic_record(verifier) -> dict[str, Any]:
     base_sha = "a" * 40
     path = "hub_lab/ser01_a4_fixture.py"
-    content = b"# Databricks notebook source\n# Fixture sintética A4; não é execução repo-side.\n"
+    content = "# Databricks notebook source\n# Fixture sintética A4; não é execução repo-side.\n".encode("utf-8")
     binding = {
         "operation": "create",
         "object_type": "notebook",
@@ -249,6 +249,10 @@ cases["F01_release_and_route_contract"] = {
         and ov.get("apply_authorized_by_receipt") is False
         and "NOT_AVAILABLE" in skill_text
         and "Sem Receipt válido" in skill_text
+        and not any(
+            key == "tools/skill_enforcement/ser01_object_validation.py"
+            for key in published_before
+        )
     ),
     "manifest_issues": before_issues,
     "object_validation_contract": ov,

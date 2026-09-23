@@ -145,3 +145,11 @@ A primeira tentativa da A3-R3 parou antes do freeze por falha estrutural da `mai
 `A4_RUNBOOK_FREE.md` exige dry-run/publicação/verify rápido/completo/conteúdo e execução única do probe. `A4_GENIE_CASES.md` fixa cinco chats novos para rota indisponível, bypass, Receipt inválido, autoridade limitada e negativo de roteamento. Preservar respostas literais e separar task correctness, agent adherence e canonical compliance.
 
 A4 não requer mudança em `ambiente_fonte`; qualquer delta em produto desde `fcec3e34...` bloqueia a execução e volta ao ChatGPT.
+
+### A4-FREE R2 — regressões específicas
+
+- o probe deve compilar sem gerar artefato versionado;
+- F01 deve exigir explicitamente `producer_is_published_artifact=false`;
+- `validate_assistant.py --conferir-readme` deve passar com 1732/2176 ou com nova medição real se a árvore tiver mudado;
+- autenticação renovada não transporta nenhum resultado funcional da R1;
+- publicação e probe usam nova rodada/evidência e não reutilizam outputs R1.
