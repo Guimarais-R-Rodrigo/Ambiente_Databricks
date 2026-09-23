@@ -203,7 +203,9 @@ def verify_receipt(receipt: Any, *, local_record: Mapping[str, Any] | None = Non
         issues.append("BASE_BINDING_MISMATCH")
     if expected_candidate_sha256 is not None and binding.get("candidate_sha256") != expected_candidate_sha256:
         issues.append("CANDIDATE_BINDING_MISMATCH")
-    if local_record is not None:
+    if local_record is None:
+        issues.append("LOCAL_RECORD_REQUIRED")
+    else:
         local_issues = _local_record_issues(local_record)
         if local_issues:
             issues.extend("LOCAL:" + item for item in local_issues)

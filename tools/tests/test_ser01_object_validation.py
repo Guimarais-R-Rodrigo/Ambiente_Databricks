@@ -317,6 +317,15 @@ class IntegrityTests(unittest.TestCase):
         self.assertFalse(verifier.verify_receipt(receipt, expected_base_sha="b" * 40)["valid"])
         self.assertFalse(verifier.verify_receipt(receipt, expected_candidate_sha256="c" * 64)["valid"])
 
+    def test_domain_receipt_requires_bound_local_record(self):
+        record = synthetic_record(candidate())
+        checked = module._domain_receipt_module().verify_receipt(
+            record["object_validation_receipt"], expected_run_id="synthetic-run",
+            expected_base_sha="a" * 40,
+            expected_candidate_sha256=record["binding"]["candidate_sha256"])
+        self.assertFalse(checked["valid"])
+        self.assertIn("LOCAL_RECORD_REQUIRED", checked["issues"])
+
 
 @unittest.skipUnless(os.environ.get("SER01_RUN_REPO_INTEGRATION") == "1", "integração em clone integral requer opt-in e evidência externa")
 class RepositoryIntegrationTests(unittest.TestCase):
@@ -397,6 +406,7 @@ class RepositoryIntegrationTests(unittest.TestCase):
         self.assertEqual(0, rows["baseline_validator"]["exit_code"])
         self.assertNotEqual(0, rows["validator"]["exit_code"])
         self.assertEqual(report["original_before"], report["original_after"])
+        self.assertNotIn("object_validation_receipt", report)
         self.assertFalse((self.assistant / path).exists())
 
     def test_incorrect_public_api_is_rejected_without_repairing_candidate(self):
@@ -409,6 +419,7 @@ class RepositoryIntegrationTests(unittest.TestCase):
         report = module.validate_package(data, repo_root=ROOT, evidence_dir=self.evidence / label, evidence_authorized=True)
         self.assertEqual("FAIL", report["status"], report["issues"])
         self.assertTrue(any(c["name"] == "canonical_public_api" and c["status"] == "FAIL" for c in report["checks"]))
+        self.assertNotIn("object_validation_receipt", report)
         self.assertEqual(report["original_before"], report["original_after"])
         overlay = self.evidence / label / "overlay/ambiente_fonte/.assistant" / rel
         self.assertEqual(data["files"][rel].encode("utf-8"), overlay.read_bytes())

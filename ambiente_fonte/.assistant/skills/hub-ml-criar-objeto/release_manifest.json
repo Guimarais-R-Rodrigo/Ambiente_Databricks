@@ -46,7 +46,7 @@
     {
       "path": "skills/hub-ml-criar-objeto/scripts/object_validation.py",
       "role": "object_validation_receipt_verifier",
-      "git_blob_sha1": "c2008eb3726b2f41b03868a105d5cca35dc758b5"
+      "git_blob_sha1": "cf32aa6b2b3a3d91244b1e7497a09dab9b93eec0"
     }
   ]
 }
