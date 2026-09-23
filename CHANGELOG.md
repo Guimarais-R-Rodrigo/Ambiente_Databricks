@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-09-23 — SER01 A1 encerrada; A2 liga object_validation à skill publicada
+
+### Certificado
+
+- (ChatGPT) A1-LAB R4 em `aef0f10886689a0018635535c0af105e62629de1`: G1 32/32, G2–G8 verdes, CI local 10/10 e FULL SE08 21/21 como regressão histórica, Windows 11/NTFS, com push fast-forward.
+
+### Adicionado
+
+- (ChatGPT) A2: `skills/hub-ml-criar-objeto/scripts/object_validation.py` define `SER01-OBJECT-VALIDATION-RECEIPT-1` e verifier de integridade/binding.
+- (ChatGPT) O produtor repo-side passa a emitir esse Receipt apenas em PASS; contrato, SKILL e release manifest declaram a rota sem fingir execução de `tools/` no workspace.
+
+### Limites
+
+- (ChatGPT) Receipt não autentica pessoa/executor, não reverifica execução, mantém `runtime_validation=NOT_RUN`, não autoriza apply e não altera `current_level=L2`, rollout, policy ou merge.
+
 ## 2026-09-23 — SER01 A1-LAB R3 verde local e reconciliação R4 com a MM02
 
 ### Notas

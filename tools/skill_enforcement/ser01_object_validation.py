@@ -14,6 +14,7 @@ import os
 import platform
 import re
 import sys
+import types
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath, PureWindowsPath
@@ -29,6 +30,7 @@ SECTIONS = {"constants", "display", "ml", "spark", "testing", "visual"}
 TOOL = "tools/skill_enforcement/ser01_object_validation.py"
 PREFLIGHT = "ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/scripts/preflight.py"
 POLICY = "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json"
+DOMAIN_RECEIPT = "ambiente_fonte/.assistant/skills/hub-ml-criar-objeto/scripts/object_validation.py"
 REQUIRED_COMMANDS = {"identity_before", "status_before", "history", "preflight",
                      "baseline_validator", "clone", "checkout", "stage", "validator",
                      "overlay_head", "overlay_index", "overlay_diff", "overlay_untracked",
@@ -212,8 +214,22 @@ def _runtime():
 
 def _seal(report: dict[str, Any]) -> dict[str, Any]:
     report.pop("record_id", None)
-    report["record_id"] = "ser01v1:" + digest(report)
+    body = {k: v for k, v in report.items() if k != "object_validation_receipt"}
+    report["record_id"] = "ser01v1:" + digest(body)
     return report
+
+
+def _domain_receipt_module():
+    path = ROOT / DOMAIN_RECEIPT
+    name = "_ser01_object_validation_receipt_" + uuid.uuid4().hex
+    module = types.ModuleType(name)
+    module.__file__ = str(path)
+    sys.modules[name] = module
+    try:
+        exec(compile(path.read_bytes(), str(path), "exec"), module.__dict__)
+        return module
+    finally:
+        sys.modules.pop(name, None)
 
 
 def verify_record(report: Any, candidate: Any, *, expected_base_sha: str,
@@ -224,7 +240,7 @@ def verify_record(report: Any, candidate: Any, *, expected_base_sha: str,
         envelope = inspect_candidate(candidate)
         if not isinstance(report, dict):
             raise Blocked("RECORD_INVALID")
-        body = {k: v for k, v in report.items() if k != "record_id"}
+        body = {k: v for k, v in report.items() if k not in {"record_id", "object_validation_receipt"}}
         if report.get("record_id") != "ser01v1:" + digest(body):
             issues.append("RECORD_DIGEST_MISMATCH")
         if report.get("record_version") != RECORD_VERSION:
@@ -280,6 +296,13 @@ def verify_record(report: Any, candidate: Any, *, expected_base_sha: str,
                 or report.get("policy_promotion_authorized") is not False
                 or report.get("scope") != "CREATE_PACKAGE_LOCAL_STRUCTURAL_VALIDATION_ONLY"):
             issues.append("AUTHORITY_OR_SCOPE_OVERCLAIM")
+        if report.get("status") == "PASS":
+            receipt_result = _domain_receipt_module().verify_receipt(
+                report.get("object_validation_receipt"), local_record=report,
+                expected_run_id=expected_run_id, expected_base_sha=expected_base_sha,
+                expected_candidate_sha256=envelope["candidate_sha256"])
+            if receipt_result.get("valid") is not True:
+                issues.append("OBJECT_VALIDATION_RECEIPT_INVALID")
     except (ValueError, TypeError, KeyError, AttributeError, UnicodeError) as exc:
         issues.append("MALFORMED_RECORD:" + type(exc).__name__)
     return {"valid": not issues, "issues": issues, "verification_scope": "INTEGRITY_ONLY",
@@ -378,7 +401,7 @@ def validate_package(candidate: Any, *, repo_root: Path, evidence_dir: Path,
             raise Blocked("COMPLETE_HISTORY_REQUIRED")
         report["base_tree"] = git("base_tree", "rev-parse", "HEAD^{tree}")
         report["source_hashes"] = {p: hashlib.sha256((repo / p).read_bytes()).hexdigest()
-                                   for p in (TOOL, PREFLIGHT, POLICY, "tools/validate_assistant.py",
+                                   for p in (TOOL, PREFLIGHT, POLICY, DOMAIN_RECEIPT, "tools/validate_assistant.py",
                                              "tools/skill_enforcement/validate_create_readme.py",
                                              "tools/skill_enforcement/certify_local.py")}
         code, output = run("preflight", [sys.executable, "-B", str(repo / PREFLIGHT),
@@ -464,6 +487,17 @@ def validate_package(candidate: Any, *, repo_root: Path, evidence_dir: Path,
                 report["issues"].append("ORIGINAL_POSTCHECK_FAILED:" + type(exc).__name__)
         report["ended_at_utc"] = _utc()
     _seal(report)
+    if report["status"] == "PASS":
+        try:
+            domain_receipt = _domain_receipt_module().build_receipt(report)
+            if domain_receipt is None:
+                raise RuntimeError("DOMAIN_RECEIPT_BUILD_REJECTED")
+            report["object_validation_receipt"] = domain_receipt
+        except Exception as exc:
+            report["status"] = "FAIL"
+            report["issues"].append("DOMAIN_RECEIPT_FAILED:" + type(exc).__name__ + ":" + str(exc))
+            report.pop("object_validation_receipt", None)
+            _seal(report)
     if reserved is not None:
         try:
             pending = reserved / "validation.pending.json"
@@ -473,6 +507,7 @@ def validate_package(candidate: Any, *, repo_root: Path, evidence_dir: Path,
         except BaseException as exc:
             report["status"] = "FAIL"
             report["issues"].append("EVIDENCE_PERSISTENCE_FAILED:" + type(exc).__name__)
+            report.pop("object_validation_receipt", None)
             _seal(report)
     return report
 

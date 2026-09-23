@@ -63,7 +63,9 @@ def synthetic_record(data):
               "original_after": {"head": "a" * 40, "status": ""},
               "commands": [{"name": n, "exit_code": 0, "process_cleanup": "COMPLETE", "command_started": True} for n in names],
               "checks": [{"name": n, "status": "PASS"} for n in checks]}
-    return module._seal(report)
+    module._seal(report)
+    report["object_validation_receipt"] = module._domain_receipt_module().build_receipt(report)
+    return report
 
 
 class EnvelopeTests(unittest.TestCase):
@@ -292,6 +294,29 @@ class IntegrityTests(unittest.TestCase):
         for item in (None, [], {}, {"commands": [None]}, {"checks": [True]}):
             self.assertFalse(self.verify(item)["valid"])
 
+    def test_domain_receipt_is_required_and_verifiable(self):
+        record = synthetic_record(candidate())
+        receipt = record["object_validation_receipt"]
+        checked = module._domain_receipt_module().verify_receipt(receipt, local_record=record,
+            expected_run_id="synthetic-run", expected_base_sha="a" * 40,
+            expected_candidate_sha256=record["binding"]["candidate_sha256"])
+        self.assertTrue(checked["valid"], checked)
+        record.pop("object_validation_receipt")
+        self.assertFalse(self.verify(record)["valid"])
+
+    def test_domain_receipt_tamper_is_rejected(self):
+        record = synthetic_record(candidate())
+        record["object_validation_receipt"]["claims"]["runtime_validation"] = "PASS"
+        self.assertFalse(self.verify(record)["valid"])
+
+    def test_domain_receipt_expected_binding_mismatch_is_rejected(self):
+        record = synthetic_record(candidate())
+        verifier = module._domain_receipt_module()
+        receipt = record["object_validation_receipt"]
+        self.assertFalse(verifier.verify_receipt(receipt, expected_run_id="other")["valid"])
+        self.assertFalse(verifier.verify_receipt(receipt, expected_base_sha="b" * 40)["valid"])
+        self.assertFalse(verifier.verify_receipt(receipt, expected_candidate_sha256="c" * 64)["valid"])
+
 
 @unittest.skipUnless(os.environ.get("SER01_RUN_REPO_INTEGRATION") == "1", "integração em clone integral requer opt-in e evidência externa")
 class RepositoryIntegrationTests(unittest.TestCase):
@@ -314,6 +339,11 @@ class RepositoryIntegrationTests(unittest.TestCase):
         self.assertEqual("PASS", report["status"], f"{report['issues']}; evidência={destination}")
         checked = module.verify_record(report, data, expected_base_sha=self.base, expected_run_id=report["run_id"])
         self.assertTrue(checked["valid"], checked)
+        receipt_checked = module._domain_receipt_module().verify_receipt(
+            report["object_validation_receipt"], local_record=report,
+            expected_run_id=report["run_id"], expected_base_sha=self.base,
+            expected_candidate_sha256=report["binding"]["candidate_sha256"])
+        self.assertTrue(receipt_checked["valid"], receipt_checked)
         self.assertFalse((self.assistant / report["binding"]["destination_relative"]).exists())
 
     def replica(self, kind, source_relative):
