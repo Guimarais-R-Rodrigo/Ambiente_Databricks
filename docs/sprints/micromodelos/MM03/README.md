@@ -15,6 +15,7 @@ mínimo precede apenas a revalidação final e o aceite humano.
 Revalidar a árvore após este fechamento documental e solicitar aceite humano da
 PR #110. Não iniciar MM04, não retirar o Draft e não fazer merge antes desse gate.
 O [checkpoint](CHECKPOINT.md) preserva a R1 reprovada, a correção mínima e a R2.
+O [runbook de preparação local](PREPARACAO_LOCAL.md) permanece como registro histórico da campanha pré-freeze.
 O [contrato](CONTRATO_METADATA.md) continua dono do escopo técnico; a
 [matriz de testes](TESTES.md) continua dona dos gates.
 
