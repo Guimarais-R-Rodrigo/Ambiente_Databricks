@@ -159,3 +159,13 @@ A4 não requer mudança em `ambiente_fonte`; qualquer delta em produto desde `fc
 `tools/skill_enforcement/ser_promotion_certify.py` usa identidade `SER-PROMOTION-CERT-1` e profile `ser01-object-validation-post-promotion`. Exige policy L3/L3, `policy_status=implemented`, `audit`, `stage_specific`, artifacts L3, route/evidence gates e regressões estruturais. SE07/SE08 são executados como canais históricos e só são aceitos se falharem exclusivamente nas assertions temporais L2 conhecidas; qualquer failure adicional reprova.
 
 A campanha deve ocorrer em novo SHA preparado/renderizado, evidence root externo novo, sem retry-until-green. O PASS não autoriza merge; apenas torna a candidata apta ao gate humano específico.
+
+### Promotion certifier R2
+
+- identidade `SER-PROMOTION-CERT-2` / prefixo `serprom2:`;
+- teste de policy pré-promoção usa fixture mockada e não depende do estado real;
+- árvore atual L3 precisa passar `_promotion_gate` e route gate pós-promoção;
+- classificador temporal exige conjunto exato de FAILs e zero ERROR;
+- campanha executa sua própria regressão, piloto L3 legado, policy-I/O, certifier local e CI não-SEF;
+- `test_ser_certify` pré-promoção entra como canal histórico separado com um único FAIL temporal esperado;
+- summary é persistido em `finally` após qualquer exceção posterior à reserva de evidência.

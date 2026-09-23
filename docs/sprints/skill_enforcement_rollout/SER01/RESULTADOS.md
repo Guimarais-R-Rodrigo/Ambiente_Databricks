@@ -267,3 +267,20 @@ MERGE = NOT_AUTHORIZED
 ```
 
 A mudança de policy é o último ato funcional da SER01, conforme ADR-0022. O L3 candidato só se torna promoção certificada após nova campanha SHA-bound do certifier pós-promoção e aceite humano específico. SE07/SE08 históricos permanecem imutáveis; suas assertions temporais L2 devem aparecer como canal histórico esperado, não ser reescritas.
+
+## Certificação pós-promoção R1 — bloqueio de autoria e corretiva R2 (2026-09-23)
+
+```text
+R1_SHA = 29252f33e0a3cbba77122d3c5c35ab6ee10262b6
+R1_RESULT = SER01_L3_PROMOTION_BLOCKED_AUTHORING_TEST_STALE
+PRECHECK = 2 PASS / 1 FAIL
+FAILED_TEST = test_pre_promotion_tree_is_not_yet_promotion_ready
+FREEZE = NOT_CREATED
+CERTIFIER = NOT_RUN
+PUSH = NO
+POLICY = L3_CANDIDATE_UNCHANGED
+```
+
+A auditoria confirmou também fragilidades do certifier R1: regressão própria fora da campanha; classificador histórico incapaz de distinguir ERROR; escopo inferior ao SER-CERT-1; e finalização de falha sem garantia universal de summary/git-after. A R2 corrige esses pontos sem nova alteração de policy.
+
+`SER-PROMOTION-CERT-2` executa regressão própria, SER01 36/36, piloto L3 legado, contratos/policy/validator/renderer/snapshot, policy-I/O, regressão do certifier histórico, nove etapas CI não-SEF e três canais temporais explícitos (SER-CERT-1, SE07, SE08). ERROR inesperado reprova. A policy permanece exatamente L3/L3 implemented audit stage_specific.

@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-09-23 — SER01 promoção R2: hardening do certifier pós-policy
+
+### Corrigido
+
+- (ChatGPT) R1 em `29252f33...` preservada como BLOCKED por teste pré-promoção stale; nenhum freeze/certifier/push ocorreu.
+- (ChatGPT) Certifier promovido para `SER-PROMOTION-CERT-2`: regressão própria dentro da campanha, classificador histórico que rejeita ERROR, piloto L3 legado, policy-I/O, certifier regression e CI não-SEF.
+- (ChatGPT) `test_ser_certify` pré-promoção passa a canal histórico explícito; SE07/SE08 continuam imutáveis. Apenas failures temporais exatos são admissíveis.
+- (ChatGPT) Finalização passa a persistir summary fail-closed inclusive para exceções inesperadas após a reserva de evidência.
+
+### Limites
+
+- (ChatGPT) `policy.json` não foi alterada nesta corretiva: permanece L3/L3, implemented, audit, stage_specific. A promoção continua candidata até nova certificação SHA-bound e aceite humano.
+
 ## 2026-09-23 — SER01: candidata formal de promoção L2→L3
 
 ### Promovido na candidata
