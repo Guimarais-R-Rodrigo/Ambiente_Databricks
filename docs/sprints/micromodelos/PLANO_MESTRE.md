@@ -1,5 +1,37 @@
 # Plano Mestre v2 — Framework de Micromodelos
 
+
+> **Revisão vigente pós-MM01/SEF — 2026-09-23.** MM01 está aceita e integrada; MM02 está `NOT_STARTED`. A [revisão pós-SEF](REVISAO_PLANO_POS_SEF_2026-09-23.md) complementa este Plano Mestre somente nos pontos explicitamente alterados. O restante do plano e os ADRs MM00 permanecem vigentes. O [protocolo de certificação](PROTOCOLO_CERTIFICACAO_SPRINTS.md) substitui, para MM02–MM13, o uso de FULL como detector de preconditions baratas.
+
+### Gates prospectivos adicionados
+
+```text
+MM02
+→ MM03
+→ MM04_SEF_READINESS
+→ MM04_PSEF_PROMPT_READINESS
+→ MM04
+→ MM05_PROMPT_CONTRACT_READY
+→ MM05
+→ MM06_EVIDENCE_MODEL
+→ MM06
+→ MM07
+→ MM08_ENVIRONMENT_AUTHORITY
+→ MM08
+→ MM09_BEHAVIORAL_AND_CANONICAL
+→ MM09
+→ MM10_PUBLICATION_SURFACE
+→ MM10
+→ MM11_TRANSVERSAL_REBASE
+→ MM11
+→ MM12_MIGRATION_SKILL_SEF
+→ MM12
+→ MM13
+```
+
+`current_level` observado no `policy.json` governa capacidade presente; `target_level` permanece roadmap. Não existe dependência PSEF nova para MM02/MM03. A última PSEF/SER **integrada** deve ser reconsultada nos gates em que for material.
+
+
 Data-base da iniciativa: 2026-09-14
 
 ## 1. Objetivo
