@@ -224,3 +224,19 @@ A regressão deve cobrir explicitamente:
 
 - subprocesso Python com stdout efetivamente UTF-8;
 - console `cp1252/charmap` recebendo caractere não representável sem abortar o step.
+
+
+## 16. PASS válido em baseline antigo não sobrevive a drift material da main
+
+Um bundle `PASS` permanece evidência histórica válida do par exato `HEAD × expected_main_sha` em que foi executado.
+
+Se, depois da certificação, a `main` avançar e o delta novo alterar qualquer superfície transversal material para os gates executados, o bundle anterior não pode ser promovido a freeze final da MM01, mesmo que o HEAD da MM01 não tenha mudado durante a execução.
+
+Nessa situação:
+
+1. preservar o PASS histórico sem reclassificação;
+2. reconciliar a branch MM01 com a nova `main` por merge real e auditável;
+3. recalcular snapshots derivados;
+4. executar uma nova certificação integral sobre o SHA pós-reconciliação.
+
+Esse requisito é especialmente obrigatório quando o drift da `main` altera testes, validadores ou infraestrutura transversal observada por `CI_LOCAL`.
