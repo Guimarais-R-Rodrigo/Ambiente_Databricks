@@ -21,6 +21,7 @@ Arquivo:
 - ordem serial de `fontes[].campos`;
 - ordem serial de componentes do score;
 - case/whitespace/pontuação terminal em texto normativo sob a equivalência MM01;
+- duplicação editorial equivalente em listas de uso/não uso;
 - `micromodel_version`;
 - título;
 - `negocio.objetivo`;
