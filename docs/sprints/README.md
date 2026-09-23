@@ -65,13 +65,15 @@ custos e interpretação. Estado, matriz e testes em
 [`RELATORIO_R04A.md`](readmes_objetos/RELATORIO_R04A.md). Cobertura candidata
 25/74; sem publicação, aceite antecipado ou início da R04-B.
 
-## Framework de Micromodelos — MM00 integrada; MM01 não iniciada
+## Framework de Micromodelos — MM00 e MM01 integradas; MM02 não iniciada
 
-A [iniciativa MM00–MM13](micromodelos/README.md) usa trilha própria. A [MM00](micromodelos/MM00/README.md) foi exclusivamente documental/arquitetural: baseline, inventário, reuso, riscos, dependências, ADRs, testes, auditoria A1 e checkpoint.
+A [iniciativa MM00–MM13](micromodelos/README.md) usa trilha própria. A MM00 foi aceita e integrada pela PR #43 no commit `36e89515a46df24f41deea4791b109f5a1f938f2`; ADR-0014 a ADR-0020 permanecem aceitos sem ressalvas.
 
-A MM00 recebeu aceite explícito e foi integrada pelo PR #43 no commit `36e89515a46df24f41deea4791b109f5a1f938f2`. ADR-0014 a ADR-0020 estão aceitos sem ressalvas. A A1 histórica devolveu `APTA_COM_CORRECOES`: M-01 foi corrigido, nenhum `DIVERGE` foi atribuído à MM00 e Q-01 do `CHANGELOG.md` foi fechado na manutenção imediatamente pós-merge por inserção byte a byte, com 22 adições e 0 deleções contra o merge MM00.
+A MM01 — contrato canônico `micromodelo.yaml` — foi aceita e integrada pela PR #51 no merge `73d7659dcf11509a7fba392221c4810d10401c35`, com HEAD integrado `fa1a3653e60472d171307663d1175344bb3f6a8d`. A integração posterior da SER00/PR #101 não reabre a MM01 nem promove levels da policy.
 
-A iniciativa continua sem alteração funcional própria no produto `.assistant`. **MM01 — contrato canônico `micromodelo.yaml` — é a próxima sprint e não foi iniciada por este fechamento.**
+O estado vivo e a preparação de MM02 estão no [README de Micromodelos](micromodelos/README.md), na [revisão pós-SEF/PSEF/SER](micromodelos/REVISAO_PLANO_POS_SEF_2026-09-23.md), na [retrospectiva MM01](micromodelos/RETROSPECTIVA_MM01.md) e no [protocolo de certificação](micromodelos/PROTOCOLO_CERTIFICACAO_SPRINTS.md).
+
+**MM02 = NOT_STARTED.**
 
 ## Sistema de Temas do Hub
 

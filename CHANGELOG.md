@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-09-23 — Micromodelos: revisão pós-MM01 e reconciliação SEF/PSEF/SER
+
+### Adicionado
+
+- (ChatGPT) Checkpoint pós-merge da MM01, revisão aditiva do Plano Mestre, retrospectiva operacional R1–R10 e protocolo de certificação reutilizável para MM02–MM13.
+- (ChatGPT) Gates prospectivos explícitos para MM04, MM05, MM06, MM08, MM09, MM10, MM11 e MM12, preservando MM02/MM03 sem dependência PSEF artificial.
+
+### Reconciliado
+
+- (ChatGPT) Fonte de verdade confirmada na `main@dedde0741ed4c387c3a500adfbf7de2c6166aba5`: MM01/PR #51 está integrada no merge `73d7659d...`; PSEF00/PR #98 está integrada; PSEF01/PR #99 permanece draft; SER00/PR #101 já está integrada, contrariando a expectativa histórica do handoff que ainda a tratava como draft.
+- (ChatGPT) `policy.json` permanece com 14 skills e sem promoção decorrente desta frente. `current_level` continua autoridade da capacidade presente; `target_level` continua roadmap.
+- (ChatGPT) Índices vivos de Micromodelos, sprints e contexto canônico foram atualizados sem reescrever MM00, ADR-0014 a ADR-0020, auditorias ou tentativas históricas MM01.
+
+### Limites
+
+- (ChatGPT) Delta exclusivamente documental/processual. Nenhuma alteração em policy, skills, prompts, `.assistant_instructions.md`, produto, runtime, schema/fixtures/testes/certifier MM01, workflows ou derivado.
+- (ChatGPT) `MM02 = NOT_STARTED`. Esta candidata para no gate humano; não autoriza merge automático nem abertura funcional da MM02.
+
+
 ## 2026-09-23 — A07: streams temporários Win32 com delete sharing
 
 ### Corrigido

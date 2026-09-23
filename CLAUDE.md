@@ -82,25 +82,15 @@ Escala planejada: pessoal → squad → missão.
 
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 
-## Iniciativa de micromodelos — MM00 integrada; MM01 não iniciada
+## Iniciativa de micromodelos — MM00/MM01 integradas; MM02 não iniciada
 
-A MM00 da iniciativa MM00–MM13 foi aceita explicitamente e integrada pelo PR #43
-no commit `36e89515a46df24f41deea4791b109f5a1f938f2`. O head final da candidata foi
-`e3809b15b61f2bc1eeec06c9de6f38a329868e98`, com CI geral, V00, V01 e V02 em
-`success` no mesmo head e sem relaxamento de validadores.
+A MM00 da iniciativa MM00–MM13 foi aceita e integrada pela PR #43 em `36e89515a46df24f41deea4791b109f5a1f938f2`. ADR-0014 a ADR-0020 permanecem as decisões arquiteturais aceitas: micromodelo é artefato de domínio, YAML é especificação canônica, MLflow é histórico de runs, publicação continua sob governança externa, greenfield precede migração, temas são consumidos do sistema central e fontes reais ficam limitadas ao catálogo autorizado.
 
-A auditoria A1 independente devolveu historicamente `APTA_COM_CORRECOES`: não
-encontrou `DIVERGE`, apontou M-01 documental (corrigido) e Q-01 pela ausência de
-entrada própria da MM00 no `CHANGELOG.md`. D1-B autorizou diferir exclusivamente
-Q-01 até imediatamente após o merge. O fechamento pós-merge inseriu a entrada em
-bytes, preservou o histórico anterior e foi conferido contra o merge MM00 com
-**22 adições e 0 deleções** no changelog. D1-B está consumida e encerrada.
+A MM01 foi aceita e integrada pela PR #51. HEAD integrado: `fa1a3653e60472d171307663d1175344bb3f6a8d`; merge: `73d7659dcf11509a7fba392221c4810d10401c35`. O fechamento está no [checkpoint pós-merge](docs/sprints/micromodelos/MM01/POST_MERGE_CHECKPOINT.md).
 
-MM00 não alterou funcionalmente o produto `.assistant`. O próximo estágio do
-Plano Mestre é MM01 — contrato canônico `micromodelo.yaml` —, mas MM01 **não foi
-iniciada** por este fechamento. Identificadores, nomes de catálogo e paths reais
-do ambiente de trabalho permanecem fora do Git; documentos versionados usam
-placeholders e resolvem o binding somente no workspace autorizado.
+A revisão arquitetural vigente está em [Micromodelos](docs/sprints/micromodelos/README.md), [revisão pós-SEF/PSEF/SER](docs/sprints/micromodelos/REVISAO_PLANO_POS_SEF_2026-09-23.md), [retrospectiva MM01](docs/sprints/micromodelos/RETROSPECTIVA_MM01.md) e [protocolo de certificação](docs/sprints/micromodelos/PROTOCOLO_CERTIFICACAO_SPRINTS.md). `current_level` da `policy.json` descreve capacidade presente; `target_level` é roadmap. O primeiro ponto material de criação de skill/prompt próprio na linha de Micromodelos permanece MM04.
+
+`MM02 = NOT_STARTED`. Nenhuma alteração desta revisão documental cria skill, prompt, policy, runtime, schema novo ou implementação de fingerprint.
 
 ## Regras inegociáveis
 
