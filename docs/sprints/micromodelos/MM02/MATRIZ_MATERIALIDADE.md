@@ -27,8 +27,8 @@ O documento completo precisa ser válido segundo MM01 antes de a matriz ser apli
 | `negocio.caracteristica` | EDITORIAL_CANONICALIZED | entra |
 | `negocio.objetivo` | NARRATIVE | não entra |
 | `negocio.definicao_operacional` | EDITORIAL_CANONICALIZED | entra |
-| `negocio.uso_pretendido[]` | EDITORIAL_CANONICALIZED | entra como conjunto ordenado canonicamente |
-| `negocio.nao_usar_para[]` | EDITORIAL_CANONICALIZED | entra como conjunto ordenado canonicamente |
+| `negocio.uso_pretendido[]` | EDITORIAL_CANONICALIZED | entra como conjunto deduplicado e ordenado canonicamente |
+| `negocio.nao_usar_para[]` | EDITORIAL_CANONICALIZED | entra como conjunto deduplicado e ordenado canonicamente |
 | `entidade.tipo` | EDITORIAL_CANONICALIZED | entra |
 | `entidade.chave_logica` | MATERIAL | entra exato |
 | `entidade.granularidade` | EDITORIAL_CANONICALIZED | entra |
