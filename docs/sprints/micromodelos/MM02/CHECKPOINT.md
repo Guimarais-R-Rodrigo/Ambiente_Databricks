@@ -8,7 +8,7 @@ BASE_MAIN = 86d1ff6a52d8ef03f6d5567afed6897c1b96c8c3
 BRANCH = micromodelos/mm02-spec-fingerprint
 CANDIDATE_FREEZE = NOT_REACHED
 LOCAL_EXECUTION = NOT_RUN
-PR = NOT_OPENED
+PR = #109 OPEN_DRAFT
 ```
 
 ## Escopo implementado repo-side
