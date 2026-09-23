@@ -21,6 +21,7 @@ Até este checkpoint foram materializados:
 - perfil explícito de campos materiais versus ciclo de vida;
 - reutilização da equivalência editorial MM01;
 - canonicalização de coleções não ordenadas;
+- deduplicação de listas editoriais após equivalência MM01;
 - canonicalização numérica `int/float` equivalente;
 - suíte metamórfica permanente;
 - documentação de limites e smoke.
