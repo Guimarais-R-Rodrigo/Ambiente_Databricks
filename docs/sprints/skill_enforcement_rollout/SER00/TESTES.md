@@ -22,7 +22,7 @@ Calcular SHA-256 e Git blob SHA-1 de cada arquivo local. Depois da criação do 
 
 ## Certificação final obrigatória antes de merge
 
-As manutenções A07/PR #102 e #105 já estão integradas. Na HEAD final da SER00, confirmar `origin/main=4bc7c9aada96468505e51f279cf32c107d0b6dbb`, merge-base igual à main, `behind=0`, clone não shallow e worktree limpa. Não transportar PASS das manutenções para esse novo SHA.
+As manutenções A07/PR #102 e #105 já estão integradas. Na HEAD final da SER00, confirmar `origin/main=73d7659dcf11509a7fba392221c4810d10401c35`, merge-base igual à main, `behind=0`, clone não shallow e worktree limpa. Não transportar PASS das manutenções para esse novo SHA.
 
 Preparar dependências V06 somente pelo lockfile quando ausentes e provar que `package.json`/`pnpm-lock.yaml` não mudaram. Em seguida executar, sem retry-until-green:
 
@@ -36,7 +36,7 @@ python tools/ci_local.py --verbose
 python -B tools/skill_enforcement/certify_local.py --profile se08 --evidence-dir <NOVO_DIRETORIO_EXTERNO>
 ```
 
-O FULL só deve rodar se os gates anteriores passarem. Espera-se que o snapshot confirme os valores já medidos na A07-R1, agora versionados: `repo (identidade)=1660`, `repo (links)=2126`; qualquer divergência é FAIL e deve ser preservada. Nunca editar derivado manualmente. A01–A03 estão resolvidas e a manutenção A07 está integrada; o PASS final apenas certifica a SER00 documental e não promove skill nem autoriza SER01.
+O FULL só deve rodar se os gates anteriores passarem. Após a integração MM01, espera-se que o snapshot reconciliado confirme `repo (identidade)=1697`, `repo (links)=2126`; qualquer divergência é FAIL e deve ser preservada. Nunca editar derivado manualmente. A01–A03 estão resolvidas e a manutenção A07 está integrada; o PASS final apenas certifica a SER00 documental e não promove skill nem autoriza SER01.
 
 ## Estados
 
@@ -59,3 +59,5 @@ A R2 documental foi executada sobre os bytes reconciliados antes da publicação
 - SHARE-DELETE R1 / #105: teste causal com child vivo PASS, guardas 12/12, storage 9/9, certifier 53/53 + 1 skip, stress 30/30, CI 10/10 e FULL 21/21; integrada em `4bc7c9aa...`.
 
 Nenhum desses PASS substitui a certificação da HEAD final SER00.
+
+- MM01 integrada concorrente: main avançou para `73d7659d...`; a campanha verde sobre `3079817f...` foi preservada, mas tornou-se stale para merge e exige uma única recertificação após reconciliação.
