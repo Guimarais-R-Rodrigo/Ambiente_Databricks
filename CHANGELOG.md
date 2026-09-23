@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-09-23 — A07: streams temporários Win32 com delete sharing
+
+### Corrigido
+
+- (ChatGPT) O certifier abre somente os arquivos temporários de stdout/stderr de subprocessos Windows via `CreateFileW` com `FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE`. Os handles duplicados para launcher/child continuam capturando os mesmos bytes, mas deixam de bloquear `unlink` apenas por permanecerem em fechamento tardio após o Job Object zerar.
+- (ChatGPT) A mudança não adiciona sleep, retry, nova remoção, `ignore_errors` ou tolerância de verdict. Qualquer cleanup que ainda falhe continua `FAILED` e preserva WinError32/telemetria.
+- (ChatGPT) A regressão Windows mantém um child real vivo com o stream herdado e exige que o arquivo possa ser removido enquanto esse handle ainda existe; há também roundtrip portátil do stream e guarda estática contra retry de cleanup.
+
+### Fundamentação e limites
+
+- A documentação Win32 de `CreateFile` define `FILE_SHARE_DELETE` como o share mode que permite operações posteriores de delete/rename e registra que o share mode permanece válido enquanto o handle está aberto. O `subprocess` do Python aceita file objects como stdout/stderr e, no Windows, trabalha com handles herdáveis/duplicados para redirecionamento.
+- Esta é uma corretiva causal da compatibilidade de sharing dos streams controlados pelo certifier. Ela não afirma que todo WinError32 histórico tinha esse owner, não altera timeout/process termination e não reclassifica as campanhas vermelhas anteriores.
+- A SER00/PR #101 permanece separada e Draft. Esta manutenção exige campanha Windows própria antes de qualquer merge.
+
+
 ## 2026-09-23 — SER00 A07-R2: corretiva test-only do oráculo de storage
 
 ### Corrigido
@@ -24,7 +39,7 @@
 ### Notas
 
 - (Codex) Nenhuma alteração em produto, policy, skill, runtime, workflows ou derivado. SE01–SE08 preservadas. Foram identificados A01–A03 e, em 2026-09-22, houve aceite humano do encaminhamento: certificação SER aditiva com histórico SE08 preservado; evolução declarativa/versionada de condições; target L3 stage-specific de criar-objeto mantido, sem promoção atual.
-- (ChatGPT) A manutenção A07/PR #102 foi certificada em Windows com CI 10/10 e FULL SE08 21/21 no SHA `4a70834d...` e integrada em `main@515e673b...` após autorização humana explícita. A SER00 foi reconciliada com essa main; SER01 continua `NOT_STARTED` e o merge da PR #101 permanece não autorizado até a certificação final do SHA documental.
+- (ChatGPT) As manutenções A07/PR #102 e #105 foram certificadas e integradas. A #105 adicionou `FILE_SHARE_DELETE` aos streams Win32 do certifier, com teste causal de child vivo, stress 30/30, CI 10/10 e FULL SE08 21/21. A SER00 foi reconciliada com `main@4bc7c9aa...`; SER01 continua `NOT_STARTED` e o merge da PR #101 permanece não autorizado até a certificação final da HEAD documental.
 - (Codex) GitHub Actions=`DEFERRED_NO_CREDITS`; Free/Genie=`NOT_RUN`. Promoção corporativa bloqueada.
 
 
