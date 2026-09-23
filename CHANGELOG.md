@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-09-23 — SER01: candidata formal de promoção L2→L3
+
+### Promovido na candidata
+
+- (ChatGPT) Após A1–A4 concluídas, `hub-ml-criar-objeto` passa na policy candidata de `current_level=L2` para `L3`; `target_level=L3`, `rollout_mode=audit` e `scope_mode=stage_specific` permanecem inalterados.
+- (ChatGPT) `policy_status` passa de `defined` para `implemented`; o inventário inclui SKILL, contrato, preflight, runner, verifier de object_validation e release manifest.
+
+### Certificação
+
+- (ChatGPT) O certifier pós-promoção `SER-PROMOTION-CERT-1` foi preparado antes da mudança de policy. A promoção ainda é `NOT_CERTIFIED`; novo SHA-bound lab e aceite humano específico são obrigatórios antes de merge.
+- (ChatGPT) SE07/SE08 históricos não são editados para acompanhar a promoção; assertions L2 antigas permanecem evidência temporal e serão observadas como canal histórico separado.
+
 ## 2026-09-23 — SER01 A4-FREE R2: corrigidos prechecks da autoria
 
 ### Corrigido

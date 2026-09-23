@@ -158,16 +158,19 @@
     {
       "skill": "hub-ml-criar-objeto",
       "risk_class": "high",
-      "current_level": "L2",
+      "current_level": "L3",
       "target_level": "L3",
       "scope_mode": "stage_specific",
       "rollout_mode": "audit",
-      "policy_status": "defined",
+      "policy_status": "implemented",
       "rationale": "Criação de arquivos e objetos deve seguir templates e validators determinísticos antes de ser apresentada como pronta.",
       "implemented_artifacts": [
         "skills/hub-ml-criar-objeto/SKILL.md",
         "skills/hub-ml-criar-objeto/execution_contract.json",
-        "skills/hub-ml-criar-objeto/scripts/preflight.py"
+        "skills/hub-ml-criar-objeto/scripts/preflight.py",
+        "skills/hub-ml-criar-objeto/scripts/run.py",
+        "skills/hub-ml-criar-objeto/scripts/object_validation.py",
+        "skills/hub-ml-criar-objeto/release_manifest.json"
       ],
       "protected_surfaces": [
         {

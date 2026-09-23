@@ -1,6 +1,6 @@
 # SER01 — criar-objeto: rollout L2 → L3
 
-Estado: **IN_PROGRESS / A3_COMPLETE / A4_PREPARED_NOT_RUN**.
+Estado: **IN_PROGRESS / A1–A4 COMPLETE / L3_PROMOTION_CANDIDATE_NOT_CERTIFIED**.
 
 A3 encerrou a prova local prospectiva da superfície `object_validation` em `fcec3e34898006081b3e9063c627b5783108687f`: `SER-CERT-1` PASS, certificado verificável, 27/27 steps únicos, route/evidence gates PASS, regressões/CI/SE08 históricos verdes e push fast-forward do mesmo SHA certificado. A policy continua em L2.
 
@@ -26,9 +26,10 @@ CURRENT_LEVEL = L2_UNCHANGED
 TARGET_LEVEL = L3_UNCHANGED
 ROLLOUT_MODE = audit_UNCHANGED
 A3_SER_CERT = PASS
-A4_FREE = NOT_RUN
-A4_GENIE = NOT_RUN
-POLICY_PROMOTION = NOT_AUTHORIZED
+A4_FREE = PASS
+A4_GENIE = PASS
+CURRENT_LEVEL = L3_CANDIDATE
+POLICY_PROMOTION = PENDING_POST_PROMOTION_CERTIFICATION
 MERGE = NOT_AUTHORIZED
 SER02 = NOT_STARTED
 ```

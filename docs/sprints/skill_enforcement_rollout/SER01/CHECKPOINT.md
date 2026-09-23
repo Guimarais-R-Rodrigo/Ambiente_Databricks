@@ -268,3 +268,25 @@ CURRENT_LEVEL = L2_UNCHANGED
 ```
 
 A R1 parou corretamente antes de qualquer publicação. A corretiva R2 troca somente o literal `bytes` inválido por `str.encode("utf-8")`, torna explícito no F01 que o produtor repo-side não pode ser artifact publicado e reconcilia o snapshot medido do README. O profile FREE foi renovado pelo usuário depois da parada; isso não reclassifica R1 e apenas remove o bloqueio ambiental para a próxima rodada.
+
+## Promoção SER01 L2→L3 — candidata pós-A4 (registro aditivo, 2026-09-23)
+
+```text
+A1 = COMPLETE
+A2 = COMPLETE
+A3 = COMPLETE
+A4_FREE = PASS
+A4_GENIE = PASS
+A4 = COMPLETE
+PROMOTION_CANDIDATE = PREPARED_NOT_CERTIFIED
+CURRENT_LEVEL = L3_CANDIDATE
+TARGET_LEVEL = L3
+POLICY_STATUS = implemented
+ROLLOUT_MODE = audit_UNCHANGED
+SCOPE_MODE = stage_specific_UNCHANGED
+POST_PROMOTION_CERTIFIER = SER-PROMOTION-CERT-1
+PROFILE = ser01-object-validation-post-promotion
+MERGE = NOT_AUTHORIZED
+```
+
+A mudança de policy é o último ato funcional da SER01, conforme ADR-0022. O L3 candidato só se torna promoção certificada após nova campanha SHA-bound do certifier pós-promoção e aceite humano específico. SE07/SE08 históricos permanecem imutáveis; suas assertions temporais L2 devem aparecer como canal histórico esperado, não ser reescritas.

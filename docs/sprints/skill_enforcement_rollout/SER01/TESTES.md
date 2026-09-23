@@ -153,3 +153,9 @@ A4 não requer mudança em `ambiente_fonte`; qualquer delta em produto desde `fc
 - `validate_assistant.py --conferir-readme` deve passar com 1732/2176 ou com nova medição real se a árvore tiver mudado;
 - autenticação renovada não transporta nenhum resultado funcional da R1;
 - publicação e probe usam nova rodada/evidência e não reutilizam outputs R1.
+
+## Certificação pós-promoção
+
+`tools/skill_enforcement/ser_promotion_certify.py` usa identidade `SER-PROMOTION-CERT-1` e profile `ser01-object-validation-post-promotion`. Exige policy L3/L3, `policy_status=implemented`, `audit`, `stage_specific`, artifacts L3, route/evidence gates e regressões estruturais. SE07/SE08 são executados como canais históricos e só são aceitos se falharem exclusivamente nas assertions temporais L2 conhecidas; qualquer failure adicional reprova.
+
+A campanha deve ocorrer em novo SHA preparado/renderizado, evidence root externo novo, sem retry-until-green. O PASS não autoriza merge; apenas torna a candidata apta ao gate humano específico.
