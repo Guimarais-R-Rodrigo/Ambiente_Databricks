@@ -81,6 +81,17 @@
 - (ChatGPT) Desenvolvimento em Linux/Python 3.13.5: 24 métodos unitários PASS e sete integrações não executadas; três cenários adicionais com supervisor/validators sintéticos não constituem certificação canônica. Falhas iniciais de expectativa de teste permanecem no bundle de desenvolvimento.
 - (ChatGPT) Policy, skill, contrato, writer, manifests e infraestrutura A07 permanecem intactos. L2→L3, publicação, merge e SER02 não autorizados; A1 não encerra a SER01. Gates de clone completo ficam para execução delegada sobre SHA congelado após preparação documental.
 
+## 2026-09-23 — manutenção MM03: falso positivo de identificador corporativo
+
+### Corrigido
+
+- (ChatGPT) `docs/sprints/micromodelos/MM03/CHECKPOINT.md`: a referência abreviada de oito caracteres ao commit de preparação foi substituída pelo SHA Git completo `b432596798c60eaf515c395cf6cdd97b1c48c8ce`.
+- (ChatGPT) A abreviação coincidia acidentalmente com a heurística `letra + 6–8 dígitos` de `CORPORATE_RE`; o conteúdo é um SHA público do próprio repositório, não um identificador pessoal/corporativo.
+
+### Limites
+
+- (ChatGPT) Nenhuma regra de `tools/project_policy.py`, código MM03, teste, policy, skill ou snapshot foi alterado. Esta manutenção ainda precisa de validação independente antes de qualquer merge.
+
 ## 2026-09-23 — MM03: núcleo de descoberta metadata-only
 
 ### Adicionado
