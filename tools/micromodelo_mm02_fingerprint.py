@@ -59,7 +59,7 @@ def _canonical_number(value: Any) -> str:
 
 
 def _sorted_editorial(values: list[str]) -> list[str]:
-    return sorted(_editorial_text(value) for value in values)
+    return sorted({_editorial_text(value) for value in values})
 
 
 def _canonical_sources(spec: dict[str, Any]) -> list[dict[str, Any]]:
