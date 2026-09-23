@@ -72,6 +72,14 @@ Valores numéricos materiais usam representação decimal determinística para q
 
 O domínio aceito continua sendo o domínio validado pela MM01.
 
+### Referências materiais versus audit trail
+
+A revisão estática distinguiu referências que apenas provam uma decisão das que definem uma regra:
+- `score.semantica_ref` só entra para `OUTRA_APROVADA`;
+- `score.normalizacao.referencia` só entra para `CUSTOM_APROVADO`;
+- `score.calibracao.evidencia_ref` entra como identidade da calibração escolhida;
+- resultados, run IDs, timestamps, responsáveis e proveniência continuam fora.
+
 ## Não implementado
 
 - persistência de `spec_fingerprint` no YAML;
