@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-09-23 — MM02: spec fingerprint iniciado
+
+### Adicionado
+
+- (ChatGPT) Implementação repo-side `tools/micromodelo_mm02_fingerprint.py` com SHA-256 sobre preimage canônico versionado e validação obrigatória pelo contrato MM01.
+- (ChatGPT) Suíte metamórfica MM02 e documentação própria: README, matriz de materialidade, TESTES e CHECKPOINT.
+- (ChatGPT) Separação explícita entre definição material e ciclo de vida/evidência: fonte, entidade, regra, missing, limiar, peso, semântica, normalização/calibração aplicável e saída entram; aprovação, runs, timestamps, tracking, governança e status institucional não substituem identidade material.
+
+### Estado
+
+- (ChatGPT) Base de abertura: `main@86d1ff6a52d8ef03f6d5567afed6897c1b96c8c3`.
+- (ChatGPT) Branch: `micromodelos/mm02-spec-fingerprint`.
+- (ChatGPT) `MM02=EM_IMPLEMENTACAO`; `LOCAL_EXECUTION=NOT_RUN`; `CANDIDATE_FREEZE=NOT_REACHED`; PR ainda não aberta.
+- (ChatGPT) Nenhuma alteração em schema MM01, policy, skills, prompts, Databricks, MLflow ou dados reais.
+
+
 ## 2026-09-23 — Micromodelos: revisão pós-MM01 e reconciliação SEF/PSEF/SER
 
 ### Adicionado
