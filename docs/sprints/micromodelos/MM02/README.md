@@ -83,7 +83,7 @@ Não é hash bruto do YAML.
 | `evidencias` | id, referências de fontes e regra operacional |
 | `contra_evidencias` | id, referências de fontes e regra operacional |
 | `classificacao` | tipo, semântica TRUE/FALSE/INDETERMINADO, missing policy e limiares |
-| `score` | habilitação, significado, escala, normalização, pesos e método de calibração |
+| `score` | habilitação, significado, escala, normalização, pesos e calibração; referências entram quando definem regra customizada/calibração |
 | `saida.estudo` | nomes e valores do contrato de saída analítica |
 | `saida.publicacao` | campo final e política de INDETERMINADO quando definidos |
 
@@ -100,8 +100,12 @@ Não é hash bruto do YAML.
 | `tracking` | pertence à MM06 e às execuções |
 | `governanca` | autoridade/metadata institucional separada |
 | `publicacao` de topo | estado do handoff institucional, não contrato analítico |
-| `score.calibracao.evidencia_ref` | referência da execução que prova calibração; o método continua material |
 | `saida.publicacao.estado` | estado de ciclo; os campos/política efetivos são o contrato material |
+
+Regras condicionais de referência:
+- `score.semantica_ref` é material somente para `OUTRA_APROVADA`; em semânticas estruturadas, funciona como trilha auditável;
+- `score.normalizacao.referencia` é material somente para `CUSTOM_APROVADO`; nos métodos estruturados, não redefine a normalização;
+- `score.calibracao.evidencia_ref` é material como ID da evidência/calibração escolhida. O conteúdo observado da run, timestamps e proveniência do experimento continuam fora do fingerprint.
 
 A exclusão de `identidade.nome` é deliberada: o fingerprint identifica **conteúdo material**, não o nome do artefato. Dois micromodelos com definições materiais idênticas podem, portanto, compartilhar fingerprint; `identidade.nome` e `micromodel_version` continuam disponíveis separadamente.
 
