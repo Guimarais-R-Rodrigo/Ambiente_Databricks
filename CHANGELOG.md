@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-09-23 — SER01 A3-R3: retomada após o hotfix MM03 (PR #111)
+
+### Notas
+
+- (Claude) A primeira tentativa da A3-R3 (merge local `cffb8388`) parou antes do freeze: a `main@3214a131` reprovava `validate_assistant.py` por falso positivo de identificador no checkpoint MM03. A manutenção PR #111 foi validada e integrada em `8e703f1e`; o merge dessa `main` preserva `cffb8388` e `0e687da9` como ancestrais. Implementação SER01/SER-CERT-1 byte-idêntica à A3-R2; recertificação pendente; L2, sem merge da PR.
+
+## 2026-09-23 — SER01 A3-R2 certificada localmente e reconciliação A3-R3 com a MM03
+
+### Notas
+
+- (Claude) A3-R2 sobre `0e687da96e72`: `SER-CERT-1` PASS (exit 0), `verify_certification` válida, 27/27 steps únicos, route e evidence gates PASS, SER01 36/36, regressão do certifier 7/7, piloto 35/35, CI local PASS e SE08 histórico em canal separado. Sem push: a `main` avançou para `3214a131` (MM03/PR #110) durante a campanha.
+- (Claude) A3-R3: merge `--no-ff` da `main` preservando a candidata A3-R2 como ancestral. Sobreposição só em `CHANGELOG.md` (entradas SER01 e MM03 mantidas integralmente) e `README.md` (versão da `main`, snapshot re-medido). A implementação SER01/SER-CERT-1 segue byte-idêntica; recertificação pendente; L2, sem merge da PR.
+
 ## 2026-09-23 — SER01 A3-R2: preparação da recertificação prospectiva
 
 ### Notas

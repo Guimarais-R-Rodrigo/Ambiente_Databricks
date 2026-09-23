@@ -129,3 +129,11 @@ before/after e self-verification fail-closed do produtor.
 A3-R1 em `1ff6d563824ecf3dfd80fb86c1420bb46329cf5d` permanece
 `FAIL_VERIFICATION/STEP_SET_INVALID`, sem push. A próxima campanha deve usar novo
 SHA e novo diretório de evidência; nenhum PASS material interno da R1 é transportado.
+
+## Reconciliação A3-R3 (2026-09-23)
+
+A A3-R2 passou localmente (`SER-CERT-1` PASS e certificado verificável), mas não foi publicada por avanço concorrente da `main` (MM03). A A3-R3 não altera código nem testes: `test_ser01_object_validation` segue com 36 métodos e `test_ser_certify` com sete. O `SER-CERT-1` é executado uma única vez sobre o novo SHA composto; push somente com certificado verificável e sem nova concorrência.
+
+## Retomada A3-R3 (2026-09-23)
+
+A primeira tentativa da A3-R3 parou antes do freeze por falha estrutural da `main@3214a131` (falso positivo MM03), corrigida pela PR #111 (`8e703f1e`). Suítes inalteradas: `test_ser01_object_validation` com 36 métodos e `test_ser_certify` com sete. O `SER-CERT-1` roda uma única vez sobre o SHA composto.

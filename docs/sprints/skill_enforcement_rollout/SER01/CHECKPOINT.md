@@ -179,3 +179,42 @@ A corretiva R2 distingue explicitamente `git_before_*` de `git_after_*`, passa a
 exigir os 27 nomes únicos no verifier e adiciona self-verification fail-closed no
 próprio produtor: um summary `PASS` que não seja verificável é convertido em
 `FAIL` antes do exit code. A R1 permanece vermelha e não foi publicada.
+
+## A3-R2 certificada localmente e reconciliação A3-R3 (registro aditivo, 2026-09-23)
+
+```text
+A3_R2_FREEZE_SHA = 0e687da96e72a9c4045d2acd20626d70977ac0f8
+A3_R2_RESULT = SER_CERT_PASS_LOCAL
+SER_CERT_ID = sercert1:769f61643a6fd7c20624d0f43196425ce0f8ec3f298bbf1a65adf02d37b73418
+VERIFY_CERTIFICATION = VALID
+STEPS = 27/27 UNIQUE
+ROUTE_GATE = PASS
+EVIDENCE_GATE = PASS
+SER01 = 36/36 PASS
+SER_CERT_REGRESSION = 7/7 PASS
+LEGACY_CREATE = 35/35 PASS
+CI = PASS
+HISTORICAL_SE08 = PASS_SEPARATE_CHANNEL
+A3_R2_PUSH = NO
+BLOCKER = MAIN_ADVANCED_TO_MM03 (3214a131dfb4629a7a51cdbd21a128adec1a4ae5, PR #110)
+A3_R3 = RECONCILIATION_AND_RECERTIFICATION_PENDING
+CURRENT_LEVEL = L2_UNCHANGED
+MERGE = NOT_AUTHORIZED
+```
+
+A A3-R1 (`1ff6d563`) permanece FAIL por `STEP_SET_INVALID`. O PASS da A3-R2 pertence somente a `0e687da96e72` sobre a base `073762fd`. A A3 não está encerrada: a A3-R3 incorpora a MM03 por merge preservador e exige nova execução única do `SER-CERT-1` sobre o SHA composto antes de qualquer publicação.
+
+## Retomada A3-R3 após hotfix MM03 (registro aditivo, 2026-09-23)
+
+```text
+A3_R2 = PASS_LOCAL_BLOCKED_CONCURRENCY (0e687da96e72a9c4045d2acd20626d70977ac0f8)
+A3_R3_ATTEMPT_1 = BLOCKED_MAIN_STRUCTURAL_VALIDATOR_FAIL
+BLOCKED_MERGE_SHA = cffb838891fae6a529165e6f2800fbae847d425f
+MM03_HOTFIX_PR111 = MERGED
+MM03_HOTFIX_MAIN = 8e703f1ea736593d8374b532e4a006c0cbd4691a
+A3_R3 = RECERTIFICATION_PENDING
+CURRENT_LEVEL = L2_UNCHANGED
+MERGE = NOT_AUTHORIZED
+```
+
+A tentativa bloqueada não é reclassificada: permanece como proveniência da reconciliação. A recertificação exige nova execução única do `SER-CERT-1` sobre o SHA composto que inclui `8e703f1e`.
