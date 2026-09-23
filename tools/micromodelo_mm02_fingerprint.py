@@ -117,10 +117,18 @@ def _canonical_score(score: dict[str, Any]) -> dict[str, Any]:
         for item in score["componentes"]
     ]
 
+    semantic_ref = (
+        score["semantica_ref"]
+        if score["tipo_semantica"] == "OUTRA_APROVADA"
+        else None
+    )
+
     return {
         "habilitado": score["habilitado"],
         "tipo_semantica": score["tipo_semantica"],
-        "semantica_ref": score["semantica_ref"],
+        # Para tipos estruturados, semantica_ref é trilha auditável. Em
+        # OUTRA_APROVADA ela é a única referência da definição customizada.
+        "semantica_ref": semantic_ref,
         "escala": (
             None
             if scale is None
@@ -134,7 +142,13 @@ def _canonical_score(score: dict[str, Any]) -> dict[str, Any]:
             if normalization is None
             else {
                 "metodo": normalization["metodo"],
-                "referencia": normalization["referencia"],
+                # Referência é material somente quando a normalização é
+                # customizada; nos métodos estruturados ela é audit trail.
+                "referencia": (
+                    normalization["referencia"]
+                    if normalization["metodo"] == "CUSTOM_APROVADO"
+                    else None
+                ),
             }
         ),
         "componentes": sorted(components, key=lambda item: item["id"]),
@@ -142,9 +156,11 @@ def _canonical_score(score: dict[str, Any]) -> dict[str, Any]:
             None
             if calibration is None
             else {
-                # O método altera a semântica do score; evidencia_ref pertence
-                # à prova/execução da calibração e, por isso, não entra.
+                # Método e ID do experimento de calibração participam da
+                # definição. Resultado, run, timestamp e proveniência do
+                # experimento permanecem evidência e ficam fora do preimage.
                 "metodo": _editorial_text(calibration["metodo"]),
+                "evidencia_ref": calibration["evidencia_ref"],
             }
         ),
     }
