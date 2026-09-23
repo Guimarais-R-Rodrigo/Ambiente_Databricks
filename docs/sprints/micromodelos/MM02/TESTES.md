@@ -25,6 +25,8 @@ Arquivo:
 - título;
 - `negocio.objetivo`;
 - referências de aprovação/proveniência;
+- `score.semantica_ref` quando `tipo_semantica` já é estruturado;
+- `score.normalizacao.referencia` quando o método já é estruturado;
 - timestamps;
 - resultado/referência de execução de experimento;
 - descrições auxiliares;
@@ -41,6 +43,9 @@ Arquivo:
 - semântica TRUE/FALSE/INDETERMINADO;
 - peso;
 - significado do score;
+- referência de semântica quando `OUTRA_APROVADA`;
+- referência de normalização quando `CUSTOM_APROVADO`;
+- `score.calibracao.evidencia_ref` quando muda a calibração escolhida;
 - contrato de saída de estudo;
 - contrato de saída de publicação.
 
@@ -83,7 +88,9 @@ A composição de CI local/FULL proporcional será definida somente depois do sm
 - algoritmo aceita especificação MM01 inválida;
 - serialização depende da ordem das chaves;
 - número semanticamente equivalente `70` / `70.0` gera hashes distintos;
-- normalização editorial apaga diferença potencialmente semântica não autorizada pela MM01;
+- normalização editorial apaga diferença potencialmente semântica não autorizada pela MM01, inclusive pontuação inicial;
+- referência puramente auditável gera churn de fingerprint;
+- referência que define regra customizada/calibração deixa de alterar o fingerprint;
 - implementação duplica ou diverge da autoridade MM01 para equivalência editorial;
 - algoritmo tenta consultar Databricks, MLflow, catálogo ou dado real.
 
