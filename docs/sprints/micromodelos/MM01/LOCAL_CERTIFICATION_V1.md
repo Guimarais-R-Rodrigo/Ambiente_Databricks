@@ -203,3 +203,24 @@ Para `<REPO>` e `<HOME>`, o certifier deve redigir pelo menos:
 A regra se aplica ao output incremental antes de persistência ou emissão.
 
 Um bundle que contenha path local identificável em qualquer dessas representações não satisfaz integralmente o contrato probatório v1, mesmo que todos os gates funcionais tenham exit code 0.
+
+
+## 15. Encoding determinístico e console-safe
+
+O transporte de stdout/stderr dos gates deve ser determinístico em Windows e não pode derrubar a certificação por limitações da página de código do terminal.
+
+Para todos os subprocessos executados por `run_step`, o certifier deve:
+
+- definir `PYTHONUTF8=1`;
+- definir `PYTHONIOENCODING=utf-8`;
+- decodificar o stream capturado como UTF-8;
+- persistir o log em UTF-8;
+- tentar emitir o texto sanitizado no stdout corrente;
+- se o encoding do terminal não representar algum caractere, usar fallback não destrutivo/ASCII-safe em vez de lançar `UnicodeEncodeError`.
+
+O fallback de console não altera o conteúdo probatório persistido no log e não muda o exit code do subprocesso.
+
+A regressão deve cobrir explicitamente:
+
+- subprocesso Python com stdout efetivamente UTF-8;
+- console `cp1252/charmap` recebendo caractere não representável sem abortar o step.
