@@ -59,6 +59,14 @@ class SE08WindowsCorrectiveStaticTests(unittest.TestCase):
         self.assertNotIn('[:4000]', text)
         self.assertIn('saida.strip().replace("\\n", "\\n   ")', text)
 
+    def test_storage_fixture_binds_record_without_stack_frame_introspection(self):
+        text = self.read("tools/tests/test_certify_storage_cleanup.py")
+        self.assertIn('mock.patch.object(tempfile.TemporaryDirectory, "cleanup", cleanup)', text)
+        self.assertIn('getattr(temporary, "record", {})', text)
+        self.assertIn('"native_preemptions": native_preemptions', text)
+        self.assertIn("NATIVE_STORAGE_CLEANUP_PREEMPTED_FIXTURE", text)
+        self.assertNotIn("sys._getframe", text)
+
     def test_file_owner_pid_query_is_diagnostic_only(self):
         text = self.read("tools/skill_enforcement/cleanup_diagnostics.py")
         tree = ast.parse(text)
