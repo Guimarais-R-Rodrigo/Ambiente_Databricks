@@ -608,12 +608,24 @@ def result_is_complete(
     return True
 
 
+def _safe_stdout_write(text: str) -> None:
+    try:
+        sys.stdout.write(text)
+    except UnicodeEncodeError:
+        encoding = getattr(sys.stdout, "encoding", None) or "utf-8"
+        safe = text.encode(encoding, errors="backslashreplace").decode(
+            encoding,
+            errors="strict",
+        )
+        sys.stdout.write(safe)
+    sys.stdout.flush()
+
+
 def _emit_step_text(text: str, handle, repo_root: Path) -> None:
     rendered = sanitize_text(text, repo_root)
     handle.write(rendered)
     handle.flush()
-    sys.stdout.write(rendered)
-    sys.stdout.flush()
+    _safe_stdout_write(rendered)
 
 
 def _terminate_interrupted_process(proc: subprocess.Popen[str]) -> None:
@@ -632,6 +644,8 @@ def run_step(step: Step, repo_root: Path, logs_dir: Path) -> StepResult:
     start_clock = time.monotonic()
     env = os.environ.copy()
     env.update(dict(step.env))
+    env["PYTHONUTF8"] = "1"
+    env["PYTHONIOENCODING"] = "utf-8"
     executed = resolve_argv(step.argv)
     log_rel = "logs/" + step.step_id + ".log"
     log_path = logs_dir / (step.step_id + ".log")
