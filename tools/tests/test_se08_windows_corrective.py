@@ -67,6 +67,21 @@ class SE08WindowsCorrectiveStaticTests(unittest.TestCase):
         self.assertIn("NATIVE_STORAGE_CLEANUP_PREEMPTED_FIXTURE", text)
         self.assertNotIn("sys._getframe", text)
 
+    def test_windows_process_stream_uses_delete_sharing_without_cleanup_retry(self):
+        text = self.read("tools/skill_enforcement/certify_local.py")
+        self.assertIn("def _open_process_stream(", text)
+        self.assertIn("FILE_SHARE_DELETE = 0x00000004", text)
+        self.assertIn("FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE", text)
+        self.assertIn('_open_process_stream(path / "stdout")', text)
+        self.assertIn('_open_process_stream(path / "stderr")', text)
+        tree = ast.parse(text)
+        fn = next(n for n in tree.body if isinstance(n, ast.FunctionDef)
+                  and n.name == "_open_process_stream")
+        calls = {getattr(n.func, "attr", getattr(n.func, "id", ""))
+                 for n in ast.walk(fn) if isinstance(n, ast.Call)}
+        for forbidden in ("sleep", "rmtree", "unlink", "remove"):
+            self.assertNotIn(forbidden, calls)
+
     def test_file_owner_pid_query_is_diagnostic_only(self):
         text = self.read("tools/skill_enforcement/cleanup_diagnostics.py")
         tree = ast.parse(text)
