@@ -88,5 +88,8 @@
       "path": "tools/skill_enforcement/ser01_free_probe.py",
       "mapping_mode": "command"
     }
+  ],
+  "command_only_steps": [
+    "ci:concierge-pacote"
   ]
 }
