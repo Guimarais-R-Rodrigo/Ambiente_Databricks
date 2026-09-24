@@ -223,6 +223,8 @@ def inventory():
     if successor not in observed: issues.append(f"TEMPORAL_SUCCESSOR_NOT_OBSERVED:{test_id}:{successor}")
  counts=Counter(observed_occurrences)
  return {"schema_version":"SER-PARALLEL-COVERAGE-INVENTORY-3","status":"PASS" if not issues else "FAIL","issues":sorted(set(issues)),"se08":se08,"ci_non_sef":ci_rows,"ser01":ser01,"counts":{"se08":len(se08),"ci_non_sef":len(ci_rows),"ser01":len(ser01),"method_occurrences":len(observed_occurrences),"unique_methods":len(counts)},"test_id_occurrences":dict(sorted(counts.items())),"temporal_overrides":overrides}
+def _json_cli(payload):
+ return json.dumps(payload,ensure_ascii=True,indent=2,sort_keys=True)+"\n"
 def main():
- payload=inventory(); print(json.dumps(payload,ensure_ascii=False,indent=2,sort_keys=True)); return 0 if payload["status"]=="PASS" else 1
+ payload=inventory(); sys.stdout.write(_json_cli(payload)); return 0 if payload["status"]=="PASS" else 1
 if __name__=="__main__": raise SystemExit(main())
