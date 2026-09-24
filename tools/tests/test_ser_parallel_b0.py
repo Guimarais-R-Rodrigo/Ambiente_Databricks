@@ -89,7 +89,32 @@ class BundleTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);(root/"a.txt").write_text("a");bundle.write_manifest(root);(root/"a.txt").write_text("b");self.assertFalse(verifier.verify_bundle(root)["valid"])
     def test_raw_share_identity_distinct(self): self.assertTrue(bundle.raw_share_binding(b"a",b"b",{"policy_version":bundle.SECRET_SCAN_POLICY_VERSION,"status":"PASS","findings":[]})["identities_are_distinct"])
-    def test_secret_scan(self): self.assertTrue(bundle.scan_text("Bearer abcdefghijklmnopqrstuvwxyz"))
+    def test_secret_scan(self):
+        self.assertTrue(bundle.scan_text("Bearer abcdefghijklmnopqrstuvwxyz"))
+
+    def test_share_scan_rejects_residual_user_home_paths(self):
+        windows_home="C:"+"\\Users\\Example\\python.exe"
+        posix_home="/home/example/python"
+        self.assertIn("SENSITIVE_PATH_WINDOWS_HOME",bundle.scan_text(json.dumps({"python":windows_home})))
+        self.assertIn("SENSITIVE_PATH_POSIX_HOME",bundle.scan_text(json.dumps({"python":posix_home})))
+
+    def test_default_share_substitutions_redact_home_and_repo_variants(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base=Path(tmp);raw=base/"RAW";share=base/"SHARE";binding=base/"binding.json";raw.mkdir()
+            home=str(Path.home().resolve())
+            repo=str(base.resolve())
+            payload={"python":str(Path.home()/"bin"/"python"),"repo":str(base/"repo"/"x")}
+            (raw/"paths.json").write_text(json.dumps(payload),encoding="utf-8")
+            bundle.write_manifest(raw)
+            built=bundle.build_share(raw,share,bundle.default_share_substitutions(base),binding_path=binding)
+            text=(share/"paths.json").read_text(encoding="utf-8")
+            self.assertNotIn(home,text)
+            self.assertNotIn(json.dumps(home)[1:-1],text)
+            self.assertNotIn(repo,text)
+            self.assertIn("<HOME>",text)
+            self.assertIn("<REPO>",text)
+            self.assertEqual("PASS",built["secret_scan"]["status"],built)
+            self.assertTrue(verifier.verify_raw_share_binding(raw,share,binding)["valid"])
 
 class CoverageTests(unittest.TestCase):
     def test_test_methods_are_fully_qualified(self):
