@@ -5,7 +5,7 @@
 ### Evidência preservada
 
 - (ChatGPT) A rodada local em `39e86591d710100acb32590e38fc6dac4db50d3f` passou preflight, 77 metatestes (75 PASS, 2 SKIP) e coverage V3 (21 SE08, 9 CI não-SEF, 5 SER01, 1.353 IDs únicos), mas parou em `freeze_prepare` antes de criar freeze.
-- (ChatGPT) O validator baseline recusou três arquivos de rastreabilidade por `identificador pessoal/corporativo`; o gatilho era o SHA abreviado `f6516959`, que coincide com a heurística `letra + 6–8 dígitos` embora represente um commit Git.
+- (ChatGPT) O validator baseline recusou três arquivos de rastreabilidade por `identificador pessoal/corporativo`; o gatilho era o SHA completo `f6516959a2f973ea1e163da80548e8ebb0e235cf`, cuja forma abreviada anterior, que coincide com a heurística `letra + 6–8 dígitos` embora represente um commit Git.
 - (ChatGPT) Bundle `b0_39e86591_20260924_authoring.zip` com SHA-256 `889abb4969a9db6f64d55c1026095de86c7d144901e600db1c0a7a6c68712024` preservado; nenhum freeze ou release foi executado.
 
 ### Corrigido
