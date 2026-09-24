@@ -4,7 +4,7 @@
 
 A baseline tem `tools/ci_local.py` com dez etapas e `tools/skill_enforcement/certify_local.py` com perfil SE08 cumulativo. O certifier pós-promoção SER01 seleciona nove etapas não-SEF e suites específicas. Esses conjuntos não são equivalentes apenas porque ambos terminam em PASS.
 
-`catalogos/COBERTURA_BASE.json` lista os entrypoints encontrados e seu destino proposto. O inventário é de suites, não uma contagem de métodos executados. B0 precisa expandi-lo a `test_id` na versão congelada e classificar cada assertion relevante antes de liberar certificação de produção. `METHOD_MAP_PENDING` bloqueia o gate de equivalência, não autoriza omissão.
+`catalogos/COBERTURA_BASE.json` lista os entrypoints encontrados e seu destino proposto. No B0 V3, o inventário executável não usa AST como prova de coleta: suites unittest são carregadas pelo framework e normalizadas em `test_id`; AST fica apenas como diagnóstico. `COMMAND_ONLY` é uma classificação explícita para validadores/probes não-unittest e só fica verde quando o entrypoint declarado existe. `MISSING`, `COLLECTION_ERROR`, `EMPTY_METHOD_MAP` e `UNCLASSIFIED` bloqueiam o gate. Overrides históricos têm schema fechado e sucessores que precisam aparecer na coleta real.
 
 ## 4.2 Três camadas de CI
 
