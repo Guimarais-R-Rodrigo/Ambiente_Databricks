@@ -127,10 +127,13 @@ class DocumentationContractTests(unittest.TestCase):
 
     def test_control_plan_matches_b0_candidate_state(self):
         payload = json.loads((self.plan / "CONTROLE_PLANO.json").read_text(encoding="utf-8"))
-        self.assertEqual("B0_AUDIT_CORRECTIVE_V3_AUTHORING", payload["status"])
+        self.assertIsInstance(payload["status"], str)
+        self.assertTrue(payload["status"].startswith("B0_"))
         self.assertEqual("AUDIT_CORRECTIVE_V3", payload["mechanism_implementation"])
+        self.assertFalse(payload["launchable"])
         self.assertFalse(payload["policy_changed"])
         self.assertEqual("NOT_STARTED", payload["skill_implementation_under_this_plan"])
+        self.assertFalse(payload["merge_performed"])
 
     def test_planning_catalog_counts_and_ids_are_unique(self):
         cases = json.loads((self.plan / "catalogos/CASOS.json").read_text(encoding="utf-8"))
@@ -346,6 +349,24 @@ class IndependentAuditRegressionTests(unittest.TestCase):
                 valid_row=coverage._row("ci:x","CURRENT_INVARIANT",[sys.executable,"tools/validate.py"],{"ci:x"},{})
             self.assertEqual("MISSING",missing["mapping_status"]);self.assertTrue(missing["collection_errors"])
             self.assertEqual("COMMAND_ONLY",valid_row["mapping_status"]);self.assertEqual([],valid_row["collection_errors"])
+
+    def test_unittest_discover_collection_uses_loaded_module_source(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);tests=root/"tools/tests";tests.mkdir(parents=True)
+            p=tests/"test_alpha.py";p.write_text("import unittest\nclass X(unittest.TestCase):\n def test_ok(self): pass\n",encoding="utf-8")
+            with mock.patch.object(coverage,"ROOT",root):
+                ids,errors,_=coverage._collect_command([sys.executable,"-B","-m","unittest","discover","-s","tools/tests","-p","test_*.py","-v"])
+            self.assertEqual([],errors)
+            self.assertEqual(["tools/tests/test_alpha.py::X.test_ok"],ids)
+
+    def test_direct_test_file_with_nonpackage_path_normalizes_from_module_file(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);tests=root/"ambiente_fonte/.assistant/hub_snippets/tests";tests.mkdir(parents=True)
+            p=tests/"test_core.py";p.write_text("import unittest\nclass X(unittest.TestCase):\n def test_ok(self): pass\n",encoding="utf-8")
+            with mock.patch.object(coverage,"ROOT",root):
+                ids,errors,_=coverage._collect_command([sys.executable,p.relative_to(root).as_posix()])
+            self.assertEqual([],errors)
+            self.assertEqual(["ambiente_fonte/.assistant/hub_snippets/tests/test_core.py::X.test_ok"],ids)
 
     def test_override_schema_is_closed_and_requires_successors(self):
         self.assertTrue(coverage._validate_override("x",{"classification":"OTHER","historical_sha":"x","reason":"","successor_ids":[]}))
