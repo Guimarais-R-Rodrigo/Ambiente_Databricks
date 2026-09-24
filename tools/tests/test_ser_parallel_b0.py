@@ -247,6 +247,9 @@ class CorrectiveRegressionTests(unittest.TestCase):
         rows=[*payload["se08"],*payload["ci_non_sef"],*payload["ser01"]]
         self.assertFalse(any(row["mapping_status"]=="EMPTY_METHOD_MAP" for row in rows),payload["issues"])
         self.assertTrue(all(row["mapping_status"] in {"MAPPED","COMMAND_ONLY"} for row in rows),payload["issues"])
+        rendered=coverage._json_cli({"text":"L2→L3"})
+        self.assertEqual({"text":"L2→L3"},json.loads(rendered))
+        rendered.encode("cp1252")
 
 
 class IndependentAuditRegressionTests(unittest.TestCase):
