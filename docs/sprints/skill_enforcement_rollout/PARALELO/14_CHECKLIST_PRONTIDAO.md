@@ -1,6 +1,6 @@
 # 14 — Checklist que impede o próximo handoff defeituoso
 
-Este checklist não está preenchido como PASS. Os itens são obrigações de liberação; a implementação V3 já materializa vários mecanismos, mas o executor não usa este texto para marcar a candidata como pronta sem evidência. Para o B0 atual, RD04/RD06/RD10 só podem avançar após preflight, 82 metatestes, coverage V3 e qualificação de host no SHA final; RD12–RD14 e a parte Windows de RD18 dependem de qualificação real do host.
+Este checklist não está preenchido como PASS. Os itens são obrigações de liberação; a implementação V3 já materializa vários mecanismos, mas o executor não usa este texto para marcar a candidata como pronta sem evidência. Para o B0 atual, RD04/RD06/RD10 só podem avançar após preflight, 84 metatestes, coverage V3, qualificação de host e SHARE sanitizado no SHA final; RD12–RD14 e a parte Windows de RD18 dependem de qualificação real do host.
 
 | ID | Área | Condição objetiva | Fase |
 |---|---|---|---|
