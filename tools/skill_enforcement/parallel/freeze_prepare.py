@@ -104,7 +104,7 @@ def main() -> int:
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
     payload = prepare(apply=args.apply)
-    print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+    print(json.dumps(payload, ensure_ascii=True, indent=2, sort_keys=True))
     return 0 if payload.get("status") == "PASS" else 1
 
 
