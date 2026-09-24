@@ -1,0 +1,16 @@
+{
+  "expectation_version": "SER-PARALLEL-PILOT-EXPECTATION-1",
+  "expected_campaign_pass": false,
+  "expected_cli_exit": 1,
+  "expected_first_failure": "deliberate_fail",
+  "expected_verification_valid": true,
+  "git_identity_preserved": true,
+  "merge_authorized": false,
+  "policy_promotion_authorized": false,
+  "task_statuses": {
+    "deliberate_fail": "FAIL",
+    "dependent_blocked": "BLOCKED_DEPENDENCY",
+    "independent_after_fail": "PASS",
+    "independent_pass": "PASS"
+  }
+}

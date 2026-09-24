@@ -4,18 +4,17 @@ A SER sucede operacionalmente o SEF, sem reabrir SE01–SE08. O objetivo é sust
 
 ## Estado integrado e frente corrente
 
-A SER00 foi aceita e integrada pela PR #101 em `dedde0741ed4c387c3a500adfbf7de2c6166aba5`, após a certificação da candidata e as manutenções A07 #102/#105. A MM01 já compõe essa base. Os documentos históricos da candidata SER00 são preservados; seus estados de pending não desfazem o merge aceito.
+A SER00 foi aceita e integrada pela PR #101. A SER01 foi certificada, promovida para L3 e integrada pela PR #108; a `main` de entrada do B0 é `d2988e97e7b6c5fe1fd561852e947a155c2d731b`. Os estados intermediários e FAILs históricos da SER01 permanecem evidência datada e não são reclassificados.
 
-A SER01 foi iniciada em 2026-09-23. A1–A3 fecharam a validação local, o Receipt de domínio e a certificação prospectiva da superfície `object_validation`. A frente corrente é A4, com prova ambiental no Databricks Free e aderência comportamental no Genie Code; a policy permanece L2 durante toda a coleta externa.
+Em 2026-09-24 o usuário aprovou substituir a espera estritamente sequencial por execução paralela governada. O ADR-0023 preserva os gates do ADR-0022, mas permite autoria e execução independentes conforme DAG explícito. A frente corrente é **B0 — infraestrutura comum de campanha paralela**. B0 não promove skills e não inicia SER02–SER14.
 
 ```text
 SER00 = INTEGRATED
-SER01 = IN_PROGRESS_L3_PROMOTION_CANDIDATE_NOT_CERTIFIED
-A3 = COMPLETE_AT_fcec3e34
-A4_FREE = NOT_RUN
-A4_GENIE = NOT_RUN
-POLICY_PROMOTION = NOT_AUTHORIZED
-SER02 = NOT_STARTED
+SER01 = INTEGRATED_L3
+B0 = AUTHORING_CANDIDATE
+SER02_TO_SER14 = NOT_STARTED
+SER15 = NOT_STARTED
+SER16 = NOT_STARTED
 GITHUB_ACTIONS = DEFERRED_NO_CREDITS
 PROMOCAO_TRABALHO = BLOQUEADA
 ```
@@ -24,7 +23,8 @@ PROMOCAO_TRABALHO = BLOQUEADA
 
 - [Plano Mestre](PLANO_MESTRE.md)
 - [SER00: baseline e decisões](SER00/README.md)
-- [SER01: componente candidato e próximo gate](SER01/README.md)
+- [SER01: histórico da promoção integrada](SER01/README.md)
 - [Checkpoint SER01](SER01/CHECKPOINT.md)
+- [SER paralelo: plano detalhado e B0](PARALELO/README.md)
 
-ChatGPT conduz a implementação e a revisão. O agente Cloud executa somente a missão técnica delegada, sem redesenhar a solução. Aceite da arquitetura, certificação, promoção de policy, publicação e merge são decisões distintas.
+ChatGPT conduz a autoria repo-side e a revisão. No regime paralelo, agentes locais executam e auditam tarefas fechadas pelo manifesto; não redesenham implementação, testes ou critérios. Aceite da arquitetura, certificação, promoção de policy, publicação e merge continuam decisões distintas.

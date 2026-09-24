@@ -1,0 +1,33 @@
+{
+  "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b",
+  "coverage_version": "SER-PARALLEL-COVERAGE-BASE-1",
+  "method_map_status": "PENDING_LOCAL_INVENTORY",
+  "patterns": [
+    "tools/tests/test_skill_enforcement_se01.py",
+    "tools/tests/test_skill_enforcement_se02.py",
+    "tools/tests/test_skill_enforcement_se03.py",
+    "tools/tests/test_skill_enforcement_se04.py",
+    "tools/tests/test_skill_enforcement_se04_runner.py",
+    "tools/tests/test_skill_enforcement_se05.py",
+    "tools/tests/test_skill_enforcement_se05_runner.py",
+    "tools/tests/test_skill_enforcement_se06.py",
+    "tools/tests/test_skill_enforcement_se07.py",
+    "tools/tests/test_skill_enforcement_policy_io.py",
+    "tools/tests/test_skill_enforcement_se08.py",
+    "tools/tests/test_certify_storage_cleanup.py",
+    "tools/tests/test_se08_windows_corrective.py",
+    "tools/tests/test_se08_cleanup_diagnostics.py",
+    "tools/tests/test_certify_local.py",
+    "tools/tests/test_ser01_object_validation.py",
+    "tools/tests/test_ser_certify.py",
+    "tools/tests/test_ser_promotion_certify.py",
+    "tools/tests/test_temas*.py",
+    "tools/tests/test_readme*.py",
+    "tools/tests/test_tool_guards.py",
+    "tools/tests/test_transicao_trabalho.py",
+    "tools/tests/test_concierge_integracao.py",
+    "ambiente_fonte/.assistant/skills/hub-ml-concierge/tests/test_*.py",
+    "ambiente_fonte/.assistant/skills/hub-ml-concierge/tests/validar_pacote.py",
+    "ambiente_fonte/.assistant/hub_snippets/tests/test_core.py"
+  ]
+}

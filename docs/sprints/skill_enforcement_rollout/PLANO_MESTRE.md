@@ -272,3 +272,14 @@ SER_FULLY_CERTIFIED somente com targets aceitos, promoções provadas, adversari
 ## 13. SER-ACTIONS-RECERTIFICATION
 
 Futura e fora do caminho crítico, NOT_BLOCKING / DEFERRED_NO_CREDITS. Quando houver autorização e créditos, reconfirmar a HEAD integrada final da SER, executar campanha consolidada única, registrar todos os runs, preservar failures e corrigir em PR própria. Zero rerun-until-green. Não reclassificar retroativamente local/Free/Genie nem executar automaticamente cada SHA intermediário.
+
+
+## Adendo operacional pós-SER01 — execução paralela governada
+
+**Vigência:** 2026-09-24, após integração da SER01 pela PR #108.
+
+O ADR-0023 complementa a ordem candidata desta versão do plano: os identificadores SER02–SER16 e as dependências L2→L4 permanecem, porém a numeração deixa de impor espera universal entre frentes funcionalmente independentes. Autoria, execução e auditoria seguem o DAG e os manifests aprovados em [PARALELO/PLANO_DETALHADO.md](PARALELO/PLANO_DETALHADO.md).
+
+Regras preservadas: `current_level` continua evidência de capacidade presente; alteração de policy é último ato funcional; Free/Genie e efeitos externos são gates próprios; nenhum PASS é transportado entre SHAs; FAIL histórico não é reclassificado; merge exige autorização humana específica.
+
+O B0 implementa apenas o mecanismo comum e sua qualificação. Nenhuma skill SER02–SER14 é promovida pelo B0.

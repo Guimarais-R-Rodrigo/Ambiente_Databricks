@@ -1,0 +1,24 @@
+{
+  "allowed_command_ids": [],
+  "authorization_ref": null,
+  "candidate_sha": "<40hex>",
+  "evidence_dir": "<external-new-dir>",
+  "forbidden_effects": [
+    "policy_promotion",
+    "merge",
+    "corporate_access"
+  ],
+  "output_contract": "SER-PARALLEL-TASK-RESULT-1",
+  "profile_digest": "<64hex>",
+  "read_roots": [],
+  "release_id": "<release>",
+  "resource_lease": "<lease>",
+  "role_id": "executor",
+  "stage": "<stage>",
+  "stop_rules": [
+    "no_edit_on_fail",
+    "no_retry_until_green"
+  ],
+  "task_id": "<id>",
+  "write_roots": []
+}

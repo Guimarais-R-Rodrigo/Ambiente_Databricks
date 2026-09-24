@@ -1,0 +1,15 @@
+{
+  "codex_client_version": "NOT_RUN",
+  "executor_model": "NOT_RUN",
+  "filesystem": "NOT_RUN",
+  "git": "NOT_RUN",
+  "max_agents": 5,
+  "max_audit_slots": 2,
+  "max_skill_slots": 2,
+  "permission_probe": "NOT_RUN",
+  "platform": "NOT_RUN",
+  "python": "NOT_RUN",
+  "qualification_version": "SER-PARALLEL-HOST-1",
+  "reasoner_model": "NOT_RUN",
+  "status": "PENDING_LOCAL_QUALIFICATION"
+}
