@@ -141,4 +141,21 @@ O `freeze_prepare` executou o validator baseline e parou em três arquivos de ra
 O bundle `b0_39e86591_20260924_authoring.zip` teve SHA-256 `889abb4969a9db6f64d55c1026095de86c7d144901e600db1c0a7a6c68712024`. A saída do `freeze_prepare` nessa rodada foi emitida pelo console em cp1252; a autoria posterior tornou o JSON CLI ASCII-safe e moveu a verificação de higiene para o preflight, para que essa classe de falha apareça antes do freeze.
 
 Nenhum freeze foi criado e nenhum `b0_release` foi executado nesta rodada.
+## Rodada de autoria — e0447ef3 — FAIL no freeze_prepare preservado
+
+```text
+AUTHORING_SHA = e0447ef3c84d99aae5eec565470f65a0c2649171
+AUTHORING_PREFLIGHT = PASS_HYGIENE_FILES_44
+AUTHORING_METATESTS = PASS_79_COLLECTED_77_PASS_2_SKIP
+AUTHORING_COVERAGE = PASS_21_SE08_9_CI_5_SER01_1353_UNIQUE_METHODS
+FREEZE_PREPARE = FAIL
+FREEZE_CREATED = NO
+B0_RELEASE = NOT_RUN
+```
+
+O bundle `b0_e0447ef3_20260924_authoring.zip` teve SHA-256 `6b4fd978b98d54557030f16c7a1273d7d3c4b21dee649dfe340129d0fda3ed7c`. O preflight, os 79 metatestes e o coverage passaram; o `freeze_prepare` parou porque o validator encontrou `identificador pessoal/corporativo` em `tools/tests/test_ser_parallel_b0.py`.
+
+O gatilho era a própria fixture adversarial: o teste que verifica a colisão de SHA curto havia gravado literalmente no source o token que pretendia rejeitar. A corretiva constrói o token em runtime por concatenação, de modo que o comportamento adversarial continua testado sem tornar o arquivo-fonte inválido. O preflight também foi ampliado para incluir o próprio arquivo de metatestes e os módulos do mecanismo na hygiene scan. A varredura repo-side posterior das heurísticas ficou sem matches nos arquivos críticos.
+
+Nenhum freeze foi criado e nenhum `b0_release` foi executado nesta rodada.
 
