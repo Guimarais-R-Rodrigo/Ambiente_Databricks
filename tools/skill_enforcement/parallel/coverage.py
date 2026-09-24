@@ -79,8 +79,9 @@ def inventory() -> dict[str, Any]:
     for name,description,argv in ci.ETAPAS:
         if name=="sef": continue
         paths=_command_test_paths(list(argv)); methods=[m for path in paths for m in test_methods(path)]
-        mapping_status="MAPPED" if methods else ("EMPTY_METHOD_MAP" if paths else "COMMAND_ONLY")
-        ci_rows.append({"step_id":"ci:"+name,"classification":"CURRENT_INVARIANT","description":description,"argv":list(argv),"test_paths":[p.relative_to(ROOT).as_posix() for p in paths],"test_methods":[_classify(m,"CURRENT_INVARIANT",overrides) for m in methods],"mapping_status":mapping_status})
+        step_id="ci:"+name
+        mapping_status="COMMAND_ONLY" if step_id in set(cfg.get("command_only_steps",[])) else ("MAPPED" if methods else ("EMPTY_METHOD_MAP" if paths else "COMMAND_ONLY"))
+        ci_rows.append({"step_id":step_id,"classification":"CURRENT_INVARIANT","description":description,"argv":list(argv),"test_paths":[p.relative_to(ROOT).as_posix() for p in paths],"test_methods":[_classify(m,"CURRENT_INVARIANT",overrides) for m in methods],"mapping_status":mapping_status})
     ser01=[]
     for row in cfg["ser01_groups"]:
         path=ROOT/row["path"]; methods=test_methods(path)
