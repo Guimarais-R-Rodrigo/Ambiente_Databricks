@@ -19,21 +19,11 @@
     "issues"
   ],
   "properties": {
-    "result_schema": {
-      "const": "SER-PARALLEL-RESULT-2"
-    },
-    "task_id": {
-      "type": "string"
-    },
-    "candidate_sha": {
-      "type": "string",
-      "pattern": "^[0-9a-f]{40}$"
-    },
+    "result_schema": {"const": "SER-PARALLEL-RESULT-2"},
+    "task_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{2,127}$"},
+    "candidate_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
     "status": {
       "enum": [
-        "PLANNED",
-        "READY",
-        "RUNNING",
         "PASS",
         "FAIL",
         "BLOCKED_DEPENDENCY",
@@ -43,56 +33,58 @@
         "NOT_APPLICABLE"
       ]
     },
-    "effect_state": {
-      "const": "NONE"
-    },
+    "effect_state": {"const": "NONE"},
     "command_records": {
-      "type": "array"
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "name",
+          "command_id",
+          "argv_template",
+          "argv",
+          "command_started",
+          "exit_code",
+          "timed_out",
+          "cleanup",
+          "duration_seconds",
+          "started_at_utc",
+          "ended_at_utc",
+          "stdout_sha256",
+          "stderr_sha256"
+        ],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "command_id": {"type": "string", "minLength": 1},
+          "argv_template": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "argv": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "command_started": {"type": "boolean"},
+          "exit_code": {"type": "integer"},
+          "timed_out": {"type": "boolean"},
+          "cleanup": {"type": "string"},
+          "duration_seconds": {"type": "number", "minimum": 0},
+          "started_at_utc": {"type": "string"},
+          "ended_at_utc": {"type": "string"},
+          "stdout_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "stderr_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
     },
     "first_failure": {
-      "type": [
-        "string",
-        "null"
+      "anyOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{2,127}$"}
       ]
     },
-    "wave_index": {
-      "type": "integer",
-      "minimum": 0
-    },
-    "started_at_utc": {
-      "type": "string"
-    },
-    "ended_at_utc": {
-      "type": "string"
-    },
-    "protected_fingerprint_before": {
-      "type": "string",
-      "pattern": "^[0-9a-f]{64}$"
-    },
-    "protected_fingerprint_after": {
-      "type": "string",
-      "pattern": "^[0-9a-f]{64}$"
-    },
-    "issues": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "diagnosis": {
-      "type": "string"
-    },
-    "evidence_files": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "blocked_by": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    }
+    "wave_index": {"type": "integer", "minimum": 0},
+    "started_at_utc": {"type": "string"},
+    "ended_at_utc": {"type": "string"},
+    "protected_fingerprint_before": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "protected_fingerprint_after": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "issues": {"type": "array", "items": {"type": "string"}},
+    "diagnosis": {"type": "string"},
+    "evidence_files": {"type": "array", "items": {"type": "string"}},
+    "blocked_by": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
   }
 }
