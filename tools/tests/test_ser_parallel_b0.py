@@ -103,10 +103,10 @@ class CoverageTests(unittest.TestCase):
 
 class PilotVerifierTests(unittest.TestCase):
     def test_selective_expected_failure_is_mechanism_pass(self):
-        summary={"status":"FAIL","first_failure":"pilot.beta.fail","global_stop":None,"verification":{"valid":True,"issues":[]},"results":{"pilot.alpha.pass":{"status":"PASS"},"pilot.beta.fail":{"status":"FAIL"},"pilot.beta.dependent":{"status":"BLOCKED_DEPENDENCY","blocked_by":["pilot.beta.fail"],"command_records":[]},"pilot.gamma.independent":{"status":"PASS"},"pilot.publication.blocked":{"status":"BLOCKED_DEPENDENCY","blocked_by":["pilot.beta.dependent"],"command_records":[]}}}
+        summary={"status":"FAIL","round_id":"B0ROUND-test","release_spec_digest":"9"*64,"first_failure":"pilot.beta.fail","global_stop":None,"issues":[],"verification":{"valid":True,"issues":[]},"results":{"pilot.alpha.pass":{"status":"PASS"},"pilot.beta.fail":{"status":"FAIL"},"pilot.beta.dependent":{"status":"BLOCKED_DEPENDENCY","blocked_by":["pilot.beta.fail"],"command_records":[]},"pilot.gamma.independent":{"status":"PASS"},"pilot.publication.blocked":{"status":"BLOCKED_DEPENDENCY","blocked_by":["pilot.beta.dependent"],"command_records":[]}}}
         self.assertTrue(pilot_verify.verify(summary,"selective")["valid"])
     def test_global_stop_requires_late_task_not_started(self):
-        summary={"status":"FAIL","first_failure":"pilot.global.fail","global_stop":"pilot.global.fail","verification":{"valid":True,"issues":[]},"results":{"pilot.global.arm":{"status":"PASS"},"pilot.global.fail":{"status":"FAIL"},"pilot.global.anchor":{"status":"PASS"},"pilot.global.must_not_start":{"status":"BLOCKED_GLOBAL_STOP","blocked_by":["pilot.global.fail"],"command_records":[]},"pilot.global.integrator":{"status":"BLOCKED_GLOBAL_STOP","blocked_by":["pilot.global.fail"],"command_records":[]}}}
+        summary={"status":"FAIL","round_id":"B0ROUND-test","release_spec_digest":"9"*64,"first_failure":"pilot.global.fail","global_stop":"pilot.global.fail","issues":[],"verification":{"valid":True,"issues":[]},"results":{"pilot.global.arm":{"status":"PASS"},"pilot.global.fail":{"status":"FAIL"},"pilot.global.anchor":{"status":"PASS"},"pilot.global.must_not_start":{"status":"BLOCKED_GLOBAL_STOP","blocked_by":["pilot.global.fail"],"command_records":[]},"pilot.global.integrator":{"status":"BLOCKED_GLOBAL_STOP","blocked_by":["pilot.global.fail"],"command_records":[]}}}
         self.assertTrue(pilot_verify.verify(summary,"global")["valid"])
 
 class LauncherLogicTests(unittest.TestCase):
@@ -193,8 +193,8 @@ class CorrectiveRegressionTests(unittest.TestCase):
         c=campaign(rows);c["max_parallel"]=1;c["max_auditors"]=1;c["resource_limits"]={"audit":1}
         v=verifier.verify_campaign_run(c,{"aaa":result("aaa",wave=0),"bbb":result("bbb",wave=0)})
         joined=" ".join(v["issues"])
-        self.assertIn("MAX_PARALLEL_EXCEEDED",joined);self.assertIn("EXCLUSIVITY_VIOLATION",joined)
-        self.assertIn("AUDITOR_LIMIT_EXCEEDED",joined);self.assertIn("RESOURCE_LIMIT_EXCEEDED",joined)
+        self.assertIn("MAX_PARALLEL_INTERVAL_EXCEEDED",joined);self.assertIn("EXCLUSIVITY_INTERVAL_VIOLATION",joined)
+        self.assertIn("AUDITOR_INTERVAL_LIMIT_EXCEEDED",joined);self.assertIn("RESOURCE_INTERVAL_LIMIT_EXCEEDED",joined)
 
     def test_command_log_hash_binding(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -236,7 +236,7 @@ class CorrectiveRegressionTests(unittest.TestCase):
             self.assertEqual(hashlib.sha256(data).hexdigest(),row["stdout_sha256"])
 
     def test_pilot_rejects_invalid_campaign_verification(self):
-        summary={"status":"FAIL","first_failure":"pilot.beta.fail","global_stop":None,"verification":{"valid":False,"issues":["x"]},"results":{"pilot.alpha.pass":{"status":"PASS"},"pilot.beta.fail":{"status":"FAIL"},"pilot.beta.dependent":{"status":"BLOCKED_DEPENDENCY","blocked_by":["pilot.beta.fail"],"command_records":[]},"pilot.gamma.independent":{"status":"PASS"},"pilot.publication.blocked":{"status":"BLOCKED_DEPENDENCY","blocked_by":["pilot.beta.dependent"],"command_records":[]}}}
+        summary={"status":"FAIL","round_id":"B0ROUND-test","release_spec_digest":"9"*64,"first_failure":"pilot.beta.fail","global_stop":None,"issues":[],"verification":{"valid":False,"issues":["x"]},"results":{"pilot.alpha.pass":{"status":"PASS"},"pilot.beta.fail":{"status":"FAIL"},"pilot.beta.dependent":{"status":"BLOCKED_DEPENDENCY","blocked_by":["pilot.beta.fail"],"command_records":[]},"pilot.gamma.independent":{"status":"PASS"},"pilot.publication.blocked":{"status":"BLOCKED_DEPENDENCY","blocked_by":["pilot.beta.dependent"],"command_records":[]}}}
         self.assertFalse(pilot_verify.verify(summary,"selective")["valid"])
 
     def test_coverage_has_no_empty_method_map(self):
@@ -244,5 +244,104 @@ class CorrectiveRegressionTests(unittest.TestCase):
         rows=[*payload["se08"],*payload["ci_non_sef"],*payload["ser01"]]
         self.assertFalse(any(row["mapping_status"]=="EMPTY_METHOD_MAP" for row in rows),payload["issues"])
         self.assertTrue(all(row["mapping_status"] in {"MAPPED","COMMAND_ONLY"} for row in rows),payload["issues"])
+
+
+class IndependentAuditRegressionTests(unittest.TestCase):
+    def test_result_null_wrong_type_empty_and_missing_are_rejected(self):
+        c=campaign()
+        for results in ({},{"task.a":None},{"task.a":[]},{"task.a":{}}):
+            with self.subTest(results=results):
+                self.assertFalse(verifier.verify_campaign_run(c,results)["valid"])
+
+    def test_required_task_cannot_be_empty_or_not_applicable(self):
+        self.assertIn("TASK_COMMANDS_EMPTY",contract.validate_task(task(command_ids=[])))
+        self.assertFalse(verifier.verify_campaign_run(campaign(),{"task.a":result(status="NOT_APPLICABLE")})["valid"])
+
+    def test_optional_not_applicable_requires_preapproved_reason(self):
+        t=task(required=False);c=campaign([t]);r=result(status="NOT_APPLICABLE")
+        self.assertTrue(verifier.verify_campaign_run(c,{"task.a":r})["valid"])
+        del t["not_applicable_reason"]
+        self.assertFalse(verifier.verify_campaign_run(campaign([t]),{"task.a":r})["valid"])
+
+    def test_command_record_rejects_timeout_bool_exit_missing_exit_and_bad_time(self):
+        variants=[]
+        x=command_record();x["timed_out"]=True;variants.append(x)
+        x=command_record();x["exit_code"]=False;variants.append(x)
+        x=command_record();del x["exit_code"];variants.append(x)
+        x=command_record();x["started_at_utc"]="not-a-time";variants.append(x)
+        for row in variants:
+            with self.subTest(row=row):
+                self.assertTrue(contract.validate_command_record(row))
+
+    def test_temporal_overlap_hidden_by_waves_is_rejected(self):
+        c=campaign([task("aaa",key="same"),task("bbb",key="same")]);c["max_parallel"]=1;c["resource_limits"]={"light":1}
+        a=result("aaa",wave=0);b=result("bbb",wave=1);b["started_at_utc"]=a["started_at_utc"];b["ended_at_utc"]=a["ended_at_utc"]
+        v=verifier.verify_campaign_run(c,{"aaa":a,"bbb":b})
+        self.assertFalse(v["valid"]);self.assertTrue(any("TEMPORAL_BARRIER" in i or "INTERVAL" in i for i in v["issues"]))
+
+    def test_global_stop_block_cannot_precede_failure(self):
+        c=campaign([task("aaa",failure_scope="GLOBAL_CAMPAIGN"),task("bbb",key="k2")])
+        a=result("aaa","FAIL",1,1);b=result("bbb","BLOCKED_GLOBAL_STOP",wave=0);a["first_failure"]=b["first_failure"]="aaa";b["blocked_by"]=["aaa"]
+        self.assertFalse(verifier.verify_campaign_run(c,{"aaa":a,"bbb":b})["valid"])
+
+    def test_cycle_cannot_be_hidden_by_not_applicable(self):
+        ta=task("aaa",["bbb"],"a",required=False);tb=task("bbb",["aaa"],"b",required=False);c=campaign([ta,tb])
+        self.assertFalse(verifier.verify_campaign_run(c,{"aaa":result("aaa","NOT_APPLICABLE"),"bbb":result("bbb","NOT_APPLICABLE")})["valid"])
+
+    def test_secret_scan_cannot_be_resealed_and_filename_is_scanned(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            raw=Path(tmp)/"RAW";share=Path(tmp)/"SHARE";binding=Path(tmp)/"binding.json";raw.mkdir()
+            (raw/"safe.txt").write_text("Bearer abcdefghijklmnopqrstuvwxyz",encoding="utf-8");bundle.write_manifest(raw);bundle.build_share(raw,share,{},binding_path=binding)
+            payload=json.loads(binding.read_text(encoding="utf-8"));payload["secret_scan"]={"policy_version":bundle.SECRET_SCAN_POLICY_VERSION,"status":"PASS","findings":[]};binding.write_text(json.dumps(payload),encoding="utf-8")
+            self.assertFalse(verifier.verify_raw_share_binding(raw,share,binding)["valid"])
+        with tempfile.TemporaryDirectory() as tmp:
+            raw=Path(tmp)/"RAW";share=Path(tmp)/"SHARE";binding=Path(tmp)/"binding.json";raw.mkdir()
+            (raw/"ghp_abcdefghijklmnopqrstuvwxyz.txt").write_text("safe",encoding="utf-8");bundle.write_manifest(raw);built=bundle.build_share(raw,share,{},binding_path=binding)
+            self.assertEqual("FAIL",built["secret_scan"]["status"])
+
+    def test_reserved_metadata_collision_and_external_symlink_are_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            raw=Path(tmp)/"RAW";share=Path(tmp)/"SHARE";raw.mkdir();(raw/"SHARE_METADATA.json").write_text("original",encoding="utf-8");bundle.write_manifest(raw)
+            self.assertRaises(ValueError,bundle.build_share,raw,share,{})
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)/"root";root.mkdir();outside=Path(tmp)/"outside.txt";outside.write_text("x",encoding="utf-8");link=root/"link.txt"
+            try: link.symlink_to(outside)
+            except (OSError,NotImplementedError): self.skipTest("symlink unavailable")
+            self.assertRaises(ValueError,bundle.write_manifest,root)
+
+    def test_real_crlf_and_real_non_utf8_are_discriminant(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            raw=Path(tmp)/"RAW";share=Path(tmp)/"SHARE";binding=Path(tmp)/"binding.json";raw.mkdir()
+            crlf=b"a\r\nb\r\n";(raw/"crlf.txt").write_bytes(crlf);(raw/"binary.bin").write_bytes(b"\xff\xfe\x00");bundle.write_manifest(raw);built=bundle.build_share(raw,share,{},binding_path=binding)
+            self.assertEqual(crlf,(share/"crlf.txt").read_bytes());self.assertIn("BINARY_UNEXAMINED"," ".join(built["secret_scan"]["findings"]))
+
+    def test_process_tree_residual_is_detected(self):
+        if sys.platform=="win32": self.skipTest("Windows job-object proof belongs to host qualification")
+        with tempfile.TemporaryDirectory() as tmp:
+            code='import subprocess,sys;subprocess.Popen([sys.executable,"-c","import time;time.sleep(5)"]);sys.exit(0)'
+            row=process.run_argv([sys.executable,"-c",code],Path(tmp),"tree",timeout=10)
+            self.assertTrue(row["residual_descendants_detected"]);self.assertEqual("COMPLETE_DESCENDANTS_TERMINATED",row["cleanup"])
+
+    def test_coverage_missing_target_and_non_collected_ast_test_are_not_mapped(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);tests=root/"tools/tests";tests.mkdir(parents=True);p=tests/"test_fake.py";p.write_text("class NotATest:\n def test_x(self): pass\n",encoding="utf-8")
+            with mock.patch.object(coverage,"ROOT",root):
+                ids,errors,_=coverage._collect_command(["python","-B","-m","unittest","tools.tests.missing","-v"]);self.assertFalse(ids);self.assertTrue(errors)
+                ids,errors,_=coverage._collect_command(["python","-B",str(p.relative_to(root)),"-v"]);self.assertFalse(ids)
+
+    def test_override_schema_is_closed_and_requires_successors(self):
+        self.assertTrue(coverage._validate_override("x",{"classification":"OTHER","historical_sha":"x","reason":"","successor_ids":[]}))
+
+    def test_round_binding_mismatch_is_rejected(self):
+        c=campaign();c["round_id"]="B0ROUND-other"
+        self.assertFalse(verifier.verify_campaign_run(c,{"task.a":result()})["valid"])
+
+    def test_finding_schema_uses_documented_severity_and_closure_states(self):
+        schema=json.loads((Path(__file__).resolve().parents[2]/"tools/skill_enforcement/parallel/schemas/finding.schema.json").read_text(encoding="utf-8"))
+        self.assertEqual(["F0","F1","F2","F3"],schema["properties"]["severity"]["enum"]);self.assertIn("FIXED_VERIFIED",schema["properties"]["status"]["enum"])
+
+    def test_resource_profile_declares_total_slot_semantics_and_host_lease(self):
+        profile=json.loads((Path(__file__).resolve().parents[2]/"tools/skill_enforcement/parallel/resource_profiles.json").read_text(encoding="utf-8"))
+        self.assertIn("total number",profile["slot_semantics"]);self.assertEqual("SINGLE_LAUNCHER_OS_LEASE",profile["host_coordination"])
 
 if __name__=="__main__": unittest.main()
