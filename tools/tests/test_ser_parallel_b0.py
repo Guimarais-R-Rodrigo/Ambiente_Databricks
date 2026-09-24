@@ -329,6 +329,15 @@ class IndependentAuditRegressionTests(unittest.TestCase):
                 ids,errors,_=coverage._collect_command(["python","-B","-m","unittest","tools.tests.missing","-v"]);self.assertFalse(ids);self.assertTrue(errors)
                 ids,errors,_=coverage._collect_command(["python","-B",str(p.relative_to(root)),"-v"]);self.assertFalse(ids)
 
+    def test_command_only_requires_real_entrypoint(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);(root/"tools").mkdir();valid=root/"tools/validate.py";valid.write_text("print('ok')\n",encoding="utf-8")
+            with mock.patch.object(coverage,"ROOT",root):
+                missing=coverage._row("ci:x","CURRENT_INVARIANT",[sys.executable,"tools/missing.py"],{"ci:x"},{})
+                valid_row=coverage._row("ci:x","CURRENT_INVARIANT",[sys.executable,"tools/validate.py"],{"ci:x"},{})
+            self.assertEqual("MISSING",missing["mapping_status"]);self.assertTrue(missing["collection_errors"])
+            self.assertEqual("COMMAND_ONLY",valid_row["mapping_status"]);self.assertEqual([],valid_row["collection_errors"])
+
     def test_override_schema_is_closed_and_requires_successors(self):
         self.assertTrue(coverage._validate_override("x",{"classification":"OTHER","historical_sha":"x","reason":"","successor_ids":[]}))
 
