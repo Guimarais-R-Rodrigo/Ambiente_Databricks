@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-09-24 — SER B0: worktree dedicado para qualificação local
+
+### Corrigido
+
+- (ChatGPT) O handoff local não exige mais trocar a branch do checkout em que o executor foi iniciado. Checkout sujo ou em outra frente é preservado e usado apenas para `fetch`/descoberta.
+- (ChatGPT) A qualificação passa a ocorrer em `git worktree --detach` novo, externo e limpo, fixado no HEAD remoto exato da PR #113.
+- (ChatGPT) Após os gates verdes, o freeze mecânico é commitado em branch local temporária e publicado por push fast-forward normal para a branch da PR, somente se o remoto continuar no SHA de autoria esperado.
+- (ChatGPT) Stash/reset/clean do checkout original e qualquer force push ficam explicitamente proibidos.
+
+### Motivo
+
+- (ChatGPT) A primeira tentativa local parou corretamente porque o checkout corrente estava na branch `ser/SER00-rollout-baseline` com mudanças locais. O bloqueio preservou trabalho, mas era evitável: identidade do B0 deve ser estabelecida em checkout dedicado, não pela disponibilidade do worktree corrente.
+
 ## 2026-09-24 — SER B0: fechamento repo-side e handoff local
 
 ### Concluído
