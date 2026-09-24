@@ -345,6 +345,17 @@ class IndependentAuditRegressionTests(unittest.TestCase):
         self.assertNotIn("GITHUB_TOKEN",env)
         self.assertNotIn("OPENAI_API_KEY",env)
 
+    def test_clean_env_allows_child_path_home(self):
+        completed=process.subprocess.run(
+            [sys.executable,"-c","from pathlib import Path; p=Path.home(); assert p.is_absolute(); print(p)"],
+            cwd=process.ROOT,
+            env=process._clean_env(),
+            capture_output=True,
+            timeout=30,
+        )
+        self.assertEqual(0,completed.returncode,completed.stderr.decode("utf-8",errors="replace"))
+        self.assertTrue(completed.stdout.strip())
+
     def test_windows_supervisor_assigns_before_child_release(self):
         source=Path(process.__file__).read_text(encoding="utf-8")
         assign=source.index("job.assign(process)")
