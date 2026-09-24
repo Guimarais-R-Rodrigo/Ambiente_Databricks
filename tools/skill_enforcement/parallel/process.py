@@ -242,12 +242,36 @@ def _read_windows_child(path: Path) -> tuple[int | None, str | None]:
     return None, "WINDOWS_CHILD_START_ERROR:" + str(error or "UNKNOWN")
 
 
-def run_argv(argv: list[str], evidence_dir: Path, name: str, *, timeout: float = 120.0) -> dict:
+def _sandbox_argv(argv: list[str], scratch_dir: Path, probe_target: Path | None = None) -> list[str]:
+    wrapped = [
+        sys.executable, "-B", "-m", "tools.skill_enforcement.parallel.sandbox_exec",
+        "--scratch", str(scratch_dir),
+    ]
+    if probe_target is not None:
+        wrapped.extend(["--probe-target", str(probe_target)])
+    wrapped.append(json.dumps(argv))
+    return wrapped
+
+
+def run_argv(
+    argv: list[str],
+    evidence_dir: Path,
+    name: str,
+    *,
+    timeout: float = 120.0,
+    sandbox: bool = False,
+    sandbox_probe_target: Path | None = None,
+) -> dict:
     if not argv or any(not isinstance(x, str) or not x for x in argv):
         raise ValueError("ARGV_INVALID")
     if isinstance(timeout, bool) or not isinstance(timeout, (int, float)) or timeout <= 0:
         raise ValueError("TIMEOUT_INVALID")
     evidence_dir.mkdir(parents=True, exist_ok=True)
+    scratch_dir = evidence_dir / f"{name}.scratch"
+    actual_argv = argv
+    if sandbox:
+        scratch_dir.mkdir(parents=True, exist_ok=False)
+        actual_argv = _sandbox_argv(argv, scratch_dir, sandbox_probe_target)
     started = _utc()
     t0 = time.monotonic()
     prefix = evidence_dir / name
@@ -264,7 +288,7 @@ def run_argv(argv: list[str], evidence_dir: Path, name: str, *, timeout: float =
             if os.name == "nt":
                 job = _WindowsJob()
                 process = subprocess.Popen(
-                    [sys.executable, "-c", _WINDOWS_LAUNCHER, json.dumps(argv), str(windows_child_path)],
+                    [sys.executable, "-c", _WINDOWS_LAUNCHER, json.dumps(actual_argv), str(windows_child_path)],
                     cwd=ROOT,
                     env=_clean_env(),
                     stdin=subprocess.PIPE,
@@ -290,7 +314,7 @@ def run_argv(argv: list[str], evidence_dir: Path, name: str, *, timeout: float =
                     raise
             else:
                 process = subprocess.Popen(
-                    argv,
+                    actual_argv,
                     cwd=ROOT,
                     env=_clean_env(),
                     stdout=stdout_f,
