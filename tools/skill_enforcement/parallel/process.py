@@ -10,6 +10,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
 
+from .contract import COMMAND_RECORD_SCHEMA_VERSION
+
 ROOT = Path(__file__).resolve().parents[3]
 
 
@@ -23,11 +25,14 @@ def fingerprint_paths(root: Path, paths: Iterable[str]) -> str:
         p = root / rel
         h.update(rel.encode("utf-8") + b"\0")
         if not p.exists() and not p.is_symlink():
-            h.update(b"MISSING\0"); continue
+            h.update(b"MISSING\0")
+            continue
         if p.is_symlink():
-            h.update(b"SYMLINK\0" + os.readlink(p).encode("utf-8", "surrogateescape") + b"\0"); continue
+            h.update(b"SYMLINK\0" + os.readlink(p).encode("utf-8", "surrogateescape") + b"\0")
+            continue
         if p.is_file():
-            h.update(b"FILE\0" + hashlib.sha256(p.read_bytes()).digest()); continue
+            h.update(b"FILE\0" + hashlib.sha256(p.read_bytes()).digest())
+            continue
         h.update(b"DIR\0")
         for child in sorted(x for x in p.rglob("*") if x.is_file() or x.is_symlink()):
             child_rel = child.relative_to(root).as_posix()
@@ -53,89 +58,267 @@ def _clean_env() -> dict[str, str]:
     return {key: value for key, value in allowed.items() if value}
 
 
-def _terminate_tree(process: subprocess.Popen[bytes]) -> str:
-    if process.poll() is not None:
-        return "COMPLETE_ALREADY_EXITED"
-    if os.name == "nt":
-        try:
-            subprocess.run(["taskkill", "/PID", str(process.pid), "/T", "/F"], capture_output=True, timeout=10, check=False)
-        except (OSError, subprocess.SubprocessError):
-            try: process.kill()
-            except OSError: pass
-    else:
-        try: os.killpg(process.pid, signal.SIGTERM)
-        except OSError: pass
-        try: process.wait(timeout=2)
-        except subprocess.TimeoutExpired:
-            try: os.killpg(process.pid, signal.SIGKILL)
-            except OSError: pass
+def _group_alive(pgid: int) -> bool:
     try:
-        process.wait(timeout=10)
+        os.killpg(pgid, 0)
+        return True
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+
+
+def _wait_group_gone(pgid: int, timeout: float) -> bool:
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if not _group_alive(pgid):
+            return True
+        time.sleep(0.05)
+    return not _group_alive(pgid)
+
+
+def _terminate_posix_group(pgid: int) -> str:
+    if not _group_alive(pgid):
+        return "COMPLETE_ALREADY_EXITED"
+    try:
+        os.killpg(pgid, signal.SIGTERM)
+    except ProcessLookupError:
+        return "COMPLETE_ALREADY_EXITED"
+    if _wait_group_gone(pgid, 2.0):
         return "COMPLETE"
-    except (subprocess.TimeoutExpired, OSError):
-        return "INCOMPLETE"
+    try:
+        os.killpg(pgid, signal.SIGKILL)
+    except ProcessLookupError:
+        return "COMPLETE"
+    return "COMPLETE" if _wait_group_gone(pgid, 8.0) else "INCOMPLETE"
+
+
+class _WindowsJob:
+    def __init__(self) -> None:
+        import ctypes
+        from ctypes import wintypes as w
+
+        self.ctypes = ctypes
+        self.w = w
+        self.kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        self.handle = self.kernel32.CreateJobObjectW(None, None)
+        if not self.handle:
+            raise OSError(ctypes.get_last_error(), "CreateJobObjectW failed")
+
+        class BasicLimit(ctypes.Structure):
+            _fields_ = [
+                ("PerProcessUserTimeLimit", ctypes.c_longlong),
+                ("PerJobUserTimeLimit", ctypes.c_longlong),
+                ("LimitFlags", w.DWORD),
+                ("MinimumWorkingSetSize", ctypes.c_size_t),
+                ("MaximumWorkingSetSize", ctypes.c_size_t),
+                ("ActiveProcessLimit", w.DWORD),
+                ("Affinity", ctypes.c_size_t),
+                ("PriorityClass", w.DWORD),
+                ("SchedulingClass", w.DWORD),
+            ]
+
+        class IoCounters(ctypes.Structure):
+            _fields_ = [
+                ("ReadOperationCount", ctypes.c_ulonglong),
+                ("WriteOperationCount", ctypes.c_ulonglong),
+                ("OtherOperationCount", ctypes.c_ulonglong),
+                ("ReadTransferCount", ctypes.c_ulonglong),
+                ("WriteTransferCount", ctypes.c_ulonglong),
+                ("OtherTransferCount", ctypes.c_ulonglong),
+            ]
+
+        class ExtendedLimit(ctypes.Structure):
+            _fields_ = [
+                ("BasicLimitInformation", BasicLimit),
+                ("IoInfo", IoCounters),
+                ("ProcessMemoryLimit", ctypes.c_size_t),
+                ("JobMemoryLimit", ctypes.c_size_t),
+                ("PeakProcessMemoryUsed", ctypes.c_size_t),
+                ("PeakJobMemoryUsed", ctypes.c_size_t),
+            ]
+
+        class BasicAccounting(ctypes.Structure):
+            _fields_ = [
+                ("TotalUserTime", ctypes.c_longlong),
+                ("TotalKernelTime", ctypes.c_longlong),
+                ("ThisPeriodTotalUserTime", ctypes.c_longlong),
+                ("ThisPeriodTotalKernelTime", ctypes.c_longlong),
+                ("TotalPageFaultCount", w.DWORD),
+                ("TotalProcesses", w.DWORD),
+                ("ActiveProcesses", w.DWORD),
+                ("TotalTerminatedProcesses", w.DWORD),
+            ]
+
+        self.BasicAccounting = BasicAccounting
+        info = ExtendedLimit()
+        info.BasicLimitInformation.LimitFlags = 0x00002000
+        ok = self.kernel32.SetInformationJobObject(self.handle, 9, ctypes.byref(info), ctypes.sizeof(info))
+        if not ok:
+            err = ctypes.get_last_error()
+            self.close()
+            raise OSError(err, "SetInformationJobObject failed")
+
+    def assign(self, process: subprocess.Popen[bytes]) -> None:
+        handle = self.w.HANDLE(int(process._handle))
+        if not self.kernel32.AssignProcessToJobObject(self.handle, handle):
+            raise OSError(self.ctypes.get_last_error(), "AssignProcessToJobObject failed")
+
+    def active_processes(self) -> int:
+        info = self.BasicAccounting()
+        ok = self.kernel32.QueryInformationJobObject(
+            self.handle, 1, self.ctypes.byref(info), self.ctypes.sizeof(info), None
+        )
+        if not ok:
+            raise OSError(self.ctypes.get_last_error(), "QueryInformationJobObject failed")
+        return int(info.ActiveProcesses)
+
+    def terminate(self) -> bool:
+        return bool(self.kernel32.TerminateJobObject(self.handle, 1))
+
+    def wait_empty(self, timeout: float) -> bool:
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            try:
+                if self.active_processes() == 0:
+                    return True
+            except OSError:
+                return False
+            time.sleep(0.05)
+        try:
+            return self.active_processes() == 0
+        except OSError:
+            return False
+
+    def close(self) -> None:
+        handle = getattr(self, "handle", None)
+        if handle:
+            self.kernel32.CloseHandle(handle)
+            self.handle = None
+
+
+def _hash_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _write_record(prefix: Path, row: dict) -> None:
+    prefix.with_suffix(".json").write_bytes(
+        (json.dumps(row, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
+    )
 
 
 def run_argv(argv: list[str], evidence_dir: Path, name: str, *, timeout: float = 120.0) -> dict:
     if not argv or any(not isinstance(x, str) or not x for x in argv):
         raise ValueError("ARGV_INVALID")
-    if timeout <= 0 or not isinstance(timeout, (int, float)):
+    if isinstance(timeout, bool) or not isinstance(timeout, (int, float)) or timeout <= 0:
         raise ValueError("TIMEOUT_INVALID")
     evidence_dir.mkdir(parents=True, exist_ok=True)
     started = _utc()
     t0 = time.monotonic()
-    flags = subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0
     prefix = evidence_dir / name
     stdout_path = prefix.with_suffix(".stdout.txt")
     stderr_path = prefix.with_suffix(".stderr.txt")
-    try:
-        process = subprocess.Popen(
-            argv, cwd=ROOT, env=_clean_env(), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-            shell=False, start_new_session=(os.name != "nt"), creationflags=flags,
-        )
-    except OSError as exc:
-        stdout_b = b""
-        stderr_b = str(exc).encode("utf-8")
-        stdout_path.write_bytes(stdout_b)
-        stderr_path.write_bytes(stderr_b)
-        row = {
-            "name": name, "argv": argv, "command_started": False, "pid": None,
-            "exit_code": 125, "timed_out": False, "cleanup": "NOT_STARTED",
-            "duration_seconds": time.monotonic() - t0, "started_at_utc": started, "ended_at_utc": _utc(),
-            "stdout_sha256": hashlib.sha256(stdout_b).hexdigest(),
-            "stderr_sha256": hashlib.sha256(stderr_b).hexdigest(),
-            "spawn_error": f"{type(exc).__name__}:{exc}",
-        }
-        prefix.with_suffix(".json").write_bytes(
-            (json.dumps(row, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
-        )
-        return row
-    timed_out = False
-    cleanup = "COMPLETE_ALREADY_EXITED"
-    try:
-        stdout_b, stderr_b = process.communicate(timeout=timeout)
-    except subprocess.TimeoutExpired:
-        timed_out = True
-        cleanup = _terminate_tree(process)
+    flags = subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0
+    job: _WindowsJob | None = None
+    process: subprocess.Popen[bytes] | None = None
+    supervision = "WINDOWS_JOB_OBJECT" if os.name == "nt" else "POSIX_PROCESS_GROUP"
+
+    with stdout_path.open("wb", buffering=0) as stdout_f, stderr_path.open("wb", buffering=0) as stderr_f:
         try:
-            stdout_b, stderr_b = process.communicate(timeout=2)
-        except subprocess.TimeoutExpired:
-            stdout_b, stderr_b = b"", b"cleanup did not finish"
-    stdout_b = stdout_b or b""
-    stderr_b = stderr_b or b""
-    code = process.returncode if process.returncode is not None else 124
-    if timed_out and code == 0:
-        code = 124
-    stdout_path.write_bytes(stdout_b)
-    stderr_path.write_bytes(stderr_b)
-    row = {
-        "name": name, "argv": argv, "command_started": True, "pid": process.pid,
-        "exit_code": int(code), "timed_out": timed_out, "cleanup": cleanup,
-        "duration_seconds": time.monotonic() - t0, "started_at_utc": started, "ended_at_utc": _utc(),
-        "stdout_sha256": hashlib.sha256(stdout_b).hexdigest(),
-        "stderr_sha256": hashlib.sha256(stderr_b).hexdigest(),
-    }
-    prefix.with_suffix(".json").write_bytes(
-        (json.dumps(row, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
-    )
+            if os.name == "nt":
+                job = _WindowsJob()
+            process = subprocess.Popen(
+                argv,
+                cwd=ROOT,
+                env=_clean_env(),
+                stdout=stdout_f,
+                stderr=stderr_f,
+                shell=False,
+                start_new_session=(os.name != "nt"),
+                creationflags=flags,
+            )
+            if job is not None:
+                try:
+                    job.assign(process)
+                except OSError:
+                    try:
+                        process.kill()
+                        process.wait(timeout=5)
+                    except (OSError, subprocess.SubprocessError):
+                        pass
+                    raise
+        except OSError as exc:
+            if job is not None:
+                job.close()
+            stderr_f.write(str(exc).encode("utf-8", errors="replace"))
+            row = {
+                "record_schema": COMMAND_RECORD_SCHEMA_VERSION,
+                "name": name, "argv": argv, "command_started": False, "pid": None,
+                "exit_code": 125, "timed_out": False, "cleanup": "NOT_STARTED",
+                "residual_descendants_detected": False, "supervision": "NOT_STARTED",
+                "duration_seconds": time.monotonic() - t0, "started_at_utc": started, "ended_at_utc": _utc(),
+                "stdout_sha256": "", "stderr_sha256": "",
+                "spawn_error": f"{type(exc).__name__}:{exc}",
+            }
+        else:
+            timed_out = False
+            residual = False
+            cleanup = "COMPLETE_ALREADY_EXITED"
+            try:
+                process.wait(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                timed_out = True
+                if os.name == "nt" and job is not None:
+                    residual = job.active_processes() > 1
+                    job.terminate()
+                    cleanup = "COMPLETE" if job.wait_empty(10.0) else "INCOMPLETE"
+                else:
+                    cleanup = _terminate_posix_group(process.pid)
+                try:
+                    process.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    cleanup = "INCOMPLETE"
+            else:
+                if os.name == "nt" and job is not None:
+                    try:
+                        active = job.active_processes()
+                    except OSError:
+                        active = 1
+                        cleanup = "INCOMPLETE"
+                    if active > 0:
+                        residual = True
+                        job.terminate()
+                        cleanup = "COMPLETE_DESCENDANTS_TERMINATED" if job.wait_empty(10.0) else "INCOMPLETE"
+                elif _group_alive(process.pid):
+                    residual = True
+                    tree_cleanup = _terminate_posix_group(process.pid)
+                    cleanup = "COMPLETE_DESCENDANTS_TERMINATED" if tree_cleanup in {"COMPLETE", "COMPLETE_ALREADY_EXITED"} else "INCOMPLETE"
+            code = process.returncode if process.returncode is not None else 124
+            if timed_out and code == 0:
+                code = 124
+            row = {
+                "record_schema": COMMAND_RECORD_SCHEMA_VERSION,
+                "name": name, "argv": argv, "command_started": True, "pid": process.pid,
+                "exit_code": int(code), "timed_out": timed_out, "cleanup": cleanup,
+                "residual_descendants_detected": residual, "supervision": supervision,
+                "duration_seconds": time.monotonic() - t0, "started_at_utc": started, "ended_at_utc": _utc(),
+                "stdout_sha256": "", "stderr_sha256": "",
+            }
+        finally:
+            if job is not None:
+                job.close()
+            for fh in (stdout_f, stderr_f):
+                try:
+                    fh.flush()
+                    os.fsync(fh.fileno())
+                except OSError:
+                    pass
+
+    row["stdout_sha256"] = _hash_file(stdout_path)
+    row["stderr_sha256"] = _hash_file(stderr_path)
+    _write_record(prefix, row)
     return row
