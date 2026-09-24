@@ -4,7 +4,6 @@
   "plan_id": "SER-PARALLEL-PLAN-2026-09-23",
   "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b",
   "candidate_sha": null,
-  "candidate_tree": null,
   "release_spec_digest": null,
   "unresolved_fields_are_blockers": true,
   "execution_authorized": false,
@@ -23,5 +22,8 @@
   "remote_effects_authorized": false,
   "merge_authorized": false,
   "next_owner": "REPO_SIDE_AUTHORING",
-  "instruction": "Materializar implementação/testes/perfis antes de produzir envelope executável. Não executar este modelo."
+  "instruction": "Materializar implementação/testes/perfis antes de produzir envelope executável. Não executar este modelo.",
+  "round_id": null,
+  "candidate_tree_sha": null,
+  "contract_version": "SER-PARALLEL-CAMPAIGN-3"
 }
