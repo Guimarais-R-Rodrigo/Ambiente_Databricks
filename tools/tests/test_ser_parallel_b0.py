@@ -315,6 +315,15 @@ class IndependentAuditRegressionTests(unittest.TestCase):
             crlf=b"a\r\nb\r\n";(raw/"crlf.txt").write_bytes(crlf);(raw/"binary.bin").write_bytes(b"\xff\xfe\x00");bundle.write_manifest(raw);built=bundle.build_share(raw,share,{},binding_path=binding)
             self.assertEqual(crlf,(share/"crlf.txt").read_bytes());self.assertIn("BINARY_UNEXAMINED"," ".join(built["secret_scan"]["findings"]))
 
+    def test_windows_supervisor_assigns_before_child_release(self):
+        source=Path(process.__file__).read_text(encoding="utf-8")
+        assign=source.index("job.assign(process)")
+        release=source.index('process.stdin.write(b"1")')
+        self.assertLess(assign,release)
+        with tempfile.TemporaryDirectory() as tmp:
+            p=Path(tmp)/"child.json";p.write_text(json.dumps({"pid":123}),encoding="utf-8")
+            self.assertEqual((123,None),process._read_windows_child(p))
+
     def test_process_tree_residual_is_detected(self):
         if sys.platform=="win32": self.skipTest("Windows job-object proof belongs to host qualification")
         with tempfile.TemporaryDirectory() as tmp:
