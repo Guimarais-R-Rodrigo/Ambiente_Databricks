@@ -333,3 +333,12 @@ tools/skill_enforcement/ser01_free_probe.py
 O probe resolve a `.assistant` publicada, verifica o release manifest de `hub-ml-criar-objeto`, confirma que a primitive repo-side não é artifact publicado, executa o verifier com fixture sintética de integridade e testa ausência de `local_record`, Receipt ausente, tamper/replay e policy pré-promoção. Não executa a primitive repo-side, não escreve no produto e não transforma a fixture em prova de execução.
 
 Runbook: `docs/sprints/skill_enforcement_rollout/SER01/A4_RUNBOOK_FREE.md`.
+
+
+## Campanhas SER paralelas — B0
+
+A candidata B0 introduz `parallel_campaign/`, um launcher/verifier repo-side para campanhas declarativas do Skill Enforcement Rollout. Ele não substitui os runners de domínio, não escreve policy e não concede promoção ou merge.
+
+Interfaces previstas no B0: lint de manifests, diagnóstico/certificação/piloto, inventário de testes, qualificação de host, verificação independente, empacotamento RAW/SHARE e validação segura de ZIP. Comandos são registrados por argv fechado; efeitos materiais exigem autorização separada ligada a campanha/candidato/comando.
+
+O mecanismo só pode ser considerado `LOCAL_QUALIFIED` depois do runbook e da auditoria B0.7. Os 28 metatestes M01–M28 são regressões do mecanismo, não promoção de nenhuma skill.

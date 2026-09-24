@@ -1,0 +1,344 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "{python}",
+        "tools/tests/parallel_campaign_fixtures/pilot_worker.py",
+        "pass",
+        "{evidence}",
+        "{task_id}"
+      ],
+      "command_id": "b0.pilot.pass",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 10
+    },
+    {
+      "argv": [
+        "{python}",
+        "tools/tests/parallel_campaign_fixtures/pilot_worker.py",
+        "fail",
+        "{evidence}",
+        "{task_id}"
+      ],
+      "command_id": "b0.pilot.fail",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 10
+    },
+    {
+      "argv": [
+        "{python}",
+        "tools/tests/parallel_campaign_fixtures/pilot_worker.py",
+        "sleep",
+        "{evidence}",
+        "{task_id}"
+      ],
+      "command_id": "b0.pilot.sleep",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 10
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_parallel_campaign_b0",
+        "-v"
+      ],
+      "command_id": "b0.meta",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 120
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "tools/skill_enforcement/validate_contracts.py"
+      ],
+      "command_id": "b0.contracts",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 120
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "tools/skill_enforcement/se07_policy.py"
+      ],
+      "command_id": "b0.policy",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 120
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "tools/validate_assistant.py",
+        "--conferir-readme"
+      ],
+      "command_id": "b0.assistant_snapshot",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_skill_enforcement_policy_io",
+        "-v"
+      ],
+      "command_id": "b0.policy_io",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_certify_local",
+        "-v"
+      ],
+      "command_id": "b0.certifier_regression",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 300
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_ser_promotion_certify",
+        "-v"
+      ],
+      "command_id": "b0.promotion_regression",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 120
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_ser_certify",
+        "-v"
+      ],
+      "command_id": "b0.historical_ser_certifier",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 120
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_skill_enforcement_se07",
+        "-v"
+      ],
+      "command_id": "b0.historical_se07",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 300
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_skill_enforcement_se08",
+        "-v"
+      ],
+      "command_id": "b0.historical_se08",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 300
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_certify_storage_cleanup",
+        "-v"
+      ],
+      "command_id": "b0.storage_cleanup",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 300
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_se08_windows_corrective",
+        "-v"
+      ],
+      "command_id": "b0.windows_corrective",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 300
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_se08_cleanup_diagnostics",
+        "-v"
+      ],
+      "command_id": "b0.cleanup_diagnostics",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 300
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "tools/ci_local.py",
+        "--etapa",
+        "temas",
+        "--verbose"
+      ],
+      "command_id": "b0.ci.temas",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "tools/ci_local.py",
+        "--etapa",
+        "validacao",
+        "--verbose"
+      ],
+      "command_id": "b0.ci.validacao",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "tools/ci_local.py",
+        "--etapa",
+        "biblioteca",
+        "--verbose"
+      ],
+      "command_id": "b0.ci.biblioteca",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "tools/ci_local.py",
+        "--etapa",
+        "ferramentas",
+        "--verbose"
+      ],
+      "command_id": "b0.ci.ferramentas",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "tools/ci_local.py",
+        "--etapa",
+        "transicao",
+        "--verbose"
+      ],
+      "command_id": "b0.ci.transicao",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "tools/ci_local.py",
+        "--etapa",
+        "readmes",
+        "--verbose"
+      ],
+      "command_id": "b0.ci.readmes",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "tools/ci_local.py",
+        "--etapa",
+        "concierge-pacote",
+        "--verbose"
+      ],
+      "command_id": "b0.ci.concierge-pacote",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "tools/ci_local.py",
+        "--etapa",
+        "concierge-regressoes",
+        "--verbose"
+      ],
+      "command_id": "b0.ci.concierge-regressoes",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 900
+    },
+    {
+      "argv": [
+        "{python}",
+        "-B",
+        "tools/ci_local.py",
+        "--etapa",
+        "concierge-integracao",
+        "--verbose"
+      ],
+      "command_id": "b0.ci.concierge-integracao",
+      "effect_class": "read_only",
+      "env_allowlist": [],
+      "timeout_seconds": 900
+    }
+  ],
+  "schema_version": "SER-PARALLEL-COMMAND-REGISTRY-1"
+}

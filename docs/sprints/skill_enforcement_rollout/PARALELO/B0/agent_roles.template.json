@@ -1,0 +1,47 @@
+{
+  "activation": "INACTIVE_TEMPLATE_UNTIL_LOCAL_QUALIFICATION",
+  "profile_version": "SER-PARALLEL-AGENT-ROLES-1",
+  "roles": [
+    {
+      "max_children": 5,
+      "may_authorize": false,
+      "may_edit_repo": false,
+      "may_spawn_workers": true,
+      "model_alias": "reasoner",
+      "role_id": "coordinator"
+    },
+    {
+      "max_children": 0,
+      "may_authorize": false,
+      "may_edit_repo": false,
+      "may_spawn_workers": false,
+      "model_alias": "executor",
+      "role_id": "skill_executor"
+    },
+    {
+      "max_children": 0,
+      "may_authorize": false,
+      "may_edit_repo": false,
+      "may_spawn_workers": false,
+      "model_alias": "reasoner",
+      "role_id": "domain_auditor"
+    },
+    {
+      "max_children": 0,
+      "may_authorize": false,
+      "may_edit_repo": false,
+      "may_spawn_workers": false,
+      "model_alias": "reasoner",
+      "role_id": "evidence_auditor"
+    },
+    {
+      "max_children": 0,
+      "may_authorize": false,
+      "may_edit_repo": true,
+      "may_spawn_workers": false,
+      "model_alias": "executor",
+      "role_id": "integrator",
+      "write_scope": "mechanical_preparation_only"
+    }
+  ]
+}

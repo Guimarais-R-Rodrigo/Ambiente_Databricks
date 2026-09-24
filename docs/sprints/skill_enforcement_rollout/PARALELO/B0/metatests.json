@@ -1,0 +1,201 @@
+{
+  "cases": [
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M01_...",
+      "case_id": "M01",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Producer/verifier discordantes"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M02_...",
+      "case_id": "M02",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Erro de fase"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M03_...",
+      "case_id": "M03",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Stdout/stderr"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M04_...",
+      "case_id": "M04",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Histórico malformado"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M05_...",
+      "case_id": "M05",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Falha mesmo nome/causa diferente"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M06_...",
+      "case_id": "M06",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Missing/duplicate stage"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M07_...",
+      "case_id": "M07",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Reserva de evidência"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M08_...",
+      "case_id": "M08",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Disco/relato indisponível"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M09_...",
+      "case_id": "M09",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Serialização inválida"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M10_...",
+      "case_id": "M10",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Concorrência de dados globais"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M11_...",
+      "case_id": "M11",
+      "required": true,
+      "status": "IMPLEMENTED_WITH_LOCAL_QUALIFICATION_REQUIRED",
+      "title": "Capacidade de isolamento"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M12_...",
+      "case_id": "M12",
+      "required": true,
+      "status": "IMPLEMENTED_WITH_LOCAL_QUALIFICATION_REQUIRED",
+      "title": "Recursão de agentes"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M13_...",
+      "case_id": "M13",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Lock expirado/stale"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M14_...",
+      "case_id": "M14",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Certificado forjado"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M15_...",
+      "case_id": "M15",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Troca de fixture"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M16_...",
+      "case_id": "M16",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Contagem fraudulenta"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M17_...",
+      "case_id": "M17",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Skip não autorizado"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M18_...",
+      "case_id": "M18",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Fim de processo incompleto"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M19_...",
+      "case_id": "M19",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Integridade depois do freeze"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M20_...",
+      "case_id": "M20",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Substituição RAW/SHARE"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M21_...",
+      "case_id": "M21",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "ZIP adversarial"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M22_...",
+      "case_id": "M22",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Progresso enganoso"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M23_...",
+      "case_id": "M23",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Mudança de main"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M24_...",
+      "case_id": "M24",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Replay de autorização"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M25_...",
+      "case_id": "M25",
+      "required": true,
+      "status": "IMPLEMENTED_WITH_LOCAL_QUALIFICATION_REQUIRED",
+      "title": "Regra não carregada"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M26_...",
+      "case_id": "M26",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Identidade circular"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M27_...",
+      "case_id": "M27",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Chamada antes da autorização"
+    },
+    {
+      "binding": "tools.tests.test_parallel_campaign_b0.B0MetaTests.test_M28_...",
+      "case_id": "M28",
+      "required": true,
+      "status": "IMPLEMENTED_REPO_SIDE",
+      "title": "Retomada pós-efeito desconhecido"
+    }
+  ],
+  "catalog_version": "SER-PARALLEL-METATESTS-1"
+}

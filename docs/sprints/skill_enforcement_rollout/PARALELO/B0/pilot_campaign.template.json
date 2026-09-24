@@ -1,0 +1,104 @@
+{
+  "approved_vector_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "baseline_sha": "0000000000000000000000000000000000000000",
+  "campaign_id": "B0-PILOT-SYNTHETIC",
+  "candidate_sha": "0000000000000000000000000000000000000000",
+  "candidate_tree": "0000000000000000000000000000000000000000",
+  "limits": {
+    "max_parallel": 2,
+    "stop_policy": "block_dependents_continue_independent"
+  },
+  "metadata": {
+    "purpose": "synthetic mechanism pilot; no skill promotion"
+  },
+  "mode": "pilot",
+  "release_id": "B0-LOCAL-QUALIFICATION",
+  "round_id": "R1",
+  "schema_version": "SER-PARALLEL-CAMPAIGN-1",
+  "tasks": [
+    {
+      "command_id": "b0.pilot.sleep",
+      "depends_on": [],
+      "env": {},
+      "exclusivity_keys": [
+        "pilot-a"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "light",
+      "task_id": "independent_pass"
+    },
+    {
+      "command_id": "b0.pilot.fail",
+      "depends_on": [],
+      "env": {},
+      "exclusivity_keys": [
+        "pilot-b"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "light",
+      "task_id": "deliberate_fail"
+    },
+    {
+      "command_id": "b0.pilot.pass",
+      "depends_on": [
+        "deliberate_fail"
+      ],
+      "env": {},
+      "exclusivity_keys": [],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "light",
+      "task_id": "dependent_blocked"
+    },
+    {
+      "command_id": "b0.pilot.pass",
+      "depends_on": [
+        "independent_pass"
+      ],
+      "env": {},
+      "exclusivity_keys": [],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "light",
+      "task_id": "independent_after_fail"
+    }
+  ]
+}

@@ -1,0 +1,222 @@
+{
+  "$defs": {
+    "task": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "pattern": "^[A-Za-z0-9._-]{1,128}$",
+          "type": "string"
+        },
+        "depends_on": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "env": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "exclusivity_keys": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "expected_exit_codes": {
+          "items": {
+            "maximum": 255,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "outcome_assertion": {
+          "oneOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "kind": {
+                  "const": "exit_only"
+                }
+              },
+              "required": [
+                "kind"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "expected_failures": {
+                  "items": {
+                    "pattern": "^test_[A-Za-z0-9_]+$",
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true
+                },
+                "forbid_errors": {
+                  "const": true
+                },
+                "kind": {
+                  "const": "unittest_exact_failures"
+                }
+              },
+              "required": [
+                "kind",
+                "expected_failures",
+                "forbid_errors"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "protected_paths": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "repo_write_paths": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "resource_class": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "task_id": {
+          "pattern": "^[A-Za-z0-9._-]{1,96}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "task_id",
+        "command_id",
+        "depends_on",
+        "resource_class",
+        "exclusivity_keys",
+        "required",
+        "expected_exit_codes",
+        "protected_paths",
+        "repo_write_paths",
+        "outcome_assertion"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "ser-parallel-campaign-1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "approved_vector_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "baseline_sha": {
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    },
+    "campaign_id": {
+      "pattern": "^[A-Za-z0-9._-]{3,96}$",
+      "type": "string"
+    },
+    "candidate_sha": {
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    },
+    "candidate_tree": {
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    },
+    "limits": {
+      "additionalProperties": false,
+      "properties": {
+        "max_parallel": {
+          "maximum": 8,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "stop_policy": {
+          "enum": [
+            "fail_fast_global",
+            "block_dependents_continue_independent"
+          ]
+        }
+      },
+      "required": [
+        "max_parallel",
+        "stop_policy"
+      ],
+      "type": "object"
+    },
+    "metadata": {
+      "additionalProperties": {
+        "type": [
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "type": "object"
+    },
+    "mode": {
+      "enum": [
+        "diagnose",
+        "certify",
+        "pilot"
+      ]
+    },
+    "release_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "type": "string"
+    },
+    "round_id": {
+      "pattern": "^[A-Za-z0-9._-]{1,64}$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "SER-PARALLEL-CAMPAIGN-1"
+    },
+    "tasks": {
+      "items": {
+        "$ref": "#/$defs/task"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "campaign_id",
+    "round_id",
+    "mode",
+    "baseline_sha",
+    "candidate_sha",
+    "candidate_tree",
+    "release_id",
+    "tasks",
+    "limits"
+  ],
+  "type": "object"
+}

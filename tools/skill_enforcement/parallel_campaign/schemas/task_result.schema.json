@@ -1,0 +1,132 @@
+{
+  "$id": "ser-parallel-task-result-1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cleanup_complete": {
+      "type": "boolean"
+    },
+    "command_id": {
+      "type": "string"
+    },
+    "command_started": {
+      "type": "boolean"
+    },
+    "effect_state": {
+      "enum": [
+        "NONE",
+        "CREATED",
+        "MODIFIED",
+        "PARTIAL",
+        "UNKNOWN",
+        "CLEANUP_REQUIRED"
+      ]
+    },
+    "ended_at_utc": {
+      "type": "string"
+    },
+    "exit_code": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "expected_exit_codes": {
+      "items": {
+        "type": "integer"
+      },
+      "type": "array"
+    },
+    "issues": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "outcome_observed": {
+      "additionalProperties": false,
+      "properties": {
+        "errors": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "failures": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "kind": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "failures",
+        "errors"
+      ],
+      "type": "object"
+    },
+    "protected_changes": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "repo_mutations": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "SER-PARALLEL-TASK-RESULT-1"
+    },
+    "started_at_utc": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "BLOCKED_DEPENDENCY",
+        "BLOCKED_LOCK",
+        "BLOCKED_DESIGN",
+        "REPORTING_FAILURE"
+      ]
+    },
+    "stderr_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "stdout_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "task_id",
+    "command_id",
+    "status",
+    "exit_code",
+    "expected_exit_codes",
+    "command_started",
+    "cleanup_complete",
+    "started_at_utc",
+    "ended_at_utc",
+    "stdout_sha256",
+    "stderr_sha256",
+    "repo_mutations",
+    "protected_changes",
+    "effect_state",
+    "issues",
+    "outcome_observed"
+  ],
+  "type": "object"
+}

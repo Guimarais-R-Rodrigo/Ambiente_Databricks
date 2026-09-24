@@ -1,0 +1,63 @@
+{
+  "$id": "ser-parallel-command-registry-1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "commands": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "argv": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "command_id": {
+            "pattern": "^[A-Za-z0-9._-]{1,128}$",
+            "type": "string"
+          },
+          "effect_class": {
+            "enum": [
+              "read_only",
+              "repo_fixture_write",
+              "external_effect"
+            ]
+          },
+          "env_allowlist": {
+            "items": {
+              "pattern": "^[A-Z_][A-Z0-9_]*$",
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "timeout_seconds": {
+            "exclusiveMinimum": 0,
+            "maximum": 3600,
+            "type": "number"
+          }
+        },
+        "required": [
+          "command_id",
+          "argv",
+          "env_allowlist",
+          "timeout_seconds",
+          "effect_class"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "SER-PARALLEL-COMMAND-REGISTRY-1"
+    }
+  },
+  "required": [
+    "schema_version",
+    "commands"
+  ],
+  "type": "object"
+}

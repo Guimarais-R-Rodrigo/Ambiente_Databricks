@@ -1,0 +1,603 @@
+{
+  "approved_vector_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "baseline_sha": "0000000000000000000000000000000000000000",
+  "campaign_id": "B0-LOCAL-QUALIFICATION",
+  "candidate_sha": "0000000000000000000000000000000000000000",
+  "candidate_tree": "0000000000000000000000000000000000000000",
+  "limits": {
+    "max_parallel": 1,
+    "stop_policy": "fail_fast_global"
+  },
+  "metadata": {
+    "purpose": "qualify B0 common mechanism; no skill promotion"
+  },
+  "mode": "certify",
+  "release_id": "B0-FOUNDATION-R1",
+  "round_id": "R1",
+  "schema_version": "SER-PARALLEL-CAMPAIGN-1",
+  "tasks": [
+    {
+      "command_id": "b0.meta",
+      "depends_on": [],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "meta"
+    },
+    {
+      "command_id": "b0.contracts",
+      "depends_on": [
+        "meta"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "contracts"
+    },
+    {
+      "command_id": "b0.policy",
+      "depends_on": [
+        "contracts"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "policy"
+    },
+    {
+      "command_id": "b0.assistant_snapshot",
+      "depends_on": [
+        "policy"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "assistant_snapshot"
+    },
+    {
+      "command_id": "b0.policy_io",
+      "depends_on": [
+        "assistant_snapshot"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "policy_io"
+    },
+    {
+      "command_id": "b0.certifier_regression",
+      "depends_on": [
+        "policy_io"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "certifier_regression"
+    },
+    {
+      "command_id": "b0.promotion_regression",
+      "depends_on": [
+        "certifier_regression"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "promotion_regression"
+    },
+    {
+      "command_id": "b0.historical_ser_certifier",
+      "depends_on": [
+        "promotion_regression"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        1
+      ],
+      "outcome_assertion": {
+        "expected_failures": [
+          "test_current_tree_route_is_coherent_pre_promotion"
+        ],
+        "forbid_errors": true,
+        "kind": "unittest_exact_failures"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "historical_ser_certifier"
+    },
+    {
+      "command_id": "b0.historical_se07",
+      "depends_on": [
+        "historical_ser_certifier"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        1
+      ],
+      "outcome_assertion": {
+        "expected_failures": [
+          "test_current_level_is_evidence_based",
+          "test_runtime_resolver"
+        ],
+        "forbid_errors": true,
+        "kind": "unittest_exact_failures"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "historical_se07"
+    },
+    {
+      "command_id": "b0.historical_se08",
+      "depends_on": [
+        "historical_se07"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        1
+      ],
+      "outcome_assertion": {
+        "expected_failures": [
+          "test_create_object_global_level_is_not_promoted_by_se08"
+        ],
+        "forbid_errors": true,
+        "kind": "unittest_exact_failures"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "historical_se08"
+    },
+    {
+      "command_id": "b0.storage_cleanup",
+      "depends_on": [
+        "historical_se08"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "storage_cleanup"
+    },
+    {
+      "command_id": "b0.windows_corrective",
+      "depends_on": [
+        "storage_cleanup"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "windows_corrective"
+    },
+    {
+      "command_id": "b0.cleanup_diagnostics",
+      "depends_on": [
+        "windows_corrective"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "cleanup_diagnostics"
+    },
+    {
+      "command_id": "b0.ci.temas",
+      "depends_on": [
+        "cleanup_diagnostics"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "ci_temas"
+    },
+    {
+      "command_id": "b0.ci.validacao",
+      "depends_on": [
+        "ci_temas"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "ci_validacao"
+    },
+    {
+      "command_id": "b0.ci.biblioteca",
+      "depends_on": [
+        "ci_validacao"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "ci_biblioteca"
+    },
+    {
+      "command_id": "b0.ci.ferramentas",
+      "depends_on": [
+        "ci_biblioteca"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "ci_ferramentas"
+    },
+    {
+      "command_id": "b0.ci.transicao",
+      "depends_on": [
+        "ci_ferramentas"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "ci_transicao"
+    },
+    {
+      "command_id": "b0.ci.readmes",
+      "depends_on": [
+        "ci_transicao"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "ci_readmes"
+    },
+    {
+      "command_id": "b0.ci.concierge-pacote",
+      "depends_on": [
+        "ci_readmes"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "ci_concierge-pacote"
+    },
+    {
+      "command_id": "b0.ci.concierge-regressoes",
+      "depends_on": [
+        "ci_concierge-pacote"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "ci_concierge-regressoes"
+    },
+    {
+      "command_id": "b0.ci.concierge-integracao",
+      "depends_on": [
+        "ci_concierge-regressoes"
+      ],
+      "env": {},
+      "exclusivity_keys": [
+        "b0-qualification"
+      ],
+      "expected_exit_codes": [
+        0
+      ],
+      "outcome_assertion": {
+        "kind": "exit_only"
+      },
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/certify_local.py",
+        "tools/skill_enforcement/ser_certify.py",
+        "tools/skill_enforcement/ser_promotion_certify.py"
+      ],
+      "repo_write_paths": [],
+      "required": true,
+      "resource_class": "qualification",
+      "task_id": "ci_concierge-integracao"
+    }
+  ]
+}

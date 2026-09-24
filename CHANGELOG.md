@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-09-24 — SER B0: fundação da execução paralela governada
+
+### Adicionado
+
+- (ChatGPT) ADR-0023 formaliza o regime paralelo governado após a integração da SER01, preservando ADR-0022, gates humanos e a distinção entre autoria, execução, auditoria e integração.
+- (ChatGPT) `tools/skill_enforcement/parallel_campaign/` adiciona schemas fechados, registry argv, scheduler/locks, supervisor de processos, evidência, verificador independente, inventário, qualificação de host e empacotamento RAW/SHARE.
+- (ChatGPT) B0 recebe 28 metatestes nominados (M01–M28), regressões adicionais de contrato/CLI e manifests de piloto/qualificação ainda não materializados para execução final.
+- (ChatGPT) O plano detalhado aprovado passa a documento dono em `docs/sprints/skill_enforcement_rollout/PARALELO/PLANO_DETALHADO.md`.
+
+### Corrigido durante a autoria
+
+- (ChatGPT) O verifier deixou de aceitar PASS com processo não iniciado/cleanup incompleto.
+- (ChatGPT) Resultados de `BLOCKED_DEPENDENCY`/lock passam a ser persistidos para verificação, evitando discrepância produtor/verifier.
+- (ChatGPT) O CLI passou a suportar invocação por módulo e por path, com regressão específica.
+
+### Limites
+
+- (ChatGPT) Esta candidata não altera `ambiente_fonte/`, `policy.json`, `Novo_Ambiente_Simulado/` ou qualquer nível de skill. B0 ainda requer qualificação local/Windows/Codex, piloto e auditoria B0.7 antes de liberar as campanhas reais.
+
 ## 2026-09-23 — SER01 L3: preparação da certificação pós-promoção R2
 
 ### Notas
