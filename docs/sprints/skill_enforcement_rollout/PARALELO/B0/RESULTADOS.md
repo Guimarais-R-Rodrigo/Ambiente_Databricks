@@ -60,3 +60,21 @@ B0_RELEASE = NOT_RUN
 ```
 
 Falhas de autoria observadas: o coverage tentava normalizar IDs de suites reais a partir do nome importável, o que falha para `discover` fora de package e paths como `.assistant/hub-ml-concierge`; e um metateste documental ainda exigia o checkpoint transitório `B0_AUDIT_CORRECTIVE_V3_AUTHORING`. Ambas foram corrigidas repo-side em SHA posterior. O PASS parcial 68/72 permanece evidência histórica e não é certificado do novo SHA.
+## Rodada local de autoria — 39d2fefa — FAIL preservado
+
+```text
+AUTHORING_SHA = 39d2fefa13fa747c2ab636e8a47cda06737d841e
+AUTHORING_PREFLIGHT = PASS
+METATESTS = PASS
+COLLECTED_AND_EXECUTED = 74
+PASS = 72
+FAIL = 0
+ERROR = 0
+SKIP = 2
+COVERAGE_V3 = FAIL_OUTPUT_ENCODING_CP1252
+FREEZE = NOT_CREATED
+B0_RELEASE = NOT_RUN
+```
+
+A coleta/normalização corrigida funcionou: os 74 metatestes completaram sem falha. O bloqueio seguinte ocorreu apenas na serialização do JSON do coverage para stdout em console Windows `cp1252`, ao encontrar o caractere `→`. O inventário não foi reclassificado; a saída CLI foi corrigida para JSON ASCII-safe, semanticamente equivalente após parsing. A rodada permanece FAIL histórica e exige reexecução integral no SHA novo.
+
