@@ -1,0 +1,23 @@
+{
+  "schema_version": "SER-PARALLEL-COMMANDS-1",
+  "commands": [
+    {
+      "command_id": "b0:pilot:pass",
+      "argv": ["python", "-B", "-m", "tools.skill_enforcement.parallel.pilot_worker", "pass"],
+      "effects": "none",
+      "purpose": "Cenário sintético verde do piloto B0"
+    },
+    {
+      "command_id": "b0:pilot:fail",
+      "argv": ["python", "-B", "-m", "tools.skill_enforcement.parallel.pilot_worker", "fail"],
+      "effects": "none",
+      "purpose": "Falha sintética deliberada para testar propagação seletiva"
+    },
+    {
+      "command_id": "b0:host:probe",
+      "argv": ["python", "-B", "-m", "tools.skill_enforcement.parallel.host_probe"],
+      "effects": "none",
+      "purpose": "Qualificação read-only do host local"
+    }
+  ]
+}
