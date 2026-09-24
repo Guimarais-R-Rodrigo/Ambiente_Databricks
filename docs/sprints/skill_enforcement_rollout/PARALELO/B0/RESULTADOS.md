@@ -7,7 +7,7 @@ A auditoria examinou a candidata `f803b50f898ac93eb0e5541ba428a3656dc4f732` e cl
 ```text
 AUDIT_BASE = f803b50f898ac93eb0e5541ba428a3656dc4f732
 AUDIT_CORRECTIVE_V3 = IMPLEMENTED_REPO_SIDE
-B0_TEST_METHODS_STATIC = 82
+B0_TEST_METHODS_STATIC = 84
 
 AUTHORING_PREFLIGHT_ON_FINAL_SHA = NOT_RUN
 B0_FULL_METATESTS_ON_FINAL_SHA = NOT_RUN
@@ -204,4 +204,47 @@ B0_RELEASE = NOT_RUN
 O único FAIL foi `test_b0_checkpoint_does_not_claim_local_pass`. O teste ainda exigia literalmente o estado antigo `B0.5 HOST_QUALIFICATION = NOT_RUN_LOCAL`, embora a implementação de host qualification já estivesse corretamente marcada como `IMPLEMENTED_RERUN_PENDING` e o estado final separado continuasse `LOCAL_QUALIFICATION = NOT_RUN`. A corretiva torna o metateste estável: valida que a qualificação final continua `NOT_RUN` e rejeita qualquer claim `PASS/LOCAL_QUALIFIED` prematura, sem acoplar-se ao estado de implementação do B0.5.
 
 Bundle `b0_021702a7_20260924_authoring.zip`: SHA-256 `eb5deeffc087008fef3e7d5eb407ffc2395b94c971d6564bc3b674b9c608742f`. Nenhum coverage, freeze ou release foi executado nesta tentativa.
+
+## Rodada completa — 47017817 → freeze eea99938 — LOCAL_QUALIFIED com finding de SHARE
+
+```text
+AUTHORING_SHA = 47017817d76d682d77d95fa55f1d4b7f88f53b04
+AUTHORING_TREE = 7f1d70388c59a16a679b468c2a82367ce5e069c7
+AUTHORING_PREFLIGHT = PASS
+AUTHORING_METATESTS = PASS_82_COLLECTED_80_PASS_2_SKIP
+AUTHORING_COVERAGE = PASS_21_SE08_9_CI_5_SER01_1353_UNIQUE_METHODS
+FREEZE_SHA = eea9993880dcbde1adb18c12aa72346e617dd7d8
+FREEZE_TREE = cc0faa1c6fd9b628fc87e03d8a7908f90f412cbe
+FREEZE_DELTA = README_ONLY
+B0_RELEASE.status = PASS
+B0_RELEASE.release_status = LOCAL_QUALIFIED
+HOST_QUALIFICATION.status = PASS
+SELECTIVE_PILOT = PASS
+GLOBAL_PILOT = PASS
+RAW_VALID = true
+SHARE_VALID_BY_V1 = true
+RAW_SHARE_BINDING_VALID_BY_V1 = true
+SECRET_SCAN_V1 = PASS
+ENVELOPE_VALID_BY_V1 = true
+AUDIT_ACCEPTANCE = BLOCKED
+```
+
+O bundle `b0_47017817_eea99938_host_qualification_complete.zip` teve SHA-256 `e7ae0c06b91a09862a9c412496d27e6198ff6911737c468615e91254c581c6d7`. A auditoria independente recalculou 69/69 entradas RAW e 70/70 entradas SHARE com hash e tamanho válidos; os hashes de `MECHANISM_RESULT`, manifestos, binding e envelope conferem com o `RELEASE_VERDICT`.
+
+A qualificação ambiental passou integralmente: Windows/NTFS observado via WinAPI; probe negativo do sandbox PASS; Job Object comprovado pelos command records; CPU/RAM/disco observados; overlap 2/1 efetivamente observado nos dois pilotos; 3/2 permaneceu não qualificado.
+
+### Finding F0 — SHARE continha home path apesar de PASS
+
+O contraditório encontrou conteúdo de home path do Windows no derivado SHARE, inclusive em `RELEASE_SPEC.json`, coverage/logs e command records. Isso viola o contrato de evidência em `06_AUDITORIA_EVIDENCIA.md`, que determina que homes não entram no SHARE. A política V1 varria segredos, mas não paths pessoais, e `b0_release` chamava `build_share(..., {})` sem substituições; por isso o envelope conseguiu produzir falso PASS para um SHARE não sanitizado.
+
+A rodada continua válida como prova histórica da execução e do host, mas **não é aceita como liberação B0**. A corretiva posterior:
+
+- aplica substituições padrão de repo root e home por `<REPO>` e `<HOME>`, inclusive variantes escapadas de JSON;
+- promove a política de scan para `SER-PARALLEL-SECRET-SCAN-2`;
+- faz o scan reprovar home paths residuais Windows/POSIX;
+- mantém RAW imutável;
+- faz o verifier recalcular o scan V2;
+- adiciona regressões de sanitização e de rejeição de home path residual.
+
+Como houve mudança funcional em evidence packaging/verifier, o freeze `eea99938...` é histórico e não reutilizável. Nova rodada integral é obrigatória.
 
