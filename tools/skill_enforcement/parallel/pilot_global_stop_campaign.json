@@ -125,6 +125,33 @@
       "required": true,
       "expected_effect": "NONE",
       "failure_scope": "LOCAL_CHAIN"
+    },
+    {
+      "task_schema": "SER-PARALLEL-TASK-2",
+      "task_id": "pilot.global.integrator",
+      "role": "integrator",
+      "stage": "B0.6",
+      "skill": "synthetic",
+      "candidate_sha": "0000000000000000000000000000000000000000",
+      "command_ids": [
+        "b0:pilot:pass"
+      ],
+      "depends_on": [
+        "pilot.global.anchor"
+      ],
+      "read_roots": [
+        "tools/skill_enforcement/parallel"
+      ],
+      "write_roots": [],
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/parallel"
+      ],
+      "resource_class": "external_effect",
+      "exclusivity_key": "global-publication",
+      "required": true,
+      "expected_effect": "NONE",
+      "failure_scope": "LOCAL_CHAIN"
     }
   ]
 }
