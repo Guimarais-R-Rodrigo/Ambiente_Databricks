@@ -4,26 +4,31 @@ import hashlib
 import json
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 from unittest import mock
 
 from tools.skill_enforcement.parallel import bundle, contract, coverage, registry, scheduler, verifier, pilot_verify
-from tools.skill_enforcement.parallel import launcher, process
+from tools.skill_enforcement.parallel import launcher, process, preflight, round_identity
 
 
-def task(task_id="task.a", deps=None, key="k", role="executor", resource="light", failure_scope="LOCAL_CHAIN"):
-    return {"task_schema":contract.TASK_SCHEMA_VERSION,"task_id":task_id,"role":role,"stage":"B0.6","skill":"synthetic","candidate_sha":"a"*40,"command_ids":["b0:pilot:pass"],"depends_on":deps or [],"read_roots":["tools"],"write_roots":[],"protected_paths":["ambiente_fonte"],"resource_class":resource,"exclusivity_key":key,"required":True,"expected_effect":"NONE","failure_scope":failure_scope}
+def task(task_id="task.a", deps=None, key="k", role="executor", resource="light", failure_scope="LOCAL_CHAIN", required=True, command_ids=None):
+    row={"task_schema":contract.TASK_SCHEMA_VERSION,"task_id":task_id,"role":role,"stage":"B0.6","skill":"synthetic","candidate_sha":"a"*40,"command_ids":command_ids if command_ids is not None else ["b0:pilot:pass"],"depends_on":deps or [],"read_roots":["tools"],"write_roots":[],"protected_paths":["ambiente_fonte"],"resource_class":resource,"exclusivity_key":key,"required":required,"expected_effect":"NONE","failure_scope":failure_scope}
+    if not required: row["not_applicable_reason"]="preapproved synthetic optional case"
+    return row
 
 def campaign(tasks=None):
-    return {"schema_version":contract.CAMPAIGN_SCHEMA_VERSION,"campaign_id":"SER-B0-TEST","baseline_sha":"b"*40,"candidate_sha":"a"*40,"state":"PLANNED","max_parallel":2,"max_auditors":1,"resource_limits":{"light":2,"audit":1},"tasks":tasks or [task()],"command_registry_digest":"1"*64,"coverage_digest":"2"*64,"policy_before_digest":"3"*64,"human_gates":["B0_RELEASE"],"external_gates":[],"repo_mode":"READ_ONLY"}
+    return {"schema_version":contract.CAMPAIGN_SCHEMA_VERSION,"campaign_id":"SER-B0-TEST","round_id":"B0ROUND-test","release_spec_digest":"9"*64,"baseline_sha":"b"*40,"candidate_sha":"a"*40,"candidate_tree_sha":"c"*40,"state":"PLANNED","max_parallel":2,"max_auditors":1,"resource_limits":{"light":2,"audit":1},"tasks":tasks or [task()],"command_registry_digest":"1"*64,"coverage_digest":"2"*64,"policy_before_digest":"3"*64,"human_gates":["B0_RELEASE"],"external_gates":[],"repo_mode":"READ_ONLY"}
 
 def command_record(command_id="b0:pilot:pass",exit_code=0):
     argv,_=registry.resolve_command(command_id); empty=hashlib.sha256(b"").hexdigest()
-    return {"name":command_id.replace(":","_"),"argv":argv,"exit_code":exit_code,"command_started":True,"cleanup":"COMPLETE","stdout_sha256":empty,"stderr_sha256":empty}
+    return {"record_schema":contract.COMMAND_RECORD_SCHEMA_VERSION,"name":command_id.replace(":","_"),"argv":argv,"command_started":True,"pid":12345,"exit_code":exit_code,"timed_out":False,"cleanup":"COMPLETE","residual_descendants_detected":False,"supervision":"POSIX_PROCESS_GROUP","duration_seconds":0.1,"started_at_utc":"2026-09-24T00:00:00+00:00","ended_at_utc":"2026-09-24T00:00:01+00:00","stdout_sha256":empty,"stderr_sha256":empty}
 
 def result(task_id="task.a",status="PASS",exit_code=0,wave=0,command_id="b0:pilot:pass"):
-    return {"result_schema":contract.RESULT_SCHEMA_VERSION,"task_id":task_id,"candidate_sha":"a"*40,"status":status,"effect_state":"NONE","command_records":[] if status.startswith("BLOCKED") else [command_record(command_id,exit_code)],"first_failure":None,"wave_index":wave,"started_at_utc":"2026-09-24T00:00:00Z","ended_at_utc":"2026-09-24T00:00:01Z","protected_fingerprint_before":"4"*64,"protected_fingerprint_after":"4"*64,"issues":[]}
+    blocked=status.startswith("BLOCKED") or status=="NOT_APPLICABLE"
+    start=min(wave*2,8); end=min(wave*2+1,9)
+    return {"result_schema":contract.RESULT_SCHEMA_VERSION,"task_id":task_id,"round_id":"B0ROUND-test","release_spec_digest":"9"*64,"candidate_sha":"a"*40,"status":status,"effect_state":"NONE","command_records":[] if blocked else [command_record(command_id,exit_code)],"first_failure":None,"wave_index":wave,"started_at_utc":f"2026-09-24T00:00:0{start}+00:00","ended_at_utc":f"2026-09-24T00:00:0{end}+00:00","protected_fingerprint_before":"4"*64,"protected_fingerprint_after":"4"*64,"issues":[]}
 
 class ContractTests(unittest.TestCase):
     def test_valid_task(self): self.assertEqual([],contract.validate_task(task()))
@@ -46,11 +51,13 @@ class RegistryTests(unittest.TestCase):
     def test_shell_and_inline_code_rejected(self):
         for argv in (["bash","-c","echo x"],["{PYTHON}","-c","print(1)"]):
             with self.subTest(argv=argv), tempfile.TemporaryDirectory() as tmp:
-                p=Path(tmp)/"r.json";p.write_text(json.dumps({"schema_version":"SER-PARALLEL-COMMANDS-2","commands":[{"command_id":"x","argv":argv,"effects":"none","purpose":"x"}]}))
+                payload=json.loads(registry.DEFAULT_REGISTRY.read_text(encoding="utf-8"));payload["commands"][0]["argv"]=argv
+                p=Path(tmp)/"r.json";p.write_text(json.dumps(payload),encoding="utf-8")
                 self.assertRaises(registry.RegistryError,registry.load_registry,p)
     def test_unknown_placeholder_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
-            p=Path(tmp)/"r.json";p.write_text(json.dumps({"schema_version":"SER-PARALLEL-COMMANDS-2","commands":[{"command_id":"x","argv":["{SHELL}","x"],"effects":"none","purpose":"x"}]}))
+            payload=json.loads(registry.DEFAULT_REGISTRY.read_text(encoding="utf-8"));payload["commands"][0]["argv"]=["{SHELL}","x"]
+            p=Path(tmp)/"r.json";p.write_text(json.dumps(payload),encoding="utf-8")
             self.assertRaises(registry.RegistryError,registry.load_registry,p)
 
 class SchedulerTests(unittest.TestCase):
@@ -77,7 +84,7 @@ class BundleTests(unittest.TestCase):
     def test_tamper_detected(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);(root/"a.txt").write_text("a");bundle.write_manifest(root);(root/"a.txt").write_text("b");self.assertFalse(verifier.verify_bundle(root)["valid"])
-    def test_raw_share_identity_distinct(self): self.assertTrue(bundle.raw_share_binding(b"a",b"b")["identities_are_distinct"])
+    def test_raw_share_identity_distinct(self): self.assertTrue(bundle.raw_share_binding(b"a",b"b",{"policy_version":bundle.SECRET_SCAN_POLICY_VERSION,"status":"PASS","findings":[]})["identities_are_distinct"])
     def test_secret_scan(self): self.assertTrue(bundle.scan_text("Bearer abcdefghijklmnopqrstuvwxyz"))
 
 class CoverageTests(unittest.TestCase):
@@ -120,8 +127,8 @@ class DocumentationContractTests(unittest.TestCase):
 
     def test_control_plan_matches_b0_candidate_state(self):
         payload = json.loads((self.plan / "CONTROLE_PLANO.json").read_text(encoding="utf-8"))
-        self.assertEqual("B0_CORRECTED_CANDIDATE_FULL_CHECKOUT_TESTS_PENDING", payload["status"])
-        self.assertEqual("CORRECTED_CANDIDATE", payload["mechanism_implementation"])
+        self.assertEqual("B0_AUDIT_CORRECTIVE_V3_AUTHORING", payload["status"])
+        self.assertEqual("AUDIT_CORRECTIVE_V3", payload["mechanism_implementation"])
         self.assertFalse(payload["policy_changed"])
         self.assertEqual("NOT_STARTED", payload["skill_implementation_under_this_plan"])
 
@@ -207,7 +214,7 @@ class CorrectiveRegressionTests(unittest.TestCase):
     def test_share_binary_unexamined_fails_and_binding_matches_final_manifest(self):
         with tempfile.TemporaryDirectory() as tmp:
             raw=Path(tmp)/"RAW";share=Path(tmp)/"SHARE";binding_path=Path(tmp)/"binding.json";raw.mkdir()
-            (raw/"x.bin").write_bytes(b"\\xffBearer abcdefghijklmnopqrstuvwxyz");bundle.write_manifest(raw)
+            (raw/"x.bin").write_bytes(b"\xffBearer abcdefghijklmnopqrstuvwxyz");bundle.write_manifest(raw)
             binding=bundle.build_share(raw,share,{},binding_path=binding_path)
             self.assertEqual("FAIL",binding["secret_scan"]["status"])
             self.assertEqual(hashlib.sha256((share/"MANIFEST.json").read_bytes()).hexdigest(),binding["share_manifest_sha256"])
@@ -216,7 +223,7 @@ class CorrectiveRegressionTests(unittest.TestCase):
     def test_share_preserves_crlf_when_no_substitution(self):
         with tempfile.TemporaryDirectory() as tmp:
             raw=Path(tmp)/"RAW";share=Path(tmp)/"SHARE";binding_path=Path(tmp)/"binding.json";raw.mkdir()
-            original=b"a\\r\\nb\\r\\n";(raw/"x.txt").write_bytes(original);bundle.write_manifest(raw)
+            original=b"a\r\nb\r\n";(raw/"x.txt").write_bytes(original);bundle.write_manifest(raw)
             bundle.build_share(raw,share,{},binding_path=binding_path)
             self.assertEqual(original,(share/"x.txt").read_bytes())
             self.assertTrue(verifier.verify_raw_share_binding(raw,share,binding_path)["valid"])
@@ -225,7 +232,7 @@ class CorrectiveRegressionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             row=process.run_argv([sys.executable,"-c",'import sys;sys.stdout.buffer.write(b"a\\r\\nb\\r\\n")'],Path(tmp),"raw")
             data=(Path(tmp)/"raw.stdout.txt").read_bytes()
-            self.assertEqual(b"a\\r\\nb\\r\\n",data)
+            self.assertEqual(b"a\r\nb\r\n",data)
             self.assertEqual(hashlib.sha256(data).hexdigest(),row["stdout_sha256"])
 
     def test_pilot_rejects_invalid_campaign_verification(self):
