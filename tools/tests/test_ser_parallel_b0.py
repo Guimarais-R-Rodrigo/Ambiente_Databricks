@@ -11,7 +11,7 @@ from pathlib import Path
 from unittest import mock
 
 from tools.skill_enforcement.parallel import bundle, contract, coverage, registry, scheduler, verifier, pilot_verify
-from tools.skill_enforcement.parallel import launcher, process, preflight, round_identity, freeze_prepare, host_qualification
+from tools.skill_enforcement.parallel import launcher, process, preflight, round_identity, freeze_prepare, host_qualification, b0_release
 
 
 def task(task_id="task.a", deps=None, key="k", role="executor", resource="light", failure_scope="LOCAL_CHAIN", required=True, command_ids=None):
@@ -523,6 +523,8 @@ class IndependentAuditRegressionTests(unittest.TestCase):
         self.assertEqual("QUALIFIED_BY_OBSERVED_PILOTS",qualified["initial_profile"]["status"])
         self.assertEqual("NOT_QUALIFIED_REQUIRES_SEPARATE_HEADROOM_MEASUREMENT",qualified["post_pilot_candidate_3_2"])
         self.assertEqual("FAIL",bad_fs["status"])
+        self.assertEqual("LOCAL_QUALIFIED",b0_release._host_release_status(qualified))
+        self.assertEqual("PENDING_HOST_QUALIFICATION",b0_release._host_release_status(bad_fs))
 
     def test_round_start_detects_clean_head_swap(self):
         row={"candidate_sha":"a"*40,"candidate_tree_sha":"b"*40,"baseline_sha":"c"*40}
