@@ -83,3 +83,12 @@ O encerramento de sessão persiste journal e status fora do produto. Ao retomar,
 ## 9.10 Critério para aceitar um handoff
 
 Todos os campos obrigatórios resolvidos; modelo e permissões qualificados; command IDs existentes; digests coerentes; candidatas acessíveis; decisões materiais fechadas; recursos disponíveis e destino exclusivo. Uma tarefa que precise começar com “descubra como implementar ou testar” não é um handoff de execução válido.
+
+## 9.11 Handoff executável: B0 versus campanhas reais
+
+O B0 não precisa de um gerador genérico de handoff para skills que ainda não possuem perfil executável materializado. Sua própria qualificação já é fechada pelo repositório: o operador recebe SHA/branch e um único entrypoint de release; `b0_release` cria a identidade da rodada, executa os gates allowlisted, materializa campanhas sintéticas e emite o veredito externo.
+
+Para B1 e campanhas reais, o handoff deve ser **gerado a partir do manifesto/perfil aprovado**, não redigitado em conversa. O gerador será implementado junto do primeiro pacote real (piloto SER03/SER05 ou substituto autorizado), quando os campos concretos de domínio, cases, fixtures, resources e gates externos existirem. Isso evita congelar agora uma abstração especulativa e reduz drift entre campanha, dossiê e prompt operacional.
+
+O artefato gerado deve conter apenas projeções verificáveis do dono normativo: round/release identity, task/role, command IDs, digests, roots, lease, evidence destination, expected exits, stop rules, outputs obrigatórios e ações proibidas. Campos não resolvidos bloqueiam geração. Texto explicativo pode acompanhar o pacote, mas não altera os bytes/autoridades do manifesto.
+
