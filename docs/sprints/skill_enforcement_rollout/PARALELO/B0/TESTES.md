@@ -46,6 +46,8 @@ AST é apenas diagnóstico paralelo (`ast_methods`); não define `MAPPED`. Overr
 
 No Windows, um launcher Python permanece bloqueado em stdin. O launcher é primeiro atribuído a um Job Object com kill-on-close; somente então recebe o byte de liberação e cria o comando real. Assim, o alvo e seus descendentes nascem dentro do job. O PID do child é preservado em evidência. A prova efetiva dessa semântica no Windows continua gate de host, não inferência do teste Linux.
 
+O ambiente do child é uma allowlist explícita: metadados necessários ao runtime do SO podem ser preservados, mas credenciais/tokens não. A suíte executa também o **coverage completo em subprocesso com exatamente `_clean_env()`** e exige `status=PASS` com 21/9/5; esse gate existe para impedir divergência entre a execução direta de autoria e a execução interna do `b0_release`.
+
 ## 5. Pilotos e verificação independente
 
 - selective: falha deliberada bloqueia apenas dependentes; frente independente continua; integrador/publicação sintética fica bloqueado.
