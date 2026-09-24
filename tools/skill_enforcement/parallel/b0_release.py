@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 from typing import Any, Mapping
 
-from .bundle import build_share, write_manifest
+from .bundle import build_share, default_share_substitutions, write_manifest
 from .pilot_verify import verify as verify_pilot
 from .prepare_pilot import prepare
 from .process import ROOT, run_argv
@@ -33,7 +33,7 @@ def _finish(output_dir,result,*,round_start=None,release_spec=None):
  mechanism_path=output_dir/"MECHANISM_RESULT.json"; mechanism_path.write_bytes(_json_bytes(result)); raw_manifest_path=write_manifest(output_dir)
  share_root=output_dir.parent/f"{output_dir.name}_SHARE"; binding_path=output_dir.parent/f"{output_dir.name}_RAW_SHARE_BINDING.json"; envelope_path=output_dir.parent/f"{output_dir.name}_ENVELOPE_VERIFICATION.json"; verdict_path=output_dir.parent/f"{output_dir.name}_RELEASE_VERDICT.json"
  try:
-  build_share(output_dir,share_root,{},binding_path=binding_path); envelope=verify_raw_share_binding(output_dir,share_root,binding_path)
+  build_share(output_dir,share_root,default_share_substitutions(ROOT),binding_path=binding_path); envelope=verify_raw_share_binding(output_dir,share_root,binding_path)
  except Exception as exc: envelope={"valid":False,"issues":[f"EVIDENCE_ENVELOPE_EXCEPTION:{type(exc).__name__}:{exc}"]}
  envelope_path.write_bytes(_json_bytes(envelope))
  final_status="PASS" if result.get("status")=="PASS" and envelope.get("valid") is True else "FAIL"; release_status=result.get("release_status","NOT_QUALIFIED") if final_status=="PASS" else "NOT_QUALIFIED"; identity=release_spec or round_start or {}
