@@ -1,5 +1,29 @@
 # Changelog
 
+## 2026-09-24 — SER B0: mecanismo PASS e qualificação ambiental executável
+
+### Evidência preservada
+
+- (ChatGPT) A autoria `0ff29b5e4f859c219626c502ad8a96b0ab1eee11` passou preflight, 79 metatestes (77 PASS, 2 SKIP) e coverage V3 (21 SE08, 9 CI não-SEF, 5 SER01, 1.353 IDs únicos).
+- (ChatGPT) O freeze `dd147b79e4949a70f827a5521b5b869bec679dc0` executou `b0_release` com exit 0; `RELEASE_VERDICT.status=PASS`, ambos os pilotos e verificações independentes passaram, e RAW/SHARE/binding/secret scan/envelope ficaram válidos.
+- (ChatGPT) O release permaneceu `PENDING_HOST_QUALIFICATION` porque o probe anterior não observava NTFS, sandbox efetivo nem recursos. Bundle `b0_0ff29b5e_dd147b79_20260924_complete.zip` com SHA-256 `c5a66993c2026f4e656c14ae56115d5bc3cf296cb9cc8e1ff48f76db03bb5772` auditado integralmente.
+
+### Adicionado
+
+- (ChatGPT) `sandbox_exec.py`: sandbox Python audit-hook para tasks allowlisted do B0, com leitura do repositório, escrita somente em scratch exclusivo e bloqueio de subprocesso/rede.
+- (ChatGPT) `sandbox_probe.py`: probe negativo que exige scratch write permitido, escrita externa/subprocesso/rede bloqueados e credencial sentinela ausente.
+- (ChatGPT) `host_qualification.py`: agrega NTFS observado, sandbox, Job Object dos command records, snapshot de CPU/RAM/disco e concorrência 2/1 efetivamente observada nos pilotos.
+- (ChatGPT) `host_probe.py` passa a observar filesystem Windows via `GetVolumeInformationW`, sem depender de `fsutil`; configuração de modelo é N/A para o runtime Python determinístico do B0.
+- (ChatGPT) O launcher executa todos os comandos de task através do sandbox; o command record preserva o argv lógico allowlisted.
+- (ChatGPT) `b0_release` executa o probe negativo, produz `sandbox_probe.json` e `HOST_QUALIFICATION.json` e só deriva `LOCAL_QUALIFIED` de `HOST_QUALIFICATION.status=PASS`.
+- (ChatGPT) A suíte B0 passa a 82 métodos definidos estaticamente, com regressões end-to-end do sandbox, enforcement do launcher e qualificação do host.
+
+### Limites
+
+- (ChatGPT) O sandbox é Python audit-hook para tasks Python allowlisted do B0, não um container/ACL genérico de SO. Comandos B1 que necessitem subprocesso, rede ou escrita externa exigem extensão e prova próprias.
+- (ChatGPT) O perfil inicial 2/1 pode ser qualificado pela nova rodada; 3/2 permanece `NOT_QUALIFIED_REQUIRES_SEPARATE_HEADROOM_MEASUREMENT`.
+- (ChatGPT) O freeze `dd147b79...` é histórico após mudança funcional. O SHA atual exige nova autoria, novo freeze e uma única nova rodada de release.
+
 ## 2026-09-24 — SER B0: regressão adversarial de higiene corrigida no source de testes
 
 ### Evidência preservada
