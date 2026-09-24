@@ -98,4 +98,29 @@ ENVELOPE_VALID = true
 A falha ocorreu apenas dentro do `b0_release`: o supervisor executou os metatestes com ambiente sanitizado sem `HOME/USERPROFILE/HOMEDRIVE/HOMEPATH`; no Windows, `Path.home()` levantou `RuntimeError` ao importar `certify_local.py` via coverage. O preflight interno passou. O envelope de falha foi íntegro: manifests RAW/SHARE, binding e todos os hashes referenciados pelo `RELEASE_VERDICT` foram recalculados independentemente e conferem.
 
 O freeze `49385c30...` é preservado como evidência histórica, mas foi invalidado pela correção funcional posterior. Não pode ser reutilizado como candidata de release. O supervisor passou a preservar apenas as variáveis não sensíveis de identidade do home necessárias ao runtime, mantendo tokens/credenciais fora da allowlist, e a suíte ganhou reprodução direta de `Path.home()` no child environment.
+## Rodada de release — freeze f6516959 — FAIL preservado
+
+```text
+AUTHORING_SHA = e62861bb13d5da5ab3248ab094225aaf4ded5b41
+AUTHORING_TREE = 11ded361baf8b242a6eb8eacf1e29e2ed08d5b53
+AUTHORING_PREFLIGHT = PASS
+AUTHORING_METATESTS = PASS_76_COLLECTED_74_PASS_2_SKIP
+AUTHORING_COVERAGE = PASS_21_SE08_9_CI_5_SER01_1353_UNIQUE_METHODS
+FREEZE_SHA = f6516959a2f973ea1e163da80548e8ebb0e235cf
+FREEZE_TREE = 11ded361baf8b242a6eb8eacf1e29e2ed08d5b53
+FREEZE_KIND = EMPTY_MARKER_TREE_IDENTICAL_TO_AUTHORING
+B0_RELEASE = FAIL
+FIRST_FAILURE = metatests
+RELEASE_STATUS = NOT_QUALIFIED
+RAW_VALID = true
+SHARE_VALID = true
+RAW_SHARE_BINDING_VALID = true
+ENVELOPE_VALID = true
+```
+
+A autoria externa ao supervisor passou integralmente, inclusive coverage com 1.353 IDs únicos. O `freeze_prepare` reportou `changed=false`; o commit `f6516959...` é um marcador vazio de freeze, com a mesma tree da autoria, 0 adições e 0 deleções.
+
+Dentro do `b0_release`, o preflight interno passou e os metatestes reprovaram somente `test_coverage_has_no_empty_method_map`: `ci:temas` virou `COLLECTION_ERROR` quando o coverage foi reexecutado sob o ambiente sanitizado do supervisor. O bundle completo `b0_e62861bb_f6516959_20260924_complete.zip` teve SHA-256 `bd6e6949cbcb574988fcaf4795fcd069fbba13bd0f5ad21889def105449e53b3`; manifests RAW/SHARE, binding e hashes do release verdict foram recalculados e conferem.
+
+A corretiva posterior amplia apenas a allowlist de metadados não sensíveis do runtime Windows (por exemplo `APPDATA`, `LOCALAPPDATA`, `COMSPEC`, `PATHEXT` e locale), preservando exclusão de credenciais. A suíte ganhou um discriminante end-to-end que executa o coverage completo com exatamente `_clean_env()` e exige PASS/21/9/5. O metateste de coverage também passa a exibir `collection_errors` detalhados em eventual falha. O freeze `f6516959...` é histórico e não pode ser reutilizado.
 
