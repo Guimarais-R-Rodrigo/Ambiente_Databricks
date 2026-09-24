@@ -27,7 +27,7 @@ Contagem estática não equivale a execução. O SHA final precisa produzir cole
 
 `python -B -m tools.skill_enforcement.parallel.coverage` deve retornar `status=PASS`, 21 steps SE08, nove etapas CI não-SEF e cinco grupos SER01.
 
-O V3 distingue:
+A saída CLI do inventory é JSON ASCII-safe (caracteres Unicode escapados) para ser transportável também em consoles Windows `cp1252`; o parsing recupera o conteúdo Unicode original.\n\nO V3 distingue:
 
 - `MAPPED`: command de unittest realmente coletado pelo loader, com IDs normalizados;
 - `COMMAND_ONLY`: validador/probe explicitamente allowlisted como não-unittest **e com entrypoint existente/verificado**;
