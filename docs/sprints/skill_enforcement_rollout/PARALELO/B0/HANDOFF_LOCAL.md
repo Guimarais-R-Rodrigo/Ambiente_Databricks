@@ -96,7 +96,7 @@ B0_METATESTS = PASS
 COVERAGE_V3.status = PASS
 ```
 
-A suíte contém 82 métodos definidos estaticamente na autoria atual. A coleta real do checkout é a autoridade para a execução; não ajustar o esperado localmente.
+A suíte contém 84 métodos definidos estaticamente na autoria atual. A coleta real do checkout é a autoridade para a execução; não ajustar o esperado localmente.
 
 Se qualquer comando falhar:
 
@@ -252,6 +252,8 @@ Preservar e retornar, sem editar:
 - `MECHANISM_RESULT.json`;
 - RAW `MANIFEST.json`;
 - SHARE completo + `MANIFEST.json`;
+- confirmação de `SHARE_SCAN_POLICY = SER-PARALLEL-SECRET-SCAN-2`;
+- varredura de ausência de repo root/home path residual no SHARE;
 - `RAW_SHARE_BINDING.json`;
 - `ENVELOPE_VERIFICATION.json`;
 - `RELEASE_VERDICT.json`.
@@ -333,4 +335,4 @@ ou
 B0_LOCAL_HANDOFF = BLOCKED_ENVIRONMENT_<REASON>
 ```
 
-Mesmo `PASS_EVIDENCE_RETURNED` não autoriza merge ou campanha real. A evidência retorna para auditoria/revisão B0 e gate humano posterior.
+Mesmo `PASS_EVIDENCE_RETURNED` não autoriza merge ou campanha real. Além do verdict, a auditoria final deve confirmar que o SHARE está sanitizado: repo root/home substituídos por marcadores neutros, política V2 PASS e nenhum home path residual Windows/POSIX. A evidência retorna para auditoria/revisão B0 e gate humano posterior.
