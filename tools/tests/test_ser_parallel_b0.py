@@ -47,7 +47,10 @@ class ContractTests(unittest.TestCase):
     def test_digest_stable(self): self.assertEqual(contract.digest_json({"b":2,"a":1}),contract.digest_json({"a":1,"b":2}))
 
 class RegistryTests(unittest.TestCase):
-    def test_registry_loads(self): self.assertIn("b0:pilot:pass",registry.load_registry()["commands"])
+    def test_registry_loads(self):
+        commands=registry.load_registry()["commands"]
+        self.assertIn("b0:pilot:pass",commands)
+        self.assertIn("b0:sandbox:probe",commands)
     def test_unknown_command_rejected(self): self.assertRaises(registry.RegistryError,registry.resolve_command,"missing")
     def test_shell_and_inline_code_rejected(self):
         for argv in (["bash","-c","echo x"],["{PYTHON}","-c","print(1)"]):
