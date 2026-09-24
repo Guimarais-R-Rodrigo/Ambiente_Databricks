@@ -333,6 +333,11 @@ class IndependentAuditRegressionTests(unittest.TestCase):
             "USERPROFILE": r"C:\\Users\\Example",
             "HOMEDRIVE": "C:",
             "HOMEPATH": r"\\Users\\Example",
+            "APPDATA": r"C:\\Users\\Example\\AppData\\Roaming",
+            "LOCALAPPDATA": r"C:\\Users\\Example\\AppData\\Local",
+            "PROGRAMDATA": r"C:\\ProgramData",
+            "COMSPEC": r"C:\\Windows\\System32\\cmd.exe",
+            "PATHEXT": ".COM;.EXE;.BAT;.CMD",
             "GITHUB_TOKEN": "must-not-leak",
             "OPENAI_API_KEY": "must-not-leak",
         }
@@ -342,6 +347,10 @@ class IndependentAuditRegressionTests(unittest.TestCase):
         self.assertEqual(r"C:\\Users\\Example",env["HOME"])
         self.assertEqual("C:",env["HOMEDRIVE"])
         self.assertEqual(r"\\Users\\Example",env["HOMEPATH"])
+        self.assertEqual(r"C:\\Users\\Example\\AppData\\Roaming",env["APPDATA"])
+        self.assertEqual(r"C:\\Users\\Example\\AppData\\Local",env["LOCALAPPDATA"])
+        self.assertEqual(r"C:\\Windows\\System32\\cmd.exe",env["COMSPEC"])
+        self.assertEqual(".COM;.EXE;.BAT;.CMD",env["PATHEXT"])
         self.assertNotIn("GITHUB_TOKEN",env)
         self.assertNotIn("OPENAI_API_KEY",env)
 
@@ -355,6 +364,23 @@ class IndependentAuditRegressionTests(unittest.TestCase):
         )
         self.assertEqual(0,completed.returncode,completed.stderr.decode("utf-8",errors="replace"))
         self.assertTrue(completed.stdout.strip())
+
+    def test_coverage_cli_passes_under_sanitized_child_environment(self):
+        completed=process.subprocess.run(
+            [sys.executable,"-B","-m","tools.skill_enforcement.parallel.coverage"],
+            cwd=process.ROOT,
+            env=process._clean_env(),
+            capture_output=True,
+            timeout=300,
+        )
+        stderr=completed.stderr.decode("utf-8",errors="replace")
+        stdout=completed.stdout.decode("utf-8",errors="strict")
+        self.assertEqual(0,completed.returncode,stderr)
+        payload=json.loads(stdout)
+        self.assertEqual("PASS",payload["status"],payload.get("issues"))
+        self.assertEqual(21,payload["counts"]["se08"])
+        self.assertEqual(9,payload["counts"]["ci_non_sef"])
+        self.assertEqual(5,payload["counts"]["ser01"])
 
     def test_windows_supervisor_assigns_before_child_release(self):
         source=Path(process.__file__).read_text(encoding="utf-8")
