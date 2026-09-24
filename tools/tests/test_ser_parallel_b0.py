@@ -365,6 +365,7 @@ class IndependentAuditRegressionTests(unittest.TestCase):
     def test_authoring_preflight_parses_current_tree(self):
         payload=preflight.run()
         self.assertEqual("PASS",payload["status"],payload["issues"])
+        self.assertEqual(4,payload["schema_contracts_checked"])
 
     def test_round_start_detects_clean_head_swap(self):
         row={"candidate_sha":"a"*40,"candidate_tree_sha":"b"*40,"baseline_sha":"c"*40}
