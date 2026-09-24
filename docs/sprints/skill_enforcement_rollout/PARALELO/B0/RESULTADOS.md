@@ -7,7 +7,7 @@ A auditoria examinou a candidata `f803b50f898ac93eb0e5541ba428a3656dc4f732` e cl
 ```text
 AUDIT_BASE = f803b50f898ac93eb0e5541ba428a3656dc4f732
 AUDIT_CORRECTIVE_V3 = IMPLEMENTED_REPO_SIDE
-B0_TEST_METHODS_STATIC = 77
+B0_TEST_METHODS_STATIC = 79
 
 AUTHORING_PREFLIGHT_ON_FINAL_SHA = NOT_RUN
 B0_FULL_METATESTS_ON_FINAL_SHA = NOT_RUN
@@ -123,4 +123,22 @@ A autoria externa ao supervisor passou integralmente, inclusive coverage com 1.3
 Dentro do `b0_release`, o preflight interno passou e os metatestes reprovaram somente `test_coverage_has_no_empty_method_map`: `ci:temas` virou `COLLECTION_ERROR` quando o coverage foi reexecutado sob o ambiente sanitizado do supervisor. O bundle completo `b0_e62861bb_f6516959a2f973ea1e163da80548e8ebb0e235cf_20260924_complete.zip` teve SHA-256 `bd6e6949cbcb574988fcaf4795fcd069fbba13bd0f5ad21889def105449e53b3`; manifests RAW/SHARE, binding e hashes do release verdict foram recalculados e conferem.
 
 A corretiva posterior amplia apenas a allowlist de metadados não sensíveis do runtime Windows (por exemplo `APPDATA`, `LOCALAPPDATA`, `COMSPEC`, `PATHEXT` e locale), preservando exclusão de credenciais. A suíte ganhou um discriminante end-to-end que executa o coverage completo com exatamente `_clean_env()` e exige PASS/21/9/5. O metateste de coverage também passa a exibir `collection_errors` detalhados em eventual falha. O freeze `f6516959a2f973ea1e163da80548e8ebb0e235cf` é histórico e não pode ser reutilizado.
+
+## Rodada de autoria — 39e86591 — FAIL no freeze_prepare preservado
+
+```text
+AUTHORING_SHA = 39e86591d710100acb32590e38fc6dac4db50d3f
+AUTHORING_PREFLIGHT = PASS
+AUTHORING_METATESTS = PASS_77_COLLECTED_75_PASS_2_SKIP
+AUTHORING_COVERAGE = PASS_21_SE08_9_CI_5_SER01_1353_UNIQUE_METHODS
+FREEZE_PREPARE = FAIL
+FREEZE_CREATED = NO
+B0_RELEASE = NOT_RUN
+```
+
+O `freeze_prepare` executou o validator baseline e parou em três arquivos de rastreabilidade: `CHANGELOG.md`, `B0/RESULTADOS.md` e `CONTROLE_PLANO.json`. O gatilho não era identidade pessoal real: o SHA abreviado `f6516959` coincide com a heurística corporativa `letra + 6–8 dígitos`. A correção preserva a rastreabilidade substituindo o prefixo pelo SHA Git completo `f6516959a2f973ea1e163da80548e8ebb0e235cf`, sem afrouxar `CORPORATE_RE`.
+
+O bundle `b0_39e86591_20260924_authoring.zip` teve SHA-256 `889abb4969a9db6f64d55c1026095de86c7d144901e600db1c0a7a6c68712024`. A saída do `freeze_prepare` nessa rodada foi emitida pelo console em cp1252; a autoria posterior tornou o JSON CLI ASCII-safe e moveu a verificação de higiene para o preflight, para que essa classe de falha apareça antes do freeze.
+
+Nenhum freeze foi criado e nenhum `b0_release` foi executado nesta rodada.
 
