@@ -7,7 +7,7 @@ A auditoria examinou a candidata `f803b50f898ac93eb0e5541ba428a3656dc4f732` e cl
 ```text
 AUDIT_BASE = f803b50f898ac93eb0e5541ba428a3656dc4f732
 AUDIT_CORRECTIVE_V3 = IMPLEMENTED_REPO_SIDE
-B0_TEST_METHODS_STATIC = 79
+B0_TEST_METHODS_STATIC = 82
 
 AUTHORING_PREFLIGHT_ON_FINAL_SHA = NOT_RUN
 B0_FULL_METATESTS_ON_FINAL_SHA = NOT_RUN
@@ -158,4 +158,30 @@ O bundle `b0_e0447ef3_20260924_authoring.zip` teve SHA-256 `6b4fd978b98d54557030
 O gatilho era a própria fixture adversarial: o teste que verifica a colisão de SHA curto havia gravado literalmente no source o token que pretendia rejeitar. A corretiva constrói o token em runtime por concatenação, de modo que o comportamento adversarial continua testado sem tornar o arquivo-fonte inválido. O preflight também foi ampliado para incluir o próprio arquivo de metatestes e os módulos do mecanismo na hygiene scan. A varredura repo-side posterior das heurísticas ficou sem matches nos arquivos críticos.
 
 Nenhum freeze foi criado e nenhum `b0_release` foi executado nesta rodada.
+
+## Rodada completa — 0ff29b5e → freeze dd147b79 — mecanismo PASS / host pendente
+
+```text
+AUTHORING_SHA = 0ff29b5e4f859c219626c502ad8a96b0ab1eee11
+AUTHORING_PREFLIGHT = PASS
+AUTHORING_METATESTS = PASS_79_COLLECTED_77_PASS_2_SKIP
+AUTHORING_COVERAGE = PASS_21_SE08_9_CI_5_SER01_1353_UNIQUE_METHODS
+FREEZE_SHA = dd147b79e4949a70f827a5521b5b869bec679dc0
+FREEZE_TREE = 4bda853bf68a71aa61f2ed8030889b39360b1aed
+B0_RELEASE_STATUS = PASS
+B0_RELEASE_RELEASE_STATUS = PENDING_HOST_QUALIFICATION
+SELECTIVE_PILOT = PASS
+GLOBAL_PILOT = PASS
+RAW_VALID = true
+SHARE_VALID = true
+RAW_SHARE_BINDING_VALID = true
+SECRET_SCAN = PASS
+ENVELOPE_VALID = true
+```
+
+O bundle `b0_0ff29b5e_dd147b79_20260924_complete.zip` teve SHA-256 `c5a66993c2026f4e656c14ae56115d5bc3cf296cb9cc8e1ff48f76db03bb5772`. RAW e SHARE foram recalculados independentemente a partir do pacote; manifestos, binding e hashes referenciados pelo `RELEASE_VERDICT` conferem.
+
+Os dois pilotos cumpriram os oráculos: a falha seletiva bloqueou somente dependentes e preservou a frente independente; a falha global bloqueou as tarefas posteriores; verificações independentes e do piloto ficaram válidas. Todos os command records iniciados no Windows usaram `WINDOWS_JOB_OBJECT`, sem timeout, descendente residual ou cleanup incompleto.
+
+A rodada não recebeu `LOCAL_QUALIFIED` porque o host probe antigo ainda declarava filesystem e sandbox como não observados e não produzia prova de recursos. A corretiva posterior não relabela essa evidência: ela adiciona qualificação ambiental executável para uma nova rodada — NTFS via WinAPI, sandbox Python scratch-only com probe negativo, Job Object pelos records reais, snapshot de recursos e observação do perfil inicial 2/1. O perfil 3/2 permanece deliberadamente não qualificado.
 
