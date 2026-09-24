@@ -11,7 +11,7 @@ from pathlib import Path
 from unittest import mock
 
 from tools.skill_enforcement.parallel import bundle, contract, coverage, registry, scheduler, verifier, pilot_verify
-from tools.skill_enforcement.parallel import launcher, process, preflight, round_identity, freeze_prepare
+from tools.skill_enforcement.parallel import launcher, process, preflight, round_identity, freeze_prepare, host_qualification
 
 
 def task(task_id="task.a", deps=None, key="k", role="executor", resource="light", failure_scope="LOCAL_CHAIN", required=True, command_ids=None):
@@ -473,6 +473,52 @@ class IndependentAuditRegressionTests(unittest.TestCase):
         rendered=freeze_prepare._json_cli({"status":"FAIL","stdout":"seções · válidas → revisão"})
         rendered.encode("cp1252")
         self.assertEqual({"status":"FAIL","stdout":"seções · válidas → revisão"},json.loads(rendered))
+
+    def test_sandbox_probe_is_effective_end_to_end(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            evidence=root/"evidence"
+            denied=root/"denied.txt"
+            denied.write_text("UNCHANGED\n",encoding="utf-8")
+            argv,_=registry.resolve_command("b0:sandbox:probe")
+            with mock.patch.dict(os.environ,{"SER_B0_SECRET_SENTINEL":"must-not-pass"},clear=False):
+                row=process.run_argv(
+                    argv,evidence,"sandbox_probe_test",timeout=30,
+                    sandbox=True,sandbox_probe_target=denied,
+                )
+            self.assertEqual(0,row["exit_code"],(evidence/"sandbox_probe_test.stderr.txt").read_text(encoding="utf-8",errors="replace"))
+            payload=json.loads((evidence/"sandbox_probe_test.stdout.txt").read_text(encoding="utf-8"))
+            self.assertEqual("PASS",payload["status"],payload)
+            self.assertTrue(payload["scratch_write_allowed"])
+            self.assertTrue(payload["outside_write_blocked"])
+            self.assertTrue(payload["subprocess_blocked"])
+            self.assertTrue(payload["network_blocked"])
+            self.assertTrue(payload["credential_sentinel_absent"])
+            self.assertEqual("UNCHANGED\n",denied.read_text(encoding="utf-8"))
+
+    def test_launcher_task_helper_always_requests_sandbox(self):
+        fake={"ok":True}
+        with mock.patch.object(launcher,"run_argv",return_value=fake) as called:
+            actual=launcher._run_task_command(["python","x.py"],Path("evidence"),"x",12)
+        self.assertIs(fake,actual)
+        called.assert_called_once_with(["python","x.py"],Path("evidence"),"x",timeout=12,sandbox=True)
+
+    def test_host_qualification_requires_ntfs_sandbox_job_and_observed_two_slot_pilot(self):
+        record={"command_started":True,"supervision":"WINDOWS_JOB_OBJECT","timed_out":False,"residual_descendants_detected":False,"cleanup":"COMPLETE"}
+        summary={"results":{
+            "a":{"status":"PASS","command_records":[record],"started_at_utc":"2026-09-24T00:00:00+00:00","ended_at_utc":"2026-09-24T00:00:02+00:00"},
+            "b":{"status":"FAIL","command_records":[record],"started_at_utc":"2026-09-24T00:00:00.500000+00:00","ended_at_utc":"2026-09-24T00:00:01.500000+00:00"},
+        }}
+        sandbox={"status":"PASS","scratch_write_allowed":True,"outside_write_blocked":True,"subprocess_blocked":True,"network_blocked":True,"credential_sentinel_absent":True}
+        host={"os":"Windows","filesystem":{"family":"windows","type":"NTFS"},"client_model_configuration":"NOT_APPLICABLE_B0_DETERMINISTIC_PYTHON_RUNTIME"}
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(host_qualification.os,"name","nt"):
+            qualified=host_qualification.qualify(Path(tmp),host,sandbox,summary,summary)
+            bad_fs=host_qualification.qualify(Path(tmp),{**host,"filesystem":{"family":"windows","type":"REFS"}},sandbox,summary,summary)
+        self.assertEqual("PASS",qualified["status"],qualified)
+        self.assertEqual(2,qualified["observed_peak_parallel"]["selective"])
+        self.assertEqual("QUALIFIED_BY_OBSERVED_PILOTS",qualified["initial_profile"]["status"])
+        self.assertEqual("NOT_QUALIFIED_REQUIRES_SEPARATE_HEADROOM_MEASUREMENT",qualified["post_pilot_candidate_3_2"])
+        self.assertEqual("FAIL",bad_fs["status"])
 
     def test_round_start_detects_clean_head_swap(self):
         row={"candidate_sha":"a"*40,"candidate_tree_sha":"b"*40,"baseline_sha":"c"*40}
