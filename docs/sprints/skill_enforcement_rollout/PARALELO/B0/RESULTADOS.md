@@ -248,3 +248,66 @@ A rodada continua válida como prova histórica da execução e do host, mas **n
 
 Como houve mudança funcional em evidence packaging/verifier, o freeze `eea99938...` é histórico e não reutilizável. Nova rodada integral é obrigatória.
 
+## Rodada final — 2a66380c → freeze d8ff4392 — LOCAL_QUALIFIED / AUDIT PASS
+
+```text
+AUTHORING_SHA = 2a66380cf0d50a8c3e3b8697c6b131b3a0dc884d
+AUTHORING_TREE = a18344e40ff06fb67e97f2eab8c2528c784466cd
+AUTHORING_PREFLIGHT = PASS
+AUTHORING_METATESTS = PASS_84_COLLECTED_82_PASS_2_SKIP
+AUTHORING_COVERAGE = PASS_21_SE08_9_CI_5_SER01_1353_UNIQUE_METHODS
+FREEZE_PREPARE = PASS_CHANGED_FALSE
+FREEZE_SHA = d8ff4392f161f08f2bc765bb9fc24227baca02bc
+FREEZE_TREE = a18344e40ff06fb67e97f2eab8c2528c784466cd
+FREEZE_KIND = EMPTY_MARKER_TREE_IDENTICAL_TO_AUTHORING
+
+RELEASE_VERDICT.status = PASS
+RELEASE_VERDICT.release_status = LOCAL_QUALIFIED
+HOST_QUALIFICATION.status = PASS
+SELECTIVE_PILOT = PASS
+GLOBAL_PILOT = PASS
+INDEPENDENT_VERIFICATIONS = VALID
+
+RAW_MANIFEST = PASS_69_OF_69
+SHARE_MANIFEST = PASS_70_OF_70
+RAW_SHARE_BINDING = PASS
+SECRET_SCAN_POLICY = SER-PARALLEL-SECRET-SCAN-2
+SECRET_SCAN = PASS_NO_FINDINGS
+ENVELOPE_VERIFICATION = PASS
+
+SHARE_FILES_SCANNED = 71
+RESIDUAL_HOME_PATHS = 0
+RESIDUAL_REPO_ROOT_PATHS = 0
+HOME_MARKERS = 92
+REPO_MARKERS = 0
+
+ZIP_MEMBERS = 169
+ZIP_DUPLICATES = 0
+ZIP_UNSAFE_PATHS = 0
+ZIP_SYMLINKS = 0
+BUNDLE_SHA256 = a2ea025b0c440dcf8b61f6519333b0a3270a68cbe5aad2f4f62b2738fa203a6e
+
+INITIAL_PROFILE_2_1 = QUALIFIED_BY_OBSERVED_PILOTS
+POST_PILOT_3_2 = NOT_QUALIFIED_REQUIRES_SEPARATE_HEADROOM_MEASUREMENT
+
+AUDIT_ACCEPTANCE = PASS_TECHNICAL_WAITING_HUMAN_ACCEPTANCE
+```
+
+A auditoria independente do pacote `b0_2a66380c_d8ff4392_share_v2_complete.zip` não encontrou blocker material:
+
+- 169 membros ZIP; zero duplicados, traversal/path absoluto ou symlink;
+- 69/69 entries RAW e 70/70 entries SHARE conferem em hash e tamanho;
+- todos os hashes referenciados pelo `RELEASE_VERDICT` conferem byte a byte;
+- `release_spec_digest` foi rederivado e coincide em release spec, mechanism result e verdict;
+- selective/global preservaram exatamente os oráculos esperados, com verificações independentes válidas;
+- os command records reais dos pilotos usaram `WINDOWS_JOB_OBJECT`, sem timeout, descendente residual ou cleanup incompleto;
+- o probe sandbox deixou o alvo externo byte-idêntico e provou scratch write permitido, escrita externa/subprocesso/rede bloqueados e credencial sentinela ausente;
+- os picos de concorrência foram rederivados dos timestamps e resultaram em 2 para selective e 2 para global;
+- o SHARE V2 foi varrido de forma independente em todos os 71 arquivos: zero home paths e zero repo-root paths residuais, sem secret patterns, com 92 marcadores `<HOME>`.
+
+A correção V2, portanto, fecha o finding F0 da rodada `eea99938...`. O B0 está tecnicamente qualificado e a auditoria é PASS.
+
+Observação não bloqueante: `SHARE_METADATA.json` registra `sanitization_substitution_count=6`, isto é, quantidade de regras/variantes de substituição, e não uma lista por arquivo transformado. A comparação independente dos manifests RAW/SHARE rederivou 20 arquivos transformados. Como a transformação é verificável sem confiar no produtor e o scan V2 está limpo, a observação não invalida a rodada.
+
+O estado final continua aguardando aceite humano explícito. Nenhuma campanha real, policy, Databricks, Ready, merge ou perfil 3/2 está autorizado por esta qualificação.
+
