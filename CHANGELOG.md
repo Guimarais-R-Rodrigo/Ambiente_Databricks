@@ -1,5 +1,304 @@
 # Changelog
 
+## 2026-09-24 — SER B0: LOCAL_QUALIFIED com SHARE V2 e auditoria técnica PASS
+
+### Qualificado
+
+- (ChatGPT) A autoria `2a66380cf0d50a8c3e3b8697c6b131b3a0dc884d` passou preflight, 84 metatestes (82 PASS, 2 SKIP), coverage V3 (21 SE08, 9 CI não-SEF, 5 SER01; 1.353 IDs únicos) e freeze_prepare.
+- (ChatGPT) O freeze `d8ff4392f161f08f2bc765bb9fc24227baca02bc` é marcador vazio, tree-idêntico à autoria (`a18344e40ff06fb67e97f2eab8c2528c784466cd`), e executou `b0_release` com `RELEASE_VERDICT.status=PASS`, `release_status=LOCAL_QUALIFIED` e `HOST_QUALIFICATION.status=PASS`.
+- (ChatGPT) Selective/global pilots e verificações independentes passaram; NTFS, sandbox negativo, Windows Job Object, recursos e concorrência 2/1 foram observados. 3/2 permanece não qualificado.
+
+### Auditoria independente
+
+- (ChatGPT) Bundle `b0_2a66380c_d8ff4392_share_v2_complete.zip` com SHA-256 `a2ea025b0c440dcf8b61f6519333b0a3270a68cbe5aad2f4f62b2738fa203a6e`.
+- (ChatGPT) ZIP: 169 membros, zero duplicados, traversal/path absoluto ou symlink.
+- (ChatGPT) RAW 69/69 e SHARE 70/70 conferem em hash/tamanho; hashes do release verdict, binding e release-spec digest foram rederivados e coincidem.
+- (ChatGPT) SHARE policy V2 PASS: 71 arquivos varridos, zero home paths e zero repo-root paths residuais, zero secret patterns e 92 marcadores `<HOME>`.
+- (ChatGPT) Finding F0 da rodada V1 está FIXED_VERIFIED. Não há finding material aberto no freeze qualificado.
+
+### Observação não bloqueante
+
+- (ChatGPT) `SHARE_METADATA.json` registra a quantidade de regras de substituição, não a lista nominal de arquivos transformados. A auditoria rederivou 20 arquivos transformados pela diferença dos manifests RAW/SHARE; não há perda de verificabilidade.
+
+### Estado da PR
+
+- (ChatGPT) B0 está tecnicamente `LOCAL_QUALIFIED` e com auditoria PASS no freeze acima.
+- (ChatGPT) Registros de auditoria foram versionados depois do freeze no mesmo branch; portanto o HEAD posterior da PR é documentação/prova pós-freeze e requer apenas revalidação final mínima da árvore antes de eventual merge. Não repetir a campanha B0.
+- (ChatGPT) Ready, merge, campanhas reais, policy, Databricks e aumento para 3/2 permanecem não autorizados.
+
+## 2026-09-24 — SER B0: SHARE sanitization V2 após LOCAL_QUALIFIED
+
+### Evidência preservada
+
+- (ChatGPT) A autoria `47017817d76d682d77d95fa55f1d4b7f88f53b04` passou preflight, 82 metatestes (80 PASS, 2 SKIP), coverage V3 (21/9/5; 1.353 IDs únicos) e freeze_prepare.
+- (ChatGPT) O freeze `eea9993880dcbde1adb18c12aa72346e617dd7d8` executou `b0_release` com `RELEASE_VERDICT.status=PASS`, `release_status=LOCAL_QUALIFIED` e `HOST_QUALIFICATION.status=PASS`; selective/global, RAW/SHARE/binding/envelope também passaram pela política V1.
+- (ChatGPT) Bundle `b0_47017817_eea99938_host_qualification_complete.zip` com SHA-256 `e7ae0c06b91a09862a9c412496d27e6198ff6911737c468615e91254c581c6d7`; auditoria independente conferiu 69/69 entradas RAW e 70/70 entradas SHARE, além dos hashes do verdict.
+
+### Finding de auditoria
+
+- (ChatGPT) O contraditório encontrou home path do Windows ainda presente no SHARE, inclusive em release spec, coverage/logs e command records. O contrato do projeto determina que homes não entram no SHARE.
+- (ChatGPT) A causa foi dupla: `b0_release` construía SHARE com substituições vazias e a política V1 do scan cobria segredos, mas não home paths. Assim, um SHARE inadequadamente sanitizado pôde receber envelope válido e `LOCAL_QUALIFIED`.
+- (ChatGPT) A rodada permanece evidência histórica válida de execução/host, mas não é aceita como liberação B0.
+
+### Corrigido
+
+- (ChatGPT) `bundle.py` passa a gerar substituições padrão de repo root/home para `<REPO>`/`<HOME>`, incluindo variantes escapadas usadas em JSON.
+- (ChatGPT) A política de scan sobe para `SER-PARALLEL-SECRET-SCAN-2` e reprova home paths residuais Windows/POSIX além dos padrões de segredo existentes.
+- (ChatGPT) `b0_release` aplica as substituições padrão ao construir SHARE; o verifier já recalcula o scan e, portanto, rejeita residual não sanitizado.
+- (ChatGPT) Regressões cobrem detecção de home path residual e sanitização automática de repo/home com binding verificado.
+- (ChatGPT) A suíte B0 passa de 82 para 84 métodos definidos estaticamente.
+
+### Limites
+
+- (ChatGPT) O freeze `eea99938...` é histórico após mudança funcional em evidence packaging. O SHA atual exige nova autoria, novo freeze e nova rodada única de release. `LOCAL_QUALIFIED` anterior não é transportado.
+
+## 2026-09-24 — SER B0: metateste documental desacoplado da implementação de host qualification
+
+### Evidência preservada
+
+- (ChatGPT) A rodada `021702a770f276c147c49194804f2a34167e0672` passou preflight e executou 82 metatestes: 79 PASS, 1 FAIL, 2 SKIP; coverage/freeze/release não rodaram por fail-fast.
+- (ChatGPT) O único FAIL foi `test_b0_checkpoint_does_not_claim_local_pass`: o teste ainda exigia literalmente `B0.5 HOST_QUALIFICATION = NOT_RUN_LOCAL`, embora B0.5 já estivesse implementado e aguardando rerun.
+- (ChatGPT) Bundle `b0_021702a7_20260924_authoring.zip` com SHA-256 `eb5deeffc087008fef3e7d5eb407ffc2395b94c971d6564bc3b674b9c608742f` validado.
+
+### Corrigido
+
+- (ChatGPT) O metateste passa a validar a invariante durável: `LOCAL_QUALIFICATION = NOT_RUN` enquanto não houver rodada `LOCAL_QUALIFIED`, e rejeita claim prematura `PASS/LOCAL_QUALIFIED`.
+- (ChatGPT) O estado de implementação de `B0.5 HOST_QUALIFICATION` deixa de ser confundido com o resultado final da qualificação local.
+
+### Limites
+
+- (ChatGPT) Nenhum PASS parcial é transportado. O SHA novo precisa executar novamente preflight, 82 metatestes, coverage, freeze_prepare, novo freeze e uma única rodada de `b0_release`.
+
+## 2026-09-24 — SER B0: mecanismo PASS e qualificação ambiental executável
+
+### Evidência preservada
+
+- (ChatGPT) A autoria `0ff29b5e4f859c219626c502ad8a96b0ab1eee11` passou preflight, 79 metatestes (77 PASS, 2 SKIP) e coverage V3 (21 SE08, 9 CI não-SEF, 5 SER01, 1.353 IDs únicos).
+- (ChatGPT) O freeze `dd147b79e4949a70f827a5521b5b869bec679dc0` executou `b0_release` com exit 0; `RELEASE_VERDICT.status=PASS`, ambos os pilotos e verificações independentes passaram, e RAW/SHARE/binding/secret scan/envelope ficaram válidos.
+- (ChatGPT) O release permaneceu `PENDING_HOST_QUALIFICATION` porque o probe anterior não observava NTFS, sandbox efetivo nem recursos. Bundle `b0_0ff29b5e_dd147b79_20260924_complete.zip` com SHA-256 `c5a66993c2026f4e656c14ae56115d5bc3cf296cb9cc8e1ff48f76db03bb5772` auditado integralmente.
+
+### Adicionado
+
+- (ChatGPT) `sandbox_exec.py`: sandbox Python audit-hook para tasks allowlisted do B0, com leitura do repositório, escrita somente em scratch exclusivo e bloqueio de subprocesso/rede.
+- (ChatGPT) `sandbox_probe.py`: probe negativo que exige scratch write permitido, escrita externa/subprocesso/rede bloqueados e credencial sentinela ausente.
+- (ChatGPT) `host_qualification.py`: agrega NTFS observado, sandbox, Job Object dos command records, snapshot de CPU/RAM/disco e concorrência 2/1 efetivamente observada nos pilotos.
+- (ChatGPT) `host_probe.py` passa a observar filesystem Windows via `GetVolumeInformationW`, sem depender de `fsutil`; configuração de modelo é N/A para o runtime Python determinístico do B0.
+- (ChatGPT) O launcher executa todos os comandos de task através do sandbox; o command record preserva o argv lógico allowlisted.
+- (ChatGPT) `b0_release` executa o probe negativo, produz `sandbox_probe.json` e `HOST_QUALIFICATION.json` e só deriva `LOCAL_QUALIFIED` de `HOST_QUALIFICATION.status=PASS`.
+- (ChatGPT) A suíte B0 passa a 82 métodos definidos estaticamente, com regressões end-to-end do sandbox, enforcement do launcher e qualificação do host.
+
+### Limites
+
+- (ChatGPT) O sandbox é Python audit-hook para tasks Python allowlisted do B0, não um container/ACL genérico de SO. Comandos B1 que necessitem subprocesso, rede ou escrita externa exigem extensão e prova próprias.
+- (ChatGPT) O perfil inicial 2/1 pode ser qualificado pela nova rodada; 3/2 permanece `NOT_QUALIFIED_REQUIRES_SEPARATE_HEADROOM_MEASUREMENT`.
+- (ChatGPT) O freeze `dd147b79...` é histórico após mudança funcional. O SHA atual exige nova autoria, novo freeze e uma única nova rodada de release.
+
+## 2026-09-24 — SER B0: regressão adversarial de higiene corrigida no source de testes
+
+### Evidência preservada
+
+- (ChatGPT) A rodada `e0447ef3c84d99aae5eec565470f65a0c2649171` passou preflight, 79 metatestes (77 PASS, 2 SKIP) e coverage V3 (21 SE08, 9 CI não-SEF, 5 SER01, 1.353 IDs únicos), mas parou no `freeze_prepare` antes de criar freeze.
+- (ChatGPT) O validator baseline recusou `tools/tests/test_ser_parallel_b0.py` por identificador pessoal/corporativo; o gatilho era a fixture adversarial que continha literalmente no source o mesmo token de SHA curto que o teste pretendia rejeitar.
+- (ChatGPT) Bundle `b0_e0447ef3_20260924_authoring.zip` com SHA-256 `6b4fd978b98d54557030f16c7a1273d7d3c4b21dee649dfe340129d0fda3ed7c` preservado; nenhum freeze ou `b0_release` foi executado.
+
+### Corrigido
+
+- (ChatGPT) A fixture adversarial constrói o token problemático por concatenação em runtime, preservando o comportamento do teste sem tornar o próprio source incompatível com a política de higiene.
+- (ChatGPT) O preflight amplia a hygiene scan para incluir `tools/tests/test_ser_parallel_b0.py` e os módulos Python do mecanismo, além do CHANGELOG e documentos do plano.
+- (ChatGPT) O checkpoint foi normalizado para uma única seção `LATEST_*`; histórico detalhado permanece em `B0/RESULTADOS.md`.
+
+### Limites
+
+- (ChatGPT) Nenhum PASS da rodada `e0447ef3...` é transportado ao SHA novo. Preflight, 79 metatestes, coverage e `freeze_prepare` devem rodar novamente antes de novo freeze/release.
+
+## 2026-09-24 — SER B0: higiene documental antecipada antes do freeze
+
+### Evidência preservada
+
+- (ChatGPT) A rodada local em `39e86591d710100acb32590e38fc6dac4db50d3f` passou preflight, 77 metatestes (75 PASS, 2 SKIP) e coverage V3 (21 SE08, 9 CI não-SEF, 5 SER01, 1.353 IDs únicos), mas parou em `freeze_prepare` antes de criar freeze.
+- (ChatGPT) O validator baseline recusou três arquivos de rastreabilidade por `identificador pessoal/corporativo`; o gatilho era o SHA completo `f6516959a2f973ea1e163da80548e8ebb0e235cf`, cuja forma abreviada anterior, que coincide com a heurística `letra + 6–8 dígitos` embora represente um commit Git.
+- (ChatGPT) Bundle `b0_39e86591_20260924_authoring.zip` com SHA-256 `889abb4969a9db6f64d55c1026095de86c7d144901e600db1c0a7a6c68712024` preservado; nenhum freeze ou release foi executado.
+
+### Corrigido
+
+- (ChatGPT) As referências ativas ao prefixo ambíguo foram substituídas pelo SHA completo `f6516959a2f973ea1e163da80548e8ebb0e235cf`; a regra de higiene não foi relaxada.
+- (ChatGPT) O preflight de autoria passa a aplicar `CORPORATE_RE`/`PERSONAL_RE` sobre `CHANGELOG.md` e documentos JSON/Markdown do plano, antecipando esse gate antes do freeze.
+- (ChatGPT) `freeze_prepare` passa a emitir JSON ASCII-safe, removendo dependência da code page do console Windows.
+- (ChatGPT) Regressões cobrem SHA curto que colide com a heurística, SHA completo aceito e round-trip Unicode do JSON do freeze em `cp1252`.
+- (ChatGPT) A suíte B0 passa de 77 para 79 métodos definidos estaticamente.
+
+### Limites
+
+- (ChatGPT) Nenhum PASS da rodada `39e86591...` é transportado para o novo SHA. Preflight, 79 metatestes, coverage e freeze_prepare precisam rodar novamente antes de qualquer freeze/release.
+
+## 2026-09-24 — SER B0: coverage sob ambiente sanitizado do release
+
+### Evidência preservada
+
+- (ChatGPT) A autoria `e62861bb13d5da5ab3248ab094225aaf4ded5b41` passou preflight, 76 metatestes (74 PASS, 2 SKIP) e coverage V3 (21 SE08, 9 CI não-SEF, 5 SER01, 1.353 IDs únicos).
+- (ChatGPT) `freeze_prepare` retornou `changed=false`; o freeze `f6516959a2f973ea1e163da80548e8ebb0e235cf` foi um commit vazio intencional, tree-idêntico à autoria (`11ded361...`).
+- (ChatGPT) A rodada única de `b0_release` terminou `FAIL / NOT_QUALIFIED` no gate interno de metatestes porque `ci:temas` foi reclassificado como `COLLECTION_ERROR` somente sob o ambiente sanitizado do supervisor.
+- (ChatGPT) O bundle completo `b0_e62861bb_f6516959a2f973ea1e163da80548e8ebb0e235cf_20260924_complete.zip` teve SHA-256 `bd6e6949cbcb574988fcaf4795fcd069fbba13bd0f5ad21889def105449e53b3`; RAW, SHARE, binding, secret scan, envelope e hashes do release verdict foram recalculados e conferem.
+
+### Corrigido
+
+- (ChatGPT) A allowlist do child environment passa a incluir explicitamente apenas metadados não sensíveis de runtime do Windows/POSIX necessários a bibliotecas e ferramentas locais (`APPDATA`, `LOCALAPPDATA`, `PROGRAMDATA`, `COMSPEC`, `PATHEXT`, system/processor metadata e locale), mantendo tokens/credenciais fora.
+- (ChatGPT) Adicionado metateste end-to-end que executa `python -B -m tools.skill_enforcement.parallel.coverage` usando exatamente `_clean_env()` e exige PASS com contagens 21/9/5.
+- (ChatGPT) A regressão de coverage agora imprime `collection_errors` detalhados em eventual falha, evitando nova rodada diagnóstica cega.
+- (ChatGPT) O handoff passa a documentar explicitamente freeze vazio via `git commit --allow-empty` quando `freeze_prepare` reporta `changed=false` e a tree permanece limpa.
+- (ChatGPT) A suíte B0 passa de 76 para 77 métodos definidos estaticamente.
+
+### Limites
+
+- (ChatGPT) O freeze `f6516959a2f973ea1e163da80548e8ebb0e235cf` é histórico e não reutilizável após a correção funcional. Novo SHA exige preflight + 77 metatestes + coverage, novo freeze e nova rodada única de release.
+
+## 2026-09-24 — SER B0: corrigido ambiente sanitizado do release
+
+### Evidência preservada
+
+- (ChatGPT) A autoria `ec132ccc...` passou preflight, 74 metatestes (72 PASS, 2 SKIP) e coverage V3 (21 SE08, 9 CI não-SEF, 5 SER01, 1.353 IDs únicos).
+- (ChatGPT) O freeze mecânico `49385c306b03b1eeaf734e5b8daa4c2a4e5dc922` foi criado e a rodada única de `b0_release` terminou `FAIL / NOT_QUALIFIED` no gate interno de metatestes.
+- (ChatGPT) O bundle completo `b0_ec132ccc_49385c30_20260924_complete.zip` teve SHA-256 `05c0445f876fb0432519fc2325a24921b730c00a4e248d466ca780200a9c83cc`; manifests RAW/SHARE, binding e hashes do release verdict foram recalculados e conferem.
+
+### Corrigido
+
+- (ChatGPT) `_clean_env()` preserva agora apenas as variáveis não sensíveis necessárias à resolução do home (`HOME`, `USERPROFILE`, `HOMEDRIVE`, `HOMEPATH`) além do ambiente mínimo já allowlisted.
+- (ChatGPT) Tokens e credenciais continuam fora da allowlist do child process.
+- (ChatGPT) Adicionadas regressões para verificar a preservação da identidade de home sem credenciais e para executar `Path.home()` num Python filho usando exatamente o ambiente sanitizado do supervisor.
+- (ChatGPT) A suíte B0 passa de 74 para 76 métodos definidos estaticamente.
+
+### Limites
+
+- (ChatGPT) O freeze `49385c30...` é histórico e foi invalidado pela correção funcional posterior; novo SHA de autoria exige preflight + 76 metatestes + coverage, novo freeze e nova rodada única de release.
+
+## 2026-09-24 — SER B0: cobertura portátil em console Windows
+
+### Evidência preservada
+
+- (ChatGPT) A rodada local em `39d2fefa13fa747c2ab636e8a47cda06737d841e` passou preflight e os 74 metatestes (72 PASS, 0 FAIL, 0 ERROR, 2 SKIP), mas parou no coverage antes de emitir JSON.
+- (ChatGPT) A causa foi `UnicodeEncodeError` no stdout `cp1252` ao serializar o caractere `→`; freeze e release não foram executados.
+- (ChatGPT) Bundle retornado SHA-256 `da70ffc3758c61c00c64ba8c2ecbdb7f0febe25c01ac36450915d5e884f503ee` validado contra o arquivo recebido.
+
+### Corrigido
+
+- (ChatGPT) O CLI de `coverage.py` passa a serializar JSON com escapes ASCII (`ensure_ascii=True`), preservando o payload semanticamente após `json.loads` e tornando a saída independente da code page do console.
+- (ChatGPT) A regressão existente de coverage agora exige que um payload com `L2→L3` seja serializável em `cp1252` e recupere o texto original após parsing.
+
+### Limites
+
+- (ChatGPT) O PASS de metatestes da rodada anterior não é transportado para o novo SHA. Preflight, 74 metatestes e coverage V3 precisam ser reexecutados no novo candidato antes de freeze.
+
+## 2026-09-24 — SER B0: corretiva da primeira rodada real de metatestes
+
+### Evidência preservada
+
+- (ChatGPT) A rodada local em `7ad3846fb5b79590050adc7c11ff841e816fb6b9` passou o authoring preflight e executou 72 metatestes: 68 PASS, 2 FAIL, 2 SKIP; coverage/freeze/release não rodaram por fail-fast.
+- (ChatGPT) O bundle retornado teve SHA-256 `464fb8a467f8a1881c401dd0747c70cce164cb4d47188e6190e9cf09b47b50ab`; nenhum retry/correção local foi realizado.
+
+### Corrigido
+
+- (ChatGPT) Coverage V3 passa a normalizar IDs pela origem real (`module.__file__`) carregada pelo unittest, em vez de inferir path a partir de nomes de módulo; `discover` reproduz a semântica do comando original sem impor `top_level_dir` da raiz.
+- (ChatGPT) Adicionadas regressões para `unittest discover` em diretório não-package e arquivo de teste em path não-package como `.assistant/...`.
+- (ChatGPT) O metateste do `CONTROLE_PLANO.json` deixa de exigir um checkpoint transitório exato e passa a validar invariantes duráveis de escopo/governança.
+- (ChatGPT) Suíte B0 passa de 72 para 74 métodos definidos estaticamente; nova execução integral é obrigatória no novo SHA.
+
+### Limites
+
+- (ChatGPT) O 68/72 parcial da rodada anterior não é transportado para o novo SHA. Preflight, 74 metatestes e coverage V3 precisam ser executados novamente antes de freeze.
+
+## 2026-09-24 — SER B0: worktree dedicado para qualificação local
+
+### Corrigido
+
+- (ChatGPT) O handoff local não exige mais trocar a branch do checkout em que o executor foi iniciado. Checkout sujo ou em outra frente é preservado e usado apenas para `fetch`/descoberta.
+- (ChatGPT) A qualificação passa a ocorrer em `git worktree --detach` novo, externo e limpo, fixado no HEAD remoto exato da PR #113.
+- (ChatGPT) Após os gates verdes, o freeze mecânico é commitado em branch local temporária e publicado por push fast-forward normal para a branch da PR, somente se o remoto continuar no SHA de autoria esperado.
+- (ChatGPT) Stash/reset/clean do checkout original e qualquer force push ficam explicitamente proibidos.
+
+### Motivo
+
+- (ChatGPT) A primeira tentativa local parou corretamente porque o checkout corrente estava na branch `ser/SER00-rollout-baseline` com mudanças locais. O bloqueio preservou trabalho, mas era evitável: identidade do B0 deve ser estabelecida em checkout dedicado, não pela disponibilidade do worktree corrente.
+
+## 2026-09-24 — SER B0: fechamento repo-side e handoff local
+
+### Concluído
+
+- (ChatGPT) Validado por leitura remota que os 23 JSONs alterados pela PR fazem parse no HEAD de autoria antes do handoff.
+- (ChatGPT) Criado `PARALELO/B0/HANDOFF_LOCAL.md` com identidade, gates, stop rules, freeze, rodada única de `b0_release`, artefatos obrigatórios, provas ambientais e ações proibidas.
+- (ChatGPT) O handoff explicita que o SHA executável é o HEAD exato publicado na PR #113; divergência, worktree suja, shallow clone, branch behind ou necessidade de correção funcional bloqueiam antes da execução.
+- (ChatGPT) O fluxo local passa a ter uma única fonte operacional de execução, reduzindo novos handoffs interpretativos.
+
+### Limites
+
+- (ChatGPT) O runtime desta conversa não possui rede para clonar o repositório privado; portanto preflight, 72 metatestes, coverage V3 e qualificação Windows/NTFS continuam NOT_RUN neste host.
+- (ChatGPT) Nenhum PASS de checkout foi inventado. PR continua draft; Ready, merge, campanhas reais e Databricks permanecem não autorizados.
+
+## 2026-09-24 — SER B0: convergência da corretiva V3 após auditoria independente
+
+### Corrigido
+
+- (ChatGPT) A auditoria independente da candidata `f803b50f...` foi incorporada sem transportar seus estados como certificado; a linha V3 fecha repo-side os achados AUD-01–AUD-12 que não dependem de prova ambiental.
+- (ChatGPT) `coverage.py` passa a exigir existência/resolução do entrypoint também para `COMMAND_ONLY`; target de módulo/script ausente não pode mais virar dispensa permissiva.
+- (ChatGPT) A supervisão Windows elimina a janela entre spawn e Job Object: um launcher bloqueado é atribuído ao job antes de receber autorização para criar o child real, cujo PID fica registrado.
+- (ChatGPT) `preflight.py` confronta código, quatro schemas executáveis fechados e templates de planejamento para impedir drift de versão/estrutura antes do laboratório.
+- (ChatGPT) Documentação viva do B0/coverage/paralelismo/evidência/implantação/handoff foi reconciliada com a semântica V3: `max_parallel` é pool total, auditor é subconjunto, e o lease host-wide permite uma campanha por host no B0.
+- (ChatGPT) O handoff de campanhas reais será gerado do primeiro manifesto B1 materializado, em vez de congelar agora um gerador genérico especulativo.
+
+### Regressões e estado
+
+- (ChatGPT) A suíte B0 contém 72 métodos definidos estaticamente, incluindo regressões para entrypoint `COMMAND_ONLY` ausente e assignment-before-release no Windows.
+- (ChatGPT) `CONTROLE_PLANO.json` revision 1.4 registra zero blockers repo-side conhecidos, mas mantém preflight/metatestes/coverage do SHA final e qualificação local como NOT_RUN.
+- (ChatGPT) Melhorias P2 de despacho ao liberar slot, cache de inventory e tuning 2/1→3/2 permanecem deliberadamente deferidas até métricas do piloto.
+
+### Limites
+
+- (ChatGPT) Windows/Job Object, NTFS, sandbox/permissões negativas e headroom de host continuam exigindo prova no host real.
+- (ChatGPT) Nenhuma policy, skill, `ambiente_fonte/`, `Novo_Ambiente_Simulado/`, Databricks, Ready ou merge foi alterado/acionado nesta convergência.
+
+## 2026-09-24 — SER B0: corretiva pós-revisão independente
+
+### Corrigido
+
+- (ChatGPT) RV-01: o PASS dos pilotos agora depende de `summary.verification.valid=true`, topologia/status exatos, tarefas bloqueadas sem execução, first failure correto e exit code deliberado `1` do launcher.
+- (ChatGPT) RV-02/RV-03: o verificador reconstrói dependências, ordem de ondas, global stop, `max_parallel`, exclusividade, slots de auditoria e limites de recurso; também vincula task-id, SHA, effect, command-id/argv e hashes dos logs.
+- (ChatGPT) RV-04: o command registry B0 tornou-se allowlist fechada de IDs + argv exatos; editar apenas o JSON não amplia a superfície executável.
+- (ChatGPT) RV-05/RV-06: RAW e SHARE usam manifestos finais independentes e binding irmão não circular; apenas o `MANIFEST.json` raiz é metadado fora do fileset, portanto manifestos aninhados ficam protegidos.
+- (ChatGPT) RV-07: arquivo não UTF-8 torna o secret scan FAIL por conteúdo não examinável; texto sem substituição é copiado byte a byte.
+- (ChatGPT) `process.py` persiste stdout/stderr como bytes e calcula SHA-256 sobre os mesmos bytes, removendo normalização de newline/encoding da identidade.
+- (ChatGPT) cobertura distingue `MAPPED`, `COMMAND_ONLY` e `EMPTY_METHOD_MAP`; o último bloqueia o gate. `concierge-pacote` e o probe SER01 são classificados explicitamente como comandos.
+- (ChatGPT) o piloto global inclui integrador posterior e exige `BLOCKED_GLOBAL_STOP`.
+- (ChatGPT) `b0_release` fecha a rodada com envelope RAW/SHARE verificado e fail-closed.
+
+### Regressões
+
+- (ChatGPT) suíte B0 ampliada de 39 para 52 métodos, com 13 regressões corretivas.
+- (ChatGPT) 9/9 reproduções adversariais isoladas passaram após a correção, incluindo dependency/global-stop escape, allowlist, bindings, nested manifest, binário não examinável e preservação CRLF.
+
+### Limites
+
+- (ChatGPT) os 52 metatestes ainda não foram executados no checkout real deste SHA; o PASS histórico de 39/39 não é transportado.
+- (ChatGPT) host/Windows/NTFS, freeze e `b0_release` permanecem NOT_RUN. Nenhuma policy, skill, `ambiente_fonte/`, `Novo_Ambiente_Simulado/` ou Databricks foi alterado/acionado.
+
+## 2026-09-24 — SER B0: candidata do framework de execução paralela governada
+
+### Adicionado
+
+- (ChatGPT) ADR-0023 formaliza execução paralela por DAG sem alterar targets, identidade das sprints ou gates humanos.
+- (ChatGPT) `tools/skill_enforcement/parallel/` recebe contratos fechados V2, registry de comandos sem shell/inline code, scheduler por dependência/lock/recurso, launcher B0 read-only, verificador, bundles RAW/SHARE, qualificação de host e dois pilotos sintéticos.
+- (ChatGPT) Cobertura herdada passa a ser inventariada por método, inclusive expansão de `unittest discover`, com assertions históricas temporais classificadas explicitamente.
+- (ChatGPT) Plano operacional completo e oito dossiês de skill são versionados em `docs/sprints/skill_enforcement_rollout/PARALELO/`.
+
+### Validado em autoria
+
+- (ChatGPT) Suíte isolada `tools.tests.test_ser_parallel_b0`: 39/39 PASS antes da publicação da candidata.
+- (ChatGPT) O B0 distingue propagação local de falha de `GLOBAL_CAMPAIGN`; first failure é determinístico por onda/task-id e workers não possuem rota de escrita no B0.
+
+### Limites
+
+- (ChatGPT) B0 ainda não está qualificado no host local/Windows; pilotos locais e prova efetiva de sandbox permanecem pendentes.
+- (ChatGPT) Nenhuma policy, skill publicada ou `Novo_Ambiente_Simulado/` foi alterada nesta autoria. SER02–SER14 continuam sem campanha real iniciada.
+- (ChatGPT) Snapshot do README raiz será reconciliado por preparação mecânica medida via `freeze_prepare.py` antes do freeze local, não por valor estimado nesta autoria.
+
 ## 2026-09-23 — SER01 L3: preparação da certificação pós-promoção R2
 
 ### Notas

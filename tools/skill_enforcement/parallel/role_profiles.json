@@ -1,0 +1,31 @@
+{
+  "schema_version": "SER-PARALLEL-ROLES-2",
+  "roles": {
+    "coordinator": {
+      "repo_write": false,
+      "change_criteria": false,
+      "human_authorize": false
+    },
+    "executor": {
+      "repo_write": false,
+      "change_criteria": false,
+      "human_authorize": false
+    },
+    "domain_auditor": {
+      "repo_write": false,
+      "change_criteria": false,
+      "human_authorize": false
+    },
+    "evidence_auditor": {
+      "repo_write": false,
+      "change_criteria": false,
+      "human_authorize": false
+    },
+    "integrator": {
+      "repo_write": "MECHANICAL_ONLY_OUTSIDE_PARALLEL_LAUNCHER",
+      "change_criteria": false,
+      "human_authorize": false
+    }
+  },
+  "warning": "Perfis lógicos não provam sandbox do SO. B0.5 exige teste efetivo de permissões."
+}

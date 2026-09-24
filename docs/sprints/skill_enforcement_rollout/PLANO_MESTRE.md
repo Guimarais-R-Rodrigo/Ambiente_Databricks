@@ -272,3 +272,34 @@ SER_FULLY_CERTIFIED somente com targets aceitos, promoções provadas, adversari
 ## 13. SER-ACTIONS-RECERTIFICATION
 
 Futura e fora do caminho crítico, NOT_BLOCKING / DEFERRED_NO_CREDITS. Quando houver autorização e créditos, reconfirmar a HEAD integrada final da SER, executar campanha consolidada única, registrar todos os runs, preservar failures e corrigir em PR própria. Zero rerun-until-green. Não reclassificar retroativamente local/Free/Genie nem executar automaticamente cada SHA intermediário.
+
+
+---
+
+## Adendo operacional de 2026-09-24 — execução paralela governada
+
+Após a integração da SER01, o usuário aprovou substituir a execução estritamente sequencial por um modelo paralelo governado. O ADR-0023 complementa este Plano Mestre sem apagar sua ordem histórica.
+
+Regras vigentes:
+
+1. os identificadores SER02–SER16 e seus targets permanecem;
+2. a ordem listada neste Plano continua sendo ordem de integração e rastreabilidade, não dependência funcional universal;
+3. componentes independentes podem ser preparados, executados e auditados em paralelo conforme o DAG aprovado;
+4. autoria de implementação, testes, fixtures, oráculos e perfis continua repo-side;
+5. executores locais recebem campanhas fechadas e não corrigem o candidato;
+6. integração, publicação, alteração de policy e gates humanos continuam serializados;
+7. cada L4 depende do L2 da própria skill e das dependências compartilhadas explicitamente declaradas;
+8. nenhum PASS é transportado como certificado de SHA novo;
+9. B0 precisa ser qualificado antes de liberar qualquer campanha real SER02–SER14.
+
+Estado inicial do adendo:
+
+```text
+BASELINE_MAIN = d2988e97e7b6c5fe1fd561852e947a155c2d731b
+SER01 = INTEGRATED
+B0 = IMPLEMENTED_CANDIDATE_LOCAL_QUALIFICATION_PENDING
+PARALLEL_REAL_SKILL_CAMPAIGNS = NOT_AUTHORIZED
+POLICY_CHANGE_BY_B0 = NONE
+```
+
+Documentação operacional: [PARALELO/README.md](PARALELO/README.md). Decisão arquitetural: [ADR-0023](../../decisions/ADR-0023-execucao-paralela-governada-ser.md).
