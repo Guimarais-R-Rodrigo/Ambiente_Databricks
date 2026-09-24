@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-09-24 — SER B0: coverage sob ambiente sanitizado do release
+
+### Evidência preservada
+
+- (ChatGPT) A autoria `e62861bb13d5da5ab3248ab094225aaf4ded5b41` passou preflight, 76 metatestes (74 PASS, 2 SKIP) e coverage V3 (21 SE08, 9 CI não-SEF, 5 SER01, 1.353 IDs únicos).
+- (ChatGPT) `freeze_prepare` retornou `changed=false`; o freeze `f6516959a2f973ea1e163da80548e8ebb0e235cf` foi um commit vazio intencional, tree-idêntico à autoria (`11ded361...`).
+- (ChatGPT) A rodada única de `b0_release` terminou `FAIL / NOT_QUALIFIED` no gate interno de metatestes porque `ci:temas` foi reclassificado como `COLLECTION_ERROR` somente sob o ambiente sanitizado do supervisor.
+- (ChatGPT) O bundle completo `b0_e62861bb_f6516959_20260924_complete.zip` teve SHA-256 `bd6e6949cbcb574988fcaf4795fcd069fbba13bd0f5ad21889def105449e53b3`; RAW, SHARE, binding, secret scan, envelope e hashes do release verdict foram recalculados e conferem.
+
+### Corrigido
+
+- (ChatGPT) A allowlist do child environment passa a incluir explicitamente apenas metadados não sensíveis de runtime do Windows/POSIX necessários a bibliotecas e ferramentas locais (`APPDATA`, `LOCALAPPDATA`, `PROGRAMDATA`, `COMSPEC`, `PATHEXT`, system/processor metadata e locale), mantendo tokens/credenciais fora.
+- (ChatGPT) Adicionado metateste end-to-end que executa `python -B -m tools.skill_enforcement.parallel.coverage` usando exatamente `_clean_env()` e exige PASS com contagens 21/9/5.
+- (ChatGPT) A regressão de coverage agora imprime `collection_errors` detalhados em eventual falha, evitando nova rodada diagnóstica cega.
+- (ChatGPT) O handoff passa a documentar explicitamente freeze vazio via `git commit --allow-empty` quando `freeze_prepare` reporta `changed=false` e a tree permanece limpa.
+- (ChatGPT) A suíte B0 passa de 76 para 77 métodos definidos estaticamente.
+
+### Limites
+
+- (ChatGPT) O freeze `f6516959...` é histórico e não reutilizável após a correção funcional. Novo SHA exige preflight + 77 metatestes + coverage, novo freeze e nova rodada única de release.
+
 ## 2026-09-24 — SER B0: corrigido ambiente sanitizado do release
 
 ### Evidência preservada
