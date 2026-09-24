@@ -43,3 +43,20 @@ REAL_SKILL_CAMPAIGN = NOT_STARTED
 Não há PASS do SHA final, qualificação Windows, prova de sandbox, benchmark de ganho de paralelismo ou autorização de campanha real. Dispatch contínuo, cache de inventory e tuning de concorrência ficam fora do caminho crítico até existir medição do piloto.
 
 O próximo executor deve rodar, no SHA final limpo, `preflight`, a suíte B0 e `coverage`. Somente após esses três verdes deve preparar o freeze e executar uma única rodada de `b0_release`.
+
+## Rodada local de autoria — 7ad3846f — FAIL preservado
+
+```text
+AUTHORING_SHA = 7ad3846fb5b79590050adc7c11ff841e816fb6b9
+AUTHORING_PREFLIGHT = PASS
+METATESTS = FAIL
+COLLECTED_AND_EXECUTED = 72
+PASS = 68
+FAIL = 2
+SKIP = 2
+COVERAGE_V3 = NOT_RUN_BY_FAIL_FAST
+FREEZE = NOT_CREATED
+B0_RELEASE = NOT_RUN
+```
+
+Falhas de autoria observadas: o coverage tentava normalizar IDs de suites reais a partir do nome importável, o que falha para `discover` fora de package e paths como `.assistant/hub-ml-concierge`; e um metateste documental ainda exigia o checkpoint transitório `B0_AUDIT_CORRECTIVE_V3_AUTHORING`. Ambas foram corrigidas repo-side em SHA posterior. O PASS parcial 68/72 permanece evidência histórica e não é certificado do novo SHA.
