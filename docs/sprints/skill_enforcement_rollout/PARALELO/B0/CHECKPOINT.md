@@ -17,7 +17,7 @@ AUD11_HOST_COORDINATION = SINGLE_LAUNCHER_OS_LEASE
 HOST_PROOF = PENDING_WINDOWS_NTFS_SANDBOX_RESOURCE_HEADROOM
 P2_OPTIMIZATIONS = DEFERRED_UNTIL_MEASURED_PILOT
 
-B0_TEST_METHODS_STATIC = 77
+B0_TEST_METHODS_STATIC = 79
 HISTORICAL_AUTHORING_39d2fefa = PREFLIGHT_PASS_METATESTS_PASS_COVERAGE_STDOUT_CP1252_FAIL
 HISTORICAL_FREEZE_49385c30 = RELEASE_FAIL_METATESTS_ENVELOPE_VALID_INVALIDATED
 LATEST_AUTHORING_SHA = e62861bb13d5da5ab3248ab094225aaf4ded5b41
@@ -31,7 +31,15 @@ LATEST_FREEZE_KIND = EMPTY_MARKER_TREE_IDENTICAL_TO_AUTHORING
 LATEST_RELEASE = FAIL_NOT_QUALIFIED_AT_METATESTS
 LATEST_RELEASE_FIRST_FAILURE = SANITIZED_ENV_CI_TEMAS_COLLECTION_ERROR
 LATEST_RELEASE_ENVELOPE = VALID
-CURRENT_TEST_METHODS_STATIC = 77
+LATEST_AUTHORING_SHA = 39e86591d710100acb32590e38fc6dac4db50d3f
+LATEST_AUTHORING_PREFLIGHT = PASS
+LATEST_AUTHORING_METATESTS = PASS_77_COLLECTED_75_PASS_2_SKIP
+LATEST_AUTHORING_COVERAGE = PASS_21_9_5_1353_UNIQUE
+LATEST_FREEZE_PREPARE = FAIL_REPO_HYGIENE_IDENTIFIER
+LATEST_FREEZE_CREATED = NO
+LATEST_B0_RELEASE = NOT_RUN
+LATEST_FINDING = SHORT_SHA_f6516959_FALSE_POSITIVE_CORPORATE_RE
+CURRENT_TEST_METHODS_STATIC = 79
 AUTHORING_PREFLIGHT_ON_FINAL_SHA = NOT_RUN
 B0_FULL_METATESTS_ON_FINAL_SHA = NOT_RUN
 COVERAGE_V3_ON_FINAL_SHA = NOT_RUN
@@ -42,6 +50,6 @@ DATABRICKS_EFFECT = none
 SKILL_CAMPAIGN_STARTED = false
 ```
 
-A V3 não transforma a auditoria em certificado. As correções acima são autoria publicada no branch; a execução integral do preflight, dos 77 metatestes, do inventory e da qualificação continua obrigatória no SHA final.
+A V3 não transforma a auditoria em certificado. As correções acima são autoria publicada no branch; a execução integral do preflight, dos 79 metatestes, do inventory e da qualificação continua obrigatória no SHA final.
 
 O próximo gate é exclusivamente local e fail-fast: preflight → metatestes → coverage. Qualquer falha retorna à autoria com os primeiros bytes/logs preservados; o executor não corrige, não altera testes e não repete até ficar verde. Somente depois ocorre freeze mecânico e uma rodada única de `b0_release`.
