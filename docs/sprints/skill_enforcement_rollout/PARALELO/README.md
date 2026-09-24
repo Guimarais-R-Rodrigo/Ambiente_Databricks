@@ -8,7 +8,7 @@ Base Git conferida: `d2988e97e7b6c5fe1fd561852e947a155c2d731b`, no repositório 
 
 ## Próxima ação
 
-Executar **a qualificação local do pacote B0 candidato**, conforme [B0](B0/README.md) e [plano de implantação](10_IMPLANTACAO.md). Nenhuma skill vai para o laboratório enquanto o B0 não estiver `LOCAL_QUALIFIED` e a implementação, testes, oráculos, perfis e decisões materiais da própria skill não estiverem fechados.
+Executar primeiro os **52 metatestes B0 e o inventário de cobertura no checkout real**. Somente se esses gates passarem, preparar o freeze e executar a qualificação local do pacote B0 conforme [B0](B0/README.md) e [plano de implantação](10_IMPLANTACAO.md). Nenhuma skill vai para o laboratório enquanto o B0 não estiver `LOCAL_QUALIFIED` e a implementação, testes, oráculos, perfis e decisões materiais da própria skill não estiverem fechados.
 
 ## Organização e documento dono
 
