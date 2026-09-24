@@ -18,31 +18,26 @@ HOST_PROOF = PENDING_WINDOWS_NTFS_SANDBOX_RESOURCE_HEADROOM
 P2_OPTIMIZATIONS = DEFERRED_UNTIL_MEASURED_PILOT
 
 B0_TEST_METHODS_STATIC = 79
+
 HISTORICAL_AUTHORING_39d2fefa = PREFLIGHT_PASS_METATESTS_PASS_COVERAGE_STDOUT_CP1252_FAIL
 HISTORICAL_FREEZE_49385c30 = RELEASE_FAIL_METATESTS_ENVELOPE_VALID_INVALIDATED
-LATEST_AUTHORING_SHA = e62861bb13d5da5ab3248ab094225aaf4ded5b41
-LATEST_AUTHORING_TREE = 11ded361baf8b242a6eb8eacf1e29e2ed08d5b53
-LATEST_AUTHORING_PREFLIGHT = PASS
-LATEST_AUTHORING_METATESTS = PASS_76_COLLECTED_74_PASS_2_SKIP
+HISTORICAL_FREEZE_f6516959_FULL_SHA = f6516959a2f973ea1e163da80548e8ebb0e235cf
+HISTORICAL_FREEZE_f6516959_RESULT = RELEASE_FAIL_SANITIZED_ENV_CI_TEMAS_ENVELOPE_VALID_INVALIDATED
+
+LATEST_AUTHORING_SHA = e0447ef3c84d99aae5eec565470f65a0c2649171
+LATEST_AUTHORING_PREFLIGHT = PASS_HYGIENE_FILES_44
+LATEST_AUTHORING_METATESTS = PASS_79_COLLECTED_77_PASS_2_SKIP
 LATEST_AUTHORING_COVERAGE = PASS_21_9_5_1353_UNIQUE
-LATEST_FREEZE_SHA = f6516959a2f973ea1e163da80548e8ebb0e235cf
-LATEST_FREEZE_TREE = 11ded361baf8b242a6eb8eacf1e29e2ed08d5b53
-LATEST_FREEZE_KIND = EMPTY_MARKER_TREE_IDENTICAL_TO_AUTHORING
-LATEST_RELEASE = FAIL_NOT_QUALIFIED_AT_METATESTS
-LATEST_RELEASE_FIRST_FAILURE = SANITIZED_ENV_CI_TEMAS_COLLECTION_ERROR
-LATEST_RELEASE_ENVELOPE = VALID
-LATEST_AUTHORING_SHA = 39e86591d710100acb32590e38fc6dac4db50d3f
-LATEST_AUTHORING_PREFLIGHT = PASS
-LATEST_AUTHORING_METATESTS = PASS_77_COLLECTED_75_PASS_2_SKIP
-LATEST_AUTHORING_COVERAGE = PASS_21_9_5_1353_UNIQUE
-LATEST_FREEZE_PREPARE = FAIL_REPO_HYGIENE_IDENTIFIER
+LATEST_FREEZE_PREPARE = FAIL_VALIDATOR_TEST_SOURCE_HYGIENE_IDENTIFIER
 LATEST_FREEZE_CREATED = NO
 LATEST_B0_RELEASE = NOT_RUN
-LATEST_FINDING = SHORT_SHA_f6516959_FALSE_POSITIVE_CORPORATE_RE
+LATEST_FINDING = ADVERSARIAL_SHORT_SHA_LITERAL_IN_TEST_SOURCE
+
 CURRENT_TEST_METHODS_STATIC = 79
 AUTHORING_PREFLIGHT_ON_FINAL_SHA = NOT_RUN
 B0_FULL_METATESTS_ON_FINAL_SHA = NOT_RUN
 COVERAGE_V3_ON_FINAL_SHA = NOT_RUN
+FREEZE_PREPARE_ON_FINAL_SHA = NOT_RUN
 LOCAL_QUALIFICATION = NOT_RUN
 
 POLICY_CHANGED = false
@@ -50,6 +45,8 @@ DATABRICKS_EFFECT = none
 SKILL_CAMPAIGN_STARTED = false
 ```
 
-A V3 não transforma a auditoria em certificado. As correções acima são autoria publicada no branch; a execução integral do preflight, dos 79 metatestes, do inventory e da qualificação continua obrigatória no SHA final.
+A V3 não transforma a auditoria em certificado. As correções estão publicadas na branch, mas o SHA atual ainda precisa de execução integral do preflight, dos 79 metatestes, do inventory e do freeze_prepare antes de qualquer novo freeze.
 
-O próximo gate é exclusivamente local e fail-fast: preflight → metatestes → coverage. Qualquer falha retorna à autoria com os primeiros bytes/logs preservados; o executor não corrige, não altera testes e não repete até ficar verde. Somente depois ocorre freeze mecânico e uma rodada única de `b0_release`.
+O preflight agora inclui na hygiene scan o próprio `tools/tests/test_ser_parallel_b0.py`, os módulos do mecanismo, o CHANGELOG e os documentos do plano. O token adversarial que reproduz a colisão de SHA curto é construído em runtime, sem inserir no source a sequência que a própria política precisa rejeitar.
+
+O próximo gate é fail-fast: preflight → metatestes → coverage → freeze_prepare. Qualquer falha retorna à autoria; o executor não corrige, não altera testes e não repete até ficar verde. Somente depois pode ser criado um novo freeze e executada uma única rodada de `b0_release`.
