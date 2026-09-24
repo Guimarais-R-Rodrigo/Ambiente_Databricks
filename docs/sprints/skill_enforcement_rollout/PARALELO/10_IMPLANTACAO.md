@@ -83,3 +83,18 @@ Meta operacional de segurança: zero promoção sem autorização, zero nova exe
 ## 10.10 Encerramento desta entrega de planejamento
 
 O pacote contém decisões e especificações, e a candidata B0 implementa o mecanismo mínimo comum. A qualificação local do B0 e os testes das novas skills permanecem pendentes. O laboratório recebe apenas o entrypoint de qualificação do mecanismo; não recebe instrução para construir arquitetura, inventar testes ou corrigir a candidata durante a campanha.
+
+
+## 10.11 Estado V3 e saída da autoria corretiva
+
+Após a auditoria independente da candidata `f803b50f...`, o B0 foi promovido internamente para contratos V3. Antes de qualquer freeze, a saída de autoria exige três gates baratos e determinísticos no mesmo checkout limpo:
+
+1. `python -B -m tools.skill_enforcement.parallel.preflight`;
+2. `python -B -m unittest tools.tests.test_ser_parallel_b0 -v` — atualmente 72 métodos definidos;
+3. `python -B -m tools.skill_enforcement.parallel.coverage`.
+
+Nenhum PASS anterior atravessa SHA. O preflight parseia JSON/Python e confronta versões dos schemas/templates; coverage usa coleta unittest real e valida entrypoints `COMMAND_ONLY`; metatestes cobrem os mutantes levantados pela auditoria.
+
+Host/Windows/NTFS/sandbox/headroom continuam gates ambientais. O lease atual restringe o host a uma campanha por vez; portanto, a prova de B0 não depende de coordenar múltiplos launchers. Dispatch por conclusão, cache de inventory e tuning do pool são P2: só entram depois que o piloto fornecer métricas de duração, fila, locks e recurso.
+
+O gerador de handoff para campanhas reais fica no primeiro pacote B1, quando existir o primeiro manifesto de skill materializado; não se generaliza agora um formato sem consumidor real. O B0 já elimina handoff manual entre seus gates porque `b0_release` encadeia preflight, metatestes, coverage, host, pilotos e veredito em uma rodada única.
