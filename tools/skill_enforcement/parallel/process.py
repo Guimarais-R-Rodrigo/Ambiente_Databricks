@@ -5,7 +5,6 @@ import json
 import os
 import signal
 import subprocess
-import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -58,13 +57,8 @@ def _terminate_tree(process: subprocess.Popen[bytes]) -> str:
     if process.poll() is not None:
         return "COMPLETE_ALREADY_EXITED"
     if os.name == "nt":
-        # taskkill is used only as timeout cleanup for the already-started PID;
-        # it is not a campaign command and cannot execute arbitrary user text.
         try:
-            subprocess.run(
-                ["taskkill", "/PID", str(process.pid), "/T", "/F"],
-                capture_output=True, timeout=10, check=False,
-            )
+            subprocess.run(["taskkill", "/PID", str(process.pid), "/T", "/F"], capture_output=True, timeout=10, check=False)
         except (OSError, subprocess.SubprocessError):
             try: process.kill()
             except OSError: pass
@@ -88,26 +82,33 @@ def run_argv(argv: list[str], evidence_dir: Path, name: str, *, timeout: float =
     if timeout <= 0 or not isinstance(timeout, (int, float)):
         raise ValueError("TIMEOUT_INVALID")
     evidence_dir.mkdir(parents=True, exist_ok=True)
-    started = _utc(); t0 = time.monotonic()
+    started = _utc()
+    t0 = time.monotonic()
     flags = subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0
+    prefix = evidence_dir / name
+    stdout_path = prefix.with_suffix(".stdout.txt")
+    stderr_path = prefix.with_suffix(".stderr.txt")
     try:
         process = subprocess.Popen(
             argv, cwd=ROOT, env=_clean_env(), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
             shell=False, start_new_session=(os.name != "nt"), creationflags=flags,
         )
     except OSError as exc:
+        stdout_b = b""
+        stderr_b = str(exc).encode("utf-8")
+        stdout_path.write_bytes(stdout_b)
+        stderr_path.write_bytes(stderr_b)
         row = {
             "name": name, "argv": argv, "command_started": False, "pid": None,
             "exit_code": 125, "timed_out": False, "cleanup": "NOT_STARTED",
             "duration_seconds": time.monotonic() - t0, "started_at_utc": started, "ended_at_utc": _utc(),
-            "stdout_sha256": hashlib.sha256(b"").hexdigest(),
-            "stderr_sha256": hashlib.sha256(str(exc).encode("utf-8")).hexdigest(),
+            "stdout_sha256": hashlib.sha256(stdout_b).hexdigest(),
+            "stderr_sha256": hashlib.sha256(stderr_b).hexdigest(),
             "spawn_error": f"{type(exc).__name__}:{exc}",
         }
-        prefix = evidence_dir / name
-        prefix.with_suffix(".stdout.txt").write_text("", encoding="utf-8")
-        prefix.with_suffix(".stderr.txt").write_text(str(exc), encoding="utf-8")
-        prefix.with_suffix(".json").write_text(json.dumps(row, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+        prefix.with_suffix(".json").write_bytes(
+            (json.dumps(row, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
+        )
         return row
     timed_out = False
     cleanup = "COMPLETE_ALREADY_EXITED"
@@ -120,20 +121,21 @@ def run_argv(argv: list[str], evidence_dir: Path, name: str, *, timeout: float =
             stdout_b, stderr_b = process.communicate(timeout=2)
         except subprocess.TimeoutExpired:
             stdout_b, stderr_b = b"", b"cleanup did not finish"
+    stdout_b = stdout_b or b""
+    stderr_b = stderr_b or b""
     code = process.returncode if process.returncode is not None else 124
     if timed_out and code == 0:
         code = 124
-    stdout = (stdout_b or b"").decode("utf-8", errors="replace")
-    stderr = (stderr_b or b"").decode("utf-8", errors="replace")
-    prefix = evidence_dir / name
-    prefix.with_suffix(".stdout.txt").write_text(stdout, encoding="utf-8")
-    prefix.with_suffix(".stderr.txt").write_text(stderr, encoding="utf-8")
+    stdout_path.write_bytes(stdout_b)
+    stderr_path.write_bytes(stderr_b)
     row = {
         "name": name, "argv": argv, "command_started": True, "pid": process.pid,
         "exit_code": int(code), "timed_out": timed_out, "cleanup": cleanup,
         "duration_seconds": time.monotonic() - t0, "started_at_utc": started, "ended_at_utc": _utc(),
-        "stdout_sha256": hashlib.sha256(stdout.encode("utf-8")).hexdigest(),
-        "stderr_sha256": hashlib.sha256(stderr.encode("utf-8")).hexdigest(),
+        "stdout_sha256": hashlib.sha256(stdout_b).hexdigest(),
+        "stderr_sha256": hashlib.sha256(stderr_b).hexdigest(),
     }
-    prefix.with_suffix(".json").write_text(json.dumps(row, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+    prefix.with_suffix(".json").write_bytes(
+        (json.dumps(row, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
+    )
     return row
