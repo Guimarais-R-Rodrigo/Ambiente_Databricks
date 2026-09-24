@@ -27,6 +27,8 @@ def _run_argv_gate(output_dir,argv,name,timeout,expected_exit):
 def _run_sandbox_registry_gate(output_dir,command_id,name,probe_target):
  argv,timeout=resolve_command(command_id); gate_dir=output_dir/"release_gates"; row=run_argv(argv,gate_dir,name,timeout=timeout,sandbox=True,sandbox_probe_target=probe_target); return row,gate_dir/f"{name}.stdout.txt"
 def _sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
+def _host_release_status(host_qualification):
+ return "LOCAL_QUALIFIED" if host_qualification.get("status")=="PASS" else "PENDING_HOST_QUALIFICATION"
 def _finish(output_dir,result,*,round_start=None,release_spec=None):
  mechanism_path=output_dir/"MECHANISM_RESULT.json"; mechanism_path.write_bytes(_json_bytes(result)); raw_manifest_path=write_manifest(output_dir)
  share_root=output_dir.parent/f"{output_dir.name}_SHARE"; binding_path=output_dir.parent/f"{output_dir.name}_RAW_SHARE_BINDING.json"; envelope_path=output_dir.parent/f"{output_dir.name}_ENVELOPE_VERIFICATION.json"; verdict_path=output_dir.parent/f"{output_dir.name}_RELEASE_VERDICT.json"
@@ -109,7 +111,7 @@ def qualify(output_dir:Path):
  current_issues=assert_release_spec_current(release_spec)
  if current_issues: return _fail(output_dir,"release_spec_final_binding",checks,round_start=round_start,release_spec=release_spec,extra={"issues":current_issues})
  host_qualification=qualify_host(ROOT,host,sandbox_probe,pilot_summaries["selective"],pilot_summaries["global"]); (output_dir/"HOST_QUALIFICATION.json").write_bytes(_json_bytes(host_qualification)); checks.append({"name":"host_qualification","exit_code":0 if host_qualification.get("status")=="PASS" else 1})
- release_status="LOCAL_QUALIFIED" if host_qualification.get("status")=="PASS" else "PENDING_HOST_QUALIFICATION"
+ release_status=_host_release_status(host_qualification)
  return _finish(output_dir,{"status":"PASS","release_status":release_status,"first_failure":None,"checks":checks,"round_id":release_spec["round_id"],"release_spec_digest":release_spec_digest(release_spec),"host":host,"host_qualification":host_qualification,"release_scope":"MECHANISM_QUALIFICATION_ONLY_NO_SKILL_PROMOTION"},round_start=round_start,release_spec=release_spec)
 def main():
  p=argparse.ArgumentParser(); p.add_argument("--output-dir",required=True,type=Path); a=p.parse_args()
