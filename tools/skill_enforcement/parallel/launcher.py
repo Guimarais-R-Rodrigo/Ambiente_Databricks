@@ -67,7 +67,7 @@ def execute(campaign:dict,evidence_root:Path,release_spec:Mapping[str,Any]):
    def run_task(task_id):
     task=tasks[task_id]; started=_utc(); task_dir=evidence_root/task_id; before=fingerprint_paths(ROOT,task["protected_paths"]); records=[]; status="PASS"; task_issues=[]
     for command_id in task["command_ids"]:
-     argv,timeout=resolve_command(command_id); row=run_argv(argv,task_dir,command_id.replace(":","_"),timeout=timeout); records.append(row); good_exit=type(row.get("exit_code")) is int and row.get("exit_code")==0
+     argv,timeout=resolve_command(command_id); row=run_argv(argv,task_dir,command_id.replace(":","_"),timeout=timeout,sandbox=True); records.append(row); good_exit=type(row.get("exit_code")) is int and row.get("exit_code")==0
      if row.get("command_started") is not True or row.get("timed_out") is not False or row.get("cleanup") not in {"COMPLETE","COMPLETE_ALREADY_EXITED"} or row.get("residual_descendants_detected") is not False or not good_exit:
       status="FAIL"; task_issues.append("COMMAND_FAILED:"+command_id); break
     after=fingerprint_paths(ROOT,task["protected_paths"])
