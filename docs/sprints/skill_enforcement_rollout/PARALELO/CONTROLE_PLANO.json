@@ -1,11 +1,11 @@
 {
   "schema_version": "1.0",
   "plan_id": "SER-PARALLEL-PLAN-2026-09-23",
-  "revision": "1.9",
+  "revision": "2.0",
   "date": "2026-09-24",
   "repository": "Guimarais-R-Rodrigo/Ambiente_Databricks",
   "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b",
-  "status": "B0_AUDIT_CORRECTIVE_V3_FREEZE_HYGIENE_RERUN_PENDING",
+  "status": "B0_AUDIT_CORRECTIVE_V3_FREEZE_TEST_HYGIENE_RERUN_PENDING",
   "user_approval_scope": "Direção aprovada e correções de auditoria autorizadas; não equivale a qualificação, promoção ou merge.",
   "launchable": false,
   "repo_publication_performed": true,
@@ -61,28 +61,25 @@
       "RUNTIME_COST_TUNING"
     ]
   },
-  "next_action": "No novo SHA de autoria: preflight V3 -> 79 metatestes -> coverage V3 -> freeze_prepare. O preflight agora antecipa higiene e o freeze CLI é ASCII-safe. Se verdes, criar novo freeze e executar uma única rodada b0_release.",
+  "next_action": "No novo SHA: preflight -> 79 metatestes -> coverage -> freeze_prepare. O preflight agora inclui o próprio arquivo de metatestes e módulos do mecanismo na hygiene scan; se tudo verde, criar freeze e executar uma única rodada b0_release.",
   "open_known_repo_side_authoring_blockers": 0,
   "b0_validation_state": {
     "test_methods_static": 79,
-    "latest_authoring_sha": "39e86591d710100acb32590e38fc6dac4db50d3f",
-    "latest_authoring_preflight": "PASS",
-    "latest_authoring_metatests": "PASS_77_COLLECTED_75_PASS_0_FAIL_0_ERROR_2_SKIP",
+    "latest_authoring_sha": "e0447ef3c84d99aae5eec565470f65a0c2649171",
+    "latest_authoring_preflight": "PASS_HYGIENE_FILES_44",
+    "latest_authoring_metatests": "PASS_79_COLLECTED_77_PASS_0_FAIL_0_ERROR_2_SKIP",
     "latest_authoring_coverage": "PASS_21_SE08_9_CI_5_SER01_1353_UNIQUE_METHODS",
-    "latest_freeze_prepare": "FAIL_VALIDATOR_BASELINE_REPO_HYGIENE_IDENTIFIER",
-    "latest_freeze_prepare_fail_paths": [
-      "CHANGELOG.md",
-      "docs/sprints/skill_enforcement_rollout/PARALELO/B0/RESULTADOS.md",
-      "docs/sprints/skill_enforcement_rollout/PARALELO/CONTROLE_PLANO.json"
-    ],
-    "latest_freeze_prepare_trigger": "SHORT_SHA_f6516959_FALSE_POSITIVE_CORPORATE_RE",
-    "latest_bundle_sha256": "889abb4969a9db6f64d55c1026095de86c7d144901e600db1c0a7a6c68712024",
+    "latest_freeze_prepare": "FAIL_VALIDATOR_TEST_SOURCE_HYGIENE_IDENTIFIER",
+    "latest_freeze_prepare_fail_path": "tools/tests/test_ser_parallel_b0.py",
+    "latest_freeze_prepare_trigger": "ADVERSARIAL_SHORT_SHA_LITERAL_IN_TEST_SOURCE",
+    "latest_bundle_sha256": "6b4fd978b98d54557030f16c7a1273d7d3c4b21dee649dfe340129d0fda3ed7c",
     "freeze_created": "NO",
     "b0_release": "NOT_RUN",
     "corrective_status": "FIXED_REPO_SIDE_NEW_AUTHORING_SHA_REQUIRES_FULL_RERUN",
     "authoring_preflight_on_final_sha": "NOT_RUN",
     "full_metatests_on_final_sha": "NOT_RUN",
     "coverage_v3_on_final_sha": "NOT_RUN",
+    "freeze_prepare_on_final_sha": "NOT_RUN",
     "local_qualification": "NOT_RUN"
   },
   "audit_convergence_hardenings": [
