@@ -1,15 +1,15 @@
 {
   "schema_version": "1.0",
   "plan_id": "SER-PARALLEL-PLAN-2026-09-23",
-  "revision": "1.1",
+  "revision": "1.2",
   "date": "2026-09-24",
   "repository": "Guimarais-R-Rodrigo/Ambiente_Databricks",
   "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b",
-  "status": "B0_IMPLEMENTED_CANDIDATE_LOCAL_QUALIFICATION_PENDING",
+  "status": "B0_CORRECTED_CANDIDATE_FULL_CHECKOUT_TESTS_PENDING",
   "user_approval_scope": "Direção aprovada e detalhamento solicitado; não equivale a execução ou promoção futura.",
   "launchable": false,
   "repo_publication_performed": true,
-  "mechanism_implementation": "IMPLEMENTED_CANDIDATE",
+  "mechanism_implementation": "CORRECTED_CANDIDATE",
   "skill_implementation_under_this_plan": "NOT_STARTED",
   "runtime_campaign": "B0_QUALIFICATION_NOT_RUN",
   "policy_changed": false,
@@ -31,5 +31,11 @@
   "dag_edges": 149,
   "open_authoring_blockers": 20,
   "readiness_obligations": 24,
-  "next_action": "Executar B0 local qualification; nenhuma campanha de skill ainda liberada."
-}
+  "next_action": "Executar 52 metatestes B0 + coverage no checkout real; somente depois preparar freeze e b0_release.",
+  "corrective_review": {
+    "rv01_to_rv07": "CORRECTED_REPO_SIDE",
+    "adversarial_isolated": "9/9 PASS",
+    "b0_test_methods": 52,
+    "full_checkout_metatests": "NOT_RUN"
+  }
+}\n
