@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-09-24 — SER B0: metateste documental desacoplado da implementação de host qualification
+
+### Evidência preservada
+
+- (ChatGPT) A rodada `021702a770f276c147c49194804f2a34167e0672` passou preflight e executou 82 metatestes: 79 PASS, 1 FAIL, 2 SKIP; coverage/freeze/release não rodaram por fail-fast.
+- (ChatGPT) O único FAIL foi `test_b0_checkpoint_does_not_claim_local_pass`: o teste ainda exigia literalmente `B0.5 HOST_QUALIFICATION = NOT_RUN_LOCAL`, embora B0.5 já estivesse implementado e aguardando rerun.
+- (ChatGPT) Bundle `b0_021702a7_20260924_authoring.zip` com SHA-256 `eb5deeffc087008fef3e7d5eb407ffc2395b94c971d6564bc3b674b9c608742f` validado.
+
+### Corrigido
+
+- (ChatGPT) O metateste passa a validar a invariante durável: `LOCAL_QUALIFICATION = NOT_RUN` enquanto não houver rodada `LOCAL_QUALIFIED`, e rejeita claim prematura `PASS/LOCAL_QUALIFIED`.
+- (ChatGPT) O estado de implementação de `B0.5 HOST_QUALIFICATION` deixa de ser confundido com o resultado final da qualificação local.
+
+### Limites
+
+- (ChatGPT) Nenhum PASS parcial é transportado. O SHA novo precisa executar novamente preflight, 82 metatestes, coverage, freeze_prepare, novo freeze e uma única rodada de `b0_release`.
+
 ## 2026-09-24 — SER B0: mecanismo PASS e qualificação ambiental executável
 
 ### Evidência preservada
