@@ -1,91 +1,14 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "SER-PARALLEL-CAMPAIGN-2",
-  "type": "object",
-  "additionalProperties": false,
-  "required": [
-    "schema_version",
-    "campaign_id",
-    "baseline_sha",
-    "candidate_sha",
-    "state",
-    "max_parallel",
-    "max_auditors",
-    "tasks",
-    "command_registry_digest",
-    "coverage_digest",
-    "policy_before_digest",
-    "human_gates",
-    "external_gates",
-    "repo_mode"
-  ],
-  "properties": {
-    "schema_version": {
-      "const": "SER-PARALLEL-CAMPAIGN-2"
-    },
-    "campaign_id": {
-      "type": "string"
-    },
-    "baseline_sha": {
-      "type": "string",
-      "pattern": "^[0-9a-f]{40}$"
-    },
-    "candidate_sha": {
-      "type": "string",
-      "pattern": "^[0-9a-f]{40}$"
-    },
-    "state": {
-      "type": "string"
-    },
-    "max_parallel": {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 8
-    },
-    "max_auditors": {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 8
-    },
-    "tasks": {
-      "type": "array",
-      "minItems": 1
-    },
-    "command_registry_digest": {
-      "type": "string",
-      "pattern": "^[0-9a-f]{64}$"
-    },
-    "coverage_digest": {
-      "type": "string",
-      "pattern": "^[0-9a-f]{64}$"
-    },
-    "policy_before_digest": {
-      "type": "string",
-      "pattern": "^[0-9a-f]{64}$"
-    },
-    "human_gates": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "external_gates": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "repo_mode": {
-      "const": "READ_ONLY"
-    },
-    "approved_target_vector": {
-      "type": "object"
-    },
-    "resource_limits": {
-      "type": "object"
-    },
-    "description": {
-      "type": "string"
-    }
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"SER-PARALLEL-CAMPAIGN-3","type":"object","additionalProperties":false,
+  "required":["schema_version","campaign_id","round_id","release_spec_digest","baseline_sha","candidate_sha","candidate_tree_sha","state","max_parallel","max_auditors","tasks","command_registry_digest","coverage_digest","policy_before_digest","human_gates","external_gates","repo_mode"],
+  "properties":{
+    "schema_version":{"const":"SER-PARALLEL-CAMPAIGN-3"},"campaign_id":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9_.:-]{2,127}$"},"round_id":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9_.:-]{2,127}$"},
+    "release_spec_digest":{"type":"string","pattern":"^[0-9a-f]{64}$"},"baseline_sha":{"type":"string","pattern":"^[0-9a-f]{40}$"},"candidate_sha":{"type":"string","pattern":"^[0-9a-f]{40}$"},"candidate_tree_sha":{"type":"string","pattern":"^[0-9a-f]{40}$"},
+    "state":{"enum":["PLANNED","AUTHORING_READY","LOCAL_RUNNING","LOCAL_PASS","LOCAL_FAIL","BLOCKED_ENVIRONMENT","BLOCKED_DESIGN","AUDIT_PENDING","AUDIT_PASS","EXTERNAL_PENDING","EXTERNAL_PASS","PROMOTION_CANDIDATE","CERTIFIED","WAITING_HUMAN","MERGED"]},
+    "max_parallel":{"type":"integer","minimum":1,"maximum":8},"max_auditors":{"type":"integer","minimum":1,"maximum":8},"tasks":{"type":"array","minItems":1,"items":{"$ref":"task.schema.json"}},
+    "command_registry_digest":{"type":"string","pattern":"^[0-9a-f]{64}$"},"coverage_digest":{"type":"string","pattern":"^[0-9a-f]{64}$"},"policy_before_digest":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "human_gates":{"type":"array","items":{"type":"string"},"uniqueItems":true},"external_gates":{"type":"array","items":{"type":"string"},"uniqueItems":true},"repo_mode":{"const":"READ_ONLY"},"approved_target_vector":{"type":"object"},
+    "resource_limits":{"type":"object","additionalProperties":false,"properties":{"light":{"type":"integer","minimum":1,"maximum":8},"cpu":{"type":"integer","minimum":1,"maximum":8},"spark":{"type":"integer","minimum":1,"maximum":8},"tracking":{"type":"integer","minimum":1,"maximum":8},"external_effect":{"type":"integer","minimum":1,"maximum":8},"audit":{"type":"integer","minimum":1,"maximum":8}}},
+    "description":{"type":"string"}
   }
 }
