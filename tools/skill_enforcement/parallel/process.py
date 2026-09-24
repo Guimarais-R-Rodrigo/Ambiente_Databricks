@@ -5,6 +5,7 @@ import json
 import os
 import signal
 import subprocess
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -211,6 +212,30 @@ def _write_record(prefix: Path, row: dict) -> None:
     )
 
 
+_WINDOWS_LAUNCHER = """import json, pathlib, subprocess, sys
+if sys.stdin.buffer.read(1) != b'1': sys.exit(125)
+try:
+ p = subprocess.Popen(json.loads(sys.argv[1]), stdin=subprocess.DEVNULL)
+except OSError as exc:
+ pathlib.Path(sys.argv[2]).write_text(json.dumps({'start_error': repr(exc)}), encoding='utf-8')
+ sys.exit(125)
+pathlib.Path(sys.argv[2]).write_text(json.dumps({'pid': p.pid}), encoding='utf-8')
+sys.exit(p.wait())
+"""
+
+
+def _read_windows_child(path: Path) -> tuple[int | None, str | None]:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return None, "WINDOWS_CHILD_START_UNOBSERVED"
+    pid = payload.get("pid")
+    if type(pid) is int and pid > 0:
+        return pid, None
+    error = payload.get("start_error")
+    return None, "WINDOWS_CHILD_START_ERROR:" + str(error or "UNKNOWN")
+
+
 def run_argv(argv: list[str], evidence_dir: Path, name: str, *, timeout: float = 120.0) -> dict:
     if not argv or any(not isinstance(x, str) or not x for x in argv):
         raise ValueError("ARGV_INVALID")
@@ -229,21 +254,27 @@ def run_argv(argv: list[str], evidence_dir: Path, name: str, *, timeout: float =
 
     with stdout_path.open("wb", buffering=0) as stdout_f, stderr_path.open("wb", buffering=0) as stderr_f:
         try:
+            windows_child_path = evidence_dir / f"{name}.child.json"
             if os.name == "nt":
                 job = _WindowsJob()
-            process = subprocess.Popen(
-                argv,
-                cwd=ROOT,
-                env=_clean_env(),
-                stdout=stdout_f,
-                stderr=stderr_f,
-                shell=False,
-                start_new_session=(os.name != "nt"),
-                creationflags=flags,
-            )
-            if job is not None:
+                process = subprocess.Popen(
+                    [sys.executable, "-c", _WINDOWS_LAUNCHER, json.dumps(argv), str(windows_child_path)],
+                    cwd=ROOT,
+                    env=_clean_env(),
+                    stdin=subprocess.PIPE,
+                    stdout=stdout_f,
+                    stderr=stderr_f,
+                    shell=False,
+                    start_new_session=False,
+                    creationflags=flags,
+                )
                 try:
                     job.assign(process)
+                    if process.stdin is None:
+                        raise OSError("WINDOWS_LAUNCHER_STDIN_MISSING")
+                    process.stdin.write(b"1")
+                    process.stdin.flush()
+                    process.stdin.close()
                 except OSError:
                     try:
                         process.kill()
@@ -251,6 +282,17 @@ def run_argv(argv: list[str], evidence_dir: Path, name: str, *, timeout: float =
                     except (OSError, subprocess.SubprocessError):
                         pass
                     raise
+            else:
+                process = subprocess.Popen(
+                    argv,
+                    cwd=ROOT,
+                    env=_clean_env(),
+                    stdout=stdout_f,
+                    stderr=stderr_f,
+                    shell=False,
+                    start_new_session=True,
+                    creationflags=flags,
+                )
         except OSError as exc:
             if job is not None:
                 job.close()
@@ -300,14 +342,29 @@ def run_argv(argv: list[str], evidence_dir: Path, name: str, *, timeout: float =
             code = process.returncode if process.returncode is not None else 124
             if timed_out and code == 0:
                 code = 124
-            row = {
-                "record_schema": COMMAND_RECORD_SCHEMA_VERSION,
-                "name": name, "argv": argv, "command_started": True, "pid": process.pid,
-                "exit_code": int(code), "timed_out": timed_out, "cleanup": cleanup,
-                "residual_descendants_detected": residual, "supervision": supervision,
-                "duration_seconds": time.monotonic() - t0, "started_at_utc": started, "ended_at_utc": _utc(),
-                "stdout_sha256": "", "stderr_sha256": "",
-            }
+            observed_pid = process.pid
+            child_start_error = None
+            if os.name == "nt":
+                observed_pid, child_start_error = _read_windows_child(windows_child_path)
+            if child_start_error is not None:
+                row = {
+                    "record_schema": COMMAND_RECORD_SCHEMA_VERSION,
+                    "name": name, "argv": argv, "command_started": False, "pid": None,
+                    "exit_code": int(code) if type(code) is int else 125, "timed_out": timed_out,
+                    "cleanup": "NOT_STARTED", "residual_descendants_detected": False,
+                    "supervision": "NOT_STARTED",
+                    "duration_seconds": time.monotonic() - t0, "started_at_utc": started, "ended_at_utc": _utc(),
+                    "stdout_sha256": "", "stderr_sha256": "", "spawn_error": child_start_error,
+                }
+            else:
+                row = {
+                    "record_schema": COMMAND_RECORD_SCHEMA_VERSION,
+                    "name": name, "argv": argv, "command_started": True, "pid": observed_pid,
+                    "exit_code": int(code), "timed_out": timed_out, "cleanup": cleanup,
+                    "residual_descendants_detected": residual, "supervision": supervision,
+                    "duration_seconds": time.monotonic() - t0, "started_at_utc": started, "ended_at_utc": _utc(),
+                    "stdout_sha256": "", "stderr_sha256": "",
+                }
         finally:
             if job is not None:
                 job.close()
