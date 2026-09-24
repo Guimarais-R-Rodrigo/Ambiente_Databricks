@@ -18,6 +18,6 @@ python -B -m unittest tools.tests.test_ser_parallel_b0 -v
 python -B -m tools.skill_enforcement.parallel.coverage
 ```
 
-Somente se os três gates forem verdes, a preparação mecânica executa `python -B -m tools.skill_enforcement.parallel.freeze_prepare --apply`, altera exclusivamente o snapshot medido de `README.md`, e o operador cria o commit de freeze após inspecionar o diff. A qualificação então roda uma única vez com `python -B -m tools.skill_enforcement.parallel.b0_release --output-dir <DIR_EXTERNO_NOVO>`.
+O roteiro operacional fechado está em [`HANDOFF_LOCAL.md`](HANDOFF_LOCAL.md). Ele é a fonte do executor para stop rules, comandos, evidências de retorno e ações proibidas.\n\nSomente se os três gates forem verdes, a preparação mecânica executa `python -B -m tools.skill_enforcement.parallel.freeze_prepare --apply`, altera exclusivamente o snapshot medido de `README.md`, e o operador cria o commit de freeze após inspecionar o diff. A qualificação então roda uma única vez com `python -B -m tools.skill_enforcement.parallel.b0_release --output-dir <DIR_EXTERNO_NOVO>`.
 
 O `b0_release` V3 fixa `ROUND_START` e `RELEASE_SPEC`, reconfirma identidade entre gates, reabre campanha/summary/logs persistidos para verificação independente e emite um `RELEASE_VERDICT` externo ligado aos hashes do mecanismo, RAW, SHARE, binding e envelope. Um PASS funcional com host/sandbox não provados não autoriza campanha real nem promoção.
