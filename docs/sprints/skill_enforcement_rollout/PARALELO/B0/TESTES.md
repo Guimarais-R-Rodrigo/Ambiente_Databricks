@@ -17,7 +17,7 @@ Erro barato não deve chegar ao laboratório.
 
 ## 2. Metatestes
 
-`python -B -m unittest tools.tests.test_ser_parallel_b0 -v` contém **72 métodos definidos estaticamente** na candidata V3.
+`python -B -m unittest tools.tests.test_ser_parallel_b0 -v` contém **74 métodos definidos estaticamente** na candidata V3.
 
 A suíte preserva as regressões históricas e adiciona discriminantes para os achados da auditoria: null/tipos inválidos; task obrigatória vazia; NA sem precondição aprovada; timeout/exit booleano/tempo inválido; overlap escondido por wave; causalidade de stop; ciclo; secret scan resealado e filename; colisão de metadata; symlink; CRLF/non-UTF8 reais; processo filho residual; coleta unittest real; target ausente; override histórico; identidade de rodada; schemas/findings; lease/slot semantics; preflight; troca limpa de HEAD; entrypoint COMMAND_ONLY ausente; e ordem de atribuição do Job Object antes da liberação do child.
 
