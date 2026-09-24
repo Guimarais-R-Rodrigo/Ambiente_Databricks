@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-09-24 — SER B0: corretiva da primeira rodada real de metatestes
+
+### Evidência preservada
+
+- (ChatGPT) A rodada local em `7ad3846fb5b79590050adc7c11ff841e816fb6b9` passou o authoring preflight e executou 72 metatestes: 68 PASS, 2 FAIL, 2 SKIP; coverage/freeze/release não rodaram por fail-fast.
+- (ChatGPT) O bundle retornado teve SHA-256 `464fb8a467f8a1881c401dd0747c70cce164cb4d47188e6190e9cf09b47b50ab`; nenhum retry/correção local foi realizado.
+
+### Corrigido
+
+- (ChatGPT) Coverage V3 passa a normalizar IDs pela origem real (`module.__file__`) carregada pelo unittest, em vez de inferir path a partir de nomes de módulo; `discover` reproduz a semântica do comando original sem impor `top_level_dir` da raiz.
+- (ChatGPT) Adicionadas regressões para `unittest discover` em diretório não-package e arquivo de teste em path não-package como `.assistant/...`.
+- (ChatGPT) O metateste do `CONTROLE_PLANO.json` deixa de exigir um checkpoint transitório exato e passa a validar invariantes duráveis de escopo/governança.
+- (ChatGPT) Suíte B0 passa de 72 para 74 métodos definidos estaticamente; nova execução integral é obrigatória no novo SHA.
+
+### Limites
+
+- (ChatGPT) O 68/72 parcial da rodada anterior não é transportado para o novo SHA. Preflight, 74 metatestes e coverage V3 precisam ser executados novamente antes de freeze.
+
 ## 2026-09-24 — SER B0: worktree dedicado para qualificação local
 
 ### Corrigido
