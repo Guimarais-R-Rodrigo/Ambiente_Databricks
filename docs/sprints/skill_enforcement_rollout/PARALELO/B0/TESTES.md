@@ -17,7 +17,7 @@ Erro barato não deve chegar ao laboratório.
 
 ## 2. Metatestes
 
-`python -B -m unittest tools.tests.test_ser_parallel_b0 -v` contém **76 métodos definidos estaticamente** na candidata V3.
+`python -B -m unittest tools.tests.test_ser_parallel_b0 -v` contém **77 métodos definidos estaticamente** na candidata V3.
 
 A suíte preserva as regressões históricas e adiciona discriminantes para os achados da auditoria: null/tipos inválidos; task obrigatória vazia; NA sem precondição aprovada; timeout/exit booleano/tempo inválido; overlap escondido por wave; causalidade de stop; ciclo; secret scan resealado e filename; colisão de metadata; symlink; CRLF/non-UTF8 reais; processo filho residual; coleta unittest real; target ausente; override histórico; identidade de rodada; schemas/findings; lease/slot semantics; preflight; troca limpa de HEAD; entrypoint COMMAND_ONLY ausente; e ordem de atribuição do Job Object antes da liberação do child.
 
@@ -27,7 +27,9 @@ Contagem estática não equivale a execução. O SHA final precisa produzir cole
 
 `python -B -m tools.skill_enforcement.parallel.coverage` deve retornar `status=PASS`, 21 steps SE08, nove etapas CI não-SEF e cinco grupos SER01.
 
-A saída CLI do inventory é JSON ASCII-safe (caracteres Unicode escapados) para ser transportável também em consoles Windows `cp1252`; o parsing recupera o conteúdo Unicode original.\n\nO V3 distingue:
+A saída CLI do inventory é JSON ASCII-safe (caracteres Unicode escapados) para ser transportável também em consoles Windows `cp1252`; o parsing recupera o conteúdo Unicode original.
+
+O V3 distingue:
 
 - `MAPPED`: command de unittest realmente coletado pelo loader, com IDs normalizados;
 - `COMMAND_ONLY`: validador/probe explicitamente allowlisted como não-unittest **e com entrypoint existente/verificado**;
