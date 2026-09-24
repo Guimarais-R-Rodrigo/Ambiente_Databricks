@@ -246,8 +246,12 @@ class CorrectiveRegressionTests(unittest.TestCase):
     def test_coverage_has_no_empty_method_map(self):
         payload=coverage.inventory()
         rows=[*payload["se08"],*payload["ci_non_sef"],*payload["ser01"]]
-        self.assertFalse(any(row["mapping_status"]=="EMPTY_METHOD_MAP" for row in rows),payload["issues"])
-        self.assertTrue(all(row["mapping_status"] in {"MAPPED","COMMAND_ONLY"} for row in rows),payload["issues"])
+        details=[
+            {"step_id":row["step_id"],"mapping_status":row["mapping_status"],"collection_errors":row.get("collection_errors",[])}
+            for row in rows if row["mapping_status"] not in {"MAPPED","COMMAND_ONLY"}
+        ]
+        self.assertFalse(any(row["mapping_status"]=="EMPTY_METHOD_MAP" for row in rows),details)
+        self.assertTrue(all(row["mapping_status"] in {"MAPPED","COMMAND_ONLY"} for row in rows),details)
         rendered=coverage._json_cli({"text":"L2→L3"})
         self.assertEqual({"text":"L2→L3"},json.loads(rendered))
         rendered.encode("cp1252")
