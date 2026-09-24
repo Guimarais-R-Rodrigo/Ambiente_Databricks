@@ -96,7 +96,7 @@ B0_METATESTS = PASS
 COVERAGE_V3.status = PASS
 ```
 
-A suíte contém 79 métodos definidos estaticamente na autoria atual. A coleta real do checkout é a autoridade para a execução; não ajustar o esperado localmente.
+A suíte contém 82 métodos definidos estaticamente na autoria atual. A coleta real do checkout é a autoridade para a execução; não ajustar o esperado localmente.
 
 Se qualquer comando falhar:
 
@@ -233,12 +233,17 @@ A falha deliberada do piloto não é falha do mecanismo quando o oráculo indepe
 
 Preservar e retornar, sem editar:
 
-- estado do checkout original (somente observação; não alterado);\n- SHA/tree/base do worktree dedicado;\n- SHA remoto da branch antes e depois do freeze;\n- SHA/tree/base/branch local da rodada;
+- estado do checkout original (somente observação; não alterado);
+- SHA/tree/base do worktree dedicado;
+- SHA remoto da branch antes e depois do freeze;
+- SHA/tree/base/branch local da rodada;
 - `ROUND_START.json`;
 - `RELEASE_SPEC.json`;
 - stdout/stderr + records dos release gates;
 - `coverage.json`;
 - `host.json`;
+- `sandbox_probe.json`;
+- `HOST_QUALIFICATION.json`;
 - campanhas prepared;
 - evidence roots dos dois pilotos;
 - summaries dos pilotos;
@@ -255,18 +260,22 @@ Não reconstruir manualmente arquivo faltante.
 
 ## 7. Provas ambientais que não podem ser inferidas
 
-Mesmo com gates funcionais verdes, registrar separadamente:
+A rodada atual deve produzir `HOST_QUALIFICATION.json`. Para `LOCAL_QUALIFIED`, exigir:
 
 ```text
-WINDOWS_JOB_OBJECT_PROOF
-NTFS_QUALIFICATION
-SANDBOX_NEGATIVE_PERMISSIONS
-HOST_RESOURCE_HEADROOM
+HOST_QUALIFICATION.status = PASS
+filesystem_ntfs_or_not_windows = true
+sandbox_negative_probe = true
+windows_job_object = true
+resource_observation_complete = true
+initial_parallelism_2_1_observed = true
 ```
 
-Se uma dessas dimensões não tiver sido efetivamente observada, usar estado pendente correspondente.
+O probe negativo do sandbox deve provar scratch write permitido, escrita externa bloqueada, subprocesso bloqueado, rede bloqueada e credencial sentinela ausente. O filesystem Windows deve ser observado como NTFS. CPU/memória/disco precisam ser efetivamente medidos, e os próprios pilotos devem mostrar overlap de duas tasks.
 
-Não converter ausência de prova em PASS.
+`post_pilot_candidate_3_2` deve continuar `NOT_QUALIFIED_REQUIRES_SEPARATE_HEADROOM_MEASUREMENT`. Não converter a prova do perfil inicial 2/1 em autorização para 3/2.
+
+O sandbox qualificado aqui é o sandbox Python audit-hook das tasks Python allowlisted do B0; não alegar sandbox genérico de SO.
 
 ## 8. Paralelismo autorizado no B0
 
@@ -300,7 +309,9 @@ Durante o handoff não:
 - executar Databricks;
 - publicar;
 - marcar PR Ready;
-- fazer merge;\n- stash/reset/clean no checkout original;\n- force push ou force-with-lease.
+- fazer merge;
+- stash/reset/clean no checkout original;
+- force push ou force-with-lease.
 
 ## 10. Resultado do handoff
 
