@@ -1,5 +1,5 @@
 {
-  "schema_version": "SER-PARALLEL-CAMPAIGN-2",
+  "schema_version": "SER-PARALLEL-CAMPAIGN-3",
   "baseline_sha": "0000000000000000000000000000000000000000",
   "candidate_sha": "0000000000000000000000000000000000000000",
   "state": "PLANNED",
@@ -21,7 +21,7 @@
   "campaign_id": "SER-B0-PILOT-GLOBAL",
   "tasks": [
     {
-      "task_schema": "SER-PARALLEL-TASK-2",
+      "task_schema": "SER-PARALLEL-TASK-3",
       "task_id": "pilot.global.arm",
       "role": "executor",
       "stage": "B0.6",
@@ -46,7 +46,7 @@
       "failure_scope": "LOCAL_CHAIN"
     },
     {
-      "task_schema": "SER-PARALLEL-TASK-2",
+      "task_schema": "SER-PARALLEL-TASK-3",
       "task_id": "pilot.global.fail",
       "role": "executor",
       "stage": "B0.6",
@@ -73,7 +73,7 @@
       "failure_scope": "GLOBAL_CAMPAIGN"
     },
     {
-      "task_schema": "SER-PARALLEL-TASK-2",
+      "task_schema": "SER-PARALLEL-TASK-3",
       "task_id": "pilot.global.anchor",
       "role": "executor",
       "stage": "B0.6",
@@ -100,7 +100,7 @@
       "failure_scope": "LOCAL_CHAIN"
     },
     {
-      "task_schema": "SER-PARALLEL-TASK-2",
+      "task_schema": "SER-PARALLEL-TASK-3",
       "task_id": "pilot.global.must_not_start",
       "role": "executor",
       "stage": "B0.6",
@@ -127,7 +127,7 @@
       "failure_scope": "LOCAL_CHAIN"
     },
     {
-      "task_schema": "SER-PARALLEL-TASK-2",
+      "task_schema": "SER-PARALLEL-TASK-3",
       "task_id": "pilot.global.integrator",
       "role": "integrator",
       "stage": "B0.6",
@@ -153,5 +153,8 @@
       "expected_effect": "NONE",
       "failure_scope": "LOCAL_CHAIN"
     }
-  ]
+  ],
+  "round_id": "B0ROUND-PLACEHOLDER",
+  "release_spec_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "candidate_tree_sha": "0000000000000000000000000000000000000000"
 }
