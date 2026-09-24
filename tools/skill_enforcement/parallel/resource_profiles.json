@@ -1,5 +1,5 @@
 {
-  "schema_version": "SER-PARALLEL-RESOURCES-2",
+  "schema_version": "SER-PARALLEL-RESOURCES-3",
   "initial": {
     "max_parallel": 2,
     "max_auditors": 1,
@@ -10,7 +10,8 @@
       "tracking": 1,
       "external_effect": 1,
       "audit": 1
-    }
+    },
+    "host_campaigns": 1
   },
   "post_pilot_candidate": {
     "max_parallel": 3,
@@ -19,7 +20,11 @@
       "B0_SELECTIVE_PILOT_PASS",
       "B0_GLOBAL_PILOT_PASS",
       "NO_MATERIAL_ISOLATION_FINDING",
-      "SANDBOX_QUALIFIED"
+      "SANDBOX_QUALIFIED",
+      "MEASURED_RESOURCE_HEADROOM",
+      "HOST_WIDE_LEASE_VERIFIED"
     ]
-  }
+  },
+  "slot_semantics": "max_parallel is the total number of simultaneously running tasks, including auditor roles; max_auditors is a subset cap, not additional slots.",
+  "host_coordination": "SINGLE_LAUNCHER_OS_LEASE"
 }
