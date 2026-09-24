@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+import hashlib
 import json
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
 
 from tools.skill_enforcement.parallel import bundle, contract, coverage, registry, scheduler, verifier, pilot_verify
-from tools.skill_enforcement.parallel import launcher
+from tools.skill_enforcement.parallel import launcher, process
 
 
 def task(task_id="task.a", deps=None, key="k", role="executor", resource="light", failure_scope="LOCAL_CHAIN"):
@@ -16,8 +18,12 @@ def task(task_id="task.a", deps=None, key="k", role="executor", resource="light"
 def campaign(tasks=None):
     return {"schema_version":contract.CAMPAIGN_SCHEMA_VERSION,"campaign_id":"SER-B0-TEST","baseline_sha":"b"*40,"candidate_sha":"a"*40,"state":"PLANNED","max_parallel":2,"max_auditors":1,"resource_limits":{"light":2,"audit":1},"tasks":tasks or [task()],"command_registry_digest":"1"*64,"coverage_digest":"2"*64,"policy_before_digest":"3"*64,"human_gates":["B0_RELEASE"],"external_gates":[],"repo_mode":"READ_ONLY"}
 
-def result(task_id="task.a",status="PASS",exit_code=0,wave=0):
-    return {"result_schema":contract.RESULT_SCHEMA_VERSION,"task_id":task_id,"candidate_sha":"a"*40,"status":status,"effect_state":"NONE","command_records":[] if status.startswith("BLOCKED") else [{"exit_code":exit_code,"command_started":True,"cleanup":"COMPLETE"}],"first_failure":None,"wave_index":wave,"started_at_utc":"2026-09-24T00:00:00Z","ended_at_utc":"2026-09-24T00:00:01Z","protected_fingerprint_before":"4"*64,"protected_fingerprint_after":"4"*64,"issues":[]}
+def command_record(command_id="b0:pilot:pass",exit_code=0):
+    argv,_=registry.resolve_command(command_id); empty=hashlib.sha256(b"").hexdigest()
+    return {"name":command_id.replace(":","_"),"argv":argv,"exit_code":exit_code,"command_started":True,"cleanup":"COMPLETE","stdout_sha256":empty,"stderr_sha256":empty}
+
+def result(task_id="task.a",status="PASS",exit_code=0,wave=0,command_id="b0:pilot:pass"):
+    return {"result_schema":contract.RESULT_SCHEMA_VERSION,"task_id":task_id,"candidate_sha":"a"*40,"status":status,"effect_state":"NONE","command_records":[] if status.startswith("BLOCKED") else [command_record(command_id,exit_code)],"first_failure":None,"wave_index":wave,"started_at_utc":"2026-09-24T00:00:00Z","ended_at_utc":"2026-09-24T00:00:01Z","protected_fingerprint_before":"4"*64,"protected_fingerprint_after":"4"*64,"issues":[]}
 
 class ContractTests(unittest.TestCase):
     def test_valid_task(self): self.assertEqual([],contract.validate_task(task()))
@@ -62,7 +68,7 @@ class VerifierTests(unittest.TestCase):
     def test_first_failure_deterministic_by_wave_then_id(self):
         c=campaign([task("bbb"),task("aaa",key="k2")]);ra=result("aaa","FAIL",1,0);rb=result("bbb","FAIL",1,0);v=verifier.verify_campaign_run(c,{"bbb":rb,"aaa":ra});self.assertEqual("aaa",v["first_failure"])
     def test_global_stop_task_cannot_execute(self):
-        c=campaign([task("aaa",failure_scope="GLOBAL_CAMPAIGN"),task("bbb",key="k2")]);ra=result("aaa","FAIL",1,0);rb=result("bbb","BLOCKED_GLOBAL_STOP",wave=1);rb["blocked_by"]=["aaa"];self.assertTrue(verifier.verify_campaign_run(c,{"aaa":ra,"bbb":rb})["valid"])
+        c=campaign([task("aaa",failure_scope="GLOBAL_CAMPAIGN"),task("bbb",key="k2")]);ra=result("aaa","FAIL",1,0);rb=result("bbb","BLOCKED_GLOBAL_STOP",wave=1);rb["blocked_by"]=["aaa"];ra["first_failure"]=rb["first_failure"]="aaa";self.assertTrue(verifier.verify_campaign_run(c,{"aaa":ra,"bbb":rb})["valid"])
 
 class BundleTests(unittest.TestCase):
     def test_manifest_roundtrip(self):
@@ -90,10 +96,10 @@ class CoverageTests(unittest.TestCase):
 
 class PilotVerifierTests(unittest.TestCase):
     def test_selective_expected_failure_is_mechanism_pass(self):
-        summary={"first_failure":"pilot.beta.fail","results":{"pilot.alpha.pass":{"status":"PASS"},"pilot.beta.fail":{"status":"FAIL"},"pilot.beta.dependent":{"status":"BLOCKED_DEPENDENCY","blocked_by":["pilot.beta.fail"]},"pilot.gamma.independent":{"status":"PASS"},"pilot.publication.blocked":{"status":"BLOCKED_DEPENDENCY","blocked_by":["pilot.beta.dependent"]}}}
+        summary={"status":"FAIL","first_failure":"pilot.beta.fail","global_stop":None,"verification":{"valid":True,"issues":[]},"results":{"pilot.alpha.pass":{"status":"PASS"},"pilot.beta.fail":{"status":"FAIL"},"pilot.beta.dependent":{"status":"BLOCKED_DEPENDENCY","blocked_by":["pilot.beta.fail"],"command_records":[]},"pilot.gamma.independent":{"status":"PASS"},"pilot.publication.blocked":{"status":"BLOCKED_DEPENDENCY","blocked_by":["pilot.beta.dependent"],"command_records":[]}}}
         self.assertTrue(pilot_verify.verify(summary,"selective")["valid"])
     def test_global_stop_requires_late_task_not_started(self):
-        summary={"global_stop":"pilot.global.fail","results":{"pilot.global.arm":{"status":"PASS"},"pilot.global.fail":{"status":"FAIL"},"pilot.global.anchor":{"status":"PASS"},"pilot.global.must_not_start":{"status":"BLOCKED_GLOBAL_STOP","blocked_by":["pilot.global.fail"],"command_records":[]}}}
+        summary={"status":"FAIL","first_failure":"pilot.global.fail","global_stop":"pilot.global.fail","verification":{"valid":True,"issues":[]},"results":{"pilot.global.arm":{"status":"PASS"},"pilot.global.fail":{"status":"FAIL"},"pilot.global.anchor":{"status":"PASS"},"pilot.global.must_not_start":{"status":"BLOCKED_GLOBAL_STOP","blocked_by":["pilot.global.fail"],"command_records":[]},"pilot.global.integrator":{"status":"BLOCKED_GLOBAL_STOP","blocked_by":["pilot.global.fail"],"command_records":[]}}}
         self.assertTrue(pilot_verify.verify(summary,"global")["valid"])
 
 class LauncherLogicTests(unittest.TestCase):
@@ -134,5 +140,102 @@ class DocumentationContractTests(unittest.TestCase):
         checkpoint = (self.plan / "B0/CHECKPOINT.md").read_text(encoding="utf-8")
         self.assertIn("LOCAL_QUALIFICATION = NOT_RUN_LOCAL", checkpoint.replace("B0.5 HOST_QUALIFICATION", "LOCAL_QUALIFICATION"))
         self.assertIn("POLICY_CHANGED = false", checkpoint)
+
+
+class CorrectiveRegressionTests(unittest.TestCase):
+    def test_registry_rejects_arbitrary_executable_module_script_and_absolute_shell(self):
+        base=json.loads(registry.DEFAULT_REGISTRY.read_text(encoding="utf-8"))
+        bad_argv=[["/bin/echo","x"],["{PYTHON}","-B","-m","evil.module"],["{PYTHON}","evil.py"],["/bin/bash","-c","echo x"]]
+        for argv in bad_argv:
+            with self.subTest(argv=argv), tempfile.TemporaryDirectory() as tmp:
+                payload=json.loads(json.dumps(base));payload["commands"][0]["argv"]=argv
+                p=Path(tmp)/"r.json";p.write_text(json.dumps(payload),encoding="utf-8")
+                self.assertRaises(registry.RegistryError,registry.load_registry,p)
+
+    def test_dependency_failure_cannot_execute_dependent(self):
+        c=campaign([task("aaa"),task("bbb",["aaa"],"k2")])
+        ra=result("aaa","FAIL",1,0);rb=result("bbb","PASS",0,1);ra["first_failure"]=rb["first_failure"]="aaa"
+        v=verifier.verify_campaign_run(c,{"aaa":ra,"bbb":rb})
+        self.assertFalse(v["valid"]);self.assertTrue(any("UNSATISFIED_DEPENDENCY" in i for i in v["issues"]))
+
+    def test_global_stop_cannot_escape_in_later_wave(self):
+        c=campaign([task("aaa",failure_scope="GLOBAL_CAMPAIGN"),task("bbb",key="k2")])
+        ra=result("aaa","FAIL",1,0);rb=result("bbb","PASS",0,1);ra["first_failure"]=rb["first_failure"]="aaa"
+        v=verifier.verify_campaign_run(c,{"aaa":ra,"bbb":rb})
+        self.assertFalse(v["valid"]);self.assertTrue(any("GLOBAL_STOP_ESCAPE" in i for i in v["issues"]))
+
+    def test_result_task_and_task_candidate_bindings(self):
+        t=task();c=campaign([t]);r=result();r["task_id"]="other.task"
+        self.assertFalse(verifier.verify_campaign_run(c,{"task.a":r})["valid"])
+        t2=task();t2["candidate_sha"]="b"*40;c2=campaign([t2])
+        self.assertFalse(verifier.verify_campaign_run(c2,{"task.a":result()})["valid"])
+
+    def test_effect_running_command_pass_issues_rejected(self):
+        c=campaign()
+        for mutate in (
+            lambda r:r.update(effect_state="MODIFIED"),
+            lambda r:r.update(status="RUNNING"),
+            lambda r:r.update(issues=["pending"]),
+            lambda r:r["command_records"][0].update(argv=["evil"]),
+        ):
+            r=result();mutate(r)
+            self.assertFalse(verifier.verify_campaign_run(c,{"task.a":r})["valid"])
+
+    def test_wave_parallel_exclusivity_auditor_and_resource_limits(self):
+        rows=[task("aaa",key="same",role="domain_auditor",resource="audit"),task("bbb",key="same",role="evidence_auditor",resource="audit")]
+        c=campaign(rows);c["max_parallel"]=1;c["max_auditors"]=1;c["resource_limits"]={"audit":1}
+        v=verifier.verify_campaign_run(c,{"aaa":result("aaa",wave=0),"bbb":result("bbb",wave=0)})
+        joined=" ".join(v["issues"])
+        self.assertIn("MAX_PARALLEL_EXCEEDED",joined);self.assertIn("EXCLUSIVITY_VIOLATION",joined)
+        self.assertIn("AUDITOR_LIMIT_EXCEEDED",joined);self.assertIn("RESOURCE_LIMIT_EXCEEDED",joined)
+
+    def test_command_log_hash_binding(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);task_dir=root/"task.a";task_dir.mkdir()
+            r=result();row=r["command_records"][0];prefix=task_dir/"b0_pilot_pass"
+            prefix.with_suffix(".stdout.txt").write_bytes(b"");prefix.with_suffix(".stderr.txt").write_bytes(b"")
+            self.assertTrue(verifier.verify_campaign_run(campaign(),{"task.a":r},root)["valid"])
+            prefix.with_suffix(".stdout.txt").write_bytes(b"tamper")
+            self.assertFalse(verifier.verify_campaign_run(campaign(),{"task.a":r},root)["valid"])
+
+    def test_nested_manifest_is_covered(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);(root/"nested").mkdir();(root/"nested/MANIFEST.json").write_text("a",encoding="utf-8")
+            bundle.write_manifest(root);(root/"nested/MANIFEST.json").write_text("b",encoding="utf-8")
+            self.assertFalse(verifier.verify_bundle(root)["valid"])
+
+    def test_share_binary_unexamined_fails_and_binding_matches_final_manifest(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            raw=Path(tmp)/"RAW";share=Path(tmp)/"SHARE";binding_path=Path(tmp)/"binding.json";raw.mkdir()
+            (raw/"x.bin").write_bytes(b"\\xffBearer abcdefghijklmnopqrstuvwxyz");bundle.write_manifest(raw)
+            binding=bundle.build_share(raw,share,{},binding_path=binding_path)
+            self.assertEqual("FAIL",binding["secret_scan"]["status"])
+            self.assertEqual(hashlib.sha256((share/"MANIFEST.json").read_bytes()).hexdigest(),binding["share_manifest_sha256"])
+            self.assertFalse(verifier.verify_raw_share_binding(raw,share,binding_path)["valid"])
+
+    def test_share_preserves_crlf_when_no_substitution(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            raw=Path(tmp)/"RAW";share=Path(tmp)/"SHARE";binding_path=Path(tmp)/"binding.json";raw.mkdir()
+            original=b"a\\r\\nb\\r\\n";(raw/"x.txt").write_bytes(original);bundle.write_manifest(raw)
+            bundle.build_share(raw,share,{},binding_path=binding_path)
+            self.assertEqual(original,(share/"x.txt").read_bytes())
+            self.assertTrue(verifier.verify_raw_share_binding(raw,share,binding_path)["valid"])
+
+    def test_process_hash_is_over_exact_persisted_bytes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            row=process.run_argv([sys.executable,"-c",'import sys;sys.stdout.buffer.write(b"a\\r\\nb\\r\\n")'],Path(tmp),"raw")
+            data=(Path(tmp)/"raw.stdout.txt").read_bytes()
+            self.assertEqual(b"a\\r\\nb\\r\\n",data)
+            self.assertEqual(hashlib.sha256(data).hexdigest(),row["stdout_sha256"])
+
+    def test_pilot_rejects_invalid_campaign_verification(self):
+        summary={"status":"FAIL","first_failure":"pilot.beta.fail","global_stop":None,"verification":{"valid":False,"issues":["x"]},"results":{"pilot.alpha.pass":{"status":"PASS"},"pilot.beta.fail":{"status":"FAIL"},"pilot.beta.dependent":{"status":"BLOCKED_DEPENDENCY","blocked_by":["pilot.beta.fail"],"command_records":[]},"pilot.gamma.independent":{"status":"PASS"},"pilot.publication.blocked":{"status":"BLOCKED_DEPENDENCY","blocked_by":["pilot.beta.dependent"],"command_records":[]}}}
+        self.assertFalse(pilot_verify.verify(summary,"selective")["valid"])
+
+    def test_coverage_has_no_empty_method_map(self):
+        payload=coverage.inventory()
+        rows=[*payload["se08"],*payload["ci_non_sef"],*payload["ser01"]]
+        self.assertFalse(any(row["mapping_status"]=="EMPTY_METHOD_MAP" for row in rows),payload["issues"])
+        self.assertTrue(all(row["mapping_status"] in {"MAPPED","COMMAND_ONLY"} for row in rows),payload["issues"])
 
 if __name__=="__main__": unittest.main()
