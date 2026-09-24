@@ -17,7 +17,7 @@ Erro barato não deve chegar ao laboratório.
 
 ## 2. Metatestes
 
-`python -B -m unittest tools.tests.test_ser_parallel_b0 -v` contém **82 métodos definidos estaticamente** na candidata V3.
+`python -B -m unittest tools.tests.test_ser_parallel_b0 -v` contém **84 métodos definidos estaticamente** na candidata V3.
 
 A suíte preserva as regressões históricas e adiciona discriminantes para os achados da auditoria: null/tipos inválidos; task obrigatória vazia; NA sem precondição aprovada; timeout/exit booleano/tempo inválido; overlap escondido por wave; causalidade de stop; ciclo; secret scan resealado e filename; colisão de metadata; symlink; CRLF/non-UTF8 reais; processo filho residual; coleta unittest real; target ausente; override histórico; identidade de rodada; schemas/findings; lease/slot semantics; preflight; troca limpa de HEAD; entrypoint COMMAND_ONLY ausente; e ordem de atribuição do Job Object antes da liberação do child.
 
@@ -59,7 +59,7 @@ A campanha normal permanece FAIL quando contém falha deliberada. O release driv
 
 O manifesto exclui somente o `MANIFEST.json` raiz. Manifestos aninhados são arquivos normais. Symlinks e escapes são proibidos.
 
-SHARE reserva os paths do protocolo, preserva bytes quando não há substituição e reexecuta a política de secret scan sobre **nomes e conteúdos finais**. Conteúdo não UTF-8 é `BINARY_UNEXAMINED` e reprova. O verifier recalcula o scan; alterar apenas o rótulo do binding não cria PASS.
+SHARE reserva os paths do protocolo, sanitiza automaticamente variantes do repo root e do home para `<REPO>`/`<HOME>`, preserva bytes quando não há substituição e reexecuta a política de scan V2 sobre **nomes e conteúdos finais**. O scan V2 também reprova home paths residuais Windows/POSIX. Conteúdo não UTF-8 é `BINARY_UNEXAMINED` e reprova. O verifier recalcula o scan; alterar apenas o rótulo do binding não cria PASS.
 
 RAW e SHARE têm manifestos finais separados e binding externo não circular. `RELEASE_VERDICT.json` é o único veredito de liberação e aponta por hash para resultado do mecanismo, manifestos, binding e verificação do envelope.
 
