@@ -19,16 +19,31 @@ def _version(command: list[str]) -> str | None:
 
 def _filesystem() -> dict:
     result = {"family": "windows" if os.name == "nt" else "posix", "type": "NOT_OBSERVED"}
-    if os.name != "nt": return result
-    drive = Path.cwd().drive or str(Path.cwd().anchor).rstrip("\\")
-    if not drive: return result
+    if os.name != "nt":
+        return result
     try:
-        p = subprocess.run(["fsutil", "fsinfo", "volumeinfo", drive], capture_output=True, text=True, timeout=10, shell=False)
-    except (OSError, subprocess.SubprocessError): return result
-    if p.returncode == 0:
-        upper = (p.stdout or "").upper()
-        for kind in ("NTFS", "REFS", "FAT32", "EXFAT"):
-            if kind in upper: result["type"] = kind; break
+        import ctypes
+        from ctypes import wintypes as w
+        root = Path.cwd().anchor
+        if not root:
+            return result
+        fs_name = ctypes.create_unicode_buffer(261)
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        fn = kernel32.GetVolumeInformationW
+        fn.argtypes = [
+            w.LPCWSTR, w.LPWSTR, w.DWORD, ctypes.POINTER(w.DWORD),
+            ctypes.POINTER(w.DWORD), ctypes.POINTER(w.DWORD), w.LPWSTR, w.DWORD,
+        ]
+        fn.restype = w.BOOL
+        serial = w.DWORD()
+        max_component = w.DWORD()
+        flags = w.DWORD()
+        ok = fn(root, None, 0, ctypes.byref(serial), ctypes.byref(max_component), ctypes.byref(flags), fs_name, len(fs_name))
+        if ok and fs_name.value:
+            result["type"] = fs_name.value.upper()
+            result["observed_by"] = "GetVolumeInformationW"
+    except (OSError, AttributeError, ValueError):
+        pass
     return result
 
 
@@ -39,8 +54,8 @@ def probe() -> dict:
         "python": sys.version.split()[0], "git": _version(["git", "--version"]),
         "node": _version(["node", "--version"]), "pnpm": _version(["pnpm", "--version"]),
         "filesystem": _filesystem(),
-        "sandbox_enforcement": "NOT_PROVEN_BY_HOST_PROBE",
-        "client_model_configuration": "NOT_OBSERVED_BY_HOST_PROBE",
+        "sandbox_enforcement": "PYTHON_AUDIT_SCRATCH_ONLY_TASKS_REQUIRES_NEGATIVE_PROBE",
+        "client_model_configuration": "NOT_APPLICABLE_B0_DETERMINISTIC_PYTHON_RUNTIME",
         "credential_material_recorded": False,
     }
 
