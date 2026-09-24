@@ -6,7 +6,7 @@ B0 implementa apenas a infraestrutura local comum. Não promove skill, não alte
 
 A auditoria independente da candidata `f803b50f898ac93eb0e5541ba428a3656dc4f732` encontrou AUD-01–AUD-12. A linha V3 implementa as correções repo-side materiais: contratos fechados de command record/result/task/campaign; resultado nulo e NA obrigatório fail-closed; causalidade/intervalos verificados; scan SHARE recalculado sobre bytes e nomes finais; paths reservados e symlinks recusados; coleta unittest real; identidade única de rodada por SHA/tree/base/release-spec; verificação final externa; lease host-wide conservador; supervisão POSIX por process group e Windows por Job Object com launcher bloqueado até a atribuição ao job; preflight barato de JSON/Python/schemas/templates.
 
-A suíte versionada contém **74 métodos**. Essa contagem é estática do arquivo e ainda não é PASS de checkout. O histórico de 39/39 e a antiga contagem de 52 pertencem a candidatas anteriores e não são transportados.
+A suíte versionada contém **76 métodos**. Essa contagem é estática do arquivo e ainda não é PASS de checkout. O histórico de 39/39 e a antiga contagem de 52 pertencem a candidatas anteriores e não são transportados.
 
 Permanecem necessariamente pendentes de host: prova Windows/Job Object, NTFS, sandbox/permissões negativas e headroom de CPU/RAM/IO. Também permanecem deliberadamente P2 até o piloto medido: despacho ao liberar slot, cache de inventory por digest e tuning 2/1 versus 3/2.
 
