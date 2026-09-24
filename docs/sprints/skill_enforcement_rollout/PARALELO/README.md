@@ -8,7 +8,7 @@ Base Git conferida: `d2988e97e7b6c5fe1fd561852e947a155c2d731b`, no repositório 
 
 ## Próxima ação
 
-Executar, em fail-fast, **preflight V3 → 82 metatestes B0 → coverage V3** no checkout real do SHA final. Somente se esses gates passarem, preparar o freeze e executar a qualificação local do pacote B0 conforme [B0](B0/README.md) e [plano de implantação](10_IMPLANTACAO.md). Nenhuma skill vai para o laboratório enquanto o B0 não estiver qualificado no alcance efetivamente provado e a implementação, testes, oráculos, perfis e decisões materiais da própria skill não estiverem fechados.
+Executar, em fail-fast, **preflight V3 → 84 metatestes B0 → coverage V3** no checkout real do SHA final. Somente se esses gates passarem, preparar o freeze e executar a qualificação local do pacote B0 conforme [B0](B0/README.md) e [plano de implantação](10_IMPLANTACAO.md). Nenhuma skill vai para o laboratório enquanto o B0 não estiver qualificado no alcance efetivamente provado e a implementação, testes, oráculos, perfis e decisões materiais da própria skill não estiverem fechados.
 
 A corretiva V3 também adota coordenação host-wide conservadora: uma única campanha/launcher por host via lease do SO; `max_parallel` é o total de tasks simultâneas dentro da campanha e `max_auditors` é um subconjunto desse total. Aumento de concorrência, despacho por slot liberado e cache de inventory dependem de medição do piloto, não de expectativa documental.
 
