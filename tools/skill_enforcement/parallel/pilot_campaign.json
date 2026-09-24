@@ -1,5 +1,5 @@
 {
-  "schema_version": "SER-PARALLEL-CAMPAIGN-2",
+  "schema_version": "SER-PARALLEL-CAMPAIGN-3",
   "baseline_sha": "0000000000000000000000000000000000000000",
   "candidate_sha": "0000000000000000000000000000000000000000",
   "state": "PLANNED",
@@ -21,7 +21,7 @@
   "campaign_id": "SER-B0-PILOT-SELECTIVE",
   "tasks": [
     {
-      "task_schema": "SER-PARALLEL-TASK-2",
+      "task_schema": "SER-PARALLEL-TASK-3",
       "task_id": "pilot.alpha.pass",
       "role": "executor",
       "stage": "B0.6",
@@ -46,7 +46,7 @@
       "failure_scope": "LOCAL_CHAIN"
     },
     {
-      "task_schema": "SER-PARALLEL-TASK-2",
+      "task_schema": "SER-PARALLEL-TASK-3",
       "task_id": "pilot.beta.fail",
       "role": "executor",
       "stage": "B0.6",
@@ -71,7 +71,7 @@
       "failure_scope": "LOCAL_CHAIN"
     },
     {
-      "task_schema": "SER-PARALLEL-TASK-2",
+      "task_schema": "SER-PARALLEL-TASK-3",
       "task_id": "pilot.beta.dependent",
       "role": "executor",
       "stage": "B0.6",
@@ -98,7 +98,7 @@
       "failure_scope": "LOCAL_CHAIN"
     },
     {
-      "task_schema": "SER-PARALLEL-TASK-2",
+      "task_schema": "SER-PARALLEL-TASK-3",
       "task_id": "pilot.gamma.independent",
       "role": "executor",
       "stage": "B0.6",
@@ -125,7 +125,7 @@
       "failure_scope": "LOCAL_CHAIN"
     },
     {
-      "task_schema": "SER-PARALLEL-TASK-2",
+      "task_schema": "SER-PARALLEL-TASK-3",
       "task_id": "pilot.publication.blocked",
       "role": "integrator",
       "stage": "B0.6",
@@ -152,5 +152,8 @@
       "expected_effect": "NONE",
       "failure_scope": "LOCAL_CHAIN"
     }
-  ]
+  ],
+  "round_id": "B0ROUND-PLACEHOLDER",
+  "release_spec_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "candidate_tree_sha": "0000000000000000000000000000000000000000"
 }
