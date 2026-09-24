@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from pathlib import PurePosixPath
 from typing import Any, Mapping
 
 CAMPAIGN_SCHEMA_VERSION = "SER-PARALLEL-CAMPAIGN-1"
@@ -43,6 +44,12 @@ def _closed_keys(obj: Mapping[str, Any], required: set[str], optional: set[str],
 def _strings(value: Any) -> bool:
     return isinstance(value, list) and all(isinstance(x, str) and x for x in value)
 
+def _safe_rel(value: str) -> bool:
+    if not value or "\\" in value:
+        return False
+    p = PurePosixPath(value)
+    return not p.is_absolute() and ".." not in p.parts and "." not in p.parts
+
 def validate_task(task: Any) -> list[str]:
     if not isinstance(task, Mapping):
         return ["TASK_NOT_MAPPING"]
@@ -68,6 +75,10 @@ def validate_task(task: Any) -> list[str]:
     for key in ("command_ids", "depends_on", "read_roots", "write_roots", "protected_paths"):
         if not _strings(task.get(key)) and task.get(key) != []:
             issues.append(f"TASK_{key.upper()}_INVALID")
+    for key in ("read_roots", "write_roots", "protected_paths"):
+        for value in task.get(key) or []:
+            if isinstance(value, str) and not _safe_rel(value):
+                issues.append(f"TASK_{key.upper()}_UNSAFE:{value}")
     if task.get("resource_class") not in RESOURCE_CLASSES:
         issues.append("TASK_RESOURCE_CLASS_INVALID")
     if not isinstance(task.get("exclusivity_key"), str) or not task.get("exclusivity_key"):

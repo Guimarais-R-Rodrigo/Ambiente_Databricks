@@ -1,19 +1,63 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import subprocess
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .contract import RESULT_SCHEMA_VERSION, validate_campaign
+from .contract import RESULT_SCHEMA_VERSION, digest_json, validate_campaign
+from .coverage import inventory
 from .process import ROOT, fingerprint_paths, run_argv
-from .registry import resolve_command
+from .registry import DEFAULT_REGISTRY, load_registry, resolve_command
 from .scheduler import decide, detect_cycle
 from .verifier import verify_campaign_run
 
+POLICY = ROOT / "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json"
+
 def _utc() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+def _git(*args: str) -> str:
+    p = subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True, timeout=20)
+    if p.returncode != 0:
+        raise RuntimeError("GIT_FAILED:" + " ".join(args))
+    return p.stdout.strip()
+
+def _preconditions(campaign: dict, evidence_root: Path) -> list[str]:
+    issues = []
+    try:
+        head = _git("rev-parse", "HEAD")
+        status = _git("status", "--porcelain=v1", "--untracked-files=all")
+    except RuntimeError as exc:
+        return [str(exc)]
+    if head != campaign.get("candidate_sha"):
+        issues.append("CANDIDATE_HEAD_MISMATCH")
+    if status:
+        issues.append("WORKTREE_NOT_CLEAN")
+    repo = ROOT.resolve()
+    target = evidence_root.absolute()
+    try:
+        parent = target.parent.resolve(strict=True)
+    except OSError:
+        issues.append("EVIDENCE_PARENT_INVALID")
+        parent = None
+    if parent is not None and (parent.is_relative_to(repo) or repo.is_relative_to(target)):
+        issues.append("EVIDENCE_MUST_BE_EXTERNAL")
+    if target.exists():
+        issues.append("EVIDENCE_DIRECTORY_MUST_BE_NEW")
+    actual_registry = digest_json(load_registry(DEFAULT_REGISTRY))
+    if actual_registry != campaign.get("command_registry_digest"):
+        issues.append("COMMAND_REGISTRY_DIGEST_MISMATCH")
+    actual_coverage = digest_json(inventory())
+    if actual_coverage != campaign.get("coverage_digest"):
+        issues.append("COVERAGE_DIGEST_MISMATCH")
+    actual_policy = hashlib.sha256(POLICY.read_bytes()).hexdigest()
+    if actual_policy != campaign.get("policy_before_digest"):
+        issues.append("POLICY_DIGEST_MISMATCH")
+    return issues
 
 def execute(campaign: dict, evidence_root: Path) -> dict:
     issues = validate_campaign(campaign)
@@ -21,6 +65,9 @@ def execute(campaign: dict, evidence_root: Path) -> dict:
         return {"status": "FAIL", "issues": issues, "results": {}, "verification": None}
     if detect_cycle(campaign["tasks"]):
         return {"status": "FAIL", "issues": ["CAMPAIGN_DAG_CYCLE"], "results": {}, "verification": None}
+    pre = _preconditions(campaign, evidence_root)
+    if pre:
+        return {"status": "FAIL", "issues": pre, "results": {}, "verification": None}
     evidence_root.mkdir(parents=True, exist_ok=False)
     results: dict[str, dict] = {}
     tasks = {t["task_id"]: t for t in campaign["tasks"]}
@@ -55,18 +102,25 @@ def execute(campaign: dict, evidence_root: Path) -> dict:
                     }
             break
         def run_task(task_id: str) -> tuple[str, dict]:
-            task = tasks[task_id]; started = _utc(); task_dir = evidence_root / task_id
+            task = tasks[task_id]
+            started = _utc()
+            task_dir = evidence_root / task_id
             before = fingerprint_paths(ROOT, task["protected_paths"])
-            records = []; status = "PASS"; task_issues=[]
+            records = []
+            status = "PASS"
+            task_issues=[]
             for command_id in task["command_ids"]:
                 argv = resolve_command(command_id)
                 row = run_argv(argv, task_dir, command_id.replace(":", "_"))
                 records.append(row)
                 if row["exit_code"] != 0:
-                    status = "FAIL"; task_issues.append("COMMAND_FAILED:" + command_id); break
+                    status = "FAIL"
+                    task_issues.append("COMMAND_FAILED:" + command_id)
+                    break
             after = fingerprint_paths(ROOT, task["protected_paths"])
             if before != after:
-                status = "FAIL"; task_issues.append("PROTECTED_PATH_MUTATED")
+                status = "FAIL"
+                task_issues.append("PROTECTED_PATH_MUTATED")
             return task_id, {
                 "result_schema": RESULT_SCHEMA_VERSION, "task_id": task_id,
                 "candidate_sha": campaign["candidate_sha"], "status": status,

@@ -6,6 +6,7 @@ import unittest
 from pathlib import Path
 
 from tools.skill_enforcement.parallel import bundle, contract, coverage, registry, scheduler, verifier
+from tools.skill_enforcement.parallel import pilot_verify
 
 def task(task_id="task.a", deps=None, key="k"):
     return {
@@ -71,6 +72,10 @@ class ContractTests(unittest.TestCase):
         x=task(); x["write_roots"]=["tools"]; self.assertIn("TASK_READ_WRITE_ROOT_OVERLAP", contract.validate_task(x))
     def test_task_protected_write_overlap_rejected(self):
         x=task(); x["write_roots"]=["ambiente_fonte"]; self.assertIn("TASK_PROTECTED_WRITE_OVERLAP", contract.validate_task(x))
+    def test_task_path_traversal_rejected(self):
+        x=task(); x["read_roots"]=["../outside"]; self.assertTrue(any("UNSAFE" in issue for issue in contract.validate_task(x)))
+    def test_task_absolute_path_rejected(self):
+        x=task(); x["protected_paths"]=["/tmp"]; self.assertTrue(any("UNSAFE" in issue for issue in contract.validate_task(x)))
     def test_valid_campaign(self): self.assertEqual([], contract.validate_campaign(campaign()))
     def test_campaign_duplicate_task_id_rejected(self):
         self.assertIn("CAMPAIGN_TASK_ID_DUPLICATE", contract.validate_campaign(campaign([task(),task()])))
@@ -143,6 +148,24 @@ class CoverageTests(unittest.TestCase):
             self.assertEqual(["X.test_a"],coverage.test_methods(p))
     def test_registry_declares_21_se08_policies(self):
         cfg=json.loads(coverage.REGISTRY.read_text()); self.assertEqual(21,len(cfg["step_policy"]))
+
+class PilotVerifierTests(unittest.TestCase):
+    def test_expected_deliberate_failure_is_mechanism_pass(self):
+        summary={"first_failure":"pilot.beta.fail","results":{
+            "pilot.alpha.pass":{"status":"PASS"},
+            "pilot.beta.fail":{"status":"FAIL"},
+            "pilot.beta.dependent":{"status":"BLOCKED_DEPENDENCY","blocked_by":["pilot.beta.fail"]},
+            "pilot.publication.blocked":{"status":"BLOCKED_DEPENDENCY","blocked_by":["pilot.beta.dependent"]},
+        }}
+        self.assertTrue(pilot_verify.verify(summary)["valid"])
+    def test_publication_not_blocked_is_rejected(self):
+        summary={"first_failure":"pilot.beta.fail","results":{
+            "pilot.alpha.pass":{"status":"PASS"},
+            "pilot.beta.fail":{"status":"FAIL"},
+            "pilot.beta.dependent":{"status":"BLOCKED_DEPENDENCY","blocked_by":["pilot.beta.fail"]},
+            "pilot.publication.blocked":{"status":"PASS","blocked_by":[]},
+        }}
+        self.assertFalse(pilot_verify.verify(summary)["valid"])
 
 if __name__ == "__main__":
     unittest.main()
