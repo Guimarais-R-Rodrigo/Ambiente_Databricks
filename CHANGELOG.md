@@ -1,5 +1,31 @@
 # Changelog
 
+## 2026-09-24 — SER B0: SHARE sanitization V2 após LOCAL_QUALIFIED
+
+### Evidência preservada
+
+- (ChatGPT) A autoria `47017817d76d682d77d95fa55f1d4b7f88f53b04` passou preflight, 82 metatestes (80 PASS, 2 SKIP), coverage V3 (21/9/5; 1.353 IDs únicos) e freeze_prepare.
+- (ChatGPT) O freeze `eea9993880dcbde1adb18c12aa72346e617dd7d8` executou `b0_release` com `RELEASE_VERDICT.status=PASS`, `release_status=LOCAL_QUALIFIED` e `HOST_QUALIFICATION.status=PASS`; selective/global, RAW/SHARE/binding/envelope também passaram pela política V1.
+- (ChatGPT) Bundle `b0_47017817_eea99938_host_qualification_complete.zip` com SHA-256 `e7ae0c06b91a09862a9c412496d27e6198ff6911737c468615e91254c581c6d7`; auditoria independente conferiu 69/69 entradas RAW e 70/70 entradas SHARE, além dos hashes do verdict.
+
+### Finding de auditoria
+
+- (ChatGPT) O contraditório encontrou home path do Windows ainda presente no SHARE, inclusive em release spec, coverage/logs e command records. O contrato do projeto determina que homes não entram no SHARE.
+- (ChatGPT) A causa foi dupla: `b0_release` construía SHARE com substituições vazias e a política V1 do scan cobria segredos, mas não home paths. Assim, um SHARE inadequadamente sanitizado pôde receber envelope válido e `LOCAL_QUALIFIED`.
+- (ChatGPT) A rodada permanece evidência histórica válida de execução/host, mas não é aceita como liberação B0.
+
+### Corrigido
+
+- (ChatGPT) `bundle.py` passa a gerar substituições padrão de repo root/home para `<REPO>`/`<HOME>`, incluindo variantes escapadas usadas em JSON.
+- (ChatGPT) A política de scan sobe para `SER-PARALLEL-SECRET-SCAN-2` e reprova home paths residuais Windows/POSIX além dos padrões de segredo existentes.
+- (ChatGPT) `b0_release` aplica as substituições padrão ao construir SHARE; o verifier já recalcula o scan e, portanto, rejeita residual não sanitizado.
+- (ChatGPT) Regressões cobrem detecção de home path residual e sanitização automática de repo/home com binding verificado.
+- (ChatGPT) A suíte B0 passa de 82 para 84 métodos definidos estaticamente.
+
+### Limites
+
+- (ChatGPT) O freeze `eea99938...` é histórico após mudança funcional em evidence packaging. O SHA atual exige nova autoria, novo freeze e nova rodada única de release. `LOCAL_QUALIFIED` anterior não é transportado.
+
 ## 2026-09-24 — SER B0: metateste documental desacoplado da implementação de host qualification
 
 ### Evidência preservada
