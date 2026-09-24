@@ -61,7 +61,7 @@
       "RUNTIME_COST_TUNING"
     ]
   },
-  "next_action": "No novo SHA de autoria: preflight V3 -> 77 metatestes (inclui coverage completo sob _clean_env) -> coverage V3. Se verdes, criar NOVO freeze; f6516959 é histórico e não reutilizável. Depois executar uma única nova rodada b0_release.",
+  "next_action": "No novo SHA de autoria: preflight V3 -> 77 metatestes (inclui coverage completo sob _clean_env) -> coverage V3. Se verdes, criar NOVO freeze; f6516959a2f973ea1e163da80548e8ebb0e235cf é histórico e não reutilizável. Depois executar uma única nova rodada b0_release.",
   "open_known_repo_side_authoring_blockers": 0,
   "b0_validation_state": {
     "test_methods_static": 77,
@@ -70,7 +70,7 @@
     "latest_authoring_preflight": "PASS",
     "latest_authoring_metatests": "PASS_76_COLLECTED_74_PASS_0_FAIL_0_ERROR_2_SKIP",
     "latest_authoring_coverage": "PASS_21_SE08_9_CI_5_SER01_1353_UNIQUE_METHODS",
-    "latest_freeze_sha": "f6516959a2f973ea1e163da80548e8ebb0e235cf",
+    "latest_freeze_sha": "f6516959a2f973ea1e163da80548e8ebb0e235cfa2f973ea1e163da80548e8ebb0e235cf",
     "latest_freeze_tree": "11ded361baf8b242a6eb8eacf1e29e2ed08d5b53",
     "latest_freeze_kind": "EMPTY_MARKER_TREE_IDENTICAL_TO_AUTHORING",
     "latest_release_verdict": "FAIL_NOT_QUALIFIED_AT_METATESTS",
