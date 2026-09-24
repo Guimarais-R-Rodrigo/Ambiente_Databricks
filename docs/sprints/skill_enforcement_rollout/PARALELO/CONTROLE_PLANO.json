@@ -1,11 +1,11 @@
 {
   "schema_version": "1.0",
   "plan_id": "SER-PARALLEL-PLAN-2026-09-23",
-  "revision": "1.6",
+  "revision": "1.7",
   "date": "2026-09-24",
   "repository": "Guimarais-R-Rodrigo/Ambiente_Databricks",
   "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b",
-  "status": "B0_AUDIT_CORRECTIVE_V3_COVERAGE_RERUN_PENDING",
+  "status": "B0_AUDIT_CORRECTIVE_V3_RELEASE_ENV_RERUN_PENDING",
   "user_approval_scope": "Direção aprovada e correções de auditoria autorizadas; não equivale a qualificação, promoção ou merge.",
   "launchable": false,
   "repo_publication_performed": true,
@@ -61,17 +61,20 @@
       "RUNTIME_COST_TUNING"
     ]
   },
-  "next_action": "No novo SHA limpo: preflight V3 -> 74 metatestes -> coverage V3. O PASS anterior dos metatestes não é transportado; se todos verdes, seguir para freeze mecânico e rodada única b0_release.",
+  "next_action": "No novo SHA de autoria: preflight V3 -> 76 metatestes -> coverage V3. Se verdes, criar NOVO freeze; o freeze 49385c30 é histórico e não reutilizável. Depois executar uma única nova rodada b0_release.",
   "open_known_repo_side_authoring_blockers": 0,
   "b0_validation_state": {
-    "test_methods_static": 74,
-    "authoring_preflight_on_previous_sha": "PASS_AT_39d2fefa13fa747c2ab636e8a47cda06737d841e",
-    "full_metatests_on_previous_sha": "PASS_72_PASS_0_FAIL_0_ERROR_2_SKIP_AT_39d2fefa13fa747c2ab636e8a47cda06737d841e",
-    "coverage_v3_on_previous_sha": "FAIL_OUTPUT_ENCODING_CP1252_AT_39d2fefa13fa747c2ab636e8a47cda06737d841e",
-    "latest_authoring_failures": [
-      "COVERAGE_STDOUT_ENCODING_PORTABILITY"
-    ],
-    "corrective_status": "FIXED_REPO_SIDE_NEW_SHA_RERUN_REQUIRED",
+    "test_methods_static": 76,
+    "authoring_sha_pre_freeze": "ec132cccfe596dee7c5459346db59a0b573c226e",
+    "authoring_preflight_pre_freeze": "PASS",
+    "metatests_pre_freeze": "PASS_72_PASS_0_FAIL_0_ERROR_2_SKIP",
+    "coverage_v3_pre_freeze": "PASS_21_SE08_9_CI_5_SER01_1353_UNIQUE_METHODS",
+    "previous_freeze_sha": "49385c306b03b1eeaf734e5b8daa4c2a4e5dc922",
+    "previous_freeze_status": "INVALIDATED_BY_POST_FREEZE_AUTHORING_DEFECT",
+    "previous_release_verdict": "FAIL_NOT_QUALIFIED_AT_METATESTS",
+    "previous_release_first_failure": "METATESTS_CHILD_ENV_MISSING_HOME_IDENTITY",
+    "previous_release_envelope": "VALID",
+    "corrective_status": "FIXED_REPO_SIDE_NEW_AUTHORING_SHA_REQUIRES_FULL_RERUN",
     "authoring_preflight_on_final_sha": "NOT_RUN",
     "full_metatests_on_final_sha": "NOT_RUN",
     "coverage_v3_on_final_sha": "NOT_RUN",
