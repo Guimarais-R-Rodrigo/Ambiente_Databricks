@@ -514,7 +514,8 @@ class IndependentAuditRegressionTests(unittest.TestCase):
         }}
         sandbox={"status":"PASS","scratch_write_allowed":True,"outside_write_blocked":True,"subprocess_blocked":True,"network_blocked":True,"credential_sentinel_absent":True}
         host={"os":"Windows","filesystem":{"family":"windows","type":"NTFS"},"client_model_configuration":"NOT_APPLICABLE_B0_DETERMINISTIC_PYTHON_RUNTIME"}
-        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(host_qualification.os,"name","nt"):
+        resources={"logical_cpus":8,"disk_total_bytes":1000,"disk_free_bytes":500,"memory_total_bytes":1000,"memory_available_bytes":500}
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(host_qualification.os,"name","nt"), mock.patch.object(host_qualification,"_resource_snapshot",return_value=resources):
             qualified=host_qualification.qualify(Path(tmp),host,sandbox,summary,summary)
             bad_fs=host_qualification.qualify(Path(tmp),{**host,"filesystem":{"family":"windows","type":"REFS"}},sandbox,summary,summary)
         self.assertEqual("PASS",qualified["status"],qualified)
