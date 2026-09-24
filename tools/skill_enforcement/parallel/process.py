@@ -45,21 +45,23 @@ def fingerprint_paths(root: Path, paths: Iterable[str]) -> str:
     return h.hexdigest()
 
 
+_RUNTIME_ENV_KEYS = (
+    "PATH", "SYSTEMROOT", "WINDIR", "SYSTEMDRIVE", "COMSPEC", "PATHEXT", "OS",
+    "TEMP", "TMP", "HOME", "USERPROFILE", "HOMEDRIVE", "HOMEPATH",
+    "APPDATA", "LOCALAPPDATA", "PROGRAMDATA",
+    "PROGRAMFILES", "PROGRAMFILES(X86)", "COMMONPROGRAMFILES", "COMMONPROGRAMFILES(X86)",
+    "PROCESSOR_ARCHITECTURE", "PROCESSOR_IDENTIFIER", "NUMBER_OF_PROCESSORS",
+    "LANG", "LC_ALL", "LC_CTYPE", "TZ",
+)
+
+
 def _clean_env() -> dict[str, str]:
-    allowed = {
-        "PATH": os.environ.get("PATH", ""),
-        "SYSTEMROOT": os.environ.get("SYSTEMROOT", ""),
-        "WINDIR": os.environ.get("WINDIR", ""),
-        "TEMP": os.environ.get("TEMP", ""),
-        "TMP": os.environ.get("TMP", ""),
-        "HOME": os.environ.get("HOME", ""),
-        "USERPROFILE": os.environ.get("USERPROFILE", ""),
-        "HOMEDRIVE": os.environ.get("HOMEDRIVE", ""),
-        "HOMEPATH": os.environ.get("HOMEPATH", ""),
+    allowed = {key: os.environ.get(key, "") for key in _RUNTIME_ENV_KEYS}
+    allowed.update({
         "PYTHONUTF8": "1",
         "PYTHONIOENCODING": "utf-8",
         "PYTHONDONTWRITEBYTECODE": "1",
-    }
+    })
     return {key: value for key, value in allowed.items() if value}
 
 
