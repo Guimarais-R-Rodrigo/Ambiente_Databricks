@@ -77,4 +77,25 @@ B0_RELEASE = NOT_RUN
 ```
 
 A coleta/normalização corrigida funcionou: os 76 metatestes completaram sem falha. O bloqueio seguinte ocorreu apenas na serialização do JSON do coverage para stdout em console Windows `cp1252`, ao encontrar o caractere `→`. O inventário não foi reclassificado; a saída CLI foi corrigida para JSON ASCII-safe, semanticamente equivalente após parsing. A rodada permanece FAIL histórica e exige reexecução integral no SHA novo.
+## Rodada de release — freeze 49385c30 — FAIL preservado
+
+```text
+AUTHORING_SHA = ec132cccfe596dee7c5459346db59a0b573c226e
+AUTHORING_PREFLIGHT = PASS
+AUTHORING_METATESTS = PASS_74_COLLECTED_72_PASS_2_SKIP
+AUTHORING_COVERAGE = PASS_21_SE08_9_CI_5_SER01_1353_UNIQUE_METHODS
+FREEZE_SHA = 49385c306b03b1eeaf734e5b8daa4c2a4e5dc922
+FREEZE_TREE = aa0b32fbf5f9728ac7fde326ace49490e1521abb
+B0_RELEASE = FAIL
+FIRST_FAILURE = metatests
+RELEASE_STATUS = NOT_QUALIFIED
+RAW_VALID = true
+SHARE_VALID = true
+RAW_SHARE_BINDING_VALID = true
+ENVELOPE_VALID = true
+```
+
+A falha ocorreu apenas dentro do `b0_release`: o supervisor executou os metatestes com ambiente sanitizado sem `HOME/USERPROFILE/HOMEDRIVE/HOMEPATH`; no Windows, `Path.home()` levantou `RuntimeError` ao importar `certify_local.py` via coverage. O preflight interno passou. O envelope de falha foi íntegro: manifests RAW/SHARE, binding e todos os hashes referenciados pelo `RELEASE_VERDICT` foram recalculados independentemente e conferem.
+
+O freeze `49385c30...` é preservado como evidência histórica, mas foi invalidado pela correção funcional posterior. Não pode ser reutilizado como candidata de release. O supervisor passou a preservar apenas as variáveis não sensíveis de identidade do home necessárias ao runtime, mantendo tokens/credenciais fora da allowlist, e a suíte ganhou reprodução direta de `Path.home()` no child environment.
 
