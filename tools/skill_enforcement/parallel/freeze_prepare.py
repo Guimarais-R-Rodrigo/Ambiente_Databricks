@@ -99,12 +99,16 @@ def prepare(*, apply: bool) -> dict:
     return result
 
 
+def _json_cli(payload: dict) -> str:
+    return json.dumps(payload, ensure_ascii=True, indent=2, sort_keys=True) + "\n"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Reconcilia mecanicamente apenas o snapshot medido do README antes do freeze B0.")
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
     payload = prepare(apply=args.apply)
-    print(json.dumps(payload, ensure_ascii=True, indent=2, sort_keys=True))
+    sys.stdout.write(_json_cli(payload))
     return 0 if payload.get("status") == "PASS" else 1
 
 
