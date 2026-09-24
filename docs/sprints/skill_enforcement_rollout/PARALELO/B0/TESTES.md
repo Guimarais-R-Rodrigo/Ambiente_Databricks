@@ -17,7 +17,7 @@ Erro barato não deve chegar ao laboratório.
 
 ## 2. Metatestes
 
-`python -B -m unittest tools.tests.test_ser_parallel_b0 -v` contém **79 métodos definidos estaticamente** na candidata V3.
+`python -B -m unittest tools.tests.test_ser_parallel_b0 -v` contém **82 métodos definidos estaticamente** na candidata V3.
 
 A suíte preserva as regressões históricas e adiciona discriminantes para os achados da auditoria: null/tipos inválidos; task obrigatória vazia; NA sem precondição aprovada; timeout/exit booleano/tempo inválido; overlap escondido por wave; causalidade de stop; ciclo; secret scan resealado e filename; colisão de metadata; symlink; CRLF/non-UTF8 reais; processo filho residual; coleta unittest real; target ausente; override histórico; identidade de rodada; schemas/findings; lease/slot semantics; preflight; troca limpa de HEAD; entrypoint COMMAND_ONLY ausente; e ordem de atribuição do Job Object antes da liberação do child.
 
@@ -66,3 +66,15 @@ RAW e SHARE têm manifestos finais separados e binding externo não circular. `R
 ## 7. Freeze
 
 `freeze_prepare.py` exige worktree limpa, mede o snapshot, pode alterar somente `README.md` e reconfirma o snapshot. Ele não faz commit, não altera policy e não substitui os gates acima.
+
+## 8. Qualificação ambiental executável
+
+A saída `LOCAL_QUALIFIED` exige prova no mesmo round, não inferência documental. O release executa um probe negativo do sandbox antes dos pilotos e, ao final, grava `HOST_QUALIFICATION.json`.
+
+Para Windows, o filesystem é observado por `GetVolumeInformationW`; NTFS é obrigatório para esta qualificação. Os command records reais dos pilotos precisam demonstrar `WINDOWS_JOB_OBJECT`, sem timeout, descendente residual ou cleanup incompleto.
+
+As tasks da campanha B0 executam comandos Python allowlisted por um sandbox de audit hook. O escopo é deliberadamente restrito: leitura do repositório é permitida; escrita só no scratch exclusivo da task; subprocessos e rede são bloqueados. O probe exige escrita em scratch bem-sucedida, escrita externa bloqueada, subprocesso bloqueado, rede bloqueada e ausência de uma credencial sentinela no child environment.
+
+O snapshot de recursos precisa observar CPU lógica, memória total/disponível e disco livre. O perfil inicial `2/1` só é qualificado se os próprios pilotos demonstrarem duas tasks sobrepostas. A candidata `3/2` continua `NOT_QUALIFIED_REQUIRES_SEPARATE_HEADROOM_MEASUREMENT`.
+
+Esse sandbox não é um container ou ACL genérica de SO. Comandos futuros B1 que precisem de subprocesso, rede ou escrita fora do scratch exigirão extensão explícita do contrato e prova própria antes de uso.
