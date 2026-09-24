@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "plan_id": "SER-PARALLEL-PLAN-2026-09-23",
-  "revision": "1.1",
+  "revision": "1.2",
   "date": "2026-09-24",
   "repository": "Guimarais-R-Rodrigo/Ambiente_Databricks",
   "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b",
@@ -26,10 +26,18 @@
   },
   "counts_are": "Obrigações de planejamento; não testes Python implementados nem executados.",
   "baseline_coverage_entries": 35,
-  "baseline_coverage_note": "21 SE08 + 9 CI não-SEF + 5 SER01; a etapa CI sef está expandida, não omitida.",
+  "baseline_coverage_note": "21 SE08 + 9 CI não-SEF + 5 SER01; a etapa CI sef está expandida, não omitida. Entradas sem método exigem command_only_steps explícito.",
   "dag_nodes": 102,
   "dag_edges": 149,
   "open_authoring_blockers": 20,
   "readiness_obligations": 24,
-  "next_action": "Executar B0 local qualification; nenhuma campanha de skill ainda liberada."
+  "b0_corrective": {
+    "source_candidate_sha": "318b51c13f70915377624ba59a10724e0e2fd101",
+    "findings": ["RV-01", "RV-02", "RV-03", "RV-04", "RV-05", "RV-06", "RV-07"],
+    "implementation_status": "FIXED_IN_CANDIDATE_PENDING_FULL_CHECKOUT_REVALIDATION",
+    "targeted_authoring_tests": "65/65 PASS",
+    "full_suite_total": 69,
+    "full_checkout_revalidation": "NOT_RUN"
+  },
+  "next_action": "Revalidar 69/69 e coverage no checkout do novo SHA; somente depois preparar freeze e executar B0 local qualification. Nenhuma campanha de skill está liberada."
 }
