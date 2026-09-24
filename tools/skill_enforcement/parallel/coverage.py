@@ -42,19 +42,31 @@ def _normalize_unittest_id(raw):
   candidate=ROOT.joinpath(*parts[:idx]).with_suffix(".py")
   if candidate.is_file(): return f"{candidate.relative_to(ROOT).as_posix()}::{'.'.join(parts[idx:])}"
  return None
+def _normalize_loaded_test(test):
+ raw=test.id(); module_name=getattr(test.__class__,"__module__",""); module=sys.modules.get(module_name)
+ source=getattr(module,"__file__",None) if module is not None else None
+ if source:
+  try:
+   path=Path(source).resolve(); rel=path.relative_to(ROOT.resolve()).as_posix()
+  except (OSError,ValueError): pass
+  else:
+   prefix=module_name+"."
+   suffix=raw[len(prefix):] if module_name and raw.startswith(prefix) else raw
+   return f"{rel}::{suffix}"
+ return _normalize_unittest_id(raw)
 def _collect_from_suite(suite):
  ids=[]; errors=[]
  for test in _flatten(suite):
   raw=test.id()
   if "_FailedTest" in raw: errors.append("FAILED_TEST:"+raw); continue
-  normalized=_normalize_unittest_id(raw)
+  normalized=_normalize_loaded_test(test)
   if normalized is None: errors.append("UNRESOLVED_TEST_ID:"+raw)
   else: ids.append(normalized)
  return ids,errors
 def _discover(start,pattern):
  loader=unittest.TestLoader()
  try:
-  with _root_on_path(): suite=loader.discover(start_dir=str(start),pattern=pattern,top_level_dir=str(ROOT))
+  with _root_on_path(): suite=loader.discover(start_dir=str(start),pattern=pattern)
  except Exception as exc: return [],[f"DISCOVER_EXCEPTION:{type(exc).__name__}:{exc}"]
  ids,errors=_collect_from_suite(suite); errors.extend(f"LOADER_ERROR:{msg}" for msg in loader.errors); return ids,errors
 def _module_target_path(target):
