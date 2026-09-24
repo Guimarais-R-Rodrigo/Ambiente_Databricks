@@ -95,8 +95,10 @@ class BundleTests(unittest.TestCase):
     def test_share_scan_rejects_residual_user_home_paths(self):
         windows_home="C:"+"\\Users\\Example\\python.exe"
         posix_home="/home/example/python"
+        root_home="/root/python"
         self.assertIn("SENSITIVE_PATH_WINDOWS_HOME",bundle.scan_text(json.dumps({"python":windows_home})))
         self.assertIn("SENSITIVE_PATH_POSIX_HOME",bundle.scan_text(json.dumps({"python":posix_home})))
+        self.assertIn("SENSITIVE_PATH_POSIX_HOME",bundle.scan_text(json.dumps({"python":root_home})))
 
     def test_default_share_substitutions_redact_home_and_repo_variants(self):
         with tempfile.TemporaryDirectory() as tmp:
