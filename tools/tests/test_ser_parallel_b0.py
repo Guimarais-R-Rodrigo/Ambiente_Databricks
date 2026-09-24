@@ -120,8 +120,8 @@ class DocumentationContractTests(unittest.TestCase):
 
     def test_control_plan_matches_b0_candidate_state(self):
         payload = json.loads((self.plan / "CONTROLE_PLANO.json").read_text(encoding="utf-8"))
-        self.assertEqual("B0_IMPLEMENTED_CANDIDATE_LOCAL_QUALIFICATION_PENDING", payload["status"])
-        self.assertEqual("IMPLEMENTED_CANDIDATE", payload["mechanism_implementation"])
+        self.assertEqual("B0_CORRECTED_CANDIDATE_FULL_CHECKOUT_TESTS_PENDING", payload["status"])
+        self.assertEqual("CORRECTED_CANDIDATE", payload["mechanism_implementation"])
         self.assertFalse(payload["policy_changed"])
         self.assertEqual("NOT_STARTED", payload["skill_implementation_under_this_plan"])
 
