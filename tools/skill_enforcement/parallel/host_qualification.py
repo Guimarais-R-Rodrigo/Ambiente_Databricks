@@ -110,10 +110,18 @@ def qualify(
     selective_peak = _max_parallel(selective_summary)
     global_peak = _max_parallel(global_summary)
     initial_parallelism_ok = max(selective_peak, global_peak) >= 2
+    resources = _resource_snapshot(root)
+    resource_observation_ok = (
+        type(resources.get("logical_cpus")) is int and resources["logical_cpus"] > 0
+        and type(resources.get("disk_free_bytes")) is int and resources["disk_free_bytes"] > 0
+        and type(resources.get("memory_total_bytes")) is int and resources["memory_total_bytes"] > 0
+        and type(resources.get("memory_available_bytes")) is int and resources["memory_available_bytes"] > 0
+    )
     checks = {
         "filesystem_ntfs_or_not_windows": filesystem_ok,
         "sandbox_negative_probe": sandbox_ok,
         "windows_job_object": job_ok,
+        "resource_observation_complete": resource_observation_ok,
         "initial_parallelism_2_1_observed": initial_parallelism_ok,
     }
     return {
@@ -122,7 +130,7 @@ def qualify(
         "checks": checks,
         "filesystem": host.get("filesystem"),
         "sandbox_probe": dict(sandbox_probe),
-        "resource_snapshot": _resource_snapshot(root),
+        "resource_snapshot": resources,
         "observed_peak_parallel": {
             "selective": selective_peak,
             "global": global_peak,
@@ -133,6 +141,7 @@ def qualify(
             "status": "QUALIFIED_BY_OBSERVED_PILOTS" if initial_parallelism_ok else "NOT_QUALIFIED",
         },
         "post_pilot_candidate_3_2": "NOT_QUALIFIED_REQUIRES_SEPARATE_HEADROOM_MEASUREMENT",
+        "sandbox_scope": "PYTHON_AUDIT_HOOK_ALLOWLISTED_PYTHON_TASKS_ONLY",
         "host_coordination": "SINGLE_LAUNCHER_OS_LEASE",
         "client_model_configuration": host.get("client_model_configuration"),
     }
