@@ -103,7 +103,7 @@ def execute(campaign: dict, evidence_root: Path) -> dict:
             first_failure=first_failure or "__REPO_MUTATION__"; global_stop="__REPO_MUTATION__"
             for row in results.values(): row["first_failure"]=first_failure
         wave+=1
-    verification=verify_campaign_run(campaign,results)
+    verification=verify_campaign_run(campaign,results,evidence_root)
     # Expected deliberate failures still make a normal campaign FAIL. Pilot
     # semantics are evaluated by a separate verifier and cannot redefine this.
     summary={"schema_version":"SER-PARALLEL-RUN-2","campaign_id":campaign["campaign_id"],"candidate_sha":campaign["candidate_sha"],"status":"PASS" if verification["valid"] and all(r["status"] in {"PASS","NOT_APPLICABLE"} for r in results.values()) else "FAIL","first_failure":verification.get("first_failure"),"global_stop":global_stop,"results":results,"verification":verification}
