@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sys
 import tempfile
 import time
@@ -320,6 +321,29 @@ class IndependentAuditRegressionTests(unittest.TestCase):
             raw=Path(tmp)/"RAW";share=Path(tmp)/"SHARE";binding=Path(tmp)/"binding.json";raw.mkdir()
             crlf=b"a\r\nb\r\n";(raw/"crlf.txt").write_bytes(crlf);(raw/"binary.bin").write_bytes(b"\xff\xfe\x00");bundle.write_manifest(raw);built=bundle.build_share(raw,share,{},binding_path=binding)
             self.assertEqual(crlf,(share/"crlf.txt").read_bytes());self.assertIn("BINARY_UNEXAMINED"," ".join(built["secret_scan"]["findings"]))
+
+    def test_clean_env_preserves_home_identity_without_credentials(self):
+        sample={
+            "PATH": os.environ.get("PATH",""),
+            "SYSTEMROOT": os.environ.get("SYSTEMROOT",""),
+            "WINDIR": os.environ.get("WINDIR",""),
+            "TEMP": os.environ.get("TEMP",""),
+            "TMP": os.environ.get("TMP",""),
+            "HOME": r"C:\\Users\\Example",
+            "USERPROFILE": r"C:\\Users\\Example",
+            "HOMEDRIVE": "C:",
+            "HOMEPATH": r"\\Users\\Example",
+            "GITHUB_TOKEN": "must-not-leak",
+            "OPENAI_API_KEY": "must-not-leak",
+        }
+        with mock.patch.dict(process.os.environ,sample,clear=True):
+            env=process._clean_env()
+        self.assertEqual(r"C:\\Users\\Example",env["USERPROFILE"])
+        self.assertEqual(r"C:\\Users\\Example",env["HOME"])
+        self.assertEqual("C:",env["HOMEDRIVE"])
+        self.assertEqual(r"\\Users\\Example",env["HOMEPATH"])
+        self.assertNotIn("GITHUB_TOKEN",env)
+        self.assertNotIn("OPENAI_API_KEY",env)
 
     def test_windows_supervisor_assigns_before_child_release(self):
         source=Path(process.__file__).read_text(encoding="utf-8")
