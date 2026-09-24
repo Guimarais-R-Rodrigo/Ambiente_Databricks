@@ -22,7 +22,13 @@ def run():
  for path in json_paths:
   try: parsed[path]=json.loads(path.read_text(encoding="utf-8"))
   except (OSError,UnicodeDecodeError,json.JSONDecodeError) as exc: issues.append(f"JSON_INVALID:{path.relative_to(ROOT).as_posix()}:{type(exc).__name__}:{exc}")
- hygiene_paths=sorted({ROOT/"CHANGELOG.md",*PLAN.rglob("*.md"),*PLAN.rglob("*.json")})
+ hygiene_paths=sorted({
+  ROOT/"CHANGELOG.md",
+  ROOT/"tools/tests/test_ser_parallel_b0.py",
+  *PARALLEL.glob("*.py"),
+  *PLAN.rglob("*.md"),
+  *PLAN.rglob("*.json"),
+ })
  issues.extend(_hygiene_issues(hygiene_paths))
  python_paths=sorted({*PARALLEL.glob("*.py"),ROOT/"tools/tests/test_ser_parallel_b0.py"})
  for path in python_paths:
