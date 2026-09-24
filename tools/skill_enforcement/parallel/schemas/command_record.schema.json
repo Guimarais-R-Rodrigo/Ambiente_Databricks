@@ -1,0 +1,12 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","$id":"SER-PARALLEL-COMMAND-RECORD-1","type":"object","additionalProperties":false,
+  "required":["record_schema","name","argv","command_started","pid","exit_code","timed_out","cleanup","residual_descendants_detected","supervision","duration_seconds","started_at_utc","ended_at_utc","stdout_sha256","stderr_sha256"],
+  "properties":{
+    "record_schema":{"const":"SER-PARALLEL-COMMAND-RECORD-1"},"name":{"type":"string","minLength":1},"argv":{"type":"array","minItems":1,"items":{"type":"string","minLength":1}},
+    "command_started":{"type":"boolean"},"pid":{"type":["integer","null"],"minimum":1},"exit_code":{"type":"integer"},"timed_out":{"type":"boolean"},
+    "cleanup":{"enum":["NOT_STARTED","COMPLETE_ALREADY_EXITED","COMPLETE","COMPLETE_DESCENDANTS_TERMINATED","INCOMPLETE"]},"residual_descendants_detected":{"type":"boolean"},
+    "supervision":{"enum":["NOT_STARTED","POSIX_PROCESS_GROUP","WINDOWS_JOB_OBJECT"]},"duration_seconds":{"type":"number","minimum":0},
+    "started_at_utc":{"type":"string","format":"date-time"},"ended_at_utc":{"type":"string","format":"date-time"},
+    "stdout_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"stderr_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},"spawn_error":{"type":"string","minLength":1}
+  }
+}
