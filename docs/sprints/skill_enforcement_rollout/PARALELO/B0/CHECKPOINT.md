@@ -17,7 +17,7 @@ AUD11_HOST_COORDINATION = SINGLE_LAUNCHER_OS_LEASE
 HOST_PROOF = PENDING_WINDOWS_NTFS_SANDBOX_RESOURCE_HEADROOM
 P2_OPTIMIZATIONS = DEFERRED_UNTIL_MEASURED_PILOT
 
-B0_TEST_METHODS_STATIC = 76
+B0_TEST_METHODS_STATIC = 77
 PREVIOUS_SHA = 39d2fefa13fa747c2ab636e8a47cda06737d841e
 PREVIOUS_AUTHORING_PREFLIGHT = PASS
 PREVIOUS_METATESTS = PASS_74_COLLECTED_72_PASS_2_SKIP
@@ -33,7 +33,7 @@ PREVIOUS_FREEZE_SHA = 49385c306b03b1eeaf734e5b8daa4c2a4e5dc922
 PREVIOUS_FREEZE_STATUS = INVALIDATED_BY_POST_FREEZE_AUTHORING_DEFECT
 PREVIOUS_RELEASE = FAIL_NOT_QUALIFIED_AT_METATESTS
 PREVIOUS_RELEASE_ENVELOPE = VALID
-CURRENT_TEST_METHODS_STATIC = 76
+CURRENT_TEST_METHODS_STATIC = 77
 LOCAL_QUALIFICATION = NOT_RUN
 
 POLICY_CHANGED = false
@@ -41,6 +41,6 @@ DATABRICKS_EFFECT = none
 SKILL_CAMPAIGN_STARTED = false
 ```
 
-A V3 não transforma a auditoria em certificado. As correções acima são autoria publicada no branch; a execução integral do preflight, dos 76 metatestes, do inventory e da qualificação continua obrigatória no SHA final.
+A V3 não transforma a auditoria em certificado. As correções acima são autoria publicada no branch; a execução integral do preflight, dos 77 metatestes, do inventory e da qualificação continua obrigatória no SHA final.
 
 O próximo gate é exclusivamente local e fail-fast: preflight → metatestes → coverage. Qualquer falha retorna à autoria com os primeiros bytes/logs preservados; o executor não corrige, não altera testes e não repete até ficar verde. Somente depois ocorre freeze mecânico e uma rodada única de `b0_release`.
