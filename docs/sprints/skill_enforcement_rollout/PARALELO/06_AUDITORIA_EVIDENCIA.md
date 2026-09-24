@@ -86,3 +86,12 @@ O SHARE pode ter um resumo próprio de integridade para facilitar análise, mas 
 O verificador recebe manifestos aprovados de fora do payload candidato; confere schema e enums; resolve paths seguros; recalcula hashes; confronta documentos e outputs; compara case/test IDs, argumentos, ordem causal e tempo; exige provas dos effects e desautorização pertinente; e rederiva o veredito. Não basta verificar `status=PASS` nem confiar em expected_outcomes fornecidos pelo próprio summary.
 
 Hashes e registros são tamper evidence, não assinatura de pessoa. Numa máquina controlada pelo operador, um agente com acesso irrestrito poderia forjar todos os dados; por isso permissões, isolamento, revisão e aceites observáveis continuam necessários. Não prometer segurança criptográfica que esta arquitetura não oferece.
+
+
+## 6.11 Implementação B0 V3 após auditoria independente
+
+A implementação V3 materializa parte deste contrato: `ROUND_START` fixa SHA/tree/base antes dos gates; `RELEASE_SPEC` liga registry, coverage, policy, host e interpreter; cada piloto é relido do disco e passa por `verify_campaign_run` independente antes do oráculo específico; SHARE é revarrido pelo verifier em nomes e bytes finais; reserved paths e symlinks são recusados; e `RELEASE_VERDICT.json` é o veredito externo que referencia por hash os documentos anteriores.
+
+O resultado interno do mecanismo não é certificado final. Se o envelope SHARE falhar, o release verdict é FAIL mesmo quando o mecanismo havia produzido PASS. Da mesma forma, hash não autentica usuário e a prova de sandbox/host continua separada.
+
+Para B0, a coordenação host-wide é conservadora: uma campanha por host. Isso evita afirmar quotas globais inexistentes. A expansão para múltiplos launchers ou dispatch contínuo não é requisito para qualificar o mecanismo atual e permanece melhoria posterior condicionada a medição.
