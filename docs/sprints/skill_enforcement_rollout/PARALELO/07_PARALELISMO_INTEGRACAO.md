@@ -4,13 +4,15 @@
 
 Há oito frentes lógicas, não oito processos pesados obrigatoriamente simultâneos. O scheduler escolhe tarefas READY cujas dependências e recursos estejam livres. O coordenador solicita a execução, mas não altera a regra do scheduler.
 
-Piloto: dois slots de skill; operação regular inicial: três slots após prova. Até dois auditores simultâneos e um coordenador, com teto de cinco subagentes ativos; o integrador ocupa um slot exclusivo e não se sobrepõe a publication/certification mutável do mesmo composto. Se o host/cliente suportar menos, usar o limite menor. Não aumentar durante rodada para “ganhar tempo”.
+No B0 V3, `max_parallel` é o **total de tasks simultâneas**, inclusive auditorias. `max_auditors` é um teto dentro desse mesmo pool, não slots adicionais. O piloto parte de `max_parallel=2` e `max_auditors=1`; `3/2` é somente candidata pós-piloto e exige headroom medido, sandbox qualificado e ausência de finding material. Se o host suportar menos, usar o limite menor. Não aumentar durante rodada para “ganhar tempo”.
+
+O B0 também usa um lease de SO host-wide que autoriza **um launcher de campanha por host**. Assim, exclusivity/resource limits não são vendidos como globais entre múltiplos launchers independentes: múltiplas campanhas locais simultâneas permanecem não autorizadas. O paralelismo ocorre dentro da campanha única. Uma coordenação multi-launcher futura só pode substituir esse conservadorismo depois de prova própria de leases/quotas.
 
 A etapa cara normalmente é processo analítico/IO, não conversa da IA. O agente não precisa permanecer gerando texto enquanto um comando determinístico roda. Eventos started/finished/failure são suficientes, com heartbeat de liveness sem suposições de progresso.
 
 ## 7.2 Pools de recursos
 
-`LIGHT_READ` para contratos, lint e parsing; `CPU_ANALYTIC` para pandas/SHAP/treino; `SPARK_LOCAL` quando qualificado; `DISK_HEAVY` para clones/renderer/temas; `REMOTE_READ`; `REMOTE_EFFECT`; `INTEGRATION_WRITE`.
+As classes executáveis do B0 são `light`, `cpu`, `spark`, `tracking`, `external_effect` e `audit`, exatamente como no contrato/runtime. Rótulos conceituais históricos como `LIGHT_READ` ou `CPU_ANALYTIC` podem aparecer em material de planejamento, mas não constituem outra taxonomia operacional.
 
 Antes de liberar, medir recursos do host em diagnóstico e congelar budgets. Um Spark pesado pode reservar todos os slots analíticos sem impedir auditoria leve. Caches de dependência preparados e read-only podem ser compartilhados; instalações e mutações do cache não ocorrem em concorrência. Não compartilhar run MLflow, porta, temporary root ou fixture mutável entre tarefas.
 
