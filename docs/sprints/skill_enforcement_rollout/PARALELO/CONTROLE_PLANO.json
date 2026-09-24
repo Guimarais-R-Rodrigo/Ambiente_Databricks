@@ -1,11 +1,11 @@
 {
   "schema_version": "1.0",
   "plan_id": "SER-PARALLEL-PLAN-2026-09-23",
-  "revision": "2.4",
+  "revision": "2.5",
   "date": "2026-09-24",
   "repository": "Guimarais-R-Rodrigo/Ambiente_Databricks",
   "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b",
-  "status": "B0_LOCAL_QUALIFIED_AUDIT_PASS_WAITING_HUMAN_ACCEPTANCE",
+  "status": "B0_LOCAL_QUALIFIED_AUDIT_PASS_FINAL_TREE_REVALIDATION_PENDING",
   "user_approval_scope": "Direção aprovada e correções de auditoria autorizadas; não equivale a qualificação, promoção ou merge.",
   "launchable": false,
   "repo_publication_performed": true,
@@ -56,7 +56,7 @@
       "RUNTIME_COST_TUNING"
     ]
   },
-  "next_action": "Aguardar aceite humano explícito do B0. Depois do aceite, preparar B1/primeiro piloto real conforme DAG; não iniciar campanha real, Ready ou merge sem autorização específica.",
+  "next_action": "Executar revalidação final mínima do HEAD atual contra o freeze qualificado d8ff4392f161f08f2bc765bb9fc24227baca02bc. Confirmar delta somente documental/probatório e rodar gates baratos pertinentes; não repetir b0_release. Depois, aguardar aceite humano explícito antes de Ready/merge ou campanha real.",
   "open_known_repo_side_authoring_blockers": 0,
   "b0_validation_state": {
     "test_methods_static": 84,
@@ -96,7 +96,17 @@
     "non_blocking_observations": [
       "SHARE_METADATA_RECORDS_SUBSTITUTION_RULE_COUNT_NOT_PER_FILE_TRANSFORM_LIST; 20 transformed files independently derivable from RAW/SHARE manifest diff"
     ],
-    "local_qualification": "PASS"
+    "local_qualification": "PASS",
+    "current_pr_head": null,
+    "qualified_freeze_sha": "d8ff4392f161f08f2bc765bb9fc24227baca02bc",
+    "qualified_freeze_tree": "a18344e40ff06fb67e97f2eab8c2528c784466cd",
+    "post_freeze_audit_docs_only": true,
+    "post_freeze_changed_paths": [
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B0/CHECKPOINT.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B0/RESULTADOS.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/CONTROLE_PLANO.json"
+    ],
+    "final_tree_revalidation": "NOT_RUN"
   },
   "audit_convergence_hardenings": [
     "COMMAND_ONLY_ENTRYPOINT_VERIFICATION",
