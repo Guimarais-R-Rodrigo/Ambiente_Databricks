@@ -344,4 +344,19 @@ class IndependentAuditRegressionTests(unittest.TestCase):
         profile=json.loads((Path(__file__).resolve().parents[2]/"tools/skill_enforcement/parallel/resource_profiles.json").read_text(encoding="utf-8"))
         self.assertIn("total number",profile["slot_semantics"]);self.assertEqual("SINGLE_LAUNCHER_OS_LEASE",profile["host_coordination"])
 
+    def test_authoring_preflight_parses_current_tree(self):
+        payload=preflight.run()
+        self.assertEqual("PASS",payload["status"],payload["issues"])
+
+    def test_round_start_detects_clean_head_swap(self):
+        row={"candidate_sha":"a"*40,"candidate_tree_sha":"b"*40,"baseline_sha":"c"*40}
+        def fake_git(*args):
+            if args==("rev-parse","HEAD"): return "d"*40
+            if args==("rev-parse","HEAD^{tree}"): return "b"*40
+            if args==("merge-base","HEAD","origin/main"): return "c"*40
+            if args==("status","--porcelain=v1","--untracked-files=all"): return ""
+            raise AssertionError(args)
+        with mock.patch.object(round_identity,"_git",side_effect=fake_git):
+            self.assertIn("ROUND_HEAD_CHANGED",round_identity.assert_round_start_current(row))
+
 if __name__=="__main__": unittest.main()
