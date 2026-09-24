@@ -51,8 +51,10 @@ BUNDLE_SHA256 = a2ea025b0c440dcf8b61f6519333b0a3270a68cbe5aad2f4f62b2738fa203a6e
 INITIAL_PROFILE_2_1 = QUALIFIED_BY_OBSERVED_PILOTS
 POST_PILOT_3_2 = NOT_QUALIFIED_REQUIRES_SEPARATE_HEADROOM_MEASUREMENT
 
-AUDIT_ACCEPTANCE = PASS_TECHNICAL_WAITING_HUMAN_ACCEPTANCE
-LOCAL_QUALIFICATION = PASS
+QUALIFIED_FREEZE_AUDIT_ACCEPTANCE = PASS_TECHNICAL
+QUALIFIED_FREEZE_LOCAL_QUALIFICATION = PASS
+CURRENT_HEAD_FINAL_TREE_REVALIDATION = NOT_RUN
+LOCAL_QUALIFICATION = NOT_RUN
 
 POLICY_CHANGED = false
 DATABRICKS_EFFECT = none
@@ -67,4 +69,4 @@ A correção V2 removeu o blocker de sanitização observado na primeira rodada 
 
 Observação não bloqueante: o `SHARE_METADATA.json` registra a quantidade de regras de substituição, não a lista nominal de arquivos transformados. A auditoria rederivou 20 arquivos transformados pela comparação dos manifests RAW/SHARE; essa informação continua verificável sem confiar no produtor.
 
-O B0 está tecnicamente qualificado e com auditoria PASS, mas permanece aguardando aceite humano explícito. Esse estado não autoriza campanha real, mudança de policy, 3/2, Ready ou merge.
+O freeze `d8ff4392...` está tecnicamente qualificado e com auditoria PASS. O HEAD posterior contém somente documentação/prova pós-freeze e ainda precisa de revalidação final mínima da árvore; por isso `LOCAL_QUALIFICATION` do HEAD corrente permanece `NOT_RUN`. Nenhum desses estados autoriza campanha real, mudança de policy, 3/2, Ready ou merge.
