@@ -2,42 +2,81 @@
 
 Este documento é operacional e não concede autoridade de release, promoção, Ready ou merge.
 
-## 1. Identidade obrigatória
+## 1. Bootstrap isolado e identidade obrigatória
 
 Repositório:
 
 `Guimarais-R-Rodrigo/Ambiente_Databricks`
 
-Branch:
+Branch remota fonte:
 
-`ser/B0-parallel-rollout-framework`
+`origin/ser/B0-parallel-rollout-framework`
 
 PR:
 
 `#113`
 
-O SHA executável é **exatamente o HEAD da PR #113 indicado no corpo da própria PR no momento do handoff**. Antes de qualquer comando:
+O checkout em que o operador/Codex foi iniciado **não precisa estar limpo nem na branch B0**. Mudanças locais preexistentes pertencem a outra frente e devem ser preservadas. Elas não são motivo para tentar `checkout`, `stash`, `reset` ou limpeza.
+
+### 1.1 No checkout já existente
+
+Executar apenas operações read-only/fetch:
 
 ```bash
 git fetch --all --prune
-git checkout ser/B0-parallel-rollout-framework
+git rev-parse --show-toplevel
+git rev-parse refs/remotes/origin/ser/B0-parallel-rollout-framework
+git rev-parse origin/main
+```
+
+O SHA de `refs/remotes/origin/ser/B0-parallel-rollout-framework` deve ser **exatamente o `CURRENT_HEAD` publicado no corpo da PR #113 no momento do handoff**.
+
+Se divergir, PARE com:
+
+```text
+B0_LOCAL_HANDOFF = BLOCKED_ENVIRONMENT_REMOTE_HEAD_DIVERGED
+```
+
+Não tente atualizar o esperado localmente.
+
+### 1.2 Criar worktree dedicado
+
+Escolher um path externo, curto, novo e vazio, por exemplo:
+
+`C:\b0_worktrees\b0_<shortsha>`
+
+Criar o worktree **destacado no SHA exato**:
+
+```bash
+git worktree add --detach <B0_WORKTREE_NOVO> <CURRENT_HEAD_EXATO>
+```
+
+Não reutilizar worktree anterior.
+
+Entrar em `<B0_WORKTREE_NOVO>` e executar:
+
+```bash
 git rev-parse HEAD
 git rev-parse HEAD^{tree}
 git merge-base HEAD origin/main
 git status --porcelain=v1 --untracked-files=all
 git rev-parse --is-shallow-repository
+git rev-list --left-right --count origin/main...HEAD
 ```
 
-Parar se:
+Condições obrigatórias:
 
-- HEAD divergir do `CURRENT_HEAD` publicado na PR;
-- merge-base divergir da base publicada;
-- worktree não estiver limpa;
-- repositório for shallow;
-- branch estiver behind de `main`;
-- qualquer correção funcional parecer necessária.
+- HEAD = `CURRENT_HEAD` publicado na PR;
+- merge-base = base/merge-base publicado na PR;
+- worktree dedicado = limpo;
+- shallow = `false`;
+- behind = `0`.
 
-O executor não altera código, testes, schemas, JSONs, documentação, timeouts ou policy.
+O estado do **checkout original** é apenas registrado para rastreabilidade e não bloqueia a rodada. Ele não deve ser modificado.
+
+Parar se qualquer condição do **worktree dedicado** divergir ou se qualquer correção funcional parecer necessária.
+
+O executor não altera código, testes, schemas, JSONs, documentação, timeouts ou policy antes do freeze mecânico autorizado.
 
 ## 2. Gate de autoria no checkout real
 
@@ -84,9 +123,32 @@ Qualquer outro path alterado é STOP.
 
 Reexecutar a conferência do snapshot conforme saída do próprio `freeze_prepare`.
 
-Depois da inspeção mecânica, criar **um único commit de freeze**, sem alteração funcional adicional.
+Depois da inspeção mecânica, transformar o worktree destacado em uma branch local temporária e criar **um único commit de freeze**, sem alteração funcional adicional:
 
-O commit de freeze cria um novo SHA. A partir desse ponto, toda evidência pertence ao SHA de freeze, não ao SHA de autoria anterior.
+```bash
+git switch -c b0-local-freeze-<shortsha>
+git add -- README.md
+git commit -m "SER B0: freeze candidate after local authoring gates"
+```
+
+Antes de publicar o freeze, reconfirmar que a branch remota B0 ainda aponta para o SHA de autoria original:
+
+```bash
+git fetch origin --prune
+git rev-parse refs/remotes/origin/ser/B0-parallel-rollout-framework
+```
+
+Se o remoto tiver mudado, PARE com `BLOCKED_ENVIRONMENT_REMOTE_HEAD_DIVERGED_BEFORE_FREEZE_PUSH`.
+
+Se continuar idêntico, publicar **somente** o commit mecânico de freeze por fast-forward normal:
+
+```bash
+git push origin HEAD:ser/B0-parallel-rollout-framework
+```
+
+É proibido `--force`, `--force-with-lease`, rebase, amend ou push de qualquer outro delta.
+
+O commit de freeze cria um novo SHA e passa a ser o HEAD da PR. A partir desse ponto, toda evidência pertence ao SHA de freeze, não ao SHA de autoria anterior.
 
 ## 4. Rodada única de qualificação B0
 
@@ -158,7 +220,7 @@ A falha deliberada do piloto não é falha do mecanismo quando o oráculo indepe
 
 Preservar e retornar, sem editar:
 
-- SHA/tree/base/branch da rodada;
+- estado do checkout original (somente observação; não alterado);\n- SHA/tree/base do worktree dedicado;\n- SHA remoto da branch antes e depois do freeze;\n- SHA/tree/base/branch local da rodada;
 - `ROUND_START.json`;
 - `RELEASE_SPEC.json`;
 - stdout/stderr + records dos release gates;
@@ -225,7 +287,7 @@ Durante o handoff não:
 - executar Databricks;
 - publicar;
 - marcar PR Ready;
-- fazer merge.
+- fazer merge;\n- stash/reset/clean no checkout original;\n- force push ou force-with-lease.
 
 ## 10. Resultado do handoff
 
