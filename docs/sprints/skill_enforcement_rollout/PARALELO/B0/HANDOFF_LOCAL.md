@@ -96,7 +96,7 @@ B0_METATESTS = PASS
 COVERAGE_V3.status = PASS
 ```
 
-A suíte contém 76 métodos definidos estaticamente na autoria atual. A coleta real do checkout é a autoridade para a execução; não ajustar o esperado localmente.
+A suíte contém 77 métodos definidos estaticamente na autoria atual. A coleta real do checkout é a autoridade para a execução; não ajustar o esperado localmente.
 
 Se qualquer comando falhar:
 
@@ -127,9 +127,22 @@ Depois da inspeção mecânica, transformar o worktree destacado em uma branch l
 
 ```bash
 git switch -c b0-local-freeze-<shortsha>
+```
+
+Se `freeze_prepare` alterou exclusivamente `README.md`:
+
+```bash
 git add -- README.md
 git commit -m "SER B0: freeze candidate after local authoring gates"
 ```
+
+Se `freeze_prepare` reportou `changed=false` e o worktree continua totalmente limpo, criar um marcador de freeze vazio:
+
+```bash
+git commit --allow-empty -m "SER B0: freeze candidate after local authoring gates"
+```
+
+O commit vazio é permitido somente nesse caso e deve ter a mesma tree da autoria. Qualquer outro delta continua sendo STOP.
 
 Antes de publicar o freeze, reconfirmar que a branch remota B0 ainda aponta para o SHA de autoria original:
 
