@@ -1,0 +1,50 @@
+{
+  "$id": "urn:ser:temporal-context:1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "availability_column": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "bitemporal": {
+      "const": false
+    },
+    "boundary": {
+      "enum": [
+        "LE",
+        "LT"
+      ]
+    },
+    "lag_days": {
+      "maximum": 36500,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "lag_kind": {
+      "const": "CONSTANT"
+    },
+    "reference_column": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "tie_break": {
+      "const": "REJECT"
+    },
+    "timezone": {
+      "const": "UTC"
+    }
+  },
+  "required": [
+    "availability_column",
+    "bitemporal",
+    "boundary",
+    "lag_days",
+    "lag_kind",
+    "reference_column",
+    "tie_break",
+    "timezone"
+  ],
+  "title": "SER temporal declared context — no PIT execution",
+  "type": "object"
+}

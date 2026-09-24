@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-24 — SER B1 P1: integração canônica SER03/SER05
+
+- (ChatGPT) A candidata P1 preserva o mecanismo B0 e a policy; SER03 usa helper de safra e Receipt V1 canônicos, enquanto SER05 permanece preflight/contexto L2 sem join material.
+- (ChatGPT) Integração pública observada no checkout completo: suíte B1 47/47 PASS, incluindo os dois testes antes pendentes; regressões Temas V07 17/17, V07 mirror 2/2 e V08 22/22 PASS.
+- (ChatGPT) A suíte SE07 histórica retornou exclusivamente os dois FAILs temporais L2 conhecidos de `hub-ml-criar-objeto`, classificados como `EXPECTED_TEMPORAL_FAIL` pelo contrato pós-promoção SER01; zero ERROR e nenhuma falha adicional.
+- (ChatGPT) O primeiro validator da continuação reprovou somente o novo `exemplo_domain_context.py` por ausência de transcrição `text`; a corretiva acrescenta apenas a saída sintética realmente observada, sem alterar lógica ou release manifest.
+- (ChatGPT) Esta integração é autoria, não certificação nem promoção. Policy, B0, Databricks, P2, Ready e merge permanecem inalterados/não autorizados.
+
 ## 2026-09-24 — SER B0: LOCAL_QUALIFIED com SHARE V2 e auditoria técnica PASS
 
 ### Qualificado

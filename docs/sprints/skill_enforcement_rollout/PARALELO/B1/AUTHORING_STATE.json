@@ -1,0 +1,34 @@
+{
+  "b0_runtime_changed": false,
+  "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
+  "blocked_by": [
+    "P1_SURFACE_CASE_REVIEW",
+    "P2_CLOSED_COMMAND_IDS_AND_HANDOFF",
+    "P2_SANITIZED_RUNTIME_COMPATIBILITY",
+    "P2_AUDITOR_ADAPTER"
+  ],
+  "canonical_renderer": "PASS",
+  "domain_profiles": [
+    "MONTHLY_BINARY_PILOT_V1",
+    "CONTEXT_ONLY_PILOT_V1"
+  ],
+  "full_checkout_integration_methods": 2,
+  "full_checkout_integration_status": "PASS_2_OF_2",
+  "full_domain_suite": "PASS_47_OF_47",
+  "full_validator": "PASS",
+  "launchable": false,
+  "policy_changed": false,
+  "python_test_methods": 47,
+  "ready_for_certification": false,
+  "real_campaign": "NOT_RUN",
+  "root_changelog_integration": "PASS",
+  "schema_version": "SER-B1-AUTHORING-1",
+  "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL",
+  "stage": "P1_DOMAIN_AUTHORING_INTEGRATED",
+  "temas_v07": "PASS_17_OF_17",
+  "temas_v07_mirror": "PASS_2_OF_2",
+  "temas_v08": "PASS_22_OF_22",
+  "unit_methods_executed": 45,
+  "unit_status": "PASS",
+  "windows_status": "NOT_RUN"
+}

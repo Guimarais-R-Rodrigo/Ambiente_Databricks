@@ -1,0 +1,128 @@
+{
+  "$id": "urn:ser:05:context:1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "UNKNOWN is representable but blocks semantic preflight. This schema does not execute a join.",
+  "properties": {
+    "anchor": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "anchor_grain": {
+      "const": "ONE_ROW_PER_ENTITY_DECISION"
+    },
+    "cardinality": {
+      "enum": [
+        "1:1",
+        "N:1"
+      ]
+    },
+    "decision_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "entity_keys": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "not_applicable_reason": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "null_key_policy": {
+      "const": "REJECT"
+    },
+    "pit": {
+      "enum": [
+        "APPLICABLE",
+        "NOT_APPLICABLE",
+        "UNKNOWN"
+      ]
+    },
+    "profile": {
+      "const": "CONTEXT_ONLY_PILOT_V1"
+    },
+    "requested_effect": {
+      "const": "NONE"
+    },
+    "schema_version": {
+      "const": "SER05-CONTEXT-1"
+    },
+    "sources": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "columns": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "content_sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "grain": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "snapshot_id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "columns",
+          "content_sha256",
+          "grain",
+          "id",
+          "snapshot_id"
+        ],
+        "type": "object"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "synthetic": {
+      "const": true
+    },
+    "temporal": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "urn:ser:temporal-context:1"
+        }
+      ]
+    }
+  },
+  "required": [
+    "anchor",
+    "anchor_grain",
+    "cardinality",
+    "decision_at",
+    "entity_keys",
+    "null_key_policy",
+    "pit",
+    "profile",
+    "requested_effect",
+    "schema_version",
+    "sources",
+    "synthetic",
+    "temporal"
+  ],
+  "type": "object"
+}
