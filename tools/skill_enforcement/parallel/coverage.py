@@ -191,7 +191,7 @@ def inventory() -> dict[str, Any]:
     if missing_overrides:
         issues.append("TEMPORAL_OVERRIDE_NOT_OBSERVED:" + ",".join(missing_overrides))
 
-    known_ids = {row["step_id"] for row in se08} | {row["step_id"] for row in ci_rows} | {
+    # A command-only exemption is itself closed: stale/unreferenced exemptions\n    # are rejected so they cannot accumulate into a silent coverage escape hatch.\n    known_ids = {row["step_id"] for row in se08} | {row["step_id"] for row in ci_rows} | {
         row["group_id"] for row in ser01
     }
     stale_command_only = sorted(command_only - known_ids)
