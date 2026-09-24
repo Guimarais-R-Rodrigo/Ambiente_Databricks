@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-09-24 — SER B0: fechamento repo-side e handoff local
+
+### Concluído
+
+- (ChatGPT) Validado por leitura remota que os 23 JSONs alterados pela PR fazem parse no HEAD de autoria antes do handoff.
+- (ChatGPT) Criado `PARALELO/B0/HANDOFF_LOCAL.md` com identidade, gates, stop rules, freeze, rodada única de `b0_release`, artefatos obrigatórios, provas ambientais e ações proibidas.
+- (ChatGPT) O handoff explicita que o SHA executável é o HEAD exato publicado na PR #113; divergência, worktree suja, shallow clone, branch behind ou necessidade de correção funcional bloqueiam antes da execução.
+- (ChatGPT) O fluxo local passa a ter uma única fonte operacional de execução, reduzindo novos handoffs interpretativos.
+
+### Limites
+
+- (ChatGPT) O runtime desta conversa não possui rede para clonar o repositório privado; portanto preflight, 72 metatestes, coverage V3 e qualificação Windows/NTFS continuam NOT_RUN neste host.
+- (ChatGPT) Nenhum PASS de checkout foi inventado. PR continua draft; Ready, merge, campanhas reais e Databricks permanecem não autorizados.
+
 ## 2026-09-24 — SER B0: convergência da corretiva V3 após auditoria independente
 
 ### Corrigido
