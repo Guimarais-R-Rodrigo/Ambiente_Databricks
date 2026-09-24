@@ -1,15 +1,15 @@
 {
   "schema_version": "1.0",
   "plan_id": "SER-PARALLEL-PLAN-2026-09-23",
-  "revision": "1.2",
+  "revision": "1.3",
   "date": "2026-09-24",
   "repository": "Guimarais-R-Rodrigo/Ambiente_Databricks",
   "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b",
-  "status": "B0_CORRECTED_CANDIDATE_FULL_CHECKOUT_TESTS_PENDING",
-  "user_approval_scope": "Direção aprovada e detalhamento solicitado; não equivale a execução ou promoção futura.",
+  "status": "B0_AUDIT_CORRECTIVE_V3_AUTHORING",
+  "user_approval_scope": "Direção aprovada e correções de auditoria autorizadas; não equivale a qualificação, promoção ou merge.",
   "launchable": false,
   "repo_publication_performed": true,
-  "mechanism_implementation": "CORRECTED_CANDIDATE",
+  "mechanism_implementation": "AUDIT_CORRECTIVE_V3",
   "skill_implementation_under_this_plan": "NOT_STARTED",
   "runtime_campaign": "B0_QUALIFICATION_NOT_RUN",
   "policy_changed": false,
@@ -26,16 +26,41 @@
   },
   "counts_are": "Obrigações de planejamento; não testes Python implementados nem executados.",
   "baseline_coverage_entries": 35,
-  "baseline_coverage_note": "21 SE08 + 9 CI não-SEF + 5 SER01; a etapa CI sef está expandida, não omitida.",
+  "baseline_coverage_note": "21 SE08 + 9 CI não-SEF + 5 SER01; V3 exige coleta unittest real para test commands e COMMAND_ONLY explícito.",
   "dag_nodes": 102,
   "dag_edges": 149,
-  "open_authoring_blockers": 20,
+  "open_authoring_blockers": 0,
   "readiness_obligations": 24,
-  "next_action": "Executar 52 metatestes B0 + coverage no checkout real; somente depois preparar freeze e b0_release.",
-  "corrective_review": {
-    "rv01_to_rv07": "CORRECTED_REPO_SIDE",
-    "adversarial_isolated": "9/9 PASS",
-    "b0_test_methods": 52,
-    "full_checkout_metatests": "NOT_RUN"
-  }
-}\n
+  "independent_audit_2026_09_24": {
+    "audited_sha": "f803b50f898ac93eb0e5541ba428a3656dc4f732",
+    "disposition": "AUTHORING_CORRECTIVE_IMPLEMENTED_IN_NEW_SHA_PENDING_FULL_CHECKOUT_VALIDATION",
+    "p0_repo_side": [
+      "AUD-01",
+      "AUD-02",
+      "AUD-03",
+      "AUD-04",
+      "AUD-05",
+      "AUD-06",
+      "AUD-07",
+      "AUD-09",
+      "AUD-10"
+    ],
+    "p1_repo_side": [
+      "AUD-08",
+      "AUD-11",
+      "AUD-12"
+    ],
+    "host_proof_pending": [
+      "WINDOWS_JOB_OBJECT",
+      "NTFS",
+      "SANDBOX_NEGATIVE_PERMISSIONS",
+      "HOST_RESOURCE_HEADROOM"
+    ],
+    "p2_deferred_until_measured_pilot": [
+      "DISPATCH_ON_SLOT_RELEASE",
+      "INVENTORY_CACHE",
+      "RUNTIME_COST_TUNING"
+    ]
+  },
+  "next_action": "Rodar authoring preflight + suíte B0 V3 + coverage V3 no checkout real do novo SHA; qualquer falha volta à autoria. Somente depois freeze e b0_release."
+}
