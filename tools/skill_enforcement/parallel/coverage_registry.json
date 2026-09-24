@@ -85,7 +85,8 @@
     },
     {
       "group_id": "ser01_free_probe",
-      "path": "tools/skill_enforcement/ser01_free_probe.py"
+      "path": "tools/skill_enforcement/ser01_free_probe.py",
+      "mapping_mode": "command"
     }
   ]
 }
