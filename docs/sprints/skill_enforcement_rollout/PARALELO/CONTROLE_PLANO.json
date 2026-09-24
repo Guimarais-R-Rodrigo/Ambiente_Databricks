@@ -70,7 +70,7 @@
     "latest_authoring_preflight": "PASS",
     "latest_authoring_metatests": "PASS_76_COLLECTED_74_PASS_0_FAIL_0_ERROR_2_SKIP",
     "latest_authoring_coverage": "PASS_21_SE08_9_CI_5_SER01_1353_UNIQUE_METHODS",
-    "latest_freeze_sha": "f6516959a2f973ea1e163da80548e8ebb0e235cfa2f973ea1e163da80548e8ebb0e235cf",
+    "latest_freeze_sha": "f6516959a2f973ea1e163da80548e8ebb0e235cf",
     "latest_freeze_tree": "11ded361baf8b242a6eb8eacf1e29e2ed08d5b53",
     "latest_freeze_kind": "EMPTY_MARKER_TREE_IDENTICAL_TO_AUTHORING",
     "latest_release_verdict": "FAIL_NOT_QUALIFIED_AT_METATESTS",
