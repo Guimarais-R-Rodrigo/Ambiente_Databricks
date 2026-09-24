@@ -1,5 +1,31 @@
 # Changelog
 
+## 2026-09-24 — SER B0: LOCAL_QUALIFIED com SHARE V2 e auditoria técnica PASS
+
+### Qualificado
+
+- (ChatGPT) A autoria `2a66380cf0d50a8c3e3b8697c6b131b3a0dc884d` passou preflight, 84 metatestes (82 PASS, 2 SKIP), coverage V3 (21 SE08, 9 CI não-SEF, 5 SER01; 1.353 IDs únicos) e freeze_prepare.
+- (ChatGPT) O freeze `d8ff4392f161f08f2bc765bb9fc24227baca02bc` é marcador vazio, tree-idêntico à autoria (`a18344e40ff06fb67e97f2eab8c2528c784466cd`), e executou `b0_release` com `RELEASE_VERDICT.status=PASS`, `release_status=LOCAL_QUALIFIED` e `HOST_QUALIFICATION.status=PASS`.
+- (ChatGPT) Selective/global pilots e verificações independentes passaram; NTFS, sandbox negativo, Windows Job Object, recursos e concorrência 2/1 foram observados. 3/2 permanece não qualificado.
+
+### Auditoria independente
+
+- (ChatGPT) Bundle `b0_2a66380c_d8ff4392_share_v2_complete.zip` com SHA-256 `a2ea025b0c440dcf8b61f6519333b0a3270a68cbe5aad2f4f62b2738fa203a6e`.
+- (ChatGPT) ZIP: 169 membros, zero duplicados, traversal/path absoluto ou symlink.
+- (ChatGPT) RAW 69/69 e SHARE 70/70 conferem em hash/tamanho; hashes do release verdict, binding e release-spec digest foram rederivados e coincidem.
+- (ChatGPT) SHARE policy V2 PASS: 71 arquivos varridos, zero home paths e zero repo-root paths residuais, zero secret patterns e 92 marcadores `<HOME>`.
+- (ChatGPT) Finding F0 da rodada V1 está FIXED_VERIFIED. Não há finding material aberto no freeze qualificado.
+
+### Observação não bloqueante
+
+- (ChatGPT) `SHARE_METADATA.json` registra a quantidade de regras de substituição, não a lista nominal de arquivos transformados. A auditoria rederivou 20 arquivos transformados pela diferença dos manifests RAW/SHARE; não há perda de verificabilidade.
+
+### Estado da PR
+
+- (ChatGPT) B0 está tecnicamente `LOCAL_QUALIFIED` e com auditoria PASS no freeze acima.
+- (ChatGPT) Registros de auditoria foram versionados depois do freeze no mesmo branch; portanto o HEAD posterior da PR é documentação/prova pós-freeze e requer apenas revalidação final mínima da árvore antes de eventual merge. Não repetir a campanha B0.
+- (ChatGPT) Ready, merge, campanhas reais, policy, Databricks e aumento para 3/2 permanecem não autorizados.
+
 ## 2026-09-24 — SER B0: SHARE sanitization V2 após LOCAL_QUALIFIED
 
 ### Evidência preservada
