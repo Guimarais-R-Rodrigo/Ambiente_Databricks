@@ -152,7 +152,8 @@ class DocumentationContractTests(unittest.TestCase):
 
     def test_b0_checkpoint_does_not_claim_local_pass(self):
         checkpoint = (self.plan / "B0/CHECKPOINT.md").read_text(encoding="utf-8")
-        self.assertIn("LOCAL_QUALIFICATION = NOT_RUN_LOCAL", checkpoint.replace("B0.5 HOST_QUALIFICATION", "LOCAL_QUALIFICATION"))
+        self.assertIn("LOCAL_QUALIFICATION = NOT_RUN", checkpoint)
+        self.assertNotRegex(checkpoint, r"(?m)^LOCAL_QUALIFICATION\s*=\s*(?:PASS|LOCAL_QUALIFIED)\s*$")
         self.assertIn("POLICY_CHANGED = false", checkpoint)
 
 
