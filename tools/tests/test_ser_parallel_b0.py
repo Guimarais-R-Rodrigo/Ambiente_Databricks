@@ -122,6 +122,12 @@ class SchedulerTests(unittest.TestCase):
         self.assertIn("bbb",d.blocked_dependency); self.assertIn("ccc",d.ready)
     def test_exclusivity_key_serializes(self):
         d=scheduler.decide([task("aaa",[],"same"),task("bbb",[],"same")],{},limit=2); self.assertEqual(1,len(d.ready))
+    def test_second_order_dependency_can_be_recomputed_after_block(self):
+        tasks=[task("aaa"),task("bbb",["aaa"],"k2"),task("ccc",["bbb"],"k3")]
+        first=scheduler.decide(tasks,{"aaa":"FAIL"},limit=2)
+        self.assertEqual(("bbb",),first.blocked_dependency)
+        second=scheduler.decide(tasks,{"aaa":"FAIL","bbb":"BLOCKED_DEPENDENCY"},limit=2)
+        self.assertEqual(("ccc",),second.blocked_dependency)
     def test_resource_limit_serializes(self):
         d=scheduler.decide([task("aaa",[],"k1",resource="cpu"),task("bbb",[],"k2",resource="cpu")],{},limit=2,resource_limits={"cpu":1})
         self.assertEqual(1,len(d.ready))

@@ -51,12 +51,16 @@ def qualify(output_dir: Path) -> dict:
     pilot = verify_pilot(json.loads(summary_path.read_text(encoding="utf-8")))
     (output_dir/"pilot_verification.json").write_text(json.dumps(pilot,ensure_ascii=False,indent=2,sort_keys=True)+"\n",encoding="utf-8")
     checks.append({"name":"pilot_verifier","exit_code":0 if pilot["valid"] else 1})
-    status = "PASS" if pilot["valid"] else "FAIL"
+    mechanism_status = "PASS" if pilot["valid"] else "FAIL"
+    host_isolation_status = "QUALIFIED" if host["sandbox_enforcement"] != "NOT_PROVEN_BY_HOST_PROBE" else "PENDING_EFFECTIVE_SANDBOX_TEST"
+    release_status = "READY" if mechanism_status == "PASS" and host_isolation_status == "QUALIFIED" else "PENDING_HOST_QUALIFICATION" if mechanism_status == "PASS" else "FAIL"
     return {
-        "status": status,
-        "first_failure": None if status=="PASS" else "pilot_verifier",
+        "status": mechanism_status,
+        "release_status": release_status,
+        "first_failure": None if mechanism_status=="PASS" else "pilot_verifier",
         "checks": checks,
         "host_sandbox_enforcement": host["sandbox_enforcement"],
+        "host_isolation_status": host_isolation_status,
         "campaign_id": campaign["campaign_id"],
         "release_scope": "MECHANISM_QUALIFICATION_ONLY_NO_SKILL_PROMOTION",
     }

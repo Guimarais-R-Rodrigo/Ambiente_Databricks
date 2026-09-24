@@ -87,6 +87,10 @@ def execute(campaign: dict, evidence_root: Path) -> dict:
                 "protected_fingerprint_before": fp, "protected_fingerprint_after": fp,
                 "issues": [], "blocked_by": blockers,
             }
+        if not decision.ready and decision.blocked_dependency:
+            # A classificação de um bloqueio nesta onda pode tornar novos dependentes
+            # bloqueados na onda seguinte. Recalcular antes de declarar falta de recurso.
+            continue
         if not decision.ready:
             if len(results) < len(tasks):
                 for task_id in decision.pending:
