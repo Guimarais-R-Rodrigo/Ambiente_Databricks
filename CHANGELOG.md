@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-09-24 — SER B0: convergência da corretiva V3 após auditoria independente
+
+### Corrigido
+
+- (ChatGPT) A auditoria independente da candidata `f803b50f...` foi incorporada sem transportar seus estados como certificado; a linha V3 fecha repo-side os achados AUD-01–AUD-12 que não dependem de prova ambiental.
+- (ChatGPT) `coverage.py` passa a exigir existência/resolução do entrypoint também para `COMMAND_ONLY`; target de módulo/script ausente não pode mais virar dispensa permissiva.
+- (ChatGPT) A supervisão Windows elimina a janela entre spawn e Job Object: um launcher bloqueado é atribuído ao job antes de receber autorização para criar o child real, cujo PID fica registrado.
+- (ChatGPT) `preflight.py` confronta código, quatro schemas executáveis fechados e templates de planejamento para impedir drift de versão/estrutura antes do laboratório.
+- (ChatGPT) Documentação viva do B0/coverage/paralelismo/evidência/implantação/handoff foi reconciliada com a semântica V3: `max_parallel` é pool total, auditor é subconjunto, e o lease host-wide permite uma campanha por host no B0.
+- (ChatGPT) O handoff de campanhas reais será gerado do primeiro manifesto B1 materializado, em vez de congelar agora um gerador genérico especulativo.
+
+### Regressões e estado
+
+- (ChatGPT) A suíte B0 contém 72 métodos definidos estaticamente, incluindo regressões para entrypoint `COMMAND_ONLY` ausente e assignment-before-release no Windows.
+- (ChatGPT) `CONTROLE_PLANO.json` revision 1.4 registra zero blockers repo-side conhecidos, mas mantém preflight/metatestes/coverage do SHA final e qualificação local como NOT_RUN.
+- (ChatGPT) Melhorias P2 de despacho ao liberar slot, cache de inventory e tuning 2/1→3/2 permanecem deliberadamente deferidas até métricas do piloto.
+
+### Limites
+
+- (ChatGPT) Windows/Job Object, NTFS, sandbox/permissões negativas e headroom de host continuam exigindo prova no host real.
+- (ChatGPT) Nenhuma policy, skill, `ambiente_fonte/`, `Novo_Ambiente_Simulado/`, Databricks, Ready ou merge foi alterado/acionado nesta convergência.
+
 ## 2026-09-24 — SER B0: corretiva pós-revisão independente
 
 ### Corrigido
