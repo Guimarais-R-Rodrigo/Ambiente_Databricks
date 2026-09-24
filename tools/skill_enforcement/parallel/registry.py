@@ -14,6 +14,7 @@ _ALLOWED_SPECS: dict[str, tuple[str, ...]] = {
     "b0:pilot:fail": ("{PYTHON}", "-B", "-m", "tools.skill_enforcement.parallel.pilot_worker", "fail"),
     "b0:pilot:global-fail": ("{PYTHON}", "-B", "-m", "tools.skill_enforcement.parallel.pilot_worker", "global_fail"),
     "b0:host:probe": ("{PYTHON}", "-B", "-m", "tools.skill_enforcement.parallel.host_probe"),
+    "b0:sandbox:probe": ("{PYTHON}", "-B", "-m", "tools.skill_enforcement.parallel.sandbox_probe"),
     "b0:meta:tests": ("{PYTHON}", "-B", "-m", "unittest", "tools.tests.test_ser_parallel_b0", "-v"),
     "b0:coverage:inventory": ("{PYTHON}", "-B", "-m", "tools.skill_enforcement.parallel.coverage"),
 }
