@@ -136,7 +136,7 @@ FREEZE_CREATED = NO
 B0_RELEASE = NOT_RUN
 ```
 
-O `freeze_prepare` executou o validator baseline e parou em três arquivos de rastreabilidade: `CHANGELOG.md`, `B0/RESULTADOS.md` e `CONTROLE_PLANO.json`. O gatilho não era identidade pessoal real: o SHA abreviado `f6516959` coincide com a heurística corporativa `letra + 6–8 dígitos`. A correção preserva a rastreabilidade substituindo o prefixo pelo SHA Git completo `f6516959a2f973ea1e163da80548e8ebb0e235cf`, sem afrouxar `CORPORATE_RE`.
+O `freeze_prepare` executou o validator baseline e parou em três arquivos de rastreabilidade: `CHANGELOG.md`, `B0/RESULTADOS.md` e `CONTROLE_PLANO.json`. O gatilho não era identidade pessoal real: o SHA completo `f6516959a2f973ea1e163da80548e8ebb0e235cf`, cuja forma abreviada anterior coincide com a heurística corporativa `letra + 6–8 dígitos`. A correção preserva a rastreabilidade substituindo o referência pelo SHA Git completo `f6516959a2f973ea1e163da80548e8ebb0e235cf`, sem afrouxar `CORPORATE_RE`.
 
 O bundle `b0_39e86591_20260924_authoring.zip` teve SHA-256 `889abb4969a9db6f64d55c1026095de86c7d144901e600db1c0a7a6c68712024`. A saída do `freeze_prepare` nessa rodada foi emitida pelo console em cp1252; a autoria posterior tornou o JSON CLI ASCII-safe e moveu a verificação de higiene para o preflight, para que essa classe de falha apareça antes do freeze.
 
