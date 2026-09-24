@@ -1,5 +1,5 @@
 {
-  "schema_version": "SER-PARALLEL-COVERAGE-2",
+  "schema_version": "SER-PARALLEL-COVERAGE-3",
   "sources": [
     {
       "source_id": "SE08_PROFILE",
@@ -40,6 +40,17 @@
     "render_diff": "CURRENT_INVARIANT",
     "readme_snapshot": "CURRENT_INVARIANT"
   },
+  "command_only_steps": [
+    "contract_v0_1",
+    "se07_policy_validation",
+    "assistant_structure",
+    "render_simulado",
+    "render_diff",
+    "readme_snapshot",
+    "ci:validacao",
+    "ci:concierge-pacote",
+    "ser01_free_probe"
+  ],
   "method_overrides": {
     "tools/tests/test_skill_enforcement_se07.py::SE07PolicyTests.test_current_level_is_evidence_based": {
       "classification": "HISTORICAL_TEMPORAL",
