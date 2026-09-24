@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "plan_id": "SER-PARALLEL-PLAN-2026-09-23",
-  "revision": "2.5",
+  "revision": "2.6",
   "date": "2026-09-24",
   "repository": "Guimarais-R-Rodrigo/Ambiente_Databricks",
   "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b",
@@ -97,11 +97,12 @@
       "SHARE_METADATA_RECORDS_SUBSTITUTION_RULE_COUNT_NOT_PER_FILE_TRANSFORM_LIST; 20 transformed files independently derivable from RAW/SHARE manifest diff"
     ],
     "local_qualification": "PASS",
-    "current_pr_head": null,
+    "current_pr_head": "6f1d0a10676f2abfd7a08fbb6d588872fb6214e8",
     "qualified_freeze_sha": "d8ff4392f161f08f2bc765bb9fc24227baca02bc",
     "qualified_freeze_tree": "a18344e40ff06fb67e97f2eab8c2528c784466cd",
     "post_freeze_audit_docs_only": true,
     "post_freeze_changed_paths": [
+      "CHANGELOG.md",
       "docs/sprints/skill_enforcement_rollout/PARALELO/B0/CHECKPOINT.md",
       "docs/sprints/skill_enforcement_rollout/PARALELO/B0/RESULTADOS.md",
       "docs/sprints/skill_enforcement_rollout/PARALELO/CONTROLE_PLANO.json"
