@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-09-24 — SER B0: cobertura portátil em console Windows
+
+### Evidência preservada
+
+- (ChatGPT) A rodada local em `39d2fefa13fa747c2ab636e8a47cda06737d841e` passou preflight e os 74 metatestes (72 PASS, 0 FAIL, 0 ERROR, 2 SKIP), mas parou no coverage antes de emitir JSON.
+- (ChatGPT) A causa foi `UnicodeEncodeError` no stdout `cp1252` ao serializar o caractere `→`; freeze e release não foram executados.
+- (ChatGPT) Bundle retornado SHA-256 `da70ffc3758c61c00c64ba8c2ecbdb7f0febe25c01ac36450915d5e884f503ee` validado contra o arquivo recebido.
+
+### Corrigido
+
+- (ChatGPT) O CLI de `coverage.py` passa a serializar JSON com escapes ASCII (`ensure_ascii=True`), preservando o payload semanticamente após `json.loads` e tornando a saída independente da code page do console.
+- (ChatGPT) A regressão existente de coverage agora exige que um payload com `L2→L3` seja serializável em `cp1252` e recupere o texto original após parsing.
+
+### Limites
+
+- (ChatGPT) O PASS de metatestes da rodada anterior não é transportado para o novo SHA. Preflight, 74 metatestes e coverage V3 precisam ser reexecutados no novo candidato antes de freeze.
+
 ## 2026-09-24 — SER B0: corretiva da primeira rodada real de metatestes
 
 ### Evidência preservada
