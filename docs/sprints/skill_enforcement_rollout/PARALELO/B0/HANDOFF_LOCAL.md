@@ -96,7 +96,7 @@ B0_METATESTS = PASS
 COVERAGE_V3.status = PASS
 ```
 
-A suíte contém 74 métodos definidos estaticamente na autoria atual. A coleta real do checkout é a autoridade para a execução; não ajustar o esperado localmente.
+A suíte contém 76 métodos definidos estaticamente na autoria atual. A coleta real do checkout é a autoridade para a execução; não ajustar o esperado localmente.
 
 Se qualquer comando falhar:
 
