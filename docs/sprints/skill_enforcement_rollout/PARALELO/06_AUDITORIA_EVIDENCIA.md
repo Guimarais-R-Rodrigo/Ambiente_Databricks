@@ -77,12 +77,32 @@ Diretórios são exclusivos por rodada. Evidências grandes desnecessárias, `.g
 
 RAW é imutável e privado. SHARE é derivado sanitizado, com ID e manifesto próprios. `raw_bindings` pode conter hashes dos bytes RAW e referências não sensíveis; não prova por si só a execução. `transformation_manifest` registra arquivos transformados e política de sanitização, sem expor os valores secretos removidos.
 
-Manifesto interno exclui a si próprio do conjunto hasheado e declara a exclusão. Hash externo do ZIP cobre o arquivo completo. Não criar ciclo em que manifesto precisa conter seu próprio hash final. O relatório de auditoria de um ZIP também não pode afirmar que audita a si mesmo dentro do ZIP; seu digest externo ou revisão sucessora resolve o vínculo.
+Manifesto interno exclui **somente o próprio `MANIFEST.json` na raiz daquele bundle** do conjunto hasheado e declara a exclusão. Um `MANIFEST.json` aninhado é payload comum e deve ser coberto. Symlink/junction não é tratado como arquivo comum sem regra explícita. Hash externo do ZIP cobre o arquivo completo. Não criar ciclo em que manifesto precisa conter seu próprio hash final. O relatório de auditoria de um ZIP também não pode afirmar que audita a si mesmo dentro do ZIP; seu digest externo ou revisão sucessora resolve o vínculo.
+
+No B0, o envelope V3 materializa a regra não circular assim:
+
+```text
+<evidence-root>/
+  RAW/
+    ... bytes autoritativos ...
+    MANIFEST.json
+  SHARE/
+    ... derivado sanitizado ...
+    MANIFEST.json
+  RAW_SHARE_BINDING.json
+  MANIFEST.json
+```
+
+`RAW/MANIFEST.json` e `SHARE/MANIFEST.json` são fechados antes do binding. `RAW_SHARE_BINDING.json` fica fora das duas identidades internas e aponta para os hashes finais de ambos; depois o `MANIFEST.json` do envelope cobre RAW, SHARE, seus manifestos e o binding. Não reescrever o manifesto SHARE depois de calcular seu hash de binding.
+
+stdout/stderr RAW são bytes, não texto normalizado: hash deve ser calculado sobre os bytes realmente persistidos, preservando CRLF e qualquer byte não UTF-8. Sanitização SHARE opera sobre texto UTF-8 de forma determinística. Arquivo que não puder ser examinado pela política de secret scan pode ser preservado para auditoria, mas obriga `secret_scan=FAIL`/bloqueio; “não consegui decodificar” nunca equivale a scan completo sem findings.
 
 O SHARE pode ter um resumo próprio de integridade para facilitar análise, mas nunca reutilizar o `certification_id` RAW como se fosse recalculável sobre bytes alterados. Preservar o output de verificação RAW com hash quando ele não exige sanitização; caso contrário, declarar também sua transformação. Sem RAW acessível, o auditor limita a conclusão ao que pode verificar no derivado, não inventa autenticidade.
 
 ## 6.10 Verificação independente do agregado
 
 O verificador recebe manifestos aprovados de fora do payload candidato; confere schema e enums; resolve paths seguros; recalcula hashes; confronta documentos e outputs; compara case/test IDs, argumentos, ordem causal e tempo; exige provas dos effects e desautorização pertinente; e rederiva o veredito. Não basta verificar `status=PASS` nem confiar em expected_outcomes fornecidos pelo próprio summary.
+
+Para a campanha B0, a rederivação também confronta cada `command_record` com `command_id`, argv template e argv resolvido pelo registry versionado; recalcula hashes dos arquivos stdout/stderr persistidos; compara o metadata JSON persistido; reconstitui DAG e ordem de ondas; e verifica `max_parallel`, `max_auditors`, resource limits, exclusivity keys e stop global. O verificador não considera um rótulo `BLOCKED_*` como prova de que a tarefa não executou: a ausência de command records e a causalidade correspondente precisam ser consistentes.
 
 Hashes e registros são tamper evidence, não assinatura de pessoa. Numa máquina controlada pelo operador, um agente com acesso irrestrito poderia forjar todos os dados; por isso permissões, isolamento, revisão e aceites observáveis continuam necessários. Não prometer segurança criptográfica que esta arquitetura não oferece.
