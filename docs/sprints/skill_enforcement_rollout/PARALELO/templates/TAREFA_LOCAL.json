@@ -25,5 +25,7 @@
     "publish",
     "merge"
   ],
-  "instruction": "Campos resolvidos somente pelo pacote aprovado, não pelo agente ao receber."
+  "instruction": "Campos resolvidos somente pelo pacote aprovado, não pelo agente ao receber.",
+  "round_id": null,
+  "contract_version": "SER-PARALLEL-TASK-3"
 }
