@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any, Mapping
@@ -10,8 +11,9 @@ from typing import Any, Mapping
 from .bundle import build_share, write_manifest
 from .pilot_verify import verify as verify_pilot
 from .prepare_pilot import prepare
-from .process import run_argv
+from .process import ROOT, run_argv
 from .registry import resolve_command
+from .host_qualification import qualify as qualify_host
 from .round_identity import assert_release_spec_current, assert_round_start_current, build_release_spec, capture_round_start, release_spec_digest
 from .verifier import verify_campaign_run, verify_raw_share_binding
 
@@ -22,6 +24,8 @@ def _run_registry_gate(output_dir,command_id,name,expected_exit=0):
  argv,timeout=resolve_command(command_id); gate_dir=output_dir/"release_gates"; row=run_argv(argv,gate_dir,name,timeout=timeout); return row,gate_dir/f"{name}.stdout.txt"
 def _run_argv_gate(output_dir,argv,name,timeout,expected_exit):
  gate_dir=output_dir/"release_gates"; row=run_argv(argv,gate_dir,name,timeout=timeout); return row,gate_dir/f"{name}.stdout.txt"
+def _run_sandbox_registry_gate(output_dir,command_id,name,probe_target):
+ argv,timeout=resolve_command(command_id); gate_dir=output_dir/"release_gates"; row=run_argv(argv,gate_dir,name,timeout=timeout,sandbox=True,sandbox_probe_target=probe_target); return row,gate_dir/f"{name}.stdout.txt"
 def _sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
 def _finish(output_dir,result,*,round_start=None,release_spec=None):
  mechanism_path=output_dir/"MECHANISM_RESULT.json"; mechanism_path.write_bytes(_json_bytes(result)); raw_manifest_path=write_manifest(output_dir)
@@ -66,9 +70,22 @@ def qualify(output_dir:Path):
  try: host=json.loads(host_stdout.read_text(encoding="utf-8"))
  except Exception as exc: return _fail(output_dir,"host_parse",checks,round_start=round_start,extra={"issues":[f"HOST_PARSE:{type(exc).__name__}:{exc}"]})
  (output_dir/"host.json").write_bytes(_json_bytes(host))
+ gate_dir=output_dir/"release_gates"; gate_dir.mkdir(parents=True,exist_ok=True); sandbox_target=gate_dir/"sandbox_probe.denied.txt"; sandbox_target.write_bytes(b"UNCHANGED\n"); sandbox_target_before=_sha(sandbox_target)
+ sentinel_before=os.environ.get("SER_B0_SECRET_SENTINEL"); os.environ["SER_B0_SECRET_SENTINEL"]="MUST_NOT_REACH_CHILD"
+ try: sandbox_row,sandbox_stdout=_run_sandbox_registry_gate(output_dir,"b0:sandbox:probe","sandbox_probe",sandbox_target)
+ finally:
+  if sentinel_before is None: os.environ.pop("SER_B0_SECRET_SENTINEL",None)
+  else: os.environ["SER_B0_SECRET_SENTINEL"]=sentinel_before
+ checks.append({"name":"sandbox_probe","exit_code":sandbox_row.get("exit_code"),"valid_process":_gate_ok(sandbox_row,0)})
+ if not _gate_ok(sandbox_row,0): return _fail(output_dir,"sandbox_probe",checks,round_start=round_start)
+ try: sandbox_probe=json.loads(sandbox_stdout.read_text(encoding="utf-8"))
+ except Exception as exc: return _fail(output_dir,"sandbox_probe_parse",checks,round_start=round_start,extra={"issues":[f"SANDBOX_PROBE_PARSE:{type(exc).__name__}:{exc}"]})
+ if sandbox_probe.get("status")!="PASS" or _sha(sandbox_target)!=sandbox_target_before: return _fail(output_dir,"sandbox_probe_status",checks,round_start=round_start,extra={"issues":["SANDBOX_NEGATIVE_PROBE_FAILED"]})
+ (output_dir/"sandbox_probe.json").write_bytes(_json_bytes(sandbox_probe))
  release_spec=build_release_spec(round_start,coverage,host); release_spec_path=output_dir/"RELEASE_SPEC.json"; release_spec_path.write_bytes(_json_bytes(release_spec))
  current_issues=assert_release_spec_current(release_spec)
  if current_issues: return _fail(output_dir,"release_spec_initial_binding",checks,round_start=round_start,release_spec=release_spec,extra={"issues":current_issues})
+ pilot_summaries={}
  for scenario in ("selective","global"):
   current_issues=assert_release_spec_current(release_spec)
   if current_issues: return _fail(output_dir,f"release_spec_before_{scenario}",checks,round_start=round_start,release_spec=release_spec,extra={"issues":current_issues})
@@ -88,10 +105,12 @@ def qualify(output_dir:Path):
   if summary.get("issues") not in (None,[]): return _fail(output_dir,f"pilot_{scenario}_mechanism_issues",checks,round_start=round_start,release_spec=release_spec,extra={"issues":summary.get("issues")})
   pilot_input=dict(summary); pilot_input["verification"]=independent; pilot=verify_pilot(pilot_input,scenario); (output_dir/f"pilot_{scenario}_verification.json").write_bytes(_json_bytes(pilot)); checks.append({"name":f"pilot_{scenario}_verifier","exit_code":0 if pilot.get("valid") else 1})
   if independent.get("valid") is not True or pilot.get("valid") is not True: return _fail(output_dir,f"pilot_{scenario}_verifier",checks,round_start=round_start,release_spec=release_spec,extra={"issues":[*(independent.get("issues") or []),*(pilot.get("issues") or [])]})
+  pilot_summaries[scenario]=summary
  current_issues=assert_release_spec_current(release_spec)
  if current_issues: return _fail(output_dir,"release_spec_final_binding",checks,round_start=round_start,release_spec=release_spec,extra={"issues":current_issues})
- sandbox_pending=host.get("sandbox_enforcement")=="NOT_PROVEN_BY_HOST_PROBE"; fs_pending=host.get("os")=="Windows" and (host.get("filesystem") or {}).get("type")!="NTFS"; release_status="PENDING_HOST_QUALIFICATION" if sandbox_pending or fs_pending else "LOCAL_QUALIFIED"
- return _finish(output_dir,{"status":"PASS","release_status":release_status,"first_failure":None,"checks":checks,"round_id":release_spec["round_id"],"release_spec_digest":release_spec_digest(release_spec),"host":host,"release_scope":"MECHANISM_QUALIFICATION_ONLY_NO_SKILL_PROMOTION"},round_start=round_start,release_spec=release_spec)
+ host_qualification=qualify_host(ROOT,host,sandbox_probe,pilot_summaries["selective"],pilot_summaries["global"]); (output_dir/"HOST_QUALIFICATION.json").write_bytes(_json_bytes(host_qualification)); checks.append({"name":"host_qualification","exit_code":0 if host_qualification.get("status")=="PASS" else 1})
+ release_status="LOCAL_QUALIFIED" if host_qualification.get("status")=="PASS" else "PENDING_HOST_QUALIFICATION"
+ return _finish(output_dir,{"status":"PASS","release_status":release_status,"first_failure":None,"checks":checks,"round_id":release_spec["round_id"],"release_spec_digest":release_spec_digest(release_spec),"host":host,"host_qualification":host_qualification,"release_scope":"MECHANISM_QUALIFICATION_ONLY_NO_SKILL_PROMOTION"},round_start=round_start,release_spec=release_spec)
 def main():
  p=argparse.ArgumentParser(); p.add_argument("--output-dir",required=True,type=Path); a=p.parse_args()
  try: result=qualify(a.output_dir)
