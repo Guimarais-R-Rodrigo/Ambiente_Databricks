@@ -20,6 +20,10 @@ TASK_STATES = {
     "PLANNED", "READY", "RUNNING", "PASS", "FAIL", "BLOCKED_DEPENDENCY",
     "BLOCKED_GLOBAL_STOP", "BLOCKED_RESOURCE", "BLOCKED_ENVIRONMENT", "NOT_APPLICABLE",
 }
+RESULT_STATES = {
+    "PASS", "FAIL", "BLOCKED_DEPENDENCY", "BLOCKED_GLOBAL_STOP",
+    "BLOCKED_RESOURCE", "BLOCKED_ENVIRONMENT", "NOT_APPLICABLE",
+}
 EFFECT_STATES = {"NONE", "CREATED", "MODIFIED", "PARTIAL", "UNKNOWN", "CLEANUP_REQUIRED"}
 ROLES = {"coordinator", "executor", "domain_auditor", "evidence_auditor", "integrator"}
 RESOURCE_CLASSES = {"light", "cpu", "spark", "tracking", "external_effect", "audit"}
@@ -31,7 +35,13 @@ _ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{2,127}$")
 
 
 def _canonical_bytes(value: Any) -> bytes:
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+    return json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
 
 
 def digest_json(value: Any) -> str:
@@ -102,8 +112,6 @@ def validate_task(task: Any) -> list[str]:
         issues.append("TASK_READ_WRITE_ROOT_OVERLAP")
     if set(task.get("protected_paths") or []) & set(task.get("write_roots") or []):
         issues.append("TASK_PROTECTED_WRITE_OVERLAP")
-    # B0 launcher is intentionally read-only over the repository. Mechanical
-    # integration is a separate, serial gate and never happens inside workers.
     if task.get("write_roots"):
         issues.append("TASK_REPO_WRITES_NOT_SUPPORTED_BY_B0")
     if task.get("expected_effect") != "NONE":
@@ -136,6 +144,7 @@ def validate_campaign(payload: Any) -> list[str]:
     for key in ("max_parallel", "max_auditors"):
         if type(payload.get(key)) is not int or payload[key] < 1 or payload[key] > 8:
             issues.append(f"CAMPAIGN_{key.upper()}_INVALID")
+
     tasks = payload.get("tasks")
     if not isinstance(tasks, list) or not tasks:
         issues.append("CAMPAIGN_TASKS_INVALID")
@@ -146,6 +155,8 @@ def validate_campaign(payload: Any) -> list[str]:
             issues.append(f"CAMPAIGN_TASK[{idx}]:{issue}")
         if isinstance(task, Mapping) and isinstance(task.get("task_id"), str):
             task_ids.append(task["task_id"])
+            if task.get("candidate_sha") != payload.get("candidate_sha"):
+                issues.append(f"CAMPAIGN_TASK_CANDIDATE_MISMATCH:{task['task_id']}")
     if len(task_ids) != len(set(task_ids)):
         issues.append("CAMPAIGN_TASK_ID_DUPLICATE")
     known = set(task_ids)
@@ -192,7 +203,7 @@ def validate_result(result: Any) -> list[str]:
         issues.append("RESULT_TASK_ID_INVALID")
     if not isinstance(result.get("candidate_sha"), str) or not _SHA_RE.fullmatch(result["candidate_sha"]):
         issues.append("RESULT_CANDIDATE_SHA_INVALID")
-    if result.get("status") not in TASK_STATES:
+    if result.get("status") not in RESULT_STATES:
         issues.append("RESULT_STATUS_INVALID")
     if result.get("effect_state") not in EFFECT_STATES:
         issues.append("RESULT_EFFECT_INVALID")
@@ -206,4 +217,12 @@ def validate_result(result: Any) -> list[str]:
         value = result.get(key)
         if not isinstance(value, str) or _HEX64_RE.fullmatch(value) is None:
             issues.append(f"RESULT_{key.upper()}_INVALID")
+    ff = result.get("first_failure")
+    if ff is not None and (not isinstance(ff, str) or not _ID_RE.fullmatch(ff)):
+        issues.append("RESULT_FIRST_FAILURE_INVALID")
+    for key in ("started_at_utc", "ended_at_utc"):
+        if not isinstance(result.get(key), str) or not result[key]:
+            issues.append(f"RESULT_{key.upper()}_INVALID")
+    if "blocked_by" in result and not _strings(result.get("blocked_by")) and result.get("blocked_by") != []:
+        issues.append("RESULT_BLOCKED_BY_INVALID")
     return issues
