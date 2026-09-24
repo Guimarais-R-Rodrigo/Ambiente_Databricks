@@ -7,7 +7,7 @@ A auditoria examinou a candidata `f803b50f898ac93eb0e5541ba428a3656dc4f732` e cl
 ```text
 AUDIT_BASE = f803b50f898ac93eb0e5541ba428a3656dc4f732
 AUDIT_CORRECTIVE_V3 = IMPLEMENTED_REPO_SIDE
-B0_TEST_METHODS_STATIC = 74
+B0_TEST_METHODS_STATIC = 76
 
 AUTHORING_PREFLIGHT_ON_FINAL_SHA = NOT_RUN
 B0_FULL_METATESTS_ON_FINAL_SHA = NOT_RUN
@@ -76,5 +76,5 @@ FREEZE = NOT_CREATED
 B0_RELEASE = NOT_RUN
 ```
 
-A coleta/normalização corrigida funcionou: os 74 metatestes completaram sem falha. O bloqueio seguinte ocorreu apenas na serialização do JSON do coverage para stdout em console Windows `cp1252`, ao encontrar o caractere `→`. O inventário não foi reclassificado; a saída CLI foi corrigida para JSON ASCII-safe, semanticamente equivalente após parsing. A rodada permanece FAIL histórica e exige reexecução integral no SHA novo.
+A coleta/normalização corrigida funcionou: os 76 metatestes completaram sem falha. O bloqueio seguinte ocorreu apenas na serialização do JSON do coverage para stdout em console Windows `cp1252`, ao encontrar o caractere `→`. O inventário não foi reclassificado; a saída CLI foi corrigida para JSON ASCII-safe, semanticamente equivalente após parsing. A rodada permanece FAIL histórica e exige reexecução integral no SHA novo.
 
