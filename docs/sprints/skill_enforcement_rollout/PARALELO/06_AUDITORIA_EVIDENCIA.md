@@ -95,3 +95,11 @@ A implementação V3 materializa parte deste contrato: `ROUND_START` fixa SHA/tr
 O resultado interno do mecanismo não é certificado final. Se o envelope SHARE falhar, o release verdict é FAIL mesmo quando o mecanismo havia produzido PASS. Da mesma forma, hash não autentica usuário e a prova de sandbox/host continua separada.
 
 Para B0, a coordenação host-wide é conservadora: uma campanha por host. Isso evita afirmar quotas globais inexistentes. A expansão para múltiplos launchers ou dispatch contínuo não é requisito para qualificar o mecanismo atual e permanece melhoria posterior condicionada a medição.
+
+## 6.12 SHARE sanitization V2
+
+A auditoria da primeira rodada `LOCAL_QUALIFIED` encontrou um gap entre integridade e sanitização: o SHARE tinha manifesto/binding íntegros e secret scan V1 verde, mas ainda continha home path do host. Integridade de bytes não satisfaz por si só o contrato de derivado compartilhável.
+
+A política V2 exige que o produtor substitua variantes textuais do repo root e do home por `<REPO>` e `<HOME>` antes de selar o SHARE. O scan final passa a tratar home paths residuais Windows/POSIX como finding bloqueante, além dos padrões de segredo. O verifier recalcula a política sobre nomes e conteúdos finais; portanto, alterar somente metadata/binding não pode transformar residual em PASS.
+
+RAW permanece imutável e privado. Sanitização ocorre apenas na construção do SHARE, que mantém identidade e manifesto próprios. A presença de path pessoal em RAW não é finding por si só quando necessária à evidência local; a mesma informação no SHARE é incompatível com a política de compartilhamento.
