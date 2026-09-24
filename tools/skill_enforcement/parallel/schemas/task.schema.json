@@ -1,27 +1,117 @@
 {
-  "$schema":"https://json-schema.org/draft/2020-12/schema",
-  "$id":"SER-PARALLEL-TASK-1",
-  "type":"object",
-  "additionalProperties":false,
-  "required":["task_schema","task_id","role","stage","skill","candidate_sha","command_ids","depends_on","read_roots","write_roots","protected_paths","resource_class","exclusivity_key","required","expected_effect"],
-  "properties":{
-    "task_schema":{"const":"SER-PARALLEL-TASK-1"},
-    "task_id":{"type":"string","pattern":"^[A-Za-z0-9][A-Za-z0-9_.:-]{2,127}$"},
-    "role":{"enum":["coordinator","executor","domain_auditor","evidence_auditor","integrator"]},
-    "stage":{"type":"string","minLength":1},
-    "skill":{"type":"string","minLength":1},
-    "candidate_sha":{"type":"string","pattern":"^[0-9a-f]{40}$"},
-    "command_ids":{"type":"array","items":{"type":"string","minLength":1},"uniqueItems":true},
-    "depends_on":{"type":"array","items":{"type":"string","minLength":1},"uniqueItems":true},
-    "read_roots":{"type":"array","items":{"type":"string","minLength":1},"uniqueItems":true},
-    "write_roots":{"type":"array","items":{"type":"string","minLength":1},"uniqueItems":true},
-    "protected_paths":{"type":"array","items":{"type":"string","minLength":1},"uniqueItems":true},
-    "resource_class":{"enum":["light","cpu","spark","tracking","external_effect","audit"]},
-    "exclusivity_key":{"type":"string","minLength":1},
-    "required":{"type":"boolean"},
-    "expected_effect":{"enum":["NONE","CREATED","MODIFIED","PARTIAL","UNKNOWN","CLEANUP_REQUIRED"]},
-    "description":{"type":"string"},
-    "external_gate":{"type":"string"},
-    "not_applicable_reason":{"type":"string"}
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "SER-PARALLEL-TASK-2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task_schema",
+    "task_id",
+    "role",
+    "stage",
+    "skill",
+    "candidate_sha",
+    "command_ids",
+    "depends_on",
+    "read_roots",
+    "write_roots",
+    "protected_paths",
+    "resource_class",
+    "exclusivity_key",
+    "required",
+    "expected_effect",
+    "failure_scope"
+  ],
+  "properties": {
+    "task_schema": {
+      "const": "SER-PARALLEL-TASK-2"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "role": {
+      "enum": [
+        "coordinator",
+        "executor",
+        "domain_auditor",
+        "evidence_auditor",
+        "integrator"
+      ]
+    },
+    "stage": {
+      "type": "string"
+    },
+    "skill": {
+      "type": "string"
+    },
+    "candidate_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "command_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "depends_on": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "read_roots": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "write_roots": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "protected_paths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "resource_class": {
+      "enum": [
+        "light",
+        "cpu",
+        "spark",
+        "tracking",
+        "external_effect",
+        "audit"
+      ]
+    },
+    "exclusivity_key": {
+      "type": "string"
+    },
+    "required": {
+      "type": "boolean"
+    },
+    "expected_effect": {
+      "const": "NONE"
+    },
+    "failure_scope": {
+      "enum": [
+        "LOCAL_CHAIN",
+        "GLOBAL_CAMPAIGN"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "external_gate": {
+      "type": "string"
+    },
+    "not_applicable_reason": {
+      "type": "string"
+    }
   }
 }

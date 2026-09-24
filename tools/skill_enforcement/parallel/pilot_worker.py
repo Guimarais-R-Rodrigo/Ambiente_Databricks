@@ -1,14 +1,12 @@
 from __future__ import annotations
-import argparse
-import json
+import json, sys
 
-def main() -> int:
-    p = argparse.ArgumentParser()
-    p.add_argument("mode", choices=["pass", "fail"])
-    a = p.parse_args()
-    payload = {"mode": a.mode, "synthetic": True, "writes_product": False}
-    print(json.dumps(payload, sort_keys=True))
-    return 0 if a.mode == "pass" else 7
+def main(argv=None) -> int:
+    args=list(sys.argv[1:] if argv is None else argv)
+    if args not in (["pass"],["fail"],["global_fail"]):
+        print(json.dumps({"status":"BLOCKED","reason":"UNKNOWN_CASE"})); return 2
+    case=args[0]
+    if case=="pass": print(json.dumps({"status":"PASS","case":case})); return 0
+    print(json.dumps({"status":"FAIL","case":case,"deliberate":True})); return 7
 
-if __name__ == "__main__":
-    raise SystemExit(main())
+if __name__=="__main__": raise SystemExit(main())

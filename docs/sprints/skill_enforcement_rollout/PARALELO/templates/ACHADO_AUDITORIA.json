@@ -1,0 +1,19 @@
+{
+  "document_kind": "AUDIT_FINDING_TEMPLATE_NOT_A_RESULT",
+  "finding_id": null,
+  "task_id": null,
+  "auditor_role": null,
+  "candidate_sha": null,
+  "severity": null,
+  "category": null,
+  "path_symbol": null,
+  "requirement_case_ids": [],
+  "expected": null,
+  "observed": null,
+  "evidence_refs": [],
+  "reproduction_command_id": null,
+  "impact_scope": null,
+  "hypothesis_not_yet_reproduced": null,
+  "author_response": null,
+  "resolution_status": "NOT_ASSESSED"
+}

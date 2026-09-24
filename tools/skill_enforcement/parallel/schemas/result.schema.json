@@ -1,24 +1,98 @@
 {
-  "$schema":"https://json-schema.org/draft/2020-12/schema",
-  "$id":"SER-PARALLEL-RESULT-1",
-  "type":"object",
-  "additionalProperties":false,
-  "required":["result_schema","task_id","candidate_sha","status","effect_state","command_records","first_failure","started_at_utc","ended_at_utc","protected_fingerprint_before","protected_fingerprint_after","issues"],
-  "properties":{
-    "result_schema":{"const":"SER-PARALLEL-RESULT-1"},
-    "task_id":{"type":"string"},
-    "candidate_sha":{"type":"string","pattern":"^[0-9a-f]{40}$"},
-    "status":{"enum":["PLANNED","READY","RUNNING","PASS","FAIL","BLOCKED_DEPENDENCY","BLOCKED_RESOURCE","BLOCKED_ENVIRONMENT","NOT_APPLICABLE"]},
-    "effect_state":{"enum":["NONE","CREATED","MODIFIED","PARTIAL","UNKNOWN","CLEANUP_REQUIRED"]},
-    "command_records":{"type":"array","items":{"type":"object"}},
-    "first_failure":{"type":["string","null"]},
-    "started_at_utc":{"type":"string"},
-    "ended_at_utc":{"type":"string"},
-    "protected_fingerprint_before":{"type":"string","pattern":"^[0-9a-f]{64}$"},
-    "protected_fingerprint_after":{"type":"string","pattern":"^[0-9a-f]{64}$"},
-    "issues":{"type":"array","items":{"type":"string"}},
-    "diagnosis":{"type":"string"},
-    "evidence_files":{"type":"array","items":{"type":"string"}},
-    "blocked_by":{"type":"array","items":{"type":"string"}}
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "SER-PARALLEL-RESULT-2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "result_schema",
+    "task_id",
+    "candidate_sha",
+    "status",
+    "effect_state",
+    "command_records",
+    "first_failure",
+    "wave_index",
+    "started_at_utc",
+    "ended_at_utc",
+    "protected_fingerprint_before",
+    "protected_fingerprint_after",
+    "issues"
+  ],
+  "properties": {
+    "result_schema": {
+      "const": "SER-PARALLEL-RESULT-2"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "candidate_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "status": {
+      "enum": [
+        "PLANNED",
+        "READY",
+        "RUNNING",
+        "PASS",
+        "FAIL",
+        "BLOCKED_DEPENDENCY",
+        "BLOCKED_GLOBAL_STOP",
+        "BLOCKED_RESOURCE",
+        "BLOCKED_ENVIRONMENT",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "effect_state": {
+      "const": "NONE"
+    },
+    "command_records": {
+      "type": "array"
+    },
+    "first_failure": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "wave_index": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "started_at_utc": {
+      "type": "string"
+    },
+    "ended_at_utc": {
+      "type": "string"
+    },
+    "protected_fingerprint_before": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "protected_fingerprint_after": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "diagnosis": {
+      "type": "string"
+    },
+    "evidence_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "blocked_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
   }
 }

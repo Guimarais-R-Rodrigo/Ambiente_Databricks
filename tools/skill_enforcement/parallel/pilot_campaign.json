@@ -1,84 +1,156 @@
 {
-  "schema_version": "SER-PARALLEL-CAMPAIGN-1",
-  "campaign_id": "SER-B0-PILOT-1",
-  "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b",
-  "candidate_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b",
+  "schema_version": "SER-PARALLEL-CAMPAIGN-2",
+  "baseline_sha": "0000000000000000000000000000000000000000",
+  "candidate_sha": "0000000000000000000000000000000000000000",
   "state": "PLANNED",
   "max_parallel": 2,
   "max_auditors": 1,
-  "command_registry_digest": "REPLACE_AT_AUTHORING",
-  "coverage_digest": "REPLACE_AT_AUTHORING",
-  "policy_before_digest": "REPLACE_AT_AUTHORING",
-  "human_gates": ["B0_RELEASE"],
+  "resource_limits": {
+    "light": 2,
+    "audit": 1,
+    "external_effect": 1
+  },
+  "command_registry_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "coverage_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "policy_before_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "human_gates": [
+    "B0_RELEASE"
+  ],
   "external_gates": [],
+  "repo_mode": "READ_ONLY",
+  "campaign_id": "SER-B0-PILOT-SELECTIVE",
   "tasks": [
     {
-      "task_schema": "SER-PARALLEL-TASK-1",
+      "task_schema": "SER-PARALLEL-TASK-2",
       "task_id": "pilot.alpha.pass",
       "role": "executor",
       "stage": "B0.6",
-      "skill": "synthetic-alpha",
-      "candidate_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b",
-      "command_ids": ["b0:pilot:pass"],
+      "skill": "synthetic",
+      "candidate_sha": "0000000000000000000000000000000000000000",
+      "command_ids": [
+        "b0:pilot:pass"
+      ],
       "depends_on": [],
-      "read_roots": ["tools/skill_enforcement/parallel"],
+      "read_roots": [
+        "tools/skill_enforcement/parallel"
+      ],
       "write_roots": [],
-      "protected_paths": ["ambiente_fonte", "tools/skill_enforcement/parallel"],
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/parallel"
+      ],
       "resource_class": "light",
-      "exclusivity_key": "pilot-alpha",
+      "exclusivity_key": "alpha",
       "required": true,
-      "expected_effect": "NONE"
+      "expected_effect": "NONE",
+      "failure_scope": "LOCAL_CHAIN"
     },
     {
-      "task_schema": "SER-PARALLEL-TASK-1",
+      "task_schema": "SER-PARALLEL-TASK-2",
       "task_id": "pilot.beta.fail",
       "role": "executor",
       "stage": "B0.6",
-      "skill": "synthetic-beta",
-      "candidate_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b",
-      "command_ids": ["b0:pilot:fail"],
+      "skill": "synthetic",
+      "candidate_sha": "0000000000000000000000000000000000000000",
+      "command_ids": [
+        "b0:pilot:fail"
+      ],
       "depends_on": [],
-      "read_roots": ["tools/skill_enforcement/parallel"],
+      "read_roots": [
+        "tools/skill_enforcement/parallel"
+      ],
       "write_roots": [],
-      "protected_paths": ["ambiente_fonte", "tools/skill_enforcement/parallel"],
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/parallel"
+      ],
       "resource_class": "light",
-      "exclusivity_key": "pilot-beta",
+      "exclusivity_key": "beta",
       "required": true,
-      "expected_effect": "NONE"
+      "expected_effect": "NONE",
+      "failure_scope": "LOCAL_CHAIN"
     },
     {
-      "task_schema": "SER-PARALLEL-TASK-1",
+      "task_schema": "SER-PARALLEL-TASK-2",
       "task_id": "pilot.beta.dependent",
       "role": "executor",
       "stage": "B0.6",
-      "skill": "synthetic-beta-dependent",
-      "candidate_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b",
-      "command_ids": ["b0:pilot:pass"],
-      "depends_on": ["pilot.beta.fail"],
-      "read_roots": ["tools/skill_enforcement/parallel"],
+      "skill": "synthetic",
+      "candidate_sha": "0000000000000000000000000000000000000000",
+      "command_ids": [
+        "b0:pilot:pass"
+      ],
+      "depends_on": [
+        "pilot.beta.fail"
+      ],
+      "read_roots": [
+        "tools/skill_enforcement/parallel"
+      ],
       "write_roots": [],
-      "protected_paths": ["ambiente_fonte", "tools/skill_enforcement/parallel"],
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/parallel"
+      ],
       "resource_class": "light",
-      "exclusivity_key": "pilot-beta",
+      "exclusivity_key": "beta2",
       "required": true,
-      "expected_effect": "NONE"
+      "expected_effect": "NONE",
+      "failure_scope": "LOCAL_CHAIN"
     },
     {
-      "task_schema": "SER-PARALLEL-TASK-1",
+      "task_schema": "SER-PARALLEL-TASK-2",
+      "task_id": "pilot.gamma.independent",
+      "role": "executor",
+      "stage": "B0.6",
+      "skill": "synthetic",
+      "candidate_sha": "0000000000000000000000000000000000000000",
+      "command_ids": [
+        "b0:pilot:pass"
+      ],
+      "depends_on": [
+        "pilot.alpha.pass"
+      ],
+      "read_roots": [
+        "tools/skill_enforcement/parallel"
+      ],
+      "write_roots": [],
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/parallel"
+      ],
+      "resource_class": "light",
+      "exclusivity_key": "gamma",
+      "required": true,
+      "expected_effect": "NONE",
+      "failure_scope": "LOCAL_CHAIN"
+    },
+    {
+      "task_schema": "SER-PARALLEL-TASK-2",
       "task_id": "pilot.publication.blocked",
       "role": "integrator",
       "stage": "B0.6",
-      "skill": "synthetic-publication",
-      "candidate_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b",
-      "command_ids": ["b0:pilot:pass"],
-      "depends_on": ["pilot.alpha.pass", "pilot.beta.dependent"],
-      "read_roots": ["tools/skill_enforcement/parallel"],
+      "skill": "synthetic",
+      "candidate_sha": "0000000000000000000000000000000000000000",
+      "command_ids": [
+        "b0:pilot:pass"
+      ],
+      "depends_on": [
+        "pilot.beta.dependent",
+        "pilot.gamma.independent"
+      ],
+      "read_roots": [
+        "tools/skill_enforcement/parallel"
+      ],
       "write_roots": [],
-      "protected_paths": ["ambiente_fonte", "tools/skill_enforcement/parallel"],
+      "protected_paths": [
+        "ambiente_fonte",
+        "tools/skill_enforcement/parallel"
+      ],
       "resource_class": "external_effect",
       "exclusivity_key": "publication",
       "required": true,
-      "expected_effect": "NONE"
+      "expected_effect": "NONE",
+      "failure_scope": "LOCAL_CHAIN"
     }
   ]
 }

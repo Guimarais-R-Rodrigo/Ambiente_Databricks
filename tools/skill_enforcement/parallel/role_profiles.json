@@ -1,11 +1,31 @@
 {
-  "schema_version": "SER-PARALLEL-ROLES-1",
+  "schema_version": "SER-PARALLEL-ROLES-2",
   "roles": {
-    "coordinator": {"may_edit_candidate": false, "may_change_criteria": false, "may_human_authorize": false, "purpose": "Despachar tarefas já autorizadas e consolidar estados."},
-    "executor": {"may_edit_candidate": false, "may_change_criteria": false, "may_human_authorize": false, "purpose": "Executar comandos allowlisted e preservar evidência."},
-    "domain_auditor": {"may_edit_candidate": false, "may_change_criteria": false, "may_human_authorize": false, "purpose": "Auditar significado analítico contra oráculos independentes."},
-    "evidence_auditor": {"may_edit_candidate": false, "may_change_criteria": false, "may_human_authorize": false, "purpose": "Auditar binding, integridade, efeitos e autoridade."},
-    "integrator": {"may_edit_candidate": false, "may_change_criteria": false, "may_human_authorize": false, "purpose": "Executar apenas preparação mecânica previamente aprovada."}
+    "coordinator": {
+      "repo_write": false,
+      "change_criteria": false,
+      "human_authorize": false
+    },
+    "executor": {
+      "repo_write": false,
+      "change_criteria": false,
+      "human_authorize": false
+    },
+    "domain_auditor": {
+      "repo_write": false,
+      "change_criteria": false,
+      "human_authorize": false
+    },
+    "evidence_auditor": {
+      "repo_write": false,
+      "change_criteria": false,
+      "human_authorize": false
+    },
+    "integrator": {
+      "repo_write": "MECHANICAL_ONLY_OUTSIDE_PARALLEL_LAUNCHER",
+      "change_criteria": false,
+      "human_authorize": false
+    }
   },
-  "warning": "Perfis lógicos não provam sandbox do SO. B0.5 precisa qualificar enforcement efetivo no host."
+  "warning": "Perfis lógicos não provam sandbox do SO. B0.5 exige teste efetivo de permissões."
 }

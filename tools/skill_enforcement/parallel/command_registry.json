@@ -1,10 +1,82 @@
 {
-  "schema_version": "SER-PARALLEL-COMMANDS-1",
+  "schema_version": "SER-PARALLEL-COMMANDS-2",
   "commands": [
-    {"command_id":"b0:pilot:pass","argv":["{PYTHON}","-B","-m","tools.skill_enforcement.parallel.pilot_worker","pass"],"effects":"none","purpose":"Cenário sintético verde do piloto B0"},
-    {"command_id":"b0:pilot:fail","argv":["{PYTHON}","-B","-m","tools.skill_enforcement.parallel.pilot_worker","fail"],"effects":"none","purpose":"Falha sintética deliberada para testar propagação seletiva"},
-    {"command_id":"b0:host:probe","argv":["{PYTHON}","-B","-m","tools.skill_enforcement.parallel.host_probe"],"effects":"none","purpose":"Qualificação read-only do host local"},
-    {"command_id":"b0:meta:tests","argv":["{PYTHON}","-B","-m","unittest","tools.tests.test_ser_parallel_b0","-v"],"effects":"none","purpose":"Metatestes do mecanismo paralelo B0"},
-    {"command_id":"b0:coverage:inventory","argv":["{PYTHON}","-B","-m","tools.skill_enforcement.parallel.coverage"],"effects":"none","purpose":"Inventário de cobertura herdada"}
+    {
+      "command_id": "b0:pilot:pass",
+      "argv": [
+        "{PYTHON}",
+        "-B",
+        "-m",
+        "tools.skill_enforcement.parallel.pilot_worker",
+        "pass"
+      ],
+      "effects": "none",
+      "purpose": "Cenário sintético verde",
+      "timeout_seconds": 30
+    },
+    {
+      "command_id": "b0:pilot:fail",
+      "argv": [
+        "{PYTHON}",
+        "-B",
+        "-m",
+        "tools.skill_enforcement.parallel.pilot_worker",
+        "fail"
+      ],
+      "effects": "none",
+      "purpose": "Falha deliberada de cadeia local",
+      "timeout_seconds": 30
+    },
+    {
+      "command_id": "b0:pilot:global-fail",
+      "argv": [
+        "{PYTHON}",
+        "-B",
+        "-m",
+        "tools.skill_enforcement.parallel.pilot_worker",
+        "global_fail"
+      ],
+      "effects": "none",
+      "purpose": "Falha deliberada de stop global",
+      "timeout_seconds": 30
+    },
+    {
+      "command_id": "b0:host:probe",
+      "argv": [
+        "{PYTHON}",
+        "-B",
+        "-m",
+        "tools.skill_enforcement.parallel.host_probe"
+      ],
+      "effects": "none",
+      "purpose": "Probe read-only do host",
+      "timeout_seconds": 30
+    },
+    {
+      "command_id": "b0:meta:tests",
+      "argv": [
+        "{PYTHON}",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_ser_parallel_b0",
+        "-v"
+      ],
+      "effects": "none",
+      "purpose": "Metatestes B0",
+      "timeout_seconds": 300
+    },
+    {
+      "command_id": "b0:coverage:inventory",
+      "argv": [
+        "{PYTHON}",
+        "-B",
+        "-m",
+        "tools.skill_enforcement.parallel.coverage"
+      ],
+      "effects": "none",
+      "purpose": "Inventário de cobertura herdada",
+      "timeout_seconds": 120
+    }
   ]
 }

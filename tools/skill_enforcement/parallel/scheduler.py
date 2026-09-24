@@ -11,6 +11,7 @@ class Decision:
     blocked_dependency: tuple[str, ...]
     pending: tuple[str, ...]
 
+
 def detect_cycle(tasks: list[Mapping[str, Any]]) -> bool:
     deps = {t["task_id"]: set(t.get("depends_on") or []) for t in tasks}
     indegree = {k: len(v) for k, v in deps.items()}
@@ -19,16 +20,18 @@ def detect_cycle(tasks: list[Mapping[str, Any]]) -> bool:
         for dep in requirements:
             if dep in followers:
                 followers[dep].add(task)
-    queue = [k for k, v in indegree.items() if v == 0]
+    queue = sorted(k for k, value in indegree.items() if value == 0)
     seen = 0
     while queue:
-        cur = queue.pop()
+        current = queue.pop(0)
         seen += 1
-        for nxt in followers[cur]:
+        for nxt in sorted(followers[current]):
             indegree[nxt] -= 1
             if indegree[nxt] == 0:
                 queue.append(nxt)
+                queue.sort()
     return seen != len(tasks)
+
 
 def decide(
     tasks: list[Mapping[str, Any]],
@@ -47,14 +50,13 @@ def decide(
     by_id = {t["task_id"]: t for t in tasks}
     resource_usage: dict[str, int] = {}
     auditors = 0
-
     for task_id in sorted(by_id):
         if task_id in statuses:
             continue
         task = by_id[task_id]
         deps = task.get("depends_on") or []
         dep_states = [statuses.get(dep) for dep in deps]
-        if any(state in {"FAIL", "BLOCKED_DEPENDENCY", "BLOCKED_ENVIRONMENT"} for state in dep_states):
+        if any(state in {"FAIL", "BLOCKED_DEPENDENCY", "BLOCKED_GLOBAL_STOP", "BLOCKED_ENVIRONMENT"} for state in dep_states):
             blocked.append(task_id)
             continue
         if not all(state in {"PASS", "NOT_APPLICABLE"} for state in dep_states):

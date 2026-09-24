@@ -1,0 +1,137 @@
+{
+  "schema_version": "1.0",
+  "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b",
+  "sources": [
+    {
+      "source_id": "P0",
+      "kind": "approved_proposal",
+      "path": "SER_PLANO_PARALELO_PROPOSTA_2026-09-23.md",
+      "scope": "Proposta aprovada pelo usuário; terminologia, papéis, oito dossiês e limitações.",
+      "status": "READ_IN_FULL"
+    },
+    {
+      "source_id": "P1",
+      "kind": "retrospective_extraction",
+      "path": "SER01_medicoes_retrospectivas.json",
+      "scope": "Tempos de summaries sanitizados; não mede autoria/auditoria/espera humana.",
+      "status": "READ_IN_FULL"
+    },
+    {
+      "source_id": "R01",
+      "kind": "repository",
+      "path": "CLAUDE.md",
+      "scope": "Hierarquia, fonte/derivado, changelog e contexto canônico.",
+      "status": "READ_AT_BASE",
+      "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b"
+    },
+    {
+      "source_id": "R02",
+      "kind": "repository",
+      "path": ".claude/CLAUDE.md",
+      "scope": "Índice operacional e rota de leitura.",
+      "status": "READ_AT_BASE",
+      "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b"
+    },
+    {
+      "source_id": "R03",
+      "kind": "repository",
+      "path": ".claude/rules/multi-llm.md",
+      "scope": "Papéis, adaptação de contexto e auditoria multi-IA.",
+      "status": "READ_AT_BASE",
+      "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b"
+    },
+    {
+      "source_id": "R04",
+      "kind": "repository",
+      "path": ".claude/rules/docs-e-readmes.md",
+      "scope": "Documento dono, estados verificáveis, ADR aceito e linguagem.",
+      "status": "READ_AT_BASE",
+      "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b"
+    },
+    {
+      "source_id": "R05",
+      "kind": "repository",
+      "path": "docs/sprints/skill_enforcement_rollout/PLANO_MESTRE.md",
+      "scope": "Metas/sprints/gates/ordem histórica; trecho amplo lido, saída longa com truncamento.",
+      "status": "READ_RELEVANT_SECTIONS",
+      "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b"
+    },
+    {
+      "source_id": "R06",
+      "kind": "repository",
+      "path": "docs/sprints/skill_enforcement_rollout/SER00/MATRIZ_DEPENDENCIAS.md",
+      "scope": "Dependências reais e ordem de integração distinta de dependência universal.",
+      "status": "READ_AT_BASE",
+      "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b"
+    },
+    {
+      "source_id": "R07",
+      "kind": "repository",
+      "path": "docs/sprints/skill_enforcement_rollout/SER00/MATRIZ_HELPERS_PRIMITIVES.md",
+      "scope": "Public API versus declarado, lacunas SHAP/PIT/tracking/materialização.",
+      "status": "READ_AT_BASE",
+      "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b"
+    },
+    {
+      "source_id": "R08",
+      "kind": "repository",
+      "path": "tools/skill_enforcement/certify_local.py",
+      "scope": "Linhas 80–276; 21 gates do perfil SE08, process records e budgets.",
+      "status": "READ_RELEVANT_SECTIONS",
+      "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b"
+    },
+    {
+      "source_id": "R09",
+      "kind": "repository",
+      "path": "ambiente_fonte/.assistant/hub_snippets/ml/shap_explainer/__init__.py",
+      "scope": "Fachada exporta compute_shap/importance/plots; não comprova assinatura ou execução.",
+      "status": "READ_AT_BASE",
+      "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b"
+    },
+    {
+      "source_id": "R10",
+      "kind": "repository_via_approved_proposal",
+      "path": "tools/ci_local.py",
+      "scope": "Nove etapas não-SEF e sef cumulativo descritos na proposta e no histórico fornecido; reler integralmente em B0.",
+      "status": "SOURCE_DERIVED_REVALIDATE_BEFORE_EXECUTION",
+      "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b"
+    },
+    {
+      "source_id": "R11",
+      "kind": "repository_via_approved_proposal",
+      "path": "docs/decisions/ADR-0022-certificacao-prospectiva-ser.md",
+      "scope": "Preservação de SEF histórico, certificação prospectiva, último ato funcional e aceite.",
+      "status": "SOURCE_DERIVED_REVALIDATE_BEFORE_FORMALIZATION",
+      "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b"
+    },
+    {
+      "source_id": "R12",
+      "kind": "repository_via_approved_proposal",
+      "path": "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json",
+      "scope": "Vetor de capacidade confirmado no fechamento SER01 e proposta aprovada; reconfirmar no release preflight.",
+      "status": "SOURCE_DERIVED_REVALIDATE_BEFORE_EXECUTION",
+      "baseline_sha": "d2988e97e7b6c5fe1fd561852e947a155c2d731b"
+    },
+    {
+      "source_id": "H01",
+      "kind": "conversation_evidence",
+      "path": "report(3).md: SER01 A4-FREE R2",
+      "scope": "Erro de transporte com efeito servidor observado; preservar resultado de comando e efeito separadamente.",
+      "status": "RETRIEVED_RELEVANT_EXCERPTS"
+    },
+    {
+      "source_id": "H02",
+      "kind": "conversation_evidence",
+      "path": "A4_GENIE_FORMULARIO_PREENCHIDO.md",
+      "scope": "Transcrição sem indicador da UI; narrativa não equivale a chamada observada.",
+      "status": "RETRIEVED_RELEVANT_EXCERPTS"
+    },
+    {
+      "source_id": "W01",
+      "kind": "official_documentation",
+      "path": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
+      "scope": "Agentes customizados, limites, herança de permissões e overrides; configuração efetiva precisa de qualificação local.",
+      "status": "WEB_VERIFIED_2026_09_23"
+    }
+  ]
+}
