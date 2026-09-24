@@ -90,7 +90,7 @@ O pacote contém decisões e especificações, e a candidata B0 implementa o mec
 Após a auditoria independente da candidata `f803b50f...`, o B0 foi promovido internamente para contratos V3. Antes de qualquer freeze, a saída de autoria exige três gates baratos e determinísticos no mesmo checkout limpo:
 
 1. `python -B -m tools.skill_enforcement.parallel.preflight`;
-2. `python -B -m unittest tools.tests.test_ser_parallel_b0 -v` — atualmente 72 métodos definidos;
+2. `python -B -m unittest tools.tests.test_ser_parallel_b0 -v` — atualmente 74 métodos definidos;
 3. `python -B -m tools.skill_enforcement.parallel.coverage`.
 
 Nenhum PASS anterior atravessa SHA. O preflight parseia JSON/Python e confronta versões dos schemas/templates; coverage usa coleta unittest real e valida entrypoints `COMMAND_ONLY`; metatestes cobrem os mutantes levantados pela auditoria.
