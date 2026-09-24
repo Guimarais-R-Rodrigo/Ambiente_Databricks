@@ -73,21 +73,24 @@ def inventory() -> dict[str, Any]:
         paths=_command_test_paths(list(argv)); default=cfg["step_policy"].get(name,"UNCLASSIFIED")
         methods=[m for path in paths for m in test_methods(path)]
         classified=[_classify(m,"CURRENT_INVARIANT" if default=="MIXED_METHOD_CLASSIFICATION" else default,overrides) for m in methods]
-        se08.append({"step_id":name,"classification":default,"argv":list(argv),"test_paths":[p.relative_to(ROOT).as_posix() for p in paths],"test_methods":classified,"mapping_status":"MAPPED" if default!="UNCLASSIFIED" else "UNCLASSIFIED"})
+        mapping_status="UNCLASSIFIED" if default=="UNCLASSIFIED" else ("MAPPED" if methods else ("EMPTY_METHOD_MAP" if paths else "COMMAND_ONLY"))
+        se08.append({"step_id":name,"classification":default,"argv":list(argv),"test_paths":[p.relative_to(ROOT).as_posix() for p in paths],"test_methods":classified,"mapping_status":mapping_status})
     ci_rows=[]
     for name,description,argv in ci.ETAPAS:
         if name=="sef": continue
         paths=_command_test_paths(list(argv)); methods=[m for path in paths for m in test_methods(path)]
-        ci_rows.append({"step_id":"ci:"+name,"classification":"CURRENT_INVARIANT","description":description,"argv":list(argv),"test_paths":[p.relative_to(ROOT).as_posix() for p in paths],"test_methods":[_classify(m,"CURRENT_INVARIANT",overrides) for m in methods],"mapping_status":"MAPPED"})
+        mapping_status="MAPPED" if methods else ("EMPTY_METHOD_MAP" if paths else "COMMAND_ONLY")
+        ci_rows.append({"step_id":"ci:"+name,"classification":"CURRENT_INVARIANT","description":description,"argv":list(argv),"test_paths":[p.relative_to(ROOT).as_posix() for p in paths],"test_methods":[_classify(m,"CURRENT_INVARIANT",overrides) for m in methods],"mapping_status":mapping_status})
     ser01=[]
     for row in cfg["ser01_groups"]:
         path=ROOT/row["path"]; methods=test_methods(path)
-        ser01.append({**row,"classification":"MIXED_CURRENT_AND_TEMPORAL" if row["group_id"]=="ser01_certifier" else "CURRENT_INVARIANT","exists":path.is_file(),"test_methods":[_classify(m,"CURRENT_INVARIANT",overrides) for m in methods],"mapping_status":"MAPPED" if path.is_file() else "MISSING"})
+        mapping_status="MISSING" if not path.is_file() else ("MAPPED" if methods else ("COMMAND_ONLY" if row.get("mapping_mode")=="command" else "EMPTY_METHOD_MAP"))
+        ser01.append({**row,"classification":"MIXED_CURRENT_AND_TEMPORAL" if row["group_id"]=="ser01_certifier" else "CURRENT_INVARIANT","exists":path.is_file(),"test_methods":[_classify(m,"CURRENT_INVARIANT",overrides) for m in methods],"mapping_status":mapping_status})
     issues=[]
     if len(se08)!=21: issues.append(f"SE08_STEP_COUNT:{len(se08)}")
     if len(ci_rows)!=9: issues.append(f"CI_NON_SEF_COUNT:{len(ci_rows)}")
     if len(ser01)!=5: issues.append(f"SER01_GROUP_COUNT:{len(ser01)}")
-    if any(row["mapping_status"]!="MAPPED" for row in [*se08,*ci_rows,*ser01]): issues.append("METHOD_MAP_INCOMPLETE")
+    if any(row["mapping_status"] in {"UNCLASSIFIED","MISSING","EMPTY_METHOD_MAP"} for row in [*se08,*ci_rows,*ser01]): issues.append("METHOD_MAP_INCOMPLETE")
     observed={item["test_id"] for group in [*se08,*ci_rows,*ser01] for item in group["test_methods"]}
     missing_overrides=sorted(set(overrides)-observed)
     if missing_overrides: issues.append("TEMPORAL_OVERRIDE_NOT_OBSERVED:"+",".join(missing_overrides))
