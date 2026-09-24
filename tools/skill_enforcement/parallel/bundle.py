@@ -18,7 +18,7 @@ _SECRET_PATTERNS = [
     re.compile(r"AKIA[0-9A-Z]{16}"),
 ]
 _WINDOWS_HOME_RE = re.compile(r"(?i)\b[A-Z]:\\Users\\[^\\/\s\"']+")
-_POSIX_HOME_RE = re.compile(r"(?i)(?:^|[\s\"'=:(])/(?:Users|home)/[^/\s\"']+")
+_POSIX_HOME_RE = re.compile(r"(?i)(?:^|[\s\"'=:(])(?:/(?:Users|home)/[^/\s\"']+|/root(?=$|[/\s\"']))")
 
 
 def _normalized_for_path_scan(text: str) -> str:
