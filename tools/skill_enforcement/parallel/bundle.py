@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 from typing import Mapping
 
-SECRET_SCAN_POLICY_VERSION = "SER-PARALLEL-SECRET-SCAN-1"
+SECRET_SCAN_POLICY_VERSION = "SER-PARALLEL-SECRET-SCAN-2"
 BUNDLE_SCHEMA_VERSION = "SER-PARALLEL-BUNDLE-3"
 RAW_SHARE_SCHEMA_VERSION = "SER-PARALLEL-RAW-SHARE-3"
 SHARE_METADATA_SCHEMA_VERSION = "SER-PARALLEL-SHARE-METADATA-3"
@@ -17,10 +17,50 @@ _SECRET_PATTERNS = [
     re.compile(r"sk-(?:proj-)?[A-Za-z0-9_-]{16,}"),
     re.compile(r"AKIA[0-9A-Z]{16}"),
 ]
+_WINDOWS_HOME_RE = re.compile(r"(?i)\b[A-Z]:\\Users\\[^\\/\s\"']+")
+_POSIX_HOME_RE = re.compile(r"(?i)(?:^|[\s\"'=:(])/(?:Users|home)/[^/\s\"']+")
+
+
+def _normalized_for_path_scan(text: str) -> str:
+    previous = None
+    current = text
+    while previous != current:
+        previous = current
+        current = current.replace("\\\\", "\\")
+    return current
 
 
 def scan_text(text: str) -> list[str]:
-    return [f"SECRET_PATTERN_{idx}" for idx, pattern in enumerate(_SECRET_PATTERNS) if pattern.search(text)]
+    findings = [f"SECRET_PATTERN_{idx}" for idx, pattern in enumerate(_SECRET_PATTERNS) if pattern.search(text)]
+    normalized = _normalized_for_path_scan(text)
+    if _WINDOWS_HOME_RE.search(normalized):
+        findings.append("SENSITIVE_PATH_WINDOWS_HOME")
+    if _POSIX_HOME_RE.search(normalized):
+        findings.append("SENSITIVE_PATH_POSIX_HOME")
+    return findings
+
+
+def _path_variants(raw: str) -> list[str]:
+    if not raw:
+        return []
+    values = {raw, raw.replace("\\", "/")}
+    for value in list(values):
+        values.add(value.replace("\\", "\\\\"))
+        values.add(json.dumps(value, ensure_ascii=False)[1:-1])
+    return sorted((value for value in values if value), key=len, reverse=True)
+
+
+def default_share_substitutions(repo_root: Path) -> dict[str, str]:
+    pairs = [(str(repo_root.resolve()), "<REPO>")]
+    try:
+        pairs.append((str(Path.home().resolve()), "<HOME>"))
+    except OSError:
+        pass
+    substitutions: dict[str, str] = {}
+    for raw, marker in pairs:
+        for variant in _path_variants(raw):
+            substitutions.setdefault(variant, marker)
+    return substitutions
 
 
 def _safe_files(root: Path) -> list[Path]:
