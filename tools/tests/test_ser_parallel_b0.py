@@ -11,7 +11,7 @@ from pathlib import Path
 from unittest import mock
 
 from tools.skill_enforcement.parallel import bundle, contract, coverage, registry, scheduler, verifier, pilot_verify
-from tools.skill_enforcement.parallel import launcher, process, preflight, round_identity
+from tools.skill_enforcement.parallel import launcher, process, preflight, round_identity, freeze_prepare
 
 
 def task(task_id="task.a", deps=None, key="k", role="executor", resource="light", failure_scope="LOCAL_CHAIN", required=True, command_ids=None):
@@ -455,6 +455,22 @@ class IndependentAuditRegressionTests(unittest.TestCase):
         payload=preflight.run()
         self.assertEqual("PASS",payload["status"],payload["issues"])
         self.assertEqual(4,payload["schema_contracts_checked"])
+
+    def test_preflight_hygiene_rejects_short_sha_collision_but_accepts_full_sha(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            short=root/"short.md";short.write_text("freeze f6516959",encoding="utf-8")
+            full=root/"full.md";full.write_text("freeze f6516959a2f973ea1e163da80548e8ebb0e235cf",encoding="utf-8")
+            with mock.patch.object(preflight,"ROOT",root):
+                short_issues=preflight._hygiene_issues([short])
+                full_issues=preflight._hygiene_issues([full])
+            self.assertEqual(["REPO_HYGIENE_IDENTIFIER:short.md"],short_issues)
+            self.assertEqual([],full_issues)
+
+    def test_freeze_prepare_cli_json_is_cp1252_safe_and_roundtrips_unicode(self):
+        rendered=freeze_prepare._json_cli({"status":"FAIL","stdout":"seções · válidas → revisão"})
+        rendered.encode("cp1252")
+        self.assertEqual({"status":"FAIL","stdout":"seções · válidas → revisão"},json.loads(rendered))
 
     def test_round_start_detects_clean_head_swap(self):
         row={"candidate_sha":"a"*40,"candidate_tree_sha":"b"*40,"baseline_sha":"c"*40}
