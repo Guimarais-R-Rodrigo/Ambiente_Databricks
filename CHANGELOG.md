@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-09-24 — SER B0: regressão adversarial de higiene corrigida no source de testes
+
+### Evidência preservada
+
+- (ChatGPT) A rodada `e0447ef3c84d99aae5eec565470f65a0c2649171` passou preflight, 79 metatestes (77 PASS, 2 SKIP) e coverage V3 (21 SE08, 9 CI não-SEF, 5 SER01, 1.353 IDs únicos), mas parou no `freeze_prepare` antes de criar freeze.
+- (ChatGPT) O validator baseline recusou `tools/tests/test_ser_parallel_b0.py` por identificador pessoal/corporativo; o gatilho era a fixture adversarial que continha literalmente no source o mesmo token de SHA curto que o teste pretendia rejeitar.
+- (ChatGPT) Bundle `b0_e0447ef3_20260924_authoring.zip` com SHA-256 `6b4fd978b98d54557030f16c7a1273d7d3c4b21dee649dfe340129d0fda3ed7c` preservado; nenhum freeze ou `b0_release` foi executado.
+
+### Corrigido
+
+- (ChatGPT) A fixture adversarial constrói o token problemático por concatenação em runtime, preservando o comportamento do teste sem tornar o próprio source incompatível com a política de higiene.
+- (ChatGPT) O preflight amplia a hygiene scan para incluir `tools/tests/test_ser_parallel_b0.py` e os módulos Python do mecanismo, além do CHANGELOG e documentos do plano.
+- (ChatGPT) O checkpoint foi normalizado para uma única seção `LATEST_*`; histórico detalhado permanece em `B0/RESULTADOS.md`.
+
+### Limites
+
+- (ChatGPT) Nenhum PASS da rodada `e0447ef3...` é transportado ao SHA novo. Preflight, 79 metatestes, coverage e `freeze_prepare` devem rodar novamente antes de novo freeze/release.
+
 ## 2026-09-24 — SER B0: higiene documental antecipada antes do freeze
 
 ### Evidência preservada
