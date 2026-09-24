@@ -1,24 +1,43 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "SER-PARALLEL-FINDING-2",
+  "$id": "SER-PARALLEL-FINDING-3",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "finding_id",
+    "audit_id",
+    "round_id",
+    "candidate_sha",
     "auditor_role",
     "severity",
+    "category",
+    "affected_scope",
+    "path_symbol",
     "requirement_id",
-    "location",
     "expected",
     "observed",
-    "impact",
+    "evidence_refs",
     "reproduction",
+    "impact",
+    "suggested_minimal_resolution",
     "status"
   ],
   "properties": {
     "finding_id": {
       "type": "string",
       "minLength": 3
+    },
+    "audit_id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "round_id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "candidate_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
     },
     "auditor_role": {
       "enum": [
@@ -28,17 +47,36 @@
     },
     "severity": {
       "enum": [
-        "info",
-        "minor",
-        "major",
-        "critical"
+        "F0",
+        "F1",
+        "F2",
+        "F3"
       ]
     },
-    "requirement_id": {
-      "type": "string"
+    "category": {
+      "enum": [
+        "DOMAIN",
+        "CONTRACT",
+        "COVERAGE",
+        "AUTHORITY",
+        "EVIDENCE",
+        "ISOLATION",
+        "ENVIRONMENT",
+        "INTEGRATION",
+        "EDITORIAL"
+      ]
     },
-    "location": {
-      "type": "string"
+    "affected_scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "path_symbol": {
+      "type": "string",
+      "minLength": 1
+    },
+    "requirement_id": {
+      "type": "string",
+      "minLength": 1
     },
     "expected": {
       "type": "string"
@@ -46,19 +84,39 @@
     "observed": {
       "type": "string"
     },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "reproduction": {
+      "type": "string"
+    },
     "impact": {
       "type": "string"
     },
-    "reproduction": {
+    "suggested_minimal_resolution": {
       "type": "string"
     },
     "status": {
       "enum": [
         "OPEN",
-        "ACCEPTED",
-        "FIXED_IN_NEW_SHA",
-        "NOT_APPLICABLE"
+        "BLOCKED",
+        "FIXED_VERIFIED",
+        "NOT_A_DEFECT_WITH_EVIDENCE",
+        "ACCEPTED_LIMITATION_BY_USER"
       ]
+    },
+    "author_response": {
+      "type": "string"
+    },
+    "closure_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   }
 }
