@@ -1,5 +1,29 @@
 # Changelog
 
+## 2026-09-24 — SER B0: corretiva pós-revisão independente
+
+### Corrigido
+
+- (ChatGPT) RV-01: o PASS dos pilotos agora depende de `summary.verification.valid=true`, topologia/status exatos, tarefas bloqueadas sem execução, first failure correto e exit code deliberado `1` do launcher.
+- (ChatGPT) RV-02/RV-03: o verificador reconstrói dependências, ordem de ondas, global stop, `max_parallel`, exclusividade, slots de auditoria e limites de recurso; também vincula task-id, SHA, effect, command-id/argv e hashes dos logs.
+- (ChatGPT) RV-04: o command registry B0 tornou-se allowlist fechada de IDs + argv exatos; editar apenas o JSON não amplia a superfície executável.
+- (ChatGPT) RV-05/RV-06: RAW e SHARE usam manifestos finais independentes e binding irmão não circular; apenas o `MANIFEST.json` raiz é metadado fora do fileset, portanto manifestos aninhados ficam protegidos.
+- (ChatGPT) RV-07: arquivo não UTF-8 torna o secret scan FAIL por conteúdo não examinável; texto sem substituição é copiado byte a byte.
+- (ChatGPT) `process.py` persiste stdout/stderr como bytes e calcula SHA-256 sobre os mesmos bytes, removendo normalização de newline/encoding da identidade.
+- (ChatGPT) cobertura distingue `MAPPED`, `COMMAND_ONLY` e `EMPTY_METHOD_MAP`; o último bloqueia o gate. `concierge-pacote` e o probe SER01 são classificados explicitamente como comandos.
+- (ChatGPT) o piloto global inclui integrador posterior e exige `BLOCKED_GLOBAL_STOP`.
+- (ChatGPT) `b0_release` fecha a rodada com envelope RAW/SHARE verificado e fail-closed.
+
+### Regressões
+
+- (ChatGPT) suíte B0 ampliada de 39 para 52 métodos, com 13 regressões corretivas.
+- (ChatGPT) 9/9 reproduções adversariais isoladas passaram após a correção, incluindo dependency/global-stop escape, allowlist, bindings, nested manifest, binário não examinável e preservação CRLF.
+
+### Limites
+
+- (ChatGPT) os 52 metatestes ainda não foram executados no checkout real deste SHA; o PASS histórico de 39/39 não é transportado.
+- (ChatGPT) host/Windows/NTFS, freeze e `b0_release` permanecem NOT_RUN. Nenhuma policy, skill, `ambiente_fonte/`, `Novo_Ambiente_Simulado/` ou Databricks foi alterado/acionado.
+
 ## 2026-09-24 — SER B0: candidata do framework de execução paralela governada
 
 ### Adicionado
