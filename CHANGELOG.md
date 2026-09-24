@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-09-24 — SER B0: corrigido ambiente sanitizado do release
+
+### Evidência preservada
+
+- (ChatGPT) A autoria `ec132ccc...` passou preflight, 74 metatestes (72 PASS, 2 SKIP) e coverage V3 (21 SE08, 9 CI não-SEF, 5 SER01, 1.353 IDs únicos).
+- (ChatGPT) O freeze mecânico `49385c306b03b1eeaf734e5b8daa4c2a4e5dc922` foi criado e a rodada única de `b0_release` terminou `FAIL / NOT_QUALIFIED` no gate interno de metatestes.
+- (ChatGPT) O bundle completo `b0_ec132ccc_49385c30_20260924_complete.zip` teve SHA-256 `05c0445f876fb0432519fc2325a24921b730c00a4e248d466ca780200a9c83cc`; manifests RAW/SHARE, binding e hashes do release verdict foram recalculados e conferem.
+
+### Corrigido
+
+- (ChatGPT) `_clean_env()` preserva agora apenas as variáveis não sensíveis necessárias à resolução do home (`HOME`, `USERPROFILE`, `HOMEDRIVE`, `HOMEPATH`) além do ambiente mínimo já allowlisted.
+- (ChatGPT) Tokens e credenciais continuam fora da allowlist do child process.
+- (ChatGPT) Adicionadas regressões para verificar a preservação da identidade de home sem credenciais e para executar `Path.home()` num Python filho usando exatamente o ambiente sanitizado do supervisor.
+- (ChatGPT) A suíte B0 passa de 74 para 76 métodos definidos estaticamente.
+
+### Limites
+
+- (ChatGPT) O freeze `49385c30...` é histórico e foi invalidado pela correção funcional posterior; novo SHA de autoria exige preflight + 76 metatestes + coverage, novo freeze e nova rodada única de release.
+
 ## 2026-09-24 — SER B0: cobertura portátil em console Windows
 
 ### Evidência preservada
