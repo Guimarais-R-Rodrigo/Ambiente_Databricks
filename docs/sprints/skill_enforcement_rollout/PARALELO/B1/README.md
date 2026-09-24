@@ -1,32 +1,39 @@
-# B1 — primeira candidata de domínio (P1)
+# B1 — SER03 L3 + SER05 L2
 
-Base de autoria: `4ba7f551767d847381df1556ed937116258fa77d`, após merge do B0/PR #113.
-A issue #114 é o registro da frente. Esta entrega é **autoria parcial, não certificação e não promoção**.
+Base inicial de autoria: `4ba7f551767d847381df1556ed937116258fa77d`, após merge do B0/PR #113.  
+P1 integrada: `d2b6079ee2e6ecec628d14411afbdbdb878a5fb9`, PR draft #115.  
+A issue #114 é o registro operacional. Nada nesta pasta é promoção automática.
 
-## Implementado
+## P1 — autoria de domínio integrada
 
-SER03 recebe contrato SEF 0.1, schema de request, preflight mensal/binário, runner fino da primitive `build_vintage_table`, Receipt V1 e verifier vinculado a request/run/oráculo externo. Denominador: roster explícito de MOB0; duplicatas rejeitadas; células sem observação não são convertidas em zero; maturidade e cobertura são separadas.
+SER03 recebeu contrato SEF 0.1, schema, preflight mensal/binário, runner fino de `build_vintage_table`, Receipt V1 e verifier vinculado a request/run/oráculo. SER05 recebeu contrato/schema e preflight L2 de contexto, sem leitura de fonte ou join.
 
-SER05 recebe contrato/schema e preflight de contexto L2. Fontes são identificadas por metadados declarados, não lidas. Temporalidade UNKNOWN bloqueia; NOT_APPLICABLE exige motivo; latência variável e bitemporalidade são recusadas. O resultado nunca declara join executado, cobertura medida ou readiness ML.
+No SHA P1 foram observados: 47/47 testes B1 PASS, os 2 testes de integração pública PASS, Temas V07 17/17, mirror 2/2, V08 22/22, validator e renderer PASS. O canal SE07 preservou exatamente os dois FAILs temporais historicamente esperados. Esses resultados permanecem evidência do SHA P1; a P2 não os renomeia como reexecução em SHA posterior.
 
-O owner compartilhado do contexto é `hub_scripts.skill_execution.domain_context`. Não há novo scheduler nem implementação paralela do Receipt. O protocolo de Receipt existente e o preflight genérico são consumidos pelas fachadas.
+## P2 — campanha real governada, autoria repo-side
 
-## Prova nesta etapa
+A P2 está materializada em `tools/skill_enforcement/real_campaigns/b1/` e documentada em `P2_ARCHITECTURE.md`.
 
-O arquivo `tools/tests/test_ser_b1_domains.py` contém 47 métodos, todos executados no checkout completo: **47/47 PASS**, zero FAIL, ERROR ou SKIP. Os dois métodos de integração pública comprovaram o preflight SEF real e o caminho público de helper/Receipt/verifier, incluindo rejeição de replay e tamper.
+O B0 fica fechado. Nenhum arquivo em `tools/skill_enforcement/parallel/**` é alterado para aceitar comandos reais. O adapter B1 reutiliza launcher, scheduler, lease, sandbox, process supervision e verifier B0, mas injeta no processo um registry B1 fechado e uma release identity própria. O `finally` restaura os globals importados.
 
-Os contratos foram conferidos com o schema canônico `execution_contract.schema.json`, blob `54a9b5a6675417cd3b732a5a7e4507e97e77d58a`. Os quatro requests/contextos foram validados estruturalmente pelos schemas da candidata. Temas V07 (17/17), V07 mirror (2/2) e V08 (22/22), validator completo e renderer canônico passaram. O canal SE07 preservou exatamente os dois FAILs temporais esperados, sem ERROR ou falha adicional. Essas provas qualificam a autoria integrada, não certificam ou promovem SER03/SER05.
+A campanha é read-only, effects `NONE`, uma campanha por host, `max_parallel=2` e `max_auditors=1`.
 
-## Pendências que impedem certificação
+## Coverage e limites
 
-1. Fechar os mapas de superfície/caso e a revisão do perfil limitado; trimestre/comparações da safra e os casos de join/Postflight de SER06 continuam fora desta candidata.
-2. Integrar os pontos de entrada às instruções das skills e reconciliar Manual quando o escopo correspondente for autorizado; o render canônico, validator e entrada no CHANGELOG raiz desta P1 já foram executados.
-3. Implementar os command IDs/manifesto/handoff B1 de forma aditiva. O registry fechado B0 não foi alterado.
-4. Verificar o domínio sob o ambiente sanitizado da campanha. Nenhum PASS do B0 é transportado para as novas dependências.
-5. Definir o adapter de auditoria de produtor para SER03: o auditor atual tem adapter direto somente para EDA. Não declarar reverificação genérica sem implementação.
+O registry de coverage liga 19 casos no escopo a testes P1, oráculos e comandos P2. CE03/CE04/CE09/CE11/CE12 permanecem fora do L2 e não são declarados cobertos.
 
-A ordem de trabalho continua P1 (domínio) → P2 (campanha) → diagnóstico consolidado → certificação. Não é necessário enviar esta entrega ao Codex como campanha fechada.
+SER03 continua restrita ao perfil mensal/binário sintético. Não há suporte alegado a trimestre, comparação de safras, estimando monetário, plots, Free ou Genie.
 
-## Limites
+SER05 continua contexto/preflight L2. Não há join, Spark, coverage real, readiness ML ou Postflight.
 
-Policy L0 e targets permanecem como estavam. Sem Spark, Free, Genie, publicação, 3/2, Ready ou merge. A main e o branch integrado do B0 não são alterados por esta candidata.
+## Próximo gate
+
+P2 está `AUTHORED_NOT_LOCALLY_QUALIFIED`. O próximo passo exige checkout local completo para, uma vez por gate:
+
+1. preflight B1;
+2. metatestes da campanha;
+3. preparação SHA-bound e geração mecânica do handoff;
+4. campanha sandboxed 2/1;
+5. auditoria independente das evidências.
+
+Somente depois disso se discute freeze/certificação. Policy, Ready, merge, Free/Genie e promoção continuam não autorizados.

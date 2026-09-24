@@ -1,0 +1,146 @@
+{
+  "schema_version": "SER-B1-COMMANDS-1",
+  "commands": [
+    {
+      "command_id": "b1:ser03:preflight:cumulative",
+      "argv": [
+        "{PYTHON}",
+        "-B",
+        "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/scripts/preflight.py",
+        "--request",
+        "tools/tests/fixtures/ser_b1/vf_cumulative.json"
+      ],
+      "effects": "none",
+      "purpose": "SER03 preflight mensal/binário cumulativo sobre fixture sintética",
+      "timeout_seconds": 120
+    },
+    {
+      "command_id": "b1:ser03:preflight:event",
+      "argv": [
+        "{PYTHON}",
+        "-B",
+        "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/scripts/preflight.py",
+        "--request",
+        "tools/tests/fixtures/ser_b1/vf_events.json"
+      ],
+      "effects": "none",
+      "purpose": "SER03 preflight mensal/binário de eventos sobre fixture sintética",
+      "timeout_seconds": 120
+    },
+    {
+      "command_id": "b1:ser03:execute-verify",
+      "argv": [
+        "{PYTHON}",
+        "-B",
+        "-m",
+        "tools.skill_enforcement.real_campaigns.b1.domain_worker",
+        "ser03-execute-verify"
+      ],
+      "effects": "none",
+      "purpose": "Executar SER03 via primitive/Receipt canônicos e verificar os dois oráculos sintéticos",
+      "timeout_seconds": 300
+    },
+    {
+      "command_id": "b1:ser03:domain-audit",
+      "argv": [
+        "{PYTHON}",
+        "-B",
+        "-m",
+        "tools.skill_enforcement.real_campaigns.b1.domain_audit",
+        "ser03"
+      ],
+      "effects": "none",
+      "purpose": "Auditoria independente do estimando/denominador/oráculo SER03",
+      "timeout_seconds": 300
+    },
+    {
+      "command_id": "b1:ser03:negative-audit",
+      "argv": [
+        "{PYTHON}",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_ser_b1_domains.SafraDomainTests.test_vf02_reject_mob_negative_fractional_boolean_null_and_string",
+        "tools.tests.test_ser_b1_domains.SafraDomainTests.test_vf03_reject_nonbinary_target",
+        "tools.tests.test_ser_b1_domains.SafraDomainTests.test_vf04_reject_cumulative_decrease",
+        "tools.tests.test_ser_b1_domains.SafraDomainTests.test_vf05_duplicate_identical_and_conflicting_rejected",
+        "tools.tests.test_ser_b1_domains.SafraDomainTests.test_vf08_quarterly_rejected_not_claimed_by_monthly_profile",
+        "tools.tests.test_ser_b1_domains.SafraDomainTests.test_vf12_monetary_estimand_rejected",
+        "-v"
+      ],
+      "effects": "none",
+      "purpose": "Negativos discriminantes SER03 para a superfície mensal/binária promovível",
+      "timeout_seconds": 300
+    },
+    {
+      "command_id": "b1:ser05:preflight:temporal",
+      "argv": [
+        "{PYTHON}",
+        "-B",
+        "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/scripts/preflight.py",
+        "--context",
+        "tools/tests/fixtures/ser_b1/ce_l2_temporal.json"
+      ],
+      "effects": "none",
+      "purpose": "SER05 L2 preflight temporal sintético, sem join",
+      "timeout_seconds": 120
+    },
+    {
+      "command_id": "b1:ser05:preflight:static",
+      "argv": [
+        "{PYTHON}",
+        "-B",
+        "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/scripts/preflight.py",
+        "--context",
+        "tools/tests/fixtures/ser_b1/ce_l2_static.json"
+      ],
+      "effects": "none",
+      "purpose": "SER05 L2 preflight estático NOT_APPLICABLE, sem join",
+      "timeout_seconds": 120
+    },
+    {
+      "command_id": "b1:ser05:domain-audit",
+      "argv": [
+        "{PYTHON}",
+        "-B",
+        "-m",
+        "tools.skill_enforcement.real_campaigns.b1.domain_audit",
+        "ser05"
+      ],
+      "effects": "none",
+      "purpose": "Auditoria independente de contexto/PIT declarado SER05 L2",
+      "timeout_seconds": 180
+    },
+    {
+      "command_id": "b1:ser05:negative-audit",
+      "argv": [
+        "{PYTHON}",
+        "-B",
+        "-m",
+        "unittest",
+        "tools.tests.test_ser_b1_domains.CrossDomainTests.test_ce02_unknown_pit_never_becomes_false",
+        "tools.tests.test_ser_b1_domains.CrossDomainTests.test_ce02_not_applicable_requires_reason",
+        "tools.tests.test_ser_b1_domains.CrossDomainTests.test_ce05_timezone_and_tie_policy_fail_closed",
+        "tools.tests.test_ser_b1_domains.CrossDomainTests.test_ce06_variable_lag_not_approximated",
+        "tools.tests.test_ser_b1_domains.CrossDomainTests.test_ce07_bitemporal_not_claimed",
+        "tools.tests.test_ser_b1_domains.CrossDomainTests.test_effect_not_permitted_at_l2",
+        "-v"
+      ],
+      "effects": "none",
+      "purpose": "Negativos discriminantes SER05 L2 para PIT/contexto/effects",
+      "timeout_seconds": 240
+    },
+    {
+      "command_id": "b1:campaign:coverage-audit",
+      "argv": [
+        "{PYTHON}",
+        "-B",
+        "-m",
+        "tools.skill_enforcement.real_campaigns.b1.coverage"
+      ],
+      "effects": "none",
+      "purpose": "Conferir cobertura caso→teste→oráculo→command/evidência da campanha B1",
+      "timeout_seconds": 120
+    }
+  ]
+}
