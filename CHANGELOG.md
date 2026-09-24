@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-09-24 — SER B0: candidata do framework de execução paralela governada
+
+### Adicionado
+
+- (ChatGPT) ADR-0023 formaliza execução paralela por DAG sem alterar targets, identidade das sprints ou gates humanos.
+- (ChatGPT) `tools/skill_enforcement/parallel/` recebe contratos fechados V2, registry de comandos sem shell/inline code, scheduler por dependência/lock/recurso, launcher B0 read-only, verificador, bundles RAW/SHARE, qualificação de host e dois pilotos sintéticos.
+- (ChatGPT) Cobertura herdada passa a ser inventariada por método, inclusive expansão de `unittest discover`, com assertions históricas temporais classificadas explicitamente.
+- (ChatGPT) Plano operacional completo e oito dossiês de skill são versionados em `docs/sprints/skill_enforcement_rollout/PARALELO/`.
+
+### Validado em autoria
+
+- (ChatGPT) Suíte isolada `tools.tests.test_ser_parallel_b0`: 39/39 PASS antes da publicação da candidata.
+- (ChatGPT) O B0 distingue propagação local de falha de `GLOBAL_CAMPAIGN`; first failure é determinístico por onda/task-id e workers não possuem rota de escrita no B0.
+
+### Limites
+
+- (ChatGPT) B0 ainda não está qualificado no host local/Windows; pilotos locais e prova efetiva de sandbox permanecem pendentes.
+- (ChatGPT) Nenhuma policy, skill publicada ou `Novo_Ambiente_Simulado/` foi alterada nesta autoria. SER02–SER14 continuam sem campanha real iniciada.
+- (ChatGPT) Snapshot do README raiz será reconciliado por preparação mecânica medida via `freeze_prepare.py` antes do freeze local, não por valor estimado nesta autoria.
+
 ## 2026-09-23 — SER01 L3: preparação da certificação pós-promoção R2
 
 ### Notas

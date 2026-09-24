@@ -4,18 +4,21 @@ A SER sucede operacionalmente o SEF, sem reabrir SE01–SE08. O objetivo é sust
 
 ## Estado integrado e frente corrente
 
-A SER00 foi aceita e integrada pela PR #101 em `dedde0741ed4c387c3a500adfbf7de2c6166aba5`, após a certificação da candidata e as manutenções A07 #102/#105. A MM01 já compõe essa base. Os documentos históricos da candidata SER00 são preservados; seus estados de pending não desfazem o merge aceito.
+A SER00 foi aceita e integrada pela PR #101. A SER01 promoveu `hub-ml-criar-objeto` de L2 para L3, foi certificada por `SER-PROMOTION-CERT-2` e integrada pela PR #108; a `main` de entrada do B0 é `d2988e97e7b6c5fe1fd561852e947a155c2d731b`.
 
-A SER01 foi iniciada em 2026-09-23. A1–A3 fecharam a validação local, o Receipt de domínio e a certificação prospectiva da superfície `object_validation`. A frente corrente é A4, com prova ambiental no Databricks Free e aderência comportamental no Genie Code; a policy permanece L2 durante toda a coleta externa.
+Em 2026-09-24 foi aceita a mudança operacional para execução paralela governada, formalizada pelo ADR-0023. Isso **não** renumera SER02–SER16, não altera targets e não autoriza promoções em lote. A ordem histórica permanece rastreável; o DAG passa a controlar execução e qualificação de componentes independentes antes da integração serial.
+
+A frente corrente é o **B0 — mecanismo comum da execução paralela**. A candidata implementa contratos fechados, scheduler, launcher read-only, verificador, bundle RAW/SHARE, inventário de cobertura por método, dois pilotos sintéticos, qualificação de host e metatestes. Nenhuma campanha real de SER02–SER14 foi iniciada.
 
 ```text
 SER00 = INTEGRATED
-SER01 = IN_PROGRESS_L3_PROMOTION_CANDIDATE_NOT_CERTIFIED
-A3 = COMPLETE_AT_fcec3e34
-A4_FREE = NOT_RUN
-A4_GENIE = NOT_RUN
-POLICY_PROMOTION = NOT_AUTHORIZED
-SER02 = NOT_STARTED
+SER01 = INTEGRATED / CLOSED
+B0 = IMPLEMENTED_CANDIDATE_LOCAL_QUALIFICATION_PENDING
+B0_METATESTS_AUTHORING = 39/39 PASS
+B0_POLICY_CHANGE = NONE
+SER02_TO_SER14 = NOT_STARTED_UNDER_PARALLEL_FRAMEWORK
+SER15 = NOT_STARTED
+SER16 = NOT_STARTED
 GITHUB_ACTIONS = DEFERRED_NO_CREDITS
 PROMOCAO_TRABALHO = BLOQUEADA
 ```
@@ -23,8 +26,9 @@ PROMOCAO_TRABALHO = BLOQUEADA
 ## Navegação
 
 - [Plano Mestre](PLANO_MESTRE.md)
+- [Execução paralela governada](PARALELO/README.md)
+- [B0: mecanismo comum](PARALELO/B0/README.md)
 - [SER00: baseline e decisões](SER00/README.md)
-- [SER01: componente candidato e próximo gate](SER01/README.md)
-- [Checkpoint SER01](SER01/CHECKPOINT.md)
+- [SER01: histórico da primeira promoção](SER01/README.md)
 
-ChatGPT conduz a implementação e a revisão. O agente Cloud executa somente a missão técnica delegada, sem redesenhar a solução. Aceite da arquitetura, certificação, promoção de policy, publicação e merge são decisões distintas.
+ChatGPT conduz autoria e revisão repo-side. O executor local executa somente campanhas congeladas e comandos allowlisted; não redesenha solução, testes, critérios ou policy. Diagnóstico, certificação, prova externa, promoção e merge são estados distintos.
