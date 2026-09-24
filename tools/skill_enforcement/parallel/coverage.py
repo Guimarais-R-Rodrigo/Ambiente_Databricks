@@ -121,6 +121,29 @@ def _collect_command(argv):
    ids,item_errors=_collect_file(path); all_ids.extend(ids); errors.extend(item_errors)
   return all_ids,errors,paths
  return [],["NOT_UNITTEST_COMMAND"],paths
+def _command_only_errors(argv):
+ tokens=list(argv)
+ if not tokens: return ["COMMAND_ONLY_ARGV_EMPTY"]
+ issues=[]; first=Path(tokens[0]).name.lower()
+ is_python=tokens[0]==sys.executable or first.startswith("python")
+ if is_python:
+  if "-m" in tokens:
+   idx=tokens.index("-m")
+   if idx+1>=len(tokens): issues.append("COMMAND_ONLY_MODULE_MISSING")
+   else:
+    module=tokens[idx+1]; path,selector=_module_target_path(module)
+    if path is None: issues.append("COMMAND_ONLY_MODULE_TARGET_MISSING:"+module)
+    elif selector is not None: issues.append("COMMAND_ONLY_MODULE_SELECTOR_UNSUPPORTED:"+module)
+  scripts=[token for token in tokens[1:] if token.endswith(".py")]
+  for token in scripts:
+   target=ROOT/token
+   if not target.is_file(): issues.append("COMMAND_ONLY_SCRIPT_MISSING:"+token)
+  if "-m" not in tokens and not scripts: issues.append("COMMAND_ONLY_PYTHON_ENTRYPOINT_MISSING")
+ elif first=="git":
+  if len(tokens)<2 or tokens[1]!="status": issues.append("COMMAND_ONLY_GIT_OPERATION_UNSUPPORTED")
+ else:
+  issues.append("COMMAND_ONLY_EXECUTABLE_UNSUPPORTED:"+tokens[0])
+ return issues
 def _validate_override(test_id,override):
  if not isinstance(override,dict): return ["OVERRIDE_NOT_OBJECT:"+test_id]
  expected={"classification","historical_sha","reason","successor_ids"}
@@ -136,7 +159,9 @@ def _classify(method,default,overrides):
  override=overrides.get(method); return {"test_id":method,**override} if override else {"test_id":method,"classification":default}
 def _row(step_id,classification,argv,command_only,overrides,description=None):
  paths=_command_test_paths(argv); ast_methods=[m for path in paths for m in ast_test_methods(path)]
- if step_id in command_only: status="COMMAND_ONLY"; test_ids=[]; collection_errors=[]
+ if step_id in command_only:
+  collection_errors=_command_only_errors(argv); test_ids=[]
+  status="COMMAND_ONLY" if not collection_errors else ("MISSING" if any("MISSING" in item for item in collection_errors) else "COLLECTION_ERROR")
  else:
   test_ids,collection_errors,paths=_collect_command(argv)
   if collection_errors: status="MISSING" if any("MISSING" in item for item in collection_errors) else "COLLECTION_ERROR"
