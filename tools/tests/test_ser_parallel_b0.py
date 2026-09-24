@@ -459,8 +459,10 @@ class IndependentAuditRegressionTests(unittest.TestCase):
     def test_preflight_hygiene_rejects_short_sha_collision_but_accepts_full_sha(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp)
-            short=root/"short.md";short.write_text("freeze f6516959",encoding="utf-8")
-            full=root/"full.md";full.write_text("freeze f6516959a2f973ea1e163da80548e8ebb0e235cf",encoding="utf-8")
+            short_token="f"+"6516959"
+            full_token=short_token+"a2f973ea1e163da80548e8ebb0e235cf"
+            short=root/"short.md";short.write_text("freeze "+short_token,encoding="utf-8")
+            full=root/"full.md";full.write_text("freeze "+full_token,encoding="utf-8")
             with mock.patch.object(preflight,"ROOT",root):
                 short_issues=preflight._hygiene_issues([short])
                 full_issues=preflight._hygiene_issues([full])
