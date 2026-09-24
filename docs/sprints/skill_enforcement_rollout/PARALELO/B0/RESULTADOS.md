@@ -184,4 +184,24 @@ O bundle `b0_0ff29b5e_dd147b79_20260924_complete.zip` teve SHA-256 `c5a66993c202
 Os dois pilotos cumpriram os oráculos: a falha seletiva bloqueou somente dependentes e preservou a frente independente; a falha global bloqueou as tarefas posteriores; verificações independentes e do piloto ficaram válidas. Todos os command records iniciados no Windows usaram `WINDOWS_JOB_OBJECT`, sem timeout, descendente residual ou cleanup incompleto.
 
 A rodada não recebeu `LOCAL_QUALIFIED` porque o host probe antigo ainda declarava filesystem e sandbox como não observados e não produzia prova de recursos. A corretiva posterior não relabela essa evidência: ela adiciona qualificação ambiental executável para uma nova rodada — NTFS via WinAPI, sandbox Python scratch-only com probe negativo, Job Object pelos records reais, snapshot de recursos e observação do perfil inicial 2/1. O perfil 3/2 permanece deliberadamente não qualificado.
+## Rodada de autoria — 021702a7 — FAIL documental preservado
+
+```text
+AUTHORING_SHA = 021702a770f276c147c49194804f2a34167e0672
+AUTHORING_PREFLIGHT = PASS
+AUTHORING_METATESTS = FAIL
+COLLECTED = 82
+PASS = 79
+FAIL = 1
+ERROR = 0
+SKIP = 2
+COVERAGE = NOT_RUN_BY_FAIL_FAST
+FREEZE_PREPARE = NOT_RUN
+FREEZE_CREATED = NO
+B0_RELEASE = NOT_RUN
+```
+
+O único FAIL foi `test_b0_checkpoint_does_not_claim_local_pass`. O teste ainda exigia literalmente o estado antigo `B0.5 HOST_QUALIFICATION = NOT_RUN_LOCAL`, embora a implementação de host qualification já estivesse corretamente marcada como `IMPLEMENTED_RERUN_PENDING` e o estado final separado continuasse `LOCAL_QUALIFICATION = NOT_RUN`. A corretiva torna o metateste estável: valida que a qualificação final continua `NOT_RUN` e rejeita qualquer claim `PASS/LOCAL_QUALIFIED` prematura, sem acoplar-se ao estado de implementação do B0.5.
+
+Bundle `b0_021702a7_20260924_authoring.zip`: SHA-256 `eb5deeffc087008fef3e7d5eb407ffc2395b94c971d6564bc3b674b9c608742f`. Nenhum coverage, freeze ou release foi executado nesta tentativa.
 
