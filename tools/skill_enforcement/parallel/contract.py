@@ -143,6 +143,14 @@ def validate_campaign(payload: Any) -> list[str]:
         issues.append("CAMPAIGN_HUMAN_GATES_INVALID")
     if not _strings(payload.get("external_gates")) and payload.get("external_gates") != []:
         issues.append("CAMPAIGN_EXTERNAL_GATES_INVALID")
+    resource_limits = payload.get("resource_limits")
+    if resource_limits is not None:
+        if not isinstance(resource_limits, Mapping):
+            issues.append("CAMPAIGN_RESOURCE_LIMITS_INVALID")
+        else:
+            for key, value in resource_limits.items():
+                if key not in RESOURCE_CLASSES or type(value) is not int or value < 1 or value > 8:
+                    issues.append(f"CAMPAIGN_RESOURCE_LIMIT_INVALID:{key}")
     return issues
 
 def validate_result(result: Any) -> list[str]:

@@ -1,0 +1,19 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"SER-PARALLEL-FINDING-1",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["finding_id","auditor_role","severity","requirement_id","location","expected","observed","impact","reproduction","status"],
+  "properties":{
+    "finding_id":{"type":"string","minLength":3},
+    "auditor_role":{"enum":["domain_auditor","evidence_auditor"]},
+    "severity":{"enum":["info","minor","major","critical"]},
+    "requirement_id":{"type":"string","minLength":1},
+    "location":{"type":"string","minLength":1},
+    "expected":{"type":"string"},
+    "observed":{"type":"string"},
+    "impact":{"type":"string"},
+    "reproduction":{"type":"string"},
+    "status":{"enum":["OPEN","ACCEPTED","FIXED_IN_NEW_SHA","NOT_APPLICABLE"]}
+  }
+}

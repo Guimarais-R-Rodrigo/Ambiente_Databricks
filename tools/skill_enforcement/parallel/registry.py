@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -28,7 +29,8 @@ def load_registry(path: Path | str = DEFAULT_REGISTRY) -> dict[str, Any]:
             raise RegistryError("COMMAND_ID_INVALID_OR_DUPLICATE")
         if not isinstance(argv, list) or not argv or any(not isinstance(x, str) or not x for x in argv):
             raise RegistryError("COMMAND_ARGV_INVALID:" + cid)
-        if any(x in {"sh", "bash", "cmd", "powershell", "pwsh"} for x in argv[:1]):
+        first = argv[0]
+        if first in {"sh", "bash", "cmd", "powershell", "pwsh"}:
             raise RegistryError("COMMAND_SHELL_FORBIDDEN:" + cid)
         seen.add(cid)
         by_id[cid] = dict(row)
@@ -40,4 +42,4 @@ def resolve_command(command_id: str, path: Path | str = DEFAULT_REGISTRY) -> lis
         row = registry["commands"][command_id]
     except KeyError as exc:
         raise RegistryError("COMMAND_UNKNOWN:" + command_id) from exc
-    return list(row["argv"])
+    return [sys.executable if token == "{PYTHON}" else token for token in row["argv"]]

@@ -1,0 +1,5 @@
+{
+  "schema_version": "SER-PARALLEL-RESOURCES-1",
+  "initial": {"max_parallel": 2, "max_auditors": 1, "resources": {"light":2,"cpu":1,"spark":1,"tracking":1,"external_effect":1,"audit":1}},
+  "post_pilot_candidate": {"max_parallel": 3, "max_auditors": 2, "requires": ["B0_MECHANISM_PILOT_PASS","NO_MATERIAL_ISOLATION_FINDING","SANDBOX_QUALIFIED"]}
+}

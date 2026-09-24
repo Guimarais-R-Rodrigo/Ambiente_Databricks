@@ -1,0 +1,11 @@
+{
+  "schema_version": "SER-PARALLEL-ROLES-1",
+  "roles": {
+    "coordinator": {"may_edit_candidate": false, "may_change_criteria": false, "may_human_authorize": false, "purpose": "Despachar tarefas já autorizadas e consolidar estados."},
+    "executor": {"may_edit_candidate": false, "may_change_criteria": false, "may_human_authorize": false, "purpose": "Executar comandos allowlisted e preservar evidência."},
+    "domain_auditor": {"may_edit_candidate": false, "may_change_criteria": false, "may_human_authorize": false, "purpose": "Auditar significado analítico contra oráculos independentes."},
+    "evidence_auditor": {"may_edit_candidate": false, "may_change_criteria": false, "may_human_authorize": false, "purpose": "Auditar binding, integridade, efeitos e autoridade."},
+    "integrator": {"may_edit_candidate": false, "may_change_criteria": false, "may_human_authorize": false, "purpose": "Executar apenas preparação mecânica previamente aprovada."}
+  },
+  "warning": "Perfis lógicos não provam sandbox do SO. B0.5 precisa qualificar enforcement efetivo no host."
+}

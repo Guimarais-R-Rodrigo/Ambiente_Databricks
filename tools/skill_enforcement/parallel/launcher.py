@@ -74,7 +74,7 @@ def execute(campaign: dict, evidence_root: Path) -> dict:
     first_failure: str | None = None
     while len(results) < len(tasks):
         states = {k: v["status"] for k, v in results.items()}
-        decision = decide(campaign["tasks"], states, limit=campaign["max_parallel"])
+        decision = decide(campaign["tasks"], states, limit=campaign["max_parallel"], auditor_limit=campaign["max_auditors"], resource_limits=campaign.get("resource_limits"))
         for task_id in decision.blocked_dependency:
             task = tasks[task_id]
             blockers = [d for d in task["depends_on"] if states.get(d) not in {"PASS", "NOT_APPLICABLE"}]
