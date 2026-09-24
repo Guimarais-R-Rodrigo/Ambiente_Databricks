@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-09-24 — SER B0: higiene documental antecipada antes do freeze
+
+### Evidência preservada
+
+- (ChatGPT) A rodada local em `39e86591d710100acb32590e38fc6dac4db50d3f` passou preflight, 77 metatestes (75 PASS, 2 SKIP) e coverage V3 (21 SE08, 9 CI não-SEF, 5 SER01, 1.353 IDs únicos), mas parou em `freeze_prepare` antes de criar freeze.
+- (ChatGPT) O validator baseline recusou três arquivos de rastreabilidade por `identificador pessoal/corporativo`; o gatilho era o SHA abreviado `f6516959`, que coincide com a heurística `letra + 6–8 dígitos` embora represente um commit Git.
+- (ChatGPT) Bundle `b0_39e86591_20260924_authoring.zip` com SHA-256 `889abb4969a9db6f64d55c1026095de86c7d144901e600db1c0a7a6c68712024` preservado; nenhum freeze ou release foi executado.
+
+### Corrigido
+
+- (ChatGPT) As referências ativas ao prefixo ambíguo foram substituídas pelo SHA completo `f6516959a2f973ea1e163da80548e8ebb0e235cf`; a regra de higiene não foi relaxada.
+- (ChatGPT) O preflight de autoria passa a aplicar `CORPORATE_RE`/`PERSONAL_RE` sobre `CHANGELOG.md` e documentos JSON/Markdown do plano, antecipando esse gate antes do freeze.
+- (ChatGPT) `freeze_prepare` passa a emitir JSON ASCII-safe, removendo dependência da code page do console Windows.
+- (ChatGPT) Regressões cobrem SHA curto que colide com a heurística, SHA completo aceito e round-trip Unicode do JSON do freeze em `cp1252`.
+- (ChatGPT) A suíte B0 passa de 77 para 79 métodos definidos estaticamente.
+
+### Limites
+
+- (ChatGPT) Nenhum PASS da rodada `39e86591...` é transportado para o novo SHA. Preflight, 79 metatestes, coverage e freeze_prepare precisam rodar novamente antes de qualquer freeze/release.
+
 ## 2026-09-24 — SER B0: coverage sob ambiente sanitizado do release
 
 ### Evidência preservada
