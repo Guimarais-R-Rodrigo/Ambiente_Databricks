@@ -223,6 +223,98 @@ class G6MinimalPublicationTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "CURRENT_USER_LOOKS_CORPORATE"):
                 pub._resolve_target("FREE", pub.EXPECTED_HOST)
 
+
+    def _write_auth_v2(self, directory: Path) -> Path:
+        object_ids = [e["object_id"] for e in self.manifest()["entries"]]
+        payload = {
+            "schema_version": pub.AUTH_SCHEMA,
+            "decision": "AUTHORIZED",
+            "manifest_sha256": pub._manifest_sha256(),
+            "publisher_package_sha256": pub._publisher_package_sha256(),
+            "effect": "REMOTE_PACKAGE_WRITE",
+            "target": {"profile": "FREE", "host": pub.EXPECTED_HOST},
+            "allowed_object_ids": object_ids,
+            "one_write_attempt": True,
+            "authorization_ref": "issue#114:comment#future",
+        }
+        path = directory / "auth.json"
+        path.write_text(json.dumps(payload), encoding="utf-8")
+        return path
+
+    def test_execute_mocked_full_success_covers_17_records(self):
+        manifest = self.manifest()
+        by_remote = {e["remote_relative_path"]: e for e in manifest["entries"]}
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            auth = self._write_auth_v2(root)
+            evidence = root / "evidence"
+
+            def exported(_profile, remote, _kind):
+                rel = remote.split("/.assistant/", 1)[1]
+                key = ".assistant/" + rel
+                entry = by_remote[key]
+                return (ROOT / entry["rendered_path"]).read_bytes()
+
+            with patch.object(pub, "_resolve_target", return_value=("/Users/u", {"profile":"FREE","host":pub.EXPECTED_HOST,"current_user_resolved":True})), \
+                 patch.object(pub, "_assert_parent_directory_exists"), \
+                 patch.object(pub, "_assert_missing"), \
+                 patch.object(pub, "_assert_stale_hash", return_value="b68d"), \
+                 patch.object(pub, "_consume_write_authorization", return_value="c" * 64) as consume, \
+                 patch.object(pub, "_run_import", return_value=(0, "", "")), \
+                 patch.object(pub, "_assert_remote_object_type"), \
+                 patch.object(pub, "_export", side_effect=exported):
+                result = pub.execute(auth, evidence)
+
+            self.assertEqual("PASS", result["status"])
+            self.assertTrue(result["authorization_consumed"])
+            self.assertEqual(1, consume.call_count)
+            self.assertEqual(17, len(result["records"]))
+            self.assertEqual(17, sum(r["write_started"] is True for r in result["records"]))
+            self.assertEqual(17, sum(r["write_exit_code"] == 0 for r in result["records"]))
+            self.assertEqual(17, sum(r["verification"] == "PASS" for r in result["records"]))
+            self.assertEqual(16, sum(r["effect_status"] == "CREATED" for r in result["records"]))
+            self.assertEqual(1, sum(r["effect_status"] == "UPDATED" for r in result["records"]))
+
+    def test_execute_preflight_failure_does_not_consume_write_authorization(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            auth = self._write_auth_v2(root)
+            evidence = root / "evidence"
+            with patch.object(pub, "_resolve_target", return_value=("/Users/u", {"profile":"FREE","host":pub.EXPECTED_HOST,"current_user_resolved":True})), \
+                 patch.object(pub, "_assert_parent_directory_exists", side_effect=RuntimeError("PARENT_NOT_DIRECTORY")), \
+                 patch.object(pub, "_consume_write_authorization") as consume:
+                result = pub.execute(auth, evidence)
+            self.assertEqual("FAIL", result["status"])
+            self.assertIn("REMOTE_PRECONDITION:PARENT_NOT_DIRECTORY", result["first_failure"])
+            self.assertFalse(result["authorization_consumed"])
+            self.assertEqual(0, consume.call_count)
+            self.assertEqual([], result["records"])
+
+    def test_execute_exception_after_write_start_marks_unknown_and_stops(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            auth = self._write_auth_v2(root)
+            evidence = root / "evidence"
+            with patch.object(pub, "_resolve_target", return_value=("/Users/u", {"profile":"FREE","host":pub.EXPECTED_HOST,"current_user_resolved":True})), \
+                 patch.object(pub, "_assert_parent_directory_exists"), \
+                 patch.object(pub, "_assert_missing"), \
+                 patch.object(pub, "_assert_stale_hash", return_value="b68d"), \
+                 patch.object(pub, "_consume_write_authorization", return_value="c" * 64), \
+                 patch.object(pub, "_run_import", side_effect=OSError("transport vanished")):
+                result = pub.execute(auth, evidence)
+            self.assertEqual("FAIL", result["status"])
+            self.assertTrue(result["authorization_consumed"])
+            self.assertEqual(1, len(result["records"]))
+            self.assertTrue(result["records"][0]["write_started"])
+            self.assertEqual("UNKNOWN", result["records"][0]["effect_status"])
+            self.assertIn("transport vanished", result["first_failure"])
+
+    def test_target_resolution_rejects_auth_describe_error_status(self):
+        auth = {"status":"error","details":{"configuration":{"profile":{"value":"FREE"},"host":{"value":pub.EXPECTED_HOST}}}}
+        with patch.object(pub, "_run_dbx", return_value=(0, json.dumps(auth), "")):
+            with self.assertRaisesRegex(RuntimeError, "AUTH_DESCRIBE_STATUS_ERROR"):
+                pub._resolve_target("FREE", pub.EXPECTED_HOST)
+
     def test_evidence_must_be_outside_repo_and_new(self):
         with self.assertRaisesRegex(RuntimeError, "EVIDENCE_MUST_BE_EXTERNAL"):
             pub._evidence_dir(ROOT / "tmp-evidence-forbidden")

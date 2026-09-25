@@ -37,3 +37,5 @@ R1 authorization is consumed and cannot be reused.
 R2 local PASS is preserved. Before another remote attempt, R3 hardens the whole publisher class: list payload variants, missing-parent recursion, parent DIRECTORY preconditions, RAW FILE import/export, post-write object-type checks, normalized host/corporate guard, authorization V2 bound to executable package digest and ordered object set, external auth record, atomic one-write-attempt consumption, and UNKNOWN effect after write start when success is not known.
 
 The 17-object manifest remains byte-identical. R3 requires a new local qualification and a new human authorization.
+
+R3 also includes mocked end-to-end state-machine tests: all 17 records succeeding, a remote-precondition failure that must not consume the write authorization, and an exception after write start that must mark the effect UNKNOWN and stop immediately.
