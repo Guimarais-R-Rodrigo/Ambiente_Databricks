@@ -75,7 +75,9 @@
       "operations": [
         "delete only the two SHA-bound probe notebooks after evidence preservation"
       ],
-      "prerequisite": "explicit separate authorization after outputs/export evidence are preserved and audited"
+      "prerequisite": "explicit separate authorization after outputs/export evidence are preserved and audited",
+      "requires_evidence_preserved": true,
+      "requires_separate_authorization": true
     }
   ],
   "free_probes": [

@@ -47,3 +47,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) G6 autoria repo-side materializada após R7 G4/G5 PASS: 2 probes Free read-only/computacionais, 16 casos Genie canônicos em 20 variantes congeladas, authorization request sem decisão, runbook e validador/metatestes. Corrigida a classificação de efeitos: reconcile=NONE; publicação/import de probes são efeitos remotos separados e permanecem NOT_AUTHORIZED.
 
 (ChatGPT) Auditoria repo-side G6: reconciliados campos top-level do AUTHORING_STATE com R7 PASS; probe SER05 passou de hash->índice para path->SHA256; cleanup de notebooks temporários explicitado como efeito separado TEMPORARY_WORKSPACE_OBJECT_DELETE, pós-evidência e não autorizado. Nenhuma execução externa.
+
+(ChatGPT) G6 local R1 preservada FAIL: validate_package PASS, 1/6 metateste FAIL por asserção textual "after evidence" apesar de prerequisite semanticamente correto. R2 troca o oráculo frágil por campos estruturais requires_evidence_preserved/requires_separate_authorization, validados pelo package validator e metateste. Nenhuma ação externa.

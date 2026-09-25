@@ -32,7 +32,8 @@ class G6PackageTests(unittest.TestCase):
         cleanup = phases["G6.PROBE_CLEANUP_AFTER_AUDIT"]
         self.assertEqual("TEMPORARY_WORKSPACE_OBJECT_DELETE", cleanup["effect"])
         self.assertFalse(cleanup["authorized"])
-        self.assertIn("after evidence", cleanup["prerequisite"])
+        self.assertTrue(cleanup["requires_evidence_preserved"])
+        self.assertTrue(cleanup["requires_separate_authorization"])
 
     def test_genie_manifest_starts_without_observed_results(self):
         payload = json.loads((G6 / "genie_manifest.json").read_text(encoding="utf-8"))
