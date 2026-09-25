@@ -51,3 +51,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) G6 local R1 preservada FAIL: validate_package PASS, 1/6 metateste FAIL por asserção textual "after evidence" apesar de prerequisite semanticamente correto. R2 troca o oráculo frágil por campos estruturais requires_evidence_preserved/requires_separate_authorization, validados pelo package validator e metateste. Nenhuma ação externa.
 
 (ChatGPT) G6 local R2 PASS: validate_package PASS, 6/6 metatestes, zero diff de produto/B0/policy contra R7, autoridade externa toda false, authorization request continua não-autorização. Pacote G6 congelado por identidade em c11c2dff.../15527a29.... Próximo gate: autorização humana somente para G6.READ_ONLY_RECONCILE; nenhuma operação externa executada.
+
+(ChatGPT) Usuário autorizou explicitamente somente G6.READ_ONLY_RECONCILE sobre o freeze c11c2dff...; autorização registrada em issue#114:comment#5834465790. Target esperado FREE / https://dbc-72c8503a-bc27.cloud.databricks.com; efeito NONE. Publicação/import/probes/Genie/cleanup/policy/promoção/Ready/merge permanecem não autorizados.

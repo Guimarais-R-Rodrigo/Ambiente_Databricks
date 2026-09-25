@@ -3,8 +3,8 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_EXPLICIT_HUMAN_AUTHORIZATION_READ_ONLY_RECONCILIATION",
-    "G6_READ_ONLY_RECONCILIATION",
+    "G6_READ_ONLY_RECONCILIATION_EXECUTION",
+    "G6_READ_ONLY_RECONCILIATION_EVIDENCE_REVIEW",
     "G6_EFFECTFUL_OPERATIONS_SEPARATELY_AUTHORIZED_IF_NEEDED"
   ],
   "canonical_renderer": "PASS_AT_P1",
@@ -29,7 +29,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_FROZEN_AWAITING_HUMAN_AUTHORIZATION",
+  "stage": "B1_G6_READ_ONLY_RECONCILIATION_AUTHORIZED_NOT_RUN",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -171,7 +171,16 @@
     "local_validation": "PASS_R2",
     "freeze": "CREATED_BY_IDENTITY",
     "freeze_sha": "c11c2dff07f0f7595ed545f32990e5d54f1fd583",
-    "freeze_tree": "15527a29db0e6bcefa639cfadd4d66eed1d32d83"
+    "freeze_tree": "15527a29db0e6bcefa639cfadd4d66eed1d32d83",
+    "read_only_reconciliation": {
+      "authorization": "AUTHORIZED",
+      "authorization_ref": "issue#114:comment#5834465790",
+      "freeze_sha": "c11c2dff07f0f7595ed545f32990e5d54f1fd583",
+      "freeze_tree": "15527a29db0e6bcefa639cfadd4d66eed1d32d83",
+      "effect": "NONE",
+      "target": "PERSONAL_DATABRICKS_FREE_ONLY",
+      "execution_status": "NOT_RUN"
+    }
   },
   "g6_local_r1": {
     "candidate_sha": "814ae6f3286b367f45173b9b36b426317f9806e3",

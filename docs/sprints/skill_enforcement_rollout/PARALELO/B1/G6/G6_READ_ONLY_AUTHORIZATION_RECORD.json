@@ -1,0 +1,36 @@
+{
+  "schema_version": "SER-B1-G6-HUMAN-AUTHORIZATION-1",
+  "gate_id": "G6.READ_ONLY_RECONCILE",
+  "decision": "AUTHORIZED",
+  "authorization_ref": "issue#114:comment#5834465790",
+  "applies_to_freeze_sha": "c11c2dff07f0f7595ed545f32990e5d54f1fd583",
+  "applies_to_freeze_tree": "15527a29db0e6bcefa639cfadd4d66eed1d32d83",
+  "target": {
+    "kind": "PERSONAL_DATABRICKS_FREE",
+    "profile": "FREE",
+    "expected_host": "https://dbc-72c8503a-bc27.cloud.databricks.com"
+  },
+  "allowed_effect": "NONE",
+  "allowed_operations": [
+    "databricks --profile FREE auth describe -o json",
+    "databricks --profile FREE current-user me -o json",
+    "confirm target is the expected personal Free workspace",
+    "python tools/publicar_free.py --verify --conteudo --profile FREE --expected-host https://dbc-72c8503a-bc27.cloud.databricks.com --relatorio <LOCAL_EVIDENCE_PATH>",
+    "preserve sanitized local evidence"
+  ],
+  "explicitly_not_authorized": [
+    "publication",
+    "publicar_free --execute",
+    "workspace mkdirs/import",
+    "probe import",
+    "Free probe execution",
+    "Genie",
+    "cleanup/delete",
+    "policy change",
+    "promotion",
+    "Ready",
+    "merge"
+  ],
+  "stop_rule": "STOP_ON_HOST_USER_OR_REMOTE_CONTENT_MISMATCH_NO_CORRECTIVE_WRITE",
+  "execution_status": "NOT_RUN"
+}
