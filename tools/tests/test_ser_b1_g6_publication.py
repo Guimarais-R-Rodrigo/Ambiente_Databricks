@@ -55,7 +55,7 @@ class G6MinimalPublicationTests(unittest.TestCase):
         entries = manifest["entries"]
         self.assertEqual(manifest["expected_object_count"], len(entries))
         self.assertEqual(manifest["missing_object_count"], sum(e["precondition"]["kind"] == "MISSING" for e in entries))
-        self.assertEqual(manifest["overwrite_object_count"], sum(e["precondition"]["kind"] == "REMOTE_NORMALIZED_SHA256_EQUALS" for e in entries))
+        self.assertEqual(manifest["overwrite_object_count"], sum(e["precondition"]["kind"] in pub.OVERWRITE_PRECONDITION_KINDS for e in entries))
         self.assertEqual(len(entries), len({e["object_id"] for e in entries}))
         self.assertEqual(len(entries), len({e["remote_relative_path"] for e in entries}))
         self.assertFalse(manifest["full_republish"])
@@ -108,7 +108,7 @@ class G6MinimalPublicationTests(unittest.TestCase):
 
     def test_only_policy_can_overwrite(self):
         entries = self.manifest()["entries"]
-        overwrite = [e for e in entries if e["precondition"]["kind"] == "REMOTE_NORMALIZED_SHA256_EQUALS"]
+        overwrite = [e for e in entries if e["precondition"]["kind"] in pub.OVERWRITE_PRECONDITION_KINDS]
         self.assertEqual(["policy"], [e["object_id"] for e in overwrite])
 
     def test_import_uses_api_put_json_base64(self):
