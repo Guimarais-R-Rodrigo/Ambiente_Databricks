@@ -59,3 +59,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) Usuário autorizou remediação OAuth U2M local do profile FREE no host pessoal esperado. Authorization ref issue#114:comment#5834668546. Escopo: login OAuth + auth describe/current-user; nenhuma leitura de conteúdo remoto, publicação, import/probe, Genie, cleanup ou promoção nesta fase.
 
 (ChatGPT) G6 auth remediation PASS: profile FREE/host esperado válidos após OAuth U2M login, current-user resolvido, zero efeito remoto e nenhum content verify. Tentativa 1 de READ_ONLY_RECONCILE permanece BLOCKED_AUTHENTICATION; tentativa 2 aberta sob a mesma autorização issue#114:comment#5834465790 e mesmo freeze, efeito NONE.
+
+(ChatGPT) G6.READ_ONLY_RECONCILE attempt 2 = REMOTE_CONTENT_MISMATCH: 574 arquivos comparados, 33 errors = 16 missing + 16 incomplete remote reads + 1 divergent content, zero writes. Aberta forense local do JSON já coletado para deduplicar paths e identificar divergência antes de qualquer proposta de publicação.

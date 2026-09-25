@@ -3,9 +3,9 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_READ_ONLY_RECONCILIATION_ATTEMPT_2_EXECUTION",
-    "G6_READ_ONLY_RECONCILIATION_ATTEMPT_2_EVIDENCE_REVIEW",
-    "G6_EFFECTFUL_OPERATIONS_SEPARATELY_AUTHORIZED_IF_NEEDED"
+    "G6_MISMATCH_FORENSICS_LOCAL",
+    "G6_MISMATCH_REVIEW",
+    "G6_ANY_REMOTE_WRITE_REQUIRES_SEPARATE_AUTHORIZATION"
   ],
   "canonical_renderer": "PASS_AT_P1",
   "domain_profiles": [
@@ -29,7 +29,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_READ_ONLY_RECONCILIATION_ATTEMPT_2_AUTHORIZED_NOT_RUN",
+  "stage": "B1_G6_REMOTE_CONTENT_MISMATCH_FORENSICS_PENDING",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -225,27 +225,40 @@
       "remote_writes": false
     },
     "read_only_reconciliation_attempt_2": {
-      "state": "AUTHORIZED_NOT_RUN",
+      "state": "REMOTE_CONTENT_MISMATCH",
       "authorization_ref": "issue#114:comment#5834465790",
       "freeze_sha": "c11c2dff07f0f7595ed545f32990e5d54f1fd583",
-      "prerequisite_auth_remediation": "PASS",
-      "effect": "NONE",
-      "allowed_operations": [
-        "auth describe profile FREE",
-        "current-user me profile FREE",
-        "publicar_free --verify --conteudo",
-        "preserve sanitized local evidence"
-      ],
-      "explicitly_not_authorized": [
-        "publication",
-        "probe import",
-        "probe execution",
-        "Genie",
-        "cleanup",
-        "policy change",
-        "promotion",
-        "Ready",
-        "merge"
+      "auth_remediation": "PASS",
+      "auth_describe": "PASS",
+      "current_user": "PASS",
+      "verify_exit_code": 1,
+      "verify_status": "FAIL",
+      "verify_scope": "inventory-types-content",
+      "files_compared": 574,
+      "error_count": 33,
+      "missing_remote_count": 16,
+      "divergent_content_count": 1,
+      "incomplete_remote_read_count": 16,
+      "package_raw_sha256": "576134eb3e8d5c6d52be306a35351960df3be2ecb2b1b4602749864f5cca16ff",
+      "package_normalized_sha256": "5ac3db2f3104c6829e3d17314ef386afcd7e4b3ce6cc095db75e044318fe332f",
+      "remote_writes": false,
+      "publication": false,
+      "probe_import": false,
+      "probe_execution": false,
+      "genie": false,
+      "cleanup": false
+    },
+    "mismatch_forensics": {
+      "state": "LOCAL_EVIDENCE_ANALYSIS_PENDING",
+      "remote_access_required": false,
+      "authorization_required": false,
+      "source": "existing remote_content_verify.json from attempt 2",
+      "goals": [
+        "deduplicate missing vs incomplete-read paths",
+        "identify exact divergent-content path",
+        "classify object types/areas",
+        "determine whether mismatch is stale remote package vs unexpected remote mutation",
+        "do not authorize publication"
       ]
     }
   },
