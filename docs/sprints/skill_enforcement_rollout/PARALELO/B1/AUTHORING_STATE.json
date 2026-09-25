@@ -3,6 +3,7 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
+    "G6_R8_EXPLICIT_HUMAN_REMOTE_AUTHORIZATION",
     "G6_R8_REMOTE_EXECUTION",
     "G6_R8_EVIDENCE_REVIEW",
     "G6_POST_PUBLICATION_READ_ONLY_VERIFY"
@@ -29,7 +30,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_R7_CONVERGENT_PUBLISHER_AUTHORIZED_NOT_RUN",
+  "stage": "B1_G6_R8_CANONICAL_POST_PUBLISHER_FROZEN_AWAITING_HUMAN_REMOTE_AUTHORIZATION",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -638,7 +639,7 @@
       "remote_execution": "NOT_AUTHORIZED"
     },
     "minimal_publication_r8": {
-      "state": "CANONICAL_POST_CORRECTION",
+      "state": "LOCALLY_VALIDATED_AND_FROZEN",
       "blocked_candidate": {
         "sha": "37071972749dc60861a4e58350683ded7e09aa67",
         "tree": "3fc1e86925c8c5f2f8076ad64d608c626159ac33",
@@ -647,11 +648,53 @@
       },
       "manifest_changed": false,
       "transport_correction": "DATABRICKS_API_PUT_TO_POST",
-      "endpoint": "/api/2.0/workspace/import",
+      "endpoint": "POST /api/2.0/workspace/import",
       "convergent_semantics_preserved": true,
       "authorization_v2_preserved": true,
       "fixture_sanitization": "RUNTIME_VALUE_PRESERVED_BY_FRAGMENT_COMPOSITION",
-      "remote_execution": "NOT_AUTHORIZED"
+      "remote_execution": "NOT_AUTHORIZED",
+      "historical_blocked_candidate": {
+        "sha": "37071972749dc60861a4e58350683ded7e09aa67",
+        "state": "BLOCKED_VALIDATOR",
+        "published_as_freeze": false
+      },
+      "freeze_sha": "607a4272a34e896c38192094bf24821494d32328",
+      "freeze_tree": "561ec2fe75b75535f8fed459341cfeaf8992167d",
+      "manifest_sha256": "067e05e6f228efddbf963edf02a0059108a6a58fc97be4441087d23e5be4ca3a",
+      "publisher_package_sha256": "c72711ee0cdecbb0ebc6d9db64ed68bd062c2bec0c88fad28357a323d356319e",
+      "validate_local": "PASS",
+      "metatests": "38/38 PASS",
+      "validate_assistant": "PASS_0_FAILURES_0_WARNINGS",
+      "coverage_schema": "SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-5",
+      "coverage_required_cases": 21,
+      "transport": "DATABRICKS_API_POST_JSON_BASE64",
+      "g6_original_changed": false,
+      "r7_product_changed": false,
+      "b0_shared_mechanism_changed": false,
+      "remote_access": "NOT_RUN"
+    },
+    "minimal_publication_r7_attempt_1": {
+      "result": "FAIL_FIRST_WRITE_UNKNOWN",
+      "authorization_ref": "issue#114:comment#5838421464",
+      "authorization_consumed": true,
+      "consumption_marker_present": true,
+      "publisher_freeze_sha": "139898191f651e04405116d06aae01860c3eb0eb",
+      "manifest_sha256": "067e05e6f228efddbf963edf02a0059108a6a58fc97be4441087d23e5be4ca3a",
+      "publisher_package_sha256": "ff7a7d0b45b875210eb2524b5f01dd43332e6c3074f61f80757d95c02a0f2d3f",
+      "first_failure": "domain-context-init:API_PUT_WORKSPACE_IMPORT_PROTOCOL_ERROR",
+      "writes_started": 1,
+      "write_success": 0,
+      "verification_pass": 0,
+      "effects": {
+        "already_correct": 0,
+        "created": 0,
+        "updated": 0,
+        "unknown": 1
+      },
+      "unknown_object_ids": [
+        "domain-context-init"
+      ],
+      "retry_authorized": false
     }
   },
   "g6_local_r1": {

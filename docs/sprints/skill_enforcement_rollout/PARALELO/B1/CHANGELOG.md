@@ -113,3 +113,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (Codex) R7 remote FAIL preservado: autorização issue#114:comment#5838421464 consumida, primeiro write `domain-context-init` via API PUT terminou em `PROTOCOL_ERROR` com efeito `UNKNOWN`. R8 corrige exclusivamente o método canônico de Workspace Import para API POST; manifest e semântica convergente permanecem inalterados, e execução remota R8 segue não autorizada.
 
 (Codex) A primeira candidata R8 `37071972...` permanece histórica como `BLOCKED_VALIDATOR`: a fixture adversarial continha literal de identidade proibido. O amend preserva o valor efetivo em runtime por composição de fragmentos, sem mudar o oráculo, o publisher ou o manifest.
+
+(ChatGPT) R8 canonical-POST publisher local PASS após amend da fixture adversarial: freeze 607a4272.../561ec2fe..., manifest SHA256 067e05e6... inalterado, publisher package SHA256 c72711ee..., 38/38 tests, validate_assistant PASS, coverage v5 21/21, invariants produto/G6/B0 preservados. Candidato local anterior 37071972... preservado BLOCKED_VALIDATOR e não publicado como freeze. Remote execution NOT_AUTHORIZED.
