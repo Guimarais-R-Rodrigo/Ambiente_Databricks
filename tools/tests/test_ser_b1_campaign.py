@@ -147,6 +147,7 @@ class HandoffTests(unittest.TestCase):
         self.assertEqual(spec["python_executable"], payload["execution_argv"][0])
         self.assertEqual(spec["python_executable"], payload["post_run_package_argv"][0])
         self.assertIn("package_evidence", payload["post_run_package_argv"][3])
+        self.assertEqual("--output-dir", payload["post_run_package_argv"][4])
         self.assertEqual(
             [x["task_id"] for x in campaign["tasks"]],
             [x["task_id"] for x in payload["tasks"]],

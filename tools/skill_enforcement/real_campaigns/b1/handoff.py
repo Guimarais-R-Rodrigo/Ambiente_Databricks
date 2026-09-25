@@ -128,7 +128,7 @@ def render_markdown(handoff: Mapping[str, Any]) -> str:
         "Antes desse comando, os gates estáticos/metatestes do pacote devem ter passado uma única vez. "
         "Qualquer exit code não zero interrompe a rodada; não corrigir ou repetir no mesmo round. "
         "Depois da tentativa única, execute post_run_package_argv uma única vez para selar RAW/SHARE; "
-        "o RAW permanece privado e o artefato de upload é o ZIP SHARE sanitizado.\n"
+        "o RAW permanece privado e o artefato de upload é o AUDIT_BUNDLE.zip sanitizado, que contém SHARE + binding/envelope públicos.\n"
     )
 
 

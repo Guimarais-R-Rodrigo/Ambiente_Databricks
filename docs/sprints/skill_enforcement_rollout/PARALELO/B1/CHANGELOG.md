@@ -15,3 +15,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) Segundo contraditório P2: o handoff agora recusa divergência campaign↔release-spec e grava no execution_argv o python_executable real congelado, não o token simbólico {PYTHON}. O metateste cobre ambos.
 
 (ChatGPT) Fechado o envelope P2 antes do run local: ADAPTER_RESULT persistido externamente e post_run_package_argv reutilizando RAW/SHARE + sanitização V2 + verificação B0; somente o ZIP SHARE deve ser enviado para auditoria, RAW permanece privado.
+
+(ChatGPT) O retorno P2 foi fortalecido para AUDIT_BUNDLE.zip: SHARE sanitizado + RAW_SHARE_BINDING + ENVELOPE_VERIFICATION + AUDIT_CONTEXT + manifesto/scan do bundle público; RAW continua privado.

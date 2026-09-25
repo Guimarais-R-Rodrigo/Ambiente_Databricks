@@ -88,3 +88,15 @@ O preflight também prova que os bytes funcionais P1 permanecem idênticos a `d2
 Após a tentativa única da campanha, o adapter persiste `ADAPTER_RESULT.json` no output externo. O `post_run_package_argv` do handoff executa `package_evidence`, que reutiliza `parallel.bundle.build_share`, sanitização V2 e `verify_raw_share_binding`. O RAW recebe manifesto e permanece privado; o SHARE recebe identidade própria, secret/path scan e verificação de envelope. O artefato destinado à auditoria remota é o ZIP SHARE sanitizado com SHA-256 registrado no verdict externo.
 
 Empacotar evidência após um FAIL não constitui retry do gate: é preservação da primeira tentativa. A campanha não é reexecutada.
+
+
+## Bundle público de auditoria
+
+O arquivo a retornar não é mais um ZIP contendo apenas o SHARE. O empacotador cria um `*_AUDIT_BUNDLE.zip` com:
+- `SHARE/**` sanitizado e seu manifesto;
+- `RAW_SHARE_BINDING.json` (somente hashes/scan, sem bytes RAW);
+- `ENVELOPE_VERIFICATION.json`;
+- `AUDIT_CONTEXT.json`, com identidade da campanha, status, SHA candidato e hashes dos sidecars;
+- manifesto do próprio audit bundle e scan final.
+
+O RAW não entra no audit bundle. Assim, o auditor remoto consegue revalidar integralmente o conteúdo compartilhado, o scan e os sidecars públicos; a autenticidade dos bytes RAW permanece limitada ao hash/binding e à verificação local, como previsto pelo contrato de evidência.
