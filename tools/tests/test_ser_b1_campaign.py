@@ -153,7 +153,13 @@ class HandoffTests(unittest.TestCase):
             "policy_before_digest": campaign["policy_before_digest"],
             "b0_mechanism_digest": "e" * 64,
             "adapter_id": "SER-B1-ADAPTER-1",
-            "python_executable": "C:/Python/python.exe",
+            "python_executable": "C:/Authorized/Venv/python.exe",
+            "python_runtime_executable_observed": "C:/Sandbox/Redirect/Venv/python.exe",
+            "python_executable_sha256": "3" * 64,
+            "python_runtime_executable_sha256": "3" * 64,
+            "python_version": "3.12.10",
+            "python_implementation": "CPython",
+            "python_isolated": True,
         }
         campaign["release_spec_digest"] = digest_json(spec)
         payload = handoff.build_handoff(
@@ -166,8 +172,13 @@ class HandoffTests(unittest.TestCase):
         self.assertEqual(1, payload["max_auditors"])
         self.assertEqual(64, len(payload["profile_digest"]))
         self.assertTrue(all(x["profile_digest"] == payload["profile_digest"] for x in payload["tasks"]))
+        self.assertEqual("SER-B1-HANDOFF-2", payload["handoff_schema"])
+        self.assertEqual(spec["python_executable"], payload["python_launcher_path"])
+        self.assertEqual(spec["python_runtime_executable_observed"], payload["python_runtime_executable_observed"])
+        self.assertEqual(spec["python_executable_sha256"], payload["python_binary_sha256"])
         self.assertEqual(spec["python_executable"], payload["execution_argv"][0])
         self.assertEqual(spec["python_executable"], payload["post_run_package_argv"][0])
+        self.assertNotEqual(spec["python_runtime_executable_observed"], payload["execution_argv"][0])
         self.assertIn("package_evidence", payload["post_run_package_argv"][3])
         self.assertEqual("--output-dir", payload["post_run_package_argv"][4])
         self.assertEqual(
@@ -221,10 +232,85 @@ class IdentityTests(unittest.TestCase):
             "command_registry_digest": "d"*64, "coverage_digest": "e"*64,
             "policy_before_digest": "f"*64, "host_digest": "1"*64,
             "b0_mechanism_digest": "2"*64, "adapter_id": "SER-B1-ADAPTER-1",
-            "python_executable": "python", "python_version": "3", "platform": "x",
+            "python_executable": "python",
+            "python_runtime_executable_observed": "sandbox-python",
+            "python_executable_sha256": "3"*64,
+            "python_runtime_executable_sha256": "3"*64,
+            "python_version": "3",
+            "python_implementation": "CPython",
+            "python_isolated": True,
+            "platform": "x",
             "created_at_utc": "now",
         }
         self.assertIn("B1_RELEASE_SPEC_SCHEMA_INVALID", identity.validate_release_spec(spec))
+
+
+class RuntimeInterpreterBindingTests(unittest.TestCase):
+    def _spec(self):
+        return {
+            "python_executable": r"C:\\Users\\u\\venv\\Scripts\\python.exe",
+            "python_runtime_executable_observed": r"C:\\Sandbox\\Redirect\\venv\\Scripts\\python.exe",
+            "python_executable_sha256": "a" * 64,
+            "python_runtime_executable_sha256": "a" * 64,
+            "python_version": "3.12.10",
+            "python_implementation": "CPython",
+            "python_isolated": True,
+        }
+
+    def test_redirected_runtime_path_is_allowed_when_identity_matches(self):
+        spec = self._spec()
+        with mock.patch.object(identity, "_sha256_file", return_value="a" * 64):
+            issues = identity._runtime_binding_issues(
+                spec,
+                current_executable=spec["python_runtime_executable_observed"],
+                current_version="3.12.10",
+                current_implementation="CPython",
+                current_isolated=True,
+            )
+        self.assertEqual([], issues)
+
+    def test_authorized_launcher_binary_change_is_rejected(self):
+        spec = self._spec()
+        values = iter(["a" * 64, "b" * 64])
+        with mock.patch.object(identity, "_sha256_file", side_effect=lambda _: next(values)):
+            issues = identity._runtime_binding_issues(
+                spec,
+                current_executable=spec["python_runtime_executable_observed"],
+                current_version="3.12.10",
+                current_implementation="CPython",
+                current_isolated=True,
+            )
+        self.assertIn("B1_RELEASE_PYTHON_LAUNCHER_CHANGED", issues)
+        self.assertIn("B1_RELEASE_PYTHON_LAUNCHER_RUNTIME_DIGEST_MISMATCH", issues)
+
+    def test_release_spec_v2_rejects_distinct_launcher_runtime_hashes(self):
+        spec = {
+            "schema_version": "SER-B1-RELEASE-SPEC-2",
+            "round_id": "B1ROUND-test",
+            "candidate_sha": "a"*40,
+            "candidate_tree_sha": "b"*40,
+            "baseline_sha": "c"*40,
+            "branch": "x",
+            "command_registry_digest": "d"*64,
+            "coverage_digest": "e"*64,
+            "policy_before_digest": "f"*64,
+            "host_digest": "1"*64,
+            "b0_mechanism_digest": "2"*64,
+            "adapter_id": "SER-B1-ADAPTER-1",
+            "python_executable": r"C:\\venv\\python.exe",
+            "python_runtime_executable_observed": r"C:\\sandbox\\python.exe",
+            "python_executable_sha256": "3"*64,
+            "python_runtime_executable_sha256": "4"*64,
+            "python_version": "3.12.10",
+            "python_implementation": "CPython",
+            "python_isolated": True,
+            "platform": "Windows",
+            "created_at_utc": "now",
+        }
+        self.assertIn(
+            "B1_RELEASE_PYTHON_BINDING_DIGEST_MISMATCH",
+            identity.validate_release_spec(spec),
+        )
 
 
 if __name__ == "__main__":

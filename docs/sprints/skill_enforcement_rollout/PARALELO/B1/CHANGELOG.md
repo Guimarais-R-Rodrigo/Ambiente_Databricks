@@ -35,3 +35,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) ENV-03 encerrada BLOCKED: Get-Command py.exe não resolveu na sessão, sem probe 3.12. ENV-04 não depende do PATH; usa o path do launcher legado observado em ENV-02 via %LOCALAPPDATA%\Programs\Python\Launcher\py.exe, captura sys.executable e prepara venv externo se CPython 3.12 for comprovado.
 
 (ChatGPT) ENV-04 PASS: CPython 3.12.10 provado diretamente, venv externo isolado criado, tools/requirements-dev.txt instalado e smoke ambiental verde, repo intacto. Remediação encerrada; R5 criada apenas como novo checkpoint documental, usando diretamente o Python do venv e sem resolver V3.
+
+(ChatGPT) R5 FAIL após preflight PASS e 19/19 metatestes: prepare PASS congelou sys.executable no path físico redirecionado do sandbox, divergente do launcher literal ENV-04 exigido pelo gate; campanha/package NOT_RUN. R6 introduz RELEASE-SPEC-2/HANDOFF-2: launcher autorizado separado do runtime observado e ligados por probe direto + SHA-256 + versão/implementação/isolamento.

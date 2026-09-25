@@ -13,6 +13,10 @@ def _profile_digest(campaign: Mapping[str, Any], release_spec: Mapping[str, Any]
         "coverage_digest": release_spec["coverage_digest"],
         "b0_mechanism_digest": release_spec["b0_mechanism_digest"],
         "adapter_id": release_spec["adapter_id"],
+        "python_executable_sha256": release_spec["python_executable_sha256"],
+        "python_version": release_spec["python_version"],
+        "python_implementation": release_spec["python_implementation"],
+        "python_isolated": release_spec["python_isolated"],
         "max_parallel": campaign["max_parallel"],
         "max_auditors": campaign["max_auditors"],
         "resource_limits": campaign.get("resource_limits"),
@@ -31,9 +35,17 @@ def _assert_campaign_release_binding(campaign: Mapping[str, Any], release_spec: 
             raise ValueError("HANDOFF_RELEASE_FIELD_MISMATCH:" + key)
     if campaign.get("release_spec_digest") != digest_json(dict(release_spec)):
         raise ValueError("HANDOFF_RELEASE_SPEC_DIGEST_MISMATCH")
-    python_executable = release_spec.get("python_executable")
-    if not isinstance(python_executable, str) or not python_executable:
-        raise ValueError("HANDOFF_PYTHON_EXECUTABLE_MISSING")
+    for key in (
+        "python_executable", "python_runtime_executable_observed",
+        "python_executable_sha256", "python_runtime_executable_sha256",
+        "python_version", "python_implementation",
+    ):
+        if not isinstance(release_spec.get(key), str) or not release_spec.get(key):
+            raise ValueError("HANDOFF_PYTHON_BINDING_MISSING:" + key)
+    if release_spec.get("python_executable_sha256") != release_spec.get("python_runtime_executable_sha256"):
+        raise ValueError("HANDOFF_PYTHON_BINARY_MISMATCH")
+    if not isinstance(release_spec.get("python_isolated"), bool):
+        raise ValueError("HANDOFF_PYTHON_ISOLATION_MISSING")
 
 
 def build_handoff(
@@ -77,7 +89,7 @@ def build_handoff(
             "authorization_ref": "issue#114:P2_LOCAL_CAMPAIGN_ONLY",
         })
     return {
-        "handoff_schema": "SER-B1-HANDOFF-1",
+        "handoff_schema": "SER-B1-HANDOFF-2",
         "campaign_id": campaign["campaign_id"],
         "round_id": campaign["round_id"],
         "release_id": release_id,
@@ -87,6 +99,12 @@ def build_handoff(
         "campaign_path": str(campaign_path),
         "release_spec_path": str(release_spec_path),
         "evidence_root": str(evidence_dir),
+        "python_launcher_path": release_spec["python_executable"],
+        "python_runtime_executable_observed": release_spec["python_runtime_executable_observed"],
+        "python_binary_sha256": release_spec["python_executable_sha256"],
+        "python_version": release_spec["python_version"],
+        "python_implementation": release_spec["python_implementation"],
+        "python_isolated": release_spec["python_isolated"],
         "max_parallel": campaign["max_parallel"],
         "max_auditors": campaign["max_auditors"],
         "tasks": tasks,
@@ -121,10 +139,15 @@ def render_markdown(handoff: Mapping[str, Any]) -> str:
         f"- round: `{handoff['round_id']}`\n"
         f"- candidate: `{handoff['candidate_sha']}`\n"
         f"- profile digest: `{handoff['profile_digest']}`\n"
+        f"- python launcher autorizado: `{handoff['python_launcher_path']}`\n"
+        f"- python runtime observado: `{handoff['python_runtime_executable_observed']}`\n"
+        f"- python SHA-256: `{handoff['python_binary_sha256']}`\n"
         f"- concorrência: `{handoff['max_parallel']}/{handoff['max_auditors']}` (total/auditores)\n"
         "- finalidade: executar uma única campanha local read-only e produzir evidência; não promover nem integrar.\n\n"
         "## Comando único da campanha\n\n"
         "```text\n" + argv + "\n```\n\n"
+        "O launcher autorizado e o runtime físico observado podem ter paths distintos sob virtualização, "
+        "mas o release exige identidade SHA-256, versão/implementação/isolamento e runtime observado estáveis. "
         "Antes desse comando, os gates estáticos/metatestes do pacote devem ter passado uma única vez. "
         "Qualquer exit code não zero interrompe a rodada; não corrigir ou repetir no mesmo round. "
         "Depois da tentativa única, execute post_run_package_argv uma única vez para selar RAW/SHARE; "

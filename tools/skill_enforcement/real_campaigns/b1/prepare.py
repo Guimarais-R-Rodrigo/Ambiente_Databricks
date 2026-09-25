@@ -21,7 +21,7 @@ def validate_output_location(output_dir: Path) -> Path:
     return target
 
 
-def prepare(output_dir: Path) -> dict:
+def prepare(output_dir: Path, *, python_launcher: str) -> dict:
     preflight = check()
     if preflight.get("status") != "PASS":
         raise RuntimeError("B1_P2_PREFLIGHT_NOT_PASS")
@@ -32,7 +32,7 @@ def prepare(output_dir: Path) -> dict:
     else:
         output_dir.mkdir(parents=True)
     round_start = capture_round_start()
-    release_spec = build_release_spec(round_start)
+    release_spec = build_release_spec(round_start, python_launcher=python_launcher)
     campaign = json.loads(TEMPLATE.read_text(encoding="utf-8"))
     campaign["round_id"] = release_spec["round_id"]
     campaign["release_spec_digest"] = digest_json(release_spec)
@@ -77,6 +77,9 @@ def prepare(output_dir: Path) -> dict:
         "release_spec": str(paths["release_spec"]),
         "handoff": str(paths["handoff_md"]),
         "evidence_dir_must_not_exist_before_launch": str(paths["evidence"]),
+        "python_launcher_path": release_spec["python_executable"],
+        "python_runtime_executable_observed": release_spec["python_runtime_executable_observed"],
+        "python_binary_sha256": release_spec["python_executable_sha256"],
         "execution_argv": handoff["execution_argv"],
     }
 
@@ -84,9 +87,10 @@ def prepare(output_dir: Path) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Prepare immutable B1 P2 campaign + mechanically derived handoff")
     parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument("--python-launcher", required=True)
     args = parser.parse_args()
     try:
-        report = prepare(args.output_dir)
+        report = prepare(args.output_dir, python_launcher=args.python_launcher)
     except Exception as exc:
         report = {"status": "FAIL", "issue": type(exc).__name__ + ":" + str(exc)}
     print(json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2))

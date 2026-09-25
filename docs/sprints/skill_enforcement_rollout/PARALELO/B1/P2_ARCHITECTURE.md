@@ -140,3 +140,10 @@ R4 introduz resolver V3:
 - preserva `formal_gate_executed=false` e `writes_performed=false`.
 
 Somente um FAIL JSON válido do V3 com `PYTHON3_INTERPRETER_NOT_RESOLVED` será suficiente para classificar o host como sem Python 3 utilizável observável e partir para remediação ambiental explícita.
+
+
+## R5: path virtualizado do interpretador e release identity V2
+
+R5 passou preflight e 19 metatestes. O prepare gerou o release, mas o processo Codex materializou `sys.executable` sob um path físico `LocalCache\Local` diferente do launcher literal ENV-04. O gate externo corretamente parou antes da campanha.
+
+R6 não relaxa a identidade para comparação textual frouxa. O release V2 separa launcher autorizado de runtime observado e os liga por probe direto + SHA-256 idêntico + versão/implementação/isolamento. O handoff V2 usa o launcher autorizado nos argv; o adapter revalida o runtime observado e os hashes.

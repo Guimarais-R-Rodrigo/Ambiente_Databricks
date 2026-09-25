@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import platform
 import subprocess
 import sys
@@ -20,7 +21,7 @@ POLICY = ROOT / "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.
 PARALLEL_ROOT = ROOT / "tools/skill_enforcement/parallel"
 B0_BINDINGS = Path(__file__).with_name("b0_qualified_bindings.json")
 ROUND_START_SCHEMA = "SER-B1-ROUND-START-1"
-RELEASE_SPEC_SCHEMA = "SER-B1-RELEASE-SPEC-1"
+RELEASE_SPEC_SCHEMA = "SER-B1-RELEASE-SPEC-2"
 
 
 def _utc() -> str:
@@ -37,6 +38,134 @@ def _git(*args: str) -> str:
 def _git_blob(path: Path) -> str:
     data = path.read_bytes()
     return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\0" + data).hexdigest()
+
+
+def _sha256_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _runtime_path_key(value: str) -> str:
+    return os.path.normcase(os.path.normpath(value))
+
+
+def _probe_python_launcher(python_launcher: str) -> dict[str, Any]:
+    code = (
+        "import json,platform,sys;"
+        "print(json.dumps({"
+        "'executable':sys.executable,"
+        "'version':platform.python_version(),"
+        "'implementation':platform.python_implementation(),"
+        "'prefix':sys.prefix,"
+        "'base_prefix':sys.base_prefix,"
+        "'isolated':sys.prefix != sys.base_prefix"
+        "},sort_keys=True))"
+    )
+    p = subprocess.run(
+        [python_launcher, "-B", "-c", code],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    if p.returncode != 0:
+        raise RuntimeError("B1_PYTHON_LAUNCHER_PROBE_FAILED:" + str(p.returncode))
+    lines = [line.strip() for line in p.stdout.splitlines() if line.strip()]
+    if not lines:
+        raise RuntimeError("B1_PYTHON_LAUNCHER_PROBE_EMPTY")
+    try:
+        payload = json.loads(lines[-1])
+    except json.JSONDecodeError as exc:
+        raise RuntimeError("B1_PYTHON_LAUNCHER_PROBE_JSON_INVALID") from exc
+    required = {"executable", "version", "implementation", "prefix", "base_prefix", "isolated"}
+    if not isinstance(payload, dict) or set(payload) != required:
+        raise RuntimeError("B1_PYTHON_LAUNCHER_PROBE_SHAPE_INVALID")
+    if not all(isinstance(payload.get(k), str) and payload.get(k) for k in ("executable", "version", "implementation", "prefix", "base_prefix")):
+        raise RuntimeError("B1_PYTHON_LAUNCHER_PROBE_FIELD_INVALID")
+    if not isinstance(payload.get("isolated"), bool):
+        raise RuntimeError("B1_PYTHON_LAUNCHER_PROBE_ISOLATION_INVALID")
+    return payload
+
+
+def _capture_python_binding(python_launcher: str) -> dict[str, Any]:
+    if not isinstance(python_launcher, str) or not python_launcher:
+        raise ValueError("B1_PYTHON_LAUNCHER_REQUIRED")
+    launcher_path = Path(python_launcher)
+    if not launcher_path.is_absolute():
+        raise ValueError("B1_PYTHON_LAUNCHER_MUST_BE_ABSOLUTE")
+    if not launcher_path.is_file():
+        raise ValueError("B1_PYTHON_LAUNCHER_NOT_FILE")
+
+    probe_payload = _probe_python_launcher(python_launcher)
+    runtime_observed = str(Path(sys.executable).resolve())
+    if _runtime_path_key(probe_payload["executable"]) != _runtime_path_key(runtime_observed):
+        raise ValueError("B1_PYTHON_LAUNCHER_RUNTIME_MISMATCH")
+    if probe_payload["version"] != platform.python_version():
+        raise ValueError("B1_PYTHON_LAUNCHER_VERSION_MISMATCH")
+    if probe_payload["implementation"] != platform.python_implementation():
+        raise ValueError("B1_PYTHON_LAUNCHER_IMPLEMENTATION_MISMATCH")
+    isolated = sys.prefix != sys.base_prefix
+    if probe_payload["isolated"] is not isolated:
+        raise ValueError("B1_PYTHON_LAUNCHER_ISOLATION_MISMATCH")
+
+    launcher_sha = _sha256_file(launcher_path)
+    runtime_sha = _sha256_file(Path(runtime_observed))
+    if launcher_sha != runtime_sha:
+        raise ValueError("B1_PYTHON_LAUNCHER_BINARY_MISMATCH")
+
+    return {
+        "python_executable": python_launcher,
+        "python_runtime_executable_observed": runtime_observed,
+        "python_executable_sha256": launcher_sha,
+        "python_runtime_executable_sha256": runtime_sha,
+        "python_version": platform.python_version(),
+        "python_implementation": platform.python_implementation(),
+        "python_isolated": isolated,
+    }
+
+
+def _runtime_binding_issues(
+    spec: Mapping[str, Any],
+    *,
+    current_executable: str | None = None,
+    current_version: str | None = None,
+    current_implementation: str | None = None,
+    current_isolated: bool | None = None,
+) -> list[str]:
+    issues: list[str] = []
+    observed = current_executable if current_executable is not None else str(Path(sys.executable).resolve())
+    version = current_version if current_version is not None else platform.python_version()
+    implementation = current_implementation if current_implementation is not None else platform.python_implementation()
+    isolated = current_isolated if current_isolated is not None else (sys.prefix != sys.base_prefix)
+
+    if _runtime_path_key(observed) != _runtime_path_key(str(spec.get("python_runtime_executable_observed") or "")):
+        issues.append("B1_RELEASE_RUNTIME_EXECUTABLE_CHANGED")
+    if version != spec.get("python_version"):
+        issues.append("B1_RELEASE_PYTHON_VERSION_CHANGED")
+    if implementation != spec.get("python_implementation"):
+        issues.append("B1_RELEASE_PYTHON_IMPLEMENTATION_CHANGED")
+    if isolated is not spec.get("python_isolated"):
+        issues.append("B1_RELEASE_PYTHON_ISOLATION_CHANGED")
+
+    try:
+        runtime_sha = _sha256_file(Path(observed))
+        if runtime_sha != spec.get("python_runtime_executable_sha256"):
+            issues.append("B1_RELEASE_RUNTIME_BINARY_CHANGED")
+    except OSError as exc:
+        issues.append("B1_RELEASE_RUNTIME_BINARY_UNREADABLE:" + type(exc).__name__)
+
+    launcher = spec.get("python_executable")
+    try:
+        if not isinstance(launcher, str) or not launcher:
+            issues.append("B1_RELEASE_PYTHON_LAUNCHER_INVALID")
+        else:
+            launcher_sha = _sha256_file(Path(launcher))
+            if launcher_sha != spec.get("python_executable_sha256"):
+                issues.append("B1_RELEASE_PYTHON_LAUNCHER_CHANGED")
+            if launcher_sha != spec.get("python_runtime_executable_sha256"):
+                issues.append("B1_RELEASE_PYTHON_LAUNCHER_RUNTIME_DIGEST_MISMATCH")
+    except OSError as exc:
+        issues.append("B1_RELEASE_PYTHON_LAUNCHER_UNREADABLE:" + type(exc).__name__)
+    return sorted(set(issues))
 
 
 def _load_b0_bindings() -> dict[str, Any]:
@@ -127,7 +256,7 @@ def capture_round_start() -> dict[str, Any]:
     }
 
 
-def build_release_spec(round_start: Mapping[str, Any]) -> dict[str, Any]:
+def build_release_spec(round_start: Mapping[str, Any], *, python_launcher: str) -> dict[str, Any]:
     coverage = build_report()
     if coverage.get("status") != "PASS":
         raise ValueError("B1_COVERAGE_NOT_PASS")
@@ -145,8 +274,7 @@ def build_release_spec(round_start: Mapping[str, Any]) -> dict[str, Any]:
         "host_digest": digest_json(host),
         "b0_mechanism_digest": _b0_digest(),
         "adapter_id": "SER-B1-ADAPTER-1",
-        "python_executable": str(Path(sys.executable).resolve()),
-        "python_version": platform.python_version(),
+        **_capture_python_binding(python_launcher),
         "platform": platform.platform(),
         "created_at_utc": _utc(),
     }
@@ -159,7 +287,9 @@ def validate_release_spec(spec: Any) -> list[str]:
         "schema_version", "round_id", "candidate_sha", "candidate_tree_sha", "baseline_sha",
         "branch", "command_registry_digest", "coverage_digest", "policy_before_digest",
         "host_digest", "b0_mechanism_digest", "adapter_id", "python_executable",
-        "python_version", "platform", "created_at_utc",
+        "python_runtime_executable_observed", "python_executable_sha256",
+        "python_runtime_executable_sha256", "python_version", "python_implementation",
+        "python_isolated", "platform", "created_at_utc",
     }
     issues: list[str] = []
     if set(spec) != required:
@@ -168,18 +298,33 @@ def validate_release_spec(spec: Any) -> list[str]:
         issues.append("B1_RELEASE_SPEC_SCHEMA_INVALID")
     if spec.get("adapter_id") != "SER-B1-ADAPTER-1":
         issues.append("B1_RELEASE_ADAPTER_INVALID")
-    for key in ("round_id", "branch", "python_executable", "python_version", "platform", "created_at_utc"):
+    for key in (
+        "round_id", "branch", "python_executable", "python_runtime_executable_observed",
+        "python_version", "python_implementation", "platform", "created_at_utc",
+    ):
         if not isinstance(spec.get(key), str) or not spec.get(key):
             issues.append("B1_RELEASE_FIELD_INVALID:" + key)
+    if not isinstance(spec.get("python_isolated"), bool):
+        issues.append("B1_RELEASE_FIELD_INVALID:python_isolated")
     for key in ("candidate_sha", "candidate_tree_sha", "baseline_sha"):
         value = spec.get(key)
         if not isinstance(value, str) or len(value) != 40 or any(c not in "0123456789abcdef" for c in value):
             issues.append("B1_RELEASE_SHA_INVALID:" + key)
-    for key in ("command_registry_digest", "coverage_digest", "policy_before_digest", "host_digest", "b0_mechanism_digest"):
+    for key in (
+        "command_registry_digest", "coverage_digest", "policy_before_digest",
+        "host_digest", "b0_mechanism_digest", "python_executable_sha256",
+        "python_runtime_executable_sha256",
+    ):
         value = spec.get(key)
         if not isinstance(value, str) or len(value) != 64 or any(c not in "0123456789abcdef" for c in value):
             issues.append("B1_RELEASE_DIGEST_INVALID:" + key)
-    return issues
+    if (
+        isinstance(spec.get("python_executable_sha256"), str)
+        and isinstance(spec.get("python_runtime_executable_sha256"), str)
+        and spec.get("python_executable_sha256") != spec.get("python_runtime_executable_sha256")
+    ):
+        issues.append("B1_RELEASE_PYTHON_BINDING_DIGEST_MISMATCH")
+    return sorted(set(issues))
 
 
 def assert_release_spec_current(spec: Mapping[str, Any]) -> list[str]:
@@ -218,8 +363,5 @@ def assert_release_spec_current(spec: Mapping[str, Any]) -> list[str]:
             issues.append("B1_RELEASE_HOST_CHANGED")
     except Exception as exc:
         issues.append("B1_RELEASE_BINDING_UNREADABLE:" + type(exc).__name__)
-    if str(Path(sys.executable).resolve()) != spec.get("python_executable"):
-        issues.append("B1_RELEASE_INTERPRETER_CHANGED")
-    if platform.python_version() != spec.get("python_version"):
-        issues.append("B1_RELEASE_PYTHON_VERSION_CHANGED")
+    issues.extend(_runtime_binding_issues(spec))
     return sorted(set(issues))
