@@ -65,3 +65,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) G6 mismatch forensics PASS: 33 errors reduzem-se a 17 defeitos lógicos conhecidos (16 objetos ausentes do P1 + policy.json remoto em revisão histórica a01d12ff...), sem outras anomalias. Preparada proposta de publicação corretiva mínima de 17 objetos; full republish rejeitado como superfície de efeito desnecessária. Nenhuma escrita remota autorizada.
 
 (ChatGPT) Autoria repo-side da correção remota mínima criada fora do freeze G6: manifest fechado de 17 objetos, publisher delta fail-closed e 7 metatestes. 16 creates exigem target ausente e nunca usam overwrite; somente policy.json pode overwrite se o hash remoto ainda for exatamente o histórico observado. Execução remota continua NOT_AUTHORIZED.
+
+(ChatGPT) Usuário autorizou UMA tentativa do publisher corretivo mínimo congelado, ref issue#114:comment#5835957014, preso ao manifest SHA256 57574ddb..., 17 objetos, target FREE e effect REMOTE_PACKAGE_WRITE. Full republish/retry/probes/Genie/cleanup/policy mutation/promoção/Ready/merge seguem proibidos. Execução ainda NOT_RUN.
