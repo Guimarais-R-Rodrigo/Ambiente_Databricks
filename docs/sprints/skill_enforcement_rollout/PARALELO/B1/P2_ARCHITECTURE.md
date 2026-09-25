@@ -107,3 +107,12 @@ O RAW não entra no audit bundle. Assim, o auditor remoto consegue revalidar int
 A qualificação B0 observou Windows, NTFS, sandbox negativo, Windows Job Object, recursos e concorrência 2/1. A P2 não transporta esse limite para outro host por mera compatibilidade de código. O preflight B1 atual exige `Windows` + filesystem `NTFS`; execução em Linux/Cloud ou Windows não-NTFS retorna bloqueio ambiental antes de preparar a campanha.
 
 Outro host poderá ser usado somente após uma qualificação ambiental própria e uma alteração versionada dessa autoridade; isso não faz parte desta P2.
+
+
+## Bootstrap do interpretador após R1
+
+A primeira tentativa local em `3149ff6...` encerrou antes de iniciar Python porque o handoff usava o alias literal `python`, ausente no PATH daquela sessão. O histórico está preservado em `P2_R1_FAILURE.md`.
+
+A correção é exclusivamente de bootstrap. `resolve_python_windows.ps1` roda antes do primeiro gate formal, não escreve no repositório e não executa nenhum gate P2. Ele procura candidatos Python 3 via ambiente, `Get-Command`, `py.exe -3` e instalações locais; cada candidato precisa provar seu próprio `sys.executable`. O output PASS fornece `python_executable` real.
+
+P2-01, P2-02 e P2-03 devem então ser chamados por esse caminho exato. P2-03 congela o mesmo `sys.executable` no release spec e os argv gerados continuam SHA/release-bound. Falha do resolver é `BLOCKED_ENVIRONMENT`, não um retry de P2-01.

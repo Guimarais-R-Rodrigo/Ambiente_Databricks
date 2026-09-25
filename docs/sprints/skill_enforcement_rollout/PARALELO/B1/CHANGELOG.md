@@ -19,3 +19,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) O retorno P2 foi fortalecido para AUDIT_BUNDLE.zip: SHARE sanitizado + RAW_SHARE_BINDING + ENVELOPE_VERIFICATION + AUDIT_CONTEXT + manifesto/scan do bundle público; RAW continua privado.
 
 (ChatGPT) Autoridade ambiental fechada: P2 2/1 exige Windows+NTFS no preflight; Linux/Cloud ou Windows não-NTFS bloqueiam antes de prepare. Também removida inferência frágil do path RAW no AUDIT_CONTEXT.
+
+(ChatGPT) R1 preservada como FAIL pré-processo em 3149ff6: alias literal python ausente no PATH. Classificado como ENVIRONMENT_ALIAS_ABSENT + HANDOFF_BOOTSTRAP_DEFECT, sem defeito de candidata. Adicionado resolve_python_windows.ps1 como descoberta pré-gate de sys.executable para a rodada sucessora.
