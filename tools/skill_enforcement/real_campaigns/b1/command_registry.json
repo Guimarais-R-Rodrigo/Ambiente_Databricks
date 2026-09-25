@@ -8,7 +8,7 @@
         "-B",
         "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/scripts/preflight.py",
         "--request",
-        "tools/tests/fixtures/ser_b1/vf_cumulative.json"
+        "tools/skill_enforcement/real_campaigns/b1/fixtures/vf_cumulative_request.json"
       ],
       "effects": "none",
       "purpose": "SER03 preflight mensal/binário cumulativo sobre fixture sintética",
@@ -21,7 +21,7 @@
         "-B",
         "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/scripts/preflight.py",
         "--request",
-        "tools/tests/fixtures/ser_b1/vf_events.json"
+        "tools/skill_enforcement/real_campaigns/b1/fixtures/vf_events_request.json"
       ],
       "effects": "none",
       "purpose": "SER03 preflight mensal/binário de eventos sobre fixture sintética",
@@ -79,7 +79,7 @@
         "-B",
         "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/scripts/preflight.py",
         "--context",
-        "tools/tests/fixtures/ser_b1/ce_l2_temporal.json"
+        "tools/skill_enforcement/real_campaigns/b1/fixtures/ce_l2_temporal_context.json"
       ],
       "effects": "none",
       "purpose": "SER05 L2 preflight temporal sintético, sem join",
@@ -92,7 +92,7 @@
         "-B",
         "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/scripts/preflight.py",
         "--context",
-        "tools/tests/fixtures/ser_b1/ce_l2_static.json"
+        "tools/skill_enforcement/real_campaigns/b1/fixtures/ce_l2_static_context.json"
       ],
       "effects": "none",
       "purpose": "SER05 L2 preflight estático NOT_APPLICABLE, sem join",

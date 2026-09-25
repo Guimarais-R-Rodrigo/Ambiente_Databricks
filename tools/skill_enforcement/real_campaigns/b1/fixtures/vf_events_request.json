@@ -1,0 +1,98 @@
+{
+  "absence_policy": "MISSING_ROW_NOT_ZERO",
+  "cohort_roster": [
+    {
+      "id": "a1",
+      "originated_at": "2026-01-01T00:00:00Z"
+    },
+    {
+      "id": "a2",
+      "originated_at": "2026-01-01T00:00:00Z"
+    },
+    {
+      "id": "b1",
+      "originated_at": "2026-02-01T00:00:00Z"
+    },
+    {
+      "id": "b2",
+      "originated_at": "2026-02-01T00:00:00Z"
+    }
+  ],
+  "cutoff": "2026-03-01T00:00:00Z",
+  "denominator": "MOB0_UNIQUE_IDS_FIXED_PER_COHORT",
+  "duplicate_policy": "REJECT",
+  "estimand": "BINARY_CUMULATIVE_INCIDENCE",
+  "max_mob": 2,
+  "periodicity": "MONTH",
+  "population_id": "synthetic-VF-F01-EVENT",
+  "profile": "MONTHLY_BINARY_PILOT_V1",
+  "requested_effect": "NONE",
+  "rows": [
+    {
+      "id": "a1",
+      "mob": 0,
+      "observed_at": "2026-01-01T00:00:00Z",
+      "originated_at": "2026-01-01T00:00:00Z",
+      "target": 0
+    },
+    {
+      "id": "a2",
+      "mob": 0,
+      "observed_at": "2026-01-01T00:00:00Z",
+      "originated_at": "2026-01-01T00:00:00Z",
+      "target": 0
+    },
+    {
+      "id": "a1",
+      "mob": 1,
+      "observed_at": "2026-02-01T00:00:00Z",
+      "originated_at": "2026-01-01T00:00:00Z",
+      "target": 1
+    },
+    {
+      "id": "a2",
+      "mob": 1,
+      "observed_at": "2026-02-01T00:00:00Z",
+      "originated_at": "2026-01-01T00:00:00Z",
+      "target": 0
+    },
+    {
+      "id": "a1",
+      "mob": 2,
+      "observed_at": "2026-03-01T00:00:00Z",
+      "originated_at": "2026-01-01T00:00:00Z",
+      "target": 0
+    },
+    {
+      "id": "b1",
+      "mob": 0,
+      "observed_at": "2026-02-01T00:00:00Z",
+      "originated_at": "2026-02-01T00:00:00Z",
+      "target": 0
+    },
+    {
+      "id": "b2",
+      "mob": 0,
+      "observed_at": "2026-02-01T00:00:00Z",
+      "originated_at": "2026-02-01T00:00:00Z",
+      "target": 1
+    },
+    {
+      "id": "b1",
+      "mob": 1,
+      "observed_at": "2026-03-01T00:00:00Z",
+      "originated_at": "2026-02-01T00:00:00Z",
+      "target": 0
+    },
+    {
+      "id": "b2",
+      "mob": 1,
+      "observed_at": "2026-03-01T00:00:00Z",
+      "originated_at": "2026-02-01T00:00:00Z",
+      "target": 0
+    }
+  ],
+  "schema_version": "SER03-REQUEST-1",
+  "semantic_mode": "EVENT",
+  "synthetic": true
+}

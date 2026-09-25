@@ -164,3 +164,14 @@ A autoridade R6 é:
 - mesmo estado de isolamento.
 
 No adapter, mudança do path físico por si só não reprova; mudança de hash/versão/implementação/isolamento reprova.
+
+
+## R6 campaign FAIL: fixture wrapper versus CLI payload
+
+A primeira campanha real chegou ao wave 0 e revelou um erro de integração que as suítes P1 não cobriam: os testes carregavam `fixture(...)[request/context]`, mas o registry passava o wrapper inteiro aos CLIs.
+
+R7 resolve sem tocar nos bytes funcionais P1:
+- projeções CLI ficam em `real_campaigns/b1/fixtures`;
+- cada projeção deve ser semanticamente idêntica ao objeto interno do fixture P1;
+- command IDs permanecem os mesmos;
+- metatestes executam os quatro preflights CLI reais para impedir recorrência.

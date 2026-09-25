@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import copy
 import json
+import subprocess
+import sys
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -311,6 +313,59 @@ class RuntimeInterpreterBindingTests(unittest.TestCase):
             "B1_RELEASE_PYTHON_BINDING_DIGEST_MISMATCH",
             identity.validate_release_spec(spec),
         )
+
+
+class CliFixtureProjectionTests(unittest.TestCase):
+    def test_cli_fixture_files_are_exact_nested_payload_projections(self):
+        pairs = (
+            (
+                ROOT / "tools/tests/fixtures/ser_b1/vf_cumulative.json",
+                "request",
+                ROOT / "tools/skill_enforcement/real_campaigns/b1/fixtures/vf_cumulative_request.json",
+            ),
+            (
+                ROOT / "tools/tests/fixtures/ser_b1/vf_events.json",
+                "request",
+                ROOT / "tools/skill_enforcement/real_campaigns/b1/fixtures/vf_events_request.json",
+            ),
+            (
+                ROOT / "tools/tests/fixtures/ser_b1/ce_l2_temporal.json",
+                "context",
+                ROOT / "tools/skill_enforcement/real_campaigns/b1/fixtures/ce_l2_temporal_context.json",
+            ),
+            (
+                ROOT / "tools/tests/fixtures/ser_b1/ce_l2_static.json",
+                "context",
+                ROOT / "tools/skill_enforcement/real_campaigns/b1/fixtures/ce_l2_static_context.json",
+            ),
+        )
+        for wrapper_path, key, cli_path in pairs:
+            with self.subTest(cli_path=cli_path.name):
+                wrapper = json.loads(wrapper_path.read_text(encoding="utf-8"))
+                cli_payload = json.loads(cli_path.read_text(encoding="utf-8"))
+                self.assertEqual(wrapper[key], cli_payload)
+
+    def test_real_preflight_cli_commands_accept_projected_fixtures(self):
+        command_ids = (
+            "b1:ser03:preflight:cumulative",
+            "b1:ser03:preflight:event",
+            "b1:ser05:preflight:temporal",
+            "b1:ser05:preflight:static",
+        )
+        for command_id in command_ids:
+            with self.subTest(command_id=command_id):
+                argv, timeout = registry.resolve_command(command_id)
+                self.assertEqual(sys.executable, argv[0])
+                completed = subprocess.run(
+                    argv,
+                    cwd=ROOT,
+                    capture_output=True,
+                    text=True,
+                    timeout=min(timeout, 60),
+                )
+                self.assertEqual(0, completed.returncode, completed.stdout + completed.stderr)
+                payload = json.loads(completed.stdout.strip().splitlines()[-1])
+                self.assertEqual("PASS", payload["status"], payload)
 
 
 if __name__ == "__main__":

@@ -16,12 +16,12 @@ _ALLOWED_SPECS: dict[str, tuple[str, ...]] = {
     "b1:ser03:preflight:cumulative": (
         "{PYTHON}", "-B",
         "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/scripts/preflight.py",
-        "--request", "tools/tests/fixtures/ser_b1/vf_cumulative.json",
+        "--request", "tools/skill_enforcement/real_campaigns/b1/fixtures/vf_cumulative_request.json",
     ),
     "b1:ser03:preflight:event": (
         "{PYTHON}", "-B",
         "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/scripts/preflight.py",
-        "--request", "tools/tests/fixtures/ser_b1/vf_events.json",
+        "--request", "tools/skill_enforcement/real_campaigns/b1/fixtures/vf_events_request.json",
     ),
     "b1:ser03:execute-verify": (
         "{PYTHON}", "-B", "-m",
@@ -45,12 +45,12 @@ _ALLOWED_SPECS: dict[str, tuple[str, ...]] = {
     "b1:ser05:preflight:temporal": (
         "{PYTHON}", "-B",
         "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/scripts/preflight.py",
-        "--context", "tools/tests/fixtures/ser_b1/ce_l2_temporal.json",
+        "--context", "tools/skill_enforcement/real_campaigns/b1/fixtures/ce_l2_temporal_context.json",
     ),
     "b1:ser05:preflight:static": (
         "{PYTHON}", "-B",
         "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/scripts/preflight.py",
-        "--context", "tools/tests/fixtures/ser_b1/ce_l2_static.json",
+        "--context", "tools/skill_enforcement/real_campaigns/b1/fixtures/ce_l2_static_context.json",
     ),
     "b1:ser05:domain-audit": (
         "{PYTHON}", "-B", "-m",
