@@ -3,8 +3,9 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_R8_REMOTE_EXECUTION",
-    "G6_R8_EVIDENCE_REVIEW",
+    "G6_R10_EXPLICIT_HUMAN_REMOTE_AUTHORIZATION",
+    "G6_R10_REMOTE_EXECUTION",
+    "G6_R10_EVIDENCE_REVIEW",
     "G6_POST_PUBLICATION_READ_ONLY_VERIFY"
   ],
   "canonical_renderer": "PASS_AT_P1",
@@ -29,7 +30,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_R8_CONVERGENT_POST_PUBLISHER_AUTHORIZED_NOT_RUN",
+  "stage": "B1_G6_R10_DIRECT_HTTP11_U2M_PUBLISHER_FROZEN_AWAITING_HUMAN_REMOTE_AUTHORIZATION",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -679,19 +680,32 @@
     },
     "minimal_publication_r9": {
       "result": "BLOCKED_DEPENDENCY",
-      "databricks_sdk_importable": false,
+      "sdk_importable": false,
+      "sdk_version": "NOT_AVAILABLE",
       "repo_mutation": false,
       "environment_mutation": false,
-      "remote_access": "NOT_RUN"
+      "remote_access": "NOT_RUN",
+      "remote_execution": "NOT_AUTHORIZED"
     },
     "minimal_publication_r10": {
-      "state": "AUTHORED_NOT_RUN",
+      "state": "LOCALLY_VALIDATED_AND_FROZEN",
       "strategy": "DIRECT_HTTP11_WITH_CLI_U2M_TOKEN",
-      "auth_source": "DATABRICKS_CLI_AUTH_TOKEN",
-      "material_transport": "PYTHON_HTTP_CLIENT",
+      "auth_source": "DATABRICKS_CLI_U2M_TOKEN",
+      "material_transport": "PYTHON_HTTP_CLIENT_HTTP11",
       "automatic_retry": false,
       "manifest_changed": false,
+      "requirements_changed": false,
       "convergent_semantics_preserved": true,
+      "freeze_sha": "b89cc5f1579caf8af6784ca5761c114fb6a6df09",
+      "freeze_tree": "45ddb0252795c6ba70fbbc04740346c1cfd082cc",
+      "manifest_sha256": "067e05e6f228efddbf963edf02a0059108a6a58fc97be4441087d23e5be4ca3a",
+      "publisher_package_sha256": "b4c186b2838bfa04e6d5475d6a7d23561a8957b3fcea9539be612d11e032f0f6",
+      "validate_local": "PASS",
+      "metatests": "48/48 PASS",
+      "validate_assistant": "PASS_0_FAILURES_0_WARNINGS",
+      "coverage_schema": "SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-6",
+      "coverage_required_cases": 25,
+      "remote_access": "NOT_RUN",
       "remote_execution": "NOT_AUTHORIZED"
     },
     "minimal_publication_r7_attempt_1": {
@@ -703,6 +717,30 @@
       "manifest_sha256": "067e05e6f228efddbf963edf02a0059108a6a58fc97be4441087d23e5be4ca3a",
       "publisher_package_sha256": "ff7a7d0b45b875210eb2524b5f01dd43332e6c3074f61f80757d95c02a0f2d3f",
       "first_failure": "domain-context-init:API_PUT_WORKSPACE_IMPORT_PROTOCOL_ERROR",
+      "writes_started": 1,
+      "write_success": 0,
+      "verification_pass": 0,
+      "effects": {
+        "already_correct": 0,
+        "created": 0,
+        "updated": 0,
+        "unknown": 1
+      },
+      "unknown_object_ids": [
+        "domain-context-init"
+      ],
+      "retry_authorized": false
+    },
+    "minimal_publication_r8_attempt_1": {
+      "result": "FAIL_FIRST_WRITE_UNKNOWN",
+      "authorization_ref": "issue#114:comment#5839374341",
+      "authorization_consumed": true,
+      "consumption_marker_present": true,
+      "publisher_freeze_sha": "607a4272a34e896c38192094bf24821494d32328",
+      "publisher_freeze_tree": "561ec2fe75b75535f8fed459341cfeaf8992167d",
+      "manifest_sha256": "067e05e6f228efddbf963edf02a0059108a6a58fc97be4441087d23e5be4ca3a",
+      "publisher_package_sha256": "c72711ee0cdecbb0ebc6d9db64ed68bd062c2bec0c88fad28357a323d356319e",
+      "first_failure": "domain-context-init:IMPORT_FAILED_PROTOCOL_ERROR",
       "writes_started": 1,
       "write_success": 0,
       "verification_pass": 0,
