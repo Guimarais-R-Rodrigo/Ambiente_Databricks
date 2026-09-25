@@ -116,3 +116,12 @@ A primeira tentativa local em `3149ff6...` encerrou antes de iniciar Python porq
 A correção é exclusivamente de bootstrap. `resolve_python_windows.ps1` roda antes do primeiro gate formal, não escreve no repositório e não executa nenhum gate P2. Ele procura candidatos Python 3 via ambiente, `Get-Command`, `py.exe -3` e instalações locais; cada candidato precisa provar seu próprio `sys.executable`. O output PASS fornece `python_executable` real.
 
 P2-01, P2-02 e P2-03 devem então ser chamados por esse caminho exato. P2-03 congela o mesmo `sys.executable` no release spec e os argv gerados continuam SHA/release-bound. Falha do resolver é `BLOCKED_ENVIRONMENT`, não um retry de P2-01.
+
+
+## R2 bloqueada e resolver V2
+
+R2 comprovou Windows/NTFS e identidade Git, mas o resolver V1 não encontrou Python 3; nenhum gate formal iniciou.
+
+R3 amplia exclusivamente a descoberta pré-gate para PythonCore Registry, USERPROFILE/ProgramData Conda-Miniconda-Miniforge-Mambaforge, pyenv-win, Rye, Scoop, stores do uv, ProgramFiles(x86) e roots legados. Não há instalação, download, criação de venv ou mudança de PATH.
+
+O schema passa a `SER-B1-WINDOWS-PYTHON-RESOLUTION-2`. Se V2 falhar, nenhuma nova alteração automática de resolver deve ser feita: tratar o host como sem Python 3 utilizável observável e exigir remediação ambiental explícita fora da campanha.

@@ -190,8 +190,12 @@ class WindowsPythonBootstrapContractTests(unittest.TestCase):
     def test_bootstrap_is_pre_gate_and_has_no_repo_write_commands(self):
         path = ROOT / "tools/skill_enforcement/real_campaigns/b1/resolve_python_windows.ps1"
         text = path.read_text(encoding="utf-8")
-        self.assertIn("SER-B1-WINDOWS-PYTHON-RESOLUTION-1", text)
+        self.assertIn("SER-B1-WINDOWS-PYTHON-RESOLUTION-2", text)
         self.assertIn("sys.executable", text)
+        self.assertIn("Python\\PythonCore", text)
+        self.assertIn("pyenv-win", text)
+        self.assertIn("scoop", text.lower())
+        self.assertIn("uv\\python", text)
         self.assertIn("formal_gate_executed = $false", text)
         self.assertNotIn("tools.skill_enforcement.real_campaigns.b1.preflight", text)
         self.assertNotIn("tools.tests.test_ser_b1_campaign", text)
