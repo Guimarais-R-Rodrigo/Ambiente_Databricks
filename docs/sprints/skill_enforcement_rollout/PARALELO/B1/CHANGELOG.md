@@ -61,3 +61,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) G6 auth remediation PASS: profile FREE/host esperado válidos após OAuth U2M login, current-user resolvido, zero efeito remoto e nenhum content verify. Tentativa 1 de READ_ONLY_RECONCILE permanece BLOCKED_AUTHENTICATION; tentativa 2 aberta sob a mesma autorização issue#114:comment#5834465790 e mesmo freeze, efeito NONE.
 
 (ChatGPT) G6.READ_ONLY_RECONCILE attempt 2 = REMOTE_CONTENT_MISMATCH: 574 arquivos comparados, 33 errors = 16 missing + 16 incomplete remote reads + 1 divergent content, zero writes. Aberta forense local do JSON já coletado para deduplicar paths e identificar divergência antes de qualquer proposta de publicação.
+
+(ChatGPT) G6 mismatch forensics PASS: 33 errors reduzem-se a 17 defeitos lógicos conhecidos (16 objetos ausentes do P1 + policy.json remoto em revisão histórica a01d12ff...), sem outras anomalias. Preparada proposta de publicação corretiva mínima de 17 objetos; full republish rejeitado como superfície de efeito desnecessária. Nenhuma escrita remota autorizada.

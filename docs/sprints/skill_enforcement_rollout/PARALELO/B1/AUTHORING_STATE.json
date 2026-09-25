@@ -3,9 +3,11 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_MISMATCH_FORENSICS_LOCAL",
-    "G6_MISMATCH_REVIEW",
-    "G6_ANY_REMOTE_WRITE_REQUIRES_SEPARATE_AUTHORIZATION"
+    "G6_MINIMAL_PUBLICATION_LOCAL_PACKAGE_VALIDATION",
+    "G6_MINIMAL_PUBLICATION_EXPLICIT_HUMAN_AUTHORIZATION",
+    "G6_MINIMAL_PUBLICATION_EXECUTION",
+    "G6_POST_PUBLICATION_READ_ONLY_VERIFY",
+    "G6_PROBE_IMPORT_SEPARATE_AUTHORIZATION"
   ],
   "canonical_renderer": "PASS_AT_P1",
   "domain_profiles": [
@@ -29,7 +31,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_REMOTE_CONTENT_MISMATCH_FORENSICS_PENDING",
+  "stage": "B1_G6_MINIMAL_REMOTE_PUBLICATION_PROPOSAL_PREPARED_NOT_AUTHORIZED",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -249,17 +251,38 @@
       "cleanup": false
     },
     "mismatch_forensics": {
-      "state": "LOCAL_EVIDENCE_ANALYSIS_PENDING",
-      "remote_access_required": false,
-      "authorization_required": false,
-      "source": "existing remote_content_verify.json from attempt 2",
-      "goals": [
-        "deduplicate missing vs incomplete-read paths",
-        "identify exact divergent-content path",
-        "classify object types/areas",
-        "determine whether mismatch is stale remote package vs unexpected remote mutation",
-        "do not authorize publication"
-      ]
+      "state": "PASS",
+      "source": "remote_content_verify.json attempt 2",
+      "artifact_sha256": "c92cc638d2ed46c45f5f53d085e81e0408d3b89fa4ec2e1a3b219366e90a7da7",
+      "raw_error_count": 33,
+      "unique_path_count": 18,
+      "logical_unique_defects": 17,
+      "missing_remote_count": 16,
+      "incomplete_remote_read_count": 16,
+      "missing_incomplete_intersection": 15,
+      "notebook_representation_pair": {
+        "missing": ".assistant/hub_scripts/skill_execution/domain_context/exemplo_domain_context",
+        "incomplete": ".assistant/hub_scripts/skill_execution/domain_context/exemplo_domain_context.py",
+        "same_logical_object": true
+      },
+      "divergent_content_count": 1,
+      "divergent_path": ".assistant/hub_padroes/skill_enforcement/policy.json",
+      "remote_policy_matches_historical_commit": "a01d12ff4e0cb7cfd795ade164f9ce9daad372ba",
+      "remote_package_state": "STALE_INCOMPLETE",
+      "remote_access_performed": false,
+      "remote_write_performed": false
+    },
+    "minimal_publication_proposal": {
+      "state": "PREPARED_NOT_AUTHORIZED",
+      "target": "PERSONAL_DATABRICKS_FREE_ONLY",
+      "effect": "REMOTE_PACKAGE_WRITE",
+      "object_count": 17,
+      "missing_objects": 16,
+      "stale_content_objects": 1,
+      "full_package_republish": false,
+      "post_write_verify_required": true,
+      "rollback_strategy": "STOP_ON_FIRST_WRITE_FAILURE_PRESERVE_EFFECT_LEDGER_NO_BLIND_RETRY",
+      "requires_separate_human_authorization": true
     }
   },
   "g6_local_r1": {
