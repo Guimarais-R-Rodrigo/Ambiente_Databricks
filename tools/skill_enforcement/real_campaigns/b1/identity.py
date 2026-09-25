@@ -17,17 +17,10 @@ from tools.skill_enforcement.real_campaigns.b1.coverage import build_report
 from tools.skill_enforcement.real_campaigns.b1.registry import load_registry
 
 POLICY = ROOT / "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json"
+PARALLEL_ROOT = ROOT / "tools/skill_enforcement/parallel"
+B0_BINDINGS = Path(__file__).with_name("b0_qualified_bindings.json")
 ROUND_START_SCHEMA = "SER-B1-ROUND-START-1"
 RELEASE_SPEC_SCHEMA = "SER-B1-RELEASE-SPEC-1"
-B0_PROTECTED = (
-    "tools/skill_enforcement/parallel/contract.py",
-    "tools/skill_enforcement/parallel/launcher.py",
-    "tools/skill_enforcement/parallel/verifier.py",
-    "tools/skill_enforcement/parallel/scheduler.py",
-    "tools/skill_enforcement/parallel/process.py",
-    "tools/skill_enforcement/parallel/sandbox_exec.py",
-    "tools/skill_enforcement/parallel/lease.py",
-)
 
 
 def _utc() -> str:
@@ -41,12 +34,77 @@ def _git(*args: str) -> str:
     return p.stdout.strip()
 
 
-def _b0_digest() -> str:
-    rows = []
-    for rel in B0_PROTECTED:
+def _git_blob(path: Path) -> str:
+    data = path.read_bytes()
+    return hashlib.sha1(b"blob " + str(len(data)).encode("ascii") + b"\0" + data).hexdigest()
+
+
+def _load_b0_bindings() -> dict[str, Any]:
+    raw = json.loads(B0_BINDINGS.read_text(encoding="utf-8"))
+    if not isinstance(raw, dict) or set(raw) != {"schema_version", "qualified_pr", "qualified_main", "files"}:
+        raise ValueError("B0_BINDINGS_SHAPE_INVALID")
+    if raw.get("schema_version") != "SER-B1-B0-QUALIFIED-BINDINGS-1":
+        raise ValueError("B0_BINDINGS_SCHEMA_INVALID")
+    if raw.get("qualified_pr") != 113 or raw.get("qualified_main") != "4ba7f551767d847381df1556ed937116258fa77d":
+        raise ValueError("B0_BINDINGS_AUTHORITY_INVALID")
+    files = raw.get("files")
+    if not isinstance(files, dict) or not files:
+        raise ValueError("B0_BINDINGS_FILES_INVALID")
+    for rel, sha in files.items():
+        if not isinstance(rel, str) or not rel.startswith("tools/skill_enforcement/parallel/"):
+            raise ValueError("B0_BINDINGS_PATH_INVALID")
+        if not isinstance(sha, str) or len(sha) != 40 or any(c not in "0123456789abcdef" for c in sha):
+            raise ValueError("B0_BINDINGS_SHA_INVALID:" + rel)
+    return raw
+
+
+def qualified_b0_issues() -> list[str]:
+    issues: list[str] = []
+    try:
+        bindings = _load_b0_bindings()
+    except Exception as exc:
+        return ["B0_QUALIFIED_BINDINGS_UNREADABLE:" + type(exc).__name__ + ":" + str(exc)]
+    expected = bindings["files"]
+    observed: set[str] = set()
+    try:
+        for path in PARALLEL_ROOT.rglob("*"):
+            if path.is_symlink():
+                issues.append("B0_QUALIFIED_SYMLINK_PRESENT:" + path.relative_to(ROOT).as_posix())
+            elif path.is_file():
+                observed.add(path.relative_to(ROOT).as_posix())
+    except OSError as exc:
+        issues.append("B0_QUALIFIED_TREE_UNREADABLE:" + type(exc).__name__)
+        return sorted(set(issues))
+    if observed != set(expected):
+        missing = sorted(set(expected) - observed)
+        extra = sorted(observed - set(expected))
+        if missing:
+            issues.append("B0_QUALIFIED_FILES_MISSING:" + ",".join(missing))
+        if extra:
+            issues.append("B0_QUALIFIED_FILES_EXTRA:" + ",".join(extra))
+    for rel, expected_sha in expected.items():
         path = ROOT / rel
-        rows.append({"path": rel, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
-    return digest_json(rows)
+        try:
+            if not path.is_file() or path.is_symlink():
+                issues.append("B0_QUALIFIED_FILE_INVALID:" + rel)
+            elif _git_blob(path) != expected_sha:
+                issues.append("B0_QUALIFIED_BLOB_MISMATCH:" + rel)
+        except OSError as exc:
+            issues.append("B0_QUALIFIED_FILE_UNREADABLE:" + rel + ":" + type(exc).__name__)
+    return sorted(set(issues))
+
+
+def _b0_digest() -> str:
+    issues = qualified_b0_issues()
+    if issues:
+        raise ValueError("B0_NOT_QUALIFIED:" + ",".join(issues))
+    bindings = _load_b0_bindings()
+    rows = [{"path": rel, "git_blob_sha1": sha} for rel, sha in sorted(bindings["files"].items())]
+    return digest_json({
+        "qualified_pr": bindings["qualified_pr"],
+        "qualified_main": bindings["qualified_main"],
+        "files": rows,
+    })
 
 
 def capture_round_start() -> dict[str, Any]:
@@ -153,7 +211,8 @@ def assert_release_spec_current(spec: Mapping[str, Any]) -> list[str]:
     try:
         if hashlib.sha256(POLICY.read_bytes()).hexdigest() != spec.get("policy_before_digest"):
             issues.append("B1_RELEASE_POLICY_CHANGED")
-        if _b0_digest() != spec.get("b0_mechanism_digest"):
+        issues.extend("B1_RELEASE_" + item for item in qualified_b0_issues())
+        if not qualified_b0_issues() and _b0_digest() != spec.get("b0_mechanism_digest"):
             issues.append("B1_RELEASE_B0_MECHANISM_CHANGED")
         if digest_json(probe()) != spec.get("host_digest"):
             issues.append("B1_RELEASE_HOST_CHANGED")

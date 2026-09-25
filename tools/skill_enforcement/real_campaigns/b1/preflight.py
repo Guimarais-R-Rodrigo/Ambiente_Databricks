@@ -8,16 +8,30 @@ from tools.skill_enforcement.parallel.contract import validate_campaign
 from tools.skill_enforcement.parallel.process import ROOT
 from tools.skill_enforcement.parallel.registry import load_registry as load_b0_registry
 from tools.skill_enforcement.real_campaigns.b1.coverage import build_report
+from tools.skill_enforcement.real_campaigns.b1.identity import qualified_b0_issues
 from tools.skill_enforcement.real_campaigns.b1.registry import load_registry
 
 TEMPLATE = ROOT / "tools/skill_enforcement/real_campaigns/b1/campaign_template.json"
 POLICY = ROOT / "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json"
+P1_SHA = "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9"
 FORBIDDEN_DIFF_PATHS = (
     "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json",
     "ambiente_fonte/.assistant/hub_snippets/ml/vintage_analysis",
     "ambiente_fonte/.assistant/hub_scripts/skill_execution/receipt",
     "ambiente_fonte/.assistant/hub_scripts/skill_execution/skill_execution.py",
     "tools/skill_enforcement/parallel",
+)
+P1_FUNCTIONAL_PATHS = (
+    "ambiente_fonte/.assistant/hub_scripts/skill_execution/domain_context",
+    "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/execution_contract.json",
+    "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/input.schema.json",
+    "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/release_manifest.json",
+    "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/scripts",
+    "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/execution_contract.json",
+    "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/input.schema.json",
+    "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/scripts",
+    "tools/tests/fixtures/ser_b1",
+    "tools/tests/test_ser_b1_domains.py",
 )
 
 
@@ -38,6 +52,7 @@ def check() -> dict:
             issues.append("B0_REGISTRY_NOT_CLOSED")
     except Exception as exc:
         issues.append("B0_REGISTRY_INVALID:" + type(exc).__name__)
+    issues.extend(qualified_b0_issues())
     coverage = build_report()
     if coverage.get("status") != "PASS":
         issues.extend("B1_" + x for x in coverage.get("issues", []))
@@ -76,6 +91,12 @@ def check() -> dict:
             issues.append("B1_FORBIDDEN_PATH_DIFF:" + rel)
         elif p.returncode not in (0, 1):
             issues.append("B1_GIT_DIFF_ERROR:" + rel)
+    for rel in P1_FUNCTIONAL_PATHS:
+        p = _git("diff", "--quiet", P1_SHA + "..HEAD", "--", rel)
+        if p.returncode == 1:
+            issues.append("B1_P1_FUNCTIONAL_BYTES_CHANGED:" + rel)
+        elif p.returncode not in (0, 1):
+            issues.append("B1_P1_DIFF_ERROR:" + rel)
     behind = _git("rev-list", "--count", "HEAD..origin/main")
     if behind.returncode != 0:
         issues.append("B1_ORIGIN_MAIN_UNREADABLE")
@@ -92,7 +113,8 @@ def check() -> dict:
         "coverage": coverage,
         "max_parallel": 2,
         "max_auditors": 1,
-        "b0_modified": any(x.startswith("B1_FORBIDDEN_PATH_DIFF:tools/skill_enforcement/parallel") for x in issues),
+        "b0_qualified_bytes": not any(x.startswith("B0_QUALIFIED_") for x in issues),
+        "p1_functional_bytes_preserved": not any(x.startswith("B1_P1_") for x in issues),
     }
 
 

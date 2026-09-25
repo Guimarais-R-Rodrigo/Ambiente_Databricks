@@ -9,3 +9,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) P1 auditada independentemente a partir do bundle pós-import-path e do estado remoto: PR #115 draft, main preservada, 44 paths dentro do escopo e policy L0 mantida para SER03/SER05. Veredito P1: autoria integrada PASS, sem certificação.
 
 (ChatGPT) P2 repo-side materializa a primeira campanha real governada em `tools/skill_enforcement/real_campaigns/b1/`: registry B1 fechado, release identity B1, adapter aditivo sobre launcher/verifier B0, DAG 2/1, coverage caso→teste→oráculo→command, auditorias de domínio e gerador mecânico de handoff. A campanha ainda não foi executada localmente.
+
+(ChatGPT) Contraditório P2 endureceu a identidade antes do primeiro run: bindings exatos de todo o B0 qualificado na PR #113, preservação dos bytes funcionais P1, profile_digest obrigatório no handoff e evidence/output fora do repositório. Nenhum gate local foi executado por este commit.

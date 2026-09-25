@@ -71,3 +71,13 @@ Cada gate é fail-fast, sem retry-until-green. O diretório `EVIDENCE` precisa n
 P2 não altera `policy.json`. SER03 permanece current L0/target L3 e SER05 current L0/target L4 até campanha, auditoria, eventual prova externa pertinente e gate humano específico.
 
 Não autoriza Ready, merge, Databricks Free/Genie, SER06 ou 3/2.
+
+
+## Endurecimento pós-contraditório repo-side
+
+O contraditório do primeiro commit P2 identificou dois gaps antes da execução local e ambos foram fechados em autoria:
+
+- a identidade B1 agora exige correspondência exata, arquivo por arquivo e de fileset, com todo o diretório `tools/skill_enforcement/parallel/**` qualificado na PR #113/main `4ba7f551...`; não é permitido rebinding silencioso a um B0 futuro;
+- o handoff passou a carregar `profile_digest` top-level e por task, derivado de registry, coverage, B0 qualificado, adapter, recursos e target vector.
+
+O preflight também prova que os bytes funcionais P1 permanecem idênticos a `d2b6079...` e `prepare` recusa diretório de saída dentro (ou acima) do repositório. Essas mudanças ainda são autoria: exigem os gates locais no novo SHA.

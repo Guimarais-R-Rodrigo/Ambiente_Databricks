@@ -4,6 +4,21 @@ import json
 from pathlib import Path
 from typing import Any, Mapping
 
+from tools.skill_enforcement.parallel.contract import digest_json
+
+
+def _profile_digest(campaign: Mapping[str, Any], release_spec: Mapping[str, Any]) -> str:
+    return digest_json({
+        "command_registry_digest": release_spec["command_registry_digest"],
+        "coverage_digest": release_spec["coverage_digest"],
+        "b0_mechanism_digest": release_spec["b0_mechanism_digest"],
+        "adapter_id": release_spec["adapter_id"],
+        "max_parallel": campaign["max_parallel"],
+        "max_auditors": campaign["max_auditors"],
+        "resource_limits": campaign.get("resource_limits"),
+        "approved_target_vector": campaign.get("approved_target_vector"),
+    })
+
 
 def build_handoff(
     campaign: Mapping[str, Any],
@@ -17,13 +32,16 @@ def build_handoff(
         raise ValueError("HANDOFF_CANDIDATE_MISMATCH")
     if campaign.get("round_id") != release_spec.get("round_id"):
         raise ValueError("HANDOFF_ROUND_MISMATCH")
+    profile_digest = _profile_digest(campaign, release_spec)
+    release_id = campaign["campaign_id"] + ":" + campaign["round_id"]
     tasks = []
     for task in campaign.get("tasks", []):
         tasks.append({
             "task_id": task["task_id"],
             "role_id": task["role"],
-            "release_id": release_spec["round_id"],
+            "release_id": release_id,
             "candidate_sha": campaign["candidate_sha"],
+            "profile_digest": profile_digest,
             "stage": task["stage"],
             "allowed_command_ids": list(task["command_ids"]),
             "read_roots": list(task["read_roots"]),
@@ -49,7 +67,9 @@ def build_handoff(
         "handoff_schema": "SER-B1-HANDOFF-1",
         "campaign_id": campaign["campaign_id"],
         "round_id": campaign["round_id"],
+        "release_id": release_id,
         "candidate_sha": campaign["candidate_sha"],
+        "profile_digest": profile_digest,
         "release_spec_digest": campaign["release_spec_digest"],
         "campaign_path": str(campaign_path),
         "release_spec_path": str(release_spec_path),
@@ -83,6 +103,7 @@ def render_markdown(handoff: Mapping[str, Any]) -> str:
         f"- campaign: `{handoff['campaign_id']}`\n"
         f"- round: `{handoff['round_id']}`\n"
         f"- candidate: `{handoff['candidate_sha']}`\n"
+        f"- profile digest: `{handoff['profile_digest']}`\n"
         f"- concorrência: `{handoff['max_parallel']}/{handoff['max_auditors']}` (total/auditores)\n"
         "- finalidade: executar uma única campanha local read-only e produzir evidência; não promover nem integrar.\n\n"
         "## Comando único da campanha\n\n"

@@ -5,22 +5,27 @@ import json
 from pathlib import Path
 
 from tools.skill_enforcement.parallel.contract import digest_json, validate_campaign
+from tools.skill_enforcement.parallel.process import ROOT
 from tools.skill_enforcement.real_campaigns.b1.handoff import write_handoff
-from tools.skill_enforcement.real_campaigns.b1.identity import (
-    build_release_spec,
-    capture_round_start,
-)
+from tools.skill_enforcement.real_campaigns.b1.identity import build_release_spec, capture_round_start
 from tools.skill_enforcement.real_campaigns.b1.preflight import check
 
-ROOT = Path(__file__).resolve().parents[4]
 TEMPLATE = ROOT / "tools/skill_enforcement/real_campaigns/b1/campaign_template.json"
+
+
+def validate_output_location(output_dir: Path) -> Path:
+    target = output_dir.resolve(strict=False)
+    repo = ROOT.resolve()
+    if target == repo or target.is_relative_to(repo) or repo.is_relative_to(target):
+        raise RuntimeError("B1_P2_OUTPUT_DIR_MUST_BE_EXTERNAL_TO_REPOSITORY")
+    return target
 
 
 def prepare(output_dir: Path) -> dict:
     preflight = check()
     if preflight.get("status") != "PASS":
         raise RuntimeError("B1_P2_PREFLIGHT_NOT_PASS")
-    output_dir = output_dir.resolve()
+    output_dir = validate_output_location(output_dir)
     if output_dir.exists():
         if any(output_dir.iterdir()):
             raise RuntimeError("B1_P2_OUTPUT_DIR_MUST_BE_NEW_OR_EMPTY")
@@ -66,6 +71,7 @@ def prepare(output_dir: Path) -> dict:
         "status": "PASS",
         "candidate_sha": release_spec["candidate_sha"],
         "round_id": release_spec["round_id"],
+        "profile_digest": handoff["profile_digest"],
         "output_dir": str(output_dir),
         "campaign": str(paths["campaign"]),
         "release_spec": str(paths["release_spec"]),

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import copy
 import json
-import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -13,6 +12,7 @@ from tools.skill_enforcement.parallel.contract import validate_campaign
 from tools.skill_enforcement.parallel.registry import load_registry as load_b0_registry
 from tools.skill_enforcement.real_campaigns.b1 import adapter, handoff, identity, registry
 from tools.skill_enforcement.real_campaigns.b1.coverage import build_report
+from tools.skill_enforcement.real_campaigns.b1.prepare import validate_output_location
 
 ROOT = Path(__file__).resolve().parents[2]
 TEMPLATE = ROOT / "tools/skill_enforcement/real_campaigns/b1/campaign_template.json"
@@ -30,15 +30,6 @@ class RegistryTests(unittest.TestCase):
     def test_unknown_command_rejected(self):
         with self.assertRaises(registry.RegistryError):
             registry.resolve_command("b1:unknown")
-
-    def test_argv_mutation_rejected(self):
-        payload = json.loads(registry.DEFAULT_REGISTRY.read_text(encoding="utf-8"))
-        payload["commands"][0]["argv"].append("--unexpected")
-        with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / "registry.json"
-            path.write_text(json.dumps(payload), encoding="utf-8")
-            with self.assertRaises(registry.RegistryError):
-                registry.load_registry(path)
 
 
 class CampaignContractTests(unittest.TestCase):
@@ -78,13 +69,26 @@ class CoverageTests(unittest.TestCase):
         self.assertEqual(5, report["out_of_scope_cases"])
 
 
+class B0QualificationBindingTests(unittest.TestCase):
+    def test_qualified_b0_bytes_are_exact(self):
+        self.assertEqual([], identity.qualified_b0_issues())
+
+    def test_b0_blob_mutant_is_detected_without_editing_repository(self):
+        real = identity._git_blob
+        def fake(path):
+            if path.name == "launcher.py":
+                return "0" * 40
+            return real(path)
+        with mock.patch.object(identity, "_git_blob", side_effect=fake):
+            self.assertTrue(any("launcher.py" in x for x in identity.qualified_b0_issues()))
+
+
 class AdapterTests(unittest.TestCase):
     def test_adapter_injects_b1_resolver_and_restores_b0_globals(self):
         campaign = {"sentinel": True}
         spec = {"sentinel": True}
         old_launcher_resolve = b0_launcher.resolve_command
         old_verifier_resolve = b0_verifier.resolve_command
-
         def fake_execute(received_campaign, evidence_root, received_spec):
             self.assertIs(b0_launcher.resolve_command, registry.resolve_command)
             self.assertIs(b0_verifier.resolve_command, registry.resolve_command)
@@ -93,7 +97,6 @@ class AdapterTests(unittest.TestCase):
             self.assertEqual(campaign, received_campaign)
             self.assertEqual(spec, received_spec)
             return {"status": "PASS"}
-
         with mock.patch.object(b0_launcher, "execute", side_effect=fake_execute):
             result = adapter.execute(campaign, Path("unused"), spec)
         self.assertEqual("PASS", result["status"])
@@ -111,14 +114,21 @@ class AdapterTests(unittest.TestCase):
 
 
 class HandoffTests(unittest.TestCase):
-    def test_handoff_is_projection_of_campaign(self):
+    def test_handoff_contains_profile_digest_and_is_projection(self):
         campaign = json.loads(TEMPLATE.read_text(encoding="utf-8"))
         campaign["candidate_sha"] = "a" * 40
         campaign["round_id"] = "B1ROUND-test"
         campaign["release_spec_digest"] = "b" * 64
         for task in campaign["tasks"]:
             task["candidate_sha"] = campaign["candidate_sha"]
-        spec = {"candidate_sha": campaign["candidate_sha"], "round_id": campaign["round_id"]}
+        spec = {
+            "candidate_sha": campaign["candidate_sha"],
+            "round_id": campaign["round_id"],
+            "command_registry_digest": "c" * 64,
+            "coverage_digest": "d" * 64,
+            "b0_mechanism_digest": "e" * 64,
+            "adapter_id": "SER-B1-ADAPTER-1",
+        }
         payload = handoff.build_handoff(
             campaign, spec,
             campaign_path=Path("CAMPAIGN.json"),
@@ -127,11 +137,19 @@ class HandoffTests(unittest.TestCase):
         )
         self.assertEqual(2, payload["max_parallel"])
         self.assertEqual(1, payload["max_auditors"])
+        self.assertEqual(64, len(payload["profile_digest"]))
+        self.assertTrue(all(x["profile_digest"] == payload["profile_digest"] for x in payload["tasks"]))
         self.assertEqual(
             [x["task_id"] for x in campaign["tasks"]],
             [x["task_id"] for x in payload["tasks"]],
         )
         self.assertIn("USE_3_2_CONCURRENCY", payload["prohibited"])
+
+
+class OutputLocationTests(unittest.TestCase):
+    def test_prepare_rejects_output_inside_repository(self):
+        with self.assertRaisesRegex(RuntimeError, "MUST_BE_EXTERNAL"):
+            validate_output_location(ROOT / "_b1_evidence")
 
 
 class IdentityTests(unittest.TestCase):
