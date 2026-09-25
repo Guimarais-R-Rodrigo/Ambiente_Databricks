@@ -57,6 +57,25 @@ def main() -> int:
             "results": {},
             "verification": None,
         }
+    result_path = args.campaign.resolve().parent / "ADAPTER_RESULT.json"
+    if result_path.exists():
+        summary = {
+            **summary,
+            "status": "FAIL",
+            "issues": [*(summary.get("issues") or []), "B1_ADAPTER_RESULT_MUST_BE_NEW"],
+        }
+    else:
+        try:
+            result_path.write_text(
+                json.dumps(summary, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+                encoding="utf-8",
+            )
+        except OSError as exc:
+            summary = {
+                **summary,
+                "status": "FAIL",
+                "issues": [*(summary.get("issues") or []), "B1_ADAPTER_RESULT_WRITE_FAILED:" + type(exc).__name__],
+            }
     print(json.dumps(summary, ensure_ascii=False, sort_keys=True, indent=2))
     return 0 if summary.get("status") == "PASS" else 1
 

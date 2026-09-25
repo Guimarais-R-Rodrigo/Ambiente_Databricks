@@ -145,6 +145,8 @@ class HandoffTests(unittest.TestCase):
         self.assertEqual(64, len(payload["profile_digest"]))
         self.assertTrue(all(x["profile_digest"] == payload["profile_digest"] for x in payload["tasks"]))
         self.assertEqual(spec["python_executable"], payload["execution_argv"][0])
+        self.assertEqual(spec["python_executable"], payload["post_run_package_argv"][0])
+        self.assertIn("package_evidence", payload["post_run_package_argv"][3])
         self.assertEqual(
             [x["task_id"] for x in campaign["tasks"]],
             [x["task_id"] for x in payload["tasks"]],

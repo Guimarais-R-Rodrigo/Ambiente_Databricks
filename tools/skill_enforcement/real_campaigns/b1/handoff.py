@@ -96,6 +96,10 @@ def build_handoff(
             "--release-spec", str(release_spec_path),
             "--evidence-dir", str(evidence_dir),
         ],
+        "post_run_package_argv": [
+            release_spec["python_executable"], "-B", "-m", "tools.skill_enforcement.real_campaigns.b1.package_evidence",
+            "--output-dir", str(campaign_path.parent),
+        ],
         "prohibited": [
             "EDIT_CANDIDATE_DURING_CAMPAIGN",
             "CHANGE_POLICY",
@@ -122,7 +126,9 @@ def render_markdown(handoff: Mapping[str, Any]) -> str:
         "## Comando único da campanha\n\n"
         "```text\n" + argv + "\n```\n\n"
         "Antes desse comando, os gates estáticos/metatestes do pacote devem ter passado uma única vez. "
-        "Qualquer exit code não zero interrompe a rodada; não corrigir ou repetir no mesmo round.\n"
+        "Qualquer exit code não zero interrompe a rodada; não corrigir ou repetir no mesmo round. "
+        "Depois da tentativa única, execute post_run_package_argv uma única vez para selar RAW/SHARE; "
+        "o RAW permanece privado e o artefato de upload é o ZIP SHARE sanitizado.\n"
     )
 
 

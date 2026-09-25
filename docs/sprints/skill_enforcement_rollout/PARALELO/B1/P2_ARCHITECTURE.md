@@ -81,3 +81,10 @@ O contraditório do primeiro commit P2 identificou dois gaps antes da execução
 - o handoff passou a carregar `profile_digest` top-level e por task, derivado de registry, coverage, B0 qualificado, adapter, recursos e target vector.
 
 O preflight também prova que os bytes funcionais P1 permanecem idênticos a `d2b6079...` e `prepare` recusa diretório de saída dentro (ou acima) do repositório. Essas mudanças ainda são autoria: exigem os gates locais no novo SHA.
+
+
+## Envelope de evidência P2
+
+Após a tentativa única da campanha, o adapter persiste `ADAPTER_RESULT.json` no output externo. O `post_run_package_argv` do handoff executa `package_evidence`, que reutiliza `parallel.bundle.build_share`, sanitização V2 e `verify_raw_share_binding`. O RAW recebe manifesto e permanece privado; o SHARE recebe identidade própria, secret/path scan e verificação de envelope. O artefato destinado à auditoria remota é o ZIP SHARE sanitizado com SHA-256 registrado no verdict externo.
+
+Empacotar evidência após um FAIL não constitui retry do gate: é preservação da primeira tentativa. A campanha não é reexecutada.
