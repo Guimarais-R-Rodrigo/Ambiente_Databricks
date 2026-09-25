@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-25 — SER B1 G6: corretiva canônica de transporte R8
+
+### Corrigido
+
+1. (Codex) `g6_publication` troca exclusivamente Workspace Import de API PUT para o POST canônico, atualiza seus oráculos/coverage e preserva manifesto, semântica convergente e execução remota não autorizada.
+
 ## 2026-09-24 — SER B1 P1: integração canônica SER03/SER05
 
 - (ChatGPT) A candidata P1 preserva o mecanismo B0 e a policy; SER03 usa helper de safra e Receipt V1 canônicos, enquanto SER05 permanece preflight/contexto L2 sem join material.

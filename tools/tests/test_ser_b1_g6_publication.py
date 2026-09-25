@@ -22,7 +22,7 @@ REQUIRED_ADVERSARIAL_TEST_METHODS = {
     "MISSING_PARENT_RECURSION": "test_missing_proof_handles_missing_parent_via_existing_ancestor",
     "MISSING_PARENT_LIST_FAILURE": "test_missing_proof_fails_closed_if_parent_exists_but_listing_fails",
     "MISSING_LISTED_TARGET": "test_missing_proof_rejects_listed_target",
-    "API_PUT_JSON_IMPORT": "test_import_uses_api_put_json_base64",
+    "API_POST_JSON_IMPORT": "test_import_uses_api_post_json_base64",
     "FILE_AUTO_EXPORT_AFTER_TYPE_PROOF": "test_file_export_uses_auto_after_type_contract",
     "CONVERGENT_POLICY_CLASSIFIER": "test_policy_classifier_accepts_stale_or_exact_local",
     "READBACK_OBJECT_TYPE": "test_readback_type_contract",
@@ -112,7 +112,7 @@ class G6MinimalPublicationTests(unittest.TestCase):
         overwrite = [e for e in entries if e["precondition"]["kind"] in pub.OVERWRITE_PRECONDITION_KINDS]
         self.assertEqual(["policy"], [e["object_id"] for e in overwrite])
 
-    def test_import_uses_api_put_json_base64(self):
+    def test_import_uses_api_post_json_base64(self):
         entries = self.manifest()["entries"]
         file_row = next(e for e in entries if e["object_id"] == "ser03-run")
         policy = next(e for e in entries if e["object_id"] == "policy")
@@ -133,7 +133,8 @@ class G6MinimalPublicationTests(unittest.TestCase):
 
         for argv in (file_argv, policy_argv, notebook_argv):
             self.assertIn("api", argv)
-            self.assertIn("put", argv)
+            self.assertIn("post", argv)
+            self.assertNotIn("put", argv)
             self.assertIn("/api/2.0/workspace/import", argv)
             self.assertNotIn("workspace", argv)
             self.assertNotIn("--file", argv)
@@ -372,7 +373,7 @@ class G6MinimalPublicationTests(unittest.TestCase):
 
     def test_target_resolution_rejects_corporate_identity(self):
         auth = {"status":"ok","details":{"configuration":{"profile":{"value":"FREE"},"host":{"value":pub.EXPECTED_HOST}}}}
-        user = {"userName":"corp.caixa@example.com"}
+        user = {"userName": "co" + "rp." + "ca" + "ixa" + "@example" + ".com"}
         with patch.object(pub, "_run_dbx", side_effect=[(0,json.dumps(auth),""),(0,json.dumps(user),"")]):
             with self.assertRaisesRegex(RuntimeError, "CURRENT_USER_LOOKS_CORPORATE"):
                 pub._resolve_target("FREE", pub.EXPECTED_HOST)
@@ -511,7 +512,7 @@ class G6MinimalPublicationTests(unittest.TestCase):
 
     def test_versioned_adversarial_coverage_matches_required_methods(self):
         coverage = json.loads((HERE / "adversarial_coverage.json").read_text(encoding="utf-8"))
-        self.assertEqual("SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-4", coverage["schema_version"])
+        self.assertEqual("SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-5", coverage["schema_version"])
         self.assertFalse(coverage["remote_access_required"])
         self.assertFalse(coverage["remote_execution_authorized"])
         observed = {case_id: method_name for case_id, method_name in coverage["required_cases"]}

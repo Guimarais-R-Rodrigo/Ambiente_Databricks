@@ -1,7 +1,7 @@
 {
-  "schema_version": "SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-4",
+  "schema_version": "SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-5",
   "publisher_r3_sha": "a0ac7f66839f7f7e9d73460558208652a9edcf02",
-  "purpose": "Required adversarial/protocol/convergent-recovery regression inventory for R7 local qualification",
+  "purpose": "Required adversarial/protocol/convergent-recovery regression inventory for R8 local qualification",
   "required_cases": [
     [
       "WORKSPACE_LIST_INVALID_JSON",
@@ -68,8 +68,8 @@
       "test_manifest_matches_reconciled_residual_exactly"
     ],
     [
-      "API_PUT_JSON_IMPORT",
-      "test_import_uses_api_put_json_base64"
+      "API_POST_JSON_IMPORT",
+      "test_import_uses_api_post_json_base64"
     ],
     [
       "CONVERGENT_POLICY_CLASSIFIER",

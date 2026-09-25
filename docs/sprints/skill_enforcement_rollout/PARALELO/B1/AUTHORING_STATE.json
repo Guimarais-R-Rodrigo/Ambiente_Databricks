@@ -3,8 +3,8 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_R7_REMOTE_EXECUTION",
-    "G6_R7_EVIDENCE_REVIEW",
+    "G6_R8_REMOTE_EXECUTION",
+    "G6_R8_EVIDENCE_REVIEW",
     "G6_POST_PUBLICATION_READ_ONLY_VERIFY"
   ],
   "canonical_renderer": "PASS_AT_P1",
@@ -586,7 +586,7 @@
       "retry_authorized": false
     },
     "minimal_publication_r7": {
-      "state": "AUTHORIZED_NOT_RUN",
+      "state": "REMOTE_FAIL_FIRST_WRITE_PROTOCOL_ERROR",
       "package_id": "SER-B1-G6-CONVERGENT-PUBLISH-R7-1",
       "manifest_schema": "SER-B1-G6-CONVERGENT-PUBLISH-MANIFEST-2",
       "transport": "DATABRICKS_API_PUT_JSON_BASE64",
@@ -598,7 +598,7 @@
       "object_count": 16,
       "local_validation": "NOT_RUN",
       "freeze": "NOT_CREATED",
-      "remote_execution": "NOT_RUN",
+      "remote_execution": "FAIL",
       "authorization_ref": "issue#114:comment#5838421464",
       "freeze_sha": "139898191f651e04405116d06aae01860c3eb0eb",
       "freeze_tree": "dae1912d87b1a60ba5b8cafd0a8914d98b0517b8",
@@ -606,7 +606,12 @@
       "publisher_package_sha256": "ff7a7d0b45b875210eb2524b5f01dd43332e6c3074f61f80757d95c02a0f2d3f",
       "effect": "REMOTE_PACKAGE_WRITE",
       "one_write_attempt": true,
-      "candidate_object_count": 16
+      "candidate_object_count": 16,
+      "authorization_consumed": true,
+      "first_failure": "domain-context-init:API_PUT_PROTOCOL_ERROR",
+      "writes_started": 1,
+      "write_success": 0,
+      "first_effect_status": "UNKNOWN"
     },
     "minimal_publication_r7_local_attempt_1": {
       "result": "FAIL_COVERAGE_MAP_MISMATCH",
@@ -630,6 +635,22 @@
       "expected_publisher_package_sha256": "ff7a7d0b45b875210eb2524b5f01dd43332e6c3074f61f80757d95c02a0f2d3f",
       "local_validation": "NOT_RUN",
       "freeze": "NOT_CREATED",
+      "remote_execution": "NOT_AUTHORIZED"
+    },
+    "minimal_publication_r8": {
+      "state": "CANONICAL_POST_CORRECTION",
+      "blocked_candidate": {
+        "sha": "37071972749dc60861a4e58350683ded7e09aa67",
+        "tree": "3fc1e86925c8c5f2f8076ad64d608c626159ac33",
+        "state": "BLOCKED_VALIDATOR",
+        "finding": "ADVERSARIAL_FIXTURE_LITERAL_TRIGGERED_REPOSITORY_HYGIENE"
+      },
+      "manifest_changed": false,
+      "transport_correction": "DATABRICKS_API_PUT_TO_POST",
+      "endpoint": "/api/2.0/workspace/import",
+      "convergent_semantics_preserved": true,
+      "authorization_v2_preserved": true,
+      "fixture_sanitization": "RUNTIME_VALUE_PRESERVED_BY_FRAGMENT_COMPOSITION",
       "remote_execution": "NOT_AUTHORIZED"
     }
   },

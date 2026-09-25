@@ -95,3 +95,13 @@ R7 also becomes convergent:
 - only actually required material writes consume authorization.
 
 This means a future transport-unknown effect can be safely reconciled by the next authorized execution's preflight without requiring a new residual manifest solely to determine whether an object landed.
+
+## R8 canonical Workspace Import method correction
+
+The authorized R7 attempt preserved all convergent preconditions but failed on its first material write because Workspace Import was invoked with `api put`, producing `PROTOCOL_ERROR`; its authorization is consumed and must not be reused.
+
+R8 changes only the material transport method to the canonical Workspace Import request:
+
+`databricks api post /api/2.0/workspace/import --json <payload>`
+
+The convergent classifiers, inline JSON/base64 payload, FILE `RAW`, notebook `SOURCE/PYTHON`, conditional policy overwrite, authorization V2, atomic consumption, readback and UNKNOWN handling remain unchanged. R8 remote execution requires a new explicit authorization.

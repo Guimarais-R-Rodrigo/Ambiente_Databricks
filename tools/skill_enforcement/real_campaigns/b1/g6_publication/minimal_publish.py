@@ -424,7 +424,7 @@ def build_import_argv(profile: str, remote_path: str, local_path: Path, entry: d
     body = json.dumps(payload, ensure_ascii=True, separators=(",", ":"))
     return [
         "databricks", "--profile", profile,
-        "api", "put", "/api/2.0/workspace/import",
+        "api", "post", "/api/2.0/workspace/import",
         "--json", body,
     ]
 
