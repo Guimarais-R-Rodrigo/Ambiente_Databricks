@@ -54,10 +54,23 @@ P2_R4_LOCAL_QUALIFICATION = BLOCKED_ENVIRONMENT
 CANDIDATE_DOMAIN_DEFECT = false
 B0_SHARED_MECHANISM_DEFECT = false
 POLICY_DEFECT = false
-HOST_PYTHON3_RUNTIME_AVAILABLE = false
+HOST_PYTHON3_RUNTIME_OBSERVED_BY_RESOLVER_V3 = false
 HOST_REMEDIATION_REQUIRED = true
 ```
 
 R4 é a última rodada de discovery. Não criar novo resolver automaticamente.
 
 A próxima etapa é remediação ambiental explícita e separada da campanha. Somente depois de existir Python 3 + ambiente de dependências comprovados poderá ser criado um novo SHA/round P2.
+
+
+## Evidência posterior — ENV-02
+
+ENV-02 instalou o Python Install Manager e, ao invocar por engano o `py.exe` legado, observou que esse launcher seleciona um runtime Python 3.12. Isso não reabre nem relabela R4: o resultado histórico correto continua `BLOCKED_ENVIRONMENT` porque o resolver V3 não conseguiu resolver um executável utilizável naquele round.
+
+A inferência mais forte `HOST_PYTHON3_RUNTIME_AVAILABLE=false` foi retirada. O fato posterior correto é:
+
+```text
+R4_RESOLVER_OBSERVATION = PYTHON3_NOT_RESOLVED
+LATER_ENV02_OBSERVATION = LEGACY_LAUNCHER_SELECTS_PYTHON_3_12
+R4_REEXECUTED = false
+```
