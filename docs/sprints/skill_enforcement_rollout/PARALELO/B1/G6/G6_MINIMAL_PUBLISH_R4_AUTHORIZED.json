@@ -1,0 +1,48 @@
+{
+  "schema_version": "SER-B1-G6-MINIMAL-PUBLISH-R4-HUMAN-AUTHORIZATION-1",
+  "decision": "AUTHORIZED",
+  "authorization_ref": "issue#114:comment#5836601472",
+  "applies_to_publisher_freeze_sha": "3ef1f14e728338540a4426f297c90ee2f576ec92",
+  "applies_to_publisher_freeze_tree": "baecc5498c1a0fef63a7f8dfba21d615ca2b33df",
+  "manifest_sha256": "57574ddbdadfd344776bcb2b37142248b9af95671d5efd818a4dda6bcae6ae9e",
+  "publisher_package_sha256": "47f230f2ffef57510d1c92b7d94dac3ded766ccbba81368d4058ef2b78aaf7c9",
+  "effect": "REMOTE_PACKAGE_WRITE",
+  "target": {
+    "profile": "FREE",
+    "host": "https://dbc-72c8503a-bc27.cloud.databricks.com"
+  },
+  "one_write_attempt": true,
+  "allowed_object_ids": [
+    "domain-context-readme",
+    "domain-context-init",
+    "domain-context-example",
+    "domain-context-release",
+    "domain-context-schema",
+    "ser03-contract",
+    "ser03-input-schema",
+    "ser03-release-manifest",
+    "ser03-scripts-readme",
+    "ser03-preflight",
+    "ser03-run",
+    "ser03-verify",
+    "ser05-contract",
+    "ser05-input-schema",
+    "ser05-scripts-readme",
+    "ser05-preflight",
+    "policy"
+  ],
+  "explicitly_not_authorized": [
+    "full republish",
+    "write retry",
+    "implicit mkdirs",
+    "probe import",
+    "probe execution",
+    "Genie",
+    "cleanup/delete",
+    "repository policy mutation",
+    "promotion",
+    "Ready",
+    "merge"
+  ],
+  "execution_status": "NOT_RUN"
+}

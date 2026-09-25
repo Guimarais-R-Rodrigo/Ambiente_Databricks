@@ -79,3 +79,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) R4 coverage inventory agora ligado mecanicamente à suíte: metateste exige equivalência exata entre adversarial_coverage.json e REQUIRED_ADVERSARIAL_TEST_METHODS, além de remote_access/execution=false. Publisher funcional e manifest seguem inalterados.
 
 (ChatGPT) Publisher R4 local qualification PASS: 33/33 tests, 15 required adversarial cases, manifest unchanged, functional publisher code unchanged from R3, freeze 3ef1f14e.../baecc549..., manifest SHA256 57574ddb..., publisher package SHA256 47f230f2.... Remote execution remains NOT_AUTHORIZED; next gate is one new one-write-attempt authorization bound to both digests.
+
+(ChatGPT) Usuário autorizou UMA tentativa remota do publisher R4, ref issue#114:comment#5836601472, presa ao freeze 3ef1f14e..., manifest 57574ddb..., publisher package 47f230f2..., target FREE, sequência exata de 17 object IDs e effect REMOTE_PACKAGE_WRITE. Full republish/retry/mkdirs/probes/Genie/cleanup/policy mutation/promoção/Ready/merge seguem proibidos. Execução ainda NOT_RUN.
