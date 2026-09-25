@@ -54,7 +54,7 @@ class G6MinimalPublicationTests(unittest.TestCase):
         manifest = self.manifest()
         entries = manifest["entries"]
         self.assertEqual(manifest["expected_object_count"], len(entries))
-        self.assertEqual(manifest["missing_object_count"], sum(e["precondition"]["kind"] == "MISSING" for e in entries))
+        self.assertEqual(manifest["missing_object_count"], sum(e["precondition"]["kind"] in pub.CREATE_PRECONDITION_KINDS for e in entries))
         self.assertEqual(manifest["overwrite_object_count"], sum(e["precondition"]["kind"] in pub.OVERWRITE_PRECONDITION_KINDS for e in entries))
         self.assertEqual(len(entries), len({e["object_id"] for e in entries}))
         self.assertEqual(len(entries), len({e["remote_relative_path"] for e in entries}))

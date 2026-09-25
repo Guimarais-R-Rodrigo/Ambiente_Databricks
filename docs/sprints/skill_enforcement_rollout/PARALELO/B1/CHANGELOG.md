@@ -103,3 +103,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) R6 material attempt FAIL on first domain-context-init write with PROTOCOL_ERROR, authorization issue#114:comment#5837785336 consumed, effect UNKNOWN; all R6 preconditions had passed. Because this repeats the same RAW .py transport failure seen in R5, R7 replaces workspace import --file with official api put /api/2.0/workspace/import JSON/base64. R7 also introduces convergent preconditions: missing-or-exact for creates and stale-or-exact-local for policy, skipping already-correct objects while failing closed on divergent ones. Remote R7 NOT_AUTHORIZED.
 
 (ChatGPT) R7 repo-side contraditório encontrou e corrigiu dois oráculos de teste ainda presos ao precondition kind legado REMOTE_NORMALIZED_SHA256_EQUALS. Agora os testes usam OVERWRITE_PRECONDITION_KINDS; nenhuma alteração adicional de runtime/manifest.
+
+(ChatGPT) Último oráculo legado R7 corrigido: missing_object_count agora usa CREATE_PRECONDITION_KINDS, compatível com MISSING_OR_EXACT_CONTENT. O único "--file" restante na suíte é asserção negativa para garantir remoção do transporte multipart antigo.
