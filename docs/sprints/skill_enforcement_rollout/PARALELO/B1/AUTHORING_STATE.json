@@ -3,7 +3,6 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_R10_EXPLICIT_HUMAN_REMOTE_AUTHORIZATION",
     "G6_R10_REMOTE_EXECUTION",
     "G6_R10_EVIDENCE_REVIEW",
     "G6_POST_PUBLICATION_READ_ONLY_VERIFY"
@@ -30,7 +29,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_R10_DIRECT_HTTP11_U2M_PUBLISHER_FROZEN_AWAITING_HUMAN_REMOTE_AUTHORIZATION",
+  "stage": "B1_G6_R10_DIRECT_HTTP11_U2M_PUBLISHER_AUTHORIZED_NOT_RUN",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -688,7 +687,7 @@
       "remote_execution": "NOT_AUTHORIZED"
     },
     "minimal_publication_r10": {
-      "state": "LOCALLY_VALIDATED_AND_FROZEN",
+      "state": "AUTHORIZED_NOT_RUN",
       "strategy": "DIRECT_HTTP11_WITH_CLI_U2M_TOKEN",
       "auth_source": "DATABRICKS_CLI_U2M_TOKEN",
       "material_transport": "PYTHON_HTTP_CLIENT_HTTP11",
@@ -706,7 +705,12 @@
       "coverage_schema": "SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-6",
       "coverage_required_cases": 25,
       "remote_access": "NOT_RUN",
-      "remote_execution": "NOT_AUTHORIZED"
+      "remote_execution": "NOT_RUN",
+      "authorization_ref": "issue#114:comment#5840353763",
+      "effect": "REMOTE_PACKAGE_WRITE",
+      "one_write_attempt": true,
+      "candidate_object_count": 16,
+      "endpoint": "POST /api/2.0/workspace/import"
     },
     "minimal_publication_r7_attempt_1": {
       "result": "FAIL_FIRST_WRITE_UNKNOWN",

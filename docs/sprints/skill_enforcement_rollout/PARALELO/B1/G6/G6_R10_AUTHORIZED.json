@@ -1,0 +1,47 @@
+{
+  "schema_version": "SER-B1-G6-R10-HUMAN-AUTHORIZATION-1",
+  "decision": "AUTHORIZED",
+  "authorization_ref": "issue#114:comment#5840353763",
+  "action": "G6_DIRECT_HTTP11_U2M_REMOTE_PACKAGE_WRITE_R10",
+  "effect": "REMOTE_PACKAGE_WRITE",
+  "one_write_attempt": true,
+  "applies_to_publisher_freeze_sha": "b89cc5f1579caf8af6784ca5761c114fb6a6df09",
+  "applies_to_publisher_freeze_tree": "45ddb0252795c6ba70fbbc04740346c1cfd082cc",
+  "manifest_sha256": "067e05e6f228efddbf963edf02a0059108a6a58fc97be4441087d23e5be4ca3a",
+  "publisher_package_sha256": "b4c186b2838bfa04e6d5475d6a7d23561a8957b3fcea9539be612d11e032f0f6",
+  "target": {
+    "profile": "FREE",
+    "host": "https://dbc-72c8503a-bc27.cloud.databricks.com"
+  },
+  "candidate_object_count": 16,
+  "transport": {
+    "auth": "databricks auth token",
+    "writer": "Python http.client HTTPSConnection",
+    "endpoint": "POST /api/2.0/workspace/import",
+    "retries": false
+  },
+  "convergent_semantics": {
+    "missing": "CREATE",
+    "exact_existing": "ALREADY_CORRECT",
+    "divergent_existing": "FAIL_CLOSED",
+    "policy_stale": "OVERWRITE",
+    "policy_exact_local": "ALREADY_CORRECT",
+    "policy_other_hash": "FAIL_CLOSED"
+  },
+  "excluded_object_ids": [
+    "domain-context-readme"
+  ],
+  "explicitly_not_authorized": [
+    "full republish",
+    "retry or second attempt after consumption",
+    "directory creation",
+    "probes",
+    "Genie",
+    "cleanup/delete",
+    "repository policy mutation",
+    "promotion",
+    "Ready",
+    "merge"
+  ],
+  "execution_status": "NOT_RUN"
+}
