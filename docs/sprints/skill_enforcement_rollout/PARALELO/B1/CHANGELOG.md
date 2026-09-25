@@ -57,3 +57,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) G6.READ_ONLY_RECONCILE bloqueada antes do content verify: auth describe apontou host esperado, profile DEFAULT/status error, e current-user falhou INVALID_REFRESH_TOKEN; zero writes remotos. Preparado gate separado de OAuth U2M re-login para profile FREE, não autorizado porque altera credencial/config local.
 
 (ChatGPT) Usuário autorizou remediação OAuth U2M local do profile FREE no host pessoal esperado. Authorization ref issue#114:comment#5834668546. Escopo: login OAuth + auth describe/current-user; nenhuma leitura de conteúdo remoto, publicação, import/probe, Genie, cleanup ou promoção nesta fase.
+
+(ChatGPT) G6 auth remediation PASS: profile FREE/host esperado válidos após OAuth U2M login, current-user resolvido, zero efeito remoto e nenhum content verify. Tentativa 1 de READ_ONLY_RECONCILE permanece BLOCKED_AUTHENTICATION; tentativa 2 aberta sob a mesma autorização issue#114:comment#5834465790 e mesmo freeze, efeito NONE.

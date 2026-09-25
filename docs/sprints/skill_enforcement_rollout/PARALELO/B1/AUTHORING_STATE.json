@@ -3,9 +3,9 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_AUTHENTICATION_REMEDIATION_EXECUTION",
-    "G6_AUTHENTICATION_REMEDIATION_EVIDENCE_REVIEW",
-    "G6_READ_ONLY_RECONCILIATION_NEW_ATTEMPT"
+    "G6_READ_ONLY_RECONCILIATION_ATTEMPT_2_EXECUTION",
+    "G6_READ_ONLY_RECONCILIATION_ATTEMPT_2_EVIDENCE_REVIEW",
+    "G6_EFFECTFUL_OPERATIONS_SEPARATELY_AUTHORIZED_IF_NEEDED"
   ],
   "canonical_renderer": "PASS_AT_P1",
   "domain_profiles": [
@@ -29,7 +29,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_AUTHENTICATION_REMEDIATION_AUTHORIZED_NOT_RUN",
+  "stage": "B1_G6_READ_ONLY_RECONCILIATION_ATTEMPT_2_AUTHORIZED_NOT_RUN",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -191,22 +191,52 @@
       "external_writes": false
     },
     "authentication_remediation": {
-      "state": "AUTHORIZED_NOT_RUN",
+      "state": "PASS",
       "authorization_ref": "issue#114:comment#5834668546",
       "freeze_sha": "c11c2dff07f0f7595ed545f32990e5d54f1fd583",
       "freeze_tree": "15527a29db0e6bcefa639cfadd4d66eed1d32d83",
       "target_profile": "FREE",
       "target_host": "https://dbc-72c8503a-bc27.cloud.databricks.com",
-      "local_credential_mutation": true,
+      "pre_auth_exit": 0,
+      "pre_auth_profile": "FREE",
+      "pre_auth_host_match": true,
+      "pre_auth_valid": true,
+      "oauth_login_exit": 0,
+      "post_auth_exit": 0,
+      "post_auth_profile_match": true,
+      "post_auth_host_match": true,
+      "post_auth_valid": true,
+      "current_user_exit": 0,
+      "current_user_resolved": true,
       "remote_workspace_write": false,
-      "allowed_steps": [
-        "inspect existing local profiles read-only",
-        "single OAuth U2M login for profile FREE on expected host",
-        "auth describe for profile FREE",
-        "current-user me for profile FREE"
+      "content_verify": false,
+      "publication": false,
+      "probe_import": false,
+      "probe_execution": false,
+      "genie": false,
+      "cleanup": false
+    },
+    "read_only_reconciliation_attempt_1": {
+      "result": "BLOCKED_AUTHENTICATION",
+      "authorization_ref": "issue#114:comment#5834465790",
+      "freeze_sha": "c11c2dff07f0f7595ed545f32990e5d54f1fd583",
+      "blocker": "INVALID_REFRESH_TOKEN",
+      "content_verify": "NOT_RUN",
+      "remote_writes": false
+    },
+    "read_only_reconciliation_attempt_2": {
+      "state": "AUTHORIZED_NOT_RUN",
+      "authorization_ref": "issue#114:comment#5834465790",
+      "freeze_sha": "c11c2dff07f0f7595ed545f32990e5d54f1fd583",
+      "prerequisite_auth_remediation": "PASS",
+      "effect": "NONE",
+      "allowed_operations": [
+        "auth describe profile FREE",
+        "current-user me profile FREE",
+        "publicar_free --verify --conteudo",
+        "preserve sanitized local evidence"
       ],
       "explicitly_not_authorized": [
-        "content verify",
         "publication",
         "probe import",
         "probe execution",
@@ -216,8 +246,7 @@
         "promotion",
         "Ready",
         "merge"
-      ],
-      "execution_status": "NOT_RUN"
+      ]
     }
   },
   "g6_local_r1": {
