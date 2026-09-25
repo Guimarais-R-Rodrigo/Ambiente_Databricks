@@ -73,3 +73,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) Publisher R2 local PASS preservado em 4d951664... (11/11). Após autorização do usuário para fluxo mais ágil, R3 aplica hardening adversarial antes de nova tentativa remota: list payload variants, missing-parent recursion + parent DIRECTORY precondition, RAW FILE import/export, readback type, auth V2 ligado ao digest funcional e ordem exata, auth record externo, consumo atômico one-write-attempt, host/user guards e UNKNOWN pós-write-start. Manifest/17 objetos inalterados; remoto NOT_RUN.
 
 (ChatGPT) R3 adversarial suite extended with mocked end-to-end publisher flows: full 17-object PASS, precondition FAIL without authorization consumption, and post-write-start exception => UNKNOWN + stop; auth-describe error status also covered.
+
+(ChatGPT) R3 qualification preserved FAIL despite validate PASS + 27/27: four required adversarial classes lacked explicit negative tests. R4 adds those four regressions plus versioned adversarial coverage inventory and method-presence metatest. Functional publisher and 17-object manifest unchanged; remote NOT_RUN.

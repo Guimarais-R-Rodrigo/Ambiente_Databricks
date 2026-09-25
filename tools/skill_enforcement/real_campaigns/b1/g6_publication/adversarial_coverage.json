@@ -1,0 +1,69 @@
+{
+  "schema_version": "SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-1",
+  "publisher_r3_sha": "a0ac7f66839f7f7e9d73460558208652a9edcf02",
+  "purpose": "Required explicit negative/flow regression inventory for local qualification",
+  "required_cases": [
+    [
+      "WORKSPACE_LIST_INVALID_JSON",
+      "test_workspace_listing_rejects_invalid_json"
+    ],
+    [
+      "WORKSPACE_LIST_ROW_NOT_OBJECT",
+      "test_workspace_listing_rejects_non_object_row"
+    ],
+    [
+      "AUTHORIZATION_RECORD_SYMLINK",
+      "test_authorization_record_symlink_is_rejected"
+    ],
+    [
+      "AUTHORIZATION_MANIFEST_DIGEST_DRIFT",
+      "test_authorization_rejects_manifest_digest_drift"
+    ],
+    [
+      "AUTHORIZATION_PUBLISHER_DIGEST_DRIFT",
+      "test_authorization_rejects_package_digest_drift"
+    ],
+    [
+      "AUTHORIZATION_EXACT_OBJECT_ORDER",
+      "test_authorization_v2_binds_manifest_package_order_and_target"
+    ],
+    [
+      "AUTHORIZATION_ATOMIC_SINGLE_USE",
+      "test_write_authorization_consumption_is_atomic"
+    ],
+    [
+      "MISSING_PARENT_RECURSION",
+      "test_missing_proof_handles_missing_parent_via_existing_ancestor"
+    ],
+    [
+      "MISSING_PARENT_LIST_FAILURE",
+      "test_missing_proof_fails_closed_if_parent_exists_but_listing_fails"
+    ],
+    [
+      "MISSING_LISTED_TARGET",
+      "test_missing_proof_rejects_listed_target"
+    ],
+    [
+      "FILE_RAW_IMPORT_EXPORT",
+      "test_file_import_uses_raw_and_notebook_uses_source"
+    ],
+    [
+      "READBACK_OBJECT_TYPE",
+      "test_readback_type_contract"
+    ],
+    [
+      "PREFLIGHT_DOES_NOT_CONSUME",
+      "test_execute_preflight_failure_does_not_consume_write_authorization"
+    ],
+    [
+      "UNKNOWN_AFTER_WRITE_START",
+      "test_execute_exception_after_write_start_marks_unknown_and_stops"
+    ],
+    [
+      "MOCKED_FULL_SUCCESS",
+      "test_execute_mocked_full_success_covers_17_records"
+    ]
+  ],
+  "remote_access_required": false,
+  "remote_execution_authorized": false
+}

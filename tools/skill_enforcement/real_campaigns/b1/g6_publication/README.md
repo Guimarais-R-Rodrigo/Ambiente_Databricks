@@ -39,3 +39,9 @@ R2 local PASS is preserved. Before another remote attempt, R3 hardens the whole 
 The 17-object manifest remains byte-identical. R3 requires a new local qualification and a new human authorization.
 
 R3 also includes mocked end-to-end state-machine tests: all 17 records succeeding, a remote-precondition failure that must not consume the write authorization, and an exception after write start that must mark the effect UNKNOWN and stop immediately.
+
+## R4 explicit adversarial coverage closure
+
+R3 functional guards passed locally, but qualification correctly failed because four required negative classes were not represented by explicit tests. R4 adds direct regressions for invalid workspace-list JSON, non-object list rows, authorization symlink rejection, and manifest-digest drift. It also versions `adversarial_coverage.json` and a metatest that requires the named regression methods to remain present.
+
+No publisher functional code or 17-object manifest changed in R4.

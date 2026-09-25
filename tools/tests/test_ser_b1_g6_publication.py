@@ -11,6 +11,24 @@ from tools.skill_enforcement.real_campaigns.b1.g6_publication import minimal_pub
 ROOT = Path(__file__).resolve().parents[2]
 HERE = ROOT / "tools/skill_enforcement/real_campaigns/b1/g6_publication"
 
+REQUIRED_ADVERSARIAL_TEST_METHODS = {
+    "WORKSPACE_LIST_INVALID_JSON": "test_workspace_listing_rejects_invalid_json",
+    "WORKSPACE_LIST_ROW_NOT_OBJECT": "test_workspace_listing_rejects_non_object_row",
+    "AUTHORIZATION_RECORD_SYMLINK": "test_authorization_record_symlink_is_rejected",
+    "AUTHORIZATION_MANIFEST_DIGEST_DRIFT": "test_authorization_rejects_manifest_digest_drift",
+    "AUTHORIZATION_PUBLISHER_DIGEST_DRIFT": "test_authorization_rejects_package_digest_drift",
+    "AUTHORIZATION_EXACT_OBJECT_ORDER": "test_authorization_v2_binds_manifest_package_order_and_target",
+    "AUTHORIZATION_ATOMIC_SINGLE_USE": "test_write_authorization_consumption_is_atomic",
+    "MISSING_PARENT_RECURSION": "test_missing_proof_handles_missing_parent_via_existing_ancestor",
+    "MISSING_PARENT_LIST_FAILURE": "test_missing_proof_fails_closed_if_parent_exists_but_listing_fails",
+    "MISSING_LISTED_TARGET": "test_missing_proof_rejects_listed_target",
+    "FILE_RAW_IMPORT_EXPORT": "test_file_import_uses_raw_and_notebook_uses_source",
+    "READBACK_OBJECT_TYPE": "test_readback_type_contract",
+    "PREFLIGHT_DOES_NOT_CONSUME": "test_execute_preflight_failure_does_not_consume_write_authorization",
+    "UNKNOWN_AFTER_WRITE_START": "test_execute_exception_after_write_start_marks_unknown_and_stops",
+    "MOCKED_FULL_SUCCESS": "test_execute_mocked_full_success_covers_17_records",
+}
+
 
 class G6MinimalPublicationTests(unittest.TestCase):
     def manifest(self):
@@ -74,6 +92,15 @@ class G6MinimalPublicationTests(unittest.TestCase):
 
     def test_workspace_listing_accepts_empty_object(self):
         self.assertEqual([], pub._parse_workspace_listing("{}"))
+
+    def test_workspace_listing_rejects_invalid_json(self):
+        with self.assertRaisesRegex(RuntimeError, "WORKSPACE_LIST_INVALID_JSON"):
+            pub._parse_workspace_listing("not-json")
+
+    def test_workspace_listing_rejects_non_object_row(self):
+        payload = json.dumps([{"path": "/Users/u/a", "object_type": "FILE"}, "bad-row"])
+        with self.assertRaisesRegex(RuntimeError, "WORKSPACE_LIST_ROW_NOT_OBJECT"):
+            pub._parse_workspace_listing(payload)
 
     def test_workspace_listing_rejects_unsupported_shape(self):
         with self.assertRaisesRegex(RuntimeError, "WORKSPACE_LIST_UNSUPPORTED_SHAPE"):
@@ -181,6 +208,25 @@ class G6MinimalPublicationTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "AUTH_OBJECT_SEQUENCE"):
                 pub._validate_authorization(path, pub._manifest_sha256(), pub._publisher_package_sha256(), object_ids)
 
+    def test_authorization_rejects_manifest_digest_drift(self):
+        object_ids = [e["object_id"] for e in self.manifest()["entries"]]
+        payload = {
+            "schema_version": pub.AUTH_SCHEMA,
+            "decision": "AUTHORIZED",
+            "manifest_sha256": "0" * 64,
+            "publisher_package_sha256": pub._publisher_package_sha256(),
+            "effect": "REMOTE_PACKAGE_WRITE",
+            "target": {"profile": "FREE", "host": pub.EXPECTED_HOST},
+            "allowed_object_ids": object_ids,
+            "one_write_attempt": True,
+            "authorization_ref": "issue#114:comment#future",
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "auth.json"
+            path.write_text(json.dumps(payload), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "AUTH_MANIFEST_BINDING"):
+                pub._validate_authorization(path, pub._manifest_sha256(), pub._publisher_package_sha256(), object_ids)
+
     def test_authorization_rejects_package_digest_drift(self):
         object_ids = [e["object_id"] for e in self.manifest()["entries"]]
         payload = {
@@ -206,6 +252,14 @@ class G6MinimalPublicationTests(unittest.TestCase):
             path.write_text("{}", encoding="utf-8")
             with self.assertRaisesRegex(RuntimeError, "AUTHORIZATION_MUST_BE_EXTERNAL"):
                 pub._assert_external_file(path, "AUTHORIZATION")
+
+    def test_authorization_record_symlink_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "auth.json"
+            path.write_text("{}", encoding="utf-8")
+            with patch.object(Path, "is_symlink", return_value=True):
+                with self.assertRaisesRegex(RuntimeError, "AUTHORIZATION_SYMLINK_FORBIDDEN"):
+                    pub._assert_external_file(path, "AUTHORIZATION")
 
     def test_write_authorization_consumption_is_atomic(self):
         payload = {"authorization_ref":"issue#114:comment#future","manifest_sha256":pub._manifest_sha256(),"effect":"REMOTE_PACKAGE_WRITE"}
@@ -314,6 +368,14 @@ class G6MinimalPublicationTests(unittest.TestCase):
         with patch.object(pub, "_run_dbx", return_value=(0, json.dumps(auth), "")):
             with self.assertRaisesRegex(RuntimeError, "AUTH_DESCRIBE_STATUS_ERROR"):
                 pub._resolve_target("FREE", pub.EXPECTED_HOST)
+
+    def test_required_adversarial_case_methods_are_present(self):
+        missing = [
+            case_id
+            for case_id, method_name in REQUIRED_ADVERSARIAL_TEST_METHODS.items()
+            if not callable(getattr(type(self), method_name, None))
+        ]
+        self.assertEqual([], missing)
 
     def test_evidence_must_be_outside_repo_and_new(self):
         with self.assertRaisesRegex(RuntimeError, "EVIDENCE_MUST_BE_EXTERNAL"):
