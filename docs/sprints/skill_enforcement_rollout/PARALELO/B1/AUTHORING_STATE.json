@@ -3,10 +3,9 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_MINIMAL_PUBLICATION_R5_LOCAL_VALIDATION",
-    "G6_MINIMAL_PUBLICATION_R5_PACKAGE_FREEZE",
     "G6_MINIMAL_PUBLICATION_R5_EXPLICIT_HUMAN_AUTHORIZATION",
-    "G6_MINIMAL_PUBLICATION_R5_REMOTE_EXECUTION"
+    "G6_MINIMAL_PUBLICATION_R5_REMOTE_EXECUTION",
+    "G6_POST_PUBLICATION_READ_ONLY_VERIFY"
   ],
   "canonical_renderer": "PASS_AT_P1",
   "domain_profiles": [
@@ -30,7 +29,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_MINIMAL_PUBLICATION_R5_EXPORT_PROTOCOL_AUTHORED_LOCAL_VALIDATION_PENDING",
+  "stage": "B1_G6_MINIMAL_PUBLICATION_R5_FROZEN_AWAITING_HUMAN_REMOTE_AUTHORIZATION",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -405,18 +404,20 @@
       "full_verify": "NOT_RUN"
     },
     "minimal_publication_r5": {
-      "state": "AUTHORED_NOT_RUN",
-      "correction": "FILE_EXPORT_AUTO_AFTER_FILE_TYPE_PROOF",
+      "state": "LOCALLY_VALIDATED_AND_FROZEN",
+      "freeze_sha": "66f531dacbbd67ac972812a0057c932183c1aba1",
+      "freeze_tree": "fcfcc03a7d38cdd4e14a821a382b2a88c1781811",
+      "manifest_sha256": "57574ddbdadfd344776bcb2b37142248b9af95671d5efd818a4dda6bcae6ae9e",
+      "publisher_package_sha256": "774c4351e48becb4ccdcf13a375aedec635718c3c2c8dd7eb6f447e47e87ce62",
+      "validate_local": "PASS",
+      "metatests": "34/34 PASS",
+      "adversarial_schema": "SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-2",
+      "adversarial_required_cases": 17,
       "file_import_format": "RAW",
       "file_export_format": "AUTO_AFTER_OBJECT_TYPE_FILE",
-      "notebook_format": "SOURCE/PYTHON",
       "stale_policy_type_proof_before_export": true,
+      "parent_bootstrap_reuse": "3_DIRECTORIES_ALREADY_PRESENT_AND_VERIFIED",
       "manifest_changed": false,
-      "object_set_changed": false,
-      "parent_bootstrap_reuse": "THREE_DIRECTORIES_ALREADY_CREATED_AND_VERIFIED",
-      "prior_r4_write_authorization_reusable": false,
-      "local_validation": "NOT_RUN",
-      "freeze": "NOT_CREATED",
       "remote_execution": "NOT_AUTHORIZED"
     }
   },
