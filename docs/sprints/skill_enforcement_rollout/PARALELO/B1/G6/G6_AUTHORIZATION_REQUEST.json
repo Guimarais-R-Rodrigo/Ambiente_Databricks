@@ -12,13 +12,15 @@
     "optional product publication only if remote mismatch and separately approved",
     "create/import two uniquely named temporary probe notebooks only after approval",
     "run each probe once and preserve literal output",
-    "create 20 new Genie chats (10 frozen variants per skill) and preserve first result"
+    "create 20 new Genie chats (10 frozen variants per skill) and preserve first result",
+    "optional delete of the two SHA-bound probe notebooks only after evidence preservation and separate approval"
   ],
   "proposed_effects": [
     "NONE for read-only reconciliation",
     "REMOTE_PACKAGE_WRITE only if separately authorized",
     "TEMPORARY_WORKSPACE_OBJECT_CREATE for probe notebooks only if authorized",
-    "CONVERSATION_HISTORY_CREATE for Genie cases"
+    "CONVERSATION_HISTORY_CREATE for Genie cases",
+    "TEMPORARY_WORKSPACE_OBJECT_DELETE only after evidence preservation and separate authorization"
   ],
   "forbidden": [
     "corporate workspace",

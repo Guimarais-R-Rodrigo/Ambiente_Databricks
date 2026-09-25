@@ -88,7 +88,7 @@ def run_probe() -> dict:
         skill_dir / "scripts/preflight.py",
         assistant_root / "hub_scripts/skill_execution/domain_context/__init__.py",
     ]
-    before = {_sha256(path): str(index) for index, path in enumerate(protected)}
+    before = {str(path.relative_to(assistant_root)): _sha256(path) for path in protected}
     cases = {}
 
     for label in ("temporal", "static"):
@@ -134,7 +134,7 @@ def run_probe() -> dict:
         "checks": negatives,
     }
 
-    after = {_sha256(path): str(index) for index, path in enumerate(protected)}
+    after = {str(path.relative_to(assistant_root)): _sha256(path) for path in protected}
     cases["protected_bytes_unchanged"] = {
         "ok": before == after,
         "count": len(protected),

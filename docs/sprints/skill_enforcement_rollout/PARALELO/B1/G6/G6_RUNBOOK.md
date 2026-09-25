@@ -101,7 +101,18 @@ Os três eixos permanecem separados:
 - AGENT_ADHERENCE;
 - CANONICAL_COMPLIANCE.
 
-## 7. Encerramento
+## 7. Cleanup opcional pós-evidência
+
+Não apagar os notebooks temporários antes de preservar:
+- output literal;
+- export do probe;
+- IDs observáveis;
+- verify de conteúdo pós-probe;
+- evidência necessária à auditoria.
+
+A remoção dos dois notebooks SHA-bound é um efeito separado `TEMPORARY_WORKSPACE_OBJECT_DELETE` e exige autorização específica posterior. Ausência dessa autorização deixa os objetos temporários presentes; não converte G6 em FAIL.
+
+## 8. Encerramento
 
 G6 PASS por skill exige somente as claims externas congeladas e observáveis. Resultado correto sem prova de rota não prova chamada; rota observada sem resultado correto não prova domínio.
 

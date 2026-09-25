@@ -67,6 +67,15 @@
         "new chat per frozen variant",
         "preserve first literal response and observability"
       ]
+    },
+    {
+      "phase_id": "G6.PROBE_CLEANUP_AFTER_AUDIT",
+      "effect": "TEMPORARY_WORKSPACE_OBJECT_DELETE",
+      "authorized": false,
+      "operations": [
+        "delete only the two SHA-bound probe notebooks after evidence preservation"
+      ],
+      "prerequisite": "explicit separate authorization after outputs/export evidence are preserved and audited"
     }
   ],
   "free_probes": [

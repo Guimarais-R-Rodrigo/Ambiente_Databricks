@@ -63,6 +63,10 @@ def validate() -> dict:
         issues.append("PUBLISH_EFFECT_NOT_EXPLICIT")
     if phases.get("G6.PROBE_IMPORT", {}).get("effect") != "TEMPORARY_WORKSPACE_OBJECT_CREATE":
         issues.append("PROBE_IMPORT_EFFECT_NOT_EXPLICIT")
+    if phases.get("G6.PROBE_CLEANUP_AFTER_AUDIT", {}).get("effect") != "TEMPORARY_WORKSPACE_OBJECT_DELETE":
+        issues.append("PROBE_CLEANUP_EFFECT_NOT_EXPLICIT")
+    if phases.get("G6.PROBE_CLEANUP_AFTER_AUDIT", {}).get("authorized") is not False:
+        issues.append("PROBE_CLEANUP_PREAUTHORIZED")
 
     if genie.get("schema_version") != "SER-B1-G6-GENIE-MANIFEST-1":
         issues.append("GENIE_SCHEMA")

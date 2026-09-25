@@ -26,6 +26,14 @@ class G6PackageTests(unittest.TestCase):
         self.assertFalse(payload["policy_change_authorized"])
         self.assertTrue(all(row["authorized"] is False for row in payload["external_phases"]))
 
+    def test_cleanup_is_separate_effect_and_not_pre_authorized(self):
+        payload = json.loads((G6 / "external_manifest.json").read_text(encoding="utf-8"))
+        phases = {row["phase_id"]: row for row in payload["external_phases"]}
+        cleanup = phases["G6.PROBE_CLEANUP_AFTER_AUDIT"]
+        self.assertEqual("TEMPORARY_WORKSPACE_OBJECT_DELETE", cleanup["effect"])
+        self.assertFalse(cleanup["authorized"])
+        self.assertIn("after evidence", cleanup["prerequisite"])
+
     def test_genie_manifest_starts_without_observed_results(self):
         payload = json.loads((G6 / "genie_manifest.json").read_text(encoding="utf-8"))
         variants = [v for skill in payload["skills"] for v in skill["variants"]]
