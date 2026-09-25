@@ -27,3 +27,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) R3 encerrada BLOCKED_ENVIRONMENT por defeito do resolver V2: PermissionDenied em WindowsApps/python.exe antes do JSON. R4/V3 ignora App Execution Aliases, isola erros por candidato e garante JSON estruturado via trap; ainda sem instalar/baixar Python.
 
 (ChatGPT) R4 encerrou o ciclo de discovery: resolver V3 completou a busca com JSON válido, 3 candidatos observados e nenhum Python 3 utilizável. Nenhum gate P2 iniciou. Estado passa a HOST_REMEDIATION_REQUIRED; próxima etapa ENV-01 provisiona CPython/venv fora do repo e instala tools/requirements-dev.txt, sem executar campanha.
+
+(ChatGPT) ENV-01 encerrada BLOCKED antes de mutação: winget.exe ausente. ENV-02 passa ao caminho oficial alternativo do Python Install Manager via PowerShell Add-AppxPackage/AppInstaller; continua fora de qualquer round P2.

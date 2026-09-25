@@ -71,3 +71,12 @@ NOT_RUN
 ```
 
 Após ENV-01 PASS, abrir uma nova rodada P2 em SHA posterior que registre a remediação e use o resolver V3. Não reaproveitar R4.
+
+
+## ENV-01 bloqueada / ENV-02
+
+ENV-01 encerrou antes de qualquer mutação porque `winget.exe` não existe no host.
+
+ENV-02 usa o mecanismo alternativo oficialmente documentado pelo CPython para máquinas onde Store/WinGet não estão disponíveis: `Add-AppxPackage -AppInstallerFile` com o AppInstaller publicado em `python.org/ftp/python/pymanager/pymanager.appinstaller`.
+
+ENV-02 ainda é remediação ambiental, não rodada P2. Ela pode instalar o Python Install Manager e CPython 3.13, criar venv externo e instalar `tools/requirements-dev.txt`, mas não pode executar resolver V3 ou gates P2.
