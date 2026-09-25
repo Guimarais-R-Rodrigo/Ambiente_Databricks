@@ -377,6 +377,14 @@ class G6MinimalPublicationTests(unittest.TestCase):
         ]
         self.assertEqual([], missing)
 
+    def test_versioned_adversarial_coverage_matches_required_methods(self):
+        coverage = json.loads((HERE / "adversarial_coverage.json").read_text(encoding="utf-8"))
+        self.assertEqual("SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-1", coverage["schema_version"])
+        self.assertFalse(coverage["remote_access_required"])
+        self.assertFalse(coverage["remote_execution_authorized"])
+        observed = {case_id: method_name for case_id, method_name in coverage["required_cases"]}
+        self.assertEqual(REQUIRED_ADVERSARIAL_TEST_METHODS, observed)
+
     def test_evidence_must_be_outside_repo_and_new(self):
         with self.assertRaisesRegex(RuntimeError, "EVIDENCE_MUST_BE_EXTERNAL"):
             pub._evidence_dir(ROOT / "tmp-evidence-forbidden")

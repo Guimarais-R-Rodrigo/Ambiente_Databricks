@@ -75,3 +75,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) R3 adversarial suite extended with mocked end-to-end publisher flows: full 17-object PASS, precondition FAIL without authorization consumption, and post-write-start exception => UNKNOWN + stop; auth-describe error status also covered.
 
 (ChatGPT) R3 qualification preserved FAIL despite validate PASS + 27/27: four required adversarial classes lacked explicit negative tests. R4 adds those four regressions plus versioned adversarial coverage inventory and method-presence metatest. Functional publisher and 17-object manifest unchanged; remote NOT_RUN.
+
+(ChatGPT) R4 coverage inventory agora ligado mecanicamente à suíte: metateste exige equivalência exata entre adversarial_coverage.json e REQUIRED_ADVERSARIAL_TEST_METHODS, além de remote_access/execution=false. Publisher funcional e manifest seguem inalterados.
