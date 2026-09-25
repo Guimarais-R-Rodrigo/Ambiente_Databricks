@@ -110,3 +110,10 @@ ENV-04 usa diretamente:
 Esse path não é inferido de conhecimento externo: ele é a forma sem nome de usuário do path efetivamente observado em ENV-02. ENV-04 exige `Test-Path` antes da execução.
 
 Se o launcher provar CPython 3.12, ENV-04 captura `sys.executable`, cria venv externo `ser-b1-p2-py312-env04`, instala `tools/requirements-dev.txt` e executa smoke ambiental. Nenhum gate P2 é executado.
+
+
+## ENV-04 PASS / remediação encerrada
+
+ENV-04 provou CPython 3.12.10 via path observado do launcher legado, capturou o executável real, criou venv externo isolado, instalou `tools/requirements-dev.txt` e concluiu o smoke ambiental.
+
+A remediação do host está encerrada. Não executar ENV-05. A próxima etapa é P2 R5, em novo SHA, usando diretamente o Python do venv ENV-04 e sem executar o resolver V3.

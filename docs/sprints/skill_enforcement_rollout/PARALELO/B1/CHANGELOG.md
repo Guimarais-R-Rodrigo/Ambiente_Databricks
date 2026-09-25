@@ -33,3 +33,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) ENV-02: Python Install Manager oficial 26.3.240.0 instalado, mas py.exe resolveu o launcher legado e `help` foi tratado como script por Python 3.12. Em vez de remover launcher ou instalar 3.13 sem necessidade, ENV-03 adotará o CPython 3.12 já existente, criará venv externo e instalará tools/requirements-dev.txt.
 
 (ChatGPT) ENV-03 encerrada BLOCKED: Get-Command py.exe não resolveu na sessão, sem probe 3.12. ENV-04 não depende do PATH; usa o path do launcher legado observado em ENV-02 via %LOCALAPPDATA%\Programs\Python\Launcher\py.exe, captura sys.executable e prepara venv externo se CPython 3.12 for comprovado.
+
+(ChatGPT) ENV-04 PASS: CPython 3.12.10 provado diretamente, venv externo isolado criado, tools/requirements-dev.txt instalado e smoke ambiental verde, repo intacto. Remediação encerrada; R5 criada apenas como novo checkpoint documental, usando diretamente o Python do venv e sem resolver V3.

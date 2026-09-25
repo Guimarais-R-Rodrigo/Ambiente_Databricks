@@ -3,12 +3,13 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "ENV04_PROVE_OBSERVED_LEGACY_LAUNCHER_PATH",
-    "ENV04_PROVE_EXISTING_CPYTHON_312",
-    "ENV04_CREATE_EXTERNAL_VENV_PY312",
-    "ENV04_INSTALL_TOOLS_REQUIREMENTS_DEV",
-    "ENV04_IMPORT_SMOKE",
-    "NEW_P2_ROUND_AFTER_ENV04"
+    "P2_R5_ENVIRONMENT_RECONFIRMATION",
+    "P2_R5_01_PREFLIGHT",
+    "P2_R5_02_METATESTS",
+    "P2_R5_03_PREPARE",
+    "P2_R5_04_CAMPAIGN",
+    "P2_R5_05_PACKAGE",
+    "P2_R5_INDEPENDENT_AUDIT"
   ],
   "canonical_renderer": "PASS_AT_P1",
   "domain_profiles": [
@@ -32,7 +33,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "P2_HOST_REMEDIATION_ENV04_DIRECT_LEGACY_LAUNCHER_PATH",
+  "stage": "P2_R5_AUTHORED_AWAITING_LOCAL_QUALIFICATION",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -103,5 +104,27 @@
     "cpython_probe": "NOT_RUN",
     "p2_gates_executed": false,
     "repo_mutation": false
+  },
+  "env04": {
+    "result": "PASS",
+    "python_version": "3.12.10",
+    "implementation": "CPython",
+    "architecture": "64bit",
+    "machine": "AMD64",
+    "venv": "<LOCALAPPDATA>\\AmbienteDatabricks\\venvs\\ser-b1-p2-py312-env04",
+    "venv_isolated": true,
+    "requirements_dev_sha256": "5df30220f76f9d3fe34512d03446a405fe703223442db4cf72a29ba72693bd9a",
+    "requirements_temas_dev_sha256": "eab43ce8b26d15e11186f735ef885b4b3fe844479894190fdb23d16db4a3a294",
+    "import_smoke": "PASS",
+    "p2_gates_executed": false,
+    "repo_mutation": false
+  },
+  "p2_r5": {
+    "state": "AUTHORED_NOT_RUN",
+    "use_env04_venv": true,
+    "resolver_v3": "DO_NOT_RUN",
+    "max_parallel": 2,
+    "max_auditors": 1,
+    "promotion_authorized": false
   }
 }
