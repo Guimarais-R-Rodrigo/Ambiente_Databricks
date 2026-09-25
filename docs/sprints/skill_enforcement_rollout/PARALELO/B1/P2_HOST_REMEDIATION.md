@@ -97,3 +97,16 @@ ENV-03:
 - não executa resolver V3 nem gates P2;
 - não remove nem altera o launcher legado;
 - não precisa usar `pymanager` para prosseguir.
+
+
+## ENV-03 bloqueada por PATH / ENV-04 usa o launcher pelo path observado
+
+ENV-03 não conseguiu resolver `py.exe` com `Get-Command`. Isso é compatível com uma sessão cujo PATH não contém o diretório do launcher e não invalida a evidência ENV-02.
+
+ENV-04 usa diretamente:
+
+`%LOCALAPPDATA%\Programs\Python\Launcher\py.exe`
+
+Esse path não é inferido de conhecimento externo: ele é a forma sem nome de usuário do path efetivamente observado em ENV-02. ENV-04 exige `Test-Path` antes da execução.
+
+Se o launcher provar CPython 3.12, ENV-04 captura `sys.executable`, cria venv externo `ser-b1-p2-py312-env04`, instala `tools/requirements-dev.txt` e executa smoke ambiental. Nenhum gate P2 é executado.
