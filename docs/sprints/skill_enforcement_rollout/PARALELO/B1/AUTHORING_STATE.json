@@ -3,9 +3,10 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_MINIMAL_PUBLICATION_R6_REMOTE_EXECUTION",
-    "G6_MINIMAL_PUBLICATION_R6_EVIDENCE_REVIEW",
-    "G6_POST_PUBLICATION_READ_ONLY_VERIFY"
+    "G6_MINIMAL_PUBLICATION_R7_LOCAL_VALIDATION",
+    "G6_MINIMAL_PUBLICATION_R7_PACKAGE_FREEZE",
+    "G6_MINIMAL_PUBLICATION_R7_EXPLICIT_HUMAN_AUTHORIZATION",
+    "G6_MINIMAL_PUBLICATION_R7_REMOTE_EXECUTION"
   ],
   "canonical_renderer": "PASS_AT_P1",
   "domain_profiles": [
@@ -29,7 +30,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_R6_RESIDUAL_PUBLISHER_AUTHORIZED_NOT_RUN",
+  "stage": "B1_G6_R7_CONVERGENT_API_PUBLISHER_AUTHORED_LOCAL_VALIDATION_PENDING",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -560,6 +561,45 @@
       "excluded_already_correct": [
         "domain-context-readme"
       ]
+    },
+    "minimal_publication_r6_attempt_1": {
+      "result": "FAIL_FIRST_WRITE_UNKNOWN",
+      "authorization_ref": "issue#114:comment#5837785336",
+      "authorization_consumed": true,
+      "consumption_marker_present": true,
+      "publisher_freeze_sha": "d583c495baed2ab5f2f96453b69232ec3ad30be7",
+      "manifest_sha256": "1115e497852c2290dae0c5f1ec247df0de9f19e92e89385cc3f1659855d2cf9e",
+      "publisher_package_sha256": "a4f838c64d5e4f3ad902a401ab52b642e10c8d22eadde9e19e61bb647d16181f",
+      "preconditions": "PASS_16_PARENTS_15_CREATE_1_POLICY",
+      "first_failure": "domain-context-init:IMPORT_FAILED_PROTOCOL_ERROR",
+      "records": 1,
+      "writes_started": 1,
+      "write_success": 0,
+      "verification_pass": 0,
+      "effects": {
+        "created": 0,
+        "updated": 0,
+        "unknown": 1
+      },
+      "unknown_object_ids": [
+        "domain-context-init"
+      ],
+      "retry_authorized": false
+    },
+    "minimal_publication_r7": {
+      "state": "AUTHORED_NOT_RUN",
+      "package_id": "SER-B1-G6-CONVERGENT-PUBLISH-R7-1",
+      "manifest_schema": "SER-B1-G6-CONVERGENT-PUBLISH-MANIFEST-2",
+      "transport": "DATABRICKS_API_PUT_JSON_BASE64",
+      "endpoint": "/api/2.0/workspace/import",
+      "convergent_preconditions": true,
+      "skip_exact_existing": true,
+      "fail_on_divergent_existing": true,
+      "authorization_consumed_only_before_material_write": true,
+      "object_count": 16,
+      "local_validation": "NOT_RUN",
+      "freeze": "NOT_CREATED",
+      "remote_execution": "NOT_AUTHORIZED"
     }
   },
   "g6_local_r1": {

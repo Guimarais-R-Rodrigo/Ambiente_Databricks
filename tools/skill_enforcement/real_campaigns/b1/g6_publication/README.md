@@ -75,3 +75,23 @@ R6 therefore removes `domain-context-readme` from the material-write manifest an
 The publisher validator no longer hardcodes 17/16/1. Counts are declared by the closed manifest and mechanically checked against the entries. R6 currently declares 16 total objects: 15 create-if-missing plus one conditional policy overwrite.
 
 This makes the publisher reusable for a shrinking residual set without another code change solely for count changes.
+
+## R7 convergent recovery after repeated RAW .py transport failure
+
+R6 again failed on the first `domain-context-init.py` import with `PROTOCOL_ERROR`, after all preconditions passed. This is the second independent occurrence on the same RAW Python workspace file. R7 therefore removes the CLI multipart `workspace import --file` path.
+
+R7 uses the officially supported generic CLI API request:
+
+`databricks api put /api/2.0/workspace/import --json <payload>`
+
+The request body carries base64 `content`, explicit `RAW` for FILE, `SOURCE/PYTHON` for notebook, and explicit overwrite only for the policy update.
+
+R7 also becomes convergent:
+- create candidates use `MISSING_OR_EXACT_CONTENT`;
+- policy uses `REMOTE_STALE_OR_EXACT_LOCAL`;
+- a candidate that already exists with the exact expected type/content is `ALREADY_CORRECT` and skipped without a write;
+- an existing create candidate with divergent content/type still fails closed;
+- policy already at local-current content is skipped;
+- only actually required material writes consume authorization.
+
+This means a future transport-unknown effect can be safely reconciled by the next authorized execution's preflight without requiring a new residual manifest solely to determine whether an object landed.

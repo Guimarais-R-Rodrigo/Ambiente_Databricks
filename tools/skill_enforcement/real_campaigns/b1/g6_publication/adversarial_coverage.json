@@ -1,7 +1,7 @@
 {
-  "schema_version": "SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-3",
+  "schema_version": "SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-4",
   "publisher_r3_sha": "a0ac7f66839f7f7e9d73460558208652a9edcf02",
-  "purpose": "Required adversarial/protocol/residual-manifest regression inventory for R6 local qualification",
+  "purpose": "Required adversarial/protocol/convergent-recovery regression inventory for R7 local qualification",
   "required_cases": [
     [
       "WORKSPACE_LIST_INVALID_JSON",
@@ -56,16 +56,8 @@
       "test_execute_exception_after_write_start_marks_unknown_and_stops"
     ],
     [
-      "FILE_RAW_IMPORT",
-      "test_file_import_uses_raw_and_notebook_uses_source"
-    ],
-    [
       "FILE_AUTO_EXPORT_AFTER_TYPE_PROOF",
       "test_file_export_uses_auto_after_type_contract"
-    ],
-    [
-      "STALE_HASH_TYPE_BEFORE_EXPORT",
-      "test_stale_hash_checks_type_before_export"
     ],
     [
       "MOCKED_FULL_SUCCESS",
@@ -74,10 +66,31 @@
     [
       "RESIDUAL_MANIFEST_BINDING",
       "test_manifest_matches_reconciled_residual_exactly"
+    ],
+    [
+      "API_PUT_JSON_IMPORT",
+      "test_import_uses_api_put_json_base64"
+    ],
+    [
+      "CONVERGENT_POLICY_CLASSIFIER",
+      "test_policy_classifier_accepts_stale_or_exact_local"
+    ],
+    [
+      "CONVERGENT_CREATE_SKIP",
+      "test_create_classifier_skips_exact_existing_content"
+    ],
+    [
+      "CONVERGENT_CREATE_DIVERGENCE",
+      "test_create_classifier_rejects_divergent_existing_content"
+    ],
+    [
+      "CONVERGENT_EXECUTION_SKIP",
+      "test_execute_skips_already_correct_without_consuming_for_that_entry"
     ]
   ],
   "remote_access_required": false,
   "remote_execution_authorized": false,
   "publisher_r5_parent_sha": "d00832b40230f7a1a10161a399151fb5afdf1d2a",
-  "publisher_r6_parent_sha": "0cdfeadb38ff99b4c4622723cbd2ed10a02b51b6"
+  "publisher_r6_parent_sha": "0cdfeadb38ff99b4c4622723cbd2ed10a02b51b6",
+  "publisher_r7_parent_sha": "ba9d8e556d80e5acc863a6290d1c943c77216703"
 }

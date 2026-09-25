@@ -22,14 +22,16 @@ REQUIRED_ADVERSARIAL_TEST_METHODS = {
     "MISSING_PARENT_RECURSION": "test_missing_proof_handles_missing_parent_via_existing_ancestor",
     "MISSING_PARENT_LIST_FAILURE": "test_missing_proof_fails_closed_if_parent_exists_but_listing_fails",
     "MISSING_LISTED_TARGET": "test_missing_proof_rejects_listed_target",
-    "FILE_RAW_IMPORT": "test_file_import_uses_raw_and_notebook_uses_source",
+    "API_PUT_JSON_IMPORT": "test_import_uses_api_put_json_base64",
     "FILE_AUTO_EXPORT_AFTER_TYPE_PROOF": "test_file_export_uses_auto_after_type_contract",
-    "STALE_HASH_TYPE_BEFORE_EXPORT": "test_stale_hash_checks_type_before_export",
+    "CONVERGENT_POLICY_CLASSIFIER": "test_policy_classifier_accepts_stale_or_exact_local",
     "READBACK_OBJECT_TYPE": "test_readback_type_contract",
     "PREFLIGHT_DOES_NOT_CONSUME": "test_execute_preflight_failure_does_not_consume_write_authorization",
     "UNKNOWN_AFTER_WRITE_START": "test_execute_exception_after_write_start_marks_unknown_and_stops",
     "MOCKED_FULL_SUCCESS": "test_execute_mocked_full_success_covers_manifest_records",
     "RESIDUAL_MANIFEST_BINDING": "test_manifest_matches_reconciled_residual_exactly",
+    "CONVERGENT_CREATE_SKIP": "test_create_classifier_skips_exact_existing_content",
+    "CONVERGENT_CREATE_DIVERGENCE": "test_create_classifier_rejects_divergent_existing_content",
 }
 
 
@@ -80,7 +82,8 @@ class G6MinimalPublicationTests(unittest.TestCase):
             "ser05-preflight",
             "policy",
         ]
-        self.assertEqual("SER-B1-G6-RESIDUAL-PUBLISH-R6-1", manifest["package_id"])
+        self.assertEqual("SER-B1-G6-CONVERGENT-PUBLISH-R7-1", manifest["package_id"])
+        self.assertEqual("SER-B1-G6-CONVERGENT-PUBLISH-MANIFEST-2", manifest["schema_version"])
         self.assertEqual(expected_ids, [e["object_id"] for e in manifest["entries"]])
         self.assertEqual(16, manifest["expected_object_count"])
         self.assertEqual(15, manifest["missing_object_count"])
@@ -108,19 +111,41 @@ class G6MinimalPublicationTests(unittest.TestCase):
         overwrite = [e for e in entries if e["precondition"]["kind"] == "REMOTE_NORMALIZED_SHA256_EQUALS"]
         self.assertEqual(["policy"], [e["object_id"] for e in overwrite])
 
-    def test_file_import_uses_raw_and_notebook_uses_source(self):
+    def test_import_uses_api_put_json_base64(self):
         entries = self.manifest()["entries"]
         file_row = next(e for e in entries if e["object_id"] == "ser03-run")
         policy = next(e for e in entries if e["object_id"] == "policy")
         notebook = next(e for e in entries if e["object_kind"] == "NOTEBOOK")
-        file_argv = pub.build_import_argv("FREE", "/Users/u/" + file_row["remote_relative_path"], ROOT / file_row["rendered_path"], file_row)
-        policy_argv = pub.build_import_argv("FREE", "/Users/u/" + policy["remote_relative_path"], ROOT / policy["rendered_path"], policy)
-        notebook_argv = pub.build_import_argv("FREE", "/Users/u/" + notebook["remote_relative_path"], ROOT / notebook["rendered_path"], notebook)
-        self.assertIn("RAW", file_argv)
-        self.assertNotIn("AUTO", file_argv)
-        self.assertNotIn("--overwrite", file_argv)
-        self.assertIn("--overwrite", policy_argv)
-        self.assertEqual(["--format", "SOURCE", "--language", "PYTHON"], notebook_argv[-4:])
+
+        file_argv = pub.build_import_argv(
+            "FREE", "/Users/u/" + file_row["remote_relative_path"],
+            ROOT / file_row["rendered_path"], file_row, "CREATE"
+        )
+        policy_argv = pub.build_import_argv(
+            "FREE", "/Users/u/" + policy["remote_relative_path"],
+            ROOT / policy["rendered_path"], policy, "OVERWRITE"
+        )
+        notebook_argv = pub.build_import_argv(
+            "FREE", "/Users/u/" + notebook["remote_relative_path"],
+            ROOT / notebook["rendered_path"], notebook, "CREATE"
+        )
+
+        for argv in (file_argv, policy_argv, notebook_argv):
+            self.assertIn("api", argv)
+            self.assertIn("put", argv)
+            self.assertIn("/api/2.0/workspace/import", argv)
+            self.assertNotIn("workspace", argv)
+            self.assertNotIn("--file", argv)
+
+        file_payload = json.loads(file_argv[-1])
+        policy_payload = json.loads(policy_argv[-1])
+        notebook_payload = json.loads(notebook_argv[-1])
+        self.assertEqual("RAW", file_payload["format"])
+        self.assertFalse(file_payload["overwrite"])
+        self.assertEqual((ROOT / file_row["rendered_path"]).read_bytes(), __import__("base64").b64decode(file_payload["content"]))
+        self.assertTrue(policy_payload["overwrite"])
+        self.assertEqual("SOURCE", notebook_payload["format"])
+        self.assertEqual("PYTHON", notebook_payload["language"])
 
     def test_workspace_listing_accepts_cli_list_shape(self):
         rows = pub._parse_workspace_listing('[{"path":"/Users/u/a","object_type":"FILE"}]')
@@ -226,22 +251,38 @@ class G6MinimalPublicationTests(unittest.TestCase):
         self.assertIn("AUTO", calls[0])
         self.assertNotIn("RAW", calls[0])
 
-    def test_stale_hash_checks_type_before_export(self):
-        calls = []
-        expected = pub._sha256_bytes(b"a")
+    def test_policy_classifier_accepts_stale_or_exact_local(self):
+        stale = pub._sha256_bytes(b"stale")
+        local = pub._sha256_bytes(b"local")
         entry = {
             "object_kind": "FILE",
-            "precondition": {"kind": "REMOTE_NORMALIZED_SHA256_EQUALS", "sha256": expected},
+            "precondition": {"kind": "REMOTE_STALE_OR_EXACT_LOCAL", "sha256": stale},
+            "expected_local_normalized_sha256": local,
         }
-        def type_check(*_args):
-            calls.append("type")
-        def export(*_args):
-            calls.append("export")
-            return b"a"
-        with patch.object(pub, "_assert_remote_object_type", side_effect=type_check), patch.object(pub, "_export", side_effect=export):
-            observed = pub._assert_stale_hash("FREE", "/Users/u/policy.json", entry)
-        self.assertEqual(expected, observed)
-        self.assertEqual(["type", "export"], calls)
+        with patch.object(pub, "_remote_normalized_hash", return_value=stale):
+            self.assertEqual("OVERWRITE", pub._classify_overwrite_candidate("FREE", "/Users/u/policy.json", entry)["action"])
+        with patch.object(pub, "_remote_normalized_hash", return_value=local):
+            self.assertEqual("ALREADY_CORRECT", pub._classify_overwrite_candidate("FREE", "/Users/u/policy.json", entry)["action"])
+        with patch.object(pub, "_remote_normalized_hash", return_value="0" * 64):
+            with self.assertRaisesRegex(RuntimeError, "OVERWRITE_TARGET_UNEXPECTED_HASH"):
+                pub._classify_overwrite_candidate("FREE", "/Users/u/policy.json", entry)
+
+    def test_create_classifier_skips_exact_existing_content(self):
+        entry = next(e for e in self.manifest()["entries"] if e["object_id"] == "domain-context-init")
+        local_hash = pub._local_normalized_hash(entry)
+        with patch.object(pub, "_status", return_value=(0, "{}", "")), patch.object(
+            pub, "_remote_normalized_hash", return_value=local_hash
+        ):
+            result = pub._classify_create_candidate("FREE", "/Users/u/x.py", entry)
+        self.assertEqual("ALREADY_CORRECT", result["action"])
+
+    def test_create_classifier_rejects_divergent_existing_content(self):
+        entry = next(e for e in self.manifest()["entries"] if e["object_id"] == "domain-context-init")
+        with patch.object(pub, "_status", return_value=(0, "{}", "")), patch.object(
+            pub, "_remote_normalized_hash", return_value="0" * 64
+        ):
+            with self.assertRaisesRegex(RuntimeError, "CREATE_TARGET_EXISTS_DIVERGENT"):
+                pub._classify_create_candidate("FREE", "/Users/u/x.py", entry)
 
     def test_authorization_v2_binds_manifest_package_order_and_target(self):
         object_ids = [e["object_id"] for e in self.manifest()["entries"]]
@@ -369,8 +410,7 @@ class G6MinimalPublicationTests(unittest.TestCase):
 
             with patch.object(pub, "_resolve_target", return_value=("/Users/u", {"profile":"FREE","host":pub.EXPECTED_HOST,"current_user_resolved":True})), \
                  patch.object(pub, "_assert_parent_directory_exists"), \
-                 patch.object(pub, "_assert_missing"), \
-                 patch.object(pub, "_assert_stale_hash", return_value="b68d"), \
+                 patch.object(pub, "_classify_entry", side_effect=lambda _p,_r,e: {"action":"CREATE"} if e["precondition"]["kind"] in pub.CREATE_PRECONDITION_KINDS else {"action":"OVERWRITE"}), \
                  patch.object(pub, "_consume_write_authorization", return_value="c" * 64) as consume, \
                  patch.object(pub, "_run_import", return_value=(0, "", "")), \
                  patch.object(pub, "_assert_remote_object_type"), \
@@ -389,6 +429,37 @@ class G6MinimalPublicationTests(unittest.TestCase):
             self.assertEqual(expected_total, sum(r["verification"] == "PASS" for r in result["records"]))
             self.assertEqual(expected_created, sum(r["effect_status"] == "CREATED" for r in result["records"]))
             self.assertEqual(expected_updated, sum(r["effect_status"] == "UPDATED" for r in result["records"]))
+
+    def test_execute_skips_already_correct_without_consuming_for_that_entry(self):
+        manifest = self.manifest()
+        first_id = manifest["entries"][0]["object_id"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            auth = self._write_auth_v2(root)
+            evidence = root / "evidence"
+            def classify(_p, _r, entry):
+                if entry["object_id"] == first_id:
+                    return {"action":"ALREADY_CORRECT","remote_normalized_sha256":"a"*64,"local_normalized_sha256":"a"*64}
+                return {"action":"CREATE"} if entry["precondition"]["kind"] in pub.CREATE_PRECONDITION_KINDS else {"action":"OVERWRITE"}
+            by_remote = {e["remote_relative_path"]: e for e in manifest["entries"]}
+            def exported(_profile, remote, _kind):
+                rel = remote.split("/.assistant/", 1)[1]
+                entry = by_remote[".assistant/" + rel]
+                return (ROOT / entry["rendered_path"]).read_bytes()
+            with patch.object(pub, "_resolve_target", return_value=("/Users/u", {"profile":"FREE","host":pub.EXPECTED_HOST,"current_user_resolved":True})), \
+                 patch.object(pub, "_assert_parent_directory_exists"), \
+                 patch.object(pub, "_classify_entry", side_effect=classify), \
+                 patch.object(pub, "_consume_write_authorization", return_value="c"*64) as consume, \
+                 patch.object(pub, "_run_import", return_value=(0,"","")), \
+                 patch.object(pub, "_assert_remote_object_type"), \
+                 patch.object(pub, "_export", side_effect=exported):
+                result = pub.execute(auth, evidence)
+            self.assertEqual("PASS", result["status"])
+            skipped = next(r for r in result["records"] if r["object_id"] == first_id)
+            self.assertFalse(skipped["write_started"])
+            self.assertEqual("ALREADY_CORRECT", skipped["effect_status"])
+            self.assertEqual("PASS", skipped["verification"])
+            self.assertEqual(1, consume.call_count)
 
     def test_execute_preflight_failure_does_not_consume_write_authorization(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -412,8 +483,7 @@ class G6MinimalPublicationTests(unittest.TestCase):
             evidence = root / "evidence"
             with patch.object(pub, "_resolve_target", return_value=("/Users/u", {"profile":"FREE","host":pub.EXPECTED_HOST,"current_user_resolved":True})), \
                  patch.object(pub, "_assert_parent_directory_exists"), \
-                 patch.object(pub, "_assert_missing"), \
-                 patch.object(pub, "_assert_stale_hash", return_value="b68d"), \
+                 patch.object(pub, "_classify_entry", return_value={"action":"CREATE"}), \
                  patch.object(pub, "_consume_write_authorization", return_value="c" * 64), \
                  patch.object(pub, "_run_import", side_effect=OSError("transport vanished")):
                 result = pub.execute(auth, evidence)
@@ -440,7 +510,7 @@ class G6MinimalPublicationTests(unittest.TestCase):
 
     def test_versioned_adversarial_coverage_matches_required_methods(self):
         coverage = json.loads((HERE / "adversarial_coverage.json").read_text(encoding="utf-8"))
-        self.assertEqual("SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-3", coverage["schema_version"])
+        self.assertEqual("SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-4", coverage["schema_version"])
         self.assertFalse(coverage["remote_access_required"])
         self.assertFalse(coverage["remote_execution_authorized"])
         observed = {case_id: method_name for case_id, method_name in coverage["required_cases"]}

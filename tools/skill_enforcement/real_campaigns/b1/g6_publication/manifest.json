@@ -1,6 +1,6 @@
 {
-  "schema_version": "SER-B1-G6-MINIMAL-PUBLISH-MANIFEST-1",
-  "package_id": "SER-B1-G6-RESIDUAL-PUBLISH-R6-1",
+  "schema_version": "SER-B1-G6-CONVERGENT-PUBLISH-MANIFEST-2",
+  "package_id": "SER-B1-G6-CONVERGENT-PUBLISH-R7-1",
   "source_forensics_sha256": "c92cc638d2ed46c45f5f53d085e81e0408d3b89fa4ec2e1a3b219366e90a7da7",
   "g6_freeze_sha": "c11c2dff07f0f7595ed545f32990e5d54f1fd583",
   "g6_freeze_tree": "15527a29db0e6bcefa639cfadd4d66eed1d32d83",
@@ -33,7 +33,7 @@
       "object_kind": "FILE",
       "expected_git_blob_sha1": "4f2f61fb3221a72d066cf415e49e15b5b6362f66",
       "precondition": {
-        "kind": "MISSING"
+        "kind": "MISSING_OR_EXACT_CONTENT"
       }
     },
     {
@@ -45,7 +45,7 @@
       "object_kind": "NOTEBOOK",
       "expected_git_blob_sha1": "72cff69e80f4a5a19bb0f275a59b30d6b2d65016",
       "precondition": {
-        "kind": "MISSING"
+        "kind": "MISSING_OR_EXACT_CONTENT"
       }
     },
     {
@@ -57,7 +57,7 @@
       "object_kind": "FILE",
       "expected_git_blob_sha1": "42b83c751dabd714835096e587bbc7460605b4bc",
       "precondition": {
-        "kind": "MISSING"
+        "kind": "MISSING_OR_EXACT_CONTENT"
       }
     },
     {
@@ -69,7 +69,7 @@
       "object_kind": "FILE",
       "expected_git_blob_sha1": "cc1b8ddbde6ea29745cfe35b44c87962cd78cc99",
       "precondition": {
-        "kind": "MISSING"
+        "kind": "MISSING_OR_EXACT_CONTENT"
       }
     },
     {
@@ -81,7 +81,7 @@
       "object_kind": "FILE",
       "expected_git_blob_sha1": "f7b2ef59a942153b53d52439285909b82e06147c",
       "precondition": {
-        "kind": "MISSING"
+        "kind": "MISSING_OR_EXACT_CONTENT"
       }
     },
     {
@@ -93,7 +93,7 @@
       "object_kind": "FILE",
       "expected_git_blob_sha1": "ec1054b23d1af124a8f216750206ca6c96f5f162",
       "precondition": {
-        "kind": "MISSING"
+        "kind": "MISSING_OR_EXACT_CONTENT"
       }
     },
     {
@@ -105,7 +105,7 @@
       "object_kind": "FILE",
       "expected_git_blob_sha1": "74215d432037ffc9a02eae0f0ccbb631a3102bf1",
       "precondition": {
-        "kind": "MISSING"
+        "kind": "MISSING_OR_EXACT_CONTENT"
       }
     },
     {
@@ -117,7 +117,7 @@
       "object_kind": "FILE",
       "expected_git_blob_sha1": "f1b708aa677838750635ddfabbccbbb8e0934934",
       "precondition": {
-        "kind": "MISSING"
+        "kind": "MISSING_OR_EXACT_CONTENT"
       }
     },
     {
@@ -129,7 +129,7 @@
       "object_kind": "FILE",
       "expected_git_blob_sha1": "8bbb6bc0a864b094bc69e2bd8a6946af48db2ca2",
       "precondition": {
-        "kind": "MISSING"
+        "kind": "MISSING_OR_EXACT_CONTENT"
       }
     },
     {
@@ -141,7 +141,7 @@
       "object_kind": "FILE",
       "expected_git_blob_sha1": "95e02ba701e01f67696ebece8936ec09f8c22019",
       "precondition": {
-        "kind": "MISSING"
+        "kind": "MISSING_OR_EXACT_CONTENT"
       }
     },
     {
@@ -153,7 +153,7 @@
       "object_kind": "FILE",
       "expected_git_blob_sha1": "8a0b075c324208aacafca783b3e5a60a0bf79699",
       "precondition": {
-        "kind": "MISSING"
+        "kind": "MISSING_OR_EXACT_CONTENT"
       }
     },
     {
@@ -165,7 +165,7 @@
       "object_kind": "FILE",
       "expected_git_blob_sha1": "1c23fdb8a4896a6a5cc94da3734ec0efaf61ca43",
       "precondition": {
-        "kind": "MISSING"
+        "kind": "MISSING_OR_EXACT_CONTENT"
       }
     },
     {
@@ -177,7 +177,7 @@
       "object_kind": "FILE",
       "expected_git_blob_sha1": "108937477a4331170a0d162ef305a52d1cc37809",
       "precondition": {
-        "kind": "MISSING"
+        "kind": "MISSING_OR_EXACT_CONTENT"
       }
     },
     {
@@ -189,7 +189,7 @@
       "object_kind": "FILE",
       "expected_git_blob_sha1": "1d9a4b796a8e8c25365537fef667cbb83dd503ac",
       "precondition": {
-        "kind": "MISSING"
+        "kind": "MISSING_OR_EXACT_CONTENT"
       }
     },
     {
@@ -201,7 +201,7 @@
       "object_kind": "FILE",
       "expected_git_blob_sha1": "0717afa2561471ba97a39390f1c3462ecefc9bfc",
       "precondition": {
-        "kind": "MISSING"
+        "kind": "MISSING_OR_EXACT_CONTENT"
       }
     },
     {
@@ -213,7 +213,7 @@
       "object_kind": "FILE",
       "expected_git_blob_sha1": "d8035e5e56553890afaf701c1b8343db8a5d753e",
       "precondition": {
-        "kind": "REMOTE_NORMALIZED_SHA256_EQUALS",
+        "kind": "REMOTE_STALE_OR_EXACT_LOCAL",
         "sha256": "b68d378b4552f0f2800e82a47faf48961af68c0c95f416bb580582fc48f47be9"
       },
       "expected_local_normalized_sha256": "957a8a4d30d2d1c04b0ec4a3c079e2fa784b24c512dc90386aa686f7cdf69d9d"
@@ -226,5 +226,13 @@
     "already_correct_object_ids": [
       "domain-context-readme"
     ]
+  },
+  "recovery_source": {
+    "r6_authorization_ref": "issue#114:comment#5837785336",
+    "r6_result": "FAIL_FIRST_WRITE_PROTOCOL_ERROR",
+    "r6_unknown_object_ids": [
+      "domain-context-init"
+    ],
+    "strategy": "CONVERGENT_SKIP_IF_EXACT"
   }
 }

@@ -18,6 +18,9 @@ MANIFEST_PATH = HERE / "manifest.json"
 EXPECTED_PROFILE = "FREE"
 EXPECTED_HOST = "https://dbc-72c8503a-bc27.cloud.databricks.com"
 AUTH_SCHEMA = "SER-B1-G6-MINIMAL-PUBLISH-AUTH-2"
+MANIFEST_SCHEMA = "SER-B1-G6-CONVERGENT-PUBLISH-MANIFEST-2"
+CREATE_PRECONDITION_KINDS = frozenset({"MISSING_OR_EXACT_CONTENT"})
+OVERWRITE_PRECONDITION_KINDS = frozenset({"REMOTE_STALE_OR_EXACT_LOCAL"})
 FUNCTIONAL_PACKAGE_FILES = ("manifest.json", "minimal_publish.py")
 
 
@@ -72,7 +75,7 @@ def validate_local() -> dict:
     except Exception as exc:
         return {"status": "FAIL", "issues": ["MANIFEST_UNREADABLE:" + type(exc).__name__]}
 
-    if manifest.get("schema_version") != "SER-B1-G6-MINIMAL-PUBLISH-MANIFEST-1":
+    if manifest.get("schema_version") != MANIFEST_SCHEMA:
         issues.append("MANIFEST_SCHEMA")
     entries = manifest.get("entries")
     if not isinstance(entries, list):
@@ -139,9 +142,9 @@ def validate_local() -> dict:
                 issues.append("NOTEBOOK_REMOTE_EXTENSION:" + str(entry.get("object_id")))
 
         pre = entry.get("precondition") or {}
-        if pre.get("kind") == "MISSING":
+        if pre.get("kind") in CREATE_PRECONDITION_KINDS:
             missing += 1
-        elif pre.get("kind") == "REMOTE_NORMALIZED_SHA256_EQUALS":
+        elif pre.get("kind") in OVERWRITE_PRECONDITION_KINDS:
             overwrite += 1
             expected_local = entry.get("expected_local_normalized_sha256")
             actual_local = _sha256_bytes(_normalize(rendered_bytes, notebook=is_nb))
@@ -350,25 +353,80 @@ def _assert_remote_object_type(profile: str, remote_path: str, kind: str) -> Non
         raise RuntimeError("READBACK_NOTEBOOK_LANGUAGE_MISMATCH")
 
 
-def _assert_stale_hash(profile: str, remote_path: str, entry: dict) -> str:
+def _local_normalized_hash(entry: dict) -> str:
+    local_path = _rendered_path(entry)
+    return _sha256_bytes(
+        _normalize(local_path.read_bytes(), notebook=entry["object_kind"] == "NOTEBOOK")
+    )
+
+
+def _remote_normalized_hash(profile: str, remote_path: str, entry: dict) -> str:
     _assert_remote_object_type(profile, remote_path, entry["object_kind"])
     remote = _export(profile, remote_path, entry["object_kind"])
-    actual = _sha256_bytes(_normalize(remote, notebook=entry["object_kind"] == "NOTEBOOK"))
-    expected = entry["precondition"]["sha256"]
-    if actual != expected:
-        raise RuntimeError("REMOTE_STALE_HASH_PRECONDITION_MISMATCH")
-    return actual
+    return _sha256_bytes(
+        _normalize(remote, notebook=entry["object_kind"] == "NOTEBOOK")
+    )
 
 
-def build_import_argv(profile: str, remote_path: str, local_path: Path, entry: dict) -> list[str]:
-    argv = ["databricks", "--profile", profile, "workspace", "import", remote_path, "--file", str(local_path)]
+def _classify_create_candidate(profile: str, remote_path: str, entry: dict) -> dict:
+    rc, _out, _err = _status(profile, remote_path)
+    if rc == 0:
+        remote_hash = _remote_normalized_hash(profile, remote_path, entry)
+        local_hash = _local_normalized_hash(entry)
+        if remote_hash == local_hash:
+            return {
+                "action": "ALREADY_CORRECT",
+                "remote_normalized_sha256": remote_hash,
+                "local_normalized_sha256": local_hash,
+            }
+        raise RuntimeError("CREATE_TARGET_EXISTS_DIVERGENT")
+    _prove_absent_via_ancestor(profile, remote_path)
+    return {"action": "CREATE"}
+
+
+def _classify_overwrite_candidate(profile: str, remote_path: str, entry: dict) -> dict:
+    remote_hash = _remote_normalized_hash(profile, remote_path, entry)
+    stale_hash = entry["precondition"]["sha256"]
+    local_hash = entry["expected_local_normalized_sha256"]
+    if remote_hash == local_hash:
+        return {
+            "action": "ALREADY_CORRECT",
+            "remote_normalized_sha256": remote_hash,
+            "local_normalized_sha256": local_hash,
+        }
+    if remote_hash == stale_hash:
+        return {
+            "action": "OVERWRITE",
+            "remote_normalized_sha256": remote_hash,
+            "local_normalized_sha256": local_hash,
+        }
+    raise RuntimeError("OVERWRITE_TARGET_UNEXPECTED_HASH")
+
+
+def _classify_entry(profile: str, remote_path: str, entry: dict) -> dict:
+    kind = entry["precondition"]["kind"]
+    if kind in CREATE_PRECONDITION_KINDS:
+        return _classify_create_candidate(profile, remote_path, entry)
+    if kind in OVERWRITE_PRECONDITION_KINDS:
+        return _classify_overwrite_candidate(profile, remote_path, entry)
+    raise RuntimeError("UNSUPPORTED_PRECONDITION_KIND")
+
+
+def build_import_argv(profile: str, remote_path: str, local_path: Path, entry: dict, action: str) -> list[str]:
+    payload = {
+        "path": remote_path,
+        "format": "SOURCE" if entry["object_kind"] == "NOTEBOOK" else "RAW",
+        "content": base64.b64encode(local_path.read_bytes()).decode("ascii"),
+        "overwrite": action == "OVERWRITE",
+    }
     if entry["object_kind"] == "NOTEBOOK":
-        argv += ["--format", "SOURCE", "--language", "PYTHON"]
-    else:
-        argv += ["--format", "RAW"]
-    if entry["precondition"]["kind"] == "REMOTE_NORMALIZED_SHA256_EQUALS":
-        argv.append("--overwrite")
-    return argv
+        payload["language"] = "PYTHON"
+    body = json.dumps(payload, ensure_ascii=True, separators=(",", ":"))
+    return [
+        "databricks", "--profile", profile,
+        "api", "put", "/api/2.0/workspace/import",
+        "--json", body,
+    ]
 
 
 def _run_import(argv: list[str]) -> tuple[int, str, str]:
@@ -501,19 +559,21 @@ def execute(authorization_record: Path, evidence_dir: Path) -> dict:
         _write_json(evidence / "RUN_STATE.json", result)
         return result
 
-    # Complete preflight before the first write.
+    # Complete convergent preflight before the first material write.
+    plans: dict[str, dict] = {}
     try:
         for entry in entries:
             remote = _remote_path(home, entry)
             _assert_parent_directory_exists(EXPECTED_PROFILE, remote)
-            if entry["precondition"]["kind"] == "MISSING":
-                _assert_missing(EXPECTED_PROFILE, remote)
-            else:
-                _assert_stale_hash(EXPECTED_PROFILE, remote, entry)
+            plans[entry["object_id"]] = _classify_entry(EXPECTED_PROFILE, remote, entry)
         result["preconditions_confirmed"] = {
             "parent_directories": len(entries),
-            "missing_targets": sum(e["precondition"]["kind"] == "MISSING" for e in entries),
-            "stale_hash_targets": sum(e["precondition"]["kind"] == "REMOTE_NORMALIZED_SHA256_EQUALS" for e in entries),
+            "create_candidates": sum(e["precondition"]["kind"] in CREATE_PRECONDITION_KINDS for e in entries),
+            "overwrite_candidates": sum(e["precondition"]["kind"] in OVERWRITE_PRECONDITION_KINDS for e in entries),
+            "create_required": sum(p["action"] == "CREATE" for p in plans.values()),
+            "overwrite_required": sum(p["action"] == "OVERWRITE" for p in plans.values()),
+            "already_correct": sum(p["action"] == "ALREADY_CORRECT" for p in plans.values()),
+            "material_writes_required": sum(p["action"] in {"CREATE", "OVERWRITE"} for p in plans.values()),
         }
         _write_json(evidence / "RUN_STATE.json", result)
     except Exception as exc:
@@ -539,12 +599,23 @@ def execute(authorization_record: Path, evidence_dir: Path) -> dict:
         remote = _remote_path(home, entry)
         local_path = _rendered_path(entry)
         try:
-            # Recheck immediately before each write to close the preflight/write window.
+            # Recheck immediately before each material write to close the race window.
             _assert_parent_directory_exists(EXPECTED_PROFILE, remote)
-            if entry["precondition"]["kind"] == "MISSING":
-                _assert_missing(EXPECTED_PROFILE, remote)
-            else:
-                _assert_stale_hash(EXPECTED_PROFILE, remote, entry)
+            current = _classify_entry(EXPECTED_PROFILE, remote, entry)
+            record["planned_action"] = plans[entry["object_id"]]["action"]
+            record["prewrite_action"] = current["action"]
+
+            if current["action"] == "ALREADY_CORRECT":
+                record["effect_status"] = "ALREADY_CORRECT"
+                record["verification"] = "PASS"
+                if "remote_normalized_sha256" in current:
+                    record["remote_normalized_sha256"] = current["remote_normalized_sha256"]
+                    record["local_normalized_sha256"] = current["local_normalized_sha256"]
+                _write_json(evidence / "RUN_STATE.json", result)
+                continue
+
+            if current["action"] not in {"CREATE", "OVERWRITE"}:
+                raise RuntimeError("UNSUPPORTED_MATERIAL_ACTION")
 
             if result["authorization_consumed"] is False:
                 result["authorization_consumption_sha256"] = _consume_write_authorization(
@@ -553,14 +624,14 @@ def execute(authorization_record: Path, evidence_dir: Path) -> dict:
                 result["authorization_consumed"] = True
                 _write_json(evidence / "RUN_STATE.json", result)
 
-            argv = build_import_argv(EXPECTED_PROFILE, remote, local_path, entry)
+            argv = build_import_argv(EXPECTED_PROFILE, remote, local_path, entry, current["action"])
             record["write_started"] = True
             rc, out, err = _run_import(argv)
             record["write_exit_code"] = rc
             if rc != 0:
                 record["effect_status"] = "UNKNOWN"
                 raise RuntimeError("IMPORT_FAILED:" + (err.strip() or out.strip())[:120])
-            record["effect_status"] = "CREATED" if entry["precondition"]["kind"] == "MISSING" else "UPDATED"
+            record["effect_status"] = "CREATED" if current["action"] == "CREATE" else "UPDATED"
 
             _assert_remote_object_type(EXPECTED_PROFILE, remote, entry["object_kind"])
             remote_bytes = _export(EXPECTED_PROFILE, remote, entry["object_kind"])
@@ -588,7 +659,7 @@ def execute(authorization_record: Path, evidence_dir: Path) -> dict:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Closed 17-object G6 corrective publisher")
+    parser = argparse.ArgumentParser(description="Convergent G6 residual corrective publisher")
     parser.add_argument("--validate-local", action="store_true")
     parser.add_argument("--execute", action="store_true")
     parser.add_argument("--authorization-record", type=Path)
