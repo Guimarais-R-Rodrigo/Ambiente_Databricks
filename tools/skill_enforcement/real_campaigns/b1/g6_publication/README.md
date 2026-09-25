@@ -45,3 +45,18 @@ R3 also includes mocked end-to-end state-machine tests: all 17 records succeedin
 R3 functional guards passed locally, but qualification correctly failed because four required negative classes were not represented by explicit tests. R4 adds direct regressions for invalid workspace-list JSON, non-object list rows, authorization symlink rejection, and manifest-digest drift. It also versions `adversarial_coverage.json` and a metatest that requires the named regression methods to remain present.
 
 No publisher functional code or 17-object manifest changed in R4.
+
+## R5 export protocol correction after real Free preflight
+
+The three authorized parent directories were successfully created and verified. R4 then stopped before any package write because the Free workspace rejected FILE export with `format=RAW` when the CLI requested JSON/base64 (`direct_download=false`).
+
+R5 preserves:
+- FILE **import** as `RAW` to prevent notebook inference;
+- notebook import/export as `SOURCE/PYTHON`;
+- exact 17-object manifest;
+- parent-directory preconditions;
+- authorization V2 and atomic consumption.
+
+R5 changes FILE **export/readback** to `AUTO`, which is the protocol already used by the canonical `tools/publicar_free.py` content verifier that previously compared the remote package. Safety is preserved by requiring `get-status object_type=FILE` before every FILE readback, including the stale-policy precondition.
+
+The existing R4 write authorization is bound to the R4 executable digest and therefore cannot authorize R5. R5 requires its own local qualification, package digest, freeze, and explicit remote authorization.

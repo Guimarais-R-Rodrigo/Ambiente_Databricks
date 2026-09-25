@@ -22,7 +22,9 @@ REQUIRED_ADVERSARIAL_TEST_METHODS = {
     "MISSING_PARENT_RECURSION": "test_missing_proof_handles_missing_parent_via_existing_ancestor",
     "MISSING_PARENT_LIST_FAILURE": "test_missing_proof_fails_closed_if_parent_exists_but_listing_fails",
     "MISSING_LISTED_TARGET": "test_missing_proof_rejects_listed_target",
-    "FILE_RAW_IMPORT_EXPORT": "test_file_import_uses_raw_and_notebook_uses_source",
+    "FILE_RAW_IMPORT": "test_file_import_uses_raw_and_notebook_uses_source",
+    "FILE_AUTO_EXPORT_AFTER_TYPE_PROOF": "test_file_export_uses_auto_after_type_contract",
+    "STALE_HASH_TYPE_BEFORE_EXPORT": "test_stale_hash_checks_type_before_export",
     "READBACK_OBJECT_TYPE": "test_readback_type_contract",
     "PREFLIGHT_DOES_NOT_CONSUME": "test_execute_preflight_failure_does_not_consume_write_authorization",
     "UNKNOWN_AFTER_WRITE_START": "test_execute_exception_after_write_start_marks_unknown_and_stops",
@@ -179,11 +181,29 @@ class G6MinimalPublicationTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "READBACK_OBJECT_TYPE_MISMATCH"):
                 pub._assert_remote_object_type("FREE", file_path, "FILE")
 
-    def test_file_export_uses_raw(self):
+    def test_file_export_uses_auto_after_type_contract(self):
         calls = []
         with patch.object(pub, "_run_dbx", side_effect=lambda _profile,*args:(calls.append(args) or (0,json.dumps({"content":"YQ=="}),""))):
             self.assertEqual(b"a", pub._export("FREE", "/Users/u/a.py", "FILE"))
-        self.assertIn("RAW", calls[0])
+        self.assertIn("AUTO", calls[0])
+        self.assertNotIn("RAW", calls[0])
+
+    def test_stale_hash_checks_type_before_export(self):
+        calls = []
+        expected = pub._sha256_bytes(b"a")
+        entry = {
+            "object_kind": "FILE",
+            "precondition": {"kind": "REMOTE_NORMALIZED_SHA256_EQUALS", "sha256": expected},
+        }
+        def type_check(*_args):
+            calls.append("type")
+        def export(*_args):
+            calls.append("export")
+            return b"a"
+        with patch.object(pub, "_assert_remote_object_type", side_effect=type_check), patch.object(pub, "_export", side_effect=export):
+            observed = pub._assert_stale_hash("FREE", "/Users/u/policy.json", entry)
+        self.assertEqual(expected, observed)
+        self.assertEqual(["type", "export"], calls)
 
     def test_authorization_v2_binds_manifest_package_order_and_target(self):
         object_ids = [e["object_id"] for e in self.manifest()["entries"]]
@@ -379,7 +399,7 @@ class G6MinimalPublicationTests(unittest.TestCase):
 
     def test_versioned_adversarial_coverage_matches_required_methods(self):
         coverage = json.loads((HERE / "adversarial_coverage.json").read_text(encoding="utf-8"))
-        self.assertEqual("SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-1", coverage["schema_version"])
+        self.assertEqual("SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-2", coverage["schema_version"])
         self.assertFalse(coverage["remote_access_required"])
         self.assertFalse(coverage["remote_execution_authorized"])
         observed = {case_id: method_name for case_id, method_name in coverage["required_cases"]}

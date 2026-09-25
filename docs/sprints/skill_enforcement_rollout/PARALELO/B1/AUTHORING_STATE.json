@@ -3,9 +3,10 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_R4_PARENT_DIRECTORY_BOOTSTRAP_EXECUTION",
-    "G6_R4_REMOTE_EXECUTION_REINVOCATION",
-    "G6_POST_PUBLICATION_READ_ONLY_VERIFY"
+    "G6_MINIMAL_PUBLICATION_R5_LOCAL_VALIDATION",
+    "G6_MINIMAL_PUBLICATION_R5_PACKAGE_FREEZE",
+    "G6_MINIMAL_PUBLICATION_R5_EXPLICIT_HUMAN_AUTHORIZATION",
+    "G6_MINIMAL_PUBLICATION_R5_REMOTE_EXECUTION"
   ],
   "canonical_renderer": "PASS_AT_P1",
   "domain_profiles": [
@@ -29,7 +30,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_R4_PARENT_BOOTSTRAP_AUTHORIZED_THEN_PUBLISHER_REINVOCATION_AUTHORIZED",
+  "stage": "B1_G6_MINIMAL_PUBLICATION_R5_EXPORT_PROTOCOL_AUTHORED_LOCAL_VALIDATION_PENDING",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -370,7 +371,7 @@
       "full_verify": "NOT_RUN"
     },
     "parent_directory_bootstrap": {
-      "state": "AUTHORIZED_NOT_RUN",
+      "state": "PASS",
       "authorization_ref": "issue#114:comment#5836769448",
       "effect": "REMOTE_DIRECTORY_CREATE",
       "allowed_directories": [
@@ -382,7 +383,41 @@
       "parent_must_exist_as_directory": true,
       "no_other_directories": true,
       "after_success": "REINVOKE_R4_WITH_EXISTING_UNCONSUMED_WRITE_AUTHORIZATION",
-      "r4_write_authorization_ref": "issue#114:comment#5836601472"
+      "r4_write_authorization_ref": "issue#114:comment#5836601472",
+      "checked": 3,
+      "created": 3,
+      "preexisting": 0,
+      "type_conflicts": 0,
+      "extra_created": 0,
+      "all_three_directory": true
+    },
+    "minimal_publication_r4_reinvocation": {
+      "result": "BLOCKED_PRECONDITION",
+      "publisher_write_authorization_ref": "issue#114:comment#5836601472",
+      "authorization_consumed": false,
+      "consumption_marker_present": false,
+      "first_failure": "REMOTE_PRECONDITION:EXPORT_FAILED_RAW_DIRECT_DOWNLOAD_FALSE",
+      "records": 0,
+      "writes_started": 0,
+      "package_created": 0,
+      "package_updated": 0,
+      "package_unknown": 0,
+      "full_verify": "NOT_RUN"
+    },
+    "minimal_publication_r5": {
+      "state": "AUTHORED_NOT_RUN",
+      "correction": "FILE_EXPORT_AUTO_AFTER_FILE_TYPE_PROOF",
+      "file_import_format": "RAW",
+      "file_export_format": "AUTO_AFTER_OBJECT_TYPE_FILE",
+      "notebook_format": "SOURCE/PYTHON",
+      "stale_policy_type_proof_before_export": true,
+      "manifest_changed": false,
+      "object_set_changed": false,
+      "parent_bootstrap_reuse": "THREE_DIRECTORIES_ALREADY_CREATED_AND_VERIFIED",
+      "prior_r4_write_authorization_reusable": false,
+      "local_validation": "NOT_RUN",
+      "freeze": "NOT_CREATED",
+      "remote_execution": "NOT_AUTHORIZED"
     }
   },
   "g6_local_r1": {

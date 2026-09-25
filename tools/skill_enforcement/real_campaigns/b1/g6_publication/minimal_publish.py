@@ -216,7 +216,11 @@ def _remote_path(home: str, entry: dict) -> str:
 
 
 def _export(profile: str, remote_path: str, kind: str) -> bytes:
-    fmt = "SOURCE" if kind == "NOTEBOOK" else "RAW"
+    # FILE imports stay RAW to prevent notebook inference. For export/readback,
+    # AUTO is used only after object_type=FILE has been proven by get-status.
+    # This matches the repository's canonical publicar_free.py protocol and
+    # avoids RAW + JSON/direct_download=false incompatibility observed in Free.
+    fmt = "SOURCE" if kind == "NOTEBOOK" else "AUTO"
     rc, out, err = _run_dbx(profile, "workspace", "export", remote_path, "--format", fmt, "-o", "json")
     if rc != 0:
         raise RuntimeError("EXPORT_FAILED:" + (err.strip() or out.strip())[:120])
@@ -329,6 +333,7 @@ def _assert_remote_object_type(profile: str, remote_path: str, kind: str) -> Non
 
 
 def _assert_stale_hash(profile: str, remote_path: str, entry: dict) -> str:
+    _assert_remote_object_type(profile, remote_path, entry["object_kind"])
     remote = _export(profile, remote_path, entry["object_kind"])
     actual = _sha256_bytes(_normalize(remote, notebook=entry["object_kind"] == "NOTEBOOK"))
     expected = entry["precondition"]["sha256"]
