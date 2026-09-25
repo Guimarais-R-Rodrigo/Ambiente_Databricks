@@ -3,8 +3,8 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_MINIMAL_PUBLICATION_R4_REMOTE_EXECUTION",
-    "G6_MINIMAL_PUBLICATION_R4_EVIDENCE_REVIEW",
+    "G6_R4_PARENT_DIRECTORY_BOOTSTRAP_EXECUTION",
+    "G6_R4_REMOTE_EXECUTION_REINVOCATION",
     "G6_POST_PUBLICATION_READ_ONLY_VERIFY"
   ],
   "canonical_renderer": "PASS_AT_P1",
@@ -29,7 +29,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_MINIMAL_PUBLICATION_R4_AUTHORIZED_NOT_RUN",
+  "stage": "B1_G6_R4_PARENT_BOOTSTRAP_AUTHORIZED_THEN_PUBLISHER_REINVOCATION_AUTHORIZED",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -350,6 +350,39 @@
       "effect": "REMOTE_PACKAGE_WRITE",
       "one_write_attempt": true,
       "object_count": 17
+    },
+    "minimal_publication_r4_attempt_1": {
+      "result": "BLOCKED_PRECONDITION",
+      "authorization_ref": "issue#114:comment#5836601472",
+      "authorization_consumed": false,
+      "consumption_marker_present": false,
+      "publisher_freeze_sha": "3ef1f14e728338540a4426f297c90ee2f576ec92",
+      "publisher_freeze_tree": "baecc5498c1a0fef63a7f8dfba21d615ca2b33df",
+      "manifest_sha256": "57574ddbdadfd344776bcb2b37142248b9af95671d5efd818a4dda6bcae6ae9e",
+      "publisher_package_sha256": "47f230f2ffef57510d1c92b7d94dac3ded766ccbba81368d4058ef2b78aaf7c9",
+      "first_failure": "REMOTE_PRECONDITION:GET_STATUS_FAILED:PARENT_PATH_DOES_NOT_EXIST",
+      "records": 0,
+      "writes_started": 0,
+      "created": 0,
+      "updated": 0,
+      "unknown": 0,
+      "remote_package_objects_changed": false,
+      "full_verify": "NOT_RUN"
+    },
+    "parent_directory_bootstrap": {
+      "state": "AUTHORIZED_NOT_RUN",
+      "authorization_ref": "issue#114:comment#5836769448",
+      "effect": "REMOTE_DIRECTORY_CREATE",
+      "allowed_directories": [
+        ".assistant/hub_scripts/skill_execution/domain_context",
+        ".assistant/skills/hub-ml-analise-safra/scripts",
+        ".assistant/skills/hub-ml-cross-eda-ml/scripts"
+      ],
+      "create_only_if_exact_child_absent": true,
+      "parent_must_exist_as_directory": true,
+      "no_other_directories": true,
+      "after_success": "REINVOKE_R4_WITH_EXISTING_UNCONSUMED_WRITE_AUTHORIZATION",
+      "r4_write_authorization_ref": "issue#114:comment#5836601472"
     }
   },
   "g6_local_r1": {
