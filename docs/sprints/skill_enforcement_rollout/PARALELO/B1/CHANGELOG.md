@@ -11,3 +11,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) P2 repo-side materializa a primeira campanha real governada em `tools/skill_enforcement/real_campaigns/b1/`: registry B1 fechado, release identity B1, adapter aditivo sobre launcher/verifier B0, DAG 2/1, coverage caso→teste→oráculo→command, auditorias de domínio e gerador mecânico de handoff. A campanha ainda não foi executada localmente.
 
 (ChatGPT) Contraditório P2 endureceu a identidade antes do primeiro run: bindings exatos de todo o B0 qualificado na PR #113, preservação dos bytes funcionais P1, profile_digest obrigatório no handoff e evidence/output fora do repositório. Nenhum gate local foi executado por este commit.
+
+(ChatGPT) Segundo contraditório P2: o handoff agora recusa divergência campaign↔release-spec e grava no execution_argv o python_executable real congelado, não o token simbólico {PYTHON}. O metateste cobre ambos.

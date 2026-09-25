@@ -8,7 +8,7 @@ from unittest import mock
 
 from tools.skill_enforcement.parallel import launcher as b0_launcher
 from tools.skill_enforcement.parallel import verifier as b0_verifier
-from tools.skill_enforcement.parallel.contract import validate_campaign
+from tools.skill_enforcement.parallel.contract import digest_json, validate_campaign
 from tools.skill_enforcement.parallel.registry import load_registry as load_b0_registry
 from tools.skill_enforcement.real_campaigns.b1 import adapter, handoff, identity, registry
 from tools.skill_enforcement.real_campaigns.b1.coverage import build_report
@@ -123,12 +123,17 @@ class HandoffTests(unittest.TestCase):
             task["candidate_sha"] = campaign["candidate_sha"]
         spec = {
             "candidate_sha": campaign["candidate_sha"],
+            "candidate_tree_sha": campaign["candidate_tree_sha"],
+            "baseline_sha": campaign["baseline_sha"],
             "round_id": campaign["round_id"],
-            "command_registry_digest": "c" * 64,
-            "coverage_digest": "d" * 64,
+            "command_registry_digest": campaign["command_registry_digest"],
+            "coverage_digest": campaign["coverage_digest"],
+            "policy_before_digest": campaign["policy_before_digest"],
             "b0_mechanism_digest": "e" * 64,
             "adapter_id": "SER-B1-ADAPTER-1",
+            "python_executable": "C:/Python/python.exe",
         }
+        campaign["release_spec_digest"] = digest_json(spec)
         payload = handoff.build_handoff(
             campaign, spec,
             campaign_path=Path("CAMPAIGN.json"),
@@ -139,11 +144,21 @@ class HandoffTests(unittest.TestCase):
         self.assertEqual(1, payload["max_auditors"])
         self.assertEqual(64, len(payload["profile_digest"]))
         self.assertTrue(all(x["profile_digest"] == payload["profile_digest"] for x in payload["tasks"]))
+        self.assertEqual(spec["python_executable"], payload["execution_argv"][0])
         self.assertEqual(
             [x["task_id"] for x in campaign["tasks"]],
             [x["task_id"] for x in payload["tasks"]],
         )
         self.assertIn("USE_3_2_CONCURRENCY", payload["prohibited"])
+        broken = dict(campaign)
+        broken["release_spec_digest"] = "0" * 64
+        with self.assertRaisesRegex(ValueError, "RELEASE_SPEC_DIGEST_MISMATCH"):
+            handoff.build_handoff(
+                broken, spec,
+                campaign_path=Path("CAMPAIGN.json"),
+                release_spec_path=Path("RELEASE_SPEC.json"),
+                evidence_dir=Path("EVIDENCE"),
+            )
 
 
 class OutputLocationTests(unittest.TestCase):

@@ -20,6 +20,22 @@ def _profile_digest(campaign: Mapping[str, Any], release_spec: Mapping[str, Any]
     })
 
 
+def _assert_campaign_release_binding(campaign: Mapping[str, Any], release_spec: Mapping[str, Any]) -> None:
+    if campaign.get("round_id") != release_spec.get("round_id"):
+        raise ValueError("HANDOFF_ROUND_MISMATCH")
+    for key in (
+        "candidate_sha", "candidate_tree_sha", "baseline_sha",
+        "command_registry_digest", "coverage_digest", "policy_before_digest",
+    ):
+        if campaign.get(key) != release_spec.get(key):
+            raise ValueError("HANDOFF_RELEASE_FIELD_MISMATCH:" + key)
+    if campaign.get("release_spec_digest") != digest_json(dict(release_spec)):
+        raise ValueError("HANDOFF_RELEASE_SPEC_DIGEST_MISMATCH")
+    python_executable = release_spec.get("python_executable")
+    if not isinstance(python_executable, str) or not python_executable:
+        raise ValueError("HANDOFF_PYTHON_EXECUTABLE_MISSING")
+
+
 def build_handoff(
     campaign: Mapping[str, Any],
     release_spec: Mapping[str, Any],
@@ -28,10 +44,7 @@ def build_handoff(
     release_spec_path: Path,
     evidence_dir: Path,
 ) -> dict[str, Any]:
-    if campaign.get("candidate_sha") != release_spec.get("candidate_sha"):
-        raise ValueError("HANDOFF_CANDIDATE_MISMATCH")
-    if campaign.get("round_id") != release_spec.get("round_id"):
-        raise ValueError("HANDOFF_ROUND_MISMATCH")
+    _assert_campaign_release_binding(campaign, release_spec)
     profile_digest = _profile_digest(campaign, release_spec)
     release_id = campaign["campaign_id"] + ":" + campaign["round_id"]
     tasks = []
@@ -78,7 +91,7 @@ def build_handoff(
         "max_auditors": campaign["max_auditors"],
         "tasks": tasks,
         "execution_argv": [
-            "{PYTHON}", "-B", "-m", "tools.skill_enforcement.real_campaigns.b1.adapter",
+            release_spec["python_executable"], "-B", "-m", "tools.skill_enforcement.real_campaigns.b1.adapter",
             "--campaign", str(campaign_path),
             "--release-spec", str(release_spec_path),
             "--evidence-dir", str(evidence_dir),
