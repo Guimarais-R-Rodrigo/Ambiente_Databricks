@@ -3,10 +3,9 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_MINIMAL_PUBLICATION_R6_LOCAL_VALIDATION",
-    "G6_MINIMAL_PUBLICATION_R6_PACKAGE_FREEZE",
     "G6_MINIMAL_PUBLICATION_R6_EXPLICIT_HUMAN_AUTHORIZATION",
-    "G6_MINIMAL_PUBLICATION_R6_REMOTE_EXECUTION"
+    "G6_MINIMAL_PUBLICATION_R6_REMOTE_EXECUTION",
+    "G6_POST_PUBLICATION_READ_ONLY_VERIFY"
   ],
   "canonical_renderer": "PASS_AT_P1",
   "domain_profiles": [
@@ -30,7 +29,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_R6_RESIDUAL_PUBLISHER_AUTHORED_LOCAL_VALIDATION_PENDING",
+  "stage": "B1_G6_R6_RESIDUAL_PUBLISHER_FROZEN_AWAITING_HUMAN_REMOTE_AUTHORIZATION",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -530,7 +529,7 @@
       "remote_writes": false
     },
     "minimal_publication_r6": {
-      "state": "AUTHORED_NOT_RUN",
+      "state": "LOCALLY_VALIDATED_AND_FROZEN",
       "package_id": "SER-B1-G6-RESIDUAL-PUBLISH-R6-1",
       "residual_evidence_sha256": "d255398df799f0262872db4b5b327cb4dc3b9be67178746923a009138f702435",
       "object_count": 16,
@@ -543,7 +542,18 @@
       "parent_directories": "ALREADY_PRESENT_AND_VERIFIED",
       "local_validation": "NOT_RUN",
       "freeze": "NOT_CREATED",
-      "remote_execution": "NOT_AUTHORIZED"
+      "remote_execution": "NOT_AUTHORIZED",
+      "freeze_sha": "d583c495baed2ab5f2f96453b69232ec3ad30be7",
+      "freeze_tree": "31aedaf256cc6ef1eea5a03412825df313eb747d",
+      "manifest_sha256": "1115e497852c2290dae0c5f1ec247df0de9f19e92e89385cc3f1659855d2cf9e",
+      "publisher_package_sha256": "a4f838c64d5e4f3ad902a401ab52b642e10c8d22eadde9e19e61bb647d16181f",
+      "validate_local": "PASS",
+      "metatests": "35/35 PASS",
+      "adversarial_schema": "SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-3",
+      "adversarial_required_cases": 18,
+      "residual_object_count": 16,
+      "count_model": "MANIFEST_DECLARED",
+      "argparse_legacy_text": "NON_FUNCTIONAL_DEBT_ACCEPTED_AT_FREEZE"
     }
   },
   "g6_local_r1": {
