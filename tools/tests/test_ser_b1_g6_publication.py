@@ -4,6 +4,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from tools.skill_enforcement.real_campaigns.b1.g6_publication import minimal_publish as pub
 
@@ -88,6 +89,40 @@ class G6MinimalPublicationTests(unittest.TestCase):
             path.write_text(json.dumps(bad), encoding="utf-8")
             with self.assertRaisesRegex(RuntimeError, "AUTH_MANIFEST_BINDING"):
                 pub._validate_authorization(path, pub._manifest_sha256(), object_ids)
+
+
+    def test_missing_precondition_uses_successful_parent_listing(self):
+        target = "/Users/u/.assistant/skills/hub-ml-analise-safra/scripts/run.py"
+        parent_rows = [
+            {"path": "/Users/u/.assistant/skills/hub-ml-analise-safra/scripts/preflight.py"},
+            {"path": "/Users/u/.assistant/skills/hub-ml-analise-safra/scripts/verify.py"},
+        ]
+        with patch.object(pub, "_status", return_value=(1, "", "path not found")), patch.object(
+            pub, "_run_dbx", return_value=(0, json.dumps(parent_rows), "")
+        ):
+            pub._assert_missing("FREE", target)
+
+    def test_missing_precondition_rejects_listed_target(self):
+        target = "/Users/u/.assistant/skills/hub-ml-analise-safra/scripts/run.py"
+        with patch.object(pub, "_status", return_value=(1, "", "not found")), patch.object(
+            pub, "_run_dbx", return_value=(0, json.dumps([{"path": target}]), "")
+        ):
+            with self.assertRaisesRegex(RuntimeError, "EXPECTED_MISSING_BUT_LISTED"):
+                pub._assert_missing("FREE", target)
+
+    def test_missing_precondition_fails_closed_if_parent_listing_fails(self):
+        target = "/Users/u/.assistant/skills/hub-ml-analise-safra/scripts/run.py"
+        with patch.object(pub, "_status", return_value=(1, "", "not found")), patch.object(
+            pub, "_run_dbx", return_value=(1, "", "transport error")
+        ):
+            with self.assertRaisesRegex(RuntimeError, "MISSING_PARENT_LIST_FAILED"):
+                pub._assert_missing("FREE", target)
+
+    def test_missing_precondition_rejects_existing_target(self):
+        target = "/Users/u/.assistant/skills/hub-ml-analise-safra/scripts/run.py"
+        with patch.object(pub, "_status", return_value=(0, "{}", "")):
+            with self.assertRaisesRegex(RuntimeError, "EXPECTED_MISSING_BUT_EXISTS"):
+                pub._assert_missing("FREE", target)
 
     def test_evidence_must_be_outside_repo_and_new(self):
         with self.assertRaisesRegex(RuntimeError, "EVIDENCE_MUST_BE_EXTERNAL"):

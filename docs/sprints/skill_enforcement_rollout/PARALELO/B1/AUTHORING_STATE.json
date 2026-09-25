@@ -3,10 +3,10 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_MINIMAL_PUBLICATION_EXECUTION",
-    "G6_MINIMAL_PUBLICATION_EVIDENCE_REVIEW",
-    "G6_POST_PUBLICATION_READ_ONLY_VERIFY",
-    "G6_PROBE_IMPORT_SEPARATE_AUTHORIZATION"
+    "G6_MINIMAL_PUBLICATION_R2_LOCAL_VALIDATION",
+    "G6_MINIMAL_PUBLICATION_R2_PACKAGE_FREEZE",
+    "G6_MINIMAL_PUBLICATION_R2_EXPLICIT_HUMAN_AUTHORIZATION",
+    "G6_MINIMAL_PUBLICATION_R2_EXECUTION"
   ],
   "canonical_renderer": "PASS_AT_P1",
   "domain_profiles": [
@@ -30,7 +30,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_MINIMAL_PUBLICATION_AUTHORIZED_NOT_RUN",
+  "stage": "B1_G6_MINIMAL_PUBLICATION_R2_AUTHORED_LOCAL_VALIDATION_PENDING",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -272,27 +272,32 @@
       "remote_write_performed": false
     },
     "minimal_publication_proposal": {
-      "state": "AUTHORIZED_NOT_RUN",
-      "authorization_ref": "issue#114:comment#5835957014",
+      "state": "R2_AUTHORED_NOT_AUTHORIZED",
       "package_path": "tools/skill_enforcement/real_campaigns/b1/g6_publication",
-      "target": "PERSONAL_DATABRICKS_FREE_ONLY",
-      "target_profile": "FREE",
-      "target_host": "https://dbc-72c8503a-bc27.cloud.databricks.com",
       "effect": "REMOTE_PACKAGE_WRITE",
       "object_count": 17,
-      "missing_objects": 16,
-      "stale_content_objects": 1,
-      "full_package_republish": false,
-      "authorization_record_required": true,
-      "post_write_full_content_verify_required": true,
-      "local_validation": "PASS",
-      "metatests": "7/7 PASS",
-      "freeze": "CREATED_BY_IDENTITY",
-      "freeze_sha": "74117255dedebde0b30ed027cab6494974240d83",
-      "freeze_tree": "88ba0bb4efa07867c8adea7ea65c6e690d12a288",
+      "manifest_sha256_expected_after_code_only_change": "57574ddbdadfd344776bcb2b37142248b9af95671d5efd818a4dda6bcae6ae9e",
+      "correction": "STRUCTURED_PARENT_LIST_MISSING_PROOF",
+      "previous_authorization_reusable": false,
+      "local_validation": "NOT_RUN",
+      "freeze": "NOT_CREATED",
+      "remote_execution_status": "NOT_AUTHORIZED"
+    },
+    "minimal_publication_attempt_1": {
+      "publisher_freeze_sha": "74117255dedebde0b30ed027cab6494974240d83",
+      "publisher_freeze_tree": "88ba0bb4efa07867c8adea7ea65c6e690d12a288",
       "manifest_sha256": "57574ddbdadfd344776bcb2b37142248b9af95671d5efd818a4dda6bcae6ae9e",
-      "one_attempt": true,
-      "remote_execution_status": "NOT_RUN"
+      "authorization_ref": "issue#114:comment#5835957014",
+      "authorization_consumed": true,
+      "result": "FAIL",
+      "first_failure": "REMOTE_PRECONDITION:MISSING_NOT_PROVEN",
+      "writes_started": 0,
+      "writes_success": 0,
+      "effect_created": 0,
+      "effect_updated": 0,
+      "effect_unknown": 0,
+      "policy_hash_observed": "NOT_OBSERVED",
+      "remote_changed": false
     }
   },
   "g6_local_r1": {

@@ -67,3 +67,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) Autoria repo-side da correção remota mínima criada fora do freeze G6: manifest fechado de 17 objetos, publisher delta fail-closed e 7 metatestes. 16 creates exigem target ausente e nunca usam overwrite; somente policy.json pode overwrite se o hash remoto ainda for exatamente o histórico observado. Execução remota continua NOT_AUTHORIZED.
 
 (ChatGPT) Usuário autorizou UMA tentativa do publisher corretivo mínimo congelado, ref issue#114:comment#5835957014, preso ao manifest SHA256 57574ddb..., 17 objetos, target FREE e effect REMOTE_PACKAGE_WRITE. Full republish/retry/probes/Genie/cleanup/policy mutation/promoção/Ready/merge seguem proibidos. Execução ainda NOT_RUN.
+
+(ChatGPT) Minimal publisher attempt 1 FAIL antes de writes: REMOTE_PRECONDITION:MISSING_NOT_PROVEN; autorização one-attempt consumida, 0 created/updated/unknown. Causa: prova de ausência dependia do token textual RESOURCE_DOES_NOT_EXIST. R2 usa get-status não-success + workspace list JSON do pai omitindo o path exato; adicionadas 4 regressões fail-closed. Nenhuma execução remota autorizada para R2.

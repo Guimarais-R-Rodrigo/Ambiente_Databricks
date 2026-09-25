@@ -210,12 +210,32 @@ def _status(profile: str, remote_path: str) -> tuple[int, str, str]:
 
 
 def _assert_missing(profile: str, remote_path: str) -> None:
-    rc, out, err = _status(profile, remote_path)
+    rc, _out, _err = _status(profile, remote_path)
     if rc == 0:
         raise RuntimeError("EXPECTED_MISSING_BUT_EXISTS")
-    combined = (out + "\n" + err).upper()
-    if "RESOURCE_DOES_NOT_EXIST" not in combined:
-        raise RuntimeError("MISSING_NOT_PROVEN:" + (err.strip() or out.strip())[:120])
+
+    if "/" not in remote_path.rstrip("/"):
+        raise RuntimeError("MISSING_PARENT_UNRESOLVED")
+    parent = remote_path.rstrip("/").rsplit("/", 1)[0]
+    list_rc, list_out, list_err = _run_dbx(profile, "workspace", "list", parent, "-o", "json")
+    if list_rc != 0:
+        raise RuntimeError(
+            "MISSING_PARENT_LIST_FAILED:" + (list_err.strip() or list_out.strip())[:120]
+        )
+    try:
+        listing = json.loads(list_out)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError("MISSING_PARENT_LIST_INVALID_JSON") from exc
+    if not isinstance(listing, list):
+        raise RuntimeError("MISSING_PARENT_LIST_NOT_ARRAY")
+
+    observed = {
+        str(item.get("path"))
+        for item in listing
+        if isinstance(item, dict) and isinstance(item.get("path"), str)
+    }
+    if remote_path in observed:
+        raise RuntimeError("EXPECTED_MISSING_BUT_LISTED")
 
 
 def _assert_stale_hash(profile: str, remote_path: str, entry: dict) -> str:

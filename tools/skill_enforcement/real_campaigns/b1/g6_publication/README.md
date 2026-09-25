@@ -25,3 +25,9 @@ The publisher fails closed:
 - the output requires a separate full `publicar_free.py --verify --conteudo` after a successful run.
 
 No probe, Genie, cleanup, policy promotion, Ready or merge is part of this package.
+
+## R2 missing-object proof
+
+R1 stopped before the first write because the missing proof depended on a literal CLI error token. R2 uses structured parent-directory listing instead: a target is considered missing only after get-status does not succeed and a successful JSON workspace list of its parent omits the exact target path. Parent-list failure or malformed output remains fail-closed.
+
+R1 authorization is consumed and cannot be reused.
