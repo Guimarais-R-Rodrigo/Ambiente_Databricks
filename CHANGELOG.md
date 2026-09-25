@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-25 — SER B1 G6: publisher direto HTTP/1.1 R10
+
+### Corrigido
+
+1. (Codex) A escrita material do publisher convergente deixa a Databricks CLI e passa a uma única requisição HTTP/1.1 via stdlib, usando token U2M adquirido just-in-time e mantido somente em memória; manifest, produto, policy e mecanismos B0/G6 originais permanecem inalterados.
+
 ## 2026-09-25 — SER B1 G6: corretiva canônica de transporte R8
 
 ### Corrigido

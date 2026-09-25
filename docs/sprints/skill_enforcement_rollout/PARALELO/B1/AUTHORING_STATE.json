@@ -677,6 +677,23 @@
       "candidate_object_count": 16,
       "convergent_semantics": true
     },
+    "minimal_publication_r9": {
+      "result": "BLOCKED_DEPENDENCY",
+      "databricks_sdk_importable": false,
+      "repo_mutation": false,
+      "environment_mutation": false,
+      "remote_access": "NOT_RUN"
+    },
+    "minimal_publication_r10": {
+      "state": "AUTHORED_NOT_RUN",
+      "strategy": "DIRECT_HTTP11_WITH_CLI_U2M_TOKEN",
+      "auth_source": "DATABRICKS_CLI_AUTH_TOKEN",
+      "material_transport": "PYTHON_HTTP_CLIENT",
+      "automatic_retry": false,
+      "manifest_changed": false,
+      "convergent_semantics_preserved": true,
+      "remote_execution": "NOT_AUTHORIZED"
+    },
     "minimal_publication_r7_attempt_1": {
       "result": "FAIL_FIRST_WRITE_UNKNOWN",
       "authorization_ref": "issue#114:comment#5838421464",

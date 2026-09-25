@@ -105,3 +105,11 @@ R8 changes only the material transport method to the canonical Workspace Import 
 `databricks api post /api/2.0/workspace/import --json <payload>`
 
 The convergent classifiers, inline JSON/base64 payload, FILE `RAW`, notebook `SOURCE/PYTHON`, conditional policy overwrite, authorization V2, atomic consumption, readback and UNKNOWN handling remain unchanged. R8 remote execution requires a new explicit authorization.
+
+## R10 direct HTTP/1.1 recovery
+
+R8 reached the first material request but the Databricks CLI transport again returned `PROTOCOL_ERROR`. R9 was then blocked locally because `databricks-sdk` is not installed in the frozen ENV04 environment; it made no repository or environment changes.
+
+R10 keeps the CLI for read-only operations and for future just-in-time retrieval of the cached U2M token only. Material Workspace Import is performed by one `http.client.HTTPSConnection.request` call using `POST /api/2.0/workspace/import`, JSON/base64, no redirect handling and no retry. The token remains in memory and is acquired only after convergent preflight/recheck finds a real write, but before atomic authorization consumption.
+
+This package does not authorize remote execution. A future attempt requires a new external authorization record bound to the R10 package digest.

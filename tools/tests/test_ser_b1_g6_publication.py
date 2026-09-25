@@ -4,7 +4,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from tools.skill_enforcement.real_campaigns.b1.g6_publication import minimal_publish as pub
 
@@ -22,7 +22,11 @@ REQUIRED_ADVERSARIAL_TEST_METHODS = {
     "MISSING_PARENT_RECURSION": "test_missing_proof_handles_missing_parent_via_existing_ancestor",
     "MISSING_PARENT_LIST_FAILURE": "test_missing_proof_fails_closed_if_parent_exists_but_listing_fails",
     "MISSING_LISTED_TARGET": "test_missing_proof_rejects_listed_target",
-    "API_POST_JSON_IMPORT": "test_import_uses_api_post_json_base64",
+    "DIRECT_HTTP11_POST_IMPORT": "test_direct_http_writer_uses_single_post_json_base64",
+    "AUTH_TOKEN_MEMORY_ONLY": "test_execute_does_not_persist_access_token",
+    "AUTH_TOKEN_FAILURE_DOES_NOT_CONSUME": "test_auth_token_failure_does_not_consume",
+    "DIRECT_HTTP_SINGLE_REQUEST_NO_RETRY": "test_execute_exception_after_write_start_marks_unknown_and_stops",
+    "ALL_ALREADY_CORRECT_NO_AUTH": "test_execute_all_already_correct_needs_no_auth",
     "FILE_AUTO_EXPORT_AFTER_TYPE_PROOF": "test_file_export_uses_auto_after_type_contract",
     "CONVERGENT_POLICY_CLASSIFIER": "test_policy_classifier_accepts_stale_or_exact_local",
     "READBACK_OBJECT_TYPE": "test_readback_type_contract",
@@ -112,42 +116,88 @@ class G6MinimalPublicationTests(unittest.TestCase):
         overwrite = [e for e in entries if e["precondition"]["kind"] in pub.OVERWRITE_PRECONDITION_KINDS]
         self.assertEqual(["policy"], [e["object_id"] for e in overwrite])
 
-    def test_import_uses_api_post_json_base64(self):
+    def test_direct_http_writer_uses_single_post_json_base64(self):
         entries = self.manifest()["entries"]
         file_row = next(e for e in entries if e["object_id"] == "ser03-run")
         policy = next(e for e in entries if e["object_id"] == "policy")
         notebook = next(e for e in entries if e["object_kind"] == "NOTEBOOK")
-
-        file_argv = pub.build_import_argv(
-            "FREE", "/Users/u/" + file_row["remote_relative_path"],
-            ROOT / file_row["rendered_path"], file_row, "CREATE"
+        response = MagicMock(status=200)
+        response.read.return_value = b""
+        connection = MagicMock()
+        connection.getresponse.return_value = response
+        token = "unit" + "-token"
+        with patch.object(pub.http.client, "HTTPSConnection", return_value=connection) as constructor:
+            result = pub._run_direct_http_import(
+                pub.EXPECTED_HOST, token, "/Users/u/" + file_row["remote_relative_path"],
+                ROOT / file_row["rendered_path"], file_row, "CREATE"
+            )
+        self.assertEqual((0, "", ""), result)
+        constructor.assert_called_once_with("dbc-72c8503a-bc27.cloud.databricks.com", 443, timeout=60)
+        connection.request.assert_called_once()
+        method, endpoint = connection.request.call_args.args[:2]
+        self.assertEqual("POST", method)
+        self.assertEqual("/api/2.0/workspace/import", endpoint)
+        file_payload = json.loads(connection.request.call_args.kwargs["body"].decode("utf-8"))
+        self.assertEqual("Bearer " + token, connection.request.call_args.kwargs["headers"]["Authorization"])
+        connection.close.assert_called_once()
+        policy_payload = pub._build_import_payload(
+            "/Users/u/" + policy["remote_relative_path"], ROOT / policy["rendered_path"], policy, "OVERWRITE"
         )
-        policy_argv = pub.build_import_argv(
-            "FREE", "/Users/u/" + policy["remote_relative_path"],
-            ROOT / policy["rendered_path"], policy, "OVERWRITE"
+        notebook_payload = pub._build_import_payload(
+            "/Users/u/" + notebook["remote_relative_path"], ROOT / notebook["rendered_path"], notebook, "CREATE"
         )
-        notebook_argv = pub.build_import_argv(
-            "FREE", "/Users/u/" + notebook["remote_relative_path"],
-            ROOT / notebook["rendered_path"], notebook, "CREATE"
-        )
-
-        for argv in (file_argv, policy_argv, notebook_argv):
-            self.assertIn("api", argv)
-            self.assertIn("post", argv)
-            self.assertNotIn("put", argv)
-            self.assertIn("/api/2.0/workspace/import", argv)
-            self.assertNotIn("workspace", argv)
-            self.assertNotIn("--file", argv)
-
-        file_payload = json.loads(file_argv[-1])
-        policy_payload = json.loads(policy_argv[-1])
-        notebook_payload = json.loads(notebook_argv[-1])
         self.assertEqual("RAW", file_payload["format"])
         self.assertFalse(file_payload["overwrite"])
         self.assertEqual((ROOT / file_row["rendered_path"]).read_bytes(), __import__("base64").b64decode(file_payload["content"]))
         self.assertTrue(policy_payload["overwrite"])
         self.assertEqual("SOURCE", notebook_payload["format"])
         self.assertEqual("PYTHON", notebook_payload["language"])
+
+    def test_material_write_has_no_cli_builder(self):
+        source = (HERE / "minimal_publish.py").read_text(encoding="utf-8")
+        self.assertNotIn('"workspace", "import"', source)
+        self.assertNotIn('"api", "post", "/api/2.0/workspace/import"', source)
+        self.assertNotIn('"api", "put", "/api/2.0/workspace/import"', source)
+        self.assertIn("http.client.HTTPSConnection", source)
+
+    def test_auth_token_parser_accepts_bearer(self):
+        token = "unit" + "-token"
+        with patch.object(pub, "_run_dbx", return_value=(0, json.dumps({"access_token": token, "token_type": "Bearer"}), "")):
+            self.assertEqual(token, pub._acquire_u2m_access_token("FREE"))
+
+    def test_auth_token_parser_rejects_command_failure(self):
+        with patch.object(pub, "_run_dbx", return_value=(1, "", "private-output")):
+            with self.assertRaisesRegex(RuntimeError, "^AUTH_TOKEN_FAILED$") as caught:
+                pub._acquire_u2m_access_token("FREE")
+        self.assertNotIn("private-output", str(caught.exception))
+
+    def test_auth_token_parser_rejects_invalid_json(self):
+        with patch.object(pub, "_run_dbx", return_value=(0, "not-json", "")):
+            with self.assertRaisesRegex(RuntimeError, "^AUTH_TOKEN_INVALID_JSON$"):
+                pub._acquire_u2m_access_token("FREE")
+
+    def test_auth_token_parser_rejects_missing_token(self):
+        with patch.object(pub, "_run_dbx", return_value=(0, json.dumps({"token_type": "Bearer"}), "")):
+            with self.assertRaisesRegex(RuntimeError, "^AUTH_TOKEN_MISSING$"):
+                pub._acquire_u2m_access_token("FREE")
+
+    def test_auth_token_parser_rejects_unexpected_type(self):
+        with patch.object(pub, "_run_dbx", return_value=(0, json.dumps({"access_token": "x", "token_type": "Other"}), "")):
+            with self.assertRaisesRegex(RuntimeError, "^AUTH_TOKEN_TYPE_UNEXPECTED$"):
+                pub._acquire_u2m_access_token("FREE")
+
+    def test_direct_http_writer_closes_and_does_not_retry_transport_error(self):
+        entry = next(e for e in self.manifest()["entries"] if e["object_id"] == "ser03-run")
+        connection = MagicMock()
+        connection.request.side_effect = OSError("transport")
+        with patch.object(pub.http.client, "HTTPSConnection", return_value=connection):
+            with self.assertRaisesRegex(RuntimeError, "DIRECT_HTTP_REQUEST_FAILED:OSError"):
+                pub._run_direct_http_import(
+                    pub.EXPECTED_HOST, "unit" + "-token", "/Users/u/" + entry["remote_relative_path"],
+                    ROOT / entry["rendered_path"], entry, "CREATE"
+                )
+        self.assertEqual(1, connection.request.call_count)
+        connection.close.assert_called_once()
 
     def test_workspace_listing_accepts_cli_list_shape(self):
         rows = pub._parse_workspace_listing('[{"path":"/Users/u/a","object_type":"FILE"}]')
@@ -413,14 +463,16 @@ class G6MinimalPublicationTests(unittest.TestCase):
             with patch.object(pub, "_resolve_target", return_value=("/Users/u", {"profile":"FREE","host":pub.EXPECTED_HOST,"current_user_resolved":True})), \
                  patch.object(pub, "_assert_parent_directory_exists"), \
                  patch.object(pub, "_classify_entry", side_effect=lambda _p,_r,e: {"action":"CREATE"} if e["precondition"]["kind"] in pub.CREATE_PRECONDITION_KINDS else {"action":"OVERWRITE"}), \
+                 patch.object(pub, "_acquire_u2m_access_token", return_value="unit-token") as acquire, \
                  patch.object(pub, "_consume_write_authorization", return_value="c" * 64) as consume, \
-                 patch.object(pub, "_run_import", return_value=(0, "", "")), \
+                 patch.object(pub, "_run_direct_http_import", return_value=(0, "", "")), \
                  patch.object(pub, "_assert_remote_object_type"), \
                  patch.object(pub, "_export", side_effect=exported):
                 result = pub.execute(auth, evidence)
 
             self.assertEqual("PASS", result["status"])
             self.assertTrue(result["authorization_consumed"])
+            self.assertEqual(1, acquire.call_count)
             self.assertEqual(1, consume.call_count)
             expected_total = manifest["expected_object_count"]
             expected_created = manifest["missing_object_count"]
@@ -451,8 +503,9 @@ class G6MinimalPublicationTests(unittest.TestCase):
             with patch.object(pub, "_resolve_target", return_value=("/Users/u", {"profile":"FREE","host":pub.EXPECTED_HOST,"current_user_resolved":True})), \
                  patch.object(pub, "_assert_parent_directory_exists"), \
                  patch.object(pub, "_classify_entry", side_effect=classify), \
+                 patch.object(pub, "_acquire_u2m_access_token", return_value="unit-token"), \
                  patch.object(pub, "_consume_write_authorization", return_value="c"*64) as consume, \
-                 patch.object(pub, "_run_import", return_value=(0,"","")), \
+                 patch.object(pub, "_run_direct_http_import", return_value=(0,"","")), \
                  patch.object(pub, "_assert_remote_object_type"), \
                  patch.object(pub, "_export", side_effect=exported):
                 result = pub.execute(auth, evidence)
@@ -487,7 +540,8 @@ class G6MinimalPublicationTests(unittest.TestCase):
                  patch.object(pub, "_assert_parent_directory_exists"), \
                  patch.object(pub, "_classify_entry", return_value={"action":"CREATE"}), \
                  patch.object(pub, "_consume_write_authorization", return_value="c" * 64), \
-                 patch.object(pub, "_run_import", side_effect=OSError("transport vanished")):
+                 patch.object(pub, "_acquire_u2m_access_token", return_value="unit-token"), \
+                 patch.object(pub, "_run_direct_http_import", side_effect=OSError("transport vanished")) as writer:
                 result = pub.execute(auth, evidence)
             self.assertEqual("FAIL", result["status"])
             self.assertTrue(result["authorization_consumed"])
@@ -495,6 +549,73 @@ class G6MinimalPublicationTests(unittest.TestCase):
             self.assertTrue(result["records"][0]["write_started"])
             self.assertEqual("UNKNOWN", result["records"][0]["effect_status"])
             self.assertIn("transport vanished", result["first_failure"])
+            self.assertEqual(1, writer.call_count)
+
+    def test_auth_token_failure_does_not_consume(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            auth = self._write_auth_v2(root)
+            evidence = root / "evidence"
+            with patch.object(pub, "_resolve_target", return_value=("/Users/u", {"profile":"FREE","host":pub.EXPECTED_HOST,"current_user_resolved":True})), \
+                 patch.object(pub, "_assert_parent_directory_exists"), \
+                 patch.object(pub, "_classify_entry", return_value={"action":"CREATE"}), \
+                 patch.object(pub, "_acquire_u2m_access_token", side_effect=RuntimeError("AUTH_TOKEN_FAILED")), \
+                 patch.object(pub, "_consume_write_authorization") as consume, \
+                 patch.object(pub, "_run_direct_http_import") as writer:
+                result = pub.execute(auth, evidence)
+            self.assertEqual("FAIL", result["status"])
+            self.assertFalse(result["authorization_consumed"])
+            self.assertFalse(result["records"][0]["write_started"])
+            self.assertEqual(0, consume.call_count)
+            self.assertEqual(0, writer.call_count)
+            self.assertIn("AUTH_TOKEN_FAILED", result["first_failure"])
+
+    def test_execute_does_not_persist_access_token(self):
+        manifest = self.manifest()
+        by_remote = {e["remote_relative_path"]: e for e in manifest["entries"]}
+        token = "memory" + "-only-value"
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            auth = self._write_auth_v2(root)
+            evidence = root / "evidence"
+            def exported(_profile, remote, _kind):
+                rel = remote.split("/.assistant/", 1)[1]
+                return (ROOT / by_remote[".assistant/" + rel]["rendered_path"]).read_bytes()
+            with patch.object(pub, "_resolve_target", return_value=("/Users/u", {"profile":"FREE","host":pub.EXPECTED_HOST,"current_user_resolved":True})), \
+                 patch.object(pub, "_assert_parent_directory_exists"), \
+                 patch.object(pub, "_classify_entry", side_effect=lambda _p,_r,e: {"action":"CREATE"} if e["precondition"]["kind"] in pub.CREATE_PRECONDITION_KINDS else {"action":"OVERWRITE"}), \
+                 patch.object(pub, "_acquire_u2m_access_token", return_value=token), \
+                 patch.object(pub, "_consume_write_authorization", return_value="c" * 64), \
+                 patch.object(pub, "_run_direct_http_import", return_value=(0, "", "")), \
+                 patch.object(pub, "_assert_remote_object_type"), \
+                 patch.object(pub, "_export", side_effect=exported):
+                result = pub.execute(auth, evidence)
+            self.assertEqual("PASS", result["status"])
+            self.assertNotIn(token, str(result))
+            self.assertNotIn(token, (evidence / "RUN_STATE.json").read_text(encoding="utf-8"))
+            self.assertNotIn("auth_headers", result)
+
+    def test_execute_all_already_correct_needs_no_auth(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            auth = self._write_auth_v2(root)
+            evidence = root / "evidence"
+            exact = {"action":"ALREADY_CORRECT","remote_normalized_sha256":"a"*64,"local_normalized_sha256":"a"*64}
+            with patch.object(pub, "_resolve_target", return_value=("/Users/u", {"profile":"FREE","host":pub.EXPECTED_HOST,"current_user_resolved":True})), \
+                 patch.object(pub, "_assert_parent_directory_exists"), \
+                 patch.object(pub, "_classify_entry", return_value=exact), \
+                 patch.object(pub, "_acquire_u2m_access_token") as acquire, \
+                 patch.object(pub, "_consume_write_authorization") as consume, \
+                 patch.object(pub, "_run_direct_http_import") as writer:
+                result = pub.execute(auth, evidence)
+            self.assertEqual("PASS", result["status"])
+            self.assertEqual(16, len(result["records"]))
+            self.assertEqual(16, sum(r["verification"] == "PASS" for r in result["records"]))
+            self.assertEqual(16, sum(r["effect_status"] == "ALREADY_CORRECT" for r in result["records"]))
+            self.assertFalse(result["authorization_consumed"])
+            self.assertEqual(0, acquire.call_count)
+            self.assertEqual(0, consume.call_count)
+            self.assertEqual(0, writer.call_count)
 
     def test_target_resolution_rejects_auth_describe_error_status(self):
         auth = {"status":"error","details":{"configuration":{"profile":{"value":"FREE"},"host":{"value":pub.EXPECTED_HOST}}}}
@@ -512,7 +633,7 @@ class G6MinimalPublicationTests(unittest.TestCase):
 
     def test_versioned_adversarial_coverage_matches_required_methods(self):
         coverage = json.loads((HERE / "adversarial_coverage.json").read_text(encoding="utf-8"))
-        self.assertEqual("SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-5", coverage["schema_version"])
+        self.assertEqual("SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-6", coverage["schema_version"])
         self.assertFalse(coverage["remote_access_required"])
         self.assertFalse(coverage["remote_execution_authorized"])
         observed = {case_id: method_name for case_id, method_name in coverage["required_cases"]}

@@ -1,7 +1,7 @@
 {
-  "schema_version": "SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-5",
+  "schema_version": "SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-6",
   "publisher_r3_sha": "a0ac7f66839f7f7e9d73460558208652a9edcf02",
-  "purpose": "Required adversarial/protocol/convergent-recovery regression inventory for R8 local qualification",
+  "purpose": "Required adversarial/protocol/convergent-recovery regression inventory for R10 direct HTTP/1.1 local qualification",
   "required_cases": [
     [
       "WORKSPACE_LIST_INVALID_JSON",
@@ -68,8 +68,24 @@
       "test_manifest_matches_reconciled_residual_exactly"
     ],
     [
-      "API_POST_JSON_IMPORT",
-      "test_import_uses_api_post_json_base64"
+      "DIRECT_HTTP11_POST_IMPORT",
+      "test_direct_http_writer_uses_single_post_json_base64"
+    ],
+    [
+      "AUTH_TOKEN_MEMORY_ONLY",
+      "test_execute_does_not_persist_access_token"
+    ],
+    [
+      "AUTH_TOKEN_FAILURE_DOES_NOT_CONSUME",
+      "test_auth_token_failure_does_not_consume"
+    ],
+    [
+      "DIRECT_HTTP_SINGLE_REQUEST_NO_RETRY",
+      "test_execute_exception_after_write_start_marks_unknown_and_stops"
+    ],
+    [
+      "ALL_ALREADY_CORRECT_NO_AUTH",
+      "test_execute_all_already_correct_needs_no_auth"
     ],
     [
       "CONVERGENT_POLICY_CLASSIFIER",

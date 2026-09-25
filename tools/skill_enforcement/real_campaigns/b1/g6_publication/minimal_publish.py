@@ -3,9 +3,11 @@ from __future__ import annotations
 import argparse
 import base64
 import hashlib
+import http.client
 import json
 import os
 import subprocess
+import urllib.parse
 from pathlib import Path
 from typing import Any
 
@@ -412,7 +414,23 @@ def _classify_entry(profile: str, remote_path: str, entry: dict) -> dict:
     raise RuntimeError("UNSUPPORTED_PRECONDITION_KIND")
 
 
-def build_import_argv(profile: str, remote_path: str, local_path: Path, entry: dict, action: str) -> list[str]:
+def _acquire_u2m_access_token(profile: str) -> str:
+    rc, out, _err = _run_dbx(profile, "auth", "token", "-o", "json")
+    if rc != 0:
+        raise RuntimeError("AUTH_TOKEN_FAILED")
+    try:
+        payload = json.loads(out)
+    except (TypeError, json.JSONDecodeError):
+        raise RuntimeError("AUTH_TOKEN_INVALID_JSON") from None
+    token = payload.get("access_token") if isinstance(payload, dict) else None
+    if not isinstance(token, str) or not token.strip():
+        raise RuntimeError("AUTH_TOKEN_MISSING")
+    if payload.get("token_type") != "Bearer":
+        raise RuntimeError("AUTH_TOKEN_TYPE_UNEXPECTED")
+    return token
+
+
+def _build_import_payload(remote_path: str, local_path: Path, entry: dict, action: str) -> dict:
     payload = {
         "path": remote_path,
         "format": "SOURCE" if entry["object_kind"] == "NOTEBOOK" else "RAW",
@@ -421,17 +439,56 @@ def build_import_argv(profile: str, remote_path: str, local_path: Path, entry: d
     }
     if entry["object_kind"] == "NOTEBOOK":
         payload["language"] = "PYTHON"
-    body = json.dumps(payload, ensure_ascii=True, separators=(",", ":"))
-    return [
-        "databricks", "--profile", profile,
-        "api", "post", "/api/2.0/workspace/import",
-        "--json", body,
-    ]
+    return payload
 
 
-def _run_import(argv: list[str]) -> tuple[int, str, str]:
-    proc = subprocess.run(argv, capture_output=True, text=True, encoding="utf-8")
-    return proc.returncode, proc.stdout or "", proc.stderr or ""
+def _run_direct_http_import(
+    host: str,
+    access_token: str,
+    remote_path: str,
+    local_path: Path,
+    entry: dict,
+    action: str,
+) -> tuple[int, str, str]:
+    normalized_host = normalize_host(host)
+    parsed = urllib.parse.urlsplit(normalized_host)
+    if (
+        parsed.scheme != "https"
+        or not parsed.hostname
+        or parsed.username is not None
+        or parsed.password is not None
+        or parsed.query
+        or parsed.fragment
+        or parsed.path not in {"", "/"}
+    ):
+        raise RuntimeError("DIRECT_HTTP_HOST_INVALID")
+    payload = _build_import_payload(remote_path, local_path, entry, action)
+    body = json.dumps(payload, ensure_ascii=True, separators=(",", ":")).encode("utf-8")
+    headers = {
+        "Authorization": "Bearer " + access_token,
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Connection": "close",
+    }
+    connection = None
+    try:
+        connection = http.client.HTTPSConnection(parsed.hostname, parsed.port or 443, timeout=60)
+        connection.request(
+            "POST",
+            "/api/2.0/workspace/import",
+            body=body,
+            headers=headers,
+        )
+        response = connection.getresponse()
+        response.read()
+        if 200 <= response.status < 300:
+            return 0, "", ""
+        return 1, "", "HTTP_STATUS_" + str(response.status)
+    except Exception as exc:
+        raise RuntimeError("DIRECT_HTTP_REQUEST_FAILED:" + type(exc).__name__) from None
+    finally:
+        if connection is not None:
+            connection.close()
 
 
 def _assert_external_file(path: Path, label: str) -> Path:
@@ -582,6 +639,7 @@ def execute(authorization_record: Path, evidence_dir: Path) -> dict:
         _write_json(evidence / "RUN_STATE.json", result)
         return result
 
+    access_token: str | None = None
     for entry in entries:
         record = {
             "order": entry["order"],
@@ -617,6 +675,9 @@ def execute(authorization_record: Path, evidence_dir: Path) -> dict:
             if current["action"] not in {"CREATE", "OVERWRITE"}:
                 raise RuntimeError("UNSUPPORTED_MATERIAL_ACTION")
 
+            if access_token is None:
+                access_token = _acquire_u2m_access_token(EXPECTED_PROFILE)
+
             if result["authorization_consumed"] is False:
                 result["authorization_consumption_sha256"] = _consume_write_authorization(
                     authorization_record, auth, local["publisher_package_sha256"]
@@ -624,9 +685,10 @@ def execute(authorization_record: Path, evidence_dir: Path) -> dict:
                 result["authorization_consumed"] = True
                 _write_json(evidence / "RUN_STATE.json", result)
 
-            argv = build_import_argv(EXPECTED_PROFILE, remote, local_path, entry, current["action"])
             record["write_started"] = True
-            rc, out, err = _run_import(argv)
+            rc, out, err = _run_direct_http_import(
+                EXPECTED_HOST, access_token, remote, local_path, entry, current["action"]
+            )
             record["write_exit_code"] = rc
             if rc != 0:
                 record["effect_status"] = "UNKNOWN"
