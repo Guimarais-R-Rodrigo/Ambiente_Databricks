@@ -32,6 +32,7 @@ REQUIRED_ADVERSARIAL_TEST_METHODS = {
     "RESIDUAL_MANIFEST_BINDING": "test_manifest_matches_reconciled_residual_exactly",
     "CONVERGENT_CREATE_SKIP": "test_create_classifier_skips_exact_existing_content",
     "CONVERGENT_CREATE_DIVERGENCE": "test_create_classifier_rejects_divergent_existing_content",
+    "CONVERGENT_EXECUTION_SKIP": "test_execute_skips_already_correct_without_consuming_for_that_entry",
 }
 
 

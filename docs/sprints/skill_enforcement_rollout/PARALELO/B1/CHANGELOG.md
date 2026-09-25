@@ -105,3 +105,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) R7 repo-side contraditório encontrou e corrigiu dois oráculos de teste ainda presos ao precondition kind legado REMOTE_NORMALIZED_SHA256_EQUALS. Agora os testes usam OVERWRITE_PRECONDITION_KINDS; nenhuma alteração adicional de runtime/manifest.
 
 (ChatGPT) Último oráculo legado R7 corrigido: missing_object_count agora usa CREATE_PRECONDITION_KINDS, compatível com MISSING_OR_EXACT_CONTENT. O único "--file" restante na suíte é asserção negativa para garantir remoção do transporte multipart antigo.
+
+(ChatGPT) R7 local attempt preserved FAIL despite validate-local PASS: 38 tests observed, 1 failure in coverage↔test-map equivalence. Root cause isolated: adversarial_coverage.json included CONVERGENT_EXECUTION_SKIP but REQUIRED_ADVERSARIAL_TEST_METHODS omitted the corresponding existing method. Corrective candidate adds only that map entry; manifest and minimal_publish.py unchanged, so functional digests are expected unchanged.
