@@ -125,3 +125,18 @@ R2 comprovou Windows/NTFS e identidade Git, mas o resolver V1 não encontrou Pyt
 R3 amplia exclusivamente a descoberta pré-gate para PythonCore Registry, USERPROFILE/ProgramData Conda-Miniconda-Miniforge-Mambaforge, pyenv-win, Rye, Scoop, stores do uv, ProgramFiles(x86) e roots legados. Não há instalação, download, criação de venv ou mudança de PATH.
 
 O schema passa a `SER-B1-WINDOWS-PYTHON-RESOLUTION-2`. Se V2 falhar, nenhuma nova alteração automática de resolver deve ser feita: tratar o host como sem Python 3 utilizável observável e exigir remediação ambiental explícita fora da campanha.
+
+
+## R3 bloqueada: WindowsApps não é prova de ausência de Python
+
+O resolver V2 abortou ao avaliar `WindowsApps/python.exe` com PermissionDenied antes de emitir seu JSON. Esse path é um App Execution Alias e não deve ser tratado como executável Python comprovado.
+
+R4 introduz resolver V3:
+- exclui aliases `Microsoft\WindowsApps`;
+- isola erros de path/registry/root por candidato;
+- registra `discovery_issues` sem abortar a busca;
+- não inclui paths sensíveis nos registros de tentativa;
+- usa trap top-level para emitir JSON em exceção residual;
+- preserva `formal_gate_executed=false` e `writes_performed=false`.
+
+Somente um FAIL JSON válido do V3 com `PYTHON3_INTERPRETER_NOT_RESOLVED` será suficiente para classificar o host como sem Python 3 utilizável observável e partir para remediação ambiental explícita.

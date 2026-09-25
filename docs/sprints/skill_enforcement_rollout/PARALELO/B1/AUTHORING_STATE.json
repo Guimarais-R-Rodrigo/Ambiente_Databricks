@@ -3,11 +3,11 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "P2_R3_WINDOWS_PYTHON_RESOLUTION_V2",
-    "P2_R3_LOCAL_STATIC_PREFLIGHT",
-    "P2_R3_LOCAL_METATESTS",
-    "P2_R3_PREPARE_AND_REAL_CAMPAIGN",
-    "P2_R3_POST_RUN_INDEPENDENT_AUDIT"
+    "P2_R4_WINDOWS_PYTHON_RESOLUTION_V3",
+    "P2_R4_LOCAL_STATIC_PREFLIGHT",
+    "P2_R4_LOCAL_METATESTS",
+    "P2_R4_PREPARE_AND_REAL_CAMPAIGN",
+    "P2_R4_POST_RUN_INDEPENDENT_AUDIT"
   ],
   "canonical_renderer": "PASS_AT_P1",
   "domain_profiles": [
@@ -31,7 +31,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "P2_R3_DISCOVERY_CORRECTIVE_AUTHORED_AWAITING_LOCAL_BOOTSTRAP",
+  "stage": "P2_R4_BOOTSTRAP_HARDENING_AUTHORED_AWAITING_LOCAL_RESOLUTION",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -53,6 +53,16 @@
     "bootstrap_schema": "SER-B1-WINDOWS-PYTHON-RESOLUTION-1",
     "bootstrap_exit_code": 1,
     "issue": "PYTHON3_INTERPRETER_NOT_RESOLVED",
+    "formal_gates_started": false,
+    "later_gates": "NOT_RUN"
+  },
+  "p2_r3": {
+    "candidate_sha": "4abbac3078ab1520a8b38689abc6756db3199c3f",
+    "result": "BLOCKED_ENVIRONMENT",
+    "bootstrap_schema": "SER-B1-WINDOWS-PYTHON-RESOLUTION-2",
+    "bootstrap_exit_code": 1,
+    "issue": "PERMISSION_DENIED_WINDOWSAPPS_ALIAS",
+    "json_emitted": false,
     "formal_gates_started": false,
     "later_gates": "NOT_RUN"
   }

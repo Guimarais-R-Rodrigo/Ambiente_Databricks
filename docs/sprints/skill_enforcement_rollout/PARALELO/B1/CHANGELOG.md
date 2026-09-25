@@ -23,3 +23,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) R1 preservada como FAIL pré-processo em 3149ff6: alias literal python ausente no PATH. Classificado como ENVIRONMENT_ALIAS_ABSENT + HANDOFF_BOOTSTRAP_DEFECT, sem defeito de candidata. Adicionado resolve_python_windows.ps1 como descoberta pré-gate de sys.executable para a rodada sucessora.
 
 (ChatGPT) R2 encerrada BLOCKED_ENVIRONMENT: resolver V1 não localizou Python 3 e nenhum gate formal iniciou. R3 amplia só a descoberta pré-gate para Registry/Conda/Miniforge/pyenv/Scoop/Rye/uv/ProgramData; nenhuma instalação ou download autorizado.
+
+(ChatGPT) R3 encerrada BLOCKED_ENVIRONMENT por defeito do resolver V2: PermissionDenied em WindowsApps/python.exe antes do JSON. R4/V3 ignora App Execution Aliases, isola erros por candidato e garante JSON estruturado via trap; ainda sem instalar/baixar Python.
