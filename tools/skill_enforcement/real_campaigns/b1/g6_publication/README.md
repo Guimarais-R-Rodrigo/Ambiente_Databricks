@@ -31,3 +31,9 @@ No probe, Genie, cleanup, policy promotion, Ready or merge is part of this packa
 R1 stopped before the first write because the missing proof depended on a literal CLI error token. R2 uses structured parent-directory listing instead: a target is considered missing only after get-status does not succeed and a successful JSON workspace list of its parent omits the exact target path. Parent-list failure or malformed output remains fail-closed.
 
 R1 authorization is consumed and cannot be reused.
+
+## R3 adversarial hardening
+
+R2 local PASS is preserved. Before another remote attempt, R3 hardens the whole publisher class: list payload variants, missing-parent recursion, parent DIRECTORY preconditions, RAW FILE import/export, post-write object-type checks, normalized host/corporate guard, authorization V2 bound to executable package digest and ordered object set, external auth record, atomic one-write-attempt consumption, and UNKNOWN effect after write start when success is not known.
+
+The 17-object manifest remains byte-identical. R3 requires a new local qualification and a new human authorization.

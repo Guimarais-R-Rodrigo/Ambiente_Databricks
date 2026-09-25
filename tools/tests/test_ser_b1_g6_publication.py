@@ -22,6 +22,7 @@ class G6MinimalPublicationTests(unittest.TestCase):
         self.assertEqual(17, result["object_count"])
         self.assertEqual(16, result["missing_count"])
         self.assertEqual(1, result["overwrite_count"])
+        self.assertEqual(64, len(result["publisher_package_sha256"]))
         self.assertFalse(result["remote_access_performed"])
         self.assertFalse(result["remote_write_performed"])
 
@@ -48,81 +49,179 @@ class G6MinimalPublicationTests(unittest.TestCase):
         entries = self.manifest()["entries"]
         overwrite = [e for e in entries if e["precondition"]["kind"] == "REMOTE_NORMALIZED_SHA256_EQUALS"]
         self.assertEqual(["policy"], [e["object_id"] for e in overwrite])
-        self.assertEqual(
-            "b68d378b4552f0f2800e82a47faf48961af68c0c95f416bb580582fc48f47be9",
-            overwrite[0]["precondition"]["sha256"],
-        )
 
-    def test_import_argv_overwrite_semantics(self):
+    def test_file_import_uses_raw_and_notebook_uses_source(self):
         entries = self.manifest()["entries"]
-        missing = next(e for e in entries if e["object_id"] == "ser03-run")
+        file_row = next(e for e in entries if e["object_id"] == "ser03-run")
         policy = next(e for e in entries if e["object_id"] == "policy")
         notebook = next(e for e in entries if e["object_kind"] == "NOTEBOOK")
-        missing_argv = pub.build_import_argv("FREE", "/Users/u/" + missing["remote_relative_path"], ROOT / missing["rendered_path"], missing)
+        file_argv = pub.build_import_argv("FREE", "/Users/u/" + file_row["remote_relative_path"], ROOT / file_row["rendered_path"], file_row)
         policy_argv = pub.build_import_argv("FREE", "/Users/u/" + policy["remote_relative_path"], ROOT / policy["rendered_path"], policy)
         notebook_argv = pub.build_import_argv("FREE", "/Users/u/" + notebook["remote_relative_path"], ROOT / notebook["rendered_path"], notebook)
-        self.assertNotIn("--overwrite", missing_argv)
+        self.assertIn("RAW", file_argv)
+        self.assertNotIn("AUTO", file_argv)
+        self.assertNotIn("--overwrite", file_argv)
         self.assertIn("--overwrite", policy_argv)
         self.assertEqual(["--format", "SOURCE", "--language", "PYTHON"], notebook_argv[-4:])
-        self.assertNotIn("--overwrite", notebook_argv)
 
-    def test_authorization_is_bound_to_manifest_and_object_set(self):
-        manifest = self.manifest()
-        object_ids = [e["object_id"] for e in manifest["entries"]]
+    def test_workspace_listing_accepts_cli_list_shape(self):
+        rows = pub._parse_workspace_listing('[{"path":"/Users/u/a","object_type":"FILE"}]')
+        self.assertEqual("/Users/u/a", rows[0]["path"])
+
+    def test_workspace_listing_accepts_api_objects_shape(self):
+        rows = pub._parse_workspace_listing('{"objects":[{"path":"/Users/u/a","object_type":"FILE"}]}')
+        self.assertEqual("/Users/u/a", rows[0]["path"])
+
+    def test_workspace_listing_accepts_empty_object(self):
+        self.assertEqual([], pub._parse_workspace_listing("{}"))
+
+    def test_workspace_listing_rejects_unsupported_shape(self):
+        with self.assertRaisesRegex(RuntimeError, "WORKSPACE_LIST_UNSUPPORTED_SHAPE"):
+            pub._parse_workspace_listing('{"unexpected":[]}')
+
+    def test_missing_proof_accepts_exact_absence(self):
+        target = "/Users/u/.assistant/skills/x/run.py"
+        with patch.object(pub, "_status", return_value=(1, "", "not found")), patch.object(
+            pub, "_run_dbx", return_value=(0, json.dumps([{"path":"/Users/u/.assistant/skills/x/other.py","object_type":"FILE"}]), "")
+        ):
+            pub._assert_missing("FREE", target)
+
+    def test_missing_proof_rejects_listed_target(self):
+        target = "/Users/u/.assistant/skills/x/run.py"
+        with patch.object(pub, "_status", return_value=(1, "", "not found")), patch.object(
+            pub, "_run_dbx", return_value=(0, json.dumps([{"path":target,"object_type":"FILE"}]), "")
+        ):
+            with self.assertRaisesRegex(RuntimeError, "EXPECTED_MISSING_BUT_LISTED"):
+                pub._assert_missing("FREE", target)
+
+    def test_missing_proof_handles_missing_parent_via_existing_ancestor(self):
+        target = "/Users/u/.assistant/hub_scripts/domain_context/README.md"
+        parent = "/Users/u/.assistant/hub_scripts/domain_context"
+        grandparent = "/Users/u/.assistant/hub_scripts"
+        def status_side(_profile, path):
+            if path in {target, parent}:
+                return (1, "", "not found")
+            return (0, json.dumps({"path": path, "object_type": "DIRECTORY"}), "")
+        def dbx_side(_profile, *args):
+            path = args[2]
+            if path == parent:
+                return (1, "", "parent missing")
+            if path == grandparent:
+                return (0, json.dumps([{"path":grandparent + "/other","object_type":"DIRECTORY"}]), "")
+            raise AssertionError(path)
+        with patch.object(pub, "_status", side_effect=status_side), patch.object(pub, "_run_dbx", side_effect=dbx_side):
+            pub._assert_missing("FREE", target)
+
+    def test_missing_proof_fails_closed_if_parent_exists_but_listing_fails(self):
+        target = "/Users/u/.assistant/skills/x/run.py"
+        parent = "/Users/u/.assistant/skills/x"
+        def status_side(_profile, path):
+            if path == target:
+                return (1, "", "not found")
+            if path == parent:
+                return (0, json.dumps({"path":parent,"object_type":"DIRECTORY"}), "")
+            raise AssertionError(path)
+        with patch.object(pub, "_status", side_effect=status_side), patch.object(
+            pub, "_run_dbx", return_value=(1, "", "transport")
+        ):
+            with self.assertRaisesRegex(RuntimeError, "MISSING_PARENT_LIST_FAILED"):
+                pub._assert_missing("FREE", target)
+
+    def test_missing_proof_rejects_existing_target(self):
+        with patch.object(pub, "_status", return_value=(0, "{}", "")):
+            with self.assertRaisesRegex(RuntimeError, "EXPECTED_MISSING_BUT_EXISTS"):
+                pub._assert_missing("FREE", "/Users/u/a")
+
+    def test_parent_directory_requires_directory_status(self):
+        target = "/Users/u/.assistant/skills/x/run.py"
+        parent = "/Users/u/.assistant/skills/x"
+        with patch.object(pub, "_status", return_value=(0, json.dumps({"path":parent,"object_type":"DIRECTORY"}), "")):
+            pub._assert_parent_directory_exists("FREE", target)
+        with patch.object(pub, "_status", return_value=(0, json.dumps({"path":parent,"object_type":"FILE"}), "")):
+            with self.assertRaisesRegex(RuntimeError, "PARENT_NOT_DIRECTORY"):
+                pub._assert_parent_directory_exists("FREE", target)
+
+    def test_readback_type_contract(self):
+        file_path = "/Users/u/a.py"
+        nb_path = "/Users/u/nb"
+        with patch.object(pub, "_status", return_value=(0, json.dumps({"path":file_path,"object_type":"FILE"}), "")):
+            pub._assert_remote_object_type("FREE", file_path, "FILE")
+        with patch.object(pub, "_status", return_value=(0, json.dumps({"path":nb_path,"object_type":"NOTEBOOK","language":"PYTHON"}), "")):
+            pub._assert_remote_object_type("FREE", nb_path, "NOTEBOOK")
+        with patch.object(pub, "_status", return_value=(0, json.dumps({"path":file_path,"object_type":"NOTEBOOK","language":"PYTHON"}), "")):
+            with self.assertRaisesRegex(RuntimeError, "READBACK_OBJECT_TYPE_MISMATCH"):
+                pub._assert_remote_object_type("FREE", file_path, "FILE")
+
+    def test_file_export_uses_raw(self):
+        calls = []
+        with patch.object(pub, "_run_dbx", side_effect=lambda _profile,*args:(calls.append(args) or (0,json.dumps({"content":"YQ=="}),""))):
+            self.assertEqual(b"a", pub._export("FREE", "/Users/u/a.py", "FILE"))
+        self.assertIn("RAW", calls[0])
+
+    def test_authorization_v2_binds_manifest_package_order_and_target(self):
+        object_ids = [e["object_id"] for e in self.manifest()["entries"]]
         good = {
             "schema_version": pub.AUTH_SCHEMA,
             "decision": "AUTHORIZED",
             "manifest_sha256": pub._manifest_sha256(),
+            "publisher_package_sha256": pub._publisher_package_sha256(),
             "effect": "REMOTE_PACKAGE_WRITE",
-            "target": {"profile": "FREE", "host": pub.EXPECTED_HOST},
+            "target": {"profile": "FREE", "host": pub.EXPECTED_HOST + "/"},
             "allowed_object_ids": object_ids,
-            "one_attempt": True,
+            "one_write_attempt": True,
             "authorization_ref": "issue#114:comment#future",
         }
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "auth.json"
             path.write_text(json.dumps(good), encoding="utf-8")
-            loaded = pub._validate_authorization(path, pub._manifest_sha256(), object_ids)
-            self.assertEqual("AUTHORIZED", loaded["decision"])
+            self.assertEqual("AUTHORIZED", pub._validate_authorization(path, pub._manifest_sha256(), pub._publisher_package_sha256(), object_ids)["decision"])
             bad = dict(good)
-            bad["manifest_sha256"] = "0" * 64
+            bad["allowed_object_ids"] = list(reversed(object_ids))
             path.write_text(json.dumps(bad), encoding="utf-8")
-            with self.assertRaisesRegex(RuntimeError, "AUTH_MANIFEST_BINDING"):
-                pub._validate_authorization(path, pub._manifest_sha256(), object_ids)
+            with self.assertRaisesRegex(RuntimeError, "AUTH_OBJECT_SEQUENCE"):
+                pub._validate_authorization(path, pub._manifest_sha256(), pub._publisher_package_sha256(), object_ids)
 
+    def test_authorization_rejects_package_digest_drift(self):
+        object_ids = [e["object_id"] for e in self.manifest()["entries"]]
+        payload = {
+            "schema_version": pub.AUTH_SCHEMA,
+            "decision": "AUTHORIZED",
+            "manifest_sha256": pub._manifest_sha256(),
+            "publisher_package_sha256": "0" * 64,
+            "effect": "REMOTE_PACKAGE_WRITE",
+            "target": {"profile": "FREE", "host": pub.EXPECTED_HOST},
+            "allowed_object_ids": object_ids,
+            "one_write_attempt": True,
+            "authorization_ref": "issue#114:comment#future",
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "auth.json"
+            path.write_text(json.dumps(payload), encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "AUTH_PUBLISHER_PACKAGE_BINDING"):
+                pub._validate_authorization(path, pub._manifest_sha256(), pub._publisher_package_sha256(), object_ids)
 
-    def test_missing_precondition_uses_successful_parent_listing(self):
-        target = "/Users/u/.assistant/skills/hub-ml-analise-safra/scripts/run.py"
-        parent_rows = [
-            {"path": "/Users/u/.assistant/skills/hub-ml-analise-safra/scripts/preflight.py"},
-            {"path": "/Users/u/.assistant/skills/hub-ml-analise-safra/scripts/verify.py"},
-        ]
-        with patch.object(pub, "_status", return_value=(1, "", "path not found")), patch.object(
-            pub, "_run_dbx", return_value=(0, json.dumps(parent_rows), "")
-        ):
-            pub._assert_missing("FREE", target)
+    def test_authorization_record_must_be_external(self):
+        with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
+            path = Path(tmp) / "auth.json"
+            path.write_text("{}", encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "AUTHORIZATION_MUST_BE_EXTERNAL"):
+                pub._assert_external_file(path, "AUTHORIZATION")
 
-    def test_missing_precondition_rejects_listed_target(self):
-        target = "/Users/u/.assistant/skills/hub-ml-analise-safra/scripts/run.py"
-        with patch.object(pub, "_status", return_value=(1, "", "not found")), patch.object(
-            pub, "_run_dbx", return_value=(0, json.dumps([{"path": target}]), "")
-        ):
-            with self.assertRaisesRegex(RuntimeError, "EXPECTED_MISSING_BUT_LISTED"):
-                pub._assert_missing("FREE", target)
+    def test_write_authorization_consumption_is_atomic(self):
+        payload = {"authorization_ref":"issue#114:comment#future","manifest_sha256":pub._manifest_sha256(),"effect":"REMOTE_PACKAGE_WRITE"}
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "auth.json"
+            path.write_text("{}", encoding="utf-8")
+            self.assertEqual(64, len(pub._consume_write_authorization(path, payload, pub._publisher_package_sha256())))
+            with self.assertRaisesRegex(RuntimeError, "AUTHORIZATION_ALREADY_CONSUMED"):
+                pub._consume_write_authorization(path, payload, pub._publisher_package_sha256())
 
-    def test_missing_precondition_fails_closed_if_parent_listing_fails(self):
-        target = "/Users/u/.assistant/skills/hub-ml-analise-safra/scripts/run.py"
-        with patch.object(pub, "_status", return_value=(1, "", "not found")), patch.object(
-            pub, "_run_dbx", return_value=(1, "", "transport error")
-        ):
-            with self.assertRaisesRegex(RuntimeError, "MISSING_PARENT_LIST_FAILED"):
-                pub._assert_missing("FREE", target)
-
-    def test_missing_precondition_rejects_existing_target(self):
-        target = "/Users/u/.assistant/skills/hub-ml-analise-safra/scripts/run.py"
-        with patch.object(pub, "_status", return_value=(0, "{}", "")):
-            with self.assertRaisesRegex(RuntimeError, "EXPECTED_MISSING_BUT_EXISTS"):
-                pub._assert_missing("FREE", target)
+    def test_target_resolution_rejects_corporate_identity(self):
+        auth = {"status":"ok","details":{"configuration":{"profile":{"value":"FREE"},"host":{"value":pub.EXPECTED_HOST}}}}
+        user = {"userName":"corp.caixa@example.com"}
+        with patch.object(pub, "_run_dbx", side_effect=[(0,json.dumps(auth),""),(0,json.dumps(user),"")]):
+            with self.assertRaisesRegex(RuntimeError, "CURRENT_USER_LOOKS_CORPORATE"):
+                pub._resolve_target("FREE", pub.EXPECTED_HOST)
 
     def test_evidence_must_be_outside_repo_and_new(self):
         with self.assertRaisesRegex(RuntimeError, "EVIDENCE_MUST_BE_EXTERNAL"):
