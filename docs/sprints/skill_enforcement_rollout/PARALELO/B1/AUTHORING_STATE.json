@@ -3,11 +3,12 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_FREE_SER03_PACKAGE_FREEZE",
-    "G6_FREE_SER05_L2_PACKAGE_FREEZE",
-    "G6_GENIE_VF_MANIFEST_FREEZE",
-    "G6_GENIE_CE_MANIFEST_FREEZE",
-    "G6_EXPLICIT_HUMAN_AUTHORIZATION"
+    "G6_LOCAL_PACKAGE_VALIDATION",
+    "G6_PRODUCT_DIFF_ZERO_CONFIRMATION",
+    "G6_PACKAGE_FREEZE",
+    "G6_EXPLICIT_HUMAN_AUTHORIZATION",
+    "G6_READ_ONLY_RECONCILIATION",
+    "G6_EFFECTFUL_OPERATIONS_SEPARATELY_AUTHORIZED_IF_NEEDED"
   ],
   "canonical_renderer": "PASS_AT_P1",
   "domain_profiles": [
@@ -31,7 +32,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_EXTERNAL_PREPARATION_AWAITING_HUMAN_AUTHORIZATION",
+  "stage": "B1_G6_EXTERNAL_PACKAGE_AUTHORED_LOCAL_VALIDATION_PENDING",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -160,5 +161,17 @@
     "G7_PROMOTION_PROPOSAL": "NOT_AUTHORIZED",
     "G8_POST_POLICY": "NOT_RUN",
     "G9_INTEGRATION": "NOT_AUTHORIZED"
+  },
+  "g6": {
+    "state": "AUTHORED_NOT_RUN",
+    "qualified_candidate_sha": "08c2a93c4c9dede1e759abe28c07242b4116f47e",
+    "qualified_candidate_tree": "a2b1b8c805044ff2e1898da3190414afab9140a7",
+    "external_execution_authorized": false,
+    "free_probes": 2,
+    "genie_canonical_cases": 16,
+    "genie_variants": 20,
+    "product_bytes_must_equal_r7": true,
+    "local_validation": "NOT_RUN",
+    "freeze": "NOT_CREATED"
   }
 }

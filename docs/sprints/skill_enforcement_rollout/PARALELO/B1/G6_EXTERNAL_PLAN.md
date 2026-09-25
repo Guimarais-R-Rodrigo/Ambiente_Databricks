@@ -104,3 +104,20 @@ Antes de qualquer execução externa, apresentar ao usuário:
 8. limitações explicitamente fora do escopo.
 
 Somente autorização explícita libera o G6.
+
+
+## Correção de efeitos antes da execução
+
+O planejamento inicial dizia `REMOTE_EFFECTS=NONE` de forma ampla demais. Isso vale somente para a reconciliação read-only e para a computação dos probes. Publicar o pacote ou importar notebooks de probe são efeitos remotos persistentes/temporários e exigem autorização separada.
+
+Estados preparados:
+
+```text
+G6.READ_ONLY_RECONCILE = effect NONE / NOT_AUTHORIZED
+G6.PRODUCT_PUBLISH_IF_NEEDED = REMOTE_PACKAGE_WRITE / NOT_AUTHORIZED
+G6.PROBE_IMPORT = TEMPORARY_WORKSPACE_OBJECT_CREATE / NOT_AUTHORIZED
+G6.FREE_PROBE_RUN = COMPUTE_ONLY_EXPECTED / NOT_AUTHORIZED
+G6.GENIE = CONVERSATION_HISTORY_CREATE / NOT_AUTHORIZED
+```
+
+Não existe autorização implícita para overwrite ou cleanup.
