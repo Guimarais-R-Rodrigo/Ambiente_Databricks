@@ -3,10 +3,7 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_R2_LOCAL_PACKAGE_VALIDATION",
-    "G6_R2_PRODUCT_DIFF_ZERO_CONFIRMATION",
-    "G6_R2_PACKAGE_FREEZE",
-    "G6_EXPLICIT_HUMAN_AUTHORIZATION",
+    "G6_EXPLICIT_HUMAN_AUTHORIZATION_READ_ONLY_RECONCILIATION",
     "G6_READ_ONLY_RECONCILIATION",
     "G6_EFFECTFUL_OPERATIONS_SEPARATELY_AUTHORIZED_IF_NEEDED"
   ],
@@ -32,7 +29,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_EXTERNAL_PACKAGE_CORRECTIVE_R2_AUTHORED_LOCAL_VALIDATION_PENDING",
+  "stage": "B1_G6_FROZEN_AWAITING_HUMAN_AUTHORIZATION",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -171,8 +168,10 @@
     "genie_canonical_cases": 16,
     "genie_variants": 20,
     "product_bytes_must_equal_r7": true,
-    "local_validation": "R1_FAIL_TEST_ORACLE_TEXTUAL_BRITTLENESS",
-    "freeze": "NOT_CREATED"
+    "local_validation": "PASS_R2",
+    "freeze": "CREATED_BY_IDENTITY",
+    "freeze_sha": "c11c2dff07f0f7595ed545f32990e5d54f1fd583",
+    "freeze_tree": "15527a29db0e6bcefa639cfadd4d66eed1d32d83"
   },
   "g6_local_r1": {
     "candidate_sha": "814ae6f3286b367f45173b9b36b426317f9806e3",
@@ -188,5 +187,17 @@
     "correction": "STRUCTURED_CLEANUP_PREREQUISITES",
     "requires_evidence_preserved": true,
     "requires_separate_authorization": true
+  },
+  "g6_local_r2": {
+    "result": "PASS",
+    "candidate_sha": "c11c2dff07f0f7595ed545f32990e5d54f1fd583",
+    "candidate_tree": "15527a29db0e6bcefa639cfadd4d66eed1d32d83",
+    "validate_package": "PASS",
+    "metatests": "6/6 PASS",
+    "product_diff": "PASS_ZERO",
+    "authority": "PASS_ALL_EXTERNAL_PHASES_UNAUTHORIZED",
+    "auth_request": "PASS_NOT_AUTHORIZATION",
+    "freeze": "CREATED_BY_IDENTITY",
+    "external_execution": "NOT_RUN"
   }
 }
