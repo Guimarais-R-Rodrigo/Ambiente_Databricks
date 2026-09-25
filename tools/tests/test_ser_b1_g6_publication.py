@@ -28,7 +28,8 @@ REQUIRED_ADVERSARIAL_TEST_METHODS = {
     "READBACK_OBJECT_TYPE": "test_readback_type_contract",
     "PREFLIGHT_DOES_NOT_CONSUME": "test_execute_preflight_failure_does_not_consume_write_authorization",
     "UNKNOWN_AFTER_WRITE_START": "test_execute_exception_after_write_start_marks_unknown_and_stops",
-    "MOCKED_FULL_SUCCESS": "test_execute_mocked_full_success_covers_17_records",
+    "MOCKED_FULL_SUCCESS": "test_execute_mocked_full_success_covers_manifest_records",
+    "RESIDUAL_MANIFEST_BINDING": "test_manifest_matches_reconciled_residual_exactly",
 }
 
 
@@ -39,22 +40,59 @@ class G6MinimalPublicationTests(unittest.TestCase):
     def test_local_validation_passes(self):
         result = pub.validate_local()
         self.assertEqual("PASS", result["status"], result["issues"])
-        self.assertEqual(17, result["object_count"])
-        self.assertEqual(16, result["missing_count"])
-        self.assertEqual(1, result["overwrite_count"])
+        manifest = self.manifest()
+        self.assertEqual(manifest["expected_object_count"], result["object_count"])
+        self.assertEqual(manifest["missing_object_count"], result["missing_count"])
+        self.assertEqual(manifest["overwrite_object_count"], result["overwrite_count"])
         self.assertEqual(64, len(result["publisher_package_sha256"]))
         self.assertFalse(result["remote_access_performed"])
         self.assertFalse(result["remote_write_performed"])
 
-    def test_manifest_is_closed_exactly_17_objects(self):
+    def test_manifest_is_closed_and_declared_counts_match(self):
         manifest = self.manifest()
         entries = manifest["entries"]
-        self.assertEqual(17, len(entries))
-        self.assertEqual(17, len({e["object_id"] for e in entries}))
-        self.assertEqual(17, len({e["remote_relative_path"] for e in entries}))
+        self.assertEqual(manifest["expected_object_count"], len(entries))
+        self.assertEqual(manifest["missing_object_count"], sum(e["precondition"]["kind"] == "MISSING" for e in entries))
+        self.assertEqual(manifest["overwrite_object_count"], sum(e["precondition"]["kind"] == "REMOTE_NORMALIZED_SHA256_EQUALS" for e in entries))
+        self.assertEqual(len(entries), len({e["object_id"] for e in entries}))
+        self.assertEqual(len(entries), len({e["remote_relative_path"] for e in entries}))
         self.assertFalse(manifest["full_republish"])
         self.assertEqual("REMOTE_PACKAGE_WRITE", manifest["effect"])
         self.assertEqual("NOT_AUTHORIZED", manifest["execution_status"])
+
+    def test_manifest_matches_reconciled_residual_exactly(self):
+        manifest = self.manifest()
+        expected_ids = [
+            "domain-context-init",
+            "domain-context-example",
+            "domain-context-release",
+            "domain-context-schema",
+            "ser03-contract",
+            "ser03-input-schema",
+            "ser03-release-manifest",
+            "ser03-scripts-readme",
+            "ser03-preflight",
+            "ser03-run",
+            "ser03-verify",
+            "ser05-contract",
+            "ser05-input-schema",
+            "ser05-scripts-readme",
+            "ser05-preflight",
+            "policy",
+        ]
+        self.assertEqual("SER-B1-G6-RESIDUAL-PUBLISH-R6-1", manifest["package_id"])
+        self.assertEqual(expected_ids, [e["object_id"] for e in manifest["entries"]])
+        self.assertEqual(16, manifest["expected_object_count"])
+        self.assertEqual(15, manifest["missing_object_count"])
+        self.assertEqual(1, manifest["overwrite_object_count"])
+        residual = manifest["residual_source"]
+        self.assertEqual(["domain-context-readme"], residual["already_correct_object_ids"])
+        self.assertEqual("SIMPLE_RESIDUAL", residual["remote_residual_state"])
+        self.assertEqual(
+            "d255398df799f0262872db4b5b327cb4dc3b9be67178746923a009138f702435",
+            residual["sanitized_evidence_sha256"],
+        )
+        self.assertNotIn("domain-context-readme", expected_ids)
 
     def test_notebook_mapping_is_explicit(self):
         entries = self.manifest()["entries"]
@@ -315,7 +353,7 @@ class G6MinimalPublicationTests(unittest.TestCase):
         path.write_text(json.dumps(payload), encoding="utf-8")
         return path
 
-    def test_execute_mocked_full_success_covers_17_records(self):
+    def test_execute_mocked_full_success_covers_manifest_records(self):
         manifest = self.manifest()
         by_remote = {e["remote_relative_path"]: e for e in manifest["entries"]}
         with tempfile.TemporaryDirectory() as tmp:
@@ -342,12 +380,15 @@ class G6MinimalPublicationTests(unittest.TestCase):
             self.assertEqual("PASS", result["status"])
             self.assertTrue(result["authorization_consumed"])
             self.assertEqual(1, consume.call_count)
-            self.assertEqual(17, len(result["records"]))
-            self.assertEqual(17, sum(r["write_started"] is True for r in result["records"]))
-            self.assertEqual(17, sum(r["write_exit_code"] == 0 for r in result["records"]))
-            self.assertEqual(17, sum(r["verification"] == "PASS" for r in result["records"]))
-            self.assertEqual(16, sum(r["effect_status"] == "CREATED" for r in result["records"]))
-            self.assertEqual(1, sum(r["effect_status"] == "UPDATED" for r in result["records"]))
+            expected_total = manifest["expected_object_count"]
+            expected_created = manifest["missing_object_count"]
+            expected_updated = manifest["overwrite_object_count"]
+            self.assertEqual(expected_total, len(result["records"]))
+            self.assertEqual(expected_total, sum(r["write_started"] is True for r in result["records"]))
+            self.assertEqual(expected_total, sum(r["write_exit_code"] == 0 for r in result["records"]))
+            self.assertEqual(expected_total, sum(r["verification"] == "PASS" for r in result["records"]))
+            self.assertEqual(expected_created, sum(r["effect_status"] == "CREATED" for r in result["records"]))
+            self.assertEqual(expected_updated, sum(r["effect_status"] == "UPDATED" for r in result["records"]))
 
     def test_execute_preflight_failure_does_not_consume_write_authorization(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -399,7 +440,7 @@ class G6MinimalPublicationTests(unittest.TestCase):
 
     def test_versioned_adversarial_coverage_matches_required_methods(self):
         coverage = json.loads((HERE / "adversarial_coverage.json").read_text(encoding="utf-8"))
-        self.assertEqual("SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-2", coverage["schema_version"])
+        self.assertEqual("SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-3", coverage["schema_version"])
         self.assertFalse(coverage["remote_access_required"])
         self.assertFalse(coverage["remote_execution_authorized"])
         observed = {case_id: method_name for case_id, method_name in coverage["required_cases"]}

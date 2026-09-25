@@ -1,7 +1,7 @@
 {
-  "schema_version": "SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-2",
+  "schema_version": "SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-3",
   "publisher_r3_sha": "a0ac7f66839f7f7e9d73460558208652a9edcf02",
-  "purpose": "Required explicit negative/flow/protocol regression inventory for R5 local qualification",
+  "purpose": "Required adversarial/protocol/residual-manifest regression inventory for R6 local qualification",
   "required_cases": [
     [
       "WORKSPACE_LIST_INVALID_JSON",
@@ -56,10 +56,6 @@
       "test_execute_exception_after_write_start_marks_unknown_and_stops"
     ],
     [
-      "MOCKED_FULL_SUCCESS",
-      "test_execute_mocked_full_success_covers_17_records"
-    ],
-    [
       "FILE_RAW_IMPORT",
       "test_file_import_uses_raw_and_notebook_uses_source"
     ],
@@ -70,9 +66,18 @@
     [
       "STALE_HASH_TYPE_BEFORE_EXPORT",
       "test_stale_hash_checks_type_before_export"
+    ],
+    [
+      "MOCKED_FULL_SUCCESS",
+      "test_execute_mocked_full_success_covers_manifest_records"
+    ],
+    [
+      "RESIDUAL_MANIFEST_BINDING",
+      "test_manifest_matches_reconciled_residual_exactly"
     ]
   ],
   "remote_access_required": false,
   "remote_execution_authorized": false,
-  "publisher_r5_parent_sha": "d00832b40230f7a1a10161a399151fb5afdf1d2a"
+  "publisher_r5_parent_sha": "d00832b40230f7a1a10161a399151fb5afdf1d2a",
+  "publisher_r6_parent_sha": "0cdfeadb38ff99b4c4622723cbd2ed10a02b51b6"
 }

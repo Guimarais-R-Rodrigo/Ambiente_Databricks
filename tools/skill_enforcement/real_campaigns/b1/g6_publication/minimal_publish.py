@@ -78,8 +78,24 @@ def validate_local() -> dict:
     if not isinstance(entries, list):
         entries = []
         issues.append("ENTRIES_NOT_LIST")
-    if len(entries) != 17 or manifest.get("expected_object_count") != 17:
+    expected_object_count = manifest.get("expected_object_count")
+    expected_missing_count = manifest.get("missing_object_count")
+    expected_overwrite_count = manifest.get("overwrite_object_count")
+    if not isinstance(expected_object_count, int) or expected_object_count < 1:
+        issues.append("EXPECTED_OBJECT_COUNT")
+    elif len(entries) != expected_object_count:
         issues.append("OBJECT_COUNT")
+    if not isinstance(expected_missing_count, int) or expected_missing_count < 0:
+        issues.append("EXPECTED_MISSING_COUNT")
+    if not isinstance(expected_overwrite_count, int) or expected_overwrite_count < 0:
+        issues.append("EXPECTED_OVERWRITE_COUNT")
+    if (
+        isinstance(expected_object_count, int)
+        and isinstance(expected_missing_count, int)
+        and isinstance(expected_overwrite_count, int)
+        and expected_object_count != expected_missing_count + expected_overwrite_count
+    ):
+        issues.append("DECLARED_PRECONDITION_COUNT_SUM")
     ids = [e.get("object_id") for e in entries if isinstance(e, dict)]
     if len(ids) != len(set(ids)):
         issues.append("DUPLICATE_OBJECT_ID")
@@ -136,8 +152,10 @@ def validate_local() -> dict:
         else:
             issues.append("PRECONDITION_KIND:" + str(entry.get("object_id")))
 
-    if missing != 16 or overwrite != 1:
-        issues.append("PRECONDITION_COUNTS")
+    if isinstance(expected_missing_count, int) and missing != expected_missing_count:
+        issues.append("MISSING_COUNT")
+    if isinstance(expected_overwrite_count, int) and overwrite != expected_overwrite_count:
+        issues.append("OVERWRITE_COUNT")
     if manifest.get("full_republish") is not False:
         issues.append("FULL_REPUBLISH_NOT_FALSE")
     if manifest.get("effect") != "REMOTE_PACKAGE_WRITE":

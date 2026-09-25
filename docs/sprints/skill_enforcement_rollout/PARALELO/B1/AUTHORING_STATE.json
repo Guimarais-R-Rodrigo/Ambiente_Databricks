@@ -3,9 +3,10 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_R5_PARTIAL_STATE_READ_ONLY_RECONCILIATION",
-    "G6_R5_RESIDUAL_STATE_ANALYSIS",
-    "G6_RESIDUAL_PUBLICATION_PLAN"
+    "G6_MINIMAL_PUBLICATION_R6_LOCAL_VALIDATION",
+    "G6_MINIMAL_PUBLICATION_R6_PACKAGE_FREEZE",
+    "G6_MINIMAL_PUBLICATION_R6_EXPLICIT_HUMAN_AUTHORIZATION",
+    "G6_MINIMAL_PUBLICATION_R6_REMOTE_EXECUTION"
   ],
   "canonical_renderer": "PASS_AT_P1",
   "domain_profiles": [
@@ -29,7 +30,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_R5_PARTIAL_STATE_READ_ONLY_RECONCILIATION_AUTHORIZED_NOT_RUN",
+  "stage": "B1_G6_R6_RESIDUAL_PUBLISHER_AUTHORED_LOCAL_VALIDATION_PENDING",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -481,19 +482,68 @@
       "retry_authorized": false
     },
     "partial_remote_reconciliation": {
-      "state": "AUTHORIZED_NOT_RUN",
+      "state": "PASS",
       "authorization_ref": "issue#114:comment#5837331711",
       "mechanism": "tools/publicar_free.py --verify --conteudo",
       "effect": "NONE",
-      "target_profile": "FREE",
-      "target_host": "https://dbc-72c8503a-bc27.cloud.databricks.com",
-      "local_evidence_only": true,
-      "purpose": [
-        "resolve domain-context-init unknown effect",
-        "reconfirm domain-context-readme",
-        "compute exact residual package mismatch"
+      "verify_exit_code": 1,
+      "verify_status": "FAIL",
+      "verify_scope": "inventory-types-content",
+      "files_compared": 575,
+      "raw_error_count": 31,
+      "error_classification": {
+        "missing_remote": 15,
+        "incomplete_remote_read": 15,
+        "divergent_content": 1,
+        "obsolete_remote": 0,
+        "type_mismatch": 0,
+        "skill_mismatch": 0,
+        "directory_missing": 0,
+        "other": 0
+      },
+      "confirmed_correct": [
+        "domain-context-readme"
       ],
+      "unknown_resolution": {
+        "domain-context-init": "NOT_CREATED"
+      },
+      "residual_objects": [
+        "domain-context-init",
+        "domain-context-example",
+        "domain-context-release",
+        "domain-context-schema",
+        "ser03-contract",
+        "ser03-input-schema",
+        "ser03-release-manifest",
+        "ser03-scripts-readme",
+        "ser03-preflight",
+        "ser03-run",
+        "ser03-verify",
+        "ser05-contract",
+        "ser05-input-schema",
+        "ser05-scripts-readme",
+        "ser05-preflight",
+        "policy"
+      ],
+      "remote_residual_state": "SIMPLE_RESIDUAL",
+      "sanitized_evidence_sha256": "d255398df799f0262872db4b5b327cb4dc3b9be67178746923a009138f702435",
       "remote_writes": false
+    },
+    "minimal_publication_r6": {
+      "state": "AUTHORED_NOT_RUN",
+      "package_id": "SER-B1-G6-RESIDUAL-PUBLISH-R6-1",
+      "residual_evidence_sha256": "d255398df799f0262872db4b5b327cb4dc3b9be67178746923a009138f702435",
+      "object_count": 16,
+      "missing_objects": 15,
+      "overwrite_objects": 1,
+      "already_correct_excluded": [
+        "domain-context-readme"
+      ],
+      "validator_counts": "MANIFEST_DECLARED_NOT_HARDCODED",
+      "parent_directories": "ALREADY_PRESENT_AND_VERIFIED",
+      "local_validation": "NOT_RUN",
+      "freeze": "NOT_CREATED",
+      "remote_execution": "NOT_AUTHORIZED"
     }
   },
   "g6_local_r1": {

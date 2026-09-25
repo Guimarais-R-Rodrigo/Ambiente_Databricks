@@ -1,6 +1,6 @@
 {
   "schema_version": "SER-B1-G6-MINIMAL-PUBLISH-MANIFEST-1",
-  "package_id": "SER-B1-G6-MINIMAL-PUBLISH-1",
+  "package_id": "SER-B1-G6-RESIDUAL-PUBLISH-R6-1",
   "source_forensics_sha256": "c92cc638d2ed46c45f5f53d085e81e0408d3b89fa4ec2e1a3b219366e90a7da7",
   "g6_freeze_sha": "c11c2dff07f0f7595ed545f32990e5d54f1fd583",
   "g6_freeze_tree": "15527a29db0e6bcefa639cfadd4d66eed1d32d83",
@@ -13,8 +13,8 @@
   },
   "effect": "REMOTE_PACKAGE_WRITE",
   "full_republish": false,
-  "expected_object_count": 17,
-  "missing_object_count": 16,
+  "expected_object_count": 16,
+  "missing_object_count": 15,
   "overwrite_object_count": 1,
   "authorization": {
     "embedded": false,
@@ -26,18 +26,6 @@
   "entries": [
     {
       "order": 1,
-      "object_id": "domain-context-readme",
-      "source_path": "ambiente_fonte/.assistant/hub_scripts/skill_execution/domain_context/README.md",
-      "rendered_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/domain_context/README.md",
-      "remote_relative_path": ".assistant/hub_scripts/skill_execution/domain_context/README.md",
-      "object_kind": "FILE",
-      "expected_git_blob_sha1": "bddf9fcab23f378c185b6e38b0bd57fcafe53c32",
-      "precondition": {
-        "kind": "MISSING"
-      }
-    },
-    {
-      "order": 2,
       "object_id": "domain-context-init",
       "source_path": "ambiente_fonte/.assistant/hub_scripts/skill_execution/domain_context/__init__.py",
       "rendered_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/domain_context/__init__.py",
@@ -49,7 +37,7 @@
       }
     },
     {
-      "order": 3,
+      "order": 2,
       "object_id": "domain-context-example",
       "source_path": "ambiente_fonte/.assistant/hub_scripts/skill_execution/domain_context/exemplo_domain_context.py",
       "rendered_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/domain_context/exemplo_domain_context.py",
@@ -61,7 +49,7 @@
       }
     },
     {
-      "order": 4,
+      "order": 3,
       "object_id": "domain-context-release",
       "source_path": "ambiente_fonte/.assistant/hub_scripts/skill_execution/domain_context/release.py",
       "rendered_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/domain_context/release.py",
@@ -73,7 +61,7 @@
       }
     },
     {
-      "order": 5,
+      "order": 4,
       "object_id": "domain-context-schema",
       "source_path": "ambiente_fonte/.assistant/hub_scripts/skill_execution/domain_context/temporal.schema.json",
       "rendered_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_scripts/skill_execution/domain_context/temporal.schema.json",
@@ -85,7 +73,7 @@
       }
     },
     {
-      "order": 6,
+      "order": 5,
       "object_id": "ser03-contract",
       "source_path": "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/execution_contract.json",
       "rendered_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-analise-safra/execution_contract.json",
@@ -97,7 +85,7 @@
       }
     },
     {
-      "order": 7,
+      "order": 6,
       "object_id": "ser03-input-schema",
       "source_path": "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/input.schema.json",
       "rendered_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-analise-safra/input.schema.json",
@@ -109,7 +97,7 @@
       }
     },
     {
-      "order": 8,
+      "order": 7,
       "object_id": "ser03-release-manifest",
       "source_path": "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/release_manifest.json",
       "rendered_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-analise-safra/release_manifest.json",
@@ -121,7 +109,7 @@
       }
     },
     {
-      "order": 9,
+      "order": 8,
       "object_id": "ser03-scripts-readme",
       "source_path": "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/scripts/README.md",
       "rendered_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-analise-safra/scripts/README.md",
@@ -133,7 +121,7 @@
       }
     },
     {
-      "order": 10,
+      "order": 9,
       "object_id": "ser03-preflight",
       "source_path": "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/scripts/preflight.py",
       "rendered_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-analise-safra/scripts/preflight.py",
@@ -145,7 +133,7 @@
       }
     },
     {
-      "order": 11,
+      "order": 10,
       "object_id": "ser03-run",
       "source_path": "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/scripts/run.py",
       "rendered_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-analise-safra/scripts/run.py",
@@ -157,7 +145,7 @@
       }
     },
     {
-      "order": 12,
+      "order": 11,
       "object_id": "ser03-verify",
       "source_path": "ambiente_fonte/.assistant/skills/hub-ml-analise-safra/scripts/verify.py",
       "rendered_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-analise-safra/scripts/verify.py",
@@ -169,7 +157,7 @@
       }
     },
     {
-      "order": 13,
+      "order": 12,
       "object_id": "ser05-contract",
       "source_path": "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/execution_contract.json",
       "rendered_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/execution_contract.json",
@@ -181,7 +169,7 @@
       }
     },
     {
-      "order": 14,
+      "order": 13,
       "object_id": "ser05-input-schema",
       "source_path": "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/input.schema.json",
       "rendered_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/input.schema.json",
@@ -193,7 +181,7 @@
       }
     },
     {
-      "order": 15,
+      "order": 14,
       "object_id": "ser05-scripts-readme",
       "source_path": "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/scripts/README.md",
       "rendered_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/scripts/README.md",
@@ -205,7 +193,7 @@
       }
     },
     {
-      "order": 16,
+      "order": 15,
       "object_id": "ser05-preflight",
       "source_path": "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml/scripts/preflight.py",
       "rendered_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-cross-eda-ml/scripts/preflight.py",
@@ -217,7 +205,7 @@
       }
     },
     {
-      "order": 17,
+      "order": 16,
       "object_id": "policy",
       "source_path": "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json",
       "rendered_path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/hub_padroes/skill_enforcement/policy.json",
@@ -230,5 +218,13 @@
       },
       "expected_local_normalized_sha256": "957a8a4d30d2d1c04b0ec4a3c079e2fa784b24c512dc90386aa686f7cdf69d9d"
     }
-  ]
+  ],
+  "residual_source": {
+    "reconciliation_authorization_ref": "issue#114:comment#5837331711",
+    "sanitized_evidence_sha256": "d255398df799f0262872db4b5b327cb4dc3b9be67178746923a009138f702435",
+    "remote_residual_state": "SIMPLE_RESIDUAL",
+    "already_correct_object_ids": [
+      "domain-context-readme"
+    ]
+  }
 }

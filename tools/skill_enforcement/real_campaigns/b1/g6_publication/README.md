@@ -60,3 +60,18 @@ R5 preserves:
 R5 changes FILE **export/readback** to `AUTO`, which is the protocol already used by the canonical `tools/publicar_free.py` content verifier that previously compared the remote package. Safety is preserved by requiring `get-status object_type=FILE` before every FILE readback, including the stale-policy precondition.
 
 The existing R4 write authorization is bound to the R4 executable digest and therefore cannot authorize R5. R5 requires its own local qualification, package digest, freeze, and explicit remote authorization.
+
+## R6 residual publisher after R5 partial-state reconciliation
+
+The canonical read-only reconciliation resolved the R5 transport uncertainty:
+- `domain-context-readme` is present, FILE, and content-correct;
+- `domain-context-init` was not created;
+- 15 objects remain missing;
+- `policy.json` remains the expected historical stale revision;
+- no wrong types or unexplained read errors exist.
+
+R6 therefore removes `domain-context-readme` from the material-write manifest and binds the residual manifest to sanitized reconciliation evidence SHA-256 `d255398df799f0262872db4b5b327cb4dc3b9be67178746923a009138f702435`.
+
+The publisher validator no longer hardcodes 17/16/1. Counts are declared by the closed manifest and mechanically checked against the entries. R6 currently declares 16 total objects: 15 create-if-missing plus one conditional policy overwrite.
+
+This makes the publisher reusable for a shrinking residual set without another code change solely for count changes.
