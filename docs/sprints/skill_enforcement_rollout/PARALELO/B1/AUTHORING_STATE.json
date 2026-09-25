@@ -3,11 +3,11 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_MINIMAL_PUBLICATION_LOCAL_PACKAGE_VALIDATION",
+    "G6_MINIMAL_PUBLICATION_LOCAL_VALIDATION",
+    "G6_MINIMAL_PUBLICATION_PACKAGE_FREEZE",
     "G6_MINIMAL_PUBLICATION_EXPLICIT_HUMAN_AUTHORIZATION",
     "G6_MINIMAL_PUBLICATION_EXECUTION",
-    "G6_POST_PUBLICATION_READ_ONLY_VERIFY",
-    "G6_PROBE_IMPORT_SEPARATE_AUTHORIZATION"
+    "G6_POST_PUBLICATION_READ_ONLY_VERIFY"
   ],
   "canonical_renderer": "PASS_AT_P1",
   "domain_profiles": [
@@ -31,7 +31,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_MINIMAL_REMOTE_PUBLICATION_PROPOSAL_PREPARED_NOT_AUTHORIZED",
+  "stage": "B1_G6_MINIMAL_PUBLICATION_PACKAGE_AUTHORED_LOCAL_VALIDATION_PENDING",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -273,15 +273,18 @@
       "remote_write_performed": false
     },
     "minimal_publication_proposal": {
-      "state": "PREPARED_NOT_AUTHORIZED",
+      "state": "AUTHORED_NOT_AUTHORIZED",
+      "package_path": "tools/skill_enforcement/real_campaigns/b1/g6_publication",
       "target": "PERSONAL_DATABRICKS_FREE_ONLY",
       "effect": "REMOTE_PACKAGE_WRITE",
       "object_count": 17,
       "missing_objects": 16,
       "stale_content_objects": 1,
       "full_package_republish": false,
-      "post_write_verify_required": true,
-      "rollback_strategy": "STOP_ON_FIRST_WRITE_FAILURE_PRESERVE_EFFECT_LEDGER_NO_BLIND_RETRY",
+      "authorization_record_required": true,
+      "post_write_full_content_verify_required": true,
+      "local_validation": "NOT_RUN",
+      "freeze": "NOT_CREATED",
       "requires_separate_human_authorization": true
     }
   },

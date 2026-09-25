@@ -63,3 +63,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) G6.READ_ONLY_RECONCILE attempt 2 = REMOTE_CONTENT_MISMATCH: 574 arquivos comparados, 33 errors = 16 missing + 16 incomplete remote reads + 1 divergent content, zero writes. Aberta forense local do JSON já coletado para deduplicar paths e identificar divergência antes de qualquer proposta de publicação.
 
 (ChatGPT) G6 mismatch forensics PASS: 33 errors reduzem-se a 17 defeitos lógicos conhecidos (16 objetos ausentes do P1 + policy.json remoto em revisão histórica a01d12ff...), sem outras anomalias. Preparada proposta de publicação corretiva mínima de 17 objetos; full republish rejeitado como superfície de efeito desnecessária. Nenhuma escrita remota autorizada.
+
+(ChatGPT) Autoria repo-side da correção remota mínima criada fora do freeze G6: manifest fechado de 17 objetos, publisher delta fail-closed e 7 metatestes. 16 creates exigem target ausente e nunca usam overwrite; somente policy.json pode overwrite se o hash remoto ainda for exatamente o histórico observado. Execução remota continua NOT_AUTHORIZED.
