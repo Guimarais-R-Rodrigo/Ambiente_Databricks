@@ -29,3 +29,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) R4 encerrou o ciclo de discovery: resolver V3 completou a busca com JSON válido, 3 candidatos observados e nenhum Python 3 utilizável. Nenhum gate P2 iniciou. Estado passa a HOST_REMEDIATION_REQUIRED; próxima etapa ENV-01 provisiona CPython/venv fora do repo e instala tools/requirements-dev.txt, sem executar campanha.
 
 (ChatGPT) ENV-01 encerrada BLOCKED antes de mutação: winget.exe ausente. ENV-02 passa ao caminho oficial alternativo do Python Install Manager via PowerShell Add-AppxPackage/AppInstaller; continua fora de qualquer round P2.
+
+(ChatGPT) ENV-02: Python Install Manager oficial 26.3.240.0 instalado, mas py.exe resolveu o launcher legado e `help` foi tratado como script por Python 3.12. Em vez de remover launcher ou instalar 3.13 sem necessidade, ENV-03 adotará o CPython 3.12 já existente, criará venv externo e instalará tools/requirements-dev.txt.

@@ -80,3 +80,20 @@ ENV-01 encerrou antes de qualquer mutação porque `winget.exe` não existe no h
 ENV-02 usa o mecanismo alternativo oficialmente documentado pelo CPython para máquinas onde Store/WinGet não estão disponíveis: `Add-AppxPackage -AppInstallerFile` com o AppInstaller publicado em `python.org/ftp/python/pymanager/pymanager.appinstaller`.
 
 ENV-02 ainda é remediação ambiental, não rodada P2. Ela pode instalar o Python Install Manager e CPython 3.13, criar venv externo e instalar `tools/requirements-dev.txt`, mas não pode executar resolver V3 ou gates P2.
+
+
+## ENV-02 falhou por colisão `py`; ENV-03 adota o Python 3.12 existente
+
+ENV-02 instalou com sucesso `PythonSoftwareFoundation.PythonManager 26.3.240.0`, mas `Get-Command py.exe` resolveu o launcher legado. Esse comportamento é esperado quando o launcher antigo tem precedência; o comando inequívoco do manager é `pymanager`.
+
+A própria falha demonstrou que o launcher legado seleciona um Python 3.12. Como P2 não fixa 3.13 e o repositório possui certificação local explicitamente vinculada a Python 3.12, ENV-03 usa o runtime existente em vez de instalar outro.
+
+ENV-03:
+- prova `py -3.12 -c` e captura `sys.executable`;
+- exige CPython 3.12;
+- cria venv externo `ser-b1-p2-py312`;
+- instala somente `tools/requirements-dev.txt`;
+- faz smoke de imports;
+- não executa resolver V3 nem gates P2;
+- não remove nem altera o launcher legado;
+- não precisa usar `pymanager` para prosseguir.

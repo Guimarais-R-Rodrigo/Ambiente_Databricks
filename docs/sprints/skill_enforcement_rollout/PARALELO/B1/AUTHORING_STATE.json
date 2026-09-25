@@ -3,12 +3,11 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "ENV02_INSTALL_PYTHON_MANAGER_VIA_OFFICIAL_APPINSTALLER",
-    "ENV02_INSTALL_CPYTHON_313",
-    "ENV02_CREATE_EXTERNAL_VENV",
-    "ENV02_INSTALL_TOOLS_REQUIREMENTS_DEV",
-    "ENV02_IMPORT_SMOKE",
-    "NEW_P2_ROUND_AFTER_ENV02"
+    "ENV03_PROVE_EXISTING_CPYTHON_312",
+    "ENV03_CREATE_EXTERNAL_VENV_PY312",
+    "ENV03_INSTALL_TOOLS_REQUIREMENTS_DEV",
+    "ENV03_IMPORT_SMOKE",
+    "NEW_P2_ROUND_AFTER_ENV03"
   ],
   "canonical_renderer": "PASS_AT_P1",
   "domain_profiles": [
@@ -32,7 +31,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "P2_HOST_REMEDIATION_ENV02_REQUIRED",
+  "stage": "P2_HOST_REMEDIATION_ENV03_EXISTING_PY312_REQUIRED",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -84,5 +83,16 @@
     "host_mutation": false,
     "repo_mutation": false,
     "p2_gates_executed": false
+  },
+  "env02": {
+    "result": "FAIL",
+    "issue": "PYTHON_INSTALL_MANAGER_HELP_FAILED",
+    "manager_installed": true,
+    "manager_package": "PythonSoftwareFoundation.PythonManager",
+    "manager_version": "26.3.240.0",
+    "py_resolution": "LEGACY_LAUNCHER",
+    "observed_runtime_series": "3.12",
+    "p2_gates_executed": false,
+    "repo_mutation": false
   }
 }
