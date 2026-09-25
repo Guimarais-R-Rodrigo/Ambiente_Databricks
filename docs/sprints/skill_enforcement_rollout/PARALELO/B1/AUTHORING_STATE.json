@@ -3,8 +3,8 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_MINIMAL_PUBLICATION_R5_EXPLICIT_HUMAN_AUTHORIZATION",
     "G6_MINIMAL_PUBLICATION_R5_REMOTE_EXECUTION",
+    "G6_MINIMAL_PUBLICATION_R5_EVIDENCE_REVIEW",
     "G6_POST_PUBLICATION_READ_ONLY_VERIFY"
   ],
   "canonical_renderer": "PASS_AT_P1",
@@ -29,7 +29,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_MINIMAL_PUBLICATION_R5_FROZEN_AWAITING_HUMAN_REMOTE_AUTHORIZATION",
+  "stage": "B1_G6_MINIMAL_PUBLICATION_R5_AUTHORIZED_NOT_RUN",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -404,7 +404,7 @@
       "full_verify": "NOT_RUN"
     },
     "minimal_publication_r5": {
-      "state": "LOCALLY_VALIDATED_AND_FROZEN",
+      "state": "AUTHORIZED_NOT_RUN",
       "freeze_sha": "66f531dacbbd67ac972812a0057c932183c1aba1",
       "freeze_tree": "fcfcc03a7d38cdd4e14a821a382b2a88c1781811",
       "manifest_sha256": "57574ddbdadfd344776bcb2b37142248b9af95671d5efd818a4dda6bcae6ae9e",
@@ -418,7 +418,12 @@
       "stale_policy_type_proof_before_export": true,
       "parent_bootstrap_reuse": "3_DIRECTORIES_ALREADY_PRESENT_AND_VERIFIED",
       "manifest_changed": false,
-      "remote_execution": "NOT_AUTHORIZED"
+      "remote_execution": "NOT_RUN",
+      "authorization_ref": "issue#114:comment#5837135604",
+      "effect": "REMOTE_PACKAGE_WRITE",
+      "one_write_attempt": true,
+      "object_count": 17,
+      "parent_bootstrap_state": "PASS_3_OF_3_ALREADY_PRESENT"
     }
   },
   "g6_local_r1": {
