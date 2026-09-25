@@ -3,8 +3,9 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_READ_ONLY_RECONCILIATION_EXECUTION",
-    "G6_READ_ONLY_RECONCILIATION_EVIDENCE_REVIEW",
+    "G6_AUTHENTICATION_REMEDIATION_EXPLICIT_AUTHORIZATION",
+    "G6_AUTHENTICATION_REMEDIATION",
+    "G6_READ_ONLY_RECONCILIATION_NEW_ATTEMPT",
     "G6_EFFECTFUL_OPERATIONS_SEPARATELY_AUTHORIZED_IF_NEEDED"
   ],
   "canonical_renderer": "PASS_AT_P1",
@@ -29,7 +30,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_READ_ONLY_RECONCILIATION_AUTHORIZED_NOT_RUN",
+  "stage": "B1_G6_AUTHENTICATION_REMEDIATION_REQUIRED",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -179,7 +180,23 @@
       "freeze_tree": "15527a29db0e6bcefa639cfadd4d66eed1d32d83",
       "effect": "NONE",
       "target": "PERSONAL_DATABRICKS_FREE_ONLY",
-      "execution_status": "NOT_RUN"
+      "result": "BLOCKED_AUTHENTICATION",
+      "auth_describe_exit": 0,
+      "auth_describe_status": "error",
+      "observed_profile": "DEFAULT",
+      "observed_host": "https://dbc-72c8503a-bc27.cloud.databricks.com",
+      "auth_type": "databricks-cli",
+      "current_user_exit": 1,
+      "blocker": "INVALID_REFRESH_TOKEN",
+      "content_verify": "NOT_RUN",
+      "external_writes": false
+    },
+    "authentication_remediation": {
+      "state": "PREPARED_NOT_AUTHORIZED",
+      "proposed_action": "OAUTH_U2M_RELOGIN_FOR_PROFILE_FREE",
+      "mutates_local_credentials": true,
+      "remote_workspace_write": false,
+      "requires_separate_human_authorization": true
     }
   },
   "g6_local_r1": {
