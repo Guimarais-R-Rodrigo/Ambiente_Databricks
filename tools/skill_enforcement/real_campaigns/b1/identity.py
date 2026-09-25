@@ -97,8 +97,6 @@ def _capture_python_binding(python_launcher: str) -> dict[str, Any]:
 
     probe_payload = _probe_python_launcher(python_launcher)
     runtime_observed = str(Path(sys.executable).resolve())
-    if _runtime_path_key(probe_payload["executable"]) != _runtime_path_key(runtime_observed):
-        raise ValueError("B1_PYTHON_LAUNCHER_RUNTIME_MISMATCH")
     if probe_payload["version"] != platform.python_version():
         raise ValueError("B1_PYTHON_LAUNCHER_VERSION_MISMATCH")
     if probe_payload["implementation"] != platform.python_implementation():
@@ -108,8 +106,9 @@ def _capture_python_binding(python_launcher: str) -> dict[str, Any]:
         raise ValueError("B1_PYTHON_LAUNCHER_ISOLATION_MISMATCH")
 
     launcher_sha = _sha256_file(launcher_path)
+    probe_runtime_sha = _sha256_file(Path(probe_payload["executable"]))
     runtime_sha = _sha256_file(Path(runtime_observed))
-    if launcher_sha != runtime_sha:
+    if len({launcher_sha, probe_runtime_sha, runtime_sha}) != 1:
         raise ValueError("B1_PYTHON_LAUNCHER_BINARY_MISMATCH")
 
     return {
@@ -137,8 +136,6 @@ def _runtime_binding_issues(
     implementation = current_implementation if current_implementation is not None else platform.python_implementation()
     isolated = current_isolated if current_isolated is not None else (sys.prefix != sys.base_prefix)
 
-    if _runtime_path_key(observed) != _runtime_path_key(str(spec.get("python_runtime_executable_observed") or "")):
-        issues.append("B1_RELEASE_RUNTIME_EXECUTABLE_CHANGED")
     if version != spec.get("python_version"):
         issues.append("B1_RELEASE_PYTHON_VERSION_CHANGED")
     if implementation != spec.get("python_implementation"):

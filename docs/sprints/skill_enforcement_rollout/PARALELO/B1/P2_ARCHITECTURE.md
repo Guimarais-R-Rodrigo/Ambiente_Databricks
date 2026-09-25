@@ -147,3 +147,20 @@ Somente um FAIL JSON válido do V3 com `PYTHON3_INTERPRETER_NOT_RESOLVED` será 
 R5 passou preflight e 19 metatestes. O prepare gerou o release, mas o processo Codex materializou `sys.executable` sob um path físico `LocalCache\Local` diferente do launcher literal ENV-04. O gate externo corretamente parou antes da campanha.
 
 R6 não relaxa a identidade para comparação textual frouxa. O release V2 separa launcher autorizado de runtime observado e os liga por probe direto + SHA-256 idêntico + versão/implementação/isolamento. O handoff V2 usa o launcher autorizado nos argv; o adapter revalida o runtime observado e os hashes.
+
+
+### Refinamento contraditório R6
+
+O path físico observado por `sys.executable` é evidência, não autoridade de identidade. Virtualização pode remapear esse path entre processos sem trocar o runtime.
+
+A autoridade R6 é:
+- launcher literal autorizado;
+- SHA-256 do launcher;
+- SHA-256 do runtime observado;
+- SHA-256 do runtime observado pelo probe filho;
+- todos iguais;
+- mesma versão;
+- mesma implementação;
+- mesmo estado de isolamento.
+
+No adapter, mudança do path físico por si só não reprova; mudança de hash/versão/implementação/isolamento reprova.

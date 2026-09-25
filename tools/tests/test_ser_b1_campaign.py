@@ -262,7 +262,7 @@ class RuntimeInterpreterBindingTests(unittest.TestCase):
         with mock.patch.object(identity, "_sha256_file", return_value="a" * 64):
             issues = identity._runtime_binding_issues(
                 spec,
-                current_executable=spec["python_runtime_executable_observed"],
+                current_executable=r"C:\\AnotherSandbox\\Redirect\\venv\\Scripts\\python.exe",
                 current_version="3.12.10",
                 current_implementation="CPython",
                 current_isolated=True,
