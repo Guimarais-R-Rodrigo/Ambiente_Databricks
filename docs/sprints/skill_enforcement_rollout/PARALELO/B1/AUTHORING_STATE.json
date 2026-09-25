@@ -3,8 +3,9 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_MINIMAL_PUBLICATION_R5_REMOTE_EXECUTION",
-    "G6_MINIMAL_PUBLICATION_R5_EVIDENCE_REVIEW",
+    "G6_R5_PARTIAL_STATE_READ_ONLY_RECONCILIATION_AUTHORIZATION",
+    "G6_R5_PARTIAL_STATE_READ_ONLY_RECONCILIATION",
+    "G6_RESIDUAL_PUBLICATION_PLAN",
     "G6_POST_PUBLICATION_READ_ONLY_VERIFY"
   ],
   "canonical_renderer": "PASS_AT_P1",
@@ -29,7 +30,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_MINIMAL_PUBLICATION_R5_AUTHORIZED_NOT_RUN",
+  "stage": "B1_G6_R5_PARTIAL_REMOTE_STATE_RECONCILIATION_REQUIRED",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -424,6 +425,76 @@
       "one_write_attempt": true,
       "object_count": 17,
       "parent_bootstrap_state": "PASS_3_OF_3_ALREADY_PRESENT"
+    },
+    "minimal_publication_r5_attempt_1": {
+      "result": "FAIL_PARTIAL_REMOTE_STATE",
+      "authorization_ref": "issue#114:comment#5837135604",
+      "authorization_consumed": true,
+      "consumption_marker_present": true,
+      "publisher_freeze_sha": "66f531dacbbd67ac972812a0057c932183c1aba1",
+      "publisher_freeze_tree": "fcfcc03a7d38cdd4e14a821a382b2a88c1781811",
+      "manifest_sha256": "57574ddbdadfd344776bcb2b37142248b9af95671d5efd818a4dda6bcae6ae9e",
+      "publisher_package_sha256": "774c4351e48becb4ccdcf13a375aedec635718c3c2c8dd7eb6f447e47e87ce62",
+      "preconditions": {
+        "parent_directories_confirmed": 17,
+        "missing_targets_confirmed": 16,
+        "stale_hash_targets_confirmed": 1,
+        "policy_file_type_confirmed": true,
+        "policy_precondition_hash_observed": "b68d378b4552f0f2800e82a47faf48961af68c0c95f416bb580582fc48f47be9",
+        "all_passed": true
+      },
+      "first_failure": "domain-context-init:IMPORT_FAILED_CONNECTION_PROTOCOL_ERROR",
+      "records": 2,
+      "writes_started": 2,
+      "write_success": 1,
+      "verification_pass": 1,
+      "effects": {
+        "created": 1,
+        "updated": 0,
+        "unknown": 1
+      },
+      "objects": {
+        "confirmed_created": [
+          "domain-context-readme"
+        ],
+        "unknown": [
+          "domain-context-init"
+        ],
+        "not_run": [
+          "domain-context-example",
+          "domain-context-release",
+          "domain-context-schema",
+          "ser03-contract",
+          "ser03-input-schema",
+          "ser03-release-manifest",
+          "ser03-scripts-readme",
+          "ser03-preflight",
+          "ser03-run",
+          "ser03-verify",
+          "ser05-contract",
+          "ser05-input-schema",
+          "ser05-scripts-readme",
+          "ser05-preflight",
+          "policy"
+        ]
+      },
+      "post_write_full_content_verify": "NOT_RUN",
+      "retry_authorized": false
+    },
+    "partial_remote_reconciliation": {
+      "state": "PROPOSED_NOT_AUTHORIZED",
+      "preferred_mechanism": "CANONICAL_PUBLICAR_FREE_VERIFY_CONTENT",
+      "effect": "NONE",
+      "scope": "FULL_PACKAGE_READ_ONLY",
+      "purpose": [
+        "determine whether domain-context-init actually landed despite PROTOCOL_ERROR",
+        "confirm domain-context-readme remains byte/type correct",
+        "recompute exact residual missing/divergent set after partial R5"
+      ],
+      "publication": false,
+      "probes": false,
+      "genie": false,
+      "cleanup": false
     }
   },
   "g6_local_r1": {
