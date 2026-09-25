@@ -36,6 +36,7 @@ def _deterministic_zip(source: Path, target: Path) -> None:
 
 def _copy_public_audit_root(
     *,
+    raw_root: Path,
     share_root: Path,
     binding_path: Path,
     envelope_path: Path,
@@ -56,7 +57,7 @@ def _copy_public_audit_root(
         "candidate_sha": adapter_result.get("candidate_sha"),
         "candidate_tree_sha": adapter_result.get("candidate_tree_sha"),
         "first_failure": adapter_result.get("first_failure"),
-        "raw_manifest_sha256": _sha256(share_root.parent / share_root.name.replace("_SHARE", "") / "MANIFEST.json"),
+        "raw_manifest_sha256": _sha256(raw_root / "MANIFEST.json"),
         "share_manifest_sha256": _sha256(share_root / "MANIFEST.json"),
         "raw_share_binding_sha256": _sha256(binding_path),
         "envelope_verification_sha256": _sha256(envelope_path),
@@ -123,6 +124,7 @@ def package(output_dir: Path) -> dict:
         encoding="utf-8",
     )
     audit = _copy_public_audit_root(
+        raw_root=raw_root,
         share_root=share_root,
         binding_path=binding_path,
         envelope_path=envelope_path,

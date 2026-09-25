@@ -5,6 +5,7 @@ import subprocess
 from pathlib import Path
 
 from tools.skill_enforcement.parallel.contract import validate_campaign
+from tools.skill_enforcement.parallel.host_probe import probe
 from tools.skill_enforcement.parallel.process import ROOT
 from tools.skill_enforcement.parallel.registry import load_registry as load_b0_registry
 from tools.skill_enforcement.real_campaigns.b1.coverage import build_report
@@ -53,6 +54,16 @@ def check() -> dict:
     except Exception as exc:
         issues.append("B0_REGISTRY_INVALID:" + type(exc).__name__)
     issues.extend(qualified_b0_issues())
+    try:
+        host = probe()
+        filesystem = host.get("filesystem") if isinstance(host, dict) else None
+        if host.get("os") != "Windows":
+            issues.append("B1_HOST_NOT_QUALIFIED_WINDOWS_REQUIRED")
+        elif not isinstance(filesystem, dict) or filesystem.get("family") != "windows" or filesystem.get("type") != "NTFS":
+            issues.append("B1_HOST_NOT_QUALIFIED_NTFS_REQUIRED")
+    except Exception as exc:
+        host = None
+        issues.append("B1_HOST_PROBE_UNREADABLE:" + type(exc).__name__)
     coverage = build_report()
     if coverage.get("status") != "PASS":
         issues.extend("B1_" + x for x in coverage.get("issues", []))
@@ -115,6 +126,8 @@ def check() -> dict:
         "max_auditors": 1,
         "b0_qualified_bytes": not any(x.startswith("B0_QUALIFIED_") for x in issues),
         "p1_functional_bytes_preserved": not any(x.startswith("B1_P1_") for x in issues),
+        "host": host,
+        "host_requirement": "WINDOWS_NTFS_CURRENTLY_QUALIFIED_PATH",
     }
 
 

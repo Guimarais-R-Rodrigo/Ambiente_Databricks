@@ -100,3 +100,10 @@ O arquivo a retornar não é mais um ZIP contendo apenas o SHARE. O empacotador 
 - manifesto do próprio audit bundle e scan final.
 
 O RAW não entra no audit bundle. Assim, o auditor remoto consegue revalidar integralmente o conteúdo compartilhado, o scan e os sidecars públicos; a autenticidade dos bytes RAW permanece limitada ao hash/binding e à verificação local, como previsto pelo contrato de evidência.
+
+
+## Autoridade ambiental do perfil 2/1
+
+A qualificação B0 observou Windows, NTFS, sandbox negativo, Windows Job Object, recursos e concorrência 2/1. A P2 não transporta esse limite para outro host por mera compatibilidade de código. O preflight B1 atual exige `Windows` + filesystem `NTFS`; execução em Linux/Cloud ou Windows não-NTFS retorna bloqueio ambiental antes de preparar a campanha.
+
+Outro host poderá ser usado somente após uma qualificação ambiental própria e uma alteração versionada dessa autoridade; isso não faz parte desta P2.

@@ -10,7 +10,7 @@ from tools.skill_enforcement.parallel import launcher as b0_launcher
 from tools.skill_enforcement.parallel import verifier as b0_verifier
 from tools.skill_enforcement.parallel.contract import digest_json, validate_campaign
 from tools.skill_enforcement.parallel.registry import load_registry as load_b0_registry
-from tools.skill_enforcement.real_campaigns.b1 import adapter, handoff, identity, registry
+from tools.skill_enforcement.real_campaigns.b1 import adapter, handoff, identity, preflight, registry
 from tools.skill_enforcement.real_campaigns.b1.coverage import build_report
 from tools.skill_enforcement.real_campaigns.b1.prepare import validate_output_location
 
@@ -59,6 +59,28 @@ class CampaignContractTests(unittest.TestCase):
         self.assertEqual([], by_id["b1.ser03.preflight"]["depends_on"])
         self.assertEqual([], by_id["b1.ser05.preflight"]["depends_on"])
         self.assertNotIn("b1.ser05.preflight", by_id["b1.ser03.execute_verify"]["depends_on"])
+
+
+class HostQualificationScopeTests(unittest.TestCase):
+    def test_preflight_blocks_non_windows_host(self):
+        fake = {
+            "os": "Linux",
+            "filesystem": {"family": "posix", "type": "NOT_OBSERVED"},
+        }
+        with mock.patch.object(preflight, "probe", return_value=fake):
+            report = preflight.check()
+        self.assertEqual("FAIL", report["status"])
+        self.assertIn("B1_HOST_NOT_QUALIFIED_WINDOWS_REQUIRED", report["issues"])
+
+    def test_preflight_blocks_non_ntfs_windows(self):
+        fake = {
+            "os": "Windows",
+            "filesystem": {"family": "windows", "type": "REFS"},
+        }
+        with mock.patch.object(preflight, "probe", return_value=fake):
+            report = preflight.check()
+        self.assertEqual("FAIL", report["status"])
+        self.assertIn("B1_HOST_NOT_QUALIFIED_NTFS_REQUIRED", report["issues"])
 
 
 class CoverageTests(unittest.TestCase):

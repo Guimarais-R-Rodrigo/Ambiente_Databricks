@@ -17,3 +17,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) Fechado o envelope P2 antes do run local: ADAPTER_RESULT persistido externamente e post_run_package_argv reutilizando RAW/SHARE + sanitização V2 + verificação B0; somente o ZIP SHARE deve ser enviado para auditoria, RAW permanece privado.
 
 (ChatGPT) O retorno P2 foi fortalecido para AUDIT_BUNDLE.zip: SHARE sanitizado + RAW_SHARE_BINDING + ENVELOPE_VERIFICATION + AUDIT_CONTEXT + manifesto/scan do bundle público; RAW continua privado.
+
+(ChatGPT) Autoridade ambiental fechada: P2 2/1 exige Windows+NTFS no preflight; Linux/Cloud ou Windows não-NTFS bloqueiam antes de prepare. Também removida inferência frágil do path RAW no AUDIT_CONTEXT.
