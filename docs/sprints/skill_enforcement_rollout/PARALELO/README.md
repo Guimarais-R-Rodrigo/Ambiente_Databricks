@@ -34,7 +34,7 @@ campanha.
 | [Dossiês por skill](dossies/README.md) | Escopo e provas específicas das oito skills |
 | [06 — Auditoria e evidência](06_AUDITORIA_EVIDENCIA.md) | Revisão independente, RAW/SHARE, finding e suficiência probatória |
 | [07 — Paralelismo e integração](07_PARALELISMO_INTEGRACAO.md) | Isolamento, recursos, DAG, merge e mudança de base |
-| [08 — Databricks e Genie](08_DATABRICKS_GENIE.md) | Capacidade externa, publicação única, execução humana e observabilidade |
+| [08 — Databricks e Genie](08_DATABRICKS_GENIE.md) | Capacidade externa, publicação única, coleta controlada e observabilidade |
 | [09 — Papéis e handoffs](09_PAPEIS_HANDOFFS.md) | Contratos do coordenador, executores, auditores e integrador |
 | [10 — Implantação](10_IMPLANTACAO.md) | Pacotes de trabalho, pilotos, entregáveis e critério de liberação |
 | [11 — Riscos e bloqueios](11_RISCOS_BLOQUEIOS.md) | Questões que precisam ser resolvidas pela autoria, sem decisão improvisada local |

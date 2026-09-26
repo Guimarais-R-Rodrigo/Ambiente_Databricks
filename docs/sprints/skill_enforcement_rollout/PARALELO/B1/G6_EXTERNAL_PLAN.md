@@ -1,5 +1,11 @@
 # B1 G6 — plano externo preparado, não autorizado para execução
 
+> **HISTORICAL_PRE_EXECUTION_PLAN — NOT LIVE STATE.**
+> Os `NOT_RUN/NOT_AUTHORIZED` abaixo registram o estado anterior à execução G6.
+> R10, full-content verify e a tentativa parcial de probes ocorreram depois.
+> Estado vivo: `B1/AUTHORING_STATE.json`.
+
+
 ## Autoridade
 
 Este documento prepara o próximo gate após R7 `LOCAL_PASS/AUDIT_PASS`.

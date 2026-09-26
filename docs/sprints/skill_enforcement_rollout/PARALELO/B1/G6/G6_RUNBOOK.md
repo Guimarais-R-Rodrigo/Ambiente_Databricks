@@ -1,5 +1,12 @@
 # B1 G6 — runbook externo congelável (NÃO AUTORIZADO)
 
+> **HISTORICAL_FROZEN_RUNBOOK — NOT LIVE STATE.**
+> Este arquivo preserva o contrato congelado que originou G6. Estados como
+> `G6_EXECUTION = NOT_AUTHORIZED` descrevem o momento do freeze e não anulam
+> R10/full verify/attempts posteriores. Para estado atual use
+> `../AUTHORING_STATE.json` e os registros de tentativa em `G6/`.
+
+
 ## Estado
 
 ```text
