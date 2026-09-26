@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-26 — AC-R2 Windows bootstrap maintenance: fechamento estático
+
+- (ChatGPT) `WINDOWS_BOOTSTRAP_MAINTENANCE_STATIC = PASS` no candidato `36969a4ec3c2a70c37e89737a11ec273bb16be4f` / tree `a62bd3b29bc0ecd4f31b68578c5ef5b6d4ed2785`.
+- (ChatGPT) O profile A0 preserva repository root read-only e network disabled; o único novo write root é o scratch externo `~\codex-scratch\Ambiente_Databricks`.
+- (ChatGPT) Validator V5 e 49 métodos de metateste estão definidos; execução real permanece NOT_RUN e ocorrerá em CQ.
+- (ChatGPT) Finding material aberto repo-side: 0.
+- (ChatGPT) Próxima ação é somente criar o diretório externo vazio, fazer fast-forward do worktree B1 e repetir a criação da conversa/CQ0–CQ5.
+
 ## 2026-09-26 — AC-R2 Windows sandbox bootstrap maintenance
 
 ### Observado

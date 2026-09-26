@@ -137,3 +137,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) AC-R2-MIN static closure PASS no candidato 128ff8df9f2b91567847eaed1e99532d88bfee2f / tree f191e85662d8e617ae9f42af7909a780437ad5e7: 0 findings materiais abertos na revisão repo-side; 47 metatest methods definidos, mas validator/metatests/runtime CQ permanecem NOT_RUN. Próximo gate é CQ0–CQ5; CQ verde não remove autonomamente o blocker de runtime.
 
 (ChatGPT) CONTROLLER_MAINTENANCE autorizado pelo usuário para bootstrap Windows: A0 ganhou scratch externo explícito ~\\codex-scratch\\Ambiente_Databricks sem ampliar write no repositório; validator V5 e 49 metatest methods definidos. Tentativa Desktop anterior bloqueou antes de CQ0/thread creation; CQ0–CQ5 permanecem NOT_RUN.
+
+(ChatGPT) Windows bootstrap maintenance static PASS em 36969a4ec3c2a70c37e89737a11ec273bb16be4f/a62bd3b29bc0ecd4f31b68578c5ef5b6d4ed2785: A0 repo read-only + external scratch capability root, validator V5, 49 metatest methods definidos, 0 findings materiais repo-side. CQ0–CQ5 seguem NOT_RUN; próximo passo é host scratch + fast-forward + retry Desktop.

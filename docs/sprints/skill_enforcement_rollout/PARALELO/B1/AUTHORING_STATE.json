@@ -33,7 +33,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_AC_R2_WINDOWS_BOOTSTRAP_MAINTENANCE_AUTHORED_AWAITING_CQ_RETRY",
+  "stage": "B1_AC_R2_WINDOWS_BOOTSTRAP_MAINTENANCE_CLOSED_AWAITING_CQ_RETRY",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -1002,7 +1002,7 @@
     "max_write_capable_agents": 1,
     "custom_agents": 5,
     "controller_metatest_methods_static": 49,
-    "structural_validation": "AC_R2_WINDOWS_BOOTSTRAP_MAINTENANCE_AUTHORED_NOT_RUNTIME_QUALIFIED",
+    "structural_validation": "PASS_AC_R2_WINDOWS_BOOTSTRAP_STATIC",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
     "previous_static_audit": {
@@ -1019,7 +1019,7 @@
     "executor_permissions_default": "SER_B1_A1_EXACT_FILES_NO_DIRECT_GIT_OR_NETWORK",
     "ac_r2": {
       "authorization": "DIRECT_USER_CHAT_2026-09-26",
-      "state": "PASS_STATIC_WITH_WINDOWS_BOOTSTRAP_MAINTENANCE_AWAITING_CQ_RETRY",
+      "state": "PASS_STATIC_AWAITING_CQ_RETRY",
       "scope": [
         "CR1_LEAST_PRIVILEGE_A1_PERMISSION_BOUNDARY",
         "CR2_DELTA_AND_STATE_TRANSITION_INTEGRITY",
@@ -1061,7 +1061,15 @@
         "repository_root_access": "READ",
         "command_network": "DISABLED",
         "host_precondition": "CREATE_SCRATCH_DIRECTORY_BEFORE_CODEX_DESKTOP_CHAT",
-        "runtime_requalification": "REQUIRED"
+        "runtime_requalification": "REQUIRED",
+        "state": "PASS_STATIC_AWAITING_HOST_PRECONDITION_AND_CQ_RETRY",
+        "static_candidate_commit": "36969a4ec3c2a70c37e89737a11ec273bb16be4f",
+        "static_candidate_tree": "a62bd3b29bc0ecd4f31b68578c5ef5b6d4ed2785",
+        "validator_execution": "NOT_RUN",
+        "metatests_execution": "NOT_RUN",
+        "material_findings_open": 0,
+        "next_action": "CREATE_EXTERNAL_SCRATCH_THEN_RETRY_CODEX_DESKTOP_THREAD",
+        "cq0_cq5": "NOT_RUN"
       }
     }
   }
