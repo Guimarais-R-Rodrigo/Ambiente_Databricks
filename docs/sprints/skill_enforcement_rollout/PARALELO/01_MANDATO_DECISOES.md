@@ -2,9 +2,18 @@
 
 ## 1.1 Autorização recebida e fronteira desta entrega
 
-O usuário aprovou a proposta de 23/09/2026 e solicitou: “siga para montar o plano de forma extremamente bem detalhada com o intuito de evitar derivas e idas e vindas de correções que poderiam ser evitadas”. A autorização cobre o detalhamento da mudança de rota. Ela não contém uma lista de novos SHAs aceitos, destinos de escrita externos ou promoções antecipadamente aprovadas.
+O usuário aprovou a proposta de 23/09/2026 para execução paralela e, em
+26/09/2026, aprovou ADR-0024/0025 para reduzir micro-handoffs. A autorização
+corrente do controller é definida pelo envelope da frente; não contém promoção,
+merge ou A2 implícitos.
 
-A arquitetura aprovada é preservada: oito frentes lógicas por skill, autoria repo-side, execução local paralela limitada, revisão independente e integração/publicação serializada. O plano não é uma delegação de desenvolvimento ao Codex local. Havendo lacuna de implementação, o item retorna à fila de autoria aqui.
+A arquitetura preserva oito frentes lógicas por skill, autoria repo-side,
+execução determinística isolada, revisão independente e integração/publicação
+serializada. A frase histórica “não é delegação de desenvolvimento ao Codex
+local” aplica-se aos **workers determinísticos de campanha** do ADR-0023. No
+Autonomous Controller Mode, o A1 Authoring Executor pode implementar reparos
+causais dentro de `repo_scope.write_roots`; lacunas fora desse escopo ou na
+governança do controller voltam ao Human Gate apropriado.
 
 O usuário não precisa responder repetidamente a perguntas técnicas que a inspeção e a autoria possam resolver. Questões realmente materiais — população real, destino, overwrite, efeito remoto, scope ou target — são consolidadas num formulário único por lote antes do respectivo gate. Ausência dessas decisões bloqueia o efeito correspondente, não todo o trabalho independente.
 

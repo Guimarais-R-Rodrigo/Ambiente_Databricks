@@ -1,12 +1,20 @@
 # 09 — Contratos dos agentes e handoffs sem deriva
 
-## 9.1 Princípio de delegação
+## 9.1 Princípio de delegação — workers determinísticos
 
-O agente recebe uma tarefa fechada, não uma missão vaga como “promova esta skill”. A tarefa referencia release, profile, case set, candidatas e permissão por hash. O executor não escolhe retrospectivamente quais testes eram relevantes. O coordenador não pode gerar um script novo para substituir um comando ausente.
+Um **worker determinístico de campanha** recebe uma tarefa fechada, não uma
+missão vaga como “promova esta skill”. A tarefa referencia release, profile, case
+set, candidatas e permissão por hash. O executor determinístico não escolhe
+retrospectivamente quais testes eram relevantes. O coordenador determinístico não
+gera script novo para substituir comando ausente.
+
+O root Autonomous Controller recebe uma **frente fechada**, conforme §9.12, e pode
+gerar tasks fechadas internamente; seu executor de autoria A1 pode produzir patch
+causal entre rodadas dentro do envelope.
 
 A hierarquia durável continua em `CLAUDE.md` e `.claude/`. Os futuros adapters Codex apontam para os contratos deste pacote e não copiam toda a governança. O nome do modelo é uma configuração de execução, não uma fonte de autoridade. Trocar de modelo não altera os critérios da campanha.
 
-## 9.2 Coordenador
+## 9.2 Coordenador determinístico de campanha
 
 Entrada: manifesto validado, autorização de execução local, qualificação do ambiente, fila e DAG congelados. Leitura: perfis, status e evidências; não receber credenciais remotas por padrão. Escrita: journal externo de coordenação e registros de despacho, por API do launcher.
 
@@ -22,7 +30,7 @@ Procedimento:
 
 Saída: quadro factual com tarefas concluídas, falhas, blockers, slots, evidências e próxima ação autorizada. “O agente disse PASS” não é fonte de status. Sem confirmação do launcher/verificador, usar EVIDENCE_INCOMPLETE.
 
-## 9.3 Executor de skill
+## 9.3 Executor determinístico de skill
 
 Entrada: checkout preparado e candidato imutável, `task_id`, perfil com comandos e diretório externo de evidência. Leitura: apenas contexto pertinente e fonte/testes autorizados. Escrita: evidência e temporários permitidos ao comando, nunca arquivos de autoria.
 
@@ -30,7 +38,7 @@ Executar preflight do launcher, depois entrypoint por fase. Não instalar depend
 
 Ao primeiro bloqueio material, registrar resultado e efeito separados. Executar apenas diagnósticos/readback que o perfil já permita. Descrever a causa e localização observáveis; não apresentar palpite como reprodução. Terminar com `task_result.json` validado, evidências e diagnóstico, não com uma proposta de merge.
 
-Um executor pode identificar uma correção provável; ela vai no finding como hipótese. Não aplica patch. Isso mantém a divisão pedida pelo usuário: a próxima alteração de implementação continua repo-side.
+Um executor determinístico pode identificar uma correção provável; ela vai no finding como hipótese e não é aplicada durante a campanha. O root controller pode depois abrir uma rodada de autoria e despachar essa correção ao A1 Authoring Executor, se o path/autoridade estiverem no envelope.
 
 ## 9.4 Auditor de domínio
 
@@ -66,7 +74,7 @@ O handoff contém no máximo a informação necessária ao papel, com links inte
 
 ## 9.8 Adapter Codex e modelos
 
-Configuração proposta: coordenador e auditorias mais exigentes usam o alias lógico `reasoner`; executores, `executor`. A proposta anterior sugere Astra e Sol, respectivamente. O instalador de campanha resolve esses aliases para modelos realmente disponíveis, registra identificadores e não assume equivalência automática nem disponibilidade por nome comercial.
+Configuração atual do controller: root Astra/high; explorer Luna/high; executor de autoria Sol/medium; auditores Astra/high. `xhigh`/`max` são escaladas excepcionais para incidente/adjudicação, não defaults. O executor determinístico de campanha continua processo/launcher, não um alias de LLM.
 
 A documentação oficial consultada admite agentes customizados e limites de threads. O campo corrente de limite deve ser verificado na instalação (na referência consultada, `agents.max_concurrent_threads_per_session`; `agents.max_threads` aparece como alias legado). Não escrever TOML ativo com sintaxe apenas lembrada de outra versão. O limite deve ser imposto também pelo launcher, não apenas pelo cliente.
 
@@ -96,7 +104,7 @@ O artefato gerado deve conter apenas projeções verificáveis do dono normativo
 
 ## 9.12 Codex Autonomous Controller Mode
 
-O ADR-0024 adiciona um coordenador de sessão de nível acima dos handoffs
+O ADR-0024, reconciliado pelo ADR-0025, adiciona um coordenador de sessão de nível acima dos handoffs
 determinísticos já definidos neste documento.
 
 ### Root controller
@@ -138,3 +146,11 @@ permanece proibido.
 O usuário não precisa fornecer novo prompt para cada task interna. O controller
 gera o despacho a partir dos manifests/contratos donos. Só volta ao usuário em
 Human Gate, blocker fora do envelope, `UNKNOWN` irresolvido ou budget esgotado.
+
+
+### Governança protegida
+
+`repo_scope.write_roots` define autoria A1. `protected_roots` são proibidos e
+`shared_roots_requiring_human_gate` exigem `CONTROLLER_MAINTENANCE`.
+Falha do validator/config do controller é diagnosticada, não autocorrigida pelo
+próprio controller.
