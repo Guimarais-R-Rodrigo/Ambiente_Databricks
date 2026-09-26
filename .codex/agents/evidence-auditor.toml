@@ -1,3 +1,5 @@
+name = "evidence-auditor"
+description = "Independent read-only adversarial auditor for evidence, authority, effects, hashes, retries and secret hygiene."
 model = "gpt-6-astra"
 model_reasoning_effort = "xhigh"
 sandbox_mode = "read-only"

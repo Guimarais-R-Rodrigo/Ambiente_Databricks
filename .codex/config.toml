@@ -18,11 +18,11 @@ default_subagent_model = "gpt-6-sol"
 default_subagent_reasoning_effort = "high"
 
 [agents.explorer]
-description = "Read-only investigator for codebase history, prior attempts, causal hypotheses and source discovery. Never edits."
+description = "Read-only investigator for codebase history, prior attempts, causal hypotheses and source discovery."
 config_file = "agents/explorer.toml"
 
 [agents.executor]
-description = "The only write-capable subagent. Implements one causal repo-side change at a time inside the active autonomy envelope."
+description = "The only write-capable subagent for causal repo-side changes inside the active autonomy envelope."
 config_file = "agents/executor.toml"
 
 [agents.domain-auditor]

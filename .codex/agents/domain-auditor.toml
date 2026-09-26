@@ -1,3 +1,5 @@
+name = "domain-auditor"
+description = "Independent read-only domain auditor for semantics, fixtures, oracles, temporal/numerical meaning and scope."
 model = "gpt-6-astra"
 model_reasoning_effort = "xhigh"
 sandbox_mode = "read-only"
