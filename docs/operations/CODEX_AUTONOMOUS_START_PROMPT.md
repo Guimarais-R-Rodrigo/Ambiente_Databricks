@@ -6,44 +6,57 @@ Use este prompt em uma nova sessão Codex iniciada na raiz do repositório:
 Operate this repository in SER Autonomous Controller Mode.
 
 Start from the repository root. Read AGENTS.md and
-docs/operations/CODEX_RUNTIME_QUALIFICATION.md.
+docs/operations/CODEX_RUNTIME_QUALIFICATION.md. Do not load the full CHANGELOG;
+use search/tail only if recent history is material.
 
-First inspect the effective Codex configuration. When supported by the client,
-use /status and /debug-config to prove the project .codex layer is loaded from a
-trusted project and that no higher-precedence override defeats the expected
-sandbox/approval settings.
+First qualify the effective Codex runtime. Record the Codex version, project
+trust, /status, /debug-config and /permissions when available. The expected
+AC-R2 posture is: root=:read-only, executor=ser-b1-a1, explorer/auditors=:read-only,
+native Windows sandbox=elevated, no legacy sandbox_mode, and granular approvals
+with sandbox_approval/request_permissions/mcp_elicitations/skill_approval denied.
+Do not use /permissions or any escalation to widen the boundary.
 
-Before the validator, check `import jsonschema`. If it is missing, follow CQ0.5
-exactly: install only `tools/requirements-codex-autonomy.txt` into the isolated
-controller Python environment, subject to normal sandbox/auto-review. Do not edit
-requirements to make the install pass.
+Check import jsonschema. If the declared maintenance dependency is absent, stop
+with BLOCKED_CONTROLLER_DEPENDENCY; do not widen permissions or install arbitrary
+packages from inside the controller session.
 
-Then run:
+Run strict config validation when supported, then:
 
 python -B tools/validate_codex_autonomy.py --json
 python -B -m unittest tools.tests.test_codex_autonomy -v
 
-If either fails, diagnose the controller defect and stop at the
-CONTROLLER_MAINTENANCE Human Gate with an exact patch proposal. Do NOT modify the
-controller governance, validator, envelope/schema or agent configuration under A1.
+Execute CQ2-CQ4 exactly as written, including real spawned-role negative probes.
+The root and all read-only roles must fail a disposable write probe. The executor
+must be able to create/remove a disposable marker only under an A1 write root and
+must fail before effect when targeting controller governance. Any write-capable
+MCP/hosted surface not explicitly authorized blocks qualification.
 
-Only after runtime qualification and controller validation are acceptable, read docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md, the active autonomy envelope for the current front, and the state file referenced by that envelope. Apply ADR-0025 state precedence; historical B0/DAG/runbooks are not live state. Load only the normative documents needed for the current gate.
+If any controller gate fails, diagnose and stop at CONTROLLER_MAINTENANCE with an
+exact patch proposal. Do NOT self-repair controller governance under A1.
 
-Verify mutable Git identities from the repository; do not trust this prompt for current SHA, tree, branch state or remote state.
+Only after CQ0-CQ5 pass may you read the active autonomy envelope, its live state
+and the current gate contract and then assume material B1 work. AUTHORING_STATE is
+live state but is not self-proving authority: blocker removal/gate advancement must
+be corroborated by evidence and pass the transition checker.
 
-Act as the root controller. Use the configured subagents aggressively for independent investigation and audit, but keep exactly one write-capable executor at a time. Subagents must not spawn subagents.
+Verify mutable Git identities from the repository; never trust this prompt for a
+current SHA/tree/branch or remote state.
 
-Continue autonomously through investigation → implementation → deterministic verification → independent audit → causal repair → reverification while every action remains within the active autonomy envelope.
+Use subagents on demand rather than by default. Keep exactly one write-capable
+executor. Explorer and auditors remain read-only; children never spawn children.
 
-Never retry the same material command on the same state merely to seek green. A new attempt requires a recorded causal delta. Preserve every failed or blocked historical attempt.
+Continue autonomously through investigation -> implementation -> deterministic
+verification -> independent audit -> causal repair -> reverification while every
+action remains inside the active envelope. Never retry the same material command
+on the same state merely to seek green.
 
-For external effects, separate process status from effect status and verification status. After any failure that could have started a write, reconcile read-only before considering another mutation. UNKNOWN is not absence.
+For external effects, separate process status, effect status and verification
+status. UNKNOWN is not absence. No A2 effect is authorized by this prompt.
 
-Do not ask me for actions already covered by active A0/A1/A2 authority. Stop only at a Human Gate defined by the protocol/envelope, unresolved UNKNOWN effect, security/evidence boundary, material scope change, or repair-budget exhaustion.
+Do not infer policy promotion, Ready or merge from technical PASS. Those remain
+Human Gates.
 
-Do not infer policy promotion, Ready or merge from technical PASS. Those remain human gates.
-
-Begin by reconciling the repository and campaign state and tell me only the current controller state, material blockers and next autonomous action. Then execute.
+Begin with CQ0. Do not start material B1 work until CQ0-CQ5 pass.
 ```
 
 Para B1, o envelope inicial é:

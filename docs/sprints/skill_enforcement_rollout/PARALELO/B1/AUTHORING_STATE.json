@@ -33,7 +33,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_SER05_RESIDUAL_RECOVERY_AUTHORED_NOT_QUALIFIED",
+  "stage": "B1_AC_R2_CORRECTIVE_AUTHORED_AWAITING_RUNTIME_QUALIFICATION",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -993,16 +993,16 @@
     "explorer_default": "GPT_6_LUNA_HIGH",
     "executor_default": "GPT_6_SOL_MEDIUM",
     "auditors_default": "GPT_6_ASTRA_HIGH",
-    "approvals_reviewer_expected": "AUTO_REVIEW",
-    "sandbox_expected": "WORKSPACE_WRITE_NETWORK_DISABLED",
-    "hooks_expected": "PRE_POST_SCOPE_GUARDS",
+    "approvals_reviewer_expected": "AUTO_REVIEW_RULES_ONLY",
+    "sandbox_expected": "PERMISSION_PROFILES_ROOT_READ_ONLY_EXECUTOR_SCOPED_A1",
+    "hooks_expected": "PRE_PATCH_POST_SCOPE_GUARDS_DEFENSE_IN_DEPTH",
     "max_causal_repair_rounds_per_gate": 4,
     "same_state_same_command_retries": 0,
     "max_concurrent_subagents": 5,
     "max_write_capable_agents": 1,
     "custom_agents": 5,
-    "controller_metatest_methods_static": 22,
-    "structural_validation": "PASS_AC_R1_STATIC_REPO_SIDE",
+    "controller_metatest_methods_static": 34,
+    "structural_validation": "AC_R2_REPO_SIDE_AUTHORED_NOT_RUNTIME_QUALIFIED",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
     "previous_static_audit": {
@@ -1014,6 +1014,28 @@
     "effective_config_observation": "NOT_RUN",
     "first_material_controller_session": "NOT_RUN",
     "static_audit_candidate_tree": "e83b8c329f17d15de1c477204c2a82e07e32d1bd",
-    "ac_r1_closure": "PASS_STATIC_AWAITING_RUNTIME_CQ0_CQ5"
+    "ac_r1_closure": "SUPERSEDED_BY_INDEPENDENT_AUDIT_CORRECTIVE_REQUIRED",
+    "root_permissions_default": "READ_ONLY",
+    "executor_permissions_default": "SER_B1_A1_PERMISSION_PROFILE",
+    "ac_r2": {
+      "authorization": "DIRECT_USER_CHAT_2026-09-26",
+      "state": "AUTHORED_NOT_QUALIFIED",
+      "scope": [
+        "CR1_LEAST_PRIVILEGE_A1_PERMISSION_BOUNDARY",
+        "CR2_DELTA_AND_STATE_TRANSITION_INTEGRITY",
+        "CR3_EFFECTIVE_RUNTIME_QUALIFICATION",
+        "OPT0_PROGRESSIVE_CHANGELOG_DISCLOSURE"
+      ],
+      "permission_profile": "ser-b1-a1",
+      "root_permissions": ":read-only",
+      "legacy_sandbox_mode": false,
+      "approval_boundary": "SANDBOX_AND_REQUEST_PERMISSIONS_FAIL_CLOSED",
+      "delta_schema": "SER-CODEX-AUTONOMY-DELTA-2",
+      "metatest_methods_static": 34,
+      "runtime_qualification": "NOT_RUN",
+      "cq0_cq5": "NOT_RUN",
+      "b1_material_execution": "NOT_RUN",
+      "a2": "DISABLED"
+    }
   }
 }

@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-09-26 — AC-R2-MIN: least-privilege controller correction
+
+### Corrigido
+
+1. (ChatGPT) Root controller migra de `workspace-write` para `:read-only`; somente o executor seleciona o permission profile `ser-b1-a1`, cujo workspace default é read e cujos writes são exatamente os A1 roots do envelope mais `.git` para metadata de commits.
+2. (ChatGPT) `sandbox_mode`/legacy workspace-write são removidos. Approval policy granular deixa `sandbox_approval`, `request_permissions`, `mcp_elicitations` e `skill_approval` fail-closed; Auto-review permanece somente para categorias técnicas ainda interativas.
+3. (ChatGPT) Rede de comandos do executor fica atrás do network proxy e limitada a GitHub; apps e remote plugin permanecem disabled.
+4. (ChatGPT) Delta checker v2 usa raw Git diff com ambos endpoints de rename/delete, rejeita symlink versionado e valida invariantes mínimas de transição do `AUTHORING_STATE`.
+5. (ChatGPT) Validator passa a exigir paridade permission-profile↔envelope, root read-only, executor único A1, Windows elevated e ausência de mistura com sandbox legado; metatestes estáticos sobem de 22 para 34.
+6. (ChatGPT) CQ0–CQ5 é redefinido para provar permissões efetivas dos papéis spawned, parent overrides, Bash pre-effect denial e inventário de MCP/hosted surfaces. CQ ainda está NOT_RUN.
+7. (ChatGPT) Bootstrap deixa de carregar o `CHANGELOG.md` completo por padrão; histórico passa a ser consultado por busca/tail.
+
+### Limites
+
+- Nenhum CQ0–CQ5 foi executado como runtime qualification nesta correção GitHub-side.
+- Nenhum B1 material, A2, Databricks, G6, Genie, policy, Ready ou merge foi executado.
+- AC-R1 permanece histórico; seu readiness está supersedido pela auditoria independente e pela AC-R2-MIN.
+
 ## 2026-09-26 — AC-R1: auditoria corretiva do Codex Autonomous Controller
 
 ### Corrigido

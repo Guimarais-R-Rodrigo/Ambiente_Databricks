@@ -15,7 +15,7 @@ Escala planejada: pessoal → squad → missão.
 
 1. `.claude/CLAUDE.md` — índice operacional (o que ler para cada tipo de tarefa).
 2. As regras em `.claude/rules/` relevantes à tarefa.
-3. `CHANGELOG.md` — o que as outras IAs fizeram recentemente.
+3. Não carregue `CHANGELOG.md` integralmente por padrão. Quando histórico recente for necessário, use busca/tail e leia somente as entradas relevantes.
 
 ## Fonte única de verdade
 

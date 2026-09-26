@@ -1,6 +1,6 @@
 # Codex Autonomous Controller Protocol
 
-Versão: 1.1  
+Versão: 1.2  
 Decisões donas: ADR-0024 + ADR-0025
 
 ## 1. Objetivo
@@ -19,7 +19,8 @@ Ao iniciar uma frente:
 4. ler o arquivo de estado vivo indicado pelo envelope;
 5. aplicar `live_state_precedence`: state source vivo > índices correntes > contratos do gate > snapshots/runbooks/tentativas históricas;
 6. carregar somente os documentos donos do gate corrente;
-7. tratar relatórios de executor como evidência a auditar, não como verdade canônica.
+7. tratar relatórios de executor como evidência a auditar, não como verdade canônica;
+8. não carregar `CHANGELOG.md` integralmente: usar busca/tail somente quando histórico recente for material.
 
 Prompt de partida não é fonte de SHA mutável. Sempre reconsultar Git/repositório.
 
@@ -33,8 +34,10 @@ vivos, salvo ponteiro explícito do envelope/state source.
 
 Antes de assumir a frente, executar
 `docs/operations/CODEX_RUNTIME_QUALIFICATION.md`. Configuração versionada não
-prova configuração efetiva: project trust, overrides, sandbox e hooks precisam
-ser observados no cliente.
+prova configuração efetiva: project trust, overrides, permission profile e hooks
+precisam ser observados no cliente. Em AC-R2, o root deve permanecer `:read-only`
+e somente o `executor` pode selecionar o profile `ser-b1-a1`. `sandbox_mode` e
+permission profiles não podem coexistir.
 
 Falha da própria camada de governança => `CONTROLLER_MAINTENANCE`, sem
 autorreparo A1.
@@ -119,7 +122,10 @@ Somente o executor escreve. Cada patch deve:
 
 Executar gates determinísticos do candidato. Não usar teste como reparador. Não modificar código durante uma certificação single-shot.
 
-Resultado parcial não vira PASS agregado.
+Resultado parcial não vira PASS agregado. O próprio `AUTHORING_STATE.json` é um
+registro vivo, não prova de si mesmo: remoção de blocker ou avanço material deve
+ser corroborado pelo contrato/evidência pertinente e passar pelo state-transition
+check do delta checker.
 
 ### 4.6 Audit
 
@@ -237,12 +243,24 @@ Investigações e auditorias independentes podem rodar em paralelo.
 
 ### 6.1 A1 write path
 
-A1 authors through the local worktree only. MCP/apps/hosted GitHub tools or other
-remote APIs must not mutate repository files/refs under A1 because they can bypass
-local hooks and worktree delta inspection. After local checks, normal `git push`
-to the authorized branch is the only A1 remote Git transport.
+A barreira primária A1 é o permission profile local, não o hook. O root controller
+usa `:read-only`; somente o executor usa `ser-b1-a1`. O profile deixa o workspace
+genericamente `read` e reabre apenas os `repo_scope.write_roots` como `write`,
+além de `.git` para metadata de commits causais. Governança, produto, histórico e
+outras frentes permanecem read-only no filesystem antes do efeito.
 
-Hosted/read-only tools remain usable for inspection when A0 permits them.
+`sandbox_approval` e `request_permissions` são fail-closed no Controller Mode:
+o executor não pode ampliar sua própria fronteira para contornar um Human Gate.
+Auto-review permanece apenas para categorias técnicas ainda interativas, como
+rules; ele não concede autoridade SER.
+
+A1 authors through the local worktree only. MCP/apps/hosted GitHub tools ou APIs
+remotas não podem mutar arquivos/refs sob A1. O profile de comando permite rede
+somente para os domínios GitHub declarados; isso não transforma chamadas HTTP/API
+em transporte autorizado. Após checks locais, `git push` normal para a branch
+autorizada continua sendo o único transporte remoto Git A1.
+
+Hosted/read-only tools permanecem utilizáveis para inspeção quando A0 permitir.
 
 ### 6.2 Delta A1
 
@@ -252,9 +270,11 @@ Antes de commit/push de um repair A1, execute:
 python -B tools/check_codex_autonomy_delta.py --base <CAUSAL_BASE> --head <CANDIDATE>
 ```
 
-Qualquer `PROTECTED`, `HUMAN_GATE_REQUIRED` ou `OUTSIDE_A1` bloqueia a
-continuação. O controller não pode editar o checker/envelope para transformar a
-própria violação em PASS.
+Qualquer `PROTECTED`, `HUMAN_GATE_REQUIRED`, `OUTSIDE_A1`, symlink versionado ou
+transição inválida do state bloqueia a continuação. O checker preserva ambos os
+endpoints de rename/delete e valida invariantes mínimas do `AUTHORING_STATE`.
+O controller não pode editar checker/envelope/config para transformar a própria
+violação em PASS.
 
 Se a arquitetura/validator do controller falhar, diagnosticar e parar em
 `CONTROLLER_MAINTENANCE`; não se autorreparar por A1.
@@ -310,9 +330,14 @@ Evidence bundle compartilhável deve aplicar secret/path hygiene. Não persistir
 
 ## 9.1 Auto-review técnico
 
-O projeto pode usar `approvals_reviewer=auto_review` para escaladas técnicas do
-sandbox. Auto-review é reviewer técnico, não autoridade humana do SER. Ele nunca
-substitui referência humana exigida por A2/A3/`CONTROLLER_MAINTENANCE`.
+O projeto mantém `approvals_reviewer=auto_review`, mas AC-R2 usa approval policy
+granular: `sandbox_approval=false`, `request_permissions=false`,
+`mcp_elicitations=false` e `skill_approval=false`. Apenas categorias
+explicitamente interativas, como rules, podem chegar ao reviewer automático.
+
+Auto-review é reviewer técnico, não autoridade humana do SER. Ele nunca substitui
+referência humana exigida por A2/A3/`CONTROLLER_MAINTENANCE` e não pode ampliar
+a permission boundary do executor.
 
 ## 10. Human Gates
 
