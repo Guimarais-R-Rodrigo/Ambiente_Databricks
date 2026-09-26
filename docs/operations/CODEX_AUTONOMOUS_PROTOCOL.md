@@ -1,7 +1,7 @@
 # Codex Autonomous Controller Protocol
 
-Versão: 1.0  
-Decisão dona: ADR-0024
+Versão: 1.1  
+Decisões donas: ADR-0024 + ADR-0025
 
 ## 1. Objetivo
 
@@ -17,12 +17,17 @@ Ao iniciar uma frente:
 2. ler `AGENTS.md` e `CLAUDE.md`;
 3. localizar o envelope ativo da frente em `docs/operations/autonomy/`;
 4. ler o arquivo de estado vivo indicado pelo envelope;
-5. carregar somente os documentos donos do gate corrente;
-6. tratar relatórios de executor como evidência a auditar, não como verdade canônica.
+5. aplicar `live_state_precedence`: state source vivo > índices correntes > contratos do gate > snapshots/runbooks/tentativas históricas;
+6. carregar somente os documentos donos do gate corrente;
+7. tratar relatórios de executor como evidência a auditar, não como verdade canônica.
 
 Prompt de partida não é fonte de SHA mutável. Sempre reconsultar Git/repositório.
 
-Um `AUTHORIZATION_REQUEST` nunca é `AUTHORIZED`. Um envelope A2 só está ativo com referência humana explícita conforme schema.
+Um `AUTHORIZATION_REQUEST` nunca é `AUTHORIZED`. Um envelope A2 só está ativo
+com referência humana explícita e `a2_contract` válido.
+
+`CONTROLE_PLANO.json`, `DAG.json` e runbooks congelados não são state sources
+vivos, salvo ponteiro explícito do envelope/state source.
 
 ## 3. State machine do controller
 
@@ -159,7 +164,7 @@ A0 não autoriza login/remediação de credencial, criação, compute que crie h
 
 Pode incluir, quando o envelope estiver ativo:
 
-- criar/editar código e documentação na branch da frente;
+- criar/editar somente paths que casem com `repo_scope.write_roots`;
 - executar renderer e validadores;
 - criar commits causais;
 - push normal para a branch autorizada;
@@ -167,6 +172,9 @@ Pode incluir, quando o envelope estiver ativo:
 
 A1 não autoriza:
 
+- qualquer path em `protected_roots`;
+- qualquer path em `shared_roots_requiring_human_gate` sem `CONTROLLER_MAINTENANCE`;
+- alterar a própria governança/validator/envelope para escapar de um blocker;
 - alterar `current_level` ou rollout;
 - Ready;
 - merge;
@@ -216,6 +224,21 @@ Enquanto o executor escreve:
 - filhos não criam netos.
 
 Investigações e auditorias independentes podem rodar em paralelo.
+
+### 6.1 Delta A1
+
+Antes de commit/push de um repair A1, execute:
+
+```text
+python -B tools/check_codex_autonomy_delta.py --base <CAUSAL_BASE> --head <CANDIDATE>
+```
+
+Qualquer `PROTECTED`, `HUMAN_GATE_REQUIRED` ou `OUTSIDE_A1` bloqueia a
+continuação. O controller não pode editar o checker/envelope para transformar a
+própria violação em PASS.
+
+Se a arquitetura/validator do controller falhar, diagnosticar e parar em
+`CONTROLLER_MAINTENANCE`; não se autorreparar por A1.
 
 ## 7. Causal repair budget
 

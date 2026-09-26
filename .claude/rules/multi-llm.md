@@ -41,3 +41,11 @@ O modo autônomo é opt-in e governado pelo ADR-0024, por
 Aprovar o modo não equivale a autorizar efeitos A2. A0/A1/A2/A3 são classes de
 autoridade separadas. Subagentes não criam netos e só um agente pode escrever na
 árvore por vez.
+
+
+### Precedência e papéis
+
+O ADR-0025 separa executor de autoria A1 de executor determinístico de campanha.
+Restrições de campanha não bloqueiam repair repo-side dentro do envelope A1.
+State source vivo prevalece sobre snapshots/runbooks históricos. Governança do
+próprio controller exige `CONTROLLER_MAINTENANCE`.

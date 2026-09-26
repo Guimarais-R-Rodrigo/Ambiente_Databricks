@@ -80,6 +80,19 @@ Escala planejada: pessoal → squad → missão.
   governança externa como autoridade de publicação, piloto greenfield antes dos
   legados, consumo do Sistema de Temas e fontes limitadas ao catálogo configurado.
 
+- Execução verificável e rollout SER: `ADR-0021` e `ADR-0022`.
+- Execução paralela governada: `ADR-0023`; o B0 foi integrado pela PR #113.
+- Codex Autonomous Controller: `ADR-0024`, reconciliado com os papéis
+  determinísticos pelo `ADR-0025`. No piloto B1, A0/A1 são ativos e A2/A3 não
+  são inferidos.
+
+## Estado corrente da SER
+
+A frente corrente é B1 — SER03 L3 + SER05 L2 — na PR #115. O state source vivo é
+`docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json`.
+B0 está integrado; snapshots B0/DAG/runbooks antigos são história/planejamento,
+não estado corrente. O controller deve seguir a precedência do ADR-0025.
+
 O índice completo, com o status de cada ADR, está em `docs/decisions/README.md`.
 
 ## Iniciativa de micromodelos — MM00/MM01/MM02 integradas; MM03 pós-certificação

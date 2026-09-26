@@ -10,9 +10,11 @@ Start from the repository root. Read AGENTS.md, then run:
 python -B tools/validate_codex_autonomy.py --json
 python -B -m unittest tools.tests.test_codex_autonomy -v
 
-If either fails, stop in BLOCKED_DESIGN and repair only the controller layer within active A1 authority. Re-run those controller checks only after a causal patch.
+If either fails, diagnose the controller defect and stop at the
+CONTROLLER_MAINTENANCE Human Gate with an exact patch proposal. Do NOT modify the
+controller governance, validator, envelope/schema or agent configuration under A1.
 
-Once the controller layer is valid, read docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md, the active autonomy envelope for the current front, and the state file referenced by that envelope. Load only the normative documents needed for the current gate.
+Once the controller layer is valid, read docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md, the active autonomy envelope for the current front, and the state file referenced by that envelope. Apply ADR-0025 state precedence; historical B0/DAG/runbooks are not live state. Load only the normative documents needed for the current gate.
 
 Verify mutable Git identities from the repository; do not trust this prompt for current SHA, tree, branch state or remote state.
 
