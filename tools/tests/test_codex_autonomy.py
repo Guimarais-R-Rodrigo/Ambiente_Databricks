@@ -131,6 +131,11 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertTrue(result["desktop_windows_cq_contract"])
         self.assertTrue(result["desktop_host_preflight"])
 
+    def test_desktop_contract_names_host_preflight_artifact_explicitly(self):
+        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        self.assertIn("CQ_HOST_PREFLIGHT.json", text)
+        self.assertIn("CQ_HOST_PREFLIGHT.sha256", text)
+
     def test_desktop_host_preflight_v3_runs_validator_and_metatests_host_side(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn("AC-R2-DESKTOP-HOST-PREFLIGHT-3", text)

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-26 — CM-DESKTOP-RUNTIME-3 host-preflight validator false negative
+
+- (User/Host) Preflight v3 executou validator V10 e parou fail-closed com `DESKTOP_WINDOWS_CQ_CONTRACT_INVALID`; metatests não rodaram.
+- (ChatGPT) Causa isolada: contrato Desktop continha toda a semântica v3, mas não nomeava literalmente `CQ_HOST_PREFLIGHT.json`, token obrigatório do validator.
+- (ChatGPT) Corrigido somente o binding documental; nenhuma autoridade, permission profile, preflight runtime ou regra Git foi alterada.
+- (ChatGPT) Adicionada regressão para exigir `CQ_HOST_PREFLIGHT.json` + sidecar no contrato. Suíte passa a 68 métodos definidos estaticamente.
+
 ## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-3: fechamento estático
 
 - (ChatGPT) `CM_DESKTOP_RUNTIME_3_STATIC = PASS` no candidato `c486cb36d28c7652556ea796c1861ebc53503106` / tree `d67e887a61b066448cba2a42f3ab6616bcfa8aed`.

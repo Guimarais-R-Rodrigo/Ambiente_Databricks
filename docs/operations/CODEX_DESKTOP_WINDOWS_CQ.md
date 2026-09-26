@@ -16,6 +16,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\codex_desktop_cq
 ```
 
 Exigir `CQ_HOST_PREFLIGHT = PASS`, `HOST_VALIDATOR = PASS` e `HOST_METATESTS = PASS`.
+O artefato canônico de host evidence é `CQ_HOST_PREFLIGHT.json`, acompanhado de `CQ_HOST_PREFLIGHT.sha256`.
 Schema: `AC-R2-DESKTOP-HOST-PREFLIGHT-3`.
 
 O preflight v3 executa no host `validate_codex_autonomy.py --json` e `unittest tools.tests.test_codex_autonomy -v`, registra exit codes, test count, hashes de stdout/stderr, source SHA-256, HEAD/tree/config e worktree clean. Python é `HOST_ONLY`; não instalar dependências.
