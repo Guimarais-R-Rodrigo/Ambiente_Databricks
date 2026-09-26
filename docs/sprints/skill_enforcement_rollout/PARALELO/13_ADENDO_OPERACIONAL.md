@@ -1,6 +1,6 @@
 # 13 — Minuta do adendo operacional ao Skill Enforcement Rollout
 
-**Estado: FORMALIZADO PELO ADR-0023 NA CANDIDATA B0; QUALIFICAÇÃO TÉCNICA PENDENTE.**
+**Estado efetivo: ADR-0023 formalizado; B0 qualificado e integrado pela PR #113. O ADR-0025 preserva estas regras para workers determinísticos e adiciona o A1 Authoring Executor como papel separado.**
 
 O ADR-0023 formaliza esta mudança operacional e complementa o ADR-0022 sem reescrever seu corpo decisório. Este documento permanece como explicação operacional longa; em caso de divergência normativa, o ADR-0023 é o registro decisório.
 
@@ -31,4 +31,4 @@ A formalização não modifica policy nem atribui resultados de runtime. As seis
 
 ## Critério de vigência executável
 
-O adendo pode registrar a decisão operacional antes do código. A execução paralela só é liberada após B0 qualificado, perfil completo, autorização local delimitada e release verificada. A vigência documental não equivale à prontidão técnica da infraestrutura.
+B0 já satisfez a condição de qualificação e foi integrado. A vigência desta decisão não autoriza efeitos A2, promoção ou merge de B1; essas autoridades continuam no envelope e nos Human Gates.

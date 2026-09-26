@@ -1,8 +1,17 @@
 # 10 — Implantação controlada, entregáveis e critérios de saída
 
+## Estado efetivo da implantação
+
+B0 foi integrado pela PR #113. B1 é o piloto real em execução e está em G6 com
+recuperação parcial. As seções 10.1–10.11 preservam o plano de implantação que
+levou a esse estado; não devem ser usadas como fila corrente quando contradisserem
+`B1/AUTHORING_STATE.json`. A camada vigente de coordenação autônoma está em
+10.12 e nos ADR-0024/0025.
+
+
 ## 10.1 Ordem do trabalho
 
-Esta entrega detalha o plano. O próximo trabalho é autoria B0, não executar oito agentes sobre documentação sem implementação. O B0 constrói o mecanismo mínimo comum e seu mapa de cobertura. Em seguida, libera-se autoria dos domínios em paralelo lógico, executando localmente só os pacotes já prontos.
+Esta seção registra a ordem planejada originalmente. B0 já foi concluído e integrado; a frente corrente é B1. O texto abaixo permanece como racional histórico para o mecanismo e não redefine o próximo gate.
 
 A execução de contratos L2 não precisa esperar todas as L3. Cada L4 depende do próprio L2 aceito e dos contratos compartilhados pertinentes. A integração continua controlada por lote e autorização. Não renumerar SER02–SER16 para esconder ou reiniciar as etapas históricas.
 
