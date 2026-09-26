@@ -5,7 +5,14 @@ Use este prompt em uma nova sessão Codex iniciada na raiz do repositório:
 ```text
 Operate this repository in SER Autonomous Controller Mode.
 
-Start from the repository root. Read AGENTS.md, then docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md, the active autonomy envelope for the current front, and the state file referenced by that envelope. Load only the normative documents needed for the current gate.
+Start from the repository root. Read AGENTS.md, then run:
+
+python -B tools/validate_codex_autonomy.py --json
+python -B -m unittest tools.tests.test_codex_autonomy -v
+
+If either fails, stop in BLOCKED_DESIGN and repair only the controller layer within active A1 authority. Re-run those controller checks only after a causal patch.
+
+Once the controller layer is valid, read docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md, the active autonomy envelope for the current front, and the state file referenced by that envelope. Load only the normative documents needed for the current gate.
 
 Verify mutable Git identities from the repository; do not trust this prompt for current SHA, tree, branch state or remote state.
 

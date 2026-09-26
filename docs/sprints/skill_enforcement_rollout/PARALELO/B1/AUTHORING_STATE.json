@@ -3,6 +3,7 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
+    "AUTONOMOUS_CONTROLLER_STRUCTURAL_VALIDATION",
     "G6_SER05_RECOVERY_LOCAL_QUALIFICATION",
     "G6_PARTIAL_REMOTE_STATE_RECONCILIATION",
     "G6_SER05_RESIDUAL_WRITE_AUTHORIZATION",
@@ -972,5 +973,21 @@
     "auth_request": "PASS_NOT_AUTHORIZATION",
     "freeze": "CREATED_BY_IDENTITY",
     "external_execution": "NOT_RUN"
+  },
+  "autonomous_controller": {
+    "architecture": "ADR-0024",
+    "protocol": "docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md",
+    "envelope": "docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json",
+    "envelope_state": "ACTIVE_A0_A1",
+    "a0": "ACTIVE",
+    "a1": "ACTIVE",
+    "a2": "PENDING_EXPLICIT_ACTIVATION",
+    "a3": "HUMAN_ONLY",
+    "max_causal_repair_rounds_per_gate": 4,
+    "same_state_same_command_retries": 0,
+    "max_write_capable_agents": 1,
+    "custom_agents": 5,
+    "structural_validation": "NOT_RUN",
+    "first_material_controller_session": "NOT_RUN"
   }
 }

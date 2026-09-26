@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-09-26 — Codex Autonomous Controller para SER/SEF
+
+### Adicionado
+
+1. (ChatGPT) ADR-0024, protocolo autônomo, retrospectiva B1, schema/envelope de autoridade, prompt de bootstrap, configuração project-scoped do Codex, cinco agentes especializados e skill de progressive disclosure.
+2. (ChatGPT) `tools/validate_codex_autonomy.py` + `tools/tests/test_codex_autonomy.py`: validação fail-closed da camada, incluindo single-writer, A2 com referência humana, zero blind retry, sandbox e bindings.
+
+### Atualizado
+
+1. (ChatGPT) `AGENTS.md`, regra multi-LLM e plano SER passam a reconhecer controller autônomo por frente; gates existentes permanecem e A3 continua humana.
+2. (ChatGPT) Estado SER corrigido: B0 foi integrado pela PR #113 (`4ba7f551...`); B1/PR #115 é a frente corrente e inicia o novo modo com A0/A1 ativos e A2 pendente.
+
+### Corrigido
+
+1. (ChatGPT) Um commit intermediário de autoria usou base tree incorreta e aparentou remover arquivos preexistentes. A correção aditiva seguinte restaurou a tree íntegra; o delta líquido contra `d3871d27...` contém somente a nova camada autônoma e alterações intencionais deste rollout. O histórico não foi reescrito.
+
 ## 2026-09-25 — SER B1 G6: publisher direto HTTP/1.1 R10
 
 ### Corrigido
