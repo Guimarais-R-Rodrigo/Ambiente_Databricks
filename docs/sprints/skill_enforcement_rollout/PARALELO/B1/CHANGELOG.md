@@ -149,3 +149,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) Desktop CQ pré-fechamento: corrigida normalização do scratch key, Desktop CQ tornado required path e raw origin URL removida do host evidence. Validator V8, 59 metatest methods definidos. Runtime ainda NOT_RUN.
 
 (ChatGPT) Desktop host-preflight hardening: safe PowerShell variable boundaries + freshness 30 min; 60 metatest methods definidos. CQ runtime continua NOT_RUN.
+
+(ChatGPT) Desktop Windows CQ maintenance static PASS em 121791df5be90ba6d31bbd607c62aa2d52f24765/b9445413ce9ee7fe784a6697cbad60e8ee08e3c9: validator V8, 60 metatest methods definidos, host preflight v1, 0 findings materiais repo-side. Próximo passo = fast-forward + host preflight + plugins externos write-capable disabled + CQ retry. Runtime permanece NOT_RUN.

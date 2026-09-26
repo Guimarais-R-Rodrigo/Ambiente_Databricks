@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-26 — AC-R2 Desktop Windows CQ compatibility: fechamento estático
+
+- (ChatGPT) `DESKTOP_WINDOWS_CQ_MAINTENANCE_STATIC = PASS` no candidato `121791df5be90ba6d31bbd607c62aa2d52f24765` / tree `b9445413ce9ee7fe784a6697cbad60e8ee08e3c9`.
+- (ChatGPT) Validator `SER-CODEX-AUTONOMY-VALIDATION-8`, 60 métodos de metateste definidos, host preflight `AC-R2-DESKTOP-HOST-PREFLIGHT-1` e contrato Desktop explícito.
+- (ChatGPT) Host preflight exige fetch/HEAD/tree/cleanliness, hash da config e Python absoluto com jsonschema; não instala dependências, não faz push e não persiste URL remota bruta.
+- (ChatGPT) Codex CLI/strict/execpolicy podem ser `NOT_OBSERVABLE_DESKTOP`; prova crítica migra para profile ativo + hash de config + CQ3 + CQ4.
+- (ChatGPT) PR metadata pode ser deferida à adjudicação externa; plugins externos persistentes write-capable continuam blocker e devem estar desabilitados durante CQ.
+- (ChatGPT) A0/A1/A2 e os 10 write paths A1 não foram ampliados. Findings materiais repo-side abertos: 0.
+- (ChatGPT) CQ0–CQ5, validator runtime e metatestes runtime permanecem NOT_RUN.
+
 ## 2026-09-26 — AC-R2 Desktop host-preflight PowerShell hardening
 
 - (ChatGPT) Corrigida interpolação PowerShell do erro de divergência para `${head}:${originHead}`, evitando parsing ambíguo.
