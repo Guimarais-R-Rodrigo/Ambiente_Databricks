@@ -1,0 +1,119 @@
+{
+  "schema_version": "SER-B1-G6-EXTERNAL-MANIFEST-1",
+  "qualified_candidate_sha": "08c2a93c4c9dede1e759abe28c07242b4116f47e",
+  "qualified_candidate_tree": "a2b1b8c805044ff2e1898da3190414afab9140a7",
+  "r7_audit_bundle_sha256": "ff771504e47ab1b9fa10bcc6c925ceed84508ac2cb173e325e85bf8e09b96deb",
+  "state": "AUTHORING_NOT_RUN",
+  "execution_authorized": false,
+  "policy_change_authorized": false,
+  "promotion_authorized": false,
+  "ready_authorized": false,
+  "merge_authorized": false,
+  "data_policy": {
+    "synthetic_only": true,
+    "corporate_data_forbidden": true
+  },
+  "product_binding": {
+    "product_root": "ambiente_fonte/.assistant",
+    "product_bytes_must_equal_r7": true,
+    "verify_remote_content_before_any_write": true
+  },
+  "external_phases": [
+    {
+      "phase_id": "G6.READ_ONLY_RECONCILE",
+      "effect": "NONE",
+      "authorized": false,
+      "operations": [
+        "auth describe",
+        "current-user me",
+        "publicar_free --verify --conteudo"
+      ],
+      "stop_on_mismatch": true
+    },
+    {
+      "phase_id": "G6.PRODUCT_PUBLISH_IF_NEEDED",
+      "effect": "REMOTE_PACKAGE_WRITE",
+      "authorized": false,
+      "operations": [
+        "publicar_free --execute"
+      ],
+      "prerequisite": "explicit separate authorization after read-only mismatch"
+    },
+    {
+      "phase_id": "G6.PROBE_IMPORT",
+      "effect": "TEMPORARY_WORKSPACE_OBJECT_CREATE",
+      "authorized": false,
+      "operations": [
+        "workspace mkdirs",
+        "workspace import probe",
+        "workspace export probe"
+      ],
+      "prerequisite": "explicit authorization and absent/new target"
+    },
+    {
+      "phase_id": "G6.FREE_PROBE_RUN",
+      "effect": "COMPUTE_ONLY_EXPECTED",
+      "authorized": false,
+      "operations": [
+        "run each imported probe once",
+        "preserve literal JSON output"
+      ]
+    },
+    {
+      "phase_id": "G6.GENIE",
+      "effect": "CONVERSATION_HISTORY_CREATE",
+      "authorized": false,
+      "operations": [
+        "new chat per frozen variant",
+        "preserve first literal response and observability"
+      ]
+    },
+    {
+      "phase_id": "G6.PROBE_CLEANUP_AFTER_AUDIT",
+      "effect": "TEMPORARY_WORKSPACE_OBJECT_DELETE",
+      "authorized": false,
+      "operations": [
+        "delete only the two SHA-bound probe notebooks after evidence preservation"
+      ],
+      "prerequisite": "explicit separate authorization after outputs/export evidence are preserved and audited",
+      "requires_evidence_preserved": true,
+      "requires_separate_authorization": true
+    }
+  ],
+  "free_probes": [
+    {
+      "probe_id": "G6-SER03-FREE-1",
+      "skill": "hub-ml-analise-safra",
+      "scope": "L3_MONTHLY_BINARY_PILOT_V1",
+      "source": "tools/skill_enforcement/real_campaigns/b1/g6/ser03_free_probe.py",
+      "marker": "SER_B1_G6_SER03_FREE_PROBE_1",
+      "expected_effect": "NONE",
+      "persistent_product_write": false,
+      "cases": [
+        "cumulative_real_core",
+        "event_real_core",
+        "negative_monetary_estimand",
+        "release_unchanged",
+        "policy_pre_promotion"
+      ]
+    },
+    {
+      "probe_id": "G6-SER05-L2-FREE-1",
+      "skill": "hub-ml-cross-eda-ml",
+      "scope": "L2_CONTEXT_ONLY_PILOT_V1",
+      "source": "tools/skill_enforcement/real_campaigns/b1/g6/ser05_l2_free_probe.py",
+      "marker": "SER_B1_G6_SER05_L2_FREE_PROBE_1",
+      "expected_effect": "NONE",
+      "persistent_product_write": false,
+      "cases": [
+        "temporal_context",
+        "static_context",
+        "negative_temporal_limits",
+        "protected_bytes_unchanged",
+        "policy_pre_promotion"
+      ]
+    }
+  ],
+  "genie_manifest": "tools/skill_enforcement/real_campaigns/b1/g6/genie_manifest.json",
+  "authorization_request": "docs/sprints/skill_enforcement_rollout/PARALELO/B1/G6/G6_AUTHORIZATION_REQUEST.json"
+}

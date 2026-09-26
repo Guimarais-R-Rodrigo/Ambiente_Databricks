@@ -1,0 +1,236 @@
+{
+  "id": "scripts.01_anatomia_pasta",
+  "archetype": "exploded_anatomy",
+  "source": "readmes/scripts/sources/01_anatomia_pasta.svg",
+  "published": "readmes/scripts/png/01_anatomia_pasta.png",
+  "sha256": "4628da25d3770d7573cb8f4230a4af73b8e54009ae2b5725079773ae50fa93da",
+  "svg_sha256": "440c99fe89fb4ba99bf99b07409f05f35a2ebb26e449885c9dbd2e499f88a8b3",
+  "width": 1400,
+  "height": 900,
+  "chrome": "compact",
+  "minimum_display_width": 720,
+  "question": "Como um Hub Script é organizado?",
+  "alt": "Vista explodida de uma pasta de Hub Script com interface, implementação e notebook de exemplo.",
+  "caption": "O exemplo demonstra o contrato específico da ferramenta, que pode retornar estruturas diferentes.",
+  "owner_readme": "ambiente_fonte/.assistant/hub_scripts/README.md",
+  "anchor": "arquitetura-e-o-padrao-pasta-de-objeto",
+  "approved_signature": false,
+  "texts": [
+    {
+      "text": "ANATOMIA · PASTA DE OBJETO",
+      "x": 56,
+      "y": 25,
+      "width": 373.546875,
+      "height": 30,
+      "size": 24,
+      "essential": false,
+      "color": "#FF6598"
+    },
+    {
+      "text": "Um Hub Script, por dentro",
+      "x": 56,
+      "y": 57,
+      "width": 562.50390625,
+      "height": 55,
+      "size": 44,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "Como um Hub Script é organizado?",
+      "x": 56,
+      "y": 116,
+      "width": 470.23046875,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "HUB CUSTOMIZADO · 1 PASTA",
+      "x": 98,
+      "y": 264,
+      "width": 324.7900390625,
+      "height": 27.5,
+      "size": 22,
+      "essential": false,
+      "color": "#FF6598"
+    },
+    {
+      "text": "CONTÉM",
+      "x": 84,
+      "y": 321,
+      "width": 108.29296875,
+      "height": 30,
+      "size": 24,
+      "essential": false,
+      "color": "#8196AA"
+    },
+    {
+      "text": "__init__.py",
+      "x": 264,
+      "y": 367,
+      "width": 149.970703125,
+      "height": 37.5,
+      "size": 30,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "interface pública · reexporta",
+      "x": 264,
+      "y": 409,
+      "width": 372.88671875,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "<nome>.py",
+      "x": 314,
+      "y": 512,
+      "width": 169.4970703125,
+      "height": 37.5,
+      "size": 30,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "implementação · contrato específico",
+      "x": 314,
+      "y": 554,
+      "width": 482.15234375,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "exemplo_<nome>.py",
+      "x": 364,
+      "y": 657,
+      "width": 308.5400390625,
+      "height": 37.5,
+      "size": 30,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "demonstração em notebook",
+      "x": 364,
+      "y": 699,
+      "width": 371.546875,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "DEFINE",
+      "x": 832,
+      "y": 501,
+      "width": 85.8984375,
+      "height": 30,
+      "size": 24,
+      "essential": false,
+      "color": "#66E3C4"
+    },
+    {
+      "text": "SAÍDA DO OBJETO",
+      "x": 1028,
+      "y": 331,
+      "width": 255.58203125,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#66E3C4"
+    },
+    {
+      "text": "A ferramenta escolhida",
+      "x": 962,
+      "y": 392,
+      "width": 307.466796875,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "define a forma da saída.",
+      "x": 962,
+      "y": 430,
+      "width": 319.34765625,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "dict · contratos próprios",
+      "x": 990,
+      "y": 495,
+      "width": 327.810546875,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "Spark DataFrame · RFV",
+      "x": 990,
+      "y": 544,
+      "width": 314.083984375,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "texto · YAML ou JSON",
+      "x": 990,
+      "y": 593,
+      "width": 299.072265625,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "lista · violações",
+      "x": 990,
+      "y": 642,
+      "width": 211.517578125,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "SEM RETORNO UNIVERSAL",
+      "x": 976,
+      "y": 724,
+      "width": 291.822265625,
+      "height": 27.5,
+      "size": 22,
+      "essential": false,
+      "color": "#FFC966"
+    },
+    {
+      "text": "O exemplo demonstra; o consumidor interpreta o contrato da ferramenta escolhida.",
+      "x": 148.0390625,
+      "y": 838,
+      "width": 1103.921875,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#B8C9DA"
+    }
+  ],
+  "icons": [
+    "plug-zap",
+    "file-code-2",
+    "notebook-tabs",
+    "file-output"
+  ]
+}

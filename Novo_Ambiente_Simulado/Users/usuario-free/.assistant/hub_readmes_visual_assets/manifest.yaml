@@ -1,0 +1,548 @@
+version: 2
+generated_by: tools/readme_visuals/production.mjs
+approved_direction: sprint_0
+contracts: specs/visual_contracts.yaml
+inputs:
+  - path: tools/readme_visuals/production.mjs
+    sha256: 47d1cdfd55f8e7a06a3a88b7038da2cd25e4178d16e312f0b946840731c30a57
+  - path: tools/readme_visuals/validate_production.mjs
+    sha256: e2f96328d5a8833ead0699e8d176cef3b94aa9eb69803900f40e793c391f886b
+  - path: tools/readme_visuals/lib.mjs
+    sha256: 0630dbb2c7ef9ef2682ce417bbbcd0bed161ce6f6872824e8b8b330e10016852
+  - path: tools/readme_visuals/headers.mjs
+    sha256: 018185730303009ceb0d3eedc78efef2dafabb7df2cd306d0301a460f3ddd1ca
+  - path: tools/readme_visuals/archetypes/top.mjs
+    sha256: 6ebdc9c9b65d321e2f0d94ad1a75ef77e3c0fa06ec3d3f8ce0755508a6ad5ed6
+  - path: tools/readme_visuals/archetypes/snippets.mjs
+    sha256: f1986dcb7a1cd22ece37579114977253522b5b4e043157bd3331cc4727d7d617
+  - path: tools/readme_visuals/archetypes/scripts.mjs
+    sha256: a5fdd8b8c6eb31a141279e3e2b362ef731d3ea522e04f3e0d500156fa9470db2
+  - path: tools/readme_visuals/archetypes/methods.mjs
+    sha256: b10ea61a894a49fe76d333c39176fee829b59e8d448474f748b6474673a0c480
+  - path: tools/readme_visuals/package.json
+    sha256: f9fbd435c540f08d84258aa33f8e707a6847a5aa03e65a54c57c9f29d01cf459
+  - path: tools/readme_visuals/pnpm-lock.yaml
+    sha256: 16890a3bcc03d4f6dc0c8a41b2c875581d3505a2f2739cdfefa00cc2d7fffc71
+  - path: ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml
+    sha256: a7c70ca4d17435c8fe7ae8347ffa1c684b10f67a105a66c0ab1934c3c096c339
+  - path: ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/approved_signatures.json
+    sha256: 0ddbe98dc5046493553ba507cea70a72ce48e075eac3192fcda178667090888d
+  - path: ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/approved_headers.json
+    sha256: 3f1b7f56014b8f884fb21923fe3153047dc62910802a8a15451042ff8230ce9a
+  - path: ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/editorial_corrections.json
+    sha256: ee8cf7eeb5b932d6202767ab5e501ef1615611d8b169e7c17ce294184aa53226
+  - path: ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/prototype_copy.yaml
+    sha256: efe513c51b37bed7f3eb3fbac13efbecd25a01547f57615ec2a2b3d8cd0f8493
+  - path: ambiente_fonte/.assistant/hub_readmes_visual_assets/visual_system/tokens.yaml
+    sha256: f397e639d45f4c1db5206982a12ebfbfdf3bb3e34ed78531863f9456056edbdd
+  - path: ambiente_fonte/.assistant/hub_readmes_visual_assets/visual_system/semantic_roles.yaml
+    sha256: 40885ddf7cb2c44747d3f3d4e40cc21bbde33028e2ee8c1e94d5c8e2f05483ce
+  - path: ambiente_fonte/.assistant/hub_readmes_visual_assets/visual_system/archetypes.yaml
+    sha256: 0aec174e57a7e5c82f67af56ecb52d9498054c66ea79555ca95d41727e7d987b
+  - path: ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/src/copy.json
+    sha256: 8a1c883b85cdac846aa7159de5aac83f85766cab663dfae21462704ec6d36c7c
+  - path: ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/src/fundo_tecnologico_original.png
+    sha256: 4c7740fee858e762f7d431a4031824b0d75b63fd558114ece5ccdef2ee6b4e71
+  - path: tools/readme_visuals/node_modules/@fontsource/inter/files/inter-latin-400-normal.woff
+    sha256: e20fa0b4fd2dd26e4d14b3ac3cc922509c3a63fa5e910e90c614544aa042dd45
+  - path: tools/readme_visuals/node_modules/@fontsource/inter/files/inter-latin-600-normal.woff
+    sha256: 6a9cb3a509b4eeaf12b7dda6c4aacac3e85d07f4201bf4dd716e332e692b87bd
+  - path: tools/readme_visuals/node_modules/@fontsource/inter/files/inter-latin-700-normal.woff
+    sha256: 7c5ed5655730de337704d3fc94628515cd7e3d8d32368871709bf56ac0397e7a
+  - path: tools/readme_visuals/node_modules/@fontsource/inter/files/inter-latin-800-normal.woff
+    sha256: a2fdc5be8acd75fe8f3fd9de8179828d04fd884c155cd6b63fec23b33651ec88
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/activity.svg
+    sha256: 2ebdf102ece2ad972d881a838723dc11e5947ada83923a2756f5f570994cc209
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/at-sign.svg
+    sha256: 5197c639bd66f222e0ac8c78242ca45d57cefc732169ba5316bd132e713cd827
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/badge-check.svg
+    sha256: a3d6bfb8f41725b49fb692e0d63fec7c19a33b32a71c594c9a65878ac7ea06ec
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/blocks.svg
+    sha256: a0135bb7a634e759adf501dc0d4a151961ca27e110febf1dbd02ed8b69fd6b49
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/book-open-check.svg
+    sha256: 469707c02d9806398e7342437db2e44f3f8883e43c3621dd350ba1b0970efa65
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/braces.svg
+    sha256: fd4a1eb5fb9f2ad2b89ba4662145abb8bbbb9bc1cb6d9d4fd1947e889786d333
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/brain-circuit.svg
+    sha256: dd3434411ed08025ac52a5ff0454448e39ee562a3755d357cb2042959163522a
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/chart-no-axes-combined.svg
+    sha256: e9ffd045dc85d081ffb972d203f459d311a318329821465d1d32d947719f4c0e
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/circle-check.svg
+    sha256: a599cc48bd27bac916a74d0ab8604d59a20340da0aa42068f822858d3edd6aad
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/clipboard-check.svg
+    sha256: 94c653db207ffc97c80e276ad87ac82059943b92a068eacadde281388586554b
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/compass.svg
+    sha256: 9e705cc84574055a3c53ac307af57896dac7e901cbceadfb6273a9759cb0b77b
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/copy-check.svg
+    sha256: f42092a56da8f781081c5dd18e8a8bd07fa21454770b8c0f436e49f754cdb4af
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/cpu.svg
+    sha256: 34cb9db843cfe8961b6503a5653949f422e8881c0cad06690053f46d6e0ec631
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/database.svg
+    sha256: 439afaec785dd4a54f61b1df01785c267b9a5cf3128813c5497b5651e0273f80
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/door-open.svg
+    sha256: 8cf0e1713cdd4a9e135b25ccf999d6d569252380c388c504fa22be39ce4b4b86
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/file-check-2.svg
+    sha256: a0149171a773a79920070127382d9cdca0a3f381d8f2871fa23b7f1e0635e17a
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/file-code-2.svg
+    sha256: df70650ca6bd0cef5ccce82e3ff1b0251e764fef3adf6135a5e25835fc3bcb06
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/file-json-2.svg
+    sha256: 7973be44ee65443245e46703255411abe0cab548c93183ff6e96e3112b18f4d5
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/file-output.svg
+    sha256: 0ef6c6d1edbd695a3998a18211b73ece2b26357fa87abb3bc128a21a1c539cf8
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/file-pen-line.svg
+    sha256: de9918786f98a217dffc0d93400239d800c6ceaf636a6f6414eda0b4f28bc280
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/file-stack.svg
+    sha256: 066ced40a4945e3459ffcfbc57e63c3082de971d4c0e3866b3c808179a9f1d24
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/file-text.svg
+    sha256: 2ec7ceb2cd3e1c29afc5fea15221568f19dc938046c56d3699843964f5c65ca6
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/files.svg
+    sha256: e27a509a8f2c6389491d6e84df2c4946a5fc92a7e1cba5c130ede1dc8db09aa2
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/flag.svg
+    sha256: 94286e3bd42f163346a1de4f01ee6d6de542e5d7cce9c64df1fe3e12bf91ec3b
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/flask-conical.svg
+    sha256: 7c1fe72f017c9820e0c4dd409b949e793f09977d9d23b2559241863cbc530de8
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/folder-git-2.svg
+    sha256: d1e60f1aa5fcb97b2d62a3c065a87e621d29d02830cd38c2542ca6d33b9d1274
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/git-branch.svg
+    sha256: 1807533de7835a0ebebcfe4c3db9e9f65423a3c504c0351569c801ed453da533
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/git-commit-horizontal.svg
+    sha256: 9e76cc8dab4df7175f661391242803631af974088bc07fa181a946c6ab90c48d
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/layers-3.svg
+    sha256: 6d91b1281bb5711915ae67363fae5a8dd1abba368408460d735179efd20bec62
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/library-big.svg
+    sha256: 8b4385162ff2c54ca3639c3542c54d69b468730aedc5b120083f347d1b85119c
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/list-checks.svg
+    sha256: 7240f89430380e2e85086afc056fd66edcc86712c835bb2b0c051fa9960738cc
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/list-filter.svg
+    sha256: 9d1de7c4359636bc31992f7aafe7b3e82668158f74d0f92b9f03fa0b9261fcdc
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/merge.svg
+    sha256: 5a4605dbd2cc27a19cd64ba83ae06807531b6439434caf99192481d02fbcc255
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/message-square-text.svg
+    sha256: f600bf5ffd75164c47ca2e824fa8096bbd72d5ea7aec9a190e178bab38319f5c
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/mouse-pointer-click.svg
+    sha256: 5cd20669da0e0b7854a53cc595d98d182d026e74cca397239927432987498d1b
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/network.svg
+    sha256: fefe95704dd7f7a691f7c3a35e516c54182c4b0932bd19f07a3bd081d77e6d40
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/notebook-pen.svg
+    sha256: 963cca3c92cd945e608a593137688f9be74e472a4d9ebb82a97df6bdc7f89e42
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/notebook-tabs.svg
+    sha256: be365f6053caa442cc21da92a1d7f914297ef6499b4f69695249616fb257f1c4
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/package-check.svg
+    sha256: c9acd0f879498cd2d2498fcb13d799da3e6752fc360f6a8745647331fa3a544e
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/package-open.svg
+    sha256: 55d815a88af22240d7e3dfc3228e65ea9e0e748aabfb8b936bd14c87862f0d6e
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/paperclip.svg
+    sha256: f86c9139043608d7c179b860a7aaa3895e3b794661c707396daaadd2d5d982c7
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/play.svg
+    sha256: e0309020b8ddcfe41ab4a54385dc833e3542e18b1e1bf5bf1341b633b7e97786
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/plug-zap.svg
+    sha256: 32f9fcdb56bf832241499a814ffd8e29d9e6bc09a2fa1601ce36b2316e57cfbb
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/route.svg
+    sha256: 7a58084ca96faad0767d332bb74553350b3e4ead0c9f85eec5e21484743385f2
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/scan-face.svg
+    sha256: d1e20f5a288965d293e6cac09832e4c37da18a0002c9bdd37ed31020637c437c
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/scan-search.svg
+    sha256: b387072e36f09fcca3b3b80a705e8bec97d438b061474d72be337fda2bdd3f01
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/server-cog.svg
+    sha256: 8d4e24abd3ab75f81ead507a291ae880494923d9515c805d7ca2f8cc45541321
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/settings-2.svg
+    sha256: 8bfcfe8bba0cbf1894f2b5928d308f992dc857cc6cbb0d83cd28e83697e1c35f
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/shield-alert.svg
+    sha256: 3512caae2b2fe402824ff4b57bbb20e01c7de35fb72cc1d91ee3eece74a6f5d9
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/shield-check.svg
+    sha256: d0203f22ef27ada2d0782c9d078c77d66f9c31eb47f54733a175542d1d34901c
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/sliders-horizontal.svg
+    sha256: ea62fa13ecf285388cabcc30faaccf1598ccbeb8c69e4c24fc1c98a1ce15607d
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/sparkles.svg
+    sha256: 689f8cb6d302196d64211a422ab90ed044a619d332137f7780a4f99460effda9
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/split.svg
+    sha256: 258f071a60f521b21278aea6bc59b236721a2c097859f531ab8090e4b571a9db
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/square-pen.svg
+    sha256: b0415d4894d13a8e882be0544203fa117d9c1b2547d866727b42d8acd76d9d63
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/table-2.svg
+    sha256: 699b1946687d952964f56d13b570c08cac6106bcb078096aefe19c7ac87d3854
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/target.svg
+    sha256: 568d7a4f7ad366be519566963101b5d6209081e4601afdf506ea797351b39dd7
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/terminal-square.svg
+    sha256: 227d8365fdf6f7be4753ccf5f6d7dc723789c4330e1a2e8d68aebe874d6e8340
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/triangle-alert.svg
+    sha256: a51da8b637c2d73cf0b16a576621bb4413144121ec1b099bdab927cf325ea9df
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/upload.svg
+    sha256: edb0008defe217a95d79c666d710fdb709b3c122088da70832844d8571ad383d
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/user-round-check.svg
+    sha256: 2f5b0c7046c88d088b1cb7586bb2ecdd4d3f97bd33135ecf6927a98764850e9a
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/users-round.svg
+    sha256: 12bdccd7475c9235a38c402a3337c999b593c25d2fd682382acf2c23e445ba06
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/waypoints.svg
+    sha256: 7b0496e30f2c5957f4be4b1ca08582ff3e51d64f7bde2598aafaa777d212d229
+  - path: tools/readme_visuals/node_modules/lucide-static/icons/x.svg
+    sha256: 830dcaf4d684c39c0fd13fc700c637ef1d0120e1230aa6b6c88b0de51c759091
+assets:
+  - id: raiz.01_mapa_ecossistema
+    archetype: system_atlas
+    source: readmes/raiz/sources/01_mapa_ecossistema.svg
+    published: readmes/raiz/png/01_mapa_ecossistema.png
+    sha256: 476743d24837ac6392ff32d8cb73a86ab2811baf38a56e20a2b47c4ea34cc45a
+    svg_sha256: dafab3d97b08af3b68ff24a2e8a881e225559bf5c9638466d95159b8a382d143
+    width: 1600
+    height: 760
+    minimum_display_width: 720
+    question: Quais componentes existem e em qual plano atuam?
+    alt: Mapa do ecossistema .assistant separado entre contexto e método, código e diagnóstico, com cinco
+      componentes e suas formas de uso.
+    caption: Agent Skills usam um mecanismo reconhecido pela plataforma; prompts e padrões podem ser fornecidos
+      como contexto explícito, enquanto snippets e scripts são usados por importação ou execução no notebook.
+    owner_readme: README.md
+    anchor: o-que-tem-neste-ambiente-e-como-ele-ajuda-na-rotina-de-trabalho
+    approved_signature: true
+  - id: raiz.02_arquitetura_ecossistema
+    archetype: architectural_cutaway
+    source: readmes/raiz/sources/02_arquitetura_ecossistema.svg
+    published: readmes/raiz/png/02_arquitetura_ecossistema.png
+    sha256: d6882c0b60257cae22b6deaef0aedfb02f21f8dc1b21163bd4f5f5d98c0e4775
+    svg_sha256: 14db7ed43cecd236befab63b6b24b266599012bcc60cfabf69ab40aeeba38bbc
+    width: 1600
+    height: 760
+    chrome: compact
+    minimum_display_width: 720
+    question: Como fonte, publicação, contexto e runtime se relacionam?
+    alt: Corte arquitetural entre fonte versionada, workspace, contexto da Genie Code, notebook e runtime.
+    caption: A fonte é publicada no workspace; contexto orienta a conversa e código reutilizável entra no runtime
+      por ação explícita do notebook.
+    owner_readme: README.md
+    anchor: arquitetura-completa-do-ecossistema
+    approved_signature: false
+  - id: raiz.03_ciclo_de_vida
+    archetype: promotion_track
+    source: readmes/raiz/sources/03_ciclo_de_vida.svg
+    published: readmes/raiz/png/03_ciclo_de_vida.png
+    sha256: 4e28ed3934dbf9787f6d845726ff215a34acdc3c74605b9ac982ac69f1a6e1c4
+    svg_sha256: 39804c6b86e92db8d4d9b4991af6c47e77bc4e59d56b4ed43e6cf1ae14dedd11
+    width: 1600
+    height: 760
+    chrome: compact
+    minimum_display_width: 720
+    question: Quais gates uma mudança percorre antes de ser promovida?
+    alt: Pista de promoção com sete gates e retornos de correção para a etapa de edição.
+    caption: Cada falha retorna à fonte editável; promoção ao destino autorizado só acontece após verificação,
+      testes e registro.
+    owner_readme: README.md
+    anchor: ciclo-de-vida-do-projeto
+    approved_signature: false
+  - id: assistant.01_escolha_ponto_de_partida
+    archetype: decision_compass
+    source: readmes/assistant/sources/01_escolha_ponto_de_partida.svg
+    published: readmes/assistant/png/01_escolha_ponto_de_partida.png
+    sha256: ab9c7a55fc765ccaf86a1b885002858159f6e36f54b05f2be5b616085cdedb65
+    svg_sha256: b96af0bffc087ed3067c416929750b35b2e066fe3515e0bc11311f7ba98c1a66
+    width: 1400
+    height: 900
+    chrome: compact
+    minimum_display_width: 720
+    question: Qual componente atende melhor à necessidade atual?
+    alt: Bússola de decisão que conduz de cinco necessidades explícitas ao componente mais adequado.
+    caption: Método, briefing, função reutilizável, diagnóstico e criação de componente têm pontos de partida
+      diferentes e podem se complementar.
+    owner_readme: ambiente_fonte/.assistant/README.md
+    anchor: como-escolher-o-ponto-de-partida
+    approved_signature: false
+  - id: assistant.02_arquitetura_de_uso
+    archetype: dual_route
+    source: readmes/assistant/sources/02_arquitetura_de_uso.svg
+    published: readmes/assistant/png/02_arquitetura_de_uso.png
+    sha256: 7658823d3d1f5e8a75813861e9e61acebe4aca1185d60ccf8f43d31565c311a7
+    svg_sha256: d87b7fe83debc547e3ebc368e339f3720371ebe45d71e7f30972e37154695715
+    width: 1600
+    height: 760
+    minimum_display_width: 720
+    question: O que pertence ao contexto e o que pertence ao runtime?
+    alt: Duas rotas paralelas, uma de contexto para a Genie Code e outra de execução no notebook, conectadas por
+      um checkpoint conforme a política configurada.
+    caption: Instruções, skills, briefing e recursos orientam a conversa; snippets e scripts entram no runtime
+      somente por importação ou chamada explícita.
+    owner_readme: ambiente_fonte/.assistant/README.md
+    anchor: arquitetura-completa-do-ecossistema
+    approved_signature: true
+  - id: assistant.03_contexto_e_execucao
+    archetype: context_confluence
+    source: readmes/assistant/sources/03_contexto_e_execucao.svg
+    published: readmes/assistant/png/03_contexto_e_execucao.png
+    sha256: 2cf9fcab2d591084ddab32b7b694132670102e9888dac458041aba5b992d59f2
+    svg_sha256: 8f61160d66ce45a774321a1d299deeb6398b726b586c08826310a32ba68d6965
+    width: 1400
+    height: 900
+    chrome: compact
+    minimum_display_width: 720
+    question: Quais fontes de contexto podem orientar a Genie Code?
+    alt: Confluência de fontes de contexto suportadas para a Genie Code e suas saídas possíveis.
+    caption: O contexto depende da superfície, das permissões, das instruções aplicáveis e dos recursos fornecidos
+      com @ ou Add Context.
+    owner_readme: ambiente_fonte/.assistant/README.md
+    anchor: como-o-contexto-chega-ao-genie-code
+    approved_signature: false
+  - id: snippets.01_anatomia_pasta
+    archetype: exploded_anatomy
+    source: readmes/snippets/sources/01_anatomia_pasta.svg
+    published: readmes/snippets/png/01_anatomia_pasta.png
+    sha256: 864a6c0727f8bbd51b353d95eaf6c7fd0a3eeb42ce343d4f924bd3485b1d93cd
+    svg_sha256: 422145074a1334b555e721888078c59d080843b891730dbb04e7f48940ba8cfe
+    width: 1400
+    height: 900
+    chrome: compact
+    minimum_display_width: 720
+    question: Como um snippet é estruturado fisicamente?
+    alt: Vista explodida de uma pasta de snippet com fachada, implementação e notebook didático.
+    caption: O notebook consome a API pública; a implementação permanece atrás da fachada.
+    owner_readme: ambiente_fonte/.assistant/hub_snippets/README.md
+    anchor: arquitetura-e-o-padrao-pasta-de-objeto
+    approved_signature: false
+  - id: snippets.02_mapa_categorias
+    archetype: capability_landscape
+    source: readmes/snippets/sources/02_mapa_categorias.svg
+    published: readmes/snippets/png/02_mapa_categorias.png
+    sha256: e9a2d1669d3b9efad94bf6d9e3bdb579c4d48608ece02478e0f3694ca5c87b51
+    svg_sha256: e08088e7de20bfd6f106bb7b1d794e5f7c80f412c1525247d104acf3b9775021
+    width: 1600
+    height: 760
+    chrome: compact
+    minimum_display_width: 720
+    question: Como as seis categorias se organizam funcionalmente?
+    alt: Paisagem funcional com as seis categorias do Hub Snippets em áreas distintas.
+    caption: As categorias agrupam helpers por natureza de problema e não constituem uma sequência obrigatória.
+    owner_readme: ambiente_fonte/.assistant/hub_snippets/README.md
+    anchor: mapa-de-categorias-do-hub-snippets
+    approved_signature: false
+  - id: snippets.03_fluxo_operacional
+    archetype: notebook_journey
+    source: readmes/snippets/sources/03_fluxo_operacional.svg
+    published: readmes/snippets/png/03_fluxo_operacional.png
+    sha256: a9122675eb66d828bce735c38b463b9a4d77014d96702f4714fa0f8ee22c8c75
+    svg_sha256: c6ddd9cd6739c7ce7380427225b3347c259e6c9f597ec1a70ce2489d3969d4c2
+    width: 1600
+    height: 760
+    chrome: compact
+    minimum_display_width: 720
+    question: Como usar um snippet do exemplo à validação?
+    alt: Jornada em notebook desde a consulta ao exemplo até a interpretação do resultado.
+    caption: O snippet acelera a implementação, mas o notebook ainda configura dependências, executa a API e
+      valida o retorno.
+    owner_readme: ambiente_fonte/.assistant/hub_snippets/README.md
+    anchor: passo-a-passo-operacional-como-usar-um-snippet
+    approved_signature: false
+  - id: snippets.04_contrato_de_reuso
+    archetype: trust_bridge
+    source: readmes/snippets/sources/04_contrato_de_reuso.svg
+    published: readmes/snippets/png/04_contrato_de_reuso.png
+    sha256: 2fce8543a1201bf03b51ac46c265e55ba750c62107bf7e01a3762a9157f20c40
+    svg_sha256: 54844f3aaa170ec0826726616bc2595f52e4da03de49b50603a9183fd5c0a616
+    width: 1600
+    height: 760
+    chrome: compact
+    minimum_display_width: 720
+    question: O que sustenta um reuso confiável?
+    alt: Ponte de reuso apoiada por interface previsível, execução consciente e evidência reproduzível.
+    caption: Dependências, efeitos, parâmetros, limites e resultados precisam permanecer observáveis.
+    owner_readme: ambiente_fonte/.assistant/hub_snippets/README.md
+    anchor: o-contrato-de-reuso
+    approved_signature: false
+  - id: scripts.01_anatomia_pasta
+    archetype: exploded_anatomy
+    source: readmes/scripts/sources/01_anatomia_pasta.svg
+    published: readmes/scripts/png/01_anatomia_pasta.png
+    sha256: 4628da25d3770d7573cb8f4230a4af73b8e54009ae2b5725079773ae50fa93da
+    svg_sha256: 440c99fe89fb4ba99bf99b07409f05f35a2ebb26e449885c9dbd2e499f88a8b3
+    width: 1400
+    height: 900
+    chrome: compact
+    minimum_display_width: 720
+    question: Como um Hub Script é organizado?
+    alt: Vista explodida de uma pasta de Hub Script com interface, implementação e notebook de exemplo.
+    caption: O exemplo demonstra o contrato específico da ferramenta, que pode retornar estruturas diferentes.
+    owner_readme: ambiente_fonte/.assistant/hub_scripts/README.md
+    anchor: arquitetura-e-o-padrao-pasta-de-objeto
+    approved_signature: false
+  - id: scripts.02_catalogo_diagnosticos
+    archetype: diagnostic_workbench
+    source: readmes/scripts/sources/02_catalogo_diagnosticos.svg
+    published: readmes/scripts/png/02_catalogo_diagnosticos.png
+    sha256: 4cb42c2bea4af614dcd8de4b9fa676a92f64a784a57da2f71d4c0964c74a3444
+    svg_sha256: b50bfe5f2bbda9761314dca4c6cc7fa7b2c41dd739fc36a63c8a572534cc136f
+    width: 1600
+    height: 760
+    minimum_display_width: 720
+    question: Que tarefa cada família de script atende e qual retorno produz?
+    alt: Bancada dos Hub Scripts com sete ferramentas executadas sob demanda, agrupadas em qualidade,
+      estabilidade, transformação analítica e governança técnica.
+    caption: Cada instrumento responde a uma pergunta e devolve uma estrutura própria; a tabela do README
+      permanece o catálogo canônico.
+    owner_readme: ambiente_fonte/.assistant/hub_scripts/README.md
+    anchor: catalogo-detalhado
+    approved_signature: true
+  - id: scripts.03_panorama_retornos
+    archetype: return_panorama
+    source: readmes/scripts/sources/03_panorama_retornos.svg
+    published: readmes/scripts/png/03_panorama_retornos.png
+    sha256: e64d2176875d7cfa5144bfa538dd9caab72de76221fdcb1939d8ed307fbe5534
+    svg_sha256: a00f8e078cc8c10f354c8905f64140723ce0e7c5e8c26a6b354bf3347fc3a2ca
+    width: 1600
+    height: 760
+    chrome: compact
+    minimum_display_width: 720
+    question: Quais contratos de retorno existem nos Hub Scripts?
+    alt: Panorama de entradas e dos diferentes tipos de retorno produzidos pelos sete Hub Scripts.
+    caption: O consumidor interpreta o contrato específico do script e codifica separadamente qualquer reação
+      operacional.
+    owner_readme: ambiente_fonte/.assistant/hub_scripts/README.md
+    anchor: passo-a-passo-operacional-como-usar-um-script
+    approved_signature: false
+  - id: scripts.04_diagnostico_vs_enforcement
+    archetype: operational_zones
+    source: readmes/scripts/sources/04_diagnostico_vs_enforcement.svg
+    published: readmes/scripts/png/04_diagnostico_vs_enforcement.png
+    sha256: 5805f98ed09a8f5c6f46cc43151f396fc1d170c1efb4c7ad5dcdff89891bef96
+    svg_sha256: d04b2a16b3ed53edd07e59fdb323b536a25a579d81fd16856d67175f48ce2906
+    width: 1600
+    height: 760
+    chrome: compact
+    minimum_display_width: 720
+    question: Quem mede, quem decide e quem orquestra?
+    alt: Três zonas separando diagnóstico, política consumidora e orquestração Databricks.
+    caption: Um Hub Script não agenda, notifica nem interrompe outro processo por conta própria.
+    owner_readme: ambiente_fonte/.assistant/hub_scripts/README.md
+    anchor: diagnostico-nao-e-enforcement
+    approved_signature: false
+  - id: scripts.05_veredito_data_quality
+    archetype: state_machine_with_policy_gate
+    source: readmes/scripts/sources/05_veredito_data_quality.svg
+    published: readmes/scripts/png/05_veredito_data_quality.png
+    sha256: df6a4e5f5d375589ac761b602dfb9d14f6e2cfc7e00021966a7c34e3bfe69b3c
+    svg_sha256: f0ba4453368bea52bfebd42640d32b6daceaee6f5e59708518a9f78cd2cd5246
+    width: 1600
+    height: 760
+    chrome: compact
+    minimum_display_width: 720
+    question: Como interpretar o retorno de data_quality_check?
+    alt: Três estados do data_quality_check seguidos de um gate separado de política consumidora.
+    caption: PASS indica apenas que as verificações configuradas não encontraram violações; WARN e FAIL também
+      exigem interpretação da política consumidora.
+    owner_readme: ambiente_fonte/.assistant/hub_scripts/README.md
+    anchor: leitura-visual-do-veredito
+    approved_signature: false
+  - id: skills.01_descoberta_e_selecao
+    archetype: converging_routes
+    source: readmes/skills/sources/01_descoberta_e_selecao.svg
+    published: readmes/skills/png/01_descoberta_e_selecao.png
+    sha256: 0f62869eba0c57794aacf4d444e20ef9a1e77cd9f2b585da76219ab75e1d1928
+    svg_sha256: fa114d57182a1b62f4296ec36ebfaf1125c17931a967c06353ef3a37349152a8
+    width: 1600
+    height: 760
+    chrome: compact
+    minimum_display_width: 720
+    question: Como relevância e menção explícita conduzem à skill?
+    alt: Duas rotas independentes, relevância e menção com @, convergindo no carregamento de uma Agent Skill.
+    caption: A description ajuda o roteamento; a menção com @ torna a escolha explícita.
+    owner_readme: ambiente_fonte/.assistant/skills/README.md
+    anchor: como-o-genie-code-e-o-usuario-utilizam-as-skills
+    approved_signature: false
+  - id: skills.02_skill_helpers_runtime
+    archetype: architectural_cutaway
+    source: readmes/skills/sources/02_skill_helpers_runtime.svg
+    published: readmes/skills/png/02_skill_helpers_runtime.png
+    sha256: 43df2534087eb148369457223c11cc6d67bb3229874e9310022fb3b81d8c4774
+    svg_sha256: 207c2a3894a1151ef66d76ab74d6c92c0c35548164d82b71c86fb2deff1b7fc5
+    width: 1600
+    height: 760
+    chrome: compact
+    minimum_display_width: 720
+    question: Onde termina o método e começa a execução?
+    alt: Dois planos separando método da Agent Skill e execução explícita de helpers no notebook.
+    caption: Orientação metodológica e código executável são responsabilidades diferentes.
+    owner_readme: ambiente_fonte/.assistant/skills/README.md
+    anchor: relacao-entre-skills-hub-snippets-e-hub-scripts
+    approved_signature: false
+  - id: skills.03_anatomia_skill
+    archetype: skill_dossier
+    source: readmes/skills/sources/03_anatomia_skill.svg
+    published: readmes/skills/png/03_anatomia_skill.png
+    sha256: 0edd08059de6dea5f21a8b6cb9f83bc835cf9e89ca42257d418c76bb6af5c390
+    svg_sha256: f194a10380639c90a33964003593de188a4288cfe77ea799c3b59736110da14a
+    width: 1400
+    height: 900
+    minimum_display_width: 720
+    question: O que fica dentro e fora de SKILL.md?
+    alt: Dossiê de uma Agent Skill mostrando frontmatter e instruções dentro de SKILL.md e recursos opcionais ao
+      lado.
+    caption: O mecanismo Agent Skills reconhece o pacote; o conteúdo metodológico e seus recursos são mantidos
+      pelo Hub.
+    owner_readme: ambiente_fonte/.assistant/skills/README.md
+    anchor: estrutura-de-uma-skill-profissional
+    approved_signature: true
+  - id: prompts.01_mapa_familias
+    archetype: briefing_router
+    source: readmes/prompts/sources/01_mapa_familias.svg
+    published: readmes/prompts/png/01_mapa_familias.png
+    sha256: 69a92fcb91281dc981ad38194a696c7ed2d244bb505a1de5d19052626972b1fc
+    svg_sha256: 6f708d7c2b823ca0e6f3e594ab3453eec797e971eccc956da14db1d6d06dc3d7
+    width: 1400
+    height: 900
+    chrome: compact
+    minimum_display_width: 720
+    question: Qual família de briefing corresponde ao resultado esperado?
+    alt: Roteador editorial que relaciona quatro tipos de resultado às famílias de briefing adequadas.
+    caption: O catálogo textual continua canônico; a figura ensina como escolher a família.
+    owner_readme: ambiente_fonte/.assistant/hub_prompts/README.md
+    anchor: familias-do-ciclo-de-dados
+    approved_signature: false
+  - id: prompts.02_fluxo_operacional
+    archetype: five_stage_storyboard
+    source: readmes/prompts/sources/02_fluxo_operacional.svg
+    published: readmes/prompts/png/02_fluxo_operacional.png
+    sha256: 71e442aea13c567a51a1636db3457e9eb7547e1424a7383beb314cf6959ec8a9
+    svg_sha256: af2c279b153c710a0d7d183c05f3d40bc45911e3094aba471610e017f594350c
+    width: 1600
+    height: 760
+    chrome: compact
+    minimum_display_width: 720
+    question: Como o briefing evolui até uma entrega verificável?
+    alt: Storyboard em cinco estágios desde a escolha do briefing até a validação da entrega.
+    caption: A execução ocorre dentro do escopo e da política definidos no estágio de revisão.
+    owner_readme: ambiente_fonte/.assistant/hub_prompts/README.md
+    anchor: passo-a-passo-operacional-do-briefing-ao-resultado
+    approved_signature: false
+  - id: prompts.03_anatomia_briefing
+    archetype: briefing_blueprint
+    source: readmes/prompts/sources/03_anatomia_briefing.svg
+    published: readmes/prompts/png/03_anatomia_briefing.png
+    sha256: 5b974251dc505780429f66024c78de68259b9e5f6c50e95a4595e0bc972ebaa8
+    svg_sha256: f237a8a719a2adcc59e83b59640f5d04b0a9ca78541a2427d97555618c3fb1ff
+    width: 1400
+    height: 900
+    minimum_display_width: 720
+    question: O que compõe um briefing técnico forte?
+    alt: Blueprint de um briefing com objetivo e contexto, recursos, restrições, modo de trabalho, contrato de
+      saída e validação final.
+    caption: O template permanece o contrato copiável; a figura mostra como seus blocos reduzem ambiguidade e
+      tornam o aceite verificável.
+    owner_readme: ambiente_fonte/.assistant/hub_prompts/README.md
+    anchor: estrutura-do-hub-prompts
+    approved_signature: true
+headers:
+  - id: cabecalho_crm
+    alt: CRM — Missão Modelos Analíticos CRM
+    uses:
+      - README
+      - notebook
+    path: headers/png/cabecalho_crm.png
+    width: 1920
+    height: 480
+    bytes: 746615
+    sha256: 705a2c35c5182401edc6874fae6de56ed1f5d48891cb2e6dd995682b415ffca2
+  - id: cabecalho_squad
+    alt: Squad Modelos Analíticos e Preditivos
+    uses:
+      - notebook específico da Squad
+    path: headers/png/cabecalho_squad.png
+    width: 1920
+    height: 480
+    bytes: 752761
+    sha256: bc7d804c3127924ad7838dcc8fe1bc0a573daafb7c4512d335210540f3ef7a05

@@ -1,0 +1,49 @@
+{
+  "sprint": "R08",
+  "base": "b73bbb91961f9ba5f9031d648c42ec0891b63347",
+  "contract": "1.0.0",
+  "objects": [
+    "autoencoder_anomaly",
+    "cluster_profiling",
+    "clustering_suite",
+    "explainability_report",
+    "shap_explainer",
+    "umap_viz"
+  ],
+  "coverage_expected": {
+    "operational": 55,
+    "total": 75,
+    "exemplars": "3/3",
+    "pending": 20
+  },
+  "review_level": "A0_light_self_review",
+  "independent_audit": false,
+  "databricks_published": false,
+  "criteria": {
+    "readme_contract": "passed_automated_check",
+    "implementation_facade_preservation": "passed_automated_check",
+    "notebook_executable_preservation": "passed_automated_check",
+    "runtime_core": "passed_automated_check",
+    "runtime_torch": "passed_automated_check",
+    "runtime_shap": "passed_automated_check",
+    "runtime_umap": "passed_automated_check",
+    "full_gate_v00_v04": "passed_automated_check"
+  },
+  "run_id": 34756829497,
+  "case_counts": {
+    "static.txt": 4,
+    "core.txt": 3,
+    "torch.txt": 1,
+    "shap.txt": 1,
+    "umap.txt": 1
+  },
+  "total_cases": 10,
+  "runtime_total_cases": 6,
+  "static_total_cases": 4,
+  "human_editorial_acceptance": "pending",
+  "umap_test_environment": {
+    "numpy": "1.26.4",
+    "umap-learn": "0.5.5",
+    "scikit-learn": "1.4.2"
+  }
+}

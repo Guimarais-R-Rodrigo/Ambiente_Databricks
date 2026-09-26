@@ -1,0 +1,327 @@
+{
+  "id": "prompts.02_fluxo_operacional",
+  "archetype": "five_stage_storyboard",
+  "source": "readmes/prompts/sources/02_fluxo_operacional.svg",
+  "published": "readmes/prompts/png/02_fluxo_operacional.png",
+  "sha256": "71e442aea13c567a51a1636db3457e9eb7547e1424a7383beb314cf6959ec8a9",
+  "svg_sha256": "af2c279b153c710a0d7d183c05f3d40bc45911e3094aba471610e017f594350c",
+  "width": 1600,
+  "height": 760,
+  "chrome": "compact",
+  "minimum_display_width": 720,
+  "question": "Como o briefing evolui até uma entrega verificável?",
+  "alt": "Storyboard em cinco estágios desde a escolha do briefing até a validação da entrega.",
+  "caption": "A execução ocorre dentro do escopo e da política definidos no estágio de revisão.",
+  "owner_readme": "ambiente_fonte/.assistant/hub_prompts/README.md",
+  "anchor": "passo-a-passo-operacional-do-briefing-ao-resultado",
+  "approved_signature": false,
+  "texts": [
+    {
+      "text": "STORYBOARD · 5 MACROESTÁGIOS",
+      "x": 71,
+      "y": 35,
+      "width": 417.41015625,
+      "height": 30,
+      "size": 24,
+      "essential": false,
+      "color": "#FF6598"
+    },
+    {
+      "text": "Do briefing à entrega verificável",
+      "x": 56,
+      "y": 67,
+      "width": 601.5986328125,
+      "height": 47.5,
+      "size": 38,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "Cada cena acrescenta informação ao mesmo trabalho — não é um novo fluxo paralelo.",
+      "x": 56,
+      "y": 118,
+      "width": 1313.28125,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "01",
+      "x": 287.734375,
+      "y": 297,
+      "width": 36.265625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#5DD6FF"
+    },
+    {
+      "text": "SELECIONAR",
+      "x": 96,
+      "y": 354,
+      "width": 206.234375,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "O BRIEFING",
+      "x": 96,
+      "y": 395,
+      "width": 179.296875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "Resultado-alvo",
+      "x": 96,
+      "y": 445,
+      "width": 227.328125,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "família",
+      "x": 96,
+      "y": 487,
+      "width": 98.5625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "02",
+      "x": 579.453125,
+      "y": 327,
+      "width": 42.546875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#A992FF"
+    },
+    {
+      "text": "PREENCHER",
+      "x": 394,
+      "y": 384,
+      "width": 194.03125,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "METADADOS",
+      "x": 394,
+      "y": 425,
+      "width": 208.375,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "Contexto + grão",
+      "x": 394,
+      "y": 475,
+      "width": 245,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "tempo explícito",
+      "x": 394,
+      "y": 517,
+      "width": 230.5,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "03",
+      "x": 876.84375,
+      "y": 297,
+      "width": 43.15625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#FF6598"
+    },
+    {
+      "text": "ANEXAR",
+      "x": 692,
+      "y": 354,
+      "width": 138.8125,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "RECURSOS",
+      "x": 692,
+      "y": 395,
+      "width": 175.9375,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "Contexto",
+      "x": 692,
+      "y": 445,
+      "width": 137,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "limites + modo",
+      "x": 692,
+      "y": 487,
+      "width": 222.15625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "04",
+      "x": 1173.828125,
+      "y": 327,
+      "width": 44.171875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#FFC966"
+    },
+    {
+      "text": "REVISAR",
+      "x": 990,
+      "y": 384,
+      "width": 140.71875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "O PLANO",
+      "x": 990,
+      "y": 425,
+      "width": 144.546875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "Escopo definido",
+      "x": 990,
+      "y": 475,
+      "width": 244.65625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "política vigente",
+      "x": 990,
+      "y": 517,
+      "width": 229.796875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "05",
+      "x": 1473.578125,
+      "y": 297,
+      "width": 42.421875,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#66E3C4"
+    },
+    {
+      "text": "VALIDAR",
+      "x": 1288,
+      "y": 354,
+      "width": 141.3125,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "A ENTREGA",
+      "x": 1288,
+      "y": 395,
+      "width": 185.578125,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "Evidências",
+      "x": 1288,
+      "y": 445,
+      "width": 163.015625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "limites + aceite",
+      "x": 1288,
+      "y": 487,
+      "width": 227.625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "A EXECUÇÃO CABE NO ESTÁGIO 04",
+      "x": 1025,
+      "y": 670,
+      "width": 419.859375,
+      "height": 30,
+      "size": 24,
+      "essential": false,
+      "color": "#FFC966"
+    },
+    {
+      "text": "O quinto estágio confronta a entrega com o contrato de saída.",
+      "x": 56,
+      "y": 708,
+      "width": 938.40625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    }
+  ],
+  "icons": [
+    "list-filter",
+    "square-pen",
+    "paperclip",
+    "clipboard-check",
+    "badge-check"
+  ]
+}

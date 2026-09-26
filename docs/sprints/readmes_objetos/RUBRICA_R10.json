@@ -1,0 +1,8 @@
+{
+  "sprint": "R10",
+  "contrato": "1.0.0",
+  "objetos": 6,
+  "revisao": "A0_light",
+  "gates": ["estrutura", "preservacao", "ci_local", "renderer"],
+  "nao_coberto": ["interacao_genie_code", "runtime_databricks", "publicacao_workspace", "auditoria_independente", "aceite_editorial"]
+}

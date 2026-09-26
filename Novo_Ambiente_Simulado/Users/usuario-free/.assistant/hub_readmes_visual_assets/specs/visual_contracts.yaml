@@ -1,0 +1,439 @@
+version: 1
+status: approved_direction_integration_v2
+microcopy_source: specs/prototype_copy.yaml
+script_inventory_source: scripts.02_catalogo_diagnosticos.prototype_content.zones
+inventory:
+  expected_unique_assets: 21
+  expected_readme_occurrences: 23
+  expected_header_occurrences: 6
+  signature_assets: 5
+
+contracts:
+  - id: raiz.01_mapa_ecossistema
+    prototype: true
+    signature: true
+    owner_readme: README.md
+    section: O que tem neste ambiente e como ele ajuda na rotina de trabalho?
+    question: Quais componentes existem e em qual plano atuam?
+    message: O ecossistema combina contexto e método com código e diagnóstico, sem tornar toda a pasta automaticamente disponível à Genie Code.
+    archetype: system_atlas
+    semantic_scope: visão do conjunto e forma de ativação dos cinco componentes
+    non_goals:
+      - colocar Genie Code no centro de snippets e scripts
+      - sugerir descoberta automática de toda a pasta .assistant
+      - mostrar fluxo de publicação
+    fact_sources:
+      - README.md
+      - ambiente_fonte/.assistant/README.md
+      - .claude/rules/genie-code-oficial.md
+    alt: Mapa do ecossistema .assistant separado entre contexto e método, código e diagnóstico, com cinco componentes e suas formas de uso.
+    caption: Agent Skills usam um mecanismo reconhecido pela plataforma; prompts e padrões podem ser fornecidos como contexto explícito, enquanto snippets e scripts são usados por importação ou execução no notebook.
+    text_equivalent_anchor: "-o-que-tem-neste-ambiente-e-como-ele-ajuda-na-rotina-de-trabalho"
+    anchor_scope: existing_section
+    planned_ascii_anchor: o-que-tem-neste-ambiente-e-como-ele-ajuda-na-rotina-de-trabalho
+    render_targets: [readme_wide, presentation_hero]
+  - id: raiz.02_arquitetura_ecossistema
+    prototype: false
+    signature: false
+    owner_readme: README.md
+    section: Arquitetura Completa do Ecossistema
+    question: Como fonte, publicação, contexto e runtime se relacionam?
+    message: Publicação, contexto conversacional e execução são planos distintos; helpers podem ser importados pelo notebook sem passar pela Genie Code.
+    archetype: architectural_cutaway
+    semantic_scope: fonte versionada, workspace, contexto, notebook, runtime e evidência
+    non_goals: [representar toda rota como linear ou obrigatória, expor histórico de ambientes]
+    fact_sources: [README.md, .claude/rules/fonte-de-verdade.md]
+    alt: Corte arquitetural entre fonte versionada, workspace, contexto da Genie Code, notebook e runtime.
+    caption: A fonte é publicada no workspace; contexto orienta a conversa e código reutilizável entra no runtime por ação explícita do notebook.
+    text_equivalent_anchor: "️-arquitetura-completa-do-ecossistema"
+    anchor_scope: existing_section
+    planned_ascii_anchor: arquitetura-completa-do-ecossistema
+    render_targets: [readme_wide]
+
+  - id: raiz.03_ciclo_de_vida
+    prototype: false
+    signature: false
+    owner_readme: README.md
+    section: Ciclo de vida do projeto
+    question: Quais gates uma mudança percorre antes de ser promovida?
+    message: Editar, validar, renderizar, publicar e verificar, testar, registrar e promover são gates distintos, com retorno à edição quando há falha.
+    archetype: promotion_track
+    semantic_scope: sete gates do procedimento canônico
+    non_goals: [separar publicação e verificação em fases canônicas diferentes, identificar ambientes pessoais ou corporativos]
+    fact_sources: [docs/playbooks/ciclo-de-vida.md]
+    alt: Pista de promoção com sete gates e retornos de correção para a etapa de edição.
+    caption: Cada falha retorna à fonte editável; promoção ao destino autorizado só acontece após verificação, testes e registro.
+    text_equivalent_anchor: "️-arquitetura-completa-do-ecossistema"
+    anchor_scope: existing_parent_section
+    planned_ascii_anchor: ciclo-de-vida-do-projeto
+    render_targets: [readme_wide]
+
+  - id: assistant.01_escolha_ponto_de_partida
+    prototype: false
+    signature: false
+    owner_readme: ambiente_fonte/.assistant/README.md
+    section: Como Escolher o Ponto de Partida
+    question: Qual componente atende melhor à necessidade atual?
+    message: A escolha começa pelo resultado desejado; componentes podem ser combinados sem perder suas responsabilidades.
+    archetype: decision_compass
+    semantic_scope: skill, prompt, snippet, script e padrão
+    non_goals: [usar apenas nomes de pastas como decisão, afirmar exclusividade entre componentes]
+    fact_sources: [ambiente_fonte/.assistant/README.md]
+    alt: Bússola de decisão que conduz de cinco necessidades explícitas ao componente mais adequado.
+    caption: Método, briefing, função reutilizável, diagnóstico e criação de componente têm pontos de partida diferentes e podem se complementar.
+    text_equivalent_anchor: "-como-escolher-o-ponto-de-partida"
+    anchor_scope: existing_section
+    planned_ascii_anchor: como-escolher-o-ponto-de-partida
+    render_targets: [readme_standard]
+
+  - id: assistant.02_arquitetura_de_uso
+    prototype: true
+    signature: true
+    owner_readme: ambiente_fonte/.assistant/README.md
+    section: Arquitetura Completa do Ecossistema
+    question: O que pertence ao contexto e o que pertence ao runtime?
+    message: A rota de contexto orienta a proposta; a rota de execução só usa helpers quando o notebook os importa ou chama explicitamente.
+    archetype: dual_route
+    semantic_scope: contexto da Genie Code versus execução Python, PySpark ou SQL
+    non_goals:
+      - tratar revisão como trava nativa universal
+      - mostrar snippets e scripts como contexto carregado automaticamente
+      - exigir que todo uso de helper passe pela Genie Code
+    fact_sources:
+      - ambiente_fonte/.assistant/README.md
+      - .claude/rules/genie-code-oficial.md
+    alt: Duas rotas paralelas, uma de contexto para a Genie Code e outra de execução no notebook, conectadas por um checkpoint conforme a política configurada.
+    caption: Instruções, skills, briefing e recursos orientam a conversa; snippets e scripts entram no runtime somente por importação ou chamada explícita.
+    text_equivalent_anchor: "️-arquitetura-completa-do-ecossistema"
+    anchor_scope: existing_section
+    planned_ascii_anchor: arquitetura-completa-do-ecossistema
+    render_targets: [readme_wide, presentation_hero]
+  - id: assistant.03_contexto_e_execucao
+    prototype: false
+    signature: false
+    owner_readme: ambiente_fonte/.assistant/README.md
+    section: Como o Contexto chega ao Genie Code?
+    question: Quais fontes de contexto podem orientar a Genie Code?
+    message: Contexto corrente e metadados permitidos se combinam com recursos fornecidos explicitamente e instruções aplicáveis.
+    archetype: context_confluence
+    semantic_scope: contexto suportado, explícito e aplicável
+    non_goals: [prometer leitura automática de toda .assistant, incluir helpers Python como contexto automático]
+    fact_sources: [ambiente_fonte/.assistant/README.md, .claude/rules/genie-code-oficial.md]
+    alt: Confluência de fontes de contexto suportadas para a Genie Code e suas saídas possíveis.
+    caption: O contexto depende da superfície, das permissões, das instruções aplicáveis e dos recursos fornecidos com @ ou Add Context.
+    text_equivalent_anchor: "-como-o-contexto-chega-ao-genie-code"
+    anchor_scope: existing_section
+    planned_ascii_anchor: como-o-contexto-chega-ao-genie-code
+    render_targets: [readme_standard]
+
+  - id: snippets.01_anatomia_pasta
+    prototype: false
+    signature: false
+    owner_readme: ambiente_fonte/.assistant/hub_snippets/README.md
+    section: Arquitetura e o Padrão Pasta de Objeto
+    question: Como um snippet é estruturado fisicamente?
+    message: Fachada pública, implementação e notebook didático têm responsabilidades diferentes.
+    archetype: exploded_anatomy
+    semantic_scope: estrutura de pasta de um snippet
+    non_goals: [inventar assinatura, afirmar ausência universal de efeitos]
+    fact_sources: [ambiente_fonte/.assistant/hub_snippets/README.md]
+    alt: Vista explodida de uma pasta de snippet com fachada, implementação e notebook didático.
+    caption: O notebook consome a API pública; a implementação permanece atrás da fachada.
+    text_equivalent_anchor: "-o-que-é-um-snippet-neste-ecossistema"
+    anchor_scope: existing_parent_section
+    planned_ascii_anchor: arquitetura-e-o-padrao-pasta-de-objeto
+    render_targets: [readme_standard]
+
+  - id: snippets.02_mapa_categorias
+    prototype: false
+    signature: false
+    owner_readme: ambiente_fonte/.assistant/hub_snippets/README.md
+    section: Mapa de Categorias do Hub Snippets
+    question: Como as seis categorias se organizam funcionalmente?
+    message: ML, Spark, display, visual, constants e testing são categorias distintas agrupadas pelo problema que resolvem.
+    archetype: capability_landscape
+    semantic_scope: seis categorias reais da biblioteca
+    non_goals: [combinar seis categorias em quatro, sugerir sequência ou escala quantitativa]
+    fact_sources: [ambiente_fonte/.assistant/hub_snippets/README.md]
+    alt: Paisagem funcional com as seis categorias do Hub Snippets em áreas distintas.
+    caption: As categorias agrupam helpers por natureza de problema e não constituem uma sequência obrigatória.
+    text_equivalent_anchor: "-mapa-de-categorias-do-hub-snippets"
+    anchor_scope: existing_section
+    planned_ascii_anchor: mapa-de-categorias-do-hub-snippets
+    render_targets: [readme_wide]
+
+  - id: snippets.03_fluxo_operacional
+    prototype: false
+    signature: false
+    owner_readme: ambiente_fonte/.assistant/hub_snippets/README.md
+    section: Passo a Passo Operacional Como Usar um Snippet
+    question: Como usar um snippet do exemplo à validação?
+    message: Consultar, configurar, importar e executar, e interpretar são quatro decisões explícitas.
+    archetype: notebook_journey
+    semantic_scope: quatro passos reais do README
+    non_goals: [colocar código copiável apenas na imagem, esconder a execução dentro do verbo importar]
+    fact_sources: [ambiente_fonte/.assistant/hub_snippets/README.md]
+    alt: Jornada em notebook desde a consulta ao exemplo até a interpretação do resultado.
+    caption: O snippet acelera a implementação, mas o notebook ainda configura dependências, executa a API e valida o retorno.
+    text_equivalent_anchor: "️-passo-a-passo-operacional-como-usar-um-snippet"
+    anchor_scope: existing_section
+    planned_ascii_anchor: passo-a-passo-operacional-como-usar-um-snippet
+    render_targets: [readme_wide]
+
+  - id: snippets.04_contrato_de_reuso
+    prototype: false
+    signature: false
+    owner_readme: ambiente_fonte/.assistant/hub_snippets/README.md
+    section: O Contrato de Reuso
+    question: O que sustenta um reuso confiável?
+    message: Interface previsível, execução consciente e evidência reproduzível sustentam o reuso.
+    archetype: trust_bridge
+    semantic_scope: contrato antes, durante e depois da chamada
+    non_goals: [prometer funções puras, colocar a pessoa como componente estrutural da API]
+    fact_sources: [ambiente_fonte/.assistant/hub_snippets/README.md]
+    alt: Ponte de reuso apoiada por interface previsível, execução consciente e evidência reproduzível.
+    caption: Dependências, efeitos, parâmetros, limites e resultados precisam permanecer observáveis.
+    text_equivalent_anchor: "️-passo-a-passo-operacional-como-usar-um-snippet"
+    anchor_scope: existing_parent_section
+    planned_ascii_anchor: o-contrato-de-reuso
+    render_targets: [readme_wide]
+
+  - id: scripts.01_anatomia_pasta
+    prototype: false
+    signature: false
+    owner_readme: ambiente_fonte/.assistant/hub_scripts/README.md
+    section: Arquitetura e o Padrão Pasta de Objeto
+    question: Como um Hub Script é organizado?
+    message: Interface, implementação e demonstração permanecem separadas sem impor um retorno universal.
+    archetype: exploded_anatomy
+    semantic_scope: estrutura de pasta de um script
+    non_goals: [afirmar que todo script retorna status, duplicar a anatomia visual de snippet]
+    fact_sources: [ambiente_fonte/.assistant/hub_scripts/README.md]
+    alt: Vista explodida de uma pasta de Hub Script com interface, implementação e notebook de exemplo.
+    caption: O exemplo demonstra o contrato específico da ferramenta, que pode retornar estruturas diferentes.
+    text_equivalent_anchor: "-o-que-é-um-script-neste-ecossistema"
+    anchor_scope: existing_parent_section
+    planned_ascii_anchor: arquitetura-e-o-padrao-pasta-de-objeto
+    render_targets: [readme_standard]
+
+  - id: scripts.02_catalogo_diagnosticos
+    prototype: true
+    signature: true
+    owner_readme: ambiente_fonte/.assistant/hub_scripts/README.md
+    section: Catálogo Detalhado
+    question: Que tarefa cada família de script atende e qual retorno produz?
+    message: Sete ferramentas executadas sob demanda cobrem qualidade, estabilidade, transformação analítica e governança técnica, com contratos de retorno diferentes.
+    archetype: diagnostic_workbench
+    semantic_scope: sete scripts reais, quatro zonas funcionais e tipos de retorno
+    non_goals:
+      - parecer monitoramento contínuo
+      - usar radar sem escala quantitativa
+      - transformar PASS WARN FAIL em contrato universal
+    fact_sources:
+      - ambiente_fonte/.assistant/hub_scripts/README.md
+      - ambiente_fonte/.assistant/hub_scripts
+    alt: Bancada dos Hub Scripts com sete ferramentas executadas sob demanda, agrupadas em qualidade, estabilidade, transformação analítica e governança técnica.
+    caption: Cada instrumento responde a uma pergunta e devolve uma estrutura própria; a tabela do README permanece o catálogo canônico.
+    text_equivalent_anchor: "-catálogo-detalhado"
+    anchor_scope: existing_section
+    planned_ascii_anchor: catalogo-detalhado
+    render_targets: [readme_wide, presentation_hero]
+    prototype_content:
+      badge: EXECUÇÃO SOB DEMANDA
+      zones:
+        - title: Qualidade e perfil
+          note: inspecionar a base
+          accent: databricks_native
+          tools:
+            - [data_quality_check, dict · status e alertas, shield-check]
+            - [quick_profile, dict · perfil, scan-search]
+        - title: Estabilidade
+          note: mudança de distribuição
+          accent: supporting_method
+          tools:
+            - [drift_detector, dict · classificações, activity]
+        - title: Transformação analítica
+          note: construir features RFV
+          accent: supporting_method
+          tools:
+            - [rfv_calculator, Spark DataFrame, users-round]
+        - title: Governança técnica
+          note: schema, nomes e documentação
+          accent: human_decision
+          tools:
+            - [schema_to_yaml, texto YAML ou JSON, file-code-2]
+            - [naming_checker, lista de violações, spell-check-2]
+            - [doc_coverage, dict · métricas, notebook-tabs]
+
+  - id: scripts.03_panorama_retornos
+    prototype: false
+    signature: false
+    owner_readme: ambiente_fonte/.assistant/hub_scripts/README.md
+    section: Passo a Passo Operacional Como Usar um Script
+    question: Quais contratos de retorno existem nos Hub Scripts?
+    message: Recurso e parâmetros entram no utilitário; DataFrame, texto, listas, métricas, alertas ou classificações podem sair.
+    archetype: return_panorama
+    semantic_scope: diversidade de retornos dos sete scripts
+    non_goals: [inventar schema universal, apresentar WARN como transição para FAIL]
+    fact_sources: [ambiente_fonte/.assistant/hub_scripts]
+    alt: Panorama de entradas e dos diferentes tipos de retorno produzidos pelos sete Hub Scripts.
+    caption: O consumidor interpreta o contrato específico do script e codifica separadamente qualquer reação operacional.
+    text_equivalent_anchor: "️-passo-a-passo-operacional-como-usar-um-script"
+    anchor_scope: existing_section
+    planned_ascii_anchor: passo-a-passo-operacional-como-usar-um-script
+    render_targets: [readme_wide]
+
+  - id: scripts.04_diagnostico_vs_enforcement
+    prototype: false
+    signature: false
+    owner_readme: ambiente_fonte/.assistant/hub_scripts/README.md
+    section: Diagnóstico não é Enforcement
+    question: Quem mede, quem decide e quem orquestra?
+    message: O script produz evidência; a política consumidora escolhe a reação; serviços operacionais aplicam o fluxo quando configurados.
+    archetype: operational_zones
+    semantic_scope: medição, política e orquestração
+    non_goals: [mostrar agendamento ou bloqueio automático, generalizar disponibilidade de serviços]
+    fact_sources: [ambiente_fonte/.assistant/hub_scripts/README.md, .claude/rules/genie-code-oficial.md]
+    alt: Três zonas separando diagnóstico, política consumidora e orquestração Databricks.
+    caption: Um Hub Script não agenda, notifica nem interrompe outro processo por conta própria.
+    text_equivalent_anchor: "-diagnóstico-não-é-enforcement"
+    anchor_scope: existing_section
+    planned_ascii_anchor: diagnostico-nao-e-enforcement
+    render_targets: [readme_wide]
+
+  - id: scripts.05_veredito_data_quality
+    prototype: false
+    signature: false
+    owner_readme: ambiente_fonte/.assistant/hub_scripts/README.md
+    section: Leitura visual do veredito
+    question: Como interpretar o retorno de data_quality_check?
+    message: PASS, WARN e FAIL são estados irmãos do diagnóstico; somente uma política externa decide a reação.
+    archetype: state_machine_with_policy_gate
+    semantic_scope: data_quality_check exclusivamente
+    non_goals: [estender o contrato aos demais scripts, fazer FAIL significar parada automática, chamar PASS de homologação]
+    fact_sources:
+      - ambiente_fonte/.assistant/hub_scripts/data_quality_check/data_quality_check.py
+      - ambiente_fonte/.assistant/hub_scripts/README.md
+    alt: Três estados do data_quality_check seguidos de um gate separado de política consumidora.
+    caption: PASS indica apenas que as verificações configuradas não encontraram violações; WARN e FAIL também exigem interpretação da política consumidora.
+    text_equivalent_anchor: "️-o-que-acontece-durante-a-execução"
+    anchor_scope: existing_parent_section
+    planned_ascii_anchor: leitura-visual-do-veredito
+    render_targets: [readme_wide]
+
+  - id: skills.01_descoberta_e_selecao
+    prototype: false
+    signature: false
+    owner_readme: ambiente_fonte/.assistant/skills/README.md
+    section: Como o Genie Code e o Usuário utilizam as Skills
+    question: Como relevância e menção explícita conduzem à skill?
+    message: A Genie Code pode carregar uma skill relevante, ou a pessoa pode selecioná-la com @; as duas rotas convergem na skill carregada.
+    archetype: converging_routes
+    semantic_scope: descoberta por relevance e seleção explícita
+    non_goals: [inventar limiar de confiança, exigir confirmação adicional, inventar nome de skill]
+    fact_sources: [ambiente_fonte/.assistant/skills/README.md, .claude/rules/genie-code-oficial.md]
+    alt: Duas rotas independentes, relevância e menção com @, convergindo no carregamento de uma Agent Skill.
+    caption: A description ajuda o roteamento; a menção com @ torna a escolha explícita.
+    text_equivalent_anchor: "-como-o-genie-code-e-o-usuário-utilizam-as-skills"
+    anchor_scope: existing_section
+    planned_ascii_anchor: como-o-genie-code-e-o-usuario-utilizam-as-skills
+    render_targets: [readme_wide]
+
+  - id: skills.02_skill_helpers_runtime
+    prototype: false
+    signature: false
+    owner_readme: ambiente_fonte/.assistant/skills/README.md
+    section: Relação entre Skills, Hub Snippets e Hub Scripts
+    question: Onde termina o método e começa a execução?
+    message: A skill orienta metodologia e guardrails; o notebook importa e executa helpers explicitamente.
+    archetype: architectural_cutaway
+    semantic_scope: plano de contexto versus plano de runtime
+    non_goals: [mostrar recomendação como importação, colocar helper no contexto automático]
+    fact_sources: [ambiente_fonte/.assistant/skills/README.md]
+    alt: Dois planos separando método da Agent Skill e execução explícita de helpers no notebook.
+    caption: Orientação metodológica e código executável são responsabilidades diferentes.
+    text_equivalent_anchor: "-relação-entre-skills-hub-snippets-e-hub-scripts"
+    anchor_scope: existing_section
+    planned_ascii_anchor: relacao-entre-skills-hub-snippets-e-hub-scripts
+    render_targets: [readme_wide]
+
+  - id: skills.03_anatomia_skill
+    prototype: true
+    signature: true
+    owner_readme: ambiente_fonte/.assistant/skills/README.md
+    section: Arquitetura de Skills no Hub
+    question: O que fica dentro e fora de SKILL.md?
+    message: Frontmatter e instruções vivem no mesmo SKILL.md; templates, referências e scripts são recursos associados e opcionais.
+    archetype: skill_dossier
+    semantic_scope: anatomia física e progressive disclosure de uma skill
+    non_goals:
+      - mostrar frontmatter como arquivo separado
+      - afirmar que todo recurso é carregado sempre
+      - confundir o mecanismo nativo com o conteúdo customizado
+    fact_sources:
+      - ambiente_fonte/.assistant/skills/README.md
+      - .claude/rules/genie-code-oficial.md
+    alt: Dossiê de uma Agent Skill mostrando frontmatter e instruções dentro de SKILL.md e recursos opcionais ao lado.
+    caption: O mecanismo Agent Skills reconhece o pacote; o conteúdo metodológico e seus recursos são mantidos pelo Hub.
+    text_equivalent_anchor: "-relação-entre-skills-hub-snippets-e-hub-scripts"
+    anchor_scope: existing_parent_section
+    planned_ascii_anchor: estrutura-de-uma-skill-profissional
+    render_targets: [readme_standard, presentation_hero]
+  - id: prompts.01_mapa_familias
+    prototype: false
+    signature: false
+    owner_readme: ambiente_fonte/.assistant/hub_prompts/README.md
+    section: Famílias Funcionais de Prompts
+    question: Qual família de briefing corresponde ao resultado esperado?
+    message: A escolha do briefing parte da decisão e do artefato esperado, não apenas do nome do prompt.
+    archetype: briefing_router
+    semantic_scope: quatro famílias documentadas no README
+    non_goals: [duplicar o catálogo completo, mostrar skill ou helper como obrigatório]
+    fact_sources: [ambiente_fonte/.assistant/hub_prompts/README.md]
+    alt: Roteador editorial que relaciona quatro tipos de resultado às famílias de briefing adequadas.
+    caption: O catálogo textual continua canônico; a figura ensina como escolher a família.
+    text_equivalent_anchor: "-catálogo-detalhado-de-prompts"
+    anchor_scope: existing_parent_section
+    planned_ascii_anchor: familias-do-ciclo-de-dados
+    render_targets: [readme_standard]
+
+  - id: prompts.02_fluxo_operacional
+    prototype: false
+    signature: false
+    owner_readme: ambiente_fonte/.assistant/hub_prompts/README.md
+    section: Passo a Passo Operacional Do Briefing ao Resultado
+    question: Como o briefing evolui até uma entrega verificável?
+    message: Seleção, preenchimento, contexto, revisão e validação são os cinco macroestágios do README.
+    archetype: five_stage_storyboard
+    semantic_scope: cinco etapas reais do uso do briefing
+    non_goals: [inventar um sexto macroestágio, chamar o PNG de interativo, transformar revisão em trava universal]
+    fact_sources: [ambiente_fonte/.assistant/hub_prompts/README.md]
+    alt: Storyboard em cinco estágios desde a escolha do briefing até a validação da entrega.
+    caption: A execução ocorre dentro do escopo e da política definidos no estágio de revisão.
+    text_equivalent_anchor: "️-passo-a-passo-operacional-do-briefing-ao-resultado"
+    anchor_scope: existing_section
+    planned_ascii_anchor: passo-a-passo-operacional-do-briefing-ao-resultado
+    render_targets: [readme_wide]
+
+  - id: prompts.03_anatomia_briefing
+    prototype: true
+    signature: true
+    owner_readme: ambiente_fonte/.assistant/hub_prompts/README.md
+    section: A Anatomia de uma Pasta de Prompt
+    question: O que compõe um briefing técnico forte?
+    message: Um briefing conecta intenção e contexto, recursos e restrições, modo de trabalho, contrato de saída e validação final.
+    archetype: briefing_blueprint
+    semantic_scope: campos reais e controles dos templates do Hub Prompts
+    non_goals:
+      - inventar schema, resposta ou execução observada
+      - substituir o template copiável
+      - esconder campos desconhecidos
+    fact_sources:
+      - ambiente_fonte/.assistant/hub_prompts/README.md
+      - ambiente_fonte/.assistant/hub_prompts/eda_rapida/eda_rapida.md
+    alt: Blueprint de um briefing com objetivo e contexto, recursos, restrições, modo de trabalho, contrato de saída e validação final.
+    caption: O template permanece o contrato copiável; a figura mostra como seus blocos reduzem ambiguidade e tornam o aceite verificável.
+    text_equivalent_anchor: "️-a-anatomia-de-uma-pasta-de-prompt"
+    anchor_scope: existing_section
+    planned_ascii_anchor: estrutura-do-hub-prompts
+    render_targets: [readme_standard, presentation_hero]

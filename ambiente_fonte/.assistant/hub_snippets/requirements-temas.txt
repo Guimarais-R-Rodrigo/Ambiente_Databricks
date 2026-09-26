@@ -1,0 +1,3 @@
+# Validação explícita V02. Não instalar no import; respeitar política do ambiente.
+jsonschema==4.26.0
+referencing==0.37.0

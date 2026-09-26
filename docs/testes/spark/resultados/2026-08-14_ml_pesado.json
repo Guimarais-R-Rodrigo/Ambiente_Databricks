@@ -1,0 +1,1 @@
+{"ok": 3, "falha": 1, "resultados": {"mlp_embeddings": {"status": "OK", "detalhe": "treinou com 1 categorica"}, "tabnet_wrapper": {"status": "OK", "detalhe": "treinou sem registro"}, "prophet_wrapper": {"status": "FALHA", "erro": "AttributeError: 'Prophet' object has no attribute 'stan_backend'"}, "arima_wrapper": {"status": "OK", "detalhe": "ajustou ARIMA"}}}

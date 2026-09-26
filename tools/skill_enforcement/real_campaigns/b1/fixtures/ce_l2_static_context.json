@@ -1,0 +1,41 @@
+{
+  "anchor": "anchor_snapshot",
+  "anchor_grain": "ONE_ROW_PER_ENTITY_DECISION",
+  "cardinality": "N:1",
+  "decision_at": "2026-01-10T00:00:00Z",
+  "entity_keys": [
+    "entity_id"
+  ],
+  "not_applicable_reason": "Synthetic static attribute declared invariant over the decision period.",
+  "null_key_policy": "REJECT",
+  "pit": "NOT_APPLICABLE",
+  "profile": "CONTEXT_ONLY_PILOT_V1",
+  "requested_effect": "NONE",
+  "schema_version": "SER05-CONTEXT-1",
+  "sources": [
+    {
+      "columns": [
+        "entity_id",
+        "reference_at",
+        "available_at"
+      ],
+      "content_sha256": "94444ab59ced9bdfee79fc8ec48536354243cc000436bb2f10e355228e48f056",
+      "grain": "ONE_ROW_PER_ENTITY_DECISION",
+      "id": "anchor_snapshot",
+      "snapshot_id": "anchor_snapshot_synthetic_v1"
+    },
+    {
+      "columns": [
+        "entity_id",
+        "reference_at",
+        "available_at"
+      ],
+      "content_sha256": "ee1e053a125aed64b6d65664727da742764683266b2c6a146d332737a88261ed",
+      "grain": "ENTITY_SNAPSHOT",
+      "id": "attributes_snapshot",
+      "snapshot_id": "attributes_snapshot_synthetic_v1"
+    }
+  ],
+  "synthetic": true,
+  "temporal": null
+}

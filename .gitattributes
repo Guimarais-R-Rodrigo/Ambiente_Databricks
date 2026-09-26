@@ -1,0 +1,24 @@
+# Política de fim de linha do repositório.
+#
+# Por que existe: em 08/09/2026 o diagnóstico registrado em
+# docs/testes/2026-09-08_diagnostico-eol.md encontrou 647 arquivos CRLF e 1 com
+# EOL misto na árvore de trabalho contra um índice inteiramente LF. Nenhum tinha
+# diferença de conteúdo. Sem este arquivo, cada máquina e cada agente enxerga uma
+# worktree diferente, `bundle_implantacao.py` recusa gerar o pacote por worktree
+# suja, e o diff de qualquer PR fica ilegível.
+#
+# `eol=lf` normaliza no índice E no checkout, em qualquer sistema operacional.
+
+* text=auto eol=lf
+
+# Binários: nunca tratar como texto, mesmo que a heurística erre.
+*.zip   binary
+*.gz    binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.pdf   binary
+*.dbc   binary
+*.xlsx  binary

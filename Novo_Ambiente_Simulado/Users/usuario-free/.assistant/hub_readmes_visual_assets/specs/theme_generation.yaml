@@ -1,0 +1,50 @@
+version: 1
+status: candidate_v06
+purpose: "Conectar o compositor editorial v2 a um tema resolvido sem transformar assets em uma segunda fonte de tema."
+source_of_truth:
+  theme: "hub_snippets.visual.tema.ResolvedTheme"
+  bridge: "tools/readme_visuals/theme_bridge.py"
+  renderer: "tools/readme_visuals/theme_assets.mjs"
+  visual_contracts: "ambiente_fonte/.assistant/hub_readmes_visual_assets/specs/visual_contracts.yaml"
+  frozen_asset_contract: "ambiente_fonte/.assistant/hub_padroes/identidade_visual/assets.json"
+
+rules:
+  - "theme_id seleciona uma configuração canônica; caminho JSON arbitrário não é entrada pública."
+  - "tokens chegam ao renderer somente depois de resolve_theme/load_theme validar schema, contexto e asset_set_id."
+  - "o pacote ativo em hub_readmes_visual_assets não é sobrescrito pela geração V06."
+  - "assets congelados preservam bytes e SHA-256; não existe recoloração automática de PNG/SVG aprovado."
+  - "mudança paramétrica que altere bytes vira variante candidata e exige nova revisão antes de promoção."
+  - "SOURCE_DATE_EPOCH é obrigatório para que manifesto e geração sejam reproduzíveis."
+  - "gerar, revisar, aprovar e publicar são operações distintas; este contrato implementa somente geração e verificação local."
+
+classifications:
+  frozen:
+    meaning: "byte aprovado ou baseline contratual imutável"
+    action_on_change: "fail_closed"
+  frozen_approved_signature:
+    meaning: "assinatura editorial aprovada copiada sem reinterpretar design"
+    action_on_change: "fail_closed"
+  parametric_equivalent:
+    meaning: "renderização por tokens cujo PNG é idêntico ao ativo"
+    action_on_change: "keep_active"
+  variant_review_required:
+    meaning: "renderização válida, mas bytes diferem do ativo"
+    action_on_change: "create_new_revision_before_promotion"
+
+output:
+  root: ".artifacts/visual-v2/theme-variants/<theme_id>/<fingerprint-prefix>/"
+  status: "candidate_not_approved"
+  manifest: "manifest.yaml"
+  manifest_hash: "manifest.sha256"
+  active_package_mutated: false
+
+manifest_fields:
+  theme: [theme_id, theme_version, context, asset_set_id, source, content_sha256, schema_sha256, asset_manifest_sha256, fingerprint]
+  asset: [id, type, variant, classification, action, theme_id, theme_version, width, height, intended_use, files, sha256, svg_sha256, active]
+
+scope_limits:
+  - "não publica no Databricks"
+  - "não aprova tema ou asset"
+  - "não altera ACL, compute, Spark, SQL ou MLflow"
+  - "não promete renderização de browser, acessibilidade visual efetiva ou UAT"
+  - "não antecipa integração transversal de V08 nem guias de App/AI-BI de versões posteriores"

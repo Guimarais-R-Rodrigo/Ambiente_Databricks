@@ -1,0 +1,32 @@
+name: Contrato de temas V01
+on:
+  pull_request:
+  push:
+    branches: [main, codex/temas-v01]
+permissions:
+  contents: read
+jobs:
+  contrato:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: |
+            tools/requirements-dev.txt
+            tools/requirements-temas-dev.txt
+      - name: Instalar dependências de manutenção
+        run: python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt
+      - name: Conferir contrato e documentação derivada
+        run: python -B tools/temas_v01_contract.py
+      - name: Regressões e mutantes V01
+        run: python -B -m unittest discover -s tools/tests -p 'test_temas_v01*.py' -v

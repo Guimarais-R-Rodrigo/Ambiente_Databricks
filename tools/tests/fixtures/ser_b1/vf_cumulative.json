@@ -1,0 +1,154 @@
+{
+  "expected_table": [
+    {
+      "cobertura_observada": 1.0,
+      "mob": 0,
+      "n_contratos_observados": 2,
+      "n_contratos_safra": 2,
+      "n_eventos_acumulados": 0,
+      "safra": "2026-01",
+      "taxa": 0.0,
+      "taxa_acumulada": 0.0
+    },
+    {
+      "cobertura_observada": 1.0,
+      "mob": 1,
+      "n_contratos_observados": 2,
+      "n_contratos_safra": 2,
+      "n_eventos_acumulados": 1,
+      "safra": "2026-01",
+      "taxa": 0.5,
+      "taxa_acumulada": 0.5
+    },
+    {
+      "cobertura_observada": 0.5,
+      "mob": 2,
+      "n_contratos_observados": 1,
+      "n_contratos_safra": 2,
+      "n_eventos_acumulados": 1,
+      "safra": "2026-01",
+      "taxa": null,
+      "taxa_acumulada": null
+    },
+    {
+      "cobertura_observada": 1.0,
+      "mob": 0,
+      "n_contratos_observados": 2,
+      "n_contratos_safra": 2,
+      "n_eventos_acumulados": 1,
+      "safra": "2026-02",
+      "taxa": 0.5,
+      "taxa_acumulada": 0.5
+    },
+    {
+      "cobertura_observada": 1.0,
+      "mob": 1,
+      "n_contratos_observados": 2,
+      "n_contratos_safra": 2,
+      "n_eventos_acumulados": 1,
+      "safra": "2026-02",
+      "taxa": 0.5,
+      "taxa_acumulada": 0.5
+    }
+  ],
+  "fixture_id": "VF-F01-CUMULATIVE",
+  "request": {
+    "absence_policy": "MISSING_ROW_NOT_ZERO",
+    "cohort_roster": [
+      {
+        "id": "a1",
+        "originated_at": "2026-01-01T00:00:00Z"
+      },
+      {
+        "id": "a2",
+        "originated_at": "2026-01-01T00:00:00Z"
+      },
+      {
+        "id": "b1",
+        "originated_at": "2026-02-01T00:00:00Z"
+      },
+      {
+        "id": "b2",
+        "originated_at": "2026-02-01T00:00:00Z"
+      }
+    ],
+    "cutoff": "2026-03-01T00:00:00Z",
+    "denominator": "MOB0_UNIQUE_IDS_FIXED_PER_COHORT",
+    "duplicate_policy": "REJECT",
+    "estimand": "BINARY_CUMULATIVE_INCIDENCE",
+    "max_mob": 2,
+    "periodicity": "MONTH",
+    "population_id": "synthetic-VF-F01-CUMULATIVE",
+    "profile": "MONTHLY_BINARY_PILOT_V1",
+    "requested_effect": "NONE",
+    "rows": [
+      {
+        "id": "a1",
+        "mob": 0,
+        "observed_at": "2026-01-01T00:00:00Z",
+        "originated_at": "2026-01-01T00:00:00Z",
+        "target": 0
+      },
+      {
+        "id": "a2",
+        "mob": 0,
+        "observed_at": "2026-01-01T00:00:00Z",
+        "originated_at": "2026-01-01T00:00:00Z",
+        "target": 0
+      },
+      {
+        "id": "a1",
+        "mob": 1,
+        "observed_at": "2026-02-01T00:00:00Z",
+        "originated_at": "2026-01-01T00:00:00Z",
+        "target": 1
+      },
+      {
+        "id": "a2",
+        "mob": 1,
+        "observed_at": "2026-02-01T00:00:00Z",
+        "originated_at": "2026-01-01T00:00:00Z",
+        "target": 0
+      },
+      {
+        "id": "a1",
+        "mob": 2,
+        "observed_at": "2026-03-01T00:00:00Z",
+        "originated_at": "2026-01-01T00:00:00Z",
+        "target": 1
+      },
+      {
+        "id": "b1",
+        "mob": 0,
+        "observed_at": "2026-02-01T00:00:00Z",
+        "originated_at": "2026-02-01T00:00:00Z",
+        "target": 0
+      },
+      {
+        "id": "b2",
+        "mob": 0,
+        "observed_at": "2026-02-01T00:00:00Z",
+        "originated_at": "2026-02-01T00:00:00Z",
+        "target": 1
+      },
+      {
+        "id": "b1",
+        "mob": 1,
+        "observed_at": "2026-03-01T00:00:00Z",
+        "originated_at": "2026-02-01T00:00:00Z",
+        "target": 0
+      },
+      {
+        "id": "b2",
+        "mob": 1,
+        "observed_at": "2026-03-01T00:00:00Z",
+        "originated_at": "2026-02-01T00:00:00Z",
+        "target": 1
+      }
+    ],
+    "schema_version": "SER03-REQUEST-1",
+    "semantic_mode": "CUMULATIVE",
+    "synthetic": true
+  },
+  "source": "B1_PREPARACAO_SER03_SER05 fixtures; monthly synthetic decisions only"
+}

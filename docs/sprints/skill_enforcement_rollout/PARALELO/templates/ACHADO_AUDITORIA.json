@@ -1,0 +1,22 @@
+{
+  "document_kind": "AUDIT_FINDING_TEMPLATE_NOT_A_RESULT",
+  "finding_id": null,
+  "audit_id": null,
+  "round_id": null,
+  "candidate_sha": null,
+  "auditor_role": null,
+  "severity": null,
+  "category": null,
+  "affected_scope": null,
+  "path_symbol": null,
+  "requirement_id": null,
+  "expected": null,
+  "observed": null,
+  "evidence_refs": [],
+  "reproduction": null,
+  "impact": null,
+  "suggested_minimal_resolution": null,
+  "status": "OPEN",
+  "author_response": null,
+  "closure_evidence": []
+}

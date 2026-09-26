@@ -1,0 +1,58 @@
+{
+  "purpose": "baseline_de_contrato_nao_e_registro_de_aprovacoes_novas",
+  "source_commit": "8744157fe9c3e0603f689fb2bcad52445e96cb41",
+  "sets": {
+    "sem-assets": [],
+    "editorial-v2-congelado": [
+      {
+        "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/png/cabecalho_crm.png",
+        "sha256": "705a2c35c5182401edc6874fae6de56ed1f5d48891cb2e6dd995682b415ffca2"
+      },
+      {
+        "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/headers/png/cabecalho_squad.png",
+        "sha256": "bc7d804c3127924ad7838dcc8fe1bc0a573daafb7c4512d335210540f3ef7a05"
+      },
+      {
+        "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/assistant/png/02_arquitetura_de_uso.png",
+        "sha256": "7658823d3d1f5e8a75813861e9e61acebe4aca1185d60ccf8f43d31565c311a7"
+      },
+      {
+        "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/assistant/sources/02_arquitetura_de_uso.svg",
+        "sha256": "d87b7fe83debc547e3ebc368e339f3720371ebe45d71e7f30972e37154695715"
+      },
+      {
+        "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/prompts/png/03_anatomia_briefing.png",
+        "sha256": "5b974251dc505780429f66024c78de68259b9e5f6c50e95a4595e0bc972ebaa8"
+      },
+      {
+        "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/prompts/sources/03_anatomia_briefing.svg",
+        "sha256": "f237a8a719a2adcc59e83b59640f5d04b0a9ca78541a2427d97555618c3fb1ff"
+      },
+      {
+        "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/png/01_mapa_ecossistema.png",
+        "sha256": "476743d24837ac6392ff32d8cb73a86ab2811baf38a56e20a2b47c4ea34cc45a"
+      },
+      {
+        "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/raiz/sources/01_mapa_ecossistema.svg",
+        "sha256": "dafab3d97b08af3b68ff24a2e8a881e225559bf5c9638466d95159b8a382d143"
+      },
+      {
+        "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/scripts/png/02_catalogo_diagnosticos.png",
+        "sha256": "4cb42c2bea4af614dcd8de4b9fa676a92f64a784a57da2f71d4c0964c74a3444"
+      },
+      {
+        "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/scripts/sources/02_catalogo_diagnosticos.svg",
+        "sha256": "b50bfe5f2bbda9761314dca4c6cc7fa7b2c41dd739fc36a63c8a572534cc136f"
+      },
+      {
+        "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/skills/png/03_anatomia_skill.png",
+        "sha256": "0edd08059de6dea5f21a8b6cb9f83bc835cf9e89ca42257d418c76bb6af5c390"
+      },
+      {
+        "path": "ambiente_fonte/.assistant/hub_readmes_visual_assets/readmes/skills/sources/03_anatomia_skill.svg",
+        "sha256": "f194a10380639c90a33964003593de188a4288cfe77ea799c3b59736110da14a"
+      }
+    ]
+  },
+  "verified_against_commit": "b88a9ccdde6e61892bc25eb7cf4f4b2577badb23"
+}

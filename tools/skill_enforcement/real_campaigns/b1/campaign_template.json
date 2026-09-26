@@ -1,0 +1,231 @@
+{
+  "schema_version": "SER-PARALLEL-CAMPAIGN-3",
+  "baseline_sha": "0000000000000000000000000000000000000000",
+  "candidate_sha": "0000000000000000000000000000000000000000",
+  "candidate_tree_sha": "0000000000000000000000000000000000000000",
+  "state": "PLANNED",
+  "max_parallel": 2,
+  "max_auditors": 1,
+  "resource_limits": {
+    "light": 2,
+    "cpu": 1,
+    "audit": 1
+  },
+  "command_registry_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "coverage_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "policy_before_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "human_gates": [
+    "B1_P2_LOCAL_CAMPAIGN_ACCEPTANCE"
+  ],
+  "external_gates": [],
+  "repo_mode": "READ_ONLY",
+  "campaign_id": "SER-B1-P2-SER03-SER05",
+  "round_id": "B1ROUND-PLACEHOLDER",
+  "release_spec_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "description": "Primeira campanha real governada: SER03 L3 mensal/binário + SER05 L2 contexto, sem promoção.",
+  "approved_target_vector": {
+    "hub-ml-analise-safra": "L3_CANDIDATE",
+    "hub-ml-cross-eda-ml": "L2_CANDIDATE"
+  },
+  "tasks": [
+    {
+      "task_schema": "SER-PARALLEL-TASK-3",
+      "task_id": "b1.ser03.preflight",
+      "role": "executor",
+      "stage": "P2.PREFLIGHT",
+      "skill": "hub-ml-analise-safra",
+      "candidate_sha": "0000000000000000000000000000000000000000",
+      "command_ids": [
+        "b1:ser03:preflight:cumulative",
+        "b1:ser03:preflight:event"
+      ],
+      "depends_on": [],
+      "read_roots": [
+        "ambiente_fonte/.assistant",
+        "tools/tests/fixtures/ser_b1",
+        "tools/skill_enforcement/real_campaigns/b1"
+      ],
+      "write_roots": [],
+      "protected_paths": [
+        "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json",
+        "ambiente_fonte/.assistant/hub_scripts/skill_execution",
+        "ambiente_fonte/.assistant/hub_snippets/ml/vintage_analysis",
+        "ambiente_fonte/.assistant/skills/hub-ml-analise-safra",
+        "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml",
+        "tools/skill_enforcement/parallel"
+      ],
+      "resource_class": "light",
+      "exclusivity_key": "ser03",
+      "required": true,
+      "expected_effect": "NONE",
+      "failure_scope": "LOCAL_CHAIN"
+    },
+    {
+      "task_schema": "SER-PARALLEL-TASK-3",
+      "task_id": "b1.ser05.preflight",
+      "role": "executor",
+      "stage": "P2.PREFLIGHT",
+      "skill": "hub-ml-cross-eda-ml",
+      "candidate_sha": "0000000000000000000000000000000000000000",
+      "command_ids": [
+        "b1:ser05:preflight:temporal",
+        "b1:ser05:preflight:static"
+      ],
+      "depends_on": [],
+      "read_roots": [
+        "ambiente_fonte/.assistant",
+        "tools/tests/fixtures/ser_b1",
+        "tools/skill_enforcement/real_campaigns/b1"
+      ],
+      "write_roots": [],
+      "protected_paths": [
+        "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json",
+        "ambiente_fonte/.assistant/hub_scripts/skill_execution",
+        "ambiente_fonte/.assistant/hub_snippets/ml/vintage_analysis",
+        "ambiente_fonte/.assistant/skills/hub-ml-analise-safra",
+        "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml",
+        "tools/skill_enforcement/parallel"
+      ],
+      "resource_class": "light",
+      "exclusivity_key": "ser05",
+      "required": true,
+      "expected_effect": "NONE",
+      "failure_scope": "LOCAL_CHAIN"
+    },
+    {
+      "task_schema": "SER-PARALLEL-TASK-3",
+      "task_id": "b1.ser03.execute_verify",
+      "role": "executor",
+      "stage": "P2.L3",
+      "skill": "hub-ml-analise-safra",
+      "candidate_sha": "0000000000000000000000000000000000000000",
+      "command_ids": [
+        "b1:ser03:execute-verify"
+      ],
+      "depends_on": [
+        "b1.ser03.preflight"
+      ],
+      "read_roots": [
+        "ambiente_fonte/.assistant",
+        "tools/tests/fixtures/ser_b1",
+        "tools/skill_enforcement/real_campaigns/b1"
+      ],
+      "write_roots": [],
+      "protected_paths": [
+        "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json",
+        "ambiente_fonte/.assistant/hub_scripts/skill_execution",
+        "ambiente_fonte/.assistant/hub_snippets/ml/vintage_analysis",
+        "ambiente_fonte/.assistant/skills/hub-ml-analise-safra",
+        "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml",
+        "tools/skill_enforcement/parallel"
+      ],
+      "resource_class": "cpu",
+      "exclusivity_key": "ser03",
+      "required": true,
+      "expected_effect": "NONE",
+      "failure_scope": "LOCAL_CHAIN"
+    },
+    {
+      "task_schema": "SER-PARALLEL-TASK-3",
+      "task_id": "b1.ser03.domain_audit",
+      "role": "domain_auditor",
+      "stage": "P2.AUDIT",
+      "skill": "hub-ml-analise-safra",
+      "candidate_sha": "0000000000000000000000000000000000000000",
+      "command_ids": [
+        "b1:ser03:domain-audit",
+        "b1:ser03:negative-audit"
+      ],
+      "depends_on": [
+        "b1.ser03.execute_verify"
+      ],
+      "read_roots": [
+        "ambiente_fonte/.assistant",
+        "tools/tests/fixtures/ser_b1",
+        "tools/skill_enforcement/real_campaigns/b1"
+      ],
+      "write_roots": [],
+      "protected_paths": [
+        "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json",
+        "ambiente_fonte/.assistant/hub_scripts/skill_execution",
+        "ambiente_fonte/.assistant/hub_snippets/ml/vintage_analysis",
+        "ambiente_fonte/.assistant/skills/hub-ml-analise-safra",
+        "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml",
+        "tools/skill_enforcement/parallel"
+      ],
+      "resource_class": "audit",
+      "exclusivity_key": "domain-auditor",
+      "required": true,
+      "expected_effect": "NONE",
+      "failure_scope": "LOCAL_CHAIN"
+    },
+    {
+      "task_schema": "SER-PARALLEL-TASK-3",
+      "task_id": "b1.ser05.domain_audit",
+      "role": "domain_auditor",
+      "stage": "P2.AUDIT",
+      "skill": "hub-ml-cross-eda-ml",
+      "candidate_sha": "0000000000000000000000000000000000000000",
+      "command_ids": [
+        "b1:ser05:domain-audit",
+        "b1:ser05:negative-audit"
+      ],
+      "depends_on": [
+        "b1.ser05.preflight"
+      ],
+      "read_roots": [
+        "ambiente_fonte/.assistant",
+        "tools/tests/fixtures/ser_b1",
+        "tools/skill_enforcement/real_campaigns/b1"
+      ],
+      "write_roots": [],
+      "protected_paths": [
+        "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json",
+        "ambiente_fonte/.assistant/hub_scripts/skill_execution",
+        "ambiente_fonte/.assistant/hub_snippets/ml/vintage_analysis",
+        "ambiente_fonte/.assistant/skills/hub-ml-analise-safra",
+        "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml",
+        "tools/skill_enforcement/parallel"
+      ],
+      "resource_class": "audit",
+      "exclusivity_key": "domain-auditor",
+      "required": true,
+      "expected_effect": "NONE",
+      "failure_scope": "LOCAL_CHAIN"
+    },
+    {
+      "task_schema": "SER-PARALLEL-TASK-3",
+      "task_id": "b1.evidence_contract_audit",
+      "role": "evidence_auditor",
+      "stage": "P2.AUDIT",
+      "skill": "SER-B1",
+      "candidate_sha": "0000000000000000000000000000000000000000",
+      "command_ids": [
+        "b1:campaign:coverage-audit"
+      ],
+      "depends_on": [
+        "b1.ser03.domain_audit",
+        "b1.ser05.domain_audit"
+      ],
+      "read_roots": [
+        "ambiente_fonte/.assistant",
+        "tools/tests/fixtures/ser_b1",
+        "tools/skill_enforcement/real_campaigns/b1"
+      ],
+      "write_roots": [],
+      "protected_paths": [
+        "ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json",
+        "ambiente_fonte/.assistant/hub_scripts/skill_execution",
+        "ambiente_fonte/.assistant/hub_snippets/ml/vintage_analysis",
+        "ambiente_fonte/.assistant/skills/hub-ml-analise-safra",
+        "ambiente_fonte/.assistant/skills/hub-ml-cross-eda-ml",
+        "tools/skill_enforcement/parallel"
+      ],
+      "resource_class": "audit",
+      "exclusivity_key": "evidence-auditor",
+      "required": true,
+      "expected_effect": "NONE",
+      "failure_scope": "GLOBAL_CAMPAIGN"
+    }
+  ]
+}

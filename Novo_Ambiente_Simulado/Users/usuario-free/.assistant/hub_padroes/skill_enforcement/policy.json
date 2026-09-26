@@ -1,0 +1,412 @@
+{
+  "schema_version": "1.0",
+  "policy_id": "SE07-skill-enforcement-policy",
+  "policy_date": "2026-09-19",
+  "source_of_truth": "ambiente_fonte/.assistant/skills",
+  "semantics": {
+    "current_level": "Nível de enforcement realmente sustentado por artefatos estruturais presentes hoje.",
+    "target_level": "Nível máximo aprovado como direção de migração; não prova implementação.",
+    "rollout_mode": "guidance não mede; audit mede sem bloquear; warn acusa desvio; enforce pode bloquear homologação.",
+    "levels": {
+      "L0": "Guidance — orientação textual.",
+      "L1": "Contract — requisitos estruturados e validáveis estaticamente.",
+      "L2": "Preflight — requisitos resolvidos antes de lógica protegida.",
+      "L3": "Deterministic execution — runner/primitives canônicas com receipt.",
+      "L4": "Fail-closed postflight — conclusão depende de validação final."
+    }
+  },
+  "skills": [
+    {
+      "skill": "hub-ml-analise-safra",
+      "risk_class": "high",
+      "current_level": "L0",
+      "target_level": "L3",
+      "scope_mode": "stage_specific",
+      "rollout_mode": "audit",
+      "policy_status": "defined",
+      "rationale": "MOB, denominadores e triangulação safra×calendário são repetíveis e erros mudam conclusões materiais.",
+      "implemented_artifacts": [
+        "skills/hub-ml-analise-safra/SKILL.md"
+      ],
+      "protected_surfaces": [
+        {
+          "id": "vintage_core",
+          "level": "L3",
+          "evidence": "receipt",
+          "rationale": "Tabela safra×MOB e incidência acumulada devem usar primitive canônica verificável."
+        },
+        {
+          "id": "calendar_derivation",
+          "level": "L2",
+          "evidence": "preflight",
+          "rationale": "Periodicidade e campos temporais precisam ser resolvidos antes do cálculo."
+        }
+      ],
+      "known_debt": []
+    },
+    {
+      "skill": "hub-ml-auditoria-skills",
+      "risk_class": "high",
+      "current_level": "L3",
+      "target_level": "L3",
+      "scope_mode": "stage_specific",
+      "rollout_mode": "audit",
+      "policy_status": "implemented",
+      "rationale": "A auditoria não pode elevar evidência fraca para estado forte nem duplicar o veredito de canonical compliance.",
+      "implemented_artifacts": [
+        "skills/hub-ml-auditoria-skills/SKILL.md",
+        "skills/hub-ml-auditoria-skills/templates/relatorio_auditoria.md",
+        "skills/hub-ml-auditoria-skills/execution_contract.json",
+        "skills/hub-ml-auditoria-skills/scripts/preflight.py",
+        "skills/hub-ml-auditoria-skills/scripts/run.py",
+        "skills/hub-ml-auditoria-skills/release_manifest.json"
+      ],
+      "protected_surfaces": [
+        {
+          "id": "state_ladder",
+          "level": "L2",
+          "evidence": "preflight",
+          "rationale": "Cada recurso deve preservar citado→localizado→lido→importado→chamado→concluído e NOT_OBSERVABLE."
+        },
+        {
+          "id": "independent_verification",
+          "level": "L3",
+          "evidence": "receipt",
+          "rationale": "PASS persistido só vira reverificado após executar o verifier canônico aplicável."
+        }
+      ],
+      "known_debt": [
+        "AUDIT_FALSE_REASSURANCE",
+        "AUDIT_STATE_LADDER",
+        "AUDIT_CONDITIONAL_APPLICABILITY"
+      ]
+    },
+    {
+      "skill": "hub-ml-baseline-ml",
+      "risk_class": "critical",
+      "current_level": "L0",
+      "target_level": "L4",
+      "scope_mode": "stage_specific",
+      "rollout_mode": "audit",
+      "policy_status": "defined",
+      "rationale": "Split, treino, validação e tracking têm risco de leakage e de promoção indevida.",
+      "implemented_artifacts": [
+        "skills/hub-ml-baseline-ml/SKILL.md"
+      ],
+      "protected_surfaces": [
+        {
+          "id": "split_without_leakage",
+          "level": "L3",
+          "evidence": "receipt",
+          "rationale": "Split temporal/grupo deve usar implementação canônica quando aplicável."
+        },
+        {
+          "id": "training_and_tracking",
+          "level": "L4",
+          "evidence": "postflight",
+          "rationale": "Conclusão de baseline exige evidência de treino/validação coerente e tracking sem promoção implícita."
+        }
+      ],
+      "known_debt": []
+    },
+    {
+      "skill": "hub-ml-comentar-notebook",
+      "risk_class": "low",
+      "current_level": "L1",
+      "target_level": "L1",
+      "scope_mode": "whole_skill",
+      "rollout_mode": "audit",
+      "policy_status": "implemented",
+      "rationale": "É fluxo editorial; contrato estático de preservação do código é proporcional e runner analítico seria excesso.",
+      "implemented_artifacts": [
+        "skills/hub-ml-comentar-notebook/SKILL.md",
+        "skills/hub-ml-comentar-notebook/execution_contract.json"
+      ],
+      "protected_surfaces": [
+        {
+          "id": "preserve_code_cells",
+          "level": "L1",
+          "evidence": "static",
+          "rationale": "A política deve proibir alteração de células existentes e exigir documentação ao redor do código."
+        }
+      ],
+      "known_debt": []
+    },
+    {
+      "skill": "hub-ml-concierge",
+      "risk_class": "low",
+      "current_level": "L1",
+      "target_level": "L1",
+      "scope_mode": "whole_skill",
+      "rollout_mode": "audit",
+      "policy_status": "implemented",
+      "rationale": "Descoberta e handoff exigem contrato de escopo; execução analítica final continua fora desta skill.",
+      "implemented_artifacts": [
+        "skills/hub-ml-concierge/SKILL.md",
+        "skills/hub-ml-concierge/execution_contract.json"
+      ],
+      "protected_surfaces": [
+        {
+          "id": "routing_and_handoff",
+          "level": "L1",
+          "evidence": "static",
+          "rationale": "Não inventar target/autorização e não ampliar permissões no handoff."
+        }
+      ],
+      "known_debt": []
+    },
+    {
+      "skill": "hub-ml-criar-objeto",
+      "risk_class": "high",
+      "current_level": "L3",
+      "target_level": "L3",
+      "scope_mode": "stage_specific",
+      "rollout_mode": "audit",
+      "policy_status": "implemented",
+      "rationale": "Criação de arquivos e objetos deve seguir templates e validators determinísticos antes de ser apresentada como pronta.",
+      "implemented_artifacts": [
+        "skills/hub-ml-criar-objeto/SKILL.md",
+        "skills/hub-ml-criar-objeto/execution_contract.json",
+        "skills/hub-ml-criar-objeto/scripts/preflight.py",
+        "skills/hub-ml-criar-objeto/scripts/run.py",
+        "skills/hub-ml-criar-objeto/scripts/object_validation.py",
+        "skills/hub-ml-criar-objeto/release_manifest.json"
+      ],
+      "protected_surfaces": [
+        {
+          "id": "object_shape",
+          "level": "L2",
+          "evidence": "preflight",
+          "rationale": "Tipo, nome, template e destino precisam ser resolvidos antes da escrita."
+        },
+        {
+          "id": "object_validation",
+          "level": "L3",
+          "evidence": "receipt",
+          "rationale": "Objeto criado deve passar validator canônico e notebook de exemplo quando aplicável."
+        }
+      ],
+      "known_debt": []
+    },
+    {
+      "skill": "hub-ml-cross-eda-ml",
+      "risk_class": "critical",
+      "current_level": "L0",
+      "target_level": "L4",
+      "scope_mode": "stage_specific",
+      "rollout_mode": "audit",
+      "policy_status": "defined",
+      "rationale": "Cardinalidade, join e disponibilidade histórica podem multiplicar linhas ou introduzir leakage.",
+      "implemented_artifacts": [
+        "skills/hub-ml-cross-eda-ml/SKILL.md"
+      ],
+      "protected_surfaces": [
+        {
+          "id": "join_diagnostics",
+          "level": "L3",
+          "evidence": "receipt",
+          "rationale": "Cardinalidade e cobertura de join devem usar diagnósticos canônicos."
+        },
+        {
+          "id": "point_in_time_join",
+          "level": "L4",
+          "evidence": "postflight",
+          "rationale": "Join histórico que alimenta ML exige prova fail-closed de point-in-time quando aplicável."
+        }
+      ],
+      "known_debt": []
+    },
+    {
+      "skill": "hub-ml-eda-profissional",
+      "risk_class": "high",
+      "current_level": "L4",
+      "target_level": "L4",
+      "scope_mode": "stage_specific",
+      "rollout_mode": "enforce",
+      "policy_status": "implemented",
+      "rationale": "Piloto completo do SEF com contrato, preflight, runner, Receipt e postflight fail-closed.",
+      "implemented_artifacts": [
+        "skills/hub-ml-eda-profissional/SKILL.md",
+        "skills/hub-ml-eda-profissional/execution_contract.json",
+        "skills/hub-ml-eda-profissional/scripts/preflight.py",
+        "skills/hub-ml-eda-profissional/scripts/run.py",
+        "skills/hub-ml-eda-profissional/scripts/run_enforced.py",
+        "skills/hub-ml-eda-profissional/scripts/postflight.py"
+      ],
+      "protected_surfaces": [
+        {
+          "id": "eda_core",
+          "level": "L4",
+          "evidence": "postflight",
+          "rationale": "Conclusão homologada depende do L4 e de completion.authorized=true."
+        }
+      ],
+      "known_debt": [
+        "ANALYTIC_REDUNDANT_COMPUTATION",
+        "ANALYTIC_METHOD_QUALITY"
+      ]
+    },
+    {
+      "skill": "hub-ml-explainability",
+      "risk_class": "medium",
+      "current_level": "L0",
+      "target_level": "L3",
+      "scope_mode": "stage_specific",
+      "rollout_mode": "audit",
+      "policy_status": "defined",
+      "rationale": "Método varia por modelo, mas binding ao modelo/conjunto e cálculo de explicação podem ser verificados.",
+      "implemented_artifacts": [
+        "skills/hub-ml-explainability/SKILL.md"
+      ],
+      "protected_surfaces": [
+        {
+          "id": "model_and_dataset_binding",
+          "level": "L2",
+          "evidence": "preflight",
+          "rationale": "Modelo, versão e população explicada precisam ser identificados antes do cálculo."
+        },
+        {
+          "id": "explanation_computation",
+          "level": "L3",
+          "evidence": "receipt",
+          "rationale": "SHAP/importância devem registrar método e execução canônica aplicável."
+        }
+      ],
+      "known_debt": []
+    },
+    {
+      "skill": "hub-ml-feature-engineering",
+      "risk_class": "critical",
+      "current_level": "L0",
+      "target_level": "L4",
+      "scope_mode": "stage_specific",
+      "rollout_mode": "audit",
+      "policy_status": "defined",
+      "rationale": "Point-in-time, janelas e materialização têm alto risco de leakage e training-serving skew.",
+      "implemented_artifacts": [
+        "skills/hub-ml-feature-engineering/SKILL.md"
+      ],
+      "protected_surfaces": [
+        {
+          "id": "point_in_time_features",
+          "level": "L4",
+          "evidence": "postflight",
+          "rationale": "Features históricas devem provar corte temporal e disponibilidade."
+        },
+        {
+          "id": "materialization",
+          "level": "L4",
+          "evidence": "authorization",
+          "rationale": "Escrita/materialização exige autorização e validação final."
+        }
+      ],
+      "known_debt": []
+    },
+    {
+      "skill": "hub-ml-monitoramento-modelo",
+      "risk_class": "critical",
+      "current_level": "L0",
+      "target_level": "L4",
+      "scope_mode": "stage_specific",
+      "rollout_mode": "audit",
+      "policy_status": "defined",
+      "rationale": "Drift/performance são repetíveis; retreino/promoção são ações operacionais que não podem ser implícitas.",
+      "implemented_artifacts": [
+        "skills/hub-ml-monitoramento-modelo/SKILL.md"
+      ],
+      "protected_surfaces": [
+        {
+          "id": "monitoring_metrics",
+          "level": "L3",
+          "evidence": "receipt",
+          "rationale": "PSI/CSI/performance devem usar métricas e thresholds explicitamente vinculados."
+        },
+        {
+          "id": "retrain_or_promotion",
+          "level": "L4",
+          "evidence": "authorization",
+          "rationale": "Retreino, alias ou promoção exigem autorização e postflight."
+        }
+      ],
+      "known_debt": []
+    },
+    {
+      "skill": "hub-ml-pipeline-builder",
+      "risk_class": "critical",
+      "current_level": "L0",
+      "target_level": "L4",
+      "scope_mode": "stage_specific",
+      "rollout_mode": "audit",
+      "policy_status": "defined",
+      "rationale": "Deploy, escrita e execução de jobs têm efeitos materiais; planejamento pode permanecer leve, execução precisa de autorização.",
+      "implemented_artifacts": [
+        "skills/hub-ml-pipeline-builder/SKILL.md"
+      ],
+      "protected_surfaces": [
+        {
+          "id": "pipeline_spec",
+          "level": "L2",
+          "evidence": "preflight",
+          "rationale": "Ambiente, objeto alvo e estratégia incremental precisam ser resolvidos antes de gerar deploy."
+        },
+        {
+          "id": "deploy_or_write",
+          "level": "L4",
+          "evidence": "authorization",
+          "rationale": "Deploy/escrita/run em ambiente alvo exige autorização explícita e validação final."
+        }
+      ],
+      "known_debt": []
+    },
+    {
+      "skill": "hub-ml-tutor-databricks",
+      "risk_class": "low",
+      "current_level": "L0",
+      "target_level": "L0",
+      "scope_mode": "whole_skill",
+      "rollout_mode": "guidance",
+      "policy_status": "implemented",
+      "rationale": "Explicação e ensino não devem ser artificialmente engessados quando não há execução material.",
+      "implemented_artifacts": [
+        "skills/hub-ml-tutor-databricks/SKILL.md"
+      ],
+      "protected_surfaces": [
+        {
+          "id": "explanation",
+          "level": "L0",
+          "evidence": "static",
+          "rationale": "Aderência é avaliada pelo SKILL.md e pelas fontes citadas, sem runner obrigatório."
+        }
+      ],
+      "known_debt": []
+    },
+    {
+      "skill": "hub-ml-validacao-estatistica",
+      "risk_class": "high",
+      "current_level": "L0",
+      "target_level": "L3",
+      "scope_mode": "stage_specific",
+      "rollout_mode": "audit",
+      "policy_status": "defined",
+      "rationale": "Plano do teste e interpretação são flexíveis, mas cálculos estatísticos repetíveis podem ser executados por primitives verificáveis.",
+      "implemented_artifacts": [
+        "skills/hub-ml-validacao-estatistica/SKILL.md"
+      ],
+      "protected_surfaces": [
+        {
+          "id": "test_plan",
+          "level": "L2",
+          "evidence": "preflight",
+          "rationale": "Decisão, hipótese, população e multiplicidade precisam ser definidas antes do teste."
+        },
+        {
+          "id": "deterministic_statistics",
+          "level": "L3",
+          "evidence": "receipt",
+          "rationale": "Cálculos disponíveis na biblioteca devem produzir receipt em vez de reimplementação silenciosa."
+        }
+      ],
+      "known_debt": []
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "document_kind": "NON_EXECUTABLE_TASK_TEMPLATE",
+  "launchable": false,
+  "task_id": null,
+  "role_id": null,
+  "candidate_sha": null,
+  "release_spec_digest": null,
+  "profile_digest": null,
+  "command_ids": [],
+  "read_roots": [],
+  "write_roots": [],
+  "protected_paths": [],
+  "resource_lease": null,
+  "evidence_dir": null,
+  "first_failure": null,
+  "output_contract": null,
+  "authorization_ref": null,
+  "forbidden_actions": [
+    "author_code",
+    "change_tests",
+    "change_policy",
+    "change_oracles",
+    "unapproved_install",
+    "unapproved_network",
+    "publish",
+    "merge"
+  ],
+  "instruction": "Campos resolvidos somente pelo pacote aprovado, não pelo agente ao receber.",
+  "round_id": null,
+  "contract_version": "SER-PARALLEL-TASK-3"
+}

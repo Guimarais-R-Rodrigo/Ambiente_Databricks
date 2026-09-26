@@ -1,0 +1,61 @@
+version: 1
+status: approved_active_v2
+
+archetypes:
+  system_atlas:
+    use_for: ecosystem overview with a real organizing center
+    avoid: placing Genie Code at the center of runtime libraries
+  architectural_cutaway:
+    use_for: physical and logical boundaries between source, workspace, context and runtime
+    avoid: presenting every route as sequential or mandatory
+  promotion_track:
+    use_for: ordered gates with explicit rework paths
+    avoid: a closed circle that implies automatic repetition
+  decision_compass:
+    use_for: navigation based on explicit user questions
+    avoid: a radial menu without decision conditions
+  dual_route:
+    use_for: context and runtime paths that remain separate until a defined junction
+    avoid: one linear chain titled as two routes
+  context_confluence:
+    use_for: multiple supported context sources converging on Genie Code
+    avoid: treating snippets and scripts as automatically loaded context
+  exploded_anatomy:
+    use_for: folders, files and document structure
+    avoid: generic cards that hide physical containment
+  capability_landscape:
+    use_for: independent categories grouped by purpose
+    avoid: routes or axes that imply unsupported order or measurement
+  notebook_journey:
+    use_for: a practical sequence performed in a notebook
+    avoid: putting copyable source code only inside the image
+  trust_bridge:
+    use_for: a contract supported by complementary pillars
+    avoid: placing the user as a structural component of the API contract
+  diagnostic_workbench:
+    use_for: tools executed on demand to inspect different risks
+    avoid: looking like live monitoring or a quantitative radar
+  return_panorama:
+    use_for: heterogeneous output types
+    avoid: inventing a universal return schema
+  operational_zones:
+    use_for: measurement, policy and orchestration boundaries
+    avoid: implying that a helper automatically schedules or blocks work
+  state_machine_with_policy_gate:
+    use_for: sibling diagnostic states followed by a separate policy decision
+    avoid: a STOP sign that turns FAIL into automatic enforcement
+  converging_routes:
+    use_for: relevance-based and explicit skill selection
+    avoid: invented confidence thresholds or mandatory confirmation
+  skill_dossier:
+    use_for: SKILL.md containing frontmatter and body plus optional side resources
+    avoid: showing frontmatter as a separate file or phase
+  briefing_router:
+    use_for: choosing a prompt family by expected outcome
+    avoid: duplicating a mutable catalog better kept in text
+  five_stage_storyboard:
+    use_for: the five documented briefing stages
+    avoid: creating an undocumented sixth macro-step
+  briefing_blueprint:
+    use_for: the fields and controls of a real technical briefing
+    avoid: invented examples or responses presented as observed evidence

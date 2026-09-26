@@ -1,0 +1,187 @@
+{
+  "id": "assistant.03_contexto_e_execucao",
+  "archetype": "context_confluence",
+  "source": "readmes/assistant/sources/03_contexto_e_execucao.svg",
+  "published": "readmes/assistant/png/03_contexto_e_execucao.png",
+  "sha256": "2cf9fcab2d591084ddab32b7b694132670102e9888dac458041aba5b992d59f2",
+  "svg_sha256": "8f61160d66ce45a774321a1d299deeb6398b726b586c08826310a32ba68d6965",
+  "width": 1400,
+  "height": 900,
+  "chrome": "compact",
+  "minimum_display_width": 720,
+  "question": "Quais fontes de contexto podem orientar a Genie Code?",
+  "alt": "Confluência de fontes de contexto suportadas para a Genie Code e suas saídas possíveis.",
+  "caption": "O contexto depende da superfície, das permissões, das instruções aplicáveis e dos recursos fornecidos com @ ou Add Context.",
+  "owner_readme": "ambiente_fonte/.assistant/README.md",
+  "anchor": "como-o-contexto-chega-ao-genie-code",
+  "approved_signature": false,
+  "texts": [
+    {
+      "text": "FONTES DIFERENTES, CONTEXTO APLICÁVEL",
+      "x": 56,
+      "y": 29,
+      "width": 761.8955078125,
+      "height": 42.5,
+      "size": 34,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "Código e histórico",
+      "x": 147,
+      "y": 149,
+      "width": 275.17041015625,
+      "height": 38.75,
+      "size": 31,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "célula, consulta, conversa",
+      "x": 147,
+      "y": 198,
+      "width": 344.39453125,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "Metadados permitidos",
+      "x": 147,
+      "y": 306,
+      "width": 340.86376953125,
+      "height": 38.75,
+      "size": 31,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "nomes, schemas e descrições",
+      "x": 147,
+      "y": 355,
+      "width": 401.392578125,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "Instruções aplicáveis",
+      "x": 147,
+      "y": 463,
+      "width": 321.67041015625,
+      "height": 38.75,
+      "size": 31,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "pessoais, workspace, hierarquia",
+      "x": 147,
+      "y": 512,
+      "width": 427.24609375,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "Skills e recursos",
+      "x": 147,
+      "y": 620,
+      "width": 248.22705078125,
+      "height": 38.75,
+      "size": 31,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "método e conteúdo fornecido",
+      "x": 147,
+      "y": 669,
+      "width": 392.328125,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "relevância",
+      "x": 658,
+      "y": 550,
+      "width": 135.32421875,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#A992FF"
+    },
+    {
+      "text": "@ / Add Context: seleção explícita",
+      "x": 56,
+      "y": 722,
+      "width": 454.015625,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#FF6598"
+    },
+    {
+      "text": "Genie Code",
+      "x": 891.162109375,
+      "y": 410,
+      "width": 227.67578125,
+      "height": 50,
+      "size": 40,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "contexto da tarefa",
+      "x": 884.4482421875,
+      "y": 467,
+      "width": 241.103515625,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "Explicação, plano ou código;",
+      "x": 814.6328125,
+      "y": 626,
+      "width": 380.734375,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "ações conforme escopo e política.",
+      "x": 776.8779296875,
+      "y": 668,
+      "width": 456.244140625,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "Uma pasta existir não faz todo o seu conteúdo entrar na conversa.",
+      "x": 56,
+      "y": 818,
+      "width": 879.56640625,
+      "height": 35,
+      "size": 28,
+      "essential": true,
+      "color": "#B8C9DA"
+    }
+  ],
+  "icons": [
+    "notebook-tabs",
+    "database",
+    "file-check-2",
+    "route",
+    "sparkles"
+  ]
+}

@@ -1,0 +1,237 @@
+{
+  "id": "snippets.03_fluxo_operacional",
+  "archetype": "notebook_journey",
+  "source": "readmes/snippets/sources/03_fluxo_operacional.svg",
+  "published": "readmes/snippets/png/03_fluxo_operacional.png",
+  "sha256": "a9122675eb66d828bce735c38b463b9a4d77014d96702f4714fa0f8ee22c8c75",
+  "svg_sha256": "c6ddd9cd6739c7ce7380427225b3347c259e6c9f597ec1a70ce2489d3969d4c2",
+  "width": 1600,
+  "height": 760,
+  "chrome": "compact",
+  "minimum_display_width": 720,
+  "question": "Como usar um snippet do exemplo à validação?",
+  "alt": "Jornada em notebook desde a consulta ao exemplo até a interpretação do resultado.",
+  "caption": "O snippet acelera a implementação, mas o notebook ainda configura dependências, executa a API e valida o retorno.",
+  "owner_readme": "ambiente_fonte/.assistant/hub_snippets/README.md",
+  "anchor": "passo-a-passo-operacional-como-usar-um-snippet",
+  "approved_signature": false,
+  "texts": [
+    {
+      "text": "HUB SNIPPETS · JORNADA NO NOTEBOOK",
+      "x": 68,
+      "y": 23,
+      "width": 664.140625,
+      "height": 40,
+      "size": 32,
+      "essential": false,
+      "color": "#FF6598"
+    },
+    {
+      "text": "Do exemplo à evidência reproduzível",
+      "x": 54,
+      "y": 66,
+      "width": 716.34765625,
+      "height": 50,
+      "size": 40,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "Quatro decisões explícitas mantêm o reuso sob controle.",
+      "x": 54,
+      "y": 118,
+      "width": 858.40625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "notebook de consumo",
+      "x": 254,
+      "y": 249,
+      "width": 347.4375,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "01",
+      "x": 201.400390625,
+      "y": 436,
+      "width": 27.19921875,
+      "height": 30,
+      "size": 24,
+      "essential": false,
+      "color": "#A992FF"
+    },
+    {
+      "text": "Consultar",
+      "x": 131.7099609375,
+      "y": 476,
+      "width": 166.580078125,
+      "height": 42.5,
+      "size": 34,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "abra exemplo_*.py",
+      "x": 77.625,
+      "y": 526,
+      "width": 274.75,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "premissas e saída",
+      "x": 79.4921875,
+      "y": 570,
+      "width": 271.015625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "02",
+      "x": 569.044921875,
+      "y": 436,
+      "width": 31.91015625,
+      "height": 30,
+      "size": 24,
+      "essential": false,
+      "color": "#FFC966"
+    },
+    {
+      "text": "Configurar",
+      "x": 493.4423828125,
+      "y": 476,
+      "width": 183.115234375,
+      "height": 42.5,
+      "size": 34,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "torne a raiz visível",
+      "x": 448,
+      "y": 526,
+      "width": 274,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "confirme dependências",
+      "x": 406.171875,
+      "y": 570,
+      "width": 357.65625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "03",
+      "x": 953.81640625,
+      "y": 436,
+      "width": 32.3671875,
+      "height": 30,
+      "size": 24,
+      "essential": false,
+      "color": "#FF6598"
+    },
+    {
+      "text": "Importar + executar",
+      "x": 803.2041015625,
+      "y": 476,
+      "width": 333.591796875,
+      "height": 42.5,
+      "size": 34,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "execute a API pública",
+      "x": 807.1953125,
+      "y": 526,
+      "width": 325.609375,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "com parâmetros reais",
+      "x": 805.3828125,
+      "y": 570,
+      "width": 329.234375,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "04",
+      "x": 1323.435546875,
+      "y": 436,
+      "width": 33.12890625,
+      "height": 30,
+      "size": 24,
+      "essential": false,
+      "color": "#66E3C4"
+    },
+    {
+      "text": "Interpretar",
+      "x": 1249.1728515625,
+      "y": 476,
+      "width": 181.654296875,
+      "height": 42.5,
+      "size": 34,
+      "essential": true,
+      "color": "#F7FAFC"
+    },
+    {
+      "text": "tipo, schema e unidade",
+      "x": 1163.9921875,
+      "y": 526,
+      "width": 352.015625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "limites e população",
+      "x": 1193.796875,
+      "y": 570,
+      "width": 292.40625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    },
+    {
+      "text": "O código copiável permanece no README e no notebook modelo.",
+      "x": 300.7421875,
+      "y": 622,
+      "width": 998.515625,
+      "height": 40,
+      "size": 32,
+      "essential": true,
+      "color": "#B8C9DA"
+    }
+  ],
+  "icons": [
+    "notebook-tabs",
+    "book-open-check",
+    "settings-2",
+    "play",
+    "badge-check"
+  ]
+}

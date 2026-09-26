@@ -1,0 +1,62 @@
+{
+  "sprint": "R13",
+  "base": "ec4b559d098c96dfececbb17e52fbc276cb485c0",
+  "status": "PASS",
+  "template_version": "1.0.0",
+  "headings": [
+    "## 1. O que é?",
+    "## 2. Que problema este recurso resolve?",
+    "## 3. Quando faz sentido usar?",
+    "## 4. Quando não usar?",
+    "## 5. Como funciona, intuitivamente?",
+    "## 6. Exemplo de situação",
+    "## 7. O que você precisa antes de usar?",
+    "## 8. O que este recurso entrega?",
+    "## 9. Como usar este recurso no Hub?",
+    "## 10. Decisões e configurações que mais importam",
+    "## 11. Limitações, riscos e armadilhas",
+    "## 12. Quais são as alternativas?",
+    "## 13. Como saber se o resultado faz sentido?",
+    "## 14. Arquivos relacionados e próximos passos",
+    "## 15. Referências"
+  ],
+  "counts": {
+    "operational": 75,
+    "present": 75,
+    "exemplar": 3,
+    "exemplar_present": 3,
+    "pending": 0
+  },
+  "operational_by_kind": {
+    "prompt": 16,
+    "script": 7,
+    "snippet": 52
+  },
+  "category_counts": {
+    "constants": 4,
+    "display": 3,
+    "ml": 30,
+    "spark": 7,
+    "testing": 1,
+    "visual": 7
+  },
+  "inventory_count": 78,
+  "blockers": [],
+  "observations": [
+    "A auditoria automática certifica estrutura, coerência interna e regressões; não certifica compreensão humana.",
+    "A0_light: esta execução não é auditoria independente; o próprio fluxo da iniciativa registra essa limitação.",
+    "Databricks Runtime, Spark opcional, publicação no workspace e testes conversacionais Genie Code não são convertidos em homologação por esta R13.",
+    "Referências externas são inventariadas pelos READMEs, mas disponibilidade/conteúdo externo não é revalidado por este gate local."
+  ],
+  "scope": {
+    "template_checklist": true,
+    "skill_criacao": true,
+    "validator": true,
+    "manual": true,
+    "all_readmes": true,
+    "category_indexes": true,
+    "mirror": true,
+    "databricks_homologation": false,
+    "independent_audit": false
+  }
+}
