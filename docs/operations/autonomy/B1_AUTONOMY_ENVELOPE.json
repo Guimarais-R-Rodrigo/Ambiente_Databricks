@@ -23,7 +23,9 @@
     "write_roots": [
       "tools/skill_enforcement/real_campaigns/b1/g6_recovery/**",
       "tools/tests/test_ser_b1_g6_recovery.py",
-      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/**",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/CHANGELOG.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/**",
       "CHANGELOG.md"
     ],
     "protected_roots": [
@@ -34,7 +36,13 @@
       ".github/**",
       "**/skill_enforcement/policy.json",
       "tools/skill_enforcement/real_campaigns/b1/g6/**",
-      "tools/skill_enforcement/real_campaigns/b1/g6_publication/**"
+      "tools/skill_enforcement/real_campaigns/b1/g6_publication/**",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/G6/**",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/G6_*.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/P2_*.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/CASE_MAP.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/SOURCE_BINDINGS.json",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/README.md"
     ],
     "shared_roots_requiring_human_gate": [
       "AGENTS.md",
@@ -90,14 +98,16 @@
         "repo-side authoring only within repo_scope.write_roots",
         "local qualification and causal repair of the SER05 residual recovery package",
         "tests and validators relevant to the current B1 recovery",
+        "B1 live-state/changelog maintenance",
+        "append-only autonomous run records under B1/AUTONOMY",
         "causal commits",
         "normal push to the B1 branch",
-        "draft PR metadata/comments",
-        "B1 state and changelog maintenance"
+        "draft PR metadata/comments"
       ],
       "forbidden": [
         "any path matching repo_scope.protected_roots",
         "any path matching repo_scope.shared_roots_requiring_human_gate without CONTROLLER_MAINTENANCE",
+        "historical B1 evidence/runbooks/checkpoints outside B1/AUTONOMY",
         "any B1 campaign/frozen G6 path not listed in write_roots",
         "force push",
         "destructive reset of user work",

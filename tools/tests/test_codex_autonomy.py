@@ -135,6 +135,30 @@ class CodexAutonomyTests(unittest.TestCase):
             ),
         )
 
+    def test_delta_classifier_protects_historical_b1_evidence(self):
+        self.assertEqual(
+            "PROTECTED",
+            delta.classify_path(
+                "docs/sprints/skill_enforcement_rollout/PARALELO/B1/G6/G6_R10_REMOTE_PASS.md"
+            ),
+        )
+
+    def test_delta_classifier_allows_live_b1_state(self):
+        self.assertEqual(
+            "ALLOWED_A1",
+            delta.classify_path(
+                "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json"
+            ),
+        )
+
+    def test_delta_classifier_allows_autonomy_journal(self):
+        self.assertEqual(
+            "ALLOWED_A1",
+            delta.classify_path(
+                "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/RUN-001.md"
+            ),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
