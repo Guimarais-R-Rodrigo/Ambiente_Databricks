@@ -941,7 +941,9 @@
       "local_validation": "NOT_RUN",
       "unit_tests": "NOT_RUN",
       "remote_reconciliation": "NOT_RUN",
-      "remote_write": "NOT_AUTHORIZED"
+      "remote_write": "NOT_AUTHORIZED",
+      "adversarial_coverage_schema": "SER-B1-G6-PROBE-RECOVERY-ADVERSARIAL-COVERAGE-1",
+      "adversarial_required_cases": 20
     }
   },
   "g6_local_r1": {

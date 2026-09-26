@@ -281,6 +281,91 @@ class G6ProbeRecoveryTests(unittest.TestCase):
             manifest["g6_original_freeze_sha"],
         )
 
+    def test_local_validation_rejects_base_http11_drift(self):
+        with patch.object(rec.base, "_publisher_package_sha256", return_value="0" * 64):
+            result = rec.validate_local()
+        self.assertEqual("FAIL", result["status"])
+        self.assertIn("BASE_HTTP11_PACKAGE_DRIFT", result["issues"])
+
+    def test_consumption_marker_is_atomic_and_single_use(self):
+        local = rec.validate_local()
+        payload = self._auth_payload(local)
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td) / "authorization.json"
+            path.write_text(json.dumps(payload), encoding="utf-8")
+            first = rec._consume_authorization(
+                path, payload, recovery_package_sha256=local["recovery_package_sha256"]
+            )
+            self.assertEqual(64, len(first))
+            with self.assertRaisesRegex(RuntimeError, "AUTHORIZATION_ALREADY_CONSUMED"):
+                rec._consume_authorization(
+                    path, payload, recovery_package_sha256=local["recovery_package_sha256"]
+                )
+
+    def test_execute_rejects_preconsumed_authorization_before_remote_access(self):
+        local = rec.validate_local()
+        payload = self._auth_payload(local)
+        with tempfile.TemporaryDirectory() as td:
+            td = Path(td)
+            path = td / "authorization.json"
+            path.write_text(json.dumps(payload), encoding="utf-8")
+            path.with_name(path.name + ".consumed").write_text("already", encoding="utf-8")
+            with patch.object(rec, "_reconcile_remote") as remote:
+                result = rec.execute(path, td / "evidence")
+        self.assertEqual("FAIL", result["status"])
+        self.assertEqual("AUTH_OR_EVIDENCE_PRECHECK", result["phase"])
+        self.assertFalse(result["authorization_consumed"])
+        self.assertFalse(result["write_started"])
+        remote.assert_not_called()
+
+    def test_success_evidence_does_not_persist_access_token(self):
+        local = rec.validate_local()
+        auth = self._auth_payload(local)
+        remote_path = "/Users/u/ser-b1-g6-tests/08c2a93c4c9d/ser05_l2_free_probe"
+        pre = {
+            "status": "PASS",
+            "target": {"profile": "FREE", "host": rec.EXPECTED_HOST, "current_user_resolved": True},
+            "remote_root": "/Users/u/ser-b1-g6-tests/08c2a93c4c9d",
+            "root_object_count": 1,
+            "ser03": {"state": "EXACT"},
+            "ser05": {"state": "ABSENT", "action": "CREATE", "remote_path": remote_path},
+            "remote_write_performed": False,
+        }
+        final = {
+            **pre,
+            "root_object_count": 2,
+            "ser05": {"state": "EXACT", "action": "ALREADY_CORRECT", "remote_path": remote_path},
+        }
+        ser05 = rec._entries(self.manifest())["ser05-free-probe"]
+        local_hash = rec._local_normalized_hash(ser05)
+        token_value = "private-unit-secret"
+        with tempfile.TemporaryDirectory() as td:
+            td = Path(td)
+            auth_path = td / "authorization.json"
+            auth_path.write_text(json.dumps(auth), encoding="utf-8")
+            evidence = td / "evidence"
+            with patch.object(rec, "_reconcile_remote", side_effect=[pre, pre, final]), \
+                 patch.object(rec.base, "_acquire_u2m_access_token", return_value=token_value), \
+                 patch.object(rec, "_consume_authorization", return_value="a" * 64), \
+                 patch.object(rec.base, "_run_direct_http_import", return_value=(0, "", "")), \
+                 patch.object(rec, "_remote_notebook_hash", return_value=local_hash):
+                result = rec.execute(auth_path, evidence)
+            evidence_text = (evidence / "RUN_STATE.json").read_text(encoding="utf-8")
+        self.assertEqual("PASS", result["status"])
+        self.assertNotIn(token_value, evidence_text)
+        self.assertNotIn("access_token", evidence_text)
+        self.assertNotIn("Authorization", evidence_text)
+
+    def test_coverage_inventory_matches_test_methods(self):
+        coverage = json.loads((HERE / "adversarial_coverage.json").read_text(encoding="utf-8"))
+        methods = {
+            name for name in dir(type(self))
+            if name.startswith("test_")
+        }
+        required = {row[1] for row in coverage["required_cases"]}
+        self.assertTrue(required <= methods)
+        self.assertEqual(len(coverage["required_cases"]), len({row[0] for row in coverage["required_cases"]}))
+
 
 if __name__ == "__main__":
     unittest.main()
