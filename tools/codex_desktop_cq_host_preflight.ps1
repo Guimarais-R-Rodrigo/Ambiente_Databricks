@@ -7,6 +7,8 @@ $ErrorActionPreference = "Stop"
 
 $ExpectedBranch = "ser/B1-ser03-ser05-authoring"
 $ExpectedRepoFragment = "Guimarais-R-Rodrigo/Ambiente_Databricks"
+$QualifiedPythonRootRelative = "~\\AppData\\Local\\Programs\\Python\\Python312"
+$QualifiedPythonRoot = [System.IO.Path]::GetFullPath((Join-Path $HOME "AppData\\Local\\Programs\\Python\\Python312"))
 
 function Write-Utf8NoBom([string]$Path, [string]$Text) {
     $encoding = New-Object System.Text.UTF8Encoding($false)
@@ -75,6 +77,7 @@ if ($userConfigExists) {
 }
 
 $candidates = New-Object 'System.Collections.Generic.List[string]'
+Add-PythonCandidate $candidates (Join-Path $QualifiedPythonRoot "python.exe")
 if ($env:CODEX_CQ_PYTHON) {
     Add-PythonCandidate $candidates $env:CODEX_CQ_PYTHON
 }
@@ -107,10 +110,18 @@ if ($py) {
 $python = $null
 foreach ($candidate in $candidates) {
     try {
-        $probe = (& $candidate -c "import json,sys,importlib.metadata as m; print(json.dumps({'executable':sys.executable,'python_version':sys.version.split()[0],'implementation':sys.implementation.name,'jsonschema_version':m.version('jsonschema')}))" 2>$null)
+        $candidateFull = [System.IO.Path]::GetFullPath($candidate)
+        $rootPrefix = $QualifiedPythonRoot.TrimEnd("\\") + "\\"
+        if (-not $candidateFull.StartsWith($rootPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+            continue
+        }
+        $probe = (& $candidateFull -c "import json,sys,importlib.metadata as m; print(json.dumps({'executable':sys.executable,'python_version':sys.version.split()[0],'implementation':sys.implementation.name,'jsonschema_version':m.version('jsonschema')}))" 2>$null)
         if ($LASTEXITCODE -eq 0 -and $probe) {
             $python = ($probe | Select-Object -First 1) | ConvertFrom-Json
             $python.executable = [System.IO.Path]::GetFullPath($python.executable)
+            if (-not $python.executable.StartsWith($rootPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+                continue
+            }
             break
         }
     }
@@ -149,11 +160,14 @@ if ($LASTEXITCODE -ne 0 -or $finalStatus.Count -ne 0) {
     throw "CQ_HOST_PREFLIGHT_FINAL_WORKTREE_DIRTY"
 }
 
+$recordedAt = [DateTimeOffset]::Now
+
 $payload = [ordered]@{
-    schema_version = "AC-R2-DESKTOP-HOST-PREFLIGHT-1"
+    schema_version = "AC-R2-DESKTOP-HOST-PREFLIGHT-2"
     result = "PASS"
     client_surface = "CODEX_DESKTOP_WINDOWS"
-    recorded_at = (Get-Date).ToString("o")
+    recorded_at = $recordedAt.ToString("o")
+    recorded_at_unix_seconds = $recordedAt.ToUnixTimeSeconds()
     git = [ordered]@{
         root = $root
         branch = $branch
@@ -167,6 +181,8 @@ $payload = [ordered]@{
     }
     python = [ordered]@{
         executable = $python.executable
+        allowed_root = $QualifiedPythonRootRelative
+        within_allowed_root = $true
         python_version = $python.python_version
         implementation = $python.implementation
         jsonschema_version = $python.jsonschema_version
@@ -193,6 +209,7 @@ Write-Host "HEAD = $head"
 Write-Host "TREE = $tree"
 Write-Host "ORIGIN_HEAD = $originHead"
 Write-Host "PYTHON = $($python.executable)"
+Write-Host "PYTHON_ALLOWED_ROOT = $QualifiedPythonRootRelative"
 Write-Host "JSONSCHEMA = $($python.jsonschema_version)"
 Write-Host "EVIDENCE = $jsonPath"
 Write-Host "EVIDENCE_SHA256 = $sha"

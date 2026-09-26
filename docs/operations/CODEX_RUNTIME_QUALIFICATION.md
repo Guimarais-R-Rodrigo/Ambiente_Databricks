@@ -1,6 +1,6 @@
 # Codex Autonomous Controller — runtime qualification
 
-Versão: 1.3  
+Versão: 1.4  
 Decisões donas: ADR-0024 + ADR-0025
 
 CQ0–CQ5 prova o runtime real. Não inicia B1 material e não concede A2.
@@ -58,6 +58,7 @@ remote_plugin            = false
 A0/A1 command network   = disabled
 A0/A1 filesystem :root  = read (Windows elevated backend requirement)
 A0 external scratch     = ~\codex-scratch\Ambiente_Databricks (write)
+qualified Python root    = ~\AppData\Local\Programs\Python\Python312 (read)
 repository root under A0 = read-only for writes
 A1 direct .git write    = denied
 ```

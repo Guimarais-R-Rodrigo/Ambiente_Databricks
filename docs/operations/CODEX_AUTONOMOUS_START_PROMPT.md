@@ -10,8 +10,9 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\codex_desktop_cq
 Só iniciar a conversa se `CQ_HOST_PREFLIGHT = PASS`.
 
 Antes do chat, desabilitar temporariamente plugins externos write-capable em
-Settings > Plugins. Tools internos do próprio Codex app não precisam ser
-desinstalados; mutadores não devem ser invocados durante CQ.
+Settings > Plugins, inclusive Creative Production se estiver habilitado.
+Tools internos do próprio Codex app não precisam ser desinstalados; mutadores
+não devem ser invocados durante CQ.
 
 Use este prompt em uma nova conversa do projeto B1:
 
@@ -32,14 +33,16 @@ Do not load the full CHANGELOG.
 
 Execute CQ0-CQ5 using the Desktop Windows profile. Read and verify the external
 CQ_HOST_PREFLIGHT.json and its SHA256. Use the absolute Python executable bound
-by that preflight; do not rely on the PATH token "python" and do not install
-dependencies.
+by that preflight. It must be inside ~\AppData\Local\Programs\Python\Python312,
+which is read-enabled for A0/A1. Do not rely on the PATH token "python" and do
+not install dependencies.
 
 Codex CLI/version/strict/execpolicy commands are optional observations on this
 surface. If inaccessible, record NOT_OBSERVABLE_DESKTOP rather than inventing
-PASS or blocking solely for that reason. Critical config must instead be proven
-by the active ser-controller-a0 project profile, project-config hash, validator,
-spawned behavior probes and real CQ4 Git bridge behavior.
+PASS or blocking solely for that reason. If the nominal project profile name is
+not observable, record PROJECT_PROFILE_ACTIVE=NOT_OBSERVABLE_DESKTOP and
+continue provisionally. Final PASS requires project-config hash plus CQ3/CQ4/CQ5
+behavioral proof and PROJECT_PROFILE_EFFECTIVE=PASS_BEHAVIORALLY.
 
 The host-side fetch evidence may prove the remote branch identity. PR metadata
 may be DEFERRED_TO_EXTERNAL_ADJUDICATION and will be independently rechecked

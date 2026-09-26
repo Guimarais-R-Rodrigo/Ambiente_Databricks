@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-2
+
+### Evidência incorporada
+
+- (Codex/ChatGPT) Tentativa Desktop em `3285d7ba...` terminou BLOCKED sem mutação repo-side: Creative Production write-capable carregado, Python host-qualified negado pelo sandbox e nome nominal do profile não observável.
+- (ChatGPT) Host preflight havia provado Python 3.12.10 + jsonschema 4.26.0 e identidade Git/PR, mas o executável em LocalAppData não recebeu execução efetiva dentro da sandbox.
+
+### Corrigido
+
+- (ChatGPT) A0/A1 recebem somente `read` explícito em `~\AppData\Local\Programs\Python\Python312`; nenhum write/network/A1 path foi ampliado.
+- (ChatGPT) Host preflight v2 aceita Python somente dentro desse root e emite `recorded_at_unix_seconds` para freshness independente de locale.
+- (ChatGPT) Nome nominal do profile pode ser `NOT_OBSERVABLE_DESKTOP` provisoriamente; PASS final exige prova comportamental cumulativa em CQ3/CQ4/CQ5 e resulta em `PROJECT_PROFILE_EFFECTIVE=PASS_BEHAVIORALLY`.
+- (ChatGPT) Creative Production continua blocker externo real e deve ser desabilitado no app antes do próximo CQ.
+- (ChatGPT) Validator sobe para V9 e a suíte controller passa a 65 métodos definidos estaticamente.
+
+### Limites
+
+- Nenhum write/network/A1/A2 foi ampliado.
+- CQ0–CQ5, B1 material, G6, Genie, Databricks, policy, Ready e merge permanecem NOT_RUN.
+
 ## 2026-09-26 — AC-R2 Desktop Windows CQ compatibility: fechamento estático
 
 - (ChatGPT) `DESKTOP_WINDOWS_CQ_MAINTENANCE_STATIC = PASS` no candidato `121791df5be90ba6d31bbd607c62aa2d52f24765` / tree `b9445413ce9ee7fe784a6697cbad60e8ee08e3c9`.

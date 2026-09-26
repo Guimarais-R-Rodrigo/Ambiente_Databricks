@@ -151,3 +151,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) Desktop host-preflight hardening: safe PowerShell variable boundaries + freshness 30 min; 60 metatest methods definidos. CQ runtime continua NOT_RUN.
 
 (ChatGPT) Desktop Windows CQ maintenance static PASS em 121791df5be90ba6d31bbd607c62aa2d52f24765/b9445413ce9ee7fe784a6697cbad60e8ee08e3c9: validator V8, 60 metatest methods definidos, host preflight v1, 0 findings materiais repo-side. Próximo passo = fast-forward + host preflight + plugins externos write-capable disabled + CQ retry. Runtime permanece NOT_RUN.
+
+(ChatGPT) CM-DESKTOP-RUNTIME-2 autorizado: read explícito apenas para Python312 em A0/A1, host preflight v2 com binding+epoch, profile nominal NOT_OBSERVABLE permitido apenas com CQ3/CQ4/CQ5 behavioral PASS. Creative Production deve ser desabilitado pelo usuário. Validator V9, 65 metatest methods definidos; runtime continua NOT_RUN.

@@ -131,6 +131,27 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertTrue(result["desktop_windows_cq_contract"])
         self.assertTrue(result["desktop_host_preflight"])
 
+    def test_desktop_host_preflight_binds_python_to_qualified_root(self):
+        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        self.assertIn('QualifiedPythonRootRelative = "~\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python312"', text)
+        self.assertIn("within_allowed_root = $true", text)
+        self.assertIn("CQ_HOST_PREFLIGHT_NO_PYTHON_WITH_JSONSCHEMA", text)
+
+    def test_desktop_host_preflight_emits_locale_independent_epoch(self):
+        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        self.assertIn("recorded_at_unix_seconds = $recordedAt.ToUnixTimeSeconds()", text)
+        contract = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        self.assertIn("recorded_at_unix_seconds", contract)
+        self.assertIn("não converter `recorded_at` por locale", contract)
+
+    def test_desktop_nominal_profile_may_be_unobservable_only_with_behavioral_proof(self):
+        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        self.assertIn("PROJECT_PROFILE_ACTIVE = NOT_OBSERVABLE_DESKTOP", text)
+        self.assertIn("PROJECT_PROFILE_EFFECTIVE = PASS_BEHAVIORALLY", text)
+        self.assertIn("CQ3 root/read-only roles/executor/network boundaries = PASS", text)
+        self.assertIn("CQ4 protected Git bridge + hooks = PASS", text)
+        self.assertIn("CQ5 validator + metatests = PASS", text)
+
     def test_desktop_host_preflight_uses_safe_powershell_variable_boundaries(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn('CQ_HOST_PREFLIGHT_LOCAL_REMOTE_DIVERGENCE:${head}:${originHead}', text)
@@ -279,6 +300,21 @@ class CodexAutonomyTests(unittest.TestCase):
         del cfg["permissions"]["ser-b1-a1"]["filesystem"][":root"]
         issues = val._validate_permission_profile(cfg, self.envelope())
         self.assertIn("A1_WINDOWS_ROOT_READ_REQUIRED", issues)
+
+    def test_windows_profiles_read_enable_only_qualified_python_root(self):
+        cfg = val._read_toml(ROOT / ".codex/config.toml")
+        self.assertEqual("read", cfg["permissions"]["ser-controller-a0"]["filesystem"][val.WINDOWS_QUALIFIED_PYTHON_ROOT])
+        self.assertEqual("read", cfg["permissions"]["ser-b1-a1"]["filesystem"][val.WINDOWS_QUALIFIED_PYTHON_ROOT])
+        self.assertFalse(cfg["permissions"]["ser-controller-a0"]["network"]["enabled"])
+        self.assertFalse(cfg["permissions"]["ser-b1-a1"]["network"]["enabled"])
+
+    def test_validator_rejects_missing_qualified_python_read(self):
+        cfg = copy.deepcopy(val._read_toml(ROOT / ".codex/config.toml"))
+        del cfg["permissions"]["ser-controller-a0"]["filesystem"][val.WINDOWS_QUALIFIED_PYTHON_ROOT]
+        del cfg["permissions"]["ser-b1-a1"]["filesystem"][val.WINDOWS_QUALIFIED_PYTHON_ROOT]
+        issues = val._validate_permission_profile(cfg, self.envelope())
+        self.assertIn("A0_WINDOWS_QUALIFIED_PYTHON_READ_REQUIRED", issues)
+        self.assertIn("A1_WINDOWS_QUALIFIED_PYTHON_READ_REQUIRED", issues)
 
     def test_a0_windows_scratch_capability_root_is_explicit(self):
         cfg = val._read_toml(ROOT / ".codex/config.toml")

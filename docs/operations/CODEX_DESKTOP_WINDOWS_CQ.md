@@ -1,6 +1,6 @@
 # Codex Desktop Windows — CQ0–CQ5 profile
 
-Versão: 1.0  
+Versão: 1.1  
 Contrato-base: `CODEX_RUNTIME_QUALIFICATION.md`  
 Decisões donas: ADR-0024 + ADR-0025
 
@@ -24,17 +24,21 @@ O script deve retornar `CQ_HOST_PREFLIGHT = PASS` e criar fora do repositório:
 
 O evidence file liga branch/HEAD/tree, fetch remoto, limpeza do worktree,
 SHA-256 da config project-scoped e um Python absoluto que já importa
-`jsonschema`. Ele não instala dependências e não faz push. A URL remota bruta
-não é persistida; somente a identidade esperada do repositório é registrada.
+`jsonschema`. O Python só é aceito se estiver dentro de
+`~\AppData\Local\Programs\Python\Python312`, root explicitamente read-enabled
+em A0/A1. Ele não instala dependências e não faz push. A URL remota bruta não é
+persistida; somente a identidade esperada do repositório é registrada.
 
-O registro deve ter no máximo **30 minutos** no momento do CQ0-D. Se ultrapassar
-esse limite ou se o checkout mudar após o preflight, repetir D0.
+O registro deve ter no máximo **30 minutos** no momento do CQ0-D. Calcular a
+idade por `recorded_at_unix_seconds`; não converter `recorded_at` por locale.
+Se ultrapassar esse limite ou se o checkout mudar após o preflight, repetir D0.
 
 ## D0.1 — superfícies externas
 
 Antes da conversa, desabilitar temporariamente em **Settings > Plugins** qualquer
 plugin externo com operações persistentes de create/update/delete/share/import/
-generate. Exemplo observado na tentativa anterior: NotebookLM.
+generate. Exemplos observados nas tentativas anteriores: NotebookLM e
+Creative Production.
 
 `features.apps=false` e `remote_plugin=false` no projeto não são prova
 suficiente de ausência de plugins instalados no workspace/conta.
@@ -65,14 +69,24 @@ revalidado fora da sessão na adjudicação independente.
 
 Para project trust/config loading no Desktop:
 
-1. a thread precisa iniciar com o profile ativo `ser-controller-a0`;
+1. a thread deve iniciar sem Full Access ou override manual de permissions;
 2. o SHA-256 da `.codex/config.toml` lida na thread precisa coincidir com D0;
-3. a config precisa declarar esse profile;
-4. não pode existir override vivo observado que amplie a autoridade.
+3. a config precisa declarar `ser-controller-a0` como default;
+4. não pode existir override vivo observado que amplie autoridade;
+5. se o nome nominal do profile for visível, deve ser `ser-controller-a0`;
+6. se o nome nominal não for observável, registrar
+   `PROJECT_PROFILE_ACTIVE = NOT_OBSERVABLE_DESKTOP` e continuar
+   **provisoriamente** para CQ3/CQ4/CQ5.
 
-Como a documentação do Codex só carrega config project-scoped em projeto trusted,
-essa observação comportamental é prova suficiente de loading/trust para este
-profile Desktop. Se o profile ativo não for observável, CQ0-D bloqueia.
+No caso não observável, CQ só pode terminar PASS se, cumulativamente:
+- config hash = D0;
+- CQ3 root/read-only roles/executor/network boundaries = PASS;
+- CQ4 protected Git bridge + hooks = PASS;
+- CQ5 validator + metatests = PASS.
+
+Esse conjunto permite concluir `PROJECT_PROFILE_EFFECTIVE = PASS_BEHAVIORALLY`.
+Sem essas provas, o profile permanece `NOT_PROVEN`; o nome ausente, sozinho,
+não é blocker nem PASS.
 
 `/status`, `/debug-config` e `/permissions` são evidência complementar
 quando disponíveis, não requisitos universais do Desktop.
@@ -86,6 +100,10 @@ absoluto**:
 
 ```powershell
 $H = Get-Content "$HOME\codex-scratch\Ambiente_Databricks\CQ_HOST_PREFLIGHT.json" -Raw | ConvertFrom-Json
+if ($H.python.allowed_root -ne "~\AppData\Local\Programs\Python\Python312" -or
+    $H.python.within_allowed_root -ne $true) {
+    throw "CQ_DESKTOP_PYTHON_BINDING_INVALID"
+}
 $Py = $H.python.executable
 & $Py -c "import sys, importlib.metadata as m; print(sys.executable); print(m.version('jsonschema'))"
 ```
@@ -172,7 +190,8 @@ Além dos campos comuns, registrar:
 CLIENT_SURFACE = CODEX_DESKTOP_WINDOWS
 HOST_PREFLIGHT = PASS|FAIL
 HOST_PREFLIGHT_SHA256 = ...
-PROJECT_PROFILE_ACTIVE = ser-controller-a0 | NOT_OBSERVABLE
+PROJECT_PROFILE_ACTIVE = ser-controller-a0 | NOT_OBSERVABLE_DESKTOP
+PROJECT_PROFILE_EFFECTIVE = PASS_BEHAVIORALLY | FAIL | NOT_PROVEN
 CODEX_CLI = <version>|NOT_OBSERVABLE_DESKTOP
 STRICT_CONFIG_CLI = PASS|FAIL|NOT_OBSERVABLE_DESKTOP
 EXECPOLICY_CLI = PASS|FAIL|NOT_OBSERVABLE_DESKTOP
@@ -182,6 +201,9 @@ EXTERNAL_MUTATING_PLUGIN_SURFACE = ABSENT|BLOCKED
 
 O preflight local pode conter paths absolutos necessários à execução; o bundle
 compartilhável final deve sanitizar home/user paths antes de sair do host.
+
+`PROJECT_PROFILE_ACTIVE=NOT_OBSERVABLE_DESKTOP` só pode coexistir com PASS
+agregado quando `PROJECT_PROFILE_EFFECTIVE=PASS_BEHAVIORALLY`.
 
 `NOT_OBSERVABLE_DESKTOP` nos três campos CLI não é PASS inventado; é uma
 limitação explícita compensada pelos probes comportamentais exigidos.
