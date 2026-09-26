@@ -129,8 +129,10 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ROOT_SANDBOX")
     if cfg.get("approval_policy") != "on-request":
         issues.append("ROOT_APPROVAL_POLICY")
-    if cfg.get("approvals_reviewer") != "user":
+    if cfg.get("approvals_reviewer") != "auto_review":
         issues.append("ROOT_APPROVAL_REVIEWER")
+    if (cfg.get("sandbox_workspace_write") or {}).get("network_access") is not False:
+        issues.append("ROOT_NETWORK_ACCESS")
 
     features = cfg.get("features") or {}
     if features.get("multi_agent") is not True:

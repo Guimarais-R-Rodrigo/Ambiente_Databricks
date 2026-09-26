@@ -24,7 +24,7 @@ Registrar sem segredos:
 - project root;
 - fonte da camada `.codex/config.toml`;
 - modelo/effort efetivos;
-- approval policy;
+- approval policy and effective reviewer;
 - sandbox/permission mode;
 - writable roots;
 - overrides de maior precedência.
@@ -65,7 +65,8 @@ model = gpt-6-astra
 reasoning = high
 sandbox = workspace-write
 approval = on-request
-reviewer = user
+reviewer = auto_review
+sandboxed command network = false
 ```
 
 Esperado para subagentes:
@@ -77,6 +78,17 @@ Esperado para subagentes:
 O sandbox padrão do Codex protege `.git`, `.codex` e `.agents` dentro do
 workspace, mas isso não prova todo o `repo_scope` do envelope. Os hooks e o
 delta checker são defesa adicional.
+
+### Auto-review versus Human Gates
+
+Auto-review decide somente escaladas técnicas que já seriam prompts do sandbox.
+Ele não é fonte de autorização de projeto. A2 activation, policy/current_level,
+Ready, merge, corporativo, dados reais e `CONTROLLER_MAINTENANCE` continuam
+dependendo de referência humana explícita no contrato pertinente.
+
+Se o cliente/organização não disponibilizar auto-review, registrar
+`AUTO_REVIEW_UNAVAILABLE` e usar reviewer humano; isso reduz autonomia, mas não
+autoriza mudar para full access.
 
 ## Gate CQ4 — hooks
 

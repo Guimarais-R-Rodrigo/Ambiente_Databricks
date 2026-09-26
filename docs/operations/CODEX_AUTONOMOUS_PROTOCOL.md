@@ -299,6 +299,12 @@ Narrativa nunca substitui RAW quando o claim exige RAW.
 
 Evidence bundle compartilhável deve aplicar secret/path hygiene. Não persistir tokens.
 
+## 9.1 Auto-review técnico
+
+O projeto pode usar `approvals_reviewer=auto_review` para escaladas técnicas do
+sandbox. Auto-review é reviewer técnico, não autoridade humana do SER. Ele nunca
+substitui referência humana exigida por A2/A3/`CONTROLLER_MAINTENANCE`.
+
 ## 10. Human Gates
 
 O controller para com um pacote de decisão curto contendo:
