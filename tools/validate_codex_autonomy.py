@@ -135,6 +135,10 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ROOT_NETWORK_ACCESS")
 
     features = cfg.get("features") or {}
+    if features.get("apps") is not False:
+        issues.append("APPS_MUST_BE_DISABLED")
+    if features.get("remote_plugin") is not False:
+        issues.append("REMOTE_PLUGIN_MUST_BE_DISABLED")
     if features.get("multi_agent") is not True:
         issues.append("MULTI_AGENT_NOT_ENABLED")
     if features.get("goals") is not True:

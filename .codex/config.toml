@@ -11,6 +11,8 @@ approvals_reviewer = "auto_review"
 network_access = false
 
 [features]
+apps = false
+remote_plugin = false
 multi_agent = true
 goals = true
 hooks = true

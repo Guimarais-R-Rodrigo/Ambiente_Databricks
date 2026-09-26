@@ -7,7 +7,19 @@ Esta qualificação prova a configuração **efetiva** do cliente Codex. Ler TOM
 Git não prova que a camada project-scoped foi carregada nem que overrides do
 usuário/CLI/managed policy preservaram as permissões esperadas.
 
-## Gate CQ0 — project root e trust
+## Gate CQ0 — project root, clean worktree e trust
+
+Antes de assumir A1:
+
+```text
+git status --porcelain
+```
+
+deve estar vazio. Trabalho preexistente não atribuído ao controller gera
+`BLOCKED_USER_WORKTREE_DIRTY`; não fazer stash/reset/checkout destrutivo.
+
+O projeto deve também resolver a raiz Git esperada e a camada project-scoped.
+
 
 A sessão deve começar na raiz Git do repositório. A configuração project-scoped
 só é válida se o projeto estiver trusted.
@@ -27,7 +39,12 @@ Registrar sem segredos:
 - approval policy and effective reviewer;
 - sandbox/permission mode;
 - writable roots;
-- overrides de maior precedência.
+- overrides de maior precedência;
+- `features.apps=false` e `features.remote_plugin=false`.
+
+Apps/remote-plugin ficam desabilitados neste projeto autônomo por least privilege;
+A1 usa worktree local + Git e A2 usa somente as superfícies explicitamente
+contratadas.
 
 Se a camada project-scoped estiver ignorada, parar:
 
