@@ -3,7 +3,7 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "AUTONOMOUS_CONTROLLER_STRUCTURAL_VALIDATION",
+    "AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION",
     "G6_SER05_RECOVERY_LOCAL_QUALIFICATION",
     "G6_PARTIAL_REMOTE_STATE_RECONCILIATION",
     "G6_SER05_RESIDUAL_WRITE_AUTHORIZATION",
@@ -987,7 +987,10 @@
     "same_state_same_command_retries": 0,
     "max_write_capable_agents": 1,
     "custom_agents": 5,
-    "structural_validation": "NOT_RUN",
-    "first_material_controller_session": "NOT_RUN"
+    "structural_validation": "PASS_STATIC_REPO_SIDE",
+    "first_material_controller_session": "NOT_RUN",
+    "runtime_validation": "NOT_RUN",
+    "static_audit_commit": "c5d30330e8dd03f2eb6587f627553f2a6d010416",
+    "static_audit_findings": 0
   }
 }
