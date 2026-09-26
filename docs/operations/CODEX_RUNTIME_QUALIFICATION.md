@@ -33,6 +33,36 @@ Se a camada project-scoped estiver ignorada, parar:
 
 `BLOCKED_CONTROLLER_PROJECT_TRUST`.
 
+## Gate CQ0.5 — maintenance dependency
+
+O validator usa `jsonschema` Draft 2020-12. A dependência é declarada somente em:
+
+`tools/requirements-codex-autonomy.txt`
+
+Não alterar `tools/requirements-dev.txt` para instalar a governança, pois seus
+digests históricos pertencem a B0/B1.
+
+Primeiro testar:
+
+```text
+python -c "import jsonschema"
+```
+
+Se faltar, é autorizado apenas o bootstrap técnico dessa dependência declarada,
+no ambiente Python isolado usado pela sessão do controller:
+
+```text
+python -m pip install -r tools/requirements-codex-autonomy.txt
+```
+
+Essa instalação local é um causal environment delta de CQ0.5, não um repair de
+código nem A2. A operação de rede continua sujeita ao sandbox/auto-review.
+Não instalar pacote diferente, não alterar requirements durante a mesma sessão e
+não usar ambiente corporativo.
+
+Depois, reexecutar o import e prosseguir. Se a instalação declarada falhar,
+`BLOCKED_CONTROLLER_DEPENDENCY`.
+
 ## Gate CQ1 — strict config
 
 Quando o CLI estiver disponível, executar uma validação de configuração em modo

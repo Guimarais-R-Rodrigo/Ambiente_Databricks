@@ -13,6 +13,11 @@ use /status and /debug-config to prove the project .codex layer is loaded from a
 trusted project and that no higher-precedence override defeats the expected
 sandbox/approval settings.
 
+Before the validator, check `import jsonschema`. If it is missing, follow CQ0.5
+exactly: install only `tools/requirements-codex-autonomy.txt` into the isolated
+controller Python environment, subject to normal sandbox/auto-review. Do not edit
+requirements to make the install pass.
+
 Then run:
 
 python -B tools/validate_codex_autonomy.py --json

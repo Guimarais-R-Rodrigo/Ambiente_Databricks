@@ -9,10 +9,8 @@ from typing import Any
 
 try:
     from jsonschema import Draft202012Validator
-except ImportError as exc:
-    raise SystemExit(
-        "DEPENDENCY_MISSING: jsonschema; install the repository maintenance requirements"
-    ) from exc
+except ImportError:
+    Draft202012Validator = None
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -35,6 +33,8 @@ def _read_json(path: Path) -> dict[str, Any]:
 
 
 def _validate_envelope_schema(root: Path, envelope: dict[str, Any]) -> list[str]:
+    if Draft202012Validator is None:
+        return ["DEPENDENCY_MISSING:jsonschema"]
     schema_path = root / "docs" / "operations" / "autonomy" / "autonomy-envelope.schema.json"
     try:
         schema = _read_json(schema_path)
@@ -217,6 +217,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         ".codex/hooks/post_scope_guard.py",
         ".codex/hooks/pre_scope_guard.ps1",
         ".codex/hooks/post_scope_guard.ps1",
+        "tools/requirements-codex-autonomy.txt",
     ]
     for rel in required_paths:
         if not (root / rel).is_file():
