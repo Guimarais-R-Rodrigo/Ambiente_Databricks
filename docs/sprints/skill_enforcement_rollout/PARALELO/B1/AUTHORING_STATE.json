@@ -3,7 +3,8 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_REMAINING_EXTERNAL_EFFECT_AUTHORIZATION",
+    "G6_PARTIAL_REMOTE_STATE_RECONCILIATION",
+    "G6_SER05_RESIDUAL_IMPORT_RECOVERY",
     "G6_FREE_PROBES",
     "G6_GENIE",
     "G6_EXTERNAL_EVIDENCE_VERIFICATION"
@@ -30,7 +31,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_FULL_CONTENT_VERIFY_PASS_AWAITING_FREE_PROBES_AND_GENIE",
+  "stage": "B1_G6_REMAINING_ATTEMPT_1_FAIL_PARTIAL_RECOVERY_REQUIRED",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -155,13 +156,13 @@
   "gates": {
     "G4_LOCAL_CERTIFICATION": "PASS",
     "G5_AUDIT": "PASS",
-    "G6_EXTERNAL": "IN_PROGRESS_FULL_CONTENT_VERIFY_PASS_PROBES_GENIE_NOT_RUN",
+    "G6_EXTERNAL": "FAIL_PARTIAL_RECOVERY_REQUIRED",
     "G7_PROMOTION_PROPOSAL": "NOT_AUTHORIZED",
     "G8_POST_POLICY": "NOT_RUN",
     "G9_INTEGRATION": "NOT_AUTHORIZED"
   },
   "g6": {
-    "state": "IN_PROGRESS_FULL_CONTENT_VERIFY_PASS_PROBES_GENIE_NOT_RUN",
+    "state": "FAIL_PARTIAL_RECOVERY_REQUIRED",
     "qualified_candidate_sha": "08c2a93c4c9dede1e759abe28c07242b4116f47e",
     "qualified_candidate_tree": "a2b1b8c805044ff2e1898da3190414afab9140a7",
     "external_execution_authorized": false,
@@ -859,7 +860,7 @@
       ]
     },
     "remaining_external": {
-      "authorization": "NOT_AUTHORIZED",
+      "authorization": "PROVENANCE_NOT_INDEPENDENTLY_VERIFIED",
       "probe_import": {
         "state": "NOT_RUN",
         "effect": "TEMPORARY_WORKSPACE_OBJECT_CREATE",
@@ -883,7 +884,47 @@
         "effect": "TEMPORARY_WORKSPACE_OBJECT_DELETE",
         "required_for_g6_pass": false
       },
-      "aggregate_verifier": "tools.skill_enforcement.real_campaigns.b1.g6.verify_external_results"
+      "aggregate_verifier": "tools.skill_enforcement.real_campaigns.b1.g6.verify_external_results",
+      "attempt_1": {
+        "schema_version": "SER-B1-G6-REMAINING-FIRST-ATTEMPT-1",
+        "evidence_bundle_sha256": "2b29494da8e58317c8f3a03bbdb99e2c06dc7d50e36a818ccbe5ee2edb790212",
+        "summary_sha256": "d1ff1b04d803fd32e45a56da7cbf6551496497ed0640d4ace768b8a5b9aaa1e8",
+        "git_state_sha256": "8c5e0cccf3010fe7fd3899632662ec48df0410b6e6247e93f26c54c5bf932352",
+        "request_sha256": "a080fe05af39f006b672521b9af1191e9c6f80ccefa67d5e27f143e5830907f7",
+        "request_binding": "PASS",
+        "status": "FAIL_STOPPED_AT_G6_PROBE_IMPORT",
+        "first_failure": "SER05_IMPORT_PROTOCOL_ERROR_TARGET_ABSENT",
+        "current_head": "48f4cac94a5b7ff08abacda62d9e9bf3849ccddc",
+        "current_tree": "98c6e27498215375f47652de08a7e95adbfddd4d",
+        "remote_observation_source": "EXECUTOR_SUMMARY_ONLY_RAW_REMOTE_EVIDENCE_NOT_INCLUDED",
+        "authorization_provenance": "NOT_INDEPENDENTLY_VERIFIED",
+        "directory_created": true,
+        "import_attempts": 2,
+        "ser03": {
+          "import_exit_code": 1,
+          "transport_error": "PROTOCOL_ERROR",
+          "reported_state": "CREATED_VERIFIED",
+          "readback": "PASS",
+          "local_normalized_sha256": "d3b81593fa0e18a08ce569768e8719e771161c453c2ad1a6bcc0f94f69f02768",
+          "remote_normalized_sha256": "d3b81593fa0e18a08ce569768e8719e771161c453c2ad1a6bcc0f94f69f02768"
+        },
+        "ser05": {
+          "import_exit_code": 1,
+          "transport_error": "PROTOCOL_ERROR",
+          "reported_state": "NOT_PRESENT"
+        },
+        "final_reported_inventory": [
+          "ser03_free_probe"
+        ],
+        "free_probe_runs": 0,
+        "genie_variants_run": 0,
+        "post_probe_content_verify": "NOT_RUN",
+        "external_results_verify": "NOT_RUN",
+        "retry_performed": false,
+        "cleanup_executed": false,
+        "repo_mutation": false,
+        "next_required_action": "READ_ONLY_RECONCILE_BEFORE_ANY_NEW_WRITE"
+      }
     }
   },
   "g6_local_r1": {
