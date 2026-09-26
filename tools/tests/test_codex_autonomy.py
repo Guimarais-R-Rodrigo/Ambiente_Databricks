@@ -131,6 +131,11 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertTrue(result["desktop_windows_cq_contract"])
         self.assertTrue(result["desktop_host_preflight"])
 
+    def test_desktop_host_preflight_does_not_persist_raw_remote_url(self):
+        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        self.assertIn("origin_identity = $ExpectedRepoFragment", text)
+        self.assertNotIn("origin_url = $origin", text)
+
     def test_desktop_host_preflight_is_fail_closed_without_installer(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn("git fetch origin $ExpectedBranch", text)

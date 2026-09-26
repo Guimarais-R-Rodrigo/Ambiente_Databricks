@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-26 — AC-R2 Desktop Windows CQ corrective follow-up
+
+- (ChatGPT) Revisão pré-fechamento rejeitou a primeira candidata Desktop antes de runtime: corrigida a representação do key `~\codex-scratch\Ambiente_Databricks` no validator.
+- (ChatGPT) `CODEX_DESKTOP_WINDOWS_CQ.md` passa a ser required path explícito do validator.
+- (ChatGPT) Host preflight deixa de persistir URL remota bruta; registra apenas identidade do repo, evitando eventual credential leakage.
+- (ChatGPT) Validator sobe para V8 e a suíte passa a 59 métodos definidos estaticamente.
+- (ChatGPT) Nenhuma execução CQ/B1/A2 ocorreu nesta correção.
+
 ## 2026-09-26 — AC-R2 Desktop Windows CQ compatibility maintenance
 
 ### Evidência incorporada

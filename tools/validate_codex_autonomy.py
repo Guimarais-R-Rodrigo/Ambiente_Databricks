@@ -15,7 +15,7 @@ except ImportError:
 ROOT = Path(__file__).resolve().parents[1]
 A0_PROFILE = "ser-controller-a0"
 A1_PROFILE = "ser-b1-a1"
-A0_WINDOWS_SCRATCH = r"~\\codex-scratch\\Ambiente_Databricks"
+A0_WINDOWS_SCRATCH = r"~\codex-scratch\Ambiente_Databricks"
 EXPECTED_AGENTS = {
     "explorer": ("explorer.toml", A0_PROFILE, "gpt-6-luna", "high"),
     "executor": ("executor.toml", A1_PROFILE, "gpt-6-sol", "medium"),
@@ -213,7 +213,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-7",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-8",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -418,7 +418,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-7",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-8",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),

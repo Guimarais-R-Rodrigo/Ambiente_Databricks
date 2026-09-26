@@ -145,3 +145,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) Windows elevated :root=read maintenance static PASS em 2678c03fd3e8b16a1299bf4b999426276bcd436e/9db25d36631ded4f868bdbca55a551737d8349dc: A0/A1 root-read somente, write/network inalterados, validator V6, 52 metatest methods definidos, 0 findings materiais repo-side. CQ0–CQ5 seguem NOT_RUN.
 
 (ChatGPT) CONTROLLER_MAINTENANCE consolidado Desktop Windows autorizado: novo CQ profile + host preflight SHA-bound + Python absoluto + CLI-not-observable semantics + external PR adjudication + tool-surface classification. Validator V7, 58 metatest methods definidos; A1/A2 e B1 material inalterados.
+
+(ChatGPT) Desktop CQ pré-fechamento: corrigida normalização do scratch key, Desktop CQ tornado required path e raw origin URL removida do host evidence. Validator V8, 59 metatest methods definidos. Runtime ainda NOT_RUN.

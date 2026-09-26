@@ -33,7 +33,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_AC_R2_DESKTOP_WINDOWS_CQ_MAINTENANCE_AUTHORED_AWAITING_STATIC_REVIEW",
+  "stage": "B1_AC_R2_DESKTOP_WINDOWS_CQ_MAINTENANCE_AUTHORED_AWAITING_FINAL_STATIC_REVIEW",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -1001,8 +1001,8 @@
     "max_concurrent_subagents": 5,
     "max_write_capable_agents": 1,
     "custom_agents": 5,
-    "controller_metatest_methods_static": 58,
-    "structural_validation": "AC_R2_DESKTOP_WINDOWS_CQ_MAINTENANCE_AUTHORED_NOT_RUNTIME_QUALIFIED",
+    "controller_metatest_methods_static": 59,
+    "structural_validation": "AC_R2_DESKTOP_WINDOWS_CQ_MAINTENANCE_CORRECTED_AWAITING_FINAL_STATIC_REVIEW",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
     "previous_static_audit": {
@@ -1031,7 +1031,7 @@
       "legacy_sandbox_mode": false,
       "approval_boundary": "EXECUTOR_RULE_PROMPTS_ONLY_OTHER_ESCALATIONS_FAIL_CLOSED",
       "delta_schema": "SER-CODEX-AUTONOMY-DELTA-3",
-      "metatest_methods_static": 58,
+      "metatest_methods_static": 59,
       "runtime_qualification": "NOT_RUN",
       "cq0_cq5": "NOT_RUN",
       "b1_material_execution": "NOT_RUN",
@@ -1049,7 +1049,7 @@
         "SPAWNED_AGENT_EFFECTIVE_PERMISSIONS_REQUIRE_CQ3",
         "EXEC_POLICY_AND_GIT_TRANSPORT_RUNTIME_REQUIRE_CQ1_CQ4"
       ],
-      "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-7",
+      "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-8",
       "windows_bootstrap_maintenance": {
         "authorization": "DIRECT_USER_CHAT_2026-09-26",
         "trigger": "WINDOWS_SANDBOX_WORKSPACE_WRITE_NO_WRITABLE_ROOT_CAPABILITY_SIDS",
@@ -1112,7 +1112,14 @@
         "a1_changed": false,
         "a2_changed": false,
         "b1_material_execution": "NOT_RUN",
-        "runtime_requalification": "REQUIRED"
+        "runtime_requalification": "REQUIRED",
+        "state": "AUTHORED_AWAITING_FINAL_STATIC_REVIEW",
+        "corrective_followup": [
+          "FIX_A0_SCRATCH_TOML_KEY_NORMALIZATION",
+          "REQUIRE_DESKTOP_CQ_PATH_IN_VALIDATOR",
+          "REMOVE_RAW_ORIGIN_URL_FROM_HOST_EVIDENCE"
+        ],
+        "material_findings_open": "PENDING_FINAL_STATIC_REVIEW"
       }
     }
   }

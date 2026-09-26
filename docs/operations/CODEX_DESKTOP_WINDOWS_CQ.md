@@ -24,7 +24,8 @@ O script deve retornar `CQ_HOST_PREFLIGHT = PASS` e criar fora do repositório:
 
 O evidence file liga branch/HEAD/tree, fetch remoto, limpeza do worktree,
 SHA-256 da config project-scoped e um Python absoluto que já importa
-`jsonschema`. Ele não instala dependências e não faz push.
+`jsonschema`. Ele não instala dependências e não faz push. A URL remota bruta
+não é persistida; somente a identidade esperada do repositório é registrada.
 
 O registro deve ser recente para a conversa corrente; se o checkout mudar após o
 preflight, repetir D0.
@@ -109,7 +110,7 @@ A config crítica é provada pela combinação:
 
 - thread iniciada com `ser-controller-a0`;
 - hash project-config = D0;
-- validator V7 PASS;
+- validator V8 PASS;
 - CQ3 behavior probes;
 - CQ4 execução real do rule-reviewed Git transport.
 
@@ -178,6 +179,9 @@ EXECPOLICY_CLI = PASS|FAIL|NOT_OBSERVABLE_DESKTOP
 PR_REMOTE_VERIFICATION = OBSERVED_HOST_GH|DEFERRED_TO_EXTERNAL_ADJUDICATION
 EXTERNAL_MUTATING_PLUGIN_SURFACE = ABSENT|BLOCKED
 ```
+
+O preflight local pode conter paths absolutos necessários à execução; o bundle
+compartilhável final deve sanitizar home/user paths antes de sair do host.
 
 `NOT_OBSERVABLE_DESKTOP` nos três campos CLI não é PASS inventado; é uma
 limitação explícita compensada pelos probes comportamentais exigidos.
