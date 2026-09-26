@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-26 — CM-DESKTOP-RUNTIME-4 pre-close instruction hardening
+
+- (ChatGPT) Removida ambiguidade residual em roles A0: regra read-only normal agora é explicitamente "outside the qualification-only exception".
+- (ChatGPT) Executor normal A1/envelope/governance rules também excluem somente os probes negativos exatos CQ3, evitando refusal por instrução conflitante.
+- (ChatGPT) Permission profiles e autoridade efetiva permanecem inalterados; apenas a capacidade do modelo de tentar o sentinel foi corrigida.
+- (ChatGPT) Validator sobe para V12 e a suíte passa a 75 métodos definidos estaticamente.
+
 ## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-4
 
 - (Codex/ChatGPT) CQ anterior chegou ao CQ3: root denial foi provado; quatro roles A0 foram spawned mas recusaram a tentativa por developer_instructions, logo enforcement não foi provado; executor foi interrompido por metadata read-only antes dos probes.

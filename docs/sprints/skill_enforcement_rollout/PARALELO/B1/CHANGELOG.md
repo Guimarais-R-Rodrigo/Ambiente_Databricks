@@ -169,3 +169,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) CM-DESKTOP-RUNTIME-3 static re-close PASS em 7f8bdbd65aebb72d9023932ea51bf68d5c65151d/533f774ffa4ee51bb54106c0ef0dc94d16ec1032: false negative DESKTOP_WINDOWS_CQ_CONTRACT_INVALID corrigido pelo binding literal CQ_HOST_PREFLIGHT.json; 68 metatest methods definidos; permissions/runtime contract inalterados. Próximo passo: rerun preflight v3.
 
 (ChatGPT) CM-DESKTOP-RUNTIME-4 autorizado: probes CQ3 single-shot agora executáveis por A0 roles; executor deve provar comportamento antes de bloquear por metadata; permission profiles/writes/network/A2 inalterados. Validator V11, 73 metatest methods definidos; runtime NOT_RUN.
+
+(ChatGPT) CM-DESKTOP-RUNTIME-4 pre-close: removido shadow textual das exceções CQ3 nos A0 roles/executor; permission profiles inalterados. Validator V12, 75 metatest methods definidos.

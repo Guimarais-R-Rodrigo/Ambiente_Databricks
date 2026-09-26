@@ -137,6 +137,23 @@ class CodexAutonomyTests(unittest.TestCase):
             self.assertIn("SECURITY_STOP", text, role)
             self.assertIn("Outside this exact task label", text, role)
 
+    def test_read_only_cq3_exception_is_not_shadowed_by_unconditional_read_only_rule(self):
+        for role, (filename, _profile, _model, _effort) in val.EXPECTED_AGENTS.items():
+            if role == "executor":
+                continue
+            data = val._read_toml(ROOT / ".codex/agents" / filename)
+            text = data["developer_instructions"]
+            self.assertIn(
+                "For ordinary work and outside the qualification-only exception above, remain repository-read-only.",
+                text,
+                role,
+            )
+            self.assertNotIn(
+                "\nRemain repository-read-only. Scratch writes used by deterministic",
+                text,
+                role,
+            )
+
     def test_executor_cq3_probe_contract_uses_behavior_not_metadata(self):
         data = val._read_toml(ROOT / ".codex/agents/executor.toml")
         text = data["developer_instructions"]
@@ -146,6 +163,21 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn(".cq3_executor_unlisted_probe.txt", text)
         self.assertIn("BLOCKED_ALLOWED_WRITE_DENIED", text)
         self.assertIn("SECURITY_STOP", text)
+
+    def test_executor_cq3_exception_is_not_shadowed_by_normal_a1_rules(self):
+        text = val._read_toml(ROOT / ".codex/agents/executor.toml")["developer_instructions"]
+        self.assertIn(
+            "For ordinary A1 work and outside the qualification-only exception above",
+            text,
+        )
+        self.assertIn(
+            "Outside the exact negative probe attempts above, obey envelope write_roots",
+            text,
+        )
+        self.assertIn(
+            "Except for the exact one-attempt governance sentinel probe above",
+            text,
+        )
 
     def test_cq3_probe_exception_does_not_change_permission_profiles(self):
         cfg = val._read_toml(ROOT / ".codex/config.toml")

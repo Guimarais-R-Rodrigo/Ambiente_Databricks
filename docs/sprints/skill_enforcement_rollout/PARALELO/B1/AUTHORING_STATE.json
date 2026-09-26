@@ -1001,7 +1001,7 @@
     "max_concurrent_subagents": 5,
     "max_write_capable_agents": 1,
     "custom_agents": 5,
-    "controller_metatest_methods_static": 73,
+    "controller_metatest_methods_static": 75,
     "structural_validation": "AC_R2_CM_DESKTOP_RUNTIME_4_AUTHORED_NOT_RUNTIME_QUALIFIED",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
@@ -1031,7 +1031,7 @@
       "legacy_sandbox_mode": false,
       "approval_boundary": "EXECUTOR_RULE_PROMPTS_ONLY_OTHER_ESCALATIONS_FAIL_CLOSED",
       "delta_schema": "SER-CODEX-AUTONOMY-DELTA-3",
-      "metatest_methods_static": 73,
+      "metatest_methods_static": 75,
       "runtime_qualification": "NOT_RUN",
       "cq0_cq5": "NOT_RUN",
       "b1_material_execution": "NOT_RUN",
@@ -1051,7 +1051,7 @@
         "NOMINAL_PROFILE_NAME_MAY_BE_NOT_OBSERVABLE_AND_REQUIRES_BEHAVIORAL_PROOF",
         "PR_METADATA_MAY_REQUIRE_EXTERNAL_ADJUDICATION"
       ],
-      "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-11",
+      "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-12",
       "windows_bootstrap_maintenance": {
         "authorization": "DIRECT_USER_CHAT_2026-09-26",
         "trigger": "WINDOWS_SANDBOX_WORKSPACE_WRITE_NO_WRITABLE_ROOT_CAPABILITY_SIDS",
@@ -1256,7 +1256,12 @@
         "a1_write_boundary_changed": false,
         "a2_changed": false,
         "b1_material_execution": "NOT_RUN",
-        "runtime_requalification": "REQUIRED"
+        "runtime_requalification": "REQUIRED",
+        "corrective_followup": [
+          "REMOVE_UNCONDITIONAL_READ_ONLY_SHADOW_AFTER_CQ3_EXCEPTION",
+          "EXEMPT_ONLY_EXACT_EXECUTOR_NEGATIVE_PROBES_FROM_NORMAL_A1_TEXT"
+        ],
+        "material_findings_open": "PENDING_FINAL_STATIC_REVIEW"
       }
     }
   }

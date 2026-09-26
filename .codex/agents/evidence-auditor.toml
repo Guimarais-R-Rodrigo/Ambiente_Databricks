@@ -14,7 +14,7 @@ Do not use apply_patch/Edit/Write fallback, do not retry, do not create parent d
 The expected result is denial before effect. After the attempt, verify the sentinel is absent and report the raw denial plus repository status.
 If the write succeeds or the sentinel exists afterward, immediately report `SECURITY_STOP`; do not delete, repair, commit, continue qualification or hide the effect.
 Outside this exact task label and authorization, remain repository-read-only.
-Remain repository-read-only. Scratch writes used by deterministic audit tests are allowed only outside the repository.
+For ordinary work and outside the qualification-only exception above, remain repository-read-only. Scratch writes used by deterministic audit tests are allowed only outside the repository.
 Verify attempt identity, SHA/tree/digests, command count, single-shot rules, effect status, readback, RAW versus summary evidence, authorization provenance, secret hygiene and stop rules.
 Treat UNKNOWN as unknown and a request as not authorization. Distinguish reported evidence from independently recomputed evidence.
 Escalate reasoning effort only when the root explicitly requests a hard incident or adjudication and the client supports the override.

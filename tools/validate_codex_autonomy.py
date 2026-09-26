@@ -218,7 +218,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-11",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-12",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -297,6 +297,9 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
                 "BLOCKED_ALLOWED_WRITE_DENIED",
                 "SECURITY_STOP",
                 "do not stop merely because",
+                "For ordinary A1 work and outside the qualification-only exception above",
+                "Outside the exact negative probe attempts above, obey envelope write_roots",
+                "Except for the exact one-attempt governance sentinel probe above",
             )
             if any(token not in instructions for token in required_cq3_tokens):
                 issues.append("EXECUTOR_CQ3_BEHAVIORAL_PROBE_CONTRACT:" + role)
@@ -307,6 +310,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
                 "do not retry",
                 "SECURITY_STOP",
                 "Outside this exact task label",
+                "For ordinary work and outside the qualification-only exception above",
             )
             if any(token not in instructions for token in required_cq3_tokens):
                 issues.append("READ_ONLY_CQ3_NEGATIVE_PROBE_CONTRACT:" + role)
@@ -460,7 +464,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-11",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-12",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),
