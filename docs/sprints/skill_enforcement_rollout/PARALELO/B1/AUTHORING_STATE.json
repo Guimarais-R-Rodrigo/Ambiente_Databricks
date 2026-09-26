@@ -3,7 +3,7 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "G6_POST_PUBLICATION_READ_ONLY_VERIFY"
+    "G7_PROMOTION_PROPOSAL_AND_EXPLICIT_HUMAN_AUTHORIZATION"
   ],
   "canonical_renderer": "PASS_AT_P1",
   "domain_profiles": [
@@ -27,7 +27,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_R10_REMOTE_PASS_AWAITING_FULL_CONTENT_VERIFY",
+  "stage": "B1_G6_COMPLETE_G7_PROPOSAL_PENDING",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -152,13 +152,13 @@
   "gates": {
     "G4_LOCAL_CERTIFICATION": "PASS",
     "G5_AUDIT": "PASS",
-    "G6_EXTERNAL": "IN_PROGRESS_R10_WRITE_PASS_FULL_VERIFY_REQUIRED",
+    "G6_EXTERNAL": "PASS",
     "G7_PROMOTION_PROPOSAL": "NOT_AUTHORIZED",
     "G8_POST_POLICY": "NOT_RUN",
     "G9_INTEGRATION": "NOT_AUTHORIZED"
   },
   "g6": {
-    "state": "R10_REMOTE_WRITE_PASS_AWAITING_FULL_CONTENT_VERIFY",
+    "state": "PASS",
     "qualified_candidate_sha": "08c2a93c4c9dede1e759abe28c07242b4116f47e",
     "qualified_candidate_tree": "a2b1b8c805044ff2e1898da3190414afab9140a7",
     "external_execution_authorized": false,
@@ -815,15 +815,34 @@
       "post_write_full_content_verify": "REQUIRED_NOT_RUN"
     },
     "post_publication_full_verify": {
-      "state": "REQUIRED_NOT_RUN",
+      "state": "PASS",
+      "schema_version": "SER-B1-G6-POST-R10-FULL-VERIFY-1",
       "effect": "NONE",
+      "verify_invocations": 1,
+      "exit_code": 0,
+      "source_commit": "7d0a2656345e596ff735332acc22d1c18d9e8758",
+      "source_tree": "81587c74c60577aefd733e5711ac2651dbb16669",
       "target_profile": "FREE",
       "target_host": "https://dbc-72c8503a-bc27.cloud.databricks.com",
-      "command": "tools/publicar_free.py --verify --conteudo",
       "scope": "inventory-types-content",
-      "material_writes_authorized": false,
-      "human_remote_effect_authorization_required": false
-    }
+      "files_compared": 590,
+      "file_records": 590,
+      "error_count": 0,
+      "package_raw_sha256": "576134eb3e8d5c6d52be306a35351960df3be2ecb2b1b4602749864f5cca16ff",
+      "package_normalized_sha256": "5ac3db2f3104c6829e3d17314ef386afcd7e4b3ce6cc095db75e044318fe332f",
+      "evidence_bundle_sha256": "1d593b6859d5b97c33454be395b94513fd1ffa7912bfd08249637fc636b3d34c",
+      "inventory": "PASS",
+      "types": "PASS",
+      "content": "PASS",
+      "mirror_source": "PASS",
+      "secret_hygiene": "PASS_INDEPENDENT_BUNDLE_SCAN",
+      "remote_writes": 0,
+      "repo_mutation": false,
+      "r10_authorization_state": "CONSUMED_UNTOUCHED",
+      "r10_publisher_reexecuted": false
+    },
+    "external_execution_result": "PASS",
+    "external_execution_authorization_state": "CONSUMED"
   },
   "g6_local_r1": {
     "candidate_sha": "814ae6f3286b367f45173b9b36b426317f9806e3",
