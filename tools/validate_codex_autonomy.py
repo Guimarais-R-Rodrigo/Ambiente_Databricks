@@ -112,17 +112,22 @@ def validate_envelope_data(envelope: dict[str, Any], *, max_threads: int) -> lis
 
 def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) -> list[str]:
     issues: list[str] = []
+
     if "sandbox_mode" in cfg or "sandbox_workspace_write" in cfg:
         issues.append("LEGACY_SANDBOX_MUST_BE_ABSENT")
     if cfg.get("default_permissions") != A0_PROFILE:
         issues.append("ROOT_PERMISSIONS_PROFILE")
     if cfg.get("approval_policy") != "never":
         issues.append("ROOT_APPROVAL_POLICY_MUST_BE_NEVER")
-
     if cfg.get("approvals_reviewer") != "auto_review":
         issues.append("ROOT_APPROVAL_REVIEWER")
+
     review_policy = ((cfg.get("auto_review") or {}).get("policy") or "")
-    if "a1_git_transport.ps1" not in review_policy or "nested/temp/other repository" not in review_policy:
+    if (
+        "a1_git_transport.ps1" not in review_policy
+        or "nested/temp/other repository" not in review_policy
+        or "zero extra arguments" not in review_policy
+    ):
         issues.append("AUTO_REVIEW_TRANSPORT_POLICY")
 
     if (cfg.get("windows") or {}).get("sandbox") != "elevated":
@@ -130,21 +135,76 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
 
     profiles = cfg.get("permissions") or {}
     a0 = profiles.get(A0_PROFILE) if isinstance(profiles, dict) else None
-    profile = profiles.get(A1_PROFILE) if isinstance(profiles, dict) else None
+    a1 = profiles.get(A1_PROFILE) if isinstance(profiles, dict) else None
+
     if not isinstance(a0, dict):
         issues.append("A0_PERMISSION_PROFILE_MISSING")
     else:
-        a0fs = a0.get("filesystem") or {}
-        a0ws = a0fs.get(":workspace_roots") or {}
-        if a0fs.get(":minimal") != "read" or a0ws.get(".") != "read":
+        filesystem = a0.get("filesystem") or {}
+        workspace = filesystem.get(":workspace_roots") or {}
+        if filesystem.get(":minimal") != "read" or workspace.get(".") != "read":
             issues.append("A0_REPOSITORY_READ_ONLY_REQUIRED")
+        if filesystem.get(":tmpdir") != "write":
+            issues.append("A0_TMPDIR_WRITE_REQUIRED")
+        if filesystem.get(":slash_tmp") != "write":
+            issues.append("A0_SLASH_TMP_WRITE_REQUIRED")
         if (a0.get("network") or {}).get("enabled") is not False:
             issues.append("A0_NETWORK_MUST_BE_DISABLED")
 
-    if not isinstance(profile, dict):
+    if not isinstance(a1, dict):
         issues.append("A1_PERMISSION_PROFILE_MISSING")
         return issues
 
+    filesystem = a1.get("filesystem") or {}
+    workspace = filesystem.get(":workspace_roots") or {}
+    if filesystem.get(":minimal") != "read":
+        issues.append("A1_MINIMAL_READ_REQUIRED")
+    if filesystem.get(":tmpdir") != "write":
+        issues.append("A1_TMPDIR_WRITE_REQUIRED")
+    if filesystem.get(":slash_tmp") != "write":
+        issues.append("A1_SLASH_TMP_WRITE_REQUIRED")
+    if workspace.get(".") != "read":
+        issues.append("A1_WORKSPACE_DEFAULT_MUST_BE_READ")
+
+    actual_writes = {
+        _normalize_write_root(path)
+        for path, access in workspace.items()
+        if path != "." and access == "write"
+    }
+    expected_writes = {
+        _normalize_write_root(path)
+        for path in (envelope.get("repo_scope") or {}).get("write_roots", [])
+    }
+    if actual_writes != expected_writes:
+        issues.append(
+            "A1_PERMISSION_WRITE_ROOT_MISMATCH:expected="
+            + ",".join(sorted(expected_writes))
+            + ":actual="
+            + ",".join(sorted(actual_writes))
+        )
+    if any(access not in {"read", "write", "deny"} for access in workspace.values()):
+        issues.append("A1_PERMISSION_ACCESS_VALUE")
+    if ".git" in actual_writes or any(path.startswith(".git/") for path in actual_writes):
+        issues.append("A1_DIRECT_GIT_METADATA_WRITE_FORBIDDEN")
+    if (a1.get("network") or {}).get("enabled") is not False:
+        issues.append("A1_DIRECT_NETWORK_MUST_BE_DISABLED")
+    if any("*" in path or "?" in path or "[" in path for path in expected_writes):
+        issues.append("A1_WRITE_ROOTS_MUST_BE_CONCRETE")
+
+    forbidden_exact = {
+        ".codex/config.toml",
+        "docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md",
+        "docs/operations/CODEX_RUNTIME_QUALIFICATION.md",
+        "docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json",
+        "tools/validate_codex_autonomy.py",
+        "tools/check_codex_autonomy_delta.py",
+        "tools/tests/test_codex_autonomy.py",
+    }
+    overlap = sorted(expected_writes & forbidden_exact)
+    if overlap:
+        issues.append("A1_GOVERNANCE_WRITE_OVERLAP:" + ",".join(overlap))
+
+    return issues
 
 def validate(root: Path = ROOT) -> dict[str, Any]:
     issues: list[str] = []

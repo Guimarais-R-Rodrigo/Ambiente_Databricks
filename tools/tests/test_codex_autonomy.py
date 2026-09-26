@@ -175,6 +175,37 @@ class CodexAutonomyTests(unittest.TestCase):
         issues = val._validate_permission_profile(cfg, self.envelope())
         self.assertEqual([], issues)
 
+    def test_permission_profile_rejects_extra_git_write(self):
+        cfg = copy.deepcopy(val._read_toml(ROOT / ".codex/config.toml"))
+        cfg["permissions"]["ser-b1-a1"]["filesystem"][":workspace_roots"][".git"] = "write"
+        issues = val._validate_permission_profile(cfg, self.envelope())
+        self.assertTrue(
+            "A1_DIRECT_GIT_METADATA_WRITE_FORBIDDEN" in issues
+            or any(item.startswith("A1_PERMISSION_WRITE_ROOT_MISMATCH") for item in issues)
+        )
+
+    def test_permission_profile_rejects_direct_network(self):
+        cfg = copy.deepcopy(val._read_toml(ROOT / ".codex/config.toml"))
+        cfg["permissions"]["ser-b1-a1"]["network"]["enabled"] = True
+        issues = val._validate_permission_profile(cfg, self.envelope())
+        self.assertIn("A1_DIRECT_NETWORK_MUST_BE_DISABLED", issues)
+
+    def test_permission_profile_rejects_extra_write_root(self):
+        cfg = copy.deepcopy(val._read_toml(ROOT / ".codex/config.toml"))
+        cfg["permissions"]["ser-b1-a1"]["filesystem"][":workspace_roots"]["README.md"] = "write"
+        issues = val._validate_permission_profile(cfg, self.envelope())
+        self.assertTrue(any(item.startswith("A1_PERMISSION_WRITE_ROOT_MISMATCH") for item in issues))
+
+    def test_permission_profile_rejects_controller_governance_overlap(self):
+        payload = self.envelope()
+        payload["repo_scope"]["write_roots"].append("tools/validate_codex_autonomy.py")
+        cfg = val._read_toml(ROOT / ".codex/config.toml")
+        issues = val._validate_permission_profile(cfg, payload)
+        self.assertIn(
+            "A1_GOVERNANCE_WRITE_OVERLAP:tools/validate_codex_autonomy.py",
+            issues,
+        )
+
     def test_root_and_agents_use_permission_profiles_not_legacy_sandbox(self):
         cfg = val._read_toml(ROOT / ".codex/config.toml")
         self.assertEqual("ser-controller-a0", cfg["default_permissions"])
