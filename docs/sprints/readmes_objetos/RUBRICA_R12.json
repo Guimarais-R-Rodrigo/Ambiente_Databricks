@@ -1,7 +1,0 @@
-{
-  "sprint": "R12",
-  "escopo": "navegacao_categoria",
-  "indices": 6,
-  "objetos_alterados": 0,
-  "gates": ["cobertura_indices", "links", "preservacao", "renderer", "ci_local"]
-}

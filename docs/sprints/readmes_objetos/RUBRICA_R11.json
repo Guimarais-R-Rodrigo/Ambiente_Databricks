@@ -1,8 +1,0 @@
-{
-  "sprint": "R11",
-  "contrato": "1.0.0",
-  "objetos": 9,
-  "meta": "75/75",
-  "gates": ["estrutura", "preservacao", "ci_local", "renderer"],
-  "nao_coberto": ["genie_code_real", "runtime_databricks", "publicacao_workspace", "auditoria_independente", "aceite_editorial"]
-}

@@ -1,5 +1,0 @@
-# Dependências ADICIONAIS de manutenção da candidata V01; não são publicadas.
-# O gate vigente continua em requirements-dev.txt. Combinação verificada em
-# 12/09/2026; versões explícitas tornam este contrato reproduzível em CI.
-jsonschema==4.26.0
-referencing==0.37.0

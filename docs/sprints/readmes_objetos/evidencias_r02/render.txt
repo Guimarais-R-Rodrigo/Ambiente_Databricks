@@ -1,6 +1,0 @@
-fonte  : /mnt/data/r02_full/ambiente_fonte
-destino: /mnt/data/r02_full/Novo_Ambiente_Simulado/Users/usuario-free
-  copy file .assistant_instructions.md -> /mnt/data/r02_full/Novo_Ambiente_Simulado/Users/usuario-free/.assistant_instructions.md
-  copy dir  .assistant -> /mnt/data/r02_full/Novo_Ambiente_Simulado/Users/usuario-free/.assistant
-
-OK: 425 arquivos renderizados em Novo_Ambiente_Simulado/

@@ -1,0 +1,38 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+
+# Project defaults. Explicit user/model-picker choices can override these.
+model = "gpt-6-astra"
+model_reasoning_effort = "max"
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+approvals_reviewer = "user"
+
+[features]
+multi_agent = true
+goals = true
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 5
+default_subagent_model = "gpt-6-sol"
+default_subagent_reasoning_effort = "high"
+
+[agents.explorer]
+description = "Read-only investigator for codebase history, prior attempts, causal hypotheses and source discovery. Never edits."
+config_file = "agents/explorer.toml"
+
+[agents.executor]
+description = "The only write-capable subagent. Implements one causal repo-side change at a time inside the active autonomy envelope."
+config_file = "agents/executor.toml"
+
+[agents.domain-auditor]
+description = "Independent read-only auditor for domain semantics, fixtures, oracles, temporal/numerical meaning and scope."
+config_file = "agents/domain-auditor.toml"
+
+[agents.evidence-auditor]
+description = "Independent read-only adversarial auditor for evidence, authority, effects, hashes, retries and secret hygiene."
+config_file = "agents/evidence-auditor.toml"
+
+[agents.architecture-auditor]
+description = "Independent read-only auditor for architecture, regression risk, duplicated mechanisms, scope creep and integration impact."
+config_file = "agents/architecture-auditor.toml"

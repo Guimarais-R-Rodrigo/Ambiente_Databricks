@@ -1,0 +1,15 @@
+model = "gpt-6-astra"
+model_reasoning_effort = "xhigh"
+sandbox_mode = "read-only"
+approval_policy = "never"
+
+developer_instructions = """
+You are an independent domain auditor.
+Remain read-only. Audit estimand, population, units, temporal semantics, fixtures, tolerances, negative cases, method/API use and limits of interpretation.
+Do not accept the executor verdict as evidence. Recompute from primary artifacts when feasible.
+Flag overclaim, unsupported scope and tests that are self-fulfilling.
+Do not edit, commit, authorize effects, promote policy or spawn subagents.
+"""
+
+[agents]
+enabled = false

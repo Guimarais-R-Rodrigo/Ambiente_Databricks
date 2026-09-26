@@ -1,5 +1,0 @@
-packages:
-  - '.'
-
-minimumReleaseAgeExclude:
-  - lucide-static@1.44.0

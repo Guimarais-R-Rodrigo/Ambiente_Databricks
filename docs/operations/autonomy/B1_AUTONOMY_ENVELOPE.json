@@ -1,0 +1,120 @@
+{
+  "schema_version": "SER-AUTONOMY-ENVELOPE-1",
+  "envelope_id": "SER-B1-AUTONOMY-2026-09-26",
+  "front_id": "SER-B1",
+  "activation": {
+    "state": "ACTIVE_A0_A1",
+    "source_type": "direct_user_chat",
+    "reference": "user-approved-autonomous-controller-architecture-2026-09-26",
+    "a2_reference": null
+  },
+  "repository": {
+    "full_name": "Guimarais-R-Rodrigo/Ambiente_Databricks",
+    "branch": "ser/B1-ser03-ser05-authoring",
+    "pull_request": 115
+  },
+  "state_source": "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json",
+  "authority_classes": {
+    "A0": {
+      "autonomous": true,
+      "status": "ACTIVE",
+      "allowed": [
+        "repository inspection",
+        "local static analysis",
+        "deterministic tests without material external effect",
+        "evidence audit",
+        "hash recomputation",
+        "read-only remote reconciliation when credentials are already valid and the campaign contract permits it"
+      ],
+      "forbidden": [
+        "credential remediation",
+        "remote object creation",
+        "remote compute with persistent run history unless separately A2-authorized",
+        "Genie conversation creation"
+      ]
+    },
+    "A1": {
+      "autonomous": true,
+      "status": "ACTIVE",
+      "allowed": [
+        "repo-side authoring on the B1 branch",
+        "tests and validators",
+        "renderer/snapshot updates when required by existing contracts",
+        "causal commits",
+        "normal push to the B1 branch",
+        "draft PR metadata/comments",
+        "state and changelog maintenance"
+      ],
+      "forbidden": [
+        "force push",
+        "destructive reset of user work",
+        "policy promotion",
+        "Ready",
+        "merge"
+      ]
+    },
+    "A2": {
+      "autonomous": false,
+      "status": "PENDING_EXPLICIT_ACTIVATION",
+      "allowed": [
+        "proposed: SHA-bound temporary objects in personal Databricks Free",
+        "proposed: synthetic compute/probes",
+        "proposed: frozen Genie conversations",
+        "proposed: cleanup limited to objects created by the active envelope"
+      ],
+      "forbidden": [
+        "any A2 effect before activation.a2_reference is non-null",
+        "corporate workspace",
+        "real or corporate data",
+        "unbounded namespace",
+        "blind retry",
+        "effect class not explicitly listed"
+      ]
+    },
+    "A3": {
+      "autonomous": false,
+      "status": "HUMAN_ONLY",
+      "allowed": [],
+      "forbidden": [
+        "current_level promotion",
+        "rollout_mode promotion",
+        "policy promotion",
+        "Ready",
+        "merge",
+        "corporate workspace access",
+        "real/corporate data",
+        "material scope or estimand expansion",
+        "guardrail or coverage relaxation",
+        "decision after unresolved UNKNOWN effect"
+      ]
+    }
+  },
+  "budgets": {
+    "max_causal_repair_rounds_per_gate": 4,
+    "max_hypotheses_per_root_cause": 2,
+    "same_state_same_command_retries": 0,
+    "max_unknown_effects_before_human": 1,
+    "max_concurrent_subagents": 5,
+    "max_write_capable_agents": 1
+  },
+  "human_gates": [
+    "A2 activation or expansion",
+    "policy/current_level/rollout promotion",
+    "Ready",
+    "merge",
+    "corporate workspace",
+    "real or corporate data",
+    "material scope or estimand change",
+    "guardrail or coverage relaxation",
+    "unresolved UNKNOWN effect",
+    "causal repair budget exhausted"
+  ],
+  "stop_conditions": [
+    "SECURITY_STOP",
+    "EVIDENCE_INCOMPLETE for a claim required by the next gate",
+    "BLOCKED_AUTHORITY",
+    "BLOCKED_DESIGN outside authorized scope",
+    "UNKNOWN_EFFECT not resolved by allowed read-only reconciliation",
+    "BUDGET_EXHAUSTED"
+  ]
+}
