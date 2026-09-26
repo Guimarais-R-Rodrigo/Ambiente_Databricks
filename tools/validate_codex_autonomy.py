@@ -7,14 +7,21 @@ import tomllib
 from pathlib import Path
 from typing import Any
 
+try:
+    from jsonschema import Draft202012Validator
+except ImportError as exc:
+    raise SystemExit(
+        "DEPENDENCY_MISSING: jsonschema; install the repository maintenance requirements"
+    ) from exc
+
 ROOT = Path(__file__).resolve().parents[1]
 
 EXPECTED_AGENTS = {
-    "explorer": ("explorer.toml", "read-only"),
-    "executor": ("executor.toml", "workspace-write"),
-    "domain-auditor": ("domain-auditor.toml", "read-only"),
-    "evidence-auditor": ("evidence-auditor.toml", "read-only"),
-    "architecture-auditor": ("architecture-auditor.toml", "read-only"),
+    "explorer": ("explorer.toml", "read-only", "gpt-6-luna", "high"),
+    "executor": ("executor.toml", "workspace-write", "gpt-6-sol", "medium"),
+    "domain-auditor": ("domain-auditor.toml", "read-only", "gpt-6-astra", "high"),
+    "evidence-auditor": ("evidence-auditor.toml", "read-only", "gpt-6-astra", "high"),
+    "architecture-auditor": ("architecture-auditor.toml", "read-only", "gpt-6-astra", "high"),
 }
 
 
@@ -27,14 +34,30 @@ def _read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _validate_envelope_schema(root: Path, envelope: dict[str, Any]) -> list[str]:
+    schema_path = root / "docs" / "operations" / "autonomy" / "autonomy-envelope.schema.json"
+    try:
+        schema = _read_json(schema_path)
+        Draft202012Validator.check_schema(schema)
+        validator = Draft202012Validator(schema)
+        errors = sorted(validator.iter_errors(envelope), key=lambda e: list(e.absolute_path))
+    except Exception as exc:
+        return ["ENVELOPE_SCHEMA_VALIDATOR:" + type(exc).__name__]
+    issues = []
+    for error in errors:
+        path = ".".join(str(part) for part in error.absolute_path) or "<root>"
+        issues.append("ENVELOPE_SCHEMA_ERROR:" + path + ":" + error.validator)
+    return issues
+
+
 def validate_envelope_data(
     envelope: dict[str, Any],
     *,
     max_threads: int,
 ) -> list[str]:
     issues: list[str] = []
-    if envelope.get("schema_version") != "SER-AUTONOMY-ENVELOPE-1":
-        issues.append("ENVELOPE_SCHEMA")
+    if envelope.get("schema_version") != "SER-AUTONOMY-ENVELOPE-2":
+        issues.append("ENVELOPE_SCHEMA_VERSION")
 
     activation = envelope.get("activation") or {}
     state = activation.get("state")
@@ -50,6 +73,9 @@ def validate_envelope_data(
             issues.append("A2_STATE_MISMATCH")
         if not activation.get("a2_reference"):
             issues.append("A2_REFERENCE_REQUIRED")
+        a2_contract = envelope.get("a2_contract")
+        if not isinstance(a2_contract, dict):
+            issues.append("A2_CONTRACT_REQUIRED")
     elif state == "ACTIVE_A0_A1_A2":
         issues.append("A2_FALSE_BUT_STATE_ACTIVE")
 
@@ -73,6 +99,13 @@ def validate_envelope_data(
     if not isinstance(budgets.get("max_unknown_effects_before_human"), int) or budgets["max_unknown_effects_before_human"] < 1:
         issues.append("UNKNOWN_BUDGET_INVALID")
 
+    write_roots = envelope.get("repo_scope", {}).get("write_roots")
+    protected = envelope.get("repo_scope", {}).get("protected_roots")
+    if not isinstance(write_roots, list) or not write_roots:
+        issues.append("WRITE_ROOTS_REQUIRED")
+    if not isinstance(protected, list) or not protected:
+        issues.append("PROTECTED_ROOTS_REQUIRED")
+
     return issues
 
 
@@ -83,15 +116,15 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-1",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-2",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
 
     if cfg.get("model") != "gpt-6-astra":
         issues.append("ROOT_MODEL_NOT_ASTRA")
-    if cfg.get("model_reasoning_effort") != "max":
-        issues.append("ROOT_REASONING_NOT_MAX")
+    if cfg.get("model_reasoning_effort") != "high":
+        issues.append("ROOT_REASONING_NOT_HIGH")
     if cfg.get("sandbox_mode") != "workspace-write":
         issues.append("ROOT_SANDBOX")
     if cfg.get("approval_policy") != "on-request":
@@ -116,7 +149,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
 
     if agents_cfg.get("default_subagent_model") != "gpt-6-sol":
         issues.append("DEFAULT_SUBAGENT_MODEL")
-    if agents_cfg.get("default_subagent_reasoning_effort") != "high":
+    if agents_cfg.get("default_subagent_reasoning_effort") != "medium":
         issues.append("DEFAULT_SUBAGENT_EFFORT")
 
     roles = {k: v for k, v in agents_cfg.items() if isinstance(v, dict)}
@@ -124,7 +157,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ROLE_SET")
 
     write_capable = 0
-    for role, (file_name, sandbox) in EXPECTED_AGENTS.items():
+    for role, (file_name, sandbox, model, effort) in EXPECTED_AGENTS.items():
         role_cfg = roles.get(role) or {}
         if role_cfg.get("config_file") != "agents/" + file_name:
             issues.append("ROLE_CONFIG_FILE:" + role)
@@ -138,8 +171,15 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             issues.append("AGENT_UNREADABLE:" + role + ":" + type(exc).__name__)
             continue
 
-        if not isinstance(data.get("developer_instructions"), str) or not data["developer_instructions"].strip():
-            issues.append("AGENT_REQUIRED_FIELD:" + role + ":developer_instructions")
+        for required in ("name", "description", "developer_instructions"):
+            if not isinstance(data.get(required), str) or not data[required].strip():
+                issues.append("AGENT_REQUIRED_FIELD:" + role + ":" + required)
+        if data.get("name") != role:
+            issues.append("AGENT_NAME:" + role)
+        if data.get("model") != model:
+            issues.append("AGENT_MODEL:" + role)
+        if data.get("model_reasoning_effort") != effort:
+            issues.append("AGENT_REASONING:" + role)
         if data.get("sandbox_mode") != sandbox:
             issues.append("AGENT_SANDBOX:" + role)
         if data.get("sandbox_mode") == "danger-full-access":
@@ -155,6 +195,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
     envelope_path = root / "docs" / "operations" / "autonomy" / "B1_AUTONOMY_ENVELOPE.json"
     try:
         envelope = _read_json(envelope_path)
+        issues.extend(_validate_envelope_schema(root, envelope))
         issues.extend(validate_envelope_data(envelope, max_threads=max_threads))
     except Exception as exc:
         issues.append("ENVELOPE_UNREADABLE:" + type(exc).__name__)
@@ -188,7 +229,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-1",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-2",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),

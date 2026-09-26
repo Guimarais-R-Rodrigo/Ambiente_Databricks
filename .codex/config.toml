@@ -2,7 +2,7 @@
 
 # Project defaults. Explicit user/model-picker choices can override these.
 model = "gpt-6-astra"
-model_reasoning_effort = "max"
+model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 approval_policy = "on-request"
 approvals_reviewer = "user"
@@ -15,7 +15,7 @@ goals = true
 enabled = true
 max_concurrent_threads_per_session = 5
 default_subagent_model = "gpt-6-sol"
-default_subagent_reasoning_effort = "high"
+default_subagent_reasoning_effort = "medium"
 
 [agents.explorer]
 description = "Read-only investigator for codebase history, prior attempts, causal hypotheses and source discovery."
