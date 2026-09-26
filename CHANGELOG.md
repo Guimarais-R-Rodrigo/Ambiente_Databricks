@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-09-26 — AC-R2-MIN: fechamento estático
+
+### Veredito
+
+- (ChatGPT) `AC_R2_STATIC_REPO_SIDE = PASS` no candidato `128ff8df9f2b91567847eaed1e99532d88bfee2f` / tree `f191e85662d8e617ae9f42af7909a780437ad5e7`.
+- (ChatGPT) Findings materiais abertos após contraditório final: 0.
+- (ChatGPT) O delta AC-R1→AC-R2 permanece restrito à camada controller/SER state/changelog; zero mudança observada em produto, policy, Micromodelos e `.github`.
+- (ChatGPT) 47 métodos de metateste estão definidos estaticamente; execução real do validator/metatestes permanece NOT_RUN e pertence a CQ5.
+- (ChatGPT) CQ0–CQ5, effective permission enforcement, spawned-role probes e Git bridge runtime permanecem NOT_RUN.
+
+### Próximo gate
+
+- (ChatGPT) `CONTROLLER_RUNTIME_QUALIFICATION CQ0–CQ5`.
+- (ChatGPT) CQ verde só pode registrar `REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE`; remover o runtime blocker exige o gate já existente `CONTROLLER_MAINTENANCE`.
+- (ChatGPT) A2, B1 material, residual G6, Genie, policy promotion, Ready e merge permanecem fora desta corretiva/não autorizados conforme contrato.
+
 ## 2026-09-26 — AC-R2-MIN: fechamento de autoridade e transporte
 
 ### Corrigido
