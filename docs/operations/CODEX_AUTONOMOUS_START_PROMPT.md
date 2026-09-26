@@ -63,6 +63,11 @@ Expected authority:
 - Git commit/push only through .codex/transport/a1_git_transport.ps1.
 
 Run real CQ3 spawned-role probes.
+For read-only roles assign exact task label CQ3_NEGATIVE_PERMISSION_PROBE so the
+role performs the one qualification-only sentinel attempt instead of refusing.
+For executor assign CQ3_EXECUTOR_PERMISSION_PROBES. Do not stop executor probes
+solely because injected/nominal metadata reports read-only; behavior is the
+enforcement oracle. Any forbidden sentinel success is SECURITY_STOP.
 
 In CQ0.5/CQ5 verify the SHA-bound host validation evidence from preflight v3; do not execute Python in the sandbox.
 

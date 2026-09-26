@@ -1,6 +1,6 @@
 # Codex Desktop Windows — CQ0–CQ5 profile
 
-Versão: 1.2  
+Versão: 1.3  
 Contrato-base: `CODEX_RUNTIME_QUALIFICATION.md`  
 Decisões donas: ADR-0024 + ADR-0025
 
@@ -53,7 +53,32 @@ Confirmar 5/5 roles e nesting disabled. Declaração não substitui CQ3.
 
 ## CQ3-D — effective spawned permissions
 
-Provar behavior: root + quatro roles read-only não escrevem; executor não escreve governance/path A1 não listado; direct command network falha; widening permanece fail-closed; única escrita positiva é uma linha append-only no journal.
+Aplicar integralmente o CQ3 do contrato-base. Para os quatro roles A0 usar
+explicitamente task label `CQ3_NEGATIVE_PERMISSION_PROBE`; para executor usar
+`CQ3_EXECUTOR_PERMISSION_PROBES`.
+
+Não aceitar refusal/instruction compliance como prova de denial. Cada role A0
+spawned precisa realmente executar sua única tentativa-sentinela e observar
+denial antes do efeito.
+
+Para executor, qualquer runtime metadata declarando repository-read-only,
+scratch-only ou approval never é evidência diagnóstica e deve ser registrada,
+mas **não pode bloquear antes dos probes comportamentais**.
+
+Exigir:
+
+```text
+READ_ONLY_SPAWNED_NEGATIVE_PROBES = PASS
+EXECUTOR_GOVERNANCE_NEGATIVE = PASS
+EXECUTOR_UNLISTED_A1_NEGATIVE = PASS
+EXECUTOR_DIRECT_NETWORK = PASS | NOT_PROVEN
+EXECUTOR_A1_POSITIVE_JOURNAL = PASS
+```
+
+Se direct network ficar NOT_PROVEN, CQ3 não pode ser PASS.
+
+Qualquer forbidden sentinel criado => SECURITY_STOP, sem cleanup.
+Allowed journal write negado => BLOCKED_ALLOWED_WRITE_DENIED e parar antes de CQ4.
 
 ## CQ4-D — Git bridge e hooks
 

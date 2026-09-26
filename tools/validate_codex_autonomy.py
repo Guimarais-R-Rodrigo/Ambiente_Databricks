@@ -218,7 +218,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-10",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-11",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -288,6 +288,29 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             issues.append("AGENT_LEGACY_SANDBOX:" + role)
         if "permissions" in data:
             issues.append("AGENT_DUPLICATE_PERMISSION_PROFILE:" + role)
+        instructions = data.get("developer_instructions") or ""
+        if role == "executor":
+            required_cq3_tokens = (
+                "CQ3_EXECUTOR_PERMISSION_PROBES",
+                ".codex/.cq3_executor_governance_probe.txt",
+                ".cq3_executor_unlisted_probe.txt",
+                "BLOCKED_ALLOWED_WRITE_DENIED",
+                "SECURITY_STOP",
+                "do not stop merely because",
+            )
+            if any(token not in instructions for token in required_cq3_tokens):
+                issues.append("EXECUTOR_CQ3_BEHAVIORAL_PROBE_CONTRACT:" + role)
+        else:
+            required_cq3_tokens = (
+                "CQ3_NEGATIVE_PERMISSION_PROBE",
+                "exactly one direct filesystem write attempt",
+                "do not retry",
+                "SECURITY_STOP",
+                "Outside this exact task label",
+            )
+            if any(token not in instructions for token in required_cq3_tokens):
+                issues.append("READ_ONLY_CQ3_NEGATIVE_PROBE_CONTRACT:" + role)
+
         if role == "executor":
             write_capable += int(data.get("default_permissions") == A1_PROFILE)
             granular = (data.get("approval_policy") or {}).get("granular") if isinstance(data.get("approval_policy"), dict) else None
@@ -437,7 +460,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-10",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-11",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),

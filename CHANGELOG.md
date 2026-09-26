@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-4
+
+- (Codex/ChatGPT) CQ anterior chegou ao CQ3: root denial foi provado; quatro roles A0 foram spawned mas recusaram a tentativa por developer_instructions, logo enforcement não foi provado; executor foi interrompido por metadata read-only antes dos probes.
+- (ChatGPT) Roles A0 ganham exceção CQ3 estritamente rotulada `CQ3_NEGATIVE_PERMISSION_PROBE`: uma única tentativa-sentinela, sem retry/fallback/escalation, esperada como denial; sucesso inesperado => SECURITY_STOP sem cleanup.
+- (ChatGPT) Executor ganha `CQ3_EXECUTOR_PERMISSION_PROBES`: metadata declarativa vira diagnóstico e não blocker antecipado; governance/unlisted/network negativos devem rodar antes do único append positivo ao journal.
+- (ChatGPT) Permission profiles, 10 write paths A1, network, .git boundary e A2 permanecem inalterados.
+- (ChatGPT) Validator sobe para V11 e a suíte controller passa a 73 métodos definidos estaticamente.
+- (ChatGPT) CQ corrigido ainda NOT_RUN.
+
 ## 2026-09-26 — CM-DESKTOP-RUNTIME-3 false-negative correction: fechamento estático
 
 - (ChatGPT) `CM_DESKTOP_RUNTIME_3_STATIC = PASS` após correção do falso negativo do validator.

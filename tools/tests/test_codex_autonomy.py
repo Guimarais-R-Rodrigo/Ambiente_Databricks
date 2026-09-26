@@ -125,6 +125,63 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertTrue((ROOT / "docs/operations/CODEX_RUNTIME_QUALIFICATION.md").is_file())
 
 
+    def test_read_only_agents_have_single_shot_cq3_negative_probe_exception(self):
+        for role, (filename, _profile, _model, _effort) in val.EXPECTED_AGENTS.items():
+            if role == "executor":
+                continue
+            data = val._read_toml(ROOT / ".codex/agents" / filename)
+            text = data["developer_instructions"]
+            self.assertIn("CQ3_NEGATIVE_PERMISSION_PROBE", text, role)
+            self.assertIn("exactly one direct filesystem write attempt", text, role)
+            self.assertIn("do not retry", text, role)
+            self.assertIn("SECURITY_STOP", text, role)
+            self.assertIn("Outside this exact task label", text, role)
+
+    def test_executor_cq3_probe_contract_uses_behavior_not_metadata(self):
+        data = val._read_toml(ROOT / ".codex/agents/executor.toml")
+        text = data["developer_instructions"]
+        self.assertIn("CQ3_EXECUTOR_PERMISSION_PROBES", text)
+        self.assertIn("do not stop merely because", text)
+        self.assertIn(".codex/.cq3_executor_governance_probe.txt", text)
+        self.assertIn(".cq3_executor_unlisted_probe.txt", text)
+        self.assertIn("BLOCKED_ALLOWED_WRITE_DENIED", text)
+        self.assertIn("SECURITY_STOP", text)
+
+    def test_cq3_probe_exception_does_not_change_permission_profiles(self):
+        cfg = val._read_toml(ROOT / ".codex/config.toml")
+        self.assertEqual("ser-controller-a0", cfg["default_permissions"])
+        self.assertEqual("read", cfg["permissions"]["ser-controller-a0"]["filesystem"][":workspace_roots"]["."])
+        self.assertFalse(cfg["permissions"]["ser-controller-a0"]["network"]["enabled"])
+        self.assertEqual("read", cfg["permissions"]["ser-b1-a1"]["filesystem"][":workspace_roots"]["."])
+        self.assertFalse(cfg["permissions"]["ser-b1-a1"]["network"]["enabled"])
+        writes = {
+            path
+            for path, access in cfg["permissions"]["ser-b1-a1"]["filesystem"][":workspace_roots"].items()
+            if path != "." and access == "write"
+        }
+        self.assertEqual(set(self.envelope()["repo_scope"]["write_roots"]), writes)
+
+    def test_cq3_contract_requires_exact_sentinels_and_no_cleanup_on_security_stop(self):
+        text = (ROOT / "docs/operations/CODEX_RUNTIME_QUALIFICATION.md").read_text(encoding="utf-8")
+        for token in (
+            ".cq3_root_negative_probe.txt",
+            ".cq3_explorer_negative_probe.txt",
+            ".cq3_domain_auditor_negative_probe.txt",
+            ".cq3_evidence_auditor_negative_probe.txt",
+            ".cq3_architecture_auditor_negative_probe.txt",
+            ".codex/.cq3_executor_governance_probe.txt",
+            ".cq3_executor_unlisted_probe.txt",
+            "SECURITY_STOP",
+            "não limpar nem continuar",
+        ):
+            self.assertIn(token, text)
+
+    def test_desktop_cq3_rejects_instruction_refusal_as_enforcement_proof(self):
+        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        self.assertIn("Não aceitar refusal/instruction compliance como prova de denial", text)
+        self.assertIn("não pode bloquear antes dos probes comportamentais", text)
+        self.assertIn("EXECUTOR_A1_POSITIVE_JOURNAL = PASS", text)
+
     def test_desktop_windows_cq_contract_exists(self):
         self.assertTrue((ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").is_file())
         result = val.validate(ROOT)

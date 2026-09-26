@@ -1,6 +1,6 @@
 # Codex Autonomous Controller Protocol
 
-Versão: 1.6  
+Versão: 1.7  
 Decisões donas: ADR-0024 + ADR-0025
 
 ## 1. Objetivo
@@ -46,6 +46,14 @@ AC-R2 usa permission profiles:
 
 Configuração declarada não prova configuração efetiva. Parent/live overrides,
 project trust, Windows sandbox e MCP/hosted surfaces precisam ser observados.
+
+Durante CQ3 existe uma exceção de qualificação estritamente rotulada nas
+developer_instructions dos custom agents. `CQ3_NEGATIVE_PERMISSION_PROBE` permite
+uma única tentativa-sentinela dos roles A0; `CQ3_EXECUTOR_PERMISSION_PROBES`
+obriga o executor a testar negativos e o único positivo journal A1. Essa exceção
+não muda permission profiles nem autoridade normal e não pode ser usada fora de
+CONTROLLER_RUNTIME_QUALIFICATION. Metadata declarativa do role não substitui
+enforcement comportamental.
 
 No Desktop, ausência da CLI Codex, de credenciais Git dentro da sandbox ou do
 nome nominal do permission profile não é automaticamente equivalente a falha.
