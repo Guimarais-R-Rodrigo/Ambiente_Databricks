@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-2: fechamento estático
+
+- (ChatGPT) `CM_DESKTOP_RUNTIME_2_STATIC = PASS` no candidato `2a16776ca9d73ad0b667bd682adf8e4a066cba85` / tree `7ff84fb124deb40c3a17fb95ce8d5844a42ada81`.
+- (ChatGPT) A0/A1 possuem exatamente read explícito para `~\AppData\Local\Programs\Python\Python312`; network e writes repo-side permanecem inalterados.
+- (ChatGPT) A1 mantém exatamente 10 write paths do envelope, sem `.git` write.
+- (ChatGPT) Host preflight v2 prende Python ao root qualificado e usa epoch para freshness sem locale.
+- (ChatGPT) Nome nominal do profile pode ser `NOT_OBSERVABLE_DESKTOP`, mas PASS agregado exige `PROJECT_PROFILE_EFFECTIVE=PASS_BEHAVIORALLY` após CQ3/CQ4/CQ5 verdes.
+- (ChatGPT) Validator V9 e 66 métodos de metateste estão definidos estaticamente; execução real permanece NOT_RUN.
+- (ChatGPT) Creative Production continua precondição operacional: deve estar desabilitado antes do próximo CQ.
+- (ChatGPT) Findings materiais repo-side abertos: 0.
+
+### Próximo passo
+
+- Fast-forward do worktree B1, desabilitar Creative Production, executar host preflight v2 e abrir nova sessão CQ0–CQ5.
+
 ## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-2 pre-close hardening
 
 - (ChatGPT) PowerShell do host preflight normalizado para separadores Windows nativos no root Python qualificado.

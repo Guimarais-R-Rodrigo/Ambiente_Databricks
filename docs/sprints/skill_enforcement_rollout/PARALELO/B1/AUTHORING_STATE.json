@@ -33,7 +33,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_AC_R2_CM_DESKTOP_RUNTIME_2_AUTHORED_AWAITING_STATIC_REVIEW",
+  "stage": "B1_AC_R2_CM_DESKTOP_RUNTIME_2_CLOSED_AWAITING_HOST_PREFLIGHT_AND_CQ_RETRY",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -1002,7 +1002,7 @@
     "max_write_capable_agents": 1,
     "custom_agents": 5,
     "controller_metatest_methods_static": 66,
-    "structural_validation": "AC_R2_CM_DESKTOP_RUNTIME_2_AUTHORED_NOT_RUNTIME_QUALIFIED",
+    "structural_validation": "PASS_AC_R2_CM_DESKTOP_RUNTIME_2_STATIC",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
     "previous_static_audit": {
@@ -1019,7 +1019,7 @@
     "executor_permissions_default": "SER_B1_A1_EXACT_FILES_NO_DIRECT_GIT_OR_NETWORK",
     "ac_r2": {
       "authorization": "DIRECT_USER_CHAT_2026-09-26",
-      "state": "CORRECTIVE_AUTHORED_AWAITING_STATIC_REVIEW",
+      "state": "PASS_STATIC_AWAITING_HOST_PREFLIGHT_AND_CQ_RETRY",
       "scope": [
         "CR1_LEAST_PRIVILEGE_A1_PERMISSION_BOUNDARY",
         "CR2_DELTA_AND_STATE_TRANSITION_INTEGRITY",
@@ -1048,7 +1048,7 @@
         "SPAWNED_AGENT_EFFECTIVE_PERMISSIONS_REQUIRE_CQ3",
         "GIT_TRANSPORT_RUNTIME_REQUIRES_CQ4",
         "CODEX_DESKTOP_CLI_MAY_BE_NOT_OBSERVABLE",
-        "PR_METADATA_MAY_REQUIRE_EXTERNAL_ADJUDICATION",
+        "NOMINAL_PROFILE_NAME_MAY_BE_NOT_OBSERVABLE_AND_REQUIRES_BEHAVIORAL_PROOF",
         "EXTERNAL_WRITE_CAPABLE_PLUGINS_MUST_BE_DISABLED_FOR_CQ"
       ],
       "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-9",
@@ -1164,7 +1164,17 @@
           "ALIGN_DESKTOP_CONTRACT_TO_VALIDATOR_V9",
           "RECORD_A1_READ_SURFACE_CHANGE_WITH_WRITE_BOUNDARY_UNCHANGED"
         ],
-        "material_findings_open": "PENDING_FINAL_STATIC_REVIEW"
+        "material_findings_open": 0,
+        "state": "PASS_STATIC_AWAITING_HOST_PREFLIGHT_AND_CQ_RETRY",
+        "static_candidate_commit": "2a16776ca9d73ad0b667bd682adf8e4a066cba85",
+        "static_candidate_tree": "7ff84fb124deb40c3a17fb95ce8d5844a42ada81",
+        "metatest_methods_static": 66,
+        "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-9",
+        "host_preflight_schema": "AC-R2-DESKTOP-HOST-PREFLIGHT-2",
+        "validator_execution": "NOT_RUN",
+        "metatests_execution": "NOT_RUN",
+        "cq0_cq5": "NOT_RUN",
+        "next_action": "DISABLE_CREATIVE_PRODUCTION_FAST_FORWARD_RUN_HOST_PREFLIGHT_RETRY_CQ0_CQ5"
       }
     }
   }
