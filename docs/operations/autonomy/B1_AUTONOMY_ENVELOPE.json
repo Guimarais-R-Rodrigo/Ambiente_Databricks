@@ -21,8 +21,8 @@
   ],
   "repo_scope": {
     "write_roots": [
-      "tools/skill_enforcement/real_campaigns/b1/**",
-      "tools/tests/test_ser_b1_*.py",
+      "tools/skill_enforcement/real_campaigns/b1/g6_recovery/**",
+      "tools/tests/test_ser_b1_g6_recovery.py",
       "docs/sprints/skill_enforcement_rollout/PARALELO/B1/**",
       "CHANGELOG.md"
     ],
@@ -32,7 +32,9 @@
       "tools/skill_enforcement/parallel/**",
       "docs/sprints/micromodelos/**",
       ".github/**",
-      "**/skill_enforcement/policy.json"
+      "**/skill_enforcement/policy.json",
+      "tools/skill_enforcement/real_campaigns/b1/g6/**",
+      "tools/skill_enforcement/real_campaigns/b1/g6_publication/**"
     ],
     "shared_roots_requiring_human_gate": [
       "AGENTS.md",
@@ -86,7 +88,8 @@
       "status": "ACTIVE_SCOPED",
       "allowed": [
         "repo-side authoring only within repo_scope.write_roots",
-        "tests and validators relevant to B1",
+        "local qualification and causal repair of the SER05 residual recovery package",
+        "tests and validators relevant to the current B1 recovery",
         "causal commits",
         "normal push to the B1 branch",
         "draft PR metadata/comments",
@@ -95,6 +98,7 @@
       "forbidden": [
         "any path matching repo_scope.protected_roots",
         "any path matching repo_scope.shared_roots_requiring_human_gate without CONTROLLER_MAINTENANCE",
+        "any B1 campaign/frozen G6 path not listed in write_roots",
         "force push",
         "destructive reset of user work",
         "policy promotion",

@@ -119,6 +119,22 @@ class CodexAutonomyTests(unittest.TestCase):
             (ROOT / "docs/operations/CODEX_RUNTIME_QUALIFICATION.md").is_file()
         )
 
+    def test_delta_classifier_protects_frozen_g6(self):
+        self.assertEqual(
+            "PROTECTED",
+            delta.classify_path(
+                "tools/skill_enforcement/real_campaigns/b1/g6/ser03_free_probe.py"
+            ),
+        )
+
+    def test_delta_classifier_rejects_qualified_b1_adapter(self):
+        self.assertEqual(
+            "OUTSIDE_A1",
+            delta.classify_path(
+                "tools/skill_enforcement/real_campaigns/b1/adapter.py"
+            ),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
