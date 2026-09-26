@@ -1,5 +1,3 @@
-name = "explorer"
-description = "Read-only investigator for repository history, prior attempts, causal hypotheses and source discovery."
 model = "gpt-6-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"

@@ -1,5 +1,3 @@
-name = "architecture-auditor"
-description = "Independent read-only architecture auditor for regressions, duplicated mechanisms, scope creep and integration risk."
 model = "gpt-6-astra"
 model_reasoning_effort = "xhigh"
 sandbox_mode = "read-only"

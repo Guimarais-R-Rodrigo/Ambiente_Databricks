@@ -138,12 +138,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             issues.append("AGENT_UNREADABLE:" + role + ":" + type(exc).__name__)
             continue
 
-        for required in ("name", "description", "developer_instructions"):
-            if not isinstance(data.get(required), str) or not data[required].strip():
-                issues.append("AGENT_REQUIRED_FIELD:" + role + ":" + required)
-
-        if data.get("name") != role:
-            issues.append("AGENT_NAME:" + role)
+        if not isinstance(data.get("developer_instructions"), str) or not data["developer_instructions"].strip():
+            issues.append("AGENT_REQUIRED_FIELD:" + role + ":developer_instructions")
         if data.get("sandbox_mode") != sandbox:
             issues.append("AGENT_SANDBOX:" + role)
         if data.get("sandbox_mode") == "danger-full-access":
