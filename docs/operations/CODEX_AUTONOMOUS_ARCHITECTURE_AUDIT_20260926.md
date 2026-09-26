@@ -1,3 +1,10 @@
+> **SUPERSEDED / NÃO USAR COMO GATE DE PRONTIDÃO.**  
+> Esta auditoria preserva o resultado observado no commit `c5d30330...`, mas a
+> AC-R1 encontrou posteriormente findings materiais: schema incompleto dos custom
+> agents, validator com risco de false-green, self-modification não protegida e
+> estados legados concorrentes. O PASS abaixo é histórico. Auditoria corrente:
+> [CODEX_AUTONOMOUS_ARCHITECTURE_AUDIT_AC_R1_20260926.md](CODEX_AUTONOMOUS_ARCHITECTURE_AUDIT_AC_R1_20260926.md).
+
 # Codex Autonomous Controller — auditoria estática repo-side
 
 Data: 2026-09-26  

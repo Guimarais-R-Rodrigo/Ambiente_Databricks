@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-09-26 — AC-R1: auditoria corretiva do Codex Autonomous Controller
+
+### Corrigido
+
+1. (ChatGPT) Cinco custom agents alinhados ao schema vigente com `name`, `description` e `developer_instructions`; topologia passa a Astra/high root, Luna/high explorer, Sol/medium executor e Astra/high auditores.
+2. (ChatGPT) Validator passa a usar JSON Schema Draft 2020-12 real, exigir agent schema, single-writer, hooks, roots A1 e contrato A2 completo antes de ativação.
+3. (ChatGPT) ADR-0025 reconcilia A1 Authoring Executor com o executor determinístico do ADR-0023 e fixa precedência do state source vivo.
+4. (ChatGPT) A1 passa a ter write/protected/shared roots, delta checker e `CONTROLLER_MAINTENANCE`; governança do controller não é autoeditável.
+5. (ChatGPT) Estados legados B0/DAG/blockers/readiness e runbooks G6 foram marcados como histórico/snapshot; B0 consta integrado e B1 como frente viva.
+6. (ChatGPT) Hooks pre/post adicionam defesa em profundidade para o escopo A1; runtime qualification passa a provar trust/config/sandbox/hooks no cliente real.
+7. (ChatGPT) Reviewer técnico padrão muda para `auto_review` com sandbox `workspace-write`, `on-request` e network de comandos desabilitada; Human Gates não são delegados ao reviewer.
+8. (ChatGPT) Auditoria estática anterior de `c5d30330...` é preservada como histórica e explicitamente supersedida pela AC-R1.
+
+### Limites
+
+- (ChatGPT) Nenhum efeito Databricks, policy, promoção, Ready ou merge foi executado.
+- (ChatGPT) Runtime Codex CQ0–CQ5 e os 16 metatestes permanecem NOT_RUN até a primeira sessão local.
+
 ## 2026-09-26 — Codex Autonomous Controller para SER/SEF
 
 ### Adicionado

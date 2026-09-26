@@ -975,22 +975,43 @@
     "external_execution": "NOT_RUN"
   },
   "autonomous_controller": {
-    "architecture": "ADR-0024",
+    "architecture": [
+      "ADR-0024",
+      "ADR-0025"
+    ],
     "protocol": "docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md",
+    "runtime_qualification": "docs/operations/CODEX_RUNTIME_QUALIFICATION.md",
     "envelope": "docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json",
+    "envelope_schema": "SER-AUTONOMY-ENVELOPE-2",
     "envelope_state": "ACTIVE_A0_A1",
     "a0": "ACTIVE",
-    "a1": "ACTIVE",
-    "a2": "PENDING_EXPLICIT_ACTIVATION",
+    "a1": "ACTIVE_SCOPED",
+    "a2": "PENDING_EXPLICIT_ACTIVATION_AND_CONTRACT",
     "a3": "HUMAN_ONLY",
+    "controller_maintenance": "HUMAN_GATE",
+    "root_model_default": "GPT_6_ASTRA_HIGH",
+    "explorer_default": "GPT_6_LUNA_HIGH",
+    "executor_default": "GPT_6_SOL_MEDIUM",
+    "auditors_default": "GPT_6_ASTRA_HIGH",
+    "approvals_reviewer_expected": "AUTO_REVIEW",
+    "sandbox_expected": "WORKSPACE_WRITE_NETWORK_DISABLED",
+    "hooks_expected": "PRE_POST_SCOPE_GUARDS",
     "max_causal_repair_rounds_per_gate": 4,
     "same_state_same_command_retries": 0,
+    "max_concurrent_subagents": 5,
     "max_write_capable_agents": 1,
     "custom_agents": 5,
-    "structural_validation": "PASS_STATIC_REPO_SIDE",
-    "first_material_controller_session": "NOT_RUN",
+    "controller_metatest_methods_static": 16,
+    "structural_validation": "PASS_AC_R1_STATIC_REPO_SIDE",
+    "static_audit_candidate_commit": "9a1ec4e7425ac7d411f81e83da6cf919235fa7a5",
+    "static_audit_findings_open": 0,
+    "previous_static_audit": {
+      "commit": "c5d30330e8dd03f2eb6587f627553f2a6d010416",
+      "disposition": "SUPERSEDED_INVALID_RELEASE_GATE",
+      "reason": "CUSTOM_AGENT_SCHEMA_FALSE_GREEN_AND_LEGACY_STATE_GOVERNANCE_GAPS_FOUND_DURING_AC_R1"
+    },
     "runtime_validation": "NOT_RUN",
-    "static_audit_commit": "c5d30330e8dd03f2eb6587f627553f2a6d010416",
-    "static_audit_findings": 0
+    "effective_config_observation": "NOT_RUN",
+    "first_material_controller_session": "NOT_RUN"
   }
 }
