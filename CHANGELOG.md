@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-3: fechamento estático
+
+- (ChatGPT) `CM_DESKTOP_RUNTIME_3_STATIC = PASS` no candidato `c486cb36d28c7652556ea796c1861ebc53503106` / tree `d67e887a61b066448cba2a42f3ab6616bcfa8aed`.
+- (ChatGPT) Preflight v3 executa validator/metatests host-side, SHA-bound ao candidato e aos fontes críticos, e exige final HEAD/tree/worktree inalterados.
+- (ChatGPT) Python é `HOST_ONLY`; nenhuma regra Python específica permanece em A0/A1.
+- (ChatGPT) A1 mantém exatamente os 10 write paths do envelope; direct `.git` write ausente e command network disabled.
+- (ChatGPT) CQ3/CQ4 permanecem behavioral runtime obrigatórios no Desktop.
+- (ChatGPT) Validator V10 e 67 métodos de metateste definidos estaticamente; execução host-side ainda NOT_RUN até o próximo preflight.
+- (User) Creative Production foi reportado como desabilitado, mas ausência precisa ser observada em uma nova sessão.
+- (ChatGPT) Findings materiais repo-side abertos: 0.
+
 ## 2026-09-26 — CM-DESKTOP-RUNTIME-3 pre-close hardening
 
 - (ChatGPT) Removido oráculo textual frágil de PR deferred; teste passa a validar a semântica.
