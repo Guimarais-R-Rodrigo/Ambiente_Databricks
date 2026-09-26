@@ -7,8 +7,12 @@ ferramenta.
 
 - `CLAUDE.md` (raiz) é canônico. `AGENTS.md` (Codex/padrão aberto) e `GEMINI.md`
   são adaptadores finos que apontam para ele. Nunca crie sistema concorrente.
-- Papéis usuais: Claude = implementação e governança local; Codex = auditoria de
-  implementação/segunda opinião técnica; Gemini = pesquisa ampla e síntese.
+- Papéis são definidos pela sessão e pelo envelope, não pela marca do modelo. Claude,
+  Codex ou outra IA podem implementar/auditar quando o contrato da frente permitir.
+  O Codex possui três modos explícitos: reviewer, executor e
+  `autonomous-controller`; o último segue o ADR-0024 e nunca amplia autoridade por
+  inferência. Gemini continua útil para pesquisa ampla/síntese quando essa for a
+  tarefa delegada.
 
 ## Obrigações de toda sessão que altera algo
 
@@ -27,3 +31,13 @@ ferramenta.
 - Gatilhos mínimos de auditoria `A1+`: antes de compartilhar com a squad, antes de
   replicar mudança grande no trabalho, e quando duas IAs divergirem sobre a
   plataforma (aí a fonte oficial decide — `rules/genie-code-oficial.md`).
+
+
+## Codex Autonomous Controller
+
+O modo autônomo é opt-in e governado pelo ADR-0024, por
+`docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md` e por um envelope machine-readable.
+
+Aprovar o modo não equivale a autorizar efeitos A2. A0/A1/A2/A3 são classes de
+autoridade separadas. Subagentes não criam netos e só um agente pode escrever na
+árvore por vez.
