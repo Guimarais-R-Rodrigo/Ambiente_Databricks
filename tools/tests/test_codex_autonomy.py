@@ -107,6 +107,18 @@ class CodexAutonomyTests(unittest.TestCase):
             delta.classify_path("README.md"),
         )
 
+    def test_hooks_are_enabled_and_configured(self):
+        result = val.validate(ROOT)
+        self.assertTrue(result["hooks_configured"])
+        self.assertNotIn("HOOKS_NOT_ENABLED", result["issues"])
+        self.assertNotIn("HOOK_CONFIG_INVALID", result["issues"])
+        self.assertNotIn("HOOK_CONFIG_MISSING_PRE_OR_POST", result["issues"])
+
+    def test_runtime_qualification_document_exists(self):
+        self.assertTrue(
+            (ROOT / "docs/operations/CODEX_RUNTIME_QUALIFICATION.md").is_file()
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

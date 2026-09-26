@@ -137,6 +137,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("MULTI_AGENT_NOT_ENABLED")
     if features.get("goals") is not True:
         issues.append("GOALS_NOT_ENABLED")
+    if features.get("hooks") is not True:
+        issues.append("HOOKS_NOT_ENABLED")
 
     agents_cfg = cfg.get("agents") or {}
     if agents_cfg.get("enabled") is not True:
@@ -205,12 +207,33 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         "docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md",
         "docs/operations/CODEX_AUTONOMOUS_RETROSPECTIVE.md",
         "docs/operations/CODEX_AUTONOMOUS_START_PROMPT.md",
+        "docs/operations/CODEX_RUNTIME_QUALIFICATION.md",
         "docs/operations/autonomy/autonomy-envelope.schema.json",
         ".agents/skills/ser-autonomous-controller/SKILL.md",
+        ".codex/hooks.json",
+        ".codex/hooks/pre_scope_guard.py",
+        ".codex/hooks/post_scope_guard.py",
+        ".codex/hooks/pre_scope_guard.ps1",
+        ".codex/hooks/post_scope_guard.ps1",
     ]
     for rel in required_paths:
         if not (root / rel).is_file():
             issues.append("REQUIRED_PATH_MISSING:" + rel)
+
+    hooks_path = root / ".codex" / "hooks.json"
+    if hooks_path.is_file():
+        try:
+            hooks_payload = _read_json(hooks_path)
+            hooks = hooks_payload.get("hooks") or {}
+            pre = hooks.get("PreToolUse") or []
+            post = hooks.get("PostToolUse") or []
+            if not pre or not post:
+                issues.append("HOOK_CONFIG_MISSING_PRE_OR_POST")
+            serialized = json.dumps(hooks_payload)
+            if "pre_scope_guard" not in serialized or "post_scope_guard" not in serialized:
+                issues.append("HOOK_CONFIG_INVALID")
+        except Exception as exc:
+            issues.append("HOOK_CONFIG_UNREADABLE:" + type(exc).__name__)
 
     agents_md = root / "AGENTS.md"
     if agents_md.is_file():
@@ -235,6 +258,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         "custom_agents": len(EXPECTED_AGENTS),
         "write_capable_agents": write_capable,
         "max_concurrent_threads_per_session": max_threads,
+        "hooks_configured": (root / ".codex" / "hooks.json").is_file(),
     }
 
 
