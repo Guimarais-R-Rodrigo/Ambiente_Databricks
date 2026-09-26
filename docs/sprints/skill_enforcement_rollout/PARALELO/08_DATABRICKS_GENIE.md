@@ -1,4 +1,4 @@
-# 08 — Capacidade externa, publicação e coleta manual
+# 08 — Capacidade externa, publicação e coleta controlada
 
 ## 8.1 Objetivo do canal externo
 
@@ -26,9 +26,9 @@ Antes de import/publicação: registrar request fingerprint sem segredo, path al
 
 Se o comando falhar com possibilidade de efeito no servidor, parar novas escritas. Permitir somente reconciliação read-only declarada: get-status, export, list/readback. A tentativa falha continua falha. Se o objeto existe e corresponde ao conteúdo, uma tarefa nova pode usar o objeto existente sem novo import, mediante transição autorizada do runbook. Nunca repetir cegamente a escrita para “conseguir exit 0”.
 
-## 8.5 Roteiro humano reduzido
+## 8.5 Roteiro de coleta controlada
 
-O coletor prepara uma fila com case_id, notebook/chat alvo, instrução literal, deployment digest, output que deve ser preservado e proibições. O usuário não precisa inventar nome, preencher schema nem resumir resultados. A primeira tarefa piloto valida que o canal consegue transportar o JSON/eventos necessários antes de pedir a execução das demais.
+O coletor prepara uma fila com case_id, notebook/chat alvo, instrução literal, deployment digest, output que deve ser preservado e proibições. A execução pode ser humana ou feita pelo controller somente quando a superfície/capability correspondente estiver qualificada e a classe A2 estiver ativa para aquele efeito. O usuário não precisa inventar nome, preencher schema nem resumir resultados. A primeira tarefa piloto valida que o canal consegue transportar o JSON/eventos necessários antes das demais.
 
 Para notebook: abrir o alvo previamente materializado e verificado, executar uma vez, preservar output literal completo e ID/timestamp de execução quando exposto. O JSON é validado mecanicamente pelo coletor. Se parte foi omitida, usar export/readback permitido antes de pedir novo Run all. Não converter um resumo humano em JSON “equivalente”.
 
@@ -62,7 +62,7 @@ A suficiência probatória por caso é congelada antes da coleta. Se a UI não e
 
 Uma autorização delimita workspace pessoal, identidade da candidata/deployment, lista de operações e destinos temporários, write/overwrite permitido, limites e cleanup/rollback. Referenciar o aceite do usuário; não colocar credencial no manifesto. Troca de host, tabela, modelo, schedule, payload material ou candidato revoga o vínculo para a ação alterada.
 
-Reautenticar profile após expiração é ação do usuário ou procedimento explicitamente autorizado. Uma autenticação renovada não reclassifica rodada antiga. O local nunca presume DEFAULT ou um profile corporativo para contornar FREE indisponível.
+Reautenticar profile após expiração é ação do usuário ou procedimento explicitamente autorizado pelo contrato ativo; A0 não inclui remediação de credencial. Uma autenticação renovada não reclassifica rodada antiga. O local nunca presume DEFAULT ou um profile corporativo para contornar FREE indisponível.
 
 ## 8.10 Encerramento e publicação pós-merge
 
