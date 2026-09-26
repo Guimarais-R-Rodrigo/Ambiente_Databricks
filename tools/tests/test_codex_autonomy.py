@@ -159,6 +159,12 @@ class CodexAutonomyTests(unittest.TestCase):
             ),
         )
 
+    def test_delta_classifier_requires_human_for_controller_requirements(self):
+        self.assertEqual(
+            "HUMAN_GATE_REQUIRED",
+            delta.classify_path("tools/requirements-codex-autonomy.txt"),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

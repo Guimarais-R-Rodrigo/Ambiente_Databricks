@@ -68,7 +68,8 @@
       "docs/sprints/skill_enforcement_rollout/PARALELO/13_ADENDO_OPERACIONAL.md",
       "docs/sprints/skill_enforcement_rollout/PARALELO/14_CHECKLIST_PRONTIDAO.md",
       "docs/sprints/skill_enforcement_rollout/PARALELO/CONTROLE_PLANO.json",
-      "docs/sprints/skill_enforcement_rollout/PARALELO/catalogos/**"
+      "docs/sprints/skill_enforcement_rollout/PARALELO/catalogos/**",
+      "tools/requirements-codex-autonomy.txt"
     ],
     "controller_maintenance_gate": "CONTROLLER_MAINTENANCE"
   },
