@@ -5,6 +5,14 @@ Decisões donas: ADR-0024 + ADR-0025
 
 CQ0–CQ5 prova o runtime real. Não inicia B1 material e não concede A2.
 
+## Perfil de cliente
+
+Quando a superfície real for **Codex no aplicativo desktop do Windows**, aplicar
+`docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md`. Esse perfil é normativo e
+substitui apenas os detalhes de observabilidade/command resolution que não
+existem de forma uniforme no Desktop; os invariantes de autoridade deste
+documento permanecem obrigatórios.
+
 ## Bootstrap nativo Windows — antes de criar a conversa
 
 O sandbox `elevated` precisa de pelo menos um writable capability root resolvível
@@ -78,7 +86,7 @@ não ampliar permissões para autorreparar a própria governança.
 
 ## CQ1 — strict config e execpolicy
 
-Executar strict config suportado pelo cliente e:
+Na CLI/IDE, executar strict config suportado pelo cliente e:
 
 ```text
 codex execpolicy check --pretty --rules .codex/rules/a1_git_transport.rules -- \
@@ -88,6 +96,9 @@ codex execpolicy check --pretty --rules .codex/rules/a1_git_transport.rules -- \
 
 A decisão deve ser `prompt`. Variações com script diferente ou forma incompleta
 não podem casar como o transporte autorizado.
+
+No Codex Desktop Windows, a indisponibilidade da CLI não bloqueia por si só;
+seguir CQ1-D e provar o comportamento real do transportador em CQ4-D.
 
 ## CQ2 — role definitions
 
@@ -144,12 +155,16 @@ Reinventariar MCP/apps/hosted surfaces após os spawns.
 
 ## CQ5 — validators e adversarial integrity
 
-Executar:
+Na CLI/IDE, executar:
 
 ```text
 python -B tools/validate_codex_autonomy.py --json
 python -B -m unittest tools.tests.test_codex_autonomy -v
 ```
+
+No Desktop Windows, usar o interpretador absoluto qualificado por D0 conforme
+CQ5-D; ausência de `python` no PATH não é falha quando o executável absoluto
+passa.
 
 A cobertura inclui ao menos:
 - permission-profile <-> envelope;

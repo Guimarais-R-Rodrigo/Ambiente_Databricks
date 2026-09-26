@@ -194,6 +194,7 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
         ".codex/config.toml",
         "docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md",
         "docs/operations/CODEX_RUNTIME_QUALIFICATION.md",
+        "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md",
         "docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json",
         "tools/validate_codex_autonomy.py",
         "tools/check_codex_autonomy_delta.py",
@@ -212,7 +213,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-6",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-7",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -327,6 +328,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         ".codex/hooks/pre_scope_guard.ps1",
         ".codex/hooks/post_scope_guard.ps1",
         "tools/requirements-codex-autonomy.txt",
+        "tools/codex_desktop_cq_host_preflight.ps1",
         ".codex/rules/a1_git_transport.rules",
         ".codex/transport/a1_git_transport.ps1",
         "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl",
@@ -334,6 +336,35 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
     for rel in required_paths:
         if not (root / rel).is_file():
             issues.append("REQUIRED_PATH_MISSING:" + rel)
+
+    desktop_cq_path = root / "docs" / "operations" / "CODEX_DESKTOP_WINDOWS_CQ.md"
+    desktop_preflight_path = root / "tools" / "codex_desktop_cq_host_preflight.ps1"
+    if desktop_cq_path.is_file():
+        desktop_text = desktop_cq_path.read_text(encoding="utf-8")
+        required_desktop_tokens = (
+            "CODEX_DESKTOP_WINDOWS",
+            "CQ_HOST_PREFLIGHT.json",
+            "DEFERRED_TO_EXTERNAL_ADJUDICATION",
+            "NOT_OBSERVABLE_DESKTOP",
+            "INTERNAL_CLIENT_CONTROL_PLANE",
+            "EXTERNAL_MUTATING_PLUGIN_SURFACE",
+        )
+        if any(token not in desktop_text for token in required_desktop_tokens):
+            issues.append("DESKTOP_WINDOWS_CQ_CONTRACT_INVALID")
+    if desktop_preflight_path.is_file():
+        preflight_text = desktop_preflight_path.read_text(encoding="utf-8")
+        required_preflight_tokens = (
+            "git fetch origin $ExpectedBranch",
+            "CQ_HOST_PREFLIGHT.json",
+            "jsonschema",
+            "config_sha256",
+            "python_version",
+            "final_clean",
+        )
+        if any(token not in preflight_text for token in required_preflight_tokens):
+            issues.append("DESKTOP_WINDOWS_HOST_PREFLIGHT_INVALID")
+        if "pip install" in preflight_text or "python -m pip" in preflight_text:
+            issues.append("DESKTOP_WINDOWS_HOST_PREFLIGHT_INSTALL_FORBIDDEN")
 
     rule_path = root / ".codex" / "rules" / "a1_git_transport.rules"
     transport_path = root / ".codex" / "transport" / "a1_git_transport.ps1"
@@ -387,7 +418,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-6",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-7",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),
@@ -398,6 +429,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         "direct_a1_network": False,
         "direct_git_metadata_write": False,
         "hooks_configured": hooks_path.is_file(),
+        "desktop_windows_cq_contract": desktop_cq_path.is_file(),
+        "desktop_host_preflight": desktop_preflight_path.is_file(),
     }
 
 

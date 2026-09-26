@@ -124,6 +124,43 @@ class CodexAutonomyTests(unittest.TestCase):
     def test_runtime_qualification_document_exists(self):
         self.assertTrue((ROOT / "docs/operations/CODEX_RUNTIME_QUALIFICATION.md").is_file())
 
+
+    def test_desktop_windows_cq_contract_exists(self):
+        self.assertTrue((ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").is_file())
+        result = val.validate(ROOT)
+        self.assertTrue(result["desktop_windows_cq_contract"])
+        self.assertTrue(result["desktop_host_preflight"])
+
+    def test_desktop_host_preflight_is_fail_closed_without_installer(self):
+        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        self.assertIn("git fetch origin $ExpectedBranch", text)
+        self.assertIn("CQ_HOST_PREFLIGHT_NO_PYTHON_WITH_JSONSCHEMA", text)
+        self.assertIn("CQ_HOST_PREFLIGHT_LOCAL_REMOTE_DIVERGENCE", text)
+        self.assertNotIn("pip install", text)
+        self.assertNotIn("python -m pip", text)
+
+    def test_desktop_cq_uses_host_bound_absolute_python(self):
+        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        self.assertIn("$Py = $H.python.executable", text)
+        self.assertIn("& $Py -B tools/validate_codex_autonomy.py --json", text)
+        self.assertIn('Literal `python` via PATH não é oráculo', text)
+
+    def test_desktop_cq_cli_unobservable_is_explicit_not_pass(self):
+        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        self.assertIn("CODEX_CLI = NOT_OBSERVABLE_DESKTOP", text)
+        self.assertIn("isso **não bloqueia sozinho**", text)
+
+    def test_desktop_cq_defers_pr_metadata_to_external_adjudication(self):
+        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        self.assertIn("PR_REMOTE_VERIFICATION = DEFERRED_TO_EXTERNAL_ADJUDICATION", text)
+        self.assertIn("revalidado fora da sessão", text)
+
+    def test_desktop_cq_distinguishes_internal_control_plane_and_external_plugins(self):
+        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        self.assertIn("INTERNAL_CLIENT_CONTROL_PLANE", text)
+        self.assertIn("EXTERNAL_MUTATING_PLUGIN_SURFACE", text)
+        self.assertIn("NotebookLM", text)
+
     def test_delta_classifier_protects_frozen_g6(self):
         self.assertEqual(
             "PROTECTED",

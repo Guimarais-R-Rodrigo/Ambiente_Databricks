@@ -1,54 +1,80 @@
 # Prompt inicial — Codex Autonomous Controller
 
-Use este prompt em uma nova sessão Codex iniciada na raiz do repositório:
+Para Codex Desktop Windows, executar primeiro no PowerShell do host:
+
+```powershell
+Set-Location "C:\b1_worktrees\b1_p1_4ba7f551_20260924"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\codex_desktop_cq_host_preflight.ps1
+```
+
+Só iniciar a conversa se `CQ_HOST_PREFLIGHT = PASS`.
+
+Antes do chat, desabilitar temporariamente plugins externos write-capable em
+Settings > Plugins. Tools internos do próprio Codex app não precisam ser
+desinstalados; mutadores não devem ser invocados durante CQ.
+
+Use este prompt em uma nova conversa do projeto B1:
 
 ```text
 Operate this repository in SER Autonomous Controller Mode.
 
-Read AGENTS.md and docs/operations/CODEX_RUNTIME_QUALIFICATION.md. Do not load
-the full CHANGELOG; use search/tail only when history is material.
+CLIENT_SURFACE = CODEX_DESKTOP_WINDOWS
 
-Run CQ0-CQ5 exactly. Do not start material B1 work during qualification.
+Read:
+- AGENTS.md
+- docs/operations/CODEX_RUNTIME_QUALIFICATION.md
+- docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md
+- docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md
+- docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json
+- the live state source referenced by the envelope
 
-Expected AC-R2 posture:
-- root, explorer and auditors: ser-controller-a0, repository read-only;
-- Windows elevated A0/A1 filesystem includes :root=read as a backend requirement;
-- this broadens read visibility only and must not be interpreted as write/network authority;
-- executor: ser-b1-a1, only the ten exact envelope paths writable;
-- executor has no direct .git write and no command network;
-- no legacy sandbox_mode;
-- Windows native sandbox elevated;
-- executor granular approvals expose only execpolicy rule prompts;
-- executor reviewer = auto_review;
-- project does not override [auto_review].policy;
-- Git commit/push only through .codex/transport/a1_git_transport.ps1;
-- no write-capable MCP/app/hosted surface outside an explicit contract.
+Do not load the full CHANGELOG.
 
-Do not use /permissions, --yolo, sandbox widening, request_permissions or another
-override to make a failing target pass.
+Execute CQ0-CQ5 using the Desktop Windows profile. Read and verify the external
+CQ_HOST_PREFLIGHT.json and its SHA256. Use the absolute Python executable bound
+by that preflight; do not rely on the PATH token "python" and do not install
+dependencies.
 
-Run strict config/execpolicy checks and:
+Codex CLI/version/strict/execpolicy commands are optional observations on this
+surface. If inaccessible, record NOT_OBSERVABLE_DESKTOP rather than inventing
+PASS or blocking solely for that reason. Critical config must instead be proven
+by the active ser-controller-a0 project profile, project-config hash, validator,
+spawned behavior probes and real CQ4 Git bridge behavior.
 
-python -B tools/validate_codex_autonomy.py --json
-python -B -m unittest tools.tests.test_codex_autonomy -v
+The host-side fetch evidence may prove the remote branch identity. PR metadata
+may be DEFERRED_TO_EXTERNAL_ADJUDICATION and will be independently rechecked
+outside this session.
 
-Perform the real spawned-role negative probes in CQ3. The only positive A1 repo
-write during qualification is the append-only CQ line in
-B1/AUTONOMY/JOURNAL.jsonl. CQ4 must commit/push that delta through the protected
-A1 Git transport, not by direct git metadata/network access.
+Classify mcp__codex_app__* as INTERNAL_CLIENT_CONTROL_PLANE: inventory them but
+do not invoke mutators. A loaded external persistent write-capable plugin is a
+CQ blocker.
 
-If CQ0-CQ5 is green, do NOT remove
-AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION and do NOT write canonical PASS.
-Record only REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE for runtime/effective
-config, preserve the blocker, and stop at the existing CONTROLLER_MAINTENANCE
-Human Gate with the CQ evidence.
+Do not use /permissions, Full Access, --yolo, sandbox widening,
+request_permissions or another override.
 
-If any CQ fails, report the exact failure and stop at CONTROLLER_MAINTENANCE.
-Never self-repair controller governance under A1.
+Expected authority:
+- Windows elevated A0/A1 includes :root=read (read visibility only);
+- root/explorer/auditors = ser-controller-a0;
+- A0 repo writes denied;
+- executor = ser-b1-a1;
+- A1 repo writes limited to the exact ten envelope files;
+- direct .git write denied;
+- A0/A1 command network disabled;
+- Git commit/push only through .codex/transport/a1_git_transport.ps1.
 
-A2, residual G6 effects, Genie, policy promotion, Ready and merge are not
-authorized by this prompt.
+Run real CQ3 spawned-role probes.
+
+In CQ5 run the validator and metatests with the absolute Python from host
+preflight.
+
+If any controller gate fails, stop at CONTROLLER_MAINTENANCE. Do not self-repair.
+
+If CQ0-CQ5 is technically green, do not write canonical PASS and do not remove
+AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION. Record only
+REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE for runtime/effective config,
+preserve the blocker, create a sanitized evidence package outside the repo, and
+STOP at CONTROLLER_MAINTENANCE.
+
+No B1 material, A2, residual G6, Genie, policy promotion, Ready or merge is
+authorized.
 ```
-
-B1 envelope:
-`docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json`.

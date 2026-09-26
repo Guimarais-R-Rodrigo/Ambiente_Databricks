@@ -33,7 +33,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_AC_R2_WINDOWS_ROOT_READ_MAINTENANCE_CLOSED_AWAITING_CQ_RETRY",
+  "stage": "B1_AC_R2_DESKTOP_WINDOWS_CQ_MAINTENANCE_AUTHORED_AWAITING_STATIC_REVIEW",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -1001,8 +1001,8 @@
     "max_concurrent_subagents": 5,
     "max_write_capable_agents": 1,
     "custom_agents": 5,
-    "controller_metatest_methods_static": 52,
-    "structural_validation": "PASS_AC_R2_WINDOWS_ROOT_READ_STATIC",
+    "controller_metatest_methods_static": 58,
+    "structural_validation": "AC_R2_DESKTOP_WINDOWS_CQ_MAINTENANCE_AUTHORED_NOT_RUNTIME_QUALIFIED",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
     "previous_static_audit": {
@@ -1019,7 +1019,7 @@
     "executor_permissions_default": "SER_B1_A1_EXACT_FILES_NO_DIRECT_GIT_OR_NETWORK",
     "ac_r2": {
       "authorization": "DIRECT_USER_CHAT_2026-09-26",
-      "state": "PASS_STATIC_AWAITING_CQ_RETRY",
+      "state": "CORRECTIVE_AUTHORED_AWAITING_STATIC_REVIEW",
       "scope": [
         "CR1_LEAST_PRIVILEGE_A1_PERMISSION_BOUNDARY",
         "CR2_DELTA_AND_STATE_TRANSITION_INTEGRITY",
@@ -1031,7 +1031,7 @@
       "legacy_sandbox_mode": false,
       "approval_boundary": "EXECUTOR_RULE_PROMPTS_ONLY_OTHER_ESCALATIONS_FAIL_CLOSED",
       "delta_schema": "SER-CODEX-AUTONOMY-DELTA-3",
-      "metatest_methods_static": 52,
+      "metatest_methods_static": 58,
       "runtime_qualification": "NOT_RUN",
       "cq0_cq5": "NOT_RUN",
       "b1_material_execution": "NOT_RUN",
@@ -1049,7 +1049,7 @@
         "SPAWNED_AGENT_EFFECTIVE_PERMISSIONS_REQUIRE_CQ3",
         "EXEC_POLICY_AND_GIT_TRANSPORT_RUNTIME_REQUIRE_CQ1_CQ4"
       ],
-      "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-6",
+      "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-7",
       "windows_bootstrap_maintenance": {
         "authorization": "DIRECT_USER_CHAT_2026-09-26",
         "trigger": "WINDOWS_SANDBOX_WORKSPACE_WRITE_NO_WRITABLE_ROOT_CAPABILITY_SIDS",
@@ -1093,6 +1093,26 @@
         "material_findings_open": 0,
         "next_action": "FAST_FORWARD_DEDICATED_B1_WORKTREE_AND_RETRY_CODEX_DESKTOP_THREAD",
         "cq0_cq5": "NOT_RUN"
+      },
+      "desktop_windows_cq_maintenance": {
+        "authorization": "DIRECT_USER_CHAT_2026-09-26",
+        "trigger_evidence_report_sha256": "E4B0B892743FDE27FFBC214753A38D25B745CBF25853B21EA3A0A6C31CB745BE",
+        "previous_result": "BLOCKED",
+        "previous_head": "8a58a2d2aaec381fc0db8fdea5f575200c5e0286",
+        "previous_tree": "80a5a9d86629d1c9f0fff281afdedb9fe14003ab",
+        "previous_repo_mutation": false,
+        "corrective_scope": [
+          "CODEX_DESKTOP_WINDOWS_CQ_PROFILE",
+          "HOST_PREFLIGHT_REMOTE_IDENTITY_AND_PYTHON_BINDING",
+          "DESKTOP_CLI_NOT_OBSERVABLE_SEMANTICS",
+          "PR_REMOTE_EXTERNAL_ADJUDICATION",
+          "CLIENT_CONTROL_PLANE_VS_EXTERNAL_PLUGIN_CLASSIFICATION"
+        ],
+        "authority_expansion": false,
+        "a1_changed": false,
+        "a2_changed": false,
+        "b1_material_execution": "NOT_RUN",
+        "runtime_requalification": "REQUIRED"
       }
     }
   }

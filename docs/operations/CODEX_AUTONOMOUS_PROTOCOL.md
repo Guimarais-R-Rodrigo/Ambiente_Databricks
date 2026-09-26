@@ -27,7 +27,10 @@ A2 exige referência humana explícita + contrato válido.
 
 ## 2.1 Runtime qualification e bootstrap de autoridade
 
-Antes de B1 material, executar `CODEX_RUNTIME_QUALIFICATION.md`.
+Antes de B1 material, executar `CODEX_RUNTIME_QUALIFICATION.md`. No aplicativo
+Codex Desktop para Windows, aplicar também
+`CODEX_DESKTOP_WINDOWS_CQ.md` e exigir o host preflight SHA-bound produzido por
+`tools/codex_desktop_cq_host_preflight.ps1`.
 
 AC-R2 usa permission profiles:
 - no Windows elevado, A0 e A1 declaram `:root=read` porque o backend atual
@@ -43,6 +46,17 @@ AC-R2 usa permission profiles:
 
 Configuração declarada não prova configuração efetiva. Parent/live overrides,
 project trust, Windows sandbox e MCP/hosted surfaces precisam ser observados.
+
+No Desktop, ausência da CLI Codex ou de credenciais Git dentro da sandbox não é
+automaticamente equivalente a falha do permission profile. O contrato Desktop
+usa host preflight para identidade/Python e exige prova comportamental em CQ3/CQ4.
+Estado de PR pode ficar `DEFERRED_TO_EXTERNAL_ADJUDICATION` e ser recomputado
+fora da sessão.
+
+Tools internos `mcp__codex_app__*` são control-plane do cliente e são
+inventariados separadamente; presença não os transforma em transporte A1.
+Mutadores internos continuam proibidos durante CQ. Plugins externos persistentes
+write-capable devem estar desabilitados durante qualificação.
 
 CQ0–CQ5 pode produzir um resultado técnico verde, mas A1 não pode promover a
 própria qualificação a autoridade canônica. Quando CQ passar, A1 pode registrar:

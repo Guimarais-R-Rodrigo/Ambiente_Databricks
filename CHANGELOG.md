@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-09-26 — AC-R2 Desktop Windows CQ compatibility maintenance
+
+### Evidência incorporada
+
+- (Codex/ChatGPT) Tentativa CQ em `8a58a2d2...` terminou BLOCKED sem mutação repo-side. O report anexado teve SHA-256 `E4B0B892743FDE27FFBC214753A38D25B745CBF25853B21EA3A0A6C31CB745BE`.
+- (ChatGPT) Checkout/HEAD/tree e limpeza foram preservados; nenhum CQ3/CQ4/B1/A2 foi executado.
+
+### Corrigido
+
+- (ChatGPT) Criado perfil normativo `CODEX_DESKTOP_WINDOWS_CQ.md`: CLI Codex/strict/execpolicy ficam como observações opcionais no Desktop, nunca como PASS inventado.
+- (ChatGPT) Criado `tools/codex_desktop_cq_host_preflight.ps1` para prova host-side de fetch/HEAD/tree/cleanliness, binding SHA-256 da config e descoberta fail-closed de Python absoluto com `jsonschema`, sem instalação automática.
+- (ChatGPT) PR metadata pode ser `DEFERRED_TO_EXTERNAL_ADJUDICATION`; a branch remota continua vinculada pelo fetch host-side e a PR será recomputada externamente.
+- (ChatGPT) Tools `mcp__codex_app__*` passam a ser control-plane interno inventariado, não blocker por presença; mutadores continuam proibidos. Plugin externo persistente write-capable continua blocker e deve ser desabilitado durante CQ.
+- (ChatGPT) Validator sobe para V7 e a suíte controller passa a 58 métodos definidos estaticamente.
+
+### Limites
+
+- Nenhuma autoridade A0/A1/A2 foi ampliada.
+- CQ0–CQ5 continuam NOT_RUN na candidata corretiva; B1 material/G6/Genie/Databricks/policy/Ready/merge não foram iniciados.
+
 ## 2026-09-26 — AC-R2 Windows elevated root-read maintenance: fechamento estático
 
 - (ChatGPT) `WINDOWS_ROOT_READ_MAINTENANCE_STATIC = PASS` no candidato `2678c03fd3e8b16a1299bf4b999426276bcd436e` / tree `9db25d36631ded4f868bdbca55a551737d8349dc`.
