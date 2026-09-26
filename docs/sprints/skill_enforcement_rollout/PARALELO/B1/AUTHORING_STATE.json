@@ -33,7 +33,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_AC_R2_WINDOWS_ROOT_READ_MAINTENANCE_AUTHORED_AWAITING_CQ_RETRY",
+  "stage": "B1_AC_R2_WINDOWS_ROOT_READ_MAINTENANCE_CLOSED_AWAITING_CQ_RETRY",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -1002,7 +1002,7 @@
     "max_write_capable_agents": 1,
     "custom_agents": 5,
     "controller_metatest_methods_static": 52,
-    "structural_validation": "AC_R2_WINDOWS_ROOT_READ_MAINTENANCE_AUTHORED_NOT_RUNTIME_QUALIFIED",
+    "structural_validation": "PASS_AC_R2_WINDOWS_ROOT_READ_STATIC",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
     "previous_static_audit": {
@@ -1019,7 +1019,7 @@
     "executor_permissions_default": "SER_B1_A1_EXACT_FILES_NO_DIRECT_GIT_OR_NETWORK",
     "ac_r2": {
       "authorization": "DIRECT_USER_CHAT_2026-09-26",
-      "state": "PASS_STATIC_WITH_WINDOWS_ROOT_READ_MAINTENANCE_AWAITING_CQ_RETRY",
+      "state": "PASS_STATIC_AWAITING_CQ_RETRY",
       "scope": [
         "CR1_LEAST_PRIVILEGE_A1_PERMISSION_BOUNDARY",
         "CR2_DELTA_AND_STATE_TRANSITION_INTEGRITY",
@@ -1084,7 +1084,15 @@
         "command_network": "DISABLED",
         "direct_git_write": "DENIED",
         "read_surface_limitation": "WINDOWS_ELEVATED_CAN_READ_BROADER_FILESYSTEM_THAN_REPOSITORY_ONLY_TARGET",
-        "runtime_requalification": "REQUIRED"
+        "runtime_requalification": "REQUIRED",
+        "state": "PASS_STATIC_AWAITING_CQ_RETRY",
+        "static_candidate_commit": "2678c03fd3e8b16a1299bf4b999426276bcd436e",
+        "static_candidate_tree": "9db25d36631ded4f868bdbca55a551737d8349dc",
+        "validator_execution": "NOT_RUN",
+        "metatests_execution": "NOT_RUN",
+        "material_findings_open": 0,
+        "next_action": "FAST_FORWARD_DEDICATED_B1_WORKTREE_AND_RETRY_CODEX_DESKTOP_THREAD",
+        "cq0_cq5": "NOT_RUN"
       }
     }
   }

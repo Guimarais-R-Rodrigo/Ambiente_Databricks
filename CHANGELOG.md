@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-26 — AC-R2 Windows elevated root-read maintenance: fechamento estático
+
+- (ChatGPT) `WINDOWS_ROOT_READ_MAINTENANCE_STATIC = PASS` no candidato `2678c03fd3e8b16a1299bf4b999426276bcd436e` / tree `9db25d36631ded4f868bdbca55a551737d8349dc`.
+- (ChatGPT) A0 e A1 declaram exatamente `:root=read`; nenhuma autoridade de write/network foi ampliada.
+- (ChatGPT) A0 segue sem write repo-side; A1 segue com os mesmos 10 arquivos concretos do envelope, além dos scratch temporários já previstos.
+- (ChatGPT) Escrita direta em `.git` permanece ausente e command network permanece disabled.
+- (ChatGPT) Validator V6 e 52 métodos de metateste estão definidos; execução real permanece NOT_RUN e ocorrerá em CQ.
+- (ChatGPT) Finding material aberto repo-side: 0.
+- (ChatGPT) Próxima ação é fast-forward do worktree B1 e nova tentativa de criação da thread/CQ0–CQ5.
+
 ## 2026-09-26 — AC-R2 Windows elevated root-read maintenance
 
 ### Observado

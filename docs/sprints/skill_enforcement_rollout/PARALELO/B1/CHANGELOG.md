@@ -141,3 +141,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) Windows bootstrap maintenance static PASS em 36969a4ec3c2a70c37e89737a11ec273bb16be4f/a62bd3b29bc0ecd4f31b68578c5ef5b6d4ed2785: A0 repo read-only + external scratch capability root, validator V5, 49 metatest methods definidos, 0 findings materiais repo-side. CQ0–CQ5 seguem NOT_RUN; próximo passo é host scratch + fast-forward + retry Desktop.
 
 (ChatGPT) CONTROLLER_MAINTENANCE autorizado para requisito Windows elevated :root=read: A0/A1 ganharam somente leitura de root; writes/network permanecem inalterados. Validator V6, 52 metatest methods definidos; CQ0–CQ5 continuam NOT_RUN.
+
+(ChatGPT) Windows elevated :root=read maintenance static PASS em 2678c03fd3e8b16a1299bf4b999426276bcd436e/9db25d36631ded4f868bdbca55a551737d8349dc: A0/A1 root-read somente, write/network inalterados, validator V6, 52 metatest methods definidos, 0 findings materiais repo-side. CQ0–CQ5 seguem NOT_RUN.
