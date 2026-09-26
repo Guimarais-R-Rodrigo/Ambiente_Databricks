@@ -1,14 +1,15 @@
 # G6 pós-R10 — full content verify PASS
 
-## Veredito
+## Veredito do subgate
 
 ```text
 G6_POST_R10_FULL_CONTENT_VERIFY = PASS
-G6_EXTERNAL = PASS
 EFFECT = NONE
 REMOTE_WRITES = 0
 REPO_MUTATION = false
 ```
+
+**Escopo:** este PASS encerra o subgate read-only de inventário/tipos/conteúdo após a publicação R10. Ele **não encerra o G6 agregado**. O G6 congelado também exige os dois probes Free e a coleta Genie definida no `external_manifest.json`, seguida de `verify_external_results.py`.
 
 Bundle auditado: `G6_POST_R10_FULL_VERIFY_EVIDENCE_20260926.zip`
 
@@ -69,11 +70,11 @@ A varredura sanitizada não encontrou valores de:
 - `refresh_token`
 - token JWT-like
 
-Os 17 objetos críticos do lote B1 aparecem no relatório, incluindo o README já correto, os 15 objetos criados na R10 e `policy.json`. O hash reportado de `policy.json` é `957a8a4d30d2d1c04b0ec4a3c079e2fa784b24c512dc90386aa686f7cdf69d9d`, igual ao conteúdo local corrente usado pelo publisher R10.
+Os 17 objetos críticos do lote B1 aparecem no relatório. O hash reportado de `policy.json` é `957a8a4d30d2d1c04b0ec4a3c079e2fa784b24c512dc90386aa686f7cdf69d9d`, igual ao conteúdo local corrente usado pelo publisher R10.
 
 ## Segurança e autoridade
 
-- `remote_writes = 0` neste gate;
+- `remote_writes = 0` neste subgate;
 - publisher R10 não foi reexecutado;
 - authorization record R10 permaneceu `CONSUMED_UNTOUCHED`;
 - promotion = NOT_RUN;
@@ -81,4 +82,20 @@ Os 17 objetos críticos do lote B1 aparecem no relatório, incluindo o README j�
 - Ready = NOT_RUN;
 - merge = NOT_RUN.
 
-O G6 está encerrado. O próximo gate é G7, que prepara before/after, riscos e rollback e exige autorização humana específica antes de qualquer mutação de `policy.json`.
+## Próxima condição do G6 agregado
+
+Ainda são obrigatórios, sob autorização específica de seus efeitos:
+
+1. criar/importar exatamente dois notebooks-probe temporários SHA-bound;
+2. executar cada probe Free uma única vez;
+3. executar as 20 variantes Genie congeladas, em chat novo por variante;
+4. validar os outputs com `verify_external_results.py`.
+
+Cleanup dos dois probes é efeito separado e opcional para o PASS do G6.
+
+Enquanto esses canais permanecerem NOT_RUN:
+
+```text
+G6_EXTERNAL = IN_PROGRESS
+G7_PROMOTION_PROPOSAL = NOT_AUTHORIZED
+```
