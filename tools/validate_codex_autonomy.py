@@ -13,13 +13,15 @@ except ImportError:
     Draft202012Validator = None
 
 ROOT = Path(__file__).resolve().parents[1]
-
+A1_PROFILE = "ser-b1-a1"
+A1_TRANSPORT_WRITES = {".git"}
+EXPECTED_GITHUB_DOMAINS = {"github.com", "api.github.com", "objects.githubusercontent.com"}
 EXPECTED_AGENTS = {
-    "explorer": ("explorer.toml", "read-only", "gpt-6-luna", "high"),
-    "executor": ("executor.toml", "workspace-write", "gpt-6-sol", "medium"),
-    "domain-auditor": ("domain-auditor.toml", "read-only", "gpt-6-astra", "high"),
-    "evidence-auditor": ("evidence-auditor.toml", "read-only", "gpt-6-astra", "high"),
-    "architecture-auditor": ("architecture-auditor.toml", "read-only", "gpt-6-astra", "high"),
+    "explorer": ("explorer.toml", ":read-only", "gpt-6-luna", "high"),
+    "executor": ("executor.toml", A1_PROFILE, "gpt-6-sol", "medium"),
+    "domain-auditor": ("domain-auditor.toml", ":read-only", "gpt-6-astra", "high"),
+    "evidence-auditor": ("evidence-auditor.toml", ":read-only", "gpt-6-astra", "high"),
+    "architecture-auditor": ("architecture-auditor.toml", ":read-only", "gpt-6-astra", "high"),
 }
 
 
@@ -30,6 +32,13 @@ def _read_toml(path: Path) -> dict[str, Any]:
 
 def _read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _normalize_write_root(path: str) -> str:
+    value = path.replace("\\", "/").rstrip("/")
+    if value.endswith("/**"):
+        value = value[:-3].rstrip("/")
+    return value
 
 
 def _validate_envelope_schema(root: Path, envelope: dict[str, Any]) -> list[str]:
@@ -50,11 +59,7 @@ def _validate_envelope_schema(root: Path, envelope: dict[str, Any]) -> list[str]
     return issues
 
 
-def validate_envelope_data(
-    envelope: dict[str, Any],
-    *,
-    max_threads: int,
-) -> list[str]:
+def validate_envelope_data(envelope: dict[str, Any], *, max_threads: int) -> list[str]:
     issues: list[str] = []
     if envelope.get("schema_version") != "SER-AUTONOMY-ENVELOPE-2":
         issues.append("ENVELOPE_SCHEMA_VERSION")
@@ -73,8 +78,7 @@ def validate_envelope_data(
             issues.append("A2_STATE_MISMATCH")
         if not activation.get("a2_reference"):
             issues.append("A2_REFERENCE_REQUIRED")
-        a2_contract = envelope.get("a2_contract")
-        if not isinstance(a2_contract, dict):
+        if not isinstance(envelope.get("a2_contract"), dict):
             issues.append("A2_CONTRACT_REQUIRED")
     elif state == "ACTIVE_A0_A1_A2":
         issues.append("A2_FALSE_BUT_STATE_ACTIVE")
@@ -99,13 +103,89 @@ def validate_envelope_data(
     if not isinstance(budgets.get("max_unknown_effects_before_human"), int) or budgets["max_unknown_effects_before_human"] < 1:
         issues.append("UNKNOWN_BUDGET_INVALID")
 
-    write_roots = envelope.get("repo_scope", {}).get("write_roots")
-    protected = envelope.get("repo_scope", {}).get("protected_roots")
-    if not isinstance(write_roots, list) or not write_roots:
+    scope = envelope.get("repo_scope") or {}
+    if not isinstance(scope.get("write_roots"), list) or not scope["write_roots"]:
         issues.append("WRITE_ROOTS_REQUIRED")
-    if not isinstance(protected, list) or not protected:
+    if not isinstance(scope.get("protected_roots"), list) or not scope["protected_roots"]:
         issues.append("PROTECTED_ROOTS_REQUIRED")
+    return issues
 
+
+def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) -> list[str]:
+    issues: list[str] = []
+    if "sandbox_mode" in cfg or "sandbox_workspace_write" in cfg:
+        issues.append("LEGACY_SANDBOX_MUST_BE_ABSENT")
+    if cfg.get("default_permissions") != ":read-only":
+        issues.append("ROOT_PERMISSIONS_MUST_BE_READ_ONLY")
+
+    approval = cfg.get("approval_policy")
+    if not isinstance(approval, dict) or not isinstance(approval.get("granular"), dict):
+        issues.append("GRANULAR_APPROVAL_POLICY_REQUIRED")
+    else:
+        granular = approval["granular"]
+        expected = {
+            "sandbox_approval": False,
+            "rules": True,
+            "mcp_elicitations": False,
+            "request_permissions": False,
+            "skill_approval": False,
+        }
+        for key, value in expected.items():
+            if granular.get(key) is not value:
+                issues.append("APPROVAL_POLICY:" + key)
+
+    if cfg.get("approvals_reviewer") != "auto_review":
+        issues.append("ROOT_APPROVAL_REVIEWER")
+
+    if (cfg.get("windows") or {}).get("sandbox") != "elevated":
+        issues.append("WINDOWS_SANDBOX_NOT_ELEVATED")
+
+    features = cfg.get("features") or {}
+    if features.get("network_proxy") is not True:
+        issues.append("NETWORK_PROXY_NOT_ENABLED")
+
+    profiles = cfg.get("permissions") or {}
+    profile = profiles.get(A1_PROFILE) if isinstance(profiles, dict) else None
+    if not isinstance(profile, dict):
+        issues.append("A1_PERMISSION_PROFILE_MISSING")
+        return issues
+
+    filesystem = profile.get("filesystem") or {}
+    if filesystem.get(":minimal") != "read":
+        issues.append("A1_MINIMAL_READ_REQUIRED")
+    if filesystem.get(":tmpdir") != "write":
+        issues.append("A1_TMPDIR_WRITE_REQUIRED")
+    if filesystem.get(":slash_tmp") != "write":
+        issues.append("A1_SLASH_TMP_WRITE_REQUIRED")
+
+    workspace = filesystem.get(":workspace_roots") or {}
+    if workspace.get(".") != "read":
+        issues.append("A1_WORKSPACE_DEFAULT_MUST_BE_READ")
+
+    actual_writes = {
+        _normalize_write_root(path)
+        for path, access in workspace.items()
+        if path != "." and access == "write"
+    }
+    expected_writes = {
+        _normalize_write_root(path)
+        for path in (envelope.get("repo_scope") or {}).get("write_roots", [])
+    } | A1_TRANSPORT_WRITES
+    if actual_writes != expected_writes:
+        issues.append(
+            "A1_PERMISSION_WRITE_ROOT_MISMATCH:expected="
+            + ",".join(sorted(expected_writes))
+            + ":actual="
+            + ",".join(sorted(actual_writes))
+        )
+
+    network = profile.get("network") or {}
+    if network.get("enabled") is not True:
+        issues.append("A1_NETWORK_MUST_BE_GITHUB_SCOPED")
+    domains = network.get("domains") or {}
+    actual_domains = {name for name, rule in domains.items() if rule == "allow"}
+    if actual_domains != EXPECTED_GITHUB_DOMAINS or any(rule != "allow" for rule in domains.values()):
+        issues.append("A1_NETWORK_DOMAIN_SET")
     return issues
 
 
@@ -116,7 +196,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-2",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-3",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -125,14 +205,6 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ROOT_MODEL_NOT_ASTRA")
     if cfg.get("model_reasoning_effort") != "high":
         issues.append("ROOT_REASONING_NOT_HIGH")
-    if cfg.get("sandbox_mode") != "workspace-write":
-        issues.append("ROOT_SANDBOX")
-    if cfg.get("approval_policy") != "on-request":
-        issues.append("ROOT_APPROVAL_POLICY")
-    if cfg.get("approvals_reviewer") != "auto_review":
-        issues.append("ROOT_APPROVAL_REVIEWER")
-    if (cfg.get("sandbox_workspace_write") or {}).get("network_access") is not False:
-        issues.append("ROOT_NETWORK_ACCESS")
 
     features = cfg.get("features") or {}
     if features.get("apps") is not False:
@@ -165,7 +237,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ROLE_SET")
 
     write_capable = 0
-    for role, (file_name, sandbox, model, effort) in EXPECTED_AGENTS.items():
+    for role, (file_name, permission_profile, model, effort) in EXPECTED_AGENTS.items():
         role_cfg = roles.get(role) or {}
         if role_cfg.get("config_file") != "agents/" + file_name:
             issues.append("ROLE_CONFIG_FILE:" + role)
@@ -188,12 +260,18 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             issues.append("AGENT_MODEL:" + role)
         if data.get("model_reasoning_effort") != effort:
             issues.append("AGENT_REASONING:" + role)
-        if data.get("sandbox_mode") != sandbox:
-            issues.append("AGENT_SANDBOX:" + role)
-        if data.get("sandbox_mode") == "danger-full-access":
-            issues.append("DANGER_FULL_ACCESS:" + role)
-        if data.get("sandbox_mode") == "workspace-write":
-            write_capable += 1
+        if data.get("default_permissions") != permission_profile:
+            issues.append("AGENT_PERMISSIONS:" + role)
+        if "sandbox_mode" in data or "sandbox_workspace_write" in data:
+            issues.append("AGENT_LEGACY_SANDBOX:" + role)
+        if "permissions" in data:
+            issues.append("AGENT_DUPLICATE_PERMISSION_PROFILE:" + role)
+        if role == "executor":
+            write_capable += int(data.get("default_permissions") == A1_PROFILE)
+            if "approval_policy" in data:
+                issues.append("EXECUTOR_MUST_INHERIT_GRANULAR_APPROVALS")
+        elif data.get("approval_policy") != "never":
+            issues.append("READ_ONLY_AGENT_APPROVAL_POLICY:" + role)
         if (data.get("agents") or {}).get("enabled") is not False:
             issues.append("SUBAGENT_NESTING_NOT_DISABLED:" + role)
 
@@ -205,6 +283,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         envelope = _read_json(envelope_path)
         issues.extend(_validate_envelope_schema(root, envelope))
         issues.extend(validate_envelope_data(envelope, max_threads=max_threads))
+        issues.extend(_validate_permission_profile(cfg, envelope))
     except Exception as exc:
         issues.append("ENVELOPE_UNREADABLE:" + type(exc).__name__)
 
@@ -259,13 +338,15 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-2",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-3",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),
         "write_capable_agents": write_capable,
         "max_concurrent_threads_per_session": max_threads,
-        "hooks_configured": (root / ".codex" / "hooks.json").is_file(),
+        "root_permissions": cfg.get("default_permissions"),
+        "executor_permissions": A1_PROFILE,
+        "hooks_configured": hooks_path.is_file(),
     }
 
 
@@ -274,7 +355,6 @@ def main() -> int:
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
     result = validate()
-
     if args.json:
         print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
     else:
