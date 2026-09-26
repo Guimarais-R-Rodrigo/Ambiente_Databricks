@@ -235,7 +235,16 @@ Enquanto o executor escreve:
 
 Investigações e auditorias independentes podem rodar em paralelo.
 
-### 6.1 Delta A1
+### 6.1 A1 write path
+
+A1 authors through the local worktree only. MCP/apps/hosted GitHub tools or other
+remote APIs must not mutate repository files/refs under A1 because they can bypass
+local hooks and worktree delta inspection. After local checks, normal `git push`
+to the authorized branch is the only A1 remote Git transport.
+
+Hosted/read-only tools remain usable for inspection when A0 permits them.
+
+### 6.2 Delta A1
 
 Antes de commit/push de um repair A1, execute:
 

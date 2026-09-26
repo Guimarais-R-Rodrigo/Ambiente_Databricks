@@ -105,6 +105,7 @@
         "draft PR metadata/comments"
       ],
       "forbidden": [
+        "repository mutation through MCP/apps/hosted remote tools; use the local worktree and normal git push instead",
         "any path matching repo_scope.protected_roots",
         "any path matching repo_scope.shared_roots_requiring_human_gate without CONTROLLER_MAINTENANCE",
         "historical B1 evidence/runbooks/checkpoints outside B1/AUTONOMY",

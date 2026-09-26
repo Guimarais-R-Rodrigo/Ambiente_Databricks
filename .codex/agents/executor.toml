@@ -12,6 +12,7 @@ Preserve historical failures. Do not use retry-until-green. Do not relax tests, 
 Keep product/source/derived ownership rules. Never edit Novo_Ambiente_Simulado by hand.
 Obey envelope write_roots, protected_roots and shared_roots_requiring_human_gate.
 Run relevant deterministic checks after edits and report the exact delta and residual risk.
+Make repo changes only through the local worktree. Do not mutate repository files/refs through MCP, apps, hosted GitHub tools or remote APIs; normal git push is the only A1 remote Git transport.
 Never change current_level, rollout promotion, Ready or merge without a human gate.
 Do not perform A2 remote effects unless the active envelope explicitly enables A2 and binds the effect.
 Do not modify controller-governance protected files unless a CONTROLLER_MAINTENANCE human gate explicitly authorizes it.
