@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-4: fechamento estático
+
+- (ChatGPT) `CM_DESKTOP_RUNTIME_4_STATIC = PASS` no candidato `90cf3eb85e9bd79d58e0bb211ee179649fc5a6f1` / tree `548a84944595559994cabe532c36c43e5b5103d1`.
+- (ChatGPT) Quatro roles A0 possuem exceção CQ3 single-shot explícita, sem refusal shadow: tentativa direta única, sem retry/fallback/escalation, sucesso inesperado => SECURITY_STOP sem cleanup.
+- (ChatGPT) Executor CQ3 é obrigado a testar governance/unlisted/network antes do único append positivo A1; metadata declarativa não bloqueia antecipadamente.
+- (ChatGPT) `.codex/config.toml` permaneceu byte-idêntico ao candidato anterior: exatamente 10 writes A1, sem .git write, network A0/A1 disabled.
+- (ChatGPT) Validator V12 e 75 métodos de metateste definidos estaticamente.
+- (ChatGPT) Findings materiais repo-side abertos: 0; runtime CQ ainda NOT_RUN.
+
 ## 2026-09-26 — CM-DESKTOP-RUNTIME-4 pre-close instruction hardening
 
 - (ChatGPT) Removida ambiguidade residual em roles A0: regra read-only normal agora é explicitamente "outside the qualification-only exception".

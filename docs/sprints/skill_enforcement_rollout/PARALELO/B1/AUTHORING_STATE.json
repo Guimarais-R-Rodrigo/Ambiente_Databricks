@@ -33,7 +33,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_AC_R2_CM_DESKTOP_RUNTIME_4_AUTHORED_AWAITING_STATIC_REVIEW",
+  "stage": "B1_AC_R2_CM_DESKTOP_RUNTIME_4_CLOSED_AWAITING_HOST_PREFLIGHT_V3_AND_CQ_RETRY",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -1002,7 +1002,7 @@
     "max_write_capable_agents": 1,
     "custom_agents": 5,
     "controller_metatest_methods_static": 75,
-    "structural_validation": "AC_R2_CM_DESKTOP_RUNTIME_4_AUTHORED_NOT_RUNTIME_QUALIFIED",
+    "structural_validation": "PASS_AC_R2_CM_DESKTOP_RUNTIME_4_STATIC",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
     "previous_static_audit": {
@@ -1019,7 +1019,7 @@
     "executor_permissions_default": "SER_B1_A1_EXACT_FILES_NO_DIRECT_GIT_OR_NETWORK",
     "ac_r2": {
       "authorization": "DIRECT_USER_CHAT_2026-09-26",
-      "state": "CORRECTIVE_AUTHORED_AWAITING_STATIC_REVIEW",
+      "state": "PASS_STATIC_AWAITING_HOST_PREFLIGHT_V3_AND_CQ_RETRY",
       "scope": [
         "CR1_LEAST_PRIVILEGE_A1_PERMISSION_BOUNDARY",
         "CR2_DELTA_AND_STATE_TRANSITION_INTEGRITY",
@@ -1044,12 +1044,12 @@
       "validator_execution": "NOT_RUN",
       "metatests_execution": "NOT_RUN",
       "limitations": [
-        "HOST_PREFLIGHT_V3_RUNTIME_EXECUTION_REQUIRED",
+        "HOST_PREFLIGHT_V3_MUST_BE_RERUN_ON_NEW_CANDIDATE",
         "EXTERNAL_WRITE_CAPABLE_PLUGIN_INVENTORY_REQUIRES_FRESH_DESKTOP_SESSION",
-        "SPAWNED_AGENT_EFFECTIVE_PERMISSIONS_REQUIRE_CQ3",
+        "SPAWNED_AGENT_NEGATIVE_ENFORCEMENT_REQUIRES_CQ3",
+        "EXECUTOR_ALLOWED_A1_WRITE_REQUIRES_CQ3",
         "GIT_TRANSPORT_AND_HOOK_RUNTIME_REQUIRE_CQ4",
-        "NOMINAL_PROFILE_NAME_MAY_BE_NOT_OBSERVABLE_AND_REQUIRES_BEHAVIORAL_PROOF",
-        "PR_METADATA_MAY_REQUIRE_EXTERNAL_ADJUDICATION"
+        "NOMINAL_PROFILE_NAME_MAY_BE_NOT_OBSERVABLE_AND_REQUIRES_BEHAVIORAL_PROOF"
       ],
       "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-12",
       "windows_bootstrap_maintenance": {
@@ -1261,7 +1261,19 @@
           "REMOVE_UNCONDITIONAL_READ_ONLY_SHADOW_AFTER_CQ3_EXCEPTION",
           "EXEMPT_ONLY_EXACT_EXECUTOR_NEGATIVE_PROBES_FROM_NORMAL_A1_TEXT"
         ],
-        "material_findings_open": "PENDING_FINAL_STATIC_REVIEW"
+        "material_findings_open": 0,
+        "state": "PASS_STATIC_AWAITING_HOST_PREFLIGHT_V3_AND_CQ_RETRY",
+        "static_candidate_commit": "90cf3eb85e9bd79d58e0bb211ee179649fc5a6f1",
+        "static_candidate_tree": "548a84944595559994cabe532c36c43e5b5103d1",
+        "metatest_methods_static": 75,
+        "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-12",
+        "validator_execution": "NOT_RUN",
+        "metatests_execution": "NOT_RUN",
+        "cq0_cq5": "NOT_RUN",
+        "next_action": "FAST_FORWARD_RUN_HOST_PREFLIGHT_V3_START_FRESH_CQ3_CQ4_SESSION",
+        "permission_config_blob_unchanged": true,
+        "readonly_probe_task_label": "CQ3_NEGATIVE_PERMISSION_PROBE",
+        "executor_probe_task_label": "CQ3_EXECUTOR_PERMISSION_PROBES"
       }
     }
   }

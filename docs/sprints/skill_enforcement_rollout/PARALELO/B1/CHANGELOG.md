@@ -171,3 +171,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) CM-DESKTOP-RUNTIME-4 autorizado: probes CQ3 single-shot agora executáveis por A0 roles; executor deve provar comportamento antes de bloquear por metadata; permission profiles/writes/network/A2 inalterados. Validator V11, 73 metatest methods definidos; runtime NOT_RUN.
 
 (ChatGPT) CM-DESKTOP-RUNTIME-4 pre-close: removido shadow textual das exceções CQ3 nos A0 roles/executor; permission profiles inalterados. Validator V12, 75 metatest methods definidos.
+
+(ChatGPT) CM-DESKTOP-RUNTIME-4 static PASS em 90cf3eb85e9bd79d58e0bb211ee179649fc5a6f1/548a84944595559994cabe532c36c43e5b5103d1: A0 CQ3 single-shot probes + executor behavioral-before-metadata; config permissions byte-idêntica, 10 A1 writes, network disabled. Validator V12, 75 metatest methods definidos, 0 findings materiais repo-side. Próximo: preflight v3 + fresh CQ.
