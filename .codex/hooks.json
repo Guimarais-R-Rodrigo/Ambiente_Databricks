@@ -1,0 +1,33 @@
+{
+  "description": "SER Autonomous Controller A1 scope guards. Defense in depth; envelope and sandbox remain authoritative.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "apply_patch|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/pre_scope_guard.py\"",
+            "commandWindows": "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$r=(git rev-parse --show-toplevel).Trim(); & (Join-Path $r '.codex\\hooks\\pre_scope_guard.ps1')\"",
+            "timeout": 10,
+            "statusMessage": "Checking A1 write scope"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash|apply_patch|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/post_scope_guard.py\"",
+            "commandWindows": "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$r=(git rev-parse --show-toplevel).Trim(); & (Join-Path $r '.codex\\hooks\\post_scope_guard.ps1')\"",
+            "timeout": 10,
+            "statusMessage": "Verifying A1 worktree scope"
+          }
+        ]
+      }
+    ]
+  }
+}
