@@ -1001,7 +1001,7 @@
     "max_concurrent_subagents": 5,
     "max_write_capable_agents": 1,
     "custom_agents": 5,
-    "controller_metatest_methods_static": 66,
+    "controller_metatest_methods_static": 67,
     "structural_validation": "AC_R2_CM_DESKTOP_RUNTIME_3_AUTHORED_NOT_RUNTIME_QUALIFIED",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
@@ -1031,7 +1031,7 @@
       "legacy_sandbox_mode": false,
       "approval_boundary": "EXECUTOR_RULE_PROMPTS_ONLY_OTHER_ESCALATIONS_FAIL_CLOSED",
       "delta_schema": "SER-CODEX-AUTONOMY-DELTA-3",
-      "metatest_methods_static": 66,
+      "metatest_methods_static": 67,
       "runtime_qualification": "NOT_RUN",
       "cq0_cq5": "NOT_RUN",
       "b1_material_execution": "NOT_RUN",
@@ -1200,7 +1200,12 @@
         "a2_changed": false,
         "b1_material_execution": "NOT_RUN",
         "creative_production": "USER_REPORTED_DISABLED_REQUIRES_NEW_SESSION_INVENTORY",
-        "runtime_requalification": "REQUIRED"
+        "runtime_requalification": "REQUIRED",
+        "corrective_followup": [
+          "REMOVE_FRAGILE_PR_DEFERRED_EXACT_TEXT_ORACLE",
+          "REQUIRE_FINAL_HEAD_TREE_IDENTITY_AFTER_HOST_VALIDATION"
+        ],
+        "material_findings_open": "PENDING_FINAL_STATIC_REVIEW"
       }
     }
   }

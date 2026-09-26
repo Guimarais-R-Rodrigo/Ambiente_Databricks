@@ -375,6 +375,9 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "runtime_test_count",
             "static_test_count",
             "source_sha256",
+            "CQ_HOST_PREFLIGHT_GIT_IDENTITY_CHANGED_DURING_HOST_VALIDATION",
+            "final_head",
+            "final_tree",
             "final_clean",
         )
         if any(token not in preflight_text for token in required_preflight_tokens):

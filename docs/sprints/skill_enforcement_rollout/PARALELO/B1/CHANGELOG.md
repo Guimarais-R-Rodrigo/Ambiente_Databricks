@@ -159,3 +159,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) CM-DESKTOP-RUNTIME-2 static PASS em 2a16776ca9d73ad0b667bd682adf8e4a066cba85/7ff84fb124deb40c3a17fb95ce8d5844a42ada81: Python312 read-only A0/A1, write/network inalterados, preflight v2, validator V9, 66 metatest methods definidos, 0 findings materiais repo-side. Creative Production deve estar disabled antes do CQ; runtime segue NOT_RUN.
 
 (ChatGPT) CM-DESKTOP-RUNTIME-3: CQ0.5/CQ5 host-side v3 SHA-bound, Python HOST_ONLY, Python read exceptions removidas A0/A1, CQ3/CQ4 behaviorais; validator V10, 66 metatest methods definidos. Runtime NOT_RUN.
+
+(ChatGPT) CM-DESKTOP-RUNTIME-3 pre-close: PR deferred oracle semântico + final HEAD/tree invariants pós-host-validation; 67 metatest methods definidos. Runtime NOT_RUN.

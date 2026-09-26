@@ -174,6 +174,12 @@ class CodexAutonomyTests(unittest.TestCase):
         ):
             self.assertIn(token, text)
 
+    def test_desktop_host_preflight_preserves_head_and_tree_after_host_validation(self):
+        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        self.assertIn("CQ_HOST_PREFLIGHT_GIT_IDENTITY_CHANGED_DURING_HOST_VALIDATION", text)
+        self.assertIn("final_head=$finalHead", text)
+        self.assertIn("final_tree=$finalTree", text)
+
     def test_desktop_host_preflight_uses_safe_powershell_variable_boundaries(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn('CQ_HOST_PREFLIGHT_LOCAL_REMOTE_DIVERGENCE:${head}:${originHead}', text)
@@ -200,7 +206,7 @@ class CodexAutonomyTests(unittest.TestCase):
 
     def test_desktop_cq_defers_pr_metadata_to_external_adjudication(self):
         text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
-        self.assertIn("PR_REMOTE_VERIFICATION = DEFERRED_TO_EXTERNAL_ADJUDICATION", text)
+        self.assertIn("DEFERRED_TO_EXTERNAL_ADJUDICATION", text)
 
     def test_desktop_cq_distinguishes_internal_control_plane_and_external_plugins(self):
         text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")

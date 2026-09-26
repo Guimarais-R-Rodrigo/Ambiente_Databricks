@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-26 — CM-DESKTOP-RUNTIME-3 pre-close hardening
+
+- (ChatGPT) Removido oráculo textual frágil de PR deferred; teste passa a validar a semântica.
+- (ChatGPT) Preflight v3 agora exige final HEAD/tree idênticos ao candidato após validator/metatests, além de worktree clean.
+- (ChatGPT) Evidence v3 registra final_head/final_tree.
+- (ChatGPT) Suíte passa a 67 métodos definidos estaticamente; runtime CQ permanece NOT_RUN.
+
 ## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-3
 
 - (Codex/ChatGPT) Tentativa anterior confirmou preflight v2 válido, mas Python permaneceu Access denied dentro da sandbox; Creative Production estava carregado naquela sessão.

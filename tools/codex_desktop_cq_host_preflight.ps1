@@ -115,6 +115,11 @@ $staticTestCount = [regex]::Matches($testSourceText, "(?m)^\s+def test_").Count
 if ($runtimeTestCount -ne $staticTestCount) { throw "CQ_HOST_PREFLIGHT_METATEST_COUNT_MISMATCH:${runtimeTestCount}:${staticTestCount}" }
 $finalStatus = @(& git status --porcelain)
 if ($LASTEXITCODE -ne 0 -or $finalStatus.Count -ne 0) { throw "CQ_HOST_PREFLIGHT_FINAL_WORKTREE_DIRTY" }
+$finalHead = (& git rev-parse HEAD).Trim()
+$finalTree = (& git rev-parse 'HEAD^{tree}').Trim()
+if ($finalHead -ne $head -or $finalTree -ne $tree) {
+    throw "CQ_HOST_PREFLIGHT_GIT_IDENTITY_CHANGED_DURING_HOST_VALIDATION"
+}
 
 $prEvidence = [ordered]@{ state = "DEFERRED_TO_EXTERNAL_ADJUDICATION"; source = "NONE" }
 $gh = Get-Command "gh.exe" -ErrorAction SilentlyContinue
@@ -126,7 +131,7 @@ $payload = [ordered]@{
     client_surface = "CODEX_DESKTOP_WINDOWS"
     recorded_at = $recordedAt.ToString("o")
     recorded_at_unix_seconds = $recordedAt.ToUnixTimeSeconds()
-    git = [ordered]@{ root=$root; branch=$branch; head=$head; tree=$tree; origin_identity=$ExpectedRepoFragment; origin_tracking_ref=$originHead; fetch="PASS"; initial_clean=$true; final_clean=$true }
+    git = [ordered]@{ root=$root; branch=$branch; head=$head; tree=$tree; final_head=$finalHead; final_tree=$finalTree; origin_identity=$ExpectedRepoFragment; origin_tracking_ref=$originHead; fetch="PASS"; initial_clean=$true; final_clean=$true }
     python = [ordered]@{ executable=$python.executable; python_version=$python.python_version; implementation=$python.implementation; jsonschema_version=$python.jsonschema_version; execution_surface="HOST_ONLY" }
     project = [ordered]@{ config_path=$projectConfig; config_sha256=$sourceHashes.config; user_config_exists=$userConfigExists; user_config_sha256=$userConfigSha256 }
     source_sha256 = $sourceHashes
