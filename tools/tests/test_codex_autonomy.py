@@ -91,6 +91,14 @@ class CodexAutonomyTests(unittest.TestCase):
     def test_delta_classifier_allows_b1_recovery(self):
         self.assertEqual(
             "ALLOWED_A1",
+            delta.classify_path(
+                "tools/skill_enforcement/real_campaigns/b1/g6_recovery/residual_probe_recovery.py"
+            ),
+        )
+
+    def test_delta_classifier_rejects_new_file_in_recovery_directory(self):
+        self.assertEqual(
+            "OUTSIDE_A1",
             delta.classify_path("tools/skill_enforcement/real_campaigns/b1/g6_recovery/example.py"),
         )
 
@@ -143,7 +151,17 @@ class CodexAutonomyTests(unittest.TestCase):
     def test_delta_classifier_allows_autonomy_journal(self):
         self.assertEqual(
             "ALLOWED_A1",
-            delta.classify_path("docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/RUN-001.md"),
+            delta.classify_path(
+                "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl"
+            ),
+        )
+
+    def test_delta_classifier_rejects_arbitrary_autonomy_run_file(self):
+        self.assertEqual(
+            "OUTSIDE_A1",
+            delta.classify_path(
+                "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/RUN-001.md"
+            ),
         )
 
     def test_delta_classifier_requires_human_for_controller_requirements(self):
@@ -183,6 +201,8 @@ class CodexAutonomyTests(unittest.TestCase):
         workspace = profile["filesystem"][":workspace_roots"]
         self.assertNotIn(".git", {p for p, access in workspace.items() if access == "write"})
         self.assertFalse(profile["network"]["enabled"])
+
+        self.assertNotIn("network_proxy", cfg.get("features") or {})
 
     def test_a1_write_roots_are_concrete_files(self):
         roots = self.envelope()["repo_scope"]["write_roots"]

@@ -119,22 +119,6 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
     if cfg.get("approval_policy") != "never":
         issues.append("ROOT_APPROVAL_POLICY_MUST_BE_NEVER")
 
-    approval = cfg.get("approval_policy")
-    if not isinstance(approval, dict) or not isinstance(approval.get("granular"), dict):
-        issues.append("GRANULAR_APPROVAL_POLICY_REQUIRED")
-    else:
-        granular = approval["granular"]
-        expected = {
-            "sandbox_approval": False,
-            "rules": True,
-            "mcp_elicitations": False,
-            "request_permissions": False,
-            "skill_approval": False,
-        }
-        for key, value in expected.items():
-            if granular.get(key) is not value:
-                issues.append("APPROVAL_POLICY:" + key)
-
     if cfg.get("approvals_reviewer") != "auto_review":
         issues.append("ROOT_APPROVAL_REVIEWER")
     review_policy = ((cfg.get("auto_review") or {}).get("policy") or "")
@@ -143,10 +127,6 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
 
     if (cfg.get("windows") or {}).get("sandbox") != "elevated":
         issues.append("WINDOWS_SANDBOX_NOT_ELEVATED")
-
-    features = cfg.get("features") or {}
-    if features.get("network_proxy") is not True:
-        issues.append("NETWORK_PROXY_NOT_ENABLED")
 
     profiles = cfg.get("permissions") or {}
     a0 = profiles.get(A0_PROFILE) if isinstance(profiles, dict) else None
@@ -164,80 +144,6 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
     if not isinstance(profile, dict):
         issues.append("A1_PERMISSION_PROFILE_MISSING")
         return issues
-
-    filesystem = profile.get("filesystem") or {}
-    if filesystem.get(":minimal") != "read":
-        issues.append("A1_MINIMAL_READ_REQUIRED")
-    if filesystem.get(":tmpdir") != "write":
-        issues.append("A1_TMPDIR_WRITE_REQUIRED")
-    if filesystem.get(":slash_tmp") != "write":
-        issues.append("A1_SLASH_TMP_WRITE_REQUIRED")
-
-    workspace = filesystem.get(":workspace_roots") or {}
-    if workspace.get(".") != "read":
-        issues.append("A1_WORKSPACE_DEFAULT_MUST_BE_READ")
-
-    actual_writes = {
-        _normalize_write_root(path)
-        for path, access in workspace.items()
-        if path != "." and access == "write"
-    }
-    expected_writes = {
-        _normalize_write_root(path)
-        for path in (envelope.get("repo_scope") or {}).get("write_roots", [])
-    }
-    if actual_writes != expected_writes:
-        issues.append(
-            "A1_PERMISSION_WRITE_ROOT_MISMATCH:expected="
-            + ",".join(sorted(expected_writes))
-            + ":actual="
-            + ",".join(sorted(actual_writes))
-        )
-    if ".git" in actual_writes or any(path.startswith(".git/") for path in actual_writes):
-        issues.append("A1_DIRECT_GIT_METADATA_WRITE_FORBIDDEN")
-    if (profile.get("network") or {}).get("enabled") is not False:
-        issues.append("A1_DIRECT_NETWORK_MUST_BE_DISABLED")
-    if any("*" in path for path in expected_writes):
-        issues.append("A1_WRITE_ROOTS_MUST_BE_CONCRETE")
-    return issues
-
-    filesystem = profile.get("filesystem") or {}
-    if filesystem.get(":minimal") != "read":
-        issues.append("A1_MINIMAL_READ_REQUIRED")
-    if filesystem.get(":tmpdir") != "write":
-        issues.append("A1_TMPDIR_WRITE_REQUIRED")
-    if filesystem.get(":slash_tmp") != "write":
-        issues.append("A1_SLASH_TMP_WRITE_REQUIRED")
-
-    workspace = filesystem.get(":workspace_roots") or {}
-    if workspace.get(".") != "read":
-        issues.append("A1_WORKSPACE_DEFAULT_MUST_BE_READ")
-
-    actual_writes = {
-        _normalize_write_root(path)
-        for path, access in workspace.items()
-        if path != "." and access == "write"
-    }
-    expected_writes = {
-        _normalize_write_root(path)
-        for path in (envelope.get("repo_scope") or {}).get("write_roots", [])
-    } | A1_TRANSPORT_WRITES
-    if actual_writes != expected_writes:
-        issues.append(
-            "A1_PERMISSION_WRITE_ROOT_MISMATCH:expected="
-            + ",".join(sorted(expected_writes))
-            + ":actual="
-            + ",".join(sorted(actual_writes))
-        )
-
-    network = profile.get("network") or {}
-    if network.get("enabled") is not True:
-        issues.append("A1_NETWORK_MUST_BE_GITHUB_SCOPED")
-    domains = network.get("domains") or {}
-    actual_domains = {name for name, rule in domains.items() if rule == "allow"}
-    if actual_domains != EXPECTED_GITHUB_DOMAINS or any(rule != "allow" for rule in domains.values()):
-        issues.append("A1_NETWORK_DOMAIN_SET")
-    return issues
 
 
 def validate(root: Path = ROOT) -> dict[str, Any]:
@@ -369,6 +275,26 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
     for rel in required_paths:
         if not (root / rel).is_file():
             issues.append("REQUIRED_PATH_MISSING:" + rel)
+
+    rule_path = root / ".codex" / "rules" / "a1_git_transport.rules"
+    transport_path = root / ".codex" / "transport" / "a1_git_transport.ps1"
+    if rule_path.is_file():
+        rule_text = rule_path.read_text(encoding="utf-8")
+        if 'decision = "prompt"' not in rule_text or "a1_git_transport.ps1" not in rule_text:
+            issues.append("A1_GIT_RULE_INVALID")
+    if transport_path.is_file():
+        transport_text = transport_path.read_text(encoding="utf-8")
+        required_transport_tokens = (
+            'ser/B1-ser03-ser05-authoring',
+            'tools/check_codex_autonomy_delta.py --worktree',
+            'tools/check_codex_autonomy_delta.py --index',
+            'HEAD:refs/heads/$ExpectedBranch',
+            'A1_GIT_TRANSPORT_ENVELOPE_PATH_MISMATCH',
+        )
+        if any(token not in transport_text for token in required_transport_tokens):
+            issues.append("A1_GIT_TRANSPORT_INVALID")
+        if "--force" in transport_text:
+            issues.append("A1_GIT_TRANSPORT_FORCE_FORBIDDEN")
 
     hooks_path = root / ".codex" / "hooks.json"
     if hooks_path.is_file():

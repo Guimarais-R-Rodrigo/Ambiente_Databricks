@@ -27,7 +27,6 @@ sandbox = "elevated"
 [features]
 apps = false
 remote_plugin = false
-network_proxy = true
 multi_agent = true
 goals = true
 hooks = true
