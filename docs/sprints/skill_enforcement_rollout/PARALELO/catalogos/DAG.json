@@ -1473,5 +1473,10 @@
       "target": "SER16",
       "dependency_kind": "prerequisite"
     }
-  ]
+  ],
+  "state_semantics": "PLANNING_DEPENDENCY_GRAPH_NOT_LIVE_STATE",
+  "node_status_semantics": "HISTORICAL_PLANNING_SNAPSHOT",
+  "live_state_source": "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json",
+  "current_front_pointer": "SER-B1",
+  "legacy_status_note": "Node status values are frozen planning annotations and do not represent current execution state."
 }

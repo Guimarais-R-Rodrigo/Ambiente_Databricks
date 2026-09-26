@@ -116,5 +116,15 @@
     "WINDOWS_JOB_ASSIGN_BEFORE_CHILD_START",
     "SCHEMA_TEMPLATE_DRIFT_PREFLIGHT",
     "LIVE_DOCUMENTATION_V3_RECONCILED"
-  ]
+  ],
+  "state_semantics": "HISTORICAL_B0_SNAPSHOT_NOT_LIVE_STATE",
+  "snapshot_scope": "B0_PRE_INTEGRATION_CONTROL_RECORD",
+  "live_state_source": "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json",
+  "current_front_pointer": "SER-B1",
+  "b0_integrated": {
+    "pull_request": 113,
+    "merge_commit": "4ba7f551767d847381df1556ed937116258fa77d",
+    "state": "INTEGRATED_CLOSED"
+  },
+  "legacy_fields_note": "Top-level B0 status/launchable/skill_implementation/next_action are preserved as historical evidence for B0 metatests and must not drive current execution."
 }

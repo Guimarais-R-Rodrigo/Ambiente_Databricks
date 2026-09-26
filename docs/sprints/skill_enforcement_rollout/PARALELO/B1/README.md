@@ -4,6 +4,27 @@ Base inicial de autoria: `4ba7f551767d847381df1556ed937116258fa77d`, após merge
 P1 integrada: `d2b6079ee2e6ecec628d14411afbdbdb878a5fb9`, PR draft #115.  
 A issue #114 é o registro operacional. Nada nesta pasta é promoção automática.
 
+## Estado corrente
+
+```text
+B1 = ACTIVE
+G4_LOCAL_CERTIFICATION = PASS
+G5_AUDIT = PASS
+G6_EXTERNAL = FAIL_PARTIAL_RECOVERY_IN_PROGRESS
+SER05_RESIDUAL_RECOVERY = AUTHORED_NOT_QUALIFIED
+AUTONOMOUS_CONTROLLER = AC-R1_CORRECTIVE_IN_PROGRESS
+A0 = ACTIVE
+A1 = ACTIVE_SCOPED
+A2 = PENDING_EXPLICIT_ACTIVATION_AND_CONTRACT
+A3 = HUMAN_ONLY
+PROMOTION = NOT_AUTHORIZED
+READY = NOT_AUTHORIZED
+MERGE = NOT_AUTHORIZED
+```
+
+Fonte viva: `AUTHORING_STATE.json`. Se qualquer seção histórica abaixo divergir,
+o state source e o gate artifact corrente prevalecem conforme ADR-0025.
+
 ## P1 — autoria de domínio integrada
 
 SER03 recebeu contrato SEF 0.1, schema, preflight mensal/binário, runner fino de `build_vintage_table`, Receipt V1 e verifier vinculado a request/run/oráculo. SER05 recebeu contrato/schema e preflight L2 de contexto, sem leitura de fonte ou join.
@@ -28,12 +49,10 @@ SER05 continua contexto/preflight L2. Não há join, Spark, coverage real, readi
 
 ## Próximo gate
 
-P2 está `AUTHORED_NOT_LOCALLY_QUALIFIED`. O próximo passo exige checkout local completo para, uma vez por gate:
+Concluir a AC-R1 do Autonomous Controller e executar sua validação runtime no
+checkout real. Depois, retomar o G6 a partir do recovery residual SER05:
+qualificação local → auditoria → uma reconciliação read-only permitida por A0.
 
-1. preflight B1;
-2. metatestes da campanha;
-3. preparação SHA-bound e geração mecânica do handoff;
-4. campanha sandboxed 2/1;
-5. auditoria independente das evidências.
-
-Somente depois disso se discute freeze/certificação. Policy, Ready, merge, Free/Genie e promoção continuam não autorizados.
+Nenhuma escrita remota SER05, execução dos probes, Genie, promoção, Ready ou
+merge decorre desta seção; A2 continua exigindo ativação humana + contrato
+machine-readable.

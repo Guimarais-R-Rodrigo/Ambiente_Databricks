@@ -223,5 +223,8 @@
       "category": "FERRAMENTA",
       "status": "OPEN_BEFORE_IMPLEMENTATION"
     }
-  ]
+  ],
+  "state_semantics": "PLANNING_BLOCKER_CATALOG_NOT_LIVE_STATE",
+  "live_state_source": "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json",
+  "legacy_status_note": "Per-blocker status values are planning-era annotations; consult the live state source and current gate artifacts before acting."
 }

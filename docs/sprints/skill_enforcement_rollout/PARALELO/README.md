@@ -2,7 +2,7 @@
 
 **Versão 1.3 — 26/09/2026. Autoria: ChatGPT.**
 
-O usuário aprovou a direção de execução paralela e, em 24/09/2026, autorizou a implementação do B0. Este pacote continua sendo o plano detalhado; a candidata de mecanismo está em `tools/skill_enforcement/parallel/` e seu estado vivo está em `B0/`. A existência do mecanismo não autoriza campanhas de skills, publicação, promoção de policy ou merge.
+O usuário aprovou a direção de execução paralela e, em 24/09/2026, autorizou a implementação do B0. Este pacote continua sendo o plano detalhado. O B0 em `tools/skill_enforcement/parallel/` está integrado e fechado; documentos B0 permanecem como evidência histórica. O estado vivo da frente corrente está em `B1/AUTHORING_STATE.json`. A existência do mecanismo ou do controller não autoriza promoção de policy ou merge.
 
 Base Git conferida: `d2988e97e7b6c5fe1fd561852e947a155c2d731b`, no repositório `Guimarais-R-Rodrigo/Ambiente_Databricks`. A SER01 está integrada nessa base. As oito frentes restantes preservam os identificadores SER02–SER14; SER15/SER16 preservam suas funções de reconciliação e fechamento.
 
@@ -43,7 +43,7 @@ campanha.
 | [14 — Checklist de prontidão](14_CHECKLIST_PRONTIDAO.md) | Contraditório final antes do primeiro disparo |
 | [Codex Autonomous Controller](../../../operations/CODEX_AUTONOMOUS_PROTOCOL.md) | Orquestração autônoma entre gates sob envelope A0/A1/A2/A3 |
 
-`catalogos/CASOS.json` é o catálogo dono dos IDs de casos e das obrigações discriminantes; as tabelas dos dossiês e do documento 05 são visualizações desse catálogo. `catalogos/COBERTURA_BASE.json` preserva o inventário de planejamento; o inventário executável por método é produzido por `tools.skill_enforcement.parallel.coverage`. `catalogos/DAG.json` descreve dependências, não dispara agentes. `catalogos/BLOQUEIOS.json` registra as decisões e lacunas de autoria. `CONTROLE_PLANO.json` concentra o estado da transição.
+`catalogos/CASOS.json` é o catálogo dono dos IDs de casos e das obrigações discriminantes; as tabelas dos dossiês e do documento 05 são visualizações desse catálogo. `catalogos/COBERTURA_BASE.json` preserva o inventário de planejamento; o inventário executável por método é produzido por `tools.skill_enforcement.parallel.coverage`. `catalogos/DAG.json`, `catalogos/BLOQUEIOS.json`, `catalogos/PRONTIDAO.json` e `CONTROLE_PLANO.json` são snapshots de planejamento/B0 e declaram essa semântica nos próprios JSONs; não são state sources vivos. Para B1, use exclusivamente `B1/AUTHORING_STATE.json` como estado corrente.
 
 ## Regra operacional em uma frase
 
