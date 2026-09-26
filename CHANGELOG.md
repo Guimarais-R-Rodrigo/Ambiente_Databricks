@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-3
+
+- (Codex/ChatGPT) Tentativa anterior confirmou preflight v2 válido, mas Python permaneceu Access denied dentro da sandbox; Creative Production estava carregado naquela sessão.
+- (User) Creative Production foi desabilitado depois; a nova sessão ainda precisa provar inventory sem plugin mutável.
+- (ChatGPT) CQ0.5/CQ5 migram para preflight host-side v3 SHA-bound; Python = HOST_ONLY.
+- (ChatGPT) Preflight v3 executa validator/metatests host-side, exige PASS/exit 0, runtime count = static count e hashes source/output.
+- (ChatGPT) Exceções Python read removidas de A0/A1; writes/network permanecem inalterados.
+- (ChatGPT) CQ3/CQ4 permanecem behaviorais no Desktop.
+- (ChatGPT) Validator V10 e 66 métodos de metateste definidos estaticamente.
+- (ChatGPT) CQ0–CQ5 corrigido continua NOT_RUN; B1 material/A2/G6/Genie/Databricks/policy/Ready/merge fora do escopo.
+
 ## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-2: fechamento estático
 
 - (ChatGPT) `CM_DESKTOP_RUNTIME_2_STATIC = PASS` no candidato `2a16776ca9d73ad0b667bd682adf8e4a066cba85` / tree `7ff84fb124deb40c3a17fb95ce8d5844a42ada81`.

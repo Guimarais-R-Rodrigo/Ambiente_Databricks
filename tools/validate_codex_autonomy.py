@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 A0_PROFILE = "ser-controller-a0"
 A1_PROFILE = "ser-b1-a1"
 A0_WINDOWS_SCRATCH = r"~\codex-scratch\Ambiente_Databricks"
-WINDOWS_QUALIFIED_PYTHON_ROOT = r"~\AppData\Local\Programs\Python\Python312"
+LEGACY_WINDOWS_QUALIFIED_PYTHON_ROOT = r"~\AppData\Local\Programs\Python\Python312"
 EXPECTED_AGENTS = {
     "explorer": ("explorer.toml", A0_PROFILE, "gpt-6-luna", "high"),
     "executor": ("executor.toml", A1_PROFILE, "gpt-6-sol", "medium"),
@@ -146,8 +146,8 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
             issues.append("A0_WINDOWS_SCRATCH_WORKSPACE_ROOT_REQUIRED")
         if filesystem.get(A0_WINDOWS_SCRATCH) != "write":
             issues.append("A0_WINDOWS_SCRATCH_WRITE_REQUIRED")
-        if filesystem.get(WINDOWS_QUALIFIED_PYTHON_ROOT) != "read":
-            issues.append("A0_WINDOWS_QUALIFIED_PYTHON_READ_REQUIRED")
+        if LEGACY_WINDOWS_QUALIFIED_PYTHON_ROOT in filesystem:
+            issues.append("A0_HOST_PYTHON_READ_MUST_BE_ABSENT")
         if (a0.get("network") or {}).get("enabled") is not False:
             issues.append("A0_NETWORK_MUST_BE_DISABLED")
 
@@ -165,8 +165,8 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
         issues.append("A1_TMPDIR_WRITE_REQUIRED")
     if filesystem.get(":slash_tmp") != "write":
         issues.append("A1_SLASH_TMP_WRITE_REQUIRED")
-    if filesystem.get(WINDOWS_QUALIFIED_PYTHON_ROOT) != "read":
-        issues.append("A1_WINDOWS_QUALIFIED_PYTHON_READ_REQUIRED")
+    if LEGACY_WINDOWS_QUALIFIED_PYTHON_ROOT in filesystem:
+        issues.append("A1_HOST_PYTHON_READ_MUST_BE_ABSENT")
     if workspace.get(".") != "read":
         issues.append("A1_WORKSPACE_DEFAULT_MUST_BE_READ")
 
@@ -218,7 +218,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-9",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-10",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -349,10 +349,14 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         required_desktop_tokens = (
             "CODEX_DESKTOP_WINDOWS",
             "CQ_HOST_PREFLIGHT.json",
-            "DEFERRED_TO_EXTERNAL_ADJUDICATION",
+            "AC-R2-DESKTOP-HOST-PREFLIGHT-3",
             "NOT_OBSERVABLE_DESKTOP",
+            "PASS_BEHAVIORALLY",
             "INTERNAL_CLIENT_CONTROL_PLANE",
             "EXTERNAL_MUTATING_PLUGIN_SURFACE",
+            "DO_NOT_EXECUTE_PYTHON_IN_SANDBOX",
+            "HOST_VALIDATOR",
+            "HOST_METATESTS",
         )
         if any(token not in desktop_text for token in required_desktop_tokens):
             issues.append("DESKTOP_WINDOWS_CQ_CONTRACT_INVALID")
@@ -360,13 +364,17 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         preflight_text = desktop_preflight_path.read_text(encoding="utf-8")
         required_preflight_tokens = (
             "git fetch origin $ExpectedBranch",
+            "AC-R2-DESKTOP-HOST-PREFLIGHT-3",
             "CQ_HOST_PREFLIGHT.json",
             "jsonschema",
-            "config_sha256",
-            "python_version",
             "recorded_at_unix_seconds",
-            "QualifiedPythonRootRelative",
-            "within_allowed_root",
+            "tools/validate_codex_autonomy.py",
+            "tools.tests.test_codex_autonomy",
+            "Invoke-CapturedProcess",
+            "host_validation",
+            "runtime_test_count",
+            "static_test_count",
+            "source_sha256",
             "final_clean",
         )
         if any(token not in preflight_text for token in required_preflight_tokens):
@@ -426,7 +434,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-9",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-10",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),

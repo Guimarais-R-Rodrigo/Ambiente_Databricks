@@ -33,7 +33,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_AC_R2_CM_DESKTOP_RUNTIME_2_CLOSED_AWAITING_HOST_PREFLIGHT_AND_CQ_RETRY",
+  "stage": "B1_AC_R2_CM_DESKTOP_RUNTIME_3_AUTHORED_AWAITING_STATIC_REVIEW",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -1002,7 +1002,7 @@
     "max_write_capable_agents": 1,
     "custom_agents": 5,
     "controller_metatest_methods_static": 66,
-    "structural_validation": "PASS_AC_R2_CM_DESKTOP_RUNTIME_2_STATIC",
+    "structural_validation": "AC_R2_CM_DESKTOP_RUNTIME_3_AUTHORED_NOT_RUNTIME_QUALIFIED",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
     "previous_static_audit": {
@@ -1019,7 +1019,7 @@
     "executor_permissions_default": "SER_B1_A1_EXACT_FILES_NO_DIRECT_GIT_OR_NETWORK",
     "ac_r2": {
       "authorization": "DIRECT_USER_CHAT_2026-09-26",
-      "state": "PASS_STATIC_AWAITING_HOST_PREFLIGHT_AND_CQ_RETRY",
+      "state": "CORRECTIVE_AUTHORED_AWAITING_STATIC_REVIEW",
       "scope": [
         "CR1_LEAST_PRIVILEGE_A1_PERMISSION_BOUNDARY",
         "CR2_DELTA_AND_STATE_TRANSITION_INTEGRITY",
@@ -1051,7 +1051,7 @@
         "NOMINAL_PROFILE_NAME_MAY_BE_NOT_OBSERVABLE_AND_REQUIRES_BEHAVIORAL_PROOF",
         "EXTERNAL_WRITE_CAPABLE_PLUGINS_MUST_BE_DISABLED_FOR_CQ"
       ],
-      "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-9",
+      "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-10",
       "windows_bootstrap_maintenance": {
         "authorization": "DIRECT_USER_CHAT_2026-09-26",
         "trigger": "WINDOWS_SANDBOX_WORKSPACE_WRITE_NO_WRITABLE_ROOT_CAPABILITY_SIDS",
@@ -1175,6 +1175,32 @@
         "metatests_execution": "NOT_RUN",
         "cq0_cq5": "NOT_RUN",
         "next_action": "DISABLE_CREATIVE_PRODUCTION_FAST_FORWARD_RUN_HOST_PREFLIGHT_RETRY_CQ0_CQ5"
+      },
+      "cm_desktop_runtime_3": {
+        "authorization": "DIRECT_USER_CHAT_2026-09-26",
+        "previous_result": "BLOCKED",
+        "previous_head": "b45f37e153a95ccf50f009dc4b642e9968f53447",
+        "previous_tree": "75e833b3e5405389e792bfb53a497e0738c24947",
+        "previous_repo_mutation": false,
+        "trigger_evidence_report_sha256": "2DDD4B07BC84F9D4DAA92C8229D0750A057DA81C592C00D874833A24ED32B10E",
+        "corrective_scope": [
+          "MOVE_CQ0_5_TO_SHA_BOUND_HOST_EVIDENCE",
+          "MOVE_CQ5_TO_SHA_BOUND_HOST_VALIDATOR_METATESTS",
+          "REMOVE_IN_SANDBOX_PYTHON_DEPENDENCY",
+          "REMOVE_A0_A1_PYTHON_READ_EXCEPTION",
+          "KEEP_CQ3_CQ4_BEHAVIORAL_RUNTIME_PROOFS"
+        ],
+        "host_preflight_schema": "AC-R2-DESKTOP-HOST-PREFLIGHT-3",
+        "python_execution_surface": "HOST_ONLY",
+        "a0_python_read_exception_removed": true,
+        "a1_python_read_exception_removed": true,
+        "repository_write_boundary": "UNCHANGED",
+        "command_network": "UNCHANGED_DISABLED",
+        "a1_write_boundary_changed": false,
+        "a2_changed": false,
+        "b1_material_execution": "NOT_RUN",
+        "creative_production": "USER_REPORTED_DISABLED_REQUIRES_NEW_SESSION_INVENTORY",
+        "runtime_requalification": "REQUIRED"
       }
     }
   }

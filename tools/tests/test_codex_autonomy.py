@@ -131,31 +131,48 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertTrue(result["desktop_windows_cq_contract"])
         self.assertTrue(result["desktop_host_preflight"])
 
-    def test_desktop_host_preflight_binds_python_to_qualified_root(self):
+    def test_desktop_host_preflight_v3_runs_validator_and_metatests_host_side(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
-        self.assertIn(r'QualifiedPythonRootRelative = "~\AppData\Local\Programs\Python\Python312"', text)
-        self.assertIn("within_allowed_root = $true", text)
-        self.assertIn("CQ_HOST_PREFLIGHT_NO_PYTHON_WITH_JSONSCHEMA", text)
+        self.assertIn("AC-R2-DESKTOP-HOST-PREFLIGHT-3", text)
+        self.assertIn("tools/validate_codex_autonomy.py", text)
+        self.assertIn("tools.tests.test_codex_autonomy", text)
+        self.assertIn("HOST_VALIDATOR = PASS", text)
+        self.assertIn("HOST_METATESTS = PASS", text)
+        self.assertIn('execution_surface="HOST_ONLY"', text)
+        self.assertNotIn("QualifiedPythonRootRelative", text)
 
     def test_desktop_host_preflight_emits_locale_independent_epoch(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn("recorded_at_unix_seconds = $recordedAt.ToUnixTimeSeconds()", text)
         contract = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
         self.assertIn("recorded_at_unix_seconds", contract)
-        self.assertIn("não converter `recorded_at` por locale", contract)
+        self.assertIn("<= 1800", contract)
 
-    def test_desktop_nominal_profile_may_be_unobservable_only_with_behavioral_proof(self):
+    def test_desktop_nominal_profile_requires_behavioral_proof(self):
         text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
         self.assertIn("PROJECT_PROFILE_ACTIVE = NOT_OBSERVABLE_DESKTOP", text)
         self.assertIn("PROJECT_PROFILE_EFFECTIVE = PASS_BEHAVIORALLY", text)
-        self.assertIn("CQ3 root/read-only roles/executor/network boundaries = PASS", text)
-        self.assertIn("CQ4 protected Git bridge + hooks = PASS", text)
-        self.assertIn("CQ5 validator + metatests = PASS", text)
+        self.assertIn("CQ3 = PASS", text)
+        self.assertIn("CQ4 = PASS", text)
+        self.assertIn("CQ5-D = PASS", text)
 
-    def test_desktop_host_preflight_uses_native_directory_separator_for_python_binding(self):
+    def test_desktop_contract_forbids_python_execution_in_sandbox(self):
+        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        self.assertGreaterEqual(text.count("DO_NOT_EXECUTE_PYTHON_IN_SANDBOX"), 2)
+        self.assertIn("HOST_VALIDATOR = PASS", text)
+        self.assertIn("HOST_METATESTS = PASS", text)
+        self.assertNotIn("& $Py", text)
+
+    def test_desktop_host_evidence_binds_critical_source_hashes(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
-        self.assertIn("[System.IO.Path]::DirectorySeparatorChar", text)
-        self.assertNotIn('$rootPrefix = $QualifiedPythonRoot.TrimEnd("\\\\") + "\\\\"', text)
+        for token in (
+            "source_sha256",
+            "validate_codex_autonomy.py",
+            "test_codex_autonomy.py",
+            "check_codex_autonomy_delta.py",
+            "B1_AUTONOMY_ENVELOPE.json",
+        ):
+            self.assertIn(token, text)
 
     def test_desktop_host_preflight_uses_safe_powershell_variable_boundaries(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
@@ -164,38 +181,32 @@ class CodexAutonomyTests(unittest.TestCase):
 
     def test_desktop_host_preflight_does_not_persist_raw_remote_url(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
-        self.assertIn("origin_identity = $ExpectedRepoFragment", text)
-        self.assertNotIn("origin_url = $origin", text)
+        self.assertIn("origin_identity=$ExpectedRepoFragment", text)
+        self.assertNotIn("origin_url", text)
 
     def test_desktop_host_preflight_is_fail_closed_without_installer(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn("git fetch origin $ExpectedBranch", text)
-        self.assertIn("CQ_HOST_PREFLIGHT_NO_PYTHON_WITH_JSONSCHEMA", text)
-        self.assertIn("CQ_HOST_PREFLIGHT_LOCAL_REMOTE_DIVERGENCE", text)
+        self.assertIn("CQ_HOST_PREFLIGHT_NO_QUALIFIED_CPYTHON312_WITH_JSONSCHEMA", text)
+        self.assertIn("CQ_HOST_PREFLIGHT_VALIDATOR_FAILED", text)
+        self.assertIn("CQ_HOST_PREFLIGHT_METATESTS_FAILED", text)
         self.assertNotIn("pip install", text)
         self.assertNotIn("python -m pip", text)
 
-    def test_desktop_cq_uses_host_bound_absolute_python(self):
-        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
-        self.assertIn("$Py = $H.python.executable", text)
-        self.assertIn("& $Py -B tools/validate_codex_autonomy.py --json", text)
-        self.assertIn('Literal `python` via PATH não é oráculo', text)
-
     def test_desktop_cq_cli_unobservable_is_explicit_not_pass(self):
         text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
-        self.assertIn("CODEX_CLI = NOT_OBSERVABLE_DESKTOP", text)
-        self.assertIn("isso **não bloqueia sozinho**", text)
+        self.assertIn("NOT_OBSERVABLE_DESKTOP", text)
+        self.assertIn("não bloqueia sozinho", text)
 
     def test_desktop_cq_defers_pr_metadata_to_external_adjudication(self):
         text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
         self.assertIn("PR_REMOTE_VERIFICATION = DEFERRED_TO_EXTERNAL_ADJUDICATION", text)
-        self.assertIn("revalidado fora da sessão", text)
 
     def test_desktop_cq_distinguishes_internal_control_plane_and_external_plugins(self):
         text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
         self.assertIn("INTERNAL_CLIENT_CONTROL_PLANE", text)
         self.assertIn("EXTERNAL_MUTATING_PLUGIN_SURFACE", text)
-        self.assertIn("NotebookLM", text)
+        self.assertIn("Creative Production", text)
 
     def test_delta_classifier_protects_frozen_g6(self):
         self.assertEqual(
@@ -306,20 +317,28 @@ class CodexAutonomyTests(unittest.TestCase):
         issues = val._validate_permission_profile(cfg, self.envelope())
         self.assertIn("A1_WINDOWS_ROOT_READ_REQUIRED", issues)
 
-    def test_windows_profiles_read_enable_only_qualified_python_root(self):
+    def test_windows_profiles_do_not_need_host_python_read(self):
         cfg = val._read_toml(ROOT / ".codex/config.toml")
-        self.assertEqual("read", cfg["permissions"]["ser-controller-a0"]["filesystem"][val.WINDOWS_QUALIFIED_PYTHON_ROOT])
-        self.assertEqual("read", cfg["permissions"]["ser-b1-a1"]["filesystem"][val.WINDOWS_QUALIFIED_PYTHON_ROOT])
-        self.assertFalse(cfg["permissions"]["ser-controller-a0"]["network"]["enabled"])
-        self.assertFalse(cfg["permissions"]["ser-b1-a1"]["network"]["enabled"])
+        self.assertNotIn(
+            val.LEGACY_WINDOWS_QUALIFIED_PYTHON_ROOT,
+            cfg["permissions"]["ser-controller-a0"]["filesystem"],
+        )
+        self.assertNotIn(
+            val.LEGACY_WINDOWS_QUALIFIED_PYTHON_ROOT,
+            cfg["permissions"]["ser-b1-a1"]["filesystem"],
+        )
 
-    def test_validator_rejects_missing_qualified_python_read(self):
+    def test_validator_rejects_reintroduced_host_python_read(self):
         cfg = copy.deepcopy(val._read_toml(ROOT / ".codex/config.toml"))
-        del cfg["permissions"]["ser-controller-a0"]["filesystem"][val.WINDOWS_QUALIFIED_PYTHON_ROOT]
-        del cfg["permissions"]["ser-b1-a1"]["filesystem"][val.WINDOWS_QUALIFIED_PYTHON_ROOT]
+        cfg["permissions"]["ser-controller-a0"]["filesystem"][
+            val.LEGACY_WINDOWS_QUALIFIED_PYTHON_ROOT
+        ] = "read"
+        cfg["permissions"]["ser-b1-a1"]["filesystem"][
+            val.LEGACY_WINDOWS_QUALIFIED_PYTHON_ROOT
+        ] = "read"
         issues = val._validate_permission_profile(cfg, self.envelope())
-        self.assertIn("A0_WINDOWS_QUALIFIED_PYTHON_READ_REQUIRED", issues)
-        self.assertIn("A1_WINDOWS_QUALIFIED_PYTHON_READ_REQUIRED", issues)
+        self.assertIn("A0_HOST_PYTHON_READ_MUST_BE_ABSENT", issues)
+        self.assertIn("A1_HOST_PYTHON_READ_MUST_BE_ABSENT", issues)
 
     def test_a0_windows_scratch_capability_root_is_explicit(self):
         cfg = val._read_toml(ROOT / ".codex/config.toml")
