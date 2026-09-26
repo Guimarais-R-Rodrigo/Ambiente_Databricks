@@ -30,8 +30,10 @@ A2 exige referência humana explícita + contrato válido.
 Antes de B1 material, executar `CODEX_RUNTIME_QUALIFICATION.md`.
 
 AC-R2 usa permission profiles:
-- root + explorer/auditors: `ser-controller-a0`, repository read-only, scratch
-  somente em temp, command network disabled;
+- root + explorer/auditors: `ser-controller-a0`, repository read-only,
+  command network disabled, com scratch externo explícito
+  `~\codex-scratch\Ambiente_Databricks` para capability/write temporário no
+  Windows nativo;
 - executor: `ser-b1-a1`, workspace default read, somente 10 arquivos A1 concretos
   writable, sem escrita direta em `.git` e sem command network;
 - `sandbox_mode` legado é incompatível com esse target.
@@ -133,6 +135,9 @@ MCP/apps/hosted GitHub APIs não são transporte A1 de escrita.
 ## 7. State integrity
 
 `AUTHORING_STATE.json` é estado vivo, não prova de si próprio.
+
+O scratch externo A0 não é evidence root nem autoridade do projeto. Ele existe
+somente para execução determinística temporária e nunca substitui o worktree.
 
 A1 não pode:
 - alterar Human Gates;

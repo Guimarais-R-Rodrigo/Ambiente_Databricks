@@ -45,12 +45,16 @@ description = "Independent read-only auditor for architecture, regression risk, 
 config_file = "agents/architecture-auditor.toml"
 
 [permissions.ser-controller-a0]
-description = "Repository read-only controller/auditor profile with scratch writes only for deterministic local tests."
+description = "Repository read-only controller/auditor profile with one explicit external scratch capability root for deterministic local tests."
+
+[permissions.ser-controller-a0.workspace_roots]
+"~\\codex-scratch\\Ambiente_Databricks" = true
 
 [permissions.ser-controller-a0.filesystem]
 ":minimal" = "read"
 ":tmpdir" = "write"
 ":slash_tmp" = "write"
+"~\\codex-scratch\\Ambiente_Databricks" = "write"
 
 [permissions.ser-controller-a0.filesystem.":workspace_roots"]
 "." = "read"

@@ -5,6 +5,24 @@ Decisões donas: ADR-0024 + ADR-0025
 
 CQ0–CQ5 prova o runtime real. Não inicia B1 material e não concede A2.
 
+## Bootstrap nativo Windows — antes de criar a conversa
+
+O sandbox `elevated` precisa de pelo menos um writable capability root resolvível
+quando o profile contém writes de scratch. AC-R2 mantém o repositório read-only
+para A0 e declara um workspace root externo dedicado:
+
+`~\codex-scratch\Ambiente_Databricks`
+
+Antes de iniciar uma conversa Codex Desktop no Windows nativo, esse diretório
+deve existir. Preparação do host, fora do repositório:
+
+```powershell
+New-Item -ItemType Directory -Force "$HOME\codex-scratch\Ambiente_Databricks" | Out-Null
+```
+
+Não apontar o scratch para dentro do repositório e não tornar o repository root
+writable para contornar erro de sandbox.
+
 ## CQ0 — identity, clean worktree, trust e effective config
 
 Exigir `git status --porcelain` vazio antes da qualificação e registrar:
@@ -30,6 +48,8 @@ native Windows sandbox  = elevated
 apps                     = false
 remote_plugin            = false
 A0/A1 command network   = disabled
+A0 external scratch     = ~\codex-scratch\Ambiente_Databricks (write)
+repository root under A0 = read
 A1 direct .git write    = denied
 ```
 

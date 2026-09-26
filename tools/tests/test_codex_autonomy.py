@@ -216,6 +216,23 @@ class CodexAutonomyTests(unittest.TestCase):
             self.assertEqual(expected_profile, agent["default_permissions"], role)
             self.assertNotIn("sandbox_mode", agent, role)
 
+    def test_a0_windows_scratch_capability_root_is_explicit(self):
+        cfg = val._read_toml(ROOT / ".codex/config.toml")
+        a0 = cfg["permissions"]["ser-controller-a0"]
+        self.assertTrue(a0["workspace_roots"][val.A0_WINDOWS_SCRATCH])
+        self.assertEqual("write", a0["filesystem"][val.A0_WINDOWS_SCRATCH])
+        self.assertEqual("read", a0["filesystem"][":workspace_roots"]["."])
+        self.assertFalse(a0["network"]["enabled"])
+
+    def test_validator_rejects_missing_a0_windows_scratch_capability_root(self):
+        cfg = copy.deepcopy(val._read_toml(ROOT / ".codex/config.toml"))
+        a0 = cfg["permissions"]["ser-controller-a0"]
+        del a0["workspace_roots"][val.A0_WINDOWS_SCRATCH]
+        del a0["filesystem"][val.A0_WINDOWS_SCRATCH]
+        issues = val._validate_permission_profile(cfg, self.envelope())
+        self.assertIn("A0_WINDOWS_SCRATCH_WORKSPACE_ROOT_REQUIRED", issues)
+        self.assertIn("A0_WINDOWS_SCRATCH_WRITE_REQUIRED", issues)
+
     def test_approval_escalation_is_fail_closed(self):
         executor = val._read_toml(ROOT / ".codex/agents/executor.toml")
         granular = executor["approval_policy"]["granular"]

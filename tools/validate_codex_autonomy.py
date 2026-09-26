@@ -15,6 +15,7 @@ except ImportError:
 ROOT = Path(__file__).resolve().parents[1]
 A0_PROFILE = "ser-controller-a0"
 A1_PROFILE = "ser-b1-a1"
+A0_WINDOWS_SCRATCH = r"~\\codex-scratch\\Ambiente_Databricks"
 EXPECTED_AGENTS = {
     "explorer": ("explorer.toml", A0_PROFILE, "gpt-6-luna", "high"),
     "executor": ("executor.toml", A1_PROFILE, "gpt-6-sol", "medium"),
@@ -131,12 +132,17 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
     else:
         filesystem = a0.get("filesystem") or {}
         workspace = filesystem.get(":workspace_roots") or {}
+        profile_roots = a0.get("workspace_roots") or {}
         if filesystem.get(":minimal") != "read" or workspace.get(".") != "read":
             issues.append("A0_REPOSITORY_READ_ONLY_REQUIRED")
         if filesystem.get(":tmpdir") != "write":
             issues.append("A0_TMPDIR_WRITE_REQUIRED")
         if filesystem.get(":slash_tmp") != "write":
             issues.append("A0_SLASH_TMP_WRITE_REQUIRED")
+        if profile_roots.get(A0_WINDOWS_SCRATCH) is not True:
+            issues.append("A0_WINDOWS_SCRATCH_WORKSPACE_ROOT_REQUIRED")
+        if filesystem.get(A0_WINDOWS_SCRATCH) != "write":
+            issues.append("A0_WINDOWS_SCRATCH_WRITE_REQUIRED")
         if (a0.get("network") or {}).get("enabled") is not False:
             issues.append("A0_NETWORK_MUST_BE_DISABLED")
 
@@ -202,7 +208,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-4",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-5",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -377,7 +383,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-4",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-5",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),

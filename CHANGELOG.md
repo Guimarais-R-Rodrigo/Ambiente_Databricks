@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-09-26 — AC-R2 Windows sandbox bootstrap maintenance
+
+### Observado
+
+- (User/Codex Desktop) A criação da conversa falhou antes de carregar `AGENTS.md` com `workspace-write sandbox has no writable root capability SIDs`.
+- (ChatGPT) O worktree B1 já estava limpo e alinhado ao HEAD remoto; a falha ocorreu antes de CQ0 e sem mutação repo-side.
+
+### Corrigido
+
+- (ChatGPT) `ser-controller-a0` mantém o repository root read-only e recebe um único scratch externo explícito `~\codex-scratch\Ambiente_Databricks` como profile workspace root + filesystem write.
+- (ChatGPT) Command network continua disabled; nenhuma escrita em `.git`, produto, policy ou outra frente foi aberta.
+- (ChatGPT) Validator sobe para `SER-CODEX-AUTONOMY-VALIDATION-5` e exige mecanicamente o scratch/capability root.
+- (ChatGPT) Suíte controller passa a 49 métodos definidos estaticamente, incluindo regressão positiva e fail-closed para ausência do scratch root.
+- (ChatGPT) Runtime qualification documenta a precondição de host: criar o diretório vazio antes de iniciar o Codex Desktop.
+
+### Limites
+
+- CQ0–CQ5 continuam NOT_RUN porque a tentativa anterior não chegou a criar a thread.
+- B1 material, A2, G6, Genie, policy promotion, Ready e merge permanecem fora do escopo.
+
 ## 2026-09-26 — AC-R2-MIN: fechamento estático
 
 ### Veredito

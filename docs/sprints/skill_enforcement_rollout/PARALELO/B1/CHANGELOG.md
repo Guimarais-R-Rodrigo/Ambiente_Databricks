@@ -135,3 +135,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) AC-R2-MIN fechamento: removido override local de reviewer policy, mantidos A0 repo-read-only e A1 em dez arquivos exatos sem .git/network direto, Git isolado no transportador rule-reviewed, e runtime CQ impedido de autopromover PASS/remover blocker. 47 metatest methods definidos estaticamente. CQ0–CQ5 e B1 material continuam NOT_RUN.
 
 (ChatGPT) AC-R2-MIN static closure PASS no candidato 128ff8df9f2b91567847eaed1e99532d88bfee2f / tree f191e85662d8e617ae9f42af7909a780437ad5e7: 0 findings materiais abertos na revisão repo-side; 47 metatest methods definidos, mas validator/metatests/runtime CQ permanecem NOT_RUN. Próximo gate é CQ0–CQ5; CQ verde não remove autonomamente o blocker de runtime.
+
+(ChatGPT) CONTROLLER_MAINTENANCE autorizado pelo usuário para bootstrap Windows: A0 ganhou scratch externo explícito ~\\codex-scratch\\Ambiente_Databricks sem ampliar write no repositório; validator V5 e 49 metatest methods definidos. Tentativa Desktop anterior bloqueou antes de CQ0/thread creation; CQ0–CQ5 permanecem NOT_RUN.
