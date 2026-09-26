@@ -28,13 +28,13 @@ Não há obrigação de pedir autorização humana a cada comando read-only se a
 
 Antes de enviar ao laboratório: parse de todos os `.py` novos com `ast.parse`; JSON/TOML válidos; fixture pequena com encoding explícito; assinaturas públicas reais; testes de policy em fixtures quando se destinarem a níveis históricos; ausência de autoimport recursivo do test runner; manifest hashes; paths/links locais; testes positivos e negativos; erros e skips estruturados; esquema de summary e verificação independente; placeholders bloqueados no perfil executável.
 
-O autor não declara runtime local ou Windows se não o executou. Checagens estáticas aqui reduzem defeitos triviais; a qualificação G2 cobre o que depende da máquina do usuário. Qualificação não é oportunidade para o executor criar implementação faltante.
+O autor não declara runtime local ou Windows se não o executou. Checagens estáticas aqui reduzem defeitos triviais; a qualificação G2 cobre o que depende da máquina do usuário. Qualificação não é oportunidade para o **executor determinístico da campanha** criar implementação faltante. Após a rodada encerrar, o root controller pode abrir repair A1 causal em novo SHA quando o envelope permitir.
 
 ## 3.4 Diagnóstico sem retry-until-green
 
 `diagnose` recebe um DAG diagnóstico fixo. Pode rodar syntax, schemas, coleta, fixtures puras e validação de configuração em paralelo, mesmo se outro diagnóstico independente falhar. Interrompe descendentes de uma falha e qualquer operação com efeito. Preserva todas as falhas numa lista ordenada; `first_failure` é imutável.
 
-É proibido instalar uma nova biblioteca, editar o teste, trocar seed, aumentar timeout ou repetir só o teste que falhou durante a mesma rodada. Um problema ambiental causa uma rodada causalmente nova após a alteração autorizada do ambiente. Um problema de código retorna à autoria e exige novo SHA.
+É proibido instalar uma nova biblioteca, editar o teste, trocar seed, aumentar timeout ou repetir só o teste que falhou durante a mesma rodada. Um problema ambiental causa uma rodada causalmente nova após a alteração autorizada do ambiente. Um problema de código encerra a rodada determinística e retorna à autoria; em Autonomous Controller Mode essa autoria pode ser executada pelo A1 Authoring Executor dentro dos write roots, sempre produzindo novo SHA antes de nova certificação.
 
 O diagnóstico pode revelar erro novo que a análise aqui não alcançou. O compromisso é não encaminhar erro conhecido, não prometer ausência de qualquer defeito futuro.
 

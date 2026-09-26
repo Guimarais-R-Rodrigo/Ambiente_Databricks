@@ -40,7 +40,7 @@ Se o sandbox local não permitir fonte read-only + scratch/evidence write por es
 | Workspace `.assistant` | Único publicador do lote/destino autorizado |
 | Merge GitHub | Operação explícita após aceite humano do SHA |
 
-Workers não fazem commits de correção. Falha produz issue/proposta de diagnóstico; a correção é escrita aqui. Mudanças mecânicas não são licença para decidir conflitos semânticos no local.
+Workers determinísticos de campanha não fazem commits de correção. Falha produz finding/diagnóstico e encerra a rodada pertinente; no modo autônomo, o root pode então despachar repair causal ao A1 Authoring Executor dentro dos write roots. Mudanças mecânicas não são licença para decidir conflitos semânticos.
 
 ## 7.5 DAG funcional
 
@@ -48,7 +48,7 @@ Depois de B0 qualificado, as três frentes L3 e os cinco contratos L2 podem ser 
 
 SER06 depende da L2 SER05 aceita; SER08 da L2 SER07; SER10 da L2 SER09; SER12 da L2 SER11; SER14 da L2 SER13. Dependências de efeito externo são nós adicionais: capacidades, destino e autorização. A fila não impõe que toda L3 termine antes de iniciar L2 independente.
 
-O arquivo `catalogos/DAG.json` contém o grafo de planejamento. Nós de autoria não são tarefas delegadas ao executor local. Nós de execução só recebem SHA/perfil depois de G1/G2. Faltas de schema/contrato comum bloqueiam consumidores; falha independente não cancela todos os demais.
+O arquivo `catalogos/DAG.json` contém o grafo de planejamento histórico e não é state source vivo. Nós de autoria não são tarefas do executor determinístico local; podem ser despachados ao A1 Authoring Executor quando o envelope corrente os autoriza. Nós de execução só recebem SHA/perfil depois de G1/G2. Faltas de schema/contrato comum bloqueiam consumidores; falha independente não cancela todos os demais.
 
 ## 7.6 Modelo de branches e composição
 
