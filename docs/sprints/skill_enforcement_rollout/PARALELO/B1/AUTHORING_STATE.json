@@ -33,7 +33,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_AC_R2_CM_DESKTOP_RUNTIME_3_FALSE_NEGATIVE_CORRECTED_AWAITING_STATIC_REVIEW",
+  "stage": "B1_AC_R2_CM_DESKTOP_RUNTIME_3_CLOSED_AWAITING_HOST_PREFLIGHT_V3_RETRY",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -1002,7 +1002,7 @@
     "max_write_capable_agents": 1,
     "custom_agents": 5,
     "controller_metatest_methods_static": 68,
-    "structural_validation": "AC_R2_CM_DESKTOP_RUNTIME_3_FALSE_NEGATIVE_CORRECTED",
+    "structural_validation": "PASS_AC_R2_CM_DESKTOP_RUNTIME_3_STATIC",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
     "previous_static_audit": {
@@ -1019,7 +1019,7 @@
     "executor_permissions_default": "SER_B1_A1_EXACT_FILES_NO_DIRECT_GIT_OR_NETWORK",
     "ac_r2": {
       "authorization": "DIRECT_USER_CHAT_2026-09-26",
-      "state": "CORRECTIVE_AUTHORED_AWAITING_STATIC_REVIEW",
+      "state": "PASS_STATIC_AWAITING_HOST_PREFLIGHT_V3_RETRY",
       "scope": [
         "CR1_LEAST_PRIVILEGE_A1_PERMISSION_BOUNDARY",
         "CR2_DELTA_AND_STATE_TRANSITION_INTEGRITY",
@@ -1206,16 +1206,16 @@
           "REQUIRE_FINAL_HEAD_TREE_IDENTITY_AFTER_HOST_VALIDATION",
           "ADD_EXPLICIT_CQ_HOST_PREFLIGHT_JSON_CONTRACT_TOKEN"
         ],
-        "material_findings_open": "PENDING_STATIC_REVIEW",
-        "state": "FALSE_NEGATIVE_CORRECTED_AWAITING_STATIC_REVIEW",
-        "static_candidate_commit": "c486cb36d28c7652556ea796c1861ebc53503106",
-        "static_candidate_tree": "d67e887a61b066448cba2a42f3ab6616bcfa8aed",
-        "metatest_methods_static": 67,
+        "material_findings_open": 0,
+        "state": "PASS_STATIC_AWAITING_HOST_PREFLIGHT_V3_RETRY",
+        "static_candidate_commit": "7f8bdbd65aebb72d9023932ea51bf68d5c65151d",
+        "static_candidate_tree": "533f774ffa4ee51bb54106c0ef0dc94d16ec1032",
+        "metatest_methods_static": 68,
         "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-10",
-        "validator_execution": "NOT_RUN",
-        "metatests_execution": "NOT_RUN",
+        "validator_execution": "NOT_RUN_AFTER_FALSE_NEGATIVE_CORRECTION",
+        "metatests_execution": "NOT_RUN_AFTER_FALSE_NEGATIVE_CORRECTION",
         "cq0_cq5": "NOT_RUN",
-        "next_action": "FAST_FORWARD_RUN_HOST_PREFLIGHT_V3_START_FRESH_CQ_SESSION",
+        "next_action": "FAST_FORWARD_AND_RERUN_HOST_PREFLIGHT_V3",
         "python_in_sandbox_required": false,
         "last_host_preflight_attempt": {
           "head": "c1b94432f87d40caba29f225ef6dd75587554f06",
@@ -1225,6 +1225,13 @@
           "root_cause": "CQ_HOST_PREFLIGHT_JSON_TOKEN_ABSENT_FROM_CONTRACT_TEXT",
           "repo_mutation": false,
           "metatests": "NOT_RUN"
+        },
+        "false_negative_correction": {
+          "issue": "DESKTOP_WINDOWS_CQ_CONTRACT_INVALID",
+          "missing_token": "CQ_HOST_PREFLIGHT.json",
+          "correction": "EXPLICIT_ARTIFACT_BINDING_IN_DESKTOP_CONTRACT",
+          "permission_change": false,
+          "runtime_change": false
         }
       }
     }

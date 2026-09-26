@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-26 — CM-DESKTOP-RUNTIME-3 false-negative correction: fechamento estático
+
+- (ChatGPT) `CM_DESKTOP_RUNTIME_3_STATIC = PASS` após correção do falso negativo do validator.
+- (ChatGPT) Contrato Desktop agora nomeia explicitamente `CQ_HOST_PREFLIGHT.json` e `CQ_HOST_PREFLIGHT.sha256`; todos os 10 tokens contratuais V10 estão presentes.
+- (ChatGPT) Suíte controller passa a 68 métodos definidos estaticamente.
+- (ChatGPT) Nenhuma mudança de permission profile, write boundary, network, A1 ou A2 nesta correção.
+- (ChatGPT) Findings materiais repo-side abertos: 0.
+- (ChatGPT) Próximo passo é somente fast-forward + nova execução do host preflight v3.
+
 ## 2026-09-26 — CM-DESKTOP-RUNTIME-3 host-preflight validator false negative
 
 - (User/Host) Preflight v3 executou validator V10 e parou fail-closed com `DESKTOP_WINDOWS_CQ_CONTRACT_INVALID`; metatests não rodaram.

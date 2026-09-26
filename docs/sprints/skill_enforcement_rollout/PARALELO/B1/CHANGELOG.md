@@ -165,3 +165,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) CM-DESKTOP-RUNTIME-3 static PASS em c486cb36d28c7652556ea796c1861ebc53503106/d67e887a61b066448cba2a42f3ab6616bcfa8aed: preflight v3 host-side SHA-bound, Python HOST_ONLY, A0/A1 sem Python read exception, validator V10, 67 metatest methods definidos, 0 findings materiais repo-side. Próximo passo = fast-forward + preflight v3 + fresh CQ session.
 
 (ChatGPT) Preflight v3 false negative corrigido: DESKTOP_WINDOWS_CQ_CONTRACT_INVALID era ausência literal de CQ_HOST_PREFLIGHT.json no contrato; sem mudança de runtime/authority. 68 metatest methods definidos.
+
+(ChatGPT) CM-DESKTOP-RUNTIME-3 static re-close PASS em 7f8bdbd65aebb72d9023932ea51bf68d5c65151d/533f774ffa4ee51bb54106c0ef0dc94d16ec1032: false negative DESKTOP_WINDOWS_CQ_CONTRACT_INVALID corrigido pelo binding literal CQ_HOST_PREFLIGHT.json; 68 metatest methods definidos; permissions/runtime contract inalterados. Próximo passo: rerun preflight v3.
