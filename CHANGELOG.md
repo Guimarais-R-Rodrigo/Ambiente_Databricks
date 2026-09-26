@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-09-26 — AC-R2-MIN: fechamento de autoridade e transporte
+
+### Corrigido
+
+1. (ChatGPT) Removido override local de `[auto_review].policy`: a documentação oficial atual confirma que ele substitui, não complementa, a política ativa do reviewer.
+2. (ChatGPT) A1 permanece sem escrita direta em `.git` e sem command network; commit/push existem somente pelo transportador protegido acionado por rule prompt do executor.
+3. (ChatGPT) Permission roots A1 permanecem dez arquivos concretos; criação arbitrária de arquivo em recovery/AUTONOMY fica fora de A1.
+4. (ChatGPT) Runtime qualification deixa de poder autoatestarse como `PASS`: A1 registra somente `REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE`, preserva o blocker e para no Human Gate já existente.
+5. (ChatGPT) Metatestes estáticos da camada controller passam a 47 métodos definidos; CQ0–CQ5 continuam NOT_RUN nesta fase.
+
+### Limites
+
+- Nenhum CQ0–CQ5, B1 material, Databricks, G6, Genie, A2, policy promotion, Ready ou merge foi executado.
+- A corretiva permanece candidata até revalidação estática final do HEAD.
+
 ## 2026-09-26 — AC-R2-MIN: least-privilege controller correction
 
 ### Corrigido

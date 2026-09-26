@@ -5,60 +5,48 @@ Use este prompt em uma nova sessão Codex iniciada na raiz do repositório:
 ```text
 Operate this repository in SER Autonomous Controller Mode.
 
-Start from the repository root. Read AGENTS.md and
-docs/operations/CODEX_RUNTIME_QUALIFICATION.md. Do not load the full CHANGELOG;
-use search/tail only if recent history is material.
+Read AGENTS.md and docs/operations/CODEX_RUNTIME_QUALIFICATION.md. Do not load
+the full CHANGELOG; use search/tail only when history is material.
 
-First qualify the effective Codex runtime. Record the Codex version, project
-trust, /status, /debug-config and /permissions when available. The expected
-AC-R2 posture is: root=:read-only, executor=ser-b1-a1, explorer/auditors=:read-only,
-native Windows sandbox=elevated, no legacy sandbox_mode, and granular approvals
-with sandbox_approval/request_permissions/mcp_elicitations/skill_approval denied.
-Do not use /permissions or any escalation to widen the boundary.
+Run CQ0-CQ5 exactly. Do not start material B1 work during qualification.
 
-Check import jsonschema. If the declared maintenance dependency is absent, stop
-with BLOCKED_CONTROLLER_DEPENDENCY; do not widen permissions or install arbitrary
-packages from inside the controller session.
+Expected AC-R2 posture:
+- root, explorer and auditors: ser-controller-a0, repository read-only;
+- executor: ser-b1-a1, only the ten exact envelope paths writable;
+- executor has no direct .git write and no command network;
+- no legacy sandbox_mode;
+- Windows native sandbox elevated;
+- executor granular approvals expose only execpolicy rule prompts;
+- executor reviewer = auto_review;
+- project does not override [auto_review].policy;
+- Git commit/push only through .codex/transport/a1_git_transport.ps1;
+- no write-capable MCP/app/hosted surface outside an explicit contract.
 
-Run strict config validation when supported, then:
+Do not use /permissions, --yolo, sandbox widening, request_permissions or another
+override to make a failing target pass.
+
+Run strict config/execpolicy checks and:
 
 python -B tools/validate_codex_autonomy.py --json
 python -B -m unittest tools.tests.test_codex_autonomy -v
 
-Execute CQ2-CQ4 exactly as written, including real spawned-role negative probes.
-The root and all read-only roles must fail a disposable write probe. The executor
-must be able to create/remove a disposable marker only under an A1 write root and
-must fail before effect when targeting controller governance. Any write-capable
-MCP/hosted surface not explicitly authorized blocks qualification.
+Perform the real spawned-role negative probes in CQ3. The only positive A1 repo
+write during qualification is the append-only CQ line in
+B1/AUTONOMY/JOURNAL.jsonl. CQ4 must commit/push that delta through the protected
+A1 Git transport, not by direct git metadata/network access.
 
-If any controller gate fails, diagnose and stop at CONTROLLER_MAINTENANCE with an
-exact patch proposal. Do NOT self-repair controller governance under A1.
+If CQ0-CQ5 is green, do NOT remove
+AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION and do NOT write canonical PASS.
+Record only REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE for runtime/effective
+config, preserve the blocker, and stop at the existing CONTROLLER_MAINTENANCE
+Human Gate with the CQ evidence.
 
-Only after CQ0-CQ5 pass may you read the active autonomy envelope, its live state
-and the current gate contract and then assume material B1 work. AUTHORING_STATE is
-live state but is not self-proving authority: blocker removal/gate advancement must
-be corroborated by evidence and pass the transition checker.
+If any CQ fails, report the exact failure and stop at CONTROLLER_MAINTENANCE.
+Never self-repair controller governance under A1.
 
-Verify mutable Git identities from the repository; never trust this prompt for a
-current SHA/tree/branch or remote state.
-
-Use subagents on demand rather than by default. Keep exactly one write-capable
-executor. Explorer and auditors remain read-only; children never spawn children.
-
-Continue autonomously through investigation -> implementation -> deterministic
-verification -> independent audit -> causal repair -> reverification while every
-action remains inside the active envelope. Never retry the same material command
-on the same state merely to seek green.
-
-For external effects, separate process status, effect status and verification
-status. UNKNOWN is not absence. No A2 effect is authorized by this prompt.
-
-Do not infer policy promotion, Ready or merge from technical PASS. Those remain
-Human Gates.
-
-Begin with CQ0. Do not start material B1 work until CQ0-CQ5 pass.
+A2, residual G6 effects, Genie, policy promotion, Ready and merge are not
+authorized by this prompt.
 ```
 
-Para B1, o envelope inicial é:
-
+B1 envelope:
 `docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json`.

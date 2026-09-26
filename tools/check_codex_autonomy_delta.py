@@ -243,10 +243,10 @@ def _authorized(value: Any) -> bool:
 
 def _blocker_has_evidence(blocker: str, candidate: dict[str, Any]) -> bool:
     if blocker == "AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION":
-        return (
-            _nested(candidate, "autonomous_controller", "runtime_validation") == "PASS"
-            and _nested(candidate, "autonomous_controller", "effective_config_observation") == "PASS"
-        )
+        # Runtime qualification is governance about the controller itself.
+        # A1 may report its observed result, but cannot make that report its own
+        # authority source or remove the blocker.
+        return False
     if blocker == "G6_SER05_RECOVERY_LOCAL_QUALIFICATION":
         return (
             _passish(_nested(candidate, "g6", "ser05_residual_recovery", "local_validation"))
@@ -291,6 +291,21 @@ def validate_state_transition(base_state: dict[str, Any], candidate_state: dict[
             continue
         if base_controller.get(key) != candidate_controller.get(key):
             issues.append("STATE_CONTROLLER_AUTHORITY_MUTATION:autonomous_controller." + key)
+
+    runtime_fields = ("runtime_validation", "effective_config_observation")
+    allowed_runtime_reports = {
+        "NOT_RUN",
+        "FAIL",
+        "BLOCKED",
+        "REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE",
+    }
+    for key in runtime_fields:
+        base_value = base_controller.get(key)
+        candidate_value = candidate_controller.get(key)
+        if base_value == "PASS" and candidate_value != "PASS":
+            issues.append("STATE_RUNTIME_QUALIFICATION_REGRESSION:" + key)
+        elif base_value != candidate_value and candidate_value not in allowed_runtime_reports:
+            issues.append("STATE_RUNTIME_SELF_CERTIFICATION_FORBIDDEN:" + key)
 
     base_blockers = base_state.get("blocked_by")
     candidate_blockers = candidate_state.get("blocked_by")

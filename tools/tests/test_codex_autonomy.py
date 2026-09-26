@@ -394,13 +394,45 @@ class CodexAutonomyTests(unittest.TestCase):
             "STATE_BLOCKER_REMOVAL_UNPROVEN:AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION", issues
         )
 
-    def test_state_transition_accepts_runtime_blocker_removal_after_proof(self):
+    def test_state_transition_rejects_runtime_self_certification(self):
+        base = self._state()
+        candidate = copy.deepcopy(base)
+        candidate["autonomous_controller"]["runtime_validation"] = "PASS"
+        candidate["autonomous_controller"]["effective_config_observation"] = "PASS"
+        issues = delta.validate_state_transition(base, candidate)
+        self.assertIn(
+            "STATE_RUNTIME_SELF_CERTIFICATION_FORBIDDEN:runtime_validation", issues
+        )
+        self.assertIn(
+            "STATE_RUNTIME_SELF_CERTIFICATION_FORBIDDEN:effective_config_observation", issues
+        )
+
+    def test_state_transition_accepts_reported_runtime_pass_with_blocker_retained(self):
+        base = self._state()
+        candidate = copy.deepcopy(base)
+        candidate["autonomous_controller"]["runtime_validation"] = (
+            "REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE"
+        )
+        candidate["autonomous_controller"]["effective_config_observation"] = (
+            "REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE"
+        )
+        self.assertEqual([], delta.validate_state_transition(base, candidate))
+
+    def test_state_transition_runtime_blocker_removal_requires_controller_maintenance(self):
         base = self._state()
         candidate = copy.deepcopy(base)
         candidate["blocked_by"] = []
-        candidate["autonomous_controller"]["runtime_validation"] = "PASS"
-        candidate["autonomous_controller"]["effective_config_observation"] = "PASS"
-        self.assertEqual([], delta.validate_state_transition(base, candidate))
+        candidate["autonomous_controller"]["runtime_validation"] = (
+            "REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE"
+        )
+        candidate["autonomous_controller"]["effective_config_observation"] = (
+            "REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE"
+        )
+        issues = delta.validate_state_transition(base, candidate)
+        self.assertIn(
+            "STATE_BLOCKER_REMOVAL_UNPROVEN:AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION",
+            issues,
+        )
 
     def test_state_transition_rejects_launchable_with_blockers(self):
         base = self._state()

@@ -1,377 +1,171 @@
 # Codex Autonomous Controller Protocol
 
-Versão: 1.2  
+Versão: 1.3  
 Decisões donas: ADR-0024 + ADR-0025
 
 ## 1. Objetivo
 
-Permitir que uma sessão Codex conduza uma frente técnica por múltiplas rodadas de investigação, autoria, teste, auditoria e reparo causal sem devolver cada microdecisão ao usuário.
-
-O controller não substitui o launcher, verifiers, manifests ou human gates. Ele coordena esses mecanismos.
+Permitir que uma sessão Codex conduza investigação, autoria A1, teste, auditoria e
+repair causal sem devolver microdecisões ao usuário, preservando autoridade humana
+para decisões materiais.
 
 ## 2. Fontes e precedência
 
 Ao iniciar uma frente:
 
-1. obedecer instruções de sistema, plataforma e usuário;
+1. obedecer sistema/plataforma/usuário;
 2. ler `AGENTS.md` e `CLAUDE.md`;
-3. localizar o envelope ativo da frente em `docs/operations/autonomy/`;
-4. ler o arquivo de estado vivo indicado pelo envelope;
-5. aplicar `live_state_precedence`: state source vivo > índices correntes > contratos do gate > snapshots/runbooks/tentativas históricas;
-6. carregar somente os documentos donos do gate corrente;
-7. tratar relatórios de executor como evidência a auditar, não como verdade canônica;
-8. não carregar `CHANGELOG.md` integralmente: usar busca/tail somente quando histórico recente for material.
+3. localizar o envelope ativo;
+4. ler o state source apontado pelo envelope;
+5. aplicar: live state > índices correntes > contrato do gate > histórico;
+6. carregar somente documentos donos do gate;
+7. tratar reports como evidência a auditar;
+8. consultar `CHANGELOG.md` apenas por busca/tail quando necessário.
 
-Prompt de partida não é fonte de SHA mutável. Sempre reconsultar Git/repositório.
+Prompt não é fonte de SHA mutável. `AUTHORIZATION_REQUEST` nunca é autorização.
+A2 exige referência humana explícita + contrato válido.
 
-Um `AUTHORIZATION_REQUEST` nunca é `AUTHORIZED`. Um envelope A2 só está ativo
-com referência humana explícita e `a2_contract` válido.
+## 2.1 Runtime qualification e bootstrap de autoridade
 
-`CONTROLE_PLANO.json`, `DAG.json` e runbooks congelados não são state sources
-vivos, salvo ponteiro explícito do envelope/state source.
+Antes de B1 material, executar `CODEX_RUNTIME_QUALIFICATION.md`.
 
-## 2.1 Runtime qualification
+AC-R2 usa permission profiles:
+- root + explorer/auditors: `ser-controller-a0`, repository read-only, scratch
+  somente em temp, command network disabled;
+- executor: `ser-b1-a1`, workspace default read, somente 10 arquivos A1 concretos
+  writable, sem escrita direta em `.git` e sem command network;
+- `sandbox_mode` legado é incompatível com esse target.
 
-Antes de assumir a frente, executar
-`docs/operations/CODEX_RUNTIME_QUALIFICATION.md`. Configuração versionada não
-prova configuração efetiva: project trust, overrides, permission profile e hooks
-precisam ser observados no cliente. Em AC-R2, o root deve permanecer `:read-only`
-e somente o `executor` pode selecionar o profile `ser-b1-a1`. `sandbox_mode` e
-permission profiles não podem coexistir.
+Configuração declarada não prova configuração efetiva. Parent/live overrides,
+project trust, Windows sandbox e MCP/hosted surfaces precisam ser observados.
 
-Falha da própria camada de governança => `CONTROLLER_MAINTENANCE`, sem
-autorreparo A1.
+CQ0–CQ5 pode produzir um resultado técnico verde, mas A1 não pode promover a
+própria qualificação a autoridade canônica. Quando CQ passar, A1 pode registrar:
 
-## 3. State machine do controller
+`REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE`
 
-```text
-DISCOVERING
-→ PLANNING
-→ IMPLEMENTING
-→ LOCAL_VERIFYING
-→ AUDITING
-→ REPAIRING
-→ EXTERNAL_RECONCILING
-→ EXTERNAL_EXECUTING
-→ POST_EFFECT_VERIFYING
-→ GATE_ADVANCING
-→ WAITING_HUMAN
-→ COMPLETE
-```
+e deve manter `AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION` em `blocked_by`.
+A remoção desse blocker e o estado canônico `PASS` exigem o Human Gate já
+existente `CONTROLLER_MAINTENANCE`. Não é um novo gate.
 
-Saídas adicionais:
+## 3. Loop
 
 ```text
-BLOCKED_DESIGN
-BLOCKED_ENVIRONMENT
-BLOCKED_AUTHORITY
-UNKNOWN_EFFECT
-BUDGET_EXHAUSTED
-SECURITY_STOP
-EVIDENCE_INCOMPLETE
+DISCOVERING -> PLANNING -> IMPLEMENTING -> LOCAL_VERIFYING -> AUDITING
+-> REPAIRING -> GATE_ADVANCING -> WAITING_HUMAN | COMPLETE
 ```
 
-O estado é conclusão observável, não descrição livre.
+Também são saídas válidas:
+`BLOCKED_DESIGN`, `BLOCKED_ENVIRONMENT`, `BLOCKED_AUTHORITY`,
+`UNKNOWN_EFFECT`, `BUDGET_EXHAUSTED`, `SECURITY_STOP`,
+`EVIDENCE_INCOMPLETE`.
 
-## 4. Loop principal
+Retry-until-green é proibido. Nova rodada exige causal delta identificável.
 
-### 4.1 Discover
+## 4. Papéis
 
-- confirmar branch, HEAD, tree, worktree e base relevante;
-- identificar gate corrente pelo estado vivo;
-- identificar histórico de tentativas do mesmo gate;
-- validar envelope e classe de autoridade necessária;
-- identificar evidência RAW disponível e claims que só foram reportadas.
+- root controller — coordena; repository read-only;
+- explorer — read-only;
+- executor — único writer A1;
+- domain-auditor — read-only;
+- evidence-auditor — read-only;
+- architecture-auditor — read-only, somente quando estrutural.
 
-### 4.2 Plan
+Filhos não criam filhos. Cinco definições não significam cinco agentes ativos.
+Normalmente usar 0–2 subagentes e escalar por causa.
 
-Construir um DAG curto da próxima rodada. Paralelizar apenas tarefas independentes. Identificar antes:
-
-- escritor único;
-- auditores necessários;
-- comandos materialmente single-shot;
-- precondições;
-- efeito esperado;
-- stop rules;
-- evidence roots;
-- budget causal restante.
-
-### 4.3 Delegate
-
-O root pode usar:
-
-- `explorer` para investigação e histórico;
-- `executor` para a única linha de escrita repo-side;
-- `domain-auditor` para semântica/oráculos;
-- `evidence-auditor` para autoridade/evidência/efeitos;
-- `architecture-auditor` para regressão/duplicação/impacto.
-
-Filhos não criam subagentes. O root não delega a dois writers.
-
-### 4.4 Implement
-
-Somente o executor escreve. Cada patch deve:
-
-- resolver uma causa identificada;
-- preservar tentativas históricas;
-- evitar alterar produto fora do escopo;
-- atualizar testes e documentação quando a mudança exigir;
-- produzir commit identificável antes de nova certificação quando o protocolo da campanha exigir SHA imutável.
-
-### 4.5 Verify
-
-Executar gates determinísticos do candidato. Não usar teste como reparador. Não modificar código durante uma certificação single-shot.
-
-Resultado parcial não vira PASS agregado. O próprio `AUTHORING_STATE.json` é um
-registro vivo, não prova de si mesmo: remoção de blocker ou avanço material deve
-ser corroborado pelo contrato/evidência pertinente e passar pelo state-transition
-check do delta checker.
-
-### 4.6 Audit
-
-Antes de avançar gate material, auditores independentes verificam o escopo aplicável. Auditor recebe artefatos primários quando disponíveis; não deve receber “confirme que passou” como tarefa.
-
-### 4.7 Repair
-
-Só abrir uma nova rodada se existir `causal_delta` explícito. Exemplos válidos:
-
-- patch funcional;
-- correção de fixture/teste que era defeituoso;
-- ambiente alterado e autorizado;
-- transporte diferente previamente qualificado;
-- nova reconciliação que muda a precondição.
-
-Não são causal delta:
-
-- “pareceu transitório”;
-- timeout maior sem diagnóstico;
-- repetir o mesmo comando;
-- trocar seed para obter verde;
-- ignorar teste que falhou.
-
-### 4.8 Advance
-
-Avançar automaticamente apenas se:
-
-- gate anterior satisfaz seus critérios;
-- auditorias exigidas não têm finding material aberto;
-- ação seguinte está dentro da classe ativa do envelope;
-- budgets não foram excedidos;
-- estado de efeito é conhecido.
-
-Caso contrário, ir para `WAITING_HUMAN` ou blocker específico.
-
-## 5. Classes de autoridade
+## 5. Autoridade
 
 ### A0 — READ_ONLY
 
-Pode incluir:
-
-- Git/file inspection;
-- parse/schema/lint;
-- testes que não produzem efeito externo material;
-- read-only remote status/list/export;
-- auditoria e recomputação de hashes;
-- investigação documental.
-
-A0 não autoriza login/remediação de credencial, criação, compute que crie histórico, chat remoto ou escrita.
+Inspeção, análise estática, testes sem efeito externo material, auditoria,
+recomputação e reconciliação remota somente quando o contrato já permitir.
 
 ### A1 — REPO_LOCAL
 
-Pode incluir, quando o envelope estiver ativo:
-
-- criar/editar somente paths que casem com `repo_scope.write_roots`;
-- executar renderer e validadores;
-- criar commits causais;
-- push normal para a branch autorizada;
-- atualizar draft PR e registros da frente.
-
-A1 não autoriza:
-
-- qualquer path em `protected_roots`;
-- qualquer path em `shared_roots_requiring_human_gate` sem `CONTROLLER_MAINTENANCE`;
-- alterar a própria governança/validator/envelope para escapar de um blocker;
-- alterar `current_level` ou rollout;
-- Ready;
-- merge;
-- escrita em workspace externo.
+Somente paths exatos de `repo_scope.write_roots`. Não inclui controller
+governance, produto, policy, evidência histórica, outras frentes, `.git` direto
+ou command network direto.
 
 ### A2 — PERSONAL_REMOTE_REVERSIBLE
 
-Somente se explicitamente ativada no envelope. Pode incluir subconjunto declarado de:
-
-- objetos temporários SHA-bound no Databricks Free pessoal;
-- compute/probes com dados sintéticos;
-- conversas Genie congeladas;
-- cleanup apenas de objetos criados pelo próprio envelope;
-- publicação de pacote apenas se expressamente listada.
-
-Cada efeito precisa de host, namespace, precondição, limite de tentativas e verificação pós-efeito no envelope. A2 não cruza para destino corporativo.
+Permanece inativa até ativação humana explícita e contrato completo.
 
 ### A3 — HUMAN_ONLY
 
-Sempre parar para:
+Inclui promoção/current_level/rollout, Ready, merge, corporativo, dados reais,
+mudança material de escopo/estimand, relaxamento de guardrail e UNKNOWN irresolvido.
 
-- `current_level` / `target_level` material ou `rollout_mode` quando representar promoção;
-- promoção de policy;
-- Ready;
-- merge;
-- workspace corporativo;
-- dados reais/corporativos;
-- expansão material de escopo/estimando;
-- nova classe de efeito não listada;
-- relaxamento de cobertura/guardrail;
-- `UNKNOWN_EFFECT` não resolvido;
-- alteração destrutiva fora de cleanup explicitamente delegado.
+## 6. A1 filesystem e Git
 
-## 6. Single-writer e concorrência
+A barreira primária é o permission profile, não hooks.
 
-O máximo de subagentes vem do envelope/config, mas:
+O executor pode alterar apenas os arquivos concretos do envelope. O journal
+`B1/AUTONOMY/JOURNAL.jsonl` e changelogs são append-only. O delta checker
+reprova escrita fora de A1, origem/destino de rename indevido, delete protegido,
+symlink, reescrita de histórico e transição inválida do live state.
+
+O executor não escreve `.git` e não possui command network. Commit/push usam
+exclusivamente:
 
 ```text
-MAX_WRITE_CAPABLE_AGENTS = 1
+powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\transport\a1_git_transport.ps1
 ```
 
-Enquanto o executor escreve:
+via regra project-scoped `decision="prompt"`. Somente o executor mantém
+`approval_policy.granular.rules=true` e `approvals_reviewer=auto_review`;
+sandbox escalation, request_permissions, MCP elicitations e skill approval são
+fail-closed. Não há override local de `[auto_review].policy`: o projeto não
+substitui a política padrão do reviewer.
 
-- root não edita os mesmos arquivos;
-- auditores e explorer permanecem read-only;
-- nenhum segundo executor é criado;
-- filhos não criam netos.
+O transportador protegido:
+- aceita zero argumentos;
+- verifica Git root, branch e remote exatos;
+- confronta a lista de paths com o envelope;
+- valida worktree e index antes do commit;
+- faz commit normal;
+- revalida o commit;
+- exige worktree limpo;
+- faz push non-force somente para a branch B1 esperada.
 
-Investigações e auditorias independentes podem rodar em paralelo.
+MCP/apps/hosted GitHub APIs não são transporte A1 de escrita.
 
-### 6.1 A1 write path
+## 7. State integrity
 
-A barreira primária A1 é o permission profile local, não o hook. O root controller
-usa `:read-only`; somente o executor usa `ser-b1-a1`. O profile deixa o workspace
-genericamente `read` e reabre apenas os `repo_scope.write_roots` como `write`,
-além de `.git` para metadata de commits causais. Governança, produto, histórico e
-outras frentes permanecem read-only no filesystem antes do efeito.
+`AUTHORING_STATE.json` é estado vivo, não prova de si próprio.
 
-`sandbox_approval` e `request_permissions` são fail-closed no Controller Mode:
-o executor não pode ampliar sua própria fronteira para contornar um Human Gate.
-Auto-review permanece apenas para categorias técnicas ainda interativas, como
-rules; ele não concede autoridade SER.
+A1 não pode:
+- alterar Human Gates;
+- alterar autoridade do controller;
+- escrever `PASS` canônico para runtime qualification;
+- remover o blocker de runtime qualification;
+- tornar `launchable=true` mantendo blockers;
+- reescrever tentativa/histórico append-only.
 
-A1 authors through the local worktree only. MCP/apps/hosted GitHub tools ou APIs
-remotas não podem mutar arquivos/refs sob A1. O profile de comando permite rede
-somente para os domínios GitHub declarados; isso não transforma chamadas HTTP/API
-em transporte autorizado. Após checks locais, `git push` normal para a branch
-autorizada continua sendo o único transporte remoto Git A1.
+Demais remoções de blocker precisam satisfazer invariantes determinísticos
+definidos no checker.
 
-Hosted/read-only tools permanecem utilizáveis para inspeção quando A0 permitir.
+## 8. Evidência, efeitos e UNKNOWN
 
-### 6.2 Delta A1
-
-Antes de commit/push de um repair A1, execute:
-
-```text
-python -B tools/check_codex_autonomy_delta.py --base <CAUSAL_BASE> --head <CANDIDATE>
-```
-
-Qualquer `PROTECTED`, `HUMAN_GATE_REQUIRED`, `OUTSIDE_A1`, symlink versionado ou
-transição inválida do state bloqueia a continuação. O checker preserva ambos os
-endpoints de rename/delete e valida invariantes mínimas do `AUTHORING_STATE`.
-O controller não pode editar checker/envelope/config para transformar a própria
-violação em PASS.
-
-Se a arquitetura/validator do controller falhar, diagnosticar e parar em
-`CONTROLLER_MAINTENANCE`; não se autorreparar por A1.
-
-## 7. Causal repair budget
-
-O envelope define pelo menos:
-
-- `max_causal_repair_rounds_per_gate`;
-- `max_hypotheses_per_root_cause`;
-- `same_state_same_command_retries` — deve ser 0;
-- `max_unknown_effects_before_human`;
-- `max_concurrent_subagents`;
-- `max_write_capable_agents` — deve ser 1.
-
-Ao consumir budget, registrar tentativa e causal delta. Budget esgotado => `BUDGET_EXHAUSTED`, não reduzir testes.
-
-## 8. Efeitos remotos e UNKNOWN
-
-Antes de efeito A2:
-
-1. validar envelope ativo;
-2. validar destino;
-3. validar precondições;
-4. congelar conteúdo/digest;
-5. reservar evidência;
-6. executar no máximo a tentativa permitida.
-
-Depois:
-
-1. readback;
-2. classificar `CREATED/UPDATED/ALREADY_CORRECT/NONE/UNKNOWN`;
-3. preservar saída literal;
-4. executar verificação pós-efeito prevista.
-
-Se processo falhar depois de `write_started`, não inferir ausência. Marcar `UNKNOWN` até reconciliação.
-
-Uma reconciliação read-only pode ocorrer se já autorizada pelo envelope. Nova mutação só após estado suficiente e causal delta.
-
-## 9. Evidência
-
-Hierarquia de força:
-
-1. bytes RAW / resposta literal / estado remoto observado;
+Força de evidência:
+1. RAW/estado observado;
 2. hashes rederiváveis;
 3. verifier independente;
 4. summary estruturado;
-5. narrativa do executor.
+5. narrativa.
 
-Narrativa nunca substitui RAW quando o claim exige RAW.
+Após possível write remoto com resultado incerto: `UNKNOWN` até reconciliação.
+Não repetir a mesma operação no mesmo estado.
 
-Evidence bundle compartilhável deve aplicar secret/path hygiene. Não persistir tokens.
+## 9. Human Gates
 
-## 9.1 Auto-review técnico
+O pacote de gate deve conter estado observado, o que foi/não foi provado,
+autoridade pedida, efeitos, riscos/rollback e o que permanece proibido.
 
-O projeto mantém `approvals_reviewer=auto_review`, mas AC-R2 usa approval policy
-granular: `sandbox_approval=false`, `request_permissions=false`,
-`mcp_elicitations=false` e `skill_approval=false`. Apenas categorias
-explicitamente interativas, como rules, podem chegar ao reviewer automático.
+Auto-review é aprovação técnica de uma categoria permitida; nunca equivale a
+A2/A3/`CONTROLLER_MAINTENANCE`.
 
-Auto-review é reviewer técnico, não autoridade humana do SER. Ele nunca substitui
-referência humana exigida por A2/A3/`CONTROLLER_MAINTENANCE` e não pode ampliar
-a permission boundary do executor.
+## 10. Encerramento
 
-## 10. Human Gates
-
-O controller para com um pacote de decisão curto contendo:
-
-- estado observado;
-- evidência suficiente e lacunas;
-- decisão pedida;
-- delta exato que a decisão autoriza;
-- riscos/rollback;
-- o que continuará proibido.
-
-Não pedir autorização para A0/A1 já ativas.
-
-## 11. Comunicação
-
-Atualizações durante execução devem ser event-driven:
-
-- finding material;
-- mudança causal;
-- passagem de gate;
-- Human Gate;
-- blocker.
-
-Não narrar cada comando.
-
-## 12. Encerramento
-
-Uma frente autônoma termina somente em:
-
-- Human Gate explícito;
-- COMPLETE;
-- blocker que não pode ser resolvido no envelope;
-- budget esgotado;
-- segurança/evidência insuficiente.
-
-Ao encerrar, atualizar estado/changelog conforme A1 e deixar worktree limpo quando aplicável.
+A frente termina em Human Gate, COMPLETE, blocker, budget esgotado ou limite de
+segurança/evidência. Nenhum PASS técnico implica promoção, Ready ou merge.

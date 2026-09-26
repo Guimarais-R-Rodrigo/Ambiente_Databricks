@@ -8,19 +8,6 @@ model = "gpt-6-astra"
 model_reasoning_effort = "high"
 default_permissions = "ser-controller-a0"
 approval_policy = "never"
-approvals_reviewer = "auto_review"
-
-[auto_review]
-policy = """
-For this project, approve an execpolicy prompt only for the exact command:
-powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\\transport\\a1_git_transport.ps1
-Approve it only when the request cwd is the trusted Ambiente_Databricks project root,
-the active role is the A1 executor, and there are no extra arguments. Deny any
-transport invocation from a nested/temp/other repository and deny every other
-request to widen filesystem, network, MCP, app, skill, or sandbox authority.
-This technical review never grants A2/A3 or CONTROLLER_MAINTENANCE authority.
-"""
-
 [windows]
 sandbox = "elevated"
 

@@ -119,17 +119,6 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
         issues.append("ROOT_PERMISSIONS_PROFILE")
     if cfg.get("approval_policy") != "never":
         issues.append("ROOT_APPROVAL_POLICY_MUST_BE_NEVER")
-    if cfg.get("approvals_reviewer") != "auto_review":
-        issues.append("ROOT_APPROVAL_REVIEWER")
-
-    review_policy = ((cfg.get("auto_review") or {}).get("policy") or "")
-    if (
-        "a1_git_transport.ps1" not in review_policy
-        or "nested/temp/other repository" not in review_policy
-        or "zero extra arguments" not in review_policy
-    ):
-        issues.append("AUTO_REVIEW_TRANSPORT_POLICY")
-
     if (cfg.get("windows") or {}).get("sandbox") != "elevated":
         issues.append("WINDOWS_SANDBOX_NOT_ELEVATED")
 
