@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-2 pre-close hardening
+
+- (ChatGPT) PowerShell do host preflight normalizado para separadores Windows nativos no root Python qualificado.
+- (ChatGPT) Contrato Desktop alinhado ao validator V9.
+- (ChatGPT) State explicita: A1 read surface mudou para permitir Python qualificado; A1 write boundary e network permanecem inalterados.
+- (ChatGPT) Suíte controller passa a 66 métodos definidos estaticamente; CQ runtime continua NOT_RUN.
+
 ## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-2
 
 ### Evidência incorporada

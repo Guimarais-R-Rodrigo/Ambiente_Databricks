@@ -133,7 +133,7 @@ class CodexAutonomyTests(unittest.TestCase):
 
     def test_desktop_host_preflight_binds_python_to_qualified_root(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
-        self.assertIn('QualifiedPythonRootRelative = "~\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python312"', text)
+        self.assertIn(r'QualifiedPythonRootRelative = "~\AppData\Local\Programs\Python\Python312"', text)
         self.assertIn("within_allowed_root = $true", text)
         self.assertIn("CQ_HOST_PREFLIGHT_NO_PYTHON_WITH_JSONSCHEMA", text)
 
@@ -151,6 +151,11 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("CQ3 root/read-only roles/executor/network boundaries = PASS", text)
         self.assertIn("CQ4 protected Git bridge + hooks = PASS", text)
         self.assertIn("CQ5 validator + metatests = PASS", text)
+
+    def test_desktop_host_preflight_uses_native_directory_separator_for_python_binding(self):
+        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        self.assertIn("[System.IO.Path]::DirectorySeparatorChar", text)
+        self.assertNotIn('$rootPrefix = $QualifiedPythonRoot.TrimEnd("\\\\") + "\\\\"', text)
 
     def test_desktop_host_preflight_uses_safe_powershell_variable_boundaries(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")

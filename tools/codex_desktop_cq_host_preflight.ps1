@@ -7,8 +7,8 @@ $ErrorActionPreference = "Stop"
 
 $ExpectedBranch = "ser/B1-ser03-ser05-authoring"
 $ExpectedRepoFragment = "Guimarais-R-Rodrigo/Ambiente_Databricks"
-$QualifiedPythonRootRelative = "~\\AppData\\Local\\Programs\\Python\\Python312"
-$QualifiedPythonRoot = [System.IO.Path]::GetFullPath((Join-Path $HOME "AppData\\Local\\Programs\\Python\\Python312"))
+$QualifiedPythonRootRelative = "~\AppData\Local\Programs\Python\Python312"
+$QualifiedPythonRoot = [System.IO.Path]::GetFullPath((Join-Path $HOME "AppData\Local\Programs\Python\Python312"))
 
 function Write-Utf8NoBom([string]$Path, [string]$Text) {
     $encoding = New-Object System.Text.UTF8Encoding($false)
@@ -111,7 +111,7 @@ $python = $null
 foreach ($candidate in $candidates) {
     try {
         $candidateFull = [System.IO.Path]::GetFullPath($candidate)
-        $rootPrefix = $QualifiedPythonRoot.TrimEnd("\\") + "\\"
+        $rootPrefix = $QualifiedPythonRoot.TrimEnd([char[]]@('\','/')) + [System.IO.Path]::DirectorySeparatorChar
         if (-not $candidateFull.StartsWith($rootPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
             continue
         }

@@ -128,7 +128,7 @@ A config crítica é provada pela combinação:
 
 - thread iniciada com `ser-controller-a0`;
 - hash project-config = D0;
-- validator V8 PASS;
+- validator V9 PASS;
 - CQ3 behavior probes;
 - CQ4 execução real do rule-reviewed Git transport.
 

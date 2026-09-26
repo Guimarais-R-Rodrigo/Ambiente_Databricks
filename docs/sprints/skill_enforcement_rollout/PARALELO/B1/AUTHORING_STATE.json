@@ -1001,7 +1001,7 @@
     "max_concurrent_subagents": 5,
     "max_write_capable_agents": 1,
     "custom_agents": 5,
-    "controller_metatest_methods_static": 65,
+    "controller_metatest_methods_static": 66,
     "structural_validation": "AC_R2_CM_DESKTOP_RUNTIME_2_AUTHORED_NOT_RUNTIME_QUALIFIED",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
@@ -1031,7 +1031,7 @@
       "legacy_sandbox_mode": false,
       "approval_boundary": "EXECUTOR_RULE_PROMPTS_ONLY_OTHER_ESCALATIONS_FAIL_CLOSED",
       "delta_schema": "SER-CODEX-AUTONOMY-DELTA-3",
-      "metatest_methods_static": 65,
+      "metatest_methods_static": 66,
       "runtime_qualification": "NOT_RUN",
       "cq0_cq5": "NOT_RUN",
       "b1_material_execution": "NOT_RUN",
@@ -1153,11 +1153,18 @@
         "qualified_python_root": "~\\AppData\\Local\\Programs\\Python\\Python312",
         "repository_write_boundary": "UNCHANGED",
         "command_network": "UNCHANGED_DISABLED",
-        "a1_changed": false,
         "a2_changed": false,
         "b1_material_execution": "NOT_RUN",
         "plugin_remediation": "USER_MUST_DISABLE_CREATIVE_PRODUCTION_BEFORE_RETRY",
-        "runtime_requalification": "REQUIRED"
+        "runtime_requalification": "REQUIRED",
+        "a1_read_surface_changed": true,
+        "a1_write_boundary_changed": false,
+        "corrective_followup": [
+          "NORMALIZE_POWERSHELL_PYTHON_ROOT_SEPARATORS",
+          "ALIGN_DESKTOP_CONTRACT_TO_VALIDATOR_V9",
+          "RECORD_A1_READ_SURFACE_CHANGE_WITH_WRITE_BOUNDARY_UNCHANGED"
+        ],
+        "material_findings_open": "PENDING_FINAL_STATIC_REVIEW"
       }
     }
   }
