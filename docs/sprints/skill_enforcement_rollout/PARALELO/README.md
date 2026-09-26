@@ -1,6 +1,6 @@
 # SER paralelo — plano detalhado de autoria e execução governada
 
-**Versão 1.2 — 24/09/2026. Autoria: ChatGPT.**
+**Versão 1.3 — 26/09/2026. Autoria: ChatGPT.**
 
 O usuário aprovou a direção de execução paralela e, em 24/09/2026, autorizou a implementação do B0. Este pacote continua sendo o plano detalhado; a candidata de mecanismo está em `tools/skill_enforcement/parallel/` e seu estado vivo está em `B0/`. A existência do mecanismo não autoriza campanhas de skills, publicação, promoção de policy ou merge.
 
@@ -8,9 +8,19 @@ Base Git conferida: `d2988e97e7b6c5fe1fd561852e947a155c2d731b`, no repositório 
 
 ## Próxima ação
 
-Executar, em fail-fast, **preflight V3 → 84 metatestes B0 → coverage V3** no checkout real do SHA final. Somente se esses gates passarem, preparar o freeze e executar a qualificação local do pacote B0 conforme [B0](B0/README.md) e [plano de implantação](10_IMPLANTACAO.md). Nenhuma skill vai para o laboratório enquanto o B0 não estiver qualificado no alcance efetivamente provado e a implementação, testes, oráculos, perfis e decisões materiais da própria skill não estiverem fechados.
+O B0 está integrado pela PR #113. O piloto real B1 (SER03 L3 + SER05 L2) está em
+G6 com recuperação residual de probe, sem promoção.
 
-A corretiva V3 também adota coordenação host-wide conservadora: uma única campanha/launcher por host via lease do SO; `max_parallel` é o total de tasks simultâneas dentro da campanha e `max_auditors` é um subconjunto desse total. Aumento de concorrência, despacho por slot liberado e cache de inventory dependem de medição do piloto, não de expectativa documental.
+Com o ADR-0024, a coordenação pode usar **Codex Autonomous Controller Mode**.
+O controller recebe uma frente fechada, gera internamente tasks fechadas e percorre
+investigação → autoria → verificação → auditoria → reparo causal até Human Gate,
+sempre dentro do envelope ativo.
+
+Para B1, o envelope inicial em
+`docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json` ativa somente A0/A1. A2
+remoto permanece pendente. O state source continua
+`B1/AUTHORING_STATE.json`; o protocolo autônomo não cria um segundo estado da
+campanha.
 
 ## Organização e documento dono
 
@@ -31,12 +41,13 @@ A corretiva V3 também adota coordenação host-wide conservadora: uma única ca
 | [12 — Fontes](12_FONTES.md) | Proveniência, verificações realizadas e limites da leitura |
 | [13 — Adendo operacional proposto](13_ADENDO_OPERACIONAL.md) | Texto pronto para formalização no repositório, sem reescrever ADR aceito |
 | [14 — Checklist de prontidão](14_CHECKLIST_PRONTIDAO.md) | Contraditório final antes do primeiro disparo |
+| [Codex Autonomous Controller](../../../operations/CODEX_AUTONOMOUS_PROTOCOL.md) | Orquestração autônoma entre gates sob envelope A0/A1/A2/A3 |
 
 `catalogos/CASOS.json` é o catálogo dono dos IDs de casos e das obrigações discriminantes; as tabelas dos dossiês e do documento 05 são visualizações desse catálogo. `catalogos/COBERTURA_BASE.json` preserva o inventário de planejamento; o inventário executável por método é produzido por `tools.skill_enforcement.parallel.coverage`. `catalogos/DAG.json` descreve dependências, não dispara agentes. `catalogos/BLOQUEIOS.json` registra as decisões e lacunas de autoria. `CONTROLE_PLANO.json` concentra o estado da transição.
 
 ## Regra operacional em uma frase
 
-**Aqui se define e implementa; localmente se executa e audita; apenas o integrador opera arquivos/destinos compartilhados; o usuário autoriza efeitos e promoções específicas.**
+**Aqui se define a governança; o controller pode implementar, verificar, auditar e reparar dentro do envelope ativo; somente efeitos/classes explicitamente delegados podem avançar sem nova intervenção humana; promoção e integração continuam nos Human Gates.**
 
 ## O que este pacote não alega
 
