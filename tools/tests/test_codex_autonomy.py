@@ -6,6 +6,7 @@ import unittest
 from pathlib import Path
 
 from tools import validate_codex_autonomy as val
+from tools import check_codex_autonomy_delta as delta
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -81,6 +82,30 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIsNone(payload["activation"]["a2_reference"])
         self.assertFalse(payload["authority_classes"]["A2"]["autonomous"])
         self.assertFalse(payload["authority_classes"]["A3"]["autonomous"])
+
+    def test_delta_classifier_allows_b1_recovery(self):
+        self.assertEqual(
+            "ALLOWED_A1",
+            delta.classify_path("tools/skill_enforcement/real_campaigns/b1/g6_recovery/example.py"),
+        )
+
+    def test_delta_classifier_protects_product(self):
+        self.assertEqual(
+            "PROTECTED",
+            delta.classify_path("ambiente_fonte/.assistant/skills/example/SKILL.md"),
+        )
+
+    def test_delta_classifier_requires_human_for_controller_governance(self):
+        self.assertEqual(
+            "HUMAN_GATE_REQUIRED",
+            delta.classify_path(".codex/config.toml"),
+        )
+
+    def test_delta_classifier_rejects_unlisted_paths(self):
+        self.assertEqual(
+            "OUTSIDE_A1",
+            delta.classify_path("README.md"),
+        )
 
 
 if __name__ == "__main__":

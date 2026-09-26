@@ -1,11 +1,11 @@
 {
-  "schema_version": "SER-AUTONOMY-ENVELOPE-1",
-  "envelope_id": "SER-B1-AUTONOMY-2026-09-26",
+  "schema_version": "SER-AUTONOMY-ENVELOPE-2",
+  "envelope_id": "SER-B1-AUTONOMY-2026-09-26-R2",
   "front_id": "SER-B1",
   "activation": {
     "state": "ACTIVE_A0_A1",
     "source_type": "direct_user_chat",
-    "reference": "user-approved-autonomous-controller-architecture-2026-09-26",
+    "reference": "user-approved-autonomous-controller-architecture-and-ac-r1-2026-09-26",
     "a2_reference": null
   },
   "repository": {
@@ -14,6 +14,54 @@
     "pull_request": 115
   },
   "state_source": "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json",
+  "live_state_precedence": [
+    "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json",
+    "docs/sprints/skill_enforcement_rollout/README.md",
+    "docs/sprints/skill_enforcement_rollout/PARALELO/README.md"
+  ],
+  "repo_scope": {
+    "write_roots": [
+      "tools/skill_enforcement/real_campaigns/b1/**",
+      "tools/tests/test_ser_b1_*.py",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/**",
+      "CHANGELOG.md"
+    ],
+    "protected_roots": [
+      "ambiente_fonte/**",
+      "Novo_Ambiente_Simulado/**",
+      "tools/skill_enforcement/parallel/**",
+      "docs/sprints/micromodelos/**",
+      ".github/**",
+      "**/skill_enforcement/policy.json"
+    ],
+    "shared_roots_requiring_human_gate": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      ".claude/**",
+      ".codex/**",
+      ".agents/skills/ser-autonomous-controller/**",
+      "docs/decisions/**",
+      "docs/operations/**",
+      "tools/validate_codex_autonomy.py",
+      "tools/check_codex_autonomy_delta.py",
+      "tools/tests/test_codex_autonomy.py",
+      "docs/sprints/skill_enforcement_rollout/PLANO_MESTRE.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/01_MANDATO_DECISOES.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/02_ARQUITETURA_CONTRATOS.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/03_CICLO_GATES.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/06_AUDITORIA_EVIDENCIA.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/07_PARALELISMO_INTEGRACAO.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/08_DATABRICKS_GENIE.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/09_PAPEIS_HANDOFFS.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/10_IMPLANTACAO.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/11_RISCOS_BLOQUEIOS.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/13_ADENDO_OPERACIONAL.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/14_CHECKLIST_PRONTIDAO.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/CONTROLE_PLANO.json",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/catalogos/**"
+    ],
+    "controller_maintenance_gate": "CONTROLLER_MAINTENANCE"
+  },
   "authority_classes": {
     "A0": {
       "autonomous": true,
@@ -35,17 +83,18 @@
     },
     "A1": {
       "autonomous": true,
-      "status": "ACTIVE",
+      "status": "ACTIVE_SCOPED",
       "allowed": [
-        "repo-side authoring on the B1 branch",
-        "tests and validators",
-        "renderer/snapshot updates when required by existing contracts",
+        "repo-side authoring only within repo_scope.write_roots",
+        "tests and validators relevant to B1",
         "causal commits",
         "normal push to the B1 branch",
         "draft PR metadata/comments",
-        "state and changelog maintenance"
+        "B1 state and changelog maintenance"
       ],
       "forbidden": [
+        "any path matching repo_scope.protected_roots",
+        "any path matching repo_scope.shared_roots_requiring_human_gate without CONTROLLER_MAINTENANCE",
         "force push",
         "destructive reset of user work",
         "policy promotion",
@@ -55,15 +104,16 @@
     },
     "A2": {
       "autonomous": false,
-      "status": "PENDING_EXPLICIT_ACTIVATION",
+      "status": "PENDING_EXPLICIT_ACTIVATION_AND_CONTRACT",
       "allowed": [
         "proposed: SHA-bound temporary objects in personal Databricks Free",
         "proposed: synthetic compute/probes",
         "proposed: frozen Genie conversations",
-        "proposed: cleanup limited to objects created by the active envelope"
+        "proposed: cleanup limited to objects created by the active A2 contract"
       ],
       "forbidden": [
         "any A2 effect before activation.a2_reference is non-null",
+        "any A2 effect before a2_contract is structurally complete",
         "corporate workspace",
         "real or corporate data",
         "unbounded namespace",
@@ -85,7 +135,8 @@
         "real/corporate data",
         "material scope or estimand expansion",
         "guardrail or coverage relaxation",
-        "decision after unresolved UNKNOWN effect"
+        "decision after unresolved UNKNOWN effect",
+        "controller-governance self-modification without CONTROLLER_MAINTENANCE"
       ]
     }
   },
@@ -97,7 +148,9 @@
     "max_concurrent_subagents": 5,
     "max_write_capable_agents": 1
   },
+  "a2_contract": null,
   "human_gates": [
+    "CONTROLLER_MAINTENANCE",
     "A2 activation or expansion",
     "policy/current_level/rollout promotion",
     "Ready",
@@ -114,6 +167,7 @@
     "EVIDENCE_INCOMPLETE for a claim required by the next gate",
     "BLOCKED_AUTHORITY",
     "BLOCKED_DESIGN outside authorized scope",
+    "CONTROLLER_GOVERNANCE_CHANGE_REQUIRED",
     "UNKNOWN_EFFECT not resolved by allowed read-only reconciliation",
     "BUDGET_EXHAUSTED"
   ]
