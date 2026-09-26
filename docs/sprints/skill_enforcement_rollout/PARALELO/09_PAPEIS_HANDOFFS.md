@@ -92,3 +92,49 @@ Para B1 e campanhas reais, o handoff deve ser **gerado a partir do manifesto/per
 
 O artefato gerado deve conter apenas projeções verificáveis do dono normativo: round/release identity, task/role, command IDs, digests, roots, lease, evidence destination, expected exits, stop rules, outputs obrigatórios e ações proibidas. Campos não resolvidos bloqueiam geração. Texto explicativo pode acompanhar o pacote, mas não altera os bytes/autoridades do manifesto.
 
+
+
+## 9.12 Codex Autonomous Controller Mode
+
+O ADR-0024 adiciona um coordenador de sessão de nível acima dos handoffs
+determinísticos já definidos neste documento.
+
+### Root controller
+
+Recebe uma frente fechada, um envelope e o state source. Ele pode gerar
+internamente múltiplas tasks fechadas, despachar subagentes e continuar até Human
+Gate. Ele não cria autoridade; apenas consome a autoridade ativa do envelope.
+
+### Um writer
+
+O controller usa no máximo um subagente write-capable. Explorer e auditores são
+read-only. O root não edita concorrentemente com o executor.
+
+### Dois significados de executor
+
+- **executor Codex de autoria:** pode editar repo-side dentro de A1 para corrigir
+  uma causa identificada;
+- **executor determinístico de campanha (seção 9.3):** executa candidata congelada
+  e continua proibido de editar para resolver uma falha durante a certificação.
+
+Não misturar os papéis.
+
+### Auditores
+
+Durante repair loop, usar o auditor diretamente relacionado à causa. Antes de
+transição material de gate, executar as auditorias exigidas pelo plano, em
+paralelo quando independentes.
+
+### Repair loop
+
+Falha → investigação/auditoria → causa → patch/causal delta → novo SHA/rodada →
+verificação → auditoria.
+
+Repetir o mesmo comando no mesmo estado para tentar obter verde não é repair e
+permanece proibido.
+
+### Handoff externo
+
+O usuário não precisa fornecer novo prompt para cada task interna. O controller
+gera o despacho a partir dos manifests/contratos donos. Só volta ao usuário em
+Human Gate, blocker fora do envelope, `UNKNOWN` irresolvido ou budget esgotado.

@@ -79,3 +79,31 @@ Exceção de serialização, schema inválido, verifier que levanta exceção e 
 Após interrupção, executar apenas a inspeção autorizada de ledger, locks, processos e destinos. Se estado mutável desconhecido persistir, não retomar a ação. Tarefa puramente read-only pode ganhar nova rodada explicitamente registrada; ela não é continuação invisível de um PASS parcial.
 
 Nenhum agente decide sozinho que uma falha é “flaky”. A hipótese precisa de causa, reprodução controlada e correção da infraestrutura ou mudança de ambiente autorizada. Stress test é conjunto de repetições predefinido com denominador e critério antes da execução; não é rodar até acertar.
+
+
+## 3.11 Autonomous Controller Mode
+
+O ADR-0024 muda a **granularidade da coordenação**, não os gates.
+
+Um envelope ativo pode delegar ao Codex controller transições técnicas entre gates
+sem nova pergunta humana:
+
+- A0: read-only, diagnóstico, auditoria e reconciliação permitida;
+- A1: autoria repo-side, testes, commits/push normal e manutenção da draft PR;
+- A2: efeitos pessoais/reversíveis somente após ativação humana explícita e dentro
+  de host/namespace/effect/budget fechados;
+- A3: promoção, Ready, merge, corporativo, dados reais e mudanças materiais de
+  escopo permanecem Human Gates.
+
+A nova unidade delegada ao controller é uma **frente fechada**, não um comando
+isolado. O controller continua despachando tasks fechadas para seus subagentes.
+
+`retry-until-green` permanece proibido. O controller pode abrir nova rodada
+somente após registrar `causal_delta`. Mesmo SHA + mesmo estado + mesmo comando
+tem budget de retry igual a zero.
+
+Antes de qualquer nova mutação após possível write, `UNKNOWN` exige
+reconciliação read-only. Se o efeito continuar irresolvido, parar em Human Gate.
+
+A transição G6→G7 continua exigindo todos os subgates externos obrigatórios; PASS
+de um subgate não promove o agregado.
