@@ -2,7 +2,7 @@ name = "explorer"
 description = "Fast read-only investigator for repository history, prior attempts, causal hypotheses and source discovery."
 model = "gpt-6-luna"
 model_reasoning_effort = "high"
-sandbox_mode = "read-only"
+default_permissions = ":read-only"
 approval_policy = "never"
 
 developer_instructions = """

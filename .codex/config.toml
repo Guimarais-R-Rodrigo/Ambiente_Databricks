@@ -1,18 +1,21 @@
 #:schema https://developers.openai.com/codex/config-schema.json
 
-# Project defaults. Explicit user/model-picker choices can override these.
+# AC-R2-MIN: the root controller is read-only. Only the executor selects the
+# scoped ser-b1-a1 profile. Permission profiles and legacy sandbox_mode MUST NOT
+# be combined.
 model = "gpt-6-astra"
 model_reasoning_effort = "high"
-sandbox_mode = "workspace-write"
-approval_policy = "on-request"
+default_permissions = ":read-only"
+approval_policy = { granular = { sandbox_approval = false, rules = true, mcp_elicitations = false, request_permissions = false, skill_approval = false } }
 approvals_reviewer = "auto_review"
 
-[sandbox_workspace_write]
-network_access = false
+[windows]
+sandbox = "elevated"
 
 [features]
 apps = false
 remote_plugin = false
+network_proxy = true
 multi_agent = true
 goals = true
 hooks = true
@@ -42,3 +45,29 @@ config_file = "agents/evidence-auditor.toml"
 [agents.architecture-auditor]
 description = "Independent read-only auditor for architecture, regression risk, duplicated mechanisms, scope creep and integration impact."
 config_file = "agents/architecture-auditor.toml"
+
+[permissions.ser-b1-a1]
+description = "SER B1 A1 executor: repository read access, exact B1 write roots, Git metadata for causal commits, and GitHub-only command network."
+
+[permissions.ser-b1-a1.filesystem]
+":minimal" = "read"
+":tmpdir" = "write"
+":slash_tmp" = "write"
+
+[permissions.ser-b1-a1.filesystem.":workspace_roots"]
+"." = "read"
+".git" = "write"
+"tools/skill_enforcement/real_campaigns/b1/g6_recovery" = "write"
+"tools/tests/test_ser_b1_g6_recovery.py" = "write"
+"docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json" = "write"
+"docs/sprints/skill_enforcement_rollout/PARALELO/B1/CHANGELOG.md" = "write"
+"docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY" = "write"
+"CHANGELOG.md" = "write"
+
+[permissions.ser-b1-a1.network]
+enabled = true
+
+[permissions.ser-b1-a1.network.domains]
+"github.com" = "allow"
+"api.github.com" = "allow"
+"objects.githubusercontent.com" = "allow"
