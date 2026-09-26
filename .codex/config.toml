@@ -55,7 +55,6 @@ description = "Repository read-only controller/auditor profile with one explicit
 ":minimal" = "read"
 ":tmpdir" = "write"
 ":slash_tmp" = "write"
-"~\\AppData\\Local\\Programs\\Python\\Python312" = "read"
 "~\\codex-scratch\\Ambiente_Databricks" = "write"
 
 [permissions.ser-controller-a0.filesystem.":workspace_roots"]
@@ -72,7 +71,6 @@ description = "SER B1 A1 executor: repository read access plus exact B1 file wri
 ":minimal" = "read"
 ":tmpdir" = "write"
 ":slash_tmp" = "write"
-"~\\AppData\\Local\\Programs\\Python\\Python312" = "read"
 
 [permissions.ser-b1-a1.filesystem.":workspace_roots"]
 "." = "read"

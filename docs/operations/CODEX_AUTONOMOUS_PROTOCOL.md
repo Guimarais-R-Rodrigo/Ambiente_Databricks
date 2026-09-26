@@ -1,6 +1,6 @@
 # Codex Autonomous Controller Protocol
 
-Versão: 1.5  
+Versão: 1.6  
 Decisões donas: ADR-0024 + ADR-0025
 
 ## 1. Objetivo
@@ -37,9 +37,7 @@ AC-R2 usa permission profiles:
   exige leitura efetiva da raiz; esta é uma ampliação de leitura observada e
   documentada, não uma autorização de write;
 - root + explorer/auditors: `ser-controller-a0`, repository read-only para
-  mutações, command network disabled, com read explícito do runtime Python
-  qualificado em `~\AppData\Local\Programs\Python\Python312` e scratch externo
-  explícito
+  mutações, command network disabled, com scratch externo explícito
   `~\codex-scratch\Ambiente_Databricks` para capability/write temporário no
   Windows nativo;
 - executor: `ser-b1-a1`, workspace default read, somente 10 arquivos A1 concretos
@@ -51,9 +49,7 @@ project trust, Windows sandbox e MCP/hosted surfaces precisam ser observados.
 
 No Desktop, ausência da CLI Codex, de credenciais Git dentro da sandbox ou do
 nome nominal do permission profile não é automaticamente equivalente a falha.
-O contrato Desktop usa host preflight para identidade/Python e exige prova
-comportamental cumulativa em CQ3/CQ4/CQ5 quando o nome do profile não é
-observável.
+O contrato Desktop usa host preflight v3 para identidade e CQ0.5/CQ5 repo-side; Python roda somente no host. CQ3/CQ4 continuam provas comportamentais obrigatórias do sandbox. Quando o nome do profile não é observável, o PASS agregado exige CQ3/CQ4 e CQ5 host-bound verdes.
 Estado de PR pode ficar `DEFERRED_TO_EXTERNAL_ADJUDICATION` e ser recomputado
 fora da sessão.
 

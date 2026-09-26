@@ -32,10 +32,7 @@ Read:
 Do not load the full CHANGELOG.
 
 Execute CQ0-CQ5 using the Desktop Windows profile. Read and verify the external
-CQ_HOST_PREFLIGHT.json and its SHA256. Use the absolute Python executable bound
-by that preflight. It must be inside ~\AppData\Local\Programs\Python\Python312,
-which is read-enabled for A0/A1. Do not rely on the PATH token "python" and do
-not install dependencies.
+CQ_HOST_PREFLIGHT.json and its SHA256. The preflight v3 already executes validator/metatests host-side. DO NOT execute Python inside the Desktop sandbox and do not install dependencies.
 
 Codex CLI/version/strict/execpolicy commands are optional observations on this
 surface. If inaccessible, record NOT_OBSERVABLE_DESKTOP rather than inventing
@@ -67,8 +64,7 @@ Expected authority:
 
 Run real CQ3 spawned-role probes.
 
-In CQ5 run the validator and metatests with the absolute Python from host
-preflight.
+In CQ0.5/CQ5 verify the SHA-bound host validation evidence from preflight v3; do not execute Python in the sandbox.
 
 If any controller gate fails, stop at CONTROLLER_MAINTENANCE. Do not self-repair.
 

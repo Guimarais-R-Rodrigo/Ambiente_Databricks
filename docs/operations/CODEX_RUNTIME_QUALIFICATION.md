@@ -1,6 +1,6 @@
 # Codex Autonomous Controller — runtime qualification
 
-Versão: 1.4  
+Versão: 1.5  
 Decisões donas: ADR-0024 + ADR-0025
 
 CQ0–CQ5 prova o runtime real. Não inicia B1 material e não concede A2.
@@ -58,7 +58,6 @@ remote_plugin            = false
 A0/A1 command network   = disabled
 A0/A1 filesystem :root  = read (Windows elevated backend requirement)
 A0 external scratch     = ~\codex-scratch\Ambiente_Databricks (write)
-qualified Python root    = ~\AppData\Local\Programs\Python\Python312 (read)
 repository root under A0 = read-only for writes
 A1 direct .git write    = denied
 ```
@@ -163,9 +162,7 @@ python -B tools/validate_codex_autonomy.py --json
 python -B -m unittest tools.tests.test_codex_autonomy -v
 ```
 
-No Desktop Windows, usar o interpretador absoluto qualificado por D0 conforme
-CQ5-D; ausência de `python` no PATH não é falha quando o executável absoluto
-passa.
+No Desktop Windows, CQ0.5-D/CQ5-D verificam evidência host-side SHA-bound do preflight v3; Python não é iniciado dentro da sandbox.
 
 A cobertura inclui ao menos:
 - permission-profile <-> envelope;
