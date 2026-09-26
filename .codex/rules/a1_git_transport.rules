@@ -1,0 +1,20 @@
+prefix_rule(
+    pattern = [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".codex\\transport\\a1_git_transport.ps1",
+    ],
+    decision = "prompt",
+    justification = "A1 Git bridge only. Auto-review must verify trusted repo-root cwd, executor role, and zero extra arguments before running outside the sandbox.",
+    match = [
+        "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\\transport\\a1_git_transport.ps1",
+    ],
+    not_match = [
+        "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\\transport\\other.ps1",
+        "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .codex\\transport\\a1_git_transport.ps1",
+    ],
+)

@@ -1,11 +1,11 @@
 {
   "schema_version": "SER-AUTONOMY-ENVELOPE-2",
-  "envelope_id": "SER-B1-AUTONOMY-2026-09-26-R2",
+  "envelope_id": "SER-B1-AUTONOMY-2026-09-26-R3",
   "front_id": "SER-B1",
   "activation": {
     "state": "ACTIVE_A0_A1",
     "source_type": "direct_user_chat",
-    "reference": "user-approved-autonomous-controller-architecture-and-ac-r1-2026-09-26",
+    "reference": "user-approved-ac-r2-min-2026-09-26",
     "a2_reference": null
   },
   "repository": {
@@ -21,11 +21,15 @@
   ],
   "repo_scope": {
     "write_roots": [
-      "tools/skill_enforcement/real_campaigns/b1/g6_recovery/**",
+      "tools/skill_enforcement/real_campaigns/b1/g6_recovery/README.md",
+      "tools/skill_enforcement/real_campaigns/b1/g6_recovery/__init__.py",
+      "tools/skill_enforcement/real_campaigns/b1/g6_recovery/adversarial_coverage.json",
+      "tools/skill_enforcement/real_campaigns/b1/g6_recovery/manifest.json",
+      "tools/skill_enforcement/real_campaigns/b1/g6_recovery/residual_probe_recovery.py",
       "tools/tests/test_ser_b1_g6_recovery.py",
       "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json",
       "docs/sprints/skill_enforcement_rollout/PARALELO/B1/CHANGELOG.md",
-      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/**",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl",
       "CHANGELOG.md"
     ],
     "protected_roots": [
@@ -100,12 +104,13 @@
         "local qualification and causal repair of the SER05 residual recovery package",
         "tests and validators relevant to the current B1 recovery",
         "B1 live-state/changelog maintenance",
-        "append-only autonomous run records under B1/AUTONOMY",
-        "causal commits",
-        "normal push to the B1 branch",
+        "append-only autonomous run journal at B1/AUTONOMY/JOURNAL.jsonl",
+        "causal commits through the rule-reviewed A1 Git transport only",
+        "normal non-force push to the B1 branch through the rule-reviewed A1 Git transport only",
         "draft PR metadata/comments"
       ],
       "forbidden": [
+        "direct writes to .git or direct command-network access; Git metadata and push require the rule-reviewed A1 Git transport",
         "repository mutation through MCP/apps/hosted remote tools; use the local worktree and normal git push instead",
         "any path matching repo_scope.protected_roots",
         "any path matching repo_scope.shared_roots_requiring_human_gate without CONTROLLER_MAINTENANCE",

@@ -1,17 +1,14 @@
 # B1 Autonomous Controller journal
 
-Esta pasta é o único root documental livre para registros novos do controller A1.
+A1 possui um único registro operacional versionado gravável: JOURNAL.jsonl.
 
 Regras:
 
-- nunca reescrever evidência histórica em `../G6/` ou checkpoints `../P2_*.md`;
-- cada run record novo identifica base/candidate SHA, controller state, causal delta,
-  gates executados e findings;
+- README.md e qualquer outro arquivo desta pasta permanecem read-only para A1;
+- cada linha nova do journal é um objeto JSON independente;
+- o journal é append-only: truncar, reordenar ou reescrever linha anterior falha no delta checker;
+- cada registro identifica, quando aplicável, base/candidate SHA, controller state, causal delta, gates e findings;
 - autorização de projeto nunca nasce deste journal;
 - não copiar tokens, usernames, homes reais ou paths sensíveis;
-- `AUTHORING_STATE.json` continua sendo o state source vivo;
-- este journal é evidência operacional complementar, não substitui manifests,
-  outputs RAW ou verifiers.
-
-Arquivos devem ser append-only por identidade: não reutilizar nome de uma rodada
-anterior para reescrever seu resultado.
+- AUTHORING_STATE.json continua sendo o state source vivo;
+- o journal é evidência operacional complementar e não substitui manifests, RAW ou verifiers.

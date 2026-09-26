@@ -11,6 +11,11 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 ENVELOPE = ROOT / "docs" / "operations" / "autonomy" / "B1_AUTONOMY_ENVELOPE.json"
 STATE_PATH = "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json"
+APPEND_ONLY_PATHS = {
+    "CHANGELOG.md",
+    "docs/sprints/skill_enforcement_rollout/PARALELO/B1/CHANGELOG.md",
+    "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl",
+}
 
 ALLOWED_A1_CONTROLLER_STATE_FIELDS = {
     "runtime_validation",
@@ -57,16 +62,7 @@ def _run_git(argv: list[str], *, text: bool = False) -> subprocess.CompletedProc
     )
 
 
-def _diff_entries(base: str, head: str) -> list[dict[str, Any]]:
-    proc = _run_git([
-        "diff",
-        "--raw",
-        "--no-abbrev",
-        "-z",
-        "--find-renames",
-        "--find-copies",
-        f"{base}..{head}",
-    ])
+def _parse_raw_diff(proc: subprocess.CompletedProcess) -> list[dict[str, Any]]:
     if proc.returncode != 0:
         stderr = proc.stderr.decode("utf-8", errors="replace")
         stdout = proc.stdout.decode("utf-8", errors="replace")
@@ -107,6 +103,55 @@ def _diff_entries(base: str, head: str) -> list[dict[str, Any]]:
             "destination": destination,
         })
     return entries
+
+
+def _raw_diff(argv: list[str]) -> list[dict[str, Any]]:
+    return _parse_raw_diff(_run_git(argv))
+
+
+def _diff_entries(base: str, head: str) -> list[dict[str, Any]]:
+    return _raw_diff(["diff", "--raw", "--no-abbrev", "-z", "--find-renames", f"{base}..{head}"])
+
+
+def _worktree_entries() -> list[dict[str, Any]]:
+    entries = _raw_diff(["diff", "--raw", "--no-abbrev", "-z", "--find-renames", "HEAD"])
+    entries.extend(_raw_diff(["diff", "--cached", "--raw", "--no-abbrev", "-z", "--find-renames", "HEAD"]))
+    proc = _run_git(["ls-files", "--others", "--exclude-standard", "-z"])
+    if proc.returncode != 0:
+        raise RuntimeError("GIT_UNTRACKED_LIST_FAILED")
+    for raw in proc.stdout.split(b"\0"):
+        if not raw:
+            continue
+        path = raw.decode("utf-8", errors="strict")
+        target = ROOT / path
+        mode = "120000" if target.is_symlink() else "100644"
+        entries.append({
+            "status": "A?",
+            "old_mode": "000000",
+            "new_mode": mode,
+            "old_sha": "0" * 40,
+            "new_sha": "0" * 40,
+            "source": path,
+            "destination": None,
+        })
+    return entries
+
+
+def _index_entries() -> list[dict[str, Any]]:
+    return _raw_diff(["diff", "--cached", "--raw", "--no-abbrev", "-z", "--find-renames", "HEAD"])
+
+
+def _git_text(spec: str) -> str | None:
+    proc = _run_git(["show", spec], text=True)
+    return proc.stdout if proc.returncode == 0 else None
+
+
+def _append_only_issues(base_text: str | None, candidate_text: str | None, path: str) -> list[str]:
+    if base_text is None or candidate_text is None:
+        return ["APPEND_ONLY_PATH_MISSING:" + path]
+    if not candidate_text.startswith(base_text):
+        return ["APPEND_ONLY_HISTORY_REWRITE:" + path]
+    return []
 
 
 def _entry_rows(entry: dict[str, Any]) -> list[dict[str, Any]]:
@@ -275,50 +320,94 @@ def validate_state_transition(base_state: dict[str, Any], candidate_state: dict[
     return sorted(set(issues))
 
 
-def check_delta(base: str, head: str) -> dict[str, Any]:
-    entries = _diff_entries(base, head)
+def _evaluate(entries: list[dict[str, Any]], *, base_ref: str, candidate_kind: str, candidate_ref: str | None = None) -> dict[str, Any]:
     rows: list[dict[str, Any]] = []
     for entry in entries:
         rows.extend(_entry_rows(entry))
 
-    violations = [
-        row for row in rows
-        if row["enforced"] and row["classification"] != "ALLOWED_A1"
-    ]
-    symlink_rows = [
-        row for row in rows
-        if row["old_mode"] == "120000" or row["new_mode"] == "120000"
-    ]
-    for row in symlink_rows:
-        violations.append({**row, "classification": "SYMLINK_NOT_ALLOWED"})
+    violations = [row for row in rows if row["enforced"] and row["classification"] != "ALLOWED_A1"]
+    for row in rows:
+        if row["old_mode"] == "120000" or row["new_mode"] == "120000":
+            violations.append({**row, "classification": "SYMLINK_NOT_ALLOWED"})
 
-    state_transition_issues: list[str] = []
-    if any(row["path"] == STATE_PATH for row in rows):
-        base_state = _json_at(base, STATE_PATH)
-        candidate_state = _json_at(head, STATE_PATH)
-        if base_state is None or candidate_state is None:
-            state_transition_issues.append("STATE_SOURCE_MISSING_IN_DELTA")
+    integrity_issues: list[str] = []
+    changed = {row["path"] for row in rows}
+
+    if STATE_PATH in changed:
+        base_state = _json_at(base_ref, STATE_PATH)
+        if candidate_kind == "ref":
+            candidate_state = _json_at(candidate_ref or "", STATE_PATH)
+        elif candidate_kind == "index":
+            raw = _git_text(":" + STATE_PATH)
+            candidate_state = json.loads(raw) if raw is not None else None
         else:
-            state_transition_issues.extend(validate_state_transition(base_state, candidate_state))
+            path = ROOT / STATE_PATH
+            candidate_state = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else None
+        if base_state is None or not isinstance(candidate_state, dict):
+            integrity_issues.append("STATE_SOURCE_MISSING_IN_DELTA")
+        else:
+            integrity_issues.extend(validate_state_transition(base_state, candidate_state))
 
-    status = "PASS" if not violations and not state_transition_issues else "FAIL"
+    for path in sorted(APPEND_ONLY_PATHS & changed):
+        base_text = _git_text(f"{base_ref}:{path}")
+        if candidate_kind == "ref":
+            candidate_text = _git_text(f"{candidate_ref}:{path}")
+        elif candidate_kind == "index":
+            candidate_text = _git_text(":" + path)
+        else:
+            p = ROOT / path
+            candidate_text = p.read_text(encoding="utf-8") if p.is_file() else None
+        integrity_issues.extend(_append_only_issues(base_text, candidate_text, path))
+
+    status = "PASS" if not violations and not integrity_issues else "FAIL"
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-DELTA-2",
-        "base": base,
-        "head": head,
+        "schema_version": "SER-CODEX-AUTONOMY-DELTA-3",
         "status": status,
         "files": rows,
         "violations": violations,
-        "state_transition_issues": state_transition_issues,
+        "integrity_issues": sorted(set(integrity_issues)),
     }
+
+
+def check_delta(base: str, head: str) -> dict[str, Any]:
+    result = _evaluate(_diff_entries(base, head), base_ref=base, candidate_kind="ref", candidate_ref=head)
+    result.update({"base": base, "head": head, "mode": "commit_range"})
+    return result
+
+
+def check_worktree() -> dict[str, Any]:
+    result = _evaluate(_worktree_entries(), base_ref="HEAD", candidate_kind="worktree")
+    result.update({"base": "HEAD", "head": "WORKTREE", "mode": "worktree"})
+    return result
+
+
+def check_index() -> dict[str, Any]:
+    result = _evaluate(_index_entries(), base_ref="HEAD", candidate_kind="index")
+    result.update({"base": "HEAD", "head": "INDEX", "mode": "index"})
+    return result
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--base", required=True)
-    parser.add_argument("--head", required=True)
+    parser.add_argument("--base")
+    parser.add_argument("--head")
+    parser.add_argument("--worktree", action="store_true")
+    parser.add_argument("--index", action="store_true")
     args = parser.parse_args()
-    result = check_delta(args.base, args.head)
+
+    selected = int(args.worktree) + int(args.index) + int(bool(args.base or args.head))
+    if selected != 1:
+        parser.error("choose exactly one of --worktree, --index, or --base/--head")
+
+    if args.worktree:
+        result = check_worktree()
+    elif args.index:
+        result = check_index()
+    else:
+        if not args.base or not args.head:
+            parser.error("--base and --head are required together")
+        result = check_delta(args.base, args.head)
+
     print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
     return 0 if result["status"] == "PASS" else 1
 

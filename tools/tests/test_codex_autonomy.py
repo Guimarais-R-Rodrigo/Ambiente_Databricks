@@ -20,7 +20,7 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertEqual("PASS", result["status"], result["issues"])
         self.assertEqual(5, result["custom_agents"])
         self.assertEqual(1, result["write_capable_agents"])
-        self.assertEqual(":read-only", result["root_permissions"])
+        self.assertEqual("ser-controller-a0", result["root_permissions"])
         self.assertEqual("ser-b1-a1", result["executor_permissions"])
 
     def envelope(self):
@@ -159,7 +159,8 @@ class CodexAutonomyTests(unittest.TestCase):
 
     def test_root_and_agents_use_permission_profiles_not_legacy_sandbox(self):
         cfg = val._read_toml(ROOT / ".codex/config.toml")
-        self.assertEqual(":read-only", cfg["default_permissions"])
+        self.assertEqual("ser-controller-a0", cfg["default_permissions"])
+        self.assertEqual("never", cfg["approval_policy"])
         self.assertNotIn("sandbox_mode", cfg)
         for role, (filename, expected_profile, _model, _effort) in val.EXPECTED_AGENTS.items():
             agent = val._read_toml(ROOT / ".codex/agents" / filename)
@@ -167,13 +168,45 @@ class CodexAutonomyTests(unittest.TestCase):
             self.assertNotIn("sandbox_mode", agent, role)
 
     def test_approval_escalation_is_fail_closed(self):
-        cfg = val._read_toml(ROOT / ".codex/config.toml")
-        granular = cfg["approval_policy"]["granular"]
+        executor = val._read_toml(ROOT / ".codex/agents/executor.toml")
+        granular = executor["approval_policy"]["granular"]
         self.assertFalse(granular["sandbox_approval"])
         self.assertFalse(granular["request_permissions"])
         self.assertFalse(granular["mcp_elicitations"])
         self.assertFalse(granular["skill_approval"])
         self.assertTrue(granular["rules"])
+        self.assertEqual("auto_review", executor["approvals_reviewer"])
+
+    def test_executor_has_no_direct_git_metadata_or_network(self):
+        cfg = val._read_toml(ROOT / ".codex/config.toml")
+        profile = cfg["permissions"]["ser-b1-a1"]
+        workspace = profile["filesystem"][":workspace_roots"]
+        self.assertNotIn(".git", {p for p, access in workspace.items() if access == "write"})
+        self.assertFalse(profile["network"]["enabled"])
+
+    def test_a1_write_roots_are_concrete_files(self):
+        roots = self.envelope()["repo_scope"]["write_roots"]
+        self.assertEqual(10, len(roots))
+        self.assertFalse(any("*" in path for path in roots))
+        self.assertIn(
+            "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl",
+            roots,
+        )
+        self.assertNotIn(
+            "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/README.md",
+            roots,
+        )
+
+    def test_git_transport_is_rule_reviewed_and_branch_bound(self):
+        rule = (ROOT / ".codex/rules/a1_git_transport.rules").read_text(encoding="utf-8")
+        script = (ROOT / ".codex/transport/a1_git_transport.ps1").read_text(encoding="utf-8")
+        self.assertIn('decision = "prompt"', rule)
+        self.assertIn("a1_git_transport.ps1", rule)
+        self.assertIn("ser/B1-ser03-ser05-authoring", script)
+        self.assertIn('push origin "HEAD:refs/heads/$ExpectedBranch"', script)
+        self.assertNotIn("--force", script)
+        self.assertIn("--worktree", script)
+        self.assertIn("--index", script)
 
     def _temporary_git_repo(self) -> tuple[Path, mock._patch, mock._patch]:
         repo = Path(tempfile.mkdtemp())
@@ -184,7 +217,7 @@ class CodexAutonomyTests(unittest.TestCase):
         envelope.parent.mkdir(parents=True)
         envelope.write_text(json.dumps({
             "repo_scope": {
-                "write_roots": ["allowed/**"],
+                "write_roots": ["allowed/x.txt"],
                 "protected_roots": ["protected/**"],
                 "shared_roots_requiring_human_gate": ["governance/**"],
             }
@@ -242,6 +275,18 @@ class CodexAutonomyTests(unittest.TestCase):
             self._git(repo, "commit", "-m", "delete")
             head = self._git(repo, "rev-parse", "HEAD")
             self.assertEqual("FAIL", delta.check_delta(base, head)["status"])
+
+    def test_worktree_rejects_untracked_outside_a1(self):
+        repo, root_patch, envelope_patch = self._temporary_git_repo()
+        with root_patch, envelope_patch:
+            (repo / "allowed").mkdir()
+            (repo / "allowed/x.txt").write_text("x", encoding="utf-8")
+            self._git(repo, "add", ".")
+            self._git(repo, "commit", "-m", "base")
+            (repo / "outside.txt").write_text("bad", encoding="utf-8")
+            result = delta.check_worktree()
+            self.assertEqual("FAIL", result["status"])
+            self.assertTrue(any(row["path"] == "outside.txt" for row in result["violations"]))
 
     def test_delta_rejects_tracked_symlink_even_under_allowed_root(self):
         repo, root_patch, envelope_patch = self._temporary_git_repo()
@@ -311,6 +356,11 @@ class CodexAutonomyTests(unittest.TestCase):
         candidate = copy.deepcopy(base)
         candidate["launchable"] = True
         self.assertIn("STATE_LAUNCHABLE_WITH_BLOCKERS", delta.validate_state_transition(base, candidate))
+
+    def test_append_only_guard_rejects_rewrite(self):
+        issues = delta._append_only_issues("old\n", "replacement\n", "journal.jsonl")
+        self.assertEqual(["APPEND_ONLY_HISTORY_REWRITE:journal.jsonl"], issues)
+        self.assertEqual([], delta._append_only_issues("old\n", "old\nnew\n", "journal.jsonl"))
 
     def test_claude_uses_progressive_changelog_disclosure(self):
         text = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")

@@ -1,13 +1,25 @@
 #:schema https://developers.openai.com/codex/config-schema.json
 
-# AC-R2-MIN: the root controller is read-only. Only the executor selects the
-# scoped ser-b1-a1 profile. Permission profiles and legacy sandbox_mode MUST NOT
-# be combined.
+# AC-R2-MIN: repository writes are impossible for the root/read-only roles.
+# Only the executor selects ser-b1-a1, whose filesystem writes are exact files.
+# Git metadata/network stay outside the sandbox and are reachable only through
+# the rule-reviewed A1 transport.
 model = "gpt-6-astra"
 model_reasoning_effort = "high"
-default_permissions = ":read-only"
-approval_policy = { granular = { sandbox_approval = false, rules = true, mcp_elicitations = false, request_permissions = false, skill_approval = false } }
+default_permissions = "ser-controller-a0"
+approval_policy = "never"
 approvals_reviewer = "auto_review"
+
+[auto_review]
+policy = """
+For this project, approve an execpolicy prompt only for the exact command:
+powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\\transport\\a1_git_transport.ps1
+Approve it only when the request cwd is the trusted Ambiente_Databricks project root,
+the active role is the A1 executor, and there are no extra arguments. Deny any
+transport invocation from a nested/temp/other repository and deny every other
+request to widen filesystem, network, MCP, app, skill, or sandbox authority.
+This technical review never grants A2/A3 or CONTROLLER_MAINTENANCE authority.
+"""
 
 [windows]
 sandbox = "elevated"
@@ -46,8 +58,22 @@ config_file = "agents/evidence-auditor.toml"
 description = "Independent read-only auditor for architecture, regression risk, duplicated mechanisms, scope creep and integration impact."
 config_file = "agents/architecture-auditor.toml"
 
+[permissions.ser-controller-a0]
+description = "Repository read-only controller/auditor profile with scratch writes only for deterministic local tests."
+
+[permissions.ser-controller-a0.filesystem]
+":minimal" = "read"
+":tmpdir" = "write"
+":slash_tmp" = "write"
+
+[permissions.ser-controller-a0.filesystem.":workspace_roots"]
+"." = "read"
+
+[permissions.ser-controller-a0.network]
+enabled = false
+
 [permissions.ser-b1-a1]
-description = "SER B1 A1 executor: repository read access, exact B1 write roots, Git metadata for causal commits, and GitHub-only command network."
+description = "SER B1 A1 executor: repository read access plus exact B1 file writes; no direct Git metadata or network."
 
 [permissions.ser-b1-a1.filesystem]
 ":minimal" = "read"
@@ -56,18 +82,16 @@ description = "SER B1 A1 executor: repository read access, exact B1 write roots,
 
 [permissions.ser-b1-a1.filesystem.":workspace_roots"]
 "." = "read"
-".git" = "write"
-"tools/skill_enforcement/real_campaigns/b1/g6_recovery" = "write"
+"tools/skill_enforcement/real_campaigns/b1/g6_recovery/README.md" = "write"
+"tools/skill_enforcement/real_campaigns/b1/g6_recovery/__init__.py" = "write"
+"tools/skill_enforcement/real_campaigns/b1/g6_recovery/adversarial_coverage.json" = "write"
+"tools/skill_enforcement/real_campaigns/b1/g6_recovery/manifest.json" = "write"
+"tools/skill_enforcement/real_campaigns/b1/g6_recovery/residual_probe_recovery.py" = "write"
 "tools/tests/test_ser_b1_g6_recovery.py" = "write"
 "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json" = "write"
 "docs/sprints/skill_enforcement_rollout/PARALELO/B1/CHANGELOG.md" = "write"
-"docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY" = "write"
+"docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl" = "write"
 "CHANGELOG.md" = "write"
 
 [permissions.ser-b1-a1.network]
-enabled = true
-
-[permissions.ser-b1-a1.network.domains]
-"github.com" = "allow"
-"api.github.com" = "allow"
-"objects.githubusercontent.com" = "allow"
+enabled = false

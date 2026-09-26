@@ -13,15 +13,14 @@ except ImportError:
     Draft202012Validator = None
 
 ROOT = Path(__file__).resolve().parents[1]
+A0_PROFILE = "ser-controller-a0"
 A1_PROFILE = "ser-b1-a1"
-A1_TRANSPORT_WRITES = {".git"}
-EXPECTED_GITHUB_DOMAINS = {"github.com", "api.github.com", "objects.githubusercontent.com"}
 EXPECTED_AGENTS = {
-    "explorer": ("explorer.toml", ":read-only", "gpt-6-luna", "high"),
+    "explorer": ("explorer.toml", A0_PROFILE, "gpt-6-luna", "high"),
     "executor": ("executor.toml", A1_PROFILE, "gpt-6-sol", "medium"),
-    "domain-auditor": ("domain-auditor.toml", ":read-only", "gpt-6-astra", "high"),
-    "evidence-auditor": ("evidence-auditor.toml", ":read-only", "gpt-6-astra", "high"),
-    "architecture-auditor": ("architecture-auditor.toml", ":read-only", "gpt-6-astra", "high"),
+    "domain-auditor": ("domain-auditor.toml", A0_PROFILE, "gpt-6-astra", "high"),
+    "evidence-auditor": ("evidence-auditor.toml", A0_PROFILE, "gpt-6-astra", "high"),
+    "architecture-auditor": ("architecture-auditor.toml", A0_PROFILE, "gpt-6-astra", "high"),
 }
 
 
@@ -115,8 +114,10 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
     issues: list[str] = []
     if "sandbox_mode" in cfg or "sandbox_workspace_write" in cfg:
         issues.append("LEGACY_SANDBOX_MUST_BE_ABSENT")
-    if cfg.get("default_permissions") != ":read-only":
-        issues.append("ROOT_PERMISSIONS_MUST_BE_READ_ONLY")
+    if cfg.get("default_permissions") != A0_PROFILE:
+        issues.append("ROOT_PERMISSIONS_PROFILE")
+    if cfg.get("approval_policy") != "never":
+        issues.append("ROOT_APPROVAL_POLICY_MUST_BE_NEVER")
 
     approval = cfg.get("approval_policy")
     if not isinstance(approval, dict) or not isinstance(approval.get("granular"), dict):
@@ -136,6 +137,9 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
 
     if cfg.get("approvals_reviewer") != "auto_review":
         issues.append("ROOT_APPROVAL_REVIEWER")
+    review_policy = ((cfg.get("auto_review") or {}).get("policy") or "")
+    if "a1_git_transport.ps1" not in review_policy or "nested/temp/other repository" not in review_policy:
+        issues.append("AUTO_REVIEW_TRANSPORT_POLICY")
 
     if (cfg.get("windows") or {}).get("sandbox") != "elevated":
         issues.append("WINDOWS_SANDBOX_NOT_ELEVATED")
@@ -145,10 +149,57 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
         issues.append("NETWORK_PROXY_NOT_ENABLED")
 
     profiles = cfg.get("permissions") or {}
+    a0 = profiles.get(A0_PROFILE) if isinstance(profiles, dict) else None
     profile = profiles.get(A1_PROFILE) if isinstance(profiles, dict) else None
+    if not isinstance(a0, dict):
+        issues.append("A0_PERMISSION_PROFILE_MISSING")
+    else:
+        a0fs = a0.get("filesystem") or {}
+        a0ws = a0fs.get(":workspace_roots") or {}
+        if a0fs.get(":minimal") != "read" or a0ws.get(".") != "read":
+            issues.append("A0_REPOSITORY_READ_ONLY_REQUIRED")
+        if (a0.get("network") or {}).get("enabled") is not False:
+            issues.append("A0_NETWORK_MUST_BE_DISABLED")
+
     if not isinstance(profile, dict):
         issues.append("A1_PERMISSION_PROFILE_MISSING")
         return issues
+
+    filesystem = profile.get("filesystem") or {}
+    if filesystem.get(":minimal") != "read":
+        issues.append("A1_MINIMAL_READ_REQUIRED")
+    if filesystem.get(":tmpdir") != "write":
+        issues.append("A1_TMPDIR_WRITE_REQUIRED")
+    if filesystem.get(":slash_tmp") != "write":
+        issues.append("A1_SLASH_TMP_WRITE_REQUIRED")
+
+    workspace = filesystem.get(":workspace_roots") or {}
+    if workspace.get(".") != "read":
+        issues.append("A1_WORKSPACE_DEFAULT_MUST_BE_READ")
+
+    actual_writes = {
+        _normalize_write_root(path)
+        for path, access in workspace.items()
+        if path != "." and access == "write"
+    }
+    expected_writes = {
+        _normalize_write_root(path)
+        for path in (envelope.get("repo_scope") or {}).get("write_roots", [])
+    }
+    if actual_writes != expected_writes:
+        issues.append(
+            "A1_PERMISSION_WRITE_ROOT_MISMATCH:expected="
+            + ",".join(sorted(expected_writes))
+            + ":actual="
+            + ",".join(sorted(actual_writes))
+        )
+    if ".git" in actual_writes or any(path.startswith(".git/") for path in actual_writes):
+        issues.append("A1_DIRECT_GIT_METADATA_WRITE_FORBIDDEN")
+    if (profile.get("network") or {}).get("enabled") is not False:
+        issues.append("A1_DIRECT_NETWORK_MUST_BE_DISABLED")
+    if any("*" in path for path in expected_writes):
+        issues.append("A1_WRITE_ROOTS_MUST_BE_CONCRETE")
+    return issues
 
     filesystem = profile.get("filesystem") or {}
     if filesystem.get(":minimal") != "read":
@@ -196,7 +247,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-3",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-4",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -268,8 +319,18 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             issues.append("AGENT_DUPLICATE_PERMISSION_PROFILE:" + role)
         if role == "executor":
             write_capable += int(data.get("default_permissions") == A1_PROFILE)
-            if "approval_policy" in data:
-                issues.append("EXECUTOR_MUST_INHERIT_GRANULAR_APPROVALS")
+            granular = (data.get("approval_policy") or {}).get("granular") if isinstance(data.get("approval_policy"), dict) else None
+            expected_granular = {
+                "sandbox_approval": False,
+                "rules": True,
+                "mcp_elicitations": False,
+                "request_permissions": False,
+                "skill_approval": False,
+            }
+            if granular != expected_granular:
+                issues.append("EXECUTOR_GRANULAR_APPROVALS")
+            if data.get("approvals_reviewer") != "auto_review":
+                issues.append("EXECUTOR_APPROVAL_REVIEWER")
         elif data.get("approval_policy") != "never":
             issues.append("READ_ONLY_AGENT_APPROVAL_POLICY:" + role)
         if (data.get("agents") or {}).get("enabled") is not False:
@@ -301,6 +362,9 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         ".codex/hooks/pre_scope_guard.ps1",
         ".codex/hooks/post_scope_guard.ps1",
         "tools/requirements-codex-autonomy.txt",
+        ".codex/rules/a1_git_transport.rules",
+        ".codex/transport/a1_git_transport.ps1",
+        "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl",
     ]
     for rel in required_paths:
         if not (root / rel).is_file():
@@ -338,7 +402,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-3",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-4",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),
@@ -346,6 +410,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         "max_concurrent_threads_per_session": max_threads,
         "root_permissions": cfg.get("default_permissions"),
         "executor_permissions": A1_PROFILE,
+        "direct_a1_network": False,
+        "direct_git_metadata_write": False,
         "hooks_configured": hooks_path.is_file(),
     }
 
