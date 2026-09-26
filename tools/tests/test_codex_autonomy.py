@@ -131,6 +131,11 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertTrue(result["desktop_windows_cq_contract"])
         self.assertTrue(result["desktop_host_preflight"])
 
+    def test_desktop_host_preflight_uses_safe_powershell_variable_boundaries(self):
+        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        self.assertIn('CQ_HOST_PREFLIGHT_LOCAL_REMOTE_DIVERGENCE:${head}:${originHead}', text)
+        self.assertNotIn('CQ_HOST_PREFLIGHT_LOCAL_REMOTE_DIVERGENCE:$head:$originHead', text)
+
     def test_desktop_host_preflight_does_not_persist_raw_remote_url(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn("origin_identity = $ExpectedRepoFragment", text)

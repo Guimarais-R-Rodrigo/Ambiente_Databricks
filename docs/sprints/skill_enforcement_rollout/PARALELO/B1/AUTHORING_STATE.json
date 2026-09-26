@@ -1001,7 +1001,7 @@
     "max_concurrent_subagents": 5,
     "max_write_capable_agents": 1,
     "custom_agents": 5,
-    "controller_metatest_methods_static": 59,
+    "controller_metatest_methods_static": 60,
     "structural_validation": "AC_R2_DESKTOP_WINDOWS_CQ_MAINTENANCE_CORRECTED_AWAITING_FINAL_STATIC_REVIEW",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
@@ -1031,7 +1031,7 @@
       "legacy_sandbox_mode": false,
       "approval_boundary": "EXECUTOR_RULE_PROMPTS_ONLY_OTHER_ESCALATIONS_FAIL_CLOSED",
       "delta_schema": "SER-CODEX-AUTONOMY-DELTA-3",
-      "metatest_methods_static": 59,
+      "metatest_methods_static": 60,
       "runtime_qualification": "NOT_RUN",
       "cq0_cq5": "NOT_RUN",
       "b1_material_execution": "NOT_RUN",
@@ -1117,9 +1117,11 @@
         "corrective_followup": [
           "FIX_A0_SCRATCH_TOML_KEY_NORMALIZATION",
           "REQUIRE_DESKTOP_CQ_PATH_IN_VALIDATOR",
-          "REMOVE_RAW_ORIGIN_URL_FROM_HOST_EVIDENCE"
+          "REMOVE_RAW_ORIGIN_URL_FROM_HOST_EVIDENCE",
+          "FIX_POWERSHELL_VARIABLE_BOUNDARY_AND_SET_30_MIN_FRESHNESS"
         ],
-        "material_findings_open": "PENDING_FINAL_STATIC_REVIEW"
+        "material_findings_open": "PENDING_FINAL_STATIC_REVIEW",
+        "host_preflight_max_age_minutes": 30
       }
     }
   }

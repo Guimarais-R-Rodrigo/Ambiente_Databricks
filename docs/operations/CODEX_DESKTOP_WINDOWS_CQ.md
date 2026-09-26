@@ -27,8 +27,8 @@ SHA-256 da config project-scoped e um Python absoluto que já importa
 `jsonschema`. Ele não instala dependências e não faz push. A URL remota bruta
 não é persistida; somente a identidade esperada do repositório é registrada.
 
-O registro deve ser recente para a conversa corrente; se o checkout mudar após o
-preflight, repetir D0.
+O registro deve ter no máximo **30 minutos** no momento do CQ0-D. Se ultrapassar
+esse limite ou se o checkout mudar após o preflight, repetir D0.
 
 ## D0.1 — superfícies externas
 

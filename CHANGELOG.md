@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-26 — AC-R2 Desktop host-preflight PowerShell hardening
+
+- (ChatGPT) Corrigida interpolação PowerShell do erro de divergência para `${head}:${originHead}`, evitando parsing ambíguo.
+- (ChatGPT) Host preflight passa a ter freshness máxima explícita de 30 minutos para CQ0-D.
+- (ChatGPT) Suíte controller passa a 60 métodos definidos estaticamente; runtime continua NOT_RUN.
+
 ## 2026-09-26 — AC-R2 Desktop Windows CQ corrective follow-up
 
 - (ChatGPT) Revisão pré-fechamento rejeitou a primeira candidata Desktop antes de runtime: corrigida a representação do key `~\codex-scratch\Ambiente_Databricks` no validator.

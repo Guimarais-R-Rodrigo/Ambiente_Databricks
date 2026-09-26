@@ -55,7 +55,7 @@ $head = (& git rev-parse HEAD).Trim()
 $originHead = (& git rev-parse "origin/$ExpectedBranch").Trim()
 $tree = (& git rev-parse 'HEAD^{tree}').Trim()
 if ($head -ne $originHead) {
-    throw "CQ_HOST_PREFLIGHT_LOCAL_REMOTE_DIVERGENCE:$head:$originHead"
+    throw "CQ_HOST_PREFLIGHT_LOCAL_REMOTE_DIVERGENCE:${head}:${originHead}"
 }
 
 New-Item -ItemType Directory -Force -Path $OutputRoot | Out-Null
