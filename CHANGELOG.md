@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-09-26 — AC-R2 Windows elevated root-read maintenance
+
+### Observado
+
+- (User/Codex Desktop) Após corrigir o writable capability root, a criação da thread avançou até a validação seguinte e falhou com `elevated Windows sandbox requires effective :root read access`.
+- (ChatGPT) A falha ocorreu antes de CQ0 e sem mutação repo-side.
+
+### Corrigido
+
+- (ChatGPT) `:root = "read"` foi adicionado aos profiles `ser-controller-a0` e `ser-b1-a1`, conforme requisito efetivo do backend Windows elevado observado.
+- (ChatGPT) Nenhum write root do repositório foi ampliado: A0 continua sem writes repo-side e A1 continua limitado aos 10 arquivos concretos do envelope.
+- (ChatGPT) Command network continua disabled e escrita direta em `.git` continua negada.
+- (ChatGPT) Validator sobe para `SER-CODEX-AUTONOMY-VALIDATION-6` e exige `:root=read` em A0/A1.
+- (ChatGPT) Suíte controller passa a 52 métodos definidos estaticamente, com regressões fail-closed para ausência de root read.
+- (ChatGPT) A documentação passa a registrar explicitamente a limitação: no Windows elevado, a superfície de leitura é mais ampla do que repository-only, sem equivaler a autoridade de mutação.
+
+### Limites
+
+- CQ0–CQ5 continuam NOT_RUN porque a thread ainda não foi criada com sucesso.
+- B1 material, A2, G6, Genie, policy promotion, Ready e merge permanecem fora do escopo.
+
 ## 2026-09-26 — AC-R2 Windows bootstrap maintenance: fechamento estático
 
 - (ChatGPT) `WINDOWS_BOOTSTRAP_MAINTENANCE_STATIC = PASS` no candidato `36969a4ec3c2a70c37e89737a11ec273bb16be4f` / tree `a62bd3b29bc0ecd4f31b68578c5ef5b6d4ed2785`.

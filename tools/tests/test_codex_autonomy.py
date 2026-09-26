@@ -216,6 +216,23 @@ class CodexAutonomyTests(unittest.TestCase):
             self.assertEqual(expected_profile, agent["default_permissions"], role)
             self.assertNotIn("sandbox_mode", agent, role)
 
+    def test_windows_elevated_profiles_have_effective_root_read(self):
+        cfg = val._read_toml(ROOT / ".codex/config.toml")
+        self.assertEqual("read", cfg["permissions"]["ser-controller-a0"]["filesystem"][":root"])
+        self.assertEqual("read", cfg["permissions"]["ser-b1-a1"]["filesystem"][":root"])
+
+    def test_validator_rejects_missing_a0_windows_root_read(self):
+        cfg = copy.deepcopy(val._read_toml(ROOT / ".codex/config.toml"))
+        del cfg["permissions"]["ser-controller-a0"]["filesystem"][":root"]
+        issues = val._validate_permission_profile(cfg, self.envelope())
+        self.assertIn("A0_WINDOWS_ROOT_READ_REQUIRED", issues)
+
+    def test_validator_rejects_missing_a1_windows_root_read(self):
+        cfg = copy.deepcopy(val._read_toml(ROOT / ".codex/config.toml"))
+        del cfg["permissions"]["ser-b1-a1"]["filesystem"][":root"]
+        issues = val._validate_permission_profile(cfg, self.envelope())
+        self.assertIn("A1_WINDOWS_ROOT_READ_REQUIRED", issues)
+
     def test_a0_windows_scratch_capability_root_is_explicit(self):
         cfg = val._read_toml(ROOT / ".codex/config.toml")
         a0 = cfg["permissions"]["ser-controller-a0"]

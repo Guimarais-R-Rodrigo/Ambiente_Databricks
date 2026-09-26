@@ -30,8 +30,11 @@ A2 exige referência humana explícita + contrato válido.
 Antes de B1 material, executar `CODEX_RUNTIME_QUALIFICATION.md`.
 
 AC-R2 usa permission profiles:
-- root + explorer/auditors: `ser-controller-a0`, repository read-only,
-  command network disabled, com scratch externo explícito
+- no Windows elevado, A0 e A1 declaram `:root=read` porque o backend atual
+  exige leitura efetiva da raiz; esta é uma ampliação de leitura observada e
+  documentada, não uma autorização de write;
+- root + explorer/auditors: `ser-controller-a0`, repository read-only para
+  mutações, command network disabled, com scratch externo explícito
   `~\codex-scratch\Ambiente_Databricks` para capability/write temporário no
   Windows nativo;
 - executor: `ser-b1-a1`, workspace default read, somente 10 arquivos A1 concretos
@@ -138,6 +141,12 @@ MCP/apps/hosted GitHub APIs não são transporte A1 de escrita.
 
 O scratch externo A0 não é evidence root nem autoridade do projeto. Ele existe
 somente para execução determinística temporária e nunca substitui o worktree.
+
+A proteção de least privilege material deste backend está nos efeitos:
+filesystem write, network e transportes remotos permanecem restritos. O
+controller pode ler mais filesystem do que o ideal no Windows elevado; qualquer
+tentativa futura de voltar a uma leitura mais estreita exige nova qualificação do
+backend e não pode ser inferida deste contrato.
 
 A1 não pode:
 - alterar Human Gates;

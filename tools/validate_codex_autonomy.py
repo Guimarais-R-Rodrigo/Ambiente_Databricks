@@ -133,6 +133,8 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
         filesystem = a0.get("filesystem") or {}
         workspace = filesystem.get(":workspace_roots") or {}
         profile_roots = a0.get("workspace_roots") or {}
+        if filesystem.get(":root") != "read":
+            issues.append("A0_WINDOWS_ROOT_READ_REQUIRED")
         if filesystem.get(":minimal") != "read" or workspace.get(".") != "read":
             issues.append("A0_REPOSITORY_READ_ONLY_REQUIRED")
         if filesystem.get(":tmpdir") != "write":
@@ -152,6 +154,8 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
 
     filesystem = a1.get("filesystem") or {}
     workspace = filesystem.get(":workspace_roots") or {}
+    if filesystem.get(":root") != "read":
+        issues.append("A1_WINDOWS_ROOT_READ_REQUIRED")
     if filesystem.get(":minimal") != "read":
         issues.append("A1_MINIMAL_READ_REQUIRED")
     if filesystem.get(":tmpdir") != "write":
@@ -208,7 +212,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-5",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-6",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -383,7 +387,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-5",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-6",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),

@@ -51,6 +51,7 @@ description = "Repository read-only controller/auditor profile with one explicit
 "~\\codex-scratch\\Ambiente_Databricks" = true
 
 [permissions.ser-controller-a0.filesystem]
+":root" = "read"
 ":minimal" = "read"
 ":tmpdir" = "write"
 ":slash_tmp" = "write"
@@ -66,6 +67,7 @@ enabled = false
 description = "SER B1 A1 executor: repository read access plus exact B1 file writes; no direct Git metadata or network."
 
 [permissions.ser-b1-a1.filesystem]
+":root" = "read"
 ":minimal" = "read"
 ":tmpdir" = "write"
 ":slash_tmp" = "write"

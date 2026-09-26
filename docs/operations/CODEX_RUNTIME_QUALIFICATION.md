@@ -48,15 +48,22 @@ native Windows sandbox  = elevated
 apps                     = false
 remote_plugin            = false
 A0/A1 command network   = disabled
+A0/A1 filesystem :root  = read (Windows elevated backend requirement)
 A0 external scratch     = ~\codex-scratch\Ambiente_Databricks (write)
-repository root under A0 = read
+repository root under A0 = read-only for writes
 A1 direct .git write    = denied
 ```
 
 O projeto não define `[auto_review].policy`; não deve substituir a política
 padrão do reviewer por um fragmento local.
 
-Permission profiles são beta. Se o host não conseguir impor o split, FAIL.
+Permission profiles são beta. No backend Windows elevado atual, o sandbox exige
+leitura efetiva de `:root`; isso amplia a superfície de leitura do processo,
+mas não concede write nem network. O CQ deve registrar essa limitação
+explicitamente e continuar provando que repository writes permanecem negados em
+A0 e restritos aos 10 arquivos A1 no executor.
+
+Se o host não conseguir impor o split, FAIL.
 Qualquer live override que amplie a permission mode esperada gera
 `BLOCKED_CONTROLLER_PERMISSION_OVERRIDE`.
 

@@ -12,6 +12,8 @@ Run CQ0-CQ5 exactly. Do not start material B1 work during qualification.
 
 Expected AC-R2 posture:
 - root, explorer and auditors: ser-controller-a0, repository read-only;
+- Windows elevated A0/A1 filesystem includes :root=read as a backend requirement;
+- this broadens read visibility only and must not be interpreted as write/network authority;
 - executor: ser-b1-a1, only the ten exact envelope paths writable;
 - executor has no direct .git write and no command network;
 - no legacy sandbox_mode;
