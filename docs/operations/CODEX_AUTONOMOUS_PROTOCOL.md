@@ -1,6 +1,6 @@
 # Codex Autonomous Controller Protocol
 
-Versão: 1.3  
+Versão: 1.4  
 Decisões donas: ADR-0024 + ADR-0025
 
 ## 1. Objetivo

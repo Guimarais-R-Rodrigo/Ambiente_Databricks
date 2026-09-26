@@ -1,6 +1,6 @@
 # Codex Autonomous Controller — runtime qualification
 
-Versão: 1.2  
+Versão: 1.3  
 Decisões donas: ADR-0024 + ADR-0025
 
 CQ0–CQ5 prova o runtime real. Não inicia B1 material e não concede A2.
