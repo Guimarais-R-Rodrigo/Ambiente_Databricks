@@ -1,7 +1,8 @@
 # Codex Autonomous Controller — auditoria corretiva AC-R1
 
 Data: 2026-09-26  
-Candidata estática auditada: `9a1ec4e7425ac7d411f81e83da6cf919235fa7a5`  
+Candidata funcional/governança auditada: `3c9db7edec703cb875989430cbb7477d4245c70b`  
+Tree: `61f6b300f1910114399664a0b686ef56b63ef478`  
 Escopo: ADR-0024 + ADR-0025 / SER B1
 
 ## Veredito
@@ -11,59 +12,64 @@ AC_R1_STATIC_ARCHITECTURE_AUDIT = PASS
 MATERIAL_FINDINGS_OPEN = 0
 RUNTIME_QUALIFICATION = NOT_RUN
 EFFECTIVE_CONFIG_OBSERVATION = NOT_RUN
+
 A0 = ACTIVE
 A1 = ACTIVE_SCOPED
 A2 = PENDING_EXPLICIT_ACTIVATION_AND_CONTRACT
 A3 = HUMAN_ONLY
+
 READY_FOR_RUNTIME_QUALIFICATION = YES
-READY_FOR_MATERIAL_B1_WORK = NO_UNTIL_RUNTIME_QUALIFICATION
+READY_FOR_MATERIAL_B1_WORK = NO_UNTIL_CQ0_CQ5
 ```
 
-Este PASS prova somente a arquitetura versionada. O primeiro Codex deve executar
-`CODEX_RUNTIME_QUALIFICATION.md` e os validators no checkout real.
+Este PASS é estático e repo-side. O primeiro Codex deve executar
+`docs/operations/CODEX_RUNTIME_QUALIFICATION.md` e os validators no checkout
+real antes de assumir trabalho material de B1.
 
-## Findings da auditoria anterior e disposição
+## 1. Findings anteriores e disposição
 
-| Finding | Severidade | Disposição AC-R1 |
+| Finding | Severidade original | Disposição AC-R1 |
 |---|---|---|
 | custom agents sem `name`/`description` obrigatórios | crítica | FIXED |
 | validator aceitava esse schema inválido | crítica | FIXED |
 | `CONTROLE_PLANO.json` parecia state vivo B0 | crítica | FIXED |
-| executor determinístico e A1 authoring executor ambíguos | alta | FIXED via ADR-0025 |
-| governança autoeditável pelo próprio A1 | alta | FIXED com CONTROLLER_MAINTENANCE |
+| executor determinístico e A1 authoring executor ambíguos | alta | FIXED via ADR-0025 + docs 01/02/03/06/07/09 |
+| governança autoeditável pelo próprio A1 | alta | FIXED com `CONTROLLER_MAINTENANCE` |
 | A1 sem roots machine-readable | alta | FIXED envelope v2 |
 | A2 sem contrato estrutural | alta | FIXED schema v2; A2 continua disabled |
-| permissões efetivas não provadas pelo TOML | alta | RUNTIME GATE CQ0–CQ5 |
+| permissões efetivas não provadas pelo TOML | alta | CQ0–CQ5 obrigatório |
 | `CLAUDE.md` canônico sem controller/B1 corrente | alta | FIXED |
-| Plano Mestre/B0/B1/DAG/runbooks com estado legado | alta | FIXED por precedence/snapshot markers |
+| Plano Mestre/B0/B1/DAG/runbooks com estado legado | alta | FIXED por precedência/snapshot markers |
 | Genie assumia coleta exclusivamente humana | alta | FIXED para coleta controlada/capability-bound |
 | defaults de reasoning excessivos | média | FIXED |
 | `AGENTS.md` exigia pergunta/teste global por rotina | média | FIXED |
 | hooks/delta inexistentes para A1 | média | FIXED defense-in-depth |
+| A1 permitia todo `real_campaigns/b1/**` | alta | FIXED: somente `g6_recovery/**` |
+| A1 documental permitia reescrever evidência G6/P2 | alta | FIXED: state/changelogs/journal somente |
+| MCP/apps poderiam contornar hooks locais para mutar Git | alta | FIXED: A1 local-worktree-only |
 
-## Custom agents
+A auditoria anterior de `c5d30330...` permanece histórica e está explicitamente
+marcada como supersedida; não é release gate.
 
-Os cinco arquivos em `.codex/agents/` possuem:
+## 2. Custom agents
 
-- `name`;
-- `description`;
-- `developer_instructions`;
-- sandbox por papel;
-- nesting desabilitado.
+Cinco agentes project-scoped, todos com `name`, `description` e
+`developer_instructions`:
 
-Topologia:
+- explorer — GPT-6 Luna / high / read-only;
+- executor — GPT-6 Sol / medium / workspace-write;
+- domain-auditor — GPT-6 Astra / high / read-only;
+- evidence-auditor — GPT-6 Astra / high / read-only;
+- architecture-auditor — GPT-6 Astra / high / read-only.
 
-- explorer: GPT-6 Luna / high / read-only;
-- executor: GPT-6 Sol / medium / workspace-write;
-- domain-auditor: GPT-6 Astra / high / read-only;
-- evidence-auditor: GPT-6 Astra / high / read-only;
-- architecture-auditor: GPT-6 Astra / high / read-only.
+Cada subagente tem nesting desabilitado. Há exatamente um papel write-capable.
 
-Há exatamente um papel write-capable.
+Essa topologia segue a prática atual de agentes estreitos/opinionados, explorer
+rápido/read-only e writer único.
 
-## Root controller
+## 3. Root controller e approvals
 
-Project config esperado:
+Config versionada esperada:
 
 ```text
 model = gpt-6-astra
@@ -75,118 +81,176 @@ sandboxed command network = false
 multi_agent = true
 goals = true
 hooks = true
-max concurrent subagents = 5
+max_concurrent_subagents = 5
 ```
 
-Auto-review reduz interrupções técnicas, mas não é autoridade SER. Human Gates
-continuam exigindo referência humana no envelope/contrato.
+`auto_review` reduz prompts técnicos de sandbox; não é autoridade SER. A2,
+`CONTROLLER_MAINTENANCE`, promoção, Ready e merge continuam exigindo referência
+humana no contrato apropriado.
 
-## Autoridade e self-modification
+## 4. A1: escopo executável
 
-Envelope v2 introduz:
+Write roots atuais:
 
-- `write_roots`;
-- `protected_roots`;
-- `shared_roots_requiring_human_gate`;
-- `CONTROLLER_MAINTENANCE`;
-- `a2_contract`.
+- `tools/skill_enforcement/real_campaigns/b1/g6_recovery/**`;
+- `tools/tests/test_ser_b1_g6_recovery.py`;
+- `B1/AUTHORING_STATE.json`;
+- `B1/CHANGELOG.md`;
+- `B1/AUTONOMY/**`;
+- `CHANGELOG.md`.
 
-A1 não pode modificar a camada de governança para corrigir sua própria falha.
+Protegidos explicitamente:
 
-## Defense in depth
+- produto/mirror/policy;
+- B0 shared mechanism;
+- micromodelos e `.github`;
+- G6 congelado;
+- publisher R10;
+- evidência histórica G6/P2/CASE_MAP/SOURCE_BINDINGS/B1 README.
 
-Além do envelope:
+A1 não pode mutar o repositório por MCP/app/hosted GitHub/API remota. Autoria
+ocorre no worktree local e `git push` é o único transporte Git remoto A1.
 
-- `.codex/hooks.json` habilita PreToolUse para patches e PostToolUse para
-  shell/patch;
-- hooks Python e PowerShell classificam paths contra o envelope;
-- `tools/check_codex_autonomy_delta.py` bloqueia delta A1 fora dos roots.
+## 5. Defense in depth
 
-Hooks são guardrail e feedback, não fronteira absoluta. O sandbox é a fronteira
-técnica principal. Em `workspace-write`, `.git`, `.codex` e `.agents`
-são protegidos read-only pelo cliente atual; isso ainda deve ser observado no
-runtime.
+- `.codex/hooks.json` possui PreToolUse e PostToolUse;
+- hooks Python/PowerShell classificam paths pelo envelope;
+- `tools/check_codex_autonomy_delta.py` revalida o delta antes de commit/push;
+- hooks são guardrail/feedback, não fronteira de segurança completa;
+- sandbox permanece a fronteira técnica primária.
 
-## Estado e documentação legada
+Hosted tools não são assumidos como cobertos por hooks; por isso A1 remote repo
+mutation foi explicitamente proibida.
 
-ADR-0025 fixa precedência:
+## 6. A2
+
+A2 continua:
+
+```text
+activation.state = ACTIVE_A0_A1
+a2_reference = null
+a2_contract = null
+A2.autonomous = false
+```
+
+O schema v2 exige, antes de A2 ativa:
+
+- target/profile/host/workspace class;
+- namespace;
+- effects;
+- attempts por effect;
+- dados sintéticos;
+- overwrite;
+- readback obrigatório;
+- UNKNOWN reconciliation policy;
+- cleanup.
+
+Nenhuma autorização anterior do G6 ativa A2 por inferência.
+
+## 7. Estado vivo versus legado
+
+ADR-0025 fixa:
 
 1. `B1/AUTHORING_STATE.json`;
-2. índices correntes;
-3. contratos do gate;
+2. índices SER/PARALELO correntes;
+3. contratos do gate atual;
 4. snapshots/runbooks/tentativas históricas.
 
-Foram marcados como não-live:
+Foram desambiguados como não-live:
 
 - `CONTROLE_PLANO.json`;
-- `catalogos/DAG.json`;
-- `catalogos/BLOQUEIOS.json`;
-- `catalogos/PRONTIDAO.json`;
+- DAG;
+- blockers/readiness;
+- B0 README histórico;
 - G6 runbook congelado;
-- G6 plano pré-execução.
+- G6 plano pré-execução;
+- partes antigas de Plano Mestre/implantação/checklist.
 
-B0 README registra `INTEGRATED_CLOSED`; B1 README possui bloco corrente.
+As restrições “executor não corrige” agora estão qualificadas como regras do
+executor determinístico; repair A1 acontece entre rodadas, com novo causal delta.
 
-## Invariância funcional B1
+## 8. Validator e metatestes
 
-A AC-R1 não altera:
+O validator:
 
-- `ambiente_fonte/**`;
-- mirror de produto em `Novo_Ambiente_Simulado/.../.assistant/**`;
-- pacote G6 congelado;
-- publisher R10;
-- policy.
-
-Portanto a AC-R1 é mudança de governança/coordenação, não nova candidata de
-produto nem nova tentativa G6.
-
-## Validator
-
-`tools/validate_codex_autonomy.py` agora:
-
-- valida o envelope com Draft 2020-12 real;
-- exige `name`/`description`/`developer_instructions` dos agents;
+- usa Draft 2020-12 real para o envelope;
+- exige schema dos cinco agents;
 - exige exatamente um writer;
 - reprova `danger-full-access`;
-- exige A2 reference + contract para ativação;
-- exige roots A1;
-- exige hooks;
-- exige runtime qualification/documentos donos.
+- exige A1 roots;
+- exige A2 reference + contract antes de A2 ativa;
+- exige hooks e runtime qualification;
+- verifica bindings dos documentos donos.
 
-A suíte tem 16 métodos definidos estaticamente na candidata auditada.
+A suíte possui **21 métodos** definidos estaticamente na candidata auditada,
+incluindo regressões para:
 
-## Limitações obrigatórias
+- custom-agent governance;
+- A2/A3;
+- blind retry;
+- single-writer;
+- concurrency;
+- hooks;
+- recovery root permitido;
+- G6 congelado protegido;
+- adapters B1 qualificados fora de A1;
+- evidência histórica B1 protegida;
+- live state e journal autônomo permitidos.
+
+## 9. Invariância funcional
+
+Compare contra a base B1 pré-controller
+`d3871d27e34af3940153b8df47b4dcfd5739ff85`:
+
+- branch permanece ahead, behind 0;
+- nenhuma mudança em `ambiente_fonte/**`;
+- nenhuma mudança no mirror de produto;
+- nenhuma mudança em policy;
+- nenhuma mudança no G6 congelado;
+- nenhuma mudança no publisher R10.
+
+Logo AC-R1 é camada de governança/coordenação, não uma nova candidata de produto
+nem uma nova tentativa G6.
+
+## 10. Limitações desta auditoria
 
 Não foram executados nesta sessão GitHub-side:
 
-- parse/runtime local dos TOMLs pelo cliente Codex;
+- parse/config runtime real pelo cliente Codex;
 - project trust;
 - `/status`;
 - `/debug-config`;
-- `--strict-config`;
-- sandbox negative probes;
+- strict-config quando disponível;
+- effective sandbox/approval overrides;
 - hooks reais;
+- negative permission probes;
 - validator Python;
-- 16 metatestes.
+- 21 metatestes.
 
-Esses itens pertencem ao gate runtime CQ0–CQ5.
+Esses itens são CQ0–CQ5.
 
-## Fontes oficiais verificadas em 2026-09-26
+## 11. Fontes oficiais verificadas em 2026-09-26
 
 - https://learn.chatgpt.com/docs/agent-configuration/subagents
 - https://learn.chatgpt.com/docs/hooks
-- https://learn.chatgpt.com/docs/developer-settings
+- https://learn.chatgpt.com/docs/config-file/config-reference
 - https://learn.chatgpt.com/docs/config-file/config-advanced
 - https://learn.chatgpt.com/docs/agent-approvals-security
-- https://learn.chatgpt.com/docs/sandboxing/auto-review
+- https://developers.openai.com/pt-BR/docs/sandboxing
 
-## Próximo gate
+## 12. Fechamento
 
 ```text
-NEXT = CONTROLLER_RUNTIME_QUALIFICATION
+AC_R1_STATIC = PASS
+NEXT = CONTROLLER_RUNTIME_QUALIFICATION_CQ0_CQ5
 REMOTE_EFFECT = NONE
 A2 = NOT_ACTIVE
 PROMOTION = NOT_AUTHORIZED
 READY = NOT_AUTHORIZED
 MERGE = NOT_AUTHORIZED
 ```
+
+O commit que grava este relatório é documental/state e, por definição, não pode
+conter a própria identidade sem circularidade. Após o commit, o integrador deve
+revalidar externamente que o delta `3c9db7edec703cb875989430cbb7477d4245c70b` → HEAD contém somente este
+fechamento documental/state.

@@ -1001,9 +1001,9 @@
     "max_concurrent_subagents": 5,
     "max_write_capable_agents": 1,
     "custom_agents": 5,
-    "controller_metatest_methods_static": 16,
+    "controller_metatest_methods_static": 21,
     "structural_validation": "PASS_AC_R1_STATIC_REPO_SIDE",
-    "static_audit_candidate_commit": "9a1ec4e7425ac7d411f81e83da6cf919235fa7a5",
+    "static_audit_candidate_commit": "3c9db7edec703cb875989430cbb7477d4245c70b",
     "static_audit_findings_open": 0,
     "previous_static_audit": {
       "commit": "c5d30330e8dd03f2eb6587f627553f2a6d010416",
@@ -1012,6 +1012,8 @@
     },
     "runtime_validation": "NOT_RUN",
     "effective_config_observation": "NOT_RUN",
-    "first_material_controller_session": "NOT_RUN"
+    "first_material_controller_session": "NOT_RUN",
+    "static_audit_candidate_tree": "61f6b300f1910114399664a0b686ef56b63ef478",
+    "ac_r1_closure": "PASS_STATIC_AWAITING_RUNTIME_CQ0_CQ5"
   }
 }

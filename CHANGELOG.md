@@ -16,7 +16,8 @@
 ### Limites
 
 - (ChatGPT) Nenhum efeito Databricks, policy, promoção, Ready ou merge foi executado.
-- (ChatGPT) Runtime Codex CQ0–CQ5 e os 16 metatestes permanecem NOT_RUN até a primeira sessão local.
+- (ChatGPT) Runtime Codex CQ0–CQ5 e os 21 metatestes permanecem NOT_RUN até a primeira sessão local.
+- (ChatGPT) A1 foi estreitado ao recovery SER05, state/changelogs/journal; G6/P2 históricos e publisher R10 ficam protegidos. Repo mutation por MCP/apps/hosted tools foi proibida para preservar hooks/delta local.
 
 ## 2026-09-26 — Codex Autonomous Controller para SER/SEF
 
