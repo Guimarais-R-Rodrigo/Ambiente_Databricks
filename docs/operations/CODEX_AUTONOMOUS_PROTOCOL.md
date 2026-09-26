@@ -29,6 +29,16 @@ com referência humana explícita e `a2_contract` válido.
 `CONTROLE_PLANO.json`, `DAG.json` e runbooks congelados não são state sources
 vivos, salvo ponteiro explícito do envelope/state source.
 
+## 2.1 Runtime qualification
+
+Antes de assumir a frente, executar
+`docs/operations/CODEX_RUNTIME_QUALIFICATION.md`. Configuração versionada não
+prova configuração efetiva: project trust, overrides, sandbox e hooks precisam
+ser observados no cliente.
+
+Falha da própria camada de governança => `CONTROLLER_MAINTENANCE`, sem
+autorreparo A1.
+
 ## 3. State machine do controller
 
 ```text

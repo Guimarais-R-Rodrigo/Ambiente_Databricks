@@ -5,7 +5,15 @@ Use este prompt em uma nova sessão Codex iniciada na raiz do repositório:
 ```text
 Operate this repository in SER Autonomous Controller Mode.
 
-Start from the repository root. Read AGENTS.md, then run:
+Start from the repository root. Read AGENTS.md and
+docs/operations/CODEX_RUNTIME_QUALIFICATION.md.
+
+First inspect the effective Codex configuration. When supported by the client,
+use /status and /debug-config to prove the project .codex layer is loaded from a
+trusted project and that no higher-precedence override defeats the expected
+sandbox/approval settings.
+
+Then run:
 
 python -B tools/validate_codex_autonomy.py --json
 python -B -m unittest tools.tests.test_codex_autonomy -v
@@ -14,7 +22,7 @@ If either fails, diagnose the controller defect and stop at the
 CONTROLLER_MAINTENANCE Human Gate with an exact patch proposal. Do NOT modify the
 controller governance, validator, envelope/schema or agent configuration under A1.
 
-Once the controller layer is valid, read docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md, the active autonomy envelope for the current front, and the state file referenced by that envelope. Apply ADR-0025 state precedence; historical B0/DAG/runbooks are not live state. Load only the normative documents needed for the current gate.
+Only after runtime qualification and controller validation are acceptable, read docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md, the active autonomy envelope for the current front, and the state file referenced by that envelope. Apply ADR-0025 state precedence; historical B0/DAG/runbooks are not live state. Load only the normative documents needed for the current gate.
 
 Verify mutable Git identities from the repository; do not trust this prompt for current SHA, tree, branch state or remote state.
 
