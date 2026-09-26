@@ -13,10 +13,12 @@
 7. (ChatGPT) Reviewer técnico padrão muda para `auto_review` com sandbox `workspace-write`, `on-request` e network de comandos desabilitada; Human Gates não são delegados ao reviewer.
 8. (ChatGPT) Auditoria estática anterior de `c5d30330...` é preservada como histórica e explicitamente supersedida pela AC-R1.
 
+9. (ChatGPT) Dependência `jsonschema` isolada em `tools/requirements-codex-autonomy.txt`; Apps/remote-plugin desabilitados e CQ0 passa a exigir worktree limpo.
+
 ### Limites
 
 - (ChatGPT) Nenhum efeito Databricks, policy, promoção, Ready ou merge foi executado.
-- (ChatGPT) Runtime Codex CQ0–CQ5 e os 21 metatestes permanecem NOT_RUN até a primeira sessão local.
+- (ChatGPT) Runtime Codex CQ0–CQ5 e os 22 metatestes permanecem NOT_RUN até a primeira sessão local.
 - (ChatGPT) A1 foi estreitado ao recovery SER05, state/changelogs/journal; G6/P2 históricos e publisher R10 ficam protegidos. Repo mutation por MCP/apps/hosted tools foi proibida para preservar hooks/delta local.
 
 ## 2026-09-26 — Codex Autonomous Controller para SER/SEF
