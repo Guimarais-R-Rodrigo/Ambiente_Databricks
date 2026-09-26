@@ -3,8 +3,9 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
+    "G6_SER05_RECOVERY_LOCAL_QUALIFICATION",
     "G6_PARTIAL_REMOTE_STATE_RECONCILIATION",
-    "G6_SER05_RESIDUAL_IMPORT_RECOVERY",
+    "G6_SER05_RESIDUAL_WRITE_AUTHORIZATION",
     "G6_FREE_PROBES",
     "G6_GENIE",
     "G6_EXTERNAL_EVIDENCE_VERIFICATION"
@@ -31,7 +32,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_G6_REMAINING_ATTEMPT_1_FAIL_PARTIAL_RECOVERY_REQUIRED",
+  "stage": "B1_G6_SER05_RESIDUAL_RECOVERY_AUTHORED_NOT_QUALIFIED",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -162,7 +163,7 @@
     "G9_INTEGRATION": "NOT_AUTHORIZED"
   },
   "g6": {
-    "state": "FAIL_PARTIAL_RECOVERY_REQUIRED",
+    "state": "FAIL_PARTIAL_RECOVERY_AUTHORED",
     "qualified_candidate_sha": "08c2a93c4c9dede1e759abe28c07242b4116f47e",
     "qualified_candidate_tree": "a2b1b8c805044ff2e1898da3190414afab9140a7",
     "external_execution_authorized": false,
@@ -925,6 +926,22 @@
         "repo_mutation": false,
         "next_required_action": "READ_ONLY_RECONCILE_BEFORE_ANY_NEW_WRITE"
       }
+    },
+    "ser05_residual_recovery": {
+      "state": "AUTHORED_NOT_QUALIFIED",
+      "package_path": "tools/skill_enforcement/real_campaigns/b1/g6_recovery",
+      "manifest_schema": "SER-B1-G6-PROBE-RECOVERY-MANIFEST-1",
+      "authorization_schema": "SER-B1-G6-SER05-RESIDUAL-AUTH-1",
+      "allowed_write_object_ids": [
+        "ser05-free-probe"
+      ],
+      "ser03_write_allowed": false,
+      "transport": "PYTHON_HTTP_CLIENT_HTTP11_REUSE_R10",
+      "base_http11_publisher_package_sha256": "b4c186b2838bfa04e6d5475d6a7d23561a8957b3fcea9539be612d11e032f0f6",
+      "local_validation": "NOT_RUN",
+      "unit_tests": "NOT_RUN",
+      "remote_reconciliation": "NOT_RUN",
+      "remote_write": "NOT_AUTHORIZED"
     }
   },
   "g6_local_r1": {

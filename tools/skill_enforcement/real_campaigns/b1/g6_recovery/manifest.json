@@ -1,0 +1,62 @@
+{
+  "schema_version": "SER-B1-G6-PROBE-RECOVERY-MANIFEST-1",
+  "package_id": "SER-B1-G6-SER05-RESIDUAL-HTTP11-R1",
+  "qualified_candidate_sha": "08c2a93c4c9dede1e759abe28c07242b4116f47e",
+  "g6_original_freeze_sha": "c11c2dff07f0f7595ed545f32990e5d54f1fd583",
+  "partial_failure_evidence_bundle_sha256": "2b29494da8e58317c8f3a03bbdb99e2c06dc7d50e36a818ccbe5ee2edb790212",
+  "base_http11_publisher_package_sha256": "b4c186b2838bfa04e6d5475d6a7d23561a8957b3fcea9539be612d11e032f0f6",
+  "target": {
+    "profile": "FREE",
+    "host": "https://dbc-72c8503a-bc27.cloud.databricks.com",
+    "workspace_class": "PERSONAL_DATABRICKS_FREE"
+  },
+  "remote_root_suffix": "ser-b1-g6-tests/08c2a93c4c9d",
+  "objects": [
+    {
+      "object_id": "ser03-free-probe",
+      "role": "REQUIRED_EXACT_EXISTING_READ_ONLY",
+      "source_path": "tools/skill_enforcement/real_campaigns/b1/g6/ser03_free_probe.py",
+      "expected_git_blob_sha1": "6d7e51116f2c4ccd0319925077ae347a8be8722c",
+      "remote_name": "ser03_free_probe",
+      "object_kind": "NOTEBOOK",
+      "language": "PYTHON",
+      "write_allowed": false
+    },
+    {
+      "object_id": "ser05-free-probe",
+      "role": "RESIDUAL_CREATE_OR_ALREADY_CORRECT",
+      "source_path": "tools/skill_enforcement/real_campaigns/b1/g6/ser05_l2_free_probe.py",
+      "expected_git_blob_sha1": "758339212a246fcacf431195d816a2f6d210f5b5",
+      "remote_name": "ser05_l2_free_probe",
+      "object_kind": "NOTEBOOK",
+      "language": "PYTHON",
+      "write_allowed": true
+    }
+  ],
+  "reconcile_semantics": {
+    "root_missing": "FAIL_CLOSED",
+    "unexpected_root_object": "FAIL_CLOSED",
+    "ser03_missing": "FAIL_CLOSED",
+    "ser03_exact": "REQUIRED",
+    "ser03_divergent": "FAIL_CLOSED",
+    "ser05_missing": "CREATE",
+    "ser05_exact": "ALREADY_CORRECT",
+    "ser05_divergent": "FAIL_CLOSED"
+  },
+  "write_contract": {
+    "allowed_object_ids": ["ser05-free-probe"],
+    "effect": "TEMPORARY_WORKSPACE_OBJECT_CREATE",
+    "transport": "PYTHON_HTTP_CLIENT_HTTP11",
+    "auth_source": "DATABRICKS_CLI_U2M_TOKEN",
+    "endpoint": "POST /api/2.0/workspace/import",
+    "format": "SOURCE",
+    "language": "PYTHON",
+    "overwrite": false,
+    "one_write_attempt": true,
+    "automatic_retry": false,
+    "readback_required": true,
+    "mkdir_allowed": false,
+    "cleanup_allowed": false
+  },
+  "execution_status": "NOT_AUTHORIZED"
+}
