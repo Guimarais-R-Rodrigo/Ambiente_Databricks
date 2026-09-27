@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-27 — AC-R2 CM-DESKTOP-RUNTIME-6: fechamento estático
+
+- (ChatGPT) `CM_DESKTOP_RUNTIME_6_STATIC = PASS` no candidato `d09f05694ae462b74ae8be11f70e8c5ce9076401` / tree `b2c791f6b68ffa500dbdbd5e1fba7e147f6f789e`.
+- (ChatGPT) Probe v2 remove o padrão PowerShell que falhou: sem `New-Object System.Collections.Generic.List[object]` e sem `exception_type=$(if ...)` inline.
+- (ChatGPT) Exception chain usa array simples; exception_type é precomputado; todos os payloads passam por função única de JSON serialize+round-trip.
+- (ChatGPT) Preflight v5 executará `-SelfTest` offline 3/3 com zero network attempts antes de qualquer baseline TCP e persistirá hashes stdout/stderr no evidence.
+- (ChatGPT) Validator V14 e 84 métodos de metateste definidos estaticamente; os padrões inseguros agora são regressões explícitas.
+- (ChatGPT) `.codex/config.toml` permanece byte-idêntico: 10 write roots A1, sem .git write, network A0/A1 disabled.
+- (ChatGPT) Findings materiais repo-side abertos: 0; host self-test, validator/metatests v14 e CQ runtime ainda NOT_RUN no novo candidato.
+
 ## 2026-09-27 — AC-R2 CM-DESKTOP-RUNTIME-6
 
 - (Codex/ChatGPT) Runtime-5 parou corretamente em CQ3: o probe protegido foi invocado uma vez, mas PowerShell lançou ArgumentException "Os tipos de argumento não correspondem" ao montar o payload; nenhum JSON/socket outcome ficou recuperável.

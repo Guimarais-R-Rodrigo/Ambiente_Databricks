@@ -33,7 +33,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_AC_R2_CM_DESKTOP_RUNTIME_6_AUTHORED_AWAITING_STATIC_REVIEW",
+  "stage": "B1_AC_R2_CM_DESKTOP_RUNTIME_6_CLOSED_AWAITING_HOST_PREFLIGHT_V5_AND_CQ_RETRY",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -1002,7 +1002,7 @@
     "max_write_capable_agents": 1,
     "custom_agents": 5,
     "controller_metatest_methods_static": 84,
-    "structural_validation": "AC_R2_CM_DESKTOP_RUNTIME_6_AUTHORED_NOT_RUNTIME_QUALIFIED",
+    "structural_validation": "PASS_AC_R2_CM_DESKTOP_RUNTIME_6_STATIC",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
     "previous_static_audit": {
@@ -1019,7 +1019,7 @@
     "executor_permissions_default": "SER_B1_A1_EXACT_FILES_NO_DIRECT_GIT_OR_NETWORK",
     "ac_r2": {
       "authorization": "DIRECT_USER_CHAT_2026-09-26",
-      "state": "CORRECTIVE_AUTHORED_AWAITING_STATIC_REVIEW",
+      "state": "PASS_STATIC_AWAITING_HOST_PREFLIGHT_V5_AND_CQ_RETRY",
       "scope": [
         "CR1_LEAST_PRIVILEGE_A1_PERMISSION_BOUNDARY",
         "CR2_DELTA_AND_STATE_TRANSITION_INTEGRITY",
@@ -1044,7 +1044,8 @@
       "validator_execution": "NOT_RUN",
       "metatests_execution": "NOT_RUN",
       "limitations": [
-        "HOST_PREFLIGHT_V4_RUNTIME_EXECUTION_REQUIRED",
+        "HOST_PREFLIGHT_V5_RUNTIME_EXECUTION_REQUIRED",
+        "NETWORK_PROBE_SERIALIZATION_SELFTEST_RUNTIME_REQUIRED",
         "HOST_TCP_BASELINE_MUST_PASS_ON_NEW_CANDIDATE",
         "EXECUTOR_RAW_TCP_ENFORCEMENT_REQUIRES_CQ3",
         "EXECUTOR_ALLOWED_A1_WRITE_REQUIRES_CQ3_AFTER_NETWORK_PASS",
@@ -1352,7 +1353,22 @@
         "a1_write_boundary_changed": false,
         "a2_changed": false,
         "b1_material_execution": "NOT_RUN",
-        "runtime_requalification": "REQUIRED"
+        "runtime_requalification": "REQUIRED",
+        "state": "PASS_STATIC_AWAITING_HOST_PREFLIGHT_V5_AND_CQ_RETRY",
+        "static_candidate_commit": "d09f05694ae462b74ae8be11f70e8c5ce9076401",
+        "static_candidate_tree": "b2c791f6b68ffa500dbdbd5e1fba7e147f6f789e",
+        "material_findings_open": 0,
+        "metatest_methods_static": 84,
+        "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-14",
+        "validator_execution": "NOT_RUN",
+        "metatests_execution": "NOT_RUN",
+        "serialization_selftest_execution": "NOT_RUN",
+        "host_network_baseline": "NOT_RUN",
+        "cq0_cq5": "NOT_RUN",
+        "next_action": "FAST_FORWARD_RUN_HOST_PREFLIGHT_V5_REQUIRE_SELFTEST_AND_BASELINE_THEN_FRESH_CQ",
+        "permission_config_blob_unchanged": true,
+        "unsafe_generic_list_forbidden": true,
+        "inline_dynamic_exception_payload_forbidden": true
       }
     }
   }
