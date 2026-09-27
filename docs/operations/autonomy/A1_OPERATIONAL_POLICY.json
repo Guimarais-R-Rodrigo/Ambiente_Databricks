@@ -4,7 +4,7 @@
   "invariants": {
     "qualification_transport": "CQ remains single-shot, preflight-head-bound and CQ_JOURNAL_ONLY.",
     "operational_transport": "Operational work uses a separate checkpointed transport only after canonical runtime PASS.",
-    "control_identity": "All control-source hashes recorded by host evidence must remain byte-identical during operational use.",
+    "control_identity": "The qualified control identity is the set of control-source hashes recorded by host evidence, and every such source must remain byte-identical during operational use.",
     "authority": "No operational checkpoint can expand repo_scope, permissions, A2/A3, promotion, Ready or merge.",
     "writer": "Exactly one write-capable executor per worktree/session.",
     "git": "Normal non-force push only through the protected operational transport."
