@@ -33,7 +33,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_AC_R2_CONTROLLER_STABILIZATION_1_FINAL_STATIC_PASS_AWAITING_HOST_PREFLIGHT_V6",
+  "stage": "B1_AC_R2_CONTROLLER_STABILIZATION_2_AUTONOMY_STATIC_PASS_AWAITING_HOST_PREFLIGHT_V6",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -1001,8 +1001,8 @@
     "max_concurrent_subagents": 5,
     "max_write_capable_agents": 1,
     "custom_agents": 5,
-    "controller_metatest_methods_static": 105,
-    "structural_validation": "PASS_CONTROLLER_STABILIZATION_1_FINAL_STATIC",
+    "controller_metatest_methods_static": 113,
+    "structural_validation": "PASS_CONTROLLER_STABILIZATION_2_AUTONOMY_STATIC",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
     "previous_static_audit": {
@@ -1010,7 +1010,7 @@
       "disposition": "SUPERSEDED_INVALID_RELEASE_GATE",
       "reason": "CUSTOM_AGENT_SCHEMA_FALSE_GREEN_AND_LEGACY_STATE_GOVERNANCE_GAPS_FOUND_DURING_AC_R1"
     },
-    "runtime_validation": "BLOCKED_PRIOR_ATTEMPTS_SUPERSEDED_BY_STABILIZATION_1",
+    "runtime_validation": "NOT_RUN_ON_STABILIZATION_2_CANDIDATE",
     "effective_config_observation": "NOT_PROVEN_AWAITING_FRESH_CQ",
     "first_material_controller_session": "NOT_RUN",
     "static_audit_candidate_tree": "e83b8c329f17d15de1c477204c2a82e07e32d1bd",
@@ -1019,7 +1019,7 @@
     "executor_permissions_default": "SER_B1_A1_EXACT_FILES_NO_DIRECT_GIT_OR_NETWORK",
     "ac_r2": {
       "authorization": "DIRECT_USER_CHAT_2026-09-26",
-      "state": "PASS_CONTROLLER_STABILIZATION_1_FINAL_STATIC_AWAITING_HOST_PREFLIGHT_V6",
+      "state": "PASS_CONTROLLER_STABILIZATION_2_AUTONOMY_STATIC_AWAITING_HOST_PREFLIGHT_V6",
       "scope": [
         "CR1_LEAST_PRIVILEGE_A1_PERMISSION_BOUNDARY",
         "CR2_DELTA_AND_STATE_TRANSITION_INTEGRITY",
@@ -1031,9 +1031,9 @@
       "legacy_sandbox_mode": false,
       "approval_boundary": "EXECUTOR_RULE_PROMPTS_ONLY_OTHER_ESCALATIONS_FAIL_CLOSED",
       "delta_schema": "SER-CODEX-AUTONOMY-DELTA-3",
-      "metatest_methods_static": 105,
+      "metatest_methods_static": 113,
       "runtime_qualification": "BLOCKED_PRIOR_ATTEMPTS_SUPERSEDED",
-      "cq0_cq5": "NOT_RUN_ON_STABILIZATION_1_CANDIDATE",
+      "cq0_cq5": "NOT_RUN_ON_STABILIZATION_2_CANDIDATE",
       "b1_material_execution": "NOT_RUN",
       "a2": "DISABLED",
       "runtime_state_promotion": "CONTROLLER_MAINTENANCE_REQUIRED_AFTER_REPORTED_CQ_PASS",
@@ -1041,8 +1041,8 @@
       "material_findings_open": 0,
       "static_candidate_commit": "CURRENT_HEAD_AFTER_SINGLE_FREEZE_FAST_FORWARD",
       "static_candidate_tree": "CURRENT_TREE_AFTER_SINGLE_FREEZE_FAST_FORWARD",
-      "validator_execution": "NOT_RUN_ON_FINAL_STABILIZATION_1_CANDIDATE",
-      "metatests_execution": "NOT_RUN_ON_FINAL_STABILIZATION_1_CANDIDATE",
+      "validator_execution": "NOT_RUN_ON_STABILIZATION_2_CANDIDATE",
+      "metatests_execution": "NOT_RUN_ON_STABILIZATION_2_CANDIDATE",
       "limitations": [
         "HOST_PREFLIGHT_V5_RUNTIME_EXECUTION_REQUIRED",
         "NETWORK_PROBE_SERIALIZATION_SELFTEST_RUNTIME_REQUIRED",
@@ -1052,7 +1052,7 @@
         "GIT_TRANSPORT_AND_HOOK_RUNTIME_REQUIRE_CQ4",
         "NOMINAL_PROFILE_NAME_MAY_BE_NOT_OBSERVABLE_AND_REQUIRES_BEHAVIORAL_PROOF"
       ],
-      "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-17",
+      "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-18",
       "windows_bootstrap_maintenance": {
         "authorization": "DIRECT_USER_CHAT_2026-09-26",
         "trigger": "WINDOWS_SANDBOX_WORKSPACE_WRITE_NO_WRITABLE_ROOT_CAPABILITY_SIDS",
@@ -1489,6 +1489,35 @@
           "protocol_preflight_version": "v6",
           "no_post_freeze_repo_commit": true
         }
+      },
+      "controller_stabilization_2": {
+        "authorization": "DIRECT_USER_CHAT_2026-09-27_IMPLEMENT_RECOMMENDED_OPERATIONAL_AUTONOMY",
+        "objective": "TRUST_AGENTS_FOR_RECOVERABLE_A1_WORK_WITHOUT_AUTHORITY_SELF_EXPANSION",
+        "changes": [
+          "SEPARATE_CQ_SINGLE_SHOT_TRANSPORT_FROM_OPERATIONAL_MULTI_COMMIT_TRANSPORT",
+          "EXTERNAL_OPERATIONAL_CHECKPOINT_CHAINED_FROM_QUALIFIED_CONTROL_HEAD",
+          "AUTONOMOUS_CAUSAL_REPAIR_WITHIN_EXISTING_BUDGET",
+          "IDEMPOTENT_PARTIAL_PUSH_RECONCILIATION",
+          "JOURNAL_REMOVED_AS_OPERATIONAL_AUTHORITY_SELECTOR",
+          "VALIDATOR_V18_OPERATIONAL_INVARIANTS",
+          "HOST_PREFLIGHT_V6_OPERATIONAL_TRANSPORT_SELFTEST"
+        ],
+        "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-18",
+        "metatest_methods_static": 113,
+        "permission_profile_changed": false,
+        "write_root_count": 10,
+        "write_roots_expanded": false,
+        "a2_changed": false,
+        "b1_material_execution": "NOT_RUN",
+        "qualification_transport_changed": false,
+        "operational_transport_added": true,
+        "operational_checkpoint_external": true,
+        "same_state_same_command_retries": 0,
+        "max_causal_repair_rounds_per_gate": 4,
+        "human_gates_preserved": true,
+        "static_review": "PENDING_FINAL_TREE_AUDIT",
+        "material_findings_open": 0,
+        "next_action": "FINAL_TREE_AUDIT_THEN_SINGLE_FAST_FORWARD_HOST_PREFLIGHT_V6_FRESH_CQ"
       }
     }
   }

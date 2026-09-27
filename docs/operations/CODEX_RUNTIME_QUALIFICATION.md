@@ -175,6 +175,8 @@ overrides que alterem resultados => CQ3 FAIL.
 
 ## CQ4 — Git bridge, hooks e lateral surfaces
 
+Este CQ qualifica o transporte single-shot `.codex/transport/a1_git_transport.ps1`. O transporte operacional multi-commit é separado e não é exercido como writer durante CQ; sua estrutura/self-test pode ser validada host-side.
+
 No CQ, o transportador detecta o evento `CQ3_A1_POSITIVE_PROBE` e entra obrigatoriamente em `CQ_JOURNAL_ONLY`: exatamente um path alterado/stageado (`B1/AUTONOMY/JOURNAL.jsonl`), Python resolvido do host evidence SHA-bound, fetch URL e push URL validados, fetch-before-commit, push non-force e readback remoto do SHA. Qualquer outro delta junto ao journal => FAIL antes do commit.
 
 Com o executor, invocar exatamente uma vez o transportador A1 sem argumentos.

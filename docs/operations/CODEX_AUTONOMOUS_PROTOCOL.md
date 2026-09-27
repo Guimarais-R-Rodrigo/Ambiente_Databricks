@@ -83,6 +83,24 @@ Também são saídas válidas:
 
 Retry-until-green é proibido. Nova rodada exige causal delta identificável.
 
+### 3.1 Falha recuperável não é Human Gate
+
+Dentro de A1 já autorizado, falha local determinística (teste, lint, parser,
+validator, build ou commit ainda não publicado) entra em `REPAIRING`. O
+controller identifica a causa, aplica um delta causal e pode repetir a
+verificação dentro de `budgets.max_causal_repair_rounds_per_gate`. Não pedir
+microautorização ao usuário para correção reversível que não amplia autoridade.
+
+Distinguir:
+- `RECOVERABLE_A1`: corrigir autonomamente;
+- `PRECONDITION`: informar/obter a pré-condição já prevista no contrato;
+- `UNKNOWN_EFFECT`: reconciliar somente por leitura; não repetir write;
+- `AUTHORITY_BOUNDARY`: Human Gate.
+
+O orçamento conta **rodadas causais**, não comandos de leitura/testes necessários
+para verificar a mesma correção. `same_state_same_command_retries=0` continua
+proibindo repetição cega.
+
 ## 4. Papéis
 
 - root controller — coordena; repository read-only;
@@ -150,6 +168,30 @@ O transportador protegido:
 - faz push non-force somente para a branch B1 esperada.
 
 MCP/apps/hosted GitHub APIs não são transporte A1 de escrita.
+
+### 6.1 Qualificação versus transporte operacional
+
+`.codex/transport/a1_git_transport.ps1` permanece exclusivo da qualificação CQ
+e continua single-shot/preflight-head-bound.
+
+Depois que o runtime for adjudicado como qualificado e uma tarefa A1 estiver
+ativa, commits normais usam exclusivamente
+`.codex/transport/a1_operational_git_transport.ps1`, conforme
+`docs/operations/autonomy/A1_OPERATIONAL_POLICY.json`.
+
+O transporte operacional:
+- inicializa checkpoint externo no HEAD de controle qualificado;
+- permite sucessores causais sequenciais dentro dos mesmos write roots;
+- valida cada delta com `check_codex_autonomy_delta.py`;
+- faz fetch imediatamente antes de publicar;
+- preserva commit local se push/readback falhar;
+- reconcilia publicação parcial antes de qualquer nova mutação;
+- nunca transforma journal em fonte de autoridade;
+- para em divergência não reconciliável.
+
+Um commit A1 válido **não invalida por si só** a qualificação do controller.
+Mudança em config, envelope, hooks, rules, transportes, validators ou demais
+governance roots exige `CONTROLLER_MAINTENANCE` e nova qualificação pertinente.
 
 ## 7. State integrity
 

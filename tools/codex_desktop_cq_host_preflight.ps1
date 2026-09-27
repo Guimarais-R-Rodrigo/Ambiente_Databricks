@@ -96,6 +96,8 @@ $sourcePaths = [ordered]@{
     delta_checker = "tools\check_codex_autonomy_delta.py"
     network_probe_script = ".codex\probes\cq3_executor_network_probe.ps1"
     transport = ".codex\transport\a1_git_transport.ps1"
+    operational_transport = ".codex\transport\a1_operational_git_transport.ps1"
+    operational_policy = "docs\operations\autonomy\A1_OPERATIONAL_POLICY.json"
     hooks = ".codex\hooks.json"
     pre_scope_guard = ".codex\hooks\pre_scope_guard.ps1"
     pre_scope_guard_python = ".codex\hooks\pre_scope_guard.py"
@@ -154,7 +156,7 @@ $metatestStderr = Join-Path $outputRootFull "CQ_HOST_METATESTS.stderr.txt"
 $validatorExit = Invoke-CapturedProcess -FilePath $python.executable -ArgumentList @("-B", "tools/validate_codex_autonomy.py", "--json") -StdoutPath $validatorStdout -StderrPath $validatorStderr
 try { $validatorPayload = Get-Content -LiteralPath $validatorStdout -Raw | ConvertFrom-Json } catch { throw "CQ_HOST_PREFLIGHT_VALIDATOR_OUTPUT_NOT_JSON" }
 if ($validatorExit -ne 0 -or $validatorPayload.status -ne "PASS") { throw "CQ_HOST_PREFLIGHT_VALIDATOR_FAILED:$($validatorExit):$($validatorPayload.status)" }
-if ($validatorPayload.schema_version -ne "SER-CODEX-AUTONOMY-VALIDATION-17") { throw "CQ_HOST_PREFLIGHT_VALIDATOR_SCHEMA:$($validatorPayload.schema_version)" }
+if ($validatorPayload.schema_version -ne "SER-CODEX-AUTONOMY-VALIDATION-18") { throw "CQ_HOST_PREFLIGHT_VALIDATOR_SCHEMA:$($validatorPayload.schema_version)" }
 $metatestExit = Invoke-CapturedProcess -FilePath $python.executable -ArgumentList @("-B", "-m", "unittest", "tools.tests.test_codex_autonomy", "-v") -StdoutPath $metatestStdout -StderrPath $metatestStderr
 $metatestText = ""
 if (Test-Path -LiteralPath $metatestStdout) { $metatestText += Get-Content -LiteralPath $metatestStdout -Raw }
@@ -218,6 +220,13 @@ $postGuardStderr = Join-Path $outputRootFull "CQ_HOST_POST_SCOPE_GUARD_SELFTEST.
 $postGuardExit = Invoke-CapturedProcess -FilePath $powershellExe -ArgumentList @("-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", (Join-Path $root ".codex\hooks\post_scope_guard.ps1"), "-SelfTest") -StdoutPath $postGuardStdout -StderrPath $postGuardStderr
 if ($postGuardExit -ne 0) { throw "CQ_HOST_PREFLIGHT_POST_SCOPE_GUARD_SELFTEST_EXIT:$($postGuardExit)" }
 
+$operationalTransportStdout = Join-Path $outputRootFull "CQ_HOST_A1_OPERATIONAL_TRANSPORT_SELFTEST.stdout.txt"
+$operationalTransportStderr = Join-Path $outputRootFull "CQ_HOST_A1_OPERATIONAL_TRANSPORT_SELFTEST.stderr.txt"
+$operationalTransportExit = Invoke-CapturedProcess -FilePath $powershellExe -ArgumentList @("-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", (Join-Path $root ".codex\transport\a1_operational_git_transport.ps1"), "-SelfTest") -StdoutPath $operationalTransportStdout -StderrPath $operationalTransportStderr
+if ($operationalTransportExit -ne 0) { throw "CQ_HOST_PREFLIGHT_A1_OPERATIONAL_TRANSPORT_SELFTEST_EXIT:$($operationalTransportExit)" }
+try { $operationalTransportPayload = Get-Content -LiteralPath $operationalTransportStdout -Raw | ConvertFrom-Json }
+catch { throw "CQ_HOST_PREFLIGHT_A1_OPERATIONAL_TRANSPORT_SELFTEST_JSON" }
+if ($operationalTransportPayload.result -ne "PASS") { throw "CQ_HOST_PREFLIGHT_A1_OPERATIONAL_TRANSPORT_SELFTEST_CONTRACT" }
 $transportStdout = Join-Path $outputRootFull "CQ_HOST_A1_GIT_TRANSPORT_SELFTEST.stdout.txt"
 $transportStderr = Join-Path $outputRootFull "CQ_HOST_A1_GIT_TRANSPORT_SELFTEST.stderr.txt"
 $transportExit = Invoke-CapturedProcess -FilePath $powershellExe -ArgumentList @("-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", (Join-Path $root ".codex\transport\a1_git_transport.ps1"), "-SelfTest") -StdoutPath $transportStdout -StderrPath $transportStderr
@@ -269,6 +278,7 @@ $payload = [ordered]@{
         network_offline_runtime = [ordered]@{ result="PASS"; exit_code=$networkOfflineExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $networkOfflineStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $networkOfflineStderr).Hash }
         mcp_guard = [ordered]@{ result="PASS"; exit_code=$mcpGuardExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $mcpGuardStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $mcpGuardStderr).Hash }
         scope_guards = [ordered]@{ result="PASS"; pre_exit_code=$preGuardExit; post_exit_code=$postGuardExit }
+        a1_operational_transport = [ordered]@{ result="PASS"; exit_code=$operationalTransportExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $operationalTransportStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $operationalTransportStderr).Hash }
         a1_git_transport = [ordered]@{ result="PASS"; exit_code=$transportExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $transportStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $transportStderr).Hash }
     }
     network_probe = [ordered]@{
@@ -350,6 +360,7 @@ Write-Host "MCP_GUARD_SELFTEST = PASS"
 Write-Host "EXTERNAL_SURFACE_GUARD_SELFTEST = PASS"
 Write-Host "SCOPE_GUARDS_SELFTEST = PASS"
 Write-Host "A1_GIT_TRANSPORT_SELFTEST = PASS"
+Write-Host "A1_OPERATIONAL_TRANSPORT_SELFTEST = PASS"
 Write-Host "NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS (3/3; network_attempts=0)"
 Write-Host ("HOST_NETWORK_BASELINE = PASS ({0}:{1})" -f $networkProbeIp, $NetworkProbePort)
 Write-Host "HEAD = $head"

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-27 — Controller Stabilization 2: autonomia operacional
+
+- (ChatGPT) Separados CQ single-shot e operação A1 multi-commit; trabalho posterior usa checkpoint externo encadeado ao control head qualificado.
+- (ChatGPT) Falhas locais recuperáveis entram em REPAIRING e usam até 4 rodadas causais já previstas; repetição cega continua zero.
+- (ChatGPT) Transporte operacional preserva commit local em falha de push/readback e reconcilia publicação parcial antes de nova mutação; divergência não reconciliável continua UNKNOWN_EFFECT.
+- (ChatGPT) Journal deixa de selecionar modo/autoridade operacional; policy/envelope são fontes de autoridade.
+- (ChatGPT) Validator V18 + 113 metatests protegem separação CQ/operação, checkpoint, non-force, write roots=10, ausência de journal-authority e gates humanos.
+- (ChatGPT) Nenhum B1 material, A2, G6/Genie/Databricks material, promoção, Ready ou merge executado.
 ## 2026-09-27 — Controller Stabilization 1: fechamento de contradições finais
 
 - (ChatGPT) Contraditório final encontrou duas inconsistências antes do novo CQ: o bootstrap exigia `CQ_READY_TO_RUN = PASS` antes do trust humano embora o preflight só possa emitir `AFTER_PROJECT_HOOK_TRUST`; e o protocolo geral ainda referenciava preflight v5/classificação antiga de tools.

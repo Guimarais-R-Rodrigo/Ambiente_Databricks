@@ -950,10 +950,77 @@ class CodexAutonomyTests(unittest.TestCase):
 
     def test_validator_v17_enforces_start_and_protocol_consistency(self):
         text = (ROOT / "tools/validate_codex_autonomy.py").read_text(encoding="utf-8")
-        self.assertIn("SER-CODEX-AUTONOMY-VALIDATION-17", text)
+        self.assertIn("SER-CODEX-AUTONOMY-VALIDATION-18", text)
         self.assertIn("CODEX_AUTONOMOUS_START_PROMPT_PREMATURE_READY_PASS", text)
         self.assertIn("CODEX_AUTONOMOUS_PROTOCOL_STABILIZATION_DRIFT", text)
         self.assertIn("DESKTOP_WINDOWS_CQ_PREMATURE_READY_PASS", text)
+
+    def test_operational_policy_separates_cq_from_multi_commit_operation(self):
+        payload = json.loads(
+            (ROOT / "docs/operations/autonomy/A1_OPERATIONAL_POLICY.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual("SER-CODEX-A1-OPERATIONAL-1", payload["schema_version"])
+        self.assertIn("single-shot", payload["invariants"]["qualification_transport"])
+        self.assertEqual(0, payload["recovery"]["same_state_same_command_retries"])
+        self.assertIn("unresolved UNKNOWN effect", payload["human_gates"])
+
+    def test_operational_transport_uses_external_checkpoint_not_journal_authority(self):
+        text = (ROOT / ".codex/transport/a1_operational_git_transport.ps1").read_text(encoding="utf-8")
+        for token in (
+            "SER-A1-OPERATIONAL-CHECKPOINT-1",
+            "InitializeCheckpoint",
+            "ReconcileOnly",
+            "A1_OPERATIONAL_RECONCILE=PUBLISHED_SUCCESSOR",
+            "A1_OPERATIONAL_RECONCILE=RESUMED_PUSH",
+            "A1_OPERATIONAL_UNKNOWN_DIVERGENCE",
+            "A1_OPERATIONAL_PUSH_FAILED_LOCAL_COMMIT_PRESERVED",
+            "A1_OPERATIONAL_PUSH_READBACK_UNKNOWN_LOCAL_COMMIT_PRESERVED",
+        ):
+            self.assertIn(token, text)
+        self.assertNotIn("lastJournal", text)
+        self.assertNotIn("CQ3_A1_POSITIVE_PROBE", text)
+
+    def test_operational_transport_allows_checkpoint_successor_instead_of_preflight_head_only(self):
+        text = (ROOT / ".codex/transport/a1_operational_git_transport.ps1").read_text(encoding="utf-8")
+        self.assertIn("$checkpointHead=[string]$cp.last_published_head", text)
+        self.assertIn("--base $checkpointHead --head $newHead", text)
+        self.assertNotIn("A1_GIT_TRANSPORT_BASE_NOT_PREFLIGHT_HEAD", text)
+
+    def test_operational_transport_preserves_local_commit_on_publish_failure(self):
+        text = (ROOT / ".codex/transport/a1_operational_git_transport.ps1").read_text(encoding="utf-8")
+        self.assertIn("PUSH_FAILED_LOCAL_COMMIT_PRESERVED", text)
+        self.assertIn("PUSH_READBACK_UNKNOWN_LOCAL_COMMIT_PRESERVED", text)
+        self.assertIn("A1_OPERATIONAL_RECONCILE_LOCAL_NOT_SINGLE_SUCCESSOR", text)
+
+    def test_operational_transport_is_non_force_and_validates_push_remote(self):
+        text = (ROOT / ".codex/transport/a1_operational_git_transport.ps1").read_text(encoding="utf-8")
+        self.assertIn("git remote get-url --push origin", text)
+        self.assertIn("git ls-remote origin", text)
+        self.assertNotIn("--force", text)
+
+    def test_envelope_enables_operational_autonomy_without_authority_expansion(self):
+        envelope = self.envelope()
+        operational = envelope["operational_autonomy"]
+        self.assertEqual("SER-A1-OPERATIONAL-1", operational["schema_version"])
+        self.assertTrue(operational["sequential_causal_commits"])
+        self.assertTrue(operational["partial_publish_reconciliation"])
+        self.assertFalse(operational["authority_expansion"])
+        self.assertEqual(10, len(envelope["repo_scope"]["write_roots"]))
+
+    def test_protocol_routes_recoverable_a1_failures_to_repairing(self):
+        text = (ROOT / "docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md").read_text(encoding="utf-8")
+        self.assertIn("Falha recuperável não é Human Gate", text)
+        self.assertIn("RECOVERABLE_A1", text)
+        self.assertIn("PRECONDITION", text)
+        self.assertIn("UNKNOWN_EFFECT", text)
+        self.assertIn("AUTHORITY_BOUNDARY", text)
+        self.assertIn("Qualificação versus transporte operacional", text)
+
+    def test_operational_transport_rule_is_separate_and_prompt_reviewed(self):
+        text = (ROOT / ".codex/rules/a1_git_transport.rules").read_text(encoding="utf-8")
+        self.assertIn("a1_git_transport.ps1", text)
+        self.assertIn("a1_operational_git_transport.ps1", text)
+        self.assertGreaterEqual(text.count('decision = "prompt"'), 2)
 
     def test_claude_uses_progressive_changelog_disclosure(self):
         text = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")

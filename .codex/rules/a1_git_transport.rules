@@ -18,3 +18,19 @@ prefix_rule(
         "powershell.exe -NoProfile -ExecutionPolicy Bypass -File .codex\\transport\\a1_git_transport.ps1",
     ],
 )
+
+
+# Operational A1 transport: same reviewer boundary, separate from CQ single-shot transport.
+prefix_rule(
+    pattern = [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".codex\\transport\\a1_operational_git_transport.ps1",
+    ],
+    decision = "prompt",
+    justification = "Operational A1 causal commit/push via checkpointed non-force transport only",
+)

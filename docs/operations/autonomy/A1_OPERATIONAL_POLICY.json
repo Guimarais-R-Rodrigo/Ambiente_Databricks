@@ -1,0 +1,49 @@
+{
+  "schema_version": "SER-CODEX-A1-OPERATIONAL-1",
+  "purpose": "Allow autonomous causal work inside an already-authorized A1 envelope without requalifying the controller after every valid commit.",
+  "invariants": {
+    "qualification_transport": "CQ remains single-shot, preflight-head-bound and CQ_JOURNAL_ONLY.",
+    "operational_transport": "A1 operational commits use a separate external checkpoint chained from the qualified control head.",
+    "authority": "No operational checkpoint can expand repo_scope, permissions, A2/A3, promotion, Ready or merge.",
+    "writer": "Exactly one write-capable executor per worktree/session.",
+    "git": "Normal non-force push only through the protected A1 transport."
+  },
+  "recovery": {
+    "causal_repair_budget_source": "B1_AUTONOMY_ENVELOPE.json:budgets.max_causal_repair_rounds_per_gate",
+    "same_state_same_command_retries": 0,
+    "retry_rule": "A failed command may be retried only after an identified causal delta, except read-only remote reconciliation.",
+    "partial_publish": [
+      "If local HEAD equals remote HEAD, publication is already complete: advance checkpoint without creating another commit.",
+      "If local HEAD is exactly one validated successor of checkpoint and remote remains checkpoint, retry only the push/readback.",
+      "If remote advanced to the local validated successor, reconcile as published and advance checkpoint.",
+      "Any other divergence is UNKNOWN_EFFECT/BLOCKED and requires human adjudication."
+    ]
+  },
+  "checkpoints": {
+    "root": "~/codex-scratch/Ambiente_Databricks",
+    "file": "A1_OPERATIONAL_CHECKPOINT.json",
+    "sidecar": "A1_OPERATIONAL_CHECKPOINT.sha256",
+    "fields": [
+      "schema_version",
+      "branch",
+      "qualified_control_head",
+      "last_published_head",
+      "last_published_tree",
+      "sequence",
+      "updated_at_unix_seconds"
+    ]
+  },
+  "human_gates": [
+    "controller governance or permission change",
+    "repo_scope expansion",
+    "A2 activation or expansion",
+    "policy/current_level/rollout promotion",
+    "Ready",
+    "merge",
+    "corporate workspace",
+    "real/corporate data",
+    "guardrail or coverage relaxation",
+    "unresolved UNKNOWN effect",
+    "causal repair budget exhausted"
+  ]
+}

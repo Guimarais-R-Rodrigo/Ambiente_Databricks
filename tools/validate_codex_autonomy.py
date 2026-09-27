@@ -274,7 +274,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-17",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-18",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -407,6 +407,14 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.extend(_validate_envelope_schema(root, envelope))
         issues.extend(validate_envelope_data(envelope, max_threads=max_threads))
         issues.extend(_validate_permission_profile(cfg, envelope))
+
+    operational = envelope.get("operational_autonomy") or {}
+    if operational.get("schema_version") != "SER-A1-OPERATIONAL-1":
+        issues.append("A1_OPERATIONAL_ENVELOPE_SCHEMA")
+    if operational.get("authority_expansion") is not False:
+        issues.append("A1_OPERATIONAL_AUTHORITY_EXPANSION")
+    if operational.get("sequential_causal_commits") is not True:
+        issues.append("A1_OPERATIONAL_SEQUENTIAL_COMMITS")
     except Exception as exc:
         issues.append("ENVELOPE_UNREADABLE:" + type(exc).__name__)
 
@@ -427,6 +435,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         "tools/codex_desktop_cq_host_preflight.ps1",
         ".codex/rules/a1_git_transport.rules",
         ".codex/transport/a1_git_transport.ps1",
+        ".codex/transport/a1_operational_git_transport.ps1",
+        "docs/operations/autonomy/A1_OPERATIONAL_POLICY.json",
         ".codex/probes/cq3_executor_network_probe.ps1",
         ".codex/hooks/external_surface_guard.ps1",
         ".codex/hooks/external_surface_guard.py",
@@ -537,6 +547,10 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
     if protocol_path.is_file():
         protocol_text = protocol_path.read_text(encoding="utf-8")
         required_protocol_tokens = (
+            "Falha recuperável não é Human Gate",
+            "Qualificação versus transporte operacional",
+            "a1_operational_git_transport.ps1",
+            "A1_OPERATIONAL_POLICY.json",
             "host preflight v6",
             "CODEX_DESKTOP_TOOL_SURFACE_POLICY.json",
             "external_surface_guard",
@@ -606,6 +620,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         rule_text = rule_path.read_text(encoding="utf-8")
         if 'decision = "prompt"' not in rule_text or "a1_git_transport.ps1" not in rule_text:
             issues.append("A1_GIT_RULE_INVALID")
+        if "a1_operational_git_transport.ps1" not in rule_text:
+            issues.append("A1_OPERATIONAL_GIT_TRANSPORT_RULE_MISSING")
     if transport_path.is_file():
         transport_text = transport_path.read_text(encoding="utf-8")
         required_transport_tokens = (
@@ -626,6 +642,50 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             issues.append("A1_GIT_TRANSPORT_FORCE_FORBIDDEN")
         if re.search(r"(?m)^\s*&\s+python(?:\.exe)?\s", transport_text):
             issues.append("A1_GIT_TRANSPORT_BARE_PYTHON_FORBIDDEN")
+
+    operational_policy_path = root / "docs" / "operations" / "autonomy" / "A1_OPERATIONAL_POLICY.json"
+    operational_transport_path = root / ".codex" / "transport" / "a1_operational_git_transport.ps1"
+    if operational_policy_path.is_file():
+        try:
+            operational_policy = _read_json(operational_policy_path)
+            if operational_policy.get("schema_version") != "SER-CODEX-A1-OPERATIONAL-1":
+                issues.append("A1_OPERATIONAL_POLICY_SCHEMA")
+            invariants = operational_policy.get("invariants") or {}
+            if "single-shot" not in str(invariants.get("qualification_transport") or ""):
+                issues.append("A1_OPERATIONAL_POLICY_CQ_SEPARATION")
+            recovery = operational_policy.get("recovery") or {}
+            if recovery.get("same_state_same_command_retries") != 0:
+                issues.append("A1_OPERATIONAL_POLICY_BLIND_RETRY")
+        except Exception as exc:
+            issues.append("A1_OPERATIONAL_POLICY_UNREADABLE:" + type(exc).__name__)
+    else:
+        issues.append("A1_OPERATIONAL_POLICY_MISSING")
+
+    if operational_transport_path.is_file():
+        operational_transport_text = operational_transport_path.read_text(encoding="utf-8")
+        required_operational_tokens = (
+            "SER-A1-OPERATIONAL-CHECKPOINT-1",
+            "InitializeCheckpoint",
+            "ReconcileOnly",
+            "A1_OPERATIONAL_RECONCILE=PUBLISHED_SUCCESSOR",
+            "A1_OPERATIONAL_RECONCILE=RESUMED_PUSH",
+            "A1_OPERATIONAL_UNKNOWN_DIVERGENCE",
+            "A1_OPERATIONAL_PUSH_FAILED_LOCAL_COMMIT_PRESERVED",
+            "A1_OPERATIONAL_PUSH_READBACK_UNKNOWN_LOCAL_COMMIT_PRESERVED",
+            "check_codex_autonomy_delta.py --base",
+            "git remote get-url --push origin",
+            "git ls-remote origin",
+        )
+        if any(token not in operational_transport_text for token in required_operational_tokens):
+            issues.append("A1_OPERATIONAL_TRANSPORT_CONTRACT")
+        if re.search(r"(?m)^\s*&\s+python(?:\.exe)?\s", operational_transport_text):
+            issues.append("A1_OPERATIONAL_TRANSPORT_BARE_PYTHON_FORBIDDEN")
+        if "--force" in operational_transport_text:
+            issues.append("A1_OPERATIONAL_TRANSPORT_FORCE_FORBIDDEN")
+        if "lastJournal" in operational_transport_text or "CQ3_A1_POSITIVE_PROBE" in operational_transport_text:
+            issues.append("A1_OPERATIONAL_TRANSPORT_JOURNAL_AUTHORITY_FORBIDDEN")
+    else:
+        issues.append("A1_OPERATIONAL_TRANSPORT_MISSING")
 
     tool_policy_path = root / "docs" / "operations" / "autonomy" / "CODEX_DESKTOP_TOOL_SURFACE_POLICY.json"
     if tool_policy_path.is_file():
@@ -690,7 +750,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-17",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-18",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),

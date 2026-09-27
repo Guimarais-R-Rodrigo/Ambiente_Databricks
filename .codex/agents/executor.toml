@@ -37,3 +37,10 @@ Do not spawn subagents.
 
 [agents]
 enabled = false
+
+
+# Operational autonomy after canonical controller qualification:
+# - resolve recoverable A1 failures autonomously within the causal repair budget;
+# - never retry a write with UNKNOWN effect before read-only reconciliation;
+# - use a1_operational_git_transport.ps1 for sequential operational commits;
+# - never treat the journal as authority or expand repo_scope/permissions.
