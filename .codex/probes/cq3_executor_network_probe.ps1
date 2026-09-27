@@ -1,5 +1,6 @@
 param(
-    [switch]$SelfTest
+    [switch]$SelfTest,
+    [switch]$OfflineRuntimeSelfTest
 )
 
 Set-StrictMode -Version Latest
@@ -110,6 +111,75 @@ if ($SelfTest) {
     exit 0
 }
 
+if ($OfflineRuntimeSelfTest) {
+    $tokens = $null
+    $parseErrors = $null
+    $ast = [System.Management.Automation.Language.Parser]::ParseFile($PSCommandPath, [ref]$tokens, [ref]$parseErrors)
+    if ($parseErrors.Count -ne 0) { throw "CQ3_NETWORK_PROBE_OFFLINE_PARSE_FAILED" }
+
+    $parameterNames = @{}
+    foreach ($parameter in $ast.ParamBlock.Parameters) {
+        $parameterNames[$parameter.Name.VariablePath.UserPath.ToLowerInvariant()] = $true
+    }
+
+    $collisions = @()
+    foreach ($assignment in $ast.FindAll({ param($node) $node -is [System.Management.Automation.Language.AssignmentStatementAst] }, $true)) {
+        if ($assignment.Left -is [System.Management.Automation.Language.VariableExpressionAst]) {
+            $name = $assignment.Left.VariablePath.UserPath.ToLowerInvariant()
+            if ($parameterNames.ContainsKey($name)) { $collisions += $name }
+        }
+    }
+    if ($collisions.Count -ne 0) {
+        throw ("CQ3_NETWORK_PROBE_PARAMETER_ASSIGNMENT_COLLISION:" + (($collisions | Sort-Object -Unique) -join ","))
+    }
+
+    $syntheticEvidence = [pscustomobject][ordered]@{
+        schema_version = "AC-R2-DESKTOP-HOST-PREFLIGHT-6"
+        result = "PASS"
+        network_probe = [pscustomobject][ordered]@{
+            serialization_selftest = [pscustomobject][ordered]@{
+                result = "PASS"
+                network_attempt_count = 0
+                case_count = 3
+            }
+            host_baseline = [pscustomobject][ordered]@{
+                result = "PASS"
+                attempt_count = 1
+            }
+            selected_ipv4 = "192.0.2.1"
+            port = 443
+        }
+        source_sha256 = [pscustomobject][ordered]@{
+            network_probe_script = ("A" * 64)
+        }
+    }
+
+    $hostSerializationSelfTestEvidence = $syntheticEvidence.network_probe.serialization_selftest
+    if (
+        $hostSerializationSelfTestEvidence.result -ne "PASS" -or
+        [int]$hostSerializationSelfTestEvidence.network_attempt_count -ne 0 -or
+        [int]$hostSerializationSelfTestEvidence.case_count -ne 3
+    ) {
+        throw "CQ3_NETWORK_PROBE_OFFLINE_SELFTEST_CONTRACT"
+    }
+    if (
+        $syntheticEvidence.network_probe.host_baseline.result -ne "PASS" -or
+        [int]$syntheticEvidence.network_probe.host_baseline.attempt_count -ne 1 -or
+        [int]$syntheticEvidence.network_probe.port -ne 443
+    ) {
+        throw "CQ3_NETWORK_PROBE_OFFLINE_BASELINE_CONTRACT"
+    }
+
+    Write-Output (@{
+        schema_version = "AC-R2-CQ3-NETWORK-PROBE-OFFLINE-RUNTIME-SELFTEST-1"
+        result = "PASS"
+        parameter_assignment_collisions = 0
+        network_attempt_count = 0
+        case_count = 2
+    } | ConvertTo-Json -Compress)
+    exit 0
+}
+
 if (-not (Test-Path -LiteralPath $EvidencePath) -or -not (Test-Path -LiteralPath $SidecarPath)) {
     Emit-And-Exit (New-ProbePayload -Result "NOT_PROVEN" -Reason "HOST_EVIDENCE_MISSING" -PreflightSha256 "" -ProbeSha256 "" -TargetHostname "" -TargetIpv4 "" -TargetPort 0 -AttemptCount 0 -Connected $false -SocketErrorCode $null -NativeErrorCode $null -SocketHResult $null -ExceptionChain ([object[]]@())) 30
 }
@@ -126,7 +196,7 @@ catch {
     Emit-And-Exit (New-ProbePayload -Result "NOT_PROVEN" -Reason "HOST_EVIDENCE_INVALID_JSON" -PreflightSha256 $actualEvidenceSha -ProbeSha256 "" -TargetHostname "" -TargetIpv4 "" -TargetPort 0 -AttemptCount 0 -Connected $false -SocketErrorCode $null -NativeErrorCode $null -SocketHResult $null -ExceptionChain ([object[]]@())) 32
 }
 
-if ($evidence.schema_version -ne "AC-R2-DESKTOP-HOST-PREFLIGHT-5" -or $evidence.result -ne "PASS") {
+if ($evidence.schema_version -ne "AC-R2-DESKTOP-HOST-PREFLIGHT-6" -or $evidence.result -ne "PASS") {
     Emit-And-Exit (New-ProbePayload -Result "NOT_PROVEN" -Reason "HOST_EVIDENCE_SCHEMA_OR_RESULT" -PreflightSha256 $actualEvidenceSha -ProbeSha256 "" -TargetHostname "" -TargetIpv4 "" -TargetPort 0 -AttemptCount 0 -Connected $false -SocketErrorCode $null -NativeErrorCode $null -SocketHResult $null -ExceptionChain ([object[]]@())) 33
 }
 

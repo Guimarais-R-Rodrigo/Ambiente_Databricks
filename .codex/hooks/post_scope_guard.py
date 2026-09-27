@@ -3,28 +3,35 @@ from __future__ import annotations
 import fnmatch
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 
 IGNORED_PARTS = {"__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
 
 
+def block(reason: str) -> None:
+    print(json.dumps({"decision": "block", "reason": reason}))
+    raise SystemExit(0)
+
+
 def root() -> Path:
-    p = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
-    if p.returncode != 0:
-        raise SystemExit(0)
-    return Path(p.stdout.strip())
+    proc = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
+    if proc.returncode != 0 or not proc.stdout.strip():
+        block("A1 post-scope guard cannot resolve repository root")
+    return Path(proc.stdout.strip()).resolve()
 
 
-def load_scope(repo: Path) -> dict:
-    return json.loads(
-        (repo / "docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json").read_text(encoding="utf-8")
-    )["repo_scope"]
+def normalize(path: str) -> str:
+    value = path.replace("\\", "/")
+    while value.startswith("./"):
+        value = value[2:]
+    return value
 
 
 def matches(path: str, patterns: list[str]) -> bool:
-    value = path.replace("\\", "/").lstrip("./")
-    return any(fnmatch.fnmatchcase(value, pat) for pat in patterns)
+    value = normalize(path)
+    return any(fnmatch.fnmatchcase(value, pattern) for pattern in patterns)
 
 
 def classify(path: str, scope: dict) -> str:
@@ -38,31 +45,35 @@ def classify(path: str, scope: dict) -> str:
 
 
 def ignored(path: str) -> bool:
-    parts = set(path.replace("\\", "/").split("/"))
-    return bool(parts & IGNORED_PARTS) or path.endswith((".pyc", ".pyo"))
+    parts = Path(normalize(path)).parts
+    return bool(IGNORED_PARTS.intersection(parts)) or path.endswith((".pyc", ".pyo"))
 
+
+def git_lines(repo: Path, *args: str) -> list[str]:
+    proc = subprocess.run(["git", *args], cwd=repo, capture_output=True, text=True)
+    if proc.returncode != 0:
+        block("A1 post-scope guard git inspection failed: " + " ".join(args))
+    return [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
+try:
+    json.load(sys.stdin)
+except Exception:
+    block("A1 post-scope guard cannot parse hook input")
 
 repo = root()
-commands = [
-    ["git", "diff", "--name-only", "HEAD"],
-    ["git", "diff", "--cached", "--name-only", "HEAD"],
-    ["git", "ls-files", "--others", "--exclude-standard"],
-]
-paths: set[str] = set()
-for argv in commands:
-    p = subprocess.run(argv, cwd=repo, capture_output=True, text=True)
-    if p.returncode == 0:
-        paths.update(line.strip() for line in p.stdout.splitlines() if line.strip())
+try:
+    scope = json.loads((repo / "docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json").read_text(encoding="utf-8"))["repo_scope"]
+except Exception:
+    block("A1 post-scope guard cannot load autonomy envelope")
 
-scope = load_scope(repo)
+paths = set(git_lines(repo, "diff", "--name-only", "HEAD"))
+paths.update(git_lines(repo, "diff", "--cached", "--name-only", "HEAD"))
+paths.update(git_lines(repo, "ls-files", "--others", "--exclude-standard"))
 violations = [
-    (p, classify(p, scope))
-    for p in sorted(paths)
-    if not ignored(p) and classify(p, scope) != "ALLOWED_A1"
+    (path, classify(path, scope))
+    for path in sorted(paths)
+    if not ignored(path) and classify(path, scope) != "ALLOWED_A1"
 ]
 if violations:
-    print(json.dumps({
-        "decision": "block",
-        "reason": "A1 worktree scope violation after tool use: "
-        + ", ".join(f"{p}={c}" for p, c in violations),
-    }))
+    block("A1 worktree scope violation after tool use: " + ", ".join(f"{p}={c}" for p, c in violations))

@@ -228,7 +228,7 @@ class CodexAutonomyTests(unittest.TestCase):
 
     def test_desktop_host_preflight_v5_runs_validator_and_metatests_host_side(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
-        self.assertIn("AC-R2-DESKTOP-HOST-PREFLIGHT-5", text)
+        self.assertIn("AC-R2-DESKTOP-HOST-PREFLIGHT-6", text)
         self.assertIn("tools/validate_codex_autonomy.py", text)
         self.assertIn("tools.tests.test_codex_autonomy", text)
         self.assertIn("HOST_VALIDATOR = PASS", text)
@@ -263,7 +263,7 @@ class CodexAutonomyTests(unittest.TestCase):
     def test_network_probe_selftest_switch_is_not_shadowed_case_insensitively(self):
         text = (ROOT / ".codex/probes/cq3_executor_network_probe.ps1").read_text(encoding="utf-8")
         self.assertIn("[switch]$SelfTest", text)
-        self.assertIsNone(re.search(r"(?mi)^\\s*\\$selftest\\s*=", text))
+        self.assertEqual(set(), val._powershell_parameter_assignment_collisions(text))
         self.assertIn("$hostSerializationSelfTestEvidence = $evidence.network_probe.serialization_selftest", text)
 
     def test_host_preflight_requires_probe_serialization_selftest_before_network_baseline(self):
@@ -763,6 +763,173 @@ class CodexAutonomyTests(unittest.TestCase):
         issues = delta._append_only_issues("old\n", "replacement\n", "journal.jsonl")
         self.assertEqual(["APPEND_ONLY_HISTORY_REWRITE:journal.jsonl"], issues)
         self.assertEqual([], delta._append_only_issues("old\n", "old\nnew\n", "journal.jsonl"))
+
+    def test_parameter_collision_guard_rejects_historical_selftest_bug(self):
+        bad = (
+            "param(\n"
+            "    [switch]$SelfTest\n"
+            ")\n"
+            "Set-StrictMode -Version Latest\n"
+            "$selfTest = $evidence.network_probe.serialization_selftest\n"
+        )
+        self.assertEqual({"selftest"}, val._powershell_parameter_assignment_collisions(bad))
+
+    def test_parameter_collision_guard_accepts_renamed_runtime_variable(self):
+        good = (
+            "param(\n"
+            "    [switch]$SelfTest\n"
+            ")\n"
+            "Set-StrictMode -Version Latest\n"
+            "$hostSerializationSelfTestEvidence = $evidence.network_probe.serialization_selftest\n"
+        )
+        self.assertEqual(set(), val._powershell_parameter_assignment_collisions(good))
+
+    def test_permission_profile_rejects_a0_extra_filesystem_write(self):
+        cfg = copy.deepcopy(val._read_toml(ROOT / ".codex/config.toml"))
+        cfg["permissions"]["ser-controller-a0"]["filesystem"]["C:/unexpected"] = "write"
+        self.assertIn(
+            "A0_FILESYSTEM_KEYS_MISMATCH",
+            val._validate_permission_profile(cfg, self.envelope()),
+        )
+
+    def test_permission_profile_rejects_a0_extra_workspace_write(self):
+        cfg = copy.deepcopy(val._read_toml(ROOT / ".codex/config.toml"))
+        cfg["permissions"]["ser-controller-a0"]["filesystem"][":workspace_roots"]["README.md"] = "write"
+        self.assertIn(
+            "A0_WORKSPACE_ROOT_MAP_MISMATCH",
+            val._validate_permission_profile(cfg, self.envelope()),
+        )
+
+    def test_permission_profile_rejects_a1_extra_filesystem_write(self):
+        cfg = copy.deepcopy(val._read_toml(ROOT / ".codex/config.toml"))
+        cfg["permissions"]["ser-b1-a1"]["filesystem"]["C:/unexpected"] = "write"
+        self.assertIn(
+            "A1_FILESYSTEM_KEYS_MISMATCH",
+            val._validate_permission_profile(cfg, self.envelope()),
+        )
+
+    def test_permission_profile_rejects_a1_extra_workspace_entry(self):
+        cfg = copy.deepcopy(val._read_toml(ROOT / ".codex/config.toml"))
+        cfg["permissions"]["ser-b1-a1"]["filesystem"][":workspace_roots"]["README.md"] = "read"
+        self.assertIn(
+            "A1_WORKSPACE_ROOT_MAP_MISMATCH",
+            val._validate_permission_profile(cfg, self.envelope()),
+        )
+
+    def test_validator_git_mode_is_executable(self):
+        self.assertEqual("100755", val._git_index_mode(ROOT, "tools/validate_codex_autonomy.py"))
+
+    def test_desktop_tool_surface_policy_tolerates_presence_but_forbids_mcp_invocation(self):
+        payload = json.loads(
+            (ROOT / "docs/operations/autonomy/CODEX_DESKTOP_TOOL_SURFACE_POLICY.json")
+            .read_text(encoding="utf-8")
+        )
+        self.assertEqual("SER-CODEX-DESKTOP-TOOL-SURFACE-2", payload["schema_version"])
+        self.assertFalse(payload["cq_rules"]["builtin_browser_presence_alone_blocks"])
+        self.assertTrue(payload["cq_rules"]["project_hook_trust_required"])
+        self.assertEqual(
+            "^(mcp__.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$",
+            payload["enforcement"]["matcher"],
+        )
+        self.assertEqual(
+            "DENY_EXTERNAL_SURFACES_ALLOW_INTERNAL_NODE_REPL",
+            payload["enforcement"]["policy"],
+        )
+        serialized = json.dumps(payload["presence_classes"])
+        self.assertIn("INTERNAL_CODE_MODE_CONTROL", serialized)
+        self.assertIn("mcp__node_repl__*", serialized)
+
+    def test_hooks_include_fail_closed_mcp_guard(self):
+        hooks = json.loads((ROOT / ".codex/hooks.json").read_text(encoding="utf-8"))
+        serialized = json.dumps(hooks)
+        self.assertIn("^(mcp__.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$", serialized)
+        self.assertIn("external_surface_guard", serialized)
+        self.assertIn("list_mcp_resources", serialized)
+        self.assertIn("web__run", serialized)
+
+    def test_windows_scope_guards_have_host_selftests_and_fail_closed_inspection(self):
+        pre = (ROOT / ".codex/hooks/pre_scope_guard.ps1").read_text(encoding="utf-8")
+        post = (ROOT / ".codex/hooks/post_scope_guard.ps1").read_text(encoding="utf-8")
+        self.assertIn("[switch]$SelfTest", pre)
+        self.assertIn("[switch]$SelfTest", post)
+        self.assertIn("could not resolve target path", pre)
+        self.assertIn("git inspection failed", post)
+        self.assertNotIn('TrimStart("./")', pre)
+        self.assertNotIn('TrimStart("./")', post)
+
+    def test_python_scope_guards_use_precise_normalization_and_fail_closed_git(self):
+        pre = (ROOT / ".codex/hooks/pre_scope_guard.py").read_text(encoding="utf-8")
+        post = (ROOT / ".codex/hooks/post_scope_guard.py").read_text(encoding="utf-8")
+        self.assertIn('while value.startswith("./")', pre)
+        self.assertIn('while value.startswith("./")', post)
+        self.assertNotIn('.lstrip("./")', pre)
+        self.assertNotIn('.lstrip("./")', post)
+        self.assertIn("git inspection failed", post)
+
+    def test_transport_binds_host_python_push_url_remote_readback_and_cq_journal_only(self):
+        text = (ROOT / ".codex/transport/a1_git_transport.ps1").read_text(encoding="utf-8")
+        for token in (
+            "evidence.python.executable",
+            "git remote get-url --push origin",
+            "CQ_JOURNAL_ONLY",
+            "git ls-remote origin",
+            "A1_GIT_TRANSPORT_REMOTE_ADVANCED",
+            "A1_GIT_TRANSPORT_CQ_JOURNAL_NOT_EXCLUSIVE",
+            "A1_GIT_TRANSPORT_REMOTE_READBACK_FAIL",
+        ):
+            self.assertIn(token, text)
+        self.assertIsNone(re.search(r"(?m)^\s*&\s+python(?:\.exe)?\s", text))
+
+    def test_transport_selftest_is_non_mutating_contract_surface(self):
+        text = (ROOT / ".codex/transport/a1_git_transport.ps1").read_text(encoding="utf-8")
+        self.assertIn("[switch]$SelfTest", text)
+        self.assertIn("SER-A1-GIT-TRANSPORT-SELFTEST-1", text)
+        self.assertLess(
+            text.index("if ($SelfTest)"),
+            text.index("A1_GIT_TRANSPORT_HOST_EVIDENCE_MISSING"),
+        )
+
+    def test_network_probe_offline_runtime_selftest_uses_powershell_ast(self):
+        text = (ROOT / ".codex/probes/cq3_executor_network_probe.ps1").read_text(encoding="utf-8")
+        for token in (
+            "[switch]$OfflineRuntimeSelfTest",
+            "AssignmentStatementAst",
+            "CQ3_NETWORK_PROBE_PARAMETER_ASSIGNMENT_COLLISION",
+            "AC-R2-CQ3-NETWORK-PROBE-OFFLINE-RUNTIME-SELFTEST-1",
+            "parameter_assignment_collisions = 0",
+            "network_attempt_count = 0",
+        ):
+            self.assertIn(token, text)
+
+    def test_preflight_v6_generates_machine_handoff_and_runs_contract_selftests(self):
+        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        for token in (
+            "AC-R2-DESKTOP-HOST-PREFLIGHT-6",
+            "CQ_RUN_REQUEST.json",
+            "CQ_RUN_PROMPT.md",
+            "NETWORK_PROBE_OFFLINE_RUNTIME_SELFTEST = PASS",
+            "MCP_GUARD_SELFTEST = PASS",
+            "SCOPE_GUARDS_SELFTEST = PASS",
+            "A1_GIT_TRANSPORT_SELFTEST = PASS",
+            "CQ_READY_TO_RUN",
+            "HOOK_TRUST_REVIEW_REQUIRED",
+            "PROJECT_HOOKS_SHA256",
+            "CQ_HOST_PREFLIGHT_RUN_REQUEST_ROUNDTRIP_MISMATCH",
+            "CQ_HOST_PREFLIGHT_PROMPT_TEMPLATE_UNRESOLVED",
+        ):
+            self.assertIn(token, text)
+
+    def test_runtime_contract_keeps_final_state_outside_repo_after_cq4(self):
+        text = (ROOT / "docs/operations/CODEX_RUNTIME_QUALIFICATION.md").read_text(encoding="utf-8")
+        self.assertIn("não realizar nova escrita repo-side depois de CQ4", text)
+        self.assertIn("pacote externo de evidências", text)
+
+    def test_start_prompt_uses_machine_generated_handoff(self):
+        text = (ROOT / "docs/operations/CODEX_AUTONOMOUS_START_PROMPT.md").read_text(encoding="utf-8")
+        self.assertIn("CQ_RUN_REQUEST.json", text)
+        self.assertIn("CQ_RUN_PROMPT.md", text)
+        self.assertIn("HOOK_TRUST_REVIEW_REQUIRED", text)
+        self.assertIn("PROJECT_HOOK_TRUST", text)
 
     def test_claude_uses_progressive_changelog_disclosure(self):
         text = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")

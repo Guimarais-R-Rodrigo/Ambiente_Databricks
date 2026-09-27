@@ -8,22 +8,41 @@ import sys
 from pathlib import Path
 
 
+def deny(reason: str) -> None:
+    print(json.dumps({
+        "hookSpecificOutput": {
+            "hookEventName": "PreToolUse",
+            "permissionDecision": "deny",
+            "permissionDecisionReason": reason,
+        }
+    }))
+    raise SystemExit(0)
+
+
 def root() -> Path:
-    p = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
-    if p.returncode != 0:
-        raise SystemExit(0)
-    return Path(p.stdout.strip())
+    proc = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
+    if proc.returncode != 0 or not proc.stdout.strip():
+        deny("A1 scope guard cannot resolve repository root")
+    return Path(proc.stdout.strip()).resolve()
+
+
+def normalize(path: str) -> str:
+    value = path.replace("\\", "/")
+    while value.startswith("./"):
+        value = value[2:]
+    return value
 
 
 def load_scope(repo: Path) -> dict:
-    return json.loads(
-        (repo / "docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json").read_text(encoding="utf-8")
-    )["repo_scope"]
+    try:
+        return json.loads((repo / "docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json").read_text(encoding="utf-8"))["repo_scope"]
+    except Exception:
+        deny("A1 scope guard cannot load autonomy envelope")
 
 
 def matches(path: str, patterns: list[str]) -> bool:
-    value = path.replace("\\", "/").lstrip("./")
-    return any(fnmatch.fnmatchcase(value, pat) for pat in patterns)
+    value = normalize(path)
+    return any(fnmatch.fnmatchcase(value, pattern) for pattern in patterns)
 
 
 def classify(path: str, scope: dict) -> str:
@@ -36,28 +55,29 @@ def classify(path: str, scope: dict) -> str:
     return "OUTSIDE_A1"
 
 
-def deny(reason: str) -> None:
-    print(json.dumps({
-        "hookSpecificOutput": {
-            "hookEventName": "PreToolUse",
-            "permissionDecision": "deny",
-            "permissionDecisionReason": reason,
-        }
-    }))
+try:
+    event = json.load(sys.stdin)
+except Exception:
+    deny("A1 scope guard cannot parse hook input")
 
+tool_input = event.get("tool_input") or {}
+paths: list[str] = []
+for key in ("path", "file_path", "target_path", "target_file"):
+    value = tool_input.get(key)
+    if isinstance(value, str) and value.strip():
+        paths.append(value.strip())
 
-event = json.load(sys.stdin)
-command = str((event.get("tool_input") or {}).get("command") or "")
-paths = []
-for match in re.finditer(r"(?m)^\*\*\*\s+(?:Add|Update|Delete) File:\s*(.+?)\s*$", command):
-    paths.append(match.group(1).strip())
-for match in re.finditer(r"(?m)^\*\*\*\s+Move to:\s*(.+?)\s*$", command):
-    paths.append(match.group(1).strip())
+command = str(tool_input.get("command") or "")
+for pattern in (
+    r"(?m)^\*\*\*\s+(?:Add|Update|Delete) File:\s*(.+?)\s*$",
+    r"(?m)^\*\*\*\s+Move to:\s*(.+?)\s*$",
+):
+    paths.extend(match.group(1).strip() for match in re.finditer(pattern, command))
 
 if not paths:
-    raise SystemExit(0)
+    deny("A1 scope guard could not resolve target path for tool " + str(event.get("tool_name") or ""))
 
 scope = load_scope(root())
-violations = [(p, classify(p, scope)) for p in paths if classify(p, scope) != "ALLOWED_A1"]
+violations = [(path, classify(path, scope)) for path in paths if classify(path, scope) != "ALLOWED_A1"]
 if violations:
-    deny("A1 scope violation: " + ", ".join(f"{p}={c}" for p, c in violations))
+    deny("A1 scope violation: " + ", ".join(f"{path}={category}" for path, category in violations))

@@ -1,0 +1,84 @@
+{
+  "schema_version": "SER-CODEX-DESKTOP-TOOL-SURFACE-2",
+  "purpose": "Deterministic CQ classification of Codex Desktop tool surfaces. Presence, trust, authority and invocation are separate decisions.",
+  "enforcement": {
+    "project_hook": ".codex/hooks/external_surface_guard.ps1",
+    "matcher": "^(mcp__.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$",
+    "policy": "DENY_EXTERNAL_SURFACES_ALLOW_INTERNAL_NODE_REPL",
+    "failure_mode": "FAIL_CLOSED_FOR_MATCHED_SURFACES",
+    "hook_trust": "HUMAN_REVIEW_CURRENT_HASH_REQUIRED_BEFORE_CQ"
+  },
+  "presence_classes": [
+    {
+      "patterns": [
+        "mcp__node_repl__*"
+      ],
+      "class": "INTERNAL_CODE_MODE_CONTROL",
+      "presence": "ALLOWED_EXPECTED",
+      "invocation": "ALLOWED; nested tool calls remain hook-governed"
+    },
+    {
+      "patterns": [
+        "mcp__cua_repl*"
+      ],
+      "class": "CLIENT_BUILTIN_BROWSER_CONTROL",
+      "presence": "ALLOWED_EXPECTED",
+      "invocation": "FORBIDDEN_BY_PROJECT_HOOK"
+    },
+    {
+      "patterns": [
+        "mcp__codex_app__*"
+      ],
+      "class": "INTERNAL_CLIENT_CONTROL_PLANE",
+      "presence": "ALLOWED_EXPECTED",
+      "invocation": "FORBIDDEN_BY_PROJECT_HOOK"
+    },
+    {
+      "patterns": [
+        "list_mcp_resources",
+        "list_mcp_resource_templates",
+        "read_mcp_resource"
+      ],
+      "class": "MCP_RESOURCE_CONTROL",
+      "presence": "ALLOWED_EXPECTED",
+      "invocation": "FORBIDDEN_BY_PROJECT_HOOK"
+    },
+    {
+      "patterns": [
+        "web__run"
+      ],
+      "class": "HOSTED_OPEN_WORLD_READ",
+      "presence": "ALLOWED_EXPECTED",
+      "invocation": "FORBIDDEN_DURING_CQ; hook interception attempted but not treated as sole boundary"
+    },
+    {
+      "patterns": [
+        "mcp__*"
+      ],
+      "class": "OTHER_MCP_SURFACE",
+      "presence": "BLOCK_UNLESS_EXPLICITLY_CLASSIFIED",
+      "invocation": "FORBIDDEN"
+    }
+  ],
+  "cq_rules": {
+    "builtin_browser_presence_alone_blocks": false,
+    "codex_app_presence_alone_blocks": false,
+    "internal_node_repl_presence_alone_blocks": false,
+    "unknown_mcp_presence_blocks": true,
+    "project_hook_trust_required": true,
+    "mcp_guard_behavioral_denial_required": true,
+    "denial_probe_tool_preference": [
+      "mcp__codex_app__get_usage_limits",
+      "mcp__codex_app__list_projects"
+    ],
+    "denial_probe_must_be_read_only_if_hook_is_skipped": true,
+    "any_forbidden_mcp_invocation_reaching_backend": "SECURITY_STOP",
+    "web_invocation_count_required": 0,
+    "external_plugin_skill_catalog_is_not_loaded_tool_evidence": true
+  },
+  "sources": [
+    "https://learn.chatgpt.com/docs/hooks",
+    "https://learn.chatgpt.com/docs/browser?surface=app",
+    "https://learn.chatgpt.com/docs/sandboxing"
+  ]
+}

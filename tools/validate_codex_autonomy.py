@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 import tomllib
 from pathlib import Path
 from typing import Any
@@ -41,6 +42,34 @@ def _normalize_write_root(path: str) -> str:
     if value.endswith("/**"):
         value = value[:-3].rstrip("/")
     return value
+
+
+def _powershell_parameter_assignment_collisions(text: str) -> set[str]:
+    param_match = re.search(r"(?is)^\s*param\s*\((.*?)\)\s*Set-StrictMode", text)
+    if not param_match:
+        return set()
+    parameters = {
+        name.lower()
+        for name in re.findall(r"\$([A-Za-z_][A-Za-z0-9_]*)", param_match.group(1))
+    }
+    assignments = {
+        name.lower()
+        for name in re.findall(r"(?mi)^\s*\$([A-Za-z_][A-Za-z0-9_]*)\s*=", text)
+    }
+    return parameters & assignments
+
+
+def _git_index_mode(root: Path, path: str) -> str | None:
+    proc = subprocess.run(
+        ["git", "ls-files", "-s", "--", path],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0 or not proc.stdout.strip():
+        return None
+    return proc.stdout.split()[0]
 
 
 def _validate_envelope_schema(root: Path, envelope: dict[str, Any]) -> list[str]:
@@ -135,6 +164,16 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
         filesystem = a0.get("filesystem") or {}
         workspace = filesystem.get(":workspace_roots") or {}
         profile_roots = a0.get("workspace_roots") or {}
+        expected_filesystem_keys = {
+            ":root", ":minimal", ":tmpdir", ":slash_tmp",
+            ":workspace_roots", A0_WINDOWS_SCRATCH,
+        }
+        if set(filesystem) != expected_filesystem_keys:
+            issues.append("A0_FILESYSTEM_KEYS_MISMATCH")
+        if workspace != {".": "read"}:
+            issues.append("A0_WORKSPACE_ROOT_MAP_MISMATCH")
+        if profile_roots != {A0_WINDOWS_SCRATCH: True}:
+            issues.append("A0_PROFILE_WORKSPACE_ROOT_MAP_MISMATCH")
         if filesystem.get(":root") != "read":
             issues.append("A0_WINDOWS_ROOT_READ_REQUIRED")
         if filesystem.get(":minimal") != "read" or workspace.get(".") != "read":
@@ -151,6 +190,8 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
             issues.append("A0_HOST_PYTHON_READ_MUST_BE_ABSENT")
         if (a0.get("network") or {}).get("enabled") is not False:
             issues.append("A0_NETWORK_MUST_BE_DISABLED")
+        if (a0.get("network") or {}) != {"enabled": False}:
+            issues.append("A0_NETWORK_POLICY_MUST_BE_EXACT_DISABLED")
 
     if not isinstance(a1, dict):
         issues.append("A1_PERMISSION_PROFILE_MISSING")
@@ -158,6 +199,11 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
 
     filesystem = a1.get("filesystem") or {}
     workspace = filesystem.get(":workspace_roots") or {}
+    expected_filesystem_keys = {
+        ":root", ":minimal", ":tmpdir", ":slash_tmp", ":workspace_roots",
+    }
+    if set(filesystem) != expected_filesystem_keys:
+        issues.append("A1_FILESYSTEM_KEYS_MISMATCH")
     if filesystem.get(":root") != "read":
         issues.append("A1_WINDOWS_ROOT_READ_REQUIRED")
     if filesystem.get(":minimal") != "read":
@@ -180,6 +226,13 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
         _normalize_write_root(path)
         for path in (envelope.get("repo_scope") or {}).get("write_roots", [])
     }
+    normalized_workspace = {
+        "." if path == "." else _normalize_write_root(path): access
+        for path, access in workspace.items()
+    }
+    expected_workspace = {".": "read", **{path: "write" for path in expected_writes}}
+    if normalized_workspace != expected_workspace:
+        issues.append("A1_WORKSPACE_ROOT_MAP_MISMATCH")
     if actual_writes != expected_writes:
         issues.append(
             "A1_PERMISSION_WRITE_ROOT_MISMATCH:expected="
@@ -193,6 +246,8 @@ def _validate_permission_profile(cfg: dict[str, Any], envelope: dict[str, Any]) 
         issues.append("A1_DIRECT_GIT_METADATA_WRITE_FORBIDDEN")
     if (a1.get("network") or {}).get("enabled") is not False:
         issues.append("A1_DIRECT_NETWORK_MUST_BE_DISABLED")
+    if (a1.get("network") or {}) != {"enabled": False}:
+        issues.append("A1_NETWORK_POLICY_MUST_BE_EXACT_DISABLED")
     if any("*" in path or "?" in path or "[" in path for path in expected_writes):
         issues.append("A1_WRITE_ROOTS_MUST_BE_CONCRETE")
 
@@ -219,10 +274,13 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-15",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-16",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
+
+    if _git_index_mode(root, "tools/validate_codex_autonomy.py") != "100755":
+        issues.append("VALIDATOR_GIT_MODE_MUST_BE_100755")
 
     if cfg.get("model") != "gpt-6-astra":
         issues.append("ROOT_MODEL_NOT_ASTRA")
@@ -370,6 +428,10 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         ".codex/rules/a1_git_transport.rules",
         ".codex/transport/a1_git_transport.ps1",
         ".codex/probes/cq3_executor_network_probe.ps1",
+        ".codex/hooks/external_surface_guard.ps1",
+        ".codex/hooks/external_surface_guard.py",
+        "docs/operations/autonomy/CODEX_DESKTOP_TOOL_SURFACE_POLICY.json",
+        "docs/operations/CODEX_DESKTOP_CQ_RUN_PROMPT_TEMPLATE.md",
         "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl",
     ]
     for rel in required_paths:
@@ -383,7 +445,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         required_desktop_tokens = (
             "CODEX_DESKTOP_WINDOWS",
             "CQ_HOST_PREFLIGHT.json",
-            "AC-R2-DESKTOP-HOST-PREFLIGHT-5",
+            "AC-R2-DESKTOP-HOST-PREFLIGHT-6",
             "NOT_OBSERVABLE_DESKTOP",
             "PASS_BEHAVIORALLY",
             "INTERNAL_CLIENT_CONTROL_PLANE",
@@ -393,6 +455,11 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "HOST_METATESTS",
             "HOST_NETWORK_BASELINE",
             "NETWORK_PROBE_SERIALIZATION_SELFTEST",
+            "MCP_PRETOOL_GUARD",
+            "CQ_RUN_REQUEST.json",
+            "CQ_RUN_PROMPT.md",
+            "HOOK_TRUST_REVIEW_REQUIRED",
+            "PROJECT_HOOK_TRUST",
             "AccessDenied",
             "10013",
         )
@@ -402,7 +469,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         preflight_text = desktop_preflight_path.read_text(encoding="utf-8")
         required_preflight_tokens = (
             "git fetch origin $ExpectedBranch",
-            "AC-R2-DESKTOP-HOST-PREFLIGHT-5",
+            "AC-R2-DESKTOP-HOST-PREFLIGHT-6",
             "CQ_HOST_PREFLIGHT.json",
             "jsonschema",
             "recorded_at_unix_seconds",
@@ -417,6 +484,19 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "network_probe_script",
             "networkSelfTestPayload",
             "NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS",
+            "NETWORK_PROBE_OFFLINE_RUNTIME_SELFTEST = PASS",
+            "MCP_GUARD_SELFTEST = PASS",
+            "SCOPE_GUARDS_SELFTEST = PASS",
+            "A1_GIT_TRANSPORT_SELFTEST = PASS",
+            "CQ_RUN_REQUEST.json",
+            "CQ_RUN_PROMPT.md",
+            "HOOK_TRUST_REVIEW_REQUIRED",
+            "PROJECT_HOOKS_SHA256",
+            "CQ_HOST_PREFLIGHT_RUN_REQUEST_ROUNDTRIP_MISMATCH",
+            "CQ_HOST_PREFLIGHT_PROMPT_TEMPLATE_UNRESOLVED",
+            "external_surface_guard_python",
+            "pre_scope_guard_python",
+            "post_scope_guard_python",
             "HOST_NETWORK_BASELINE = PASS",
             "$NetworkProbeHost",
             "selected_ipv4",
@@ -434,7 +514,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
     if network_probe_path.is_file():
         network_probe_text = network_probe_path.read_text(encoding="utf-8")
         required_network_probe_tokens = (
-            "AC-R2-DESKTOP-HOST-PREFLIGHT-5",
+            "AC-R2-DESKTOP-HOST-PREFLIGHT-6",
             "network_probe_script",
             "BeginConnect",
             "EndConnect",
@@ -452,6 +532,9 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "New-ProbePayload",
             "network_attempt_count",
             "$hostSerializationSelfTestEvidence",
+            "OfflineRuntimeSelfTest",
+            "AC-R2-CQ3-NETWORK-PROBE-OFFLINE-RUNTIME-SELFTEST-1",
+            "AssignmentStatementAst",
         )
         if any(token not in network_probe_text for token in required_network_probe_tokens):
             issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_INVALID")
@@ -461,8 +544,12 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_UNSAFE_GENERIC_LIST")
         if "exception_type = $(if" in network_probe_text:
             issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_INLINE_DYNAMIC_PAYLOAD_FORBIDDEN")
-        if re.search(r"(?mi)^\\s*\\$selftest\\s*=", network_probe_text):
-            issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_SELFTEST_SWITCH_SHADOWED")
+        collisions = _powershell_parameter_assignment_collisions(network_probe_text)
+        if collisions:
+            issues.append(
+                "DESKTOP_WINDOWS_NETWORK_PROBE_PARAMETER_ASSIGNMENT_COLLISION:"
+                + ",".join(sorted(collisions))
+            )
         forbidden_network_probe_tokens = (
             "Invoke-WebRequest",
             "HttpClient",
@@ -487,11 +574,44 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             'tools/check_codex_autonomy_delta.py --index',
             'HEAD:refs/heads/$ExpectedBranch',
             'A1_GIT_TRANSPORT_ENVELOPE_PATH_MISMATCH',
+            'CQ_JOURNAL_ONLY',
+            'git remote get-url --push origin',
+            'git ls-remote origin',
+            'AC-R2-DESKTOP-HOST-PREFLIGHT-6',
+            'evidence.python.executable',
         )
         if any(token not in transport_text for token in required_transport_tokens):
             issues.append("A1_GIT_TRANSPORT_INVALID")
         if "--force" in transport_text:
             issues.append("A1_GIT_TRANSPORT_FORCE_FORBIDDEN")
+        if re.search(r"(?m)^\s*&\s+python(?:\.exe)?\s", transport_text):
+            issues.append("A1_GIT_TRANSPORT_BARE_PYTHON_FORBIDDEN")
+
+    tool_policy_path = root / "docs" / "operations" / "autonomy" / "CODEX_DESKTOP_TOOL_SURFACE_POLICY.json"
+    if tool_policy_path.is_file():
+        try:
+            tool_policy = _read_json(tool_policy_path)
+            if tool_policy.get("schema_version") != "SER-CODEX-DESKTOP-TOOL-SURFACE-2":
+                issues.append("DESKTOP_TOOL_SURFACE_POLICY_SCHEMA")
+            enforcement = tool_policy.get("enforcement") or {}
+            if (
+                enforcement.get("matcher") != "^(mcp__.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$"
+                or enforcement.get("policy") != "DENY_EXTERNAL_SURFACES_ALLOW_INTERNAL_NODE_REPL"
+            ):
+                issues.append("DESKTOP_TOOL_SURFACE_POLICY_ENFORCEMENT")
+            cq_rules = tool_policy.get("cq_rules") or {}
+            if cq_rules.get("builtin_browser_presence_alone_blocks") is not False:
+                issues.append("DESKTOP_TOOL_SURFACE_POLICY_PRESENCE_RULE")
+            if cq_rules.get("project_hook_trust_required") is not True:
+                issues.append("DESKTOP_TOOL_SURFACE_POLICY_HOOK_TRUST")
+            classes = tool_policy.get("presence_classes") or []
+            serialized_classes = json.dumps(classes)
+            if "INTERNAL_CODE_MODE_CONTROL" not in serialized_classes or "mcp__node_repl__*" not in serialized_classes:
+                issues.append("DESKTOP_TOOL_SURFACE_POLICY_NODE_REPL_CLASS")
+        except Exception as exc:
+            issues.append("DESKTOP_TOOL_SURFACE_POLICY_UNREADABLE:" + type(exc).__name__)
+    else:
+        issues.append("DESKTOP_TOOL_SURFACE_POLICY_MISSING")
 
     hooks_path = root / ".codex" / "hooks.json"
     if hooks_path.is_file():
@@ -503,7 +623,12 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             if not pre or not post:
                 issues.append("HOOK_CONFIG_MISSING_PRE_OR_POST")
             serialized = json.dumps(hooks_payload)
-            if "pre_scope_guard" not in serialized or "post_scope_guard" not in serialized:
+            if (
+                "pre_scope_guard" not in serialized
+                or "post_scope_guard" not in serialized
+                or "external_surface_guard" not in serialized
+                or "^(mcp__.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$" not in serialized
+            ):
                 issues.append("HOOK_CONFIG_INVALID")
         except Exception as exc:
             issues.append("HOOK_CONFIG_UNREADABLE:" + type(exc).__name__)
@@ -525,7 +650,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-15",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-16",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),

@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-27 — Codex Autonomous Controller: estabilização consolidada
+
+- (ChatGPT) Manutenção consolidada autorizada após CQ blockers sucessivos; nenhum B1 material, A2, G6/Genie/Databricks material, promoção, Ready ou merge.
+- (ChatGPT) Tool surfaces passam a separar presença de autoridade: Browser/CUA nativo e control plane interno não bloqueiam por presença; `mcp__node_repl__*` interno permanece permitido; project `PreToolUse` nega Browser/CUA, Codex-app, MCP externos/resources e web antes do efeito quando interceptáveis.
+- (ChatGPT) Validator V16 substitui o falso-oráculo de colisão PowerShell por análise de parâmetros/assignments com fixture que reintroduz o bug histórico; permission maps A0/A1 passam a ser exatos e modo `100755` do validator é obrigatório.
+- (ChatGPT) Preflight v6 adiciona self-test offline/AST do probe, MCP guard, scope guards e Git transport antes do baseline TCP; suíte controller passa a 102 metatests definidos.
+- (ChatGPT) CQ4 passa a usar Python do host evidence, validar fetch/push URL, fazer fetch-before-commit, exigir `CQ_JOURNAL_ONLY` e readback remoto do SHA.
+- (ChatGPT) Handoff passa a ser mecânico via `CQ_RUN_REQUEST.json` + `CQ_RUN_PROMPT.md`; após CQ4 não há segunda escrita repo-side, evitando churn de HEAD/tree. Hooks alterados exigem review/trust humano do hash atual como pré-condição anterior a CQ0.
+- (ChatGPT) Config/envelope/10 A1 write roots/network policy/A2 permanecem inalterados. Runtime do novo candidato ainda NOT_RUN; próximo passo único = host preflight v6 e prompt gerado.
+
 ## 2026-09-27 — AC-R2 Runtime-6 R1: preservação do modo executável
 
 - (ChatGPT) Revalidação pós-fast-forward detectou regressão incidental de modo Git em `tools/validate_codex_autonomy.py`: `100755 -> 100644`, sem alteração intencional de conteúdo.
