@@ -1,12 +1,12 @@
 # Codex Desktop Windows — CQ0–CQ5 profile
 
-Versão: 1.4  
+Versão: 1.5  
 Contrato-base: `CODEX_RUNTIME_QUALIFICATION.md`  
 Decisões donas: ADR-0024 + ADR-0025
 
 Este documento adapta somente a forma de provar CQ0–CQ5 no Codex Desktop Windows. Não amplia A0/A1/A2.
 
-## D0 — host preflight v4 obrigatório
+## D0 — host preflight v5 obrigatório
 
 Executar imediatamente antes da nova conversa:
 
@@ -15,14 +15,13 @@ Set-Location "C:\b1_worktrees\b1_p1_4ba7f551_20260924"
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\codex_desktop_cq_host_preflight.ps1
 ```
 
-Exigir `CQ_HOST_PREFLIGHT = PASS`, `HOST_VALIDATOR = PASS`,
-`HOST_METATESTS = PASS` e `HOST_NETWORK_BASELINE = PASS`.
+Exigir `CQ_HOST_PREFLIGHT = PASS`, `HOST_VALIDATOR = PASS`, `HOST_METATESTS = PASS`, `NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS` e `HOST_NETWORK_BASELINE = PASS`.
 O artefato canônico de host evidence é `CQ_HOST_PREFLIGHT.json`, acompanhado de
 `CQ_HOST_PREFLIGHT.sha256`. O evidence v4 contém `network_probe.hostname`,
 `selected_ipv4`, porta 443 e baseline host-side single-shot.
-Schema: `AC-R2-DESKTOP-HOST-PREFLIGHT-4`.
+Schema: `AC-R2-DESKTOP-HOST-PREFLIGHT-5`.
 
-O preflight v4 executa no host `validate_codex_autonomy.py --json` e `unittest tools.tests.test_codex_autonomy -v`, registra exit codes, test count, hashes de stdout/stderr, source SHA-256, HEAD/tree/config e worktree clean. Python é `HOST_ONLY`; não instalar dependências.
+O preflight v5 executa no host `validate_codex_autonomy.py --json` e `unittest tools.tests.test_codex_autonomy -v`, registra exit codes, test count, hashes de stdout/stderr, source SHA-256, HEAD/tree/config e worktree clean. Antes do baseline TCP, executa o probe protegido com `-SelfTest`: três payloads sintéticos (PASS/FAIL/NOT_PROVEN), round-trip JSON e zero tentativas de rede. Só depois faz o baseline TCP host-side. Python é `HOST_ONLY`; não instalar dependências.
 
 Freshness: <= 1800 s usando `recorded_at_unix_seconds`.
 
@@ -46,8 +45,7 @@ PASS com nome não observável exige `CQ3 = PASS`, `CQ4 = PASS`, `CQ5-D = PASS` 
 
 Validar evidence v4: schema; `python.execution_surface = HOST_ONLY`; CPython 3.12;
 jsonschema version; host validator exit=0/status=PASS; source hashes; freshness;
-identity/config; e `network_probe.host_baseline.result = PASS` com
-`attempt_count=1`, IP literal e porta 443.
+identity/config; `network_probe.serialization_selftest.result = PASS`, `network_attempt_count=0`, `case_count=3`; e `network_probe.host_baseline.result = PASS` com `attempt_count=1`, IP literal e porta 443.
 
 ## CQ1-D — CLI opcional
 
@@ -110,7 +108,7 @@ Se CQ4 mudar HEAD apenas pelo journal permitido, registrar o commit separadament
 ```text
 CLIENT_SURFACE = CODEX_DESKTOP_WINDOWS
 HOST_PREFLIGHT = PASS|FAIL
-HOST_PREFLIGHT_SCHEMA = AC-R2-DESKTOP-HOST-PREFLIGHT-4
+HOST_PREFLIGHT_SCHEMA = AC-R2-DESKTOP-HOST-PREFLIGHT-5
 HOST_VALIDATOR = PASS|FAIL
 HOST_METATESTS = PASS|FAIL
 PROJECT_PROFILE_ACTIVE = ser-controller-a0 | NOT_OBSERVABLE_DESKTOP

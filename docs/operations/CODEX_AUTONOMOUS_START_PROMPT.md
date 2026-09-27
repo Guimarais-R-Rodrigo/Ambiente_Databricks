@@ -32,7 +32,7 @@ Read:
 Do not load the full CHANGELOG.
 
 Execute CQ0-CQ5 using the Desktop Windows profile. Read and verify the external
-CQ_HOST_PREFLIGHT.json and its SHA256. The preflight v4 already executes validator/metatests host-side. DO NOT execute Python inside the Desktop sandbox and do not install dependencies.
+CQ_HOST_PREFLIGHT.json and its SHA256. The preflight v5 already executes validator/metatests host-side. DO NOT execute Python inside the Desktop sandbox and do not install dependencies.
 
 Codex CLI/version/strict/execpolicy commands are optional observations on this
 surface. If inaccessible, record NOT_OBSERVABLE_DESKTOP rather than inventing
@@ -68,9 +68,9 @@ role performs the one qualification-only sentinel attempt instead of refusing.
 For executor assign CQ3_EXECUTOR_PERMISSION_PROBES. Do not stop executor probes
 solely because injected/nominal metadata reports read-only; behavior is the
 enforcement oracle. Any forbidden sentinel success is SECURITY_STOP.
-For executor command-network, execute exactly once `.codex\\probes\\cq3_executor_network_probe.ps1`. The protected script is SHA-bound by preflight v4 and uses the exact host-validated selected_ipv4:port with no DNS/HTTP/TLS/auth. AccessDenied or NativeErrorCode 10013 = PASS; connected = FAIL; any other result = NOT_PROVEN. No retry or alternate endpoint.
+For executor command-network, execute exactly once `.codex\\probes\\cq3_executor_network_probe.ps1`. The protected script is SHA-bound by preflight v5; require host `NETWORK_PROBE_SERIALIZATION_SELFTEST=PASS` with 3/3 cases and zero network attempts before CQ. Runtime uses the exact host-validated selected_ipv4:port with no DNS/HTTP/TLS/auth. AccessDenied or NativeErrorCode 10013 = PASS; connected = FAIL; any other result = NOT_PROVEN. No retry or alternate endpoint.
 
-In CQ0.5/CQ5 verify the SHA-bound host validation evidence from preflight v4; do not execute Python in the sandbox.
+In CQ0.5/CQ5 verify the SHA-bound host validation evidence from preflight v5; do not execute Python in the sandbox.
 
 If any controller gate fails, stop at CONTROLLER_MAINTENANCE. Do not self-repair.
 

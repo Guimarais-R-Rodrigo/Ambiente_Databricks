@@ -142,6 +142,28 @@ $runtimeTestCount = [int]$Matches[1]
 $testSourceText = Get-Content -LiteralPath (Join-Path $root "tools\tests\test_codex_autonomy.py") -Raw
 $staticTestCount = [regex]::Matches($testSourceText, "(?m)^\s+def test_").Count
 if ($runtimeTestCount -ne $staticTestCount) { throw "CQ_HOST_PREFLIGHT_METATEST_COUNT_MISMATCH:${runtimeTestCount}:${staticTestCount}" }
+
+$networkProbeScript = Join-Path $root ".codex\probes\cq3_executor_network_probe.ps1"
+$networkSelfTestStdout = Join-Path $outputRootFull "CQ_HOST_NETWORK_PROBE_SELFTEST.stdout.txt"
+$networkSelfTestStderr = Join-Path $outputRootFull "CQ_HOST_NETWORK_PROBE_SELFTEST.stderr.txt"
+$powershellExe = (Get-Command "powershell.exe" -ErrorAction Stop).Source
+$networkSelfTestExit = Invoke-CapturedProcess -FilePath $powershellExe -ArgumentList @("-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", $networkProbeScript, "-SelfTest") -StdoutPath $networkSelfTestStdout -StderrPath $networkSelfTestStderr
+if ($networkSelfTestExit -ne 0) { throw "CQ_HOST_PREFLIGHT_NETWORK_PROBE_SELFTEST_EXIT:${networkSelfTestExit}" }
+try { $networkSelfTestPayload = Get-Content -LiteralPath $networkSelfTestStdout -Raw | ConvertFrom-Json }
+catch { throw "CQ_HOST_PREFLIGHT_NETWORK_PROBE_SELFTEST_INVALID_JSON" }
+$networkSelfTestCases = @($networkSelfTestPayload.cases)
+$networkSelfTestResults = @($networkSelfTestCases | ForEach-Object { [string]$_.result } | Sort-Object)
+$networkSelfTestExpected = @("FAIL_NETWORK_BOUNDARY_OPEN", "NOT_PROVEN", "PASS_NETWORK_DENIED" | Sort-Object)
+if (
+    $networkSelfTestPayload.schema_version -ne "AC-R2-CQ3-NETWORK-PROBE-SELFTEST-1" -or
+    $networkSelfTestPayload.result -ne "PASS" -or
+    [int]$networkSelfTestPayload.network_attempt_count -ne 0 -or
+    [int]$networkSelfTestPayload.case_count -ne 3 -or
+    [string]::Join("|", $networkSelfTestResults) -ne [string]::Join("|", $networkSelfTestExpected)
+) {
+    throw "CQ_HOST_PREFLIGHT_NETWORK_PROBE_SELFTEST_CONTRACT_FAIL"
+}
+
 $networkProbeAddresses = @(
     [System.Net.Dns]::GetHostAddresses($NetworkProbeHost) |
         Where-Object { $_.AddressFamily -eq [System.Net.Sockets.AddressFamily]::InterNetwork } |
@@ -168,7 +190,7 @@ $gh = Get-Command "gh.exe" -ErrorAction SilentlyContinue
 if ($gh) { try { $ghRaw = (& $gh.Source pr view 115 --repo Guimarais-R-Rodrigo/Ambiente_Databricks --json state,isDraft,mergedAt,headRefName,headRefOid 2>$null); if ($LASTEXITCODE -eq 0 -and $ghRaw) { $parsed = $ghRaw | ConvertFrom-Json; $prEvidence = [ordered]@{ state="OBSERVED_HOST_GH"; source="gh"; pr_state=$parsed.state; draft=$parsed.isDraft; merged_at=$parsed.mergedAt; head_ref=$parsed.headRefName; head_sha=$parsed.headRefOid } } } catch {} }
 $recordedAt = [DateTimeOffset]::Now
 $payload = [ordered]@{
-    schema_version = "AC-R2-DESKTOP-HOST-PREFLIGHT-4"
+    schema_version = "AC-R2-DESKTOP-HOST-PREFLIGHT-5"
     result = "PASS"
     client_surface = "CODEX_DESKTOP_WINDOWS"
     recorded_at = $recordedAt.ToString("o")
@@ -182,6 +204,15 @@ $payload = [ordered]@{
         metatests = [ordered]@{ exit_code=$metatestExit; result="PASS"; runtime_test_count=$runtimeTestCount; static_test_count=$staticTestCount; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $metatestStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $metatestStderr).Hash }
     }
     network_probe = [ordered]@{
+        serialization_selftest = [ordered]@{
+            result = "PASS"
+            exit_code = $networkSelfTestExit
+            network_attempt_count = [int]$networkSelfTestPayload.network_attempt_count
+            case_count = [int]$networkSelfTestPayload.case_count
+            cases = @($networkSelfTestPayload.cases)
+            stdout_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $networkSelfTestStdout).Hash
+            stderr_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $networkSelfTestStderr).Hash
+        }
         hostname = $NetworkProbeHost
         port = $NetworkProbePort
         selected_ipv4 = $networkProbeIp
@@ -201,6 +232,7 @@ Write-Utf8NoBom $shaPath ($sha + "  CQ_HOST_PREFLIGHT.json" + [Environment]::New
 Write-Host "CQ_HOST_PREFLIGHT = PASS"
 Write-Host "HOST_VALIDATOR = PASS"
 Write-Host "HOST_METATESTS = PASS ($runtimeTestCount/$staticTestCount)"
+Write-Host "NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS (3/3; network_attempts=0)"
 Write-Host ("HOST_NETWORK_BASELINE = PASS ({0}:{1})" -f $networkProbeIp, $NetworkProbePort)
 Write-Host "HEAD = $head"
 Write-Host "TREE = $tree"

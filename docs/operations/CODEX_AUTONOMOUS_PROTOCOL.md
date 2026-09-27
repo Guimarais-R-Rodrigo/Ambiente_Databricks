@@ -1,6 +1,6 @@
 # Codex Autonomous Controller Protocol
 
-Versão: 1.8  
+Versão: 1.9  
 Decisões donas: ADR-0024 + ADR-0025
 
 ## 1. Objetivo
@@ -55,11 +55,11 @@ não muda permission profiles nem autoridade normal e não pode ser usada fora d
 CONTROLLER_RUNTIME_QUALIFICATION. Metadata declarativa do role não substitui
 enforcement comportamental.
 
-No CQ3 Desktop, command-network é provado por `.codex/probes/cq3_executor_network_probe.ps1`, source-SHA-bound pelo host preflight v4. O script reutiliza o IPv4:443 previamente validado no host, faz um único TCP raw BeginConnect/EndConnect e não usa DNS/HTTP/TLS/auth na sandbox. AccessDenied/10013 é denial; conexão bem-sucedida prova network boundary aberta; demais erros ficam NOT_PROVEN.
+No CQ3 Desktop, command-network é provado por `.codex/probes/cq3_executor_network_probe.ps1`, source-SHA-bound pelo host preflight v5. Antes de qualquer baseline/retry de CQ, o host executa `-SelfTest` no mesmo Windows PowerShell: três payloads sintéticos, JSON round-trip e zero network attempts. O script runtime reutiliza o IPv4:443 previamente validado no host, faz um único TCP raw BeginConnect/EndConnect e não usa DNS/HTTP/TLS/auth na sandbox. AccessDenied/10013 é denial; conexão bem-sucedida prova network boundary aberta; demais erros ficam NOT_PROVEN.
 
 No Desktop, ausência da CLI Codex, de credenciais Git dentro da sandbox ou do
 nome nominal do permission profile não é automaticamente equivalente a falha.
-O contrato Desktop usa host preflight v4 para identidade e CQ0.5/CQ5 repo-side; Python roda somente no host. CQ3/CQ4 continuam provas comportamentais obrigatórias do sandbox. Quando o nome do profile não é observável, o PASS agregado exige CQ3/CQ4 e CQ5 host-bound verdes.
+O contrato Desktop usa host preflight v5 para identidade e CQ0.5/CQ5 repo-side; Python roda somente no host. CQ3/CQ4 continuam provas comportamentais obrigatórias do sandbox. Quando o nome do profile não é observável, o PASS agregado exige CQ3/CQ4 e CQ5 host-bound verdes.
 Estado de PR pode ficar `DEFERRED_TO_EXTERNAL_ADJUDICATION` e ser recomputado
 fora da sessão.
 
