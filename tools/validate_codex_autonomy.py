@@ -218,7 +218,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-12",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-13",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -300,6 +300,10 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
                 "For ordinary A1 work and outside the qualification-only exception above",
                 "Outside the exact negative probe attempts above, obey envelope write_roots",
                 "Except for the exact one-attempt governance sentinel probe above",
+                ".codex\\probes\\cq3_executor_network_probe.ps1",
+                "AccessDenied",
+                "10013",
+                "Do not use Invoke-WebRequest",
             )
             if any(token not in instructions for token in required_cq3_tokens):
                 issues.append("EXECUTOR_CQ3_BEHAVIORAL_PROBE_CONTRACT:" + role)
@@ -363,6 +367,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         "tools/codex_desktop_cq_host_preflight.ps1",
         ".codex/rules/a1_git_transport.rules",
         ".codex/transport/a1_git_transport.ps1",
+        ".codex/probes/cq3_executor_network_probe.ps1",
         "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl",
     ]
     for rel in required_paths:
@@ -376,7 +381,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         required_desktop_tokens = (
             "CODEX_DESKTOP_WINDOWS",
             "CQ_HOST_PREFLIGHT.json",
-            "AC-R2-DESKTOP-HOST-PREFLIGHT-3",
+            "AC-R2-DESKTOP-HOST-PREFLIGHT-4",
             "NOT_OBSERVABLE_DESKTOP",
             "PASS_BEHAVIORALLY",
             "INTERNAL_CLIENT_CONTROL_PLANE",
@@ -384,6 +389,9 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "DO_NOT_EXECUTE_PYTHON_IN_SANDBOX",
             "HOST_VALIDATOR",
             "HOST_METATESTS",
+            "HOST_NETWORK_BASELINE",
+            "AccessDenied",
+            "10013",
         )
         if any(token not in desktop_text for token in required_desktop_tokens):
             issues.append("DESKTOP_WINDOWS_CQ_CONTRACT_INVALID")
@@ -391,7 +399,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         preflight_text = desktop_preflight_path.read_text(encoding="utf-8")
         required_preflight_tokens = (
             "git fetch origin $ExpectedBranch",
-            "AC-R2-DESKTOP-HOST-PREFLIGHT-3",
+            "AC-R2-DESKTOP-HOST-PREFLIGHT-4",
             "CQ_HOST_PREFLIGHT.json",
             "jsonschema",
             "recorded_at_unix_seconds",
@@ -402,6 +410,11 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "runtime_test_count",
             "static_test_count",
             "source_sha256",
+            "network_probe",
+            "network_probe_script",
+            "HOST_NETWORK_BASELINE = PASS",
+            "$NetworkProbeHost",
+            "selected_ipv4",
             "CQ_HOST_PREFLIGHT_GIT_IDENTITY_CHANGED_DURING_HOST_VALIDATION",
             "final_head",
             "final_tree",
@@ -411,6 +424,38 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             issues.append("DESKTOP_WINDOWS_HOST_PREFLIGHT_INVALID")
         if "pip install" in preflight_text or "python -m pip" in preflight_text:
             issues.append("DESKTOP_WINDOWS_HOST_PREFLIGHT_INSTALL_FORBIDDEN")
+
+    network_probe_path = root / ".codex" / "probes" / "cq3_executor_network_probe.ps1"
+    if network_probe_path.is_file():
+        network_probe_text = network_probe_path.read_text(encoding="utf-8")
+        required_network_probe_tokens = (
+            "AC-R2-DESKTOP-HOST-PREFLIGHT-4",
+            "network_probe_script",
+            "BeginConnect",
+            "EndConnect",
+            "PASS_NETWORK_DENIED",
+            "FAIL_NETWORK_BOUNDARY_OPEN",
+            "NOT_PROVEN",
+            "AccessDenied",
+            "10013",
+            "attempt_count",
+            "TCP_RAW",
+            "dns_in_sandbox",
+            "CQ_HOST_PREFLIGHT.sha256",
+        )
+        if any(token not in network_probe_text for token in required_network_probe_tokens):
+            issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_INVALID")
+        if network_probe_text.count(".BeginConnect(") != 1:
+            issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_NOT_SINGLE_CONNECT")
+        forbidden_network_probe_tokens = (
+            "Invoke-WebRequest",
+            "HttpClient",
+            "SslStream",
+            "Dns.GetHostAddresses",
+            "curl ",
+        )
+        if any(token in network_probe_text for token in forbidden_network_probe_tokens):
+            issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_HIGH_LEVEL_NETWORK_FORBIDDEN")
 
     rule_path = root / ".codex" / "rules" / "a1_git_transport.rules"
     transport_path = root / ".codex" / "transport" / "a1_git_transport.ps1"
@@ -464,7 +509,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-12",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-13",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),

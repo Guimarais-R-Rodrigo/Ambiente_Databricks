@@ -82,6 +82,7 @@ $sourcePaths = [ordered]@{
     validator = "tools\validate_codex_autonomy.py"
     metatests = "tools\tests\test_codex_autonomy.py"
     delta_checker = "tools\check_codex_autonomy_delta.py"
+    network_probe_script = ".codex\probes\cq3_executor_network_probe.ps1"
 }
 $sourceHashes = [ordered]@{}
 foreach ($key in $sourcePaths.Keys) {

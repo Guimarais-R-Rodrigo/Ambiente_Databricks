@@ -225,15 +225,55 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("CQ_HOST_PREFLIGHT.json", text)
         self.assertIn("CQ_HOST_PREFLIGHT.sha256", text)
 
-    def test_desktop_host_preflight_v3_runs_validator_and_metatests_host_side(self):
+    def test_desktop_host_preflight_v4_runs_validator_and_metatests_host_side(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
-        self.assertIn("AC-R2-DESKTOP-HOST-PREFLIGHT-3", text)
+        self.assertIn("AC-R2-DESKTOP-HOST-PREFLIGHT-4", text)
         self.assertIn("tools/validate_codex_autonomy.py", text)
         self.assertIn("tools.tests.test_codex_autonomy", text)
         self.assertIn("HOST_VALIDATOR = PASS", text)
         self.assertIn("HOST_METATESTS = PASS", text)
         self.assertIn('execution_surface="HOST_ONLY"', text)
         self.assertNotIn("QualifiedPythonRootRelative", text)
+
+    def test_desktop_host_preflight_v4_binds_raw_tcp_baseline_and_probe_source(self):
+        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        self.assertIn('$NetworkProbeHost = "github.com"', text)
+        self.assertIn("$NetworkProbePort = 443", text)
+        self.assertIn("HOST_NETWORK_BASELINE = PASS", text)
+        self.assertIn('network_probe_script = ".codex\\probes\\cq3_executor_network_probe.ps1"', text)
+        self.assertIn("selected_ipv4", text)
+
+    def test_executor_network_probe_is_single_raw_tcp_attempt_without_high_level_stack(self):
+        text = (ROOT / ".codex/probes/cq3_executor_network_probe.ps1").read_text(encoding="utf-8")
+        self.assertEqual(1, text.count("$client.BeginConnect("))
+        self.assertIn("$client.EndConnect($async)", text)
+        self.assertIn('transport = "TCP_RAW"', text)
+        self.assertIn("dns_in_sandbox = $false", text)
+        self.assertIn("http = $false", text)
+        self.assertIn("tls = $false", text)
+        self.assertIn("authentication = $false", text)
+        for forbidden in ("Invoke-WebRequest", "HttpClient", "SslStream", "Dns.GetHostAddresses", "curl "):
+            self.assertNotIn(forbidden, text)
+
+    def test_executor_network_probe_oracle_requires_accessdenied_or_10013(self):
+        text = (ROOT / ".codex/probes/cq3_executor_network_probe.ps1").read_text(encoding="utf-8")
+        self.assertIn('$socketErrorCode -eq "AccessDenied" -or $nativeErrorCode -eq 10013', text)
+        self.assertIn('"PASS_NETWORK_DENIED"', text)
+        self.assertIn('"FAIL_NETWORK_BOUNDARY_OPEN"', text)
+        self.assertIn('"NOT_PROVEN"', text)
+
+    def test_executor_network_probe_verifies_own_source_hash_from_host_evidence(self):
+        text = (ROOT / ".codex/probes/cq3_executor_network_probe.ps1").read_text(encoding="utf-8")
+        self.assertIn("source_sha256.network_probe_script", text)
+        self.assertIn("NETWORK_PROBE_SOURCE_HASH_MISMATCH", text)
+        self.assertIn("CQ_HOST_PREFLIGHT.sha256", text)
+
+    def test_executor_role_invokes_only_protected_network_probe_for_cq3(self):
+        text = val._read_toml(ROOT / ".codex/agents/executor.toml")["developer_instructions"]
+        self.assertIn(".codex\\probes\\cq3_executor_network_probe.ps1", text)
+        self.assertIn("Do not use Invoke-WebRequest", text)
+        self.assertIn("AccessDenied", text)
+        self.assertIn("10013", text)
 
     def test_desktop_host_preflight_emits_locale_independent_epoch(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")

@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-27 — AC-R2 CM-DESKTOP-RUNTIME-5
+
+- (Codex/ChatGPT) Runtime-4 CQ provou filesystem denials e parou somente no network probe inconclusivo: Invoke-WebRequest retornou Authentication failed sem exception chain suficiente.
+- (Concurrent local commit) `c9648525...` introduziu baseline host-side TCP raw v4 e contrato parcial; incorporado como base concorrente compatível.
+- (ChatGPT) Hardening: novo probe protegido `.codex/probes/cq3_executor_network_probe.ps1`, cujo SHA entra no host evidence. O executor executa apenas esse script.
+- (ChatGPT) Probe valida evidence+sidecar+próprio SHA+HEAD/tree clean, reutiliza exatamente selected_ipv4:443 e faz uma única tentativa TCP raw, sem DNS/HTTP/TLS/auth.
+- (ChatGPT) Oráculo: AccessDenied/10013 = PASS_NETWORK_DENIED; conexão = FAIL_NETWORK_BOUNDARY_OPEN; timeout/outros = NOT_PROVEN. Sem retry ou endpoint alternativo.
+- (ChatGPT) Permission profiles, 10 A1 write roots, .git boundary, command-network policy e A2 permanecem inalterados.
+- (ChatGPT) Validator sobe para V13 e a suíte controller passa a 80 métodos definidos estaticamente; runtime corrigido ainda NOT_RUN.
+
 ## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-4: fechamento estático
 
 - (ChatGPT) `CM_DESKTOP_RUNTIME_4_STATIC = PASS` no candidato `90cf3eb85e9bd79d58e0bb211ee179649fc5a6f1` / tree `548a84944595559994cabe532c36c43e5b5103d1`.

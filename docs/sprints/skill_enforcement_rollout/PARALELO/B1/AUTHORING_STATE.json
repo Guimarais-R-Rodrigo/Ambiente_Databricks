@@ -33,7 +33,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_AC_R2_CM_DESKTOP_RUNTIME_4_CLOSED_AWAITING_HOST_PREFLIGHT_V3_AND_CQ_RETRY",
+  "stage": "B1_AC_R2_CM_DESKTOP_RUNTIME_5_AUTHORED_AWAITING_STATIC_REVIEW",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -1001,8 +1001,8 @@
     "max_concurrent_subagents": 5,
     "max_write_capable_agents": 1,
     "custom_agents": 5,
-    "controller_metatest_methods_static": 75,
-    "structural_validation": "PASS_AC_R2_CM_DESKTOP_RUNTIME_4_STATIC",
+    "controller_metatest_methods_static": 80,
+    "structural_validation": "AC_R2_CM_DESKTOP_RUNTIME_5_AUTHORED_NOT_RUNTIME_QUALIFIED",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
     "previous_static_audit": {
@@ -1019,7 +1019,7 @@
     "executor_permissions_default": "SER_B1_A1_EXACT_FILES_NO_DIRECT_GIT_OR_NETWORK",
     "ac_r2": {
       "authorization": "DIRECT_USER_CHAT_2026-09-26",
-      "state": "PASS_STATIC_AWAITING_HOST_PREFLIGHT_V3_AND_CQ_RETRY",
+      "state": "CORRECTIVE_AUTHORED_AWAITING_STATIC_REVIEW",
       "scope": [
         "CR1_LEAST_PRIVILEGE_A1_PERMISSION_BOUNDARY",
         "CR2_DELTA_AND_STATE_TRANSITION_INTEGRITY",
@@ -1031,7 +1031,7 @@
       "legacy_sandbox_mode": false,
       "approval_boundary": "EXECUTOR_RULE_PROMPTS_ONLY_OTHER_ESCALATIONS_FAIL_CLOSED",
       "delta_schema": "SER-CODEX-AUTONOMY-DELTA-3",
-      "metatest_methods_static": 75,
+      "metatest_methods_static": 80,
       "runtime_qualification": "NOT_RUN",
       "cq0_cq5": "NOT_RUN",
       "b1_material_execution": "NOT_RUN",
@@ -1051,7 +1051,7 @@
         "GIT_TRANSPORT_AND_HOOK_RUNTIME_REQUIRE_CQ4",
         "NOMINAL_PROFILE_NAME_MAY_BE_NOT_OBSERVABLE_AND_REQUIRES_BEHAVIORAL_PROOF"
       ],
-      "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-12",
+      "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-13",
       "windows_bootstrap_maintenance": {
         "authorization": "DIRECT_USER_CHAT_2026-09-26",
         "trigger": "WINDOWS_SANDBOX_WORKSPACE_WRITE_NO_WRITABLE_ROOT_CAPABILITY_SIDS",
@@ -1274,6 +1274,39 @@
         "permission_config_blob_unchanged": true,
         "readonly_probe_task_label": "CQ3_NEGATIVE_PERMISSION_PROBE",
         "executor_probe_task_label": "CQ3_EXECUTOR_PERMISSION_PROBES"
+      },
+      "cm_desktop_runtime_5": {
+        "authorization": "DIRECT_USER_CHAT_2026-09-27",
+        "trigger_evidence_report_sha256": "1101F830A509660361204842BB1E6D7D142FE979B43B9AF50DA5EA2B1C19CB2C",
+        "previous_result": "BLOCKED_CQ3_NETWORK_NOT_PROVEN",
+        "previous_candidate_head": "65bfdc29ce9595c21abee36ab2023b30ac660080",
+        "previous_candidate_tree": "88cce24c6012b0dee2479b31564a23e4e87ff3e5",
+        "previous_repo_mutation": false,
+        "concurrent_partial_commit": "c96485259c3ee08cae466a0038ee3c3de2f9358d",
+        "concurrent_partial_commit_disposition": "INCORPORATED_AND_HARDENED",
+        "prior_network_probe": {
+          "mechanism": "Invoke-WebRequest_HEAD",
+          "result": "NOT_PROVEN",
+          "observed_error": "Authentication failed, see inner exception",
+          "retry_count": 0
+        },
+        "corrective_scope": [
+          "HOST_PREFLIGHT_V4_SINGLE_TCP_RAW_BASELINE",
+          "SHA_BOUND_PROTECTED_EXECUTOR_TCP_PROBE",
+          "ACCESSDENIED_10013_ONLY_PASS_ORACLE",
+          "NO_DNS_HTTP_TLS_AUTH_OR_RETRY_IN_SANDBOX"
+        ],
+        "host_preflight_schema": "AC-R2-DESKTOP-HOST-PREFLIGHT-4",
+        "protected_network_probe": ".codex/probes/cq3_executor_network_probe.ps1",
+        "network_baseline_host": "github.com",
+        "network_baseline_port": 443,
+        "permission_profiles_changed": false,
+        "repository_write_boundary": "UNCHANGED",
+        "command_network_policy": "UNCHANGED_DISABLED",
+        "a1_write_boundary_changed": false,
+        "a2_changed": false,
+        "b1_material_execution": "NOT_RUN",
+        "runtime_requalification": "REQUIRED"
       }
     }
   }

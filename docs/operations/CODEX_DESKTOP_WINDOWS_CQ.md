@@ -6,7 +6,7 @@ Decisões donas: ADR-0024 + ADR-0025
 
 Este documento adapta somente a forma de provar CQ0–CQ5 no Codex Desktop Windows. Não amplia A0/A1/A2.
 
-## D0 — host preflight v3 obrigatório
+## D0 — host preflight v4 obrigatório
 
 Executar imediatamente antes da nova conversa:
 
@@ -22,7 +22,7 @@ O artefato canônico de host evidence é `CQ_HOST_PREFLIGHT.json`, acompanhado d
 `selected_ipv4`, porta 443 e baseline host-side single-shot.
 Schema: `AC-R2-DESKTOP-HOST-PREFLIGHT-4`.
 
-O preflight v3 executa no host `validate_codex_autonomy.py --json` e `unittest tools.tests.test_codex_autonomy -v`, registra exit codes, test count, hashes de stdout/stderr, source SHA-256, HEAD/tree/config e worktree clean. Python é `HOST_ONLY`; não instalar dependências.
+O preflight v4 executa no host `validate_codex_autonomy.py --json` e `unittest tools.tests.test_codex_autonomy -v`, registra exit codes, test count, hashes de stdout/stderr, source SHA-256, HEAD/tree/config e worktree clean. Python é `HOST_ONLY`; não instalar dependências.
 
 Freshness: <= 1800 s usando `recorded_at_unix_seconds`.
 
@@ -81,9 +81,7 @@ EXECUTOR_DIRECT_NETWORK = PASS | NOT_PROVEN | FAIL_NETWORK_BOUNDARY_OPEN
 EXECUTOR_A1_POSITIVE_JOURNAL = PASS
 ```
 
-O network probe do executor deve usar exatamente o `selected_ipv4` e `port`
-do host evidence, uma única vez, via `System.Net.Sockets.TcpClient`.
-Não usar `Invoke-WebRequest`, DNS, HTTP, TLS ou autenticação.
+O network probe do executor deve executar exatamente uma vez `powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\\probes\\cq3_executor_network_probe.ps1`. O script é source-SHA-bound pelo host evidence, usa exatamente `network_probe.selected_ipv4` e `network_probe.port`, e não usa `Invoke-WebRequest`, DNS, HTTP, TLS ou autenticação.
 
 Oráculo obrigatório:
 - SocketErrorCode=AccessDenied OU NativeErrorCode=10013 => PASS;
