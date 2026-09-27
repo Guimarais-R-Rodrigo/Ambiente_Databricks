@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-27 — AC-R2 CM-DESKTOP-RUNTIME-6 R1: fechamento estático
+
+- (ChatGPT) `CM_DESKTOP_RUNTIME_6_R1_STATIC = PASS` no candidato `3fd442fb6590c6913221bc58ad0aaaf2164c4f2a` / tree `1c1fce89560d668026180e6b38f8229de69c341f`.
+- (ChatGPT) Auditoria adversarial confirmou delta exato de 6 arquivos, zero findings materiais, ausência case-insensitive de atribuição `$selfTest =`, novo guard validator `DESKTOP_WINDOWS_NETWORK_PROBE_SELFTEST_SWITCH_SHADOWED` e 85 métodos de metateste definidos.
+- (ChatGPT) `.codex/config.toml` e `B1_AUTONOMY_ENVELOPE.json` permanecem blob-idênticos ao candidato bloqueado; 10 writes A1, A0/A1 network disabled, A2 disabled e TCP oracle inalterados.
+- (ChatGPT) Validator = `SER-CODEX-AUTONOMY-VALIDATION-15`. Host validator/metatests/self-test/baseline e CQ0-CQ5 ainda NOT_RUN no novo candidato.
+- (ChatGPT) Próximo passo: fast-forward do worktree dedicado, novo host preflight v5 e nova conversa CQ; nenhuma promoção, Ready ou merge autorizados.
+
 ## 2026-09-27 — AC-R2 CM-DESKTOP-RUNTIME-6 R1: CQ3 switch-variable collision
 
 - (Codex/ChatGPT) CQ bundle independently adjudicated as valid BLOCKED at CQ3; uploaded ZIP SHA256 `165A10FD01DE206B430D2FCA5EEC0CD47E0681324EC5404F2FA444F9F6CAA1FA`, all MANIFEST hashes verified.
