@@ -846,7 +846,7 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertFalse(payload["cq_rules"]["builtin_browser_presence_alone_blocks"])
         self.assertTrue(payload["cq_rules"]["project_hook_trust_required"])
         self.assertEqual(
-            "^(mcp__.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$",
+            val.EXTERNAL_SURFACE_MATCHER,
             payload["enforcement"]["matcher"],
         )
         self.assertEqual(
@@ -856,14 +856,41 @@ class CodexAutonomyTests(unittest.TestCase):
         serialized = json.dumps(payload["presence_classes"])
         self.assertIn("INTERNAL_CODE_MODE_CONTROL", serialized)
         self.assertIn("mcp__node_repl__*", serialized)
+        self.assertEqual(["codex_app", "cua_repl"], payload["enforcement"]["dynamic_hook_name_prefixes"])
+        self.assertTrue(payload["cq_rules"]["dynamic_client_hook_aliases_required"])
 
     def test_hooks_include_fail_closed_mcp_guard(self):
         hooks = val._read_toml(ROOT / ".codex/config.toml")["hooks"]
         serialized = json.dumps(hooks)
-        self.assertIn("^(mcp__.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$", serialized)
+        self.assertIn(val.EXTERNAL_SURFACE_MATCHER, serialized)
         self.assertIn("external_surface_guard", serialized)
         self.assertIn("list_mcp_resources", serialized)
         self.assertIn("web__run", serialized)
+
+    def test_external_surface_matcher_covers_dynamic_client_hook_names(self):
+        hooks = val._read_toml(ROOT / ".codex/config.toml")["hooks"]
+        external_groups = [
+            group
+            for group in hooks["PreToolUse"]
+            if "external_surface_guard" in json.dumps(group)
+        ]
+        self.assertEqual(1, len(external_groups))
+        matcher = external_groups[0]["matcher"]
+        self.assertEqual(val.EXTERNAL_SURFACE_MATCHER, matcher)
+        for sample in (
+            "mcp__codex_app__get_usage_limits",
+            "codex_appget_usage_limits",
+            "codex_app__get_usage_limits",
+            "mcp__cua_repl.js",
+            "cua_repljs",
+        ):
+            self.assertIsNotNone(re.fullmatch(matcher, sample), sample)
+
+        ps = (ROOT / ".codex/hooks/external_surface_guard.ps1").read_text(encoding="utf-8")
+        py = (ROOT / ".codex/hooks/external_surface_guard.py").read_text(encoding="utf-8")
+        for token in ("codex_app", "cua_repl", "codex_appget_usage_limits"):
+            self.assertIn(token, ps)
+            self.assertIn(token, py)
 
     def test_windows_scope_guards_have_host_selftests_and_fail_closed_inspection(self):
         pre = (ROOT / ".codex/hooks/pre_scope_guard.ps1").read_text(encoding="utf-8")

@@ -19,6 +19,7 @@ A0_PROFILE = "ser-controller-a0"
 A1_PROFILE = "ser-b1-a1"
 A0_WINDOWS_SCRATCH = "~/codex-scratch/Ambiente_Databricks"
 LEGACY_WINDOWS_QUALIFIED_PYTHON_ROOT = r"~\AppData\Local\Programs\Python\Python312"
+EXTERNAL_SURFACE_MATCHER = r"^(mcp__.*|codex_app.*|cua_repl.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$"
 EXPECTED_AGENTS = {
     "explorer": ("explorer.toml", A0_PROFILE, "gpt-6-luna", "high"),
     "executor": ("executor.toml", A1_PROFILE, "gpt-6-sol", "medium"),
@@ -762,7 +763,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
                 issues.append("DESKTOP_TOOL_SURFACE_POLICY_SCHEMA")
             enforcement = tool_policy.get("enforcement") or {}
             if (
-                enforcement.get("matcher") != "^(mcp__.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$"
+                enforcement.get("matcher") != EXTERNAL_SURFACE_MATCHER
                 or enforcement.get("policy") != "DENY_EXTERNAL_SURFACES_ALLOW_INTERNAL_NODE_REPL"
             ):
                 issues.append("DESKTOP_TOOL_SURFACE_POLICY_ENFORCEMENT")
@@ -771,6 +772,19 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
                 issues.append("DESKTOP_TOOL_SURFACE_POLICY_PRESENCE_RULE")
             if cq_rules.get("project_hook_trust_required") is not True:
                 issues.append("DESKTOP_TOOL_SURFACE_POLICY_HOOK_TRUST")
+            if cq_rules.get("dynamic_client_hook_aliases_required") is not True:
+                issues.append("DESKTOP_TOOL_SURFACE_POLICY_DYNAMIC_ALIAS_REQUIREMENT")
+            if enforcement.get("dynamic_hook_name_prefixes") != ["codex_app", "cua_repl"]:
+                issues.append("DESKTOP_TOOL_SURFACE_POLICY_DYNAMIC_ALIAS_BINDING")
+            for sample in (
+                "mcp__codex_app__get_usage_limits",
+                "codex_appget_usage_limits",
+                "codex_app__get_usage_limits",
+                "mcp__cua_repl.js",
+                "cua_repljs",
+            ):
+                if re.fullmatch(EXTERNAL_SURFACE_MATCHER, sample) is None:
+                    issues.append("DESKTOP_TOOL_SURFACE_POLICY_DYNAMIC_ALIAS_NOT_MATCHED:" + sample)
             classes = tool_policy.get("presence_classes") or []
             serialized_classes = json.dumps(classes)
             if "INTERNAL_CODE_MODE_CONTROL" not in serialized_classes or "mcp__node_repl__*" not in serialized_classes:
@@ -797,9 +811,32 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "pre_scope_guard" not in serialized
             or "post_scope_guard" not in serialized
             or "external_surface_guard" not in serialized
-            or "^(mcp__.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$" not in serialized
+            or EXTERNAL_SURFACE_MATCHER not in serialized
         ):
             issues.append("HOOK_CONFIG_INVALID")
+        external_matchers = [
+            str(group.get("matcher") or "")
+            for group in pre
+            if any(
+                "external_surface_guard" in json.dumps(hook)
+                for hook in (group.get("hooks") or [])
+            )
+        ]
+        if external_matchers != [EXTERNAL_SURFACE_MATCHER]:
+            issues.append("HOOK_EXTERNAL_SURFACE_MATCHER_MISMATCH")
+        for sample in ("codex_appget_usage_limits", "cua_repljs"):
+            if not external_matchers or re.fullmatch(external_matchers[0], sample) is None:
+                issues.append("HOOK_DYNAMIC_CLIENT_ALIAS_NOT_MATCHED:" + sample)
+
+        guard_ps_path = root / ".codex" / "hooks" / "external_surface_guard.ps1"
+        guard_py_path = root / ".codex" / "hooks" / "external_surface_guard.py"
+        if guard_ps_path.is_file() and guard_py_path.is_file():
+            guard_ps_text = guard_ps_path.read_text(encoding="utf-8")
+            guard_py_text = guard_py_path.read_text(encoding="utf-8")
+            for token in ("codex_app", "cua_repl", "codex_appget_usage_limits"):
+                if token not in guard_ps_text or token not in guard_py_text:
+                    issues.append("HOOK_EXTERNAL_SURFACE_GUARD_DYNAMIC_ALIAS_MISSING:" + token)
+
         for group in pre:
             for hook in group.get("hooks") or []:
                 windows_command = str(

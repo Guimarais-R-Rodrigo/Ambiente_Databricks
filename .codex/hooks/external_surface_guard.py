@@ -16,6 +16,8 @@ BLOCKED_NON_MCP = {
 def decision(tool_name: str) -> str:
     if tool_name.startswith("mcp__node_repl__"):
         return "ALLOW_INTERNAL_NODE_REPL"
+    if tool_name.startswith(("codex_app", "cua_repl")):
+        return "DENY"
     if tool_name.startswith("mcp__"):
         return "DENY"
     if tool_name in BLOCKED_NON_MCP:
@@ -44,20 +46,24 @@ def main() -> int:
 
     if args.self_test:
         assert decision("mcp__node_repl__js") == "ALLOW_INTERNAL_NODE_REPL"
-        for name in (
+        denied_names = (
             "mcp__cua_repl.js",
+            "cua_repljs",
             "mcp__codex_app__get_usage_limits",
+            "codex_appget_usage_limits",
+            "codex_app__get_usage_limits",
             "mcp__example__write",
             "list_mcp_resources",
             "read_mcp_resource",
             "web__run",
-        ):
+        )
+        for name in denied_names:
             assert decision(name) == "DENY"
         print(json.dumps({
             "schema_version": "SER-CODEX-EXTERNAL-SURFACE-GUARD-SELFTEST-1",
             "result": "PASS",
             "internal_node_repl": "ALLOW",
-            "denied_cases": 6,
+            "denied_cases": len(denied_names),
         }))
         return 0
 

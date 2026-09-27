@@ -31,7 +31,7 @@ timeout = 10
 statusMessage = "Checking A1 write scope"
 
 [[hooks.PreToolUse]]
-matcher = "^(mcp__.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$"
+matcher = "^(mcp__.*|codex_app.*|cua_repl.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$"
 
 [[hooks.PreToolUse.hooks]]
 type = "command"

@@ -3,10 +3,15 @@
   "purpose": "Deterministic CQ classification of Codex Desktop tool surfaces. Presence, trust, authority and invocation are separate decisions.",
   "enforcement": {
     "project_hook": ".codex/hooks/external_surface_guard.ps1",
-    "matcher": "^(mcp__.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$",
+    "matcher": "^(mcp__.*|codex_app.*|cua_repl.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$",
     "policy": "DENY_EXTERNAL_SURFACES_ALLOW_INTERNAL_NODE_REPL",
     "failure_mode": "FAIL_CLOSED_FOR_MATCHED_SURFACES",
-    "hook_trust": "HUMAN_REVIEW_CURRENT_HASH_REQUIRED_BEFORE_CQ"
+    "hook_trust": "HUMAN_REVIEW_CURRENT_HASH_REQUIRED_BEFORE_CQ",
+    "dynamic_hook_name_prefixes": [
+      "codex_app",
+      "cua_repl"
+    ],
+    "runtime_compatibility_note": "Codex 0.158 dynamic client tools can expose mcp__-style model names while PreToolUse matcher input uses a flattened dynamic namespace such as codex_app... or cua_repl...."
   },
   "presence_classes": [
     {
@@ -23,7 +28,11 @@
       ],
       "class": "CLIENT_BUILTIN_BROWSER_CONTROL",
       "presence": "ALLOWED_EXPECTED",
-      "invocation": "FORBIDDEN_BY_PROJECT_HOOK"
+      "invocation": "FORBIDDEN_BY_PROJECT_HOOK",
+      "hook_matcher_patterns": [
+        "mcp__cua_repl*",
+        "cua_repl*"
+      ]
     },
     {
       "patterns": [
@@ -31,7 +40,11 @@
       ],
       "class": "INTERNAL_CLIENT_CONTROL_PLANE",
       "presence": "ALLOWED_EXPECTED",
-      "invocation": "FORBIDDEN_BY_PROJECT_HOOK"
+      "invocation": "FORBIDDEN_BY_PROJECT_HOOK",
+      "hook_matcher_patterns": [
+        "mcp__codex_app__*",
+        "codex_app*"
+      ]
     },
     {
       "patterns": [
@@ -74,7 +87,9 @@
     "denial_probe_must_be_read_only_if_hook_is_skipped": true,
     "any_forbidden_mcp_invocation_reaching_backend": "SECURITY_STOP",
     "web_invocation_count_required": 0,
-    "external_plugin_skill_catalog_is_not_loaded_tool_evidence": true
+    "external_plugin_skill_catalog_is_not_loaded_tool_evidence": true,
+    "dynamic_client_hook_aliases_required": true,
+    "runtime_observed_security_stop_version": "0.158.0-alpha.2.1"
   },
   "sources": [
     "https://learn.chatgpt.com/docs/hooks",

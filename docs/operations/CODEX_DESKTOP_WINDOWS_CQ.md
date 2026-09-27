@@ -40,7 +40,9 @@ O Browser/CUA integrado do Desktop pode aparecer como `mcp__cua_repl.js` /
 por si só**. `mcp__codex_app__*` também pode estar presente como
 `INTERNAL_CLIENT_CONTROL_PLANE`.
 
-Nenhuma chamada MCP é autorizada durante o controller. Os hooks project-local são definidos inline em `.codex/config.toml` sob `[hooks]`; o `PreToolUse` de superfícies externas deve cobrir `mcp__.*` e negar a
+No runtime Codex 0.158, ferramentas dinâmicas do cliente podem ser exibidas ao modelo com nome `mcp__...`, mas chegar ao matcher `PreToolUse` com namespace dinâmico achatado. Para as superfícies atualmente classificadas, o guard precisa cobrir tanto `mcp__codex_app__*` quanto `codex_app*`, e tanto `mcp__cua_repl*` quanto `cua_repl*`. O SECURITY_STOP de 2026-09-27 em `mcp__codex_app__get_usage_limits` demonstrou que confiar apenas em `mcp__.*` não intercepta toda a superfície dinâmica.
+
+Nenhuma chamada MCP/cliente externa é autorizada durante o controller. Os hooks project-local são definidos inline em `.codex/config.toml` sob `[hooks]`; o `PreToolUse` de superfícies externas deve cobrir as formas MCP-visible e dynamic-hook-facing e negar a
 chamada antes do backend. Em CQ0, provar esse enforcement com uma única chamada
 read-only/inócua de uma superfície MCP conhecida, quando disponível. O resultado
 válido é denial pelo hook antes do efeito. Se a chamada alcançar o MCP
