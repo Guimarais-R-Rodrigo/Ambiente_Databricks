@@ -33,7 +33,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_AC_R2_CONTROLLER_STABILIZATION_1_STATIC_PASS_AWAITING_HOST_PREFLIGHT_V6",
+  "stage": "B1_AC_R2_CONTROLLER_STABILIZATION_1_FINAL_STATIC_PASS_AWAITING_HOST_PREFLIGHT_V6",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -1001,8 +1001,8 @@
     "max_concurrent_subagents": 5,
     "max_write_capable_agents": 1,
     "custom_agents": 5,
-    "controller_metatest_methods_static": 102,
-    "structural_validation": "PASS_CONTROLLER_STABILIZATION_1_STATIC",
+    "controller_metatest_methods_static": 105,
+    "structural_validation": "PASS_CONTROLLER_STABILIZATION_1_FINAL_STATIC",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
     "previous_static_audit": {
@@ -1019,7 +1019,7 @@
     "executor_permissions_default": "SER_B1_A1_EXACT_FILES_NO_DIRECT_GIT_OR_NETWORK",
     "ac_r2": {
       "authorization": "DIRECT_USER_CHAT_2026-09-26",
-      "state": "PASS_CONTROLLER_STABILIZATION_1_STATIC_AWAITING_HOST_PREFLIGHT_V6",
+      "state": "PASS_CONTROLLER_STABILIZATION_1_FINAL_STATIC_AWAITING_HOST_PREFLIGHT_V6",
       "scope": [
         "CR1_LEAST_PRIVILEGE_A1_PERMISSION_BOUNDARY",
         "CR2_DELTA_AND_STATE_TRANSITION_INTEGRITY",
@@ -1031,7 +1031,7 @@
       "legacy_sandbox_mode": false,
       "approval_boundary": "EXECUTOR_RULE_PROMPTS_ONLY_OTHER_ESCALATIONS_FAIL_CLOSED",
       "delta_schema": "SER-CODEX-AUTONOMY-DELTA-3",
-      "metatest_methods_static": 102,
+      "metatest_methods_static": 105,
       "runtime_qualification": "BLOCKED_PRIOR_ATTEMPTS_SUPERSEDED",
       "cq0_cq5": "NOT_RUN_ON_STABILIZATION_1_CANDIDATE",
       "b1_material_execution": "NOT_RUN",
@@ -1041,8 +1041,8 @@
       "material_findings_open": 0,
       "static_candidate_commit": "CURRENT_HEAD_AFTER_SINGLE_FREEZE_FAST_FORWARD",
       "static_candidate_tree": "CURRENT_TREE_AFTER_SINGLE_FREEZE_FAST_FORWARD",
-      "validator_execution": "NOT_RUN_ON_STABILIZATION_1_CANDIDATE",
-      "metatests_execution": "NOT_RUN_ON_STABILIZATION_1_CANDIDATE",
+      "validator_execution": "NOT_RUN_ON_FINAL_STABILIZATION_1_CANDIDATE",
+      "metatests_execution": "NOT_RUN_ON_FINAL_STABILIZATION_1_CANDIDATE",
       "limitations": [
         "HOST_PREFLIGHT_V5_RUNTIME_EXECUTION_REQUIRED",
         "NETWORK_PROBE_SERIALIZATION_SELFTEST_RUNTIME_REQUIRED",
@@ -1052,7 +1052,7 @@
         "GIT_TRANSPORT_AND_HOOK_RUNTIME_REQUIRE_CQ4",
         "NOMINAL_PROFILE_NAME_MAY_BE_NOT_OBSERVABLE_AND_REQUIRES_BEHAVIORAL_PROOF"
       ],
-      "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-16",
+      "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-17",
       "windows_bootstrap_maintenance": {
         "authorization": "DIRECT_USER_CHAT_2026-09-26",
         "trigger": "WINDOWS_SANDBOX_WORKSPACE_WRITE_NO_WRITABLE_ROOT_CAPABILITY_SIDS",
@@ -1431,7 +1431,9 @@
           "CQ4_TRANSPORT_NOT_BOUND_TO_HOST_PYTHON_PUSH_URL_OR_JOURNAL_ONLY_MODE",
           "SCOPE_HOOKS_NOT_FULLY_FAIL_CLOSED",
           "POST_CQ4_STATE_WRITE_CONTRADICTION",
-          "MANUAL_CHATGPT_HASH_HANDOFF_CREATED_IDENTITY_CHURN"
+          "MANUAL_CHATGPT_HASH_HANDOFF_CREATED_IDENTITY_CHURN",
+          "HOST_READY_PASS_REQUIRED_BEFORE_HUMAN_HOOK_TRUST_WAS_IMPOSSIBLE",
+          "GENERAL_PROTOCOL_REMAINED_ON_PREFLIGHT_V5_AFTER_DESKTOP_V6"
         ],
         "corrections": [
           "EXTERNAL_SURFACE_PRETOOL_GUARD_WITH_INTERNAL_NODE_REPL_EXCEPTION",
@@ -1444,13 +1446,15 @@
           "CQ4_BOUND_PYTHON_PUSH_URL_FETCH_BEFORE_COMMIT_JOURNAL_ONLY_REMOTE_READBACK",
           "HOST_PREFLIGHT_V6_CONTRACT_SELFTESTS",
           "MACHINE_GENERATED_CQ_RUN_REQUEST_AND_PROMPT",
-          "CQ_FINAL_RESULT_EXTERNAL_EVIDENCE_ONLY_AFTER_CQ4"
+          "CQ_FINAL_RESULT_EXTERNAL_EVIDENCE_ONLY_AFTER_CQ4",
+          "READINESS_CONTRACT_HOST_PASS_THEN_HUMAN_HOOK_TRUST",
+          "PROTOCOL_V6_TOOL_SURFACE_AND_EXTERNAL_RESULT_ALIGNMENT"
         ],
         "host_preflight_schema": "AC-R2-DESKTOP-HOST-PREFLIGHT-6",
         "tool_surface_policy_schema": "SER-CODEX-DESKTOP-TOOL-SURFACE-2",
         "run_request_schema": "SER-CODEX-DESKTOP-CQ-REQUEST-1",
-        "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-16",
-        "metatest_methods_static": 102,
+        "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-17",
+        "metatest_methods_static": 105,
         "permission_profiles_changed": false,
         "a1_write_boundary_changed": false,
         "a1_write_root_count": 10,
@@ -1463,24 +1467,26 @@
         "policy_promotion": "NOT_RUN",
         "ready": "NOT_RUN",
         "merge": "NOT_RUN",
-        "static_review": "PASS_SINGLE_FREEZE_GIT_OBJECT_RECHECK",
+        "static_review": "PASS_FINAL_CONTRADICTION_CONTENT_MODE_AND_INVARIANT_AUDIT",
         "material_findings_open": 0,
         "runtime_requalification": "REQUIRED_ONCE_AFTER_HOST_PREFLIGHT_V6",
         "freeze_policy": "ONE_REPO_COMMIT_THEN_NO_REPO_MUTATION_BEFORE_CQ",
         "handoff_policy": "HOST_GENERATED_CQ_RUN_REQUEST_AND_PROMPT",
-        "next_action": "FAST_FORWARD_ONCE_RUN_HOST_PREFLIGHT_V6_USE_GENERATED_CQ_RUN_PROMPT",
+        "next_action": "FAST_FORWARD_ONCE_RUN_HOST_PREFLIGHT_V6_REVIEW_HOOK_HASH_USE_GENERATED_CQ_RUN_PROMPT",
         "hook_trust_precondition": "HUMAN_REVIEW_CURRENT_HASH_REQUIRED_BEFORE_CQ",
         "hook_trust_semantics": "PRE_CQ_PRECONDITION_NOT_CQ_RESULT",
         "final_precommit_audit": {
           "result": "PASS",
           "findings_open": 0,
           "candidate_policy_schema": "SER-CODEX-DESKTOP-TOOL-SURFACE-2",
-          "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-16",
-          "metatest_methods_static": 102,
+          "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-17",
+          "metatest_methods_static": 105,
           "validator_git_mode": "100755",
           "config_changed": false,
           "autonomy_envelope_changed": false,
           "hook_trust_precondition": "REQUIRED_BEFORE_CQ0",
+          "host_readiness_output": "CQ_READY_TO_RUN=AFTER_PROJECT_HOOK_TRUST",
+          "protocol_preflight_version": "v6",
           "no_post_freeze_repo_commit": true
         }
       }

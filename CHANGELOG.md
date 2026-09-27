@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-27 — Controller Stabilization 1: fechamento de contradições finais
+
+- (ChatGPT) Contraditório final encontrou duas inconsistências antes do novo CQ: o bootstrap exigia `CQ_READY_TO_RUN = PASS` antes do trust humano embora o preflight só possa emitir `AFTER_PROJECT_HOOK_TRUST`; e o protocolo geral ainda referenciava preflight v5/classificação antiga de tools.
+- (ChatGPT) Contrato final separa fases: host preflight v6 PASS -> revisão/trust humano do hash atual dos project hooks -> nova conversa CQ gerada mecanicamente. O host nunca declara trust em nome do usuário.
+- (ChatGPT) Protocolo geral alinhado ao v6/tool-surface policy v2 e ao resultado pós-CQ4 somente em evidence externo, sem segunda escrita repo-side.
+- (ChatGPT) Validator sobe para `SER-CODEX-AUTONOMY-VALIDATION-17` e passa a falhar em readiness prematuro, drift do protocolo e regressão para preflight v5.
+- (ChatGPT) Metatest methods definidos = 105; permissions/config/envelope/A1 roots/network/A2 permanecem inalterados; runtime novo ainda NOT_RUN.
+
 ## 2026-09-27 — Codex Autonomous Controller: estabilização consolidada
 
 - (ChatGPT) Manutenção consolidada autorizada após CQ blockers sucessivos; nenhum B1 material, A2, G6/Genie/Databricks material, promoção, Ready ou merge.

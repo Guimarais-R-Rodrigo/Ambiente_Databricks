@@ -931,6 +931,30 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("HOOK_TRUST_REVIEW_REQUIRED", text)
         self.assertIn("PROJECT_HOOK_TRUST", text)
 
+    def test_readiness_contract_requires_human_hook_trust_before_cq(self):
+        start = (ROOT / "docs/operations/CODEX_AUTONOMOUS_START_PROMPT.md").read_text(encoding="utf-8")
+        desktop = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        preflight = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        for text in (start, desktop, preflight):
+            self.assertIn("CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST", text)
+        self.assertNotIn("CQ_READY_TO_RUN = PASS", start)
+        self.assertNotIn("CQ_READY_TO_RUN = PASS", desktop)
+
+    def test_protocol_stabilization_is_v6_surface_policy_and_external_result_consistent(self):
+        text = (ROOT / "docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md").read_text(encoding="utf-8")
+        self.assertIn("host preflight v6", text)
+        self.assertNotIn("host preflight v5", text)
+        self.assertIn("CODEX_DESKTOP_TOOL_SURFACE_POLICY.json", text)
+        self.assertIn("external_surface_guard", text)
+        self.assertIn("Depois de CQ4 não há segunda escrita repo-side", text)
+
+    def test_validator_v17_enforces_start_and_protocol_consistency(self):
+        text = (ROOT / "tools/validate_codex_autonomy.py").read_text(encoding="utf-8")
+        self.assertIn("SER-CODEX-AUTONOMY-VALIDATION-17", text)
+        self.assertIn("CODEX_AUTONOMOUS_START_PROMPT_PREMATURE_READY_PASS", text)
+        self.assertIn("CODEX_AUTONOMOUS_PROTOCOL_STABILIZATION_DRIFT", text)
+        self.assertIn("DESKTOP_WINDOWS_CQ_PREMATURE_READY_PASS", text)
+
     def test_claude_uses_progressive_changelog_disclosure(self):
         text = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
         self.assertIn("Não carregue `CHANGELOG.md` integralmente", text)

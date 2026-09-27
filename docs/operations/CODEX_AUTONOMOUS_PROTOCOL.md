@@ -55,25 +55,17 @@ não muda permission profiles nem autoridade normal e não pode ser usada fora d
 CONTROLLER_RUNTIME_QUALIFICATION. Metadata declarativa do role não substitui
 enforcement comportamental.
 
-No CQ3 Desktop, command-network é provado por `.codex/probes/cq3_executor_network_probe.ps1`, source-SHA-bound pelo host preflight v5. Antes de qualquer baseline/retry de CQ, o host executa `-SelfTest` no mesmo Windows PowerShell: três payloads sintéticos, JSON round-trip e zero network attempts. O script runtime reutiliza o IPv4:443 previamente validado no host, faz um único TCP raw BeginConnect/EndConnect e não usa DNS/HTTP/TLS/auth na sandbox. AccessDenied/10013 é denial; conexão bem-sucedida prova network boundary aberta; demais erros ficam NOT_PROVEN.
+No CQ3 Desktop, command-network é provado por `.codex/probes/cq3_executor_network_probe.ps1`, source-SHA-bound pelo host preflight v6. Antes de qualquer baseline/retry de CQ, o host executa `-SelfTest` no mesmo Windows PowerShell: três payloads sintéticos, JSON round-trip e zero network attempts. O script runtime reutiliza o IPv4:443 previamente validado no host, faz um único TCP raw BeginConnect/EndConnect e não usa DNS/HTTP/TLS/auth na sandbox. AccessDenied/10013 é denial; conexão bem-sucedida prova network boundary aberta; demais erros ficam NOT_PROVEN.
 
 No Desktop, ausência da CLI Codex, de credenciais Git dentro da sandbox ou do
 nome nominal do permission profile não é automaticamente equivalente a falha.
-O contrato Desktop usa host preflight v5 para identidade e CQ0.5/CQ5 repo-side; Python roda somente no host. CQ3/CQ4 continuam provas comportamentais obrigatórias do sandbox. Quando o nome do profile não é observável, o PASS agregado exige CQ3/CQ4 e CQ5 host-bound verdes.
+O contrato Desktop usa host preflight v6 para identidade e CQ0.5/CQ5 repo-side; Python roda somente no host. CQ3/CQ4 continuam provas comportamentais obrigatórias do sandbox. Quando o nome do profile não é observável, o PASS agregado exige CQ3/CQ4 e CQ5 host-bound verdes.
 Estado de PR pode ficar `DEFERRED_TO_EXTERNAL_ADJUDICATION` e ser recomputado
 fora da sessão.
 
-Tools internos `mcp__codex_app__*` são control-plane do cliente e são
-inventariados separadamente; presença não os transforma em transporte A1.
-Mutadores internos continuam proibidos durante CQ. Plugins externos persistentes
-write-capable devem estar desabilitados durante qualificação.
+`CODEX_DESKTOP_TOOL_SURFACE_POLICY.json` separa presença, trust, autoridade e invocação. `mcp__node_repl__*` é control-plane interno de code mode; Browser/CUA integrado e `mcp__codex_app__*` podem estar presentes sem virar transporte A1. Antes de CQ0, o hash atual dos hooks do projeto precisa estar revisado/confiado. O `external_surface_guard` bloqueia Browser/CUA, Codex-app, MCP externos/resources e web conforme a policy; qualquer superfície proibida que alcance o backend é `SECURITY_STOP`.
 
-CQ0–CQ5 pode produzir um resultado técnico verde, mas A1 não pode promover a
-própria qualificação a autoridade canônica. Quando CQ passar, A1 pode registrar:
-
-`REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE`
-
-e deve manter `AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION` em `blocked_by`.
+CQ0–CQ5 pode produzir um resultado técnico verde, mas A1 não pode promover a própria qualificação a autoridade canônica. Depois de CQ4 não há segunda escrita repo-side para registrar o resultado: `REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE` fica somente no pacote externo de evidências, e `AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION` permanece em `blocked_by`.
 A remoção desse blocker e o estado canônico `PASS` exigem o Human Gate já
 existente `CONTROLLER_MAINTENANCE`. Não é um novo gate.
 

@@ -274,7 +274,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-16",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-17",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -465,6 +465,10 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         )
         if any(token not in desktop_text for token in required_desktop_tokens):
             issues.append("DESKTOP_WINDOWS_CQ_CONTRACT_INVALID")
+        if "CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST" not in desktop_text:
+            issues.append("DESKTOP_WINDOWS_CQ_READINESS_CONTRACT")
+        if "CQ_READY_TO_RUN = PASS" in desktop_text:
+            issues.append("DESKTOP_WINDOWS_CQ_PREMATURE_READY_PASS")
     if desktop_preflight_path.is_file():
         preflight_text = desktop_preflight_path.read_text(encoding="utf-8")
         required_preflight_tokens = (
@@ -509,6 +513,42 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             issues.append("DESKTOP_WINDOWS_HOST_PREFLIGHT_INVALID")
         if "pip install" in preflight_text or "python -m pip" in preflight_text:
             issues.append("DESKTOP_WINDOWS_HOST_PREFLIGHT_INSTALL_FORBIDDEN")
+        if "CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST" not in preflight_text:
+            issues.append("DESKTOP_WINDOWS_HOST_PREFLIGHT_READINESS_CONTRACT")
+
+    start_prompt_path = root / "docs" / "operations" / "CODEX_AUTONOMOUS_START_PROMPT.md"
+    if start_prompt_path.is_file():
+        start_text = start_prompt_path.read_text(encoding="utf-8")
+        required_start_tokens = (
+            "HOOK_TRUST_REVIEW_REQUIRED = true",
+            "CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST",
+            "Settings > Hooks",
+            "CQ_RUN_REQUEST.json",
+            "CQ_RUN_PROMPT.md",
+        )
+        if any(token not in start_text for token in required_start_tokens):
+            issues.append("CODEX_AUTONOMOUS_START_PROMPT_INVALID")
+        if "CQ_READY_TO_RUN = PASS" in start_text:
+            issues.append("CODEX_AUTONOMOUS_START_PROMPT_PREMATURE_READY_PASS")
+    else:
+        issues.append("CODEX_AUTONOMOUS_START_PROMPT_MISSING")
+
+    protocol_path = root / "docs" / "operations" / "CODEX_AUTONOMOUS_PROTOCOL.md"
+    if protocol_path.is_file():
+        protocol_text = protocol_path.read_text(encoding="utf-8")
+        required_protocol_tokens = (
+            "host preflight v6",
+            "CODEX_DESKTOP_TOOL_SURFACE_POLICY.json",
+            "external_surface_guard",
+            "Depois de CQ4 não há segunda escrita repo-side",
+            "AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION",
+        )
+        if any(token not in protocol_text for token in required_protocol_tokens):
+            issues.append("CODEX_AUTONOMOUS_PROTOCOL_STABILIZATION_DRIFT")
+        if "host preflight v5" in protocol_text:
+            issues.append("CODEX_AUTONOMOUS_PROTOCOL_LEGACY_PREFLIGHT")
+    else:
+        issues.append("CODEX_AUTONOMOUS_PROTOCOL_MISSING")
 
     network_probe_path = root / ".codex" / "probes" / "cq3_executor_network_probe.ps1"
     if network_probe_path.is_file():
@@ -650,7 +690,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-16",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-17",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),
