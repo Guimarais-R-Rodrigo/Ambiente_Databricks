@@ -218,7 +218,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-13",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-14",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -304,6 +304,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
                 "AccessDenied",
                 "10013",
                 "Do not use Invoke-WebRequest",
+                "serialization self-test PASS",
             )
             if any(token not in instructions for token in required_cq3_tokens):
                 issues.append("EXECUTOR_CQ3_BEHAVIORAL_PROBE_CONTRACT:" + role)
@@ -381,7 +382,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         required_desktop_tokens = (
             "CODEX_DESKTOP_WINDOWS",
             "CQ_HOST_PREFLIGHT.json",
-            "AC-R2-DESKTOP-HOST-PREFLIGHT-4",
+            "AC-R2-DESKTOP-HOST-PREFLIGHT-5",
             "NOT_OBSERVABLE_DESKTOP",
             "PASS_BEHAVIORALLY",
             "INTERNAL_CLIENT_CONTROL_PLANE",
@@ -390,6 +391,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "HOST_VALIDATOR",
             "HOST_METATESTS",
             "HOST_NETWORK_BASELINE",
+            "NETWORK_PROBE_SERIALIZATION_SELFTEST",
             "AccessDenied",
             "10013",
         )
@@ -399,7 +401,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         preflight_text = desktop_preflight_path.read_text(encoding="utf-8")
         required_preflight_tokens = (
             "git fetch origin $ExpectedBranch",
-            "AC-R2-DESKTOP-HOST-PREFLIGHT-4",
+            "AC-R2-DESKTOP-HOST-PREFLIGHT-5",
             "CQ_HOST_PREFLIGHT.json",
             "jsonschema",
             "recorded_at_unix_seconds",
@@ -412,6 +414,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "source_sha256",
             "network_probe",
             "network_probe_script",
+            "networkSelfTestPayload",
+            "NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS",
             "HOST_NETWORK_BASELINE = PASS",
             "$NetworkProbeHost",
             "selected_ipv4",
@@ -429,7 +433,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
     if network_probe_path.is_file():
         network_probe_text = network_probe_path.read_text(encoding="utf-8")
         required_network_probe_tokens = (
-            "AC-R2-DESKTOP-HOST-PREFLIGHT-4",
+            "AC-R2-DESKTOP-HOST-PREFLIGHT-5",
             "network_probe_script",
             "BeginConnect",
             "EndConnect",
@@ -442,11 +446,19 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "TCP_RAW",
             "dns_in_sandbox",
             "CQ_HOST_PREFLIGHT.sha256",
+            "AC-R2-CQ3-NETWORK-PROBE-SELFTEST-1",
+            "Convert-ProbePayloadToJson",
+            "New-ProbePayload",
+            "network_attempt_count",
         )
         if any(token not in network_probe_text for token in required_network_probe_tokens):
             issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_INVALID")
         if network_probe_text.count(".BeginConnect(") != 1:
             issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_NOT_SINGLE_CONNECT")
+        if "New-Object System.Collections.Generic.List[object]" in network_probe_text:
+            issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_UNSAFE_GENERIC_LIST")
+        if "exception_type = $(if" in network_probe_text:
+            issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_INLINE_DYNAMIC_PAYLOAD_FORBIDDEN")
         forbidden_network_probe_tokens = (
             "Invoke-WebRequest",
             "HttpClient",
@@ -509,7 +521,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-13",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-14",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),

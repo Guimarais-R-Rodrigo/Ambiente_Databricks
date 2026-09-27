@@ -225,9 +225,9 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("CQ_HOST_PREFLIGHT.json", text)
         self.assertIn("CQ_HOST_PREFLIGHT.sha256", text)
 
-    def test_desktop_host_preflight_v4_runs_validator_and_metatests_host_side(self):
+    def test_desktop_host_preflight_v5_runs_validator_and_metatests_host_side(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
-        self.assertIn("AC-R2-DESKTOP-HOST-PREFLIGHT-4", text)
+        self.assertIn("AC-R2-DESKTOP-HOST-PREFLIGHT-5", text)
         self.assertIn("tools/validate_codex_autonomy.py", text)
         self.assertIn("tools.tests.test_codex_autonomy", text)
         self.assertIn("HOST_VALIDATOR = PASS", text)
@@ -235,13 +235,44 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn('execution_surface="HOST_ONLY"', text)
         self.assertNotIn("QualifiedPythonRootRelative", text)
 
-    def test_desktop_host_preflight_v4_binds_raw_tcp_baseline_and_probe_source(self):
+    def test_desktop_host_preflight_v5_binds_raw_tcp_baseline_and_probe_source(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn('$NetworkProbeHost = "github.com"', text)
         self.assertIn("$NetworkProbePort = 443", text)
         self.assertIn("HOST_NETWORK_BASELINE = PASS", text)
         self.assertIn('network_probe_script = ".codex\\probes\\cq3_executor_network_probe.ps1"', text)
         self.assertIn("selected_ipv4", text)
+
+    def test_network_probe_avoids_windows_powershell_generic_list_serialization_bug(self):
+        text = (ROOT / ".codex/probes/cq3_executor_network_probe.ps1").read_text(encoding="utf-8")
+        self.assertNotIn("New-Object System.Collections.Generic.List[object]", text)
+        self.assertNotIn("exception_type = $(if", text)
+        self.assertIn("$exceptionChain = @()", text)
+        self.assertIn("$exceptionType = $null", text)
+        self.assertIn("exception_chain = [object[]]$ExceptionChain", text)
+
+    def test_network_probe_has_offline_serialization_selftest_for_all_three_outcomes(self):
+        text = (ROOT / ".codex/probes/cq3_executor_network_probe.ps1").read_text(encoding="utf-8")
+        self.assertIn("[switch]$SelfTest", text)
+        self.assertIn("AC-R2-CQ3-NETWORK-PROBE-SELFTEST-1", text)
+        self.assertIn("network_attempt_count = 0", text)
+        for outcome in ("PASS_NETWORK_DENIED", "FAIL_NETWORK_BOUNDARY_OPEN", "NOT_PROVEN"):
+            self.assertIn(outcome, text)
+
+    def test_host_preflight_requires_probe_serialization_selftest_before_network_baseline(self):
+        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        self.assertIn('"powershell.exe"', text)
+        self.assertIn('"-SelfTest"', text)
+        self.assertIn("CQ_HOST_PREFLIGHT_NETWORK_PROBE_SELFTEST_INVALID_JSON", text)
+        self.assertIn("CQ_HOST_PREFLIGHT_NETWORK_PROBE_SELFTEST_CONTRACT_FAIL", text)
+        self.assertIn("NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS", text)
+        self.assertLess(text.index("CQ_HOST_PREFLIGHT_NETWORK_PROBE_SELFTEST_CONTRACT_FAIL"), text.index("$networkProbeAddresses = @("))
+
+    def test_desktop_contract_requires_host_probe_serialization_selftest(self):
+        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        self.assertIn("NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS", text)
+        self.assertIn("network_attempt_count=0", text)
+        self.assertIn("case_count=3", text)
 
     def test_executor_network_probe_is_single_raw_tcp_attempt_without_high_level_stack(self):
         text = (ROOT / ".codex/probes/cq3_executor_network_probe.ps1").read_text(encoding="utf-8")

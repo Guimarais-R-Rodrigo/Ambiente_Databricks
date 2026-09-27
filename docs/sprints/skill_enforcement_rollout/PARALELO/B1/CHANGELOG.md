@@ -177,3 +177,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) CM-DESKTOP-RUNTIME-5: incorporado commit parcial c9648525 e endurecido com protected SHA-bound raw TCP probe; AccessDenied/10013-only PASS; permissions/writes/network policy/A2 inalterados. Validator V13, 80 metatest methods definidos; runtime NOT_RUN.
 
 (ChatGPT) CM-DESKTOP-RUNTIME-5 static PASS em a486187264e25ff972dae81f4f90ee3cea103726/5170fa2ec7b147174c0f254691431037c2193151: host preflight v4 + protected SHA-bound raw TCP single-shot probe; AccessDenied/10013-only PASS; config permissions unchanged. Validator V13, 80 metatest methods definidos, 0 findings materiais. Próximo: preflight v4 + fresh CQ.
+
+(ChatGPT) CM-DESKTOP-RUNTIME-6: corrigida serialização PowerShell do protected network probe; self-test offline 3-case/0-network no preflight v5 antes do TCP baseline; oracle/permissions/writes/network policy/A2 inalterados. Validator V14, 84 metatest methods definidos; runtime NOT_RUN.
