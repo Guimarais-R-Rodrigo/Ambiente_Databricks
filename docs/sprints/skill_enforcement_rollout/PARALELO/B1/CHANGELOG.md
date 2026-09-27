@@ -195,3 +195,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) Stabilization 2: autonomia operacional A1 implementada com transporte multi-commit separado do CQ, checkpoint externo, repair causal até orçamento existente e reconciliação idempotente de publicação parcial. Validator V18/113 metatests; write roots permanecem 10; sem B1 material/A2/G6/Genie/Databricks/promotion/Ready/merge.
 
 (ChatGPT) Stabilization 2 pente-fino final: validator V19, 124 metatests, operational policy/checkpoint V2, bootstrap pós-CQ canônico, control-source hash binding e envelope de autoridade restaurado ao blob qualificado V2. Static audit PASS; host/runtime NOT_RUN; sem B1 material/A2/G6/Genie/Databricks/promotion/Ready/merge.
+
+- 2026-09-27 (ChatGPT): controller-maintenance migrou hooks project-local de `.codex/hooks.json` para tabelas inline `[hooks]` em `.codex/config.toml` após Codex CLI 0.157.1 carregar a config do projeto mas reportar `Installed 0` para todos os eventos; validator V20 e bindings de preflight/operational control identity foram alinhados. Sem expansão de autoridade.

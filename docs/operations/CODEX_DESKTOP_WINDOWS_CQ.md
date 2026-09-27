@@ -21,7 +21,7 @@ O artefato canônico de host evidence é `CQ_HOST_PREFLIGHT.json`, acompanhado d
 `selected_ipv4`, porta 443 e baseline host-side single-shot.
 Schema: `AC-R2-DESKTOP-HOST-PREFLIGHT-6`.
 
-O host preflight **não** pode declarar trust dos hooks em nome do usuário. `CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST` significa que a qualificação host-side está verde, mas a conversa CQ só pode iniciar após a revisão/confiança humana do hash atual em Settings > Hooks. O próprio CQ verifica essa pré-condição antes de CQ0.
+O host preflight **não** pode declarar trust dos hooks em nome do usuário. `CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST` significa que a qualificação host-side está verde, mas a conversa CQ só pode iniciar após a revisão/confiança humana do hook atual pelo navegador `/hooks` de uma sessão Codex local suportada no mesmo projeto. O próprio CQ verifica essa pré-condição antes de CQ0.
 
 O preflight v6 executa no host `validate_codex_autonomy.py --json` e `unittest tools.tests.test_codex_autonomy -v`, registra exit codes, test count, hashes de stdout/stderr, source SHA-256, HEAD/tree/config e worktree clean. Antes do baseline TCP, executa o probe protegido com `-SelfTest`: três payloads sintéticos (PASS/FAIL/NOT_PROVEN), round-trip JSON e zero tentativas de rede. Só depois faz o baseline TCP host-side. Python é `HOST_ONLY`; não instalar dependências.
 
@@ -36,8 +36,7 @@ O Browser/CUA integrado do Desktop pode aparecer como `mcp__cua_repl.js` /
 por si só**. `mcp__codex_app__*` também pode estar presente como
 `INTERNAL_CLIENT_CONTROL_PLANE`.
 
-Nenhuma chamada MCP é autorizada durante o controller. `.codex/hooks.json`
-deve carregar um `PreToolUse` com matcher `^mcp__.*`; o guard deve negar a
+Nenhuma chamada MCP é autorizada durante o controller. Os hooks project-local são definidos inline em `.codex/config.toml` sob `[hooks]`; o `PreToolUse` de superfícies externas deve cobrir `mcp__.*` e negar a
 chamada antes do backend. Em CQ0, provar esse enforcement com uma única chamada
 read-only/inócua de uma superfície MCP conhecida, quando disponível. O resultado
 válido é denial pelo hook antes do efeito. Se a chamada alcançar o MCP

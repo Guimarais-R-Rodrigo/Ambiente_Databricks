@@ -274,7 +274,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-19",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-20",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -419,7 +419,6 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         "docs/operations/CODEX_RUNTIME_QUALIFICATION.md",
         "docs/operations/autonomy/autonomy-envelope.schema.json",
         ".agents/skills/ser-autonomous-controller/SKILL.md",
-        ".codex/hooks.json",
         ".codex/hooks/pre_scope_guard.py",
         ".codex/hooks/post_scope_guard.py",
         ".codex/hooks/pre_scope_guard.ps1",
@@ -765,30 +764,37 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
     else:
         issues.append("DESKTOP_TOOL_SURFACE_POLICY_MISSING")
 
-    hooks_path = root / ".codex" / "hooks.json"
-    if hooks_path.is_file():
-        try:
-            hooks_payload = _read_json(hooks_path)
-            hooks = hooks_payload.get("hooks") or {}
-            pre = hooks.get("PreToolUse") or []
-            post = hooks.get("PostToolUse") or []
-            if not pre or not post:
-                issues.append("HOOK_CONFIG_MISSING_PRE_OR_POST")
-            serialized = json.dumps(hooks_payload)
-            if (
-                "pre_scope_guard" not in serialized
-                or "post_scope_guard" not in serialized
-                or "external_surface_guard" not in serialized
-                or "^(mcp__.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$" not in serialized
-            ):
-                issues.append("HOOK_CONFIG_INVALID")
-            for group in pre:
-                for hook in group.get("hooks") or []:
-                    windows_command = str(hook.get("commandWindows") or "")
-                    if ".codex\\\\hooks\\\\external_surface_guard.ps1" in windows_command:
-                        issues.append("HOOK_WINDOWS_EXTERNAL_SURFACE_PATH_DOUBLE_SEPARATOR")
-        except Exception as exc:
-            issues.append("HOOK_CONFIG_UNREADABLE:" + type(exc).__name__)
+    hooks_configured = False
+    hooks_json_path = root / ".codex" / "hooks.json"
+    if hooks_json_path.exists():
+        issues.append("HOOK_JSON_DUPLICATE_SOURCE_FORBIDDEN")
+    try:
+        hooks = cfg.get("hooks") or {}
+        pre = hooks.get("PreToolUse") or []
+        post = hooks.get("PostToolUse") or []
+        if not isinstance(hooks, dict) or not pre or not post:
+            issues.append("HOOK_CONFIG_MISSING_PRE_OR_POST")
+        else:
+            hooks_configured = True
+        serialized = json.dumps(hooks)
+        if (
+            "pre_scope_guard" not in serialized
+            or "post_scope_guard" not in serialized
+            or "external_surface_guard" not in serialized
+            or "^(mcp__.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$" not in serialized
+        ):
+            issues.append("HOOK_CONFIG_INVALID")
+        for group in pre:
+            for hook in group.get("hooks") or []:
+                windows_command = str(
+                    hook.get("commandWindows")
+                    or hook.get("command_windows")
+                    or ""
+                )
+                if ".codex\\\\hooks\\\\external_surface_guard.ps1" in windows_command:
+                    issues.append("HOOK_WINDOWS_EXTERNAL_SURFACE_PATH_DOUBLE_SEPARATOR")
+    except Exception as exc:
+        issues.append("HOOK_CONFIG_UNREADABLE:" + type(exc).__name__)
 
     agents_md = root / "AGENTS.md"
     if agents_md.is_file():
@@ -807,7 +813,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-19",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-20",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),
@@ -817,7 +823,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         "executor_permissions": A1_PROFILE,
         "direct_a1_network": False,
         "direct_git_metadata_write": False,
-        "hooks_configured": hooks_path.is_file(),
+        "hooks_configured": hooks_configured,
         "desktop_windows_cq_contract": desktop_cq_path.is_file(),
         "desktop_host_preflight": desktop_preflight_path.is_file(),
     }

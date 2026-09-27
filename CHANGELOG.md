@@ -4672,3 +4672,11 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 
 - (ChatGPT) Corrigida a sintaxe do workspace root externo A0 de `~\codex-scratch\Ambiente_Databricks` para `~/codex-scratch/Ambiente_Databricks`, após o parser real do Codex CLI rejeitar a forma Windows com backslash antes de iniciar a sessão.
 - (ChatGPT) Validator, metatests e contratos operacionais foram alinhados à forma home-relative aceita pelo cliente; adicionado teste de regressão para impedir reintrodução de `~\...` em permission-profile paths. Nenhuma permissão, write root, hook, transporte, envelope, A2, produto ou G6 foi ampliado.
+
+
+## 2026-09-27 — descoberta de hooks project-local no Codex CLI (ChatGPT)
+
+### Corrigido
+
+- (ChatGPT) Migrou a definição dos hooks do controller de `.codex/hooks.json` para tabelas inline `[hooks]` em `.codex/config.toml`, representação oficialmente suportada pela mesma camada de configuração que o Codex CLI 0.157.1 comprovou carregar. O arquivo `hooks.json` foi removido para evitar dupla execução caso a descoberta por arquivo volte a funcionar.
+- (ChatGPT) Validator V20, metatests, host preflight, control-identity do transporte operacional e contratos Desktop foram alinhados à fonte inline. O trust humano passa a ser revisado pelo navegador `/hooks` de uma sessão Codex local suportada no mesmo projeto. Nenhuma permissão, write root, A2, produto ou G6 foi ampliado.

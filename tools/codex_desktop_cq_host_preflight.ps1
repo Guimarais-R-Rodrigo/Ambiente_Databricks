@@ -111,7 +111,7 @@ $sourcePaths = [ordered]@{
     runtime_contract = "docs\operations\CODEX_RUNTIME_QUALIFICATION.md"
     desktop_contract = "docs\operations\CODEX_DESKTOP_WINDOWS_CQ.md"
     start_prompt = "docs\operations\CODEX_AUTONOMOUS_START_PROMPT.md"
-    hooks = ".codex\hooks.json"
+    hooks = ".codex\config.toml"
     pre_scope_guard = ".codex\hooks\pre_scope_guard.ps1"
     pre_scope_guard_python = ".codex\hooks\pre_scope_guard.py"
     post_scope_guard = ".codex\hooks\post_scope_guard.ps1"
@@ -169,7 +169,7 @@ $metatestStderr = Join-Path $outputRootFull "CQ_HOST_METATESTS.stderr.txt"
 $validatorExit = Invoke-CapturedProcess -FilePath $python.executable -ArgumentList @("-B", "tools/validate_codex_autonomy.py", "--json") -StdoutPath $validatorStdout -StderrPath $validatorStderr
 try { $validatorPayload = Get-Content -LiteralPath $validatorStdout -Raw | ConvertFrom-Json } catch { throw "CQ_HOST_PREFLIGHT_VALIDATOR_OUTPUT_NOT_JSON" }
 if ($validatorExit -ne 0 -or $validatorPayload.status -ne "PASS") { throw "CQ_HOST_PREFLIGHT_VALIDATOR_FAILED:$($validatorExit):$($validatorPayload.status)" }
-if ($validatorPayload.schema_version -ne "SER-CODEX-AUTONOMY-VALIDATION-19") { throw "CQ_HOST_PREFLIGHT_VALIDATOR_SCHEMA:$($validatorPayload.schema_version)" }
+if ($validatorPayload.schema_version -ne "SER-CODEX-AUTONOMY-VALIDATION-20") { throw "CQ_HOST_PREFLIGHT_VALIDATOR_SCHEMA:$($validatorPayload.schema_version)" }
 $metatestExit = Invoke-CapturedProcess -FilePath $python.executable -ArgumentList @("-B", "-m", "unittest", "tools.tests.test_codex_autonomy", "-v") -StdoutPath $metatestStdout -StderrPath $metatestStderr
 $metatestText = ""
 if (Test-Path -LiteralPath $metatestStdout) { $metatestText += Get-Content -LiteralPath $metatestStdout -Raw }

@@ -122,6 +122,8 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertNotIn("HOOKS_NOT_ENABLED", result["issues"])
         self.assertNotIn("HOOK_CONFIG_INVALID", result["issues"])
         self.assertNotIn("HOOK_CONFIG_MISSING_PRE_OR_POST", result["issues"])
+        self.assertNotIn("HOOK_JSON_DUPLICATE_SOURCE_FORBIDDEN", result["issues"])
+        self.assertFalse((ROOT / ".codex/hooks.json").exists())
 
     def test_runtime_qualification_document_exists(self):
         self.assertTrue((ROOT / "docs/operations/CODEX_RUNTIME_QUALIFICATION.md").is_file())
@@ -851,7 +853,7 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("mcp__node_repl__*", serialized)
 
     def test_hooks_include_fail_closed_mcp_guard(self):
-        hooks = json.loads((ROOT / ".codex/hooks.json").read_text(encoding="utf-8"))
+        hooks = val._read_toml(ROOT / ".codex/config.toml")["hooks"]
         serialized = json.dumps(hooks)
         self.assertIn("^(mcp__.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$", serialized)
         self.assertIn("external_surface_guard", serialized)
@@ -964,9 +966,10 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("external_surface_guard", text)
         self.assertIn("Depois de CQ4 não há segunda escrita repo-side", text)
 
-    def test_validator_v19_enforces_start_and_protocol_consistency(self):
+    def test_validator_v20_enforces_start_protocol_and_inline_hooks_consistency(self):
         text = (ROOT / "tools/validate_codex_autonomy.py").read_text(encoding="utf-8")
-        self.assertIn("SER-CODEX-AUTONOMY-VALIDATION-19", text)
+        self.assertIn("SER-CODEX-AUTONOMY-VALIDATION-20", text)
+        self.assertIn("HOOK_JSON_DUPLICATE_SOURCE_FORBIDDEN", text)
         self.assertIn("CODEX_AUTONOMOUS_START_PROMPT_PREMATURE_READY_PASS", text)
         self.assertIn("CODEX_AUTONOMOUS_PROTOCOL_STABILIZATION_DRIFT", text)
         self.assertIn("DESKTOP_WINDOWS_CQ_PREMATURE_READY_PASS", text)
@@ -1141,12 +1144,12 @@ class CodexAutonomyTests(unittest.TestCase):
             self.assertEqual("PASS", delta.check_delta(head1, head2)["status"])
 
     def test_external_surface_hook_windows_path_is_normalized(self):
-        hooks = json.loads((ROOT / ".codex/hooks.json").read_text(encoding="utf-8"))
+        hooks = val._read_toml(ROOT / ".codex/config.toml")["hooks"]
         commands = [
-            hook.get("commandWindows", "")
-            for group in hooks["hooks"]["PreToolUse"]
+            hook.get("command_windows", hook.get("commandWindows", ""))
+            for group in hooks["PreToolUse"]
             for hook in group.get("hooks", [])
-            if "external_surface_guard" in hook.get("commandWindows", "")
+            if "external_surface_guard" in hook.get("command_windows", hook.get("commandWindows", ""))
         ]
         self.assertEqual(1, len(commands))
         self.assertIn(".codex\\hooks\\external_surface_guard.ps1", commands[0])

@@ -18,6 +18,38 @@ multi_agent = true
 goals = true
 hooks = true
 
+# Project-local lifecycle hooks are inline in this active config layer.
+# This avoids dependence on hooks.json discovery while preserving the same hook definitions.
+[[hooks.PreToolUse]]
+matcher = "apply_patch|Edit|Write"
+
+[[hooks.PreToolUse.hooks]]
+type = "command"
+command = "python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/pre_scope_guard.py\""
+command_windows = "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$r=(git rev-parse --show-toplevel).Trim(); & (Join-Path $r '.codex\\hooks\\pre_scope_guard.ps1')\""
+timeout = 10
+statusMessage = "Checking A1 write scope"
+
+[[hooks.PreToolUse]]
+matcher = "^(mcp__.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$"
+
+[[hooks.PreToolUse.hooks]]
+type = "command"
+command = "python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/external_surface_guard.py\""
+command_windows = "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$r=(git rev-parse --show-toplevel).Trim(); & (Join-Path $r '.codex\\hooks\\external_surface_guard.ps1')\""
+timeout = 10
+statusMessage = "Enforcing SER external tool boundary"
+
+[[hooks.PostToolUse]]
+matcher = "Bash|apply_patch|Edit|Write"
+
+[[hooks.PostToolUse.hooks]]
+type = "command"
+command = "python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/post_scope_guard.py\""
+command_windows = "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$r=(git rev-parse --show-toplevel).Trim(); & (Join-Path $r '.codex\\hooks\\post_scope_guard.ps1')\""
+timeout = 10
+statusMessage = "Verifying A1 worktree scope"
+
 [agents]
 enabled = true
 max_concurrent_threads_per_session = 5

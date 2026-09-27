@@ -31,7 +31,7 @@ CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST
 - `CQ_RUN_REQUEST.json` + sidecar SHA256;
 - `CQ_RUN_PROMPT.md`.
 
-4. Antes da conversa CQ, abrir **Settings > Hooks** no Codex app e revisar/confiar os hooks do projeto para a definição atual. O preflight imprime `PROJECT_HOOKS_SHA256`; hooks alterados não devem ser bypassados. Se já estiverem trusted no hash atual, nenhuma ação adicional é necessária.
+4. Antes da conversa CQ, abrir uma sessão Codex local suportada no mesmo worktree e usar **`/hooks`** para revisar/confiar os hooks project-local definidos inline em `.codex/config.toml`. O preflight imprime `PROJECT_HOOKS_SHA256`; hooks alterados não devem ser bypassados. Se já estiverem trusted na definição atual, nenhuma ação adicional é necessária.
 
 5. Só depois do trust, abrir **uma conversa nova** no Codex Desktop do mesmo projeto e colar o conteúdo de `CQ_RUN_PROMPT.md`. O prompt manda o Codex validar diretamente o request machine-readable. Não é necessário voltar ao ChatGPT apenas para interpolar hashes.
 

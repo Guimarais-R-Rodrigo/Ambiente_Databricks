@@ -1052,7 +1052,7 @@
         "GIT_TRANSPORT_AND_HOOK_RUNTIME_REQUIRE_CQ4",
         "NOMINAL_PROFILE_NAME_MAY_BE_NOT_OBSERVABLE_AND_REQUIRES_BEHAVIORAL_PROOF"
       ],
-      "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-19",
+      "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-20",
       "windows_bootstrap_maintenance": {
         "authorization": "DIRECT_USER_CHAT_2026-09-26",
         "trigger": "WINDOWS_SANDBOX_WORKSPACE_WRITE_NO_WRITABLE_ROOT_CAPABILITY_SIDS",
@@ -1520,7 +1520,7 @@
           "OPERATIONAL_VALIDATOR_SELFTEST_ORDER_CHECK_FAILS_CLOSED_WITH_FIND_NOT_INDEX",
           "OPERATIONAL_POWERSHELL_PARAMETER_COLLISION_GUARD"
         ],
-        "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-19",
+        "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-20",
         "metatest_methods_static": 124,
         "operational_policy_schema": "SER-CODEX-A1-OPERATIONAL-2",
         "operational_checkpoint_schema": "SER-A1-OPERATIONAL-CHECKPOINT-2",
