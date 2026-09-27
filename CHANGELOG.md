@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-27 — Controller Stabilization 2: pente-fino final
+
+- (ChatGPT) Auditoria final encontrou e corrigiu nove pontas pré-runtime: validator V18 com indentação Python inválida; oracle textual MCP legado; dois metatests históricos frágeis; self-test operacional dependente de evidence ainda não criado; bootstrap de checkpoint incompatível com avanço CQ4/adjudicação; extensão incompatível com schema fechado do envelope; binding incompleto de control sources; path Windows duplicado no hook externo.
+- (ChatGPT) Envelope de autoridade foi restaurado byte-idêntico ao blob qualificado 0956016350b06ccf3ef87b9ab102c102802843c1; autonomia operacional permanece em policy separada V2, sem expansão dos 10 write roots.
+- (ChatGPT) Transporte operacional V2 exige PASS canônico + remoção humana do blocker para bootstrap, aceita somente bridge journal/state/changelogs pós-CQ e verifica hashes dos control sources qualificados em toda execução.
+- (ChatGPT) Checkpoint é memória de progresso, não fonte de autoridade; reconciliação de publicação parcial e commits causais sequenciais permanecem.
+- (ChatGPT) Validator V19 + 124 metatest methods definidos. Host validator/metatests/PowerShell/CQ ainda NOT_RUN neste candidato.
+- (ChatGPT) Nenhum B1 material, A2, G6/Genie/Databricks material, promoção, Ready ou merge executado.
 ## 2026-09-27 — Controller Stabilization 2: autonomia operacional
 
 - (ChatGPT) Separados CQ single-shot e operação A1 multi-commit; trabalho posterior usa checkpoint externo encadeado ao control head qualificado.

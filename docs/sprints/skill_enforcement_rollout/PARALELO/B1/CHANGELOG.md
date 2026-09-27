@@ -193,3 +193,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) Controller Stabilization 1 final contraditório: corrigida a impossibilidade CQ_READY_TO_RUN=PASS antes do trust de hooks e alinhado o protocolo geral ao preflight v6/tool-surface policy v2. Validator V17 + 105 metatests passam a proteger readiness/protocol drift; nenhuma mudança de permissions/envelope/B1 material/A2/G6/Genie/Databricks/promotion/Ready/merge.
 
 (ChatGPT) Stabilization 2: autonomia operacional A1 implementada com transporte multi-commit separado do CQ, checkpoint externo, repair causal até orçamento existente e reconciliação idempotente de publicação parcial. Validator V18/113 metatests; write roots permanecem 10; sem B1 material/A2/G6/Genie/Databricks/promotion/Ready/merge.
+
+(ChatGPT) Stabilization 2 pente-fino final: validator V19, 124 metatests, operational policy/checkpoint V2, bootstrap pós-CQ canônico, control-source hash binding e envelope de autoridade restaurado ao blob qualificado V2. Static audit PASS; host/runtime NOT_RUN; sem B1 material/A2/G6/Genie/Databricks/promotion/Ready/merge.

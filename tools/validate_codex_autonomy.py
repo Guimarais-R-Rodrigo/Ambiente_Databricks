@@ -274,7 +274,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-18",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-19",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -408,13 +408,6 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.extend(validate_envelope_data(envelope, max_threads=max_threads))
         issues.extend(_validate_permission_profile(cfg, envelope))
 
-    operational = envelope.get("operational_autonomy") or {}
-    if operational.get("schema_version") != "SER-A1-OPERATIONAL-1":
-        issues.append("A1_OPERATIONAL_ENVELOPE_SCHEMA")
-    if operational.get("authority_expansion") is not False:
-        issues.append("A1_OPERATIONAL_AUTHORITY_EXPANSION")
-    if operational.get("sequential_causal_commits") is not True:
-        issues.append("A1_OPERATIONAL_SEQUENTIAL_COMMITS")
     except Exception as exc:
         issues.append("ENVELOPE_UNREADABLE:" + type(exc).__name__)
 
@@ -465,7 +458,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "HOST_METATESTS",
             "HOST_NETWORK_BASELINE",
             "NETWORK_PROBE_SERIALIZATION_SELFTEST",
-            "MCP_PRETOOL_GUARD",
+            "EXTERNAL_SURFACE_PRETOOL_GUARD",
             "CQ_RUN_REQUEST.json",
             "CQ_RUN_PROMPT.md",
             "HOOK_TRUST_REVIEW_REQUIRED",
@@ -511,6 +504,22 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "external_surface_guard_python",
             "pre_scope_guard_python",
             "post_scope_guard_python",
+            "operational_transport",
+            "operational_policy",
+            "rules",
+            "executor_agent",
+            "protocol",
+            "runtime_contract",
+            "desktop_contract",
+            "start_prompt",
+            "envelope_schema",
+            "agents_md",
+            "controller_skill",
+            "explorer_agent",
+            "domain_auditor_agent",
+            "evidence_auditor_agent",
+            "architecture_auditor_agent",
+            "A1_OPERATIONAL_TRANSPORT_SELFTEST = PASS",
             "HOST_NETWORK_BASELINE = PASS",
             "$NetworkProbeHost",
             "selected_ipv4",
@@ -551,6 +560,10 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "Qualificação versus transporte operacional",
             "a1_operational_git_transport.ps1",
             "A1_OPERATIONAL_POLICY.json",
+            "runtime_validation=PASS",
+            "effective_config_observation=PASS",
+            "qualified HEAD",
+            "operational base",
             "host preflight v6",
             "CODEX_DESKTOP_TOOL_SURFACE_POLICY.json",
             "external_surface_guard",
@@ -648,14 +661,33 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
     if operational_policy_path.is_file():
         try:
             operational_policy = _read_json(operational_policy_path)
-            if operational_policy.get("schema_version") != "SER-CODEX-A1-OPERATIONAL-1":
+            if operational_policy.get("schema_version") != "SER-CODEX-A1-OPERATIONAL-2":
                 issues.append("A1_OPERATIONAL_POLICY_SCHEMA")
             invariants = operational_policy.get("invariants") or {}
             if "single-shot" not in str(invariants.get("qualification_transport") or ""):
                 issues.append("A1_OPERATIONAL_POLICY_CQ_SEPARATION")
+            if "qualified control identity" not in str(invariants.get("control_identity") or "").lower():
+                issues.append("A1_OPERATIONAL_POLICY_CONTROL_IDENTITY")
+            bootstrap = operational_policy.get("bootstrap") or {}
+            canonical = bootstrap.get("canonical_state_required") or {}
+            if canonical.get("runtime_validation") != "PASS" or canonical.get("effective_config_observation") != "PASS":
+                issues.append("A1_OPERATIONAL_POLICY_CANONICAL_PASS")
+            if canonical.get("runtime_blocker_absent") != "AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION":
+                issues.append("A1_OPERATIONAL_POLICY_RUNTIME_BLOCKER")
+            if bootstrap.get("qualified_head_must_be_ancestor") is not True:
+                issues.append("A1_OPERATIONAL_POLICY_ANCESTRY")
+            if bootstrap.get("current_local_must_equal_remote") is not True:
+                issues.append("A1_OPERATIONAL_POLICY_LOCAL_REMOTE_BINDING")
+            if bootstrap.get("worktree_must_be_clean") is not True:
+                issues.append("A1_OPERATIONAL_POLICY_CLEAN_BOOTSTRAP")
+            if len(bootstrap.get("allowed_bridge_paths") or []) != 4:
+                issues.append("A1_OPERATIONAL_POLICY_BRIDGE_PATHS")
             recovery = operational_policy.get("recovery") or {}
             if recovery.get("same_state_same_command_retries") != 0:
                 issues.append("A1_OPERATIONAL_POLICY_BLIND_RETRY")
+            checkpoint = operational_policy.get("checkpoints") or {}
+            if checkpoint.get("role") != "progress tracking only; not an authority source":
+                issues.append("A1_OPERATIONAL_POLICY_CHECKPOINT_AUTHORITY")
         except Exception as exc:
             issues.append("A1_OPERATIONAL_POLICY_UNREADABLE:" + type(exc).__name__)
     else:
@@ -664,9 +696,19 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
     if operational_transport_path.is_file():
         operational_transport_text = operational_transport_path.read_text(encoding="utf-8")
         required_operational_tokens = (
-            "SER-A1-OPERATIONAL-CHECKPOINT-1",
+            "SER-A1-OPERATIONAL-CHECKPOINT-2",
+            "SER-A1-OPERATIONAL-TRANSPORT-SELFTEST-2",
             "InitializeCheckpoint",
             "ReconcileOnly",
+            "Require-ControlIdentity",
+            "Require-CanonicalRuntimePass",
+            "Get-ReconcileDecision",
+            "A1_OPERATIONAL_RUNTIME_NOT_CANONICAL_PASS",
+            "A1_OPERATIONAL_EFFECTIVE_CONFIG_NOT_CANONICAL_PASS",
+            "A1_OPERATIONAL_RUNTIME_BLOCKER_STILL_PRESENT",
+            "A1_OPERATIONAL_QUALIFIED_HEAD_NOT_ANCESTOR",
+            "A1_OPERATIONAL_BOOTSTRAP_UNEXPECTED_PATH",
+            "A1_OPERATIONAL_CONTROL_IDENTITY_DRIFT",
             "A1_OPERATIONAL_RECONCILE=PUBLISHED_SUCCESSOR",
             "A1_OPERATIONAL_RECONCILE=RESUMED_PUSH",
             "A1_OPERATIONAL_UNKNOWN_DIVERGENCE",
@@ -684,6 +726,16 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             issues.append("A1_OPERATIONAL_TRANSPORT_FORCE_FORBIDDEN")
         if "lastJournal" in operational_transport_text or "CQ3_A1_POSITIVE_PROBE" in operational_transport_text:
             issues.append("A1_OPERATIONAL_TRANSPORT_JOURNAL_AUTHORITY_FORBIDDEN")
+        selftest_pos = operational_transport_text.find("if($SelfTest)")
+        evidence_pos = operational_transport_text.find("$evidence=Load-Evidence")
+        if selftest_pos < 0 or evidence_pos < 0 or selftest_pos > evidence_pos:
+            issues.append("A1_OPERATIONAL_SELFTEST_REQUIRES_EVIDENCE")
+        operational_collisions = _powershell_parameter_assignment_collisions(operational_transport_text)
+        if operational_collisions:
+            issues.append(
+                "A1_OPERATIONAL_PARAMETER_ASSIGNMENT_COLLISION:"
+                + ",".join(sorted(operational_collisions))
+            )
     else:
         issues.append("A1_OPERATIONAL_TRANSPORT_MISSING")
 
@@ -730,6 +782,11 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
                 or "^(mcp__.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$" not in serialized
             ):
                 issues.append("HOOK_CONFIG_INVALID")
+            for group in pre:
+                for hook in group.get("hooks") or []:
+                    windows_command = str(hook.get("commandWindows") or "")
+                    if ".codex\\\\hooks\\\\external_surface_guard.ps1" in windows_command:
+                        issues.append("HOOK_WINDOWS_EXTERNAL_SURFACE_PATH_DOUBLE_SEPARATOR")
         except Exception as exc:
             issues.append("HOOK_CONFIG_UNREADABLE:" + type(exc).__name__)
 
@@ -750,7 +807,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-18",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-19",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),

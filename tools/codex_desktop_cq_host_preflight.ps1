@@ -91,6 +91,9 @@ $outputRootFull = [System.IO.Path]::GetFullPath($OutputRoot)
 $sourcePaths = [ordered]@{
     config = ".codex\config.toml"
     envelope = "docs\operations\autonomy\B1_AUTONOMY_ENVELOPE.json"
+    envelope_schema = "docs\operations\autonomy\autonomy-envelope.schema.json"
+    agents_md = "AGENTS.md"
+    controller_skill = ".agents\skills\ser-autonomous-controller\SKILL.md"
     validator = "tools\validate_codex_autonomy.py"
     metatests = "tools\tests\test_codex_autonomy.py"
     delta_checker = "tools\check_codex_autonomy_delta.py"
@@ -98,6 +101,16 @@ $sourcePaths = [ordered]@{
     transport = ".codex\transport\a1_git_transport.ps1"
     operational_transport = ".codex\transport\a1_operational_git_transport.ps1"
     operational_policy = "docs\operations\autonomy\A1_OPERATIONAL_POLICY.json"
+    rules = ".codex\rules\a1_git_transport.rules"
+    executor_agent = ".codex\agents\executor.toml"
+    explorer_agent = ".codex\agents\explorer.toml"
+    domain_auditor_agent = ".codex\agents\domain-auditor.toml"
+    evidence_auditor_agent = ".codex\agents\evidence-auditor.toml"
+    architecture_auditor_agent = ".codex\agents\architecture-auditor.toml"
+    protocol = "docs\operations\CODEX_AUTONOMOUS_PROTOCOL.md"
+    runtime_contract = "docs\operations\CODEX_RUNTIME_QUALIFICATION.md"
+    desktop_contract = "docs\operations\CODEX_DESKTOP_WINDOWS_CQ.md"
+    start_prompt = "docs\operations\CODEX_AUTONOMOUS_START_PROMPT.md"
     hooks = ".codex\hooks.json"
     pre_scope_guard = ".codex\hooks\pre_scope_guard.ps1"
     pre_scope_guard_python = ".codex\hooks\pre_scope_guard.py"
@@ -156,7 +169,7 @@ $metatestStderr = Join-Path $outputRootFull "CQ_HOST_METATESTS.stderr.txt"
 $validatorExit = Invoke-CapturedProcess -FilePath $python.executable -ArgumentList @("-B", "tools/validate_codex_autonomy.py", "--json") -StdoutPath $validatorStdout -StderrPath $validatorStderr
 try { $validatorPayload = Get-Content -LiteralPath $validatorStdout -Raw | ConvertFrom-Json } catch { throw "CQ_HOST_PREFLIGHT_VALIDATOR_OUTPUT_NOT_JSON" }
 if ($validatorExit -ne 0 -or $validatorPayload.status -ne "PASS") { throw "CQ_HOST_PREFLIGHT_VALIDATOR_FAILED:$($validatorExit):$($validatorPayload.status)" }
-if ($validatorPayload.schema_version -ne "SER-CODEX-AUTONOMY-VALIDATION-18") { throw "CQ_HOST_PREFLIGHT_VALIDATOR_SCHEMA:$($validatorPayload.schema_version)" }
+if ($validatorPayload.schema_version -ne "SER-CODEX-AUTONOMY-VALIDATION-19") { throw "CQ_HOST_PREFLIGHT_VALIDATOR_SCHEMA:$($validatorPayload.schema_version)" }
 $metatestExit = Invoke-CapturedProcess -FilePath $python.executable -ArgumentList @("-B", "-m", "unittest", "tools.tests.test_codex_autonomy", "-v") -StdoutPath $metatestStdout -StderrPath $metatestStderr
 $metatestText = ""
 if (Test-Path -LiteralPath $metatestStdout) { $metatestText += Get-Content -LiteralPath $metatestStdout -Raw }

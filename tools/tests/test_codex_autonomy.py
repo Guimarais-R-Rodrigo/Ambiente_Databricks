@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import copy
 import json
 import re
@@ -354,7 +355,7 @@ class CodexAutonomyTests(unittest.TestCase):
 
     def test_desktop_host_preflight_uses_safe_powershell_variable_boundaries(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
-        self.assertIn('CQ_HOST_PREFLIGHT_LOCAL_REMOTE_DIVERGENCE:${head}:${originHead}', text)
+        self.assertIn('CQ_HOST_PREFLIGHT_LOCAL_REMOTE_DIVERGENCE:$($head):$($originHead)', text)
         self.assertNotIn('CQ_HOST_PREFLIGHT_LOCAL_REMOTE_DIVERGENCE:$head:$originHead', text)
 
     def test_desktop_host_preflight_does_not_persist_raw_remote_url(self):
@@ -380,11 +381,12 @@ class CodexAutonomyTests(unittest.TestCase):
         text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
         self.assertIn("DEFERRED_TO_EXTERNAL_ADJUDICATION", text)
 
-    def test_desktop_cq_distinguishes_internal_control_plane_and_external_plugins(self):
+    def test_desktop_cq_distinguishes_internal_control_plane_and_external_surfaces(self):
         text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
         self.assertIn("INTERNAL_CLIENT_CONTROL_PLANE", text)
         self.assertIn("EXTERNAL_MUTATING_PLUGIN_SURFACE", text)
-        self.assertIn("Creative Production", text)
+        self.assertIn("EXTERNAL_SURFACE_PRETOOL_GUARD", text)
+        self.assertIn("INTERNAL_CODE_MODE_CONTROL", text)
 
     def test_delta_classifier_protects_frozen_g6(self):
         self.assertEqual(
@@ -948,9 +950,9 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("external_surface_guard", text)
         self.assertIn("Depois de CQ4 não há segunda escrita repo-side", text)
 
-    def test_validator_v17_enforces_start_and_protocol_consistency(self):
+    def test_validator_v19_enforces_start_and_protocol_consistency(self):
         text = (ROOT / "tools/validate_codex_autonomy.py").read_text(encoding="utf-8")
-        self.assertIn("SER-CODEX-AUTONOMY-VALIDATION-18", text)
+        self.assertIn("SER-CODEX-AUTONOMY-VALIDATION-19", text)
         self.assertIn("CODEX_AUTONOMOUS_START_PROMPT_PREMATURE_READY_PASS", text)
         self.assertIn("CODEX_AUTONOMOUS_PROTOCOL_STABILIZATION_DRIFT", text)
         self.assertIn("DESKTOP_WINDOWS_CQ_PREMATURE_READY_PASS", text)
@@ -959,7 +961,7 @@ class CodexAutonomyTests(unittest.TestCase):
         payload = json.loads(
             (ROOT / "docs/operations/autonomy/A1_OPERATIONAL_POLICY.json").read_text(encoding="utf-8")
         )
-        self.assertEqual("SER-CODEX-A1-OPERATIONAL-1", payload["schema_version"])
+        self.assertEqual("SER-CODEX-A1-OPERATIONAL-2", payload["schema_version"])
         self.assertIn("single-shot", payload["invariants"]["qualification_transport"])
         self.assertEqual(0, payload["recovery"]["same_state_same_command_retries"])
         self.assertIn("unresolved UNKNOWN effect", payload["human_gates"])
@@ -967,7 +969,8 @@ class CodexAutonomyTests(unittest.TestCase):
     def test_operational_transport_uses_external_checkpoint_not_journal_authority(self):
         text = (ROOT / ".codex/transport/a1_operational_git_transport.ps1").read_text(encoding="utf-8")
         for token in (
-            "SER-A1-OPERATIONAL-CHECKPOINT-1",
+            "SER-A1-OPERATIONAL-CHECKPOINT-2",
+            "SER-A1-OPERATIONAL-TRANSPORT-SELFTEST-2",
             "InitializeCheckpoint",
             "ReconcileOnly",
             "A1_OPERATIONAL_RECONCILE=PUBLISHED_SUCCESSOR",
@@ -998,14 +1001,12 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("git ls-remote origin", text)
         self.assertNotIn("--force", text)
 
-    def test_envelope_enables_operational_autonomy_without_authority_expansion(self):
+    def test_operational_autonomy_does_not_expand_envelope_schema_or_write_roots(self):
         envelope = self.envelope()
-        operational = envelope["operational_autonomy"]
-        self.assertEqual("SER-A1-OPERATIONAL-1", operational["schema_version"])
-        self.assertTrue(operational["sequential_causal_commits"])
-        self.assertTrue(operational["partial_publish_reconciliation"])
-        self.assertFalse(operational["authority_expansion"])
+        self.assertNotIn("operational_autonomy", envelope)
+        self.assertEqual("SER-AUTONOMY-ENVELOPE-2", envelope["schema_version"])
         self.assertEqual(10, len(envelope["repo_scope"]["write_roots"]))
+        self.assertFalse(envelope["authority_classes"]["A2"]["autonomous"])
 
     def test_protocol_routes_recoverable_a1_failures_to_repairing(self):
         text = (ROOT / "docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md").read_text(encoding="utf-8")
@@ -1021,6 +1022,124 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("a1_git_transport.ps1", text)
         self.assertIn("a1_operational_git_transport.ps1", text)
         self.assertGreaterEqual(text.count('decision = "prompt"'), 2)
+
+    def test_validator_source_is_python_syntax_valid(self):
+        text = (ROOT / "tools/validate_codex_autonomy.py").read_text(encoding="utf-8")
+        ast.parse(text)
+
+    def test_operational_transport_has_no_powershell_parameter_assignment_collision(self):
+        text = (ROOT / ".codex/transport/a1_operational_git_transport.ps1").read_text(encoding="utf-8")
+        self.assertEqual(set(), val._powershell_parameter_assignment_collisions(text))
+
+    def test_operational_transport_selftest_does_not_require_host_evidence(self):
+        text = (ROOT / ".codex/transport/a1_operational_git_transport.ps1").read_text(encoding="utf-8")
+        self.assertLess(text.index("if($SelfTest)"), text.index("$evidence=Load-Evidence"))
+        self.assertIn("A1_OPERATIONAL_SELFTEST_RECONCILIATION_MATRIX", text)
+
+    def test_operational_bootstrap_requires_canonical_pass_and_runtime_blocker_removal(self):
+        text = (ROOT / ".codex/transport/a1_operational_git_transport.ps1").read_text(encoding="utf-8")
+        for token in (
+            "A1_OPERATIONAL_RUNTIME_NOT_CANONICAL_PASS",
+            "A1_OPERATIONAL_EFFECTIVE_CONFIG_NOT_CANONICAL_PASS",
+            "A1_OPERATIONAL_RUNTIME_BLOCKER_STILL_PRESENT",
+            "A1_OPERATIONAL_QUALIFIED_HEAD_NOT_ANCESTOR",
+            "A1_OPERATIONAL_BOOTSTRAP_UNEXPECTED_PATH",
+        ):
+            self.assertIn(token, text)
+
+    def test_operational_transport_binds_all_control_sources_to_host_evidence(self):
+        text = (ROOT / ".codex/transport/a1_operational_git_transport.ps1").read_text(encoding="utf-8")
+        for token in (
+            "Require-ControlIdentity",
+            "A1_OPERATIONAL_CONTROL_HASH_MISSING",
+            "A1_OPERATIONAL_CONTROL_IDENTITY_DRIFT",
+            'rules = ".codex\\rules\\a1_git_transport.rules"',
+            'executor_agent = ".codex\\agents\\executor.toml"',
+            'protocol = "docs\\operations\\CODEX_AUTONOMOUS_PROTOCOL.md"',
+            'runtime_contract = "docs\\operations\\CODEX_RUNTIME_QUALIFICATION.md"',
+            'desktop_contract = "docs\\operations\\CODEX_DESKTOP_WINDOWS_CQ.md"',
+            'start_prompt = "docs\\operations\\CODEX_AUTONOMOUS_START_PROMPT.md"',
+            'envelope_schema = "docs\\operations\\autonomy\\autonomy-envelope.schema.json"',
+            'agents_md = "AGENTS.md"',
+            'controller_skill = ".agents\\skills\\ser-autonomous-controller\\SKILL.md"',
+            'explorer_agent = ".codex\\agents\\explorer.toml"',
+            'domain_auditor_agent = ".codex\\agents\\domain-auditor.toml"',
+            'evidence_auditor_agent = ".codex\\agents\\evidence-auditor.toml"',
+            'architecture_auditor_agent = ".codex\\agents\\architecture-auditor.toml"',
+        ):
+            self.assertIn(token, text)
+
+    def test_preflight_hashes_operational_control_identity(self):
+        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        for token in (
+            'operational_transport = ".codex\\transport\\a1_operational_git_transport.ps1"',
+            'operational_policy = "docs\\operations\\autonomy\\A1_OPERATIONAL_POLICY.json"',
+            'rules = ".codex\\rules\\a1_git_transport.rules"',
+            'executor_agent = ".codex\\agents\\executor.toml"',
+            'protocol = "docs\\operations\\CODEX_AUTONOMOUS_PROTOCOL.md"',
+            'runtime_contract = "docs\\operations\\CODEX_RUNTIME_QUALIFICATION.md"',
+            'desktop_contract = "docs\\operations\\CODEX_DESKTOP_WINDOWS_CQ.md"',
+            "A1_OPERATIONAL_TRANSPORT_SELFTEST = PASS",
+        ):
+            self.assertIn(token, text)
+
+    def test_operational_policy_checkpoint_is_progress_not_authority(self):
+        payload = json.loads(
+            (ROOT / "docs/operations/autonomy/A1_OPERATIONAL_POLICY.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual("progress tracking only; not an authority source", payload["checkpoints"]["role"])
+        self.assertTrue(payload["bootstrap"]["qualified_head_must_be_ancestor"])
+        self.assertTrue(payload["bootstrap"]["current_local_must_equal_remote"])
+        self.assertTrue(payload["bootstrap"]["worktree_must_be_clean"])
+        self.assertEqual(4, len(payload["bootstrap"]["allowed_bridge_paths"]))
+
+    def test_operational_policy_is_separate_from_authority_envelope(self):
+        envelope = self.envelope()
+        policy = json.loads(
+            (ROOT / "docs/operations/autonomy/A1_OPERATIONAL_POLICY.json").read_text(encoding="utf-8")
+        )
+        self.assertNotIn("operational_autonomy", envelope)
+        self.assertEqual("SER-CODEX-A1-OPERATIONAL-2", policy["schema_version"])
+        self.assertEqual(4, len(policy["bootstrap"]["allowed_bridge_paths"]))
+        self.assertIn("qualified control identity", policy["invariants"]["control_identity"].lower())
+
+    def test_two_successive_allowed_commits_validate_independently(self):
+        repo, root_patch, envelope_patch = self._temporary_git_repo()
+        with root_patch, envelope_patch:
+            (repo / "allowed").mkdir()
+            (repo / "allowed/x.txt").write_text("0", encoding="utf-8")
+            self._git(repo, "add", ".")
+            self._git(repo, "commit", "-m", "base")
+            base = self._git(repo, "rev-parse", "HEAD")
+
+            (repo / "allowed/x.txt").write_text("1", encoding="utf-8")
+            self._git(repo, "add", ".")
+            self._git(repo, "commit", "-m", "step1")
+            head1 = self._git(repo, "rev-parse", "HEAD")
+            self.assertEqual("PASS", delta.check_delta(base, head1)["status"])
+
+            (repo / "allowed/x.txt").write_text("2", encoding="utf-8")
+            self._git(repo, "add", ".")
+            self._git(repo, "commit", "-m", "step2")
+            head2 = self._git(repo, "rev-parse", "HEAD")
+            self.assertEqual("PASS", delta.check_delta(head1, head2)["status"])
+
+    def test_external_surface_hook_windows_path_is_normalized(self):
+        hooks = json.loads((ROOT / ".codex/hooks.json").read_text(encoding="utf-8"))
+        commands = [
+            hook.get("commandWindows", "")
+            for group in hooks["hooks"]["PreToolUse"]
+            for hook in group.get("hooks", [])
+            if "external_surface_guard" in hook.get("commandWindows", "")
+        ]
+        self.assertEqual(1, len(commands))
+        self.assertIn(".codex\\hooks\\external_surface_guard.ps1", commands[0])
+        self.assertNotIn(".codex\\\\hooks\\\\external_surface_guard.ps1", commands[0])
+
+    def test_validator_uses_current_external_surface_contract_name(self):
+        text = (ROOT / "tools/validate_codex_autonomy.py").read_text(encoding="utf-8")
+        self.assertIn("EXTERNAL_SURFACE_PRETOOL_GUARD", text)
+        self.assertNotIn("MCP_PRETOOL_GUARD", text)
 
     def test_claude_uses_progressive_changelog_disclosure(self):
         text = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")

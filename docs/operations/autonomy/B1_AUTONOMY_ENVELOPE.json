@@ -191,16 +191,5 @@
     "CONTROLLER_GOVERNANCE_CHANGE_REQUIRED",
     "UNKNOWN_EFFECT not resolved by allowed read-only reconciliation",
     "BUDGET_EXHAUSTED"
-  ],
-  "operational_autonomy": {
-    "schema_version": "SER-A1-OPERATIONAL-1",
-    "policy": "docs/operations/autonomy/A1_OPERATIONAL_POLICY.json",
-    "transport": ".codex/transport/a1_operational_git_transport.ps1",
-    "checkpoint": "~/codex-scratch/Ambiente_Databricks/A1_OPERATIONAL_CHECKPOINT.json",
-    "enabled_after": "CANONICAL_CONTROLLER_RUNTIME_PASS_AND_ACTIVE_A1_TASK",
-    "sequential_causal_commits": true,
-    "partial_publish_reconciliation": true,
-    "qualification_transport_remains_single_shot": true,
-    "authority_expansion": false
-  }
+  ]
 }

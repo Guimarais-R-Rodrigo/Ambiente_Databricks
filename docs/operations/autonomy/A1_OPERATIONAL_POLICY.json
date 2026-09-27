@@ -1,22 +1,40 @@
 {
-  "schema_version": "SER-CODEX-A1-OPERATIONAL-1",
-  "purpose": "Allow autonomous causal work inside an already-authorized A1 envelope without requalifying the controller after every valid commit.",
+  "schema_version": "SER-CODEX-A1-OPERATIONAL-2",
+  "purpose": "Allow autonomous causal A1 work after canonical controller qualification without requalifying after each valid work commit, while binding operation to the qualified control identity.",
   "invariants": {
     "qualification_transport": "CQ remains single-shot, preflight-head-bound and CQ_JOURNAL_ONLY.",
-    "operational_transport": "A1 operational commits use a separate external checkpoint chained from the qualified control head.",
+    "operational_transport": "Operational work uses a separate checkpointed transport only after canonical runtime PASS.",
+    "control_identity": "All control-source hashes recorded by host evidence must remain byte-identical during operational use.",
     "authority": "No operational checkpoint can expand repo_scope, permissions, A2/A3, promotion, Ready or merge.",
     "writer": "Exactly one write-capable executor per worktree/session.",
-    "git": "Normal non-force push only through the protected A1 transport."
+    "git": "Normal non-force push only through the protected operational transport."
+  },
+  "bootstrap": {
+    "canonical_state_required": {
+      "runtime_validation": "PASS",
+      "effective_config_observation": "PASS",
+      "runtime_blocker_absent": "AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION"
+    },
+    "qualified_head_must_be_ancestor": true,
+    "current_local_must_equal_remote": true,
+    "worktree_must_be_clean": true,
+    "allowed_bridge_paths": [
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/CHANGELOG.md",
+      "CHANGELOG.md"
+    ],
+    "rationale": "CQ4 journal and human adjudication may advance HEAD after the preflight candidate; bootstrap accepts only this bounded bridge while requiring control hashes to remain qualified."
   },
   "recovery": {
     "causal_repair_budget_source": "B1_AUTONOMY_ENVELOPE.json:budgets.max_causal_repair_rounds_per_gate",
     "same_state_same_command_retries": 0,
-    "retry_rule": "A failed command may be retried only after an identified causal delta, except read-only remote reconciliation.",
+    "retry_rule": "A failed command may be retried only after an identified causal delta, except read-only reconciliation.",
     "partial_publish": [
-      "If local HEAD equals remote HEAD, publication is already complete: advance checkpoint without creating another commit.",
-      "If local HEAD is exactly one validated successor of checkpoint and remote remains checkpoint, retry only the push/readback.",
-      "If remote advanced to the local validated successor, reconcile as published and advance checkpoint.",
-      "Any other divergence is UNKNOWN_EFFECT/BLOCKED and requires human adjudication."
+      "checkpoint/local/remote equal => no pending publication",
+      "local and remote equal one validated successor of checkpoint => advance checkpoint without a new commit",
+      "local is one validated successor and remote remains checkpoint => retry only push/readback",
+      "all other divergence => UNKNOWN_EFFECT/BLOCKED"
     ]
   },
   "checkpoints": {
@@ -27,14 +45,16 @@
       "schema_version",
       "branch",
       "qualified_control_head",
+      "operational_base_head",
       "last_published_head",
       "last_published_tree",
       "sequence",
       "updated_at_unix_seconds"
-    ]
+    ],
+    "role": "progress tracking only; not an authority source"
   },
   "human_gates": [
-    "controller governance or permission change",
+    "controller governance or qualified control-source change",
     "repo_scope expansion",
     "A2 activation or expansion",
     "policy/current_level/rollout promotion",

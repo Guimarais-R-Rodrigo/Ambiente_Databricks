@@ -129,7 +129,7 @@ Allowed journal write negado => BLOCKED_ALLOWED_WRITE_DENIED e parar antes de CQ
 
 ## CQ4-D — Git bridge
 
-CQ4-D prova somente o transporte de qualificação single-shot. A rotina posterior usa `a1_operational_git_transport.ps1` + `A1_OPERATIONAL_POLICY.json`; commits operacionais válidos não exigem novo host preflight enquanto o control identity qualificado não mudar. e hooks
+CQ4-D prova somente o transporte de qualificação single-shot. A rotina posterior usa `a1_operational_git_transport.ps1` + `A1_OPERATIONAL_POLICY.json`; o bootstrap operacional ocorre somente depois de PASS canônico/removal do blocker e aceita apenas o bridge journal/state/changelogs com control hashes idênticos. Depois de inicializado, commits operacionais válidos não exigem novo host preflight enquanto o control identity qualificado não mudar. e hooks
 
 Invocar exatamente uma vez `powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\transport\a1_git_transport.ps1`. Exigir commit/push non-force somente do journal A1, hooks/boundary probes e worktree final clean.
 

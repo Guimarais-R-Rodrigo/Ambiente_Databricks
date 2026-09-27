@@ -193,6 +193,19 @@ Um commit A1 válido **não invalida por si só** a qualificação do controller
 Mudança em config, envelope, hooks, rules, transportes, validators ou demais
 governance roots exige `CONTROLLER_MAINTENANCE` e nova qualificação pertinente.
 
+O primeiro checkpoint operacional ocorre **depois** da adjudicação canônica do
+CQ. Como CQ4 e a própria adjudicação podem avançar a branch, o bootstrap aceita
+um HEAD descendente do preflight somente quando:
+- `runtime_validation=PASS` e `effective_config_observation=PASS`;
+- `AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION` já foi removido por Human Gate;
+- todos os control-source hashes continuam idênticos ao host evidence;
+- local HEAD = remote HEAD e worktree está limpo;
+- o caminho entre qualified HEAD e operational base altera somente
+  journal/state/changelogs previstos na policy.
+
+Depois disso, o checkpoint, e não o preflight HEAD, acompanha os commits de
+trabalho.
+
 ## 7. State integrity
 
 `AUTHORING_STATE.json` é estado vivo, não prova de si próprio.
