@@ -540,12 +540,14 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         required_start_tokens = (
             "HOOK_TRUST_REVIEW_REQUIRED = true",
             "CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST",
-            "Settings > Hooks",
+            "/hooks",
             "CQ_RUN_REQUEST.json",
             "CQ_RUN_PROMPT.md",
         )
         if any(token not in start_text for token in required_start_tokens):
             issues.append("CODEX_AUTONOMOUS_START_PROMPT_INVALID")
+        if "Settings > Hooks" in start_text:
+            issues.append("CODEX_AUTONOMOUS_START_PROMPT_LEGACY_HOOK_TRUST_UI")
         if "CQ_READY_TO_RUN = PASS" in start_text:
             issues.append("CODEX_AUTONOMOUS_START_PROMPT_PREMATURE_READY_PASS")
     else:

@@ -948,6 +948,8 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("CQ_RUN_PROMPT.md", text)
         self.assertIn("HOOK_TRUST_REVIEW_REQUIRED", text)
         self.assertIn("PROJECT_HOOK_TRUST", text)
+        self.assertIn("/hooks", text)
+        self.assertNotIn("Settings > Hooks", text)
 
     def test_readiness_contract_requires_human_hook_trust_before_cq(self):
         start = (ROOT / "docs/operations/CODEX_AUTONOMOUS_START_PROMPT.md").read_text(encoding="utf-8")

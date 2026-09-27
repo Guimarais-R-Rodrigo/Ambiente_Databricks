@@ -4680,3 +4680,10 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 
 - (ChatGPT) Migrou a definição dos hooks do controller de `.codex/hooks.json` para tabelas inline `[hooks]` em `.codex/config.toml`, representação oficialmente suportada pela mesma camada de configuração que o Codex CLI 0.157.1 comprovou carregar. O arquivo `hooks.json` foi removido para evitar dupla execução caso a descoberta por arquivo volte a funcionar.
 - (ChatGPT) Validator V20, metatests, host preflight, control-identity do transporte operacional e contratos Desktop foram alinhados à fonte inline. O trust humano passa a ser revisado pelo navegador `/hooks` de uma sessão Codex local suportada no mesmo projeto. Nenhuma permissão, write root, A2, produto ou G6 foi ampliado.
+
+
+## 2026-09-27 — oráculo de trust dos hooks (ChatGPT)
+
+### Corrigido
+
+- (ChatGPT) O validator V20 ainda exigia a string legada `Settings > Hooks` no start prompt após a migração documentada para o navegador `/hooks`, causando falso FAIL no host preflight. O oráculo foi alinhado ao contrato atual e o metateste existente agora exige `/hooks` e rejeita a UI legada.
