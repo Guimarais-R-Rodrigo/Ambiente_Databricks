@@ -130,8 +130,8 @@ if ($evidence.schema_version -ne "AC-R2-DESKTOP-HOST-PREFLIGHT-5" -or $evidence.
     Emit-And-Exit (New-ProbePayload -Result "NOT_PROVEN" -Reason "HOST_EVIDENCE_SCHEMA_OR_RESULT" -PreflightSha256 $actualEvidenceSha -ProbeSha256 "" -TargetHostname "" -TargetIpv4 "" -TargetPort 0 -AttemptCount 0 -Connected $false -SocketErrorCode $null -NativeErrorCode $null -SocketHResult $null -ExceptionChain ([object[]]@())) 33
 }
 
-$selfTest = $evidence.network_probe.serialization_selftest
-if ($null -eq $selfTest -or $selfTest.result -ne "PASS" -or [int]$selfTest.network_attempt_count -ne 0 -or [int]$selfTest.case_count -ne 3) {
+$hostSerializationSelfTestEvidence = $evidence.network_probe.serialization_selftest
+if ($null -eq $hostSerializationSelfTestEvidence -or $hostSerializationSelfTestEvidence.result -ne "PASS" -or [int]$hostSerializationSelfTestEvidence.network_attempt_count -ne 0 -or [int]$hostSerializationSelfTestEvidence.case_count -ne 3) {
     Emit-And-Exit (New-ProbePayload -Result "NOT_PROVEN" -Reason "HOST_SERIALIZATION_SELFTEST_INVALID" -PreflightSha256 $actualEvidenceSha -ProbeSha256 "" -TargetHostname "" -TargetIpv4 "" -TargetPort 0 -AttemptCount 0 -Connected $false -SocketErrorCode $null -NativeErrorCode $null -SocketHResult $null -ExceptionChain ([object[]]@())) 34
 }
 

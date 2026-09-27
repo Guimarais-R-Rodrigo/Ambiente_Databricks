@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-27 — AC-R2 CM-DESKTOP-RUNTIME-6 R1: CQ3 switch-variable collision
+
+- (Codex/ChatGPT) CQ bundle independently adjudicated as valid BLOCKED at CQ3; uploaded ZIP SHA256 `165A10FD01DE206B430D2FCA5EEC0CD47E0681324EC5404F2FA444F9F6CAA1FA`, all MANIFEST hashes verified.
+- (Codex/ChatGPT) Seven negative filesystem probes were single-shot denied with sentinels absent; network probe invoked once, exited 1 before socket, TCP attempts = 0; journal/CQ4/commit/push/material effects = NOT_RUN.
+- (ChatGPT) Root cause: PowerShell variable names are case-insensitive, so script parameter `[switch]$SelfTest` collided with script-scope assignment `$selfTest = $evidence.network_probe.serialization_selftest`.
+- (ChatGPT) Corrective R1 renames the runtime evidence variable to `$hostSerializationSelfTestEvidence` and adds validator/metatest regression forbidding any case-insensitive `$selfTest =` assignment.
+- (ChatGPT) Validator advances to `SER-CODEX-AUTONOMY-VALIDATION-15`; controller metatest methods defined statically = 85. Permission profiles, write roots, command network, A2 and TCP oracle are unchanged.
+- (ChatGPT) Corrected candidate is authored only; host preflight/CQ runtime on the new candidate remain NOT_RUN pending static close.
+
 ## 2026-09-27 — AC-R2 CM-DESKTOP-RUNTIME-6: fechamento estático
 
 - (ChatGPT) `CM_DESKTOP_RUNTIME_6_STATIC = PASS` no candidato `d09f05694ae462b74ae8be11f70e8c5ce9076401` / tree `b2c791f6b68ffa500dbdbd5e1fba7e147f6f789e`.

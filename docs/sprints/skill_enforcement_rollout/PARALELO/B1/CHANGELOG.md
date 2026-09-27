@@ -181,3 +181,5 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 (ChatGPT) CM-DESKTOP-RUNTIME-6: corrigida serialização PowerShell do protected network probe; self-test offline 3-case/0-network no preflight v5 antes do TCP baseline; oracle/permissions/writes/network policy/A2 inalterados. Validator V14, 84 metatest methods definidos; runtime NOT_RUN.
 
 (ChatGPT) CM-DESKTOP-RUNTIME-6 static PASS em d09f05694ae462b74ae8be11f70e8c5ce9076401/b2c791f6b68ffa500dbdbd5e1fba7e147f6f789e: safe PowerShell payload serialization + offline 3-case/0-network self-test no preflight v5; config permissions unchanged. Validator V14, 84 metatest methods definidos, 0 findings materiais. Próximo: preflight v5.
+
+(ChatGPT) CM-DESKTOP-RUNTIME-6 R1 authored after independently adjudicated CQ3 BLOCKED bundle 165A10FD01DE206B430D2FCA5EEC0CD47E0681324EC5404F2FA444F9F6CAA1FA: PowerShell [switch]$SelfTest collided case-insensitively with runtime $selfTest assignment before socket. Runtime variable renamed; validator V15 + 85th metatest forbid recurrence. Permissions/writes/network oracle/A2 unchanged; new candidate runtime NOT_RUN.

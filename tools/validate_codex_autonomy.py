@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import tomllib
 from pathlib import Path
 from typing import Any
@@ -218,7 +219,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-14",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-15",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -450,6 +451,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "Convert-ProbePayloadToJson",
             "New-ProbePayload",
             "network_attempt_count",
+            "$hostSerializationSelfTestEvidence",
         )
         if any(token not in network_probe_text for token in required_network_probe_tokens):
             issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_INVALID")
@@ -459,6 +461,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_UNSAFE_GENERIC_LIST")
         if "exception_type = $(if" in network_probe_text:
             issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_INLINE_DYNAMIC_PAYLOAD_FORBIDDEN")
+        if re.search(r"(?mi)^\\s*\\$selftest\\s*=", network_probe_text):
+            issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_SELFTEST_SWITCH_SHADOWED")
         forbidden_network_probe_tokens = (
             "Invoke-WebRequest",
             "HttpClient",
@@ -521,7 +525,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-14",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-15",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),

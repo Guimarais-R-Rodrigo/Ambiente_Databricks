@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 import subprocess
 import tempfile
 import unittest
@@ -258,6 +259,12 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("network_attempt_count = 0", text)
         for outcome in ("PASS_NETWORK_DENIED", "FAIL_NETWORK_BOUNDARY_OPEN", "NOT_PROVEN"):
             self.assertIn(outcome, text)
+
+    def test_network_probe_selftest_switch_is_not_shadowed_case_insensitively(self):
+        text = (ROOT / ".codex/probes/cq3_executor_network_probe.ps1").read_text(encoding="utf-8")
+        self.assertIn("[switch]$SelfTest", text)
+        self.assertIsNone(re.search(r"(?mi)^\\s*\\$selftest\\s*=", text))
+        self.assertIn("$hostSerializationSelfTestEvidence = $evidence.network_probe.serialization_selftest", text)
 
     def test_host_preflight_requires_probe_serialization_selftest_before_network_baseline(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
