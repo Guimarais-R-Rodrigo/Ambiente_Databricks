@@ -464,6 +464,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "PROJECT_HOOK_TRUST",
             "AccessDenied",
             "10013",
+            "standalone checkout",
         )
         if any(token not in desktop_text for token in required_desktop_tokens):
             issues.append("DESKTOP_WINDOWS_CQ_CONTRACT_INVALID")
@@ -526,6 +527,9 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "final_head",
             "final_tree",
             "final_clean",
+            "CQ_HOST_PREFLIGHT_LINKED_WORKTREE_UNSUPPORTED",
+            "checkout_mode",
+            "CHECKOUT_MODE = STANDALONE",
         )
         if any(token not in preflight_text for token in required_preflight_tokens):
             issues.append("DESKTOP_WINDOWS_HOST_PREFLIGHT_INVALID")
@@ -543,6 +547,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "/hooks",
             "CQ_RUN_REQUEST.json",
             "CQ_RUN_PROMPT.md",
+            "standalone checkout",
         )
         if any(token not in start_text for token in required_start_tokens):
             issues.append("CODEX_AUTONOMOUS_START_PROMPT_INVALID")
@@ -570,6 +575,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "external_surface_guard",
             "Depois de CQ4 não há segunda escrita repo-side",
             "AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION",
+            "standalone checkout",
         )
         if any(token not in protocol_text for token in required_protocol_tokens):
             issues.append("CODEX_AUTONOMOUS_PROTOCOL_STABILIZATION_DRIFT")
@@ -636,6 +642,10 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             issues.append("A1_GIT_RULE_INVALID")
         if "a1_operational_git_transport.ps1" not in rule_text:
             issues.append("A1_OPERATIONAL_GIT_TRANSPORT_RULE_MISSING")
+        if '"powershell.exe -NoProfile' in rule_text:
+            issues.append("A1_GIT_RULE_STRING_EXAMPLE_FORBIDDEN")
+        if 'match = [' not in rule_text or 'not_match = [' not in rule_text:
+            issues.append("A1_GIT_RULE_EXAMPLES_MISSING")
     if transport_path.is_file():
         transport_text = transport_path.read_text(encoding="utf-8")
         required_transport_tokens = (
@@ -649,6 +659,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             'git ls-remote origin',
             'AC-R2-DESKTOP-HOST-PREFLIGHT-6',
             'evidence.python.executable',
+            'A1_GIT_TRANSPORT_LINKED_WORKTREE_UNSUPPORTED',
+            'A1_GIT_TRANSPORT_HOST_EVIDENCE_CHECKOUT_MODE',
         )
         if any(token not in transport_text for token in required_transport_tokens):
             issues.append("A1_GIT_TRANSPORT_INVALID")
@@ -718,6 +730,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "check_codex_autonomy_delta.py --base",
             "git remote get-url --push origin",
             "git ls-remote origin",
+            "A1_OPERATIONAL_LINKED_WORKTREE_UNSUPPORTED",
+            "A1_OPERATIONAL_HOST_EVIDENCE_CHECKOUT_MODE",
         )
         if any(token not in operational_transport_text for token in required_operational_tokens):
             issues.append("A1_OPERATIONAL_TRANSPORT_CONTRACT")

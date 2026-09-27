@@ -199,3 +199,6 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 - 2026-09-27 (ChatGPT): controller-maintenance migrou hooks project-local de `.codex/hooks.json` para tabelas inline `[hooks]` em `.codex/config.toml` após Codex CLI 0.157.1 carregar a config do projeto mas reportar `Installed 0` para todos os eventos; validator V20 e bindings de preflight/operational control identity foram alinhados. Sem expansão de autoridade.
 
 - 2026-09-27 (ChatGPT): corrigido oráculo legado do validator V20 que ainda exigia `Settings > Hooks` após a migração canônica do trust para `/hooks`; metateste existente agora exige `/hooks` e rejeita a UI legada. Sem mudança de runtime/enforcement.
+
+
+- 2026-09-27 (ChatGPT): compatibilidade Codex 0.157.1 consolidada: controller/CQ passa a exigir standalone checkout porque linked worktree resolve hooks pelo root checkout; preflight/transportes falham fechados e execpolicy usa exemplos argv tokenizados. Sem alteração de autoridade, A2, produto, G6, promoção, Ready ou merge.

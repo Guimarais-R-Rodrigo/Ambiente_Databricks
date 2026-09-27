@@ -81,6 +81,20 @@ function Get-Root {
     if ($LASTEXITCODE -ne 0 -or -not $rootText) { throw "A1_OPERATIONAL_NOT_GIT_REPO" }
     return [IO.Path]::GetFullPath(($rootText | Select-Object -First 1).Trim())
 }
+function Require-StandaloneCheckout([string]$Root) {
+    $gitDirText=(& git rev-parse --path-format=absolute --git-dir 2>$null)
+    if($LASTEXITCODE -ne 0 -or -not $gitDirText){throw "A1_OPERATIONAL_GIT_DIR_UNRESOLVED"}
+    $commonDirText=(& git rev-parse --path-format=absolute --git-common-dir 2>$null)
+    if($LASTEXITCODE -ne 0 -or -not $commonDirText){throw "A1_OPERATIONAL_COMMON_DIR_UNRESOLVED"}
+    $trimChars=[char[]]@([IO.Path]::DirectorySeparatorChar,[IO.Path]::AltDirectorySeparatorChar)
+    $gitDir=[IO.Path]::GetFullPath(($gitDirText|Select-Object -First 1).Trim()).TrimEnd($trimChars)
+    $commonDir=[IO.Path]::GetFullPath(($commonDirText|Select-Object -First 1).Trim()).TrimEnd($trimChars)
+    $expected=[IO.Path]::GetFullPath((Join-Path $Root ".git")).TrimEnd($trimChars)
+    if(
+        -not [string]::Equals($gitDir,$expected,[StringComparison]::OrdinalIgnoreCase) -or
+        -not [string]::Equals($commonDir,$expected,[StringComparison]::OrdinalIgnoreCase)
+    ){throw "A1_OPERATIONAL_LINKED_WORKTREE_UNSUPPORTED"}
+}
 function Require-Identity([string]$Root) {
     Set-Location $Root
     $branch = (& git branch --show-current).Trim()
@@ -105,6 +119,7 @@ function Load-Evidence {
     if($sha -ne $side){throw "A1_OPERATIONAL_HOST_EVIDENCE_SHA_MISMATCH"}
     try { $e=Get-Content -LiteralPath $EvidencePath -Raw|ConvertFrom-Json -ErrorAction Stop } catch { throw "A1_OPERATIONAL_HOST_EVIDENCE_INVALID_JSON" }
     if($e.schema_version -ne "AC-R2-DESKTOP-HOST-PREFLIGHT-6" -or $e.result -ne "PASS"){throw "A1_OPERATIONAL_HOST_EVIDENCE_INVALID"}
+    if([string]$e.git.checkout_mode -ne "STANDALONE"){throw "A1_OPERATIONAL_HOST_EVIDENCE_CHECKOUT_MODE"}
     return $e
 }
 function Require-ControlIdentity($Evidence,[string]$Root) {
@@ -166,6 +181,7 @@ function Load-Checkpoint {
 
 $root=Get-Root
 Set-Location $root
+Require-StandaloneCheckout $root
 $identity=Require-Identity $root
 Require-Envelope $root
 

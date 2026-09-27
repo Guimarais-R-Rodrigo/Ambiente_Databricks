@@ -24,6 +24,11 @@ function Add-PythonCandidate([System.Collections.Generic.List[string]]$List, [st
     if ((Test-Path -LiteralPath $full) -and -not $List.Contains($full)) { $List.Add($full) }
 }
 
+function Normalize-GitMetadataPath([string]$Value) {
+    $trimChars = [char[]]@([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
+    return [System.IO.Path]::GetFullPath($Value.Trim()).TrimEnd($trimChars)
+}
+
 function Invoke-CapturedProcess([string]$FilePath, [string[]]$ArgumentList, [string]$StdoutPath, [string]$StderrPath) {
     Remove-Item -LiteralPath $StdoutPath -Force -ErrorAction SilentlyContinue
     Remove-Item -LiteralPath $StderrPath -Force -ErrorAction SilentlyContinue
@@ -60,6 +65,22 @@ $rootText = (& git rev-parse --show-toplevel 2>$null)
 if ($LASTEXITCODE -ne 0 -or -not $rootText) { throw "CQ_HOST_PREFLIGHT_NOT_GIT_REPOSITORY" }
 $root = [System.IO.Path]::GetFullPath(($rootText | Select-Object -First 1).Trim())
 Set-Location $root
+
+$gitDirText = (& git rev-parse --path-format=absolute --git-dir 2>$null)
+if ($LASTEXITCODE -ne 0 -or -not $gitDirText) { throw "CQ_HOST_PREFLIGHT_GIT_DIR_UNRESOLVED" }
+$gitCommonDirText = (& git rev-parse --path-format=absolute --git-common-dir 2>$null)
+if ($LASTEXITCODE -ne 0 -or -not $gitCommonDirText) { throw "CQ_HOST_PREFLIGHT_COMMON_DIR_UNRESOLVED" }
+$gitDir = Normalize-GitMetadataPath (($gitDirText | Select-Object -First 1).Trim())
+$gitCommonDir = Normalize-GitMetadataPath (($gitCommonDirText | Select-Object -First 1).Trim())
+$expectedGitMetadataDir = Normalize-GitMetadataPath (Join-Path $root ".git")
+if (
+    -not [string]::Equals($gitDir, $expectedGitMetadataDir, [StringComparison]::OrdinalIgnoreCase) -or
+    -not [string]::Equals($gitCommonDir, $expectedGitMetadataDir, [StringComparison]::OrdinalIgnoreCase)
+) {
+    throw "CQ_HOST_PREFLIGHT_LINKED_WORKTREE_UNSUPPORTED"
+}
+$checkoutMode = "STANDALONE"
+
 $initialStatus = @(& git status --porcelain)
 if ($LASTEXITCODE -ne 0 -or $initialStatus.Count -ne 0) { throw "CQ_HOST_PREFLIGHT_WORKTREE_DIRTY" }
 $branch = (& git branch --show-current).Trim()
@@ -279,7 +300,7 @@ $payload = [ordered]@{
     client_surface = "CODEX_DESKTOP_WINDOWS"
     recorded_at = $recordedAt.ToString("o")
     recorded_at_unix_seconds = $recordedAt.ToUnixTimeSeconds()
-    git = [ordered]@{ root=$root; branch=$branch; head=$head; tree=$tree; final_head=$finalHead; final_tree=$finalTree; origin_identity=$ExpectedRepoFragment; origin_tracking_ref=$originHead; fetch="PASS"; initial_clean=$true; final_clean=$true }
+    git = [ordered]@{ root=$root; checkout_mode=$checkoutMode; git_dir=$gitDir; git_common_dir=$gitCommonDir; branch=$branch; head=$head; tree=$tree; final_head=$finalHead; final_tree=$finalTree; origin_identity=$ExpectedRepoFragment; origin_tracking_ref=$originHead; fetch="PASS"; initial_clean=$true; final_clean=$true }
     python = [ordered]@{ executable=$python.executable; python_version=$python.python_version; implementation=$python.implementation; jsonschema_version=$python.jsonschema_version; execution_surface="HOST_ONLY" }
     project = [ordered]@{ config_path=$projectConfig; config_sha256=$sourceHashes.config; user_config_exists=$userConfigExists; user_config_sha256=$userConfigSha256; validator_git_mode="100755"; validator_blob=$validatorBlob }
     source_sha256 = $sourceHashes
@@ -328,6 +349,7 @@ $promptTemplatePath = Join-Path $root "docs\operations\CODEX_DESKTOP_CQ_RUN_PROM
 $request = [ordered]@{
     schema_version = "SER-CODEX-DESKTOP-CQ-REQUEST-1"
     client_surface = "CODEX_DESKTOP_WINDOWS"
+    checkout_mode = $checkoutMode
     branch = $branch
     candidate_head = $head
     candidate_tree = $tree
@@ -353,6 +375,7 @@ try { $requestRoundtrip = Get-Content -LiteralPath $requestPath -Raw | ConvertFr
 catch { throw "CQ_HOST_PREFLIGHT_RUN_REQUEST_INVALID_JSON" }
 if (
     $requestRoundtrip.schema_version -ne "SER-CODEX-DESKTOP-CQ-REQUEST-1" -or
+    $requestRoundtrip.checkout_mode -ne "STANDALONE" -or
     $requestRoundtrip.candidate_head -ne $head -or
     $requestRoundtrip.candidate_tree -ne $tree -or
     $requestRoundtrip.host_evidence_sha256 -ne $sha
@@ -376,6 +399,7 @@ Write-Host "A1_GIT_TRANSPORT_SELFTEST = PASS"
 Write-Host "A1_OPERATIONAL_TRANSPORT_SELFTEST = PASS"
 Write-Host "NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS (3/3; network_attempts=0)"
 Write-Host ("HOST_NETWORK_BASELINE = PASS ({0}:{1})" -f $networkProbeIp, $NetworkProbePort)
+Write-Host "CHECKOUT_MODE = STANDALONE"
 Write-Host "HEAD = $head"
 Write-Host "TREE = $tree"
 Write-Host "ORIGIN_HEAD = $originHead"

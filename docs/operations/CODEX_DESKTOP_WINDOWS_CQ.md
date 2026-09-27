@@ -8,20 +8,24 @@ Este documento adapta somente a forma de provar CQ0–CQ5 no Codex Desktop Windo
 
 ## D0 — host preflight v6 obrigatório
 
-Executar imediatamente antes da nova conversa:
+Executar imediatamente antes da nova conversa, em **standalone checkout** dedicado da branch B1. Linked Git worktree é fail-closed para o controller: o Codex 0.157.1 substitui as declarações de hooks do worktree pelas do root checkout, então o hash do arquivo local não provaria a fonte efetiva de hooks.
 
 ```powershell
-Set-Location "C:\b1_worktrees\b1_p1_4ba7f551_20260924"
+Set-Location "C:\b1_runtime\b1_p1_4ba7f551_20260924"
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\codex_desktop_cq_host_preflight.ps1
 ```
 
-Exigir `CQ_HOST_PREFLIGHT = PASS`, `HOST_VALIDATOR = PASS`, `HOST_METATESTS = PASS`, `NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS`, `NETWORK_PROBE_OFFLINE_RUNTIME_SELFTEST = PASS`, `MCP_GUARD_SELFTEST = PASS`, `SCOPE_GUARDS_SELFTEST = PASS`, `A1_GIT_TRANSPORT_SELFTEST = PASS`, `HOST_NETWORK_BASELINE = PASS` e `CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST`.
+O preflight deve rejeitar linked worktree com `CQ_HOST_PREFLIGHT_LINKED_WORKTREE_UNSUPPORTED`. Não copiar hooks para um root checkout de outra branch e não usar bypass.
+
+Exigir `CQ_HOST_PREFLIGHT = PASS`, `HOST_VALIDATOR = PASS`, `HOST_METATESTS = PASS`, `NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS`, `NETWORK_PROBE_OFFLINE_RUNTIME_SELFTEST = PASS`, `MCP_GUARD_SELFTEST = PASS`, `SCOPE_GUARDS_SELFTEST = PASS`, `A1_GIT_TRANSPORT_SELFTEST = PASS`, `HOST_NETWORK_BASELINE = PASS`, `CHECKOUT_MODE = STANDALONE` e `CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST`.
 O artefato canônico de host evidence é `CQ_HOST_PREFLIGHT.json`, acompanhado de
 `CQ_HOST_PREFLIGHT.sha256`. O evidence v6 contém `network_probe.hostname`,
 `selected_ipv4`, porta 443 e baseline host-side single-shot.
 Schema: `AC-R2-DESKTOP-HOST-PREFLIGHT-6`.
 
 O host preflight **não** pode declarar trust dos hooks em nome do usuário. `CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST` significa que a qualificação host-side está verde, mas a conversa CQ só pode iniciar após a revisão/confiança humana do hook atual pelo navegador `/hooks` de uma sessão Codex local suportada no mesmo projeto. O próprio CQ verifica essa pré-condição antes de CQ0.
+
+O evidence v6 registra `git.checkout_mode = STANDALONE`, `git.git_dir` e `git.git_common_dir`; transportes A1 recusam evidence sem esse binding.
 
 O preflight v6 executa no host `validate_codex_autonomy.py --json` e `unittest tools.tests.test_codex_autonomy -v`, registra exit codes, test count, hashes de stdout/stderr, source SHA-256, HEAD/tree/config e worktree clean. Antes do baseline TCP, executa o probe protegido com `-SelfTest`: três payloads sintéticos (PASS/FAIL/NOT_PROVEN), round-trip JSON e zero tentativas de rede. Só depois faz o baseline TCP host-side. Python é `HOST_ONLY`; não instalar dependências.
 

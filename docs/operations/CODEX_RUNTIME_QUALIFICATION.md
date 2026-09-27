@@ -31,6 +31,8 @@ New-Item -ItemType Directory -Force "$HOME\codex-scratch\Ambiente_Databricks" | 
 Não apontar o scratch para dentro do repositório e não tornar o repository root
 writable para contornar erro de sandbox.
 
+A qualificação e a operação do controller devem ocorrer em **standalone checkout** dedicado. Linked Git worktree é proibido para este runtime porque o Codex 0.157.1 resolve as declarações de hooks pelo root checkout; isso desacoplaria o hash qualificado da fonte efetivamente executada. O host preflight e os dois transportes A1 verificam `git-dir`/`git-common-dir` e falham fechados fora de checkout standalone.
+
 ## CQ0 — identity, clean worktree, trust e effective config
 
 Exigir `git status --porcelain` vazio antes da qualificação e registrar:

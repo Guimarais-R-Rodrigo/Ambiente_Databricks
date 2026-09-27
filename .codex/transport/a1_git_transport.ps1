@@ -37,6 +37,30 @@ function Resolve-RepositoryRoot {
     return [IO.Path]::GetFullPath(($rootText | Select-Object -First 1).Trim())
 }
 
+function Require-StandaloneCheckout([string]$Root) {
+    $gitDirText = (& git rev-parse --path-format=absolute --git-dir 2>$null)
+    if ($LASTEXITCODE -ne 0 -or -not $gitDirText) {
+        Write-Error "A1_GIT_TRANSPORT_GIT_DIR_UNRESOLVED"
+        exit 91
+    }
+    $commonDirText = (& git rev-parse --path-format=absolute --git-common-dir 2>$null)
+    if ($LASTEXITCODE -ne 0 -or -not $commonDirText) {
+        Write-Error "A1_GIT_TRANSPORT_COMMON_DIR_UNRESOLVED"
+        exit 91
+    }
+    $trimChars = [char[]]@([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar)
+    $gitDir = [IO.Path]::GetFullPath(($gitDirText | Select-Object -First 1).Trim()).TrimEnd($trimChars)
+    $commonDir = [IO.Path]::GetFullPath(($commonDirText | Select-Object -First 1).Trim()).TrimEnd($trimChars)
+    $expected = [IO.Path]::GetFullPath((Join-Path $Root ".git")).TrimEnd($trimChars)
+    if (
+        -not [string]::Equals($gitDir, $expected, [StringComparison]::OrdinalIgnoreCase) -or
+        -not [string]::Equals($commonDir, $expected, [StringComparison]::OrdinalIgnoreCase)
+    ) {
+        Write-Error "A1_GIT_TRANSPORT_LINKED_WORKTREE_UNSUPPORTED"
+        exit 91
+    }
+}
+
 function Require-RepositoryIdentity([string]$Root) {
     Set-Location $Root
     $branch = (& git branch --show-current).Trim()
@@ -76,6 +100,7 @@ if ($actualScript -ne $expectedScript) {
     exit 66
 }
 Set-Location $root
+Require-StandaloneCheckout $root
 
 $identity = Require-RepositoryIdentity $root
 Require-Envelope $root
@@ -114,6 +139,10 @@ catch {
 if ($evidence.schema_version -ne "AC-R2-DESKTOP-HOST-PREFLIGHT-6" -or $evidence.result -ne "PASS") {
     Write-Error "A1_GIT_TRANSPORT_HOST_EVIDENCE_INVALID"
     exit 81
+}
+if ([string]$evidence.git.checkout_mode -ne "STANDALONE") {
+    Write-Error "A1_GIT_TRANSPORT_HOST_EVIDENCE_CHECKOUT_MODE"
+    exit 92
 }
 
 $QualifiedPython = [string]$evidence.python.executable

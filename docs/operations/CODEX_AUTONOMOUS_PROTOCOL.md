@@ -32,6 +32,8 @@ Codex Desktop para Windows, aplicar também
 `CODEX_DESKTOP_WINDOWS_CQ.md` e exigir o host preflight SHA-bound produzido por
 `tools/codex_desktop_cq_host_preflight.ps1`.
 
+O runtime do controller usa **standalone checkout** dedicado. Linked Git worktree não é um substrate aceito no Codex 0.157.1 porque a descoberta de hooks substitui as declarações locais pelas do root checkout; preflight e transportes falham fechados se `git-dir`/`git-common-dir` não forem os metadados do próprio checkout. O root checkout de outra branch nunca é modificado para satisfazer essa pré-condição.
+
 AC-R2 usa permission profiles:
 - no Windows elevado, A0 e A1 declaram `:root=read` porque o backend atual
   exige leitura efetiva da raiz; esta é uma ampliação de leitura observada e

@@ -590,6 +590,11 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertNotIn("--force", script)
         self.assertIn("--worktree", script)
         self.assertIn("--index", script)
+        self.assertNotIn('"powershell.exe -NoProfile', rule)
+        self.assertIn('match = [', rule)
+        self.assertIn('not_match = [', rule)
+        self.assertIn("A1_GIT_TRANSPORT_LINKED_WORKTREE_UNSUPPORTED", script)
+        self.assertIn("A1_GIT_TRANSPORT_HOST_EVIDENCE_CHECKOUT_MODE", script)
 
     def _temporary_git_repo(self) -> tuple[Path, mock._patch, mock._patch]:
         repo = Path(tempfile.mkdtemp())
@@ -934,6 +939,9 @@ class CodexAutonomyTests(unittest.TestCase):
             "PROJECT_HOOKS_SHA256",
             "CQ_HOST_PREFLIGHT_RUN_REQUEST_ROUNDTRIP_MISMATCH",
             "CQ_HOST_PREFLIGHT_PROMPT_TEMPLATE_UNRESOLVED",
+            "CQ_HOST_PREFLIGHT_LINKED_WORKTREE_UNSUPPORTED",
+            "CHECKOUT_MODE = STANDALONE",
+            "checkout_mode",
         ):
             self.assertIn(token, text)
 
@@ -950,6 +958,7 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("PROJECT_HOOK_TRUST", text)
         self.assertIn("/hooks", text)
         self.assertNotIn("Settings > Hooks", text)
+        self.assertIn("standalone checkout", text)
 
     def test_readiness_contract_requires_human_hook_trust_before_cq(self):
         start = (ROOT / "docs/operations/CODEX_AUTONOMOUS_START_PROMPT.md").read_text(encoding="utf-8")
@@ -959,6 +968,7 @@ class CodexAutonomyTests(unittest.TestCase):
             self.assertIn("CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST", text)
         self.assertNotIn("CQ_READY_TO_RUN = PASS", start)
         self.assertNotIn("CQ_READY_TO_RUN = PASS", desktop)
+        self.assertIn("standalone checkout", desktop)
 
     def test_protocol_stabilization_is_v6_surface_policy_and_external_result_consistent(self):
         text = (ROOT / "docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md").read_text(encoding="utf-8")
@@ -967,6 +977,7 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("CODEX_DESKTOP_TOOL_SURFACE_POLICY.json", text)
         self.assertIn("external_surface_guard", text)
         self.assertIn("Depois de CQ4 não há segunda escrita repo-side", text)
+        self.assertIn("standalone checkout", text)
 
     def test_validator_v20_enforces_start_protocol_and_inline_hooks_consistency(self):
         text = (ROOT / "tools/validate_codex_autonomy.py").read_text(encoding="utf-8")
@@ -1021,6 +1032,8 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("git remote get-url --push origin", text)
         self.assertIn("git ls-remote origin", text)
         self.assertNotIn("--force", text)
+        self.assertIn("A1_OPERATIONAL_LINKED_WORKTREE_UNSUPPORTED", text)
+        self.assertIn("A1_OPERATIONAL_HOST_EVIDENCE_CHECKOUT_MODE", text)
 
     def test_operational_autonomy_does_not_expand_envelope_schema_or_write_roots(self):
         envelope = self.envelope()

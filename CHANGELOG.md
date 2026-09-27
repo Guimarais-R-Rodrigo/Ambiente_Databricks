@@ -4687,3 +4687,12 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 ### Corrigido
 
 - (ChatGPT) O validator V20 ainda exigia a string legada `Settings > Hooks` no start prompt após a migração documentada para o navegador `/hooks`, causando falso FAIL no host preflight. O oráculo foi alinhado ao contrato atual e o metateste existente agora exige `/hooks` e rejeita a UI legada.
+
+
+## 2026-09-27 — runtime standalone para hooks do Codex (ChatGPT)
+
+### Corrigido
+
+- (ChatGPT) Confirmado no Codex CLI 0.157.1 que linked Git worktrees substituem especificamente as declarações de hooks pela configuração do root checkout. Como o root checkout local estava em outra branch, sujo e sem config de hooks, `/hooks` reportava `Installed 0` apesar de `/debug-config` mostrar o config do worktree habilitado.
+- (ChatGPT) CQ/preflight/transportes A1 agora exigem standalone checkout e registram `checkout_mode=STANDALONE`; linked worktree falha fechado sem tocar no root checkout.
+- (ChatGPT) Exemplos `match/not_match` de `.codex/rules/a1_git_transport.rules` foram convertidos para arrays explícitos de argv, evitando tokenização shlex incorreta de caminhos Windows. Nenhuma permissão, write root, A2, produto ou G6 foi ampliado.
