@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-27 — AC-R2 CM-DESKTOP-RUNTIME-5: fechamento estático
+
+- (ChatGPT) `CM_DESKTOP_RUNTIME_5_STATIC = PASS` no candidato `a486187264e25ff972dae81f4f90ee3cea103726` / tree `5170fa2ec7b147174c0f254691431037c2193151`.
+- (ChatGPT) Preflight v4 mantém baseline TCP raw host-side single-shot em IPv4:443 e agora inclui o SHA do probe protegido.
+- (ChatGPT) `.codex/probes/cq3_executor_network_probe.ps1` verifica evidence+sidecar+próprio SHA+HEAD/tree clean, usa exatamente o selected_ipv4:443 e faz uma única tentativa TCP raw BeginConnect/EndConnect sem DNS/HTTP/TLS/auth.
+- (ChatGPT) Oráculo: AccessDenied/10013 = PASS; TCP conectado = FAIL_NETWORK_BOUNDARY_OPEN; timeout/outros = NOT_PROVEN; sem retry/endpoint alternativo.
+- (ChatGPT) `.codex/config.toml` permanece byte-idêntico ao candidato Runtime-4: exatamente 10 write roots A1, sem .git write, network A0/A1 disabled.
+- (ChatGPT) Validator V13 e 80 métodos de metateste definidos estaticamente; 0 findings materiais repo-side.
+- (ChatGPT) Runtime CQ corrigido permanece NOT_RUN até novo host preflight v4.
+
 ## 2026-09-27 — AC-R2 CM-DESKTOP-RUNTIME-5
 
 - (Codex/ChatGPT) Runtime-4 CQ provou filesystem denials e parou somente no network probe inconclusivo: Invoke-WebRequest retornou Authentication failed sem exception chain suficiente.
