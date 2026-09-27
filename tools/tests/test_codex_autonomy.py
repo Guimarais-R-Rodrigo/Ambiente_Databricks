@@ -528,6 +528,15 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertEqual("read", a0["filesystem"][":workspace_roots"]["."])
         self.assertFalse(a0["network"]["enabled"])
 
+    def test_a0_windows_scratch_uses_cli_portable_home_relative_syntax(self):
+        self.assertEqual("~/codex-scratch/Ambiente_Databricks", val.A0_WINDOWS_SCRATCH)
+        cfg = val._read_toml(ROOT / ".codex/config.toml")
+        a0 = cfg["permissions"]["ser-controller-a0"]
+        self.assertIn(val.A0_WINDOWS_SCRATCH, a0["workspace_roots"])
+        self.assertIn(val.A0_WINDOWS_SCRATCH, a0["filesystem"])
+        self.assertFalse(any(path.startswith("~\\") for path in a0["workspace_roots"]))
+        self.assertFalse(any(path.startswith("~\\") for path in a0["filesystem"]))
+
     def test_validator_rejects_missing_a0_windows_scratch_capability_root(self):
         cfg = copy.deepcopy(val._read_toml(ROOT / ".codex/config.toml"))
         a0 = cfg["permissions"]["ser-controller-a0"]

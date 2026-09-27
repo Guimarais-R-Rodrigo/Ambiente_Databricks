@@ -19,7 +19,7 @@ O sandbox `elevated` precisa de pelo menos um writable capability root resolvív
 quando o profile contém writes de scratch. AC-R2 mantém o repositório read-only
 para A0 e declara um workspace root externo dedicado:
 
-`~\codex-scratch\Ambiente_Databricks`
+`~/codex-scratch/Ambiente_Databricks`
 
 Antes de iniciar uma conversa Codex Desktop no Windows nativo, esse diretório
 deve existir. Preparação do host, fora do repositório:
@@ -57,7 +57,7 @@ apps                     = false
 remote_plugin            = false
 A0/A1 command network   = disabled
 A0/A1 filesystem :root  = read (Windows elevated backend requirement)
-A0 external scratch     = ~\codex-scratch\Ambiente_Databricks (write)
+A0 external scratch     = ~/codex-scratch/Ambiente_Databricks (write)
 repository root under A0 = read-only for writes
 A1 direct .git write    = denied
 ```

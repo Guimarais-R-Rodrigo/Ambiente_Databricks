@@ -48,14 +48,14 @@ config_file = "agents/architecture-auditor.toml"
 description = "Repository read-only controller/auditor profile with one explicit external scratch capability root for deterministic local tests."
 
 [permissions.ser-controller-a0.workspace_roots]
-"~\\codex-scratch\\Ambiente_Databricks" = true
+"~/codex-scratch/Ambiente_Databricks" = true
 
 [permissions.ser-controller-a0.filesystem]
 ":root" = "read"
 ":minimal" = "read"
 ":tmpdir" = "write"
 ":slash_tmp" = "write"
-"~\\codex-scratch\\Ambiente_Databricks" = "write"
+"~/codex-scratch/Ambiente_Databricks" = "write"
 
 [permissions.ser-controller-a0.filesystem.":workspace_roots"]
 "." = "read"

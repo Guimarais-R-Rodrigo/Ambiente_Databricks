@@ -38,7 +38,7 @@ AC-R2 usa permission profiles:
   documentada, não uma autorização de write;
 - root + explorer/auditors: `ser-controller-a0`, repository read-only para
   mutações, command network disabled, com scratch externo explícito
-  `~\codex-scratch\Ambiente_Databricks` para capability/write temporário no
+  `~/codex-scratch/Ambiente_Databricks` para capability/write temporário no
   Windows nativo;
 - executor: `ser-b1-a1`, workspace default read, somente 10 arquivos A1 concretos
   writable, sem escrita direta em `.git` e sem command network;

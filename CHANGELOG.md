@@ -4664,3 +4664,11 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 ### Atualizado
 
 - (ChatGPT) Registro RECUPERACAO_R09, relatório e matriz distinguem recuperação concluída de integração, freeze e runtimes ainda pendentes. Cinco novos READMEs preservados; nenhuma mudança na main, em implementações/fachadas ou publicação Databricks.
+
+
+## 2026-09-27 — compatibilidade do path de scratch com Codex CLI (ChatGPT)
+
+### Corrigido
+
+- (ChatGPT) Corrigida a sintaxe do workspace root externo A0 de `~\codex-scratch\Ambiente_Databricks` para `~/codex-scratch/Ambiente_Databricks`, após o parser real do Codex CLI rejeitar a forma Windows com backslash antes de iniciar a sessão.
+- (ChatGPT) Validator, metatests e contratos operacionais foram alinhados à forma home-relative aceita pelo cliente; adicionado teste de regressão para impedir reintrodução de `~\...` em permission-profile paths. Nenhuma permissão, write root, hook, transporte, envelope, A2, produto ou G6 foi ampliado.

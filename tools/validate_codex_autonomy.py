@@ -17,7 +17,7 @@ except ImportError:
 ROOT = Path(__file__).resolve().parents[1]
 A0_PROFILE = "ser-controller-a0"
 A1_PROFILE = "ser-b1-a1"
-A0_WINDOWS_SCRATCH = r"~\codex-scratch\Ambiente_Databricks"
+A0_WINDOWS_SCRATCH = "~/codex-scratch/Ambiente_Databricks"
 LEGACY_WINDOWS_QUALIFIED_PYTHON_ROOT = r"~\AppData\Local\Programs\Python\Python312"
 EXPECTED_AGENTS = {
     "explorer": ("explorer.toml", A0_PROFILE, "gpt-6-luna", "high"),
