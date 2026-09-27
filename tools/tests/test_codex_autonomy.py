@@ -855,7 +855,12 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("[switch]$SelfTest", pre)
         self.assertIn("[switch]$SelfTest", post)
         self.assertIn("could not resolve target path", pre)
-        self.assertIn("git inspection failed", post)
+        for token in (
+            "A1 post-scope guard git diff failed",
+            "A1 post-scope guard git cached diff failed",
+            "A1 post-scope guard git untracked inspection failed",
+        ):
+            self.assertIn(token, post)
         self.assertNotIn('TrimStart("./")', pre)
         self.assertNotIn('TrimStart("./")', post)
 
@@ -993,7 +998,9 @@ class CodexAutonomyTests(unittest.TestCase):
         text = (ROOT / ".codex/transport/a1_operational_git_transport.ps1").read_text(encoding="utf-8")
         self.assertIn("PUSH_FAILED_LOCAL_COMMIT_PRESERVED", text)
         self.assertIn("PUSH_READBACK_UNKNOWN_LOCAL_COMMIT_PRESERVED", text)
-        self.assertIn("A1_OPERATIONAL_RECONCILE_LOCAL_NOT_SINGLE_SUCCESSOR", text)
+        self.assertIn("LOCAL_SUCCESSOR_PENDING_PUSH", text)
+        self.assertIn("A1_OPERATIONAL_RECONCILE_LOCAL_DELTA_INVALID", text)
+        self.assertIn("A1_OPERATIONAL_UNKNOWN_DIVERGENCE", text)
 
     def test_operational_transport_is_non_force_and_validates_push_remote(self):
         text = (ROOT / ".codex/transport/a1_operational_git_transport.ps1").read_text(encoding="utf-8")
