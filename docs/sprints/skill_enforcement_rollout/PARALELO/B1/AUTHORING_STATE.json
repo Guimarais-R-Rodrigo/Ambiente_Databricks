@@ -33,7 +33,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_AC_R2_CM_DESKTOP_RUNTIME_6_R1_CLOSED_AWAITING_HOST_PREFLIGHT_V5_AND_CQ_RETRY",
+  "stage": "B1_AC_R2_CM_DESKTOP_RUNTIME_6_R1_FINAL_STATIC_CLOSED_AWAITING_HOST_PREFLIGHT_V5_AND_CQ_RETRY",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -1002,7 +1002,7 @@
     "max_write_capable_agents": 1,
     "custom_agents": 5,
     "controller_metatest_methods_static": 85,
-    "structural_validation": "PASS_AC_R2_CM_DESKTOP_RUNTIME_6_R1_STATIC",
+    "structural_validation": "PASS_AC_R2_CM_DESKTOP_RUNTIME_6_R1_FINAL_STATIC",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
     "static_audit_findings_open": 0,
     "previous_static_audit": {
@@ -1019,7 +1019,7 @@
     "executor_permissions_default": "SER_B1_A1_EXACT_FILES_NO_DIRECT_GIT_OR_NETWORK",
     "ac_r2": {
       "authorization": "DIRECT_USER_CHAT_2026-09-26",
-      "state": "PASS_STATIC_AWAITING_HOST_PREFLIGHT_V5_AND_CQ_RETRY",
+      "state": "PASS_FINAL_STATIC_AWAITING_HOST_PREFLIGHT_V5_AND_CQ_RETRY",
       "scope": [
         "CR1_LEAST_PRIVILEGE_A1_PERMISSION_BOUNDARY",
         "CR2_DELTA_AND_STATE_TRANSITION_INTEGRITY",
@@ -1039,8 +1039,8 @@
       "runtime_state_promotion": "CONTROLLER_MAINTENANCE_REQUIRED_AFTER_REPORTED_CQ_PASS",
       "static_review": "PASS_RUNTIME6_R1_STATIC",
       "material_findings_open": 0,
-      "static_candidate_commit": "3fd442fb6590c6913221bc58ad0aaaf2164c4f2a",
-      "static_candidate_tree": "1c1fce89560d668026180e6b38f8229de69c341f",
+      "static_candidate_commit": "f4139e1e0bb5e1d0ba677f630d56c467f6261154",
+      "static_candidate_tree": "15a01c2e0cc789f3d6a95ae169cd44329b30feaf",
       "validator_execution": "NOT_RUN_ON_RUNTIME6_R1_CANDIDATE",
       "metatests_execution": "NOT_RUN_ON_RUNTIME6_R1_CANDIDATE",
       "limitations": [
@@ -1354,9 +1354,9 @@
         "a2_changed": false,
         "b1_material_execution": "NOT_RUN",
         "runtime_requalification": "REQUIRED",
-        "state": "PASS_STATIC_R1_AWAITING_HOST_PREFLIGHT_V5_AND_CQ_RETRY",
-        "static_candidate_commit": "3fd442fb6590c6913221bc58ad0aaaf2164c4f2a",
-        "static_candidate_tree": "1c1fce89560d668026180e6b38f8229de69c341f",
+        "state": "PASS_FINAL_STATIC_R1_AWAITING_HOST_PREFLIGHT_V5_AND_CQ_RETRY",
+        "static_candidate_commit": "f4139e1e0bb5e1d0ba677f630d56c467f6261154",
+        "static_candidate_tree": "15a01c2e0cc789f3d6a95ae169cd44329b30feaf",
         "material_findings_open": 0,
         "metatest_methods_static": 85,
         "validator_schema": "SER-CODEX-AUTONOMY-VALIDATION-15",
@@ -1365,7 +1365,7 @@
         "serialization_selftest_execution": "NOT_RUN_ON_RUNTIME6_R1_CANDIDATE",
         "host_network_baseline": "NOT_RUN_ON_RUNTIME6_R1_CANDIDATE",
         "cq0_cq5": "NOT_RUN_ON_RUNTIME6_R1_CANDIDATE",
-        "next_action": "FAST_FORWARD_RUN_HOST_PREFLIGHT_V5_REQUIRE_VALIDATOR_V15_METATESTS_85_SELFTEST_BASELINE_THEN_FRESH_CQ",
+        "next_action": "FAST_FORWARD_RUN_FRESH_HOST_PREFLIGHT_V5_ON_FINAL_MODE_PRESERVED_CANDIDATE_THEN_FRESH_CQ",
         "permission_config_blob_unchanged": true,
         "unsafe_generic_list_forbidden": true,
         "inline_dynamic_exception_payload_forbidden": true,
@@ -1409,12 +1409,15 @@
           "metatest_methods_static": 85,
           "static_review": "PASS",
           "runtime_requalification": "REQUIRED",
-          "next_action": "FAST_FORWARD_RUN_HOST_PREFLIGHT_V5_THEN_FRESH_CQ",
-          "static_candidate_commit": "3fd442fb6590c6913221bc58ad0aaaf2164c4f2a",
-          "static_candidate_tree": "1c1fce89560d668026180e6b38f8229de69c341f",
+          "next_action": "FRESH_HOST_PREFLIGHT_V5_THEN_FRESH_CQ",
+          "static_candidate_commit": "f4139e1e0bb5e1d0ba677f630d56c467f6261154",
+          "static_candidate_tree": "15a01c2e0cc789f3d6a95ae169cd44329b30feaf",
           "material_findings_open": 0,
           "validator_execution": "NOT_RUN",
-          "metatests_execution": "NOT_RUN"
+          "metatests_execution": "NOT_RUN",
+          "validator_mode": "100755_RESTORED",
+          "validator_blob_sha": "6f497c1591e9cea4fefe766885a9519776c3d2da",
+          "host_preflight_after_mode_restore": "NOT_RUN"
         }
       }
     }

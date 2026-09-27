@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-27 — AC-R2 Runtime-6 R1: preservação do modo executável
+
+- (ChatGPT) Revalidação pós-fast-forward detectou regressão incidental de modo Git em `tools/validate_codex_autonomy.py`: `100755 -> 100644`, sem alteração intencional de conteúdo.
+- (ChatGPT) Commit `f4139e1e0bb5e1d0ba677f630d56c467f6261154` restaura exclusivamente `100755`; blob do validator permanece `6f497c1591e9cea4fefe766885a9519776c3d2da`, com 0 additions/deletions e conteúdo byte-idêntico.
+- (ChatGPT) Candidato final revalidado em tree `15a01c2e0cc789f3d6a95ae169cd44329b30feaf`: validator V15, 85 metatests, config/envelope inalterados, self-test collision ausente e TCP oracle inalterado; findings materiais = 0.
+- (ChatGPT) Host preflight executado no HEAD anterior fica superseded pela mudança de identidade; novo preflight v5 é obrigatório antes do próximo CQ.
+
 ## 2026-09-27 — AC-R2 CM-DESKTOP-RUNTIME-6 R1: fechamento estático
 
 - (ChatGPT) `CM_DESKTOP_RUNTIME_6_R1_STATIC = PASS` no candidato `3fd442fb6590c6913221bc58ad0aaaf2164c4f2a` / tree `1c1fce89560d668026180e6b38f8229de69c341f`.
