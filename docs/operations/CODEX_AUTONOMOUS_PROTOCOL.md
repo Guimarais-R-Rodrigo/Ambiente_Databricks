@@ -1,6 +1,6 @@
 # Codex Autonomous Controller Protocol
 
-Versão: 1.7  
+Versão: 1.8  
 Decisões donas: ADR-0024 + ADR-0025
 
 ## 1. Objetivo
@@ -54,6 +54,11 @@ obriga o executor a testar negativos e o único positivo journal A1. Essa exceç
 não muda permission profiles nem autoridade normal e não pode ser usada fora de
 CONTROLLER_RUNTIME_QUALIFICATION. Metadata declarativa do role não substitui
 enforcement comportamental.
+
+No CQ3 Desktop, command-network é provado por socket TCP raw single-shot contra
+o IP:porta previamente validado pelo host preflight v4. HTTP/TLS/auth failures não
+são oráculo de sandbox. AccessDenied/10013 é denial; conexão bem-sucedida prova
+network boundary aberta; demais erros ficam NOT_PROVEN.
 
 No Desktop, ausência da CLI Codex, de credenciais Git dentro da sandbox ou do
 nome nominal do permission profile não é automaticamente equivalente a falha.

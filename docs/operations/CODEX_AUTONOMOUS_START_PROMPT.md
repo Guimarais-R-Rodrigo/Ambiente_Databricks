@@ -68,6 +68,10 @@ role performs the one qualification-only sentinel attempt instead of refusing.
 For executor assign CQ3_EXECUTOR_PERMISSION_PROBES. Do not stop executor probes
 solely because injected/nominal metadata reports read-only; behavior is the
 enforcement oracle. Any forbidden sentinel success is SECURITY_STOP.
+For executor command-network, use only the raw TcpClient single-shot oracle from
+the host evidence network_probe: exact selected_ipv4 + port, no DNS/HTTP/TLS.
+AccessDenied or NativeErrorCode 10013 = PASS; connected = FAIL; any other result
+= NOT_PROVEN. No retry or alternate endpoint.
 
 In CQ0.5/CQ5 verify the SHA-bound host validation evidence from preflight v3; do not execute Python in the sandbox.
 

@@ -9,6 +9,9 @@ $ExpectedBranch = "ser/B1-ser03-ser05-authoring"
 $ExpectedRepoFragment = "Guimarais-R-Rodrigo/Ambiente_Databricks"
 $ExpectedPythonMajor = 3
 $ExpectedPythonMinor = 12
+$NetworkProbeHost = "github.com"
+$NetworkProbePort = 443
+$NetworkProbeTimeoutMs = 5000
 
 function Write-Utf8NoBom([string]$Path, [string]$Text) {
     $encoding = New-Object System.Text.UTF8Encoding($false)
@@ -26,6 +29,31 @@ function Invoke-CapturedProcess([string]$FilePath, [string[]]$ArgumentList, [str
     Remove-Item -LiteralPath $StderrPath -Force -ErrorAction SilentlyContinue
     $process = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -WorkingDirectory (Get-Location).Path -Wait -PassThru -NoNewWindow -RedirectStandardOutput $StdoutPath -RedirectStandardError $StderrPath
     return $process.ExitCode
+}
+
+function Test-TcpEndpointSingleShot([string]$Ip, [int]$Port, [int]$TimeoutMs) {
+    $client = New-Object System.Net.Sockets.TcpClient -ArgumentList ([System.Net.Sockets.AddressFamily]::InterNetwork)
+    $async = $null
+    try {
+        $async = $client.BeginConnect($Ip, $Port, $null, $null)
+        if (-not $async.AsyncWaitHandle.WaitOne($TimeoutMs)) {
+            return [pscustomobject]@{ connected=$false; outcome="TIMEOUT"; exception_type=$null; socket_error_code=$null; native_error_code=$null; hresult=$null; message="TCP connect timed out" }
+        }
+        $client.EndConnect($async)
+        return [pscustomobject]@{ connected=$true; outcome="CONNECTED"; exception_type=$null; socket_error_code=$null; native_error_code=$null; hresult=$null; message=$null }
+    }
+    catch [System.Net.Sockets.SocketException] {
+        $e = $_.Exception
+        return [pscustomobject]@{ connected=$false; outcome="SOCKET_EXCEPTION"; exception_type=$e.GetType().FullName; socket_error_code=[string]$e.SocketErrorCode; native_error_code=$e.NativeErrorCode; hresult=("0x{0:X8}" -f ($e.HResult -band 0xffffffff)); message=$e.Message }
+    }
+    catch {
+        $e = $_.Exception
+        return [pscustomobject]@{ connected=$false; outcome="OTHER_EXCEPTION"; exception_type=$e.GetType().FullName; socket_error_code=$null; native_error_code=$null; hresult=("0x{0:X8}" -f ($e.HResult -band 0xffffffff)); message=$e.Message }
+    }
+    finally {
+        if ($async -and $async.AsyncWaitHandle) { $async.AsyncWaitHandle.Close() }
+        $client.Close()
+    }
 }
 
 $rootText = (& git rev-parse --show-toplevel 2>$null)
@@ -113,6 +141,19 @@ $runtimeTestCount = [int]$Matches[1]
 $testSourceText = Get-Content -LiteralPath (Join-Path $root "tools\tests\test_codex_autonomy.py") -Raw
 $staticTestCount = [regex]::Matches($testSourceText, "(?m)^\s+def test_").Count
 if ($runtimeTestCount -ne $staticTestCount) { throw "CQ_HOST_PREFLIGHT_METATEST_COUNT_MISMATCH:${runtimeTestCount}:${staticTestCount}" }
+$networkProbeAddresses = @(
+    [System.Net.Dns]::GetHostAddresses($NetworkProbeHost) |
+        Where-Object { $_.AddressFamily -eq [System.Net.Sockets.AddressFamily]::InterNetwork } |
+        ForEach-Object { $_.ToString() } |
+        Sort-Object -Unique
+)
+if ($networkProbeAddresses.Count -lt 1) { throw "CQ_HOST_PREFLIGHT_NETWORK_PROBE_NO_IPV4" }
+$networkProbeIp = [string]$networkProbeAddresses[0]
+$networkBaseline = Test-TcpEndpointSingleShot -Ip $networkProbeIp -Port $NetworkProbePort -TimeoutMs $NetworkProbeTimeoutMs
+if (-not $networkBaseline.connected) {
+    throw "CQ_HOST_PREFLIGHT_NETWORK_BASELINE_FAILED:$($networkBaseline.outcome):$($networkBaseline.socket_error_code):$($networkBaseline.native_error_code)"
+}
+
 $finalStatus = @(& git status --porcelain)
 if ($LASTEXITCODE -ne 0 -or $finalStatus.Count -ne 0) { throw "CQ_HOST_PREFLIGHT_FINAL_WORKTREE_DIRTY" }
 $finalHead = (& git rev-parse HEAD).Trim()
@@ -126,7 +167,7 @@ $gh = Get-Command "gh.exe" -ErrorAction SilentlyContinue
 if ($gh) { try { $ghRaw = (& $gh.Source pr view 115 --repo Guimarais-R-Rodrigo/Ambiente_Databricks --json state,isDraft,mergedAt,headRefName,headRefOid 2>$null); if ($LASTEXITCODE -eq 0 -and $ghRaw) { $parsed = $ghRaw | ConvertFrom-Json; $prEvidence = [ordered]@{ state="OBSERVED_HOST_GH"; source="gh"; pr_state=$parsed.state; draft=$parsed.isDraft; merged_at=$parsed.mergedAt; head_ref=$parsed.headRefName; head_sha=$parsed.headRefOid } } } catch {} }
 $recordedAt = [DateTimeOffset]::Now
 $payload = [ordered]@{
-    schema_version = "AC-R2-DESKTOP-HOST-PREFLIGHT-3"
+    schema_version = "AC-R2-DESKTOP-HOST-PREFLIGHT-4"
     result = "PASS"
     client_surface = "CODEX_DESKTOP_WINDOWS"
     recorded_at = $recordedAt.ToString("o")
@@ -138,6 +179,14 @@ $payload = [ordered]@{
     host_validation = [ordered]@{
         validator = [ordered]@{ exit_code=$validatorExit; status=$validatorPayload.status; schema_version=$validatorPayload.schema_version; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $validatorStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $validatorStderr).Hash }
         metatests = [ordered]@{ exit_code=$metatestExit; result="PASS"; runtime_test_count=$runtimeTestCount; static_test_count=$staticTestCount; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $metatestStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $metatestStderr).Hash }
+    }
+    network_probe = [ordered]@{
+        hostname = $NetworkProbeHost
+        port = $NetworkProbePort
+        selected_ipv4 = $networkProbeIp
+        resolved_ipv4 = $networkProbeAddresses
+        host_baseline = [ordered]@{ result="PASS"; attempt_count=1; timeout_ms=$NetworkProbeTimeoutMs; outcome=$networkBaseline.outcome }
+        executor_oracle = [ordered]@{ access_denied_socket_error="AccessDenied"; access_denied_native_error=10013; connected="FAIL_NETWORK_BOUNDARY_OPEN"; other_error="NOT_PROVEN" }
     }
     pr_115 = $prEvidence
     scratch_root = $outputRootFull
@@ -151,6 +200,7 @@ Write-Utf8NoBom $shaPath ($sha + "  CQ_HOST_PREFLIGHT.json" + [Environment]::New
 Write-Host "CQ_HOST_PREFLIGHT = PASS"
 Write-Host "HOST_VALIDATOR = PASS"
 Write-Host "HOST_METATESTS = PASS ($runtimeTestCount/$staticTestCount)"
+Write-Host ("HOST_NETWORK_BASELINE = PASS ({0}:{1})" -f $networkProbeIp, $NetworkProbePort)
 Write-Host "HEAD = $head"
 Write-Host "TREE = $tree"
 Write-Host "ORIGIN_HEAD = $originHead"

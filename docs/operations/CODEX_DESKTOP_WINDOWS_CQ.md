@@ -1,6 +1,6 @@
 # Codex Desktop Windows — CQ0–CQ5 profile
 
-Versão: 1.3  
+Versão: 1.4  
 Contrato-base: `CODEX_RUNTIME_QUALIFICATION.md`  
 Decisões donas: ADR-0024 + ADR-0025
 
@@ -15,9 +15,12 @@ Set-Location "C:\b1_worktrees\b1_p1_4ba7f551_20260924"
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\codex_desktop_cq_host_preflight.ps1
 ```
 
-Exigir `CQ_HOST_PREFLIGHT = PASS`, `HOST_VALIDATOR = PASS` e `HOST_METATESTS = PASS`.
-O artefato canônico de host evidence é `CQ_HOST_PREFLIGHT.json`, acompanhado de `CQ_HOST_PREFLIGHT.sha256`.
-Schema: `AC-R2-DESKTOP-HOST-PREFLIGHT-3`.
+Exigir `CQ_HOST_PREFLIGHT = PASS`, `HOST_VALIDATOR = PASS`,
+`HOST_METATESTS = PASS` e `HOST_NETWORK_BASELINE = PASS`.
+O artefato canônico de host evidence é `CQ_HOST_PREFLIGHT.json`, acompanhado de
+`CQ_HOST_PREFLIGHT.sha256`. O evidence v4 contém `network_probe.hostname`,
+`selected_ipv4`, porta 443 e baseline host-side single-shot.
+Schema: `AC-R2-DESKTOP-HOST-PREFLIGHT-4`.
 
 O preflight v3 executa no host `validate_codex_autonomy.py --json` e `unittest tools.tests.test_codex_autonomy -v`, registra exit codes, test count, hashes de stdout/stderr, source SHA-256, HEAD/tree/config e worktree clean. Python é `HOST_ONLY`; não instalar dependências.
 
@@ -41,7 +44,10 @@ PASS com nome não observável exige `CQ3 = PASS`, `CQ4 = PASS`, `CQ5-D = PASS` 
 
 **DO_NOT_EXECUTE_PYTHON_IN_SANDBOX.**
 
-Validar evidence v3: schema; `python.execution_surface = HOST_ONLY`; CPython 3.12; jsonschema version; host validator exit=0/status=PASS; source hashes; freshness; identity/config.
+Validar evidence v4: schema; `python.execution_surface = HOST_ONLY`; CPython 3.12;
+jsonschema version; host validator exit=0/status=PASS; source hashes; freshness;
+identity/config; e `network_probe.host_baseline.result = PASS` com
+`attempt_count=1`, IP literal e porta 443.
 
 ## CQ1-D — CLI opcional
 
@@ -71,11 +77,21 @@ Exigir:
 READ_ONLY_SPAWNED_NEGATIVE_PROBES = PASS
 EXECUTOR_GOVERNANCE_NEGATIVE = PASS
 EXECUTOR_UNLISTED_A1_NEGATIVE = PASS
-EXECUTOR_DIRECT_NETWORK = PASS | NOT_PROVEN
+EXECUTOR_DIRECT_NETWORK = PASS | NOT_PROVEN | FAIL_NETWORK_BOUNDARY_OPEN
 EXECUTOR_A1_POSITIVE_JOURNAL = PASS
 ```
 
-Se direct network ficar NOT_PROVEN, CQ3 não pode ser PASS.
+O network probe do executor deve usar exatamente o `selected_ipv4` e `port`
+do host evidence, uma única vez, via `System.Net.Sockets.TcpClient`.
+Não usar `Invoke-WebRequest`, DNS, HTTP, TLS ou autenticação.
+
+Oráculo obrigatório:
+- SocketErrorCode=AccessDenied OU NativeErrorCode=10013 => PASS;
+- TCP conectado => FAIL_NETWORK_BOUNDARY_OPEN e CQ3 FAIL;
+- timeout/outro erro => NOT_PROVEN e CQ3 BLOCKED.
+
+Registrar exception type, SocketErrorCode, NativeErrorCode, HResult e message.
+Sem retry e sem endpoint alternativo.
 
 Qualquer forbidden sentinel criado => SECURITY_STOP, sem cleanup.
 Allowed journal write negado => BLOCKED_ALLOWED_WRITE_DENIED e parar antes de CQ4.
@@ -96,7 +112,7 @@ Se CQ4 mudar HEAD apenas pelo journal permitido, registrar o commit separadament
 ```text
 CLIENT_SURFACE = CODEX_DESKTOP_WINDOWS
 HOST_PREFLIGHT = PASS|FAIL
-HOST_PREFLIGHT_SCHEMA = AC-R2-DESKTOP-HOST-PREFLIGHT-3
+HOST_PREFLIGHT_SCHEMA = AC-R2-DESKTOP-HOST-PREFLIGHT-4
 HOST_VALIDATOR = PASS|FAIL
 HOST_METATESTS = PASS|FAIL
 PROJECT_PROFILE_ACTIVE = ser-controller-a0 | NOT_OBSERVABLE_DESKTOP
