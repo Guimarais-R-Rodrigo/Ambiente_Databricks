@@ -1545,7 +1545,7 @@
         "material_findings_open": 0,
         "next_action": "SINGLE_FAST_FORWARD_RUN_HOST_PREFLIGHT_V6_THEN_FRESH_CQ"
       },
-      "next_action": "FAST_FORWARD_CORRECTIVE_HEAD_RUN_FRESH_ADMIN_HOST_PREFLIGHT_NO_CQ_UNTIL_PASS",
+      "next_action": "CONTROLLER_MAINTENANCE_REPROVISION_WINDOWS_SANDBOX_THEN_FRESH_HOST_PREFLIGHT",
       "subagent_permission_inheritance": {
         "adjudicated_on": "2026-09-28",
         "upstream_versions": [
@@ -1583,19 +1583,25 @@
         "write_root_count": 10,
         "a2_changed": false,
         "runtime_status": "NOT_RUN",
-        "host_preflight": "FAILED_METATESTS_161_6_FAIL_1_ERROR_CORRECTED_FRESH_RUN_REQUIRED",
+        "host_preflight": "FAIL_WINDOWS_SANDBOX_FIREWALL_INBOUND_RULE_MISSING",
         "cq0_cq5": "NOT_RUN"
       },
       "last_host_preflight": {
-        "candidate_head": "db7cc63c568803b0e1e6c28c9fbf2c014e4eaac0",
+        "candidate_head": "c0cd0ffc3fad0488d3ae3cf9b6f881711999ba64",
         "result": "FAIL_BEFORE_CQ",
-        "phase": "HOST_METATESTS",
-        "tests_run": 161,
-        "failures": 6,
-        "errors": 1,
+        "phase": "WINDOWS_SANDBOX_NETWORK_INTEGRITY",
+        "metatests": "PASS_162_OF_162",
+        "execpolicy": "PASS",
+        "bridge_selftests": "PASS",
+        "hook_wire": "PASS",
+        "firewall_observation": {
+          "outbound_rule": "PRESENT_AND_PASSED_BEFORE_INBOUND_CHECK",
+          "inbound_rule": "MISSING_ACTIVE_STORE",
+          "failed_rule": "codex_sandbox_offline_block_inbound"
+        },
+        "wfp": "NOT_REACHED_IN_THIS_PREFLIGHT",
         "cq_started": false,
-        "adjudication": "LEGACY_TEST_AND_CQ0_CQ1_CONTRACT_DRIFT",
-        "corrected_in_successor": true
+        "adjudication": "WINDOWS_SANDBOX_PROVISIONING_INCOMPLETE_CONFIRMED"
       }
     },
     "a1_bridge_runtime": "NOT_RUN"

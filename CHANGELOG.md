@@ -4822,3 +4822,11 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 - The same run exposed a substantive documentation contradiction not covered by the previous validator: CQ0 still declared executor=ser-b1-a1/granular/auto_review and CQ1 still expected execpolicy prompt, while CQ2/CQ3 already required executor A0 plus bridge-only A1.
 - Corrected CQ0/CQ1 to all-spawned-A0 plus root-only ser-b1-a1 bridge; corrected the metatests; added validator invariants that explicitly reject the legacy spawned-A1 target and require the bridge contract tokens.
 - Runtime remains unqualified. No CQ retry is authorized until a fresh host preflight is green; no B1 material work, A2, promotion, Ready or merge.
+
+
+## 2026-09-28 — fresh host preflight proves incomplete native Windows sandbox provisioning (ChatGPT)
+
+- Fresh admin preflight on c0cd0ffc passed validator/metatests (162/162), exact execpolicy oracles, A1 bridge/transport/probe self-tests and normal hook-wire probes.
+- Preflight then failed before CQ at native Windows sandbox integrity: `codex_sandbox_offline_block_outbound` passed, while `codex_sandbox_offline_block_inbound` had zero ActiveStore matches by corrected Name|DisplayName lookup. WFP inspection was not reached in this run.
+- Upstream 0.157.1 treats inbound as part of mandatory `ensure_offline_network_blocks`; this is now confirmed host provisioning incompleteness. It does not, by itself, explain the historical outbound TCP success because the outbound rule is currently present and structurally valid.
+- CQ remains NOT_RUN. Next action is controlled CONTROLLER_MAINTENANCE reprovisioning of the native Windows sandbox, then a fresh host preflight; no manual Firewall rule creation is authorized.
