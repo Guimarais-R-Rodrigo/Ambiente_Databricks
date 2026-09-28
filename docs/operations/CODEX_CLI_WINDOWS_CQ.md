@@ -3,7 +3,7 @@
 Status: CANONICAL controller runtime for Windows.
 Client surface: `CODEX_CLI_WINDOWS_TUI`.
 
-The Codex Desktop runtime is not a controller runtime. Two CQ attempts on 2026-09-27 demonstrated that a `mcp__codex_app__get_usage_limits` call could reach the client backend even with project `PreToolUse` hooks installed, active and trusted. Do not qualify the controller in Desktop by relaxing this invariant.
+The Codex Desktop runtime is `UNQUALIFIED_FOR_CONTROLLER`. Two CQ attempts on 2026-09-27 demonstrated that a `mcp__codex_app__get_usage_limits` call could reach the client backend even with project `PreToolUse` hooks installed, active and trusted. Do not qualify the controller in Desktop by relaxing this invariant.
 
 ## 1. Substrate
 

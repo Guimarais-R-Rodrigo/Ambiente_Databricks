@@ -293,6 +293,20 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("APPS_MUST_BE_DISABLED")
     if features.get("remote_plugin") is not False:
         issues.append("REMOTE_PLUGIN_MUST_BE_DISABLED")
+    if features.get("plugins") is not False:
+        issues.append("PLUGINS_MUST_BE_DISABLED")
+    if features.get("connectors") is not False:
+        issues.append("CONNECTORS_MUST_BE_DISABLED")
+    if features.get("enable_mcp_apps") is not False or features.get("codex_apps_mcp_2026_07_28") is not False:
+        issues.append("MCP_APPS_MUST_BE_DISABLED")
+    if (
+        features.get("browser_use") is not False
+        or features.get("browser_use_external") is not False
+        or features.get("browser_use_full_cdp_access") is not False
+    ):
+        issues.append("BROWSER_USE_MUST_BE_DISABLED")
+    if features.get("computer_use") is not False:
+        issues.append("COMPUTER_USE_MUST_BE_DISABLED")
     if features.get("multi_agent") is not True:
         issues.append("MULTI_AGENT_NOT_ENABLED")
     if features.get("goals") is not True:
@@ -533,6 +547,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             issues.append("DESKTOP_WINDOWS_CQ_PREMATURE_READY_PASS")
     if desktop_preflight_path.is_file():
         preflight_text = desktop_preflight_path.read_text(encoding="utf-8")
+        if "CODEX_DESKTOP_RUNTIME_UNQUALIFIED_USE_TOOLS_CODEX_CLI_CQ_HOST_PREFLIGHT_PS1" not in preflight_text:
+            issues.append("DESKTOP_WINDOWS_HOST_PREFLIGHT_NOT_RETIRED")
         required_preflight_tokens = (
             "git fetch origin $ExpectedBranch",
             "AC-R2-DESKTOP-HOST-PREFLIGHT-6",
@@ -822,6 +838,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             tool_policy = _read_json(tool_policy_path)
             if tool_policy.get("schema_version") != "SER-CODEX-DESKTOP-TOOL-SURFACE-2":
                 issues.append("DESKTOP_TOOL_SURFACE_POLICY_SCHEMA")
+            if tool_policy.get("controller_runtime_status") != "UNQUALIFIED_AFTER_REPEATED_BACKEND_REACH":
+                issues.append("DESKTOP_TOOL_SURFACE_POLICY_RUNTIME_STATUS")
             enforcement = tool_policy.get("enforcement") or {}
             if (
                 enforcement.get("matcher") != EXTERNAL_SURFACE_MATCHER

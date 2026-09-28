@@ -25,6 +25,23 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertEqual("ser-controller-a0", result["root_permissions"])
         self.assertEqual("ser-b1-a1", result["executor_permissions"])
 
+    def test_cli_controller_narrows_client_owned_features(self):
+        cfg = val._read_toml(ROOT / ".codex/config.toml")
+        features = cfg["features"]
+        for key in (
+            "apps",
+            "remote_plugin",
+            "plugins",
+            "connectors",
+            "enable_mcp_apps",
+            "codex_apps_mcp_2026_07_28",
+            "browser_use",
+            "browser_use_external",
+            "browser_use_full_cdp_access",
+            "computer_use",
+        ):
+            self.assertIs(False, features[key], key)
+
     def envelope(self):
         return json.loads(
             (ROOT / "docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json")
@@ -431,6 +448,11 @@ class CodexAutonomyTests(unittest.TestCase):
     def test_desktop_preflight_is_explicitly_retired(self):
         text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn("CODEX_DESKTOP_RUNTIME_UNQUALIFIED_USE_TOOLS_CODEX_CLI_CQ_HOST_PREFLIGHT_PS1", text)
+        policy = json.loads(
+            (ROOT / "docs/operations/autonomy/CODEX_DESKTOP_TOOL_SURFACE_POLICY.json")
+            .read_text(encoding="utf-8")
+        )
+        self.assertEqual("UNQUALIFIED_AFTER_REPEATED_BACKEND_REACH", policy["controller_runtime_status"])
 
     def test_delta_classifier_protects_frozen_g6(self):
         self.assertEqual(
