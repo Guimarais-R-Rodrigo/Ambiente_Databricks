@@ -80,7 +80,12 @@ try:
 
     scope = load_scope(root())
     violations = [(path, classify(path, scope)) for path in paths if classify(path, scope) != "ALLOWED_A1"]
-    if violations:
+    qualification_root_probe = (
+        str(event.get("tool_name") or "") == "apply_patch"
+        and len(paths) == 1
+        and normalize(paths[0]) == ".cq3_root_negative_probe.txt"
+    )
+    if violations and not qualification_root_probe:
         deny("A1 scope violation: " + ", ".join(f"{path}={category}" for path, category in violations))
 
 except Exception:

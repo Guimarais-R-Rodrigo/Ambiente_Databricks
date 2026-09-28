@@ -431,6 +431,23 @@ $postGuardStderr = Join-Path $outputRootFull "CQ_HOST_POST_SCOPE_GUARD_SELFTEST.
 $postGuardExit = Invoke-CapturedProcess -FilePath $powershellExe -ArgumentList @("-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", (Join-Path $root ".codex\hooks\post_scope_guard.ps1"), "-SelfTest") -StdoutPath $postGuardStdout -StderrPath $postGuardStderr
 if ($postGuardExit -ne 0) { throw "CQ_HOST_PREFLIGHT_POST_SCOPE_GUARD_SELFTEST_EXIT:$($postGuardExit)" }
 
+function New-HookWireInput([string]$EventName, [string]$ToolName, [object]$ToolInput, [object]$ToolResponse = $null) {
+    $payload = [ordered]@{
+        session_id = "00000000-0000-0000-0000-000000000001"
+        turn_id = "cq-host-wire"
+        transcript_path = $null
+        cwd = $root
+        hook_event_name = $EventName
+        model = "gpt-6-astra"
+        permission_mode = "dontAsk"
+        tool_name = $ToolName
+        tool_input = $ToolInput
+        tool_use_id = "cq-host-wire-tool"
+    }
+    if ($EventName -eq "PostToolUse") { $payload["tool_response"] = $ToolResponse }
+    return ($payload | ConvertTo-Json -Depth 10 -Compress)
+}
+
 $hookWireRoot = Join-Path $outputRootFull "CQ_HOST_HOOK_WIRE"
 $hookScripts = [ordered]@{
     pre = (Join-Path $root ".codex\hooks\pre_scope_guard.ps1")
@@ -448,15 +465,23 @@ $hookShellArgsPrefix = @("/D", "/S", "/C")
 
 $preWireOut = $hookWireRoot + ".pre.stdout.txt"
 $preWireErr = $hookWireRoot + ".pre.stderr.txt"
-$preWireInput = '{"tool_name":"apply_patch","tool_input":{"path":"docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl"}}'
+$preWireInput = New-HookWireInput -EventName "PreToolUse" -ToolName "apply_patch" -ToolInput @{ path="docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl" }
 $preWireExit = Invoke-CapturedProcessWithInput -FilePath $commandShell -ArgumentList ($hookShellArgsPrefix + @($hookWindowsCommands.pre)) -InputText $preWireInput -StdoutPath $preWireOut -StderrPath $preWireErr
 if ($preWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_PRE_SCOPE_NORMAL_WIRE_EXIT:$preWireExit" }
 $preWireText = [string](Get-Content -LiteralPath $preWireOut -Raw -Encoding UTF8)
 if (-not [string]::IsNullOrWhiteSpace($preWireText)) { throw "CQ_HOST_PREFLIGHT_PRE_SCOPE_NORMAL_WIRE_UNEXPECTED_OUTPUT" }
 
+$rootProbeWireOut = $hookWireRoot + ".root-negative.stdout.txt"
+$rootProbeWireErr = $hookWireRoot + ".root-negative.stderr.txt"
+$rootProbeWireInput = New-HookWireInput -EventName "PreToolUse" -ToolName "apply_patch" -ToolInput @{ command="*** Begin Patch`n*** Add File: .cq3_root_negative_probe.txt`n+CQ3`n*** End Patch" }
+$rootProbeWireExit = Invoke-CapturedProcessWithInput -FilePath $commandShell -ArgumentList ($hookShellArgsPrefix + @($hookWindowsCommands.pre)) -InputText $rootProbeWireInput -StdoutPath $rootProbeWireOut -StderrPath $rootProbeWireErr
+if ($rootProbeWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_ROOT_NEGATIVE_HOOK_BYPASS_EXIT:$rootProbeWireExit" }
+$rootProbeWireText = [string](Get-Content -LiteralPath $rootProbeWireOut -Raw -Encoding UTF8)
+if (-not [string]::IsNullOrWhiteSpace($rootProbeWireText)) { throw "CQ_HOST_PREFLIGHT_ROOT_NEGATIVE_HOOK_PREEMPTED_SANDBOX" }
+
 $postWireOut = $hookWireRoot + ".post.stdout.txt"
 $postWireErr = $hookWireRoot + ".post.stderr.txt"
-$postWireInput = '{"tool_name":"Bash","tool_input":{"command":"git status --porcelain"}}'
+$postWireInput = New-HookWireInput -EventName "PostToolUse" -ToolName "Bash" -ToolInput @{ command="git status --porcelain" } -ToolResponse @{ output=""; metadata=@{} }
 $postWireExit = Invoke-CapturedProcessWithInput -FilePath $commandShell -ArgumentList ($hookShellArgsPrefix + @($hookWindowsCommands.post)) -InputText $postWireInput -StdoutPath $postWireOut -StderrPath $postWireErr
 if ($postWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_POST_SCOPE_NORMAL_WIRE_EXIT:$postWireExit" }
 $postWireText = [string](Get-Content -LiteralPath $postWireOut -Raw -Encoding UTF8)
@@ -464,7 +489,7 @@ if (-not [string]::IsNullOrWhiteSpace($postWireText)) { throw "CQ_HOST_PREFLIGHT
 
 $externalWireOut = $hookWireRoot + ".external.stdout.txt"
 $externalWireErr = $hookWireRoot + ".external.stderr.txt"
-$externalWireInput = '{"tool_name":"mcp__example__read","tool_input":{}}'
+$externalWireInput = New-HookWireInput -EventName "PreToolUse" -ToolName "mcp__example__read" -ToolInput @{}
 $externalWireExit = Invoke-CapturedProcessWithInput -FilePath $commandShell -ArgumentList ($hookShellArgsPrefix + @($hookWindowsCommands.external)) -InputText $externalWireInput -StdoutPath $externalWireOut -StderrPath $externalWireErr
 if ($externalWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_EXTERNAL_NORMAL_WIRE_EXIT:$externalWireExit" }
 try { $externalWirePayload = Get-Content -LiteralPath $externalWireOut -Raw -Encoding UTF8 | ConvertFrom-Json -ErrorAction Stop }
@@ -478,7 +503,7 @@ if (
 
 $nodeWireOut = $hookWireRoot + ".node.stdout.txt"
 $nodeWireErr = $hookWireRoot + ".node.stderr.txt"
-$nodeWireInput = '{"tool_name":"mcp__node_repl__js","tool_input":{}}'
+$nodeWireInput = New-HookWireInput -EventName "PreToolUse" -ToolName "mcp__node_repl__js" -ToolInput @{}
 $nodeWireExit = Invoke-CapturedProcessWithInput -FilePath $commandShell -ArgumentList ($hookShellArgsPrefix + @($hookWindowsCommands.external)) -InputText $nodeWireInput -StdoutPath $nodeWireOut -StderrPath $nodeWireErr
 if ($nodeWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_NODE_REPL_NORMAL_WIRE_EXIT:$nodeWireExit" }
 $nodeWireText = [string](Get-Content -LiteralPath $nodeWireOut -Raw -Encoding UTF8)
@@ -550,7 +575,7 @@ $payload = [ordered]@{
         network_offline_runtime = [ordered]@{ result="PASS"; exit_code=$networkOfflineExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $networkOfflineStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $networkOfflineStderr).Hash }
         mcp_guard = [ordered]@{ result="PASS"; exit_code=$mcpGuardExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $mcpGuardStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $mcpGuardStderr).Hash }
         scope_guards = [ordered]@{ result="PASS"; pre_exit_code=$preGuardExit; post_exit_code=$postGuardExit }
-        hook_wire_runtime = [ordered]@{ result="PASS"; shell=$commandShell; pre_exit_code=$preWireExit; post_exit_code=$postWireExit; external_exit_code=$externalWireExit; node_repl_exit_code=$nodeWireExit }
+        hook_wire_runtime = [ordered]@{ result="PASS"; shell=$commandShell; pre_exit_code=$preWireExit; root_negative_hook_bypass_exit_code=$rootProbeWireExit; post_exit_code=$postWireExit; external_exit_code=$externalWireExit; node_repl_exit_code=$nodeWireExit }
         execpolicy = [ordered]@{ result="PASS"; qualification=$execPolicyQualification; operational=$execPolicyOperational; incomplete=$execPolicyIncomplete; alternate=$execPolicyAlternate }
         a1_operational_transport = [ordered]@{ result="PASS"; exit_code=$operationalTransportExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $operationalTransportStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $operationalTransportStderr).Hash }
         a1_git_transport = [ordered]@{ result="PASS"; exit_code=$transportExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $transportStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $transportStderr).Hash }

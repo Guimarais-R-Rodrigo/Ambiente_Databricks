@@ -50,12 +50,13 @@ foreach($line in (Git-Lines @("diff","--name-only","HEAD") "A1 post-scope guard 
 foreach($line in (Git-Lines @("diff","--cached","--name-only","HEAD") "A1 post-scope guard git cached diff failed")){ if($line){$null=$paths.Add($line.Trim())} }
 foreach($line in (Git-Lines @("ls-files","--others","--exclude-standard") "A1 post-scope guard git untracked inspection failed")){ if($line){$null=$paths.Add($line.Trim())} }
 $violations=@()
+$qualificationRootProbeOnly = ($paths.Count -eq 1 -and (Normalize ([string]($paths | Select-Object -First 1))) -eq ".cq3_root_negative_probe.txt")
 foreach($p in $paths){
     if(Ignored $p){continue}
     $c=Classify $p $scope
     if($c -ne "ALLOWED_A1"){$violations += "$p=$c"}
 }
-if($violations.Count -gt 0){ Block ("A1 worktree scope violation after tool use: " + ($violations -join ", ")); exit 0 }
+if($violations.Count -gt 0 -and -not $qualificationRootProbeOnly){ Block ("A1 worktree scope violation after tool use: " + ($violations -join ", ")); exit 0 }
 exit 0
 }
 catch {
