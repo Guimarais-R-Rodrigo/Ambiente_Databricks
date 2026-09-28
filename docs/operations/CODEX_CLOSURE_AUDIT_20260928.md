@@ -111,3 +111,8 @@ Nenhuma dessas mudanças altera o envelope, os 10 write roots, A2, command netwo
 A revisão contra o código-fonte do Codex 0.157.1 encontrou um problema lógico adicional antes de nova execução: o pre_scope_guard casava apply_patch/Write/Edit e negava qualquer path fora dos A1 write roots. O CQ3 exige que o root A0 tente criar `.cq3_root_negative_probe.txt` para provar a negação do sandbox. Sem exceção estrita, o próprio hook poderia negar o sentinel e produzir falso PASS. Os guards agora deixam passar exclusivamente esse sentinel de qualificação; qualquer efeito inesperado continua SECURITY_STOP.
 
 O host preflight também passou a construir payloads sintéticos com os campos obrigatórios do schema upstream PreToolUse/PostToolUse. A inspeção upstream confirmou: hooks são executados no request.cwd; no Windows o command runner usa COMSPEC/cmd.exe /C quando não há shell explícito; apply_patch usa aliases Write/Edit mas stdin canônico tool_name=apply_patch; shell-like usa tool_name=Bash; PreToolUse exit 0 + stdout vazio é allow; deny JSON válido bloqueia; PostToolUse exit 0 + stdout vazio é sucesso.
+
+
+### Correção do adendo CQ3
+
+O adendo anterior identificou corretamente o risco conceitual de confundir hook denial com sandbox denial, mas a manutenção imediatamente anterior já havia resolvido esse risco de forma mais forte: todos os negativos CQ3 foram movidos para Bash/shell e `apply_patch/Edit/Write` foram proibidos. Portanto, não é necessário nem desejável abrir exceção no scope guard para o sentinel root. Essa exceção foi revertida antes de qualquer novo host run. Mantém-se apenas a melhoria independente dos wire probes host, agora com payloads que reproduzem os campos obrigatórios do schema upstream.

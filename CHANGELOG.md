@@ -4772,3 +4772,10 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 - Upstream Codex 0.157.1 contradictory review found the PreToolUse scope guard would deny the root CQ3 sentinel before sandbox enforcement, permitting a false-positive permission-boundary result.
 - Scope guards now contain a strict qualification-only exception for exactly `.cq3_root_negative_probe.txt`; host preflight proves the pre-hook does not preempt it and uses upstream-shaped PreToolUse/PostToolUse payloads.
 - No authority expansion: envelope, 10 A1 roots, A2, transports and product policy unchanged. CQ remains NOT_RUN on this freeze.
+
+
+## 2026-09-28 — CQ3 oracle clarification after upstream sweep (ChatGPT)
+
+- Supersedes the immediately preceding suggestion that the scope hook needed an apply_patch exception for the root sentinel. The prior `final pre-runtime contradiction sweep` had already moved every CQ3 filesystem negative probe to the Bash/shell surface specifically so PreToolUse apply_patch/Edit/Write cannot satisfy the oracle.
+- Scope guards are restored unchanged; no governance-path bypass is added. The host hook-wire probes retain the useful upstream-shaped PreToolUse/PostToolUse payloads.
+- CQ3 proof remains: shell control succeeds, exact shell WriteAllText attempt is denied by sandbox/permission boundary, sentinel remains absent; unrelated execution errors are NOT_PROVEN.

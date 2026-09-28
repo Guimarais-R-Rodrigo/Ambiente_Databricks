@@ -232,3 +232,6 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 
 
 - 2026-09-28 (ChatGPT): upstream review found CQ3 root negative could be falsely satisfied by pre_scope_guard denial. Added exact qualification-only sentinel bypass so sandbox, not hook, must deny it; host wire probes now use upstream-shaped payloads. Authority unchanged; CQ NOT_RUN.
+
+
+- 2026-09-28 (ChatGPT): superseded proposed apply_patch sentinel bypass after recognizing the prior sweep already forces all CQ3 filesystem negatives through Bash/shell. Scope guards restored unchanged; upstream-shaped host hook payloads retained. No authority change.
