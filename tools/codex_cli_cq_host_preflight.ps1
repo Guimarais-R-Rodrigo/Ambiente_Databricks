@@ -110,6 +110,54 @@ function Invoke-CapturedProcess([string]$FilePath, [string[]]$ArgumentList, [str
     }
 }
 
+function Invoke-CapturedProcessWithInput([string]$FilePath, [string[]]$ArgumentList, [string]$InputText, [string]$StdoutPath, [string]$StderrPath) {
+    Remove-Item -LiteralPath $StdoutPath -Force -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $StderrPath -Force -ErrorAction SilentlyContinue
+    $quoted = @($ArgumentList | ForEach-Object { Quote-NativeArgument $_ }) -join ' '
+    Write-Host ("HOST_STEP = " + [IO.Path]::GetFileName($StdoutPath))
+
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = $FilePath
+    $psi.Arguments = $quoted
+    $psi.WorkingDirectory = (Get-Location).Path
+    $psi.UseShellExecute = $false
+    $psi.CreateNoWindow = $true
+    $psi.RedirectStandardInput = $true
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+
+    $process = New-Object System.Diagnostics.Process
+    $process.StartInfo = $psi
+    try {
+        if (-not $process.Start()) { throw "CQ_HOST_PREFLIGHT_HOOK_CHILD_START_FAILED" }
+        $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+        $stderrTask = $process.StandardError.ReadToEndAsync()
+        $process.StandardInput.Write($InputText)
+        $process.StandardInput.Close()
+
+        if (-not $process.WaitForExit(60000)) {
+            try { $process.Kill() } catch {}
+            $process.WaitForExit()
+            throw "CQ_HOST_PREFLIGHT_HOOK_CHILD_TIMEOUT_NO_RETRY"
+        }
+        $process.WaitForExit()
+        $stdout = [string]$stdoutTask.Result
+        $stderr = [string]$stderrTask.Result
+        $process.Refresh()
+        $exitCode = [int]$process.ExitCode
+        Write-Utf8NoBom $StdoutPath $stdout
+        Write-Utf8NoBom $StderrPath $stderr
+        if ($exitCode -ne 0) {
+            Show-CapturedDiagnostic $StdoutPath
+            Show-CapturedDiagnostic $StderrPath
+        }
+        return $exitCode
+    }
+    finally {
+        if ($null -ne $process) { $process.Dispose() }
+    }
+}
+
 function Test-TcpEndpointSingleShot([string]$Ip, [int]$Port, [int]$TimeoutMs) {
     $client = New-Object System.Net.Sockets.TcpClient -ArgumentList ([System.Net.Sockets.AddressFamily]::InterNetwork)
     $async = $null
@@ -351,6 +399,49 @@ $postGuardStderr = Join-Path $outputRootFull "CQ_HOST_POST_SCOPE_GUARD_SELFTEST.
 $postGuardExit = Invoke-CapturedProcess -FilePath $powershellExe -ArgumentList @("-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", (Join-Path $root ".codex\hooks\post_scope_guard.ps1"), "-SelfTest") -StdoutPath $postGuardStdout -StderrPath $postGuardStderr
 if ($postGuardExit -ne 0) { throw "CQ_HOST_PREFLIGHT_POST_SCOPE_GUARD_SELFTEST_EXIT:$($postGuardExit)" }
 
+$hookWireRoot = Join-Path $outputRootFull "CQ_HOST_HOOK_WIRE"
+$hookScripts = [ordered]@{
+    pre = (Join-Path $root ".codex\hooks\pre_scope_guard.ps1")
+    external = (Join-Path $root ".codex\hooks\external_surface_guard.ps1")
+    post = (Join-Path $root ".codex\hooks\post_scope_guard.ps1")
+}
+$hookWireArgs = @("-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File")
+
+$preWireOut = $hookWireRoot + ".pre.stdout.txt"
+$preWireErr = $hookWireRoot + ".pre.stderr.txt"
+$preWireInput = '{"tool_name":"apply_patch","tool_input":{"path":"docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl"}}'
+$preWireExit = Invoke-CapturedProcessWithInput -FilePath $powershellExe -ArgumentList ($hookWireArgs + @($hookScripts.pre)) -InputText $preWireInput -StdoutPath $preWireOut -StderrPath $preWireErr
+if ($preWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_PRE_SCOPE_NORMAL_WIRE_EXIT:$preWireExit" }
+if ((Get-Content -LiteralPath $preWireOut -Raw -Encoding UTF8).Trim()) { throw "CQ_HOST_PREFLIGHT_PRE_SCOPE_NORMAL_WIRE_UNEXPECTED_OUTPUT" }
+
+$postWireOut = $hookWireRoot + ".post.stdout.txt"
+$postWireErr = $hookWireRoot + ".post.stderr.txt"
+$postWireInput = '{"tool_name":"Bash","tool_input":{"command":"git status --porcelain"}}'
+$postWireExit = Invoke-CapturedProcessWithInput -FilePath $powershellExe -ArgumentList ($hookWireArgs + @($hookScripts.post)) -InputText $postWireInput -StdoutPath $postWireOut -StderrPath $postWireErr
+if ($postWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_POST_SCOPE_NORMAL_WIRE_EXIT:$postWireExit" }
+if ((Get-Content -LiteralPath $postWireOut -Raw -Encoding UTF8).Trim()) { throw "CQ_HOST_PREFLIGHT_POST_SCOPE_NORMAL_WIRE_UNEXPECTED_OUTPUT" }
+
+$externalWireOut = $hookWireRoot + ".external.stdout.txt"
+$externalWireErr = $hookWireRoot + ".external.stderr.txt"
+$externalWireInput = '{"tool_name":"mcp__example__read","tool_input":{}}'
+$externalWireExit = Invoke-CapturedProcessWithInput -FilePath $powershellExe -ArgumentList ($hookWireArgs + @($hookScripts.external)) -InputText $externalWireInput -StdoutPath $externalWireOut -StderrPath $externalWireErr
+if ($externalWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_EXTERNAL_NORMAL_WIRE_EXIT:$externalWireExit" }
+try { $externalWirePayload = Get-Content -LiteralPath $externalWireOut -Raw -Encoding UTF8 | ConvertFrom-Json -ErrorAction Stop }
+catch { throw "CQ_HOST_PREFLIGHT_EXTERNAL_NORMAL_WIRE_JSON" }
+if (
+    @($externalWirePayload.PSObject.Properties).Count -ne 1 -or
+    $externalWirePayload.hookSpecificOutput.hookEventName -ne "PreToolUse" -or
+    $externalWirePayload.hookSpecificOutput.permissionDecision -ne "deny" -or
+    [string]::IsNullOrWhiteSpace([string]$externalWirePayload.hookSpecificOutput.permissionDecisionReason)
+) { throw "CQ_HOST_PREFLIGHT_EXTERNAL_NORMAL_WIRE_CONTRACT" }
+
+$nodeWireOut = $hookWireRoot + ".node.stdout.txt"
+$nodeWireErr = $hookWireRoot + ".node.stderr.txt"
+$nodeWireInput = '{"tool_name":"mcp__node_repl__js","tool_input":{}}'
+$nodeWireExit = Invoke-CapturedProcessWithInput -FilePath $powershellExe -ArgumentList ($hookWireArgs + @($hookScripts.external)) -InputText $nodeWireInput -StdoutPath $nodeWireOut -StderrPath $nodeWireErr
+if ($nodeWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_NODE_REPL_NORMAL_WIRE_EXIT:$nodeWireExit" }
+if ((Get-Content -LiteralPath $nodeWireOut -Raw -Encoding UTF8).Trim()) { throw "CQ_HOST_PREFLIGHT_NODE_REPL_NORMAL_WIRE_UNEXPECTED_OUTPUT" }
+
 $operationalTransportStdout = Join-Path $outputRootFull "CQ_HOST_A1_OPERATIONAL_TRANSPORT_SELFTEST.stdout.txt"
 $operationalTransportStderr = Join-Path $outputRootFull "CQ_HOST_A1_OPERATIONAL_TRANSPORT_SELFTEST.stderr.txt"
 $operationalTransportExit = Invoke-CapturedProcess -FilePath $powershellExe -ArgumentList @("-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", (Join-Path $root ".codex\transport\a1_operational_git_transport.ps1"), "-SelfTest") -StdoutPath $operationalTransportStdout -StderrPath $operationalTransportStderr
@@ -417,6 +508,7 @@ $payload = [ordered]@{
         network_offline_runtime = [ordered]@{ result="PASS"; exit_code=$networkOfflineExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $networkOfflineStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $networkOfflineStderr).Hash }
         mcp_guard = [ordered]@{ result="PASS"; exit_code=$mcpGuardExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $mcpGuardStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $mcpGuardStderr).Hash }
         scope_guards = [ordered]@{ result="PASS"; pre_exit_code=$preGuardExit; post_exit_code=$postGuardExit }
+        hook_wire_runtime = [ordered]@{ result="PASS"; pre_exit_code=$preWireExit; post_exit_code=$postWireExit; external_exit_code=$externalWireExit; node_repl_exit_code=$nodeWireExit }
         a1_operational_transport = [ordered]@{ result="PASS"; exit_code=$operationalTransportExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $operationalTransportStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $operationalTransportStderr).Hash }
         a1_git_transport = [ordered]@{ result="PASS"; exit_code=$transportExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $transportStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $transportStderr).Hash }
     }
@@ -513,6 +605,7 @@ Write-Host "NETWORK_PROBE_OFFLINE_RUNTIME_SELFTEST = PASS"
 Write-Host "MCP_GUARD_SELFTEST = PASS"
 Write-Host "EXTERNAL_SURFACE_GUARD_SELFTEST = PASS"
 Write-Host "SCOPE_GUARDS_SELFTEST = PASS"
+Write-Host "HOOK_WIRE_RUNTIME_SELFTEST = PASS"
 Write-Host "A1_GIT_TRANSPORT_SELFTEST = PASS"
 Write-Host "A1_OPERATIONAL_TRANSPORT_SELFTEST = PASS"
 Write-Host "NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS (3/3; network_attempts=0)"

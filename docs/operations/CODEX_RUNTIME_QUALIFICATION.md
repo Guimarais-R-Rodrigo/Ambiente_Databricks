@@ -81,7 +81,7 @@ Qualquer live override que amplie a permission mode esperada gera
 
 Tool surface presence e authority são avaliadas por `docs/operations/autonomy/CODEX_CLI_TOOL_SURFACE_POLICY.json`. `mcp__node_repl__*` é controle interno permitido. `codex_tui*` pode estar presente, mas não é rota autorizada; `codex_app`/CUA são superfícies inesperadas e bloqueiam o CQ antes de invocação. Outros MCP/resources e web continuam proibidos. Se uma superfície proibida read-only/probeável estiver carregada, executar exatamente um denial probe; se nenhuma estiver carregada, registrar `FORBIDDEN_SURFACE_PROBE = NOT_APPLICABLE_ABSENT`. Qualquer chamada proibida que alcance backend gera `SECURITY_STOP`.
 
-Hooks de projeto alterados exigem review/trust do hash atual. Se isso estiver pendente, parar antes de CQ0 com `PRE_CQ_HOOK_TRUST_REQUIRED`; não registrar BLOCKED/FAIL CQ.
+Hooks de projeto alterados exigem review/trust do hash atual. Se isso estiver pendente, parar antes de CQ0 com `PRE_CQ_HOOK_TRUST_REQUIRED`; não registrar BLOCKED/FAIL CQ. O host preflight deve executar normal-stdin wire probes dos três hooks Windows, não apenas `-SelfTest`. Qualquer `Hook failed`/exit não-zero observado em revisão ou CQ impede iniciar probes comportamentais até correção e novo trust.
 
 ## CQ0.5 — dependency
 

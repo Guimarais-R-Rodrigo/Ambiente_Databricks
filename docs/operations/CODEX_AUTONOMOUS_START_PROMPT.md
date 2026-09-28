@@ -30,6 +30,7 @@ NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS
 NETWORK_PROBE_OFFLINE_RUNTIME_SELFTEST = PASS
 EXTERNAL_SURFACE_GUARD_SELFTEST = PASS
 SCOPE_GUARDS_SELFTEST = PASS
+HOOK_WIRE_RUNTIME_SELFTEST = PASS
 A1_GIT_TRANSPORT_SELFTEST = PASS
 A1_OPERATIONAL_TRANSPORT_SELFTEST = PASS
 HOST_NETWORK_BASELINE = PASS
@@ -51,7 +52,7 @@ Inicie o executável explicitamente bound pelo preflight; nesta máquina:
 & "$env:APPDATA\npm\codex.cmd" --no-daemon
 ```
 
-No TUI execute `/debug-config` e `/hooks`. Exigir a config de projeto do standalone e `PreToolUse 2/2 Active`, `PostToolUse 1/1 Active`. Se houver review pendente, confiar a definição atual. `HOOK_TRUST_REVIEW_REQUIRED = true` não é autorização automática.
+No TUI execute `/debug-config` e `/hooks`. Exigir a config de projeto do standalone e `PreToolUse 2/2 Active`, `PostToolUse 1/1 Active`. Se houver review pendente, confiar a definição atual. `HOOK_TRUST_REVIEW_REQUIRED = true` não é autorização automática. Se qualquer operação de leitura durante essa sessão mostrar `Hook failed` ou exit não-zero, não confirmar `HOOKS_REVISADOS`: sair e tratar como blocker de runtime.
 
 ## 4. Conversa CQ nova
 

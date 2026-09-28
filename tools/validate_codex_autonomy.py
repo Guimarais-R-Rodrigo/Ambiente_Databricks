@@ -478,6 +478,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "HOST_VALIDATOR",
             "HOST_METATESTS",
             "HOST_NETWORK_BASELINE",
+            "HOOK_WIRE_RUNTIME_SELFTEST = PASS",
             "CQ_RUN_REQUEST.json",
             "CQ_RUN_PROMPT.md",
             "CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST",
@@ -506,6 +507,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "docs\\operations\\CODEX_CLI_CQ_RUN_PROMPT_TEMPLATE.md",
             'cli_preflight = "tools\\codex_cli_cq_host_preflight.ps1"',
             "CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST",
+            "HOOK_WIRE_RUNTIME_SELFTEST = PASS",
             "CHECKOUT_MODE = STANDALONE",
         )
         missing_preflight_tokens = [token for token in required_cli_preflight_tokens if token not in cli_preflight_text]
@@ -836,6 +838,24 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             for token in ("codex_app", "cua_repl", "codex_tui", "codex_appget_usage_limits"):
                 if token not in guard_ps_text or token not in guard_py_text:
                     issues.append("HOOK_EXTERNAL_SURFACE_GUARD_DYNAMIC_ALIAS_MISSING:" + token)
+
+        expected_windows_hook_commands = {
+            "pre_scope_guard": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\\hooks\\pre_scope_guard.ps1",
+            "external_surface_guard": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\\hooks\\external_surface_guard.ps1",
+            "post_scope_guard": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\\hooks\\post_scope_guard.ps1",
+        }
+        observed_windows_hook_commands = {}
+        for event_name in ("PreToolUse", "PostToolUse"):
+            for group in hooks.get(event_name) or []:
+                for hook in group.get("hooks") or []:
+                    command = str(hook.get("commandWindows") or hook.get("command_windows") or "")
+                    for key in expected_windows_hook_commands:
+                        if key in command:
+                            observed_windows_hook_commands[key] = command
+        if observed_windows_hook_commands != expected_windows_hook_commands:
+            issues.append("HOOK_WINDOWS_COMMAND_BINDING_MISMATCH")
+        if any(" -Command " in command for command in observed_windows_hook_commands.values()):
+            issues.append("HOOK_WINDOWS_COMMAND_WRAPPER_FORBIDDEN")
 
         for group in pre:
             for hook in group.get("hooks") or []:

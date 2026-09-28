@@ -4742,3 +4742,10 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 - (ChatGPT) A fresh post-trust CQ session stopped before CQ0 after observing session metadata version/source different from the host-preflight launcher binding. Upstream Codex 0.157.1 supports a shared background server and explicit `--no-daemon` embedded mode; the previous launcher-only binding could therefore attach to a different client/version runtime.
 - (ChatGPT) Canonical review and CQ sessions now require `EMBEDDED_NO_DAEMON` / `--no-daemon`. Host evidence/request record that mode; contracts clarify that originator/terminal-name telemetry alone is not a client-identity oracle.
 - (ChatGPT) The stopped attempt made no CQ0 probe, B1 material effect, A2, promotion, Ready or merge. Authority envelope and A1 roots remain unchanged.
+
+
+## 2026-09-28 — normal Windows hook invocation is host-qualified (ChatGPT)
+
+- (ChatGPT) First embedded/no-daemon CLI session exposed repeated `Hook failed / hook exited with code 1` on read-only commands before CQ0, despite hooks showing Installed/Active and prior self-tests passing.
+- (ChatGPT) Windows hook commands now invoke project scripts directly with `powershell.exe ... -File .codex\\hooks\\...`; scope guards explicitly exit 0 on normal success. Host preflight adds normal-stdin wire probes for pre-scope, post-scope, external deny and node-repl allow and emits `HOOK_WIRE_RUNTIME_SELFTEST = PASS`.
+- (ChatGPT) Visible hook failure is now a blocking precondition; Active counts alone are insufficient. No CQ behavioral probe, B1 material, A2, promotion, Ready or merge occurred. Authority envelope and 10 A1 write roots remain unchanged.

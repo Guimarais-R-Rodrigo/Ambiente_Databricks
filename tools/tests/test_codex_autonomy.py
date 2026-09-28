@@ -1414,6 +1414,39 @@ class CodexAutonomyTests(unittest.TestCase):
             head2 = self._git(repo, "rev-parse", "HEAD")
             self.assertEqual("PASS", delta.check_delta(head1, head2)["status"])
 
+    def test_windows_hook_commands_use_direct_file_execution(self):
+        hooks = val._read_toml(ROOT / ".codex/config.toml")["hooks"]
+        commands = []
+        for event in ("PreToolUse", "PostToolUse"):
+            for group in hooks[event]:
+                for hook in group.get("hooks", []):
+                    command = hook.get("command_windows", hook.get("commandWindows", ""))
+                    if ".codex\\hooks\\" in command:
+                        commands.append(command)
+        self.assertEqual(3, len(commands))
+        self.assertTrue(all(" -File .codex\\hooks\\" in command for command in commands))
+        self.assertTrue(all(" -Command " not in command for command in commands))
+
+    def test_scope_guards_explicitly_exit_zero_after_normal_success(self):
+        pre = (ROOT / ".codex/hooks/pre_scope_guard.ps1").read_text(encoding="utf-8")
+        post = (ROOT / ".codex/hooks/post_scope_guard.ps1").read_text(encoding="utf-8")
+        self.assertIn('if ($violations.Count -gt 0) { Deny', pre)
+        self.assertIn('exit 0\n}\ncatch {', pre)
+        self.assertIn('if($violations.Count -gt 0){ Block', post)
+        self.assertIn('exit 0\n}\ncatch {', post)
+
+    def test_cli_preflight_runs_normal_hook_wire_probes(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        for token in (
+            "Invoke-CapturedProcessWithInput",
+            "CQ_HOST_PREFLIGHT_PRE_SCOPE_NORMAL_WIRE_EXIT",
+            "CQ_HOST_PREFLIGHT_POST_SCOPE_NORMAL_WIRE_EXIT",
+            "CQ_HOST_PREFLIGHT_EXTERNAL_NORMAL_WIRE_CONTRACT",
+            "CQ_HOST_PREFLIGHT_NODE_REPL_NORMAL_WIRE_EXIT",
+            "HOOK_WIRE_RUNTIME_SELFTEST = PASS",
+        ):
+            self.assertIn(token, text)
+
     def test_external_surface_hook_windows_path_is_normalized(self):
         hooks = val._read_toml(ROOT / ".codex/config.toml")["hooks"]
         commands = [

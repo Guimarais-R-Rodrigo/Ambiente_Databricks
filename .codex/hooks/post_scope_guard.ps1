@@ -55,7 +55,8 @@ foreach($p in $paths){
     $c=Classify $p $scope
     if($c -ne "ALLOWED_A1"){$violations += "$p=$c"}
 }
-if($violations.Count -gt 0){ Block ("A1 worktree scope violation after tool use: " + ($violations -join ", ")) }
+if($violations.Count -gt 0){ Block ("A1 worktree scope violation after tool use: " + ($violations -join ", ")); exit 0 }
+exit 0
 }
 catch {
     if ($SelfTest) { throw }

@@ -79,7 +79,8 @@ foreach ($p in $paths) {
     $c=Classify $p $scope
     if ($c -ne "ALLOWED_A1") { $violations += "$p=$c" }
 }
-if ($violations.Count -gt 0) { Deny ("A1 scope violation: " + ($violations -join ", ")) }
+if ($violations.Count -gt 0) { Deny ("A1 scope violation: " + ($violations -join ", ")); exit 0 }
+exit 0
 }
 catch {
     if ($SelfTest) { throw }

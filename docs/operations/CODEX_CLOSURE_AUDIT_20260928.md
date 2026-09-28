@@ -82,3 +82,10 @@ Os logs executados, comparação da resposta com schema oficial e manifesto dos 
 Uma tentativa nativa posterior ao fechamento conferiu prompt/request/evidence e parou antes de CQ0 ao observar versão/source de sessão diferentes do launcher qualificado. A investigação do código upstream 0.157.1 mostrou que o TUI pode usar um shared background server e oferece `--no-daemon` para operar sem ele. Como o servidor compartilhado pode ser de outro cliente/versão, o binding anterior ao `codex.cmd --version` não garantia sozinho que a conversa usaria o mesmo runtime.
 
 O contrato agora exige `EMBEDDED_NO_DAEMON` e `--no-daemon` na revisão e na conversa CQ. `originator`/terminal-name é telemetria diagnóstica, não oráculo isolado de client identity. A tentativa interrompida não executou CQ0–CQ5 materialmente e não altera o blocker.
+
+
+## Adendo — hooks Active mas com exit não-zero em runtime
+
+A primeira sessão CLI embedded/no-daemon posterior exibiu repetidamente `Hook failed / hook exited with code 1` após operações read-only, antes de CQ0. Isso demonstra que `Installed/Active` e o self-test funcional não bastavam para provar a invocação normal pelo host Windows. A tentativa parou sem probes CQ.
+
+A manutenção substitui wrappers `powershell -Command ... git rev-parse ...` por `powershell -File .codex\\hooks\\<guard>.ps1`, adiciona `exit 0` explícito no caminho normal dos scope guards e faz o host preflight executar stdin normal sintético dos três hooks (incluindo allow silencioso e deny JSON) com a mesma forma de processo Windows. O preflight passa a exigir `HOOK_WIRE_RUNTIME_SELFTEST = PASS`. Qualquer `Hook failed` visível continua bloqueante, mesmo com 2/2 e 1/1 Active.

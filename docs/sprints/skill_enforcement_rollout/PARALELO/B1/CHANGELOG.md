@@ -220,3 +220,6 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 
 
 - 2026-09-28 (ChatGPT): post-trust CQ stopped before CQ0 on session version/source mismatch. Controller maintenance now requires Codex CLI embedded `--no-daemon` mode for review/CQ so qualification cannot attach to a shared server from another client/version. No material CQ probe or authority change occurred.
+
+
+- 2026-09-28 (ChatGPT): embedded/no-daemon CQ session stopped pre-CQ after repeated hook exit=1 on reads. Windows hook invocation was simplified to direct -File, normal-success exits made explicit and host preflight now proves normal stdin/wire behavior before trust. No CQ probe/material effect/authority change occurred.

@@ -37,6 +37,7 @@ CHECKOUT_MODE = STANDALONE
 CLIENT_SURFACE = CODEX_CLI_WINDOWS_TUI
 CODEX_CLI_VERSION = <observed>
 HOOK_TRUST_REVIEW_REQUIRED = true
+HOOK_WIRE_RUNTIME_SELFTEST = PASS
 CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST
 ```
 
@@ -58,7 +59,7 @@ PostToolUse Installed 1  Active 1
 PROJECT_HOOK_TRUST = CURRENT_HASH_TRUSTED
 ```
 
-If hooks are pending review, disabled or modified, stop with `PRE_CQ_HOOK_TRUST_REQUIRED`. Trust is a human precondition, not a CQ result. After trust, start an entirely fresh CLI/TUI conversation.
+If hooks are pending review, disabled or modified, stop with `PRE_CQ_HOOK_TRUST_REQUIRED`. Trust is a human precondition, not a CQ result. After trust, start an entirely fresh CLI/TUI conversation. Any visible `Hook failed` / nonzero hook exit during review or CQ is blocking evidence of ineffective defense-in-depth and must stop before behavioral probes; `Installed/Active` alone is insufficient.
 
 ## 4. CQ0 — identity, config and tool surfaces
 
