@@ -1545,7 +1545,7 @@
         "material_findings_open": 0,
         "next_action": "SINGLE_FAST_FORWARD_RUN_HOST_PREFLIGHT_V6_THEN_FRESH_CQ"
       },
-      "next_action": "FAST_FORWARD_STANDALONE_RUN_FRESH_ADMIN_HOST_PREFLIGHT_REVIEW_3_PRETOOL_HOOKS_THEN_FRESH_CQ",
+      "next_action": "FAST_FORWARD_CORRECTIVE_HEAD_RUN_FRESH_ADMIN_HOST_PREFLIGHT_NO_CQ_UNTIL_PASS",
       "subagent_permission_inheritance": {
         "adjudicated_on": "2026-09-28",
         "upstream_versions": [
@@ -1583,8 +1583,19 @@
         "write_root_count": 10,
         "a2_changed": false,
         "runtime_status": "NOT_RUN",
-        "host_preflight": "NOT_RUN",
+        "host_preflight": "FAILED_METATESTS_161_6_FAIL_1_ERROR_CORRECTED_FRESH_RUN_REQUIRED",
         "cq0_cq5": "NOT_RUN"
+      },
+      "last_host_preflight": {
+        "candidate_head": "db7cc63c568803b0e1e6c28c9fbf2c014e4eaac0",
+        "result": "FAIL_BEFORE_CQ",
+        "phase": "HOST_METATESTS",
+        "tests_run": 161,
+        "failures": 6,
+        "errors": 1,
+        "cq_started": false,
+        "adjudication": "LEGACY_TEST_AND_CQ0_CQ1_CONTRACT_DRIFT",
+        "corrected_in_successor": true
       }
     },
     "a1_bridge_runtime": "NOT_RUN"

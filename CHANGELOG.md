@@ -4813,3 +4813,12 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 - CQ3 contract was rewritten: all spawned roles prove A0 denial; root-only bridge proves A1 network denial and forbidden governance-write denial under ser-b1-a1 before the only positive journal patch. Qualification/operational Git transports are root-only as well.
 - Host preflight now binds the new sources by SHA and self-tests bridge guard, patch transport, filesystem probe, corrected Firewall Name|DisplayName + security-filter inspection, and exact allow/negative execpolicy forms.
 - Runtime qualification remains NOT_RUN. No B1 material task, A2, Databricks/Genie effect, promotion, Ready or merge is authorized.
+
+
+## 2026-09-28 — host-preflight R1 exposed legacy AC-R2 metatests and CQ0/CQ1 drift (ChatGPT)
+
+- Fresh Windows host preflight on freeze db7cc63c stopped correctly at metatests: 161 tests ran with 6 failures and 1 error; CQ was not started.
+- The failures were maintenance regressions from the spawned-A1 to root-only A1-bridge redesign: stale schema-21 assertions, stale granular/auto-review executor assumptions, stale executor-owned network/transport assertions, and a CURRENT BLOCKER token after the bridge had been authored.
+- The same run exposed a substantive documentation contradiction not covered by the previous validator: CQ0 still declared executor=ser-b1-a1/granular/auto_review and CQ1 still expected execpolicy prompt, while CQ2/CQ3 already required executor A0 plus bridge-only A1.
+- Corrected CQ0/CQ1 to all-spawned-A0 plus root-only ser-b1-a1 bridge; corrected the metatests; added validator invariants that explicitly reject the legacy spawned-A1 target and require the bridge contract tokens.
+- Runtime remains unqualified. No CQ retry is authorized until a fresh host preflight is green; no B1 material work, A2, promotion, Ready or merge.

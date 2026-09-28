@@ -144,12 +144,17 @@ class CodexAutonomyTests(unittest.TestCase):
     def test_scope_guards_windows_failures_emit_blocking_wire(self):
         self._scope_failure_wire_cases(windows=True)
 
-    def test_executor_active_instructions_separate_operational_and_cq_transport(self):
+    def test_executor_active_instructions_forbid_privileged_transports(self):
         agent = val._read_toml(ROOT / ".codex/agents/executor.toml")
         instructions = agent["developer_instructions"]
-        self.assertIn("a1_operational_git_transport.ps1", instructions)
-        self.assertIn("a1_git_transport.ps1", instructions)
-        self.assertIn("canonical", instructions)
+        self.assertEqual("ser-controller-a0", agent["default_permissions"])
+        self.assertEqual("never", agent["approval_policy"])
+        self.assertIn("Never invoke A1 Git transports", instructions)
+        self.assertIn("root-controller-only", instructions)
+        self.assertIn("external scratch", instructions)
+        self.assertNotIn("a1_operational_git_transport.ps1", instructions)
+        self.assertNotIn("a1_git_transport.ps1", instructions)
+        self.assertNotIn("a1_patch_transport.ps1", instructions)
         self.assertNotIn("host preflight v6", instructions)
 
     def test_cli_control_source_producer_and_operational_consumer_agree(self):
@@ -360,8 +365,27 @@ class CodexAutonomyTests(unittest.TestCase):
         text = (ROOT / "docs/operations/CODEX_RUNTIME_QUALIFICATION.md").read_text(encoding="utf-8")
         self.assertIn("Recusa por instrução não conta como PASS", " ".join(text.split()))
         self.assertIn("CQ3_A1_POSITIVE_PROBE", text)
-        self.assertIn("CURRENT BLOCKER", text)
-        self.assertIn("capability bridge A1 root-only", text)
+        self.assertIn("CURRENT DESIGN", text)
+        self.assertIn("capability bridge root-only", text)
+
+    def test_runtime_contract_has_no_legacy_spawned_a1_target(self):
+        text = (ROOT / "docs/operations/CODEX_RUNTIME_QUALIFICATION.md").read_text(encoding="utf-8")
+        for required in (
+            "executor               = ser-controller-a0",
+            "A1 bridge profile       = ser-b1-a1",
+            "A1 bridge invocation    = root-only deterministic",
+            "Exactly three privileged argv forms",
+            "CURRENT DESIGN",
+        ):
+            self.assertIn(required, text)
+        for forbidden in (
+            "executor                = ser-b1-a1",
+            "executor approvals      = granular:",
+            "executor reviewer       = auto_review",
+            "10 arquivos A1 no executor",
+            "A decisão deve ser `prompt`",
+        ):
+            self.assertNotIn(forbidden, text)
 
     def test_desktop_profile_is_historical_and_cli_is_canonical(self):
         desktop = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
@@ -393,7 +417,7 @@ class CodexAutonomyTests(unittest.TestCase):
     def test_cli_host_preflight_runs_validator_and_metatests_host_side(self):
         text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn("AC-R2-CLI-HOST-PREFLIGHT-1", text)
-        self.assertIn("SER-CODEX-AUTONOMY-VALIDATION-21", text)
+        self.assertIn("SER-CODEX-AUTONOMY-VALIDATION-23", text)
         self.assertIn("tools/validate_codex_autonomy.py", text)
         self.assertIn("tools.tests.test_codex_autonomy", text)
         self.assertIn("HOST_VALIDATOR = PASS", text)
@@ -468,12 +492,14 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("NETWORK_PROBE_SOURCE_HASH_MISMATCH", text)
         self.assertIn("CQ_HOST_PREFLIGHT.sha256", text)
 
-    def test_executor_role_invokes_only_protected_network_probe_for_cq3(self):
-        text = val._read_toml(ROOT / ".codex/agents/executor.toml")["developer_instructions"]
-        self.assertIn(".codex\\probes\\cq3_executor_network_probe.ps1", text)
-        self.assertIn("Do not use Invoke-WebRequest", text)
-        self.assertIn("AccessDenied", text)
-        self.assertIn("10013", text)
+    def test_root_only_a1_bridge_invokes_protected_network_probe_for_cq3(self):
+        executor = val._read_toml(ROOT / ".codex/agents/executor.toml")["developer_instructions"]
+        bridge = (ROOT / ".codex/transport/a1_patch_transport.ps1").read_text(encoding="utf-8")
+        self.assertNotIn(".codex\\probes\\cq3_executor_network_probe.ps1", executor)
+        self.assertIn(".codex\\probes\\cq3_executor_network_probe.ps1", bridge)
+        self.assertIn("PASS_NETWORK_DENIED", bridge)
+        self.assertIn("SECURITY_STOP_A1_NETWORK_BOUNDARY_OPEN", bridge)
+        self.assertIn("ser-b1-a1", bridge)
 
 
     def test_cli_host_preflight_emits_locale_independent_epoch(self):
@@ -587,7 +613,7 @@ class CodexAutonomyTests(unittest.TestCase):
             "SER-CODEX-CLI-CQ-REQUEST-1",
             'cli_contract = "docs\\operations\\CODEX_CLI_WINDOWS_CQ.md"',
             'cli_preflight = "tools\\codex_cli_cq_host_preflight.ps1"',
-            "SER-CODEX-AUTONOMY-VALIDATION-21",
+            "SER-CODEX-AUTONOMY-VALIDATION-23",
         ):
             self.assertIn(token, text)
         self.assertNotIn("CODEX_DESKTOP_WINDOWS", text)
@@ -773,14 +799,10 @@ class CodexAutonomyTests(unittest.TestCase):
 
     def test_approval_escalation_is_fail_closed(self):
         executor = val._read_toml(ROOT / ".codex/agents/executor.toml")
-        granular = executor["approval_policy"]["granular"]
-        self.assertFalse(granular["sandbox_approval"])
-        self.assertFalse(granular["request_permissions"])
-        self.assertFalse(granular["mcp_elicitations"])
-        self.assertFalse(granular["skill_approval"])
-        self.assertTrue(granular["rules"])
+        self.assertEqual("ser-controller-a0", executor["default_permissions"])
         self.assertEqual("never", executor["approval_policy"])
         self.assertNotIn("approvals_reviewer", executor)
+        self.assertNotIsInstance(executor["approval_policy"], dict)
 
     def test_executor_has_no_direct_git_metadata_or_network(self):
         cfg = val._read_toml(ROOT / ".codex/config.toml")
@@ -1243,7 +1265,7 @@ class CodexAutonomyTests(unittest.TestCase):
 
     def test_validator_v20_enforces_start_protocol_and_inline_hooks_consistency(self):
         text = (ROOT / "tools/validate_codex_autonomy.py").read_text(encoding="utf-8")
-        self.assertIn("SER-CODEX-AUTONOMY-VALIDATION-21", text)
+        self.assertIn("SER-CODEX-AUTONOMY-VALIDATION-23", text)
         self.assertIn("HOOK_JSON_DUPLICATE_SOURCE_FORBIDDEN", text)
         self.assertIn("CODEX_AUTONOMOUS_START_PROMPT_PREMATURE_READY_PASS", text)
         self.assertIn("CODEX_AUTONOMOUS_PROTOCOL_STABILIZATION_DRIFT", text)

@@ -595,6 +595,46 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
     else:
         issues.append("CODEX_AUTONOMOUS_START_PROMPT_MISSING")
 
+    runtime_contract_path = root / "docs" / "operations" / "CODEX_RUNTIME_QUALIFICATION.md"
+    if runtime_contract_path.is_file():
+        runtime_text = runtime_contract_path.read_text(encoding="utf-8")
+        required_runtime_tokens = (
+            "executor               = ser-controller-a0",
+            "executor approval_policy = never",
+            "executor repo writes    = forbidden; scratch-only patch author",
+            "A1 bridge profile       = ser-b1-a1",
+            "A1 bridge invocation    = root-only deterministic",
+            "Exactly three privileged argv forms",
+            "CURRENT DESIGN",
+            "codex sandbox -P ser-b1-a1",
+            "a1_patch_transport.ps1",
+            "PASS_NETWORK_DENIED",
+            "PASS_WRITE_DENIED",
+        )
+        missing_runtime_tokens = [
+            token for token in required_runtime_tokens if token not in runtime_text
+        ]
+        if missing_runtime_tokens:
+            issues.append("CODEX_RUNTIME_QUALIFICATION_BRIDGE_CONTRACT_DRIFT")
+            issues.extend(
+                "CODEX_RUNTIME_QUALIFICATION_MISSING_TOKEN:" + token
+                for token in missing_runtime_tokens
+            )
+        forbidden_runtime_tokens = (
+            "executor                = ser-b1-a1",
+            "executor approvals      = granular:",
+            "executor reviewer       = auto_review",
+            "10 arquivos A1 no executor",
+            "A decisão deve ser `prompt`",
+        )
+        for token in forbidden_runtime_tokens:
+            if token in runtime_text:
+                issues.append(
+                    "CODEX_RUNTIME_QUALIFICATION_LEGACY_SPAWNED_A1:" + token
+                )
+    else:
+        issues.append("CODEX_RUNTIME_QUALIFICATION_MISSING")
+
     protocol_path = root / "docs" / "operations" / "CODEX_AUTONOMOUS_PROTOCOL.md"
     if protocol_path.is_file():
         protocol_text = protocol_path.read_text(encoding="utf-8")

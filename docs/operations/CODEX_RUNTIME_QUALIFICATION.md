@@ -33,7 +33,7 @@ New-Item -ItemType Directory -Force "$HOME\codex-scratch\Ambiente_Databricks" | 
 Não apontar o scratch para dentro do repositório e não tornar o repository root
 writable para contornar erro de sandbox.
 
-A qualificação e a operação do controller devem ocorrer em **standalone checkout** dedicado. Linked Git worktree é proibido para este runtime porque o Codex 0.157.1 resolve as declarações de hooks pelo root checkout; isso desacoplaria o hash qualificado da fonte efetivamente executada. O host preflight e os dois transportes A1 verificam `git-dir`/`git-common-dir` e falham fechados fora de checkout standalone.
+A qualificação e a operação do controller devem ocorrer em **standalone checkout** dedicado. Linked Git worktree é proibido para este runtime porque o Codex 0.157.1 resolve as declarações de hooks pelo root checkout; isso desacoplaria o hash qualificado da fonte efetivamente executada. O host preflight e os três transportes privilegiados A1 verificam `git-dir`/`git-common-dir` e falham fechados fora de checkout standalone.
 
 ## CQ0 — identity, clean worktree, trust e effective config
 
@@ -52,9 +52,11 @@ Target:
 root                    = ser-controller-a0
 root approval_policy    = never
 explorer/auditors       = ser-controller-a0 + approval never
-executor                = ser-b1-a1
-executor approvals      = granular: rules=true; demais categorias=false
-executor reviewer       = auto_review
+executor               = ser-controller-a0
+executor approval_policy = never
+executor repo writes    = forbidden; scratch-only patch author
+A1 bridge profile       = ser-b1-a1
+A1 bridge invocation    = root-only deterministic
 legacy sandbox_mode     = ABSENT
 native Windows sandbox  = elevated
 apps                     = false
@@ -66,22 +68,24 @@ repository root under A0 = read-only for writes
 A1 direct .git write    = denied
 ```
 
-O projeto não define `[auto_review].policy`; não deve substituir a política
-padrão do reviewer por um fragmento local.
+Não há `approvals_reviewer` em nenhum role spawnado. O projeto não depende de
+auto-review para conceder A1; a única transição de autoridade ocorre pelos
+comandos privilegiados exatos, guardados e root-only.
 
 Permission profiles são beta. No backend Windows elevado atual, o sandbox exige
 leitura efetiva de `:root`; isso amplia a superfície de leitura do processo,
 mas não concede write nem network. O CQ deve registrar essa limitação
 explicitamente e continuar provando que repository writes permanecem negados em
-A0 e restritos aos 10 arquivos A1 no executor.
+A0 e restritos aos 10 arquivos A1 somente quando o root-only capability bridge
+invoca `codex sandbox -P ser-b1-a1`.
 
-Se o host não conseguir impor o split, FAIL.
+Se o host não conseguir impor o split A0-spawned/A1-bridge, FAIL.
 Qualquer live override que amplie a permission mode esperada gera
 `BLOCKED_CONTROLLER_PERMISSION_OVERRIDE`.
 
 Tool surface presence e authority são avaliadas por `docs/operations/autonomy/CODEX_CLI_TOOL_SURFACE_POLICY.json`. `mcp__node_repl__*` é controle interno permitido. `codex_tui*` pode estar presente, mas não é rota autorizada; `codex_app`/CUA são superfícies inesperadas e bloqueiam o CQ antes de invocação. Outros MCP/resources e web continuam proibidos. Se uma superfície proibida read-only/probeável estiver carregada, executar exatamente um denial probe; se nenhuma estiver carregada, registrar `FORBIDDEN_SURFACE_PROBE = NOT_APPLICABLE_ABSENT`. Qualquer chamada proibida que alcance backend gera `SECURITY_STOP`.
 
-Hooks de projeto alterados exigem review/trust do hash atual. Se isso estiver pendente, parar antes de CQ0 com `PRE_CQ_HOOK_TRUST_REQUIRED`; não registrar BLOCKED/FAIL CQ. O host preflight deve executar normal-stdin wire probes dos três hooks Windows, não apenas `-SelfTest`. Qualquer `Hook failed`/exit não-zero observado em revisão ou CQ impede iniciar probes comportamentais até correção e novo trust.
+Hooks de projeto alterados exigem review/trust do hash atual. Se isso estiver pendente, parar antes de CQ0 com `PRE_CQ_HOOK_TRUST_REQUIRED`; não registrar BLOCKED/FAIL CQ. O host preflight deve executar normal-stdin wire probes dos quatro scripts de hook Windows (três PreToolUse e um PostToolUse), não apenas `-SelfTest`. Qualquer `Hook failed`/exit não-zero observado em revisão ou CQ impede iniciar probes comportamentais até correção e novo trust.
 
 ## CQ0.5 — dependency
 
@@ -91,8 +95,9 @@ não ampliar permissões para autorreparar a própria governança.
 
 No CLI/TUI Windows, o host preflight também deve resolver um IPv4 público e
 comprovar uma conexão TCP host-side single-shot ao mesmo IP:porta que será usado
-no CQ3 executor. Esse baseline não prova o sandbox; apenas remove a ambiguidade
-de endpoint indisponível. O executor usa o IP literal do evidence e não faz DNS.
+pelo probe do A1 bridge em CQ3. Esse baseline não prova o sandbox; apenas remove
+a ambiguidade de endpoint indisponível. O bridge usa o IP literal do evidence e
+não faz DNS.
 
 Antes desse baseline, o host preflight deve executar
 `WINDOWS_SANDBOX_NETWORK_INTEGRITY = PASS` em PowerShell elevado. Essa prova é
@@ -112,16 +117,19 @@ segundo blocker: roles spawnados não recebem `ser-b1-a1`; herdam A0 do parent.
 
 ## CQ1 — strict config e execpolicy
 
-Na CLI/IDE, executar strict config suportado pelo cliente e:
+Na CLI/IDE, executar strict config suportado pelo cliente e verificar as três
+formas privilegiadas exatas:
 
 ```text
-codex execpolicy check --pretty --rules .codex/rules/a1_git_transport.rules -- \
-  powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \
-  .codex\transport\a1_git_transport.ps1
+.codex\transport\a1_patch_transport.ps1
+.codex\transport\a1_git_transport.ps1
+.codex\transport\a1_operational_git_transport.ps1
 ```
 
-A decisão deve ser `prompt`. Variações com script diferente ou forma incompleta
-não podem casar como o transporte autorizado.
+Exactly three privileged argv forms devem resultar em `allow`. Forma incompleta,
+script alternativo ou argv diferente não pode casar. `allow` não substitui a
+prova de origem root: PreToolUse bridge guard e root gate in-script continuam
+obrigatórios antes de qualquer efeito.
 
 No Codex CLI/TUI Windows, a CLI é parte do substrate qualificado. O host preflight registra executável e versão; ausência ou falha do binário bound bloqueia antes de CQ0. CQ1 verifica a rule atual e CQ4 prova o transportador real.
 
