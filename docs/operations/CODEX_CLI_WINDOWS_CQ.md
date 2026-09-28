@@ -32,6 +32,7 @@ EXTERNAL_SURFACE_GUARD_SELFTEST = PASS
 SCOPE_GUARDS_SELFTEST = PASS
 A1_GIT_TRANSPORT_SELFTEST = PASS
 A1_OPERATIONAL_TRANSPORT_SELFTEST = PASS
+WINDOWS_SANDBOX_NETWORK_INTEGRITY = PASS
 HOST_NETWORK_BASELINE = PASS
 CHECKOUT_MODE = STANDALONE
 CLIENT_SURFACE = CODEX_CLI_WINDOWS_TUI
@@ -41,6 +42,12 @@ HOOK_WIRE_RUNTIME_SELFTEST = PASS
 EXECPOLICY_HOST_SELFTEST = PASS
 CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST
 ```
+
+`WINDOWS_SANDBOX_NETWORK_INTEGRITY` deve ser executado antes do baseline TCP
+em PowerShell elevado e é estritamente read-only: marker v5, conta offline,
+4/4 regras de Firewall e 12/12 filtros WFP; zero tentativas de rede. Falha ou
+evidência incompleta bloqueia antes de CQ0/CQ3. O CLI/TUI que será qualificado
+continua sendo lançado normalmente como o usuário, não como administrador.
 
 Host evidence schema: `AC-R2-CLI-HOST-PREFLIGHT-1`.
 Run request schema: `SER-CODEX-CLI-CQ-REQUEST-1`.

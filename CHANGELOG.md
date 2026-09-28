@@ -4786,3 +4786,12 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 - Native Windows preflight on freeze `6829b50...` stopped before metatests with exactly four validator issues, one for each read-only agent. Diagnostic evidence showed the only missing required token was lowercase `do not retry`; all four role instructions already contained the same prohibition as sentence-initial `Do not retry`. The validator and metatest now treat only that natural-language retry phrase case-insensitively while preserving exact matching for machine labels, paths and security states.
 - The host PreToolUse wire probe for `apply_patch` is also corrected to the upstream 0.157.1 shape: `tool_input.command` containing an apply-patch payload, not a synthetic `tool_input.path`. Validator/metatest require that shape.
 - No runtime CQ probe, authority expansion, A2, write-root change, transport change, promotion, Ready or merge occurred. The diagnostic stopped at HOST_PREFLIGHT validator.
+
+
+## 2026-09-28 — CQ3 network SECURITY_STOP root cause and host-integrity guard (ChatGPT)
+
+- The real CLI/TUI CQ3 on freeze `6069ef62b8586c20e301101005720b700135c668` reached the protected raw TCP probe and correctly stopped with `FAIL_NETWORK_BOUNDARY_OPEN`.
+- Independent read-only host evidence validated its manifest and showed: setup marker v5 present; `CodexSandboxOffline` and `CodexSandboxOnline` healthy; Windows Firewall service/profiles active; **all four required `codex_sandbox_offline_block_*` rules absent**; WFP provider/sublayer present with 12/12 Codex filters.
+- Upstream `rust-v0.157.1` shows those WFP filters cover ICMP, DNS 53/853 and SMB 139/445, while generic non-loopback TCP is blocked by the missing firewall rule. This directly explains the observed TCP:443 connection and matches the stale/broken provisioning class in openai/codex#34313.
+- Controller maintenance strengthens `tools/codex_cli_cq_host_preflight.ps1`: before host TCP baseline it now requires a read-only, elevated `WINDOWS_SANDBOX_NETWORK_INTEGRITY = PASS` with marker/account binding, 4/4 firewall rules, SID scoping and 12/12 WFP filters; the integrity step performs zero network attempts.
+- The CQ3 oracle itself, `network.enabled=false`, the ten A1 write roots, A2=false, blind retry=0 and the historical SECURITY_STOP are unchanged. No CQ retry is authorized merely by this commit; host reprovisioning and a fresh preflight are still required.

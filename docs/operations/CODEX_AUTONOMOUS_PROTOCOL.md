@@ -60,6 +60,13 @@ enforcement comportamental.
 
 No CQ3 CLI/TUI, command-network é provado por `.codex/probes/cq3_executor_network_probe.ps1`, source-SHA-bound pelo CLI host preflight v1. Antes de qualquer baseline/retry de CQ, o host executa `-SelfTest` no mesmo Windows PowerShell: três payloads sintéticos, JSON round-trip e zero network attempts. O script runtime reutiliza o IPv4:443 previamente validado no host, faz um único TCP raw BeginConnect/EndConnect e não usa DNS/HTTP/TLS/auth na sandbox. AccessDenied/10013 é denial; conexão bem-sucedida prova network boundary aberta; demais erros ficam NOT_PROVEN.
 
+Após o SECURITY_STOP real de 2026-09-28, o preflight também verifica a integridade
+do provisioning de rede do Windows elevated sandbox antes do baseline TCP.
+Marker v5 não é mais aceito como proxy de integridade: são exigidos
+`CodexSandboxOffline`, 4/4 regras de Firewall Codex e 12/12 filtros WFP, com
+zero tentativas de rede nessa verificação. Essa regressão fecha a classe causal
+do upstream openai/codex#34313 sem ampliar autoridade nem enfraquecer o CQ3.
+
 No CLI/TUI, o executável e a versão Codex são observados pelo preflight via path explícito + versão. Python roda somente no host para CQ0.5/CQ5. CQ3/CQ4 continuam provas comportamentais obrigatórias do sandbox. Estado de PR pode ficar `DEFERRED_TO_EXTERNAL_ADJUDICATION` e ser recomputado fora da sessão.
 
 `CODEX_CLI_TOOL_SURFACE_POLICY.json` separa presença, trust, autoridade e invocação para o runtime canônico. `mcp__node_repl__*` é control-plane interno permitido. `codex_tui*` pode existir, mas sua invocação é proibida pelo `external_surface_guard`; superfícies `codex_app`/CUA são inesperadas no CLI e bloqueiam CQ por presença antes de qualquer probe. Se houver uma superfície proibida read-only e probeável, CQ0 executa exatamente um denial probe; se não houver, registra `NOT_APPLICABLE_ABSENT`. Qualquer superfície proibida que alcance backend é `SECURITY_STOP`.

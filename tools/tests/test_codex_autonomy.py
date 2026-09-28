@@ -1464,6 +1464,33 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("*** Update File: docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl", text)
         self.assertNotIn('ToolName "apply_patch" -ToolInput @{ path=', text)
 
+    def test_cli_preflight_checks_windows_sandbox_network_integrity_before_host_network_baseline(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        for token in (
+            "Assert-WindowsSandboxNetworkIntegrity",
+            "CodexSandboxOffline",
+            "codex_sandbox_offline_block_outbound",
+            "codex_sandbox_offline_block_inbound",
+            "codex_sandbox_offline_block_loopback_tcp",
+            "codex_sandbox_offline_block_loopback_udp",
+            "codex_wfp_dns_53_v4",
+            "2e31d31c-3948-4753-9117-e5d1a6496f41",
+            "e65054fd-4d32-4c7c-95ef-621f0cf6431a",
+            "network_attempt_count = 0",
+            "WINDOWS_SANDBOX_NETWORK_INTEGRITY = PASS",
+        ):
+            self.assertIn(token, text)
+        integrity_pos = text.index("$windowsSandboxNetworkIntegrity = Assert-WindowsSandboxNetworkIntegrity")
+        baseline_pos = text.index("$networkProbeAddresses = @(")
+        self.assertLess(integrity_pos, baseline_pos)
+        for forbidden in (
+            "New-NetFirewallRule",
+            "Set-NetFirewallRule",
+            "Remove-NetFirewallRule",
+            "codex sandbox setup",
+        ):
+            self.assertNotIn(forbidden, text)
+
     def test_cli_preflight_runs_normal_hook_wire_probes(self):
         text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         for token in (

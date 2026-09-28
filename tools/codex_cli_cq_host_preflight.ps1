@@ -183,6 +183,195 @@ function Test-TcpEndpointSingleShot([string]$Ip, [int]$Port, [int]$TimeoutMs) {
     }
 }
 
+function Get-ObjectPropertyValue([object]$Object, [string]$Name) {
+    if ($null -eq $Object) { return $null }
+    $property = $Object.PSObject.Properties[$Name]
+    if ($null -eq $property) { return $null }
+    return $property.Value
+}
+
+function Get-TextSha256([string]$Text) {
+    $sha256 = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $bytes = [System.Text.Encoding]::UTF8.GetBytes($Text)
+        return ([System.BitConverter]::ToString($sha256.ComputeHash($bytes))).Replace("-", "")
+    }
+    finally {
+        $sha256.Dispose()
+    }
+}
+
+function Assert-WindowsSandboxNetworkIntegrity([string]$EvidenceRoot) {
+    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object Security.Principal.WindowsPrincipal($identity)
+    if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_INTEGRITY_REQUIRES_ADMIN"
+    }
+
+    $markerPath = Join-Path $HOME ".codex\.sandbox\setup_marker.json"
+    if (-not (Test-Path -LiteralPath $markerPath -PathType Leaf)) {
+        throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_MARKER_MISSING"
+    }
+    $markerText = [string](Get-Content -LiteralPath $markerPath -Raw -Encoding UTF8)
+    if ([string]::IsNullOrWhiteSpace($markerText)) {
+        throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_MARKER_EMPTY"
+    }
+    try { $marker = $markerText | ConvertFrom-Json -ErrorAction Stop }
+    catch { throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_MARKER_INVALID_JSON" }
+
+    if ([int](Get-ObjectPropertyValue $marker "version") -ne 5) {
+        throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_MARKER_VERSION"
+    }
+    $offlineUsername = [string](Get-ObjectPropertyValue $marker "offline_username")
+    $onlineUsername = [string](Get-ObjectPropertyValue $marker "online_username")
+    if ($offlineUsername -ne "CodexSandboxOffline" -or $onlineUsername -ne "CodexSandboxOnline") {
+        throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_MARKER_ACCOUNTS"
+    }
+    if ([bool](Get-ObjectPropertyValue $marker "allow_local_binding")) {
+        throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_LOCAL_BINDING_FORBIDDEN"
+    }
+    $proxyPorts = @((Get-ObjectPropertyValue $marker "proxy_ports"))
+    if ($proxyPorts.Count -ne 0) {
+        throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_PROXY_PORTS_FORBIDDEN"
+    }
+
+    try {
+        $offlineUsers = @(
+            Get-CimInstance -ClassName Win32_UserAccount -ErrorAction Stop |
+                Where-Object { $_.LocalAccount -eq $true -and $_.Name -eq $offlineUsername }
+        )
+    }
+    catch {
+        throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_OFFLINE_ACCOUNT_QUERY"
+    }
+    if ($offlineUsers.Count -ne 1) {
+        throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_OFFLINE_ACCOUNT_COUNT:$($offlineUsers.Count)"
+    }
+    $offlineUser = $offlineUsers[0]
+    $offlineSid = [string](Get-ObjectPropertyValue $offlineUser "SID")
+    if ([string]::IsNullOrWhiteSpace($offlineSid)) {
+        throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_OFFLINE_SID_MISSING"
+    }
+    if ([bool](Get-ObjectPropertyValue $offlineUser "Disabled")) {
+        throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_OFFLINE_ACCOUNT_DISABLED"
+    }
+
+    $firewallService = Get-Service -Name MpsSvc -ErrorAction Stop
+    if ([string]$firewallService.Status -ne "Running") {
+        throw "CQ_HOST_PREFLIGHT_WINDOWS_FIREWALL_SERVICE_NOT_RUNNING"
+    }
+    if (-not (Get-Command Get-NetFirewallRule -ErrorAction SilentlyContinue)) {
+        throw "CQ_HOST_PREFLIGHT_GET_NETFIREWALLRULE_UNAVAILABLE"
+    }
+
+    $expectedRules = @(
+        [pscustomobject]@{ name="codex_sandbox_offline_block_outbound"; direction="Outbound"; action="Block" },
+        [pscustomobject]@{ name="codex_sandbox_offline_block_inbound"; direction="Inbound"; action="Block" },
+        [pscustomobject]@{ name="codex_sandbox_offline_block_loopback_tcp"; direction="Outbound"; action="Block" },
+        [pscustomobject]@{ name="codex_sandbox_offline_block_loopback_udp"; direction="Outbound"; action="Block" }
+    )
+    $ruleEvidence = @()
+    $activeRules = @(Get-NetFirewallRule -PolicyStore ActiveStore -ErrorAction Stop)
+    foreach ($expected in $expectedRules) {
+        $matches = @(
+            $activeRules |
+                Where-Object { [string](Get-ObjectPropertyValue $_ "Name") -eq $expected.name }
+        )
+        if ($matches.Count -ne 1) {
+            throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_FIREWALL_RULE_COUNT:$($expected.name):$($matches.Count)"
+        }
+        $rule = $matches[0]
+        $enabled = [string](Get-ObjectPropertyValue $rule "Enabled")
+        $direction = [string](Get-ObjectPropertyValue $rule "Direction")
+        $action = [string](Get-ObjectPropertyValue $rule "Action")
+        $localUser = [string](Get-ObjectPropertyValue $rule "LocalUserAuthorizedList")
+        if ($enabled -ne "True") {
+            throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_FIREWALL_RULE_DISABLED:$($expected.name)"
+        }
+        if ($direction -ne $expected.direction) {
+            throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_FIREWALL_DIRECTION:$($expected.name):$direction"
+        }
+        if ($action -ne $expected.action) {
+            throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_FIREWALL_ACTION:$($expected.name):$action"
+        }
+        if (
+            [string]::IsNullOrWhiteSpace($localUser) -or
+            $localUser.IndexOf($offlineSid, [StringComparison]::OrdinalIgnoreCase) -lt 0
+        ) {
+            throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_FIREWALL_SID_SCOPE:$($expected.name)"
+        }
+        $ruleEvidence += [pscustomobject][ordered]@{
+            name = $expected.name
+            enabled = $true
+            direction = $direction
+            action = $action
+            offline_sid_scope_match = $true
+        }
+    }
+
+    $expectedWfpFilters = @(
+        "codex_wfp_icmp_connect_v4",
+        "codex_wfp_icmp_connect_v6",
+        "codex_wfp_icmp_assign_v4",
+        "codex_wfp_icmp_assign_v6",
+        "codex_wfp_dns_53_v4",
+        "codex_wfp_dns_53_v6",
+        "codex_wfp_dns_853_v4",
+        "codex_wfp_dns_853_v6",
+        "codex_wfp_smb_445_v4",
+        "codex_wfp_smb_445_v6",
+        "codex_wfp_smb_139_v4",
+        "codex_wfp_smb_139_v6"
+    )
+    $netsh = Get-Command "netsh.exe" -ErrorAction SilentlyContinue
+    if (-not $netsh) { throw "CQ_HOST_PREFLIGHT_NETSH_UNAVAILABLE" }
+
+    $wfpPath = Join-Path $EvidenceRoot ("CQ_HOST_WFP_" + [Guid]::NewGuid().ToString("N") + ".xml")
+    $wfpStdout = Join-Path $EvidenceRoot "CQ_HOST_WFP.stdout.txt"
+    $wfpStderr = Join-Path $EvidenceRoot "CQ_HOST_WFP.stderr.txt"
+    try {
+        $wfpExit = Invoke-CapturedProcess -FilePath $netsh.Source -ArgumentList @("wfp", "show", "filters", ("file=" + $wfpPath)) -StdoutPath $wfpStdout -StderrPath $wfpStderr
+        if ($wfpExit -ne 0 -or -not (Test-Path -LiteralPath $wfpPath -PathType Leaf)) {
+            throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_WFP_DUMP_FAILED:$wfpExit"
+        }
+        $wfpText = [string](Get-Content -LiteralPath $wfpPath -Raw -Encoding UTF8)
+        $missingWfp = @(
+            $expectedWfpFilters |
+                Where-Object {
+                    $wfpText.IndexOf($_, [StringComparison]::OrdinalIgnoreCase) -lt 0
+                }
+        )
+        if ($missingWfp.Count -ne 0) {
+            throw ("CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_WFP_FILTERS_MISSING:" + ($missingWfp -join ","))
+        }
+        if (
+            $wfpText.IndexOf("2e31d31c-3948-4753-9117-e5d1a6496f41", [StringComparison]::OrdinalIgnoreCase) -lt 0 -or
+            $wfpText.IndexOf("e65054fd-4d32-4c7c-95ef-621f0cf6431a", [StringComparison]::OrdinalIgnoreCase) -lt 0
+        ) {
+            throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_WFP_PROVIDER_OR_SUBLAYER_MISSING"
+        }
+    }
+    finally {
+        Remove-Item -LiteralPath $wfpPath -Force -ErrorAction SilentlyContinue
+    }
+
+    return [pscustomobject][ordered]@{
+        result = "PASS"
+        setup_marker_version = 5
+        setup_marker_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $markerPath).Hash
+        offline_username = $offlineUsername
+        offline_sid_sha256 = Get-TextSha256 $offlineSid
+        firewall_service = "RUNNING"
+        firewall_rule_count = $ruleEvidence.Count
+        firewall_rules = [object[]]$ruleEvidence
+        wfp_expected_filter_count = $expectedWfpFilters.Count
+        wfp_observed_filter_count = $expectedWfpFilters.Count
+        allow_local_binding = $false
+        proxy_port_count = 0
+        network_attempt_count = 0
+    }
+}
+
 $canonicalOutputRoot = [IO.Path]::GetFullPath((Join-Path $HOME "codex-scratch\Ambiente_Databricks"))
 if (-not [string]::Equals([IO.Path]::GetFullPath($OutputRoot).TrimEnd('\','/'), $canonicalOutputRoot.TrimEnd('\','/'), [StringComparison]::OrdinalIgnoreCase)) {
     throw "CQ_HOST_PREFLIGHT_OUTPUT_ROOT_MUST_MATCH_CONSUMERS"
@@ -341,7 +530,7 @@ $metatestStderr = Join-Path $outputRootFull "CQ_HOST_METATESTS.stderr.txt"
 $validatorExit = Invoke-CapturedProcess -FilePath $python.executable -ArgumentList @("-B", "tools/validate_codex_autonomy.py", "--json") -StdoutPath $validatorStdout -StderrPath $validatorStderr
 try { $validatorPayload = Get-Content -LiteralPath $validatorStdout -Raw -Encoding UTF8 | ConvertFrom-Json } catch { throw "CQ_HOST_PREFLIGHT_VALIDATOR_OUTPUT_NOT_JSON" }
 if ($validatorExit -ne 0 -or $validatorPayload.status -ne "PASS") { throw "CQ_HOST_PREFLIGHT_VALIDATOR_FAILED:$($validatorExit):$($validatorPayload.status)" }
-if ($validatorPayload.schema_version -ne "SER-CODEX-AUTONOMY-VALIDATION-21") { throw "CQ_HOST_PREFLIGHT_VALIDATOR_SCHEMA:$($validatorPayload.schema_version)" }
+if ($validatorPayload.schema_version -ne "SER-CODEX-AUTONOMY-VALIDATION-22") { throw "CQ_HOST_PREFLIGHT_VALIDATOR_SCHEMA:$($validatorPayload.schema_version)" }
 $metatestExit = Invoke-CapturedProcess -FilePath $python.executable -ArgumentList @("-B", "-m", "unittest", "tools.tests.test_codex_autonomy", "-v") -StdoutPath $metatestStdout -StderrPath $metatestStderr
 $metatestText = ""
 if (Test-Path -LiteralPath $metatestStdout) { $metatestText += Get-Content -LiteralPath $metatestStdout -Raw -Encoding UTF8 }
@@ -516,6 +705,11 @@ try { $transportPayload = Get-Content -LiteralPath $transportStdout -Raw -Encodi
 catch { throw "CQ_HOST_PREFLIGHT_A1_GIT_TRANSPORT_SELFTEST_JSON" }
 if ($transportPayload.result -ne "PASS") { throw "CQ_HOST_PREFLIGHT_A1_GIT_TRANSPORT_SELFTEST_CONTRACT" }
 
+$windowsSandboxNetworkIntegrity = Assert-WindowsSandboxNetworkIntegrity -EvidenceRoot $outputRootFull
+if ($windowsSandboxNetworkIntegrity.result -ne "PASS" -or [int]$windowsSandboxNetworkIntegrity.network_attempt_count -ne 0) {
+    throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_NETWORK_INTEGRITY_NOT_PROVEN"
+}
+
 $networkProbeAddresses = @(
     [System.Net.Dns]::GetHostAddresses($NetworkProbeHost) |
         Where-Object { $_.AddressFamily -eq [System.Net.Sockets.AddressFamily]::InterNetwork } |
@@ -572,6 +766,7 @@ $payload = [ordered]@{
         a1_operational_transport = [ordered]@{ result="PASS"; exit_code=$operationalTransportExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $operationalTransportStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $operationalTransportStderr).Hash }
         a1_git_transport = [ordered]@{ result="PASS"; exit_code=$transportExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $transportStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $transportStderr).Hash }
     }
+    windows_sandbox_network_integrity = $windowsSandboxNetworkIntegrity
     network_probe = [ordered]@{
         serialization_selftest = [ordered]@{
             result = "PASS"
@@ -623,7 +818,7 @@ $request = [ordered]@{
     runtime_mode = "EMBEDDED_NO_DAEMON"
     strict_config = $true
     required_launch_args = @("--no-daemon","--strict-config")
-    network = [ordered]@{ selected_ipv4=$networkProbeIp; port=$NetworkProbePort; host_baseline="PASS"; serialization_selftest="PASS"; offline_runtime_selftest="PASS" }
+    network = [ordered]@{ selected_ipv4=$networkProbeIp; port=$NetworkProbePort; host_baseline="PASS"; serialization_selftest="PASS"; offline_runtime_selftest="PASS"; windows_sandbox_network_integrity="PASS" }
     tool_surface_policy = [ordered]@{ path="docs/operations/autonomy/CODEX_CLI_TOOL_SURFACE_POLICY.json"; source_sha256=$sourceHashes.tool_surface_policy; schema_version="SER-CODEX-CLI-TOOL-SURFACE-1"; mcp_invocation="DENY_EXTERNAL_SURFACES_ALLOW_INTERNAL_NODE_REPL"; absent_probeable_surface="NOT_APPLICABLE_ABSENT" }
     hook_trust = [ordered]@{
         project_hooks_sha256 = $sourceHashes.hooks
@@ -671,6 +866,7 @@ Write-Host "EXECPOLICY_HOST_SELFTEST = PASS"
 Write-Host "A1_GIT_TRANSPORT_SELFTEST = PASS"
 Write-Host "A1_OPERATIONAL_TRANSPORT_SELFTEST = PASS"
 Write-Host "NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS (3/3; network_attempts=0)"
+Write-Host "WINDOWS_SANDBOX_NETWORK_INTEGRITY = PASS (firewall=4/4; wfp=12/12; network_attempts=0)"
 Write-Host ("HOST_NETWORK_BASELINE = PASS ({0}:{1})" -f $networkProbeIp, $NetworkProbePort)
 Write-Host "CHECKOUT_MODE = STANDALONE"
 Write-Host "CLIENT_SURFACE = CODEX_CLI_WINDOWS_TUI"

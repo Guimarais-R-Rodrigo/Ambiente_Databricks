@@ -94,6 +94,21 @@ comprovar uma conexão TCP host-side single-shot ao mesmo IP:porta que será usa
 no CQ3 executor. Esse baseline não prova o sandbox; apenas remove a ambiguidade
 de endpoint indisponível. O executor usa o IP literal do evidence e não faz DNS.
 
+Antes desse baseline, o host preflight deve executar
+`WINDOWS_SANDBOX_NETWORK_INTEGRITY = PASS` em PowerShell elevado. Essa prova é
+read-only e exige marker v5 coerente, `CodexSandboxOffline` habilitado, as quatro
+regras `codex_sandbox_offline_block_*` esperadas no ActiveStore com escopo do SID
+offline e os 12 filtros WFP do Codex. Ela executa zero tentativas de rede. Marker
+válido sem essas regras é falha fechada e bloqueia o CQ antes do baseline.
+
+Causa preservada de 2026-09-28: no freeze `6069ef62...`, o CQ3 conectou TCP
+4.228.31.150:443. Diagnóstico host independente confirmou marker v5 e ambas as
+contas sandbox, WFP 12/12, mas 0/4 regras de Firewall obrigatórias. Isso reproduz
+a classe causal documentada no upstream openai/codex#34313: setup/marker pode
+permanecer aceito enquanto a proteção de Firewall está ausente. Os filtros WFP
+0.157.1 cobrem ICMP, DNS 53/853 e SMB 139/445; eles não substituem o bloqueio
+genérico de TCP 443 feito pelas regras de Firewall.
+
 ## CQ1 — strict config e execpolicy
 
 Na CLI/IDE, executar strict config suportado pelo cliente e:

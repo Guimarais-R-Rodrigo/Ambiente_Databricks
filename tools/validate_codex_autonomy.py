@@ -275,7 +275,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-21",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-22",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -482,6 +482,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "HOST_VALIDATOR",
             "HOST_METATESTS",
             "HOST_NETWORK_BASELINE",
+            "WINDOWS_SANDBOX_NETWORK_INTEGRITY = PASS",
             "HOOK_WIRE_RUNTIME_SELFTEST = PASS",
             "EXECPOLICY_HOST_SELFTEST = PASS",
             "CQ_RUN_REQUEST.json",
@@ -506,8 +507,16 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "CODEX_CLI_WINDOWS_TUI",
             'Join-Path $env:APPDATA "npm\\codex.cmd"',
             "CODEX_CLI_VERSION =",
-            "SER-CODEX-AUTONOMY-VALIDATION-21",
+            "SER-CODEX-AUTONOMY-VALIDATION-22",
             "docs\\operations\\CODEX_CLI_WINDOWS_CQ.md",
+            "Assert-WindowsSandboxNetworkIntegrity",
+            "codex_sandbox_offline_block_outbound",
+            "codex_sandbox_offline_block_inbound",
+            "codex_sandbox_offline_block_loopback_tcp",
+            "codex_sandbox_offline_block_loopback_udp",
+            "codex_wfp_dns_53_v4",
+            "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_NETWORK_INTEGRITY_NOT_PROVEN",
+            "WINDOWS_SANDBOX_NETWORK_INTEGRITY = PASS",
             "docs\\operations\\autonomy\\CODEX_CLI_TOOL_SURFACE_POLICY.json",
             "docs\\operations\\CODEX_CLI_CQ_RUN_PROMPT_TEMPLATE.md",
             'cli_preflight = "tools\\codex_cli_cq_host_preflight.ps1"',
@@ -526,6 +535,18 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             or "*** Update File: docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl" not in cli_preflight_text
         ):
             issues.append("CLI_WINDOWS_HOST_PREFLIGHT_APPLY_PATCH_WIRE_SHAPE")
+        integrity_pos = cli_preflight_text.find("$windowsSandboxNetworkIntegrity = Assert-WindowsSandboxNetworkIntegrity")
+        baseline_pos = cli_preflight_text.find("$networkProbeAddresses = @(")
+        if integrity_pos < 0 or baseline_pos < 0 or integrity_pos > baseline_pos:
+            issues.append("CLI_WINDOWS_SANDBOX_INTEGRITY_MUST_PRECEDE_NETWORK_BASELINE")
+        forbidden_integrity_mutators = (
+            "New-NetFirewallRule",
+            "Set-NetFirewallRule",
+            "Remove-NetFirewallRule",
+            "codex sandbox setup",
+        )
+        if any(token in cli_preflight_text for token in forbidden_integrity_mutators):
+            issues.append("CLI_WINDOWS_HOST_PREFLIGHT_SANDBOX_INTEGRITY_MUST_BE_READ_ONLY")
         if "CODEX_DESKTOP_WINDOWS" in cli_preflight_text:
             issues.append("CLI_WINDOWS_HOST_PREFLIGHT_DESKTOP_SURFACE_LEAK")
     else:
@@ -908,7 +929,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-21",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-22",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),
