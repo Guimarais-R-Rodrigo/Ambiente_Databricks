@@ -7,6 +7,12 @@ $ErrorActionPreference = "Stop"
 
 $ExpectedBranch = "ser/B1-ser03-ser05-authoring"
 $ExpectedRepoFragment = "Guimarais-R-Rodrigo/Ambiente_Databricks"
+$ExpectedRemotes = @(
+    "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks.git",
+    "https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks",
+    "git@github.com:Guimarais-R-Rodrigo/Ambiente_Databricks.git",
+    "ssh://git@github.com/Guimarais-R-Rodrigo/Ambiente_Databricks.git"
+)
 $ExpectedPythonMajor = 3
 $ExpectedPythonMinor = 12
 $NetworkProbeHost = "github.com"
@@ -29,11 +35,41 @@ function Normalize-GitMetadataPath([string]$Value) {
     return [System.IO.Path]::GetFullPath($Value.Trim()).TrimEnd($trimChars)
 }
 
+function Quote-NativeArgument([string]$Value) {
+    if ($Value.Length -gt 0 -and $Value -notmatch '[\s"]') { return $Value }
+    $escaped = [regex]::Replace($Value, '(\\*)"', '$1$1\"')
+    $escaped = [regex]::Replace($escaped, '(\\+)$', '$1$1')
+    return '"' + $escaped + '"'
+}
+
+function Show-CapturedDiagnostic([string]$Path) {
+    Write-Host ("--- " + [IO.Path]::GetFileName($Path) + " ---")
+    if (Test-Path -LiteralPath $Path) {
+        $text = Get-Content -LiteralPath $Path -Raw -Encoding UTF8
+        if ($text) { Write-Host $text } else { Write-Host "<empty>" }
+    } else { Write-Host "<not created>" }
+}
+
 function Invoke-CapturedProcess([string]$FilePath, [string[]]$ArgumentList, [string]$StdoutPath, [string]$StderrPath) {
     Remove-Item -LiteralPath $StdoutPath -Force -ErrorAction SilentlyContinue
     Remove-Item -LiteralPath $StderrPath -Force -ErrorAction SilentlyContinue
-    $process = Start-Process -FilePath $FilePath -ArgumentList $ArgumentList -WorkingDirectory (Get-Location).Path -Wait -PassThru -NoNewWindow -RedirectStandardOutput $StdoutPath -RedirectStandardError $StderrPath
-    return $process.ExitCode
+    $quoted = @($ArgumentList | ForEach-Object { Quote-NativeArgument $_ }) -join ' '
+    Write-Host ("HOST_STEP = " + [IO.Path]::GetFileName($StdoutPath))
+    $process = Start-Process -FilePath $FilePath -ArgumentList $quoted -WorkingDirectory (Get-Location).Path -PassThru -NoNewWindow -RedirectStandardOutput $StdoutPath -RedirectStandardError $StderrPath
+    if (-not $process.WaitForExit(600000)) {
+        Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+        Show-CapturedDiagnostic $StdoutPath
+        Show-CapturedDiagnostic $StderrPath
+        throw "CQ_HOST_PREFLIGHT_CHILD_TIMEOUT_NO_RETRY"
+    }
+    $process.WaitForExit()
+    $exitCode = $process.ExitCode
+    if ($null -eq $exitCode) { throw "CQ_HOST_PREFLIGHT_CHILD_EXIT_NOT_OBSERVED" }
+    if ($exitCode -ne 0) {
+        Show-CapturedDiagnostic $StdoutPath
+        Show-CapturedDiagnostic $StderrPath
+    }
+    return [int]$exitCode
 }
 
 function Test-TcpEndpointSingleShot([string]$Ip, [int]$Port, [int]$TimeoutMs) {
@@ -61,6 +97,18 @@ function Test-TcpEndpointSingleShot([string]$Ip, [int]$Port, [int]$TimeoutMs) {
     }
 }
 
+$canonicalOutputRoot = [IO.Path]::GetFullPath((Join-Path $HOME "codex-scratch\Ambiente_Databricks"))
+if (-not [string]::Equals([IO.Path]::GetFullPath($OutputRoot).TrimEnd('\','/'), $canonicalOutputRoot.TrimEnd('\','/'), [StringComparison]::OrdinalIgnoreCase)) {
+    throw "CQ_HOST_PREFLIGHT_OUTPUT_ROOT_MUST_MATCH_CONSUMERS"
+}
+New-Item -ItemType Directory -Force -Path $canonicalOutputRoot | Out-Null
+$readyPath = Join-Path $canonicalOutputRoot "CQ_LAUNCH_READY.json"
+$runId = [Guid]::NewGuid().ToString("N")
+$ready = [ordered]@{ schema_version="SER-CQ-LAUNCH-READY-1"; run_id=$runId; result="IN_PROGRESS"; phase="HOST_PREFLIGHT_ONLY" }
+Write-Utf8NoBom $readyPath ($ready | ConvertTo-Json -Depth 6)
+$previousPythonEncoding = $env:PYTHONIOENCODING
+$env:PYTHONIOENCODING = "utf-8"
+try {
 $rootText = (& git rev-parse --show-toplevel 2>$null)
 if ($LASTEXITCODE -ne 0 -or -not $rootText) { throw "CQ_HOST_PREFLIGHT_NOT_GIT_REPOSITORY" }
 $root = [System.IO.Path]::GetFullPath(($rootText | Select-Object -First 1).Trim())
@@ -89,8 +137,8 @@ $origin = (& git remote get-url origin).Trim()
 $pushOrigin = (& git remote get-url --push origin).Trim()
 if (
     $LASTEXITCODE -ne 0 -or
-    $origin -notmatch [regex]::Escape($ExpectedRepoFragment) -or
-    $pushOrigin -notmatch [regex]::Escape($ExpectedRepoFragment)
+    $ExpectedRemotes -notcontains $origin -or
+    $ExpectedRemotes -notcontains $pushOrigin
 ) { throw "CQ_HOST_PREFLIGHT_REMOTE_MISMATCH" }
 & git fetch origin $ExpectedBranch
 if ($LASTEXITCODE -ne 0) { throw "CQ_HOST_PREFLIGHT_FETCH_FAILED" }
@@ -115,7 +163,7 @@ $codexVersionStdout = Join-Path $outputRootFull "CQ_HOST_CODEX_CLI_VERSION.stdou
 $codexVersionStderr = Join-Path $outputRootFull "CQ_HOST_CODEX_CLI_VERSION.stderr.txt"
 $codexVersionExit = Invoke-CapturedProcess -FilePath $codexCli -ArgumentList @("--version") -StdoutPath $codexVersionStdout -StderrPath $codexVersionStderr
 if ($codexVersionExit -ne 0) { throw "CQ_HOST_PREFLIGHT_CODEX_CLI_VERSION_FAILED:$codexVersionExit" }
-$codexVersion = (Get-Content -LiteralPath $codexVersionStdout -Raw).Trim()
+$codexVersion = (Get-Content -LiteralPath $codexVersionStdout -Raw -Encoding UTF8).Trim()
 if ([string]::IsNullOrWhiteSpace($codexVersion) -or $codexVersion -notmatch "^codex-cli\s+\S+") { throw "CQ_HOST_PREFLIGHT_CODEX_CLI_VERSION_UNPARSEABLE:$codexVersion" }
 
 $sourcePaths = [ordered]@{
@@ -198,17 +246,18 @@ $validatorStderr = Join-Path $outputRootFull "CQ_HOST_VALIDATOR.stderr.txt"
 $metatestStdout = Join-Path $outputRootFull "CQ_HOST_METATESTS.stdout.txt"
 $metatestStderr = Join-Path $outputRootFull "CQ_HOST_METATESTS.stderr.txt"
 $validatorExit = Invoke-CapturedProcess -FilePath $python.executable -ArgumentList @("-B", "tools/validate_codex_autonomy.py", "--json") -StdoutPath $validatorStdout -StderrPath $validatorStderr
-try { $validatorPayload = Get-Content -LiteralPath $validatorStdout -Raw | ConvertFrom-Json } catch { throw "CQ_HOST_PREFLIGHT_VALIDATOR_OUTPUT_NOT_JSON" }
+try { $validatorPayload = Get-Content -LiteralPath $validatorStdout -Raw -Encoding UTF8 | ConvertFrom-Json } catch { throw "CQ_HOST_PREFLIGHT_VALIDATOR_OUTPUT_NOT_JSON" }
 if ($validatorExit -ne 0 -or $validatorPayload.status -ne "PASS") { throw "CQ_HOST_PREFLIGHT_VALIDATOR_FAILED:$($validatorExit):$($validatorPayload.status)" }
 if ($validatorPayload.schema_version -ne "SER-CODEX-AUTONOMY-VALIDATION-21") { throw "CQ_HOST_PREFLIGHT_VALIDATOR_SCHEMA:$($validatorPayload.schema_version)" }
 $metatestExit = Invoke-CapturedProcess -FilePath $python.executable -ArgumentList @("-B", "-m", "unittest", "tools.tests.test_codex_autonomy", "-v") -StdoutPath $metatestStdout -StderrPath $metatestStderr
 $metatestText = ""
-if (Test-Path -LiteralPath $metatestStdout) { $metatestText += Get-Content -LiteralPath $metatestStdout -Raw }
-if (Test-Path -LiteralPath $metatestStderr) { $metatestText += [Environment]::NewLine + (Get-Content -LiteralPath $metatestStderr -Raw) }
+if (Test-Path -LiteralPath $metatestStdout) { $metatestText += Get-Content -LiteralPath $metatestStdout -Raw -Encoding UTF8 }
+if (Test-Path -LiteralPath $metatestStderr) { $metatestText += [Environment]::NewLine + (Get-Content -LiteralPath $metatestStderr -Raw -Encoding UTF8) }
 if ($metatestExit -ne 0) { throw "CQ_HOST_PREFLIGHT_METATESTS_FAILED:$metatestExit" }
+if ($metatestText -match "skipped=[1-9][0-9]*") { throw "CQ_HOST_PREFLIGHT_WINDOWS_TESTS_SKIPPED" }
 if ($metatestText -notmatch "Ran\s+(\d+)\s+tests?") { throw "CQ_HOST_PREFLIGHT_METATEST_COUNT_NOT_OBSERVED" }
 $runtimeTestCount = [int]$Matches[1]
-$testSourceText = Get-Content -LiteralPath (Join-Path $root "tools\tests\test_codex_autonomy.py") -Raw
+$testSourceText = Get-Content -LiteralPath (Join-Path $root "tools\tests\test_codex_autonomy.py") -Raw -Encoding UTF8
 $staticTestCount = [regex]::Matches($testSourceText, "(?m)^\s+def test_").Count
 if ($runtimeTestCount -ne $staticTestCount) { throw "CQ_HOST_PREFLIGHT_METATEST_COUNT_MISMATCH:$($runtimeTestCount):$($staticTestCount)" }
 
@@ -218,7 +267,7 @@ $networkSelfTestStderr = Join-Path $outputRootFull "CQ_HOST_NETWORK_PROBE_SELFTE
 $powershellExe = (Get-Command "powershell.exe" -ErrorAction Stop).Source
 $networkSelfTestExit = Invoke-CapturedProcess -FilePath $powershellExe -ArgumentList @("-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", $networkProbeScript, "-SelfTest") -StdoutPath $networkSelfTestStdout -StderrPath $networkSelfTestStderr
 if ($networkSelfTestExit -ne 0) { throw "CQ_HOST_PREFLIGHT_NETWORK_PROBE_SELFTEST_EXIT:$($networkSelfTestExit)" }
-try { $networkSelfTestPayload = Get-Content -LiteralPath $networkSelfTestStdout -Raw | ConvertFrom-Json }
+try { $networkSelfTestPayload = Get-Content -LiteralPath $networkSelfTestStdout -Raw -Encoding UTF8 | ConvertFrom-Json }
 catch { throw "CQ_HOST_PREFLIGHT_NETWORK_PROBE_SELFTEST_INVALID_JSON" }
 $networkSelfTestCases = @($networkSelfTestPayload.cases)
 $networkSelfTestResults = @($networkSelfTestCases | ForEach-Object { [string]$_.result } | Sort-Object)
@@ -237,7 +286,7 @@ $networkOfflineStdout = Join-Path $outputRootFull "CQ_HOST_NETWORK_PROBE_OFFLINE
 $networkOfflineStderr = Join-Path $outputRootFull "CQ_HOST_NETWORK_PROBE_OFFLINE_RUNTIME_SELFTEST.stderr.txt"
 $networkOfflineExit = Invoke-CapturedProcess -FilePath $powershellExe -ArgumentList @("-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", $networkProbeScript, "-OfflineRuntimeSelfTest") -StdoutPath $networkOfflineStdout -StderrPath $networkOfflineStderr
 if ($networkOfflineExit -ne 0) { throw "CQ_HOST_PREFLIGHT_NETWORK_PROBE_OFFLINE_RUNTIME_SELFTEST_EXIT:$($networkOfflineExit)" }
-try { $networkOfflinePayload = Get-Content -LiteralPath $networkOfflineStdout -Raw | ConvertFrom-Json }
+try { $networkOfflinePayload = Get-Content -LiteralPath $networkOfflineStdout -Raw -Encoding UTF8 | ConvertFrom-Json }
 catch { throw "CQ_HOST_PREFLIGHT_NETWORK_PROBE_OFFLINE_RUNTIME_SELFTEST_JSON" }
 if (
     $networkOfflinePayload.schema_version -ne "AC-R2-CQ3-NETWORK-PROBE-OFFLINE-RUNTIME-SELFTEST-1" -or
@@ -250,7 +299,7 @@ $mcpGuardStdout = Join-Path $outputRootFull "CQ_HOST_EXTERNAL_SURFACE_GUARD_SELF
 $mcpGuardStderr = Join-Path $outputRootFull "CQ_HOST_EXTERNAL_SURFACE_GUARD_SELFTEST.stderr.txt"
 $mcpGuardExit = Invoke-CapturedProcess -FilePath $powershellExe -ArgumentList @("-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", (Join-Path $root ".codex\hooks\external_surface_guard.ps1"), "-SelfTest") -StdoutPath $mcpGuardStdout -StderrPath $mcpGuardStderr
 if ($mcpGuardExit -ne 0) { throw "CQ_HOST_PREFLIGHT_MCP_GUARD_SELFTEST_EXIT:$($mcpGuardExit)" }
-try { $mcpGuardPayload = Get-Content -LiteralPath $mcpGuardStdout -Raw | ConvertFrom-Json }
+try { $mcpGuardPayload = Get-Content -LiteralPath $mcpGuardStdout -Raw -Encoding UTF8 | ConvertFrom-Json }
 catch { throw "CQ_HOST_PREFLIGHT_MCP_GUARD_SELFTEST_JSON" }
 if ($mcpGuardPayload.result -ne "PASS") { throw "CQ_HOST_PREFLIGHT_MCP_GUARD_SELFTEST_CONTRACT" }
 
@@ -268,14 +317,14 @@ $operationalTransportStdout = Join-Path $outputRootFull "CQ_HOST_A1_OPERATIONAL_
 $operationalTransportStderr = Join-Path $outputRootFull "CQ_HOST_A1_OPERATIONAL_TRANSPORT_SELFTEST.stderr.txt"
 $operationalTransportExit = Invoke-CapturedProcess -FilePath $powershellExe -ArgumentList @("-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", (Join-Path $root ".codex\transport\a1_operational_git_transport.ps1"), "-SelfTest") -StdoutPath $operationalTransportStdout -StderrPath $operationalTransportStderr
 if ($operationalTransportExit -ne 0) { throw "CQ_HOST_PREFLIGHT_A1_OPERATIONAL_TRANSPORT_SELFTEST_EXIT:$($operationalTransportExit)" }
-try { $operationalTransportPayload = Get-Content -LiteralPath $operationalTransportStdout -Raw | ConvertFrom-Json }
+try { $operationalTransportPayload = Get-Content -LiteralPath $operationalTransportStdout -Raw -Encoding UTF8 | ConvertFrom-Json }
 catch { throw "CQ_HOST_PREFLIGHT_A1_OPERATIONAL_TRANSPORT_SELFTEST_JSON" }
 if ($operationalTransportPayload.result -ne "PASS") { throw "CQ_HOST_PREFLIGHT_A1_OPERATIONAL_TRANSPORT_SELFTEST_CONTRACT" }
 $transportStdout = Join-Path $outputRootFull "CQ_HOST_A1_GIT_TRANSPORT_SELFTEST.stdout.txt"
 $transportStderr = Join-Path $outputRootFull "CQ_HOST_A1_GIT_TRANSPORT_SELFTEST.stderr.txt"
 $transportExit = Invoke-CapturedProcess -FilePath $powershellExe -ArgumentList @("-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", (Join-Path $root ".codex\transport\a1_git_transport.ps1"), "-SelfTest") -StdoutPath $transportStdout -StderrPath $transportStderr
 if ($transportExit -ne 0) { throw "CQ_HOST_PREFLIGHT_A1_GIT_TRANSPORT_SELFTEST_EXIT:$($transportExit)" }
-try { $transportPayload = Get-Content -LiteralPath $transportStdout -Raw | ConvertFrom-Json }
+try { $transportPayload = Get-Content -LiteralPath $transportStdout -Raw -Encoding UTF8 | ConvertFrom-Json }
 catch { throw "CQ_HOST_PREFLIGHT_A1_GIT_TRANSPORT_SELFTEST_JSON" }
 if ($transportPayload.result -ne "PASS") { throw "CQ_HOST_PREFLIGHT_A1_GIT_TRANSPORT_SELFTEST_CONTRACT" }
 
@@ -300,6 +349,11 @@ if ($finalHead -ne $head -or $finalTree -ne $tree) {
     throw "CQ_HOST_PREFLIGHT_GIT_IDENTITY_CHANGED_DURING_HOST_VALIDATION"
 }
 
+foreach ($key in $sourcePaths.Keys) {
+    $currentHash = (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $root $sourcePaths[$key])).Hash
+    if ($currentHash -ne $sourceHashes[$key]) { throw "CQ_HOST_PREFLIGHT_SOURCE_CHANGED_DURING_VALIDATION:$key" }
+}
+
 $prEvidence = [ordered]@{ state = "DEFERRED_TO_EXTERNAL_ADJUDICATION"; source = "NONE" }
 $gh = Get-Command "gh.exe" -ErrorAction SilentlyContinue
 if ($gh) { try { $ghRaw = (& $gh.Source pr view 115 --repo Guimarais-R-Rodrigo/Ambiente_Databricks --json state,isDraft,mergedAt,headRefName,headRefOid 2>$null); if ($LASTEXITCODE -eq 0 -and $ghRaw) { $parsed = $ghRaw | ConvertFrom-Json; $prEvidence = [ordered]@{ state="OBSERVED_HOST_GH"; source="gh"; pr_state=$parsed.state; draft=$parsed.isDraft; merged_at=$parsed.mergedAt; head_ref=$parsed.headRefName; head_sha=$parsed.headRefOid } } } catch {} }
@@ -308,12 +362,14 @@ $payload = [ordered]@{
     schema_version = "AC-R2-CLI-HOST-PREFLIGHT-1"
     result = "PASS"
     client_surface = "CODEX_CLI_WINDOWS_TUI"
+    run_id = $runId
+    launch_ready_path = $readyPath
     recorded_at = $recordedAt.ToString("o")
     recorded_at_unix_seconds = $recordedAt.ToUnixTimeSeconds()
     git = [ordered]@{ root=$root; checkout_mode=$checkoutMode; git_dir=$gitDir; git_common_dir=$gitCommonDir; branch=$branch; head=$head; tree=$tree; final_head=$finalHead; final_tree=$finalTree; origin_identity=$ExpectedRepoFragment; origin_tracking_ref=$originHead; fetch="PASS"; initial_clean=$true; final_clean=$true }
     python = [ordered]@{ executable=$python.executable; python_version=$python.python_version; implementation=$python.implementation; jsonschema_version=$python.jsonschema_version; execution_surface="HOST_ONLY" }
     project = [ordered]@{ config_path=$projectConfig; config_sha256=$sourceHashes.config; user_config_exists=$userConfigExists; user_config_sha256=$userConfigSha256; validator_git_mode="100755"; validator_blob=$validatorBlob }
-    codex_cli = [ordered]@{ executable=$codexCli; version=$codexVersion; launcher="EXPLICIT_APPDATA_NPM_CODEX_CMD" }
+    codex_cli = [ordered]@{ executable=$codexCli; version=$codexVersion; launcher="EXPLICIT_APPDATA_NPM_CODEX_CMD"; launcher_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $codexCli).Hash }
     source_sha256 = $sourceHashes
     host_validation = [ordered]@{
         validator = [ordered]@{ exit_code=$validatorExit; status=$validatorPayload.status; schema_version=$validatorPayload.schema_version; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $validatorStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $validatorStderr).Hash }
@@ -360,6 +416,8 @@ $promptTemplatePath = Join-Path $root "docs\operations\CODEX_CLI_CQ_RUN_PROMPT_T
 $request = [ordered]@{
     schema_version = "SER-CODEX-CLI-CQ-REQUEST-1"
     client_surface = "CODEX_CLI_WINDOWS_TUI"
+    run_id = $runId
+    launch_ready_path = $readyPath
     checkout_mode = $checkoutMode
     branch = $branch
     candidate_head = $head
@@ -371,6 +429,7 @@ $request = [ordered]@{
     validator_git_mode = "100755"
     validator_blob = $validatorBlob
     metatest_count = $runtimeTestCount
+    codex_cli = $payload.codex_cli
     network = [ordered]@{ selected_ipv4=$networkProbeIp; port=$NetworkProbePort; host_baseline="PASS"; serialization_selftest="PASS"; offline_runtime_selftest="PASS" }
     tool_surface_policy = [ordered]@{ path="docs/operations/autonomy/CODEX_CLI_TOOL_SURFACE_POLICY.json"; source_sha256=$sourceHashes.tool_surface_policy; schema_version="SER-CODEX-CLI-TOOL-SURFACE-1"; mcp_invocation="DENY_EXTERNAL_SURFACES_ALLOW_INTERNAL_NODE_REPL"; absent_probeable_surface="NOT_APPLICABLE_ABSENT" }
     hook_trust = [ordered]@{
@@ -382,7 +441,7 @@ $request = [ordered]@{
 }
 $requestJson = $request | ConvertTo-Json -Depth 10
 Write-Utf8NoBom $requestPath $requestJson
-try { $requestRoundtrip = Get-Content -LiteralPath $requestPath -Raw | ConvertFrom-Json -ErrorAction Stop }
+try { $requestRoundtrip = Get-Content -LiteralPath $requestPath -Raw -Encoding UTF8 | ConvertFrom-Json -ErrorAction Stop }
 catch { throw "CQ_HOST_PREFLIGHT_RUN_REQUEST_INVALID_JSON" }
 if (
     $requestRoundtrip.schema_version -ne "SER-CODEX-CLI-CQ-REQUEST-1" -or
@@ -394,11 +453,19 @@ if (
 $requestSha = (Get-FileHash -Algorithm SHA256 -LiteralPath $requestPath).Hash
 Write-Utf8NoBom $requestShaPath ($requestSha + "  CQ_RUN_REQUEST.json" + [Environment]::NewLine)
 
-$promptTemplate = Get-Content -LiteralPath $promptTemplatePath -Raw
-$renderedPrompt = $promptTemplate.Replace("{{REQUEST_PATH}}",$requestPath).Replace("{{REQUEST_SHA256}}",$requestSha).Replace("{{EVIDENCE_SHA256}}",$sha).Replace("{{BRANCH}}",$branch).Replace("{{HEAD}}",$head).Replace("{{TREE}}",$tree).Replace("{{VALIDATOR_SCHEMA}}",[string]$validatorPayload.schema_version).Replace("{{METATEST_COUNT}}",[string]$runtimeTestCount).Replace("{{PREFLIGHT_SCHEMA}}","AC-R2-CLI-HOST-PREFLIGHT-1").Replace("{{HOOKS_SHA256}}",$sourceHashes.hooks).Replace("{{SURFACE_POLICY_SHA256}}",$sourceHashes.tool_surface_policy).Replace("{{CODEX_CLI_VERSION}}",$codexVersion)
+$promptTemplate = Get-Content -LiteralPath $promptTemplatePath -Raw -Encoding UTF8
+$renderedPrompt = $promptTemplate.Replace("{{REQUEST_PATH}}",$requestPath).Replace("{{REQUEST_SHA256}}",$requestSha).Replace("{{EVIDENCE_SHA256}}",$sha).Replace("{{BRANCH}}",$branch).Replace("{{HEAD}}",$head).Replace("{{TREE}}",$tree).Replace("{{VALIDATOR_SCHEMA}}",[string]$validatorPayload.schema_version).Replace("{{METATEST_COUNT}}",[string]$runtimeTestCount).Replace("{{PREFLIGHT_SCHEMA}}","AC-R2-CLI-HOST-PREFLIGHT-1").Replace("{{HOOKS_SHA256}}",$sourceHashes.hooks).Replace("{{SURFACE_POLICY_SHA256}}",$sourceHashes.tool_surface_policy).Replace("{{CODEX_CLI_VERSION}}",$codexVersion).Replace("{{READY_PATH}}",$readyPath)
 if ($renderedPrompt -match "\{\{[A-Z0-9_]+\}\}") { throw "CQ_HOST_PREFLIGHT_PROMPT_TEMPLATE_UNRESOLVED" }
 Write-Utf8NoBom $promptPath $renderedPrompt
 $promptSha = (Get-FileHash -Algorithm SHA256 -LiteralPath $promptPath).Hash
+$ready.result = "PASS"
+$ready['recorded_at_unix_seconds'] = $payload.recorded_at_unix_seconds
+$ready['head'] = $head
+$ready['tree'] = $tree
+$ready['request_sha256'] = $requestSha
+$ready['evidence_sha256'] = $sha
+$ready['prompt_sha256'] = $promptSha
+Write-Utf8NoBom $readyPath ($ready | ConvertTo-Json -Depth 6)
 Write-Host "CQ_HOST_PREFLIGHT = PASS"
 Write-Host "HOST_VALIDATOR = PASS"
 Write-Host "HOST_METATESTS = PASS ($runtimeTestCount/$staticTestCount)"
@@ -428,3 +495,17 @@ Write-Host "CQ_RUN_PROMPT_SHA256 = $promptSha"
 Write-Host "PROJECT_HOOKS_SHA256 = $($sourceHashes.hooks)"
 Write-Host "HOOK_TRUST_REVIEW_REQUIRED = true"
 Write-Host "CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST"
+
+}
+catch {
+    $ready.result = "FAIL"
+    $ready['error'] = [string]$_.Exception.Message
+    Write-Utf8NoBom $readyPath ($ready | ConvertTo-Json -Depth 6)
+    Write-Host "CQ_LAUNCH_READY = FAIL; do not reuse a previous CQ_RUN_PROMPT.md"
+    throw
+}
+finally {
+    if ($null -eq $previousPythonEncoding) {
+        Remove-Item Env:PYTHONIOENCODING -ErrorAction SilentlyContinue
+    } else { $env:PYTHONIOENCODING = $previousPythonEncoding }
+}

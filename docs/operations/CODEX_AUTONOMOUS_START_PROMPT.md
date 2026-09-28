@@ -43,6 +43,8 @@ O preflight grava `CQ_HOST_PREFLIGHT.json`, `CQ_RUN_REQUEST.json` e `CQ_RUN_PROM
 
 ## 3. Trust dos hooks no mesmo standalone
 
+`PROJECT_HOOK_TRUST = REQUIRED_FOR_CURRENT_HASH`. Revisar a definição e os scripts atuais; o preflight não concede trust e nenhum launcher pode fazê-lo pelo usuário.
+
 Inicie o executável explicitamente bound pelo preflight; nesta máquina:
 
 ```powershell
@@ -60,3 +62,11 @@ Não use o Codex Desktop para este CQ.
 ## 5. Encerramento
 
 Traga o bundle externo de evidências para adjudicação. CQ verde para em `CONTROLLER_MAINTENANCE`; não remove blocker e não autoriza B1 material, A2, G6/Genie/Databricks, promoção, Ready ou merge.
+
+## Retomada assistida no PC
+
+O script externo `RETOMAR_CQ.ps1` entregue com o freeze sincroniza somente os dois checkouts conhecidos por fast-forward, executa o preflight e verifica os hashes antes da revisão humana. Depois da revisão em `/hooks`, exige confirmação explícita `HOOKS_REVISADOS` e abre uma sessão CLI/TUI nova que lê `CQ_RUN_PROMPT.md` pelo caminho e SHA. Não é necessário copiar o prompt pelo clipboard nem retornar ao ChatGPT apenas para confirmar uma saída host verde.
+
+`CQ_LAUNCH_READY.json` é marcador técnico da última tentativa host: `IN_PROGRESS`/`FAIL` nunca libera o prompt antigo; `PASS` atesta somente `HOST_PREFLIGHT_ONLY`. Ele não é trust, autorização, assinatura ou resultado CQ. Request/evidence/marker devem compartilhar `run_id`; source hashes, launcher e freshness continuam obrigatórios.
+
+O helper não corrige erros por retry. Somente expiração da freshness durante a revisão humana permite regeneração única por essa causa. Em falha, um ZIP com logs restritos e diagnóstico é preparado fora do repositório; revisar antes de compartilhar. Não coleta auth.json, user config, chat history ou variáveis de ambiente. O helper não envia arquivos nem concede B1 material/A2/Ready/merge. O bundle final do CQ continua exigindo adjudicação.

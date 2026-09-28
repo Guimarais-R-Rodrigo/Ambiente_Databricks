@@ -14,7 +14,7 @@ BLOCKED_NON_MCP = {
 
 
 def decision(tool_name: str) -> str:
-    if tool_name.startswith("mcp__node_repl__"):
+    if tool_name.startswith("mcp__node_repl__") and len(tool_name) > len("mcp__node_repl__"):
         return "ALLOW_INTERNAL_NODE_REPL"
     if tool_name.startswith(("codex_app", "cua_repl", "codex_tui")):
         return "DENY"
@@ -31,10 +31,6 @@ def deny(tool_name: str, reason: str) -> dict:
             "hookEventName": "PreToolUse",
             "permissionDecision": "deny",
             "permissionDecisionReason": reason,
-        },
-        "ser_controller": {
-            "tool_name": tool_name,
-            "policy": "DENY_EXTERNAL_SURFACES_ALLOW_INTERNAL_NODE_REPL",
         },
     }
 
@@ -60,6 +56,10 @@ def main() -> int:
         )
         for name in denied_names:
             assert decision(name) == "DENY"
+        payload = deny("mcp__example__read", "synthetic denial")
+        assert set(payload) == {"hookSpecificOutput"}
+        assert payload["hookSpecificOutput"]["permissionDecision"] == "deny"
+        assert json.loads(json.dumps(payload)) == payload
         print(json.dumps({
             "schema_version": "SER-CODEX-EXTERNAL-SURFACE-GUARD-SELFTEST-1",
             "result": "PASS",
@@ -70,7 +70,11 @@ def main() -> int:
 
     try:
         event = json.load(sys.stdin)
-        tool_name = str(event.get("tool_name") or "")
+        if not isinstance(event, dict):
+            raise ValueError("hook input must be an object")
+        tool_name = event.get("tool_name")
+        if not isinstance(tool_name, str) or not tool_name.strip():
+            raise ValueError("tool_name must be a nonempty string")
     except Exception:
         print(json.dumps(deny("<unparseable>", "SER controller surface guard could not parse hook input")))
         return 0

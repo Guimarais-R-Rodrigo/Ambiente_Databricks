@@ -23,17 +23,18 @@ function Ignored([string]$Path) {
     $n=Normalize $Path
     return ($n -match '(^|/)(__pycache__|\.pytest_cache|\.mypy_cache|\.ruff_cache)(/|$)' -or $n -match '\.(pyc|pyo)$')
 }
-function Block([string]$Reason) { @{decision="block";reason=$Reason}|ConvertTo-Json -Compress|Write-Output }
-function Git-Lines([string[]]$Args,[string]$Failure) {
-    $lines=@(& git @Args 2>$null)
+function Block([string]$Reason) { [Console]::Out.WriteLine((@{decision="block";reason=$Reason}|ConvertTo-Json -Compress)) }
+function Git-Lines([string[]]$GitArguments,[string]$Failure) {
+    $lines=@(& git @GitArguments 2>$null)
     if($LASTEXITCODE -ne 0){ Block $Failure; exit 0 }
     return $lines
 }
 
+try {
 $rootText=(& git rev-parse --show-toplevel 2>$null)
 if($LASTEXITCODE -ne 0 -or -not $rootText){ Block "A1 post-scope guard cannot resolve repository root"; exit 0 }
 $root=[IO.Path]::GetFullPath(($rootText|Select-Object -First 1).Trim())
-$scope=(Get-Content -Raw (Join-Path $root "docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json")|ConvertFrom-Json).repo_scope
+$scope=(Get-Content -Encoding UTF8 -Raw (Join-Path $root "docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json")|ConvertFrom-Json).repo_scope
 
 if($SelfTest){
     $journal="docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl"
@@ -55,3 +56,9 @@ foreach($p in $paths){
     if($c -ne "ALLOWED_A1"){$violations += "$p=$c"}
 }
 if($violations.Count -gt 0){ Block ("A1 worktree scope violation after tool use: " + ($violations -join ", ")) }
+}
+catch {
+    if ($SelfTest) { throw }
+    Block "A1 post-scope guard git inspection failed or envelope is unreadable"
+    exit 0
+}

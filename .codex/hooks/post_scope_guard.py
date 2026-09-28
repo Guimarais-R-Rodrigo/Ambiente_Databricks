@@ -57,23 +57,27 @@ def git_lines(repo: Path, *args: str) -> list[str]:
 
 
 try:
-    json.load(sys.stdin)
-except Exception:
-    block("A1 post-scope guard cannot parse hook input")
+    try:
+        json.load(sys.stdin)
+    except Exception:
+        block("A1 post-scope guard cannot parse hook input")
 
-repo = root()
-try:
-    scope = json.loads((repo / "docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json").read_text(encoding="utf-8"))["repo_scope"]
-except Exception:
-    block("A1 post-scope guard cannot load autonomy envelope")
+    repo = root()
+    try:
+        scope = json.loads((repo / "docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json").read_text(encoding="utf-8"))["repo_scope"]
+    except Exception:
+        block("A1 post-scope guard cannot load autonomy envelope")
 
-paths = set(git_lines(repo, "diff", "--name-only", "HEAD"))
-paths.update(git_lines(repo, "diff", "--cached", "--name-only", "HEAD"))
-paths.update(git_lines(repo, "ls-files", "--others", "--exclude-standard"))
-violations = [
-    (path, classify(path, scope))
-    for path in sorted(paths)
-    if not ignored(path) and classify(path, scope) != "ALLOWED_A1"
-]
-if violations:
-    block("A1 worktree scope violation after tool use: " + ", ".join(f"{p}={c}" for p, c in violations))
+    paths = set(git_lines(repo, "diff", "--name-only", "HEAD"))
+    paths.update(git_lines(repo, "diff", "--cached", "--name-only", "HEAD"))
+    paths.update(git_lines(repo, "ls-files", "--others", "--exclude-standard"))
+    violations = [
+        (path, classify(path, scope))
+        for path in sorted(paths)
+        if not ignored(path) and classify(path, scope) != "ALLOWED_A1"
+    ]
+    if violations:
+        block("A1 worktree scope violation after tool use: " + ", ".join(f"{p}={c}" for p, c in violations))
+
+except Exception:
+    block("A1 post-scope guard git inspection failed or input is invalid")

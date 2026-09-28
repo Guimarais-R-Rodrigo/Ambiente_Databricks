@@ -34,8 +34,9 @@ function Get-Root {
     return [IO.Path]::GetFullPath(($rootText | Select-Object -First 1).Trim())
 }
 
+try {
 $root = Get-Root
-$scope = (Get-Content -Raw (Join-Path $root "docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json") | ConvertFrom-Json).repo_scope
+$scope = (Get-Content -Encoding UTF8 -Raw (Join-Path $root "docs/operations/autonomy/B1_AUTONOMY_ENVELOPE.json") | ConvertFrom-Json).repo_scope
 
 if ($SelfTest) {
     $journal = "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl"
@@ -51,7 +52,10 @@ $raw = [Console]::In.ReadToEnd()
 try { $event = $raw | ConvertFrom-Json -ErrorAction Stop }
 catch { Deny "A1 scope guard cannot parse hook input"; exit 0 }
 
-$inputObject = $event.tool_input
+if ($null -eq $event -or $event -isnot [System.Management.Automation.PSCustomObject]) { throw "PRE_SCOPE_INPUT_OBJECT_REQUIRED" }
+$inputProperty = $event.PSObject.Properties["tool_input"]
+if ($null -eq $inputProperty -or $inputProperty.Value -isnot [System.Management.Automation.PSCustomObject]) { throw "PRE_SCOPE_TOOL_INPUT_REQUIRED" }
+$inputObject = $inputProperty.Value
 $paths = New-Object System.Collections.Generic.List[string]
 foreach ($key in @("path","file_path","target_path","target_file")) {
     if ($null -ne $inputObject -and $null -ne $inputObject.PSObject.Properties[$key]) {
@@ -76,3 +80,9 @@ foreach ($p in $paths) {
     if ($c -ne "ALLOWED_A1") { $violations += "$p=$c" }
 }
 if ($violations.Count -gt 0) { Deny ("A1 scope violation: " + ($violations -join ", ")) }
+}
+catch {
+    if ($SelfTest) { throw }
+    Deny "A1 scope guard could not resolve repository, envelope or hook input"
+    exit 0
+}

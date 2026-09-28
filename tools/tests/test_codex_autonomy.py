@@ -3,6 +3,8 @@ from __future__ import annotations
 import ast
 import copy
 import json
+import os
+import sys
 import re
 import subprocess
 import tempfile
@@ -41,6 +43,131 @@ class CodexAutonomyTests(unittest.TestCase):
             "computer_use",
         ):
             self.assertIs(False, features[key], key)
+
+
+    @staticmethod
+    def _wire_is_denial(payload):
+        # Strict subset of the public Codex PreToolUse output contract.
+        # Extra root keys (the former ser_controller metadata) invalidate a denial.
+        if not isinstance(payload, dict) or set(payload) != {"hookSpecificOutput"}:
+            return False
+        nested = payload["hookSpecificOutput"]
+        return (
+            isinstance(nested, dict)
+            and set(nested) == {"hookEventName", "permissionDecision", "permissionDecisionReason"}
+            and nested["hookEventName"] == "PreToolUse"
+            and nested["permissionDecision"] == "deny"
+            and isinstance(nested["permissionDecisionReason"], str)
+            and bool(nested["permissionDecisionReason"].strip())
+        )
+
+    def _invoke_guard_wire(self, script, raw, *, windows=False, cwd=None):
+        if windows:
+            command = ["powershell.exe", "-NoProfile", "-NonInteractive",
+                       "-ExecutionPolicy", "Bypass", "-File", str(ROOT / script)]
+        else:
+            command = [sys.executable, "-I", "-B", str(ROOT / script)]
+        return subprocess.run(
+            command, input=raw, text=True, encoding="utf-8", capture_output=True,
+            cwd=cwd or ROOT, timeout=20, check=False,
+        )
+
+    def _external_wire_cases(self, windows=False):
+        script = ".codex/hooks/external_surface_guard." + ("ps1" if windows else "py")
+        names = (
+            "mcp__codex_app__get_usage_limits", "codex_appget_usage_limits",
+            "codex_tuilist_threads", "cua_repljs", "mcp__example__write",
+            "list_mcp_resources", "list_mcp_resource_templates", "read_mcp_resource",
+            "web__run", "mcp__node_repl__", "MCP__NODE_REPL__js",
+        )
+        for name in names:
+            with self.subTest(windows=windows, tool=name):
+                proc = self._invoke_guard_wire(script, json.dumps({"tool_name": name}), windows=windows)
+                self.assertEqual(0, proc.returncode, proc.stderr)
+                self.assertTrue(self._wire_is_denial(json.loads(proc.stdout)), proc.stdout)
+        for raw in ("not json", "null", "[]", "{}", '"text"', '{"tool_name":42}',
+                    '{"tool_name":[]}', '{"tool_name":""}'):
+            with self.subTest(windows=windows, invalid=raw):
+                proc = self._invoke_guard_wire(script, raw, windows=windows)
+                self.assertEqual(0, proc.returncode, proc.stderr)
+                self.assertTrue(self._wire_is_denial(json.loads(proc.stdout)), proc.stdout)
+        proc = self._invoke_guard_wire(script, '{"tool_name":"mcp__node_repl__js"}', windows=windows)
+        self.assertEqual(0, proc.returncode, proc.stderr)
+        self.assertEqual("", proc.stdout.strip())
+
+    def test_external_guard_python_normal_stdin_emits_valid_wire(self):
+        self._external_wire_cases()
+
+    @unittest.skipUnless(os.name == "nt", "Windows PowerShell must be tested on the host")
+    def test_external_guard_windows_normal_stdin_emits_valid_wire(self):
+        # A missing powershell.exe on Windows is an error, not a skip or a PASS.
+        self._external_wire_cases(windows=True)
+
+    def test_wire_oracle_rejects_legacy_metadata_and_malformed_denials(self):
+        good = {"hookSpecificOutput": {"hookEventName": "PreToolUse",
+                "permissionDecision": "deny", "permissionDecisionReason": "test"}}
+        self.assertTrue(self._wire_is_denial(good))
+        bad = copy.deepcopy(good)
+        bad["ser_controller"] = {"policy": "legacy"}
+        self.assertFalse(self._wire_is_denial(bad))
+        for key in ("hookEventName", "permissionDecision", "permissionDecisionReason"):
+            bad = copy.deepcopy(good)
+            del bad["hookSpecificOutput"][key]
+            self.assertFalse(self._wire_is_denial(bad))
+        bad = copy.deepcopy(good)
+        bad["hookSpecificOutput"]["permissionDecision"] = "allow"
+        self.assertFalse(self._wire_is_denial(bad))
+
+    def _scope_failure_wire_cases(self, windows=False):
+        # Temporary directory is deliberately outside Git. No tool backend, repo
+        # edit or network access is attempted; these are hook subprocesses only.
+        with tempfile.TemporaryDirectory() as directory:
+            for guard in ("pre_scope_guard", "post_scope_guard"):
+                script = ".codex/hooks/" + guard + (".ps1" if windows else ".py")
+                for raw in ("null", "[]", "not json", "{}",
+                            '{"tool_name":"apply_patch","tool_input":{"path":"allowed/x.txt"}}'):
+                    with self.subTest(windows=windows, guard=guard, raw=raw):
+                        proc = self._invoke_guard_wire(script, raw, windows=windows, cwd=directory)
+                        self.assertEqual(0, proc.returncode, proc.stderr)
+                        value = json.loads(proc.stdout)
+                        if guard == "pre_scope_guard":
+                            self.assertTrue(self._wire_is_denial(value), proc.stdout)
+                        else:
+                            self.assertEqual({"decision", "reason"}, set(value))
+                            self.assertEqual("block", value["decision"])
+                            self.assertTrue(value["reason"])
+
+    def test_scope_guards_python_failures_emit_blocking_wire(self):
+        self._scope_failure_wire_cases()
+
+    @unittest.skipUnless(os.name == "nt", "Windows PowerShell must be tested on the host")
+    def test_scope_guards_windows_failures_emit_blocking_wire(self):
+        self._scope_failure_wire_cases(windows=True)
+
+    def test_executor_active_instructions_separate_operational_and_cq_transport(self):
+        agent = val._read_toml(ROOT / ".codex/agents/executor.toml")
+        instructions = agent["developer_instructions"]
+        self.assertIn("a1_operational_git_transport.ps1", instructions)
+        self.assertIn("a1_git_transport.ps1", instructions)
+        self.assertIn("canonical", instructions)
+        self.assertNotIn("host preflight v6", instructions)
+
+    def test_cli_control_source_producer_and_operational_consumer_agree(self):
+        def source_map(path, marker):
+            text = (ROOT / path).read_text(encoding="utf-8")
+            block = text.split(marker, 1)[1].split("\n}", 1)[0]
+            return dict(re.findall(r'(?m)^\s+(\w+)\s*=\s*"([^"\n]+)"\s*$', block))
+        producer = source_map("tools/codex_cli_cq_host_preflight.ps1", "$sourcePaths = [ordered]@{")
+        consumer = source_map(".codex/transport/a1_operational_git_transport.ps1", "$ControlSourcePaths = [ordered]@{")
+        self.assertEqual(producer, consumer)
+
+    def test_generated_prompt_placeholders_have_preflight_producers(self):
+        template = (ROOT / "docs/operations/CODEX_CLI_CQ_RUN_PROMPT_TEMPLATE.md").read_text(encoding="utf-8")
+        preflight = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        required = set(re.findall(r"\{\{([A-Z0-9_]+)\}\}", template))
+        produced = set(re.findall(r'\.Replace\("\{\{([A-Z0-9_]+)\}\}"', preflight))
+        self.assertTrue(required)
+        self.assertEqual(required, produced)
 
     def envelope(self):
         return json.loads(
@@ -232,7 +359,7 @@ class CodexAutonomyTests(unittest.TestCase):
 
     def test_cli_cq3_rejects_instruction_refusal_as_enforcement_proof(self):
         text = (ROOT / "docs/operations/CODEX_RUNTIME_QUALIFICATION.md").read_text(encoding="utf-8")
-        self.assertIn("Recusa por instrução não conta como PASS", text)
+        self.assertIn("Recusa por instrução não conta como PASS", " ".join(text.split()))
         self.assertIn("CQ3_EXECUTOR_PERMISSION_PROBES", text)
         self.assertIn("CQ3_A1_POSITIVE_PROBE", text)
 
@@ -1088,7 +1215,7 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("HOOK_JSON_DUPLICATE_SOURCE_FORBIDDEN", text)
         self.assertIn("CODEX_AUTONOMOUS_START_PROMPT_PREMATURE_READY_PASS", text)
         self.assertIn("CODEX_AUTONOMOUS_PROTOCOL_STABILIZATION_DRIFT", text)
-        self.assertIn("DESKTOP_WINDOWS_CQ_PREMATURE_READY_PASS", text)
+        self.assertIn("DESKTOP_WINDOWS_CQ_NOT_MARKED_HISTORICAL", text)
 
     def test_operational_policy_separates_cq_from_multi_commit_operation(self):
         payload = json.loads(
@@ -1279,7 +1406,7 @@ class CodexAutonomyTests(unittest.TestCase):
 
     def test_validator_uses_current_external_surface_contract_name(self):
         text = (ROOT / "tools/validate_codex_autonomy.py").read_text(encoding="utf-8")
-        self.assertIn("EXTERNAL_SURFACE_PRETOOL_GUARD", text)
+        self.assertIn("HOOK_EXTERNAL_SURFACE_MATCHER_MISMATCH", text)
         self.assertNotIn("MCP_PRETOOL_GUARD", text)
 
     def test_claude_uses_progressive_changelog_disclosure(self):

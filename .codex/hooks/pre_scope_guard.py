@@ -56,28 +56,32 @@ def classify(path: str, scope: dict) -> str:
 
 
 try:
-    event = json.load(sys.stdin)
+    try:
+        event = json.load(sys.stdin)
+    except Exception:
+        deny("A1 scope guard cannot parse hook input")
+
+    tool_input = event.get("tool_input") or {}
+    paths: list[str] = []
+    for key in ("path", "file_path", "target_path", "target_file"):
+        value = tool_input.get(key)
+        if isinstance(value, str) and value.strip():
+            paths.append(value.strip())
+
+    command = str(tool_input.get("command") or "")
+    for pattern in (
+        r"(?m)^\*\*\*\s+(?:Add|Update|Delete) File:\s*(.+?)\s*$",
+        r"(?m)^\*\*\*\s+Move to:\s*(.+?)\s*$",
+    ):
+        paths.extend(match.group(1).strip() for match in re.finditer(pattern, command))
+
+    if not paths:
+        deny("A1 scope guard could not resolve target path for tool " + str(event.get("tool_name") or ""))
+
+    scope = load_scope(root())
+    violations = [(path, classify(path, scope)) for path in paths if classify(path, scope) != "ALLOWED_A1"]
+    if violations:
+        deny("A1 scope violation: " + ", ".join(f"{path}={category}" for path, category in violations))
+
 except Exception:
-    deny("A1 scope guard cannot parse hook input")
-
-tool_input = event.get("tool_input") or {}
-paths: list[str] = []
-for key in ("path", "file_path", "target_path", "target_file"):
-    value = tool_input.get(key)
-    if isinstance(value, str) and value.strip():
-        paths.append(value.strip())
-
-command = str(tool_input.get("command") or "")
-for pattern in (
-    r"(?m)^\*\*\*\s+(?:Add|Update|Delete) File:\s*(.+?)\s*$",
-    r"(?m)^\*\*\*\s+Move to:\s*(.+?)\s*$",
-):
-    paths.extend(match.group(1).strip() for match in re.finditer(pattern, command))
-
-if not paths:
-    deny("A1 scope guard could not resolve target path for tool " + str(event.get("tool_name") or ""))
-
-scope = load_scope(root())
-violations = [(path, classify(path, scope)) for path in paths if classify(path, scope) != "ALLOWED_A1"]
-if violations:
-    deny("A1 scope violation: " + ", ".join(f"{path}={category}" for path, category in violations))
+    deny("A1 scope guard failed to inspect hook input or repository")

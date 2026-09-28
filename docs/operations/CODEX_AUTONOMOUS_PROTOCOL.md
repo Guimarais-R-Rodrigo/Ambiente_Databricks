@@ -31,6 +31,8 @@ Antes de B1 material, executar `CODEX_RUNTIME_QUALIFICATION.md`. No Windows, o r
 
 O Codex Desktop é `UNQUALIFIED_FOR_CONTROLLER`: duas execuções CQ em 2026-09-27 mostraram uma superfície `codex_app` proibida alcançando o backend apesar de project hooks ativos e confiados. O antigo Desktop host preflight v6 e `CODEX_DESKTOP_TOOL_SURFACE_POLICY.json` permanecem apenas como histórico de diagnóstico; não são rota de qualificação.
 
+Errata causal de 2026-09-28: a saída JSON do guard externo continha a propriedade raiz `ser_controller`, rejeitada pelo schema oficial `PreToolUse` nas versões 0.157.1 e 0.158.0-alpha.2.1. A incompatibilidade foi reproduzida offline. Os dois SECURITY_STOP permanecem válidos, mas não provam uma falha exclusiva do Desktop sem trace de dispatch. A migração aprovada para CLI permanece; nenhum cliente foi requalificado por esta correção.
+
 O runtime do controller usa **standalone checkout** dedicado. Linked Git worktree não é um substrate aceito no Codex 0.157.1 porque a descoberta de hooks substitui as declarações locais pelas do root checkout; preflight e transportes falham fechados se `git-dir`/`git-common-dir` não forem os metadados do próprio checkout. O root checkout de outra branch nunca é modificado para satisfazer essa pré-condição.
 
 AC-R2 usa permission profiles:
@@ -141,7 +143,7 @@ O executor pode alterar apenas os arquivos concretos do envelope. O journal
 reprova escrita fora de A1, origem/destino de rename indevido, delete protegido,
 symlink, reescrita de histórico e transição inválida do live state.
 
-O executor não escreve `.git` e não possui command network. Commit/push usam
+O executor não escreve `.git` e não possui command network. Na qualificação CQ, commit/push usam
 exclusivamente:
 
 ```text

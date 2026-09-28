@@ -485,8 +485,10 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "AccessDenied",
             "10013",
         )
-        if any(token not in cli_text for token in required_cli_tokens):
+        missing_cli_tokens = [token for token in required_cli_tokens if token not in cli_text]
+        if missing_cli_tokens:
             issues.append("CLI_WINDOWS_CQ_CONTRACT_INVALID")
+            issues.extend("CLI_WINDOWS_CQ_MISSING_TOKEN:" + token for token in missing_cli_tokens)
     else:
         issues.append("CLI_WINDOWS_CQ_CONTRACT_MISSING")
 
@@ -506,8 +508,10 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST",
             "CHECKOUT_MODE = STANDALONE",
         )
-        if any(token not in cli_preflight_text for token in required_cli_preflight_tokens):
+        missing_preflight_tokens = [token for token in required_cli_preflight_tokens if token not in cli_preflight_text]
+        if missing_preflight_tokens:
             issues.append("CLI_WINDOWS_HOST_PREFLIGHT_INVALID")
+            issues.extend("CLI_WINDOWS_HOST_PREFLIGHT_MISSING_TOKEN:" + token for token in missing_preflight_tokens)
         if "CODEX_DESKTOP_WINDOWS" in cli_preflight_text:
             issues.append("CLI_WINDOWS_HOST_PREFLIGHT_DESKTOP_SURFACE_LEAK")
     else:

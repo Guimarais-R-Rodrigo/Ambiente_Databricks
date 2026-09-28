@@ -33,8 +33,8 @@ matcher = "apply_patch|Edit|Write"
 
 [[hooks.PreToolUse.hooks]]
 type = "command"
-command = "python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/pre_scope_guard.py\""
-command_windows = "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$r=(git rev-parse --show-toplevel).Trim(); & (Join-Path $r '.codex\\hooks\\pre_scope_guard.ps1')\""
+command = "python3 -I -B \"$(git rev-parse --show-toplevel)/.codex/hooks/pre_scope_guard.py\""
+command_windows = "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"$r=(git rev-parse --show-toplevel).Trim(); & (Join-Path $r '.codex\\hooks\\pre_scope_guard.ps1')\""
 timeout = 10
 statusMessage = "Checking A1 write scope"
 
@@ -43,8 +43,8 @@ matcher = "^(mcp__.*|codex_app.*|cua_repl.*|codex_tui.*|list_mcp_resources|list_
 
 [[hooks.PreToolUse.hooks]]
 type = "command"
-command = "python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/external_surface_guard.py\""
-command_windows = "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$r=(git rev-parse --show-toplevel).Trim(); & (Join-Path $r '.codex\\hooks\\external_surface_guard.ps1')\""
+command = "python3 -I -B \"$(git rev-parse --show-toplevel)/.codex/hooks/external_surface_guard.py\""
+command_windows = "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"$r=(git rev-parse --show-toplevel).Trim(); & (Join-Path $r '.codex\\hooks\\external_surface_guard.ps1')\""
 timeout = 10
 statusMessage = "Enforcing SER external tool boundary"
 
@@ -53,8 +53,8 @@ matcher = "Bash|apply_patch|Edit|Write"
 
 [[hooks.PostToolUse.hooks]]
 type = "command"
-command = "python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/post_scope_guard.py\""
-command_windows = "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command \"$r=(git rev-parse --show-toplevel).Trim(); & (Join-Path $r '.codex\\hooks\\post_scope_guard.ps1')\""
+command = "python3 -I -B \"$(git rev-parse --show-toplevel)/.codex/hooks/post_scope_guard.py\""
+command_windows = "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"$r=(git rev-parse --show-toplevel).Trim(); & (Join-Path $r '.codex\\hooks\\post_scope_guard.ps1')\""
 timeout = 10
 statusMessage = "Verifying A1 worktree scope"
 

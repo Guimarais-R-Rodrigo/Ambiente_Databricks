@@ -5,6 +5,8 @@ Client surface: `CODEX_CLI_WINDOWS_TUI`.
 
 The Codex Desktop runtime is `UNQUALIFIED_FOR_CONTROLLER`. Two CQ attempts on 2026-09-27 demonstrated that a `mcp__codex_app__get_usage_limits` call could reach the client backend even with project `PreToolUse` hooks installed, active and trusted. Do not qualify the controller in Desktop by relaxing this invariant.
 
+Audit clarification (2026-09-28): the earlier external guard emitted an unsupported top-level `ser_controller` field. This independently invalidates its PreToolUse JSON response in both inspected Codex versions. The observed SECURITY_STOP results do not establish a Desktop-exclusive cause. Desktop remains unqualified; CLI still requires live behavioral CQ.
+
 ## 1. Substrate
 
 - Execute only from the dedicated standalone checkout `C:\b1_runtime\b1_p1_4ba7f551_20260924`.

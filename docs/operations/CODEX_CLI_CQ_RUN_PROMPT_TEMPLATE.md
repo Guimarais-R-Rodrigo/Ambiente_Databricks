@@ -4,7 +4,15 @@ Operate this repository in SER Autonomous Controller Mode.
 
 CLIENT_SURFACE = CODEX_CLI_WINDOWS_TUI
 
-Before any CQ probe, read and verify the machine-generated request:
+Before any CQ probe, read `{{READY_PATH}}` and the machine-generated request.
+Require the ready marker to have schema SER-CQ-LAUNCH-READY-1, result PASS,
+phase HOST_PREFLIGHT_ONLY, the same run_id as request and host evidence, and
+request/evidence SHA256 values equal to the bindings below. IN_PROGRESS, FAIL,
+missing marker or mismatched run IDs mean BLOCKED_STALE_OR_INCOMPLETE_PREFLIGHT;
+do not reuse a prompt from an older successful preflight. Marker PASS is not
+hook trust and not runtime qualification.
+
+Read and verify the machine-generated request:
 
 `{{REQUEST_PATH}}`
 
