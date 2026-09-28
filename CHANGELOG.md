@@ -4705,3 +4705,13 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 - (ChatGPT) CQ standalone em Codex 0.158.0-alpha.2.1 produziu SECURITY_STOP correto: `mcp__codex_app__get_usage_limits` alcançou backend apesar de PreToolUse 2/2 ativo; nenhum write/spawn/Python/Git material ocorreu.
 - (ChatGPT) Causa consolidada: ferramentas dinâmicas do cliente usam nomes hook-facing de namespace achatado (`codex_app...` / `cua_repl...`), enquanto o matcher externo cobria apenas `mcp__.*`. Matcher, guards, policy, validator e metatests agora cobrem ambas as representações, mantendo `mcp__node_repl__*` interno permitido.
 - (ChatGPT) Nenhuma alteração de authority envelope, A1 write roots, A2, permission profiles, produto, G6, promoção, Ready ou merge.
+
+
+## 2026-09-27 — controller runtime migra de Desktop para CLI/TUI (ChatGPT)
+
+### Corrigido
+
+- (ChatGPT) Após dois SECURITY_STOP independentes no Codex Desktop, ambos com `mcp__codex_app__get_usage_limits` alcançando backend apesar de hooks trusted/active, o Desktop foi desqualificado como runtime do Autonomous Controller.
+- (ChatGPT) Runtime canônico Windows passa a ser Codex CLI/TUI em standalone checkout, com host preflight `AC-R2-CLI-HOST-PREFLIGHT-1`, request `SER-CODEX-CLI-CQ-REQUEST-1`, policy `SER-CODEX-CLI-TOOL-SURFACE-1` e launcher explícito `%APPDATA%\npm\codex.cmd`.
+- (ChatGPT) Features apps/plugins/connectors/browser/computer-use foram explicitamente desabilitadas no projeto; `codex_tui*` entrou no guard externo. Authority envelope, 10 A1 write roots, A2 e policy de produto permanecem inalterados.
+- (ChatGPT) O preflight Desktop antigo agora falha imediatamente e não pode emitir nova evidência qualificante. Evidência e transportes A1 passam a exigir o schema CLI.

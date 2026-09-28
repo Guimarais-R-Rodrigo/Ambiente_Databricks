@@ -3,13 +3,14 @@
   "purpose": "Deterministic CQ classification of Codex Desktop tool surfaces. Presence, trust, authority and invocation are separate decisions.",
   "enforcement": {
     "project_hook": ".codex/hooks/external_surface_guard.ps1",
-    "matcher": "^(mcp__.*|codex_app.*|cua_repl.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$",
+    "matcher": "^(mcp__.*|codex_app.*|cua_repl.*|codex_tui.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$",
     "policy": "DENY_EXTERNAL_SURFACES_ALLOW_INTERNAL_NODE_REPL",
     "failure_mode": "FAIL_CLOSED_FOR_MATCHED_SURFACES",
     "hook_trust": "HUMAN_REVIEW_CURRENT_HASH_REQUIRED_BEFORE_CQ",
     "dynamic_hook_name_prefixes": [
       "codex_app",
-      "cua_repl"
+      "cua_repl",
+      "codex_tui"
     ],
     "runtime_compatibility_note": "Codex 0.158 dynamic client tools can expose mcp__-style model names while PreToolUse matcher input uses a flattened dynamic namespace such as codex_app... or cua_repl...."
   },
@@ -95,5 +96,7 @@
     "https://learn.chatgpt.com/docs/hooks",
     "https://learn.chatgpt.com/docs/browser?surface=app",
     "https://learn.chatgpt.com/docs/sandboxing"
-  ]
+  ],
+  "controller_runtime_status": "UNQUALIFIED_AFTER_REPEATED_BACKEND_REACH",
+  "superseded_by": "docs/operations/autonomy/CODEX_CLI_TOOL_SURFACE_POLICY.json"
 }

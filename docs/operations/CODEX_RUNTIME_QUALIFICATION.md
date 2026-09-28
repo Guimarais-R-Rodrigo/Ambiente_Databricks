@@ -7,11 +7,9 @@ CQ0–CQ5 prova o runtime real. Não inicia B1 material e não concede A2.
 
 ## Perfil de cliente
 
-Quando a superfície real for **Codex no aplicativo desktop do Windows**, aplicar
-`docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md`. Esse perfil é normativo e
-substitui apenas os detalhes de observabilidade/command resolution que não
-existem de forma uniforme no Desktop; os invariantes de autoridade deste
-documento permanecem obrigatórios.
+No Windows, a superfície canônica é **Codex CLI/TUI** e deve aplicar `docs/operations/CODEX_CLI_WINDOWS_CQ.md`. O executável/versão usados são registrados pelo host preflight `tools/codex_cli_cq_host_preflight.ps1`.
+
+Codex Desktop está `UNQUALIFIED_FOR_CONTROLLER` após duas execuções CQ independentes em 2026-09-27 nas quais uma ferramenta `codex_app` proibida alcançou o backend apesar de hooks project-local ativos e confiados. Não repetir CQ no Desktop e não relaxar a policy para converter esse bypass em PASS.
 
 ## Bootstrap nativo Windows — antes de criar a conversa
 
@@ -21,7 +19,7 @@ para A0 e declara um workspace root externo dedicado:
 
 `~/codex-scratch/Ambiente_Databricks`
 
-Antes de iniciar uma conversa Codex Desktop no Windows nativo, esse diretório
+Antes de iniciar uma sessão Codex CLI/TUI no Windows nativo, esse diretório
 deve existir. Preparação do host, fora do repositório:
 
 ```powershell
@@ -77,7 +75,7 @@ Se o host não conseguir impor o split, FAIL.
 Qualquer live override que amplie a permission mode esperada gera
 `BLOCKED_CONTROLLER_PERMISSION_OVERRIDE`.
 
-Tool surface presence e authority são avaliadas por `docs/operations/autonomy/CODEX_DESKTOP_TOOL_SURFACE_POLICY.json`. Browser/CUA nativo e `mcp__codex_app__*` podem estar presentes sem bloquear por presença. `mcp__node_repl__*` é controle interno de code mode permitido; chamadas aninhadas continuam governadas pelos hooks. Browser/CUA, Codex-app, outros MCP/resources e web não são rotas autorizadas e são cobertos pelo external-surface PreToolUse quando suportado. Qualquer probe MCP proibido que alcance o backend durante CQ gera `SECURITY_STOP`. Uma superfície externa mutadora não classificada continua `BLOCKED_UNAUTHORIZED_REMOTE_TOOL`.
+Tool surface presence e authority são avaliadas por `docs/operations/autonomy/CODEX_CLI_TOOL_SURFACE_POLICY.json`. `mcp__node_repl__*` é controle interno permitido. `codex_tui*` pode estar presente, mas não é rota autorizada; `codex_app`/CUA são superfícies inesperadas e bloqueiam o CQ antes de invocação. Outros MCP/resources e web continuam proibidos. Se uma superfície proibida read-only/probeável estiver carregada, executar exatamente um denial probe; se nenhuma estiver carregada, registrar `FORBIDDEN_SURFACE_PROBE = NOT_APPLICABLE_ABSENT`. Qualquer chamada proibida que alcance backend gera `SECURITY_STOP`.
 
 Hooks de projeto alterados exigem review/trust do hash atual. Se isso estiver pendente, parar antes de CQ0 com `PRE_CQ_HOOK_TRUST_REQUIRED`; não registrar BLOCKED/FAIL CQ.
 
@@ -87,7 +85,7 @@ Hooks de projeto alterados exigem review/trust do hash atual. Se isso estiver pe
 Registrar a versão importável. Ausência => `BLOCKED_CONTROLLER_DEPENDENCY`;
 não ampliar permissões para autorreparar a própria governança.
 
-No Desktop Windows, o host preflight também deve resolver um IPv4 público e
+No CLI/TUI Windows, o host preflight também deve resolver um IPv4 público e
 comprovar uma conexão TCP host-side single-shot ao mesmo IP:porta que será usado
 no CQ3 executor. Esse baseline não prova o sandbox; apenas remove a ambiguidade
 de endpoint indisponível. O executor usa o IP literal do evidence e não faz DNS.
@@ -105,8 +103,7 @@ codex execpolicy check --pretty --rules .codex/rules/a1_git_transport.rules -- \
 A decisão deve ser `prompt`. Variações com script diferente ou forma incompleta
 não podem casar como o transporte autorizado.
 
-No Codex Desktop Windows, a indisponibilidade da CLI não bloqueia por si só;
-seguir CQ1-D e provar o comportamento real do transportador em CQ4-D.
+No Codex CLI/TUI Windows, a CLI é parte do substrate qualificado. O host preflight registra executável e versão; ausência ou falha do binário bound bloqueia antes de CQ0. CQ1 verifica a rule atual e CQ4 prova o transportador real.
 
 ## CQ2 — role definitions
 
@@ -210,7 +207,7 @@ python -B tools/validate_codex_autonomy.py --json
 python -B -m unittest tools.tests.test_codex_autonomy -v
 ```
 
-No Desktop Windows, CQ0.5-D/CQ5-D verificam evidência host-side SHA-bound do preflight v6; Python não é iniciado dentro da sandbox.
+No CLI/TUI Windows, CQ0.5/CQ5 verificam evidência host-side SHA-bound do CLI host preflight v1; Python não é iniciado dentro da sandbox.
 
 A cobertura inclui ao menos:
 - permission-profile <-> envelope;

@@ -1,17 +1,26 @@
 # Prompt inicial — Codex Autonomous Controller
 
-Para Codex Desktop Windows, **não montar manualmente HEAD/tree/hash em chat**.
+Runtime canônico no Windows: **Codex CLI/TUI**, nunca Codex Desktop.
 
-O controller/CQ deve executar em **standalone checkout** dedicado da branch B1. Linked Git worktree é incompatível com este runtime: no Codex CLI 0.157.1 a descoberta de hooks de um linked worktree usa a configuração de hooks do root checkout, que pode pertencer a outra branch. Não copiar hooks para o root checkout e não usar bypass.
+O Desktop foi desqualificado para o controller após duas execuções CQ independentes em que uma superfície `codex_app` proibida alcançou o backend apesar de hooks project-local ativos e confiados. Não relaxar a policy para contornar esse resultado.
 
-1. No standalone checkout dedicado, executar:
+## 1. Checkout
+
+Use somente o standalone checkout:
 
 ```powershell
 Set-Location "C:\b1_runtime\b1_p1_4ba7f551_20260924"
-powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .\tools\codex_desktop_cq_host_preflight.ps1
 ```
 
-2. Só continuar se a saída contiver simultaneamente:
+Linked worktree continua proibido.
+
+## 2. Fresh CLI host preflight
+
+```powershell
+powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .\tools\codex_cli_cq_host_preflight.ps1
+```
+
+Só continuar se aparecerem simultaneamente:
 
 ```text
 CQ_HOST_PREFLIGHT = PASS
@@ -19,27 +28,35 @@ HOST_VALIDATOR = PASS
 HOST_METATESTS = PASS
 NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS
 NETWORK_PROBE_OFFLINE_RUNTIME_SELFTEST = PASS
-MCP_GUARD_SELFTEST = PASS
+EXTERNAL_SURFACE_GUARD_SELFTEST = PASS
 SCOPE_GUARDS_SELFTEST = PASS
 A1_GIT_TRANSPORT_SELFTEST = PASS
+A1_OPERATIONAL_TRANSPORT_SELFTEST = PASS
 HOST_NETWORK_BASELINE = PASS
 CHECKOUT_MODE = STANDALONE
+CLIENT_SURFACE = CODEX_CLI_WINDOWS_TUI
 HOOK_TRUST_REVIEW_REQUIRED = true
 CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST
 ```
 
-3. O preflight v6 grava no scratch:
+O preflight grava `CQ_HOST_PREFLIGHT.json`, `CQ_RUN_REQUEST.json` e `CQ_RUN_PROMPT.md` no scratch externo.
 
-- `CQ_HOST_PREFLIGHT.json` + sidecar SHA256;
-- `CQ_RUN_REQUEST.json` + sidecar SHA256;
-- `CQ_RUN_PROMPT.md`.
+## 3. Trust dos hooks no mesmo standalone
 
-4. Antes da conversa CQ, abrir uma sessão Codex local suportada no **mesmo standalone checkout** e usar **`/hooks`** para revisar/confiar os hooks project-local definidos inline em `.codex/config.toml`. O preflight imprime `PROJECT_HOOKS_SHA256`; hooks alterados não devem ser bypassados. Se já estiverem trusted na definição atual, nenhuma ação adicional é necessária.
+Inicie o executável explicitamente bound pelo preflight; nesta máquina:
 
-5. Só depois do trust, abrir **uma conversa nova** no Codex Desktop do mesmo standalone checkout/projeto e colar o conteúdo de `CQ_RUN_PROMPT.md`. O prompt manda o Codex validar diretamente o request machine-readable. Não é necessário voltar ao ChatGPT apenas para interpolar hashes.
+```powershell
+& "$env:APPDATA\npm\codex.cmd"
+```
 
-6. Ao final do CQ, trazer o bundle de evidências para adjudicação independente. Se CQ0-CQ5 estiver verde, o CQ para em `CONTROLLER_MAINTENANCE`; não remove blocker e não faz B1 material.
+No TUI execute `/debug-config` e `/hooks`. Exigir a config de projeto do standalone e `PreToolUse 2/2 Active`, `PostToolUse 1/1 Active`. Se houver review pendente, confiar a definição atual. `HOOK_TRUST_REVIEW_REQUIRED = true` não é autorização automática.
 
-Browser/CUA integrado pode aparecer na lista de tools. Sua presença não é blocker. `mcp__node_repl__*` interno pode operar; Browser/CUA, Codex-app, MCP externos/resources e web não são rotas autorizadas. `HOOK_TRUST_REVIEW_REQUIRED` e `PROJECT_HOOK_TRUST` são pré-condições explícitas do handoff.
+## 4. Conversa CQ nova
 
-No B1 material, A2, residual G6, Genie, policy promotion, Ready ou merge é autorizado por este bootstrap.
+Após o trust, saia da sessão usada para revisão e abra uma **nova** sessão CLI/TUI no mesmo standalone. Copie o conteúdo integral de `CQ_RUN_PROMPT.md` e cole nessa nova conversa. No Windows Terminal, prefira `Ctrl+Shift+V` ou botão direito se `Ctrl+V` for interpretado como imagem.
+
+Não use o Codex Desktop para este CQ.
+
+## 5. Encerramento
+
+Traga o bundle externo de evidências para adjudicação. CQ verde para em `CONTROLLER_MAINTENANCE`; não remove blocker e não autoriza B1 material, A2, G6/Genie/Databricks, promoção, Ready ou merge.

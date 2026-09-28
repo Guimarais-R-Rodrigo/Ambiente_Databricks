@@ -14,6 +14,14 @@ sandbox = "elevated"
 [features]
 apps = false
 remote_plugin = false
+plugins = false
+connectors = false
+enable_mcp_apps = false
+codex_apps_mcp_2026_07_28 = false
+browser_use = false
+browser_use_external = false
+browser_use_full_cdp_access = false
+computer_use = false
 multi_agent = true
 goals = true
 hooks = true
@@ -31,7 +39,7 @@ timeout = 10
 statusMessage = "Checking A1 write scope"
 
 [[hooks.PreToolUse]]
-matcher = "^(mcp__.*|codex_app.*|cua_repl.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$"
+matcher = "^(mcp__.*|codex_app.*|cua_repl.*|codex_tui.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$"
 
 [[hooks.PreToolUse.hooks]]
 type = "command"

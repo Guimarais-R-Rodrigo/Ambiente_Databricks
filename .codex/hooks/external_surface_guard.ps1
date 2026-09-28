@@ -11,7 +11,7 @@ $BlockedNonMcp = @(
 
 function Get-SurfaceDecision([string]$ToolName) {
     if ($ToolName -like "mcp__node_repl__*") { return "ALLOW_INTERNAL_NODE_REPL" }
-    if ($ToolName -like "codex_app*" -or $ToolName -like "cua_repl*") { return "DENY" }
+    if ($ToolName -like "codex_app*" -or $ToolName -like "cua_repl*" -or $ToolName -like "codex_tui*") { return "DENY" }
     if ($ToolName -like "mcp__*") { return "DENY" }
     if ($BlockedNonMcp -contains $ToolName) { return "DENY" }
     return "DENY_UNEXPECTED_MATCH"
@@ -39,6 +39,7 @@ if ($SelfTest) {
         "mcp__codex_app__get_usage_limits",
         "codex_appget_usage_limits",
         "codex_app__get_usage_limits",
+        "codex_tuilist_threads",
         "mcp__example__write",
         "list_mcp_resources",
         "read_mcp_resource",

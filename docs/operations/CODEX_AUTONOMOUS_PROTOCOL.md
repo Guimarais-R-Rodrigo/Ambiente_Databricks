@@ -27,10 +27,9 @@ A2 exige referência humana explícita + contrato válido.
 
 ## 2.1 Runtime qualification e bootstrap de autoridade
 
-Antes de B1 material, executar `CODEX_RUNTIME_QUALIFICATION.md`. No aplicativo
-Codex Desktop para Windows, aplicar também
-`CODEX_DESKTOP_WINDOWS_CQ.md` e exigir o host preflight SHA-bound produzido por
-`tools/codex_desktop_cq_host_preflight.ps1`.
+Antes de B1 material, executar `CODEX_RUNTIME_QUALIFICATION.md`. No Windows, o runtime canônico do controller é **Codex CLI/TUI** no standalone checkout. Aplicar `CODEX_CLI_WINDOWS_CQ.md` e exigir o CLI host preflight v1 SHA-bound produzido por `tools/codex_cli_cq_host_preflight.ps1`.
+
+O Codex Desktop é `UNQUALIFIED_FOR_CONTROLLER`: duas execuções CQ em 2026-09-27 mostraram uma superfície `codex_app` proibida alcançando o backend apesar de project hooks ativos e confiados. O antigo Desktop host preflight v6 e `CODEX_DESKTOP_TOOL_SURFACE_POLICY.json` permanecem apenas como histórico de diagnóstico; não são rota de qualificação.
 
 O runtime do controller usa **standalone checkout** dedicado. Linked Git worktree não é um substrate aceito no Codex 0.157.1 porque a descoberta de hooks substitui as declarações locais pelas do root checkout; preflight e transportes falham fechados se `git-dir`/`git-common-dir` não forem os metadados do próprio checkout. O root checkout de outra branch nunca é modificado para satisfazer essa pré-condição.
 
@@ -57,15 +56,11 @@ não muda permission profiles nem autoridade normal e não pode ser usada fora d
 CONTROLLER_RUNTIME_QUALIFICATION. Metadata declarativa do role não substitui
 enforcement comportamental.
 
-No CQ3 Desktop, command-network é provado por `.codex/probes/cq3_executor_network_probe.ps1`, source-SHA-bound pelo host preflight v6. Antes de qualquer baseline/retry de CQ, o host executa `-SelfTest` no mesmo Windows PowerShell: três payloads sintéticos, JSON round-trip e zero network attempts. O script runtime reutiliza o IPv4:443 previamente validado no host, faz um único TCP raw BeginConnect/EndConnect e não usa DNS/HTTP/TLS/auth na sandbox. AccessDenied/10013 é denial; conexão bem-sucedida prova network boundary aberta; demais erros ficam NOT_PROVEN.
+No CQ3 CLI/TUI, command-network é provado por `.codex/probes/cq3_executor_network_probe.ps1`, source-SHA-bound pelo CLI host preflight v1. Antes de qualquer baseline/retry de CQ, o host executa `-SelfTest` no mesmo Windows PowerShell: três payloads sintéticos, JSON round-trip e zero network attempts. O script runtime reutiliza o IPv4:443 previamente validado no host, faz um único TCP raw BeginConnect/EndConnect e não usa DNS/HTTP/TLS/auth na sandbox. AccessDenied/10013 é denial; conexão bem-sucedida prova network boundary aberta; demais erros ficam NOT_PROVEN.
 
-No Desktop, ausência da CLI Codex, de credenciais Git dentro da sandbox ou do
-nome nominal do permission profile não é automaticamente equivalente a falha.
-O contrato Desktop usa host preflight v6 para identidade e CQ0.5/CQ5 repo-side; Python roda somente no host. CQ3/CQ4 continuam provas comportamentais obrigatórias do sandbox. Quando o nome do profile não é observável, o PASS agregado exige CQ3/CQ4 e CQ5 host-bound verdes.
-Estado de PR pode ficar `DEFERRED_TO_EXTERNAL_ADJUDICATION` e ser recomputado
-fora da sessão.
+No CLI/TUI, o executável e a versão Codex são observados pelo preflight via path explícito + versão. Python roda somente no host para CQ0.5/CQ5. CQ3/CQ4 continuam provas comportamentais obrigatórias do sandbox. Estado de PR pode ficar `DEFERRED_TO_EXTERNAL_ADJUDICATION` e ser recomputado fora da sessão.
 
-`CODEX_DESKTOP_TOOL_SURFACE_POLICY.json` separa presença, trust, autoridade e invocação. `mcp__node_repl__*` é control-plane interno de code mode; Browser/CUA integrado e `mcp__codex_app__*` podem estar presentes sem virar transporte A1. Antes de CQ0, o hash atual dos hooks do projeto precisa estar revisado/confiado. O `external_surface_guard` bloqueia Browser/CUA, Codex-app, MCP externos/resources e web conforme a policy; qualquer superfície proibida que alcance o backend é `SECURITY_STOP`.
+`CODEX_CLI_TOOL_SURFACE_POLICY.json` separa presença, trust, autoridade e invocação para o runtime canônico. `mcp__node_repl__*` é control-plane interno permitido. `codex_tui*` pode existir, mas sua invocação é proibida pelo `external_surface_guard`; superfícies `codex_app`/CUA são inesperadas no CLI e bloqueiam CQ por presença antes de qualquer probe. Se houver uma superfície proibida read-only e probeável, CQ0 executa exatamente um denial probe; se não houver, registra `NOT_APPLICABLE_ABSENT`. Qualquer superfície proibida que alcance backend é `SECURITY_STOP`.
 
 CQ0–CQ5 pode produzir um resultado técnico verde, mas A1 não pode promover a própria qualificação a autoridade canônica. Depois de CQ4 não há segunda escrita repo-side para registrar o resultado: `REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE` fica somente no pacote externo de evidências, e `AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION` permanece em `blocked_by`.
 A remoção desse blocker e o estado canônico `PASS` exigem o Human Gate já

@@ -136,7 +136,7 @@ catch {
     Write-Error "A1_GIT_TRANSPORT_HOST_EVIDENCE_INVALID_JSON"
     exit 81
 }
-if ($evidence.schema_version -ne "AC-R2-DESKTOP-HOST-PREFLIGHT-6" -or $evidence.result -ne "PASS") {
+if ($evidence.schema_version -ne "AC-R2-CLI-HOST-PREFLIGHT-1" -or $evidence.result -ne "PASS") {
     Write-Error "A1_GIT_TRANSPORT_HOST_EVIDENCE_INVALID"
     exit 81
 }

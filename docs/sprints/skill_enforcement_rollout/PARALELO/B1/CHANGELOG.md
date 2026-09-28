@@ -205,3 +205,6 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 
 
 - 2026-09-27 (ChatGPT): após SECURITY_STOP CQ0 no Codex 0.158.0-alpha.2.1, external-surface guard passou a cobrir aliases hook-facing dinâmicos `codex_app*` e `cua_repl*` além das formas `mcp__*`; authority/permissions/A2 inalterados. Fresh preflight + novo trust de hooks obrigatórios.
+
+
+- 2026-09-27 (ChatGPT): CONTROLLER_MAINTENANCE migrou o runtime canônico de Codex Desktop para Codex CLI/TUI após dois SECURITY_STOP com backend reach em `codex_app`; novo preflight/policy/prompt CLI, Desktop desqualificado, surfaces externas estreitadas, authority/A1 roots/A2 inalterados. CQ CLI ainda NOT_RUN.

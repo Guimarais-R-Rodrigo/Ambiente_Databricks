@@ -16,7 +16,7 @@ BLOCKED_NON_MCP = {
 def decision(tool_name: str) -> str:
     if tool_name.startswith("mcp__node_repl__"):
         return "ALLOW_INTERNAL_NODE_REPL"
-    if tool_name.startswith(("codex_app", "cua_repl")):
+    if tool_name.startswith(("codex_app", "cua_repl", "codex_tui")):
         return "DENY"
     if tool_name.startswith("mcp__"):
         return "DENY"
@@ -52,6 +52,7 @@ def main() -> int:
             "mcp__codex_app__get_usage_limits",
             "codex_appget_usage_limits",
             "codex_app__get_usage_limits",
+            "codex_tuilist_threads",
             "mcp__example__write",
             "list_mcp_resources",
             "read_mcp_resource",

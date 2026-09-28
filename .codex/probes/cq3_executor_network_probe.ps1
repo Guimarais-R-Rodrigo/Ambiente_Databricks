@@ -134,7 +134,7 @@ if ($OfflineRuntimeSelfTest) {
     }
 
     $syntheticEvidence = [pscustomobject][ordered]@{
-        schema_version = "AC-R2-DESKTOP-HOST-PREFLIGHT-6"
+        schema_version = "AC-R2-CLI-HOST-PREFLIGHT-1"
         result = "PASS"
         network_probe = [pscustomobject][ordered]@{
             serialization_selftest = [pscustomobject][ordered]@{
@@ -196,7 +196,7 @@ catch {
     Emit-And-Exit (New-ProbePayload -Result "NOT_PROVEN" -Reason "HOST_EVIDENCE_INVALID_JSON" -PreflightSha256 $actualEvidenceSha -ProbeSha256 "" -TargetHostname "" -TargetIpv4 "" -TargetPort 0 -AttemptCount 0 -Connected $false -SocketErrorCode $null -NativeErrorCode $null -SocketHResult $null -ExceptionChain ([object[]]@())) 32
 }
 
-if ($evidence.schema_version -ne "AC-R2-DESKTOP-HOST-PREFLIGHT-6" -or $evidence.result -ne "PASS") {
+if ($evidence.schema_version -ne "AC-R2-CLI-HOST-PREFLIGHT-1" -or $evidence.result -ne "PASS") {
     Emit-And-Exit (New-ProbePayload -Result "NOT_PROVEN" -Reason "HOST_EVIDENCE_SCHEMA_OR_RESULT" -PreflightSha256 $actualEvidenceSha -ProbeSha256 "" -TargetHostname "" -TargetIpv4 "" -TargetPort 0 -AttemptCount 0 -Connected $false -SocketErrorCode $null -NativeErrorCode $null -SocketHResult $null -ExceptionChain ([object[]]@())) 33
 }
 

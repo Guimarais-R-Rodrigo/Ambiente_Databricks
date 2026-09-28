@@ -390,6 +390,48 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("EXTERNAL_SURFACE_PRETOOL_GUARD", text)
         self.assertIn("INTERNAL_CODE_MODE_CONTROL", text)
 
+    def test_cli_windows_controller_contract_is_canonical(self):
+        text = (ROOT / "docs/operations/CODEX_CLI_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        self.assertIn("CODEX_CLI_WINDOWS_TUI", text)
+        self.assertIn("AC-R2-CLI-HOST-PREFLIGHT-1", text)
+        self.assertIn("SER-CODEX-CLI-CQ-REQUEST-1", text)
+        self.assertIn("FORBIDDEN_SURFACE_PROBE = NOT_APPLICABLE_ABSENT", text)
+        self.assertIn("UNQUALIFIED_FOR_CONTROLLER", text)
+        result = val.validate(ROOT)
+        self.assertTrue(result["cli_windows_cq_contract"])
+        self.assertTrue(result["cli_host_preflight"])
+        self.assertEqual("UNQUALIFIED", result["desktop_controller_runtime"])
+
+    def test_cli_preflight_binds_explicit_launcher_version_and_control_sources(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        for token in (
+            'Join-Path $env:APPDATA "npm\\codex.cmd"',
+            "CODEX_CLI_VERSION =",
+            "AC-R2-CLI-HOST-PREFLIGHT-1",
+            "SER-CODEX-CLI-CQ-REQUEST-1",
+            'cli_contract = "docs\\operations\\CODEX_CLI_WINDOWS_CQ.md"',
+            'cli_preflight = "tools\\codex_cli_cq_host_preflight.ps1"',
+            "SER-CODEX-AUTONOMY-VALIDATION-21",
+        ):
+            self.assertIn(token, text)
+        self.assertNotIn("CODEX_DESKTOP_WINDOWS", text)
+
+    def test_cli_tool_policy_blocks_desktop_surfaces_and_allows_absent_probe(self):
+        payload = json.loads(
+            (ROOT / "docs/operations/autonomy/CODEX_CLI_TOOL_SURFACE_POLICY.json")
+            .read_text(encoding="utf-8")
+        )
+        self.assertEqual("SER-CODEX-CLI-TOOL-SURFACE-1", payload["schema_version"])
+        self.assertEqual("CODEX_CLI_WINDOWS_TUI", payload["canonical_runtime"])
+        self.assertTrue(payload["cq_rules"]["desktop_client_surface_presence_blocks"])
+        self.assertTrue(payload["cq_rules"]["no_probe_is_valid_when_no_probeable_forbidden_surface_is_loaded"])
+        self.assertEqual(0, payload["cq_rules"]["probe_retry_count"])
+        self.assertIn("codex_tui.*", payload["enforcement"]["matcher"])
+
+    def test_desktop_preflight_is_explicitly_retired(self):
+        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        self.assertIn("CODEX_DESKTOP_RUNTIME_UNQUALIFIED_USE_TOOLS_CODEX_CLI_CQ_HOST_PREFLIGHT_PS1", text)
+
     def test_delta_classifier_protects_frozen_g6(self):
         self.assertEqual(
             "PROTECTED",
@@ -856,7 +898,7 @@ class CodexAutonomyTests(unittest.TestCase):
         serialized = json.dumps(payload["presence_classes"])
         self.assertIn("INTERNAL_CODE_MODE_CONTROL", serialized)
         self.assertIn("mcp__node_repl__*", serialized)
-        self.assertEqual(["codex_app", "cua_repl"], payload["enforcement"]["dynamic_hook_name_prefixes"])
+        self.assertEqual(["codex_app", "cua_repl", "codex_tui"], payload["enforcement"]["dynamic_hook_name_prefixes"])
         self.assertTrue(payload["cq_rules"]["dynamic_client_hook_aliases_required"])
 
     def test_hooks_include_fail_closed_mcp_guard(self):
@@ -883,12 +925,13 @@ class CodexAutonomyTests(unittest.TestCase):
             "codex_app__get_usage_limits",
             "mcp__cua_repl.js",
             "cua_repljs",
+            "codex_tuilist_threads",
         ):
             self.assertIsNotNone(re.fullmatch(matcher, sample), sample)
 
         ps = (ROOT / ".codex/hooks/external_surface_guard.ps1").read_text(encoding="utf-8")
         py = (ROOT / ".codex/hooks/external_surface_guard.py").read_text(encoding="utf-8")
-        for token in ("codex_app", "cua_repl", "codex_appget_usage_limits"):
+        for token in ("codex_app", "cua_repl", "codex_tui", "codex_appget_usage_limits"):
             self.assertIn(token, ps)
             self.assertIn(token, py)
 
@@ -999,16 +1042,16 @@ class CodexAutonomyTests(unittest.TestCase):
 
     def test_protocol_stabilization_is_v6_surface_policy_and_external_result_consistent(self):
         text = (ROOT / "docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md").read_text(encoding="utf-8")
-        self.assertIn("host preflight v6", text)
-        self.assertNotIn("host preflight v5", text)
-        self.assertIn("CODEX_DESKTOP_TOOL_SURFACE_POLICY.json", text)
+        self.assertIn("CLI host preflight v1", text)
+        self.assertIn("CODEX_CLI_TOOL_SURFACE_POLICY.json", text)
+        self.assertIn("UNQUALIFIED_FOR_CONTROLLER", text)
         self.assertIn("external_surface_guard", text)
         self.assertIn("Depois de CQ4 não há segunda escrita repo-side", text)
         self.assertIn("standalone checkout", text)
 
     def test_validator_v20_enforces_start_protocol_and_inline_hooks_consistency(self):
         text = (ROOT / "tools/validate_codex_autonomy.py").read_text(encoding="utf-8")
-        self.assertIn("SER-CODEX-AUTONOMY-VALIDATION-20", text)
+        self.assertIn("SER-CODEX-AUTONOMY-VALIDATION-21", text)
         self.assertIn("HOOK_JSON_DUPLICATE_SOURCE_FORBIDDEN", text)
         self.assertIn("CODEX_AUTONOMOUS_START_PROMPT_PREMATURE_READY_PASS", text)
         self.assertIn("CODEX_AUTONOMOUS_PROTOCOL_STABILIZATION_DRIFT", text)
@@ -1131,7 +1174,7 @@ class CodexAutonomyTests(unittest.TestCase):
             self.assertIn(token, text)
 
     def test_preflight_hashes_operational_control_identity(self):
-        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         for token in (
             'operational_transport = ".codex\\transport\\a1_operational_git_transport.ps1"',
             'operational_policy = "docs\\operations\\autonomy\\A1_OPERATIONAL_POLICY.json"',

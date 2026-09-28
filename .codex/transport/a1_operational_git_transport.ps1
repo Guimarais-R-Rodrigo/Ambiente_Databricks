@@ -65,11 +65,12 @@ $ControlSourcePaths = [ordered]@{
     post_scope_guard_python = ".codex\hooks\post_scope_guard.py"
     external_surface_guard = ".codex\hooks\external_surface_guard.ps1"
     external_surface_guard_python = ".codex\hooks\external_surface_guard.py"
-    tool_surface_policy = "docs\operations\autonomy\CODEX_DESKTOP_TOOL_SURFACE_POLICY.json"
-    prompt_template = "docs\operations\CODEX_DESKTOP_CQ_RUN_PROMPT_TEMPLATE.md"
+    tool_surface_policy = "docs\operations\autonomy\CODEX_CLI_TOOL_SURFACE_POLICY.json"
+    prompt_template = "docs\operations\CODEX_CLI_CQ_RUN_PROMPT_TEMPLATE.md"
     protocol = "docs\operations\CODEX_AUTONOMOUS_PROTOCOL.md"
     runtime_contract = "docs\operations\CODEX_RUNTIME_QUALIFICATION.md"
-    desktop_contract = "docs\operations\CODEX_DESKTOP_WINDOWS_CQ.md"
+    cli_contract = "docs\operations\CODEX_CLI_WINDOWS_CQ.md"
+    cli_preflight = "tools\codex_cli_cq_host_preflight.ps1"
     start_prompt = "docs\operations\CODEX_AUTONOMOUS_START_PROMPT.md"
 }
 
@@ -118,7 +119,7 @@ function Load-Evidence {
     $side=(((Get-Content -LiteralPath $EvidenceSidecarPath -Raw).Trim() -split "\s+")[0]).ToUpperInvariant()
     if($sha -ne $side){throw "A1_OPERATIONAL_HOST_EVIDENCE_SHA_MISMATCH"}
     try { $e=Get-Content -LiteralPath $EvidencePath -Raw|ConvertFrom-Json -ErrorAction Stop } catch { throw "A1_OPERATIONAL_HOST_EVIDENCE_INVALID_JSON" }
-    if($e.schema_version -ne "AC-R2-DESKTOP-HOST-PREFLIGHT-6" -or $e.result -ne "PASS"){throw "A1_OPERATIONAL_HOST_EVIDENCE_INVALID"}
+    if($e.schema_version -ne "AC-R2-CLI-HOST-PREFLIGHT-1" -or $e.result -ne "PASS"){throw "A1_OPERATIONAL_HOST_EVIDENCE_INVALID"}
     if([string]$e.git.checkout_mode -ne "STANDALONE"){throw "A1_OPERATIONAL_HOST_EVIDENCE_CHECKOUT_MODE"}
     return $e
 }

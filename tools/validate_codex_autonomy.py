@@ -19,7 +19,7 @@ A0_PROFILE = "ser-controller-a0"
 A1_PROFILE = "ser-b1-a1"
 A0_WINDOWS_SCRATCH = "~/codex-scratch/Ambiente_Databricks"
 LEGACY_WINDOWS_QUALIFIED_PYTHON_ROOT = r"~\AppData\Local\Programs\Python\Python312"
-EXTERNAL_SURFACE_MATCHER = r"^(mcp__.*|codex_app.*|cua_repl.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$"
+EXTERNAL_SURFACE_MATCHER = r"^(mcp__.*|codex_app.*|cua_repl.*|codex_tui.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$"
 EXPECTED_AGENTS = {
     "explorer": ("explorer.toml", A0_PROFILE, "gpt-6-luna", "high"),
     "executor": ("executor.toml", A1_PROFILE, "gpt-6-sol", "medium"),
@@ -275,7 +275,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-20",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-21",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -435,11 +435,69 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         ".codex/hooks/external_surface_guard.py",
         "docs/operations/autonomy/CODEX_DESKTOP_TOOL_SURFACE_POLICY.json",
         "docs/operations/CODEX_DESKTOP_CQ_RUN_PROMPT_TEMPLATE.md",
+        "docs/operations/CODEX_CLI_WINDOWS_CQ.md",
+        "docs/operations/autonomy/CODEX_CLI_TOOL_SURFACE_POLICY.json",
+        "docs/operations/CODEX_CLI_CQ_RUN_PROMPT_TEMPLATE.md",
+        "tools/codex_cli_cq_host_preflight.ps1",
         "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl",
     ]
     for rel in required_paths:
         if not (root / rel).is_file():
             issues.append("REQUIRED_PATH_MISSING:" + rel)
+
+    cli_cq_path = root / "docs" / "operations" / "CODEX_CLI_WINDOWS_CQ.md"
+    cli_preflight_path = root / "tools" / "codex_cli_cq_host_preflight.ps1"
+    if cli_cq_path.is_file():
+        cli_text = cli_cq_path.read_text(encoding="utf-8")
+        required_cli_tokens = (
+            "CODEX_CLI_WINDOWS_TUI",
+            "AC-R2-CLI-HOST-PREFLIGHT-1",
+            "SER-CODEX-CLI-CQ-REQUEST-1",
+            "CODEX_CLI_VERSION",
+            "PROJECT_CONFIG_LAYER = ENABLED",
+            "PreToolUse  Installed 2  Active 2",
+            "PostToolUse Installed 1  Active 1",
+            "CODEX_CLI_TOOL_SURFACE_POLICY.json",
+            "FORBIDDEN_SURFACE_PROBE = NOT_APPLICABLE_ABSENT",
+            "BLOCK_UNEXPECTED_IN_CANONICAL_CLI_RUNTIME",
+            "DO_NOT_EXECUTE_PYTHON_IN_SANDBOX",
+            "HOST_VALIDATOR",
+            "HOST_METATESTS",
+            "HOST_NETWORK_BASELINE",
+            "CQ_RUN_REQUEST.json",
+            "CQ_RUN_PROMPT.md",
+            "CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST",
+            "standalone checkout",
+            "AccessDenied",
+            "10013",
+        )
+        if any(token not in cli_text for token in required_cli_tokens):
+            issues.append("CLI_WINDOWS_CQ_CONTRACT_INVALID")
+    else:
+        issues.append("CLI_WINDOWS_CQ_CONTRACT_MISSING")
+
+    if cli_preflight_path.is_file():
+        cli_preflight_text = cli_preflight_path.read_text(encoding="utf-8")
+        required_cli_preflight_tokens = (
+            "AC-R2-CLI-HOST-PREFLIGHT-1",
+            "SER-CODEX-CLI-CQ-REQUEST-1",
+            "CODEX_CLI_WINDOWS_TUI",
+            'Join-Path $env:APPDATA "npm\\codex.cmd"',
+            "CODEX_CLI_VERSION =",
+            "SER-CODEX-AUTONOMY-VALIDATION-21",
+            "docs\\operations\\CODEX_CLI_WINDOWS_CQ.md",
+            "docs\\operations\\autonomy\\CODEX_CLI_TOOL_SURFACE_POLICY.json",
+            "docs\\operations\\CODEX_CLI_CQ_RUN_PROMPT_TEMPLATE.md",
+            'cli_preflight = "tools\\codex_cli_cq_host_preflight.ps1"',
+            "CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST",
+            "CHECKOUT_MODE = STANDALONE",
+        )
+        if any(token not in cli_preflight_text for token in required_cli_preflight_tokens):
+            issues.append("CLI_WINDOWS_HOST_PREFLIGHT_INVALID")
+        if "CODEX_DESKTOP_WINDOWS" in cli_preflight_text:
+            issues.append("CLI_WINDOWS_HOST_PREFLIGHT_DESKTOP_SURFACE_LEAK")
+    else:
+        issues.append("CLI_WINDOWS_HOST_PREFLIGHT_MISSING")
 
     desktop_cq_path = root / "docs" / "operations" / "CODEX_DESKTOP_WINDOWS_CQ.md"
     desktop_preflight_path = root / "tools" / "codex_desktop_cq_host_preflight.ps1"
@@ -545,6 +603,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         required_start_tokens = (
             "HOOK_TRUST_REVIEW_REQUIRED = true",
             "CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST",
+            "CODEX_CLI_WINDOWS_TUI",
+            "codex_cli_cq_host_preflight.ps1",
             "/hooks",
             "CQ_RUN_REQUEST.json",
             "CQ_RUN_PROMPT.md",
@@ -571,12 +631,13 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "effective_config_observation=PASS",
             "qualified HEAD",
             "operational base",
-            "host preflight v6",
-            "CODEX_DESKTOP_TOOL_SURFACE_POLICY.json",
+            "CLI host preflight v1",
+            "CODEX_CLI_TOOL_SURFACE_POLICY.json",
             "external_surface_guard",
             "Depois de CQ4 não há segunda escrita repo-side",
             "AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION",
             "standalone checkout",
+            "UNQUALIFIED_FOR_CONTROLLER",
         )
         if any(token not in protocol_text for token in required_protocol_tokens):
             issues.append("CODEX_AUTONOMOUS_PROTOCOL_STABILIZATION_DRIFT")
@@ -589,7 +650,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
     if network_probe_path.is_file():
         network_probe_text = network_probe_path.read_text(encoding="utf-8")
         required_network_probe_tokens = (
-            "AC-R2-DESKTOP-HOST-PREFLIGHT-6",
+            "AC-R2-CLI-HOST-PREFLIGHT-1",
             "network_probe_script",
             "BeginConnect",
             "EndConnect",
@@ -774,7 +835,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
                 issues.append("DESKTOP_TOOL_SURFACE_POLICY_HOOK_TRUST")
             if cq_rules.get("dynamic_client_hook_aliases_required") is not True:
                 issues.append("DESKTOP_TOOL_SURFACE_POLICY_DYNAMIC_ALIAS_REQUIREMENT")
-            if enforcement.get("dynamic_hook_name_prefixes") != ["codex_app", "cua_repl"]:
+            if enforcement.get("dynamic_hook_name_prefixes") != ["codex_app", "cua_repl", "codex_tui"]:
                 issues.append("DESKTOP_TOOL_SURFACE_POLICY_DYNAMIC_ALIAS_BINDING")
             for sample in (
                 "mcp__codex_app__get_usage_limits",
@@ -782,6 +843,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
                 "codex_app__get_usage_limits",
                 "mcp__cua_repl.js",
                 "cua_repljs",
+                "codex_tuilist_threads",
             ):
                 if re.fullmatch(EXTERNAL_SURFACE_MATCHER, sample) is None:
                     issues.append("DESKTOP_TOOL_SURFACE_POLICY_DYNAMIC_ALIAS_NOT_MATCHED:" + sample)
@@ -793,6 +855,29 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             issues.append("DESKTOP_TOOL_SURFACE_POLICY_UNREADABLE:" + type(exc).__name__)
     else:
         issues.append("DESKTOP_TOOL_SURFACE_POLICY_MISSING")
+
+    cli_tool_policy_path = root / "docs" / "operations" / "autonomy" / "CODEX_CLI_TOOL_SURFACE_POLICY.json"
+    if cli_tool_policy_path.is_file():
+        try:
+            cli_tool_policy = _read_json(cli_tool_policy_path)
+            if cli_tool_policy.get("schema_version") != "SER-CODEX-CLI-TOOL-SURFACE-1":
+                issues.append("CLI_TOOL_SURFACE_POLICY_SCHEMA")
+            if cli_tool_policy.get("canonical_runtime") != "CODEX_CLI_WINDOWS_TUI":
+                issues.append("CLI_TOOL_SURFACE_POLICY_RUNTIME")
+            cli_enforcement = cli_tool_policy.get("enforcement") or {}
+            if cli_enforcement.get("matcher") != EXTERNAL_SURFACE_MATCHER:
+                issues.append("CLI_TOOL_SURFACE_POLICY_MATCHER")
+            cli_rules = cli_tool_policy.get("cq_rules") or {}
+            if cli_rules.get("desktop_client_surface_presence_blocks") is not True:
+                issues.append("CLI_TOOL_SURFACE_POLICY_DESKTOP_PRESENCE")
+            if cli_rules.get("no_probe_is_valid_when_no_probeable_forbidden_surface_is_loaded") is not True:
+                issues.append("CLI_TOOL_SURFACE_POLICY_ABSENCE_RULE")
+            if cli_rules.get("probe_retry_count") != 0:
+                issues.append("CLI_TOOL_SURFACE_POLICY_RETRY")
+        except Exception as exc:
+            issues.append("CLI_TOOL_SURFACE_POLICY_UNREADABLE:" + type(exc).__name__)
+    else:
+        issues.append("CLI_TOOL_SURFACE_POLICY_MISSING")
 
     hooks_configured = False
     hooks_json_path = root / ".codex" / "hooks.json"
@@ -833,7 +918,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         if guard_ps_path.is_file() and guard_py_path.is_file():
             guard_ps_text = guard_ps_path.read_text(encoding="utf-8")
             guard_py_text = guard_py_path.read_text(encoding="utf-8")
-            for token in ("codex_app", "cua_repl", "codex_appget_usage_limits"):
+            for token in ("codex_app", "cua_repl", "codex_tui", "codex_appget_usage_limits"):
                 if token not in guard_ps_text or token not in guard_py_text:
                     issues.append("HOOK_EXTERNAL_SURFACE_GUARD_DYNAMIC_ALIAS_MISSING:" + token)
 
@@ -866,7 +951,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-20",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-21",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),
@@ -877,8 +962,11 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         "direct_a1_network": False,
         "direct_git_metadata_write": False,
         "hooks_configured": hooks_configured,
+        "cli_windows_cq_contract": cli_cq_path.is_file(),
+        "cli_host_preflight": cli_preflight_path.is_file(),
         "desktop_windows_cq_contract": desktop_cq_path.is_file(),
         "desktop_host_preflight": desktop_preflight_path.is_file(),
+        "desktop_controller_runtime": "UNQUALIFIED",
     }
 
 
