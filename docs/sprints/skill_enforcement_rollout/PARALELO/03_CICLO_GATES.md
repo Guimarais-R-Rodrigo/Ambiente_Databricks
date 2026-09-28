@@ -28,13 +28,13 @@ Não há obrigação de pedir autorização humana a cada comando read-only se a
 
 Antes de enviar ao laboratório: parse de todos os `.py` novos com `ast.parse`; JSON/TOML válidos; fixture pequena com encoding explícito; assinaturas públicas reais; testes de policy em fixtures quando se destinarem a níveis históricos; ausência de autoimport recursivo do test runner; manifest hashes; paths/links locais; testes positivos e negativos; erros e skips estruturados; esquema de summary e verificação independente; placeholders bloqueados no perfil executável.
 
-O autor não declara runtime local ou Windows se não o executou. Checagens estáticas aqui reduzem defeitos triviais; a qualificação G2 cobre o que depende da máquina do usuário. Qualificação não é oportunidade para o executor criar implementação faltante.
+O autor não declara runtime local ou Windows se não o executou. Checagens estáticas aqui reduzem defeitos triviais; a qualificação G2 cobre o que depende da máquina do usuário. Qualificação não é oportunidade para o **executor determinístico da campanha** criar implementação faltante. Após a rodada encerrar, o root controller pode abrir repair A1 causal em novo SHA quando o envelope permitir.
 
 ## 3.4 Diagnóstico sem retry-until-green
 
 `diagnose` recebe um DAG diagnóstico fixo. Pode rodar syntax, schemas, coleta, fixtures puras e validação de configuração em paralelo, mesmo se outro diagnóstico independente falhar. Interrompe descendentes de uma falha e qualquer operação com efeito. Preserva todas as falhas numa lista ordenada; `first_failure` é imutável.
 
-É proibido instalar uma nova biblioteca, editar o teste, trocar seed, aumentar timeout ou repetir só o teste que falhou durante a mesma rodada. Um problema ambiental causa uma rodada causalmente nova após a alteração autorizada do ambiente. Um problema de código retorna à autoria e exige novo SHA.
+É proibido instalar uma nova biblioteca, editar o teste, trocar seed, aumentar timeout ou repetir só o teste que falhou durante a mesma rodada. Um problema ambiental causa uma rodada causalmente nova após a alteração autorizada do ambiente. Um problema de código encerra a rodada determinística e retorna à autoria; em Autonomous Controller Mode essa autoria pode ser executada pelo A1 Authoring Executor dentro dos write roots, sempre produzindo novo SHA antes de nova certificação.
 
 O diagnóstico pode revelar erro novo que a análise aqui não alcançou. O compromisso é não encaminhar erro conhecido, não prometer ausência de qualquer defeito futuro.
 
@@ -79,3 +79,31 @@ Exceção de serialização, schema inválido, verifier que levanta exceção e 
 Após interrupção, executar apenas a inspeção autorizada de ledger, locks, processos e destinos. Se estado mutável desconhecido persistir, não retomar a ação. Tarefa puramente read-only pode ganhar nova rodada explicitamente registrada; ela não é continuação invisível de um PASS parcial.
 
 Nenhum agente decide sozinho que uma falha é “flaky”. A hipótese precisa de causa, reprodução controlada e correção da infraestrutura ou mudança de ambiente autorizada. Stress test é conjunto de repetições predefinido com denominador e critério antes da execução; não é rodar até acertar.
+
+
+## 3.11 Autonomous Controller Mode
+
+O ADR-0024 muda a **granularidade da coordenação**, não os gates.
+
+Um envelope ativo pode delegar ao Codex controller transições técnicas entre gates
+sem nova pergunta humana:
+
+- A0: read-only, diagnóstico, auditoria e reconciliação permitida;
+- A1: autoria repo-side, testes, commits/push normal e manutenção da draft PR;
+- A2: efeitos pessoais/reversíveis somente após ativação humana explícita e dentro
+  de host/namespace/effect/budget fechados;
+- A3: promoção, Ready, merge, corporativo, dados reais e mudanças materiais de
+  escopo permanecem Human Gates.
+
+A nova unidade delegada ao controller é uma **frente fechada**, não um comando
+isolado. O controller continua despachando tasks fechadas para seus subagentes.
+
+`retry-until-green` permanece proibido. O controller pode abrir nova rodada
+somente após registrar `causal_delta`. Mesmo SHA + mesmo estado + mesmo comando
+tem budget de retry igual a zero.
+
+Antes de qualquer nova mutação após possível write, `UNKNOWN` exige
+reconciliação read-only. Se o efeito continuar irresolvido, parar em Human Gate.
+
+A transição G6→G7 continua exigindo todos os subgates externos obrigatórios; PASS
+de um subgate não promove o agregado.

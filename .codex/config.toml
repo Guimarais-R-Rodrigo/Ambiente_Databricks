@@ -1,0 +1,139 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+
+# AC-R2-MIN: root and every spawned role are repository-read-only A0.
+# Codex 0.157.1/0.158.0 preserve the parent's permission snapshot across spawn_agent;
+# role files cannot turn a child into A1. The ser-b1-a1 profile is retained only as
+# the target of a future deterministic capability bridge; until that bridge is
+# implemented and qualified, no spawned agent is write-capable.
+model = "gpt-6-astra"
+model_reasoning_effort = "high"
+default_permissions = "ser-controller-a0"
+approval_policy = "never"
+[windows]
+sandbox = "elevated"
+
+[features]
+apps = false
+remote_plugin = false
+plugins = false
+enable_mcp_apps = false
+codex_apps_mcp_2026_07_28 = false
+browser_use = false
+browser_use_external = false
+browser_use_full_cdp_access = false
+computer_use = false
+multi_agent = true
+goals = true
+hooks = true
+
+# Project-local lifecycle hooks are inline in this active config layer.
+# This avoids dependence on hooks.json discovery while preserving the same hook definitions.
+[[hooks.PreToolUse]]
+matcher = "apply_patch|Edit|Write"
+
+[[hooks.PreToolUse.hooks]]
+type = "command"
+command = "python3 -I -B \"$(git rev-parse --show-toplevel)/.codex/hooks/pre_scope_guard.py\""
+command_windows = "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\\hooks\\pre_scope_guard.ps1"
+timeout = 10
+statusMessage = "Checking A1 write scope"
+
+[[hooks.PreToolUse]]
+matcher = "Bash"
+
+[[hooks.PreToolUse.hooks]]
+type = "command"
+command = "python3 -I -B \"$(git rev-parse --show-toplevel)/.codex/hooks/a1_privileged_bridge_guard.py\""
+command_windows = "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\\hooks\\a1_privileged_bridge_guard.ps1"
+timeout = 10
+statusMessage = "Checking root-only A1 bridge origin"
+
+[[hooks.PreToolUse]]
+matcher = "^(mcp__.*|codex_app.*|cua_repl.*|codex_tui.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$"
+
+[[hooks.PreToolUse.hooks]]
+type = "command"
+command = "python3 -I -B \"$(git rev-parse --show-toplevel)/.codex/hooks/external_surface_guard.py\""
+command_windows = "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\\hooks\\external_surface_guard.ps1"
+timeout = 10
+statusMessage = "Enforcing SER external tool boundary"
+
+[[hooks.PostToolUse]]
+matcher = "Bash|apply_patch|Edit|Write"
+
+[[hooks.PostToolUse.hooks]]
+type = "command"
+command = "python3 -I -B \"$(git rev-parse --show-toplevel)/.codex/hooks/post_scope_guard.py\""
+command_windows = "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\\hooks\\post_scope_guard.ps1"
+timeout = 10
+statusMessage = "Verifying A1 worktree scope"
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 5
+default_subagent_model = "gpt-6-sol"
+default_subagent_reasoning_effort = "medium"
+
+[agents.explorer]
+description = "Read-only investigator for codebase history, prior attempts, causal hypotheses and source discovery."
+config_file = "agents/explorer.toml"
+
+[agents.executor]
+description = "A0 patch-author subagent: proposes causal changes in external scratch; never writes the repository directly."
+config_file = "agents/executor.toml"
+
+[agents.domain-auditor]
+description = "Independent read-only auditor for domain semantics, fixtures, oracles, temporal/numerical meaning and scope."
+config_file = "agents/domain-auditor.toml"
+
+[agents.evidence-auditor]
+description = "Independent read-only adversarial auditor for evidence, authority, effects, hashes, retries and secret hygiene."
+config_file = "agents/evidence-auditor.toml"
+
+[agents.architecture-auditor]
+description = "Independent read-only auditor for architecture, regression risk, duplicated mechanisms, scope creep and integration impact."
+config_file = "agents/architecture-auditor.toml"
+
+[permissions.ser-controller-a0]
+description = "Repository read-only controller/auditor profile with one explicit external scratch capability root for deterministic local tests."
+
+[permissions.ser-controller-a0.workspace_roots]
+"~/codex-scratch/Ambiente_Databricks" = true
+
+[permissions.ser-controller-a0.filesystem]
+":root" = "read"
+":minimal" = "read"
+":tmpdir" = "write"
+":slash_tmp" = "write"
+"~/codex-scratch/Ambiente_Databricks" = "write"
+
+[permissions.ser-controller-a0.filesystem.":workspace_roots"]
+"." = "read"
+
+[permissions.ser-controller-a0.network]
+enabled = false
+
+[permissions.ser-b1-a1]
+description = "SER B1 A1 bridge target: repository read access plus exact B1 file writes; never assigned directly to spawn_agent roles."
+
+[permissions.ser-b1-a1.filesystem]
+":root" = "read"
+":minimal" = "read"
+":tmpdir" = "write"
+":slash_tmp" = "write"
+
+[permissions.ser-b1-a1.filesystem.":workspace_roots"]
+"." = "read"
+"tools/skill_enforcement/real_campaigns/b1/g6_recovery/README.md" = "write"
+"tools/skill_enforcement/real_campaigns/b1/g6_recovery/__init__.py" = "write"
+"tools/skill_enforcement/real_campaigns/b1/g6_recovery/adversarial_coverage.json" = "write"
+"tools/skill_enforcement/real_campaigns/b1/g6_recovery/manifest.json" = "write"
+"tools/skill_enforcement/real_campaigns/b1/g6_recovery/residual_probe_recovery.py" = "write"
+"tools/tests/test_ser_b1_g6_recovery.py" = "write"
+"docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json" = "write"
+"docs/sprints/skill_enforcement_rollout/PARALELO/B1/CHANGELOG.md" = "write"
+"docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl" = "write"
+"CHANGELOG.md" = "write"
+
+[permissions.ser-b1-a1.network]
+enabled = false

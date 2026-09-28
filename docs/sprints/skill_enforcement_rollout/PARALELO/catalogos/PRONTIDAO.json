@@ -170,5 +170,8 @@
       "phase": "INTEGRATION",
       "status": "NOT_YET_PROVEN"
     }
-  ]
+  ],
+  "state_semantics": "PLANNING_READINESS_CATALOG_NOT_LIVE_STATE",
+  "live_state_source": "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json",
+  "legacy_status_note": "NOT_YET_PROVEN values are the original planning snapshot and must not be interpreted as current B0/B1 gate state."
 }

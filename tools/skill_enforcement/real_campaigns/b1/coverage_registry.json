@@ -1,0 +1,255 @@
+{
+  "schema_version": "SER-B1-COVERAGE-1",
+  "campaign_scope": {
+    "ser03": "L3_MONTHLY_BINARY_PILOT_V1",
+    "ser05": "L2_CONTEXT_ONLY_PILOT_V1"
+  },
+  "p1_evidence_binding": {
+    "commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
+    "domain_suite": "PASS_47_OF_47",
+    "public_integration": "PASS_2_OF_2"
+  },
+  "cases": [
+    {
+      "case_id": "VF01",
+      "test_ids": [
+        "SafraDomainTests.test_vf01_cumulative_and_event_fixtures"
+      ],
+      "oracle_id": "manual_monthly_binary_v1",
+      "command_ids": [
+        "b1:ser03:execute-verify",
+        "b1:ser03:domain-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "VF02",
+      "test_ids": [
+        "SafraDomainTests.test_vf02_reject_mob_negative_fractional_boolean_null_and_string",
+        "SafraDomainTests.test_vf02_reject_mob_incompatible_with_dates"
+      ],
+      "oracle_id": "negative_preflight",
+      "command_ids": [
+        "b1:ser03:negative-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "VF03",
+      "test_ids": [
+        "SafraDomainTests.test_vf03_reject_nonbinary_target"
+      ],
+      "oracle_id": "negative_preflight",
+      "command_ids": [
+        "b1:ser03:negative-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "VF04",
+      "test_ids": [
+        "SafraDomainTests.test_vf04_reject_cumulative_decrease"
+      ],
+      "oracle_id": "negative_preflight",
+      "command_ids": [
+        "b1:ser03:negative-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "VF05",
+      "test_ids": [
+        "SafraDomainTests.test_vf05_duplicate_identical_and_conflicting_rejected"
+      ],
+      "oracle_id": "negative_preflight",
+      "command_ids": [
+        "b1:ser03:negative-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "VF06",
+      "test_ids": [
+        "SafraDomainTests.test_vf06_missing_observation_is_not_zero_or_complete"
+      ],
+      "oracle_id": "manual_monthly_binary_v1",
+      "command_ids": [
+        "b1:ser03:domain-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "VF07",
+      "test_ids": [
+        "SafraDomainTests.test_vf07_roster_not_observed_subset_defines_denominator",
+        "SafraDomainTests.test_vf07_origin_cannot_change_inside_unit"
+      ],
+      "oracle_id": "manual_monthly_binary_v1",
+      "command_ids": [
+        "b1:ser03:domain-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "VF08",
+      "test_ids": [
+        "SafraDomainTests.test_vf08_quarterly_rejected_not_claimed_by_monthly_profile"
+      ],
+      "oracle_id": "negative_preflight",
+      "command_ids": [
+        "b1:ser03:negative-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "VF09",
+      "test_ids": [
+        "SafraDomainTests.test_vf09_immature_differs_from_incomplete",
+        "SafraDomainTests.test_vf09_no_observations_not_false_zero"
+      ],
+      "oracle_id": "manual_monthly_binary_v1",
+      "command_ids": [
+        "b1:ser03:domain-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "VF10",
+      "test_ids": [
+        "SafraDomainTests.test_vf10_request_digest_covers_population_cutoff_and_semantics",
+        "SEFIntegrationTests.test_actual_public_vintage_helper_receipt_and_trusted_oracle"
+      ],
+      "oracle_id": "receipt_and_replay",
+      "command_ids": [
+        "b1:ser03:execute-verify"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "VF11",
+      "test_ids": [
+        "SafraDomainTests.test_vf11_event_sequence_can_decrease_but_not_disappear_and_reenter"
+      ],
+      "oracle_id": "manual_monthly_binary_v1",
+      "command_ids": [
+        "b1:ser03:domain-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "VF12",
+      "test_ids": [
+        "SafraDomainTests.test_vf12_monetary_estimand_rejected"
+      ],
+      "oracle_id": "negative_preflight",
+      "command_ids": [
+        "b1:ser03:negative-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "CE01",
+      "test_ids": [
+        "CrossDomainTests.test_ce01_required_context_fields_block_if_missing",
+        "CrossDomainTests.test_ce01_source_identity_declared_never_read"
+      ],
+      "oracle_id": "declared_context_only",
+      "command_ids": [
+        "b1:ser05:domain-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "CE02",
+      "test_ids": [
+        "CrossDomainTests.test_ce02_unknown_pit_never_becomes_false",
+        "CrossDomainTests.test_ce02_not_applicable_requires_reason"
+      ],
+      "oracle_id": "pit_tristate",
+      "command_ids": [
+        "b1:ser05:negative-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "CE05",
+      "test_ids": [
+        "CrossDomainTests.test_ce05_temporal_boundary_is_explicit_and_bound_to_digest",
+        "CrossDomainTests.test_ce05_timezone_and_tie_policy_fail_closed"
+      ],
+      "oracle_id": "pit_boundary",
+      "command_ids": [
+        "b1:ser05:preflight:temporal",
+        "b1:ser05:negative-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "CE06",
+      "test_ids": [
+        "CrossDomainTests.test_ce06_variable_lag_not_approximated"
+      ],
+      "oracle_id": "negative_context",
+      "command_ids": [
+        "b1:ser05:negative-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "CE07",
+      "test_ids": [
+        "CrossDomainTests.test_ce07_bitemporal_not_claimed"
+      ],
+      "oracle_id": "negative_context",
+      "command_ids": [
+        "b1:ser05:negative-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "CE08",
+      "test_ids": [
+        "CrossDomainTests.test_ce08_context_replay_changes_identity"
+      ],
+      "oracle_id": "context_identity",
+      "command_ids": [
+        "b1:ser05:domain-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    },
+    {
+      "case_id": "CE10",
+      "test_ids": [
+        "CrossDomainTests.test_ce10_static_context_has_no_temporal_join"
+      ],
+      "oracle_id": "declared_context_only",
+      "command_ids": [
+        "b1:ser05:preflight:static",
+        "b1:ser05:domain-audit"
+      ],
+      "evidence": "P1_SHA_BOUND_TEST_PLUS_P2_SANDBOX_COMMAND"
+    }
+  ],
+  "out_of_scope": [
+    {
+      "case_id": "CE03",
+      "reason": "join material pertence a SER06/L4; não executado em SER05 L2"
+    },
+    {
+      "case_id": "CE04",
+      "reason": "diagnóstico de join pertence a SER06/L4"
+    },
+    {
+      "case_id": "CE09",
+      "reason": "coverage de join não é medida no contexto L2"
+    },
+    {
+      "case_id": "CE11",
+      "reason": "Postflight não pertence à etapa L2"
+    },
+    {
+      "case_id": "CE12",
+      "reason": "integração cross-skill/Spark fica fora desta campanha"
+    }
+  ]
+}

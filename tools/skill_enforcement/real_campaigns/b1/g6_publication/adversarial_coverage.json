@@ -1,0 +1,112 @@
+{
+  "schema_version": "SER-B1-G6-PUBLISHER-ADVERSARIAL-COVERAGE-6",
+  "publisher_r3_sha": "a0ac7f66839f7f7e9d73460558208652a9edcf02",
+  "purpose": "Required adversarial/protocol/convergent-recovery regression inventory for R10 direct HTTP/1.1 local qualification",
+  "required_cases": [
+    [
+      "WORKSPACE_LIST_INVALID_JSON",
+      "test_workspace_listing_rejects_invalid_json"
+    ],
+    [
+      "WORKSPACE_LIST_ROW_NOT_OBJECT",
+      "test_workspace_listing_rejects_non_object_row"
+    ],
+    [
+      "AUTHORIZATION_RECORD_SYMLINK",
+      "test_authorization_record_symlink_is_rejected"
+    ],
+    [
+      "AUTHORIZATION_MANIFEST_DIGEST_DRIFT",
+      "test_authorization_rejects_manifest_digest_drift"
+    ],
+    [
+      "AUTHORIZATION_PUBLISHER_DIGEST_DRIFT",
+      "test_authorization_rejects_package_digest_drift"
+    ],
+    [
+      "AUTHORIZATION_EXACT_OBJECT_ORDER",
+      "test_authorization_v2_binds_manifest_package_order_and_target"
+    ],
+    [
+      "AUTHORIZATION_ATOMIC_SINGLE_USE",
+      "test_write_authorization_consumption_is_atomic"
+    ],
+    [
+      "MISSING_PARENT_RECURSION",
+      "test_missing_proof_handles_missing_parent_via_existing_ancestor"
+    ],
+    [
+      "MISSING_PARENT_LIST_FAILURE",
+      "test_missing_proof_fails_closed_if_parent_exists_but_listing_fails"
+    ],
+    [
+      "MISSING_LISTED_TARGET",
+      "test_missing_proof_rejects_listed_target"
+    ],
+    [
+      "READBACK_OBJECT_TYPE",
+      "test_readback_type_contract"
+    ],
+    [
+      "PREFLIGHT_DOES_NOT_CONSUME",
+      "test_execute_preflight_failure_does_not_consume_write_authorization"
+    ],
+    [
+      "UNKNOWN_AFTER_WRITE_START",
+      "test_execute_exception_after_write_start_marks_unknown_and_stops"
+    ],
+    [
+      "FILE_AUTO_EXPORT_AFTER_TYPE_PROOF",
+      "test_file_export_uses_auto_after_type_contract"
+    ],
+    [
+      "MOCKED_FULL_SUCCESS",
+      "test_execute_mocked_full_success_covers_manifest_records"
+    ],
+    [
+      "RESIDUAL_MANIFEST_BINDING",
+      "test_manifest_matches_reconciled_residual_exactly"
+    ],
+    [
+      "DIRECT_HTTP11_POST_IMPORT",
+      "test_direct_http_writer_uses_single_post_json_base64"
+    ],
+    [
+      "AUTH_TOKEN_MEMORY_ONLY",
+      "test_execute_does_not_persist_access_token"
+    ],
+    [
+      "AUTH_TOKEN_FAILURE_DOES_NOT_CONSUME",
+      "test_auth_token_failure_does_not_consume"
+    ],
+    [
+      "DIRECT_HTTP_SINGLE_REQUEST_NO_RETRY",
+      "test_execute_exception_after_write_start_marks_unknown_and_stops"
+    ],
+    [
+      "ALL_ALREADY_CORRECT_NO_AUTH",
+      "test_execute_all_already_correct_needs_no_auth"
+    ],
+    [
+      "CONVERGENT_POLICY_CLASSIFIER",
+      "test_policy_classifier_accepts_stale_or_exact_local"
+    ],
+    [
+      "CONVERGENT_CREATE_SKIP",
+      "test_create_classifier_skips_exact_existing_content"
+    ],
+    [
+      "CONVERGENT_CREATE_DIVERGENCE",
+      "test_create_classifier_rejects_divergent_existing_content"
+    ],
+    [
+      "CONVERGENT_EXECUTION_SKIP",
+      "test_execute_skips_already_correct_without_consuming_for_that_entry"
+    ]
+  ],
+  "remote_access_required": false,
+  "remote_execution_authorized": false,
+  "publisher_r5_parent_sha": "d00832b40230f7a1a10161a399151fb5afdf1d2a",
+  "publisher_r6_parent_sha": "0cdfeadb38ff99b4c4622723cbd2ed10a02b51b6",
+  "publisher_r7_parent_sha": "ba9d8e556d80e5acc863a6290d1c943c77216703"
+}

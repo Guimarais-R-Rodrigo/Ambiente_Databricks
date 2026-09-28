@@ -1,0 +1,39 @@
+{
+  "document_kind": "AUTHORIZATION_REQUEST_NOT_AUTHORIZATION",
+  "gate_id": "B1-G6-EXTERNAL",
+  "qualified_candidate_sha": "08c2a93c4c9dede1e759abe28c07242b4116f47e",
+  "qualified_candidate_tree": "a2b1b8c805044ff2e1898da3190414afab9140a7",
+  "deployment_digest": null,
+  "workspace_binding": null,
+  "proposed_target": "personal Databricks Free workspace only",
+  "proposed_operations": [
+    "read-only auth/profile/current-user reconciliation",
+    "read-only remote package content verification",
+    "optional product publication only if remote mismatch and separately approved",
+    "create/import two uniquely named temporary probe notebooks only after approval",
+    "run each probe once and preserve literal output",
+    "create 20 new Genie chats (10 frozen variants per skill) and preserve first result",
+    "optional delete of the two SHA-bound probe notebooks only after evidence preservation and separate approval"
+  ],
+  "proposed_effects": [
+    "NONE for read-only reconciliation",
+    "REMOTE_PACKAGE_WRITE only if separately authorized",
+    "TEMPORARY_WORKSPACE_OBJECT_CREATE for probe notebooks only if authorized",
+    "CONVERSATION_HISTORY_CREATE for Genie cases",
+    "TEMPORARY_WORKSPACE_OBJECT_DELETE only after evidence preservation and separate authorization"
+  ],
+  "forbidden": [
+    "corporate workspace",
+    "corporate/real data",
+    "policy change",
+    "promotion",
+    "Ready",
+    "merge",
+    "blind overwrite/retry"
+  ],
+  "decision": null,
+  "observed_user_authorization_ref": null,
+  "validity": null,
+  "execution_status": "NOT_RUN",
+  "instruction": "Este arquivo solicita autorização; não é autorização e não pode ser preenchido pelo executor."
+}

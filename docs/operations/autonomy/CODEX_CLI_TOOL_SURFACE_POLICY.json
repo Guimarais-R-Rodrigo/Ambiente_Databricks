@@ -1,0 +1,112 @@
+{
+  "schema_version": "SER-CODEX-CLI-TOOL-SURFACE-1",
+  "purpose": "Fail-closed tool-surface classification for the canonical Codex CLI/TUI Windows controller runtime.",
+  "canonical_runtime": "CODEX_CLI_WINDOWS_TUI",
+  "desktop_runtime_status": "UNQUALIFIED_FOR_CONTROLLER_AFTER_REPEATED_BACKEND_REACH",
+  "enforcement": {
+    "project_hook": ".codex/hooks/external_surface_guard.ps1",
+    "matcher": "^(mcp__.*|codex_app.*|cua_repl.*|codex_tui.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$",
+    "policy": "DENY_EXTERNAL_SURFACES_ALLOW_INTERNAL_NODE_REPL",
+    "failure_mode": "FAIL_CLOSED_FOR_MATCHED_SURFACES",
+    "hook_trust": "HUMAN_REVIEW_CURRENT_HASH_REQUIRED_BEFORE_CQ",
+    "hook_name_prefixes": [
+      "codex_app",
+      "cua_repl",
+      "codex_tui"
+    ]
+  },
+  "presence_classes": [
+    {
+      "patterns": [
+        "mcp__node_repl__*"
+      ],
+      "class": "INTERNAL_CODE_MODE_CONTROL",
+      "presence": "ALLOWED_EXPECTED",
+      "invocation": "ALLOWED; nested calls remain hook-governed"
+    },
+    {
+      "patterns": [
+        "codex_tui*"
+      ],
+      "class": "CLI_TUI_DYNAMIC_CONTROL",
+      "presence": "ALLOWED_EXPECTED",
+      "invocation": "FORBIDDEN_BY_PROJECT_HOOK; controller uses project multi-agent roles instead"
+    },
+    {
+      "patterns": [
+        "mcp__codex_app__*",
+        "codex_app*"
+      ],
+      "class": "DESKTOP_CLIENT_CONTROL_PLANE",
+      "presence": "BLOCK_UNEXPECTED_IN_CANONICAL_CLI_RUNTIME",
+      "invocation": "FORBIDDEN; do not probe when presence itself is observed"
+    },
+    {
+      "patterns": [
+        "mcp__cua_repl*",
+        "cua_repl*"
+      ],
+      "class": "CLIENT_BROWSER_CONTROL",
+      "presence": "BLOCK_UNEXPECTED_IN_CANONICAL_CLI_RUNTIME",
+      "invocation": "FORBIDDEN; do not probe when presence itself is observed"
+    },
+    {
+      "patterns": [
+        "list_mcp_resources",
+        "list_mcp_resource_templates",
+        "read_mcp_resource"
+      ],
+      "class": "MCP_RESOURCE_CONTROL",
+      "presence": "ALLOWED_IF_CLIENT_BUILTIN",
+      "invocation": "FORBIDDEN_BY_PROJECT_HOOK"
+    },
+    {
+      "patterns": [
+        "web__run"
+      ],
+      "class": "HOSTED_OPEN_WORLD_READ",
+      "presence": "ALLOWED_IF_CLIENT_BUILTIN",
+      "invocation": "FORBIDDEN_DURING_CQ"
+    },
+    {
+      "patterns": [
+        "mcp__*"
+      ],
+      "class": "OTHER_MCP_SURFACE",
+      "presence": "BLOCK_UNLESS_EXPLICITLY_CLASSIFIED",
+      "invocation": "FORBIDDEN"
+    }
+  ],
+  "cq_rules": {
+    "project_hook_trust_required": true,
+    "desktop_client_surface_presence_blocks": true,
+    "cua_surface_presence_blocks": true,
+    "codex_tui_presence_alone_blocks": false,
+    "unknown_mcp_presence_blocks": true,
+    "forbidden_surface_probe_required_only_when_probeable_surface_present": true,
+    "no_probe_is_valid_when_no_probeable_forbidden_surface_is_loaded": true,
+    "denial_probe_preferences": [
+      {
+        "surface": "codex_tui",
+        "tool": "list_threads",
+        "effect": "READ_ONLY"
+      },
+      {
+        "surface": "mcp_resource",
+        "tool": "list_mcp_resources",
+        "effect": "READ_ONLY"
+      }
+    ],
+    "denial_probe_must_be_read_only_if_hook_is_skipped": true,
+    "any_forbidden_invocation_reaching_backend": "SECURITY_STOP",
+    "probe_retry_count": 0,
+    "web_invocation_count_required": 0,
+    "external_mcp_startup_failure_without_loaded_tool": "NONBLOCKING_DIAGNOSTIC_ONLY",
+    "external_mcp_startup_failure_conditions": [
+      "startup/authentication failed",
+      "zero model-visible tools/resources from that server",
+      "no invocation attempted",
+      "re-inventory at CQ4"
+    ]
+  }
+}

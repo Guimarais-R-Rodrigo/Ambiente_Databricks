@@ -10,6 +10,7 @@ Leia este arquivo primeiro; depois carregue apenas o que a tarefa pedir.
 | Validar/publicar/replicar | `skills/validar-assistant/`, `skills/render-simulado/`, `rules/free-vs-trabalho.md` |
 | Documentar (READMEs, relatórios) | `rules/docs-e-readmes.md`; para objetos: `ambiente_fonte/.assistant/hub_padroes/readme/template_objeto.md` e checkpoint atual em `docs/sprints/readmes_objetos/README.md` |
 | Coordenar com outra IA / fechar sessão | `rules/multi-llm.md`, `templates/changelog-entry.md`, `templates/handoff.md` |
+| Operar SER/SEF em Codex Autonomous Controller Mode | `rules/multi-llm.md`, `../docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md`, envelope ativo e state source da frente |
 | Decisão arquitetural | `docs/decisions/` (ADRs) + `templates/adr.md` |
 | Entender o usuário e os ambientes | `context/perfil-usuario.md`, `context/ambiente-trabalho.md`, `context/ambiente-free.md` |
 

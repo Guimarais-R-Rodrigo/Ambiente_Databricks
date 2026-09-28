@@ -1,0 +1,195 @@
+{
+  "schema_version": "SER-AUTONOMY-ENVELOPE-2",
+  "envelope_id": "SER-B1-AUTONOMY-2026-09-26-R3",
+  "front_id": "SER-B1",
+  "activation": {
+    "state": "ACTIVE_A0_A1",
+    "source_type": "direct_user_chat",
+    "reference": "user-approved-ac-r2-min-2026-09-26",
+    "a2_reference": null
+  },
+  "repository": {
+    "full_name": "Guimarais-R-Rodrigo/Ambiente_Databricks",
+    "branch": "ser/B1-ser03-ser05-authoring",
+    "pull_request": 115
+  },
+  "state_source": "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json",
+  "live_state_precedence": [
+    "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json",
+    "docs/sprints/skill_enforcement_rollout/README.md",
+    "docs/sprints/skill_enforcement_rollout/PARALELO/README.md"
+  ],
+  "repo_scope": {
+    "write_roots": [
+      "tools/skill_enforcement/real_campaigns/b1/g6_recovery/README.md",
+      "tools/skill_enforcement/real_campaigns/b1/g6_recovery/__init__.py",
+      "tools/skill_enforcement/real_campaigns/b1/g6_recovery/adversarial_coverage.json",
+      "tools/skill_enforcement/real_campaigns/b1/g6_recovery/manifest.json",
+      "tools/skill_enforcement/real_campaigns/b1/g6_recovery/residual_probe_recovery.py",
+      "tools/tests/test_ser_b1_g6_recovery.py",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/CHANGELOG.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl",
+      "CHANGELOG.md"
+    ],
+    "protected_roots": [
+      "ambiente_fonte/**",
+      "Novo_Ambiente_Simulado/**",
+      "tools/skill_enforcement/parallel/**",
+      "docs/sprints/micromodelos/**",
+      ".github/**",
+      "**/skill_enforcement/policy.json",
+      "tools/skill_enforcement/real_campaigns/b1/g6/**",
+      "tools/skill_enforcement/real_campaigns/b1/g6_publication/**",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/G6/**",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/G6_*.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/P2_*.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/CASE_MAP.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/SOURCE_BINDINGS.json",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/B1/README.md"
+    ],
+    "shared_roots_requiring_human_gate": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      ".claude/**",
+      ".codex/**",
+      ".agents/skills/ser-autonomous-controller/**",
+      "docs/decisions/**",
+      "docs/operations/**",
+      "tools/validate_codex_autonomy.py",
+      "tools/check_codex_autonomy_delta.py",
+      "tools/tests/test_codex_autonomy.py",
+      "docs/sprints/skill_enforcement_rollout/PLANO_MESTRE.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/01_MANDATO_DECISOES.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/02_ARQUITETURA_CONTRATOS.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/03_CICLO_GATES.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/06_AUDITORIA_EVIDENCIA.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/07_PARALELISMO_INTEGRACAO.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/08_DATABRICKS_GENIE.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/09_PAPEIS_HANDOFFS.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/10_IMPLANTACAO.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/11_RISCOS_BLOQUEIOS.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/13_ADENDO_OPERACIONAL.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/14_CHECKLIST_PRONTIDAO.md",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/CONTROLE_PLANO.json",
+      "docs/sprints/skill_enforcement_rollout/PARALELO/catalogos/**",
+      "tools/requirements-codex-autonomy.txt"
+    ],
+    "controller_maintenance_gate": "CONTROLLER_MAINTENANCE"
+  },
+  "authority_classes": {
+    "A0": {
+      "autonomous": true,
+      "status": "ACTIVE",
+      "allowed": [
+        "repository inspection",
+        "local static analysis",
+        "deterministic tests without material external effect",
+        "evidence audit",
+        "hash recomputation",
+        "read-only remote reconciliation when credentials are already valid and the campaign contract permits it"
+      ],
+      "forbidden": [
+        "credential remediation",
+        "remote object creation",
+        "remote compute with persistent run history unless separately A2-authorized",
+        "Genie conversation creation"
+      ]
+    },
+    "A1": {
+      "autonomous": true,
+      "status": "ACTIVE_SCOPED",
+      "allowed": [
+        "repo-side authoring only within repo_scope.write_roots",
+        "local qualification and causal repair of the SER05 residual recovery package",
+        "tests and validators relevant to the current B1 recovery",
+        "B1 live-state/changelog maintenance",
+        "append-only autonomous run journal at B1/AUTONOMY/JOURNAL.jsonl",
+        "causal commits through the rule-reviewed A1 Git transport only",
+        "normal non-force push to the B1 branch through the rule-reviewed A1 Git transport only",
+        "draft PR metadata/comments"
+      ],
+      "forbidden": [
+        "direct writes to .git or direct command-network access; Git metadata and push require the rule-reviewed A1 Git transport",
+        "repository mutation through MCP/apps/hosted remote tools; use the local worktree and normal git push instead",
+        "any path matching repo_scope.protected_roots",
+        "any path matching repo_scope.shared_roots_requiring_human_gate without CONTROLLER_MAINTENANCE",
+        "historical B1 evidence/runbooks/checkpoints outside B1/AUTONOMY",
+        "any B1 campaign/frozen G6 path not listed in write_roots",
+        "force push",
+        "destructive reset of user work",
+        "policy promotion",
+        "Ready",
+        "merge"
+      ]
+    },
+    "A2": {
+      "autonomous": false,
+      "status": "PENDING_EXPLICIT_ACTIVATION_AND_CONTRACT",
+      "allowed": [
+        "proposed: SHA-bound temporary objects in personal Databricks Free",
+        "proposed: synthetic compute/probes",
+        "proposed: frozen Genie conversations",
+        "proposed: cleanup limited to objects created by the active A2 contract"
+      ],
+      "forbidden": [
+        "any A2 effect before activation.a2_reference is non-null",
+        "any A2 effect before a2_contract is structurally complete",
+        "corporate workspace",
+        "real or corporate data",
+        "unbounded namespace",
+        "blind retry",
+        "effect class not explicitly listed"
+      ]
+    },
+    "A3": {
+      "autonomous": false,
+      "status": "HUMAN_ONLY",
+      "allowed": [],
+      "forbidden": [
+        "current_level promotion",
+        "rollout_mode promotion",
+        "policy promotion",
+        "Ready",
+        "merge",
+        "corporate workspace access",
+        "real/corporate data",
+        "material scope or estimand expansion",
+        "guardrail or coverage relaxation",
+        "decision after unresolved UNKNOWN effect",
+        "controller-governance self-modification without CONTROLLER_MAINTENANCE"
+      ]
+    }
+  },
+  "budgets": {
+    "max_causal_repair_rounds_per_gate": 4,
+    "max_hypotheses_per_root_cause": 2,
+    "same_state_same_command_retries": 0,
+    "max_unknown_effects_before_human": 1,
+    "max_concurrent_subagents": 5,
+    "max_write_capable_agents": 1
+  },
+  "a2_contract": null,
+  "human_gates": [
+    "CONTROLLER_MAINTENANCE",
+    "A2 activation or expansion",
+    "policy/current_level/rollout promotion",
+    "Ready",
+    "merge",
+    "corporate workspace",
+    "real or corporate data",
+    "material scope or estimand change",
+    "guardrail or coverage relaxation",
+    "unresolved UNKNOWN effect",
+    "causal repair budget exhausted"
+  ],
+  "stop_conditions": [
+    "SECURITY_STOP",
+    "EVIDENCE_INCOMPLETE for a claim required by the next gate",
+    "BLOCKED_AUTHORITY",
+    "BLOCKED_DESIGN outside authorized scope",
+    "CONTROLLER_GOVERNANCE_CHANGE_REQUIRED",
+    "UNKNOWN_EFFECT not resolved by allowed read-only reconciliation",
+    "BUDGET_EXHAUSTED"
+  ]
+}

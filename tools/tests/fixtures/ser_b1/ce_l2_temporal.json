@@ -1,0 +1,60 @@
+{
+  "context": {
+    "anchor": "anchor_snapshot",
+    "anchor_grain": "ONE_ROW_PER_ENTITY_DECISION",
+    "cardinality": "N:1",
+    "decision_at": "2026-01-10T00:00:00Z",
+    "entity_keys": [
+      "entity_id"
+    ],
+    "null_key_policy": "REJECT",
+    "pit": "APPLICABLE",
+    "profile": "CONTEXT_ONLY_PILOT_V1",
+    "requested_effect": "NONE",
+    "schema_version": "SER05-CONTEXT-1",
+    "sources": [
+      {
+        "columns": [
+          "entity_id",
+          "reference_at",
+          "available_at"
+        ],
+        "content_sha256": "94444ab59ced9bdfee79fc8ec48536354243cc000436bb2f10e355228e48f056",
+        "grain": "ONE_ROW_PER_ENTITY_DECISION",
+        "id": "anchor_snapshot",
+        "snapshot_id": "anchor_snapshot_synthetic_v1"
+      },
+      {
+        "columns": [
+          "entity_id",
+          "reference_at",
+          "available_at"
+        ],
+        "content_sha256": "ee1e053a125aed64b6d65664727da742764683266b2c6a146d332737a88261ed",
+        "grain": "ENTITY_SNAPSHOT",
+        "id": "attributes_snapshot",
+        "snapshot_id": "attributes_snapshot_synthetic_v1"
+      }
+    ],
+    "synthetic": true,
+    "temporal": {
+      "availability_column": "available_at",
+      "bitemporal": false,
+      "boundary": "LE",
+      "lag_days": 1,
+      "lag_kind": "CONSTANT",
+      "reference_column": "reference_at",
+      "tie_break": "REJECT",
+      "timezone": "UTC"
+    }
+  },
+  "expected_context": {
+    "context_status": "RESOLVED_FOR_L2",
+    "effect": "NONE",
+    "join_executed": false,
+    "ml_readiness": "NOT_EVALUATED",
+    "pit": "APPLICABLE"
+  },
+  "fixture_id": "CE-F01-CONTEXT",
+  "source_id_note": "Synthetic declared identifiers, not verification of source contents"
+}

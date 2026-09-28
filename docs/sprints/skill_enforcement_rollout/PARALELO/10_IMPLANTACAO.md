@@ -1,8 +1,17 @@
 # 10 — Implantação controlada, entregáveis e critérios de saída
 
+## Estado efetivo da implantação
+
+B0 foi integrado pela PR #113. B1 é o piloto real em execução e está em G6 com
+recuperação parcial. As seções 10.1–10.11 preservam o plano de implantação que
+levou a esse estado; não devem ser usadas como fila corrente quando contradisserem
+`B1/AUTHORING_STATE.json`. A camada vigente de coordenação autônoma está em
+10.12 e nos ADR-0024/0025.
+
+
 ## 10.1 Ordem do trabalho
 
-Esta entrega detalha o plano. O próximo trabalho é autoria B0, não executar oito agentes sobre documentação sem implementação. O B0 constrói o mecanismo mínimo comum e seu mapa de cobertura. Em seguida, libera-se autoria dos domínios em paralelo lógico, executando localmente só os pacotes já prontos.
+Esta seção registra a ordem planejada originalmente. B0 já foi concluído e integrado; a frente corrente é B1. O texto abaixo permanece como racional histórico para o mecanismo e não redefine o próximo gate.
 
 A execução de contratos L2 não precisa esperar todas as L3. Cada L4 depende do próprio L2 aceito e dos contratos compartilhados pertinentes. A integração continua controlada por lote e autorização. Não renumerar SER02–SER16 para esconder ou reiniciar as etapas históricas.
 
@@ -98,3 +107,41 @@ Nenhum PASS anterior atravessa SHA. O preflight parseia JSON/Python e confronta 
 Host/Windows/NTFS/sandbox/headroom continuam gates ambientais. O lease atual restringe o host a uma campanha por vez; portanto, a prova de B0 não depende de coordenar múltiplos launchers. Dispatch por conclusão, cache de inventory e tuning do pool são P2: só entram depois que o piloto fornecer métricas de duração, fila, locks e recurso.
 
 O gerador de handoff para campanhas reais fica no primeiro pacote B1, quando existir o primeiro manifesto de skill materializado; não se generaliza agora um formato sem consumidor real. O B0 já elimina handoff manual entre seus gates porque `b0_release` encadeia preflight, metatestes, coverage, host, pilotos e veredito em uma rodada única.
+
+
+## 10.12 Implantação do Autonomous Controller
+
+A camada do ADR-0024 é implantada em três estágios:
+
+### AC0 — estrutura
+
+- `AGENTS.md` permanece adapter fino;
+- `docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md` é o protocolo durável;
+- `docs/operations/autonomy/autonomy-envelope.schema.json` valida envelopes;
+- `.codex/config.toml` habilita multi-agent/goals;
+- `.codex/agents/*.toml` define explorer, executor e três auditores;
+- `.agents/skills/ser-autonomous-controller/SKILL.md` faz progressive disclosure.
+
+### AC1 — validação
+
+Antes do primeiro uso material:
+
+```text
+python -B tools/validate_codex_autonomy.py --json
+python -B -m unittest tools.tests.test_codex_autonomy -v
+```
+
+O validator deve reprovar, no mínimo: A2 ativa sem referência humana, retry no
+mesmo estado, mais de um writer, `danger-full-access`, custom agent incompleto,
+concurrency incompatível e ausência dos documentos donos.
+
+### AC2 — piloto B1
+
+B1 é o primeiro consumidor. O envelope começa `ACTIVE_A0_A1`; portanto o
+controller pode concluir qualificação, autoria corretiva e auditoria repo-side sem
+novo micro-handoff. Efeitos Free/Genie permanecem bloqueados até A2 ser ativada
+explicitamente pelo usuário.
+
+A ativação A2 futura deve definir host, namespace, effects, tentativa/budget,
+readback e cleanup permitido. Não editar o envelope por decisão do próprio
+controller para autoativar A2.

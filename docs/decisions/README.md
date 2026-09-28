@@ -43,7 +43,9 @@ escolha for difícil de reverter ou afetar mais de um componente.
 | [0020](ADR-0020-fontes-catalogo-configurado.md) | fontes ficam no catálogo corporativo configurado via binding externo | aceito em 2026-09-14; integração da MM00 pendente |
 | [0021](ADR-0021-execucao-verificavel-de-skills.md) | `execution_contract` estruturado + capability experiment antes de preflight/runner | aceito em 2026-09-16 após gate humano da SE01; probe temporário aposentado do produto |
 | [0022](ADR-0022-certificacao-prospectiva-ser.md) | certificação SER prospectiva, condições aditivas e prova por superfície | aceito em 2026-09-22 na SER00; implementação prospectiva pendente |
-| [0023](ADR-0023-execucao-paralela-governada-ser.md) | execução paralela governada da SER por DAG, autoria central e certificação isolada | aceito em 2026-09-24; B0 candidata implementada, qualificação local pendente |
+| [0023](ADR-0023-execucao-paralela-governada-ser.md) | execução paralela governada da SER por DAG, autoria central e certificação isolada | aceito; B0 integrado; papéis reconciliados por 0025 |
+| [0024](ADR-0024-codex-autonomous-controller.md) | controller Codex autônomo governado por envelope, single-writer e Human Gates | aceito em 2026-09-26; papéis/estado esclarecidos por 0025 |
+| [0025](ADR-0025-reconciliacao-controller-ser.md) | separa authoring executor de campaign executor e fixa precedência de estado | aceito em 2026-09-26; AC-R1 |
 
 Ao adicionar um ADR, atualize esta tabela e o `CHANGELOG.md`.
 

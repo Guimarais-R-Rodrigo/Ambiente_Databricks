@@ -1,0 +1,4 @@
+# Dependencies used only by the Codex Autonomous Controller governance validator.
+# This file is separate from tools/requirements-dev.txt so historical B0/B1
+# environment digests remain unchanged.
+jsonschema>=4.23

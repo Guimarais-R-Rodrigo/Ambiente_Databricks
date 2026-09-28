@@ -1,5 +1,20 @@
 # B0 — mecanismo comum da execução paralela SER
 
+## Estado efetivo pós-integração
+
+```text
+B0 = INTEGRATED_CLOSED
+PR = #113
+MERGE = 4ba7f551767d847381df1556ed937116258fa77d
+LIVE_FRONT = B1
+```
+
+O texto abaixo preserva o estado e a evidência da campanha B0 antes da integração.
+Campos como `LOCAL_QUALIFICATION_PENDING` são históricos e não reabrem B0.
+O state source vivo da frente atual é
+`../B1/AUTHORING_STATE.json`.
+
+
 Estado de autoria: **AUDIT_CORRECTIVE_V3 / FULL_CHECKOUT_VALIDATION_PENDING / LOCAL_QUALIFICATION_PENDING**.
 
 B0 implementa apenas a infraestrutura local comum. Não promove skill, não altera `policy.json`, não publica no Databricks e não autoriza SER02–SER14. O executor B0 opera o repositório em `READ_ONLY`; preparação mecânica de renderer/snapshot permanece serial e fora dos workers.

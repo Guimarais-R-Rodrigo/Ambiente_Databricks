@@ -5,7 +5,7 @@
 1. **Plano e dossiês:** arquivos versionados que declaram requisitos, decisão de domínio e testes. Esta entrega pertence a essa camada.
 2. **Pacote executável:** implementação, testes, fixtures, perfis e registro de comandos. A autoria repo-side o produz antes de liberar qualquer worker.
 3. **Launcher determinístico:** valida manifesto/autorizações, reserva diretórios e recursos, lança processos isolados, captura evidência e bloqueia ações fora do contrato. Não delega decisão de segurança ao LLM.
-4. **Agentes:** coordenador, executores e auditores recebem escopos fechados. Podem diagnosticar, mas não alterar pacote, resultados ou critérios.
+4. **Agentes de campanha determinística:** coordenador, executores e auditores recebem escopos fechados. Podem diagnosticar, mas não alterar a candidata congelada, resultados ou critérios. O A1 Authoring Executor do ADR-0024/0025 é outro papel: ele pode alterar somente `repo_scope.write_roots` entre rodadas causais, nunca durante a certificação.
 5. **Verificador:** inspeciona os artefatos persistidos, confronta cobertura, identidades e efeitos. Não confia apenas nos flags que o produtor gravou.
 6. **Integrador:** prepara mecanicamente o composto, snapshots e derivado, após receber instruções repo-side. Publicação e merge exigem autorizações próprias.
 

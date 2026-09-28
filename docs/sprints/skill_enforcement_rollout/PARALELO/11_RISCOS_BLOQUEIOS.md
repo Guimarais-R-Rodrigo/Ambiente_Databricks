@@ -1,5 +1,12 @@
 # 11 — Bloqueios de autoria, riscos e controle de escopo
 
+## Estado dos blockers deste catálogo
+
+A tabela B01–B20 é um snapshot de planejamento. B01–B08 e B20 não devem ser
+reabertos apenas porque aparecem como antigos `OPEN_BEFORE_IMPLEMENTATION`.
+O catálogo JSON correspondente declara `PLANNING_BLOCKER_CATALOG_NOT_LIVE_STATE`.
+Para blockers atuais de B1, consulte `B1/AUTHORING_STATE.json`.
+
 ## 11.1 Regra de resolução
 
 Os bloqueios abaixo não são pedidos para o executor local improvisar. Cada um tem owner, evidência faltante e gate impedido. A autoria resolve os técnicos; o usuário decide somente matéria que altera escopo/autoridade/efeito. Não enviar novamente a mesma pergunta se a evidência do repositório já puder resolvê-la.

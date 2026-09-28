@@ -4,7 +4,8 @@ Use `CLAUDE.md` (raiz) como entrada canônica. Ordem de contexto recomendada:
 
 @CLAUDE.md
 @.claude/CLAUDE.md
-@CHANGELOG.md
+
+Consulte `CHANGELOG.md` somente por busca/tail quando o histórico for material para a tarefa; não carregue o arquivo completo por padrão.
 
 Papel preferencial do Gemini neste projeto: pesquisa ampla, revisão de contexto
 longo, segunda opinião e síntese. Não crie um sistema de instruções concorrente.

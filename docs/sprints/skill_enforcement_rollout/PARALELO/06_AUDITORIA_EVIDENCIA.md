@@ -4,7 +4,7 @@
 
 O auditor de domínio verifica o significado do resultado e a suficiência do oráculo. O auditor de evidência/enforcement verifica se a conclusão está sustentada por execução, integridade, cobertura e autoridade. Ambos precisam de contextos distintos do executor. Modelo diferente é desejável quando acrescenta diversidade; não é requisito suficiente para independência.
 
-O executor não edita o relatório de auditoria. O auditor não edita o código nem reclassifica o esperado para concordar com o resultado. O coordenador não resolve conflito contando PASSs. O autor responde com análise causal e mudança proposta; decisões de escopo/risco material vão ao usuário.
+O executor determinístico não edita o relatório de auditoria. O auditor não edita o código nem reclassifica o esperado para concordar com o resultado. O coordenador não resolve conflito contando PASSs. Após a auditoria/rodada encerrar, o A1 Authoring Executor pode responder com análise causal e patch dentro do envelope; decisões de escopo/risco material vão ao Human Gate.
 
 ## 6.2 Pacote mínimo para cada auditor
 

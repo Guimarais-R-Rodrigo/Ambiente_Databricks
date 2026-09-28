@@ -1,5 +1,425 @@
 # Changelog
 
+## 2026-09-27 — Controller Stabilization 2: pente-fino final
+
+- (ChatGPT) Auditoria final encontrou e corrigiu nove pontas pré-runtime: validator V18 com indentação Python inválida; oracle textual MCP legado; dois metatests históricos frágeis; self-test operacional dependente de evidence ainda não criado; bootstrap de checkpoint incompatível com avanço CQ4/adjudicação; extensão incompatível com schema fechado do envelope; binding incompleto de control sources; path Windows duplicado no hook externo.
+- (ChatGPT) Envelope de autoridade foi restaurado byte-idêntico ao blob qualificado 0956016350b06ccf3ef87b9ab102c102802843c1; autonomia operacional permanece em policy separada V2, sem expansão dos 10 write roots.
+- (ChatGPT) Transporte operacional V2 exige PASS canônico + remoção humana do blocker para bootstrap, aceita somente bridge journal/state/changelogs pós-CQ e verifica hashes dos control sources qualificados em toda execução.
+- (ChatGPT) Checkpoint é memória de progresso, não fonte de autoridade; reconciliação de publicação parcial e commits causais sequenciais permanecem.
+- (ChatGPT) Validator V19 + 124 metatest methods definidos. Host validator/metatests/PowerShell/CQ ainda NOT_RUN neste candidato.
+- (ChatGPT) Nenhum B1 material, A2, G6/Genie/Databricks material, promoção, Ready ou merge executado.
+## 2026-09-27 — Controller Stabilization 2: autonomia operacional
+
+- (ChatGPT) Separados CQ single-shot e operação A1 multi-commit; trabalho posterior usa checkpoint externo encadeado ao control head qualificado.
+- (ChatGPT) Falhas locais recuperáveis entram em REPAIRING e usam até 4 rodadas causais já previstas; repetição cega continua zero.
+- (ChatGPT) Transporte operacional preserva commit local em falha de push/readback e reconcilia publicação parcial antes de nova mutação; divergência não reconciliável continua UNKNOWN_EFFECT.
+- (ChatGPT) Journal deixa de selecionar modo/autoridade operacional; policy/envelope são fontes de autoridade.
+- (ChatGPT) Validator V18 + 113 metatests protegem separação CQ/operação, checkpoint, non-force, write roots=10, ausência de journal-authority e gates humanos.
+- (ChatGPT) Nenhum B1 material, A2, G6/Genie/Databricks material, promoção, Ready ou merge executado.
+## 2026-09-27 — Controller Stabilization 1: fechamento de contradições finais
+
+- (ChatGPT) Contraditório final encontrou duas inconsistências antes do novo CQ: o bootstrap exigia `CQ_READY_TO_RUN = PASS` antes do trust humano embora o preflight só possa emitir `AFTER_PROJECT_HOOK_TRUST`; e o protocolo geral ainda referenciava preflight v5/classificação antiga de tools.
+- (ChatGPT) Contrato final separa fases: host preflight v6 PASS -> revisão/trust humano do hash atual dos project hooks -> nova conversa CQ gerada mecanicamente. O host nunca declara trust em nome do usuário.
+- (ChatGPT) Protocolo geral alinhado ao v6/tool-surface policy v2 e ao resultado pós-CQ4 somente em evidence externo, sem segunda escrita repo-side.
+- (ChatGPT) Validator sobe para `SER-CODEX-AUTONOMY-VALIDATION-17` e passa a falhar em readiness prematuro, drift do protocolo e regressão para preflight v5.
+- (ChatGPT) Metatest methods definidos = 105; permissions/config/envelope/A1 roots/network/A2 permanecem inalterados; runtime novo ainda NOT_RUN.
+
+## 2026-09-27 — Codex Autonomous Controller: estabilização consolidada
+
+- (ChatGPT) Manutenção consolidada autorizada após CQ blockers sucessivos; nenhum B1 material, A2, G6/Genie/Databricks material, promoção, Ready ou merge.
+- (ChatGPT) Tool surfaces passam a separar presença de autoridade: Browser/CUA nativo e control plane interno não bloqueiam por presença; `mcp__node_repl__*` interno permanece permitido; project `PreToolUse` nega Browser/CUA, Codex-app, MCP externos/resources e web antes do efeito quando interceptáveis.
+- (ChatGPT) Validator V16 substitui o falso-oráculo de colisão PowerShell por análise de parâmetros/assignments com fixture que reintroduz o bug histórico; permission maps A0/A1 passam a ser exatos e modo `100755` do validator é obrigatório.
+- (ChatGPT) Preflight v6 adiciona self-test offline/AST do probe, MCP guard, scope guards e Git transport antes do baseline TCP; suíte controller passa a 102 metatests definidos.
+- (ChatGPT) CQ4 passa a usar Python do host evidence, validar fetch/push URL, fazer fetch-before-commit, exigir `CQ_JOURNAL_ONLY` e readback remoto do SHA.
+- (ChatGPT) Handoff passa a ser mecânico via `CQ_RUN_REQUEST.json` + `CQ_RUN_PROMPT.md`; após CQ4 não há segunda escrita repo-side, evitando churn de HEAD/tree. Hooks alterados exigem review/trust humano do hash atual como pré-condição anterior a CQ0.
+- (ChatGPT) Config/envelope/10 A1 write roots/network policy/A2 permanecem inalterados. Runtime do novo candidato ainda NOT_RUN; próximo passo único = host preflight v6 e prompt gerado.
+
+## 2026-09-27 — AC-R2 Runtime-6 R1: preservação do modo executável
+
+- (ChatGPT) Revalidação pós-fast-forward detectou regressão incidental de modo Git em `tools/validate_codex_autonomy.py`: `100755 -> 100644`, sem alteração intencional de conteúdo.
+- (ChatGPT) Commit `f4139e1e0bb5e1d0ba677f630d56c467f6261154` restaura exclusivamente `100755`; blob do validator permanece `6f497c1591e9cea4fefe766885a9519776c3d2da`, com 0 additions/deletions e conteúdo byte-idêntico.
+- (ChatGPT) Candidato final revalidado em tree `15a01c2e0cc789f3d6a95ae169cd44329b30feaf`: validator V15, 85 metatests, config/envelope inalterados, self-test collision ausente e TCP oracle inalterado; findings materiais = 0.
+- (ChatGPT) Host preflight executado no HEAD anterior fica superseded pela mudança de identidade; novo preflight v5 é obrigatório antes do próximo CQ.
+
+## 2026-09-27 — AC-R2 CM-DESKTOP-RUNTIME-6 R1: fechamento estático
+
+- (ChatGPT) `CM_DESKTOP_RUNTIME_6_R1_STATIC = PASS` no candidato `3fd442fb6590c6913221bc58ad0aaaf2164c4f2a` / tree `1c1fce89560d668026180e6b38f8229de69c341f`.
+- (ChatGPT) Auditoria adversarial confirmou delta exato de 6 arquivos, zero findings materiais, ausência case-insensitive de atribuição `$selfTest =`, novo guard validator `DESKTOP_WINDOWS_NETWORK_PROBE_SELFTEST_SWITCH_SHADOWED` e 85 métodos de metateste definidos.
+- (ChatGPT) `.codex/config.toml` e `B1_AUTONOMY_ENVELOPE.json` permanecem blob-idênticos ao candidato bloqueado; 10 writes A1, A0/A1 network disabled, A2 disabled e TCP oracle inalterados.
+- (ChatGPT) Validator = `SER-CODEX-AUTONOMY-VALIDATION-15`. Host validator/metatests/self-test/baseline e CQ0-CQ5 ainda NOT_RUN no novo candidato.
+- (ChatGPT) Próximo passo: fast-forward do worktree dedicado, novo host preflight v5 e nova conversa CQ; nenhuma promoção, Ready ou merge autorizados.
+
+## 2026-09-27 — AC-R2 CM-DESKTOP-RUNTIME-6 R1: CQ3 switch-variable collision
+
+- (Codex/ChatGPT) CQ bundle independently adjudicated as valid BLOCKED at CQ3; uploaded ZIP SHA256 `165A10FD01DE206B430D2FCA5EEC0CD47E0681324EC5404F2FA444F9F6CAA1FA`, all MANIFEST hashes verified.
+- (Codex/ChatGPT) Seven negative filesystem probes were single-shot denied with sentinels absent; network probe invoked once, exited 1 before socket, TCP attempts = 0; journal/CQ4/commit/push/material effects = NOT_RUN.
+- (ChatGPT) Root cause: PowerShell variable names are case-insensitive, so script parameter `[switch]$SelfTest` collided with script-scope assignment `$selfTest = $evidence.network_probe.serialization_selftest`.
+- (ChatGPT) Corrective R1 renames the runtime evidence variable to `$hostSerializationSelfTestEvidence` and adds validator/metatest regression forbidding any case-insensitive `$selfTest =` assignment.
+- (ChatGPT) Validator advances to `SER-CODEX-AUTONOMY-VALIDATION-15`; controller metatest methods defined statically = 85. Permission profiles, write roots, command network, A2 and TCP oracle are unchanged.
+- (ChatGPT) Corrected candidate is authored only; host preflight/CQ runtime on the new candidate remain NOT_RUN pending static close.
+
+## 2026-09-27 — AC-R2 CM-DESKTOP-RUNTIME-6: fechamento estático
+
+- (ChatGPT) `CM_DESKTOP_RUNTIME_6_STATIC = PASS` no candidato `d09f05694ae462b74ae8be11f70e8c5ce9076401` / tree `b2c791f6b68ffa500dbdbd5e1fba7e147f6f789e`.
+- (ChatGPT) Probe v2 remove o padrão PowerShell que falhou: sem `New-Object System.Collections.Generic.List[object]` e sem `exception_type=$(if ...)` inline.
+- (ChatGPT) Exception chain usa array simples; exception_type é precomputado; todos os payloads passam por função única de JSON serialize+round-trip.
+- (ChatGPT) Preflight v5 executará `-SelfTest` offline 3/3 com zero network attempts antes de qualquer baseline TCP e persistirá hashes stdout/stderr no evidence.
+- (ChatGPT) Validator V14 e 84 métodos de metateste definidos estaticamente; os padrões inseguros agora são regressões explícitas.
+- (ChatGPT) `.codex/config.toml` permanece byte-idêntico: 10 write roots A1, sem .git write, network A0/A1 disabled.
+- (ChatGPT) Findings materiais repo-side abertos: 0; host self-test, validator/metatests v14 e CQ runtime ainda NOT_RUN no novo candidato.
+
+## 2026-09-27 — AC-R2 CM-DESKTOP-RUNTIME-6
+
+- (Codex/ChatGPT) Runtime-5 parou corretamente em CQ3: o probe protegido foi invocado uma vez, mas PowerShell lançou ArgumentException "Os tipos de argumento não correspondem" ao montar o payload; nenhum JSON/socket outcome ficou recuperável.
+- (ChatGPT) Root cause isolada no padrão generic List[object] via New-Object combinado com acesso dinâmico inline ao construir exception_type.
+- (ChatGPT) Probe v2 usa array PowerShell simples, precomputa exception_type e centraliza serialize + JSON round-trip em funções compartilhadas.
+- (ChatGPT) Novo -SelfTest offline serializa/round-trips PASS_NETWORK_DENIED, FAIL_NETWORK_BOUNDARY_OPEN e NOT_PROVEN com network_attempt_count=0.
+- (ChatGPT) Host preflight sobe para v5 e exige self-test 3/3 PASS no mesmo Windows PowerShell antes do baseline TCP host-side.
+- (ChatGPT) Oráculo TCP, endpoint semantics e single-shot/no-retry permanecem inalterados.
+- (ChatGPT) Permission profiles, 10 writes A1, .git boundary, network policy e A2 permanecem inalterados.
+- (ChatGPT) Validator sobe para V14 e a suíte controller passa a 84 métodos definidos estaticamente; runtime corrigido ainda NOT_RUN.
+
+## 2026-09-27 — AC-R2 CM-DESKTOP-RUNTIME-5: fechamento estático
+
+- (ChatGPT) `CM_DESKTOP_RUNTIME_5_STATIC = PASS` no candidato `a486187264e25ff972dae81f4f90ee3cea103726` / tree `5170fa2ec7b147174c0f254691431037c2193151`.
+- (ChatGPT) Preflight v4 mantém baseline TCP raw host-side single-shot em IPv4:443 e agora inclui o SHA do probe protegido.
+- (ChatGPT) `.codex/probes/cq3_executor_network_probe.ps1` verifica evidence+sidecar+próprio SHA+HEAD/tree clean, usa exatamente o selected_ipv4:443 e faz uma única tentativa TCP raw BeginConnect/EndConnect sem DNS/HTTP/TLS/auth.
+- (ChatGPT) Oráculo: AccessDenied/10013 = PASS; TCP conectado = FAIL_NETWORK_BOUNDARY_OPEN; timeout/outros = NOT_PROVEN; sem retry/endpoint alternativo.
+- (ChatGPT) `.codex/config.toml` permanece byte-idêntico ao candidato Runtime-4: exatamente 10 write roots A1, sem .git write, network A0/A1 disabled.
+- (ChatGPT) Validator V13 e 80 métodos de metateste definidos estaticamente; 0 findings materiais repo-side.
+- (ChatGPT) Runtime CQ corrigido permanece NOT_RUN até novo host preflight v4.
+
+## 2026-09-27 — AC-R2 CM-DESKTOP-RUNTIME-5
+
+- (Codex/ChatGPT) Runtime-4 CQ provou filesystem denials e parou somente no network probe inconclusivo: Invoke-WebRequest retornou Authentication failed sem exception chain suficiente.
+- (Concurrent local commit) `c9648525...` introduziu baseline host-side TCP raw v4 e contrato parcial; incorporado como base concorrente compatível.
+- (ChatGPT) Hardening: novo probe protegido `.codex/probes/cq3_executor_network_probe.ps1`, cujo SHA entra no host evidence. O executor executa apenas esse script.
+- (ChatGPT) Probe valida evidence+sidecar+próprio SHA+HEAD/tree clean, reutiliza exatamente selected_ipv4:443 e faz uma única tentativa TCP raw, sem DNS/HTTP/TLS/auth.
+- (ChatGPT) Oráculo: AccessDenied/10013 = PASS_NETWORK_DENIED; conexão = FAIL_NETWORK_BOUNDARY_OPEN; timeout/outros = NOT_PROVEN. Sem retry ou endpoint alternativo.
+- (ChatGPT) Permission profiles, 10 A1 write roots, .git boundary, command-network policy e A2 permanecem inalterados.
+- (ChatGPT) Validator sobe para V13 e a suíte controller passa a 80 métodos definidos estaticamente; runtime corrigido ainda NOT_RUN.
+
+## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-4: fechamento estático
+
+- (ChatGPT) `CM_DESKTOP_RUNTIME_4_STATIC = PASS` no candidato `90cf3eb85e9bd79d58e0bb211ee179649fc5a6f1` / tree `548a84944595559994cabe532c36c43e5b5103d1`.
+- (ChatGPT) Quatro roles A0 possuem exceção CQ3 single-shot explícita, sem refusal shadow: tentativa direta única, sem retry/fallback/escalation, sucesso inesperado => SECURITY_STOP sem cleanup.
+- (ChatGPT) Executor CQ3 é obrigado a testar governance/unlisted/network antes do único append positivo A1; metadata declarativa não bloqueia antecipadamente.
+- (ChatGPT) `.codex/config.toml` permaneceu byte-idêntico ao candidato anterior: exatamente 10 writes A1, sem .git write, network A0/A1 disabled.
+- (ChatGPT) Validator V12 e 75 métodos de metateste definidos estaticamente.
+- (ChatGPT) Findings materiais repo-side abertos: 0; runtime CQ ainda NOT_RUN.
+
+## 2026-09-26 — CM-DESKTOP-RUNTIME-4 pre-close instruction hardening
+
+- (ChatGPT) Removida ambiguidade residual em roles A0: regra read-only normal agora é explicitamente "outside the qualification-only exception".
+- (ChatGPT) Executor normal A1/envelope/governance rules também excluem somente os probes negativos exatos CQ3, evitando refusal por instrução conflitante.
+- (ChatGPT) Permission profiles e autoridade efetiva permanecem inalterados; apenas a capacidade do modelo de tentar o sentinel foi corrigida.
+- (ChatGPT) Validator sobe para V12 e a suíte passa a 75 métodos definidos estaticamente.
+
+## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-4
+
+- (Codex/ChatGPT) CQ anterior chegou ao CQ3: root denial foi provado; quatro roles A0 foram spawned mas recusaram a tentativa por developer_instructions, logo enforcement não foi provado; executor foi interrompido por metadata read-only antes dos probes.
+- (ChatGPT) Roles A0 ganham exceção CQ3 estritamente rotulada `CQ3_NEGATIVE_PERMISSION_PROBE`: uma única tentativa-sentinela, sem retry/fallback/escalation, esperada como denial; sucesso inesperado => SECURITY_STOP sem cleanup.
+- (ChatGPT) Executor ganha `CQ3_EXECUTOR_PERMISSION_PROBES`: metadata declarativa vira diagnóstico e não blocker antecipado; governance/unlisted/network negativos devem rodar antes do único append positivo ao journal.
+- (ChatGPT) Permission profiles, 10 write paths A1, network, .git boundary e A2 permanecem inalterados.
+- (ChatGPT) Validator sobe para V11 e a suíte controller passa a 73 métodos definidos estaticamente.
+- (ChatGPT) CQ corrigido ainda NOT_RUN.
+
+## 2026-09-26 — CM-DESKTOP-RUNTIME-3 false-negative correction: fechamento estático
+
+- (ChatGPT) `CM_DESKTOP_RUNTIME_3_STATIC = PASS` após correção do falso negativo do validator.
+- (ChatGPT) Contrato Desktop agora nomeia explicitamente `CQ_HOST_PREFLIGHT.json` e `CQ_HOST_PREFLIGHT.sha256`; todos os 10 tokens contratuais V10 estão presentes.
+- (ChatGPT) Suíte controller passa a 68 métodos definidos estaticamente.
+- (ChatGPT) Nenhuma mudança de permission profile, write boundary, network, A1 ou A2 nesta correção.
+- (ChatGPT) Findings materiais repo-side abertos: 0.
+- (ChatGPT) Próximo passo é somente fast-forward + nova execução do host preflight v3.
+
+## 2026-09-26 — CM-DESKTOP-RUNTIME-3 host-preflight validator false negative
+
+- (User/Host) Preflight v3 executou validator V10 e parou fail-closed com `DESKTOP_WINDOWS_CQ_CONTRACT_INVALID`; metatests não rodaram.
+- (ChatGPT) Causa isolada: contrato Desktop continha toda a semântica v3, mas não nomeava literalmente `CQ_HOST_PREFLIGHT.json`, token obrigatório do validator.
+- (ChatGPT) Corrigido somente o binding documental; nenhuma autoridade, permission profile, preflight runtime ou regra Git foi alterada.
+- (ChatGPT) Adicionada regressão para exigir `CQ_HOST_PREFLIGHT.json` + sidecar no contrato. Suíte passa a 68 métodos definidos estaticamente.
+
+## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-3: fechamento estático
+
+- (ChatGPT) `CM_DESKTOP_RUNTIME_3_STATIC = PASS` no candidato `c486cb36d28c7652556ea796c1861ebc53503106` / tree `d67e887a61b066448cba2a42f3ab6616bcfa8aed`.
+- (ChatGPT) Preflight v3 executa validator/metatests host-side, SHA-bound ao candidato e aos fontes críticos, e exige final HEAD/tree/worktree inalterados.
+- (ChatGPT) Python é `HOST_ONLY`; nenhuma regra Python específica permanece em A0/A1.
+- (ChatGPT) A1 mantém exatamente os 10 write paths do envelope; direct `.git` write ausente e command network disabled.
+- (ChatGPT) CQ3/CQ4 permanecem behavioral runtime obrigatórios no Desktop.
+- (ChatGPT) Validator V10 e 67 métodos de metateste definidos estaticamente; execução host-side ainda NOT_RUN até o próximo preflight.
+- (User) Creative Production foi reportado como desabilitado, mas ausência precisa ser observada em uma nova sessão.
+- (ChatGPT) Findings materiais repo-side abertos: 0.
+
+## 2026-09-26 — CM-DESKTOP-RUNTIME-3 pre-close hardening
+
+- (ChatGPT) Removido oráculo textual frágil de PR deferred; teste passa a validar a semântica.
+- (ChatGPT) Preflight v3 agora exige final HEAD/tree idênticos ao candidato após validator/metatests, além de worktree clean.
+- (ChatGPT) Evidence v3 registra final_head/final_tree.
+- (ChatGPT) Suíte passa a 67 métodos definidos estaticamente; runtime CQ permanece NOT_RUN.
+
+## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-3
+
+- (Codex/ChatGPT) Tentativa anterior confirmou preflight v2 válido, mas Python permaneceu Access denied dentro da sandbox; Creative Production estava carregado naquela sessão.
+- (User) Creative Production foi desabilitado depois; a nova sessão ainda precisa provar inventory sem plugin mutável.
+- (ChatGPT) CQ0.5/CQ5 migram para preflight host-side v3 SHA-bound; Python = HOST_ONLY.
+- (ChatGPT) Preflight v3 executa validator/metatests host-side, exige PASS/exit 0, runtime count = static count e hashes source/output.
+- (ChatGPT) Exceções Python read removidas de A0/A1; writes/network permanecem inalterados.
+- (ChatGPT) CQ3/CQ4 permanecem behaviorais no Desktop.
+- (ChatGPT) Validator V10 e 66 métodos de metateste definidos estaticamente.
+- (ChatGPT) CQ0–CQ5 corrigido continua NOT_RUN; B1 material/A2/G6/Genie/Databricks/policy/Ready/merge fora do escopo.
+
+## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-2: fechamento estático
+
+- (ChatGPT) `CM_DESKTOP_RUNTIME_2_STATIC = PASS` no candidato `2a16776ca9d73ad0b667bd682adf8e4a066cba85` / tree `7ff84fb124deb40c3a17fb95ce8d5844a42ada81`.
+- (ChatGPT) A0/A1 possuem exatamente read explícito para `~\AppData\Local\Programs\Python\Python312`; network e writes repo-side permanecem inalterados.
+- (ChatGPT) A1 mantém exatamente 10 write paths do envelope, sem `.git` write.
+- (ChatGPT) Host preflight v2 prende Python ao root qualificado e usa epoch para freshness sem locale.
+- (ChatGPT) Nome nominal do profile pode ser `NOT_OBSERVABLE_DESKTOP`, mas PASS agregado exige `PROJECT_PROFILE_EFFECTIVE=PASS_BEHAVIORALLY` após CQ3/CQ4/CQ5 verdes.
+- (ChatGPT) Validator V9 e 66 métodos de metateste estão definidos estaticamente; execução real permanece NOT_RUN.
+- (ChatGPT) Creative Production continua precondição operacional: deve estar desabilitado antes do próximo CQ.
+- (ChatGPT) Findings materiais repo-side abertos: 0.
+
+### Próximo passo
+
+- Fast-forward do worktree B1, desabilitar Creative Production, executar host preflight v2 e abrir nova sessão CQ0–CQ5.
+
+## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-2 pre-close hardening
+
+- (ChatGPT) PowerShell do host preflight normalizado para separadores Windows nativos no root Python qualificado.
+- (ChatGPT) Contrato Desktop alinhado ao validator V9.
+- (ChatGPT) State explicita: A1 read surface mudou para permitir Python qualificado; A1 write boundary e network permanecem inalterados.
+- (ChatGPT) Suíte controller passa a 66 métodos definidos estaticamente; CQ runtime continua NOT_RUN.
+
+## 2026-09-26 — AC-R2 CM-DESKTOP-RUNTIME-2
+
+### Evidência incorporada
+
+- (Codex/ChatGPT) Tentativa Desktop em `3285d7ba...` terminou BLOCKED sem mutação repo-side: Creative Production write-capable carregado, Python host-qualified negado pelo sandbox e nome nominal do profile não observável.
+- (ChatGPT) Host preflight havia provado Python 3.12.10 + jsonschema 4.26.0 e identidade Git/PR, mas o executável em LocalAppData não recebeu execução efetiva dentro da sandbox.
+
+### Corrigido
+
+- (ChatGPT) A0/A1 recebem somente `read` explícito em `~\AppData\Local\Programs\Python\Python312`; nenhum write/network/A1 path foi ampliado.
+- (ChatGPT) Host preflight v2 aceita Python somente dentro desse root e emite `recorded_at_unix_seconds` para freshness independente de locale.
+- (ChatGPT) Nome nominal do profile pode ser `NOT_OBSERVABLE_DESKTOP` provisoriamente; PASS final exige prova comportamental cumulativa em CQ3/CQ4/CQ5 e resulta em `PROJECT_PROFILE_EFFECTIVE=PASS_BEHAVIORALLY`.
+- (ChatGPT) Creative Production continua blocker externo real e deve ser desabilitado no app antes do próximo CQ.
+- (ChatGPT) Validator sobe para V9 e a suíte controller passa a 65 métodos definidos estaticamente.
+
+### Limites
+
+- Nenhum write/network/A1/A2 foi ampliado.
+- CQ0–CQ5, B1 material, G6, Genie, Databricks, policy, Ready e merge permanecem NOT_RUN.
+
+## 2026-09-26 — AC-R2 Desktop Windows CQ compatibility: fechamento estático
+
+- (ChatGPT) `DESKTOP_WINDOWS_CQ_MAINTENANCE_STATIC = PASS` no candidato `121791df5be90ba6d31bbd607c62aa2d52f24765` / tree `b9445413ce9ee7fe784a6697cbad60e8ee08e3c9`.
+- (ChatGPT) Validator `SER-CODEX-AUTONOMY-VALIDATION-8`, 60 métodos de metateste definidos, host preflight `AC-R2-DESKTOP-HOST-PREFLIGHT-1` e contrato Desktop explícito.
+- (ChatGPT) Host preflight exige fetch/HEAD/tree/cleanliness, hash da config e Python absoluto com jsonschema; não instala dependências, não faz push e não persiste URL remota bruta.
+- (ChatGPT) Codex CLI/strict/execpolicy podem ser `NOT_OBSERVABLE_DESKTOP`; prova crítica migra para profile ativo + hash de config + CQ3 + CQ4.
+- (ChatGPT) PR metadata pode ser deferida à adjudicação externa; plugins externos persistentes write-capable continuam blocker e devem estar desabilitados durante CQ.
+- (ChatGPT) A0/A1/A2 e os 10 write paths A1 não foram ampliados. Findings materiais repo-side abertos: 0.
+- (ChatGPT) CQ0–CQ5, validator runtime e metatestes runtime permanecem NOT_RUN.
+
+## 2026-09-26 — AC-R2 Desktop host-preflight PowerShell hardening
+
+- (ChatGPT) Corrigida interpolação PowerShell do erro de divergência para `${head}:${originHead}`, evitando parsing ambíguo.
+- (ChatGPT) Host preflight passa a ter freshness máxima explícita de 30 minutos para CQ0-D.
+- (ChatGPT) Suíte controller passa a 60 métodos definidos estaticamente; runtime continua NOT_RUN.
+
+## 2026-09-26 — AC-R2 Desktop Windows CQ corrective follow-up
+
+- (ChatGPT) Revisão pré-fechamento rejeitou a primeira candidata Desktop antes de runtime: corrigida a representação do key `~\codex-scratch\Ambiente_Databricks` no validator.
+- (ChatGPT) `CODEX_DESKTOP_WINDOWS_CQ.md` passa a ser required path explícito do validator.
+- (ChatGPT) Host preflight deixa de persistir URL remota bruta; registra apenas identidade do repo, evitando eventual credential leakage.
+- (ChatGPT) Validator sobe para V8 e a suíte passa a 59 métodos definidos estaticamente.
+- (ChatGPT) Nenhuma execução CQ/B1/A2 ocorreu nesta correção.
+
+## 2026-09-26 — AC-R2 Desktop Windows CQ compatibility maintenance
+
+### Evidência incorporada
+
+- (Codex/ChatGPT) Tentativa CQ em `8a58a2d2...` terminou BLOCKED sem mutação repo-side. O report anexado teve SHA-256 `E4B0B892743FDE27FFBC214753A38D25B745CBF25853B21EA3A0A6C31CB745BE`.
+- (ChatGPT) Checkout/HEAD/tree e limpeza foram preservados; nenhum CQ3/CQ4/B1/A2 foi executado.
+
+### Corrigido
+
+- (ChatGPT) Criado perfil normativo `CODEX_DESKTOP_WINDOWS_CQ.md`: CLI Codex/strict/execpolicy ficam como observações opcionais no Desktop, nunca como PASS inventado.
+- (ChatGPT) Criado `tools/codex_desktop_cq_host_preflight.ps1` para prova host-side de fetch/HEAD/tree/cleanliness, binding SHA-256 da config e descoberta fail-closed de Python absoluto com `jsonschema`, sem instalação automática.
+- (ChatGPT) PR metadata pode ser `DEFERRED_TO_EXTERNAL_ADJUDICATION`; a branch remota continua vinculada pelo fetch host-side e a PR será recomputada externamente.
+- (ChatGPT) Tools `mcp__codex_app__*` passam a ser control-plane interno inventariado, não blocker por presença; mutadores continuam proibidos. Plugin externo persistente write-capable continua blocker e deve ser desabilitado durante CQ.
+- (ChatGPT) Validator sobe para V7 e a suíte controller passa a 58 métodos definidos estaticamente.
+
+### Limites
+
+- Nenhuma autoridade A0/A1/A2 foi ampliada.
+- CQ0–CQ5 continuam NOT_RUN na candidata corretiva; B1 material/G6/Genie/Databricks/policy/Ready/merge não foram iniciados.
+
+## 2026-09-26 — AC-R2 Windows elevated root-read maintenance: fechamento estático
+
+- (ChatGPT) `WINDOWS_ROOT_READ_MAINTENANCE_STATIC = PASS` no candidato `2678c03fd3e8b16a1299bf4b999426276bcd436e` / tree `9db25d36631ded4f868bdbca55a551737d8349dc`.
+- (ChatGPT) A0 e A1 declaram exatamente `:root=read`; nenhuma autoridade de write/network foi ampliada.
+- (ChatGPT) A0 segue sem write repo-side; A1 segue com os mesmos 10 arquivos concretos do envelope, além dos scratch temporários já previstos.
+- (ChatGPT) Escrita direta em `.git` permanece ausente e command network permanece disabled.
+- (ChatGPT) Validator V6 e 52 métodos de metateste estão definidos; execução real permanece NOT_RUN e ocorrerá em CQ.
+- (ChatGPT) Finding material aberto repo-side: 0.
+- (ChatGPT) Próxima ação é fast-forward do worktree B1 e nova tentativa de criação da thread/CQ0–CQ5.
+
+## 2026-09-26 — AC-R2 Windows elevated root-read maintenance
+
+### Observado
+
+- (User/Codex Desktop) Após corrigir o writable capability root, a criação da thread avançou até a validação seguinte e falhou com `elevated Windows sandbox requires effective :root read access`.
+- (ChatGPT) A falha ocorreu antes de CQ0 e sem mutação repo-side.
+
+### Corrigido
+
+- (ChatGPT) `:root = "read"` foi adicionado aos profiles `ser-controller-a0` e `ser-b1-a1`, conforme requisito efetivo do backend Windows elevado observado.
+- (ChatGPT) Nenhum write root do repositório foi ampliado: A0 continua sem writes repo-side e A1 continua limitado aos 10 arquivos concretos do envelope.
+- (ChatGPT) Command network continua disabled e escrita direta em `.git` continua negada.
+- (ChatGPT) Validator sobe para `SER-CODEX-AUTONOMY-VALIDATION-6` e exige `:root=read` em A0/A1.
+- (ChatGPT) Suíte controller passa a 52 métodos definidos estaticamente, com regressões fail-closed para ausência de root read.
+- (ChatGPT) A documentação passa a registrar explicitamente a limitação: no Windows elevado, a superfície de leitura é mais ampla do que repository-only, sem equivaler a autoridade de mutação.
+
+### Limites
+
+- CQ0–CQ5 continuam NOT_RUN porque a thread ainda não foi criada com sucesso.
+- B1 material, A2, G6, Genie, policy promotion, Ready e merge permanecem fora do escopo.
+
+## 2026-09-26 — AC-R2 Windows bootstrap maintenance: fechamento estático
+
+- (ChatGPT) `WINDOWS_BOOTSTRAP_MAINTENANCE_STATIC = PASS` no candidato `36969a4ec3c2a70c37e89737a11ec273bb16be4f` / tree `a62bd3b29bc0ecd4f31b68578c5ef5b6d4ed2785`.
+- (ChatGPT) O profile A0 preserva repository root read-only e network disabled; o único novo write root é o scratch externo `~\codex-scratch\Ambiente_Databricks`.
+- (ChatGPT) Validator V5 e 49 métodos de metateste estão definidos; execução real permanece NOT_RUN e ocorrerá em CQ.
+- (ChatGPT) Finding material aberto repo-side: 0.
+- (ChatGPT) Próxima ação é somente criar o diretório externo vazio, fazer fast-forward do worktree B1 e repetir a criação da conversa/CQ0–CQ5.
+
+## 2026-09-26 — AC-R2 Windows sandbox bootstrap maintenance
+
+### Observado
+
+- (User/Codex Desktop) A criação da conversa falhou antes de carregar `AGENTS.md` com `workspace-write sandbox has no writable root capability SIDs`.
+- (ChatGPT) O worktree B1 já estava limpo e alinhado ao HEAD remoto; a falha ocorreu antes de CQ0 e sem mutação repo-side.
+
+### Corrigido
+
+- (ChatGPT) `ser-controller-a0` mantém o repository root read-only e recebe um único scratch externo explícito `~\codex-scratch\Ambiente_Databricks` como profile workspace root + filesystem write.
+- (ChatGPT) Command network continua disabled; nenhuma escrita em `.git`, produto, policy ou outra frente foi aberta.
+- (ChatGPT) Validator sobe para `SER-CODEX-AUTONOMY-VALIDATION-5` e exige mecanicamente o scratch/capability root.
+- (ChatGPT) Suíte controller passa a 49 métodos definidos estaticamente, incluindo regressão positiva e fail-closed para ausência do scratch root.
+- (ChatGPT) Runtime qualification documenta a precondição de host: criar o diretório vazio antes de iniciar o Codex Desktop.
+
+### Limites
+
+- CQ0–CQ5 continuam NOT_RUN porque a tentativa anterior não chegou a criar a thread.
+- B1 material, A2, G6, Genie, policy promotion, Ready e merge permanecem fora do escopo.
+
+## 2026-09-26 — AC-R2-MIN: fechamento estático
+
+### Veredito
+
+- (ChatGPT) `AC_R2_STATIC_REPO_SIDE = PASS` no candidato `128ff8df9f2b91567847eaed1e99532d88bfee2f` / tree `f191e85662d8e617ae9f42af7909a780437ad5e7`.
+- (ChatGPT) Findings materiais abertos após contraditório final: 0.
+- (ChatGPT) O delta AC-R1→AC-R2 permanece restrito à camada controller/SER state/changelog; zero mudança observada em produto, policy, Micromodelos e `.github`.
+- (ChatGPT) 47 métodos de metateste estão definidos estaticamente; execução real do validator/metatestes permanece NOT_RUN e pertence a CQ5.
+- (ChatGPT) CQ0–CQ5, effective permission enforcement, spawned-role probes e Git bridge runtime permanecem NOT_RUN.
+
+### Próximo gate
+
+- (ChatGPT) `CONTROLLER_RUNTIME_QUALIFICATION CQ0–CQ5`.
+- (ChatGPT) CQ verde só pode registrar `REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE`; remover o runtime blocker exige o gate já existente `CONTROLLER_MAINTENANCE`.
+- (ChatGPT) A2, B1 material, residual G6, Genie, policy promotion, Ready e merge permanecem fora desta corretiva/não autorizados conforme contrato.
+
+## 2026-09-26 — AC-R2-MIN: fechamento de autoridade e transporte
+
+### Corrigido
+
+1. (ChatGPT) Removido override local de `[auto_review].policy`: a documentação oficial atual confirma que ele substitui, não complementa, a política ativa do reviewer.
+2. (ChatGPT) A1 permanece sem escrita direta em `.git` e sem command network; commit/push existem somente pelo transportador protegido acionado por rule prompt do executor.
+3. (ChatGPT) Permission roots A1 permanecem dez arquivos concretos; criação arbitrária de arquivo em recovery/AUTONOMY fica fora de A1.
+4. (ChatGPT) Runtime qualification deixa de poder autoatestarse como `PASS`: A1 registra somente `REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE`, preserva o blocker e para no Human Gate já existente.
+5. (ChatGPT) Metatestes estáticos da camada controller passam a 47 métodos definidos; CQ0–CQ5 continuam NOT_RUN nesta fase.
+
+### Limites
+
+- Nenhum CQ0–CQ5, B1 material, Databricks, G6, Genie, A2, policy promotion, Ready ou merge foi executado.
+- A corretiva permanece candidata até revalidação estática final do HEAD.
+
+## 2026-09-26 — AC-R2-MIN: least-privilege controller correction
+
+### Corrigido
+
+1. (ChatGPT) Root controller migra de `workspace-write` para `:read-only`; somente o executor seleciona o permission profile `ser-b1-a1`, cujo workspace default é read e cujos writes são exatamente os A1 roots do envelope mais `.git` para metadata de commits.
+2. (ChatGPT) `sandbox_mode`/legacy workspace-write são removidos. Approval policy granular deixa `sandbox_approval`, `request_permissions`, `mcp_elicitations` e `skill_approval` fail-closed; Auto-review permanece somente para categorias técnicas ainda interativas.
+3. (ChatGPT) Rede de comandos do executor fica atrás do network proxy e limitada a GitHub; apps e remote plugin permanecem disabled.
+4. (ChatGPT) Delta checker v2 usa raw Git diff com ambos endpoints de rename/delete, rejeita symlink versionado e valida invariantes mínimas de transição do `AUTHORING_STATE`.
+5. (ChatGPT) Validator passa a exigir paridade permission-profile↔envelope, root read-only, executor único A1, Windows elevated e ausência de mistura com sandbox legado; metatestes estáticos sobem de 22 para 34.
+6. (ChatGPT) CQ0–CQ5 é redefinido para provar permissões efetivas dos papéis spawned, parent overrides, Bash pre-effect denial e inventário de MCP/hosted surfaces. CQ ainda está NOT_RUN.
+7. (ChatGPT) Bootstrap deixa de carregar o `CHANGELOG.md` completo por padrão; histórico passa a ser consultado por busca/tail.
+
+### Limites
+
+- Nenhum CQ0–CQ5 foi executado como runtime qualification nesta correção GitHub-side.
+- Nenhum B1 material, A2, Databricks, G6, Genie, policy, Ready ou merge foi executado.
+- AC-R1 permanece histórico; seu readiness está supersedido pela auditoria independente e pela AC-R2-MIN.
+
+## 2026-09-26 — AC-R1: auditoria corretiva do Codex Autonomous Controller
+
+### Corrigido
+
+1. (ChatGPT) Cinco custom agents alinhados ao schema vigente com `name`, `description` e `developer_instructions`; topologia passa a Astra/high root, Luna/high explorer, Sol/medium executor e Astra/high auditores.
+2. (ChatGPT) Validator passa a usar JSON Schema Draft 2020-12 real, exigir agent schema, single-writer, hooks, roots A1 e contrato A2 completo antes de ativação.
+3. (ChatGPT) ADR-0025 reconcilia A1 Authoring Executor com o executor determinístico do ADR-0023 e fixa precedência do state source vivo.
+4. (ChatGPT) A1 passa a ter write/protected/shared roots, delta checker e `CONTROLLER_MAINTENANCE`; governança do controller não é autoeditável.
+5. (ChatGPT) Estados legados B0/DAG/blockers/readiness e runbooks G6 foram marcados como histórico/snapshot; B0 consta integrado e B1 como frente viva.
+6. (ChatGPT) Hooks pre/post adicionam defesa em profundidade para o escopo A1; runtime qualification passa a provar trust/config/sandbox/hooks no cliente real.
+7. (ChatGPT) Reviewer técnico padrão muda para `auto_review` com sandbox `workspace-write`, `on-request` e network de comandos desabilitada; Human Gates não são delegados ao reviewer.
+8. (ChatGPT) Auditoria estática anterior de `c5d30330...` é preservada como histórica e explicitamente supersedida pela AC-R1.
+
+9. (ChatGPT) Dependência `jsonschema` isolada em `tools/requirements-codex-autonomy.txt`; Apps/remote-plugin desabilitados e CQ0 passa a exigir worktree limpo.
+
+### Limites
+
+- (ChatGPT) Nenhum efeito Databricks, policy, promoção, Ready ou merge foi executado.
+- (ChatGPT) Runtime Codex CQ0–CQ5 e os 22 metatestes permanecem NOT_RUN até a primeira sessão local.
+- (ChatGPT) A1 foi estreitado ao recovery SER05, state/changelogs/journal; G6/P2 históricos e publisher R10 ficam protegidos. Repo mutation por MCP/apps/hosted tools foi proibida para preservar hooks/delta local.
+
+## 2026-09-26 — Codex Autonomous Controller para SER/SEF
+
+### Adicionado
+
+1. (ChatGPT) ADR-0024, protocolo autônomo, retrospectiva B1, schema/envelope de autoridade, prompt de bootstrap, configuração project-scoped do Codex, cinco agentes especializados e skill de progressive disclosure.
+2. (ChatGPT) `tools/validate_codex_autonomy.py` + `tools/tests/test_codex_autonomy.py`: validação fail-closed da camada, incluindo single-writer, A2 com referência humana, zero blind retry, sandbox e bindings.
+
+### Atualizado
+
+1. (ChatGPT) `AGENTS.md`, regra multi-LLM e plano SER passam a reconhecer controller autônomo por frente; gates existentes permanecem e A3 continua humana.
+2. (ChatGPT) Estado SER corrigido: B0 foi integrado pela PR #113 (`4ba7f551...`); B1/PR #115 é a frente corrente e inicia o novo modo com A0/A1 ativos e A2 pendente.
+
+### Corrigido
+
+1. (ChatGPT) Um commit intermediário de autoria usou base tree incorreta e aparentou remover arquivos preexistentes. A correção aditiva seguinte restaurou a tree íntegra; o delta líquido contra `d3871d27...` contém somente a nova camada autônoma e alterações intencionais deste rollout. O histórico não foi reescrito.
+
+## 2026-09-25 — SER B1 G6: publisher direto HTTP/1.1 R10
+
+### Corrigido
+
+1. (Codex) A escrita material do publisher convergente deixa a Databricks CLI e passa a uma única requisição HTTP/1.1 via stdlib, usando token U2M adquirido just-in-time e mantido somente em memória; manifest, produto, policy e mecanismos B0/G6 originais permanecem inalterados.
+
+## 2026-09-25 — SER B1 G6: corretiva canônica de transporte R8
+
+### Corrigido
+
+1. (Codex) `g6_publication` troca exclusivamente Workspace Import de API PUT para o POST canônico, atualiza seus oráculos/coverage e preserva manifesto, semântica convergente e execução remota não autorizada.
+
+## 2026-09-24 — SER B1 P1: integração canônica SER03/SER05
+
+- (ChatGPT) A candidata P1 preserva o mecanismo B0 e a policy; SER03 usa helper de safra e Receipt V1 canônicos, enquanto SER05 permanece preflight/contexto L2 sem join material.
+- (ChatGPT) Integração pública observada no checkout completo: suíte B1 47/47 PASS, incluindo os dois testes antes pendentes; regressões Temas V07 17/17, V07 mirror 2/2 e V08 22/22 PASS.
+- (ChatGPT) A suíte SE07 histórica retornou exclusivamente os dois FAILs temporais L2 conhecidos de `hub-ml-criar-objeto`, classificados como `EXPECTED_TEMPORAL_FAIL` pelo contrato pós-promoção SER01; zero ERROR e nenhuma falha adicional.
+- (ChatGPT) O primeiro validator da continuação reprovou somente o novo `exemplo_domain_context.py` por ausência de transcrição `text`; a corretiva acrescenta apenas a saída sintética realmente observada, sem alterar lógica ou release manifest.
+- (ChatGPT) Esta integração é autoria, não certificação nem promoção. Policy, B0, Databricks, P2, Ready e merge permanecem inalterados/não autorizados.
+
 ## 2026-09-24 — SER B0: LOCAL_QUALIFIED com SHARE V2 e auditoria técnica PASS
 
 ### Qualificado
@@ -4244,3 +4664,169 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 ### Atualizado
 
 - (ChatGPT) Registro RECUPERACAO_R09, relatório e matriz distinguem recuperação concluída de integração, freeze e runtimes ainda pendentes. Cinco novos READMEs preservados; nenhuma mudança na main, em implementações/fachadas ou publicação Databricks.
+
+
+## 2026-09-27 — compatibilidade do path de scratch com Codex CLI (ChatGPT)
+
+### Corrigido
+
+- (ChatGPT) Corrigida a sintaxe do workspace root externo A0 de `~\codex-scratch\Ambiente_Databricks` para `~/codex-scratch/Ambiente_Databricks`, após o parser real do Codex CLI rejeitar a forma Windows com backslash antes de iniciar a sessão.
+- (ChatGPT) Validator, metatests e contratos operacionais foram alinhados à forma home-relative aceita pelo cliente; adicionado teste de regressão para impedir reintrodução de `~\...` em permission-profile paths. Nenhuma permissão, write root, hook, transporte, envelope, A2, produto ou G6 foi ampliado.
+
+
+## 2026-09-27 — descoberta de hooks project-local no Codex CLI (ChatGPT)
+
+### Corrigido
+
+- (ChatGPT) Migrou a definição dos hooks do controller de `.codex/hooks.json` para tabelas inline `[hooks]` em `.codex/config.toml`, representação oficialmente suportada pela mesma camada de configuração que o Codex CLI 0.157.1 comprovou carregar. O arquivo `hooks.json` foi removido para evitar dupla execução caso a descoberta por arquivo volte a funcionar.
+- (ChatGPT) Validator V20, metatests, host preflight, control-identity do transporte operacional e contratos Desktop foram alinhados à fonte inline. O trust humano passa a ser revisado pelo navegador `/hooks` de uma sessão Codex local suportada no mesmo projeto. Nenhuma permissão, write root, A2, produto ou G6 foi ampliado.
+
+
+## 2026-09-27 — oráculo de trust dos hooks (ChatGPT)
+
+### Corrigido
+
+- (ChatGPT) O validator V20 ainda exigia a string legada `Settings > Hooks` no start prompt após a migração documentada para o navegador `/hooks`, causando falso FAIL no host preflight. O oráculo foi alinhado ao contrato atual e o metateste existente agora exige `/hooks` e rejeita a UI legada.
+
+
+## 2026-09-27 — runtime standalone para hooks do Codex (ChatGPT)
+
+### Corrigido
+
+- (ChatGPT) Confirmado no Codex CLI 0.157.1 que linked Git worktrees substituem especificamente as declarações de hooks pela configuração do root checkout. Como o root checkout local estava em outra branch, sujo e sem config de hooks, `/hooks` reportava `Installed 0` apesar de `/debug-config` mostrar o config do worktree habilitado.
+- (ChatGPT) CQ/preflight/transportes A1 agora exigem standalone checkout e registram `checkout_mode=STANDALONE`; linked worktree falha fechado sem tocar no root checkout.
+- (ChatGPT) Exemplos `match/not_match` de `.codex/rules/a1_git_transport.rules` foram convertidos para arrays explícitos de argv, evitando tokenização shlex incorreta de caminhos Windows. Nenhuma permissão, write root, A2, produto ou G6 foi ampliado.
+
+
+## 2026-09-27 — guard de superfícies dinâmicas Codex 0.158 (ChatGPT)
+
+### Corrigido
+
+- (ChatGPT) CQ standalone em Codex 0.158.0-alpha.2.1 produziu SECURITY_STOP correto: `mcp__codex_app__get_usage_limits` alcançou backend apesar de PreToolUse 2/2 ativo; nenhum write/spawn/Python/Git material ocorreu.
+- (ChatGPT) Causa consolidada: ferramentas dinâmicas do cliente usam nomes hook-facing de namespace achatado (`codex_app...` / `cua_repl...`), enquanto o matcher externo cobria apenas `mcp__.*`. Matcher, guards, policy, validator e metatests agora cobrem ambas as representações, mantendo `mcp__node_repl__*` interno permitido.
+- (ChatGPT) Nenhuma alteração de authority envelope, A1 write roots, A2, permission profiles, produto, G6, promoção, Ready ou merge.
+
+
+## 2026-09-27 — controller runtime migra de Desktop para CLI/TUI (ChatGPT)
+
+### Corrigido
+
+- (ChatGPT) Após dois SECURITY_STOP independentes no Codex Desktop, ambos com `mcp__codex_app__get_usage_limits` alcançando backend apesar de hooks trusted/active, o Desktop foi desqualificado como runtime do Autonomous Controller.
+- (ChatGPT) Runtime canônico Windows passa a ser Codex CLI/TUI em standalone checkout, com host preflight `AC-R2-CLI-HOST-PREFLIGHT-1`, request `SER-CODEX-CLI-CQ-REQUEST-1`, policy `SER-CODEX-CLI-TOOL-SURFACE-1` e launcher explícito `%APPDATA%\npm\codex.cmd`.
+- (ChatGPT) Features apps/plugins/connectors/browser/computer-use foram explicitamente desabilitadas no projeto; `codex_tui*` entrou no guard externo. Authority envelope, 10 A1 write roots, A2 e policy de produto permanecem inalterados.
+- (ChatGPT) O preflight Desktop antigo agora falha imediatamente e não pode emitir nova evidência qualificante. Evidência e transportes A1 passam a exigir o schema CLI.
+
+
+## 2026-09-27 — pós-migração CLI: limpeza de oráculos legados (ChatGPT)
+
+- (ChatGPT) Pente-fino pós-migração removeu do validator/metatests as expectativas canônicas do Desktop: A1 qualification transport agora exige `AC-R2-CLI-HOST-PREFLIGHT-1`; network probe issues usam nomenclatura CLI; Desktop preflight/policy são validados somente como históricos/aposentados.
+- (ChatGPT) Testes de preflight, freshness, Python host-only, source binding, readiness e control identity passaram a apontar para `codex_cli_cq_host_preflight.ps1` e `CODEX_CLI_WINDOWS_CQ.md`. Desktop mantém apenas regressões de desqualificação/supersession.
+- (ChatGPT) Sem mudança de authority envelope, A1 roots, A2, produto, G6, promoção, Ready ou merge.
+
+
+## 2026-09-28 — correção do contrato CLI machine handoff (ChatGPT)
+
+- (ChatGPT) Validator V21 apontou `CLI_WINDOWS_CQ_CONTRACT_INVALID` no primeiro host preflight do freeze `b316a4d5...`. A causa foi documental e determinística: o contrato CLI não continha literalmente os nomes `CQ_RUN_REQUEST.json` e `CQ_RUN_PROMPT.md`, embora o preflight já os gerasse.
+- (ChatGPT) O contrato CLI agora nomeia explicitamente os dois artefatos SHA-bound e o metateste correspondente os exige. Nenhuma authority, permission profile, write root, A2, transport semantics ou product policy foi alterada.
+
+
+## 2026-09-28 — Windows PowerShell child-process exit-code correction (ChatGPT)
+
+- (ChatGPT) First native run of the closure candidate exposed a Windows PowerShell 5.1 interoperability defect in `tools/codex_cli_cq_host_preflight.ps1`: `Start-Process -PassThru` with redirected streams returned a process object whose `ExitCode` remained unset after `WaitForExit()`, causing `CQ_HOST_PREFLIGHT_CHILD_EXIT_NOT_OBSERVED` during the first `codex.cmd --version` host step.
+- (ChatGPT) The preflight child runner now uses `System.Diagnostics.Process` directly, drains stdout/stderr asynchronously, waits/finalizes the process, calls `Refresh()`, then reads an integer exit code. A regression metatest rejects reintroduction of the old Start-Process runner.
+- (ChatGPT) This correction changes only controller-maintenance execution plumbing. Authority envelope, A1 write roots, A2, transports, network policy, product policy and runtime blocker are unchanged. CQ remains NOT_RUN.
+
+
+## 2026-09-28 — CLI qualification isolates from shared background server (ChatGPT)
+
+- (ChatGPT) A fresh post-trust CQ session stopped before CQ0 after observing session metadata version/source different from the host-preflight launcher binding. Upstream Codex 0.157.1 supports a shared background server and explicit `--no-daemon` embedded mode; the previous launcher-only binding could therefore attach to a different client/version runtime.
+- (ChatGPT) Canonical review and CQ sessions now require `EMBEDDED_NO_DAEMON` / `--no-daemon`. Host evidence/request record that mode; contracts clarify that originator/terminal-name telemetry alone is not a client-identity oracle.
+- (ChatGPT) The stopped attempt made no CQ0 probe, B1 material effect, A2, promotion, Ready or merge. Authority envelope and A1 roots remain unchanged.
+
+
+## 2026-09-28 — normal Windows hook invocation is host-qualified (ChatGPT)
+
+- (ChatGPT) First embedded/no-daemon CLI session exposed repeated `Hook failed / hook exited with code 1` on read-only commands before CQ0, despite hooks showing Installed/Active and prior self-tests passing.
+- (ChatGPT) Windows hook commands now invoke project scripts directly with `powershell.exe ... -File .codex\\hooks\\...`; scope guards explicitly exit 0 on normal success. Host preflight adds normal-stdin wire probes for pre-scope, post-scope, external deny and node-repl allow and emits `HOOK_WIRE_RUNTIME_SELFTEST = PASS`.
+- (ChatGPT) Visible hook failure is now a blocking precondition; Active counts alone are insufficient. No CQ behavioral probe, B1 material, A2, promotion, Ready or merge occurred. Authority envelope and 10 A1 write roots remain unchanged.
+
+
+## 2026-09-28 — empty hook stdout handling on Windows PowerShell (ChatGPT)
+
+- (ChatGPT) Native host preflight reached the new normal hook-wire probe and exposed Windows PowerShell 5.1 behavior where `Get-Content -Raw` on an empty file yields `$null`; calling `.Trim()` caused `InvokeMethodOnNull` despite the hook subprocess itself returning exit 0.
+- (ChatGPT) Hook-wire empty-output checks now cast to `[string]` and use `[string]::IsNullOrWhiteSpace`; codex version capture is also null-safe. A regression metatest forbids the old null-unsafe pattern.
+- (ChatGPT) No hook runtime failure or CQ probe was inferred from this preflight bug. Authority envelope, A1 roots, A2, transports and product policy remain unchanged; CQ remains NOT_RUN.
+
+
+## 2026-09-28 — final pre-runtime contradiction sweep (ChatGPT)
+
+- (ChatGPT) CQ3 negative filesystem probes are now forced through shell/Bash + exact PowerShell WriteAllText, with apply_patch/Edit/Write forbidden, so pre-scope hook denial cannot masquerade as permission-profile enforcement.
+- (ChatGPT) Windows hook wire qualification now mirrors upstream command execution through COMSPEC /D /S /C. Host preflight also runs real execpolicy checks for qualification/operational commands and negative forms before opening the TUI.
+- (ChatGPT) CLI review/CQ requires --no-daemon --strict-config; deprecated features.connectors alias removed while canonical apps=false remains. CQ3/CQ4/operational SHA sidecar reads are null-safe.
+- (ChatGPT) External MCP startup/auth failure is nonblocking only when zero tools/resources are loaded and no invocation occurs; CQ4 re-inventory remains required.
+- (ChatGPT) Authority envelope, ten A1 write roots, A2=false, no-direct-network, product policy, G6, promotion, Ready and merge remain unchanged. Runtime CQ still NOT_RUN on this candidate.
+
+
+## 2026-09-28 — CQ3 root sandbox proof cannot be preempted by hooks (ChatGPT)
+
+- Upstream Codex 0.157.1 contradictory review found the PreToolUse scope guard would deny the root CQ3 sentinel before sandbox enforcement, permitting a false-positive permission-boundary result.
+- Scope guards now contain a strict qualification-only exception for exactly `.cq3_root_negative_probe.txt`; host preflight proves the pre-hook does not preempt it and uses upstream-shaped PreToolUse/PostToolUse payloads.
+- No authority expansion: envelope, 10 A1 roots, A2, transports and product policy unchanged. CQ remains NOT_RUN on this freeze.
+
+
+## 2026-09-28 — CQ3 oracle clarification after upstream sweep (ChatGPT)
+
+- Supersedes the immediately preceding suggestion that the scope hook needed an apply_patch exception for the root sentinel. The prior `final pre-runtime contradiction sweep` had already moved every CQ3 filesystem negative probe to the Bash/shell surface specifically so PreToolUse apply_patch/Edit/Write cannot satisfy the oracle.
+- Scope guards are restored unchanged; no governance-path bypass is added. The host hook-wire probes retain the useful upstream-shaped PreToolUse/PostToolUse payloads.
+- CQ3 proof remains: shell control succeeds, exact shell WriteAllText attempt is denied by sandbox/permission boundary, sentinel remains absent; unrelated execution errors are NOT_PROVEN.
+
+
+## 2026-09-28 — validator contract normalization and upstream apply_patch wire fidelity (ChatGPT)
+
+- Native Windows preflight on freeze `6829b50...` stopped before metatests with exactly four validator issues, one for each read-only agent. Diagnostic evidence showed the only missing required token was lowercase `do not retry`; all four role instructions already contained the same prohibition as sentence-initial `Do not retry`. The validator and metatest now treat only that natural-language retry phrase case-insensitively while preserving exact matching for machine labels, paths and security states.
+- The host PreToolUse wire probe for `apply_patch` is also corrected to the upstream 0.157.1 shape: `tool_input.command` containing an apply-patch payload, not a synthetic `tool_input.path`. Validator/metatest require that shape.
+- No runtime CQ probe, authority expansion, A2, write-root change, transport change, promotion, Ready or merge occurred. The diagnostic stopped at HOST_PREFLIGHT validator.
+
+
+## 2026-09-28 — CQ3 network SECURITY_STOP root cause and host-integrity guard (ChatGPT)
+
+- The real CLI/TUI CQ3 on freeze `6069ef62b8586c20e301101005720b700135c668` reached the protected raw TCP probe and correctly stopped with `FAIL_NETWORK_BOUNDARY_OPEN`.
+- Independent read-only host evidence validated its manifest and showed: setup marker v5 present; `CodexSandboxOffline` and `CodexSandboxOnline` healthy; Windows Firewall service/profiles active; **all four required `codex_sandbox_offline_block_*` rules absent**; WFP provider/sublayer present with 12/12 Codex filters.
+- Upstream `rust-v0.157.1` shows those WFP filters cover ICMP, DNS 53/853 and SMB 139/445, while generic non-loopback TCP is blocked by the missing firewall rule. This directly explains the observed TCP:443 connection and matches the stale/broken provisioning class in openai/codex#34313.
+- Controller maintenance strengthens `tools/codex_cli_cq_host_preflight.ps1`: before host TCP baseline it now requires a read-only, elevated `WINDOWS_SANDBOX_NETWORK_INTEGRITY = PASS` with marker/account binding, 4/4 firewall rules, SID scoping and 12/12 WFP filters; the integrity step performs zero network attempts.
+- The CQ3 oracle itself, `network.enabled=false`, the ten A1 write roots, A2=false, blind retry=0 and the historical SECURITY_STOP are unchanged. No CQ retry is authorized merely by this commit; host reprovisioning and a fresh preflight are still required.
+
+
+## 2026-09-28 — invalidate false firewall adjudication and block unrealizable spawned-A1 design (ChatGPT)
+
+- Supersedes the immediately preceding claim that the host had proven 0/4 Codex firewall rules absent. The diagnostic matched only NetFirewallRule.Name; host evidence showed at least one logical Codex rule represented by GUID Name and expected DisplayName. Network-integrity inspection now matches Name OR DisplayName and obtains user scope from Get-NetFirewallSecurityFilter.
+- Independent upstream inspection establishes a separate architectural blocker in Codex 0.157.1 and 0.158.0: spawn_agent children retain the parent's live permission snapshot, and role overrides cannot replace permission_profile/approval_policy. The old executor.toml A1 declaration was nominal, not an effective authority boundary.
+- Safe interim state: root and all spawned roles, including executor, are ser-controller-a0. Executor may author proposals only in external scratch. ser-b1-a1 remains defined with the same 10 write roots but is reserved for a deterministic root-only capability bridge that is not yet implemented/qualified.
+- Runtime remains blocked; no CQ retry, B1 material effect, A2, promotion, Ready or merge is authorized by this commit.
+
+
+## 2026-09-28 — root-only A1 capability bridge authored after subagent-permission contradiction (ChatGPT)
+
+- Implemented the corrective architecture required after upstream Codex 0.157.1/0.158.0 showed that spawn_agent children inherit the parent permission snapshot: all spawned roles remain ser-controller-a0; executor is scratch-only patch author.
+- Added root-only A1 capability bridge: a1_privileged_bridge_guard (PreToolUse/Bash), a1_root_gate.ps1, a1_patch_transport.ps1, and cq3_a1_filesystem_probe.ps1. The bridge applies repository mutations only by launching codex sandbox -P ser-b1-a1 and post-validating the delta against the existing ten write roots.
+- Execpolicy now has exactly three privileged argv forms with decision=allow: A1 patch, qualification Git, and operational Git transports. The allow is not trusted alone: PreToolUse transcript/session-origin proof and in-script root CLI gate are mandatory; subagent/unproven origin fails closed.
+- CQ3 contract was rewritten: all spawned roles prove A0 denial; root-only bridge proves A1 network denial and forbidden governance-write denial under ser-b1-a1 before the only positive journal patch. Qualification/operational Git transports are root-only as well.
+- Host preflight now binds the new sources by SHA and self-tests bridge guard, patch transport, filesystem probe, corrected Firewall Name|DisplayName + security-filter inspection, and exact allow/negative execpolicy forms.
+- Runtime qualification remains NOT_RUN. No B1 material task, A2, Databricks/Genie effect, promotion, Ready or merge is authorized.
+
+
+## 2026-09-28 — host-preflight R1 exposed legacy AC-R2 metatests and CQ0/CQ1 drift (ChatGPT)
+
+- Fresh Windows host preflight on freeze db7cc63c stopped correctly at metatests: 161 tests ran with 6 failures and 1 error; CQ was not started.
+- The failures were maintenance regressions from the spawned-A1 to root-only A1-bridge redesign: stale schema-21 assertions, stale granular/auto-review executor assumptions, stale executor-owned network/transport assertions, and a CURRENT BLOCKER token after the bridge had been authored.
+- The same run exposed a substantive documentation contradiction not covered by the previous validator: CQ0 still declared executor=ser-b1-a1/granular/auto_review and CQ1 still expected execpolicy prompt, while CQ2/CQ3 already required executor A0 plus bridge-only A1.
+- Corrected CQ0/CQ1 to all-spawned-A0 plus root-only ser-b1-a1 bridge; corrected the metatests; added validator invariants that explicitly reject the legacy spawned-A1 target and require the bridge contract tokens.
+- Runtime remains unqualified. No CQ retry is authorized until a fresh host preflight is green; no B1 material work, A2, promotion, Ready or merge.
+
+
+## 2026-09-28 — fresh host preflight proves incomplete native Windows sandbox provisioning (ChatGPT)
+
+- Fresh admin preflight on c0cd0ffc passed validator/metatests (162/162), exact execpolicy oracles, A1 bridge/transport/probe self-tests and normal hook-wire probes.
+- Preflight then failed before CQ at native Windows sandbox integrity: `codex_sandbox_offline_block_outbound` passed, while `codex_sandbox_offline_block_inbound` had zero ActiveStore matches by corrected Name|DisplayName lookup. WFP inspection was not reached in this run.
+- Upstream 0.157.1 treats inbound as part of mandatory `ensure_offline_network_blocks`; this is now confirmed host provisioning incompleteness. It does not, by itself, explain the historical outbound TCP success because the outbound rule is currently present and structurally valid.
+- CQ remains NOT_RUN. Next action is controlled CONTROLLER_MAINTENANCE reprovisioning of the native Windows sandbox, then a fresh host preflight; no manual Firewall rule creation is authorized.
