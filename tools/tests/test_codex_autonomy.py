@@ -1453,13 +1453,9 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertNotIn("(Get-Content -LiteralPath $postWireOut -Raw -Encoding UTF8).Trim()", text)
         self.assertNotIn("(Get-Content -LiteralPath $nodeWireOut -Raw -Encoding UTF8).Trim()", text)
 
-    def test_cq3_root_negative_probe_is_not_preempted_by_scope_hooks(self):
-        for path in (".codex/hooks/pre_scope_guard.ps1", ".codex/hooks/pre_scope_guard.py", ".codex/hooks/post_scope_guard.ps1", ".codex/hooks/post_scope_guard.py"):
-            self.assertIn(".cq3_root_negative_probe.txt", (ROOT / path).read_text(encoding="utf-8"), path)
-
     def test_cli_preflight_wire_payload_matches_upstream_required_shape(self):
         text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
-        for token in ("New-HookWireInput", "session_id", "turn_id", "transcript_path", "cwd", "hook_event_name", "model", "permission_mode", "tool_name", "tool_input", "tool_use_id", "tool_response", "CQ_HOST_PREFLIGHT_ROOT_NEGATIVE_HOOK_BYPASS_EXIT", "CQ_HOST_PREFLIGHT_ROOT_NEGATIVE_HOOK_PREEMPTED_SANDBOX"):
+        for token in ("New-HookWireInput", "session_id", "turn_id", "transcript_path", "cwd", "hook_event_name", "model", "permission_mode", "tool_name", "tool_input", "tool_use_id", "tool_response"):
             self.assertIn(token, text)
 
     def test_cli_preflight_runs_normal_hook_wire_probes(self):

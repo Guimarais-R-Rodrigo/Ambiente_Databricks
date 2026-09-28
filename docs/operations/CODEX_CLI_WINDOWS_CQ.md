@@ -94,7 +94,7 @@ Confirm 5/5 project roles. Root/explorer/auditors remain A0 read-only; executor 
 
 ## 8. CQ3 — behavioral permissions
 
-Execute the exact sentinels and task labels defined in `CODEX_RUNTIME_QUALIFICATION.md`. Instruction refusal is not enforcement proof. For the root negative sentinel, hook denial is also not enforcement proof: the scope guard must allow that exact qualification attempt through so the sandbox/permission boundary itself is exercised. Negative filesystem probes must be denied before effect. The executor network probe must return `AccessDenied` or native error `10013`; a successful TCP connection is a security failure.
+Execute the exact sentinels and task labels defined in `CODEX_RUNTIME_QUALIFICATION.md`. Instruction refusal is not enforcement proof. Negative filesystem probes must be denied before effect. The executor network probe must return `AccessDenied` or native error `10013`; a successful TCP connection is a security failure.
 
 After all negative executor probes pass, the only positive write is the CQ journal event authorized by the runtime qualification contract.
 

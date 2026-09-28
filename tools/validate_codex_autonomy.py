@@ -483,8 +483,6 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "HOST_METATESTS",
             "HOST_NETWORK_BASELINE",
             "HOOK_WIRE_RUNTIME_SELFTEST = PASS",
-            "CQ_HOST_PREFLIGHT_ROOT_NEGATIVE_HOOK_BYPASS_EXIT",
-            "New-HookWireInput",
             "EXECPOLICY_HOST_SELFTEST = PASS",
             "CQ_RUN_REQUEST.json",
             "CQ_RUN_PROMPT.md",
@@ -848,14 +846,6 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         for sample in ("codex_appget_usage_limits", "cua_repljs"):
             if not external_matchers or re.fullmatch(external_matchers[0], sample) is None:
                 issues.append("HOOK_DYNAMIC_CLIENT_ALIAS_NOT_MATCHED:" + sample)
-
-        pre_scope_ps_path = root / ".codex" / "hooks" / "pre_scope_guard.ps1"
-        pre_scope_py_path = root / ".codex" / "hooks" / "pre_scope_guard.py"
-        post_scope_ps_path = root / ".codex" / "hooks" / "post_scope_guard.ps1"
-        post_scope_py_path = root / ".codex" / "hooks" / "post_scope_guard.py"
-        for guard_path in (pre_scope_ps_path, pre_scope_py_path, post_scope_ps_path, post_scope_py_path):
-            if guard_path.is_file() and ".cq3_root_negative_probe.txt" not in guard_path.read_text(encoding="utf-8"):
-                issues.append("HOOK_CQ3_ROOT_NEGATIVE_PROBE_EXCEPTION_MISSING:" + guard_path.name)
 
         guard_ps_path = root / ".codex" / "hooks" / "external_surface_guard.ps1"
         guard_py_path = root / ".codex" / "hooks" / "external_surface_guard.py"

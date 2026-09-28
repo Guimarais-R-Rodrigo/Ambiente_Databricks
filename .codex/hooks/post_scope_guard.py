@@ -71,15 +71,12 @@ try:
     paths = set(git_lines(repo, "diff", "--name-only", "HEAD"))
     paths.update(git_lines(repo, "diff", "--cached", "--name-only", "HEAD"))
     paths.update(git_lines(repo, "ls-files", "--others", "--exclude-standard"))
-    qualification_root_probe_only = (
-        len(paths) == 1 and normalize(next(iter(paths))) == ".cq3_root_negative_probe.txt"
-    )
     violations = [
         (path, classify(path, scope))
         for path in sorted(paths)
         if not ignored(path) and classify(path, scope) != "ALLOWED_A1"
     ]
-    if violations and not qualification_root_probe_only:
+    if violations:
         block("A1 worktree scope violation after tool use: " + ", ".join(f"{p}={c}" for p, c in violations))
 
 except Exception:

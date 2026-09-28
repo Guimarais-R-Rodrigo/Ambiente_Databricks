@@ -471,14 +471,6 @@ if ($preWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_PRE_SCOPE_NORMAL_WIRE_EXIT:$p
 $preWireText = [string](Get-Content -LiteralPath $preWireOut -Raw -Encoding UTF8)
 if (-not [string]::IsNullOrWhiteSpace($preWireText)) { throw "CQ_HOST_PREFLIGHT_PRE_SCOPE_NORMAL_WIRE_UNEXPECTED_OUTPUT" }
 
-$rootProbeWireOut = $hookWireRoot + ".root-negative.stdout.txt"
-$rootProbeWireErr = $hookWireRoot + ".root-negative.stderr.txt"
-$rootProbeWireInput = New-HookWireInput -EventName "PreToolUse" -ToolName "apply_patch" -ToolInput @{ command="*** Begin Patch`n*** Add File: .cq3_root_negative_probe.txt`n+CQ3`n*** End Patch" }
-$rootProbeWireExit = Invoke-CapturedProcessWithInput -FilePath $commandShell -ArgumentList ($hookShellArgsPrefix + @($hookWindowsCommands.pre)) -InputText $rootProbeWireInput -StdoutPath $rootProbeWireOut -StderrPath $rootProbeWireErr
-if ($rootProbeWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_ROOT_NEGATIVE_HOOK_BYPASS_EXIT:$rootProbeWireExit" }
-$rootProbeWireText = [string](Get-Content -LiteralPath $rootProbeWireOut -Raw -Encoding UTF8)
-if (-not [string]::IsNullOrWhiteSpace($rootProbeWireText)) { throw "CQ_HOST_PREFLIGHT_ROOT_NEGATIVE_HOOK_PREEMPTED_SANDBOX" }
-
 $postWireOut = $hookWireRoot + ".post.stdout.txt"
 $postWireErr = $hookWireRoot + ".post.stderr.txt"
 $postWireInput = New-HookWireInput -EventName "PostToolUse" -ToolName "Bash" -ToolInput @{ command="git status --porcelain" } -ToolResponse @{ output=""; metadata=@{} }
@@ -575,7 +567,7 @@ $payload = [ordered]@{
         network_offline_runtime = [ordered]@{ result="PASS"; exit_code=$networkOfflineExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $networkOfflineStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $networkOfflineStderr).Hash }
         mcp_guard = [ordered]@{ result="PASS"; exit_code=$mcpGuardExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $mcpGuardStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $mcpGuardStderr).Hash }
         scope_guards = [ordered]@{ result="PASS"; pre_exit_code=$preGuardExit; post_exit_code=$postGuardExit }
-        hook_wire_runtime = [ordered]@{ result="PASS"; shell=$commandShell; pre_exit_code=$preWireExit; root_negative_hook_bypass_exit_code=$rootProbeWireExit; post_exit_code=$postWireExit; external_exit_code=$externalWireExit; node_repl_exit_code=$nodeWireExit }
+        hook_wire_runtime = [ordered]@{ result="PASS"; shell=$commandShell; pre_exit_code=$preWireExit; post_exit_code=$postWireExit; external_exit_code=$externalWireExit; node_repl_exit_code=$nodeWireExit }
         execpolicy = [ordered]@{ result="PASS"; qualification=$execPolicyQualification; operational=$execPolicyOperational; incomplete=$execPolicyIncomplete; alternate=$execPolicyAlternate }
         a1_operational_transport = [ordered]@{ result="PASS"; exit_code=$operationalTransportExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $operationalTransportStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $operationalTransportStderr).Hash }
         a1_git_transport = [ordered]@{ result="PASS"; exit_code=$transportExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $transportStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $transportStderr).Hash }

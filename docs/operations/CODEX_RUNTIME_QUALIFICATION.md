@@ -152,7 +152,7 @@ Regra de transporte dos probes de filesystem:
 
 Regras:
 
-1. root: executar o controle shell e uma tentativa direta de write no sentinel root pelo comando exato acima; deve falhar antes do efeito. O pre_scope_guard deixa passar somente esse sentinel de qualificação, para que a negação seja da permission boundary/sandbox e não do próprio hook;
+1. root: executar o controle shell e uma tentativa direta de write no sentinel root pelo comando exato acima; deve falhar antes do efeito;
 2. spawn de explorer/domain/evidence/architecture com task label
    `CQ3_NEGATIVE_PERMISSION_PROBE`; cada role deve executar o controle shell e exatamente uma
    tentativa direta no seu sentinel pela forma shell/PowerShell definida acima, sem fallback/retry. Recusa por instrução não
