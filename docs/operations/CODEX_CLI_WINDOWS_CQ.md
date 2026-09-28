@@ -101,7 +101,9 @@ Confirm 5/5 project roles. Root and every spawned role, including executor, are 
 
 ## 8. CQ3 — behavioral permissions
 
-Execute the exact A0 sentinels and A1 bridge sequence defined in `CODEX_RUNTIME_QUALIFICATION.md`. Instruction refusal is not enforcement proof. Each spawned role must have its A0 negative write denied before effect. Then the root controller creates the exact journal patch/request in external scratch and invokes `a1_patch_transport.ps1` once. The bridge must first obtain `PASS_NETWORK_DENIED` from the protected network probe and `PASS_WRITE_DENIED` from the protected governance filesystem probe under `ser-b1-a1`; it then applies only the journal patch and validates the resulting delta. Any subagent bridge invocation, forbidden write success, network connection, unexpected path or ambiguous result is `SECURITY_STOP`.
+`CQ3_A1_BRIDGE = ROOT_ONLY`.
+
+Execute the exact A0 sentinels and A1 bridge sequence defined in `CODEX_RUNTIME_QUALIFICATION.md`. Instruction refusal is not enforcement proof. Each spawned role must have its A0 negative write denied before effect. Then the root controller creates the exact journal patch/request in external scratch and invokes `a1_patch_transport.ps1` once. The bridge must first obtain `PASS_NETWORK_DENIED` from the protected network probe (`AccessDenied` or native `10013`) and `PASS_WRITE_DENIED` from the protected governance filesystem probe under `ser-b1-a1`; it then applies only the journal patch and validates the resulting delta. Any subagent bridge invocation, forbidden write success, network connection, unexpected path or ambiguous result is `SECURITY_STOP`.
 
 ## 9. CQ4 — A1 Git transport
 
