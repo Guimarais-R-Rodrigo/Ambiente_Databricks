@@ -55,21 +55,59 @@ function Invoke-CapturedProcess([string]$FilePath, [string[]]$ArgumentList, [str
     Remove-Item -LiteralPath $StderrPath -Force -ErrorAction SilentlyContinue
     $quoted = @($ArgumentList | ForEach-Object { Quote-NativeArgument $_ }) -join ' '
     Write-Host ("HOST_STEP = " + [IO.Path]::GetFileName($StdoutPath))
-    $process = Start-Process -FilePath $FilePath -ArgumentList $quoted -WorkingDirectory (Get-Location).Path -PassThru -NoNewWindow -RedirectStandardOutput $StdoutPath -RedirectStandardError $StderrPath
-    if (-not $process.WaitForExit(600000)) {
-        Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
-        Show-CapturedDiagnostic $StdoutPath
-        Show-CapturedDiagnostic $StderrPath
-        throw "CQ_HOST_PREFLIGHT_CHILD_TIMEOUT_NO_RETRY"
+
+    # Windows PowerShell 5.1 can leave ExitCode unset on a Start-Process
+    # -PassThru object even after WaitForExit() when redirected streams are used.
+    # Use System.Diagnostics.Process directly and finalize async readers first.
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = $FilePath
+    $psi.Arguments = $quoted
+    $psi.WorkingDirectory = (Get-Location).Path
+    $psi.UseShellExecute = $false
+    $psi.CreateNoWindow = $true
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
+
+    $process = New-Object System.Diagnostics.Process
+    $process.StartInfo = $psi
+    try {
+        if (-not $process.Start()) {
+            throw "CQ_HOST_PREFLIGHT_CHILD_START_FAILED"
+        }
+
+        $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+        $stderrTask = $process.StandardError.ReadToEndAsync()
+
+        if (-not $process.WaitForExit(600000)) {
+            try { $process.Kill() } catch {}
+            $process.WaitForExit()
+            $stdout = [string]$stdoutTask.Result
+            $stderr = [string]$stderrTask.Result
+            Write-Utf8NoBom $StdoutPath $stdout
+            Write-Utf8NoBom $StderrPath $stderr
+            Show-CapturedDiagnostic $StdoutPath
+            Show-CapturedDiagnostic $StderrPath
+            throw "CQ_HOST_PREFLIGHT_CHILD_TIMEOUT_NO_RETRY"
+        }
+
+        $process.WaitForExit()
+        $stdout = [string]$stdoutTask.Result
+        $stderr = [string]$stderrTask.Result
+        $process.Refresh()
+        $exitCode = [int]$process.ExitCode
+
+        Write-Utf8NoBom $StdoutPath $stdout
+        Write-Utf8NoBom $StderrPath $stderr
+
+        if ($exitCode -ne 0) {
+            Show-CapturedDiagnostic $StdoutPath
+            Show-CapturedDiagnostic $StderrPath
+        }
+        return $exitCode
     }
-    $process.WaitForExit()
-    $exitCode = $process.ExitCode
-    if ($null -eq $exitCode) { throw "CQ_HOST_PREFLIGHT_CHILD_EXIT_NOT_OBSERVED" }
-    if ($exitCode -ne 0) {
-        Show-CapturedDiagnostic $StdoutPath
-        Show-CapturedDiagnostic $StderrPath
+    finally {
+        if ($null -ne $process) { $process.Dispose() }
     }
-    return [int]$exitCode
 }
 
 function Test-TcpEndpointSingleShot([string]$Ip, [int]$Port, [int]$TimeoutMs) {

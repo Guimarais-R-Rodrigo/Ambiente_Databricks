@@ -381,6 +381,15 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("CQ_RUN_PROMPT.md", text)
         self.assertIn("AC-R2-CLI-HOST-PREFLIGHT-1", text)
 
+    def test_cli_host_preflight_uses_diagnostics_process_for_windows_exit_code(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        self.assertIn("System.Diagnostics.ProcessStartInfo", text)
+        self.assertIn("$process.Refresh()", text)
+        self.assertIn("$exitCode = [int]$process.ExitCode", text)
+        self.assertIn("ReadToEndAsync()", text)
+        self.assertNotIn("Start-Process -FilePath $FilePath", text)
+        self.assertNotIn("CQ_HOST_PREFLIGHT_CHILD_EXIT_NOT_OBSERVED", text)
+
     def test_cli_host_preflight_runs_validator_and_metatests_host_side(self):
         text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn("AC-R2-CLI-HOST-PREFLIGHT-1", text)

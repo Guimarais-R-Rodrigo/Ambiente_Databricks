@@ -4728,3 +4728,10 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 
 - (ChatGPT) Validator V21 apontou `CLI_WINDOWS_CQ_CONTRACT_INVALID` no primeiro host preflight do freeze `b316a4d5...`. A causa foi documental e determinística: o contrato CLI não continha literalmente os nomes `CQ_RUN_REQUEST.json` e `CQ_RUN_PROMPT.md`, embora o preflight já os gerasse.
 - (ChatGPT) O contrato CLI agora nomeia explicitamente os dois artefatos SHA-bound e o metateste correspondente os exige. Nenhuma authority, permission profile, write root, A2, transport semantics ou product policy foi alterada.
+
+
+## 2026-09-28 — Windows PowerShell child-process exit-code correction (ChatGPT)
+
+- (ChatGPT) First native run of the closure candidate exposed a Windows PowerShell 5.1 interoperability defect in `tools/codex_cli_cq_host_preflight.ps1`: `Start-Process -PassThru` with redirected streams returned a process object whose `ExitCode` remained unset after `WaitForExit()`, causing `CQ_HOST_PREFLIGHT_CHILD_EXIT_NOT_OBSERVED` during the first `codex.cmd --version` host step.
+- (ChatGPT) The preflight child runner now uses `System.Diagnostics.Process` directly, drains stdout/stderr asynchronously, waits/finalizes the process, calls `Refresh()`, then reads an integer exit code. A regression metatest rejects reintroduction of the old Start-Process runner.
+- (ChatGPT) This correction changes only controller-maintenance execution plumbing. Authority envelope, A1 write roots, A2, transports, network policy, product policy and runtime blocker are unchanged. CQ remains NOT_RUN.

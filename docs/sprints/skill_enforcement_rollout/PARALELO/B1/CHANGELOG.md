@@ -214,3 +214,6 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 
 
 - 2026-09-28 (ChatGPT): primeiro CLI host preflight parou fail-closed em `CLI_WINDOWS_CQ_CONTRACT_INVALID`; root cause foi ausência literal de `CQ_RUN_REQUEST.json` e `CQ_RUN_PROMPT.md` no contrato CLI. Corrigido apenas o contrato/metateste correspondente; authority/A1/A2 inalterados.
+
+
+- 2026-09-28 (ChatGPT): native Windows preflight exposed `CQ_HOST_PREFLIGHT_CHILD_EXIT_NOT_OBSERVED` at the first `codex.cmd --version` child process. Replaced the preflight's Start-Process runner with direct System.Diagnostics.Process exit-code handling and added a regression metatest. No authority/A1/A2/product change; CQ still NOT_RUN.
