@@ -223,3 +223,6 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 
 
 - 2026-09-28 (ChatGPT): embedded/no-daemon CQ session stopped pre-CQ after repeated hook exit=1 on reads. Windows hook invocation was simplified to direct -File, normal-success exits made explicit and host preflight now proves normal stdin/wire behavior before trust. No CQ probe/material effect/authority change occurred.
+
+
+- 2026-09-28 (ChatGPT): host preflight reached hook-wire normal stdin but stopped on PowerShell 5.1 empty-file semantics: Get-Content -Raw returned null and .Trim() threw before evaluating success. Checks are now null-safe; no CQ probe/material effect/authority change occurred.

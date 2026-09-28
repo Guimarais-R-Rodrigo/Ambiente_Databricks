@@ -249,7 +249,8 @@ $codexVersionStdout = Join-Path $outputRootFull "CQ_HOST_CODEX_CLI_VERSION.stdou
 $codexVersionStderr = Join-Path $outputRootFull "CQ_HOST_CODEX_CLI_VERSION.stderr.txt"
 $codexVersionExit = Invoke-CapturedProcess -FilePath $codexCli -ArgumentList @("--version") -StdoutPath $codexVersionStdout -StderrPath $codexVersionStderr
 if ($codexVersionExit -ne 0) { throw "CQ_HOST_PREFLIGHT_CODEX_CLI_VERSION_FAILED:$codexVersionExit" }
-$codexVersion = (Get-Content -LiteralPath $codexVersionStdout -Raw -Encoding UTF8).Trim()
+$codexVersion = [string](Get-Content -LiteralPath $codexVersionStdout -Raw -Encoding UTF8)
+$codexVersion = $codexVersion.Trim()
 if ([string]::IsNullOrWhiteSpace($codexVersion) -or $codexVersion -notmatch "^codex-cli\s+\S+") { throw "CQ_HOST_PREFLIGHT_CODEX_CLI_VERSION_UNPARSEABLE:$codexVersion" }
 
 $sourcePaths = [ordered]@{
@@ -412,14 +413,16 @@ $preWireErr = $hookWireRoot + ".pre.stderr.txt"
 $preWireInput = '{"tool_name":"apply_patch","tool_input":{"path":"docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl"}}'
 $preWireExit = Invoke-CapturedProcessWithInput -FilePath $powershellExe -ArgumentList ($hookWireArgs + @($hookScripts.pre)) -InputText $preWireInput -StdoutPath $preWireOut -StderrPath $preWireErr
 if ($preWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_PRE_SCOPE_NORMAL_WIRE_EXIT:$preWireExit" }
-if ((Get-Content -LiteralPath $preWireOut -Raw -Encoding UTF8).Trim()) { throw "CQ_HOST_PREFLIGHT_PRE_SCOPE_NORMAL_WIRE_UNEXPECTED_OUTPUT" }
+$preWireText = [string](Get-Content -LiteralPath $preWireOut -Raw -Encoding UTF8)
+if (-not [string]::IsNullOrWhiteSpace($preWireText)) { throw "CQ_HOST_PREFLIGHT_PRE_SCOPE_NORMAL_WIRE_UNEXPECTED_OUTPUT" }
 
 $postWireOut = $hookWireRoot + ".post.stdout.txt"
 $postWireErr = $hookWireRoot + ".post.stderr.txt"
 $postWireInput = '{"tool_name":"Bash","tool_input":{"command":"git status --porcelain"}}'
 $postWireExit = Invoke-CapturedProcessWithInput -FilePath $powershellExe -ArgumentList ($hookWireArgs + @($hookScripts.post)) -InputText $postWireInput -StdoutPath $postWireOut -StderrPath $postWireErr
 if ($postWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_POST_SCOPE_NORMAL_WIRE_EXIT:$postWireExit" }
-if ((Get-Content -LiteralPath $postWireOut -Raw -Encoding UTF8).Trim()) { throw "CQ_HOST_PREFLIGHT_POST_SCOPE_NORMAL_WIRE_UNEXPECTED_OUTPUT" }
+$postWireText = [string](Get-Content -LiteralPath $postWireOut -Raw -Encoding UTF8)
+if (-not [string]::IsNullOrWhiteSpace($postWireText)) { throw "CQ_HOST_PREFLIGHT_POST_SCOPE_NORMAL_WIRE_UNEXPECTED_OUTPUT" }
 
 $externalWireOut = $hookWireRoot + ".external.stdout.txt"
 $externalWireErr = $hookWireRoot + ".external.stderr.txt"
@@ -440,7 +443,8 @@ $nodeWireErr = $hookWireRoot + ".node.stderr.txt"
 $nodeWireInput = '{"tool_name":"mcp__node_repl__js","tool_input":{}}'
 $nodeWireExit = Invoke-CapturedProcessWithInput -FilePath $powershellExe -ArgumentList ($hookWireArgs + @($hookScripts.external)) -InputText $nodeWireInput -StdoutPath $nodeWireOut -StderrPath $nodeWireErr
 if ($nodeWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_NODE_REPL_NORMAL_WIRE_EXIT:$nodeWireExit" }
-if ((Get-Content -LiteralPath $nodeWireOut -Raw -Encoding UTF8).Trim()) { throw "CQ_HOST_PREFLIGHT_NODE_REPL_NORMAL_WIRE_UNEXPECTED_OUTPUT" }
+$nodeWireText = [string](Get-Content -LiteralPath $nodeWireOut -Raw -Encoding UTF8)
+if (-not [string]::IsNullOrWhiteSpace($nodeWireText)) { throw "CQ_HOST_PREFLIGHT_NODE_REPL_NORMAL_WIRE_UNEXPECTED_OUTPUT" }
 
 $operationalTransportStdout = Join-Path $outputRootFull "CQ_HOST_A1_OPERATIONAL_TRANSPORT_SELFTEST.stdout.txt"
 $operationalTransportStderr = Join-Path $outputRootFull "CQ_HOST_A1_OPERATIONAL_TRANSPORT_SELFTEST.stderr.txt"

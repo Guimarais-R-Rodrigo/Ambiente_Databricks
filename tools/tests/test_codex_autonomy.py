@@ -1435,6 +1435,16 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn('if($violations.Count -gt 0){ Block', post)
         self.assertIn('exit 0\n}\ncatch {', post)
 
+    def test_cli_preflight_treats_empty_hook_stdout_as_empty_string_on_windows_powershell(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        self.assertIn("$preWireText = [string](Get-Content", text)
+        self.assertIn("$postWireText = [string](Get-Content", text)
+        self.assertIn("$nodeWireText = [string](Get-Content", text)
+        self.assertIn("[string]::IsNullOrWhiteSpace($preWireText)", text)
+        self.assertNotIn("(Get-Content -LiteralPath $preWireOut -Raw -Encoding UTF8).Trim()", text)
+        self.assertNotIn("(Get-Content -LiteralPath $postWireOut -Raw -Encoding UTF8).Trim()", text)
+        self.assertNotIn("(Get-Content -LiteralPath $nodeWireOut -Raw -Encoding UTF8).Trim()", text)
+
     def test_cli_preflight_runs_normal_hook_wire_probes(self):
         text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         for token in (

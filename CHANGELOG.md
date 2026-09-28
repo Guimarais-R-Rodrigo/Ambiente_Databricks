@@ -4749,3 +4749,10 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 - (ChatGPT) First embedded/no-daemon CLI session exposed repeated `Hook failed / hook exited with code 1` on read-only commands before CQ0, despite hooks showing Installed/Active and prior self-tests passing.
 - (ChatGPT) Windows hook commands now invoke project scripts directly with `powershell.exe ... -File .codex\\hooks\\...`; scope guards explicitly exit 0 on normal success. Host preflight adds normal-stdin wire probes for pre-scope, post-scope, external deny and node-repl allow and emits `HOOK_WIRE_RUNTIME_SELFTEST = PASS`.
 - (ChatGPT) Visible hook failure is now a blocking precondition; Active counts alone are insufficient. No CQ behavioral probe, B1 material, A2, promotion, Ready or merge occurred. Authority envelope and 10 A1 write roots remain unchanged.
+
+
+## 2026-09-28 — empty hook stdout handling on Windows PowerShell (ChatGPT)
+
+- (ChatGPT) Native host preflight reached the new normal hook-wire probe and exposed Windows PowerShell 5.1 behavior where `Get-Content -Raw` on an empty file yields `$null`; calling `.Trim()` caused `InvokeMethodOnNull` despite the hook subprocess itself returning exit 0.
+- (ChatGPT) Hook-wire empty-output checks now cast to `[string]` and use `[string]::IsNullOrWhiteSpace`; codex version capture is also null-safe. A regression metatest forbids the old null-unsafe pattern.
+- (ChatGPT) No hook runtime failure or CQ probe was inferred from this preflight bug. Authority envelope, A1 roots, A2, transports and product policy remain unchanged; CQ remains NOT_RUN.
