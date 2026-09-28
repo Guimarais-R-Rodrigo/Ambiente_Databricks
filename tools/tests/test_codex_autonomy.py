@@ -229,41 +229,46 @@ class CodexAutonomyTests(unittest.TestCase):
         ):
             self.assertIn(token, text)
 
-    def test_desktop_cq3_rejects_instruction_refusal_as_enforcement_proof(self):
-        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
-        self.assertIn("Não aceitar refusal/instruction compliance como prova de denial", text)
-        self.assertIn("não pode bloquear antes dos probes comportamentais", text)
-        self.assertIn("EXECUTOR_A1_POSITIVE_JOURNAL = PASS", text)
 
-    def test_desktop_windows_cq_contract_exists(self):
-        self.assertTrue((ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").is_file())
+    def test_cli_cq3_rejects_instruction_refusal_as_enforcement_proof(self):
+        text = (ROOT / "docs/operations/CODEX_RUNTIME_QUALIFICATION.md").read_text(encoding="utf-8")
+        self.assertIn("Recusa por instrução não conta como PASS", text)
+        self.assertIn("CQ3_EXECUTOR_PERMISSION_PROBES", text)
+        self.assertIn("CQ3_A1_POSITIVE_PROBE", text)
+
+    def test_desktop_profile_is_historical_and_cli_is_canonical(self):
+        desktop = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        cli = (ROOT / "docs/operations/CODEX_CLI_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        self.assertIn("HISTORICAL_UNQUALIFIED", desktop)
+        self.assertIn("CODEX_CLI_WINDOWS_CQ.md", desktop)
+        self.assertIn("CODEX_CLI_WINDOWS_TUI", cli)
         result = val.validate(ROOT)
-        self.assertTrue(result["desktop_windows_cq_contract"])
-        self.assertTrue(result["desktop_host_preflight"])
+        self.assertTrue(result["cli_windows_cq_contract"])
+        self.assertTrue(result["cli_host_preflight"])
+        self.assertEqual("UNQUALIFIED", result["desktop_controller_runtime"])
 
-    def test_desktop_contract_names_host_preflight_artifact_explicitly(self):
-        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
+    def test_cli_contract_names_host_preflight_artifact_explicitly(self):
+        text = (ROOT / "docs/operations/CODEX_CLI_WINDOWS_CQ.md").read_text(encoding="utf-8")
         self.assertIn("CQ_HOST_PREFLIGHT.json", text)
-        self.assertIn("CQ_HOST_PREFLIGHT.sha256", text)
+        self.assertIn("AC-R2-CLI-HOST-PREFLIGHT-1", text)
 
-    def test_desktop_host_preflight_v5_runs_validator_and_metatests_host_side(self):
-        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
-        self.assertIn("AC-R2-DESKTOP-HOST-PREFLIGHT-6", text)
+    def test_cli_host_preflight_runs_validator_and_metatests_host_side(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        self.assertIn("AC-R2-CLI-HOST-PREFLIGHT-1", text)
+        self.assertIn("SER-CODEX-AUTONOMY-VALIDATION-21", text)
         self.assertIn("tools/validate_codex_autonomy.py", text)
         self.assertIn("tools.tests.test_codex_autonomy", text)
         self.assertIn("HOST_VALIDATOR = PASS", text)
         self.assertIn("HOST_METATESTS = PASS", text)
         self.assertIn('execution_surface="HOST_ONLY"', text)
-        self.assertNotIn("QualifiedPythonRootRelative", text)
 
-    def test_desktop_host_preflight_v5_binds_raw_tcp_baseline_and_probe_source(self):
-        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+    def test_cli_host_preflight_binds_raw_tcp_baseline_and_probe_source(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn('$NetworkProbeHost = "github.com"', text)
         self.assertIn("$NetworkProbePort = 443", text)
         self.assertIn("HOST_NETWORK_BASELINE = PASS", text)
         self.assertIn('network_probe_script = ".codex\\probes\\cq3_executor_network_probe.ps1"', text)
         self.assertIn("selected_ipv4", text)
-
     def test_network_probe_avoids_windows_powershell_generic_list_serialization_bug(self):
         text = (ROOT / ".codex/probes/cq3_executor_network_probe.ps1").read_text(encoding="utf-8")
         self.assertNotIn("New-Object System.Collections.Generic.List[object]", text)
@@ -286,8 +291,9 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertEqual(set(), val._powershell_parameter_assignment_collisions(text))
         self.assertIn("$hostSerializationSelfTestEvidence = $evidence.network_probe.serialization_selftest", text)
 
-    def test_host_preflight_requires_probe_serialization_selftest_before_network_baseline(self):
-        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+
+    def test_cli_host_preflight_requires_probe_serialization_selftest_before_network_baseline(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn('"powershell.exe"', text)
         self.assertIn('"-SelfTest"', text)
         self.assertIn("CQ_HOST_PREFLIGHT_NETWORK_PROBE_SELFTEST_INVALID_JSON", text)
@@ -295,12 +301,10 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS", text)
         self.assertLess(text.index("CQ_HOST_PREFLIGHT_NETWORK_PROBE_SELFTEST_CONTRACT_FAIL"), text.index("$networkProbeAddresses = @("))
 
-    def test_desktop_contract_requires_host_probe_serialization_selftest(self):
-        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
+    def test_cli_contract_requires_host_probe_serialization_selftest(self):
+        text = (ROOT / "docs/operations/CODEX_CLI_WINDOWS_CQ.md").read_text(encoding="utf-8")
         self.assertIn("NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS", text)
-        self.assertIn("network_attempt_count=0", text)
-        self.assertIn("case_count=3", text)
-
+        self.assertIn("HOST_NETWORK_BASELINE = PASS", text)
     def test_executor_network_probe_is_single_raw_tcp_attempt_without_high_level_stack(self):
         text = (ROOT / ".codex/probes/cq3_executor_network_probe.ps1").read_text(encoding="utf-8")
         self.assertEqual(1, text.count("$client.BeginConnect("))
@@ -333,80 +337,83 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("AccessDenied", text)
         self.assertIn("10013", text)
 
-    def test_desktop_host_preflight_emits_locale_independent_epoch(self):
-        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+
+    def test_cli_host_preflight_emits_locale_independent_epoch(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn("recorded_at_unix_seconds = $recordedAt.ToUnixTimeSeconds()", text)
-        contract = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        contract = (ROOT / "docs/operations/CODEX_CLI_WINDOWS_CQ.md").read_text(encoding="utf-8")
         self.assertIn("recorded_at_unix_seconds", contract)
         self.assertIn("<= 1800", contract)
 
-    def test_desktop_nominal_profile_requires_behavioral_proof(self):
-        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
-        self.assertIn("PROJECT_PROFILE_ACTIVE = NOT_OBSERVABLE_DESKTOP", text)
-        self.assertIn("PROJECT_PROFILE_EFFECTIVE = PASS_BEHAVIORALLY", text)
-        self.assertIn("CQ3 = PASS", text)
-        self.assertIn("CQ4 = PASS", text)
-        self.assertIn("CQ5-D = PASS", text)
+    def test_cli_contract_requires_observed_cli_version(self):
+        text = (ROOT / "docs/operations/CODEX_CLI_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        self.assertIn("CODEX_CLI_VERSION", text)
+        self.assertIn("same CLI version recorded by preflight", text)
 
-    def test_desktop_contract_forbids_python_execution_in_sandbox(self):
-        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
+    def test_cli_contract_forbids_python_execution_in_sandbox(self):
+        text = (ROOT / "docs/operations/CODEX_CLI_WINDOWS_CQ.md").read_text(encoding="utf-8")
         self.assertGreaterEqual(text.count("DO_NOT_EXECUTE_PYTHON_IN_SANDBOX"), 2)
         self.assertIn("HOST_VALIDATOR = PASS", text)
         self.assertIn("HOST_METATESTS = PASS", text)
-        self.assertNotIn("& $Py", text)
 
-    def test_desktop_host_evidence_binds_critical_source_hashes(self):
-        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+    def test_cli_host_evidence_binds_critical_source_hashes(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         for token in (
             "source_sha256",
             "validate_codex_autonomy.py",
             "test_codex_autonomy.py",
             "check_codex_autonomy_delta.py",
             "B1_AUTONOMY_ENVELOPE.json",
+            "CODEX_CLI_TOOL_SURFACE_POLICY.json",
         ):
             self.assertIn(token, text)
 
-    def test_desktop_host_preflight_preserves_head_and_tree_after_host_validation(self):
-        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+    def test_cli_host_preflight_preserves_head_and_tree_after_host_validation(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn("CQ_HOST_PREFLIGHT_GIT_IDENTITY_CHANGED_DURING_HOST_VALIDATION", text)
         self.assertIn("final_head=$finalHead", text)
         self.assertIn("final_tree=$finalTree", text)
 
-    def test_desktop_host_preflight_uses_safe_powershell_variable_boundaries(self):
-        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+    def test_cli_host_preflight_uses_safe_powershell_variable_boundaries(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn('CQ_HOST_PREFLIGHT_LOCAL_REMOTE_DIVERGENCE:$($head):$($originHead)', text)
         self.assertNotIn('CQ_HOST_PREFLIGHT_LOCAL_REMOTE_DIVERGENCE:$head:$originHead', text)
 
-    def test_desktop_host_preflight_does_not_persist_raw_remote_url(self):
-        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+    def test_cli_host_preflight_does_not_persist_raw_remote_url(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn("origin_identity=$ExpectedRepoFragment", text)
         self.assertNotIn("origin_url", text)
 
-    def test_desktop_host_preflight_is_fail_closed_without_installer(self):
-        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+    def test_cli_host_preflight_is_fail_closed_without_installer(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         self.assertIn("git fetch origin $ExpectedBranch", text)
         self.assertIn("CQ_HOST_PREFLIGHT_NO_QUALIFIED_CPYTHON312_WITH_JSONSCHEMA", text)
+        self.assertIn("CQ_HOST_PREFLIGHT_CODEX_CLI_MISSING", text)
+        self.assertIn("CQ_HOST_PREFLIGHT_CODEX_CLI_VERSION_FAILED", text)
         self.assertIn("CQ_HOST_PREFLIGHT_VALIDATOR_FAILED", text)
         self.assertIn("CQ_HOST_PREFLIGHT_METATESTS_FAILED", text)
         self.assertNotIn("pip install", text)
         self.assertNotIn("python -m pip", text)
 
-    def test_desktop_cq_cli_unobservable_is_explicit_not_pass(self):
-        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
-        self.assertIn("NOT_OBSERVABLE_DESKTOP", text)
-        self.assertIn("não bloqueia sozinho", text)
+    def test_cli_surface_is_explicitly_observable(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        self.assertIn("CODEX_CLI = $codexCli", text)
+        self.assertIn("CODEX_CLI_VERSION = $codexVersion", text)
 
-    def test_desktop_cq_defers_pr_metadata_to_external_adjudication(self):
-        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
+    def test_cli_cq_defers_pr_metadata_to_external_adjudication(self):
+        text = (ROOT / "docs/operations/CODEX_CLI_WINDOWS_CQ.md").read_text(encoding="utf-8")
         self.assertIn("DEFERRED_TO_EXTERNAL_ADJUDICATION", text)
 
-    def test_desktop_cq_distinguishes_internal_control_plane_and_external_surfaces(self):
-        text = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
-        self.assertIn("INTERNAL_CLIENT_CONTROL_PLANE", text)
-        self.assertIn("EXTERNAL_MUTATING_PLUGIN_SURFACE", text)
-        self.assertIn("EXTERNAL_SURFACE_PRETOOL_GUARD", text)
-        self.assertIn("INTERNAL_CODE_MODE_CONTROL", text)
-
+    def test_desktop_policy_is_historical_and_superseded(self):
+        payload = json.loads(
+            (ROOT / "docs/operations/autonomy/CODEX_DESKTOP_TOOL_SURFACE_POLICY.json")
+            .read_text(encoding="utf-8")
+        )
+        self.assertEqual("UNQUALIFIED_AFTER_REPEATED_BACKEND_REACH", payload["controller_runtime_status"])
+        self.assertEqual(
+            "docs/operations/autonomy/CODEX_CLI_TOOL_SURFACE_POLICY.json",
+            payload["superseded_by"],
+        )
     def test_cli_windows_controller_contract_is_canonical(self):
         text = (ROOT / "docs/operations/CODEX_CLI_WINDOWS_CQ.md").read_text(encoding="utf-8")
         self.assertIn("CODEX_CLI_WINDOWS_TUI", text)
@@ -901,28 +908,22 @@ class CodexAutonomyTests(unittest.TestCase):
     def test_validator_git_mode_is_executable(self):
         self.assertEqual("100755", val._git_index_mode(ROOT, "tools/validate_codex_autonomy.py"))
 
-    def test_desktop_tool_surface_policy_tolerates_presence_but_forbids_mcp_invocation(self):
+
+    def test_cli_tool_surface_policy_is_canonical_and_fail_closed(self):
         payload = json.loads(
-            (ROOT / "docs/operations/autonomy/CODEX_DESKTOP_TOOL_SURFACE_POLICY.json")
+            (ROOT / "docs/operations/autonomy/CODEX_CLI_TOOL_SURFACE_POLICY.json")
             .read_text(encoding="utf-8")
         )
-        self.assertEqual("SER-CODEX-DESKTOP-TOOL-SURFACE-2", payload["schema_version"])
-        self.assertFalse(payload["cq_rules"]["builtin_browser_presence_alone_blocks"])
-        self.assertTrue(payload["cq_rules"]["project_hook_trust_required"])
-        self.assertEqual(
-            val.EXTERNAL_SURFACE_MATCHER,
-            payload["enforcement"]["matcher"],
-        )
+        self.assertEqual("SER-CODEX-CLI-TOOL-SURFACE-1", payload["schema_version"])
+        self.assertEqual("CODEX_CLI_WINDOWS_TUI", payload["canonical_runtime"])
+        self.assertEqual(val.EXTERNAL_SURFACE_MATCHER, payload["enforcement"]["matcher"])
         self.assertEqual(
             "DENY_EXTERNAL_SURFACES_ALLOW_INTERNAL_NODE_REPL",
             payload["enforcement"]["policy"],
         )
-        serialized = json.dumps(payload["presence_classes"])
-        self.assertIn("INTERNAL_CODE_MODE_CONTROL", serialized)
-        self.assertIn("mcp__node_repl__*", serialized)
-        self.assertEqual(["codex_app", "cua_repl", "codex_tui"], payload["enforcement"]["dynamic_hook_name_prefixes"])
-        self.assertTrue(payload["cq_rules"]["dynamic_client_hook_aliases_required"])
-
+        self.assertTrue(payload["cq_rules"]["desktop_client_surface_presence_blocks"])
+        self.assertTrue(payload["cq_rules"]["no_probe_is_valid_when_no_probeable_forbidden_surface_is_loaded"])
+        self.assertEqual(0, payload["cq_rules"]["probe_retry_count"])
     def test_hooks_include_fail_closed_mcp_guard(self):
         hooks = val._read_toml(ROOT / ".codex/config.toml")["hooks"]
         serialized = json.dumps(hooks)
@@ -995,6 +996,11 @@ class CodexAutonomyTests(unittest.TestCase):
             self.assertIn(token, text)
         self.assertIsNone(re.search(r"(?m)^\s*&\s+python(?:\.exe)?\s", text))
 
+    def test_qualification_transport_requires_cli_host_evidence(self):
+        text = (ROOT / ".codex/transport/a1_git_transport.ps1").read_text(encoding="utf-8")
+        self.assertIn("AC-R2-CLI-HOST-PREFLIGHT-1", text)
+        self.assertNotIn("AC-R2-DESKTOP-HOST-PREFLIGHT-6", text)
+
     def test_transport_selftest_is_non_mutating_contract_surface(self):
         text = (ROOT / ".codex/transport/a1_git_transport.ps1").read_text(encoding="utf-8")
         self.assertIn("[switch]$SelfTest", text)
@@ -1016,16 +1022,21 @@ class CodexAutonomyTests(unittest.TestCase):
         ):
             self.assertIn(token, text)
 
-    def test_preflight_v6_generates_machine_handoff_and_runs_contract_selftests(self):
-        text = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
+
+    def test_cli_preflight_v1_generates_machine_handoff_and_runs_contract_selftests(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         for token in (
-            "AC-R2-DESKTOP-HOST-PREFLIGHT-6",
+            "AC-R2-CLI-HOST-PREFLIGHT-1",
+            "SER-CODEX-CLI-CQ-REQUEST-1",
+            "CODEX_CLI_WINDOWS_TUI",
+            "CODEX_CLI_VERSION =",
             "CQ_RUN_REQUEST.json",
             "CQ_RUN_PROMPT.md",
             "NETWORK_PROBE_OFFLINE_RUNTIME_SELFTEST = PASS",
             "MCP_GUARD_SELFTEST = PASS",
             "SCOPE_GUARDS_SELFTEST = PASS",
             "A1_GIT_TRANSPORT_SELFTEST = PASS",
+            "A1_OPERATIONAL_TRANSPORT_SELFTEST = PASS",
             "CQ_READY_TO_RUN",
             "HOOK_TRUST_REVIEW_REQUIRED",
             "PROJECT_HOOKS_SHA256",
@@ -1033,10 +1044,8 @@ class CodexAutonomyTests(unittest.TestCase):
             "CQ_HOST_PREFLIGHT_PROMPT_TEMPLATE_UNRESOLVED",
             "CQ_HOST_PREFLIGHT_LINKED_WORKTREE_UNSUPPORTED",
             "CHECKOUT_MODE = STANDALONE",
-            "checkout_mode",
         ):
             self.assertIn(token, text)
-
     def test_runtime_contract_keeps_final_state_outside_repo_after_cq4(self):
         text = (ROOT / "docs/operations/CODEX_RUNTIME_QUALIFICATION.md").read_text(encoding="utf-8")
         self.assertIn("não realizar nova escrita repo-side depois de CQ4", text)
@@ -1052,16 +1061,16 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertNotIn("Settings > Hooks", text)
         self.assertIn("standalone checkout", text)
 
-    def test_readiness_contract_requires_human_hook_trust_before_cq(self):
+
+    def test_readiness_contract_requires_human_hook_trust_before_cli_cq(self):
         start = (ROOT / "docs/operations/CODEX_AUTONOMOUS_START_PROMPT.md").read_text(encoding="utf-8")
-        desktop = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
-        preflight = (ROOT / "tools/codex_desktop_cq_host_preflight.ps1").read_text(encoding="utf-8")
-        for text in (start, desktop, preflight):
+        cli = (ROOT / "docs/operations/CODEX_CLI_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        preflight = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        for text in (start, cli, preflight):
             self.assertIn("CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST", text)
         self.assertNotIn("CQ_READY_TO_RUN = PASS", start)
-        self.assertNotIn("CQ_READY_TO_RUN = PASS", desktop)
-        self.assertIn("standalone checkout", desktop)
-
+        self.assertNotIn("CQ_READY_TO_RUN = PASS", cli)
+        self.assertIn("standalone checkout", cli)
     def test_protocol_stabilization_is_v6_surface_policy_and_external_result_consistent(self):
         text = (ROOT / "docs/operations/CODEX_AUTONOMOUS_PROTOCOL.md").read_text(encoding="utf-8")
         self.assertIn("CLI host preflight v1", text)
@@ -1173,6 +1182,7 @@ class CodexAutonomyTests(unittest.TestCase):
         ):
             self.assertIn(token, text)
 
+
     def test_operational_transport_binds_all_control_sources_to_host_evidence(self):
         text = (ROOT / ".codex/transport/a1_operational_git_transport.ps1").read_text(encoding="utf-8")
         for token in (
@@ -1183,7 +1193,10 @@ class CodexAutonomyTests(unittest.TestCase):
             'executor_agent = ".codex\\agents\\executor.toml"',
             'protocol = "docs\\operations\\CODEX_AUTONOMOUS_PROTOCOL.md"',
             'runtime_contract = "docs\\operations\\CODEX_RUNTIME_QUALIFICATION.md"',
-            'desktop_contract = "docs\\operations\\CODEX_DESKTOP_WINDOWS_CQ.md"',
+            'cli_contract = "docs\\operations\\CODEX_CLI_WINDOWS_CQ.md"',
+            'cli_preflight = "tools\\codex_cli_cq_host_preflight.ps1"',
+            'tool_surface_policy = "docs\\operations\\autonomy\\CODEX_CLI_TOOL_SURFACE_POLICY.json"',
+            'prompt_template = "docs\\operations\\CODEX_CLI_CQ_RUN_PROMPT_TEMPLATE.md"',
             'start_prompt = "docs\\operations\\CODEX_AUTONOMOUS_START_PROMPT.md"',
             'envelope_schema = "docs\\operations\\autonomy\\autonomy-envelope.schema.json"',
             'agents_md = "AGENTS.md"',
@@ -1195,7 +1208,7 @@ class CodexAutonomyTests(unittest.TestCase):
         ):
             self.assertIn(token, text)
 
-    def test_preflight_hashes_operational_control_identity(self):
+    def test_cli_preflight_hashes_operational_control_identity(self):
         text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         for token in (
             'operational_transport = ".codex\\transport\\a1_operational_git_transport.ps1"',
@@ -1204,11 +1217,11 @@ class CodexAutonomyTests(unittest.TestCase):
             'executor_agent = ".codex\\agents\\executor.toml"',
             'protocol = "docs\\operations\\CODEX_AUTONOMOUS_PROTOCOL.md"',
             'runtime_contract = "docs\\operations\\CODEX_RUNTIME_QUALIFICATION.md"',
-            'desktop_contract = "docs\\operations\\CODEX_DESKTOP_WINDOWS_CQ.md"',
+            'cli_contract = "docs\\operations\\CODEX_CLI_WINDOWS_CQ.md"',
+            'cli_preflight = "tools\\codex_cli_cq_host_preflight.ps1"',
             "A1_OPERATIONAL_TRANSPORT_SELFTEST = PASS",
         ):
             self.assertIn(token, text)
-
     def test_operational_policy_checkpoint_is_progress_not_authority(self):
         payload = json.loads(
             (ROOT / "docs/operations/autonomy/A1_OPERATIONAL_POLICY.json").read_text(encoding="utf-8")

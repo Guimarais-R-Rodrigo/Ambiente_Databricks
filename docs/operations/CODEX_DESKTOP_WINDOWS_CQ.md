@@ -1,5 +1,9 @@
 # Codex Desktop Windows — CQ0–CQ5 profile
 
+Status: `HISTORICAL_UNQUALIFIED` — não executar para qualificar o Autonomous Controller. Use `CODEX_CLI_WINDOWS_CQ.md`.
+
+Este perfil é preservado apenas como registro do contrato que foi falsificado em runtime por dois `SECURITY_STOP` independentes em 27/09/2026; o preflight Desktop está aposentado e falha imediatamente.
+
 Versão: 2.0  
 Contrato-base: `CODEX_RUNTIME_QUALIFICATION.md`  
 Decisões donas: ADR-0024 + ADR-0025

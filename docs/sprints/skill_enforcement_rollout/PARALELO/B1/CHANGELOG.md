@@ -208,3 +208,6 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 
 
 - 2026-09-27 (ChatGPT): CONTROLLER_MAINTENANCE migrou o runtime canônico de Codex Desktop para Codex CLI/TUI após dois SECURITY_STOP com backend reach em `codex_app`; novo preflight/policy/prompt CLI, Desktop desqualificado, surfaces externas estreitadas, authority/A1 roots/A2 inalterados. CQ CLI ainda NOT_RUN.
+
+
+- 2026-09-27 (ChatGPT): pós-migração CLI removeu oráculos/metatests canônicos remanescentes do Desktop e vinculou qualification transport ao evidence schema CLI; Desktop fica apenas histórico/aposentado. Authority/A1/A2 inalterados; CQ CLI ainda NOT_RUN.

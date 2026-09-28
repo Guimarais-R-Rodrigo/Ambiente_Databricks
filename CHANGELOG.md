@@ -4715,3 +4715,10 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 - (ChatGPT) Runtime canônico Windows passa a ser Codex CLI/TUI em standalone checkout, com host preflight `AC-R2-CLI-HOST-PREFLIGHT-1`, request `SER-CODEX-CLI-CQ-REQUEST-1`, policy `SER-CODEX-CLI-TOOL-SURFACE-1` e launcher explícito `%APPDATA%\npm\codex.cmd`.
 - (ChatGPT) Features apps/plugins/connectors/browser/computer-use foram explicitamente desabilitadas no projeto; `codex_tui*` entrou no guard externo. Authority envelope, 10 A1 write roots, A2 e policy de produto permanecem inalterados.
 - (ChatGPT) O preflight Desktop antigo agora falha imediatamente e não pode emitir nova evidência qualificante. Evidência e transportes A1 passam a exigir o schema CLI.
+
+
+## 2026-09-27 — pós-migração CLI: limpeza de oráculos legados (ChatGPT)
+
+- (ChatGPT) Pente-fino pós-migração removeu do validator/metatests as expectativas canônicas do Desktop: A1 qualification transport agora exige `AC-R2-CLI-HOST-PREFLIGHT-1`; network probe issues usam nomenclatura CLI; Desktop preflight/policy são validados somente como históricos/aposentados.
+- (ChatGPT) Testes de preflight, freshness, Python host-only, source binding, readiness e control identity passaram a apontar para `codex_cli_cq_host_preflight.ps1` e `CODEX_CLI_WINDOWS_CQ.md`. Desktop mantém apenas regressões de desqualificação/supersession.
+- (ChatGPT) Sem mudança de authority envelope, A1 roots, A2, produto, G6, promoção, Ready ou merge.

@@ -517,101 +517,21 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
     desktop_preflight_path = root / "tools" / "codex_desktop_cq_host_preflight.ps1"
     if desktop_cq_path.is_file():
         desktop_text = desktop_cq_path.read_text(encoding="utf-8")
-        required_desktop_tokens = (
-            "CODEX_DESKTOP_WINDOWS",
-            "CQ_HOST_PREFLIGHT.json",
-            "AC-R2-DESKTOP-HOST-PREFLIGHT-6",
-            "NOT_OBSERVABLE_DESKTOP",
-            "PASS_BEHAVIORALLY",
-            "INTERNAL_CLIENT_CONTROL_PLANE",
-            "EXTERNAL_MUTATING_PLUGIN_SURFACE",
-            "DO_NOT_EXECUTE_PYTHON_IN_SANDBOX",
-            "HOST_VALIDATOR",
-            "HOST_METATESTS",
-            "HOST_NETWORK_BASELINE",
-            "NETWORK_PROBE_SERIALIZATION_SELFTEST",
-            "EXTERNAL_SURFACE_PRETOOL_GUARD",
-            "CQ_RUN_REQUEST.json",
-            "CQ_RUN_PROMPT.md",
-            "HOOK_TRUST_REVIEW_REQUIRED",
-            "PROJECT_HOOK_TRUST",
-            "AccessDenied",
-            "10013",
-            "standalone checkout",
-        )
-        if any(token not in desktop_text for token in required_desktop_tokens):
-            issues.append("DESKTOP_WINDOWS_CQ_CONTRACT_INVALID")
-        if "CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST" not in desktop_text:
-            issues.append("DESKTOP_WINDOWS_CQ_READINESS_CONTRACT")
-        if "CQ_READY_TO_RUN = PASS" in desktop_text:
-            issues.append("DESKTOP_WINDOWS_CQ_PREMATURE_READY_PASS")
+        if "HISTORICAL_UNQUALIFIED" not in desktop_text or "CODEX_CLI_WINDOWS_CQ.md" not in desktop_text:
+            issues.append("DESKTOP_WINDOWS_CQ_NOT_MARKED_HISTORICAL")
+    else:
+        issues.append("DESKTOP_WINDOWS_CQ_HISTORY_MISSING")
+
     if desktop_preflight_path.is_file():
         preflight_text = desktop_preflight_path.read_text(encoding="utf-8")
         if "CODEX_DESKTOP_RUNTIME_UNQUALIFIED_USE_TOOLS_CODEX_CLI_CQ_HOST_PREFLIGHT_PS1" not in preflight_text:
             issues.append("DESKTOP_WINDOWS_HOST_PREFLIGHT_NOT_RETIRED")
-        required_preflight_tokens = (
-            "git fetch origin $ExpectedBranch",
-            "AC-R2-DESKTOP-HOST-PREFLIGHT-6",
-            "CQ_HOST_PREFLIGHT.json",
-            "jsonschema",
-            "recorded_at_unix_seconds",
-            "tools/validate_codex_autonomy.py",
-            "tools.tests.test_codex_autonomy",
-            "Invoke-CapturedProcess",
-            "host_validation",
-            "runtime_test_count",
-            "static_test_count",
-            "source_sha256",
-            "network_probe",
-            "network_probe_script",
-            "networkSelfTestPayload",
-            "NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS",
-            "NETWORK_PROBE_OFFLINE_RUNTIME_SELFTEST = PASS",
-            "MCP_GUARD_SELFTEST = PASS",
-            "SCOPE_GUARDS_SELFTEST = PASS",
-            "A1_GIT_TRANSPORT_SELFTEST = PASS",
-            "CQ_RUN_REQUEST.json",
-            "CQ_RUN_PROMPT.md",
-            "HOOK_TRUST_REVIEW_REQUIRED",
-            "PROJECT_HOOKS_SHA256",
-            "CQ_HOST_PREFLIGHT_RUN_REQUEST_ROUNDTRIP_MISMATCH",
-            "CQ_HOST_PREFLIGHT_PROMPT_TEMPLATE_UNRESOLVED",
-            "external_surface_guard_python",
-            "pre_scope_guard_python",
-            "post_scope_guard_python",
-            "operational_transport",
-            "operational_policy",
-            "rules",
-            "executor_agent",
-            "protocol",
-            "runtime_contract",
-            "desktop_contract",
-            "start_prompt",
-            "envelope_schema",
-            "agents_md",
-            "controller_skill",
-            "explorer_agent",
-            "domain_auditor_agent",
-            "evidence_auditor_agent",
-            "architecture_auditor_agent",
-            "A1_OPERATIONAL_TRANSPORT_SELFTEST = PASS",
-            "HOST_NETWORK_BASELINE = PASS",
-            "$NetworkProbeHost",
-            "selected_ipv4",
-            "CQ_HOST_PREFLIGHT_GIT_IDENTITY_CHANGED_DURING_HOST_VALIDATION",
-            "final_head",
-            "final_tree",
-            "final_clean",
-            "CQ_HOST_PREFLIGHT_LINKED_WORKTREE_UNSUPPORTED",
-            "checkout_mode",
-            "CHECKOUT_MODE = STANDALONE",
-        )
-        if any(token not in preflight_text for token in required_preflight_tokens):
-            issues.append("DESKTOP_WINDOWS_HOST_PREFLIGHT_INVALID")
-        if "pip install" in preflight_text or "python -m pip" in preflight_text:
-            issues.append("DESKTOP_WINDOWS_HOST_PREFLIGHT_INSTALL_FORBIDDEN")
-        if "CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST" not in preflight_text:
-            issues.append("DESKTOP_WINDOWS_HOST_PREFLIGHT_READINESS_CONTRACT")
+        stop_pos = preflight_text.find("CODEX_DESKTOP_RUNTIME_UNQUALIFIED_USE_TOOLS_CODEX_CLI_CQ_HOST_PREFLIGHT_PS1")
+        root_pos = preflight_text.find("$rootText =")
+        if stop_pos < 0 or root_pos < 0 or stop_pos > root_pos:
+            issues.append("DESKTOP_WINDOWS_HOST_PREFLIGHT_RETIREMENT_NOT_EARLY")
+    else:
+        issues.append("DESKTOP_WINDOWS_HOST_PREFLIGHT_HISTORY_MISSING")
 
     start_prompt_path = root / "docs" / "operations" / "CODEX_AUTONOMOUS_START_PROMPT.md"
     if start_prompt_path.is_file():
@@ -689,17 +609,17 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "AssignmentStatementAst",
         )
         if any(token not in network_probe_text for token in required_network_probe_tokens):
-            issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_INVALID")
+            issues.append("CLI_WINDOWS_NETWORK_PROBE_INVALID")
         if network_probe_text.count(".BeginConnect(") != 1:
-            issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_NOT_SINGLE_CONNECT")
+            issues.append("CLI_WINDOWS_NETWORK_PROBE_NOT_SINGLE_CONNECT")
         if "New-Object System.Collections.Generic.List[object]" in network_probe_text:
-            issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_UNSAFE_GENERIC_LIST")
+            issues.append("CLI_WINDOWS_NETWORK_PROBE_UNSAFE_GENERIC_LIST")
         if "exception_type = $(if" in network_probe_text:
-            issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_INLINE_DYNAMIC_PAYLOAD_FORBIDDEN")
+            issues.append("CLI_WINDOWS_NETWORK_PROBE_INLINE_DYNAMIC_PAYLOAD_FORBIDDEN")
         collisions = _powershell_parameter_assignment_collisions(network_probe_text)
         if collisions:
             issues.append(
-                "DESKTOP_WINDOWS_NETWORK_PROBE_PARAMETER_ASSIGNMENT_COLLISION:"
+                "CLI_WINDOWS_NETWORK_PROBE_PARAMETER_ASSIGNMENT_COLLISION:"
                 + ",".join(sorted(collisions))
             )
         forbidden_network_probe_tokens = (
@@ -710,7 +630,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "curl ",
         )
         if any(token in network_probe_text for token in forbidden_network_probe_tokens):
-            issues.append("DESKTOP_WINDOWS_NETWORK_PROBE_HIGH_LEVEL_NETWORK_FORBIDDEN")
+            issues.append("CLI_WINDOWS_NETWORK_PROBE_HIGH_LEVEL_NETWORK_FORBIDDEN")
 
     rule_path = root / ".codex" / "rules" / "a1_git_transport.rules"
     transport_path = root / ".codex" / "transport" / "a1_git_transport.ps1"
@@ -735,7 +655,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             'CQ_JOURNAL_ONLY',
             'git remote get-url --push origin',
             'git ls-remote origin',
-            'AC-R2-DESKTOP-HOST-PREFLIGHT-6',
+            'AC-R2-CLI-HOST-PREFLIGHT-1',
             'evidence.python.executable',
             'A1_GIT_TRANSPORT_LINKED_WORKTREE_UNSUPPORTED',
             'A1_GIT_TRANSPORT_HOST_EVIDENCE_CHECKOUT_MODE',
@@ -840,35 +760,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
                 issues.append("DESKTOP_TOOL_SURFACE_POLICY_SCHEMA")
             if tool_policy.get("controller_runtime_status") != "UNQUALIFIED_AFTER_REPEATED_BACKEND_REACH":
                 issues.append("DESKTOP_TOOL_SURFACE_POLICY_RUNTIME_STATUS")
-            enforcement = tool_policy.get("enforcement") or {}
-            if (
-                enforcement.get("matcher") != EXTERNAL_SURFACE_MATCHER
-                or enforcement.get("policy") != "DENY_EXTERNAL_SURFACES_ALLOW_INTERNAL_NODE_REPL"
-            ):
-                issues.append("DESKTOP_TOOL_SURFACE_POLICY_ENFORCEMENT")
-            cq_rules = tool_policy.get("cq_rules") or {}
-            if cq_rules.get("builtin_browser_presence_alone_blocks") is not False:
-                issues.append("DESKTOP_TOOL_SURFACE_POLICY_PRESENCE_RULE")
-            if cq_rules.get("project_hook_trust_required") is not True:
-                issues.append("DESKTOP_TOOL_SURFACE_POLICY_HOOK_TRUST")
-            if cq_rules.get("dynamic_client_hook_aliases_required") is not True:
-                issues.append("DESKTOP_TOOL_SURFACE_POLICY_DYNAMIC_ALIAS_REQUIREMENT")
-            if enforcement.get("dynamic_hook_name_prefixes") != ["codex_app", "cua_repl", "codex_tui"]:
-                issues.append("DESKTOP_TOOL_SURFACE_POLICY_DYNAMIC_ALIAS_BINDING")
-            for sample in (
-                "mcp__codex_app__get_usage_limits",
-                "codex_appget_usage_limits",
-                "codex_app__get_usage_limits",
-                "mcp__cua_repl.js",
-                "cua_repljs",
-                "codex_tuilist_threads",
-            ):
-                if re.fullmatch(EXTERNAL_SURFACE_MATCHER, sample) is None:
-                    issues.append("DESKTOP_TOOL_SURFACE_POLICY_DYNAMIC_ALIAS_NOT_MATCHED:" + sample)
-            classes = tool_policy.get("presence_classes") or []
-            serialized_classes = json.dumps(classes)
-            if "INTERNAL_CODE_MODE_CONTROL" not in serialized_classes or "mcp__node_repl__*" not in serialized_classes:
-                issues.append("DESKTOP_TOOL_SURFACE_POLICY_NODE_REPL_CLASS")
+            if tool_policy.get("superseded_by") != "docs/operations/autonomy/CODEX_CLI_TOOL_SURFACE_POLICY.json":
+                issues.append("DESKTOP_TOOL_SURFACE_POLICY_SUPERSESSION")
         except Exception as exc:
             issues.append("DESKTOP_TOOL_SURFACE_POLICY_UNREADABLE:" + type(exc).__name__)
     else:
