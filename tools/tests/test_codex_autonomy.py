@@ -250,6 +250,8 @@ class CodexAutonomyTests(unittest.TestCase):
     def test_cli_contract_names_host_preflight_artifact_explicitly(self):
         text = (ROOT / "docs/operations/CODEX_CLI_WINDOWS_CQ.md").read_text(encoding="utf-8")
         self.assertIn("CQ_HOST_PREFLIGHT.json", text)
+        self.assertIn("CQ_RUN_REQUEST.json", text)
+        self.assertIn("CQ_RUN_PROMPT.md", text)
         self.assertIn("AC-R2-CLI-HOST-PREFLIGHT-1", text)
 
     def test_cli_host_preflight_runs_validator_and_metatests_host_side(self):

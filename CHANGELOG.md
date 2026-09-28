@@ -4722,3 +4722,9 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 - (ChatGPT) Pente-fino pós-migração removeu do validator/metatests as expectativas canônicas do Desktop: A1 qualification transport agora exige `AC-R2-CLI-HOST-PREFLIGHT-1`; network probe issues usam nomenclatura CLI; Desktop preflight/policy são validados somente como históricos/aposentados.
 - (ChatGPT) Testes de preflight, freshness, Python host-only, source binding, readiness e control identity passaram a apontar para `codex_cli_cq_host_preflight.ps1` e `CODEX_CLI_WINDOWS_CQ.md`. Desktop mantém apenas regressões de desqualificação/supersession.
 - (ChatGPT) Sem mudança de authority envelope, A1 roots, A2, produto, G6, promoção, Ready ou merge.
+
+
+## 2026-09-28 — correção do contrato CLI machine handoff (ChatGPT)
+
+- (ChatGPT) Validator V21 apontou `CLI_WINDOWS_CQ_CONTRACT_INVALID` no primeiro host preflight do freeze `b316a4d5...`. A causa foi documental e determinística: o contrato CLI não continha literalmente os nomes `CQ_RUN_REQUEST.json` e `CQ_RUN_PROMPT.md`, embora o preflight já os gerasse.
+- (ChatGPT) O contrato CLI agora nomeia explicitamente os dois artefatos SHA-bound e o metateste correspondente os exige. Nenhuma authority, permission profile, write root, A2, transport semantics ou product policy foi alterada.

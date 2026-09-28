@@ -39,6 +39,7 @@ CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST
 
 Host evidence schema: `AC-R2-CLI-HOST-PREFLIGHT-1`.
 Run request schema: `SER-CODEX-CLI-CQ-REQUEST-1`.
+O preflight grava `CQ_HOST_PREFLIGHT.json`, `CQ_RUN_REQUEST.json` e `CQ_RUN_PROMPT.md` no scratch externo; o request e o prompt são artefatos machine-generated SHA-bound, não texto reconstruído manualmente.
 Freshness: `recorded_at_unix_seconds` must be <= 1800 seconds old.
 
 ## 3. Human hook trust

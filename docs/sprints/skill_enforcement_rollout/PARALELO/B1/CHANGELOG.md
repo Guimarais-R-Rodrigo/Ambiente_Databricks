@@ -211,3 +211,6 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 
 
 - 2026-09-27 (ChatGPT): pós-migração CLI removeu oráculos/metatests canônicos remanescentes do Desktop e vinculou qualification transport ao evidence schema CLI; Desktop fica apenas histórico/aposentado. Authority/A1/A2 inalterados; CQ CLI ainda NOT_RUN.
+
+
+- 2026-09-28 (ChatGPT): primeiro CLI host preflight parou fail-closed em `CLI_WINDOWS_CQ_CONTRACT_INVALID`; root cause foi ausência literal de `CQ_RUN_REQUEST.json` e `CQ_RUN_PROMPT.md` no contrato CLI. Corrigido apenas o contrato/metateste correspondente; authority/A1/A2 inalterados.
