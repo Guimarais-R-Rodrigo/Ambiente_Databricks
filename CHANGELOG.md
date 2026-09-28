@@ -4795,3 +4795,11 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 - Upstream `rust-v0.157.1` shows those WFP filters cover ICMP, DNS 53/853 and SMB 139/445, while generic non-loopback TCP is blocked by the missing firewall rule. This directly explains the observed TCP:443 connection and matches the stale/broken provisioning class in openai/codex#34313.
 - Controller maintenance strengthens `tools/codex_cli_cq_host_preflight.ps1`: before host TCP baseline it now requires a read-only, elevated `WINDOWS_SANDBOX_NETWORK_INTEGRITY = PASS` with marker/account binding, 4/4 firewall rules, SID scoping and 12/12 WFP filters; the integrity step performs zero network attempts.
 - The CQ3 oracle itself, `network.enabled=false`, the ten A1 write roots, A2=false, blind retry=0 and the historical SECURITY_STOP are unchanged. No CQ retry is authorized merely by this commit; host reprovisioning and a fresh preflight are still required.
+
+
+## 2026-09-28 — invalidate false firewall adjudication and block unrealizable spawned-A1 design (ChatGPT)
+
+- Supersedes the immediately preceding claim that the host had proven 0/4 Codex firewall rules absent. The diagnostic matched only NetFirewallRule.Name; host evidence showed at least one logical Codex rule represented by GUID Name and expected DisplayName. Network-integrity inspection now matches Name OR DisplayName and obtains user scope from Get-NetFirewallSecurityFilter.
+- Independent upstream inspection establishes a separate architectural blocker in Codex 0.157.1 and 0.158.0: spawn_agent children retain the parent's live permission snapshot, and role overrides cannot replace permission_profile/approval_policy. The old executor.toml A1 declaration was nominal, not an effective authority boundary.
+- Safe interim state: root and all spawned roles, including executor, are ser-controller-a0. Executor may author proposals only in external scratch. ser-b1-a1 remains defined with the same 10 write roots but is reserved for a deterministic root-only capability bridge that is not yet implemented/qualified.
+- Runtime remains blocked; no CQ retry, B1 material effect, A2, promotion, Ready or merge is authorized by this commit.

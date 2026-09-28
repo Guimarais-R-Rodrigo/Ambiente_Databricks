@@ -43,8 +43,12 @@ AC-R2 usa permission profiles:
   mutações, command network disabled, com scratch externo explícito
   `~/codex-scratch/Ambiente_Databricks` para capability/write temporário no
   Windows nativo;
-- executor: `ser-b1-a1`, workspace default read, somente 10 arquivos A1 concretos
-  writable, sem escrita direta em `.git` e sem command network;
+- todos os roles criados por `spawn_agent`, inclusive executor, permanecem
+  `ser-controller-a0`: upstream 0.157.1/0.158.0 reaplica o snapshot de
+  permissions do parent após o role e não permite role-local A1;
+- `ser-b1-a1` continua definindo os mesmos 10 arquivos concretos writable,
+  sem `.git`/network, mas é reservado a um capability bridge determinístico
+  root-only ainda pendente de implementação/qualificação;
 - `sandbox_mode` legado é incompatível com esse target.
 
 Configuração declarada não prova configuração efetiva. Parent/live overrides,
@@ -62,10 +66,13 @@ No CQ3 CLI/TUI, command-network é provado por `.codex/probes/cq3_executor_netwo
 
 Após o SECURITY_STOP real de 2026-09-28, o preflight também verifica a integridade
 do provisioning de rede do Windows elevated sandbox antes do baseline TCP.
-Marker v5 não é mais aceito como proxy de integridade: são exigidos
+Marker v5 não é aceito como proxy de integridade: são exigidos
 `CodexSandboxOffline`, 4/4 regras de Firewall Codex e 12/12 filtros WFP, com
-zero tentativas de rede nessa verificação. Essa regressão fecha a classe causal
-do upstream openai/codex#34313 sem ampliar autoridade nem enfraquecer o CQ3.
+zero tentativas de rede nessa verificação. A primeira implementação desse
+diagnóstico confundiu `Name` com `DisplayName` em regras cujo Name pode ser
+GUID; por isso a alegação histórica "0/4 ausentes" foi invalidada. A hipótese
+openai/codex#34313 permanece plausível, mas só pode ser adjudicada pela leitura
+corrigida de Name/DisplayName + `Get-NetFirewallSecurityFilter`.
 
 No CLI/TUI, o executável e a versão Codex são observados pelo preflight via path explícito + versão. Python roda somente no host para CQ0.5/CQ5. CQ3/CQ4 continuam provas comportamentais obrigatórias do sandbox. Estado de PR pode ficar `DEFERRED_TO_EXTERNAL_ADJUDICATION` e ser recomputado fora da sessão.
 
@@ -111,7 +118,7 @@ proibindo repetição cega.
 
 - root controller — coordena; repository read-only;
 - explorer — read-only;
-- executor — único writer A1;
+- executor — A0 patch-author em scratch; não é writer repo-side;
 - domain-auditor — read-only;
 - evidence-auditor — read-only;
 - architecture-auditor — read-only, somente quando estrutural.
@@ -260,3 +267,16 @@ A2/A3/`CONTROLLER_MAINTENANCE`.
 
 A frente termina em Human Gate, COMPLETE, blocker, budget esgotado ou limite de
 segurança/evidência. Nenhum PASS técnico implica promoção, Ready ou merge.
+
+
+### Errata arquitetural 2026-09-28 — subagent permission inheritance
+
+A inspeção do upstream Codex 0.157.1 e 0.158.0 mostrou que `spawn_agent`
+constrói o filho a partir da configuração efetiva do parent e reaplica o
+`permission_profile` do parent após o role. `role.rs` também exclui
+`approval_policy` e sandbox das overrides de role. Portanto,
+`default_permissions="ser-b1-a1"` no antigo `executor.toml` nunca constituiu
+uma fronteira A1 efetiva. O executor foi rebaixado explicitamente a A0 e a
+arquitetura fica bloqueada até existir e ser qualificado um capability bridge
+determinístico que aplique `ser-b1-a1` fora de `spawn_agent`. Nenhum PASS
+anterior é reinterpretado como prova dessa separação.

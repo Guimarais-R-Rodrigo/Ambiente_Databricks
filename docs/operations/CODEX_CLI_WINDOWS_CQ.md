@@ -93,15 +93,15 @@ Use the SHA-bound host evidence for CPython 3.12 + `jsonschema`, validator and m
 
 ## 6. CQ1 — execpolicy
 
-Use the actual CLI runtime and project rule file. Host evidence must already contain `EXECPOLICY_HOST_SELFTEST = PASS`. Recheck the exact qualification and operational A1 transport commands: both evaluate to `prompt`; incomplete or alternate script forms do not match. Execpolicy is prefix-based, so suffix arguments can still reach reviewer; both transport scripts therefore remain responsible for rejecting unsupported arguments/switch combinations before effects. Any rules parse/config warning is blocking.
+Use the actual CLI runtime and project rule file. Host evidence must already contain `EXECPOLICY_HOST_SELFTEST = PASS`. The legacy qualification and operational Git transport commands still evaluate to `prompt`, but that route is not executable from the corrected A0 root with approval_policy=never. They are retained only until the root-only A1 capability-bridge maintenance rebinds them; incomplete or alternate script forms must not match. Execpolicy is prefix-based, so suffix arguments can still reach reviewer; both transport scripts therefore remain responsible for rejecting unsupported arguments/switch combinations before effects. Any rules parse/config warning is blocking.
 
 ## 7. CQ2 — roles
 
-Confirm 5/5 project roles. Root/explorer/auditors remain A0 read-only; executor alone is A1 write-capable. Child nesting remains disabled.
+Confirm 5/5 project roles. Root and every spawned role, including executor, are A0 repository-read-only. The executor is only a patch author in external scratch. Any spawned role reporting effective A1 authority is a contract failure. Child nesting remains disabled.
 
 ## 8. CQ3 — behavioral permissions
 
-Execute the exact sentinels and task labels defined in `CODEX_RUNTIME_QUALIFICATION.md`. Instruction refusal is not enforcement proof. Negative filesystem probes must be denied before effect. The executor network probe must return `AccessDenied` or native error `10013`; a successful TCP connection is a security failure.
+Execute the exact sentinels and task labels defined in `CODEX_RUNTIME_QUALIFICATION.md`. Instruction refusal is not enforcement proof. Negative filesystem probes must be denied before effect. The prior executor-subagent network probe is historical only because the executor inherits A0. A new A1 bridge qualification must run the protected network oracle directly under `ser-b1-a1`; until that bridge exists CQ3 is BLOCKED_DESIGN.
 
 After all negative executor probes pass, the only positive write is the CQ journal event authorized by the runtime qualification contract.
 
@@ -116,3 +116,12 @@ Use host-bound validator/metatest evidence plus final HEAD/tree/status. `DO_NOT_
 If CQ0–CQ5 are green, produce only an external sanitized evidence bundle with `REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE`. Do not remove `AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION`, do not self-certify canonical PASS and do not perform a second repo-side write after CQ4.
 
 No B1 material, A2, residual G6, Genie, Databricks material effect, policy promotion, Ready or merge is authorized by CQ.
+
+
+## Structural blocker discovered 2026-09-28
+
+Codex 0.157.1 and 0.158.0 do not apply role-local permission profiles to
+`spawn_agent` children. The child receives the parent's live permission
+snapshot after role configuration. Therefore the former executor=A1 CQ2/CQ3
+contract is invalid and must not be retried. Current safe state is all spawned
+roles=A0; `ser-b1-a1` is bridge-only and the bridge is not yet qualified.

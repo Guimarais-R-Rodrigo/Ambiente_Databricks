@@ -275,7 +275,10 @@ function Assert-WindowsSandboxNetworkIntegrity([string]$EvidenceRoot) {
     foreach ($expected in $expectedRules) {
         $matches = @(
             $activeRules |
-                Where-Object { [string](Get-ObjectPropertyValue $_ "Name") -eq $expected.name }
+                Where-Object {
+                    [string](Get-ObjectPropertyValue $_ "Name") -eq $expected.name -or
+                    [string](Get-ObjectPropertyValue $_ "DisplayName") -eq $expected.name
+                }
         )
         if ($matches.Count -ne 1) {
             throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_FIREWALL_RULE_COUNT:$($expected.name):$($matches.Count)"
@@ -284,7 +287,30 @@ function Assert-WindowsSandboxNetworkIntegrity([string]$EvidenceRoot) {
         $enabled = [string](Get-ObjectPropertyValue $rule "Enabled")
         $direction = [string](Get-ObjectPropertyValue $rule "Direction")
         $action = [string](Get-ObjectPropertyValue $rule "Action")
-        $localUser = [string](Get-ObjectPropertyValue $rule "LocalUserAuthorizedList")
+        try {
+            $securityFilters = @(
+                Get-NetFirewallSecurityFilter -AssociatedNetFirewallRule $rule -PolicyStore ActiveStore -ErrorAction Stop
+            )
+        }
+        catch {
+            throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_FIREWALL_SECURITY_FILTER_QUERY:$($expected.name)"
+        }
+        if ($securityFilters.Count -lt 1) {
+            throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_FIREWALL_SECURITY_FILTER_MISSING:$($expected.name)"
+        }
+        $localUsers = @(
+            $securityFilters |
+                ForEach-Object { [string](Get-ObjectPropertyValue $_ "LocalUser") }
+        )
+        $offlineSidScoped = $false
+        foreach ($localUser in $localUsers) {
+            if (
+                -not [string]::IsNullOrWhiteSpace($localUser) -and
+                $localUser.IndexOf($offlineSid, [StringComparison]::OrdinalIgnoreCase) -ge 0
+            ) {
+                $offlineSidScoped = $true
+            }
+        }
         if ($enabled -ne "True") {
             throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_FIREWALL_RULE_DISABLED:$($expected.name)"
         }
@@ -294,10 +320,7 @@ function Assert-WindowsSandboxNetworkIntegrity([string]$EvidenceRoot) {
         if ($action -ne $expected.action) {
             throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_FIREWALL_ACTION:$($expected.name):$action"
         }
-        if (
-            [string]::IsNullOrWhiteSpace($localUser) -or
-            $localUser.IndexOf($offlineSid, [StringComparison]::OrdinalIgnoreCase) -lt 0
-        ) {
+        if (-not $offlineSidScoped) {
             throw "CQ_HOST_PREFLIGHT_WINDOWS_SANDBOX_FIREWALL_SID_SCOPE:$($expected.name)"
         }
         $ruleEvidence += [pscustomobject][ordered]@{
@@ -530,7 +553,7 @@ $metatestStderr = Join-Path $outputRootFull "CQ_HOST_METATESTS.stderr.txt"
 $validatorExit = Invoke-CapturedProcess -FilePath $python.executable -ArgumentList @("-B", "tools/validate_codex_autonomy.py", "--json") -StdoutPath $validatorStdout -StderrPath $validatorStderr
 try { $validatorPayload = Get-Content -LiteralPath $validatorStdout -Raw -Encoding UTF8 | ConvertFrom-Json } catch { throw "CQ_HOST_PREFLIGHT_VALIDATOR_OUTPUT_NOT_JSON" }
 if ($validatorExit -ne 0 -or $validatorPayload.status -ne "PASS") { throw "CQ_HOST_PREFLIGHT_VALIDATOR_FAILED:$($validatorExit):$($validatorPayload.status)" }
-if ($validatorPayload.schema_version -ne "SER-CODEX-AUTONOMY-VALIDATION-22") { throw "CQ_HOST_PREFLIGHT_VALIDATOR_SCHEMA:$($validatorPayload.schema_version)" }
+if ($validatorPayload.schema_version -ne "SER-CODEX-AUTONOMY-VALIDATION-23") { throw "CQ_HOST_PREFLIGHT_VALIDATOR_SCHEMA:$($validatorPayload.schema_version)" }
 $metatestExit = Invoke-CapturedProcess -FilePath $python.executable -ArgumentList @("-B", "-m", "unittest", "tools.tests.test_codex_autonomy", "-v") -StdoutPath $metatestStdout -StderrPath $metatestStderr
 $metatestText = ""
 if (Test-Path -LiteralPath $metatestStdout) { $metatestText += Get-Content -LiteralPath $metatestStdout -Raw -Encoding UTF8 }

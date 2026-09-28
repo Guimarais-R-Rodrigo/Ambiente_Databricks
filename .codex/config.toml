@@ -1,9 +1,10 @@
 #:schema https://developers.openai.com/codex/config-schema.json
 
-# AC-R2-MIN: repository writes are impossible for the root/read-only roles.
-# Only the executor selects ser-b1-a1, whose filesystem writes are exact files.
-# Git metadata/network stay outside the sandbox and are reachable only through
-# the rule-reviewed A1 transport.
+# AC-R2-MIN: root and every spawned role are repository-read-only A0.
+# Codex 0.157.1/0.158.0 preserve the parent's permission snapshot across spawn_agent;
+# role files cannot turn a child into A1. The ser-b1-a1 profile is retained only as
+# the target of a future deterministic capability bridge; until that bridge is
+# implemented and qualified, no spawned agent is write-capable.
 model = "gpt-6-astra"
 model_reasoning_effort = "high"
 default_permissions = "ser-controller-a0"
@@ -68,7 +69,7 @@ description = "Read-only investigator for codebase history, prior attempts, caus
 config_file = "agents/explorer.toml"
 
 [agents.executor]
-description = "The only write-capable subagent for causal repo-side changes inside the active autonomy envelope."
+description = "A0 patch-author subagent: proposes causal changes in external scratch; never writes the repository directly."
 config_file = "agents/executor.toml"
 
 [agents.domain-auditor]
@@ -103,7 +104,7 @@ description = "Repository read-only controller/auditor profile with one explicit
 enabled = false
 
 [permissions.ser-b1-a1]
-description = "SER B1 A1 executor: repository read access plus exact B1 file writes; no direct Git metadata or network."
+description = "SER B1 A1 bridge target: repository read access plus exact B1 file writes; never assigned directly to spawn_agent roles."
 
 [permissions.ser-b1-a1.filesystem]
 ":root" = "read"

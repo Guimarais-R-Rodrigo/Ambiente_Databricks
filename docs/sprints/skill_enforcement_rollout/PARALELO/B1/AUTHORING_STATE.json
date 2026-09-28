@@ -3,6 +3,7 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
+    "AUTONOMOUS_CONTROLLER_A1_CAPABILITY_BRIDGE_REQUIRED",
     "AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION",
     "G6_SER05_RECOVERY_LOCAL_QUALIFICATION",
     "G6_PARTIAL_REMOTE_STATE_RECONCILIATION",
@@ -33,7 +34,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_AC_R2_CONTROLLER_STABILIZATION_2_FINAL_STATIC_AUDIT_PASS_AWAITING_HOST_PREFLIGHT_V6",
+  "stage": "B1_AC_R2_BLOCKED_SUBAGENT_PERMISSION_INHERITANCE_AWAITING_A1_CAPABILITY_BRIDGE",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -993,8 +994,8 @@
     "explorer_default": "GPT_6_LUNA_HIGH",
     "executor_default": "GPT_6_SOL_MEDIUM",
     "auditors_default": "GPT_6_ASTRA_HIGH",
-    "approvals_reviewer_expected": "EXECUTOR_AUTO_REVIEW_RULE_PROMPT_ONLY",
-    "sandbox_expected": "PERMISSION_PROFILES_A0_REPO_READ_ONLY_A1_EXACT_FILES",
+    "approvals_reviewer_expected": "NONE_ALL_SPAWNED_ROLES_APPROVAL_NEVER",
+    "sandbox_expected": "ALL_SPAWNED_ROLES_A0_SER_B1_A1_RESERVED_FOR_CAPABILITY_BRIDGE",
     "hooks_expected": "PRE_PATCH_POST_SCOPE_GUARDS_DEFENSE_IN_DEPTH",
     "max_causal_repair_rounds_per_gate": 4,
     "same_state_same_command_retries": 0,
@@ -1002,24 +1003,24 @@
     "max_write_capable_agents": 1,
     "custom_agents": 5,
     "controller_metatest_methods_static": 124,
-    "structural_validation": "PASS_CONTROLLER_STABILIZATION_2_FINAL_STATIC_AUDIT",
+    "structural_validation": "BLOCKED_PENDING_A1_CAPABILITY_BRIDGE",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
-    "static_audit_findings_open": 0,
+    "static_audit_findings_open": 2,
     "previous_static_audit": {
       "commit": "c5d30330e8dd03f2eb6587f627553f2a6d010416",
       "disposition": "SUPERSEDED_INVALID_RELEASE_GATE",
       "reason": "CUSTOM_AGENT_SCHEMA_FALSE_GREEN_AND_LEGACY_STATE_GOVERNANCE_GAPS_FOUND_DURING_AC_R1"
     },
-    "runtime_validation": "NOT_RUN_ON_FINAL_STABILIZATION_2_CANDIDATE",
-    "effective_config_observation": "NOT_PROVEN_AWAITING_FRESH_CQ",
+    "runtime_validation": "BLOCKED_DESIGN_SUBAGENT_PERMISSION_PROFILE_INHERITANCE",
+    "effective_config_observation": "FAIL_NOMINAL_EXECUTOR_A1_NOT_RUNTIME_EFFECTIVE",
     "first_material_controller_session": "NOT_RUN",
     "static_audit_candidate_tree": "e83b8c329f17d15de1c477204c2a82e07e32d1bd",
     "ac_r1_closure": "SUPERSEDED_BY_INDEPENDENT_AUDIT_CORRECTIVE_REQUIRED",
     "root_permissions_default": "SER_CONTROLLER_A0",
-    "executor_permissions_default": "SER_B1_A1_EXACT_FILES_NO_DIRECT_GIT_OR_NETWORK",
+    "executor_permissions_default": "SER_CONTROLLER_A0_PATCH_AUTHOR_SCRATCH_ONLY",
     "ac_r2": {
       "authorization": "DIRECT_USER_CHAT_2026-09-26",
-      "state": "PASS_CONTROLLER_STABILIZATION_2_FINAL_STATIC_AUDIT_AWAITING_HOST_PREFLIGHT_V6",
+      "state": "BLOCKED_DESIGN_A1_SUBAGENT_PERMISSION_INHERITANCE",
       "scope": [
         "CR1_LEAST_PRIVILEGE_A1_PERMISSION_BOUNDARY",
         "CR2_DELTA_AND_STATE_TRANSITION_INTEGRITY",
@@ -1032,13 +1033,13 @@
       "approval_boundary": "EXECUTOR_RULE_PROMPTS_ONLY_OTHER_ESCALATIONS_FAIL_CLOSED",
       "delta_schema": "SER-CODEX-AUTONOMY-DELTA-3",
       "metatest_methods_static": 124,
-      "runtime_qualification": "BLOCKED_PRIOR_ATTEMPTS_SUPERSEDED",
+      "runtime_qualification": "BLOCKED_DESIGN_NO_EFFECTIVE_SPAWNED_A1",
       "cq0_cq5": "NOT_RUN_ON_FINAL_STABILIZATION_2_CANDIDATE",
       "b1_material_execution": "NOT_RUN",
       "a2": "DISABLED",
       "runtime_state_promotion": "CONTROLLER_MAINTENANCE_REQUIRED_AFTER_REPORTED_CQ_PASS",
       "static_review": "PASS_RUNTIME6_R1_STATIC",
-      "material_findings_open": 0,
+      "material_findings_open": 2,
       "static_candidate_commit": "CURRENT_HEAD_AFTER_SINGLE_FREEZE_FAST_FORWARD",
       "static_candidate_tree": "CURRENT_TREE_AFTER_SINGLE_FREEZE_FAST_FORWARD",
       "validator_execution": "NOT_RUN_ON_FINAL_STABILIZATION_2_CANDIDATE",
@@ -1543,6 +1544,29 @@
         "static_review": "PASS_FINAL_REPO_OBJECT_CONTRACT_MODE_AND_ORACLE_AUDIT",
         "material_findings_open": 0,
         "next_action": "SINGLE_FAST_FORWARD_RUN_HOST_PREFLIGHT_V6_THEN_FRESH_CQ"
+      },
+      "next_action": "IMPLEMENT_AND_STATICALLY_AUDIT_ROOT_ONLY_A1_CAPABILITY_BRIDGE_THEN_HOST_PREFLIGHT",
+      "subagent_permission_inheritance": {
+        "adjudicated_on": "2026-09-28",
+        "upstream_versions": [
+          "0.157.1",
+          "0.158.0"
+        ],
+        "result": "ESTABLISHED_ARCHITECTURAL_BLOCKER",
+        "parent_profile": "ser-controller-a0",
+        "spawned_executor_effective_profile": "INHERITS_PARENT_A0",
+        "former_executor_role_a1_declaration": "INVALID_AS_RUNTIME_AUTHORITY",
+        "safe_interim": "ALL_SPAWNED_ROLES_A0",
+        "required_correction": "ROOT_ONLY_DETERMINISTIC_A1_CAPABILITY_BRIDGE"
+      },
+      "windows_network_security_stop_reanalysis": {
+        "cq_freeze": "6069ef62b8586c20e301101005720b700135c668",
+        "observed": "FAIL_NETWORK_BOUNDARY_OPEN",
+        "first_host_diagnostic": "INVALIDATED_PARTIAL_FALSE_NEGATIVE",
+        "invalid_oracle": "MATCHED_FIREWALL_NAME_ONLY",
+        "observed_counterexample": "RULE_NAME_GUID_WITH_LOGICAL_DISPLAYNAME",
+        "corrected_oracle": "NAME_OR_DISPLAYNAME_PLUS_NETFIREWALLSECURITYFILTER",
+        "stale_provisioning_hypothesis": "OPEN_NOT_ADJUDICATED"
       }
     }
   }

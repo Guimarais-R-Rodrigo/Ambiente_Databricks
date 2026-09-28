@@ -23,9 +23,9 @@ class CodexAutonomyTests(unittest.TestCase):
         result = val.validate(ROOT)
         self.assertEqual("PASS", result["status"], result["issues"])
         self.assertEqual(5, result["custom_agents"])
-        self.assertEqual(1, result["write_capable_agents"])
+        self.assertEqual(0, result["write_capable_agents"])
         self.assertEqual("ser-controller-a0", result["root_permissions"])
-        self.assertEqual("ser-b1-a1", result["executor_permissions"])
+        self.assertEqual("ser-controller-a0", result["executor_permissions"])
 
     def test_cli_controller_narrows_client_owned_features(self):
         cfg = val._read_toml(ROOT / ".codex/config.toml")
@@ -304,32 +304,24 @@ class CodexAutonomyTests(unittest.TestCase):
                 role,
             )
 
-    def test_executor_cq3_probe_contract_uses_behavior_not_metadata(self):
+    def test_executor_is_a0_patch_author_not_spawned_a1(self):
         data = val._read_toml(ROOT / ".codex/agents/executor.toml")
         text = data["developer_instructions"]
-        self.assertIn("CQ3_EXECUTOR_PERMISSION_PROBES", text)
-        self.assertIn("do not stop merely because", text)
-        self.assertIn(".codex/.cq3_executor_governance_probe.txt", text)
-        self.assertIn(".cq3_executor_unlisted_probe.txt", text)
-        self.assertIn("BLOCKED_ALLOWED_WRITE_DENIED", text)
-        self.assertIn("SECURITY_STOP", text)
-        self.assertIn("shell/Bash execution surface", text)
-        self.assertIn("apply_patch/Edit/Write is forbidden", text)
+        self.assertEqual("ser-controller-a0", data["default_permissions"])
+        self.assertEqual("never", data["approval_policy"])
+        self.assertNotIn("approvals_reviewer", data)
+        self.assertIn("A0 repository-read-only", text)
+        self.assertIn("external scratch", text)
+        self.assertIn("must never claim ser-b1-a1 authority", text)
+        self.assertIn("CQ3_NEGATIVE_PERMISSION_PROBE", text)
+        self.assertIn("root-controller-only", text)
 
-    def test_executor_cq3_exception_is_not_shadowed_by_normal_a1_rules(self):
-        text = val._read_toml(ROOT / ".codex/agents/executor.toml")["developer_instructions"]
-        self.assertIn(
-            "For ordinary A1 work and outside the qualification-only exception above",
-            text,
-        )
-        self.assertIn(
-            "Outside the exact negative probe attempts above, obey envelope write_roots",
-            text,
-        )
-        self.assertIn(
-            "Except for the exact one-attempt governance sentinel probe above",
-            text,
-        )
+    def test_no_spawned_agent_declares_a1_profile(self):
+        for role, (filename, _profile, _model, _effort) in val.EXPECTED_AGENTS.items():
+            data = val._read_toml(ROOT / ".codex/agents" / filename)
+            self.assertEqual("ser-controller-a0", data["default_permissions"], role)
+            self.assertEqual("never", data["approval_policy"], role)
+            self.assertNotIn("approvals_reviewer", data, role)
 
     def test_cq3_probe_exception_does_not_change_permission_profiles(self):
         cfg = val._read_toml(ROOT / ".codex/config.toml")
@@ -786,7 +778,8 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertFalse(granular["mcp_elicitations"])
         self.assertFalse(granular["skill_approval"])
         self.assertTrue(granular["rules"])
-        self.assertEqual("auto_review", executor["approvals_reviewer"])
+        self.assertEqual("never", executor["approval_policy"])
+        self.assertNotIn("approvals_reviewer", executor)
 
     def test_executor_has_no_direct_git_metadata_or_network(self):
         cfg = val._read_toml(ROOT / ".codex/config.toml")

@@ -22,7 +22,7 @@ LEGACY_WINDOWS_QUALIFIED_PYTHON_ROOT = r"~\AppData\Local\Programs\Python\Python3
 EXTERNAL_SURFACE_MATCHER = r"^(mcp__.*|codex_app.*|cua_repl.*|codex_tui.*|list_mcp_resources|list_mcp_resource_templates|read_mcp_resource|web__run)$"
 EXPECTED_AGENTS = {
     "explorer": ("explorer.toml", A0_PROFILE, "gpt-6-luna", "high"),
-    "executor": ("executor.toml", A1_PROFILE, "gpt-6-sol", "medium"),
+    "executor": ("executor.toml", A0_PROFILE, "gpt-6-sol", "medium"),
     "domain-auditor": ("domain-auditor.toml", A0_PROFILE, "gpt-6-astra", "high"),
     "evidence-auditor": ("evidence-auditor.toml", A0_PROFILE, "gpt-6-astra", "high"),
     "architecture-auditor": ("architecture-auditor.toml", A0_PROFILE, "gpt-6-astra", "high"),
@@ -275,7 +275,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         cfg = _read_toml(config_path)
     except Exception as exc:
         return {
-            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-22",
+            "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-23",
             "status": "FAIL",
             "issues": ["CONFIG_UNREADABLE:" + type(exc).__name__],
         }
@@ -364,26 +364,21 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             issues.append("AGENT_DUPLICATE_PERMISSION_PROFILE:" + role)
         instructions = data.get("developer_instructions") or ""
         if role == "executor":
-            required_cq3_tokens = (
-                "CQ3_EXECUTOR_PERMISSION_PROBES",
-                ".codex/.cq3_executor_governance_probe.txt",
-                ".cq3_executor_unlisted_probe.txt",
-                "BLOCKED_ALLOWED_WRITE_DENIED",
+            required_executor_tokens = (
+                "A0 repository-read-only",
+                "external scratch",
+                "CQ3_NEGATIVE_PERMISSION_PROBE",
+                "exactly one direct filesystem write attempt",
+                "shell/Bash surface",
+                "apply_patch/Edit/Write are forbidden",
                 "SECURITY_STOP",
-                "do not stop merely because",
-                "For ordinary A1 work and outside the qualification-only exception above",
-                "Outside the exact negative probe attempts above, obey envelope write_roots",
-                "Except for the exact one-attempt governance sentinel probe above",
-                ".codex\\probes\\cq3_executor_network_probe.ps1",
-                "AccessDenied",
-                "10013",
-                "Do not use Invoke-WebRequest",
-                "serialization self-test PASS",
-                "shell/Bash execution surface",
-                "apply_patch/Edit/Write is forbidden",
+                "root-controller-only",
             )
-            if any(token not in instructions for token in required_cq3_tokens):
-                issues.append("EXECUTOR_CQ3_BEHAVIORAL_PROBE_CONTRACT:" + role)
+            retry_prohibition_present = "do not retry" in instructions.casefold()
+            if any(token not in instructions for token in required_executor_tokens) or not retry_prohibition_present:
+                issues.append("EXECUTOR_A0_PATCH_AUTHOR_CONTRACT:" + role)
+            if "ser-b1-a1 authority" not in instructions or "must never claim" not in instructions:
+                issues.append("EXECUTOR_MUST_REJECT_NOMINAL_A1_ROLE_AUTHORITY")
         else:
             required_cq3_tokens = (
                 "CQ3_NEGATIVE_PERMISSION_PROBE",
@@ -398,27 +393,18 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             if any(token not in instructions for token in required_cq3_tokens) or not retry_prohibition_present:
                 issues.append("READ_ONLY_CQ3_NEGATIVE_PROBE_CONTRACT:" + role)
 
-        if role == "executor":
-            write_capable += int(data.get("default_permissions") == A1_PROFILE)
-            granular = (data.get("approval_policy") or {}).get("granular") if isinstance(data.get("approval_policy"), dict) else None
-            expected_granular = {
-                "sandbox_approval": False,
-                "rules": True,
-                "mcp_elicitations": False,
-                "request_permissions": False,
-                "skill_approval": False,
-            }
-            if granular != expected_granular:
-                issues.append("EXECUTOR_GRANULAR_APPROVALS")
-            if data.get("approvals_reviewer") != "auto_review":
-                issues.append("EXECUTOR_APPROVAL_REVIEWER")
-        elif data.get("approval_policy") != "never":
+        if data.get("default_permissions") == A1_PROFILE:
+            write_capable += 1
+            issues.append("SPAWNED_AGENT_A1_PROFILE_FORBIDDEN:" + role)
+        if data.get("approval_policy") != "never":
             issues.append("READ_ONLY_AGENT_APPROVAL_POLICY:" + role)
+        if "approvals_reviewer" in data:
+            issues.append("SPAWNED_AGENT_APPROVAL_REVIEWER_FORBIDDEN:" + role)
         if (data.get("agents") or {}).get("enabled") is not False:
             issues.append("SUBAGENT_NESTING_NOT_DISABLED:" + role)
 
-    if write_capable != 1:
-        issues.append("WRITE_CAPABLE_AGENT_COUNT")
+    if write_capable != 0:
+        issues.append("SPAWNED_WRITE_CAPABLE_AGENT_COUNT_MUST_BE_ZERO")
 
     envelope_path = root / "docs" / "operations" / "autonomy" / "B1_AUTONOMY_ENVELOPE.json"
     try:
@@ -507,7 +493,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "CODEX_CLI_WINDOWS_TUI",
             'Join-Path $env:APPDATA "npm\\codex.cmd"',
             "CODEX_CLI_VERSION =",
-            "SER-CODEX-AUTONOMY-VALIDATION-22",
+            "SER-CODEX-AUTONOMY-VALIDATION-23",
             "docs\\operations\\CODEX_CLI_WINDOWS_CQ.md",
             "Assert-WindowsSandboxNetworkIntegrity",
             "codex_sandbox_offline_block_outbound",
@@ -929,14 +915,14 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("ADR_INDEX_MISSING")
 
     return {
-        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-22",
+        "schema_version": "SER-CODEX-AUTONOMY-VALIDATION-23",
         "status": "PASS" if not issues else "FAIL",
         "issues": sorted(set(issues)),
         "custom_agents": len(EXPECTED_AGENTS),
         "write_capable_agents": write_capable,
         "max_concurrent_threads_per_session": max_threads,
         "root_permissions": cfg.get("default_permissions"),
-        "executor_permissions": A1_PROFILE,
+        "executor_permissions": A0_PROFILE,
         "direct_a1_network": False,
         "direct_git_metadata_write": False,
         "hooks_configured": hooks_configured,

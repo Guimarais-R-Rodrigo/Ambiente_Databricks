@@ -101,13 +101,14 @@ regras `codex_sandbox_offline_block_*` esperadas no ActiveStore com escopo do SI
 offline e os 12 filtros WFP do Codex. Ela executa zero tentativas de rede. Marker
 válido sem essas regras é falha fechada e bloqueia o CQ antes do baseline.
 
-Causa preservada de 2026-09-28: no freeze `6069ef62...`, o CQ3 conectou TCP
-4.228.31.150:443. Diagnóstico host independente confirmou marker v5 e ambas as
-contas sandbox, WFP 12/12, mas 0/4 regras de Firewall obrigatórias. Isso reproduz
-a classe causal documentada no upstream openai/codex#34313: setup/marker pode
-permanecer aceito enquanto a proteção de Firewall está ausente. Os filtros WFP
-0.157.1 cobrem ICMP, DNS 53/853 e SMB 139/445; eles não substituem o bloqueio
-genérico de TCP 443 feito pelas regras de Firewall.
+Evidência preservada de 2026-09-28: no freeze `6069ef62...`, o CQ3 conectou
+TCP 4.228.31.150:443. O primeiro diagnóstico host classificou 0/4 regras
+obrigatórias, mas esse oráculo foi posteriormente invalidado porque consultava
+apenas `Name`; no host observado ao menos uma regra tinha Name GUID e o nome
+lógico em `DisplayName`. A hipótese de stale provisioning do upstream
+openai/codex#34313 continua aberta e deve ser testada com Name/DisplayName mais
+`Get-NetFirewallSecurityFilter`. Independente disso, o upstream confirmou um
+segundo blocker: roles spawnados não recebem `ser-b1-a1`; herdam A0 do parent.
 
 ## CQ1 — strict config e execpolicy
 
@@ -131,11 +132,16 @@ Confirmar 5/5 custom agents. Cada um possui `name`, `description` e
 
 ```text
 root/explorer/auditors -> ser-controller-a0
-executor               -> ser-b1-a1
+executor               -> ser-controller-a0 (patch author; scratch only)
+ser-b1-a1              -> reserved for deterministic root-only capability bridge
 children nesting        -> disabled
 ```
 
 ## CQ3 — effective spawned permissions
+
+> CURRENT BLOCKER: o fluxo executor-subagente=A1 abaixo é histórico e está
+> superseded. Não executar novo CQ3 até o capability bridge A1 root-only ser
+> implementado, validado e incorporado a este contrato.
 
 Provar comportamento, não TOML nem auto-relato do role.
 
