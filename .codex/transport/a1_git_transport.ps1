@@ -121,6 +121,13 @@ if ($args.Count -ne 0) {
     exit 64
 }
 
+$rootGate = Join-Path $root ".codex\transport\a1_root_gate.ps1"
+if (-not (Test-Path -LiteralPath $rootGate)) { Write-Error "A1_GIT_TRANSPORT_ROOT_GATE_MISSING"; exit 93 }
+. $rootGate
+try { $rootOrigin = Assert-A1RootControllerInvocation $root }
+catch { Write-Error ("A1_GIT_TRANSPORT_ROOT_GATE:" + $_.Exception.Message); exit 93 }
+if ($rootOrigin.result -ne "PASS") { Write-Error "A1_GIT_TRANSPORT_ROOT_GATE_NOT_PASS"; exit 93 }
+
 if (-not (Test-Path -LiteralPath $EvidencePath) -or -not (Test-Path -LiteralPath $SidecarPath)) {
     Write-Error "A1_GIT_TRANSPORT_HOST_EVIDENCE_MISSING"
     exit 79

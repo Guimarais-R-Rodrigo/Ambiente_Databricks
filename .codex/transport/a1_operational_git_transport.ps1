@@ -206,6 +206,12 @@ if($SelfTest){
     exit 0
 }
 
+$rootGate=Join-Path $root ".codex\transport\a1_root_gate.ps1"
+if(-not(Test-Path -LiteralPath $rootGate)){throw "A1_OPERATIONAL_ROOT_GATE_MISSING"}
+. $rootGate
+$rootOrigin=Assert-A1RootControllerInvocation $root
+if($rootOrigin.result -ne "PASS"){throw "A1_OPERATIONAL_ROOT_GATE_NOT_PASS"}
+
 $evidence=Load-Evidence
 Require-ControlIdentity $evidence $root
 $QualifiedPython=[string]$evidence.python.executable

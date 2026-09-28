@@ -8,8 +8,8 @@ prefix_rule(
         "-File",
         ".codex\\transport\\a1_git_transport.ps1",
     ],
-    decision = "prompt",
-    justification = "A1 Git bridge only. Auto-review must verify trusted repo-root cwd, executor role, and zero extra arguments before running outside the sandbox.",
+    decision = "allow",
+    justification = "Root-only qualification Git bridge. PreToolUse + transport root gate verify CLI-root origin; script rejects unsupported arguments and scope.",
     match = [
         [
             "powershell.exe",
@@ -54,8 +54,8 @@ prefix_rule(
         "-File",
         ".codex\\transport\\a1_operational_git_transport.ps1",
     ],
-    decision = "prompt",
-    justification = "Operational A1 causal commit/push via checkpointed non-force transport only",
+    decision = "allow",
+    justification = "Root-only operational A1 commit/push via checkpointed non-force transport; origin and scope are revalidated in-script.",
     match = [
         [
             "powershell.exe",
@@ -84,6 +84,52 @@ prefix_rule(
             "Bypass",
             "-File",
             ".codex\\transport\\a1_operational_git_transport.ps1",
+        ],
+    ],
+)
+
+
+# Root-only deterministic A1 patch bridge. No spawned role receives A1 directly.
+prefix_rule(
+    pattern = [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".codex\\transport\\a1_patch_transport.ps1",
+    ],
+    decision = "allow",
+    justification = "Root-only A1 patch capability bridge; caller origin, request binding, sandbox profile and post-delta are all fail-closed.",
+    match = [
+        [
+            "powershell.exe",
+            "-NoProfile",
+            "-NonInteractive",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            ".codex\\transport\\a1_patch_transport.ps1",
+        ],
+    ],
+    not_match = [
+        [
+            "powershell.exe",
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            ".codex\\transport\\a1_patch_transport.ps1",
+        ],
+        [
+            "powershell.exe",
+            "-NoProfile",
+            "-NonInteractive",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            ".codex\\transport\\other.ps1",
         ],
     ],
 )
