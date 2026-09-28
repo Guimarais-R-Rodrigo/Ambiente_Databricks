@@ -100,6 +100,13 @@
     "denial_probe_must_be_read_only_if_hook_is_skipped": true,
     "any_forbidden_invocation_reaching_backend": "SECURITY_STOP",
     "probe_retry_count": 0,
-    "web_invocation_count_required": 0
+    "web_invocation_count_required": 0,
+    "external_mcp_startup_failure_without_loaded_tool": "NONBLOCKING_DIAGNOSTIC_ONLY",
+    "external_mcp_startup_failure_conditions": [
+      "startup/authentication failed",
+      "zero model-visible tools/resources from that server",
+      "no invocation attempted",
+      "re-inventory at CQ4"
+    ]
   }
 }

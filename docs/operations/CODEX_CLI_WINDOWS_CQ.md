@@ -12,7 +12,7 @@ Audit clarification (2026-09-28): the earlier external guard emitted an unsuppor
 - Execute only from the dedicated standalone checkout `C:\b1_runtime\b1_p1_4ba7f551_20260924`.
 - Linked worktrees are unsupported.
 - Launch the exact CLI executable bound by host preflight; on this Windows installation the expected launcher is `%APPDATA%\npm\codex.cmd`.
-- Launch both hook-review and CQ sessions with `--no-daemon`. The canonical runtime is `EMBEDDED_NO_DAEMON`; qualification must not attach to the shared background server because that server can be a different version/source started by another client.
+- Launch both hook-review and CQ sessions with `--no-daemon --strict-config`. The canonical runtime is `EMBEDDED_NO_DAEMON`; qualification must not attach to the shared background server because that server can be a different version/source started by another client. Strict config is mandatory so unknown project settings fail at startup instead of becoming warnings.
 - Project config must resolve from the standalone checkout.
 - Python remains `HOST_ONLY` for CQ0.5/CQ5; `DO_NOT_EXECUTE_PYTHON_IN_SANDBOX`.
 
@@ -38,6 +38,7 @@ CLIENT_SURFACE = CODEX_CLI_WINDOWS_TUI
 CODEX_CLI_VERSION = <observed>
 HOOK_TRUST_REVIEW_REQUIRED = true
 HOOK_WIRE_RUNTIME_SELFTEST = PASS
+EXECPOLICY_HOST_SELFTEST = PASS
 CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST
 ```
 
@@ -63,7 +64,7 @@ If hooks are pending review, disabled or modified, stop with `PRE_CQ_HOOK_TRUST_
 
 ## 4. CQ0 — identity, config and tool surfaces
 
-Recompute request/evidence sidecars, branch, HEAD, tree, clean status and project config hash. Require the same standalone checkout and the same CLI version recorded by preflight. Require `runtime_mode=EMBEDDED_NO_DAEMON` and launch args `--no-daemon`. `originator` or terminal-name telemetry is diagnostic and is not, by itself, proof of client identity; the qualifying runtime must be the embedded CLI session launched by the bound executable.
+Recompute request/evidence sidecars, branch, HEAD, tree, clean status and project config hash. Require the same standalone checkout and the same CLI version recorded by preflight. Require `runtime_mode=EMBEDDED_NO_DAEMON`, `strict_config=true` and launch args `--no-daemon --strict-config`. `originator` or terminal-name telemetry is diagnostic and is not, by itself, proof of client identity; the qualifying runtime must be the embedded CLI session launched by the bound executable.
 
 Apply `docs/operations/autonomy/CODEX_CLI_TOOL_SURFACE_POLICY.json`.
 
@@ -72,6 +73,7 @@ Apply `docs/operations/autonomy/CODEX_CLI_TOOL_SURFACE_POLICY.json`.
 - Any `codex_app*` / `mcp__codex_app__*` or CUA/browser client surface is unexpected in the canonical CLI runtime and blocks CQ before invocation.
 - `CLI_UNEXPECTED_CLIENT_SURFACE = BLOCK_UNEXPECTED_IN_CANONICAL_CLI_RUNTIME`.
 - Unknown MCP surfaces block unless explicitly classified.
+- A configured external MCP server that fails startup/authentication and exposes zero tools/resources is a diagnostic warning, not loaded-surface presence; do not login or invoke it, and re-inventory at CQ4.
 - Web and MCP resource calls are not alternate controller transports.
 
 If a probeable forbidden read-only surface is actually loaded, execute exactly one denial probe from the policy preference list. The valid outcome is `PreToolUse` denial before backend execution. No retry.
@@ -84,7 +86,7 @@ Use the SHA-bound host evidence for CPython 3.12 + `jsonschema`, validator and m
 
 ## 6. CQ1 — execpolicy
 
-Use the actual CLI runtime and project rule file. The exact qualification and operational A1 transport commands must evaluate to `prompt`; incomplete or alternate script forms must not match. A config-warning parse failure is blocking.
+Use the actual CLI runtime and project rule file. Host evidence must already contain `EXECPOLICY_HOST_SELFTEST = PASS`. Recheck the exact qualification and operational A1 transport commands: both evaluate to `prompt`; incomplete or alternate script forms do not match. Execpolicy is prefix-based, so suffix arguments can still reach reviewer; both transport scripts therefore remain responsible for rejecting unsupported arguments/switch combinations before effects. Any rules parse/config warning is blocking.
 
 ## 7. CQ2 — roles
 

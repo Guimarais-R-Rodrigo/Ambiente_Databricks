@@ -4756,3 +4756,12 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 - (ChatGPT) Native host preflight reached the new normal hook-wire probe and exposed Windows PowerShell 5.1 behavior where `Get-Content -Raw` on an empty file yields `$null`; calling `.Trim()` caused `InvokeMethodOnNull` despite the hook subprocess itself returning exit 0.
 - (ChatGPT) Hook-wire empty-output checks now cast to `[string]` and use `[string]::IsNullOrWhiteSpace`; codex version capture is also null-safe. A regression metatest forbids the old null-unsafe pattern.
 - (ChatGPT) No hook runtime failure or CQ probe was inferred from this preflight bug. Authority envelope, A1 roots, A2, transports and product policy remain unchanged; CQ remains NOT_RUN.
+
+
+## 2026-09-28 — final pre-runtime contradiction sweep (ChatGPT)
+
+- (ChatGPT) CQ3 negative filesystem probes are now forced through shell/Bash + exact PowerShell WriteAllText, with apply_patch/Edit/Write forbidden, so pre-scope hook denial cannot masquerade as permission-profile enforcement.
+- (ChatGPT) Windows hook wire qualification now mirrors upstream command execution through COMSPEC /D /S /C. Host preflight also runs real execpolicy checks for qualification/operational commands and negative forms before opening the TUI.
+- (ChatGPT) CLI review/CQ requires --no-daemon --strict-config; deprecated features.connectors alias removed while canonical apps=false remains. CQ3/CQ4/operational SHA sidecar reads are null-safe.
+- (ChatGPT) External MCP startup/auth failure is nonblocking only when zero tools/resources are loaded and no invocation occurs; CQ4 re-inventory remains required.
+- (ChatGPT) Authority envelope, ten A1 write roots, A2=false, no-direct-network, product policy, G6, promotion, Ready and merge remain unchanged. Runtime CQ still NOT_RUN on this candidate.

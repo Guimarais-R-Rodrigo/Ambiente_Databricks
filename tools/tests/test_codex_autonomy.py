@@ -34,7 +34,6 @@ class CodexAutonomyTests(unittest.TestCase):
             "apps",
             "remote_plugin",
             "plugins",
-            "connectors",
             "enable_mcp_apps",
             "codex_apps_mcp_2026_07_28",
             "browser_use",
@@ -43,6 +42,7 @@ class CodexAutonomyTests(unittest.TestCase):
             "computer_use",
         ):
             self.assertIs(False, features[key], key)
+        self.assertNotIn("connectors", features)
 
 
     @staticmethod
@@ -284,6 +284,8 @@ class CodexAutonomyTests(unittest.TestCase):
             self.assertIn("do not retry", text, role)
             self.assertIn("SECURITY_STOP", text, role)
             self.assertIn("Outside this exact task label", text, role)
+            self.assertIn("shell/Bash execution surface", text, role)
+            self.assertIn("apply_patch/Edit/Write is forbidden", text, role)
 
     def test_read_only_cq3_exception_is_not_shadowed_by_unconditional_read_only_rule(self):
         for role, (filename, _profile, _model, _effort) in val.EXPECTED_AGENTS.items():
@@ -311,6 +313,8 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn(".cq3_executor_unlisted_probe.txt", text)
         self.assertIn("BLOCKED_ALLOWED_WRITE_DENIED", text)
         self.assertIn("SECURITY_STOP", text)
+        self.assertIn("shell/Bash execution surface", text)
+        self.assertIn("apply_patch/Edit/Write is forbidden", text)
 
     def test_executor_cq3_exception_is_not_shadowed_by_normal_a1_rules(self):
         text = val._read_toml(ROOT / ".codex/agents/executor.toml")["developer_instructions"]
@@ -353,6 +357,9 @@ class CodexAutonomyTests(unittest.TestCase):
             ".cq3_executor_unlisted_probe.txt",
             "SECURITY_STOP",
             "não limpar nem continuar",
+            "CQ3_SHELL_CONTROL",
+            "shell/Bash execution surface",
+            "WriteAllText",
         ):
             self.assertIn(token, text)
 
@@ -570,12 +577,13 @@ class CodexAutonomyTests(unittest.TestCase):
         prompt = (ROOT / "docs/operations/CODEX_CLI_CQ_RUN_PROMPT_TEMPLATE.md").read_text(encoding="utf-8")
         start = (ROOT / "docs/operations/CODEX_AUTONOMOUS_START_PROMPT.md").read_text(encoding="utf-8")
         self.assertIn('runtime_mode="EMBEDDED_NO_DAEMON"', preflight)
-        self.assertIn('required_launch_args=@("--no-daemon")', preflight)
+        self.assertIn('required_launch_args=@("--no-daemon","--strict-config")', preflight)
+        self.assertIn("strict_config=$true", preflight)
         self.assertIn("EMBEDDED_NO_DAEMON", contract)
         self.assertIn("--no-daemon", contract)
         self.assertIn("EMBEDDED_NO_DAEMON", prompt)
         self.assertIn("--no-daemon", prompt)
-        self.assertIn('& "$env:APPDATA\\npm\\codex.cmd" --no-daemon', start)
+        self.assertIn('& "$env:APPDATA\\npm\\codex.cmd" --no-daemon --strict-config', start)
 
     def test_cli_preflight_binds_explicit_launcher_version_and_control_sources(self):
         text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
@@ -1456,6 +1464,52 @@ class CodexAutonomyTests(unittest.TestCase):
             "HOOK_WIRE_RUNTIME_SELFTEST = PASS",
         ):
             self.assertIn(token, text)
+
+    def test_legacy_connectors_alias_is_absent(self):
+        cfg = val._read_toml(ROOT / ".codex/config.toml")
+        self.assertNotIn("connectors", cfg["features"])
+        self.assertIs(False, cfg["features"]["apps"])
+
+    def test_cq3_negative_filesystem_probes_bypass_pre_scope_hook(self):
+        cfg = val._read_toml(ROOT / ".codex/config.toml")
+        pre = cfg["hooks"]["PreToolUse"]
+        groups = [group for group in pre if "pre_scope_guard" in json.dumps(group.get("hooks", []))]
+        self.assertEqual(1, len(groups))
+        self.assertEqual("apply_patch|Edit|Write", groups[0]["matcher"])
+        self.assertIsNone(re.fullmatch(groups[0]["matcher"], "Bash"))
+        runtime = (ROOT / "docs/operations/CODEX_RUNTIME_QUALIFICATION.md").read_text(encoding="utf-8")
+        self.assertIn("CQ3_SHELL_CONTROL", runtime)
+        self.assertIn("WriteAllText", runtime)
+
+    def test_cli_runtime_requires_strict_config_and_no_daemon(self):
+        preflight = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        contract = (ROOT / "docs/operations/CODEX_CLI_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        self.assertIn('required_launch_args=@("--no-daemon","--strict-config")', preflight)
+        self.assertIn("strict_config=$true", preflight)
+        self.assertIn("--no-daemon --strict-config", contract)
+
+    def test_host_preflight_execpolicy_oracles_cover_exact_and_negative_forms(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        for token in (
+            "Invoke-ExecPolicyOracle",
+            'ExpectedDecision "prompt"',
+            'ExpectedDecision ""',
+            "CQ_HOST_PREFLIGHT_EXECPOLICY_NEGATIVE_MATCHED",
+            "EXECPOLICY_HOST_SELFTEST = PASS",
+        ):
+            self.assertIn(token, text)
+
+    def test_runtime_sidecars_are_null_safe(self):
+        for path in (
+            ".codex/probes/cq3_executor_network_probe.ps1",
+            ".codex/transport/a1_git_transport.ps1",
+            ".codex/transport/a1_operational_git_transport.ps1",
+        ):
+            text = (ROOT / path).read_text(encoding="utf-8")
+            self.assertNotIn("(Get-Content -LiteralPath $SidecarPath -Raw).Trim()", text)
+            self.assertNotIn("(Get-Content -LiteralPath $EvidenceSidecarPath -Raw).Trim()", text)
+            self.assertNotIn("(Get-Content -LiteralPath $CheckpointSidecarPath -Raw).Trim()", text)
+            self.assertIn("IsNullOrWhiteSpace", text)
 
     def test_external_surface_hook_windows_path_is_normalized(self):
         hooks = val._read_toml(ROOT / ".codex/config.toml")["hooks"]

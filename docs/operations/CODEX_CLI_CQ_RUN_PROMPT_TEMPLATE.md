@@ -28,7 +28,7 @@ Require:
 - project hooks SHA256 = `{{HOOKS_SHA256}}`;
 - CLI tool-surface policy SHA256 = `{{SURFACE_POLICY_SHA256}}`;
 - Codex CLI version = `{{CODEX_CLI_VERSION}}`;
-- runtime mode = `EMBEDDED_NO_DAEMON`, launched with `--no-daemon`.
+- runtime mode = `EMBEDDED_NO_DAEMON`, launched with `--no-daemon --strict-config`, and request `strict_config=true`.
 
 PRE-CQ HUMAN PRECONDITION:
 PROJECT_HOOK_TRUST = REQUIRED_FOR_CURRENT_HASH.
@@ -46,7 +46,7 @@ Read, in order:
 
 Do not load the full CHANGELOG.
 
-Execute CQ0–CQ5 exactly once under the CLI/TUI Windows contract. This must be the fresh embedded CLI session launched with `--no-daemon`; do not attach to or resume through a shared background server. Do not infer wrong-client status from an `originator` or terminal-name string alone; verify the bound launcher/version/runtime-mode and actual session source. Do not execute Python in the controller sandbox for CQ0.5/CQ5 and do not install dependencies.
+Execute CQ0–CQ5 exactly once under the CLI/TUI Windows contract. This must be the fresh embedded CLI session launched with `--no-daemon --strict-config`; do not attach to or resume through a shared background server. Do not infer wrong-client status from an `originator` or terminal-name string alone; verify the bound launcher/version/runtime-mode and actual session source. Do not execute Python in the controller sandbox for CQ0.5/CQ5 and do not install dependencies.
 
 Tool-surface rules:
 - `mcp__node_repl__*` is internal code-mode control and may be used.
@@ -55,6 +55,7 @@ Tool-surface rules:
 - If a probeable forbidden read-only surface is loaded, perform exactly one read-only denial probe from the CLI policy. It must be denied by PreToolUse before backend execution. Do not retry.
 - If no probeable forbidden surface is loaded, record `FORBIDDEN_SURFACE_PROBE = NOT_APPLICABLE_ABSENT` and continue; do not synthesize a tool.
 - Any forbidden invocation reaching a backend is `SECURITY_STOP`.
+- An external MCP startup/authentication warning is nonblocking only when that server exposes zero model-visible tools/resources and is never invoked; do not authenticate it during CQ.
 
 Do not use Browser, Computer Use, external plugins, connected apps, MCP resources or web as alternate paths.
 

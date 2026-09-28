@@ -185,8 +185,11 @@ if (-not (Test-Path -LiteralPath $EvidencePath) -or -not (Test-Path -LiteralPath
 }
 
 $actualEvidenceSha = (Get-FileHash -Algorithm SHA256 -LiteralPath $EvidencePath).Hash.ToUpperInvariant()
-$sidecarText = (Get-Content -LiteralPath $SidecarPath -Raw).Trim()
-$sidecarSha = (($sidecarText -split "\s+")[0]).ToUpperInvariant()
+$sidecarText = [string](Get-Content -LiteralPath $SidecarPath -Raw)
+if ([string]::IsNullOrWhiteSpace($sidecarText)) {
+    Emit-And-Exit (New-ProbePayload -Result "NOT_PROVEN" -Reason "HOST_EVIDENCE_SIDECAR_EMPTY" -PreflightSha256 $actualEvidenceSha -ProbeSha256 "" -TargetHostname "" -TargetIpv4 "" -TargetPort 0 -AttemptCount 0 -Connected $false -SocketErrorCode $null -NativeErrorCode $null -SocketHResult $null -ExceptionChain ([object[]]@())) 30
+}
+$sidecarSha = (($sidecarText.Trim() -split "\s+")[0]).ToUpperInvariant()
 if ($sidecarSha -ne $actualEvidenceSha) {
     Emit-And-Exit (New-ProbePayload -Result "NOT_PROVEN" -Reason "HOST_EVIDENCE_SHA_MISMATCH" -PreflightSha256 $actualEvidenceSha -ProbeSha256 "" -TargetHostname "" -TargetIpv4 "" -TargetPort 0 -AttemptCount 0 -Connected $false -SocketErrorCode $null -NativeErrorCode $null -SocketHResult $null -ExceptionChain ([object[]]@())) 31
 }

@@ -252,6 +252,12 @@ if ($codexVersionExit -ne 0) { throw "CQ_HOST_PREFLIGHT_CODEX_CLI_VERSION_FAILED
 $codexVersion = [string](Get-Content -LiteralPath $codexVersionStdout -Raw -Encoding UTF8)
 $codexVersion = $codexVersion.Trim()
 if ([string]::IsNullOrWhiteSpace($codexVersion) -or $codexVersion -notmatch "^codex-cli\s+\S+") { throw "CQ_HOST_PREFLIGHT_CODEX_CLI_VERSION_UNPARSEABLE:$codexVersion" }
+$codexHelpStdout = Join-Path $outputRootFull "CQ_HOST_CODEX_CLI_HELP.stdout.txt"
+$codexHelpStderr = Join-Path $outputRootFull "CQ_HOST_CODEX_CLI_HELP.stderr.txt"
+$codexHelpExit = Invoke-CapturedProcess -FilePath $codexCli -ArgumentList @("--help") -StdoutPath $codexHelpStdout -StderrPath $codexHelpStderr
+if ($codexHelpExit -ne 0) { throw "CQ_HOST_PREFLIGHT_CODEX_CLI_HELP_FAILED:$codexHelpExit" }
+$codexHelp = [string](Get-Content -LiteralPath $codexHelpStdout -Raw -Encoding UTF8)
+if ($codexHelp -notmatch "--no-daemon" -or $codexHelp -notmatch "--strict-config") { throw "CQ_HOST_PREFLIGHT_REQUIRED_CLI_FLAGS_MISSING" }
 
 $sourcePaths = [ordered]@{
     config = ".codex\config.toml"
@@ -348,6 +354,31 @@ $testSourceText = Get-Content -LiteralPath (Join-Path $root "tools\tests\test_co
 $staticTestCount = [regex]::Matches($testSourceText, "(?m)^\s+def test_").Count
 if ($runtimeTestCount -ne $staticTestCount) { throw "CQ_HOST_PREFLIGHT_METATEST_COUNT_MISMATCH:$($runtimeTestCount):$($staticTestCount)" }
 
+$execPolicyRulePath = Join-Path $root ".codex\rules\a1_git_transport.rules"
+$qualificationCommand = @("powershell.exe","-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-File",".codex\transport\a1_git_transport.ps1")
+$operationalCommand = @("powershell.exe","-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-File",".codex\transport\a1_operational_git_transport.ps1")
+$incompleteQualificationCommand = @("powershell.exe","-NoProfile","-ExecutionPolicy","Bypass","-File",".codex\transport\a1_git_transport.ps1")
+$alternateQualificationCommand = @("powershell.exe","-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-File",".codex\transport\other.ps1")
+
+function Invoke-ExecPolicyOracle([string]$Name,[string[]]$Command,[string]$ExpectedDecision) {
+    $stdout = Join-Path $outputRootFull ("CQ_HOST_EXECPOLICY_" + $Name + ".stdout.txt")
+    $stderr = Join-Path $outputRootFull ("CQ_HOST_EXECPOLICY_" + $Name + ".stderr.txt")
+    $arguments = @("execpolicy","check","--pretty","--rules",$execPolicyRulePath) + $Command
+    $exit = Invoke-CapturedProcess -FilePath $codexCli -ArgumentList $arguments -StdoutPath $stdout -StderrPath $stderr
+    if($exit -ne 0){throw "CQ_HOST_PREFLIGHT_EXECPOLICY_EXIT:$($Name):$($exit)"}
+    try { $payload = Get-Content -LiteralPath $stdout -Raw -Encoding UTF8 | ConvertFrom-Json -ErrorAction Stop }
+    catch { throw "CQ_HOST_PREFLIGHT_EXECPOLICY_JSON:$Name" }
+    $decision = if($null -eq $payload.PSObject.Properties["decision"]){""}else{[string]$payload.decision}
+    if($decision -cne $ExpectedDecision){throw "CQ_HOST_PREFLIGHT_EXECPOLICY_DECISION:$($Name):$($decision)"}
+    return [ordered]@{ decision=$decision; matched_rule_count=@($payload.matchedRules).Count; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $stdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $stderr).Hash }
+}
+$execPolicyQualification = Invoke-ExecPolicyOracle -Name "QUALIFICATION" -Command $qualificationCommand -ExpectedDecision "prompt"
+$execPolicyOperational = Invoke-ExecPolicyOracle -Name "OPERATIONAL" -Command $operationalCommand -ExpectedDecision "prompt"
+$execPolicyIncomplete = Invoke-ExecPolicyOracle -Name "INCOMPLETE" -Command $incompleteQualificationCommand -ExpectedDecision ""
+$execPolicyAlternate = Invoke-ExecPolicyOracle -Name "ALTERNATE" -Command $alternateQualificationCommand -ExpectedDecision ""
+if($execPolicyQualification.matched_rule_count -lt 1 -or $execPolicyOperational.matched_rule_count -lt 1){throw "CQ_HOST_PREFLIGHT_EXECPOLICY_EXACT_MATCH_MISSING"}
+if($execPolicyIncomplete.matched_rule_count -ne 0 -or $execPolicyAlternate.matched_rule_count -ne 0){throw "CQ_HOST_PREFLIGHT_EXECPOLICY_NEGATIVE_MATCHED"}
+
 $networkProbeScript = Join-Path $root ".codex\probes\cq3_executor_network_probe.ps1"
 $networkSelfTestStdout = Join-Path $outputRootFull "CQ_HOST_NETWORK_PROBE_SELFTEST.stdout.txt"
 $networkSelfTestStderr = Join-Path $outputRootFull "CQ_HOST_NETWORK_PROBE_SELFTEST.stderr.txt"
@@ -406,12 +437,19 @@ $hookScripts = [ordered]@{
     external = (Join-Path $root ".codex\hooks\external_surface_guard.ps1")
     post = (Join-Path $root ".codex\hooks\post_scope_guard.ps1")
 }
-$hookWireArgs = @("-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File")
+$commandShell = [string]$env:ComSpec
+if ([string]::IsNullOrWhiteSpace($commandShell) -or -not (Test-Path -LiteralPath $commandShell)) { throw "CQ_HOST_PREFLIGHT_COMSPEC_MISSING" }
+$hookWindowsCommands = [ordered]@{
+    pre = "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\hooks\pre_scope_guard.ps1"
+    external = "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\hooks\external_surface_guard.ps1"
+    post = "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\hooks\post_scope_guard.ps1"
+}
+$hookShellArgsPrefix = @("/D", "/S", "/C")
 
 $preWireOut = $hookWireRoot + ".pre.stdout.txt"
 $preWireErr = $hookWireRoot + ".pre.stderr.txt"
 $preWireInput = '{"tool_name":"apply_patch","tool_input":{"path":"docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl"}}'
-$preWireExit = Invoke-CapturedProcessWithInput -FilePath $powershellExe -ArgumentList ($hookWireArgs + @($hookScripts.pre)) -InputText $preWireInput -StdoutPath $preWireOut -StderrPath $preWireErr
+$preWireExit = Invoke-CapturedProcessWithInput -FilePath $commandShell -ArgumentList ($hookShellArgsPrefix + @($hookWindowsCommands.pre)) -InputText $preWireInput -StdoutPath $preWireOut -StderrPath $preWireErr
 if ($preWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_PRE_SCOPE_NORMAL_WIRE_EXIT:$preWireExit" }
 $preWireText = [string](Get-Content -LiteralPath $preWireOut -Raw -Encoding UTF8)
 if (-not [string]::IsNullOrWhiteSpace($preWireText)) { throw "CQ_HOST_PREFLIGHT_PRE_SCOPE_NORMAL_WIRE_UNEXPECTED_OUTPUT" }
@@ -419,7 +457,7 @@ if (-not [string]::IsNullOrWhiteSpace($preWireText)) { throw "CQ_HOST_PREFLIGHT_
 $postWireOut = $hookWireRoot + ".post.stdout.txt"
 $postWireErr = $hookWireRoot + ".post.stderr.txt"
 $postWireInput = '{"tool_name":"Bash","tool_input":{"command":"git status --porcelain"}}'
-$postWireExit = Invoke-CapturedProcessWithInput -FilePath $powershellExe -ArgumentList ($hookWireArgs + @($hookScripts.post)) -InputText $postWireInput -StdoutPath $postWireOut -StderrPath $postWireErr
+$postWireExit = Invoke-CapturedProcessWithInput -FilePath $commandShell -ArgumentList ($hookShellArgsPrefix + @($hookWindowsCommands.post)) -InputText $postWireInput -StdoutPath $postWireOut -StderrPath $postWireErr
 if ($postWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_POST_SCOPE_NORMAL_WIRE_EXIT:$postWireExit" }
 $postWireText = [string](Get-Content -LiteralPath $postWireOut -Raw -Encoding UTF8)
 if (-not [string]::IsNullOrWhiteSpace($postWireText)) { throw "CQ_HOST_PREFLIGHT_POST_SCOPE_NORMAL_WIRE_UNEXPECTED_OUTPUT" }
@@ -427,7 +465,7 @@ if (-not [string]::IsNullOrWhiteSpace($postWireText)) { throw "CQ_HOST_PREFLIGHT
 $externalWireOut = $hookWireRoot + ".external.stdout.txt"
 $externalWireErr = $hookWireRoot + ".external.stderr.txt"
 $externalWireInput = '{"tool_name":"mcp__example__read","tool_input":{}}'
-$externalWireExit = Invoke-CapturedProcessWithInput -FilePath $powershellExe -ArgumentList ($hookWireArgs + @($hookScripts.external)) -InputText $externalWireInput -StdoutPath $externalWireOut -StderrPath $externalWireErr
+$externalWireExit = Invoke-CapturedProcessWithInput -FilePath $commandShell -ArgumentList ($hookShellArgsPrefix + @($hookWindowsCommands.external)) -InputText $externalWireInput -StdoutPath $externalWireOut -StderrPath $externalWireErr
 if ($externalWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_EXTERNAL_NORMAL_WIRE_EXIT:$externalWireExit" }
 try { $externalWirePayload = Get-Content -LiteralPath $externalWireOut -Raw -Encoding UTF8 | ConvertFrom-Json -ErrorAction Stop }
 catch { throw "CQ_HOST_PREFLIGHT_EXTERNAL_NORMAL_WIRE_JSON" }
@@ -441,7 +479,7 @@ if (
 $nodeWireOut = $hookWireRoot + ".node.stdout.txt"
 $nodeWireErr = $hookWireRoot + ".node.stderr.txt"
 $nodeWireInput = '{"tool_name":"mcp__node_repl__js","tool_input":{}}'
-$nodeWireExit = Invoke-CapturedProcessWithInput -FilePath $powershellExe -ArgumentList ($hookWireArgs + @($hookScripts.external)) -InputText $nodeWireInput -StdoutPath $nodeWireOut -StderrPath $nodeWireErr
+$nodeWireExit = Invoke-CapturedProcessWithInput -FilePath $commandShell -ArgumentList ($hookShellArgsPrefix + @($hookWindowsCommands.external)) -InputText $nodeWireInput -StdoutPath $nodeWireOut -StderrPath $nodeWireErr
 if ($nodeWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_NODE_REPL_NORMAL_WIRE_EXIT:$nodeWireExit" }
 $nodeWireText = [string](Get-Content -LiteralPath $nodeWireOut -Raw -Encoding UTF8)
 if (-not [string]::IsNullOrWhiteSpace($nodeWireText)) { throw "CQ_HOST_PREFLIGHT_NODE_REPL_NORMAL_WIRE_UNEXPECTED_OUTPUT" }
@@ -502,7 +540,7 @@ $payload = [ordered]@{
     git = [ordered]@{ root=$root; checkout_mode=$checkoutMode; git_dir=$gitDir; git_common_dir=$gitCommonDir; branch=$branch; head=$head; tree=$tree; final_head=$finalHead; final_tree=$finalTree; origin_identity=$ExpectedRepoFragment; origin_tracking_ref=$originHead; fetch="PASS"; initial_clean=$true; final_clean=$true }
     python = [ordered]@{ executable=$python.executable; python_version=$python.python_version; implementation=$python.implementation; jsonschema_version=$python.jsonschema_version; execution_surface="HOST_ONLY" }
     project = [ordered]@{ config_path=$projectConfig; config_sha256=$sourceHashes.config; user_config_exists=$userConfigExists; user_config_sha256=$userConfigSha256; validator_git_mode="100755"; validator_blob=$validatorBlob }
-    codex_cli = [ordered]@{ executable=$codexCli; version=$codexVersion; launcher="EXPLICIT_APPDATA_NPM_CODEX_CMD"; launcher_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $codexCli).Hash; runtime_mode="EMBEDDED_NO_DAEMON"; required_launch_args=@("--no-daemon") }
+    codex_cli = [ordered]@{ executable=$codexCli; version=$codexVersion; launcher="EXPLICIT_APPDATA_NPM_CODEX_CMD"; launcher_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $codexCli).Hash; runtime_mode="EMBEDDED_NO_DAEMON"; strict_config=$true; required_launch_args=@("--no-daemon","--strict-config") }
     source_sha256 = $sourceHashes
     host_validation = [ordered]@{
         validator = [ordered]@{ exit_code=$validatorExit; status=$validatorPayload.status; schema_version=$validatorPayload.schema_version; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $validatorStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $validatorStderr).Hash }
@@ -512,7 +550,8 @@ $payload = [ordered]@{
         network_offline_runtime = [ordered]@{ result="PASS"; exit_code=$networkOfflineExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $networkOfflineStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $networkOfflineStderr).Hash }
         mcp_guard = [ordered]@{ result="PASS"; exit_code=$mcpGuardExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $mcpGuardStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $mcpGuardStderr).Hash }
         scope_guards = [ordered]@{ result="PASS"; pre_exit_code=$preGuardExit; post_exit_code=$postGuardExit }
-        hook_wire_runtime = [ordered]@{ result="PASS"; pre_exit_code=$preWireExit; post_exit_code=$postWireExit; external_exit_code=$externalWireExit; node_repl_exit_code=$nodeWireExit }
+        hook_wire_runtime = [ordered]@{ result="PASS"; shell=$commandShell; pre_exit_code=$preWireExit; post_exit_code=$postWireExit; external_exit_code=$externalWireExit; node_repl_exit_code=$nodeWireExit }
+        execpolicy = [ordered]@{ result="PASS"; qualification=$execPolicyQualification; operational=$execPolicyOperational; incomplete=$execPolicyIncomplete; alternate=$execPolicyAlternate }
         a1_operational_transport = [ordered]@{ result="PASS"; exit_code=$operationalTransportExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $operationalTransportStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $operationalTransportStderr).Hash }
         a1_git_transport = [ordered]@{ result="PASS"; exit_code=$transportExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $transportStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $transportStderr).Hash }
     }
@@ -565,7 +604,8 @@ $request = [ordered]@{
     metatest_count = $runtimeTestCount
     codex_cli = $payload.codex_cli
     runtime_mode = "EMBEDDED_NO_DAEMON"
-    required_launch_args = @("--no-daemon")
+    strict_config = $true
+    required_launch_args = @("--no-daemon","--strict-config")
     network = [ordered]@{ selected_ipv4=$networkProbeIp; port=$NetworkProbePort; host_baseline="PASS"; serialization_selftest="PASS"; offline_runtime_selftest="PASS" }
     tool_surface_policy = [ordered]@{ path="docs/operations/autonomy/CODEX_CLI_TOOL_SURFACE_POLICY.json"; source_sha256=$sourceHashes.tool_surface_policy; schema_version="SER-CODEX-CLI-TOOL-SURFACE-1"; mcp_invocation="DENY_EXTERNAL_SURFACES_ALLOW_INTERNAL_NODE_REPL"; absent_probeable_surface="NOT_APPLICABLE_ABSENT" }
     hook_trust = [ordered]@{
@@ -610,6 +650,7 @@ Write-Host "MCP_GUARD_SELFTEST = PASS"
 Write-Host "EXTERNAL_SURFACE_GUARD_SELFTEST = PASS"
 Write-Host "SCOPE_GUARDS_SELFTEST = PASS"
 Write-Host "HOOK_WIRE_RUNTIME_SELFTEST = PASS"
+Write-Host "EXECPOLICY_HOST_SELFTEST = PASS"
 Write-Host "A1_GIT_TRANSPORT_SELFTEST = PASS"
 Write-Host "A1_OPERATIONAL_TRANSPORT_SELFTEST = PASS"
 Write-Host "NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS (3/3; network_attempts=0)"

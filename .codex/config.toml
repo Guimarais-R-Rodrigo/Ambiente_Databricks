@@ -15,7 +15,6 @@ sandbox = "elevated"
 apps = false
 remote_plugin = false
 plugins = false
-connectors = false
 enable_mcp_apps = false
 codex_apps_mcp_2026_07_28 = false
 browser_use = false

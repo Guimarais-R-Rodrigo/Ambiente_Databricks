@@ -51,7 +51,7 @@ Configuração declarada não prova configuração efetiva. Parent/live override
 project trust, Windows sandbox e MCP/hosted surfaces precisam ser observados.
 
 Durante CQ3 existe uma exceção de qualificação estritamente rotulada nas
-developer_instructions dos custom agents. `CQ3_NEGATIVE_PERMISSION_PROBE` permite
+developer_instructions dos custom agents. Os writes negativos usam exclusivamente a superfície shell/Bash, nunca apply_patch/Edit/Write, para que uma negação do pre-scope hook não seja confundida com enforcement do permission profile. `CQ3_NEGATIVE_PERMISSION_PROBE` permite
 uma única tentativa-sentinela dos roles A0; `CQ3_EXECUTOR_PERMISSION_PROBES`
 obriga o executor a testar negativos e o único positivo journal A1. Essa exceção
 não muda permission profiles nem autoridade normal e não pode ser usada fora de

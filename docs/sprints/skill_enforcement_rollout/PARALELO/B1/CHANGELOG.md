@@ -226,3 +226,6 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 
 
 - 2026-09-28 (ChatGPT): host preflight reached hook-wire normal stdin but stopped on PowerShell 5.1 empty-file semantics: Get-Content -Raw returned null and .Trim() threw before evaluating success. Checks are now null-safe; no CQ probe/material effect/authority change occurred.
+
+
+- 2026-09-28 (ChatGPT): final pre-runtime contradiction sweep forces CQ3 negative writes through shell (not write hooks), mirrors Windows hook invocation through COMSPEC in preflight, adds real host execpolicy oracles, requires strict-config/no-daemon, removes deprecated connectors alias, and hardens sidecar empty-file handling. Authority/A1 roots/A2 unchanged; CQ still NOT_RUN.

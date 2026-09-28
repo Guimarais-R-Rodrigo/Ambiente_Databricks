@@ -126,7 +126,12 @@ if (-not (Test-Path -LiteralPath $EvidencePath) -or -not (Test-Path -LiteralPath
     exit 79
 }
 $actualEvidenceSha = (Get-FileHash -Algorithm SHA256 -LiteralPath $EvidencePath).Hash.ToUpperInvariant()
-$sidecarSha = (((Get-Content -LiteralPath $SidecarPath -Raw).Trim() -split "\s+")[0]).ToUpperInvariant()
+$sidecarText = [string](Get-Content -LiteralPath $SidecarPath -Raw)
+if ([string]::IsNullOrWhiteSpace($sidecarText)) {
+    Write-Error "A1_GIT_TRANSPORT_HOST_EVIDENCE_SIDECAR_EMPTY"
+    exit 80
+}
+$sidecarSha = (($sidecarText.Trim() -split "\s+")[0]).ToUpperInvariant()
 if ($sidecarSha -ne $actualEvidenceSha) {
     Write-Error "A1_GIT_TRANSPORT_HOST_EVIDENCE_SHA_MISMATCH"
     exit 80

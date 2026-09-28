@@ -295,8 +295,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         issues.append("REMOTE_PLUGIN_MUST_BE_DISABLED")
     if features.get("plugins") is not False:
         issues.append("PLUGINS_MUST_BE_DISABLED")
-    if features.get("connectors") is not False:
-        issues.append("CONNECTORS_MUST_BE_DISABLED")
+    if "connectors" in features:
+        issues.append("LEGACY_CONNECTORS_ALIAS_MUST_BE_ABSENT")
     if features.get("enable_mcp_apps") is not False or features.get("codex_apps_mcp_2026_07_28") is not False:
         issues.append("MCP_APPS_MUST_BE_DISABLED")
     if (
@@ -379,6 +379,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
                 "10013",
                 "Do not use Invoke-WebRequest",
                 "serialization self-test PASS",
+                "shell/Bash execution surface",
+                "apply_patch/Edit/Write is forbidden",
             )
             if any(token not in instructions for token in required_cq3_tokens):
                 issues.append("EXECUTOR_CQ3_BEHAVIORAL_PROBE_CONTRACT:" + role)
@@ -390,6 +392,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
                 "SECURITY_STOP",
                 "Outside this exact task label",
                 "For ordinary work and outside the qualification-only exception above",
+                "shell/Bash execution surface",
+                "apply_patch/Edit/Write is forbidden",
             )
             if any(token not in instructions for token in required_cq3_tokens):
                 issues.append("READ_ONLY_CQ3_NEGATIVE_PROBE_CONTRACT:" + role)
@@ -479,6 +483,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "HOST_METATESTS",
             "HOST_NETWORK_BASELINE",
             "HOOK_WIRE_RUNTIME_SELFTEST = PASS",
+            "EXECPOLICY_HOST_SELFTEST = PASS",
             "CQ_RUN_REQUEST.json",
             "CQ_RUN_PROMPT.md",
             "CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST",
@@ -508,6 +513,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             'cli_preflight = "tools\\codex_cli_cq_host_preflight.ps1"',
             "CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST",
             "HOOK_WIRE_RUNTIME_SELFTEST = PASS",
+            "EXECPOLICY_HOST_SELFTEST = PASS",
+            "--strict-config",
             "CHECKOUT_MODE = STANDALONE",
         )
         missing_preflight_tokens = [token for token in required_cli_preflight_tokens if token not in cli_preflight_text]
@@ -816,6 +823,16 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             or EXTERNAL_SURFACE_MATCHER not in serialized
         ):
             issues.append("HOOK_CONFIG_INVALID")
+        write_scope_matchers = [
+            str(group.get("matcher") or "")
+            for group in pre
+            if any("pre_scope_guard" in json.dumps(hook) for hook in (group.get("hooks") or []))
+        ]
+        if write_scope_matchers != ["apply_patch|Edit|Write"]:
+            issues.append("HOOK_WRITE_SCOPE_MATCHER_MISMATCH")
+        if write_scope_matchers and re.fullmatch(write_scope_matchers[0], "Bash") is not None:
+            issues.append("HOOK_WRITE_SCOPE_MUST_NOT_INTERCEPT_BASH_CQ3")
+
         external_matchers = [
             str(group.get("matcher") or "")
             for group in pre

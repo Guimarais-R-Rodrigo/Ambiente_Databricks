@@ -31,6 +31,7 @@ NETWORK_PROBE_OFFLINE_RUNTIME_SELFTEST = PASS
 EXTERNAL_SURFACE_GUARD_SELFTEST = PASS
 SCOPE_GUARDS_SELFTEST = PASS
 HOOK_WIRE_RUNTIME_SELFTEST = PASS
+EXECPOLICY_HOST_SELFTEST = PASS
 A1_GIT_TRANSPORT_SELFTEST = PASS
 A1_OPERATIONAL_TRANSPORT_SELFTEST = PASS
 HOST_NETWORK_BASELINE = PASS
@@ -49,14 +50,14 @@ O preflight grava `CQ_HOST_PREFLIGHT.json`, `CQ_RUN_REQUEST.json` e `CQ_RUN_PROM
 Inicie o executável explicitamente bound pelo preflight; nesta máquina:
 
 ```powershell
-& "$env:APPDATA\npm\codex.cmd" --no-daemon
+& "$env:APPDATA\npm\codex.cmd" --no-daemon --strict-config
 ```
 
 No TUI execute `/debug-config` e `/hooks`. Exigir a config de projeto do standalone e `PreToolUse 2/2 Active`, `PostToolUse 1/1 Active`. Se houver review pendente, confiar a definição atual. `HOOK_TRUST_REVIEW_REQUIRED = true` não é autorização automática. Se qualquer operação de leitura durante essa sessão mostrar `Hook failed` ou exit não-zero, não confirmar `HOOKS_REVISADOS`: sair e tratar como blocker de runtime.
 
 ## 4. Conversa CQ nova
 
-Após o trust, saia da sessão usada para revisão e abra uma **nova** sessão CLI/TUI no mesmo standalone, também com `--no-daemon`. Não reutilize/resuma uma thread do shared background server. Copie o conteúdo integral de `CQ_RUN_PROMPT.md` e cole nessa nova conversa. No Windows Terminal, prefira `Ctrl+Shift+V` ou botão direito se `Ctrl+V` for interpretado como imagem.
+Após o trust, saia da sessão usada para revisão e abra uma **nova** sessão CLI/TUI no mesmo standalone, também com `--no-daemon --strict-config`. Não reutilize/resuma uma thread do shared background server. Copie o conteúdo integral de `CQ_RUN_PROMPT.md` e cole nessa nova conversa. No Windows Terminal, prefira `Ctrl+Shift+V` ou botão direito se `Ctrl+V` for interpretado como imagem.
 
 Não use o Codex Desktop para este CQ.
 

@@ -89,3 +89,18 @@ O contrato agora exige `EMBEDDED_NO_DAEMON` e `--no-daemon` na revisão e na con
 A primeira sessão CLI embedded/no-daemon posterior exibiu repetidamente `Hook failed / hook exited with code 1` após operações read-only, antes de CQ0. Isso demonstra que `Installed/Active` e o self-test funcional não bastavam para provar a invocação normal pelo host Windows. A tentativa parou sem probes CQ.
 
 A manutenção substitui wrappers `powershell -Command ... git rev-parse ...` por `powershell -File .codex\\hooks\\<guard>.ps1`, adiciona `exit 0` explícito no caminho normal dos scope guards e faz o host preflight executar stdin normal sintético dos três hooks (incluindo allow silencioso e deny JSON) com a mesma forma de processo Windows. O preflight passa a exigir `HOOK_WIRE_RUNTIME_SELFTEST = PASS`. Qualquer `Hook failed` visível continua bloqueante, mesmo com 2/2 e 1/1 Active.
+
+
+## Adendo — contraditório final antes do próximo host run
+
+A nova revisão encontrou quatro classes de risco que ainda poderiam gerar roundtrips ou falso PASS e as fechou em uma única manutenção:
+
+1. **CQ3 e o oráculo errado:** os negativos de filesystem eram descritos como writes diretos, mas sem obrigar a superfície shell. Como o PreToolUse de scope também intercepta apply_patch/Edit/Write, uma negação do hook poderia ser confundida com prova do permission profile. O contrato e os cinco roles agora exigem shell/Bash + comando PowerShell WriteAllText exato, com controle read-only, sentinel preexistence/absence e NOT_PROVEN para erro não relacionado a authority.
+
+2. **Host/runtime não idênticos para hooks:** os wire probes passam agora pelo shell Windows (`%COMSPEC% /D /S /C`) usando exatamente as strings `command_windows` canônicas, reproduzindo a forma usada pelo runtime upstream em Windows.
+
+3. **CQ1 tarde demais:** o host preflight agora executa `codex execpolicy check` real para os dois transportes e dois negativos, exigindo prompt somente nos exatos e zero matches nos incompletos/alternativos. O contrato registra que execpolicy é prefix-based e os scripts continuam responsáveis por rejeitar sufixos/switches não suportados.
+
+4. **Compatibilidade Windows/config:** removido o alias legado `features.connectors` (o `apps=false` canônico permanece), review/CQ passam a exigir `--strict-config`, e sidecars de CQ3/CQ4/operação foram tornados null-safe para que arquivo vazio produza diagnóstico próprio, não InvokeMethodOnNull.
+
+Nenhuma dessas mudanças altera o envelope, os 10 write roots, A2, command network, produto ou os efeitos permitidos. O próximo host run ainda é prova obrigatória; esta auditoria não o substitui.

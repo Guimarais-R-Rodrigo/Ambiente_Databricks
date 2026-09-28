@@ -116,7 +116,9 @@ function Require-Envelope([string]$Root) {
 function Load-Evidence {
     if (-not (Test-Path -LiteralPath $EvidencePath) -or -not (Test-Path -LiteralPath $EvidenceSidecarPath)) { throw "A1_OPERATIONAL_HOST_EVIDENCE_MISSING" }
     $sha=(Get-FileHash -Algorithm SHA256 -LiteralPath $EvidencePath).Hash.ToUpperInvariant()
-    $side=(((Get-Content -LiteralPath $EvidenceSidecarPath -Raw).Trim() -split "\s+")[0]).ToUpperInvariant()
+    $sideText=[string](Get-Content -LiteralPath $EvidenceSidecarPath -Raw)
+    if([string]::IsNullOrWhiteSpace($sideText)){throw "A1_OPERATIONAL_HOST_EVIDENCE_SIDECAR_EMPTY"}
+    $side=(($sideText.Trim() -split "\s+")[0]).ToUpperInvariant()
     if($sha -ne $side){throw "A1_OPERATIONAL_HOST_EVIDENCE_SHA_MISMATCH"}
     try { $e=Get-Content -LiteralPath $EvidencePath -Raw|ConvertFrom-Json -ErrorAction Stop } catch { throw "A1_OPERATIONAL_HOST_EVIDENCE_INVALID_JSON" }
     if($e.schema_version -ne "AC-R2-CLI-HOST-PREFLIGHT-1" -or $e.result -ne "PASS"){throw "A1_OPERATIONAL_HOST_EVIDENCE_INVALID"}
@@ -173,7 +175,9 @@ function Write-Checkpoint([string]$QualifiedHead,[string]$OperationalBase,[strin
 function Load-Checkpoint {
     if(-not(Test-Path -LiteralPath $CheckpointPath)-or -not(Test-Path -LiteralPath $CheckpointSidecarPath)){throw "A1_OPERATIONAL_CHECKPOINT_MISSING"}
     $sha=(Get-FileHash -Algorithm SHA256 -LiteralPath $CheckpointPath).Hash.ToUpperInvariant()
-    $side=(((Get-Content -LiteralPath $CheckpointSidecarPath -Raw).Trim() -split "\s+")[0]).ToUpperInvariant()
+    $sideText=[string](Get-Content -LiteralPath $CheckpointSidecarPath -Raw)
+    if([string]::IsNullOrWhiteSpace($sideText)){throw "A1_OPERATIONAL_CHECKPOINT_SIDECAR_EMPTY"}
+    $side=(($sideText.Trim() -split "\s+")[0]).ToUpperInvariant()
     if($sha -ne $side){throw "A1_OPERATIONAL_CHECKPOINT_SHA_MISMATCH"}
     try { $cp=Get-Content -LiteralPath $CheckpointPath -Raw|ConvertFrom-Json -ErrorAction Stop } catch { throw "A1_OPERATIONAL_CHECKPOINT_INVALID_JSON" }
     if($cp.schema_version -ne "SER-A1-OPERATIONAL-CHECKPOINT-2" -or $cp.branch -ne $ExpectedBranch){throw "A1_OPERATIONAL_CHECKPOINT_INVALID"}
