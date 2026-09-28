@@ -433,8 +433,13 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         ".codex/rules/a1_git_transport.rules",
         ".codex/transport/a1_git_transport.ps1",
         ".codex/transport/a1_operational_git_transport.ps1",
+        ".codex/transport/a1_patch_transport.ps1",
+        ".codex/transport/a1_root_gate.ps1",
         "docs/operations/autonomy/A1_OPERATIONAL_POLICY.json",
         ".codex/probes/cq3_executor_network_probe.ps1",
+        ".codex/probes/cq3_a1_filesystem_probe.ps1",
+        ".codex/hooks/a1_privileged_bridge_guard.ps1",
+        ".codex/hooks/a1_privileged_bridge_guard.py",
         ".codex/hooks/external_surface_guard.ps1",
         ".codex/hooks/external_surface_guard.py",
         "docs/operations/autonomy/CODEX_DESKTOP_TOOL_SURFACE_POLICY.json",
@@ -459,7 +464,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "SER-CODEX-CLI-CQ-REQUEST-1",
             "CODEX_CLI_VERSION",
             "PROJECT_CONFIG_LAYER = ENABLED",
-            "PreToolUse  Installed 2  Active 2",
+            "PreToolUse  Installed 3  Active 3",
             "PostToolUse Installed 1  Active 1",
             "CODEX_CLI_TOOL_SURFACE_POLICY.json",
             "FORBIDDEN_SURFACE_PROBE = NOT_APPLICABLE_ABSENT",
@@ -477,6 +482,10 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "standalone checkout",
             "AccessDenied",
             "10013",
+            "a1_patch_transport.ps1",
+            "ser-b1-a1",
+            "root-only",
+            "CQ3_A1_BRIDGE",
         )
         missing_cli_tokens = [token for token in required_cli_tokens if token not in cli_text]
         if missing_cli_tokens:
@@ -509,6 +518,12 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "CQ_READY_TO_RUN = AFTER_PROJECT_HOOK_TRUST",
             "HOOK_WIRE_RUNTIME_SELFTEST = PASS",
             "EXECPOLICY_HOST_SELFTEST = PASS",
+            "A1_PRIVILEGED_BRIDGE_GUARD_SELFTEST = PASS",
+            "A1_PATCH_TRANSPORT_SELFTEST = PASS",
+            "A1_FILESYSTEM_PROBE_SELFTEST = PASS",
+            "a1_patch_transport = \".codex\\transport\\a1_patch_transport.ps1\"",
+            "a1_root_gate = \".codex\\transport\\a1_root_gate.ps1\"",
+            "a1_filesystem_probe = \".codex\\probes\\cq3_a1_filesystem_probe.ps1\"",
             "--strict-config",
             "CHECKOUT_MODE = STANDALONE",
         )
@@ -661,10 +676,17 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
     transport_path = root / ".codex" / "transport" / "a1_git_transport.ps1"
     if rule_path.is_file():
         rule_text = rule_path.read_text(encoding="utf-8")
-        if 'decision = "prompt"' not in rule_text or "a1_git_transport.ps1" not in rule_text:
-            issues.append("A1_GIT_RULE_INVALID")
-        if "a1_operational_git_transport.ps1" not in rule_text:
-            issues.append("A1_OPERATIONAL_GIT_TRANSPORT_RULE_MISSING")
+        if 'decision = "prompt"' in rule_text:
+            issues.append("A1_PRIVILEGED_RULE_PROMPT_FORBIDDEN")
+        for privileged in (
+            "a1_git_transport.ps1",
+            "a1_operational_git_transport.ps1",
+            "a1_patch_transport.ps1",
+        ):
+            if privileged not in rule_text:
+                issues.append("A1_PRIVILEGED_RULE_MISSING:" + privileged)
+        if rule_text.count('decision = "allow"') != 3:
+            issues.append("A1_PRIVILEGED_RULE_ALLOW_COUNT")
         if '"powershell.exe -NoProfile' in rule_text:
             issues.append("A1_GIT_RULE_STRING_EXAMPLE_FORBIDDEN")
         if 'match = [' not in rule_text or 'not_match = [' not in rule_text:
@@ -684,6 +706,9 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             'evidence.python.executable',
             'A1_GIT_TRANSPORT_LINKED_WORKTREE_UNSUPPORTED',
             'A1_GIT_TRANSPORT_HOST_EVIDENCE_CHECKOUT_MODE',
+            'a1_root_gate.ps1',
+            'Assert-A1RootControllerInvocation',
+            'A1_GIT_TRANSPORT_ROOT_GATE',
         )
         if any(token not in transport_text for token in required_transport_tokens):
             issues.append("A1_GIT_TRANSPORT_INVALID")
@@ -691,6 +716,73 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             issues.append("A1_GIT_TRANSPORT_FORCE_FORBIDDEN")
         if re.search(r"(?m)^\s*&\s+python(?:\.exe)?\s", transport_text):
             issues.append("A1_GIT_TRANSPORT_BARE_PYTHON_FORBIDDEN")
+
+    root_gate_path = root / ".codex" / "transport" / "a1_root_gate.ps1"
+    if root_gate_path.is_file():
+        root_gate_text = root_gate_path.read_text(encoding="utf-8")
+        for token in (
+            "CODEX_THREAD_ID",
+            "CodexSandboxOffline",
+            "CodexSandboxOnline",
+            "session_meta",
+            'source = "cli"',
+            "parent_thread_id",
+            "A1_ROOT_GATE_SOURCE_NOT_CLI",
+            "A1_ROOT_GATE_PARENT_THREAD_PRESENT",
+            "A1_ROOT_GATE_SESSION_CWD_MISMATCH",
+        ):
+            if token not in root_gate_text:
+                issues.append("A1_ROOT_GATE_INVALID:" + token)
+    else:
+        issues.append("A1_ROOT_GATE_MISSING")
+
+    patch_transport_path = root / ".codex" / "transport" / "a1_patch_transport.ps1"
+    if patch_transport_path.is_file():
+        patch_transport_text = patch_transport_path.read_text(encoding="utf-8")
+        for token in (
+            "SER-A1-PATCH-REQUEST-1",
+            "CQ_JOURNAL_ONLY",
+            "OPERATIONAL_A1",
+            "Assert-A1RootControllerInvocation",
+            "sandbox",
+            "-P",
+            "ser-b1-a1",
+            "git",
+            "apply",
+            "--check",
+            "check_codex_autonomy_delta.py --worktree",
+            "cq3_executor_network_probe.ps1",
+            "cq3_a1_filesystem_probe.ps1",
+            "SECURITY_STOP_A1_NETWORK_BOUNDARY_OPEN",
+            "SECURITY_STOP_A1_FILESYSTEM_BOUNDARY_OPEN",
+            "SECURITY_STOP_A1_PATCH_DELTA_OUTSIDE_ENVELOPE",
+            "A1_PATCH_OPERATIONAL_RUNTIME_BLOCKER_PRESENT",
+        ):
+            if token not in patch_transport_text:
+                issues.append("A1_PATCH_TRANSPORT_INVALID:" + token)
+        if "--force" in patch_transport_text:
+            issues.append("A1_PATCH_TRANSPORT_FORCE_FORBIDDEN")
+        if "New-NetFirewallRule" in patch_transport_text or "Set-NetFirewallRule" in patch_transport_text:
+            issues.append("A1_PATCH_TRANSPORT_FIREWALL_MUTATION_FORBIDDEN")
+    else:
+        issues.append("A1_PATCH_TRANSPORT_MISSING")
+
+    fs_probe_path = root / ".codex" / "probes" / "cq3_a1_filesystem_probe.ps1"
+    if fs_probe_path.is_file():
+        fs_probe_text = fs_probe_path.read_text(encoding="utf-8")
+        for token in (
+            ".codex/.cq3_a1_bridge_governance_probe.txt",
+            "PASS_WRITE_DENIED",
+            "FAIL_WRITE_BOUNDARY_OPEN",
+            "UnauthorizedAccessException",
+            "attempt_count=1",
+        ):
+            if token not in fs_probe_text:
+                issues.append("A1_FILESYSTEM_PROBE_INVALID:" + token)
+        if fs_probe_text.count("WriteAllText(") != 1:
+            issues.append("A1_FILESYSTEM_PROBE_NOT_SINGLE_WRITE")
+    else:
+        issues.append("A1_FILESYSTEM_PROBE_MISSING")
 
     operational_policy_path = root / "docs" / "operations" / "autonomy" / "A1_OPERATIONAL_POLICY.json"
     operational_transport_path = root / ".codex" / "transport" / "a1_operational_git_transport.ps1"
@@ -708,6 +800,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             canonical = bootstrap.get("canonical_state_required") or {}
             if canonical.get("runtime_validation") != "PASS" or canonical.get("effective_config_observation") != "PASS":
                 issues.append("A1_OPERATIONAL_POLICY_CANONICAL_PASS")
+            if canonical.get("a1_bridge_runtime") != "PASS":
+                issues.append("A1_OPERATIONAL_POLICY_A1_BRIDGE_PASS")
             if canonical.get("runtime_blocker_absent") != "AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION":
                 issues.append("A1_OPERATIONAL_POLICY_RUNTIME_BLOCKER")
             if bootstrap.get("qualified_head_must_be_ancestor") is not True:
@@ -742,6 +836,12 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "A1_OPERATIONAL_RUNTIME_NOT_CANONICAL_PASS",
             "A1_OPERATIONAL_EFFECTIVE_CONFIG_NOT_CANONICAL_PASS",
             "A1_OPERATIONAL_RUNTIME_BLOCKER_STILL_PRESENT",
+            "A1_OPERATIONAL_A1_BRIDGE_NOT_CANONICAL_PASS",
+            "A1_OPERATIONAL_A1_BRIDGE_BLOCKER_STILL_PRESENT",
+            "a1_patch_transport = \".codex\\transport\\a1_patch_transport.ps1\"",
+            "a1_root_gate = \".codex\\transport\\a1_root_gate.ps1\"",
+            "a1_bridge_guard = \".codex\\hooks\\a1_privileged_bridge_guard.ps1\"",
+            "a1_filesystem_probe = \".codex\\probes\\cq3_a1_filesystem_probe.ps1\"",
             "A1_OPERATIONAL_QUALIFIED_HEAD_NOT_ANCESTOR",
             "A1_OPERATIONAL_BOOTSTRAP_UNEXPECTED_PATH",
             "A1_OPERATIONAL_CONTROL_IDENTITY_DRIFT",
@@ -755,6 +855,9 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "git ls-remote origin",
             "A1_OPERATIONAL_LINKED_WORKTREE_UNSUPPORTED",
             "A1_OPERATIONAL_HOST_EVIDENCE_CHECKOUT_MODE",
+            "a1_root_gate.ps1",
+            "Assert-A1RootControllerInvocation",
+            "A1_OPERATIONAL_ROOT_GATE",
         )
         if any(token not in operational_transport_text for token in required_operational_tokens):
             issues.append("A1_OPERATIONAL_TRANSPORT_CONTRACT")
@@ -832,6 +935,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             "pre_scope_guard" not in serialized
             or "post_scope_guard" not in serialized
             or "external_surface_guard" not in serialized
+            or "a1_privileged_bridge_guard" not in serialized
             or EXTERNAL_SURFACE_MATCHER not in serialized
         ):
             issues.append("HOOK_CONFIG_INVALID")
@@ -844,6 +948,17 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             issues.append("HOOK_WRITE_SCOPE_MATCHER_MISMATCH")
         if write_scope_matchers and re.fullmatch(write_scope_matchers[0], "Bash") is not None:
             issues.append("HOOK_WRITE_SCOPE_MUST_NOT_INTERCEPT_BASH_CQ3")
+
+        bridge_matchers = [
+            str(group.get("matcher") or "")
+            for group in pre
+            if any(
+                "a1_privileged_bridge_guard" in json.dumps(hook)
+                for hook in (group.get("hooks") or [])
+            )
+        ]
+        if bridge_matchers != ["Bash"]:
+            issues.append("HOOK_A1_BRIDGE_MATCHER_MISMATCH")
 
         external_matchers = [
             str(group.get("matcher") or "")
@@ -859,6 +974,24 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             if not external_matchers or re.fullmatch(external_matchers[0], sample) is None:
                 issues.append("HOOK_DYNAMIC_CLIENT_ALIAS_NOT_MATCHED:" + sample)
 
+        bridge_guard_ps_path = root / ".codex" / "hooks" / "a1_privileged_bridge_guard.ps1"
+        bridge_guard_py_path = root / ".codex" / "hooks" / "a1_privileged_bridge_guard.py"
+        if bridge_guard_ps_path.is_file() and bridge_guard_py_path.is_file():
+            bridge_ps = bridge_guard_ps_path.read_text(encoding="utf-8")
+            bridge_py = bridge_guard_py_path.read_text(encoding="utf-8")
+            for token in (
+                "a1_patch_transport.ps1",
+                "a1_git_transport.ps1",
+                "a1_operational_git_transport.ps1",
+                "session_meta",
+                "parent_thread_id",
+                "root-controller-only",
+            ):
+                if token not in bridge_ps or token not in bridge_py:
+                    issues.append("HOOK_A1_BRIDGE_GUARD_INVALID:" + token)
+        else:
+            issues.append("HOOK_A1_BRIDGE_GUARD_MISSING")
+
         guard_ps_path = root / ".codex" / "hooks" / "external_surface_guard.ps1"
         guard_py_path = root / ".codex" / "hooks" / "external_surface_guard.py"
         if guard_ps_path.is_file() and guard_py_path.is_file():
@@ -870,6 +1003,7 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
 
         expected_windows_hook_commands = {
             "pre_scope_guard": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\\hooks\\pre_scope_guard.ps1",
+            "a1_privileged_bridge_guard": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\\hooks\\a1_privileged_bridge_guard.ps1",
             "external_surface_guard": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\\hooks\\external_surface_guard.ps1",
             "post_scope_guard": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\\hooks\\post_scope_guard.ps1",
         }
@@ -923,6 +1057,8 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         "max_concurrent_threads_per_session": max_threads,
         "root_permissions": cfg.get("default_permissions"),
         "executor_permissions": A0_PROFILE,
+        "a1_capability_bridge": "ROOT_ONLY_DETERMINISTIC",
+        "spawned_a1_agents": 0,
         "direct_a1_network": False,
         "direct_git_metadata_write": False,
         "hooks_configured": hooks_configured,

@@ -359,8 +359,9 @@ class CodexAutonomyTests(unittest.TestCase):
     def test_cli_cq3_rejects_instruction_refusal_as_enforcement_proof(self):
         text = (ROOT / "docs/operations/CODEX_RUNTIME_QUALIFICATION.md").read_text(encoding="utf-8")
         self.assertIn("Recusa por instrução não conta como PASS", " ".join(text.split()))
-        self.assertIn("CQ3_EXECUTOR_PERMISSION_PROBES", text)
         self.assertIn("CQ3_A1_POSITIVE_PROBE", text)
+        self.assertIn("CURRENT BLOCKER", text)
+        self.assertIn("capability bridge A1 root-only", text)
 
     def test_desktop_profile_is_historical_and_cli_is_canonical(self):
         desktop = (ROOT / "docs/operations/CODEX_DESKTOP_WINDOWS_CQ.md").read_text(encoding="utf-8")
@@ -803,11 +804,17 @@ class CodexAutonomyTests(unittest.TestCase):
             roots,
         )
 
-    def test_git_transport_is_rule_reviewed_and_branch_bound(self):
+    def test_git_transport_is_root_only_allow_rule_and_branch_bound(self):
         rule = (ROOT / ".codex/rules/a1_git_transport.rules").read_text(encoding="utf-8")
         script = (ROOT / ".codex/transport/a1_git_transport.ps1").read_text(encoding="utf-8")
-        self.assertIn('decision = "prompt"', rule)
-        self.assertIn("a1_git_transport.ps1", rule)
+        self.assertNotIn('decision = "prompt"', rule)
+        self.assertEqual(3, rule.count('decision = "allow"'))
+        for leaf in (
+            "a1_git_transport.ps1",
+            "a1_operational_git_transport.ps1",
+            "a1_patch_transport.ps1",
+        ):
+            self.assertIn(leaf, rule)
         self.assertIn("ser/B1-ser03-ser05-authoring", script)
         self.assertIn('push origin "HEAD:refs/heads/$ExpectedBranch"', script)
         self.assertNotIn("--force", script)
@@ -818,6 +825,8 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn('not_match = [', rule)
         self.assertIn("A1_GIT_TRANSPORT_LINKED_WORKTREE_UNSUPPORTED", script)
         self.assertIn("A1_GIT_TRANSPORT_HOST_EVIDENCE_CHECKOUT_MODE", script)
+        self.assertIn("a1_root_gate.ps1", script)
+        self.assertIn("Assert-A1RootControllerInvocation", script)
 
     def _temporary_git_repo(self) -> tuple[Path, mock._patch, mock._patch]:
         repo = Path(tempfile.mkdtemp())
@@ -1304,15 +1313,31 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("AUTHORITY_BOUNDARY", text)
         self.assertIn("Qualificação versus transporte operacional", text)
 
-    def test_operational_transport_rule_is_separate_and_prompt_reviewed(self):
+    def test_operational_transport_rule_is_separate_and_root_only_allowed(self):
         text = (ROOT / ".codex/rules/a1_git_transport.rules").read_text(encoding="utf-8")
         self.assertIn("a1_git_transport.ps1", text)
         self.assertIn("a1_operational_git_transport.ps1", text)
-        self.assertGreaterEqual(text.count('decision = "prompt"'), 2)
+        self.assertIn("a1_patch_transport.ps1", text)
+        self.assertNotIn('decision = "prompt"', text)
+        self.assertEqual(3, text.count('decision = "allow"'))
 
     def test_validator_source_is_python_syntax_valid(self):
         text = (ROOT / "tools/validate_codex_autonomy.py").read_text(encoding="utf-8")
         ast.parse(text)
+
+    def test_operational_transport_binds_a1_bridge_control_identity(self):
+        text = (ROOT / ".codex/transport/a1_operational_git_transport.ps1").read_text(encoding="utf-8")
+        for token in (
+            'a1_patch_transport = ".codex\\transport\\a1_patch_transport.ps1"',
+            'a1_root_gate = ".codex\\transport\\a1_root_gate.ps1"',
+            'a1_bridge_guard = ".codex\\hooks\\a1_privileged_bridge_guard.ps1"',
+            'a1_filesystem_probe = ".codex\\probes\\cq3_a1_filesystem_probe.ps1"',
+            "A1_OPERATIONAL_A1_BRIDGE_NOT_CANONICAL_PASS",
+            "A1_OPERATIONAL_A1_BRIDGE_BLOCKER_STILL_PRESENT",
+        ):
+            self.assertIn(token, text)
+        policy = json.loads((ROOT / "docs/operations/autonomy/A1_OPERATIONAL_POLICY.json").read_text(encoding="utf-8"))
+        self.assertEqual("PASS", policy["bootstrap"]["canonical_state_required"]["a1_bridge_runtime"])
 
     def test_operational_transport_has_no_powershell_parameter_assignment_collision(self):
         text = (ROOT / ".codex/transport/a1_operational_git_transport.ps1").read_text(encoding="utf-8")
@@ -1329,6 +1354,8 @@ class CodexAutonomyTests(unittest.TestCase):
             "A1_OPERATIONAL_RUNTIME_NOT_CANONICAL_PASS",
             "A1_OPERATIONAL_EFFECTIVE_CONFIG_NOT_CANONICAL_PASS",
             "A1_OPERATIONAL_RUNTIME_BLOCKER_STILL_PRESENT",
+            "A1_OPERATIONAL_A1_BRIDGE_NOT_CANONICAL_PASS",
+            "A1_OPERATIONAL_A1_BRIDGE_BLOCKER_STILL_PRESENT",
             "A1_OPERATIONAL_QUALIFIED_HEAD_NOT_ANCESTOR",
             "A1_OPERATIONAL_BOOTSTRAP_UNEXPECTED_PATH",
         ):
@@ -1424,9 +1451,75 @@ class CodexAutonomyTests(unittest.TestCase):
                     command = hook.get("command_windows", hook.get("commandWindows", ""))
                     if ".codex\\hooks\\" in command:
                         commands.append(command)
-        self.assertEqual(3, len(commands))
+        self.assertEqual(4, len(commands))
         self.assertTrue(all(" -File .codex\\hooks\\" in command for command in commands))
         self.assertTrue(all(" -Command " not in command for command in commands))
+
+    def test_a1_privileged_bridge_guard_is_bound_to_bash_and_root_only(self):
+        cfg = val._read_toml(ROOT / ".codex/config.toml")
+        pre = cfg["hooks"]["PreToolUse"]
+        groups = [
+            group for group in pre
+            if "a1_privileged_bridge_guard" in json.dumps(group.get("hooks", []))
+        ]
+        self.assertEqual(1, len(groups))
+        self.assertEqual("Bash", groups[0]["matcher"])
+        ps = (ROOT / ".codex/hooks/a1_privileged_bridge_guard.ps1").read_text(encoding="utf-8")
+        py = (ROOT / ".codex/hooks/a1_privileged_bridge_guard.py").read_text(encoding="utf-8")
+        for token in (
+            "a1_patch_transport.ps1",
+            "a1_git_transport.ps1",
+            "a1_operational_git_transport.ps1",
+            "session_meta",
+            "parent_thread_id",
+            "root-controller-only",
+        ):
+            self.assertIn(token, ps)
+            self.assertIn(token, py)
+
+    def test_a1_root_gate_requires_cli_root_session_and_non_sandbox_identity(self):
+        text = (ROOT / ".codex/transport/a1_root_gate.ps1").read_text(encoding="utf-8")
+        for token in (
+            "CODEX_THREAD_ID",
+            "CodexSandboxOffline",
+            "CodexSandboxOnline",
+            'source = "cli"',
+            "parent_thread_id",
+            "A1_ROOT_GATE_SOURCE_NOT_CLI",
+            "A1_ROOT_GATE_PARENT_THREAD_PRESENT",
+            "A1_ROOT_GATE_SESSION_CWD_MISMATCH",
+        ):
+            self.assertIn(token, text)
+
+    def test_a1_patch_transport_is_profile_bound_and_fail_closed(self):
+        text = (ROOT / ".codex/transport/a1_patch_transport.ps1").read_text(encoding="utf-8")
+        for token in (
+            "SER-A1-PATCH-REQUEST-1",
+            "CQ_JOURNAL_ONLY",
+            "OPERATIONAL_A1",
+            "Assert-A1RootControllerInvocation",
+            "sandbox",
+            "-P",
+            "ser-b1-a1",
+            "git",
+            "apply",
+            "--check",
+            "check_codex_autonomy_delta.py --worktree",
+            "SECURITY_STOP_A1_NETWORK_BOUNDARY_OPEN",
+            "SECURITY_STOP_A1_FILESYSTEM_BOUNDARY_OPEN",
+            "SECURITY_STOP_A1_PATCH_DELTA_OUTSIDE_ENVELOPE",
+        ):
+            self.assertIn(token, text)
+        self.assertNotIn("--force", text)
+        self.assertNotIn("New-NetFirewallRule", text)
+        self.assertNotIn("Set-NetFirewallRule", text)
+
+    def test_a1_bridge_filesystem_probe_is_single_shot_negative(self):
+        text = (ROOT / ".codex/probes/cq3_a1_filesystem_probe.ps1").read_text(encoding="utf-8")
+        self.assertIn(".codex/.cq3_a1_bridge_governance_probe.txt", text)
+        self.assertIn("PASS_WRITE_DENIED", text)
+        self.assertIn("FAIL_WRITE_BOUNDARY_OPEN", text)
+        self.assertEqual(1, text.count("WriteAllText("))
 
     def test_scope_guards_explicitly_exit_zero_after_normal_success(self):
         pre = (ROOT / ".codex/hooks/pre_scope_guard.ps1").read_text(encoding="utf-8")
@@ -1484,6 +1577,13 @@ class CodexAutonomyTests(unittest.TestCase):
         ):
             self.assertNotIn(forbidden, text)
 
+    def test_cli_preflight_firewall_integrity_accepts_logical_display_name_and_uses_security_filter(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        self.assertIn('Get-ObjectPropertyValue $_ "DisplayName"', text)
+        self.assertIn("Get-NetFirewallSecurityFilter -AssociatedNetFirewallRule", text)
+        self.assertIn("OFFLINE_SID", text.upper())
+        self.assertNotIn('Where-Object { [string](Get-ObjectPropertyValue $_ "Name") -eq $expected.name }', text)
+
     def test_cli_preflight_runs_normal_hook_wire_probes(self):
         text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         for token in (
@@ -1493,6 +1593,19 @@ class CodexAutonomyTests(unittest.TestCase):
             "CQ_HOST_PREFLIGHT_EXTERNAL_NORMAL_WIRE_CONTRACT",
             "CQ_HOST_PREFLIGHT_NODE_REPL_NORMAL_WIRE_EXIT",
             "HOOK_WIRE_RUNTIME_SELFTEST = PASS",
+        ):
+            self.assertIn(token, text)
+
+    def test_cli_preflight_binds_and_selftests_a1_bridge_sources(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        for token in (
+            'a1_patch_transport = ".codex\\transport\\a1_patch_transport.ps1"',
+            'a1_root_gate = ".codex\\transport\\a1_root_gate.ps1"',
+            'a1_bridge_guard = ".codex\\hooks\\a1_privileged_bridge_guard.ps1"',
+            'a1_filesystem_probe = ".codex\\probes\\cq3_a1_filesystem_probe.ps1"',
+            "A1_PRIVILEGED_BRIDGE_GUARD_SELFTEST = PASS",
+            "A1_PATCH_TRANSPORT_SELFTEST = PASS",
+            "A1_FILESYSTEM_PROBE_SELFTEST = PASS",
         ):
             self.assertIn(token, text)
 
@@ -1519,12 +1632,14 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertIn("strict_config=$true", preflight)
         self.assertIn("--no-daemon --strict-config", contract)
 
-    def test_host_preflight_execpolicy_oracles_cover_exact_and_negative_forms(self):
+    def test_host_preflight_execpolicy_oracles_cover_root_only_allow_commands(self):
         text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         for token in (
             "Invoke-ExecPolicyOracle",
-            'ExpectedDecision "prompt"',
+            'ExpectedDecision "allow"',
             'ExpectedDecision ""',
+            "$patchCommand",
+            "a1_patch_transport.ps1",
             "CQ_HOST_PREFLIGHT_EXECPOLICY_NEGATIVE_MATCHED",
             "EXECPOLICY_HOST_SELFTEST = PASS",
         ):
@@ -1535,6 +1650,7 @@ class CodexAutonomyTests(unittest.TestCase):
             ".codex/probes/cq3_executor_network_probe.ps1",
             ".codex/transport/a1_git_transport.ps1",
             ".codex/transport/a1_operational_git_transport.ps1",
+            ".codex/transport/a1_patch_transport.ps1",
         ):
             text = (ROOT / path).read_text(encoding="utf-8")
             self.assertNotIn("(Get-Content -LiteralPath $SidecarPath -Raw).Trim()", text)

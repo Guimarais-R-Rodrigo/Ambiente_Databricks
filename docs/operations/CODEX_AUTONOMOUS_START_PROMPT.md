@@ -32,8 +32,12 @@ EXTERNAL_SURFACE_GUARD_SELFTEST = PASS
 SCOPE_GUARDS_SELFTEST = PASS
 HOOK_WIRE_RUNTIME_SELFTEST = PASS
 EXECPOLICY_HOST_SELFTEST = PASS
+A1_PRIVILEGED_BRIDGE_GUARD_SELFTEST = PASS
+A1_PATCH_TRANSPORT_SELFTEST = PASS
+A1_FILESYSTEM_PROBE_SELFTEST = PASS
 A1_GIT_TRANSPORT_SELFTEST = PASS
 A1_OPERATIONAL_TRANSPORT_SELFTEST = PASS
+WINDOWS_SANDBOX_NETWORK_INTEGRITY = PASS
 HOST_NETWORK_BASELINE = PASS
 CHECKOUT_MODE = STANDALONE
 CLIENT_SURFACE = CODEX_CLI_WINDOWS_TUI
@@ -53,7 +57,7 @@ Inicie o executável explicitamente bound pelo preflight; nesta máquina:
 & "$env:APPDATA\npm\codex.cmd" --no-daemon --strict-config
 ```
 
-No TUI execute `/debug-config` e `/hooks`. Exigir a config de projeto do standalone e `PreToolUse 2/2 Active`, `PostToolUse 1/1 Active`. Se houver review pendente, confiar a definição atual. `HOOK_TRUST_REVIEW_REQUIRED = true` não é autorização automática. Se qualquer operação de leitura durante essa sessão mostrar `Hook failed` ou exit não-zero, não confirmar `HOOKS_REVISADOS`: sair e tratar como blocker de runtime.
+No TUI execute `/debug-config` e `/hooks`. Exigir a config de projeto do standalone e `PreToolUse 3/3 Active`, `PostToolUse 1/1 Active`. Se houver review pendente, confiar a definição atual. `HOOK_TRUST_REVIEW_REQUIRED = true` não é autorização automática. Se qualquer operação de leitura durante essa sessão mostrar `Hook failed` ou exit não-zero, não confirmar `HOOKS_REVISADOS`: sair e tratar como blocker de runtime.
 
 ## 4. Conversa CQ nova
 
@@ -74,3 +78,13 @@ O script externo `RETOMAR_CQ.ps1` entregue com o freeze sincroniza somente os do
 O helper não corrige erros por retry. Somente expiração da freshness durante a revisão humana permite regeneração única por essa causa. Em falha, um ZIP com logs restritos e diagnóstico é preparado fora do repositório; revisar antes de compartilhar. Não coleta auth.json, user config, chat history ou variáveis de ambiente. O helper não envia arquivos nem concede B1 material/A2/Ready/merge. O bundle final do CQ continua exigindo adjudicação.
 
 Nota de 28/09/2026: uma tentativa pós-trust foi interrompida antes de CQ0 porque a sessão observada reportou versão/source diferentes do launcher preflight. A investigação do Codex 0.157.1 mostrou que o TUI pode reutilizar um shared background server; por isso revisão e CQ passam a exigir `--no-daemon`. `originator`/terminal-name isolado não é oráculo de identidade.
+
+
+## A1 bridge qualification note — 2026-09-28
+
+Do not expect the executor subagent to carry `ser-b1-a1`. The canonical design
+keeps every spawned role on `ser-controller-a0`. Repository mutation is
+performed only by the root controller through the exact no-argument
+`.codex\transport\a1_patch_transport.ps1` command, which is protected by a
+root-origin PreToolUse guard and by an in-script root-session gate. The bridge
+then invokes `codex sandbox -P ser-b1-a1` for the actual file effect.

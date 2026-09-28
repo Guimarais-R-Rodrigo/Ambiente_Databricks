@@ -3,7 +3,7 @@
   "base_commit": "4ba7f551767d847381df1556ed937116258fa77d",
   "p1_commit": "d2b6079ee2e6ecec628d14411afbdbdb878a5fb9",
   "blocked_by": [
-    "AUTONOMOUS_CONTROLLER_A1_CAPABILITY_BRIDGE_REQUIRED",
+    "AUTONOMOUS_CONTROLLER_A1_CAPABILITY_BRIDGE_RUNTIME_QUALIFICATION",
     "AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION",
     "G6_SER05_RECOVERY_LOCAL_QUALIFICATION",
     "G6_PARTIAL_REMOTE_STATE_RECONCILIATION",
@@ -34,7 +34,7 @@
   "root_changelog_integration": "PASS_AT_P1",
   "schema_version": "SER-B1-AUTHORING-2",
   "se07_historical_channel": "EXPECTED_TEMPORAL_FAIL_AT_P1_SHA",
-  "stage": "B1_AC_R2_BLOCKED_SUBAGENT_PERMISSION_INHERITANCE_AWAITING_A1_CAPABILITY_BRIDGE",
+  "stage": "B1_AC_R2_A1_CAPABILITY_BRIDGE_AUTHORED_AWAITING_HOST_PREFLIGHT_AND_CQ",
   "temas_v07": "PASS_17_OF_17_AT_P1_SHA",
   "temas_v07_mirror": "PASS_2_OF_2_AT_P1_SHA",
   "temas_v08": "PASS_22_OF_22_AT_P1_SHA",
@@ -995,7 +995,7 @@
     "executor_default": "GPT_6_SOL_MEDIUM",
     "auditors_default": "GPT_6_ASTRA_HIGH",
     "approvals_reviewer_expected": "NONE_ALL_SPAWNED_ROLES_APPROVAL_NEVER",
-    "sandbox_expected": "ALL_SPAWNED_ROLES_A0_SER_B1_A1_RESERVED_FOR_CAPABILITY_BRIDGE",
+    "sandbox_expected": "ALL_SPAWNED_ROLES_A0_A1_ONLY_VIA_ROOT_CAPABILITY_BRIDGE",
     "hooks_expected": "PRE_PATCH_POST_SCOPE_GUARDS_DEFENSE_IN_DEPTH",
     "max_causal_repair_rounds_per_gate": 4,
     "same_state_same_command_retries": 0,
@@ -1003,16 +1003,16 @@
     "max_write_capable_agents": 1,
     "custom_agents": 5,
     "controller_metatest_methods_static": 124,
-    "structural_validation": "BLOCKED_PENDING_A1_CAPABILITY_BRIDGE",
+    "structural_validation": "A1_CAPABILITY_BRIDGE_AUTHORED_STATIC_REVIEW_PENDING_HOST_VALIDATION",
     "static_audit_candidate_commit": "6abd7a12b60a042f0e219d4cca3a810a6c919d9a",
-    "static_audit_findings_open": 2,
+    "static_audit_findings_open": 0,
     "previous_static_audit": {
       "commit": "c5d30330e8dd03f2eb6587f627553f2a6d010416",
       "disposition": "SUPERSEDED_INVALID_RELEASE_GATE",
       "reason": "CUSTOM_AGENT_SCHEMA_FALSE_GREEN_AND_LEGACY_STATE_GOVERNANCE_GAPS_FOUND_DURING_AC_R1"
     },
-    "runtime_validation": "BLOCKED_DESIGN_SUBAGENT_PERMISSION_PROFILE_INHERITANCE",
-    "effective_config_observation": "FAIL_NOMINAL_EXECUTOR_A1_NOT_RUNTIME_EFFECTIVE",
+    "runtime_validation": "BLOCKED_AWAITING_A1_CAPABILITY_BRIDGE_RUNTIME_QUALIFICATION",
+    "effective_config_observation": "NOT_PROVEN_ON_ROOT_ONLY_A1_BRIDGE",
     "first_material_controller_session": "NOT_RUN",
     "static_audit_candidate_tree": "e83b8c329f17d15de1c477204c2a82e07e32d1bd",
     "ac_r1_closure": "SUPERSEDED_BY_INDEPENDENT_AUDIT_CORRECTIVE_REQUIRED",
@@ -1020,7 +1020,7 @@
     "executor_permissions_default": "SER_CONTROLLER_A0_PATCH_AUTHOR_SCRATCH_ONLY",
     "ac_r2": {
       "authorization": "DIRECT_USER_CHAT_2026-09-26",
-      "state": "BLOCKED_DESIGN_A1_SUBAGENT_PERMISSION_INHERITANCE",
+      "state": "A1_CAPABILITY_BRIDGE_AUTHORED_AWAITING_HOST_PREFLIGHT_AND_CQ",
       "scope": [
         "CR1_LEAST_PRIVILEGE_A1_PERMISSION_BOUNDARY",
         "CR2_DELTA_AND_STATE_TRANSITION_INTEGRITY",
@@ -1033,13 +1033,13 @@
       "approval_boundary": "EXECUTOR_RULE_PROMPTS_ONLY_OTHER_ESCALATIONS_FAIL_CLOSED",
       "delta_schema": "SER-CODEX-AUTONOMY-DELTA-3",
       "metatest_methods_static": 124,
-      "runtime_qualification": "BLOCKED_DESIGN_NO_EFFECTIVE_SPAWNED_A1",
+      "runtime_qualification": "REQUIRED_ON_ROOT_ONLY_A1_CAPABILITY_BRIDGE",
       "cq0_cq5": "NOT_RUN_ON_FINAL_STABILIZATION_2_CANDIDATE",
       "b1_material_execution": "NOT_RUN",
       "a2": "DISABLED",
       "runtime_state_promotion": "CONTROLLER_MAINTENANCE_REQUIRED_AFTER_REPORTED_CQ_PASS",
       "static_review": "PASS_RUNTIME6_R1_STATIC",
-      "material_findings_open": 2,
+      "material_findings_open": 0,
       "static_candidate_commit": "CURRENT_HEAD_AFTER_SINGLE_FREEZE_FAST_FORWARD",
       "static_candidate_tree": "CURRENT_TREE_AFTER_SINGLE_FREEZE_FAST_FORWARD",
       "validator_execution": "NOT_RUN_ON_FINAL_STABILIZATION_2_CANDIDATE",
@@ -1545,7 +1545,7 @@
         "material_findings_open": 0,
         "next_action": "SINGLE_FAST_FORWARD_RUN_HOST_PREFLIGHT_V6_THEN_FRESH_CQ"
       },
-      "next_action": "IMPLEMENT_AND_STATICALLY_AUDIT_ROOT_ONLY_A1_CAPABILITY_BRIDGE_THEN_HOST_PREFLIGHT",
+      "next_action": "FAST_FORWARD_STANDALONE_RUN_FRESH_ADMIN_HOST_PREFLIGHT_REVIEW_3_PRETOOL_HOOKS_THEN_FRESH_CQ",
       "subagent_permission_inheritance": {
         "adjudicated_on": "2026-09-28",
         "upstream_versions": [
@@ -1557,7 +1557,7 @@
         "spawned_executor_effective_profile": "INHERITS_PARENT_A0",
         "former_executor_role_a1_declaration": "INVALID_AS_RUNTIME_AUTHORITY",
         "safe_interim": "ALL_SPAWNED_ROLES_A0",
-        "required_correction": "ROOT_ONLY_DETERMINISTIC_A1_CAPABILITY_BRIDGE"
+        "required_correction": "ROOT_ONLY_DETERMINISTIC_A1_CAPABILITY_BRIDGE_AUTHORED_UNQUALIFIED"
       },
       "windows_network_security_stop_reanalysis": {
         "cq_freeze": "6069ef62b8586c20e301101005720b700135c668",
@@ -1567,7 +1567,26 @@
         "observed_counterexample": "RULE_NAME_GUID_WITH_LOGICAL_DISPLAYNAME",
         "corrected_oracle": "NAME_OR_DISPLAYNAME_PLUS_NETFIREWALLSECURITYFILTER",
         "stale_provisioning_hypothesis": "OPEN_NOT_ADJUDICATED"
+      },
+      "a1_capability_bridge": {
+        "architecture": "ROOT_ONLY_DETERMINISTIC",
+        "spawned_a1_agents": 0,
+        "spawned_roles_profile": "ser-controller-a0",
+        "a1_profile": "ser-b1-a1",
+        "patch_transport": ".codex/transport/a1_patch_transport.ps1",
+        "root_gate": ".codex/transport/a1_root_gate.ps1",
+        "pretool_guard": ".codex/hooks/a1_privileged_bridge_guard.ps1",
+        "filesystem_probe": ".codex/probes/cq3_a1_filesystem_probe.ps1",
+        "network_probe": ".codex/probes/cq3_executor_network_probe.ps1",
+        "execpolicy": "EXACT_THREE_PRIVILEGED_COMMANDS_ALLOW",
+        "authority_expansion": false,
+        "write_root_count": 10,
+        "a2_changed": false,
+        "runtime_status": "NOT_RUN",
+        "host_preflight": "NOT_RUN",
+        "cq0_cq5": "NOT_RUN"
       }
-    }
+    },
+    "a1_bridge_runtime": "NOT_RUN"
   }
 }

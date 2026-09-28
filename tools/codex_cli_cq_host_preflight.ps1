@@ -483,6 +483,8 @@ $sourcePaths = [ordered]@{
     network_probe_script = ".codex\probes\cq3_executor_network_probe.ps1"
     transport = ".codex\transport\a1_git_transport.ps1"
     operational_transport = ".codex\transport\a1_operational_git_transport.ps1"
+    a1_patch_transport = ".codex\transport\a1_patch_transport.ps1"
+    a1_root_gate = ".codex\transport\a1_root_gate.ps1"
     operational_policy = "docs\operations\autonomy\A1_OPERATIONAL_POLICY.json"
     rules = ".codex\rules\a1_git_transport.rules"
     executor_agent = ".codex\agents\executor.toml"
@@ -490,6 +492,9 @@ $sourcePaths = [ordered]@{
     domain_auditor_agent = ".codex\agents\domain-auditor.toml"
     evidence_auditor_agent = ".codex\agents\evidence-auditor.toml"
     architecture_auditor_agent = ".codex\agents\architecture-auditor.toml"
+    a1_bridge_guard = ".codex\hooks\a1_privileged_bridge_guard.ps1"
+    a1_bridge_guard_python = ".codex\hooks\a1_privileged_bridge_guard.py"
+    a1_filesystem_probe = ".codex\probes\cq3_a1_filesystem_probe.ps1"
     protocol = "docs\operations\CODEX_AUTONOMOUS_PROTOCOL.md"
     runtime_contract = "docs\operations\CODEX_RUNTIME_QUALIFICATION.md"
     cli_contract = "docs\operations\CODEX_CLI_WINDOWS_CQ.md"
@@ -569,6 +574,7 @@ if ($runtimeTestCount -ne $staticTestCount) { throw "CQ_HOST_PREFLIGHT_METATEST_
 $execPolicyRulePath = Join-Path $root ".codex\rules\a1_git_transport.rules"
 $qualificationCommand = @("powershell.exe","-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-File",".codex\transport\a1_git_transport.ps1")
 $operationalCommand = @("powershell.exe","-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-File",".codex\transport\a1_operational_git_transport.ps1")
+$patchCommand = @("powershell.exe","-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-File",".codex\transport\a1_patch_transport.ps1")
 $incompleteQualificationCommand = @("powershell.exe","-NoProfile","-ExecutionPolicy","Bypass","-File",".codex\transport\a1_git_transport.ps1")
 $alternateQualificationCommand = @("powershell.exe","-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-File",".codex\transport\other.ps1")
 
@@ -584,11 +590,16 @@ function Invoke-ExecPolicyOracle([string]$Name,[string[]]$Command,[string]$Expec
     if($decision -cne $ExpectedDecision){throw "CQ_HOST_PREFLIGHT_EXECPOLICY_DECISION:$($Name):$($decision)"}
     return [ordered]@{ decision=$decision; matched_rule_count=@($payload.matchedRules).Count; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $stdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $stderr).Hash }
 }
-$execPolicyQualification = Invoke-ExecPolicyOracle -Name "QUALIFICATION" -Command $qualificationCommand -ExpectedDecision "prompt"
-$execPolicyOperational = Invoke-ExecPolicyOracle -Name "OPERATIONAL" -Command $operationalCommand -ExpectedDecision "prompt"
+$execPolicyQualification = Invoke-ExecPolicyOracle -Name "QUALIFICATION" -Command $qualificationCommand -ExpectedDecision "allow"
+$execPolicyOperational = Invoke-ExecPolicyOracle -Name "OPERATIONAL" -Command $operationalCommand -ExpectedDecision "allow"
+$execPolicyPatch = Invoke-ExecPolicyOracle -Name "PATCH" -Command $patchCommand -ExpectedDecision "allow"
 $execPolicyIncomplete = Invoke-ExecPolicyOracle -Name "INCOMPLETE" -Command $incompleteQualificationCommand -ExpectedDecision ""
 $execPolicyAlternate = Invoke-ExecPolicyOracle -Name "ALTERNATE" -Command $alternateQualificationCommand -ExpectedDecision ""
-if($execPolicyQualification.matched_rule_count -lt 1 -or $execPolicyOperational.matched_rule_count -lt 1){throw "CQ_HOST_PREFLIGHT_EXECPOLICY_EXACT_MATCH_MISSING"}
+if(
+    $execPolicyQualification.matched_rule_count -lt 1 -or
+    $execPolicyOperational.matched_rule_count -lt 1 -or
+    $execPolicyPatch.matched_rule_count -lt 1
+){throw "CQ_HOST_PREFLIGHT_EXECPOLICY_EXACT_MATCH_MISSING"}
 if($execPolicyIncomplete.matched_rule_count -ne 0 -or $execPolicyAlternate.matched_rule_count -ne 0){throw "CQ_HOST_PREFLIGHT_EXECPOLICY_NEGATIVE_MATCHED"}
 
 $networkProbeScript = Join-Path $root ".codex\probes\cq3_executor_network_probe.ps1"
@@ -633,6 +644,27 @@ try { $mcpGuardPayload = Get-Content -LiteralPath $mcpGuardStdout -Raw -Encoding
 catch { throw "CQ_HOST_PREFLIGHT_MCP_GUARD_SELFTEST_JSON" }
 if ($mcpGuardPayload.result -ne "PASS") { throw "CQ_HOST_PREFLIGHT_MCP_GUARD_SELFTEST_CONTRACT" }
 
+$a1BridgeGuardStdout = Join-Path $outputRootFull "CQ_HOST_A1_BRIDGE_GUARD_SELFTEST.stdout.txt"
+$a1BridgeGuardStderr = Join-Path $outputRootFull "CQ_HOST_A1_BRIDGE_GUARD_SELFTEST.stderr.txt"
+$a1BridgeGuardExit = Invoke-CapturedProcess -FilePath $powershellExe -ArgumentList @("-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-File",(Join-Path $root ".codex\hooks\a1_privileged_bridge_guard.ps1"),"-SelfTest") -StdoutPath $a1BridgeGuardStdout -StderrPath $a1BridgeGuardStderr
+if($a1BridgeGuardExit -ne 0){throw "CQ_HOST_PREFLIGHT_A1_BRIDGE_GUARD_SELFTEST_EXIT:$a1BridgeGuardExit"}
+try{$a1BridgeGuardPayload=Get-Content -LiteralPath $a1BridgeGuardStdout -Raw -Encoding UTF8|ConvertFrom-Json -ErrorAction Stop}catch{throw "CQ_HOST_PREFLIGHT_A1_BRIDGE_GUARD_SELFTEST_JSON"}
+if($a1BridgeGuardPayload.result -ne "PASS" -or [int]$a1BridgeGuardPayload.privileged_leaf_count -ne 3){throw "CQ_HOST_PREFLIGHT_A1_BRIDGE_GUARD_SELFTEST_CONTRACT"}
+
+$a1PatchTransportStdout = Join-Path $outputRootFull "CQ_HOST_A1_PATCH_TRANSPORT_SELFTEST.stdout.txt"
+$a1PatchTransportStderr = Join-Path $outputRootFull "CQ_HOST_A1_PATCH_TRANSPORT_SELFTEST.stderr.txt"
+$a1PatchTransportExit = Invoke-CapturedProcess -FilePath $powershellExe -ArgumentList @("-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-File",(Join-Path $root ".codex\transport\a1_patch_transport.ps1"),"-SelfTest") -StdoutPath $a1PatchTransportStdout -StderrPath $a1PatchTransportStderr
+if($a1PatchTransportExit -ne 0){throw "CQ_HOST_PREFLIGHT_A1_PATCH_TRANSPORT_SELFTEST_EXIT:$a1PatchTransportExit"}
+try{$a1PatchTransportPayload=Get-Content -LiteralPath $a1PatchTransportStdout -Raw -Encoding UTF8|ConvertFrom-Json -ErrorAction Stop}catch{throw "CQ_HOST_PREFLIGHT_A1_PATCH_TRANSPORT_SELFTEST_JSON"}
+if($a1PatchTransportPayload.result -ne "PASS" -or [int]$a1PatchTransportPayload.write_root_count -ne 10){throw "CQ_HOST_PREFLIGHT_A1_PATCH_TRANSPORT_SELFTEST_CONTRACT"}
+
+$a1FilesystemProbeStdout = Join-Path $outputRootFull "CQ_HOST_A1_FILESYSTEM_PROBE_SELFTEST.stdout.txt"
+$a1FilesystemProbeStderr = Join-Path $outputRootFull "CQ_HOST_A1_FILESYSTEM_PROBE_SELFTEST.stderr.txt"
+$a1FilesystemProbeExit = Invoke-CapturedProcess -FilePath $powershellExe -ArgumentList @("-NoProfile","-NonInteractive","-ExecutionPolicy","Bypass","-File",(Join-Path $root ".codex\probes\cq3_a1_filesystem_probe.ps1"),"-SelfTest") -StdoutPath $a1FilesystemProbeStdout -StderrPath $a1FilesystemProbeStderr
+if($a1FilesystemProbeExit -ne 0){throw "CQ_HOST_PREFLIGHT_A1_FILESYSTEM_PROBE_SELFTEST_EXIT:$a1FilesystemProbeExit"}
+try{$a1FilesystemProbePayload=Get-Content -LiteralPath $a1FilesystemProbeStdout -Raw -Encoding UTF8|ConvertFrom-Json -ErrorAction Stop}catch{throw "CQ_HOST_PREFLIGHT_A1_FILESYSTEM_PROBE_SELFTEST_JSON"}
+if($a1FilesystemProbePayload.result -ne "PASS" -or [int]$a1FilesystemProbePayload.write_attempt_count -ne 0){throw "CQ_HOST_PREFLIGHT_A1_FILESYSTEM_PROBE_SELFTEST_CONTRACT"}
+
 $preGuardStdout = Join-Path $outputRootFull "CQ_HOST_PRE_SCOPE_GUARD_SELFTEST.stdout.txt"
 $preGuardStderr = Join-Path $outputRootFull "CQ_HOST_PRE_SCOPE_GUARD_SELFTEST.stderr.txt"
 $preGuardExit = Invoke-CapturedProcess -FilePath $powershellExe -ArgumentList @("-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", (Join-Path $root ".codex\hooks\pre_scope_guard.ps1"), "-SelfTest") -StdoutPath $preGuardStdout -StderrPath $preGuardStderr
@@ -663,6 +695,7 @@ function New-HookWireInput([string]$EventName, [string]$ToolName, [object]$ToolI
 $hookWireRoot = Join-Path $outputRootFull "CQ_HOST_HOOK_WIRE"
 $hookScripts = [ordered]@{
     pre = (Join-Path $root ".codex\hooks\pre_scope_guard.ps1")
+    a1_bridge = (Join-Path $root ".codex\hooks\a1_privileged_bridge_guard.ps1")
     external = (Join-Path $root ".codex\hooks\external_surface_guard.ps1")
     post = (Join-Path $root ".codex\hooks\post_scope_guard.ps1")
 }
@@ -670,6 +703,7 @@ $commandShell = [string]$env:ComSpec
 if ([string]::IsNullOrWhiteSpace($commandShell) -or -not (Test-Path -LiteralPath $commandShell)) { throw "CQ_HOST_PREFLIGHT_COMSPEC_MISSING" }
 $hookWindowsCommands = [ordered]@{
     pre = "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\hooks\pre_scope_guard.ps1"
+    a1_bridge = "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\hooks\a1_privileged_bridge_guard.ps1"
     external = "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\hooks\external_surface_guard.ps1"
     post = "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\hooks\post_scope_guard.ps1"
 }
@@ -712,6 +746,17 @@ $nodeWireExit = Invoke-CapturedProcessWithInput -FilePath $commandShell -Argumen
 if ($nodeWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_NODE_REPL_NORMAL_WIRE_EXIT:$nodeWireExit" }
 $nodeWireText = [string](Get-Content -LiteralPath $nodeWireOut -Raw -Encoding UTF8)
 if (-not [string]::IsNullOrWhiteSpace($nodeWireText)) { throw "CQ_HOST_PREFLIGHT_NODE_REPL_NORMAL_WIRE_UNEXPECTED_OUTPUT" }
+
+$bridgeWireOut = $hookWireRoot + ".a1_bridge.stdout.txt"
+$bridgeWireErr = $hookWireRoot + ".a1_bridge.stderr.txt"
+$bridgeWireInput = New-HookWireInput -EventName "PreToolUse" -ToolName "Bash" -ToolInput @{ command="powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\transport\a1_patch_transport.ps1" }
+$bridgeWireExit = Invoke-CapturedProcessWithInput -FilePath $commandShell -ArgumentList ($hookShellArgsPrefix + @($hookWindowsCommands.a1_bridge)) -InputText $bridgeWireInput -StdoutPath $bridgeWireOut -StderrPath $bridgeWireErr
+if($bridgeWireExit -ne 0){throw "CQ_HOST_PREFLIGHT_A1_BRIDGE_WIRE_EXIT:$bridgeWireExit"}
+try{$bridgeWirePayload=Get-Content -LiteralPath $bridgeWireOut -Raw -Encoding UTF8|ConvertFrom-Json -ErrorAction Stop}catch{throw "CQ_HOST_PREFLIGHT_A1_BRIDGE_WIRE_JSON"}
+if(
+    $bridgeWirePayload.hookSpecificOutput.hookEventName -ne "PreToolUse" -or
+    $bridgeWirePayload.hookSpecificOutput.permissionDecision -ne "deny"
+){throw "CQ_HOST_PREFLIGHT_A1_BRIDGE_WIRE_CONTRACT"}
 
 $operationalTransportStdout = Join-Path $outputRootFull "CQ_HOST_A1_OPERATIONAL_TRANSPORT_SELFTEST.stdout.txt"
 $operationalTransportStderr = Join-Path $outputRootFull "CQ_HOST_A1_OPERATIONAL_TRANSPORT_SELFTEST.stderr.txt"
@@ -784,8 +829,11 @@ $payload = [ordered]@{
         network_offline_runtime = [ordered]@{ result="PASS"; exit_code=$networkOfflineExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $networkOfflineStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $networkOfflineStderr).Hash }
         mcp_guard = [ordered]@{ result="PASS"; exit_code=$mcpGuardExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $mcpGuardStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $mcpGuardStderr).Hash }
         scope_guards = [ordered]@{ result="PASS"; pre_exit_code=$preGuardExit; post_exit_code=$postGuardExit }
-        hook_wire_runtime = [ordered]@{ result="PASS"; shell=$commandShell; pre_exit_code=$preWireExit; post_exit_code=$postWireExit; external_exit_code=$externalWireExit; node_repl_exit_code=$nodeWireExit }
-        execpolicy = [ordered]@{ result="PASS"; qualification=$execPolicyQualification; operational=$execPolicyOperational; incomplete=$execPolicyIncomplete; alternate=$execPolicyAlternate }
+        hook_wire_runtime = [ordered]@{ result="PASS"; shell=$commandShell; pre_exit_code=$preWireExit; post_exit_code=$postWireExit; external_exit_code=$externalWireExit; node_repl_exit_code=$nodeWireExit; a1_bridge_negative_exit_code=$bridgeWireExit }
+        a1_bridge_guard = [ordered]@{ result="PASS"; exit_code=$a1BridgeGuardExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $a1BridgeGuardStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $a1BridgeGuardStderr).Hash }
+        a1_patch_transport = [ordered]@{ result="PASS"; exit_code=$a1PatchTransportExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $a1PatchTransportStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $a1PatchTransportStderr).Hash }
+        a1_filesystem_probe = [ordered]@{ result="PASS"; exit_code=$a1FilesystemProbeExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $a1FilesystemProbeStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $a1FilesystemProbeStderr).Hash }
+        execpolicy = [ordered]@{ result="PASS"; qualification=$execPolicyQualification; operational=$execPolicyOperational; patch=$execPolicyPatch; incomplete=$execPolicyIncomplete; alternate=$execPolicyAlternate }
         a1_operational_transport = [ordered]@{ result="PASS"; exit_code=$operationalTransportExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $operationalTransportStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $operationalTransportStderr).Hash }
         a1_git_transport = [ordered]@{ result="PASS"; exit_code=$transportExit; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $transportStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $transportStderr).Hash }
     }
@@ -842,6 +890,7 @@ $request = [ordered]@{
     strict_config = $true
     required_launch_args = @("--no-daemon","--strict-config")
     network = [ordered]@{ selected_ipv4=$networkProbeIp; port=$NetworkProbePort; host_baseline="PASS"; serialization_selftest="PASS"; offline_runtime_selftest="PASS"; windows_sandbox_network_integrity="PASS" }
+    a1_bridge = [ordered]@{ mode="ROOT_ONLY_DETERMINISTIC"; spawned_a1_agents=0; permission_profile="ser-b1-a1"; patch_transport_sha256=$sourceHashes.a1_patch_transport; root_gate_sha256=$sourceHashes.a1_root_gate; bridge_guard_sha256=$sourceHashes.a1_bridge_guard; filesystem_probe_sha256=$sourceHashes.a1_filesystem_probe }
     tool_surface_policy = [ordered]@{ path="docs/operations/autonomy/CODEX_CLI_TOOL_SURFACE_POLICY.json"; source_sha256=$sourceHashes.tool_surface_policy; schema_version="SER-CODEX-CLI-TOOL-SURFACE-1"; mcp_invocation="DENY_EXTERNAL_SURFACES_ALLOW_INTERNAL_NODE_REPL"; absent_probeable_surface="NOT_APPLICABLE_ABSENT" }
     hook_trust = [ordered]@{
         project_hooks_sha256 = $sourceHashes.hooks
@@ -886,6 +935,9 @@ Write-Host "EXTERNAL_SURFACE_GUARD_SELFTEST = PASS"
 Write-Host "SCOPE_GUARDS_SELFTEST = PASS"
 Write-Host "HOOK_WIRE_RUNTIME_SELFTEST = PASS"
 Write-Host "EXECPOLICY_HOST_SELFTEST = PASS"
+Write-Host "A1_PRIVILEGED_BRIDGE_GUARD_SELFTEST = PASS"
+Write-Host "A1_PATCH_TRANSPORT_SELFTEST = PASS"
+Write-Host "A1_FILESYSTEM_PROBE_SELFTEST = PASS"
 Write-Host "A1_GIT_TRANSPORT_SELFTEST = PASS"
 Write-Host "A1_OPERATIONAL_TRANSPORT_SELFTEST = PASS"
 Write-Host "NETWORK_PROBE_SERIALIZATION_SELFTEST = PASS (3/3; network_attempts=0)"

@@ -54,13 +54,14 @@ AC-R2 usa permission profiles:
 Configuração declarada não prova configuração efetiva. Parent/live overrides,
 project trust, Windows sandbox e MCP/hosted surfaces precisam ser observados.
 
-Durante CQ3 existe uma exceção de qualificação estritamente rotulada nas
-developer_instructions dos custom agents. Os writes negativos usam exclusivamente a superfície shell/Bash, nunca apply_patch/Edit/Write, para que uma negação do pre-scope hook não seja confundida com enforcement do permission profile. `CQ3_NEGATIVE_PERMISSION_PROBE` permite
-uma única tentativa-sentinela dos roles A0; `CQ3_EXECUTOR_PERMISSION_PROBES`
-obriga o executor a testar negativos e o único positivo journal A1. Essa exceção
-não muda permission profiles nem autoridade normal e não pode ser usada fora de
-CONTROLLER_RUNTIME_QUALIFICATION. Metadata declarativa do role não substitui
-enforcement comportamental.
+Durante CQ3, todos os roles spawnados permanecem A0. `CQ3_NEGATIVE_PERMISSION_PROBE`
+permite exatamente uma tentativa-sentinela shell/Bash por role para provar que
+A0 não escreve no repositório. A1 não é obtido por role metadata: o root chama
+o comando exato `.codex\transport\a1_patch_transport.ps1`, cuja origem é
+verificada pelo PreToolUse e pelo `a1_root_gate.ps1`. O transporte executa os
+probes protegidos e o patch positivo através de
+`codex sandbox -P ser-b1-a1`. Metadata declarativa nunca substitui enforcement
+comportamental.
 
 No CQ3 CLI/TUI, command-network é provado por `.codex/probes/cq3_executor_network_probe.ps1`, source-SHA-bound pelo CLI host preflight v1. Antes de qualquer baseline/retry de CQ, o host executa `-SelfTest` no mesmo Windows PowerShell: três payloads sintéticos, JSON round-trip e zero network attempts. O script runtime reutiliza o IPv4:443 previamente validado no host, faz um único TCP raw BeginConnect/EndConnect e não usa DNS/HTTP/TLS/auth na sandbox. AccessDenied/10013 é denial; conexão bem-sucedida prova network boundary aberta; demais erros ficam NOT_PROVEN.
 
@@ -150,25 +151,28 @@ mudança material de escopo/estimand, relaxamento de guardrail e UNKNOWN irresol
 
 ## 6. A1 filesystem e Git
 
-A barreira primária é o permission profile, não hooks.
+A barreira primária é o permission profile efetivamente aplicado pelo
+`codex sandbox`, não hooks ou instruções do role.
 
-O executor pode alterar apenas os arquivos concretos do envelope. O journal
-`B1/AUTONOMY/JOURNAL.jsonl` e changelogs são append-only. O delta checker
-reprova escrita fora de A1, origem/destino de rename indevido, delete protegido,
-symlink, reescrita de histórico e transição inválida do live state.
-
-O executor não escreve `.git` e não possui command network. Na qualificação CQ, commit/push usam
-exclusivamente:
+Todos os roles spawnados são A0. O executor apenas prepara patches/request no
+scratch externo. O único writer repo-side é o capability bridge root-only:
 
 ```text
-powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\transport\a1_git_transport.ps1
+powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\transport\a1_patch_transport.ps1
 ```
 
-via regra project-scoped `decision="prompt"`. Somente o executor mantém
-`approval_policy.granular.rules=true` e `approvals_reviewer=auto_review`;
-sandbox escalation, request_permissions, MCP elicitations e skill approval são
-fail-closed. Não há override local de `[auto_review].policy`: o projeto não
-substitui a política padrão do reviewer.
+A regra project-scoped é `decision="allow"` apenas para esse argv exato e para
+os dois transportes Git exatos. O bypass não é autoridade por si só: o
+`a1_privileged_bridge_guard` e o `a1_root_gate.ps1` exigem origem em sessão
+CLI root, sem parent_thread_id e fora das identidades
+`CodexSandboxOffline/Online`. O patch bridge então aplica a mutação com
+`codex sandbox -P ser-b1-a1`, valida o delta e falha fechado fora dos 10
+write_roots. O journal e changelogs continuam append-only.
+
+Após o patch local validado, commit/push de qualificação usam exclusivamente
+`.codex\transport\a1_git_transport.ps1`; operação pós-qualificação usa
+`.codex\transport\a1_operational_git_transport.ps1`. Ambos são também
+root-only e revalidam origem em script.
 
 O transportador protegido:
 - aceita zero argumentos;
@@ -277,6 +281,7 @@ constrói o filho a partir da configuração efetiva do parent e reaplica o
 `approval_policy` e sandbox das overrides de role. Portanto,
 `default_permissions="ser-b1-a1"` no antigo `executor.toml` nunca constituiu
 uma fronteira A1 efetiva. O executor foi rebaixado explicitamente a A0 e a
-arquitetura fica bloqueada até existir e ser qualificado um capability bridge
-determinístico que aplique `ser-b1-a1` fora de `spawn_agent`. Nenhum PASS
+arquitetura passa a usar um capability bridge determinístico root-only que
+aplica `ser-b1-a1` fora de `spawn_agent`; a implementação repo-side existe,
+mas sua eficácia permanece bloqueada até host preflight e CQ frescos. Nenhum PASS
 anterior é reinterpretado como prova dessa separação.

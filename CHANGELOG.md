@@ -4803,3 +4803,13 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 - Independent upstream inspection establishes a separate architectural blocker in Codex 0.157.1 and 0.158.0: spawn_agent children retain the parent's live permission snapshot, and role overrides cannot replace permission_profile/approval_policy. The old executor.toml A1 declaration was nominal, not an effective authority boundary.
 - Safe interim state: root and all spawned roles, including executor, are ser-controller-a0. Executor may author proposals only in external scratch. ser-b1-a1 remains defined with the same 10 write roots but is reserved for a deterministic root-only capability bridge that is not yet implemented/qualified.
 - Runtime remains blocked; no CQ retry, B1 material effect, A2, promotion, Ready or merge is authorized by this commit.
+
+
+## 2026-09-28 — root-only A1 capability bridge authored after subagent-permission contradiction (ChatGPT)
+
+- Implemented the corrective architecture required after upstream Codex 0.157.1/0.158.0 showed that spawn_agent children inherit the parent permission snapshot: all spawned roles remain ser-controller-a0; executor is scratch-only patch author.
+- Added root-only A1 capability bridge: a1_privileged_bridge_guard (PreToolUse/Bash), a1_root_gate.ps1, a1_patch_transport.ps1, and cq3_a1_filesystem_probe.ps1. The bridge applies repository mutations only by launching codex sandbox -P ser-b1-a1 and post-validating the delta against the existing ten write roots.
+- Execpolicy now has exactly three privileged argv forms with decision=allow: A1 patch, qualification Git, and operational Git transports. The allow is not trusted alone: PreToolUse transcript/session-origin proof and in-script root CLI gate are mandatory; subagent/unproven origin fails closed.
+- CQ3 contract was rewritten: all spawned roles prove A0 denial; root-only bridge proves A1 network denial and forbidden governance-write denial under ser-b1-a1 before the only positive journal patch. Qualification/operational Git transports are root-only as well.
+- Host preflight now binds the new sources by SHA and self-tests bridge guard, patch transport, filesystem probe, corrected Firewall Name|DisplayName + security-filter inspection, and exact allow/negative execpolicy forms.
+- Runtime qualification remains NOT_RUN. No B1 material task, A2, Databricks/Genie effect, promotion, Ready or merge is authorized.

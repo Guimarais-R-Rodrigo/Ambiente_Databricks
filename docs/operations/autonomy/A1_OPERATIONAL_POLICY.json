@@ -3,17 +3,18 @@
   "purpose": "Allow autonomous causal A1 work after canonical controller qualification without requalifying after each valid work commit, while binding operation to the qualified control identity.",
   "invariants": {
     "qualification_transport": "CQ remains single-shot, preflight-head-bound and CQ_JOURNAL_ONLY.",
-    "operational_transport": "Operational work uses a separate checkpointed transport only after canonical runtime PASS.",
+    "operational_transport": "Operational file mutation uses a1_patch_transport.ps1 under ser-b1-a1, then checkpointed Git transport, only after canonical runtime PASS.",
     "control_identity": "The qualified control identity is the set of control-source hashes recorded by host evidence, and every such source must remain byte-identical during operational use.",
     "authority": "No operational checkpoint can expand repo_scope, permissions, A2/A3, promotion, Ready or merge.",
-    "writer": "Exactly one write-capable executor per worktree/session.",
+    "writer": "Exactly one root-controller-only deterministic A1 capability bridge may mutate repository files; spawned agents remain A0.",
     "git": "Normal non-force push only through the protected operational transport."
   },
   "bootstrap": {
     "canonical_state_required": {
       "runtime_validation": "PASS",
       "effective_config_observation": "PASS",
-      "runtime_blocker_absent": "AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION"
+      "runtime_blocker_absent": "AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION",
+      "a1_bridge_runtime": "PASS"
     },
     "qualified_head_must_be_ancestor": true,
     "current_local_must_equal_remote": true,
@@ -54,6 +55,7 @@
     "role": "progress tracking only; not an authority source"
   },
   "human_gates": [
+    "A1 capability bridge governance or scope expansion",
     "controller governance or qualified control-source change",
     "repo_scope expansion",
     "A2 activation or expansion",

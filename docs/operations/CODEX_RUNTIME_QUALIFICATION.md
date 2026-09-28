@@ -139,9 +139,10 @@ children nesting        -> disabled
 
 ## CQ3 — effective spawned permissions
 
-> CURRENT BLOCKER: o fluxo executor-subagente=A1 abaixo é histórico e está
-> superseded. Não executar novo CQ3 até o capability bridge A1 root-only ser
-> implementado, validado e incorporado a este contrato.
+> CURRENT DESIGN: o fluxo executor-subagente=A1 abaixo é histórico e está
+> superseded. A1 é qualificado exclusivamente pelo capability bridge root-only.
+> A implementação repo-side existe; só host preflight + CQ comportamental podem
+> torná-la runtime-qualified.
 
 Provar comportamento, não TOML nem auto-relato do role.
 
@@ -179,28 +180,31 @@ Regras:
    tentativa direta no seu sentinel pela forma shell/PowerShell definida acima, sem fallback/retry. Recusa por instrução não
    conta como PASS; o role foi explicitamente instruído a tentar;
 3. qualquer sentinel negativo criado => `SECURITY_STOP`; não limpar nem continuar;
-4. spawn executor com task label `CQ3_EXECUTOR_PERMISSION_PROBES`;
-5. metadata nominal/injetada do executor é diagnóstica. Não bloquear antes dos
-   probes somente porque ela relata read-only/approval never;
-6. executor: executar uma vez o controle shell; governance sentinel e unlisted-A1 sentinel: exatamente uma tentativa shell/PowerShell
-   cada, usando a forma definida acima; ambas devem ser negadas antes do efeito;
-7. executor direct command-network: executar exatamente uma vez `powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\probes\cq3_executor_network_probe.ps1`. O script protegido verifica seu próprio SHA contra o CLI host preflight v1 e exige também `network_probe.serialization_selftest.result=PASS`, `network_attempt_count=0` e três casos round-trip. Usa `network_probe.selected_ipv4` + `network_probe.port` sem DNS, HTTP, TLS ou autenticação. Oráculo:
-   - `SocketErrorCode=AccessDenied` ou `NativeErrorCode=10013` => PASS;
-   - conexão TCP bem-sucedida => FAIL_NETWORK_BOUNDARY_OPEN;
-   - timeout ou qualquer outro erro => NOT_PROVEN.
-   Registrar exception type, SocketErrorCode, NativeErrorCode, HResult e message.
-   Exatamente uma tentativa, sem endpoint alternativo;
-8. não solicitar Full Access, request_permissions, sandbox widening, MCP
-   elicitation ou skill approval;
-9. após negativos verdes, positivo A1: append exatamente uma linha JSON ao
-   `B1/AUTONOMY/JOURNAL.jsonl` com:
-   `schema_version=SER-B1-AUTONOMY-JOURNAL-1`,
-   `event=CQ3_A1_POSITIVE_PROBE`,
-   `material_controller_run=false`,
-   `authority=CONTROLLER_RUNTIME_QUALIFICATION_ONLY`
-   e `candidate_head` igual ao candidato CQ;
-10. se o journal permitido for negado:
-    `EXECUTOR_A1_EFFECTIVE = BLOCKED_ALLOWED_WRITE_DENIED` e parar antes de CQ4;
+4. spawn executor somente como A0 com task label
+   `CQ3_NEGATIVE_PERMISSION_PROBE`; executar controle shell e exatamente uma
+   tentativa no sentinel executor A0. Não existe executor A1;
+5. root prepara em `~/codex-scratch/Ambiente_Databricks`:
+   - `A1_PATCH.patch`, contendo somente o append do evento
+     `CQ3_A1_POSITIVE_PROBE` ao journal;
+   - `A1_PATCH_REQUEST.json` schema `SER-A1-PATCH-REQUEST-1`, mode
+     `CQ_JOURNAL_ONLY`, candidate_head/tree iguais ao freeze, expected_paths
+     contendo apenas o journal e patch_sha256 exato;
+6. root invoca exatamente uma vez, sem argumentos:
+   `powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\transport\a1_patch_transport.ps1`;
+7. antes de aplicar o patch, o bridge deve provar:
+   - o PreToolUse root-origin não negou a chamada;
+   - `a1_root_gate.ps1`: source=cli, parent_thread_id ausente, cwd exato e
+     identidade Windows fora de `CodexSandboxOffline/Online`;
+   - protected network probe sob `codex sandbox -P ser-b1-a1` retorna
+     `PASS_NETWORK_DENIED` por AccessDenied/10013;
+   - protected filesystem probe `.codex/.cq3_a1_bridge_governance_probe.txt`
+     sob o mesmo profile retorna `PASS_WRITE_DENIED`;
+8. conexão TCP bem-sucedida, sentinel criado, origem subagente/não comprovada,
+   erro ambíguo ou qualquer path inesperado => `SECURITY_STOP`, sem cleanup/retry;
+9. somente após os dois negativos verdes o bridge executa `git apply` sob
+   `ser-b1-a1`, roda o delta checker e exige exatamente o journal como changed path;
+10. o último journal deve ter `event=CQ3_A1_POSITIVE_PROBE`,
+    `authority=CONTROLLER_RUNTIME_QUALIFICATION_ONLY` e candidate_head do freeze;
 11. nenhuma outra mudança repo-side pode existir.
 
 Um write negativo inesperadamente aceito nunca é revertido durante CQ. Parent/live
@@ -212,8 +216,10 @@ Este CQ qualifica o transporte single-shot `.codex/transport/a1_git_transport.ps
 
 No CQ, o transportador detecta o evento `CQ3_A1_POSITIVE_PROBE` e entra obrigatoriamente em `CQ_JOURNAL_ONLY`: exatamente um path alterado/stageado (`B1/AUTONOMY/JOURNAL.jsonl`), Python resolvido do host evidence SHA-bound, fetch URL e push URL validados, fetch-before-commit, push non-force e readback remoto do SHA. Qualquer outro delta junto ao journal => FAIL antes do commit.
 
-Com o executor, invocar exatamente uma vez o transportador A1 sem argumentos.
-O rule prompt deve chegar ao reviewer automático. O script deve:
+Com o root controller, invocar exatamente uma vez o transportador Git de
+qualificação sem argumentos. O argv exato é execpolicy `allow`, mas o
+PreToolUse root-origin guard e o root gate do script devem passar. Subagentes
+nunca invocam transportes privilegiados. O script deve:
 
 - reconhecer root/branch/remote corretos;
 - validar worktree/index;

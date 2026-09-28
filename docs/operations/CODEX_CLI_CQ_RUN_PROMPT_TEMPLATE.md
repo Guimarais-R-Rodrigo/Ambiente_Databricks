@@ -62,3 +62,19 @@ Do not use Browser, Computer Use, external plugins, connected apps, MCP resource
 If CQ0–CQ5 is technically green, create the sanitized evidence package outside the repository and report only `REPORTED_PASS_AWAITING_CONTROLLER_MAINTENANCE`. Do not make a second repository state/changelog write after CQ4. Preserve `AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION` and stop at `CONTROLLER_MAINTENANCE`.
 
 No B1 material, A2, residual G6, Genie, Databricks material effect, policy promotion, Ready or merge is authorized.
+
+
+A1 CAPABILITY BRIDGE CONTRACT:
+- all spawned roles, including executor, are A0 repository-read-only;
+- do not use executor role as a repository writer;
+- CQ3 A1 proof is root-only via the exact command:
+  `powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File .codex\transport\a1_patch_transport.ps1`;
+- that command must be permitted by execpolicy as `allow`, pass the project
+  PreToolUse root-origin guard, pass the in-script CLI-root gate, and then run
+  the protected A1 network/filesystem probes under `ser-b1-a1`;
+- the only positive CQ3 mutation is the exact journal patch defined by
+  CODEX_RUNTIME_QUALIFICATION.md;
+- any bridge invocation from a subagent, any successful forbidden filesystem
+  write, any open A1 network connection, or any extra changed path is
+  SECURITY_STOP;
+- no retry without a causal delta.

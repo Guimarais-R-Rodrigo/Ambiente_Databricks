@@ -62,7 +62,7 @@ Require:
 
 ```text
 PROJECT_CONFIG_LAYER = ENABLED
-PreToolUse  Installed 2  Active 2
+PreToolUse  Installed 3  Active 3
 PostToolUse Installed 1  Active 1
 PROJECT_HOOK_TRUST = CURRENT_HASH_TRUSTED
 ```
@@ -93,7 +93,7 @@ Use the SHA-bound host evidence for CPython 3.12 + `jsonschema`, validator and m
 
 ## 6. CQ1 — execpolicy
 
-Use the actual CLI runtime and project rule file. Host evidence must already contain `EXECPOLICY_HOST_SELFTEST = PASS`. The legacy qualification and operational Git transport commands still evaluate to `prompt`, but that route is not executable from the corrected A0 root with approval_policy=never. They are retained only until the root-only A1 capability-bridge maintenance rebinds them; incomplete or alternate script forms must not match. Execpolicy is prefix-based, so suffix arguments can still reach reviewer; both transport scripts therefore remain responsible for rejecting unsupported arguments/switch combinations before effects. Any rules parse/config warning is blocking.
+Use the actual CLI runtime and project rule file. Host evidence must already contain `EXECPOLICY_HOST_SELFTEST = PASS`. Exactly three privileged argv forms evaluate to `allow`: qualification Git transport, operational Git transport and A1 patch transport. Incomplete or alternate forms do not match. `allow` only bypasses the parent A0 sandbox for those exact commands; the PreToolUse bridge guard and each transport's root-session gate must independently prove CLI-root origin before any effect. Any rules parse/config warning is blocking.
 
 ## 7. CQ2 — roles
 
@@ -101,13 +101,11 @@ Confirm 5/5 project roles. Root and every spawned role, including executor, are 
 
 ## 8. CQ3 — behavioral permissions
 
-Execute the exact sentinels and task labels defined in `CODEX_RUNTIME_QUALIFICATION.md`. Instruction refusal is not enforcement proof. Negative filesystem probes must be denied before effect. The prior executor-subagent network probe is historical only because the executor inherits A0. A new A1 bridge qualification must run the protected network oracle directly under `ser-b1-a1`; until that bridge exists CQ3 is BLOCKED_DESIGN.
-
-After all negative executor probes pass, the only positive write is the CQ journal event authorized by the runtime qualification contract.
+Execute the exact A0 sentinels and A1 bridge sequence defined in `CODEX_RUNTIME_QUALIFICATION.md`. Instruction refusal is not enforcement proof. Each spawned role must have its A0 negative write denied before effect. Then the root controller creates the exact journal patch/request in external scratch and invokes `a1_patch_transport.ps1` once. The bridge must first obtain `PASS_NETWORK_DENIED` from the protected network probe and `PASS_WRITE_DENIED` from the protected governance filesystem probe under `ser-b1-a1`; it then applies only the journal patch and validates the resulting delta. Any subagent bridge invocation, forbidden write success, network connection, unexpected path or ambiguous result is `SECURITY_STOP`.
 
 ## 9. CQ4 — A1 Git transport
 
-Only `.codex\transport\a1_git_transport.ps1` may perform the single qualification commit/push, through the project execpolicy rule and auto-review. It must remain CQ_JOURNAL_ONLY, non-force, HEAD-bound and read back the remote ref.
+Only the root controller may invoke `.codex\transport\a1_git_transport.ps1` for the single qualification commit/push. Its exact argv is execpolicy `allow`, but both the PreToolUse bridge guard and in-script root gate must pass. It must remain CQ_JOURNAL_ONLY, non-force, HEAD-bound and read back the remote ref.
 
 ## 10. CQ5 — final verification
 
@@ -124,4 +122,5 @@ Codex 0.157.1 and 0.158.0 do not apply role-local permission profiles to
 `spawn_agent` children. The child receives the parent's live permission
 snapshot after role configuration. Therefore the former executor=A1 CQ2/CQ3
 contract is invalid and must not be retried. Current safe state is all spawned
-roles=A0; `ser-b1-a1` is bridge-only and the bridge is not yet qualified.
+roles=A0; `ser-b1-a1` is bridge-only. The root-only bridge is now authored
+repo-side and remains unqualified until a fresh host preflight and CQ prove it.

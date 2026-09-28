@@ -20,7 +20,7 @@ Quando o usuário ativar explicitamente uma frente em **Codex Autonomous Control
 2. valide o envelope ativo em `docs/operations/autonomy/`;
 3. leia o state source apontado pelo envelope;
 4. use os papéis project-scoped de `.codex/agents/`;
-5. mantenha exatamente um writer;
+5. mantenha exatamente um writer efetivo: o capability bridge A1 root-only; todos os roles spawnados, inclusive executor, permanecem A0;
 6. continue autonomamente entre Human Gates enquanto a classe de autoridade e os budgets permitirem.
 
 Não trate aprovação desta arquitetura como ativação A2. Promoção de policy, Ready, merge, workspace/dados corporativos e `UNKNOWN` irresolvido permanecem Human Gates.

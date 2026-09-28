@@ -34,6 +34,7 @@ $BridgePaths = @(
 )
 $StatePath = "docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTHORING_STATE.json"
 $RuntimeBlocker = "AUTONOMOUS_CONTROLLER_RUNTIME_VALIDATION"
+$BridgeRuntimeBlocker = "AUTONOMOUS_CONTROLLER_A1_CAPABILITY_BRIDGE_RUNTIME_QUALIFICATION"
 $EvidencePath = Join-Path $HOME "codex-scratch\Ambiente_Databricks\CQ_HOST_PREFLIGHT.json"
 $EvidenceSidecarPath = Join-Path $HOME "codex-scratch\Ambiente_Databricks\CQ_HOST_PREFLIGHT.sha256"
 $CheckpointPath = Join-Path $HOME "codex-scratch\Ambiente_Databricks\A1_OPERATIONAL_CHECKPOINT.json"
@@ -51,6 +52,11 @@ $ControlSourcePaths = [ordered]@{
     network_probe_script = ".codex\probes\cq3_executor_network_probe.ps1"
     transport = ".codex\transport\a1_git_transport.ps1"
     operational_transport = ".codex\transport\a1_operational_git_transport.ps1"
+    a1_patch_transport = ".codex\transport\a1_patch_transport.ps1"
+    a1_root_gate = ".codex\transport\a1_root_gate.ps1"
+    a1_bridge_guard = ".codex\hooks\a1_privileged_bridge_guard.ps1"
+    a1_bridge_guard_python = ".codex\hooks\a1_privileged_bridge_guard.py"
+    a1_filesystem_probe = ".codex\probes\cq3_a1_filesystem_probe.ps1"
     operational_policy = "docs\operations\autonomy\A1_OPERATIONAL_POLICY.json"
     rules = ".codex\rules\a1_git_transport.rules"
     executor_agent = ".codex\agents\executor.toml"
@@ -139,7 +145,9 @@ function Require-CanonicalRuntimePass([string]$Root) {
     $state=Get-Content -LiteralPath (Join-Path $Root $StatePath) -Raw|ConvertFrom-Json
     if($state.autonomous_controller.runtime_validation -ne "PASS"){throw "A1_OPERATIONAL_RUNTIME_NOT_CANONICAL_PASS"}
     if($state.autonomous_controller.effective_config_observation -ne "PASS"){throw "A1_OPERATIONAL_EFFECTIVE_CONFIG_NOT_CANONICAL_PASS"}
+    if($state.autonomous_controller.a1_bridge_runtime -ne "PASS"){throw "A1_OPERATIONAL_A1_BRIDGE_NOT_CANONICAL_PASS"}
     if(@($state.blocked_by) -contains $RuntimeBlocker){throw "A1_OPERATIONAL_RUNTIME_BLOCKER_STILL_PRESENT"}
+    if(@($state.blocked_by) -contains $BridgeRuntimeBlocker){throw "A1_OPERATIONAL_A1_BRIDGE_BLOCKER_STILL_PRESENT"}
 }
 function Require-Ancestor([string]$Ancestor,[string]$Descendant,[string]$Code) {
     & git merge-base --is-ancestor $Ancestor $Descendant

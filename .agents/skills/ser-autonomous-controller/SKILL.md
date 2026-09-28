@@ -14,7 +14,7 @@ Read, in order:
 
 Act as the root controller. Use project roles from `.codex/config.toml`.
 
-Keep one writer. Parallelize read-only investigation/audits. Continue through causal repair rounds while the envelope and budgets permit.
+Keep one effective writer: the root-controller-only A1 capability bridge. All spawned roles, including executor, stay A0 and may only author proposals in external scratch. Parallelize read-only investigation/audits. Continue through causal repair rounds while the envelope and budgets permit.
 
 Never infer A2 activation, promotion, Ready or merge. Stop at Human Gates.
 
