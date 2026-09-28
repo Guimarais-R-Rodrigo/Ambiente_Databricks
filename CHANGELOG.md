@@ -4779,3 +4779,10 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 - Supersedes the immediately preceding suggestion that the scope hook needed an apply_patch exception for the root sentinel. The prior `final pre-runtime contradiction sweep` had already moved every CQ3 filesystem negative probe to the Bash/shell surface specifically so PreToolUse apply_patch/Edit/Write cannot satisfy the oracle.
 - Scope guards are restored unchanged; no governance-path bypass is added. The host hook-wire probes retain the useful upstream-shaped PreToolUse/PostToolUse payloads.
 - CQ3 proof remains: shell control succeeds, exact shell WriteAllText attempt is denied by sandbox/permission boundary, sentinel remains absent; unrelated execution errors are NOT_PROVEN.
+
+
+## 2026-09-28 — validator contract normalization and upstream apply_patch wire fidelity (ChatGPT)
+
+- Native Windows preflight on freeze `6829b50...` stopped before metatests with exactly four validator issues, one for each read-only agent. Diagnostic evidence showed the only missing required token was lowercase `do not retry`; all four role instructions already contained the same prohibition as sentence-initial `Do not retry`. The validator and metatest now treat only that natural-language retry phrase case-insensitively while preserving exact matching for machine labels, paths and security states.
+- The host PreToolUse wire probe for `apply_patch` is also corrected to the upstream 0.157.1 shape: `tool_input.command` containing an apply-patch payload, not a synthetic `tool_input.path`. Validator/metatest require that shape.
+- No runtime CQ probe, authority expansion, A2, write-root change, transport change, promotion, Ready or merge occurred. The diagnostic stopped at HOST_PREFLIGHT validator.

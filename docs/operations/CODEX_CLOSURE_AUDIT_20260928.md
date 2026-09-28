@@ -116,3 +116,10 @@ O host preflight também passou a construir payloads sintéticos com os campos o
 ### Correção do adendo CQ3
 
 O adendo anterior identificou corretamente o risco conceitual de confundir hook denial com sandbox denial, mas a manutenção imediatamente anterior já havia resolvido esse risco de forma mais forte: todos os negativos CQ3 foram movidos para Bash/shell e `apply_patch/Edit/Write` foram proibidos. Portanto, não é necessário nem desejável abrir exceção no scope guard para o sentinel root. Essa exceção foi revertida antes de qualquer novo host run. Mantém-se apenas a melhoria independente dos wire probes host, agora com payloads que reproduzem os campos obrigatórios do schema upstream.
+
+
+## Adendo — diagnóstico nativo do freeze 6829b50
+
+O ZIP `CQ_PC_DIAGNOSTIC_748c9e8196f74927bebbe2ca48694b4c.zip` confirmou Codex CLI 0.157.1, suporte a `--strict-config` e `--no-daemon`, e parou no validator antes dos metatests. O validator V21 retornou exatamente quatro issues: `READ_ONLY_CQ3_NEGATIVE_PROBE_CONTRACT` para explorer e os três auditors. Recomputação token-a-token mostrou um único token ausente em cada role: lowercase `do not retry`; as instruções já continham `Do not retry`, com a mesma semântica. Isso era fragilidade do oráculo textual, não ausência do guardrail. A verificação desse único natural-language token passa a ser case-insensitive; labels/paths/security states continuam exatos.
+
+A mesma revisão upstream confirmou que `ApplyPatchHandler::pre_tool_use_payload` serializa `tool_input={"command": ...}`. O preflight ainda usava `tool_input.path` no probe permitido. Esse probe agora usa um payload `*** Update File: ...` no campo `command`, exercitando o parser real do scope guard. Nenhum estágio CQ foi iniciado pelo run diagnosticado.

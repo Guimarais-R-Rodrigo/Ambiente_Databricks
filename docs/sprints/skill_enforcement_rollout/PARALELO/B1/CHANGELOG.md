@@ -235,3 +235,6 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 
 
 - 2026-09-28 (ChatGPT): superseded proposed apply_patch sentinel bypass after recognizing the prior sweep already forces all CQ3 filesystem negatives through Bash/shell. Scope guards restored unchanged; upstream-shaped host hook payloads retained. No authority change.
+
+
+- 2026-09-28 (ChatGPT): Windows preflight diagnostic on `6829b50...` showed only four read-only-agent validator failures caused by case-sensitive matching of natural-language `do not retry` versus existing `Do not retry`. Normalized that single phrase check and corrected the host apply_patch wire probe to upstream `tool_input.command` shape. No CQ material probe or authority change.

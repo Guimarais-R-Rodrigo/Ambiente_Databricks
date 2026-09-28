@@ -465,7 +465,7 @@ $hookShellArgsPrefix = @("/D", "/S", "/C")
 
 $preWireOut = $hookWireRoot + ".pre.stdout.txt"
 $preWireErr = $hookWireRoot + ".pre.stderr.txt"
-$preWireInput = New-HookWireInput -EventName "PreToolUse" -ToolName "apply_patch" -ToolInput @{ path="docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl" }
+$preWireInput = New-HookWireInput -EventName "PreToolUse" -ToolName "apply_patch" -ToolInput @{ command="*** Begin Patch`n*** Update File: docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl`n*** End Patch" }
 $preWireExit = Invoke-CapturedProcessWithInput -FilePath $commandShell -ArgumentList ($hookShellArgsPrefix + @($hookWindowsCommands.pre)) -InputText $preWireInput -StdoutPath $preWireOut -StderrPath $preWireErr
 if ($preWireExit -ne 0) { throw "CQ_HOST_PREFLIGHT_PRE_SCOPE_NORMAL_WIRE_EXIT:$preWireExit" }
 $preWireText = [string](Get-Content -LiteralPath $preWireOut -Raw -Encoding UTF8)

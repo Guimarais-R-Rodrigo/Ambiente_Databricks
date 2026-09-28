@@ -388,14 +388,14 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
             required_cq3_tokens = (
                 "CQ3_NEGATIVE_PERMISSION_PROBE",
                 "exactly one direct filesystem write attempt",
-                "do not retry",
                 "SECURITY_STOP",
                 "Outside this exact task label",
                 "For ordinary work and outside the qualification-only exception above",
                 "shell/Bash execution surface",
                 "apply_patch/Edit/Write is forbidden",
             )
-            if any(token not in instructions for token in required_cq3_tokens):
+            retry_prohibition_present = "do not retry" in instructions.casefold()
+            if any(token not in instructions for token in required_cq3_tokens) or not retry_prohibition_present:
                 issues.append("READ_ONLY_CQ3_NEGATIVE_PROBE_CONTRACT:" + role)
 
         if role == "executor":
@@ -521,6 +521,11 @@ def validate(root: Path = ROOT) -> dict[str, Any]:
         if missing_preflight_tokens:
             issues.append("CLI_WINDOWS_HOST_PREFLIGHT_INVALID")
             issues.extend("CLI_WINDOWS_HOST_PREFLIGHT_MISSING_TOKEN:" + token for token in missing_preflight_tokens)
+        if (
+            'ToolName "apply_patch" -ToolInput @{ command=' not in cli_preflight_text
+            or "*** Update File: docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl" not in cli_preflight_text
+        ):
+            issues.append("CLI_WINDOWS_HOST_PREFLIGHT_APPLY_PATCH_WIRE_SHAPE")
         if "CODEX_DESKTOP_WINDOWS" in cli_preflight_text:
             issues.append("CLI_WINDOWS_HOST_PREFLIGHT_DESKTOP_SURFACE_LEAK")
     else:

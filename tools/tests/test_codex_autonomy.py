@@ -281,7 +281,7 @@ class CodexAutonomyTests(unittest.TestCase):
             text = data["developer_instructions"]
             self.assertIn("CQ3_NEGATIVE_PERMISSION_PROBE", text, role)
             self.assertIn("exactly one direct filesystem write attempt", text, role)
-            self.assertIn("do not retry", text, role)
+            self.assertIn("do not retry", text.casefold(), role)
             self.assertIn("SECURITY_STOP", text, role)
             self.assertIn("Outside this exact task label", text, role)
             self.assertIn("shell/Bash execution surface", text, role)
@@ -1457,6 +1457,12 @@ class CodexAutonomyTests(unittest.TestCase):
         text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         for token in ("New-HookWireInput", "session_id", "turn_id", "transcript_path", "cwd", "hook_event_name", "model", "permission_mode", "tool_name", "tool_input", "tool_use_id", "tool_response"):
             self.assertIn(token, text)
+
+    def test_cli_preflight_apply_patch_wire_uses_upstream_command_shape(self):
+        text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        self.assertIn('ToolName "apply_patch" -ToolInput @{ command=', text)
+        self.assertIn("*** Update File: docs/sprints/skill_enforcement_rollout/PARALELO/B1/AUTONOMY/JOURNAL.jsonl", text)
+        self.assertNotIn('ToolName "apply_patch" -ToolInput @{ path=', text)
 
     def test_cli_preflight_runs_normal_hook_wire_probes(self):
         text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
