@@ -564,6 +564,19 @@ class CodexAutonomyTests(unittest.TestCase):
         self.assertTrue(result["cli_host_preflight"])
         self.assertEqual("UNQUALIFIED", result["desktop_controller_runtime"])
 
+    def test_cli_runtime_is_bound_to_no_daemon_embedded_mode(self):
+        preflight = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
+        contract = (ROOT / "docs/operations/CODEX_CLI_WINDOWS_CQ.md").read_text(encoding="utf-8")
+        prompt = (ROOT / "docs/operations/CODEX_CLI_CQ_RUN_PROMPT_TEMPLATE.md").read_text(encoding="utf-8")
+        start = (ROOT / "docs/operations/CODEX_AUTONOMOUS_START_PROMPT.md").read_text(encoding="utf-8")
+        self.assertIn('runtime_mode="EMBEDDED_NO_DAEMON"', preflight)
+        self.assertIn('required_launch_args=@("--no-daemon")', preflight)
+        self.assertIn("EMBEDDED_NO_DAEMON", contract)
+        self.assertIn("--no-daemon", contract)
+        self.assertIn("EMBEDDED_NO_DAEMON", prompt)
+        self.assertIn("--no-daemon", prompt)
+        self.assertIn('& "$env:APPDATA\\npm\\codex.cmd" --no-daemon', start)
+
     def test_cli_preflight_binds_explicit_launcher_version_and_control_sources(self):
         text = (ROOT / "tools/codex_cli_cq_host_preflight.ps1").read_text(encoding="utf-8")
         for token in (

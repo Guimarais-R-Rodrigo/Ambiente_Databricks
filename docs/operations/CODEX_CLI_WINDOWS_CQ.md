@@ -12,6 +12,7 @@ Audit clarification (2026-09-28): the earlier external guard emitted an unsuppor
 - Execute only from the dedicated standalone checkout `C:\b1_runtime\b1_p1_4ba7f551_20260924`.
 - Linked worktrees are unsupported.
 - Launch the exact CLI executable bound by host preflight; on this Windows installation the expected launcher is `%APPDATA%\npm\codex.cmd`.
+- Launch both hook-review and CQ sessions with `--no-daemon`. The canonical runtime is `EMBEDDED_NO_DAEMON`; qualification must not attach to the shared background server because that server can be a different version/source started by another client.
 - Project config must resolve from the standalone checkout.
 - Python remains `HOST_ONLY` for CQ0.5/CQ5; `DO_NOT_EXECUTE_PYTHON_IN_SANDBOX`.
 
@@ -61,7 +62,7 @@ If hooks are pending review, disabled or modified, stop with `PRE_CQ_HOOK_TRUST_
 
 ## 4. CQ0 — identity, config and tool surfaces
 
-Recompute request/evidence sidecars, branch, HEAD, tree, clean status and project config hash. Require the same standalone checkout and the same CLI version recorded by preflight.
+Recompute request/evidence sidecars, branch, HEAD, tree, clean status and project config hash. Require the same standalone checkout and the same CLI version recorded by preflight. Require `runtime_mode=EMBEDDED_NO_DAEMON` and launch args `--no-daemon`. `originator` or terminal-name telemetry is diagnostic and is not, by itself, proof of client identity; the qualifying runtime must be the embedded CLI session launched by the bound executable.
 
 Apply `docs/operations/autonomy/CODEX_CLI_TOOL_SURFACE_POLICY.json`.
 

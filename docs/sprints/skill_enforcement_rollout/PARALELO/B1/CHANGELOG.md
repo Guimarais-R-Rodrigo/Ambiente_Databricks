@@ -217,3 +217,6 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 
 
 - 2026-09-28 (ChatGPT): native Windows preflight exposed `CQ_HOST_PREFLIGHT_CHILD_EXIT_NOT_OBSERVED` at the first `codex.cmd --version` child process. Replaced the preflight's Start-Process runner with direct System.Diagnostics.Process exit-code handling and added a regression metatest. No authority/A1/A2/product change; CQ still NOT_RUN.
+
+
+- 2026-09-28 (ChatGPT): post-trust CQ stopped before CQ0 on session version/source mismatch. Controller maintenance now requires Codex CLI embedded `--no-daemon` mode for review/CQ so qualification cannot attach to a shared server from another client/version. No material CQ probe or authority change occurred.

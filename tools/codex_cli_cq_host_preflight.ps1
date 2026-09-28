@@ -407,7 +407,7 @@ $payload = [ordered]@{
     git = [ordered]@{ root=$root; checkout_mode=$checkoutMode; git_dir=$gitDir; git_common_dir=$gitCommonDir; branch=$branch; head=$head; tree=$tree; final_head=$finalHead; final_tree=$finalTree; origin_identity=$ExpectedRepoFragment; origin_tracking_ref=$originHead; fetch="PASS"; initial_clean=$true; final_clean=$true }
     python = [ordered]@{ executable=$python.executable; python_version=$python.python_version; implementation=$python.implementation; jsonschema_version=$python.jsonschema_version; execution_surface="HOST_ONLY" }
     project = [ordered]@{ config_path=$projectConfig; config_sha256=$sourceHashes.config; user_config_exists=$userConfigExists; user_config_sha256=$userConfigSha256; validator_git_mode="100755"; validator_blob=$validatorBlob }
-    codex_cli = [ordered]@{ executable=$codexCli; version=$codexVersion; launcher="EXPLICIT_APPDATA_NPM_CODEX_CMD"; launcher_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $codexCli).Hash }
+    codex_cli = [ordered]@{ executable=$codexCli; version=$codexVersion; launcher="EXPLICIT_APPDATA_NPM_CODEX_CMD"; launcher_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $codexCli).Hash; runtime_mode="EMBEDDED_NO_DAEMON"; required_launch_args=@("--no-daemon") }
     source_sha256 = $sourceHashes
     host_validation = [ordered]@{
         validator = [ordered]@{ exit_code=$validatorExit; status=$validatorPayload.status; schema_version=$validatorPayload.schema_version; stdout_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $validatorStdout).Hash; stderr_sha256=(Get-FileHash -Algorithm SHA256 -LiteralPath $validatorStderr).Hash }
@@ -468,6 +468,8 @@ $request = [ordered]@{
     validator_blob = $validatorBlob
     metatest_count = $runtimeTestCount
     codex_cli = $payload.codex_cli
+    runtime_mode = "EMBEDDED_NO_DAEMON"
+    required_launch_args = @("--no-daemon")
     network = [ordered]@{ selected_ipv4=$networkProbeIp; port=$NetworkProbePort; host_baseline="PASS"; serialization_selftest="PASS"; offline_runtime_selftest="PASS" }
     tool_surface_policy = [ordered]@{ path="docs/operations/autonomy/CODEX_CLI_TOOL_SURFACE_POLICY.json"; source_sha256=$sourceHashes.tool_surface_policy; schema_version="SER-CODEX-CLI-TOOL-SURFACE-1"; mcp_invocation="DENY_EXTERNAL_SURFACES_ALLOW_INTERNAL_NODE_REPL"; absent_probeable_surface="NOT_APPLICABLE_ABSENT" }
     hook_trust = [ordered]@{

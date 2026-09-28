@@ -27,7 +27,8 @@ Require:
 - host preflight schema = `{{PREFLIGHT_SCHEMA}}`;
 - project hooks SHA256 = `{{HOOKS_SHA256}}`;
 - CLI tool-surface policy SHA256 = `{{SURFACE_POLICY_SHA256}}`;
-- Codex CLI version = `{{CODEX_CLI_VERSION}}`.
+- Codex CLI version = `{{CODEX_CLI_VERSION}}`;
+- runtime mode = `EMBEDDED_NO_DAEMON`, launched with `--no-daemon`.
 
 PRE-CQ HUMAN PRECONDITION:
 PROJECT_HOOK_TRUST = REQUIRED_FOR_CURRENT_HASH.
@@ -45,7 +46,7 @@ Read, in order:
 
 Do not load the full CHANGELOG.
 
-Execute CQ0–CQ5 exactly once under the CLI/TUI Windows contract. Do not execute Python in the controller sandbox for CQ0.5/CQ5 and do not install dependencies.
+Execute CQ0–CQ5 exactly once under the CLI/TUI Windows contract. This must be the fresh embedded CLI session launched with `--no-daemon`; do not attach to or resume through a shared background server. Do not infer wrong-client status from an `originator` or terminal-name string alone; verify the bound launcher/version/runtime-mode and actual session source. Do not execute Python in the controller sandbox for CQ0.5/CQ5 and do not install dependencies.
 
 Tool-surface rules:
 - `mcp__node_repl__*` is internal code-mode control and may be used.

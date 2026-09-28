@@ -75,3 +75,10 @@ A próxima prova obrigatória é o fresh host preflight no PC, incluindo os test
 - Fontes canônicas deste repositório: config, cinco roles, três pares de guards, validator, suíte, preflight, prompt, contratos CQ, envelope, policies, delta checker, regras, transportes e probe TCP.
 
 Os logs executados, comparação da resposta com schema oficial e manifesto dos arquivos estão no pacote externo de auditoria entregue ao usuário. Este documento registra esta manutenção sem substituir o histórico de runs nem o estado canônico de qualificação.
+
+
+## Adendo — isolamento do shared background server
+
+Uma tentativa nativa posterior ao fechamento conferiu prompt/request/evidence e parou antes de CQ0 ao observar versão/source de sessão diferentes do launcher qualificado. A investigação do código upstream 0.157.1 mostrou que o TUI pode usar um shared background server e oferece `--no-daemon` para operar sem ele. Como o servidor compartilhado pode ser de outro cliente/versão, o binding anterior ao `codex.cmd --version` não garantia sozinho que a conversa usaria o mesmo runtime.
+
+O contrato agora exige `EMBEDDED_NO_DAEMON` e `--no-daemon` na revisão e na conversa CQ. `originator`/terminal-name é telemetria diagnóstica, não oráculo isolado de client identity. A tentativa interrompida não executou CQ0–CQ5 materialmente e não altera o blocker.

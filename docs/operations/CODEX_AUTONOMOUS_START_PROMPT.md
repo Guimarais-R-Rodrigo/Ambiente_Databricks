@@ -48,14 +48,14 @@ O preflight grava `CQ_HOST_PREFLIGHT.json`, `CQ_RUN_REQUEST.json` e `CQ_RUN_PROM
 Inicie o executável explicitamente bound pelo preflight; nesta máquina:
 
 ```powershell
-& "$env:APPDATA\npm\codex.cmd"
+& "$env:APPDATA\npm\codex.cmd" --no-daemon
 ```
 
 No TUI execute `/debug-config` e `/hooks`. Exigir a config de projeto do standalone e `PreToolUse 2/2 Active`, `PostToolUse 1/1 Active`. Se houver review pendente, confiar a definição atual. `HOOK_TRUST_REVIEW_REQUIRED = true` não é autorização automática.
 
 ## 4. Conversa CQ nova
 
-Após o trust, saia da sessão usada para revisão e abra uma **nova** sessão CLI/TUI no mesmo standalone. Copie o conteúdo integral de `CQ_RUN_PROMPT.md` e cole nessa nova conversa. No Windows Terminal, prefira `Ctrl+Shift+V` ou botão direito se `Ctrl+V` for interpretado como imagem.
+Após o trust, saia da sessão usada para revisão e abra uma **nova** sessão CLI/TUI no mesmo standalone, também com `--no-daemon`. Não reutilize/resuma uma thread do shared background server. Copie o conteúdo integral de `CQ_RUN_PROMPT.md` e cole nessa nova conversa. No Windows Terminal, prefira `Ctrl+Shift+V` ou botão direito se `Ctrl+V` for interpretado como imagem.
 
 Não use o Codex Desktop para este CQ.
 
@@ -70,3 +70,5 @@ O script externo `RETOMAR_CQ.ps1` entregue com o freeze sincroniza somente os do
 `CQ_LAUNCH_READY.json` é marcador técnico da última tentativa host: `IN_PROGRESS`/`FAIL` nunca libera o prompt antigo; `PASS` atesta somente `HOST_PREFLIGHT_ONLY`. Ele não é trust, autorização, assinatura ou resultado CQ. Request/evidence/marker devem compartilhar `run_id`; source hashes, launcher e freshness continuam obrigatórios.
 
 O helper não corrige erros por retry. Somente expiração da freshness durante a revisão humana permite regeneração única por essa causa. Em falha, um ZIP com logs restritos e diagnóstico é preparado fora do repositório; revisar antes de compartilhar. Não coleta auth.json, user config, chat history ou variáveis de ambiente. O helper não envia arquivos nem concede B1 material/A2/Ready/merge. O bundle final do CQ continua exigindo adjudicação.
+
+Nota de 28/09/2026: uma tentativa pós-trust foi interrompida antes de CQ0 porque a sessão observada reportou versão/source diferentes do launcher preflight. A investigação do Codex 0.157.1 mostrou que o TUI pode reutilizar um shared background server; por isso revisão e CQ passam a exigir `--no-daemon`. `originator`/terminal-name isolado não é oráculo de identidade.

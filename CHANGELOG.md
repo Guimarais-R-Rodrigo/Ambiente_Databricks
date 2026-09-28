@@ -4735,3 +4735,10 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 - (ChatGPT) First native run of the closure candidate exposed a Windows PowerShell 5.1 interoperability defect in `tools/codex_cli_cq_host_preflight.ps1`: `Start-Process -PassThru` with redirected streams returned a process object whose `ExitCode` remained unset after `WaitForExit()`, causing `CQ_HOST_PREFLIGHT_CHILD_EXIT_NOT_OBSERVED` during the first `codex.cmd --version` host step.
 - (ChatGPT) The preflight child runner now uses `System.Diagnostics.Process` directly, drains stdout/stderr asynchronously, waits/finalizes the process, calls `Refresh()`, then reads an integer exit code. A regression metatest rejects reintroduction of the old Start-Process runner.
 - (ChatGPT) This correction changes only controller-maintenance execution plumbing. Authority envelope, A1 write roots, A2, transports, network policy, product policy and runtime blocker are unchanged. CQ remains NOT_RUN.
+
+
+## 2026-09-28 — CLI qualification isolates from shared background server (ChatGPT)
+
+- (ChatGPT) A fresh post-trust CQ session stopped before CQ0 after observing session metadata version/source different from the host-preflight launcher binding. Upstream Codex 0.157.1 supports a shared background server and explicit `--no-daemon` embedded mode; the previous launcher-only binding could therefore attach to a different client/version runtime.
+- (ChatGPT) Canonical review and CQ sessions now require `EMBEDDED_NO_DAEMON` / `--no-daemon`. Host evidence/request record that mode; contracts clarify that originator/terminal-name telemetry alone is not a client-identity oracle.
+- (ChatGPT) The stopped attempt made no CQ0 probe, B1 material effect, A2, promotion, Ready or merge. Authority envelope and A1 roots remain unchanged.
