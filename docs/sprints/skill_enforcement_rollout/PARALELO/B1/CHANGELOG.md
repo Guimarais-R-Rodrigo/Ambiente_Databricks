@@ -229,3 +229,6 @@ A integração final deste registro no CHANGELOG raiz acompanha o fechamento do 
 
 
 - 2026-09-28 (ChatGPT): final pre-runtime contradiction sweep forces CQ3 negative writes through shell (not write hooks), mirrors Windows hook invocation through COMSPEC in preflight, adds real host execpolicy oracles, requires strict-config/no-daemon, removes deprecated connectors alias, and hardens sidecar empty-file handling. Authority/A1 roots/A2 unchanged; CQ still NOT_RUN.
+
+
+- 2026-09-28 (ChatGPT): upstream review found CQ3 root negative could be falsely satisfied by pre_scope_guard denial. Added exact qualification-only sentinel bypass so sandbox, not hook, must deny it; host wire probes now use upstream-shaped payloads. Authority unchanged; CQ NOT_RUN.

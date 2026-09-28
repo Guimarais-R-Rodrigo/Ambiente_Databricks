@@ -104,3 +104,10 @@ A nova revisão encontrou quatro classes de risco que ainda poderiam gerar round
 4. **Compatibilidade Windows/config:** removido o alias legado `features.connectors` (o `apps=false` canônico permanece), review/CQ passam a exigir `--strict-config`, e sidecars de CQ3/CQ4/operação foram tornados null-safe para que arquivo vazio produza diagnóstico próprio, não InvokeMethodOnNull.
 
 Nenhuma dessas mudanças altera o envelope, os 10 write roots, A2, command network, produto ou os efeitos permitidos. O próximo host run ainda é prova obrigatória; esta auditoria não o substitui.
+
+
+## Adendo — contraditório upstream dos hooks e CQ3 root probe
+
+A revisão contra o código-fonte do Codex 0.157.1 encontrou um problema lógico adicional antes de nova execução: o pre_scope_guard casava apply_patch/Write/Edit e negava qualquer path fora dos A1 write roots. O CQ3 exige que o root A0 tente criar `.cq3_root_negative_probe.txt` para provar a negação do sandbox. Sem exceção estrita, o próprio hook poderia negar o sentinel e produzir falso PASS. Os guards agora deixam passar exclusivamente esse sentinel de qualificação; qualquer efeito inesperado continua SECURITY_STOP.
+
+O host preflight também passou a construir payloads sintéticos com os campos obrigatórios do schema upstream PreToolUse/PostToolUse. A inspeção upstream confirmou: hooks são executados no request.cwd; no Windows o command runner usa COMSPEC/cmd.exe /C quando não há shell explícito; apply_patch usa aliases Write/Edit mas stdin canônico tool_name=apply_patch; shell-like usa tool_name=Bash; PreToolUse exit 0 + stdout vazio é allow; deny JSON válido bloqueia; PostToolUse exit 0 + stdout vazio é sucesso.

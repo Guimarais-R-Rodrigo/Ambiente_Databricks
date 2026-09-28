@@ -4765,3 +4765,10 @@ sprint, e a certificação de roteamento 36/36 permanece válida.
 - (ChatGPT) CLI review/CQ requires --no-daemon --strict-config; deprecated features.connectors alias removed while canonical apps=false remains. CQ3/CQ4/operational SHA sidecar reads are null-safe.
 - (ChatGPT) External MCP startup/auth failure is nonblocking only when zero tools/resources are loaded and no invocation occurs; CQ4 re-inventory remains required.
 - (ChatGPT) Authority envelope, ten A1 write roots, A2=false, no-direct-network, product policy, G6, promotion, Ready and merge remain unchanged. Runtime CQ still NOT_RUN on this candidate.
+
+
+## 2026-09-28 — CQ3 root sandbox proof cannot be preempted by hooks (ChatGPT)
+
+- Upstream Codex 0.157.1 contradictory review found the PreToolUse scope guard would deny the root CQ3 sentinel before sandbox enforcement, permitting a false-positive permission-boundary result.
+- Scope guards now contain a strict qualification-only exception for exactly `.cq3_root_negative_probe.txt`; host preflight proves the pre-hook does not preempt it and uses upstream-shaped PreToolUse/PostToolUse payloads.
+- No authority expansion: envelope, 10 A1 roots, A2, transports and product policy unchanged. CQ remains NOT_RUN on this freeze.
