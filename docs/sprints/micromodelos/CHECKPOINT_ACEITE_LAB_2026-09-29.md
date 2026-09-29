@@ -17,3 +17,7 @@ O responsável respondeu **“aceito”** ao checkpoint em 2026-09-29. Esse acei
 A integração Git da PR #116 continua decisão posterior. GitHub Actions está `BLOCKED_EXTERNAL_CI` por saldo da conta, portanto não há PASS remoto presumido; a branch tem commits locais não enviados para evitar disparo desnecessário. B1 permanece compartilhado e sujo; qualquer escrita nele exige janela segura com os outros trabalhos preservados.
 
 Após o aceite do laboratório, o planejamento corporativo exigirá definição de dono, dados e permissões autorizadas, contratos de população/grão, governança de resultados, ACL/auditoria/custo e estratégia de rollback. MM10–MM13 reais dependem de piloto, integração visual, monitoramento e legado V1 verificável. Essas ações são E2 e continuam `NOT_RUN`.
+
+## Atualização posterior ao aceite — 2026-09-29
+
+Após a recarga de crédito, a branch foi enviada e o commit `d5f34acc` teve 14 checks SUCCESS e SE02 SKIPPED. O bloqueio de saldo descrito acima pertence ao momento do aceite. PR #116 permanece Draft, sem merge. A pedido do responsável, a próxima etapa é concluir o [pacote local e sua auditoria](PLANO_ENTREGA_LOCAL.md) antes da transferência. O aceite sintético permanece válido dentro do seu escopo; E2 continua NOT_RUN.

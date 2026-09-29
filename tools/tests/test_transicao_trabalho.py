@@ -144,6 +144,19 @@ class NotebookKitTests(unittest.TestCase):
     def test_all_code_cells_compile(self):
         for cell in self.nb["cells"]:
             if cell["cell_type"]=="code": ast.parse("".join(cell["source"]))
+
+    def test_micromodelos_notebook_checks_commit_and_failure(self):
+        nb = json.loads(kit.micromodelos_notebook(COMMIT, "b" * 64))
+        code = "\n".join("".join(c["source"]) for c in nb["cells"] if c["cell_type"] == "code")
+        ast.parse(code)
+        self.assertIn("resultado.get('source_commit')", code)
+        self.assertIn("resultado.get('status') != 'PASS'", code)
+        self.assertIn("run(PACKAGE_ROOT, MANIFEST_PATH)", code)
+        self.assertLess(code.index("hashlib.sha256(manifest_bytes)"),
+                        code.index("from aceite_micromodelos_trabalho import run"))
+        self.assertIn("hashlib.sha256(script_bytes)", code)
+        self.assertNotIn("testar_mlflow=True", code)
+        self.assertNotIn("testar_metadata=True", code)
     def test_no_saved_outputs(self):
         for cell in self.nb["cells"]:
             if cell["cell_type"]=="code":

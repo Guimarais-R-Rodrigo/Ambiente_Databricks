@@ -9,7 +9,7 @@ Procedimento dono: [guia de transição](replicacao-trabalho.md). Versão 14/09/
 - [ ] Gerar `tools/kit_transicao_trabalho.py --output .artifacts/kit-trabalho` em diretório novo ou baixar o artefato do workflow.
 - [ ] Conferir no `MANIFEST.json` o bloco `theme_contract`: contrato v1, caminhos obrigatórios presentes e transportados com SHA256. Ausência ou divergência bloqueia o kit.
 - [ ] Tratar `theme_contract.activation = manual_opt_in` e `publication = not_performed` literalmente: transportar e conferir o Sistema de Temas **não é publicação**, ativação global nem aprovação visual no Databricks.
-- [ ] Levar ZIP 01, ZIP 02, guias e SHA256SUMS pelo canal corporativo permitido; não levar Git/histórico/segredos.
+- [ ] Levar ZIP 01, ZIP 02, ZIP 03 de Micromodelos, guias e SHA256SUMS pelo canal corporativo permitido; não levar Git/histórico/segredos.
 - [ ] Conferir hashes e commit. Não misturar releases; não importar o ZIP externo de download.
 
 ## Destino, backup e staging
@@ -21,6 +21,7 @@ Procedimento dono: [guia de transição](replicacao-trabalho.md). Versão 14/09/
 - [ ] Guardar backup/configurações dentro do ambiente corporativo; separar Hub de skills/arquivos de terceiros.
 - [ ] Criar `hub_staging_<commit>` e importar ZIP 01 dentro dela, conferindo a camada de diretório.
 - [ ] Importar ZIP 02 na raiz do usuário; abrir `aceite_hub_<commit>/01_ACEITE_TECNICO`.
+- [ ] Importar ZIP 03 em pasta técnica pessoal separada de `.assistant`; seguir [aceite sintético de Micromodelos](aceite-micromodelos-trabalho.md), com metadata e MLflow institucionais desligados.
 
 ## Notebook técnico em staging
 

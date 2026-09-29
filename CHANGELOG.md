@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-29 — Entrega local antes da transferência de Micromodelos
+
+- (Codex) Registrado `PLANO_ENTREGA_LOCAL.md` após três análises paralelas: lacunas de transporte do runtime/schema MM01, aceite específico e ensaio do ZIP extraído; frentes disjuntas, critério de saída e retorno sanitizado para sprint corretiva.
+- (Codex) Adicionados `kit_micromodelos_trabalho.py`, `aceite_micromodelos_trabalho.py` e testes de pacote extraído. O kit corporativo passa a conter ZIP 03 técnico, notebook próprio e guia, com manifesto/hash, verificação antes de imports, dados sintéticos e opções externas desligadas. Guia e checklist de replicação atualizados.
+- (Codex) Atualizados plano E2 e índice; anexada atualização ao checkpoint preservando o histórico. CI de `d5f34acc`: 14 SUCCESS e SE02 SKIPPED. Promoção SE08 e homologação corporativa continuam separadas; ensaio do kit final e CI do novo commit serão registrados no checkpoint de entrega.
+
 ## 2026-09-29 — Correção do snapshot README após reativação do CI
 
 - (Codex) O job SE01 da PR #116 executou após a recarga de crédito e revelou 11 divergências no bloco de saída do validador colado no `README.md` raiz. Atualizados os números observados na própria execução remota, preservando os FAILs do run anterior. O checkout Windows local conserva nove diretórios `__pycache__` ignorados; a conferência local do snapshot difere somente pelo aviso 1 contra 0 do runner limpo, sem alteração do bloco publicado.

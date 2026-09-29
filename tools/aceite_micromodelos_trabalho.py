@@ -1,0 +1,251 @@
+"""Aceite E0 sintético do pacote técnico de Micromodelos extraído.
+
+Pode ser chamado de uma célula Python: ``run(package_root)``. Não consulta catálogo,
+registros, MLflow, rede ou autoridade de publicação. O manifesto é conferido antes
+de importar qualquer módulo Micromodelos do pacote.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib
+import importlib.util
+import json
+import sys
+import tempfile
+from pathlib import Path
+from typing import Any
+
+
+class AcceptanceError(ValueError):
+    """Falha de aceite com código estável, sem conteúdo de fixtures."""
+
+
+def _require(condition: bool, code: str) -> None:
+    if not condition:
+        raise AcceptanceError(code)
+
+
+def _stage(report: dict[str, Any], name: str, status: str, detail: str) -> None:
+    report["stages"].append({"name": name, "status": status, "detail": detail})
+
+
+def _load_verified_verifier(root: Path, manifest_path: Path):
+    """Confere o próprio verificador com stdlib antes de carregá-lo."""
+    _require(root.is_dir() and manifest_path.is_file(), "PACKAGE_OR_MANIFEST_MISSING")
+    _require(not manifest_path.is_symlink(), "MANIFEST_SYMLINK")
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        raise AcceptanceError("INVALID_MANIFEST") from None
+    _require(type(manifest) is dict and manifest.get("kind") == "MM_E2_PREPARED_SYNTHETIC"
+             and manifest.get("version") == 1 and type(manifest.get("files")) is dict,
+             "INVALID_MANIFEST")
+    relative = "tools/kit_micromodelos_trabalho.py"
+    entry = manifest["files"].get(relative)
+    _require(type(entry) is dict and type(entry.get("sha256")) is str
+             and type(entry.get("size")) is int and entry["size"] >= 0,
+             "VERIFIER_NOT_IN_MANIFEST")
+    verifier_path = root / relative
+    _require(verifier_path.is_file() and not verifier_path.is_symlink(), "VERIFIER_MISSING")
+    try:
+        content = verifier_path.read_bytes()
+    except OSError:
+        raise AcceptanceError("VERIFIER_UNREADABLE") from None
+    _require(len(content) == entry["size"] and
+             hashlib.sha256(content).hexdigest() == entry["sha256"],
+             "VERIFIER_HASH_MISMATCH")
+    spec = importlib.util.spec_from_file_location("_verified_mm_package", verifier_path)
+    _require(spec is not None and spec.loader is not None, "VERIFIER_UNLOADABLE")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    _require(callable(getattr(module, "verify", None)), "VERIFIER_UNAVAILABLE")
+    return module.verify
+
+
+def _package_module(root: Path, name: str):
+    module = importlib.import_module(name)
+    expected = (root / "tools" / (name + ".py")).resolve()
+    _require(Path(module.__file__).resolve() == expected, "IMPORT_OUTSIDE_PACKAGE")
+    return module
+
+
+def _execute_synthetic(root: Path, report: dict[str, Any]) -> None:
+    capabilities = ("yaml", "jsonschema", "regex")
+    missing = [name for name in capabilities if importlib.util.find_spec(name) is None]
+    _require(not missing, "MISSING_DEPENDENCIES:" + ",".join(missing))
+    _stage(report, "dependencies", "PASS", "yaml,jsonschema,regex disponíveis")
+
+    tools_path = str(root / "tools")
+    if tools_path not in sys.path:
+        sys.path.insert(0, tools_path)
+    mm01 = _package_module(root, "micromodelo_mm01_contract")
+    mm02 = _package_module(root, "micromodelo_mm02_fingerprint")
+    _package_module(root, "micromodelo_mm03_metadata")
+    mm04 = _package_module(root, "micromodelo_mm04_flow")
+    _package_module(root, "micromodelo_mm06_artifacts")
+    mm09 = _package_module(root, "micromodelo_mm09_lab")
+    mm10 = _package_module(root, "micromodelo_mm10_handoff")
+    mm12 = _package_module(root, "micromodelo_mm12_migration_lab")
+    mm13 = _package_module(root, "micromodelo_mm13_catalog")
+    _stage(report, "imports", "PASS", "módulos carregados da raiz conferida")
+
+    pilot = mm09.run_greenfield_lab()
+    _require(pilot["environment"] == "E0_SYNTHETIC_IN_MEMORY"
+             and pilot["mm04_mode"] == "OBJETIVO_CONHECIDO"
+             and pilot["metadata_coverage"] == "ESCOPO_OBSERVADO"
+             and pilot["metadata_catalog_complete"] is False,
+             "LAB_SCOPE_MISMATCH")
+    _stage(report, "briefing_metadata", "PASS", "briefing e fixture sintéticos; escopo observado")
+
+    discovery = mm04.discover_opportunities(
+        mm09._metadata_fixture(), "catalogo_sintetico", ["crm_sintetico"],
+        proposals=[mm04.OpportunityProposal(
+            characteristic="eventos sintéticos recorrentes",
+            decision="triagem sintética para estudo",
+            population="entidades fictícias",
+            grain="entidade e janela sintética",
+            decision_time="fim da janela sintética",
+            horizon="janela sintética seguinte",
+            candidates=(("crm_sintetico", "eventos_sinteticos"),),
+        )],
+    )
+    _require(discovery["mode"] == "DESCOBRIR_OPORTUNIDADES"
+             and discovery["metadata"]["coverage"] == "ESCOPO_OBSERVADO"
+             and len(discovery["shortlist"]) == 1
+             and discovery["shortlist"][0]["hypothesis"]["status"] == "PROPOSTO"
+             and discovery["shortlist"][0]["observed"]["status"] == "DESCOBERTO",
+             "SYNTHETIC_DISCOVERY_MISMATCH")
+    _stage(report, "metadata_discovery", "PASS", "hipótese sintética; sem leitura de linhas")
+
+    schema = mm01.load_schema(mm04.SCHEMA)
+    history = pilot["spec_history"]
+    spec = pilot["spec"]
+    _require(not mm01.validate_spec(history["IDEIA"], schema)
+             and not mm01.validate_spec(history["EM_DESCOBERTA"], schema,
+                                        previous_spec=history["IDEIA"])
+             and not mm01.validate_spec(spec, schema,
+                                        previous_spec=history["EM_DESCOBERTA"]),
+             "INVALID_MM01_PHASES")
+    yaml = importlib.import_module("yaml")
+    with tempfile.TemporaryDirectory(prefix="aceite-mm-") as temporary:
+        document = Path(temporary) / "micromodelo.yaml"
+        document.write_text(yaml.safe_dump(spec, allow_unicode=True, sort_keys=False),
+                            encoding="utf-8")
+        _require(mm01.load_document(document) == spec, "YAML_READBACK_MISMATCH")
+    _stage(report, "mm01_yaml", "PASS", "transições válidas e YAML relido")
+
+    digest = mm02.calculate_spec_fingerprint(spec, schema)
+    _require(digest.sha256 == pilot["spec_fingerprint"], "FINGERPRINT_MISMATCH")
+    _require(digest.sha256 in pilot["artifacts"]["notebook_source"]
+             and digest.sha256 in pilot["artifacts"]["readme_markdown"],
+             "ARTIFACT_FINGERPRINT_MISMATCH")
+    _stage(report, "fingerprint_artifacts", "PASS", digest.sha256)
+
+    scoring = pilot["scoring"]
+    individual = scoring["individual"]
+    aggregate = scoring["aggregate"]
+    counted = {label: sum(row["classificacao"] == label for row in individual)
+               for label in ("TRUE", "FALSE", "INDETERMINADO")}
+    scores = [row["score_heuristico_0_100"] for row in individual
+              if row["score_heuristico_0_100"] is not None]
+    _require(len(individual) == 6 and aggregate["populacao"] == 6
+             and aggregate["contagens"] == counted
+             and counted == {"TRUE": 1, "FALSE": 2, "INDETERMINADO": 3}
+             and aggregate["scores_emitidos"] == len(scores) == 4
+             and all(0 <= value <= 100 for value in scores)
+             and scoring["score_semantics"] == "HEURISTICA_FORCA_EVIDENCIA_NAO_PROBABILIDADE",
+             "SYNTHETIC_SCORING_MISMATCH")
+    _stage(report, "classification_score", "PASS", "6 entidades; TRUE=1 FALSE=2 INDETERMINADO=3; scores=4")
+
+    handoff = mm10.prepare_handoff(spec, schema, aggregate)
+    _require(handoff["status"] == "DRAFT_NOT_SUBMITTED"
+             and handoff["aggregate"]["status"] == "SUPPLIED_UNVERIFIED"
+             and handoff["spec_fingerprint"] == digest.sha256
+             and handoff["published"] is False and handoff["run_ref"] is None,
+             "HANDOFF_GOVERNANCE_MISMATCH")
+    _stage(report, "handoff", "PASS", "rascunho reconciliado; publicação não executada")
+
+    catalogue = mm13.build_catalog([spec], schema)
+    _require(len(catalogue) == 1 and catalogue[0]["fingerprint"] == digest.sha256
+             and catalogue[0]["execution_status"] == "NOT_OBSERVED",
+             "CATALOG_MISMATCH")
+    fictitious = [{"fixture_namespace": "MM12_FICTICIO", "synthetic": True,
+                   "id_entidade": row["id_entidade"], "classificacao": row["classificacao"],
+                   "score": row["score_heuristico_0_100"]} for row in individual]
+    rehearsal = mm12.rehearse_equivalence(fictitious, fictitious)
+    _require(rehearsal["status"] == "EQUIVALENT_LAB"
+             and rehearsal["corporate_v1_verified"] is False
+             and rehearsal["publication_authorized"] is False,
+             "MIGRATION_LAB_MISMATCH")
+    _stage(report, "catalog_migration", "PASS", "catálogo declarado; equivalência apenas fictícia")
+    report["synthetic_summary"] = {"population": 6, "counts": counted,
+                                   "score_count": len(scores), "fingerprint": digest.sha256}
+
+
+def run(package_root: str | Path, manifest: str | Path | None = None, *,
+        testar_mlflow: bool = False, testar_metadata: bool = False) -> dict[str, Any]:
+    """Confere e executa E0 do ZIP extraído; devolve vereditos sem linhas de dados."""
+    report: dict[str, Any] = {"status": "FAIL", "mode": "E0_SYNTHETIC_PACKAGE",
+                              "stages": [], "source_commit": None,
+                              "manifest_sha256": None, "synthetic_summary": None,
+                              "limits": {"mlflow": "NOT_RUN", "metadata_real": "NOT_RUN",
+                                         "genie": "NOT_RUN", "corporate_runtime": "NOT_VERIFIED",
+                                         "publication": "NOT_EXECUTED"}}
+    if type(testar_mlflow) is not bool or type(testar_metadata) is not bool:
+        _stage(report, "input", "FAIL", "INVALID_OPTIONS")
+        return report
+    root = Path(package_root).resolve()
+    manifest_path = (root / "manifest.json") if manifest is None else Path(manifest).resolve()
+    try:
+        _require(manifest_path.parent == root, "MANIFEST_OUTSIDE_PACKAGE")
+        verify = _load_verified_verifier(root, manifest_path)
+        verified = verify(root, manifest_path)
+        _require(type(verified) is dict and verified.get("status") == "PASS",
+                 "INVALID_VERIFIER_RESULT")
+        report["source_commit"] = verified["source_commit"]
+        report["manifest_sha256"] = verified["manifest_sha256"]
+        _stage(report, "integrity", "PASS", "manifesto e hashes conferidos")
+    except AcceptanceError as exc:
+        _stage(report, "integrity", "FAIL", str(exc))
+        return report
+    except ValueError as exc:
+        code = str(exc)
+        if not code.startswith("KIT_"):
+            code = "PACKAGE_INTEGRITY_ERROR"
+        _stage(report, "integrity", "FAIL", code)
+        return report
+    except Exception:
+        _stage(report, "integrity", "FAIL", "PACKAGE_INTEGRITY_ERROR")
+        return report
+    if testar_mlflow or testar_metadata:
+        _stage(report, "destination_opt_in", "UNAVAILABLE",
+               "REQUIRES_DESTINATION_CONFIGURATION")
+        return report
+    try:
+        _execute_synthetic(root, report)
+    except AcceptanceError as exc:
+        _stage(report, "acceptance", "FAIL", str(exc))
+        return report
+    except Exception:
+        _stage(report, "acceptance", "FAIL", "PACKAGE_OR_RUNTIME_ERROR")
+        return report
+    report["status"] = "PASS"
+    return report
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Aceite E0 sintético do ZIP Micromodelos")
+    parser.add_argument("--package-root", required=True)
+    parser.add_argument("--manifest")
+    parser.add_argument("--testar-mlflow", action="store_true")
+    parser.add_argument("--testar-metadata", action="store_true")
+    args = parser.parse_args(argv)
+    report = run(args.package_root, args.manifest, testar_mlflow=args.testar_mlflow,
+                 testar_metadata=args.testar_metadata)
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+    return 0 if report["status"] == "PASS" else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

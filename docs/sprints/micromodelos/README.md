@@ -12,6 +12,7 @@ Documentos vivos desta fase:
 
 - [execução de laboratório e revisão processual](PLANO_EXECUCAO_LAB.md);
 - [aceite do laboratório sintético](CHECKPOINT_ACEITE_LAB_2026-09-29.md);
+- [entrega local completa antes da transferência](PLANO_ENTREGA_LOCAL.md);
 - [preparação do piloto E2 e portas de avanço](PLANO_PREPARACAO_E2.md);
 - [relatório da candidata E0 e estados E1/E2](RELATORIO_ENTREGA_LAB.md);
 - [resultados Genie E1 e limites](RESULTADOS_GENIE_E1_2026-09-29.md);
