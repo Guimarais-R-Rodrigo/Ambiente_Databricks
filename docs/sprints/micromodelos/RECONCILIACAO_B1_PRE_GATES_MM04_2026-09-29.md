@@ -25,8 +25,10 @@ humano ou autorização de merge/promoção.
 - Os dois briefings da PR #116 foram alinhados à skill corrigida. O de objetivo
   conhecido só pede YAML quando o schema MM01 está acessível; o de descoberta
   distingue fixture `FORNECIDA` de metadata `OBSERVADA`. Esses briefings
-  revisados ainda não foram testados como prompts no Genie; os três casos E1
-  usaram mensagens de teste próprias.
+  revisados foram testados depois no Genie: P1 passou como resposta com
+  ressalva de proveniência; P2 falhou por inferir detecção de fabricação a
+  partir de “eventos fictícios”, expressão ambígua na fixture. O reteste P2b
+  esclarecido segue `NOT_RUN`. Ver [resultados](TESTE_BRIEFINGS_MM04_E1.md).
 
 ## Verificações proporcionais desta reconciliação
 
@@ -43,7 +45,7 @@ humano ou autorização de merge/promoção.
 | Gate | Situação agora | Ação necessária |
 |---|---|---|
 | `MM04_SEF_READINESS` | **Preparado para revisão**, sem homologação formal. Policy L1/audit e superfícies protegidas estão declaradas; target L3 é apenas direção. | Revisar policy integrada e evidência de cada superfície no snapshot congelado; não inferir L2/L3 dos testes de conversa. |
-| `MM04_PSEF_PROMPT_READINESS` e `MM05_PROMPT_CONTRACT_READY` | **Pendente de resposta real ao prompt preenchido**. PSEF01 segue aberta; decisão desta candidata: usar o contrato integrado em `hub_padroes/prompt/template.md`, sem incorporar o draft. Os dois briefings passaram na validação estrutural e refletem a skill L1, mas ambos os notebooks de exemplo mantêm a parte 3 como `NOT_RUN`. | Executar [P1 e P2](TESTE_BRIEFINGS_MM04_E1.md) em chats novos, capturar resposta/rota real e registrar na parte 3; os casos E1 anteriores usaram textos distintos e não substituem essa prova. |
+| `MM04_PSEF_PROMPT_READINESS` e `MM05_PROMPT_CONTRACT_READY` | **Pendente**. PSEF01 segue aberta; decisão desta candidata: usar o contrato integrado em `hub_padroes/prompt/template.md`, sem incorporar o draft. P1 passou como resposta; P2 falhou em interpretação semântica. Os briefings dos notebooks de exemplo ainda diferem de P1/P2 e suas partes 3 seguem `NOT_RUN`. | Executar [P2b esclarecido](TESTE_BRIEFINGS_MM04_E1.md) em chat novo. Alinhar o briefing de cada notebook à prova real antes de preencher a parte 3; não atribuir uma resposta a texto diferente. |
 | `PRE_CERTIFICATION_SMOKE` / `CANDIDATE_FREEZE` | **Não executados para MM04**. A PR #116 é candidata de laboratório; o B1 possui muitas alterações locais não commitadas, incluindo a skill importada. | Definir branch/escopo de sprint, atualizar refs, exigir `behind_by=0`, árvore limpa, snapshot/validator e gates focais verdes antes de congelar SHA/tree. |
 | FULL proporcional, bundle lint, auditoria independente, contraditório, fechamento e revalidação final | **NOT_RUN** para MM04. | Executar somente após smoke e freeze, preservando FAILs históricos. Os testes B1 e a publicação Free não substituem estes gates. |
 | Aceite humano, merge, promoção | **PENDENTE**. | Solicitar aceite sobre candidata certificada e auditada. Não promover `current_level` nem acessar E2 por inferência. |

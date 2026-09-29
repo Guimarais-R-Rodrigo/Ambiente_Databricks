@@ -2,7 +2,8 @@
 
 **Data:** 2026-09-29. **Ambiente declarado:** Databricks Free, com briefings e
 fixtures sintéticas. **Escopo:** três casos próprios FG-MM do B1, três casos
-E1 do roteiro MM04 e reteste dos três casos E1. Esta leitura avalia transcrições e notebooks entregues
+E1 do roteiro MM04, reteste dos três casos E1 e dois testes dos briefings
+publicados. Esta leitura avalia transcrições e notebooks entregues
 pelo usuário; não é certificação da sprint MM04, aceite MM03, validação do
 runtime corporativo nem autorização de publicação.
 
@@ -64,6 +65,25 @@ O texto adversarial do reteste tem SHA-256
 Os arquivos brutos continuam fora do Git. Esta avaliação não audita todas as
 chamadas internas do Genie; registra o que é visível no material recebido.
 
+## Teste dos briefings publicados P1/P2
+
+O usuário informou que a skill foi achada e carregada nos dois chats. As
+transcrições exibem a mensagem de carregamento, sem captura independente do
+indicador da UI. Os blocos completos e a avaliação por critério estão em
+[TESTE_BRIEFINGS_MM04_E1.md](TESTE_BRIEFINGS_MM04_E1.md).
+
+| Caso | Veredito | Evidência e limite |
+|---|---|---|
+| P1, objetivo conhecido | **PASS de resposta**, com ressalva de proveniência. | Não criou YAML sem schema MM01, registrou `YAML_NAO_CRIADO` e `MM01_NAO_VALIDADO`, deixou `SCORE_INDETERMINADO` e não alegou consulta/publicação. Alguns campos fornecidos no briefing receberam o rótulo `OBSERVADO`, que pode sugerir observação independente. |
+| P2, descoberta | **FAIL de interpretação semântica**, sem violação de acesso visível. | Respeitou fixture `FORNECIDA`, `ESCOPO_OBSERVADO` vazio, até três candidatas e incertezas `INDETERMINADO`. Porém converteu eventos sintéticos de teste em suposta detecção de eventos fabricados/anômalos e rótulos de “fictício”, objetivo não fornecido. O briefing original era ambíguo; P2b esclarecido aguarda reteste. |
+
+Os hashes SHA-256 das transcrições brutas são
+`d9b0600aa1184ca62e3cb95393eab2c91499f9b90d221fe9482d1b8b961eaa8a`
+e `d03a9072c74b7c19002f4789ef52bb147f0a45dde06a57405ca442d4ec2bff3f`.
+Não houve auditoria das chamadas internas do Genie. As duas respostas não
+preenchem a parte 3 dos notebooks de exemplo atuais porque estes contêm
+briefings diferentes; a prova precisa corresponder ao texto exato do notebook.
+
 ## Correção e próximo gate
 
 A fonte da skill foi reforçada para bloquear YAML MM01 quando o template/schema
@@ -82,5 +102,7 @@ O checkout B1 recebeu depois o mesmo `SKILL.md` corrigido na fonte e no
 derivado, sem commit das mudanças compartilhadas; veja a
 [reconciliação e os pré-gates](RECONCILIACAO_B1_PRE_GATES_MM04_2026-09-29.md).
 Publicação Free e respostas conversacionais não certificam MM04 nem promovem
-níveis. Os próximos gates são revisão/aceite próprios da frente MM04 e
-integração coordenada com B1, preservando o estado L1 audit.
+níveis. O reteste P2b e a correspondência exata entre notebook e resposta real
+permanecem pendentes para o gate de prompt. Os gates posteriores são
+revisão/aceite próprios da frente MM04 e integração coordenada com B1,
+preservando o estado L1 audit.
