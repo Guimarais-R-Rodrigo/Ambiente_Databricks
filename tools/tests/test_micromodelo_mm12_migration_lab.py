@@ -39,6 +39,18 @@ class MigrationLabTests(unittest.TestCase):
         with self.assertRaisesRegex(mm12.MigrationLabError, "INVALID_OR_DUPLICATE_KEY"):
             mm12.rehearse_equivalence([row("a", "TRUE", 80)] * 2, [])
 
+    def test_rejects_non_string_classification_on_either_side(self):
+        valid = row("a", "TRUE", 80)
+        for invalid_classification in ([], {}):
+            with self.subTest(classification_type=type(invalid_classification).__name__):
+                invalid = row("a", "TRUE", 80)
+                invalid["classificacao"] = invalid_classification
+                for legacy_rows, candidate_rows in (([invalid], [valid]),
+                                                    ([valid], [invalid])):
+                    with self.assertRaisesRegex(mm12.MigrationLabError,
+                                                "^INVALID_CLASSIFICATION$"):
+                        mm12.rehearse_equivalence(legacy_rows, candidate_rows)
+
 
 if __name__ == "__main__":
     unittest.main()

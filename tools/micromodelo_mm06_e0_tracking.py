@@ -30,6 +30,7 @@ metrics = {
     "score_min": aggregate["score_min"],
     "score_max": aggregate["score_max"],
     "score_mean": aggregate["score_media"],
+    "score_count": aggregate["scores_emitidos"],
 }
 contract = {
     "grain": "uma classificação por entidade e janela sintética",

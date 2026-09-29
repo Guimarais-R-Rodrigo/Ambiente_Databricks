@@ -70,9 +70,10 @@ class TrackingMM06Tests(unittest.TestCase):
     def complete(self, tipo="DEVELOPMENT"):
         with tracking.run_micromodelo("lab_sintetico", **{**self.kwargs, "tipo": tipo}) as run:
             run.parametros({"regra": "sintetica_v1", "limiar": 70})
-            run.agregados_medidos({"population": 4, "count_true": 1,
-                                   "count_false": 1, "count_indeterminate": 2,
-                                   "score_min": 0, "score_mean": 45, "score_max": 100},
+            run.agregados_medidos({"population": 6, "count_true": 1,
+                                   "count_false": 2, "count_indeterminate": 3,
+                                   "score_min": 0, "score_mean": 50, "score_max": 100,
+                                   "score_count": 2},
                                   referencia_execucao="exec_sintetica_001")
 
     def test_all_run_types_are_complete_without_sklearn_or_individual_results(self):
@@ -93,6 +94,7 @@ class TrackingMM06Tests(unittest.TestCase):
                 self.assertEqual("classificacao", json.loads(tags["mm06.output_contract"])
                                  ["classification_field"])
                 self.assertEqual(("set_tag", "mm06.complete", "true"), self.fake.calls[-1])
+                self.assertEqual(2.0, self.fake.calls[3][1]["score_count"])
                 self.assertFalse(any("artifact" in name or "model" in name for name in names))
 
     def test_incomplete_run_fails_and_does_not_claim_complete(self):
@@ -115,6 +117,20 @@ class TrackingMM06Tests(unittest.TestCase):
             {"population": 0, "count_true": 0, "count_false": 0,
              "count_indeterminate": 0, "score_min": 0,
              "score_mean": 0, "score_max": 0},
+            {"population": 6, "count_true": 1, "count_false": 2,
+             "count_indeterminate": 3, "score_min": 0, "score_mean": 40,
+             "score_max": 100, "score_count": 0},
+            {"population": 6, "count_true": 1, "count_false": 2,
+             "count_indeterminate": 3, "score_min": 0, "score_mean": 40,
+             "score_max": 100},
+            {"population": 6, "count_true": 1, "count_false": 2,
+             "count_indeterminate": 3, "score_min": 0, "score_mean": 40,
+             "score_max": 100, "score_count": 7},
+            {"population": 6, "count_true": 1, "count_false": 2,
+             "count_indeterminate": 3, "score_min": 0, "score_mean": 40,
+             "score_max": 100, "score_count": True},
+            {"population": 6, "count_true": 1, "count_false": 2,
+             "count_indeterminate": 3, "score_count": 1},
         ):
             with self.subTest(metrics=metrics):
                 self.fake = FakeMlflow()
@@ -138,9 +154,38 @@ class TrackingMM06Tests(unittest.TestCase):
             run.parametros({"regra": "sintetica_v1", "janela_dias": 30,
                             "politica_indeterminado": "INDETERMINADO"})
             run.agregados_medidos({"population": 0, "count_true": 0,
-                                   "count_false": 0, "count_indeterminate": 0},
+                                   "count_false": 0, "count_indeterminate": 0,
+                                   "score_count": 0},
                                   referencia_execucao="exec_vazia")
         self.assertEqual("FINISHED", self.fake.status)
+
+    def test_disabled_score_rejects_score_metrics_in_either_call_order(self):
+        metrics = {"population": 6, "count_true": 1, "count_false": 2,
+                   "count_indeterminate": 3, "score_min": 0, "score_mean": 45,
+                   "score_max": 100, "score_count": 2}
+        with self.assertRaisesRegex(ValueError, "score desabilitado"):
+            with tracking.run_micromodelo("lab", **self.kwargs) as run:
+                run.parametros({"regra": "x", "score_habilitado": False})
+                run.agregados_medidos(metrics, referencia_execucao="exec_sintetica")
+        self.assertNotIn(("set_tag", "mm06.complete", "true"), self.fake.calls)
+        self.fake = FakeMlflow()
+        with patch.object(tracking, "mlflow", self.fake):
+            with self.assertRaisesRegex(ValueError, "score desabilitado"):
+                with tracking.run_micromodelo("lab", **self.kwargs) as run:
+                    run.agregados_medidos(metrics, referencia_execucao="exec_sintetica")
+                    run.parametros({"regra": "x", "score_habilitado": False})
+        self.assertNotIn(("set_tag", "mm06.complete", "true"), self.fake.calls)
+
+    def test_enabled_score_requires_score_field_before_logging_parameters(self):
+        contract = {**self.kwargs["contrato_saida"], "score_field": None,
+                    "score_semantics": None}
+        with self.assertRaisesRegex(ValueError, "score habilitado sem campo"):
+            with tracking.run_micromodelo(
+                "lab", **{**self.kwargs, "contrato_saida": contract}
+            ) as run:
+                run.parametros({"regra": "x", "score_habilitado": True})
+        self.assertFalse(any(call[0] == "log_params" for call in self.fake.calls))
+        self.assertNotIn(("set_tag", "mm06.complete", "true"), self.fake.calls)
 
     def test_invalid_contract_or_non_synthetic_scope_fails_before_run(self):
         for update in (
@@ -173,7 +218,7 @@ class TrackingMM06Tests(unittest.TestCase):
                 run.agregados_medidos({"population": 1, "count_true": 1,
                                        "count_false": 0, "count_indeterminate": 0,
                                        "score_min": 50, "score_mean": 50,
-                                       "score_max": 50},
+                                       "score_max": 50, "score_count": 1},
                                       referencia_execucao="exec_sintetica")
         self.assertFalse(any(call[0] == "log_metrics" for call in self.fake.calls))
 

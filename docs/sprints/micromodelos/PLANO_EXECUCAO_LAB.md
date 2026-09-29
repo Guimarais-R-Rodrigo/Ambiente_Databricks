@@ -25,11 +25,11 @@ MM04–MM05 definem dois modos: `OBJETIVO_CONHECIDO` gera especificação prelim
 | Onda | Sprints | Entrega e prova mínima | Estado em 2026-09-29 |
 |---|---|---|---|
 | 0 | MM00–MM03 reuso | Base conciliada, docs vivos corrigidos, smoke de contratos. | E0 PASS |
-| 1 | MM04–MM05 | Skill, prompts, fluxo E0 até YAML e shortlist; casos positivos/negativos e revisão focal. | E0 PASS; três casos Genie E1 da skill corrigida PASS de resposta com ressalvas; prompts revisados ainda sem reteste próprio |
+| 1 | MM04–MM05 | Skill, prompts, fluxo E0 até YAML e shortlist; casos positivos/negativos e revisão focal. | E0 PASS; três casos Genie E1 da skill corrigida PASS de resposta com ressalvas; briefings P1/P2c PASS de resposta com ressalvas; P2/P2b FAIL históricos; revisão editorial independente pendente |
 | 2 | MM06 + MM10 preparo | Notebook, README, política de runs DEVELOPMENT/VALIDATION/SCORING e handoff sem autopublicação. | E0 PASS; MLflow local e Free sintético PASS |
 | 3 | MM09–MM10-LAB | Piloto greenfield sintético com evidência, contra-evidência, indeterminado, scoring e reconciliação. | E0 PASS; aprovação/publicação pendente |
 | 4 | MM07–MM08-LAB | Pacote Free, adapter/capability check, roteiro de execução pelo usuário e plano E2. | Adapter E0 fake PASS; código e adapter Free PASS; Genie Free com vereditos separados de resposta, sem homologação E2 |
-| 5 | MM11–MM13-LAB | Temas, catálogo/impacto e ensaio conservador com legado fictício; migração não promovida. | Catálogo e equivalência fictícia E0 PASS; temas/monitoramento N/A no ensaio |
+| 5 | MM11–MM13-LAB | Temas, catálogo/impacto e ensaio conservador com legado fictício; migração não promovida. | Catálogo e equivalência fictícia E0 PASS; scoring sintético sem tema; integração visual e monitoramento pós-publicação NOT_RUN |
 
 O planejamento MAC00–MAC05 anterior é absorvido por bootstrap, seleção de componentes, contratos/estado, testes adversariais, piloto E0 e pacote E1 nas ondas acima. Não será criado controller de execução. MM08–MM13 de laboratório não equivalem a sprints corporativas concluídas.
 

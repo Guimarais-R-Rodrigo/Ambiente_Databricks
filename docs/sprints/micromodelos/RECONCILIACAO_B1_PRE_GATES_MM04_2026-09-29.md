@@ -94,3 +94,16 @@ a revisão da PR #116 não foi copiada para evitar renderizar sobre trabalho em
 andamento. Nenhuma alteração alheia foi descartada; não houve commit, push ou
 merge do B1 nesta reconciliação. Seu registro local está em
 `docs/sprints/skill_enforcement_rollout/RECONCILIACAO_MM04_2026-09-29.md`.
+
+## Conferência posterior da interface B1 (somente leitura)
+
+Na retomada da revisão paralela, a fonte e o derivado B1 de `SKILL.md`,
+`execution_contract.json` e `policy.json` coincidiram byte a byte com a
+fonte da PR #116. O `SKILL.md` passou a SHA-256
+`93e51ac4ca25f2c3bd88c6cb6a40e7e494fd9bf1852824cd4575628cf24351f2`;
+o registro anterior acima documenta o estado observado **antes** dessa mudança
+feita no checkout compartilhado. A linha de roteamento Micromodelos em
+`.assistant_instructions.md` também coincide, embora o arquivo completo tenha
+hash diferente por trabalho B1 de outras frentes. A árvore B1 segue com muitas
+alterações locais; nenhuma cópia, renderização, staging ou commit B1 foi feita
+por esta conferência. Revalidar hashes e estado antes de qualquer integração.

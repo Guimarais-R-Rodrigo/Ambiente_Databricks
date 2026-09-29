@@ -16,6 +16,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 import micromodelo_mm01_contract as mm01
 import micromodelo_mm02_fingerprint as mm02
 import micromodelo_mm03_metadata as mm03
@@ -248,6 +250,7 @@ def known_objective(fixture: dict[str, Any], catalog: str, schemas: list[str],
     envelope = collector.envelope(discovery, details)
     objects = _observed_objects(discovery)
     spec = copy.deepcopy(previous_spec) if previous_spec is not None else mm01.load_document(TEMPLATE)
+    before_brief = copy.deepcopy(spec)
     spec["identidade"]["titulo"] = brief.title
     spec["negocio"]["caracteristica"] = brief.characteristic
     spec["negocio"]["objetivo"] = brief.objective
@@ -302,6 +305,31 @@ def known_objective(fixture: dict[str, Any], catalog: str, schemas: list[str],
                             "observado_em_utc": None, "aprovacao": None, "medicao": None},
         })
         next_id += 1
+    supplied_fields = {
+        "identidade.nome": brief.name,
+        "identidade.titulo": brief.title,
+        "negocio.caracteristica": brief.characteristic,
+        "negocio.objetivo": brief.objective,
+        "negocio.definicao_operacional": brief.operational_definition,
+        "entidade.tipo": brief.entity_type,
+        "entidade.chave_logica": brief.logical_key,
+        "entidade.granularidade": brief.grain,
+        "entidade.populacao_elegivel": brief.eligible_population,
+        "entidade.referencia_temporal": brief.reference_time,
+        "negocio.uso_pretendido": list(brief.intended_uses) if brief.intended_uses else None,
+        "negocio.nao_usar_para": list(brief.prohibited_uses) if brief.prohibited_uses else None,
+    }
+    for path, supplied in supplied_fields.items():
+        if supplied is None:
+            continue
+        group, field = path.split(".")
+        if before_brief[group][field] != spec[group][field]:
+            spec["proveniencia"]["registros"].append({
+                "alvo": path,
+                "proveniencia": {"status": "PROPOSTO", "origem": "briefing fornecido",
+                                "referencia": brief.request_ref, "observado_em_utc": None,
+                                "aprovacao": None, "medicao": None},
+            })
     issues = mm01.validate_spec(spec, schema_contract, previous_spec=previous_spec)
     _require(not issues, "INVALID_MM01_SPEC")
     digest = mm02.calculate_spec_fingerprint(spec, schema_contract)
@@ -325,12 +353,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--proposals", help="JSON de hipóteses explícitas; só para discover")
     parser.add_argument("--previous-spec", help="YAML/JSON MM01 anterior; só para known")
     parser.add_argument("--advance-to-discovery", action="store_true")
+    parser.add_argument("--output-yaml", help="gera micromodelo.yaml sem sobrescrever; só para known")
     args = parser.parse_args(argv)
     try:
         fixture, _ = mm03.load_fixture(args.fixture)
         if args.mode == "discover":
             _require(not args.brief and not args.candidate and not args.previous_spec
-                     and not args.advance_to_discovery, "INVALID_MODE_ARGUMENTS")
+                     and not args.advance_to_discovery and not args.output_yaml,
+                     "INVALID_MODE_ARGUMENTS")
             proposals = None
             if args.proposals:
                 raw = Path(args.proposals).read_bytes()
@@ -358,6 +388,26 @@ def main(argv: list[str] | None = None) -> int:
             report = known_objective(fixture, args.catalog, args.schemas, candidates,
                                      KnownObjective(**payload), previous_spec=previous_spec,
                                      advance_to_discovery=args.advance_to_discovery)
+            if args.output_yaml:
+                destination = Path(args.output_yaml)
+                _require(destination.name == "micromodelo.yaml", "INVALID_OUTPUT_NAME")
+                document = yaml.safe_dump(report["spec"], allow_unicode=True,
+                                          sort_keys=False)
+                round_trip = yaml.safe_load(document)
+                _require(round_trip == report["spec"] and
+                         not mm01.validate_spec(round_trip, mm01.load_schema(SCHEMA)),
+                         "INVALID_YAML_ROUND_TRIP")
+                created_here = False
+                try:
+                    with destination.open("x", encoding="utf-8", newline="\n") as output:
+                        created_here = True
+                        output.write(document)
+                    _require(mm01.load_document(destination) == report["spec"],
+                             "INVALID_YAML_READBACK")
+                except BaseException:
+                    if created_here:
+                        destination.unlink(missing_ok=True)
+                    raise
         print(json.dumps(report, ensure_ascii=True, sort_keys=True, separators=(",", ":")))
         return 0
     except (FlowError, mm03.MetadataError, ValueError, UnicodeError, OSError):

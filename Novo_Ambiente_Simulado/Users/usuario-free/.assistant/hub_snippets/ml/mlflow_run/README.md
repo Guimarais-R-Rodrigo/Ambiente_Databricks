@@ -88,7 +88,7 @@ with run_micromodelo(
                           referencia_execucao="exec_sintetica_001")
 ```
 
-O SHA repetido ilustra a forma do campo, não é fingerprint de uma especificação real. O exemplo acima é ilustrativo; a prova com fingerprint MM02 real e backend MLflow local está em `tools/micromodelo_mm06_e0_tracking.py` e no relatório de entrega do laboratório. A compatibilidade do backend Free permanece sem execução.
+O SHA repetido ilustra a forma do campo, não é fingerprint de uma especificação real. O exemplo acima é ilustrativo; a prova com fingerprint MM02 real e backend MLflow local está em `tools/micromodelo_mm06_e0_tracking.py` e no relatório de entrega do laboratório. Em 2026-09-29, três runs sintéticas foram gravadas e relidas no Databricks Free com fingerprint e `mm06.complete=true`; a prova e suas limitações estão no `docs/sprints/micromodelos/RELATORIO_ENTREGA_LAB.md` no repositório. Essa execução se limita ao experimento pessoal e à configuração explícita usada no ensaio.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -96,7 +96,7 @@ O SHA repetido ilustra a forma do campo, não é fingerprint de uma especificaç
 
 `nome` do artefato do modelo é passado como `artifact_path` em APIs antigas e `name` no fallback para versões que mudaram a assinatura.
 
-Em `run_micromodelo`, não há `exigir_completo=False`: parâmetros e agregados reconciliados são obrigatórios. `score_field=None` exige `score_semantics=None`; caso haja score, a semântica precisa ser declarada. A política não transforma força de evidência em probabilidade.
+Em `run_micromodelo`, não há `exigir_completo=False`: parâmetros e agregados reconciliados são obrigatórios. `score_field=None` exige `score_semantics=None`; caso haja score, a semântica precisa ser declarada. A política não transforma força de evidência em probabilidade. Com estatísticas `score_min`, `score_mean` e `score_max`, informe também `score_count`: a média cobre somente os scores emitidos, que podem ser menos que a população. Sem scores, `score_count=0` pode ser registrado sem o trio; `score_habilitado=False` recusa estatísticas de score.
 
 Os valores dos parâmetros também são limitados: `regra`/`versao_regra` são rótulos curtos, `limiar` fica em 0–100, `janela_dias` em 1–3650, `normalizacao` usa os nomes do contrato MM01, `politica_indeterminado` permanece `INDETERMINADO` e `score_habilitado` é booleano. A allowlist não aceita campos de identificador ou resultado por indivíduo.
 

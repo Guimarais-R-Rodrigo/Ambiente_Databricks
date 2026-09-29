@@ -1,6 +1,6 @@
 # Plano de paralelização da candidata de laboratório
 
-**Data:** 2026-09-29. **Estado:** planejado; nenhum agente foi iniciado por este plano.
+**Data:** 2026-09-29. **Estado:** três revisões executadas; correções e rechecagens cruzadas registradas em [resultado](REVISAO_PARALELA_LAB_2026-09-29.md).
 **Objetivo:** concluir a revisão e as correções proporcionais da candidata MM04–MM13-LAB, preparando um checkpoint de aceite com evidências e pendências explícitas.
 
 ## Base e autoridade
@@ -80,4 +80,4 @@ Com os agentes sem escrever, o coordenador:
 
 A maior economia vem da primeira leitura dos três grupos e de correções sem arquivos comuns. O tempo dessa leitura tende ao grupo mais demorado, em vez da soma dos três. Preparação, triagem, alterações compartilhadas, renderer, reconciliação B1 e checkpoint permanecem no caminho sequencial; não há base para prometer ganho de três vezes ou prazo fechado antes dos achados.
 
-Este plano está pronto para despacho. Ele não iniciou agentes, não publicou arquivos no Free e não solicitou execução de GitHub Actions.
+A revisÃ£o e a correÃ§Ã£o local foram executadas como descrito no [resultado](REVISAO_PARALELA_LAB_2026-09-29.md). Nova execuÃ§Ã£o no Free e checkpoint de aceite sÃ£o tratados separadamente; GitHub Actions permanece indisponÃ­vel.

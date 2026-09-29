@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import json
+import io
 import subprocess
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
+from unittest import mock
 
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "tools"))
@@ -56,6 +59,16 @@ class MM04FlowTests(unittest.TestCase):
                          [x["operation"] for x in result["metadata"]["calls"]])
         self.assertFalse(result["metadata"]["metadata_is_instruction"])
         self.assertFalse(result["metadata"]["data_access_authorized"])
+        records = spec["proveniencia"]["registros"]
+        self.assertIn("negocio.objetivo", {item["alvo"] for item in records})
+        self.assertIn("identidade.titulo", {item["alvo"] for item in records})
+        self.assertNotIn("entidade.tipo", {item["alvo"] for item in records})
+        for item in records:
+            self.assertEqual("PROPOSTO", item["proveniencia"]["status"])
+            self.assertEqual("briefing fornecido", item["proveniencia"]["origem"])
+            self.assertEqual(self.brief.request_ref, item["proveniencia"]["referencia"])
+            self.assertIsNone(item["proveniencia"]["aprovacao"])
+            self.assertIsNone(item["proveniencia"]["medicao"])
 
     def test_injected_description_and_tag_cannot_change_brief_scope_or_approval(self):
         result = self.known(candidates=[("crm_sintetico", "apoio_sintetico")])
@@ -174,6 +187,11 @@ class MM04FlowTests(unittest.TestCase):
         self.assertEqual("IDEIA", first["identidade"]["estado"]["fase_atual"])
         self.assertTrue(first["entidade"]["tipo"].startswith("PENDENTE:"))
         self.assertEqual([], mm01.validate_spec(updated, mm01.load_schema(flow.SCHEMA), first))
+        added = updated["proveniencia"]["registros"][len(first["proveniencia"]["registros"]):]
+        self.assertIn("negocio.objetivo", {item["alvo"] for item in added})
+        self.assertIn("entidade.tipo", {item["alvo"] for item in added})
+        self.assertNotIn("negocio.caracteristica", {item["alvo"] for item in added})
+        self.assertTrue(all(item["proveniencia"]["status"] == "PROPOSTO" for item in added))
 
     def test_truncated_columns_are_not_written_as_complete_fields(self):
         result = flow.known_objective(
@@ -199,16 +217,16 @@ class MM04FlowTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             brief_file = Path(directory) / "brief.json"
             brief_file.write_text(json.dumps(self.brief.__dict__), encoding="utf-8")
-            common = [sys.executable, str(SCRIPT), "--fixture", str(FIXTURE),
+            common = [sys.executable, "-B", str(SCRIPT), "--fixture", str(FIXTURE),
                       "--catalog", "catalogo_sintetico", "--schema", "crm_sintetico"]
             known = subprocess.run(common + ["--mode", "known", "--brief", str(brief_file),
                                           "--candidate", "crm_sintetico.eventos_sinteticos"],
-                                   capture_output=True, text=True, cwd=REPO)
+                                   capture_output=True, text=True, cwd=directory)
             self.assertEqual(0, known.returncode, known.stderr)
             self.assertEqual("IDEIA", json.loads(known.stdout)["spec"]["identidade"]
                              ["estado"]["fase_atual"])
             discover = subprocess.run(common + ["--mode", "discover"],
-                                      capture_output=True, text=True, cwd=REPO)
+                                      capture_output=True, text=True, cwd=directory)
             self.assertEqual(0, discover.returncode, discover.stderr)
             self.assertEqual(0, len(json.loads(discover.stdout)["shortlist"]))
             self.assertEqual(2, len(json.loads(discover.stdout)["source_objects_for_triage"]))
@@ -216,9 +234,59 @@ class MM04FlowTests(unittest.TestCase):
             proposals_file.write_text(json.dumps([self.proposal().__dict__]), encoding="utf-8")
             selected = subprocess.run(common + ["--mode", "discover", "--proposals",
                                             str(proposals_file)], capture_output=True,
-                                      text=True, cwd=REPO)
+                                      text=True, cwd=directory)
             self.assertEqual(0, selected.returncode, selected.stderr)
             self.assertEqual(1, len(json.loads(selected.stdout)["shortlist"]))
+
+    def test_cli_yaml_round_trip_without_overwrite_or_discover_side_effect(self):
+        with tempfile.TemporaryDirectory() as directory:
+            brief_file = Path(directory) / "brief.json"
+            brief_file.write_text(json.dumps(self.brief.__dict__), encoding="utf-8")
+            output = Path(directory) / "micromodelo.yaml"
+            common = [sys.executable, "-B", str(SCRIPT), "--fixture", str(FIXTURE),
+                      "--catalog", "catalogo_sintetico", "--schema", "crm_sintetico"]
+            known_args = common + ["--mode", "known", "--brief", str(brief_file),
+                                   "--candidate", "crm_sintetico.eventos_sinteticos",
+                                   "--output-yaml", str(output)]
+            created = subprocess.run(known_args, capture_output=True, text=True, cwd=directory)
+            self.assertEqual(0, created.returncode, created.stderr)
+            from_disk = mm01.load_document(output)
+            self.assertEqual(from_disk, json.loads(created.stdout)["spec"])
+            self.assertEqual([], mm01.validate_spec(from_disk, mm01.load_schema(flow.SCHEMA)))
+            saved = output.read_bytes()
+            repeated = subprocess.run(known_args, capture_output=True, text=True, cwd=directory)
+            self.assertEqual(1, repeated.returncode)
+            self.assertEqual(saved, output.read_bytes())
+            discover = subprocess.run(common + ["--mode", "discover", "--output-yaml",
+                                             str(output)], capture_output=True, text=True,
+                                      cwd=directory)
+            self.assertEqual(1, discover.returncode)
+            self.assertEqual(saved, output.read_bytes())
+
+    def test_cli_readback_failure_removes_only_new_yaml_and_retry_succeeds(self):
+        with tempfile.TemporaryDirectory() as directory:
+            brief_file = Path(directory) / "brief.json"
+            brief_file.write_text(json.dumps(self.brief.__dict__), encoding="utf-8")
+            output = Path(directory) / "micromodelo.yaml"
+            args = ["--fixture", str(FIXTURE), "--catalog", "catalogo_sintetico",
+                    "--schema", "crm_sintetico", "--mode", "known", "--brief",
+                    str(brief_file), "--candidate", "crm_sintetico.eventos_sinteticos",
+                    "--output-yaml", str(output)]
+            original_load = mm01.load_document
+
+            def fail_readback(path):
+                if Path(path) == output:
+                    raise OSError("readback failure injected")
+                return original_load(path)
+
+            with mock.patch.object(flow.mm01, "load_document", side_effect=fail_readback):
+                with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+                    self.assertEqual(1, flow.main(args))
+            self.assertFalse(output.exists())
+            with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+                self.assertEqual(0, flow.main(args))
+            self.assertEqual([], mm01.validate_spec(mm01.load_document(output),
+                                                   mm01.load_schema(flow.SCHEMA)))
 
 
 if __name__ == "__main__":

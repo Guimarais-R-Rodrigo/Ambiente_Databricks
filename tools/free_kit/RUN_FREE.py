@@ -97,6 +97,7 @@ if RUN_TRACKING_CHECK:
         "score_min": aggregate["score_min"],
         "score_max": aggregate["score_max"],
         "score_mean": aggregate["score_media"],
+        "score_count": aggregate["scores_emitidos"],
     }
     contract = {
         "grain": "uma classificação por entidade e janela sintética",
@@ -134,9 +135,13 @@ if RUN_TRACKING_CHECK:
 RUN_METADATA_CHECK = False
 LAB_CATALOG = "PREENCHER_CATALOGO_SINTETICO"
 LAB_SCHEMA = "PREENCHER_SCHEMA_SINTETICA"
+LAB_TABLE = "PREENCHER_TABELA_SINTETICA"
 if RUN_METADATA_CHECK:
     if "spark" not in globals():
         raise RuntimeError("Spark indisponível; metadata Databricks NOT_RUN")
+    if any(value.startswith("PREENCHER_") for value in
+           (LAB_CATALOG, LAB_SCHEMA, LAB_TABLE)):
+        raise ValueError("Configure catálogo, schema e tabela sintéticos do setup")
     import micromodelo_mm03_metadata as mm03
     import micromodelo_mm07_databricks as mm07
 
@@ -144,13 +149,23 @@ if RUN_METADATA_CHECK:
     provider = mm07.DatabricksMetadataProvider(spark, binding)
     collector = mm03.MetadataCollector(provider, binding)
     discovered = collector.discover([LAB_SCHEMA])
-    metadata = collector.envelope(discovered, {})
+    objects = discovered["objects"][LAB_SCHEMA]
+    if objects["status"] != "OBSERVED" or not any(
+            item["name"] == LAB_TABLE and item["object_type"] == "TABLE"
+            for item in objects["items"]):
+        raise RuntimeError("Tabela sintética configurada não observada como TABLE")
+    details = collector.details([(LAB_SCHEMA, LAB_TABLE)])
+    table_details = details[f"{LAB_SCHEMA}.{LAB_TABLE}"]
+    metadata = collector.envelope(discovered, details)
     print("DATABRICKS_METADATA_CHECK", json.dumps({
         "observation_status": metadata["observation_status"],
         "coverage": metadata["coverage"],
         "catalog_complete": metadata["catalog_complete"],
         "schema_status": discovered["schemas"]["status"],
-        "object_status": discovered["objects"][LAB_SCHEMA]["status"],
-        "object_count_observed": len(discovered["objects"][LAB_SCHEMA]["items"]),
+        "object_status": objects["status"],
+        "object_count_observed": len(objects["items"]),
+        "column_status": table_details["columns"]["status"],
+        "column_tag_status": table_details["column_tags"]["status"],
+        "constraint_status": table_details["constraints"]["status"],
         "capabilities": provider.capabilities,
     }, sort_keys=True))

@@ -1,5 +1,8 @@
 """Transporte Free executa isolado sem imports do checkout de desenvolvimento."""
 from __future__ import annotations
+import ast
+from contextlib import redirect_stdout
+import io
 
 import json
 import os
@@ -14,9 +17,46 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 import micromodelo_free_kit as kit
+from tools.tests.test_micromodelo_mm07_databricks import FakeSpark, synthetic_rows
 
 
 class FreeKitTests(unittest.TestCase):
+    def test_optional_metadata_cell_checks_only_configured_synthetic_table(self):
+        source = (ROOT / "tools/free_kit/RUN_FREE.py").read_text(encoding="utf-8")
+        tree = ast.parse(source)
+        cell = next(node for node in tree.body if isinstance(node, ast.If)
+                    and isinstance(node.test, ast.Name)
+                    and node.test.id == "RUN_METADATA_CHECK")
+        code = compile(ast.Module(body=[cell], type_ignores=[]), "RUN_FREE_metadata", "exec")
+        spark = FakeSpark(synthetic_rows())
+        scope = {"RUN_METADATA_CHECK": True, "spark": spark,
+                 "LAB_CATALOG": "laboratorio", "LAB_SCHEMA": "crm_sintetico",
+                 "LAB_TABLE": "eventos_sinteticos", "json": json}
+        output = io.StringIO()
+        with redirect_stdout(output):
+            exec(code, scope)
+        result = json.loads(output.getvalue().split("DATABRICKS_METADATA_CHECK ", 1)[1])
+        self.assertEqual("OBSERVED", result["column_status"])
+        self.assertEqual("OBSERVED", result["column_tag_status"])
+        self.assertEqual("OBSERVED", result["constraint_status"])
+        self.assertEqual(5, len(spark.queries))
+        self.assertTrue(all("`laboratorio`.information_schema." in query
+                            for query in spark.queries))
+
+        other = FakeSpark(synthetic_rows())
+        scope.update({"spark": other, "LAB_TABLE": "tabela_nao_criada"})
+        with self.assertRaisesRegex(RuntimeError, "não observada"):
+            exec(code, scope)
+        self.assertEqual(2, len(other.queries))
+
+        view_rows = synthetic_rows()
+        view_rows["tables"][0]["table_type"] = "VIEW"
+        view = FakeSpark(view_rows)
+        scope.update({"spark": view, "LAB_TABLE": "eventos_sinteticos"})
+        with self.assertRaisesRegex(RuntimeError, "não observada como TABLE"):
+            exec(code, scope)
+        self.assertEqual(2, len(view.queries))
+
     def test_build_and_execute_from_isolated_package(self):
         with tempfile.TemporaryDirectory(prefix="mm-free-kit-") as temp:
             output = Path(temp) / "package"

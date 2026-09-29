@@ -28,7 +28,9 @@ def _index(rows: list[dict[str, Any]]) -> dict[str, tuple[str, int | None]]:
         score = row["score"]
         if not isinstance(key, str) or not key or key in indexed:
             raise MigrationLabError("INVALID_OR_DUPLICATE_KEY")
-        if classification not in {"TRUE", "FALSE", "INDETERMINADO"}:
+        if type(classification) is not str or classification not in {
+            "TRUE", "FALSE", "INDETERMINADO"
+        }:
             raise MigrationLabError("INVALID_CLASSIFICATION")
         if score is not None and (type(score) is not int or not 0 <= score <= 100):
             raise MigrationLabError("INVALID_SCORE")

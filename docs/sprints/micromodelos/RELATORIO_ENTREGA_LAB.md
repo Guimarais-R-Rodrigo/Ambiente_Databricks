@@ -11,7 +11,7 @@
 | MM06 | Notebook/README de estudo ligados ao fingerprint e helper rule-based com runs DEVELOPMENT/VALIDATION/SCORING. | PASS artefato e MLflow local real | Três runs sintéticas completas no Free; fingerprint e `mm06.complete` conferidos | NOT_RUN |
 | MM07–MM08-LAB | Adapter `information_schema` com capability/status explícitos; kit portátil, setup sintético opcional e roteiro Free. | PASS fake Spark/empacotamento isolado | Kit revisado importado; código e adapter real PASS no escopo sintético | NOT_RUN |
 | MM09–MM10-LAB | Piloto novo, seis entidades fictícias, evidência, contra-evidência, indeterminado, scoring heurístico e handoff de governança como rascunho. | PASS | Notebook sintético PASS; governança/publicação NOT_RUN | NOT_RUN |
-| MM11-LAB | Integração de temas/monitoramento: não aplicável ao scoring sem interface visual; ponto de integração documentado no plano. | NOT_APPLICABLE | NOT_RUN | NOT_RUN |
+| MM11-LAB | Scoring sintético sem interface visual; integração de temas dos artefatos e monitoramento após publicação permanecem tarefas da MM11 real. | NOT_RUN | NOT_RUN | NOT_RUN |
 | MM12-LAB | Equivalência conservadora com legado fictício, skill de migração não roteável. | PASS ensaio | Código sintético PASS no Free; migração corporativa NOT_RUN | NOT_RUN |
 | MM13-LAB | Catálogo derivado do YAML e impacto por fonte declarada. | PASS | Código sintético PASS no Free; catálogo corporativo NOT_RUN | NOT_RUN |
 

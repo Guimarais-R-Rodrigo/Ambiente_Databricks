@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-29 — Revisão paralela do laboratório de Micromodelos
+
+- (Codex) Três agentes revisaram MM04–MM13-LAB no commit `2bc23dad`; correções cruzadas adicionaram YAML MM01 local com proveniência, cobertura de score em MLflow, guarda de tabela sintética no kit e erro estável no ensaio MM12. Documentos vivos e derivado foram atualizados pelo integrador. Bateria MM 192 PASS; validador 0 falhas/1 aviso; três runs MLflow E0 relidas com `score_count=4`. Limites de E1/E2 e CI externo em `docs/sprints/micromodelos/REVISAO_PARALELA_LAB_2026-09-29.md`.
+
 ## 2026-09-29 — Plano de paralelização do laboratório
 
 - (Codex) Adicionado `docs/sprints/micromodelos/PLANO_PARALELIZACAO_LAB.md`: coordenador e três revisores, escopos de correção disjuntos, revisão cruzada e integração serial. Plano operacional do laboratório preservado; agentes ainda não iniciados.

@@ -166,7 +166,7 @@ def run_governado(
 _MM_RUN_TYPES = frozenset({"DEVELOPMENT", "VALIDATION", "SCORING"})
 _MM_AGGREGATES = frozenset({"population", "count_true", "count_false",
                             "count_indeterminate", "score_min", "score_max",
-                            "score_mean"})
+                            "score_mean", "score_count"})
 _MM_COUNTS = frozenset({"population", "count_true", "count_false",
                         "count_indeterminate"})
 _MM_SCORES = frozenset({"score_min", "score_max", "score_mean"})
@@ -221,6 +221,8 @@ class _RunMicromodelo:
         self._tem_parametros = False
         self._tem_agregados = False
         self._has_score = has_score
+        self._score_enabled: bool | None = None
+        self._has_score_metrics = False
         self._active = True
 
     def _require_active(self) -> None:
@@ -261,7 +263,13 @@ class _RunMicromodelo:
                 clean[key] = value
             else:
                 raise ValueError("parametros inválidos")
+        if clean.get("score_habilitado") is True and not self._has_score:
+            raise ValueError("score habilitado sem campo no contrato de saída")
+        if clean.get("score_habilitado") is False and self._has_score_metrics:
+            raise ValueError("score desabilitado com métricas de score")
         mlflow.log_params(clean)
+        if "score_habilitado" in clean:
+            self._score_enabled = clean["score_habilitado"]
         self._tem_parametros = True
 
     def agregados_medidos(self, valores: Dict[str, Any], *,
@@ -278,12 +286,24 @@ class _RunMicromodelo:
         if sum(valores[key] for key in _MM_COUNTS - {"population"}) != valores["population"]:
             raise ValueError("contagens não reconciliadas")
         scores = set(valores) & _MM_SCORES
+        score_count = valores.get("score_count")
+        if score_count is not None and (type(score_count) is not int or
+                                        not 0 <= score_count <= valores["population"]):
+            raise ValueError("score_count inválido")
         if scores and not self._has_score:
             raise ValueError("score não declarado no contrato de saída")
+        if score_count is not None and not self._has_score:
+            raise ValueError("score não declarado no contrato de saída")
+        if scores and self._score_enabled is False:
+            raise ValueError("score desabilitado com métricas de score")
         if scores and valores["population"] == 0:
             raise ValueError("score sem população medida")
         if scores and scores != _MM_SCORES:
             raise ValueError("estatísticas de score incompletas")
+        if scores and (score_count is None or score_count == 0):
+            raise ValueError("score_count necessário para estatísticas de score")
+        if not scores and score_count not in (None, 0):
+            raise ValueError("score_count sem estatísticas de score")
         if scores:
             low, mean, high = (valores["score_min"], valores["score_mean"],
                                valores["score_max"])
@@ -295,6 +315,7 @@ class _RunMicromodelo:
         reference = _mm_text(referencia_execucao, "referencia_execucao", 200)
         mlflow.log_metrics({key: float(value) for key, value in valores.items()})
         mlflow.set_tag("mm06.measurement_ref", reference)
+        self._has_score_metrics = bool(scores)
         self._tem_agregados = True
 
     def pendencias(self) -> list[str]:
