@@ -1,0 +1,27 @@
+# Matriz local proporcional da MM04
+
+**Data:** 2026-09-29. **Estado:** matriz proposta para a candidata da PR #116; não é contrato aceito nem certificação. O [protocolo](PROTOCOLO_CERTIFICACAO_SPRINTS.md) mantém a ordem smoke → freeze → FULL → lint → auditoria → contraditório → fechamento → aceite. O [smoke local](SMOKE_LOCAL_SEM_CI_MM04_2026-09-29.md) registra os comandos já executados no SHA `b8d3ebc9`.
+
+## Fronteira da rodada
+
+MM04 cobre o modo `OBJETIVO_CONHECIDO`, a skill L1 e o primeiro briefing `micromodelo_novo`. O mesmo arquivo de skill também contém `DESCOBRIR_OPORTUNIDADES`; a sua rota multiskill e o prompt `descobrir_micromodelos` são interface MM05 e exigem veredito próprio. Testes de MM01–MM03 protegem contratos consumidos por MM04; testes de MM06–MM13 são regressão da branch de laboratório, não certificado dessas sprints. A PR #116 reúne várias sprints, portanto um eventual PASS MM04 isolado não autoriza merge de todo o PR.
+
+A authority de enforcement é a policy integrada em `ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json`: `risk_class=high`, `current_level=L1`, `target_level=L3`, `rollout_mode=audit`. `execution_contract.json` registra invariantes estáticas, sem runner/Receipt. A PSEF01/PR #99 segue Draft; o briefing usa o template de prompt já integrado.
+
+| Gate | Critério verificável | Evidência local atual | Estado para certificação |
+|---|---|---|---|
+| `MM04_GIT_SNAPSHOT` | Refs atuais, merge-base, `behind_by=0`, árvore limpa, SHA/tree fixos e drift material classificado. | Smoke no `b8d3ebc9`: main/merge-base `4ba7f551`, behind 0, árvore limpa. | Revalidar imediatamente antes do freeze; PRs #115/#99/#91 podem alterar entradas. |
+| `MM04_SEF_READINESS` | Policy integrada e rota L1 explícitas; superfície de especificação/proveniência protegida estaticamente; L2/L3 não alegados. | Validador 15 skills/0 falhas; policy/SE07/renderer 96 OK/1 skip; skill e contrato lidos. | Preparado para revisão de autoridade/artefatos no SHA congelado. |
+| `MM04_CORE_E0` | Objetivo conhecido gera somente especificação preliminar MM01 válida, fingerprint MM02, metadata MM03 restrita e lacunas honestas; entradas inválidas recusadas. | `test_micromodelo_mm04_flow` incluído na bateria de 186 PASS; testes MM01–MM03 também incluídos. | Evidência de código E0 disponível; executar como gate focal single-shot na FULL. |
+| `MM04_ADVERSARIAL` | Comentário/tag injetado não altera escopo, aprovação ou coleta; sem linhas, score/probabilidade ou publicação indevida. | Teste adversarial do fluxo E0 passou na bateria; caso Genie E1 adversarial teve PASS de contenção com ressalvas no relatório próprio. | Revisar evidência conversacional e limites instrumentais; não inferir chamadas internas da transcrição. |
+| `MM04_PSEF_PROMPT_READINESS` | Briefing `micromodelo_novo` segue template integrado, deixa placeholders resolvidos, preserva proveniência e separa YAML validado de checklist. | P1 PASS de resposta com ressalvas; notebook reproduz prompt exato e resposta sanitizada. | Revisão editorial independente ainda pendente; o PASS conversacional não fecha o gate sozinho. |
+| `MM05_PROMPT_CONTRACT_READY` (interface) | Descoberta multirrota resolve a policy de cada skill e distingue fixture fornecida de metadata observada. | P2 e P2b FAIL históricos; P2c PASS das guardas centrais com ressalvas. | Exige veredito MM05 separado; não se incorpora ao PASS MM04. |
+| `MM04_PRODUCT_SNAPSHOT` | Fonte/derivado iguais, links/estrutura válidos, nenhuma edição manual do simulado. | Validador 0 falhas/1 aviso de caches; 582 arquivos da árvore de usuário iguais byte a byte. | Repetir check rápido após qualquer delta de produto ou documentação relevante. |
+| `MM04_E1_BOUNDARY` | Separar instalação/readback, resposta Genie, código Free e autorização ambiental; nenhuma evidência E1 substitui contrato ou aprovação MM04. | Relatórios E1 e B1 preservam hashes, FAILs e ressalvas; E2 não executado. | Escopo de uso definido; prova de runtime da skill L2/L3 e certificação corporativa ausentes. |
+| `MM04_REMOTE_CI` | Checks remotos quando disponíveis, com status real. | Jobs do HEAD examinado não iniciaram por limite/pagamento; usuário pediu prosseguir sem saldo. | `BLOCKED_EXTERNAL_CI`/adiado, sem conversão em PASS. |
+
+## Composição proposta da FULL local
+
+Após smoke verde e freeze de um único SHA/tree, executar **uma vez**, com `PYTHONUTF8=1`, os testes `test_micromodelo_mm04_flow`, `test_micromodelo_mm01`, `test_micromodelo_mm01_r02`, `test_micromodelo_mm01_r03`, `test_micromodelo_mm02_fingerprint`, `test_micromodelo_mm03_metadata`, `test_skill_enforcement_policy_io` e `test_render_simulado`, além de `validate_assistant.py --root ambiente_fonte`. Conferir fonte/derivado por bytes, prompt integrado e policy do snapshot. Registrar para cada comando stdout/stderr, exit code, hash dos logs e skips; um bundle deve apontar ao SHA/tree e passar lint de bytes antes da auditoria. A bateria MM04–MM13 de 186 testes pode servir de regressão adicional, sem promover as outras sprints.
+
+A instrumentação SHA-bound e o bundle lint desta matriz ainda não foram executados como campanha FULL. Uma revisão independente deve conferir bytes do bundle, status Git vivo, amostras de resposta Genie e fronteiras de autoridade; depois vêm contraditório e fechamento conforme o protocolo. O checkout B1 compartilhado exige reconciliação segura antes de integração, mas seus testes e publicação Free permanecem evidência de proveniência, não autoridade desta rodada.

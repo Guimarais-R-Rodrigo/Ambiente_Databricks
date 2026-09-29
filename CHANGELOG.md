@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-29 — Smoke local MM04 sem GitHub Actions
+
+- (Codex) Executada a parcela local do pré-smoke da PR #116 em `b8d3ebc9`: 186 testes Micromodelos PASS após fixar `PYTHONUTF8=1` para subprocessos Windows (primeira tentativa com 3 erros de decodificação preservada), 96 testes SE07/policy/renderer OK com 1 skip, validador 0 falhas/1 aviso de cache e 582 arquivos fonte/derivado idênticos. CI remoto adiado por ausência de saldo informada pelo usuário; smoke formal incompleto, freeze/FULL/auditoria não executados. Ver `docs/sprints/micromodelos/SMOKE_LOCAL_SEM_CI_MM04_2026-09-29.md` e a matriz proporcional `docs/sprints/micromodelos/MATRIZ_LOCAL_MM04.md`.
+
 ## 2026-09-29 — Reconciliação B1 e pré-gates MM04
 
 - (Codex) Diagnóstico pré-smoke da PR #116: `behind_by=0`, 29 testes MM04/policy e 3 do kit PASS, validador 0 falhas/1 aviso local. CI do GitHub não iniciou jobs por anotação de pagamentos/limite da conta (`runner_id=0`, `steps=[]`), classificado `BLOCKED_EXTERNAL_CI`; freeze não executado. Detalhes em `docs/sprints/micromodelos/RECONCILIACAO_B1_PRE_GATES_MM04_2026-09-29.md`.
