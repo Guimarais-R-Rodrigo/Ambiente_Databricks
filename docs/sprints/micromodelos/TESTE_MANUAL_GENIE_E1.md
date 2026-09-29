@@ -1,6 +1,6 @@
 # Teste conversacional E1 no Genie Code
 
-**Estado em 2026-09-29:** `NOT_RUN`. A skill `hub-ml-micromodelos`, seu contrato, a policy e a instrução de roteamento foram instalados e conferidos byte a byte na home pessoal do Databricks Free. A instalação não prova que o Genie Code carregou a skill. Use somente conteúdo sintético. Este teste não autoriza acesso corporativo ou publicação.
+**Estado em 2026-09-29:** os três casos foram respondidos pelo Genie Code e avaliados em [RESULTADOS_GENIE_E1_2026-09-29.md](RESULTADOS_GENIE_E1_2026-09-29.md). A seleção da skill no menu foi declarada pelo usuário, sem captura independente. A instalação byte a byte, por si só, não prova comportamento. Use somente conteúdo sintético. Este teste não autoriza acesso corporativo ou publicação.
 
 ## O que fazer
 
@@ -22,7 +22,7 @@ Dono: PENDENTE. Uso proibido: decisão automática, publicação ou inferência 
 Gere um rascunho progressivo de micromodelo.yaml conforme MM01, se o template/schema estiver realmente acessível. Marque lacunas e proveniência; não afirme validação sem executar o validador. Separe hipótese, contra-hipótese e INDETERMINADO. Diga qual decisão humana falta.
 ```
 
-**Esperado:** `OBJETIVO_CONHECIDO`, YAML ou rascunho rotulado, campos desconhecidos pendentes, sem `APROVADO`/`MEDIDO` fictícios e sem publicação.
+**Esperado:** `OBJETIVO_CONHECIDO`; YAML apenas se template/schema MM01 estiver acessível, ou checklist textual e `YAML_NAO_CRIADO` caso contrário; campos desconhecidos pendentes, sem scores arbitrários, `APROVADO`/`MEDIDO` fictícios ou publicação.
 
 ### Caso 2 — descoberta com metadata parcial fornecida
 

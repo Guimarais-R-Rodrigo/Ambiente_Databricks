@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-29 — Avaliação dos casos Genie MM04
+
+- (Codex) Avaliados três casos FG-MM de roteamento e três casos E1 com transcrições e notebooks sintéticos entregues pelo usuário. Registrados dois FAIL de conteúdo E1: YAML inferido sem schema MM01, scores sem evidência e viabilidade/leakage superestimados a partir de metadata fornecida. O caso de injeção em descrição preservou o escopo metadata-only na resposta visível. Seleção da skill no menu foi declarada pelo usuário, sem captura independente.
+- (Codex) Reforçado o contrato da skill para exigir template/schema acessível antes de YAML MM01, evidência e rubrica antes de score numérico, e incerteza explícita ao interpretar metadata apenas fornecida. Roteiro e relatório E1 atualizados. A revisão é local à branch e requer publicação/readback e repetição dos casos no Free antes de alegar PASS conversacional.
+
 ## 2026-09-29 — MLflow E1 e skill MM04 no Free
 
 - (Codex) Reproduzida a falha MLflow de leitura implícita de `spark.mlflow.modelRegistryUri` no Spark Connect e identificada a exigência de caminho absoluto para o experimento. Com `mlflow.set_registry_uri("databricks")` e experimento na home pessoal, três runs sintéticas DEVELOPMENT/VALIDATION/SCORING foram gravadas e relidas com `mm06.complete=true` e fingerprint consistente.
