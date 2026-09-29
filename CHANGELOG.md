@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-29 — Plano de paralelização do laboratório
+
+- (Codex) Adicionado `docs/sprints/micromodelos/PLANO_PARALELIZACAO_LAB.md`: coordenador e três revisores, escopos de correção disjuntos, revisão cruzada e integração serial. Plano operacional do laboratório preservado; agentes ainda não iniciados.
+
 ## 2026-09-29 — Smoke local MM04 sem GitHub Actions
 
 - (Codex) Executada a parcela local do pré-smoke da PR #116 em `b8d3ebc9`: 186 testes Micromodelos PASS após fixar `PYTHONUTF8=1` para subprocessos Windows (primeira tentativa com 3 erros de decodificação preservada), 96 testes SE07/policy/renderer OK com 1 skip, validador 0 falhas/1 aviso de cache e 582 arquivos fonte/derivado idênticos. CI remoto adiado por ausência de saldo informada pelo usuário; smoke formal incompleto, freeze/FULL/auditoria não executados. Ver `docs/sprints/micromodelos/SMOKE_LOCAL_SEM_CI_MM04_2026-09-29.md` e a matriz proporcional `docs/sprints/micromodelos/MATRIZ_LOCAL_MM04.md`.
