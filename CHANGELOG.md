@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-29 — Correção do snapshot README após reativação do CI
+
+- (Codex) O job SE01 da PR #116 executou após a recarga de crédito e revelou 11 divergências no bloco de saída do validador colado no `README.md` raiz. Atualizados os números observados na própria execução remota, preservando os FAILs do run anterior. O checkout Windows local conserva nove diretórios `__pycache__` ignorados; a conferência local do snapshot difere somente pelo aviso 1 contra 0 do runner limpo, sem alteração do bloco publicado.
+- (Codex) O gate geral revelou expectativa SE08 histórica L2 para `hub-ml-criar-objeto`, embora a `main` tenha promovido a policy a L3 na SER01, e ausência de Micromodelos no guia Genie offline. O teste agora verifica a policy vigente; guia e inventário do kit foram atualizados para 15 skills, com caso sintético metadata-only de Micromodelos. Nenhuma policy ou nível foi alterado.
+
 ## 2026-09-29 — Preparação do piloto E2 de Micromodelos
 
 - (Codex) Criado `docs/sprints/micromodelos/PLANO_PREPARACAO_E2.md` após o aceite do laboratório: sequência G0–G6, separação entre staging sintético, promoção SE08, metadata-only, leitura autorizada, piloto novo, governança externa e V1. A ficha de decisões usa apenas placeholders; nenhum acesso ou identificador corporativo foi usado. Índice atualizado para apontar ao plano e ao checkpoint.

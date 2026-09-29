@@ -225,7 +225,7 @@ hub_scripts/
 hub_snippets/
 ```
 
-Além deles, há `README.md`, `MANUAL_TECNICO.md` e `skills/` com as 14 skills do pacote. O manifesto é a lista de arquivos da release; o roteiro da Genie contém os nomes exatos das skills atuais. A raiz documental do Hub continua com README e Manual, sem catálogo/glossário independentes.
+Além deles, há `README.md`, `MANUAL_TECNICO.md` e `skills/` com as 15 skills do pacote. O manifesto é a lista de arquivos da release; o roteiro da Genie contém os nomes exatos das skills atuais. A raiz documental do Hub continua com README e Manual, sem catálogo/glossário independentes.
 
 1. Pela UI, crie uma pasta de rollback pessoal fora de `.assistant/skills/`, se a política permitir. Não use as pastas nativas de descoberta para guardar cópias.
 2. Para cada um dos cinco diretórios `hub_`, confirme propriedade e ausência de customização desconhecida. Mova a versão anterior para rollback e copie/mova a candidata correspondente de staging para `.assistant/`. Se houver conteúdo de terceiros misturado, pare e faça reconciliação; não apague a pasta inteira.
