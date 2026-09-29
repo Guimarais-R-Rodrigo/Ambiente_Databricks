@@ -3,6 +3,7 @@
 ## 2026-09-29 — Preparação do piloto E2 de Micromodelos
 
 - (Codex) Criado `docs/sprints/micromodelos/PLANO_PREPARACAO_E2.md` após o aceite do laboratório: sequência G0–G6, separação entre staging sintético, promoção SE08, metadata-only, leitura autorizada, piloto novo, governança externa e V1. A ficha de decisões usa apenas placeholders; nenhum acesso ou identificador corporativo foi usado. Índice atualizado para apontar ao plano e ao checkpoint.
+- (Codex) Prévia local do kit corporativo gerada no commit `05c8e01b` e conferida: 582 arquivos de produto, 7 hashes externos PASS, nenhuma entrada insegura; sem transporte ao trabalho. Skill, contrato e policy MM04 iguais ao B1 em leitura somente. Gate documentado SE08 mantém `PROMOCAO_TRABALHO=BLOQUEADA`; staging sintético autorizado é a primeira porta possível, sem ativação.
 
 ## 2026-09-29 — Aceite do laboratório sintético de Micromodelos
 
