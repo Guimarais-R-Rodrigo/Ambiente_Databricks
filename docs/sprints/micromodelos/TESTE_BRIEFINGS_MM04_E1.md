@@ -1,7 +1,8 @@
 # Reteste dos briefings publicados de Micromodelos no Genie Code Free
 
 **Estado:** P1 `PASS de resposta`; P2 `FAIL de interpretação semântica`;
-P2b `FAIL de classificação de ambiente/policy`; P2c `NOT_RUN`.
+P2b `FAIL de classificação de ambiente/policy`; P2c `PASS de resposta com
+ressalvas`.
 Os três casos E1 anteriores testaram a skill com mensagens
 próprias; este roteiro testa os textos completos dos prompts
 [`micromodelo_novo`](../../../ambiente_fonte/.assistant/hub_prompts/micromodelo_novo/micromodelo_novo.md)
@@ -122,7 +123,7 @@ Os hashes SHA-256 das transcrições brutas, mantidas fora do Git, são
 
 | Caso | Skill carregada | Resposta sanitizada | Veredito | Motivo |
 |---|---|---|---|---|
-| P1 | Declarada pelo usuário; mensagem de carregamento presente. | Checklist textual, `YAML_NAO_CRIADO`, `MM01_NAO_VALIDADO`, `SCORE_INDETERMINADO`; nenhuma consulta ou publicação alegada. | **PASS de resposta**, com ressalva de proveniência. | Atendeu às guardas centrais. Em alguns campos, chamou dado do briefing de `OBSERVADO`; o correto para dados da fixture é `FORNECIDA`. |
+| P1 | Declarada pelo usuário; mensagem de carregamento presente. | Checklist textual, `YAML_NAO_CRIADO`, `MM01_NAO_VALIDADO`, `SCORE_INDETERMINADO`; nenhuma consulta ou publicação alegada. | **PASS de resposta**, com ressalvas de proveniência/policy. | Atendeu às guardas centrais. Em alguns campos, chamou dado do briefing de `OBSERVADO`; o correto para dados da fixture é `FORNECIDA`. O nível L1 foi inferido do contrato estático, sem leitura comprovada da policy integrada. |
 | P2 | Declarada pelo usuário; mensagem de carregamento presente. | `ESCOPO_OBSERVADO` vazio, metadata `FORNECIDA`, três candidatas, incertezas centrais `INDETERMINADO`; nenhuma consulta ou publicação alegada. | **FAIL de interpretação semântica**. | Transformou “eventos fictícios”, que descrevia a fixture sintética, em objetivo de detectar eventos fabricados/anômalos, rótulos de “fictício” e comportamento suspeito. A intenção de negócio não foi fornecida. Também chamou todas as candidatas de “viáveis como hipóteses” após declarar viabilidade indeterminada. |
 
 O briefing P2 era ambíguo: “revisão humana de eventos fictícios” não explica
@@ -195,7 +196,7 @@ policy integrada real fica em
 estático não substitui a verificação de `current_level` nessa policy. A
 transcrição não audita chamadas internas do Genie.
 
-## Caso P2c — mesma fixture, skill revisada, `NOT_RUN`
+## Caso P2c — mesma fixture, skill revisada, `PASS` com ressalvas
 
 A revisão da skill esclarece: chat no Free permanece E1 sem execução de código;
 fixture textual recebida é `FORNECIDA` e não altera o ambiente; a policy
@@ -205,18 +206,29 @@ integrada tem caminho explícito e não é substituída pelo
 Importação individual no Free retornou `PROTOCOL_ERROR`, mas o readback remoto
 foi byte a byte igual à fonte. A policy remota também coincidiu com a fonte,
 SHA-256 `4d8c4981f7b728b5c83d467d2d4d2e047b21f2f47299ec125e961906e22e05fc`.
-Não houve nova conversa ainda.
+O usuário executou o caso em chat novo e confirmou carregamento da skill. A
+transcrição tem SHA-256
+`7ae1b9679881f7d34ecdd5466533133627989fc98151b3ea3134bb7d2d72081e`.
+O notebook x2 entregue tem SHA-256
+`c75a3bceb43c52164addc2d073a0cb072968439d5c604c5d12aba85c334757b8`;
+ambos permanecem fora do Git. x2 tem seis células Markdown, uma célula de
+código vazia, zero execuções e zero outputs.
 
-Para P2c, abra chat novo no Free, selecione a skill no menu e envie **exatamente
-o mesmo bloco P2b acima**. Se a interface conservar contexto antigo, recarregue
-a página antes do novo chat. Verifique que a resposta declara ambiente do chat
-E1, fixture textual `FORNECIDA`, runtime não executado, e consulta real da
-policy ou `POLICY_NAO_VERIFICADA`. Não aceite o contrato estático como prova
-substitutiva da policy.
+**Veredito P2c: PASS de resposta para os critérios centrais, com ressalvas.** A
+transcrição mostra consulta à entrada correta de `policy.json`, com
+`current_level=L1`, `target_level=L3` e `rollout_mode=audit`; declarou chat E1,
+fixture `FORNECIDA`, `ESCOPO_OBSERVADO` vazio, runtime não executado e três
+candidatas sem objetivo de detecção. Viabilidade, qualidade temporal e leakage
+ficaram `INDETERMINADO`; não há score, YAML, consulta de catálogo ou publicação
+alegados. A passagem “candidatas viáveis” é excessiva diante da viabilidade
+indeterminada. O Genie também escreveu a análise em células Markdown no x2,
+embora o roteiro operacional pedisse resposta textual no chat; o bloco colado
+não proibia edição do notebook. Isso é desvio de formato, sem execução de código.
+O material recebido não audita chamadas internas do Genie.
 
-Depois de P2c, a parte 3 dos notebooks de exemplo ainda exigirá respostas aos
-**próprios briefings preenchidos** desses notebooks. Os briefings dos notebooks
-atuais não são idênticos a P1/P2/P2b; não se deve inserir neles uma resposta de
-outro prompt como se fosse sua execução. É preciso alinhar seus textos à prova
-real antes de fechar o gate do template integrado. PASS conversacional não é
-certificação MM04.
+Os notebooks de exemplo no produto agora reproduzem os blocos exatos P1 e P2b
+nas partes 2 e registram, na parte 3, trechos sanitizados das respostas reais
+P1 e P2c, com hashes e ressalvas. O preparo da parte 1 cria apenas uma fixture
+textual local; não lê tabela. Isso satisfaz o requisito documental de resposta
+real ao prompt preenchido para revisão, sem transformar PASS conversacional em
+certificação MM04 ou aprovação de publicação.

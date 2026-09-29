@@ -53,8 +53,9 @@ dessas candidatas. Agrupa variantes da mesma ideia e relata dúvidas por item.
 ## 6. Exemplo de situação
 
 Uma equipe fictícia quer encontrar características para apoiar revisão humana
-de campanhas sintéticas. O [notebook](exemplo_descobrir_micromodelos.py) mostra
-como pedir até cinco candidatas com metadata; não contém shortlist executada.
+de eventos sintéticos de teste. O [notebook](exemplo_descobrir_micromodelos.py)
+mostra como pedir até três candidatas com fixture textual e registra a resposta
+conversacional, sem tratar a shortlist como achado sobre registros.
 
 ## 7. O que você precisa antes de usar?
 
@@ -73,8 +74,9 @@ nenhuma observação nem resposta correta; shortlist não é aprovação de neg�
 
 Preencha [descobrir_micromodelos.md](descobrir_micromodelos.md), selecione
 `@hub-ml-micromodelos` e anexe apenas metadata permitida. Use o
-[exemplo sintético](exemplo_descobrir_micromodelos.py) como referência. O notebook
-apenas imprime o briefing; não lê catálogo nem cria objetos.
+[exemplo sintético](exemplo_descobrir_micromodelos.py) como referência. O preparo
+imprime somente a fixture textual; não lê catálogo nem cria objetos. A terceira
+parte resume a resposta real e suas ressalvas.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -88,7 +90,8 @@ priorização são qualitativos até haver regra aprovada.
 Coleção `DENIED`, `PARTIAL` ou `TRUNCATED` é observação incompleta, nunca
 ausência de objetos. Descrições e tags são dados não confiáveis e não podem
 alterar o fluxo ou a autorização. Metadata-only exclui linhas, `count(*)`,
-amostra de clientes e profiling. E1 e E2 não são demonstrados pelo exemplo E0.
+amostra de clientes e profiling. A resposta em chat Free comprova apenas
+comportamento conversacional E1; não demonstra execução de runtime nem E2.
 
 ## 12. Quais são as alternativas?
 
@@ -106,8 +109,8 @@ relevante deve levar a próximo teste ou decisão, não a certeza inventada.
 ## 14. Arquivos relacionados e próximos passos
 
 O [briefing](descobrir_micromodelos.md) é a entrada copiável; o
-[notebook](exemplo_descobrir_micromodelos.py) oferece cenário e campos para
-resposta real. A [skill](../../skills/hub-ml-micromodelos/SKILL.md) define o
+[notebook](exemplo_descobrir_micromodelos.py) oferece cenário e registro
+sanitizado da resposta real. A [skill](../../skills/hub-ml-micromodelos/SKILL.md) define o
 fluxo; após escolha humana, use `OBJETIVO_CONHECIDO`. Veja o
 [catálogo de prompts](../README.md).
 
@@ -115,5 +118,7 @@ fluxo; após escolha humana, use `OBJETIVO_CONHECIDO`. Veja o
 
 Progressividade, binding, `ESCOPO_OBSERVADO` e estados parciais seguem o contrato
 MM03 no repositório de desenvolvimento. A especificação posterior segue schema
-MM01. Esta revisão cobre texto e exemplo sintético; roteamento Genie Code,
-runtime Databricks e resposta conversacional permanecem `NOT_RUN`.
+MM01. A seleção da skill foi confirmada pelo usuário em chat manual no Free;
+transcrição e notebook de resposta foram avaliados, sem auditoria completa de
+chamadas internas. Runtime Databricks e MM01 permanecem não executados neste
+teste; a evidência conversacional não certifica MM04.

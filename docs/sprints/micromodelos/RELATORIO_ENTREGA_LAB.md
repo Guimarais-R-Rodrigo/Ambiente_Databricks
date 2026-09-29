@@ -7,7 +7,7 @@
 | Sprint | Capacidade nesta candidata | E0 | E1 | E2 |
 |---|---|---|---|---|
 | MM00–MM03 | Contratos MM01, fingerprint MM02 e metadata-only MM03 reutilizados; status vivo de MM03 corrigido. | PASS regressão | MM01/MM02 e fixture MM03 exercitados pelo notebook sintético; adapter real MM07 PASS em metadata sintética Free | NOT_RUN |
-| MM04–MM05 | Skill `hub-ml-micromodelos` L1, dois briefings, objetivo conhecido e shortlist de oportunidades, spec progressiva MM01, incerteza explícita. | PASS código e contrato | Fluxo Python de objetivo conhecido PASS; primeira rodada Genie: dois FAIL de conteúdo; skill corrigida instalada, retestes 1/2 PASS de resposta e 3 PASS de contenção; briefings P1 PASS, P2 FAIL semântico e P2b FAIL ambiente/policy | NOT_RUN |
+| MM04–MM05 | Skill `hub-ml-micromodelos` L1, dois briefings, objetivo conhecido e shortlist de oportunidades, spec progressiva MM01, incerteza explícita. | PASS código e contrato | Fluxo Python de objetivo conhecido PASS; primeira rodada Genie: dois FAIL de conteúdo; skill corrigida instalada, retestes 1/2 PASS de resposta e 3 PASS de contenção; briefings P1 PASS, P2/P2b FAIL históricos e P2c PASS de resposta com ressalvas | NOT_RUN |
 | MM06 | Notebook/README de estudo ligados ao fingerprint e helper rule-based com runs DEVELOPMENT/VALIDATION/SCORING. | PASS artefato e MLflow local real | Três runs sintéticas completas no Free; fingerprint e `mm06.complete` conferidos | NOT_RUN |
 | MM07–MM08-LAB | Adapter `information_schema` com capability/status explícitos; kit portátil, setup sintético opcional e roteiro Free. | PASS fake Spark/empacotamento isolado | Kit revisado importado; código e adapter real PASS no escopo sintético | NOT_RUN |
 | MM09–MM10-LAB | Piloto novo, seis entidades fictícias, evidência, contra-evidência, indeterminado, scoring heurístico e handoff de governança como rascunho. | PASS | Notebook sintético PASS; governança/publicação NOT_RUN | NOT_RUN |
@@ -84,8 +84,11 @@ sintéticos como eventos fabricados/anômalos a detectar; a frase do briefing er
 ambígua. O [roteiro](TESTE_BRIEFINGS_MM04_E1.md) preserva o FAIL e registra P2b
 com o significado explícito. P2b corrigiu a semântica, mas inverteu E0/E1 e
 substituiu a policy integrada pelo contrato estático da skill. A skill foi
-esclarecida e teve readback idêntico no Free; P2c aguarda resposta em chat
-novo. A parte 3 dos notebooks de exemplo segue
-`NOT_RUN`, pois seus próprios briefings não coincidem com P1/P2.
+esclarecida e teve readback idêntico no Free. P2c acertou E1/policy, preservou
+metadata-only e incertezas centrais; escreveu somente Markdown no notebook x2,
+sem executar código, mas chamou candidatas de “viáveis” em uma passagem.
+Os dois notebooks de exemplo foram alinhados aos prompts P1/P2b e receberam
+referência sanitizada às respostas reais nas partes 3. O gate editorial fica
+preparado para revisão, sem certificação MM04.
 
 Decisões E2 pendentes: dono e gestor, permissões/catálogo, população e grão, limiares, retenção dos resultados individuais, LGPD, auditoria/custo e autoridade de publicação. O handoff MM10 é `DRAFT_NOT_SUBMITTED`, seu agregado é `SUPPLIED_UNVERIFIED`, e `published=false`. Ensaio E2 e rollback estão em `KIT_FREE.md`; nenhum acesso corporativo foi realizado.

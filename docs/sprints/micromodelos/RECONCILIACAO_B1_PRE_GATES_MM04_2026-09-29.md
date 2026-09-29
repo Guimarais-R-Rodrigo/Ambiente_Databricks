@@ -32,7 +32,9 @@ humano ou autorização de merge/promoção.
   localizar a policy integrada. A skill da PR foi então revisada e publicada
   no Free com readback idêntico, SHA-256
 `93e51ac4ca25f2c3bd88c6cb6a40e7e494fd9bf1852824cd4575628cf24351f2`.
-  P2c segue `NOT_RUN`. O checkout B1 ainda tem o hash anterior
+  P2c passou nas guardas centrais após carregar a revisão, com ressalvas de
+  redação/formato; os exemplos agora contêm o prompt exato e a referência à
+  resposta real. O checkout B1 ainda tem o hash anterior
   `cccdfb314452c44575f13a49232671acf8da16b3f3a5307049c18b37edbbfab5`;
   sua nova reconciliação fica pendente antes de integração. Ver
   [resultados](TESTE_BRIEFINGS_MM04_E1.md).
@@ -52,7 +54,7 @@ humano ou autorização de merge/promoção.
 | Gate | Situação agora | Ação necessária |
 |---|---|---|
 | `MM04_SEF_READINESS` | **Preparado para revisão**, sem homologação formal. Policy L1/audit e superfícies protegidas estão declaradas; target L3 é apenas direção. | Revisar policy integrada e evidência de cada superfície no snapshot congelado; não inferir L2/L3 dos testes de conversa. |
-| `MM04_PSEF_PROMPT_READINESS` e `MM05_PROMPT_CONTRACT_READY` | **Pendente**. PSEF01 segue aberta; decisão desta candidata: usar o contrato integrado em `hub_padroes/prompt/template.md`, sem incorporar o draft. P1 passou como resposta; P2 falhou em interpretação semântica; P2b corrigiu essa interpretação, mas falhou em classificar ambiente e policy. Os briefings dos notebooks de exemplo ainda diferem de P1/P2b e suas partes 3 seguem `NOT_RUN`. | Executar [P2c com a skill revisada](TESTE_BRIEFINGS_MM04_E1.md) em chat novo. Alinhar o briefing de cada notebook à prova real antes de preencher a parte 3; não atribuir uma resposta a texto diferente. |
+| `MM04_PSEF_PROMPT_READINESS` e `MM05_PROMPT_CONTRACT_READY` | **Preparado para revisão editorial, sem aceite formal**. PSEF01 segue aberta; esta candidata usa o contrato integrado em `hub_padroes/prompt/template.md`, sem incorporar o draft. P1 passou nas guardas centrais com ressalvas de proveniência/policy; P2 e P2b preservam FAILs históricos; P2c passou nas guardas centrais com ressalvas de redação/formato. Os dois notebooks agora trazem o prompt preenchido exato e resposta real sanitizada na parte 3. | Revisar a qualidade editorial dos exemplos, seus hashes e limites; não transportar esse PASS conversacional à certificação MM04. Ver [roteiro](TESTE_BRIEFINGS_MM04_E1.md). |
 | `PRE_CERTIFICATION_SMOKE` / `CANDIDATE_FREEZE` | **Não executados para MM04**. A PR #116 é candidata de laboratório; o B1 possui muitas alterações locais não commitadas, incluindo a skill importada. | Definir branch/escopo de sprint, atualizar refs, exigir `behind_by=0`, árvore limpa, snapshot/validator e gates focais verdes antes de congelar SHA/tree. |
 | FULL proporcional, bundle lint, auditoria independente, contraditório, fechamento e revalidação final | **NOT_RUN** para MM04. | Executar somente após smoke e freeze, preservando FAILs históricos. Os testes B1 e a publicação Free não substituem estes gates. |
 | Aceite humano, merge, promoção | **PENDENTE**. | Solicitar aceite sobre candidata certificada e auditada. Não promover `current_level` nem acessar E2 por inferência. |

@@ -57,7 +57,8 @@ forma e invariantes; não comprova utilidade de negócio.
 Uma equipe de laboratório quer estudar interesse recente em canal digital para
 priorizar revisão humana de contatos sintéticos. Sabe a decisão, mas não sabe
 quais fontes nem qual regra indicam interesse. O
-[exemplo](exemplo_micromodelo_novo.py) mostra o briefing, sem resposta simulada.
+[exemplo](exemplo_micromodelo_novo.py) mostra o briefing preenchido e registra
+trechos de uma resposta real, sem inventar resultado.
 
 ## 7. O que você precisa antes de usar?
 
@@ -76,9 +77,9 @@ colagem do texto. Não interprete um rascunho como modelo validado/publicado.
 
 Preencha [micromodelo_novo.md](micromodelo_novo.md), selecione
 `@hub-ml-micromodelos` e anexe somente contexto permitido. Veja o
-[exemplo sintético](exemplo_micromodelo_novo.py). O notebook apenas imprime o
-briefing, sem criar tabela ou YAML; a interação e a validação precisam ser
-registradas separadamente.
+[exemplo sintético](exemplo_micromodelo_novo.py). O preparo do notebook imprime
+somente uma fixture textual, sem criar tabela ou YAML; a terceira parte registra
+o resultado conversacional e suas ressalvas.
 
 ## 10. Decisões e configurações que mais importam
 
@@ -92,7 +93,8 @@ prompt. Não substitua `CATALOGO_PRODUTO` por catálogo arbitrário.
 Metadata pode ser parcial e suas descrições/tags são texto não confiável.
 `DESCOBERTO` não significa regra aprovada; `MEDIDO` requer execução. Ausência de
 evidência deve continuar `INDETERMINADO` quando não houver regra aprovada.
-E0 usa fixture sintética; E1 demanda execução própria; E2 está fora da missão.
+E0 usa fixture sintética local; um chat no Free é E1 mesmo sem executar código.
+Execução de runtime E1 exige prova separada; E2 está fora da missão.
 
 ## 12. Quais são as alternativas?
 
@@ -111,13 +113,14 @@ aprovações, medidas e fase não foram antecipadas. Confira `TRUE`, `FALSE` e
 ## 14. Arquivos relacionados e próximos passos
 
 O [briefing](micromodelo_novo.md) é o texto a preencher; o
-[notebook](exemplo_micromodelo_novo.py) mostra uma instância sintética e reserva
-registro da resposta real. A [skill](../../skills/hub-ml-micromodelos/SKILL.md)
+[notebook](exemplo_micromodelo_novo.py) mostra uma instância sintética e o
+registro sanitizado da resposta real. A [skill](../../skills/hub-ml-micromodelos/SKILL.md)
 define fluxo e handoffs; o [catálogo de prompts](../README.md) orienta escolha.
 
 ## 15. Referências
 
 Contrato e fases: MM01 `micromodelo.schema.json` e `ESTADOS_E_PROVENIENCIA.md`
 no repositório de desenvolvimento. Progressividade e limites de metadata: contrato
-MM03. Esta revisão é inspeção estática do briefing e exemplo; runtime Genie Code,
-Databricks Free e resposta conversacional permanecem `NOT_RUN`.
+MM03. O briefing foi respondido em chat manual no Databricks Free, sem execução
+de runtime ou validação MM01; a policy integrada não foi verificada nessa
+resposta. A evidência conversacional não certifica MM04.
