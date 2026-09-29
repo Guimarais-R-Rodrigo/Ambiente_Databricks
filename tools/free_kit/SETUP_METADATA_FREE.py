@@ -24,7 +24,8 @@ if RUN_SETUP:
         ("entidade_b", "2026-09-03", "CONTRARIO"),
     ]
     frame = spark.createDataFrame(rows, ["id_entidade", "data_evento", "tipo_evento"])
-    frame.write.mode("errorifexists").saveAsTable(table_sql)
+    # Spark Connect no Free aceita "error" para falhar se a tabela já existir.
+    frame.write.mode("error").saveAsTable(table_sql)
     print("CREATED_SYNTHETIC_TABLE", table_sql)
 
 # COMMAND ----------

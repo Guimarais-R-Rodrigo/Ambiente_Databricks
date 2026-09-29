@@ -103,6 +103,9 @@ class DatabricksAdapterTests(unittest.TestCase):
         self.assertEqual("OBSERVED", collector.envelope(discovery, details)
                          ["observation_status"])
         self.assertEqual("NOT_IMPLEMENTED", provider.capabilities["table_tags"])
+        self.assertEqual("NOT_COLLECTED", provider.capabilities["constraint_comment"])
+        self.assertIn("CAST(NULL AS STRING) AS comment", spark.queries[-1])
+        self.assertNotIn("tc.comment", spark.queries[-1])
         self.assertEqual(5, len(spark.queries))
 
     def test_pagination_has_bounded_query_and_stable_batch_id(self):

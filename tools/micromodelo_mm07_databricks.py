@@ -76,6 +76,8 @@ class DatabricksMetadataProvider:
     ``table_tags`` fica NOT_IMPLEMENTED: objetos têm ``tags=None``, nunca lista
     vazia que fingiria inspeção. Se COLUMN_TAGS ou as views de constraints não
     existirem/forem negadas, retornamos UNAVAILABLE/DENIED, sem fallback a dados.
+    Descrição de constraint fica NOT_COLLECTED: a view no Free observada em
+    2026-09-29 não expôs ``comment`` apesar da documentação geral da view.
     """
 
     def __init__(self, spark: Any, binding: mm03.Binding) -> None:
@@ -86,7 +88,8 @@ class DatabricksMetadataProvider:
         self.spark = spark
         self.binding = binding
         self.snapshot_id = "obs_" + uuid.uuid4().hex
-        self.capabilities: dict[str, str] = {"table_tags": "NOT_IMPLEMENTED"}
+        self.capabilities: dict[str, str] = {
+            "table_tags": "NOT_IMPLEMENTED", "constraint_comment": "NOT_COLLECTED"}
         self._streams: dict[tuple[str, tuple[str, ...]], tuple[str, list[dict[str, Any]]]] = {}
 
     def _query(self, operation: str, scope: tuple[str, ...]) -> str:
@@ -113,7 +116,8 @@ class DatabricksMetadataProvider:
                     f"AND table_name = '{obj}' ORDER BY column_name, tag_name, tag_value "
                     f"LIMIT {_MAX_RAW_ROWS}")
         if operation == "constraints":
-            return (f"SELECT tc.constraint_name, tc.constraint_type, tc.comment, "
+            return (f"SELECT tc.constraint_name, tc.constraint_type, "
+                    f"CAST(NULL AS STRING) AS comment, "
                     f"ku.column_name, ku.ordinal_position FROM {prefix}.table_constraints tc "
                     f"LEFT JOIN {prefix}.key_column_usage ku ON "
                     f"tc.constraint_catalog = ku.constraint_catalog AND "

@@ -3,7 +3,9 @@
 ## 2026-09-29 — E1 sintético executado via Databricks CLI
 
 - (Codex) Perfil `FREE` passou o guard de identidade não corporativa; kit do commit `62c583e3` importado em pasta pessoal nova, com três arquivos críticos exportados e iguais byte a byte ao pacote local.
-- (Codex) Job sintético E1 `125183536030228` terminou `SUCCESS` após declarar PyYAML, regex e jsonschema no ambiente da task. Tentativa anterior `80682276995694` falhou no capability check por dependência ausente; ambas permanecem no histórico. Metadata real, MLflow Free e Genie Code seguem `NOT_RUN`, sem acesso E2. Detalhes e limites no relatório do laboratório.
+- (Codex) Job sintético E1 `125183536030228` terminou `SUCCESS` após declarar PyYAML, regex e jsonschema no ambiente da task. Tentativa anterior `80682276995694` falhou no capability check por dependência ausente; ambas permanecem no histórico. Detalhes e limites no relatório do laboratório.
+- (Codex) Teste metadata E1 criou schema/tabela sintéticas exclusivas e encontrou `errorifexists` não aceito pelo Spark Connect e ausência de `comment` na view de constraints. Setup e adapter corrigidos; o job read-only `1020132196464806` terminou `SUCCESS`, com três colunas observadas, cobertura limitada ao escopo e catálogo não completo.
+- (Codex) Kit revisado `mm-free-kit-lab-v2-20260929-r2.zip` (SHA-256 `522d6db1f5f7075aef52b21036dc1ffc8c57a02d5ac9b9e45f2d045ec8cd6fd2`) importado em nova pasta Free; cinco arquivos críticos coincidem byte a byte; job `401222304757724` terminou `SUCCESS`. MLflow Free e Genie Code continuam `NOT_RUN`; E2 não acessado.
 
 ## 2026-09-29 — Candidata E0 de micromodelos e kit E1 preparado
 
