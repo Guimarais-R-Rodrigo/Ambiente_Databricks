@@ -80,4 +80,4 @@ Com os agentes sem escrever, o coordenador:
 
 A maior economia vem da primeira leitura dos três grupos e de correções sem arquivos comuns. O tempo dessa leitura tende ao grupo mais demorado, em vez da soma dos três. Preparação, triagem, alterações compartilhadas, renderer, reconciliação B1 e checkpoint permanecem no caminho sequencial; não há base para prometer ganho de três vezes ou prazo fechado antes dos achados.
 
-A revisÃ£o e a correÃ§Ã£o local foram executadas como descrito no [resultado](REVISAO_PARALELA_LAB_2026-09-29.md). Nova execuÃ§Ã£o no Free e checkpoint de aceite sÃ£o tratados separadamente; GitHub Actions permanece indisponÃ­vel.
+A revisão e a correção local foram executadas como descrito no [resultado](REVISAO_PARALELA_LAB_2026-09-29.md). O kit revisado passou em três jobs sintéticos no Free; o [checkpoint](CHECKPOINT_ACEITE_LAB_2026-09-29.md) consolida evidências e decisões. GitHub Actions permanece indisponível.

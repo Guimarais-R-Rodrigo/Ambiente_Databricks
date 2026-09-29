@@ -33,8 +33,16 @@ Na revisão cruzada, B encontrou um risco de arquivo YAML parcial em A1, corrigi
 
 Os testes focais dos autores passaram: A 15, B 24, C 3. As baterias integradas acima são o gate local principal; testes focais são evidência adicional, sem somar contagens como se fossem execuções independentes de cobertura total.
 
+## Reexecução E1 dos bytes revisados
+
+Após a integração local no commit `29bc5a75bb979e37bacf9a7fe2b1bffe7bcb72cc`, o kit r4 foi gerado da allowlist sintética: 32 arquivos de conteúdo, `manifest.json` e ZIP SHA-256 `87880472161a132787598d6b88d2ccabd4af316ad0146228cfc72f1a92992532`. O perfil `FREE` passou o guard de host/usuário não corporativo. O pacote foi importado em pasta pessoal nova; readback **33/33 PASS** com comparação integral dos arquivos, normalizando apenas quebras de linha de notebooks como faz o Workspace.
+
+Três jobs one-shot, em notebooks derivados apenas por ativação das células opcionais, terminaram `SUCCESS`: código sintético; tracking MLflow com DEVELOPMENT, VALIDATION e SCORING, `mm06.complete=true` relido para cada run e `score_count=4` igual a `scores_emitidos`; metadata somente leitura da tabela sintética já criada no Free, observada como `TABLE`, com colunas, tags e constraints em `OBSERVED` e cobertura `ESCOPO_OBSERVADO`. IDs de jobs e runs ficam em `.artifacts/r4_run_*.json` e no resultado do Free, fora do Git. O job de código concluiu todos os asserts do notebook; o tracking e a metadata emitiram `R4_TRACKING_PASS` e `R4_METADATA_PASS`. Não houve leitura de linhas de cliente, execução corporativa nem teste novo de Genie nesta reexecução.
+
+Esta prova E1 vale para os bytes do kit r4; não converte os resultados históricos de Genie em certificação da skill nem concede publicação ou promoção de nível.
+
 ## Integração B1 e estado externo
 
 Na conferência somente leitura, fonte e derivado B1 de skill, contrato e policy MM04 tinham hashes idênticos aos da PR #116; a linha de encaminhamento MM04 nas instruções também coincidia. O checkout B1 continua com alterações extensas de outras frentes e não foi alterado por esta rodada. O [registro B1](RECONCILIACAO_B1_PRE_GATES_MM04_2026-09-29.md) preserva a observação anterior e a atualização posterior.
 
-GitHub Actions está indisponível por saldo da conta; seus jobs não iniciados continuam `BLOCKED_EXTERNAL_CI`, sem PASS presumido. O laboratório usa testes locais e revisão proporcional conforme o [plano operacional](PLANO_EXECUCAO_LAB.md). E2, publicação institucional, promoção L3 e migração real permanecem fora deste fechamento. O kit novo com `score_count` e a célula de metadata ampliada ainda precisa de prova E1 atualizada antes de se alegar execução desses bytes no Free.
+GitHub Actions está indisponível por saldo da conta; seus jobs não iniciados continuam `BLOCKED_EXTERNAL_CI`, sem PASS presumido. O laboratório usa testes locais e revisão proporcional conforme o [plano operacional](PLANO_EXECUCAO_LAB.md). E2, publicação institucional, promoção L3 e migração real permanecem fora deste fechamento.
