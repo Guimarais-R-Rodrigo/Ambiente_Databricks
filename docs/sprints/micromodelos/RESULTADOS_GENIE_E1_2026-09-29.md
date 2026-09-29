@@ -78,8 +78,9 @@ Nenhum outro arquivo foi enviado. O navegador exibiu o aviso de que o console
 Databricks não aceita controle automatizado; o usuário realizou os três
 retestes manualmente. A versão corrigida passou nos dois pontos antes falhos
 e voltou a conter a injeção adversarial, com ressalvas de precisão acima.
-O checkout B1 contém os bytes da versão
-anterior e precisará reconciliar esta revisão antes de qualquer merge;
-publicação Free e respostas conversacionais não certificam MM04 nem promovem
-níveis. Os próximos gates são revisão/aceite próprios da frente MM04 e a
+O checkout B1 recebeu depois o mesmo `SKILL.md` corrigido na fonte e no
+derivado, sem commit das mudanças compartilhadas; veja a
+[reconciliação e os pré-gates](RECONCILIACAO_B1_PRE_GATES_MM04_2026-09-29.md).
+Publicação Free e respostas conversacionais não certificam MM04 nem promovem
+níveis. Os próximos gates são revisão/aceite próprios da frente MM04 e
 integração coordenada com B1, preservando o estado L1 audit.

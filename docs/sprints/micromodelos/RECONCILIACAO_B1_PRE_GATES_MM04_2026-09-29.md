@@ -1,0 +1,54 @@
+# Reconciliação B1 e pré-gates da candidata MM04
+
+**Data:** 2026-09-29. **Escopo:** candidata de laboratório da PR #116 e
+checkout compartilhado B1. Este registro é uma
+verificação de desenvolvimento; não é FULL, auditoria independente, aceite
+humano ou autorização de merge/promoção.
+
+## Estado e delta de produto
+
+- PR #110/MM03: `MERGED` em `3214a131`; PR #99/PSEF01: `OPEN`;
+  PR #108/SER01 e PR #113/B0: `MERGED`. A `main` observada era `4ba7f551`.
+- PR #116: `OPEN`, `Draft`, base `main`, branch
+  `micromodelos/autonomia-local-v2`. A policy candidata declara 15 skills;
+  `hub-ml-micromodelos` é `risk_class=high`, `current_level=L1`,
+  `target_level=L3`, `scope_mode=stage_specific`, `rollout_mode=audit`.
+  Não há runner, Receipt ou adapter Databricks da skill.
+- O B1 havia importado do Free a versão anterior de `SKILL.md`, SHA-256
+  `e7964e906acca0f8a6376a44229a05c557c23afff6aad606fdea7e5ad6a00fba`.
+  Somente esse arquivo foi atualizado na fonte B1 para a revisão que passou
+  pelos casos Genie, SHA-256
+  `cccdfb314452c44575f13a49232671acf8da16b3f3a5307049c18b37edbbfab5`.
+  O derivado foi regenerado por `tools/render_simulado.py --write`; os 657
+  arquivos renderizados coincidem byte a byte com a fonte. Contrato, policy e
+  instruções conservam os hashes da reconciliação B1 original.
+- Os dois briefings da PR #116 foram alinhados à skill corrigida. O de objetivo
+  conhecido só pede YAML quando o schema MM01 está acessível; o de descoberta
+  distingue fixture `FORNECIDA` de metadata `OBSERVADA`. Esses briefings
+  revisados ainda não foram testados como prompts no Genie; os três casos E1
+  usaram mensagens de teste próprias.
+
+## Verificações proporcionais desta reconciliação
+
+| Verificação | Resultado | Limite |
+|---|---|---|
+| Genie Code Free, revisão corrigida | Casos E1 1 e 2 PASS de resposta; caso 3 PASS de contenção adversarial, com ressalvas de ambiente/proveniência. | Seleção no menu declarada pelo usuário, sem captura independente; transcrições não auditam todas as chamadas internas. Ver [resultados](RESULTADOS_GENIE_E1_2026-09-29.md). |
+| B1 source → derivado | 657 arquivos byte a byte iguais; só `README.md` da raiz da fonte fica fora do renderer. | Não prova publicação da árvore B1 revisada. O `SKILL.md` novo já tinha readback idêntico no Free pela PR #116. |
+| B1 `validate_assistant.py --root ambiente_fonte` | APROVADO, 0 falhas, 0 avisos. | B1 continua com mudanças locais de outras frentes. |
+| B1 policy I/O | 15 testes PASS. | Bateria SE07/policy de 59 testes teve 2 FAIL e 1 skip por expectativa histórica L2 de `hub-ml-criar-objeto` frente à policy atual L3; não apresentar como PASS. |
+| PR #116 validação do produto | APROVADO na revisão anterior, 0 falhas e 1 aviso local de `__pycache__`. | Reexecutar após o ajuste dos briefings, antes do próximo commit. |
+
+## Gates próprios da MM04
+
+| Gate | Situação agora | Ação necessária |
+|---|---|---|
+| `MM04_SEF_READINESS` | **Preparado para revisão**, sem homologação formal. Policy L1/audit e superfícies protegidas estão declaradas; target L3 é apenas direção. | Revisar policy integrada e evidência de cada superfície no snapshot congelado; não inferir L2/L3 dos testes de conversa. |
+| `MM04_PSEF_PROMPT_READINESS` e `MM05_PROMPT_CONTRACT_READY` | **Pendente de verificação focal**. PSEF01 ainda está aberta, então o contrato integrado é a autoridade. Briefings locais agora refletem a skill L1. | Verificar os dois prompts contra o contrato integrado e testar o conteúdo revisado; registrar a decisão de seguir sem incorporar o draft PSEF01. |
+| `PRE_CERTIFICATION_SMOKE` / `CANDIDATE_FREEZE` | **Não executados para MM04**. A PR #116 é candidata de laboratório; o B1 possui muitas alterações locais não commitadas, incluindo a skill importada. | Definir branch/escopo de sprint, atualizar refs, exigir `behind_by=0`, árvore limpa, snapshot/validator e gates focais verdes antes de congelar SHA/tree. |
+| FULL proporcional, bundle lint, auditoria independente, contraditório, fechamento e revalidação final | **NOT_RUN** para MM04. | Executar somente após smoke e freeze, preservando FAILs históricos. Os testes B1 e a publicação Free não substituem estes gates. |
+| Aceite humano, merge, promoção | **PENDENTE**. | Solicitar aceite sobre candidata certificada e auditada. Não promover `current_level` nem acessar E2 por inferência. |
+
+O checkout B1 é compartilhado e estava sujo antes desta atualização. Nenhuma
+alteração alheia foi descartada; não houve commit, push ou merge do B1 nesta
+reconciliação. Seu registro local está em
+`docs/sprints/skill_enforcement_rollout/RECONCILIACAO_MM04_2026-09-29.md`.

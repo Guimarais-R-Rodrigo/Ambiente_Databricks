@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-29 — Reconciliação B1 e pré-gates MM04
+
+- (Codex) O `SKILL.md` corrigido de Micromodelos foi copiado para a fonte do checkout compartilhado B1 após guarda de hash antigo; SHA-256 novo `cccdfb314452c44575f13a49232671acf8da16b3f3a5307049c18b37edbbfab5`, igual à revisão já instalada no Free. Derivado B1 regenerado exclusivamente pelo renderer e conferido byte a byte; validador 0 falhas/avisos e policy I/O 15 PASS. Bateria SE07/policy de 59 testes teve 2 FAIL em expectativas L2 históricas de Criar Objeto (policy atual L3), preservados. Sem commit/merge do B1 nem promoção da MM04.
+- (Codex) Alinhados os dois briefings de Micromodelos ao contrato L1 testado: ausência do schema MM01 impede YAML inferido; fixture textual permanece `FORNECIDA`, com viabilidade/leakage indeterminados. Registrados os pré-gates próprios da MM04 e seus limites, separados dos PASS conversacionais Free e do trabalho B1 em andamento.
+
 ## 2026-09-29 — Avaliação dos casos Genie MM04
 
 - (Codex) Avaliados três casos FG-MM de roteamento e três casos E1 com transcrições e notebooks sintéticos entregues pelo usuário. Registrados dois FAIL de conteúdo E1: YAML inferido sem schema MM01, scores sem evidência e viabilidade/leakage superestimados a partir de metadata fornecida. O caso de injeção em descrição preservou o escopo metadata-only na resposta visível. Seleção da skill no menu foi declarada pelo usuário, sem captura independente.

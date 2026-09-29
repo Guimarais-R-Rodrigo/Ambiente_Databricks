@@ -1,6 +1,6 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: **MM00–MM03 integradas; candidata MM04–MM13-LAB validada em E0 para o escopo sintético.** PR #110/MM03 foi integrada em 2026-09-23 (`3214a131`). Código do kit, adapter metadata e três runs MLflow sintéticas executados no Free via CLI; skill instalada, conversa Genie E1 pendente. E2 não executado.
+> Estado: **MM00–MM03 integradas; candidata MM04–MM13-LAB validada em E0 para o escopo sintético.** PR #110/MM03 foi integrada em 2026-09-23 (`3214a131`). Código do kit, adapter metadata e três runs MLflow sintéticas executados no Free via CLI; skill instalada. Os três casos Genie E1 da revisão corrigida passaram nos critérios de resposta, com ressalvas; certificação MM04 e E2 pendentes.
 
 ## Objetivo
 
@@ -12,6 +12,8 @@ Documentos vivos desta fase:
 
 - [execução de laboratório e revisão processual](PLANO_EXECUCAO_LAB.md);
 - [relatório da candidata E0 e estados E1/E2](RELATORIO_ENTREGA_LAB.md);
+- [resultados Genie E1 e limites](RESULTADOS_GENIE_E1_2026-09-29.md);
+- [reconciliação B1 e pré-gates MM04](RECONCILIACAO_B1_PRE_GATES_MM04_2026-09-29.md);
 - [kit Databricks Free e roteiro E2 posterior](KIT_FREE.md);
 - [MM03 — metadata-only](MM03/README.md);
 - [MM03 — contrato metadata v1](MM03/CONTRATO_METADATA.md);

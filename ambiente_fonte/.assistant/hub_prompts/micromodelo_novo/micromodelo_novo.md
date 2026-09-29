@@ -44,26 +44,31 @@ TAREFA
    fonte, target, valor, limiar, dono, permissão ou resultado de execução.
 3. Comece pela metadata do catálogo configurado. Faça shortlist antes de pedir
    colunas/tags/constraints. Não consulte linhas, contagens ou valores neste modo.
-4. Atualize progressivamente um único micromodelo.yaml conforme template e
-   schema MM01 1.0.0, preservando pendências e estados válidos. Valide pela
-   rota canônica disponível e reporte o resultado real.
+4. Somente se o template/schema MM01 1.0.0 estiver realmente acessível,
+   atualize progressivamente um único micromodelo.yaml, preservando pendências
+   e estados válidos. Valide pela rota canônica disponível e reporte o resultado
+   real. Sem template/schema, não invente YAML: entregue checklist textual de
+   fatos e lacunas com `YAML_NAO_CRIADO` e `MM01_NAO_VALIDADO`.
 5. Explicite hipóteses favoráveis, contra-hipóteses, semântica de
    TRUE/FALSE/INDETERMINADO e o que poderia invalidar a ideia. Não trate falta
-   de evidência como FALSE nem score 0-100 como probabilidade sem calibração.
+   de evidência como FALSE. Sem evidência observada e rubrica explícita, marque
+   `SCORE_INDETERMINADO`; não trate score 0-100 como probabilidade sem calibração.
 6. Entregue plano de estudo e handoff às skills especialistas apropriadas,
    cada qual sob sua policy atual. Não publique nem avance fase por suposição.
 
 SAÍDA
 - Resumo da decisão, escopo observado e lacunas.
-- YAML validado ou rascunho rotulado, com comando/erro de validação se executado.
+- YAML MM01 quando houver template/schema acessível, com resultado real da
+  validação; caso contrário, checklist textual e `YAML_NAO_CRIADO`.
 - Proveniência dos campos relevantes, incertezas e decisões pendentes.
 - Próxima etapa, responsável sugerido e evidência E0/E1/E2 realmente obtida.
 ```
 
 ## O que conferir na resposta
 
-Confira se o YAML mantém os grupos MM01, `CATALOGO_PRODUTO`, fase coerente e
-proveniência sem `APROVADO`/`MEDIDO` fictícios. Inspeção textual do briefing não
+Se houver YAML, confira grupos MM01, `CATALOGO_PRODUTO`, fase coerente e
+proveniência sem `APROVADO`/`MEDIDO` fictícios. Sem schema acessível, confira
+que não houve YAML inferido nem score sem base. Inspeção textual do briefing não
 é teste conversacional. A execução E1 depende do usuário e E2 está fora do escopo.
 
 ## Limites

@@ -72,8 +72,9 @@ antes falhos: YAML ausente sem schema MM01, scores indeterminados e viabilidade
 e leakage indeterminados com metadata fornecida. O caso adversarial foi
 repetido e conteve a injeção, embora tenha classificado o ambiente como E0 e
 mencionado `DESCOBERTO` sem observação; veja [os limites](RESULTADOS_GENIE_E1_2026-09-29.md).
-A revisão instalada difere da candidata
-anterior incorporada ao checkout B1, que precisará reconciliá-la antes de
-integrar; o readback Free não equivale a aceite MM04.
+A revisão instalada foi depois copiada para a fonte B1 e o derivado foi
+regenerado, sem commit do checkout compartilhado. Os
+[pré-gates MM04](RECONCILIACAO_B1_PRE_GATES_MM04_2026-09-29.md) seguem
+pendentes; o readback Free não equivale a aceite MM04.
 
 Decisões E2 pendentes: dono e gestor, permissões/catálogo, população e grão, limiares, retenção dos resultados individuais, LGPD, auditoria/custo e autoridade de publicação. O handoff MM10 é `DRAFT_NOT_SUBMITTED`, seu agregado é `SUPPLIED_UNVERIFIED`, e `published=false`. Ensaio E2 e rollback estão em `KIT_FREE.md`; nenhum acesso corporativo foi realizado.
