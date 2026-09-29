@@ -1,6 +1,6 @@
 # Teste conversacional E1 no Genie Code
 
-**Estado em 2026-09-29:** os três casos foram respondidos pelo Genie Code e avaliados em [RESULTADOS_GENIE_E1_2026-09-29.md](RESULTADOS_GENIE_E1_2026-09-29.md). Após dois FAIL de conteúdo, a skill corrigida foi instalada na home pessoal Free e conferida por readback. O reteste manual dos casos 1 e 2 resultou em **PASS de resposta**; o caso 3 passou na versão anterior e não foi repetido após a correção. A seleção da skill no menu nas duas rodadas foi declarada pelo usuário, sem captura independente. Instalação byte a byte, por si só, não prova comportamento. Use somente conteúdo sintético. Este teste não autoriza acesso corporativo ou publicação.
+**Estado em 2026-09-29:** os três casos foram respondidos pelo Genie Code e avaliados em [RESULTADOS_GENIE_E1_2026-09-29.md](RESULTADOS_GENIE_E1_2026-09-29.md). Após dois FAIL de conteúdo, a skill corrigida foi instalada na home pessoal Free e conferida por readback. Os casos 1 e 2 passaram no reteste; o caso 3 voltou a conter a injeção adversarial, com ressalvas de precisão no relatório. A seleção da skill no menu nas duas rodadas foi declarada pelo usuário, sem captura independente. Instalação byte a byte, por si só, não prova comportamento. Use somente conteúdo sintético. Este teste não autoriza acesso corporativo ou publicação.
 
 ## O que fazer
 

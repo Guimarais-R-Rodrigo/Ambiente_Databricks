@@ -1,13 +1,13 @@
 # Entrega da candidata de laboratório de micromodelos
 
-**Data:** 2026-09-29. **Base:** `origin/main@4ba7f551767d847381df1556ed937116258fa77d`; MM03/PR #110 já integrada. **Branch:** `micromodelos/autonomia-local-v2`. **Classificação:** `E0_VALIDADO` para o fluxo sintético e as interfaces testadas; `E1_EXECUTADO` para código sintético, adapter de metadata em objeto criado pelo ensaio e três runs MLflow sintéticas; os casos Genie E1 têm [vereditos separados](RESULTADOS_GENIE_E1_2026-09-29.md): dois FAIL na primeira rodada, seguidos de PASS de resposta nos dois retestes da skill corrigida. `E2_NAO_EXECUTADO`. A candidata não é `FRAMEWORK_MICROMODELOS_V1` corporativa.
+**Data:** 2026-09-29. **Base:** `origin/main@4ba7f551767d847381df1556ed937116258fa77d`; MM03/PR #110 já integrada. **Branch:** `micromodelos/autonomia-local-v2`. **Classificação:** `E0_VALIDADO` para o fluxo sintético e as interfaces testadas; `E1_EXECUTADO` para código sintético, adapter de metadata em objeto criado pelo ensaio e três runs MLflow sintéticas; os casos Genie E1 têm [vereditos separados](RESULTADOS_GENIE_E1_2026-09-29.md): dois FAIL na primeira rodada, seguidos de PASS de resposta nos casos 1 e 2 e PASS de contenção adversarial no caso 3 da skill corrigida, com ressalvas. `E2_NAO_EXECUTADO`. A candidata não é `FRAMEWORK_MICROMODELOS_V1` corporativa.
 
 ## Entregas por sprint original
 
 | Sprint | Capacidade nesta candidata | E0 | E1 | E2 |
 |---|---|---|---|---|
 | MM00–MM03 | Contratos MM01, fingerprint MM02 e metadata-only MM03 reutilizados; status vivo de MM03 corrigido. | PASS regressão | MM01/MM02 e fixture MM03 exercitados pelo notebook sintético; adapter real MM07 PASS em metadata sintética Free | NOT_RUN |
-| MM04–MM05 | Skill `hub-ml-micromodelos` L1, dois briefings, objetivo conhecido e shortlist de oportunidades, spec progressiva MM01, incerteza explícita. | PASS código e contrato | Fluxo Python de objetivo conhecido PASS; primeira rodada Genie: dois FAIL de conteúdo; skill corrigida instalada, retestes 1 e 2 PASS de resposta | NOT_RUN |
+| MM04–MM05 | Skill `hub-ml-micromodelos` L1, dois briefings, objetivo conhecido e shortlist de oportunidades, spec progressiva MM01, incerteza explícita. | PASS código e contrato | Fluxo Python de objetivo conhecido PASS; primeira rodada Genie: dois FAIL de conteúdo; skill corrigida instalada, retestes 1/2 PASS de resposta e 3 PASS de contenção | NOT_RUN |
 | MM06 | Notebook/README de estudo ligados ao fingerprint e helper rule-based com runs DEVELOPMENT/VALIDATION/SCORING. | PASS artefato e MLflow local real | Três runs sintéticas completas no Free; fingerprint e `mm06.complete` conferidos | NOT_RUN |
 | MM07–MM08-LAB | Adapter `information_schema` com capability/status explícitos; kit portátil, setup sintético opcional e roteiro Free. | PASS fake Spark/empacotamento isolado | Kit revisado importado; código e adapter real PASS no escopo sintético | NOT_RUN |
 | MM09–MM10-LAB | Piloto novo, seis entidades fictícias, evidência, contra-evidência, indeterminado, scoring heurístico e handoff de governança como rascunho. | PASS | Notebook sintético PASS; governança/publicação NOT_RUN | NOT_RUN |
@@ -69,8 +69,9 @@ workspace confirmou gravação byte a byte: SHA-256
 O console exibiu novamente o aviso contra controle automatizado; os dois casos
 de correção foram executados manualmente pelo usuário e passaram nos pontos
 antes falhos: YAML ausente sem schema MM01, scores indeterminados e viabilidade
-e leakage indeterminados com metadata fornecida. O caso adversarial não foi
-repetido na revisão; veja [os limites](RESULTADOS_GENIE_E1_2026-09-29.md).
+e leakage indeterminados com metadata fornecida. O caso adversarial foi
+repetido e conteve a injeção, embora tenha classificado o ambiente como E0 e
+mencionado `DESCOBERTO` sem observação; veja [os limites](RESULTADOS_GENIE_E1_2026-09-29.md).
 A revisão instalada difere da candidata
 anterior incorporada ao checkout B1, que precisará reconciliá-la antes de
 integrar; o readback Free não equivale a aceite MM04.
