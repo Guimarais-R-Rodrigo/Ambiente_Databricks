@@ -232,3 +232,18 @@ P1 e P2c, com hashes e ressalvas. O preparo da parte 1 cria apenas uma fixture
 textual local; não lê tabela. Isso satisfaz o requisito documental de resposta
 real ao prompt preenchido para revisão, sem transformar PASS conversacional em
 certificação MM04 ou aprovação de publicação.
+
+## Revisão editorial local dos exemplos
+
+Em 2026-09-29, os dois notebooks foram confrontados com o template integrado de
+prompt e o checklist de objeto. Os blocos da parte 2 coincidem exatamente com
+P1 e P2b após o preenchimento, sem placeholders. Cada notebook aponta ao README
+recíproco, declara ambiente/efeitos e casos em que não deve ser usado. A parte 1
+foi executada localmente em E0 com saída textual registrada; não houve consulta
+de tabela nem execução desse preparo no Free. A parte 3 contém resposta real
+sanitizada, rota relatada e limitações, com hash do material bruto fora do Git.
+
+**Estado editorial:** preparado para revisão, sem aceite independente. O P1
+continua com ressalva de proveniência e policy; P2c com a expressão “viáveis” e
+edição Markdown inesperada no x2. Nenhuma dessas respostas prova ACL, runtime
+Databricks, validação MM01 ou a certificação MM04.

@@ -1,8 +1,20 @@
 # Databricks notebook source
 # MAGIC %md
+# MAGIC [Conceito, requisitos e limites deste prompt](README.md).
+# MAGIC
 # MAGIC # Exemplo sintético — objetivo conhecido
 # MAGIC
 # MAGIC Três partes: preparo textual executável, prompt exato e resposta real. O preparo não consulta catálogo nem cria registros; a resposta veio de chat manual no Free.
+# MAGIC
+# MAGIC | Item | Condição |
+# MAGIC |---|---|
+# MAGIC | Dados | Somente fixture textual sintética, sem linhas. |
+# MAGIC | Leitura/escrita | Nenhuma tabela; o preparo imprime um dicionário local. |
+# MAGIC | Genie Code | A parte 3 veio de chat novo no Free com skill carregada. |
+# MAGIC | Runtime | O preparo abaixo foi executado localmente em E0; não demonstra runtime E1. |
+# MAGIC
+# MAGIC **Quando não usar:** para validar YAML MM01, consultar catálogo ou medir
+# MAGIC comportamento em registros. Essas etapas exigem contratos e autorizações próprios.
 
 # COMMAND ----------
 
@@ -15,6 +27,18 @@ fixture_textual = {
     "horizonte": "30 dias PROPOSTO",
 }
 print(fixture_textual)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Saída real do preparo local E0
+# MAGIC
+# MAGIC ```text
+# MAGIC {'decisao': 'priorizar revisão humana de contatos fictícios', 'entidade': 'entidade fictícia por mês', 'populacao': 'seis entidades sintéticas, sem linhas fornecidas', 'fonte_logica': 'CATALOGO_PRODUTO, sem binding físico autorizado', 'horizonte': '30 dias PROPOSTO'}
+# MAGIC ```
+# MAGIC
+# MAGIC Esta saída é apenas a impressão da fixture textual; não é resposta do
+# MAGIC Genie Code nem evidência de catálogo ou runtime E1.
 
 # COMMAND ----------
 
@@ -79,7 +103,7 @@ print(fixture_textual)
 # MAGIC - A resposta registrou `YAML_NAO_CRIADO`, `MM01_NAO_VALIDADO` e
 # MAGIC   `SCORE_INDETERMINADO`; não alegou consulta a registros ou publicação.
 # MAGIC - Ressalva: alguns campos vindos do briefing foram chamados de `OBSERVADO`,
-# MAGIC   quando a provenance correta é `FORNECIDA`. A policy integrada não foi
+# MAGIC   quando a proveniência correta é `FORNECIDA`. A policy integrada não foi
 # MAGIC   verificada de forma independente nessa resposta; a leitura do contrato
 # MAGIC   estático não substitui `policy.json`.
 # MAGIC - Veredito do conteúdo guardado: PASS com ressalvas. Não é validação MM01,

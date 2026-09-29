@@ -31,7 +31,7 @@ humano ou autorização de merge/promoção.
   esclarecido corrigiu a semântica, mas falhou em classificar E0/E1 e em
   localizar a policy integrada. A skill da PR foi então revisada e publicada
   no Free com readback idêntico, SHA-256
-`93e51ac4ca25f2c3bd88c6cb6a40e7e494fd9bf1852824cd4575628cf24351f2`.
+  `93e51ac4ca25f2c3bd88c6cb6a40e7e494fd9bf1852824cd4575628cf24351f2`.
   P2c passou nas guardas centrais após carregar a revisão, com ressalvas de
   redação/formato; os exemplos agora contêm o prompt exato e a referência à
   resposta real. O checkout B1 ainda tem o hash anterior
@@ -49,6 +49,34 @@ humano ou autorização de merge/promoção.
 | B1 policy I/O | 15 testes PASS. | Bateria SE07/policy de 59 testes teve 2 FAIL e 1 skip por expectativa histórica L2 de `hub-ml-criar-objeto` frente à policy atual L3; não apresentar como PASS. |
 | PR #116 validação do produto | APROVADO após o ajuste dos briefings, 0 falhas e 1 aviso local de `__pycache__`; derivado regenerado pelo renderer. | Validação estática não comprova resposta real dos briefings. |
 
+## Diagnóstico pré-smoke posterior
+
+Em 2026-09-29, antes de congelar a candidata, a branch da PR #116 estava em
+`7642fb0f56a2e4b68aa412b14b228fade96e11ec`, com `origin/main` e merge-base
+em `4ba7f551767d847381df1556ed937116258fa77d`, `behind_by=0`,
+`ahead_by=13` e repositório não shallow. A árvore estava **suja** pelas
+correções editoriais desta rodada, portanto esse SHA não foi congelado.
+
+O validador do produto passou com 0 falhas e 1 aviso local de `__pycache__`.
+Testes focais `test_micromodelo_mm04_flow` + `test_skill_enforcement_policy_io`
+passaram 29/29; `test_micromodelo_free_kit` passou 3/3. O preparo textual dos
+dois exemplos foi executado localmente em E0, sem tabela. O bloco copiável de
+cada notebook permaneceu idêntico ao prompt P1/P2b, respectivamente.
+
+Os checks do GitHub para esse SHA falharam antes de executar qualquer step:
+o job `validar` da run `36628810564` tem `steps=[]` e `runner_id=0`. A
+anotação do GitHub diz: “The job was not started because recent account
+payments have failed or your spending limit needs to be increased.” Os demais
+checks listados na PR falharam em segundos. Classificação:
+`BLOCKED_EXTERNAL_CI`, **não** falha dos testes de produto nem PASS de CI. Não
+houve rerun automático. PSEF01/PR #99 permanece `OPEN` e `Draft`.
+
+**Resultado do diagnóstico:** revisão editorial local preparada; smoke formal
+e `CANDIDATE_FREEZE` ainda `NOT_RUN`. É necessário resolver a indisponibilidade
+dos runners/limite da conta e definir a campanha proporcional MM04 antes de
+congelar uma candidata. A árvore B1 segue compartilhada e suja, com hash
+anterior da skill, sem reconciliação segura nesta janela.
+
 ## Gates próprios da MM04
 
 | Gate | Situação agora | Ação necessária |
@@ -59,7 +87,10 @@ humano ou autorização de merge/promoção.
 | FULL proporcional, bundle lint, auditoria independente, contraditório, fechamento e revalidação final | **NOT_RUN** para MM04. | Executar somente após smoke e freeze, preservando FAILs históricos. Os testes B1 e a publicação Free não substituem estes gates. |
 | Aceite humano, merge, promoção | **PENDENTE**. | Solicitar aceite sobre candidata certificada e auditada. Não promover `current_level` nem acessar E2 por inferência. |
 
-O checkout B1 é compartilhado e estava sujo antes desta atualização. Nenhuma
-alteração alheia foi descartada; não houve commit, push ou merge do B1 nesta
-reconciliação. Seu registro local está em
+O checkout B1 é compartilhado e continua com alterações simultâneas de outras
+frentes. Em nova conferência, o `SKILL.md` da fonte B1 ainda tinha o hash
+`cccdfb314452c44575f13a49232671acf8da16b3f3a5307049c18b37edbbfab5`;
+a revisão da PR #116 não foi copiada para evitar renderizar sobre trabalho em
+andamento. Nenhuma alteração alheia foi descartada; não houve commit, push ou
+merge do B1 nesta reconciliação. Seu registro local está em
 `docs/sprints/skill_enforcement_rollout/RECONCILIACAO_MM04_2026-09-29.md`.

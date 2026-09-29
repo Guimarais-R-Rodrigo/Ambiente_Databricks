@@ -1,8 +1,21 @@
 # Databricks notebook source
 # MAGIC %md
+# MAGIC [Conceito, requisitos e limites deste prompt](README.md).
+# MAGIC
 # MAGIC # Exemplo sintético — descobrir oportunidades
 # MAGIC
 # MAGIC Três partes: preparo textual executável, prompt exato e resposta real. O preparo não consulta catálogo nem cria registros; a resposta veio de chat manual no Free.
+# MAGIC
+# MAGIC | Item | Condição |
+# MAGIC |---|---|
+# MAGIC | Dados | Somente fixture textual sintética, sem linhas. |
+# MAGIC | Leitura/escrita | Nenhuma tabela; o preparo imprime um dicionário local. |
+# MAGIC | Genie Code | A parte 3 veio de chat novo no Free com skill carregada. |
+# MAGIC | Runtime | O preparo abaixo foi executado localmente em E0; não demonstra runtime E1. |
+# MAGIC
+# MAGIC **Quando não usar:** para declarar viabilidade de uma candidata, consultar
+# MAGIC valores ou medir qualidade temporal. Essas etapas exigem decisão e acesso
+# MAGIC autorizados em fluxo posterior.
 
 # COMMAND ----------
 
@@ -18,6 +31,18 @@ fixture_textual = {
     "estado": "FORNECIDA, não OBSERVADA",
 }
 print(fixture_textual)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Saída real do preparo local E0
+# MAGIC
+# MAGIC ```text
+# MAGIC {'schema': 'mm_lab_e1_62c583e3', 'objeto': 'eventos_sinteticos_cli', 'colunas': {'id_entidade': 'STRING', 'data_evento': 'STRING', 'tipo_evento': 'STRING'}, 'estado': 'FORNECIDA, não OBSERVADA'}
+# MAGIC ```
+# MAGIC
+# MAGIC Esta saída é apenas a impressão da fixture textual; não é resposta do
+# MAGIC Genie Code nem evidência de catálogo ou runtime E1.
 
 # COMMAND ----------
 
