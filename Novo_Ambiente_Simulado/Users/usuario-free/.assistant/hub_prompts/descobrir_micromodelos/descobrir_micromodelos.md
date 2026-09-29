@@ -32,8 +32,9 @@ BRIEFING
 - Critérios qualitativos de utilidade/risco: {{CRITERIOS}}
 
 TAREFA
-1. Consulte a policy vigente da skill e confirme a rota implementada. Se só
-   houver fixture E0, identifique o resultado como laboratório sintético.
+1. Consulte a policy vigente da skill e confirme a rota implementada. Declare
+   separadamente o ambiente do chat (E0 ou E1) e a origem textual/sintética da
+   fixture; uma fixture E0 em chat Free não transforma o ambiente E1 em E0.
 2. Se a consulta de catálogo estiver autorizada, descubra schemas e objetos
    visíveis; use nomes, tipos, descrições e tags de tabela para uma shortlist
    semântica. Só depois examine colunas, tags de coluna e constraints das

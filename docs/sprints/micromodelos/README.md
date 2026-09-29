@@ -14,6 +14,7 @@ Documentos vivos desta fase:
 - [relatório da candidata E0 e estados E1/E2](RELATORIO_ENTREGA_LAB.md);
 - [resultados Genie E1 e limites](RESULTADOS_GENIE_E1_2026-09-29.md);
 - [reconciliação B1 e pré-gates MM04](RECONCILIACAO_B1_PRE_GATES_MM04_2026-09-29.md);
+- [teste manual dos briefings MM04–MM05 no Genie](TESTE_BRIEFINGS_MM04_E1.md);
 - [kit Databricks Free e roteiro E2 posterior](KIT_FREE.md);
 - [MM03 — metadata-only](MM03/README.md);
 - [MM03 — contrato metadata v1](MM03/CONTRATO_METADATA.md);

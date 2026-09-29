@@ -36,14 +36,14 @@ humano ou autorização de merge/promoção.
 | B1 source → derivado | 657 arquivos byte a byte iguais; só `README.md` da raiz da fonte fica fora do renderer. | Não prova publicação da árvore B1 revisada. O `SKILL.md` novo já tinha readback idêntico no Free pela PR #116. |
 | B1 `validate_assistant.py --root ambiente_fonte` | APROVADO, 0 falhas, 0 avisos. | B1 continua com mudanças locais de outras frentes. |
 | B1 policy I/O | 15 testes PASS. | Bateria SE07/policy de 59 testes teve 2 FAIL e 1 skip por expectativa histórica L2 de `hub-ml-criar-objeto` frente à policy atual L3; não apresentar como PASS. |
-| PR #116 validação do produto | APROVADO na revisão anterior, 0 falhas e 1 aviso local de `__pycache__`. | Reexecutar após o ajuste dos briefings, antes do próximo commit. |
+| PR #116 validação do produto | APROVADO após o ajuste dos briefings, 0 falhas e 1 aviso local de `__pycache__`; derivado regenerado pelo renderer. | Validação estática não comprova resposta real dos briefings. |
 
 ## Gates próprios da MM04
 
 | Gate | Situação agora | Ação necessária |
 |---|---|---|
 | `MM04_SEF_READINESS` | **Preparado para revisão**, sem homologação formal. Policy L1/audit e superfícies protegidas estão declaradas; target L3 é apenas direção. | Revisar policy integrada e evidência de cada superfície no snapshot congelado; não inferir L2/L3 dos testes de conversa. |
-| `MM04_PSEF_PROMPT_READINESS` e `MM05_PROMPT_CONTRACT_READY` | **Pendente de verificação focal**. PSEF01 ainda está aberta, então o contrato integrado é a autoridade. Briefings locais agora refletem a skill L1. | Verificar os dois prompts contra o contrato integrado e testar o conteúdo revisado; registrar a decisão de seguir sem incorporar o draft PSEF01. |
+| `MM04_PSEF_PROMPT_READINESS` e `MM05_PROMPT_CONTRACT_READY` | **Pendente de resposta real ao prompt preenchido**. PSEF01 segue aberta; decisão desta candidata: usar o contrato integrado em `hub_padroes/prompt/template.md`, sem incorporar o draft. Os dois briefings passaram na validação estrutural e refletem a skill L1, mas ambos os notebooks de exemplo mantêm a parte 3 como `NOT_RUN`. | Executar [P1 e P2](TESTE_BRIEFINGS_MM04_E1.md) em chats novos, capturar resposta/rota real e registrar na parte 3; os casos E1 anteriores usaram textos distintos e não substituem essa prova. |
 | `PRE_CERTIFICATION_SMOKE` / `CANDIDATE_FREEZE` | **Não executados para MM04**. A PR #116 é candidata de laboratório; o B1 possui muitas alterações locais não commitadas, incluindo a skill importada. | Definir branch/escopo de sprint, atualizar refs, exigir `behind_by=0`, árvore limpa, snapshot/validator e gates focais verdes antes de congelar SHA/tree. |
 | FULL proporcional, bundle lint, auditoria independente, contraditório, fechamento e revalidação final | **NOT_RUN** para MM04. | Executar somente após smoke e freeze, preservando FAILs históricos. Os testes B1 e a publicação Free não substituem estes gates. |
 | Aceite humano, merge, promoção | **PENDENTE**. | Solicitar aceite sobre candidata certificada e auditada. Não promover `current_level` nem acessar E2 por inferência. |

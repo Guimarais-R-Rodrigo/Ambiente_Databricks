@@ -42,8 +42,10 @@ TAREFA
 1. Confirme o ambiente e a rota efetivamente disponível da skill e policy atual.
 2. Separe fato observado, inferência, proposta, aprovação e medição. Não invente
    fonte, target, valor, limiar, dono, permissão ou resultado de execução.
-3. Comece pela metadata do catálogo configurado. Faça shortlist antes de pedir
-   colunas/tags/constraints. Não consulte linhas, contagens ou valores neste modo.
+3. Se houver binding e autorização, comece pela metadata do catálogo
+   configurado: faça shortlist antes de pedir colunas/tags/constraints. Se o
+   briefing trouxer só fixture textual, não consulte catálogo; marque a
+   metadata como `FORNECIDA`. Não consulte linhas, contagens ou valores neste modo.
 4. Somente se o template/schema MM01 1.0.0 estiver realmente acessível,
    atualize progressivamente um único micromodelo.yaml, preservando pendências
    e estados válidos. Valide pela rota canônica disponível e reporte o resultado
