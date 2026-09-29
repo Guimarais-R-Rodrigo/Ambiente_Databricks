@@ -1,6 +1,6 @@
 # Kit de transferência para Databricks Free
 
-**Estado:** o código sintético `RUN_FREE`, o adapter MM07 e o tracking MLflow foram executados via CLI no Free com dados sintéticos. O kit atual incorpora as correções observadas no setup, adapter e configuração do MLflow. A skill MM04 foi instalada na home pessoal Free após conferência do Hub preexistente; o teste conversacional Genie Code permanece `NOT_RUN`, conforme o [relatório](RELATORIO_ENTREGA_LAB.md). `E2_NAO_EXECUTADO`. Todos os exemplos são sintéticos. Nenhum nome, ACL ou dado do trabalho pertence a este kit.
+**Estado:** o código sintético `RUN_FREE`, o adapter MM07 e o tracking MLflow foram executados via CLI no Free com dados sintéticos. O kit atual incorpora as correções observadas no setup, adapter e configuração do MLflow. A skill MM04 foi instalada na home pessoal Free após conferência do Hub preexistente. A primeira rodada Genie Code teve [dois FAIL de conteúdo E1](RESULTADOS_GENIE_E1_2026-09-29.md); a revisão da skill foi publicada e conferida por readback, com reteste conversacional dos casos 1 e 2 ainda `NOT_RUN`. `E2_NAO_EXECUTADO`. Todos os exemplos são sintéticos. Nenhum nome, ACL ou dado do trabalho pertence a este kit.
 
 ## Preparação e execução pelo usuário
 

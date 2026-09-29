@@ -3,7 +3,8 @@
 ## 2026-09-29 — Avaliação dos casos Genie MM04
 
 - (Codex) Avaliados três casos FG-MM de roteamento e três casos E1 com transcrições e notebooks sintéticos entregues pelo usuário. Registrados dois FAIL de conteúdo E1: YAML inferido sem schema MM01, scores sem evidência e viabilidade/leakage superestimados a partir de metadata fornecida. O caso de injeção em descrição preservou o escopo metadata-only na resposta visível. Seleção da skill no menu foi declarada pelo usuário, sem captura independente.
-- (Codex) Reforçado o contrato da skill para exigir template/schema acessível antes de YAML MM01, evidência e rubrica antes de score numérico, e incerteza explícita ao interpretar metadata apenas fornecida. Roteiro e relatório E1 atualizados. A revisão é local à branch e requer publicação/readback e repetição dos casos no Free antes de alegar PASS conversacional.
+- (Codex) Reforçado o contrato da skill para exigir template/schema acessível antes de YAML MM01, evidência e rubrica antes de score numérico, e incerteza explícita ao interpretar metadata apenas fornecida. Roteiro e relatório E1 atualizados.
+- (Codex) Revisão do `SKILL.md` instalada na home pessoal Free: import individual retornou `PROTOCOL_ERROR`, mas exportação imediata confirmou SHA-256 idêntico à fonte (`cccdfb314452c44575f13a49232671acf8da16b3f3a5307049c18b37edbbfab5`). Contrato, policy e instruções permaneceram iguais à fonte. O console bloqueia controle automatizado do navegador; reteste Genie dos casos E1 1 e 2 continua `NOT_RUN`. B1 ainda contém os bytes anteriores e precisa de reconciliação antes de integrar.
 
 ## 2026-09-29 — MLflow E1 e skill MM04 no Free
 

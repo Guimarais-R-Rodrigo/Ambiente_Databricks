@@ -46,10 +46,16 @@ privados do workspace.
 A fonte da skill foi reforçada para bloquear YAML MM01 quando o template/schema
 não estiver acessível, números de score sem evidência e rubrica, e conclusões de
 viabilidade/leakage baseadas apenas em nomes de colunas. O roteiro E1 foi
-alinhado a esse contrato. Esta correção local **ainda não foi publicada nem
-retestada no Genie**; os dois FAIL acima permanecem FAIL para a versão que
-respondeu aos prompts. Antes de alegar PASS conversacional E1, publicar a
-revisão em escopo pessoal Free, conferir readback e repetir os casos 1 e 2 em
-chats novos, preservando o caso adversarial como regressão. Coordenar essa
-publicação com o checkout B1, que incorporou bytes da candidata anterior;
-nenhum merge ou promoção decorre deste relatório.
+alinhado a esse contrato. Em continuação, o `SKILL.md` revisado foi importado
+na home pessoal Free. O comando de import retornou `PROTOCOL_ERROR`, mas uma
+exportação subsequente mostrou que a gravação ocorreu: SHA-256 remoto e local
+`cccdfb314452c44575f13a49232671acf8da16b3f3a5307049c18b37edbbfab5`.
+Contrato, policy e instruções remotos também coincidiram byte a byte com a fonte.
+Nenhum outro arquivo foi enviado. O navegador exibiu o aviso de que o console
+Databricks não aceita controle automatizado; nenhum prompt de reteste foi
+enviado por automação. Os dois FAIL acima continuam válidos para a resposta
+anterior. **Repetir manualmente os casos E1 1 e 2 em chats novos**, selecionando
+`@hub-ml-micromodelos`, ainda é o gate para um novo veredito conversacional.
+O caso adversarial permanece como regressão. O checkout B1 contém os bytes da
+versão anterior e precisará reconciliar esta revisão antes de qualquer merge;
+publicação Free e readback não certificam MM04 nem promovem níveis.

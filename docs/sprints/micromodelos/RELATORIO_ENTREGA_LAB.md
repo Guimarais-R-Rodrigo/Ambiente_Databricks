@@ -7,7 +7,7 @@
 | Sprint | Capacidade nesta candidata | E0 | E1 | E2 |
 |---|---|---|---|---|
 | MM00–MM03 | Contratos MM01, fingerprint MM02 e metadata-only MM03 reutilizados; status vivo de MM03 corrigido. | PASS regressão | MM01/MM02 e fixture MM03 exercitados pelo notebook sintético; adapter real MM07 PASS em metadata sintética Free | NOT_RUN |
-| MM04–MM05 | Skill `hub-ml-micromodelos` L1, dois briefings, objetivo conhecido e shortlist de oportunidades, spec progressiva MM01, incerteza explícita. | PASS código e contrato | Fluxo Python de objetivo conhecido PASS; Genie Code NOT_RUN | NOT_RUN |
+| MM04–MM05 | Skill `hub-ml-micromodelos` L1, dois briefings, objetivo conhecido e shortlist de oportunidades, spec progressiva MM01, incerteza explícita. | PASS código e contrato | Fluxo Python de objetivo conhecido PASS; primeira rodada Genie: dois FAIL de conteúdo, skill corrigida instalada, reteste NOT_RUN | NOT_RUN |
 | MM06 | Notebook/README de estudo ligados ao fingerprint e helper rule-based com runs DEVELOPMENT/VALIDATION/SCORING. | PASS artefato e MLflow local real | Três runs sintéticas completas no Free; fingerprint e `mm06.complete` conferidos | NOT_RUN |
 | MM07–MM08-LAB | Adapter `information_schema` com capability/status explícitos; kit portátil, setup sintético opcional e roteiro Free. | PASS fake Spark/empacotamento isolado | Kit revisado importado; código e adapter real PASS no escopo sintético | NOT_RUN |
 | MM09–MM10-LAB | Piloto novo, seis entidades fictícias, evidência, contra-evidência, indeterminado, scoring heurístico e handoff de governança como rascunho. | PASS | Notebook sintético PASS; governança/publicação NOT_RUN | NOT_RUN |
@@ -59,6 +59,16 @@ O kit r3 incorporou as duas configurações, foi gerado como `.artifacts/mm-free
 
 A skill `hub-ml-micromodelos` não estava instalada na home pessoal Free. Antes da instalação, o `policy.json` remoto foi comparado semanticamente com a fonte: as 14 entradas existentes coincidiam e a única adição era a nova skill; as instruções pessoais tinham somente a linha nova de roteamento. Os dois arquivos remotos foram exportados como backup local ignorado pelo Git. Skill, `execution_contract.json`, policy e instruções foram importados pela CLI e exportados de volta com bytes idênticos à fonte. Isso comprova instalação de arquivos, não carregamento pelo Genie Code.
 
-Na instalação inicial, o teste conversacional Genie Code ficou `NOT_RUN`: a interface Free exibiu aviso de que não oferece suporte a controle automatizado do navegador. O usuário executou depois os três casos E1 e os três FG-MM propostos no B1 e entregou transcrições/notebooks. [A avaliação](RESULTADOS_GENIE_E1_2026-09-29.md) encontrou dois FAIL de conteúdo E1 e um PASS de contenção adversarial; seleção da skill no menu foi declarada pelo usuário, sem captura independente. As correções do contrato foram feitas somente na fonte desta branch; o Genie Free ainda não foi retestado com elas.
+Na instalação inicial, o teste conversacional Genie Code ficou `NOT_RUN`: a interface Free exibiu aviso de que não oferece suporte a controle automatizado do navegador. O usuário executou depois os três casos E1 e os três FG-MM propostos no B1 e entregou transcrições/notebooks. [A avaliação](RESULTADOS_GENIE_E1_2026-09-29.md) encontrou dois FAIL de conteúdo E1 e um PASS de contenção adversarial; seleção da skill no menu foi declarada pelo usuário, sem captura independente. As correções do contrato foram registradas na fonte desta branch antes da atualização no Free; o Genie ainda não foi retestado com elas.
+
+Em seguida, somente o `SKILL.md` corrigido foi importado na home Free. A CLI
+retornou `PROTOCOL_ERROR` no import individual, mas o readback imediato da
+workspace confirmou gravação byte a byte: SHA-256
+`cccdfb314452c44575f13a49232671acf8da16b3f3a5307049c18b37edbbfab5`.
+`execution_contract.json`, policy e instruções continuaram iguais à fonte.
+O console exibiu novamente o aviso contra controle automatizado; os dois casos
+de correção permanecem `NOT_RUN`. A revisão instalada difere da candidata
+anterior incorporada ao checkout B1, que precisará reconciliá-la antes de
+integrar; o readback Free não equivale a aceite MM04.
 
 Decisões E2 pendentes: dono e gestor, permissões/catálogo, população e grão, limiares, retenção dos resultados individuais, LGPD, auditoria/custo e autoridade de publicação. O handoff MM10 é `DRAFT_NOT_SUBMITTED`, seu agregado é `SUPPLIED_UNVERIFIED`, e `published=false`. Ensaio E2 e rollback estão em `KIT_FREE.md`; nenhum acesso corporativo foi realizado.

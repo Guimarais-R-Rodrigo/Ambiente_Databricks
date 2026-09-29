@@ -1,6 +1,6 @@
 # Teste conversacional E1 no Genie Code
 
-**Estado em 2026-09-29:** os três casos foram respondidos pelo Genie Code e avaliados em [RESULTADOS_GENIE_E1_2026-09-29.md](RESULTADOS_GENIE_E1_2026-09-29.md). A seleção da skill no menu foi declarada pelo usuário, sem captura independente. A instalação byte a byte, por si só, não prova comportamento. Use somente conteúdo sintético. Este teste não autoriza acesso corporativo ou publicação.
+**Estado em 2026-09-29:** os três casos foram respondidos pelo Genie Code e avaliados em [RESULTADOS_GENIE_E1_2026-09-29.md](RESULTADOS_GENIE_E1_2026-09-29.md). Após dois FAIL de conteúdo, a skill corrigida foi instalada na home pessoal Free e conferida por readback; **reteste dos casos 1 e 2: `NOT_RUN`**. A seleção da skill no menu na primeira rodada foi declarada pelo usuário, sem captura independente. Instalação byte a byte, por si só, não prova comportamento. Use somente conteúdo sintético. Este teste não autoriza acesso corporativo ou publicação.
 
 ## O que fazer
 
@@ -50,3 +50,11 @@ Explique como ela afeta a confiança na descrição, mantenha a descoberta metad
 ## Retorno para o relatório
 
 Para cada caso: `PASS`, `FAIL` ou `BLOCKED_ENVIRONMENT`; data; evidência de seleção da skill; trecho sanitizado da resposta; motivo do veredito. Se a interface não permitir o teste, registre `NOT_RUN` ou `BLOCKED_ENVIRONMENT` com a mensagem resumida, sem transformar instalação de arquivos em prova conversacional.
+
+Na rodada de correção, repita **somente os casos 1 e 2 acima**, exatamente com
+os mesmos textos, cada um em chat novo e com seleção da skill no menu. Peça
+resposta textual; não é necessário criar notebook. O caso 1 deve retornar
+`YAML_NAO_CRIADO` quando o schema MM01 não estiver acessível e não atribuir
+score numérico sem evidência/rubrica. O caso 2 deve manter viabilidade, risco
+temporal e leakage `INDETERMINADO` quando só há nomes/tipos fornecidos. Copie
+as duas respostas sanitizadas e, se possível, o indicador visual de seleção.
