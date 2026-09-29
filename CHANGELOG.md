@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-29 — Aceite do laboratório sintético de Micromodelos
+
+- (Codex) Registrado no checkpoint o aceite declarado pelo responsável no chat para MM04–MM13-LAB sintético, com as ressalvas já documentadas. A decisão não promove L3, não certifica MM04/MM03, não homologa E2 e não autoriza publicação corporativa ou merge da PR #116. A próxima etapa técnica é preparar a integração Git e a trilha E2 mantendo seus gates separados.
+
 ## 2026-09-29 — Reexecução E1 do kit revisado de Micromodelos
 
 - (Codex) Kit r4 do commit `29bc5a75` importado na home pessoal Databricks Free após guard de identidade; readback 33/33 PASS. Três jobs sintéticos de código, tracking MLflow e metadata terminaram SUCCESS. Tracking relido com três runs completas e `score_count=4`; tabela sintética existente observada como TABLE, colunas/tags/constraints OBSERVED. Checkpoint de aceite e limites em `docs/sprints/micromodelos/CHECKPOINT_ACEITE_LAB_2026-09-29.md`. GitHub Actions permanece `BLOCKED_EXTERNAL_CI`; E2 não executado.

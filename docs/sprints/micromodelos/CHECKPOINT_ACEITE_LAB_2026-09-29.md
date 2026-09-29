@@ -1,6 +1,6 @@
 # Checkpoint de aceite do laboratório de Micromodelos
 
-**Data:** 2026-09-29. **Escopo:** candidata MM04–MM13-LAB da PR #116, sem merge ou promoção de nível. A revisão paralela, os achados, os testes e os limites estão no [relatório consolidado](REVISAO_PARALELA_LAB_2026-09-29.md).
+**Data:** 2026-09-29. **Escopo:** candidata MM04–MM13-LAB da PR #116, sem merge ou promoção de nível. **Estado:** laboratório sintético aceito pelo responsável no chat em 2026-09-29, após leitura deste checkpoint. A revisão paralela, os achados, os testes e os limites estão no [relatório consolidado](REVISAO_PARALELA_LAB_2026-09-29.md).
 
 ## Evidência pronta para decisão
 
@@ -12,7 +12,7 @@
 
 ## Estado e decisão seguinte
 
-O laboratório sintético está pronto para **aceite ou pedido de ajustes pelo responsável**. Um aceite deve nomear explicitamente este escopo de laboratório e suas ressalvas; ele não significa homologação corporativa, certificação MM04, aprovação MM03, publicação, promoção L3 ou migração real.
+O responsável respondeu **“aceito”** ao checkpoint em 2026-09-29. Esse aceite fecha o escopo sintético de laboratório e suas ressalvas documentadas. Não significa homologação corporativa, certificação MM04, aprovação MM03, publicação, promoção L3 ou migração real.
 
 A integração Git da PR #116 continua decisão posterior. GitHub Actions está `BLOCKED_EXTERNAL_CI` por saldo da conta, portanto não há PASS remoto presumido; a branch tem commits locais não enviados para evitar disparo desnecessário. B1 permanece compartilhado e sujo; qualquer escrita nele exige janela segura com os outros trabalhos preservados.
 

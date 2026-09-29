@@ -1,6 +1,6 @@
 # Execução de laboratório de micromodelos
 
-**Base conferida em 2026-09-29:** `origin/main@4ba7f551`; PR #110/MM03 `MERGED` em `3214a131`. Branch de trabalho: `micromodelos/autonomia-local-v2`. Estado desta candidata: `E0_VALIDADO` para o escopo sintético descrito em `RELATORIO_ENTREGA_LAB.md`; kit r4 revisado, adapter metadata e MLflow sintético `E1_EXECUTADO` via CLI com [readback e três jobs SUCCESS](REVISAO_PARALELA_LAB_2026-09-29.md); skill corrigida instalada no Free e três casos Genie E1 respondidos com [vereditos e limites próprios](RESULTADOS_GENIE_E1_2026-09-29.md); `E2_NAO_EXECUTADO`.
+**Base conferida em 2026-09-29:** `origin/main@4ba7f551`; PR #110/MM03 `MERGED` em `3214a131`. Branch de trabalho: `micromodelos/autonomia-local-v2`. Estado desta candidata: laboratório sintético [aceito pelo responsável](CHECKPOINT_ACEITE_LAB_2026-09-29.md), `E0_VALIDADO` para o escopo descrito em `RELATORIO_ENTREGA_LAB.md`; kit r4 revisado, adapter metadata e MLflow sintético `E1_EXECUTADO` via CLI com [readback e três jobs SUCCESS](REVISAO_PARALELA_LAB_2026-09-29.md); skill corrigida instalada no Free e três casos Genie E1 respondidos com [vereditos e limites próprios](RESULTADOS_GENIE_E1_2026-09-29.md); `E2_NAO_EXECUTADO`.
 
 ## Autoridade e revisão processual
 
