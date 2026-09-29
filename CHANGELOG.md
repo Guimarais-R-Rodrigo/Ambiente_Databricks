@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-29 — Preparação do piloto E2 de Micromodelos
+
+- (Codex) Criado `docs/sprints/micromodelos/PLANO_PREPARACAO_E2.md` após o aceite do laboratório: sequência G0–G6, separação entre staging sintético, promoção SE08, metadata-only, leitura autorizada, piloto novo, governança externa e V1. A ficha de decisões usa apenas placeholders; nenhum acesso ou identificador corporativo foi usado. Índice atualizado para apontar ao plano e ao checkpoint.
+
 ## 2026-09-29 — Aceite do laboratório sintético de Micromodelos
 
 - (Codex) Registrado no checkpoint o aceite declarado pelo responsável no chat para MM04–MM13-LAB sintético, com as ressalvas já documentadas. A decisão não promove L3, não certifica MM04/MM03, não homologa E2 e não autoriza publicação corporativa ou merge da PR #116. A próxima etapa técnica é preparar a integração Git e a trilha E2 mantendo seus gates separados.

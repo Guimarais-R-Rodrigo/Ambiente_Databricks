@@ -1,6 +1,6 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: **MM00–MM03 integradas; candidata MM04–MM13-LAB validada em E0 para o escopo sintético.** PR #110/MM03 foi integrada em 2026-09-23 (`3214a131`). Código do kit, adapter metadata e três runs MLflow sintéticas executados no Free via CLI; skill instalada. Os três casos Genie E1 da revisão corrigida passaram nos critérios de resposta, com ressalvas; certificação MM04 e E2 pendentes.
+> Estado: **MM00–MM03 integradas; laboratório sintético MM04–MM13-LAB aceito pelo responsável.** PR #110/MM03 foi integrada em 2026-09-23 (`3214a131`). Kit r4 revisado, adapter metadata e três runs MLflow sintéticas executados no Free via CLI; skill instalada. Os três casos Genie E1 da revisão corrigida passaram nos critérios de resposta, com ressalvas; certificação MM04 e E2 pendentes.
 
 ## Objetivo
 
@@ -11,6 +11,8 @@ O repositório usa somente fixtures e placeholders. O catálogo real do trabalho
 Documentos vivos desta fase:
 
 - [execução de laboratório e revisão processual](PLANO_EXECUCAO_LAB.md);
+- [aceite do laboratório sintético](CHECKPOINT_ACEITE_LAB_2026-09-29.md);
+- [preparação do piloto E2 e portas de avanço](PLANO_PREPARACAO_E2.md);
 - [relatório da candidata E0 e estados E1/E2](RELATORIO_ENTREGA_LAB.md);
 - [resultados Genie E1 e limites](RESULTADOS_GENIE_E1_2026-09-29.md);
 - [reconciliação B1 e pré-gates MM04](RECONCILIACAO_B1_PRE_GATES_MM04_2026-09-29.md);
@@ -142,4 +144,4 @@ A skill roteável `hub-ml-micromodelos` pertence à MM04; fingerprint pertence �
 
 ## Sprint corrente
 
-MM04–MM05 de laboratório estão em desenvolvimento na branch `micromodelos/autonomia-local-v2`. O [plano ativo](PLANO_EXECUCAO_LAB.md) registra entregas e evidências. O núcleo MM03 e seus limites estão em [MM03](MM03/README.md). FULL R1 e FULL R2 são resultados históricos preservados, sem reclassificação.
+O laboratório MM04–MM13-LAB foi aceito para seu escopo sintético na branch `micromodelos/autonomia-local-v2`. O [plano E2](PLANO_PREPARACAO_E2.md) registra as próximas portas; nenhuma foi executada no trabalho. O núcleo MM03 e seus limites estão em [MM03](MM03/README.md). FULL R1 e FULL R2 são resultados históricos preservados, sem reclassificação.
