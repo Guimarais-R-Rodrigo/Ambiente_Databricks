@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-29 — MLflow E1 e skill MM04 no Free
+
+- (Codex) Reproduzida a falha MLflow de leitura implícita de `spark.mlflow.modelRegistryUri` no Spark Connect e identificada a exigência de caminho absoluto para o experimento. Com `mlflow.set_registry_uri("databricks")` e experimento na home pessoal, três runs sintéticas DEVELOPMENT/VALIDATION/SCORING foram gravadas e relidas com `mm06.complete=true` e fingerprint consistente.
+- (Codex) Correções incorporadas ao `RUN_FREE.py`; kit r3 gerado (SHA-256 `e27b3d050e486b4ae2595893a73ab1382888ec3b46b3cf69d344bd89c90a2053`), importado em pasta nova no Free e cinco arquivos críticos exportados byte a byte. Job do notebook do pacote `590723076886290` terminou `SUCCESS` com três novas runs completas.
+- (Codex) Hub pessoal Free conferido antes da sobreposição: policy e instruções diferiam da fonte somente pela entrada/rota MM04. Skill, contrato, policy e instruções publicados via CLI e conferidos byte a byte. Genie Code ainda não testado em conversa; interface exibiu aviso contra controle automatizado do navegador, deixando os três casos manuais para o usuário. E2 não acessado.
+
 ## 2026-09-29 — E1 sintético executado via Databricks CLI
 
 - (Codex) Perfil `FREE` passou o guard de identidade não corporativa; kit do commit `62c583e3` importado em pasta pessoal nova, com três arquivos críticos exportados e iguais byte a byte ao pacote local.

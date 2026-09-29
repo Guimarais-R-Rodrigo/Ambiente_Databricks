@@ -78,7 +78,16 @@ if RUN_TRACKING_CHECK:
         raise RuntimeError("MLflow indisponível; tracking Free NOT_RUN")
     sys.path.insert(0, str(KIT_ROOT / "product_overlay" / ".assistant"))
     import mlflow
+    # No Spark Connect do Free, a descoberta implícita do registry URI consulta
+    # uma configuração indisponível. Fixe o serviço Databricks explicitamente.
+    mlflow.set_registry_uri("databricks")
     from hub_snippets.ml.mlflow_run import run_micromodelo
+
+    workspace_home = KIT_ROOT.parent.as_posix()
+    if not workspace_home.startswith("/Workspace/Users/"):
+        raise RuntimeError("KIT_ROOT deve estar na home pessoal do Free")
+    experiment_path = (workspace_home.removeprefix("/Workspace")
+                       + "/mm09_free_synthetic_lab_e1_20260929")
 
     measured = {
         "population": aggregate["populacao"],
@@ -104,7 +113,7 @@ if RUN_TRACKING_CHECK:
             dataset="synthetic:mm09_fixture@2026-09-29",
             split="synthetic:mesma_fixture_seis_entidades_sem_holdout",
             limitacoes=["fixture pequena", "sem dados reais ou holdout independente"],
-            contrato_saida=contract, experimento="mm09_free_synthetic_lab",
+            contrato_saida=contract, experimento=experiment_path,
         ) as run:
             run.parametros({
                 "regra": "mm09_greenfield", "versao_regra": "v1", "limiar": 2,

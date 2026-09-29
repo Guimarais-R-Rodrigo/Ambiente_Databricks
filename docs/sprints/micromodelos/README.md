@@ -1,6 +1,6 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: **MM00–MM03 integradas; candidata MM04–MM13-LAB validada em E0 para o escopo sintético.** PR #110/MM03 foi integrada em 2026-09-23 (`3214a131`). Código do kit e adapter metadata executados no Free via CLI; MLflow e Genie E1 pendentes. E2 não executado.
+> Estado: **MM00–MM03 integradas; candidata MM04–MM13-LAB validada em E0 para o escopo sintético.** PR #110/MM03 foi integrada em 2026-09-23 (`3214a131`). Código do kit, adapter metadata e três runs MLflow sintéticas executados no Free via CLI; skill instalada, conversa Genie E1 pendente. E2 não executado.
 
 ## Objetivo
 
