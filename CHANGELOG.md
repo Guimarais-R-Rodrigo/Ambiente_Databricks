@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-29 — Candidata E0 de micromodelos e kit E1 preparado
+
+- (Codex) Conciliado o estado de MM03 integrado; registrada revisão processual delimitada em `docs/sprints/micromodelos/PLANO_EXECUCAO_LAB.md`, sem reabrir certificações históricas.
+- (Codex) Implementados skill/prompts MM04–MM05, fluxo de especificação/descoberta, artefatos de estudo MM06, tracking rule-based MLflow, adapter metadata Databricks MM07 e piloto greenfield sintético MM09–MM10 com handoff sem publicação.
+- (Codex) Criados catálogo/impacto MM13, ensaio de equivalência com legado fictício MM12 e kit transportável para Databricks Free. A fonte `ambiente_fonte/` foi validada e `Novo_Ambiente_Simulado/` regenerado exclusivamente pelo renderer.
+- (Codex) Evidência E0 e limites E1/E2 registrados em `docs/sprints/micromodelos/RELATORIO_ENTREGA_LAB.md`. Free e Genie Code não executados; workspace corporativo não acessado.
+
 ## 2026-09-24 — SER B0: LOCAL_QUALIFIED com SHARE V2 e auditoria técnica PASS
 
 ### Qualificado

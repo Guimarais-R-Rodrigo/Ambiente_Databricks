@@ -15,6 +15,7 @@
 | Se você quer... | Continue em... |
 |---|---|
 | descobrir qual recurso utilizar | [Concierge Hub](skills/hub-ml-concierge/README.md) |
+| especificar micromodelo ou descobrir oportunidades | [Micromodelos](skills/hub-ml-micromodelos/SKILL.md) |
 | conhecer o propósito do Hub | [Visão Geral](#-o-que-é-este-ecossistema-e-como-ele-ajuda-no-databricks) |
 | escolher entre skill, prompt, snippet e script | [Componentes](#-o-que-tem-neste-ambiente-e-como-ele-ajuda-na-rotina-de-trabalho) |
 | entender o que é automático ou manual | [Arquitetura](#️-arquitetura-completa-do-ecossistema) |
