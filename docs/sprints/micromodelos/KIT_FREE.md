@@ -1,6 +1,6 @@
 # Kit de transferência para Databricks Free
 
-**Estado:** `E1_PREPARADO` somente após o builder gerar e conferir o pacote; `E1_EXECUTADO` depende de execução e resultados devolvidos pelo usuário. `E2_NAO_EXECUTADO`. Todos os exemplos são sintéticos. Nenhum nome, ACL ou dado do trabalho pertence a este kit.
+**Estado:** o ZIP do commit `62c583e3` foi gerado e conferido como `E1_PREPARADO`; o código sintético `RUN_FREE` foi posteriormente executado via CLI no Free (`E1_EXECUTADO` nesse escopo). Metadata Databricks, MLflow Free e Genie Code permanecem `NOT_RUN`, conforme o [relatório](RELATORIO_ENTREGA_LAB.md). `E2_NAO_EXECUTADO`. Todos os exemplos são sintéticos. Nenhum nome, ACL ou dado do trabalho pertence a este kit.
 
 ## Preparação e execução pelo usuário
 

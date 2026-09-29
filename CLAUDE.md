@@ -90,7 +90,7 @@ A MM01 foi aceita e integrada pela PR #51. HEAD integrado: `fa1a3653e60472d17130
 
 A arquitetura está em [Micromodelos](docs/sprints/micromodelos/README.md); a execução atual está no [plano de laboratório](docs/sprints/micromodelos/PLANO_EXECUCAO_LAB.md). A [revisão pós-SEF/PSEF/SER](docs/sprints/micromodelos/REVISAO_PLANO_POS_SEF_2026-09-23.md), a [retrospectiva MM01](docs/sprints/micromodelos/RETROSPECTIVA_MM01.md) e o [protocolo de certificação](docs/sprints/micromodelos/PROTOCOLO_CERTIFICACAO_SPRINTS.md) preservam contexto histórico. `current_level` da `policy.json` descreve capacidade presente; `target_level` é roadmap.
 
-A MM02 foi aceita e integrada pela PR #109; a MM03 pela PR #110 (`3214a131`, 2026-09-23). A FULL R1 da MM03 permanece FAIL histórico; a FULL R2 e a auditoria da candidata corrigida ficam preservadas em [MM03](docs/sprints/micromodelos/MM03/README.md). O núcleo MM03 é metadata-only, sem acesso Databricks. A candidata MM04–MM13-LAB tem prova E0 sintética em [relatório próprio](docs/sprints/micromodelos/RELATORIO_ENTREGA_LAB.md); o kit E1 está preparado, sem execução Free ou homologação corporativa.
+A MM02 foi aceita e integrada pela PR #109; a MM03 pela PR #110 (`3214a131`, 2026-09-23). A FULL R1 da MM03 permanece FAIL histórico; a FULL R2 e a auditoria da candidata corrigida ficam preservadas em [MM03](docs/sprints/micromodelos/MM03/README.md). O núcleo MM03 é metadata-only, sem acesso Databricks. A candidata MM04–MM13-LAB tem prova E0 sintética em [relatório próprio](docs/sprints/micromodelos/RELATORIO_ENTREGA_LAB.md); o código do kit E1 foi executado no Free via CLI, com metadata/MLflow/Genie pendentes e sem homologação corporativa.
 
 ## Regras inegociáveis
 

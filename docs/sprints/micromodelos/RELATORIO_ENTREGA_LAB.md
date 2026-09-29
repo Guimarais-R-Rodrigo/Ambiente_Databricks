@@ -1,16 +1,16 @@
 # Entrega da candidata de laboratório de micromodelos
 
-**Data:** 2026-09-29. **Base:** `origin/main@4ba7f551767d847381df1556ed937116258fa77d`; MM03/PR #110 já integrada. **Branch:** `micromodelos/autonomia-local-v2`. **Classificação:** `E0_VALIDADO` para o fluxo sintético e as interfaces testadas; `E1_PREPARADO`, `E1_NOT_RUN`; `E2_NAO_EXECUTADO`. A candidata não é `FRAMEWORK_MICROMODELOS_V1` corporativa.
+**Data:** 2026-09-29. **Base:** `origin/main@4ba7f551767d847381df1556ed937116258fa77d`; MM03/PR #110 já integrada. **Branch:** `micromodelos/autonomia-local-v2`. **Classificação:** `E0_VALIDADO` para o fluxo sintético e as interfaces testadas; `E1_EXECUTADO` para o código sintético do kit, com metadata Databricks, MLflow Free e Genie Code ainda `NOT_RUN`; `E2_NAO_EXECUTADO`. A candidata não é `FRAMEWORK_MICROMODELOS_V1` corporativa.
 
 ## Entregas por sprint original
 
 | Sprint | Capacidade nesta candidata | E0 | E1 | E2 |
 |---|---|---|---|---|
-| MM00–MM03 | Contratos MM01, fingerprint MM02 e metadata-only MM03 reutilizados; status vivo de MM03 corrigido. | PASS regressão | NOT_RUN | NOT_RUN |
-| MM04–MM05 | Skill `hub-ml-micromodelos` L1, dois briefings, objetivo conhecido e shortlist de oportunidades, spec progressiva MM01, incerteza explícita. | PASS código e contrato | Código/Genie NOT_RUN | NOT_RUN |
-| MM06 | Notebook/README de estudo ligados ao fingerprint e helper rule-based com runs DEVELOPMENT/VALIDATION/SCORING. | PASS artefato e MLflow local real | MLflow Free NOT_RUN | NOT_RUN |
-| MM07–MM08-LAB | Adapter `information_schema` com capability/status explícitos; kit portátil, setup sintético opcional e roteiro Free. | PASS fake Spark/empacotamento isolado | PREPARADO; adapter real NOT_RUN | NOT_RUN |
-| MM09–MM10-LAB | Piloto novo, seis entidades fictícias, evidência, contra-evidência, indeterminado, scoring heurístico e handoff de governança como rascunho. | PASS | Código/Genie NOT_RUN | NOT_RUN |
+| MM00–MM03 | Contratos MM01, fingerprint MM02 e metadata-only MM03 reutilizados; status vivo de MM03 corrigido. | PASS regressão | MM01/MM02 e fixture MM03 exercitados pelo notebook sintético; adapter real NOT_RUN | NOT_RUN |
+| MM04–MM05 | Skill `hub-ml-micromodelos` L1, dois briefings, objetivo conhecido e shortlist de oportunidades, spec progressiva MM01, incerteza explícita. | PASS código e contrato | Fluxo Python de objetivo conhecido PASS; Genie Code NOT_RUN | NOT_RUN |
+| MM06 | Notebook/README de estudo ligados ao fingerprint e helper rule-based com runs DEVELOPMENT/VALIDATION/SCORING. | PASS artefato e MLflow local real | Artefatos gerados; MLflow Free NOT_RUN | NOT_RUN |
+| MM07–MM08-LAB | Adapter `information_schema` com capability/status explícitos; kit portátil, setup sintético opcional e roteiro Free. | PASS fake Spark/empacotamento isolado | Kit importado e código executado; adapter real NOT_RUN | NOT_RUN |
+| MM09–MM10-LAB | Piloto novo, seis entidades fictícias, evidência, contra-evidência, indeterminado, scoring heurístico e handoff de governança como rascunho. | PASS | Notebook sintético PASS; governança/publicação NOT_RUN | NOT_RUN |
 | MM11-LAB | Integração de temas/monitoramento: não aplicável ao scoring sem interface visual; ponto de integração documentado no plano. | NOT_APPLICABLE | NOT_RUN | NOT_RUN |
 | MM12-LAB | Equivalência conservadora com legado fictício, skill de migração não roteável. | PASS ensaio | NOT_RUN | NOT_RUN |
 | MM13-LAB | Catálogo derivado do YAML e impacto por fonte declarada. | PASS | NOT_RUN | NOT_RUN |
@@ -35,6 +35,14 @@ Implementações principais foram revisadas por agente diferente do autor, com e
 
 ## Transporte e próxima ação
 
-`KIT_FREE.md` descreve importação, setup sintético opcional, execução offline, teste metadata, MLflow opcional, Genie Code e formato de retorno sanitizado. O builder é `python -B tools/micromodelo_free_kit.py --output <diretorio-novo>`. O pacote local gerado é `.artifacts/mm-free-kit-lab-v2-20260929.zip`, com 32 arquivos no manifesto e SHA-256 `23e9f75622f862ff239c60b350c5a3fd5eba4783b0d76602eeec280632765a51`. `RUN_FREE.py` foi executado dentro da cópia do pacote no Python local: contagens e fingerprint passaram; capability local: `spark=false`, `mlflow=false`. O manifesto e o ZIP ficam fora do Git. O kit não deve conter dados de `Ambiente_Antigo/`, arquivos `.env` ou objetos corporativos. Preencha `RESULTADOS_FREE.md` **somente após** execução do usuário no Free. Até lá, código Databricks/Genie permanece `NOT_RUN`.
+`KIT_FREE.md` descreve importação, setup sintético opcional, execução offline, teste metadata, MLflow opcional, Genie Code e formato de retorno sanitizado. O builder é `python -B tools/micromodelo_free_kit.py --output <diretorio-novo>`. O pacote local gerado é `.artifacts/mm-free-kit-lab-v2-20260929.zip`, com 32 arquivos no manifesto e SHA-256 `23e9f75622f862ff239c60b350c5a3fd5eba4783b0d76602eeec280632765a51`. `RUN_FREE.py` foi executado dentro da cópia do pacote no Python local: contagens e fingerprint passaram; capability local: `spark=false`, `mlflow=false`. O manifesto e o ZIP ficam fora do Git. O kit não deve conter dados de `Ambiente_Antigo/`, arquivos `.env` ou objetos corporativos.
+
+### Execução E1 via Databricks CLI
+
+Após autorização do usuário para tentar a rota CLI, o perfil local `FREE` passou o guard de identidade não corporativa do publicador. O kit do commit `62c583e3` foi importado para uma **pasta nova** na home pessoal, `mm_lab_e1_62c583e3_20260929`, sem sobrescrever objetos existentes. `RUN_FREE` foi confirmado como `NOTEBOOK`; módulos `.py` como `FILE`. A primeira tentativa de import encontrou `PROTOCOL_ERROR`; o envio foi retomado com HTTP/2 desativado somente no processo do CLI. A exportação remota de `manifest.json`, `RUN_FREE` e `tools/micromodelo_mm09_lab.py` coincidiu byte a byte com o kit local.
+
+O primeiro job único (`80682276995694`) falhou no capability check por dependência de contrato ausente no ambiente padrão. O segundo (`125183536030228`) declarou as três dependências do `requirements-free.txt` em ambiente serverless da task e terminou **SUCCESS**. `RUN_FREE` executou suas assertions de fingerprint de perfil, `TRUE=1`, `FALSE=2`, `INDETERMINADO=3`, total 6, cobertura observada, rascunho sem publicação, catálogo/impacto e equivalência fictícia. A API de output do job não retornou stdout, portanto esses valores são evidência das assertions que passaram, não uma transcrição de prints remotos. As células `RUN_METADATA_CHECK` e `RUN_TRACKING_CHECK` permaneceram `False`; não houve criação de tabela, run MLflow Free, nem teste Genie Code. Este `PASS` é de código sintético no Databricks Free, não de comportamento conversacional ou homologação.
+
+Para fechar as provas E1 restantes, executar separadamente a célula de metadata com tabela sintética própria, o tracking opcional e os três casos Genie Code de `KIT_FREE.md`; registrar resultados sanitizados. Até lá, esses itens continuam `NOT_RUN`.
 
 Decisões E2 pendentes: dono e gestor, permissões/catálogo, população e grão, limiares, retenção dos resultados individuais, LGPD, auditoria/custo e autoridade de publicação. O handoff MM10 é `DRAFT_NOT_SUBMITTED`, seu agregado é `SUPPLIED_UNVERIFIED`, e `published=false`. Ensaio E2 e rollback estão em `KIT_FREE.md`; nenhum acesso corporativo foi realizado.

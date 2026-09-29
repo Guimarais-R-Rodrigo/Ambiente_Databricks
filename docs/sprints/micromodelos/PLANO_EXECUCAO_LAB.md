@@ -1,6 +1,6 @@
 # Execução de laboratório de micromodelos
 
-**Base conferida em 2026-09-29:** `origin/main@4ba7f551`; PR #110/MM03 `MERGED` em `3214a131`. Branch de trabalho: `micromodelos/autonomia-local-v2`. Estado desta candidata: `E0_VALIDADO` para o escopo sintético descrito em `RELATORIO_ENTREGA_LAB.md`; kit `E1_PREPARADO`, execução `E1_NOT_RUN`; `E2_NAO_EXECUTADO`.
+**Base conferida em 2026-09-29:** `origin/main@4ba7f551`; PR #110/MM03 `MERGED` em `3214a131`. Branch de trabalho: `micromodelos/autonomia-local-v2`. Estado desta candidata: `E0_VALIDADO` para o escopo sintético descrito em `RELATORIO_ENTREGA_LAB.md`; código do kit `E1_EXECUTADO` via CLI, metadata/MLflow/Genie E1 `NOT_RUN`; `E2_NAO_EXECUTADO`.
 
 ## Autoridade e revisão processual
 
@@ -28,7 +28,7 @@ MM04–MM05 definem dois modos: `OBJETIVO_CONHECIDO` gera especificação prelim
 | 1 | MM04–MM05 | Skill, prompts, fluxo E0 até YAML e shortlist; casos positivos/negativos e revisão focal. | E0 PASS; conversa Genie NOT_RUN |
 | 2 | MM06 + MM10 preparo | Notebook, README, política de runs DEVELOPMENT/VALIDATION/SCORING e handoff sem autopublicação. | E0 PASS; MLflow local real PASS |
 | 3 | MM09–MM10-LAB | Piloto greenfield sintético com evidência, contra-evidência, indeterminado, scoring e reconciliação. | E0 PASS; aprovação/publicação pendente |
-| 4 | MM07–MM08-LAB | Pacote Free, adapter/capability check, roteiro de execução pelo usuário e plano E2. | Adapter E0 fake PASS; kit E1_PREPARADO; Free NOT_RUN |
+| 4 | MM07–MM08-LAB | Pacote Free, adapter/capability check, roteiro de execução pelo usuário e plano E2. | Adapter E0 fake PASS; código Free PASS; adapter/Genie Free NOT_RUN |
 | 5 | MM11–MM13-LAB | Temas, catálogo/impacto e ensaio conservador com legado fictício; migração não promovida. | Catálogo e equivalência fictícia E0 PASS; temas/monitoramento N/A no ensaio |
 
 O planejamento MAC00–MAC05 anterior é absorvido por bootstrap, seleção de componentes, contratos/estado, testes adversariais, piloto E0 e pacote E1 nas ondas acima. Não será criado controller de execução. MM08–MM13 de laboratório não equivalem a sprints corporativas concluídas.
@@ -39,4 +39,4 @@ O integrador é dono de policy, índices, changelog, schema compartilhado e rend
 
 ## Retomada
 
-A candidata E0 está implementada, revisada focalmente e testada; `RELATORIO_ENTREGA_LAB.md` contém comandos e evidência. O próximo passo humano é importar o ZIP do kit no Free e devolver `RESULTADOS_FREE.md` sanitizado, distinguindo teste de código, metadata Databricks, MLflow e conversa Genie. Depois, corrigir apenas falhas observadas em E1. E2 exige autorização institucional própria e permanece fora desta missão.
+A candidata E0 está implementada, revisada focalmente e testada; `RELATORIO_ENTREGA_LAB.md` contém comandos e evidência. O kit já foi importado e o código sintético executado no Free via CLI. Os próximos testes E1 são metadata em objeto sintético próprio, MLflow Free e conversa Genie Code, cada um com resultado sanitizado separado. Depois, corrigir apenas falhas observadas em E1. E2 exige autorização institucional própria e permanece fora desta missão.
