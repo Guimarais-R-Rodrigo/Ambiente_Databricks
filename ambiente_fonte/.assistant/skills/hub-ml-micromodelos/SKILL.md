@@ -29,17 +29,26 @@ recurso do Hub escolher, `hub-ml-concierge` é a entrada apropriada.
 
 ## Fixar ambiente, autoridade e permissão
 
-1. Identifique `E0` (fixtures sintéticas locais), `E1` (Databricks Free sintético)
-   ou `E2` (workspace corporativo). Nesta entrega, só trate E0 como executável
-   quando os componentes locais estiverem presentes e forem realmente rodados.
-   E1 requer pacote e execução separada pelo usuário; E2 fica fora da missão.
-2. Consulte a `policy.json` integrada da skill escolhida antes de uma rota
+1. Identifique `E0` (ambiente local do repositório com fixtures sintéticas),
+   `E1` (chat ou execução no Databricks Free sintético) ou `E2` (workspace
+   corporativo). Um chat no Free continua **E1 mesmo sem execução de código**;
+   uma fixture textual sintética fornecida nesse chat é `FORNECIDA`, não muda o
+   ambiente para E0 e não é metadata observada. Separe ambiente do chat,
+   origem da fixture e evidência de execução. Nesta entrega, só trate E0 como
+   executável quando os componentes locais estiverem presentes e forem
+   realmente rodados. Execução de runtime E1 exige pacote e prova separada;
+   E2 fica fora da missão.
+2. Consulte a `policy.json` integrada em
+   `.assistant/hub_padroes/skill_enforcement/policy.json` antes de uma rota
    protegida. `current_level` e artefatos presentes governam a capacidade atual;
    `target_level` indica direção. Ausência da entrada ou do runner necessário não
    autoriza simular preflight, Receipt, Postflight nem chamar helper paralelo.
    O L1 inicial desta skill é contrato estático; não oferece runner protegido,
    execução determinística nem Receipt. A policy integrada continua autoridade
-   para confirmar esse estado no snapshot em uso.
+   para confirmar esse estado no snapshot em uso. O `execution_contract.json`
+   da pasta da skill descreve invariantes estáticos, **não substitui** a
+   `policy.json` integrada. Se a policy estiver inacessível, registre
+   `POLICY_NAO_VERIFICADA` e não declare seu nível atual como confirmado.
 3. O prompt é briefing manual, sem policy ou autorização própria. Para cada
    especialista selecionado em um handoff, resolva novamente a policy *daquela*
    skill e a rota efetivamente implementada. Um prompt multirrota não possui
@@ -158,4 +167,5 @@ etapa posterior: governança externa conserva a autoridade institucional.
 - Evidência executada classificada como `E0_VALIDADO`, `E1_PREPARADO` ou
   `E1_EXECUTADO` conforme o caso real; `E2_NAO_EXECUTADO`. Inspeção textual de
   skill/prompt não demonstra roteamento Genie Code, runtime Databricks nem ACL.
-  Uma resposta textual no Free não é execução do runtime nem validação MM01.
+  Uma resposta textual no Free deve declarar ambiente **E1**, fixture textual
+  `FORNECIDA` e runtime E1 não executado; não é validação MM01 nem E0 validado.

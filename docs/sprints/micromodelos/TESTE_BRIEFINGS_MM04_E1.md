@@ -1,6 +1,7 @@
 # Reteste dos briefings publicados de Micromodelos no Genie Code Free
 
-**Estado:** P1 `PASS de resposta`; P2 `FAIL de interpretação semântica`.
+**Estado:** P1 `PASS de resposta`; P2 `FAIL de interpretação semântica`;
+P2b `FAIL de classificação de ambiente/policy`; P2c `NOT_RUN`.
 Os três casos E1 anteriores testaram a skill com mensagens
 próprias; este roteiro testa os textos completos dos prompts
 [`micromodelo_novo`](../../../ambiente_fonte/.assistant/hub_prompts/micromodelo_novo/micromodelo_novo.md)
@@ -131,7 +132,7 @@ sentido: os eventos são registros sintéticos de teste; não há objetivo de
 detectar fraude, fabricação ou anomalia. Todo o restante do prompt permanece
 igual ao P2; as seções `TAREFA` e `SAÍDA` seguem o produto publicado.
 
-## Caso P2b — esclarecimento da fixture, `NOT_RUN`
+## Caso P2b — esclarecimento da fixture, `FAIL` parcial
 
 Em chat novo no Databricks Free, selecione `@hub-ml-micromodelos` no menu e
 envie o bloco completo. Registre a resposta textual e a seleção observada.
@@ -177,9 +178,45 @@ SAÍDA
 - Rota de handoff e evidência E0/E1/E2 realmente obtida.
 ```
 
-Depois de P2b, a parte 3 dos notebooks de exemplo ainda exigirá respostas aos
+O usuário confirmou seleção com `@` e carregamento da skill em P2b. A
+transcrição recebida em 2026-09-29 tem SHA-256
+`799fe79b28b8f92f7d903e88c7ba73327983cb159dae57b8be6caa6a165f1e9d`
+e permanece fora do Git. A resposta preservou metadata `FORNECIDA`,
+`ESCOPO_OBSERVADO` vazio, três hipóteses, viabilidade/qualidade temporal/leakage
+`INDETERMINADO` e não alegou consulta ou publicação. Não tratou os eventos
+sintéticos como fraude ou fabricação: o FAIL semântico de P2 foi corrigido.
+
+**Veredito P2b: FAIL parcial.** Apesar da instrução explícita, a resposta chamou
+o chat no Free de E0 e a fixture textual de E1. Isso inverte ambiente e origem
+da evidência. Também afirmou que `execution_contract.json` era a autoridade
+vigente da policy após procurar `policy.json` apenas na pasta da skill; a
+policy integrada real fica em
+`.assistant/hub_padroes/skill_enforcement/policy.json`. A leitura do contrato
+estático não substitui a verificação de `current_level` nessa policy. A
+transcrição não audita chamadas internas do Genie.
+
+## Caso P2c — mesma fixture, skill revisada, `NOT_RUN`
+
+A revisão da skill esclarece: chat no Free permanece E1 sem execução de código;
+fixture textual recebida é `FORNECIDA` e não altera o ambiente; a policy
+integrada tem caminho explícito e não é substituída pelo
+`execution_contract.json`. O novo `SKILL.md` tem SHA-256
+`93e51ac4ca25f2c3bd88c6cb6a40e7e494fd9bf1852824cd4575628cf24351f2`.
+Importação individual no Free retornou `PROTOCOL_ERROR`, mas o readback remoto
+foi byte a byte igual à fonte. A policy remota também coincidiu com a fonte,
+SHA-256 `4d8c4981f7b728b5c83d467d2d4d2e047b21f2f47299ec125e961906e22e05fc`.
+Não houve nova conversa ainda.
+
+Para P2c, abra chat novo no Free, selecione a skill no menu e envie **exatamente
+o mesmo bloco P2b acima**. Se a interface conservar contexto antigo, recarregue
+a página antes do novo chat. Verifique que a resposta declara ambiente do chat
+E1, fixture textual `FORNECIDA`, runtime não executado, e consulta real da
+policy ou `POLICY_NAO_VERIFICADA`. Não aceite o contrato estático como prova
+substitutiva da policy.
+
+Depois de P2c, a parte 3 dos notebooks de exemplo ainda exigirá respostas aos
 **próprios briefings preenchidos** desses notebooks. Os briefings dos notebooks
-atuais não são idênticos a P1/P2; não se deve inserir neles uma resposta de
+atuais não são idênticos a P1/P2/P2b; não se deve inserir neles uma resposta de
 outro prompt como se fosse sua execução. É preciso alinhar seus textos à prova
 real antes de fechar o gate do template integrado. PASS conversacional não é
 certificação MM04.

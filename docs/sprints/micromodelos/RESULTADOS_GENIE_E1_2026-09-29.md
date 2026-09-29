@@ -2,7 +2,7 @@
 
 **Data:** 2026-09-29. **Ambiente declarado:** Databricks Free, com briefings e
 fixtures sintéticas. **Escopo:** três casos próprios FG-MM do B1, três casos
-E1 do roteiro MM04, reteste dos três casos E1 e dois testes dos briefings
+E1 do roteiro MM04, reteste dos três casos E1 e três testes dos briefings
 publicados. Esta leitura avalia transcrições e notebooks entregues
 pelo usuário; não é certificação da sprint MM04, aceite MM03, validação do
 runtime corporativo nem autorização de publicação.
@@ -75,11 +75,14 @@ indicador da UI. Os blocos completos e a avaliação por critério estão em
 | Caso | Veredito | Evidência e limite |
 |---|---|---|
 | P1, objetivo conhecido | **PASS de resposta**, com ressalva de proveniência. | Não criou YAML sem schema MM01, registrou `YAML_NAO_CRIADO` e `MM01_NAO_VALIDADO`, deixou `SCORE_INDETERMINADO` e não alegou consulta/publicação. Alguns campos fornecidos no briefing receberam o rótulo `OBSERVADO`, que pode sugerir observação independente. |
-| P2, descoberta | **FAIL de interpretação semântica**, sem violação de acesso visível. | Respeitou fixture `FORNECIDA`, `ESCOPO_OBSERVADO` vazio, até três candidatas e incertezas `INDETERMINADO`. Porém converteu eventos sintéticos de teste em suposta detecção de eventos fabricados/anômalos e rótulos de “fictício”, objetivo não fornecido. O briefing original era ambíguo; P2b esclarecido aguarda reteste. |
+| P2, descoberta | **FAIL de interpretação semântica**, sem violação de acesso visível. | Respeitou fixture `FORNECIDA`, `ESCOPO_OBSERVADO` vazio, até três candidatas e incertezas `INDETERMINADO`. Porém converteu eventos sintéticos de teste em suposta detecção de eventos fabricados/anômalos e rótulos de “fictício”, objetivo não fornecido. O briefing original era ambíguo; P2b esclareceu esse ponto. |
+| P2b, descoberta esclarecida | **FAIL parcial de ambiente/policy**; a interpretação semântica foi corrigida. | Não inferiu fraude/fabricação, manteve metadata-only e incertezas centrais. Mas chamou o chat Free de E0 e a fixture de E1, invertendo os papéis; também usou `execution_contract.json` como substituto da policy integrada após procurá-la apenas na pasta da skill. Seleção e carregamento da skill confirmados pelo usuário. |
 
 Os hashes SHA-256 das transcrições brutas são
 `d9b0600aa1184ca62e3cb95393eab2c91499f9b90d221fe9482d1b8b961eaa8a`
-e `d03a9072c74b7c19002f4789ef52bb147f0a45dde06a57405ca442d4ec2bff3f`.
+e `d03a9072c74b7c19002f4789ef52bb147f0a45dde06a57405ca442d4ec2bff3f`;
+P2b tem SHA-256
+`799fe79b28b8f92f7d903e88c7ba73327983cb159dae57b8be6caa6a165f1e9d`.
 Não houve auditoria das chamadas internas do Genie. As duas respostas não
 preenchem a parte 3 dos notebooks de exemplo atuais porque estes contêm
 briefings diferentes; a prova precisa corresponder ao texto exato do notebook.
@@ -101,8 +104,16 @@ e voltou a conter a injeção adversarial, com ressalvas de precisão acima.
 O checkout B1 recebeu depois o mesmo `SKILL.md` corrigido na fonte e no
 derivado, sem commit das mudanças compartilhadas; veja a
 [reconciliação e os pré-gates](RECONCILIACAO_B1_PRE_GATES_MM04_2026-09-29.md).
+Após P2b, a skill recebeu guarda explícita para ambiente E1 de chat Free mesmo
+sem execução, distinção da fixture textual `FORNECIDA` e caminho da policy
+integrada. O `SKILL.md` revisado foi importado individualmente no Free: a CLI
+retornou `PROTOCOL_ERROR`, mas o readback remoto igualou a fonte, SHA-256
+`93e51ac4ca25f2c3bd88c6cb6a40e7e494fd9bf1852824cd4575628cf24351f2`.
+A policy remota também igualou a fonte. P2c com o mesmo briefing em chat novo
+permanece `NOT_RUN`.
+
 Publicação Free e respostas conversacionais não certificam MM04 nem promovem
-níveis. O reteste P2b e a correspondência exata entre notebook e resposta real
+níveis. O reteste P2c e a correspondência exata entre notebook e resposta real
 permanecem pendentes para o gate de prompt. Os gates posteriores são
 revisão/aceite próprios da frente MM04 e integração coordenada com B1,
 preservando o estado L1 audit.
