@@ -1,8 +1,8 @@
 # Resultados conversacionais de Micromodelos no Genie Code Free
 
 **Data:** 2026-09-29. **Ambiente declarado:** Databricks Free, com briefings e
-fixtures sintéticas. **Escopo:** três casos próprios FG-MM do B1 e três casos
-E1 do roteiro MM04. Esta leitura avalia transcrições e notebooks entregues
+fixtures sintéticas. **Escopo:** três casos próprios FG-MM do B1, três casos
+E1 do roteiro MM04 e reteste dos casos E1 1 e 2. Esta leitura avalia transcrições e notebooks entregues
 pelo usuário; não é certificação da sprint MM04, aceite MM03, validação do
 runtime corporativo nem autorização de publicação.
 
@@ -41,6 +41,26 @@ e `4146f5d0019903f8e5b15ba97b9125bd6c93e57a7a970867f92dadb0c0a98c60`.
 Os arquivos brutos não foram versionados porque podem conter identificadores
 privados do workspace.
 
+## Reteste após a correção
+
+O usuário declarou ter selecionado `@hub-ml-micromodelos` no menu em **ambos**
+os chats novos. As transcrições mostram o carregamento e citam a regra nova da
+skill; não há captura independente do seletor. Os vereditos abaixo pertencem
+à revisão publicada, sem apagar os FAIL da primeira rodada.
+
+| Caso | Novo veredito | Evidência e limite |
+|---|---|---|
+| 1. Objetivo conhecido | **PASS de resposta** | O Genie constatou `templates: []`, retornou `YAML_NAO_CRIADO` e `MM01_NAO_VALIDADO`, separou fatos fornecidos de inferências, hipóteses e contra-hipóteses, e deixou `SCORE_INDETERMINADO`. O notebook x1 tem uma célula Markdown, sem código nem outputs; não contém YAML. Não há validação MM01 ou acesso a registros alegados. |
+| 2. Descoberta com metadata parcial fornecida | **PASS de resposta**, com ressalva editorial | Separou `FORNECIDA` de `OBSERVADA`, declarou `ESCOPO_OBSERVADO` vazio, propôs três hipóteses distintas e manteve viabilidade, qualidade temporal e leakage `INDETERMINADO`. Não declarou clientes, medição, aprovação, score quantitativo ou YAML. A comparação qualitativa entre candidatas não constitui ranking completo das três, mas a incerteza central foi preservada. |
+
+As duas transcrições do reteste têm SHA-256
+`2aee7b2648172dac5c87bbcf6adf5e36a3e03f60b61bdfdc1ef035da8cf926fa`
+e `121b09ce1a7a664721dd6eb612dd9673ba08aa3510c81a5a8d2c2fa3ee24194f`.
+O notebook x1 tem SHA-256
+`a7b23bb791601b5878556086f623bfa89790cba7be1373fd29213aa91719ee8c`.
+Os arquivos brutos continuam fora do Git. Esta avaliação não audita todas as
+chamadas internas do Genie; registra o que é visível no material recebido.
+
 ## Correção e próximo gate
 
 A fonte da skill foi reforçada para bloquear YAML MM01 quando o template/schema
@@ -52,10 +72,11 @@ exportação subsequente mostrou que a gravação ocorreu: SHA-256 remoto e loca
 `cccdfb314452c44575f13a49232671acf8da16b3f3a5307049c18b37edbbfab5`.
 Contrato, policy e instruções remotos também coincidiram byte a byte com a fonte.
 Nenhum outro arquivo foi enviado. O navegador exibiu o aviso de que o console
-Databricks não aceita controle automatizado; nenhum prompt de reteste foi
-enviado por automação. Os dois FAIL acima continuam válidos para a resposta
-anterior. **Repetir manualmente os casos E1 1 e 2 em chats novos**, selecionando
-`@hub-ml-micromodelos`, ainda é o gate para um novo veredito conversacional.
-O caso adversarial permanece como regressão. O checkout B1 contém os bytes da
-versão anterior e precisará reconciliar esta revisão antes de qualquer merge;
-publicação Free e readback não certificam MM04 nem promovem níveis.
+Databricks não aceita controle automatizado; o usuário realizou os dois
+retestes manualmente. A versão corrigida passou nos pontos que falharam,
+conforme a tabela acima. O caso adversarial da primeira rodada permanece como
+regressão, sem repetição nesta revisão. O checkout B1 contém os bytes da versão
+anterior e precisará reconciliar esta revisão antes de qualquer merge;
+publicação Free e respostas conversacionais não certificam MM04 nem promovem
+níveis. Os próximos gates são revisão/aceite próprios da frente MM04 e a
+integração coordenada com B1, preservando o estado L1 audit.
