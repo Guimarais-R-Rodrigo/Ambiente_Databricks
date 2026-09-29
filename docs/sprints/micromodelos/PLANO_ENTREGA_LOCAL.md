@@ -1,6 +1,6 @@
 # Micromodelos — concluir a entrega local antes da transferência
 
-**Data:** 2026-09-29. **Estado:** pacote complementar implementado; ensaio final do commit limpo e CI PENDENTES. Direção solicitada pelo responsável: preparar e auditar aqui uma candidata completa, transferir depois ao computador do trabalho e retornar defeitos para sprint local de correção.
+**Data:** 2026-09-29. **Referência de execução:** PR #116 e o manifesto do kit final, ambos identificados por commit. Direção solicitada pelo responsável: preparar e auditar aqui uma candidata completa, transferir depois ao computador do trabalho e retornar defeitos para sprint local de correção.
 
 Este documento é dono da preparação local restante. As portas corporativas continuam em [PLANO_PREPARACAO_E2.md](PLANO_PREPARACAO_E2.md). A entrega será uma **candidata local pronta para homologação**, conservando a skill L1/audit. Freeze V1, publicação e migração real continuam dependentes da sequência do plano mestre e do piloto institucional.
 

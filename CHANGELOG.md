@@ -5,6 +5,7 @@
 - (Codex) Registrado `PLANO_ENTREGA_LOCAL.md` após três análises paralelas: lacunas de transporte do runtime/schema MM01, aceite específico e ensaio do ZIP extraído; frentes disjuntas, critério de saída e retorno sanitizado para sprint corretiva.
 - (Codex) Adicionados `kit_micromodelos_trabalho.py`, `aceite_micromodelos_trabalho.py` e testes de pacote extraído. O kit corporativo passa a conter ZIP 03 técnico, notebook próprio e guia, com manifesto/hash, verificação antes de imports, dados sintéticos e opções externas desligadas. Guia e checklist de replicação atualizados.
 - (Codex) Atualizados plano E2 e índice; anexada atualização ao checkpoint preservando o histórico. CI de `d5f34acc`: 14 SUCCESS e SE02 SKIPPED. Promoção SE08 e homologação corporativa continuam separadas; ensaio do kit final e CI do novo commit serão registrados no checkpoint de entrega.
+- (Codex) Após o primeiro CI do pacote, corrigidas no `README.md` as duas contagens do snapshot SE01 para refletir os novos arquivos e links versionados. O FAIL do commit anterior permanece observável no workflow; os demais checks foram avaliados antes do envio corretivo.
 
 ## 2026-09-29 — Correção do snapshot README após reativação do CI
 
