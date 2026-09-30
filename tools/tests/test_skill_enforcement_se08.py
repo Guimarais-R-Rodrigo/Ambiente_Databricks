@@ -82,12 +82,12 @@ class SE08OperationalTests(unittest.TestCase):
         self.assertIn("--no-evidence", command)
         self.assertIn("--allow-dirty", command)
 
-    def test_create_object_global_level_is_not_promoted_by_se08(self):
+    def test_create_object_existing_level_is_preserved(self):
         payload = json.loads(POLICY.read_text(encoding="utf-8"))
         item = next(
             row for row in payload["skills"] if row["skill"] == "hub-ml-criar-objeto"
         )
-        self.assertEqual("L2", item["current_level"])
+        self.assertEqual("L3", item["current_level"])
         self.assertEqual("L3", item["target_level"])
         self.assertEqual("stage_specific", item["scope_mode"])
         self.assertEqual("audit", item["rollout_mode"])
@@ -109,9 +109,9 @@ class SE08OperationalTests(unittest.TestCase):
         self.assertEqual(manual, root_manual)
         self.assertIn("S06-A1-R4=NOT_RUN", playbook)
         self.assertIn("SE06_DOD=INCOMPLETE", playbook)
-        self.assertIn("14 skills", playbook)
+        self.assertIn("15 skills", playbook)
         self.assertIn("PROMOÇÃO", playbook.upper())
-        self.assertIn("skill enforcement  : 5/5 contratos válidos", root_readme)
+        self.assertIn("skill enforcement  : 14/14 contratos válidos", root_readme)
         self.assertIn("BLOQUEADA", checklist)
         self.assertIn("publicar_free.py", checklist)
 

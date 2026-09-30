@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.1",
+  "skill": "hub-ml-feature-engineering",
+  "mode": "audit",
+  "resources": [],
+  "templates": [],
+  "metadata": {
+    "b1": {
+      "state": "CANDIDATE_NOT_PROMOTED",
+      "stage_level": "COMPOSED_LOCAL_VIEW",
+      "profile": "COMPOSED_PIT_FEATURE_VIEW_V1",
+      "upstream_skill": "hub-ml-cross-eda-ml",
+      "upstream_profile": "LOCAL_SYNTHETIC_PIT_V1",
+      "upstream_finalizer_required": true,
+      "fit": false,
+      "materialization": false,
+      "promotion_authorized": false
+    }
+  }
+}

@@ -1,0 +1,101 @@
+
+hub-ml-analise-safra  Tenho coortes sintéticas mensais: janeiro com dois contratos, MOB0=(0,0), MOB1=(1,0), MOB2 só um observado; fevereiro com dois contratos, MOB0=(0,1), MOB1=(0,1). O alvo é cumulativo. Como calcular a tabela safra×MOB mantendo denominador fixo e distinguindo célula incompleta?
+The user is asking about vintage/cohort analysis with synthetic monthly cohorts. They want to know how to calculate a safra×MOB (vintage×month-on-book) table keeping the denominator fixed and distinguishing incomplete cells.
+They've referenced the hub-ml-analise-safra skill. Let me load it first, as per the instructions.
+The user is asking a conceptual/methodological question about how to calculate a vintage×MOB table with their synthetic cohorts. Let me analyze what they've provided:
+Janeiro cohort (2 contracts):
+MOB0: (0, 0) — both observed, neither defaulted MOB1: (1, 0) — both observed, 1 defaulted MOB2: only 1 observed (out of 2)
+Fevereiro cohort (2 contracts):
+MOB0: (0, 1) — both observed, 1 defaulted MOB1: (0, 1) — both observed, 1 defaulted
+The target is CUMULATIVE.
+The skill says this is a conceptual question, so I should explain the methodology without inventing execution or entries. Let me explain the key concepts:
+Denominator fixed: The denominator for each cohort is fixed at MOB0 — the number of unique contracts that entered that cohort. For January, den=2; for February, den=2.
+Cumulative target: Since the target is already cumulative (stock, not flow), we don't need to accumulate again. We use the value directly as the numerator at each MOB.
+Distinguishing incomplete cells:
+January/MOB2: only 1 of 2 contracts observed → INCOMPLETE (mature but partial coverage) Need to check maturity — depends on the cutoff date. If the cutoff is after February+1month=March, then January/MOB2 could be IMMATURE or MATURE depending on exact dates. But the user says "só um observado" meaning one is missing, so this is about coverage, not immaturity.
+Let me construct the conceptual explanation:
+Denominator fixed per cohort (MOB0_UNIQUE_IDS_FIXED_PER_COHORT):
+January: den = 2 February: den = 2
+Cumulative target — não acumular de novo: Since target is CUMULATIVE, the value at each MOB already represents the stock/accumulated state. We validate non-decreasing and use directly.
+For January:
+MOB0: numerator = sum of targets = 0+0 = 0, rate = 0/2 = 0% MOB1: numerator = 1+0 = 1, rate = 1/2 = 50% MOB2: only 1 observed → INCOMPLETE cell. We preserve denominator=2 but mark as incomplete. We should NOT finalize the rate with partial data, or at least flag it.
+For February:
+MOB0: numerator = 0+1 = 1, rate = 1/2 = 50% MOB1: numerator = 0+1 = 1, rate = 1/2 = 50%
+Coverage grid:
+January/MOB0: COMPLETE (2/2 observed) January/MOB1: COMPLETE (2/2 observed) January/MOB2: INCOMPLETE (1/2 observed) — maturity depends on cutoff, but given partial observation, it's INCOMPLETE if mature February/MOB0: COMPLETE (2/2 observed) February/MOB1: COMPLETE (2/2 observed)
+Wait, but we need a cutoff date to determine maturity. The user hasn't provided one. Without a cutoff, I can explain the coverage but cannot formally classify maturity.
+Actually, looking more carefully at the skill: "Sem corte, explique a cobertura parcial informada, mas não atribua sua causa à imaturidade nem emita classificação formal de maturity/coverage_grid."
+So without a cutoff date, I should explain the partial coverage but not formally classify maturity/coverage_grid.
+Let me construct the answer. This is a conceptual/methodological question. I should explain the rules clearly.
+The key points:
+Denominator is fixed per cohort = number of unique contracts at MOB0 Cumulative target means use the value directly (validate non-decreasing), don't re-accumulate For incomplete cells (January/MOB2 with 1/2 observed): preserve denominator=2, mark as incomplete, don't finalize the rate or treat missing as zero Without a cutoff date, I can describe coverage but not formally classify maturity
+Let me also construct the table conceptually.
+For the table, let me lay it out:
+| Safra | MOB | Contratos observados | Denominador fixo | Numerador (cumulativo) | Taxa | Cobertura | |---|---|---|---|---|---|---| | Jan | 0 | 2 | 2 | 0 | 0% | completa | | Jan | 1 | 2 | 2 | 1 | 50% | completa | | Jan | 2 | 1 | 2 | ? | ? | incompleta | | Fev | 0 | 2 | 2 | 1 | 50% | completa | | Fev | 1 | 2 | 2 | 1 | 50% | completa |
+For January/MOB2, we don't know the value of the single observed contract, so we can't compute the numerator. The user said "MOB2 só um observado" but didn't give the target value for that observation.
+Actually, the user said "MOB2 só um observado" — they mentioned only one contract was observed at MOB2 for January, but they didn't provide the target value. So I should note that.
+Let me write the response. This is conceptual, so I should explain methodology and identify the computation as illustrative, not as canonical execution.
+I should also offer to run the canonical path if they want actual execution — but I'd need the full input (IDs, dates, cutoff, etc.).
+Let me structure a clear, concise response in Portuguese.
+Esta é uma pergunta metodológica — explico a regra e mostro as contas ilustrativas, sem alegar execução canônica.
+1. Denominador fixo por safra (MOB0_UNIQUE_IDS_FIXED_PER_COHORT) O denominador de cada coorte é o número de contratos únicos observados em MOB0 — e não muda nos MOBs seguintes, mesmo que algum contrato deixe de ser observado.
+- Janeiro: den = 2 (contratos em MOB0)
+- Fevereiro: den = 2 (contratos em MOB0)
+2. Target cumulativo — NÃO acumular de novo Como o alvo é CUMULATIVE, o valor em cada MOB já é estoque acumulado. Você usa o valor diretamente como numerador, apenas validando que é não decrescente por contrato. Não aplica cumsum, máximo progressivo nem soma de fluxos.
+3. Célula incompleta ≠ zero Quando nem todos os contratos do roster aparecem em um MOB, a célula é incompleta. O denominador permanece 2, mas você não finaliza a taxa com dados parciais nem preenche ausência com zero.
+Safra
+MOB
+Observados
+Den fixo
+Numerador (cumulativo)
+Taxa
+Cobertura
+Jan
+0
+2/2
+2
+0 + 0 = 0
+0/2 = 0%
+Completa
+Jan
+1
+2/2
+2
+1 + 0 = 1
+1/2 = 50%
+Completa
+Jan
+2
+1/2
+2
+? (1 obs, valor não informado)
+não finalizar
+Incompleta
+Fev
+0
+2/2
+2
+0 + 1 = 1
+1/2 = 50%
+Completa
+Fev
+1
+2/2
+2
+0 + 1 = 1
+1/2 = 50%
+Completa
+Pontos de atenção:
+- Janeiro/MOB2: só 1 dos 2 contratos foi observado. O denominador permanece 2, mas a taxa não pode ser finalizada — faltam o valor do contrato observado e a razão da ausência do outro. Você não sabe se o contrato faltante entrou em default, foi encerrado, ou simplesmente não foi processado.
+- Fevereiro: a taxa está estável em 50% de MOB0 para MOB1, consistente com semântica cumulativa (estoque não decrescente).
+- Comparação entre safras: só comparar Janeiro e Fevereiro em MOBs onde ambas tenham cobertura completa (MOB0 e MOB1). Janeiro/MOB2 não é comparável — é incompleta.
+Sem uma data de corte informada, não é possível classificar formalmente a célula Janeiro/MOB2 como IMMATURE (MOB posterior à idade da safra no corte) ou INCOMPLETE (célula madura com cobertura parcial). A ausência de observação pode ser imaturidade temporal ou simples falta de dado — são causas distintas.
+Se quiser que eu rode o cálculo via scripts/run.py (perfil MONTHLY_BINARY_PILOT_V1), preciso dos campos faltantes do contrato de entrada:
+- IDs dos contratos (roster completo por safra)
+- Datas de originação e observação de cada linha
+- Data de corte
+- Valores de target de cada contrato × MOB (incluindo o contrato observado em Janeiro/MOB2, cujo valor não foi informado)
+Sem esses campos, o exemplo é compatível em princípio com o perfil, mas o pedido não está pronto para execução.
+Quer montar a entrada completa e rodar o cálculo canônico no notebook?
+
+  

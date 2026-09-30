@@ -1,0 +1,81 @@
+{
+  "cases": {
+    "cumulative_real_core": {
+      "incomplete_rows": [
+        {
+          "cobertura_observada": 0.5,
+          "mob": 2,
+          "n_contratos_observados": 1,
+          "n_contratos_safra": 2,
+          "n_eventos_acumulados": 1,
+          "safra": "2026-01",
+          "taxa": null,
+          "taxa_acumulada": null
+        }
+      ],
+      "ok": true,
+      "receipt_present": true,
+      "status": "PASS",
+      "verification": {
+        "completion_authorized": false,
+        "issues": [],
+        "promotion_authorized": false,
+        "scope": "CURRENT_RELEASE_REQUEST_RECEIPT_AND_TRUSTED_FIXTURE_ORACLE",
+        "status": "VALID",
+        "valid": true
+      },
+      "writes_performed": false
+    },
+    "event_real_core": {
+      "incomplete_rows": [
+        {
+          "cobertura_observada": 0.5,
+          "mob": 2,
+          "n_contratos_observados": 1,
+          "n_contratos_safra": 2,
+          "n_eventos_acumulados": 1,
+          "safra": "2026-01",
+          "taxa": null,
+          "taxa_acumulada": null
+        }
+      ],
+      "ok": true,
+      "receipt_present": true,
+      "status": "PASS",
+      "verification": {
+        "completion_authorized": false,
+        "issues": [],
+        "promotion_authorized": false,
+        "scope": "CURRENT_RELEASE_REQUEST_RECEIPT_AND_TRUSTED_FIXTURE_ORACLE",
+        "status": "VALID",
+        "valid": true
+      },
+      "writes_performed": false
+    },
+    "negative_monetary_estimand": {
+      "issues": [
+        "PROFILE:UNSUPPORTED:estimand"
+      ],
+      "ok": true,
+      "status": "BLOCKED"
+    },
+    "policy_pre_promotion": {
+      "current_level": "L0",
+      "ok": true,
+      "rollout_mode": "audit",
+      "target_level": "L3"
+    },
+    "release_unchanged": {
+      "manifest_sha256": "930318415098e83727c655766717044813c9a267a600b53fcfedd2914bf55ef8",
+      "ok": true
+    }
+  },
+  "marker": "SER_B1_G6_SER03_FREE_PROBE_1",
+  "persistent_writes_performed": false,
+  "promotion_authorized": false,
+  "published_package_mutated": false,
+  "qualified_sha": "08c2a93c4c9dede1e759abe28c07242b4116f47e",
+  "scope": "L3_MONTHLY_BINARY_PILOT_V1",
+  "skill": "hub-ml-analise-safra",
+  "status": "PASS"
+}

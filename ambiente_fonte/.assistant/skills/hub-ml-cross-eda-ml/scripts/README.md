@@ -1,11 +1,13 @@
-# Scripts candidatos — SER05: contexto L2 candidato, sem execução de join
+# Scripts candidatos — Cross-EDA
 
-Esta pasta contém `preflight.py`. As fachadas canônicas SEF são reutilizadas. `current_level` na policy não é alterado por estes arquivos.
+`preflight.py` preserva o contexto L2, fechado por [input.schema.json](../input.schema.json) e [execution_contract.json](../execution_contract.json). Ele não executa Spark nem comprova cobertura.
 
-As entradas são fechadas pelo código e descritas em [input.schema.json](../input.schema.json). O [contrato](../execution_contract.json) usa schema SEF 0.1, modo audit.
+`run_diagnostic.py` executa o helper público `diagnosticar_join` em Spark para duas fontes sintéticas estáticas, com PIT `NOT_APPLICABLE`, chave da âncora única e cardinalidade sem expansão. Use `verify_diagnostic.py` com request e run_id esperados para conferir resultado, Receipt e integridade dos artefatos. O [contrato diagnóstico](../diagnostic_contract.json) e o [manifesto](../release_manifest.json) delimitam essa rota.
 
-Os campos sintéticos e o perfil explícito são obrigatórios. Nenhum comando aqui grava output de domínio em disco: a função retorna estruturas em memória e a CLI emite JSON ASCII-safe. A coleta de evidência será responsabilidade da campanha autorizada.
+Os testes locais em `tools/tests/test_ser05_diagnostic.py` exercitam Spark real, cardinalidade, chaves inválidas, hashes e replay. O resultado comprova somente o diagnóstico estático; não entrega join de negócio, PIT temporal, postflight L4 ou autorização de publicação. Receipt e hashes não autenticam usuário nem substituem homologação Genie.
 
-Somente o perfil descrito foi implementado. Suporte a trimestre/comparações e join/Spark/Postflight L4 não deve ser inferido. O manifesto e os hashes não autenticam um usuário e não autorizam publicação.
+Nenhuma rota altera a policy. Os resultados ficam em memória; persistir evidência local não promove o candidato.
 
-Estado desta entrega: testes nativos de domínio executados; integração completa com o checkout, renderer e B0 ainda não validada. Não usar como handoff de certificação.
+## PIT SER06 local
+
+Use run_pit.py::run para executar pit_join no perfil LOCAL_SYNTHETIC_PIT_V1 e verify_pit.py::finalize + verify_finalized para Postflight e oráculo independente. Requer Spark UTC; fontes sintéticas limitadas a 500 linhas, atraso constante com disponibilidade explicitamente conferida, LE e janela positiva. Semânticas LT, variável e bitemporal bloqueiam. O PASS local não comprova readiness de negócio ou homologação Databricks.

@@ -1,0 +1,124 @@
+
+hub-ml-analise-safra se-safra Tenho eventos binários sintéticos mensais, não um target já acumulado. A safra de janeiro/2026 tem roster fixo a1 e a2: MOB0=(0,0), MOB1=(1,0), MOB2 tem somente a1=0 observado. A safra de fevereiro/2026 tem b1 e b2: MOB0=(0,1), MOB1=(0,0). Denominador fixo de 2 contratos por safra. Sem data de corte de maturidade, sem escrever arquivos ou tabelas e sem afirmar execução de runner, explique a diferença entre evento mensal e incidência acumulada, calcule somente células justificadas e diga por que janeiro/MOB2 não recebe taxa final. Não trate a ausência de a2 como zero.
+The user is asking about vintage/cohort analysis concepts - specifically about the difference between monthly events and cumulative incidence. They have a specific synthetic scenario with two cohorts (January 2026 and February 2026) with binary monthly events.
+Let me first load the relevant skill since this is about "safras, coortes e maturação comparável" which maps to hub-ml-analise-safra.
+Let me read the skill file first.
+The user is asking a conceptual/methodological question about vintage analysis. Let me analyze the SKILL.md carefully.
+Key points from the skill:
+For conceptual/methodological questions, I should explain the rule and identify illustrative calculations as such. This doesn't substitute the canonical route nor allow claiming execution, verification, or Receipt. The difference between EVENT and CUMULATIVE semantics: EVENT contains occurrences and the helper derives the cumulative indicator by contract with progressive maximum CUMULATIVE already contains the accumulated stock and should be validated as non-decreasing Coverage status definitions: IMMATURE: MOB after the cohort's age at cutoff; maturity=IMMATURE NO_OBSERVATIONS: Temporally mature cell, no observations at MOB COMPLETE: Mature cell, all contracts in roster observed at MOB INCOMPLETE: Mature cell, part of contracts observed at MOB Without a cutoff date, I should explain the reported partial coverage but not attribute its cause to immaturity nor issue formal maturity/coverage_grid classification. "sem corte que comprove idade suficiente, não escreva coverage_status=INCOMPLETE nem 'madura temporalmente', mesmo se a ausência de uma observação estiver confirmada. Diga 'cobertura parcial relatada; maturidade e status formal pendentes da data de corte' e mantenha a taxa final pendente." The example in the skill: "janeiro/MOB2 só um observado", com dois contratos na safra, informa cobertura parcial. Não identifica qual contrato foi observado, o valor dessa observação nem por que falta o outro. Preserve o denominador dois e não finalize a taxa com esses dados; não invente ID, target ou causa da ausência.
+Now let me work through the user's specific scenario:
+Safra janeiro/2026: roster fixo a1, a2 (denominador = 2)
+MOB0: (0, 0) → both observed, both 0 MOB1: (1, 0) → both observed, a1=1, a2=0 MOB2: somente a1=0 observado → only a1 observed with value 0; a2 not observed
+Safra fevereiro/2026: roster fixo b1, b2 (denominador = 2)
+MOB0: (0, 1) → both observed, b1=0, b2=1 MOB1: (0, 0) → both observed, both 0
+The user says:
+Monthly binary events, not an already-accumulated target Denominator fixed at 2 contracts per cohort No maturity cutoff date No writing files or tables No claiming runner execution Explain difference between monthly event and cumulative incidence Calculate only justified cells Explain why January/MOB2 doesn't get a final rate Don't treat a2's absence as zero
+Since these are EVENT semantics (monthly binary events, not accumulated), the cumulative incidence is derived by progressive maximum per contract.
+Let me work through the calculations:
+EVENT semantics: Each MOB has a binary event (0 or 1). The cumulative incidence per contract is the maximum across MOBs up to that point (progressive maximum - once 1, stays 1).
+Safra janeiro/2026 (denominador = 2):
+MOB0:
+a1: event=0, cumulative=0 a2: event=0, cumulative=0 Both observed. Monthly event rate = (0+0)/2 = 0/2 = 0.0 Cumulative incidence = max(0,0 per contract) = (0+0)/2 = 0.0
+MOB1:
+a1: event=1, cumulative=max(0,1)=1 a2: event=0, cumulative=max(0,0)=0 Both observed. Monthly event rate = (1+0)/2 = 1/2 = 0.5 Cumulative incidence = (1+0)/2 = 1/2 = 0.5
+MOB2:
+a1: event=0 observed, cumulative=max(1,0)=1 (stays 1 because progressive max) a2: NOT observed. We don't know a2's event at MOB2. Only 1 of 2 contracts observed. Coverage is partial. Without cutoff date, we cannot formally classify this as INCOMPLETE or mature. We should NOT treat a2's absence as 0. Therefore: cumulative incidence cannot be finalized. If we naively calculated with only a1: (1)/1 = 1.0, but this uses denominator 1, not 2. Wrong. If we treated a2 as 0: (1+0)/2 = 0.5, but this is wrong because a2's value is unknown, not zero. The monthly event rate at MOB2 for a1 alone is 0, but we can't compute the cohort monthly rate without both contracts.
+Actually, let me think about what "justified cells" means. The user says "calcule somente células justificadas" - calculate only justified cells.
+For January/2026:
+MOB0: Complete (both observed). Monthly event rate = 0/2 = 0.0. Cumulative incidence = 0/2 = 0.0. MOB1: Complete (both observed). Monthly event rate = 1/2 = 0.5. Cumulative incidence = 1/2 = 0.5 (a1 has cumulative 1, a2 has cumulative 0). MOB2: Partial (only a1 observed, a2 missing). Cannot finalize rate. Coverage partial reported.
+For February/2026:
+MOB0: Complete (both observed). Monthly event rate = 1/2 = 0.5. Cumulative incidence = 1/2 = 0.5 (b1=0, b2=1). MOB1: Complete (both observed). Monthly event rate = 0/2 = 0.0. Cumulative incidence = 1/2 = 0.5 (b1 cumulative = max(0,0)=0, b2 cumulative = max(1,0)=1).
+Wait, for MOB1 of February:
+b1: MOB0 event=0, MOB1 event=0 → cumulative at MOB1 = max(0,0) = 0 b2: MOB0 event=1, MOB1 event=0 → cumulative at MOB1 = max(1,0) = 1 Monthly event rate at MOB1 = (0+0)/2 = 0/2 = 0.0 Cumulative incidence at MOB1 = (0+1)/2 = 1/2 = 0.5
+This is a key illustration: the monthly event at MOB1 is 0 (no new events), but the cumulative incidence remains 0.5 because b2 already had the event at MOB0.
+Now, why January/MOB2 doesn't get a final rate:
+Only a1 is observed at MOB2 (a2 is absent). The roster denominator is 2. Treating a2 as 0 would be fabricating data - the absence of observation is not the same as observing a zero. Without a cutoff date, we cannot formally classify the cell as INCOMPLETE (mature with partial coverage) vs IMMATURE (not yet reached). The skill says: "sem corte que comprove idade suficiente, não escreva coverage_status=INCOMPLETE nem 'madura temporalmente'" - we should say "cobertura parcial relatada; maturidade e status formal pendentes da data de corte" and keep the final rate pending. Even though a1's cumulative is known (stays 1 from MOB1), a2's cumulative is unknown at MOB2. a2 could have had an event at MOB2 (making cumulative 1) or not (staying 0). So the cohort cumulative incidence at MOB2 could be (1+0)/2=0.5 or (1+1)/2=1.0. We can't know without observing a2.
+Let me also note: the user says "não trate a ausência de a2 como zero" - this is a key guardrail from the skill.
+Let me also think about what we CAN say about a1 at MOB2:
+a1's monthly event at MOB2 = 0 (observed) a1's cumulative at MOB2 = max(1, 0) = 1 (progressive max, stays 1) But the COHORT rate needs both contracts.
+Now let me structure my response. The user wants:
+Explanation of difference between monthly event and cumulative incidence Calculate only justified cells Explain why January/MOB2 doesn't get a final rate Don't treat a2's absence as zero No files/tables written, no runner execution claimed
+This is a conceptual/methodological question, so I'm in the "Responder perguntas conceituais" section of the skill. I should explain rules and identify illustrative calculations as such, without claiming canonical execution.
+Let me also check the memory - should I save anything? The user is working with vintage analysis, synthetic data, and has specific preferences. Let me note what I learn.
+Let me write a clear, structured response in Portuguese.
+O pedido é conceitual e metodológico, compatível em princípio com o perfil MONTHLY_BINARY_PILOT_V1, mas sem execução canônica — não há roster fechado em input.schema.json, não há run_id, Receipt ou verificação. As contas abaixo são ilustrativas e justificadas pelos dados fornecidos; não substituem a rota canônica nem alegam execução do runner.
+Com semântica EVENT, cada célula contém a ocorrência binária no MOB específico (fluxo no mês). A incidência acumulada é derivada por contrato via máximo progressivo: uma vez que o contrato assume 1 em algum MOB, seu indicador acumulado permanece 1 nos MOBs subsequentes. A taxa da coorte em cada MOB é a média dos indicadores acumulados individuais sobre o denominador fixo — nunca a soma de taxas mensais.
+Conceito
+O que mede
+Fórmula (por coorte, MOB k)
+Evento mensal
+Ocorrências neste MOB
+Σ eventoₘ / denominador
+Incidência acumulada
+Contratos que já atingiram o evento até o MOB k
+Σ max(evento₀..eventoₖ) / denominador
+A diferença é crítica: o evento mensal pode ser 0 em um MOB enquanto a incidência acumulada permanece positiva, porque um contrato anteriormente afetado não "sai" do acumulado.
+Denominador fixo = 2 contratos por safra. Semântica EVENT, acumulação por máximo progressivo.
+MOB
+a1 (evento → acum.)
+a2 (evento → acum.)
+Evento mensal
+Incidência acum.
+Cobertura
+0
+0 → 0
+0 → 0
+(0+0)/2 = 0,0
+(0+0)/2 = 0,0
+2/2 observados
+1
+1 → 1
+0 → 0
+(1+0)/2 = 0,5
+(1+0)/2 = 0,5
+2/2 observados
+2
+0 → 1
+não observado
+—
+—
+1/2 relatado
+No MOB2, a1 foi observado com evento 0; seu acumulado permanece 1 (máximo progressivo). Mas a2 não tem observação neste MOB — não se sabe se a2 teve evento 1 ou 0. A taxa final da coorte em MOB2 depende do acumulado de a2, que é desconhecido.
+MOB
+b1 (evento → acum.)
+b2 (evento → acum.)
+Evento mensal
+Incidência acum.
+Cobertura
+0
+0 → 0
+1 → 1
+(0+1)/2 = 0,5
+(0+1)/2 = 0,5
+2/2 observados
+1
+0 → 0
+0 → 1
+(0+0)/2 = 0,0
+(0+1)/2 = 0,5
+2/2 observados
+Observe fevereiro/MOB1: o evento mensal é 0,0 (nenhuma ocorrência nova), mas a incidência acumulada permanece 0,5 — b2 já havia sido afetado em MOB0 e o máximo progressivo preserva esse estado.
+Três razões convergem:
+1. Ausência ≠ zero. A2 não tem observação em MOB2. Tratar a ausência como 0 significaria fabricar evento = 0 para a2, o que reduziria artificialmente a incidência acumulada para (1+0)/2 = 0,5. Mas a2 poderia ter tido evento 1 neste MOB — a incidência acumulada real seria (1+1)/2 = 1,0. Sem observação, ambos os cenários são possíveis.
+2. Denominador preservado. O denominador da safra é 2 (roster fixo). Calcular a taxa com apenas a1 (1/1 = 1,0) troca o denominador por 1, violando o contrato de coorte. Calcular com a2 tratado como zero ((1+0)/2 = 0,5) viola a regra de não fabricar dado.
+3. Sem data de corte, sem classificação formal. Sem uma data de corte que comprove que a safra de janeiro já atingiu idade suficiente para o MOB2, não se pode classificar a célula como INCOMPLETE (madura com cobertura parcial) nem IMMATURE (ainda não chegou). A classificação formal de maturity e coverage_status fica pendente da data de corte. O que se pode dizer é: cobertura parcial relatada — 1 de 2 contratos observados em MOB2; maturidade e status formal pendentes da data de corte; taxa final pendente.
+Safra/MOB
+Incidência acum.
+Status
+Jan/MOB0
+0,0
+Calculada (2/2)
+Jan/MOB1
+0,5
+Calculada (2/2)
+Jan/MOB2
+—
+Pendente — cobertura parcial, sem corte
+Fev/MOB0
+0,5
+Calculada (2/2)
+Fev/MOB1
+0,5
+Calculada (2/2)
+As comparações entre safras só são justificadas em MOBs com maturidade comparável — aqui MOB0 e MOB1 são comuns a ambas, mas sem data de corte não se pode confirmar formalmente a maturidade.
+Para executar a rota canônica (scripts/run.py) com esses dados sintéticos, seria necessário montar o input.schema.json fechado com roster, datas, corte e semântica confirmados, e fornecer um run_id. Se quiser, posso preparar o pedido no formato do contrato para você revisar antes de qualquer execução.

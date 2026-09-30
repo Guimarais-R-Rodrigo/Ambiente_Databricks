@@ -1,0 +1,83 @@
+{
+  "manifest_version": "0.1",
+  "skill": "hub-ml-baseline-ml",
+  "algorithm": "git_blob_sha1",
+  "artifacts": [
+    {
+      "path": "hub_scripts/skill_execution/__init__.py",
+      "git_blob_sha1": "a615f117e85518e440655e5bc413951c42cedf5f"
+    },
+    {
+      "path": "hub_scripts/skill_execution/domain_context/__init__.py",
+      "git_blob_sha1": "4f2f61fb3221a72d066cf415e49e15b5b6362f66"
+    },
+    {
+      "path": "hub_scripts/skill_execution/domain_context/release.py",
+      "git_blob_sha1": "42b83c751dabd714835096e587bbc7460605b4bc"
+    },
+    {
+      "path": "hub_scripts/skill_execution/receipt/__init__.py",
+      "git_blob_sha1": "0845b8109560c05a5a466638f02482b0541ab6b9"
+    },
+    {
+      "path": "hub_scripts/skill_execution/skill_execution.py",
+      "git_blob_sha1": "f3f0d1647da161d051802ed53ce120194640e0e4"
+    },
+    {
+      "path": "hub_snippets/ml/metrics_report/__init__.py",
+      "git_blob_sha1": "710e055bef0b2685cc969a16fd1c2606ce6d5c95"
+    },
+    {
+      "path": "hub_snippets/ml/metrics_report/metrics_report.py",
+      "git_blob_sha1": "72b442c52990c3629e2b6246b79774be892fed04"
+    },
+    {
+      "path": "hub_snippets/ml/mlflow_run/__init__.py",
+      "git_blob_sha1": "6b3f98edb2deda73330d56eff1e2535a63fc45c7"
+    },
+    {
+      "path": "hub_snippets/ml/mlflow_run/mlflow_run.py",
+      "git_blob_sha1": "722843a3f29b972712979dc900f9c937d1a85c7e"
+    },
+    {
+      "path": "hub_snippets/ml/split_temporal/__init__.py",
+      "git_blob_sha1": "6e5f2e2040d83724ccc0bbc5f7d2680b12943bfa"
+    },
+    {
+      "path": "hub_snippets/ml/split_temporal/split_temporal.py",
+      "git_blob_sha1": "fbb99b6cdb91b34056a21b50e1aa4dece4041eb4"
+    },
+    {
+      "path": "skills/hub-ml-baseline-ml/execution_contract.json",
+      "git_blob_sha1": "c4cbe5610a3f6b1cca32b7bba8e970ca4b2066e2"
+    },
+    {
+      "path": "skills/hub-ml-baseline-ml/input.schema.json",
+      "git_blob_sha1": "ffa4cb57ddaf3548e65cde2e8b4ce519145116fa"
+    },
+    {
+      "path": "skills/hub-ml-baseline-ml/scripts/preflight.py",
+      "git_blob_sha1": "34686e42f472b116d4871a352d87c906f1549267"
+    },
+    {
+      "path": "skills/hub-ml-baseline-ml/scripts/run.py",
+      "git_blob_sha1": "aa609f763a9613c14a076128cceeefee31065b42"
+    },
+    {
+      "path": "skills/hub-ml-baseline-ml/scripts/run_tracking.py",
+      "git_blob_sha1": "a7f3965aaa17aedce5edb6d0c5342421704bf8f6"
+    },
+    {
+      "path": "skills/hub-ml-baseline-ml/scripts/verify.py",
+      "git_blob_sha1": "a8031772b36e9459c7a15bc10a52dc47860ece7c"
+    },
+    {
+      "path": "skills/hub-ml-baseline-ml/scripts/verify_tracking.py",
+      "git_blob_sha1": "0613253e6d8b1cfc569a9abac19e9668841ea749"
+    },
+    {
+      "path": "skills/hub-ml-baseline-ml/tracking_contract.json",
+      "git_blob_sha1": "34667f0882899abd6dfa48793b3e220adf11e91c"
+    }
+  ]
+}

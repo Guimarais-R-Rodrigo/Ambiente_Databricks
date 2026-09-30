@@ -1,0 +1,119 @@
+{
+  "manifest_version": "0.1",
+  "skill": "hub-ml-monitoramento-modelo",
+  "algorithm": "git_blob_sha1",
+  "artifacts": [
+    {
+      "path": "hub_scripts/skill_execution/__init__.py",
+      "git_blob_sha1": "a615f117e85518e440655e5bc413951c42cedf5f"
+    },
+    {
+      "path": "hub_scripts/skill_execution/domain_context/__init__.py",
+      "git_blob_sha1": "4f2f61fb3221a72d066cf415e49e15b5b6362f66"
+    },
+    {
+      "path": "hub_scripts/skill_execution/domain_context/release.py",
+      "git_blob_sha1": "42b83c751dabd714835096e587bbc7460605b4bc"
+    },
+    {
+      "path": "hub_scripts/skill_execution/postflight/__init__.py",
+      "git_blob_sha1": "ec7028a076418c8ab089b826d5dc3e2a6f582e51"
+    },
+    {
+      "path": "hub_scripts/skill_execution/receipt/__init__.py",
+      "git_blob_sha1": "0845b8109560c05a5a466638f02482b0541ab6b9"
+    },
+    {
+      "path": "hub_scripts/skill_execution/skill_execution.py",
+      "git_blob_sha1": "f3f0d1647da161d051802ed53ce120194640e0e4"
+    },
+    {
+      "path": "hub_snippets/constants/colors/__init__.py",
+      "git_blob_sha1": "65c5de17d9b96d4301d8e33eb5c28c71355b1ab7"
+    },
+    {
+      "path": "hub_snippets/constants/colors/colors.py",
+      "git_blob_sha1": "b6fa2c78a1cf1d3ab8894e3accfa27783ca51a15"
+    },
+    {
+      "path": "hub_snippets/ml/drift_detection/__init__.py",
+      "git_blob_sha1": "9685aca498f012a27166e069041ad6650795db80"
+    },
+    {
+      "path": "hub_snippets/ml/drift_detection/drift_detection.py",
+      "git_blob_sha1": "4a2cbc21802ae81d571de7fdf12164d316ced462"
+    },
+    {
+      "path": "hub_snippets/ml/metrics_report/__init__.py",
+      "git_blob_sha1": "710e055bef0b2685cc969a16fd1c2606ce6d5c95"
+    },
+    {
+      "path": "hub_snippets/ml/metrics_report/metrics_report.py",
+      "git_blob_sha1": "72b442c52990c3629e2b6246b79774be892fed04"
+    },
+    {
+      "path": "hub_snippets/ml/performance_monitor/__init__.py",
+      "git_blob_sha1": "c5d126c85586b0bffce902b1cb50086e65fd358f"
+    },
+    {
+      "path": "hub_snippets/ml/performance_monitor/performance_monitor.py",
+      "git_blob_sha1": "7be394078c926f82f4e05e8a71532c793ac155f2"
+    },
+    {
+      "path": "hub_snippets/visual/tema/__init__.py",
+      "git_blob_sha1": "214ef0afceda5892516fe735b521e121af35a077"
+    },
+    {
+      "path": "hub_snippets/visual/tema/tema.py",
+      "git_blob_sha1": "fbde5548e5ec312f1348786368d0cf9bc8026e6e"
+    },
+    {
+      "path": "hub_snippets/visual/theme_plotly/__init__.py",
+      "git_blob_sha1": "bd62c736c093a4965f13193fe68bdf0ecd31ab66"
+    },
+    {
+      "path": "hub_snippets/visual/theme_plotly/theme_plotly.py",
+      "git_blob_sha1": "0bc81f615591954c67e720eea9118f858c51e4cd"
+    },
+    {
+      "path": "skills/hub-ml-monitoramento-modelo/execution_contract.json",
+      "git_blob_sha1": "f8e2fc7ba90649d8a458db399ecbb4e0e30d0c47"
+    },
+    {
+      "path": "skills/hub-ml-monitoramento-modelo/input.schema.json",
+      "git_blob_sha1": "3429b28372f6b19a3cd50f5ff0d9b192c25103e4"
+    },
+    {
+      "path": "skills/hub-ml-monitoramento-modelo/performance_contract.json",
+      "git_blob_sha1": "a3c949e89141f63098c2304caad7edd54428e4be"
+    },
+    {
+      "path": "skills/hub-ml-monitoramento-modelo/performance_input.schema.json",
+      "git_blob_sha1": "f1b379b2caad51a083169cc0acc73b9270f2c9d5"
+    },
+    {
+      "path": "skills/hub-ml-monitoramento-modelo/scripts/preflight.py",
+      "git_blob_sha1": "8d6954cc73d054fe8ed9f99d362b86d08cc64622"
+    },
+    {
+      "path": "skills/hub-ml-monitoramento-modelo/scripts/preflight_performance.py",
+      "git_blob_sha1": "f394d21d309fe0fc182411c7385f5c5e6ec867bd"
+    },
+    {
+      "path": "skills/hub-ml-monitoramento-modelo/scripts/run.py",
+      "git_blob_sha1": "2515e1fd0907779947a6bc6def68f748c7c4854a"
+    },
+    {
+      "path": "skills/hub-ml-monitoramento-modelo/scripts/run_performance.py",
+      "git_blob_sha1": "dd9f40606b36267303e24eef29922873be6d38a1"
+    },
+    {
+      "path": "skills/hub-ml-monitoramento-modelo/scripts/verify.py",
+      "git_blob_sha1": "f619765d849f410bdb3bd49ad95b41640a22d4df"
+    },
+    {
+      "path": "skills/hub-ml-monitoramento-modelo/scripts/verify_performance.py",
+      "git_blob_sha1": "36205e0c34a85ff4081ca5ecbd4d3d08eaed6028"
+    }
+  ]
+}

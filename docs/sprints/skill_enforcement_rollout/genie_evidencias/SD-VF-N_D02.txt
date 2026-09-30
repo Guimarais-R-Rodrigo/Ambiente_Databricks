@@ -1,0 +1,111 @@
+hub-ml-monitoramento-mo... Scores sintéticos de referência [.1,.2,.3,.4] e atual [.2,.3,.4,.5]: quero examinar deslocamento de distribuição e bins.
+The user wants to examine distribution shift and bins using synthetic scores: reference [.1,.2,.3,.4] and current [.2,.3,.4,.5]. They've referenced the hub-ml-monitoramento-modelo skill.
+Let me first load that skill to understand the contract and methods available.
+Vou carregar a skill de monitoramento de modelo para seguir o contrato correto na análise de deslocamento de distribuição.
+The user wants to examine distribution shift and bins using synthetic scores: reference [.1,.2,.3,.4] and current [.2,.3,.4,.5]. This is a conceptual/analytical request with small synthetic data.
+The skill mentions:
+A candidate executable route SER11 (DRIFT_NUMERIC_LOCAL_V1) that uses preflight.py, run.py, verify.py But the skill says "Um pedido genérico para examinar scores/bins não declara esse perfil" - a generic request to examine scores/bins doesn't declare that profile
+So this is a generic request to examine distribution shift and bins. The skill says to follow the planning flow below for requests outside the profile.
+Let me think about what the user wants:
+Reference scores: [0.1, 0.2, 0.3, 0.4] Current scores: [0.2, 0.3, 0.4, 0.5] They want to examine distribution shift and bins
+This is a small synthetic example. The skill says to use helpers from hub_snippets when available. Let me check what's available - the skill mentions hub_snippets.ml.drift_detection for PSI, KS, CSI driver-side.
+Let me look at the drift_detection helper to understand its API, and also the psi_calculator. But actually, with only 4 data points, this is clearly a pedagogical/conceptual exercise.
+The skill says:
+"Com amostra pequena, mostre n, bins e eps e ressalte que um bin vazio pode dominar o PSI por causa do smoothing" "Sem limiar aprovado ou calibração fornecida, reporte o valor e o movimento por bin, mas não classifique severidade operacional"
+Let me create a notebook that:
+Shows the reference and current distributions Calculates PSI with explicit bins, smoothing, and null bucket Shows KS Examines bin-level shifts Highlights limitations of small n
+I should check the helper's API first. Let me look at the drift_detection helper.
+Actually, let me think about whether to use the helper or do a direct calculation. The skill says to prefer helpers. But with n=4, this is very much a pedagogical example. Let me check the helper API to see if it's appropriate.
+Let me read the drift_detection module to understand its interface.
+Vou inspecionar o helper de drift para usar a API correta.
+Vou localizar o helper de drift no diretório correto.
+I don't see a drift_detection module directly. Let me look for it. The skill mentions hub_snippets.ml.drift_detection. Let me check the remaining objects or look more specifically in the ml folder.
+Actually, looking at the directory listing, the ml folder has many subdirectories but I don't see a drift_detection one. Let me check the remaining objects.
+I found the drift_detection folder. Let me read its contents.
+Now I have a clear picture of the helper. The key functions are:
+calculate_psi(reference, current, n_bins=10, eps=1e-6) - PSI with quantile-based bins from reference, missing bucket, and smoothing calculate_ks(reference, current) - KS statistic and p-value The detect_drift_all_features function requires min_non_null=10 by default, so with n=4 it would return INSUFFICIENT_DATA
+For this pedagogical request with n=4, I should:
+Use calculate_psi and calculate_ks directly (they work with small arrays) Show the bin construction explicitly (how quantile bins from reference are built) Show per-bin percentages and PSI contributions Highlight the limitations: n=4, smoothing effects, empty bins, no threshold classification
+Let me build the notebook. I need to:
+Title cell (md) Code cell: import helper, define scores, calculate PSI and KS Code cell: examine bins explicitly - show bin edges, per-bin counts/pct/PSI contribution Code cell: visualize the distribution shift with plotly Code cell: limitations and caveats
+Let me think about the bins. With reference = [0.1, 0.2, 0.3, 0.4] and n_bins (default 10, but with only 4 data points, np.unique will collapse many quantile edges). Let me think...
+np.quantile(ref, np.linspace(0, 1, n_bins + 1)[1:-1]) with n_bins=10 gives quantiles at [0.1, 0.2, ..., 0.9] of [0.1, 0.2, 0.3, 0.4]. With 4 values:
+q=0.1 → 0.1 + 0.1*(0.1*3) = interpolation... actually np.quantile with 4 values uses linear interpolation. Let me think more carefully.
+np.linspace(0, 1, 11)[1:-1] = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+For [0.1, 0.2, 0.3, 0.4]:
+q=0.1: position 0.3 → 0.1 + 0.3*(0.2-0.1) = 0.13 q=0.2: position 0.6 → 0.1 + 0.6*(0.2-0.1) = 0.16 q=0.3: position 0.9 → 0.1 + 0.9*(0.2-0.1) = 0.19 q=0.4: position 1.2 → 0.2 + 0.2*(0.3-0.2) = 0.22 q=0.5: position 1.5 → 0.2 + 0.5*(0.3-0.2) = 0.25 q=0.6: position 1.8 → 0.2 + 0.8*(0.3-0.2) = 0.28 q=0.7: position 2.1 → 0.3 + 0.1*(0.4-0.3) = 0.31 q=0.8: position 2.4 → 0.3 + 0.4*(0.4-0.3) = 0.34 q=0.9: position 2.7 → 0.3 + 0.7*(0.4-0.3) = 0.37
+So internal edges would be [0.13, 0.16, 0.19, 0.22, 0.25, 0.28, 0.31, 0.34, 0.37] After np.unique (all are unique), bins = [-inf, 0.13, 0.16, 0.19, 0.22, 0.25, 0.28, 0.31, 0.34, 0.37, inf]
+That's 10 bins for 4 reference points - many will be empty!
+For reference [0.1, 0.2, 0.3, 0.4]:
+bin [-inf, 0.13): 0.1 → 1 bin [0.13, 0.16): none → 0 bin [0.16, 0.19): none → 0 bin [0.19, 0.22): 0.2 → 1 bin [0.22, 0.25): none → 0 bin [0.25, 0.28): none → 0 bin [0.28, 0.31): 0.3 → 1 bin [0.31, 0.34): none → 0 bin [0.34, 0.37): none → 0 bin [0.37, inf): 0.4 → 1
+So ref_counts = [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0] (last is missing bucket)
+For current [0.2, 0.3, 0.4, 0.5]:
+bin [-inf, 0.13): none → 0 bin [0.13, 0.16): none → 0 bin [0.16, 0.19): none → 0 bin [0.19, 0.22): 0.2 → 1 bin [0.22, 0.25): none → 0 bin [0.25, 0.28): none → 0 bin [0.28, 0.31): 0.3 → 1 bin [0.31, 0.34): none → 0 bin [0.34, 0.37): none → 0 bin [0.37, inf): 0.4, 0.5 → 2
+cur_counts = [0, 0, 0, 1, 0, 0, 1, 0, 0, 2, 0]
+ref_pct = max(counts/4, eps) → [0.25, eps, eps, 0.25, eps, eps, 0.25, eps, eps, 0.25, eps] cur_pct = max(counts/4, eps) → [eps, eps, eps, 0.25, eps, eps, 0.25, eps, eps, 0.5, eps]
+This will produce a high PSI because of the smoothing on empty bins. This is exactly what the skill warns about: "Com amostra pequena, mostre n, bins e eps e ressalte que um bin vazio pode dominar o PSI por causa do smoothing."
+I should also try with fewer bins (e.g., n_bins=2 or n_bins=3) to show how the PSI changes.
+Let me also use n_bins=2: np.linspace(0, 1, 3)[1:-1] = [0.5] q=0.5 of [0.1, 0.2, 0.3, 0.4] = 0.25 internal = [0.25] bins = [-inf, 0.25, inf]
+ref [0.1, 0.2, 0.3, 0.4]:
+[-inf, 0.25): 0.1, 0.2 → 2 [0.25, inf): 0.3, 0.4 → 2 ref_counts = [2, 2, 0], ref_pct = [0.5, 0.5, eps]
+cur [0.2, 0.3, 0.4, 0.5]:
+[-inf, 0.25): 0.2 → 1 [0.25, inf): 0.3, 0.4, 0.5 → 3 cur_counts = [1, 3, 0], cur_pct = [0.25, 0.75, eps]
+PSI = (0.25-0.5)*ln(0.25/0.5) + (0.75-0.5)*ln(0.75/0.5) + (eps-eps)*ln(eps/eps) = (-0.25)ln(0.5) + (0.25)ln(1.5) + 0 = (-0.25)(-0.693) + (0.25)(0.405) = 0.173 + 0.101 = 0.274
+That's already a notable PSI with just n_bins=2. With n_bins=10 it will be much higher due to empty bins and smoothing.
+Now let me also think about n_bins=4: np.linspace(0, 1, 5)[1:-1] = [0.25, 0.5, 0.75] q=0.25 of [0.1,0.2,0.3,0.4] = 0.175 q=0.5 = 0.25 q=0.75 = 0.325 internal = [0.175, 0.25, 0.325] bins = [-inf, 0.175, 0.25, 0.325, inf]
+ref:
+[-inf, 0.175): 0.1 → 1 [0.175, 0.25): 0.2 → 1 [0.25, 0.325): 0.3 → 1 [0.325, inf): 0.4 → 1 ref_counts = [1,1,1,1,0], ref_pct = [0.25,0.25,0.25,0.25,eps]
+cur [0.2, 0.3, 0.4, 0.5]:
+[-inf, 0.175): 0 → 0 [0.175, 0.25): 0.2 → 1 [0.25, 0.325): 0.3 → 1 [0.325, inf): 0.4, 0.5 → 2 cur_counts = [0,1,1,2,0], cur_pct = [eps, 0.25, 0.25, 0.5, eps]
+PSI for the 4 data bins:
+bin1: (eps - 0.25)*ln(eps/0.25) ≈ (-0.25)*ln(eps/0.25) → large positive due to eps bin2: (0.25-0.25)*ln(1) = 0 bin3: (0.25-0.25)*ln(1) = 0 bin4: (0.5-0.25)ln(0.5/0.25) = 0.25ln(2) = 0.173
+The empty bin in current will dominate. Let me just compute it in the code.
+OK, I have a good understanding now. Let me create the notebook with:
+Title cell (md) Cell: setup, imports, define scores Cell: calculate PSI and KS with helper, varying n_bins Cell: detailed bin analysis (edges, counts, pct, PSI contribution per bin) Cell: visualization with plotly Cell: limitations and caveats (md)
+Let me write the notebook. I need to be careful about:
+Adding sys.path for the helper Using display() for dataframes Using plotly for visualization Not classifying severity (no thresholds given) Showing n, bins, eps explicitly Highlighting the empty bin / smoothing issue
+Let me build the cells.
+Tenho o contrato do helper calculate_psi (bins por quantis da referência, bucket de missing, smoothing eps) e calculate_ks. Com n=4, o smoothing em bins vazios vai dominar o PSI — exatamente o que a skill manda ressaltar. Vou construir o notebook com análise de bins, sensibilidade a n_bins e visualização.
+Now I need to read the notebook to get the cell nuids for the newly added cells so I can run them.
+Vou ler o notebook para obter os nuids das células adicionadas e executá-las.
+The output was truncated - I need to see the remaining cells too. But I can see the nuids for cells 2, 3, 4. Let me also get cells 5 and 6. Actually, looking at the output, it seems to have been truncated. Let me fetch the remaining cells. But actually, I already have enough nuids to run. Let me check if the response was actually truncated or if those are all cells.
+Actually, looking at the cells array, I see cells at indices 1-4. The notebook should have 6 cells total (title + 5 added). Let me check - the output only shows 4 cells. Let me read from cell 5 onwards.
+Wait, the response might have been truncated. Let me fetch the rest.
+Agora vou executar as células de código (2, 3, 4 e 5 — a 1 e a 6 são markdown, não precisam rodar).
+The plotly cell failed because plotly is not installed. I need to add a %pip install plotly cell before the visualization cell, or switch to matplotlib. Given the instructions say to prefer plotly but fall back to matplotlib when needed, and the environment doesn't have plotly, let me install it with %pip.
+Actually, the instructions say "For charting: use createVisualization when adding charts to existing cell results; fall back to matplotlib when generating new analytical code or when the visualization tool is insufficient." But also the user's custom instructions say "Prefira Plotly". Let me install plotly with %pip.
+Wait, but the environment-management skill says to be careful about installing packages. Let me just use %pip install plotly since it's a common visualization library.
+Actually, let me think about this. The user's instructions say "Prefira PySpark, Spark SQL, Unity Catalog, Plotly e MLflow quando adequado." So they prefer Plotly. Let me add a %pip install cell.
+Actually, on serverless, let me check if there's a different approach. Let me just add a %pip install plotly cell before the visualization cell.
+Plotly não está disponível. Vou adicionar uma célula %pip install plotly antes da visualização e reexecutar.
+All cells executed successfully. The plotly cell returned no results (no errors, but also no visible output) - that's normal for plotly in some notebook environments; the figure renders in the cell output. Let me also note the %pip install says "you may need to restart the kernel" but since the cell ran without error, plotly was likely already available or the install worked. The fact that the cell ran successfully means plotly is now working.
+Now let me rename the notebook with a descriptive title.
+Todas as células executaram com sucesso. Vou renomear o notebook com um título descritivo.
+Notebook pronto e executado. Aqui está o que a análise revela:
+O deslocamento é um shift uniforme de +0.1 em cada ponto. Os resultados mostram como o PSI é fortemente sensível ao número de bins com n pequeno:
+n_bins
+PSI
+KS_stat
+KS_pvalue
+2
+0.2747
+0.25
+1.0
+3
+3.2087
+0.25
+1.0
+4
+3.2806
+0.25
+1.0
+10
+3.2806
+0.25
+1.0
+Com n_bins=2 (mediana da referência como corte em 0.25), o PSI captura o deslocamento real: a proporção acima de 0.25 passa de 50% → 75% e abaixo cai de 50% → 25%. Contribuições proporcionais (0.173 + 0.101 = 0.275).
+Com n_bins≥4, um bin que era 25% na referência fica 0% na atual (ex: [-inf, 0.175) perde o score 0.1 que deslocou para 0.2). O eps=1e-6 substitui o 0% e esse único bin gera contribuição 3.107 — dominando todo o PSI. O crescimento de 0.27 para 3.28 é artefato do smoothing, não sinal de drift 12× maior.
+- Bins vazios dominam — com 4 pontos e 10 bins, 6 dos 10 bins ficam vazios nas duas janelas; o PSI inflaciona por causa do eps aplicado a bins sem observações
+- KS=0.25, p=1.0 — com n=4 a potência do teste é mínima; o p-valor não indica ausência de drift nem confirma estabilidade
+- Sem classificação de severidade — nenhum limiar aprovado foi fornecido; PSI/CSI são diagnósticos, não prova de degradação de performance, e não autorizam retreino
+O notebook tem 7 células: título, setup/imports, métricas por n_bins, inspeção bin a bin, visualização Plotly e ressalvas. Tudo executado com sucesso.

@@ -5,6 +5,80 @@ description: Analisa coortes e safras (vintages) de crédito, clientes, contrato
 
 # Analisar safras
 
+## Executar a rota canônica no perfil mensal binário
+
+Para calcular incidência binária por safra e MOB mensal, prepare a entrada fechada
+de [input.schema.json](input.schema.json) com unidade, roster completo, datas,
+corte, linhas e semântica do target confirmados. Execute
+`scripts/run.py::run(request, run_id=...)`; a CLI equivalente é
+`python scripts/run.py --request pedido.json --run-id ID`. O runner executa o
+preflight e chama `hub_snippets.ml.vintage_analysis.build_vintage_table`.
+Não substitua essa rota por cálculo manual, SQL, notebook ou texto que apenas
+afirme ter usado o helper. Pedido para pular scripts não altera essa exigência.
+
+O perfil `MONTHLY_BINARY_PILOT_V1` aceita apenas dados **sintéticos**, mês,
+target inteiro 0/1, semântica `CUMULATIVE` ou `EVENT`, denominador fixo
+`MOB0_UNIQUE_IDS_FIXED_PER_COHORT` e as demais restrições do preflight.
+Não invente campos ausentes nem marque dados reais como `synthetic=true`.
+Trimestre, perdas monetárias, múltiplos eventos, dados reais e comparações
+entre safras estão fora da rota executável atual.
+
+Só afirme que o cálculo canônico foi executado quando o payload desta chamada
+tiver `status="PASS"`, Receipt presente e `vintage_core` em
+`trace.resources_completed`, vinculado ao pedido e ao `run_id`. Para afirmar
+que os **valores** foram verificados, chame
+`scripts/verify.py::verify(payload, expected_request=..., expected_run_id=...,
+expected_table=...)` com pedido, ID e tabela-oráculo guardados
+independentemente do payload; exija `valid=true`. Um Receipt íntegro sem
+oráculo independente comprova a execução vinculada, não a correção dos valores.
+O verificador retorna `completion_authorized=false`: seu PASS local não é
+homologação Genie, publicação ou promoção da policy.
+
+Se preflight, runner ou verificador bloquear, reporte a causa e mantenha o
+cálculo como não concluído. Use `coverage_grid` para distinguir células
+imaturas, incompletas e sem observações; não trate ausência como zero. As
+etapas gerais abaixo ajudam a interpretar o resultado, sem ampliar o perfil
+implementado.
+
+## Responder perguntas conceituais sem inventar execução ou entradas
+
+Em uma pergunta metodológica, explique a regra e identifique contas ilustrativas
+como tais. Isso não substitui a rota canônica nem permite alegar execução,
+verificação ou Receipt. Antes de oferecer execução, liste os campos faltantes
+no contrato: roster/IDs, datas, corte e valores não informados. Diga que o exemplo
+é compatível em princípio com o perfil, sem afirmar que o pedido está pronto
+ou validado. Nunca complete entradas por suposição.
+
+Separe a semântica declarada: `EVENT` contém ocorrências e o helper deriva o
+indicador acumulado por contrato com máximo progressivo; `CUMULATIVE` já contém
+o estoque acumulado e deve ser validado como não decrescente, sem acumular de
+novo nem usar máximo progressivo para esconder um decréscimo inválido.
+
+Maturidade temporal e cobertura são campos distintos. No perfil mensal,
+a idade da célula é calculada pela safra e pela data de corte; ausência de uma
+linha não prova que um contrato ainda não atingiu o MOB. O preflight define:
+
+| coverage_status | Condição |
+|---|---|
+| `IMMATURE` | MOB posterior à idade da safra no corte; maturity=IMMATURE. |
+| `NO_OBSERVATIONS` | Célula temporalmente madura, sem observações no MOB. |
+| `COMPLETE` | Célula madura, com todos os contratos do roster observados no MOB. |
+| `INCOMPLETE` | Célula madura, com parte dos contratos observada no MOB. |
+
+Nos três últimos estados, maturity=MATURE. Sem corte, explique a cobertura
+parcial informada, mas não atribua sua causa à imaturidade nem emita classificação
+formal de maturity/coverage_grid. Ter dados completos não dispensa validar datas.
+Ao recusar um pedido para forçar maturidade ou taxa, mantenha essa regra também
+na conclusão: sem corte que comprove idade suficiente, não escreva
+`coverage_status=INCOMPLETE` nem "madura temporalmente", mesmo se a ausência de
+uma observação estiver confirmada. Diga "cobertura parcial relatada; maturidade
+e status formal pendentes da data de corte" e mantenha a taxa final pendente.
+
+Por exemplo, “janeiro/MOB2 só um observado”, com dois contratos na safra,
+informa cobertura parcial. Não identifica qual contrato foi observado, o valor
+dessa observação nem por que falta o outro. Preserve o denominador dois e não
+finalize a taxa com esses dados; não invente ID, target ou causa da ausência.
+
 ## Quando esta skill se aplica
 
 - O pedido cita **safra, vintage, coorte, MOB, maturação** ou inadimplência por

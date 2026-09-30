@@ -1,0 +1,88 @@
+{
+  "cases": {
+    "negative_temporal_limits": {
+      "checks": [
+        {
+          "blocked": true,
+          "issues": [
+            "TEMPORAL:VARIABLE_LATENCY_UNSUPPORTED"
+          ],
+          "mutation": "VARIABLE_LAG"
+        },
+        {
+          "blocked": true,
+          "issues": [
+            "TEMPORAL:BITEMPORAL_UNSUPPORTED"
+          ],
+          "mutation": "BITEMPORAL"
+        },
+        {
+          "blocked": true,
+          "issues": [
+            "TEMPORAL:UTC_PROFILE_ONLY"
+          ],
+          "mutation": "TIMEZONE"
+        }
+      ],
+      "ok": true
+    },
+    "policy_pre_promotion": {
+      "current_level": "L0",
+      "ok": true,
+      "rollout_mode": "audit",
+      "target_level": "L4"
+    },
+    "protected_bytes_unchanged": {
+      "count": 3,
+      "ok": true
+    },
+    "static_context": {
+      "coverage_measured": false,
+      "join_executed": false,
+      "ml_readiness": "NOT_EVALUATED",
+      "ok": true,
+      "release_bindings": {
+        "contract_git_blob_sha1": "1c23fdb8a4896a6a5cc94da3734ec0efaf61ca43",
+        "preflight_git_blob_sha1": "0717afa2561471ba97a39390f1c3462ecefc9bfc",
+        "temporal_owner_git_blob_sha1": "4f2f61fb3221a72d066cf415e49e15b5b6362f66"
+      },
+      "status": "PASS",
+      "verification": {
+        "issues": [],
+        "join_executed": false,
+        "ml_readiness": "NOT_EVALUATED",
+        "status": "VALID",
+        "valid": true
+      }
+    },
+    "temporal_context": {
+      "coverage_measured": false,
+      "join_executed": false,
+      "ml_readiness": "NOT_EVALUATED",
+      "ok": true,
+      "release_bindings": {
+        "contract_git_blob_sha1": "1c23fdb8a4896a6a5cc94da3734ec0efaf61ca43",
+        "preflight_git_blob_sha1": "0717afa2561471ba97a39390f1c3462ecefc9bfc",
+        "temporal_owner_git_blob_sha1": "4f2f61fb3221a72d066cf415e49e15b5b6362f66"
+      },
+      "status": "PASS",
+      "verification": {
+        "issues": [],
+        "join_executed": false,
+        "ml_readiness": "NOT_EVALUATED",
+        "status": "VALID",
+        "valid": true
+      }
+    }
+  },
+  "coverage_measured": false,
+  "join_executed": false,
+  "marker": "SER_B1_G6_SER05_L2_FREE_PROBE_1",
+  "ml_readiness": "NOT_EVALUATED",
+  "persistent_writes_performed": false,
+  "promotion_authorized": false,
+  "qualified_sha": "08c2a93c4c9dede1e759abe28c07242b4116f47e",
+  "scope": "L2_CONTEXT_ONLY_PILOT_V1",
+  "skill": "hub-ml-cross-eda-ml",
+  "status": "PASS"
+}

@@ -1,0 +1,92 @@
+Tenho coortes sintéticas mensais: janeiro com dois contratos, MOB0=(0,0), MOB1=(1,0), MOB2 só um observado; fevereiro com dois contratos, MOB0=(0,1), MOB1=(0,1). O alvo é cumulativo. Como calcular a tabela safra×MOB mantendo denominador fixo e distinguindo célula incompleta?
+The user is asking about how to calculate a safra×MOB (vintage/cohort) table with cumulative targets, keeping the denominator fixed, and distinguishing incomplete cells. This is a conceptual/methodological question about cohort analysis.
+Let me check the skill registry - hub-ml-analise-safra is directly relevant: "Analisa coortes e safras (vintages) de crédito, clientes, contratos ou eventos no Databricks, com cálculo correto de MOB, curvas de maturação, triangulação safra-calendário, comparação entre coortes e alertas de deterioração."
+Let me load that skill first before answering.
+Actually, the user's custom instructions say to respond in Portuguese (Brasil). Let me follow that.
+The question is about:
+Monthly synthetic cohorts January: 2 contracts, MOB0=(0,0), MOB1=(1,0), MOB2 only one observed February: 2 contracts, MOB0=(0,1), MOB1=(0,1) Cumulative target How to calculate safra×MOB table keeping denominator fixed and distinguishing incomplete cells
+This is a methodological question. Let me load the relevant skill.
+Vou carregar o contexto sobre análise de safra antes de responder.
+The skill is loaded. Now let me answer the user's conceptual question about how to calculate a safra×MOB table with cumulative targets, keeping the denominator fixed, and distinguishing incomplete cells.
+The user has:
+January cohort: 2 contracts, MOB0=(0,0), MOB1=(1,0), MOB2 only one observed (so one contract has no observation at MOB2) February cohort: 2 contracts, MOB0=(0,1), MOB1=(0,1) Cumulative target
+Key points to address:
+Denominator fixed: For cumulative target with fixed denominator, the denominator is the number of contracts at MOB0 (originated in that cohort). So January = 2, February = 2. Cumulative target: At each MOB, the numerator is the count of contracts that have experienced the event AT OR BEFORE that MOB. So it's not cumsum of rates, but rather: count distinct contracts with event_flag=1 at any MOB ≤ current MOB, divided by the fixed denominator. Distinguishing incomplete cells: Cells where not all contracts have been observed yet should be marked as incomplete/immature, not treated as zero.
+Let me work through the example:
+January cohort (2 contracts, denom=2):
+MOB0: contract A=0, contract B=0. Cumulative events = {A:0, B:0} → count ever-evented = 0. Rate = 0/2 = 0% MOB1: contract A=1, contract B=0. Cumulative: A ever-evented (at MOB0 or MOB1), B not. Count = 1. Rate = 1/2 = 50% MOB2: only one contract observed. The cell is INCOMPLETE. We can compute partial numerator (how many have ever-evented among observed), but must mark the cell as incomplete. If the observed contract at MOB2 already evented at MOB1, the cumulative count among observed is still 1, but we can't say the final rate is 1/2 because the other contract hasn't been observed.
+Actually, let me think more carefully about "cumulative target" semantics.
+With CUMULATIVE semantic:
+At each MOB, the value for a contract is 1 if the event has occurred at any MOB ≤ current MOB, else 0. So we need the per-contract-per-MOB event flag, then take the cumulative max (or OR) across MOBs.
+For January:
+Contract A: MOB0=0, MOB1=1, MOB2=? Contract B: MOB0=0, MOB1=0, MOB2=? (not observed at MOB2)
+Wait, the user said "MOB2 só um observado" - meaning at MOB2, only one contract has been observed. This could be because the data cutoff prevents seeing MOB2 for the other contract.
+Cumulative at each MOB:
+MOB0: A_cum=0, B_cum=0 → numerator=0, rate=0/2=0% MOB1: A_cum=max(0,1)=1, B_cum=max(0,0)=0 → numerator=1, rate=1/2=50% MOB2: Only one observed. If A is observed and A_cum=max(1, MOB2_value), and B is not observed. The cell is INCOMPLETE. We can report the partial observation but must flag it.
+For February:
+MOB0: A=0, B=1. Cumulative: A=0, B=1 → numerator=1, rate=1/2=50% MOB1: A=0, B=1. Cumulative: A=max(0,0)=0, B=max(1,1)=1 → numerator=1, rate=1/2=50%
+Key methodological points:
+Fixed denominator: Use MOB0 count (contracts originated). January=2, February=2. Never change the denominator as MOB increases. Cumulative numerator: For each contract, the cumulative flag at MOB k = max(event_flag at MOB 0..k). Then sum across contracts. This is NOT cumsum of per-MOB rates. Incomplete cells: When not all contracts have been observed at a given MOB (due to data cutoff), mark the cell as "incomplete" or "immature". Don't treat missing as 0. The coverage_grid distinguishes: observed, incomplete, no-observation.
+The skill mentions coverage_grid to distinguish immature, incomplete, and no-observation cells.
+Let me also note that the skill has a canonical runner for executing this calculation. But the user is asking a conceptual/methodological question, not asking to execute. I should explain the methodology.
+Actually, looking at the user's question more carefully, they're asking "Como calcular a tabela safra×MOB mantendo denominador fixo e distinguindo célula incompleta?" - this is a methodology question. I should explain the approach clearly.
+Let me construct the answer. The user wants to understand:
+How to keep denominator fixed How to handle cumulative target How to distinguish incomplete cells
+I should explain with their specific data. Let me not create code in the response (per instructions, no code in responses unless explicitly requested). But I could create a notebook cell to demonstrate. Actually, the user is asking "como calcular" which is more of a methodological question. Let me explain the methodology clearly.
+Actually, re-reading the instructions: "For code-related requests: use tools to edit the notebook by creating, updating, or running cells as needed." and "No Code in Responses: Never write back any code, query or code blocks directly in the response (unless the user explicitly requests it or asks for examples)."
+The user is asking a methodological question about how to calculate. I should explain the methodology. If they want me to implement it, I can create cells. But since they're asking "how to", I'll explain the approach and offer to implement.
+Let me also consider: should I offer to run the canonical runner? The skill says the profile MONTHLY_BINARY_PILOT_V1 accepts synthetic data, monthly, binary target 0/1, CUMULATIVE or EVENT semantics, fixed denominator MOB0_UNIQUE_IDS_FIXED_PER_COHORT. This matches the user's scenario exactly (synthetic, monthly, binary, cumulative, fixed denominator). I could offer to execute it.
+Let me structure my answer clearly in Portuguese.
+Excelente perunta metodológica. O contexto da skill de análise de safra se aplica diretamente aqui. Vamos destrinchar com seus dados.
+O denominador é definido no MOB0 — o número de contratos originados em cada safra — e nunca muda conforme o MOB avança:
+Safra
+Contratos no MOB0 (denominador)
+Janeiro
+2
+Fevereiro
+2
+Mesmo que em MOBs posteriores nem todos os contratos tenham observação, o denominador permanece 2 para ambas as safras.
+Para cada contrato em cada MOB, o flag cumulativo é o máximo (OU lógico) do flag de evento da originação até aquele MOB:
+flag_cumulativo[contrato, MOB_k] = max(evento[MOB_0], …, evento[MOB_k])
+Depois soma-se os flags cumulativos por safra e divide-se pelo denominador fixo. Somar as taxas de cada MOB com cumsum produz um número incorreto — é o erro mais recorrente em painéis de vintage.
+Aplicando aos seus dados:
+Safra
+MOB
+Flags por contrato (cumulativo)
+Numerador
+Taxa
+Jan
+0
+A=0, B=0
+0
+0/2 = 0%
+Jan
+1
+A=1, B=0
+1
+1/2 = 50%
+Jan
+2
+A=?, B=sem obs.
+incompleto
+não finalizar
+Fev
+0
+A=0, B=1
+1
+1/2 = 50%
+Fev
+1
+A=0, B=1
+1
+1/2 = 50%
+Note em janeiro MOB1: o contrato A entrou em evento, e esse evento permanece no estoque cumulativo em MOB2 (não "soma de novo"). Já o contrato B não eventou em MOB0 nem MOB1, mantendo flag cumulativo = 0.
+A célula Janeiro × MOB2 tem apenas um contrato observado (o outro ainda não atingiu essa idade na data de corte). Essa célula é incompleta — não é zero e não deve ser tratada como tal. A coverage_grid da biblioteca classifica cada célula em três estados:
+- Observada: todos os contratos da safra têm dado até aquele MOB → taxa finalizável.
+- Incompleta: apenas parte dos contratos foi observada → pode-se reportar o numerador parcial, mas a taxa não é final e deve ser sinalizada.
+- Sem observação: nenhum contrato chegou àquele MOB → célula vazia/ausente.
+Nunca preencha a diagonal incompleta com zero. Compare safras apenas em MOBs onde ambas já maturaram (ambas observadas).
+1. Denominador: fixado no MOB0 por safra, não muda.
+2. Numerador cumulativo: max do flag por contrato até o MOB, depois sum por safra — não cumsum de taxas.
+3. Célula incompleta: sinalize com coverage_grid, não trate como zero, não finalize a taxa.
+Seus dados sintéticos encaixam exatamente no perfil MONTHLY_BINARY_PILOT_V1 (sintéticos, mensais, target 0/1, semântica CUMULATIVE, denominador MOB0_UNIQUE_IDS_FIXED_PER_COHORT). Posso executar a rota canônica da skill para gerar a tabela verificada no notebook — quer que eu prossiga?

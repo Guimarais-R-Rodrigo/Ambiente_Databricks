@@ -5,6 +5,47 @@ description: Treina e compara baselines reproduzíveis de machine learning no Da
 
 # Construir baseline de ML
 
+## Rota executável sintética SER09 (candidata)
+
+Para pedido explícito do perfil `BINARY_TEMPORAL_LOCAL_V1`, use
+`input.schema.json` e `scripts/preflight.py::preflight` antes de
+`scripts/run.py::run`. Verifique o Receipt e os bindings de partição/fit com
+`scripts/verify.py::verify` usando request e run_id mantidos pelo invocador.
+Esta rota cobre somente classificação binária mensal sintética, split
+50/25/25, gap zero, feature numérica única, scaler e regressão logística
+ajustados no treino e métricas em memória. O perfil é candidato não promovido:
+sem MLflow, escrita, seleção de modelo, deploy ou promoção. Pedidos fora
+deste perfil seguem o fluxo de planejamento abaixo e não recebem Receipt
+executável por aproximação.
+Um pedido para **planejar** não autoriza criar observações, treinar ou medir
+como se os dados tivessem sido fornecidos. Se um exemplo sintético executável
+for solicitado separadamente, identifique as linhas geradas e limite AUC/Brier
+àquela simulação; verificação do split e do Receipt não certifica ausência
+de leakage operacional, calibração futura ou prontidão do modelo. Amostrar
+uma feature condicionalmente ao rótulo em um gerador sintético não é, por
+si só, prova de leakage; avalie disponibilidade e proveniência no uso real.
+
+## Tracking sintético pessoal SER10 (candidato)
+
+Para registrar **o mesmo Pipeline treinado** no perfil SER09, use
+`scripts/run_tracking.py::run_tracking` apenas com autorização externa
+`SER10-AUTH-1` vinculada ao digest exato do request, run_id e experimento
+pessoal novo. O invocador configura `tracking_uri` e `registry_uri` do MLflow
+como `databricks` (sem registrar modelo no Registry) e passa uma sessão Spark autenticada para derivar `current_user()`. O adapter chama
+`scripts/verify_tracking.py::verify_live` internamente enquanto o recurso
+está ativo e **antes** do cleanup. Depois confira
+`scripts/verify_tracking.py::verify_finalized` com request, autorização,
+identidade e cliente mantidos externamente.
+
+O adapter cria experimento e run, chama `run_governado`, lê parâmetros,
+métricas, tags, assinatura e predições do modelo serializado. Só após
+verificação live independente, faz soft delete do run e confere seu estado
+com o experimento ativo; por fim, deleta e confere o experimento por ID.
+PASS exige toda essa sequência observada. O Receipt
+SER09 continua prova da **computação sem escrita**; o efeito MLflow fica em
+registro separado, sem alegar autorização autenticada pelo Receipt.
+Esta rota não registra Model Registry, deploy, job ou score produtivo.
+
 ## Quando esta skill se aplica
 
 - Pedem **baseline, primeiro modelo, benchmark ou comparação de modelos** — em
@@ -158,6 +199,6 @@ Fornecer notebook/código reproduzível, contrato, comparação com trivial, tab
 - **Instalar biblioteca opcional sem fixar versão** onde o inventário manda fixar
   — `shap`, `umap-learn` e `pmdarima` exigem pin, e as três juntas quebram o
   `import numpy`.
-- **Abrir run de MLflow no serverless** sem checar: está bloqueado no Free desde
-  17/08/2026.
-
+- **Abrir run de MLflow no serverless** sem conferir runtime, backend e
+  autorização. O bloqueio observado no Free em 17/08/2026 é histórico;
+  confirme a configuração do perfil executável antes de prometer tracking.

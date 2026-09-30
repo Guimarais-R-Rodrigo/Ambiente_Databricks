@@ -25,6 +25,7 @@ def compute_shap(
     *,
     task: str = "classification",
     output_index: Optional[int] = None,
+    background: Optional[np.ndarray] = None,
 ) -> Tuple[np.ndarray, float]:
     """Calcula SHAP values para o modelo.
 
@@ -34,12 +35,26 @@ def compute_shap(
         feature_names: Nomes das features.
         model_type: 'tree' (TreeSHAP), 'linear', 'kernel' (model-agnostic).
         max_samples: Máximo de amostras para KernelSHAP.
+        background: Referência explícita para model_type='linear'; None preserva X.
 
     Returns:
         Tuple (shap_values array, base_value float).
     """
     import shap
 
+    if background is not None:
+        if model_type != "linear":
+            raise ValueError("background is supported only for linear models")
+        reference = np.asarray(background)
+        features = np.asarray(X)
+        if (reference.ndim != 2 or features.ndim != 2 or not reference.shape[0]
+                or reference.shape[1] != features.shape[1]):
+            raise ValueError("background must be a nonempty 2D array with X column count")
+        try:
+            if not np.isfinite(reference.astype(float)).all():
+                raise ValueError("background must contain only finite numeric values")
+        except (TypeError, OverflowError) as exc:
+            raise ValueError("background must contain only finite numeric values") from exc
     if task not in {"classification", "regression"}:
         raise ValueError("task must be 'classification' or 'regression'")
     if len(feature_names) != np.asarray(X).shape[1]:
@@ -103,7 +118,7 @@ def compute_shap(
         raw_values = explainer.shap_values(X)
         shap_values, base_value = select_output(raw_values, explainer.expected_value, len(X), len(feature_names))
     elif model_type == "linear":
-        explainer = shap.LinearExplainer(model, X)
+        explainer = shap.LinearExplainer(model, X if background is None else background)
         raw_values = explainer.shap_values(X)
         shap_values, base_value = select_output(raw_values, explainer.expected_value, len(X), len(feature_names))
     elif model_type == "kernel":

@@ -46,6 +46,8 @@ Mapear:
 
 Não inferir que uma célula funcionou apenas porque existe. Separar “intenção do código” de “resultado comprovado”.
 
+Sem saída, status ou histórico de execução informado, descrever o que o código pretende fazer e marcar o resultado como não informado. Não afirmar sucesso, ambiente de produção ou tabela materializada por inferência. Exemplos mínimos usam dados fictícios explicitamente rotulados; não completam dados ausentes do notebook real. Hipóteses sobre um erro permanecem hipóteses até a checagem proposta.
+
 ## Explicar erros
 
 1. Identificar a exceção raiz e a primeira linha útil do stack trace.

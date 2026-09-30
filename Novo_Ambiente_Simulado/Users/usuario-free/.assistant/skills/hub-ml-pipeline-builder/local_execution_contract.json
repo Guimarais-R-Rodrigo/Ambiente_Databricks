@@ -1,0 +1,25 @@
+{
+  "schema_version": "0.1",
+  "skill": "hub-ml-pipeline-builder",
+  "mode": "audit",
+  "resources": [
+    {
+      "id": "data_quality_check",
+      "policy": "required",
+      "evidence": "call",
+      "module": "hub_scripts.data_quality_check",
+      "symbol": "data_quality_check"
+    }
+  ],
+  "templates": [],
+  "metadata": {
+    "delivery": {
+      "profile": "LOCAL_SYNTHETIC_SPARK_MERGE_V1",
+      "stage_level": "L3_LOCAL_ONLY",
+      "state": "CANDIDATE_NOT_PROMOTED",
+      "entrypoint": "scripts/run_local.py::run",
+      "persistent_writes": false,
+      "databricks_deploy": false
+    }
+  }
+}

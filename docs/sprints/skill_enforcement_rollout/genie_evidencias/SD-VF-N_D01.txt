@@ -1,0 +1,151 @@
+
+hub-ml-monitoramento-mo... 
+Scores sintéticos de referência [.1,.2,.3,.4] e atual [.2,.3,.4,.5]: quero examinar deslocamento de distribuição e bins.
+The user wants to examine distribution shift and bins for synthetic scores: reference [.1,.2,.3,.4] and current [.2,.3,.4,.5]. This is a drift detection / monitoring task, and they've referenced the hub-ml-monitoramento-modelo skill.
+
+Let me first load that skill to understand the contract and methods available.
+
+Vou carregar a skill de monitoramento de modelos para seguir o contrato correto.
+
+Vou ler o schema de entrada e o script de preflight para entender o formato do request da rota SER11.
+
+Agora vou ler os scripts run.py e verify.py para entender o fluxo completo.
+
+Entendi o contrato completo. Vou criar o notebook com o fluxo canônico SER11: construir o request → preflight → run → verify, e examinar bins, PSI e KS.
+
+Now I need to add code cells. Let me add them one at a time or chain them.
+
+Cell 1: Build the request and run preflight Cell 2: Run the runner Cell 3: Run verify Cell 4: Analyze bins and distribution shift
+
+Let me add all cells at once since they chain.
+
+Agora vou adicionar as células de código.
+
+I need the cell nuid for the next add operation. The added cell has guid "22e82605-a77e-444b-8bdc-17ebc195d7a0" but I need the nuid. Let me check - actually, when adding cells, I chain using the target. The first added cell's ID is returned. But I need the nuid to chain. Let me re-read the notebook to get the nuid.
+
+Actually, looking at the editAsset description: "For add: provide content items with target (cell nuid to insert after, or "BEGIN" for start), a patches array with one entry: old_text = "", new_text = the cell content, replace_all = false. Include title, and optionally language. Always include a descriptive title for new cells. When adding multiple cells, only the first item needs a target; subsequent items chain automatically."
+
+So I need to add multiple cells. But I already added one. Let me read the notebook to get the nuid of the newly added cell, then add more.
+
+Actually, the returned addedCells has id and idType: "guid". But I need the nuid. Let me read the notebook to get the nuid.
+
+Vou ler o notebook para obter o nuid da célula recém-adicionada e continuar encadeando.
+
+Agora vou adicionar as células restantes: run, verify e análise de bins.
+
+Células criadas. Vou ler o notebook para obter os nuids e executar todas as células de código.
+
+Todas as 5 células estão prontas. Agora vou executar as 4 células de código em sequência.
+
+All cells executed successfully. Let me analyze the results:
+
+Preflight: PASS — request validated Run: PASS — PSI = 3.280578, KS = 0.25, KS p-value = 1.0 Verify: VALID — no issues, all metrics confirmed against independent oracles Bins analysis:
+Bin edges from reference quantiles: [0.175, 0.25, 0.325]
+
+These are the quartiles of [0.1, 0.2, 0.3, 0.4]: Q1 = 0.175 (midpoint between 0.1 and 0.2) Q2 = 0.25 (median) Q3 = 0.325 (midpoint between 0.3 and 0.4)
+Bins and counts: | bin | ref_count | cur_count | ref_prop | cur_prop | psi_contrib | |---|---|---|---|---|---| | (-inf, 0.2) | 1 | 0 | 0.25 | 0 | 3.107 | | [0.2, 0.2) | 1 | 1 | 0.25 | 0.25 | 0 | | [0.2, 0.3) | 1 | 1 | 0.25 | 0.25 | 0 | | [0.3, +inf) | 1 | 2 | 0.25 | 0.5 | 0.173 | | missing | 0 | 0 | 0 | 0 | 0 |
+
+Wait, that's interesting. The edges are [0.175, 0.25, 0.325]. So the bins should be:
+
+(-inf, 0.175): scores < 0.175 [0.175, 0.25): 0.175 ≤ scores < 0.25 [0.25, 0.325): 0.25 ≤ scores < 0.325 [0.325, +inf): scores ≥ 0.325
+But the bin labels in the output show: (-inf, 0.2), [0.2, 0.2), [0.2, 0.3), [0.3, +inf)
+
+Wait, that seems wrong in the labels. Let me look again at the code:
+
+bin_labels = []
+for i in range(len(edges) + 1):
+    if i == 0:
+        bin_labels.append(f"(-inf, {edges[0]:.1f})")
+    elif i < len(edges):
+        bin_labels.append(f"[{edges[i-1]:.1f}, {edges[i]:.1f})")
+    else:
+        bin_labels.append(f"[{edges[-1]:.1f}, +inf)")
+bin_labels.append("missing")
+edges = [0.175, 0.25, 0.325]
+
+i=0: (-inf, 0.2) → 0.175 formatted to .1f = 0.2 (rounded!) i=1: [0.2, 0.2) → edges[0]=0.175→0.2, edges[1]=0.25→0.2... wait, 0.25 formatted to .1f is 0.2? No, 0.25 → .1f = 0.2 (banker's rounding?) or 0.3? Actually in Python, f"{0.25:.1f}" = "0.2" (banker's rounding). And f"{0.175:.1f}" = "0.2" too.
+Hmm, the labels are misleading due to formatting to 1 decimal. But the actual counts are correct. Let me verify:
+
+edges = [0.175, 0.25, 0.325] counts function: for each value, count how many edges it's >=
+
+ref: [0.1, 0.2, 0.3, 0.4] 0.1: >= 0 edges → bin 0 0.2: >= 1 edge (0.175) → bin 1 0.3: >= 2 edges (0.175, 0.25) → bin 2 0.4: >= 3 edges → bin 3 ref counts: [1, 1, 1, 1, 0(missing)] cur: [0.2, 0.3, 0.4, 0.5] 0.2: >= 1 edge → bin 1 0.3: >= 2 edges → bin 2 0.4: >= 3 edges → bin 3 0.5: >= 3 edges → bin 3 cur counts: [0, 1, 1, 2, 0(missing)]
+So the output table shows: | bin label | ref | cur | | (-inf, 0.2) | 1 | 0 | → actual: (-inf, 0.175), ref has 0.1, cur has nothing | [0.2, 0.2) | 1 | 1 | → actual: [0.175, 0.25), ref has 0.2, cur has 0.2 | [0.2, 0.3) | 1 | 1 | → actual: [0.25, 0.325), ref has 0.3, cur has 0.3 | [0.3, +inf) | 1 | 2 | → actual: [0.325, +inf), ref has 0.4, cur has 0.4 and 0.5 | missing | 0 | 0 |
+
+The label formatting is misleading (0.175→0.2, 0.25→0.2, 0.325→0.3), but the counts are correct.
+
+PSI = 3.280578 — very high. The main contribution comes from bin 0: ref has 25% but cur has 0%, contributing 3.107. The other notable contribution is bin 3 where cur has 50% vs ref 25%, contributing 0.173.
+
+KS = 0.25 — relatively small. With only 4 points per window, the KS statistic is limited.
+
+The shift is a uniform +0.1 translation: every score in the current window is exactly 0.1 higher than the corresponding reference score. This shifts mass from the lower bins to the upper bins.
+
+Now let me update the TODO and rename the notebook.
+
+I should also fix the bin label formatting to be more precise (use more decimal places). But actually, the labels are just cosmetic and the counts are correct. The user can see the actual edges from the printed output. Let me not over-engineer this.
+
+Actually, I notice the bin labels are confusing. Let me fix them to use more decimal places for accuracy.
+
+Let me update cell 5 to fix the formatting.
+
+Todas as células executaram com sucesso. Notei que os rótulos dos bins estão arredondados para 1 casa decimal, o que pode confundir. Vou corrigir a formatação para mostrar os edges com precisão adequada.
+
+A edição quebrou a sintaxe — faltou o parêntese de fechamento do append. Vou corrigir.
+
+Todas as células executaram com sucesso. Vou atualizar o TODO e renomear o notebook.
+
+Pipeline SER11 executado com sucesso no notebook Drift Score Sintetico S.... Preflight PASS, runner PASS com Receipt emitido, e verify VALID (zero divergências contra oráculos independentes).
+
+Resultados do deslocamento
+Métricas globais:
+
+Métrica
+Valor
+PSI
+3.2806
+KS statistic
+0.2500
+KS p-value
+1.0000
+Bins congelados na referência (policy: REFERENCE_QUANTILES_UNIQUE_MINUS_INF_PLUS_INF_MISSING_BUCKET):
+
+Bin
+Ref count
+Cur count
+Ref prop
+Cur prop
+Contrib. PSI
+(-inf, 0.175)
+1
+0
+0.25
+0
+3.107
+[0.175, 0.250)
+1
+1
+0.25
+0.25
+0
+[0.250, 0.325)
+1
+1
+0.25
+0.25
+0
+[0.325, +inf)
+1
+2
+0.25
+0.50
+0.173
+missing
+0
+0
+0
+0
+0
+Leitura: o deslocamento é uma translação uniforme de +0.1 (média: 0.25 → 0.35, mediana idem). Os edges são os quartis da referência [.1,.2,.3,.4] → [0.175, 0.25, 0.325]. A massa abandona o primeiro bin (o score 0.1 cai em -inf a 0.175; na janela atual não há nada ali) e acumula no último bin (0.4 e 0.5 ambos ≥ 0.325). O PSI altíssimo (3.28) é dominado por esse esvaziamento do bin inferior — com eps=1e-6 como smoothing, a proporção 0 vs 25% gera contribuição de 3.11. Os bins intermediários não mudam, pois cada um continua com exatamente 1 observação de cada lado.
+
+KS = 0.25 é modesto porque com N=4 por janela, as CDFs empíricas saltam de 0.25 em 0.25, e a maior discrepância é de apenas 1 degrau (no ponto 0.175: CDF ref = 0.25 vs CDF cur = 0; ou no ponto 0.325: CDF ref = 0.75 vs CDF cur = 0.5). O p-value = 1.0 reflete a baixa potência com N tão pequeno.
+
+Importante: PSI e KS são sinais diagnósticos de deslocamento de distribuição, não provam degradação de performance (para isso seria necessário avaliar labels). N=4 por janela é amostra mínima — decisões operacionais exigem N maior e calibração de thresholds pela variabilidade histórica.
