@@ -1,6 +1,8 @@
 # Integração de Micromodelos ao Hub
 
-**Atualização:** 2026-09-30. **Estado:** candidata implementada; validação do ambiente e publicação Free em andamento.
+**Atualização:** 2026-09-30. **Estado:** candidata implementada e validada localmente; módulo publicado no Free para análise; composição com a outra frente pendente.
+
+**Checkpoint local:** commit `66e22192`, fonte e espelho do mesmo conteúdo. Gate local completo aprovado em checkout limpo: 12 etapas, incluindo validador com 0 falhas e 0 avisos, SE08, Micromodelos e aceite do pacote extraído. O exemplo de recência conferiu sete linhas sintéticas. O módulo `hub_micromodelos/` foi enviado pela CLI ao Free e teve readback de 25/25 arquivos, nenhum ausente/extra, Python como `FILE`, hash normalizado `457f0931ffd1978a9a15103fcb7d67d08b1e664aa7e30e199f9dfe0b6b4c240e`. Caches gerados pelo Python no primeiro envio foram removidos antes do readback final. Documentos compartilhados e a skill preexistente não foram sobrescritos no Free, pois a outra frente possui diferenças ainda não compostas. Esta publicação permite examinar o módulo e o exemplo; não representa a entrega conjunta ao trabalho.
 
 ## Objetivo
 

@@ -9,6 +9,7 @@
 - (Codex) Renderizado o espelho com 608 arquivos após validador do produto aprovado (0 falhas, 1 aviso de caches). Ajustada a linha de saída do aceite para caracteres ASCII, permitindo executar 53 testes de transição/aceite/kit Free no console Windows sem exigir `PYTHONUTF8=1` (8 skips).
 - (Codex) Atualizado o snapshot de saída do validador no `README.md` raiz após a integração, com os números observados na candidata; o gate completo em checkout limpo e o readback Free serão registrados separadamente.
 - (Codex) Revisão do gate SE08 em checkout limpo identificou que ampliar o namespace no motor protegido alterava o hash do release EDA. Como Micromodelos permanece L1/audit sem recurso protegido declarado, a mudança no motor e na validação de recursos foi retirada; fonte/espelho revalidados, mantendo o isolamento dos releases existentes.
+- (Codex) Gate local completo do commit `66e22192` aprovado em checkout limpo, 12 etapas; validador 0 falhas/0 avisos. Kit local do Hub gerado com Micromodelos no ZIP 01 e aceite sintético extraído PASS. Publicado pela CLI apenas `hub_micromodelos/` no Free; readback 25/25, nenhum arquivo ausente/extra, tipos Python corretos, hash normalizado `457f0931ffd1978a9a15103fcb7d67d08b1e664aa7e30e199f9dfe0b6b4c240e`. Caches do primeiro envio removidos. Conteúdo compartilhado da outra frente no Free preservado; composição do ambiente completo permanece pendente.
 
 ## 2026-09-30 — Completude e exemplo didático de Micromodelos
 
