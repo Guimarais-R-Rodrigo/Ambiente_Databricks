@@ -2,6 +2,8 @@
 
 ## 2026-09-30 — Homologação Genie guiada
 
+- (Codex) Reconciliado G6 histórico somente de leitura: pacote local PASS, probe SER03 remoto exato e SER05 ausente; nenhuma criação no diretório congelado. A versão atual difere de R7 em 90 arquivos de produto e 0/20 prompts literais de G6 foram encontrados nas evidências versionadas. Em prova sintética separada no Free, adaptadores de saída dos probes Safra/Cross-EDA produziram duas tarefas SUCCESS em um job, 10/10 casos internos PASS e outputs aceitos pelo verificador de Free; a primeira tentativa com `SystemExit(0)` permanece FAIL. Registrados outputs literais, proveniência e limite em `docs/sprints/skill_enforcement_rollout/G6_RECONCILIACAO_ATUAL_2026-09-30.md`; snapshot de identidade/links do README atualizado. G6 formal não foi fechado, sem policy ou merge.
+
 - (Codex) Alinhadas quatro asserções históricas dos testes SE07/SE08 ao estado já presente no branch base: `hub-ml-criar-objeto` em `current_level=L3` e snapshot README com 14/14 contratos. Policy e produto não foram alterados. Testes SE07 44 (um skip), SE08 8 e certificação local SE08 sem renderer/evidence passaram; correção motivada pelo check `validar` do PR empilhado.
 
 - (Codex) Corrigido o snapshot de contagens do validador no `README.md` após o CI real do PR empilhado revelar oito linhas desatualizadas; o gate `--conferir-readme` passa com os números atuais. Nenhum contrato ou produto foi alterado nesta correção documental.
