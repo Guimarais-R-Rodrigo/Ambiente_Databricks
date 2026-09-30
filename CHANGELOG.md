@@ -2,6 +2,8 @@
 
 ## 2026-09-30 — Homologação Genie guiada
 
+- (Codex) Por escolha do usuário, PR #117 mantido como candidato parcial e revisados os FAILs das 14 skills sem novos prompts ou efeitos. `REVISAO_FAILS_REMANESCENTES_B1_2026-09-30.md` separa histórico retestado, histórico pré-correção sem reteste, falha contra guarda existente e reincidência pós-correção (Cross-EDA T02), com ação mínima e limites de versão/prova por skill. Nenhuma homologação integral inferida; CI externo segue bloqueado antes dos jobs por cobrança/limite GitHub.
+
 - (Codex) Reavaliada RQ-TRUST-COMBINED/T02 após publicação/readback do SKILL Cross-EDA: indicador confirmado; troca de skill e distinção policy/estágio corretas, mas `valid=true` hipotético continuou descrito como prova de integridade. Mantido FAIL material de proveniência, execução NOT_RUN e T01 histórico. Resposta/análise/hashes versionados; nenhum novo prompt idêntico recomendado sem hipótese causal. CI segue sem jobs por bloqueio externo de cobrança.
 
 - (Codex) Publicado no Free apenas `hub-ml-cross-eda-ml/SKILL.md` após preflight de hash contra a versão anterior. O import retornou ACK `rc=1`, mas readback imediato e segunda leitura sem escrita confirmaram o hash novo; o efeito é `READBACK_MATCH_AFTER_ACK_ERROR`, não sucesso do ACK. Relatório local e limites documentados em `CROSS_EDA_TRUST_CORRECAO_FREE_2026-09-30.md`. G6 histórico e FAIL Genie T01 preservados; CI do commit anterior não iniciou jobs por bloqueio de cobrança GitHub. Nenhum objeto MM, policy ou controller alterado.
