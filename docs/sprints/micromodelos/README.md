@@ -1,6 +1,6 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: **MM00–MM03 integradas; laboratório sintético MM04–MM13-LAB aceito pelo responsável.** PR #110/MM03 foi integrada em 2026-09-23 (`3214a131`). Kit r4 revisado, adapter metadata e três runs MLflow sintéticas executados no Free via CLI; skill instalada. Os três casos Genie E1 da revisão corrigida passaram nos critérios de resposta, com ressalvas; certificação MM04 e E2 pendentes.
+> Estado: **MM00–MM03 integradas; módulo de laboratório MM04–MM13 integrado ao Hub no Git pelo PR #119 (`63601e09`).** O laboratório sintético foi aceito pelo responsável. Kit r4 revisado, adapter metadata e três runs MLflow sintéticas foram executados no Free via CLI; skill instalada. O Hub integrado foi publicado no Free e teve readback de conteúdo 691/691 PASS em 2026-09-30. Os três casos Genie E1 da revisão corrigida passaram nos critérios de resposta, com ressalvas. A skill permanece L1/audit; certificação MM04 e E2 no trabalho continuam pendentes.
 
 ## Objetivo
 
@@ -10,7 +10,7 @@ O repositório usa somente fixtures e placeholders. O catálogo real do trabalho
 
 Documentos vivos desta fase:
 
-- [integração de Micromodelos ao Hub e entrega do ambiente completo](PLANO_INTEGRACAO_HUB_MICROMODELOS.md) — próxima etapa; substitui a distribuição do runtime em kit separado;
+- [integração de Micromodelos ao Hub e entrega do ambiente completo](PLANO_INTEGRACAO_HUB_MICROMODELOS.md) — integração Git concluída; separa o pacote local dos gates no trabalho;
 - [execução de laboratório e revisão processual](PLANO_EXECUCAO_LAB.md);
 - [aceite do laboratório sintético](CHECKPOINT_ACEITE_LAB_2026-09-29.md);
 - [entrega local completa antes da transferência](PLANO_ENTREGA_LOCAL.md);
