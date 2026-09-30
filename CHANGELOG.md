@@ -2,6 +2,8 @@
 
 ## 2026-09-30 — Homologação Genie guiada
 
+- (Codex) Corrigido o snapshot de contagens do validador no `README.md` após o CI real do PR empilhado revelar oito linhas desatualizadas; o gate `--conferir-readme` passa com os números atuais. Nenhum contrato ou produto foi alterado nesta correção documental.
+
 - (Codex) Publicados no Databricks Free apenas runner Delta e manifestos Pipeline/FE corrigidos, com readback. Primeiro probe bloqueou antes do efeito por dois contratos remotos com CRLF; republicados somente esses contratos após comparação exata. Auditoria 27/27 dos arquivos de release Pipeline/FE passou; reteste sintético Free de Delta e materialização FE terminou `PASS`, com limpeza `PASS` e ausência das tabelas confirmada. Evidência local e limites registrados na [revisão pré-PR](docs/sprints/skill_enforcement_rollout/REVISAO_PRE_PR_B1_2026-09-30.md); sem promoção de policy, homologação Genie integral ou deploy corporativo.
 
 - (Codex) Revisão pré-PR B1 corrigiu hashes obsoletos do manifesto Pipeline e o estado de limpeza Delta/FE que podia declarar PASS antes do readback. Fonte atualizada e derivado regerado; validador 0/0, 159/159 hashes de manifesto, 20 testes Spark em processos separados e 51 testes sem Spark passaram. A prova Free anterior permanece histórica até readback/publicação da nova versão; Genie segue parcial e CI do PR #115 não iniciou por cobrança/limite da conta. [Revisão](docs/sprints/skill_enforcement_rollout/REVISAO_PRE_PR_B1_2026-09-30.md).
