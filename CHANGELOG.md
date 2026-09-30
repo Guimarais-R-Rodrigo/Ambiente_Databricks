@@ -2,6 +2,8 @@
 
 ## 2026-09-30 — Homologação Genie guiada
 
+- (Codex) Preparado na triagem causal um único prompt focal de Pipeline Builder para distinguir sucesso de MERGE relatado, efeito persistido e cleanup sob `UNKNOWN`, sem executar comandos nem retriar escrita. Oráculo e limites documentados; prompt ainda não enviado à Genie.
+
 - (Codex) Publicados no Free somente `run_delta.py` e os manifestos Pipeline/FE da correção de ACK incerto. Preflight de estado anterior passou; o import do runner retornou `rc=1`, mas readback imediato e segunda leitura sem escrita coincidiram com o novo hash. Os manifestos tiveram ACK/readback e segunda leitura `ALREADY_MATCH`. [Registro](docs/sprints/skill_enforcement_rollout/DELTA_ACK_FREE_PUBLICACAO_2026-09-30.md). Não houve novo probe de efeito, mudança MM/policy nem homologação Genie desta versão.
 
 - (Codex) Registrada RQ-TRUST-FOCAL/T03 de Cross-EDA: usuário selecionou a skill no menu `@` e viu indicador separado; a resposta distinguiu `valid=true` colado de verificação observada e passou no núcleo focal de proveniência. Exemplos condicionais confundiram escopo temporal do verifier estático e nomearam um entrypoint de Postflight inexistente nessa skill, portanto o PASS tem ressalva de precisão. T01/T02 e demais FAILs permanecem históricos; nenhuma execução canônica, nova homologação integral, publicação Free ou promoção de policy foi inferida. Texto integral e SHA-256 versionados.
