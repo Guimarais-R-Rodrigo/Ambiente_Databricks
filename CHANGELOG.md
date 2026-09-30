@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-30 — Estado de Micromodelos após integração Git
+
+- (Codex) Atualizados os planos vivos após os PRs #118 e #119: o módulo Micromodelos está no `main` `63601e09`, sem promoção da skill. O kit desse commit contém 691 arquivos e passou no aceite E0 extraído; o exemplo de recência conferiu sete casos sintéticos. O snapshot do validador no README raiz foi sincronizado. A publicação integral na home pessoal Free passou no readback de conteúdo 691/691, sem arquivos ausentes ou obsoletos; hash normalizado `6a74020abf0c9f72542f7f72223f51d28cf7e463e515a8b4e05b67e960531a18`. O E2 institucional conserva gates próprios.
+
 ## 2026-09-30 — Reconciliação local de Micromodelos após B1
 
 - (Codex) Após a integração do B1 pelo PR #118, composto o módulo de domínio
