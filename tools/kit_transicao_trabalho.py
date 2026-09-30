@@ -15,6 +15,40 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def micromodelos_notebook(commit: str, manifest_sha: str, core: str) -> bytes:
+    """Aceite sintético do produto instalado, sem cópia paralela do runtime."""
+    cells = [
+        {"cell_type": "markdown", "metadata": {}, "source": [
+            "# Aceite sintético de Micromodelos no trabalho\n",
+            "Execute em staging pessoal, em sessão Python nova. Confira o SHA-256 dos dois ZIPs antes de importar. "
+            "O runtime está no próprio Hub. Este notebook usa só fixtures sintéticas; "
+            "metadata e MLflow institucionais permanecem desligados. Veja ACEITE_MICROMODELOS.md.\n",
+            f"Commit esperado: `{commit}`.\n",
+        ]},
+        {"cell_type": "code", "execution_count": None, "metadata": {}, "outputs": [], "source": [
+            "from pathlib import Path\n", "import json\n",
+            "PACKAGE_ROOT = Path('/Workspace/Users/<username-trabalho>/hub_staging_" + commit[:12] + "')\n",
+            "MANIFEST_PATH = PACKAGE_ROOT / 'MANIFEST.json'\n",
+            "if not MANIFEST_PATH.is_file():\n",
+            "    raise RuntimeError('Ajuste PACKAGE_ROOT para a raiz do ZIP 01 extraído')\n",
+            "resultado = run(PACKAGE_ROOT, MANIFEST_PATH,\n",
+            f"                expected_commit='{commit}', expected_manifest_sha256='{manifest_sha}')\n",
+            f"if resultado.get('source_commit') != '{commit}':\n",
+            "    raise RuntimeError('Commit do pacote Micromodelos diverge do kit geral')\n",
+            "print(json.dumps(resultado, ensure_ascii=False, indent=2))\n",
+            "if resultado.get('status') != 'PASS':\n",
+            "    raise RuntimeError('ACEITE_MICROMODELOS_FAIL: consulte os estágios acima')\n",
+        ]},
+    ]
+    cells.insert(1, {"cell_type": "code", "execution_count": None,
+                     "metadata": {"jupyter": {"source_hidden": True}},
+                     "outputs": [], "source": core.splitlines(True)})
+    return json.dumps({"nbformat": 4, "nbformat_minor": 5,
+                       "metadata": {"kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"}},
+                       "cells": [{**cell, "id": f"mm{i:03d}"} for i, cell in enumerate(cells)]},
+                      ensure_ascii=False, indent=2).encode("utf-8")
+
+
 def notebook(commit: str, manifest_sha: str, core: str) -> bytes:
     """Notebook sem outputs, sem configuração corporativa e sem instalação automática."""
     cells = []
@@ -78,7 +112,7 @@ else:
     aceite.skip("tipos_api", "Conferir tipos e abrir exemplos pela UI; API opcional não executada.")
 print(json.dumps(aceite.dependency_inventory(), indent=2))
 ''')
-    md("## 5. Imports e contrato Python\n\nEsperado: seis módulos da instalação conferida; formatação brasileira "
+    md("## 5. Imports e contrato Python\n\nEsperado: módulos gerais e Micromodelos da instalação conferida; formatação brasileira "
        "correta. `ModuleNotFoundError` é problema de pacote/caminho, não autorização para instalar tudo. "
        "Se já havia módulos Hub em cache, reinicie Python e recomece. O teste não executa os notebooks de exemplo.")
     code('''aceite.run("imports", aceite.check_imports, ("arquivos",))
@@ -168,37 +202,54 @@ def build_kit(output: Path) -> dict:
     manifest = json.loads(manifest_raw)
     digest = hashlib.sha256(manifest_raw).hexdigest()
     nb = notebook(commit, digest, (ROOT / "tools/aceite_trabalho.py").read_text(encoding="utf-8"))
+    nb_mm = micromodelos_notebook(commit, digest,
+                                 (ROOT / "tools/aceite_micromodelos_trabalho.py").read_text(encoding="utf-8"))
     root_dir = f"aceite_hub_{commit[:12]}"
     guide = (ROOT / "docs/playbooks/replicacao-trabalho.md").read_text(encoding="utf-8")
-    guide = guide.replace("(checklist-replicacao.md)", "(CHECKLIST.md)").replace("(testes-genie-trabalho.md)", "(TESTES_GENIE.md)")
-    checklist = (ROOT / "docs/playbooks/checklist-replicacao.md").read_text(encoding="utf-8").replace("(replicacao-trabalho.md)", "(GUIA_TRANSICAO.md)")
+    guide = (guide.replace("(checklist-replicacao.md)", "(CHECKLIST.md)")
+             .replace("(testes-genie-trabalho.md)", "(TESTES_GENIE.md)")
+             .replace("(aceite-micromodelos-trabalho.md)", "(ACEITE_MICROMODELOS.md)"))
+    checklist = (ROOT / "docs/playbooks/checklist-replicacao.md").read_text(encoding="utf-8").replace("(replicacao-trabalho.md)", "(GUIA_TRANSICAO.md)").replace("(aceite-micromodelos-trabalho.md)", "(ACEITE_MICROMODELOS.md)")
     human = (ROOT / "docs/playbooks/testes-genie-trabalho.md").read_text(encoding="utf-8").replace("(replicacao-trabalho.md)", "(GUIA_TRANSICAO.md)")
+    mm_guide = (ROOT / "docs/playbooks/aceite-micromodelos-trabalho.md").read_text(encoding="utf-8")
     test_zip = output / f"02_IMPORTAR_ACEITE_{commit[:12]}.zip"
     with zipfile.ZipFile(test_zip, "w", zipfile.ZIP_DEFLATED) as z:
-        for name, data in {"01_ACEITE_TECNICO.ipynb": nb, "MANIFEST.json": manifest_raw,
+        for name, data in {"01_ACEITE_TECNICO.ipynb": nb,
+                           "02_ACEITE_MICROMODELOS.ipynb": nb_mm,
+                           "MANIFEST.json": manifest_raw,
                            "GUIA_TRANSICAO.md": guide.encode(), "CHECKLIST.md": checklist.encode(),
-                           "TESTES_GENIE.md": human.encode()}.items():
+                           "TESTES_GENIE.md": human.encode(),
+                           "ACEITE_MICROMODELOS.md": mm_guide.encode()}.items():
             z.writestr(root_dir + "/" + name, data)
     (output / "GUIA_TRANSICAO.md").write_text(guide, encoding="utf-8")
     (output / "CHECKLIST.md").write_text(checklist, encoding="utf-8")
     (output / "TESTES_GENIE.md").write_text(human, encoding="utf-8")
     (output / "01_ACEITE_TECNICO.ipynb").write_bytes(nb)
+    (output / "02_ACEITE_MICROMODELOS.ipynb").write_bytes(nb_mm)
+    (output / "ACEITE_MICROMODELOS.md").write_text(mm_guide, encoding="utf-8")
     (output / "COMECE_AQUI.md").write_text(
-        f"# Kit de transição para o trabalho\n\nCommit: `{commit}`. Não é homologação do destino.\n\n"
+        f"# Kit de transição para o trabalho\n\nCommit: `{commit}`. "
+        f"Manifesto do Hub SHA-256: `{digest}`. "
+        "Não é homologação do destino.\n\n"
         f"Leia [o guia](GUIA_TRANSICAO.md). Importe `{product_zip.name}` numa pasta pessoal vazia "
         f"`hub_staging_{commit[:12]}`, nunca sobre o ambiente ativo. Importe `{test_zip.name}` na raiz "
         f"do seu usuário: ele cria `{root_dir}/`. Abra o notebook dentro dessa pasta e configure USER_HOME.\n\n"
+        "O módulo Micromodelos já está no ZIP 01. Siga `ACEITE_MICROMODELOS.md` e abra "
+        "`02_ACEITE_MICROMODELOS.ipynb` na pasta do ZIP 02.\n\n"
         "O ZIP externo que reúne este kit NÃO é importável como produto. Extraia-o no computador autorizado "
         "e importe os dois ZIPs internos nos locais indicados. Não descompacte/recompacte perdendo arquivos ocultos.\n\n"
         "O notebook avança de identidade para arquivos, imports, Spark e contratos. "
-        "MLflow e tabela corporativa começam desligados. Depois, promova manualmente só o escopo do Hub, "
+        "MLflow e tabela corporativa começam desligados. Esta primeira passagem termina em staging. "
+        "Após autorização específica e liberação do gate SE08, promova manualmente só o escopo do Hub, "
         "preservando MCP e skills alheias. Rode de novo na instalação final, em sessão nova, "
         "e execute os testes humanos da Genie e das imagens.\n\n"
         "SHA256 detecta alteração acidental quando comparado a uma referência confiável; não é assinatura digital.\n",
         encoding="utf-8")
     hashes = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(output.iterdir()) if p.is_file()}
     (output / "SHA256SUMS.txt").write_text("".join(f"{sha}  {name}\n" for name, sha in hashes.items()), encoding="utf-8")
-    return {"commit": commit, "product_files": len(manifest["files"]), "manifest_sha256": digest, "files": hashes}
+    return {"commit": commit, "product_files": len(manifest["files"]),
+            "manifest_sha256": digest,
+            "files": hashes}
 
 
 def main():

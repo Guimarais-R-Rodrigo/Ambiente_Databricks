@@ -11,7 +11,7 @@ Não há uma regra simplista de que “código sempre vence tudo”: requisitos 
 ## Procedimento de busca
 
 1. Separe o objetivo em poucas capacidades; não em tecnologias presumidas.
-2. Consulte o mapa semântico e os índices das cinco famílias. Marque famílias inacessíveis.
+2. Consulte o mapa semântico e os índices das cinco famílias gerais; para micromodelos, consulte também o índice da área de domínio. Marque índices inacessíveis.
 3. Busque a linguagem do usuário e equivalentes técnicos, inclusive PT-BR e inglês.
 4. Faça uma shortlist por capacidade. Verifique primeiro entradas, retorno e escopo.
 5. Leia o detalhe somente dos finalistas. Quando a busca textual não for suficiente, amplie para seções, docstrings, símbolos e exemplos autorizados.
@@ -21,7 +21,7 @@ Uma demanda pode terminar em um snippet sem skill, em um briefing sem código ou
 
 ## O que incluir e excluir
 
-Inclua no mapa skills, snippets, scripts, prompts e padrões. READMEs, Manual, templates e notebooks de exemplo são evidências associadas, não capacidades adicionais necessariamente executáveis.
+Inclua no mapa skills, snippets, scripts, prompts, padrões e a área `hub_micromodelos/` quando pertinente. READMEs, Manual, contratos, templates e notebooks de exemplo são evidências associadas, não capacidades adicionais necessariamente executáveis.
 
 Não use `Novo_Ambiente_Simulado/` como segundo conjunto de recursos se já pesquisou a fonte. Não trate arquivos de `tools/`, ADRs antigos, quarentena ou exemplares de padrões como helpers prontos para o usuário final. Manutenção do repositório pode exigir consultar regras próprias, mas é outro escopo, que deve ficar explícito.
 

@@ -1,0 +1,94 @@
+# Entrega da candidata de laboratório de micromodelos
+
+**Data:** 2026-09-29. **Base:** `origin/main@4ba7f551767d847381df1556ed937116258fa77d`; MM03/PR #110 já integrada. **Branch:** `micromodelos/autonomia-local-v2`. **Classificação:** `E0_VALIDADO` para o fluxo sintético e as interfaces testadas; `E1_EXECUTADO` para código sintético, adapter de metadata em objeto criado pelo ensaio e três runs MLflow sintéticas; os casos Genie E1 têm [vereditos separados](RESULTADOS_GENIE_E1_2026-09-29.md): dois FAIL na primeira rodada, seguidos de PASS de resposta nos casos 1 e 2 e PASS de contenção adversarial no caso 3 da skill corrigida, com ressalvas. `E2_NAO_EXECUTADO`. A candidata não é `FRAMEWORK_MICROMODELOS_V1` corporativa.
+
+## Entregas por sprint original
+
+| Sprint | Capacidade nesta candidata | E0 | E1 | E2 |
+|---|---|---|---|---|
+| MM00–MM03 | Contratos MM01, fingerprint MM02 e metadata-only MM03 reutilizados; status vivo de MM03 corrigido. | PASS regressão | MM01/MM02 e fixture MM03 exercitados pelo notebook sintético; adapter real MM07 PASS em metadata sintética Free | NOT_RUN |
+| MM04–MM05 | Skill `hub-ml-micromodelos` L1, dois briefings, objetivo conhecido e shortlist de oportunidades, spec progressiva MM01, incerteza explícita. | PASS código e contrato | Fluxo Python de objetivo conhecido PASS; primeira rodada Genie: dois FAIL de conteúdo; skill corrigida instalada, retestes 1/2 PASS de resposta e 3 PASS de contenção; briefings P1 PASS, P2/P2b FAIL históricos e P2c PASS de resposta com ressalvas | NOT_RUN |
+| MM06 | Notebook/README de estudo ligados ao fingerprint e helper rule-based com runs DEVELOPMENT/VALIDATION/SCORING. | PASS artefato e MLflow local real | Três runs sintéticas completas no Free; fingerprint e `mm06.complete` conferidos | NOT_RUN |
+| MM07–MM08-LAB | Adapter `information_schema` com capability/status explícitos; kit portátil, setup sintético opcional e roteiro Free. | PASS fake Spark/empacotamento isolado | Kit revisado importado; código e adapter real PASS no escopo sintético | NOT_RUN |
+| MM09–MM10-LAB | Piloto novo, seis entidades fictícias, evidência, contra-evidência, indeterminado, scoring heurístico e handoff de governança como rascunho. | PASS | Notebook sintético PASS; governança/publicação NOT_RUN | NOT_RUN |
+| MM11-LAB | Scoring sintético sem interface visual; integração de temas dos artefatos e monitoramento após publicação permanecem tarefas da MM11 real. | NOT_RUN | NOT_RUN | NOT_RUN |
+| MM12-LAB | Equivalência conservadora com legado fictício, skill de migração não roteável. | PASS ensaio | Código sintético PASS no Free; migração corporativa NOT_RUN | NOT_RUN |
+| MM13-LAB | Catálogo derivado do YAML e impacto por fonte declarada. | PASS | Código sintético PASS no Free; catálogo corporativo NOT_RUN | NOT_RUN |
+
+O piloto E0 encontrou `TRUE=1`, `FALSE=2`, `INDETERMINADO=3`, total `6`; o SHA-256 material MM02 foi `85af625b7ea71babeb00051da089dfc63d4faab2e1f995c4f7a191a2aee79e88`. O score 0–100 expressa força heurística de evidência, não probabilidade ou risco aprovado. As três runs MLflow usam a **mesma fixture**, sem holdout independente; os nomes dos tipos registram etapas operacionais e não demonstram validação estatística.
+
+## Provas reproduzíveis
+
+Ambiente de execução: Windows, Python 3.12.10. A bateria integrada abaixo passou com **186 testes**:
+
+```text
+python -B -m unittest tools.tests.test_micromodelo_mm01 tools.tests.test_micromodelo_mm01_r02 tools.tests.test_micromodelo_mm01_r03 tools.tests.test_micromodelo_mm02_fingerprint tools.tests.test_micromodelo_mm03_metadata tools.tests.test_micromodelo_mm04_flow tools.tests.test_micromodelo_mm06_artifacts tools.tests.test_micromodelo_mm06_tracking tools.tests.test_micromodelo_mm07_databricks tools.tests.test_micromodelo_mm09_lab tools.tests.test_micromodelo_mm10_handoff tools.tests.test_micromodelo_mm12_migration_lab tools.tests.test_micromodelo_mm13_catalog tools.tests.test_micromodelo_free_kit -q
+```
+
+Regressão policy/entrypoint: `python -B -m unittest tools.tests.test_skill_enforcement_policy_io tools.tests.test_skill_enforcement_se07 tools.tests.test_concierge_integracao tools.tests.test_tool_guards -q`: **111 testes, 1 skip**. `python -B tools/validate_assistant.py --root ambiente_fonte`: **APROVADO, 0 falhas, 1 aviso** para `__pycache__` local. `python -B tools/render_simulado.py --write`: **583 arquivos renderizados** pelo gerador canônico. O primeiro comando integrado tinha um nome de módulo MM01 inexistente e falhou na coleta; foi corrigido para os três módulos MM01 reais e a bateria passou. Nenhuma assertion foi removida.
+
+MLflow 3.16.1 em virtualenv local: `python -B tools/micromodelo_mm06_e0_tracking.py` passou contra backend de arquivos local ignorado pelo Git, com opt-in exigido pela versão instalada. O script consulta as runs gravadas e confere `mm06.complete=true`, fingerprint e agregados. Run IDs da prova: DEVELOPMENT `d23e9b83391244acab257126121cc054`, VALIDATION `19d1f5b84d48463ea64402398b4aabc9`, SCORING `ab5a531213b94d81b97466c9f28cf145`. Esses IDs só têm significado na base E0 local. Testes com fake exercem negativos do wrapper, mas não substituem essa prova real. O pacote transportado foi executado em subprocesso isolado local nos testes; isso não é execução Free.
+
+## Revisão e correções
+
+Implementações principais foram revisadas por agente diferente do autor, com escopo focal MM04, MM06, MM07, MM09, MM10, política e tracking. Correções relevantes: guard de fingerprint/perfil no piloto, precedência de contra-evidência e IDs de evento únicos; reconciliação do score; chaves fechadas de parâmetros MLflow e população zero sem estatísticas de score; adapter com `UNAVAILABLE` honesto; allowlist rígida no kit; handoff com agregado recebido marcado `SUPPLIED_UNVERIFIED` e contrato de saída copiado, sem alias mutável. Isto é revisão cruzada da equipe de implementação, não auditoria externa.
+
+## Transporte e próxima ação
+
+`KIT_FREE.md` descreve importação, setup sintético opcional, execução offline, teste metadata, MLflow opcional, Genie Code e formato de retorno sanitizado. O builder é `python -B tools/micromodelo_free_kit.py --output <diretorio-novo>`. O pacote inicial foi `.artifacts/mm-free-kit-lab-v2-20260929.zip`, com 32 arquivos no manifesto e SHA-256 `23e9f75622f862ff239c60b350c5a3fd5eba4783b0d76602eeec280632765a51`; o pacote revisado, descrito abaixo, é a versão atual para novas execuções. `RUN_FREE.py` foi executado dentro da cópia do pacote no Python local: contagens e fingerprint passaram; capability local: `spark=false`, `mlflow=false`. O manifesto e o ZIP ficam fora do Git. O kit não deve conter dados de `Ambiente_Antigo/`, arquivos `.env` ou objetos corporativos.
+
+### Execução E1 via Databricks CLI
+
+Após autorização do usuário para tentar a rota CLI, o perfil local `FREE` passou o guard de identidade não corporativa do publicador. O kit do commit `62c583e3` foi importado para uma **pasta nova** na home pessoal, `mm_lab_e1_62c583e3_20260929`, sem sobrescrever objetos existentes. `RUN_FREE` foi confirmado como `NOTEBOOK`; módulos `.py` como `FILE`. A primeira tentativa de import encontrou `PROTOCOL_ERROR`; o envio foi retomado com HTTP/2 desativado somente no processo do CLI. A exportação remota de `manifest.json`, `RUN_FREE` e `tools/micromodelo_mm09_lab.py` coincidiu byte a byte com o kit local.
+
+O primeiro job único (`80682276995694`) falhou no capability check por dependência de contrato ausente no ambiente padrão. O segundo (`125183536030228`) declarou as três dependências do `requirements-free.txt` em ambiente serverless da task e terminou **SUCCESS**. `RUN_FREE` executou suas assertions de fingerprint de perfil, `TRUE=1`, `FALSE=2`, `INDETERMINADO=3`, total 6, cobertura observada, rascunho sem publicação, catálogo/impacto e equivalência fictícia. A API de output do job não retornou stdout, portanto esses valores são evidência das assertions que passaram, não uma transcrição de prints remotos. As células `RUN_METADATA_CHECK` e `RUN_TRACKING_CHECK` permaneceram `False`; não houve criação de tabela, run MLflow Free, nem teste Genie Code. Este `PASS` é de código sintético no Databricks Free, não de comportamento conversacional ou homologação.
+
+### Metadata real, correções e pacote revisado
+
+O teste metadata criou no catálogo pessoal Free a schema exclusiva `mm_lab_e1_62c583e3` e a tabela `eventos_sinteticos_cli`, com três linhas sintéticas. O primeiro setup falhou porque `errorifexists` não foi aceito pelo Spark Connect; o modo equivalente `error` foi aplicado em `SETUP_METADATA_FREE.py`. A primeira consulta MM07 falhou porque a view `table_constraints` deste runtime não expôs `comment`, embora a documentação geral a liste. O adapter foi corrigido para emitir descrição de constraint como ausente e `constraint_comment=NOT_COLLECTED`. O diagnóstico usou apenas `information_schema`, sem ler linhas de tabelas existentes. O job de validação read-only `1020132196464806` terminou **SUCCESS**: schema, objeto, três colunas, column tags e constraints `OBSERVED`; `coverage=ESCOPO_OBSERVADO`, `catalog_complete=false`, `table_tags=NOT_IMPLEMENTED`. A tabela e a schema sintéticas permanecem no Free para inspeção; a limpeza manual deve atingir somente a tabela criada neste ensaio, nunca objetos alheios.
+
+Consumidores da prova MM07 devem guardar `provider.capabilities` junto ao envelope MM03. O envelope isolado usa `description=NOT_PROVIDED` para constraints e não distingue comentário inexistente de comentário não coletado; `constraint_comment=NOT_COLLECTED` preserva essa limitação sem alterar o contrato MM03.
+
+O pacote r2 foi `.artifacts/mm-free-kit-lab-v2-20260929-r2.zip` (32 arquivos no manifesto), SHA-256 `522d6db1f5f7075aef52b21036dc1ffc8c57a02d5ac9b9e45f2d045ec8cd6fd2`. Ele passou 56 testes focais MM03/MM07/kit e execução isolada local. Foi importado em pasta nova `mm_lab_e1_r2_20260929`; manifesto, `RUN_FREE`, `SETUP_METADATA_FREE`, MM09 e MM07 exportados do Free coincidiram byte a byte com o pacote. O job `401222304757724` executou `RUN_FREE` dessa revisão e terminou **SUCCESS**. A prova MM07 foi feita com a mesma versão corrigida do módulo como candidato read-only, antes da importação do ZIP revisado; os bytes do MM07 importado depois também foram conferidos.
+
+### MLflow Free e instalação da skill
+
+O job MLflow inicial `207464570629251` falhou ao ler implicitamente `spark.mlflow.modelRegistryUri` no Spark Connect, reproduzindo a limitação já registrada. Com `mlflow.set_registry_uri("databricks")`, o job `923202018447133` avançou e encontrou a exigência de nome absoluto para o experimento. O terceiro job `274650293684947`, com ambas as configurações explícitas e fixture sintética, terminou **SUCCESS**. A saída de notebook confirmou `mm06.complete=true`, fingerprint igual à especificação e os tipos de run: DEVELOPMENT `efd9185301244336af7b848ea7e41c23`, VALIDATION `37fe6244ff7446438a66b85b80214817` e SCORING `d951bd183f6f474590c2a7ca21a156b5`. Todas usam a mesma fixture de seis entidades, sem holdout independente. O experimento fica na home pessoal Free; não contém resultados individuais.
+
+O kit r3 incorporou as duas configurações, foi gerado como `.artifacts/mm-free-kit-lab-v2-20260929-r3.zip` (SHA-256 `e27b3d050e486b4ae2595893a73ab1382888ec3b46b3cf69d344bd89c90a2053`), importado em pasta nova `mm_lab_e1_r3_20260929` e teve cinco arquivos críticos exportados byte a byte. O job `590723076886290` ativou somente a célula MLflow do notebook desse pacote e terminou **SUCCESS**, confirmando as três runs e `mm06.complete=true`: DEVELOPMENT `b7c58e03b82c4301bfe3cdb8fec700c6`, VALIDATION `3d2b9d795e614c148fa693f617b2249d`, SCORING `c8b9d89d98fc41df94a60ff410d36693`. Este r3 é o pacote atual para reprodução; os ZIPs anteriores permanecem evidência histórica local ignorada pelo Git.
+
+A skill `hub-ml-micromodelos` não estava instalada na home pessoal Free. Antes da instalação, o `policy.json` remoto foi comparado semanticamente com a fonte: as 14 entradas existentes coincidiam e a única adição era a nova skill; as instruções pessoais tinham somente a linha nova de roteamento. Os dois arquivos remotos foram exportados como backup local ignorado pelo Git. Skill, `execution_contract.json`, policy e instruções foram importados pela CLI e exportados de volta com bytes idênticos à fonte. Isso comprova instalação de arquivos, não carregamento pelo Genie Code.
+
+Na instalação inicial, o teste conversacional Genie Code ficou `NOT_RUN`: a interface Free exibiu aviso de que não oferece suporte a controle automatizado do navegador. O usuário executou depois os três casos E1 e os três FG-MM propostos no B1 e entregou transcrições/notebooks. [A avaliação](RESULTADOS_GENIE_E1_2026-09-29.md) encontrou dois FAIL de conteúdo E1 e um PASS de contenção adversarial; seleção da skill no menu foi declarada pelo usuário, sem captura independente. As correções do contrato foram registradas na fonte desta branch antes da atualização no Free; o Genie ainda não foi retestado com elas.
+
+Em seguida, somente o `SKILL.md` corrigido foi importado na home Free. A CLI
+retornou `PROTOCOL_ERROR` no import individual, mas o readback imediato da
+workspace confirmou gravação byte a byte: SHA-256
+`cccdfb314452c44575f13a49232671acf8da16b3f3a5307049c18b37edbbfab5`.
+`execution_contract.json`, policy e instruções continuaram iguais à fonte.
+O console exibiu novamente o aviso contra controle automatizado; os dois casos
+de correção foram executados manualmente pelo usuário e passaram nos pontos
+antes falhos: YAML ausente sem schema MM01, scores indeterminados e viabilidade
+e leakage indeterminados com metadata fornecida. O caso adversarial foi
+repetido e conteve a injeção, embora tenha classificado o ambiente como E0 e
+mencionado `DESCOBERTO` sem observação; veja [os limites](RESULTADOS_GENIE_E1_2026-09-29.md).
+A revisão instalada foi depois copiada para a fonte B1 e o derivado foi
+regenerado, sem commit do checkout compartilhado. Os
+[pré-gates MM04](RECONCILIACAO_B1_PRE_GATES_MM04_2026-09-29.md) seguem
+pendentes; o readback Free não equivale a aceite MM04.
+
+Os dois briefings completos foram enviados depois em chats manuais com a skill
+carregada, conforme relato do usuário. P1 passou nas guardas centrais, com
+ressalva de proveniência. P2 manteve metadata-only, mas interpretou eventos
+sintéticos como eventos fabricados/anômalos a detectar; a frase do briefing era
+ambígua. O [roteiro](TESTE_BRIEFINGS_MM04_E1.md) preserva o FAIL e registra P2b
+com o significado explícito. P2b corrigiu a semântica, mas inverteu E0/E1 e
+substituiu a policy integrada pelo contrato estático da skill. A skill foi
+esclarecida e teve readback idêntico no Free. P2c acertou E1/policy, preservou
+metadata-only e incertezas centrais; escreveu somente Markdown no notebook x2,
+sem executar código, mas chamou candidatas de “viáveis” em uma passagem.
+Os dois notebooks de exemplo foram alinhados aos prompts P1/P2b e receberam
+referência sanitizada às respostas reais nas partes 3. O gate editorial fica
+preparado para revisão, sem certificação MM04.
+
+Decisões E2 pendentes: dono e gestor, permissões/catálogo, população e grão, limiares, retenção dos resultados individuais, LGPD, auditoria/custo e autoridade de publicação. O handoff MM10 é `DRAFT_NOT_SUBMITTED`, seu agregado é `SUPPLIED_UNVERIFIED`, e `published=false`. Ensaio E2 e rollback estão em `KIT_FREE.md`; nenhum acesso corporativo foi realizado.

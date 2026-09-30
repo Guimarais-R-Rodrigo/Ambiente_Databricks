@@ -11,6 +11,11 @@ posterior, registra execuções e não substitui a especificação. Esta skill c
 os dois modos abaixo e entrega um próximo passo verificável. Não cria um novo tipo
 de objeto do Hub nem autoriza publicação.
 
+Os recursos instalados ficam em [Hub Micromodelos](../../hub_micromodelos/README.md):
+`contratos/` contém schema e modelo YAML; `execucao/` contém código importável;
+`exemplos/recencia_contato/` demonstra o contrato com dados sintéticos.
+Leia apenas o recurso pertinente à etapa, sem presumir que sua presença o executou.
+
 ## Quando esta skill se aplica
 
 Use para definir uma característica de micromodelo ou explorar candidatas
@@ -67,11 +72,15 @@ recurso do Hub escolher, `hub-ml-concierge` é a entrada apropriada.
    disponível. Comece pelos schemas e objetos visíveis; leia nomes, tipos,
    descrições e tags de tabela. Selecione candidatas por relevância explicada;
    só então solicite colunas, tags de coluna e constraints dessas candidatas.
-3. No E0, o coletor interno MM03 (`tools/micromodelo_mm03_metadata.py`) oferece
-   essa sequência para fixtures sintéticas. Não é adapter Databricks, não cria
-   shortlist por si e não escreve YAML. Para E1, confirme antes a presença e a
-   execução de um adapter distribuído e autorizado; sem ele, entregue plano.
-4. Crie ou atualize `micromodelo.yaml` **a partir do template/schema MM01**, sem
+3. Para fixtures sintéticas, consulte o coletor em
+   `hub_micromodelos/execucao/metadados.py`. Ele preserva a sequência de coleta;
+   não cria shortlist por si nem escreve YAML. Para E1, confira o contrato do
+   adapter `hub_micromodelos/execucao/databricks.py`, sua presença na instalação,
+   o binding e a permissão efetivos antes de usá-lo. A presença do arquivo não
+   comprova consulta nem autoriza ler registros.
+4. Crie ou atualize `micromodelo.yaml` **a partir de**
+   `hub_micromodelos/contratos/micromodelo.template.yaml` e
+   `hub_micromodelos/contratos/micromodelo.schema.json`, sem
    substituir grupos nem inventar taxonomia. Comece em `IDEIA` ou avance somente
    pela máquina de estados MM01. Preencha `negocio`, `entidade` e fontes com fatos
    sustentados; deixe listas vazias e campos pendentes quando cabível. Registre
@@ -135,9 +144,9 @@ sintéticos. Metadata MM03 não fornece linha, contagem ou autorização de aces
 
 ## Usar helpers da biblioteca
 
-Esta skill não presume descoberta automática de `hub_snippets` ou `hub_scripts`.
-O coletor MM03 é ferramenta interna do repositório E0, não um helper publicado
-nessas famílias. Para uma etapa especializada posterior, confira no Hub
+Esta skill não presume descoberta automática de `hub_snippets`, `hub_scripts`
+ou `hub_micromodelos`. O núcleo de Micromodelos está na área de domínio do Hub;
+para uma etapa especializada posterior, confira no Hub
 efetivamente instalado a skill e os helpers que ela declara antes de invocá-los.
 Não importe helper por nome sugerido nem substitua um entrypoint protegido.
 

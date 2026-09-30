@@ -15,7 +15,7 @@ Arquivos estruturantes consultados nesta elaboração ou na análise precedente 
 - `docs/decisions/ADR-0004-declaracao-explicita-de-helpers.md`: risco da descoberta universal e declaração de helpers.
 - `docs/decisions/ADR-0010-manual-tecnico-unificado.md`: inventário integrado e redação única.
 - `ambiente_fonte/.assistant/MANUAL_TECNICO.md`, seções `catalogo-helpers` e `metodos`: mapa de recursos.
-- READMEs de `.assistant`, `skills`, `hub_scripts` e `hub_snippets`: escopos e formas de ativação.
+- READMEs de `.assistant`, `skills`, `hub_scripts`, `hub_snippets` e `hub_micromodelos`: escopos e formas de ativação.
 - `tools/project_policy.py`, `tools/validate_assistant.py` e `docs/testes/forward/README.md`: integração futura e distinção dos gates.
 
 Esses caminhos são referências no repositório, não promessas de disponibilidade dentro de um pacote instalado isoladamente. Na operação, o Concierge deve conferir o Hub efetivamente acessível.

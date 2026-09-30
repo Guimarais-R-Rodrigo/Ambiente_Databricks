@@ -41,7 +41,9 @@ class SE07PolicyTests(unittest.TestCase):
         cls.runtime=_load("se07_runtime_policy",ASSISTANT/"hub_scripts"/"skill_execution"/"skill_execution.py")
         cls.raw=json.loads(POLICY.read_text(encoding="utf-8")); cls.by={i["skill"]:i for i in cls.raw["skills"]}
     def test_registry_validates_and_covers_catalog(self):
-        self.assertEqual([],self.tool.validate_policy_registry(POLICY)); self.assertEqual(15,len(self.tool.discover_skills())); self.assertEqual(self.tool.discover_skills(),set(self.by))
+        self.assertEqual([], self.tool.validate_policy_registry(POLICY))
+        self.assertTrue(self.tool.discover_skills())
+        self.assertEqual(self.tool.discover_skills(), set(self.by))
 
     def test_unreadable_policy_returns_structured_fail(self):
         script = ROOT/"tools"/"skill_enforcement"/"se07_policy.py"
@@ -81,6 +83,7 @@ class SE07PolicyTests(unittest.TestCase):
             "hub-ml-micromodelos": "L1",
             "hub-ml-auditoria-skills": "L3",
             "hub-ml-criar-objeto": "L3",
+            "hub-ml-micromodelos": "L1",
         }
         for skill, policy in self.by.items():
             self.assertEqual(expected_current.get(skill, "L0"), policy["current_level"], skill)

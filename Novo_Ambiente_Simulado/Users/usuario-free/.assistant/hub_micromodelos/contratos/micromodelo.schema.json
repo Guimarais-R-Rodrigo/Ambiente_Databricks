@@ -1,0 +1,1070 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ambiente-databricks.local/contracts/micromodelo.schema.json",
+  "title": "Contrato canônico de micromodelo",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "identidade",
+    "negocio",
+    "entidade",
+    "fontes",
+    "evidencias",
+    "contra_evidencias",
+    "classificacao",
+    "score",
+    "experimentos",
+    "validacao",
+    "saida",
+    "tracking",
+    "governanca",
+    "publicacao",
+    "proveniencia"
+  ],
+  "$defs": {
+    "proveniencia": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "origem"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "DESCOBERTO",
+            "INFERIDO",
+            "PROPOSTO",
+            "APROVADO",
+            "MEDIDO"
+          ]
+        },
+        "origem": {
+          "type": "string",
+          "minLength": 1,
+          "format": "material-text"
+        },
+        "referencia": {
+          "$ref": "#/$defs/material_ref_nullable"
+        },
+        "observado_em_utc": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "aprovacao": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "por": {
+              "type": "string",
+              "minLength": 1,
+              "format": "material-text"
+            },
+            "em_utc": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "referencia": {
+              "$ref": "#/$defs/material_ref"
+            }
+          },
+          "required": [
+            "por",
+            "em_utc",
+            "referencia"
+          ]
+        },
+        "medicao": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "referencia_execucao": {
+              "$ref": "#/$defs/material_ref"
+            },
+            "medido_em_utc": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "referencia_execucao",
+            "medido_em_utc"
+          ]
+        }
+      }
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{2,63}$"
+    },
+    "material_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Referência auditável com ao menos uma letra ou número Unicode após NFKC; o format customizado é aplicado pelo validador MM01.",
+      "format": "material-text"
+    },
+    "material_ref_nullable": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/material_ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "identidade": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nome",
+        "titulo",
+        "micromodel_version",
+        "estado"
+      ],
+      "properties": {
+        "nome": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{2,63}$"
+        },
+        "titulo": {
+          "type": "string",
+          "minLength": 3,
+          "format": "material-text"
+        },
+        "micromodel_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "estado": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "fase_atual",
+            "fase_anterior",
+            "condicao",
+            "motivo_condicao"
+          ],
+          "properties": {
+            "fase_atual": {
+              "enum": [
+                "IDEIA",
+                "EM_DESCOBERTA",
+                "EM_ESTUDO",
+                "EM_VALIDACAO",
+                "VALIDADO",
+                "CANDIDATO_PRODUTO",
+                "EM_VALIDACAO_GOVERNANCA",
+                "PUBLICADO"
+              ]
+            },
+            "fase_anterior": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "enum": [
+                null,
+                "IDEIA",
+                "EM_DESCOBERTA",
+                "EM_ESTUDO",
+                "EM_VALIDACAO",
+                "VALIDADO",
+                "CANDIDATO_PRODUTO",
+                "EM_VALIDACAO_GOVERNANCA"
+              ]
+            },
+            "condicao": {
+              "enum": [
+                "ATIVO",
+                "BLOQUEADO",
+                "SUSPENSO",
+                "DEPRECATED"
+              ]
+            },
+            "motivo_condicao": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "material-text"
+            }
+          }
+        }
+      }
+    },
+    "negocio": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "caracteristica",
+        "objetivo",
+        "definicao_operacional",
+        "uso_pretendido",
+        "nao_usar_para"
+      ],
+      "properties": {
+        "caracteristica": {
+          "type": "string",
+          "minLength": 3,
+          "format": "material-text"
+        },
+        "objetivo": {
+          "type": "string",
+          "minLength": 10,
+          "format": "material-text"
+        },
+        "definicao_operacional": {
+          "type": "string",
+          "minLength": 10,
+          "format": "material-text"
+        },
+        "uso_pretendido": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 3,
+            "format": "material-text"
+          }
+        },
+        "nao_usar_para": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 3,
+            "format": "material-text"
+          }
+        }
+      }
+    },
+    "entidade": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tipo",
+        "chave_logica",
+        "granularidade",
+        "populacao_elegivel",
+        "referencia_temporal"
+      ],
+      "properties": {
+        "tipo": {
+          "type": "string",
+          "minLength": 2,
+          "format": "material-text"
+        },
+        "chave_logica": {
+          "type": "string",
+          "minLength": 2,
+          "format": "material-text"
+        },
+        "granularidade": {
+          "type": "string",
+          "minLength": 5,
+          "format": "material-text"
+        },
+        "populacao_elegivel": {
+          "type": "string",
+          "minLength": 10,
+          "format": "material-text"
+        },
+        "referencia_temporal": {
+          "type": "string",
+          "minLength": 5,
+          "format": "material-text"
+        }
+      }
+    },
+    "fontes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "catalogo_ref",
+          "schema",
+          "objeto",
+          "tipo_objeto",
+          "campos",
+          "papel",
+          "proveniencia"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "catalogo_ref": {
+            "type": "string",
+            "minLength": 1,
+            "format": "material-text"
+          },
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "format": "material-text"
+          },
+          "objeto": {
+            "type": "string",
+            "minLength": 1,
+            "format": "material-text"
+          },
+          "tipo_objeto": {
+            "enum": [
+              "TABLE",
+              "VIEW",
+              "NAO_INFORMADO"
+            ]
+          },
+          "campos": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "format": "material-text"
+            },
+            "uniqueItems": true
+          },
+          "papel": {
+            "enum": [
+              "ELEGIBILIDADE",
+              "EVIDENCIA",
+              "CONTRA_EVIDENCIA",
+              "APOIO"
+            ]
+          },
+          "proveniencia": {
+            "$ref": "#/$defs/proveniencia"
+          }
+        }
+      }
+    },
+    "evidencias": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "descricao",
+          "fontes_ref",
+          "regra",
+          "proveniencia"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "descricao": {
+            "type": "string",
+            "minLength": 5,
+            "format": "material-text"
+          },
+          "fontes_ref": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/id"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "regra": {
+            "type": "string",
+            "minLength": 5,
+            "format": "material-text"
+          },
+          "proveniencia": {
+            "$ref": "#/$defs/proveniencia"
+          }
+        }
+      }
+    },
+    "contra_evidencias": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "descricao",
+          "fontes_ref",
+          "regra",
+          "proveniencia"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "descricao": {
+            "type": "string",
+            "minLength": 5,
+            "format": "material-text"
+          },
+          "fontes_ref": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/id"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "regra": {
+            "type": "string",
+            "minLength": 5,
+            "format": "material-text"
+          },
+          "proveniencia": {
+            "$ref": "#/$defs/proveniencia"
+          }
+        }
+      }
+    },
+    "classificacao": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tipo",
+        "semantica",
+        "ausencia_evidencia",
+        "limiares"
+      ],
+      "properties": {
+        "tipo": {
+          "const": "BOOLEANO_COM_INDETERMINADO"
+        },
+        "semantica": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "quando_true",
+            "quando_false",
+            "quando_indeterminado",
+            "proveniencia"
+          ],
+          "properties": {
+            "quando_true": {
+              "type": "string",
+              "minLength": 5,
+              "format": "material-text"
+            },
+            "quando_false": {
+              "type": "string",
+              "minLength": 5,
+              "format": "material-text"
+            },
+            "quando_indeterminado": {
+              "type": "string",
+              "minLength": 5,
+              "format": "material-text"
+            },
+            "proveniencia": {
+              "$ref": "#/$defs/proveniencia"
+            }
+          }
+        },
+        "ausencia_evidencia": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "tratamento",
+            "resultado_sem_evidencia",
+            "regra_ref",
+            "proveniencia"
+          ],
+          "properties": {
+            "tratamento": {
+              "enum": [
+                "INDETERMINADO",
+                "REGRA_EXPLICITA_APROVADA"
+              ]
+            },
+            "proveniencia": {
+              "$ref": "#/$defs/proveniencia"
+            },
+            "resultado_sem_evidencia": {
+              "enum": [
+                "TRUE",
+                "FALSE",
+                "INDETERMINADO"
+              ],
+              "description": "Resultado estruturado aplicável quando não há evidência suficiente."
+            },
+            "regra_ref": {
+              "$ref": "#/$defs/material_ref_nullable"
+            }
+          }
+        },
+        "limiares": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "descricao",
+              "operador",
+              "valor",
+              "unidade",
+              "proveniencia"
+            ],
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/id"
+              },
+              "descricao": {
+                "type": "string",
+                "minLength": 3,
+                "format": "material-text"
+              },
+              "operador": {
+                "enum": [
+                  "GT",
+                  "GTE",
+                  "LT",
+                  "LTE",
+                  "EQ"
+                ]
+              },
+              "valor": {
+                "type": "number",
+                "format": "finite-number"
+              },
+              "unidade": {
+                "type": "string",
+                "minLength": 1,
+                "format": "material-text"
+              },
+              "proveniencia": {
+                "$ref": "#/$defs/proveniencia"
+              }
+            }
+          }
+        }
+      }
+    },
+    "score": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "habilitado",
+        "tipo_semantica",
+        "semantica_ref",
+        "escala",
+        "normalizacao",
+        "componentes",
+        "calibracao",
+        "proveniencia"
+      ],
+      "properties": {
+        "habilitado": {
+          "type": "boolean"
+        },
+        "tipo_semantica": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            null,
+            "FORCA_EVIDENCIA",
+            "PROBABILIDADE_CALIBRADA",
+            "OUTRA_APROVADA"
+          ]
+        },
+        "escala": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "min",
+            "max"
+          ]
+        },
+        "normalizacao": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "metodo": {
+              "enum": [
+                "PENDENTE",
+                "SOMA_PONDERADA_0_100",
+                "MIN_MAX_0_100",
+                "LINEAR_0_100",
+                "CUSTOM_APROVADO"
+              ]
+            },
+            "referencia": {
+              "$ref": "#/$defs/material_ref_nullable"
+            },
+            "proveniencia": {
+              "$ref": "#/$defs/proveniencia"
+            }
+          },
+          "required": [
+            "metodo",
+            "referencia",
+            "proveniencia"
+          ]
+        },
+        "componentes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "descricao",
+              "peso",
+              "proveniencia"
+            ],
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/id"
+              },
+              "descricao": {
+                "type": "string",
+                "minLength": 3,
+                "format": "material-text"
+              },
+              "peso": {
+                "type": "number",
+                "format": "finite-number"
+              },
+              "proveniencia": {
+                "$ref": "#/$defs/proveniencia"
+              }
+            }
+          }
+        },
+        "proveniencia": {
+          "$ref": "#/$defs/proveniencia"
+        },
+        "calibracao": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "metodo": {
+              "type": "string",
+              "minLength": 3,
+              "format": "material-text"
+            },
+            "evidencia_ref": {
+              "$ref": "#/$defs/material_ref"
+            },
+            "proveniencia": {
+              "$ref": "#/$defs/proveniencia"
+            }
+          },
+          "required": [
+            "metodo",
+            "evidencia_ref",
+            "proveniencia"
+          ]
+        },
+        "semantica_ref": {
+          "$ref": "#/$defs/material_ref_nullable"
+        }
+      }
+    },
+    "experimentos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "hipotese",
+          "status",
+          "resultado",
+          "proveniencia"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "hipotese": {
+            "type": "string",
+            "minLength": 5,
+            "format": "material-text"
+          },
+          "status": {
+            "enum": [
+              "PROPOSTO",
+              "EM_EXECUCAO",
+              "EXECUTADO",
+              "DESCARTADO"
+            ]
+          },
+          "resultado": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "material-text"
+          },
+          "proveniencia": {
+            "$ref": "#/$defs/proveniencia"
+          }
+        }
+      }
+    },
+    "validacao": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "criterios",
+        "resultado",
+        "aprovacao_humana"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "PENDENTE",
+            "EM_ANALISE",
+            "APROVADO",
+            "REPROVADO"
+          ]
+        },
+        "criterios": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 3,
+            "format": "material-text"
+          }
+        },
+        "resultado": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "resumo": {
+              "type": "string",
+              "minLength": 3,
+              "format": "material-text"
+            },
+            "proveniencia": {
+              "$ref": "#/$defs/proveniencia"
+            }
+          },
+          "required": [
+            "resumo",
+            "proveniencia"
+          ]
+        },
+        "aprovacao_humana": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "por",
+            "em_utc",
+            "referencia"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "PENDENTE",
+                "APROVADO",
+                "REPROVADO"
+              ]
+            },
+            "por": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "material-text"
+            },
+            "em_utc": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "referencia": {
+              "$ref": "#/$defs/material_ref_nullable"
+            }
+          }
+        }
+      }
+    },
+    "saida": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "estudo",
+        "publicacao"
+      ],
+      "properties": {
+        "estudo": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "campo_classificacao",
+            "valores_classificacao",
+            "campo_score"
+          ],
+          "properties": {
+            "campo_classificacao": {
+              "type": "string",
+              "minLength": 1,
+              "format": "material-text"
+            },
+            "valores_classificacao": {
+              "const": [
+                "TRUE",
+                "FALSE",
+                "INDETERMINADO"
+              ]
+            },
+            "campo_score": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "material-text"
+            }
+          }
+        },
+        "publicacao": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "estado",
+            "campo_booleano",
+            "politica_indeterminado"
+          ],
+          "properties": {
+            "estado": {
+              "enum": [
+                "PENDENTE",
+                "DEFINIDO"
+              ]
+            },
+            "campo_booleano": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "nome": {
+                  "type": "string",
+                  "minLength": 1,
+                  "format": "material-text"
+                },
+                "tipo": {
+                  "const": "BOOLEAN"
+                }
+              },
+              "required": [
+                "nome",
+                "tipo"
+              ]
+            },
+            "politica_indeterminado": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "tratamento": {
+                  "enum": [
+                    "EXCLUIR_DA_PUBLICACAO",
+                    "CAMPO_COBERTURA_SEPARADO",
+                    "OUTRA_APROVADA"
+                  ]
+                },
+                "indeterminado_vira_false": {
+                  "const": false
+                },
+                "proveniencia": {
+                  "$ref": "#/$defs/proveniencia"
+                },
+                "regra_ref": {
+                  "$ref": "#/$defs/material_ref_nullable"
+                }
+              },
+              "required": [
+                "tratamento",
+                "indeterminado_vira_false",
+                "regra_ref",
+                "proveniencia"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "tracking": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "backend",
+        "politica",
+        "armazenar_historico_runs_no_yaml"
+      ],
+      "properties": {
+        "backend": {
+          "const": "MLFLOW"
+        },
+        "politica": {
+          "enum": [
+            "PENDENTE_MM06",
+            "DEFINIDA_MM06"
+          ]
+        },
+        "armazenar_historico_runs_no_yaml": {
+          "const": false
+        }
+      }
+    },
+    "governanca": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classificacao_dados",
+        "lgpd",
+        "gestor_informacao",
+        "observacoes"
+      ],
+      "properties": {
+        "classificacao_dados": {
+          "type": "string",
+          "minLength": 1,
+          "format": "material-text"
+        },
+        "lgpd": {
+          "type": "string",
+          "minLength": 1,
+          "format": "material-text"
+        },
+        "gestor_informacao": {
+          "type": "string",
+          "minLength": 1,
+          "format": "material-text"
+        },
+        "observacoes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "publicacao": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "autoridade",
+        "handoff_ref",
+        "produto_dados_ref"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "NAO_INICIADA",
+            "CANDIDATA",
+            "EM_VALIDACAO_EXTERNA",
+            "PUBLICADA",
+            "REJEITADA"
+          ]
+        },
+        "autoridade": {
+          "const": "GOVERNANCA_EXTERNA"
+        },
+        "handoff_ref": {
+          "$ref": "#/$defs/material_ref_nullable"
+        },
+        "produto_dados_ref": {
+          "$ref": "#/$defs/material_ref_nullable"
+        }
+      }
+    },
+    "proveniencia": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "criado_em_utc",
+        "gerado_por",
+        "pedido_original_ref",
+        "registros"
+      ],
+      "properties": {
+        "criado_em_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "gerado_por": {
+          "type": "string",
+          "minLength": 1,
+          "format": "material-text"
+        },
+        "pedido_original_ref": {
+          "type": "string",
+          "minLength": 1,
+          "format": "material-text"
+        },
+        "registros": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "alvo",
+              "proveniencia"
+            ],
+            "properties": {
+              "alvo": {
+                "type": "string",
+                "minLength": 1,
+                "format": "material-text"
+              },
+              "proveniencia": {
+                "$ref": "#/$defs/proveniencia"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

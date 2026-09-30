@@ -63,8 +63,9 @@ Comece nas seções `catalogo-helpers` e `metodos` de
 permitir leitura por seção. Uma âncora Markdown não é parte do nome do arquivo.
 Complete com os READMEs de coleção e nomes dos objetos acessíveis.
 
-Considere as cinco famílias funcionais: skills, snippets, scripts, prompts e
-padrões. Examine todas no nível de índice, ou registre quais não foram acessadas;
+Considere as cinco famílias gerais: skills, snippets, scripts, prompts e padrões,
+além de `hub_micromodelos/` quando a demanda envolver essa área de domínio.
+Examine os índices pertinentes, ou registre quais não foram acessados;
 abra somente as famílias e os candidatos relevantes em profundidade.
 
 Expanda o vocabulário do usuário quando necessário: “base mudou” pode envolver

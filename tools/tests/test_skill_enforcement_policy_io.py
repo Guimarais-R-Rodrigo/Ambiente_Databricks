@@ -94,6 +94,19 @@ class PolicyIOTests(unittest.TestCase):
         self.assertEqual(result["policy_entries"], len(EXPECTED_SKILL_NAMES))
         self.assertEqual(result["issues"], [])
 
+    def test_catalog_can_grow_with_matching_policy(self):
+        raw = self.valid_policy()
+        name = "hub-ml-synthetic-new"
+        folder = self.skills / name
+        folder.mkdir()
+        (folder / "SKILL.md").write_text("Fixture sintética.\n", encoding="utf-8")
+        entry = dict(raw["skills"][0])
+        entry["skill"] = name
+        entry["implemented_artifacts"] = [f"skills/{name}/SKILL.md"]
+        raw["skills"].append(entry)
+        self.path.write_text(json.dumps(raw, ensure_ascii=False), encoding="utf-8")
+        self.assertEqual(policy.validate_policy_registry(self.path, assistant_root=self.root), [])
+
     def test_summary_reads_exactly_once(self):
         self.valid_policy()
         text = self.path.read_text(encoding="utf-8")

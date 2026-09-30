@@ -49,10 +49,11 @@ Também é possível gerar o mesmo kit pelo workflow **Kit de transição para o
 | Arquivo do kit | Finalidade | Destino |
 |---|---|---|
 | `01_IMPORTAR_HUB_<commit>.zip` | produto e manifesto | importar em pasta vazia de staging |
-| `02_IMPORTAR_ACEITE_<commit>.zip` | notebook, manifesto fixo e guias | importar na raiz da pasta do seu usuário |
+| `02_IMPORTAR_ACEITE_<commit>.zip` | notebooks de aceite geral e Micromodelos, manifesto fixo e guias | importar na raiz da pasta do seu usuário |
 | `COMECE_AQUI.md` | sequência resumida | ler no computador |
 | `GUIA_TRANSICAO.md`, `CHECKLIST.md`, `TESTES_GENIE.md` | procedimento, marcação e roteiros | ler offline ou dentro da pasta de aceite |
 | `01_ACEITE_TECNICO.ipynb` | cópia avulsa do notebook para inspeção | prefira usar a cópia dentro do ZIP 02 |
+| `02_ACEITE_MICROMODELOS.ipynb`, `ACEITE_MICROMODELOS.md` | cópias avulsas do aceite sintético e guia específico | prefira usar as cópias dentro do ZIP 02 |
 | `SHA256SUMS.txt` | integridade dos arquivos externos | conferir no computador autorizado |
 
 **Não levar:** `.git`, histórico Git, `Ambiente_Antigo`, `.claude`, tokens, perfis CLI, backups corporativos de outros ambientes ou repositório completo. O README e o Manual da raiz Git não precisam de cópias extras: o produto já contém as versões adequadas em `.assistant/`.
@@ -72,7 +73,7 @@ Substitua o trecho `<commit>` pelo nome real do arquivo. Compare hashes sem dife
 
 Abra o ZIP 01 no computador: na raiz devem existir `.assistant_instructions.md`, `.assistant/` e `MANIFEST.json`. Não deve existir uma camada extra `Users/usuario-free` ou `ambiente_fonte`.
 
-O manifesto v2 informa `source_commit`, `worktree_dirty=false`, paths, SHA256, tamanho e `object_type` (`FILE` ou `NOTEBOOK`). O notebook de aceite fixa o commit e o hash desse manifesto. Não misture o ZIP 01 de um commit com o ZIP 02 de outro.
+O manifesto v2 do Hub informa `source_commit`, `worktree_dirty=false`, paths, SHA256, tamanho e `object_type` (`FILE` ou `NOTEBOOK`). Ele cobre também `hub_micromodelos/`; o notebook de aceite sintético usa a mesma instalação e fixa o commit de origem. Não misture ZIPs de commits diferentes.
 
 ## 3. Pré-condições no trabalho — conferir antes de mudar o ambiente
 
@@ -105,8 +106,8 @@ No kit, `<commit>` representa os **12 primeiros caracteres** do commit indicado 
 2. Use **Create → Folder** e crie `hub_staging_<commit>`.
 3. Abra essa pasta vazia. Menu `⋮` ou botão direito → **Import** → selecione `01_IMPORTAR_HUB_<commit>.zip` → **Import**.
 4. Abra a pasta importada. Confirme que `.assistant` e `.assistant_instructions.md` estão **diretamente** dentro de `hub_staging_<commit>`. Se a UI criou outra camada com o nome do ZIP, ajuste a organização dentro da pasta vazia ou use esse caminho real na configuração; não siga com paths presumidos.
-5. Volte à raiz do usuário e importe `02_IMPORTAR_ACEITE_<commit>.zip`. O ZIP contém a pasta `aceite_hub_<commit>/` com o notebook, os guias e uma cópia fixa de `MANIFEST.json`.
-6. Abra `aceite_hub_<commit>/01_ACEITE_TECNICO` (a UI pode esconder `.ipynb` no nome).
+5. Volte à raiz do usuário e importe `02_IMPORTAR_ACEITE_<commit>.zip`. O ZIP contém a pasta `aceite_hub_<commit>/` com os notebooks, os guias e uma cópia fixa de `MANIFEST.json`.
+6. Abra `aceite_hub_<commit>/01_ACEITE_TECNICO` e depois `02_ACEITE_MICROMODELOS` (a UI pode esconder `.ipynb` no nome). O segundo notebook usa o módulo do ZIP 01 em staging.
 
 A UI documenta que ZIPs são descompactados e seus arquivos/notebooks importados. A distinção depende da extensão e do marcador de notebook. Confira no destino: não conclua sucesso apenas porque o ZIP foi aceito. [Fonte: importação de arquivos](https://learn.microsoft.com/en-us/azure/databricks/files/workspace-basics).
 
@@ -122,15 +123,17 @@ Esta pasta de staging **não ativa** as skills pessoais, cujo caminho nativo é 
 │   ├── .assistant_instructions.md       # candidata ainda não ativa
 │   ├── .assistant/                     # produto do kit
 │   └── MANIFEST.json
-└── aceite_hub_<commit>/
-    ├── 01_ACEITE_TECNICO.ipynb
-    ├── MANIFEST.json                   # identidade fixa que o notebook usa
-    ├── GUIA_TRANSICAO.md
-    ├── CHECKLIST.md
-    └── TESTES_GENIE.md
+├── aceite_hub_<commit>/
+│   ├── 01_ACEITE_TECNICO.ipynb
+│   ├── 02_ACEITE_MICROMODELOS.ipynb
+│   ├── MANIFEST.json                   # identidade fixa do aceite geral
+│   ├── GUIA_TRANSICAO.md
+│   ├── ACEITE_MICROMODELOS.md
+│   ├── CHECKLIST.md
+│   └── TESTES_GENIE.md
 ```
 
-Não importe `tools/` como pasta do produto. O código do mecanismo de teste já está embutido no notebook gerado. O pacote de aceite fica fora de `.assistant` para não poluir o Hub nem seu contexto permanente.
+O mecanismo dos aceites está embutido nos notebooks; o runtime Micromodelos fica em `.assistant/hub_micromodelos/` dentro do produto. O pacote de aceite fica fora de `.assistant` para não poluir o Hub nem seu contexto permanente.
 
 ## 6. Executar o notebook técnico, célula por célula
 
@@ -215,10 +218,11 @@ instruções compartilhadas sem governança administrativa própria.
 
 Só avance com backup conferido, FILEs íntegros e núcleo técnico aprovado em staging. Feche conversas e evite alterações simultâneas no escopo do Hub; a cópia manual não é uma transação atômica.
 
-Na raiz de `.assistant`, o pacote vigente tem **cinco** diretórios `hub_`, não quatro:
+Na raiz de `.assistant`, o pacote vigente tem **seis** diretórios `hub_`:
 
 ```text
 hub_padroes/
+hub_micromodelos/
 hub_prompts/
 hub_readmes_visual_assets/
 hub_scripts/
@@ -228,7 +232,7 @@ hub_snippets/
 Além deles, há `README.md`, `MANUAL_TECNICO.md` e `skills/` com as 15 skills do pacote. O manifesto é a lista de arquivos da release; o roteiro da Genie contém os nomes exatos das skills atuais. A raiz documental do Hub continua com README e Manual, sem catálogo/glossário independentes.
 
 1. Pela UI, crie uma pasta de rollback pessoal fora de `.assistant/skills/`, se a política permitir. Não use as pastas nativas de descoberta para guardar cópias.
-2. Para cada um dos cinco diretórios `hub_`, confirme propriedade e ausência de customização desconhecida. Mova a versão anterior para rollback e copie/mova a candidata correspondente de staging para `.assistant/`. Se houver conteúdo de terceiros misturado, pare e faça reconciliação; não apague a pasta inteira.
+2. Para cada um dos seis diretórios `hub_`, confirme propriedade e ausência de customização desconhecida. Mova a versão anterior para rollback e copie/mova a candidata correspondente de staging para `.assistant/`. Se houver conteúdo de terceiros misturado, pare e faça reconciliação; não apague a pasta inteira.
 3. Em `skills/`, substitua **somente** as 15 pastas atuais declaradas e retire as antigas pertencentes ao Hub após backup/identificação. Não selecione `skills/` inteira. Prefixo antigo sozinho não prova que um objeto pode ser removido; use o inventário anterior, `legacy_skill_names_for_review` no manifesto e os nomes do roteiro.
 4. Substitua `README.md` e `MANUAL_TECNICO.md` pelos arquivos candidatos. Retire `CATALOGO_HELPERS.md` e `GLOSSARIO.md` somente se forem as cópias geridas pelo Hub, preservando o backup.
 5. **Preserve `.assistant/.mcp_servers.json`, skills alheias, arquivos pessoais e instruções administrativas.** Não copie configuração MCP de outro ambiente.
