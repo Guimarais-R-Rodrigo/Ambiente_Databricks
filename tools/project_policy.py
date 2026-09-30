@@ -24,6 +24,7 @@ EXPECTED_SKILL_NAMES = frozenset(
         "hub-ml-eda-profissional",
         "hub-ml-explainability",
         "hub-ml-feature-engineering",
+        "hub-ml-micromodelos",
         "hub-ml-monitoramento-modelo",
         "hub-ml-pipeline-builder",
         "hub-ml-tutor-databricks",
@@ -53,6 +54,7 @@ LEGACY_MANAGED_SKILL_NAMES = frozenset(
 EXPECTED_HUB_DIRS = frozenset(
     {
         "hub_padroes",
+        "hub_micromodelos",
         "hub_prompts",
         "hub_readmes_visual_assets",
         "hub_scripts",

@@ -29,6 +29,7 @@ MODULES = (
     "hub_snippets.constants.format_br", "hub_snippets.ml.split_temporal",
     "hub_scripts.data_quality_check", "hub_scripts.rfv_calculator",
     "hub_snippets.spark.pit_join", "hub_snippets.spark.psi_calculator",
+    "hub_micromodelos.execucao", "hub_micromodelos.execucao.execucao",
 )
 
 
@@ -141,7 +142,7 @@ class AcceptanceSession:
                 self.errors_local[key] = exc  # não imprimir/repassar exceção corporativa bruta
                 text = str(exc) if isinstance(exc, CheckError) else "Consulte a causa nesta sessão; não exporte o erro bruto."
                 self.results[key] = {"status": "FAIL", "detail": text, "exception": type(exc).__name__}
-        print(key, "→", self.results[key]["status"], "—", self.results[key]["detail"])
+            print(key, "->", self.results[key]["status"], "-", self.results[key]["detail"])
         return self.results[key]
 
     def skip(self, key, reason):
@@ -199,8 +200,8 @@ class AcceptanceSession:
     def check_imports(self):
         root = (self.root / ".assistant").resolve()
         # Sessão fresca evita falso PASS com módulo de versão anterior em sys.modules.
-        contamination = [name for name in sys.modules if name in {"hub_scripts", "hub_snippets"}
-                         or name.startswith(("hub_scripts.", "hub_snippets."))]
+        contamination = [name for name in sys.modules if name in {"hub_scripts", "hub_snippets", "hub_micromodelos"}
+                         or name.startswith(("hub_scripts.", "hub_snippets.", "hub_micromodelos."))]
         require(not contamination, "Há módulos Hub em cache: reinicie Python e rode desde o início.")
         if str(root) not in sys.path:
             sys.path.insert(0, str(root))
@@ -209,7 +210,7 @@ class AcceptanceSession:
             mod = importlib.import_module(name)
             require(Path(mod.__file__).resolve().is_relative_to(root), "Import resolvido fora da instalação sob teste.")
         self.loaded_modules = MODULES
-        return "Seis módulos importados da instalação verificada; nenhum exemplo didático executado."
+        return f"{len(MODULES)} módulos importados da instalação verificada; nenhum exemplo didático executado."
 
     def check_python(self):
         from hub_snippets.constants.format_br import fmt_brl, fmt_pct

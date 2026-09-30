@@ -9,7 +9,7 @@ Procedimento dono: [guia de transição](replicacao-trabalho.md). Versão 14/09/
 - [ ] Gerar `tools/kit_transicao_trabalho.py --output .artifacts/kit-trabalho` em diretório novo ou baixar o artefato do workflow.
 - [ ] Conferir no `MANIFEST.json` o bloco `theme_contract`: contrato v1, caminhos obrigatórios presentes e transportados com SHA256. Ausência ou divergência bloqueia o kit.
 - [ ] Tratar `theme_contract.activation = manual_opt_in` e `publication = not_performed` literalmente: transportar e conferir o Sistema de Temas **não é publicação**, ativação global nem aprovação visual no Databricks.
-- [ ] Levar ZIP 01, ZIP 02, guias e SHA256SUMS pelo canal corporativo permitido; não levar Git/histórico/segredos.
+- [ ] Levar ZIP 01 (Hub com Micromodelos), ZIP 02 (aceites), guias e SHA256SUMS pelo canal corporativo permitido; não levar Git/histórico/segredos.
 - [ ] Conferir hashes e commit. Não misturar releases; não importar o ZIP externo de download.
 
 ## Destino, backup e staging
@@ -21,6 +21,7 @@ Procedimento dono: [guia de transição](replicacao-trabalho.md). Versão 14/09/
 - [ ] Guardar backup/configurações dentro do ambiente corporativo; separar Hub de skills/arquivos de terceiros.
 - [ ] Criar `hub_staging_<commit>` e importar ZIP 01 dentro dela, conferindo a camada de diretório.
 - [ ] Importar ZIP 02 na raiz do usuário; abrir `aceite_hub_<commit>/01_ACEITE_TECNICO`.
+- [ ] Executar [aceite sintético de Micromodelos](aceite-micromodelos-trabalho.md) contra o ZIP 01 em staging, com metadata e MLflow institucionais desligados.
 
 ## Notebook técnico em staging
 
@@ -47,7 +48,7 @@ Procedimento dono: [guia de transição](replicacao-trabalho.md). Versão 14/09/
 ## Promoção seletiva
 
 - [ ] Reservar janela sem alteração simultânea; preparar rollback fora da descoberta de skills.
-- [ ] Substituir cinco pastas Hub: padrões, prompts, recursos visuais, scripts e snippets.
+- [ ] Substituir seis pastas Hub: padrões, micromodelos, prompts, recursos visuais, scripts e snippets.
 - [ ] Substituir apenas skills declaradas do Hub, sem apagar `skills/` inteira; reconciliar legado identificado.
 - [ ] Preservar `.mcp_servers.json`, skills alheias, segredos, permissões e instruções administrativas.
 - [ ] Atualizar README e Manual; retirar catálogo/glossário independentes somente se forem Hub-owned.

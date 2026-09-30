@@ -23,7 +23,7 @@ Registradas a partir da execução no laboratório (Spark 4.1 serverless, 2026-0
 | Bibliotecas ML opcionais (LightGBM, XGBoost, CatBoost, Optuna, PyTorch, SHAP, UMAP, lifelines, Prophet, pmdarima, TabNet, tabulate) | ausentes do runtime, mas **instaláveis por `%pip` na sessão** — as 12 foram exercitadas com chamada real em 2026-08-17 | confirmar disponibilidade e política de instalação |
 | Instalar pmdarima + shap + umap-learn na mesma sessão | **quebra o `import numpy` do notebook**; isoladas, as três funcionam | não verificado |
 | Variável global `spark` dentro de módulo importado | inexistente (vale nos dois) | inexistente |
-| Abrir run do MLflow (`start_run`, `set_experiment`) | **bloqueado** desde 2026-08-17: o `MlflowClient` lê `spark.mlflow.modelRegistryUri`, e o Spark Connect recusa a config | disponível em compute clássico |
+| Abrir run do MLflow (`start_run`, `set_experiment`) | Chamada implícita bloqueada em 2026-08-17 e reproduzida em 2026-09-29: o `MlflowClient` lê `spark.mlflow.modelRegistryUri`, e o Spark Connect recusa a config. Em 2026-09-29, `mlflow.set_registry_uri("databricks")` e nome absoluto do experimento na home permitiram três runs sintéticas completas. | confirmar configuração conforme compute/política |
 | `tabulate` (exigido por `DataFrame.to_markdown()`) | ausente | confirmar |
 | `jinja2` (exigido por `DataFrame.style`) | ausente | confirmar |
 | API clássica de `pyspark.ml` (`VectorAssembler`, `Correlation.corr`) | **bloqueada** — o Spark Connect não expõe essas classes da JVM | disponível em compute clássico |
@@ -72,6 +72,9 @@ A linha do MLflow acima é o caso documentado: `docs/testes/spark/resultados/`
 registra `mlflow_run.completo` como **"run completo aceito"** em **14/08/2026**,
 e em **17/08/2026**, no mesmo tipo de compute, o mesmo caminho falha na abertura
 do run. O registro de 14/08 não está errado — descreve o que era verdade então.
+Em 29/09/2026, a configuração explícita do registry URI e um experimento com
+caminho absoluto na home fizeram três runs MM06 sintéticas terminarem completas
+no Free; isso não comprova outro runtime nem o uso implícito sem configuração.
 
 O movimento contrário também aconteceu no mesmo dia: `prophet` estava registrado
 como **"sem combinação funcional conhecida"**, por não inicializar o backend de

@@ -5,10 +5,13 @@ on:
     branches: [main]
     paths:
       - "tools/aceite_trabalho.py"
+      - "tools/aceite_micromodelos_trabalho.py"
       - "tools/kit_transicao_trabalho.py"
       - "tools/bundle_implantacao.py"
       - "tools/temas_v09_transicao.py"
       - "tools/tests/test_transicao_trabalho.py"
+      - "tools/tests/test_aceite_micromodelos_trabalho.py"
+      - "ambiente_fonte/.assistant/hub_micromodelos/**"
       - "tools/tests/test_temas_v09.py"
       - "tools/ci_local.py"
       - "tools/skill_enforcement/**"

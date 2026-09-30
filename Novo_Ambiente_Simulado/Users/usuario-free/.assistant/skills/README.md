@@ -240,6 +240,7 @@ dividido por etapa para permanecer legível em painéis estreitos do workspace.
 | Skill | Objetivo principal |
 |---|---|
 | [hub-ml-concierge](hub-ml-concierge/README.md) | Localizar e combinar recursos existentes sem exigir que o usuário conheça o catálogo. |
+| [hub-ml-micromodelos](hub-ml-micromodelos/SKILL.md) | Especificar micromodelo novo ou descobrir oportunidades via metadata, com decisões pendentes explícitas. |
 
 Integrada ao produto; publicação e testes conversacionais no destino pendentes.
 É uma entrada opcional, não substitui o especialista explicitamente selecionado.

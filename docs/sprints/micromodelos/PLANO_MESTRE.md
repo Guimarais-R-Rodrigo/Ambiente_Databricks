@@ -1,7 +1,7 @@
 # Plano Mestre v2 — Framework de Micromodelos
 
 
-> **Revisão vigente pós-MM01/SEF — 2026-09-23.** MM01 está aceita e integrada; MM02 foi aceita e integrada pela PR #109; MM03 concluiu FULL R2 e auditoria independente na PR #110, com gate humano ainda pendente e estado vivo em [MM03](MM03/README.md). A [revisão pós-SEF](REVISAO_PLANO_POS_SEF_2026-09-23.md) complementa este Plano Mestre somente nos pontos explicitamente alterados. O restante do plano e os ADRs MM00 permanecem vigentes. O [protocolo de certificação](PROTOCOLO_CERTIFICACAO_SPRINTS.md) substitui, para MM02–MM13, o uso de FULL como detector de preconditions baratas.
+> **Arquitetura de referência.** MM00–MM03 estão integradas; a PR #110/MM03 foi integrada em 2026-09-23. O [plano de execução de laboratório](PLANO_EXECUCAO_LAB.md) registra o estado operacional e a revisão processual de MM04 em diante. A [revisão pós-SEF](REVISAO_PLANO_POS_SEF_2026-09-23.md) e o [protocolo de certificação](PROTOCOLO_CERTIFICACAO_SPRINTS.md) preservam decisões e evidências históricas; gates processuais antigos não são automaticamente exigidos da candidata atual. Os ADRs MM00 e contratos de produto permanecem vigentes.
 
 ### Gates prospectivos adicionados
 

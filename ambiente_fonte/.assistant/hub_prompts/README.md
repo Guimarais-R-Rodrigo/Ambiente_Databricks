@@ -239,6 +239,8 @@ Transforma código em material compreensível, explica conceitos e estrutura o i
 
 O catálogo abaixo preserva as famílias e acrescenta links diretos para o briefing e para o notebook didático.
 
+Para micromodelos, use [micromodelo_novo](micromodelo_novo/README.md) quando o objetivo já é conhecido e [descobrir_micromodelos](descobrir_micromodelos/README.md) para uma shortlist baseada em metadata. Ambos são briefings da skill `hub-ml-micromodelos`, sem ativação ou autorização própria.
+
 ---
 
 ### 🔍 Exploração & Perfilamento

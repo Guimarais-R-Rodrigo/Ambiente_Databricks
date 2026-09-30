@@ -303,6 +303,44 @@
       "known_debt": []
     },
     {
+      "skill": "hub-ml-micromodelos",
+      "risk_class": "high",
+      "current_level": "L1",
+      "target_level": "L3",
+      "scope_mode": "stage_specific",
+      "rollout_mode": "audit",
+      "policy_status": "defined",
+      "rationale": "Especificação, proveniência e descoberta metadata-only têm contrato estático; execução determinística ainda depende de integração transportável e testes ambientais.",
+      "implemented_artifacts": [
+        "skills/hub-ml-micromodelos/SKILL.md",
+        "skills/hub-ml-micromodelos/execution_contract.json"
+      ],
+      "protected_surfaces": [
+        {
+          "id": "canonical_spec_and_provenance",
+          "level": "L1",
+          "evidence": "static",
+          "rationale": "A skill deve manter YAML MM01 e distinguir observação, hipótese, decisão e medição."
+        },
+        {
+          "id": "metadata_scope",
+          "level": "L2",
+          "evidence": "preflight",
+          "rationale": "Escopo de catálogo, permissões e operação metadata-only precisam ser verificados antes de consulta futura."
+        },
+        {
+          "id": "scoring_and_tracking",
+          "level": "L3",
+          "evidence": "receipt",
+          "rationale": "Execução futura deve vincular especificação, run e resultados agregados sem confundir identidade com medição."
+        }
+      ],
+      "known_debt": [
+        "DATABRICKS_METADATA_ADAPTER_NOT_IMPLEMENTED",
+        "PRODUCT_RUNTIME_TRANSPORT_PENDING"
+      ]
+    },
+    {
       "skill": "hub-ml-monitoramento-modelo",
       "risk_class": "critical",
       "current_level": "L0",

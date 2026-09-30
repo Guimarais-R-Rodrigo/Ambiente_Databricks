@@ -193,6 +193,8 @@ def check_saida_colada(root: Path, problems: list[str]) -> tuple[int, int]:
     """
     com = sem = 0
     for nb in sorted(root.rglob("exemplo_*.py")):
+        if not eh_notebook(nb):
+            continue  # exemplo Python de biblioteca não é notebook Databricks
         markdown = "\n".join(
             linha for linha in nb.read_text(encoding="utf-8").splitlines()
             if linha.startswith("# MAGIC")
@@ -240,7 +242,7 @@ def check_skill_helpers_resolvem(root: Path, problems: list[str]) -> int:
         texto = skill_md.read_text(encoding="utf-8")
         rel = skill_md.relative_to(root)
         for pacote, caminho in re.findall(
-            r"\b(hub_snippets|hub_scripts)((?:\.[a-z_][a-z0-9_]*)+)", texto
+            r"\b(hub_snippets|hub_scripts|hub_micromodelos)((?:\.[a-z_][a-z0-9_]*)+)", texto
         ):
             partes = [p for p in caminho.split(".") if p]
             verificados += 1
@@ -625,6 +627,11 @@ def check_notebook_links(root: Path, problems: list[str]) -> tuple[int, int]:
     return len(notebooks), links_checked
 
 
+def _colecao_de_dominio(root: Path, pasta: Path) -> bool:
+    """A execução de Micromodelos agrupa módulos e não segue o molde de objeto."""
+    return pasta == root / ".assistant" / "hub_micromodelos" / "execucao"
+
+
 def check_pastas_de_objeto(root: Path, problems: list[str]) -> int:
     """Confere a forma das pastas de objeto: nome, arquivos e `__init__.py`.
 
@@ -649,6 +656,8 @@ def check_pastas_de_objeto(root: Path, problems: list[str]) -> int:
     verificadas = 0
     for init in sorted(root.rglob("__init__.py")):
         pasta = init.parent
+        if _colecao_de_dominio(root, pasta):
+            continue
         modulo = pasta / f"{pasta.name}.py"
         if not modulo.exists():
             continue  # raiz de pacote ou pasta de seção
@@ -781,6 +790,7 @@ def check_normas_do_molde(root: Path, problems: list[str]) -> tuple[int, int]:
     modulos = [
         p for p in sorted(root.rglob("*.py"))
         if p.parent.name == p.stem and not p.name.startswith("exemplo_")
+        and not _colecao_de_dominio(root, p.parent)
     ]
     violacoes = 0
 
@@ -918,6 +928,8 @@ def check_normas_do_molde(root: Path, problems: list[str]) -> tuple[int, int]:
 
     secoes = 0
     for init in sorted(root.rglob("__init__.py")):
+        if _colecao_de_dominio(root, init.parent):
+            continue
         if (init.parent / f"{init.parent.name}.py").exists():
             continue                      # pasta de objeto: reexportar é a regra
         secoes += 1
@@ -956,6 +968,8 @@ def check_notebook_exercita_o_objeto(root: Path, problems: list[str]) -> tuple[i
     conferidos = mudos = 0
     for modulo in sorted(root.rglob("*.py")):
         if modulo.parent.name != modulo.stem or modulo.name.startswith("exemplo_"):
+            continue
+        if _colecao_de_dominio(root, modulo.parent):
             continue
         notebook = modulo.parent / f"exemplo_{modulo.stem}.py"
         if not notebook.exists():
@@ -1140,6 +1154,8 @@ def check_contrato_de_dados(root: Path, problems: list[str]) -> int:
     verificadas = 0
     for init in sorted(root.rglob("__init__.py")):
         pasta = init.parent
+        if _colecao_de_dominio(root, pasta):
+            continue
         modulo = pasta / f"{pasta.name}.py"
         notebook = pasta / f"exemplo_{pasta.name}.py"
         if not (modulo.exists() and notebook.exists()):
@@ -1247,6 +1263,8 @@ def check_contrato_de_entrada(root: Path, problems: list[str]) -> int:
     verificadas = 0
     for init in sorted(root.rglob("__init__.py")):
         pasta = init.parent
+        if _colecao_de_dominio(root, pasta):
+            continue
         modulo = pasta / f"{pasta.name}.py"
         notebook = pasta / f"exemplo_{pasta.name}.py"
         if not (modulo.exists() and notebook.exists()):
