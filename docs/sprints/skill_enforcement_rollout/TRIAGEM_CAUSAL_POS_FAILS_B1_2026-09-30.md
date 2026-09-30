@@ -73,7 +73,8 @@ limpeza; nenhum retry de MERGE ou DROP em estado ambíguo. A
 “não concluir/não reexecutar”, mas omitiu a localização inicial do alvo e
 tratou posse como autorização suficiente para `DROP_OWNED`. Por isso a
 reconciliação completa não passou. O SKILL fonte foi esclarecido nessa
-fronteira; o reteste não executou a correção Delta nem substituiu readback Free.
+fronteira e teve [readback Free](PB_RECOVERY_SKILL_FREE_2026-09-30.md);
+o reteste não executou a correção Delta nem substituiu um probe de efeito.
 
 Uma lacuna **separada** apareceu na inspeção do código, sem relação causal
 demonstrada com esses chats: se `DROP TABLE` perdesse o ACK, o tratamento de

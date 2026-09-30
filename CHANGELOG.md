@@ -2,6 +2,8 @@
 
 ## 2026-09-30 — Homologação Genie guiada
 
+- (Codex) Publicado no Free somente o `SKILL.md` Pipeline Builder corrigido: três imports iniciais falharam com remoto ainda antigo; diagnóstico mostrou `PROTOCOL_ERROR`. Com `GODEBUG=http2client=0`, import guardado teve ACK `rc=0` e readback do novo hash; leitura seguinte confirmou `ALREADY_MATCH` sem escrita. [Evidência](docs/sprints/skill_enforcement_rollout/PB_RECOVERY_SKILL_FREE_2026-09-30.md). Nenhum runner/efeito remoto, MM, policy ou homologação Genie nova nesta publicação.
+
 - (Codex) Registrada RQ-PB-RECOVERY/T02: seleção `@` e indicador Pipeline Builder confirmados; PASS focal de não concluir/não retriar MERGE relatado, com ressalvas materiais por não recuperar primeiro destino/registro e sugerir `DROP_OWNED` sem autoridade de limpeza explicitamente conferida. Texto, SHA-256 e limites versionados. O `SKILL.md` fonte esclarece reconciliação pós-`UNKNOWN`: alvo/efeito/autorização exatos antes de inspeção, posse não substitui autoridade, nenhuma repetição de CREATE/MERGE/DROP para provar o passado; derivado regenerado. Nenhum comando de dados, policy ou homologação integral nesta rodada.
 
 - (Codex) Preparado na triagem causal um único prompt focal de Pipeline Builder para distinguir sucesso de MERGE relatado, efeito persistido e cleanup sob `UNKNOWN`, sem executar comandos nem retriar escrita. Oráculo e limites documentados; prompt ainda não enviado à Genie.
