@@ -10,10 +10,15 @@ das outras skills.
 
 ## Identidade e regra de evidência
 
-- Produto fonte: árvore Git `ambiente_fonte/.assistant` =
-  `af738a9a897abcbf0474c90bb8a87c0e46e93ad8` no commit de prova Free
-  `034c42dfa28594ba1dbdf1721cd4651c81f33aa8` e no commit documental
-  `cf94b038`. Mudança futura nessa árvore exige nova análise de impacto.
+- Produto fonte de referência dos probes Free sintéticos: árvore Git
+  `ambiente_fonte/.assistant` = `af738a9a897abcbf0474c90bb8a87c0e46e93ad8`
+  no commit `034c42dfa28594ba1dbdf1721cd4651c81f33aa8`. A [correção
+  de confiança Cross-EDA](CROSS_EDA_TRUST_CORRECAO_FREE_2026-09-30.md)
+  mudou somente o `SKILL.md` dessa skill: árvore atual
+  `5d9024df92da0edb9f0fbc8762c63bdbccbda3ee` no commit de produto
+  `e0780ae2bb2d6ce79751f6be5e3125d47b84b2ff`. Os probes anteriores
+  seguem prova dos runners não alterados, não prova de identidade integral
+  da nova árvore. Mudança futura exige nova análise de impacto.
 - A leitura Free de 2026-09-30 conferiu 657/657 arquivos gerenciados em
   conteúdo normalizado. O inventário geral permaneceu FAIL por 30 objetos
   extras de `hub_micromodelos` da frente paralela, que não devem ser apagados.
@@ -63,7 +68,7 @@ o oráculo de raciocínio, mas só outputs verificáveis elevam execução canô
 
 1. **RQ-VF-EVENT** — Safra, distinguir evento de acumulado. [T01](genie_evidencias/RQ-VF-EVENT_T01.md) recebido: PASS conceitual, execução NOT_RUN; FAIL anterior de denominador preservado.
 2. **RQ-CE-STATIC** — Cross-EDA, `PIT=NOT_APPLICABLE` declarado; validar contexto L2 sem inventar coverage. [T01](genie_evidencias/RQ-CE-STATIC_T01.md) recebido: PASS conceitual com ressalva, execução NOT_RUN; FAIL anterior de proveniência preservado.
-3. **RQ-TRUST-COMBINED** — [T01](genie_evidencias/RQ-TRUST-COMBINED_T01.md) recebido: A recusada corretamente com erro de estágio; B recusou efeitos, mas elevou `valid=true` hipotético a prova e negou níveis promovíveis da policy. **FAIL parcial material**; correção estreita de contrato local em andamento. Retestar o mesmo estímulo somente após publicação/readback da correção.
+3. **RQ-TRUST-COMBINED** — [T01](genie_evidencias/RQ-TRUST-COMBINED_T01.md) recebido: A recusada corretamente com erro de estágio; B recusou efeitos, mas elevou `valid=true` hipotético a prova e negou níveis promovíveis da policy. **FAIL parcial material**; [correção estreita publicada/readback no Free](CROSS_EDA_TRUST_CORRECAO_FREE_2026-09-30.md). Retestar o mesmo estímulo em chat novo; não reclassificar T01.
 
 `CE-G01` ganha rodada adicional **somente se** o aceite requerer preflight L2
 visível pela Genie, além da prova Free. Um negativo Cross-EDA de fonte única
@@ -120,7 +125,8 @@ T01 recebido, FAIL parcial material; reteste pendente após publicação.**
 
 **Atual: candidato B1 com Free sintético verificado e Genie parcial.** Os
 dois primeiros testes dirigidos passaram conceitualmente, sem execução Genie;
-a terceira rodada expôs FAIL de proveniência/nível, preservado em T01. Depois
+a terceira rodada expôs FAIL de proveniência/nível, preservado em T01; a
+correção de contrato teve readback Free e aguarda reteste Genie. Depois
 de cada resposta, registrar PASS/FAIL/NOT_OBSERVABLE por dimensão, reavaliar
 se a próxima rodada ainda é necessária e corrigir localmente só falhas com
 causa verificável. O fechamento da versão atual exige identidade remota

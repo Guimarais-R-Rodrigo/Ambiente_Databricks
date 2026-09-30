@@ -2,6 +2,8 @@
 
 ## 2026-09-30 — Homologação Genie guiada
 
+- (Codex) Publicado no Free apenas `hub-ml-cross-eda-ml/SKILL.md` após preflight de hash contra a versão anterior. O import retornou ACK `rc=1`, mas readback imediato e segunda leitura sem escrita confirmaram o hash novo; o efeito é `READBACK_MATCH_AFTER_ACK_ERROR`, não sucesso do ACK. Relatório local e limites documentados em `CROSS_EDA_TRUST_CORRECAO_FREE_2026-09-30.md`. G6 histórico e FAIL Genie T01 preservados; CI do commit anterior não iniciou jobs por bloqueio de cobrança GitHub. Nenhum objeto MM, policy ou controller alterado.
+
 - (Codex) RQ-TRUST-COMBINED/T01 em Cross-EDA recusou Receipt de outra skill e as promoções indevidas, mas tratou `valid=true` hipotético como prova de Receipt/integridade e confundiu `stage_level` com níveis da policy; mantido FAIL parcial material. `SKILL.md` fonte esclarecido sobre output verificável, diagnóstico estático L3 e autoridade de promoção separada; derivado regerado, sem editar policy, runner ou controller. Resposta integral, análise e SHA-256 registrados para reteste após publicação/readback.
 
 - (Codex) Registrada RQ-CE-STATIC/T01: indicador separado de Cross-EDA confirmado pelo usuário; contexto L2 estático e limite `PIT=NOT_APPLICABLE` tratados corretamente sem join, coverage ou Receipt. Mantida ressalva de precisão sobre `entity_id` e FAIL anterior de proveniência. As duas lacunas de confiança foram reunidas em um prompt com oráculos separados; resposta integral e SHA-256 versionados. Nenhum produto ou policy alterado.
