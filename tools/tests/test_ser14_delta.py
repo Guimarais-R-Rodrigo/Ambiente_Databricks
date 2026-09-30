@@ -85,7 +85,8 @@ class FakeCatalog:
 class FakeSpark:
     def __init__(self, *, existing=False, wrong_principal=False, tamper_markers=False,
                  bad_readback=False, create_timeout=False, on_identity=None,
-                 post_drop_readback_error=False, post_drop_readback_stale=False):
+                 post_drop_readback_error=False, post_drop_readback_stale=False,
+                 drop_timeout=None):
         self.exists = existing
         self.wrong_principal = wrong_principal
         self.tamper_markers = tamper_markers
@@ -94,6 +95,7 @@ class FakeSpark:
         self.on_identity = on_identity
         self.post_drop_readback_error = post_drop_readback_error
         self.post_drop_readback_stale = post_drop_readback_stale
+        self.drop_timeout = drop_timeout
         self.drop_count = 0
         self.table = {}
         self.views = {}
@@ -139,8 +141,12 @@ class FakeSpark:
             return FakeResult([FakeRow(**row) for row in rows])
         if statement.startswith("DROP TABLE "):
             self.drop_count += 1
+            if self.drop_timeout == "before":
+                raise TimeoutError("simulated uncertain DROP before effect")
             self.exists = False
             self.table = {}
+            if self.drop_timeout == "after":
+                raise TimeoutError("simulated uncertain DROP after effect")
             return FakeResult()
         raise AssertionError("Unexpected SQL: " + statement)
 
@@ -239,6 +245,20 @@ class DeltaControlTests(unittest.TestCase):
         self.assertIsNone(result["table_absent_after_cleanup"])
         self.assertEqual(1, fake.drop_count)
         self.assertIn("CLEANUP:TimeoutError", result["issues"])
+
+    def test_ambiguous_drop_ack_never_retries_drop(self):
+        for fallback in (False, True):
+            for timing, table_exists in (("before", True), ("after", False)):
+                with self.subTest(fallback=fallback, timing=timing):
+                    fake = FakeSpark(drop_timeout=timing, bad_readback=fallback)
+                    result = self.execute(fake)
+                    self.assertEqual("UNKNOWN", result["status"], result)
+                    self.assertEqual("DROP_UNCONFIRMED", result["cleanup"])
+                    self.assertIsNone(result["table_absent_after_cleanup"])
+                    self.assertEqual(table_exists, fake.exists)
+                    self.assertEqual(1, fake.drop_count)
+                    if fallback:
+                        self.assertIn("CLEANUP:TimeoutError", result["issues"])
 
     def test_caller_mutation_during_session_probe_cannot_redirect_effect(self):
         q = copy.deepcopy(self.q)

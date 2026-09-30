@@ -2,6 +2,8 @@
 
 ## 2026-09-30 — Homologação Genie guiada
 
+- (Codex) Triagem causal dos FAILs prioritários registrada em `TRIAGEM_CAUSAL_POS_FAILS_B1_2026-09-30.md`: Cross-EDA e respostas Pipeline/FE não demonstram nova lacuna textual, e PB-P não confirmou carregamento. Encontrada lacuna separada no runner Delta/FE: ACK incerto de `DROP TABLE` podia acionar um segundo `DROP`. O executor agora deixa `UNKNOWN`/`DROP_UNCONFIRMED` sem retry; regressões locais de falha antes/depois do efeito e suíte FE passaram, ambos os manifestos foram atualizados, fonte validada e derivado regerado. Nenhum novo prompt Genie, publicação Free, policy ou merge nesta mudança.
+
 - (Codex) Por escolha do usuário, PR #117 mantido como candidato parcial e revisados os FAILs das 14 skills sem novos prompts ou efeitos. `REVISAO_FAILS_REMANESCENTES_B1_2026-09-30.md` separa histórico retestado, histórico pré-correção sem reteste, falha contra guarda existente e reincidência pós-correção (Cross-EDA T02), com ação mínima e limites de versão/prova por skill. Nenhuma homologação integral inferida; CI externo segue bloqueado antes dos jobs por cobrança/limite GitHub.
 
 - (Codex) Reavaliada RQ-TRUST-COMBINED/T02 após publicação/readback do SKILL Cross-EDA: indicador confirmado; troca de skill e distinção policy/estágio corretas, mas `valid=true` hipotético continuou descrito como prova de integridade. Mantido FAIL material de proveniência, execução NOT_RUN e T01 histórico. Resposta/análise/hashes versionados; nenhum novo prompt idêntico recomendado sem hipótese causal. CI segue sem jobs por bloqueio externo de cobrança.

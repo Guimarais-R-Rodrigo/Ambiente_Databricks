@@ -228,6 +228,7 @@ def _execute_owned(request: dict, expected_rows: list[dict], spark, authorizatio
                        "table_id": None, "provenance": None})
     created = False
     cleaned = False
+    drop_attempted = False
     temp_views = []
     qualified = None
     auth = None
@@ -378,6 +379,7 @@ def _execute_owned(request: dict, expected_rows: list[dict], spark, authorizatio
         effect["ownership_checks"] += 1
         if profile == "FE_PIT":
             _assert_fe_table_id(spark, qualified, effect["table_id"])
+        drop_attempted = True
         spark.sql("DROP TABLE " + qualified)
         cleaned = True
         effect["cleanup"] = "DROP_UNCONFIRMED"
@@ -389,12 +391,13 @@ def _execute_owned(request: dict, expected_rows: list[dict], spark, authorizatio
         effect["status"] = "PASS"
     except Exception as exc:
         effect["issues"].append(type(exc).__name__ + ":" + str(exc))
-        if created and not cleaned and auth is not None and qualified is not None:
+        if created and not cleaned and not drop_attempted and auth is not None and qualified is not None:
             try:
                 _assert_owned(spark, qualified, auth, provenance)
                 effect["ownership_checks"] += 1
                 if profile == "FE_PIT":
                     _assert_fe_table_id(spark, qualified, effect["table_id"])
+                drop_attempted = True
                 spark.sql("DROP TABLE " + qualified)
                 cleaned = True
                 effect["cleanup"] = "DROP_UNCONFIRMED"
@@ -404,8 +407,11 @@ def _execute_owned(request: dict, expected_rows: list[dict], spark, authorizatio
                 effect["cleanup"] = "PASS_AFTER_FAILURE"
             except Exception as cleanup_exc:
                 if not cleaned:
-                    effect["cleanup"] = "BLOCKED_OWNERSHIP_OR_DROP_UNKNOWN"
+                    effect["cleanup"] = ("DROP_UNCONFIRMED" if drop_attempted else
+                                         "BLOCKED_OWNERSHIP_OR_DROP_UNKNOWN")
                 effect["issues"].append("CLEANUP:" + type(cleanup_exc).__name__)
+        elif drop_attempted and not cleaned:
+            effect["cleanup"] = "DROP_UNCONFIRMED"
         if effect["create_attempted"] and not (cleaned and effect["table_absent_after_cleanup"] is True):
             effect["status"] = "UNKNOWN"
         else:

@@ -53,7 +53,7 @@
     },
     {
       "path": "skills/hub-ml-pipeline-builder/scripts/run_delta.py",
-      "git_blob_sha1": "e9231de1342e288d6025b7c7088ee3698f2eb267"
+      "git_blob_sha1": "89b43136dd85b1e048bf750f3571866c547ec6c2"
     },
     {
       "path": "skills/hub-ml-pipeline-builder/scripts/run_local.py",
