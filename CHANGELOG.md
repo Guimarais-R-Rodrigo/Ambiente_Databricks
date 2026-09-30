@@ -92,7 +92,7 @@
 ## 2026-09-27 — AC-R2 CM-DESKTOP-RUNTIME-5
 
 - (Codex/ChatGPT) Runtime-4 CQ provou filesystem denials e parou somente no network probe inconclusivo: Invoke-WebRequest retornou Authentication failed sem exception chain suficiente.
-- (Concurrent local commit) `c9648525...` introduziu baseline host-side TCP raw v4 e contrato parcial; incorporado como base concorrente compatível.
+- (Concurrent local commit) `c96485259c3ee08cae466a0038ee3c3de2f9358d...` introduziu baseline host-side TCP raw v4 e contrato parcial; incorporado como base concorrente compatível.
 - (ChatGPT) Hardening: novo probe protegido `.codex/probes/cq3_executor_network_probe.ps1`, cujo SHA entra no host evidence. O executor executa apenas esse script.
 - (ChatGPT) Probe valida evidence+sidecar+próprio SHA+HEAD/tree clean, reutiliza exatamente selected_ipv4:443 e faz uma única tentativa TCP raw, sem DNS/HTTP/TLS/auth.
 - (ChatGPT) Oráculo: AccessDenied/10013 = PASS_NETWORK_DENIED; conexão = FAIL_NETWORK_BOUNDARY_OPEN; timeout/outros = NOT_PROVEN. Sem retry ou endpoint alternativo.
