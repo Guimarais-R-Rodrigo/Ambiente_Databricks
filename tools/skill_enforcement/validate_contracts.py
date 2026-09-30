@@ -227,7 +227,7 @@ def _validate_resource(
         issues.append(
             _issue(
                 "RESOURCE_MODULE_INVALID",
-                f"module deve ser caminho Python canônico sob hub_snippets.*, hub_scripts.* ou hub_micromodelos.*: {module!r}",
+                f"module deve ser caminho Python canônico sob hub_snippets.* ou hub_scripts.*: {module!r}",
                 location,
             )
         )

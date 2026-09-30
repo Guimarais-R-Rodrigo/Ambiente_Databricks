@@ -11,7 +11,7 @@ SUPPORTED_SCHEMA_VERSIONS = {"0.1"}
 SUPPORTED_MODES = {"audit"}
 SUPPORTED_POLICIES = {"required", "conditional", "optional"}
 
-_ALLOWED_ROOT_PACKAGES = {"hub_snippets", "hub_scripts", "hub_micromodelos"}
+_ALLOWED_ROOT_PACKAGES = {"hub_snippets", "hub_scripts"}
 
 _CONDITION_KEYS = {
     "local_sample_required": "local_sample_required",
@@ -98,7 +98,7 @@ def _resolve_public_symbol(
     if module_parts is None:
         return (
             False,
-            "module deve ser caminho Python canônico sob hub_snippets.*, hub_scripts.* ou hub_micromodelos.*",
+            "module deve ser caminho Python canônico sob hub_snippets.* / hub_scripts.*",
         )
     if not isinstance(symbol, str) or not symbol or not symbol.isidentifier():
         return False, "symbol público inválido"
@@ -727,3 +727,4 @@ def list_skill_enforcement_policies(
         policy_path=policy_path,
     )
     return tuple(policies[name] for name in sorted(policies))
+

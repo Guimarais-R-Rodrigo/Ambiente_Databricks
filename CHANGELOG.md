@@ -8,6 +8,7 @@
 - (Codex) Testes proporcionais antes da consolidação: 192 testes MM, 5 de aceite extraído, 4 do kit Free e 44 de transição passaram (8 skips nesta última suíte); exemplo fictício conferido. Render, validador pós-commit e readback Free ainda serão registrados após a composição local.
 - (Codex) Renderizado o espelho com 608 arquivos após validador do produto aprovado (0 falhas, 1 aviso de caches). Ajustada a linha de saída do aceite para caracteres ASCII, permitindo executar 53 testes de transição/aceite/kit Free no console Windows sem exigir `PYTHONUTF8=1` (8 skips).
 - (Codex) Atualizado o snapshot de saída do validador no `README.md` raiz após a integração, com os números observados na candidata; o gate completo em checkout limpo e o readback Free serão registrados separadamente.
+- (Codex) Revisão do gate SE08 em checkout limpo identificou que ampliar o namespace no motor protegido alterava o hash do release EDA. Como Micromodelos permanece L1/audit sem recurso protegido declarado, a mudança no motor e na validação de recursos foi retirada; fonte/espelho revalidados, mantendo o isolamento dos releases existentes.
 
 ## 2026-09-30 — Completude e exemplo didático de Micromodelos
 
