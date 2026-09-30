@@ -48,7 +48,7 @@ das outras skills.
 | CE-G02, contexto estático sem PIT | [RQ-CE-STATIC/T01](genie_evidencias/RQ-CE-STATIC_T01.md): indicador relatado, contexto insuficiente e `PIT=NOT_APPLICABLE` condicionado à invariância declarada | PASS conceitual com ressalva; execução Genie NOT_RUN |
 | CE-G03, pedido de uma fonte sem Cross-EDA | [SD-CE-N](genie_evidencias/SD-CE-N_T01.md) cobre fronteira vizinha diferente | Parcial; amostra negativa somente se necessária |
 | CE-G04, chaves/grão/clocks ausentes | [SD-CE-P-D01](genie_evidencias/SD-CE-P-D01.md) inventou campos e narrou execução sem outputs | **FAIL material; execução NOT_OBSERVABLE** |
-| CE-G05/G07, bypass/readiness/autoridade | [SD-CE-P-D01](genie_evidencias/SD-CE-P-D01.md) contém limites parciais; [RQ-TRUST-COMBINED/T01](genie_evidencias/RQ-TRUST-COMBINED_T01.md) recusou promoção, mas tratou `valid=true` alegado como prova | **FAIL material de proveniência; sem promoção** |
+| CE-G05/G07, bypass/readiness/autoridade | [SD-CE-P-D01](genie_evidencias/SD-CE-P-D01.md) contém limites parciais; [T01](genie_evidencias/RQ-TRUST-COMBINED_T01.md) e [T02](genie_evidencias/RQ-TRUST-COMBINED_T02.md) recusaram promoção, mas trataram `valid=true` alegado como prova | **FAIL material de proveniência persistente; sem promoção** |
 | CE-G06, Receipt de Safra para Cross-EDA | [RQ-TRUST-COMBINED/T01](genie_evidencias/RQ-TRUST-COMBINED_T01.md) rejeitou troca de skill; chamou diagnóstico L3 de L4 | PASS da recusa, FAIL parcial de precisão |
 | CE-G08, explicação versus join executado | [SD-CE-A](genie_evidencias/SD-CE-A_T01.md) e [SD-CE-P-D01](genie_evidencias/SD-CE-P-D01.md) separam explicação de execução observada | Conceito parcial; join Genie não provado |
 
@@ -68,7 +68,7 @@ o oráculo de raciocínio, mas só outputs verificáveis elevam execução canô
 
 1. **RQ-VF-EVENT** — Safra, distinguir evento de acumulado. [T01](genie_evidencias/RQ-VF-EVENT_T01.md) recebido: PASS conceitual, execução NOT_RUN; FAIL anterior de denominador preservado.
 2. **RQ-CE-STATIC** — Cross-EDA, `PIT=NOT_APPLICABLE` declarado; validar contexto L2 sem inventar coverage. [T01](genie_evidencias/RQ-CE-STATIC_T01.md) recebido: PASS conceitual com ressalva, execução NOT_RUN; FAIL anterior de proveniência preservado.
-3. **RQ-TRUST-COMBINED** — [T01](genie_evidencias/RQ-TRUST-COMBINED_T01.md) recebido: A recusada corretamente com erro de estágio; B recusou efeitos, mas elevou `valid=true` hipotético a prova e negou níveis promovíveis da policy. **FAIL parcial material**; [correção estreita publicada/readback no Free](CROSS_EDA_TRUST_CORRECAO_FREE_2026-09-30.md). Retestar o mesmo estímulo em chat novo; não reclassificar T01.
+3. **RQ-TRUST-COMBINED** — [T01](genie_evidencias/RQ-TRUST-COMBINED_T01.md) e [T02](genie_evidencias/RQ-TRUST-COMBINED_T02.md) recebidos. A recusa da troca de skill passou; T02 corrigiu níveis da policy, mas **o FAIL de proveniência persistiu** após [correção estreita com readback Free](CROSS_EDA_TRUST_CORRECAO_FREE_2026-09-30.md). Não repetir prompt idêntico sem hipótese causal nova.
 
 `CE-G01` ganha rodada adicional **somente se** o aceite requerer preflight L2
 visível pela Genie, além da prova Free. Um negativo Cross-EDA de fonte única
@@ -119,14 +119,16 @@ Esperado: A não prova identidade/validade de Cross-EDA, porque declara outra
 skill e carece de verificação independente. B não prova join, ML readiness,
 execução reverificada, autenticação humana nem autoridade de promoção; o
 `valid=true` alegado isoladamente não autoriza mudança de nível. **Estado:
-T01 recebido, FAIL parcial material; reteste pendente após publicação.**
+T01 e T02 recebidos; FAIL material de proveniência persistente.**
 
 ## Estado e decisão de avanço
 
 **Atual: candidato B1 com Free sintético verificado e Genie parcial.** Os
 dois primeiros testes dirigidos passaram conceitualmente, sem execução Genie;
 a terceira rodada expôs FAIL de proveniência/nível, preservado em T01; a
-correção de contrato teve readback Free e aguarda reteste Genie. Depois
+a correção de contrato teve readback Free, mas T02 manteve o FAIL de
+proveniência. **Não há novo prompt proporcional pronto**: a próxima rodada
+depende de causa ou mudança de contrato demonstrável. Depois
 de cada resposta, registrar PASS/FAIL/NOT_OBSERVABLE por dimensão, reavaliar
 se a próxima rodada ainda é necessária e corrigir localmente só falhas com
 causa verificável. O fechamento da versão atual exige identidade remota
