@@ -1,9 +1,10 @@
 # B1 — revisão dos FAILs e limites remanescentes
 
 (Codex) Revisão em 2026-09-30, por escolha do usuário de manter o [PR #117](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/pull/117)
-como **candidato parcial**. Base de produto: árvore Git
+como **candidato parcial**. Base de produto desta revisão: árvore Git
 `ambiente_fonte/.assistant` `5d9024df92da0edb9f0fbc8762c63bdbccbda3ee`
-após a correção Cross-EDA. Fontes principais: [consolidação das 14
+após a correção Cross-EDA; a [ficha atual do PR](ACEITE_PARCIAL_PR117_2026-09-30.md)
+registra as mudanças posteriores. Fontes principais: [consolidação das 14
 skills](CONSOLIDACAO_GENIE_B1_2026-09-30.md),
 [triagem de UI](TRIAGEM_POS_UI_2026-09-30.md),
 [requalificação atual de Safra/Cross](G6_REQUALIFICACAO_B1_ATUAL_2026-09-30.md)
@@ -72,9 +73,10 @@ continua incompleto; a [requalificação da versão atual](G6_REQUALIFICACAO_B1_
 paralela e foi preservado. Os 14 checks recentes falharam **antes de iniciar**
 por bloqueio de cobrança/limite da conta GitHub (anotações dos jobs), com
 `se02` configurado como SKIPPED; não são resultado de teste do produto.
-O validador e 24 testes SE05 locais passaram após a única correção de produto
-desta requalificação. Policy, Ready, merge e workspace corporativo não foram
-alterados.
+O validador e 24 testes SE05 locais passaram após a correção Cross-EDA que
+esta revisão examinou. Testes e readbacks das correções Delta/Pipeline
+posteriores pertencem à [ficha atual](ACEITE_PARCIAL_PR117_2026-09-30.md).
+Policy, Ready, merge e workspace corporativo não foram alterados.
 
 **Decisão:** candidato parcial, nenhuma das 14 skills homologada integralmente
 por esta campanha. Não há prompt Genie adicional proporcional programado.

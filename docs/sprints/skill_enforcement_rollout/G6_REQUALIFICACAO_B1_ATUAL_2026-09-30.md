@@ -14,11 +14,13 @@ das outras skills.
   `ambiente_fonte/.assistant` = `af738a9a897abcbf0474c90bb8a87c0e46e93ad8`
   no commit `034c42dfa28594ba1dbdf1721cd4651c81f33aa8`. A [correção
   de confiança Cross-EDA](CROSS_EDA_TRUST_CORRECAO_FREE_2026-09-30.md)
-  mudou somente o `SKILL.md` dessa skill: árvore atual
+  mudou somente o `SKILL.md` dessa skill: árvore daquele snapshot
   `5d9024df92da0edb9f0fbc8762c63bdbccbda3ee` no commit de produto
   `e0780ae2bb2d6ce79751f6be5e3125d47b84b2ff`. Os probes anteriores
   seguem prova dos runners não alterados, não prova de identidade integral
-  da nova árvore. Mudança futura exige nova análise de impacto.
+  da nova árvore. Mudanças posteriores de Delta/Pipeline e a identidade
+  corrente estão na [ficha do PR #117](ACEITE_PARCIAL_PR117_2026-09-30.md);
+  este registro preserva a versão da requalificação G6.
 - A leitura Free de 2026-09-30 conferiu 657/657 arquivos gerenciados em
   conteúdo normalizado. O inventário geral permaneceu FAIL por 30 objetos
   extras de `hub_micromodelos` da frente paralela, que não devem ser apagados.
