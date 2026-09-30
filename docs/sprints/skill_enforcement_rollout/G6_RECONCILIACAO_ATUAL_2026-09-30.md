@@ -41,19 +41,30 @@ notebooks adaptados foram importados em caminhos novos da pasta pessoal
 
 | Skill | Casos internos | Output Free | Verificador de output congelado |
 |---|---:|---|---|
-| Safra / SER03 | 5/5 PASS | [JSON literal](g6_reconciliacao_evidencias/ser03_free_output.json) | `VALID` |
-| Cross-EDA / SER05 | 5/5 PASS | [JSON literal](g6_reconciliacao_evidencias/ser05_free_output.json) | `VALID` |
+| Safra / SER03 | 5/5 PASS | [JSON derivado do resultado](g6_reconciliacao_evidencias/ser03_free_output.json) | `VALID` |
+| Cross-EDA / SER05 | 5/5 PASS | [JSON derivado do resultado](g6_reconciliacao_evidencias/ser05_free_output.json) | `VALID` |
 
 A [proveniência](g6_reconciliacao_evidencias/proveniencia.json) fixa o commit
 fonte, os hashes dos probes e adaptadores, os IDs das tarefas, o readback e os
-hashes dos outputs. Os JSONs versionados tiveram somente CRLF normalizado para
-LF; os hashes dos arquivos brutos locais e versionados estão separados. Os três
+hashes dos outputs. O campo `notebook_output.result` do Jobs foi convertido em
+objeto JSON e reformatado para os relatórios locais; os arquivos versionados
+derivam desses relatórios e também normalizam CRLF para LF. A proveniência
+distingue os hashes do resultado literal, do envelope Jobs, do relatório local
+e do arquivo versionado. Os três
 notebooks temporários criados nesta investigação
 continuam na pasta pessoal para inspeção; nenhuma tabela, policy ou pacote do
 produto foi alterado. O job não é homologação Genie nem prova de que o produto
 remoto ainda possui os bytes R7.
 
-## Decisão pendente
+## Decisão da trilha atual
+
+Em 2026-09-30, o usuário escolheu **requalificar a versão atual**, aproveitando
+as evidências Free/Genie que resistem à revisão e testando somente lacunas.
+Esta escolha não altera o G6 congelado nem lhe atribui PASS. A matriz de aceite
+da versão atual será registrada separadamente, com identidade do produto e
+grau de cada evidência.
+
+## Trilhas consideradas
 
 Há duas trilhas distintas:
 
@@ -68,7 +79,5 @@ Há duas trilhas distintas:
    Free acima podem compor essa requalificação, sujeitos a verificação da
    identidade do pacote remoto e do adaptador.
 
-Recomendação técnica: **segunda trilha** para a entrega atual, preservando o
-G6 antigo como histórico incompleto. A escolha altera o critério de aceite da
-frente SER e requer decisão humana; até lá, `G6_EXTERNAL` continua FAIL parcial
-e nenhum merge ou promoção decorre deste relatório.
+O G6 histórico permanece `FAIL_PARTIAL_RECOVERY_AUTHORED`; nenhum merge ou
+promoção decorre desta decisão de requalificação.
