@@ -37,11 +37,11 @@
     },
     {
       "path": "skills/hub-ml-pipeline-builder/execution_contract.json",
-      "git_blob_sha1": "c58aec8c618cd85bb3a3fcf980af6e7c75f1fe6d"
+      "git_blob_sha1": "4d15ae9402f6c74ebb4781f129a1344f9ecb8293"
     },
     {
       "path": "skills/hub-ml-pipeline-builder/input.schema.json",
-      "git_blob_sha1": "9e76a8a59ac99e7df70cea962ae5efd7470a7d7b"
+      "git_blob_sha1": "9dc368ddcbe2204df1dd58feae30f03dcb18c129"
     },
     {
       "path": "skills/hub-ml-pipeline-builder/local_execution_contract.json",
@@ -53,7 +53,7 @@
     },
     {
       "path": "skills/hub-ml-pipeline-builder/scripts/run_delta.py",
-      "git_blob_sha1": "89dd42c0ec132cfcec1f0bffd133b5cf2a95c6d7"
+      "git_blob_sha1": "e9231de1342e288d6025b7c7088ee3698f2eb267"
     },
     {
       "path": "skills/hub-ml-pipeline-builder/scripts/run_local.py",

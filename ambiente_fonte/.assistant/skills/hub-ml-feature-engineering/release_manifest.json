@@ -63,7 +63,7 @@
     },
     {
       "path": "skills/hub-ml-pipeline-builder/scripts/run_delta.py",
-      "git_blob_sha1": "89dd42c0ec132cfcec1f0bffd133b5cf2a95c6d7"
+      "git_blob_sha1": "e9231de1342e288d6025b7c7088ee3698f2eb267"
     }
   ],
   "manifest_version": "0.1",

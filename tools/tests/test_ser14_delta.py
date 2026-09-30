@@ -73,19 +73,28 @@ class FakeCatalog:
     def __init__(self, owner):
         self.owner = owner
     def tableExists(self, name):
+        if self.owner.drop_count:
+            if self.owner.post_drop_readback_error:
+                raise TimeoutError("simulated cleanup readback timeout")
+            if self.owner.post_drop_readback_stale:
+                return True
         return self.owner.exists
     def dropTempView(self, name):
         return self.owner.views.pop(name, None) is not None
 
 class FakeSpark:
     def __init__(self, *, existing=False, wrong_principal=False, tamper_markers=False,
-                 bad_readback=False, create_timeout=False, on_identity=None):
+                 bad_readback=False, create_timeout=False, on_identity=None,
+                 post_drop_readback_error=False, post_drop_readback_stale=False):
         self.exists = existing
         self.wrong_principal = wrong_principal
         self.tamper_markers = tamper_markers
         self.bad_readback = bad_readback
         self.create_timeout = create_timeout
         self.on_identity = on_identity
+        self.post_drop_readback_error = post_drop_readback_error
+        self.post_drop_readback_stale = post_drop_readback_stale
+        self.drop_count = 0
         self.table = {}
         self.views = {}
         self.properties = {}
@@ -129,6 +138,7 @@ class FakeSpark:
                 rows[0]["value"] = 999
             return FakeResult([FakeRow(**row) for row in rows])
         if statement.startswith("DROP TABLE "):
+            self.drop_count += 1
             self.exists = False
             self.table = {}
             return FakeResult()
@@ -208,6 +218,27 @@ class DeltaControlTests(unittest.TestCase):
         self.assertEqual("PASS_AFTER_FAILURE", result["cleanup"])
         self.assertFalse(fake.exists)
         self.assertTrue(any(s.startswith("DROP TABLE ") for s in fake.calls))
+
+    def test_drop_ack_without_absence_readback_is_not_cleanup_pass(self):
+        for options, expected_absence in (
+                ({"post_drop_readback_error": True}, None),
+                ({"post_drop_readback_stale": True}, False)):
+            with self.subTest(options=options):
+                fake = FakeSpark(**options)
+                result = self.execute(fake)
+                self.assertEqual("UNKNOWN", result["status"], result)
+                self.assertEqual("DROP_UNCONFIRMED", result["cleanup"])
+                self.assertIs(expected_absence, result["table_absent_after_cleanup"])
+                self.assertEqual(1, fake.drop_count)
+
+    def test_fallback_drop_ack_without_absence_readback_is_not_cleanup_pass(self):
+        fake = FakeSpark(bad_readback=True, post_drop_readback_error=True)
+        result = self.execute(fake)
+        self.assertEqual("UNKNOWN", result["status"], result)
+        self.assertEqual("DROP_UNCONFIRMED", result["cleanup"])
+        self.assertIsNone(result["table_absent_after_cleanup"])
+        self.assertEqual(1, fake.drop_count)
+        self.assertIn("CLEANUP:TimeoutError", result["issues"])
 
     def test_caller_mutation_during_session_probe_cannot_redirect_effect(self):
         q = copy.deepcopy(self.q)

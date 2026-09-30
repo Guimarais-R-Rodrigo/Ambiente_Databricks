@@ -380,10 +380,11 @@ def _execute_owned(request: dict, expected_rows: list[dict], spark, authorizatio
             _assert_fe_table_id(spark, qualified, effect["table_id"])
         spark.sql("DROP TABLE " + qualified)
         cleaned = True
-        effect["cleanup"] = "PASS"
+        effect["cleanup"] = "DROP_UNCONFIRMED"
         effect["table_absent_after_cleanup"] = spark.catalog.tableExists(auth["target_table"]) is False
         if effect["table_absent_after_cleanup"] is not True:
             raise RuntimeError("TABLE_STILL_EXISTS_AFTER_DROP")
+        effect["cleanup"] = "PASS"
         effect["phase"] = "CLEANED"
         effect["status"] = "PASS"
     except Exception as exc:
@@ -396,10 +397,14 @@ def _execute_owned(request: dict, expected_rows: list[dict], spark, authorizatio
                     _assert_fe_table_id(spark, qualified, effect["table_id"])
                 spark.sql("DROP TABLE " + qualified)
                 cleaned = True
-                effect["cleanup"] = "PASS_AFTER_FAILURE"
+                effect["cleanup"] = "DROP_UNCONFIRMED"
                 effect["table_absent_after_cleanup"] = spark.catalog.tableExists(auth["target_table"]) is False
+                if effect["table_absent_after_cleanup"] is not True:
+                    raise RuntimeError("TABLE_STILL_EXISTS_AFTER_DROP")
+                effect["cleanup"] = "PASS_AFTER_FAILURE"
             except Exception as cleanup_exc:
-                effect["cleanup"] = "BLOCKED_OWNERSHIP_OR_DROP_UNKNOWN"
+                if not cleaned:
+                    effect["cleanup"] = "BLOCKED_OWNERSHIP_OR_DROP_UNKNOWN"
                 effect["issues"].append("CLEANUP:" + type(cleanup_exc).__name__)
         if effect["create_attempted"] and not (cleaned and effect["table_absent_after_cleanup"] is True):
             effect["status"] = "UNKNOWN"
