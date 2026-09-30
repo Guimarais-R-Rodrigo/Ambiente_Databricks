@@ -1,37 +1,50 @@
 # Hub Micromodelos
 
-Área de domínio para especificar, explorar e demonstrar micromodelos no ecossistema `.assistant`.
+Micromodelo é uma **característica delimitada, com regra, evidências e incerteza explícitas**, usada para apoiar uma decisão. Esta área do Hub guarda o contrato e o código de estudo. Cada micromodelo concreto é descrito em um `micromodelo.yaml`; a [skill conversacional](../skills/hub-ml-micromodelos/SKILL.md) orienta a Genie Code, mas não executa automaticamente a biblioteca. Os briefings continuam em `hub_prompts/`.
 
-## Para que serve e quando usar
+## Por onde começar
 
-Use esta área para ler o contrato `micromodelo.yaml`, validar sua consistência, descobrir oportunidades apenas com metadados, preparar artefatos de estudo e aprender pelo caso fictício de recência de contato. A [skill](../skills/hub-ml-micromodelos/SKILL.md) conduz o trabalho no Genie Code. Projetos com dados reais dependem do catálogo e das permissões corporativas.
+| Seu objetivo | Primeira leitura | Próxima ação |
+|---|---|---|
+| Entender o funcionamento completo | [Jornada e limites](guias/README.md) | Seguir as etapas de descoberta, especificação, estudo e entrega. |
+| Avaliar um micromodelo preenchido | [Recência de contato](exemplos/recencia_contato/README.md) | Conferir as sete pessoas fictícias, a classificação e o rascunho de entrega. |
+| Criar ou revisar um YAML | [Guia do contrato](contratos/README.md) | Partir do template, validar e registrar decisões ainda pendentes. |
+| Usar o código | [Execução](execucao/README.md) | Escolher o módulo da etapa; informar ambiente e permissões explicitamente. |
+| Conversar com a Genie Code | [Skill](../skills/hub-ml-micromodelos/SKILL.md) | Selecionar a skill e fornecer um briefing com escopo e restrições. |
 
-## Visão estrutural
+Para ver o exemplo local, a partir da raiz `.assistant`, com Python, `jsonschema`, `regex` e `PyYAML` disponíveis:
 
-```text
-hub_micromodelos/
-├── contratos/  especificação JSON Schema e ponto de partida YAML
-├── execucao/   funções de contrato, descoberta e laboratório
-└── exemplos/   dados e roteiros inteiramente sintéticos
+```powershell
+python hub_micromodelos/exemplos/recencia_contato/executar_exemplo.py --conferir
+python hub_micromodelos/exemplos/recencia_contato/conferir_entrega.py
 ```
 
-## Como usar
+O primeiro comando valida o YAML e reconcilia classes e scores com o resultado esperado. O segundo monta **apenas um rascunho de handoff**, com contagens conferidas e decisões pendentes; não publica.
 
-Abra o [exemplo completo de recência de contato](exemplos/recencia_contato/README.md). Com Python, `jsonschema`, `regex` e `PyYAML` disponíveis, execute o arquivo `exemplos/recencia_contato/executar_exemplo.py --conferir`. A execução lê somente os arquivos sintéticos vizinhos, imprime as classificações e compara com o resultado esperado.
+## Como as peças se encaixam
 
-## O que existe aqui
+```text
+.assistant/
+├── skills/hub-ml-micromodelos/    método de conversa e contrato estático de roteamento
+├── hub_prompts/                  briefings de uso da skill
+└── hub_micromodelos/            módulo de domínio e código instalado com o Hub
+    ├── guias/                   percurso, responsabilidades e limites por etapa
+    ├── contratos/               schema, template e leitura dos estados do YAML
+    ├── execucao/                módulos de validação, descoberta e laboratório
+    └── exemplos/                fixtures e ensaios inteiramente sintéticos
+        └── recencia_contato/    YAML preenchido, dados, resultado e handoff
+```
 
-| Recurso | Papel |
-|---|---|
-| [Contrato JSON Schema](contratos/micromodelo.schema.json) | Define campos, tipos, valores e condições da especificação. |
-| [Modelo YAML](contratos/micromodelo.template.yaml) | Ponto de partida, com decisões pendentes identificadas. |
-| [Execução](execucao/README.md) | Biblioteca reutilizável e laboratório sintético. |
-| [Exemplos](exemplos/README.md) | Casos didáticos e ensaio de migração fictícia. |
+As pastas correspondem a trabalhos diferentes. `contratos/` define **o que um micromodelo declara**; `execucao/` contém **o que o código consegue conferir ou calcular**; `exemplos/` mostra **como isso aparece em um caso**; `guias/` liga essas peças às decisões humanas. O [mapa de capacidades](guias/README.md#capacidades-atuais-e-seus-limites) distingue implementação, demonstração local e etapas posteriores. Nenhuma pasta vazia representa uma capacidade futura.
 
-## Limites e armadilhas
+## Percurso em poucas linhas
 
-O estudo sintético calcula classificações e uma força de evidência, não uma probabilidade nem uma decisão de negócio aprovada. A ausência de registros não vira `FALSE` automaticamente. A importação de módulos não lê catálogo, inicia MLflow ou publica objetos. A skill permanece em `L1/audit`; o código de laboratório e os exemplos não representam homologação corporativa.
+1. **Descobrir ou receber um objetivo.** No modo `DESCOBRIR_OPORTUNIDADES`, metadata autorizada gera hipóteses para triagem. No modo `OBJETIVO_CONHECIDO`, um briefing define a decisão e pode iniciar um YAML. Metadata não autoriza leitura de registros.
+2. **Especificar.** Declarar entidade, grão, tempo, fontes, evidências, contraevidências, regras de `TRUE`/`FALSE`/`INDETERMINADO`, score, validação e proveniência no YAML. Validar contrato e calcular sua assinatura material.
+3. **Estudar.** Executar somente com dados e permissões próprios do ambiente. O laboratório incluso é sintético; qualidade, calibração e generalização precisam de avaliação separada.
+4. **Registrar e revisar.** MLflow guarda histórico de runs quando uma rota o utiliza; o YAML continua sendo a especificação. Uma run não aprova o micromodelo. O handoff apenas prepara evidências e pendências para a governança externa.
+5. **Publicar, se autorizado.** Produto de Dados, permissões, retenção e aceite pertencem à autoridade institucional; este módulo não faz autopublicação.
 
-## Onde continuar
+## Estado desta entrega
 
-Para entender cada atributo, siga o [README do micromodelo fictício](exemplos/recencia_contato/README.md). Para a API, consulte [execução](execucao/README.md). Os briefings conversacionais continuam em [Hub Prompts](../hub_prompts/README.md), e o panorama do ecossistema está no [Manual Técnico](../MANUAL_TECNICO.md).
+O módulo e o exemplo sintético estão instaláveis no pacote do Hub. A skill permanece `L1/audit`; seu `target_level=L3` é plano, não capacidade presente. O código de laboratório, o ensaio local e o readback de arquivos no Free não homologam comportamento no Genie Code, dados reais, execução do módulo recém-distribuído no Free ou uso corporativo. O [Manual Técnico](../MANUAL_TECNICO.md#micromodelos) explica o lugar de Micromodelos no ecossistema; o [guia de jornada](guias/README.md) informa a ação e a evidência exigida em cada etapa.

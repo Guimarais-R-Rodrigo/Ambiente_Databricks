@@ -2,6 +2,9 @@
 
 ## 2026-09-30 — Módulo Micromodelos integrado ao produto
 
+- (Codex) Revisada a completude solicitada pelo responsável: `hub_micromodelos/guias/README.md` agora explica a jornada e separa capacidade de evidência; `contratos/README.md` orienta estados e condicionais; README principal, execução, exemplos e Manual Técnico ganharam navegação e limites mais claros.
+- (Codex) Adicionado `exemplos/recencia_contato/conferir_entrega.py`: confere as sete linhas e o score do caso antes de montar somente um handoff `DRAFT_NOT_SUBMITTED`. Corrigida a hipótese do YAML de seis para sete casos e a fórmula explicada no README para refletir a janela parametrizada. Aceite do pacote exige os novos arquivos.
+- (Codex) Plano de integração recebeu matriz de cobertura entre capacidades prometidas, locais atuais e pendências institucionais. Validação, novo pacote e publicação seletiva no Free serão registrados após os gates desta revisão.
 - (Codex) Criado `ambiente_fonte/.assistant/hub_micromodelos/` com contratos MM01 de bytes preservados, implementação reutilizável, exemplos sintéticos e READMEs. O caso fictício de recência de contato contém YAML completo, dados de sete pessoas, execução e resultado esperado; os comandos antigos de desenvolvimento encaminham à biblioteca instalada.
 - (Codex) Integrados navegação do Hub, Manual Técnico e sua cópia, instruções, skill, Concierge e briefings. ADR-0024 registra a localização de domínio sem criar novo tipo de objeto.
 - (Codex) Atualizados inventário, validador, renderer/empacotamento, aceite, kit Free e CI para distribuir o módulo pelo Hub. O kit corporativo passa a transportar o runtime no ZIP 01 e a usar o ZIP 02 para aceite; o gerador de ZIP 03 separado foi retirado do produto ativo.

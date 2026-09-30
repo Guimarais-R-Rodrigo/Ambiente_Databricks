@@ -1,6 +1,6 @@
 # Integração de Micromodelos ao Hub
 
-**Atualização:** 2026-09-30. **Estado:** candidata implementada e validada localmente; módulo publicado no Free para análise; composição com a outra frente pendente.
+**Atualização:** 2026-09-30. **Estado:** candidata implementada e validada localmente; módulo publicado no Free para análise antes desta revisão documental; composição com a outra frente pendente.
 
 **Checkpoint local:** commit `66e22192`, fonte e espelho do mesmo conteúdo. Gate local completo aprovado em checkout limpo: 12 etapas, incluindo validador com 0 falhas e 0 avisos, SE08, Micromodelos e aceite do pacote extraído. O exemplo de recência conferiu sete linhas sintéticas. O módulo `hub_micromodelos/` foi enviado pela CLI ao Free e teve readback de 25/25 arquivos, nenhum ausente/extra, Python como `FILE`, hash normalizado `457f0931ffd1978a9a15103fcb7d67d08b1e664aa7e30e199f9dfe0b6b4c240e`. Caches gerados pelo Python no primeiro envio foram removidos antes do readback final. Documentos compartilhados e a skill preexistente não foram sobrescritos no Free, pois a outra frente possui diferenças ainda não compostas. Esta publicação permite examinar o módulo e o exemplo; não representa a entrega conjunta ao trabalho.
 
@@ -23,9 +23,12 @@ A árvore abaixo é uma proposta de navegação, não um limite de três pastas.
 ├── hub_micromodelos/
 │   ├── README.md
 │   ├── __init__.py
+│   ├── guias/
+│   │   └── README.md
 │   ├── contratos/
+│   │   ├── README.md
 │   │   ├── micromodelo.schema.json
-│   │   └── micromodelo.modelo.yaml
+│   │   └── micromodelo.template.yaml
 │   ├── execucao/
 │   │   ├── README.md
 │   │   ├── __init__.py
@@ -40,11 +43,12 @@ A árvore abaixo é uma proposta de navegação, não um limite de três pastas.
 │           ├── micromodelo.yaml
 │           ├── dados_sinteticos.json
 │           ├── executar_exemplo.py
+│           ├── conferir_entrega.py
 │           └── resultado_esperado.json
 └── skills/hub-ml-micromodelos/
 ```
 
-A navegação inicial agrupa contratos, execução e exemplos. As funções já separadas em arquivos continuam separadas quando isso facilita a manutenção; cada arquivo de apoio não precisa virar uma pasta ou um objeto público independente. `execucao` segue o padrão existente de objeto do Hub, inclusive seu README e exemplo. O README principal explica também os dois arquivos de contrato. READMEs adicionais e pastas úteis à compreensão permanecem onde necessários.
+A navegação agrupa jornada, contrato, execução e exemplos. `guias/` foi acrescentada após a avaliação do responsável porque a sequência e os limites de cada etapa não cabiam no resumo inicial. As funções já separadas em arquivos continuam separadas quando isso facilita a manutenção; cada arquivo de apoio não precisa virar uma pasta ou um objeto público independente. `execucao` segue o padrão existente de objeto do Hub, inclusive seu README e exemplo. `contratos/` ganhou um README para explicar estados e atributos condicionais.
 
 Os exemplos utilizam dados sintéticos e deixam esse limite explícito. Testes de desenvolvimento continuam em `tools/tests/`. Projetos e dados reais permanecem no ambiente corporativo autorizado.
 
@@ -113,4 +117,17 @@ Os resultados pertencem à versão efetivamente testada. A entrega local não co
 
 Começar pela mudança dos arquivos e definição dos caminhos. Depois, documentação pode avançar em paralelo aos ajustes de instalação e testes. Um agente pode cuidar de cada parte, com o integrador responsável pelos arquivos compartilhados e pela revisão final. Usar essa divisão apenas onde houver trabalho independente suficiente; não criar frentes ou relatórios adicionais só para preencher papéis.
 
-**Concluído localmente quando:** Micromodelos estiver na pasta do Hub, com todos os itens da entrega documentada mapeados e presentes, funcionando pelo pacote completo extraído; o micromodelo fictício tiver seus atributos explicados, variantes pertinentes e resultados reproduzidos; e os testes e a revisão necessários estiverem registrados. A próxima ação é conferir a cobertura documental e implementar essa organização completa e acessível.
+## Conferência de cobertura após a revisão do responsável
+
+| Item prometido | Destino atual | Estado e limite |
+|---|---|---|
+| Contrato MM01, template, estados, proveniência e fingerprint MM02 | `contratos/`; `execucao/especificacao.py`, `assinatura.py`; guia do contrato | Presente. O exemplo cobre os blocos do YAML e explica os condicionais que exigiriam aprovação ou medição. Não os preenche ficticiamente. |
+| Dois modos conversacionais e descoberta MM03 metadata-only | `skills/hub-ml-micromodelos/`; `hub_prompts/`; `execucao/metadados.py`, `fluxo.py`, `databricks.py` | Presente. O adapter depende de sessão e binding autorizados; metadata não comprova SELECT nem viabilidade. |
+| Artefatos de estudo e política de runs | `execucao/artefatos.py`; `hub_snippets/ml/mlflow_run`; guia de jornada | Presente. Scaffold é `NOT_RUN`. Runs E0/E1 do laboratório anterior estão nos relatórios; o novo caso de recência não foi executado em MLflow. |
+| Piloto greenfield, classificação, score e indeterminado | `execucao/execucao.py`; `exemplos/recencia_contato/` | Presente em ensaios sintéticos distintos. Não há executor genérico que transforme qualquer YAML em scoring produtivo. |
+| Exemplo preenchido, dados, resultado e handoff | `exemplos/recencia_contato/` | Sete casos, oráculo e `conferir_entrega.py` reproduzidos localmente. O handoff é rascunho com agregado `SUPPLIED_UNVERIFIED`. |
+| Catálogo, impacto e migração conservadora | `execucao/catalogo.py`; `exemplos/migracao_simulada.py` | Presente como ensaio fictício. Migração real depende do piloto institucional e de equivalência medida. |
+| Aprovação, publicação, visual/monitoramento e V1 | YAML e guia indicam autoridades e estados; plano E2 define portas | Não implementados como automação deste módulo. Dependem de governança e do ambiente corporativo; pastas vazias não trariam essas capacidades. |
+| Manual, navegação, pacote e aceite | README do módulo, `guias/`, `contratos/`, `execucao/`, `exemplos/`, Manual; pacote ZIP 01 e aceite ZIP 02 | A versão local foi validada antes desta revisão; alterações desta revisão exigem novo render, gate e readback Free antes de declarar o mesmo conteúdo publicado. |
+
+**Concluído localmente quando:** Micromodelos estiver na pasta do Hub, com os itens acima presentes e documentados, funcionando pelo pacote extraído; o exemplo tiver resultados e rascunho de entrega reproduzidos; e os gates da versão exata estiverem registrados. **Próxima ação operacional:** validar esta revisão, conferir o pacote extraído e atualizar a cópia seletiva no Free. A composição com a outra frente e o teste institucional continuam separados.

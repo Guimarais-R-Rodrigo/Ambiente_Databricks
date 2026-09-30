@@ -176,7 +176,7 @@ score:
     medicao: null
 experimentos:
 - id: ensaio_recencia_sintetico
-  hipotese: a regra de sete dias classifica os seis casos didaticos e preserva indeterminados
+  hipotese: a regra de sete dias classifica os sete casos didaticos e preserva indeterminados
   status: PROPOSTO
   resultado: null
   proveniencia:

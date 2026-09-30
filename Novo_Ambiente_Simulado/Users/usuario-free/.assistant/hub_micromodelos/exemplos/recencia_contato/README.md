@@ -8,8 +8,9 @@ Este caso mostra **todos os blocos do contrato** com sete pessoas e seis eventos
 2. Execute `python hub_micromodelos/exemplos/recencia_contato/executar_exemplo.py --conferir` a partir da pasta `.assistant`, com Python, `jsonschema`, `regex` e `PyYAML` disponíveis.
 3. Compare as sete linhas e o resumo com [resultado_esperado.json](resultado_esperado.json). O comando `--conferir` faz essa comparação automaticamente e falha se houver divergência.
 4. Troque `classificacao.limiares[0].valor` de `7` para `2` no YAML e execute sem `--conferir`: `pessoa_f` deixa de ser `TRUE`, pois seu contato tem sete dias. A assinatura material também muda. Restaure `7` para repetir o oráculo.
+5. Execute `python hub_micromodelos/exemplos/recencia_contato/conferir_entrega.py` para reconciliar o mesmo resultado e ver o rascunho de handoff. Esse comando exige o YAML original e o oráculo inalterado.
 
-O script lê somente os arquivos desta pasta, não consulta o Databricks e não grava saídas ou tabelas. O hash no resultado é a assinatura dos campos materiais calculada pelo módulo [assinatura](../../execucao/assinatura.py).
+Os scripts leem somente os arquivos desta pasta, não consultam o Databricks e não gravam saídas ou tabelas. O hash no resultado é a assinatura dos campos materiais calculada pelo módulo [assinatura](../../execucao/assinatura.py).
 
 ## Resultado calculado
 
@@ -23,7 +24,11 @@ O script lê somente os arquivos desta pasta, não consulta o Databricks e não 
 | `pessoa_f` | contato confirmado em 23/09 | `TRUE` | 39 | limite inclusivo de sete dias |
 | `pessoa_g` | nenhum evento, cobertura completa | `INDETERMINADO` | `null` | ausência não prova `FALSE` |
 
-O resumo tem população 7, contagens `TRUE=2`, `FALSE=1`, `INDETERMINADO=4` e três scores emitidos. Para contatos recentes válidos, `score = round(100 × [0,7 × (1 − idade_em_dias / 8) + 0,3])`. O score mede **força de evidência sob esta regra sintética**; não é probabilidade. `FALSE` usa 0 apenas porque há evidência negativa explícita. Ausência simples, contato antigo e conflito não recebem 0.
+O resumo tem população 7, contagens `TRUE=2`, `FALSE=1`, `INDETERMINADO=4` e três scores emitidos. Para contatos recentes válidos, `score = round(100 × [peso_proximidade × (1 − idade_em_dias / (janela_dias + 1)) + peso_cobertura])`; neste YAML, os pesos são `0,7` e `0,3` e a janela é `7`. O score mede **força de evidência sob esta regra sintética**; não é probabilidade. `FALSE` usa 0 apenas porque há evidência negativa explícita. Ausência simples, contato antigo e conflito não recebem 0.
+
+## Reconciliação e rascunho de entrega
+
+`conferir_entrega.py` recalcula as contagens das sete linhas, verifica que somam a população, confere os três scores emitidos e só então chama `execucao/entrega.py`. O agregado local tem mínimo 0, máximo 82 e média 40,33. O handoff devolve a mesma assinatura da especificação, `DRAFT_NOT_SUBMITTED`, `published=false` e a lista de decisões pendentes. A API rotula o agregado recebido como `SUPPLIED_UNVERIFIED`: a checagem deste script é uma **reconciliação didática local**, não autenticação de medição externa. Não há run MLflow deste caso (`NOT_RUN`), aceite humano ou Produto de Dados.
 
 ## Mapa de todos os atributos do YAML
 

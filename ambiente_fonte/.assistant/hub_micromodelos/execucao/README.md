@@ -51,6 +51,19 @@ O contrato devolve problemas estruturados; a assinatura devolve SHA-256 do mater
 
 Com a raiz `.assistant` no caminho Python, importe `hub_micromodelos.execucao.especificacao` e `hub_micromodelos.execucao.fluxo`. A entrada [exemplo_execucao.py](exemplo_execucao.py) executa o piloto de recorrência via `python -m hub_micromodelos.execucao.exemplo_execucao`; a demonstração de recência é [executar_exemplo.py](../exemplos/recencia_contato/executar_exemplo.py). Nenhuma delas publica ou grava tabelas.
 
+| Se você precisa... | Use | Efeito da chamada |
+|---|---|---|
+| carregar e validar YAML | `especificacao.load_document`, `load_schema`, `validate_spec` | Leitura do arquivo informado e lista de problemas; sem consulta a catálogo. |
+| identificar mudança material | `assinatura.calculate_spec_fingerprint` | Hash de regras/fontes/saída da especificação; sem execução de dados. |
+| coletar metadata com limites | `metadados.MetadataCollector`; `databricks.DatabricksMetadataProvider` com sessão injetada | Consulta apenas a metadata permitida ao ambiente configurado; não concede permissão de registros. |
+| propor shortlist ou YAML inicial | `fluxo.discover_opportunities`, `known_objective` | Hipóteses e especificação com incerteza explícita; o CLI de `fluxo.py` usa fixture local. |
+| preparar roteiro de estudo | `artefatos.render_artifacts` | Textos de notebook e README `NOT_RUN`; não abre run. |
+| conferir o piloto sintético | `execucao.run_greenfield_lab` | Resultado E0 da fixture própria do laboratório. |
+| preparar handoff | `entrega.prepare_handoff` | Rascunho `DRAFT_NOT_SUBMITTED`, sem publicação. |
+| ver catálogo e impacto | `catalogo.build_catalog`, `impact_by_source` | Inventário derivado das especificações fornecidas. |
+
+O [guia de jornada](../guias/README.md) mostra quando cada chamada faz sentido. O [exemplo de recência](../exemplos/recencia_contato/README.md) usa a biblioteca para validar, assinar, classificar e preparar um handoff didático; sua regra fechada não é um executor genérico de YAML arbitrário.
+
 ## 10. Decisões e configurações que mais importam
 
 `fluxo.SCHEMA` e `fluxo.TEMPLATE` apontam para `../contratos/`. `metadados.Limits` restringe páginas e bytes da coleta. O caso de recência fixa limiar inclusivo de sete dias e pesos 0,7/0,3 no YAML; mudar esses valores altera o cálculo e a assinatura.

@@ -73,6 +73,8 @@ def _verify_product(root: Path, manifest_path: Path, expected_commit: str | None
         ".assistant/hub_micromodelos/README.md",
         ".assistant/hub_micromodelos/contratos/micromodelo.schema.json",
         ".assistant/hub_micromodelos/contratos/micromodelo.template.yaml",
+        ".assistant/hub_micromodelos/contratos/README.md",
+        ".assistant/hub_micromodelos/guias/README.md",
         ".assistant/hub_micromodelos/execucao/execucao.py",
         ".assistant/hub_micromodelos/exemplos/README.md",
         ".assistant/hub_micromodelos/exemplos/recencia_contato/README.md",
@@ -80,6 +82,7 @@ def _verify_product(root: Path, manifest_path: Path, expected_commit: str | None
         ".assistant/hub_micromodelos/exemplos/recencia_contato/dados_sinteticos.json",
         ".assistant/hub_micromodelos/exemplos/recencia_contato/resultado_esperado.json",
         ".assistant/hub_micromodelos/exemplos/recencia_contato/executar_exemplo.py",
+        ".assistant/hub_micromodelos/exemplos/recencia_contato/conferir_entrega.py",
     }
     _require(required <= seen, "MICROMODELO_INCOMPLETE")
     return {"source_commit": manifest["source_commit"], "manifest_sha256": digest}

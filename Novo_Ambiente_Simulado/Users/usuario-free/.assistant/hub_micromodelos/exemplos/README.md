@@ -8,13 +8,13 @@ Comece pelo caso de recência de contato para ver um `micromodelo.yaml` preenchi
 
 ## Como usar
 
-No diretório do produto, execute `python hub_micromodelos/exemplos/recencia_contato/executar_exemplo.py --conferir`. O script usa somente os arquivos locais da pasta do exemplo.
+No diretório do produto, execute `python hub_micromodelos/exemplos/recencia_contato/executar_exemplo.py --conferir` e depois `python hub_micromodelos/exemplos/recencia_contato/conferir_entrega.py`. Os scripts usam somente os arquivos locais da pasta do exemplo e imprimem resultados, sem publicar.
 
 ## O que existe aqui
 
 | Item | Uso |
 |---|---|
-| [recencia_contato/](recencia_contato/README.md) | Micromodelo fictício completo, dataset e resultado esperado. |
+| [recencia_contato/](recencia_contato/README.md) | Micromodelo fictício completo, dataset, resultado esperado e handoff sintético. |
 | [catalogo_sintetico.json](catalogo_sintetico.json) | Fixture de metadados usada pelo laboratório de execução. |
 | [migracao_simulada.py](migracao_simulada.py) | Comparação local de saídas sintéticas, sem leitura institucional. |
 
