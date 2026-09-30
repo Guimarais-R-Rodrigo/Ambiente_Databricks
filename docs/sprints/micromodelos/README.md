@@ -10,6 +10,7 @@ O repositório usa somente fixtures e placeholders. O catálogo real do trabalho
 
 Documentos vivos desta fase:
 
+- [integração de Micromodelos ao Hub e entrega do ambiente completo](PLANO_INTEGRACAO_HUB_MICROMODELOS.md) — próxima etapa; substitui a distribuição do runtime em kit separado;
 - [execução de laboratório e revisão processual](PLANO_EXECUCAO_LAB.md);
 - [aceite do laboratório sintético](CHECKPOINT_ACEITE_LAB_2026-09-29.md);
 - [entrega local completa antes da transferência](PLANO_ENTREGA_LOCAL.md);

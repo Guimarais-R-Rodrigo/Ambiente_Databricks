@@ -279,7 +279,8 @@ class MetadataMM03Tests(unittest.TestCase):
         self.assertEqual(outputs[0], outputs[1])
 
     def test_implementation_has_no_execution_or_network_imports(self):
-        tree = ast.parse(SCRIPT.read_text(encoding="utf-8"))
+        produto = REPO / "ambiente_fonte/.assistant/hub_micromodelos/execucao/metadados.py"
+        tree = ast.parse(produto.read_text(encoding="utf-8"))
         imports = set()
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):

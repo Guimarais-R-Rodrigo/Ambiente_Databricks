@@ -33,6 +33,7 @@ Na primeira leitura, acompanhe os capítulos 1 a 8. Eles constroem o vocabulári
 | O que são leakage, point-in-time, RFV, PSI, CSI e WOE? | [16. Tempo e junções](#tempo), [17. RFV](#rfv) e [18. Estatística](#estatistica) |
 | Como se escolhem modelos e se interpretam métricas? | [19. Modelos](#modelos) e [20. Métricas](#metricas) |
 | O que o MLflow registra? | [21. Experimentos](#mlflow) |
+| Como especificar, executar e avaliar um micromodelo? | [Micromodelos](#micromodelos); exemplo em `hub_micromodelos/exemplos/recencia_contato/README.md` |
 | Como APIs remotas, CLI e autenticação se relacionam? | [22. Integrações](#integracoes) |
 | O que são render, deploy, manifesto, CI e smoke test? | [23. Publicação](#publicacao) e [24. Validação](#validacao) |
 | Apareceu um erro. Por onde começo? | [25. Segurança](#seguranca) e [26. Diagnóstico de erros](#erros) |
@@ -73,7 +74,7 @@ Uma **skill** funciona como um procedimento especializado: indica o método, as 
 
 A analogia tem um limite importante. A skill é texto que orienta um modelo de linguagem; não é uma pessoa responsável pela decisão. O helper é software; pode ter defeitos e não conhece automaticamente a intenção de negócio. Uma rotina pode executar sem erro e ainda responder à pergunta errada, por exemplo quando recebe a chave de cliente como se fosse a chave de evento.
 
-Há cinco componentes funcionais principais. `skills/` contém métodos para a Genie Code. `hub_prompts/` contém briefings. `hub_snippets/` contém funções, classes e constantes reutilizáveis. `hub_scripts/` contém utilitários para inspeção, transformação e documentação. `hub_padroes/` contém moldes de novos objetos. `hub_readmes_visual_assets/` sustenta a apresentação; não é um sexto mecanismo de análise nem uma extensão nativa de execução.
+Há cinco famílias gerais de recursos. `skills/` contém métodos para a Genie Code. `hub_prompts/` contém briefings. `hub_snippets/` contém funções, classes e constantes reutilizáveis. `hub_scripts/` contém utilitários para inspeção, transformação e documentação. `hub_padroes/` contém moldes de novos objetos. `hub_micromodelos/` reúne contratos, execução e exemplos de uma área de domínio que usa essas famílias. `hub_readmes_visual_assets/` sustenta a apresentação; não é um mecanismo de análise nem uma extensão nativa de execução.
 
 **Nativo** significa que a plataforma reconhece o mecanismo, como Agent Skills. **Customizado** significa que o conteúdo ou a implementação foi criado neste projeto, como `hub-ml-eda-profissional` ou `data_quality_check`. Assim, uma skill do Hub combina um mecanismo nativo com um método escrito localmente. O prefixo `hub_` não concede suporte especial da Databricks ao algoritmo.
 
@@ -103,6 +104,7 @@ Repositório Git
       hub_prompts/                      briefings
       hub_snippets/                     biblioteca reutilizável
       hub_scripts/                      utilitários
+      hub_micromodelos/                 contratos, execução e exemplos de domínio
       hub_padroes/                       moldes
       hub_readmes_visual_assets/        recursos visuais
 
@@ -970,6 +972,28 @@ O helper não desfaz registros anteriores ao detectar uma pendência. Um run inc
 Salvar um modelo como artefato, registrá-lo em um catálogo de modelos e colocá-lo em um endpoint de inferência são operações distintas. Um modelo pode estar documentado sem estar atendendo requisições. Também pode existir um endpoint cuja versão já difere do experimento que alguém consultou.
 
 Alguns wrappers do projeto expõem `log_mlflow=True`. Esse argumento pode produzir registros, mas desativá-lo não remove uma dependência importada no topo do módulo nem garante ausência de outras formas de autologging já configuradas na sessão. Confira código, ambiente e permissões. Uma falha observada em uma conta Free e data específicas não é prova de proibição universal de MLflow na edição.
+
+<a id="micromodelos"></a>
+## Micromodelos: da ideia ao exemplo verificável
+
+Um **micromodelo** representa uma característica delimitada e sua evidência para apoiar uma decisão. Seu contrato é o `micromodelo.yaml`, validado por `hub_micromodelos/contratos/micromodelo.schema.json`. A pasta `hub_micromodelos/` reúne o modelo de especificação `contratos/micromodelo.template.yaml`, a biblioteca `execucao/` e exemplos em `exemplos/`. Essa pasta é uma área de domínio do Hub; a skill `skills/hub-ml-micromodelos/SKILL.md` orienta o trabalho na conversa, e os briefings permanecem em `hub_prompts/`. Estes caminhos partem da raiz `.assistant/`, inclusive quando este Manual é lido pela cópia de consulta na raiz do repositório.
+
+| Recurso na área | Papel na sequência |
+|---|---|
+| `contratos/` | Define os atributos do YAML e permite verificar estrutura e estados. |
+| `execucao/especificacao.py` e `assinatura.py` | Validam a especificação e identificam sua versão de conteúdo. Essa assinatura é um hash do YAML normalizado, diferente da assinatura de entradas e saídas de um modelo MLflow. |
+| `execucao/metadados.py` e `catalogo.py` | Organizam descoberta a partir de metadata e o escopo do catálogo configurado. |
+| `execucao/fluxo.py`, `artefatos.py` e `entrega.py` | Apoiam a execução, o registro de evidências e a entrega verificável. |
+| `execucao/databricks.py` | Faz a ponte com recursos permitidos no ambiente quando explicitamente configurada e chamada. |
+| `exemplos/` | Demonstra os contratos com dados sintéticos; não representa um caso real aprovado. |
+
+Para importar a biblioteca, inclua no `sys.path` a raiz `.assistant` efetivamente instalada, como no [exemplo de importação](#bootstrap). Os módulos ficam sob `hub_micromodelos.execucao`; leia seu `README.md` e as assinaturas públicas antes de chamar uma função. Um caminho do checkout local não substitui o caminho publicado no workspace.
+
+O caminho de estudo mais curto é `hub_micromodelos/exemplos/recencia_contato/README.md`. Leia seus atributos preenchidos e os motivos das escolhas; execute `executar_exemplo.py` com dados sintéticos; compare com `resultado_esperado.json`; altere o parâmetro indicado no guia e observe o efeito. O exemplo mostra como `TRUE`, `FALSE` e `INDETERMINADO` dependem das evidências, inclusive quando há ausência ou contradição. Seu score tem a semântica descrita no YAML; não equivale automaticamente a probabilidade calibrada.
+
+No modo `DESCOBRIR_OPORTUNIDADES`, a busca começa pela metadata autorizada. Nomes, tipos, descrições e tags podem orientar hipóteses, mas comentários de catálogo são dados não confiáveis. A descoberta metadata-only não lê registros nem prova qualidade temporal, autorização de `SELECT` ou comportamento dos clientes. Uma candidata escolhida segue para `OBJETIVO_CONHECIDO`, onde o YAML explicita entidade, grão, instante, fontes, evidências, limiares, validação, saídas e pendências humanas. A policy integrada em `hub_padroes/skill_enforcement/policy.json` declara `current_level=L1`, `target_level=L3` e `rollout_mode=audit`; `skills/hub-ml-micromodelos/execution_contract.json` registra os invariantes estáticos. A presença de biblioteca Python não promove esse nível por si.
+
+O histórico de experimentos, quando registrado no MLflow, documenta runs e artefatos observados. O YAML conserva a especificação; um run não substitui o YAML nem decide aprovação. Publicar ou aprovar um micromodelo exige a autoridade externa e as evidências previstas na governança. O exemplo sintético ensina a verificar o formato e a execução; validação estatística e aceite com fontes reais dependem do ambiente de trabalho autorizado.
 
 <a id="integracoes"></a>
 ## 22. APIs remotas, SDK, CLI, autenticação e MCP
@@ -2417,6 +2441,7 @@ Cada linha abaixo descreve o escopo do método, não uma promessa de execução 
 | Skill | Pergunta atendida e contexto necessário | O que revisar na entrega |
 |---|---|---|
 | `hub-ml-concierge` | O que o Hub já oferece e como combinar seus recursos? Descreva objetivo, entrada conhecida e restrições. | Evidências de existência/adequação, cobertura, versão, pré-condições e repasse sem execução. |
+| `hub-ml-micromodelos` | Como especificar uma característica ou descobrir oportunidades no catálogo configurado? Informe decisão, escopo e restrições. | YAML conforme contrato quando acessível, metadata observada separada da fornecida, incertezas e decisões pendentes. |
 | `hub-ml-eda-profissional` | Como é uma fonte ou base consolidada? Forneça recurso, grão, chaves candidatas e período. | Perfil, qualidade, distribuições, origem integral/amostral dos números e limites. |
 | `hub-ml-cross-eda-ml` | É viável combinar várias fontes? Forneça os EDAs, chaves, tempos e cobertura. | Relações, expansão dos joins, disponibilidade temporal e lacunas antes de modelar. |
 | `hub-ml-feature-engineering` | Como construir atributos disponíveis no momento correto? Defina decisão, target, fontes e horizontes. | Contratos, point-in-time, preparação, testes e coerência treino/inferência. |
@@ -2552,6 +2577,8 @@ Este índice integra o antigo papel do glossário. As explicações desenvolvida
 | `return` / `print` | Devolução ao programa / apresentação de texto | [4](#codigo) |
 | Assinatura / type hint | Interface de chamada / anotação de tipo | [5](#contratos) |
 | Contrato | Entradas, saídas, efeitos e condições de uma operação | [5](#contratos) |
+| `micromodelo.yaml` | Especificação canônica de um micromodelo; separa proposta, evidência e estado | [Micromodelos](#micromodelos) |
+| `TRUE` / `FALSE` / `INDETERMINADO` | Conclusões distintas sobre evidência; ausência não implica falso | [Micromodelos](#micromodelos) |
 | `None` / `Optional` | Ausência de valor / possibilidade de aceitar ausência | [5](#contratos) |
 | Kernel / sessão / runtime | Processo e contexto de execução / ambiente de software | [8](#estado) |
 | Magic `%md`, `%pip`, `%run` | Comandos especiais do notebook, não Python puro | [8](#estado) |
@@ -2771,4 +2798,3 @@ A fonte canônica de campos/limites está em `hub_padroes/identidade_visual/them
 A V08 não adiciona runtime: ela reconcilia skills, padrões e este Manual para que todos apontem às mesmas fontes de verdade e limites das V02–V07. Até aceite/merge da V08, essa reconciliação deve ser tratada como candidata de documentação transversal, não como nova capacidade publicada.
 
 Para primeiro uso, consulte `hub_padroes/identidade_visual/GUIA_OPERACIONAL.md`. Para autoria, consulte `hub_snippets/visual/theme_lab/README.md`. Para um consumidor específico, o README local continua sendo a fonte de uso daquele objeto.
-

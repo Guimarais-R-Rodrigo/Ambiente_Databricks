@@ -5,6 +5,8 @@
 Briefing manual para o modo `DESCOBRIR_OPORTUNIDADES` da
 [`hub-ml-micromodelos`](../../skills/hub-ml-micromodelos/SKILL.md). A saída
 solicitada é uma shortlist de hipóteses, não um catálogo completo nem um YAML.
+O [Hub Micromodelos](../../hub_micromodelos/README.md) documenta os contratos e
+os exemplos usados depois da escolha da candidata.
 
 ## Visão rápida
 

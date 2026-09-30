@@ -7,9 +7,9 @@ import json
 import sys
 
 KIT_ROOT = Path.cwd()
-if not (KIT_ROOT / "tools" / "micromodelo_mm09_lab.py").is_file():
+if not (KIT_ROOT / "product_overlay" / ".assistant" / "hub_micromodelos" / "execucao" / "execucao.py").is_file():
     raise RuntimeError("Defina KIT_ROOT para a pasta importada do kit Free")
-sys.path.insert(0, str(KIT_ROOT / "tools"))
+sys.path.insert(0, str(KIT_ROOT / "product_overlay" / ".assistant"))
 
 capabilities = {name: importlib.util.find_spec(name) is not None
                 for name in ("yaml", "jsonschema", "regex", "mlflow")}
@@ -19,7 +19,7 @@ if not all(capabilities[name] for name in ("yaml", "jsonschema", "regex")):
     raise RuntimeError("Dependência de contrato ausente; veja requirements-free.txt")
 
 # COMMAND ----------
-import micromodelo_mm09_lab as lab
+from hub_micromodelos.execucao import execucao as lab
 
 result = lab.run_greenfield_lab()
 aggregate = result["scoring"]["aggregate"]
@@ -39,12 +39,12 @@ print("SYNTHETIC_CODE_LAB", json.dumps({
 }, sort_keys=True))
 
 # COMMAND ----------
-import micromodelo_mm01_contract as mm01
-import micromodelo_mm10_handoff as mm10
-import micromodelo_mm12_migration_lab as mm12
-import micromodelo_mm13_catalog as mm13
+from hub_micromodelos.execucao import especificacao as mm01
+from hub_micromodelos.execucao import entrega as mm10
+from hub_micromodelos.exemplos import migracao_simulada as mm12
+from hub_micromodelos.execucao import catalogo as mm13
 
-schema = mm01.load_schema(KIT_ROOT / "docs/sprints/micromodelos/MM01/micromodelo.schema.json")
+schema = mm01.load_schema(KIT_ROOT / "product_overlay/.assistant/hub_micromodelos/contratos/micromodelo.schema.json")
 handoff = mm10.prepare_handoff(result["spec"], schema, aggregate)
 assert handoff["status"] == "DRAFT_NOT_SUBMITTED"
 assert handoff["published"] is False
@@ -142,8 +142,8 @@ if RUN_METADATA_CHECK:
     if any(value.startswith("PREENCHER_") for value in
            (LAB_CATALOG, LAB_SCHEMA, LAB_TABLE)):
         raise ValueError("Configure catálogo, schema e tabela sintéticos do setup")
-    import micromodelo_mm03_metadata as mm03
-    import micromodelo_mm07_databricks as mm07
+    from hub_micromodelos.execucao import metadados as mm03
+    from hub_micromodelos.execucao import databricks as mm07
 
     binding = mm03.Binding(LAB_CATALOG)
     provider = mm07.DatabricksMetadataProvider(spark, binding)

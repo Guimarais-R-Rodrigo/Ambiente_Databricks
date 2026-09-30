@@ -15,19 +15,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = (
-    "tools/micromodelo_mm01_contract.py",
-    "tools/micromodelo_mm02_fingerprint.py",
-    "tools/micromodelo_mm03_metadata.py",
-    "tools/micromodelo_mm04_flow.py",
-    "tools/micromodelo_mm06_artifacts.py",
-    "tools/micromodelo_mm07_databricks.py",
-    "tools/micromodelo_mm09_lab.py",
-    "tools/micromodelo_mm10_handoff.py",
-    "tools/micromodelo_mm12_migration_lab.py",
-    "tools/micromodelo_mm13_catalog.py",
-    "tools/tests/fixtures/micromodelos_mm03/catalogo_sintetico.json",
-    "docs/sprints/micromodelos/MM01/micromodelo.schema.json",
-    "docs/sprints/micromodelos/MM01/micromodelo.template.yaml",
     "tools/free_kit/RUN_FREE.py",
     "tools/free_kit/SETUP_METADATA_FREE.py",
     "docs/sprints/micromodelos/KIT_FREE.md",
@@ -47,6 +34,11 @@ PRODUCT_FILES = (
     "ambiente_fonte/.assistant/hub_prompts/descobrir_micromodelos/README.md",
     "ambiente_fonte/.assistant/hub_prompts/descobrir_micromodelos/descobrir_micromodelos.md",
     "ambiente_fonte/.assistant/hub_prompts/descobrir_micromodelos/exemplo_descobrir_micromodelos.py",
+) + tuple(
+    "ambiente_fonte/.assistant/hub_micromodelos/" + path.relative_to(
+        ROOT / "ambiente_fonte/.assistant/hub_micromodelos").as_posix()
+    for path in sorted((ROOT / "ambiente_fonte/.assistant/hub_micromodelos").rglob("*"))
+    if path.is_file() and "__pycache__" not in path.parts
 )
 DESTINATION = {
     "tools/free_kit/RUN_FREE.py": "RUN_FREE.py",

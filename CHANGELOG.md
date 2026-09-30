@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-09-30 — Módulo Micromodelos integrado ao produto
+
+- (Codex) Criado `ambiente_fonte/.assistant/hub_micromodelos/` com contratos MM01 de bytes preservados, implementação reutilizável, exemplos sintéticos e READMEs. O caso fictício de recência de contato contém YAML completo, dados de sete pessoas, execução e resultado esperado; os comandos antigos de desenvolvimento encaminham à biblioteca instalada.
+- (Codex) Integrados navegação do Hub, Manual Técnico e sua cópia, instruções, skill, Concierge e briefings. ADR-0024 registra a localização de domínio sem criar novo tipo de objeto.
+- (Codex) Atualizados inventário, validador, renderer/empacotamento, aceite, kit Free e CI para distribuir o módulo pelo Hub. O kit corporativo passa a transportar o runtime no ZIP 01 e a usar o ZIP 02 para aceite; o gerador de ZIP 03 separado foi retirado do produto ativo.
+- (Codex) Testes proporcionais antes da consolidação: 192 testes MM, 5 de aceite extraído, 4 do kit Free e 44 de transição passaram (8 skips nesta última suíte); exemplo fictício conferido. Render, validador pós-commit e readback Free ainda serão registrados após a composição local.
+- (Codex) Renderizado o espelho com 608 arquivos após validador do produto aprovado (0 falhas, 1 aviso de caches). Ajustada a linha de saída do aceite para caracteres ASCII, permitindo executar 53 testes de transição/aceite/kit Free no console Windows sem exigir `PYTHONUTF8=1` (8 skips).
+
+## 2026-09-30 — Completude e exemplo didático de Micromodelos
+
+- (Codex) Corrigido o plano de integração conforme esclarecimento do responsável: simplicidade não limita pastas nem reduz capacidades, atributos ou documentação útil. Prevista conferência de cobertura dos READMEs e contratos e um micromodelo fictício de recência de contato, com atributos explicados, execução reproduzível, saídas esperadas e variantes condicionais. Aprovações simuladas permanecem distintas de evidência real. Implementação pendente.
+
+## 2026-09-29 — Plano de integração de Micromodelos ao Hub
+
+- (Codex) Simplificado o plano a pedido do responsável: três subpastas (`contratos`, `execucao`, `exemplos`), novos nomes em português e reaproveitamento do código, documentação, instalação e testes existentes. Retiradas subdivisões e camadas propostas sem necessidade atual; interfaces existentes preservadas.
+- (Codex) Registrado `PLANO_INTEGRACAO_HUB_MICROMODELOS.md`: módulo de domínio em `.assistant/hub_micromodelos/`, migração para fonte única, READMEs e Manual Técnico, descoberta, validadores, distribuição, revisão cruzada e composição com a outra frente antes da transferência do ambiente completo.
+- (Codex) Atualizados índice e plano de entrega local para distinguir o kit técnico anterior da entrega integrada requerida. Planejamento apenas; movimentação do runtime, criação do módulo de produto e novos aceites ainda pendentes.
+
 ## 2026-09-29 — Entrega local antes da transferência de Micromodelos
 
 - (Codex) Registrado `PLANO_ENTREGA_LOCAL.md` após três análises paralelas: lacunas de transporte do runtime/schema MM01, aceite específico e ensaio do ZIP extraído; frentes disjuntas, critério de saída e retorno sanitizado para sprint corretiva.

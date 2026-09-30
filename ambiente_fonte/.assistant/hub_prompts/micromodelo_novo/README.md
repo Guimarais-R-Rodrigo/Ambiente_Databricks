@@ -5,6 +5,8 @@
 Briefing manual para conduzir `OBJETIVO_CONHECIDO` em
 [`hub-ml-micromodelos`](../../skills/hub-ml-micromodelos/SKILL.md). A pasta oferece
 o formulário e um exemplo de preenchimento; não executa o micromodelo.
+O [Hub Micromodelos](../../hub_micromodelos/README.md) reúne schema, modelo YAML,
+biblioteca e um caso sintético completo para conferir o resultado do briefing.
 
 ## Visão rápida
 

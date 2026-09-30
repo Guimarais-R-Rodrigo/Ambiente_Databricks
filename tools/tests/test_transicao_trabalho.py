@@ -146,15 +146,16 @@ class NotebookKitTests(unittest.TestCase):
             if cell["cell_type"]=="code": ast.parse("".join(cell["source"]))
 
     def test_micromodelos_notebook_checks_commit_and_failure(self):
-        nb = json.loads(kit.micromodelos_notebook(COMMIT, "b" * 64))
+        nb = json.loads(kit.micromodelos_notebook(COMMIT, "b" * 64,
+                                                  (TOOLS/"aceite_micromodelos_trabalho.py").read_text()))
         code = "\n".join("".join(c["source"]) for c in nb["cells"] if c["cell_type"] == "code")
         ast.parse(code)
         self.assertIn("resultado.get('source_commit')", code)
         self.assertIn("resultado.get('status') != 'PASS'", code)
-        self.assertIn("run(PACKAGE_ROOT, MANIFEST_PATH)", code)
-        self.assertLess(code.index("hashlib.sha256(manifest_bytes)"),
-                        code.index("from aceite_micromodelos_trabalho import run"))
-        self.assertIn("hashlib.sha256(script_bytes)", code)
+        self.assertIn("run(PACKAGE_ROOT, MANIFEST_PATH,", code)
+        self.assertIn("expected_manifest_sha256='" + "b" * 64 + "'", code)
+        self.assertIn("hub_staging_", code)
+        self.assertNotIn("mm_staging_", code)
         self.assertNotIn("testar_mlflow=True", code)
         self.assertNotIn("testar_metadata=True", code)
     def test_no_saved_outputs(self):
@@ -170,11 +171,10 @@ class NotebookKitTests(unittest.TestCase):
     def test_core_embedded_exactly(self):
         self.assertIn(self.core,["".join(c["source"]) for c in self.nb["cells"]])
     def test_declared_skills_exist_in_offline_guide(self):
-        text=(TOOLS.parent/"docs/playbooks/testes-genie-trabalho.md").read_text()
+        text=(TOOLS.parent/"docs/playbooks/testes-genie-trabalho.md").read_text(encoding="utf-8")
         for n in EXPECTED_SKILL_NAMES:self.assertIn(n,text)
-    def test_all_five_directories_in_guide(self):
-        text=(TOOLS.parent/"docs/playbooks/replicacao-trabalho.md").read_text()
-        self.assertEqual(len(EXPECTED_HUB_DIRS),5)
+    def test_all_managed_directories_in_guide(self):
+        text=(TOOLS.parent/"docs/playbooks/replicacao-trabalho.md").read_text(encoding="utf-8")
         for n in EXPECTED_HUB_DIRS:self.assertIn(n,text)
     def test_import_cache_rejected(self):
         with tempfile.TemporaryDirectory() as d:

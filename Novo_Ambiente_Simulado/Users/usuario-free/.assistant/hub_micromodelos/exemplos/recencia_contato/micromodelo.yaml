@@ -1,0 +1,329 @@
+schema_version: 1.0.0
+identidade:
+  nome: recencia-contato-sintetica
+  titulo: Recencia de contato verificavel (exemplo sintetico)
+  micromodel_version: 0.1.0
+  estado:
+    fase_atual: EM_ESTUDO
+    fase_anterior: EM_DESCOBERTA
+    condicao: ATIVO
+    motivo_condicao: null
+negocio:
+  caracteristica: contato verificavel recente em entidade ficticia
+  objetivo: demonstrar como classificar recencia de contato preservando incerteza
+  definicao_operacional: TRUE se ha contato confirmado nos sete dias anteriores a
+    2026-09-30, com cobertura completa e sem estorno; FALSE apenas diante de atestado
+    explicito de ausencia; demais casos indeterminados
+  uso_pretendido:
+  - avaliacao didatica do contrato e da execucao sintetica
+  nao_usar_para:
+  - decisao real, atendimento, oferta ou publicacao corporativa
+entidade:
+  tipo: pessoa ficticia
+  chave_logica: id_entidade
+  granularidade: uma classificacao por entidade ficticia em 2026-09-30
+  populacao_elegivel: sete entidades inteiramente sinteticas da fixture local
+  referencia_temporal: 2026-09-30; janela inclusiva de sete dias completos para contato
+    recente
+fontes:
+- id: fonte_001
+  catalogo_ref: CATALOGO_PRODUTO
+  schema: crm_sintetico
+  objeto: cobertura_contato_sintetica
+  tipo_objeto: VIEW
+  campos:
+  - cobertura_completa
+  - id_entidade
+  papel: ELEGIBILIDADE
+  proveniencia:
+    status: DESCOBERTO
+    origem: metadados da fixture inteiramente sintetica
+    referencia: dados_sinteticos.json
+    observado_em_utc: null
+    aprovacao: null
+    medicao: null
+- id: fonte_002
+  catalogo_ref: CATALOGO_PRODUTO
+  schema: crm_sintetico
+  objeto: contatos_sinteticos
+  tipo_objeto: TABLE
+  campos:
+  - data_evento
+  - event_id
+  - id_entidade
+  - tipo_evento
+  papel: EVIDENCIA
+  proveniencia:
+    status: DESCOBERTO
+    origem: metadados da fixture inteiramente sintetica
+    referencia: dados_sinteticos.json
+    observado_em_utc: null
+    aprovacao: null
+    medicao: null
+evidencias:
+- id: contato_confirmado
+  descricao: contato confirmado dentro da janela de sete dias
+  fontes_ref:
+  - fonte_002
+  regra: CONFIRMADO entre 2026-09-23 e 2026-09-30 com cobertura completa e sem ESTORNADO
+    para a entidade
+  proveniencia:
+    status: PROPOSTO
+    origem: regra de laboratório E0
+    referencia: null
+    observado_em_utc: null
+    aprovacao: null
+    medicao: null
+contra_evidencias:
+- id: ausencia_atestada
+  descricao: atestado explicito de nenhum contato recente
+  fontes_ref:
+  - fonte_002
+  regra: NEGATIVO_VERIFICADO nos sete dias da janela e cobertura completa permitem
+    FALSE; um ESTORNADO conflitante preserva INDETERMINADO
+  proveniencia:
+    status: PROPOSTO
+    origem: regra de laboratório E0
+    referencia: null
+    observado_em_utc: null
+    aprovacao: null
+    medicao: null
+classificacao:
+  tipo: BOOLEANO_COM_INDETERMINADO
+  semantica:
+    quando_true: ha contato CONFIRMADO na janela de sete dias, cobertura completa
+      e nenhum ESTORNADO conflitante
+    quando_false: ha NEGATIVO_VERIFICADO explicito na janela de sete dias com cobertura
+      completa e nenhum contato confirmado conflitante
+    quando_indeterminado: cobertura parcial, so contato antigo, ausencia de eventos
+      ou sinais conflitantes nao permitem concluir
+    proveniencia:
+      status: PROPOSTO
+      origem: semântica de laboratório E0
+      referencia: null
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
+  ausencia_evidencia:
+    tratamento: INDETERMINADO
+    resultado_sem_evidencia: INDETERMINADO
+    regra_ref: null
+    proveniencia:
+      status: PROPOSTO
+      origem: template MM01
+      referencia: null
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
+  limiares:
+  - id: janela_recencia_dias
+    descricao: idade maxima inclusiva do contato recente
+    operador: LTE
+    valor: 7
+    unidade: dias
+    proveniencia:
+      status: PROPOSTO
+      origem: limiar sintético E0
+      referencia: null
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
+score:
+  habilitado: true
+  tipo_semantica: FORCA_EVIDENCIA
+  semantica_ref: null
+  escala:
+    min: 0
+    max: 100
+  normalizacao:
+    metodo: SOMA_PONDERADA_0_100
+    referencia: null
+    proveniencia:
+      status: PROPOSTO
+      origem: heurística sintética E0
+      referencia: null
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
+  componentes:
+  - id: proximidade_temporal
+    descricao: max(0, 1 - idade_em_dias/8) para contato confirmado valido
+    peso: 0.7
+    proveniencia:
+      status: PROPOSTO
+      origem: heurística sintética E0
+      referencia: null
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
+  - id: cobertura_confirmada
+    descricao: 1 para cobertura completa; 0 caso contrario
+    peso: 0.3
+    proveniencia:
+      status: PROPOSTO
+      origem: heurística sintética E0
+      referencia: null
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
+  calibracao: null
+  proveniencia:
+    status: PROPOSTO
+    origem: heurística sintética E0
+    referencia: null
+    observado_em_utc: null
+    aprovacao: null
+    medicao: null
+experimentos:
+- id: ensaio_recencia_sintetico
+  hipotese: a regra de sete dias classifica os seis casos didaticos e preserva indeterminados
+  status: PROPOSTO
+  resultado: null
+  proveniencia:
+    status: PROPOSTO
+    origem: roteiro didatico sintetico
+    referencia: resultado_esperado.json
+    observado_em_utc: null
+    aprovacao: null
+    medicao: null
+validacao:
+  status: PENDENTE
+  criterios:
+  - reconciliar sete entidades e tres classes
+  - recusar ausencia como FALSE sem atestado explicito
+  - conferir hash da especificacao e resultados sinteticos
+  resultado: null
+  aprovacao_humana:
+    status: PENDENTE
+    por: null
+    em_utc: null
+    referencia: null
+saida:
+  estudo:
+    campo_classificacao: classificacao
+    valores_classificacao:
+    - 'TRUE'
+    - 'FALSE'
+    - INDETERMINADO
+    campo_score: score
+  publicacao:
+    estado: PENDENTE
+    campo_booleano: null
+    politica_indeterminado: null
+tracking:
+  backend: MLFLOW
+  politica: PENDENTE_MM06
+  armazenar_historico_runs_no_yaml: false
+governanca:
+  classificacao_dados: DADOS_SINTETICOS_LOCAIS
+  lgpd: SEM_DADOS_PESSOAIS_REAIS_NESTE_EXEMPLO
+  gestor_informacao: PENDENTE_PARA_QUALQUER_USO_REAL
+  observacoes:
+  - Fixture ficticia para revisao do framework; nao prova permissao, validacao institucional
+    ou desempenho em dados reais.
+publicacao:
+  status: NAO_INICIADA
+  autoridade: GOVERNANCA_EXTERNA
+  handoff_ref: null
+  produto_dados_ref: null
+proveniencia:
+  criado_em_utc: '2026-09-30T00:00:00Z'
+  gerado_por: exemplo didatico sintetico do Hub
+  pedido_original_ref: exemplo_recencia_contato
+  registros:
+  - alvo: identidade.nome
+    proveniencia:
+      status: PROPOSTO
+      origem: briefing ficticio de recencia de contato
+      referencia: exemplo_recencia_contato
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
+  - alvo: identidade.titulo
+    proveniencia:
+      status: PROPOSTO
+      origem: briefing ficticio de recencia de contato
+      referencia: exemplo_recencia_contato
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
+  - alvo: negocio.caracteristica
+    proveniencia:
+      status: PROPOSTO
+      origem: briefing ficticio de recencia de contato
+      referencia: exemplo_recencia_contato
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
+  - alvo: negocio.objetivo
+    proveniencia:
+      status: PROPOSTO
+      origem: briefing ficticio de recencia de contato
+      referencia: exemplo_recencia_contato
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
+  - alvo: negocio.definicao_operacional
+    proveniencia:
+      status: PROPOSTO
+      origem: briefing ficticio de recencia de contato
+      referencia: exemplo_recencia_contato
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
+  - alvo: entidade.tipo
+    proveniencia:
+      status: PROPOSTO
+      origem: briefing ficticio de recencia de contato
+      referencia: exemplo_recencia_contato
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
+  - alvo: entidade.chave_logica
+    proveniencia:
+      status: PROPOSTO
+      origem: briefing ficticio de recencia de contato
+      referencia: exemplo_recencia_contato
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
+  - alvo: entidade.granularidade
+    proveniencia:
+      status: PROPOSTO
+      origem: briefing ficticio de recencia de contato
+      referencia: exemplo_recencia_contato
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
+  - alvo: entidade.populacao_elegivel
+    proveniencia:
+      status: PROPOSTO
+      origem: briefing ficticio de recencia de contato
+      referencia: exemplo_recencia_contato
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
+  - alvo: entidade.referencia_temporal
+    proveniencia:
+      status: PROPOSTO
+      origem: briefing ficticio de recencia de contato
+      referencia: exemplo_recencia_contato
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
+  - alvo: negocio.uso_pretendido
+    proveniencia:
+      status: PROPOSTO
+      origem: briefing ficticio de recencia de contato
+      referencia: exemplo_recencia_contato
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null
+  - alvo: negocio.nao_usar_para
+    proveniencia:
+      status: PROPOSTO
+      origem: briefing ficticio de recencia de contato
+      referencia: exemplo_recencia_contato
+      observado_em_utc: null
+      aprovacao: null
+      medicao: null

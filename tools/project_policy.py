@@ -54,6 +54,7 @@ LEGACY_MANAGED_SKILL_NAMES = frozenset(
 EXPECTED_HUB_DIRS = frozenset(
     {
         "hub_padroes",
+        "hub_micromodelos",
         "hub_prompts",
         "hub_readmes_visual_assets",
         "hub_scripts",

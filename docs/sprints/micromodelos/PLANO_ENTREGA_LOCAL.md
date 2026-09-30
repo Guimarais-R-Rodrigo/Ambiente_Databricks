@@ -1,5 +1,7 @@
 # Micromodelos — concluir a entrega local antes da transferência
 
+> **Atualização de direção — 2026-09-29:** o responsável solicitou integrar o framework em `.assistant/hub_micromodelos/` e levar o ambiente inteiro, consolidado com a outra frente. O [plano de integração ao Hub](PLANO_INTEGRACAO_HUB_MICROMODELOS.md) governa essa próxima etapa e substitui a solução de runtime em ZIP técnico separado descrita abaixo. O kit anterior conserva suas evidências, mas não representa a entrega integrada final. O restante deste documento preserva a preparação anterior e os critérios aplicáveis.
+
 **Data:** 2026-09-29. **Referência de execução:** PR #116 e o manifesto do kit final, ambos identificados por commit. Direção solicitada pelo responsável: preparar e auditar aqui uma candidata completa, transferir depois ao computador do trabalho e retornar defeitos para sprint local de correção.
 
 Este documento é dono da preparação local restante. As portas corporativas continuam em [PLANO_PREPARACAO_E2.md](PLANO_PREPARACAO_E2.md). A entrega será uma **candidata local pronta para homologação**, conservando a skill L1/audit. Freeze V1, publicação e migração real continuam dependentes da sequência do plano mestre e do piloto institucional.
