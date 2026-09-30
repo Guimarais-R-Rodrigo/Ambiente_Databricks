@@ -11,6 +11,9 @@
   decisão de política vinculada à AUC efetivamente reportada. Produto SER12
   não foi alterado. Escopo e limites em
   [PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md](docs/sprints/skill_enforcement_rollout/PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md).
+- (Codex) O índice e o Plano Mestre da SER apontam o estado vigente para a
+  candidata isolada; o controller e o state source do #115 ficam históricos e
+  fora deste pacote.
 
 ## 2026-09-24 — SER B0: LOCAL_QUALIFIED com SHARE V2 e auditoria técnica PASS
 
