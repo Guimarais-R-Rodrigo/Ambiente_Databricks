@@ -2,6 +2,8 @@
 
 ## 2026-09-30 — Homologação Genie guiada
 
+- (Codex) Alinhadas quatro asserções históricas dos testes SE07/SE08 ao estado já presente no branch base: `hub-ml-criar-objeto` em `current_level=L3` e snapshot README com 14/14 contratos. Policy e produto não foram alterados. Testes SE07 44 (um skip), SE08 8 e certificação local SE08 sem renderer/evidence passaram; correção motivada pelo check `validar` do PR empilhado.
+
 - (Codex) Corrigido o snapshot de contagens do validador no `README.md` após o CI real do PR empilhado revelar oito linhas desatualizadas; o gate `--conferir-readme` passa com os números atuais. Nenhum contrato ou produto foi alterado nesta correção documental.
 
 - (Codex) Publicados no Databricks Free apenas runner Delta e manifestos Pipeline/FE corrigidos, com readback. Primeiro probe bloqueou antes do efeito por dois contratos remotos com CRLF; republicados somente esses contratos após comparação exata. Auditoria 27/27 dos arquivos de release Pipeline/FE passou; reteste sintético Free de Delta e materialização FE terminou `PASS`, com limpeza `PASS` e ausência das tabelas confirmada. Evidência local e limites registrados na [revisão pré-PR](docs/sprints/skill_enforcement_rollout/REVISAO_PRE_PR_B1_2026-09-30.md); sem promoção de policy, homologação Genie integral ou deploy corporativo.

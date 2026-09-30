@@ -80,7 +80,7 @@ class SE07PolicyTests(unittest.TestCase):
             "hub-ml-concierge": "L1",
             "hub-ml-micromodelos": "L1",
             "hub-ml-auditoria-skills": "L3",
-            "hub-ml-criar-objeto": "L2",
+            "hub-ml-criar-objeto": "L3",
         }
         for skill, policy in self.by.items():
             self.assertEqual(expected_current.get(skill, "L0"), policy["current_level"], skill)
@@ -567,7 +567,7 @@ class SE07PolicyTests(unittest.TestCase):
         p=self.by["hub-ml-tutor-databricks"]; self.assertEqual(("L0","L0","guidance"),(p["current_level"],p["target_level"],p["rollout_mode"]))
     def test_runtime_resolver(self):
         p=self.runtime.get_skill_enforcement_policy("hub-ml-auditoria-skills",assistant_root=ASSISTANT); self.assertEqual(("L3","L3"),(p.current_level,p.target_level)); self.assertIn("AUDIT_FALSE_REASSURANCE",p.known_debt)
-        c=self.runtime.get_skill_enforcement_policy("hub-ml-criar-objeto",assistant_root=ASSISTANT); self.assertEqual(("L2","L3"),(c.current_level,c.target_level))
+        c=self.runtime.get_skill_enforcement_policy("hub-ml-criar-objeto",assistant_root=ASSISTANT); self.assertEqual(("L3","L3"),(c.current_level,c.target_level))
     def test_unknown_fails_closed(self):
         with self.assertRaises(self.runtime.EnforcementPolicyError): self.runtime.get_skill_enforcement_policy("hub-ml-nao-existe",assistant_root=ASSISTANT)
 class CreateObjectL2BoundaryTests(unittest.TestCase):
