@@ -144,3 +144,12 @@ Para legado, confira o inventário do ambiente anterior e a lista `legacy_skill_
 ## Fontes
 
 [Instruções](https://learn.microsoft.com/en-us/azure/databricks/genie-code/instructions), [skills e edição](https://learn.microsoft.com/en-us/azure/databricks/genie-code/skills), [tipos de notebook](https://learn.microsoft.com/en-us/azure/databricks/notebooks/notebook-export-import). Consulta em 11/09/2026. As expectativas de negócio e critérios de aceite acima são políticas do Hub, não testes oficiais fornecidos pela Databricks.
+
+### Micromodelos — contrato L1 (candidata, ainda sem homologação Genie)
+
+`hub-ml-micromodelos` entrou no catálogo após a rodada original. Ao testar em
+chat novo, selecione a skill real pelo menu @ e peça um plano metadata-only para
+uma característica sintética com chave e instante ainda desconhecidos. Esperado:
+lacunas pendentes, sem leitura de registros, YAML validado fictício, runner ou
+Receipt alegados. Este caso está **NOT_RUN** e não herda a certificação das outras
+skills nem substitui os testes MM04 próprios.

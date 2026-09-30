@@ -15,6 +15,47 @@ description: Planeja e executa validação estatística no Databricks para quali
 acompanhar modelo em produção (`hub-ml-monitoramento-modelo`), onde o limiar vem
 de política e não de teste.
 
+## Execução verificável SER04 (perfil piloto)
+
+Para uma comparação diagnóstica de **duas amostras independentes** com variável
+numérica contínua e hipótese bicaudal pré-registrada, use a rota canônica
+[preflight.py](scripts/preflight.py) → [run.py](scripts/run.py) →
+[verify.py](scripts/verify.py). O contrato fechado está em
+[input.schema.json](input.schema.json) e [execution_contract.json](execution_contract.json).
+Exemplo sintético e comandos: [scripts/README.md](scripts/README.md).
+Ao usar a CLI, capture o stdout JSON do runner em arquivo próprio e passe-o
+como `--payload` a `verify.py`, junto com request, run_id e oráculo independente.
+Confirme o JSON `valid=true` **e** o código de saída zero. Rodar o arquivo
+sem payload ou receber stdout vazio não executa/comprova a função `verify()`.
+
+O perfil piloto aceita **somente dados realmente sintéticos fornecidos inline**.
+`synthetic: true` declara a origem dos dados, não o formato do request: coletar,
+limitar ou agregar dados reais de uma tabela não os torna sintéticos. Quando a
+origem não for informada, confirme-a antes de montar o request. Dados reais
+ficam fora deste perfil executável; ofereça planejamento e aponte a lacuna, sem
+usar uma chamada manual como substituta da rota protegida. A orientação genérica
+de coleta em Spark abaixo não amplia o escopo deste piloto. Peça o `alpha` já
+pré-especificado quando ausente; `0,05` só pode ser proposto para confirmação
+antes de olhar os dados, nunca aplicado como default silencioso.
+
+O perfil `TWO_SAMPLE_KS_PILOT_V1` chama
+`hub_snippets.ml.drift_detection.calculate_ks` e emite a estatística KS D
+como tamanho de efeito e o p-valor do SciPy. A declaração de independência,
+amostragem i.i.d. e continuidade é uma **pré-condição fornecida pelo usuário**;
+o código apenas rejeita empates no vetor recebido, sem certificar o desenho
+amostral. A comparação única pré-registrada tem multiplicidade não aplicável,
+com motivo expresso no request. O perfil não calcula intervalo de confiança;
+`confidence_interval_status=UNSUPPORTED_IN_PROFILE` não deve ser preenchido
+por estimativa inventada. Falha em rejeitar H0 não demonstra equivalência.
+
+A execução só pode ser descrita como **candidata local verificável** quando
+`run.status=PASS`, o Receipt V1 verifica a release/request/run e o oráculo
+independente confere D, p e decisão. O verificador recebe request, run_id e
+oráculo de fonte confiável externa ao payload. `VALID` não autoriza promoção
+de policy, conclusão de negócio, publicação ou homologação Genie. Para
+Welch/Mann-Whitney, pares, séries, regressão, múltiplas comparações e IC,
+a skill continua oferecendo planejamento; não reivindique essa rota executável.
+
 ## Definir a decisão antes do teste
 
 Registrar:
@@ -102,7 +143,7 @@ Reportar sempre que aplicável:
 - sensibilidade/robustez;
 - consequência prática.
 
-Evitar limiares universais. Um p-valor pequeno não mede magnitude, probabilidade de H0 nem relevância de negócio. Power pós-hoc baseado apenas no efeito observado costuma adicionar pouca informação; priorizar intervalo de confiança e planejamento a priori.
+Evitar limiares universais. Um p-valor pequeno não mede magnitude, probabilidade de H0 nem relevância de negócio. Não inferir potência do p-valor, da não rejeição ou de N isolado: qualificá-la como baixa/alta exige alternativa, desenho, alfa e cálculo ou simulação específicos. Amostra pequena limita resolução, mas `p=1` não demonstra equivalência nem potência quase nula. Power pós-hoc baseado apenas no efeito observado costuma adicionar pouca informação; priorizar intervalo de confiança e planejamento a priori.
 
 ## Prescrever ações proporcionais
 
@@ -144,14 +185,19 @@ Os helpers entregam a estatística, não a decisão: classificação de severida
 - **Reportar p-valor sem effect size.** Com amostra grande, tudo é significante e
   quase nada é relevante.
 - **Testar pressuposto e seguir mesmo assim** sem dizer o que muda na conclusão.
-- **Ignorar múltiplas comparações.** Vinte testes a 5% produzem um "achado" por
-  acaso.
+- **Ignorar múltiplas comparações.** Sob vinte nulas verdadeiras e testes de
+  tamanho 5%, o número esperado de falsos positivos é um; isso não garante
+  um achado. A probabilidade `1−0,95^20≈64%` exige testes independentes.
+  Sem dependência conhecida, não atribua essa probabilidade à família;
+  correção de multiplicidade não converte escolha pós-hoc em teste confirmado.
 - **Usar a API clássica de `pyspark.ml`** — `VectorAssembler` e `Correlation.corr`
   estão bloqueados sob Spark Connect no Free.
 
 ## Formato de saída
 
 Um card por teste: pergunta, teste escolhido e por quê, pressupostos conferidos,
-estatística, p-valor, effect size com intervalo, e a **prescrição** — o que fazer
-com o resultado. Sem prescrição, o card não está pronto.
+estatística, p-valor, effect size e intervalo de confiança quando calculado e suportado pelo perfil, e a **prescrição** — o que fazer com o resultado ou qual evidência ainda obter.
 
+No piloto `TWO_SAMPLE_KS_PILOT_V1`, reportar D como tamanho de efeito e `confidence_interval_status=UNSUPPORTED_IN_PROFILE`. Não preencher IC, N, alfa, p-valor ou pressupostos com valores inventados para completar o card. Preservar a distinção entre desenho declarado pelo usuário e pressuposto efetivamente verificado. Nos campos sem evidência, indicar pendência; quando não aplicáveis ou não suportados, explicar o motivo.
+
+Perguntas conceituais podem receber contas ilustrativas identificadas, sem alegar execução canônica. O plano, a hipótese e o resultado observado devem permanecer separados. A prescrição pode ser obter a entrada faltante; não exige uma conclusão estatística sem suporte.

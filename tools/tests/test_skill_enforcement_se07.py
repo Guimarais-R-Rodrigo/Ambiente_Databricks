@@ -41,7 +41,7 @@ class SE07PolicyTests(unittest.TestCase):
         cls.runtime=_load("se07_runtime_policy",ASSISTANT/"hub_scripts"/"skill_execution"/"skill_execution.py")
         cls.raw=json.loads(POLICY.read_text(encoding="utf-8")); cls.by={i["skill"]:i for i in cls.raw["skills"]}
     def test_registry_validates_and_covers_catalog(self):
-        self.assertEqual([],self.tool.validate_policy_registry(POLICY)); self.assertEqual(14,len(self.tool.discover_skills())); self.assertEqual(self.tool.discover_skills(),set(self.by))
+        self.assertEqual([],self.tool.validate_policy_registry(POLICY)); self.assertEqual(15,len(self.tool.discover_skills())); self.assertEqual(self.tool.discover_skills(),set(self.by))
 
     def test_unreadable_policy_returns_structured_fail(self):
         script = ROOT/"tools"/"skill_enforcement"/"se07_policy.py"
@@ -78,6 +78,7 @@ class SE07PolicyTests(unittest.TestCase):
             "hub-ml-eda-profissional": "L4",
             "hub-ml-comentar-notebook": "L1",
             "hub-ml-concierge": "L1",
+            "hub-ml-micromodelos": "L1",
             "hub-ml-auditoria-skills": "L3",
             "hub-ml-criar-objeto": "L2",
         }
@@ -112,7 +113,7 @@ class SE07PolicyTests(unittest.TestCase):
             self.assertTrue(all(item["policy"] == "optional" for item in contract["templates"]))
             self.assertTrue(all(item["evidence"] == "loaded" for item in contract["templates"]))
     def test_target_classification(self):
-        expected={"hub-ml-analise-safra":"L3","hub-ml-auditoria-skills":"L3","hub-ml-baseline-ml":"L4","hub-ml-comentar-notebook":"L1","hub-ml-concierge":"L1","hub-ml-criar-objeto":"L3","hub-ml-cross-eda-ml":"L4","hub-ml-eda-profissional":"L4","hub-ml-explainability":"L3","hub-ml-feature-engineering":"L4","hub-ml-monitoramento-modelo":"L4","hub-ml-pipeline-builder":"L4","hub-ml-tutor-databricks":"L0","hub-ml-validacao-estatistica":"L3"}
+        expected={"hub-ml-analise-safra":"L3","hub-ml-auditoria-skills":"L3","hub-ml-baseline-ml":"L4","hub-ml-comentar-notebook":"L1","hub-ml-concierge":"L1","hub-ml-criar-objeto":"L3","hub-ml-cross-eda-ml":"L4","hub-ml-eda-profissional":"L4","hub-ml-explainability":"L3","hub-ml-feature-engineering":"L4","hub-ml-micromodelos":"L3","hub-ml-monitoramento-modelo":"L4","hub-ml-pipeline-builder":"L4","hub-ml-tutor-databricks":"L0","hub-ml-validacao-estatistica":"L3"}
         self.assertEqual(expected,{k:v["target_level"] for k,v in self.by.items()})
     def test_audit_debt_and_ladder(self):
         self.assertEqual({"AUDIT_FALSE_REASSURANCE","AUDIT_STATE_LADDER","AUDIT_CONDITIONAL_APPLICABILITY"},set(self.by["hub-ml-auditoria-skills"]["known_debt"]))

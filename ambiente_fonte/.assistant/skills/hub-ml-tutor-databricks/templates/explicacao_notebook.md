@@ -5,7 +5,7 @@
 | Campo | Valor |
 |-------|-------|
 | **Autor** | [nome do autor, se identificável no notebook] |
-| **Status** | [DESENVOLVIMENTO | HOMOLOGAÇÃO | PRODUÇÃO | EXPLORATÓRIO] |
+| **Status** | [DESENVOLVIMENTO | HOMOLOGAÇÃO | PRODUÇÃO | EXPLORATÓRIO | NÃO INFORMADO — citar evidência se conhecido] |
 | **Linguagem principal** | [Python | SQL | Misto] |
 | **Complexidade estimada** | [Baixa | Média | Alta] |
 
@@ -14,6 +14,8 @@
 [4 a 8 linhas: propósito do notebook, contexto, escopo.]
 
 ## 2. Mapa das etapas
+
+[Incluir somente etapas presentes no código. As linhas abaixo são exemplos, não evidência de execução; distinguir operação prevista de resultado observado.]
 
 | # | Etapa | O que faz |
 |---|-------|-----------|
@@ -71,4 +73,4 @@
 
 ## 8. Resumo executivo
 
-[O que o notebook entrega, a relevância de negócio, o próximo passo.]
+[O que o código pretende entregar, a relevância de negócio e o próximo passo. Resultado observado somente com evidência; caso contrário, não informado.]

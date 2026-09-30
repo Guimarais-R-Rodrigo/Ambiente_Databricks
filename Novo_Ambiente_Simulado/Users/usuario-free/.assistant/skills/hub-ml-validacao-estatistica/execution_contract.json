@@ -1,0 +1,41 @@
+{
+  "metadata": {
+    "b1": {
+      "input_schema": "SER04-REQUEST-1",
+      "input_schema_file": "input.schema.json",
+      "profile": "TWO_SAMPLE_KS_PILOT_V1",
+      "receipt_version": "1.0",
+      "request_entrypoint": "scripts/preflight.py::preflight",
+      "runner_entrypoint": "scripts/run.py::run",
+      "verifier_entrypoint": "scripts/verify.py::verify",
+      "scope": "stage_specific",
+      "stage_level": "L3",
+      "state": "CANDIDATE_NOT_PROMOTED",
+      "unimplemented_surfaces": [
+        "Welch",
+        "Mann-Whitney",
+        "ANOVA",
+        "chi-square",
+        "regression",
+        "time-series",
+        "multiple_comparisons",
+        "confidence_interval",
+        "Free",
+        "Genie"
+      ]
+    }
+  },
+  "mode": "audit",
+  "resources": [
+    {
+      "evidence": "call",
+      "id": "two_sample_ks",
+      "module": "hub_snippets.ml.drift_detection",
+      "policy": "required",
+      "symbol": "calculate_ks"
+    }
+  ],
+  "schema_version": "0.1",
+  "skill": "hub-ml-validacao-estatistica",
+  "templates": []
+}

@@ -109,7 +109,7 @@ class SE08OperationalTests(unittest.TestCase):
         self.assertEqual(manual, root_manual)
         self.assertIn("S06-A1-R4=NOT_RUN", playbook)
         self.assertIn("SE06_DOD=INCOMPLETE", playbook)
-        self.assertIn("14 skills", playbook)
+        self.assertIn("15 skills", playbook)
         self.assertIn("PROMOÇÃO", playbook.upper())
         self.assertIn("skill enforcement  : 5/5 contratos válidos", root_readme)
         self.assertIn("BLOQUEADA", checklist)

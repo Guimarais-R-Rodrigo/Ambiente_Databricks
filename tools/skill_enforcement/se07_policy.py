@@ -5,8 +5,11 @@ import argparse, json
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Mapping
+import sys
 
 REPO_ROOT=Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO_ROOT / "tools"))
+from project_policy import EXPECTED_SKILL_NAMES
 ASSISTANT_ROOT=REPO_ROOT/"ambiente_fonte"/".assistant"
 SKILLS_ROOT=ASSISTANT_ROOT/"skills"
 DEFAULT_POLICY=ASSISTANT_ROOT/"hub_padroes"/"skill_enforcement"/"policy.json"
@@ -100,8 +103,9 @@ def _validate_policy_data(raw:Any, assistant_root:Path)->list[PolicyIssue]:
     missing,extra=sorted(discovered-seen),sorted(seen-discovered)
     if missing: issues.append(_issue("POLICY_SKILLS_MISSING",", ".join(missing),"skills"))
     if extra: issues.append(_issue("POLICY_SKILLS_EXTRA",", ".join(extra),"skills"))
-    if len(discovered)!=14: issues.append(_issue("POLICY_CATALOG_COUNT",f"esperadas 14 skills reais; encontradas {len(discovered)}","skills"))
-    if len(seen)!=14: issues.append(_issue("POLICY_ENTRY_COUNT",f"esperadas 14 políticas; encontradas {len(seen)}","skills"))
+    expected_count=len(EXPECTED_SKILL_NAMES)
+    if len(discovered)!=expected_count: issues.append(_issue("POLICY_CATALOG_COUNT",f"esperadas {expected_count} skills reais; encontradas {len(discovered)}","skills"))
+    if len(seen)!=expected_count: issues.append(_issue("POLICY_ENTRY_COUNT",f"esperadas {expected_count} políticas; encontradas {len(seen)}","skills"))
     by={i.get("skill"):i for i in skills if isinstance(i,Mapping)}
     audit=by.get("hub-ml-auditoria-skills")
     if isinstance(audit,Mapping):

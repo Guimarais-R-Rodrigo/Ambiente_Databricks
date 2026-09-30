@@ -1,0 +1,102 @@
+
+hub-ml-explainability Como checar se a explicação da observação sintética (2,1) corresponde aos coeficientes e ao fundo (0,0) declarados?
+The user is asking about how to check if a synthetic observation's explanation (2,1) corresponds to the declared coefficients and baseline (0,0). They referenced the hub-ml-explainability skill folder. Let me load that skill first, then examine the referenced folder to understand the context.
+
+Let me read the skill file for hub-ml-explainability.
+
+Vou carregar a skill de explicabilidade e examinar a pasta referenciada para entender o contexto dessa verificação.
+
+The user is asking about checking if the explanation of a synthetic observation (2,1) corresponds to the declared coefficients and baseline (0,0). This seems to be about the LINEAR_REGRESSION_SYNTHETIC_V1 profile in the hub-ml-explainability skill.
+
+Let me understand the question better:
+
+There's a synthetic observation with values (2, 1) - likely two features with values 2 and 1 The coefficients and baseline (0,0) are declared - likely the model coefficients and the background/reference row The user wants to verify that the SHAP explanation for observation (2,1) matches what we'd expect given the declared coefficients and baseline (0,0)
+For a linear model, SHAP values have a closed-form solution. If the model is y = β₀ + β₁x₁ + β₂x₂, and the background (reference) is (0, 0), then:
+
+base value = E[y] over background = β₀ (since background is (0,0), the expected output is β₀) SHAP value for feature 1 = β₁ * (x₁ - E[x₁]) = β₁ * (2 - 0) = 2β₁ SHAP value for feature 2 = β₂ * (x₂ - E[x₂]) = β₂ * (1 - 0) = β₂ prediction = base + SHAP₁ + SHAP₂ = β₀ + 2β₁ + β₂
+So the verification is: SHAP values should equal coefficient × (observation - background_mean), and the sum of base + SHAP values should equal the model's prediction.
+
+The skill mentions scripts/verify.py::verify() as the canonical verification path, and scripts/preflight.py::preflight() and scripts/run.py::run() for execution.
+
+Let me look at the scripts and the input schema to understand the exact verification mechanism. Let me read the scripts folder and the key files.
+
+Vou examinar os scripts de verificação e o contrato de execução para entender o mecanismo canônico de checagem.
+
+The file IDs I used were wrong. Let me use the correct IDs from the directory listing. The execution_contract.json has id 2051176632870 and input.schema.json has id 2051176632871. Wait, the directory listing showed:
+
+"id":"2051176632870","name":"execution_contract.json" "id":"2051176632871","name":"input.schema.json"
+But the reads failed. Let me try again with the full path approach, or try reading the verify.py and other scripts.
+
+Now I have a clear picture of the verification mechanism. Let me understand the key parts:
+
+From verify.py, the critical verification logic (the "analytic oracle") is on lines 54-65:
+
+coefficients = [float(c) for c in expected_model.coef_]
+mean_background = [float(background[:, index].mean()) for index in range(X.shape[1])]
+oracle_base = float(expected_model.intercept_) + sum(c * b for c, b in zip(coefficients, mean_background))
+oracle_values = [[c * (float(value) - b) for c, value, b in zip(coefficients, row, mean_background)]
+                 for row in X]
+So for a linear regression model:
+
+base_value (oracle) = intercept + Σ(coef_i × mean(background_i)) SHAP value for feature i on row j = coef_i × (X[j,i] - mean(background_i))
+The user asks about a synthetic observation (2,1) with background (0,0). So:
+
+background = [[0, 0]] (single row, as required by preflight: BACKGROUND:SINGLE_ROW_REQUIRED) mean_background = [0, 0] (since the single background row is [0, 0]) oracle_base = intercept + coef_1×0 + coef_2×0 = intercept For observation [2, 1]: SHAP_1 = coef_1 × (2 - 0) = 2 × coef_1 SHAP_2 = coef_2 × (1 - 0) = 1 × coef_2 prediction = base + SHAP_1 + SHAP_2 = intercept + 2×coef_1 + coef_2
+This matches the model prediction: y = intercept + coef_1×2 + coef_2×1
+
+So the verification checks:
+
+The SHAP values from the runner match the analytic oracle (closed-form SHAP for linear models) The base value matches the oracle base Preflight, input, and result context bindings match The execution receipt is valid
+The canonical path is: scripts/verify.py::verify(payload, expected_request=..., expected_model=..., expected_X=..., expected_background=..., expected_run_id=...) — and you need valid=true.
+
+The user is asking conceptually how to check this. Let me explain the math and the canonical verification path. This is a conceptual/explanatory question, not an execution request. I should explain:
+
+The closed-form SHAP for linear models How the background (0,0) simplifies the oracle How the observation (2,1) decomposes The canonical verify.py check
+Let me also read the input schema to understand the full request structure, though I think I have enough to answer.
+
+Actually, I think I have enough to provide a thorough answer. The user seems to be asking about the mechanism conceptually — how to check that the SHAP explanation for observation (2,1) with background (0,0) matches the declared coefficients and intercept. This is both a math question and a tooling question.
+
+Let me provide the explanation.
+
+Com base no contrato da skill hub-ml-explainability (perfil LINEAR_REGRESSION_SYNTHETIC_V1), a verificação combina matemática de forma fechada e rota canônica de verificação. Veja como os dois se conectam:
+
+Matemática: o oráculo analítico de SHAP linear
+Para sklearn.LinearRegression, o SHAP tem solução fechada. O verify.py (linhas 54–65) implementa exatamente este oráculo:
+
+base_value = intercept + Σ(coef_i × mean(background_i))
+shap_i     = coef_i × (x_i − mean(background_i))
+Com background = [[0, 0]] (uma única linha, como exige o preflight), mean(background) = [0, 0], então:
+
+Componente
+Fórmula
+Valor com background (0,0)
+base_value
+intercept + coef₁×0 + coef₂×0
+= intercept
+shap₁ (obs = 2)
+coef₁ × (2 − 0)
+= 2 × coef₁
+shap₂ (obs = 1)
+coef₂ × (1 − 0)
+= coef₂
+soma = previsão
+base + shap₁ + shap₂
+= intercept + 2×coef₁ + coef₂
+A soma base_value + shap₁ + shap₂ deve igualar exatamente model.predict([[2,1]]). Se os SHAP values retornados pelo runner não casarem com esse oráculo (com tolerância 1e-10), o verify.py emite ANALYTIC_ORACLE_MISMATCH.
+
+Rota canônica de verificação
+Não basta conferir manualmente — a skill exige a chamada de scripts/verify.py::verify():
+
+verify(payload, expected_request=..., expected_model=..., 
+       expected_X=..., expected_background=..., expected_run_id=...)
+O verify checa cinco camadas antes de retornar valid=true:
+
+Preflight binding — o digest do preflight no payload é idêntico ao digest do preflight re-executado com o expected_request (garante que o runner não adulterou o request).
+Input binding — trace.input_digest == digest(expected_request) (o request não mudou entre preflight e execução).
+Result context binding — metadados do resultado (schema_version, profile, model_id, feature_names, row_ids, sample_ids) casam com o esperado.
+Oráculo analítico — base_value e shap_values batem com a fórmula de forma fechada acima.
+Receipt — o recibo de execução é válido (origem dos imports, integridade do release, run_id coerente).
+Somente com valid=true (sem issues) e completion_authorized você pode afirmar que a explicação está verificada. Um Receipt isolado não prova a correção dos valores — é o oráculo analítico que a verifica.
+
+Resumo prático
+Para a observação (2,1) com fundo (0,0), a checagem é direta: os SHAP values devem ser exatamente [2×coef₁, coef₂] e o base_value deve ser o intercept. A soma reconstrói a previsão do modelo. A verificação canônica via verify.py confirma isso computacionalmente, amarrando também integridade de preflight, input e receipt.

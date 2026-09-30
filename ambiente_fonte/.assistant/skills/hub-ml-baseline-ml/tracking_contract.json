@@ -1,0 +1,26 @@
+{
+  "schema_version": "0.1",
+  "skill": "hub-ml-baseline-ml",
+  "mode": "audit",
+  "resources": [
+    {
+      "id": "mlflow_run_governado",
+      "policy": "required",
+      "evidence": "call",
+      "module": "hub_snippets.ml.mlflow_run",
+      "symbol": "run_governado"
+    }
+  ],
+  "templates": [],
+  "metadata": {
+    "delivery": {
+      "profile": "SYNTHETIC_PERSONAL_MLFLOW_TRACKING_V1",
+      "stage_level": "L4_EPHEMERAL_PERSONAL",
+      "state": "CANDIDATE_NOT_PROMOTED",
+      "effect": "CREATE_EXPERIMENT_RUN_LOG_MODEL_SOFTDELETE",
+      "authorization": "EXACT_EXTERNAL_RECORD",
+      "readback": "RUN_PARAMS_METRICS_TAGS_SIGNATURE_MODEL_PREDICTIONS",
+      "no_registry": true
+    }
+  }
+}

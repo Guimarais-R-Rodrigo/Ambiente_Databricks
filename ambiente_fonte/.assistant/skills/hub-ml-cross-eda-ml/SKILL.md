@@ -5,6 +5,62 @@ description: Consolida múltiplos EDAs e fontes para avaliar viabilidade de join
 
 # Avaliar múltiplas fontes para ML
 
+## Resolver o contexto antes de diagnosticar o join
+
+Para o perfil sintético `CONTEXT_ONLY_PILOT_V1`, forme o objeto fechado de
+[input.schema.json](input.schema.json) com as duas fontes, âncora, chaves,
+grão, cardinalidade, instante de decisão e triestado PIT confirmados. Execute
+`scripts/preflight.py::preflight(context)` (CLI:
+`python scripts/preflight.py --context contexto.json`). Para afirmar que o
+contexto L2 foi resolvido, exija `status="PASS"` e valide o payload com
+`scripts/preflight.py::verify_preflight(payload, expected_context=...)`,
+usando o contexto original guardado independentemente do payload.
+
+Esse PASS confirma apenas metadados declarados: `source_identity_status`
+permanece `DECLARED_NOT_READ`, `join_executed=false`,
+`coverage_measured=false` e `ml_readiness="NOT_EVALUATED"`. Não transforme
+cardinalidade declarada em prova observada nem converta PIT `UNKNOWN` em
+`NOT_APPLICABLE`. Sem disponibilidade temporal confirmada, mantenha a
+decisão de readiness pendente. O diagnóstico real por
+`hub_snippets.spark.join_diagnostics.diagnosticar_join` requer DataFrames
+Spark e execução própria; a rota L2 não o chama nem emite Receipt para ele.
+
+Para o diagnóstico estático sintético com PIT `NOT_APPLICABLE`, execute
+`scripts/run_diagnostic.py::run(context, datasets, spark, run_id=...)`.
+Passe linhas das duas fontes com hashes que correspondam ao contexto; o runner
+faz o preflight L2, chama `diagnosticar_join` em Spark e emite Receipt V1.
+Só afirme cobertura medida se houver `status="PASS"`, Receipt e
+`join_diagnostics` em `trace.resources_completed`. Para verificar os valores,
+chame `scripts/verify_diagnostic.py::verify` com contexto, datasets, `run_id`
+e oráculo de diagnóstico independentes do payload; exija `valid=true`.
+O resultado mantém `join_executed=false`, `pit_executed=false` e readiness
+pendente. PIT aplicável exige a rota SER06 descrita abaixo.
+
+
+Para o perfil sintético PIT LOCAL_SYNTHETIC_PIT_V1, com atraso constante,
+fuso UTC, fronteira inclusiva LE, empate rejeitado e sem bitemporalidade,
+execute scripts/run_pit.py::run(context, datasets, spark, window_days=...,
+run_id=...). As linhas das fontes devem ter as colunas e os hashes declarados.
+A disponibilidade observada deve ser igual a referência + atraso declarado;
+a rota bloqueia divergência, LT, latência variável, referências empatadas,
+chaves nulas e alterações de dados durante a execução. O Spark deve usar UTC.
+A janela limita a idade da referência; decisão exatamente no instante de
+disponibilidade é elegível.
+
+Após PASS e Receipt, execute scripts/verify_pit.py::finalize com os inputs,
+janela e run_id originais; então verify_finalized com os mesmos valores
+mantidos independentemente do payload. Só trate o perfil local como concluído
+quando valid=true e scope_completion_authorized=true; o verificador
+recalcula a seleção temporal e a cobertura sem chamar o helper. Isto não
+declara readiness ML, homologação Genie ou publicação. Sem Postflight válido,
+o perfil permanece pendente.
+
+Se o preflight ou verificador bloquear, reporte o campo ou conflito e mantenha
+o contexto não resolvido. As etapas abaixo orientam a investigação seguinte;
+não substituem evidência de execução. Cobertura estática exige o diagnóstico
+verificado acima; join de negócio e PIT continuam não executados.
+
+
 ## Quando esta skill se aplica
 
 - Há **mais de uma fonte** e a pergunta é se elas se cruzam: viabilidade de join,
@@ -18,7 +74,11 @@ construção das features depois de decidido o cruzamento
 
 ## Receber o contexto
 
-Exigir ou inferir explicitamente:
+Confirmar a partir de informação fornecida ou de evidência identificada. Quando faltar um campo, registrar a pendência; propostas para esclarecimento não são entradas confirmadas:
+
+Em perguntas conceituais, rotular cenários hipotéticos sem preencher a fonte real. Não inferir chave, grão, corte ou disponibilidade para obter PASS, nem transformar ausência de match em causa conhecida. A hipótese orienta o plano; cobertura, elegibilidade PIT e readiness continuam dependentes das evidências e gates acima.
+
+Campos do contexto:
 
 - pergunta e target;
 - unidade de predição;

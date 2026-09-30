@@ -1,9 +1,13 @@
 # Template: Relatório de Drift
 
-> **[PSI]** drift score | **[N features]** com alerta | **[Dias]** em produção | **[Status]** saúde
+> **[PSI ou NÃO CALCULADO]** drift score | **[N features ou NÃO INFORMADO]** com alerta | **[Dias ou NÃO INFORMADO]** em produção | **[Status ou NÃO CLASSIFICADO]** saúde
 
 
-## Status: [🟢 Saudável / 🟡 Atenção / 🔴 Crítico]
+## Status: [🟢 Saudável / 🟡 Atenção / 🔴 Crítico / NÃO CLASSIFICADO — política não fornecida]
+
+Classifique apenas com limiares aprovados e evidência suficiente. Sem eles,
+use NÃO CLASSIFICADO; campo ausente fica NÃO INFORMADO. Valores de exemplo não
+são execução, nem evidência de alerta ou produção.
 
 ### Resumo
 - **Modelo**: [nome] (MLflow run_id: [X])
@@ -14,8 +18,8 @@
 ### PSI Global (Score Distribution)
 | Métrica | Valor | Limiar | Status |
 |---|---|---|---|
-| PSI (score) | [X.XXX] | [limiar aprovado] | [🟢/🟡/🔴] |
-| KS (score) | [X.XXX] | [limiar aprovado] | [🟢/🟡/🔴] |
+| PSI (score) | [X.XXX ou NÃO CALCULADO] | [limiar aprovado ou NÃO INFORMADO] | [🟢/🟡/🔴 ou NÃO CLASSIFICADO] |
+| KS (score) | [X.XXX ou NÃO CALCULADO] | [limiar aprovado ou NÃO INFORMADO] | [🟢/🟡/🔴 ou NÃO CLASSIFICADO] |
 
 ### Drift por Feature (Top-10 maiores PSI)
 | Feature | PSI | KS | Direção | Interpretação |
@@ -28,6 +32,6 @@
 | AUC | [X] | [X] | [±Xpp] | [🟢/🟡/🔴] |
 
 ### Decisão e Recomendação
-- **Ação recomendada**: [nenhuma / monitorar / retreinar / escalar]
+- **Ação recomendada**: [nenhuma / monitorar / investigar / escalar / decisão pendente]
 - **Justificativa**: [razão]
 - **Próxima revisão**: [data]

@@ -2424,6 +2424,7 @@ Cada linha abaixo descreve o escopo do método, não uma promessa de execução 
 | `hub-ml-validacao-estatistica` | O que uma evidência sustenta sob incerteza? Defina hipótese, população e desenho. | Pressupostos, magnitude, intervalos, multiplicidade e conclusão proporcional. |
 | `hub-ml-analise-safra` | Como os grupos de originação amadurecem? Informe contrato, evento, referência e MOB. | Denominador, maturidade comparável, censura/incompletude e não duplicação de eventos. |
 | `hub-ml-explainability` | Como o modelo usa as entradas? Forneça modelo, preparação, dados e saída a explicar. | Coerência de features, referência explicativa, limites e distinção de causalidade. |
+| `hub-ml-micromodelos` | Como especificar uma característica ou descobrir oportunidades usando metadata? Declare decisão, escopo e permissão. | Distinguir metadata observada, hipótese e aprovação; contrato L1, sem runner Databricks. |
 | `hub-ml-monitoramento-modelo` | O que observar no funcionamento do modelo? Defina referência, produção, rótulos disponíveis e políticas. | Qualidade, drift, performance, custo e critérios explícitos para investigar/agir. |
 | `hub-ml-pipeline-builder` | Como organizar execução recorrente? Informe fontes, destino, frequência, dependências e permissões. | Idempotência, qualidade, retries, observabilidade e aprovação de escritas. |
 | `hub-ml-comentar-notebook` | Como explicar um notebook existente? Forneça o código e suas saídas. | Explicação antes/depois, interpretação dos números reais e ausência de mudanças ocultas na lógica. |

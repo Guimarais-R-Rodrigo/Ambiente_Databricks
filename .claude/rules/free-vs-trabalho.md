@@ -32,6 +32,18 @@ Registradas a partir da execução no laboratório (Spark 4.1 serverless, 2026-0
 Os helpers foram ajustados para funcionar nos dois casos: degradam sem cache no
 serverless e mantêm o cache onde ele existe.
 
+### Revalidação MLflow em 2026-09-28
+
+O probe sintético `tools/skills_tracking_free_probe.py` executou o helper
+`run_governado` no ambiente serverless 2 com `tracking_uri` e `registry_uri`
+explicitamente definidos como `databricks`. A leitura de parâmetros, métrica,
+assinatura e predições passou, seguida de soft-delete conferido de run e
+experimento próprios. Não houve registro de modelo no Registry. A falha de
+17/08 acima continua como observação histórica de outra configuração, não como
+bloqueio universal atual. Esta prova do helper não certifica o adapter Baseline
+nem o workspace do trabalho; o resultado da rodada está em
+[continuação local/Free](../../docs/sprints/skill_enforcement_rollout/CONTINUACAO_LOCAL_FREE_2026-09-28.md).
+
 ### Instalar biblioteca no serverless: o que vale hoje
 
 `%pip install` na primeira célula, seguido de `%restart_python`, **funciona**.

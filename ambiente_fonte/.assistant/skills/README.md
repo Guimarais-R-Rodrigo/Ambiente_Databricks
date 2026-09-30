@@ -265,6 +265,10 @@ Integrada ao produto; publicação e testes conversacionais no destino pendentes
 |---|---|
 | `hub-ml-baseline-ml` | Baselines por tipo de problema, validação e tracking. |
 | `hub-ml-explainability` | Interpretação global/local e comunicação de limitações. |
+| `hub-ml-micromodelos` | Especificação e descoberta por metadata, com contrato estático L1 e sem execução protegida. |
+
+A candidata de Micromodelos veio da cópia pessoal do Free; sua incorporação ao
+catálogo não certifica a sprint MM04 nem a execução de descoberta no Databricks.
 
 ### ⚙️ MLOps & Produção
 

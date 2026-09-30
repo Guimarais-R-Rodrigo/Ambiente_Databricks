@@ -5,6 +5,53 @@ description: Desenha e implementa pipelines de dados e ML no Databricks com arqu
 
 # Construir pipelines Databricks
 
+## Validar a especificação antes de qualquer efeito
+
+Para especificação sintética local, execute
+[scripts/preflight.py](scripts/preflight.py) com o
+[input.schema.json](input.schema.json) fechado e confira
+`verify_preflight` usando o request esperado externo ao payload.
+Instruções e limites: [scripts/README.md](scripts/README.md).
+
+Esta rota cobre L2 de especificação. PASS não significa deploy,
+execução de job, permissão verificada ou skill concluída:
+`effects_authorized=false` e `deployment_status=NOT_RUN`.
+Pedidos de DEPLOY/WRITE/RUN são bloqueados por esta rota; não substituir o
+bloqueio por execução manual.
+
+## Executar o perfil sintético Spark local
+
+Após validar a spec, para um pedido explicitamente sintético de MERGE local em
+memória, execute [scripts/run_local.py](scripts/run_local.py) com Spark e
+confira [scripts/verify_local.py](scripts/verify_local.py) com request, linhas
+esperadas e run_id externos. O contrato fechado
+[local_execution_contract.json](local_execution_contract.json) exige chamada
+real de `data_quality_check`; o runner calcula o estado via Spark, verifica
+o helper, emite Receipt e limpa a view temporária. Consulte
+[scripts/README.md](scripts/README.md) para o perfil e um exemplo.
+
+Este PASS prova somente transformação e qualidade de até 100 linhas sintéticas
+em sessão Spark local, com MERGE determinístico por id/event_at e replay
+idêntico. Não cria tabela persistente, job, schedule ou recurso Databricks;
+`persistent_write=false` e `deployment_status=NOT_RUN`. Efeitos remotos
+exigem executor e postflight próprios.
+
+
+## Executar o probe Delta autorizado no Free
+
+Para comprovar escrita Delta no laboratório pessoal, use
+[scripts/run_delta.py](scripts/run_delta.py) com o envelope externo definido em
+[delta_execution_contract.json](delta_execution_contract.json). Exija destino
+sintético novo, principal autenticado, digest do pedido, run_id, nonce e limpeza
+`DROP_OWNED`. O executor verifica o Receipt de cálculo, cria a tabela marcada,
+executa MERGE, lê o resultado, repete para conferir idempotência e remove somente
+a tabela cuja propriedade conferiu. Examine o registro de efeito e a ausência
+após limpeza; o Receipt anterior continua restrito ao cálculo.
+
+`UNKNOWN` exige inspeção do destino informado, sem repetir a escrita. Este
+perfil não cria job permanente, schedule, serving ou implantação de negócio.
+Não converta o PASS em promoção de policy ou homologação conversacional.
+
 ## Quando esta skill se aplica
 
 - Pedem **pipeline, ingestão incremental, medallion, expectations, orquestração,

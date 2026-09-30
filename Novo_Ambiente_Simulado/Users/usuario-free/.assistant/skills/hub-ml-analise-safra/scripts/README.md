@@ -8,4 +8,4 @@ Os campos sintéticos e o perfil explícito são obrigatórios. Nenhum comando a
 
 Somente o perfil descrito foi implementado. Suporte a trimestre/comparações e join/Spark/Postflight L4 não deve ser inferido. O manifesto e os hashes não autenticam um usuário e não autorizam publicação.
 
-Estado desta entrega: testes nativos de domínio executados; integração completa com o checkout, renderer e B0 ainda não validada. Não usar como handoff de certificação.
+Estado local: runner integrado, testes de domínio e regressões executados, com renderer conferido. O perfil mensal cobre `semantic_mode=EVENT` e `CUMULATIVE`, denominador fixo pelo roster, imaturidade e observações incompletas. A homologação no Free/Genie é uma etapa separada; não inferir certificação ou promoção por este README.

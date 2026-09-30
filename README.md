@@ -8,6 +8,9 @@
 
 **Manual Técnico:** [APIs, Python, Spark, helpers e operação do Hub](MANUAL_TECNICO.md).
 
+**Candidata em reconciliação:** `hub-ml-micromodelos` foi incorporada como
+contrato L1 estático a partir do Free; [estado e evidências](docs/sprints/skill_enforcement_rollout/RECONCILIACAO_MM04_2026-09-29.md).
+
 ---
 
 ## 🧭 Por onde começar
