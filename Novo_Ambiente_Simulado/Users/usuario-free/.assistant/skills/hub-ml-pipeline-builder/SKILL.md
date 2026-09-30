@@ -48,8 +48,16 @@ executa MERGE, lê o resultado, repete para conferir idempotência e remove some
 a tabela cuja propriedade conferiu. Examine o registro de efeito e a ausência
 após limpeza; o Receipt anterior continua restrito ao cálculo.
 
-`UNKNOWN` exige inspeção do destino informado, sem repetir a escrita. Este
-perfil não cria job permanente, schedule, serving ou implantação de negócio.
+Após `UNKNOWN`, recupere primeiro o destino exato, o registro de efeito e a
+autorização vinculada ao run. Se faltarem, mantenha o estado desconhecido e
+escale; não trate busca negativa sem alvo conhecido como prova de ausência.
+Inspecione read-only existência, conteúdo, posse e limpeza antes de decidir.
+Não repita CREATE, MERGE ou DROP para obter prova do efeito anterior. Marcas
+de posse identificam a tabela, mas não autorizam, sozinhas, uma nova limpeza:
+qualquer nova escrita ou limpeza exige autoridade explícita aplicável ao
+destino e efeito, que pode constar do envelope original se for recuperado e
+conferido. Este perfil não cria job permanente, schedule, serving ou
+implantação de negócio.
 Não converta o PASS em promoção de policy ou homologação conversacional.
 
 ## Quando esta skill se aplica
