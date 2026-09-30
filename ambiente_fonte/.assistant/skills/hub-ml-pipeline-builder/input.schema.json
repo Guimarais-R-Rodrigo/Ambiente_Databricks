@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "synthetic",
+    "operation",
+    "environment",
+    "scope",
+    "source",
+    "destination",
+    "write_mode",
+    "incremental",
+    "primary_keys",
+    "columns",
+    "event_time",
+    "watermark_seconds",
+    "idempotency",
+    "permissions",
+    "schedule",
+    "rollback"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "SER13-SPEC-1"
+    },
+    "synthetic": {
+      "const": true
+    },
+    "operation": {
+      "const": "VALIDATE_SPEC"
+    },
+    "environment": {
+      "const": "LOCAL_SYNTHETIC"
+    },
+    "scope": {
+      "const": "PERSONAL"
+    },
+    "source": {
+      "type": "string",
+      "pattern": "^synthetic_[a-z0-9_]+$"
+    },
+    "destination": {
+      "type": "string",
+      "pattern": "^synthetic_[a-z0-9_]+$"
+    },
+    "write_mode": {
+      "enum": [
+        "APPEND",
+        "MERGE"
+      ]
+    },
+    "incremental": {
+      "enum": [
+        "BATCH",
+        "WATERMARK"
+      ]
+    },
+    "primary_keys": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*$"
+      }
+    },
+    "columns": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*$"
+      }
+    },
+    "event_time": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "watermark_seconds": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "idempotency": {
+      "enum": [
+        "REJECT_DUPLICATES",
+        "MERGE_ON_KEYS"
+      ]
+    },
+    "permissions": {
+      "enum": [
+        "UNKNOWN",
+        "DECLARED_NOT_VERIFIED"
+      ]
+    },
+    "schedule": {
+      "type": "null"
+    },
+    "rollback": {
+      "const": "NOT_APPLICABLE_NO_EFFECT"
+    }
+  }
+}

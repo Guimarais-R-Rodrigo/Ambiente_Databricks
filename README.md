@@ -8,6 +8,11 @@
 
 **Manual Técnico:** [APIs, Python, Spark, helpers e operação do Hub](MANUAL_TECNICO.md).
 
+**B1:** [pacote de skills executáveis sem controller](docs/sprints/skill_enforcement_rollout/PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md), com aceite parcial; a homologação integral segue pendente.
+
+**Candidata em reconciliação:** `hub-ml-micromodelos` foi incorporada como
+contrato L1 estático a partir do Free; [estado e evidências](docs/sprints/skill_enforcement_rollout/RECONCILIACAO_MM04_2026-09-29.md).
+
 ---
 
 ## 🧭 Por onde começar
@@ -106,25 +111,25 @@ O bloco abaixo é conferido por `python tools/validate_assistant.py --conferir-r
 
 ```text
 raiz analisada     : /home/runner/work/Ambiente_Databricks/Ambiente_Databricks/ambiente_fonte
-skills             : 14 · 14/14 com as 5 seções estruturais
-skill enforcement  : 5/5 contratos válidos · 0 issue(s) de policy
+skills             : 15 · 15/15 com as 5 seções estruturais
+skill enforcement  : 14/14 contratos válidos · 0 issue(s) de policy
 prompts            : 16 · 161 campos com guia e contrato humano
-helpers citados    : 97 caminhos verificados
-markdown / links   : 224 arquivos / 1411 links relativos
-notebooks / links  : 81 notebooks / 102 links relativos
+helpers citados    : 102 caminhos verificados
+markdown / links   : 235 arquivos / 1452 links relativos
+notebooks / links  : 82 notebooks / 102 links relativos
 readmes de objeto  : 77/77 operacionais; 3/3 exemplares; 0 pendentes (estrutura, não aceite editorial)
 pastas de objeto   : 63 conferidas (nome, arquivos, __init__)
 forma da pasta     : 61 conferidas (o módulo tem o nome da pasta)
 contrato de dados  : 63 pares (saída: o que o notebook consome)
 contrato de entrada: 61 pares (entrada: o que o notebook passa)
-saída colada       : 80 notebooks com bloco real, 0 sem
+saída colada       : 81 notebooks com bloco real, 0 sem
 idioma da docstring: 62 módulos, 0 com docstring em inglês
-normas do molde    : 75 arquivos, 0 violação(ões)
+normas do molde    : 76 arquivos, 0 violação(ões)
 notebook exercita  : 61 objetos, 0 notebook(s) que só importam
-python (AST)       : 236 arquivos
-instrucoes         : 11623/20000 caracteres
-repo (identidade)  : 1811 arquivos varridos no repositório editável/derivado
-repo (links)       : 2206 links fora da raiz analisada
+python (AST)       : 272 arquivos
+instrucoes         : 12418/20000 caracteres
+repo (identidade)  : 2106 arquivos varridos no repositório editável/derivado
+repo (links)       : 2664 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)

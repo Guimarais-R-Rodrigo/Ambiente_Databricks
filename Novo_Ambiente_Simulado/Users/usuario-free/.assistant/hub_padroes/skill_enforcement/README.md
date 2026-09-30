@@ -44,7 +44,9 @@ A API é somente leitura. Não altera contrato, arquivos, runtime ou estado de e
 - `warn`: desvio é acusado e exige revisão;
 - `enforce`: requisito implementado pode bloquear homologação.
 
-A SE07 começa com política explícita 14/14. Migração de uma skill para L1–L4 só ocorre quando os artefatos correspondentes existem e os testes pertinentes passam.
+A SE07 começou com 14/14 skills. A reconciliação posterior de Micromodelos
+amplia o catálogo corrente para 15/15 com L1 estático; o baseline histórico
+permanece registrado na campanha SE07. Migração de uma skill para L1–L4 só ocorre quando os artefatos correspondentes existem e os testes pertinentes passam.
 
 ## Operação permanente a partir da SE08
 

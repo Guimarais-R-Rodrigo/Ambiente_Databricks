@@ -3,6 +3,12 @@
 > Formato canônico para apresentação de cada teste no notebook de saída.
 > Cada teste gera **2 células**: 1 Markdown (explicação) + 1 código (execução),
 > seguidas de 1 Markdown (resultado/interpretação).
+>
+> Preencher somente o que o perfil suporta e a evidência sustenta. Sem execução,
+> manter o resultado pendente; contas didáticas devem ser identificadas como
+> ilustrativas. Campo ausente não recebe valor padrão por conveniência. No
+> piloto KS, IC permanece `UNSUPPORTED_IN_PROFILE`; desenho declarado não é
+> pressuposto comprovado. Campos não aplicáveis exigem motivo, não número fictício.
 
 ---
 
@@ -29,8 +35,8 @@ ou "Requer normalidade verificada em teste anterior". Se nenhuma: "Nenhuma".]
 
 **Configuração**:
 - N da amostra: {{N_SAMPLE}}
-- Seed: 42
-- Nível de significância: α = 0,05
+- Seed: {{SEED_DECLARADA_OU_NAO_APLICAVEL_COM_MOTIVO}}
+- Nível de significância: α = {{ALPHA_DECLARADO_OU_PENDENTE}}
 - [Outros parâmetros relevantes]
 ```
 
@@ -123,7 +129,7 @@ significa para ESTE dataset e ESTE método. Não repetir definição genérica.]
 - Graus de liberdade: df = {{DF}}
 - p-valor: {{P_EXACT}}
 - Tamanho de efeito: {{EFFECT_MEASURE}} = {{EFFECT_VALUE}} ({{EFFECT_CLASS}})
-- IC 95%: [{{IC_LOWER}}, {{IC_UPPER}}]
+- IC: {{NIVEL_E_LIMITES_CALCULADOS_OU_STATUS_COM_MOTIVO}}
 - Conclusão: {{REJEITA_NAO_REJEITA}} H₀ ao nível α = {{ALPHA}}.
 - Power: {{POWER}} (risco tipo II: β ≈ {{BETA}})
 ```
@@ -138,12 +144,12 @@ significa para ESTE dataset e ESTE método. Não repetir definição genérica.]
 3. **Valores numéricos**: 4 casas decimais para estatísticas e p-valores;
    formatar grandes números no padrão BR (1.234.567).
 4. **Próximos passos**: máximo 3, ordenados por viabilidade (mais simples primeiro).
-5. **Modo Inferência**: sempre incluir report formal quando modo = Inferência.
+5. **Modo Inferência**: incluir report formal quando modo = Inferência, respeitando o suporte do perfil. Graus de liberdade, IC, power e severidade sem suporte/evidência ficam não aplicáveis, não suportados ou pendentes, com motivo; não fabricar números ou política para preencher o molde.
 6. **Se teste não se aplica** (pré-condição não atendida): usar card especial:
 
 ```markdown
 ### ⏭️ [Nome do Teste] — SKIPPED
 
 **Motivo**: {{MOTIVO}} (ex.: "Pré-condição não atendida: normalidade rejeitada")
-**Alternativa aplicada**: {{ALTERNATIVA}} (ex.: "Substituído por Mann-Whitney")
+**Alternativa proposta**: {{ALTERNATIVA_OU_PENDENTE}}. Registrar como aplicada somente com evidência de execução na rota pertinente.
 ```

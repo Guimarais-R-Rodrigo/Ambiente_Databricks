@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ser:12:request:1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile",
+    "synthetic",
+    "requested_effect",
+    "model_id",
+    "model_version",
+    "population_id",
+    "score_name",
+    "evaluation_at",
+    "reference_start",
+    "reference_end",
+    "current_start",
+    "current_end",
+    "auc_thresholds",
+    "reference",
+    "current"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "SER12-REQUEST-1"
+    },
+    "profile": {
+      "const": "BINARY_MATURE_PERFORMANCE_V1"
+    },
+    "synthetic": {
+      "const": true
+    },
+    "requested_effect": {
+      "const": "NONE"
+    },
+    "model_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "population_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "score_name": {
+      "const": "score"
+    },
+    "evaluation_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reference_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reference_end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "current_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "current_end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "auc_thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "warning",
+        "critical",
+        "direction",
+        "delta"
+      ],
+      "properties": {
+        "warning": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 1
+        },
+        "critical": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "direction": {
+          "const": "higher"
+        },
+        "delta": {
+          "const": "absolute"
+        }
+      }
+    },
+    "reference": {
+      "$ref": "#/$defs/window"
+    },
+    "current": {
+      "$ref": "#/$defs/window"
+    }
+  },
+  "$defs": {
+    "window": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 1000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "observed_at",
+          "label_available_at",
+          "score",
+          "label"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "observed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "label_available_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "label": {
+            "type": "integer",
+            "enum": [
+              0,
+              1
+            ]
+          }
+        }
+      }
+    }
+  }
+}

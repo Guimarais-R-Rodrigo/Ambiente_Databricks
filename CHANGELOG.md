@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-09-30 — B1: autorização de integração do pacote isolado
+
+- (Codex) Após autorização humana para integrar B1 antes de Micromodelos,
+  os índices foram alinhados ao PR #118. O `validar` do PR passou no HEAD
+  `6b055225`; oito workflows temáticos foram cancelados para poupar saldo.
+  Esta atualização é documental, sem alteração dos bytes do produto nem
+  promoção de policy. O estado de merge deve ser lido no PR #118.
+
+## 2026-09-30 — B1: pacote de skills isolado do controller
+
+- (Codex) Recomposta a candidata B1 a partir de `main` com fonte das skills,
+  derivado renderizado, runners, testes e evidências sintéticas do #117, sem
+  `.codex/`, hooks ou governança do controller. A configuração humana local
+  permaneceu intacta; #115 e #117 seguem em rascunho.
+- (Codex) Ajustados dois testes de fronteira decimal de SER12 para aceitar
+  as duas saídas de arredondamento já admitidas pelo verificador, mantendo a
+  decisão de política vinculada à AUC efetivamente reportada. Produto SER12
+  não foi alterado. Escopo e limites em
+  [PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md](docs/sprints/skill_enforcement_rollout/PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md).
+- (Codex) O índice e o Plano Mestre da SER apontam o estado vigente para a
+  candidata isolada; o controller e o state source do #115 ficam históricos e
+  fora deste pacote.
+
 ## 2026-09-24 — SER B0: LOCAL_QUALIFIED com SHARE V2 e auditoria técnica PASS
 
 ### Qualificado

@@ -4,26 +4,33 @@ A SER sucede operacionalmente o SEF, sem reabrir SE01–SE08. O objetivo é sust
 
 ## Estado integrado e frente corrente
 
-A SER00 foi aceita e integrada pela PR #101. A SER01 promoveu `hub-ml-criar-objeto` de L2 para L3, foi certificada por `SER-PROMOTION-CERT-2` e integrada pela PR #108; a `main` de entrada do B0 é `d2988e97e7b6c5fe1fd561852e947a155c2d731b`.
+SER00 e SER01 estão integradas. O B0 — mecanismo comum da execução paralela —
+foi aceito e integrado pela PR #113 no merge
+`4ba7f551767d847381df1556ed937116258fa77d`.
 
-Em 2026-09-24 foi aceita a mudança operacional para execução paralela governada, formalizada pelo ADR-0023. Isso **não** renumera SER02–SER16, não altera targets e não autoriza promoções em lote. A ordem histórica permanece rastreável; o DAG passa a controlar execução e qualificação de componentes independentes antes da integração serial.
-
-A frente corrente é o **B0 — mecanismo comum da execução paralela**. A candidata implementa contratos fechados, scheduler, launcher read-only, verificador, bundle RAW/SHARE, inventário de cobertura por método, dois pilotos sintéticos, qualificação de host e metatestes. Nenhuma campanha real de SER02–SER14 foi iniciada.
+A frente corrente é a **B1 — skills executáveis**, no
+[pacote isolado do controller](PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md)
+do PR #118.
+Ela reúne Safra, Explainability, Validação Estatística, Cross-EDA, Feature
+Engineering, Baseline, Monitoramento e Pipeline Builder, com regressões
+proporcionais e MM04 estática. O PR #115 e o #117 empilhado permanecem como
+histórico em rascunho. O G6 R7 de #115 segue incompleto; as provas Free e Genie
+da versão atual são avaliadas separadamente e nenhuma das skills recebeu
+homologação integral nesta campanha.
 
 ```text
 SER00 = INTEGRATED
 SER01 = INTEGRATED / CLOSED
-B0 = AUDIT_CORRECTIVE_V3_FULL_CHECKOUT_PENDING
-B0_TEST_METHODS_STATIC = 84
-B0_AUTHORING_PREFLIGHT = NOT_RUN_ON_FINAL_SHA
-B0_FULL_METATESTS_ON_CHECKOUT = NOT_RUN
-B0_COVERAGE_V3_ON_CHECKOUT = NOT_RUN
-B0_POLICY_CHANGE = NONE
-SER02_TO_SER14 = NOT_STARTED_UNDER_PARALLEL_FRAMEWORK
-SER15 = NOT_STARTED
-SER16 = NOT_STARTED
-GITHUB_ACTIONS = DEFERRED_NO_CREDITS
-PROMOCAO_TRABALHO = BLOQUEADA
+B0 = INTEGRATED / PR #113 / 4ba7f551...
+B1_SKILLS = PR #118 / ACEITE_PARCIAL
+B1_G6_R7_HISTORICO = INCOMPLETO
+B1_FREE_ATUAL = PROBES_SINTETICOS_VERIFICADOS
+B1_GENIE_ATUAL = PARCIAL
+SER03_L3 = NOT_PROMOTED
+SER05_L2 = NOT_PROMOTED
+POLICY_PROMOTION = NOT_AUTHORIZED
+CI_PR118_VALIDAR = PASS
+CI_PR118_TEMATICOS = 8 CANCELLED_FOR_COST
 ```
 
 ## Navegação
@@ -33,5 +40,8 @@ PROMOCAO_TRABALHO = BLOQUEADA
 - [B0: mecanismo comum](PARALELO/B0/README.md)
 - [SER00: baseline e decisões](SER00/README.md)
 - [SER01: histórico da primeira promoção](SER01/README.md)
+- [B1: pacote de skills sem controller](PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md)
 
-ChatGPT conduz autoria e revisão repo-side. O executor local executa somente campanhas congeladas e comandos allowlisted; não redesenha solução, testes, critérios ou policy. Diagnóstico, certificação, prova externa, promoção e merge são estados distintos.
+Diagnóstico, certificação, prova externa, promoção e merge permanecem estados
+distintos. O conteúdo desta candidata não altera o controller nem substitui
+os registros históricos de G6.

@@ -150,3 +150,12 @@ MM04 = NOT_STARTED
 ```
 
 A MM03 foi aberta em frente própria após a integração da MM02. Seu núcleo metadata-only e seus limites estão em [MM03](MM03/README.md). A certificação segue o [protocolo de MM02–MM13](PROTOCOLO_CERTIFICACAO_SPRINTS.md). A FULL R1 permanece FAIL histórico; a candidata corrigida `ebbe6ec...` passou micro-smoke, FULL R2 e auditoria independente. O próximo gate é a revalidação final do fechamento documental e, se limpa, aceite humano explícito da PR #110. Os resultados anteriores da MM02 permanecem preservados em seus documentos históricos.
+
+## Reconciliação de candidata MM04 no B1 — 2026-09-29
+
+Por escolha explícita do usuário, os dois arquivos de `hub-ml-micromodelos` e
+suas entradas de policy/roteamento observadas no Free foram importados como
+**candidata L1 estática** no checkout B1. [Proveniência e limites](../skill_enforcement_rollout/RECONCILIACAO_MM04_2026-09-29.md).
+O marco MM04 acima continua `NOT_STARTED` para fins de sprint/certificação:
+a importação não executou seu protocolo, não fornece adapter Databricks e não
+herda o aceite MM03 ou homologação Genie.

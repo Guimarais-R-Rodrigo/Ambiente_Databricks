@@ -1,5 +1,22 @@
 # Plano Mestre — Skill Enforcement Rollout
 
+## Estado do pacote isolado em 2026-09-30
+
+O cabeçalho SER00 e partes sequenciais abaixo preservam o desenho histórico.
+O estado corrente das skills B1 pertence à
+[ficha do pacote sem controller](PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md).
+O state source e os contratos de controller do branch #115 não integram
+esta candidata.
+
+```text
+SER00 = INTEGRATED
+SER01 = INTEGRATED
+B0 = INTEGRATED_CLOSED / PR #113
+B1_SKILLS = PR #118 / ACEITE_PARCIAL
+B1_G6_R7_HISTORICO = INCOMPLETO
+CONTROLLER = FORA_DE_ESCOPO
+```
+
 **Versão candidata SER00 reconciliada em 2026-09-23.** Baseline histórica `11851e137dd7793b351ac08fc211c0be90005dee`; main atual `73d7659dcf11509a7fba392221c4810d10401c35`, após as manutenções A07 #102/#105 e a integração MM01. A01–A03 estão aceitas. Falta apenas certificar a candidata documental final da SER00 no SHA exato. Não constitui autorização de SER01.
 
 ## 1. Objetivo e limites
@@ -39,7 +56,7 @@ A certificação SER será aditiva e terá identidade própria, conforme ADR-002
 
 SER01 criar-objeto; SER02 explainability; SER03 safra; SER04 estatística; SER05/06 cross-EDA; SER07/08 features; SER09/10 baseline; SER11/12 monitoramento; SER13/14 pipeline; SER15 reconciliação; SER16 fechamento. As cinco L4 são divididas em L0→L2 e L2→L4. Não pular contrato/preflight nem fazer um salto L0→L4.
 
-Explicabilidade pode usar fixture pré-treinada, sem ciclo artificial com SER10. As dependências funcionais e PSEF/MM constam na matriz própria. Cada sprint parte da main atual após integração da anterior. O aceite de uma sprint não autoriza automaticamente a seguinte.
+Explicabilidade pode usar fixture pré-treinada, sem ciclo artificial com SER10. As dependências funcionais e PSEF/MM constam na matriz própria. A frase histórica de que cada sprint parte da main após integração da anterior foi substituída pelo DAG do ADR-0023; frentes independentes podem avançar contra base identificada. O aceite de uma sprint continua sem autorizar automaticamente a seguinte.
 
 ## 7. Especificação por sprint
 

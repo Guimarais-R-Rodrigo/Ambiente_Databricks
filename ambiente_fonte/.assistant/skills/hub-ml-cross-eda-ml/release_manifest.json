@@ -1,0 +1,83 @@
+{
+  "artifacts": [
+    {
+      "path": "hub_scripts/skill_execution/__init__.py",
+      "git_blob_sha1": "a615f117e85518e440655e5bc413951c42cedf5f"
+    },
+    {
+      "path": "hub_scripts/skill_execution/domain_context/__init__.py",
+      "git_blob_sha1": "4f2f61fb3221a72d066cf415e49e15b5b6362f66"
+    },
+    {
+      "path": "hub_scripts/skill_execution/domain_context/release.py",
+      "git_blob_sha1": "42b83c751dabd714835096e587bbc7460605b4bc"
+    },
+    {
+      "path": "hub_scripts/skill_execution/postflight/__init__.py",
+      "git_blob_sha1": "ec7028a076418c8ab089b826d5dc3e2a6f582e51"
+    },
+    {
+      "path": "hub_scripts/skill_execution/receipt/__init__.py",
+      "git_blob_sha1": "0845b8109560c05a5a466638f02482b0541ab6b9"
+    },
+    {
+      "path": "hub_scripts/skill_execution/skill_execution.py",
+      "git_blob_sha1": "f3f0d1647da161d051802ed53ce120194640e0e4"
+    },
+    {
+      "path": "hub_snippets/spark/join_diagnostics/__init__.py",
+      "git_blob_sha1": "958dfdf8ca7e4c703c26d39f1d3db485ae8b7cd3"
+    },
+    {
+      "path": "hub_snippets/spark/join_diagnostics/join_diagnostics.py",
+      "git_blob_sha1": "99ffd6410b887e2cf1171e41f446fde040726011"
+    },
+    {
+      "path": "hub_snippets/spark/pit_join/__init__.py",
+      "git_blob_sha1": "0295b0b239eda21a6ca1bbe6f9ae42c1ee982da6"
+    },
+    {
+      "path": "hub_snippets/spark/pit_join/pit_join.py",
+      "git_blob_sha1": "fd6a2361985ad197aa82918beb4befd822bf1334"
+    },
+    {
+      "path": "skills/hub-ml-cross-eda-ml/diagnostic_contract.json",
+      "git_blob_sha1": "8e3379351c34e3c26ee39d70f4c24a6bb09c7884"
+    },
+    {
+      "path": "skills/hub-ml-cross-eda-ml/execution_contract.json",
+      "git_blob_sha1": "1c23fdb8a4896a6a5cc94da3734ec0efaf61ca43"
+    },
+    {
+      "path": "skills/hub-ml-cross-eda-ml/input.schema.json",
+      "git_blob_sha1": "108937477a4331170a0d162ef305a52d1cc37809"
+    },
+    {
+      "path": "skills/hub-ml-cross-eda-ml/pit_contract.json",
+      "git_blob_sha1": "1eea6cd04d4c0d38fa71b926bb83697c48499d58"
+    },
+    {
+      "path": "skills/hub-ml-cross-eda-ml/scripts/preflight.py",
+      "git_blob_sha1": "0717afa2561471ba97a39390f1c3462ecefc9bfc"
+    },
+    {
+      "path": "skills/hub-ml-cross-eda-ml/scripts/run_diagnostic.py",
+      "git_blob_sha1": "687b1cdb37932f820b6c4d29056ba42132752528"
+    },
+    {
+      "path": "skills/hub-ml-cross-eda-ml/scripts/run_pit.py",
+      "git_blob_sha1": "595c3f5912254b63650cdf2109f6d375260f74d6"
+    },
+    {
+      "path": "skills/hub-ml-cross-eda-ml/scripts/verify_diagnostic.py",
+      "git_blob_sha1": "fd42465bd3d0ac764e5e87bdfafd31e70f80e297"
+    },
+    {
+      "path": "skills/hub-ml-cross-eda-ml/scripts/verify_pit.py",
+      "git_blob_sha1": "f6ceb42eb8cb57e37596b5507c997dc7748e5f98"
+    }
+  ],
+  "skill": "hub-ml-cross-eda-ml",
+  "manifest_version": "0.1",
+  "algorithm": "git_blob_sha1"
+}

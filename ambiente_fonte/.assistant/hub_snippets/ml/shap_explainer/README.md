@@ -43,6 +43,8 @@ Não use `max_samples` esperando limitar custo de TreeSHAP ou LinearSHAP: na imp
 
 `compute_shap` cria o explainer, obtém os valores e chama uma rotina interna que aceita listas, matrizes 2D ou tensores 3D. Quando existem múltiplas saídas, `output_index` escolhe uma delas.
 
+No ramo linear, `background=None` preserva o uso de `X` como referência. O keyword `background` permite uma referência externa numérica, finita, 2D e com a mesma largura de `X`; os ramos `tree` e `kernel` rejeitam esse argumento. A escolha muda o valor base e as atribuições, então registre sua origem e unidade.
+
 O wrapper exige um `base_value` finito e constante entre linhas. No KernelSHAP, amostra no máximo `max_samples`, usa as primeiras até 100 linhas dessa amostra como background e explica apenas a amostra selecionada.
 
 `get_feature_importance_shap` calcula mean |SHAP| por feature e divide pelo total de **todas** as features antes de truncar para `top_n`.
@@ -87,6 +89,8 @@ ranking = get_feature_importance_shap(values, names)
 O [notebook](exemplo_shap_explainer.py) instala a versão de SHAP testada naquela fixture e reinicia o Python.
 
 ## 10. Decisões e configurações que mais importam
+
+`background` é opcional e só afeta `model_type="linear"`; com `None`, permanece o comportamento anterior.
 
 `model_type` escolhe o algoritmo. `task` só altera qual método do modelo o KernelSHAP usa (`predict_proba` ou `predict`). `output_index` seleciona saída/classe quando o SHAP retorna múltiplas saídas.
 

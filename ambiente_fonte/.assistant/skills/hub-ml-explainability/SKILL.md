@@ -5,6 +5,17 @@ description: Explica modelos no Databricks para públicos técnico e executivo c
 
 # Explicar modelos com rigor
 
+## Rota executável candidata
+
+O perfil `LINEAR_REGRESSION_SYNTHETIC_V1` aceita somente regressão linear escalar `sklearn.LinearRegression` com dados sintéticos, features numéricas finitas em ordem explícita, IDs únicos, amostra explícita e uma linha de referência. Prepare [input.schema.json](input.schema.json) e use `scripts/preflight.py::preflight(request)`. Com PASS, chame `scripts/run.py::run(request, model=model, X=X, background=background, run_id=...)`; modelo e arrays devem vir da mesma fonte independente do pedido e manter os parâmetros e valores declarados. Defina `model.hub_model_id` com a identidade externa que deve coincidir com `request.model.model_id`.
+
+O runner chama `hub_snippets.ml.shap_explainer.compute_shap` com `model_type="linear"`, `task="regression"` e `background` explícito. Para afirmar valores verificados, chame `scripts/verify.py::verify(payload, expected_request=..., expected_model=..., expected_X=..., expected_background=..., expected_run_id=...)` com entradas confiáveis preservadas fora do payload. Exija `valid=true`. Um Receipt sozinho não prova a correção dos valores. Neste perfil, `valid=true` autoriza apenas afirmar que os valores passaram no escopo do verificador. O retorno mantém `completion_authorized=false` e `promotion_authorized=false` mesmo quando `valid=true`: esses campos não são condições adicionais para a afirmação limitada de valores verificados, nem autorizam homologação ou conclusão da entrega. Ao descrever a rota sem executá-la, não afirme verificação realizada.
+
+O runner copia as matrizes aceitas para `float64`; inteiros sem conversão exata são bloqueados. Se o estimador tiver `feature_names_in_`, a ordem deve coincidir com `feature_names`.
+
+A referência de uma linha fixa a base. O resultado conserva todas as linhas na ordem de `row_ids`; `sample_ids` marca exemplos pedidos para leitura local. SHAP é contribuição em unidades da saída bruta do modelo, não causalidade. O perfil não faz inferência, recomendação automática, persistência, publicação, homologação Genie ou promoção de policy. Se preflight, execução ou verificação bloquear, reporte a causa sem afirmar conclusão.
+
+
 ## Quando esta skill se aplica
 
 - Pedem **interpretabilidade, SHAP, feature importance, motivos de score,

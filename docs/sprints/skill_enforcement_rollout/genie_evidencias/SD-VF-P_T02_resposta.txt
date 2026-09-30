@@ -1,0 +1,147 @@
+Tenho coortes sintéticas mensais: janeiro com dois contratos, MOB0=(0,0), MOB1=(1,0), MOB2 só um observado; fevereiro com dois contratos, MOB0=(0,1), MOB1=(0,1). O alvo é cumulativo. Como calcular a tabela safra×MOB mantendo denominador fixo e distinguindo célula incompleta?
+The user is asking about how to calculate a vintage/cohort analysis table (safra×MOB) with fixed denominator and distinguishing incomplete cells. This is a conceptual/methodological question about credit cohort analysis.
+
+Let me check the skill registry - hub-ml-analise-safra is directly relevant here. Let me load that skill first.
+
+Also, the user's custom instructions mention this is about CRM bancário and ML, and they prefer PySpark, Spark SQL, etc.
+
+Let me load the skill and then provide a thorough answer, possibly creating a notebook with the implementation.
+
+Vou carregar a skill especializada em análise de safra para responder com o método correto.
+
+The user is asking a conceptual/methodological question about how to calculate a safra×MOB table with fixed denominator and distinguishing incomplete cells. This matches the hub-ml-analise-safra skill, which I've now loaded.
+
+The user's data:
+
+January cohort: 2 contracts, MOB0=(0,0), MOB1=(1,0), MOB2 only one observed February cohort: 2 contracts, MOB0=(0,1), MOB1=(0,1) Target is cumulative
+The skill says for conceptual questions, I should explain the rule and identify illustrative accounts as such, without claiming execution or inventing entries.
+
+Key points from the skill:
+
+Fixed denominator: MOB0_UNIQUE_IDS_FIXED_PER_COHORT Coverage grid distinguishes: IMMATURE, NO_OBSERVATIONS, COMPLETE, INCOMPLETE For CUMULATIVE semantic: already contains accumulated stock, should be validated as non-decreasing, don't accumulate again Don't fill incomplete diagonal with zero Preserve denominator and don't finalize rate with incomplete data
+Let me explain the methodology clearly with their specific data.
+
+For January (2 contracts):
+
+MOB0: both observed, values (0,0) → numerator=0, denominator=2, rate=0/2=0% MOB1: both observed, values (1,0) → numerator=1, denominator=2, rate=1/2=50% MOB2: only 1 observed → denominator stays 2, but coverage=INCOMPLETE, rate not finalized
+For February (2 contracts):
+
+MOB0: both observed, values (0,1) → numerator=1, denominator=2, rate=1/2=50% MOB1: both observed, values (0,1) → since cumulative, this means the stock is still 1 per contract... wait.
+Actually, the target is CUMULATIVE. So for February:
+
+MOB0: (0,1) → cumulative values per contract at MOB0 MOB1: (0,1) → cumulative values per contract at MOB1
+Wait, but cumulative should be non-decreasing per contract. If contract A has 0 at MOB0 and 0 at MOB1, that's fine (non-decreasing). If contract B has 1 at MOB0 and 1 at MOB1, that's also fine (non-decreasing). So the cumulative stock for February is: MOB0 rate = 1/2 = 50%, MOB1 rate = 1/2 = 50%.
+
+For January with cumulative:
+
+MOB0: (0,0) → 0/2 = 0% MOB1: (1,0) → 1/2 = 50% MOB2: only 1 observed → INCOMPLETE, can't finalize
+Now about the coverage grid:
+
+January/MOB2: maturity depends on the cutoff date. If the cutoff is such that January cohort has reached MOB2, then it's INCOMPLETE (mature but only 1 of 2 observed). If the cutoff hasn't reached MOB2 for January, it's IMMATURE. February/MOB1: depends on cutoff. If cutoff allows February to reach MOB1, it's COMPLETE (both observed).
+The key methodological points:
+
+Denominator is fixed at MOB0 unique IDs per cohort (2 for January, 2 for February) For CUMULATIVE target, don't re-accumulate; the values already represent the stock. Validate non-decreasing per contract. The rate at each MOB = sum of cumulative values / fixed denominator Distinguish coverage: IMMATURE (hasn't reached that MOB yet), INCOMPLETE (reached but not all observed), COMPLETE (all observed), NO_OBSERVATIONS (reached but none observed) Don't fill incomplete cells with zero
+Let me provide a clear explanation with their data. This is a conceptual question so I should explain without claiming execution. But I could create a notebook with the methodology if helpful.
+
+The user seems to want a conceptual/methodological explanation. Let me provide that clearly, possibly with a small illustrative table. I should also mention that execution is possible via the canonical route if they provide the full contract (IDs, dates, cutoff).
+
+Let me write a clear response in Portuguese as per their instructions.
+
+Seguindo o contrato da skill de análise de safra, aqui está a metodologia aplicada aos seus dados ilustrativos.
+
+Princípios-chave
+1. Denominador fixo por coorte (MOB0_UNIQUE_IDS_FIXED_PER_COHORT): O denominador de cada safra é o número de contratos únicos observados em MOB0. Ele não muda em MOBs posteriores — mesmo quando um contrato deixa de aparecer.
+
+Janeiro: denominador = 2
+Fevereiro: denominador = 2
+2. Target cumulativo (CUMULATIVE): Os valores já representam o estoque acumulado por contrato. Não aplique cumsum novamente. A taxa em cada MOB é simplesmente:
+
+taxa
+safra, MOB
+=
+∑
+valor cumulativo dos contratos observados
+denominador fixo
+taxa 
+safra, MOB
+​
+ = 
+denominador fixo
+∑valor cumulativo dos contratos observados
+​
+ 
+
+Valida-se ainda que o valor cumulativo é não decrescente por contrato ao longo dos MOBs.
+
+3. Distinção de cobertura (coverage_grid): Cada célula recebe um status que determina se a taxa é finalizada ou não:
+
+coverage_status
+Condição
+IMMATURE
+MOB posterior à idade da safra no corte temporal
+COMPLETE
+Célula madura, todos os contratos do roster observados
+INCOMPLETE
+Célula madura, apenas parte dos contratos observada
+NO_OBSERVATIONS
+Célula madura, sem nenhuma observação
+Nunca preencha célula incompleta com zero — zero é um valor de taxa; ausência é ausência.
+
+Aplicação aos seus dados
+Assumindo uma data de corte que permite observar janeiro até MOB2 e fevereiro até MOB1:
+
+Safra Janeiro (denominador = 2)
+MOB
+Valores observados
+Numerador
+Denominador
+Taxa
+Coverage
+0
+(0, 0)
+0
+2
+0%
+COMPLETE
+1
+(1, 0)
+1
+2
+50%
+COMPLETE
+2
+(1, —)
+1
+2
+50% não finalizar
+INCOMPLETE
+Em MOB2, só um contrato aparece. O denominador permanece 2, mas como faltam dados do segundo contrato, a célula é INCOMPLETE — a taxa não deve ser apresentada como definitiva. Sem o valor do contrato ausente, o numerador real poderia ser 1 ou 2.
+
+Safra Fevereiro (denominador = 2)
+MOB
+Valores observados
+Numerador
+Denominador
+Taxa
+Coverage
+0
+(0, 1)
+1
+2
+50%
+COMPLETE
+1
+(0, 1)
+1
+2
+50%
+COMPLETE
+A validação de não decrescimento confirma: contrato A (0→0) e contrato B (1→1) — ambos estáveis ou crescentes. A taxa fica em 50% nos dois MOBs.
+
+Resumo das regras
+Denominador fixo no MOB0 — não recalcula por MOB.
+Cumulativo não se acumula de novo; soma-se os valores observados e divide-se pelo denominador fixo.
+Célula incompleta mantém o denominador, mas a taxa fica pendente, não zero.
+Comparação entre safras só em MOBs com maturidade comparável (ambas COMPLETE).
+A causa da ausência em janeiro/MOB2 (atraso de dado vs. contrato saiu do roster) não pode ser presumida — precisa ser investigada.
+Se quiser que eu execute o cálculo pela rota canônica (build_vintage_table), será necessário informar o contrato completo: IDs dos contratos, datas de originação e observação, data de corte e valores — para que o preflight valide e produza a tabela com Receipt. Posso também montar um notebook ilustrativo com esses dados sintéticos se desejar visualizar o método em código.

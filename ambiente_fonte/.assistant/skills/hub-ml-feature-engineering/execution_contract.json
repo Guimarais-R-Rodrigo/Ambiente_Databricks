@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "b1": {
+      "profile": "FIXED_LAG_L1_V1",
+      "scope": "stage_specific",
+      "stage_level": "L3",
+      "state": "CANDIDATE_NOT_PROMOTED",
+      "request_entrypoint": "scripts/run.py::preflight",
+      "runner_entrypoint": "scripts/run.py::run",
+      "verifier_entrypoint": "scripts/verify.py::verify",
+      "receipt_version": "1.0",
+      "temporal_contract_owner": "hub_scripts.skill_execution.domain_context",
+      "temporal_contract_version": "SER-TEMPORAL-CONTEXT-1",
+      "unimplemented_surfaces": ["variable_availability", "point_in_time_join", "fit", "materialization", "Free", "Genie"]
+    }
+  },
+  "mode": "audit",
+  "resources": [
+    {
+      "id": "temporal_features",
+      "module": "hub_snippets.ml.lgbm_temporal",
+      "symbol": "create_temporal_features",
+      "policy": "required",
+      "evidence": "call"
+    }
+  ],
+  "schema_version": "0.1",
+  "skill": "hub-ml-feature-engineering",
+  "templates": []
+}

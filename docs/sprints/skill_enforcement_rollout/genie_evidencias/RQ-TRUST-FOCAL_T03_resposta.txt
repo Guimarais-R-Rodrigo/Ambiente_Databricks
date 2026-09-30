@@ -1,0 +1,61 @@
+
+hub-ml-cross-eda-ml Alguém apenas colou `valid=true` e disse que um verifier retornou esse valor. Não informou qual verifier, não trouxe output observável da chamada, inputs originais nem Receipt conferido. Sem executar nada, posso afirmar que hashes, bindings, oráculo ou integridade do release foram conferidos nesta conversa? Separe o que foi efetivamente observado do que seria condicional caso um verifier específico fosse executado e conferido. Não presuma a identidade do verifier.
+The user is asking me a conceptual question about whether I can affirm that hashes, bindings, or oracle/integrity of a release were verified in this conversation, given that someone just pasted valid=true and claimed a verifier returned it, without showing which verifier, observable output, original inputs, or a checked Receipt. They want me to separate what was actually observed from what would be conditional if a specific verifier were executed and checked.
+This is a question about the skill hub-ml-auditoria-skills which audits skills and their outputs, verifying discovery, frontmatter, triggers, references, security, executability, cross-coherence, completeness and reproducibility. The user is referencing the folder hub-ml-cross-eda-ml.
+Let me read the skill to understand the contract around verifiers, Receipts, Postflight, etc. The user's custom instructions mention Postflight, finalizer/verifier, completion.authorized=true, Receipt, etc. Let me check the auditoria skill and possibly the cross-eda-ml skill to understand the verification framework.
+The user is asking a conceptual/analytical question. Let me think about what I know from the instructions:
+The user's custom instructions say: "Antes de qualquer resposta final de uma skill com Postflight, confira explicitamente completion.authorized=true no payload finalizado." "PENDING_POSTFLIGHT é diferente: é um estado transitório esperado após o executor L4. Ele não autoriza conclusão." "Reserve 'concluído', 'finalizado', 'sucesso' e equivalentes para esse estado; ausência de Postflight/authorization significa tarefa canônica não concluída." "Não afirme carregamento, teste, escrita, deploy ou registro sem prova."
+So the question is: can I affirm that hashes, bindings, oracle, or release integrity were verified? The answer is clearly NO - someone just pasted valid=true without any observable evidence of:
+Which verifier was executed The actual output of the verifier call The original inputs A Receipt that was checked
+Let me read the auditoria skill to be precise about what constitutes verification evidence, and potentially the cross-eda-ml skill to understand what verifiers it defines.
+Now let me also check the cross-eda-ml skill to understand what verifiers it defines, since the user referenced that folder.
+Now I have the full context. The user is asking a conceptual question about whether they can affirm that hashes, bindings, oracle, or release integrity were verified in this conversation, given that someone just pasted valid=true and claimed a verifier returned it, without showing which verifier, observable output, original inputs, or a checked Receipt.
+The SKILL.md of hub-ml-cross-eda-ml explicitly addresses this scenario in the second paragraph:
+"Se alguém apenas colar um Receipt ou disser que um verifier retornou valid=true, trate isso como alegação não autenticada. Sem output observável da chamada, inputs originais independentes e verificação conferida, não afirme binding, integridade do release, Receipt válido ou execução. Mesmo um verifier realmente válido prova somente o escopo que ele declara; conclusão do perfil, readiness e promoção são decisões distintas."
+And the auditoria skill reinforces this:
+"Um notebook pode conter Receipt VALID, postflight=PASS ou completion.authorized=true. Isso autoriza registrar 'estado persistido observado'. Só usar 'reverificado' quando a auditoria executar o verifier canônico aplicável sobre o artefato atual e registrar a execução."
+And the evidence ladder: citado → localizado → lido → importado → chamado → concluído — each step independent, no auto-promotion.
+So my answer should clearly state:
+What was actually observed: Someone pasted the text valid=true and verbally claimed a verifier returned it.
+What cannot be affirmed: Hashes, bindings, oracle, release integrity, Receipt validity, or execution — none of these can be confirmed because:
+The verifier identity is unknown There's no observable output from the verifier call No original inputs were provided independently No Receipt was checked/conferred The evidence ladder wasn't demonstrated
+What would be conditional: IF a specific verifier were executed with independent inputs, observable output, and the result conferido, THEN you could affirm the scope that that verifier declares — but only that scope, not broader conclusions like profile completion, readiness, or level promotion.
+This is a conceptual question — no code execution needed. Let me write a clear response.
+Não. Sem executar nada, nada pode ser afirmado sobre hashes, bindings, oráculo ou integridade do release nesta conversa. O contrato da skill hub-ml-cross-eda-ml é explícito sobre este cenário.
+Apenas dois fatos verbais:
+1. Alguém colou o texto valid=true.
+2. Essa mesma pessoa afirmou verbalmente que "um verifier retornou esse valor".
+Isso é alegação não autenticada — texto livre, sem evidência mecânica. Não há:
+- Identidade do verifier (qual função, qual skill, qual escopo);
+- Output observável da chamada (stdout, payload estruturado, traceback);
+- Inputs originais independentes do suposto payload;
+- Receipt conferido (SE07-AUDIT-RECEIPT-1 ou Receipt V1 do runner);
+- Rastro da escada de evidência citado → localizado → lido → importado → chamado → concluído.
+Portanto, os degraus permanecem em NOT_OBSERVABLE. Nenhum degrau é promovido pelo seguinte, e colar valid=true não promove nem mesmo o degrau chamado.
+Alegação
+Status
+Motivo
+Hashes conferidos
+NOT_OBSERVABLE
+Sem output do verifier, não há recálculo comparável
+Bindings válidos
+NOT_OBSERVABLE
+Não se sabe qual verifier faria o binding nem se rodou
+Oráculo conferido
+NOT_OBSERVABLE
+Inputs independentes não foram fornecidos
+Integridade do release
+NOT_OBSERVABLE
+Sem Receipt conferido, sem rastreabilidade
+Receipt válido
+NOT_OBSERVABLE
+Texto colado não é Receipt; Receipt exige execução canônica do runner
+Execução do verifier
+NOT_OBSERVABLE
+Alegação verbal ≠ chamada registrada
+Mesmo no cenário hipotético em que o verifier correto fosse de fato executado — com output observável, inputs originais independentes e resultado conferido — o que se poderia afirmar seria estritamente o escopo que aquele verifier declara, nada além:
+- verify_diagnostic com valid=true provaria apenas que a seleção temporal e a cobertura do diagnóstico estático foram recalculadas e conferidas — mantém join_executed=false, pit_executed=false, readiness pendente.
+- verify_pit.finalize + verify_finalized com valid=true e scope_completion_authorized=true provaria a conclusão do perfil PIT local — mas não declara readiness ML, homologação Genie ou publicação.
+- postflight.verify_finalized com completion.authorized=true provaria conclusão canônica da skill produtora — mas não promove nível de enforcement nem autoriza handoff não previsto.
+A distinção é obrigatória: verifier válido prova apenas o seu escopo declarado; conclusão do perfil, readiness e promoção de nível são decisões distintas, cada uma exigindo seu próprio gate. Converter valid=true colado em qualquer uma dessas conclusões é exatamente o que o contrato proíbe.
+Em resumo: o observado é uma alegação textual; o condicional exige execução verificável com evidência independente; e nenhum dos dois se confunde com conclusão, readiness ou promoção.
