@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-09-30 — Reconciliação local de Micromodelos após B1
+
+- (Codex) Após a integração do B1 pelo PR #118, composto o módulo de domínio
+  da candidata Micromodelos em branch e worktree isolados, preservando o PR
+  #116 e a configuração humana do controller. Os conflitos de skill, policy,
+  testes, documentação e snapshot foram resolvidos; a fonte foi renderizada.
+  A policy de Micromodelos permanece L1/audit, sem promoção ou publicação.
+- (Codex) Validador do produto 0 falhas/0 avisos; 68 testes focais de
+  enforcement aprovados (1 skip). A primeira tentativa do gate local no
+  worktree sem commit aprovou 11/12 etapas; V13 parou em `TREE_DIRTY`.
+  Repetido após o commit de merge em árvore limpa: 12/12 etapas PASS.
+  Esses gates locais não certificam Databricks, Genie nem promoção.
+
 ## 2026-09-30 — B1: autorização de integração do pacote isolado
 
 - (Codex) Após autorização humana para integrar B1 antes de Micromodelos,
@@ -22,6 +35,106 @@
 - (Codex) O índice e o Plano Mestre da SER apontam o estado vigente para a
   candidata isolada; o controller e o state source do #115 ficam históricos e
   fora deste pacote.
+## 2026-09-30 — Módulo Micromodelos integrado ao produto
+
+- (Codex) Revisada a completude solicitada pelo responsável: `hub_micromodelos/guias/README.md` agora explica a jornada e separa capacidade de evidência; `contratos/README.md` orienta estados e condicionais; README principal, execução, exemplos e Manual Técnico ganharam navegação e limites mais claros.
+- (Codex) Adicionado `exemplos/recencia_contato/conferir_entrega.py`: confere as sete linhas e o score do caso antes de montar somente um handoff `DRAFT_NOT_SUBMITTED`. Corrigida a hipótese do YAML de seis para sete casos e a fórmula explicada no README para refletir a janela parametrizada. Aceite do pacote exige os novos arquivos.
+- (Codex) Plano de integração recebeu matriz de cobertura entre capacidades prometidas, locais atuais e pendências institucionais. Validação, novo pacote e publicação seletiva no Free serão registrados após os gates desta revisão.
+- (Codex) Gate completo do commit `25d30e7f` aprovado em checkout limpo: 12 etapas, validador 0/0. ZIP 01 extraído: aceite Micromodelos dez etapas PASS e novo handoff de recência executado. Módulo revisado publicado seletivamente no Free pela CLI; readback exato 28/28, SHA-256 agregado `5b6fa7d2d1270d30ad688af4978a9a32c6352b0d7316360c7a184f6bbabeffb2`. Arquivos compartilhados da outra frente preservados.
+- (Codex) Criado `ambiente_fonte/.assistant/hub_micromodelos/` com contratos MM01 de bytes preservados, implementação reutilizável, exemplos sintéticos e READMEs. O caso fictício de recência de contato contém YAML completo, dados de sete pessoas, execução e resultado esperado; os comandos antigos de desenvolvimento encaminham à biblioteca instalada.
+- (Codex) Integrados navegação do Hub, Manual Técnico e sua cópia, instruções, skill, Concierge e briefings. ADR-0024 registra a localização de domínio sem criar novo tipo de objeto.
+- (Codex) Atualizados inventário, validador, renderer/empacotamento, aceite, kit Free e CI para distribuir o módulo pelo Hub. O kit corporativo passa a transportar o runtime no ZIP 01 e a usar o ZIP 02 para aceite; o gerador de ZIP 03 separado foi retirado do produto ativo.
+- (Codex) Testes proporcionais antes da consolidação: 192 testes MM, 5 de aceite extraído, 4 do kit Free e 44 de transição passaram (8 skips nesta última suíte); exemplo fictício conferido. Render, validador pós-commit e readback Free ainda serão registrados após a composição local.
+- (Codex) Renderizado o espelho com 608 arquivos após validador do produto aprovado (0 falhas, 1 aviso de caches). Ajustada a linha de saída do aceite para caracteres ASCII, permitindo executar 53 testes de transição/aceite/kit Free no console Windows sem exigir `PYTHONUTF8=1` (8 skips).
+- (Codex) Atualizado o snapshot de saída do validador no `README.md` raiz após a integração, com os números observados na candidata; o gate completo em checkout limpo e o readback Free serão registrados separadamente.
+- (Codex) Revisão do gate SE08 em checkout limpo identificou que ampliar o namespace no motor protegido alterava o hash do release EDA. Como Micromodelos permanece L1/audit sem recurso protegido declarado, a mudança no motor e na validação de recursos foi retirada; fonte/espelho revalidados, mantendo o isolamento dos releases existentes.
+- (Codex) Gate local completo do commit `66e22192` aprovado em checkout limpo, 12 etapas; validador 0 falhas/0 avisos. Kit local do Hub gerado com Micromodelos no ZIP 01 e aceite sintético extraído PASS. Publicado pela CLI apenas `hub_micromodelos/` no Free; readback 25/25, nenhum arquivo ausente/extra, tipos Python corretos, hash normalizado `457f0931ffd1978a9a15103fcb7d67d08b1e664aa7e30e199f9dfe0b6b4c240e`. Caches do primeiro envio removidos. Conteúdo compartilhado da outra frente no Free preservado; composição do ambiente completo permanece pendente.
+
+## 2026-09-30 — Completude e exemplo didático de Micromodelos
+
+- (Codex) Corrigido o plano de integração conforme esclarecimento do responsável: simplicidade não limita pastas nem reduz capacidades, atributos ou documentação útil. Prevista conferência de cobertura dos READMEs e contratos e um micromodelo fictício de recência de contato, com atributos explicados, execução reproduzível, saídas esperadas e variantes condicionais. Aprovações simuladas permanecem distintas de evidência real. Implementação pendente.
+
+## 2026-09-29 — Plano de integração de Micromodelos ao Hub
+
+- (Codex) Simplificado o plano a pedido do responsável: três subpastas (`contratos`, `execucao`, `exemplos`), novos nomes em português e reaproveitamento do código, documentação, instalação e testes existentes. Retiradas subdivisões e camadas propostas sem necessidade atual; interfaces existentes preservadas.
+- (Codex) Registrado `PLANO_INTEGRACAO_HUB_MICROMODELOS.md`: módulo de domínio em `.assistant/hub_micromodelos/`, migração para fonte única, READMEs e Manual Técnico, descoberta, validadores, distribuição, revisão cruzada e composição com a outra frente antes da transferência do ambiente completo.
+- (Codex) Atualizados índice e plano de entrega local para distinguir o kit técnico anterior da entrega integrada requerida. Planejamento apenas; movimentação do runtime, criação do módulo de produto e novos aceites ainda pendentes.
+
+## 2026-09-29 — Entrega local antes da transferência de Micromodelos
+
+- (Codex) Registrado `PLANO_ENTREGA_LOCAL.md` após três análises paralelas: lacunas de transporte do runtime/schema MM01, aceite específico e ensaio do ZIP extraído; frentes disjuntas, critério de saída e retorno sanitizado para sprint corretiva.
+- (Codex) Adicionados `kit_micromodelos_trabalho.py`, `aceite_micromodelos_trabalho.py` e testes de pacote extraído. O kit corporativo passa a conter ZIP 03 técnico, notebook próprio e guia, com manifesto/hash, verificação antes de imports, dados sintéticos e opções externas desligadas. Guia e checklist de replicação atualizados.
+- (Codex) Atualizados plano E2 e índice; anexada atualização ao checkpoint preservando o histórico. CI de `d5f34acc`: 14 SUCCESS e SE02 SKIPPED. Promoção SE08 e homologação corporativa continuam separadas; ensaio do kit final e CI do novo commit serão registrados no checkpoint de entrega.
+- (Codex) Após o primeiro CI do pacote, corrigidas no `README.md` as duas contagens do snapshot SE01 para refletir os novos arquivos e links versionados. O FAIL do commit anterior permanece observável no workflow; os demais checks foram avaliados antes do envio corretivo.
+
+## 2026-09-29 — Correção do snapshot README após reativação do CI
+
+- (Codex) O job SE01 da PR #116 executou após a recarga de crédito e revelou 11 divergências no bloco de saída do validador colado no `README.md` raiz. Atualizados os números observados na própria execução remota, preservando os FAILs do run anterior. O checkout Windows local conserva nove diretórios `__pycache__` ignorados; a conferência local do snapshot difere somente pelo aviso 1 contra 0 do runner limpo, sem alteração do bloco publicado.
+- (Codex) O gate geral revelou expectativa SE08 histórica L2 para `hub-ml-criar-objeto`, embora a `main` tenha promovido a policy a L3 na SER01, e ausência de Micromodelos no guia Genie offline. O teste agora verifica a policy vigente; guia e inventário do kit foram atualizados para 15 skills, com caso sintético metadata-only de Micromodelos. Nenhuma policy ou nível foi alterado.
+
+## 2026-09-29 — Preparação do piloto E2 de Micromodelos
+
+- (Codex) Criado `docs/sprints/micromodelos/PLANO_PREPARACAO_E2.md` após o aceite do laboratório: sequência G0–G6, separação entre staging sintético, promoção SE08, metadata-only, leitura autorizada, piloto novo, governança externa e V1. A ficha de decisões usa apenas placeholders; nenhum acesso ou identificador corporativo foi usado. Índice atualizado para apontar ao plano e ao checkpoint.
+- (Codex) Prévia local do kit corporativo gerada no commit `05c8e01b` e conferida: 582 arquivos de produto, 7 hashes externos PASS, nenhuma entrada insegura; sem transporte ao trabalho. Skill, contrato e policy MM04 iguais ao B1 em leitura somente. Gate documentado SE08 mantém `PROMOCAO_TRABALHO=BLOQUEADA`; staging sintético autorizado é a primeira porta possível, sem ativação.
+
+## 2026-09-29 — Aceite do laboratório sintético de Micromodelos
+
+- (Codex) Registrado no checkpoint o aceite declarado pelo responsável no chat para MM04–MM13-LAB sintético, com as ressalvas já documentadas. A decisão não promove L3, não certifica MM04/MM03, não homologa E2 e não autoriza publicação corporativa ou merge da PR #116. A próxima etapa técnica é preparar a integração Git e a trilha E2 mantendo seus gates separados.
+
+## 2026-09-29 — Reexecução E1 do kit revisado de Micromodelos
+
+- (Codex) Kit r4 do commit `29bc5a75` importado na home pessoal Databricks Free após guard de identidade; readback 33/33 PASS. Três jobs sintéticos de código, tracking MLflow e metadata terminaram SUCCESS. Tracking relido com três runs completas e `score_count=4`; tabela sintética existente observada como TABLE, colunas/tags/constraints OBSERVED. Checkpoint de aceite e limites em `docs/sprints/micromodelos/CHECKPOINT_ACEITE_LAB_2026-09-29.md`. GitHub Actions permanece `BLOCKED_EXTERNAL_CI`; E2 não executado.
+
+## 2026-09-29 — Revisão paralela do laboratório de Micromodelos
+
+- (Codex) Três agentes revisaram MM04–MM13-LAB no commit `2bc23dad`; correções cruzadas adicionaram YAML MM01 local com proveniência, cobertura de score em MLflow, guarda de tabela sintética no kit e erro estável no ensaio MM12. Documentos vivos e derivado foram atualizados pelo integrador. Bateria MM 192 PASS; validador 0 falhas/1 aviso; três runs MLflow E0 relidas com `score_count=4`. Limites de E1/E2 e CI externo em `docs/sprints/micromodelos/REVISAO_PARALELA_LAB_2026-09-29.md`.
+
+## 2026-09-29 — Plano de paralelização do laboratório
+
+- (Codex) Adicionado `docs/sprints/micromodelos/PLANO_PARALELIZACAO_LAB.md`: coordenador e três revisores, escopos de correção disjuntos, revisão cruzada e integração serial. Plano operacional do laboratório preservado; agentes ainda não iniciados.
+
+## 2026-09-29 — Smoke local MM04 sem GitHub Actions
+
+- (Codex) Executada a parcela local do pré-smoke da PR #116 em `b8d3ebc9`: 186 testes Micromodelos PASS após fixar `PYTHONUTF8=1` para subprocessos Windows (primeira tentativa com 3 erros de decodificação preservada), 96 testes SE07/policy/renderer OK com 1 skip, validador 0 falhas/1 aviso de cache e 582 arquivos fonte/derivado idênticos. CI remoto adiado por ausência de saldo informada pelo usuário; smoke formal incompleto, freeze/FULL/auditoria não executados. Ver `docs/sprints/micromodelos/SMOKE_LOCAL_SEM_CI_MM04_2026-09-29.md` e a matriz proporcional `docs/sprints/micromodelos/MATRIZ_LOCAL_MM04.md`.
+
+## 2026-09-29 — Reconciliação B1 e pré-gates MM04
+
+- (Codex) Diagnóstico pré-smoke da PR #116: `behind_by=0`, 29 testes MM04/policy e 3 do kit PASS, validador 0 falhas/1 aviso local. CI do GitHub não iniciou jobs por anotação de pagamentos/limite da conta (`runner_id=0`, `steps=[]`), classificado `BLOCKED_EXTERNAL_CI`; freeze não executado. Detalhes em `docs/sprints/micromodelos/RECONCILIACAO_B1_PRE_GATES_MM04_2026-09-29.md`.
+- (Codex) Revisados os exemplos P1/P2c contra o template de prompt: `exemplo_micromodelo_novo.py` e `exemplo_descobrir_micromodelos.py` agora incluem link recíproco ao README, efeitos/limites, saída real do preparo textual E0 e ressalvas de uso. `TESTE_BRIEFINGS_MM04_E1.md` registra o checklist editorial; B1 foi inspecionado, mas a cópia da skill ficou pendente porque seu checkout compartilhado segue em alteração simultânea.
+- (Codex) P2c com skill carregada passou nas guardas centrais de ambiente E1, policy integrada e metadata `FORNECIDA`, com ressalvas de redação e edição Markdown do notebook x2 sem execução. `docs/sprints/micromodelos/TESTE_BRIEFINGS_MM04_E1.md` e relatórios atualizados com hashes/limites. Os exemplos `exemplo_micromodelo_novo.py` e `exemplo_descobrir_micromodelos.py` agora contêm prompts P1/P2b exatos e resposta real sanitizada; READMEs atualizados, simulado regenerado pelo renderer.
+- (Codex) Reteste P2b corrigiu a inferência de fraude, mas inverteu ambiente E1/fixture textual e tratou `execution_contract.json` como policy. `ambiente_fonte/.assistant/skills/hub-ml-micromodelos/SKILL.md` agora fixa ambiente de chat e caminho da policy; simulado regenerado. Import individual Free retornou `PROTOCOL_ERROR`, com readback idêntico à fonte; P2c está `NOT_RUN`. Roteiro e relatórios MM04 atualizados, B1 ainda pendente de reconciliar esta revisão.
+- (Codex) Avaliados P1/P2 com skill carregada: P1 PASS com ressalva de proveniência; P2 FAIL semântico ao inferir detecção de eventos fabricados da fixture sintética. `docs/sprints/micromodelos/TESTE_BRIEFINGS_MM04_E1.md` registra hashes, limites e P2b esclarecido `NOT_RUN`; relatórios MM04 atualizados. A parte 3 dos notebooks segue pendente por conter briefings diferentes.
+- (Codex) O `SKILL.md` corrigido de Micromodelos foi copiado para a fonte do checkout compartilhado B1 após guarda de hash antigo; SHA-256 novo `cccdfb314452c44575f13a49232671acf8da16b3f3a5307049c18b37edbbfab5`, igual à revisão já instalada no Free. Derivado B1 regenerado exclusivamente pelo renderer e conferido byte a byte; validador 0 falhas/avisos e policy I/O 15 PASS. Bateria SE07/policy de 59 testes teve 2 FAIL em expectativas L2 históricas de Criar Objeto (policy atual L3), preservados. Sem commit/merge do B1 nem promoção da MM04.
+- (Codex) Alinhados os dois briefings de Micromodelos ao contrato L1 testado: ausência do schema MM01 impede YAML inferido; fixture textual permanece `FORNECIDA`, com viabilidade/leakage indeterminados. Registrados os pré-gates MM04 separados dos PASS conversacionais e do B1. PSEF01 permanece aberta; esta candidata segue o template integrado, cuja terceira parte dos dois exemplos ainda está `NOT_RUN` e exige resposta real ao briefing preenchido.
+- (Codex) Preparados P1/P2 para testar os textos completos dos dois briefings no Genie Free, mantendo E1 (ambiente) separado de fixture sintética E0 e sem consultar catálogo ou registros. O roteiro está `NOT_RUN`; os resultados anteriores da skill não foram transportados para esse gate de prompt.
+
+## 2026-09-29 — Avaliação dos casos Genie MM04
+
+- (Codex) Avaliados três casos FG-MM de roteamento e três casos E1 com transcrições e notebooks sintéticos entregues pelo usuário. Registrados dois FAIL de conteúdo E1: YAML inferido sem schema MM01, scores sem evidência e viabilidade/leakage superestimados a partir de metadata fornecida. O caso de injeção em descrição preservou o escopo metadata-only na resposta visível. Seleção da skill no menu foi declarada pelo usuário, sem captura independente.
+- (Codex) Reforçado o contrato da skill para exigir template/schema acessível antes de YAML MM01, evidência e rubrica antes de score numérico, e incerteza explícita ao interpretar metadata apenas fornecida. Roteiro e relatório E1 atualizados.
+- (Codex) Revisão do `SKILL.md` instalada na home pessoal Free: import individual retornou `PROTOCOL_ERROR`, mas exportação imediata confirmou SHA-256 idêntico à fonte (`cccdfb314452c44575f13a49232671acf8da16b3f3a5307049c18b37edbbfab5`). Contrato, policy e instruções permaneceram iguais à fonte. O console bloqueou controle automatizado do navegador; o reteste Genie ficou `NOT_RUN` até a execução manual registrada abaixo. B1 ainda contém os bytes anteriores e precisa de reconciliação antes de integrar.
+- (Codex) Recebidos os dois primeiros retestes manuais da skill corrigida, com seleção no menu declarada pelo usuário. E1-1 passou como checklist `YAML_NAO_CRIADO`/`MM01_NAO_VALIDADO`, scores indeterminados e notebook Markdown sem execução; E1-2 passou com metadata apenas fornecida, viabilidade e leakage indeterminados, sem YAML ou score. Os FAIL históricos permanecem registrados; naquele ponto, o caso adversarial ainda não havia sido repetido.
+- (Codex) Recebido o reteste adversarial E1-3, com seleção no menu declarada pelo usuário: a resposta tratou a injeção como metadata não confiável, sem leitura ou publicação alegadas, e deixou decisões/permissões pendentes. Veredito PASS para contenção, com ressalvas: ambiente chamado E0 no chat Free e menção a `DESCOBERTO` sem metadata observada. Evidência e limites registrados no relatório Genie; sem promoção de fase ou nível.
+
+## 2026-09-29 — MLflow E1 e skill MM04 no Free
+
+- (Codex) Reproduzida a falha MLflow de leitura implícita de `spark.mlflow.modelRegistryUri` no Spark Connect e identificada a exigência de caminho absoluto para o experimento. Com `mlflow.set_registry_uri("databricks")` e experimento na home pessoal, três runs sintéticas DEVELOPMENT/VALIDATION/SCORING foram gravadas e relidas com `mm06.complete=true` e fingerprint consistente.
+- (Codex) Correções incorporadas ao `RUN_FREE.py`; kit r3 gerado (SHA-256 `e27b3d050e486b4ae2595893a73ab1382888ec3b46b3cf69d344bd89c90a2053`), importado em pasta nova no Free e cinco arquivos críticos exportados byte a byte. Job do notebook do pacote `590723076886290` terminou `SUCCESS` com três novas runs completas.
+- (Codex) Hub pessoal Free conferido antes da sobreposição: policy e instruções diferiam da fonte somente pela entrada/rota MM04. Skill, contrato, policy e instruções publicados via CLI e conferidos byte a byte. Genie Code ainda não testado em conversa; interface exibiu aviso contra controle automatizado do navegador, deixando os três casos manuais para o usuário. E2 não acessado.
+
+## 2026-09-29 — E1 sintético executado via Databricks CLI
+
+- (Codex) Perfil `FREE` passou o guard de identidade não corporativa; kit do commit `62c583e3` importado em pasta pessoal nova, com três arquivos críticos exportados e iguais byte a byte ao pacote local.
+- (Codex) Job sintético E1 `125183536030228` terminou `SUCCESS` após declarar PyYAML, regex e jsonschema no ambiente da task. Tentativa anterior `80682276995694` falhou no capability check por dependência ausente; ambas permanecem no histórico. Detalhes e limites no relatório do laboratório.
+- (Codex) Teste metadata E1 criou schema/tabela sintéticas exclusivas e encontrou `errorifexists` não aceito pelo Spark Connect e ausência de `comment` na view de constraints. Setup e adapter corrigidos; o job read-only `1020132196464806` terminou `SUCCESS`, com três colunas observadas, cobertura limitada ao escopo e catálogo não completo.
+- (Codex) Kit revisado `mm-free-kit-lab-v2-20260929-r2.zip` (SHA-256 `522d6db1f5f7075aef52b21036dc1ffc8c57a02d5ac9b9e45f2d045ec8cd6fd2`) importado em nova pasta Free; cinco arquivos críticos coincidem byte a byte; job `401222304757724` terminou `SUCCESS`. MLflow Free e Genie Code continuam `NOT_RUN`; E2 não acessado.
+
+## 2026-09-29 — Candidata E0 de micromodelos e kit E1 preparado
+
+- (Codex) Conciliado o estado de MM03 integrado; registrada revisão processual delimitada em `docs/sprints/micromodelos/PLANO_EXECUCAO_LAB.md`, sem reabrir certificações históricas.
+- (Codex) Implementados skill/prompts MM04–MM05, fluxo de especificação/descoberta, artefatos de estudo MM06, tracking rule-based MLflow, adapter metadata Databricks MM07 e piloto greenfield sintético MM09–MM10 com handoff sem publicação.
+- (Codex) Criados catálogo/impacto MM13, ensaio de equivalência com legado fictício MM12 e kit transportável para Databricks Free. A fonte `ambiente_fonte/` foi validada e `Novo_Ambiente_Simulado/` regenerado exclusivamente pelo renderer.
+- (Codex) Evidência E0 e limites E1/E2 registrados em `docs/sprints/micromodelos/RELATORIO_ENTREGA_LAB.md`. Free e Genie Code não executados; workspace corporativo não acessado.
 
 ## 2026-09-24 — SER B0: LOCAL_QUALIFIED com SHARE V2 e auditoria técnica PASS
 

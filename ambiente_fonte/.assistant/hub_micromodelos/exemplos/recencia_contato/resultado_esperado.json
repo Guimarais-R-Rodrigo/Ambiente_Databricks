@@ -1,0 +1,72 @@
+{
+  "ambiente": "E0_SINTETICO_LOCAL",
+  "micromodelo": "recencia-contato-sintetica",
+  "assinatura_especificacao": "2514d50d7694127a04044187e2425770d1aae98b6e96ef4b937452f6e7cb8eca",
+  "data_referencia": "2026-09-30",
+  "janela_dias": 7,
+  "resultado": [
+    {
+      "id_entidade": "pessoa_a",
+      "classificacao": "TRUE",
+      "score": 82,
+      "motivo": "CONTATO_RECENTE_CONFIRMADO",
+      "cobertura_completa": true
+    },
+    {
+      "id_entidade": "pessoa_b",
+      "classificacao": "FALSE",
+      "score": 0,
+      "motivo": "AUSENCIA_EXPLICITAMENTE_VERIFICADA",
+      "cobertura_completa": true
+    },
+    {
+      "id_entidade": "pessoa_c",
+      "classificacao": "INDETERMINADO",
+      "score": null,
+      "motivo": "SOMENTE_CONTATO_ANTIGO",
+      "cobertura_completa": true
+    },
+    {
+      "id_entidade": "pessoa_d",
+      "classificacao": "INDETERMINADO",
+      "score": null,
+      "motivo": "COBERTURA_INCOMPLETA",
+      "cobertura_completa": false
+    },
+    {
+      "id_entidade": "pessoa_e",
+      "classificacao": "INDETERMINADO",
+      "score": null,
+      "motivo": "SINAIS_CONFLITANTES",
+      "cobertura_completa": true
+    },
+    {
+      "id_entidade": "pessoa_f",
+      "classificacao": "TRUE",
+      "score": 39,
+      "motivo": "CONTATO_RECENTE_CONFIRMADO",
+      "cobertura_completa": true
+    },
+    {
+      "id_entidade": "pessoa_g",
+      "classificacao": "INDETERMINADO",
+      "score": null,
+      "motivo": "AUSENCIA_NAO_E_FALSE",
+      "cobertura_completa": true
+    }
+  ],
+  "resumo": {
+    "populacao": 7,
+    "contagens": {
+      "TRUE": 2,
+      "FALSE": 1,
+      "INDETERMINADO": 4
+    },
+    "scores_emitidos": 3
+  },
+  "limites": {
+    "validacao_humana": "PENDENTE",
+    "mlflow": "NOT_RUN",
+    "publicacao": "NAO_INICIADA"
+  }
+}

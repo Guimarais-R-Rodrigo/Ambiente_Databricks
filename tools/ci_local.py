@@ -119,6 +119,16 @@ ETAPAS = [
         [sys.executable, "tools/tests/test_transicao_trabalho.py"],
     ),
     (
+        "micromodelos",
+        "contratos e aceite do módulo Micromodelos extraído",
+        [sys.executable, "-B", "-m", "unittest", "discover", "-s", "tools/tests", "-p", "test_micromodelo*.py", "-v"],
+    ),
+    (
+        "micromodelos-pacote",
+        "aceite sintético do produto Micromodelos isolado do checkout",
+        [sys.executable, "-B", "tools/tests/test_aceite_micromodelos_trabalho.py", "-v"],
+    ),
+    (
         "readmes",
         "contrato dos READMEs, dispensas monotônicas e integração com Concierge",
         [sys.executable, "-B", "-m", "unittest", "discover", "-s", "tools/tests", "-p", "test_readme*.py", "-v"],

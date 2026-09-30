@@ -4,7 +4,7 @@
 
 > Um ambiente integrado de instruções, habilidades, bibliotecas e briefings que ajuda a transformar a Genie Code em uma parceira contextualizada para a rotina analítica.
 
-> **LEGENDA DE PROCEDÊNCIA.** Agent Skills e instruções são mecanismos nativos suportados pela Genie Code. Os componentes `hub_prompts`, `hub_snippets`, `hub_scripts`, `hub_padroes` e o conteúdo das skills `hub-ml-*` foram criados neste projeto e possuem ativação própria.
+> **LEGENDA DE PROCEDÊNCIA.** Agent Skills e instruções são mecanismos nativos suportados pela Genie Code. Os componentes `hub_prompts`, `hub_snippets`, `hub_scripts`, `hub_padroes`, `hub_micromodelos` e o conteúdo das skills `hub-ml-*` foram criados neste projeto e possuem ativação própria.
 
 ---
 
@@ -15,6 +15,7 @@
 | Se você quer... | Continue em... |
 |---|---|
 | descobrir qual recurso utilizar | [Concierge Hub](skills/hub-ml-concierge/README.md) |
+| especificar micromodelo ou descobrir oportunidades | [Hub Micromodelos](hub_micromodelos/README.md) e [skill](skills/hub-ml-micromodelos/SKILL.md) |
 | conhecer o propósito do Hub | [Visão Geral](#-o-que-é-este-ecossistema-e-como-ele-ajuda-no-databricks) |
 | escolher entre skill, prompt, snippet e script | [Componentes](#-o-que-tem-neste-ambiente-e-como-ele-ajuda-na-rotina-de-trabalho) |
 | entender o que é automático ou manual | [Arquitetura](#️-arquitetura-completa-do-ecossistema) |
@@ -59,7 +60,7 @@ O Hub reduz improvisação e retrabalho, mas não torna a IA infalível. Permiss
 
 ## 🧰 O que tem neste ambiente e como ele ajuda na rotina de trabalho?
 
-O ecossistema é dividido em cinco componentes, cada um com uma responsabilidade e uma forma de uso:
+O mapa abaixo apresenta as cinco famílias gerais de recursos. O [Hub Micromodelos](hub_micromodelos/README.md) reúne contratos, execução e exemplos de uma área de domínio que utiliza essas famílias.
 
 ![Mapa do ecossistema .assistant separado entre contexto e método, código e diagnóstico, com cinco componentes e suas formas de uso.](hub_readmes_visual_assets/readmes/raiz/png/01_mapa_ecossistema.png)
 
@@ -156,6 +157,14 @@ Quando uma informação for desconhecida, use `NÃO INFORMADO` e peça inspeçã
 
 Consulte o Hub Padrões em `.assistant/hub_padroes/README.md`.
 
+### 🧩 Área de domínio: Hub Micromodelos (`hub_micromodelos/`)
+
+- **O que é:** área de domínio para especificar, validar e demonstrar micromodelos, com [schema](hub_micromodelos/contratos/micromodelo.schema.json), [execução](hub_micromodelos/execucao/README.md) e [exemplos sintéticos](hub_micromodelos/exemplos/README.md).
+- **Como usar:** comece pelo [README da área](hub_micromodelos/README.md), consulte o contrato `micromodelo.yaml` e percorra o [exemplo de recência de contato](hub_micromodelos/exemplos/recencia_contato/README.md). Para orientação no chat, selecione `@hub-ml-micromodelos` em `skills/`.
+- **O que depende de ação explícita:** carregar a skill não importa nem executa a biblioteca; executar um exemplo não publica um modelo. Fontes reais, permissões, validação e aprovação pertencem às etapas e autoridades indicadas no contrato.
+
+A skill opera em `L1/audit` nesta versão; código importável e exemplo sintético não equivalem a promoção para `L3` nem a homologação no ambiente de trabalho.
+
 ### 📘 README local do recurso
 
 Ao chegar a um snippet, script ou prompt concreto, leia primeiro o `README.md` da pasta. Ele orienta escolha, requisitos, efeitos, limites e interpretação; depois use o notebook de exemplo e a implementação ou briefing. O guia não equivale a homologação de runtime ou aprovação de negócio.
@@ -194,7 +203,7 @@ O diagrama mostra as duas rotas complementares do ecossistema: **contexto para a
 
 ![Duas rotas paralelas, uma de contexto para a Genie Code e outra de execução no notebook, conectadas por um checkpoint conforme a política configurada.](hub_readmes_visual_assets/readmes/assistant/png/02_arquitetura_de_uso.png)
 
-*Leitura da figura: contexto orienta a conversa; snippets e scripts entram por importação explícita no notebook.*
+*Leitura da figura: contexto orienta a conversa; código Python do Hub, inclusive Micromodelos, entra por importação explícita no notebook.*
 
 > **Duas rotas, uma entrega:** instruções, skills e briefing orientam a conversa;
 > snippets e scripts entram por importação e chamada no notebook. A revisão de
@@ -211,6 +220,7 @@ O diagrama mostra as duas rotas complementares do ecossistema: **contexto para a
 | Hub Prompt | não | preencher e fornecer |
 | Hub Snippet | não | configurar path, importar e executar |
 | Hub Script | não | configurar path, importar e executar |
+| Hub Micromodelos | não | consultar contratos; importar e executar apenas o recurso adequado |
 | Hub Padrão | não | consultar ou anexar |
 
 Instruções pessoais e de workspace não devem ser tratadas como aplicáveis a Quick Fix e Autocomplete. Recursos de interface e permissões podem variar conforme o workspace.

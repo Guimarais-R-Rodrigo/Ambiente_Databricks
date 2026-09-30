@@ -44,6 +44,7 @@ escolha for difícil de reverter ou afetar mais de um componente.
 | [0021](ADR-0021-execucao-verificavel-de-skills.md) | `execution_contract` estruturado + capability experiment antes de preflight/runner | aceito em 2026-09-16 após gate humano da SE01; probe temporário aposentado do produto |
 | [0022](ADR-0022-certificacao-prospectiva-ser.md) | certificação SER prospectiva, condições aditivas e prova por superfície | aceito em 2026-09-22 na SER00; implementação prospectiva pendente |
 | [0023](ADR-0023-execucao-paralela-governada-ser.md) | execução paralela governada da SER por DAG, autoria central e certificação isolada | aceito em 2026-09-24; B0 candidata implementada, qualificação local pendente |
+| [0024](ADR-0024-modulo-micromodelos-no-hub.md) | Micromodelos como módulo de domínio distribuído no Hub | aceito em 2026-09-30; candidata implementada |
 
 Ao adicionar um ADR, atualize esta tabela e o `CHANGELOG.md`.
 

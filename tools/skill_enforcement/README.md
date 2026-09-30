@@ -181,7 +181,7 @@ python -B tools/skill_enforcement/se07_policy.py
 python -B tools/tests/test_skill_enforcement_se07.py -v
 ```
 
-O registry corrente cobre exatamente 15/15 skills após a reconciliação MM04 e separa `current_level` de `target_level`. O validator impede que uma skill alegue L1–L4 sem os artifacts mínimos correspondentes.
+O registry cobre as 15 skills reais atuais, acompanha novas skills descobertas e separa `current_level` de `target_level`. O validator exige uma entrada por skill e impede que uma skill alegue L1–L4 sem os artefatos mínimos correspondentes. A baseline SE07 histórica tinha 14/14 skills.
 
 ## SE08 — operação permanente
 

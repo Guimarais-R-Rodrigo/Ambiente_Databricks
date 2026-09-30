@@ -1,6 +1,6 @@
 # Framework de Micromodelos — execução por sprints
 
-> Estado: **MM00, MM01 e MM02 integradas. MM03 concluiu FULL R2 e auditoria independente; gate humano da PR #110 pendente.**
+> Estado: **MM00–MM03 integradas; laboratório sintético MM04–MM13-LAB aceito pelo responsável.** PR #110/MM03 foi integrada em 2026-09-23 (`3214a131`). Kit r4 revisado, adapter metadata e três runs MLflow sintéticas executados no Free via CLI; skill instalada. Os três casos Genie E1 da revisão corrigida passaram nos critérios de resposta, com ressalvas; certificação MM04 e E2 pendentes.
 
 ## Objetivo
 
@@ -10,6 +10,16 @@ O repositório usa somente fixtures e placeholders. O catálogo real do trabalho
 
 Documentos vivos desta fase:
 
+- [integração de Micromodelos ao Hub e entrega do ambiente completo](PLANO_INTEGRACAO_HUB_MICROMODELOS.md) — próxima etapa; substitui a distribuição do runtime em kit separado;
+- [execução de laboratório e revisão processual](PLANO_EXECUCAO_LAB.md);
+- [aceite do laboratório sintético](CHECKPOINT_ACEITE_LAB_2026-09-29.md);
+- [entrega local completa antes da transferência](PLANO_ENTREGA_LOCAL.md);
+- [preparação do piloto E2 e portas de avanço](PLANO_PREPARACAO_E2.md);
+- [relatório da candidata E0 e estados E1/E2](RELATORIO_ENTREGA_LAB.md);
+- [resultados Genie E1 e limites](RESULTADOS_GENIE_E1_2026-09-29.md);
+- [reconciliação B1 e pré-gates MM04](RECONCILIACAO_B1_PRE_GATES_MM04_2026-09-29.md);
+- [teste manual dos briefings MM04–MM05 no Genie](TESTE_BRIEFINGS_MM04_E1.md);
+- [kit Databricks Free e roteiro E2 posterior](KIT_FREE.md);
 - [MM03 — metadata-only](MM03/README.md);
 - [MM03 — contrato metadata v1](MM03/CONTRATO_METADATA.md);
 - [MM03 — testes e gates](MM03/TESTES.md);
@@ -36,11 +46,9 @@ Documentos históricos da MM02:
 - MM12: migração conservadora dos legados.
 - MM13: catálogo, impacto e fechamento.
 
-## Regra de avanço
+## Regra de avanço desta candidata de laboratório
 
-`desenvolvimento → smoke barato → candidate freeze → full certification → auditoria independente → contraditório → fechamento documental mínimo → final-tree revalidation → aceite → merge`
-
-Uma auditoria que encontra bloqueios não é reclassificada depois da correção. O resultado fica versionado como evidência histórica e a árvore corrigida volta para auditoria independente.
+O [plano ativo](PLANO_EXECUCAO_LAB.md) usa implementação incremental, testes proporcionais e revisão focal separada. Freeze, FULL, bundle, contraditório e aceite por sprint descritos nos registros anteriores são histórico da execução MM00–MM03; não são gates automáticos desta candidata. Contratos de produto, validações e autoridade externa de publicação permanecem vigentes.
 
 ## Estado da MM00
 
@@ -59,7 +67,7 @@ A exceção D1-B terminou com o fechamento de Q-01 e não se propaga às próxim
 
 ## Estado vigente da MM01
 
-A MM01 foi aceita e integrada. O HEAD da branch no merge foi `fa1a3653e60472d171307663d1175344bb3f6a8d`; o merge da PR #51 é `73d7659dcf11509a7fba392221c4810d10401c35`. O contrato canônico `micromodelo.yaml` está na `main`; a MM02 foi aceita e integrada pela PR #109, e a MM03 foi aberta em frente própria.
+A MM01 foi aceita e integrada. O HEAD da branch no merge foi `fa1a3653e60472d171307663d1175344bb3f6a8d`; o merge da PR #51 é `73d7659dcf11509a7fba392221c4810d10401c35`. O contrato canônico `micromodelo.yaml` está na `main`; a MM02 foi aceita e integrada pela PR #109 e a MM03 pela PR #110.
 
 O fechamento consolidado está no [checkpoint pós-merge](MM01/POST_MERGE_CHECKPOINT.md). A arquitetura prospectiva passa a consumir a [revisão pós-SEF](REVISAO_PLANO_POS_SEF_2026-09-23.md) sem reabrir MM01.
 
@@ -122,7 +130,7 @@ A correção da sétima A1 remove default-ignorables antes da tokenização sem�
 
 A oitava A1 concluiu `NAO_APTA` e está preservada em `10_resultado_a1_reauditoria_7.md`. O contraditório posterior encerrou as auditorias exploratórias abertas: requisitos reais foram separados de hardening e de adversariais fora do threat model, e `MATRIZ_ACEITE_FINAL.md` foi congelada. A candidata agora usa materialidade baseada em `Default_Ignorable_Code_Point`, equivalência editorial conservadora, domínio numérico canônico, invariantes intrínsecos de aprovação/proveniência, resultado observado apenas após execução, níveis distintos de garantia para snapshot/evolução e perfil canônico de autoria do schema. A suíte passa a 47 métodos.
 
-A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprint continua reservado para MM02; descoberta de metadata continua reservada para MM03; tracking definitivo continua reservado para MM06.
+A skill roteável `hub-ml-micromodelos` pertence à MM04; fingerprint pertence à MM02, descoberta de metadata à MM03 e tracking definitivo à MM06. Este parágrafo registra a divisão histórica do contrato MM01.
 
 ## Gate histórico de fechamento da MM01 — já consumido
 
@@ -138,24 +146,4 @@ A skill roteável `hub-ml-micromodelos` continua reservada para MM04; fingerprin
 
 ## Sprint corrente
 
-```text
-MM02 = INTEGRADA_PR_109
-MM03 = POS_CERTIFICACAO
-FULL_R2 = PASS
-INDEPENDENT_AUDIT = APTA
-AUDIT_FINDINGS_OPEN = 0
-FINAL_TREE_REVALIDATION = PENDING
-HUMAN_ACCEPTANCE = PENDING
-MM04 = NOT_STARTED
-```
-
-A MM03 foi aberta em frente própria após a integração da MM02. Seu núcleo metadata-only e seus limites estão em [MM03](MM03/README.md). A certificação segue o [protocolo de MM02–MM13](PROTOCOLO_CERTIFICACAO_SPRINTS.md). A FULL R1 permanece FAIL histórico; a candidata corrigida `ebbe6ec...` passou micro-smoke, FULL R2 e auditoria independente. O próximo gate é a revalidação final do fechamento documental e, se limpa, aceite humano explícito da PR #110. Os resultados anteriores da MM02 permanecem preservados em seus documentos históricos.
-
-## Reconciliação de candidata MM04 no B1 — 2026-09-29
-
-Por escolha explícita do usuário, os dois arquivos de `hub-ml-micromodelos` e
-suas entradas de policy/roteamento observadas no Free foram importados como
-**candidata L1 estática** no checkout B1. [Proveniência e limites](../skill_enforcement_rollout/RECONCILIACAO_MM04_2026-09-29.md).
-O marco MM04 acima continua `NOT_STARTED` para fins de sprint/certificação:
-a importação não executou seu protocolo, não fornece adapter Databricks e não
-herda o aceite MM03 ou homologação Genie.
+O B1 foi integrado no Git pelo PR #118 com `hub-ml-micromodelos` em L1/audit. A candidata de Micromodelos acrescenta o módulo de domínio e permanece em reconciliação local, sem promoção da policy. O laboratório MM04–MM13-LAB foi aceito para seu escopo sintético na branch `micromodelos/autonomia-local-v2`. O [plano E2](PLANO_PREPARACAO_E2.md) registra as próximas portas; nenhuma foi executada no trabalho. O núcleo MM03 e seus limites estão em [MM03](MM03/README.md). FULL R1 e FULL R2 são resultados históricos preservados, sem reclassificação.
