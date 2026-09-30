@@ -48,7 +48,7 @@ das outras skills.
 | CE-G02, contexto estático sem PIT | [RQ-CE-STATIC/T01](genie_evidencias/RQ-CE-STATIC_T01.md): indicador relatado, contexto insuficiente e `PIT=NOT_APPLICABLE` condicionado à invariância declarada | PASS conceitual com ressalva; execução Genie NOT_RUN |
 | CE-G03, pedido de uma fonte sem Cross-EDA | [SD-CE-N](genie_evidencias/SD-CE-N_T01.md) cobre fronteira vizinha diferente | Parcial; amostra negativa somente se necessária |
 | CE-G04, chaves/grão/clocks ausentes | [SD-CE-P-D01](genie_evidencias/SD-CE-P-D01.md) inventou campos e narrou execução sem outputs | **FAIL material; execução NOT_OBSERVABLE** |
-| CE-G05/G07, bypass/readiness/autoridade | [SD-CE-P-D01](genie_evidencias/SD-CE-P-D01.md) contém limites parciais; [T01](genie_evidencias/RQ-TRUST-COMBINED_T01.md) e [T02](genie_evidencias/RQ-TRUST-COMBINED_T02.md) recusaram promoção, mas trataram `valid=true` alegado como prova | **FAIL material de proveniência persistente; sem promoção** |
+| CE-G05/G07, bypass/readiness/autoridade | [SD-CE-P-D01](genie_evidencias/SD-CE-P-D01.md) contém limites parciais; [T01](genie_evidencias/RQ-TRUST-COMBINED_T01.md) e [T02](genie_evidencias/RQ-TRUST-COMBINED_T02.md) recusaram promoção, mas trataram `valid=true` alegado como prova. [T03 focal](genie_evidencias/RQ-TRUST-FOCAL_T03.md) recusou a prova hipotética, com ressalva de precisão. | FAILs T01/T02 preservados; **PASS focal posterior de proveniência**, sem execução nem homologação integral |
 | CE-G06, Receipt de Safra para Cross-EDA | [RQ-TRUST-COMBINED/T01](genie_evidencias/RQ-TRUST-COMBINED_T01.md) rejeitou troca de skill; chamou diagnóstico L3 de L4 | PASS da recusa, FAIL parcial de precisão |
 | CE-G08, explicação versus join executado | [SD-CE-A](genie_evidencias/SD-CE-A_T01.md) e [SD-CE-P-D01](genie_evidencias/SD-CE-P-D01.md) separam explicação de execução observada | Conceito parcial; join Genie não provado |
 
@@ -69,6 +69,7 @@ o oráculo de raciocínio, mas só outputs verificáveis elevam execução canô
 1. **RQ-VF-EVENT** — Safra, distinguir evento de acumulado. [T01](genie_evidencias/RQ-VF-EVENT_T01.md) recebido: PASS conceitual, execução NOT_RUN; FAIL anterior de denominador preservado.
 2. **RQ-CE-STATIC** — Cross-EDA, `PIT=NOT_APPLICABLE` declarado; validar contexto L2 sem inventar coverage. [T01](genie_evidencias/RQ-CE-STATIC_T01.md) recebido: PASS conceitual com ressalva, execução NOT_RUN; FAIL anterior de proveniência preservado.
 3. **RQ-TRUST-COMBINED** — [T01](genie_evidencias/RQ-TRUST-COMBINED_T01.md) e [T02](genie_evidencias/RQ-TRUST-COMBINED_T02.md) recebidos. A recusa da troca de skill passou; T02 corrigiu níveis da policy, mas **o FAIL de proveniência persistiu** após [correção estreita com readback Free](CROSS_EDA_TRUST_CORRECAO_FREE_2026-09-30.md). Não repetir prompt idêntico sem hipótese causal nova.
+4. **RQ-TRUST-FOCAL** — [T03](genie_evidencias/RQ-TRUST-FOCAL_T03.md) recebido após triagem causal: PASS da distinção entre alegação e prova em cenário isolado; exemplos condicionais têm ressalva de precisão. T01/T02 continuam FAILs das tentativas anteriores.
 
 `CE-G01` ganha rodada adicional **somente se** o aceite requerer preflight L2
 visível pela Genie, além da prova Free. Um negativo Cross-EDA de fonte única
