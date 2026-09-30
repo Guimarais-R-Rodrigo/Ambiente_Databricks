@@ -1,0 +1,38 @@
+{
+  "schema_version": "0.1",
+  "skill": "hub-ml-explainability",
+  "mode": "audit",
+  "resources": [
+    {
+      "id": "shap_explainer",
+      "module": "hub_snippets.ml.shap_explainer",
+      "symbol": "compute_shap",
+      "policy": "required",
+      "evidence": "call"
+    }
+  ],
+  "templates": [],
+  "metadata": {
+    "b1": {
+      "scope": "stage_specific",
+      "stage_level": "L3",
+      "state": "CANDIDATE_NOT_PROMOTED",
+      "profile": "LINEAR_REGRESSION_SYNTHETIC_V1",
+      "input_schema": "SER02-EXPLAINABILITY-REQUEST-1",
+      "input_schema_file": "input.schema.json",
+      "request_entrypoint": "scripts/preflight.py::preflight",
+      "runner_entrypoint": "scripts/run.py::run",
+      "verifier_entrypoint": "scripts/verify.py::verify",
+      "receipt_version": "1.0",
+      "unimplemented_surfaces": [
+        "classification",
+        "tree",
+        "kernel",
+        "multi_output",
+        "plots",
+        "Free",
+        "Genie"
+      ]
+    }
+  }
+}

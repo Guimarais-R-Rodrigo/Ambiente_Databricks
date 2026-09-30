@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ser:11:request:1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","profile","synthetic","requested_effect","model_id","model_version","population_id","score_name","reference_start","reference_end","current_start","current_end","n_bins","eps","reference","current"],
+  "properties": {
+    "schema_version": {"const":"SER11-REQUEST-1"},
+    "profile": {"const":"DRIFT_NUMERIC_LOCAL_V1"},
+    "synthetic": {"const":true},
+    "requested_effect": {"const":"NONE"},
+    "model_id": {"type":"string","minLength":1},
+    "model_version": {"type":"string","minLength":1},
+    "population_id": {"type":"string","minLength":1},
+    "score_name": {"const":"score"},
+    "reference_start": {"type":"string","format":"date-time"},
+    "reference_end": {"type":"string","format":"date-time"},
+    "current_start": {"type":"string","format":"date-time"},
+    "current_end": {"type":"string","format":"date-time"},
+    "n_bins": {"const":4},
+    "eps": {"const":0.000001},
+    "reference": {"$ref":"#/$defs/window"},
+    "current": {"$ref":"#/$defs/window"}
+  },
+  "$defs": {"window": {"type":"array","minItems":4,"items":{"type":"object","additionalProperties":false,"required":["id","observed_at","score"],"properties":{"id":{"type":"string","minLength":1},"observed_at":{"type":"string","format":"date-time"},"score":{"type":["number","null"],"minimum":0,"maximum":1}}}}}
+}

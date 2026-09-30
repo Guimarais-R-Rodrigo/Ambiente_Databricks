@@ -1,0 +1,69 @@
+
+Tenho duas amostras independentes contínuas sem empates e quero um teste KS bilateral pré-especificado.
+The user wants a Kolmogorov-Smirnov (KS) test for two independent continuous samples, bilateral, pre-specified. They're working in a Databricks notebook with Python.
+Let me check the skill registry - the hub-ml-validacao-estatistica skill seems relevant here as it covers statistical tests, hypotheses, p-values, etc. Let me load it first.
+Actually, let me also consider scipy is likely available. The KS two-sample test is scipy.stats.ks_2samp. But the user said "pré-especificado" (pre-specified) - this likely means the test was planned before looking at the data, which is important context for the statistical validation skill.
+Let me load the relevant skill first.
+Vou carregar a skill de validação estatística, que cobre testes de hipótese, pressupostos e prescrições.
+The skill describes a canonical route TWO_SAMPLE_KS_PILOT_V1 that uses preflight.py → run.py → verify.py scripts. Let me read the execution contract and input schema to understand what's needed.
+The user wants a KS test for two independent continuous samples, bilateral, pre-specified. This matches the TWO_SAMPLE_KS_PILOT_V1 profile exactly.
+Let me read the execution contract and input schema to understand the required inputs.
+A skill define uma rota canônica para exatamente esse cenário. Vou ler o contrato de execução e o schema de entrada.
+Now I understand the canonical route. Let me also read the scripts to understand how they work - specifically preflight.py, run.py, and verify.py.
+The user wants a KS test for two independent continuous samples, bilateral, pre-specified. But they haven't provided the actual data yet. The profile requires:
+reference: array of numbers (4 to 10000 items) comparison: array of numbers (4 to 10000 items) alpha: significance level Plus metadata fields like population_id, unit, question, etc.
+I need to ask the user for:
+The actual data (two arrays of numbers) Alpha level (default 0.05?) Population, unit, question context
+Wait - the user said they have two independent continuous samples without ties and want a bilateral pre-specified KS test. They haven't given me the data. I should ask for the essential inputs.
+Actually, let me re-read the instructions. "When users are directing a specific operation, attempt to solve the task immediately with reasonable assumptions and sensible defaults." But here, the data is genuinely missing - I can't run a KS test without data. The schema requires reference and comparison arrays.
+Let me also check if synthetic is required as true - yes, the schema says "const": true. This means the profile only accepts synthetic data in the pilot. That's a constraint.
+Wait, let me re-read: "synthetic": {"const": true} - this means the pilot profile only supports synthetic data. That's important. If the user has real data, this profile might not apply directly. But the user said "tenho duas amostras" (I have two samples) - they have actual data.
+Hmm, but the skill says this is a "candidato local verificável" (verifiable local candidate) and the schema requires synthetic: true. If the user has real data, I should be transparent about this limitation.
+Actually, let me look more carefully. The synthetic: true constraint in the schema means the pilot only accepts synthetic requests. If the user has real data, I can't use the canonical runner as-is because the schema rejects non-synthetic data.
+But wait - the skill instructions say: "A execução só pode ser descrita como candidata local verificável quando run.status=PASS..." and "Para Welch/Mann-Whitney, pares, séries, regressão, múltiplas comparações e IC, a skill continua oferecendo planejamento; não reivindique essa rota executável."
+The profile is TWO_SAMPLE_KS_PILOT_V1 - it's specifically for KS. But synthetic: true means it only works with synthetic data in the pilot.
+Let me think about what to do here. The user has real data and wants a KS test. The canonical runner only accepts synthetic data. I should:
+Explain the canonical route exists but the pilot is constrained to synthetic data Ask the user for their data and parameters If they want to proceed with real data, I should explain the limitation and offer to either: a. Use the canonical route with synthetic data (if they want to verify the pipeline works) b. Run the KS test directly using hub_snippets.ml.drift_detection.calculate_ks or scipy.stats.ks_2samp (but this would be outside the canonical route)
+Actually, let me re-read the instructions more carefully. The user's custom instructions say:
+"Quando a skill selecionada declarar um runner/entrypoint canônico para uma etapa protegida, esse entrypoint é obrigatório enquanto a tarefa continuar sendo executada como essa skill."
+And: "Se o usuário pedir explicitamente para pular o entrypoint protegido na mesma tarefa em que ativou a skill, não execute essa etapa manualmente como substituição."
+So I can't bypass the canonical runner. But the runner only accepts synthetic data. This means if the user has real data, I need to explain this constraint.
+Actually, wait. Let me re-think. The synthetic: true constraint might be a pilot limitation. The user has real data. I should:
+Ask the user to provide their data (or tell me where it is) Explain that the canonical pilot profile is constrained to synthetic data The user's custom instructions are clear: I cannot bypass the canonical runner and run the analysis manually as a substitute
+But actually, maybe I should just ask the user for the data first, and also inform them about the synthetic constraint. Let me ask the essential questions.
+Actually, let me re-read the skill more carefully. It says: "O request é fechado e sintético no piloto." This confirms the pilot is synthetic-only.
+The user's instructions also say: "Explique a lacuna e proponha alternativa mínima." and "Peça só decisões materiais ausentes: PENDENTE/DECISAO."
+So I should:
+Ask for the data and essential parameters Explain the synthetic constraint of the pilot Let the user decide how to proceed
+Let me also check if there's a fixture file that shows an example.
+Actually, I think the right approach is to ask the user for the data and alpha level, and explain the pilot's synthetic constraint. If they have real data, they need to decide whether they want to proceed differently.
+But wait - the user said "tenho duas amostras independentes contínuas sem empates" - they're describing the characteristics of their data, which matches the profile's independence declaration. They might be about to provide the data, or they might expect me to ask for it.
+Let me ask for the essential missing information:
+The two arrays of numbers (reference and comparison) Alpha level (or default to 0.05) Context metadata (population, unit, question) - required by schema but maybe I can use reasonable placeholders
+Actually, the schema requires population_id, unit, question as strings with minLength 1. These are study design metadata. I should ask the user for these.
+But the instructions say "attempt to solve the task immediately with reasonable assumptions." However, I literally cannot run a KS test without data. The data is genuinely missing and critical.
+Let me ask the user for:
+The two samples (reference and comparison arrays) Alpha (I can default to 0.05) Brief context for the metadata fields
+I'll use askUserQuestions or just ask in text. Let me use the askUserQuestions tool.
+Wait, actually, I should also note the synthetic: true constraint. If the user has real data, the canonical runner won't accept it. I need to be transparent about this.
+Let me formulate my response. I'll explain the situation and ask for the needed inputs.
+Actually, looking at this again - maybe synthetic: true just means the data is provided directly (as opposed to being read from a table), not that it must be fake/simulated data. Let me re-read the README: "O JSON sintético em fixtures/ks_separated_request.json possui reference=[1,2,3,4] and comparison=[5,6,7,8]". These are synthetic/example values. The "sintético" seems to mean the request is self-contained with inline data rather than referencing external tables.
+Hmm, but the schema says "synthetic": {"const": true} - it's a fixed boolean field in the request. It might mean "the data is provided inline in the request as opposed to being queried from a table." Or it could mean "this is a synthetic/pilot request, not real production data."
+Given the README says "O request é fechado e sintético no piloto" and uses the word "piloto" (pilot), it seems like this is a pilot phase constraint where only synthetic/inline data is supported.
+I think the right approach is to:
+Ask the user for their data (inline arrays) and alpha Ask for the metadata context Be transparent that this is the pilot route
+Let me use askUserQuestions to get the essential inputs. Actually, I think I should just ask in text since the data might be complex (arrays of numbers). Let me just ask clearly.
+Actually, I need to be practical. The user likely wants me to help them set up and run the KS test. Let me ask for the data and parameters. I'll use askUserQuestions for structured choices where possible, but the data itself needs free-form input.
+Let me just ask in text.
+A skill carregada define a rota canônica TWO_SAMPLE_KS_PILOT_V1 para exatamente esse cenário: duas amostras independentes, contínuas, sem empates, hipótese bicaudal pré-registrada. O contrato exige um request JSON fechado com os vetores reference e comparison, alpha, e metadados do desenho (população, unidade, pergunta).
+Para montar o request e executar a rota canônica (preflight → run → verify), preciso de:
+1. Os dados: os dois vetores numéricos (reference e comparison), cada um com no mínimo 4 e no máximo 10.000 valores. Você pode colar inline, indicar uma tabela do catálogo (catalog.schema.table + coluna + filtro de grupo), ou um arquivo.
+2. Alpha: nível de significância pré-especificado (default 0.05 se não informado).
+3. Contexto do desenho (campos obrigatórios do schema):
+   - population_id: identificador da população (ex.: "clientes_ativos_2026Q1")
+   - unit: unidade amostral (ex.: "contrato", "cliente")
+   - question: a pergunta científica/operacional que motivou o teste
+Restrição do piloto: o perfil atual exige synthetic: true e dados inline — o request é autocontido, sem leitura de tabela externa. Se os dados residem em uma tabela, posso coletar uma amostra agregada/limitada e passar inline, mas declararei isso transparentemente no request.
+Como prefere fornecer os dados?
+
+  

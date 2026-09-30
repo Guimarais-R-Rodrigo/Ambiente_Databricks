@@ -1,0 +1,60 @@
+{
+  "schema_version": "0.1",
+  "skill": "hub-ml-monitoramento-modelo",
+  "mode": "audit",
+  "metadata": {
+    "b1": {
+      "state": "CANDIDATE_NOT_PROMOTED",
+      "scope": "stage_specific",
+      "stage_level": "L4_LOCAL_DIAGNOSTIC_PROFILE",
+      "profile": "BINARY_MATURE_PERFORMANCE_V1",
+      "input_schema": "SER12-REQUEST-1",
+      "input_schema_file": "performance_input.schema.json",
+      "receipt_version": "1.0",
+      "request_entrypoint": "scripts/preflight_performance.py::preflight",
+      "runner_entrypoint": "scripts/run_performance.py::run",
+      "verifier_entrypoint": "scripts/verify_performance.py::verify_finalized",
+      "unimplemented_surfaces": [
+        "production_labels",
+        "alerts",
+        "retraining",
+        "promotion",
+        "Genie"
+      ]
+    },
+    "postflight": {
+      "schema_version": "1.0",
+      "policy": "fail_closed",
+      "handoff": {
+        "required": [
+          "scope",
+          "model_id",
+          "model_version",
+          "population_id",
+          "reference_count",
+          "current_count",
+          "evaluation_at",
+          "limitations"
+        ],
+        "allow_empty": []
+      }
+    }
+  },
+  "resources": [
+    {
+      "id": "binary_metrics",
+      "module": "hub_snippets.ml.metrics_report",
+      "symbol": "calculate_binary_metrics",
+      "policy": "required",
+      "evidence": "call"
+    },
+    {
+      "id": "performance_monitor",
+      "module": "hub_snippets.ml.performance_monitor",
+      "symbol": "PerformanceMonitor",
+      "policy": "required",
+      "evidence": "call"
+    }
+  ],
+  "templates": []
+}

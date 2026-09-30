@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-09-30 — B1: pacote de skills isolado do controller
+
+- (Codex) Recomposta a candidata B1 a partir de `main` com fonte das skills,
+  derivado renderizado, runners, testes e evidências sintéticas do #117, sem
+  `.codex/`, hooks ou governança do controller. A configuração humana local
+  permaneceu intacta; #115 e #117 seguem em rascunho.
+- (Codex) Ajustados dois testes de fronteira decimal de SER12 para aceitar
+  as duas saídas de arredondamento já admitidas pelo verificador, mantendo a
+  decisão de política vinculada à AUC efetivamente reportada. Produto SER12
+  não foi alterado. Escopo e limites em
+  [PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md](docs/sprints/skill_enforcement_rollout/PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md).
+
 ## 2026-09-24 — SER B0: LOCAL_QUALIFIED com SHARE V2 e auditoria técnica PASS
 
 ### Qualificado

@@ -41,7 +41,7 @@ class SE07PolicyTests(unittest.TestCase):
         cls.runtime=_load("se07_runtime_policy",ASSISTANT/"hub_scripts"/"skill_execution"/"skill_execution.py")
         cls.raw=json.loads(POLICY.read_text(encoding="utf-8")); cls.by={i["skill"]:i for i in cls.raw["skills"]}
     def test_registry_validates_and_covers_catalog(self):
-        self.assertEqual([],self.tool.validate_policy_registry(POLICY)); self.assertEqual(14,len(self.tool.discover_skills())); self.assertEqual(self.tool.discover_skills(),set(self.by))
+        self.assertEqual([],self.tool.validate_policy_registry(POLICY)); self.assertEqual(15,len(self.tool.discover_skills())); self.assertEqual(self.tool.discover_skills(),set(self.by))
 
     def test_unreadable_policy_returns_structured_fail(self):
         script = ROOT/"tools"/"skill_enforcement"/"se07_policy.py"
@@ -78,8 +78,9 @@ class SE07PolicyTests(unittest.TestCase):
             "hub-ml-eda-profissional": "L4",
             "hub-ml-comentar-notebook": "L1",
             "hub-ml-concierge": "L1",
+            "hub-ml-micromodelos": "L1",
             "hub-ml-auditoria-skills": "L3",
-            "hub-ml-criar-objeto": "L2",
+            "hub-ml-criar-objeto": "L3",
         }
         for skill, policy in self.by.items():
             self.assertEqual(expected_current.get(skill, "L0"), policy["current_level"], skill)
@@ -112,7 +113,7 @@ class SE07PolicyTests(unittest.TestCase):
             self.assertTrue(all(item["policy"] == "optional" for item in contract["templates"]))
             self.assertTrue(all(item["evidence"] == "loaded" for item in contract["templates"]))
     def test_target_classification(self):
-        expected={"hub-ml-analise-safra":"L3","hub-ml-auditoria-skills":"L3","hub-ml-baseline-ml":"L4","hub-ml-comentar-notebook":"L1","hub-ml-concierge":"L1","hub-ml-criar-objeto":"L3","hub-ml-cross-eda-ml":"L4","hub-ml-eda-profissional":"L4","hub-ml-explainability":"L3","hub-ml-feature-engineering":"L4","hub-ml-monitoramento-modelo":"L4","hub-ml-pipeline-builder":"L4","hub-ml-tutor-databricks":"L0","hub-ml-validacao-estatistica":"L3"}
+        expected={"hub-ml-analise-safra":"L3","hub-ml-auditoria-skills":"L3","hub-ml-baseline-ml":"L4","hub-ml-comentar-notebook":"L1","hub-ml-concierge":"L1","hub-ml-criar-objeto":"L3","hub-ml-cross-eda-ml":"L4","hub-ml-eda-profissional":"L4","hub-ml-explainability":"L3","hub-ml-feature-engineering":"L4","hub-ml-micromodelos":"L3","hub-ml-monitoramento-modelo":"L4","hub-ml-pipeline-builder":"L4","hub-ml-tutor-databricks":"L0","hub-ml-validacao-estatistica":"L3"}
         self.assertEqual(expected,{k:v["target_level"] for k,v in self.by.items()})
     def test_audit_debt_and_ladder(self):
         self.assertEqual({"AUDIT_FALSE_REASSURANCE","AUDIT_STATE_LADDER","AUDIT_CONDITIONAL_APPLICABILITY"},set(self.by["hub-ml-auditoria-skills"]["known_debt"]))
@@ -566,7 +567,7 @@ class SE07PolicyTests(unittest.TestCase):
         p=self.by["hub-ml-tutor-databricks"]; self.assertEqual(("L0","L0","guidance"),(p["current_level"],p["target_level"],p["rollout_mode"]))
     def test_runtime_resolver(self):
         p=self.runtime.get_skill_enforcement_policy("hub-ml-auditoria-skills",assistant_root=ASSISTANT); self.assertEqual(("L3","L3"),(p.current_level,p.target_level)); self.assertIn("AUDIT_FALSE_REASSURANCE",p.known_debt)
-        c=self.runtime.get_skill_enforcement_policy("hub-ml-criar-objeto",assistant_root=ASSISTANT); self.assertEqual(("L2","L3"),(c.current_level,c.target_level))
+        c=self.runtime.get_skill_enforcement_policy("hub-ml-criar-objeto",assistant_root=ASSISTANT); self.assertEqual(("L3","L3"),(c.current_level,c.target_level))
     def test_unknown_fails_closed(self):
         with self.assertRaises(self.runtime.EnforcementPolicyError): self.runtime.get_skill_enforcement_policy("hub-ml-nao-existe",assistant_root=ASSISTANT)
 class CreateObjectL2BoundaryTests(unittest.TestCase):

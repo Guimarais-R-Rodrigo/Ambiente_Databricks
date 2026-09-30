@@ -14,6 +14,7 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 from skill_enforcement import se07_policy as policy
+from project_policy import EXPECTED_SKILL_NAMES
 
 
 class PolicyIOTests(unittest.TestCase):
@@ -27,7 +28,7 @@ class PolicyIOTests(unittest.TestCase):
 
     def valid_policy(self):
         entries = []
-        for index in range(14):
+        for index in range(len(EXPECTED_SKILL_NAMES)):
             name = f"hub-ml-synthetic-{index:02d}"
             folder = self.skills / name
             folder.mkdir(exist_ok=True)
@@ -89,8 +90,8 @@ class PolicyIOTests(unittest.TestCase):
         self.assertEqual(policy.validate_policy_registry(self.path, assistant_root=self.root), [])
         result = policy.summarize(self.path, assistant_root=self.root)
         self.assertEqual(result["status"], "PASS")
-        self.assertEqual(result["catalog_skills"], 14)
-        self.assertEqual(result["policy_entries"], 14)
+        self.assertEqual(result["catalog_skills"], len(EXPECTED_SKILL_NAMES))
+        self.assertEqual(result["policy_entries"], len(EXPECTED_SKILL_NAMES))
         self.assertEqual(result["issues"], [])
 
     def test_summary_reads_exactly_once(self):
@@ -100,7 +101,7 @@ class PolicyIOTests(unittest.TestCase):
             result = policy.summarize(self.path, assistant_root=self.root)
         self.assertEqual(read.call_count, 1, "Resumo deve reutilizar o parse validado.")
         self.assertEqual(result["status"], "PASS")
-        self.assertEqual(result["policy_entries"], 14)
+        self.assertEqual(result["policy_entries"], len(EXPECTED_SKILL_NAMES))
 
     def test_validation_reads_exactly_once(self):
         self.valid_policy()
@@ -115,7 +116,7 @@ class PolicyIOTests(unittest.TestCase):
         with patch.object(Path, "read_text", side_effect=[text, '{"skills": []}']):
             result = policy.summarize(self.path, assistant_root=self.root)
         self.assertEqual(result["status"], "PASS")
-        self.assertEqual(result["policy_entries"], 14)
+        self.assertEqual(result["policy_entries"], len(EXPECTED_SKILL_NAMES))
 
     def test_summary_unreadable_does_not_retry_read(self):
         with patch.object(Path, "read_text", side_effect=[PermissionError("synthetic denied"), '{}']) as read:
@@ -130,14 +131,15 @@ class PolicyIOTests(unittest.TestCase):
         self.assertEqual(process.returncode, 0, process.stdout + process.stderr)
         result = json.loads(process.stdout)
         self.assertEqual(result["status"], "PASS")
-        self.assertEqual(result["policy_entries"], 14)
-        self.assertEqual(result["catalog_skills"], 14)
+        self.assertEqual(result["policy_entries"], len(EXPECTED_SKILL_NAMES))
+        self.assertEqual(result["catalog_skills"], len(EXPECTED_SKILL_NAMES))
 
     def cli(self, *arguments):
         # Copia o módulo real para uma raiz sintética mínima, não um clone Git.
         script = self.root / "cli" / "tools" / "skill_enforcement" / "se07_policy.py"
         script.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(Path(policy.__file__), script)
+        shutil.copyfile(ROOT / "tools" / "project_policy.py", script.parents[1] / "project_policy.py")
         (self.root / "cli" / "ambiente_fonte" / ".assistant" / "skills").mkdir(parents=True, exist_ok=True)
         return subprocess.run([sys.executable, "-B", str(script), "--policy", str(self.path), *arguments],
                               capture_output=True, text=True, encoding="utf-8", timeout=30)

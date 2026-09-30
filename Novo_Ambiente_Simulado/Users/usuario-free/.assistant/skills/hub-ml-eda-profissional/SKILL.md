@@ -16,7 +16,9 @@ testes de hipótese com p-valor e effect size (`hub-ml-validacao-estatistica`).
 
 ## Definir escopo
 
-Confirmar a pergunta, unidade de análise, data de corte, tabela, filtros, chave candidata e target. Se algo crítico estiver ausente, continuar com hipóteses explícitas e listar o que precisa ser confirmado.
+Confirmar a pergunta, unidade de análise, data de corte, tabela, filtros, chave candidata e target. Se algo crítico estiver ausente, limitar as hipóteses explícitas ao planejamento e listar o que precisa ser confirmado. Não preencher dados, chaves, datas, contagens ou causas de ausência por suposição.
+
+Em perguntas conceituais, separar cenário ilustrativo de evidência sobre a base real. Uma hipótese não confirma uma entrada do contrato nem autoriza execução alternativa: para analisar a base, manter os gates canônicos abaixo e registrar o que permanecer pendente.
 
 ## Executar a rota canônica e finalizar em fail-closed
 

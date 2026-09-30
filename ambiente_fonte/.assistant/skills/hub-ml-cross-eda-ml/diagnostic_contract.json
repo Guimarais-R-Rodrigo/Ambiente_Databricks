@@ -1,0 +1,33 @@
+{
+  "schema_version": "0.1",
+  "skill": "hub-ml-cross-eda-ml",
+  "mode": "audit",
+  "resources": [
+    {
+      "id": "join_diagnostics",
+      "policy": "required",
+      "evidence": "call",
+      "module": "hub_snippets.spark.join_diagnostics",
+      "symbol": "diagnosticar_join"
+    }
+  ],
+  "templates": [],
+  "metadata": {
+    "b1": {
+      "state": "CANDIDATE_NOT_PROMOTED",
+      "stage_level": "L3_DIAGNOSTIC_ONLY",
+      "profile": "STATIC_SYNTHETIC_DIAGNOSTIC_V1",
+      "pit": "NOT_APPLICABLE",
+      "request_entrypoint": "scripts/preflight.py::preflight",
+      "runner_entrypoint": "scripts/run_diagnostic.py::run",
+      "verifier_entrypoint": "scripts/verify_diagnostic.py::verify",
+      "receipt_version": "1.0",
+      "unimplemented_surfaces": [
+        "point_in_time_join",
+        "Postflight_L4",
+        "Free",
+        "Genie"
+      ]
+    }
+  }
+}

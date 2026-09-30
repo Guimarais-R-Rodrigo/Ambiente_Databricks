@@ -1,0 +1,71 @@
+{
+  "manifest_version": "0.1",
+  "skill": "hub-ml-pipeline-builder",
+  "algorithm": "git_blob_sha1",
+  "artifacts": [
+    {
+      "path": "hub_scripts/data_quality_check/__init__.py",
+      "git_blob_sha1": "87d83fb445f59c1e9bc747cb9524a1adc7fb5765"
+    },
+    {
+      "path": "hub_scripts/data_quality_check/data_quality_check.py",
+      "git_blob_sha1": "5d7f8aff0884823161e6f2da465569027752a689"
+    },
+    {
+      "path": "hub_scripts/skill_execution/__init__.py",
+      "git_blob_sha1": "a615f117e85518e440655e5bc413951c42cedf5f"
+    },
+    {
+      "path": "hub_scripts/skill_execution/domain_context/__init__.py",
+      "git_blob_sha1": "4f2f61fb3221a72d066cf415e49e15b5b6362f66"
+    },
+    {
+      "path": "hub_scripts/skill_execution/domain_context/release.py",
+      "git_blob_sha1": "42b83c751dabd714835096e587bbc7460605b4bc"
+    },
+    {
+      "path": "hub_scripts/skill_execution/receipt/__init__.py",
+      "git_blob_sha1": "0845b8109560c05a5a466638f02482b0541ab6b9"
+    },
+    {
+      "path": "hub_scripts/skill_execution/skill_execution.py",
+      "git_blob_sha1": "f3f0d1647da161d051802ed53ce120194640e0e4"
+    },
+    {
+      "path": "skills/hub-ml-pipeline-builder/delta_execution_contract.json",
+      "git_blob_sha1": "332dc7862d1425c7496c112648019af049625c94"
+    },
+    {
+      "path": "skills/hub-ml-pipeline-builder/execution_contract.json",
+      "git_blob_sha1": "4d15ae9402f6c74ebb4781f129a1344f9ecb8293"
+    },
+    {
+      "path": "skills/hub-ml-pipeline-builder/input.schema.json",
+      "git_blob_sha1": "9dc368ddcbe2204df1dd58feae30f03dcb18c129"
+    },
+    {
+      "path": "skills/hub-ml-pipeline-builder/local_execution_contract.json",
+      "git_blob_sha1": "5a7b3fa91bf688cd7c9a30f34618e937f78af70d"
+    },
+    {
+      "path": "skills/hub-ml-pipeline-builder/scripts/preflight.py",
+      "git_blob_sha1": "9208ee3e1a6dbca4dfaef7be1f3a1c61ef1dd3c4"
+    },
+    {
+      "path": "skills/hub-ml-pipeline-builder/scripts/run_delta.py",
+      "git_blob_sha1": "89b43136dd85b1e048bf750f3571866c547ec6c2"
+    },
+    {
+      "path": "skills/hub-ml-pipeline-builder/scripts/run_local.py",
+      "git_blob_sha1": "3037e295dc67da70f662d826a4a424fcd2581488"
+    },
+    {
+      "path": "skills/hub-ml-pipeline-builder/scripts/verify_local.py",
+      "git_blob_sha1": "3357c0cadef7b7189ccd484db9f95a3cc08e67ff"
+    },
+    {
+      "path": "skills/hub-ml-pipeline-builder/templates/pipeline_spec.md",
+      "git_blob_sha1": "0020a82956993bf22cc26df560733a3f886b4bde"
+    }
+  ]
+}

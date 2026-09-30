@@ -1,0 +1,76 @@
+{
+  "schema_version": "B1-G6-CURRENT-FREE-EVIDENCE-1",
+  "date": "2026-09-30",
+  "source_commit": "034c42dfa28594ba1dbdf1721cd4651c81f33aa8",
+  "scope": "CURRENT_B1_SYNTHETIC_FREE_NOT_FROZEN_G6",
+  "canonical_g6_status": "NOT_PASSED",
+  "versioned_output_encoding": "UTF-8 JSON derived by parsing notebook_output.result and serializing with indentation; local report CRLF was normalized to LF for the versioned copy. Literal result, Jobs envelope, local report and versioned copy SHA-256 are distinct.",
+  "historical_g6_reconciliation": {
+    "local_recovery_package": "PASS",
+    "ser03_frozen_probe": "EXACT_EXISTING",
+    "ser05_frozen_probe": "ABSENT",
+    "remote_write_performed": false
+  },
+  "transport_adapter": {
+    "change": "Replace only the terminal SystemExit(main()) block with run_probe() plus dbutils.notebook.exit(JSON payload).",
+    "case_logic_changed": false,
+    "original_trailer": "if __name__ == \"__main__\":\n    raise SystemExit(main())\n",
+    "adapted_trailer": "if __name__ == \"__main__\":\n    payload = run_probe()\n    dbutils.notebook.exit(json.dumps(payload, ensure_ascii=True, sort_keys=True, allow_nan=False))\n"
+  },
+  "first_job": {
+    "run_id": 842694405929853,
+    "result": "INTERNAL_ERROR",
+    "cause": "SystemExit: 0 classified as a notebook failure; no literal notebook result returned",
+    "automatic_attempts_per_task": 2,
+    "free_result_claim": "NOT_VERIFIED"
+  },
+  "adapted_job": {
+    "run_id": 193650374713787,
+    "result": "SUCCESS",
+    "task_retries_configured": 0,
+    "tasks": [
+      {
+        "skill": "hub-ml-analise-safra",
+        "task_key": "ser03",
+        "task_run_id": 794979757036260,
+        "result": "SUCCESS",
+        "source_sha256": "d3b81593fa0e18a08ce569768e8719e771161c453c2ad1a6bcc0f94f69f02768",
+        "adapter_sha256": "8fc4e81429bd0b5c8baf6dd19bbfc4a1f8116bbaf15851a948aab768ae50941e",
+        "notebook_readback": "MATCH",
+        "output_file": "ser03_free_output.json",
+        "literal_notebook_result_sha256": "6fb96fa67f38d7a8bbb37d739bd05cde24cc6649477d5f2239aba35485b70ce1",
+        "jobs_output_envelope_sha256": "d4093de34a6803c4e07e9725bf8c9256a7a4390dc2082f596a7c4d87827e13c7",
+        "local_reserialized_report_sha256": "d98a8447134d8ff276f55c13412378b248c860b7ef97788b877ddc120cf256c0",
+        "output_sha256": "b8132b9ed11e118383b262f7d9792cb0f596b8eb0795d5258b52bf6166380e1a",
+        "frozen_free_output_verifier": "VALID",
+        "case_count": 5,
+        "case_pass_count": 5
+      },
+      {
+        "skill": "hub-ml-cross-eda-ml",
+        "task_key": "ser05",
+        "task_run_id": 456659736850761,
+        "result": "SUCCESS",
+        "source_sha256": "8356a48578633702c2e74417196a8b49d389bc4f54b8fb3b27ec58f26b16f5b0",
+        "adapter_sha256": "1b116dec34edcaebc45b2d4065c1a10c022191c67ade70f5711b1b1181bcf825",
+        "notebook_readback": "MATCH",
+        "output_file": "ser05_free_output.json",
+        "literal_notebook_result_sha256": "5ac1428278996a708e44d7777bdbf97f438833e6e20017a969ed18e185ec0d9d",
+        "jobs_output_envelope_sha256": "0692347c8edccf4710cc22bb4504feff0f669832ae79c98bc8696c5bfe3caff6",
+        "local_reserialized_report_sha256": "7462ed8eecc314a1a30890946e93414750729c421d0366c9d5f6b20b6f77e58b",
+        "output_sha256": "8c7694fbff9afbc9c386ebdeab6e969e0a28ea2a7e8ecc8f1cd9f74d6d3b071d",
+        "frozen_free_output_verifier": "VALID",
+        "case_count": 5,
+        "case_pass_count": 5
+      }
+    ]
+  },
+  "effects": {
+    "databricks_free_only": true,
+    "corporate_workspace_used": false,
+    "product_package_write": false,
+    "table_write": false,
+    "policy_change": false,
+    "temporary_personal_probe_notebooks_left_for_review": true
+  }
+}

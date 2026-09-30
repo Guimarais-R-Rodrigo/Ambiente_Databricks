@@ -24,7 +24,7 @@ visualização / diagnóstico.]
 
 **Saídas**:
 - [DataFrame `df_Y`]
-- [Tabela escrita: `catalog.schema.table_destino`]
+- [Escrita prevista no código: `catalog.schema.table_destino`; escrita observada: citar evidência ou NÃO INFORMADO]
 - [Efeitos colaterais: log, métricas, modelo]
 
 ## 4. Explicação por camadas
@@ -56,6 +56,8 @@ visualização / diagnóstico.]
 [Analogia com banking, CRM, carteira, campanha, jornada, etc.]
 
 ## 7. Exemplo mínimo
+
+[Identificar dados fictícios e resultados esperados. O exemplo não é saída observada do bloco nem preenche valores desconhecidos do caso real.]
 
 ```python
 # Exemplo autocontido demonstrando a lógica isoladamente
