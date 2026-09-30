@@ -2,6 +2,8 @@
 
 ## 2026-09-30 — Homologação Genie guiada
 
+- (Codex) Registrada RQ-CE-STATIC/T01: indicador separado de Cross-EDA confirmado pelo usuário; contexto L2 estático e limite `PIT=NOT_APPLICABLE` tratados corretamente sem join, coverage ou Receipt. Mantida ressalva de precisão sobre `entity_id` e FAIL anterior de proveniência. As duas lacunas de confiança foram reunidas em um prompt com oráculos separados; resposta integral e SHA-256 versionados. Nenhum produto ou policy alterado.
+
 - (Codex) Registrada RQ-VF-EVENT/T01 na requalificação B1 atual: indicador Safra relatado e semântica EVENT/denominador/ausência corretos na fixture sintética, sem execução canônica. Preservado o FAIL anterior de denominador; a próxima lacuna dirigida é contexto estático Cross-EDA. Resposta integral colada, análise e SHA-256 versionados; nenhum produto ou policy alterado.
 
 - (Codex) Iniciada a requalificação da versão B1 atual por escolha do usuário: o G6 R7 permanece histórico incompleto, e as evidências Free/Genie serão reaproveitadas por risco coberto, sem converter analogias em prompts literais. A matriz e primeira rodada dirigida estão em `docs/sprints/skill_enforcement_rollout/G6_REQUALIFICACAO_B1_ATUAL_2026-09-30.md`. Corrigida a proveniência dos outputs Free SER03/SER05: os JSONs versionados são derivados de resultados Jobs reserializados; hashes do resultado literal, envelope, relatório local e cópia versionada estão separados no registro G6. Snapshot de identidade/links do README atualizado; nenhuma policy ou produto alterado.

@@ -1,0 +1,98 @@
+
+hub-ml-cross-eda-ml l Tenho duas fontes sintéticas estáticas por entity_id. A âncora tem uma linha por entidade e decisão, com IDs a, b, c; a fonte de atributos tem IDs a, b, uma linha por ID. O join planejado é N:1. Declaro que o atributo é invariável durante todo o período, então PIT é NOT_APPLICABLE neste caso. Avalie somente se o contexto L2 está suficientemente especificado e o que ainda falta para validá-lo; não execute join, não meça cobertura, não crie tabela e não declare preflight, Receipt ou ML readiness sem outputs observáveis.
+The user is asking me to evaluate whether the L2 context is sufficiently specified for a cross-EDA task, without executing any join, measuring coverage, creating tables, or declaring preflight/Receipt/ML readiness. This is a conceptual/planning evaluation request related to the hub-ml-cross-eda-ml skill.
+Let me load the skill to understand its contract, particularly the L2 context specification requirements.
+The user wants me to evaluate whether the L2 context is sufficiently specified for the hub-ml-cross-eda-ml skill, without executing any join, measuring coverage, creating tables, or declaring preflight/Receipt/ML readiness.
+Let me understand what the user has provided:
+Two synthetic static sources by entity_id Anchor source: one row per entity and decision, with IDs a, b, c Attribute source: IDs a, b, one row per ID Planned join: N:1 PIT declaration: attribute is invariant during the entire period, so PIT is NOT_APPLICABLE
+The skill defines context fields that need to be confirmed:
+pergunta e target unidade de predição instante de decisão e horizonte do target fonte âncora chaves de entidade e temporais snapshots/filtros de cada EDA restrições de uso e sensibilidade
+And for the preflight L2 context, I need the input.schema.json object with:
+two sources anchor keys granularity (grão) cardinality instante de decisão PIT triestado confirmado
+Let me also check the input.schema.json to understand the exact structure required.
+The user is asking me to evaluate L2 context completeness — this is a conceptual/planning evaluation, not an execution. The skill says "Em perguntas conceituais, rotular cenários hipotéticos sem preencher a fonte real. Não inferir chave, grão, corte ou disponibilidade para obter PASS."
+Let me read the input.schema.json to understand the exact fields needed for the L2 context.
+Let me read the input.schema.json to understand the exact structure required for the L2 context, and also the preflight.py to understand what fields it validates.
+Now I have the full picture. The user wants me to evaluate whether their L2 context declaration is sufficiently specified for the CONTEXT_ONLY_PILOT_V1 profile, WITHOUT executing the preflight, join, coverage measurement, or declaring any outputs.
+Let me check the validate_temporal_context function to understand what's needed for PIT=NOT_APPLICABLE.
+Actually, let me also check the domain_context module to understand validate_temporal_context.
+Let me try again with the correct tool format.
+Following your instructions and the hub-ml-cross-eda-ml contract. Avaliei a declaração contra o schema SER05-CONTEXT-1 (input.schema.json) e a lógica de validate_temporal_context, sem executar preflight, join, cobertura ou emitir Receipt.
+Campo
+Status
+Observação
+synthetic
+✅ Declarado
+true — obrigatório para CONTEXT_ONLY_PILOT_V1
+sources (2)
+✅ Estrutura
+Âncora (a, b, c) + atributos (a, b); duas fontes, conforme exigido
+anchor_grain
+✅ Implícito
+"Uma linha por entidade e decisão" → ONE_ROW_PER_ENTITY_DECISION
+cardinality
+✅ Declarado
+N:1 — dentro do enum permitido
+pit
+✅ Declarado
+NOT_APPLICABLE com justificativa verbal ("atributo invariável durante todo o período")
+entity_keys
+⚠️ Parcial
+entity_id é implícito, mas o nome exato da coluna não foi confirmado como string formal
+Estes são required no input.schema.json e não foram declarados. Sem eles, o objeto de contexto não fecha e o preflight não pode emitir PASS:
+Campo
+Requisito do schema
+Estado
+schema_version
+"SER05-CONTEXT-1" (const)
+PENDENTE
+profile
+"CONTEXT_ONLY_PILOT_V1" (const)
+PENDENTE
+requested_effect
+"NONE" (const)
+PENDENTE
+null_key_policy
+"REJECT" (const)
+PENDENTE
+decision_at
+ISO 8601 UTC-aware (format: date-time)
+PENDENTE — sem instante de decisão, não há como fechar o contexto temporal nem avaliar readiness
+anchor
+String = id de uma das fontes
+PENDENTE — não foi indicado qual source id é a âncora
+temporal
+null (obrigatório quando pit=NOT_APPLICABLE)
+PENDENTE — deve ser explicitamente null, não apenas omitido
+not_applicable_reason
+Texto não-vazio (exigido por validate_temporal_context quando pit=NOT_APPLICABLE)
+PENDENTE formalização — a justificativa verbal existe, mas não foi declarada como campo do contexto
+Cada source no array sources exige obrigatoriamente:
+Campo
+Requisito
+Estado
+id
+String não-vazia, única entre as duas fontes
+PENDENTE para ambas
+snapshot_id
+String não-vazia
+PENDENTE para ambas
+content_sha256
+Hex 64 chars (^[0-9a-f]{64}$)
+PENDENTE para ambas
+grain
+String não-vazia
+PENDENTE para ambas (a âncora deve ter ONE_ROW_PER_ENTITY_DECISION)
+columns
+Array de strings únicas; deve incluir todos os entity_keys
+PENDENTE para ambas
+O SKILL.md lista campos de contexto além do schema estrito. Para fechar a pergunta analítica (não apenas o gate de schema):
+- Pergunta e target: não declarados.
+- Unidade de predição: não declarada.
+- Horizonte do target: não declarado.
+- Snapshots/filtros de cada EDA: não declarados.
+- Restrições de uso e sensibilidade: não declaradas.
+Sem decision_at e sem pergunta/target, o SKILL.md explicita: "Sem instante de decisão, não aprovar prontidão para modelagem."
+A âncora declara IDs {a, b, c} e a fonte de atributos declara {a, b}. Isso é um fato declarado, não uma medição executada. A entidade c não tem atributo correspondente na segunda fonte. O impacto disso (cobertura à esquerda, não-match) só pode ser quantificado após join executado — que você pediu para não fazer. Registre apenas que a estrutura declarada já sugere não-match estrutural para c.
+O contexto L2 não está suficientemente especificado para fechar o objeto de input do preflight. Há 8 campos obrigatórios do schema ausentes, 5 campos por fonte ausentes (×2 fontes = 10) e 2 campos de negócio críticos (decision_at/pergunta e target) não declarados. A declaração de pit=NOT_APPLICABLE é internamente consistente com a justificativa de invariabilidade, mas precisa ser formalizada como not_applicable_reason no objeto e acompanhada de temporal: null explícito.
+PENDENTE/DECISAO: Forneça os valores para os campos acima (especialmente decision_at, anchor, not_applicable_reason, e os metadados por fonte) para que o contexto possa ser fechado e submetido ao preflight.
