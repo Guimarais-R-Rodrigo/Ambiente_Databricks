@@ -2,6 +2,8 @@
 
 ## 2026-09-30 — Homologação Genie guiada
 
+- (Codex) RQ-TRUST-COMBINED/T01 em Cross-EDA recusou Receipt de outra skill e as promoções indevidas, mas tratou `valid=true` hipotético como prova de Receipt/integridade e confundiu `stage_level` com níveis da policy; mantido FAIL parcial material. `SKILL.md` fonte esclarecido sobre output verificável, diagnóstico estático L3 e autoridade de promoção separada; derivado regerado, sem editar policy, runner ou controller. Resposta integral, análise e SHA-256 registrados para reteste após publicação/readback.
+
 - (Codex) Registrada RQ-CE-STATIC/T01: indicador separado de Cross-EDA confirmado pelo usuário; contexto L2 estático e limite `PIT=NOT_APPLICABLE` tratados corretamente sem join, coverage ou Receipt. Mantida ressalva de precisão sobre `entity_id` e FAIL anterior de proveniência. As duas lacunas de confiança foram reunidas em um prompt com oráculos separados; resposta integral e SHA-256 versionados. Nenhum produto ou policy alterado.
 
 - (Codex) Registrada RQ-VF-EVENT/T01 na requalificação B1 atual: indicador Safra relatado e semântica EVENT/denominador/ausência corretos na fixture sintética, sem execução canônica. Preservado o FAIL anterior de denominador; a próxima lacuna dirigida é contexto estático Cross-EDA. Resposta integral colada, análise e SHA-256 versionados; nenhum produto ou policy alterado.

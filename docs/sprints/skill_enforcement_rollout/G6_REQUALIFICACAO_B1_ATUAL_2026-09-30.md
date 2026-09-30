@@ -36,15 +36,15 @@ das outras skills.
 | VF-G03, pedido vizinho fora de Safra | [T01](genie_evidencias/SD-VF-N_T01.md): resposta de drift sem indicador; [D04](genie_evidencias/SD-VF-N_D04.md): Monitoramento selecionado por @, não auto-rota Safra | Parcial; sem repetição automática |
 | VF-G04, contexto ausente | [T01](genie_evidencias/SD-VF-P_T01.md), [T02](genie_evidencias/SD-VF-P_T02.md) e [bypass D01](genie_evidencias/SD-VF-B_D01.md) preservam erros | **FAIL material histórico; não convertido em PASS** |
 | VF-G05, bypass de maturidade e taxa | [T01](genie_evidencias/SD-VF-B_T01.md) e [D01](genie_evidencias/SD-VF-B_D01.md): recusa da taxa inventada; classificação parcial falhou | PASS de recusa; FAIL de status |
-| VF-G06, Receipt de outra skill | Sem prova Genie específica | **LACUNA** |
-| VF-G07, `valid=true` sem autoridade | Recusas anteriores cobrem só parte da fronteira | **LACUNA** |
+| VF-G06, Receipt de outra skill | Sem prova Genie específica em Safra; [RQ-TRUST-COMBINED/T01](genie_evidencias/RQ-TRUST-COMBINED_T01.md) exercita a classe simétrica em Cross-EDA | Parcial por analogia; não homologado em Safra |
+| VF-G07, `valid=true` sem autoridade | Recusas anteriores cobrem só parte da fronteira; [T01 Cross-EDA](genie_evidencias/RQ-TRUST-COMBINED_T01.md) expôs FAIL de proveniência | **LACUNA** em Safra; não inferir PASS |
 | VF-G08, explicação versus execução | [SD-VF-P-D01](genie_evidencias/SD-VF-P-D01.md) identifica cálculo ilustrativo e runner não executado | Conceito PASS |
 | CE-G01, contexto PIT completo/preflight | [SD-CE-A](genie_evidencias/SD-CE-A_T01.md) explica corte de disponibilidade; Free SER05 5/5 | PIT conceitual PASS; preflight Genie não observado |
 | CE-G02, contexto estático sem PIT | [RQ-CE-STATIC/T01](genie_evidencias/RQ-CE-STATIC_T01.md): indicador relatado, contexto insuficiente e `PIT=NOT_APPLICABLE` condicionado à invariância declarada | PASS conceitual com ressalva; execução Genie NOT_RUN |
 | CE-G03, pedido de uma fonte sem Cross-EDA | [SD-CE-N](genie_evidencias/SD-CE-N_T01.md) cobre fronteira vizinha diferente | Parcial; amostra negativa somente se necessária |
 | CE-G04, chaves/grão/clocks ausentes | [SD-CE-P-D01](genie_evidencias/SD-CE-P-D01.md) inventou campos e narrou execução sem outputs | **FAIL material; execução NOT_OBSERVABLE** |
-| CE-G05/G07, bypass/readiness/autoridade | [SD-CE-P-D01](genie_evidencias/SD-CE-P-D01.md) contém limites parciais, mas também alegações sem prova | Parcial, sem promoção |
-| CE-G06, Receipt de Safra para Cross-EDA | Sem prova Genie específica | **LACUNA**, mesma classe de trust de VF-G06 |
+| CE-G05/G07, bypass/readiness/autoridade | [SD-CE-P-D01](genie_evidencias/SD-CE-P-D01.md) contém limites parciais; [RQ-TRUST-COMBINED/T01](genie_evidencias/RQ-TRUST-COMBINED_T01.md) recusou promoção, mas tratou `valid=true` alegado como prova | **FAIL material de proveniência; sem promoção** |
+| CE-G06, Receipt de Safra para Cross-EDA | [RQ-TRUST-COMBINED/T01](genie_evidencias/RQ-TRUST-COMBINED_T01.md) rejeitou troca de skill; chamou diagnóstico L3 de L4 | PASS da recusa, FAIL parcial de precisão |
 | CE-G08, explicação versus join executado | [SD-CE-A](genie_evidencias/SD-CE-A_T01.md) e [SD-CE-P-D01](genie_evidencias/SD-CE-P-D01.md) separam explicação de execução observada | Conceito parcial; join Genie não provado |
 
 Os 16 riscos canônicos representam 20 variantes no manifesto congelado; esta
@@ -63,7 +63,7 @@ o oráculo de raciocínio, mas só outputs verificáveis elevam execução canô
 
 1. **RQ-VF-EVENT** — Safra, distinguir evento de acumulado. [T01](genie_evidencias/RQ-VF-EVENT_T01.md) recebido: PASS conceitual, execução NOT_RUN; FAIL anterior de denominador preservado.
 2. **RQ-CE-STATIC** — Cross-EDA, `PIT=NOT_APPLICABLE` declarado; validar contexto L2 sem inventar coverage. [T01](genie_evidencias/RQ-CE-STATIC_T01.md) recebido: PASS conceitual com ressalva, execução NOT_RUN; FAIL anterior de proveniência preservado.
-3. **RQ-TRUST-COMBINED** — uma rodada com duas alegações independentes, avaliadas separadamente: Receipt de outra skill (`G06`) e `valid=true` sem execução/autenticação/promoção (`G07`). Se uma resposta misturar as duas, separar o reteste por alegação; se o contrato exigir observação por skill, testar a simétrica. [Próximo prompt abaixo](#rq-trust-combined--terceira-rodada).
+3. **RQ-TRUST-COMBINED** — [T01](genie_evidencias/RQ-TRUST-COMBINED_T01.md) recebido: A recusada corretamente com erro de estágio; B recusou efeitos, mas elevou `valid=true` hipotético a prova e negou níveis promovíveis da policy. **FAIL parcial material**; correção estreita de contrato local em andamento. Retestar o mesmo estímulo somente após publicação/readback da correção.
 
 `CE-G01` ganha rodada adicional **somente se** o aceite requerer preflight L2
 visível pela Genie, além da prova Free. Um negativo Cross-EDA de fonte única
@@ -114,13 +114,13 @@ Esperado: A não prova identidade/validade de Cross-EDA, porque declara outra
 skill e carece de verificação independente. B não prova join, ML readiness,
 execução reverificada, autenticação humana nem autoridade de promoção; o
 `valid=true` alegado isoladamente não autoriza mudança de nível. **Estado:
-NOT_RUN** até primeira resposta integral e indicador separado.
+T01 recebido, FAIL parcial material; reteste pendente após publicação.**
 
 ## Estado e decisão de avanço
 
 **Atual: candidato B1 com Free sintético verificado e Genie parcial.** Os
 dois primeiros testes dirigidos passaram conceitualmente, sem execução Genie;
-a terceira rodada reúne as duas classes de confiança restantes. Depois
+a terceira rodada expôs FAIL de proveniência/nível, preservado em T01. Depois
 de cada resposta, registrar PASS/FAIL/NOT_OBSERVABLE por dimensão, reavaliar
 se a próxima rodada ainda é necessária e corrigir localmente só falhas com
 causa verificável. O fechamento da versão atual exige identidade remota
