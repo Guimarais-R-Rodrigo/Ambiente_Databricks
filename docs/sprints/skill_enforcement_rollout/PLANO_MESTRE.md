@@ -1,10 +1,10 @@
 # Plano Mestre — Skill Enforcement Rollout
 
-## Estado da candidata isolada em 2026-09-30
+## Estado do pacote isolado em 2026-09-30
 
 O cabeçalho SER00 e partes sequenciais abaixo preservam o desenho histórico.
 O estado corrente das skills B1 pertence à
-[ficha da candidata sem controller](PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md).
+[ficha do pacote sem controller](PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md).
 O state source e os contratos de controller do branch #115 não integram
 esta candidata.
 
@@ -12,7 +12,7 @@ esta candidata.
 SER00 = INTEGRATED
 SER01 = INTEGRATED
 B0 = INTEGRATED_CLOSED / PR #113
-B1_SKILLS = DRAFT / ACEITE_PARCIAL
+B1_SKILLS = PR #118 / ACEITE_PARCIAL
 B1_G6_R7_HISTORICO = INCOMPLETO
 CONTROLLER = FORA_DE_ESCOPO
 ```

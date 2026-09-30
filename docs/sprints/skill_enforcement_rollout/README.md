@@ -8,8 +8,9 @@ SER00 e SER01 estão integradas. O B0 — mecanismo comum da execução paralela
 foi aceito e integrado pela PR #113 no merge
 `4ba7f551767d847381df1556ed937116258fa77d`.
 
-A frente corrente é a **B1 — skills executáveis**, agora em uma
-[candidata isolada do controller](PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md).
+A frente corrente é a **B1 — skills executáveis**, no
+[pacote isolado do controller](PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md)
+do PR #118.
 Ela reúne Safra, Explainability, Validação Estatística, Cross-EDA, Feature
 Engineering, Baseline, Monitoramento e Pipeline Builder, com regressões
 proporcionais e MM04 estática. O PR #115 e o #117 empilhado permanecem como
@@ -21,15 +22,15 @@ homologação integral nesta campanha.
 SER00 = INTEGRATED
 SER01 = INTEGRATED / CLOSED
 B0 = INTEGRATED / PR #113 / 4ba7f551...
-B1_SKILLS = DRAFT / ACEITE_PARCIAL
+B1_SKILLS = PR #118 / ACEITE_PARCIAL
 B1_G6_R7_HISTORICO = INCOMPLETO
 B1_FREE_ATUAL = PROBES_SINTETICOS_VERIFICADOS
 B1_GENIE_ATUAL = PARCIAL
 SER03_L3 = NOT_PROMOTED
 SER05_L2 = NOT_PROMOTED
-READY = NOT_AUTHORIZED
-MERGE = NOT_AUTHORIZED
-CI_NOVA_CANDIDATA = NOT_RUN
+POLICY_PROMOTION = NOT_AUTHORIZED
+CI_PR118_VALIDAR = PASS
+CI_PR118_TEMATICOS = 8 CANCELLED_FOR_COST
 ```
 
 ## Navegação

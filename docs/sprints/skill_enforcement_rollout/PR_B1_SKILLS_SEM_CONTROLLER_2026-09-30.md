@@ -1,6 +1,6 @@
-# B1 — candidata de skills isolada do controller
+# B1 — pacote de skills isolado do controller
 
-(Codex) Esta candidata parte de `main` em `4ba7f551` e reutiliza os arquivos
+(Codex) Este pacote parte de `main` em `4ba7f551` e reutiliza os arquivos
 de produto do candidato `c7e9f3da` (#117). Inclui as oito skills de execução
 B1, as regressões proporcionais nas demais skills, o contexto MM04 escolhido
 pelo usuário, runners, verificadores, testes e evidências sintéticas. O
@@ -13,7 +13,8 @@ framework congelado de execução G6. O manifesto literal de prompts G6 é
 mantido apenas como referência histórica dos documentos da Genie. A
 configuração humana não commitada em `C:\b1_runtime\b1_p1_4ba7f551_20260924`
 permanece intacta. #115 e #117 também permanecem intactos e em rascunho;
-esta candidata substitui seu uso como pacote de integração B1.
+o [PR #118](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/pull/118)
+substitui seu uso como pacote de integração B1.
 
 ## Evidência e limites
 
@@ -33,15 +34,16 @@ esta candidata substitui seu uso como pacote de integração B1.
 - Testes que exigem `pyspark`, `jdk4py` ou `shap` ficaram `NOT_RUN` neste
   ambiente. As provas anteriores de Delta/FE/SER03/SER05 pertencem às versões
   documentadas nas fichas B1; não são substituídas por este empacotamento.
-- O job principal `validar` do HEAD combinado #117 passou no GitHub após a
-  recarga da conta; isso não constitui CI desta nova seleção de arquivos.
-  Outros jobs antigos ficaram com falha pré-execução por cobrança. Nenhum
-  workflow novo foi disparado durante a separação.
+- O job principal [`validar` do PR #118](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/actions/runs/36786781333)
+  passou no HEAD `6b055225`. SE01, MM01 e três regressões de base também
+  passaram. Oito workflows temáticos foram cancelados após iniciar para
+  poupar saldo; SE02 ficou `SKIPPED` pela configuração. O HEAD documental
+  posterior não modifica bytes do produto e é conferido localmente.
 - A publicação Free e os testes Genie já registrados conservam seus limites:
   readback de conteúdo não prova execução da Genie; nenhuma das 14 skills foi
   homologada integralmente nesta campanha. O G6 R7 congelado segue
-  incompleto e não é promovido por esta candidata.
+  incompleto e não é promovido por este pacote.
 
-Esta é uma candidata **Draft/aceite parcial**. Policy, Ready, merge,
-Databricks corporativo e reconciliação do PR #116 de Micromodelos seguem
-gates separados. A ordem escolhida é B1 antes de Micromodelos.
+O escopo tem **aceite parcial**; o estado de integração é o do PR #118.
+Policy e Databricks corporativo seguem gates separados. A reconciliação do
+PR #116 de Micromodelos vem depois do B1, conforme a ordem escolhida.

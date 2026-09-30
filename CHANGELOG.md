@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-30 — B1: autorização de integração do pacote isolado
+
+- (Codex) Após autorização humana para integrar B1 antes de Micromodelos,
+  os índices foram alinhados ao PR #118. O `validar` do PR passou no HEAD
+  `6b055225`; oito workflows temáticos foram cancelados para poupar saldo.
+  Esta atualização é documental, sem alteração dos bytes do produto nem
+  promoção de policy. O estado de merge deve ser lido no PR #118.
+
 ## 2026-09-30 — B1: pacote de skills isolado do controller
 
 - (Codex) Recomposta a candidata B1 a partir de `main` com fonte das skills,

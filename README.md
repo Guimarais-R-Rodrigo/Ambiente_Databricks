@@ -8,7 +8,7 @@
 
 **Manual Técnico:** [APIs, Python, Spark, helpers e operação do Hub](MANUAL_TECNICO.md).
 
-**B1 em revisão:** [candidata de skills isolada do controller](docs/sprints/skill_enforcement_rollout/PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md), com aceite parcial e sem merge.
+**B1:** [pacote de skills executáveis sem controller](docs/sprints/skill_enforcement_rollout/PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md), com aceite parcial; a homologação integral segue pendente.
 
 **Candidata em reconciliação:** `hub-ml-micromodelos` foi incorporada como
 contrato L1 estático a partir do Free; [estado e evidências](docs/sprints/skill_enforcement_rollout/RECONCILIACAO_MM04_2026-09-29.md).
