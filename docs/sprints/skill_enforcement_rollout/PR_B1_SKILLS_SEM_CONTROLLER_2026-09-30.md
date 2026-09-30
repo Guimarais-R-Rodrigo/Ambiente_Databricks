@@ -17,10 +17,14 @@ esta candidata substitui seu uso como pacote de integração B1.
 
 ## Evidência e limites
 
-- `validate_assistant.py` passou com zero falhas/avisos antes dos testes locais;
-  os testes geraram caches `__pycache__` ignorados pelo Git, que provocam
-  aviso transitório no mesmo worktree. O conteúdo de produto não mudou em
-  relação ao snapshot `c7e9f3da`.
+- `validate_assistant.py --conferir-readme` passou com zero falhas/avisos em
+  checkout limpo do commit `2beeb8b5`. No mesmo checkout, após instalar 25
+  pacotes Node do cache **offline**, `tools/ci_local.py` passou nas 10 etapas:
+  temas, validação, SEF, biblioteca, ferramentas, transição, READMEs e três
+  gates de Concierge. O gate local não cobre Databricks, Spark ou Genie.
+  Caches `__pycache__` do worktree de autoria são ignorados pelo Git e geram
+  apenas um aviso transitório ali. O conteúdo de produto não mudou em relação
+  ao snapshot `c7e9f3da`.
 - `unittest` local sem Spark/SHAP: 109 testes, OK, um skip. Dois oráculos de
   SER12 foram ajustados para aceitar as duas casas decimais possíveis no
   exato limite de meia unidade; o verificador independente já aceitava ambas
