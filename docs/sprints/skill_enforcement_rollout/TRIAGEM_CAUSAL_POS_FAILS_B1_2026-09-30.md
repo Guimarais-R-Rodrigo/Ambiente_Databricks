@@ -3,8 +3,9 @@
 (Codex) 2026-09-30. Continuação da [revisão dos FAILs](REVISAO_FAILS_REMANESCENTES_B1_2026-09-30.md)
 no PR #117 em rascunho. Foram lidos os pedidos, respostas, fichas e contratos
 atuais de Cross-EDA, Pipeline Builder e Feature Engineering. A triagem local
-não executou Genie; o reteste T03 foi coletado depois pelo usuário. Não houve
-publicação no Free, mudança de policy ou de objetos de micromodelos.
+não executou Genie; o reteste T03 foi coletado depois pelo usuário. A
+[publicação Free delimitada](DELTA_ACK_FREE_PUBLICACAO_2026-09-30.md) ocorreu
+posteriormente. Não houve mudança de policy ou de objetos de micromodelos.
 
 ## Cross-EDA: proveniência do `valid=true`
 
@@ -81,5 +82,7 @@ payload observável numa hipótese focal.
 efeito. `test_ser08_feature_materialization.py`: 7 testes PASS pelo runner
 compartilhado. `validate_assistant.py --conferir-readme`: 0 falhas/avisos;
 derivado regerado pelo renderer. Estes são testes locais com FakeSpark no
-efeito Delta e Spark local para cálculo/projeção; não são readback Free nem
-homologação conversacional Genie. O PR permanece candidato parcial.
+efeito Delta e Spark local para cálculo/projeção. O readback Free posterior
+comprova apenas conteúdo dos três arquivos publicados, não o efeito do runner.
+Nenhuma dessas evidências é homologação conversacional Genie. O PR permanece
+candidato parcial.
