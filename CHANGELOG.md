@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-01 — Auditoria causal das lacunas B1 remanescentes
+
+- (Codex) Conferidos Cross-EDA, Feature Engineering, Baseline ML e
+  Monitoramento contra os contratos atuais e as fichas Genie. O adendo à
+  revisão de FAILs separa respostas históricas incorretas dos retestes
+  focais posteriores. Não foi demonstrada lacuna nova que justificasse
+  alterar skill ou repetir prompt agora; execução canônica e homologação
+  integral permanecem separadas dos PASSes conceituais.
+
 ## 2026-10-01 — Consolidação local dos retestes B1
 
 - (Codex) Reunidas em branch isolado as evidências de Safra e Pipeline
