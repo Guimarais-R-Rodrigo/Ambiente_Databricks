@@ -23,7 +23,7 @@ SER00 = INTEGRATED
 SER01 = INTEGRATED / CLOSED
 B0 = INTEGRATED / PR #113 / 4ba7f551...
 B1_SKILLS = PR #118 / ACEITE_PARCIAL_GLOBAL
-B1_SCOPE_A = HUMAN_ACCEPTED / 2026-10-01 / PENDING_GIT_INTEGRATION
+B1_SCOPE_A = HUMAN_ACCEPTED / INTEGRATED_PR122 / 43dac176
 B1_G6_R7_HISTORICO = INCOMPLETO
 B1_FREE_ATUAL = PROBES_SINTETICOS_VERIFICADOS
 B1_GENIE_ATUAL = PARCIAL
@@ -42,8 +42,10 @@ indicador separado das duas skills; em Pipeline Builder, também confirmou
 seleção no menu `@`. Essas respostas não mostram runner ou Receipt e não
 apagam os FAILs históricos. O [escopo técnico A](B1_GATES_POS_MERGE_2026-10-01.md)
 foi aceito pelo usuário após os probes Free dirigidos e a reconciliação do
-manifesto de Baseline. O próximo passo é integrar essa correção e o registro
-de aceite em PR isolado; nenhuma rodada Genie adicional é necessária para A.
+manifesto de Baseline. O PR #122 integrou a correção e o registro de aceite
+na `main` em `43dac176`; nenhuma rodada Genie adicional é necessária para A.
+O CI central, SE01 e SE02 passaram no merge; checks temáticos fora do diff
+foram cancelados para preservar créditos.
 
 ## Navegação
 
