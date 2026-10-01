@@ -138,3 +138,32 @@ causa verificável. O fechamento da versão atual exige identidade remota
 conferida, regressões locais/CI verdes, ausência de falha material aberta nas
 fronteiras aceitas e evidência Genie suficiente para as rotas exigidas. Policy,
 Ready, merge e workspace corporativo seguem gates separados.
+
+## Adendo pós-integração — reteste focal do denominador de Safra
+
+O trecho de estado anterior descreve o candidato #117 antes dos merges #118 e
+#119. A resposta [SD-VF-STATUS-D01](genie_evidencias/SD-VF-STATUS-D01.md)
+sugeriu uma lacuna de formulação plausível: a skill proibia finalizar a taxa,
+mas não excluía explicitamente a sugestão de taxa provisória sobre o
+subconjunto. Essa hipótese não prova a causa interna da resposta da Genie.
+O helper já mantém `taxa_acumulada` ausente em célula incompleta. A correção
+posterior da skill alinha a orientação conceitual a essa regra, sem mudar o
+runner ou a policy. O FAIL original continua histórico.
+
+**RQ-VF-DENOM-D02 — NOT_RUN.** Após readback do `SKILL.md` corrigido no
+Databricks Free, abrir chat novo, selecionar `hub-ml-analise-safra` no menu
+`@` e colar exatamente:
+
+```text
+@hub-ml-analise-safra
+Tenho uma safra sintética mensal de janeiro/2026 com roster fixo de dois contratos, a e b, e data de corte em 31/mar/2026. Em MOB0 há observações de a e b; em MOB1 não há observações; em MOB2 há somente observação de a; em MOB3 não há observações. Classifique separadamente maturity e coverage_status de MOB0 a MOB3. Preserve denominador 2 e diga em quais células uma taxa final poderia ser calculada. O alvo é binário cumulativo, mas não forneci os valores 0/1 das observações. Não execute, não invente valores ausentes e não atribua a ausência a uma causa não informada.
+```
+
+Oráculo: MOB0 `MATURE/COMPLETE` (2/2), MOB1
+`MATURE/NO_OBSERVATIONS` (0/2), MOB2 `MATURE/INCOMPLETE` (1/2) e MOB3
+`IMMATURE/IMMATURE`. Só MOB0 é estruturalmente elegível à taxa final, mas
+falta numerador. `1/2` em MOB2 é cobertura; a taxa permanece indefinida e
+não se oferece taxa provisória com denominador 1. Registrar separadamente
+indicador da skill, resposta e qualquer output de ferramenta; texto sobre
+execução sem chamada observável não prova runner/Receipt. O readback Free
+confirma bytes publicados, não os bytes efetivamente consumidos pela Genie.
