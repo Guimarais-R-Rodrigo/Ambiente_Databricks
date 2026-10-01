@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-10-01 — Reconciliação de Baseline e aceite técnico B1
+
+- (Codex) Corrigidos os dois hashes do helper MLflow compartilhado no
+  manifesto de Baseline após a integração MM06, sem alterar o helper.
+  `release_integrity`, 25 testes SER09/SER10/MM06 e seis testes KS/CLI
+  passaram; derivado regenerado. O manifesto isolado foi publicado e
+  conferido no Databricks Free preservando os arquivos paralelos de
+  Micromodelos. Um job sintético sem escrita persistente confirmou preflight,
+  Receipt e verify de KS e Baseline atuais. A matriz A separa este aceite
+  técnico da orquestração Genie, policy e G6 antigo.
+
 ## 2026-10-01 — Gates B1 e efeitos sintéticos após o PR #121
 
 - (Codex) Documentada a diferença entre aceite dos perfis sintéticos

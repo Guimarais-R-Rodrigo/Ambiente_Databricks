@@ -33,11 +33,11 @@
     },
     {
       "path": "hub_snippets/ml/mlflow_run/__init__.py",
-      "git_blob_sha1": "6b3f98edb2deda73330d56eff1e2535a63fc45c7"
+      "git_blob_sha1": "ea121dcbdf1f8ff5652e12854ce15bf80854bc95"
     },
     {
       "path": "hub_snippets/ml/mlflow_run/mlflow_run.py",
-      "git_blob_sha1": "722843a3f29b972712979dc900f9c937d1a85c7e"
+      "git_blob_sha1": "175e52440afba0786c08015f2a7a5898611cfca1"
     },
     {
       "path": "hub_snippets/ml/split_temporal/__init__.py",

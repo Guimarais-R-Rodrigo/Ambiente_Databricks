@@ -31,10 +31,10 @@ não altera esses níveis.
 |---|---|---|---|
 | Safra | [Free SER03 5/5](G6_RECONCILIACAO_ATUAL_2026-09-30.md); [denominador D02](genie_evidencias/RQ-VF-DENOM-D02.md) PASS conceitual | Conferir vínculo de versões e manter oráculo de célula incompleta; runner não mudou no D02 | Um output Genie de rota canônica com Receipt/verificador, se execução pela interface for gate |
 | Explainability | [R2 runtime](CONTINUACAO_LOCAL_FREE_2026-09-28.md) e [EX-D01](genie_evidencias/SD-EX-A_D01.md) | Reusar SHAP linear escalar com fundo e oráculo independente; outros modelos fora do perfil | Output SHAP/Receipt observável, ainda ausente nos chats conceituais |
-| Validação Estatística | [KS D01](genie_evidencias/SD-ST-P_D01.md) com execução/verificação observadas e R2 | Reusar somente KS bilateral do perfil; multiplicidade/potência de outras perguntas não viram aprovação | O KS positivo já cobre a rota observada; só abrir novo chat para gate diferente e pré-definido |
+| Validação Estatística | [KS D01](genie_evidencias/SD-ST-P_D01.md) com execução/verificação observadas e R2 | KS atual passou 6 testes locais, CLI e [Free sem efeito](B1_KS_BASELINE_FREE_2026-10-01.json); multiplicidade/potência de outras perguntas não viram aprovação | D01 é prova Genie de outra versão; só abrir novo chat para gate diferente e pré-definido |
 | Cross-EDA | [Free SER05 5/5](G6_RECONCILIACAO_ATUAL_2026-09-30.md), PIT R2 e [T03](genie_evidencias/RQ-TRUST-FOCAL_T03.md) focal | Vincular contexto, oráculo e Postflight às versões; [CE-P-D01](genie_evidencias/SD-CE-P-D01.md) segue FAIL de resposta | Output Genie de preflight/diagnóstico/PIT se a interface, e não o Free, tiver de provar a chamada |
 | Feature Engineering | [R2 materialização](CONTINUACAO_LOCAL_FREE_2026-09-28.md) e composição PIT; [FE-MAT-D01](genie_evidencias/SD-FE-MAT-D01.md) preservou `UNKNOWN` | Efeito Delta na versão corrigida, readback e cleanup: **PASS no lote abaixo**; resta consolidação do aceite por perfil | Prova de seleção/execução FE na interface, se necessária; D01 mostrou indicador de Baseline |
-| Baseline ML | [R2 MLflow](CONTINUACAO_LOCAL_FREE_2026-09-28.md) e treino sintético Genie observado em [BL-P/T01](genie_evidencias/SD-BL-P_T01.md) | Manter treino/tracking e holdout no escopo do request; não inferir ausência de leakage operacional | Se a Genie for gate, pedir linhas sintéticas fornecidas pelo usuário e preservar request, run_id, Receipt e output de verify para reverificação independente; T01 não os exportou integralmente e não prova tracking pela Genie |
+| Baseline ML | [R2 MLflow](CONTINUACAO_LOCAL_FREE_2026-09-28.md) e treino sintético Genie observado em [BL-P/T01](genie_evidencias/SD-BL-P_T01.md) | Manifesto reconciliado com MM06; 25 regressões locais e [Free atual sem efeito](B1_KS_BASELINE_FREE_2026-10-01.json) PASS. O tracking R2 cobre o helper cuja função `run_governado` manteve AST; não inferir ausência de leakage operacional | Se a Genie for gate, pedir linhas sintéticas fornecidas pelo usuário e preservar request, run_id, Receipt e output de verify para reverificação independente; T01 não os exportou integralmente e não prova tracking pela Genie |
 | Monitoramento | R2 de drift SER11 e performance com labels maduros SER12; [D04](genie_evidencias/SD-VF-N_D04.md) corrigiu interpretação PSI/KS | Reusar métricas e política de labels maduros, sem ação automática | Output SER12 na Genie somente se for exigido além do Free; D04 exploratório não o substitui |
 | Pipeline Builder | [R2 Delta](CONTINUACAO_LOCAL_FREE_2026-09-28.md) e [T03](genie_evidencias/RQ-PB-RECOVERY_T03.md) PASS conceitual | Efeito Delta na versão corrigida, identidade, MERGE/replay, readback e cleanup: **PASS no retry isolado abaixo**; resta consolidação do aceite por perfil | Output da rota de spec/execução na Genie somente se seleção e chamada forem gates |
 
@@ -109,13 +109,55 @@ uso corporativo, prontidão de negócio ou promoção de policy. Auditoria
 independente de leitura recalculou os oráculos sintéticos e conferiu os
 outputs brutos e as três ausências; não foi injetada perda real de ACK remoto.
 
+## Reconciliação KS/Baseline e matriz técnica A
+
+A integração MM06 acrescentou `run_micromodelo` ao helper compartilhado
+`hub_snippets/ml/mlflow_run`, mas o manifesto de Baseline ainda apontava aos
+dois blobs antigos. Antes do reparo, `release_integrity` bloqueou no HEAD.
+Atualizamos **somente** esses hashes no manifesto de Baseline; o helper de
+Micromodelos não foi editado. Os 25 testes locais SER09/SER10/MM06 passaram e
+o derivado foi regenerado. No Free, o manifesto antigo era idêntico ao de
+`main`; a publicação restrita substituiu apenas esse arquivo para preservar
+mudanças paralelas de Micromodelos. O readback posterior confirmou objeto
+`FILE` com SHA-256
+`8e882dfef0c0513f379d5d74b074ccfbf0b446d4ab8596dc89526f9a34f661ca`.
+Não houve publicação integral nem promoção de policy.
+
+O [job Free atual de KS/Baseline](https://dbc-72c8503a-bc27.cloud.databricks.com/?o=1656741970497299#job/989363152249351/run/1105431056455456)
+teve notebook conferido por readback e [output estruturado](B1_KS_BASELINE_FREE_2026-10-01.json):
+preflight e runner `PASS`, Receipt presente e verify `valid=true` para ambos,
+sem escrita persistente. KS obteve `D=1` e `p=1/35`; Baseline usou o
+manifesto corrigido.
+O D01 Genie do KS continua vinculado ao manifesto antigo `727bc6...` e
+não é reclassificado como execução atual. Seis testes locais KS, inclusive
+CLI, passaram no HEAD. O tracking R2 permanece prova histórica do helper
+`run_governado`, cuja AST não mudou com o acréscimo de MM06.
+
+| Perfil B1 no escopo técnico A | Prova que sustenta revisão de aceite | Limite |
+|---|---|---|
+| Safra EVENT/CUMULATIVE mensal | R2 e SER03 5/5; artefatos do manifesto sem diferença no HEAD | Sem trimestre ou estimando monetário |
+| Explainability SHAP linear escalar | R2, oráculo e negativos; artefatos sem diferença | Sem outros modelos ou causalidade |
+| KS bilateral sintético | R2/D01 históricos; seis testes e Free atual | D01 Genie de outra versão; sem múltiplos testes |
+| Cross-EDA contexto/diagnóstico/PIT | R2, SER05 5/5 e Postflight; artefatos sem diferença | FAILs Genie históricos preservados |
+| FE lag/view/materialização | R2 de cálculo/composição e lote atual de efeito | Sem materialização corporativa |
+| Baseline temporal/tracking | R2 tracking, manifesto reconciliado, 25 testes e Free atual | MLflow persistente não foi repetido após MM06; sem tuning no holdout |
+| Monitoramento drift/performance madura | R2 SER11/SER12; artefatos sem diferença | Sem retreino, alerta ou promoção automática |
+| Pipeline spec/MERGE/Delta | R2 e retry de efeito atual | Sem job permanente ou injeção real de perda de ACK |
+
+Para Safra, Explainability, Cross-EDA e Monitoramento, a auditoria comparou
+**todos os artefatos dos manifests** com `published_hashes_before` do output
+R2: zero ausentes ou alterados. As seis skills de regressão não foram editadas
+nesta continuação e conservam seus gates proporcionais acima e o CI central
+do #121. Assim, A tem **prova técnica suficiente para revisão de aceite**,
+sem declarar homologação Genie B, promoção C ou PASS do G6 antigo.
+
 **Genie adicional imediato: zero prompts.** Em B, os novos chats devem ser
 especificados por rota ainda sem output observável, nunca pela contagem FG
 42/42. O número final depende de quais superfícies Genie entram no aceite;
 uma resposta narrativa ou indicador de carregamento não substitui execução.
 
-**Próximo marco:** consolidar o aceite A por perfil com as provas existentes e
-as regressões proporcionais. Se a orquestração Genie for exigida para esse
-aceite, definir as rotas B específicas antes de abrir novos chats. Promoção
+**Próximo marco:** revisar o aceite técnico A com a matriz acima. Se a
+orquestração Genie for exigida, definir as rotas B específicas antes de abrir
+novos chats. Promoção
 de policy (C), Ready, merge e workspace corporativo continuam em gates
 separados.

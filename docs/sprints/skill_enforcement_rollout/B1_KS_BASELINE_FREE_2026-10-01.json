@@ -1,0 +1,37 @@
+{
+  "schema_version": "B1-FREE-NO-EFFECT-EVIDENCE-1",
+  "date": "2026-10-01",
+  "job_run_id": 692566858782955,
+  "task_run_id": 1105431056455456,
+  "notebook_source_sha256": "c41863620c6085e9910efbf4cd25d8b06ddf31540d466f6e6bb1012d3249b183",
+  "notebook_remote_sha256": "c41863620c6085e9910efbf4cd25d8b06ddf31540d466f6e6bb1012d3249b183",
+  "result": {
+    "cases": {
+      "baseline": {
+        "manifest_sha256": "8e882dfef0c0513f379d5d74b074ccfbf0b446d4ab8596dc89526f9a34f661ca",
+        "preflight_status": "PASS",
+        "receipt_id": "er1:df15a47accafb1baa194d8fae9d4f13fbd36c849f91817c0ec7abb54cd4a9be1",
+        "run_status": "PASS",
+        "valid": true,
+        "verify_issues": [],
+        "writes_performed": false
+      },
+      "ks": {
+        "manifest_sha256": "656d5356b3b407a1674ca7f3b4b758de5955b248b6911c74eb4d1354d0603f11",
+        "p_value": 0.028571428571428577,
+        "preflight_status": "PASS",
+        "receipt_id": "er1:0cb0293fd9a4fccaba51bd64bcfa7a7dc7c47004eb889486416b454ee3d8498f",
+        "run_status": "PASS",
+        "statistic_D": 1.0,
+        "valid": true,
+        "verify_issues": [],
+        "writes_performed": false
+      }
+    },
+    "genie_homologation": false,
+    "marker": "B1_KS_BASELINE_CURRENT_FREE_V1",
+    "persistent_writes_performed": false,
+    "policy_promotion": false,
+    "status": "PASS"
+  }
+}
