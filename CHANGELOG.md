@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-01 — Kit Micromodelos após integração B1
+
+- (Codex) Atualizado `docs/sprints/micromodelos/PLANO_PREPARACAO_E2.md` com o kit local fixado no `main` `2f5a0cb9`: 691 arquivos, hashes externos conferidos e aceite sintético do ZIP extraído PASS. E2, Genie corporativa e promoção da skill permanecem pendentes; nenhum arquivo foi enviado ao Databricks do trabalho.
+
 ## 2026-10-01 — Integração do aceite técnico B1 A
 
 - (Codex) O PR #122 foi integrado em `main` no commit `43dac176`, após
