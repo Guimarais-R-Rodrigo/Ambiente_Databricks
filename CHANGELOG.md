@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-01 — Integração do aceite técnico B1 A
+
+- (Codex) O PR #122 foi integrado em `main` no commit `43dac176`, após
+  autorização específica do usuário. CI central, SE01 e SE02 passaram no
+  merge; checks temáticos sem relação com o diff foram cancelados para
+  economizar créditos. Atualizado o estado dos índices após o merge.
+  Policy, Genie B e workspace corporativo permaneceram inalterados.
+
 ## 2026-10-01 — Aceite humano do escopo A da B1
 
 - (Codex) Registrada a decisão do usuário de aceitar os oito perfis

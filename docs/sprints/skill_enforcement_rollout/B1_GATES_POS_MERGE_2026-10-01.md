@@ -11,8 +11,8 @@ não promove policy nem equivale a homologação ampla das 14 skills.
 seu aceite para os oito perfis sintéticos delimitados na matriz abaixo, com
 regressões proporcionais das outras seis skills. O estado desta trilha é
 `B1_SCOPE_A=HUMAN_ACCEPTED`. O aceite é da evidência técnica e do recorte
-funcional; a correção local de Baseline e este registro ainda precisam de
-integração Git. Não homologa toda a descrição das 14 skills, não exige as
+funcional; naquele momento a correção local de Baseline e este registro ainda
+precisavam de integração Git. Não homologa toda a descrição das 14 skills, não exige as
 20 variantes do G6 antigo, não converte os FAILs históricos em PASS e não
 inclui orquestração Genie B, promoção de policy C ou ambiente corporativo.
 
@@ -165,9 +165,10 @@ especificados por rota ainda sem output observável, nunca pela contagem FG
 42/42. O número final depende de quais superfícies Genie entram no aceite;
 uma resposta narrativa ou indicador de carregamento não substitui execução.
 
-**Próximo marco:** integrar a correção de Baseline e o registro deste aceite
-em PR isolado, com verificação proporcional ao diff e sem misturar mudanças
-de Micromodelos. Merge continua um gate separado. Nenhum prompt Genie é
-necessário para A; B só será planejado se houver novo objetivo explícito.
-Promoção de policy (C), Ready e workspace corporativo continuam em gates
-separados.
+**Fechamento pós-merge:** o [PR #122](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/pull/122)
+integrou a correção de Baseline e o registro de aceite em `main` no commit
+`43dac1762d4735378679ebdc09fd61c159be4362`. A validação central, SE01 e
+SE02 passaram no merge; checks temáticos fora do diff foram cancelados para
+preservar créditos. Nenhum prompt Genie é necessário para A. B só será
+planejado se houver novo objetivo explícito; promoção de policy (C), Ready
+e workspace corporativo continuam em gates separados.
