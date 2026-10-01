@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-10-01 — Gates B1 e efeitos sintéticos após o PR #121
+
+- (Codex) Documentada a diferença entre aceite dos perfis sintéticos
+  suportados, orquestração observável pela Genie e promoção dos níveis da
+  policy. O plano reaproveita provas locais/Free e retestes focais, aponta
+  probe Delta/FE dirigido na versão corrigida do runner e não exige os 42
+  prompts literais históricos. No Databricks Free, a FE e o Pipeline passaram
+  em casos isolados de materialização/MERGE, replay, readback e limpeza,
+  com ausência posterior das tabelas confirmada pela API. O primeiro caso
+  Pipeline bloqueou antes de criar a tabela por falta de `jsonschema` no
+  ambiente serverless; um retry em novo destino com dependência declarada
+  passou. A policy e o produto publicado não foram alterados; o aceite Genie
+  e a promoção continuam separados.
+
 ## 2026-10-01 — Auditoria causal das lacunas B1 remanescentes
 
 - (Codex) Conferidos Cross-EDA, Feature Engineering, Baseline ML e

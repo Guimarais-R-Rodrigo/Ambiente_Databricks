@@ -52,6 +52,7 @@ não há prompt repetido programado para Safra ou Pipeline Builder.
 - [SER01: histórico da primeira promoção](SER01/README.md)
 - [B1: pacote de skills sem controller](PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md)
 - [Resultados das rodadas Genie](GENIE_SKILLS_RESULTADOS_2026-09-28.md)
+- [Gates proporcionais após o PR #121](B1_GATES_POS_MERGE_2026-10-01.md)
 
 Diagnóstico, certificação, prova externa, promoção e merge permanecem estados
 distintos. O conteúdo desta candidata não altera o controller nem substitui
