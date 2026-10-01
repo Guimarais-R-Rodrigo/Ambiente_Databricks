@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-01 — Aceite humano do escopo A da B1
+
+- (Codex) Registrada a decisão do usuário de aceitar os oito perfis
+  sintéticos delimitados e as regressões proporcionais da frente B1.
+  Índices e plano agora distinguem esse aceite técnico da homologação Genie,
+  do G6 histórico, da promoção de policy e da integração Git pendente.
+
 ## 2026-10-01 — Reconciliação de Baseline e aceite técnico B1
 
 - (Codex) Corrigidos os dois hashes do helper MLflow compartilhado no

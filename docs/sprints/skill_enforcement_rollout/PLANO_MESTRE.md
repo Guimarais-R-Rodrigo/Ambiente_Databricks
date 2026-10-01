@@ -8,6 +8,10 @@ O estado corrente das skills B1 pertence à
 O state source e os contratos de controller do branch #115 não integram
 esta candidata.
 
+Atualização de 2026-10-01: o usuário aceitou o [escopo técnico A da B1](B1_GATES_POS_MERGE_2026-10-01.md)
+para os perfis sintéticos suportados. A aceitação não altera a policy, o G6
+histórico ou os gates de integração Git e de orquestração Genie.
+
 ```text
 SER00 = INTEGRATED
 SER01 = INTEGRATED

@@ -8,7 +8,7 @@
 
 **Manual Técnico:** [APIs, Python, Spark, helpers e operação do Hub](MANUAL_TECNICO.md).
 
-**B1:** [pacote de skills executáveis sem controller](docs/sprints/skill_enforcement_rollout/PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md), com aceite parcial; a homologação integral segue pendente.
+**B1:** [escopo A de perfis sintéticos](docs/sprints/skill_enforcement_rollout/B1_GATES_POS_MERGE_2026-10-01.md) aceito em 2026-10-01; orquestração Genie, promoção de policy e homologação integral permanecem separadas.
 
 **Micromodelos:** o contrato L1 estático foi integrado no B1; o módulo de domínio da [candidata MM04–MM13-LAB](docs/sprints/micromodelos/README.md) está em reconciliação local, sem promoção de policy nem homologação corporativa.
 
@@ -128,7 +128,7 @@ notebook exercita  : 61 objetos, 0 notebook(s) que só importam
 python (AST)       : 290 arquivos
 instrucoes         : 12626/20000 caracteres
 repo (identidade)  : 2216 arquivos varridos no repositório editável/derivado
-repo (links)       : 2869 links fora da raiz analisada
+repo (links)       : 2871 links fora da raiz analisada
 worktree (extras)  : 0 arquivos locais examinados, fora da contagem versionada
 
 APROVADO: 0 falha(s), 0 aviso(s)
