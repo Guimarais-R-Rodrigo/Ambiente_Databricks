@@ -68,6 +68,12 @@ além de `hub_micromodelos/` quando a demanda envolver essa área de domínio.
 Examine os índices pertinentes, ou registre quais não foram acessados;
 abra somente as famílias e os candidatos relevantes em profundidade.
 
+Para Micromodelos, confira a skill `hub-ml-micromodelos`, o README de
+`hub_micromodelos/` e os briefings pertinentes. Se a pessoa já trouxe objetivo,
+encaminhe à especificação; se pediu ideias, encaminhe à descoberta de metadata.
+Separe contrato e exemplo sintético de capacidade executada no destino. Um pedido
+direto a `@hub-ml-micromodelos` permanece com a especialista.
+
 Expanda o vocabulário do usuário quando necessário: “base mudou” pode envolver
 drift; “informação do futuro”, leakage e point-in-time; “linhas multiplicaram”,
 cardinalidade e diagnóstico de join. São hipóteses de busca, não conclusões.

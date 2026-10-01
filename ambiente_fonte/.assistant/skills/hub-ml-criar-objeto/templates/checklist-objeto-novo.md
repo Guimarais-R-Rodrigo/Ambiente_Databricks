@@ -84,6 +84,9 @@ em vez de repetir a lista.
 - [ ] O `SKILL.md` tem menos de 500 linhas
 - [ ] O corpo tem as cinco seções do template: quando se aplica, fluxo, helpers,
       o que nunca fazer, formato de saída
+- [ ] O [guia SEF](../references/estrutura-skill-sef.md) foi aplicado: contrato
+      estruturado e entrada na policy têm níveis e superfícies coerentes com os
+      artefatos presentes; manifesto de release foi criado se a rota o exige
 - [ ] Os helpers estão declarados por caminho de import, em tabela
 - [ ] Todos os caminhos de helper citados resolvem para objeto existente
 - [ ] `EXPECTED_SKILLS` em `tools/publicar_free.py` acompanha a contagem

@@ -1,6 +1,6 @@
 # Preparação do piloto E2 de Micromodelos
 
-**Data:** 2026-09-29; atualização de estado em 2026-10-01. **Estado:** `PACOTE_LOCAL_CONFERIDO; FREE_READBACK_PASS; E2_NOT_RUN`. O [laboratório sintético](CHECKPOINT_ACEITE_LAB_2026-09-29.md) foi aceito pelo responsável. B1 e o módulo Micromodelos foram integrados ao `main` pelos PRs #118 e #119; o escopo técnico A da B1 foi aceito e integrado pelos PRs #122 e #123. O kit atualizado do commit `2f5a0cb9` foi gerado com 691 arquivos de produto e passou no aceite E0 extraído. O readback Free 691/691 PASS pertence à versão anterior `63601e09`; o novo kit não foi publicado no Free. Este plano prepara a homologação no Databricks do trabalho e o primeiro micromodelo novo; não registra execução E2, leitura de registros, alteração de ACL ou publicação. Identificadores reais e evidências brutas ficam somente no ambiente autorizado.
+**Data:** 2026-09-29; atualização de estado em 2026-10-01. **Estado:** `PACOTE_LOCAL_CONFERIDO_NO_SHA_REGISTRADO; E2_NOT_RUN`. O [laboratório sintético](CHECKPOINT_ACEITE_LAB_2026-09-29.md) foi aceito pelo responsável. B1 e o módulo Micromodelos foram integrados ao `main` pelos PRs #118 e #119; o escopo técnico A da B1 foi aceito e integrado pelos PRs #122 e #123. O kit do commit `2f5a0cb9` foi gerado com 691 arquivos de produto e passou no aceite E0 extraído. O readback Free 691/691 PASS pertence à versão anterior `63601e09`. Os ajustes posteriores de Concierge e autoria de skills exigem kit e aceite próprios antes do transporte; o `2f5a0cb9` não os contém. Este plano prepara a homologação no Databricks do trabalho e o primeiro micromodelo novo; não registra execução E2, leitura de registros, alteração de ACL ou publicação. Identificadores reais e evidências brutas ficam somente no ambiente autorizado.
 
 ## Ordem e limites
 
@@ -39,7 +39,7 @@ Não preencher com nomes corporativos neste repositório. O operador mantém a f
 
 ## Primeira execução recomendada
 
-1. **Agora, local:** preservar o kit do `main` `2f5a0cb9` e seu manifesto. O ZIP extraído passou; o readback Free integral é da versão anterior. Verificar o gate SE08 vigente antes de qualquer promoção.
+1. **Agora, local:** preservar o kit `2f5a0cb9` como evidência histórica, mas gerar e conferir kit do commit final que inclua os ajustes de Concierge/autoria. Ler o SHA efetivo em `COMECE_AQUI.md`; não misturar ZIPs. O readback Free integral é de outra versão. Verificar o gate SE08 vigente antes de qualquer promoção.
 2. **Com operador autorizado no trabalho:** preencher a ficha institucional acima e executar apenas G1, o staging técnico sintético do [runbook](../../playbooks/replicacao-trabalho.md). Registrar SHA do pacote, checks de integridade, runtime, permissões e custos observados; manter opções MLflow e UC desligadas. Nenhum dado real é necessário nessa porta.
 3. **Depois de G1:** decidir G2 e G3 separadamente. Só avançar a leitura de linhas em G4 após escopo, minimização e permissões explícitas. Não transportar o pacote Free como se fosse o kit corporativo; o Free usa outra organização de arquivos e outro gate de autoridade.
 

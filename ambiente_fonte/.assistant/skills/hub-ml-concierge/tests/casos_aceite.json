@@ -133,6 +133,26 @@
       "execution_status": "PENDENTE"
     },
     {
+      "id": "P08",
+      "category": "positive",
+      "prompt": "Não sei por onde começar no Hub para especificar um micromodelo novo de recência de contato. Quais recursos já existem? Apenas oriente; não execute.",
+      "activation": "SELECT",
+      "allowed_routes": [
+        "DIRECT_ROUTE",
+        "COMPOSITE_ROUTE"
+      ],
+      "expected": [
+        "Verificar hub-ml-micromodelos, o índice hub_micromodelos e o briefing micromodelo_novo na instalação acessível.",
+        "Indicar a rota objetivo conhecido e entregar handoff explícito, sem alegar que mencionar a especialista a carregou.",
+        "Distinguir contrato, exemplo sintético e execução observada no destino."
+      ],
+      "forbidden": [
+        "Declarar micromodelo aprovado, executado ou publicado durante a descoberta.",
+        "Ler registros ou inventar catálogo e permissões."
+      ],
+      "execution_status": "PENDENTE"
+    },
+    {
       "id": "N01",
       "category": "negative",
       "prompt": "@hub-ml-eda-profissional faça a EDA desta tabela anexada.",
@@ -187,6 +207,21 @@
       ],
       "forbidden": [
         "Carregar Concierge como etapa obrigatória."
+      ],
+      "execution_status": "PENDENTE"
+    },
+    {
+      "id": "N05",
+      "category": "negative",
+      "prompt": "@hub-ml-micromodelos Quero preencher um micromodelo.yaml para uma característica sintética com objetivo já definido.",
+      "activation": "DO_NOT_SELECT",
+      "allowed_routes": [],
+      "expected": [
+        "Preservar a especialista explicitamente selecionada e seu contrato de especificação."
+      ],
+      "forbidden": [
+        "Concierge interceptar o pedido ou exigir nova triagem de recursos.",
+        "Afirmar que a menção executou módulos Python ou aprovou o YAML."
       ],
       "execution_status": "PENDENTE"
     },

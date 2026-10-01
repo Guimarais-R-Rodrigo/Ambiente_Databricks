@@ -98,6 +98,11 @@ pertinente devem confirmar policy, contratos e artefatos. Teste conversacional n
 Genie Code continua separado porque estrutura válida não prova aderência do
 agente.
 
+O passo a passo para os JSONs e a composição dos níveis está no
+[guia SEF de autoria](../../skills/hub-ml-criar-objeto/references/estrutura-skill-sef.md).
+Use os contratos da versão instalada como exemplos; não copie um Receipt, hash ou
+estado de promoção de outra skill para declarar a nova como executada.
+
 ## Antes de dar por pronto
 
 O checklist é **um só para os seis tipos**, e mora em

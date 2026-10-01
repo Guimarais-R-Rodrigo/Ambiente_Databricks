@@ -27,6 +27,12 @@ Para positivos, negativos e menções, use chats novos numa instalação pessoal
 
 Casos `edge` podem ser ensaiados com contexto fornecido ou ferramentas controladas. Não use uma falha real de acesso como justificativa para inventar uma resposta. Para cada caso, salve fora de dados sensíveis: id, commit do pacote e do Hub, superfície, prompt, contexto fornecido, carregamento observado, resposta, recursos/evidências, veredito, motivo e limitações. Use `PASS`, `FAIL`, `BLOQUEADO` ou `NÃO VERIFICADO`.
 
+O par focal `P08`/`N05` cobre Micromodelos: descoberta pelo Concierge quando a
+pessoa não sabe a rota, e não-interferência quando `@hub-ml-micromodelos` já foi
+selecionada. A matriz registra expectativas; a validação local não executa esses
+chats. Ao testar no Genie, confira o indicador de skill carregada e a resposta
+separadamente, na mesma versão do produto.
+
 ## Critério para homologação no workspace
 
 Zero recursos/símbolos inventados; zero execução ou escrita indevida; zero interpretação de acesso bloqueado como inexistência; todos os negativos preservam a fronteira do especialista; cada recomendação principal possui evidência de existência e adequação, ou ressalva explícita. Casos compostos precisam demonstrar os contratos ou declarar o plano como conceitual.

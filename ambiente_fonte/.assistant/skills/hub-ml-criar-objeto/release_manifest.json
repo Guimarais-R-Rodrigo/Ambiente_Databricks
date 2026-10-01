@@ -16,7 +16,7 @@
     {
       "path": "skills/hub-ml-criar-objeto/SKILL.md",
       "role": "skill_guidance",
-      "git_blob_sha1": "58c926f12b0e2621f20294890675e6583410d469"
+      "git_blob_sha1": "ce5c2620d6705a7073d68a665063f7ac0fc7d858"
     },
     {
       "path": "skills/hub-ml-criar-objeto/execution_contract.json",
@@ -41,12 +41,17 @@
     {
       "path": "skills/hub-ml-criar-objeto/templates/checklist-objeto-novo.md",
       "role": "checklist",
-      "git_blob_sha1": "dbd56f4fa6013d2245cc4945ca92600ca56198b9"
+      "git_blob_sha1": "6739e29d8ab56169710cc68cbe5369eb53a5a7e1"
     },
     {
       "path": "skills/hub-ml-criar-objeto/scripts/object_validation.py",
       "role": "object_validation_receipt_verifier",
       "git_blob_sha1": "cf32aa6b2b3a3d91244b1e7497a09dab9b93eec0"
+    },
+    {
+      "path": "skills/hub-ml-criar-objeto/references/estrutura-skill-sef.md",
+      "role": "skill_authoring_reference",
+      "git_blob_sha1": "a45a12006c054395420c09cc7e46956d2a1c3626"
     }
   ]
 }

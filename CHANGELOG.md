@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-01 — Descoberta de Micromodelos e autoria de skills
+
+- (Codex) Explicitado no Concierge o repasse para `hub-ml-micromodelos` e acrescentados casos focais positivo/negativo à matriz de aceite, ainda pendentes de execução no Genie. Adicionado guia de `execution_contract.json`, policy, manifesto e níveis SEF à skill `hub-ml-criar-objeto` e ao molde de skill; manifesto de release atualizado. A policy não foi promovida.
+- (Codex) Marcado o kit `2f5a0cb9` como snapshot anterior no plano E2; os novos arquivos exigem kit e aceite do commit final antes do transporte.
+
 ## 2026-10-01 — Kit Micromodelos após integração B1
 
 - (Codex) Atualizado `docs/sprints/micromodelos/PLANO_PREPARACAO_E2.md` com o kit local fixado no `main` `2f5a0cb9`: 691 arquivos, hashes externos conferidos e aceite sintético do ZIP extraído PASS. E2, Genie corporativa e promoção da skill permanecem pendentes; nenhum arquivo foi enviado ao Databricks do trabalho.

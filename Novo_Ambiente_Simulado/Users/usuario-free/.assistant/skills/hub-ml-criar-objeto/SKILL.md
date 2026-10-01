@@ -181,6 +181,11 @@ de `.assistant/skills/` é auto-descoberta, e uma cópia do exemplar viraria ski
 fantasma no chat. README tem um arquivo `exemplo.md`; notebook não tem
 exemplar separado, porque os exemplares dos outros tipos já trazem o seu.
 
+Se o tipo for skill, siga também [Estrutura SEF de uma skill](references/estrutura-skill-sef.md):
+ela distingue `SKILL.md`, `execution_contract.json`, entrada na policy canônica,
+scripts de cada nível e manifesto de release quando aplicável. O preflight L2
+confere tipo, nome e destino, mas não gera esses arquivos nem valida a skill pronta.
+
 Os exemplares usam um caso de CRM **sintético**, do domínio da equipe. São
 referência de forma — não os importe em trabalho real, e não copie os dados.
 
