@@ -78,6 +78,32 @@ esta revisão examinou. Testes e readbacks das correções Delta/Pipeline
 posteriores pertencem à [ficha atual](ACEITE_PARCIAL_PR117_2026-09-30.md).
 Policy, Ready, merge e workspace corporativo não foram alterados.
 
+## Adendo de auditoria causal — 2026-10-01
+
+(Codex) A tabela acima retrata a revisão de 30/set; os FAILs nela descritos
+não foram apagados. A versão atual passou nos retestes focais de
+[denominador Safra](genie_evidencias/RQ-VF-DENOM-D02.md) e de
+[recuperação Pipeline Builder](genie_evidencias/RQ-PB-RECOVERY_T03.md), ambos
+conceituais, com indicador da skill relatado pelo usuário e sem runner
+observado. Este adendo verifica se os demais FAILs justificam nova edição
+de produto ou rodada Genie agora:
+
+| Frente | Contrato atual versus resposta observada | Decisão proporcional |
+|---|---|---|
+| Cross-EDA | [T02](genie_evidencias/RQ-TRUST-COMBINED_T02.md) atribuiu checagens a `valid=true` apenas alegado após correção Free; o [T03 focal](genie_evidencias/RQ-TRUST-FOCAL_T03.md) tratou isso como alegação, sem prover execução. O `SKILL.md` atual já exige output, inputs independentes e não completar chave/grão/corte ausentes; [CE-P-D01](genie_evidencias/SD-CE-P-D01.md) violou esta última guarda. | Conservar T02 e CE-P-D01 como FAILs de suas tentativas; T03 passa somente na alegação isolada. Sem lacuna nova de contrato demonstrada, não repetir prompt idêntico nem declarar SER05 homologada. |
+| Feature Engineering | [FE-MAT-D01](genie_evidencias/SD-FE-MAT-D01.md) preservou `UNKNOWN`, mas inferiu schema/causa sem readback suficiente; a skill já separa view PIT de materialização e exige inspeção humana sem retry. O indicador espontâneo foi Baseline, enquanto [FE-PIT](genie_evidencias/SD-FE-PIT_T01.md) mostrou FE em outro estímulo. | Falha de evidência e de roteamento nesse caso, sem base para mudar `description` global ou reexecutar efeito Delta. |
+| Baseline ML | [BL-B/T01](genie_evidencias/SD-BL-B_T01.md) recusou alegações falsas, mas sugeriu holdout para tuning; o contrato atual reserva hiperparâmetros à validação/CV e teste à avaliação final. O planejamento [BL-P/T01](genie_evidencias/SD-BL-P_T01.md) extrapolou para execução; a skill atual já veda criar linhas ou treinar por um pedido de plano. | Preservar FAILs históricos. Repetir a regra no contrato sem causa demonstrada não é reparo; nenhuma métrica nova é necessária. |
+| Monitoramento | [MO-P/T01](genie_evidencias/SD-MO-P_T01.md) errou a interpretação de smoothing/potência, mas [D04](genie_evidencias/SD-VF-N_D04.md) acertou a fronteira exploratória; a instrução contraditória sobre bins retornados pelo helper foi esclarecida e publicada. | Sem reteste adicional para esta questão; D04 não certifica SER11 inteiro. |
+
+**Próxima decisão:** manter o B1 como candidato parcial, com os dois novos
+PASSes focais documentados. Nenhum prompt Genie adicional tem oráculo novo
+proporcional neste checkpoint. Um pedido futuro de homologação integral
+exigirá definir antes quais rotas executáveis e fronteiras ainda são gates,
+com evidência observável própria; os casos antigos não viram PASS por analogia.
+O PR #121 de Safra segue em rascunho; a evidência de Pipeline Builder está
+consolidada apenas no branch local de aceite. Policy e merge continuam gates
+separados.
+
 **Decisão:** candidato parcial, nenhuma das 14 skills homologada integralmente
 por esta campanha. Não há prompt Genie adicional proporcional programado.
 Prioridade de investigação causal após T03: (1) cobertura restante de Cross-EDA, sem repetir a fronteira focal que passou; (2)

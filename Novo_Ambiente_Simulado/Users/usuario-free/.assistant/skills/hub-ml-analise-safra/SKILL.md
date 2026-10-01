@@ -78,6 +78,11 @@ Por exemplo, “janeiro/MOB2 só um observado”, com dois contratos na safra,
 informa cobertura parcial. Não identifica qual contrato foi observado, o valor
 dessa observação nem por que falta o outro. Preserve o denominador dois e não
 finalize a taxa com esses dados; não invente ID, target ou causa da ausência.
+No perfil de roster fixo, `1/2` descreve somente a cobertura: o número de
+observados nunca substitui o denominador da taxa. Em célula `INCOMPLETE`, não
+ofereça nem calcule uma "taxa provisória" sobre o subconjunto observado; a taxa
+permanece indefinida até a cobertura completa. O helper canônico deixa
+`taxa_acumulada` ausente nesse caso.
 
 ## Quando esta skill se aplica
 

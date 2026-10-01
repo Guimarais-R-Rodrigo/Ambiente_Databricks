@@ -33,6 +33,16 @@ CI_PR118_VALIDAR = PASS
 CI_PR118_TEMATICOS = 8 CANCELLED_FOR_COST
 ```
 
+Em 2026-10-01, os retestes focais de
+[Safra](genie_evidencias/RQ-VF-DENOM-D02.md) e
+[Pipeline Builder](genie_evidencias/RQ-PB-RECOVERY_T03.md) passaram no
+raciocínio conceitual após correções publicadas no Free. O usuário confirmou
+indicador separado das duas skills; em Pipeline Builder, também confirmou
+seleção no menu `@`. Essas respostas não mostram runner ou Receipt e não
+apagam os FAILs históricos. A próxima ação é revisar as falhas materiais
+restantes contra os contratos atuais antes de pedir outra rodada à Genie;
+não há prompt repetido programado para Safra ou Pipeline Builder.
+
 ## Navegação
 
 - [Plano Mestre](PLANO_MESTRE.md)
@@ -41,6 +51,7 @@ CI_PR118_TEMATICOS = 8 CANCELLED_FOR_COST
 - [SER00: baseline e decisões](SER00/README.md)
 - [SER01: histórico da primeira promoção](SER01/README.md)
 - [B1: pacote de skills sem controller](PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md)
+- [Resultados das rodadas Genie](GENIE_SKILLS_RESULTADOS_2026-09-28.md)
 
 Diagnóstico, certificação, prova externa, promoção e merge permanecem estados
 distintos. O conteúdo desta candidata não altera o controller nem substitui

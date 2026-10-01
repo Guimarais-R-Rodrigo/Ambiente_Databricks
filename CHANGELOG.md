@@ -1,5 +1,59 @@
 # Changelog
 
+## 2026-10-01 — Auditoria causal das lacunas B1 remanescentes
+
+- (Codex) Conferidos Cross-EDA, Feature Engineering, Baseline ML e
+  Monitoramento contra os contratos atuais e as fichas Genie. O adendo à
+  revisão de FAILs separa respostas históricas incorretas dos retestes
+  focais posteriores. Não foi demonstrada lacuna nova que justificasse
+  alterar skill ou repetir prompt agora; execução canônica e homologação
+  integral permanecem separadas dos PASSes conceituais.
+
+## 2026-10-01 — Consolidação local dos retestes B1
+
+- (Codex) Reunidas em branch isolado as evidências de Safra e Pipeline
+  Builder, preservando o PR #121 em rascunho. O índice da frente aponta para
+  os dois PASSes conceituais e mantém execução Genie e homologação integral
+  pendentes. Nenhum novo prompt, efeito remoto, policy ou merge foi feito.
+
+## 2026-10-01 — Reteste focal de Safra na Genie
+
+- (Codex) Registrada a resposta RQ-VF-DENOM-D02 após a correção de Safra
+  publicada no Free. O usuário observou indicador separado da skill; a
+  resposta acertou maturidade e cobertura nos quatro MOBs, preservou o
+  denominador 2 e não propôs taxa provisória em MOB2. PASS conceitual da
+  regressão focal; runner, Receipt e bytes consumidos pela Genie não foram
+  observados. O FAIL anterior D01 permanece como histórico, sem promoção
+  de policy ou homologação integral.
+
+## 2026-10-01 — Reteste focal de Pipeline Builder na Genie
+
+- (Codex) Registrada a resposta RQ-PB-RECOVERY/T03 após o esclarecimento
+  de recuperação publicado no Free. O usuário confirmou seleção @ e
+  indicador de Pipeline Builder. A resposta distinguiu relato não
+  verificado, persistência e limpeza `UNKNOWN`, recusou retry como prova
+  retroativa e recuperou destino, effect record e autoridade antes de
+  inspeção somente leitura. PASS conceitual focal com ressalva de escopo;
+  execução Delta e bytes consumidos pela Genie não observados. Os FAILs
+  anteriores ficam preservados e não há promoção ou homologação integral.
+
+## 2026-09-30 — Safra: denominador fixo em célula incompleta
+
+- (Codex) Investigada a resposta Genie SD-VF-STATUS-D01: os status e a recusa
+  da taxa final passaram, mas a sugestão de taxa provisória com denominador
+  1 contrariou o roster fixo 2. O helper já deixa a taxa ausente quando a
+  cobertura é incompleta. A orientação conceitual da skill agora explicita
+  que `1/2` é cobertura, nunca novo denominador, e não oferece taxa sobre
+  o subconjunto observado. Sem alteração do runner ou da policy; reteste
+  Genie da versão corrigida permanece pendente. Smoke sintético do helper
+  confirmou roster 2, observado 1, cobertura 0,5 e taxa NaN em MOB2;
+  auditoria independente não encontrou bloqueador semântico. Após guarda de
+  host/perfil pessoal e comparação da versão remota anterior com `main`,
+  somente o SKILL.md de Safra foi publicado no Free: ACK sucesso e dois
+  readbacks iguais ao SHA-256 normalizado
+  `410eec57b38ddc95fe6ec5b1780e9be7c89d2f9d9b9f0be3f20655e9785367e2`.
+  Genie e promoção de policy não foram executadas.
+
 ## 2026-09-30 — Estado de Micromodelos após integração Git
 
 - (Codex) Atualizados os planos vivos após os PRs #118 e #119: o módulo Micromodelos está no `main` `63601e09`, sem promoção da skill. O kit desse commit contém 691 arquivos e passou no aceite E0 extraído; o exemplo de recência conferiu sete casos sintéticos. O snapshot do validador no README raiz foi sincronizado. A publicação integral na home pessoal Free passou no readback de conteúdo 691/691, sem arquivos ausentes ou obsoletos; hash normalizado `6a74020abf0c9f72542f7f72223f51d28cf7e463e515a8b4e05b67e960531a18`. O E2 institucional conserva gates próprios.

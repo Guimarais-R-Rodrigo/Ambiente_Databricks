@@ -38,7 +38,7 @@ das outras skills.
 
 | Risco do manifesto antigo | Evidência reutilizável para a versão atual | Estado atual |
 |---|---|---|
-| VF-G01, cumulativo/denominador/célula parcial | [SD-VF-P-D01](genie_evidencias/SD-VF-P-D01.md): regra correta no caso; [SD-VF-STATUS-D01](genie_evidencias/SD-VF-STATUS-D01.md): denominador provisório `1` indevido; Free SER03 5/5 | PASS conceitual anterior; FAIL parcial de denominador aberto; execução Genie NOT_RUN |
+| VF-G01, cumulativo/denominador/célula parcial | [SD-VF-P-D01](genie_evidencias/SD-VF-P-D01.md): regra correta no caso; [SD-VF-STATUS-D01](genie_evidencias/SD-VF-STATUS-D01.md): denominador provisório `1` indevido; [RQ-VF-DENOM-D02](genie_evidencias/RQ-VF-DENOM-D02.md): reteste focal corrigido; Free SER03 5/5 | PASS conceitual focal na versão corrigida; FAIL D01 histórico; execução Genie NOT_RUN |
 | VF-G02, evento mensal versus cumulativo | [RQ-VF-EVENT/T01](genie_evidencias/RQ-VF-EVENT_T01.md): indicador relatado, evento mensal/cumulativo e ausência corretos na fixture; Free não prova roteamento/explicação da Genie | PASS conceitual nesta rodada; execução Genie NOT_RUN |
 | VF-G03, pedido vizinho fora de Safra | [T01](genie_evidencias/SD-VF-N_T01.md): resposta de drift sem indicador; [D04](genie_evidencias/SD-VF-N_D04.md): Monitoramento selecionado por @, não auto-rota Safra | Parcial; sem repetição automática |
 | VF-G04, contexto ausente | [T01](genie_evidencias/SD-VF-P_T01.md), [T02](genie_evidencias/SD-VF-P_T02.md) e [bypass D01](genie_evidencias/SD-VF-B_D01.md) preservam erros | **FAIL material histórico; não convertido em PASS** |
@@ -138,3 +138,46 @@ causa verificável. O fechamento da versão atual exige identidade remota
 conferida, regressões locais/CI verdes, ausência de falha material aberta nas
 fronteiras aceitas e evidência Genie suficiente para as rotas exigidas. Policy,
 Ready, merge e workspace corporativo seguem gates separados.
+
+## Adendo pós-integração — reteste focal do denominador de Safra
+
+O trecho de estado anterior descreve o candidato #117 antes dos merges #118 e
+#119. A resposta [SD-VF-STATUS-D01](genie_evidencias/SD-VF-STATUS-D01.md)
+sugeriu uma lacuna de formulação plausível: a skill proibia finalizar a taxa,
+mas não excluía explicitamente a sugestão de taxa provisória sobre o
+subconjunto. Essa hipótese não prova a causa interna da resposta da Genie.
+O helper já mantém `taxa_acumulada` ausente em célula incompleta. A correção
+posterior da skill alinha a orientação conceitual a essa regra, sem mudar o
+runner ou a policy. O FAIL original continua histórico.
+
+**RQ-VF-DENOM-D02 — [PASS conceitual focal; execução NOT_RUN](genie_evidencias/RQ-VF-DENOM-D02.md).** O `SKILL.md` corrigido do commit
+`cdbdd2aa` foi publicado seletivamente no Databricks Free pessoal: ACK de
+sucesso e dois readbacks com SHA-256 normalizado
+`410eec57b38ddc95fe6ec5b1780e9be7c89d2f9d9b9f0be3f20655e9785367e2`.
+O arquivo remoto anterior coincidia com `main`; MM04, policy e outros
+objetos não foram escritos. Relatório local ignorado pelo Git:
+`.artifacts/skills-delivery-evidence/safra-denominator-free-publish-20260930.json`
+(SHA-256 `cc7741c062363bbccd777bea6f1fa1cf1e53e4447adedfbf600ec8179c31d800`).
+Isso não prova execução ou leitura pela Genie. Abrir chat novo, selecionar
+`hub-ml-analise-safra` no menu `@` e colar exatamente:
+
+```text
+@hub-ml-analise-safra
+Tenho uma safra sintética mensal de janeiro/2026 com roster fixo de dois contratos, a e b, e data de corte em 31/mar/2026. Em MOB0 há observações de a e b; em MOB1 não há observações; em MOB2 há somente observação de a; em MOB3 não há observações. Classifique separadamente maturity e coverage_status de MOB0 a MOB3. Preserve denominador 2 e diga em quais células uma taxa final poderia ser calculada. O alvo é binário cumulativo, mas não forneci os valores 0/1 das observações. Não execute, não invente valores ausentes e não atribua a ausência a uma causa não informada.
+```
+
+Oráculo: MOB0 `MATURE/COMPLETE` (2/2), MOB1
+`MATURE/NO_OBSERVATIONS` (0/2), MOB2 `MATURE/INCOMPLETE` (1/2) e MOB3
+`IMMATURE/IMMATURE`. Só MOB0 é estruturalmente elegível à taxa final, mas
+falta numerador. `1/2` em MOB2 é cobertura; a taxa permanece indefinida e
+não se oferece taxa provisória com denominador 1. Registrar separadamente
+indicador da skill, resposta e qualquer output de ferramenta; texto sobre
+execução sem chamada observável não prova runner/Receipt. O readback Free
+confirma bytes publicados, não os bytes efetivamente consumidos pela Genie.
+
+Resposta recebida em 2026-10-01, com indicador separado de Safra relatado
+pelo usuário. A classificação dos quatro MOBs bateu com o oráculo; MOB2
+permaneceu sem taxa, e `1/2` foi tratado somente como cobertura, sem sugestão
+de denominador provisório 1. A resposta não mostrou execução canônica.
+O FAIL D01 permanece no histórico e o PASS D02 atesta apenas esta regressão
+conceitual, sem homologar a rota inteira ou provar os bytes lidos pela Genie.
