@@ -10,6 +10,17 @@
   observados. O FAIL anterior D01 permanece como histórico, sem promoção
   de policy ou homologação integral.
 
+## 2026-10-01 — Reteste focal de Pipeline Builder na Genie
+
+- (Codex) Registrada a resposta RQ-PB-RECOVERY/T03 após o esclarecimento
+  de recuperação publicado no Free. O usuário confirmou seleção @ e
+  indicador de Pipeline Builder. A resposta distinguiu relato não
+  verificado, persistência e limpeza `UNKNOWN`, recusou retry como prova
+  retroativa e recuperou destino, effect record e autoridade antes de
+  inspeção somente leitura. PASS conceitual focal com ressalva de escopo;
+  execução Delta e bytes consumidos pela Genie não observados. Os FAILs
+  anteriores ficam preservados e não há promoção ou homologação integral.
+
 ## 2026-09-30 — Safra: denominador fixo em célula incompleta
 
 - (Codex) Investigada a resposta Genie SD-VF-STATUS-D01: os status e a recusa

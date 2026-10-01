@@ -381,6 +381,11 @@ espontâneo e precisão parcial. O caso não homologa Pipeline Builder.
 O [SD-PB-DELTA-D02](genie_evidencias/SD-PB-DELTA-D02.md) isola a seleção
 @ no mesmo cenário: PASS do carregamento e de `UNKNOWN`, FAIL parcial de
 aderência/precisão; sem efeito executado.
+O [RQ-PB-RECOVERY/T03](genie_evidencias/RQ-PB-RECOVERY_T03.md), após a
+correção publicada no Free, passou conceitualmente na sequência de
+reconciliação e autoridade de limpeza com @ e indicador confirmados pelo
+usuário. A execução Delta e a identidade dos bytes lidos pela Genie seguem
+não observadas; os FAILs anteriores permanecem históricos.
 
 O [SD-BL-P-D01](genie_evidencias/SD-BL-P-D01.md) é diagnóstico separado:
 PASS do núcleo de planejamento/holdout, FAIL parcial de precisão temporal;
