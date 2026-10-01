@@ -4,6 +4,7 @@
 
 - (Codex) Explicitado no Concierge o repasse para `hub-ml-micromodelos` e acrescentados casos focais positivo/negativo à matriz de aceite, ainda pendentes de execução no Genie. Adicionado guia de `execution_contract.json`, policy, manifesto e níveis SEF à skill `hub-ml-criar-objeto` e ao molde de skill; manifesto de release atualizado. A policy não foi promovida.
 - (Codex) Marcado o kit `2f5a0cb9` como snapshot anterior no plano E2; os novos arquivos exigem kit e aceite do commit final antes do transporte.
+- (Codex) Atualizadas as três contagens literais do validador em `README.md` após o gate local apontar drift do snapshot; não houve alteração de lógica do validador.
 
 ## 2026-10-01 — Kit Micromodelos após integração B1
 
