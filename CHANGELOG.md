@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-01 — Consolidação local dos retestes B1
+
+- (Codex) Reunidas em branch isolado as evidências de Safra e Pipeline
+  Builder, preservando o PR #121 em rascunho. O índice da frente aponta para
+  os dois PASSes conceituais e mantém execução Genie e homologação integral
+  pendentes. Nenhum novo prompt, efeito remoto, policy ou merge foi feito.
+
 ## 2026-10-01 — Reteste focal de Safra na Genie
 
 - (Codex) Registrada a resposta RQ-VF-DENOM-D02 após a correção de Safra
