@@ -22,7 +22,8 @@ homologação integral nesta campanha.
 SER00 = INTEGRATED
 SER01 = INTEGRATED / CLOSED
 B0 = INTEGRATED / PR #113 / 4ba7f551...
-B1_SKILLS = PR #118 / ACEITE_PARCIAL
+B1_SKILLS = PR #118 / ACEITE_PARCIAL_GLOBAL
+B1_SCOPE_A = HUMAN_ACCEPTED / 2026-10-01 / PENDING_GIT_INTEGRATION
 B1_G6_R7_HISTORICO = INCOMPLETO
 B1_FREE_ATUAL = PROBES_SINTETICOS_VERIFICADOS
 B1_GENIE_ATUAL = PARCIAL
@@ -39,9 +40,10 @@ Em 2026-10-01, os retestes focais de
 raciocínio conceitual após correções publicadas no Free. O usuário confirmou
 indicador separado das duas skills; em Pipeline Builder, também confirmou
 seleção no menu `@`. Essas respostas não mostram runner ou Receipt e não
-apagam os FAILs históricos. A próxima ação é revisar as falhas materiais
-restantes contra os contratos atuais antes de pedir outra rodada à Genie;
-não há prompt repetido programado para Safra ou Pipeline Builder.
+apagam os FAILs históricos. O [escopo técnico A](B1_GATES_POS_MERGE_2026-10-01.md)
+foi aceito pelo usuário após os probes Free dirigidos e a reconciliação do
+manifesto de Baseline. O próximo passo é integrar essa correção e o registro
+de aceite em PR isolado; nenhuma rodada Genie adicional é necessária para A.
 
 ## Navegação
 
@@ -52,6 +54,7 @@ não há prompt repetido programado para Safra ou Pipeline Builder.
 - [SER01: histórico da primeira promoção](SER01/README.md)
 - [B1: pacote de skills sem controller](PR_B1_SKILLS_SEM_CONTROLLER_2026-09-30.md)
 - [Resultados das rodadas Genie](GENIE_SKILLS_RESULTADOS_2026-09-28.md)
+- [Gates proporcionais após o PR #121](B1_GATES_POS_MERGE_2026-10-01.md)
 
 Diagnóstico, certificação, prova externa, promoção e merge permanecem estados
 distintos. O conteúdo desta candidata não altera o controller nem substitui

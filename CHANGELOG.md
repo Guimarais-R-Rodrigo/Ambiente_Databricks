@@ -1,5 +1,37 @@
 # Changelog
 
+## 2026-10-01 — Aceite humano do escopo A da B1
+
+- (Codex) Registrada a decisão do usuário de aceitar os oito perfis
+  sintéticos delimitados e as regressões proporcionais da frente B1.
+  Índices e plano agora distinguem esse aceite técnico da homologação Genie,
+  do G6 histórico, da promoção de policy e da integração Git pendente.
+
+## 2026-10-01 — Reconciliação de Baseline e aceite técnico B1
+
+- (Codex) Corrigidos os dois hashes do helper MLflow compartilhado no
+  manifesto de Baseline após a integração MM06, sem alterar o helper.
+  `release_integrity`, 25 testes SER09/SER10/MM06 e seis testes KS/CLI
+  passaram; derivado regenerado. O manifesto isolado foi publicado e
+  conferido no Databricks Free preservando os arquivos paralelos de
+  Micromodelos. Um job sintético sem escrita persistente confirmou preflight,
+  Receipt e verify de KS e Baseline atuais. A matriz A separa este aceite
+  técnico da orquestração Genie, policy e G6 antigo.
+
+## 2026-10-01 — Gates B1 e efeitos sintéticos após o PR #121
+
+- (Codex) Documentada a diferença entre aceite dos perfis sintéticos
+  suportados, orquestração observável pela Genie e promoção dos níveis da
+  policy. O plano reaproveita provas locais/Free e retestes focais, aponta
+  probe Delta/FE dirigido na versão corrigida do runner e não exige os 42
+  prompts literais históricos. No Databricks Free, a FE e o Pipeline passaram
+  em casos isolados de materialização/MERGE, replay, readback e limpeza,
+  com ausência posterior das tabelas confirmada pela API. O primeiro caso
+  Pipeline bloqueou antes de criar a tabela por falta de `jsonschema` no
+  ambiente serverless; um retry em novo destino com dependência declarada
+  passou. A policy e o produto publicado não foram alterados; o aceite Genie
+  e a promoção continuam separados.
+
 ## 2026-10-01 — Auditoria causal das lacunas B1 remanescentes
 
 - (Codex) Conferidos Cross-EDA, Feature Engineering, Baseline ML e

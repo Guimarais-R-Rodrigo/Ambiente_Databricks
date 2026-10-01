@@ -1,0 +1,196 @@
+{
+  "cases": {
+    "delta_blocked": {
+      "effect": {
+        "cleanup": "NOT_RUN",
+        "compute_manifest_sha256": null,
+        "compute_receipt_id": null,
+        "create_acknowledged": false,
+        "create_attempted": false,
+        "delta_manifest_sha256": "c02e8a8f0dabb73461361db2adeb864eee6986d30a5dfb305fed45762d6e0e45",
+        "expected_rows_sha256": null,
+        "first_merge_rows_sha256": null,
+        "issues": [
+          "ValueError:COMPUTE_RECEIPT_OR_OUTPUT_INVALID:['ValueError:SPEC_PREFLIGHT_BLOCKED']"
+        ],
+        "persistent_write_performed": false,
+        "phase": "AUTH_VALIDATED",
+        "profile": "FREE_SYNTHETIC_DELTA_MERGE_V1",
+        "replay_rows_sha256": null,
+        "schema_version": "SER14-DELTA-EFFECT-1",
+        "status": "BLOCKED",
+        "table_absent_after_cleanup": null
+      },
+      "probe_status": "BLOCKED",
+      "published_package_mutated": false,
+      "target_table": "workspace.default.skills_delivery_4e1f0a1c43b6402e830f137274725089",
+      "task_run_id": 990221941458934
+    },
+    "delta_pass": {
+      "effect": {
+        "cleanup": "PASS",
+        "compute_manifest_sha256": "c02e8a8f0dabb73461361db2adeb864eee6986d30a5dfb305fed45762d6e0e45",
+        "compute_receipt_id": "er1:1e32ad19821a26737ad3a49c580c84516bca4a5d16453d034d00726726e09053",
+        "create_acknowledged": true,
+        "create_attempted": true,
+        "delta_manifest_sha256": "c02e8a8f0dabb73461361db2adeb864eee6986d30a5dfb305fed45762d6e0e45",
+        "expected_rows_sha256": "3ac1a366023a20c34f41c03c8ce1ac8ec97624266edfcd246196ac27b2e79670",
+        "first_merge_rows_sha256": "3ac1a366023a20c34f41c03c8ce1ac8ec97624266edfcd246196ac27b2e79670",
+        "issues": [],
+        "persistent_write_performed": true,
+        "phase": "CLEANED",
+        "profile": "FREE_SYNTHETIC_DELTA_MERGE_V1",
+        "replay_rows_sha256": "3ac1a366023a20c34f41c03c8ce1ac8ec97624266edfcd246196ac27b2e79670",
+        "schema_version": "SER14-DELTA-EFFECT-1",
+        "status": "PASS",
+        "table_absent_after_cleanup": true
+      },
+      "probe_status": "PASS",
+      "published_package_mutated": false,
+      "target_table": "workspace.default.skills_delivery_f06aab8190e6496f85b0ce4b28984dcb",
+      "task_run_id": 678992559773330
+    },
+    "fe_pass": {
+      "effect": {
+        "business_readiness": "NOT_EVALUATED",
+        "cleanup": "PASS",
+        "compute_manifest_sha256": null,
+        "compute_receipt_id": "er1:c8519fa9ffbe4e79cb6587141e18a1228c2ee1d6f458ae2b7885f41fc50f8712",
+        "create_acknowledged": true,
+        "create_attempted": true,
+        "delta_manifest_sha256": "c02e8a8f0dabb73461361db2adeb864eee6986d30a5dfb305fed45762d6e0e45",
+        "expected_rows_sha256": "69bfe597aa47b9bff9ae831dca00f6c3723703ae9d0e1d24c9ad8a2241214a48",
+        "fe_manifest_sha256": "625a7ca5a237ab7735e1b2392f4fa6413dc2a818145b249e57c72af390bb8699",
+        "feature_view_sha256": "54bc418e7f43f6595f920c38ead9a77138366a94529972e41e76dd2ddd6831c8",
+        "first_merge_rows_sha256": "69bfe597aa47b9bff9ae831dca00f6c3723703ae9d0e1d24c9ad8a2241214a48",
+        "issues": [],
+        "persistent_write_performed": true,
+        "phase": "CLEANED",
+        "profile": "FREE_SYNTHETIC_PIT_FEATURE_MATERIALIZATION_V1",
+        "promotion_authorized": false,
+        "provenance": {
+          "context_sha256": "f311b705d2235ebadc62089c89fd2f2771a89c940df112c84258aaf4f1ed82c2",
+          "cutoff_sha256": "9733508c218bacb607a0f8391fee52363509cbc7ead7a66fb08b008254f55545",
+          "postflight_sha256": "4f476af7d3f67a0fedced19d6d828ade0f635841e5d7b99f4f686482ed5485c4",
+          "receipt_sha256": "279da2db5498e5e818ab75270bc80802ea646001aac1df6cb0f9c81cb9146cdf",
+          "source_sha256": "b752f0f4f2a08c0cebdcb6d75d74a2f25681baac4c34af4f3007c9f1cafc8eb8",
+          "view_sha256": "54bc418e7f43f6595f920c38ead9a77138366a94529972e41e76dd2ddd6831c8"
+        },
+        "replay_rows_sha256": "69bfe597aa47b9bff9ae831dca00f6c3723703ae9d0e1d24c9ad8a2241214a48",
+        "schema_version": "SER08-FE-DELTA-EFFECT-1",
+        "status": "PASS",
+        "table_absent_after_cleanup": true,
+        "upstream_postflight_id": "pf1:2f9d01d87907de77fd08850dfef4b8f5c0d553d3cd404c2acb11a69ed84675dc"
+      },
+      "feature_view_sha256": "54bc418e7f43f6595f920c38ead9a77138366a94529972e41e76dd2ddd6831c8",
+      "probe_status": "PASS",
+      "published_package_mutated": false,
+      "target_table": "workspace.default.skills_delivery_e2bc67d8d5bd45c6993bfef8575d6429",
+      "task_run_id": 902427072158930,
+      "upstream_postflight_id": "pf1:2f9d01d87907de77fd08850dfef4b8f5c0d553d3cd404c2acb11a69ed84675dc",
+      "upstream_receipt_id": "er1:c8519fa9ffbe4e79cb6587141e18a1228c2ee1d6f458ae2b7885f41fc50f8712"
+    },
+    "preflight_diag": {
+      "issues": [
+        "ModuleNotFoundError:No module named 'jsonschema'"
+      ],
+      "sef_issues": null,
+      "sef_status": null,
+      "status": "BLOCKED",
+      "task_run_id": 688421672619958
+    }
+  },
+  "date": "2026-10-01",
+  "job_runs": {
+    "delta_retry": 321703243414166,
+    "diagnostic": 471885332223623,
+    "initial": 716880761687778
+  },
+  "limits": [
+    "Not Genie orchestration",
+    "Not corporate validation",
+    "Not policy promotion",
+    "Real remote ACK-loss fault not injected"
+  ],
+  "schema_version": "B1-FREE-EFFECT-EVIDENCE-1",
+  "scope": "Databricks Free personal synthetic only",
+  "source_readbacks": {
+    "hub_scripts/skill_execution/__init__.py": {
+      "equal": true,
+      "local_sha256": "68a7018cd9f326a5730b26be73d2b0d7888eae07c272ff175d507f192b908b00",
+      "remote_sha256": "68a7018cd9f326a5730b26be73d2b0d7888eae07c272ff175d507f192b908b00"
+    },
+    "hub_scripts/skill_execution/domain_context/release.py": {
+      "equal": true,
+      "local_sha256": "756b4d647b975ca7e7446a8a173230e320021baa3209f71c58a21bb73d462264",
+      "remote_sha256": "756b4d647b975ca7e7446a8a173230e320021baa3209f71c58a21bb73d462264"
+    },
+    "hub_scripts/skill_execution/skill_execution.py": {
+      "equal": true,
+      "local_sha256": "acce61cd91998ddf22d98807f4ea0859b9a59e83115012f19921f520161d7563",
+      "remote_sha256": "acce61cd91998ddf22d98807f4ea0859b9a59e83115012f19921f520161d7563"
+    },
+    "skills/hub-ml-feature-engineering/release_manifest.json": {
+      "equal": true,
+      "local_sha256": "625a7ca5a237ab7735e1b2392f4fa6413dc2a818145b249e57c72af390bb8699",
+      "remote_sha256": "625a7ca5a237ab7735e1b2392f4fa6413dc2a818145b249e57c72af390bb8699"
+    },
+    "skills/hub-ml-feature-engineering/scripts/run_pit_features.py": {
+      "equal": true,
+      "local_sha256": "9cf314fc9949cdbb194354cf228a77a0f49ccf68353e2b7202e79107284f036d",
+      "remote_sha256": "9cf314fc9949cdbb194354cf228a77a0f49ccf68353e2b7202e79107284f036d"
+    },
+    "skills/hub-ml-feature-engineering/scripts/run_pit_materialization.py": {
+      "equal": true,
+      "local_sha256": "ba8f1efe23a405427498bd297d88c752ddf00ad417cbb91087e592c65d2638be",
+      "remote_sha256": "ba8f1efe23a405427498bd297d88c752ddf00ad417cbb91087e592c65d2638be"
+    },
+    "skills/hub-ml-pipeline-builder/delta_execution_contract.json": {
+      "equal": true,
+      "local_sha256": "ce4a5e6aedcfe5f62bde0be2e72b4496e51bcc8e53e176d84ebcb8d72c0a7c7a",
+      "remote_sha256": "ce4a5e6aedcfe5f62bde0be2e72b4496e51bcc8e53e176d84ebcb8d72c0a7c7a"
+    },
+    "skills/hub-ml-pipeline-builder/execution_contract.json": {
+      "equal": true,
+      "local_sha256": "44ad7d1ae02d76e6682aa71187ce64202a837afd55e0aba5928866f9b6248106",
+      "remote_sha256": "44ad7d1ae02d76e6682aa71187ce64202a837afd55e0aba5928866f9b6248106"
+    },
+    "skills/hub-ml-pipeline-builder/input.schema.json": {
+      "equal": true,
+      "local_sha256": "cde4a9cc1ea6cbcff7ad0bc0a28d9f2efde5d29b7e8374127595b96d1488af92",
+      "remote_sha256": "cde4a9cc1ea6cbcff7ad0bc0a28d9f2efde5d29b7e8374127595b96d1488af92"
+    },
+    "skills/hub-ml-pipeline-builder/release_manifest.json": {
+      "equal": true,
+      "local_sha256": "c02e8a8f0dabb73461361db2adeb864eee6986d30a5dfb305fed45762d6e0e45",
+      "remote_sha256": "c02e8a8f0dabb73461361db2adeb864eee6986d30a5dfb305fed45762d6e0e45"
+    },
+    "skills/hub-ml-pipeline-builder/scripts/preflight.py": {
+      "equal": true,
+      "local_sha256": "139d50e09cc90d64539ec263411d9d8f507c4db22b267ee7474f5312b01665c7",
+      "remote_sha256": "139d50e09cc90d64539ec263411d9d8f507c4db22b267ee7474f5312b01665c7"
+    },
+    "skills/hub-ml-pipeline-builder/scripts/run_delta.py": {
+      "equal": true,
+      "local_sha256": "f41fd08f900f65e99ffbba9be66d5fcda6747dc56116cfb37dc4a1df6ca7c115",
+      "remote_sha256": "f41fd08f900f65e99ffbba9be66d5fcda6747dc56116cfb37dc4a1df6ca7c115"
+    }
+  },
+  "table_absence": [
+    {
+      "exit_code": 1,
+      "first_line": "Error: Table 'workspace.default.skills_delivery_4e1f0a1c43b6402e830f137274725089' does not exist.",
+      "target": "workspace.default.skills_delivery_4e1f0a1c43b6402e830f137274725089"
+    },
+    {
+      "exit_code": 1,
+      "first_line": "Error: Table 'workspace.default.skills_delivery_e2bc67d8d5bd45c6993bfef8575d6429' does not exist.",
+      "target": "workspace.default.skills_delivery_e2bc67d8d5bd45c6993bfef8575d6429"
+    },
+    {
+      "exit_code": 1,
+      "first_line": "Error: Table 'workspace.default.skills_delivery_f06aab8190e6496f85b0ce4b28984dcb' does not exist.",
+      "target": "workspace.default.skills_delivery_f06aab8190e6496f85b0ce4b28984dcb"
+    }
+  ]
+}
