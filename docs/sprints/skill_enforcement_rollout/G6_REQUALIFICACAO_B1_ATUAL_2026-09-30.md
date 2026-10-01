@@ -38,7 +38,7 @@ das outras skills.
 
 | Risco do manifesto antigo | Evidência reutilizável para a versão atual | Estado atual |
 |---|---|---|
-| VF-G01, cumulativo/denominador/célula parcial | [SD-VF-P-D01](genie_evidencias/SD-VF-P-D01.md): regra correta no caso; [SD-VF-STATUS-D01](genie_evidencias/SD-VF-STATUS-D01.md): denominador provisório `1` indevido; Free SER03 5/5 | PASS conceitual anterior; FAIL parcial de denominador aberto; execução Genie NOT_RUN |
+| VF-G01, cumulativo/denominador/célula parcial | [SD-VF-P-D01](genie_evidencias/SD-VF-P-D01.md): regra correta no caso; [SD-VF-STATUS-D01](genie_evidencias/SD-VF-STATUS-D01.md): denominador provisório `1` indevido; [RQ-VF-DENOM-D02](genie_evidencias/RQ-VF-DENOM-D02.md): reteste focal corrigido; Free SER03 5/5 | PASS conceitual focal na versão corrigida; FAIL D01 histórico; execução Genie NOT_RUN |
 | VF-G02, evento mensal versus cumulativo | [RQ-VF-EVENT/T01](genie_evidencias/RQ-VF-EVENT_T01.md): indicador relatado, evento mensal/cumulativo e ausência corretos na fixture; Free não prova roteamento/explicação da Genie | PASS conceitual nesta rodada; execução Genie NOT_RUN |
 | VF-G03, pedido vizinho fora de Safra | [T01](genie_evidencias/SD-VF-N_T01.md): resposta de drift sem indicador; [D04](genie_evidencias/SD-VF-N_D04.md): Monitoramento selecionado por @, não auto-rota Safra | Parcial; sem repetição automática |
 | VF-G04, contexto ausente | [T01](genie_evidencias/SD-VF-P_T01.md), [T02](genie_evidencias/SD-VF-P_T02.md) e [bypass D01](genie_evidencias/SD-VF-B_D01.md) preservam erros | **FAIL material histórico; não convertido em PASS** |
@@ -150,7 +150,7 @@ O helper já mantém `taxa_acumulada` ausente em célula incompleta. A correçã
 posterior da skill alinha a orientação conceitual a essa regra, sem mudar o
 runner ou a policy. O FAIL original continua histórico.
 
-**RQ-VF-DENOM-D02 — NOT_RUN.** O `SKILL.md` corrigido do commit
+**RQ-VF-DENOM-D02 — [PASS conceitual focal; execução NOT_RUN](genie_evidencias/RQ-VF-DENOM-D02.md).** O `SKILL.md` corrigido do commit
 `cdbdd2aa` foi publicado seletivamente no Databricks Free pessoal: ACK de
 sucesso e dois readbacks com SHA-256 normalizado
 `410eec57b38ddc95fe6ec5b1780e9be7c89d2f9d9b9f0be3f20655e9785367e2`.
@@ -174,3 +174,10 @@ não se oferece taxa provisória com denominador 1. Registrar separadamente
 indicador da skill, resposta e qualquer output de ferramenta; texto sobre
 execução sem chamada observável não prova runner/Receipt. O readback Free
 confirma bytes publicados, não os bytes efetivamente consumidos pela Genie.
+
+Resposta recebida em 2026-10-01, com indicador separado de Safra relatado
+pelo usuário. A classificação dos quatro MOBs bateu com o oráculo; MOB2
+permaneceu sem taxa, e `1/2` foi tratado somente como cobertura, sem sugestão
+de denominador provisório 1. A resposta não mostrou execução canônica.
+O FAIL D01 permanece no histórico e o PASS D02 atesta apenas esta regressão
+conceitual, sem homologar a rota inteira ou provar os bytes lidos pela Genie.

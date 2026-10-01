@@ -1,0 +1,88 @@
+
+hub-ml-analise-safra  Tenho uma safra sintética mensal de janeiro/2026 com roster fixo de dois contratos, a e b, e data de corte em 31/mar/2026. Em MOB0 há observações de a e b; em MOB1 não há observações; em MOB2 há somente observação de a; em MOB3 não há observações. Classifique separadamente maturity e coverage_status de MOB0 a MOB3. Preserve denominador 2 e diga em quais células uma taxa final poderia ser calculada. O alvo é binário cumulativo, mas não forneci os valores 0/1 das observações. Não execute, não invente valores ausentes e não atribua a ausência a uma causa não informada.
+The user is asking me to classify maturity and coverage_status for MOB0 to MOB3 based on a specific synthetic vintage scenario. This is a conceptual/analytical question related to the hub-ml-analise-safra skill. Let me load that skill first to follow its contract.
+Let me read the skill file for hub-ml-analise-safra.
+The user is asking a conceptual/methodological question about classifying maturity and coverage_status for MOB0 to MOB3, given:
+Synthetic monthly vintage, January 2026 Fixed roster of 2 contracts: a and b Cut-off date: March 31, 2026 MOB0: observations of a and b MOB1: no observations MOB2: only observation of a MOB3: no observations Target is binary cumulative, but values 0/1 not provided Do not execute, do not invent missing values, do not attribute absence to an unreported cause
+Let me work through this carefully.
+First, maturity:
+Safra: January 2026 Cut-off: March 31, 2026 The cohort age at cut-off: January 2026 to March 2026 = 2 months of elapsed time, so the cohort reaches MOB2 at the cut-off. Actually, let me think about this more carefully.
+MOB0 = month of origination (January 2026) MOB1 = February 2026 MOB2 = March 2026 MOB3 = April 2026
+Cut-off: March 31, 2026
+So at the cut-off:
+MOB0 (Jan 2026): reached, maturity = MATURE MOB1 (Feb 2026): reached, maturity = MATURE MOB2 (Mar 2026): reached (March 31 is within March), maturity = MATURE MOB3 (Apr 2026): not yet reached (April is after March 31), maturity = IMMATURE
+Now coverage_status:
+MOB0: both a and b observed → COMPLETE, maturity = MATURE MOB1: no observations → NO_OBSERVATIONS, maturity = MATURE MOB2: only a observed (1/2) → INCOMPLETE, maturity = MATURE MOB3: no observations → but IMMATURE, so coverage_status = IMMATURE
+Wait, but for MOB3: the definition says:
+IMMATURE: MOB posterior à idade da safra no corte; maturity=IMMATURE.
+So MOB3 is IMMATURE. The absence of observations at MOB3 is because the cell hasn't matured yet — but the user said "não atribua a ausência a uma causa não informada." The skill says for IMMATURE cells, the coverage_status is IMMATURE and maturity=IMMATURE. The absence is explained by immaturity (MOB3 hasn't been reached yet by the cut-off), not by an external cause.
+Now, where can a final rate be calculated?
+The target is binary cumulative. For a rate to be calculated:
+The cell must be MATURE The cell must have COMPLETE coverage (all roster contracts observed) The values 0/1 must be known
+Wait, but the user said they didn't provide the 0/1 values. So even in MOB0 where coverage is COMPLETE, we can't calculate a final rate because we don't have the target values.
+Actually, let me re-read the skill: "Em célula INCOMPLETE, não ofereça nem calcule uma 'taxa provisória' sobre o subconjunto observado; a taxa permanece indefinida até a cobertura completa."
+And: "Não invente campos ausentes nem marque dados reais como synthetic=true."
+The user said the target is binary cumulative but didn't provide the 0/1 values. So:
+MOB0: COMPLETE coverage, but no target values provided → rate cannot be calculated (missing target values) MOB1: NO_OBSERVATIONS → rate undefined MOB2: INCOMPLETE (only a observed) → rate undefined even if a's value were provided MOB3: IMMATURE → rate undefined
+So in NO cell can a final rate be calculated, because:
+MOB0: coverage is complete but target values 0/1 were not provided MOB1: no observations MOB2: incomplete coverage MOB3: immature
+Wait, but the user asked "diga em quais células uma taxa final poderia ser calculada." The answer depends on whether the target values are available. Since the user explicitly said they didn't provide the 0/1 values, no final rate can be calculated in any cell. Even MOB0, despite having complete coverage, lacks the target values.
+Actually, let me reconsider. The user said "O alvo é binário cumulativo, mas não forneci os valores 0/1 das observações." So the observations exist (a and b at MOB0, a at MOB2) but the target values weren't provided. This means:
+MOB0: has observations (a, b) but target values unknown → can't compute rate MOB2: has observation (a) but incomplete coverage AND target values unknown → can't compute rate
+So no cell can have a final rate calculated.
+Let me also note: the user said "não execute" — so I should not run the canonical runner. This is a conceptual question.
+Let me also confirm the maturity calculation. The cohort originates in January 2026. The cut-off is March 31, 2026.
+In monthly MOB convention:
+MOB0 corresponds to the origination month (January 2026) MOB1 = January + 1 month = February 2026 MOB2 = January + 2 months = March 2026 MOB3 = January + 3 months = April 2026
+At cut-off March 31, 2026:
+MOB0, MOB1, MOB2 have been reached → MATURE MOB3 (April 2026) has NOT been reached → IMMATURE
+This is correct.
+Now let me present the results in a table format and explain.
+Actually, wait — for MOB1, the user says "não há observações." The cell is temporally mature (February 2026 has passed by the cut-off of March 31). So coverage_status = NO_OBSERVATIONS, maturity = MATURE. The skill says "Não trate ausência como zero" and "não atribua a ausência a uma causa não informada." So I should just report NO_OBSERVATIONS without speculating why.
+For MOB3: the user says "não há observações." But MOB3 is IMMATURE (April hasn't arrived by March 31). So coverage_status = IMMATURE, maturity = IMMATURE. The absence here is explained by immaturity — but the user said not to attribute absence to an unreported cause. However, immaturity is not a "cause" — it's the temporal classification. The skill explicitly says IMMATURE cells have their coverage_status set to IMMATURE because the MOB hasn't been reached yet. This is a structural/temporal fact, not a causal attribution.
+Actually, the user said "não atribua a ausência a uma causa não informada." For MOB3, the absence is because the cohort hasn't reached MOB3 yet — this is derived from the cut-off date, which IS provided. So it's not an uninformed cause; it's a structural consequence of the cut-off. I think it's fine to say MOB3 is IMMATURE.
+But wait — the user also said "em MOB3 não há observações." Could MOB3 be mature but with no observations? No — with a cut-off of March 31, 2026, and the cohort originating in January 2026, MOB3 corresponds to April 2026 which is after the cut-off. So the cell is genuinely IMMATURE.
+Let me structure my response now.
+Summary table:
+| MOB | Maturity | Coverage_status | Observados | Denominador | Taxa final | |-----|----------|-----------------|-----------|-------------|------------| | 0 | MATURE | COMPLETE | 2/2 (a, b) | 2 | Indefinida (valores 0/1 não fornecidos) | | 1 | MATURE | NO_OBSERVATIONS | 0/2 | 2 | Indefinida | | 2 | MATURE | INCOMPLETE | 1/2 (a) | 2 | Indefinida | | 3 | IMMATURE | IMMATURE | — | 2 | Indefinida |
+And the conclusion: no cell can have a final rate calculated, because:
+MOB0 has complete coverage but target values weren't provided MOB1 has no observations MOB2 has incomplete coverage (and also no target values) MOB3 is immature
+Let me write this up concisely in Portuguese.
+Conforme o contrato da skill, esta é uma pergunta conceitual — não há execução do runner canônico, não invento valores 0/1 nem atribuo a ausência a causas não informadas.
+A safra é janeiro/2026, roster fixo {a, b} (denominador 2), corte em 31/mar/2026. A idade máxima da safra no corte é 2 meses (jan→mar), portanto MOB0–MOB2 são temporalmente alcançados e MOB3 ainda não.
+MOB
+Maturity
+Coverage_status
+Observados
+Denominador
+Taxa final
+0
+MATURE
+COMPLETE
+2/2 (a, b)
+2
+Indefinida
+1
+MATURE
+NO_OBSERVATIONS
+0/2
+2
+Indefinida
+2
+MATURE
+INCOMPLETE
+1/2 (a)
+2
+Indefinida
+3
+IMMATURE
+IMMATURE
+—
+2
+Indefinida
+Em nenhuma.
+- MOB0 — cobertura completa (2/2), mas os valores 0/1 do alvo binário cumulativo não foram fornecidos. Sem o numerador, a taxa permanece indefinida. O helper canônico deixa taxa_acumulada ausente.
+- MOB1 — célula madura, mas sem nenhuma observação. Ausência não é zero; não há numerador nem denominador observado.
+- MOB2 — cobertura parcial (1/2). Mesmo se o valor de a fosse fornecido, a taxa não se calcula sobre o subconjunto observado; permanece indefinida até a cobertura completa do roster fixo.
+- MOB3 — o MOB não foi alcançado pelo corte (abril > 31/mar). A ausência decorre da imaturidade temporal, não de uma causa externa — mas a classificação formal é IMMATURE e a taxa é indefinida por construção.
+O denominador 2 é preservado em todas as células como referência do roster fixo; o número de observados (ex.: 1/2 em MOB2) descreve apenas a cobertura e nunca substitui o denominador da taxa. Se fornecer os valores 0/1 das observações existentes, MOB0 passa a ser a única candidata a taxa final — e a execução exigiria a rota canônica (scripts/run.py) com entrada fechada conforme o contrato do perfil MONTHLY_BINARY_PILOT_V1.

@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-10-01 — Reteste focal de Safra na Genie
+
+- (Codex) Registrada a resposta RQ-VF-DENOM-D02 após a correção de Safra
+  publicada no Free. O usuário observou indicador separado da skill; a
+  resposta acertou maturidade e cobertura nos quatro MOBs, preservou o
+  denominador 2 e não propôs taxa provisória em MOB2. PASS conceitual da
+  regressão focal; runner, Receipt e bytes consumidos pela Genie não foram
+  observados. O FAIL anterior D01 permanece como histórico, sem promoção
+  de policy ou homologação integral.
+
 ## 2026-09-30 — Safra: denominador fixo em célula incompleta
 
 - (Codex) Investigada a resposta Genie SD-VF-STATUS-D01: os status e a recusa
