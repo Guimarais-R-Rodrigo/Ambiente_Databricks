@@ -150,9 +150,16 @@ O helper já mantém `taxa_acumulada` ausente em célula incompleta. A correçã
 posterior da skill alinha a orientação conceitual a essa regra, sem mudar o
 runner ou a policy. O FAIL original continua histórico.
 
-**RQ-VF-DENOM-D02 — NOT_RUN.** Após readback do `SKILL.md` corrigido no
-Databricks Free, abrir chat novo, selecionar `hub-ml-analise-safra` no menu
-`@` e colar exatamente:
+**RQ-VF-DENOM-D02 — NOT_RUN.** O `SKILL.md` corrigido do commit
+`cdbdd2aa` foi publicado seletivamente no Databricks Free pessoal: ACK de
+sucesso e dois readbacks com SHA-256 normalizado
+`410eec57b38ddc95fe6ec5b1780e9be7c89d2f9d9b9f0be3f20655e9785367e2`.
+O arquivo remoto anterior coincidia com `main`; MM04, policy e outros
+objetos não foram escritos. Relatório local ignorado pelo Git:
+`.artifacts/skills-delivery-evidence/safra-denominator-free-publish-20260930.json`
+(SHA-256 `cc7741c062363bbccd777bea6f1fa1cf1e53e4447adedfbf600ec8179c31d800`).
+Isso não prova execução ou leitura pela Genie. Abrir chat novo, selecionar
+`hub-ml-analise-safra` no menu `@` e colar exatamente:
 
 ```text
 @hub-ml-analise-safra

@@ -10,7 +10,12 @@
   o subconjunto observado. Sem alteração do runner ou da policy; reteste
   Genie da versão corrigida permanece pendente. Smoke sintético do helper
   confirmou roster 2, observado 1, cobertura 0,5 e taxa NaN em MOB2;
-  auditoria independente não encontrou bloqueador semântico.
+  auditoria independente não encontrou bloqueador semântico. Após guarda de
+  host/perfil pessoal e comparação da versão remota anterior com `main`,
+  somente o SKILL.md de Safra foi publicado no Free: ACK sucesso e dois
+  readbacks iguais ao SHA-256 normalizado
+  `410eec57b38ddc95fe6ec5b1780e9be7c89d2f9d9b9f0be3f20655e9785367e2`.
+  Genie e promoção de policy não foram executadas.
 
 ## 2026-09-30 — Estado de Micromodelos após integração Git
 
