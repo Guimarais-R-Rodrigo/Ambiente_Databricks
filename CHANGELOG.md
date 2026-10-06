@@ -6,6 +6,9 @@
 - (Codex) Reorganizados a entrada do produto, os padrões e o Manual Técnico por objetivo de uso; conteúdo de construção foi preservado em manutenção. As cópias de autoria/leitura do Manual foram sincronizadas; o derivado será gerado após integrar os demais lotes.
 - (Codex) Baseline local: 12 etapas do CI aprovadas, com skips registrados. Validação focal de S1/S2: zero falhas e avisos; conferência do snapshot aguarda atualização medida na integração final. Nenhuma policy, algoritmo, schema, notebook executável ou workspace foi alterado.
 
+- (Codex) Reescritos os guias de runners com APIs e oráculos completos, rotas de efeito distintas, exemplos locais e limites de dependências. Receitas Safra, Baseline, features, drift/performance e Micromodelos executadas localmente; Spark e SHAP integral não executados por dependências opcionais ausentes.
+- (Codex) Separada a projeção operacional de TOKENS da emissão histórica; saída padrão, snapshot V01, schema e testes históricos preservados. A documentação de assets distingue uso de autoria sem regenerar imagens ou alterar licenças.
+
 ## 2026-10-01 — Integração do aceite técnico B1 A
 
 - (Codex) O PR #122 foi integrado em `main` no commit `43dac176`, após

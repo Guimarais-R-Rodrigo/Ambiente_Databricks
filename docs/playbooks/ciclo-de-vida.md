@@ -32,7 +32,7 @@ Um contrato de enforcement pode exigir gates adicionais. Não inferir autorizaç
 
 ## 6. Publicação separada
 
-Depois de autorizados destino, versão e efeito, siga a [skill de publicação](../../.claude/skills/publicar-free/SKILL.md). O plano local é `python tools/publicar_free.py`; `--execute` escreve. `--verify` compara inventário/tipos; `--verify --conteudo` também compara conteúdo. Confira recibos, ausentes e obsoletos; em falha parcial, inspecione a tentativa anterior antes de qualquer retry. A conferência não homologa comportamento Genie.
+Depois de autorizados destino, versão e efeito, siga a [skill de publicação](../../.claude/skills/publicar-free/SKILL.md). O modo de plano (`python tools/publicar_free.py`) não escreve remotamente, mas consulta identidade e destino pela CLI autenticada; não é inteiramente offline. `--execute` escreve. `--verify` compara inventário/tipos; `--verify --conteudo` também compara conteúdo. Confira recibos, ausentes e obsoletos; em falha parcial, inspecione a tentativa anterior antes de qualquer retry. A conferência não homologa comportamento Genie.
 
 ## 7. Trabalho corporativo
 

@@ -1407,9 +1407,9 @@ smart_sample(df: DataFrame, n: int=10000, stratify_col: Optional[str]=None, seed
 
 ### 27.4. Modelagem, tempo, métricas e monitoramento
 
-#### Guias locais R06 — como montar uma avaliação temporal sem misturar as camadas
+#### Avaliação temporal sem misturar as camadas
 
-Para um usuário começando no Hub, a ordem conceitual recomendada é: **(1) construir features sem futuro → (2) definir partições/gaps → (3) avaliar em um ou vários cortes → (4) ajustar e comparar candidatos**. Os objetos R06 não formam um pipeline automático; cada um cobre uma parte:
+Para um usuário começando no Hub, a ordem conceitual recomendada é: **(1) construir features sem futuro → (2) definir partições/gaps → (3) avaliar em um ou vários cortes → (4) ajustar e comparar candidatos**. Os objetos temporais não formam um pipeline automático; cada um cobre uma parte:
 
 - `hub_snippets/ml/lgbm_temporal/README.md` — lags/rollings/calendário em pandas; não treina LightGBM;
 - `hub_snippets/ml/split_temporal/README.md` — um split treino/validação/teste por períodos observados;
@@ -1434,7 +1434,7 @@ train_arima(series: np.ndarray, m: int=12, forecast_periods: int=6, seasonal: bo
 
 [Implementação](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/arima_wrapper/arima_wrapper.py) · [API exportada](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/arima_wrapper/__init__.py) · [Notebook de exemplo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/arima_wrapper/exemplo_arima_wrapper.py)
 
-#### Guias locais R08 — clusterização, anomalias e explicabilidade
+#### Clusterização, anomalias e explicabilidade
 
 Para um usuário novo, escolha primeiro a **pergunta**:
 
@@ -1445,7 +1445,7 @@ Para um usuário novo, escolha primeiro a **pergunta**:
 - `hub_snippets/ml/shap_explainer/README.md` — calcular atribuições do output do modelo;
 - `hub_snippets/ml/explainability_report/README.md` — transformar importâncias já calculadas em Markdown.
 
-Use as rotas em conjunto somente quando os contratos realmente se encaixarem. A R08 documenta o estado existente; não migra `umap_viz` para a rota V04 de temas e não altera implementações.
+Use as rotas em conjunto somente quando os contratos realmente se encaixarem. Confirme o suporte temático na API efetivamente usada; compor recursos não altera suas implementações.
 
 #### `hub_snippets.ml.autoencoder_anomaly`
 
@@ -1567,7 +1567,7 @@ profile_anomalies(df: pd.DataFrame, feature_cols: List[str], scores: np.ndarray,
 
 [Implementação](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/isolation_forest/isolation_forest.py) · [API exportada](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/isolation_forest/__init__.py) · [Notebook de exemplo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/c5fdc61181c14124d653cf9e6222d9a402745949/ambiente_fonte/.assistant/hub_snippets/ml/isolation_forest/exemplo_isolation_forest.py)
 
-#### Guias locais R07 — score, maturidade e sobrevivência
+#### Score, maturidade e sobrevivência
 
 Para um usuário novo no Hub, separe as perguntas antes de escolher o objeto:
 
@@ -2309,7 +2309,6 @@ Uma assinatura com anotação `DataFrame` pode referir-se a Spark ou pandas conf
 Quando surgir um novo objeto, atualize esta seção a partir do código e confira seu exemplo. Ao remover ou renomear um helper, revise também as skills e os prompts que o recomendam. Alterar apenas o texto do manual não cria a implementação faltante.
 
 
-<a id="metodos"></a>
 ### Rotas rápidas — scripts operacionais
 
 Se a dúvida estiver em um dos seis scripts abaixo, abra primeiro o README da própria pasta. Ele explica o conceito, efeitos, custo e interpretação antes do notebook:
@@ -2337,6 +2336,7 @@ Para escolher entre os seis modelos/tabulares desta família, abra primeiro o RE
 Os notebooks instalam dependências de laboratório e reiniciam o Python. Leia esses efeitos antes de executar. Métrica de validação, importância ou tuning não equivalem a homologação do modelo.
 
 
+<a id="metodos"></a>
 ## 28. Skills, prompts e padrões: como escolher sem decorar o repositório
 
 ### 28.1. Skills do Hub: o método não é o dado

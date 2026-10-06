@@ -181,7 +181,7 @@ Não inventar valores apenas para obter PASS. Se uma informação material não 
 - `ExecutionTraceV0`: registro técnico do que aconteceu durante o run.
 - `ExecutionReceiptV1`: comprovante formal que vincula trace e resultado à release/execução canônica esperada.
 - `PostflightV1`: valida Receipt, required/conditional aplicáveis, skips, templates, artifacts e handoff.
-- `VALID` no Receipt: comprovante SE04 íntegro e compatível; não equivale sozinho a conclusão L4.
+- `VALID` no Receipt: Receipt V1 íntegro e compatível; não equivale sozinho a conclusão L4.
 - `PASS` no postflight: única condição que autoriza `completion.authorized=true`.
 - `PENDING_POSTFLIGHT`: o executor L4 terminou, mas **a skill ainda não terminou**; falta `finalize_or_raise`.
 - `FAIL`: evidência material requerida faltou ou não concluiu.

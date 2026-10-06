@@ -1,6 +1,8 @@
 # Concierge Hub
 
-**Estado: integrada ao produto do Hub em 12/09/2026 (versão 0.2.0). Publicação e aceite conversacional no Databricks pendentes.**
+O contrato estático é L1/audit. Uma recomendação aceitável identifica recurso existente, API/contrato consultados, adequação, limites, sequência mínima e próxima decisão. Estrutura, transporte da release e comportamento conversacional são provas distintas: um registro local não confirma publicação ou aceite no ambiente-alvo.
+
+Use o Concierge para localizar recursos existentes e obter uma recomendação com evidências e limites. A busca não executa análises nem amplia permissões.
 
 ## O que é e para quem é
 

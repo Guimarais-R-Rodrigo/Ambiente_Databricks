@@ -67,8 +67,7 @@ Usar analogias de banking/CRM somente depois da explicação técnica e rotulá-
   aqui é a compreensão.
 - **Usar analogia que precisa de ressalva maior que ela.** Se a metáfora exige
   três correções, explique direto.
-- **Afirmar capacidade da plataforma sem verificar.** Slash command registrado
-  pelo usuário, hook e memória automática **não existem** no Genie Code.
+- **Afirmar capacidade da plataforma sem verificar.** Não prometa slash command, hook ou memória automática sem consultar a documentação oficial e a disponibilidade da versão/superfície em uso.
 - **Ensinar o nome antigo.** Delta Live Tables virou Lakeflow Spark Declarative
   Pipelines; Databricks Asset Bundles virou Declarative Automation Bundles.
 

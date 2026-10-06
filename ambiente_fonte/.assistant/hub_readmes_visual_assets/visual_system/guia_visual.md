@@ -31,12 +31,6 @@ Rótulos e legendas acompanham as cores; cor isolada nunca define significado.
 - Cabeçalhos usam arte raster decorativa e texto exato; não herdam a legenda
   operacional dos diagramas. O brilho fica longe da região de leitura.
 
-## Regeneração
+## Alteração de recursos visuais
 
-Execute com o Node.js que tenha o pacote `sharp` disponível:
-
-```powershell
-node tools/readme_visuals/headers.mjs
-node tools/readme_visuals/production.mjs --family all
-node tools/readme_visuals/validate_production.mjs
-```
+Encaminhe mudanças ao mantenedor e preserve as regras de semântica, legibilidade e acessibilidade acima. O [guia de autoria externo](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/docs/readme-readequacao-20261006/tools/readme_visuals/README.md) mantém a receita de geração. Gerar uma variante não a aprova.

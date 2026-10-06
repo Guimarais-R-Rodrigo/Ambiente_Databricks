@@ -89,7 +89,7 @@ Executar testes de:
   validade e dono.
 
 
-## Executar o perfil temporal sintético B1
+## Executar o perfil temporal sintético
 
 Para o perfil `FIXED_LAG_L1_V1`, exija um request JSON sintético com `decision_at`
 UTC, `window_days`, relógios `event_at`/`available_at`, atraso constante de um
@@ -115,7 +115,7 @@ Genie nem autorização de publicação.
 Para o perfil sintético COMPOSED_PIT_FEATURE_VIEW_V1, use
 scripts/run_pit_features.py::compose com contexto e datasets do Cross-EDA,
 Spark UTC, window_days, upstream_run_id e view_run_id distintos. O adapter
-executa a rota SER06, exige Receipt, finalizador e verificação independente
+executa a rota PIT local sintética, exige Receipt, finalizador e verificação independente
 do PIT, então projeta feature_value/available_at por decision_id. Retenha o
 upstream_evidence completo. Confira com scripts/run_pit_features.py::verify,
 fornecendo contexto, datasets, janela e IDs originais externos ao payload.

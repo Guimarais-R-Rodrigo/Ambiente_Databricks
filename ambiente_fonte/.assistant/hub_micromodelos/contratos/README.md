@@ -1,5 +1,23 @@
 # Contrato `micromodelo.yaml`
 
+## Revisar uma alteração
+
+Copie o template para um caso autorizado e preserve o original. Preencha fatos conhecidos e pendências honestas; execute da raiz `.assistant`:
+
+```python
+from pathlib import Path
+from hub_micromodelos.execucao import especificacao, assinatura
+spec = especificacao.load_document(Path("hub_micromodelos/exemplos/recencia_contato/micromodelo.yaml"))
+schema = especificacao.load_schema(Path("hub_micromodelos/contratos/micromodelo.schema.json"))
+issues = especificacao.validate_spec(spec, schema)
+for issue in issues:
+    print(issue)
+if not issues:
+    print(assinatura.calculate_spec_fingerprint(spec, schema))
+```
+
+Resolva erros de schema e invariantes antes de comparar assinatura. YAML válido com `validacao.status=PENDENTE` ainda é proposta. Um score de força de evidência não é probabilidade. Fingerprint compara conteúdo material; não é assinatura criptográfica de um aprovador.
+
 O [JSON Schema](micromodelo.schema.json) define campos, tipos e condições; o [template](micromodelo.template.yaml) é o ponto de partida. O YAML do [exemplo preenchido](../exemplos/recencia_contato/micromodelo.yaml) mostra escolhas concretas. O [README do exemplo](../exemplos/recencia_contato/README.md#mapa-de-todos-os-atributos-do-yaml) percorre os atributos e justifica os valores.
 
 ## Leitura por blocos

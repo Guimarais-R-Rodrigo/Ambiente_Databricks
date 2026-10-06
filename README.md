@@ -67,7 +67,7 @@ limites próprios; validar, salvar, importar, aprovar e publicar são ações di
 
 Para usar, siga o [guia operacional de temas](ambiente_fonte/.assistant/hub_padroes/identidade_visual/GUIA_OPERACIONAL.md).
 Para manter, consulte o [estado de Temas](docs/sprints/sistema_temas/README.md):
-V00–V13 e V14 S0/S1 estão integradas. A integração de S1 pela PR #72 (`79f53ba1`)
+V00–V13 e V14 S0/S1 estão integradas. O plano V14 foi integrado pela PR #70; S0 pela PR #71 em `e89ef4f79d9f9b7c901f1bbf490259ee5ce3d493`. A integração de S1 pela PR #72 (`79f53ba1`)
 não preenche os slots `BLOCKED`, não encerra `A11-01 = FAIL` e não decide go-live.
 S2–S8 não possuem início comprovado. As evidências de AI/BI draft não autorizam
 workspace theme, ACL, deploy de App ou Publish.

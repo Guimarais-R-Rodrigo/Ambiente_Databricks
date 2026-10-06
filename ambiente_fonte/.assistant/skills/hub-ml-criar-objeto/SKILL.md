@@ -102,7 +102,7 @@ também não autoriza `apply`: geração, validação, autorização e escrita s
 ## Piloto determinístico — somente create/readme/agregador
 
 `scripts/run.py` oferece `generate` e `apply` separados. É piloto local;
-policy e `current_level=L2` continuam inalterados. O contrato e o preflight L2
+a policy vigente registra `current_level=L3`, `rollout_mode=audit` e `scope_mode=stage_specific`; esta redação não altera o nível. O contrato e o preflight L2
 acima preservam suas regras; a superfície writer impõe limites adicionais.
 
 `generate(context, document, base_sha=..., assistant_root=...)` chama L2,
@@ -246,10 +246,7 @@ python tools/api_publica.py <caminho>/<nome>.py > <caminho>/__init__.py
 ```
 
 Ela lê o módulo por AST e reexporta **todos** os nomes públicos de nível
-superior. A regra é exaustiva, não curada — e isso não é preferência: uma
-curadoria plausível de `constants/colors`, que tem 22 nomes, exportaria cinco e
-quebraria o import de `visual/section_header` e `visual/theme_plotly`, com o
-sintoma aparecendo sprints depois da causa.
+superior. A regra é exaustiva, não uma seleção dos nomes que parecem mais úteis: funções, classes e constantes públicas podem ter consumidores. Omitir um nome público pode quebrar imports de outros objetos.
 
 Sem acesso ao repositório, escreva o `__init__.py` listando **todos** os nomes
 sem underscore inicial, e avise que ele precisa ser regenerado pela ferramenta
@@ -384,8 +381,7 @@ edita: `tools/api_publica.py` gera o `__init__.py`, e
 
 - **Criar objeto para demanda já coberta**, sem trazer a decisão para quem pediu.
 - **Inventar sétimo tipo.** Se não couber nos seis, diga que não couber.
-- **Escrever o notebook a partir da docstring**, sem ler a assinatura. Foi assim
-  que nove notebooks desta biblioteca nasceram quebrados.
+- **Escrever o notebook a partir da docstring**, sem ler a assinatura, os argumentos reais e os efeitos.
 - **Colar saída editada** como se fosse literal. Um bloco curado é
   indistinguível de um inventado para quem lê depois.
 - **Criar seção nova** em `hub_snippets/` por conta própria.
@@ -432,8 +428,7 @@ diferença antes de confiar:
 | **o catálogo ganhou a linha** | **você** |
 
 As cinco de baixo são as que mais custam quando falham, e nenhuma tem portão.
-A do catálogo é a mais esquecida: dois objetos ficaram fora dele por uma sprint
-inteira, indescobríveis pela rota que o próprio README recomenda.
+Confira especialmente a descoberta no catálogo: um objeto ausente do índice pode ficar invisível ao usuário.
 
 ## Usar recursos
 

@@ -17,16 +17,16 @@ As etapas 1 e 2 não exigem leitura de registros. Para consultar valores, a perm
 
 ## Capacidades atuais e seus limites
 
-| Capacidade | Onde está | O que está demonstrado | O que continua pendente |
-|---|---|---|---|
-| Schema, estados, proveniência e assinatura | `contratos/`, `execucao/especificacao.py`, `assinatura.py` | Validação e fingerprint locais, inclusive no caso preenchido. | Decisão humana sobre a adequação semântica de fontes e regras. |
-| Descoberta metadata-only e shortlist | `execucao/metadados.py`, `fluxo.py`, `databricks.py` | Fixture E0 e adapter de metadata usado no Free em ensaio anterior. | Binding, escopo e permissões reais no trabalho; metadata não prova viabilidade. |
-| Classificação e score | `execucao/execucao.py`; `exemplos/recencia_contato/` | Dois cenários sintéticos reproduzíveis; no caso de recência, `TRUE`, `FALSE` e `INDETERMINADO` reconciliados. | Validação estatística, calibração e dados reais autorizados. |
-| Artefatos e tracking | `execucao/artefatos.py`; `hub_snippets/ml/mlflow_run` | Scaffold `NOT_RUN`; runs sintéticas E0/E1 do laboratório anterior documentadas no repositório. | Run do novo caso de recência no Free ou no trabalho; política institucional e aprovação. |
-| Handoff e reconciliação | `execucao/entrega.py`; `exemplos/recencia_contato/conferir_entrega.py` | Rascunho local calculado a partir do resultado sintético conferido. | Aceite da autoridade externa, Produto de Dados, reconciliação de publicação real. |
-| Catálogo, impacto e comparação legada | `execucao/catalogo.py`; `exemplos/migracao_simulada.py` | Ensaios locais fictícios. | Migração real, monitoramento, tema visual e freeze V1. |
+| Capacidade | Entrada e resultado | Limite |
+|---|---|---|
+| Validar e assinar | YAML e schema; problemas estruturados e fingerprint | Estrutura válida não aprova fontes/regras. |
+| Descobrir metadados | Sessão/catálogo/escopo autorizados; envelope observado | Não lê registros de negócio nem garante completude. |
+| Classificar o exemplo | Fixture fictícia; classes e scores reconciliados | Sem calibração ou validade em dados reais. |
+| Preparar artefatos/tracking | Contrato e política; scaffold `NOT_RUN` ou run se executada | Gerar texto não abre MLflow; run não aprova. |
+| Preparar entrega | Contrato e evidência; `DRAFT_NOT_SUBMITTED` | `published=false`; governança externa decide. |
+| Comparar legados | Saídas sintéticas; diferenças explícitas | Não migra nem promove um caso institucional. |
 
-“Implementado” significa que existe código; “demonstrado” identifica um ensaio concreto. O envio e readback de arquivos para o Databricks Free confirma transporte dos bytes, não executa por si os módulos publicados. O guia de implantação e as portas institucionais ficam na documentação de operação do repositório, fora do produto publicado.
+Pare quando metadados forem negados, parciais ou insuficientes para a decisão. Não complete fontes por inferência. Leitura de registros exige autorização e plano de minimização próprios. Validação pendente e handoff não submetido impedem declarar publicação. Ensaios locais não homologam uma instalação nova.
 
 ## O que vai para cada lugar
 

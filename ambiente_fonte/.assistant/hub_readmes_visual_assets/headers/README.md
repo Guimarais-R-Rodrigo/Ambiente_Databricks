@@ -10,8 +10,7 @@ São identidade visual do projeto, não logotipos nem recursos nativos da Databr
 Texto: **CRM** · **Missão Modelos Analíticos CRM**.
 
 Um único PNG atende aos dois usos. O formato de 1920 × 480 px cria uma faixa
-horizontal: preserva espaço para o conteúdo e permite leitura a partir de
-720 px de largura sem reduzir o menor texto abaixo de 18 px.
+horizontal. A composição avaliada usa referência de 720 px de largura, com menor texto calculado em 18 px; isso não comprova acessibilidade em todo dispositivo. Confira zoom, contraste e leitura na superfície real.
 
 ## Squad — notebooks específicos
 
@@ -48,6 +47,10 @@ Em outro diretório, ajuste o caminho a partir do documento consumidor, mantendo
 o arquivo central. Publique a árvore de assets junto do documento. Imagens
 embutidas não são importações Python, nem usam o prefixo de links entre notebooks.
 
+### Caminhos em outros documentos
+
+Na raiz `.assistant`, o caminho é `hub_readmes_visual_assets/headers/png/cabecalho_crm.png`. Em um notebook dentro de `hub_snippets/ml/metrics_report/`, o caminho relativo é `../../../hub_readmes_visual_assets/headers/png/cabecalho_crm.png`. Derive o caminho a partir do documento consumidor e confira a imagem sem iniciar compute. Preserve título e identificação em texto, além do alt. Não copie o PNG para cada pasta.
+
 ### Acessibilidade e contexto textual
 
 - Mantenha título, finalidade, instruções e exemplos em Markdown normal. A
@@ -59,23 +62,8 @@ embutidas não são importações Python, nem usam o prefixo de links entre note
 - As conexões da arte são decorativas: não representam execução, permissões,
   disponibilidade de serviços ou automação do Hub.
 
-## Manutenção sem cópias concorrentes
+## Origem, licença e alteração
 
-| Local | Papel | Como alterar |
-|---|---|---|
-| `src/fundo_tecnologico_original.png` | arte raster original sem texto | nova proposta visual, preservando a referência aprovada |
-| `src/copy.json` | textos, pesos, cores e posicionamento | editar o texto exato e regenerar |
-| `src/*_tipografia.svg` | camada tipográfica gerada | não editar manualmente |
-| `png/` | dois arquivos finais usados pelos documentos | regenerar, conferir e publicar |
-| `manifest.json` e `qa/` | hashes e verificações | gerados pelo compositor |
+Para usar, referencie o PNG compartilhado e preserve identificação em texto. Para alterar o banner, solicite revisão ao mantenedor. O fundo é arte raster gerada e congelada; não é um logotipo solicitado. A tipografia Inter tem [licença própria](../licenses/Inter-OFL.txt). A procedência e os hashes acompanham o asset; a nova geração pelo mesmo prompt não garante bytes idênticos.
 
-Comando de autoria, na raiz do repositório:
-
-```powershell
-node tools/readme_visuals/headers.mjs
-```
-
-O fundo foi gerado pela ferramenta nativa de imagem e congelado como entrada;
-a composição e a tipografia Inter são determinísticas. Não existe um SVG da
-ilustração completa. A [proveniência](src/PROMPT_FUNDO.md) e a
-[licença Inter](../licenses/Inter-OFL.txt) acompanham os arquivos.
+O procedimento de composição está no [guia externo do mantenedor](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/docs/readme-readequacao-20261006/tools/readme_visuals/README.md). O arquivo-fonte de proveniência continua preservado em `src/PROMPT_FUNDO.md`; não é leitura necessária para inserir o cabeçalho.
