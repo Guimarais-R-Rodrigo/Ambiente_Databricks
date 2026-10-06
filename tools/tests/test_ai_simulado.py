@@ -102,6 +102,18 @@ class SimuladoParityTests(unittest.TestCase):
                 finally:
                     link.unlink()
 
+    def test_publisher_preserves_custom_neutral_username_without_remote_calls(self):
+        import publicar_free as publisher
+        self.assertEqual(0, self.render("--write", "--username", "fixture-user").returncode)
+        with mock.patch.object(publisher, "REPO_ROOT", self.repo), \
+             mock.patch.object(publisher, "FONTE", self.source), \
+             mock.patch.object(publisher, "SIMULADO", self.target), \
+             mock.patch.object(publisher, "resolve_home", return_value=("/Users/synthetic", "synthetic", "https://example.invalid", None)), \
+             mock.patch.object(publisher, "cmd_plan", return_value=0) as plan, \
+             mock.patch.object(sys, "argv", ["publicar_free.py"]):
+            self.assertEqual(0, publisher.main())
+            self.assertEqual("fixture-user", plan.call_args.args[0].name)
+
     def test_check_read_only_and_cli_modes_exclusive(self):
         before = inventory(self.user)
         self.assertEqual(0, self.render("--check").returncode)

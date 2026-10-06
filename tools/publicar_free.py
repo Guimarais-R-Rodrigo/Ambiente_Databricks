@@ -662,12 +662,12 @@ def main() -> int:
         print("FAIL --conteudo e --rapido se excluem: um confere bytes, o outro pula")
         return 1
 
+    root, arquivos = local_tree()
     from simulado import parity_errors
-    errors = parity_errors(REPO_ROOT, args.output_root)
+    errors = parity_errors(REPO_ROOT, args.output_root, root.name)
     if errors:
         print("FAIL fonte/espelho: " + "; ".join(errors))
         return 1
-    root, arquivos = local_tree()
     home, user, host, profile = resolve_home(
         expected_host=args.expected_host,
         require_explicit_target=args.execute,
