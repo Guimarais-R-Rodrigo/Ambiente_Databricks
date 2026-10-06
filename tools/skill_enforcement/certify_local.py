@@ -17,7 +17,7 @@ credenciais Databricks nem rede por conta própria. GitHub Actions deve chamar o
 mesmo entrypoint somente na release candidate/Ready-for-review e pós-merge.
 
 Por padrão a execução exige worktree limpo, materializa o simulado pelo renderer
-canônico e falha se o renderer deixar drift rastreado ou não rastreado. Isso
+canônico e confere paths, bytes/hashes e tipos sem depender de git diff. Isso
 transforma drift do derivado em evidência explícita (`DERIVED_STALE`) em vez de
 permitir uma cópia manual ou deixar arquivos novos invisíveis ao gate.
 
@@ -49,7 +49,9 @@ from typing import Sequence
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_EVIDENCE_ROOT = Path.home() / ".ambiente_databricks" / "sef_certifications"
-DERIVED_ROOT = "Novo_Ambiente_Simulado"
+sys.path.insert(0, str(REPO_ROOT / "tools"))
+from project_policy import SIMULATED_ROOT
+DERIVED_ROOT = SIMULATED_ROOT.as_posix()
 
 
 @dataclass(frozen=True)
@@ -158,14 +160,7 @@ _COMMON_FINAL_STEPS = [
     ),
     (
         "render_diff",
-        [
-            "git",
-            "status",
-            "--porcelain",
-            "--untracked-files=all",
-            "--",
-            DERIVED_ROOT,
-        ],
+        [sys.executable, "tools/render_simulado.py", "--check"],
     ),
     (
         "readme_snapshot",
@@ -987,30 +982,8 @@ def _run(command: Sequence[str]) -> tuple[int, str, float]:
 
 
 def _run_render_diff_gate() -> tuple[int, str, float]:
-    """Falha se o derivado tiver qualquer drift, inclusive arquivo não rastreado."""
-    command = [
-        "git",
-        "status",
-        "--porcelain",
-        "--untracked-files=all",
-        "--",
-        DERIVED_ROOT,
-    ]
-    code, output, duration = _run(command)
-    if code != 0:
-        return code, output, duration
-
-    dirty = [line for line in output.splitlines() if line.strip()]
-    if dirty:
-        detail = "\n".join(dirty)
-        return (
-            1,
-            "DERIVED_STALE: alterações rastreadas ou não rastreadas em "
-            f"{DERIVED_ROOT}:\n{detail}\n",
-            duration,
-        )
-
-    return 0, "OK: derivado sem drift rastreado ou não rastreado\n", duration
+    """Exact parity is independent of whether the generated output is tracked."""
+    return _run([sys.executable, "tools/render_simulado.py", "--check"])
 
 
 def _git_output(*args: str) -> str | None:

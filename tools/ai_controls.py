@@ -16,6 +16,7 @@ import subprocess
 import sys
 from pathlib import Path, PurePosixPath
 from urllib.parse import unquote
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 VERSION = '1.0.0'
 SKILLS = ('forward-test-skills', 'publicar-free', 'render-simulado', 'replicar-trabalho', 'validar-assistant')
@@ -340,13 +341,15 @@ def check(root: Path, *, release: bool = False, migration_freeze: bool = False, 
                 check_link(root, relative, raw)
     if exceptions - seen_exceptions:
         raise ContractError('STALE_HISTORICAL_EXCEPTION')
+    from simulado import inventory as payload_inventory, parity_errors
+    errors = parity_errors(root)
+    if errors:
+        raise ContractError('PRODUCT_PARITY: ' + '; '.join(errors))
+    pairs = [name for name, item in payload_inventory(root / 'ambiente_fonte', source=True).items()
+             if item['object_type'] != 'DIRECTORY']
     baseline = read_json(safe(root, BASELINE))
-    pairs = baseline.get('product_pairs', [])
-    if not pairs or len(pairs) != baseline['product_pair_count']:
+    if not baseline.get('product_pairs') or len(baseline['product_pairs']) != baseline['product_pair_count']:
         raise ContractError('PRODUCT_INVENTORY_EMPTY_OR_INCOMPLETE')
-    for pair in pairs:
-        if safe(root, pair['source']).read_bytes() != safe(root, pair['mirror']).read_bytes():
-            raise ContractError(f'PRODUCT_PARITY: {pair["source"]}')
     if migration_freeze:
         if digest(safe(root, BASELINE).read_bytes()) != BASELINE_SHA256:
             raise ContractError('BASELINE_EVIDENCE_CHANGED')

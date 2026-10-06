@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "ambiente_fonte/.assistant"
-MIRROR = ROOT / "Novo_Ambiente_Simulado/Users/usuario-free/.assistant"
+MIRROR = ROOT / ".artifacts/simulado/Users/usuario-free/.assistant"
 REGISTRY = ROOT / "docs/sprints/sistema_temas/V08/MATRIZ_INTEGRACAO.json"
 ROOT_MANUAL = ROOT / "MANUAL_TECNICO.md"
 HEX = re.compile(r"#[0-9A-Fa-f]{6}")

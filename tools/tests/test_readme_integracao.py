@@ -110,7 +110,7 @@ class ReadmeConciergeIntegrationTests(unittest.TestCase):
 
     def test_manual_and_instructions_mirrors_match(self) -> None:
         source = ROOT / 'ambiente_fonte'
-        target = ROOT / 'Novo_Ambiente_Simulado/Users/usuario-free'
+        target = ROOT / '.artifacts/simulado/Users/usuario-free'
         for rel in ('.assistant_instructions.md', '.assistant/MANUAL_TECNICO.md'):
             with self.subTest(path=rel):
                 self.assertEqual((source / rel).read_bytes(), (target / rel).read_bytes())

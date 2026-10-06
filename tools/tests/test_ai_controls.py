@@ -25,9 +25,20 @@ class AIControlsTests(unittest.TestCase):
         for name in ai.SKILLS:
             self.write(f'.agents/skills/{name}/SKILL.md', f'---\nname: {name}\ndescription: Procedimento sintético {name}.\n---\n# Procedimento\n[Guia](../../../docs/ai/README.md)\n')
         self.write('.agents/skills/validar-assistant/resources/example.txt', 'resource bytes\n')
-        self.write('ambiente_fonte/example.txt', 'synthetic product\n')
-        self.write('mirror/example.txt', 'synthetic product\n')
-        self.baseline = {'product_pair_count': 1, 'product_pairs': [{'source': 'ambiente_fonte/example.txt', 'mirror': 'mirror/example.txt'}], 'protected_roots': ['ambiente_fonte', 'mirror'], 'protected': {'ambiente_fonte/example.txt': ai.digest(b'synthetic product\n'), 'mirror/example.txt': ai.digest(b'synthetic product\n')}}
+        self.write('ambiente_fonte/.assistant/example.txt', 'synthetic product\n')
+        self.write('.artifacts/simulado/Users/usuario-free/.assistant/example.txt', 'synthetic product\n')
+        self.write('ambiente_fonte/.assistant_instructions.md', 'synthetic instructions\n')
+        self.write('.artifacts/simulado/Users/usuario-free/.assistant_instructions.md', 'synthetic instructions\n')
+        from simulado import MARKER
+        self.write('.artifacts/simulado/README_GERADO.md', MARKER)
+        self.write('.gitignore', '.artifacts/\n')
+        protected_roots = ['ambiente_fonte', '.artifacts/simulado']
+        protected = {p.relative_to(self.root).as_posix(): ai.digest(p.read_bytes())
+                     for prefix in protected_roots for p in (self.root / prefix).rglob('*') if p.is_file()}
+        self.baseline = {'product_pair_count': 1,
+            'product_pairs': [{'source': 'ambiente_fonte/.assistant/example.txt',
+                               'mirror': '.artifacts/simulado/Users/usuario-free/.assistant/example.txt'}],
+            'protected_roots': protected_roots, 'protected': protected}
         self.json(ai.BASELINE, self.baseline)
         self.baseline_sha = ai.digest((self.root / ai.BASELINE).read_bytes())
         self.control = {'adapters': [{'source': f'.agents/skills/{name}', 'destination': f'.claude/skills/{name}'} for name in ai.SKILLS], 'adopted_outputs': {}, 'critical_invariants': ['Fonte única', 'Dados sintéticos', 'Autorização explícita'], 'retired_sources': ['.claude/'+'CLAUDE.md'], 'requirements': [{'id': f'R{i}', 'control_id': f'C{i:02}', 'source': 'historical source', 'obligation': 'preserve obligation', 'target': 'AGENTS.md#contrato', 'load_condition': 'session', 'test_ids': ['T04'], 'disposition': 'migrated'} for i in range(1, 23)], 'historical_exceptions': [], 'evidence_data_files': [ai.MAP, ai.BASELINE]}
@@ -278,18 +289,18 @@ class AIControlsTests(unittest.TestCase):
         self.assertFails('STALE_HISTORICAL_EXCEPTION')
 
     def test_runtime_one_side_changed_rejected(self):
-        self.write('ambiente_fonte/example.txt', 'mutated\n')
+        self.write('ambiente_fonte/.assistant/example.txt', 'mutated\n')
         self.assertFails('PRODUCT_PARITY')
 
     def test_runtime_both_sides_changed_fails_migration_freeze(self):
-        self.write('ambiente_fonte/example.txt', 'mutated\n')
-        self.write('mirror/example.txt', 'mutated\n')
+        self.write('ambiente_fonte/.assistant/example.txt', 'mutated\n')
+        self.write('.artifacts/simulado/Users/usuario-free/.assistant/example.txt', 'mutated\n')
         self.assertFails('PROTECTED_CHANGED', migration_freeze=True)
 
     def test_runtime_and_manifest_hash_tampering_rejected(self):
-        self.write('ambiente_fonte/example.txt', 'mutated\n')
-        self.write('mirror/example.txt', 'mutated\n')
-        self.baseline['protected']['ambiente_fonte/example.txt'] = ai.digest(b'mutated\n')
+        self.write('ambiente_fonte/.assistant/example.txt', 'mutated\n')
+        self.write('.artifacts/simulado/Users/usuario-free/.assistant/example.txt', 'mutated\n')
+        self.baseline['protected']['ambiente_fonte/.assistant/example.txt'] = ai.digest(b'mutated\n')
         self.json(ai.BASELINE, self.baseline)
         self.assertFails('BASELINE_EVIDENCE_CHANGED', migration_freeze=True)
 
@@ -299,13 +310,13 @@ class AIControlsTests(unittest.TestCase):
         self.assertFails('PRODUCT_INVENTORY_EMPTY_OR_INCOMPLETE')
 
     def test_future_authorized_product_changes_not_frozen_by_normal_check(self):
-        self.write('ambiente_fonte/example.txt', 'authorized future change\n')
-        self.write('mirror/example.txt', 'authorized future change\n')
+        self.write('ambiente_fonte/.assistant/example.txt', 'authorized future change\n')
+        self.write('.artifacts/simulado/Users/usuario-free/.assistant/example.txt', 'authorized future change\n')
         self.assertEqual(self.check()['status'], 'PASS')
 
     def test_added_runtime_both_sides_fails_freeze_inventory(self):
-        self.write('ambiente_fonte/new_runtime.py', 'pass\n')
-        self.write('mirror/new_runtime.py', 'pass\n')
+        self.write('ambiente_fonte/.assistant/new_runtime.py', 'pass\n')
+        self.write('.artifacts/simulado/Users/usuario-free/.assistant/new_runtime.py', 'pass\n')
         self.assertFails('PROTECTED_INVENTORY_CHANGED', migration_freeze=True)
 
     def test_duplicate_frontmatter_key_rejected(self):

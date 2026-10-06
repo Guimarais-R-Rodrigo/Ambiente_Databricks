@@ -84,6 +84,32 @@ PERSONAL_RE = re.compile(
 )
 
 SAFE_SIMULATED_USERNAME = "usuario-free"
+SIMULATED_ROOT = Path(".artifacts/simulado")
+
+
+def simulated_root(repo_root: Path, output_root: Path | str | None = None) -> Path:
+    """Resolve an owned build directory, never a symlink or source/checkout root."""
+    repo = repo_root.resolve()
+    relative = Path(output_root) if output_root is not None else SIMULATED_ROOT
+    candidate = relative if relative.is_absolute() else repo / relative
+    # Reject lexical traversal too, even when resolution would return in bounds.
+    if ".." in candidate.parts:
+        raise ValueError("output-root não pode conter navegação de path")
+    resolved = candidate.resolve()
+    artifacts = repo / ".artifacts"
+    if resolved == artifacts or not resolved.is_relative_to(artifacts):
+        raise ValueError("output-root deve ser subdiretório próprio de .artifacts/")
+    cursor = repo
+    try:
+        parts = candidate.relative_to(repo).parts
+    except ValueError as exc:
+        raise ValueError("output-root deve permanecer dentro do checkout") from exc
+    for part in parts:
+        cursor /= part
+        if cursor.is_symlink():
+            raise ValueError("output-root não aceita links simbólicos")
+    return resolved
+
 
 
 def validate_username_component(username: str) -> str:

@@ -13,6 +13,8 @@ podem reprovar uma mudança.
 | validar fonte e repositório | `python tools/validate_assistant.py` |
 | conferir somente saídas locais do README | `python tools/validate_assistant.py --conferir-readme` |
 | regenerar o derivado | `python tools/render_simulado.py --write` |
+| conferir saída ignorada por paths/bytes/tipos | `python tools/render_simulado.py --check` |
+| conferir DAG e checks de CI | `python tools/ci_workflows.py --check` |
 | gerar/validar recursos visuais vigentes | [rota de produção v2](readme_visuals/README.md#produção-v2--caminho-recomendado) |
 | publicar no Free | `python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>` |
 | conferir o remoto (inventário e tipos) | `python tools/publicar_free.py --verify --profile <free> --expected-host <url-free>` |
@@ -28,7 +30,7 @@ podem reprovar uma mudança.
 Execute da raiz do checkout completo, com Python e Node/pnpm compatíveis com os arquivos de dependências e lockfile. Prepare Python com `python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt`; a instalação altera o ambiente escolhido. Prepare Node conforme o [guia visual](readme_visuals/README.md). `ci_local.py` verifica pré-requisitos globais mesmo com `--etapa`.
 
 - Validador e `--conferir-readme` leem localmente; exit 0 indica os checks cobertos, não runtime Databricks.
-- Render sem flag mostra plano. `--write` remove e recria toda a árvore simulada; inventarie extras e trabalhe isoladamente antes.
+- Render sem flag mostra plano. `--write` remove e recria `.artifacts/simulado/`; inventarie extras e trabalhe isoladamente antes. Prepare essa saída explicitamente antes dos testes num checkout novo. `--check` confere inventário/bytes/tipos sem depender de Git. Consulte [saída gerada e CI vigente](../docs/manutencao/saida-gerada.md).
 - Testes podem gravar temporários locais. `ci_local.py --verbose` executa a enumeração `ETAPAS`; etapa isolada não aprova o agregado.
 - Publicação exige autorização própria. `--execute` escreve remotamente; verify lê e `--conteudo` compara bytes. Falha parcial exige conferir recibo e estado antes de repetir.
 - Erro de dependência é bloqueio de ambiente; erro de contrato exige correção da fonte, nunca relaxamento do teste.

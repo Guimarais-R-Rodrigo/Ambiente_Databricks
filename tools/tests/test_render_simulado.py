@@ -21,7 +21,7 @@ class RendererBytesTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="sef_renderer_bytes_") as raw:
             repo = Path(raw).resolve()
             (repo / "tools").mkdir()
-            for name in ("render_simulado.py", "project_policy.py"):
+            for name in ("render_simulado.py", "project_policy.py", "simulado.py", "notebook_marker.py"):
                 shutil.copyfile(ROOT / "tools" / name, repo / "tools" / name)
             source = repo / "ambiente_fonte"
             (source / ".assistant").mkdir(parents=True)
@@ -35,8 +35,8 @@ class RendererBytesTests(unittest.TestCase):
                         cwd=repo, capture_output=True, timeout=15,
                         env={**os.environ, "PYTHONUTF8": "1", "PYTHONDONTWRITEBYTECODE": "1"})
                     self.assertEqual(0, p.returncode, p.stderr)
-                    target = repo / "Novo_Ambiente_Simulado"
-                    self.assertEqual(repo, target.resolve().parent)
+                    target = repo / ".artifacts/simulado"
+                    self.assertEqual(repo / ".artifacts", target.resolve().parent)
                     marker = (target / "README_GERADO.md").read_bytes()
                     self.assertEqual(module.MARKER.encode("utf-8"), marker)
                     self.assertIn(b"\n", marker)

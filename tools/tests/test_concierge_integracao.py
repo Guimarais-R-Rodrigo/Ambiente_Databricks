@@ -98,7 +98,7 @@ class ConciergeIntegrationTests(unittest.TestCase):
         self.assertEqual({c['category'] for c in matrix['cases']}, {'positive', 'negative', 'mention', 'edge'})
 
     def test_rendered_skill_matches_source_bytes(self) -> None:
-        target = ROOT / 'Novo_Ambiente_Simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge'
+        target = ROOT / '.artifacts/simulado/Users/usuario-free/.assistant/skills/hub-ml-concierge'
         def inventory(root: Path) -> dict[str, bytes]:
             return {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob('*')
                     if p.is_file() and '__pycache__' not in p.parts and p.suffix not in {'.pyc', '.pyo'}}
@@ -108,7 +108,7 @@ class ConciergeIntegrationTests(unittest.TestCase):
 
     def test_publisher_knows_skill_without_remote_calls(self) -> None:
         self.assertIn('hub-ml-concierge', publicar_free.EXPECTED_SKILL_NAMES)
-        target = ROOT / 'Novo_Ambiente_Simulado/Users/usuario-free'
+        target = ROOT / '.artifacts/simulado/Users/usuario-free'
         self.assertEqual(publicar_free.conferir_fonte_espelho(target), [])
 
     def test_forward_cases_and_pending_state_are_documented(self) -> None:

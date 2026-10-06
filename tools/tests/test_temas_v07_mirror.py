@@ -1,10 +1,10 @@
-"""V07 — fonte e Novo_Ambiente_Simulado devem permanecer byte a byte iguais."""
+"""V07 — fonte e .artifacts/simulado devem permanecer byte a byte iguais."""
 from pathlib import Path
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "ambiente_fonte/.assistant"
-MIRROR = ROOT / "Novo_Ambiente_Simulado/Users/usuario-free/.assistant"
+MIRROR = ROOT / ".artifacts/simulado/Users/usuario-free/.assistant"
 
 RELATIVE_PATHS = [
     "hub_snippets/visual/theme_plotly/theme_plotly.py",

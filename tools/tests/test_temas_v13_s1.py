@@ -30,6 +30,15 @@ class V13S1ContractTests(unittest.TestCase):
         with self.assertRaises(contract.OperationalContractError):
             contract.validate_matrix(data)
 
+    def test_current_derived_root_and_legacy_owner_alias_fail_closed(self):
+        self.assertEqual(".artifacts/simulado/", self.data["rules"]["derived_root"])
+        mutant = copy.deepcopy(self.data)
+        mutant["rules"]["derived_root"] = "Novo_Ambiente_Simulado/"
+        self.assert_invalid(mutant)
+        for ref in (".artifacts/simulado/Users/usuario-free/x", "Novo_Ambiente_Simulado/x"):
+            with self.assertRaises(contract.OperationalContractError):
+                contract._check_repo_ref(ref, "synthetic")
+
     def test_real_matrix_validates(self):
         contract.validate_matrix(self.data)
 

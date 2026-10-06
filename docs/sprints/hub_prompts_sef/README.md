@@ -60,6 +60,6 @@ Não existe, nesta iniciativa, um segundo framework de enforcement próprio para
 
 ## Fonte e derivado
 
-A fonte editável continua em `ambiente_fonte/`. `Novo_Ambiente_Simulado/` é derivado e só deve mudar por renderer canônico quando uma sprint futura efetivamente alterar fonte.
+A fonte editável continua em `ambiente_fonte/`. `Novo_Ambiente_Simulado/` nomeia o derivado histórico do freeze PSEF00. Para uma nova release, a [saída gerada vigente](../../manutencao/saida-gerada.md) é `.artifacts/simulado/`, materializada pelo renderer canônico quando houver alteração autorizada na fonte.
 
 PSEF00 é documental: não modifica prompts produtivos, skills, policy, instruções globais, Manual Técnico ou derivado.

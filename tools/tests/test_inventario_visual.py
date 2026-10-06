@@ -145,6 +145,7 @@ class InventarioVisualTests(unittest.TestCase):
 
     def test_camadas_separadas(self):
         self.assertEqual(v.camada('Novo_Ambiente_Simulado/a.py'), 'derivado')
+        self.assertEqual(v.camada('.artifacts/simulado/a.py'), 'derivado')
         self.assertEqual(v.camada('novas_funcionalidades/a.py'), 'experimental')
         self.assertEqual(v.camada('tools/a.py'), 'ferramenta')
 

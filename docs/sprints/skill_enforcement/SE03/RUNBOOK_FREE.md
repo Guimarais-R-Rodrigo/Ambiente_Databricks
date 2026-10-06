@@ -1,5 +1,11 @@
 # SE03 — runbook Databricks Free
 
+> **Leitura histórica da campanha.** Os comandos abaixo com `Novo_Ambiente_Simulado`,
+> `git diff`, `git restore` ou `git add` sobre o espelho descrevem o layout versionado
+> daquela campanha. Para uma release atual, use a [saída gerada vigente](../../../manutencao/saida-gerada.md):
+> `.artifacts/simulado/` e `render_simulado.py --check`. Não use os comandos históricos
+> para certificar paridade nem recupere/remova conteúdo atual por associação.
+
 ## Estado e objetivo
 
 Este runbook homologa a SE03 no Databricks Free pessoal depois de a candidata passar pelo perfil local `se03`.

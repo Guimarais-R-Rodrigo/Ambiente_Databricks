@@ -10,6 +10,7 @@ import argparse
 import json
 from pathlib import Path
 from typing import Any
+from project_policy import SIMULATED_ROOT
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MATRIX = ROOT / "docs/sprints/sistema_temas/V13/MATRIZ_OPERACIONAL.json"
@@ -97,7 +98,7 @@ def _check_repo_ref(ref: Any, field: str) -> None:
     candidate = Path(ref)
     if candidate.is_absolute() or ".." in candidate.parts:
         _fail("REF_PATH", f"{field} deve permanecer dentro do repositório: {ref}")
-    if ref.startswith("Novo_Ambiente_Simulado/"):
+    if ref.startswith(("Novo_Ambiente_Simulado/", SIMULATED_ROOT.as_posix() + "/")):
         _fail("DERIVED_REF", f"{field} não pode usar o derivado como owner/fonte: {ref}")
     if not (ROOT / candidate).exists():
         _fail("REF_MISSING", f"{field} aponta para artefato inexistente: {ref}")
@@ -226,10 +227,10 @@ def validate_matrix(data: dict[str, Any]) -> None:
         _fail("PREFLIGHT_BOUNDARY", "S1 não pode implementar o preflight da S2")
     if rules["remote_mutation_performed_by_s1"] is not False:
         _fail("REMOTE_MUTATION", "S1 deve permanecer sem mutação remota")
-    if rules["source_root"] != "ambiente_fonte/" or rules["derived_root"] != "Novo_Ambiente_Simulado/":
+    if rules["source_root"] != "ambiente_fonte/" or rules["derived_root"] != SIMULATED_ROOT.as_posix() + "/":
         _fail("SOURCE_DERIVED", "raízes fonte/derivado divergentes")
     if rules["derived_root_editable"] is not False:
-        _fail("DERIVED_EDITABLE", "Novo_Ambiente_Simulado não pode ser fonte editável")
+        _fail("DERIVED_EDITABLE", "saída gerada não pode ser fonte editável")
 
     relationships = data["relationships"]
     if not isinstance(relationships, list) or not relationships:

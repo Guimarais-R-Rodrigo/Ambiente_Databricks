@@ -132,7 +132,7 @@
     },
     {
       "id": "manual.simulated_copy",
-      "path": "Novo_Ambiente_Simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md",
+      "path": ".artifacts/simulado/Users/usuario-free/.assistant/MANUAL_TECNICO.md",
       "classification": "derived_mirror",
       "reason": "Cópia derivada no ambiente simulado.",
       "expected_effect": "Permanece byte a byte idêntica ao Manual canônico."
