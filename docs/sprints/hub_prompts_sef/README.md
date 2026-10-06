@@ -1,5 +1,7 @@
 # Hub Prompts × Skill Enforcement Framework — PSEF
 
+O inventário 16/49 é o freeze PSEF00. O [catálogo operacional](../../../ambiente_fonte/.assistant/hub_prompts/README.md) contém os briefings correntes; sua evolução não comprova execução das etapas PSEF01–07.
+
 **Iniciativa:** reconciliação pós-SE08 da camada `hub_prompts` com skills e Skill Enforcement Framework.
 
 **Regime operacional:** `LOCAL_FIRST`.
@@ -15,7 +17,7 @@ GitHub Actions não é gate obrigatório desta iniciativa enquanto os créditos 
 
 | Bloco | Estado |
 |---|---|
-| PSEF00 — reconciliação, inventário, baseline e freeze | CANDIDATA_PARA_REVISAO |
+| PSEF00 — reconciliação, inventário, baseline e freeze | INTEGRADA, PR #98, `11851e13` |
 | PSEF01–PSEF07 | NOT_STARTED |
 | PSEF-ACTIONS-RECERTIFICATION | DEFERRED_NO_CREDITS |
 | promoção ao workspace corporativo | NÃO_AUTORIZADA |

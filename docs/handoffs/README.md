@@ -37,16 +37,17 @@ O template completo está em `.claude/templates/handoff.md`.
 
 ## Registros
 
-| Data | Tema | Relevância atual |
-|---|---|---|
-| 2026-09-22 | [SE08, complemento de policy I/O e consolidação repo-side](2026-09-21_se08-policy-io-complemento.md) | leitura única da policy, documentação/gates SE08 e handoff para materialização/certificação local |
-| 2026-09-21 | [SE07, corretiva de cleanup após auditoria](2026-09-21_se07-auditoria-storage-cleanup.md) | interrupção preservada; cleanup de processo/temporário separado; causa nativa WinError32 não declarada resolvida |
-| 2026-09-21 | [SE07, piloto L3 README](2026-09-21_se07-criar-objeto-l3-readme-piloto.md) | candidata create/readme/agregador; F-04 aceita, D2 parcial, policy L2 e evidência externa |
-| 2026-09-21 | [SE07, corretiva F-04](2026-09-21_se07-f04-corretiva.md) | candidata delimitada SUP-F04-01/02/03; protocolo GitHub e evidências externas |
-| 2026-08-14 | [calibração das descriptions](2026-08-14_calibracao-descriptions.md) | ler antes de alterar `description` de skill |
-| 2026-09-09 | [plano consolidado, pacotes T0 a T6](2026-09-09_plano-consolidado.md) | ler antes de mexer no escopo do validador ou retomar T3, T4 e T7 |
+Estados abaixo foram reconciliados com os fechamentos SE07/SE08 e SER. “Consumido” não apaga residual técnico; “referência histórica” não autoriza retomar a operação.
 
-| 2026-09-09 | [correções Codex e retomada no PC](2026-09-09_correcoes-codex.md) | estado posterior à revisão; comandos para baixar e validar no Free |
+| Data | Tema | Disposição e continuidade |
+|---|---|---|
+| 2026-09-22 | [SE08, complemento de policy I/O e consolidação repo-side](2026-09-21_se08-policy-io-complemento.md) | consumido no [fechamento SE08](../sprints/skill_enforcement/SE08/README.md); operação posterior em [SER](../sprints/skill_enforcement_rollout/README.md) |
+| 2026-09-21 | [SE07, corretiva de cleanup após auditoria](2026-09-21_se07-auditoria-storage-cleanup.md) | referência histórica com residual: [SE07 encerrada](../sprints/skill_enforcement/SE07/README.md), cleanup FAIL preservado, WinError32 não declarado resolvido |
+| 2026-09-21 | [SE07, piloto L3 README](2026-09-21_se07-criar-objeto-l3-readme-piloto.md) | consumido; piloto e policy L2 pertencem àquela data; [SER01](../sprints/skill_enforcement_rollout/SER01/README.md) registra integração L3 posterior |
+| 2026-09-21 | [SE07, corretiva F-04](2026-09-21_se07-f04-corretiva.md) | consumido pelo [fechamento SE07](../sprints/skill_enforcement/SE07/README.md); preservar SUP-F04-01/02/03 e evidências |
+| 2026-08-14 | [calibração das descriptions](2026-08-14_calibracao-descriptions.md) | referência histórica de vigilância ao alterar `description` |
+| 2026-09-09 | [plano consolidado, pacotes T0 a T6](2026-09-09_plano-consolidado.md) | referência histórica; confirmar necessidade e autorização antes de retomar T3/T4/T7 |
+| 2026-09-09 | [correções Codex e retomada no PC](2026-09-09_correcoes-codex.md) | referência histórica da revisão; publicação atual segue [playbooks](../playbooks/README.md) |
 
 O de 2026-08-14 preserva os pontos de vigilância dos testes de roteamento e explica
 por que as falhas do instrumento não levaram a alterações indevidas nas skills. O de

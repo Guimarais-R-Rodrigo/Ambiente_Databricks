@@ -1,5 +1,9 @@
 # V09 — Sistema de Temas no kit de instalação/transição
 
+> **Nota administrativa — 06/10/2026.** Este documento preserva o escopo e a próxima ação previstos no fechamento original. [Estado atual de Temas](../README.md) é o dono da continuidade; não repetir gates antigos por inferência. Para transporte vigente, consulte o [kit de transição](../../../../tools/README.md#pacotes-de-auditoria-e-implantação).
+
+## Registro histórico preservado
+
 > **Estado atual:** **ACEITA E INTEGRADA NO GIT; SEM PUBLICAÇÃO DATABRICKS.** Rodrigo deu aceite explícito em 14/09/2026. A entrega funcional foi integrada pelo PR #45 e o defeito real encontrado no primeiro pós-merge foi corrigido pelo PR #46. O head técnico final validado na `main` é `4ae714a35a0aafd930a8cd796d962b0a79449b88`.
 
 ## Objetivo

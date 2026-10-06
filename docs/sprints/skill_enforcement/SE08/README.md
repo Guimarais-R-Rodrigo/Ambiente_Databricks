@@ -1,5 +1,9 @@
 # SE08 — CI, operação, documentação e gate de promoção ao trabalho
 
+> **Nota administrativa — 06/10/2026.** [SER e policy atuais](../../skill_enforcement_rollout/README.md) governam a continuidade. O texto abaixo preserva o fechamento SEF, inclusive níveis e próximos passos históricos; níveis posteriores não recertificam este ensaio.
+
+## Registro histórico preservado
+
 **Status:** encerrada, certificada e integrada. `SE08_RC_FULLY_CERTIFIED=true`, `SE08_INTEGRATED=true` e `SE08_POST_MERGE_ACTIONS=PASS`. A promoção ao workspace do trabalho permanece bloqueada.
 
 ## Objetivo

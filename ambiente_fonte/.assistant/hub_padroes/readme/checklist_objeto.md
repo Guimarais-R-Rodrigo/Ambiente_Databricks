@@ -24,12 +24,9 @@ Um objeto fora do escopo de execução permanece “não executado nesta rodada�
 - [ ] Links relativos, inclusive a fachada aplicável, apontam para arquivos reais.
 - [ ] Não restaram instruções de preenchimento ou marcadores editoriais.
 - [ ] O notebook referencia o README sem alteração do código executável.
-- [ ] O objeto foi retirado da dispensa temporária quando ganhou README.
+- [ ] Todo snippet, script ou prompt operacional possui README; não há dispensa automática.
 
-Os comandos `tools/readme_objeto_contract.py`, `tools/validate_assistant.py` e
-`tools/ci_local.py` pertencem ao repositório, não ao pacote no workspace. Eles
-não executam código do README para decidir se a explicação é correta. O gate
-confere cabeçalhos, ligações locais e migração; API e fontes exigem leitura.
+Validação automática pode conferir cabeçalhos e ligações locais. API, significado e fontes exigem leitura; um check estrutural não executa o código do README nem certifica sua explicação.
 
 ## 3. Rubrica técnica e didática
 
@@ -57,18 +54,9 @@ contradição de código que impeça instrução de uso segura; fonte sem suport
 
 Esses problemas bloqueiam o documento afetado até correção ou delimitação
 explícita do escopo. Defeito do helper vai para registro de achados e não é
-corrigido silenciosamente em sprint documental. Um exemplar pode continuar
+corrigido silenciosamente como edição documental. Um exemplar pode continuar
 útil para estudar a forma e ser explicitamente inadequado para produção.
 
-## 5. Fechamento por sprint
+## 5. Resultado da revisão
 
-Entregue relações separadas de: READMEs criados/revisados; outras documentações
-alteradas, com seção e motivo; ferramentas/testes; cópias geradas; arquivos
-apenas inspecionados. Extraia a relação do diff real. Registre baseline,
-regressões, testes pulados e ambiente. Salve o checkpoint antes de pausar.
-
-O padrão é parar no fim da sprint autorizada. Após o piloto R02 e o aceite
-editorial de 2026-09-12, o contrato vigente é **1.0.0**. Os textos de cada novo
-lote continuam sujeitos a revisão e aceite próprios. Uma alteração posterior
-no contrato exige revisão de impacto sobre documentos já entregues, não
-aplicação silenciosa em um lote. R03-A termina antes da R03-B.
+Registre versão, documentos conferidos, achados, evidências, limites e autor/revisor reais. Alterar o contrato editorial exige avaliação de impacto; não aplicar mudança silenciosa a guias existentes.

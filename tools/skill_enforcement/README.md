@@ -4,6 +4,12 @@ Ferramentas de desenvolvimento do Skill Enforcement Framework (SEF). Este diret�
 
 A estratégia vigente é local-first: testes e validações determinísticas rodam localmente durante desenvolvimento; GitHub Actions é reservado para release candidate/Ready-for-review e pós-merge.
 
+## Rotas atuais e leitura da história
+
+A [policy vigente](../../ambiente_fonte/.assistant/hub_padroes/skill_enforcement/policy.json) determina `current_level`, `scope_mode` e `rollout_mode`. Criar Objeto está L3/audit, `stage_specific`, com `object_validation` repo-side; a auditoria também possui rota própria. Os oito perfis sintéticos de [B1](../../docs/sprints/skill_enforcement_rollout/README.md) têm runners e evidência delimitada, sem promoção automática de nível. [B0](../../docs/sprints/skill_enforcement_rollout/PARALELO/B0/README.md) é infraestrutura de execução de manutenção, não runner analítico.
+
+As seções SE01–SE08 abaixo descrevem o histórico cumulativo. `execution_contract.mode="audit"` descreve o contrato de execução; `policy.rollout_mode="enforce"` descreve a política da skill quando aplicável. Não são campos equivalentes e não devem ser igualados por edição.
+
 ## SE01 — contrato verificável
 
 Validação estática:
@@ -201,7 +207,7 @@ python -B tools/tests/test_skill_enforcement_se08.py -v
 A suíte de I/O garante que a policy é lida/parseada uma única vez e que resumo e
 veredito descrevem o mesmo snapshot. A suíte operacional protege integração com
 validator/CI, o guardrail do publicador Free e a permanência de
-`hub-ml-criar-objeto` em L2 global.
+`hub-ml-criar-objeto` em L3/audit, após a integração SER01; o fechamento SE08 original registrava L2.
 
 SE08 não transforma gate local em evidência de Free/Genie e não autoriza
 promoção ao workspace do trabalho. O gate corporativo e o rollback permanecem
@@ -290,7 +296,7 @@ Actions permanece gate remoto final, não instrumento de desenvolvimento iterati
 ## Limites vigentes
 
 - `mode="audit"` continua vigente; a SE05 adiciona fail-closed de homologação, não muda silenciosamente o schema para `enforce`;
-- a implementação continua restrita à skill piloto;
+- as primitivas descritas nas seções SE01–SE05 são da EDA piloto; os runners atuais de B1, auditoria e criação têm contratos próprios e não herdam L4 por associação;
 - SHA-256 fornece tamper evidence/binding, não autenticação com segredo;
 - `run.py` continua o core L3 histórico; `run_enforced.py` é a rota L4 exigida para conclusão homologada;
 - recursos sem entrada suficiente não recebem evidência fabricada e impedem PASS quando aplicáveis;

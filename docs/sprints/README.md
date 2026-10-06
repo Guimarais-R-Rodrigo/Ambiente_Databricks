@@ -1,5 +1,20 @@
 # Sprints da reestruturação do Hub
 
+## Frentes e donos atuais — conferido em 06/10/2026
+
+| Frente | Dono | Estado integrado | Limite |
+|---|---|---|---|
+| Micromodelos | [Índice MM](micromodelos/README.md) | MM00–MM03 e módulo PR #119 (`63601e09`) | L1/audit; E2 não executado |
+| Temas | [Índice Temas](sistema_temas/README.md) | V00–V13 e V14 S0/S1 (`79f53ba1`) | S2–S8 sem início comprovado; FAIL/BLOCKED mantidos |
+| Enforcement | [SEF](skill_enforcement/README.md) / [SER/B1](skill_enforcement_rollout/README.md) | SER00/01, B0 e A de B1 (`43dac176`) | B parcial; C sem promoção |
+| Briefings | [PSEF](hub_prompts_sef/README.md) | PSEF00 (`11851e13`) | PSEF01–07 sem execução comprovada |
+| READMEs | [R00–R13](readmes_objetos/README.md) | transição encerrada | cobertura atual vem do validador |
+
+## Histórico das iniciativas
+
+Os rótulos de candidata, próxima sprint e pendência nos registros abaixo pertencem às datas desses fechamentos. Para decidir agora, use a tabela acima e o respectivo dono.
+
+
 Estes relatórios registram a transformação do pacote original no ambiente atual.
 São evidência histórica: não servem como manual vigente e não devem ser
 reescritos para acompanhar o produto.

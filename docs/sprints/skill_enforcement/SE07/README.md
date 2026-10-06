@@ -1,5 +1,9 @@
 # SE07 — Generalização por risco
 
+> **Nota administrativa — 06/10/2026.** [SER e policy atuais](../../skill_enforcement_rollout/README.md) governam a continuidade. O texto abaixo preserva o fechamento SEF, inclusive níveis e próximos passos históricos; níveis posteriores não recertificam este ensaio. Cleanup permanece FAIL e `SE07_FULLY_CERTIFIED=false`; não reabrir F-04 como próxima ação automática.
+
+## Registro histórico preservado
+
 ## Encerramento da SE07 — decisão humana com residual conhecido — 2026-09-21
 
 A SE07 está **ENCERRADA_POR_DECISAO_HUMANA_COM_RESIDUAL_CONHECIDO**.
@@ -44,7 +48,7 @@ da SE08, inclusive validações locais pertinentes e avaliação de achados aber
 SE08 permanece **NÃO_INICIADA** neste commit.
 
 
-## Rodada atual — piloto de criação, após aceite F-04
+## Rodada histórica — piloto de criação, após aceite F-04
 
 O usuário aceitou a corretiva F-04 `d49c8728f0e47adc15f7f78293c9fcc58c809a15`.
 A canônica `sef/SE07-generalizacao` foi promovida exclusivamente até esse SHA,
@@ -62,7 +66,7 @@ Consulte [checkpoint](CHECKPOINT.md), [testes](TESTES.md) e
 [handoff do piloto](../../../handoffs/2026-09-21_se07-criar-objeto-l3-readme-piloto.md).
 As próximas seções registram estados históricos anteriores a esta decisão.
 
-## Próxima ação — revisão da corretiva F-04
+## Próxima ação naquele fechamento — revisão da corretiva F-04
 
 O [checkpoint aceito](CHECKPOINT.md) é F-03, preservado na branch canônica remota.
 O lote F-04 `b4f8f7b...` permanece historicamente **NAO_APTA**; a rodada seguinte

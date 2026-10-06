@@ -1,5 +1,9 @@
 # B0 — mecanismo comum da execução paralela SER
 
+> **Nota administrativa — 06/10/2026.** B0 integrada pela PR #113 em `4ba7f551`. O [checkpoint de qualificação](CHECKPOINT.md) registra `LOCAL_QUALIFIED` e perfil 2/1 comprovado pelos pilotos no freeze `d8ff4392f161f08f2bc765bb9fc24227baca02bc`. A revalidação da árvore pós-freeze e a qualificação local do HEAD posterior continuam `NOT_RUN` nesse checkpoint; o merge não as comprova. O perfil 3/2 continua não qualificado. Os rótulos iniciais abaixo pertencem à candidata anterior, sem apagar essa ressalva final. Esta qualificação não autoriza campanha nova, mutação do repositório por workers ou Databricks.
+
+## Registro histórico preservado
+
 Estado de autoria: **AUDIT_CORRECTIVE_V3 / FULL_CHECKOUT_VALIDATION_PENDING / LOCAL_QUALIFICATION_PENDING**.
 
 B0 implementa apenas a infraestrutura local comum. Não promove skill, não altera `policy.json`, não publica no Databricks e não autoriza SER02–SER14. O executor B0 opera o repositório em `READ_ONLY`; preparação mecânica de renderer/snapshot permanece serial e fora dos workers.

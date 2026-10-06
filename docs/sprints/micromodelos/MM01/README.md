@@ -1,5 +1,9 @@
 # MM01 — Contrato canônico de micromodelos
 
+> **Nota administrativa — 06/10/2026.** MM01 integrada pela PR #51 em `73d7659d`. Gates de candidatura e próxima etapa abaixo são registros daquele fechamento, não pedidos atuais. [Estado e continuidade](../README.md); [módulo distribuído](../../../../ambiente_fonte/.assistant/hub_micromodelos/README.md). FAILs e limites originais permanecem; nenhuma homologação corporativa decorre desta nota.
+
+## Registro histórico preservado
+
 Status da sprint: **NONA REAUDITORIA FINAL INDEPENDENTE `NAO_APTA` PRESERVADA; D-01/R02 CORRIGIDO; 47 + 3 R02 + 1 R03 TESTES PERMANENTES; RECONCILIAÇÃO COM V13 S2 REALIZADA; CERTIFICAÇÃO FINAL E NOVA REAUDITORIA INDEPENDENTE PENDENTES; NÃO ACEITA; NÃO INTEGRADA**  
 Base inicial: `ec52d379f75dc6906a2d7e8f86fb69608a1c54d5`  
 Branch: `micromodelos/mm01-contrato-canonico`  

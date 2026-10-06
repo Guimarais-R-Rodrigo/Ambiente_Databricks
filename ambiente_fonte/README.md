@@ -43,7 +43,9 @@ ambiente_fonte/
     ├── hub_prompts/              # HUB: formulários de pedido, uso manual
     ├── hub_snippets/             # HUB: biblioteca Python, import manual
     ├── hub_scripts/              # HUB: diagnósticos, execução manual
-    └── hub_padroes/              # HUB: templates e exemplos
+    ├── hub_padroes/              # HUB: templates e exemplos
+    ├── hub_micromodelos/         # HUB: módulo de domínio e contratos
+    └── hub_readmes_visual_assets/ # infraestrutura editorial e licenças
 ```
 
 `NATIVO` identifica estruturas reconhecidas pelo Genie Code. `HUB` identifica
@@ -52,7 +54,7 @@ o conteúdo é nosso, mas usa o mecanismo nativo de Agent Skills.
 
 ## Alterar do começo ao fim
 
-Rode na raiz do repositório:
+Rode na raiz do repositório, com as [dependências Python/Node](../tools/README.md#pré-requisitos-e-efeitos) preparadas. Validação e render são locais. Publicação exige autorização específica de destino e efeito; não é etapa automática de uma edição documental. Antes de renderizar, inventarie extras: `--write` remove toda a árvore derivada.
 
 ```powershell
 # 1. Depois da edição, valide fonte, links, contratos e higiene
@@ -63,7 +65,7 @@ python tools/render_simulado.py --write
 
 # 3. Publique e confira o laboratório com destino explícito
 python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>
-python tools/publicar_free.py --verify  --profile <free> --expected-host <url-free>
+python tools/publicar_free.py --verify --conteudo --profile <free> --expected-host <url-free>
 ```
 
 Depois:
@@ -99,5 +101,5 @@ O procedimento completo e os critérios de parada estão no
 
 ## Documentação por objeto
 
-Os 75 objetos operacionais atuais possuem README local. Novos snippets, scripts e prompts usam o [molde 1.0.0](.assistant/hub_padroes/readme/template_objeto.md) e o checklist editorial. Ele complementa os exemplos e o Manual;
+O fechamento histórico R13 cobriu 75/75 objetos operacionais. A cobertura atual é medida pelo validador, incluindo objetos posteriores, sem reabrir o controle histórico. Novos snippets, scripts e prompts usam o [molde 1.0.0](.assistant/hub_padroes/readme/template_objeto.md) e o checklist editorial. Ele complementa os exemplos e o Manual;
 o README local é obrigatório para novos snippets, scripts e prompts; ele não homologa runtime nem publica o workspace.

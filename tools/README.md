@@ -13,7 +13,7 @@ podem reprovar uma mudança.
 | validar fonte e repositório | `python tools/validate_assistant.py` |
 | conferir somente saídas locais do README | `python tools/validate_assistant.py --conferir-readme` |
 | regenerar o derivado | `python tools/render_simulado.py --write` |
-| regenerar SVGs e PNGs dos READMEs | `node tools/render_readme_visuals.mjs` |
+| gerar/validar recursos visuais vigentes | [rota de produção v2](readme_visuals/README.md#produção-v2--caminho-recomendado) |
 | publicar no Free | `python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>` |
 | conferir o remoto (inventário e tipos) | `python tools/publicar_free.py --verify --profile <free> --expected-host <url-free>` |
 | conferir o remoto **por conteúdo** | `python tools/publicar_free.py --verify --conteudo --profile <free> --expected-host <url-free>` |
@@ -21,13 +21,23 @@ podem reprovar uma mudança.
 | criar pacote de auditoria | `python tools/bundle_para_auditoria.py --mode canonical` |
 | criar ZIP de implantação | `python tools/bundle_implantacao.py` |
 
+## Pré-requisitos e efeitos
+
+Execute da raiz do checkout completo, com Python e Node/pnpm compatíveis com os arquivos de dependências e lockfile. Prepare Python com `python -m pip install -r tools/requirements-dev.txt -r tools/requirements-temas-dev.txt`; a instalação altera o ambiente escolhido. Prepare Node conforme o [guia visual](readme_visuals/README.md). `ci_local.py` verifica pré-requisitos globais mesmo com `--etapa`.
+
+- Validador e `--conferir-readme` leem localmente; exit 0 indica os checks cobertos, não runtime Databricks.
+- Render sem flag mostra plano. `--write` remove e recria toda a árvore simulada; inventarie extras e trabalhe isoladamente antes.
+- Testes podem gravar temporários locais. `ci_local.py --verbose` executa a enumeração `ETAPAS`; etapa isolada não aprova o agregado.
+- Publicação exige autorização própria. `--execute` escreve remotamente; verify lê e `--conteudo` compara bytes. Falha parcial exige conferir recibo e estado antes de repetir.
+- Erro de dependência é bloqueio de ambiente; erro de contrato exige correção da fonte, nunca relaxamento do teste.
+
 ## Ciclo mínimo
 
 ```powershell
 python tools/validate_assistant.py
 python tools/render_simulado.py --write
 python tools/publicar_free.py --execute --profile <free> --expected-host <url-free>
-python tools/publicar_free.py --verify  --profile <free> --expected-host <url-free>
+python tools/publicar_free.py --verify --conteudo --profile <free> --expected-host <url-free>
 ```
 
 `--execute` altera o workspace e recusa espelho desatualizado antes de escrever.
@@ -51,7 +61,7 @@ o remoto.
 | `readme_objeto_contract.py` | estrutura, links e dispensa monotônica dos READMEs de objeto |
 | `validate_assistant.py` | estrutura, YAML, links, Python, contratos, identidade e consistência |
 | `render_simulado.py` | recriar o espelho de workspace a partir da fonte |
-| `render_readme_visuals.mjs` | gerar fontes SVG e PNGs editoriais dos READMEs |
+| `render_readme_visuals.mjs` | renderer histórico v1; recusa manifesto v2; não usar no pacote vigente |
 | `publicar_free.py` | plano, publicação protegida e conferência remota |
 | `spark_smoke_test.py` | chamadas funcionais no runtime Databricks |
 | `api_publica.py` | extrair API pública por AST e gerar `__init__.py` |
@@ -188,7 +198,7 @@ Os procedimentos completos, inclusive diagnóstico e retorno, estão no
 [guia do mantenedor](../docs/sprints/sistema_temas/V01/GUIA_MANTENEDOR.md).
 `.github/workflows/temas-v01-ci.yml` executa essas verificações com leitura apenas.
 Não substitui nem reduz o gate `ci_local.py` ou o CI permanente V00.
-A composição vigente com V02 tem nove etapas, descritas abaixo.
+A composição histórica V02 tinha nove etapas. A composição atual é a lista `ETAPAS` em `ci_local.py`, exposta por `python tools/ci_local.py --help` (12 etapas nesta revisão).
 As verificações editoriais Node e a homologação Databricks continuam separadas.
 
 
@@ -196,8 +206,7 @@ As verificações editoriais Node e a homologação Databricks continuam separad
 
 `python -B tools/temas_v02_check.py` confere fonte única, cópias derivadas,
 fachada, catálogo e descoberta não vazia. `python -B tools/tests/test_temas_v02.py`
-exercita entradas hostis, resolução e isolamento. O gate `ci_local.py` conserva
-as oito etapas anteriores e acrescenta `temas`, que executa os testes V01/V02.
+exercita entradas hostis, resolução e isolamento. Na integração V02, o gate acrescentou `temas` às oito etapas anteriores. Hoje essa etapa descobre as regressões `test_temas*.py`; outras etapas posteriores permanecem na enumeração executável.
 As dependências de validação estão em `requirements-temas-dev.txt`.
 
 O verificador V01 passa a consumir o schema do padrão do produto e as funções

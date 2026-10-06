@@ -1,5 +1,7 @@
 # Novas funcionalidades — área experimental
 
+> **Arquivo histórico do protótipo.** Não instalar ou testar esta cópia como produto atual. Use a [versão canônica](../ambiente_fonte/.assistant/skills/hub-ml-concierge/README.md). Comandos, próximos passos e resultados abaixo preservam a experiência original; não concedem autorização para nova execução.
+
 Esta pasta reúne propostas implementadas para avaliação antes de qualquer promoção ao produto. Seu conteúdo é versionado no Git, mas **não é fonte canônica do Hub publicado**, não integra `ambiente_fonte/` e não deve ser copiado em bloco para um workspace.
 
 ## Por onde começar

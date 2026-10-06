@@ -1,5 +1,10 @@
 # Auditorias multi-LLM
 
+## Evidência independente por frente
+
+Abra o índice da frente e a rodada citada para verificar autoria independente, SHA e alcance: [Micromodelos](../sprints/micromodelos/README.md), [SEF](../sprints/skill_enforcement/README.md), [SER/B1](../sprints/skill_enforcement_rollout/README.md) e [Temas](../sprints/sistema_temas/README.md). As rodadas listadas abaixo são congeladas e não são substituídas por uma auditoria posterior.
+
+
 Auditoria multi-LLM usa rodadas independentes antes do contraditório. O valor
 não é somar votos: é revelar pontos cegos diferentes, executar probes e resolver
 claims de plataforma contra documentação oficial.

@@ -17,16 +17,18 @@
 
 | Intenção | Skill operacional | Status | Saída esperada |
 |---|---|---|---|
-| validar o produto | `validar-assistant` | ativa | gate local com falhas acionáveis |
-| gerar o espelho | `render-simulado` | ativa | `Novo_Ambiente_Simulado/` regenerado |
-| publicar no laboratório | `publicar-free` | ativa | execute + verify com host/perfil explícitos |
-| testar roteamento | `forward-test-skills` | ativa | registro positivo, negativo e `@menção` |
-| copiar para o trabalho | `replicar-trabalho` | ativa | pré-condições, cópia e verificação no destino |
+| validar o produto | [validar-assistant](validar-assistant/SKILL.md) | ativa | gate local com falhas acionáveis |
+| gerar o espelho | [render-simulado](render-simulado/SKILL.md) | ativa | `Novo_Ambiente_Simulado/` regenerado |
+| publicar no laboratório | [publicar-free](publicar-free/SKILL.md) | ativa | execute + verify com host/perfil explícitos |
+| testar roteamento | [forward-test-skills](forward-test-skills/SKILL.md) | ativa | registro positivo, negativo e `@menção` |
+| copiar para o trabalho | [replicar-trabalho](replicar-trabalho/SKILL.md) | ativa | pré-condições, cópia e verificação no destino |
 | revisar documentação oficial | `revisar-docs-oficiais` | **planejada; pasta inexistente** | relatório de mudança de nomenclatura/capacidade |
 
 O pedido em linguagem natural aciona uma rota ativa pertinente. O `SKILL.md`
 explica pré-condições, comandos, critério de sucesso e quando parar. Item
 planejado não é invocável até a pasta e o `SKILL.md` existirem.
+
+Para certificar mudanças de enforcement, consulte o [procedimento local vigente](../../tools/skill_enforcement/README.md#ser--certificação-prospectiva); validar a estrutura não equivale a certificar runtime.
 
 ## Criar ou alterar uma skill operacional
 

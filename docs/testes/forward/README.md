@@ -14,7 +14,7 @@ Ele não mede qualidade da resposta nem execução de código.
 | negativo (`N`) | demanda vizinha deixa a skill alvo de fora? | alvo não carregada |
 | menção (`M`) | `@nome-da-skill` seleciona explicitamente? | alvo carregada |
 
-A matriz básica agora prevê 14 skills × 3 casos = 42. Os casos 14P/14N/14M
+A matriz histórica deste protocolo prevê 14 skills × 3 casos = 42. Os casos 14P/14N/14M
 foram acrescentados para o Concierge, mas ainda não foram executados. Os negativos
 cobrem colisões como drift, materialização, explicação de notebook e auditoria.
 A matriz detalhada do Concierge, em seu pacote canônico, acrescenta casos de qualidade
@@ -31,6 +31,8 @@ e segurança; ela não equivale a 26 forward tests aprovados.
 O caso `11N-r2` foi aprovado no critério do teste — a skill alvo ficou de fora
 —, embora a skill ideal também não tenha sido carregada. É item de vigilância,
 não motivo para reclassificar o resultado.
+
+O [catálogo corrente](../../../ambiente_fonte/.assistant/skills/README.md) inclui Micromodelos, adicionada depois desse protocolo. As [evidências Micromodelos](../../sprints/micromodelos/README.md) e os [screenings SER/B1](../../sprints/skill_enforcement_rollout/README.md) têm seus próprios casos. Não inferir 45/45 a partir de 39/39, da matriz 42 ou de outra campanha.
 
 ## Estado da integração — 12/09/2026
 

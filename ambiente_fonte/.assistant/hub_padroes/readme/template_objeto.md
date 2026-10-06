@@ -2,9 +2,7 @@
 
 <!-- readme-objeto: 1.0.0 -->
 
-Versão **1.0.0**, estabilizada em 2026-09-12 após o piloto R02 e o aceite
-editorial de Rodrigo. O PR nº 7 foi integrado antes da R03-A. O aceite do
-padrão não aprova antecipadamente novos textos nem homologa runtimes.
+Contrato editorial **1.0.0** para README de snippet, script e prompt. Preserve as quinze seções, identificadores e avisos de efeito. Validade estrutural não aprova novos textos nem homologa runtimes.
 Este arquivo é o dono das seções: regras, skill e validador o referenciam,
 sem manter outro esqueleto concorrente. É a escala **Objeto** do
 [template geral](template.md), não um sétimo tipo do Hub.
@@ -156,7 +154,7 @@ Referência histórica por commit e instrução vigente têm funções diferente
 Não exija fonte externa para a simples descrição de uma constante local. Não
 use bibliografia decorativa. Registre o estado desta revisão: leitura estática,
 testes locais, teste de runtime e revisão independente são coisas diferentes.
-Não transfira um “executado” antigo para esta sprint sem execução nova.
+Não transfira um “executado” antigo para uma nova versão ou ambiente sem execução correspondente.
 
 ## Exemplares
 

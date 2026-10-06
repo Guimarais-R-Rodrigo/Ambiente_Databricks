@@ -1,5 +1,7 @@
 # Skills experimentais
 
+> **Arquivo histórico do protótipo.** Não instalar ou testar esta cópia como produto atual. Use a [versão canônica](../../ambiente_fonte/.assistant/skills/hub-ml-concierge/README.md). Comandos, próximos passos e resultados abaixo preservam a experiência original; não concedem autorização para nova execução.
+
 Pacotes de instruções para avaliação, sem ativação no produto. Esta coleção não altera o inventário de skills canônicas.
 
 | Pacote | Finalidade | Estado |

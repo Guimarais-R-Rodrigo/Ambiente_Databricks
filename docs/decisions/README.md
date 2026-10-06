@@ -33,18 +33,18 @@ escolha for difícil de reverter ou afetar mais de um componente.
 | [0010](ADR-0010-manual-tecnico-unificado.md) | Manual Técnico unifica catálogo e glossário | aceito |
 | [0011](ADR-0011-concierge-hub.md) | Concierge opcional para descoberta e composição | aceito para integração; homologação no destino pendente |
 | [0012](ADR-0012-readmes-de-objeto.md) | README didático por objeto; transição controlada | aceito e implementado; R00–R13 encerrada em 2026-09-14 |
-| [0013](ADR-0013-sistema-de-temas.md) | contrato central de temas e aplicação explícita por contexto | aceito; V00–V08 integradas no Git; sem publicação/homologação operacional |
-| [0014](ADR-0014-micromodelo-artefato-de-dominio.md) | micromodelo é artefato de domínio, não tipo do Hub | aceito em 2026-09-14; integração da MM00 pendente |
-| [0015](ADR-0015-micromodelo-yaml-canonico.md) | `micromodelo.yaml` é especificação estruturada canônica | aceito em 2026-09-14; integração da MM00 pendente |
-| [0016](ADR-0016-mlflow-runs-micromodelos.md) | MLflow registra runs; YAML registra definição | aceito em 2026-09-14; integração da MM00 pendente |
-| [0017](ADR-0017-governanca-externa-publicacao.md) | governança externa permanece autoridade da publicação | aceito em 2026-09-14; integração da MM00 pendente |
-| [0018](ADR-0018-piloto-novo-antes-legados.md) | provar esteira com caso novo antes de migrar legados | aceito em 2026-09-14; integração da MM00 pendente |
-| [0019](ADR-0019-micromodelos-consomem-temas.md) | micromodelos consomem Sistema de Temas e não criam tema paralelo | aceito em 2026-09-14; integração da MM00 pendente |
-| [0020](ADR-0020-fontes-catalogo-configurado.md) | fontes ficam no catálogo corporativo configurado via binding externo | aceito em 2026-09-14; integração da MM00 pendente |
+| [0013](ADR-0013-sistema-de-temas.md) | contrato central de temas e aplicação explícita por contexto | aceito; [V00–V13 e V14 S0/S1 integradas](../sprints/sistema_temas/README.md); gates operacionais separados |
+| [0014](ADR-0014-micromodelo-artefato-de-dominio.md) | micromodelo é artefato de domínio, não tipo do Hub | aceito em 2026-09-14; MM00 integrada pela PR #43 (`36e89515`); [implementação](../sprints/micromodelos/README.md) |
+| [0015](ADR-0015-micromodelo-yaml-canonico.md) | `micromodelo.yaml` é especificação estruturada canônica | aceito em 2026-09-14; MM00 integrada pela PR #43 (`36e89515`); [implementação](../sprints/micromodelos/README.md) |
+| [0016](ADR-0016-mlflow-runs-micromodelos.md) | MLflow registra runs; YAML registra definição | aceito em 2026-09-14; MM00 integrada pela PR #43 (`36e89515`); [implementação](../sprints/micromodelos/README.md) |
+| [0017](ADR-0017-governanca-externa-publicacao.md) | governança externa permanece autoridade da publicação | aceito em 2026-09-14; MM00 integrada pela PR #43 (`36e89515`); [implementação](../sprints/micromodelos/README.md) |
+| [0018](ADR-0018-piloto-novo-antes-legados.md) | provar esteira com caso novo antes de migrar legados | aceito em 2026-09-14; MM00 integrada pela PR #43 (`36e89515`); [implementação](../sprints/micromodelos/README.md) |
+| [0019](ADR-0019-micromodelos-consomem-temas.md) | micromodelos consomem Sistema de Temas e não criam tema paralelo | aceito em 2026-09-14; MM00 integrada pela PR #43 (`36e89515`); [implementação](../sprints/micromodelos/README.md) |
+| [0020](ADR-0020-fontes-catalogo-configurado.md) | fontes ficam no catálogo corporativo configurado via binding externo | aceito em 2026-09-14; MM00 integrada pela PR #43 (`36e89515`); [implementação](../sprints/micromodelos/README.md) |
 | [0021](ADR-0021-execucao-verificavel-de-skills.md) | `execution_contract` estruturado + capability experiment antes de preflight/runner | aceito em 2026-09-16 após gate humano da SE01; probe temporário aposentado do produto |
-| [0022](ADR-0022-certificacao-prospectiva-ser.md) | certificação SER prospectiva, condições aditivas e prova por superfície | aceito em 2026-09-22 na SER00; implementação prospectiva pendente |
-| [0023](ADR-0023-execucao-paralela-governada-ser.md) | execução paralela governada da SER por DAG, autoria central e certificação isolada | aceito em 2026-09-24; B0 candidata implementada, qualificação local pendente |
-| [0024](ADR-0024-modulo-micromodelos-no-hub.md) | Micromodelos como módulo de domínio distribuído no Hub | aceito em 2026-09-30; candidata implementada |
+| [0022](ADR-0022-certificacao-prospectiva-ser.md) | certificação SER prospectiva, condições aditivas e prova por superfície | aceito em 2026-09-22 na SER00; [SER00/SER01 integradas](../sprints/skill_enforcement_rollout/README.md); promoção por superfície permanece separada |
+| [0023](ADR-0023-execucao-paralela-governada-ser.md) | execução paralela governada da SER por DAG, autoria central e certificação isolada | aceito em 2026-09-24; [B0 integrada](../sprints/skill_enforcement_rollout/PARALELO/B0/README.md) pela PR #113; perfil 2/1 qualificado no freeze indicado, 3/2 não qualificado |
+| [0024](ADR-0024-modulo-micromodelos-no-hub.md) | Micromodelos como módulo de domínio distribuído no Hub | aceito em 2026-09-30; módulo integrado pela PR #119 (`63601e09`) |
 
 Ao adicionar um ADR, atualize esta tabela e o `CHANGELOG.md`.
 

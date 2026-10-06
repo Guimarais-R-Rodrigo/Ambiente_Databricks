@@ -1,5 +1,7 @@
 # Ferramentas dos recursos visuais
 
+[Voltar às ferramentas](../README.md). Este é o dono único da receita de geração visual vigente. **Risco de remoção:** `--retire-legacy` altera/exclui apenas o escopo descrito abaixo; exige autorização de migração, inventário e backup. Não é flag de rotina.
+
 Autoria, exportação e validação do conjunto v2 em `hub_readmes_visual_assets/`.
 Os cabeçalhos e as cinco assinaturas aprovadas têm hashes de preservação. O
 compositor de produção não depende da pasta temporária de protótipos para

@@ -1,5 +1,7 @@
 # Dossiês das oito skills
 
+**Planejamento congelado em 24/09/2026.** Os casos abaixo não viram testes aprovados por constarem no catálogo. Consulte o [aceite técnico A e artefatos B1](../../B1_GATES_POS_MERGE_2026-10-01.md) para o que foi efetivamente verificado depois.
+
 Cada dossiê combina decisões de escopo, fixtures, casos discriminantes e requisitos de evidência. As APIs citadas são recursos candidatos de reuso; assinatura e cobertura real são bloqueios de autoria até inspeção. Os IDs dos casos são do catálogo de planejamento, não testes já executados.
 
 - [SER02 — hub-ml-explainability](SER02_EXPLAINABILITY.md)

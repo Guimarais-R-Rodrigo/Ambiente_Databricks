@@ -1,5 +1,7 @@
 # Histórico — conteúdo retirado do produto
 
+A [readequação documental de 06/10/2026](readequacao_readmes_2026-10-06/README_RAIZ_TEMAS.md) preserva a cronologia transferida do README raiz e o [ciclo de vida anterior](readequacao_readmes_2026-10-06/CICLO_DE_VIDA_ANTERIOR.md).
+
 Esta coleção preserva documentos que já viajaram com o `.assistant` e deixaram
 de ser produto. Ela explica origem e nomenclatura antiga, mas não é manual
 vigente.
@@ -16,7 +18,7 @@ vigente.
 | [`LEGACY_CONTEXT.md`](LEGACY_CONTEXT.md) | ambiente pessoal antes da reestruturação | investigar origem de uma decisão |
 | [`skills_manifest.md`](skills_manifest.md) | escopo funcional antigo das skills | comparar intenção antiga e contrato atual |
 | [`AGENTS_TEMPLATE.md`](AGENTS_TEMPLATE.md) | modelo de contexto de projeto | criar `AGENTS.md` em um projeto real |
-| `x_original_export_manifest.json` | manifesto da exportação de origem | rastreabilidade rara |
+| [x_original_export_manifest.json](x_original_export_manifest.json) | manifesto da exportação de origem | rastreabilidade rara |
 
 ## Por que não ficam no produto
 

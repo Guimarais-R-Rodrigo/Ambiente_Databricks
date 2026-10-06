@@ -1,5 +1,9 @@
 # SE01 — contrato verificável e capability probe
 
+> **Nota administrativa — 06/10/2026.** SE01 integrada pela PR #69 em `4ef1f8b9`. As pendências de abertura de PR, certificação e merge abaixo descrevem candidatas anteriores. [História SEF](../README.md) e [operação atual SER](../../skill_enforcement_rollout/README.md) distinguem o fechamento histórico da policy vigente. Esta nota não reclassifica resultados nem amplia o escopo certificado.
+
+## Registro histórico preservado
+
 ## Estado
 
 **CANDIDATA EM FECHAMENTO PARA HOMOLOGAÇÃO / NÃO HOMOLOGADA / PR #69 DRAFT.**

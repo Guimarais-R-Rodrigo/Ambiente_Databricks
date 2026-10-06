@@ -1,5 +1,9 @@
 # V07 — demais consumidores e formatos de saída
 
+> **Nota administrativa — 06/10/2026.** Este documento preserva o escopo e a próxima ação previstos no fechamento original. [Estado atual de Temas](../README.md) é o dono da continuidade; não repetir gates antigos por inferência. [Jornadas posteriores](../V12/README.md) têm escopos próprios; PASS local não se converte em PASS ambiental.
+
+## Registro histórico preservado
+
 > **Estado atual:** aceita por Rodrigo e integrada no Git em 14/09/2026 pelo PR #40. O head final validado foi `6b50151738a311eff8530c3191e24693af3fb036` e o merge efetivo na `main` é `67114605c7345a01c1144e5d6c6d24e9c24e2491`. A árvore do merge (`5438288bda2326e96372c7464b3aef0cb8375102`) é a mesma árvore da candidata validada. Nenhuma publicação Databricks foi realizada.
 
 ## Objetivo

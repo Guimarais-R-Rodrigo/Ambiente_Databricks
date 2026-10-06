@@ -12,6 +12,8 @@ resultado de teste, ele pode e deve ser atualizado quando a operação muda.
 | Conferir cada pré-condição da replicação | [Checklist de replicação](checklist-replicacao.md) |
 | Conferir Genie, instruções e imagens no trabalho | [Aceite humano](testes-genie-trabalho.md) |
 
+A sequência é local-first: [ciclo de vida](ciclo-de-vida.md) governa mudanças gerais; [certificação SEF/SER](../../tools/skill_enforcement/README.md#ser--certificação-prospectiva) acrescenta os gates das superfícies protegidas. Publicação, runtime e replicação exigem escopo autorizado próprio.
+
 ## Ordem segura
 
 ```mermaid

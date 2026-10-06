@@ -7,14 +7,14 @@
 > estado atual.
 
 Este documento preserva as descobertas por rodada. Para decidir sobre o estado
-atual, leia primeiro o resumo abaixo; as seções seguintes são histórico técnico
+atual, confira a versão e o escopo da prova; o resumo abaixo é a rodada deste smoke; as seções seguintes são histórico técnico
 e não são reescritas para parecerem atuais.
 
 Executor: job serverless one-time no Free Edition, notebook
 [`tools/spark_smoke_test.py`](../../../tools/spark_smoke_test.py), dados 100%
 sintéticos.
 
-## Resultado vigente — 2026-09-09 (Spark 4.2.0 serverless)
+## Última rodada deste smoke — 2026-09-09 (Spark 4.2.0 serverless)
 
 | Verificação | Resultado |
 |---|---:|
@@ -33,6 +33,8 @@ reprova se o comportamento mudar sem revisão.
 
 > Este resultado prova execução no runtime e na data declarados. Não prova
 > permissões, bibliotecas, Spark Connect ou política do workspace do trabalho.
+
+Ensaios posteriores de [Micromodelos](../../sprints/micromodelos/RELATORIO_ENTREGA_LAB.md) e [B1 A](../../sprints/skill_enforcement_rollout/B1_GATES_POS_MERGE_2026-10-01.md) observaram rotas MLflow com configuração explícita. Não apagam o `BLOQUEADO_ESPERADO` deste smoke nem provam que todo runtime permita tracking. Referências a “hoje”, instalação e runtime nas seções seguintes pertencem às datas registradas.
 
 ## Histórico inicial — 2026-08-13 (Spark 4.1.0 serverless)
 

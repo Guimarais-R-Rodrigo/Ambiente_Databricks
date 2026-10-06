@@ -1,5 +1,9 @@
 # PSEF00 — reconciliação, inventário, baseline e freeze
 
+> **Nota administrativa — 06/10/2026.** PSEF00 integrada pela PR #98 em `11851e13`. “HEAD real de main” e inventário 16/49 abaixo são do freeze. O [índice PSEF](../README.md) é dono da continuidade; integração não prova execução de PSEF01–07.
+
+## Registro histórico preservado
+
 **Data:** 2026-09-22  
 **Base reconciliada:** `main@17640a6a31f562e9979d235ede27cf44cef9ebbf`  
 **Branch candidata:** `psef/PSEF00-reconciliacao-inventario`  

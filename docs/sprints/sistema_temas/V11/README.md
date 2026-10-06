@@ -1,5 +1,9 @@
 # V11 — temas nativos Databricks AI/BI
 
+> **Nota administrativa — 06/10/2026.** Este documento preserva o escopo e a próxima ação previstos no fechamento original. [Estado atual de Temas](../README.md) é o dono da continuidade; não repetir gates antigos por inferência. A [prova real posterior V12-AIBI-01](../V12/evidencias/V12-AIBI-01/README.md) cobre somente import em dashboard draft; não pertence ao ensaio original V11.
+
+## Registro histórico preservado
+
 ## Estado
 
 **ACEITA E INTEGRADA NO GIT; FECHAMENTO DOCUMENTAL PÓS-MERGE; SEM HOMOLOGAÇÃO OU OPERAÇÃO REAL NO DATABRICKS.**

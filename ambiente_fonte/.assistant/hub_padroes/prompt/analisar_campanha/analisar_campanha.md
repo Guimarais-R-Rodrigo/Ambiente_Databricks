@@ -62,9 +62,7 @@ competente. Ver o registro em
 
 ## Limites deste prompt
 
-Ele descreve o que aconteceu; não isola o efeito da oferta, do canal ou do
-momento. Para atribuir causa, o desenho precisa ser experimental, e nenhum
-formulário conserta uma campanha que já rodou sem grupo de controle.
+Ele descreve o que aconteceu; não isola o efeito da oferta, do canal ou do momento. Este briefing não estabelece identificação causal. Qualquer afirmação causal exige desenho e pressupostos próprios.
 
 ## Guia do exemplar
 

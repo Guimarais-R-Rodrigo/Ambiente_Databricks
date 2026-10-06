@@ -36,8 +36,7 @@ respondeu", que é explicabilidade de modelo e não medição de campanha.
 
 ## Usar helpers da biblioteca
 
-O Genie Code **não** descobre estes módulos sozinho. Importe-os explicitamente no
-notebook, depois de acrescentar `.assistant` ao `sys.path`.
+A tabela é conceitual: `hub_scripts.checar_base_campanha` e `hub_snippets.campanha.taxa_resposta_campanha` são caminhos fictícios desta skill não roteável. Não tente importá-los. Estude os exemplares em [script](../../script/checar_base_campanha/README.md) e [snippet](../../snippet/taxa_resposta_campanha/README.md); use apenas APIs verificadas da instalação real.
 
 | Demanda | Módulo | API |
 |---|---|---|

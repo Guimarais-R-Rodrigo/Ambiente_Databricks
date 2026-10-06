@@ -1,5 +1,7 @@
 # Testes de execução de skills
 
+**Protocolo congelado de medição.** A [baseline SE00](../../sprints/skill_enforcement/SE00/README.md) fechou 16/16 runs; a [SE06](../../sprints/skill_enforcement/SE06/README.md) fechou por exceção G2 em 24/25 com DoD incompleto. Nomes antigos, inclusive `index_generator`, são os da mensuração. Este protocolo não substitui o [contrato operacional atual da EDA](../../../ambiente_fonte/.assistant/skills/hub-ml-eda-profissional/SKILL.md).
+
 Este diretório separa **roteamento** de **execução real**. Os testes forward existentes verificam se uma skill tende a ser selecionada ou recomendada; este protocolo observa o que acontece **depois** da seleção: recursos consultados, imports, chamadas, execução concluída, templates consumidos, reimplementações e alegações sem evidência.
 
 ## Estado desta baseline

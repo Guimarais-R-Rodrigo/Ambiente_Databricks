@@ -6,6 +6,9 @@ Este exemplar ajuda a transformar “mostre a taxa por segmento” em um pedido
 com dados, período e uma decisão explícita. É **material dos padrões do Hub**;
 o texto orienta uma interação, não executa uma análise sozinho.
 
+
+Antes de usar: confirme campanha única e unidade cliente-contato; preencha fonte, período e orçamento em contatos; solicite contagens e limites; confronte a resposta com dados autorizados. O preparo do notebook escreve uma tabela persistente e é dispensável para preencher o briefing. Priorização observacional não prova causalidade nem retorno incremental.
+
 ## Visão rápida
 
 | Pergunta | Resposta |
@@ -80,10 +83,7 @@ Uma equipe fictícia dispõe de uma campanha encerrada e planeja outra com limit
 de 5.000 contatos. Ela conhece a tabela e o intervalo de datas e quer comparar
 segmentos sem ignorar seu tamanho.
 
-No formulário, ela informa a tabela confirmada, o período da campanha e `5000`
-como orçamento de contatos. O resultado desejado é uma priorização justificada,
-com limites explícitos. Não há aqui uma resposta simulada da IA apresentada
-como captura real, nem indicação de que alguma tabela foi consultada nesta R01.
+Os números são ilustrativos; não representam resultado observado de uma consulta.
 
 ## 7. O que você precisa antes de usar?
 
@@ -187,6 +187,4 @@ As afirmações sobre campos e entrega foram confrontadas com o
 O [Manual Técnico](../../../MANUAL_TECNICO.md#genie) delimita contexto e execução
 no ecossistema.
 
-R01: leitura estática e revisão pelo próprio autor. Não houve envio do prompt
-à Genie Code, acesso a dados, geração de resposta observada nem teste de
-roteamento. Auditoria independente e aceite humano estão pendentes.
+O briefing estrutura o pedido. Confira na interação real quais recursos foram usados, quais consultas ocorreram e o que a resposta sustenta.

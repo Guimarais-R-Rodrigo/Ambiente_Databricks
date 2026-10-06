@@ -1,6 +1,6 @@
 # Sistema de Temas do Hub — execução por sprints
 
-## Estado vigente — V00–V13 integradas; V14 S0 em execução
+## Estado vigente — V00–V13 integradas; V14 S0/S1 integradas
 
 V00–V13 estão aceitas e integradas no Git. A V13 concluiu consolidação operacional e handoff sem transformar ausência de autorização em PASS e sem executar mutação Databricks.
 
@@ -8,7 +8,7 @@ A S7 foi integrada pela PR #66 no merge `62e9404851d6a7902371bd5b6531a113d521311
 
 Os estados herdados continuam distintos: `DOC-02`, `DOC-03`, `SEC-01`, `UAT-01` e `V12-AIBI-01` possuem PASS somente no alcance documentado; `A11-01` permanece **FAIL** na issue #57; `V12-LAB-01`, `V12-APP-01` e `V12-AIBI-02` permanecem **BLOQUEADO_AUTORIZACAO**.
 
-O [Plano Mestre V14](V14/PLANO_MESTRE.md) foi aceito e integrado pela PR #70 no merge `350dcf0b37e730042ef961f12f11b30b2660d2c6`; os **15/15 workflows de `push`** desse SHA concluíram em `success`. A V14 está agora em **S0 — reconciliação pós-V13 e freeze de readiness**, com estado vivo no [README V14](V14/README.md) e evidência no [checkpoint S0](V14/CHECKPOINT_S0.md). **S1–S8 não foram iniciadas.** S0 não é production readiness, não decide go-live e não autoriza Databricks.
+O [Plano Mestre V14](V14/PLANO_MESTRE.md) foi aceito e integrado pela PR #70 no merge `350dcf0b37e730042ef961f12f11b30b2660d2c6`; os **15/15 workflows de `push`** desse SHA concluíram em `success`. A S0 foi integrada pela PR #71 (`e89ef4f7`) e a S1 pela PR #72 (`79f53ba1`, 16/09/2026). O [README V14](V14/README.md), a [matriz de ownership](V14/MATRIZ_OWNERSHIP.json) e o [checkpoint S1](V14/CHECKPOINT_S1.md) separam integração de slots `BLOCKED`. **S2–S8 não possuem início comprovado.** Não há decisão de production readiness, go-live ou autorização Databricks.
 
 Para quem nunca entrou no Hub: use o [README V14](V14/README.md) para entender o estado corrente e o [handoff S7](V13/S7_HANDOFF_OPERACIONAL.md) para a operação herdada. A V13 continua dona de inventário, preflight, release/rollback local, diagnóstico, compatibilidade/acessibilidade, ensaios e handoff; a V14 não duplica esses mecanismos.
 

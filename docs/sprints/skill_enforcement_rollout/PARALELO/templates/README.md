@@ -4,4 +4,4 @@ Os JSONs são exemplos de estrutura do plano, não autorizações nem tasks exec
 
 O template de achado não afirma finding real. O template de gate humano não atribui consentimento. O registro de caso desta entrega não deve ser usado para emitir Receipt ou PASS de uma skill.
 
-Na implementação B0, estes exemplos serão substituídos por exemplos válidos contra os schemas de produção, com dados sintéticos explícitos e nenhum segredo. Os schemas runtime ainda precisam ser implementados e adversarialmente testados.
+B0 já dispõe de [schemas de produção](../../../../../tools/skill_enforcement/parallel/schemas/). Estes modelos continuam deliberadamente incompletos, com `launchable=false`; não foram promovidos a campanha executável. Consulte o [fechamento B0](../B0/README.md) e use o schema adequado para preparar, validar e autorizar uma campanha nova.

@@ -1,5 +1,7 @@
 # Testes do Concierge
 
+> **Arquivo histórico do protótipo.** Não instalar ou testar esta cópia como produto atual. Use a [versão canônica](../../../../ambiente_fonte/.assistant/skills/hub-ml-concierge/tests/README.md). Comandos, próximos passos e resultados abaixo preservam a experiência original; não concedem autorização para nova execução.
+
 ## Duas evidências diferentes
 
 O verificador estático confere a estrutura do pacote. Os casos de `casos_aceite.json` avaliam comportamento humano/conversacional e continuam pendentes até execução registrada. Expectativa escrita não é resultado de teste.

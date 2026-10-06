@@ -1,5 +1,9 @@
 # V06 — assets e geração orientados por tema
 
+> **Nota administrativa — 06/10/2026.** Este documento preserva o escopo e a próxima ação previstos no fechamento original. [Estado atual de Temas](../README.md) é o dono da continuidade; não repetir gates antigos por inferência.
+
+## Registro histórico preservado
+
 ## Estado desta sprint
 
 **INTEGRADA NO GIT; SEM PUBLICAÇÃO DATABRICKS; V07 NÃO INICIADA.** A V06 foi aceita por Rodrigo em 14/09/2026 e integrada pelo PR #38. O head final validado foi `70499e1803ce0d61a148a0da975c4f52611046e0`; o merge na `main` é `418946de8d1e95e87cbfd9df528ddcced5075237`. A árvore do merge (`68ddec3d691047e890ba2785e1e2e007039fa0e3`) é idêntica à árvore do head final testado.
