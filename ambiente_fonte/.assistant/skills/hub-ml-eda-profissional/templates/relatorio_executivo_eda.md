@@ -1,5 +1,10 @@
 <!-- Template: relatório executivo de EDA (skill hub-ml-eda-profissional) -->
 
+Preencher a partir dos outputs observados da rota canônica. Planejamento fica
+NÃO EXECUTADO; métrica ausente fica NÃO CALCULADO. Sem critérios de qualidade,
+manter NÃO CLASSIFICADO. O relatório não substitui Receipt, Postflight nem
+`completion.authorized=true` reverificado exigido para conclusão da EDA.
+
 ```md
 # Relatório Executivo — Análise Exploratória de Dados
 
@@ -31,7 +36,7 @@ legível por um executivo que não lerá o resto do relatório.]
 - **Completude**: [% global de preenchimento, colunas com >X% nulos].
 - **Unicidade**: [chave de negócio identificada e duplicidades].
 - **Consistência**: [tipos coerentes, datas válidas, domínios coerentes].
-- **Confiabilidade global**: ✅ Alta / 🟡 Média / 🔴 Baixa.
+- **Confiabilidade global**: [NÃO CLASSIFICADA ou nível justificado por critérios, população, evidência e limitações].
 
 | Indicador | Valor | Status |
 |-----------|-------|--------|
@@ -94,7 +99,7 @@ decisão. Ligar achados técnicos a impacto operacional/comercial.]
 
 ---
 
-**Anexos** (em notebook fonte):
+**Anexos efetivamente produzidos** (em notebook fonte; marcar não produzido/N/A com motivo):
 - Estatísticas descritivas completas.
 - Matriz de correlação.
 - Gráficos detalhados por variável.
