@@ -14,14 +14,14 @@ flowchart LR
 ```
 
 O corpo decisório aceito é imutável. Ajuste de estilo ou implementação local
-pede changelog, não ADR. Use o template `.claude/templates/adr.md` quando a
+pede changelog, não ADR. Use o [template de ADR](../ai/templates/adr.md) quando a
 escolha for difícil de reverter ou afetar mais de um componente.
 
 ## Índice vigente
 
 | ADR | Decisão | Status |
 |---|---|---|
-| [0001](ADR-0001-arquitetura-multi-ia.md) | repositório canônico e camadas derivadas | aceito |
+| [0001](ADR-0001-arquitetura-multi-ia.md) | repositório canônico e camadas derivadas | aceito; somente hierarquia editorial supersedida por [0025](ADR-0025-arquitetura-instrucoes-ia.md) |
 | [0002](ADR-0002-engine-databricks-genie-hub.md) | reutilizar engine `databricks-genie` | supersedido por 0005 |
 | [0003](ADR-0003-quarentena-ambiente-antigo.md) | `Ambiente_Antigo/` local-only | aceito |
 | [0004](ADR-0004-declaracao-explicita-de-helpers.md) | helpers declarados nas skills | forma/localização supersedidas por 0007; descoberta solicitada delimitada por 0011 |
@@ -45,6 +45,7 @@ escolha for difícil de reverter ou afetar mais de um componente.
 | [0022](ADR-0022-certificacao-prospectiva-ser.md) | certificação SER prospectiva, condições aditivas e prova por superfície | aceito em 2026-09-22 na SER00; [SER00/SER01 integradas](../sprints/skill_enforcement_rollout/README.md); promoção por superfície permanece separada |
 | [0023](ADR-0023-execucao-paralela-governada-ser.md) | execução paralela governada da SER por DAG, autoria central e certificação isolada | aceito em 2026-09-24; [B0 integrada](../sprints/skill_enforcement_rollout/PARALELO/B0/README.md) pela PR #113; perfil 2/1 qualificado no freeze indicado, 3/2 não qualificado |
 | [0024](ADR-0024-modulo-micromodelos-no-hub.md) | Micromodelos como módulo de domínio distribuído no Hub | aceito em 2026-09-30; módulo integrado pela PR #119 (`63601e09`) |
+| [0025](ADR-0025-arquitetura-instrucoes-ia.md) | núcleo AGENTS e documentação neutra; adaptadores mínimos e evidência por superfície | aceito para implementação local; compatibilidade/auditoria não presumidas |
 
 Ao adicionar um ADR, atualize esta tabela e o `CHANGELOG.md`.
 
