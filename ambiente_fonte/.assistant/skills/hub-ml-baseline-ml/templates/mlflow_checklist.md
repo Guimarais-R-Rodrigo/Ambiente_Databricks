@@ -1,49 +1,49 @@
 # Template: Checklist MLflow
 
-> **[N/8]** checks OK | **[X]** tags registradas | **[Y]** artefatos salvos
+## Escolher a rota
+Consultar a [skill](../SKILL.md) e a policy vigente antes de preencher.
+- Cálculo local sem logging: tracking e Registry são NÃO APLICÁVEL; preservar
+  request, Receipt e verificador exigidos pelo perfil.
+- Tracking autorizado: registrar escopo, experimento, identidade e evidência.
+- Registro UC/promoção: autorização e governança separadas; não decorrem do tracking.
 
+O perfil `BINARY_TEMPORAL_LOCAL_V1` não grava MLflow. Seu adapter de tracking
+exige `SER10-AUTH-1` e mantém o Registry fora do escopo. Respeitar verificação
+live/finalizada, cleanup e estados UNKNOWN previstos no contrato; este checklist
+não emite Receipt nem substitui os verificadores.
 
-## Uso
-Checklist de registro obrigatório em MLflow para cada run.
+## Tracking, somente quando aplicável e autorizado
 
-## Checklist
+- [ ] Experimento, backend e identidade autorizados verificados
+- [ ] Run efetivamente criado: [run_id ou NÃO EXECUTADO]
+- [ ] Parâmetros, métricas por split e versões realmente observados
+- [ ] Tags exigidas pelo perfil: [type, suite, algorithm, owner, versão real, dataset, target, split; N/A com motivo]
+- [ ] Pipeline/modelo e assinatura, quando exigidos: [artefato e readback]
+- [ ] Dataset/snapshot e exemplo de entrada seguros, sem PII/segredos
+- [ ] Artefatos produzidos pela rota: [lista ou NÃO APLICÁVEL; não exigir SHAP/PNG inexistente]
+- [ ] Estado de persistência, verificação e cleanup: [evidência ou UNKNOWN]
 
-- ✅ `mlflow.set_experiment()` com path padronizado
-- ✅ `mlflow.set_registry_uri("databricks-uc")`
-- ✅ `mlflow.start_run(run_name=...)` com nome descritivo
-- ✅ **Params**: todos os hiperparâmetros logados
-- ✅ **Metrics**: todas as métricas por split (treino/val/teste)
-- ✅ **Tags obrigatórias**:
-  - ✅ `type` (baseline/tuning/retrain/comparison/trivial)
-  - ✅ `suite` (B1/B2/B3/B4/B5/B6/B7)
-  - ✅ `algorithm` (lightgbm/xgboost/catboost/prophet/etc.)
-  - ✅ `author`/`owner` (valor fornecido pelo projeto)
-  - ✅ `skill_version` (1.0)
-  - ✅ `dataset` (catalog.schema.tabela)
-  - ✅ `target` (coluna target)
-  - ✅ `split_strategy` (temporal/stratified/group/walk_forward)
-- ✅ **Model**: `mlflow.sklearn.log_model()` ou equivalente
-- ✅ **Signature**: `infer_signature(X, y_pred)`
-- ✅ **Input**: `mlflow.log_input()` com dataset de teste
-- ✅ **Artifacts**: feature_importance.png, context_card.json
-- ✅ **Registro no UC**: `mlflow.register_model(name="catalog.schema.model")`
+## Registro de modelo, somente com autorização própria
 
-## Convenção de nomes
+- [ ] Registro UC é suportado pela rota e foi solicitado: [autorização/destino]
+- [ ] URI do modelo, assinatura, permissões e API instalada confirmadas
+- [ ] Registro observado: [nome/versão/readback ou NÃO EXECUTADO]
+- [ ] Promoção/alias/deploy: [decisão separada ou NÃO AUTORIZADO]
 
-| Elemento | Padrão | Exemplo |
+## Identificação
+
+| Elemento | Valor fornecido/verificado |
+|---|---|
+| Experimento | [path/ID autorizado ou NÃO APLICÁVEL] |
+| Run | [nome/ID observado ou NÃO EXECUTADO] |
+| Modelo UC | [destino autorizado ou NÃO APLICÁVEL] |
+| Responsável | [informado ou NÃO INFORMADO] |
+
+## Resumo de evidência
+
+| Item aplicável | Estado | Evidência/limite |
 |---|---|---|
-| Experiment | `/Users/{user}/experiments/{dominio}/{problema}` | `/Users/<usuario>/experiments/crm/churn_prev` |
-| Run name | `{tipo}_{algoritmo}_v{N}` | `baseline_lgbm_v1` |
-| Model name (UC) | `{catalog_ml}.{dominio}.{problema}_{produto}` | `ml_models.crm.churn_previdencia` |
+| [tracking/modelo/artefato/verificação/cleanup] | [NÃO EXECUTADO/observado/UNKNOWN/NÃO APLICÁVEL] | [fonte e motivo] |
 
----
-
-#### 💼 Resumo de conformidade
-
-| Item | Status | Observação |
-|---|---|---|
-| Run logged | ✅ / ❌ | [run_id ou motivo] |
-| Params completos | ✅ / ❌ | [N params] |
-| Metrics registradas | ✅ / ❌ | [lista] |
-| Tags obrigatórias | ✅ / ❌ | [N/8 presentes] |
-| Artefatos | ✅ / ❌ | [N salvos] |
+Só marcar uma caixa após conferir sua evidência. A ausência de logging em perfil
+local não é falha; um campo preenchido não comprova persistência ou autorização.

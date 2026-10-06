@@ -35,4 +35,4 @@ Se o usuário não sabe qual suite usar, pergunte:
 | [condição] | [B1/B2/...] | 🟢 Alta / 🟡 Média |
 
 #### ➡️ Próximo passo
-Executar suite [X] com os parâmetros padrão.
+Planejar a suite escolhida. Executar somente a rota e o perfil disponíveis na skill após confirmar entradas, dependências e autorização. B1–B7 são categorias de método; sua presença nesta tabela não comprova suporte executável de todas as suites.
