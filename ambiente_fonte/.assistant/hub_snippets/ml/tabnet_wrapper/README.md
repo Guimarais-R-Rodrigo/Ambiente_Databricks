@@ -180,7 +180,7 @@ Se o candidato continuar competitivo, avalie predição fora da amostra, custo e
 
 ## 15. Referências
 
-O [registro histórico de testes](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R05.md) identifica execução local em 12/09/2026. O arquivo de versões citado ali não está no pacote operacional; não infira uma versão homologada a partir de instalação sem pin. Confira a versão efetiva e execute os dois modos no destino antes de considerá-los validados.
+O [registro histórico de testes](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/docs/sprints/readmes_objetos/RELATORIO_R05.md) identifica execução local em 12/09/2026. A versão exata de pytorch-tabnet é **NÃO INFORMADA na evidência local disponível**: o arquivo de versões citado ali não está no checkout nem no pacote operacional. A reprodução com uma versão específica permanece **NÃO VALIDADA**; não infira homologação a partir de instalação sem pin. Confira a versão efetiva e execute os dois modos no destino antes de considerá-los validados.
 
 Consulte pytorch-tabnet e a implementação de feature_importances_ na versão testada. Compare custo e qualidade com um baseline sob a mesma partição e valide a arquitetura no runtime de destino.
 
