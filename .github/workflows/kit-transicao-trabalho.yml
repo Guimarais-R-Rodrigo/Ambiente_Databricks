@@ -1,6 +1,13 @@
 name: Kit de transição para o trabalho
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'tools/**'
+      - 'ambiente_fonte/**'
+      - '.github/workflows/**'
+      - 'docs/ai/**'
+      - 'docs/playbooks/**'
   push:
     branches: [main]
     paths:
@@ -26,8 +33,14 @@ permissions:
   contents: read
 jobs:
   preparar:
+    name: ${{ matrix.python == '3.11' && 'preparar' || 'preparar-python-3.12' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        # PRs exercise both AST schemas; main/manual keep the original kit profile.
+        python: ${{ fromJSON(github.event_name == 'pull_request' && '["3.11", "3.12"]' || '["3.11"]') }}
     env:
       PYTHONDONTWRITEBYTECODE: '1'
       SPARK_LOCAL_IP: 127.0.0.1
@@ -38,7 +51,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: ${{ matrix.python }}
           cache: pip
           cache-dependency-path: |
             tools/requirements-dev.txt
@@ -73,7 +86,8 @@ jobs:
         run: python -B tools/temas_v09_transicao.py --kit-dir .artifacts/kit-trabalho
       - uses: actions/upload-artifact@v4
         with:
-          name: kit-transicao-trabalho
+          # A PR merge-ref kit is test evidence, never a released work kit.
+          name: ${{ github.event_name == 'pull_request' && format('kit-transicao-trabalho-pr-{0}-python-{1}-teste', github.event.number, matrix.python) || 'kit-transicao-trabalho' }}
           path: .artifacts/kit-trabalho/
           retention-days: 14
           if-no-files-found: error

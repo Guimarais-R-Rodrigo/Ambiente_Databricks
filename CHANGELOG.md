@@ -9,6 +9,7 @@ Marcos relevantes para usar e manter o Hub. Decisões e limites atuais pertencem
 
 ## 2026-10-06
 
+- (Codex) Guarda de preservação dos testes core passa a fingerprint tipado estável entre Python 3.11 e 3.12, mantendo hashes históricos; a receita completa do kit ganha regressão em PR nos dois runtimes. Não certifica Windows nem destino institucional. [Contrato e migração](docs/manutencao/fingerprint-core.md).
 - (Codex) Arquitetura por tarefa: 198 entradas preservadas, recortes explícitos de contexto, 38 arquivos de manutenção extraídos do payload e espelho gerado fora do Git. Cobertura B0 mede identidades/coleta; CI compartilha suítes somente entre ambientes equivalentes, mantendo checks. Mudança local, sem publicação ou homologação de destino. [ADR-0026](docs/decisions/ADR-0026-arquitetura-projeto-e-historia.md) · [Prova de preservação](docs/historico/changelog/README.md).
 - (Codex) Documentação e instruções de manutenção passam a rotas por tarefa, núcleo AGENTS, cinco skills canônicas e adaptadores mínimos, com história preservada. Compatibilidade nativa e Windows ainda não certificadas. [ADR-0025](docs/decisions/ADR-0025-arquitetura-instrucoes-ia.md) · [Evidência READMEs](docs/auditoria/2026-10-06_readmes/README.md).
 

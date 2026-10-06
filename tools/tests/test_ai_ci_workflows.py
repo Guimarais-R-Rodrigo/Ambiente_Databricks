@@ -18,6 +18,11 @@ import ci_workflows as ci
 import yaml
 
 
+KIT_PYTHON_MATRIX = "${{ fromJSON(github.event_name == 'pull_request' && '[\"3.11\", \"3.12\"]' || '[\"3.11\"]') }}"
+KIT_CHECK_NAME = "${{ matrix.python == '3.11' && 'preparar' || 'preparar-python-3.12' }}"
+KIT_ARTIFACT_NAME = "${{ github.event_name == 'pull_request' && format('kit-transicao-trabalho-pr-{0}-python-{1}-teste', github.event.number, matrix.python) || 'kit-transicao-trabalho' }}"
+
+
 class CIWorkflowTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix="CI DAG with spaces ")
@@ -33,6 +38,17 @@ class CIWorkflowTests(unittest.TestCase):
         for filename, contract in fixture["recipes"].items():
             workflow = yaml.safe_load((self.root / ".github/workflows" / filename).read_text())
             job = workflow["jobs"][contract["job_id"]]
+            if filename == "kit-transicao-trabalho.yml":
+                # Validate the whole matrix before resolving the preserved main/manual
+                # profile against the immutable pre-matrix compatibility fixture.
+                self.assert_kit_matrix_contract(workflow)
+                job = copy.deepcopy(job)
+                job["name"] = "preparar"
+                for step in job["steps"]:
+                    if step.get("uses", "").startswith("actions/setup-python@"):
+                        step["with"]["python-version"] = "3.11"
+                    if step.get("uses", "").startswith("actions/upload-artifact@"):
+                        step["with"]["name"] = "kit-transicao-trabalho"
             if contract["job_id"] in {p[0] for p in ci.CAMPAIGNS.values()}:
                 job = active[contract["job_id"]]
             self.assertEqual(contract["check_name"], job.get("name", contract["job_id"]))
@@ -52,6 +68,72 @@ class CIWorkflowTests(unittest.TestCase):
             artifacts = [step["with"] for step in job["steps"]
                          if step.get("uses", "").startswith("actions/upload-artifact@")]
             self.assertEqual(contract["artifacts"], artifacts, filename)
+
+    def assert_kit_matrix_contract(self, workflow):
+        """Prevent the Python 3.11 kit regression escaping the PR recipe again."""
+        events = workflow.get("on", workflow.get(True, {}))
+        self.assertEqual({"workflow_dispatch", "pull_request", "push"}, set(events))
+        self.assertIsNone(events["workflow_dispatch"])
+        self.assertEqual(["main"], events["push"]["branches"])
+        self.assertEqual({"paths": ["tools/**", "ambiente_fonte/**", ".github/workflows/**",
+                                    "docs/ai/**", "docs/playbooks/**"]}, events["pull_request"])
+        self.assertEqual({"contents": "read"}, workflow["permissions"])
+        self.assertEqual({"preparar"}, set(workflow["jobs"]))
+        job = workflow["jobs"]["preparar"]
+        self.assertEqual(KIT_CHECK_NAME, job["name"])
+        self.assertEqual({"fail-fast": False, "matrix": {"python": KIT_PYTHON_MATRIX}}, job["strategy"])
+        self.assertNotIn("if", job)
+        self.assertFalse(job.get("continue-on-error", False))
+        for step in job["steps"]:
+            self.assertNotIn("if", step)
+            self.assertFalse(step.get("continue-on-error", False))
+        setup = next(s for s in job["steps"] if s.get("uses", "").startswith("actions/setup-python@"))
+        self.assertEqual("${{ matrix.python }}", setup["with"]["python-version"])
+        upload = next(s for s in job["steps"] if s.get("uses", "").startswith("actions/upload-artifact@"))
+        self.assertEqual(KIT_ARTIFACT_NAME, upload["with"]["name"])
+        checkout = next(s for s in job["steps"] if s.get("uses", "").startswith("actions/checkout@"))
+        self.assertEqual({"persist-credentials": False, "fetch-depth": 0}, checkout["with"])
+        # Both matrix legs run this same unconditional recipe; do not replace an
+        # aggregate or actual ZIP/Spark execution with a static workflow check.
+        fixture = json.loads((TOOLS / "tests/fixtures/ci_recipe_contract.json").read_text())
+        commands = [step.get("run") for step in job["steps"]]
+        indexes = [commands.index(command) for command in fixture["recipes"]["kit-transicao-trabalho.yml"]["commands"]]
+        self.assertEqual(sorted(indexes), indexes)
+        self.assertLess(indexes[-1], job["steps"].index(upload))
+
+    def test_kit_pr_matrix_preserves_main_manual_and_full_recipe(self):
+        workflow = yaml.safe_load((self.root / ".github/workflows/kit-transicao-trabalho.yml").read_text())
+        self.assert_kit_matrix_contract(workflow)
+
+    def test_kit_matrix_trigger_versions_recipe_and_artifact_mutants_rejected(self):
+        path = self.root / ".github/workflows/kit-transicao-trabalho.yml"
+        original = path.read_text()
+        mutations = (
+            ("  pull_request:", "  pull_request_target:"),
+            ("'tools/**'", "'unrelated/**'"),
+            ('["3.11", "3.12"]', '["3.12"]'),
+            ('["3.11", "3.12"]', '["3.11"]'),
+            ("|| '[\"3.11\"]'", "|| '[\"3.12\"]'"),
+            ("'preparar' ||", "'renamed' ||"),
+            ("fail-fast: false", "fail-fast: true"),
+            ("python-version: ${{ matrix.python }}", "python-version: '3.12'"),
+            ("python-{1}-teste", "teste"),
+            ("-teste", ""),
+            ("contents: read", "contents: write"),
+            ("persist-credentials: false", "persist-credentials: true"),
+            ("    runs-on:", "    if: ${{ false }}\n    runs-on:"),
+            ("        run: python tools/ci_local.py --verbose", "        if: ${{ false }}\n        run: python tools/ci_local.py --verbose"),
+            ("python tools/ci_local.py --verbose", "echo removed"),
+            ("python tools/tests/test_transicao_trabalho.py --spark -v", "echo removed"),
+            ("python tools/kit_transicao_trabalho.py --output .artifacts/kit-trabalho", "echo removed"),
+            ("python -B tools/temas_v09_transicao.py --kit-dir .artifacts/kit-trabalho", "echo removed"),
+        )
+        for old, new in mutations:
+            with self.subTest(old=old, new=new):
+                mutant = original.replace(old, new, 1)
+                self.assertNotEqual(original, mutant)
+                with self.assertRaises((AssertionError, ValueError)):
+                    self.assert_kit_matrix_contract(yaml.safe_load(mutant))
 
     def test_only_distinct_environments_discover_full_suite_automatically(self):
         work = yaml.safe_load(self.path.read_text())["jobs"]
