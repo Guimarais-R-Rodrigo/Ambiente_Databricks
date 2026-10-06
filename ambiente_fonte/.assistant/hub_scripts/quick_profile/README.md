@@ -65,6 +65,8 @@ O suporte de tipos não é geral. A implementação identifica colunas numérica
 
 ## 8. O que este recurso entrega?
 
+Para comparação entre perfis, registre **fora do retorno** a versão da tabela, filtros, horário de leitura e ambiente. A API não produz esse envelope de proveniência; seed isolada não identifica a população.
+
 | Campo | Significado e alcance |
 |---|---|
 | `table`, `total_rows`, `total_columns`, `dtypes` | Recurso consultado, tamanho e estrutura completos. |
@@ -81,13 +83,23 @@ Na tabela vazia, o código devolve percentual de nulos igual a zero. Isso signif
 
 ## 9. Como usar este recurso no Hub?
 
-Abra o [exemplo executável](exemplo_quick_profile.py) para acompanhar a comparação entre frações. Ele prepara dados sintéticos e uma view temporária, sem escrever tabela persistente. Preserve sessões compartilhadas: o nome temporário pode substituir uma view já existente.
+Antes do import, confira a [preparação comum](../README.md#preparacao-comum): raiz `.assistant` no `sys.path`, Python e, para este helper, PySpark/Spark e acesso ao recurso.
 
-A API pública é `quick_profile`, importada de `hub_scripts.quick_profile` depois de tornar a raiz `.assistant` disponível ao Python. Confira essa preparação no exemplo, usando o caminho real de sua instalação. Para uso próprio, revise o recurso, seus tipos, os dados sensíveis e o custo antes da chamada.
+Chamada mínima, após revisar fonte, tipos, PII e custo:
 
-O retorno não é automaticamente mascarado. Se houver categorias identificáveis, não imprima nem copie esses campos. A execução suplementar da R02 verificou o helper com Spark real em uma view temporária sintética; a seção 15 identifica a evidência. Isso não é uma execução recente do notebook no Databricks nem homologa o recurso em qualquer workspace.
+```python
+from hub_scripts.quick_profile import quick_profile
+
+perfil = quick_profile("catalogo.schema.tabela", sample_fraction=0.1, max_categories=10, seed=42)
+print(perfil["total_rows"], perfil["sample_rows"])
+print(perfil["null_summary_full_table"])
+```
+
+Não imprima `top_values_sample` indiscriminadamente: categorias podem conter PII sem máscara. O [exemplo](exemplo_quick_profile.py) cria/substitui uma view temporária; reveja o nome se a sessão for compartilhada. Esse cenário não homologa qualquer fonte ou runtime.
 
 ## 10. Decisões e configurações que mais importam
+
+Uma preparação possível, quando autorizada, é selecionar colunas escalares e aplicar o recorte em uma view de análise antes da chamada. Isso é orientação de preparo, não uma view criada automaticamente pelo helper.
 
 A fração padrão é `0.1`, mas a amostra resultante não tem tamanho máximo garantido. Aumentá-la pode melhorar a observação de categorias raras, com mais processamento, sem tornar a cardinalidade exata. A fração 1 elimina a amostragem, não a aproximação do estimador.
 
@@ -96,6 +108,12 @@ A fração padrão é `0.1`, mas a amostra resultante não tem tamanho máximo g
 Não há parâmetro para escolher colunas ou filtros. Delimite o recurso antes da chamada por um mecanismo autorizado, como uma view preparada para a análise, e registre essa preparação.
 
 ## 11. Limitações, riscos e armadilhas
+
+| Condição | Tratamento |
+|---|---|
+| Fração fora de `(0,1]` ou `max_categories<=0` | `ValueError` |
+| Tabela, permissão, sessão ou tipo complexo incompatível | erro de runtime |
+| Amostra vazia com tabela não vazia | retorno amostral limitado; não prova tabela vazia |
 
 Há leituras completas, ações Spark e agrupamentos. O código coleta resumos no processo coordenador, não converte a tabela inteira para pandas; ainda assim, tipos, largura e cardinalidade podem tornar a consulta cara.
 
@@ -125,8 +143,4 @@ Depois do perfil, escolha um check concreto para cada achado relevante. Não há
 
 ## 15. Referências
 
-A implementação e o notebook vinculados acima sustentam o contrato específico, revisado na base R01 `af1efd14f2a688d3d3cc816ef85f5f1755e8afec`, em 12/09/2026. As evidências de revisão e execução ficam no relatório R02; nenhum resultado de um workspace foi recertificado por esta redação.
-
-A documentação Apache Spark de [amostragem](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.sample.html) sustenta a distinção entre fração pedida e amostra obtida. A de [contagem aproximada distinta](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.approx_count_distinct.html) sustenta o caráter estimado da cardinalidade. Fontes consultadas em 12/09/2026; os limites de dez ou cinco colunas vêm do código do Hub, não dessas APIs.
-
-Na [execução suplementar da R02 em 12/09/2026](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/actions/runs/34696720982), testes com PySpark 4.0.1 real conferiram campos de retorno, contagens, nulos e recusas sobre uma view temporária sintética. O ambiente local da revisão de fechamento não possui PySpark; a evidência anterior permanece identificada, sem alegação de reexecução local. Revisão do texto pelo próprio autor não é auditoria independente nem aceite humano.
+Contrato: [implementação](quick_profile.py), [fachada](__init__.py) e [exemplo](exemplo_quick_profile.py). Referências Apache Spark: [sample](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.sample.html) e [approx_count_distinct](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.approx_count_distinct.html), consultadas em 12/09/2026. A fração pedida não fixa N; cardinalidade permanece aproximada; os limites de colunas vêm do Hub.

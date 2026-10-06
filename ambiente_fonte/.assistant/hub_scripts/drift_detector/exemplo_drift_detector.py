@@ -19,11 +19,11 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico |
+# MAGIC | Compute | sessão Spark/PySpark e view temporária; cache é oportunista |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, gerados aqui a partir de `hub_snippets.testing.fixtures` |
 # MAGIC | Escrita | uma view temporária de sessão |
-# MAGIC | Diferença Free × trabalho | o script tem guarda de `cache()`; degrada sem ele no serverless |
+# MAGIC | Diferença Free × trabalho | guarda de cache não garante todas as operações; valide tipos, coortes e permissões |
 
 # COMMAND ----------
 

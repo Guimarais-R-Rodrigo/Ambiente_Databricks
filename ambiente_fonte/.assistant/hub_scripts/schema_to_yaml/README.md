@@ -67,6 +67,14 @@ PyYAML não é dependência obrigatória. Consumidores que exigem **estilo textu
 
 ## 8. O que este recurso entrega?
 
+Exemplo **ilustrativo**, sem estatísticas de execução:
+
+```json
+{"table": "catalogo.schema.tabela", "columns": [{"name": "id_cliente", "type": "string", "nullable": false, "comment": "Identificador sintético"}]}
+```
+
+`schema_to_dict` devolve essa estrutura; `schema_to_yaml` a serializa. O campo `comment` só aparece quando disponível e solicitado.
+
 `schema_to_dict` retorna:
 
 | Campo | Significado |
@@ -84,6 +92,8 @@ PyYAML não é dependência obrigatória. Consumidores que exigem **estilo textu
 
 ## 9. Como usar este recurso no Hub?
 
+Antes do import, confira a [preparação comum](../README.md#preparacao-comum): raiz `.assistant` no `sys.path`, Python e, para este helper, PySpark/Spark e acesso ao recurso.
+
 ```python
 from hub_scripts.schema_to_yaml import schema_to_dict, schema_to_yaml
 
@@ -91,7 +101,7 @@ payload = schema_to_dict("catalogo.schema.tabela")
 texto = schema_to_yaml("catalogo.schema.tabela", include_comments=True)
 ```
 
-Para estatísticas, ative conscientemente:
+Antes de `include_stats=True`, considere scan completo e tipos compatíveis. A API não recebe seleção de colunas, filtros ou limite de linhas; delimite o recurso por uma preparação autorizada. Ative conscientemente:
 
 ```python
 payload_com_stats = schema_to_dict(
@@ -111,6 +121,10 @@ Abra o [exemplo](exemplo_schema_to_yaml.py) para comparar dicionário, YAML e fa
 A presença de PyYAML muda a representação textual, não o conteúdo lógico pretendido. Se diffs de arquivo forem usados em automação, normalize o formato antes de comparar execuções feitas em ambientes diferentes.
 
 ## 11. Limitações, riscos e armadilhas
+
+Somente `ImportError` ao importar PyYAML ativa o fallback JSON. Falhas de serialização, Spark, permissão ou acesso não são convertidas genericamente em JSON ou diagnóstico.
+
+Para snapshots comparáveis, mantenha envelope externo com data/hora, versão/filtro e ambiente. Isso é responsabilidade do consumidor, não metadata já produzida pela API.
 
 Um snapshot pode ficar desatualizado. A função não registra timestamp, versão da tabela, commit ou lineage automaticamente.
 
@@ -142,8 +156,4 @@ Depois de gerar o snapshot, escolha explicitamente onde versioná-lo e quem revi
 
 ## 15. Referências
 
-O contrato local foi revisado na implementação e no notebook durante a R04-B em 12/09/2026. A documentação Apache Spark de [`approx_count_distinct`](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.approx_count_distinct.html) sustenta o caráter aproximado da cardinalidade.
-
-A especificação [YAML 1.2](https://yaml.org/spec/1.2.1/) registra JSON como subconjunto oficial, base do fallback implementado. Fontes consultadas em 12/09/2026.
-
-A validação de runtime da R04-B é registrada após execução. Revisão do próprio autor não é auditoria independente nem publicação/homologação Databricks.
+Contrato: [implementação](schema_to_yaml.py), [fachada](__init__.py) e [exemplo](exemplo_schema_to_yaml.py). A documentação de [`approx_count_distinct`](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.approx_count_distinct.html) fundamenta a aproximação; a [especificação YAML 1.2](https://yaml.org/spec/1.2.1/) fundamenta o fallback JSON. Fontes consultadas em 12/09/2026; valide o parser consumidor real.

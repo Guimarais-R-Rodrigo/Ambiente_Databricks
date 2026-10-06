@@ -72,24 +72,25 @@ O notebook `exemplo_<nome>.py` mostra uma chamada com dados controlados e a saí
 
 ## 📚 Catálogo Detalhado
 
-O catálogo reúne os sete utilitários históricos de qualidade, estabilidade, transformação e governança técnica, além do objeto transversal `skill_execution`, introduzido pelo Skill Enforcement Framework para resolver pré-condições antes do core analítico. Todos são executados sob demanda e cada um preserva seu próprio contrato de retorno.
+O catálogo reúne sete utilitários de dados/código e o pacote transversal `skill_execution`, com preflight, Receipt, Postflight e consulta da policy. Cada objeto preserva seu contrato; o framework não é um oitavo diagnóstico de tabela.
 
 ![Bancada dos Hub Scripts com sete ferramentas executadas sob demanda, agrupadas em qualidade, estabilidade, transformação analítica e governança técnica.](../hub_readmes_visual_assets/readmes/scripts/png/02_catalogo_diagnosticos.png)
 
 *Leitura da figura: qualidade e perfil, estabilidade, transformação analítica e governança técnica respondem a necessidades diferentes.*
 
-**Equivalente textual da figura:** `data_quality_check` e `quick_profile` inspecionam qualidade e perfil; `drift_detector` compara distribuições; `rfv_calculator` constrói features RFV; `schema_to_yaml`, `naming_checker` e `doc_coverage` apoiam governança técnica. A figura retrata esses sete objetos históricos; `skill_execution` é um oitavo objeto transversal acrescentado depois dela. Os tipos de retorno estão explícitos no catálogo abaixo.
+**Equivalente textual da figura:** `data_quality_check` e `quick_profile` inspecionam qualidade e perfil; `drift_detector` compara distribuições; `rfv_calculator` constrói features RFV; `schema_to_yaml`, `naming_checker` e `doc_coverage` apoiam governança técnica. A figura retrata somente esses sete utilitários; o pacote transversal `skill_execution` é descrito separadamente no catálogo. Os tipos de retorno estão explícitos no catálogo abaixo.
 
 ---
 
 ### 🛡️ 0. Preflight e Governança de Execução
 
-#### `skill_execution` — Preflight do Contrato de Skill
+#### `skill_execution` — execução verificável de skills
 
-- **Guia local:** [skill_execution: guia local](skill_execution/README.md)
-- **O que faz:** lê um `execution_contract.json`, avalia condições objetivas e resolve APIs públicas/templates aplicáveis antes do core analítico.
-- **O que retorna:** `PreflightResult` estruturado com `PASS` ou `BLOCKED`, decisões por item, issues bloqueantes e `writes_performed=false`.
-- **Quando usar:** antes de uma execução protegida pelo Skill Enforcement Framework. Na SE02, não executa a EDA, não chama helpers analíticos e não substitui runner, receipt ou postflight.
+- **Guia local:** [preflight, Receipt, Postflight e policy](skill_execution/README.md).
+- **O que faz:** resolve pré-condições, vincula evidência canônica e verifica autorização de conclusão nas rotas instrumentadas. A [policy](../hub_padroes/skill_enforcement/policy.json) define nível e superfícies vigentes.
+- **O que retorna:** `PreflightResult`, verificações de Receipt/Postflight e objetos de policy. Importar não prova chamar ou concluir.
+- **Quando usar:** pela rota da skill selecionada. O [contexto temporal interno](skill_execution/domain_context/README.md) valida metadata para consumidores delimitados, sem executar joins.
+- **Limite:** preflight PASS não substitui Receipt, finalização ou verifier; os requisitos de uma skill não são generalizados a todas.
 
 ---
 
@@ -174,7 +175,18 @@ Integrar um Hub Script à rotina do Databricks segue um fluxo simples, mas delib
 
 *Leitura da figura: a ferramenta escolhida define o retorno; não existe um dicionário de status compartilhado por todos os Hub Scripts.*
 
-**Equivalente textual da figura:** `rfv_calculator` devolve DataFrame Spark; `schema_to_yaml`, texto YAML ou JSON; `naming_checker`, lista de violações; e os demais, dicionários com estruturas próprias. Entre esses dicionários, `data_quality_check` expõe `status`, `score`, `thresholds`, `checks` e `alerts`; `quick_profile` devolve o perfil; `drift_detector`, PSI e classificação condicional; e `doc_coverage`, métricas heurísticas de cobertura.
+**Equivalente textual da figura:** `rfv_calculator` devolve DataFrame Spark; `schema_to_yaml`, texto YAML ou JSON; `naming_checker`, lista de violações; e os quatro diagnósticos de dados/arquivos restantes, dicionários com estruturas próprias. Entre esses dicionários, `data_quality_check` expõe `status`, `score`, `thresholds`, `checks` e `alerts`; `quick_profile` devolve o perfil; `drift_detector`, PSI e classificação condicional; e `doc_coverage`, métricas heurísticas de cobertura. `skill_execution` devolve resultados tipados e evidência de contratos; não segue esse dicionário de diagnóstico.
+
+<a id="preparacao-comum"></a>
+
+### Preparação comum
+
+Torne a raiz `.assistant` disponível no `sys.path` e confirme a versão de Python
+compatível com a instalação. Funções de tabela exigem PySpark, sessão Spark e
+acesso ao recurso. `doc_coverage` e preflight trabalham sobre arquivos sem Spark;
+alguns notebooks de exemplo ainda usam Spark para resolver o usuário logado.
+Revise custo, PII, permissões e efeitos **do exemplo**, que podem incluir views,
+arquivos temporários ou tabelas. Não execute Run all sem conferir esses efeitos.
 
 ### Exemplo Prático de Código
 
@@ -239,7 +251,7 @@ O helper usa `pk_columns`; não existem os parâmetros `primary_keys` ou `critic
 Os estados nunca substituem o contexto de negócio. A severidade informa a
 classificação do diagnóstico; o notebook, job ou pipeline implementa a ação.
 
-Exemplo abreviado da estrutura retornada:
+Exemplo ilustrativo abreviado da estrutura retornada, sem medição real desta fonte:
 
 ```python
 {
@@ -296,6 +308,7 @@ Exemplo abreviado da estrutura retornada:
 | `schema_to_yaml` | schema; agregados se houver estatísticas | persistência do texto é externa |
 | `naming_checker` | leitura de schema | não inspeciona conteúdo das linhas |
 | `doc_coverage` | leitura e parse de arquivo | não executa Spark |
+| `skill_execution` | filesystem/JSON/AST, hashes e verificações de evidência | preflight/policy não executam análise; efeitos pertencem ao runner da skill |
 
 Os scripts priorizam processamento distribuído quando trabalham com Spark, mas isso não significa custo desprezível. Contagens, distinct, quantis e `groupBy` podem exigir leitura ampla e shuffle.
 
@@ -306,7 +319,7 @@ Os scripts priorizam processamento distribuído quando trabalham com Spark, mas 
 
 ## 🧭 Diagnóstico não é Enforcement
 
-Quando um Hub Script é usado como diagnóstico, ele descreve o que observou; a camada operacional decide o que fazer.
+Os utilitários **diagnósticos** descrevem o observado; o consumidor define a reação. O pacote `skill_execution` implementa justamente verificações de enforcement nas rotas instrumentadas. Um diagnóstico ad hoc não substitui a rota canônica de uma skill protegida já selecionada.
 
 ![Três zonas separando diagnóstico, política consumidora e orquestração Databricks.](../hub_readmes_visual_assets/readmes/scripts/png/04_diagnostico_vs_enforcement.png)
 
@@ -357,19 +370,14 @@ Eles foram estruturados como módulos Python importáveis. Podem ser chamados em
 - [Hub Snippets](../hub_snippets/README.md)
 - [Agent Skills](../skills/README.md)
 - [Hub Prompts](../hub_prompts/README.md)
-- Catálogo de Helpers: `.assistant/MANUAL_TECNICO.md#catalogo-helpers`
+- [Catálogo integrado de helpers no Manual Técnico](../MANUAL_TECNICO.md#catalogo-helpers)
 - [Lakeflow expectations](https://learn.microsoft.com/en-us/azure/databricks/ldp/expectations)
 - [Event log de pipelines](https://learn.microsoft.com/en-us/azure/databricks/ldp/monitor-event-logs)
 - [Notificações de Lakeflow Jobs](https://learn.microsoft.com/en-us/azure/databricks/jobs/notifications)
 
 ## Guias locais por objeto
 
-Cada objeto novo inclui um `README.md` para explicar conceito, contexto e
-limites antes do exemplo. A migração dos legados é gradual. O
-[contrato editorial](../hub_padroes/readme/template_objeto.md) padroniza essa
-leitura; o Manual continua sendo o catálogo integrado. Leia o aviso de efeitos
-do exemplo: ele pode escrever mesmo quando o helper apenas lê.
-
-No piloto R02, o [guia de quick_profile](quick_profile/README.md) explica
-o que vem da tabela inteira e o que vem da amostra, além dos limites de
-cardinalidade e da possível exposição de categorias sensíveis.
+Leia o guia do objeto antes do exemplo: contrato de entrada/retorno, custo,
+efeitos e limitações são específicos. O [Manual Técnico](../MANUAL_TECNICO.md#catalogo-helpers)
+mantém o catálogo integrado. Um helper somente de leitura pode ter demonstração
+que substitui uma view ou arquivo temporário; confira o destino e o modo.

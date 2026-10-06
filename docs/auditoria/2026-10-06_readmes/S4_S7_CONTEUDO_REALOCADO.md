@@ -255,3 +255,195 @@ A descrição foi confrontada com [tutor_explicar.md](tutor_explicar.md) e [exem
 
 ```
 
+## ambiente_fonte/.assistant/hub_scripts/data_quality_check/README.md
+
+[Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/data_quality_check/README.md).
+
+```text
+O contrato específico é sustentado pela implementação, fachada e notebook vinculados acima, revisados na R04-B em 12/09/2026. O texto foi confrontado com o comportamento do código; revisão pelo próprio autor não é auditoria independente.
+
+A documentação Databricks de [boas práticas de governança e qualidade](https://docs.databricks.com/aws/en/lakehouse-architecture/data-governance/best-practices) e de [patterns de expectations](https://docs.databricks.com/aws/en/ldp/expectation-patterns) sustenta a distinção entre diagnóstico ad hoc e regra de pipeline. Fontes consultadas em 12/09/2026.
+
+A validação específica da R04-B, incluindo Spark real, é registrada no relatório da sprint após a execução. Não há, nesta redação, alegação de publicação ou homologação em workspace Databricks.
+```
+
+## ambiente_fonte/.assistant/hub_scripts/doc_coverage/README.md
+
+[Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/doc_coverage/README.md).
+
+```text
+O contrato deste recurso vem da implementação, fachada e exemplo locais, revisados na R04-B em 12/09/2026. Não há dependência de documentação externa para a fórmula local.
+
+O formato-fonte reconhecido é o que a implementação codifica hoje; isso não deve ser generalizado como especificação eterna de exportação Databricks. A validação específica da R04-B é registrada no relatório da sprint após execução.
+
+Revisão do próprio texto não é auditoria independente; nenhuma alegação de publicação ou homologação Databricks é feita.
+```
+
+## ambiente_fonte/.assistant/hub_scripts/drift_detector/README.md
+
+[Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/drift_detector/README.md).
+
+```text
+O comportamento específico foi conferido na implementação e no exemplo locais durante a R04-B em 12/09/2026. O Apache Spark documenta [`DataFrame.approxQuantile`](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.approxQuantile.html), incluindo o papel do erro relativo; essa API sustenta o cálculo dos limites, não os limiares de PSI.
+
+Os thresholds de monitoramento permanecem política local. A validação da R04-B registra a execução com Spark real após o fechamento técnico. Revisão do próprio autor não é auditoria independente nem homologação Databricks.
+```
+
+## ambiente_fonte/.assistant/hub_scripts/naming_checker/README.md
+
+[Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/naming_checker/README.md).
+
+```text
+O comportamento específico é sustentado pelos arquivos locais vinculados acima, revisados na R04-B em 12/09/2026. A documentação Databricks de [consulta a tabelas](https://docs.databricks.com/aws/en/query) descreve o namespace de três níveis do Unity Catalog e recomenda identificadores totalmente qualificados em cenários com múltiplos catálogos/schemas. Fonte consultada em 12/09/2026.
+
+As regras de `snake_case`, comprimento e prefixos continuam sendo política deste projeto/organização, não exigência oficial. A validação de runtime da sprint é registrada separadamente; não há auditoria independente ou homologação Databricks.
+```
+
+## ambiente_fonte/.assistant/hub_scripts/quick_profile/README.md
+
+[Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/quick_profile/README.md).
+
+```text
+A implementação e o notebook vinculados acima sustentam o contrato específico, revisado na base R01 `af1efd14f2a688d3d3cc816ef85f5f1755e8afec`, em 12/09/2026. As evidências de revisão e execução ficam no relatório R02; nenhum resultado de um workspace foi recertificado por esta redação.
+
+A documentação Apache Spark de [amostragem](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.sample.html) sustenta a distinção entre fração pedida e amostra obtida. A de [contagem aproximada distinta](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.approx_count_distinct.html) sustenta o caráter estimado da cardinalidade. Fontes consultadas em 12/09/2026; os limites de dez ou cinco colunas vêm do código do Hub, não dessas APIs.
+
+Na [execução suplementar da R02 em 12/09/2026](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/actions/runs/34696720982), testes com PySpark 4.0.1 real conferiram campos de retorno, contagens, nulos e recusas sobre uma view temporária sintética. O ambiente local da revisão de fechamento não possui PySpark; a evidência anterior permanece identificada, sem alegação de reexecução local. Revisão do texto pelo próprio autor não é auditoria independente nem aceite humano.
+```
+
+## ambiente_fonte/.assistant/hub_scripts/rfv_calculator/README.md
+
+[Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/rfv_calculator/README.md).
+
+```text
+O contrato específico é sustentado pelos arquivos locais vinculados, revisados na R04-B em 12/09/2026. A semântica de datas, `datediff`, `date_sub`, agregações e joins segue Apache Spark; os detalhes usados aqui estão explícitos na implementação.
+
+A validação da sprint inclui casos sintéticos com Spark real para corte temporal e janelas. Revisão do texto pelo próprio autor não é auditoria independente nem homologação no Databricks.
+```
+
+## ambiente_fonte/.assistant/hub_scripts/schema_to_yaml/README.md
+
+[Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/schema_to_yaml/README.md).
+
+```text
+O contrato local foi revisado na implementação e no notebook durante a R04-B em 12/09/2026. A documentação Apache Spark de [`approx_count_distinct`](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.approx_count_distinct.html) sustenta o caráter aproximado da cardinalidade.
+
+A especificação [YAML 1.2](https://yaml.org/spec/1.2.1/) registra JSON como subconjunto oficial, base do fallback implementado. Fontes consultadas em 12/09/2026.
+
+A validação de runtime da R04-B é registrada após execução. Revisão do próprio autor não é auditoria independente nem publicação/homologação Databricks.
+```
+
+## ambiente_fonte/.assistant/hub_scripts/skill_execution/README.md
+
+[Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/skill_execution/README.md).
+
+```text
+- [skill_execution.py](skill_execution.py): preflight L2.
+- [receipt/__init__.py](receipt/__init__.py): Receipt SE04.
+- [postflight/__init__.py](postflight/__init__.py): Postflight SE05.
+- [__init__.py](__init__.py): fachada pública histórica do preflight.
+- [exemplo_skill_execution.py](exemplo_skill_execution.py): exemplo operacional.
+- `skills/hub-ml-eda-profissional/scripts/run.py`: core L3.
+- `skills/hub-ml-eda-profissional/scripts/run_enforced.py`: executor L4.
+- `skills/hub-ml-eda-profissional/scripts/postflight.py`: finalizador fail-closed.
+- `skills/hub-ml-eda-profissional/release_manifest.json`: fingerprints da release.
+- `docs/sprints/skill_enforcement/SE05/`: desenho, testes e runbook.
+
+Próximo estágio arquitetural após a SE05: SE06 amplia evals repetidos/adversariais e calibra falsos bloqueios/escapes.
+
+## 15. Referências
+
+- `docs/decisions/ADR-0021-execucao-verificavel-de-skills.md`;
+- `docs/sprints/skill_enforcement/PLANO_MESTRE.md`;
+- `docs/sprints/skill_enforcement/REVISAO_PLANO_2026-09-17_LOCAL_FIRST.md`;
+- `docs/sprints/skill_enforcement/SE04/DESENHO_TECNICO.md`;
+- `docs/sprints/skill_enforcement/SE05/DESENHO_TECNICO.md`;
+- testes `tools/tests/test_skill_enforcement_se03.py`, `test_skill_enforcement_se04.py`, `test_skill_enforcement_se04_runner.py`, `test_skill_enforcement_se05.py` e `test_skill_enforcement_se05_runner.py`.
+
+Estado desta revisão: implementação SE05 presente na branch de desenvolvimento; certificação oficial local/Free permanece gate separado antes de release candidate.
+
+
+## Política transversal SE07
+
+A SE07 adiciona um registry publicado para as 14 skills:
+
+`hub_padroes/skill_enforcement/policy.json`
+
+Consulta:
+
+~~~python
+from hub_scripts.skill_execution import get_skill_enforcement_policy
+
+policy = get_skill_enforcement_policy("hub-ml-auditoria-skills")
+~~~
+
+`current_level` é evidence-based. `target_level` é roadmap. A API é somente leitura e não executa helpers, não cria Receipt e não promove uma skill de nível.
+```
+
+## ambiente_fonte/.assistant/hub_scripts/skill_execution/domain_context/README.md
+
+[Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/skill_execution/domain_context/README.md).
+
+```text
+Comportamento sustentado pelos arquivos locais acima e pelo plano B1 do repositório. Estado: testes de domínio em overlay Linux; integração completa com checkout, renderer e ambiente de campanha ainda pendente.
+```
+
+## ambiente_fonte/.assistant/hub_prompts/README.md: migração editorial
+
+[Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_prompts/README.md).
+
+```text
+Cada objeto novo inclui um `README.md` para explicar conceito, contexto e
+limites antes do exemplo. A migração dos legados é gradual. O
+[contrato editorial](../hub_padroes/readme/template_objeto.md) padroniza essa
+leitura; o Manual continua sendo o catálogo integrado. Leia o aviso de efeitos
+do exemplo: ele pode escrever mesmo quando o helper apenas lê.
+
+No piloto R02, o [guia de eda_rapida](eda_rapida/README.md) explica quando
+usar o briefing e como avaliar sua resposta. Leia também o aviso de overwrite
+do notebook: o preparo escreve uma tabela, separadamente do pedido de leitura.
+```
+
+## ambiente_fonte/.assistant/hub_scripts/README.md: migração editorial
+
+[Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/README.md).
+
+```text
+Cada objeto novo inclui um `README.md` para explicar conceito, contexto e
+limites antes do exemplo. A migração dos legados é gradual. O
+[contrato editorial](../hub_padroes/readme/template_objeto.md) padroniza essa
+leitura; o Manual continua sendo o catálogo integrado. Leia o aviso de efeitos
+do exemplo: ele pode escrever mesmo quando o helper apenas lê.
+
+No piloto R02, o [guia de quick_profile](quick_profile/README.md) explica
+o que vem da tabela inteira e o que vem da amostra, além dos limites de
+cardinalidade e da possível exposição de categorias sensíveis.
+```
+
+## ambiente_fonte/.assistant/hub_scripts/quick_profile/exemplo_quick_profile.py: proveniência histórica
+
+[Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/quick_profile/exemplo_quick_profile.py).
+
+````text
+# MAGIC **Antes de usar:** veja o [README do objeto](README.md) para conceito, requisitos, efeitos e interpretação. As saídas históricas abaixo foram preservadas; a revisão R02 não as transforma em execução recente.
+````
+
+## ambiente_fonte/.assistant/hub_scripts/skill_execution/exemplo_skill_execution.py: proveniência histórica
+
+[Origem na baseline](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/2f5a0cb94f82b78324f6a79d70af7d03e7b57040/ambiente_fonte/.assistant/hub_scripts/skill_execution/exemplo_skill_execution.py).
+
+````text
+# MAGIC ## Invariantes já reproduzidos pela suíte SE02
+# MAGIC
+# MAGIC O happy path automatizado executado no GitHub Actions confirmou estes
+# MAGIC invariantes. Este bloco não é uma captura do Databricks Free; a homologação
+# MAGIC remota permanece um gate separado da sprint.
+# MAGIC
+# MAGIC ```text
+# MAGIC status=PASS
+# MAGIC blocking_issues=0
+# MAGIC writes_performed=False
+# MAGIC ```
+
+````
+

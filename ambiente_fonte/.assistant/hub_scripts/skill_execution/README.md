@@ -2,14 +2,14 @@
 
 <!-- readme-objeto: 1.0.0 -->
 
-`hub_scripts.skill_execution` é a camada determinística do Skill Enforcement Framework usada pela skill piloto `hub-ml-eda-profissional`. Ela reúne o preflight L2, o `ExecutionReceiptV1` da SE04 e, na SE05, o `PostflightV1` que decide se uma execução pode ser homologada como concluída com aderência ao contrato.
+`hub_scripts.skill_execution` reúne preflight, `ExecutionReceiptV1`, `PostflightV1` e consulta da policy para rotas canônicas de skills. A camada verifica pré-condições, vínculos de evidência e autorização de conclusão no escopo instrumentado; não homologa automaticamente o mérito da análise ou o ambiente.
 
 ## Visão rápida
 
 | Item | Resumo |
 |---|---|
 | O que é | infraestrutura determinística de preflight + Receipt + postflight |
-| Serve para | resolver pré-condições, provar execução canônica e autorizar/recusar conclusão homologada |
+| Serve para | resolver pré-condições, provar execução canônica e autorizar/recusar conclusão canônica |
 | Usa | filesystem local da `.assistant`, JSON/AST, serialização canônica, SHA-256 e evidência do runner |
 | Não faz | análise de negócio por conta própria, publicação ou enforcement universal para todas as skills |
 | Entradas | contrato/contexto; trace/result/release; artifacts/handoff |
@@ -18,6 +18,8 @@
 Implementações: [skill_execution.py](skill_execution.py), [receipt/__init__.py](receipt/__init__.py) e [postflight/__init__.py](postflight/__init__.py). Exemplo do objeto: [exemplo_skill_execution.py](exemplo_skill_execution.py).
 
 ## 1. O que é?
+
+A fachada também consulta a policy transversal por `load_enforcement_policy_registry`, `get_skill_enforcement_policy` e `list_skill_enforcement_policies`. O componente interno [domain_context](domain_context/README.md) valida metadados temporais de consumidores específicos, sem executar joins.
 
 A camada possui três responsabilidades distintas:
 
@@ -35,7 +37,7 @@ Essas respostas não são intercambiáveis. `PASS` no preflight não prova chama
 
 ## 3. Quando faz sentido usar?
 
-Use `run_preflight` antes da lógica protegida. O `ExecutionReceiptV1` é emitido pelo runner canônico após execução coerente. Para uma conclusão homologada da EDA piloto, use a rota L4 `run_enforced.py` e depois o finalizador `postflight.py` com handoff estruturado.
+Use `run_preflight` antes da lógica protegida. O `ExecutionReceiptV1` é emitido pelo runner canônico após execução coerente. Para uma conclusão canônica da EDA piloto, use a rota L4 `run_enforced.py` e depois o finalizador `postflight.py` com handoff estruturado.
 
 ## 4. Quando não usar?
 
@@ -48,7 +50,7 @@ Fluxo L4 da skill piloto:
 ```text
 execution_contract
   → run_preflight
-  → run.py::run                # core L3 histórico
+  → run.py::run                # core L3
   → ExecutionTraceV0
   → run_enforced.py            # coleta evidência L4
       ├── imports observados
@@ -64,9 +66,9 @@ execution_contract
 
 ## 6. Exemplo de situação
 
-Uma EDA sobre uma tabela sintética possui `pk_columns`, não pede gráficos nem amostra local. O L4 executa `quick_profile`, `data_quality_check` e `null_summary`, carrega os templates obrigatórios, gera Receipt válido e recebe um handoff completo. O Postflight pode retornar `PASS` e autorizar conclusão.
+Uma EDA sintética deve fornecer entradas objetivas e seguir o perfil canônico. Na rota atual da skill, distribuições e diagnóstico visual são ligados por padrão; preview/amostra são opt-in. Sem PK estabelecida, `data_quality_check` é `not_applicable`, não se inventa chave para passar. Se um recurso material **aplicável** não terminar ou o handoff ficar incompleto, a finalização não autoriza conclusão.
 
-Se `pk_columns` estiver ausente, `data_quality_check` não é marcado como chamado. O executor registra o gap, o Receipt continua servindo para provar a execução L3 correspondente, mas o Postflight retorna `FAIL` e a conclusão permanece `NOT_COMPLETED`.
+O [notebook deste objeto](exemplo_skill_execution.py) demonstra somente preflight L2 com contexto sintético. Seu PASS não demonstra Receipt, L4, análise dos dados ou outro perfil executável.
 
 ## 7. O que você precisa antes de usar?
 
@@ -77,6 +79,8 @@ Para o Receipt: trace coerente, resultado atual, release íntegra, provenance ru
 Para o Postflight: Receipt `VALID`, trace L4, artifacts vinculados por digest, decisões completas, evidência dos requisitos required/conditional aplicáveis, templates carregados e handoff final conforme o contrato.
 
 ## 8. O que este recurso entrega?
+
+Na EDA, `PENDING_POSTFLIGHT` significa evidência coletada com finalização pendente: `completion.claim_allowed=false`. Não é sucesso. Após o handoff, `finalize_or_raise` deve retornar Postflight `PASS`, `completion.authorized=true` e `completion.status="COMPLETED"` antes do claim de conclusão.
 
 ### Preflight
 
@@ -116,57 +120,44 @@ Somente `PASS` autoriza conclusão.
 
 ## 9. Como usar este recurso no Hub?
 
-Preflight:
+**Operador da skill:** comece pela [EDA profissional](../../skills/hub-ml-eda-profissional/SKILL.md) ou pela [skill escolhida](../../skills/README.md). Use seus entrypoints e verificadores; não construa Receipt/Postflight para legitimar uma rota paralela.
+
+**Integrador do framework:** confira [fachada](__init__.py), [preflight/policy](skill_execution.py), [Receipt](receipt/__init__.py), [Postflight](postflight/__init__.py) e [domínio temporal](domain_context/README.md). Assinaturas públicas:
+
+| API | Entradas e retorno |
+|---|---|
+| `run_preflight(contract_path, *, assistant_root, context)` | path/string, raiz e Mapping → `PreflightResult` |
+| `load_enforcement_policy_registry(*, assistant_root=None, policy_path=None)` | paths opcionais → dict por nome de skill |
+| `get_skill_enforcement_policy(skill, *, assistant_root=None, policy_path=None)` | nome registrado → `SkillEnforcementPolicy` |
+| `list_skill_enforcement_policies(*, assistant_root=None, policy_path=None)` | paths opcionais → tuple ordenada por nome |
+
+Consulta mínima somente leitura:
 
 ```python
-from hub_scripts.skill_execution import run_preflight
+from hub_scripts.skill_execution import get_skill_enforcement_policy
+policy = get_skill_enforcement_policy("hub-ml-auditoria-skills")
 ```
 
-Receipt:
-
-```python
-from hub_scripts.skill_execution.receipt import (
-    build_execution_receipt,
-    verify_execution_receipt,
-)
-```
-
-Postflight:
-
-```python
-from hub_scripts.skill_execution.postflight import (
-    build_postflight,
-    verify_postflight,
-)
-```
-
-Na operação normal da skill, prefira os scripts adjacentes à própria skill em vez de montar objetos manualmente.
+A [policy publicada](../../hub_padroes/skill_enforcement/policy.json) é a fonte do conjunto atual de registros; use a listagem em vez de congelar a contagem. Falha de leitura/forma ou skill desconhecida gera `EnforcementPolicyError`. Consulta não chama análise, emite Receipt ou promove nível.
 
 ## 10. Decisões e configurações que mais importam
 
-- o contrato permanece `mode="audit"`; a política `metadata.postflight.policy="fail_closed"` governa homologação, não altera silenciosamente o schema histórico;
-- `run.py` continua sendo o core L3 preservado para regressão;
-- `run_enforced.py` é a rota L4 necessária para conclusão homologada;
-- `resources_called` registra tentativa; `resources_completed` exige retorno bem-sucedido;
-- templates aplicáveis só contam quando são realmente lidos e recebem digest;
-- falta de input para um helper gera gap; não produz evidência fabricada;
-- handoff incompleto não é completion;
-- o Postflight é vinculado por hash ao trace, artifacts e handoff;
-- qualquer claim de `completion` deve ser reverificado, não confiado por autodeclaração.
+- `execution_contract.mode="audit"` e `policy.rollout_mode` são campos distintos; não os iguale nem promova níveis por editar documentação.
+- `current_level` é vigente; `target_level` é roadmap.
+- `run.py` é core L3; `run_enforced.py` e finalização completam a rota L4 da EDA.
+- `resources_called` registra tentativa; `resources_completed` exige retorno bem-sucedido.
+- Templates aplicáveis só contam quando lidos e vinculados por digest.
+- Contexto faltante não produz evidência fabricada; aplicabilidade segue contrato e entrada objetiva.
+- Handoff incompleto não é completion; Postflight vincula trace, artifacts e handoff.
+- Claim persistido exige reverificação canônica, não autodeclaração.
 
 ## 11. Limitações, riscos e armadilhas
 
-SHA-256 continua sendo mecanismo de binding/tamper evidence, não assinatura digital ou attestation externa.
-
-O postflight não consegue provar fatos que não estejam instrumentados. Nesses casos deve falhar fechado ou exigir revisão; não deve inferir consumo por menção textual.
-
-O executor L4 da SE05 continua restrito ao piloto. Generalização para as demais skills pertence a sprint posterior.
+SHA-256 fornece binding e detecção de adulteração, não assinatura digital ou attestation externa. O Postflight não comprova fatos não instrumentados: deve falhar fechado ou exigir revisão. Perfis sintéticos implementados em outras skills possuem inputs, autorizações, oráculos e verificadores próprios; sua existência ou aceite técnico delimitado não promove `current_level` nem generaliza a rota L4 da EDA.
 
 ## 12. Quais são as alternativas?
 
-`tools/skill_enforcement/validate_contracts.py` valida estrutura estática. `scripts/preflight.py` diagnostica L2. `run.py` executa o core L3 e emite Receipt. Nenhum desses, isoladamente, substitui o Postflight L4.
-
-A skill `hub-ml-auditoria-skills` continua sendo a ferramenta de auditoria humana/estruturada do ecossistema; a SE05 não cria um segundo auditor editorial.
+O [preflight da EDA](../../skills/hub-ml-eda-profissional/scripts/preflight.py) diagnostica pré-condições; o [core](../../skills/hub-ml-eda-profissional/scripts/run.py) emite Receipt. Nenhum isoladamente substitui o [finalizador](../../skills/hub-ml-eda-profissional/scripts/postflight.py). A [skill Auditoria](../../skills/hub-ml-auditoria-skills/SKILL.md) avalia aderência e consome verificadores existentes; não sobrepõe score editorial ao gate mecânico.
 
 ## 13. Como saber se o resultado faz sentido?
 
@@ -188,43 +179,14 @@ Nenhum desses desvios pode terminar com `completion_authorized=true`.
 
 ## 14. Arquivos relacionados e próximos passos
 
-- [skill_execution.py](skill_execution.py): preflight L2.
-- [receipt/__init__.py](receipt/__init__.py): Receipt SE04.
-- [postflight/__init__.py](postflight/__init__.py): Postflight SE05.
-- [__init__.py](__init__.py): fachada pública histórica do preflight.
-- [exemplo_skill_execution.py](exemplo_skill_execution.py): exemplo operacional.
-- `skills/hub-ml-eda-profissional/scripts/run.py`: core L3.
-- `skills/hub-ml-eda-profissional/scripts/run_enforced.py`: executor L4.
-- `skills/hub-ml-eda-profissional/scripts/postflight.py`: finalizador fail-closed.
-- `skills/hub-ml-eda-profissional/release_manifest.json`: fingerprints da release.
-- `docs/sprints/skill_enforcement/SE05/`: desenho, testes e runbook.
+- [Preflight e policy](skill_execution.py) e [fachada pública](__init__.py).
+- [Receipt](receipt/__init__.py) e [Postflight](postflight/__init__.py).
+- [Exemplo L2](exemplo_skill_execution.py): apenas pré-condições, sem análise.
+- [EDA: core](../../skills/hub-ml-eda-profissional/scripts/run.py), [executor](../../skills/hub-ml-eda-profissional/scripts/run_enforced.py), [finalizador](../../skills/hub-ml-eda-profissional/scripts/postflight.py) e [manifesto](../../skills/hub-ml-eda-profissional/release_manifest.json).
+- [domain_context](domain_context/README.md): validação temporal interna, com consumidores delimitados.
 
-Próximo estágio arquitetural após a SE05: SE06 amplia evals repetidos/adversariais e calibra falsos bloqueios/escapes.
+Desenvolvimento, fora do pacote: [ADR-0021](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/main/docs/decisions/ADR-0021-execucao-verificavel-de-skills.md) e [gates dos perfis sintéticos](https://github.com/Guimarais-R-Rodrigo/Ambiente_Databricks/blob/main/docs/sprints/skill_enforcement_rollout/B1_GATES_POS_MERGE_2026-10-01.md). Não são dependências da operação cotidiana.
 
 ## 15. Referências
 
-- `docs/decisions/ADR-0021-execucao-verificavel-de-skills.md`;
-- `docs/sprints/skill_enforcement/PLANO_MESTRE.md`;
-- `docs/sprints/skill_enforcement/REVISAO_PLANO_2026-09-17_LOCAL_FIRST.md`;
-- `docs/sprints/skill_enforcement/SE04/DESENHO_TECNICO.md`;
-- `docs/sprints/skill_enforcement/SE05/DESENHO_TECNICO.md`;
-- testes `tools/tests/test_skill_enforcement_se03.py`, `test_skill_enforcement_se04.py`, `test_skill_enforcement_se04_runner.py`, `test_skill_enforcement_se05.py` e `test_skill_enforcement_se05_runner.py`.
-
-Estado desta revisão: implementação SE05 presente na branch de desenvolvimento; certificação oficial local/Free permanece gate separado antes de release candidate.
-
-
-## Política transversal SE07
-
-A SE07 adiciona um registry publicado para as 14 skills:
-
-`hub_padroes/skill_enforcement/policy.json`
-
-Consulta:
-
-```python
-from hub_scripts.skill_execution import get_skill_enforcement_policy
-
-policy = get_skill_enforcement_policy("hub-ml-auditoria-skills")
-```
-
-`current_level` é evidence-based. `target_level` é roadmap. A API é somente leitura e não executa helpers, não cria Receipt e não promove uma skill de nível.
+O comportamento é definido pelas implementações, contratos e schemas vinculados. Para uso, siga a skill e a policy; para manutenção, use os registros externos indicados. Imports e exemplos de preflight não comprovam o ciclo completo nem homologação Databricks.

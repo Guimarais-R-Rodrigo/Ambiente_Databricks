@@ -55,6 +55,8 @@ Depois ele cria um terceiro arquivo em que o único Markdown contém apenas um p
 
 ## 7. O que você precisa antes de usar?
 
+Caminho ausente gera `FileNotFoundError`; extensão não suportada gera `ValueError`; JSON inválido em `.ipynb` gera erro de parsing (`JSONDecodeError`). São exceções, não cobertura zero.
+
 `notebook_path` deve apontar para arquivo local existente. São aceitos `.ipynb`, `.py`, `.sql`, `.scala` e `.r`. Outras extensões geram `ValueError`.
 
 Para fontes Databricks, o reconhecimento depende dos marcadores codificados em `SOURCE_MARKERS`. Para `.py` e `.r`, por exemplo, a célula é separada por `# COMMAND ----------`; Markdown é reconhecido por `# MAGIC %md` ou `%md-sandbox` nas primeiras linhas relevantes.
@@ -62,6 +64,8 @@ Para fontes Databricks, o reconhecimento depende dos marcadores codificados em `
 A função não baixa objetos do workspace, não autentica em APIs e não segue URLs. Exporte ou materialize o notebook por um mecanismo apropriado antes de medir.
 
 ## 8. O que este recurso entrega?
+
+Os índices contam todas as células internas, inclusive Markdown/raw: não são linhas do arquivo nem contadores de execução do Jupyter.
 
 | Campo | Significado |
 |---|---|
@@ -76,6 +80,8 @@ A função não baixa objetos do workspace, não autentica em APIs e não segue 
 Um valor de 100% não implica explicação suficiente. Um valor baixo também não prova dívida técnica: um notebook curto pode ter uma seção Markdown que explica vários blocos não adjacentes.
 
 ## 9. Como usar este recurso no Hub?
+
+Prepare a raiz `.assistant` no `sys.path` conforme a [preparação comum](../README.md#preparacao-comum). O helper em si não exige Spark.
 
 A chamada mínima é:
 
@@ -99,6 +105,8 @@ Também não há limiar de aprovação. Qualquer regra como “mínimo 80%” pr
 
 ## 11. Limitações, riscos e armadilhas
 
+Um JSON válido como `{}` não tem `cells`; o parser atual aceita a lista vazia e pode devolver 100% por ausência de código. Isso não valida o schema integral de `.ipynb` nem comprova notebook válido.
+
 O parser das fontes é heurístico. Alterações no formato de exportação, magic comments fora das primeiras linhas esperadas ou texto contendo marcadores de comando podem afetar a segmentação.
 
 Para `.ipynb`, a função pressupõe JSON legível e a estrutura convencional `cells[].cell_type/source`. Ela não executa notebook, não verifica outputs nem determina se Markdown descreve a célula correta.
@@ -121,14 +129,12 @@ Se a contagem de células parecer estranha, inspecione os marcadores de exporta�
 
 ## 14. Arquivos relacionados e próximos passos
 
+Para revisar a explicação depois da triagem, use [Comentar Notebook](../../hub_prompts/comentar_notebook/README.md); sua tarefa preserva código e ordem.
+
 A [implementação](doc_coverage.py) define parsers e fórmula; a [fachada](__init__.py) expõe a API; o [exemplo](exemplo_doc_coverage.py) mostra a fronteira entre estrutura e qualidade. O [catálogo de scripts](../README.md) reúne as outras ferramentas operacionais.
 
 Use o resultado para selecionar células a revisar. O próximo passo é ler o conteúdo e decidir se a explicação realmente cobre premissas, decisão e interpretação.
 
 ## 15. Referências
 
-O contrato deste recurso vem da implementação, fachada e exemplo locais, revisados na R04-B em 12/09/2026. Não há dependência de documentação externa para a fórmula local.
-
-O formato-fonte reconhecido é o que a implementação codifica hoje; isso não deve ser generalizado como especificação eterna de exportação Databricks. A validação específica da R04-B é registrada no relatório da sprint após execução.
-
-Revisão do próprio texto não é auditoria independente; nenhuma alegação de publicação ou homologação Databricks é feita.
+Contrato: [implementação](doc_coverage.py), [fachada](__init__.py) e [exemplo](exemplo_doc_coverage.py). A fórmula local mede adjacência; não certifica qualidade, outputs ou execução. O reconhecimento do formato-fonte é o conjunto de marcadores codificados nesta versão, não uma especificação universal.

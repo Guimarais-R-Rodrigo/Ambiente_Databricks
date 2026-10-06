@@ -20,11 +20,11 @@
 # MAGIC
 # MAGIC | Item | Exigência |
 # MAGIC |---|---|
-# MAGIC | Compute | serverless ou clássico |
+# MAGIC | Compute | sessão Spark/PySpark com operações de datas, agregações e joins |
 # MAGIC | Bibliotecas | nenhuma além do runtime |
 # MAGIC | Dados | sintéticos, gerados por `hub_snippets.testing.fixtures` |
 # MAGIC | Escrita | uma view temporária de sessão |
-# MAGIC | Diferença Free × trabalho | nenhuma conhecida |
+# MAGIC | Diferença Free × trabalho | valide tipos, ANSI, datas e chave não nula no ambiente alvo |
 
 # COMMAND ----------
 
